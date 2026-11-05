@@ -62,8 +62,12 @@
   function brickWall(g, cam, corners, col, mortar, seed, rows) {
     const p = Qc(g, cam, corners, col); if (!p) return; g.save(); g.clip(p);
     const L = (u, v) => [0, 1, 2].map(k => lerp(lerp(corners[0][k], corners[1][k], u), lerp(corners[3][k], corners[2][k], u), v));
-    const nr = rows || 30; for (let j = 1; j < nr; j++) seg2(g, cam, L(0, j / nr), L(1, j / nr), 1, mortar);
-    const R = OTM.rng(seed); for (let i = 0; i < 70; i++) { const u = R(), v = R(); const a = cam.p(L(u, v)), b = cam.p(L(u + 0.02, v)); g.strokeStyle = rgba('#000000', 0.12); g.lineWidth = Math.max(1, Math.abs(cam.p(L(u, v + 1 / nr))[1] - a[1]) * 0.8); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+    // the mortar courses in one path, one stroke; the darker headers as small quads in one fill (a draw call each is costly)
+    const nr = rows || 30, mp = new Path2D(); for (let j = 1; j < nr; j++) { const q = clipPts(cam, [L(0, j / nr), L(1, j / nr), L(1, j / nr)]); if (q.length >= 2) { mp.moveTo(q[0][0], q[0][1]); mp.lineTo(q[1][0], q[1][1]); } }
+    g.strokeStyle = mortar; g.lineWidth = 1; g.stroke(mp);
+    const R = OTM.rng(seed), hp = new Path2D(); for (let i = 0; i < 70; i++) { const u = R(), v = R(), q = [L(u, v), L(u + 0.02, v), L(u + 0.02, v + 0.8 / nr), L(u, v + 0.8 / nr)].map(x => cam.p(x)); if (q.some(x => x[2] < 0.06)) continue;
+      hp.moveTo(q[0][0], q[0][1]); for (let k = 1; k < 4; k++) hp.lineTo(q[k][0], q[k][1]); hp.closePath(); }
+    g.fillStyle = rgba('#000000', 0.12); g.fill(hp);
     g.restore();
   }
   // a window in the front wall: frame, glass (what it gives back), casement bars; o.glow: a warm interior light behind it
@@ -118,11 +122,14 @@
     PF(g,'start');
     o = o || {}; const Q = (pts, col) => Qc(g, cam, pts, col), B = T.brick, F = T.frame, R0 = T.roof;
     // the sky (the east behind the lens in the morning is not seen; above the roof we look west)
+    // (it is all smooth gradients, so it is painted at a quarter resolution and scaled up: a full-frame screen blend is costly)
     { const top = [0, Math.min(-M, cam.p(0, 30, 60)[1])], hz = cam.p(0, 0, 400); if (T.lit) top[1] = -M;      // morning: the sky's gradient runs top of frame to horizon (a pale, hot haze)
-      g.fillStyle = LC.lin(g, 0, top[1], 0, hz[1], T.sky); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
-      if (!T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const s = cam.p(1.5, 3, 400); g.fillStyle = LC.rad(g, s[0], s[1], 0, 1300, [[0, '#FFD39A', 0.55], [0.35, '#E8955A', 0.25], [1, '#E8955A', 0]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); }
-      else { g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.lin(g, 0, top[1], 0, hz[1], [[0, '#FFF2DA', 0.0], [0.7, '#FFF2DA', 0.18], [1, '#FFF6E6', 0.35]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
-        g.fillStyle = LC.rad(g, -300, -200, 0, 1400, [[0, '#FFF6E6', 0.5], [0.4, '#FBE7C2', 0.18], [1, '#FBE7C2', 0]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); } }
+      const SK = 4, sw = Math.ceil((W + 2 * M) / SK), sh = Math.ceil((H + 2 * M) / SK), sg = scratch('houseSky', sw, sh); sg.scale(1 / SK, 1 / SK); sg.translate(M, M);
+      sg.fillStyle = LC.lin(sg, 0, top[1], 0, hz[1], T.sky); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M); sg.globalCompositeOperation = 'screen';
+      if (!T.lit) { const s = cam.p(1.5, 3, 400); sg.fillStyle = LC.rad(sg, s[0], s[1], 0, 1300, [[0, '#FFD39A', 0.55], [0.35, '#E8955A', 0.25], [1, '#E8955A', 0]]); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M); }
+      else { sg.fillStyle = LC.lin(sg, 0, top[1], 0, hz[1], [[0, '#FFF2DA', 0.0], [0.7, '#FFF2DA', 0.18], [1, '#FFF6E6', 0.35]]); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M);
+        sg.fillStyle = LC.rad(sg, -300, -200, 0, 1400, [[0, '#FFF6E6', 0.5], [0.4, '#FBE7C2', 0.18], [1, '#FBE7C2', 0]]); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M); }
+      g.save(); g.imageSmoothingEnabled = true; g.drawImage(sg.canvas, -M, -M, sw * SK, sh * SK); g.restore(); }
     PF(g,'sky');
     // beyond: the roofs and chimneys of the next street, garden trees behind them whose crowns rise over the ridges (hazy in the
     // morning, a dark line at evening). The trees go first, so nothing floats in the sky between them and the roofs.
