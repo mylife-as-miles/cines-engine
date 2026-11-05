@@ -1,0 +1,3 @@
+{
+ "car_door_close": "car_door_close.wav: 'a car door closing' -> strong (z +4.1; would rank #1 among 322 vocabulary descriptions; cosine 0.41). It sounds most like: 'a door slam' (z +3.8), 'a heavy thud' (z +3.4), 'a punchy impact hit' (z +3.3), 'a body falling on the ground' (z +2.8). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+}
