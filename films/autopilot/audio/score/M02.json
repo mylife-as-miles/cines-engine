@@ -1,0 +1,7 @@
+{
+ "id": "M02",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 25 seconds: a gentle repeating felt-piano figure in D major, rocking eighth notes at about 72 bpm (D-A-F#-A, D-A-G-A), warm and ordinary, the sound of a morning routine done a thousand times. Solo felt-muted upright piano, close and soft, mezzo-piano at most, with a very soft low cello note joining near the end and the last chord left to ring. Minimal, modern classical, like a lullaby for an ordinary morning. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

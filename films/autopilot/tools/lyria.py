@@ -64,6 +64,8 @@ def main():
                 print(f"{c['id']}: HTTP {e.code}: {msg}"); break
             except urllib.error.URLError as e:
                 print(f"{c['id']}: {e.reason}, retrying"); continue
+            except (ConnectionError, TimeoutError, OSError) as e:      # a dropped connection mid-response
+                print(f"{c['id']}: {type(e).__name__}, retrying"); continue
         if resp is None: failed.append(c['id']); continue
         data, mime, text = audio_of(resp)
         if not data:

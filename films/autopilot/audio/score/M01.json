@@ -1,0 +1,7 @@
+{
+ "id": "M01",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 30 seconds, for the first music of a quiet, tender animated short film. Dawn in a dark bedroom; a tired father looks at his phone's low battery while a gentle voice asks: have you ever forgotten your phone? Very sparse and intimate: a high, still bowed-glass tone (glass harmonica) and a soft sustained string chord in D major, with three or four single felt-piano notes left to ring. Pianissimo throughout, beatless, slow, curious rather than sad. No drums, no vocals, no choir. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}
