@@ -110,7 +110,7 @@ A set draws the environment only; characters come from `RIG` and are placed by t
 - **Emily's yellow** `#E0B34F` belongs to her (cardigan, socks, her subtitles) and leaves with her. After Q05 it appears once: in the desk photograph (Q09).
 - **The phone's green** `#7BE6A0` is the film's key accent: the charging icon. It is the only colour in the ending (the quick flash in Q12).
 - **Time stamps** are only diegetic: 6:14 on the phone's alarm (Q01), 8:32 on the dashboard clock reflected in the windscreen (Q07), 10:18 to 11:43 on the conference-room clock seen in a framed print's glass (Q08), 5:37 in the laptop's corner (Q10).
-- **No title, slate or scene headings on screen**, except the opening title on black at the start of Q01.
+- **No title, slate or scene headings on screen**, except the opening title on black at the start of Q01 and the end card on black at the end of Q12 ("AUTOPILOT", "A film by Osita Miles").
 - **Cadence.** Morning: locked-off frames and slow pushes (0.2 to 0.5% per second), shots of about 4 s. Montages (the bathroom, the journey) cut every 1.5 to 3 s on a mechanical rhythm. The office: about 3.5 s. Evening: longer, quieter shots of 5 to 6 s. From "Where's Emily?": a faint handheld drift (`FILM.shake`, 1 to 2 px at 0.5 Hz), growing. The flash cuts: about 0.8 s each. The door: long, still takes; the last shot holds about 25 s.
 - **Acting.** Daniel is kind and tired: a 3 px breath at 0.25 Hz, heavy lids, small economical movements (the routine is automatic: never hesitates). Emily is sleepy, solemn and funny. Faces stay quiet; posture carries the feeling.
 - **Flash safety.** No more than 3 full-frame luminance flashes per second; flash cuts are hard cuts, not white flashes.

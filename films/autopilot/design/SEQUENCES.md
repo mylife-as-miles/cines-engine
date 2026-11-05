@@ -1,6 +1,6 @@
 # AUTOPILOT: the film, shot by shot
 
-Twelve sequences, about 11 min 24 s. Times are sequence-local seconds and are a plan: move a beat by a second or two if the picture needs it, but keep every voiced line's start (its take is recorded and has a fixed length) and keep the order of the screenplay. Every shot is seen through or framed by glass (`look_c.md`). The restraint rules in `film/FILM.md` hold in every frame.
+Twelve sequences, about 11 min 32 s. Times are sequence-local seconds and are a plan: move a beat by a second or two if the picture needs it, but keep every voiced line's start (its take is recorded and has a fixed length) and keep the order of the screenplay. Every shot is seen through or framed by glass (`look_c.md`). The restraint rules in `film/FILM.md` hold in every frame.
 
 Recorded takes (seconds): L001 3.28, L002 8.20, L003 2.20, L004 radio 6.48, L005 8.44, L020 6.80, L021 2.68, L034 9.04, L035 9.36, L039 radio 7.64, L047 3.24, L049 4.20, L050 2.40, L051 3.24, L052 2.88.
 
@@ -17,7 +17,7 @@ Recorded takes (seconds): L001 3.28, L002 8.20, L003 2.20, L004 radio 6.48, L005
 | Q09 | The hottest hours | 58 | S13, S14, S15 | L035 | kitchen (counter, afternoon), city, office |
 | Q10 | 5:37 | 62 | S16, S17, S18 | L036–L039 | office, carpark (evening), car, roads |
 | Q11 | Where's Emily? | 84 | S19–S22 | L040–L049 | house (evening), car, roads, nursery; flash cuts |
-| Q12 | The door | 64 | S23, S24 | L050–L052 | nursery (car park, the door); flash of Q02 |
+| Q12 | The door | 72 | S23, S24 | L050–L052 | nursery (car park, the door); flash of Q02; the end card |
 
 ---
 
@@ -27,7 +27,7 @@ Teal-black. The phone's cold white screen is the only light, and its glass is th
 
 | t | Shot | Notes |
 | --- | --- | --- |
-| 0–5 | Black. The opening title, small and cold, centred: "AUTOPILOT", then beneath it "A film by Osita Miles". Fades out by 4.6. | The only title in the film. Libre Franklin 500, tracked, bone. No end card. |
+| 0–5 | Black. The opening title, small and cold, centred: "AUTOPILOT", then beneath it "A film by Osita Miles". Fades out by 4.6. | Libre Franklin 500, tracked, bone. The end card at the close of Q12 uses the same type. |
 | 4.5 | The alarm starts in the dark (`vibrate`, `alarm`), before we see anything. | |
 | 5–11 | CU: the phone face-up on the bedside table, shivering, its screen lighting the room from below: the alarm screen, **6:14**. A hand comes in and silences it on the second ring (A001). | The screen is the pane. The room is only what the screen lights. |
 | 11–20 | The screen, close: **BATTERY 7%** (a red sliver), beneath it a clutter of background apps still running (stacked cards) (A002). In its black glass, Daniel's face, reflected, squinting at the number (A003). | L001 at 12.0. L002 at 16.2 (ends about 24.8). |
@@ -203,7 +203,7 @@ Sound: `engine` off, the engine's ticking, `door`, `beep`, `footsteps`, `glass_d
 | 72–80 | His eyes go to the dark rear passenger window: from where he stands, he can see only his own reflection (A099), the dusk sky behind him. | L048 at 74.6. No answer (A100). L049 at 77.6. |
 | 82–84 | He runs (A101). | Cut on the movement. |
 
-## Q12 · The door (64 s) · S23, S24, A102–A113, L050–L052 · nursery (car park, the door); flash of Q02
+## Q12 · The door (72 s) · S23, S24, A102–A113, L050–L052 · nursery (car park, the door); flash of Q02; the end card
 
 **C3 is this sequence's last image, held.** We do not see inside.
 
@@ -213,11 +213,12 @@ Sound: `engine` off, the engine's ticking, `door`, `beep`, `footsteps`, `glass_d
 | 4–9 | His thumb struggles over the remote. The car answers with the same polite BEEP it made nine hours ago (A103), its indicators blinking amber into the dusk. | `beep` at 7.6: the same sound as Q07. |
 | 9–12 | He pulls the door open (A104). The camera stays outside, behind the door: we do not see inside (A105). | |
 | 12–24 | We see Daniel (A106), through the glass of the open door: his eyes settle on something below frame. For a moment his face does not understand; then it does (A107). His breath catches and stays caught. One hand reaches into the car. A small, broken sound: the beginning of his daughter's name, with nowhere to go (A108). | The sound only; no subtitle. |
-| 24 | The world falls SILENT; even the evening traffic disappears (A109). | `S.silence(24, 64)`. Daniel's voice is all that remains. |
+| 24 | The world falls SILENT; even the evening traffic disappears (A109). | `S.silence(24, 72)`. Daniel's voice is all that remains. |
 | 24–30 | He drops to his knees beside the open door (A110). C3's camera. | |
 | 30–31.5 | QUICK FLASH: the phone on the counter; the charging symbol pulses, green and peaceful (A111). `FILM.drawShot('Q02', ~27)`. | The only colour in the ending. Silent. |
 | 31.5–59.5 | Back: still kneeling, one arm extended into the car. The sun sinks out of the glass (A112): C3, held, the sun's disc sliding below the glass's lower edge over about 20 s, the frame dropping toward teal-black. | L050 at 36.0. L051 at 42.0. A long, terrible stillness (A113). L052 at 56.0. |
-| 59.5–64 | Cut to black on the end of "Autopilot disengaged." Black and silence to the end. No end card. | |
+| 59.5–62 | Cut to black on the end of "Autopilot disengaged." Black and silence. | |
+| 62–72 | **The end card**, on black: "AUTOPILOT", and beneath it "A film by Osita Miles", in the opening title's type (Libre Franklin 500, tracked, bone; the credit smaller and dimmer). It fades in over 1.2 s, holds about 6 s, and fades out to black by 71. Silence (or the score's last held note, if the score plan gives it one). | The author asked for an end card. Nothing else on it. |
 
 ---
 
