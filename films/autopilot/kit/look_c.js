@@ -5,7 +5,8 @@
    - flat fills, stepped (posterised) gradients, soft beams
    - the glass kit: glare streaks, specks of dust, refraction bands, fresnel ramps
    - chrome(): environment-mapped reflections on any surface whose normal we can describe
-   - matte typography: words are never written on the world; dialogue and V.O. sit in the letterbox, outside the glass
+   - captions: full 16:9 frame, no letterbox and no slate; dialogue and V.O. sit in the picture, bottom centre,
+     in the same idiom as Look B (Libre Franklin, sentence case, soft dark halo, no box), as the author asked
    Deterministic: no Math.random, no Date. Uses OTM.rng / OTM.vnoise / OTM.fbm only. */
 (function (G) {
   'use strict';
@@ -187,29 +188,28 @@
 
   // ---------- post ----------
   function vignette(ctx, strength, color, cx, cy, r0, r1) {
-    const a = OTM.liveArea(2.39); cx = cx == null ? W / 2 : cx; cy = cy == null ? (a.top + a.bottom) / 2 : cy;
-    ctx.save(); ctx.fillStyle = rad(ctx, cx, cy, r0 == null ? H * 0.28 : r0, r1 == null ? W * 0.62 : r1, [[0, color || P.ink, 0], [1, color || P.ink, strength]]);
-    ctx.fillRect(0, a.top, W, a.h); ctx.restore();
+    cx = cx == null ? W / 2 : cx; cy = cy == null ? H / 2 : cy;
+    ctx.save(); ctx.fillStyle = rad(ctx, cx, cy, r0 == null ? H * 0.3 : r0, r1 == null ? W * 0.64 : r1, [[0, color || P.ink, 0], [1, color || P.ink, strength]]);
+    ctx.fillRect(0, 0, W, H); ctx.restore();
   }
 
-  // ---------- matte typography (outside the glass) ----------
+  // ---------- captions, in the picture (the Look B idiom) ----------
   const FONT = (o) => `${o.style || 'normal'} ${o.weight || 400} ${o.size || 30}px "${o.family}"`;
-  // runs: [{text, color, family, weight, style, size, tracking}] laid out on one centred line in the bottom matte
-  function subtitle(ctx, runs, o) {
-    o = o || {}; const a = OTM.liveArea(2.39); const y = o.y || Math.round(a.bottom + (H - a.bottom) * 0.5 + (o.dy || 10)); const gap = o.gap == null ? 34 : o.gap;
-    ctx.save(); ctx.textBaseline = 'alphabetic';
-    const ws = runs.map(r => { ctx.font = FONT(r); ctx.letterSpacing = (r.tracking || 0) + 'px'; return ctx.measureText(r.text).width; });
-    const total = ws.reduce((s, w) => s + w, 0) + gap * (runs.length - 1);
-    let x = o.align === 'left' ? (o.x || 96) : (W - total) / 2;
-    runs.forEach((r, i) => { ctx.font = FONT(r); ctx.letterSpacing = (r.tracking || 0) + 'px'; ctx.fillStyle = r.color; ctx.globalAlpha = r.alpha == null ? 1 : r.alpha; ctx.fillText(r.text, x, y); x += ws[i] + gap; });
-    ctx.restore();
-  }
-  function slate(ctx, left, right) {
-    const a = OTM.liveArea(2.39), y = Math.round(a.top / 2 + 8);
-    ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = P.bone; ctx.textBaseline = 'alphabetic'; ctx.font = '500 21px "Barlow Condensed"'; ctx.letterSpacing = '3.5px';
-    ctx.textAlign = 'left'; ctx.fillText(left, 56, y); ctx.textAlign = 'right'; ctx.fillText(right, W - 56, y); ctx.restore();
+  // lines: [{t, color, alpha}] or strings, stacked upward from o.y and centred. Scene dialogue (only ever type) is bold 700;
+  // Daniel's voiced V.O. is the lighter 500. Emily's lines take her colour, everyone else's are white.
+  function caption(g, lines, o) {
+    o = Object.assign({ x: W / 2, y: H - 92, size: 46, lead: 1.28, family: 'Libre Franklin', weight: 700, color: '#FFFFFF',
+      halo: 'rgba(4,10,11,0.6)', haloBlur: 14, align: 'center', tracking: 0 }, o || {});
+    g.save(); g.font = FONT(o); g.textAlign = o.align; g.textBaseline = 'alphabetic'; g.letterSpacing = o.tracking + 'px';
+    const L = lines.map(l => typeof l === 'string' ? { t: l } : l), n = L.length;
+    L.forEach((l, i) => {
+      const y = o.y - (n - 1 - i) * o.size * o.lead;
+      if (o.halo) { g.save(); g.filter = `blur(${o.haloBlur}px)`; g.fillStyle = o.halo; g.fillText(l.t, o.x, y); g.fillText(l.t, o.x, y); g.restore(); }
+      g.fillStyle = l.color || o.color; g.globalAlpha = l.alpha == null ? 1 : l.alpha; g.fillText(l.t, o.x, y); g.globalAlpha = 1;
+    });
+    g.restore();
   }
 
   G.LC = { P, clamp, lerp, mix, rgba, hexToRgb, layer, blurred, flipX, lin, rad, pathPts, rrect, rquad, fillPts, smooth, camera, quad, stepGrad, beam,
-    glare, specks, smudge, env, sampler, chrome, vignette, subtitle, slate, FONT };
+    glare, specks, smudge, env, sampler, chrome, vignette, caption, FONT };
 })(window);

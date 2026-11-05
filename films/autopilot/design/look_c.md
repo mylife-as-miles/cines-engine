@@ -2,7 +2,9 @@
 
 **Pitch.** Every shot is framed through a pane (a screen, chrome, a mirror, a windscreen, a window), so the film is literally about what we look at and what we don't. In the end, the same glass that hid Emily all day is the glass we watch her father through.
 
-Style frames: `frames/C1_counter.jpg`, `frames/C2_mirror.jpg`, `frames/C3_door.jpg`. Sources: `src/C1_counter.html`, `src/C2_mirror.html`, `src/C3_door.html`. Helpers: `kit/look_c.js` (palette, perspective camera, glass compositor, environment-mapped chrome, matte type). All 2.39:1, Canvas 2D, deterministic.
+Style frames: `frames/C1_counter.jpg`, `frames/C2_mirror.jpg`, `frames/C3_door.jpg`. Sources: `src/C1_counter.html`, `src/C2_mirror.html`, `src/C3_door.html`. Helpers: `kit/look_c.js` (palette, perspective camera, glass compositor, environment-mapped chrome, captions). Full 16:9 (1920x1080) with no letterbox and no slate, Canvas 2D, deterministic.
+
+**The author chose this look**, with three changes, now in the frames: no black bars (the frame is full 16:9 and every set runs to its edges), no title or scene-heading text on screen, and the subtitles sit in the picture the way they do in Look B.
 
 ## The grammar
 
@@ -19,7 +21,7 @@ Style frames: `frames/C1_counter.jpg`, `frames/C2_mirror.jpg`, `frames/C3_door.j
 | Teal light scale (glass, distance) | `#7A918C` `#A9BAB4` `#CBD6D0` `#E3E9E3` |
 | Amber (sun, wood, lamplight) | `#24170F` `#563720` `#9A6535` `#CF9A5C` `#EBC68D` `#F6E3BC` `#FFF6E6` |
 | Copper (evening, dusk) | `#B25F2D` `#E4894A` (dusk sky `#232D38` → `#6A5A5C` → `#E39A5C`) |
-| Type (bone) / matte | `#E6E0D2` / `#040808` |
+| Captions: white, V.O. bone, halo | `#FFFFFF` / `#E6E0D2` / `rgba(4,10,11,0.6)` |
 | Daniel skin (light / mid / shade), hair | `#BE8C6C` `#9C6D55` `#5F3F33`, `#15100D` |
 | Emily skin (light / mid / shade) | `#D6A47F` `#B27E62` `#7B5240` |
 | **Phone green** (the key object, the only recurring accent) | `#7BE6A0` |
@@ -49,9 +51,10 @@ Style frames: `frames/C1_counter.jpg`, `frames/C2_mirror.jpg`, `frames/C3_door.j
 ## Time stamps and V.O.
 
 - **Time stamps are diegetic and always read off glass:** 6:14 on the phone's alarm screen, 8:32 on the dashboard clock reflected in the windscreen, and 5:37 in the corner of the laptop screen before the lid closes. The conference-room clock (10:18 to 11:43) is seen in the glass of a framed print. C1's screen shows the 7% charge, not a clock.
-- **Words are never written on the world.** All dialogue and V.O. sit in the bottom letterbox matte, outside the glass, the one place in the frame that isn't behind a pane.
-  - Sync dialogue is set in Libre Franklin 500. Daniel's lines are in bone, Emily's in her yellow (C2: "Better?" / "Mm-hmm.").
-  - V.O. is set in Cormorant Garamond italic, in bone, centred (C3: "My phone was on the counter.").
+- **No title or scene-heading text appears on screen.** The only words are the subtitles and what the world itself shows (the phone, the clocks, the nursery's notice).
+- **Subtitles sit in the picture, as in Look B** (`LC.caption`): sentence case, Libre Franklin, bottom centre, a soft dark halo and no box, at most two lines.
+  - Scene dialogue is only ever type, so it is set bold (700), 40 to 46 px. Daniel's lines are white and Emily's are in her yellow (C2: "Better?" / "Mm-hmm.").
+  - Daniel's V.O. is voiced, and its caption is the lighter 500 weight in bone, 36 to 42 px (C3: "My phone was on the counter.").
 - "Mm-hmm." is the last yellow type in the film. From then on, every word on screen is cold.
 
 ## How Emily's absence is carried after the mirror

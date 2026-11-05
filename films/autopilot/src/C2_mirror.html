@@ -273,14 +273,10 @@
   g.fillStyle = '#0C0E0F'; g.fill(LC.rrect(872, 614, 52, 20, 6));
 
   // =====================================================================
-  // 7. FINISH: grain, halation, the matte; the dialogue sits outside the glass, in the letterbox
+  // 7. FINISH: grain, halation; full 16:9, the dialogue in the picture (Daniel white, Emily in her yellow)
   // =====================================================================
-  f.finish({ letterbox: 2.39, grain: 0.05, fibre: 0, vignette: 0, halation: 0.6, matteColor: P.matte, beforePost: c => LC.vignette(c, 0.38, P.ink) });
-  LC.slate(ctx, 'AUTOPILOT  ·  LOOK C  ·  THROUGH GLASS', 'C2  ·  THE MIRROR  ·  INT. CAR, MORNING');
-  LC.subtitle(ctx, [
-    { text: 'Better?', color: P.bone, family: 'Libre Franklin', weight: 500, size: 30, tracking: 0.5 },
-    { text: 'Mm-hmm.', color: P.emily, family: 'Libre Franklin', weight: 500, size: 30, tracking: 0.5 },
-  ], { gap: 64 });
+  f.finish({ letterbox: 0, grain: 0.05, fibre: 0, vignette: 0, halation: 0.6, beforePost: c => LC.vignette(c, 0.38, P.ink) });
+  LC.caption(ctx, [{ t: 'Better?' }, { t: 'Mm-hmm.', color: P.emily }], { y: 1040, size: 40, lead: 1.25 });
   window.FRAME_READY = true;
 })();
 </script>

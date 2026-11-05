@@ -12,7 +12,7 @@
   const ctx = OTM.stage(), { W, H } = OTM, P = LC.P;
   const f = OTM.frame(ctx, { seed: 21 });
   const g = f.world, E = f.emissive;
-  const TOP = 138, BOT = 942;
+  const TOP = 138, BOT = 942;                   // the old 2.39 live area; the frame is full 16:9 now, so the set runs to its edges
 
   // ---------------- layout (frame px) ----------------
   const RAIL = { y0: 672, y1: 728 };          // window bottom rail; the worktop meets it at y1
@@ -181,16 +181,16 @@
   g.fillStyle = '#BCC7C1'; g.fillRect(REVEAL, RAIL.y0, W, 13);                       // the rail's sloping top, catching the sky
   g.fillStyle = LC.lin(g, 0, RAIL.y0 + 13, 0, RAIL.y1, [[0, '#869590'], [1, '#64716C']]); g.fillRect(REVEAL, RAIL.y0 + 13, W, RAIL.y1 - RAIL.y0 - 13);
   g.fillStyle = fDark; g.fillRect(REVEAL, RAIL.y0 - 3, W, 3); g.fillStyle = 'rgba(255,255,255,0.4)'; g.fillRect(REVEAL, RAIL.y0 - 6, W, 2);
-  g.fillStyle = LC.lin(g, REVEAL, 0, 0, 0, [[0, '#A0ADA7'], [1, '#56625E']]); g.fill(LC.pathPts([[0, TOP - 10], [REVEAL, TOP - 10], [REVEAL, RAIL.y1], [0, RAIL.y1 + 30]]));
-  g.fillStyle = fFace; g.fillRect(REVEAL - 12, TOP - 10, 12, RAIL.y1 - TOP + 10); g.fillStyle = fEdge; g.fillRect(REVEAL - 2, TOP - 10, 2, RAIL.y1 - TOP + 10);
+  g.fillStyle = LC.lin(g, REVEAL, 0, 0, 0, [[0, '#A0ADA7'], [1, '#56625E']]); g.fill(LC.pathPts([[0, -10], [REVEAL, -10], [REVEAL, RAIL.y1], [0, RAIL.y1 + 30]]));
+  g.fillStyle = fFace; g.fillRect(REVEAL - 12, -10, 12, RAIL.y1 + 10); g.fillStyle = fEdge; g.fillRect(REVEAL - 2, -10, 2, RAIL.y1 + 10);
 
   // =====================================================================
   // 5. THE WORKTOP (oiled oak in cool shade; its satin finish mirrors the window as a bright band)
   // =====================================================================
   const WT = RAIL.y1;
-  g.fillStyle = LC.lin(g, 0, WT, 0, BOT, [[0, '#76675A'], [0.3, '#56493F'], [1, '#1E1B19']]);
+  g.fillStyle = LC.lin(g, 0, WT, 0, H, [[0, '#76675A'], [0.2, '#56493F'], [0.6, '#2B2622'], [1, '#161413']]);
   g.fill(LC.pathPts([[0, RAIL.y1 + 30], [REVEAL, WT], [W, WT], [W, H], [0, H]]));
-  { const R = OTM.rng('grain'); g.save(); g.globalAlpha = 0.16; for (let i = 0; i < 64; i++) { const y = WT + 5 + Math.pow(R(), 1.5) * (BOT - WT); g.strokeStyle = R() > 0.5 ? '#251F1A' : '#8C7B68'; g.lineWidth = 0.6 + (y - WT) / 240; g.beginPath(); g.moveTo(-20, y + R() * 4); g.bezierCurveTo(600, y + (R() - 0.5) * 6, 1300, y + (R() - 0.5) * 6, W + 20, y + (R() - 0.5) * 4); g.stroke(); } g.restore(); }
+  { const R = OTM.rng('grain'); g.save(); g.globalAlpha = 0.16; for (let i = 0; i < 64; i++) { const y = WT + 5 + Math.pow(R(), 1.5) * (H - WT); g.strokeStyle = R() > 0.5 ? '#251F1A' : '#8C7B68'; g.lineWidth = 0.6 + (y - WT) / 240; g.beginPath(); g.moveTo(-20, y + R() * 4); g.bezierCurveTo(600, y + (R() - 0.5) * 6, 1300, y + (R() - 0.5) * 6, W + 20, y + (R() - 0.5) * 4); g.stroke(); } g.restore(); }
   { const rf = LC.layer(); rf.fillStyle = LC.lin(rf, 0, WT, 0, WT + 110, [[0, '#CCD5CF', 0.5], [1, '#CCD5CF', 0]]); rf.fillRect(REVEAL, WT, W, 110);
     rf.globalCompositeOperation = 'destination-out'; rf.fillStyle = '#000'; rf.fillRect(640, WT, 284, 140); rf.fillRect(1150, WT, 510, 140);
     g.save(); g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(rf.canvas, 6, false), 0, 0); g.restore(); }
@@ -198,7 +198,7 @@
   { const sh = LC.layer(); sh.fillStyle = 'rgba(6,9,9,0.7)'; sh.beginPath(); sh.ellipse(784, 742, 165, 18, 0, 0, Math.PI * 2); sh.fill();
     sh.fillStyle = 'rgba(6,9,9,0.32)'; sh.beginPath(); sh.moveTo(640, 738); sh.lineTo(926, 734); sh.lineTo(990, 840); sh.lineTo(590, 846); sh.closePath(); sh.fill();
     g.drawImage(LC.blurred(sh.canvas, 12, false), 0, 0); }
-  g.save(); g.globalCompositeOperation = 'soft-light'; g.fillStyle = LC.lin(g, 0, 800, 0, BOT, [[0, P.honey, 0], [1, P.honey, 0.3]]); g.fillRect(0, 800, W, BOT - 800); g.restore();
+  g.save(); g.globalCompositeOperation = 'soft-light'; g.fillStyle = LC.lin(g, 0, 800, 0, H, [[0, P.honey, 0], [1, P.honey, 0.3]]); g.fillRect(0, 800, W, H - 800); g.restore();
 
   // =====================================================================
   // 6. THE PHONE
@@ -316,9 +316,8 @@
   // =====================================================================
   // 8. FINISH
   // =====================================================================
-  f.finish({ letterbox: 2.39, grain: 0.055, fibre: 0, vignette: 0, halation: 0.55, matteColor: P.matte,
+  f.finish({ letterbox: 0, grain: 0.055, fibre: 0, vignette: 0, halation: 0.55,
     beforePost: c => LC.vignette(c, 0.45, P.ink) });
-  LC.slate(ctx, 'AUTOPILOT  ·  LOOK C  ·  THROUGH GLASS', 'C1  ·  THE COUNTER  ·  INT. KITCHEN, MORNING');
   window.FRAME_READY = true;
 })();
 </script>
