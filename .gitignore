@@ -1,4 +1,6 @@
 films/autopilot/audio/gen/*.wav
 films/autopilot/audio/gen/check.log
 films/autopilot/audio/gen/gen.log
+films/autopilot/audio/gen/var/
+films/autopilot/audio/gen/variants.log
 films/autopilot/out/
