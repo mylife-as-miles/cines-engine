@@ -508,6 +508,9 @@
     g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip();
     for (let i = 0; i < Math.max(10, h / 6); i++) { const yy = y + R() * h, a = 0.05 + R() * 0.12; g.strokeStyle = R() > 0.5 ? rgba(C.plyDark, a) : rgba(C.plyLight, a); g.lineWidth = Math.max(0.6, (0.002 + R() * 0.006) * pxm);
       g.beginPath(); g.moveTo(x - 4, yy); g.bezierCurveTo(x + w * 0.3, yy + (R() - 0.5) * 0.04 * pxm, x + w * 0.7, yy + (R() - 0.5) * 0.04 * pxm, x + w + 4, yy + (R() - 0.5) * 0.02 * pxm); g.stroke(); }
+    if (pxm > 150) for (let i = 0; i < 4; i++) { const cx = x + (0.15 + R() * 0.7) * w, cy = y + R() * h, len = (0.25 + R() * 0.35) * pxm, dir = R() > 0.5 ? 1 : -1;
+      for (let k = 0; k < 6; k++) { const ww = (0.012 + k * 0.012) * pxm; g.strokeStyle = rgba(k % 2 ? C.plyDark : '#B08454', 0.16); g.lineWidth = Math.max(0.6, 0.0035 * pxm);
+        g.beginPath(); g.moveTo(cx - len * dir, cy - ww); g.quadraticCurveTo(cx + len * 0.4 * dir, cy - ww, cx + len * 0.55 * dir, cy); g.quadraticCurveTo(cx + len * 0.4 * dir, cy + ww, cx - len * dir, cy + ww); g.stroke(); } }
     for (let i = 0; i < 3; i++) { const cx = x + R() * w, cy = y + R() * h, rx = (0.03 + R() * 0.04) * pxm; g.strokeStyle = rgba(C.plyDark, 0.25); g.lineWidth = Math.max(0.6, 0.003 * pxm); for (let k = 0; k < 3; k++) { g.beginPath(); g.ellipse(cx, cy, rx * (1 + k * 0.6), rx * 0.32 * (1 + k * 0.6), 0, 0, TAU); g.stroke(); } }
     g.fillStyle = rgba(C.plyDark, 0.55); g.fillRect(x, y, w, Math.max(1, 0.006 * pxm)); g.fillRect(x, y + h - Math.max(1, 0.006 * pxm), w, Math.max(1, 0.006 * pxm)); g.fillRect(x, y, Math.max(1, 0.006 * pxm), h); g.fillRect(x + w - Math.max(1, 0.006 * pxm), y, Math.max(1, 0.006 * pxm), h);
     g.restore();
@@ -521,7 +524,7 @@
   // further, the copper only on the roof's edge. Glass is laid in after the light (it reflects the sky; it is not lit).
   const LIGHTS = {
     morning: { sat: 0.1, shade: '#D9DEE2', lit: null, glass: [[0, '#C9D6DA'], [0.55, '#A9BAC0'], [1, '#6E7E84']] },
-    evening: { sat: 0.45, shade: '#8C8494', lit: '#EEC3A2', line: [0.35, 1.05], glass: [[0, '#5A5868'], [0.5, '#8A6A62'], [0.62, '#C8845A'], [1, '#3A3034']] },
+    evening: { sat: 0.5, shade: '#7E788C', lit: '#D6A688', line: [0.35, 1.05], glass: [[0, '#5A5868'], [0.5, '#8A6A62'], [0.62, '#C8845A'], [1, '#3A3034']] },
     dusk: { sat: 0.55, shade: '#625E72', lit: '#C88E72', line: [2.7, 3.2], glass: [[0, '#2E3646'], [0.55, '#5A4E5C'], [0.65, '#8A5E50'], [1, '#262428']] },
   };
   function elevation(g, u0, u1, pxm, tod, opts) {
@@ -735,6 +738,282 @@
     return view;
   })();
 
+  // ===============================================================================================================
+  // THE NOTICE: the words are the screenplay's (A085), verbatim, printed on A4 and slipped into a punched plastic sleeve
+  // ===============================================================================================================
+  const NOTICE_TEXT = 'DUE TO VANDALISM OVERNIGHT, PLEASE USE THE SIDE ENTRANCE. TODAY ONLY.';
+  const NOTICE_LINES = [['DUE TO', 'VANDALISM', 'OVERNIGHT,', 'PLEASE USE THE', 'SIDE ENTRANCE.'], ['TODAY ONLY.']];   // line breaks only; words untouched
+  // the printed sheet in sheet space: (0,0) its top-left, w x h px. k: the paper's light (1 lit by the low sun, 0 in shade)
+  function paintNoticeSheet(g, w, h, k) {
+    g.fillStyle = mix('#BDB6B0', '#F2E8DA', k); g.fillRect(0, 0, w, h);
+    g.fillStyle = LC.lin(g, 0, 0, w, 0, [[0, '#7A7684', 0.16], [0.6, '#7A7684', 0.04], [1, '#FFE0B8', 0.1 * k]]); g.fillRect(0, 0, w, h);
+    const mw = w * 0.86, fam = '"Archivo"';
+    g.save(); g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = mix('#2A2828', '#1C1A18', k);
+    let fs = 100; g.font = `700 ${fs}px ${fam}`; const widest = Math.max(...NOTICE_LINES[0].map(t => g.measureText(t).width)); fs = Math.floor(fs * mw / widest); g.font = `700 ${fs}px ${fam}`;
+    const lead = fs * 1.12, block = NOTICE_LINES[0].length * lead + fs * 1.9; let y = (h - block) / 2 + fs * 0.92;
+    NOTICE_LINES[0].forEach(t => { g.fillText(t, w / 2, y); y += lead; });
+    y += fs * 0.55; const fs2 = Math.round(fs * 1.06); g.font = `700 ${fs2}px ${fam}`; g.fillText(NOTICE_LINES[1][0], w / 2, y);
+    const tw = g.measureText(NOTICE_LINES[1][0]).width; g.fillRect(w / 2 - tw / 2, y + fs2 * 0.14, tw, Math.max(1, fs2 * 0.07));
+    g.restore();
+  }
+  // the sleeve over it, in sleeve space (sw x sh px; the punched strip on the left). Drawn after the sheet.
+  function paintSleeve(g, x, y, sw, sh, k, seed) {
+    const R = OTM.rng('sleeve' + (seed || '')), strip = sw * 0.075;
+    g.save(); g.globalCompositeOperation = 'screen';
+    g.fillStyle = 'rgba(160,170,190,0.08)'; g.fillRect(x, y, sw, sh);
+    g.fillStyle = LC.lin(g, x, y, x + sw, y + sh, [[0, '#B8C0D0', 0.0], [0.18, '#C8CCD8', 0.14], [0.3, '#B8C0D0', 0.03], [0.62, '#E8A878', 0.0], [0.78, '#F2B080', 0.1 * k], [0.86, '#F2B080', 0.02], [1, '#F2B080', 0]]); g.fillRect(x, y, sw, sh);
+    g.lineCap = 'round';
+    for (let i = 0; i < 9; i++) { const yy = y + R() * sh, xx = x + strip + R() * (sw - strip) * 0.8, L = sw * (0.15 + R() * 0.35); g.strokeStyle = rgba(R() > 0.4 ? '#FFFFFF' : '#FFD8B0', 0.06 + R() * 0.1); g.lineWidth = 1 + R() * 2;
+      g.beginPath(); g.moveTo(xx, yy); g.bezierCurveTo(xx + L * 0.3, yy + (R() - 0.5) * sh * 0.08, xx + L * 0.7, yy + (R() - 0.5) * sh * 0.08, xx + L, yy + (R() - 0.5) * sh * 0.04); g.stroke(); }
+    g.restore();
+    // the punched strip: a doubled edge and eleven holes through which the plywood shows
+    g.fillStyle = 'rgba(255,255,255,0.07)'; g.fillRect(x, y, strip, sh);
+    g.strokeStyle = 'rgba(255,250,240,0.22)'; g.lineWidth = Math.max(1, sw * 0.003); g.beginPath(); g.moveTo(x + strip, y); g.lineTo(x + strip, y + sh); g.stroke();
+    for (let i = 0; i < 11; i++) { const hy = y + sh * (0.06 + i * 0.088), hr = sw * 0.014; g.fillStyle = 'rgba(70,46,26,0.5)'; g.beginPath(); g.arc(x + strip * 0.45, hy, hr, 0, TAU); g.fill(); g.strokeStyle = 'rgba(255,240,220,0.3)'; g.lineWidth = Math.max(0.8, hr * 0.25); g.beginPath(); g.arc(x + strip * 0.45, hy, hr, Math.PI * 0.9, Math.PI * 1.7); g.stroke(); }
+    g.strokeStyle = 'rgba(255,250,240,0.35)'; g.lineWidth = Math.max(1, sw * 0.004); g.strokeRect(x + 0.5, y + 0.5, sw - 1, sh - 1);
+  }
+  // clear packing tape across a corner: a pale glossy strip with a dirty edge
+  function tape(g, cx, cy, len, wid, ang, k) {
+    g.save(); g.translate(cx, cy); g.rotate(ang);
+    g.fillStyle = rgba('#E8DCC4', 0.22 + 0.1 * k); g.fillRect(-len / 2, -wid / 2, len, wid);
+    g.fillStyle = rgba('#FFFFFF', 0.18 * k + 0.05); g.fillRect(-len / 2, -wid / 2 + wid * 0.12, len, wid * 0.12);
+    g.strokeStyle = 'rgba(80,60,40,0.25)'; g.lineWidth = 1.2; g.strokeRect(-len / 2, -wid / 2, len, wid);
+    g.restore();
+  }
+
+  // fresh scratches round a lock cylinder at (x, y), s px per metre: a screwdriver slipping off the keyway again and again.
+  // Short, mostly parallel gouges clustered at the cylinder, a scraped patch of bare metal, a few long slips; they catch the sun (k).
+  function lockScratches(g, x, y, s, k, seed) {
+    const R = OTM.rng('lockScr' + (seed || '')); g.save(); g.lineCap = 'round';
+    // the scraped patch: the anodising worn through to bright metal round the keyway
+    const pts = []; for (let i = 0; i < 14; i++) { const a = i / 14 * TAU, r = s * (0.02 + 0.014 * R()); pts.push([x + Math.cos(a) * r * 0.9, y + Math.sin(a) * r * 1.6]); }
+    g.fillStyle = rgba('#B4B8B8', 0.55 + 0.25 * k); g.fill(LC.smooth(pts));
+    const stroke = (x0, y0, ang, len, w, bright) => { const bend = (R() - 0.5) * 0.25, x1 = x0 + Math.cos(ang) * len, y1 = y0 + Math.sin(ang) * len, mx = (x0 + x1) / 2 + Math.cos(ang + Math.PI / 2) * len * bend, my = (y0 + y1) / 2 + Math.sin(ang + Math.PI / 2) * len * bend;
+      g.strokeStyle = 'rgba(12,14,16,0.55)'; g.lineWidth = w * 1.6; g.beginPath(); g.moveTo(x0 + 0.7, y0 + 0.9); g.quadraticCurveTo(mx + 0.7, my + 0.9, x1 + 0.7, y1 + 0.9); g.stroke();
+      g.strokeStyle = rgba(bright, (0.5 + 0.45 * R()) * (0.35 + 0.65 * k)); g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo(mx, my, x1, y1); g.stroke(); };
+    for (let i = 0; i < 48; i++) { const r = s * 0.04 * Math.sqrt(R()), a = R() * TAU, x0 = x + Math.cos(a) * r * 0.8, y0 = y + Math.sin(a) * r * 1.6;
+      const ang = (R() < 0.7 ? -1.05 : -1.5) + (R() - 0.5) * 0.5, len = s * (0.006 + R() * 0.022); stroke(x0, y0, ang, len, Math.max(0.7, s * (0.0008 + R() * 0.0012)), R() > 0.25 ? '#ECE8E0' : '#FFE4C0'); }
+    for (let i = 0; i < 5; i++) { const x0 = x + (R() - 0.5) * s * 0.02, y0 = y + (R() - 0.3) * s * 0.03, ang = -1.2 + (R() - 0.5) * 0.7 + (R() > 0.5 ? Math.PI : 0), len = s * (0.04 + R() * 0.05); stroke(x0, y0, ang, len, Math.max(0.8, s * 0.0013), '#F2EEE6'); }
+    g.restore();
+  }
+
+  // ===============================================================================================================
+  // ENTRANCE · the main entrance square on from the car park (A082-A084). The elephant trumpets at the boarded door from the
+  // east, the giraffe cranes over it from the west; the low sun rakes the wall from screen-right above the shade the far
+  // trees throw, so the pavement and the foot of the wall are cool and dark while the plywood, the lock and the notice catch it.
+  // state: { tod: 'evening' | 'dusk', reflect(g, a): Daniel in the sidelight's glass (a.side = its screen rect) }
+  // anchors: stop (his feet when he stops, 1.1 m from the door), k (px/m there), ground(u, z) for anywhere in front of the wall
+  // ===============================================================================================================
+  const ENTR = (() => {
+    const F = 1150, D = 5.5, EYE = 1.5, UC = 12.5, CX = 960, CY = 540, K = F / D;
+    const sx = u => CX + (u - UC) * K, sy = y => CY - (y - EYE) * K;
+    const ground = (u, z) => { const d = D - z, k = F / d; return { x: CX + (u - UC) * k, y: CY + EYE * k, k }; };
+    const U0 = 7.6, U1 = 17.4, YT = 3.45;
+    const sd = MURAL.ENTRANCE.side, SIDE = { x: sx(sd[0]), y: sy(2.1), w: (sd[1] - sd[0]) * K, h: 1.96 * K };
+    const sideP = (() => { const p = new Path2D(); p.rect(SIDE.x, SIDE.y, SIDE.w, SIDE.h); return p; })();
+    function back(g, tod) {
+      const dusk = tod === 'dusk', P3 = (u, y, z) => { const d = D - z, k = F / d; return [CX + (u - UC) * k, CY - (y - EYE) * k]; };
+      // the southern sky over the roof: violet-teal, lit copper from the west
+      g.fillStyle = LC.lin(g, 0, 0, 0, 330, dusk ? [[0, '#1C2430'], [0.6, '#2E3242'], [1, '#4A4254']] : [[0, '#28303E'], [0.55, '#3A3D4E'], [1, '#5E5262']]); g.fillRect(0, 0, W, 360);
+      g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, W + 300, 300, 0, 1500, [[0, '#E8905A', dusk ? 0.14 : 0.26], [1, '#E8905A', 0]]); g.fillRect(0, 0, W, 360); g.restore();
+      cloudStreaks(g, [[160, 70, 520, 4], [1040, 34, 640, 5], [640, 128, 300, 3], [1460, 104, 380, 3]], dusk ? 'rgba(170,110,100,0.22)' : 'rgba(214,140,100,0.34)', 'rgba(40,44,60,0.28)');
+      // the roof slope, glimpsed above the eaves
+      g.fillStyle = dusk ? '#24222A' : '#2E2A30'; g.fill(LC.pathPts([P3(U0 - 4, 3.08, 0.4), P3(U1 + 4, 3.08, 0.4), P3(U1 + 4, 3.9, -3.2), P3(U0 - 4, 3.9, -3.2)]));
+      // the wall (to the eaves)
+      const ev = scratch('entElevOut', Math.ceil((U1 - U0) * K), Math.ceil(2.9 * K)); elevation(ev, U0, U1, K, tod, { ridge: 3.25, y1: 2.9 });
+      g.drawImage(ev.canvas, sx(U0), sy(2.9));
+      // the eaves: the soffit seen from below, the fascia board catching the last copper, the gutter
+      g.fillStyle = '#1A1618'; g.fill(LC.pathPts([P3(U0 - 4, 2.9, 0), P3(U1 + 4, 2.9, 0), P3(U1 + 4, 2.9, 0.38), P3(U0 - 4, 2.9, 0.38)]));
+      g.fillStyle = dusk ? '#5E5A64' : '#857870'; g.fill(LC.pathPts([P3(U0 - 4, 2.9, 0.38), P3(U1 + 4, 2.9, 0.38), P3(U1 + 4, 3.08, 0.38), P3(U0 - 4, 3.08, 0.38)]));
+      if (!dusk) { g.fillStyle = 'rgba(232,150,92,0.35)'; g.fill(LC.pathPts([P3(U0 - 4, 3.02, 0.385), P3(U1 + 4, 3.02, 0.385), P3(U1 + 4, 3.08, 0.385), P3(U0 - 4, 3.08, 0.385)])); }
+      g.fillStyle = '#14161A'; g.fill(LC.pathPts([P3(U0 - 4, 3.08, 0.4), P3(U1 + 4, 3.08, 0.4), P3(U1 + 4, 3.15, 0.45), P3(U0 - 4, 3.15, 0.45)]));
+      // the canopy over the door: its underside, its fascia, its lip catching the sun
+      const e = MURAL.ENTRANCE, cz = 0.9;
+      g.fillStyle = '#1E1A1C'; g.fill(LC.pathPts([P3(e.u0, 2.52, 0), P3(e.u1, 2.52, 0), P3(e.u1, 2.52, cz), P3(e.u0, 2.52, cz)]));
+      g.fillStyle = dusk ? '#76707A' : '#B4A69A'; g.fill(LC.pathPts([P3(e.u0, 2.52, cz), P3(e.u1, 2.52, cz), P3(e.u1, 2.7, cz), P3(e.u0, 2.7, cz)]));
+      g.fillStyle = '#1E2124'; g.fill(LC.pathPts([P3(e.u0, 2.7, cz), P3(e.u1, 2.7, cz), P3(e.u1, 2.74, cz - 0.02), P3(e.u0, 2.74, cz - 0.02)]));
+      if (!dusk) { g.fillStyle = 'rgba(240,160,100,0.55)'; g.fill(LC.pathPts([P3(e.u1 - 0.02, 2.52, cz), P3(e.u1, 2.52, cz), P3(e.u1, 2.7, cz), P3(e.u1 - 0.02, 2.7, cz)])); g.fillRect(P3(e.u0, 2.7, cz)[0], P3(e.u0, 2.7, cz)[1] - 1, P3(e.u1, 2.7, cz)[0] - P3(e.u0, 2.7, cz)[0], 2); }
+      // the sidelight gives back the car park behind us: the copper west, the far trees, his car alone, small and dark
+      g.save(); g.clip(sideP);
+      g.fillStyle = LC.lin(g, 0, SIDE.y, 0, SIDE.y + SIDE.h, dusk ? [[0, '#283040'], [0.42, '#5A4A58'], [0.47, '#8A5A4A'], [0.5, '#2A2428'], [1, '#18161A']] : [[0, '#363E4E'], [0.4, '#6E5658'], [0.46, '#C08050'], [0.49, '#3A2C2C'], [1, '#1E1A1C']]); g.fillRect(SIDE.x, SIDE.y, SIDE.w, SIDE.h);
+      g.fillStyle = LC.lin(g, SIDE.x, 0, SIDE.x + SIDE.w, 0, [[0, '#000000', 0.15], [1, '#F0A060', dusk ? 0.05 : 0.2]]); g.fillRect(SIDE.x, SIDE.y, SIDE.w, SIDE.h);
+      const hz = SIDE.y + SIDE.h * 0.48; g.fillStyle = '#1A1618'; g.fill(LC.smooth([[SIDE.x + SIDE.w * 0.28, hz + 6], [SIDE.x + SIDE.w * 0.3, hz - 3], [SIDE.x + SIDE.w * 0.52, hz - 5], [SIDE.x + SIDE.w * 0.62, hz + 6]]));
+      g.fillStyle = rgba('#F0A060', dusk ? 0.2 : 0.6); g.fillRect(SIDE.x + SIDE.w * 0.3, hz - 4, SIDE.w * 0.24, 1.2);
+      g.restore();
+      // the ground in front: paving slabs, a kerb, the car park; all in the cool shade the far trees throw
+      const G = (u, z) => { const q = ground(u, z); return [q.x, q.y]; };
+      g.fillStyle = dusk ? '#38343F' : '#433E4B'; g.fill(LC.pathPts([G(U0 - 6, 0), G(U1 + 6, 0), G(U1 + 6, 2.6), G(U0 - 6, 2.6)]));
+      g.strokeStyle = 'rgba(20,18,26,0.5)'; g.lineWidth = 2;
+      for (let u = Math.floor(U0 - 6); u <= U1 + 6; u += 0.6) { const a2 = G(u, 0), b2 = G(u, 1.6); g.beginPath(); g.moveTo(a2[0], a2[1]); g.lineTo(b2[0], b2[1]); g.stroke(); }
+      [0.6, 1.2].forEach(z => { const a2 = G(U0 - 6, z), b2 = G(U1 + 6, z); g.beginPath(); g.moveTo(a2[0], a2[1]); g.lineTo(b2[0], b2[1]); g.stroke(); });
+      g.fillStyle = dusk ? '#55505E' : '#625A6A'; g.fill(LC.pathPts([G(U0 - 6, 1.6), G(U1 + 6, 1.6), G(U1 + 6, 1.75), G(U0 - 6, 1.75)]));
+      g.fillStyle = LC.lin(g, 0, G(0, 1.75)[1], 0, H, dusk ? [[0, '#22202A'], [1, '#121117']] : [[0, '#2A2630'], [1, '#16141A']]); g.fill(LC.pathPts([G(U0 - 6, 1.75), G(U1 + 6, 1.75), [W + 50, H + 50], [-50, H + 50]]));
+      // the step to the door, its lip catching the sky; the canopy's shadow thrown across the paving to the east
+      const st = [e.u0 + 0.1, e.u1 - 0.1], kq = ground(0, 0.4).k, q0 = G(st[0], 0.4), q1 = G(st[1], 0.4), r0 = G(st[0], 0), r1 = G(st[1], 0), lift = 0.12;
+      g.fillStyle = dusk ? '#5A5662' : '#6A6270'; g.fill(LC.pathPts([[r0[0], r0[1] - lift * K], [r1[0], r1[1] - lift * K], [q1[0], q1[1] - lift * kq], [q0[0], q0[1] - lift * kq]]));
+      g.fillStyle = dusk ? '#302C36' : '#38323E'; g.fill(LC.pathPts([[q0[0], q0[1] - lift * kq], [q1[0], q1[1] - lift * kq], q1, q0]));
+      // where the shade gives out to the west, the low sun reaches the paving in long copper strips between the shadows of the railings
+      if (!dusk) { g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(214,132,84,0.16)';
+        for (let i = 0; i < 6; i++) { const u = U1 - 0.6 + i * 0.55; g.fill(LC.pathPts([G(u, 0.15), G(u + 0.3, 0.15), G(u - 2.4, 2.6), G(u - 2.8, 2.6)])); } g.restore(); }
+      // a calm bottom band for the subtitles: the ground falls into deeper shade toward us
+      g.fillStyle = LC.lin(g, 0, 880, 0, H, [[0, '#0C0E12', 0], [1, '#0C0E12', 0.55]]); g.fillRect(0, 880, W, H - 880);
+      // close to the lens on the left, out of focus: a bollard and the end of the low railing along the car park
+      { const fg = scratch('entFg'); const bq = ground(8.3, 3.7), bk = bq.k; fg.fillStyle = '#0B0C10';
+        fg.fill(LC.rrect(bq.x - 0.07 * bk, bq.y - 0.95 * bk, 0.14 * bk, 0.95 * bk + 40, 0.05 * bk));
+        const r0 = ground(5.0, 3.55), r1 = ground(9.2, 3.55); fg.fillRect(-20, r0.y - 0.82 * r0.k, r1.x + 20, 0.05 * r1.k); fg.fillRect(-20, r0.y - 0.42 * r0.k, r1.x + 20, 0.04 * r1.k);
+        for (let u = 5.2; u < 9.2; u += 0.62) { const q = ground(u, 3.55); fg.fillRect(q.x - 0.025 * q.k, q.y - 0.84 * q.k, 0.05 * q.k, 0.84 * q.k + 40); }
+        if (!dusk) { fg.globalCompositeOperation = 'source-atop'; fg.fillStyle = LC.lin(fg, bq.x + 0.03 * bk, 0, bq.x + 0.07 * bk, 0, [[0, '#C8845A', 0], [1, '#C8845A', 0.6]]); fg.fillRect(0, 0, W, H); }
+        g.drawImage(LC.blurred(fg.canvas, 7, false), 0, 0); }
+    }
+    const view = {
+      back(c, t, s) {
+        s = s || {}; const tod = s.tod === 'dusk' ? 'dusk' : 'evening';
+        c.g.drawImage(cache(c, 'entr|' + tod, o => back(o, tod)), 0, 0);
+        if (s.reflect) reflectInto(c, s.reflect, view.at(s), sideP, 0.55);
+      },
+      front(c, t, s) {
+        s = s || {}; const g = c.g;
+        LC.glare(g, sideP, { x: SIDE.x + SIDE.w / 2, y: SIDE.y + SIDE.h * 0.4, angle: -1.1, color: '#FFE2BC', bands: [{ d: -20, w: 30, a: 0.06 }, { d: 30, w: 8, a: 0.08 }] });
+      },
+      anchors: (() => { const st = ground(12.35, 1.1); return { stop: [st.x, st.y], k: st.k, door: [sx(12.5), sy(1.05)], notice: [sx(MURAL.NOTICE.u), sy(MURAL.NOTICE.y0 + MURAL.NOTICE.h / 2)], lock: [sx(MURAL.LOCK.u), sy(MURAL.LOCK.y)], side: SIDE, wallK: K, horizon: CY }; })(),
+      light: { x: 2500, y: 300, color: '#F2A468' },
+      ground,
+      at(s) { const a = Object.assign({}, view.anchors, { light: view.light }); a.reflection = { x: SIDE.x + SIDE.w * 0.5, y: SIDE.y + SIDE.h * 0.62, k: K * 0.42 }; return a; },
+    };
+    return view;
+  })();
+
+  // ===============================================================================================================
+  // BOARDED · the door, close (A084): the plywood sheet screwed over the broken glass, fresh scratches scoring the lock, the
+  // notice taped at eye level, the elephant's trunk raised at the left edge, the sidelight at the right
+  // state: { tod, reflect(g, a): Daniel in the sidelight (a.side) }
+  // ===============================================================================================================
+  const BOARD = (() => {
+    const F = 1150, D = 2.0, EYE = 1.55, UC = 12.12, CX = 960, CY = 540, K = F / D;
+    const sx = u => CX + (u - UC) * K, sy = y => CY - (y - EYE) * K;
+    const U0 = 10.3, U1 = 13.9, Y0 = 0.5, Y1 = 2.62;
+    const sd = MURAL.ENTRANCE.side, SIDE = { x: sx(sd[0]), y: sy(2.1), w: (sd[1] - sd[0]) * K, h: 1.96 * K };
+    const sideP = (() => { const p = new Path2D(); p.rect(SIDE.x, SIDE.y, SIDE.w, SIDE.h); return p; })();
+    const N = MURAL.NOTICE, NR = { x: sx(N.u - N.w / 2), y: sy(N.y0 + N.h), w: N.w * K, h: N.h * K };
+    const SL = { x: sx(N.u - N.w / 2) - (N.sleeve[0] - N.w) * K * 0.8, y: sy(N.y0 + N.h) - (N.sleeve[1] - N.h) * K * 0.35, w: N.sleeve[0] * K, h: N.sleeve[1] * K };
+    function back(g, tod) {
+      const dusk = tod === 'dusk', k = dusk ? 0.25 : 1;
+      const ev = scratch('brdElev', Math.ceil((U1 - U0) * K), Math.ceil((Y1 - Y0) * K)); elevation(ev, U0, U1, K, tod, { ridge: 3.2, y0: Y0, y1: Y1 });
+      g.drawImage(ev.canvas, sx(U0), sy(Y1));
+      // the scratches: someone worked at the cylinder with a screwdriver; bare metal, catching the sun
+      lockScratches(g, sx(MURAL.LOCK.u), sy(MURAL.LOCK.y), K, k, 'board');
+      { const L = MURAL.LOCK, ex = sx(MURAL.ENTRANCE.door[1] - 0.12), ly = sy(L.y), R = OTM.rng('splinter'); g.strokeStyle = rgba('#F2DCB4', 0.7 * k + 0.2); g.lineCap = 'round';
+        for (let i = 0; i < 7; i++) { const yy = ly - 22 + i * 7 + R() * 4; g.lineWidth = 1 + R() * 1.6; g.beginPath(); g.moveTo(ex - 1, yy); g.lineTo(ex - 6 - R() * 12, yy + (R() - 0.5) * 3); g.stroke(); } }
+      // the sidelight: the car park behind us, his car small in it
+      g.save(); g.clip(sideP);
+      g.fillStyle = LC.lin(g, 0, SIDE.y, 0, SIDE.y + SIDE.h, dusk ? [[0, '#283040'], [0.3, '#5A4A58'], [0.36, '#8A5A4A'], [0.39, '#2A2428'], [1, '#18161A']] : [[0, '#3A4252'], [0.28, '#7A5E5E'], [0.35, '#D08A58'], [0.38, '#3A2C2C'], [1, '#1E1A1C']]); g.fillRect(SIDE.x, SIDE.y, SIDE.w, SIDE.h);
+      g.fillStyle = LC.lin(g, SIDE.x, 0, SIDE.x + SIDE.w, 0, [[0, '#000000', 0.18], [1, '#F0A060', dusk ? 0.05 : 0.2]]); g.fillRect(SIDE.x, SIDE.y, SIDE.w, SIDE.h);
+      const hz = SIDE.y + SIDE.h * 0.37; g.fillStyle = '#1E1A1E'; g.fill(LC.smooth([[SIDE.x + SIDE.w * 0.2, hz + 14], [SIDE.x + SIDE.w * 0.24, hz - 4], [SIDE.x + SIDE.w * 0.46, hz - 10], [SIDE.x + SIDE.w * 0.62, hz - 6], [SIDE.x + SIDE.w * 0.66, hz + 14]]));
+      g.fillStyle = rgba('#F0A060', dusk ? 0.2 : 0.65); g.fillRect(SIDE.x + SIDE.w * 0.25, hz - 8, SIDE.w * 0.35, 2);
+      g.restore();
+      // the notice, taped at eye level in its sleeve
+      g.save(); g.fillStyle = 'rgba(30,20,16,0.35)'; g.fill(LC.rrect(SL.x - 6, SL.y + 4, SL.w, SL.h, 3)); g.restore();
+      g.save(); g.translate(NR.x, NR.y); paintNoticeSheet(g, NR.w, NR.h, k); g.restore();
+      paintSleeve(g, SL.x, SL.y, SL.w, SL.h, k, 'board');
+      tape(g, SL.x + 6, SL.y + 8, 64, 22, -0.75, k); tape(g, SL.x + SL.w - 6, SL.y + 8, 64, 22, 0.75, k); tape(g, SL.x + SL.w / 2, SL.y + SL.h - 4, 90, 22, 0.02, k);
+      g.fillStyle = LC.lin(g, 0, 860, 0, H, [[0, '#0A0C10', 0], [1, '#0A0C10', 0.5]]); g.fillRect(0, 860, W, H - 860);
+    }
+    const view = {
+      back(c, t, s) { s = s || {}; const tod = s.tod === 'dusk' ? 'dusk' : 'evening'; c.g.drawImage(cache(c, 'board|' + tod, o => back(o, tod)), 0, 0); if (s.reflect) reflectInto(c, s.reflect, view.at(s), sideP, 0.55); },
+      front(c, t, s) { LC.glare(c.g, sideP, { x: SIDE.x + SIDE.w / 2, y: SIDE.y + SIDE.h * 0.4, angle: -1.1, color: '#FFE2BC', bands: [{ d: -30, w: 60, a: 0.05 }, { d: 50, w: 14, a: 0.07 }] }); },
+      anchors: { lock: [sx(MURAL.LOCK.u), sy(MURAL.LOCK.y)], notice: [NR.x + NR.w / 2, NR.y + NR.h / 2], side: SIDE, k: K },
+      light: { x: 2600, y: 260, color: '#F2A468' },
+      at(s) { return Object.assign({}, view.anchors, { light: view.light, reflection: { x: SIDE.x + SIDE.w * 0.45, y: SIDE.y + SIDE.h * 0.55, k: K * 0.5 } }); },
+    };
+    return view;
+  })();
+
+  // ===============================================================================================================
+  // NOTICE · the INSERT (A085-A087): the notice close, square on, verbatim, printed on paper in its sleeve on the plywood.
+  // The low sun rakes it from the right. The sleeve's sheen can hold Daniel's face: he stands where the camera is, so his
+  // reflection is centred, over the words, a faint dark head in a sheen of copper sky.
+  // state: { tod, reflect(g, a): his face as the sleeve gives it back (a.face: centre, a.k: px/m; draw it front-on, lit
+  //          from screen-right), sheen: 0..1 (how much sky the sleeve gives back, default 1), shadow: 0..1 (his shadow
+  //          beside the notice on the plywood, from the left edge) }
+  // ===============================================================================================================
+  const NOTE = (() => {
+    const K = 2500, CX = 960, CY = 540, N = MURAL.NOTICE;
+    const SLW = N.sleeve[0] * K, SLH = N.sleeve[1] * K, PW = N.w * K, PH = N.h * K;
+    const SL = { x: CX - SLW / 2 + 12, y: CY - SLH / 2 + 6, w: SLW, h: SLH };
+    const PR = { x: SL.x + SLW * 0.1, y: SL.y + SLH * 0.035, w: PW, h: PH };
+    const TILT = -0.022;
+    const sleeveP = (() => { const p = new Path2D(), c = Math.cos(TILT), s2 = Math.sin(TILT), T = (x, y) => { const dx = x - CX, dy = y - CY; return [CX + dx * c - dy * s2, CY + dx * s2 + dy * c]; }; [[SL.x, SL.y], [SL.x + SL.w, SL.y], [SL.x + SL.w, SL.y + SL.h], [SL.x, SL.y + SL.h]].map(q => T(q[0], q[1])).forEach((q, i) => i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])); p.closePath(); return p; })();                                 // taped up in a hurry: a degree and a bit off true
+    function back(g, tod) {
+      const dusk = tod === 'dusk', k = dusk ? 0.3 : 1, R = OTM.rng('ply-insert');
+      // the plywood, huge at this distance: long grain, a cathedral figure, an irregular knot, the sun raking from the right
+      g.fillStyle = mix('#6A5644', '#BE9464', k); g.fillRect(0, 0, W, H);
+      for (let i = 0; i < 150; i++) { const y = R() * H, a = 0.04 + R() * 0.12; g.strokeStyle = R() > 0.5 ? rgba('#76522E', a) : rgba('#E2C08C', a * 0.8); g.lineWidth = 1 + R() * 4;
+        g.beginPath(); g.moveTo(-20, y); g.bezierCurveTo(500, y + (R() - 0.5) * 40, 1300, y + (R() - 0.5) * 40, W + 20, y + (R() - 0.5) * 24); g.stroke(); }
+      [[1540, 300, 1], [380, 760, -1], [1500, 880, 1]].forEach(([cx, cy, dir]) => { for (let j = 0; j < 9; j++) { const ww = 14 + j * 16, len = 520 + j * 30; g.strokeStyle = rgba(j % 2 ? '#6E4A28' : '#A47A4C', 0.14 + (j % 3) * 0.03); g.lineWidth = 3 + (j % 2) * 3;
+        g.beginPath(); g.moveTo(cx - len * dir, cy - ww); g.quadraticCurveTo(cx + len * 0.35 * dir, cy - ww * 1.05, cx + len * 0.5 * dir, cy); g.quadraticCurveTo(cx + len * 0.35 * dir, cy + ww * 1.05, cx - len * dir, cy + ww); g.stroke(); } });
+      { const cx = 250, cy = 470, n = OTM.rng('knot'); for (let r = 7; r >= 0; r--) { const pts = []; for (let a = 0; a < 24; a++) { const t = a / 24 * TAU, rr = (12 + r * 15) * (0.85 + 0.3 * n()); pts.push([cx + Math.cos(t) * rr * 2.4, cy + Math.sin(t) * rr * 0.8]); }
+          g.strokeStyle = rgba('#6A4426', 0.18 + 0.03 * (7 - r)); g.lineWidth = 2.5; g.stroke(LC.smooth(pts)); }
+        g.fillStyle = 'rgba(80,48,24,0.55)'; g.fill(LC.smooth([[cx - 26, cy], [cx - 8, cy - 9], [cx + 24, cy - 6], [cx + 30, cy + 3], [cx + 4, cy + 9], [cx - 20, cy + 6]])); }
+      g.fillStyle = LC.lin(g, 0, 0, W, 0, [[0, '#28202E', 0.46], [0.5, '#28202E', 0.12], [1, '#FFC890', 0.14 * k]]); g.fillRect(0, 0, W, H);
+      // the notice, a little off true
+      g.save(); g.translate(CX, CY); g.rotate(TILT); g.translate(-CX, -CY);
+      { const sh = scratch('noteSh'); sh.translate(CX, CY); sh.rotate(TILT); sh.translate(-CX, -CY); sh.fillStyle = 'rgba(28,18,14,0.6)'; sh.fillRect(SL.x - 26, SL.y + 12, SL.w, SL.h); sh.setTransform(1, 0, 0, 1, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(LC.blurred(sh.canvas, 12, false), 0, 0); g.restore(); }
+      g.save(); g.translate(PR.x, PR.y); paintNoticeSheet(g, PR.w, PR.h, k);
+      // the sheet is not quite flat in its sleeve: a soft fall-off along its left edge, a gentle bulge low down, the sun on its right edge
+      g.fillStyle = LC.lin(g, 0, 0, PR.w * 0.12, 0, [[0, '#2A2232', 0.2], [1, '#2A2232', 0]]); g.fillRect(0, 0, PR.w * 0.12, PR.h);
+      g.fillStyle = LC.lin(g, PR.w * 0.9, 0, PR.w, 0, [[0, '#FFE6C4', 0], [1, '#FFE6C4', 0.16 * k]]); g.fillRect(PR.w * 0.9, 0, PR.w * 0.1, PR.h);
+      g.fillStyle = LC.rad(g, PR.w * 0.55, PR.h * 0.86, 0, PR.w * 0.5, [[0, '#FFF4E4', 0.07 * k], [1, '#FFF4E4', 0]]); g.fillRect(0, PR.h * 0.6, PR.w, PR.h * 0.4);
+      g.fillStyle = LC.lin(g, 0, PR.h * 0.93, 0, PR.h, [[0, '#2A2232', 0], [1, '#2A2232', 0.12]]); g.fillRect(0, PR.h * 0.93, PR.w, PR.h * 0.07);
+      g.restore();
+      paintSleeve(g, SL.x, SL.y, SL.w, SL.h, k, 'insert');
+      g.restore();
+      // the tape, pressed on over the sleeve's corners
+      const T = (x, y) => { const c = Math.cos(TILT), s2 = Math.sin(TILT), dx = x - CX, dy = y - CY; return [CX + dx * c - dy * s2, CY + dx * s2 + dy * c]; };
+      let q = T(SL.x + 20, SL.y + 28); tape(g, q[0], q[1], 230, 70, -0.72 + TILT, k); q = T(SL.x + SL.w - 20, SL.y + 28); tape(g, q[0], q[1], 230, 70, 0.72 + TILT, k); q = T(SL.x + SL.w / 2 + 10, SL.y + SL.h - 6); tape(g, q[0], q[1], 320, 72, 0.015 + TILT, k);
+      g.fillStyle = LC.lin(g, 0, 860, 0, H, [[0, '#0E0C10', 0], [1, '#0E0C10', 0.45]]); g.fillRect(0, 860, W, H - 860);
+    }
+    // the sky the sleeve gives back, from where Daniel stands: violet-teal above, the copper west on the right
+    function sheenSky(g) { g.fillStyle = LC.lin(g, 0, SL.y, 0, SL.y + SL.h, [[0, '#4A5268'], [0.55, '#6A5A68'], [1, '#2A2228']]); g.fillRect(SL.x - 40, SL.y - 40, SL.w + 80, SL.h + 80);
+      g.fillStyle = LC.lin(g, SL.x, 0, SL.x + SL.w, 0, [[0, '#000000', 0.35], [0.62, '#E8905A', 0.1], [1, '#F2A468', 0.5]]); g.fillRect(SL.x - 40, SL.y - 40, SL.w + 80, SL.h + 80);
+      LC.glare(g, null, { x: SL.x + SL.w * 0.7, y: SL.y + SL.h * 0.25, angle: -0.9, color: '#FFD0A0', bands: [{ d: -70, w: 150, a: 0.35 }, { d: 40, w: 24, a: 0.45 }] }); }
+    const view = {
+      back(c, t, s) {
+        s = s || {}; const g = c.g, tod = s.tod === 'dusk' ? 'dusk' : 'evening';
+        g.drawImage(cache(c, 'note|' + tod, o => back(o, tod)), 0, 0);
+        if (s.shadow) { const a = clamp(s.shadow, 0, 1); g.save(); g.globalAlpha = 0.55 * a; g.fillStyle = '#1A1220'; g.filter = 'none';
+          const sh = cache(c, 'note|shadowShape', o => { o.fillStyle = '#000'; o.fill(LC.smooth([[-200, 1200], [-200, 260], [60, 200], [210, 160], [300, 60], [420, 40], [520, 120], [540, 300], [470, 420], [600, 520], [760, 760], [800, 1200]])); }, 900, 1300);
+          g.drawImage(LC.blurred(sh, 0.1) && sh, -900 + 900 * a * 0.62, -60); g.restore(); }
+        // the sleeve's sheen: the sky behind Daniel, and Daniel in it (front-on), laid over the words with a screen
+        const sheen = s.sheen == null ? 1 : s.sheen;
+        if (sheen > 0 || s.reflect) {
+          const m = g.getTransform(), r = scratch('noteRefl'); r.setTransform(m); sheenSky(r);
+          if (s.reflect) s.reflect(r, view.at(s));
+          r.setTransform(1, 0, 0, 1, 0, 0);
+          g.save(); g.clip(sleeveP); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.42 * Math.max(sheen, s.reflect ? 0.8 : 0); g.drawImage(r.canvas, 0, 0); g.restore();
+        }
+      },
+      front(c, t, s) {
+        s = s || {}; const g = c.g;
+        LC.glare(g, sleeveP, { x: SL.x + SL.w * 0.2, y: SL.y + SL.h * 0.3, angle: -1.2, color: '#FFFFFF', bands: [{ d: -40, w: 120, a: 0.06 }, { d: 60, w: 18, a: 0.08 }, { d: 420, w: 160, a: 0.04 }] });
+        LC.specks(g, sleeveP, SL, 'sleeveDust', { n: 160, color: '#FFF0DC', rMin: 0.6, rMax: 1.6, aMin: 0.05, aMax: 0.3, scratch: 0.35 });
+      },
+      anchors: { face: [CX + 6, CY - 30], k: 1050 / 0.84, sleeve: SL, paper: PR },
+      light: { x: 2400, y: 400, color: '#F2A468' },
+      at(s) { return Object.assign({}, view.anchors, { light: view.light }); },
+      text: NOTICE_TEXT,
+    };
+    return view;
+  })();
+
+  // demo stand-in: a head and shoulders front-on, as a reflection (a dark shape rimmed copper on its right)
+  function standInHeadFront(g, a) {
+    const f = a.face || [a.reflection.x, a.reflection.y], k = (a.k || a.reflection.k) / 1250, R = a.reflection && !a.face ? (a.reflection.k / 200) : k;
+    const s = a.face ? k : R, P = (x, y) => [f[0] + x * s, f[1] + y * s];
+    const p = LC.smooth([[-330, 520], [-300, 330], [-170, 250], [-90, 210], [-86, 130], [-120, 40], [-122, -60], [-100, -150], [-40, -200], [40, -200], [100, -150], [122, -60], [120, 40], [86, 130], [90, 210], [170, 250], [300, 330], [330, 520]].map(q => P(q[0], q[1])));
+    g.fillStyle = '#20181A'; g.fill(p);
+    g.fillStyle = 'rgba(214,140,100,0.55)'; g.fill(LC.smooth([[30, -170], [96, -120], [116, -40], [110, 50], [80, 120], [50, 100], [70, 0], [60, -110]].map(q => P(q[0], q[1]))));
+  }
+
   // demo stand-in for A106: Daniel stooped at the doorway, head and shoulders, seen from the door's front side
   function standInStoop(g, a) {
     const f = a.face, k = a.k / 1130, L = a.light;
@@ -764,12 +1043,16 @@
 
   // ===============================================================================================================
   SETS.nursery = {
-    views: { c3: C3, door: DOORV },
+    views: { c3: C3, door: DOORV, entrance: ENTR, boarded: BOARD, notice: NOTE },
     demos: [
       { name: 'mural: elevation (morning / evening / dusk)', draw(c, t) { const g = c.g; g.fillStyle = '#2A3440'; g.fillRect(0, 0, W, H);
         ['morning', 'evening', 'dusk'].forEach((tod, i) => { const cv = cache(c, 'test|elev|' + tod, o => elevation(o, 0, 32, 60, tod), 1920, 264); g.drawImage(cv, 0, 40 + i * 340); }); } },
       { name: 'mural: entrance detail (evening)', draw(c, t) { const g = c.g; g.fillStyle = '#2A3440'; g.fillRect(0, 0, W, H);
         const cv = cache(c, 'test|elevE', o => elevation(o, 8.4, 17.0, 220, 'evening', { ridge: 3.15 }), 1892, 968); g.drawImage(cv, 14, 50); } },
+      { name: 'entrance: evening', draw(c, t) { const v = ENTR, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'boarded: evening', draw(c, t) { const v = BOARD, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'notice: insert', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'notice: his face in the sheen (stand-in)', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening', reflect: standInHeadFront }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open 0 (he pulls)', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 0 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open 0.5', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 0.5 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open (A106, stand-in)', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 1, figure: standInStoop }; v.back(c, t, s); v.front(c, t, s); } },

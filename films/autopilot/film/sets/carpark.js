@@ -135,7 +135,7 @@
   const _parked = {};
   function parked(tod) {
     if (_parked[tod]) return _parked[tod];
-    const out = [], R = rng('carpark-bays'), fill = tod === 'evening' ? 0.45 : 0.82;
+    const out = [], R = rng('carpark-bays'), fill = tod === 'evening' ? 0.64 : 0.82;
     ROWS.forEach(rw => {
       for (let z = rw.z0 + BAYW / 2; z < rw.z1; z += BAYW) {
         const r = R(), r2 = R(), r3 = R(), r4 = R();
@@ -145,7 +145,8 @@
         if (!keep && r > fill) continue;
         const type = TYPES[Math.floor(r2 * TYPES.length)], Bd = BODIES[type];
         const x = (rw.x0 + rw.x1) / 2 + (rw.h === deg(270) ? -1 : 1) * (2.4 - Bd.L / 2 - 0.2) + (r4 - 0.5) * 0.3;
-        out.push({ x, z: z + (r3 - 0.5) * 0.35, h: rw.h + (r4 - 0.5) * 0.04, type, paint: PAINTS[Math.floor(r3 * PAINTS.length)], row: rw.row });
+        const nbr = rw.row === 1 && Math.abs(z - DANIEL.z) < 3 ? (z < DANIEL.z ? '#6E7578' : '#3E4C5C') : null;
+        out.push({ x, z: z + (r3 - 0.5) * 0.35, h: rw.h + (r4 - 0.5) * 0.04, type: nbr ? 'hatch' : type, paint: nbr || PAINTS[Math.floor(r3 * PAINTS.length)], row: rw.row });
       }
     });
     return (_parked[tod] = out);
@@ -171,7 +172,7 @@
   // a block seen small or in a reflection: glass, spandrels, the parapet
   function facadeFlat(g, cam, F, L, tod) {
     const ev = tod === 'evening', isB = F.name === 'B';
-    const glass = ev ? (isB ? '#D88A55' : '#3A3644') : (isB ? '#7E949A' : '#C7D2CE'), spand = ev ? (isB ? '#9A5E40' : '#26232A') : (isB ? '#4C5C60' : '#9AA4A2');
+    const glass = ev ? (isB ? '#F0A060' : '#3A3644') : (isB ? '#7E949A' : '#C7D2CE'), spand = ev ? (isB ? '#B06A42' : '#26232A') : (isB ? '#4C5C60' : '#9AA4A2');
     fill3(g, cam, [facadePt(F, 0, 0), facadePt(F, F.w, 0), facadePt(F, F.w, F.h + 0.8), facadePt(F, 0, F.h + 0.8)], glass);
     for (let j = 1; j <= F.floors; j++) { const t = j * 3.6; fill3(g, cam, [facadePt(F, 0, t - 0.5), facadePt(F, F.w, t - 0.5), facadePt(F, F.w, t + 0.4), facadePt(F, 0, t + 0.4)], spand); }
     fill3(g, cam, [facadePt(F, 0, 0), facadePt(F, F.w, 0), facadePt(F, F.w, 0.4), facadePt(F, 0, 0.4)], spand);
@@ -198,7 +199,7 @@
     o = o || {}; if (dot(F.n, sub(cam.pos, facadePt(F, F.w / 2, 4))) <= 0) return;
     const cw = g.canvas.width, ch = g.canvas.height, s0 = o.s0 == null ? 0 : o.s0, s1 = o.s1 == null ? F.w : o.s1;
     const mc = mirrorCam(cam, facadePt(F, 0, 0), F.n);
-    const rf = scratch('cp-fac-refl', cw, ch); reflectScene(rf, mc, L, tod, { box: { x: 0, y: 0, w: cw, h: ch }, sunR: o.sunR, sunK: o.sunK, glow: o.glow });
+    const rf = scratch('cp-fac-refl', cw, ch); reflectScene(rf, mc, L, tod, { box: { x: 0, y: 0, w: cw, h: ch }, sun: o.glint === false, sunR: o.sunR, sunK: o.sunK, glow: o.glow });
     rf.save(); rf.globalCompositeOperation = 'multiply'; rf.fillStyle = F.name === 'A' ? L.aTint : L.bTint; rf.fillRect(0, 0, cw, ch); rf.restore();
     const it = scratch('cp-fac-int', cw, ch); it.fillStyle = L.interior; it.fillRect(0, 0, cw, ch); interior(it, cam, F, L, tod, s0, s1);
     const R = rng('panes' + F.name + tod), bay = F.bay, ra = o.reflK == null ? 0.92 : o.reflK;
@@ -215,6 +216,8 @@
         g.globalCompositeOperation = 'screen'; g.globalAlpha = a * ra; g.drawImage(rf.canvas, dx, dy); g.restore();
       }
     }
+    if (o.glint !== false) { const gl = new Path2D(); for (let j = 0; j < F.floors; j++) { const t0 = j === 0 ? 0.4 : j * 3.6 + 0.4, t1 = (j + 1) * 3.6 - 0.5; gl.addPath(path3(cam, [facadePt(F, s0, t0), facadePt(F, s1, t0), facadePt(F, s1, t1), facadePt(F, s0, t1)])); }
+      sunAt(g, mc, L, { r: (o.sunR || 22) * 0.85, k: o.glintK == null ? 1 : o.glintK, glow: 0.7, clip: gl }); }
     // spandrels, plinth, parapet
     for (let j = 1; j <= F.floors; j++) { const t = j * 3.6; fill3(g, cam, [facadePt(F, s0, t - 0.5), facadePt(F, s1, t - 0.5), facadePt(F, s1, t + 0.4), facadePt(F, s0, t + 0.4)], j === F.floors ? L.spand[0] : L.spand[1]);
       line3(g, cam, facadePt(F, s0, t + 0.4), facadePt(F, s1, t + 0.4), rgba(L.rim, 0.5), 1.2); }
@@ -300,10 +303,11 @@
   function drawCar(g, cam, cr, o) {
     const Bd = BODIES[cr.type || 'hatch'], fr = carFrame(cr), L = o.L, sun = sunDir(L), camL = fr.loc(cam.pos), hw = Bd.Wd / 2;
     const cv = cam.view(fr.o); if (cv[2] < -3) return;
+    if (o.lod == null && cv[2] > 0 && cam.f / cv[2] * Bd.L < 260) o = Object.assign({}, o, { lod: 0 });
     const Wp = q => fr.w(q[0], q[1], q[2]), base = cr.paint;
     const tone = nL => {
       const nW = nrm(add(add(mul(fr.F, nL[0]), [0, nL[1], 0]), mul(fr.R, nL[2]))), d = dot(nW, sun);
-      let c = d > 0.25 ? mix(base, L.paintSun, 0.16 + 0.14 * d) : d > -0.05 ? mix(base, L.paintSky, 0.1) : mix(base, '#000000', L.shade);
+      let c = d > 0.25 ? mix(base, L.paintSun, 0.16 + 0.14 * d) : d > -0.05 ? mix(mix(base, '#55605F', 0.16), L.paintSky, 0.08) : mix(base, '#000000', L.shade);
       if (nW[1] > 0.55) c = mix(c, L.paintSky, 0.3);
       return c;
     };
@@ -328,6 +332,8 @@
       if (f.glass) { glassPane(g, cam, ptsW, f, o); return; }
       const col = tone(f.n); g.fillStyle = col; g.fill(path3(cam, ptsW));
       if (f.part === 'side') sideDetail(g, cam, Bd, f.sg, Wp, col, o);
+      if (f.part === 'rearface') { const n = Bd.spine.length, b0 = Bd.spine[n - 2], b1 = Bd.spine[n - 1], Q = (t, w) => Wp([lerp(b0[0], b1[0], t), lerp(b0[1], b1[1], t), w]);
+        fill3(g, cam, [Q(0.45, -hw), Q(0.45, hw), Q(1, hw), Q(1, -hw)], '#1A1D1E'); line3(g, cam, Q(0.08, -hw + 0.06), Q(0.08, hw - 0.06), rgba(L.rim, 0.22), 1); }
       if (f.i === Bd.spine.length - 3) rearDetail(g, cam, Bd, Wp, o, cr);
       if (f.part === 'frontface' || f.i === 1) frontDetail(g, cam, Bd, Wp, f, o);
     });
@@ -374,6 +380,7 @@
       for (const sg of [1, -1]) fill3(g, cam, [P2(0.1, sg * (hw - 0.04)), P2(0.1, sg * (hw - 0.42)), P2(0.85, sg * (hw - 0.38)), P2(0.85, sg * (hw - 0.06))], o.tod === 'evening' ? '#9A7058' : '#C9D0CC');
       fill3(g, cam, [P2(0.15, -0.36), P2(0.15, 0.36), P2(0.75, 0.36), P2(0.75, -0.36)], '#141718'); }
     if (f.part === 'frontface') { const P2 = (t, w) => Wp([lerp(S[0][0], S[1][0], t), lerp(S[0][1], S[1][1], t), w]);
+      fill3(g, cam, [P2(0, -hw), P2(0, hw), P2(0.3, hw), P2(0.3, -hw)], '#1A1D1E');
       fill3(g, cam, [P2(0.12, -hw + 0.2), P2(0.12, hw - 0.2), P2(0.45, hw - 0.25), P2(0.45, -hw + 0.25)], '#121516');
       fill3(g, cam, [P2(0.5, -0.26), P2(0.5, 0.26), P2(0.82, 0.26), P2(0.82, -0.26)], o.tod === 'evening' ? '#EBCDB0' : '#E4E2DA'); }
   }
@@ -381,6 +388,7 @@
   function glassPane(g, cam, ptsW, f, o) {
     const L = o.L, pp = path3(cam, ptsW), sp = scr3(cam, ptsW); if (sp.length < 3) return; const box = bboxOf(sp);
     if (box.w < 1 || box.h < 1 || !onScreen(box, 20)) return;
+    if (o.lod === 0 || box.w * box.h < 900) { g.fillStyle = LC.lin(g, 0, box.y, 0, box.y + box.h, [[0, mix(stopsAt(L.sky, 0.4), L.glassTint, 0.3)], [1, mix(L.interior, L.glassTint, 0.25)]]); g.fill(pp); return; }
     g.save(); g.clip(pp); g.fillStyle = L.interior; g.fill(pp);
     let n = newell(ptsW); const cW = ptsW.reduce((s, p) => add(s, p), [0, 0, 0]).map(v => v / ptsW.length); if (dot(n, sub(cam.pos, cW)) < 0) n = mul(n, -1);
     const up = f.part === 'sideglass' ? (o.uprightSide == null ? 0.6 : o.uprightSide) : (o.upright || 0);
@@ -502,9 +510,9 @@
   // glass ahead: its ceiling lights inside, the car park and the sky laid over them, each pane a touch out of true.
   // s.pull 0..1 (the last 2.3 m; 1 = stopped), s.engine (0..1 shiver while it runs), s.windscreen (default true)
   // -------------------------------------------------------------------------------------
-  const ARR = { eye: [7.95, 1.17, 12.37], back: 2.3, yaw: deg(-90), pitch: deg(6), f: 1150, over: 1.32 };
+  const ARR = { eye: [7.95, 1.17, 12.37], back: 2.3, yaw: deg(-90), pitch: deg(12), f: 1150, over: 1.32 };
   function arrivalCam(pull, over) { over = over || 1; return mkCam({ x: ARR.eye[0] + ARR.back * (1 - pull), y: ARR.eye[1], z: ARR.eye[2], yaw: ARR.yaw, pitch: ARR.pitch, f: ARR.f, cx: W * over / 2, cy: H * over / 2 }); }
-  const LA = withSun(LIGHT.morning, deg(118), deg(14), { _side: -1 });
+  const LA = withSun(LIGHT.morning, deg(110), deg(24), { _side: -1 });
   const arrival = {
     back(c, t, s) {
       s = s || {}; const g = c.g, pull = s.pull == null ? 1 : clamp(s.pull, 0, 1), over = ARR.over, cw = Math.round(W * over), chh = Math.round(H * over);
@@ -584,7 +592,7 @@
         const env = (rg, mc, cl, box) => reflectScene(rg, mc, L, tod, { box, sunR: 12, glow: 0.5 });
         parked(tod).filter(cr => cr.x < 23 && cam.view([cr.x, 0.5, cr.z])[2] > 2).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2])
           .forEach(cr => drawCar(lg, cam, cr, { L, tod, env, upright: tod === 'evening' ? 0.6 : 0.2, glassK: tod === 'evening' ? 1.25 : 1 }));
-        if (tod === 'evening') { lg.save(); lg.globalCompositeOperation = 'multiply'; lg.fillStyle = LC.lin(lg, 0, 0, 0, H, [[0, '#E6D6DE'], [0.55, '#CDB7B6'], [1, '#9E8C90']]); lg.fillRect(0, 0, W, H); lg.restore(); }
+        if (tod === 'evening') { lg.save(); lg.globalCompositeOperation = 'multiply'; lg.fillStyle = LC.lin(lg, 0, 0, 0, H, [[0, '#F2E6EA'], [0.55, '#E2CFCC'], [1, '#B8A6A8']]); lg.fillRect(0, 0, W, H); lg.restore(); }
       });
       g.drawImage(lay, 0, 0);
       const em = quarter(c, 'space|em|' + tod, eg => { const cam = SPC.cam(); sunEm(eg, mirrorCam(cam, facadePt(A, 0, 0), A.n), L, 26, tod === 'evening' ? 0.4 : 0.9); });
@@ -623,16 +631,18 @@
   // s.track (metres along the row), s.reflect(g, R): draw Daniel into the reflection (R.x, R.y the virtual image's feet,
   // R.scale px/m, R.facing, R.light); the set keeps it to the glass and lays it in like a mirror.
   // -------------------------------------------------------------------------------------
-  const CRS = { d: 3.4, eye: 0.95, f: 1500, carsX: 6.6, behind: 1.0 };
-  const CROSS_CARS = (() => { const out = [], R = rng('crossing-cars'); let z = 26; const T = ['hatch', 'saloon', 'hatch', 'estate', 'suv', 'hatch', 'saloon', 'hatch', 'estate', 'hatch'], Pp = ['#A6ACAC', '#2B3446', '#D2D3CD', '#55302D', '#676C6D', '#1C1F20', '#8E8678', '#58697A', '#C9CBC4', '#3E4A55'];
+  const CRS = { d: 1.5, eye: 1.22, f: 1350, carsX: 6.6, behind: 1.0, yaw: 122, ahead: 2.6 };
+  const CROSS_CARS = (() => { const out = [], R = rng('crossing-cars'); let z = 26; const T = ['hatch', 'saloon', 'hatch', 'estate', 'suv', 'hatch', 'saloon', 'hatch', 'estate', 'hatch'], Pp = ['#4A5357', '#2B3446', '#5E6466', '#4A2C2A', '#3E4A55', '#1C1F20', '#6A665E', '#3A4652', '#565C5E', '#2F3233'];
     for (let i = 0; i < T.length; i++) { const Bd = BODIES[T[i]]; z -= Bd.L / 2 + 0.55 + R() * 0.7; out.push({ x: CRS.carsX, z, h: 0, type: T[i], paint: Pp[i] }); z -= Bd.L / 2; } return out; })();
-  function crossCam(track) { return mkCam({ x: CRS.carsX - 0.9 - CRS.d, y: CRS.eye, z: 18 - track, yaw: deg(90), pitch: deg(1.5), f: CRS.f }); }
+  function crossCam(track) { return mkCam({ x: CRS.carsX - 0.9 - CRS.d, y: CRS.eye, z: 18 - track, yaw: deg(CRS.yaw), pitch: deg(3), f: CRS.f }); }
+  // where his reflection stands: he walks a little behind and beside the camera; the glass is the cars' flank (x = carsX - 0.9)
+  function crossImage(cam) { const gx = CRS.carsX - 0.9, dx = cam.pos[0] - CRS.behind, vi = [gx + (gx - dx), 0, cam.pos[2] - CRS.ahead], p = cam.p(vi); return { x: p[0], y: p[1], scale: cam.f / p[2], depth: p[2] }; }
   const LC_ = withSun(LIGHT.morning, deg(120), deg(26), { _side: 1 });
   function crossEnv(rg, mc, cl, box) {
     skyFill(rg, mc, null, box, LC_);
-    // block A behind us, sunlit: its ground floor and the canopy; the footpath and the hedge between
-    facadeFlat(rg, mc, A, Object.assign({}, LC_), 'morning');
-    fill3(rg, mc, [[0, 3.1, -4.2], [3.0, 3.1, -4.2], [3.0, 3.45, 4.2], [0, 3.45, 4.2]], '#C9CFCB');
+    // block A behind us: its glass gives back the dim car park, its spandrels take the sun; the footpath and hedge between
+    fill3(rg, mc, [facadePt(A, 0, 0), facadePt(A, A.w, 0), facadePt(A, A.w, A.h + 0.8), facadePt(A, 0, A.h + 0.8)], '#6F8487');
+    for (let j = 1; j <= A.floors; j++) { const t = j * 3.6; fill3(rg, mc, [facadePt(A, 0, t - 0.5), facadePt(A, A.w, t - 0.5), facadePt(A, A.w, t + 0.4), facadePt(A, 0, t + 0.4)], '#CDD2CC'); }
     fill3(rg, mc, [[0, 0.01, -60], [4.4, 0.01, -60], [4.4, 0.01, 70], [0, 0.01, 70]], '#C9C4B8');
     hedgeStrip(rg, mc, LC_, 'morning', true);
   }
@@ -640,7 +650,7 @@
     back(c, t, s) {
       s = s || {}; const g = c.g, track = s.track || 0, L = LC_;
       const farL = cached(c, 'crossing|far', fg => {
-        const cw = mkCam({ x: CRS.carsX - 0.9 - CRS.d, y: CRS.eye, z: 18, yaw: deg(90), pitch: deg(1.5), f: CRS.f, cx: 1700, cy: H / 2 });
+        const cw = mkCam({ x: CRS.carsX - 0.9 - CRS.d, y: CRS.eye, z: 18, yaw: deg(CRS.yaw), pitch: deg(3), f: CRS.f, cx: 1700, cy: H / 2 });
         skyFill(fg, cw, null, { x: 0, y: 0, w: 3400, h: H }, L);
         sunAt(fg, cw, L, { r: 26 });
         facade(fg, cw, B, L, 'morning', { s0: 20, s1: 124, reflK: 0.95 });
@@ -654,23 +664,30 @@
       const cam = crossCam(track);
       // the near tarmac in the cars' shade
       fill3(g, cam, [[CRS.carsX - 0.9, 0.01, cam.pos[2] - 30], [CRS.carsX - 0.9, 0.01, cam.pos[2] + 30], [cam.pos[0] + 0.3, 0.01, cam.pos[2] + 30], [cam.pos[0] + 0.3, 0.01, cam.pos[2] - 30]], '#3E4545');
-      CROSS_CARS.forEach(cr => { const v = cam.view([cr.x, 0.7, cr.z]); if (Math.abs(v[0] / v[2]) < 1.7) drawCar(g, cam, cr, { L, tod: 'morning', env: crossEnv, glassK: 1.1, uprightSide: 1 }); });
+      CROSS_CARS.forEach(cr => { const v = cam.view([cr.x, 0.7, cr.z]); if (v[2] > -2.5 && v[0] / Math.max(0.5, v[2]) > -1.6 && v[0] / Math.max(0.5, v[2]) < 1.6) drawCar(g, cam, cr, { L, tod: 'morning', env: crossEnv, glassK: 1.1, uprightSide: 1 }); });
     },
     front(c, t, s) {
       s = s || {}; const g = c.g, track = s.track || 0, cam = crossCam(track);
       if (s.reflect) {
-        const rg = scratch('cp-cross-refl'), dist = CRS.d + 0.9 + CRS.behind;
-        const vf = cam.p(CRS.carsX + 0.9 + CRS.d + CRS.behind, 0, cam.pos[2]);
-        const R = { x: W / 2 + (s.offset || 0), y: vf[1], scale: CRS.f / (CRS.d + dist), facing: s.facing == null ? -1 : s.facing, t, light: { x: 1400, y: -300, color: '#FFE9C4' } };
-        rg.save(); s.reflect(rg, R); rg.restore();
-        rg.globalCompositeOperation = 'multiply'; rg.fillStyle = '#B8C6C6'; rg.fillRect(0, 0, W, H);
-        const mk = scratch('cp-cross-mask');
-        CROSS_CARS.forEach(cr => { const v = cam.view([cr.x, 0.7, cr.z]); if (Math.abs(v[0] / v[2]) > 1.7) return; const Bd = BODIES[cr.type], fr = carFrame(cr), sg = fr.loc(cam.pos)[2] > 0 ? 1 : -1;
+        const im = crossImage(cam);
+        const R = { x: im.x + (s.offset || 0), y: im.y, scale: im.scale, facing: s.facing == null ? 1 : s.facing, t, light: { x: 1500, y: -300, color: '#FFE9C4' } };
+        const bx = { x: Math.max(0, Math.floor(R.x - R.scale * 0.9)), y: Math.max(0, Math.floor(R.y - R.scale * 2.15)), w: 0, h: 0 }; bx.w = Math.min(W - bx.x, Math.ceil(R.scale * 1.8)); bx.h = Math.min(H - bx.y, Math.ceil(R.scale * 2.3));
+        const rg = scratch('cp-cross-refl', W, H, bx);
+        rg.save(); rg.beginPath(); rg.rect(bx.x, bx.y, bx.w, bx.h); rg.clip(); s.reflect(rg, R); rg.restore();
+        rg.save(); rg.globalCompositeOperation = 'source-atop'; rg.fillStyle = 'rgba(150,176,182,0.35)'; rg.fillRect(bx.x, bx.y, bx.w, bx.h); rg.restore();
+        const mk = scratch('cp-cross-mask', W, H, bx);
+        CROSS_CARS.forEach(cr => { const v = cam.view([cr.x, 0.7, cr.z]); if (!(v[2] > -2.5 && v[0] / Math.max(0.5, v[2]) > -1.6 && v[0] / Math.max(0.5, v[2]) < 1.6)) return; const Bd = BODIES[cr.type], fr = carFrame(cr), sg = fr.loc(cam.pos)[2] > 0 ? 1 : -1;
           mk.fillStyle = '#fff'; mk.fill(path3(cam, [gh(Bd, sg, 0.05, 0.03), gh(Bd, sg, Bd.pB - 0.025, 0.03), gh(Bd, sg, Bd.pB - 0.025, 0.96), gh(Bd, sg, 0.05, 0.96)].map(q => fr.w(...q))));
           mk.fill(path3(cam, [gh(Bd, sg, Bd.pB + 0.03, 0.03), gh(Bd, sg, Bd.pC - 0.005, 0.03), gh(Bd, sg, Bd.pC + 0.055, 0.96), gh(Bd, sg, Bd.pB + 0.03, 0.96)].map(q => fr.w(...q)))); });
-        rg.globalCompositeOperation = 'destination-in'; rg.drawImage(mk.canvas, 0, 0);
-        g.save(); g.globalAlpha = 0.72; g.drawImage(rg.canvas, 0, 0); g.restore();
+        rg.globalCompositeOperation = 'destination-in'; rg.drawImage(mk.canvas, bx.x, bx.y, bx.w, bx.h, bx.x, bx.y, bx.w, bx.h); rg.globalCompositeOperation = 'source-over';
+        if (bx.w > 0 && bx.h > 0) { g.save(); g.globalAlpha = 0.6; g.drawImage(rg.canvas, bx.x, bx.y, bx.w, bx.h, bx.x, bx.y, bx.w, bx.h); g.restore();
+          // the glass's own sheen runs over him: he is only ever a reflection
+          g.save(); g.beginPath(); g.rect(bx.x, bx.y, bx.w, bx.h); g.clip(); LC.glare(g, null, { x: R.x, y: R.y - R.scale, angle: -1.2, color: '#FFFFFF', bands: [{ d: -R.scale * 0.3, w: R.scale * 0.35, a: 0.07 }, { d: R.scale * 0.1, w: R.scale * 0.05, a: 0.1 }] }); g.restore(); }
       }
+      c.g.drawImage(cached(c, 'crossing|hedge', hg => { const l = LC.layer(), L = LC_, R = rng('crosshedge');
+        l.fillStyle = L.hedge[2]; l.fillRect(0, 910, W, 170);
+        for (let i = 0; i < 420; i++) { const x = R() * W, y = 915 + R() * 40 - 30 * Math.pow(R(), 3); l.fillStyle = R() < 0.35 ? rgba(L.hedge[0], 0.95) : R() < 0.5 ? rgba(L.hedge[1], 0.95) : rgba(L.hedge[2], 0.95); l.beginPath(); l.ellipse(x, y, 14 + R() * 18, 9 + R() * 10, R() * 3, 0, TAU); l.fill(); }
+        hg.drawImage(LC.blurred(l.canvas, 10, false), 0, 0); }), 0, 0);
       c.g.drawImage(cached(c, 'crossing|front', fg => { fg.fillStyle = LC.lin(fg, 0, 880, 0, H, [[0, '#0B1112', 0], [1, '#0B1112', 0.45]]); fg.fillRect(0, 880, W, 200);
         fg.globalCompositeOperation = 'screen'; fg.fillStyle = LC.rad(fg, 1560, -160, 0, 1000, [[0, '#FFF6E6', 0.3], [1, '#FFF6E6', 0]]); fg.fillRect(0, 0, W, H); }), 0, 0);
     },
@@ -730,7 +747,7 @@
         const pp = path3(cam, cs);
         g.save(); g.clip(pp);
         g.fillStyle = 'rgba(150,186,194,0.16)'; g.fill(pp);
-        g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.66; g.drawImage(refl, -PAD + ang * 2 * cam.f * 0.55 * (hingeZ > 0 ? -1 : 1), 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+        g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.66; g.drawImage(refl, -PAD + ang * 2 * cam.f * 0.62, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
         // manifestation: frosted dots at eye level and lower down (the law on glass doors), a smudge by the handle
         [1.52, 0.98].forEach(hh => { for (let zz = Math.min(zA, zB) + 0.06; zz < Math.max(zA, zB) - 0.04; zz += 0.065) { const dz = zz - hingeZ, q = [0.03 + Math.abs(dz) * Math.sin(ang), hh, hingeZ + dz * Math.cos(ang)], sp = cam.p(q), k = cam.f / sp[2]; g.fillStyle = 'rgba(236,242,238,0.5)'; g.beginPath(); g.ellipse(sp[0], sp[1], 0.016 * k * Math.max(0.2, Math.cos(ang)), 0.016 * k, 0, 0, TAU); g.fill(); } });
         const bb = bboxOf(scr3(cam, cs));
@@ -754,7 +771,7 @@
   // ROWS (Q10 18–24): 5:40, down the aisle. The low sun from the left turns the windscreens along the row copper; the
   // cars' long shadows stripe the aisle; Daniel walks up it toward his car (anchors.path), small against the copper.
   // -------------------------------------------------------------------------------------
-  const RWS = { cam: () => mkCam({ x: 13.2, y: 1.6, z: -9.0, yaw: deg(5), pitch: deg(-1.2), f: 1320 }) };
+  const RWS = { cam: () => mkCam({ x: 12.6, y: 1.6, z: -8.0, yaw: deg(9), pitch: deg(-1.5), f: 1300 }) };
   const LR = withSun(LIGHT.evening, deg(272), deg(7.5), { _side: -1 });
   const rows = {
     back(c, t, s) {
@@ -765,7 +782,7 @@
         NTREES.concat(TREES).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(T => tree(lg, cam, T, L, false));
         facade(lg, cam, B, L, 'evening', { s0: 0, s1: 124, sunR: 20, reflK: 1 });
         ground(lg, cam, L, 'evening', { z: [-30, 36] });
-        LAMPS.forEach(([x, z]) => lamp(lg, cam, x, z, L, 'evening'));
+        LAMPS.forEach(([x, z]) => { if (cam.view([x, 0, z])[2] > 6) lamp(lg, cam, x, z, L, 'evening'); });
         const env = (rg, mc, cl, box) => { skyFill(rg, mc, null, box, L); sunAt(rg, mc, L, { r: 12, k: 1.3, glow: 0.8 }); if (mc.front([0, 5, 0])) facadeFlat(rg, mc, A, L, 'evening'); };
         const all = parked('evening').concat([Object.assign({ type: 'hatch', paint: DCAR.paint, plateR: '#E9C9A4', dan: true }, DANIEL)]);
         all.filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 1.5).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => {
@@ -786,7 +803,7 @@
   // wave of trapped heat pours out of the doorway and over the roof (refraction in the air against block B's blazing glass).
   // The rear of the car recedes, its glass copper too. s.door 0..1, s.heat 0..1, s.car (false: draw it with view.car)
   // -------------------------------------------------------------------------------------
-  const HT = { cam: () => mkCam({ x: 5.9, y: 1.42, z: 16.6, yaw: deg(146), pitch: deg(-4), f: 1340 }) };
+  const HT = { cam: () => mkCam({ x: 3.3, y: 1.52, z: 14.3, yaw: deg(99), pitch: deg(-4.5), f: 1250 }) };
   const LH = withSun(LIGHT.evening, deg(292), deg(8), { _side: 1 });
   function heatEnv(rg, mc, cl, box) { skyFill(rg, mc, null, box, LH); sunAt(rg, mc, LH, { r: 16, k: 1.3, glow: 0.9 }); if (mc.front([0, 5, 0])) facadeFlat(rg, mc, A, LH, 'evening'); }
   const heat = {
@@ -798,8 +815,8 @@
         TREES.concat(NTREES).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(T => tree(lg, cam, T, L, false));
         facade(lg, cam, B, L, 'evening', { s0: 0, s1: 124, sunR: 20, reflK: 1 });
         ground(lg, cam, L, 'evening', { x0: 0, z: [-30, 36] });
-        LAMPS.forEach(([x, z]) => lamp(lg, cam, x, z, L, 'evening'));
-        parked('evening').filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 3).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => drawCar(lg, cam, cr, { L, tod: 'evening', env: heatEnv, glassK: 1.35, upright: 0.7 }));
+        LAMPS.forEach(([x, z]) => { if (cam.view([x, 0, z])[2] > 6) lamp(lg, cam, x, z, L, 'evening'); });
+        parked('evening').filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 3 && Math.abs(cr.z - DANIEL.z) > 1).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => drawCar(lg, cam, cr, { L, tod: 'evening', env: heatEnv, glassK: 1.35, upright: 0.7 }));
       }), 0, 0);
       if (s.car !== false) heat.car(c, t, s);
     },
@@ -810,6 +827,14 @@
     front(c, t, s) {
       s = s || {}; const k = s.heat == null ? 1 : s.heat;
       if (k > 0.01) { const a = heat.anchors.plume; shimmer(c, a.x - a.w / 2, a.y, a.w, a.h, t, k, 'heat'); }
+      // the hedge between us and the car, out of focus: the subtitle band's shade
+      c.g.drawImage(cached(c, 'heat|hedge', hg => { const cam = HT.cam(), L = LH; const l = LC.layer();
+        fill3(l, cam, [[4.4, 0.13, -60], [5.7, 0.13, -60], [5.7, 0.13, 70], [4.4, 0.13, 70]], L.hedge[2]);
+        fill3(l, cam, [[4.55, 0.13, 0], [4.55, 0.76, 0], [4.55, 0.76, 40], [4.55, 0.13, 40]], L.hedge[2]);
+        fill3(l, cam, [[4.55, 0.76, 0], [5.6, 0.76, 0], [5.6, 0.76, 40], [4.55, 0.76, 40]], L.hedge[1]);
+        const R = rng('hedgeleaves'); for (let i = 0; i < 260; i++) { const z = 9 + R() * 14, x = 4.55 + R() * 1.05, p = cam.p(x, 0.76 + R() * 0.05, z); if (p[2] < 0.3) continue; const kk = cam.f / p[2];
+          l.fillStyle = R() < 0.3 ? rgba(L.hedge[0], 0.9) : rgba(L.hedge[2], 0.9); l.beginPath(); l.ellipse(p[0], p[1], 0.05 * kk, 0.035 * kk, R() * 3, 0, TAU); l.fill(); }
+        hg.drawImage(LC.blurred(l.canvas, 9, false), 0, 0); }), 0, 0);
       c.g.drawImage(cached(c, 'heat|front', fg => { fg.fillStyle = LC.lin(fg, 0, 850, 0, H, [[0, '#120D0E', 0], [1, '#120D0E', 0.55]]); fg.fillRect(0, 850, W, 230);
         fg.globalCompositeOperation = 'screen'; fg.fillStyle = LC.rad(fg, 2100, -100, 0, 1400, [[0, '#F7A963', 0.26], [1, '#F7A963', 0]]); fg.fillRect(0, 0, W, H); }), 0, 0);
     },
@@ -821,13 +846,13 @@
     if (dw < 4 || dh < 4) return;
     const src = scratch('cp-shim-src', dw, dh); src.drawImage(g.canvas, dx0, dy0, dw, dh, 0, 0, dw, dh);
     const out = scratch('cp-shim-out', dw, dh), step = 3;
-    for (let y = 0; y < dh; y += step) { const u = y / dh, amp = k * (2.2 + 7 * (1 - u)) * (0.65 + 0.35 * Math.sin(u * 9 + t * 1.3));
+    for (let y = 0; y < dh; y += step) { const u = y / dh, amp = k * (3 + 9 * Math.sin(Math.PI * Math.min(1, u * 1.15))) * (0.65 + 0.35 * Math.sin(u * 9 + t * 1.3));
       const off = amp * (Math.sin(y * 0.105 + t * 9.0) * 0.6 + Math.sin(y * 0.043 + t * 4.1 + 1.7) * 0.4);
       out.drawImage(src.canvas, 0, y, dw, step, off, y, dw, step); }
     out.globalCompositeOperation = 'destination-in';
     out.drawImage(cached(c, 'shimmask|' + seed + '|' + dw + 'x' + dh, mg => { mg.fillStyle = LC.rad(mg, dw / 2, dh * 0.72, 0, Math.max(dw, dh) * 0.55, [[0, '#000000', 1], [0.55, '#000000', 0.8], [1, '#000000', 0]]); mg.fillRect(0, 0, dw, dh); }, dw, dh), 0, 0);
     g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(out.canvas, dx0, dy0);
-    g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.18 * k; g.drawImage(out.canvas, dx0, dy0 - 2); g.restore();
+    g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.24 * k; g.drawImage(out.canvas, dx0, dy0 - 3); g.restore();
   }
 
   // ---------- anchors ----------
@@ -840,10 +865,10 @@
     door.anchors = { daniel: { from: [d0[0], d0[1]], to: [d1[0], d1[1]], scaleFrom: cd.f / d0[2], scaleTo: cd.f / d1[2], note: 'through the doorway, away from us into the lobby' }, hinge: [hg[0], hg[1]] };
     const cr = RWS.cam(), dA = carAnchor(cr, DANIEL), w0 = cr.p(13.4, 0, -4.0), w1 = cr.p(11.6, 0, 11.4);
     rows.anchors = { car: dA, path: { from: [w0[0], w0[1]], to: [w1[0], w1[1]], scaleFrom: cr.f / w0[2], scaleTo: cr.f / w1[2] } };
-    const ch = HT.cam(), hA = carAnchor(ch, DANIEL), st = ch.p(carPt(DANIEL, 1.42, 0.25)), pl = ch.p([...carPt(DANIEL, 1.0, 0.4)].map((v, i) => i === 1 ? 1.25 : v)), pk = ch.f / ch.view(carPt(DANIEL, 1.0, 0.4))[2];
-    heat.anchors = { car: hA, daniel: { x: st[0], y: st[1], scale: ch.f / st[2], note: 'at the open door, recoiling' }, plume: { x: pl[0], y: pl[1] - 1.3 * pk, w: 1.9 * pk, h: 1.7 * pk } };
-    const cc = crossCam(0), vf = cc.p(CRS.carsX + 0.9 + CRS.d + CRS.behind, 0, cc.pos[2]);
-    crossing.anchors = { reflection: { x: W / 2, y: vf[1], scale: CRS.f / (CRS.d * 2 + 0.9 + CRS.behind), note: 'his virtual image, walking with the camera' }, beltline: cc.p(CRS.carsX - 0.9, 1.0, cc.pos[2])[1], roofline: cc.p(CRS.carsX - 0.75, 1.45, cc.pos[2])[1] };
+    const ch = HT.cam(), hA = carAnchor(ch, DANIEL), st = ch.p(carPt(DANIEL, 1.42, 0.25)), pl = ch.p([...carPt(DANIEL, 0.9, 0.45)].map((v, i) => i === 1 ? 1.0 : v)), pk = ch.f / ch.view(carPt(DANIEL, 0.9, 0.45))[2];
+    heat.anchors = { car: hA, daniel: { x: st[0], y: st[1], scale: ch.f / st[2], note: 'at the open door, recoiling' }, plume: { x: pl[0], y: pl[1] - 1.9 * pk, w: 2.3 * pk, h: 2.3 * pk } };
+    const cc = crossCam(0), im = crossImage(cc);
+    crossing.anchors = { reflection: { x: im.x, y: im.y, scale: im.scale, facing: 1, note: 'his virtual image; it moves with the camera (s.track), the cars slide past' } };
     const ca = arrivalCam(1), ke = ca.p(5.7, 0.13, ARR.eye[2]), en = ca.p(0, 1.2, 0);
     arrival.anchors = { kerb: [ke[0], ke[1]], entrance: [en[0], en[1]], facadeScale: ca.f / ARR.eye[0] };
   })();
