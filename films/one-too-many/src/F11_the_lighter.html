@@ -1,0 +1,240 @@
+<!doctype html><meta charset="utf-8"><title>F11</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 11});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f11');
+  const LB = 2.76, LIVE = OTM.liveArea(LB);           // live slit: y 192..888
+
+  // ---------------- camera: low angle, eye 1.2 m, horizon y=470 ----------------
+  const HZ = 470, EYE = 1.2, FL = 1150, VPX = 960, ZW = 5;
+  const K = z => FL / z;
+  const P = (Xm, hm, z) => [VPX + Xm * K(z), HZ + (EYE - hm) * K(z)];
+  const wallFloorY = P(0, 0, ZW)[1];                  // 746
+
+  // ---------------- helpers ----------------
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  const norm = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
+  let LAMP = {x: 1600, y: 380};
+  // rim crescent on the lit side only, fading with distance from the lamp (so it never closes into an outline)
+  function rim(path, dir, w, color, o) {
+    o = o || {};
+    tg.setTransform(1,0,0,1,0,0); tg.globalCompositeOperation='source-over'; tg.globalAlpha=1; tg.clearRect(0,0,W,H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0]*w, -dir[1]*w); tg.fill(path);
+    tg.setTransform(1,0,0,1,0,0);
+    if (o.r1) { const gr = tg.createRadialGradient(LAMP.x, LAMP.y, o.r0 || 0, LAMP.x, LAMP.y, o.r1); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      tg.globalCompositeOperation = 'destination-in'; tg.fillStyle = gr; tg.fillRect(0, 0, W, H); }
+    if (o.clip) { tg.globalCompositeOperation = 'destination-in'; tg.fillStyle = '#000'; tg.fill(o.clip); }
+    g.save(); g.globalAlpha = o.alpha == null ? 1 : o.alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  const dirFrom = (p) => norm(LAMP.x - p[0], LAMP.y - p[1]);
+  // perforate a word: ember pinholes along the glyph contours (the VOICE letters that never healed)
+  function perforate(str, x, y, fo, o) {
+    const pc = OTM.makeCanvas(W, H), pg = pc.getContext('2d');
+    pg.font = OTM.font(fo); pg.letterSpacing = (fo.tracking || 0) + 'px'; pg.fillStyle = '#fff'; pg.fillText(str, x, y);
+    const m = pg.measureText(str); const x0 = Math.max(0, Math.floor(x - 30)), y0 = Math.max(0, Math.floor(y - fo.size * 1.05));
+    const w = Math.min(W - x0, Math.ceil(m.width + 80)), h = Math.min(H - y0, Math.ceil(fo.size * 1.4));
+    const d = pg.getImageData(x0, y0, w, h).data; const A = (px, py) => (px < 0 || py < 0 || px >= w || py >= h) ? 0 : d[(py * w + px) * 4 + 3];
+    const r = OTM.rng(o.seed || str); const st = o.step || 5;
+    if (o.scorch) { g.save(); g.globalAlpha = o.scorch; g.globalCompositeOperation = 'source-atop'; const sc = OTM.makeCanvas(W, H), sg = sc.getContext('2d'); sg.filter = 'blur(3px)'; sg.drawImage(pc, 0, 0); sg.filter = 'none'; sg.globalCompositeOperation = 'source-in'; sg.fillStyle = o.scorchColor || '#2A120A'; sg.fillRect(0, 0, W, H); g.drawImage(sc, 0, 0); g.restore(); }
+    for (let py = 0; py < h; py += st) for (let px = 0; px < w; px += st) {
+      const jx = px + Math.round((r() - 0.5) * st * 0.8), jy = py + Math.round((r() - 0.5) * st * 0.8);
+      if (A(jx, jy) < 128) continue;
+      const e = A(jx + 3, jy) < 128 || A(jx - 3, jy) < 128 || A(jx, jy + 3) < 128 || A(jx, jy - 3) < 128;
+      if (!e && r() > (o.inner || 0)) continue;
+      if (r() > (o.keep || 0.7)) continue;
+      const rad = (o.rmin || 0.8) + r() * ((o.rmax || 2) - (o.rmin || 0.8));
+      const p = new Path2D(); p.ellipse(x0 + jx, y0 + jy, rad, rad * (0.75 + r() * 0.5), r() * 3, 0, 7);
+      f.knockout(p, (o.dmin || 0.35) + r() * ((o.dmax || 0.9) - (o.dmin || 0.35)));
+    }
+  }
+  const poly = (pts) => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach(q => p.lineTo(q[0], q[1])); p.closePath(); return p; };
+
+  // ================= SET =================
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#110D0B'; g.fillRect(0, 0, W, wallFloorY);           // back wall, barely off ink
+
+  // stove + hood geometry (pushed right so Angelo's head clears the canopy)
+  const sL = P(2.42, 0, ZW)[0], sR = P(3.85, 0, ZW)[0];
+  const hL = P(2.3, 0, ZW)[0], hR = P(3.98, 0, ZW)[0], hB = P(0, 1.6, ZW)[1];
+  const cTop = P(0, 0.9, ZW)[1];
+  LAMP = {x: hL + 118, y: hB};
+
+  // the hood lamp on the wall: dim spill all round, then the hard direct bands only BELOW the lip
+  OTM.lightPool(g, LAMP.x, LAMP.y, [{r: 860, color: '#140F09'}, {r: 640, color: '#19140B'}, {r: 430, color: '#28210F'}], {sy: 0.86, rough: 2.4, seed: 7});
+  g.save(); g.beginPath(); g.rect(0, hB, W, wallFloorY - hB); g.clip();
+  OTM.lightPool(g, LAMP.x, LAMP.y, [{r: 470, color: C.hoodLow}, {r: 340, color: C.hoodMid}, {r: 165, color: C.hood}], {sy: 0.72, rough: 2.2, seed: 8});
+  g.restore();
+
+  // ---- floor: a thin receding plane, checker tiles under the hood light ----
+  g.fillStyle = C.ink; g.fillRect(0, wallFloorY, W, H - wallFloorY);
+  g.save(); g.beginPath(); g.rect(0, wallFloorY, W, H); g.clip();
+  OTM.lightPool(g, LAMP.x - 60, wallFloorY + 40, [{r: 1120, color: '#14100A'}, {r: 880, color: '#221C0D'}, {r: 700, color: C.hoodLow}, {r: 400, color: C.hoodMid}, {r: 150, color: C.hood}], {sy: 0.1, rough: 2, seed: 12});
+  const TS = 0.32; g.fillStyle = OTM.rgba(C.ink, 0.46);
+  for (let zi = 0; zi < 12; zi++) {
+    const za = ZW - zi * TS, zb = ZW - (zi + 1) * TS; if (za < 2.9) break;
+    for (let xi = -26; xi < 26; xi++) {
+      if ((xi + zi) % 2 === 0) continue;
+      g.fill(poly([P(xi * TS, 0, za), P((xi + 1) * TS, 0, za), P((xi + 1) * TS, 0, zb), P(xi * TS, 0, zb)]));
+    }
+  }
+  g.restore();
+  g.fillStyle = '#070505'; g.fillRect(0, wallFloorY - 4, W, 7);                   // skirting
+
+  // ---- the back door: night-blue glass, four panes, the yard fence beyond ----
+  const dL = P(-2.78, 0, ZW)[0], dR = P(-1.86, 0, ZW)[0], dT = P(0, 2.06, ZW)[1];
+  g.fillStyle = '#070505'; g.fillRect(dL - 14, dT - 14, dR - dL + 28, wallFloorY - dT + 14);
+  g.fillStyle = '#0E0B0A'; g.fillRect(dL, dT, dR - dL, wallFloorY - dT);
+  const gT = P(0, 1.96, ZW)[1], gB = P(0, 0.98, ZW)[1], gL = dL + 15, gR = dR - 15;
+  g.fillStyle = C.backdoorNight; g.fillRect(gL, gT, gR - gL, gB - gT);
+  const yardY = gT + (gB - gT) * 0.64;
+  g.fillStyle = '#121E2E'; g.fillRect(gL, yardY, gR - gL, gB - yardY);
+  g.fillStyle = '#0C1520';
+  const nsl = 8; for (let i = 0; i < nsl; i++) { const sw = (gR - gL) / nsl, sx = gL + i * sw + 2; g.fill(poly([[sx, gB], [sx, yardY + 6], [sx + (sw - 5) / 2, yardY - 2], [sx + sw - 5, yardY + 6], [sx + sw - 5, gB]])); }
+  g.fillStyle = '#070505'; g.fillRect((gL + gR) / 2 - 4, gT, 8, gB - gT); g.fillRect(gL, (gT + gB) / 2 - 4, gR - gL, 8);
+  g.fillRect(dR - 36, gB + 54, 24, 8);
+
+  // ---- counter run, upper cabinets (stop short so the spill frames Angelo's head) ----
+  const cL = P(-1.62, 0, ZW)[0], cR = P(2.3, 0, ZW)[0];
+  const ucB = P(0, 1.45, ZW)[1], uL = cL, uR = 1168;
+  g.fillStyle = '#0B0908'; g.fill(S().rect(cL, cTop, cR - cL, wallFloorY - cTop).path(0.8, 3));
+  g.fillStyle = '#17120F'; g.fill(S().rect(cL - 6, cTop - 10, cR - cL + 12, 11).path(0.8, 4));
+  for (let i = 1; i < 4; i++) { const sx = cL + (cR - cL) * i / 4; g.fillStyle = '#050404'; g.fillRect(sx - 1.5, cTop + 4, 3, wallFloorY - cTop - 8); }
+  g.fillStyle = '#050404'; g.fillRect(cL, cTop + 54, cR - cL, 3);
+  g.fillStyle = '#0B0908'; g.fill(S().rect(uL, 0, uR - uL, ucB).path(0.8, 6));
+  for (let i = 1; i < 3; i++) { const sx = uL + (uR - uL) * i / 3; g.fillStyle = '#050404'; g.fillRect(sx - 1.5, 0, 3, ucB); }
+  // a cupboard door left standing open: a black slab swung toward us
+  const cdoor = S().poly([[uR, LIVE.top - 20], [uR + 64, LIVE.top - 6], [uR + 64, ucB + 26], [uR, ucB]]).path(0.8, 8);
+  g.fillStyle = '#030202'; g.fill(cdoor);
+  // the counter's top edge catches the lamp near the hood
+  rim(S().rect(cL - 6, cTop - 10, cR - cL + 12, 11).path(0.8, 4), [0, -1], 2, C.hoodMid, {r0: 60, r1: 520});
+  rim(cdoor, [1, 0.1], 2, C.hoodLow, {r0: 200, r1: 700});
+
+  // ---- the light cone (lit gas in the air), posterised in two hard trapezoids ----
+  OTM.cone(g, [[LAMP.x - 70, hB + 2], [LAMP.x + 110, hB + 2], [LAMP.x + 330, 900], [LAMP.x - 300, 900]], C.hood, 0.085);
+  OTM.cone(g, [[LAMP.x - 40, hB + 2], [LAMP.x + 70, hB + 2], [LAMP.x + 200, 900], [LAMP.x - 180, 900]], C.hood, 0.07);
+  OTM.dust(g, [[LAMP.x - 60, hB + 8], [LAMP.x + 100, hB + 8], [LAMP.x + 320, 880], [LAMP.x - 290, 880]], 80, C.hood, 'f11dust');
+
+  // ---- hood canopy + duct (ink, cut against the spill) ----
+  const mid = (hL + hR) / 2;
+  const hood = S().poly([[hL, hB], [hR, hB], [hR - 46, hB - 44], [mid + 64, hB - 118], [mid + 64, 0], [mid - 64, 0], [mid - 64, hB - 118], [hL + 46, hB - 44]]);
+  g.fillStyle = C.ink; g.fill(hood.path(0.8, 17));
+  g.fillStyle = '#050404'; g.fillRect(hL, hB - 9, hR - hL, 9);
+  // the lamp itself: one small bulb panel at the left end of the hood
+  g.fillStyle = C.hood; g.fill(S().rect(LAMP.x - 52, hB - 6, 104, 6).path(0.4, 18));
+    E.fillStyle = C.hood; E.fillRect(LAMP.x - 70, hB - 12, 140, 18);
+
+  // ---- stove: ink block, hob lit, six knobs and two of them bare spindles ----
+  g.fillStyle = C.ink; g.fill(S().rect(sL, cTop, sR - sL, wallFloorY - cTop).path(0.8, 9));
+  g.fillStyle = C.hood; g.fill(S().rect(sL - 4, cTop - 6, sR - sL + 8, 6).path(0.6, 10));
+  g.fillStyle = C.ink;
+  g.fill(S().M(sL + 46, cTop - 4).L(sL + 50, cTop - 46).L(sL + 132, cTop - 46).L(sL + 136, cTop - 4).Z().rect(sL + 132, cTop - 42, 72, 7).path(0.8, 13));
+  g.fill(S().ellipse(sR - 86, cTop - 24, 44, 22).rect(sR - 118, cTop - 24, 64, 22).capsule(sR - 86, cTop - 50, 4, sR - 86, cTop - 57, 6).path(0.8, 14));
+  const knobY = cTop + 30;
+  for (let i = 0; i < 6; i++) {
+    const kx = sL + 36 + i * ((sR - sL - 72) / 5);
+    if (i === 2 || i === 4) { g.fillStyle = C.hoodMid; g.fillRect(kx - 2, knobY - 7, 4, 11); continue; }
+    g.fillStyle = '#050404'; g.beginPath(); g.arc(kx, knobY, 11, 0, 7); g.fill();
+    g.strokeStyle = C.hoodMid; g.lineWidth = 2; g.beginPath(); g.arc(kx, knobY, 11, -2.7, -0.6); g.stroke();
+  }
+  g.fillStyle = '#050404'; g.fill(S().rect(sL + 22, knobY + 32, sR - sL - 44, wallFloorY - knobY - 52).path(0.8, 15));
+  g.strokeStyle = OTM.rgba(C.hoodMid, 0.85); g.lineWidth = 2; g.beginPath(); g.moveTo(sL + 30, knobY + 46); g.lineTo(sR - 30, knobY + 46); g.stroke();
+
+  // ================= THE EXTRA'S TRACES (cut, never drawn) =================
+  perforate('Scott.', 600, 392, {family: 'Oswald', weight: 500, size: 168, tracking: 4}, {seed: 'v1', step: 4, keep: 0.62, rmin: 0.7, rmax: 1.7, dmin: 0.22, dmax: 0.75, scorch: 0.55});
+  perforate('Angelo.', 26, 664, {family: 'Libre Franklin', weight: 500, size: 74}, {seed: 'v2', step: 4, keep: 0.5, rmin: 0.6, rmax: 1.4, dmin: 0.18, dmax: 0.55, scorch: 0.4});
+  for (let i = 0; i < 90; i++) {                    // loose pinholes: the room is full of them now
+    const x = R() * W, y = LIVE.top + R() * (wallFloorY - LIVE.top);
+    if (Math.hypot((x - LAMP.x) / 1.1, (y - LAMP.y)) < 420) continue;
+    if (x > dL - 20 && x < dR + 20 && y > dT - 20) continue;
+    const p = new Path2D(); p.arc(x, y, 0.6 + R() * 1.2, 0, 7); f.knockout(p, 0.15 + R() * 0.55);
+  }
+
+  // ================= DEENA: a low shape under Angelo's jacket =================
+  const zD = 3.42, floorD = P(0, 0, zD)[1];
+  const DU = 76;
+  const deena = OTM.fig.profile('deena', {x: 0, y: 0, scale: DU, facing: -1, anchor: 'hip', lean: 0, neck: -0.2, head: -0.5, swing: -3.0,
+    armN: {a: -0.05, b: 0.1, hand: 'relaxed'}, armF: {a: -0.05, b: 0.1, hand: 'relaxed'}, legN: {a: 0.75, b: 1.35}, legF: {a: -0.02, b: 0.12}});
+  let body = deena.shape.rotate(Math.PI / 2, 0, 0);
+  // jacket over chest and throat, collar right up under the jaw; one sleeve spilled toward us
+  const u = DU;
+  const jacket = OTM.fig.smooth([[0.25*u, 0.45*u, 1], [0.35*u, -0.35*u], [0.7*u, -0.62*u], [1.1*u, -0.7*u, 1], [1.45*u, -0.6*u], [1.8*u, -0.8*u, 1], [2.15*u, -0.7*u], [2.42*u, -0.72*u, 1],
+    [2.6*u, -0.48*u], [2.66*u, -0.2*u, 1], [2.55*u, 0.2*u], [2.2*u, 0.5*u, 1]], true);
+  const sleeve = S().poly([[1.35*u, 0.0], [1.2*u, 0.42*u], [0.95*u, 0.5*u], [0.55*u, 0.52*u], [0.58*u, 0.38*u], [0.95*u, 0.3*u]]);
+  body = body.add(jacket).add(sleeve).add(S().ellipse(1.5*u, -0.2*u, 1.0*u, 0.38*u));
+  const DX = 1384 - 3.45 * DU, DY = floorD - 0.6 * DU;            // head by Angelo's feet; her back on the tiles
+  body = body.translate(DX, DY);
+  // the blood: an ink pool with a wet lip mirroring the lamp
+  const pool = S().M(1040, floorD - 3).C(1100, floorD - 15, 1250, floorD - 22, 1390, floorD - 16).C(1470, floorD - 12, 1520, floorD - 4, 1500, floorD + 6)
+    .C(1460, floorD + 14, 1300, floorD + 17, 1160, floorD + 15).C(1070, floorD + 13, 1010, floorD + 5, 1040, floorD - 3).Z();
+  const poolP = pool.path(1.2, 21);
+  g.fillStyle = '#060404'; g.fill(poolP);
+  rim(poolP, [0, -1], 2, C.hood, {r0: 100, r1: 700, alpha: 0.95});
+  const bodyP = body.path(0.8, 23);
+  g.fillStyle = C.ink; g.fill(bodyP);
+  rim(bodyP, dirFrom([1200, 820]), 2.5, C.hoodMid, {r0: 300, r1: 760});
+  // the cigarette Angelo dropped, at the edge of the blood
+  g.save(); g.translate(1012, floorD + 4); g.rotate(-0.06); g.fillStyle = C.cardPaper; g.fillRect(-10, -1.5, 20, 3); g.restore();
+  // the handprint where no hand was, burned into the floor beside her (foreshortened)
+  const hp = OTM.fig.hand('flat', {spread: 0.16}).transform([96, 0, 0, 96 * 0.3, 0, 0]).translate(1150, floorD + 6);
+  f.knockout(hp.path(0.5, 4), 0.34);
+
+  // ================= ANGELO: at the edge of the cone, the lighter up =================
+  const zA = 3.62, floorA = P(0, 0, zA)[1];
+  OTM.fig.CHAR.angelo_shirt = Object.assign({}, OTM.fig.CHAR.angelo, {clothes: 'none'});   // the jacket is on Deena; the cigarette is on the floor
+  const AS = 76, AX = 1472, U = AS;
+  const ang = OTM.fig.profile('angelo_shirt', {x: AX, y: floorA, scale: AS, facing: -1, lean: 0.0, neck: 0.24, head: 0.42,
+    armN: {a: -0.06, b: 0.12, hand: 'relaxed'}, armF: {a: -0.06, b: 0.12, hand: 'relaxed'}, legN: {a: 0.04, b: 0.03}, legF: {a: -0.14, b: 0.05}});
+  // his near arm, built by hand: elbow tucked, forearm raised toward Scott, the lighter standing out of the fist
+  const upL = 1.42 * 1.1 * 1.07 * AS, foL = 1.22 * 1.1 * 1.07 * AS, aa = 0.3, ab = 1.66, S0 = ang.joints.shoulder;
+  const Eb = [S0[0] - Math.sin(aa) * upL, S0[1] + Math.cos(aa) * upL];
+  const dv = [-Math.sin(aa + ab), Math.cos(aa + ab)]; const Wr = [Eb[0] + dv[0] * foL, Eb[1] + dv[1] * foL];
+  const arm = S().capsule(S0[0], S0[1], 0.3 * U, Eb[0], Eb[1], 0.19 * U).capsule(Eb[0], Eb[1], 0.18 * U, Wr[0], Wr[1], 0.13 * U);
+  const fc = [Wr[0] + dv[0] * 0.2 * U, Wr[1] + dv[1] * 0.2 * U + 0.04 * U];
+  arm.add(OTM.fig.smooth([[fc[0] - 0.24 * U, fc[1] - 0.14 * U], [fc[0] - 0.05 * U, fc[1] - 0.19 * U], [fc[0] + 0.16 * U, fc[1] - 0.16 * U], [fc[0] + 0.22 * U, fc[1] + 0.02 * U],
+    [fc[0] + 0.12 * U, fc[1] + 0.2 * U], [fc[0] - 0.1 * U, fc[1] + 0.22 * U], [fc[0] - 0.27 * U, fc[1] + 0.1 * U]], true));
+  const LW = 0.19 * U, LH = 0.52 * U, lx = fc[0] - 0.08 * U, ly = fc[1] - 0.12 * U;     // lighter base centre
+  const lighter = S().rect(lx - LW / 2, ly - LH, LW, LH + 0.1 * U).rect(lx - LW / 2 + 0.012 * U, ly - LH - 0.08 * U, LW - 0.024 * U, 0.1 * U).circle(lx + LW / 2 - 0.045 * U, ly - LH - 0.075 * U, 0.05 * U);
+  const tk = [lx + LW / 2 + 0.04 * U, ly - LH * 0.45];   // thumb knuckle, standing off the lighter's back
+  const thumb = S().capsule(fc[0] + 0.1 * U, fc[1] - 0.12 * U, 0.08 * U, tk[0], tk[1], 0.062 * U).capsule(tk[0], tk[1], 0.062 * U, lx + LW / 2 - 0.03 * U, ly - LH - 0.05 * U, 0.058 * U);
+  const angS = ang.shape.add(arm).add(lighter).add(thumb);
+  const aP = angS.path(0.8, 29);
+  g.fillStyle = C.ink; g.fill(aP);
+  const hd = ang.joints.head;
+  rim(aP, dirFrom([AX, 560]), 3.2, C.hood, {r0: 120, r1: 640, clip: poly([[0, hd[1] + 0.75 * U], [W, hd[1] + 0.75 * U], [W, H], [0, H]])});
+  rim(aP, dirFrom(hd), 2.6, C.hood, {r0: 120, r1: 640, clip: poly([[0, 0], [W, 0], [W, hd[1] + 0.75 * U], [0, hd[1] + 0.75 * U]])});
+  // the metal edge of the lighter facing the lamp, then the glint: 2 px, the brightest point in the frame
+  const gx = Math.round(lx + LW / 2 - 0.06 * U), gy = Math.round(ly - LH - 0.085 * U);
+  g.save(); g.globalCompositeOperation = 'screen';
+  g.fillStyle = OTM.rgba(C.lighterCream, 0.22); g.fillRect(gx - 9, gy + 0.5, 20, 1); g.fillRect(gx + 0.5, gy - 9, 1, 20);
+  g.fillStyle = OTM.rgba(C.lighterCream, 0.6); g.fillRect(gx - 3, gy + 0.5, 8, 1); g.fillRect(gx + 0.5, gy - 3, 1, 8);
+  g.restore();
+  g.fillStyle = '#FFFFFF'; g.fillRect(gx, gy, 2, 2);
+  E.fillStyle = C.lighterCream; E.beginPath(); E.arc(gx + 1, gy + 1, 15, 0, 7); E.fill(); E.fillStyle = '#FFFFFF'; E.beginPath(); E.arc(gx + 1, gy + 1, 6, 0, 7); E.fill();
+
+  // ================= SCOTT: foreground, dark, the way out at his back =================
+  const SS = 132;
+  const scPose = {scale: SS, facing: 1, lean: 0.13, neck: 0.12, head: 0.16,
+    armN: {a: 0.9, b: 0.55, hand: 'open', w: -1.15, handOpts: {spread: 0.1}}, armF: {a: -0.04, b: 0.22, hand: 'relaxed'},
+    legN: {a: 0.16, b: 0.06}, legF: {a: -0.14, b: 0.04}};
+  const sc0 = OTM.fig.profile('scott', Object.assign({x: 0, y: 0}, scPose)); const sb = sc0.shape.bbox();
+  const sc = OTM.fig.profile('scott', Object.assign({x: 560, y: 204 - sb.y}, scPose));
+  const sP = sc.shape.path(0.8, 37);
+  g.fillStyle = '#070505'; g.fill(sP);
+  rim(sP, dirFrom([700, 380]), 2.2, C.hoodMid, {r0: 500, r1: 1300, alpha: 1, clip: poly([[590, 150], [1100, 150], [1100, 560], [640, 560], [640, 330], [590, 330]])});
+
+  // the figures stand in front of the perforated walls: they occlude the holes
+  const hctx = f.markHoles(); hctx.save(); hctx.globalCompositeOperation = 'destination-out'; hctx.fillStyle = '#000';
+  hctx.fill(sP); hctx.fill(aP); hctx.fill(bodyP); hctx.restore();
+
+  // ================= TYPE: the smallest line in the film =================
+  OTM.say(g, 'angelo', 'Sorry about your house.', 1262, 612, {final: true, size: 36, align: 'right'});
+
+  f.finish({letterbox: LB, vignette: 0.6, halation: 0.6, grain: 0.075});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 11', 'THE LIGHTER', LB);
+  window.FRAME_READY = true;
+})();
+</script>

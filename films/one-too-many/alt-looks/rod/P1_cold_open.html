@@ -1,0 +1,259 @@
+<!doctype html><meta charset="utf-8"><title>P1 cold open</title>
+<script src="../../kit/otm.js"></script><script src="../../kit/figures.js"></script>
+<script src="rod.js"></script><script src="puppets.js"></script><script src="type.js"></script>
+<script>
+(async()=>{
+  await ROD.fonts(['700 48px "Archivo"']);
+  const {W,H,S,rng,vnoise,fbm,clamp,lerp} = OTM; const P = ROD.P, {smooth, slit} = ROD.geom;
+  const HX = -80;                                   // the house set is mounted 80px left of its old mark
+  const FIRE = [620, 360];
+  const st = ROD.stage({lamp: FIRE, seed: 11}); const g = st.ctx;
+  const wrap = (c, fn) => { c.save(); c.translate(HX, 0); fn(c); c.restore(); };
+
+  // ---------- the scrim, lit from behind by FIRE (ember mottled with flame-hot), rain-slate night at the top edges ----------
+  ROD.scrim(st, { lamp: FIRE, R: 1350,
+    stops: [[0, '#FFF6DC'], [0.12, '#FFE7A8'], [0.26, '#FFB255'], [0.42, '#FF6A24'], [0.6, '#C23A16'], [0.8, '#5E1D10'], [1, '#2A1416']],
+    after: (c) => {
+      const lw = 480, lh = 270, m = OTM.makeCanvas(lw, lh), mg = m.getContext('2d'), img = mg.createImageData(lw, lh);
+      for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const n = fbm(x * 0.025, y * 0.035 + 3, 21, 4); const k = clamp((n - 0.5) * 3.2, 0, 1); const o = (y * lw + x) * 4; img.data[o] = 255; img.data[o + 1] = 214; img.data[o + 2] = 140; img.data[o + 3] = 255 * k * 0.5; }
+      mg.putImageData(img, 0, 0); c.save(); c.globalCompositeOperation = 'soft-light'; c.drawImage(m, 0, 0, W, H); c.restore();
+      [[0, 0, 900], [W, 0, 1000]].forEach(([x, y, r]) => { const ng = c.createRadialGradient(x, y, 0, x, y, r); ng.addColorStop(0, 'rgba(22,34,48,0.97)'); ng.addColorStop(0.45, 'rgba(40,64,90,0.6)'); ng.addColorStop(1, 'rgba(62,92,118,0)'); c.fillStyle = ng; c.fillRect(0, 0, W, H); });
+      const tg = c.createLinearGradient(0, 0, 0, 260); tg.addColorStop(0, 'rgba(26,40,56,0.75)'); tg.addColorStop(1, 'rgba(26,40,56,0)'); c.fillStyle = tg; c.fillRect(0, 0, W, 260);
+      c.save(); c.globalCompositeOperation = 'screen'; const fg = c.createRadialGradient(FIRE[0], FIRE[1], 0, FIRE[0], FIRE[1], 520); fg.addColorStop(0, 'rgba(255,236,190,0.9)'); fg.addColorStop(0.45, 'rgba(255,140,60,0.35)'); fg.addColorStop(1, 'rgba(255,90,31,0)'); c.fillStyle = fg; c.fillRect(0, 0, W, H); c.restore();
+      c.save(); c.globalCompositeOperation = 'screen'; const yg = c.createRadialGradient(1360, 720, 0, 1360, 720, 640); yg.addColorStop(0, 'rgba(255,140,60,0.5)'); yg.addColorStop(1, 'rgba(255,90,31,0)'); c.fillStyle = yg; c.fillRect(0, 0, W, H); c.restore();
+    } });
+
+  // ---------- far plane: trees behind the fence, hazy ----------
+  { const L = st.layer(); const far = S(); const r = rng('trees');
+    for (let i = 0; i < 10; i++) far.circle(r() * 230, 640 + r() * 70, 26 + r() * 30);
+    L.fillStyle = P.ink; L.fill(far.path(1.5, 4));
+    st.commit(L, { from: [200, 700], alpha: 0.5, shadow: false, texture: 0.2, blur: 1.2 }); }
+
+  // ---------- smoke: translucent cut shapes drifting right ----------
+  function smoke(seed, x0, y0, n, sc, alpha, blur, dx) {
+    const L = st.layer(); const r = rng(seed); const sh = S();
+    for (let i = 0; i < n; i++) { const t = i / n; const x = x0 + t * dx + Math.sin(t * 5 + r()) * 50, y = y0 - t * 300; sh.circle(x, y, (36 + t * 80) * sc * (0.7 + r() * 0.5)); }
+    L.fillStyle = '#2a1c1a'; L.fill(sh.path(3, 9)); st.commit(L, { from: [x0, y0], alpha, blur, texture: false, shadow: false });
+  }
+  smoke('sm1', 620, 210, 14, 0.9, 0.26, 7, 900);
+  smoke('sm2', 480, 230, 10, 0.7, 0.2, 12, -420);
+
+  // ---------- flame sheets behind the roof: three overlapping tissue gels (ember / amber / flame-hot) ----------
+  const flameSheet = (seed, base, amp, n, x0, x1) => { const r = rng(seed); const pts = [[x0 - 20, base + 220]];
+    for (let i = 0; i <= n; i++) { const x = lerp(x0, x1, i / n); const peak = (x > 450 && x < 1000 ? 1 : 0.45) * amp * (0.45 + r() * 0.8); pts.push([x - 18, base + 40 - peak * 0.4]); pts.push([x + (r() - 0.5) * 30, base - peak, 1]); }
+    pts.push([x1 + 20, base + 220]); return smooth(pts, true); };
+  wrap(g, c => {
+    ROD.gel(c, flameSheet('fs1', 300, 210, 9, 360, 1140).path(1.5, 2), '#FF5A1F', 0.55, 0.35);
+    ROD.gel(c, flameSheet('fs3', 318, 170, 7, 420, 1060).path(1.5, 6), '#FFA040', 0.4, 0.3);
+    ROD.gel(c, flameSheet('fs2', 330, 150, 11, 360, 1140).path(1.5, 3), '#FFD27A', 0.35, 0.5);
+  });
+  wrap(st.em, c => { c.globalAlpha = 0.4; c.fillStyle = '#FFB060'; c.fill(flameSheet('fs2', 330, 150, 11, 360, 1140).path(1.5, 3)); });
+
+  // ---------- the house facade: cut card, punched wayang filigree, windows of layered tissue ----------
+  const house = S(), hHoles = S();
+  house.poly([[380, 905], [380, 520], [350, 520], [640, 268], [930, 520], [902, 520], [902, 905]]);
+  house.poly([[890, 905], [890, 600], [866, 600], [905, 472], [1118, 472], [1158, 600], [1132, 600], [1132, 905]]);
+  house.rect(756, 316, 44, 110); house.rect(748, 308, 60, 14); // chimney
+  for (let i = 0; i < 18; i++) { const t = i / 17; house.circle(lerp(362, 628, t), lerp(512, 280, t) + 10, 9); }
+  for (let i = 0; i < 18; i++) { const t = i / 17; house.circle(lerp(652, 918, t), lerp(280, 512, t) + 10, 9); }
+  // windows: [x, y, w, h, smashed]; the upstairs right one has lost its frame (the curtain is in it)
+  const wins = [[440, 565, 92, 116, 1], [742, 548, 132, 156, 2], [452, 728, 108, 112, 0], [728, 728, 108, 112, 1], [945, 652, 76, 104, 1], [1036, 652, 70, 104, 0]];
+  wins.forEach(([x, y, w, h, sm]) => {
+    const m = 7; const pw = (w - m * 3) / 2, ph = (h - m * 3) / 2;
+    if (sm === 2) { hHoles.rect(x, y, w, h); return; }
+    [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([a, b]) => { const px = x + m + a * (pw + m), py = y + m + b * (ph + m);
+      if (sm && (a + b) % 2 === 0) hHoles.poly([[px, py], [px + pw, py], [px + pw, py + ph * 0.25], [px + pw * 0.6, py + ph * 0.5], [px + pw * 0.8, py + ph], [px + pw * 0.2, py + ph * 0.8], [px, py + ph]]);
+      else hHoles.rect(px, py, pw, ph); });
+  });
+  // attic: a round louvre inside a punched rosette (wayang medallion)
+  [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([a, b]) => hHoles.add(OTM.S().M(640, 425).L(640 + (a ? 1 : -1) * 18, 425).Q(640 + (a ? 1 : -1) * 18, 425 + (b ? 1 : -1) * 18, 640, 425 + (b ? 1 : -1) * 18).Z().translate((a ? 1 : -1) * 2.5, (b ? 1 : -1) * 2.5)));
+  for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; const c = Math.cos(a), s = Math.sin(a); hHoles.poly(slit([640 + c * 31, 425 + s * 31], [640 + c * 50, 425 + s * 50], 0, 4.2)); hHoles.circle(640 + Math.cos(a + 0.22) * 40, 425 + Math.sin(a + 0.22) * 40, 1.9); }
+  // a lace band of teardrops + dots running just inside both gable slopes
+  for (let i = 1; i < 15; i++) { const t = i / 15; [[lerp(398, 626, t), lerp(504, 306, t), -1], [lerp(654, 882, t), lerp(306, 504, t), 1]].forEach(([x, y, sd]) => {
+    const yy = y + 30; hHoles.poly(slit([x, yy - 7], [x, yy + 7], 0, 3.2)); hHoles.circle(x + sd * 8, yy + 4 + sd * 0, 1.7); }); }
+  // frieze under the main eaves: punched diamonds alternating with dots
+  for (let x = 396; x < 890; x += 21) { hHoles.poly([[x, 538], [x + 5, 545], [x, 552], [x - 5, 545]]); hHoles.circle(x + 10.5, 545, 1.8); }
+  for (let x = 904; x < 1122; x += 21) { hHoles.poly([[x, 616], [x + 5, 623], [x, 630], [x - 5, 623]]); hHoles.circle(x + 10.5, 623, 1.8); }
+  // corner quoins: columns of punched lozenges; and a foundation row of crosses
+  [394, 888, 904, 1118].forEach(cx => { for (let y = 650; y < 880; y += 28) hHoles.poly([[cx, y - 8], [cx + 4, y], [cx, y + 8], [cx - 4, y]]); });
+  for (let x = 400; x < 1120; x += 18) { if (x > 600 && x < 640) continue; hHoles.rect(x - 3, 884, 6, 1.8); hHoles.rect(x - 0.9, 880, 1.8, 10); }
+  // sills: three dots under every window
+  wins.forEach(([x, y, w, h]) => { for (let k = -1; k <= 1; k++) hHoles.circle(x + w / 2 + k * 12, y + h + 14, 2.2); });
+  // door ajar
+  hHoles.rect(612, 790, 16, 115);
+  const L = st.layer(); const TS = sh => sh.translate(HX, 0);
+  ROD.piece(L, TS(house).path(0.9, 21), TS(hHoles).path(0.25, 5));
+  // ink flame tongues licking up inside the windows
+  const gelP = new Path2D(); wins.forEach(([x, y, w, h]) => gelP.rect(x - 3, y - 3, w + 6, h + 6)); gelP.arc(640, 425, 24, 0, 7); gelP.rect(608, 786, 24, 120);
+  const gelPS = new Path2D(); gelPS.addPath(gelP, new DOMMatrix([1, 0, 0, 1, HX, 0]));
+  const tongues = S(); const rr = rng('tong');
+  wins.forEach(([x, y, w, h, sm]) => { for (let k = 0; k < 3; k++) { if (sm === 2 && k < 2) continue; const bx = x + 12 + k * (w - 24) / 2, hh = h * (0.45 + rr() * 0.4), ww = 13 + rr() * 10, ln = (rr() - 0.5) * 16; tongues.add(smooth([[bx - ww, y + h + 4], [bx - ww * 0.6, y + h - hh * 0.45], [bx + ln, y + h - hh, 1], [bx + ww * 0.5, y + h - hh * 0.5], [bx + ww * 0.2, y + h - hh * 0.25], [bx + ww, y + h + 4]], true)); } });
+  L.save(); L.clip(gelPS); L.fillStyle = P.ink; L.fill(TS(tongues).path(0.6, 4)); L.restore();
+  // roof flames: black cut-paper tongues against the blaze, each a separate pinned piece
+  const flames = S(); const fr = rng('roofflame'); const flamePins = [];
+  for (let i = 0; i < 14; i++) {
+    const t = i / 13; const bx = lerp(410, 1110, t) + (fr() - 0.5) * 20;
+    const base = bx < 640 ? 520 - (bx - 380) * (252 / 260) : bx < 930 ? 268 + (bx - 640) * (252 / 290) : 472;
+    const hh = (bx > 520 && bx < 900 ? 230 : 140) * (0.55 + fr() * 0.7), ww = 24 + fr() * 26, lean = 10 + fr() * 50;
+    flames.add(smooth([[bx - ww, base + 24], [bx - ww * 0.75, base - hh * 0.3], [bx - ww * 0.1 + lean * 0.4, base - hh * 0.68], [bx + lean, base - hh, 1], [bx + ww * 0.3 + lean * 0.4, base - hh * 0.5], [bx + ww * 0.2, base - hh * 0.25], [bx + ww * 0.55 + lean * 0.2, base - hh * 0.4, 1], [bx + ww, base + 24]], true));
+    flamePins.push([bx, base + 6]);
+  }
+  flames.add(smooth([[756, 316], [764, 250], [780, 200, 1], [790, 248], [804, 222, 1], [806, 316]], true));
+  const flHoles = S(); for (let i = 0; i < 12; i++) { const x = 470 + fr() * 620, y = 250 + fr() * 220; flHoles.poly(slit([x, y], [x + 7, y - 24], 5, 2.6)); }
+  ROD.piece(L, TS(flames).path(0.7, 8), TS(flHoles).path(0.2, 2));
+  // the window frame that fell out, lying tilted against the wall below its hole
+  const fall = S(); fall.rect(-44, -56, 88, 112); const fallH = S(); [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([a, b]) => fallH.rect(-37 + a * 40, -49 + b * 52, 34, 46));
+  const FM = [Math.cos(0.5), Math.sin(0.5), -Math.sin(0.5), Math.cos(0.5), 860, 846];
+  ROD.piece(L, TS(fall.transform(FM)).path(0.5, 2), TS(fallH.transform(FM)).path(0.2, 3));
+  // layered tissue in every window: three torn pieces of ember, amber and flame-hot overlapping (multiply = deeper where they overlap)
+  const tissue = (x, y, w, h, i) => { const r = rng('tis' + i); const out = [];
+    const tear = (pts) => { const q = []; for (let k = 0; k < pts.length; k++) { const a = pts[k], b = pts[(k + 1) % pts.length]; for (let s = 0; s < 6; s++) { const t = s / 6; q.push([lerp(a[0], b[0], t) + (r() - 0.5) * 5, lerp(a[1], b[1], t) + (r() - 0.5) * 5]); } } return q; };
+    out.push({ c: '#E8330E', a: 0.72, pts: tear([[x - 4, y + h * (0.38 + r() * 0.15)], [x + w * 0.55, y + h * (0.55 + r() * 0.1)], [x + w + 4, y + h * (0.3 + r() * 0.2)], [x + w + 4, y + h + 4], [x - 4, y + h + 4]]) });
+    out.push({ c: '#FF9A2A', a: 0.62, pts: tear([[x - 4, y - 4], [x + w * (0.55 + r() * 0.2), y - 4], [x + w * (0.3 + r() * 0.2), y + h * 0.72], [x - 4, y + h * 0.86]]) });
+    out.push({ c: '#FFE7A8', a: 0.5, pts: tear([[x + w * 0.45, y - 4], [x + w + 4, y - 4], [x + w + 4, y + h * 0.62], [x + w * 0.62, y + h * 0.42]]) });
+    return out; };
+  const tissues = []; wins.forEach(([x, y, w, h, sm], i) => { if (sm !== 2) tissue(x, y, w, h, i).forEach(t => tissues.push(t)); });
+  st.commit(L, { from: [620, 620], shadow: { ox: 22, oy: 18, blur: 20, alpha: 0.62 }, rim: { w: 2.2, color: P.flameHot, alpha: 0.75 }, texture: 0.35,
+    gels: [{ fn: (c) => { c.save(); c.translate(HX, 0); wins.forEach(([x, y, w, h]) => { const wg = c.createLinearGradient(0, y + h, 0, y); wg.addColorStop(0, '#FFE2A0'); wg.addColorStop(0.5, '#FFA040'); wg.addColorStop(1, '#F0501A'); c.fillStyle = wg; c.fillRect(x - 3, y - 3, w + 6, h + 6); }); c.fillStyle = '#FF7A2A'; c.beginPath(); c.arc(640, 425, 54, 0, 7); c.fill(); c.fillStyle = '#FFD27A'; c.fillRect(608, 786, 24, 120); c.restore(); }, color: '#FFC46A', alpha: 0.55, glow: 0.3 }]
+      .concat(tissues.map(t => ({ fn: (c) => { c.save(); c.translate(HX, 0); c.beginPath(); t.pts.forEach((p, k) => k ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.closePath(); c.fill(); c.restore(); }, color: t.c, alpha: t.a, glow: 0.1 }))) });
+  wrap(st.em, c => { c.globalCompositeOperation = 'destination-out'; c.fill(house.path(0, 1)); c.globalCompositeOperation = 'source-over'; c.fillStyle = '#FFB86A'; c.globalAlpha = 0.34; c.fill(gelP); });
+  // paper fibre through the window tissue so the gels read as paper
+  g.save(); g.clip(gelPS); g.globalCompositeOperation = 'multiply'; g.globalAlpha = 0.9; g.drawImage(ROD.fibreTex(), 211, 37); g.restore();
+
+  // ---------- the upstairs curtain: pale tissue lifting in the heat, its upper part already burned away ----------
+  { const CX = 742 + HX, CY = 548, CW = 132, CH = 156; // the frameless window
+    const bx = CX - 4, by = CY - 4, bw = CW + 8, bh = CH + 8;
+    // the fire right behind this window: deeper ember tissue
+    g.save(); g.beginPath(); g.rect(CX, CY, CW, CH); g.clip(); g.globalCompositeOperation = 'multiply'; const fg2 = g.createLinearGradient(0, CY + CH, 0, CY); fg2.addColorStop(0, 'rgba(255,200,120,0.6)'); fg2.addColorStop(1, 'rgba(230,60,20,0.85)'); g.fillStyle = fg2; g.fillRect(CX, CY, CW, CH); g.restore();
+    const cur = smooth([[CX - 2, CY + 1], [CX + 64, CY + 1], [CX + 82, CY + 30], [CX + 104, CY + 62], [CX + 128, CY + 92], [CX + 136, CY + 128, 1], [CX + 110, CY + 150], [CX + 70, CY + 158], [CX + 30, CY + 158], [CX - 2, CY + 158, 1]], true);
+    const cm = OTM.makeCanvas(W, H), cmg = cm.getContext('2d'); cmg.fillStyle = '#fff'; cmg.beginPath(); cmg.rect(CX, CY, CW, CH); cmg.clip(); cmg.fill(cur.path(0.6, 3));
+    const mk = cmg.getImageData(bx, by, bw, bh).data;
+    const out = g.createImageData(bw, bh), em = g.createImageData(bw, bh), keep = g.createImageData(bw, bh);
+    // burn front: runs from the top edge down to the right; everything above/right of it is gone
+    const p0 = [CX + 40, CY + 66], nrm = [0.72, -0.69];
+    for (let j = 0; j < bh; j++) for (let i = 0; i < bw; i++) {
+      const o = (j * bw + i) * 4; if (mk[o + 3] < 8) continue; const x = bx + i, y = by + j;
+      const d = (x - p0[0]) * nrm[0] + (y - p0[1]) * nrm[1] + (fbm(x * 0.045, y * 0.045, 41, 3) - 0.5) * 30 + (vnoise(x * 0.3, y * 0.3, 9) - 0.5) * 4;
+      if (d > 0) continue;
+      let r, gg, b, a;
+      if (d > -2.8) { r = 255; gg = 150 + 80 * (1 + d / 2.8); b = 50; a = 255; em.data[o] = 255; em.data[o + 1] = 120; em.data[o + 2] = 30; em.data[o + 3] = 255; }
+      else if (d > -11) { const k = (d + 11) / 8.2; r = 40 + 50 * k; gg = 16 + 18 * k; b = 6 + 4 * k; a = 250; }
+      else if (d > -26) { const k = (d + 26) / 15; r = lerp(238, 120, k); gg = lerp(214, 58, k); b = lerp(176, 20, k); a = 245; }
+      else { r = 240; gg = 220; b = 184; a = 238; keep.data[o + 3] = 255; }
+      out.data[o] = r; out.data[o + 1] = gg; out.data[o + 2] = b; out.data[o + 3] = a;
+    }
+    const oc = OTM.makeCanvas(bw, bh); oc.getContext('2d').putImageData(out, 0, 0);
+    const ec = OTM.makeCanvas(bw, bh); ec.getContext('2d').putImageData(em, 0, 0);
+    const kc = OTM.makeCanvas(bw, bh), kg = kc.getContext('2d'); kg.putImageData(keep, 0, 0);
+    // fibre + soft vertical folds in the surviving tissue
+    const tc = OTM.makeCanvas(bw, bh), tg2 = tc.getContext('2d'); tg2.drawImage(oc, 0, 0); tg2.globalCompositeOperation = 'multiply'; tg2.drawImage(ROD.fibreTex(), -bx + 90, -by + 30);
+    tg2.strokeStyle = 'rgba(170,96,50,0.42)'; tg2.lineCap = 'round'; [[18, 6, 0.6], [40, 4, 0.5], [62, 8, 0.45], [86, 30, 0.4], [104, 70, 0.35]].forEach(([fx, fy, w2]) => { tg2.lineWidth = 3 * w2 + 1.5; tg2.beginPath(); tg2.moveTo(fx, fy); tg2.bezierCurveTo(fx + 6, fy + 50, fx - 4, fy + 100, fx + 10, bh); tg2.stroke(); });
+    tg2.globalCompositeOperation = 'destination-in'; tg2.drawImage(oc, 0, 0);
+    g.drawImage(tc, bx, by);
+    // hem: a darker bound edge along the bottom
+    g.save(); g.beginPath(); g.rect(CX, CY, CW, CH); g.clip(); g.strokeStyle = 'rgba(120,60,30,0.6)'; g.lineWidth = 3; g.beginPath(); g.moveTo(CX, CY + 152); g.quadraticCurveTo(CX + 60, CY + 156, CX + 120, CY + 146); g.stroke(); g.restore();
+    g.save(); g.globalCompositeOperation = 'screen'; g.filter = 'blur(1.5px)'; g.drawImage(ec, bx, by); g.drawImage(ec, bx, by); g.restore();
+    st.em.save(); st.em.globalAlpha = 1; st.em.drawImage(ec, bx, by); st.em.restore();
+    // flecks of burning tissue lifting off the front, up and out of the window
+    const r = rng('curflk'); for (let i = 0; i < 22; i++) { const t = r(); const x = CX + 50 + t * 100 + (r() - 0.5) * 40, y = CY + 30 - t * 60 - r() * 110; const s2 = 1.2 + r() * 2.6; g.save(); g.translate(x, y); g.rotate(r() * 3); g.fillStyle = r() < 0.45 ? P.char : (r() < 0.5 ? P.ember : P.flameHot); g.fillRect(-s2, -s2 * 0.6, s2 * 2, s2 * 1.2); g.restore(); if (r() < 0.6) { st.em.fillStyle = P.ember; st.em.beginPath(); st.em.arc(x, y, s2 * 2.4, 0, 7); st.em.fill(); } }
+  }
+  wrap(g, c => flamePins.forEach(([x, y], i) => { if (i % 2 === 0) ROD.pin(c, x, y, 3.2, { legs: false }); }));
+
+  // ---------- fence (left): the sirens are still far off, only a faint red/blue leaks through the slat gaps ----------
+  { const L2 = st.layer(); const f = S(); const fh = rng('fence');
+    for (let i = 0; i < 8; i++) { const x = -14 + i * 38; const top = 660 + fh() * 12; f.poly([[x, 930], [x, top + 10], [x + 16, top], [x + 32, top + 10], [x + 32, 930]]); }
+    f.rect(-14, 700, 318, 12); f.rect(-14, 860, 318, 12);
+    L2.fillStyle = P.ink; L2.fill(f.path(0.6, 3));
+    // soft coloured light behind the slats (seen only through the gaps)
+    g.save(); g.globalCompositeOperation = 'screen'; g.filter = 'blur(22px)';
+    [[60, 800, 'rgba(224,36,44,0.42)'], [190, 790, 'rgba(31,79,216,0.42)'], [-10, 760, 'rgba(31,79,216,0.3)'], [270, 820, 'rgba(224,36,44,0.26)']].forEach(([x, y, c]) => { g.fillStyle = c; g.beginPath(); g.ellipse(x, y, 90, 150, 0, 0, 7); g.fill(); });
+    g.restore();
+    st.commit(L2, { from: [160, 760], shadow: { ox: 9, oy: 8, blur: 9, alpha: 0.35 }, rim: { w: 1.6, color: P.flameHot, alpha: 0.4 }, texture: 0.3 }); }
+
+  // ---------- lawn ridge (mid-ground) ----------
+  { const L3 = st.layer(); const lawn = S(); lawn.poly([[0, 925], [300, 915], [700, 910], [1100, 916], [1180, 930], [1260, 950], [1500, 960], [1920, 964], [1920, 1080], [0, 1080]]);
+    const r = rng('lawn'); for (let x = 0; x < W; x += 14 + r() * 10) { const yb = x < 1100 ? 922 : x < 1260 ? 922 + (x - 1100) * 0.2 : 958; const h = (x > 1590 && x < 1780 ? 0.25 : 1) * (8 + r() * 16); lawn.poly([[x, yb], [x + 3 + r() * 4, yb - 4 - h], [x + 7, yb]]); }
+    L3.fillStyle = P.ink; L3.fill(lawn.path(0.6, 5)); st.commit(L3, { from: [960, 900], shadow: { ox: 6, oy: -8, blur: 12, alpha: 0.35 }, rim: { w: 1.6, color: P.flameHot, alpha: 0.5 } });
+    // strobe colour spilling softly onto the grass in front of the fence
+    g.save(); g.globalCompositeOperation = 'screen'; g.filter = 'blur(18px)'; g.fillStyle = 'rgba(224,36,44,0.22)'; g.beginPath(); g.ellipse(120, 945, 170, 26, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(31,79,216,0.22)'; g.beginPath(); g.ellipse(250, 950, 120, 22, 0, 0, 7); g.fill(); g.restore(); }
+
+  // ---------- SCOTT, on the grass in his socks, phone at his LEFT ear (the near side: he faces screen-left) ----------
+  const base = { x: 1440, y: 906, scale: 104, facing: -1, lean: 0.3, neck: 0.5, head: -0.62, aperture: 1.45, brow: 0.26, socks: true, torn: 0.06, phone: true,
+    legN: { a: 2.6, b: 2.45, foot: 0.25 }, legF: { a: 1.8, b: 0.28, foot: -0.75 },
+    armF: { a: -0.5, b: 0.1, w: -1.25, hand: 'flat', blister: true, pins: true }, grip: [-0.5, -1.05] };
+  let scott = ROD.puppet('scott', Object.assign({}, base, { armN: { a: 1, b: 2.5 } }));
+  const ph = scott.joints.phoneLow;
+  scott = ROD.puppet('scott', Object.assign({}, base, { armN: { ik: [ph[0], ph[1]], bend: -1, palm: 0.42, w: 0.15, hand: 'phone' } }));
+
+  // ---------- the empty place at his right: a person-sized patch where the paper fibre is missing (barely too bright) ----------
+  const GDX = 262;
+  const ghostFig = ROD.puppet('scott', Object.assign({}, base, { x: base.x + GDX, phone: false, torn: 0, lean: 0.24, neck: 0.1, head: 0.05,
+    armN: { a: 1.25, b: 0.9, hand: 'mitten' }, armF: { a: 1.1, b: 1.0, hand: 'mitten' } }));
+  const ghostP = new Path2D(); ghostFig.parts.forEach(pt => { if (!/foot/.test(pt.name)) ghostP.addPath(pt.outline.path(0.4, 2)); });
+  ROD.fibrePatch(st, ghostP, { bright: 0.045, charA: 0.0 });
+
+  ROD.drawPuppet(st, scott, { shadowD: 14, rimColor: P.flameHot, rimW: 2.6, rimA: 0.95, eyeColor: P.flameHot, commit: { shadow: { ox: 14, oy: 10, blur: 12, alpha: 0.42 } } });
+  // blisters: ember pinholes glowing through the far forearm
+  { const fo = scott.parts.find(p => p.name === 'foreF'); if (fo && fo.holes) { const hp = fo.holes.path(0, 1); g.save(); g.fillStyle = '#FF7A3A'; g.fill(hp); g.restore(); st.em.save(); st.em.fillStyle = P.ember; st.em.fill(hp); st.em.restore(); } }
+
+  // ---------- foreground grass: fringe-cut card (thin tips let the fire through) ----------
+  { const L4 = st.layer(); const gr = S(); const r = rng('grass'); gr.poly([[0, 1080], [0, 988], [1920, 988], [1920, 1080]]);
+    for (let x = -10; x < W + 10; x += 8 + r() * 7) { const inS = x > 1000 && x < 1800; const flat = x > 1590 && x < 1780 ? 0.35 : 1; const h = flat * ((inS ? 8 : 18) + r() * (inS ? 18 : 40)), w = 5 + r() * 6, lean = (r() - 0.5) * 20; gr.poly([[x, 992], [x + lean + w * 0.4, 992 - h], [x + w, 992]]); }
+    L4.fillStyle = P.ink; L4.fill(gr.path(0.3, 7));
+    st.commit(L4, { from: [960, 960], shadow: { ox: 4, oy: -6, blur: 8, alpha: 0.3 }, rim: { w: 1.4, color: P.flameHot, alpha: 0.65 } }); }
+
+  // ---------- his socks: foot + ankle cut out and backed with pale card-grey tissue, a ribbed cuff band up the shin ----------
+  [['footN', 'shinN', scott.joints.ankleN], ['footF', 'shinF', null]].forEach(([fn, sn, an], i) => {
+    const ft = scott.parts.find(p => p.name === fn), sh = scott.parts.find(p => p.name === sn); if (!ft) return;
+    const fp = ft.outline.path(0.35, 7 + i);
+    // the ankle: where the shin meets the foot (closest shin vertex to the foot's centre)
+    const fb = ft.outline.bbox(); const fc = [fb.x + fb.w / 2, fb.y + fb.h / 2]; let best = null, bd = 1e9; sh.outline.polys[0].forEach(q => { const d = Math.hypot(q[0] - fc[0], q[1] - fc[1]); if (d < bd) { bd = d; best = q; } });
+    const ank = an || best; const cuffR = 30;
+    const sockP = new Path2D(); sockP.addPath(fp); const cuffClip = new Path2D(); cuffClip.arc(ank[0], ank[1], cuffR, 0, 7);
+    // redraw shin end + foot over the grass so the sock is in front
+    const L5 = st.layer(); L5.fillStyle = P.ink; L5.fill(fp); L5.save(); L5.clip(cuffClip); L5.fill(sh.outline.path(0.35, 5)); L5.restore();
+    st.commit(L5, { from: ank, shadow: { ox: 8, oy: 6, blur: 6, alpha: 0.35 }, rim: { w: 1.8, color: P.flameHot, alpha: 0.9 }, texture: false });
+    // the sock fabric: inset 2px so a hairline of card edge remains
+    const sk = OTM.makeCanvas(W, H), sg = sk.getContext('2d'); sg.fillStyle = '#fff'; sg.fill(fp); sg.save(); sg.clip(cuffClip); sg.fill(sh.outline.path(0.35, 5)); sg.restore();
+    const er = OTM.makeCanvas(W, H), eg = er.getContext('2d'); eg.filter = 'blur(1.2px)'; eg.drawImage(sk, 0, 0); eg.filter = 'none';
+    const id = eg.getImageData(0, 0, W, H); // threshold the blur -> eroded mask
+    const bx = Math.max(0, (fb.x - 60) | 0), by2 = Math.max(0, (fb.y - 60) | 0), bw2 = Math.min(W - bx, (fb.w + 120) | 0), bh2 = Math.min(H - by2, (fb.h + 120) | 0);
+    const sub = eg.getImageData(bx, by2, bw2, bh2); for (let k = 3; k < sub.data.length; k += 4) sub.data[k] = sub.data[k] > 235 ? 255 : 0; eg.clearRect(0, 0, W, H); eg.putImageData(sub, bx, by2);
+    const fab = OTM.makeCanvas(W, H), fg3 = fab.getContext('2d'); fg3.fillStyle = '#A8A098'; fg3.fillRect(bx, by2, bw2, bh2);
+    fg3.globalCompositeOperation = 'multiply'; fg3.drawImage(ROD.fibreTex(), 13 * i, 41);
+    // knit ribs on the cuff band and a couple of soft creases on the foot
+    fg3.globalCompositeOperation = 'source-over'; fg3.strokeStyle = 'rgba(40,30,24,0.55)'; fg3.lineWidth = 1.6;
+    const sv = [ank[0] - fc[0], ank[1] - fc[1]]; const sl = Math.hypot(sv[0], sv[1]) || 1; const ux = sv[0] / sl, uy = sv[1] / sl; // toward the shin
+    for (let k = 0; k < 4; k++) { const d0 = 8 + k * 5; const cxk = ank[0] + ux * d0, cyk = ank[1] + uy * d0; fg3.beginPath(); fg3.moveTo(cxk - uy * 16, cyk + ux * 16); fg3.lineTo(cxk + uy * 16, cyk - ux * 16); fg3.stroke(); }
+    fg3.strokeStyle = 'rgba(60,44,34,0.35)'; fg3.lineWidth = 1.4; fg3.beginPath(); fg3.moveTo(fc[0] - ux * 4 - uy * 14, fc[1] - uy * 4 + ux * 14); fg3.quadraticCurveTo(fc[0] - ux * 12, fc[1] - uy * 12, fc[0] - ux * 4 + uy * 14, fc[1] - uy * 4 - ux * 14); fg3.stroke();
+    fg3.globalCompositeOperation = 'destination-in'; fg3.drawImage(er, 0, 0);
+    g.drawImage(fab, 0, 0);
+    g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.16; g.drawImage(er, 0, 0); g.restore();
+  });
+
+  // ---------- embers rising ----------
+  { const r = rng('embers'); for (let i = 0; i < 230; i++) { const x = 240 + r() * 1250, y = 70 + r() * 720; const d = Math.hypot(x - FIRE[0], (y - FIRE[1]) * 1.3); if (d > 760 && r() < 0.7) continue;
+      if (x > 1150 && y > 240 && y < 430) continue; // keep the dispatcher light clean
+      const s = 0.8 + r() * 2.2; g.fillStyle = r() < 0.35 ? P.flameHot : P.ember; g.globalAlpha = 0.55 + r() * 0.45; g.beginPath(); g.ellipse(x, y, s, s * 1.7, r() * 3, 0, 7); g.fill(); g.globalAlpha = 1;
+      st.em.fillStyle = P.ember; st.em.beginPath(); st.em.arc(x, y, s * 2.4, 0, 7); st.em.fill(); }
+    for (let i = 0; i < 16; i++) { const x = 340 + r() * 900, y = 140 + r() * 380; g.fillStyle = P.ink; g.save(); g.translate(x, y); g.rotate(r() * 3); g.beginPath(); g.moveTo(-4, -2); g.lineTo(5, -3); g.lineTo(3, 3); g.lineTo(-3, 2); g.fill(); g.restore(); } }
+
+  // ---------- the paper is paper: a second, stronger fibre pass so the sheet's grain shows even in the blaze ----------
+  ROD.paperDetail(st, 0.75);
+
+  // ---------- stage lip + TWO rods: his amber one, and a bare one the same gauge, at the same rake, ending in the empty place ----------
+  const lipT = ROD.lip(st, { top: 1004, tacks: [60, 960, 1860] }).top;
+  const LS = 1556;
+  ROD.rod(st, LS, scott.grip[0], scott.grip[1], { color: P.scott, lipTop: lipT, w: 9, fw: 32, fh: 70, fy: 66, socket: true });
+  const gg = [scott.grip[0] + GDX, scott.grip[1]];
+  ROD.rod(st, LS + GDX, gg[0], gg[1], { color: null, lipTop: lipT, w: 9, socket: true });
+
+  // ---------- dialogue: the outside world's cold rectangle; Scott's strip tears after one letter ----------
+  ROD.type.dispatcherLight(st, 'How many got out?', 1186, 256, { size: 56, cursor: true });
+  ROD.type.scottTear(st, 'I--', 1108, 400, { size: 104, stretch: 'extra-condensed', fallDx: -58, fallDy: 172, fallRot: 0.34, blur: 9 });
+
+  ROD.finish(st, { halation: 0.5, grain: 0.11, vignette: 0.6, vigR: 1.25, vigColor: '#120806' });
+  ROD.slate(st, 'ONE TOO MANY · LOOK C: ONE ROD TOO MANY', 'COLD OPEN · EXT. SCOTT’S BACK YARD · NIGHT');
+  window.FRAME_READY = true;
+})().catch(e => { console.error(e && e.stack || e); });
+</script>

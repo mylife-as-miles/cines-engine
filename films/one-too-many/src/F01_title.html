@@ -1,0 +1,123 @@
+<!doctype html><meta charset="utf-8"><title>F01 title</title>
+<svg width="0" height="0" style="position:absolute">
+  <!-- hand-cut paper edge for type: a slow scissor wander + a fine tremor -->
+  <filter id="cut" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="7" result="n1"/>
+    <feDisplacementMap in="SourceGraphic" in2="n1" scale="5" xChannelSelector="R" yChannelSelector="G" result="d1"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves="1" seed="3" result="n2"/>
+    <feDisplacementMap in="d1" in2="n2" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 4});
+  const g = f.world;
+  const R = OTM.rng('title-jitter-7');
+  const jit = () => (R() * 2 - 1);
+  const DEBUG = location.hash === '#debug';
+  const tint = (src, col) => { const c = OTM.makeCanvas(W, H).getContext('2d'); c.drawImage(src, 0, 0); c.globalCompositeOperation = 'source-in'; c.fillStyle = col; c.fillRect(0, 0, W, H); return c.canvas; };
+
+  // ================= layout: the line-up, measured by ink boxes =================
+  const SIZE = 540, FLOOR = 884;
+  const FT = {family: 'Six Caps', weight: 400, size: SIZE};
+  const ink = ch => { g.save(); g.font = OTM.font(FT); const m = g.measureText(ch); g.restore(); return {l: -m.actualBoundingBoxLeft, r: m.actualBoundingBoxRight, adv: m.width}; };
+  const PAD = 17, LG = 24;   // bar padding round a letter; letter gap inside a word
+  // left to right. A bar with a letter holds it as light; a letter between bars is ink on the light.
+  // The slot at Scott's right (screen-left of his bar) holds ONE, cut through to the ember.
+  const seq = [
+    {bar: 'deena', w: 86, k: 0.95},
+    {gap: 66},
+    {ch: 'O', one: 1}, {gap: LG}, {ch: 'N', one: 1}, {gap: LG}, {ch: 'E', one: 1},
+    {gap: 66},
+    {ch: 'T', bar: 'scott', k: 1.0}, {gap: PAD - 2},
+    {ch: 'O'}, {gap: PAD - 2},
+    {ch: 'O', bar: 'angelo', k: 1.07}, {gap: 30},
+    {bar: 'kay', w: 90, k: 0.965}, {gap: 30},
+    {ch: 'M', bar: 'christof', k: 1.015, padX: 10}, {gap: PAD - 2},
+    {ch: 'A'}, {gap: PAD - 2},
+    {ch: 'N', bar: 'marina', k: 0.98}, {gap: PAD - 2},
+    {ch: 'Y'},
+  ];
+  let cx = 0; const glyphs = [], bars = [];
+  seq.forEach(it => {
+    if (it.gap) { cx += it.gap; return; }
+    if (it.ch) {
+      const m = ink(it.ch), iw = m.r - m.l, pad = it.bar ? PAD + (it.padX || 0) : 0;
+      glyphs.push({ch: it.ch, x: cx + pad - m.l, iw, adv: m.adv, one: !!it.one, rot: jit() * 0.6 * Math.PI / 180, dy: jit() * 2});
+      if (it.bar) bars.push({id: it.bar, x: cx, w: iw + 2 * pad, k: it.k});
+      cx += iw + 2 * pad;
+    } else { bars.push({id: it.bar, x: cx, w: it.w, k: it.k}); cx += it.w; }
+  });
+  const shift = Math.round((W - cx) / 2); glyphs.forEach(q => q.x += shift); bars.forEach(b => b.x += shift);
+  const B = id => bars.find(b => b.id === id);
+  const yLast = glyphs[glyphs.length - 1];
+
+  // ================= the tungsten field: one lamp overhead, printed as flat bands =================
+  // A tall pool (its top is far above frame), so the seams fall almost vertically and hide behind bodies:
+  // the core and mid seams fall behind Scott's bar. The six stand in the light; the seventh place (the slot) is left in the low band.
+  g.fillStyle = C.tungstenLow; g.fillRect(0, 0, W, H);
+  const sc = B('scott');
+  const RIGHT = 1888, LY = 560;
+  const seamCore = sc.x + sc.w * 0.74, seamMid = sc.x + sc.w * 0.2;
+  const bands = [
+    {l: seamMid, r: RIGHT + 70, ry: 1500, col: C.tungstenMid},
+    {l: seamCore, r: RIGHT, ry: 1380, col: C.tungsten},
+  ];
+  const ditherPat = col => { const c = OTM.makeCanvas(4, 4), d = c.getContext('2d'); d.fillStyle = col; [[0,0],[2,2],[2,0],[0,2],[1,1],[3,3]].forEach(([x,y],i)=>{ if (i<4||i%2) d.fillRect(x,y,1,1); }); return g.createPattern(c, 'repeat'); };
+  bands.forEach((b, i) => {
+    const p = S().ellipse((b.l + b.r) / 2, LY, (b.r - b.l) / 2, b.ry, 0).path(2.4, 60 + i);
+    g.fillStyle = b.col; g.fill(p);
+    g.save(); g.strokeStyle = ditherPat(i ? bands[i - 1].col : C.tungstenLow); g.lineWidth = 7; g.stroke(p); g.restore();
+  });
+
+  // ================= six bodies: tall ink bars, hand-cut, each its own height and lean =================
+  // soft shoulders at the top so they stand like people, not buildings
+  const BASE = FLOOR + 60, TALL = 790;   // TALL = Scott's height above the floor
+  const barShape = S();
+  // bodies differ only in height, width and the cut of the shoulders: Angelo tallest, Christof widest, Marina blunt, Kay soft.
+  bars.forEach((b, i) => {
+    const top = FLOOR - TALL * b.k, lean = jit() * 0.008, tilt = jit() * 0.03 * b.w;
+    const rr = b.w * ({marina: 0.07, kay: 0.26, christof: 0.13}[b.id] || 0.18);
+    const cxb = b.x + b.w / 2, x0 = b.x, x1 = b.x + b.w;
+    const sh = S().M(x0, BASE).L(x0 - 2, top + rr + tilt).Q(x0 - 1, top + tilt, x0 + rr, top + tilt * 0.5)
+      .L(x1 - rr, top - tilt * 0.5).Q(x1 + 1, top - tilt, x1 + 2, top + rr - tilt).L(x1, BASE).Z();
+    barShape.add(sh.rotate(lean, cxb, BASE));
+  });
+  const barPath = barShape.path(1.6, 21);
+  const Bc = OTM.makeCanvas(W, H).getContext('2d'); Bc.fillStyle = '#fff'; Bc.fill(barPath);
+  g.fillStyle = C.ink; g.fill(barPath);
+
+  // the floor they stand on (one paper strip, slightly off level)
+  g.fillStyle = C.ink; g.fill(S().poly([[-20, FLOOR + 2], [W + 20, FLOOR - 3], [W + 20, H + 20], [-20, H + 20]]).path(1.6, 31));
+
+  // ================= the title, glyph by glyph (frozen hand-cut jitter) =================
+  function drawGlyphs(c, list, color) {
+    c.save(); c.filter = 'url(#cut)'; c.font = OTM.font(FT); c.fillStyle = color; c.textBaseline = 'alphabetic';
+    list.forEach(q => { const hw = q.adv / 2; c.save(); c.translate(q.x + hw, FLOOR + q.dy); c.rotate(q.rot); c.fillText(q.ch, -hw, 0); c.restore(); });
+    c.restore();
+  }
+  // TOO MANY: ink where it stands on the light, light where it crosses a body
+  const Lc = OTM.makeCanvas(W, H).getContext('2d'); drawGlyphs(Lc, glyphs.filter(q => !q.one), '#000');
+  g.drawImage(tint(Lc.canvas, C.ink), 0, 0);
+  const X = OTM.makeCanvas(W, H).getContext('2d'); X.drawImage(Lc.canvas, 0, 0); X.globalCompositeOperation = 'destination-in'; X.drawImage(Bc.canvas, 0, 0);
+  g.drawImage(tint(X.canvas, C.tungsten), 0, 0);
+
+  // ONE: cut clean through the paper to the ember lightbox (f.knockoutText, glyph by glyph), then given the same scissor edge
+  glyphs.filter(q => q.one).forEach(q => f.knockoutText(q.ch, q.x + q.adv / 2, FLOOR + q.dy, Object.assign({}, FT, {align: 'center', rotate: q.rot})));
+  { const hc = f.holes, tmp = OTM.makeCanvas(W, H).getContext('2d'); tmp.drawImage(hc.canvas, 0, 0); hc.save(); hc.setTransform(1, 0, 0, 1, 0, 0); hc.clearRect(0, 0, W, H); hc.filter = 'url(#cut)'; hc.drawImage(tmp.canvas, 0, 0); hc.restore(); }
+
+  // a little more bloom on ONE: the first time the audience sees the colour, it should hum
+  { const e = f.emissive; e.save(); e.font = OTM.font(FT); e.fillStyle = C.ember; e.globalAlpha = 0.55; glyphs.filter(q => q.one).forEach(q => { e.save(); e.translate(q.x + q.adv / 2, FLOOR + q.dy); e.rotate(q.rot); e.textAlign = 'center'; e.fillText(q.ch, 0, 0); e.restore(); }); e.restore(); }
+
+  // ================= credit =================
+  OTM.text(g, 'A FILM BY OSITA MILES', yLast.x + yLast.adv * 0.5 + yLast.iw * 0.5 + 6, FLOOR + 92, {family: 'Barlow Condensed', weight: 600, size: 30, color: C.tungsten, tracking: 9, align: 'right'});
+
+  if (DEBUG) bars.forEach(b => OTM.text(g, b.id, b.x, 60, {family: 'Barlow Condensed', size: 20, color: '#fff'}));
+  f.finish({letterbox: 1.7778, vignette: 0.45, halation: 0.85});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 01', 'TITLE', 1.7778);
+  window.FRAME_READY = true;
+})();
+</script>

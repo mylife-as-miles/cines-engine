@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>set test</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script src="load.js"></script>
+<script>
+  // Renders a set's demos as a fake sequence so the set can be checked in isolation.
+  FILM_LOAD('../', ['none']).then(async () => {
+    const name = new URLSearchParams(location.search).get('set');
+    if (!SETS[name]) await new Promise(res => { const s = document.createElement('script'); s.src = 'sets/' + name + '.js'; s.onload = s.onerror = res; document.head.appendChild(s); });
+    const set = SETS[name];
+    if (!set || !set.demos) { console.error('set ' + name + ' has no demos'); window.FILM_READY = true; return; }
+    FILM.seq({ id: 'SET', title: 'set ' + name, dur: set.demos.length * 4, letterbox: lt => (set.demos[Math.floor(lt / 4)] || {}).letterbox || 1.7778,
+      shots: set.demos.map((d, i) => ({ at: i * 4, name: d.name, draw: (c, st, lt) => d.draw(c, (d.t0 || 0) + st, lt) })) });
+    FILM.mountHeadless(); window.FILM_READY = true;
+  });
+</script>

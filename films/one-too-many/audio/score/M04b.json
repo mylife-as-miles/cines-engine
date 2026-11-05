@@ -1,0 +1,7 @@
+{
+ "id": "M04b",
+ "model": "lyria-3.5",
+ "prompt": "A 36-second instrumental track: a quiet, simple stretch of a mellow dinner-party record a little later in the evening, played by a warm neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo, comping softly and carrying a simple melody whose line falls E, E, D, B-flat across the four bars; a round fingered electric bass on roots and fifths; and brushes only on the snare (no kick, no hi-hat). 6/8 at 70 dotted-quarter beats per minute (one bar about 1.7 seconds). In tune at A = 440. Key: D minor (Dorian). A four-bar loop, one chord per bar, throughout: Dm9 | G13 | Cmaj9 | A7(b9). Soft, easy and intimate.\n[0:00 - 0:36] Already playing on the very first downbeat (no intro, no count-in, no fade-in), at one soft, steady level the whole way through, with no build and no ending; it will be cut off mid-bar.\nInstrumental only, no vocals, no humming, no scat. Avoid: an intro or an ending, drum fills, a kick drum, key or tempo changes, solos, synths, strings, and anything dark, tense or cinematic.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]"
+}

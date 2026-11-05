@@ -1,0 +1,195 @@
+<!doctype html><meta charset="utf-8"><title>F04</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 4});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f04');
+
+  // ================= geometry =================
+  const BASE = 872;                                 // wall meets floor
+  const LAMP = {x: 930, top: 334, bot: 414, wt: 70, wb: 148, foot: 904};
+  const SC = {LX: 948, LY: 384, D: 120, K: 0.4};   // shade cut-off on the wall
+  const scallopY = x => SC.LY + SC.K * Math.sqrt((x - SC.LX) * (x - SC.LX) + SC.D * SC.D);
+  const KIT = {x0: 92, x1: 330, top: 188};          // kitchen doorway (still warm here)
+  const TBL = {x0: 612, x1: 1316, top: 792, depth: 18, leg: 912};
+
+  // ---------- helpers ----------
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  function rim(path, dir, w, color, clip, alpha) {
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.globalAlpha = 1; tg.clearRect(0, 0, W, H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w, -dir[1] * w); tg.fill(path);
+    g.save(); if (clip) g.clip(clip); g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  const norm = (x, y) => { const l = Math.hypot(x, y); return [x / l, y / l]; };
+  function ik(id, pose, target, side) {
+    const D = OTM.fig.CHAR[id], k = D.heightK, U = 1.42 * D.armK * k, Fo = 1.22 * D.armK * k;
+    const fig = OTM.fig.profile(id, pose); const S0 = fig.joints.shoulder; const fc = pose.facing || 1, sc = pose.scale;
+    let vx = (target[0] - S0[0]) / sc * fc, vy = (target[1] - S0[1]) / sc; let d = Math.hypot(vx, vy); const md = (U + Fo) * 0.995; if (d > md) { vx *= md / d; vy *= md / d; d = md; }
+    const tv = Math.atan2(vx, vy); const al = Math.acos(Math.max(-1, Math.min(1, (U * U + d * d - Fo * Fo) / (2 * U * d))));
+    const a = tv + side * al; const Ej = [Math.sin(a) * U, Math.cos(a) * U]; const tf = Math.atan2(vx - Ej[0], vy - Ej[1]); return {a, b: tf - a};
+  }
+  const LC = [LAMP.x, (LAMP.top + LAMP.bot) / 2 + 30];   // the light's centre for rim directions
+  const toLamp = (x, y) => norm(LC[0] - x, LC[1] - y);
+  function dither(col) { const c = OTM.makeCanvas(4, 4), q = c.getContext('2d'); q.fillStyle = col; [[0, 0], [2, 2], [2, 0], [0, 2]].forEach(([x, y]) => q.fillRect(x, y, 1, 1)); return g.createPattern(c, 'repeat'); }
+  // region below a scallop curve, bounded by an ellipse
+  const arch = (K, off, cx, cy, rx, ry) => { const p = new Path2D(); const pts = [];
+    for (let x = cx - rx; x <= cx + rx; x += 4) { const u = (x - cx) / rx, yb = cy + ry * Math.sqrt(Math.max(0, 1 - u * u)); const yt = SC.LY + off + K * Math.sqrt((x - SC.LX) * (x - SC.LX) + SC.D * SC.D); if (yt < yb) pts.push([x, yt, yb]); }
+    if (!pts.length) return p; p.moveTo(pts[0][0], pts[0][2]); pts.forEach(q => p.lineTo(q[0], q[1])); for (let i = pts.length - 1; i >= 0; i--) p.lineTo(pts[i][0], pts[i][2]); p.closePath(); return p; };
+
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+
+  // ================= BACK WALL =================
+  const wallClip = new Path2D(); wallClip.rect(0, 0, W, BASE); wallClip.rect(KIT.x0, KIT.top, KIT.x1 - KIT.x0, BASE - KIT.top);
+  g.save(); g.clip(wallClip, 'evenodd');
+  // a faint up-glow through the open top of the shade
+  g.fillStyle = OTM.mix(C.tungstenLow, C.ink, 0.5);
+  g.fill(S().poly([[LAMP.x - LAMP.wt / 2, LAMP.top], [LAMP.x + LAMP.wt / 2, LAMP.top], [LAMP.x + 170, 0], [LAMP.x - 170, 0]]).path(1.2, 2));
+  // the big pool: three posterised bands behind the heads
+  OTM.lightPool(g, LAMP.x + 60, 500, [{r: 1120, color: C.tungstenLow}, {r: 720, color: C.tungstenMid}, {r: 370, color: C.tungsten}], {sy: 0.36, seed: 4, rough: 2.6});
+  // skirting
+  g.fillStyle = C.ink; g.fillRect(0, BASE - 24, W, 24);
+  g.restore();
+
+  // ================= KITCHEN DOORWAY (bright, warm: Kay is still warm here) =================
+  g.save(); const kitP = new Path2D(); kitP.rect(KIT.x0, KIT.top, KIT.x1 - KIT.x0, BASE - KIT.top + 2); g.clip(kitP);
+  g.fillStyle = C.tungstenMid; g.fillRect(KIT.x0, KIT.top, KIT.x1 - KIT.x0, BASE - KIT.top);
+  OTM.lightPool(g, KIT.x0 + 150, 420, [{r: 260, color: C.tungsten}, {r: 120, color: '#F7C46A'}], {sy: 1.3, seed: 11, rough: 1.6});
+  // kitchen cupboards and a counter in silhouette
+  // the far kitchen: a counter edge and a hanging cupboard on the right, a kettle silhouette
+  g.fillStyle = C.ink; g.fill(S().rect(KIT.x1 - 90, KIT.top - 10, 110, 120).path(0.6, 3)); g.fill(S().rect(KIT.x1 - 120, 676, 140, 220).path(0.6, 4));
+  g.fill(S().M(KIT.x1 - 96, 676).L(KIT.x1 - 92, 640).C(KIT.x1 - 88, 626, KIT.x1 - 62, 626, KIT.x1 - 58, 640).L(KIT.x1 - 54, 676).Z().add(S().rect(KIT.x1 - 82, 618, 10, 10)).path(0.4, 6));
+  g.fillStyle = C.tungsten; g.fillRect(KIT.x1 - 120, 674, 140, 3);
+  g.restore();
+  g.fillStyle = C.ink; g.fill(S().rect(KIT.x0 - 26, KIT.top - 24, 26, BASE - KIT.top + 24).add(S().rect(KIT.x0 - 26, KIT.top - 24, KIT.x1 - KIT.x0 + 52, 24)).add(S().rect(KIT.x1, KIT.top - 24, 26, BASE - KIT.top + 24)).path(0.6, 5));
+  E.fillStyle = C.tungsten; E.globalAlpha = 0.7; E.beginPath(); E.ellipse(KIT.x0 + 150, 410, 70, 110, 0, 0, 7); E.fill(); E.globalAlpha = 1;
+
+  // ================= FLOOR =================
+  const floorClip = new Path2D(); floorClip.rect(0, BASE, W, H - BASE);
+  g.save(); g.clip(floorClip);
+  g.fillStyle = C.ink; g.fillRect(0, BASE, W, H - BASE);
+  OTM.lightPool(g, LAMP.x, 948, [{r: 1060, color: C.tungstenLow}, {r: 700, color: C.tungstenMid}, {r: 380, color: C.tungsten}], {sy: 0.13, seed: 8, rough: 2.2});
+  // the rug: a darker panel under the table, its fringe edge
+  g.fillStyle = OTM.rgba(C.ink, 0.35); g.fill(S().poly([[420, 900], [1500, 900], [1640, 1080], [280, 1080]]).path(1, 9));
+  // the trunk's shadow thrown toward us: the lamp is behind it
+  g.fillStyle = OTM.rgba(C.ink, 0.8); g.fill(S().poly([[TBL.x0 + 4, 914], [TBL.x1 - 4, 914], [TBL.x1 + 150, 1090], [TBL.x0 - 130, 1090]]).path(1.6, 13));
+  // crisps that missed the bowl
+  (() => { const r = OTM.rng('floorcrisps'); g.fillStyle = C.cardPaper; [[318, 936], [356, 950], [300, 962], [392, 932]].forEach(([x, y]) => { g.save(); g.translate(x, y); g.rotate(r() * 3); g.globalAlpha = 0.85; g.beginPath(); g.ellipse(0, 0, 5 + r() * 2, 2.6, 0, 0, 7); g.fill(); g.restore(); }); })();
+  g.restore();
+
+  // haze under the shade (behind everyone), dust turning in it
+  OTM.dust(g, [[LAMP.x - 70, LAMP.bot + 10], [LAMP.x + 70, LAMP.bot + 10], [LAMP.x + 360, 760], [LAMP.x - 360, 760]], 60, C.cardPaper, 'pd');
+  OTM.cone(g, [[LAMP.x - LAMP.wb / 2, LAMP.bot], [LAMP.x + LAMP.wb / 2, LAMP.bot], [LAMP.x + 520, 1000], [LAMP.x - 520, 1000]], C.tungsten, 0.05);
+
+  // ================= FIGURES (back to front) =================
+  const P = {
+    kay: {x: 150, y: 880, scale: 76, facing: 1, lean: -0.14, neck: 0.06, head: 0.12, armN: {a: 0.06, b: 0.45, hand: 'relaxed', w: 0.4}, armF: {a: -0.12, b: 0.3, hand: 'relaxed'}, legN: {a: -0.1, b: 0.0}, legF: {a: 0.24, b: 0.04}},
+    scott: {x: 486, y: 914, scale: 84, facing: 1, lean: 0.42, neck: 0.16, head: 0.26, armN: {a: 0.5, b: 1.3, hand: 'hold'}, armF: {a: 0.3, b: 0.35, hand: 'side', w: 0.35, handOpts: {curl: 0.4}}, legN: {a: 0.72, b: 1.1}, legF: {a: 0.36, b: 0.92}},
+    marina: {x: 724, y: 724, scale: 82, facing: 1, anchor: 'hip', lean: 0.6, neck: 0.2, head: 0.42, armF: {a: 0.1, b: 0.4, hand: 'relaxed'}, legN: {a: 0.08, b: 1.62}, legF: {a: 0.0, b: 1.6}},
+    christof: {x: 1150, y: 900, scale: 88, facing: -1, lean: -0.1, neck: -0.1, head: -0.2, armN: {a: 2.5, b: -0.38, hand: 'hold'}, armF: {a: -0.5, b: -0.42, hand: 'open', w: -0.3}, legN: {a: 0.26, b: 0.08}, legF: {a: -0.22, b: 0.05}},
+    angelo: {x: 1690, y: 892, scale: 114, facing: -1, anchor: 'hip', lean: -0.5, neck: 0.22, head: 0.16, armN: {a: 0.5, b: 1.05, hand: 'relaxed'}, armF: {a: -2.25, b: 2.2, hand: 'relaxed'}, legN: {a: 1.3, b: 0.7}, legF: {a: 1.12, b: 1.0}},
+    deena: {x: 1452, y: 902, scale: 84, facing: -1, lean: -0.04, neck: -0.08, head: -0.24, swing: 0.24, armN: {a: -0.62, b: 1.85, hand: 'relaxed', w: 0.4}, armF: {a: 0.06, b: 0.16, hand: 'relaxed'}, legN: {a: 0.08, b: 0.02}, legF: {a: -0.08, b: 0.02}},
+  };
+  // Marina's ringed hand lands exactly on the wine ring
+  P.marina.armN = Object.assign({hand: 'side', handOpts: {curl: 0.0}}, ik('marina', P.marina, [870, 772], -1));
+  P.marina.armN.w = -Math.atan2(Math.cos(P.marina.armN.a + P.marina.armN.b), Math.sin(P.marina.armN.a + P.marina.armN.b)) + 0.08;   // hand flat on the table
+  const F = {}; Object.keys(P).forEach(id => F[id] = OTM.fig.profile(id, P[id]));
+
+
+  // figure helper: ink + rim facing the lamp
+  function figure(id, rimW, clip) {
+    const fg = F[id], p = fg.shape.path(0.8, 20 + id.length), bb = fg.shape.bbox();
+    g.fillStyle = C.ink; g.fill(p);
+    const d = toLamp(bb.x + bb.w / 2, bb.y + bb.h * 0.35);
+    rim(p, d, rimW || 3, C.tungsten, clip);
+    return p;
+  }
+  // BG: Kay in the kitchen doorway
+  figure('kay', 2.2);
+  g.save(); g.globalAlpha = 0.55; OTM.fig.drawDetails(g, F.kay, {beadColor: C.cardPaper}); g.restore();
+  // the floor lamp: pole behind the table, empire shade glowing
+  g.fillStyle = C.ink; g.fillRect(LAMP.x - 4, LAMP.bot - 6, 8, LAMP.foot - LAMP.bot); g.fill(S().ellipse(LAMP.x, LAMP.foot, 44, 7, 0).path(0.3, 2));
+  // Marina, Christof (behind the table)
+  figure('marina', 2.4);
+  figure('christof', 2.8);
+  figure('deena', 2.6);
+  OTM.fig.drawDetails(g, F.deena, {hoopColor: C.tungsten, light: {x: LAMP.x, y: 340}});
+  figure('scott', 2.6);
+
+  // ================= COFFEE TABLE + SIX GLASSES =================
+  // top surface strip (lit), front edge (ink), legs
+  g.fillStyle = C.tungstenMid; g.fill(S().poly([[TBL.x0 + 18, TBL.top - TBL.depth], [TBL.x1 - 18, TBL.top - TBL.depth], [TBL.x1, TBL.top], [TBL.x0, TBL.top]]).path(0.5, 41));
+  g.fillStyle = C.tungsten; g.fill(S().ellipse(LAMP.x, TBL.top - TBL.depth / 2, 300, 8, 0).path(0.8, 43));
+  // a borrowed trunk of a coffee table: solid front, lid lip catching the lamp, squat feet
+  g.fillStyle = C.ink; g.fill(S().rect(TBL.x0, TBL.top, TBL.x1 - TBL.x0, 14).add(S().rect(TBL.x0 + 10, TBL.top + 10, TBL.x1 - TBL.x0 - 20, TBL.leg - TBL.top - 18))
+    .add(S().rect(TBL.x0 + 14, TBL.leg - 10, 26, 14)).add(S().rect(TBL.x1 - 40, TBL.leg - 10, 26, 14)).path(0.6, 42));
+  g.fillStyle = C.tungstenLow; g.fillRect(TBL.x0 + 12, TBL.top + 16, TBL.x1 - TBL.x0 - 24, 2);
+  g.fillStyle = OTM.mix(C.ink, C.soot, 0.6); [[TBL.x0 + 120, 0], [TBL.x1 - 140, 0]].forEach(([x]) => g.fillRect(x, TBL.top + 22, 16, TBL.leg - TBL.top - 34));
+  // the wine ring Marina is wiping, and her cloth
+  g.save(); g.strokeStyle = C.wine; g.lineWidth = 2.5; g.beginPath(); g.ellipse(948, TBL.top - 8, 15, 3.4, 0, 0.3, Math.PI * 2 - 0.4); g.stroke(); g.restore();
+  // glasses
+  function glass(x, fill, tilt, seed) {
+    const y = TBL.top - TBL.depth * 0.45; const sh = S();
+    sh.M(x - 15, y - 66).L(x + 15, y - 66).C(x + 16, y - 46, x + 12, y - 30, x + 2.4, y - 26).L(x + 2.4, y - 6).L(x + 12, y - 1).L(x + 12, y + 1).L(x - 12, y + 1).L(x - 12, y - 1).L(x - 2.4, y - 6).L(x - 2.4, y - 26).C(x - 12, y - 30, x - 16, y - 46, x - 15, y - 66).Z();
+    const p = sh.path(0.35, seed); g.fillStyle = C.ink; g.fill(p);
+    // wine: two posterised tones, flat surface line catching the lamp
+    const wy = y - 30 - fill * 30; g.save(); g.clip(p);
+    g.fillStyle = C.wine; g.fillRect(x - 17, wy, 34, y - 26 - wy); g.fillStyle = C.blood; g.fillRect(x - 17, wy + (y - 26 - wy) * 0.55, 34, 40);
+    g.fillStyle = OTM.mix(C.wine, C.tungsten, 0.45); g.fillRect(x - 17, wy, 34, 2);
+    g.restore();
+    // the glass edge on the lamp side (reads even in front of a dark body)
+    rim(p, toLamp(x, y - 40), 1.6, C.tungstenMid);
+    // a lamp-side glint on the bowl
+    const s = x < LAMP.x ? 1 : -1; g.fillStyle = C.cardPaper; g.globalAlpha = 0.9; g.fill(S().capsule(x + s * 10, y - 60, 1.4, x + s * 11, y - 42, 1.0).path(0, 1)); g.globalAlpha = 1;
+    E.fillStyle = C.tungsten; E.beginPath(); E.arc(x + s * 10, y - 52, 6, 0, 7); E.fill();
+  }
+  [[676, 0.55], [770, 0.2], [1006, 0.7], [1094, 0.45], [1182, 0.85], [1270, 0.35]].forEach(([x, fl], i) => glass(x, fl, 0, 90 + i));
+  // a bowl of crisps on the table end, ivory flecks
+  (() => { const x = 1240, y = TBL.top + 0 - 8; if (true) return; g.fillStyle = C.ink; g.fill(S().M(x - 34, y - 22).C(x - 30, y + 4, x + 30, y + 4, x + 34, y - 22).Z().path(0.4, 5));
+    const r = OTM.rng('crisps'); g.fillStyle = C.cardPaper; for (let i = 0; i < 9; i++) { g.save(); g.translate(x - 26 + r() * 52, y - 24 - r() * 10); g.rotate(r() * 3); g.fillRect(-4, -2, 8, 4); g.restore(); } })();
+
+  // ================= FG: Deena upright on a dining chair; the sofa arm bottom-left =================
+  // FG right: Angelo sunk in the armchair, big and dark, the cigarette catching the lamp
+  const chair = S().M(1600, 900).L(1770, 560).C(1800, 516, 1880, 520, 1900, 580).L(1960, 640).L(1960, 1100).L(1560, 1100).L(1556, 950).Z();
+  const chairP = chair.path(1, 31); g.fillStyle = C.ink; g.fill(chairP);
+  rim(chairP, toLamp(1800, 600), 3, C.tungstenMid, (() => { const c = new Path2D(); c.rect(0, 0, W, 760); return c; })());
+  figure('angelo', 3.6, (() => { const c = new Path2D(); c.rect(0, 0, W, 900); return c; })());
+  const sofa = S().M(-40, 870).C(60, 846, 160, 850, 214, 890).C(250, 920, 240, 980, 226, 1100).L(-40, 1100).Z();
+  const sofaP = sofa.path(1, 51); g.fillStyle = C.ink; g.fill(sofaP); rim(sofaP, toLamp(150, 880), 3, C.tungstenMid);
+
+  // ================= props in hands, accents =================
+  // Christof's biscuit baton
+  const cb = F.christof.joints.wristN; const bis = [cb[0] - 16, cb[1] - 24];
+  g.fillStyle = C.cardPaper; g.beginPath(); g.arc(bis[0], bis[1], 13, 0, 7); g.fill();
+  g.fillStyle = C.tungstenMid; [[-4, -3], [4, -2], [0, 4]].forEach(([dx, dy]) => { g.beginPath(); g.arc(bis[0] + dx, bis[1] + dy, 1.6, 0, 7); g.fill(); });
+  E.fillStyle = C.cardPaper; E.beginPath(); E.arc(bis[0], bis[1], 16, 0, 7); E.fill();
+  // Scott's snack bowl
+  const sw = F.scott.joints.wristN; (() => { const x = sw[0] + 22, y = sw[1] - 10; g.fillStyle = C.ink; g.fill(S().M(x - 36, y - 6).C(x - 30, y + 26, x + 30, y + 26, x + 36, y - 6).Z().path(0.4, 7));
+    const r = OTM.rng('crisps2'); g.fillStyle = C.cardPaper; for (let i = 0; i < 8; i++) { g.save(); g.translate(x - 28 + r() * 56, y - 8 - r() * 9); g.rotate(r() * 3); g.fillRect(-4, -2, 8, 4); g.restore(); }
+    g.fillStyle = C.tungsten; g.fillRect(x - 36, y - 7, 72, 2); })();
+  // Marina's cloth under her hand, rings glinting
+  const mw = F.marina.joints.wristN; g.fillStyle = C.cardPaper; g.fill(S().poly([[mw[0] + 14, TBL.top - 12], [mw[0] + 60, TBL.top - 15], [mw[0] + 66, TBL.top - 3], [mw[0] + 10, TBL.top - 2]]).path(0.6, 3));
+  OTM.fig.drawDetails(g, F.marina, {ringColor: C.tungsten});
+  // Angelo's cigarette sliver
+  OTM.fig.drawDetails(g, F.angelo, {cigColor: C.cardPaper}); (() => { const d = F.angelo.details.find(x => x.kind === 'cigarette'); })();
+  OTM.fig.drawDetails(g, F.scott, {});
+
+  // ================= LAMP SHADE (the source) =================
+  const shade = S().M(LAMP.x - LAMP.wt / 2, LAMP.top).L(LAMP.x + LAMP.wt / 2, LAMP.top).L(LAMP.x + LAMP.wb / 2, LAMP.bot).L(LAMP.x - LAMP.wb / 2, LAMP.bot).Z();
+  const shP = shade.path(0.6, 3);
+  g.fillStyle = C.tungsten; g.fill(shP);
+  g.save(); g.clip(shP); g.fillStyle = '#F7C46A'; g.fill(S().ellipse(LAMP.x, LAMP.bot + 10, 46, 80, 0).path(1, 4)); g.restore();
+  g.fillStyle = C.ink; g.fillRect(LAMP.x - LAMP.wt / 2 - 2, LAMP.top - 3, LAMP.wt + 4, 5); g.fillRect(LAMP.x - LAMP.wb / 2 - 2, LAMP.bot - 2, LAMP.wb + 4, 4);
+  E.fillStyle = C.tungsten; E.fill(shP); E.beginPath(); E.ellipse(LAMP.x, LAMP.bot, 120, 40, 0, 0, 7); E.fill();
+
+  // ================= TYPE =================
+  OTM.say(g, 'angelo', "That's not a reason.", 1880, 1012, {size: 42, align: 'right', spread: 0.15, seed: 2});
+  OTM.say(g, 'christof', 'It was a twelve-quid drink.', 960, 118, {big: ['twelve-quid', 'drink.'], bulbs: true, align: 'center', size: 56});
+
+  f.finish({letterbox: 1.78, vignette: 0.5, halation: 0.6});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 04', 'THE PARTY  ·  LIVING ROOM', 1.78);
+  window.FRAME_READY = true;
+})();
+</script>

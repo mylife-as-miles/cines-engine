@@ -1,0 +1,7 @@
+{
+ "id": "M10d",
+ "model": "lyria-3.5",
+ "prompt": "A 34-second instrumental underscore cue of numb, hollow grief. A small chamber string group, muted (con sordino), sul tasto, without vibrato (two cellos, two violas, one violin), and one warm Fender Rhodes electric piano with a slightly worn, vintage sound, all recorded close, dry and intimate in a small room. In tune at A = 440. Key centre A minor over a low G in the cellos: cold, open and unresolved. Beatless free time, very slow. Pianissimo throughout. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:13] Emerging from silence: a low cello G (G2), and above it a quiet, pale viola chord of A, C and E. Numb and motionless.\n[0:13 - 0:18] The only tender moment: the Rhodes plays one slow, soft D minor 9 chord (D, F, A, C, E), warm and close, and lets it ring away. It does not play again.\n[0:18 - 0:28] The strings hold the same numb chord over the low G, unmoving and very quiet.\n[0:28 - 0:34] The chord thins to a single faint high violin harmonic on E, which fades to nothing by 0:32; silence to the end.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, bass guitar, a band or groove, pulses, melody, any further Rhodes notes, tremolo, risers, impacts, stingers, synth pads, lush or sentimental strings, swells, melodrama, and any resolution to a major key.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

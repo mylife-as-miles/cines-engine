@@ -1,0 +1,7 @@
+{
+ "id": "M09",
+ "model": "lyria-3.5",
+ "prompt": "A 31-second instrumental underscore cue: cold, hushed stillness for a small chamber string group, muted (con sordino), without vibrato, recorded close and dry in a small room: two cellos, two violas, two violins. In tune at A = 440. Key centre A minor. Beatless free time: no pulse, no rhythm, no walking line. Pianissimo throughout, never above piano. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:22] Starting softly: two violins hold quiet natural harmonics on a high A and the E above it (A5 and E6), with a barely audible low cello A (A2) far below: cold, still and wide, with nothing in between. No movement at all.\n[0:22 - 0:29] One quiet change: the high harmonics fade away and the cellos and violas settle together on a low, grave open fifth, A2 and E3, pianissimo and motionless.\n[0:29 - 0:31] It fades to silence.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, pulses, walking bass lines, march rhythms, melody, tremolo, sul ponticello, clusters, piano, music box, risers, swells, impacts, trailer clich\u00e9s, melodrama, and any major-key resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]"
+}

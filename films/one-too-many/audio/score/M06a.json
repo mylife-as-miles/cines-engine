@@ -1,0 +1,7 @@
+{
+ "id": "M06a",
+ "model": "lyria-3.5",
+ "prompt": "A 42-second instrumental track of ordinary background music at a late-night dinner party, which nobody is listening to. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo (chords on the first and fourth eighth of each bar with a light pickup on the last eighth; its top voice falls E, E, D, B-flat across the four bars), a round fingered electric bass on roots and fifths, a soft felt kick on the first beat, and brushes sweeping eighth notes on the snare. 6/8 with a gentle rocking lilt, 70 dotted-quarter beats per minute (one bar about 1.7 seconds). In tune at A = 440. Key: D minor (Dorian). One four-bar loop, one chord per bar: Dm9 | G13 | Cmaj9 | A7(b9). Medium-soft.\n[0:00 - 0:35] Already mid-song on the very first downbeat, with no intro and no count-in. The loop simply continues with small variations in the Rhodes voicings and the odd one-note fill; same density and level throughout; no build, no breakdown, no solo.\n[0:35 - 0:42] The song ends: the bass, kick and brushes stop, and the Rhodes alone holds its last chord, an A7 with a flat ninth (A, C-sharp, E, G, B-flat), letting it ring and slowly decay, unresolved. Nothing follows it.\nInstrumental only, no vocals, no humming. Avoid: drum fills, cymbal crashes, shakers, risers, synth pads, strings, horns, guitar, key or tempo changes, a resolving final chord, and any cinematic or dramatic gesture.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[A1]]\n[[B2]]"
+}

@@ -1,0 +1,156 @@
+{
+ "M01": {
+  "src_in_s": 39.0,
+  "span_s": 19.6,
+  "z": 3.4,
+  "query": "a solo piano playing slow, sparse single notes",
+  "others": [
+   10.0
+  ]
+ },
+ "M03": {
+  "src_in_s": 4.23,
+  "span_s": 88.3,
+  "z": 6.45,
+  "query": "a mellow electric piano jazz trio with bass and brushes, laid-back dinner party music",
+  "others": []
+ },
+ "M04a": {
+  "src_in_s": 11.0,
+  "span_s": 46.0,
+  "z": 5.4,
+  "query": "a warm electric piano trio with bass and brushes, mellow party music",
+  "others": []
+ },
+ "M04b": {
+  "src_in_s": 27.0,
+  "span_s": 33.6,
+  "z": 3.03,
+  "query": "a quiet, sparse electric piano with bass and soft brushes",
+  "others": []
+ },
+ "M05a": {
+  "src_in_s": 7.0,
+  "span_s": 3.4,
+  "z": 5.81,
+  "query": "two violas holding a quiet dissonant interval, uncanny strings",
+  "others": [
+   0.0,
+   15.0
+  ]
+ },
+ "M05b": {
+  "src_in_s": 15.0,
+  "span_s": 14.08,
+  "z": 2.76,
+  "query": "quiet, tightening muted strings over a low held note",
+  "others": [
+   42.0,
+   0.0
+  ]
+ },
+ "M06a": {
+  "src_in_s": 15.0,
+  "span_s": 38.95,
+  "z": 5.06,
+  "query": "background electric piano jazz trio, mellow dinner party music",
+  "others": []
+ },
+ "M06b": {
+  "src_in_s": 11.0,
+  "span_s": 25.5,
+  "z": 4.88,
+  "query": "a slightly lopsided electric piano trio groove, livelier party music",
+  "others": []
+ },
+ "M07": {
+  "src_in_s": 2.0,
+  "span_s": 30.51,
+  "z": 3.14,
+  "query": "still, haunting muted strings holding a dissonant interval",
+  "others": []
+ },
+ "M08a": {
+  "src_in_s": 0.0,
+  "span_s": 67.79,
+  "z": 3.29,
+  "query": "quiet tense chamber strings, a held chord slowly darkening",
+  "others": []
+ },
+ "M08b": {
+  "src_in_s": 8.0,
+  "span_s": 4.15,
+  "z": 5.22,
+  "query": "tense chamber strings, a dissonant chord in several octaves",
+  "others": [
+   22.0,
+   3.0
+  ]
+ },
+ "M09": {
+  "src_in_s": 6.0,
+  "span_s": 29.65,
+  "z": 0.86,
+  "query": "cold, hushed, very still muted strings",
+  "others": []
+ },
+ "M10a": {
+  "src_in_s": 42.0,
+  "span_s": 17.85,
+  "z": 2.56,
+  "query": "grinding tremolo strings, rising panic",
+  "others": [
+   7.0
+  ]
+ },
+ "M10b": {
+  "src_in_s": 2.0,
+  "span_s": 7.4,
+  "z": 6.79,
+  "query": "a single muted cello holding one long low note",
+  "others": [
+   10.0,
+   18.0
+  ]
+ },
+ "M10c": {
+  "src_in_s": 9.0,
+  "span_s": 13.25,
+  "z": 2.68,
+  "query": "shaking low tremolo strings, fearful",
+  "others": []
+ },
+ "M10d": {
+  "src_in_s": 26.0,
+  "span_s": 33.95,
+  "z": 1.71,
+  "query": "numb, hollow low strings, grief",
+  "others": []
+ },
+ "M11a": {
+  "src_in_s": 46.0,
+  "span_s": 13.23,
+  "z": 3.44,
+  "query": "a quiet, tender string chord progression, a goodbye",
+  "others": [
+   1.0,
+   15.0
+  ]
+ },
+ "M11b": {
+  "src_in_s": 3.0,
+  "span_s": 70.3,
+  "z": 3.99,
+  "query": "a solo cello playing slow falling notes",
+  "others": []
+ },
+ "M12": {
+  "src_in_s": 22.0,
+  "span_s": 20.6,
+  "z": 2.69,
+  "query": "a solo piano playing slow, sparse single notes",
+  "others": [
+   1.0
+  ]
+ }
+}

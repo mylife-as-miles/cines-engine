@@ -1,0 +1,158 @@
+{
+ "model": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp, Soundbox)",
+ "license": "Stability AI Community License",
+ "sounds": [
+  {
+   "id": "T01",
+   "prompt": "deep sub-bass pressure slowly building, distant low rumble, dark ominous tension, no music",
+   "duration_s": 9,
+   "seed": 11,
+   "places": [
+    {
+     "t": 30.8,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T02a",
+   "prompt": "a reversed breath and room tone being sucked inward, rising and stopping dead, eerie, no music",
+   "duration_s": 3,
+   "seed": 21,
+   "places": [
+    {
+     "t": 283.5,
+     "align": "end"
+    },
+    {
+     "t": 505.67,
+     "align": "end"
+    },
+    {
+     "t": 644.03,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T02b",
+   "prompt": "a reversed breath and room tone being sucked inward, rising and stopping dead, eerie, no music",
+   "duration_s": 3,
+   "seed": 22,
+   "places": [
+    {
+     "t": 360.02,
+     "align": "end"
+    },
+    {
+     "t": 547.58,
+     "align": "end"
+    },
+    {
+     "t": 838.58,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T02c",
+   "prompt": "a reversed breath and room tone being sucked inward, rising and stopping dead, eerie, no music",
+   "duration_s": 3,
+   "seed": 23,
+   "places": [
+    {
+     "t": 474.31,
+     "align": "end"
+    },
+    {
+     "t": 605.78,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T03",
+   "prompt": "a faint eerie low tone swelling slowly with a cold shimmer, intrigue, unsettling, no music",
+   "duration_s": 4,
+   "seed": 31,
+   "places": [
+    {
+     "t": 117.65,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T04",
+   "prompt": "a deep heavy dark impact with a long low rumbling tail, ominous, cinematic",
+   "duration_s": 5,
+   "seed": 41,
+   "places": [
+    {
+     "t": 519.14,
+     "align": "start"
+    }
+   ]
+  },
+  {
+   "id": "T05",
+   "prompt": "a thin high-pitched electronic whine of an old camera flash charging up, quiet, rising, then a tiny click",
+   "duration_s": 3,
+   "seed": 52,
+   "places": [
+    {
+     "t": 537.85,
+     "align": "start"
+    }
+   ]
+  },
+  {
+   "id": "T06",
+   "prompt": "a steel blade ringing with a thin sustained metallic tone, tense and unsettling, slow",
+   "duration_s": 8,
+   "seed": 61,
+   "places": [
+    {
+     "t": 631.05,
+     "align": "start"
+    }
+   ]
+  },
+  {
+   "id": "T07",
+   "prompt": "a slow tense rising roar of gas and metal building to a peak, pressure, dread",
+   "duration_s": 6,
+   "seed": 71,
+   "places": [
+    {
+     "t": 756.9,
+     "align": "end"
+    }
+   ]
+  },
+  {
+   "id": "T08",
+   "prompt": "a house groaning, deep wooden beams and metal straining, structural creak and low rumble",
+   "duration_s": 6,
+   "seed": 81,
+   "places": [
+    {
+     "t": 816.4,
+     "align": "start"
+    }
+   ]
+  },
+  {
+   "id": "T09",
+   "prompt": "a slow dark low swell rising and cutting off abruptly, ominous final breath",
+   "duration_s": 7,
+   "seed": 91,
+   "places": [
+    {
+     "t": 885.4,
+     "align": "end"
+    }
+   ]
+  }
+ ]
+}

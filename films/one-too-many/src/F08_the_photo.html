@@ -1,0 +1,187 @@
+<!doctype html><meta charset="utf-8"><title>F08</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+// ---- the flash photograph on Marina's phone: four paper-white figures, hard ink flash shadows, nobody holding the camera ----
+function makePhoto(OTM, PW, PH) {
+  const {C, S} = OTM;
+  const pc = OTM.makeCanvas(PW, PH), p = pc.getContext('2d');
+  const k = PW / 1280;
+  const wall = t => OTM.mix(C.flashWhite, C.ink, t);
+  p.fillStyle = wall(0.9); p.fillRect(0, 0, PW, PH);
+  // flash falloff on the wall, posterised; the hotspot lands where the photographer aimed
+  const HX = 610 * k, HY = 300 * k;
+  OTM.lightPool(p, HX, HY, [{r: 1050 * k, color: wall(0.84)}, {r: 760 * k, color: wall(0.75)}, {r: 470 * k, color: wall(0.66)}], {sy: 0.66, rough: 1.2 * k, seed: 8});
+  // a door frame at the left edge and a picture frame on the wall: a real room, a real snapshot
+  p.fillStyle = wall(0.9); p.fillRect(0, 0, 40 * k, PH); p.fillStyle = wall(0.66); p.fillRect(40 * k, 0, 9 * k, PH);
+  p.strokeStyle = wall(0.8); p.lineWidth = 7 * k; p.strokeRect(1040 * k, 34 * k, 168 * k, 112 * k);
+  const sc = 112 * k;
+  // two pairs; between Angelo and Scott there is room for exactly one more
+  // [id, waist x, head y if upright, lean]: Angelo and Scott lean in toward the middle of the group, as people do around whoever stands in the middle
+  const cast = [['deena', 214, 238, -0.025], ['angelo', 456, 214, 0.19], ['scott', 884, 226, -0.19], ['marina', 1112, 236, 0.035]];
+  const figs = cast.map(([id, x, y, t]) => { const L = 3.6 * sc * OTM.fig.CHAR[id].heightK, bx = x * k, by = y * k + L;
+    return {id, b: OTM.fig.bust(id, {x: bx + L * Math.sin(t), y: by - L * Math.cos(t), scale: sc, tilt: t})}; });
+  const sc2 = figs[2].b, mr = figs[3].b;
+  const shoulderS = sc2.shoulderR, shoulderM = mr.shoulderL;
+  const arm = S().capsule(shoulderM[0] + 4 * k, shoulderM[1] + 34 * k, 0.21 * sc, shoulderS[0] + 22 * k, shoulderS[1] - 2 * k, 0.15 * sc);
+  const hand = OTM.fig.hand('relaxed').transform([-0.6 * sc, -0.08 * sc, 0.08 * sc, -0.6 * sc, shoulderS[0] + 30 * k, shoulderS[1] - 4 * k]);
+  // hard flash shadows hugging each figure: the flash sat just above and left of the lens
+  const sh = OTM.makeCanvas(PW, PH), s = sh.getContext('2d');
+  s.fillStyle = C.ink; const off = [0.13 * sc, 0.07 * sc];
+  figs.forEach(f => s.fill(f.b.shape.translate(off[0], off[1]).path(0.5, 3)));
+  s.fill(arm.translate(off[0], off[1]).add(hand.translate(off[0], off[1])).path(0.5, 4));
+  p.drawImage(sh, 0, 0);
+  p.fillStyle = C.flashWhite;
+  figs.forEach((f, i) => p.fill(f.b.shape.path(0.5, 20 + i)));
+  p.fill(arm.path(0.4, 1)); p.fill(hand.path(0.4, 2));
+  // the crease where her arm crosses his shoulder
+  p.strokeStyle = OTM.rgba(C.ink, 0.8); p.lineWidth = 2.2 * k; p.beginPath(); p.moveTo(shoulderS[0] - 18 * k, shoulderS[1] + 8 * k); p.quadraticCurveTo(shoulderS[0] + 10 * k, shoulderS[1] + 18 * k, shoulderS[0] + 40 * k, shoulderS[1] + 14 * k); p.stroke();
+  p.fillStyle = '#D4AF5E'; p.beginPath(); p.arc(shoulderS[0] + 2 * k, shoulderS[1] + 2 * k, 3.4 * k, 0, 7); p.fill();
+  figs.forEach(f => OTM.fig.drawDetails(p, f.b, {hoopColor: C.ink, cigColor: wall(0.3)}));
+  return pc;
+}
+
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 8});
+  const g = f.world, E = f.emissive;
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  function rim(path, dir, w, color, clip, alpha) {
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.clearRect(0, 0, W, H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w, -dir[1] * w); tg.fill(path);
+    g.save(); if (clip) g.clip(clip); g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  const norm = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
+
+  // ---------------- the phone (the only real light) ----------------
+  const PH = {x: 1000, y: 700, w: 800, h: 372, r: 54, rot: -0.05};
+  const SCR = {w: PH.w - 40, h: PH.h - 38, r: 32};
+  const LIGHT = [PH.x, PH.y];
+
+  // ---------------- 1. the room: dark; the dining lamp is far away behind them ----------------
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+  // the back wall, lit faintly by the dining lamp out of frame: the heads silhouette against it
+  OTM.lightPool(g, 760, 30, [{r: 1250, color: '#110C09'}, {r: 960, color: '#17100B'}, {r: 700, color: '#1F150E'}, {r: 430, color: '#2A1C11'}, {r: 200, color: '#3A2613'}], {sy: 0.42, rough: 2.4, seed: 5});
+  E.fillStyle = C.tungstenLow; E.globalAlpha = 0.45; E.beginPath(); E.ellipse(760, 30, 220, 90, 0, 0, 7); E.fill(); E.globalAlpha = 1;
+  // the empty hall through the doorway behind them: the only place the photographer could have stood
+  const DR = {x0: 1694, x1: 1890, y1: 840};
+  g.fillStyle = '#21150D'; g.fill(S().poly([[DR.x0 - 10, DR.y1], [DR.x1 + 10, DR.y1], [DR.x1 + 150, 1030], [DR.x0 - 220, 1030]]).path(1.2, 3));   // its spill on our floorboards
+  g.fillStyle = '#170F0A'; g.fillRect(DR.x0 - 30, 0, DR.x1 - DR.x0 + 60, DR.y1 + 6);                                                   // casing
+  g.fillStyle = C.tungstenLow; g.fillRect(DR.x0, 0, DR.x1 - DR.x0, DR.y1);                                                               // hall wall, lit
+  g.fillStyle = '#6A3E1A'; g.fill(S().poly([[DR.x0 + 64, 0], [DR.x1 - 36, 0], [DR.x1 - 36, DR.y1 - 120], [DR.x0 + 64, DR.y1 - 150]]).path(1.0, 5));
+  g.fillStyle = '#2C1B0E'; g.fill(S().poly([[DR.x0, 0], [DR.x0 + 44, 0], [DR.x0 + 44, DR.y1 - 140], [DR.x0, DR.y1]]).path(1.0, 4));      // the hall's near wall in shadow
+  g.fillStyle = '#3B2412'; g.fill(S().poly([[DR.x0 + 44, DR.y1 - 140], [DR.x1, DR.y1 - 100], [DR.x1, DR.y1], [DR.x0, DR.y1]]).path(1.0, 6));   // hall floor
+  E.fillStyle = C.tungstenMid; E.globalAlpha = 0.3; E.fillRect(DR.x0 + 64, 60, DR.x1 - DR.x0 - 100, DR.y1 - 260); E.globalAlpha = 1;
+
+  // ---------------- 2. the faces leaning in, lifted from below by the screen ----------------
+  function place(id, pose, head) {
+    const f0 = OTM.fig.profile(id, Object.assign({}, pose, {x: 0, y: 0, anchor: 'hip'}));
+    return OTM.fig.profile(id, Object.assign({}, pose, {anchor: 'hip', x: head[0] - f0.joints.head[0], y: head[1] - f0.joints.head[1]}));
+  }
+  const heads = [
+    // Scott, a step behind, further from the light
+    ['scott', {facing: 1, scale: 168, lean: 0.55, neck: 0.32, head: 0.66, armN: {a: 0.3, b: 0.4}, armF: {a: 0.1, b: 0.3}}, [810, 250], 0.6],
+    ['deena', {facing: 1, scale: 206, lean: 0.5, neck: 0.26, head: 0.56, swing: 0.3, armN: {a: 0.15, b: 0.3}, armF: {a: 0.05, b: 0.2}}, [528, 420], 1],
+    ['angelo', {facing: -1, scale: 210, lean: 0.3, neck: 0.5, head: 0.72, armN: {a: 0.12, b: 0.2}, armF: {a: 0.05, b: 0.15}}, [1352, 318], 1],
+  ];
+  // Face light: a smooth crescent on forehead, brow and nose bridge, built from a low-roughness copy of the outline in three
+  // stepped bands (soft inner falloff), then faded out along the head's own down-axis before the lips and chin, so the bright
+  // edge never traces the notches of the mouth. A small catch-light sits on the cheekbone.
+  const ap = (m, q) => [m[0] * q[0] + m[2] * q[1] + m[4], m[1] * q[0] + m[3] * q[1] + m[5]];
+  const comp = (M2, m) => [M2[0] * m[0] + M2[2] * m[1], M2[1] * m[0] + M2[3] * m[1], M2[0] * m[2] + M2[2] * m[3], M2[1] * m[2] + M2[3] * m[3], M2[0] * m[4] + M2[2] * m[5] + M2[4], M2[1] * m[4] + M2[3] * m[5] + M2[5]];
+  const rc = OTM.makeCanvas(W, H).getContext('2d');
+  function faceRim(fg, p, dir, sc, lit) {
+    const m = comp(fg.M, fg.details.find(d => d.headM).headM);
+    const ps = fg.shape.path(0.15, 30);
+    rc.setTransform(1, 0, 0, 1, 0, 0); rc.globalCompositeOperation = 'source-over'; rc.globalAlpha = 1; rc.clearRect(0, 0, W, H);
+    [[0.075, 0.16], [0.04, 0.38], [0.018, 1]].forEach(([w, a]) => {
+      tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.clearRect(0, 0, W, H);
+      tg.fillStyle = C.phoneWhite; tg.fill(ps); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w * sc, -dir[1] * w * sc); tg.fill(ps);
+      rc.globalAlpha = a * lit; rc.drawImage(tmpC, 0, 0);
+    });
+    // fade along the head's down-axis: full on brow and nose bridge, gone by the upper lip
+    const g0 = ap(m, [0, 0.05]), g1 = ap(m, [0, 0.19]);
+    const gr = rc.createLinearGradient(g0[0], g0[1], g1[0], g1[1]); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    rc.globalAlpha = 1; rc.globalCompositeOperation = 'destination-in'; rc.fillStyle = gr; rc.fillRect(0, 0, W, H);
+    // and only around the face, never down the body
+    const h = fg.joints.head; rc.globalCompositeOperation = 'destination-in'; rc.fillStyle = '#fff'; rc.beginPath(); rc.arc(h[0], h[1], sc * 0.85, 0, Math.PI * 2); rc.fill();
+    // cheekbone catch-light under the eye: a thin lens in two flat steps, set back from the edge
+    rc.globalCompositeOperation = 'source-over'; rc.fillStyle = C.phoneWhite;
+    rc.globalAlpha = 0.18 * lit; rc.fill(S().M(0.27, -0.02).Q(0.27, 0.09, 0.1, 0.15).Q(0.2, 0.07, 0.2, -0.02).Z().transform(m).path(0.1, 5));
+    rc.globalAlpha = 0.42 * lit; rc.fill(S().M(0.265, 0.0).Q(0.26, 0.08, 0.14, 0.13).Q(0.22, 0.07, 0.225, 0.0).Z().transform(m).path(0.1, 6));
+    g.save(); g.clip(p); g.globalAlpha = 1; g.drawImage(rc.canvas, 0, 0); g.restore();
+  }
+  const figs = {};
+  heads.forEach(([id, pose, hd, lit]) => {
+    const fg = place(id, pose, hd); figs[id] = fg;
+    const p = fg.shape.path(0.7, 30);
+    g.fillStyle = C.ink; g.fill(p);
+    const h = fg.joints.head; const dir = norm(LIGHT[0] - h[0], LIGHT[1] - h[1]);
+    faceRim(fg, p, dir, pose.scale, lit);
+    OTM.fig.drawDetails(g, fg, {hoopColor: C.phoneWhite, cigColor: OTM.mix(C.cardPaper, C.phoneWhite, 0.5)});
+  });
+
+  // ---------------- 3. the phone, held out in Marina's ringed hand ----------------
+  const ca = Math.cos(PH.rot), sa = Math.sin(PH.rot);
+  const toW = (x, y) => [PH.x + x * ca - y * sa, PH.y + x * sa + y * ca];
+  const rr = (w, h, r) => { const x = -w / 2, y = -h / 2; return S().M(x + r, y).L(x + w - r, y).Q(x + w, y, x + w, y + r).L(x + w, y + h - r).Q(x + w, y + h, x + w - r, y + h).L(x + r, y + h).Q(x, y + h, x, y + h - r).L(x, y + r).Q(x, y, x + r, y).Z(); };
+  const M = [ca, sa, -sa, ca, PH.x, PH.y];
+  // forearm and the heel of the hand behind the right end: the dark foreground
+  const R2 = PH.w / 2;
+  // her forearm comes in from the right, across the lit doorway: the big dark foreground
+  const arm = S().M(...toW(R2 - 150, -60)).L(...toW(R2 + 40, -70)).C(...toW(R2 + 240, -84), ...toW(R2 + 420, -120), ...toW(R2 + 640, -150))
+    .L(...toW(R2 + 650, 70)).C(...toW(R2 + 430, 66), ...toW(R2 + 250, 96), ...toW(R2 + 120, 150)).C(...toW(R2 + 40, 186), ...toW(R2 - 60, 170), ...toW(R2 - 150, 110)).Z();
+  // two fingers come over the top edge from behind; the index wears the ring
+  const fingers = S(), fingerJ = [];
+  [[-138, 34], [-60, 32]].forEach(([dx, r]) => {
+    const k0 = toW(R2 + dx + 10, -PH.h / 2 + 40), k1 = toW(R2 + dx + 2, -PH.h / 2 - 4), k2 = toW(R2 + dx - 10, -PH.h / 2 + 30);
+    fingers.capsule(k0[0], k0[1], r + 4, k1[0], k1[1], r).capsule(k1[0], k1[1], r, k2[0], k2[1], r - 6); fingerJ.push([k0, k1, k2, r]);
+  });
+  const armP = arm.path(1.0, 4), fingP = fingers.path(0.7, 6);
+  g.fillStyle = C.ink; g.fill(armP); g.fill(fingP);
+  rim(fingP, norm(-0.2, -1), 3.5, C.tungstenMid, null, 0.9);
+  const body = rr(PH.w, PH.h, PH.r).transform(M); const bodyP = body.path(0.3, 2);
+  g.fillStyle = C.ink; g.fill(bodyP);
+  rim(bodyP, norm(-0.25, -1), 2.5, C.tungstenMid, null, 0.85);
+  // the screen: the photograph
+  const photo = makePhoto(OTM, SCR.w * 2, SCR.h * 2);
+  // the photo is painted after the bloom pass, so the glow surrounds the screen without fogging its blacks
+  const drawScreen = c => {
+    c.save(); c.translate(PH.x, PH.y); c.rotate(PH.rot);
+    c.clip(rr(SCR.w, SCR.h, SCR.r).path(0, 1));
+    c.drawImage(photo, -SCR.w / 2, -SCR.h / 2, SCR.w, SCR.h);
+    c.globalAlpha = 0.05; c.fillStyle = '#FFFFFF'; c.beginPath(); c.moveTo(-SCR.w / 2 + 140, -SCR.h / 2); c.lineTo(-SCR.w / 2 + 330, -SCR.h / 2); c.lineTo(-SCR.w / 2 + 130, SCR.h / 2); c.lineTo(-SCR.w / 2 - 60, SCR.h / 2); c.closePath(); c.fill();
+    c.restore();
+  };
+  drawScreen(g);
+  E.save(); E.translate(PH.x, PH.y); E.rotate(PH.rot); E.fillStyle = C.phoneWhite; E.globalAlpha = 0.3; E.fill(rr(SCR.w, SCR.h, SCR.r).path(0, 1)); E.restore();
+  // thumb across the bezel (drawn after the bloom so it stays a hard ink shape in front of the glow)
+  const t0 = toW(R2 + 70, PH.h / 2 + 96), t1 = toW(R2 - 18, PH.h / 2 - 6), t2 = toW(R2 - 104, PH.h / 2 - 44);
+  const thumb = S().capsule(t0[0], t0[1], 58, t1[0], t1[1], 33).capsule(t1[0], t1[1], 33, t2[0], t2[1], 25);
+  const thumbP = thumb.path(0.7, 9);
+  const lateDraw = c => {
+    drawScreen(c);
+    c.save(); c.fillStyle = C.ink; c.fill(thumbP);
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.clearRect(0, 0, W, H);
+    const d = norm(-1, -0.75); tg.fillStyle = C.phoneWhite; tg.fill(thumbP); tg.globalCompositeOperation = 'destination-out'; tg.translate(-d[0] * 3.5, -d[1] * 3.5); tg.fill(thumbP);
+    const clip = new Path2D(); clip.arc(t2[0], t2[1], 96, 0, Math.PI * 2); c.clip(clip); c.drawImage(tmpC, 0, 0); c.restore();
+  };
+  // the gold ring on her index finger, right at the top edge
+  // the gold ring on her index finger, a band across the knuckle above the edge
+  { const [, k1, k2, r] = fingerJ[0]; const t = 0.18, cx = k1[0] + (k2[0] - k1[0]) * t, cy = k1[1] + (k2[1] - k1[1]) * t;
+    const ax = Math.atan2(k2[1] - k1[1], k2[0] - k1[0]);
+    g.save(); g.translate(cx, cy); g.rotate(ax); g.strokeStyle = '#D4AF5E'; g.lineWidth = 7; g.lineCap = 'butt';
+    g.beginPath(); g.ellipse(0, 0, 7, r + 3, 0, Math.PI * 0.5, Math.PI * 1.5); g.stroke();
+    g.fillStyle = '#FFF1D6'; g.beginPath(); g.arc(-6, -r * 0.55, 3, 0, 7); g.fill(); g.restore();
+    E.fillStyle = '#D4AF5E'; E.beginPath(); E.arc(cx, cy, 14, 0, 7); E.fill(); }
+
+  // ---------------- 4. dialogue ----------------
+  OTM.say(g, 'deena', 'Four.', 96, 778, {size: 56});
+  OTM.say(g, 'deena', "There's four of us.", 96, 846, {size: 48});
+  OTM.say(g, 'angelo', 'Who took it?', 1010, 976, {size: 54, spread: 0.35, seed: 3});
+
+  f.finish({letterbox: 2.0, vignette: 0.5, halation: 0.45, beforePost: lateDraw});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 08', 'THE PHOTO', 2.0);
+  window.FRAME_READY = true;
+})();
+</script>

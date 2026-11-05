@@ -1,0 +1,407 @@
+<!doctype html><meta charset="utf-8"><title>R1 cold open - RECOUNT</title>
+<script src="../../kit/otm.js"></script><script src="rc.js"></script><script src="people.js"></script><script src="cast.js"></script>
+<script>
+(async () => {
+  await RC.fonts();
+  const ctx = OTM.stage(); const { P, W, H, rgba, mix, lin, rad, pool, paper, rim, cast, blob, limb, smooth, polyPath, clamp, lerp } = RC;
+  const { sweep, blobPath, form, hand, folds } = CAST;
+  const g = ctx; const S = OTM.S;
+  const FIRE = ['#140E0A', '#B3260E', '#FF5A14', '#FFC870', '#FFF1C8'];
+  const ramp = (v) => { v = clamp(v, 0, 1) * 4; const i = Math.min(3, Math.floor(v)), f = v - i; const a = RC.hexToRgb(FIRE[i]), b = RC.hexToRgb(FIRE[i + 1]); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]; };
+  const FIREKEY = '#FF7A32';
+  const GROUND = 640;
+
+  // ================= SKY + SMOKE =================
+  g.fillStyle = lin(g, 0, 0, 0, GROUND, [[0, '#070505'], [0.55, '#140C09'], [1, '#2A120A']]); g.fillRect(0, 0, W, GROUND + 40);
+  pool(g, 560, 420, 900, '#B3260E', 0.42, { sy: 0.55, mid: 0.4, midA: 0.35 });
+  pool(g, 560, 360, 520, '#FF5A14', 0.22, { sy: 0.7 });
+  // smoke plume: fbm density, lit from below by the fire
+  (() => {
+    const qw = 480, qh = 270, c = RC.cv(qw, qh), cg = c.getContext('2d'), id = cg.createImageData(qw, qh), d = id.data;
+    for (let y = 0; y < qh; y++) for (let x = 0; x < qw; x++) {
+      const X = x * 4, Y = y * 4; if (Y > 470) continue;
+      const hgt = clamp((300 - Y) / 300, -0.3, 1);
+      const cx = 560 + Math.max(0, 260 - Y) * 1.25 + Math.sin(Y * 0.012) * 40, wdt = 210 + Math.max(0, 300 - Y) * 1.4;
+      const m = Math.exp(-Math.pow((X - cx) / wdt, 2)) * clamp((330 - Y) / 80, 0, 1);
+      const n = OTM.fbm(X * 0.0042 - Y * 0.0012, Y * 0.0052, 11, 5); const n2 = OTM.fbm(X * 0.011, Y * 0.011 + 3, 4, 3);
+      let den = clamp((n * 1.25 - 0.42 + m * 0.55) * m * 1.6 + (n2 - 0.5) * 0.25 * m, 0, 1);
+      // second smaller plume from the back door / kitchen
+      const m2 = Math.exp(-Math.pow((X - (1060 + Math.max(0, 420 - Y) * 0.7)) / (90 + Math.max(0, 420 - Y) * 0.6), 2)) * clamp((430 - Y) / 60, 0, 1);
+      den = Math.max(den, clamp((n * 1.2 - 0.45 + m2 * 0.5) * m2 * 1.5, 0, 1) * 0.8);
+      const lit = clamp(1 - hgt * 1.15, 0, 1) * (0.55 + n2 * 0.6);
+      const col = [lerp(28, 150, lit) * (0.6 + 0.4 * n2), lerp(22, 52, lit), lerp(22, 24, lit)];
+      const i = (y * qw + x) * 4; d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = den * 235;
+    }
+    cg.putImageData(id, 0, 0); g.save(); g.filter = 'blur(3px)'; g.drawImage(c, 0, 0, W, H); g.restore();
+  })();
+
+  // distant tree line + neighbour roofs (cool, faint)
+  (() => {
+    const s = S(); const r = OTM.rng('trees'); s.M(0, GROUND - 120); for (let x = 0; x <= W; x += 30) { s.L(x, GROUND - 110 - OTM.fbm(x * 0.01, 1, 3, 3) * 120 - (x > 1300 ? 30 : 0)); } s.L(W, GROUND + 20); s.L(0, GROUND + 20); s.Z();
+    g.save(); g.filter = 'blur(3px)'; g.fillStyle = lin(g, 0, GROUND - 260, 0, GROUND, [[0, '#120B08'], [1, '#1C0F0A']]); g.fill(s.path(2, 4)); g.restore();
+  })();
+
+  // ================= THE HOUSE (background, slightly soft) =================
+  const house = RC.cv(), hg = house.getContext('2d');
+  const facade = S().poly([[110, 640], [110, 300], [520, 140], [930, 300], [930, 640]]);
+  const ext = S().poly([[900, 640], [900, 440], [1255, 440], [1255, 640]]);
+  const roofE = S().poly([[880, 440], [1275, 440], [1255, 420], [905, 410]]);
+  const chim = S().rect(700, 170, 52, 110);
+  const wins = [
+    { x: 190, y: 330, w: 130, h: 150, up: 1, burn: 0.95, curtain: false }, { x: 455, y: 300, w: 130, h: 170, up: 1, burn: 1, curtain: false },
+    { x: 720, y: 330, w: 130, h: 150, up: 1, burn: 0.8 }, { x: 200, y: 505, w: 170, h: 105, up: 0, burn: 0.7 }, { x: 610, y: 500, w: 150, h: 110, up: 0, burn: 0.9 },
+    { x: 930, y: 486, w: 104, h: 86, up: 0, burn: 1 }, { x: 1092, y: 494, w: 52, h: 62, up: 0, burn: 1, door: true },
+  ];
+  // fire buffer (fbm advected upward through an ember ramp), quarter res
+  const fire = RC.cv(480, 270), fg = fire.getContext('2d'); const fid = fg.createImageData(480, 270), fd = fid.data;
+  const licks = RC.cv(480, 270), lg = licks.getContext('2d'); const lid = lg.createImageData(480, 270), ld = lid.data;
+  for (let y = 0; y < 270; y++) for (let x = 0; x < 480; x++) {
+    const X = x * 4, Y = y * 4; let best = 0, out = 0;
+    wins.forEach((w, k) => {
+      const inX = (X - w.x) / w.w, inY = (Y - w.y) / w.h; if (inX < -0.25 || inX > 1.25 || inY < -1.6 || inY > 1.05) return;
+      const n = OTM.fbm(X * 0.022, Y * 0.016 + k * 7.1 + X * 0.004, 21 + k, 5), n2 = OTM.fbm(X * 0.06, Y * 0.045, 33 + k, 3);
+      if (inX >= 0 && inX <= 1 && inY >= 0 && inY <= 1) { const v = (0.35 + inY * 0.55) * w.burn + (n - 0.5) * 1.1 + (n2 - 0.5) * 0.4; best = Math.max(best, clamp(v * 1.25 + 0.1, 0, 1)); }
+      if (inY < 0.15 && inX > -0.1 && inX < 1.1) { // tongues licking out of the top of the opening
+        const edge = Math.min(1, Math.min(inX + 0.1, 1.1 - inX) * 4); const up = clamp(1 + inY * (w.up ? 0.9 : 1.6), 0, 1);
+        const v = (n * 1.35 - 0.5 + up * 0.75 - 0.32) * edge * w.burn; out = Math.max(out, clamp(v * 2.1, 0, 1));
+      }
+    });
+    const i = (y * 480 + x) * 4; const c = ramp(best); fd[i] = c[0]; fd[i + 1] = c[1]; fd[i + 2] = c[2]; fd[i + 3] = 255;
+    const c2 = ramp(0.25 + out * 0.75); ld[i] = c2[0]; ld[i + 1] = c2[1]; ld[i + 2] = c2[2]; ld[i + 3] = out > 0.18 ? Math.min(255, (out - 0.18) * 420) : 0;
+  }
+  fg.putImageData(fid, 0, 0); lg.putImageData(lid, 0, 0);
+  // facade: soot-dark paper, faintly lit from the burning windows
+  const facP = RC.pth(facade.add(chim), 0.6, 3), extP = RC.pth(ext, 0.6, 4);
+  paper(hg, facP, '#1A100C', { shade: (h) => {
+    wins.forEach(w => { const cx = w.x + w.w / 2, cy = w.y + w.h * 0.3; h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = rad(h, cx, cy - 20, 0, w.w * 1.25, [[0, '#FF5A14', 0.32 * w.burn], [0.5, '#B3260E', 0.14], [1, '#B3260E', 0]]); h.fillRect(cx - 300, cy - 300, 600, 600); h.restore();
+      h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = rad(h, cx, w.y - 30, 0, w.w * 0.9, [[0, '#000', 0.55], [1, '#000', 0]]); h.fillRect(cx - 200, w.y - 220, 400, 260); h.restore(); });
+    h.fillStyle = lin(h, 0, 140, 0, 640, [[0, '#000', 0.35], [0.5, '#000', 0], [1, '#000', 0.25]]); h.fillRect(0, 0, 1300, 700);
+  } });
+  paper(hg, extP, '#1C110C', { shadow: { dx: -6, dy: 0, blur: 14, alpha: 0.6 } });
+  // roof edges + gutter catching the glow
+  const roofLine = S().poly([[86, 312], [520, 128], [954, 312], [940, 318], [520, 146], [100, 318]]);
+  paper(hg, RC.pth(roofLine, 0.5, 7), '#120A07', { rim: { dx: 0, dy: -1, w: 2, color: '#FF7A32', alpha: 0.6 } });
+  paper(hg, RC.pth(roofE, 0.5, 8), '#120A07', { rim: { dx: 0, dy: -1, w: 2, color: '#FF7A32', alpha: 0.5 } });
+  // window openings: the fire interior, then frames, broken glass teeth, the curtain
+  wins.forEach((w, k) => {
+    const op = new Path2D(); op.rect(w.x, w.y, w.w, w.h);
+    hg.save(); hg.clip(op); hg.imageSmoothingQuality = 'high'; hg.filter = 'blur(1.5px)'; hg.drawImage(fire, 0, 0, W, H); hg.restore();
+    if (w.curtain) { // the upstairs curtain lifting, burning away through a noise threshold with a 3px ember edge
+      const id2 = hg.getImageData(w.x, w.y, w.w, w.h); const dd = id2.data;
+      for (let yy = 0; yy < w.h; yy++) for (let xx = 0; xx < w.w; xx++) {
+        const hem = 0.55 + 0.18 * Math.sin(xx * 0.07 + 1.3) + 0.1 * OTM.vnoise(xx * 0.05, 0, 9); const inC = yy / w.h < hem && xx > w.w * 0.08;
+        if (!inC) continue; const burnN = OTM.fbm((w.x + xx) * 0.03, (w.y + yy) * 0.03, 71, 4) + (1 - yy / w.h) * 0.25 + (xx / w.w) * 0.18;
+        const i = (yy * w.w + xx) * 4; if (burnN > 0.86) continue;
+        if (burnN > 0.8) { dd[i] = 255; dd[i + 1] = 200; dd[i + 2] = 120; continue; }
+        if (burnN > 0.75) { dd[i] = 255; dd[i + 1] = 110; dd[i + 2] = 30; continue; }
+        const fold = 0.75 + 0.25 * Math.sin(xx * 0.22 + yy * 0.02); const tr = 0.55; // backlit fabric
+        dd[i] = dd[i] * tr * fold + 60 * (1 - tr); dd[i + 1] = dd[i + 1] * tr * fold * 0.85 + 18 * (1 - tr); dd[i + 2] = dd[i + 2] * tr * 0.6 + 8 * (1 - tr);
+      }
+      hg.putImageData(id2, w.x, w.y);
+    }
+    // frame + mullions + glass teeth
+    hg.save(); hg.strokeStyle = '#0E0806'; hg.lineWidth = 9; hg.strokeRect(w.x, w.y, w.w, w.h);
+    if (!w.door) { hg.lineWidth = 6; hg.beginPath(); hg.moveTo(w.x + w.w / 2, w.y); hg.lineTo(w.x + w.w / 2, w.y + w.h); if (w.up) { hg.moveTo(w.x, w.y + w.h * 0.42); hg.lineTo(w.x + w.w, w.y + w.h * 0.42); } hg.stroke(); }
+    const r = OTM.rng('teeth' + k); hg.fillStyle = '#0E0806';
+    for (let j = 0; j < 5; j++) { const ex = w.x + r() * w.w, ey = r() < 0.5 ? w.y + 4 : w.y + w.h - 4, dir = ey < w.y + w.h / 2 ? 1 : -1; hg.beginPath(); hg.moveTo(ex - 10 - r() * 10, ey); hg.lineTo(ex + 10 + r() * 10, ey); hg.lineTo(ex + (r() - 0.5) * 14, ey + dir * (14 + r() * 26)); hg.closePath(); hg.fill(); }
+    // glass shards catching light
+    hg.strokeStyle = 'rgba(255,230,190,0.55)'; hg.lineWidth = 1.2; for (let j = 0; j < 3; j++) { const ex = w.x + r() * w.w, ey = w.y + r() * w.h; hg.beginPath(); hg.moveTo(ex, ey); hg.lineTo(ex + 6 + r() * 10, ey + 10 + r() * 14); hg.stroke(); }
+    hg.restore();
+  });
+  (() => { const w = { x: 455, y: 300, w: 130, h: 170 }; const r = OTM.rng('curtain');
+    // hem: lifted outward (to the right) by the heat, burning upward through a noise threshold
+    // it hangs down the left of the pane and billows OUT through the broken glass; the hem has burned away (3px ember edge)
+    const top = [[w.x + 6, w.y + 6], [w.x + 36, w.y + 4], [w.x + 70, w.y + 6], [w.x + 92, w.y + 8], [w.x + 104, w.y + 40], [w.x + 122, w.y + 84], [w.x + 150, w.y + 116], [w.x + 186, w.y + 132]];
+    const burnEdge = []; const N = 28; for (let i = 0; i <= N; i++) { const u = i / N; const bx = lerp(w.x + 178, w.x + 8, u), by = lerp(w.y + 150, w.y + 118, u) + 16 * Math.sin(u * Math.PI) ;
+      burnEdge.push([bx + (OTM.vnoise(u * 13, 3, 5) - 0.5) * 16, by + (OTM.vnoise(u * 17, 7, 9) - 0.5) * 30 - (u > 0.55 ? (u - 0.55) * 60 : 0)]); }
+    const pts = top.concat(burnEdge, [[w.x + 6, w.y + 96]]);
+    const cp = polyPath(pts, true);
+    hg.save(); hg.shadowColor = 'rgba(0,0,0,0.6)'; hg.shadowBlur = 10; hg.shadowOffsetY = 6; hg.fillStyle = '#3A140A'; hg.fill(cp); hg.restore();
+    hg.save(); hg.clip(cp);
+    hg.fillStyle = lin(hg, w.x, w.y, w.x + 190, w.y + 140, [[0, '#3A140A'], [0.45, '#7A2C12'], [0.75, '#C25A24'], [1, '#F09040']]); hg.fillRect(w.x - 10, w.y - 10, 230, 180);
+    // folds (backlit fabric: darker pleats, glowing gaps)
+    for (let i = 0; i < 9; i++) { const x0 = w.x + 8 + i * 11; hg.strokeStyle = rgba(i % 2 ? '#200805' : '#FFB060', i % 2 ? 0.45 : 0.22); hg.lineWidth = i % 2 ? 6 : 3; hg.filter = 'blur(2px)'; hg.beginPath(); hg.moveTo(x0, w.y + 4); hg.quadraticCurveTo(x0 + 4 + i * 2, w.y + 70, x0 + 30 + i * 10, w.y + 140); hg.stroke(); }
+    hg.filter = 'none'; hg.restore();
+    // the 3px ember burn edge, bright where it is eating upward
+    hg.save(); hg.lineJoin = 'round'; hg.lineCap = 'round'; hg.beginPath(); burnEdge.forEach((p, i) => i ? hg.lineTo(p[0], p[1]) : hg.moveTo(p[0], p[1]));
+    hg.strokeStyle = '#FF5A14'; hg.lineWidth = 5; hg.shadowColor = '#FF5A14'; hg.shadowBlur = 12; hg.stroke(); hg.strokeStyle = '#FFE6A8'; hg.lineWidth = 2.2; hg.shadowBlur = 0; hg.stroke(); hg.restore();
+    // charred flakes lifting off the burnt hem
+    for (let i = 0; i < 16; i++) { const p = burnEdge[Math.floor(r() * burnEdge.length)], x = p[0] + (r() - 0.3) * 40, y = p[1] - 10 - r() * 90, s0 = 2 + r() * 5; hg.save(); hg.translate(x, y); hg.rotate(r() * 6); hg.fillStyle = '#1A0A06'; hg.fillRect(-s0, -s0 * 0.6, s0 * 2, s0 * 1.2); hg.strokeStyle = rgba('#FF8A3D', 0.9); hg.lineWidth = 1; hg.strokeRect(-s0, -s0 * 0.6, s0 * 2, s0 * 1.2); hg.restore(); }
+    // the rail it hangs from
+    hg.fillStyle = '#0E0806'; hg.fillRect(w.x - 6, w.y + 2, w.w + 12, 5); })();
+  // back steps under the door, sill glow
+  paper(hg, RC.pth(S().rect(1066, 640, 104, 13).add(S().rect(1054, 651, 128, 13)), 0.4, 9), '#160D09', { rim: { dx: 0, dy: -1, w: 2, color: '#FF7A32', alpha: 0.8 } });
+  // THE BACK DOOR (the way he came out): a shut, glazed door, fire behind its pane and leaking round its edges
+  (() => { const dp = new Path2D(); dp.rect(1076, 478, 84, 162); dp.rect(1092, 494, 52, 62); // outer panel minus the glass
+    hg.save(); hg.fillStyle = '#FF9A40'; hg.shadowColor = '#FF6A1A'; hg.shadowBlur = 10; hg.fillRect(1074, 476, 88, 166); hg.restore();   // light leaking round the frame
+    paper(hg, dp, '#22140E', { evenodd: true, shade: (h) => { h.fillStyle = lin(h, 1076, 0, 1160, 0, [[0, '#FF7A32', 0.2], [0.5, '#000000', 0.1], [1, '#000000', 0.45]]); h.fillRect(1076, 478, 84, 162);
+      h.strokeStyle = 'rgba(0,0,0,0.5)'; h.lineWidth = 2; h.strokeRect(1084, 572, 68, 58); h.strokeStyle = rgba('#FF8A3D', 0.25); h.lineWidth = 1; h.beginPath(); h.moveTo(1085, 573); h.lineTo(1151, 573); h.stroke(); } });
+    hg.save(); hg.fillStyle = '#C8C2B8'; hg.shadowColor = '#FFC870'; hg.shadowBlur = 6; hg.beginPath(); hg.arc(1150, 566, 3.2, 0, 7); hg.fill(); hg.restore();
+    hg.strokeStyle = '#120A07'; hg.lineWidth = 7; hg.strokeRect(1072, 474, 92, 168); hg.fillStyle = '#FFE0A0'; hg.fillRect(1078, 636, 80, 3); })();
+  // flames licking out (screen)
+  hg.save(); hg.globalCompositeOperation = 'screen'; hg.filter = 'blur(2px)'; hg.drawImage(licks, 0, 0, W, H); hg.restore();
+  // composite the house layer, softened (depth of field)
+  g.save(); g.filter = 'blur(1.6px)'; g.drawImage(house, 0, 0); g.restore();
+  // spill glow around windows + flames (soft light in the smoke)
+  wins.forEach(w => pool(g, w.x + w.w / 2, w.y + w.h * 0.4, w.w * 1.3, '#FF5A14', 0.22 * w.burn, { sy: 1 }));
+  pool(g, 520, 330, 260, '#FFC870', 0.10);
+
+  // ================= THE FENCE: slats grouped like tally marks (four uprights + a diagonal brace), rhyming with the title =================
+  (() => {
+    const top = 488, bot = 652, sw = 22, pitch = 28; let x = 1268; let gi = 0;
+    // two rails behind the slats
+    [[528], [612]].forEach(([ry]) => { const rp = S().rect(1262, ry, W - 1262, 11); paper(g, RC.pth(rp, 0.5, ry), '#100906', { shadow: { dx: 0, dy: 4, blur: 6, alpha: 0.5 } }); });
+    while (x < W + 20) {
+      const warm = clamp(1 - (x - 1262) / 560, 0.06, 1); const r = OTM.rng('tally' + gi);
+      const slat = (sx, i) => { const hh = top + (r() - 0.5) * 8; const sp = S().poly([[sx, bot], [sx, hh + 3], [sx + sw * 0.5, hh - 1 + r() * 2], [sx + sw, hh + 3], [sx + sw, bot]]);
+        paper(g, RC.pth(sp, 0.6, 40 + gi * 7 + i), mix('#170F0B', '#3A1C10', warm * 0.75), { shadow: { dx: 7, dy: 0, blur: 10, alpha: 0.7 },
+          shade: (h) => { h.fillStyle = lin(h, sx, 0, sx + sw, 0, [[0, '#FF6A24', 0.4 * warm], [0.4, '#FF6A24', 0.06 * warm], [1, '#000', 0.4]]); h.fillRect(sx, hh - 10, sw, bot - hh + 20);
+            h.fillStyle = lin(h, 0, hh, 0, bot, [[0, '#000', 0], [1, '#000', 0.5]]); h.fillRect(sx, hh - 10, sw, bot - hh + 20);
+            h.strokeStyle = 'rgba(0,0,0,0.25)'; h.lineWidth = 1; h.beginPath(); h.moveTo(sx + 7 + r() * 3, hh + 4); h.lineTo(sx + 8, bot); h.moveTo(sx + 14 + r() * 3, hh + 4); h.lineTo(sx + 15, bot); h.stroke(); },
+          rim: { dx: -1, dy: -0.25, w: 2, color: '#FF7A32', alpha: 0.9 * warm } }); };
+      for (let k = 0; k < 4; k++) slat(x + k * pitch, k);
+      // the diagonal brace across the four: the fifth stroke of the tally
+      const x0 = x - 6, x1 = x + 3 * pitch + sw + 6; const br = new Path2D(); br.moveTo(x0, bot - 26); br.lineTo(x0 + 9, bot - 12); br.lineTo(x1, top + 30); br.lineTo(x1 - 9, top + 16); br.closePath();
+      paper(g, br, mix('#1B110C', '#4A2414', warm * 0.8), { shadow: { dx: 6, dy: 5, blur: 8, alpha: 0.75 }, rim: { dx: -0.6, dy: -1, w: 2, color: '#FF8A3D', alpha: 0.85 * warm } });
+      x += 4 * pitch + 30; gi++;
+    }
+  })();
+  // ================= THE GRASS =================
+  (() => {
+    g.fillStyle = lin(g, 0, GROUND, 0, H, [[0, '#2C140A'], [0.18, '#1D110B'], [0.55, '#100B08'], [1, '#080605']]); g.fillRect(0, GROUND, W, H - GROUND);
+    // fire light falling on the lawn (from windows / door), soft perspective pools
+    pool(g, 560, 700, 820, '#FF5A14', 0.42, { sy: 0.16, mid: 0.4, midA: 0.4 });
+    pool(g, 1190, 680, 360, '#FF7A32', 0.4, { sy: 0.2 });
+    pool(g, 700, 690, 420, '#FFC870', 0.14, { sy: 0.12 });
+    // blades: dense near the horizon, sparse & larger toward camera; lit tips facing the fire
+    const r = OTM.rng('grass'); g.save(); g.lineCap = 'round';
+    for (let i = 0; i < 9000; i++) {
+      const y = GROUND + Math.pow(r(), 1.6) * (H - GROUND), x = r() * W, depth = (y - GROUND) / (H - GROUND); const len = 4 + depth * 22 + r() * 6;
+      const lean = (r() - 0.5) * 0.8 + 0.2; const warm = clamp(1 - Math.hypot((x - 650) / 1100, (y - 680) / 220), 0, 1);
+      const lit = warm * (0.3 + r() * 0.7);
+      g.strokeStyle = lit > 0.25 ? rgba(mix('#3A1A0C', '#FF6A24', lit * 0.75), 0.55 + lit * 0.4) : rgba(mix('#16120E', '#24301F', r() * 0.6), 0.6);
+      g.lineWidth = 0.8 + depth * 1.6; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + lean * len * 0.3, y - len * 0.6, x + lean * len * 0.6, y - len); g.stroke();
+    }
+    g.restore();
+  })();
+
+  // ================= THE PATH: flagstones from the back door to where he sits (perspective, contact shadows) =================
+  (() => {
+    const stones = [[1112, 676, 30, 6.5], [1120, 699, 37, 8], [1134, 728, 45, 10], [1156, 765, 55, 12.5], [1188, 812, 66, 15], [1230, 870, 80, 18.5]];
+    stones.forEach(([x, y, w, hh], k) => {
+      const r = OTM.rng('flag' + k); const pts = []; const rot = (r() - 0.5) * 0.5; for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2 + r() * 0.5; const rr = 1 + (r() - 0.5) * 0.3; const ex = Math.cos(a) * w * rr, ey = Math.sin(a) * hh * rr; pts.push([x + ex + ey * rot * 2, y + ey - ex * rot * 0.08]); }
+      const top = blobPath(pts, 2); const warm = clamp(1.05 - k * 0.13, 0.25, 1);
+      // contact shadow: tight dark ring + a soft fall-off thrown toward camera-right (fire behind)
+      g.save(); g.globalCompositeOperation = 'multiply'; g.filter = `blur(${2 + k * 0.8}px)`; g.fillStyle = 'rgba(8,4,2,0.9)'; g.translate(x + w * 0.06, y + hh * 0.35); g.scale(1.06, 1.25); g.translate(-x, -y); g.fill(top); g.restore();
+      g.save(); g.globalCompositeOperation = 'multiply'; g.filter = `blur(${5 + k * 1.5}px)`; g.fillStyle = 'rgba(8,4,2,0.6)'; g.translate(w * 0.18, hh * 0.55); g.fill(top); g.restore();
+      // the slab's front edge (thickness)
+      const side = new Path2D(); pts.forEach((p, i) => { if (p[1] >= y - hh * 0.1) { side.rect(p[0] - 2, p[1] - 1, 4, hh * 0.32 + 2); } });
+      g.save(); g.fillStyle = '#0A0605'; g.translate(0, hh * 0.12 + 1); g.fill(top); g.restore();
+      paper(g, top, '#1E1612', {
+        shade: (h) => { h.fillStyle = lin(h, x, y - hh, x, y + hh, [[0, '#E0682A', 0.3 * warm], [0.35, '#7A3010', 0.1 * warm], [1, '#000000', 0.6]]); h.fillRect(x - w - 4, y - hh - 4, w * 2 + 8, hh * 2 + 8);
+          h.strokeStyle = 'rgba(0,0,0,0.3)'; h.lineWidth = 1; h.beginPath(); h.moveTo(x - w * 0.4, y - hh * 0.3); h.lineTo(x + w * 0.05, y + hh * 0.4); h.stroke(); RC.texture(h, 0.5, 'overlay'); },
+        rim: { dx: -0.5, dy: -1, w: 1.4, color: '#FFA050', alpha: 0.55 * warm } });
+      // the lawn swallows the slab's near edge: blades rising in front of it
+      g.save(); g.lineCap = 'round'; for (let i = 0; i < 26 + k * 8; i++) { const a = Math.PI * (0.08 + r() * 0.84), px = x + Math.cos(a) * w * (0.9 + r() * 0.18), py = y + Math.sin(a) * hh * (0.95 + r() * 0.15) + 2, l = 5 + k * 2.6 + r() * 6;
+        g.strokeStyle = rgba(mix('#120C08', '#4A2410', r() * 0.6), 0.95); g.lineWidth = 0.9 + k * 0.25; g.beginPath(); g.moveTo(px, py + 2); g.quadraticCurveTo(px + (r() - 0.5) * l * 0.4, py - l * 0.5, px + (r() - 0.5) * l * 0.7, py - l); g.stroke(); } g.restore();
+      // grass creeping over the slab edges
+      g.save(); g.lineCap = 'round'; for (let i = 0; i < 10 + k * 3; i++) { const a = r() * Math.PI * 2, px = x + Math.cos(a) * w * (0.95 + r() * 0.1), py = y + Math.sin(a) * hh * (0.95 + r() * 0.1) + hh * 0.3, l = 4 + k * 2.2 + r() * 5;
+        g.strokeStyle = rgba(mix('#1A120C', '#7A3A16', warm * r()), 0.85); g.lineWidth = 0.9 + k * 0.25; g.beginPath(); g.moveTo(px, py); g.quadraticCurveTo(px + (r() - 0.5) * l * 0.5, py - l * 0.6, px + (r() - 0.5) * l * 0.8, py - l); g.stroke(); } g.restore();
+    });
+    // blown-out glass on the lawn catching the fire
+    const r = OTM.rng('lawnglass'); g.save();
+    for (let i = 0; i < 46; i++) { const x = 160 + r() * 1000, y = 652 + Math.pow(r(), 1.5) * 90, l = 2 + r() * 6; g.strokeStyle = rgba(r() < 0.5 ? '#FFE2B0' : '#FF9A50', 0.5 + r() * 0.5); g.lineWidth = 1 + r(); g.beginPath(); g.moveTo(x, y); g.lineTo(x + l, y - l * 0.3); g.stroke(); }
+    g.restore();
+  })();
+  // ================= SCOTT: on the grass in his socks, knees up, left elbow on the near knee, phone at his LEFT ear =================
+  // Key: the burning house behind him (ember back-key, rim on every contour that faces it). Fill: the phone, screen-white on cheek, ear, fingers.
+  // His RIGHT arm runs down and out of frame into the dark grass (every cold-open framing crops it).
+  const SX = 110; g.save(); g.translate(SX, 0);
+  const FL = { x: 560 - SX, y: 380 };                  // the fire, as a light (in figure space)
+  const PH = [1500, 376];                              // the phone's screen, pressed to his cheek
+  const SKIN = P.skin.scott, OX = P.oxford, TROU = '#2B2A2E', SOCK = '#8A8C90';
+  const OXB = '#161B21', OXM = mix(OX, '#1A1F25', 0.3), OXL = mix(OX, '#141A20', 0.3), TRB = '#100F11', TRL = mix(TROU, FIREKEY, 0.42), SKB = mix(SKIN, P.umber, 0.82);
+  const skinB = mix(SKIN, P.umber, 0.74), skinL = mix(mix(SKIN, FIREKEY, 0.32), '#FFFFFF', 0.04);
+  const phoneFill = (h, x, y, r, k) => { h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = rad(h, x, y, 0, r, [[0, P.screen, 0.85 * k], [0.25, '#D6E4F0', 0.55 * k], [0.6, '#8FA6B8', 0.16 * k], [1, '#8FA6B8', 0]]); h.fillRect(x - r, y - r, 2 * r, 2 * r); h.restore(); };
+  const sootOn = (h, seed, cx, cy, rx, ry, n, a) => { const r = OTM.rng(seed); h.save(); h.globalCompositeOperation = 'multiply'; for (let i = 0; i < n; i++) { const x = cx + (r() - 0.5) * rx * 2, y = cy + (r() - 0.5) * ry * 2, rr = 14 + r() * 30;
+      h.save(); h.translate(x, y); h.rotate(r() * 3); h.scale(1, 0.35 + r() * 0.4); h.fillStyle = rad(h, 0, 0, 0, rr, [[0, '#231C18', a * (0.35 + r() * 0.35)], [0.6, '#231C18', a * 0.15], [1, '#231C18', 0]]); h.fillRect(-rr, -rr, 2 * rr, 2 * rr); h.restore(); } h.restore(); };
+  const FIRERIM = '#FFA050';
+  const piece = (path, base, lit, cx, cy, band, o) => { o = o || {}; form(g, path, Object.assign({ light: FL, cx, cy, base, lit, band, soft: band * 0.9, litA: 0.85, lit2: '#FF9A50', lit2A: 0.45, rimC: '#FFC890', rimW: 2.4, rimA: 1, rimBlur: 0.3, ao: 0.5,
+      bounce: { color: '#5A2A14', a: 0.35, w: band * 0.5 } }, o));
+    if (o.rimHot !== false) rim(g, path, { dx: CAST.dirTo(FL, cx, cy)[0], dy: CAST.dirTo(FL, cx, cy)[1], w: 9, color: '#FF5A14', alpha: 0.45, blur: 4 }); };
+  // the lawn's cast shadow from Scott, thrown toward camera-right by the fire
+  (() => { const sh = new Path2D(); sh.ellipse(1520, 912, 250, 26, 0, 0, Math.PI * 2); sh.ellipse(1700, 930, 260, 34, 0.05, 0, Math.PI * 2);
+    g.save(); g.globalCompositeOperation = 'multiply'; g.filter = 'blur(18px)'; g.fillStyle = 'rgba(5,3,2,0.85)'; g.fill(sh); g.restore(); })();
+  // a dark haze of smoke drifting behind him, so his silhouette separates from the fence
+  g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = rad(g, 1640, 560, 80, 520, [[0, '#2A1A14', 0.75], [1, '#2A1A14', 0]]); g.fillRect(1100, 40, 1060, 1060); g.restore();
+
+  // ---- far (RIGHT) arm: from behind his back, down into the dark grass and out of frame ----
+  (() => { const sl = sweep([[1610, 520, 34], [1660, 620, 30], [1704, 712, 27], [1722, 748, 26]], { capEnd: false });
+    piece(sl.path, '#101216', mix(OXB, FIREKEY, 0.2), 1700, 560, 8, { litA: 0.5, lit2A: 0.1, rimA: 0.35, rimW: 1.6, rimHot: false, shade: (h) => { folds(h, sl, { n: 4, a: 0.35, seed: 'farsl' }); h.fillStyle = lin(h, 0, 560, 0, 760, [[0, '#000', 0], [1, '#000', 0.5]]); h.fillRect(1600, 450, 200, 330); } });
+    const fa = sweep([[1722, 746, 23], [1768, 850, 20], [1820, 990, 18]]);
+    rim(g, fa.path, { dx: 0.4, dy: -1, w: 1.6, color: '#C8602A', alpha: 0.55, blur: 0.6 }); piece(fa.path, '#100B09', mix(SKB, FIREKEY, 0.1), 1840, 780, 6, { litA: 0.4, lit2A: 0.05, rimA: 0.2, rimW: 1.2, rimHot: false, shade: (h) => { sootOn(h, 'farfa', 1860, 810, 60, 90, 8, 0.6); h.fillStyle = lin(h, 0, 760, 0, 950, [[0, '#000', 0.2], [1, '#000', 0.9]]); h.fillRect(1700, 700, 120, 320); } }); })();
+
+  // ---- far (right) leg: knee peeking just behind the near knee, sock planted ahead of the near one ----
+  const sock = (pts, seed, k) => { const sp = blobPath(pts, 5); const bb = pts.reduce((a, q) => [Math.min(a[0], q[0]), Math.min(a[1], q[1]), Math.max(a[2], q[0]), Math.max(a[3], q[1])], [1e9, 1e9, -1e9, -1e9]);
+    // contact shadow on the grass
+    g.save(); g.globalCompositeOperation = 'multiply'; g.filter = 'blur(7px)'; g.fillStyle = 'rgba(4,2,1,0.95)'; g.beginPath(); g.ellipse((bb[0] + bb[2]) / 2 + 8, bb[3] + 1, (bb[2] - bb[0]) * 0.56, 9, 0, 0, Math.PI * 2); g.fill(); g.restore();
+    piece(sp, mix(SOCK, P.umber, 0.8), mix(mix(SOCK, FIREKEY, 0.32), '#FFFFFF', 0.04), bb[0] - 30, bb[1] - 10, 12, { rimA: 0.95 * k, litA: 0.8,
+      shade: (h) => { // dirty sole, reinforced heel, knit texture, soot
+        h.fillStyle = lin(h, 0, bb[3] - 14, 0, bb[3], [[0, '#000000', 0], [1, '#120C0A', 0.75]]); h.fillRect(bb[0] - 4, bb[1], bb[2] - bb[0] + 8, bb[3] - bb[1] + 4);
+        h.fillStyle = rad(h, bb[2] - 14, bb[3] - 18, 0, 26, [[0, '#000000', 0.25], [1, '#000000', 0]]); h.fillRect(bb[2] - 50, bb[3] - 50, 60, 60);
+        h.strokeStyle = 'rgba(0,0,0,0.16)'; h.lineWidth = 1; for (let x = bb[0]; x < bb[2]; x += 4.5) { h.beginPath(); h.moveTo(x, bb[1]); h.lineTo(x + 6, bb[3]); h.stroke(); }
+        sootOn(h, seed, (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2, (bb[2] - bb[0]) / 2, (bb[3] - bb[1]) / 2, 5, 0.5); } });
+    // ribbed cuff at the ankle
+    const cx0 = pts[pts.length - 1], cx1 = pts[0]; g.save(); g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 1.2; for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(cx0[0] + 2, cx0[1] + 4 + i * 4); g.lineTo(cx1[0] - 2, cx1[1] + 4 + i * 4); g.stroke(); } g.restore(); };
+  (() => { const th = sweep([[1612, 860, 56], [1530, 760, 50], [1446, 662, 41]]); piece(th.path, '#0E0D0F', mix(TRB, FIREKEY, 0.3), 1446, 662, 10, { rimA: 0.6 });
+    const sh = sweep([[1446, 662, 39], [1392, 770, 34], [1318, 870, 25]]); piece(sh.path, '#0E0D0F', mix(TRB, FIREKEY, 0.35), 1400, 720, 12, { rimA: 0.75 });
+    sock([[1322, 846], [1340, 874], [1330, 900], [1276, 908], [1214, 906], [1178, 900], [1170, 892], [1186, 882], [1232, 872], [1288, 850]], 'sockF', 0.8); })();
+
+  // ---- torso: pale blue-grey oxford, torn (a jagged notch out of the back, ragged hem), soot over it ----
+  // skin showing through the tear
+  piece(blobPath([[1650, 676], [1708, 690], [1712, 790], [1660, 800], [1640, 740]], 5), '#1A100C', mix(SKB, FIREKEY, 0.15), 1660, 700, 6, { rimA: 0.2, rimHot: false, litA: 0.4, shade: (h) => sootOn(h, 'backskin', 1680, 740, 40, 60, 8, 0.7) });
+  const torsoPts = [[1540, 452], [1572, 436], [1622, 460], [1668, 520], [1694, 606], [1702, 688], [1670, 706], [1690, 722], [1650, 744], [1682, 760], [1658, 778], [1696, 794], [1690, 846], [1676, 902],
+    [1660, 900], [1648, 884], [1634, 906], [1616, 890], [1600, 912], [1582, 892], [1556, 900], [1530, 868], [1508, 796], [1496, 700], [1494, 604], [1502, 524], [1518, 476]];
+  const torsoP = polyPath(RC.smooth(torsoPts, true, 3).length ? torsoPts : torsoPts, true);
+  piece(torsoP, OXB, OXL, 1500, 600, 34, { lit2A: 0.55, litA: 0.9,
+    shadow: { dx: 10, dy: 6, blur: 18, alpha: 0.6 },
+    shade: (h) => {
+      // the blue-grey sinks to umber on the side away from both lights
+      // mid-tone: the oxford's own blue-grey where the burning sky still reaches the near side
+      h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = lin(h, 1490, 0, 1640, 0, [[0, OXM, 0.55], [0.6, OXM, 0.15], [1, OXM, 0]]); h.fillRect(1480, 420, 240, 500); h.restore();
+      h.fillStyle = lin(h, 1560, 0, 1710, 0, [[0, P.umber, 0], [1, P.umber, 0.7]]); h.fillRect(1480, 420, 240, 500);
+      h.fillStyle = lin(h, 0, 700, 0, 920, [[0, '#000000', 0], [1, '#000000', 0.45]]); h.fillRect(1480, 700, 240, 230);
+      phoneFill(h, 1500, 462, 130, 0.9);
+      folds(h, { mid: [[1530, 560, 40], [1580, 680, 60], [1600, 820, 50]] }, { n: 7, a: 0.4, seed: 'shirtF', color: '#000000', lit: mix(OX, '#FFFFFF', 0.2), litA: 0.12 });
+      sootOn(h, 'shirtsoot', 1600, 680, 110, 220, 22, 0.75);
+      // scorched patch along the torn edge
+      h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = rad(h, 1690, 740, 0, 70, [[0, '#1A0E08', 0.85], [1, '#1A0E08', 0]]); h.fillRect(1600, 660, 160, 160); h.restore();
+    } });
+  // a torn flap hanging from the notch, catching a sliver of fire on its edge
+  piece(polyPath([[1676, 704], [1698, 712], [1708, 766], [1700, 788], [1690, 752]], true), '#0E1114', mix(OXB, '#3A1A0C', 0.4), 1690, 720, 3, { rimA: 0.25, rimW: 1, rimHot: false, litA: 0.3, lit2A: 0.05 });
+  // the jagged tear catches a warm bounce off the burning lawn along its torn edges
+  g.save(); g.lineJoin = 'miter'; g.strokeStyle = rgba('#FF8A3D', 0.55); g.lineWidth = 1.4; g.beginPath(); [[1702, 688], [1676, 704], [1692, 722], [1658, 742], [1684, 760], [1664, 776], [1696, 794]].forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke(); g.restore();
+
+  // ---- near (left) leg: charcoal trousers, the knee up, a grey sock on the grass ----
+  (() => { const th = sweep([[1600, 872, 62], [1506, 760, 55], [1418, 650, 45]]);
+    piece(th.path, TRB, TRL, 1418, 600, 15, { litA: 0.75, lit2A: 0.5, shadow: { dx: 8, dy: 6, blur: 16, alpha: 0.6 },
+      shade: (h) => { folds(h, th, { n: 6, a: 0.4, seed: 'thighN', lit: mix(TROU, FIREKEY, 0.4), litA: 0.18 }); sootOn(h, 'trouN', 1500, 760, 80, 80, 6, 0.5); } });
+    const sh = sweep([[1418, 650, 43], [1388, 742, 38], [1350, 820, 32], [1334, 862, 28]]);
+    piece(sh.path, TRB, TRL, 1360, 700, 14, { litA: 0.75, lit2A: 0.5, shadow: { dx: 8, dy: 4, blur: 14, alpha: 0.55 },
+      shade: (h) => { folds(h, sh, { n: 4, a: 0.35, seed: 'shinN', lit: mix(TROU, FIREKEY, 0.4), litA: 0.16 }); // knee bunching behind the joint
+        h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = rad(h, 1452, 690, 0, 40, [[0, '#000000', 0.5], [1, '#000000', 0]]); h.fillRect(1400, 640, 110, 110); h.restore(); } });
+    sock([[1358, 852], [1378, 880], [1368, 912], [1306, 920], [1246, 919], [1210, 912], [1200, 903], [1214, 892], [1262, 880], [1320, 856]], 'sockN', 1);
+    // trouser hem over the sock top
+    piece(sweep([[1316, 852, 27], [1352, 858, 27]]).path, TRB, TRL, 1300, 840, 12, { rimA: 0.9, rimW: 2 }); })();
+
+  // ---- near (left) upper arm: the sleeve, torn off at the elbow ----
+  (() => { const ua = sweep([[1548, 488, 40], [1492, 558, 34], [1442, 622, 31]], { capEnd: false });
+    piece(ua.path, OXB, OXL, 1460, 560, 30, { shadow: { dx: 8, dy: 8, blur: 16, alpha: 0.55 },
+      shade: (h) => { h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = lin(h, 1440, 0, 1560, 0, [[0, OXM, 0.7], [1, OXM, 0.1]]); h.fillRect(1380, 460, 200, 200); h.restore(); phoneFill(h, 1500, 470, 120, 0.85); folds(h, ua, { n: 4, a: 0.4, seed: 'uaN' }); sootOn(h, 'uasoot', 1490, 560, 50, 60, 8, 0.7); } });
+    // ragged sleeve end (scorched threads) just above the elbow
+    const r = OTM.rng('rag'); const e = [1442, 622]; g.save(); g.lineCap = 'round'; for (let i = 0; i < 12; i++) { const a = -2.6 + r() * 1.6, x = e[0] + Math.cos(a + 1.57) * (r() - 0.5) * 56, y = e[1] + (r() - 0.5) * 10; g.strokeStyle = rgba(mix(OX, '#120A07', 0.6), 0.95); g.lineWidth = 1 + r(); g.beginPath(); g.moveTo(x, y); g.lineTo(x - 4 + r() * 8, y + 5 + r() * 10); g.stroke(); }
+    g.strokeStyle = rgba('#FF8A3D', 0.6); g.lineWidth = 1.2; g.beginPath(); g.moveTo(e[0] - 26, e[1] - 6); for (let i = 0; i <= 8; i++) g.lineTo(e[0] - 26 + i * 6.5, e[1] - 6 + (i % 2 ? 6 : -2) + i * 1.4); g.stroke(); g.restore(); })();
+
+  // ---- neck + head (3/4 profile toward the fire), soot, eye glint, the phone's cool light on cheek and ear ----
+  piece(sweep([[1534, 478, 34], [1510, 412, 31]]).path, SKB, skinL, 1510, 420, 12, { shade: (h) => { phoneFill(h, PH[0] - 10, PH[1] + 30, 60, 0.6); sootOn(h, 'neck', 1520, 450, 30, 40, 5, 0.6); } });
+  // the oxford's collar: a band round the neck base, its near point lifted, catching the phone's cool light
+  (() => { const band = sweep([[1508, 482, 8], [1530, 468, 8], [1556, 456, 7.5], [1570, 458, 7]]);
+    piece(band.path, mix(OX, '#141A20', 0.45), mix(OX, '#FFFFFF', 0.05), 1530, 450, 8, { rimA: 0.8, rimW: 1.5, rimHot: false, shade: (h) => phoneFill(h, PH[0], PH[1] + 30, 120, 0.8) });
+    piece(polyPath([[1506, 478], [1530, 474], [1512, 504]], true), mix(OX, '#141A20', 0.5), mix(OX, '#FFFFFF', 0.05), 1500, 470, 5, { rimA: 0.9, rimW: 1.3, rimHot: false, shade: (h) => phoneFill(h, PH[0], PH[1] + 30, 120, 0.7) }); })();
+  const HX = 1478, HY = 345, HS = 165;
+  PPL.head(g, {
+    x: HX, y: HY, s: HS, t: 0.86, facing: -1, tilt: -0.05, skin: SKIN, hair: 'scott', hairColor: P.hair.scott,
+    key: { dx: -1, dy: -0.2, color: FIREKEY, k: 0.9 }, termK: 0.45, ambientDark: 0.84, top: 0.55, soot: 0.65, seed: 'scottsoot', modelK: 0.7,
+    hairSheenAt: [HX - 40, HY - 70],
+    hairStrands: (h, xf) => { h.save(); h.globalCompositeOperation = 'screen'; h.lineCap = 'round'; for (let i = 0; i < 12; i++) { const [a, b] = xf(-0.3 + i * 0.03, -0.32 + i * 0.01), [c, d] = xf(-0.05 + i * 0.03, -0.56), [e, f] = xf(0.3 + i * 0.012, -0.42 + i * 0.03); h.strokeStyle = rgba('#FF9A50', 0.07 + 0.05 * (i % 3)); h.lineWidth = 1.4; h.beginPath(); h.moveTo(a, b); h.quadraticCurveTo(c, d, e, f); h.stroke(); } h.restore(); },
+    rims: [{ dx: -1, dy: -0.15, w: 3.4, color: FIRERIM, alpha: 1, blur: 0.5, glow: 0.4 }, { dx: -1, dy: -0.1, w: 12, color: '#FF5A14', alpha: 0.4, blur: 5 }],
+    gaze: [-0.8, -0.05], brow: { knit: 1, raise: 0.4 }, lid: 0.72, glint: '#FFD7B0', glintDx: -0.5,
+    faceExtra: (h) => phoneFill(h, PH[0] - 4, PH[1] - 6, 92, 1),
+  });
+  // ---- the phone at his LEFT ear: we see its back; the screen's light spills round its edges onto the cheek ----
+  (() => { const L = 96, Wd = 46, a = 1.98;
+    g.save(); g.translate(PH[0], PH[1]); g.rotate(a);
+    g.save(); g.globalCompositeOperation = 'screen'; g.filter = 'blur(9px)'; g.fillStyle = rgba(P.screen, 0.85); g.fillRect(-L / 2 - 2, -Wd / 2 - 12, L + 4, 16); g.restore();
+    const ph = new Path2D(); ph.roundRect(-L / 2, -Wd / 2, L, Wd, 9);
+    g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 8; g.shadowOffsetX = 3; g.shadowOffsetY = 3; g.fillStyle = '#121416'; g.fill(ph); g.restore();
+    g.fillStyle = lin(g, 0, -Wd / 2, 0, Wd / 2, [[0, '#4A525A'], [0.22, '#1C2024'], [1, '#0A0B0D']]); g.fill(ph);
+    g.strokeStyle = rgba(P.screen, 0.95); g.lineWidth = 2; g.beginPath(); g.moveTo(-L / 2 + 8, -Wd / 2 + 0.6); g.lineTo(L / 2 - 8, -Wd / 2 + 0.6); g.stroke();
+    g.strokeStyle = 'rgba(255,138,61,0.7)'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(-L / 2 + 0.6, -Wd / 2 + 8); g.lineTo(-L / 2 + 0.6, Wd / 2 - 8); g.stroke();
+    g.fillStyle = '#08090A'; g.beginPath(); g.arc(-L / 2 + 15, Wd / 2 - 13, 5.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = 'rgba(200,210,220,0.3)'; g.lineWidth = 1; g.stroke();
+    g.restore(); })();
+  // ---- the blistered left forearm: sooty skin, glossy blister patches with specular dots, never brighter than the face rim ----
+  (() => { const fa = sweep([[1436, 628, 27], [1446, 560, 25], [1458, 500, 22], [1468, 456, 19]]);
+    piece(fa.path, SKB, skinL, 1436, 560, 18, { shadow: { dx: 8, dy: 6, blur: 14, alpha: 0.6 }, rimA: 0.85, rimW: 2.2,
+      shade: (h) => {
+        phoneFill(h, 1478, 440, 110, 0.75);
+        // inflamed skin around the burn
+        h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = rad(h, 1448, 560, 0, 80, [[0, '#B85A44', 0.45], [1, '#B85A44', 0]]); h.fillRect(1360, 470, 180, 180); h.restore();
+        // blister patches from seeded value noise: domed, glossy, with a specular dot or two
+        const r = OTM.rng('blisters');
+        for (let i = 0; i < 11; i++) { const u = 0.1 + r() * 0.78, cx = lerp(1436, 1468, u) + (r() - 0.5) * 20, cy = lerp(628, 456, u) + (r() - 0.5) * 8, rr = 3 + r() * 6.5;
+          const pts = []; for (let k = 0; k < 11; k++) { const an = k / 11 * Math.PI * 2; const q = rr * (0.6 + 0.8 * OTM.vnoise(cx * 0.2 + Math.cos(an) * 1.3, cy * 0.2 + Math.sin(an) * 1.3, 3)); pts.push([cx + Math.cos(an) * q * 1.2, cy + Math.sin(an) * q * 0.75]); }
+          const bp = blobPath(pts, 3); h.save(); h.globalAlpha = 0.55; h.fillStyle = mix('#C07A68', '#8A4436', r()); h.fill(bp); h.globalAlpha = 1;
+          h.strokeStyle = 'rgba(232,200,180,0.35)'; h.lineWidth = 0.7; h.stroke(bp);                                         // the peeling rim
+          h.globalCompositeOperation = 'screen'; h.strokeStyle = 'rgba(255,236,224,0.35)'; h.lineWidth = 1; h.beginPath(); h.moveTo(cx - rr * 0.6, cy - rr * 0.2); h.quadraticCurveTo(cx - rr * 0.1, cy - rr * 0.55, cx + rr * 0.5, cy - rr * 0.35); h.stroke(); h.restore();
+          h.fillStyle = 'rgba(255,248,240,0.9)'; h.beginPath(); h.arc(cx - rr * 0.3, cy - rr * 0.3, 0.7 + r() * 0.6, 0, 7); h.fill(); if (r() < 0.5) { h.beginPath(); h.arc(cx + rr * 0.35, cy - rr * 0.05, 0.6, 0, 7); h.fill(); } }
+        sootOn(h, 'faSoot', 1450, 560, 30, 90, 16, 0.85);
+      } }); })();
+  // ---- the hand round the phone: back of the hand to camera, fingers along the phone's back, sooty ----
+  hand(g, { x: 1470, y: 470, s: 112, a: -1.22, side: -1, skin: SKIN, light: FL, keyColor: FIREKEY, k: 0.6, amb: 0.8, soot: 0.8, seed: 'hsoot', spread: 0.18,
+    pose: { F: [{ b: [-0.1, 0.2, 0.3], f: [0.96, 0.88, 0.78] }, { b: [-0.06, 0.22, 0.3], f: [0.96, 0.88, 0.76] }, { b: [-0.02, 0.24, 0.32], f: [0.95, 0.86, 0.74] }, { b: [0.02, 0.26, 0.34], f: [0.93, 0.84, 0.72] }], T: { a: -0.25, b: [0.2, 0.25], f: [0.85, 0.8] } },
+    nails: 'rgba(205,175,155,0.55)', rimC: FIRERIM, shadow: { dx: 4, dy: 6, blur: 10, alpha: 0.55 },
+    fillLight: (h) => phoneFill(h, PH[0] - 34, PH[1] - 6, 70, 0.6) });
+  g.restore();
+
+  // ================= ATMOSPHERE =================
+  // embers rising (closed-form), some foreground bokeh
+  (() => {
+    const r = OTM.rng('embers'); g.save(); g.globalCompositeOperation = 'screen';
+    for (let i = 0; i < 230; i++) { const x = 120 + r() * 1500 + (r() - 0.3) * 200, y = 40 + Math.pow(r(), 0.8) * 560, rr = 0.8 + r() * 2.2, a = 0.35 + r() * 0.65;
+      g.fillStyle = rgba(r() < 0.5 ? '#FFC870' : '#FF5A14', a); g.beginPath(); g.ellipse(x, y, rr, rr * (1 + r() * 2.5), -0.3 + r() * 0.6, 0, Math.PI * 2); g.fill(); }
+    for (let i = 0; i < 14; i++) { const x = r() * W, y = 60 + r() * 900, rr = 6 + r() * 16; g.fillStyle = rad(g, x, y, 0, rr, [[0, '#FF8A3D', 0.32], [0.7, '#FF5A14', 0.18], [1, '#FF5A14', 0]]); g.fillRect(x - rr, y - rr, 2 * rr, 2 * rr); }
+    g.restore();
+  })();
+  // the glass breaking upstairs: anchored to the right-hand upstairs window, shards falling down the facade, a brief flare
+  (() => { const w = { x: 720, y: 330, w: 130, h: 150 }, cx = w.x + w.w * 0.62, cy = w.y + w.h * 0.4, r = OTM.rng('burst2');
+    g.save(); g.globalCompositeOperation = 'screen';
+    g.fillStyle = rad(g, cx, cy, 0, 150, [[0, '#FFF6E0', 0.75], [0.18, '#FFD890', 0.45], [0.5, '#FF8A3D', 0.14], [1, '#FF8A3D', 0]]); g.fillRect(cx - 150, cy - 150, 300, 300);
+    g.strokeStyle = rgba('#FFF4DC', 0.55); g.lineWidth = 1.4; [[0], [Math.PI / 2], [0.6], [2.2]].forEach(([a], i) => { const L = i < 2 ? 70 : 34; g.beginPath(); g.moveTo(cx - Math.cos(a) * L, cy - Math.sin(a) * L); g.lineTo(cx + Math.cos(a) * L, cy + Math.sin(a) * L); g.stroke(); });
+    g.lineCap = 'round';
+    for (let i = 0; i < 70; i++) { // shards: thrown out of the pane, then falling
+      const vx = (r() - 0.35) * 2.2, t = r(); const x = cx + vx * 90 * t + (r() - 0.5) * 50, y = cy + (-0.4 + t * t * 3.2) * 90 + (r() - 0.5) * 20;
+      if (y > 660) continue; const l = 4 + t * 16, a0 = 0.35 + r() * 0.6;
+      g.strokeStyle = rgba(r() < 0.5 ? '#FFF1C8' : '#FFC870', a0 * 0.6); g.lineWidth = 0.8 + r(); g.beginPath(); g.moveTo(x, y); g.lineTo(x - vx * 2, y - l); g.stroke();
+      g.fillStyle = rgba('#FFFBEF', a0); g.beginPath(); g.moveTo(x, y - 2.5); g.lineTo(x + 1.6, y); g.lineTo(x, y + 2.5); g.lineTo(x - 1.6, y); g.closePath(); g.fill();
+      if (r() < 0.12) { g.strokeStyle = rgba('#FFFFFF', 0.8); g.lineWidth = 0.8; g.beginPath(); g.moveTo(x - 5, y); g.lineTo(x + 5, y); g.moveTo(x, y - 5); g.lineTo(x, y + 5); g.stroke(); }
+    }
+    g.restore(); })();
+  // foreground: out-of-focus grass tips across the bottom (darkest, largest)
+  (() => { const r = OTM.rng('fg'); g.save(); g.filter = 'blur(5px)'; g.lineCap = 'round';
+    for (let i = 0; i < 70; i++) { const x = r() * W, y = H - 10 + r() * 20, len = 50 + r() * 120, lean = (r() - 0.5) * 0.9; g.strokeStyle = rgba('#050403', 0.9); g.lineWidth = 5 + r() * 6; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + lean * len * 0.4, y - len * 0.6, x + lean * len, y - len); g.stroke(); }
+    g.restore(); })();
+  // heat shimmer: sine-displaced strip copy of the upper frame above the flames
+  (() => { const snap = RC.cv(), sg = snap.getContext('2d'); sg.drawImage(g.canvas, 0, 0);
+    for (let y = 60; y < 330; y += 2) { const dx = Math.sin(y * 0.09) * 2.6 + Math.sin(y * 0.031 + 1) * 1.8; g.drawImage(snap, 120, y, 900, 2, 120 + dx, y, 900, 2); } })();
+
+  // ================= POST (night + dialogue only) =================
+  RC.grade(g, { lift: '#0B0605' });
+  RC.halation(g, { thresh: 0.62, alpha: 0.42, blur: 14 });
+  RC.texture(g, 0.22, 'soft-light');
+  RC.vignette(g, 0.72, 1000, 520);
+  // Scott types on his RIGHT (the gap side, where his arm leaves the frame): "I--" and the caret waiting, on a 35% umber scrim
+  RC.sayScott(g, 'I--', 1714, 300, { size: 60 });
+  RC.grain(g, 0.14, 3);
+
+  // ================= THE RECORD (crisp, after post) =================
+  RC.brackets(g, 0.045, { alpha: 0.42 });
+  RC.slug(g, "SCOTT'S BACK YARD", '23:52:13', { sub: 'EXT. · NIGHT' });
+  RC.headcount(g, 2, { alpha: 0.3 });
+  RC.callStrip(g, { y: 946, h: 96, x0: 86, x1: 1834, timer: '999 · 04:49', seed: 'cold',
+    waveX: 420, waveW: 360, textX: 830, textY: 40, lineH: 40,
+    segs: [[0.02, 0.18, 'd'], [0.24, 0.32, 's'], [0.4, 0.82, 'd'], [0.93, 0.985, 's']],
+    lines: [['[04:44]', 'You said there were six people.', 0.42], ['[04:48]', 'How many got out?', 0.94]] });
+  RC.lookLabel(g, 'COLD OPEN · EXT. SCOTT’S BACK YARD · NIGHT');
+  window.FRAME_READY = true;
+})();
+</script>

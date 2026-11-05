@@ -1,0 +1,7 @@
+{
+ "id": "M11a",
+ "model": "lyria-3.5",
+ "prompt": "A 20-second instrumental chamber-music cue: a quiet, tender goodbye. A small string group, muted (con sordino), without vibrato, recorded close and dry: two cellos, two violas, two violins. In tune at A = 440. Very slow, about 46 beats per minute, but beatless, with no audible pulse. Piano, then pianissimo; it never swells. The lowest note is the cellos' low C; no double bass. Low and middle registers only, apart from one high harmonic at the end.\n[0:00 - 0:08] A soft, warm D minor chord in the low strings (D3, F3, A3, D4), with no attack: tender, like the memory of a happier evening. From about 0:05 the cellos' bass steps slowly down, D, C, B-flat, and the harmony darkens.\n[0:08 - 0:20] It arrives on an unresolved A dominant chord with a flat ninth: the cellos on A2 and E3, a viola on C-sharp4, a violin on B-flat4, and one violin on a soft high G harmonic (G5). Very quiet. It holds perfectly still to the very end, with no decay, no swell and no resolution back to D; it will be cut off abruptly.\nInstrumental only, no vocals. Avoid: percussion, pulses, tremolo, pizzicato, risers, impacts, piano, synths, choir, a melody, romantic vibrato, crescendos, resolving cadences, trailer clich\u00e9s, melodrama, and anything bright.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

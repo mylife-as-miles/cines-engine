@@ -1,0 +1,55 @@
+<!doctype html><meta charset="utf-8"><title>POSTER</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script>
+<script>
+// Key art / poster thumbnail (1920x1080, delivered 1280x720). The film's own frame "seven hands" (Q05, 3:52): six friends,
+// seven piles, seven glasses. At the empty place (5 o'clock, between Angelo and Scott) the seventh sits, burned into
+// the paper in ember, hands on its pile. Title in the film's title face (Six Caps) and the tagline.
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H} = OTM;
+  const img = new Image(); img.src = '../frames/STILL_seven_hands.png'; await img.decode();
+
+  // ---- the frame, shifted right to leave a dark column for the type
+  const OX = 300;
+  ctx.fillStyle = '#060404'; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(img, OX, 0, W, H);
+  // fade its left edge into the black column
+  const lg = ctx.createLinearGradient(OX + 60, 0, OX + 520, 0); lg.addColorStop(0, 'rgba(6,4,4,1)'); lg.addColorStop(1, 'rgba(6,4,4,0)');
+  ctx.fillStyle = lg; ctx.fillRect(0, 0, OX + 520, H);
+
+  // ---- the seventh, at clock 150 deg (5 o'clock): an ember top-down figure, hands on its pile
+  const CX = 930 + OX, CY = 540, R = 400;
+  const a = 150 * Math.PI / 180, gx = CX + Math.sin(a) * R, gy = CY - Math.cos(a) * R;
+  const dir = Math.atan2(CY - gy, CX - gx);
+  const pile = [1050 + OX, 712];
+  const ghost = OTM.fig.top('scott', {x: gx, y: gy, scale: 94, dir, hands: [[pile[0] - 26, pile[1] + 22], [pile[0] + 24, pile[1] - 4]], handPose: 'flat'});
+  const gp = ghost.shape.path(0.9, 7);
+  const glow = OTM.makeCanvas(W, H), gg = glow.getContext('2d');
+  gg.filter = 'blur(30px)'; gg.fillStyle = C.ember; gg.globalAlpha = 0.75; gg.fill(gp);
+  ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.drawImage(glow, 0, 0); ctx.restore();
+  // the body itself: one merged silhouette (drawn on its own layer so overlapping parts never show), a deep ember burn
+  // with a hot glow around its outer edge only
+  const body = OTM.makeCanvas(W, H), bc = body.getContext('2d'); bc.fillStyle = C.emberDeep || '#8A3410'; bc.fill(gp);
+  ctx.save(); ctx.shadowColor = C.ember; ctx.shadowBlur = 26; ctx.globalAlpha = 0.95; ctx.drawImage(body, 0, 0); ctx.drawImage(body, 0, 0); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.35; ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(body, 0, 0); ctx.restore();
+
+  // ---- film-poster finish: vignette and grain over everything but the type
+  const vg = ctx.createRadialGradient(CX, CY, 380, CX, CY, 1150); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.75)');
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  // grain from its own noise layer (the still is a file:// image, so the main canvas cannot be read back)
+  const r = OTM.rng('poster-grain'), nz = OTM.makeCanvas(W, H), nc = nz.getContext('2d'), gd = nc.createImageData(W, H), d = gd.data;
+  for (let i = 0; i < d.length; i += 4) { const n = 128 + (r() - 0.5) * 70; d[i] = d[i + 1] = d[i + 2] = n; d[i + 3] = 255; }
+  nc.putImageData(gd, 0, 0);
+  ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.35; ctx.drawImage(nz, 0, 0); ctx.restore();
+
+  // ---- type
+  const T = (str, x, y, o) => { ctx.save(); ctx.font = `${o.weight || 400} ${o.size}px "${o.family}"`; ctx.letterSpacing = (o.track || 0) + 'px';
+    ctx.textAlign = o.align || 'left'; ctx.fillStyle = o.color; if (o.glow) { ctx.shadowColor = o.glow; ctx.shadowBlur = o.blur || 30; }
+    ctx.fillText(str, x, y); ctx.restore(); };
+  const LX = 96;
+  T('SIX FRIENDS.  SEVEN PLACES.', LX + 4, 132, {family: 'Barlow Condensed', weight: 600, size: 40, track: 9, color: '#E9DCC4'});
+  T('ONE TOO', LX - 6, 530, {family: 'Six Caps', size: 400, track: 12, color: '#F4EBDD'});
+  T('MANY', LX - 6, 915, {family: 'Six Caps', size: 400, track: 12, color: C.ember, glow: 'rgba(255,148,64,0.55)', blur: 44});
+  window.FRAME_READY = true;
+})();
+</script>

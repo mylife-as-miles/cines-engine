@@ -1,0 +1,7 @@
+{
+ "id": "M08b",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 30-second instrumental clip that begins immediately, on the first instant, with no intro: tense chamber music at its strongest so far. A small string group, muted (con sordino), without vibrato, recorded close and dry: two cellos, two violas, two violins. In tune at A = 440. One held dyad, an A and the B-flat a semitone above it, in three octaves: the cellos on a low A (A2), the violas on A3 and B-flat3, the violins on A4 and B-flat4. Beatless, no pulse.\n[0:00 - 0:03] It grows quickly from piano to mezzo-forte.\n[0:03 - 0:30] It holds at mezzo-forte, unchanging and unresolved, for the rest of the clip: no swell, no fade, no new notes, no ending.\nInstrumental only, no vocals. Avoid: percussion, hits, booms, risers, tremolo, glissandi, piano, synths, melody, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

@@ -1,0 +1,192 @@
+{
+ "M01": {
+  "file": "M01.mp3",
+  "dur_s": 59.19,
+  "tune_cents": 11.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "59.19 s 64 separate events, loudness range 13 LU. Music (AudioSet Music 0.82). Unvalidated hints - genre: jazz music (z +2.8), solo piano music (z +2.8); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.5), dark and tense music (z +2.8). No sound-effect description stands out (closest: a sustained glass harp tone z +1.8, a music box melody z +1.6; tentative). AudioSet: Music 0.82, Double bass 0.77, Cello 0.73. peak -0.1 dBFS, -11.1 LUFS, brightness 749 Hz, bandwidth 6.5 kHz, side/mid -9 dB. Windows that read differently: 0:00.00-0:10.00 a sustained glass harp tone (z +3.1; AudioSet Double bass 0.77); 0:20.00-0:30.00 a music box melody (z +1.6; AudioSet Cello 0.73); 0:49.19-0:59.19 a reverse cymbal swell (z +2.1; AudioSet Music 0.65).",
+  "match": "M01.mp3: 'quiet, dark chamber string music for a film' -> weak (unvalidated: music / instrument / voice description) (z +2.3; would rank #10 among 322 vocabulary descriptions; cosine 0.24).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 88%, 'a pop song with vocals' 7%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 4%."
+ },
+ "M03": {
+  "file": "M03.mp3",
+  "dur_s": 92.53,
+  "tune_cents": 0.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "92.53 s long recording, loudness range 8 LU. Music (AudioSet Music 0.78). Unvalidated hints - genre: jazz music (z +5.9), funk music (z +4.0); mood (wrong for ~1 in 5 tracks in a test): warm and cozy music (z +3.0), romantic music (z +2.8). No sound-effect description stands out (closest: keys jingling z +1.8, a music box melody z +1.6; tentative). AudioSet: Music 0.78, Musical instrument 0.49, Keyboard (musical) 0.45. peak 0.3 dBFS, -13.2 LUFS, brightness 908 Hz, bandwidth 16.3 kHz, side/mid -15 dB. Windows that read differently: 0:00.00-0:10.00 a music box melody (z +2.6; AudioSet Musical instrument 0.49); 0:15.00-0:25.00 keys jingling (z +2.8; AudioSet Music 0.52); 1:22.53-1:32.53 a mouth pop (z +1.8; AudioSet Music 0.57).",
+  "match": "M03.mp3: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' -> strong (unvalidated: music / instrument / voice description) (z +5.2; would rank #2 among 322 vocabulary descriptions; cosine 0.35).",
+  "forced_choice": "Forced choice vs your alternatives: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' >99%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a dark orchestral film score' <1%."
+ },
+ "M04a": {
+  "file": "M04a.mp3",
+  "dur_s": 63.43,
+  "tune_cents": -6.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "63.43 s long recording, loudness range 1 LU. Music (AudioSet Music 0.81). Unvalidated hints - genre: jazz music (z +5.7), funk music (z +4.1); mood (wrong for ~1 in 5 tracks in a test): playful and quirky music (z +3.4), celebratory and joyful music (z +3.2). No sound-effect description stands out (closest: keys jingling z +1.5, walking through dry leaves z +1.3; tentative). AudioSet: Music 0.81, Electric piano 0.64, Keyboard (musical) 0.63. peak -0.0 dBFS, -12.7 LUFS, brightness 486 Hz, bandwidth 16.3 kHz, side/mid -18 dB. Windows that read differently: 0:00.00-0:10.00 a mouth pop (z +2.0; AudioSet Music 0.64); 0:10.00-0:20.00 keys jingling (z +1.7; AudioSet Music 0.81); 0:53.42-1:03.42 a success chime (z +1.8; AudioSet Music 0.71).",
+  "match": "M04a.mp3: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #2 among 322 vocabulary descriptions; cosine 0.27).",
+  "forced_choice": "Forced choice vs your alternatives: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' >99%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a dark orchestral film score' <1%."
+ },
+ "M04b": {
+  "file": "M04b.mp3",
+  "dur_s": 62.09,
+  "tune_cents": 3.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "62.09 s long recording, loudness range 4 LU. Music (AudioSet Music 0.89). Unvalidated hints - genre: jazz music (z +5.0), funk music (z +3.0); mood (wrong for ~1 in 5 tracks in a test): warm and cozy music (z +3.1), calm and relaxing music (z +2.7). No sound-effect description stands out (closest: footsteps on wood z +1.9, a knock on a door z +1.4; tentative). AudioSet: Music 0.89, Drum 0.32, Electric piano 0.28. peak -0.0 dBFS, -12.8 LUFS, brightness 334 Hz, bandwidth 16.3 kHz, side/mid -16 dB. Uniform: all 6 analysed 10 s windows read as footsteps on wood.",
+  "match": "M04b.mp3: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' -> strong (unvalidated: music / instrument / voice description) (z +3.9; would rank #2 among 322 vocabulary descriptions; cosine 0.26).",
+  "forced_choice": "Forced choice vs your alternatives: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' 99%, 'a pop song with vocals' 1%, 'a choir singing' <1%, 'a dark orchestral film score' <1%."
+ },
+ "M05a": {
+  "file": "M05a.mp3",
+  "dur_s": 26.38,
+  "tune_cents": 15.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "26.38 s 12 separate events, loudness range 10 LU. Music (AudioSet Music 0.82). Unvalidated hints - genre: classical string quartet (z +3.9), uplifting orchestral film score (z +1.8); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.6), triumphant and heroic music (z +1.7). Sounds most like: a sustained glass harp tone (z +2.1), a kettle whistling (z +1.7), a quiet countryside morning (z +1.5) [weak reading]. AudioSet: Violin, fiddle 0.87, Music 0.82, Musical instrument 0.74. peak -0.0 dBFS, -10.0 LUFS, brightness 1.7 kHz, bandwidth 16.3 kHz, side/mid -16 dB. Uniform: all 5 analysed 10 s windows read as a sustained glass harp tone.",
+  "match": "M05a.mp3: 'quiet, dark chamber string music for a film' -> plausible (unvalidated: music / instrument / voice description) (z +2.7; would rank #3 among 322 vocabulary descriptions; cosine 0.21).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 98%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 2%."
+ },
+ "M05b": {
+  "file": "M05b.mp3",
+  "dur_s": 62.15,
+  "tune_cents": -15.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "62.15 s long recording, loudness range 6 LU. Music (AudioSet Music 0.58). Unvalidated hints - genre: classical string quartet (z +3.6), drum and bass music (z +2.5); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.2). Sounds most like: a sustained glass harp tone (z +2.4), a singing bowl (z +2.0), an airplane flying overhead (z +1.9) [weak reading]. Other readings: a big braam (impacts, z +1.9), a rising riser building tension (transitions, z +1.6). AudioSet: Double bass 0.85, Cello 0.79, Music 0.58. peak -0.2 dBFS, -11.9 LUFS, brightness 716 Hz, bandwidth 6.5 kHz, side/mid -11 dB. Windows that read differently: 0:00.00-0:10.00 an airplane flying overhead (z +2.2; AudioSet Double bass 0.85); 0:52.15-1:02.15 a sustained glass harp tone (z +2.2; AudioSet Cello 0.75).",
+  "match": "M05b.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.3; would rank #2 among 322 vocabulary descriptions; cosine 0.32).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 88%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 12%."
+ },
+ "M06a": {
+  "file": "M06a.mp3",
+  "dur_s": 61.26,
+  "tune_cents": 1.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "61.26 s long recording, loudness range 4 LU. Music (AudioSet Music 0.86). Unvalidated hints - genre: jazz music (z +5.0), funk music (z +3.6); mood (wrong for ~1 in 5 tracks in a test): warm and cozy music (z +3.1), playful and quirky music (z +2.7). No sound-effect description stands out (closest: footsteps on wood z +1.7, a music box melody z +1.6; tentative). AudioSet: Music 0.86, Electric piano 0.38, Musical instrument 0.34. peak 0.0 dBFS, -12.6 LUFS, brightness 367 Hz, bandwidth 12.9 kHz, side/mid -22 dB. Windows that read differently: 0:20.00-0:30.00 footsteps on wood (z +1.4; AudioSet Music 0.83); 0:35.00-0:45.00 a music box melody (z +2.0; AudioSet Music 0.83); 0:51.26-1:01.26 a knock on a door (z +2.3; AudioSet Music 0.83).",
+  "match": "M06a.mp3: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' -> strong (unvalidated: music / instrument / voice description) (z +4.4; would rank #2 among 322 vocabulary descriptions; cosine 0.28).",
+  "forced_choice": "Forced choice vs your alternatives: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' >99%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a dark orchestral film score' <1%."
+ },
+ "M06b": {
+  "file": "M06b.mp3",
+  "dur_s": 61.96,
+  "tune_cents": -2.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "61.96 s long recording, loudness range 7 LU. Music (AudioSet Music 0.86). Unvalidated hints - genre: jazz music (z +5.4), funk music (z +4.8); mood (wrong for ~1 in 5 tracks in a test): playful and quirky music (z +2.7), warm and cozy music (z +2.2). Sounds most like: a reverse cymbal swell (z +2.0), a quick swipe (z +1.8), keys jingling (z +1.7) [weak reading]. Other readings: a mouth pop (foley, z +1.6). AudioSet: Music 0.86, Organ 0.49, Musical instrument 0.48. peak 0.2 dBFS, -12.9 LUFS, brightness 925 Hz, bandwidth 16.3 kHz, side/mid -17 dB. Windows that read differently: 0:00.00-0:10.00 a reverse cymbal swell (z +2.9; AudioSet Music 0.70); 0:20.00-0:30.00 keys jingling (z +2.2; AudioSet Music 0.86); 0:35.00-0:45.00 an uplifter sweep (z +1.8; AudioSet Organ 0.49).",
+  "match": "M06b.mp3: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #3 among 322 vocabulary descriptions; cosine 0.27).",
+  "forced_choice": "Forced choice vs your alternatives: 'mellow neo-soul electric piano jazz trio, background music at a dinner party' >99%, 'a pop song with vocals' <1%, 'a choir singing' <1%, 'a dark orchestral film score' <1%."
+ },
+ "M07": {
+  "file": "M07.mp3",
+  "dur_s": 59.82,
+  "tune_cents": 0.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "59.82 s busy, 1.6 onsets/s, loudness range 7 LU. Music (AudioSet Music 0.66). Unvalidated hints - genre: classical string quartet (z +4.4), cinematic orchestral music (z +2.7); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.8), dark and tense music (z +2.2). No sound-effect description stands out (closest: a singing bowl z +1.5, a sustained glass harp tone z +1.5; tentative). AudioSet: Cello 0.85, Double bass 0.82, Bowed string instrument 0.69. peak 0.1 dBFS, -11.4 LUFS, brightness 1.1 kHz, bandwidth 10.2 kHz, side/mid -8 dB. Windows that read differently: 0:00.00-0:10.00 a sustained glass harp tone (z +2.2; AudioSet Cello 0.84); 0:10.00-0:20.00 a big braam (z +2.1; AudioSet Cello 0.85); 0:49.82-0:59.82 a celesta note (z +1.4; AudioSet Cello 0.72).",
+  "match": "M07.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.31).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 90%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 10%."
+ },
+ "M08a": {
+  "file": "M08a.mp3",
+  "dur_s": 67.06,
+  "tune_cents": 4.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "67.06 s long recording, loudness range 4 LU. Music (AudioSet Music 0.53). Unvalidated hints - genre: classical string quartet (z +4.1), cinematic orchestral music (z +2.5); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.5). Sounds most like: a sustained glass harp tone (z +2.0), an airplane flying overhead (z +1.9), a big braam (z +1.9) [weak reading]. Other readings: a rising riser building tension (transitions, z +1.4), a train passing (everyday, z +1.4). AudioSet: Cello 0.86, Double bass 0.80, Bowed string instrument 0.59. peak -0.2 dBFS, -11.3 LUFS, brightness 756 Hz, bandwidth 8.1 kHz, side/mid -9 dB. Windows that read differently: 0:00.00-0:10.00 a sustained glass harp tone (z +2.6; AudioSet Double bass 0.80); 0:10.00-0:20.00 an airplane flying overhead (z +2.0; AudioSet Cello 0.84); 0:35.00-0:45.00 a big braam (z +2.0; AudioSet Cello 0.76).",
+  "match": "M08a.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #3 among 322 vocabulary descriptions; cosine 0.29).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 88%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 11%."
+ },
+ "M08b": {
+  "file": "M08b.mp3",
+  "dur_s": 29.94,
+  "tune_cents": 8.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "29.94 s 41 separate events, loudness range 5 LU. Music (AudioSet Music 0.70). Unvalidated hints - genre: classical string quartet (z +4.2), cinematic orchestral music (z +3.0); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.3), triumphant and heroic music (z +2.6). No sound-effect description stands out (closest: church bells z +1.2, a success chime z +1.1; tentative). AudioSet: Music 0.70, Cello 0.70, Violin, fiddle 0.63. peak 0.0 dBFS, -11.3 LUFS, brightness 1.2 kHz, bandwidth 12.9 kHz, side/mid -9 dB. Windows that read differently: 0:00.00-0:10.00 a quiet countryside morning (z +1.6; AudioSet Music 0.66); 0:19.94-0:29.94 church bells (z +1.2; AudioSet Cello 0.70).",
+  "match": "M08b.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #4 among 322 vocabulary descriptions; cosine 0.29).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 89%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 11%."
+ },
+ "M09": {
+  "file": "M09.mp3",
+  "dur_s": 49.24,
+  "tune_cents": 36.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "49.24 s 31 separate events, loudness range 5 LU. Music (AudioSet Music 0.76). Unvalidated hints - genre: classical string quartet (z +3.9), cinematic orchestral music (z +2.6); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.3), romantic music (z +2.7). No sound-effect description stands out (closest: a celesta note z +1.4, a sustained glass harp tone z +1.3; tentative). AudioSet: Music 0.76, Cello 0.75, Bowed string instrument 0.64. peak -0.1 dBFS, -12.2 LUFS, brightness 1.4 kHz, bandwidth 10.2 kHz, side/mid -7 dB. Windows that read differently: 0:00.00-0:10.00 a sustained glass harp tone (z +2.6; AudioSet Music 0.61); 0:25.00-0:35.00 a rising riser building tension (z +1.1; AudioSet Music 0.76); 0:39.24-0:49.24 a cinematic hit with a long tail (z +1.4; AudioSet Music 0.64).",
+  "match": "M09.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.1; would rank #4 among 322 vocabulary descriptions; cosine 0.29).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 92%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 7%."
+ },
+ "M10a": {
+  "file": "M10a.mp3",
+  "dur_s": 61.02,
+  "tune_cents": 10.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "61.02 s long recording, loudness range 8 LU. Music (AudioSet Music 0.65). Unvalidated hints - genre: classical string quartet (z +4.3), cinematic orchestral music (z +2.7); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.6), dark and tense music (z +2.4). No sound-effect description stands out (closest: a sustained glass harp tone z +1.8, a rising riser building tension z +1.6; tentative). AudioSet: Cello 0.83, Double bass 0.81, Music 0.65. peak -0.1 dBFS, -11.7 LUFS, brightness 1.0 kHz, bandwidth 10.2 kHz, side/mid -10 dB. Windows that read differently: 0:00.00-0:10.00 a rising riser building tension (z +1.9; AudioSet Double bass 0.60); 0:10.00-0:20.00 an airplane flying overhead (z +2.1; AudioSet Double bass 0.81); 0:51.02-1:01.02 a sustained glass harp tone (z +2.0; AudioSet Cello 0.69).",
+  "match": "M10a.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.33).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 88%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 12%."
+ },
+ "M10b": {
+  "file": "M10b.mp3",
+  "dur_s": 27.98,
+  "tune_cents": 1.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "27.98 s 7 separate events, loudness range 10 LU. Music (AudioSet Music 0.62). Unvalidated hints - genre: classical string quartet (z +3.7), drum and bass music (z +2.2); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.2). Sounds most like: a sustained glass harp tone (z +2.6), a singing bowl (z +2.3), a celesta note (z +2.1) [plausible reading]. Other readings: an airplane flying overhead (ambience, z +2.0), a sub bass drop (impacts, z +1.8). AudioSet: Cello 0.80, Music 0.62, Double bass 0.61. peak -0.2 dBFS, -10.1 LUFS, brightness 1.0 kHz, bandwidth 10.2 kHz, side/mid -19 dB. Uniform: all 5 analysed 10 s windows read as a sustained glass harp tone.",
+  "match": "M10b.mp3: 'quiet, dark chamber string music for a film' -> plausible (unvalidated: music / instrument / voice description) (z +2.8; would rank #3 among 322 vocabulary descriptions; cosine 0.25).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 97%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 2%."
+ },
+ "M10c": {
+  "file": "M10c.mp3",
+  "dur_s": 30.77,
+  "tune_cents": 9.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "30.77 s busy, 3.4 onsets/s, loudness range 2 LU. Music (AudioSet Music 0.57). Unvalidated hints - genre: classical string quartet (z +3.8), cinematic orchestral music (z +3.3); mood (wrong for ~1 in 5 tracks in a test): energetic and driving music (z +2.8), triumphant and heroic music (z +2.8). Sounds most like: a big braam (z +2.1), a rising riser building tension (z +1.8), a cinematic hit with a long tail (z +1.4) [weak reading]. Other readings: an airplane flying overhead (ambience, z +1.3), a train passing (everyday, z +1.2). AudioSet: Cello 0.84, Double bass 0.83, Music 0.57. peak -0.1 dBFS, -12.1 LUFS, brightness 876 Hz, bandwidth 10.2 kHz, side/mid -8 dB. Windows that read differently: 0:00.00-0:10.00 an airplane flying overhead (z +1.4; AudioSet Cello 0.84); 0:15.00-0:25.00 a big braam (z +2.3; AudioSet Double bass 0.83).",
+  "match": "M10c.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.37).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 92%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 8%."
+ },
+ "M10d": {
+  "file": "M10d.mp3",
+  "dur_s": 62.22,
+  "tune_cents": 6.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "62.22 s long recording, loudness range 9 LU. Music (AudioSet Music 0.67). Unvalidated hints - genre: classical string quartet (z +3.6), cinematic orchestral music (z +2.4); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.4), dark and tense music (z +2.5). No sound-effect description stands out (closest: a sustained glass harp tone z +1.8, a singing bowl z +1.4; tentative). AudioSet: Cello 0.84, Double bass 0.83, Music 0.67. peak -0.1 dBFS, -11.5 LUFS, brightness 754 Hz, bandwidth 8.1 kHz, side/mid -8 dB. Windows that read differently: 0:00.00-0:10.00 a singing bowl (z +2.0; AudioSet Double bass 0.83); 0:10.00-0:20.00 an airplane flying overhead (z +1.8; AudioSet Cello 0.84); 0:52.22-1:02.22 a sustained glass harp tone (z +1.9; AudioSet Music 0.67).",
+  "match": "M10d.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #4 among 322 vocabulary descriptions; cosine 0.30).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 91%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 9%."
+ },
+ "M11a": {
+  "file": "M11a.mp3",
+  "dur_s": 59.38,
+  "tune_cents": 34.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "59.38 s 74 separate events, loudness range 4 LU. Music (AudioSet Music 0.71). Unvalidated hints - genre: classical string quartet (z +4.1), cinematic orchestral music (z +2.9); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.0), dark and tense music (z +2.4). No sound-effect description stands out (closest: a sustained glass harp tone z +1.6, a singing bowl z +1.4; tentative). AudioSet: Cello 0.85, Music 0.71, Double bass 0.61. peak -0.1 dBFS, -11.6 LUFS, brightness 1.1 kHz, bandwidth 10.2 kHz, side/mid -8 dB. Windows that read differently: 0:20.00-0:30.00 a power drill (z +1.4; AudioSet Cello 0.75); 0:30.00-0:40.00 a big braam (z +1.6; AudioSet Cello 0.85); 0:49.38-0:59.38 a sustained glass harp tone (z +2.0; AudioSet Music 0.71).",
+  "match": "M11a.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.34).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 94%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 6%."
+ },
+ "M11b": {
+  "file": "M11b.mp3",
+  "dur_s": 74.79,
+  "tune_cents": 5.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "74.79 s long recording, loudness range 8 LU. Music (AudioSet Music 0.67). Unvalidated hints - genre: classical string quartet (z +3.4), drum and bass music (z +2.9); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +2.9), dark and tense music (z +2.8). No sound-effect description stands out (closest: a sustained glass harp tone z +1.8, a celesta note z +1.6; tentative). AudioSet: Cello 0.83, Double bass 0.78, Music 0.67. peak -0.2 dBFS, -11.3 LUFS, brightness 665 Hz, bandwidth 8.1 kHz, side/mid -9 dB. Windows that read differently: 0:00.00-0:10.00 an airplane flying overhead (z +2.2; AudioSet Double bass 0.78); 0:25.00-0:35.00 a cinematic hit with a long tail (z +1.6; AudioSet Music 0.67); 1:04.79-1:14.79 a sustained glass harp tone (z +2.1; AudioSet Double bass 0.71).",
+  "match": "M11b.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.0; would rank #3 among 322 vocabulary descriptions; cosine 0.31).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 86%, 'a pop song with vocals' 1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 13%."
+ },
+ "M12": {
+  "file": "M12.mp3",
+  "dur_s": 58.91,
+  "tune_cents": 10.0,
+  "vocal_tag": false,
+  "audioset": "AudioSet Music 0",
+  "describe": "58.91 s 32 separate events, loudness range 9 LU. Music (AudioSet Music 0.82). Unvalidated hints - genre: classical string quartet (z +2.9), drum and bass music (z +2.6); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.1), dark and tense music (z +3.0). Sounds most like: a sustained glass harp tone (z +2.0), a singing bowl (z +1.7), a celesta note (z +1.5) [weak reading]. Other readings: a cinematic hit with a long tail (impacts, z +1.3), an airplane flying overhead (ambience, z +1.2). AudioSet: Music 0.82, Cello 0.69, Double bass 0.64. peak 0.0 dBFS, -11.4 LUFS, brightness 720 Hz, bandwidth 6.5 kHz, side/mid -6 dB. Windows that read differently: 0:00.00-0:10.00 a sustained glass harp tone (z +2.8; AudioSet Music 0.63); 0:48.91-0:58.91 a cinematic hit with a long tail (z +1.7; AudioSet Music 0.80).",
+  "match": "M12.mp3: 'quiet, dark chamber string music for a film' -> strong (unvalidated: music / instrument / voice description) (z +3.0; would rank #2 among 322 vocabulary descriptions; cosine 0.32).",
+  "forced_choice": "Forced choice vs your alternatives: 'quiet, dark chamber string music for a film' 94%, 'a pop song with vocals' 1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an orchestra trailer' 6%."
+ }
+}

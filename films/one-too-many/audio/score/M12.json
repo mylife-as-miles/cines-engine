@@ -1,0 +1,7 @@
+{
+ "id": "M12",
+ "model": "lyria-3.5",
+ "prompt": "A 22-second instrumental film-score cue, cold and hollow, for muted low strings (two cellos, two violas; con sordino, no vibrato) and a felt-muted upright piano, recorded close and dry, in tune at A = 440. Key centre A minor. Beatless free time. Pianissimo throughout. The lowest note is the cellos' low C; no double bass. The top octaves stay empty.\n[0:00 - 0:07] It begins at once: a hollow, soft open fifth, A2 and E3, in the cellos, with no attack, as if the floor has dropped away. Numb and still.\n[0:07 - 0:15] Above it the felt piano plays six slow single notes, about 1.3 seconds apart: E5, D5, C5, B4, A4, and then a sixth note that does not belong, a high G5 a seventh above the A. Each note is left to ring; the last one hangs unresolved. The piano does not play again.\n[0:15 - 0:20] The texture narrows to a single held A (A3, the A below middle C) on one muted cello, very soft and perfectly still.\n[0:20 - 0:22] It fades to complete silence.\nInstrumental only, no vocals, no choir. Avoid: percussion, pulses, risers, impacts, swells, synth pads, any melody beyond the six piano notes, vibrato, crescendos, resolution, trailer clich\u00e9s, and melodrama.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

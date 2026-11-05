@@ -1,0 +1,81 @@
+<!doctype html><meta charset="utf-8"><title>THUMB</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+// YouTube thumbnail (rendered 1920x1080, delivered 1280x720). The film's cast as cut-paper busts posed for the photo,
+// counted 1 to 6; at Scott's right, where the seventh should stand, only a person-shaped cut through the paper to the
+// ember lightbox. Thumbnail grammar on top of the film's look: a two-line outlined hook, numbers, and eyes (the film's
+// figures have no faces; here six pairs of eyes all look at the gap).
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 31});
+  const g = f.world, E = f.emissive;
+
+  // ---- light: one hot tungsten source behind the group, posterised; bright enough to read at phone size
+  // night on the right, so the ember cut-out is the brightest, warmest thing in frame
+  g.fillStyle = '#0F1520'; g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, 700, 560, [{r: 940, color: '#2A1B14'}, {r: 790, color: '#7A3A12'}, {r: 610, color: '#B65A16'},
+    {r: 420, color: C.tungstenMid}, {r: 250, color: C.tungsten}], {sy: 0.85, rough: 1.6, seed: 4});
+
+  // ---- six friends, one row, shoulder to shoulder; the gap is at Scott's right (screen right of Scott)
+  const sc = 150, baseY = 690;
+  const cast = [['marina', 250, 0.06], ['christof', 470, 0.02], ['kay', 690, -0.03], ['deena', 905, 0.05], ['angelo', 1120, -0.02], ['scott', 1345, -0.12]];
+  const GAP = [1610, 700];
+  const figs = cast.map(([id, x, t], i) => {
+    const y = baseY - (OTM.fig.CHAR[id].heightK - 1) * sc * 1.2 + (i % 2) * 14;
+    return {id, x, y, b: OTM.fig.bust(id, {x, y, scale: sc, tilt: t})};
+  });
+  // the seventh: a person-shaped hole, slightly taller and leaning in, like someone squeezing into the photo
+  const ghost = OTM.fig.bust('scott', {x: GAP[0], y: GAP[1] - 40, scale: sc * 1.03, tilt: -0.16});
+  f.knockout(ghost.shape.path(1.2, 77), 1);
+  E.save(); E.scale(0.25, 0.25); E.globalAlpha = 0.9; E.fillStyle = C.ember; E.fill(ghost.shape.path(1.2, 77)); E.restore();
+
+  // ink busts with a rim on the light's side (light sits behind-centre, so each rim faces the middle)
+  figs.forEach((p, i) => OTM.silhouette(g, p.b.shape, {fill: C.ink, light: {x: 700, y: 380}, rimColor: C.tungsten, rimW: 7}));
+  figs.forEach(p => OTM.fig.drawDetails(g, p.b, {}));
+
+  // one bead of sweat on Scott, the one who keeps counting
+  { const [hx, hy] = figs[5].b.head; g.fillStyle = '#9FD8FF'; g.beginPath(); const x = hx - sc * 0.43, y = hy - sc * 0.2;
+    g.moveTo(x, y - 34); g.quadraticCurveTo(x + 20, y + 4, x, y + 18); g.quadraticCurveTo(x - 20, y + 4, x, y - 34); g.fill(); }
+
+  E.fillStyle = C.ember; E.globalAlpha = 0.6; E.beginPath(); E.arc((GAP[0] + 20) / 4, (GAP[1] - sc * 1.2) / 4, 40, 0, 7); E.fill(); E.globalAlpha = 1;
+  f.finish({letterbox: 1.78, grain: 0.6});
+  // ---- eyes and type after the finish: crisp, no grain
+  // ---- eyes: big whites, worried lids, every pupil on the gap
+  figs.forEach((p, i) => {
+    const [hx, hy] = p.b.head, r = sc * 0.135, dy = sc * 0.04;
+    [-1, 1].forEach(side => {
+      const ex = hx + side * sc * 0.19, ey = hy + dy;
+      ctx.save(); ctx.translate(ex, ey);
+      ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(0, 0, r, r * 1.22, 0, 0, Math.PI * 2); ctx.fill();
+      // worried lid: the inner top corner cut down
+      ctx.fillStyle = C.ink; ctx.beginPath(); const s = side;
+      ctx.moveTo(-r * 1.4, -r * 1.6); ctx.lineTo(r * 1.4, -r * 1.6); ctx.lineTo(r * 1.4 * s > 0 ? r * 1.4 : r * 1.4, -r * (s > 0 ? 0.55 : 1.05)); ctx.lineTo(-r * 1.4, -r * (s > 0 ? 1.05 : 0.55)); ctx.closePath(); ctx.fill();
+      // pupil toward the gap
+      const dx = GAP[0] - ex, dyy = GAP[1] - 120 - ey, L = Math.hypot(dx, dyy);
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(dx / L * r * 0.45, dyy / L * r * 0.45 + r * 0.15, r * 0.48, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(dx / L * r * 0.45 - r * 0.15, dyy / L * r * 0.45 - r * 0.02, r * 0.13, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    });
+  });
+  // ---- the count over their heads, and the seventh over the hole
+  const num = (str, x, y, size, fill, stroke, rot) => {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0); ctx.font = `${size}px "Archivo Black"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineJoin = 'round'; ctx.lineWidth = size * 0.2; ctx.strokeStyle = stroke; ctx.strokeText(str, 0, 0); ctx.fillStyle = fill; ctx.fillText(str, 0, 0); ctx.restore();
+  };
+  figs.forEach((p, i) => num(String(i + 1), p.x, p.b.head[1] - sc * 1.05, 86, '#FFFFFF', C.ink, (i % 2 ? 0.06 : -0.06)));
+  num('7?', GAP[0] + 20, GAP[1] - sc * 1.2, 160, '#FFFFFF', C.ember, 0.08);
+
+  // ---- the hook, top left: big, outlined, tilted, readable on a phone
+  const hook = (str, x, y, size, fill, rot) => {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.font = `${size}px "Archivo Black"`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.lineJoin = 'round'; ctx.lineWidth = size * 0.24; ctx.strokeStyle = C.ink; ctx.strokeText(str, 0, 0);
+    ctx.fillStyle = fill; ctx.fillText(str, 0, 0); ctx.restore();
+  };
+  hook('ONE TOO', 70, 205, 168, '#FFFFFF', -0.045);
+  hook('MANY.', 92, 372, 168, '#FFD23F', -0.045);
+
+
+  window.FRAME_READY = true;
+})();
+</script>

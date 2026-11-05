@@ -1,0 +1,7 @@
+{
+ "id": "M10b",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 30-second instrumental clip that begins immediately, with no intro: one muted cello, sul tasto, without vibrato, holds a single low G-sharp (G-sharp2) very softly, piano, recorded close and dry, in tune at A = 440. Nothing else plays. The note holds steady for the whole 30 seconds, with only slow, gentle bow changes: no melody, no swell, no fade, no ending.\nInstrumental only, no vocals. Avoid: any other instruments, percussion, vibrato, tremolo, glissandi, melody, swells, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

@@ -1,0 +1,499 @@
+<!doctype html><meta charset="utf-8"><title>S03 colour script</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S, mix, rgba} = OTM;
+  const f = OTM.frame(ctx, {seed: 31});
+  const g = f.world, em = f.emissive, HC = f.markHoles();
+  const DEBUG = location.hash === '#debug';
+  const sm = (pts) => OTM.fig.smooth(pts, true);
+  const P = OTM.fig.profile, TOP = OTM.fig.top, BUST = OTM.fig.bust;
+  const TXT = (gc, s, x, y, o) => OTM.text(gc, s, x, y, Object.assign({family: 'Barlow Condensed', weight: 500, size: 16, color: C.cardPaper, tracking: 2}, o));
+
+  // ================= the sheet =================
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+
+  // ================= tiles: each vignette is a 960x540 frame, drawn with the kit, then set into the strip =================
+  const LW = 960, LH = 540;
+  const TW = 244, TH = 137, GAP = 14, X0 = 64, ROW = [212, 452];
+  const tilePos = i => i < 7 ? [X0 + i * (TW + GAP), ROW[0]] : [X0 + (i - 7) * (TW + GAP), ROW[1]];
+  function newTile() {
+    const c = OTM.makeCanvas(LW, LH).getContext('2d'), h = OTM.makeCanvas(LW, LH).getContext('2d'), e = OTM.makeCanvas(LW, LH).getContext('2d');
+    h.fillStyle = '#fff'; return {g: c, h, e};
+  }
+  // small helpers for the vignettes (local coords 960x540)
+  function bands(gc, x, y, list, o) { OTM.lightPool(gc, x, y, list, Object.assign({rough: 2}, o)); }
+  function sil(gc, sh, light, rim, w) { OTM.silhouette(gc, sh, {light, rimColor: rim, rimW: w || 3}); }
+  function windowFire(gc, ec, x, y, w, h, seed) {
+    const wp = S().rect(x, y, w, h).path(1.2, seed); gc.save(); gc.clip(wp); gc.fillStyle = C.fireOuter; gc.fillRect(x - 4, y - 4, w + 8, h + 8);
+    OTM.flame(gc, x + w / 2, y + h + 4, w * 1.3, h * 1.1, seed, 0.4 + seed * 0.1); OTM.flame(gc, x + w * 0.3, y + h + 4, w * 0.6, h * 0.7, seed + 9, 1.3); gc.restore();
+    ec.fillStyle = C.fireMid; ec.fillRect(x, y, w, h);
+  }
+  function glass(x, y, s) {   // wine glass silhouette, foot at (x,y), s = height
+    return S().M(x - s * 0.22, y - s).L(x + s * 0.22, y - s).C(x + s * 0.22, y - s * 0.55, x + s * 0.12, y - s * 0.45, x + s * 0.04, y - s * 0.44).L(x + s * 0.04, y - s * 0.06).L(x + s * 0.18, y).L(x - s * 0.18, y).L(x - s * 0.04, y - s * 0.06).L(x - s * 0.04, y - s * 0.44).C(x - s * 0.12, y - s * 0.45, x - s * 0.22, y - s * 0.55, x - s * 0.22, y - s).Z();
+  }
+
+  // ---------- 01 COLD OPEN: the house burns; Scott on the grass, phone-white at his ear ----------
+  function v01(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.yardNight; q.fillRect(0, 0, LW, LH);
+    bands(q, 330, 330, [{r: 620, color: mix(C.yardNight, C.fireOuter, 0.22)}, {r: 380, color: mix(C.yardNight, C.fireOuter, 0.45)}], {sy: 0.6, rough: 3, seed: 3});
+    const hs = S().poly([[90, 190], [560, 190], [560, 392], [90, 392]]).poly([[70, 196], [190, 110], [460, 110], [580, 196]]).rect(420, 70, 30, 60);
+    q.fillStyle = C.ink; q.fill(hs.path(1, 3));
+    [[130, 222], [262, 222], [394, 222], [170, 300], [400, 300]].forEach(([x, y], i) => windowFire(q, e, x, y, 76, 62, 11 + i * 5));
+    q.fillStyle = C.grass; q.fillRect(0, 392, LW, LH);
+    q.save(); q.beginPath(); q.rect(0, 392, LW, LH); q.clip();
+    bands(q, 330, 396, [{r: 700, color: mix(C.grass, C.fireOuter, 0.2)}, {r: 400, color: mix(C.grass, C.fireOuter, 0.36)}], {sy: 0.2, seed: 4});
+    q.restore(); q.fillStyle = C.ink; q.fillRect(80, 388, 490, 8);
+    // fence, faint strobes in two slats
+    for (let i = 0; i < 9; i++) { const x = 600 + i * 42; q.fillStyle = mix(C.ink, C.fireOuter, 0.18); q.fillRect(x, 230, 34, 190); if (i === 3 || i === 6) { q.fillStyle = i === 3 ? mix(C.ink, C.strobeRed, 0.7) : mix(C.ink, C.strobeBlue, 0.7); q.fillRect(x + 34, 236, 8, 184); } }
+    // Scott, profile facing the house, phone at his left ear
+    const sc = P('scott', {x: 800, y: 470, scale: 54, facing: -1, anchor: 'hip', lean: 0.32, neck: -0.12, head: -0.06, legN: {a: 2.0, b: 2.1}, legF: {a: 1.85, b: 1.95}, armN: {a: 0.62, b: 2.45, hand: 'hold'}, armF: {a: -0.55, b: 0.25, hand: 'flat'}});
+    sil(q, sc.shape, {dx: -1, dy: -0.4}, C.fireMid, 3);
+    const hd = sc.joints.head; q.fillStyle = C.phoneWhite; q.beginPath(); q.ellipse(hd[0] + 4, hd[1] + 8, 4, 14, 0.2, 0, 7); q.fill();
+    e.fillStyle = C.phoneWhite; e.beginPath(); e.arc(hd[0], hd[1] + 6, 16, 0, 7); e.fill();
+    // 6% warm flicker at frame right, where his free hand is cropped
+    q.save(); q.globalAlpha = 0.06; q.fillStyle = C.fireMid; q.fillRect(900, 300, 60, 240); q.restore();
+  }
+  // ---------- 02 TITLE: six bars on a tungsten field; ONE is cut to the fire ----------
+  function v02(T) {
+    const {g: q, h} = T;
+    q.fillStyle = C.tungstenLow; q.fillRect(0, 0, LW, LH);
+    bands(q, 700, 200, [{r: 640, color: C.tungstenMid}, {r: 400, color: C.tungsten}], {sy: 0.9, rough: 3, seed: 6});
+    const bars = S(); [[70, 70, 46], [340, 50, 70], [470, 20, 66], [560, 60, 48], [640, 40, 92], [790, 54, 66]].forEach(([x, top, w]) => bars.rect(x, top, w, 440 - top));
+    q.fillStyle = C.ink; q.fill(bars.path(1.2, 5)); q.fillRect(0, 440, LW, 100);
+    q.save(); q.font = '400 230px "Six Caps"'; q.fillStyle = C.ink; q.fillText('TOO', 350, 432); q.fillText('MANY', 610, 432);
+    q.clip(bars.path(1.2, 5)); q.fillStyle = C.tungsten; q.fillText('TOO', 350, 432); q.fillText('MANY', 610, 432); q.restore();
+    h.save(); h.font = '400 230px "Six Caps"'; h.fillText('ONE', 130, 432); h.restore();
+  }
+  // ---------- 03 ARRIVALS: warm hall, the door lets the rain in ----------
+  function v03(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.tungstenLow; q.fillRect(0, 0, LW, LH);
+    bands(q, 260, 210, [{r: 520, color: C.tungstenMid}, {r: 300, color: C.tungsten}], {sy: 0.85, rough: 3, seed: 8});
+    // door opening: rain slate, rain silver
+    q.fillStyle = C.rainSlate; q.fillRect(560, 70, 230, 400); OTM.rain(q, 560, 70, 230, 400, 120, 'r3', C.rainSilver, 0.55);
+    q.fillStyle = C.ink; q.fill(S().rect(540, 50, 20, 440).rect(790, 50, 22, 440).rect(540, 50, 272, 22).path(1, 2));
+    // the open door leaf, ink, swung in
+    q.fill(S().poly([[812, 62], [930, 30], [930, 520], [812, 486]]).path(1, 3));
+    q.fillRect(0, 466, LW, 80);
+    const kay = P('kay', {x: 680, y: 470, scale: 40, facing: -1, lean: 0.02, armN: {a: 0.25, b: 1.3, hand: 'hold'}, legN: {a: 0.16, b: 0.04}, legF: {a: -0.08, b: 0.02}});
+    sil(q, kay.shape, {dx: 1, dy: -0.2}, C.rainSilver, 3);
+    OTM.fig.drawDetails(q, kay, {beadColor: C.rainSilver});
+    const scott = P('scott', {x: 410, y: 470, scale: 42, facing: 1, lean: 0.12, armN: {a: 1.15, b: 0.35, hand: 'open'}, legN: {a: 0.12, b: 0.06}, legF: {a: -0.1, b: 0.04}});
+    sil(q, scott.shape, {dx: -1, dy: -0.3}, C.tungsten, 3);
+  }
+  // ---------- 04 PARTY: the warmest room in the film ----------
+  function v04(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.tungstenLow; q.fillRect(0, 0, LW, LH);
+    bands(q, 470, 230, [{r: 640, color: C.tungstenMid}, {r: 380, color: C.tungsten}, {r: 170, color: mix(C.tungsten, C.cardPaper, 0.35)}], {sy: 0.78, rough: 3, seed: 9});
+    e.fillStyle = C.tungsten; e.beginPath(); e.ellipse(470, 230, 160, 120, 0, 0, 7); e.fill();
+    q.fillStyle = C.ink; q.fillRect(0, 470, LW, 80);
+    q.fill(S().poly([[0, 0], [120, 0], [70, 540], [0, 540]]).poly([[960, 0], [880, 0], [920, 540], [960, 540]]).path(1.5, 7));
+    // foreground: the arm of the sofa Scott perches on, out of focus, darkest and largest
+    q.fill(S().M(0, 540).L(0, 330).Q(0, 290, 60, 290).L(250, 300).Q(300, 304, 300, 350).L(300, 540).Z().path(1.5, 8));
+    // couch back
+    q.fill(S().M(560, 470).L(560, 400).Q(560, 370, 600, 370).L(880, 370).Q(920, 370, 920, 400).L(920, 470).Z().path(1, 4));
+    const L = {x: 470, y: 100};
+    const figs = [
+      P('christof', {x: 170, y: 470, scale: 36, facing: 1, lean: -0.08, head: -0.12, armN: {a: 2.5, b: -0.3, hand: 'hold'}, legN: {a: 0.2, b: 0.08}, legF: {a: -0.16, b: 0.06}}),
+      P('deena', {x: 330, y: 470, scale: 36, facing: -1, head: 0.04, swing: 0.2, armN: {a: 0.4, b: 1.6, hand: 'hold'}, legN: {a: 0.1, b: 0.02}, legF: {a: -0.1, b: 0.04}}),
+      P('angelo', {x: 650, y: 470, scale: 36, facing: 1, lean: 0.06, armN: {a: 0.6, b: 1.4, hand: 'hold'}, legN: {a: 0.15, b: 0.06}, legF: {a: -0.1, b: 0.06}}),
+      P('marina', {x: 800, y: 470, scale: 35, facing: -1, armN: {a: 0.35, b: 1.75, hand: 'hold'}, legN: {a: 0.04, b: 0}, legF: {a: -0.04, b: 0}}),
+    ];
+    figs.forEach(fg => { sil(q, fg.shape, L, C.tungsten, 3); OTM.fig.drawDetails(q, fg, {rimColor: C.tungsten}); });
+    // wine in the glasses; Christof's biscuit
+    [figs[1], figs[3]].forEach(fg => { const w = fg.joints.wristN; const gx = w[0] + 14 * fg.facing, gy = w[1] + 6; const gs = glass(gx, gy, 34); sil(q, gs, L, C.tungsten, 2); q.fillStyle = C.wine; q.beginPath(); q.ellipse(gx, gy - 26, 7, 4, 0, 0, Math.PI); q.fill(); q.fillRect(gx - 7, gy - 30, 14, 4); });
+    const c = figs[0].joints.wristN; q.fillStyle = C.cardPaper; q.beginPath(); q.arc(c[0] + 6, c[1] - 14, 7, 0, 7); q.fill();
+  }
+  // ---------- 05 CARD TABLE: one pendant, three hard rings, seven piles for six ----------
+  function v05(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    const cx = 480, cy = 270;
+    bands(q, cx, cy, [{r: 330, color: mix(C.ink, C.tungstenLow, 0.75)}, {r: 196, color: C.tungstenMid}, {r: 120, color: C.tungsten}], {sy: 0.84, rough: 1.5, seed: 12});
+    e.fillStyle = C.tungsten; e.beginPath(); e.arc(cx, cy, 110, 0, 7); e.fill();
+    // seven piles, misregistered
+    for (let i = 0; i < 7; i++) { const a = -Math.PI / 2 + i / 7 * Math.PI * 2 + (i === 4 ? 0.12 : 0), r = 128; const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * 0.92;
+      q.save(); q.translate(x, y); q.rotate(a + 0.3 * Math.sin(i * 3)); q.fillStyle = C.cardPaper; q.fillRect(-15, -21, 30, 42); q.fillStyle = C.cardBlue; q.fillRect(-12, -18, 24, 36); q.restore(); }
+    q.save(); q.translate(cx + 20, cy - 10); q.rotate(0.4); q.fillStyle = C.cardPaper; q.fillRect(-14, -20, 28, 40); q.restore();
+    // six around the table: heads and shoulders from above, hands laid on the table
+    for (let i = 0; i < 6; i++) { const a = -Math.PI / 2 + (i + 0.5) / 6 * Math.PI * 2; const x = cx + Math.cos(a) * 280, y = cy + Math.sin(a) * 226; const dir = Math.atan2(cy - y, cx - x);
+      const tf = TOP(['scott', 'kay', 'deena', 'angelo', 'christof', 'marina'][i], {x, y, scale: 44, dir, hands: [[cx + Math.cos(a + 0.24) * 168, cy + Math.sin(a + 0.24) * 140], [cx + Math.cos(a - 0.24) * 168, cy + Math.sin(a - 0.24) * 140]], handPose: 'flat'});
+      sil(q, tf.shape, {x: cx, y: cy}, C.tungsten, 3); }
+    // Kay's glass: the only true red is her lip mark
+    q.fillStyle = C.ink; q.beginPath(); q.arc(cx + 70, cy + 70, 15, 0, 7); q.fill(); q.strokeStyle = C.tungsten; q.lineWidth = 2; q.stroke();
+    q.strokeStyle = '#D9262F'; q.lineWidth = 5; q.beginPath(); q.arc(cx + 70, cy + 70, 15, -0.9, -0.3); q.stroke();
+  }
+  // ---------- 06 AFTER KAY AND CHRISTOF: the pool shrinks, the kitchen door glows wrong ----------
+  function v06(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    bands(q, 400, 300, [{r: 270, color: mix(C.tungstenLow, C.ink, 0.3)}, {r: 170, color: mix(C.tungstenTired, C.tungstenLow, 0.45)}, {r: 96, color: C.tungstenTired}], {sy: 0.66, rough: 2, seed: 14});
+    // the kitchen doorway: hood yellow, empty
+    q.fillStyle = C.hoodLow; q.fillRect(740, 90, 130, 330); q.fillStyle = C.hoodMid; q.fillRect(760, 110, 90, 310); q.fillStyle = C.hood; q.fillRect(778, 150, 54, 270);
+    e.fillStyle = C.hood; e.fillRect(760, 110, 90, 310);
+    // table edge
+    q.fillStyle = C.ink; q.fill(S().rect(80, 360, 640, 26).rect(110, 386, 18, 160).rect(670, 386, 18, 160).path(1, 2));
+    // five fresh glasses and Kay's, untouched, the lip mark the most saturated thing in the room
+    const L = {x: 400, y: 120};
+    [190, 270, 340, 470, 560].forEach((x, i) => sil(q, glass(x, 360, 64), L, C.tungstenTired, 2));
+    const kg = glass(640, 360, 70); sil(q, kg, L, C.tungstenTired, 2);
+    q.fillStyle = C.wine; q.fillRect(626, 300, 28, 10);
+    q.strokeStyle = '#D9262F'; q.lineWidth = 6; q.lineCap = 'round'; q.beginPath(); q.moveTo(622, 292); q.lineTo(634, 292); q.stroke();
+    // Scott, standing with the bottle, turned toward the door
+    const sc = P('scott', {x: 300, y: 540, scale: 46, facing: 1, lean: 0.1, armN: {a: 0.9, b: 0.4, hand: 'hold'}, legN: {a: 0.1, b: 0.04}, legF: {a: -0.08, b: 0.02}});
+    sil(q, sc.shape, {dx: 1, dy: -0.3}, mix(C.hood, C.tungstenTired, 0.4), 2);
+    const w = sc.joints.wristN; q.fillStyle = C.ink; q.save(); q.translate(w[0] + 20, w[1]); q.rotate(1.2); q.fillRect(-10, -50, 20, 70); q.fillRect(-4, -76, 8, 30); q.restore();
+  }
+  // ---------- 07 HAND CIRCLE: four bodies on a pentagon; the fifth place speaks ----------
+  function v07(T) {
+    const {g: q, h} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    const cx = 480, cy = 270;
+    bands(q, cx, cy, [{r: 320, color: mix(C.ink, C.tungstenTired, 0.13)}, {r: 176, color: mix(C.tungstenTired, C.soot, 0.45)}, {r: 128, color: C.tungstenTired}], {sy: 0.82, rough: 1.4, seed: 15});
+    const ids = ['scott', 'marina', 'deena', 'angelo']; const pos = [];
+    for (let i = 0; i < 5; i++) { const a = Math.PI / 2 + i / 5 * Math.PI * 2; pos.push([cx + Math.cos(a) * 262, cy + Math.sin(a) * 196, a]); }
+    // slot 0 = Scott (bottom), going his left round to Angelo; slot 4 (Scott's right) is empty
+    const mid = (a, b) => { const am = Math.atan2((a[1] + b[1]) / 2 - cy, (a[0] + b[0]) / 2 - cx); return [cx + Math.cos(am) * 168, cy + Math.sin(am) * 138]; };
+    for (let i = 0; i < 4; i++) {
+      const p = pos[i], dir = Math.atan2(cy - p[1], cx - p[0]);
+      const tf = TOP(ids[i], {x: p[0], y: p[1], scale: 48, dir, hands: [mid(p, pos[(i + 1) % 5]), mid(p, pos[(i + 4) % 5])], handPose: 'clasp'});
+      sil(q, tf.shape, {x: cx, y: cy}, C.tungstenTired, 2);
+    }
+    // the VOICE, cut through the paper at the empty fifth place
+    h.save(); h.font = '500 70px "Oswald"'; h.textAlign = 'center'; h.translate(pos[4][0] - 6, pos[4][1] + 14); h.rotate(-1.0); h.fillText('Scott.', 0, 0); h.restore();
+  }
+  // ---------- 08 PHOTO: flash-white, the film's hardest contrast ----------
+  function v08(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    bands(q, 480, 250, [{r: 400, color: mix(C.ink, C.flashWhite, 0.14)}, {r: 290, color: mix(C.ink, C.flashWhite, 0.32)}], {sy: 0.66, rough: 2, seed: 16});
+    const ids = ['marina', 'deena', 'scott', 'angelo'];
+    ids.forEach((id, i) => { const b = BUST(id, {x: 250 + i * 150, y: 210 + (i % 2) * 10, scale: 58});
+      q.save(); q.globalAlpha = 0.95; q.fillStyle = C.ink; q.fill(b.shape.translate(16, 10).path(0.8, 3)); q.restore(); });
+    ids.forEach((id, i) => { const b = BUST(id, {x: 250 + i * 150, y: 210 + (i % 2) * 10, scale: 58}); q.fillStyle = C.flashWhite; q.fill(b.shape.path(0.8, 3)); });
+    e.save(); e.globalAlpha = 0.45; e.fillStyle = C.flashWhite; e.fillRect(200, 140, 560, 360); e.restore();
+    // Marina's hand on Scott's shoulder, trembling
+    q.fillStyle = C.flashWhite; q.fill(OTM.fig.hand('relaxed').transform([0, 40, -40, 0, 520, 268]).path(0.6, 2));
+    q.fillStyle = C.ink; q.fillRect(0, 500, LW, 40);
+  }
+  // ---------- 09 HALLWAY: no key light; the under-door line with no feet behind it ----------
+  function v09(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    // far kitchen glow at the end of the hall
+    q.fillStyle = C.hoodLow; q.fillRect(440, 170, 110, 200); q.fillStyle = C.hoodMid; q.fillRect(458, 186, 74, 184); q.fillStyle = C.hood; q.fillRect(472, 210, 46, 160);
+    e.fillStyle = C.hood; e.fillRect(458, 186, 74, 184);
+    // corridor planes
+    q.fillStyle = C.soot; q.fill(S().poly([[0, 0], [440, 170], [440, 370], [0, 540]]).path(1, 3));
+    q.fillStyle = mix(C.ink, C.soot, 0.5); q.fill(S().poly([[960, 0], [550, 170], [550, 370], [960, 540]]).path(1, 4));
+    // the bathroom door on the left wall and its unbroken line of light
+    q.fillStyle = C.ink; q.fill(S().poly([[120, 120], [270, 162], [270, 400], [120, 440]]).path(1, 5));
+    q.strokeStyle = C.underDoor; q.lineWidth = 4; q.beginPath(); q.moveTo(122, 446); q.lineTo(270, 404); q.stroke();
+    e.strokeStyle = C.underDoor; e.lineWidth = 8; e.beginPath(); e.moveTo(122, 446); e.lineTo(270, 404); e.stroke();
+    // four, rim-only, in procession toward the glow
+    [['angelo', 600, 520, 50], ['deena', 690, 540, 52], ['marina', 790, 560, 54], ['scott', 880, 580, 58]].forEach(([id, x, y, s]) => {
+      const fg = P(id, {x, y, scale: s, facing: -1, lean: 0.06, legN: {a: 0.24, b: 0.1}, legF: {a: -0.2, b: 0.12}, armN: {a: 0.3, b: 0.3}, armF: {a: -0.25, b: 0.2}});
+      sil(q, fg.shape, {x: 495, y: 270}, mix(C.ink, C.hood, 0.75), 2); });
+    // Kay's line lingering on the wall at 8%
+    q.save(); q.globalAlpha = 0.1; q.font = 'italic 600 40px "Cormorant Garamond"'; q.fillStyle = C.tKay; q.translate(60, 300); q.rotate(0.2); q.fillText('Big night for you.', 0, 0); q.restore();
+  }
+  // ---------- 10 KITCHEN: the hood's sick cone, gas haze, the line across her throat ----------
+  function v10(T) {
+    const {g: q, h, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    // checker floor
+    for (let r = 0; r < 6; r++) for (let c = -6; c < 12; c++) { if ((r + c) % 2) continue; const y0 = 360 + r * r * 6 + r * 18, y1 = 360 + (r + 1) * (r + 1) * 6 + (r + 1) * 18; const k0 = 1 + r * 0.35, k1 = 1 + (r + 1) * 0.35;
+      q.fillStyle = C.soot; q.beginPath(); q.moveTo(480 + (c * 60 - 480) * k0 / 1.6, y0); q.lineTo(480 + ((c + 1) * 60 - 480) * k0 / 1.6, y0); q.lineTo(480 + ((c + 1) * 60 - 480) * k1 / 1.6, y1); q.lineTo(480 + (c * 60 - 480) * k1 / 1.6, y1); q.closePath(); q.fill(); }
+    // hood cone over the stove
+    q.fillStyle = C.hoodLow; q.beginPath(); q.moveTo(250, 120); q.lineTo(370, 120); q.lineTo(480, 380); q.lineTo(130, 380); q.closePath(); q.fill();
+    q.fillStyle = C.hoodMid; q.beginPath(); q.moveTo(270, 120); q.lineTo(350, 120); q.lineTo(420, 330); q.lineTo(190, 330); q.closePath(); q.fill();
+    q.fillStyle = C.hood; q.fillRect(260, 300, 110, 30);
+    e.fillStyle = C.hood; e.fillRect(270, 120, 80, 210);
+    // stove + range hood in ink, the oven door dropped open and lit from inside
+    q.fillStyle = C.ink; q.fill(S().rect(220, 90, 180, 34).rect(200, 330, 220, 150).path(1, 2));
+    q.fillStyle = C.hoodMid; q.fillRect(222, 360, 176, 70); q.fillStyle = C.ink; q.fill(S().poly([[214, 432], [406, 432], [446, 470], [180, 470]]).path(1, 4));
+    // gas-blue haze, two flat sheets
+    q.save(); q.globalAlpha = 0.16; q.fillStyle = C.gasBlue; q.fillRect(140, 250, 380, 60); q.globalAlpha = 0.1; q.fillRect(80, 220, 520, 130); q.restore();
+    // Deena: the line across her throat is a cut
+    const d = P('deena', {x: 690, y: 510, scale: 44, facing: -1, lean: -0.14, head: -0.3, neck: -0.2, swing: -0.5, armN: {a: 2.3, b: 1.3, hand: 'flat'}, armF: {a: 2.0, b: 1.5, hand: 'flat'}, legN: {a: 0.1, b: 0.3}, legF: {a: -0.3, b: 0.4}});
+    sil(q, d.shape, {x: 300, y: 200}, C.hood, 2);
+    const nk = d.joints.neck, hd = d.joints.head;
+    const tx = nk[0] + (hd[0] - nk[0]) * 0.45 - 12, ty = nk[1] + (hd[1] - nk[1]) * 0.45 + 6;
+    h.save(); h.lineWidth = 5; h.lineCap = 'round'; h.strokeStyle = '#fff'; h.beginPath(); h.arc(tx + 6, ty - 30, 34, 1.75, 2.45); h.stroke(); h.restore();
+    q.fillStyle = C.blood; q.beginPath(); q.ellipse(660, 518, 120, 14, 0, 0, 7); q.fill();
+    // the handprint in the blood: a 35% cut
+    h.save(); h.globalAlpha = 0.35; h.fill(OTM.fig.hand('splay').transform([0, -34, 34 * 0.4, 0, 560, 524]).path(0.5, 4)); h.restore();
+  }
+  // ---------- 11 LIGHTER: two men and a lighter in a slit ----------
+  function v11(T) {
+    const {g: q, h, e} = T;
+    q.fillStyle = C.ink; q.fillRect(0, 0, LW, LH);
+    // the back door behind Scott: night blue
+    q.fillStyle = C.backdoorNight; q.fillRect(700, 120, 150, 330);
+    // hood cone edge on Angelo's back
+    q.fillStyle = C.hoodLow; q.beginPath(); q.moveTo(96, 0); q.lineTo(140, 0); q.lineTo(206, 540); q.lineTo(132, 540); q.closePath(); q.fill();
+    const a = P('angelo', {x: 300, y: 560, scale: 50, facing: 1, lean: 0.02, head: -0.05, armN: {a: 1.75, b: 0.7, hand: 'hold'}, armF: {a: -0.05, b: 0.2}, legN: {a: 0.12, b: 0.04}, legF: {a: -0.12, b: 0.06}});
+    sil(q, a.shape, {dx: -1, dy: 0}, C.hood, 2);
+    const s = P('scott', {x: 760, y: 560, scale: 52, facing: -1, lean: 0.1, head: 0.05, armN: {a: 0.6, b: 0.4, hand: 'open'}, legN: {a: 0.2, b: 0.06}, legF: {a: -0.18, b: 0.08}});
+    sil(q, s.shape, {dx: 1, dy: -0.2}, mix(C.backdoorNight, C.rainSilver, 0.5), 2);
+    const w = a.joints.wristN; const lx = w[0] + 22, ly = w[1] - 22;
+    q.fillStyle = '#DADDE2'; q.fillRect(lx - 6, ly - 8, 12, 18);
+    q.fillStyle = C.flashWhite; q.beginPath(); q.arc(lx, ly - 12, 5, 0, 7); q.fill();
+    e.fillStyle = C.flashWhite; e.beginPath(); e.arc(lx, ly - 12, 30, 0, 7); e.fill();
+    // scars from the kitchen leak at the floor
+    h.save(); h.globalAlpha = 0.25; h.fill(OTM.fig.hand('splay').transform([0, -30, 12, 0, 480, 505]).path(0.5, 4)); h.restore();
+  }
+  // ---------- 12 EXPLOSION: the world becomes the Extra's material; the mattes burn ----------
+  function v12(T) {
+    const {g: q, e} = T;
+    q.fillStyle = C.fireOuter; q.fillRect(0, 0, LW, LH);
+    bands(q, 300, 260, [{r: 820, color: C.fireMid}, {r: 520, color: C.fireCore}, {r: 260, color: C.blastWhite}], {sy: 0.8, rough: 5, seed: 22});
+    e.save(); e.globalAlpha = 0.5; e.fillStyle = C.fireCore; e.fillRect(80, 40, 800, 460); e.restore();
+    // the back wall and door frame, blown outward
+    q.fillStyle = mix(C.fireOuter, C.ink, 0.3);
+    q.fill(S().poly([[0, 0], [110, 0], [140, 540], [0, 540]]).poly([[700, 0], [960, 0], [960, 540], [760, 540]]).path(3, 7));
+    const sh = S(); const r = OTM.rng('shards'); for (let i = 0; i < 26; i++) { const x = 160 + r() * 760, y = r() * 540, s = 8 + r() * 26, a = r() * 6; sh.poly([[x, y], [x + Math.cos(a) * s, y + Math.sin(a) * s], [x + Math.cos(a + 2) * s * 0.5, y + Math.sin(a + 2) * s * 0.5]]); }
+    q.fill(sh.path(0.5, 3));
+    // Scott thrown down the steps
+    const s = P('scott', {x: 520, y: 360, scale: 46, facing: 1, anchor: 'hip', lean: 1.2, head: 0.4, armN: {a: 2.6, b: 0.4, hand: 'splay'}, armF: {a: 2.0, b: 0.9, hand: 'open'}, legN: {a: -0.6, b: 0.8}, legF: {a: 0.4, b: 1.2}});
+    q.fillStyle = C.ink; q.fill(s.shape.path(1, 4));
+    OTM.embers(q, 0, 0, LW, LH, 160, 'v12', C.fireCore);
+  }
+  // ---------- 13 ENDING: the yard; a hand of light at his right ----------
+  function v13(T) {
+    const {g: q, h, e} = T;
+    q.fillStyle = C.yardNight; q.fillRect(0, 0, LW, LH);
+    bands(q, 130, 300, [{r: 420, color: mix(C.yardNight, C.fireOuter, 0.2)}, {r: 240, color: mix(C.yardNight, C.fireOuter, 0.42)}], {sy: 0.55, rough: 3, seed: 24});
+    q.fillStyle = C.ink; q.fill(S().poly([[0, 160], [190, 160], [190, 330], [0, 330]]).poly([[-10, 166], [60, 110], [170, 110], [210, 166]]).path(1, 3));
+    windowFire(q, e, 20, 190, 50, 46, 7); windowFire(q, e, 110, 190, 50, 46, 9); windowFire(q, e, 60, 260, 56, 40, 13);
+    q.fillStyle = C.grass; q.fillRect(0, 330, LW, LH);
+    // fence slats with the street's strobes
+    for (let i = 0; i < 12; i++) { const x = 560 + i * 34, t0 = 200 - i * 6; q.fillStyle = mix(C.ink, C.fireOuter, 0.1); q.fillRect(x, t0, 28, 340 - t0 + i * 6); if (i === 2 || i === 3) { q.fillStyle = C.strobeRed; q.fillRect(x + 28, t0 + 4, 6, 330 - t0 + i * 6); } if (i === 8) { q.fillStyle = C.strobeBlue; q.fillRect(x + 28, t0 + 4, 6, 330 - t0 + i * 6); } }
+    q.save(); q.globalCompositeOperation = 'screen'; q.globalAlpha = 0.2; q.fillStyle = C.strobeRed; q.beginPath(); q.moveTo(640, 345); q.lineTo(660, 345); q.lineTo(380, 540); q.lineTo(240, 540); q.closePath(); q.fill(); q.restore();
+    // Scott from behind, phone at his left ear, right arm down to the grass
+    const SC = 52, HX = 330, HY = 480; const B = sh => sh.transform([SC, 0, 0, SC, HX, HY]);
+    const body = S().add(B(sm([[-0.2, -3.2], [-0.95, -2.95], [-1.0, -2.3], [-0.76, -1.2], [-1.0, -0.1], [-0.96, 0.04, 1], [0.96, 0.04, 1], [1.0, -0.1], [0.76, -1.2], [1.0, -2.2], [0.86, -2.74], [0.2, -3.17]])))
+      .add(B(S().ellipse(-0.12, -3.84, 0.44, 0.54, -0.15))).add(B(S().capsule(-0.92, -2.84, 0.27, -1.6, -2.1, 0.19).capsule(-1.6, -2.1, 0.17, -0.7, -3.4, 0.14)))
+      .add(B(S().capsule(0.94, -2.62, 0.27, 1.7, -1.6, 0.18).capsule(1.7, -1.6, 0.16, 2.3, -0.3, 0.13)));
+    q.fillStyle = C.ink; q.fill(body.path(0.6, 3));
+    OTM.silhouette(q, body, {light: {dx: -1, dy: -0.4}, rimColor: C.fireMid, rimW: 2});
+    q.fillStyle = C.phoneWhite; q.fillRect(HX - 0.78 * SC, HY - 4.2 * SC, 6, 0.6 * SC);
+    e.fillStyle = C.phoneWhite; e.beginPath(); e.arc(HX - 0.7 * SC, HY - 3.9 * SC, 18, 0, 7); e.fill();
+    // the hand of light at his right
+    h.fill(OTM.fig.hand('flat', {spread: 0.05}).transform([-56, 0, 0, 56 * 0.6, HX + 2.95 * SC, HY - 0.2 * SC]).path(0.4, 2));
+    h.fill(S().capsule(HX + 2.9 * SC, HY - 0.25 * SC, 9, HX + 3.6 * SC, HY - 0.4 * SC, 10).path(0.4, 3));
+  }
+
+  // ================= sections =================
+  const SECT = [
+    {n: 'COLD OPEN', t0: 0, t1: 28.7, lb: [[0, 1.7778]], ratio: '1.78', ink: '70', hex: ['#111926', '#0D0A09', '#A9280B', '#FF7A24', '#FFF1CF', '#D7E7F3'], v: v01},
+    {n: 'TITLE', t0: 28.7, t1: 50, lb: [[0, 1.7778]], ratio: '1.78', ink: '45', hex: ['#F2A93B', '#A4611F', '#4B2B13', '#0D0A09', '#EFE5D0', '#FFF1CF'], v: v02},
+    {n: 'ARRIVALS', t0: 50, t1: 133, lb: [[0, 1.7778]], ratio: '1.78', ink: '40', hex: ['#F2A93B', '#A4611F', '#34424F', '#BCD0DC', '#0D0A09'], v: v03},
+    {n: 'PARTY', t0: 133, t1: 173, lb: [[0, 1.7778]], ratio: '1.78', ink: '40–45', hex: ['#F2A93B', '#A4611F', '#6E1222', '#EFE5D0', '#0D0A09'], v: v04},
+    {n: 'CARD TABLE', t0: 173, t1: 301, lb: [[0, 1.7778]], ratio: '1.78', ink: '55', hex: ['#F2A93B', '#4B2B13', '#2B4C9B', '#EFE5D0', '#D9262F', '#0D0A09'], v: v05},
+    {n: 'AFTER KAY & CHRISTOF', t0: 301, t1: 390, lb: [[0, 1.7778], [0.25, 1.85], [0.56, 2.0]], ratio: '1.78 › 1.85 › 2.00', ink: '70', hex: ['#C2884E', '#4B2B13', '#D9BE5C', '#D9262F', '#6E1222', '#0D0A09'], v: v06},
+    {n: 'HAND CIRCLE', t0: 390, t1: 474, lb: [[0, 2.0]], ratio: '2.00', ink: '75', hex: ['#C2884E', '#1E1714', '#FFF1CF', '#FF7A24', '#0D0A09'], v: v07},
+    {n: 'PHOTO', t0: 474, t1: 509, lb: [[0, 2.0]], ratio: '2.00', ink: '40', hex: ['#F8F4EA', '#0D0A09', '#D7E7F3', '#C2884E'], v: v08},
+    {n: 'HALLWAY', t0: 509, t1: 520, lb: [[0, 2.0]], ratio: '2.00', ink: '85', hex: ['#F6D8A0', '#D9BE5C', '#BCD0DC', '#0D0A09'], v: v09},
+    {n: 'KITCHEN', t0: 520, t1: 629, lb: [[0, 2.0], [0.48, 2.2], [0.62, 2.39]], ratio: '2.00 › 2.20 › 2.39', ink: '85', hex: ['#D9BE5C', '#1E1714', '#5D8DF2', '#4A0812', '#FF7A24', '#0D0A09'], v: v10},
+    {n: 'LIGHTER', t0: 629, t1: 683, lb: 'squeeze', ratio: '2.39 → 2.76', ink: '92', hex: ['#0D0A09', '#1B2A3F', '#D9BE5C', '#F8F4EA', '#FF7A24', '#DADDE2'], v: v11},
+    {n: 'EXPLOSION', t0: 683, t1: 714, lb: 'burn', ratio: '2.76 · BURNT AWAY', ink: '10', hex: ['#FFF6E0', '#FFF1CF', '#FF7A24', '#A9280B', '#2A1208'], v: v12},
+    {n: 'ENDING', t0: 714, t1: 824, lb: [[0, 1.7778]], ratio: '1.78', ink: '70 › 98', hex: ['#111926', '#FF7A24', '#E3202B', '#2251E6', '#D7E7F3', '#9A9088', '#FFF1CF'], v: v13},
+  ];
+  const tc = s => { const m = Math.floor(s / 60), x = Math.round(s % 60); return m + ':' + String(x).padStart(2, '0'); };
+
+  // matte half-height (sheet px) at u across a tile
+  const halfFor = r => Math.max(0, (TH - TW / r) / 2);
+  function matteAt(sec, u) {
+    if (sec.lb === 'squeeze') return halfFor(2.39 + (2.76 - 2.39) * u);
+    if (sec.lb === 'burn') return 0;
+    let r = sec.lb[0][1]; sec.lb.forEach(([u0, rr]) => { if (u >= u0) r = rr; }); return halfFor(r);
+  }
+
+  const measured = [];
+  SECT.forEach((sec, i) => {
+    const [x, y] = tilePos(i); const T = newTile();
+    sec.v(T);
+    if (location.hash === '#tile' + (i + 1)) { window.TILE = T; }
+    // measure the ink share of the vignette (for tuning)
+    { const d = T.g.getImageData(0, 0, LW, LH).data; let n = 0, k = 0; for (let p = 0; p < d.length; p += 16) { n++; if (0.2126 * d[p] + 0.7152 * d[p + 1] + 0.0722 * d[p + 2] < 34) k++; } measured.push(Math.round(100 * k / n)); }
+    g.save(); g.imageSmoothingQuality = 'high'; g.drawImage(T.g.canvas, x, y, TW, TH); g.restore();
+    em.drawImage(T.e.canvas, x, y, TW, TH);
+    HC.drawImage(T.h.canvas, x, y, TW, TH);
+    // the mattes: matte black, hard inner edge that steps (or squeezes) where the count changes
+    const top = S(), bot = S(); const N = 120;
+    if (sec.lb !== 'burn') {
+      const tp = [[x, y]], bp = [[x, y + TH]];
+      for (let k = 0; k <= N; k++) { const u = k / N, m = matteAt(sec, u); tp.push([x + u * TW, y + m]); bp.push([x + u * TW, y + TH - m]); }
+      // make the steps vertical
+      tp.push([x + TW, y]); bp.push([x + TW, y + TH]);
+      top.poly(tp); bot.poly(bp);
+      g.fillStyle = C.matte; g.fill(top.path(0, 1)); g.fill(bot.path(0, 1));
+      HC.save(); HC.globalCompositeOperation = 'destination-out'; HC.fill(top.path(0, 1)); HC.fill(bot.path(0, 1)); HC.restore();
+      // a hairline on the matte's inner edge
+      g.save(); g.strokeStyle = rgba(C.cardPaper, 0.22); g.lineWidth = 1; g.beginPath(); for (let k = 0; k <= N; k++) { const u = k / N; const m = matteAt(sec, u); if (k === 0) g.moveTo(x + u * TW, y + m); else g.lineTo(x + u * TW, y + m); } g.stroke();
+      g.beginPath(); for (let k = 0; k <= N; k++) { const u = k / N; const m = matteAt(sec, u); if (k === 0) g.moveTo(x + u * TW, y + TH - m); else g.lineTo(x + u * TW, y + TH - m); } g.stroke(); g.restore();
+    } else {
+      // the explosion: the 2.76 mattes catch fire at the left and burn back to nothing
+      const m0 = halfFor(2.76); const rb = OTM.rng('burnmatte');
+      const tp = [[x, y]], bp = [[x, y + TH]], tEdge = [], bEdge = [];
+      for (let k = 0; k <= N; k++) { const u = k / N; const base = m0 * Math.max(0, 1 - Math.pow(u / 0.62, 1.4)); const j = (OTM.vnoise(u * 18, 1, 5) - 0.5) * 9 + (OTM.vnoise(u * 60, 2, 5) - 0.5) * 4; const m = Math.max(0, base + (base > 0.5 ? j : 0));
+        tp.push([x + u * TW, y + m]); bp.push([x + u * TW, y + TH - m]); tEdge.push([x + u * TW, y + m, base]); bEdge.push([x + u * TW, y + TH - m, base]); }
+      tp.push([x + TW, y]); bp.push([x + TW, y + TH]); top.poly(tp); bot.poly(bp);
+      g.fillStyle = C.matte; g.fill(top.path(0, 1)); g.fill(bot.path(0, 1));
+      [[tEdge, 1], [bEdge, -1]].forEach(([ed, sgn]) => { g.save(); g.lineCap = 'round';
+        for (let k = 1; k < ed.length; k++) { if (ed[k][2] < 0.4) continue; g.strokeStyle = C.fireMid; g.lineWidth = 2.4; g.beginPath(); g.moveTo(ed[k - 1][0], ed[k - 1][1]); g.lineTo(ed[k][0], ed[k][1]); g.stroke(); }
+        g.restore(); });
+      em.fillStyle = C.fireMid; em.fillRect(x, y, TW * 0.6, 26); em.fillRect(x, y + TH - 26, TW * 0.6, 26);
+      // scraps of burning matte blown into the frame
+      for (let k = 0; k < 9; k++) { const px = x + TW * (0.45 + rb() * 0.5), py = y + (rb() < 0.5 ? rb() * 30 : TH - rb() * 30); g.fillStyle = C.matte; g.beginPath(); g.moveTo(px, py); g.lineTo(px + 6 + rb() * 6, py + rb() * 4); g.lineTo(px + rb() * 4, py + 5 + rb() * 4); g.closePath(); g.fill(); g.strokeStyle = C.fireMid; g.lineWidth = 1; g.stroke(); }
+    }
+    // the full 16:9 frame, as a hairline, so the lost frame reads
+    g.save(); g.strokeStyle = rgba(C.cardPaper, 0.14); g.lineWidth = 1; g.strokeRect(x - 0.5, y - 0.5, TW + 1, TH + 1); g.restore();
+    // palette: a thin bar under the tile, the section's dominant hexes in order
+    { const n = sec.hex.length; sec.hex.forEach((hx, k) => { g.fillStyle = hx; g.fillRect(x + k * TW / n, y + TH + 5, TW / n + 0.5, 5); }); }
+    // labels
+    const ly = y + TH + 31;
+    TXT(g, String(i + 1).padStart(2, '0'), x, ly, {weight: 600, size: 15, color: C.tungsten, tracking: 1});
+    TXT(g, sec.n, x + 24, ly, {weight: 600, size: 16, alpha: 0.88});
+    TXT(g, tc(sec.t0), x + TW, ly, {size: 14, alpha: 0.4, align: 'right', tracking: 1});
+    TXT(g, sec.ratio, x, ly + 21, {weight: 600, size: 15, alpha: 0.78, tracking: 1});
+    TXT(g, 'INK ' + sec.ink + '%', x + TW, ly + 21, {size: 15, color: C.ash, tracking: 1, align: 'right'});
+  });
+  if (DEBUG) console.log('ink measured', JSON.stringify(measured));
+  window.INK = measured;
+
+  // ================= the counter legend (spare slot): the count, as frames =================
+  {
+    const [x, y] = tilePos(13);
+    TXT(g, 'THE MASTER COUNTER', x, y + 12, {weight: 600, size: 16, alpha: 0.88});
+    const rows = [['1.78', 'ARRIVALS · SIX OF THEM'], ['1.85', "CHRISTOF'S CRASH"], ['2.00', "\u201CWHERE'S KAY?\u201D"], ['2.20', "DEENA'S LAST BREATH"], ['2.39', "MARINA'S EMPTY DOORWAY"], ['2.76', 'THE STANDOFF, SQUEEZED'], ['', 'BURNT AWAY IN THE BLAST'], ['1.78', 'THE YARD · IT NEVER CLOSES']];
+    rows.forEach(([r, t], k) => { const yy = y + 36 + k * 18.5; const fw = 30, fh = 16.9;
+      // a mini frame, letterboxed to the ratio
+      const live = r ? fh * 1.7778 / +r : 0; g.fillStyle = C.matte; g.fillRect(x, yy - 12, fw, fh);
+      if (r) { g.fillStyle = k === 7 ? C.tungsten : mix(C.cardPaper, C.ink, 0.25); g.fillRect(x, yy - 12 + (fh - live) / 2, fw, live); }
+      else { g.strokeStyle = C.fireMid; g.lineWidth = 1.2; g.beginPath(); for (let j = 0; j <= 8; j++) { const px = x + j * fw / 8, py = yy - 12 + (j % 2 ? 2 : 0); j ? g.lineTo(px, py) : g.moveTo(px, py); } g.stroke(); g.beginPath(); for (let j = 0; j <= 8; j++) { const px = x + j * fw / 8, py = yy - 12 + fh - (j % 2 ? 2 : 0); j ? g.lineTo(px, py) : g.moveTo(px, py); } g.stroke(); }
+      g.strokeStyle = rgba(C.cardPaper, 0.2); g.lineWidth = 1; g.strokeRect(x + 0.5, yy - 11.5, fw - 1, fh - 1);
+      TXT(g, r || '—', x + 40, yy, {weight: 600, size: 14, alpha: 0.85, color: k === 7 ? C.tungsten : C.cardPaper, tracking: 1});
+      TXT(g, t, x + 74, yy, {size: 13, alpha: 0.55, tracking: 0.8}); });
+    TXT(g, 'STEPS WHEN NOTICED · NEVER FOR THE EXTRA', x, y + TH + 52, {size: 12.5, alpha: 0.45, tracking: 0.8});
+  }
+
+  // ================= header =================
+  { const tw = OTM.text(g, 'THE LIGHT, COUNTED', 62, 176, {family: 'Six Caps', size: 124, color: C.cardPaper, tracking: 6}); const sx = 62 + tw + 44;
+    TXT(g, 'THIRTEEN SECTIONS  ·  ONE LIGHT EACH  ·  THE FRAME IS THE HEADCOUNT', sx, 112, {size: 24, tracking: 5, alpha: 0.72});
+    TXT(g, 'Every tile is cropped to its letterbox. The mattes close one step for each absence someone notices,', sx, 145, {weight: 400, size: 20, alpha: 0.5, tracking: 1});
+    TXT(g, 'squeeze through the standoff, burn away in the blast and open again in the yard.', sx, 170, {weight: 400, size: 20, alpha: 0.5, tracking: 1});
+    // ember swatch: the one colour that belongs to nobody
+    const lbl = 'FF9440  ·  THE EXTRA\u2019S CUTS, NOTHING ELSE'; const lw = OTM.layout(g, lbl, {family: 'Barlow Condensed', weight: 500, size: 15, tracking: 1.5}).width;
+    TXT(g, lbl, 1856, 170, {size: 15, alpha: 0.6, tracking: 1.5, align: 'right'}); f.knockout(S().rect(1856 - lw - 30, 154, 20, 20).path(0.6, 2), 1); }
+
+  // ================= timeline: intensity curve, master counter ribbon, tallies =================
+  const TL = {x0: 96, x1: 1856, t1: 824};
+  const tx = t => TL.x0 + (TL.x1 - TL.x0) * t / TL.t1;
+  const CY0 = 716, CY1 = 826;            // intensity 10 .. 0
+  const iy = v => CY1 - (CY1 - CY0) * v / 10;
+  const RY = 892, RH = 66;               // ribbon centre, full (1.78) height
+  const TY = 1030;                       // tally baseline
+  // gutter titles, rotated
+  const gutter = (s2, yc) => { g.save(); g.translate(46, yc); g.rotate(-Math.PI / 2); TXT(g, s2, 0, 0, {size: 12, alpha: 0.42, tracking: 2.5, align: 'center'}); g.restore(); };
+  gutter('INTENSITY', (CY0 + CY1) / 2); gutter('FRAME', RY); gutter('TALLY', TY - 20);
+  // section spans + numbers
+  SECT.forEach((sec, i) => {
+    const a2 = tx(sec.t0), b2 = tx(sec.t1);
+    g.fillStyle = rgba(C.cardPaper, 0.11); g.fillRect(Math.round(a2), CY0 - 10, 1, RY + RH / 2 - CY0 + 10);
+    TXT(g, String(i + 1).padStart(2, '0'), (a2 + b2) / 2, CY0 - 18, {weight: 600, size: 13, alpha: 0.5, align: 'center', tracking: 0.5, color: C.tungsten});
+  });
+  g.fillStyle = rgba(C.cardPaper, 0.11); g.fillRect(TL.x1, CY0 - 10, 1, RY + RH / 2 - CY0 + 10);
+  // grid
+  [0, 5, 10].forEach(v => { g.fillStyle = rgba(C.cardPaper, v === 0 ? 0.2 : 0.07); g.fillRect(TL.x0, Math.round(iy(v)), TL.x1 - TL.x0, 1); TXT(g, String(v), TL.x0 - 9, iy(v) + 5, {size: 12, alpha: 0.42, align: 'right', tracking: 0}); });
+  // the curve (beat map intensities)
+  const beats = [[0, 6], [10, 7], [28.7, 1], [38, 2], [50, 2], [72, 2], [104, 2], [122, 3.5], [133, 2], [154, 2], [173, 2.5], [182, 3], [198, 4], [216, 4.5], [228, 5], [250, 5.5], [260, 4.5], [280, 5.5], [301, 5.5], [321, 7], [329, 6], [350, 6.5], [390, 7], [406, 7], [423, 8], [438, 8], [458, 8.5], [474, 8], [489, 8], [509, 7.5], [520, 8], [540, 9.5], [553, 10], [560, 9], [575, 9], [586, 9], [608, 8.5], [629, 9.5], [683, 9.5], [691, 10], [714, 5], [724, 5.5], [748, 6.5], [766, 8], [782, 4], [814, 2], [824, 0]];
+  {
+    const pts = beats.map(([t, v]) => [tx(t), iy(v)]);
+    g.save(); g.fillStyle = rgba(C.cardPaper, 0.045); g.beginPath(); g.moveTo(pts[0][0], CY1); pts.forEach(p2 => g.lineTo(p2[0], p2[1])); g.lineTo(pts[pts.length - 1][0], CY1); g.closePath(); g.fill(); g.restore();
+    g.save(); g.strokeStyle = rgba(C.cardPaper, 0.88); g.lineWidth = 1.8; g.lineJoin = 'round'; g.beginPath(); pts.forEach((p2, k) => k ? g.lineTo(p2[0], p2[1]) : g.moveTo(p2[0], p2[1])); g.stroke(); g.restore();
+    beats.forEach(([t, v]) => { g.fillStyle = C.cardPaper; g.beginPath(); g.arc(tx(t), iy(v), 2, 0, 7); g.fill(); });
+    const note = (t, v, s2, dx, dy, al) => { TXT(g, s2, tx(t) + dx, iy(v) + dy, {size: 12.5, alpha: 0.62, tracking: 1, align: al || 'left'}); };
+    const lead = (t, v, s2, y2, al) => { g.fillStyle = rgba(C.cardPaper, 0.35); g.fillRect(Math.round(tx(t)), iy(v) + 5, 1, y2 - iy(v) - 17); TXT(g, s2, tx(t), y2, {size: 12.5, alpha: 0.62, tracking: 1, align: al || 'center'}); };
+    note(28.7, 1, 'CRISPS · 1', 8, 13);
+    note(122, 3.5, 'THE SECOND CLICK', 6, -9, 'center');
+    note(423, 8, 'THE VOICE', -6, -8, 'right');
+    lead(553, 10, 'THE THROAT · 10', 790);
+    lead(691, 10, 'THE BLAST · 10', 790);
+    note(766, 8, '“TWO.”', 8, -6);
+  }
+  // ---- the master counter ribbon: each section's light, letterboxed by the frame height over time ----
+  const lum = hx => { const [r, g2, b2] = OTM.hexToRgb(hx); return 0.2126 * r + 0.7152 * g2 + 0.0722 * b2; };
+  const ratioT = t => { if (t < 323.5) return 1.7778; if (t < 350.5) return 1.85; if (t < 572) return 2.0; if (t < 588) return 2.2; if (t < 629) return 2.39; if (t < 683) return 2.39 + 0.37 * (t - 629) / 54; if (t < 691) return 2.76; return 1.7778; };
+  // one key light per section in the middle; its accents at the edges, where the mattes eat them first
+  const KEY = [['#A9280B', '#D7E7F3', '#FF7A24'], ['#F2A93B', '#A4611F', '#A4611F'], ['#F2A93B', '#34424F', '#BCD0DC'], ['#F2A93B', '#6E1222', '#EFE5D0'], ['#F2A93B', '#2B4C9B', '#EFE5D0'],
+    ['#C2884E', '#D9262F', '#D9BE5C'], ['#C2884E', '#FF7A24', '#4B2B13'], ['#F8F4EA', '#D7E7F3', '#C2884E'], ['#3B3216', '#F6D8A0', '#D9BE5C'], ['#D9BE5C', '#5D8DF2', '#4A0812'],
+    ['#1B2A3F', '#D9BE5C', '#DADDE2'], ['#FFF6E0', '#FF7A24', '#A9280B'], ['#111926', '#E3202B', '#2251E6']];
+  SECT.forEach((sec, i) => {
+    const a2 = tx(sec.t0), b2 = tx(sec.t1), [k0, k1, k2] = KEY[i], e2 = RH * 0.2;
+    g.fillStyle = k1; g.fillRect(a2, RY - RH / 2, b2 - a2 + 0.6, e2 + 0.5);
+    g.fillStyle = k2; g.fillRect(a2, RY + RH / 2 - e2, b2 - a2 + 0.6, e2);
+    g.fillStyle = k0; g.fillRect(a2, RY - RH / 2 + e2, b2 - a2 + 0.6, RH - 2 * e2);
+  });
+  {
+    const top = [[tx(0), RY - RH / 2 - 1]], bot = [[tx(0), RY + RH / 2 + 1]];
+    for (let t = 0; t <= TL.t1; t += 0.25) { let hh = RH / 2 * 1.7778 / ratioT(t);
+      if (t >= 691 && t < 714) { const u = (t - 691) / 23; hh = RH / 2 * (1.7778 / 2.76 + (1 - 1.7778 / 2.76) * Math.min(1, u * 1.5)) + (OTM.vnoise(t * 0.9, 3, 9) - 0.5) * 7 * Math.max(0, 1 - u * 1.5); }
+      top.push([tx(t), RY - hh]); bot.push([tx(t), RY + hh]); }
+    top.push([tx(TL.t1), RY - RH / 2 - 1]); bot.push([tx(TL.t1), RY + RH / 2 + 1]);
+    g.fillStyle = C.matte; g.fill(S().poly(top).path(0, 1)); g.fill(S().poly(bot).path(0, 1));
+    // hairline of the full frame, so the lost height reads
+    g.save(); g.strokeStyle = rgba(C.cardPaper, 0.16); g.lineWidth = 1; g.strokeRect(TL.x0 + 0.5, RY - RH / 2 - 1.5, TL.x1 - TL.x0 - 1, RH + 3); g.restore();
+    // the burning edge where the mattes go in the blast
+    g.save(); g.strokeStyle = C.fireMid; g.lineWidth = 2; [top, bot].forEach(arr => { g.beginPath(); let on = false; arr.forEach(([px, py]) => { const t = (px - TL.x0) / (TL.x1 - TL.x0) * TL.t1; if (t >= 691 && t < 705) { if (!on) { g.moveTo(px, py); on = true; } else g.lineTo(px, py); } }); g.stroke(); }); g.restore();
+    em.fillStyle = C.fireMid; em.fillRect(tx(691), RY - RH / 2, tx(705) - tx(691), RH);
+    // ratio flags at each step
+    [[0, '1.78', 'left'], [323.5, '1.85'], [350.5, '2.00'], [572, '2.20', 'right'], [588, '2.39', 'left'], [629, '2.39', 'center'], [683, '2.76', 'right'], [697, 'BURNT', 'left'], [760, '1.78 · OPEN', 'center']].forEach(([t, s2, al]) => {
+      const px = tx(t); g.fillStyle = rgba(C.cardPaper, 0.4); g.fillRect(Math.round(px), RY - RH / 2 - 9, 1, 7);
+      TXT(g, s2, px + (al === 'left' ? -1 : al === 'right' ? 2 : 0), RY - RH / 2 - 13, {weight: 600, size: 12.5, alpha: 0.72, align: al || 'center', tracking: 0.5, color: s2 === '1.78 · OPEN' ? C.tungsten : C.cardPaper}); });
+    // the squeeze arrow
+    g.save(); g.strokeStyle = rgba(C.cardPaper, 0.4); g.lineWidth = 1; g.beginPath(); g.moveTo(tx(636), RY - RH / 2 - 9); g.lineTo(tx(676), RY - RH / 2 - 9); g.stroke(); g.restore();
+  }
+  // time axis
+  for (let m = 0; m <= 13; m++) { const px = tx(m * 60); g.fillStyle = rgba(C.cardPaper, 0.25); g.fillRect(Math.round(px), RY + RH / 2 + 6, 1, 6); TXT(g, m + ':00', px, RY + RH / 2 + 26, {size: 12, alpha: 0.38, align: m ? 'center' : 'left', tracking: 0.5}); }
+  TXT(g, '13:44', tx(824), RY + RH / 2 + 26, {size: 12, alpha: 0.38, align: 'right', tracking: 0.5});
+
+  // ---- the four tally interstitials: scratched card-paper marks, placed where they fall in the film ----
+  function scratch(gc, x, y, h, seed, alpha) {
+    const r = OTM.rng('scr' + seed); gc.save(); gc.globalAlpha = alpha; gc.fillStyle = C.cardPaper;
+    const lean = (r() - 0.5) * 0.09, bow = (r() - 0.5) * 3; const N = 18; const L2 = [], R2 = [];
+    for (let k = 0; k <= N; k++) { const u = k / N, w = (1.1 + 1.5 * Math.sin(Math.PI * Math.min(1, 0.08 + u * 1.05))) * (0.75 + r() * 0.5); const cx = x + lean * h * u + bow * Math.sin(Math.PI * u); const cy = y - h * u; L2.push([cx - w, cy]); R2.unshift([cx + w, cy]); }
+    gc.beginPath(); L2.concat(R2).forEach((p2, k) => k ? gc.lineTo(p2[0], p2[1]) : gc.moveTo(p2[0], p2[1])); gc.closePath(); gc.fill();
+    // dry-brush breaks: painted back in ink (never erased: an erased world shows the Extra's lightbox)
+    gc.globalAlpha = 1; gc.fillStyle = C.ink; { const yy = y - h * (0.3 + r() * 0.45); gc.fillRect(x - 5 + lean * h * 0.5, yy, 10, 0.8 + r() * 1.0); }
+    gc.globalAlpha = alpha * 0.5; gc.strokeStyle = C.cardPaper; gc.lineWidth = 0.7;
+    for (let k = 0; k < 1; k++) { const ox = (r() - 0.5) * 6; gc.beginPath(); gc.moveTo(x + ox, y - h * (0.02 + r() * 0.2)); gc.lineTo(x + ox + lean * h * 1.2, y - h * (0.75 + r() * 0.35)); gc.stroke(); }
+    gc.restore();
+  }
+  const TALLY = [
+    {t: 131, n: 6, faint: true, label: 'SIX', sub: 'AFTER THE SECOND CLICK · A SEVENTH WON’T STAY'},
+    {t: 330, n: 5, label: 'FIVE', sub: 'AFTER CHRISTOF’S CRASH'},
+    {t: 509, n: 4, label: 'FOUR', sub: 'BEFORE THE KITCHEN'},
+    {t: 814, n: 2, label: 'TWO', sub: 'THE END CARD', right: true},
+  ];
+  TALLY.forEach((tl, k) => {
+    const n = tl.n + (tl.faint ? 1 : 0), sp = 15, wdt = (n - 1) * sp; const cx = tx(tl.t); const x0 = tl.right ? cx - wdt : cx - wdt / 2;
+    for (let j = 0; j < n; j++) { const rj = OTM.rng('th' + k + j); scratch(g, x0 + j * sp + (rj() - 0.5) * 3, TY + (rj() - 0.5) * 4, 46 + (rj() - 0.5) * 10, k * 10 + j, tl.faint && j === n - 1 ? 0.3 : 0.94); }
+    if (tl.faint) { g.save(); g.globalAlpha = 0.8; g.fillStyle = C.ink; g.fillRect(x0 + (n - 1) * sp - 7, TY - 56, 15, 24); g.restore(); }   // the seventh fades before it finishes
+    g.fillStyle = rgba(C.cardPaper, 0.28); g.fillRect(Math.round(cx), RY + RH / 2 + 34, 1, TY - 50 - (RY + RH / 2 + 34));
+    const lx = tl.right ? x0 - 16 : x0 + wdt + 18;
+    TXT(g, tl.label, lx, TY - 22, {weight: 600, size: 16, alpha: 0.9, align: tl.right ? 'right' : 'left', tracking: 3});
+    TXT(g, tl.sub + '  ·  ' + tc(tl.t), lx, TY - 2, {size: 13, alpha: 0.45, align: tl.right ? 'right' : 'left', tracking: 1});
+  });
+
+  if (window.TILE) { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.drawImage(window.TILE.g.canvas, 0, 0, W, H); ctx.globalAlpha = 0.5; ctx.drawImage(window.TILE.h.canvas, 0, 0, W, H); window.FRAME_READY = true; return; }
+  f.finish({letterbox: 1.7778, vignette: 0.25, halation: 0.32, grain: 0.05});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  COLOUR SCRIPT', 'COLOUR SCRIPT', 1.7778);
+  window.FRAME_READY = true;
+})();
+</script>

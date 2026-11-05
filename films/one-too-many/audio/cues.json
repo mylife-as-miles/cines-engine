@@ -1,0 +1,6303 @@
+{
+ "fps": 24,
+ "duration_s": 893.945,
+ "energy": "calm",
+ "kit": "audio/kit",
+ "room": {
+  "decay_s": 0.6,
+  "wet_db": -16
+ },
+ "music": {
+  "file": "out/bed_scored.wav",
+  "start_s": 0,
+  "loop": false,
+  "fade_out_s": 0.05
+ },
+ "silence_ok": [
+  [
+   283.522,
+   285.635
+  ],
+  [
+   360.035,
+   360.535
+  ],
+  [
+   474.331,
+   475.831
+  ],
+  [
+   505.693,
+   506.993
+  ],
+  [
+   547.595,
+   549.195
+  ],
+  [
+   605.795,
+   606.395
+  ],
+  [
+   615.645,
+   617.545
+  ],
+  [
+   644.045,
+   645.145
+  ],
+  [
+   651.895,
+   652.395
+  ],
+  [
+   838.595,
+   839.295
+  ],
+  [
+   0,
+   1.017
+  ],
+  [
+   30.82,
+   32.023
+  ],
+  [
+   55.008,
+   55.806
+  ],
+  [
+   283.435,
+   285.675
+  ],
+  [
+   474.284,
+   474.905
+  ],
+  [
+   505.668,
+   506.365
+  ],
+  [
+   605.794,
+   606.404
+  ],
+  [
+   616.419,
+   617.566
+  ],
+  [
+   644.037,
+   645.156
+  ],
+  [
+   651.888,
+   652.406
+  ],
+  [
+   756.397,
+   757.092
+  ],
+  [
+   863.267,
+   865.988
+  ],
+  [
+   885.457,
+   893.945
+  ]
+ ],
+ "cues": [
+  {
+   "id": "Q01-spark-0-0",
+   "t": 1.6,
+   "sound": "audio/sfx/lighter_on.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-land.dispatcher-10-0",
+   "t": 9,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-land.scott-11-0",
+   "t": 15.8,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-land.dispatcher-12-0",
+   "t": 21,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-glass-1-0",
+   "t": 22.95,
+   "sound": "audio/sfx/glass1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q01-land.scott-13-0",
+   "t": 24.3,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-Q01.slice-2-0",
+   "t": 24.445,
+   "sound": "paper/fs-484920-page-slides-1-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-3-0",
+   "t": 24.455,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-4-0",
+   "t": 25.515,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-5-0",
+   "t": 26.575,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-6-0",
+   "t": 27.635,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-7-0",
+   "t": 28.695,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01-lub-8-0",
+   "t": 29.755,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T01-0",
+   "t": 30.8,
+   "sound": "audio/tension/T01.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q01-Q01.smash-9-0",
+   "t": 30.815,
+   "sound": "thump/fs-389665-thump-close-wav-2+hit/fs-558238-distorted-impact-short-wav-1",
+   "weight": "hero",
+   "align": "peak",
+   "visual": "cut"
+  },
+  {
+   "id": "Q02-Q02.tick-0-0",
+   "t": 32.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.rustle-19-0",
+   "t": 32.2737,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.rustle-20-0",
+   "t": 32.4482,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.crisp-25-0",
+   "t": 33.0584,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.rustle-21-0",
+   "t": 33.067,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.crisp-32-0",
+   "t": 33.1178,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-43-0",
+   "t": 33.1223,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-38-0",
+   "t": 33.1443,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-1-0",
+   "t": 33.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-52-0",
+   "t": 33.1766,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.rustle-22-0",
+   "t": 33.2415,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.crisp-44-0",
+   "t": 33.4298,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.rustle-23-0",
+   "t": 33.8603,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.crisp-28-0",
+   "t": 33.8605,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-33-0",
+   "t": 33.904,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-53-0",
+   "t": 33.9265,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-47-0",
+   "t": 33.9568,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-39-0",
+   "t": 33.9596,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.rustle-24-0",
+   "t": 34.0349,
+   "sound": "audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.tick-2-0",
+   "t": 34.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-54-0",
+   "t": 34.257,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-34-0",
+   "t": 34.6387,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-31-0",
+   "t": 34.6537,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-42-0",
+   "t": 34.6801,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-48-0",
+   "t": 34.6997,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-35-0",
+   "t": 34.9932,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-49-0",
+   "t": 35.0146,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-3-0",
+   "t": 35.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-40-0",
+   "t": 35.51,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-4-0",
+   "t": 36.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-5-0",
+   "t": 37.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-41-0",
+   "t": 37.4283,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-50-0",
+   "t": 37.6375,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-51-0",
+   "t": 37.995,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-29-0",
+   "t": 38.1725,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-6-0",
+   "t": 38.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-30-0",
+   "t": 38.465,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-26-0",
+   "t": 38.618,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-27-0",
+   "t": 38.865,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-45-0",
+   "t": 39.0005,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-7-0",
+   "t": 39.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-46-0",
+   "t": 39.215,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-55-0",
+   "t": 39.34,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-56-0",
+   "t": 39.535,
+   "sound": "audio/sfx/crisp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-36-0",
+   "t": 39.653,
+   "sound": "audio/sfx/crisp3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.crisp-37-0",
+   "t": 39.835,
+   "sound": "audio/sfx/crisp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-8-0",
+   "t": 40.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-9-0",
+   "t": 41.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-10-0",
+   "t": 42.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.clink-57-0",
+   "t": 42.9617,
+   "sound": "audio/sfx/clink1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-11-0",
+   "t": 43.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.slide-58-0",
+   "t": 43.3917,
+   "sound": "audio/sfx/slide.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-12-0",
+   "t": 44.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.step-59-0",
+   "t": 44.3317,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.35
+  },
+  {
+   "id": "Q02-Q02.step-60-0",
+   "t": 44.6117,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.33
+  },
+  {
+   "id": "Q02-Q02.tink-65-0",
+   "t": 44.9117,
+   "sound": "audio/sfx/clink4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.1723076923076923
+  },
+  {
+   "id": "Q02-Q02.tick-13-0",
+   "t": 45.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.step-61-0",
+   "t": 45.2317,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.26
+  },
+  {
+   "id": "Q02-Q02.tink-66-0",
+   "t": 45.245,
+   "sound": "audio/sfx/clink3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.09538461538461539
+  },
+  {
+   "id": "Q02-Q02.tink-67-0",
+   "t": 45.5783,
+   "sound": "audio/sfx/clink4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.018461538461538463
+  },
+  {
+   "id": "Q02-Q02.step-62-0",
+   "t": 45.7517,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q02-Q02.tink-68-0",
+   "t": 45.9117,
+   "sound": "audio/sfx/clink3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05846153846153846
+  },
+  {
+   "id": "Q02-Q02.tick-14-0",
+   "t": 46.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tink-69-0",
+   "t": 46.245,
+   "sound": "audio/sfx/clink4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.13538461538461538
+  },
+  {
+   "id": "Q02-Q02.step-63-0",
+   "t": 46.2717,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.14
+  },
+  {
+   "id": "Q02-Q02.tink-70-0",
+   "t": 46.5783,
+   "sound": "audio/sfx/clink3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2123076923076923
+  },
+  {
+   "id": "Q02-Q02.step-64-0",
+   "t": 46.7917,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08000000000000002
+  },
+  {
+   "id": "Q02-Q02.tick-15-0",
+   "t": 47.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-16-0",
+   "t": 48.175,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-77-0",
+   "t": 48.995,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-78-0",
+   "t": 49.12,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-17-0",
+   "t": 49.175,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-79-0",
+   "t": 49.245,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-80-0",
+   "t": 49.37,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-81-0",
+   "t": 49.495,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-slap-82-0",
+   "t": 49.62,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.stamp-83-0",
+   "t": 49.995,
+   "sound": "audio/sfx/stamp2.flac+audio/sfx/stamp1.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.tick-18-0",
+   "t": 50.175,
+   "sound": "audio/sfx/tick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.stamp-84-0",
+   "t": 50.245,
+   "sound": "audio/sfx/stamp2.flac+audio/sfx/stamp1.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.stamp-85-0",
+   "t": 50.495,
+   "sound": "audio/sfx/stamp2.flac+audio/sfx/stamp1.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q02-Q02.burn-86-0",
+   "t": 51.095,
+   "sound": "audio/sfx/burn.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02-Q02.type-88-0",
+   "t": 52.595,
+   "sound": "audio/sfx/typeburst.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03-doorbell-0-0",
+   "t": 55.66,
+   "sound": "audio/sfx/doorbell.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-scrape-1-0",
+   "t": 56.44,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-scrape-2-0",
+   "t": 56.99,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-3-0",
+   "t": 59.12,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-whoosh-4-0",
+   "t": 60.85,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.deena-38-0",
+   "t": 61.37,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-39-0",
+   "t": 62.57,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.deena-40-0",
+   "t": 63.67,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.angelo-41-0",
+   "t": 67.57,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-flick-5-0",
+   "t": 69.72,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-42-0",
+   "t": 71.07,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.deena-43-0",
+   "t": 74.37,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-44-0",
+   "t": 76.52,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-whoosh-7-0",
+   "t": 77.094,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-8-0",
+   "t": 77.17,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.angelo-45-0",
+   "t": 77.6,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-46-0",
+   "t": 79.18,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.angelo-47-0",
+   "t": 83.17,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-9-0",
+   "t": 85.92,
+   "sound": "audio/sfx/knock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-9-1",
+   "t": 86.09,
+   "sound": "audio/sfx/knock2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-9-2",
+   "t": 86.26,
+   "sound": "audio/sfx/knock3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-whoosh-10-0",
+   "t": 86.71,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-11-0",
+   "t": 87.87,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-drip-12-0",
+   "t": 88.82,
+   "sound": "audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-drip-13-0",
+   "t": 89.72,
+   "sound": "audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.kay-48-0",
+   "t": 89.7952,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-drip-14-0",
+   "t": 90.82,
+   "sound": "audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-drip-15-0",
+   "t": 91.72,
+   "sound": "audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-49-0",
+   "t": 92.17,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.kay-50-0",
+   "t": 94.6552,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-51-0",
+   "t": 100.27,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.kay-52-0",
+   "t": 102.3524,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-53-0",
+   "t": 103.17,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-flick-17-0",
+   "t": 104.52,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.deena-54-0",
+   "t": 108.32,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.kay-55-0",
+   "t": 111.6544,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.scott-56-0",
+   "t": 112.82,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.kay-57-0",
+   "t": 114.994,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-whoosh-18-0",
+   "t": 116.74,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-19-0",
+   "t": 116.82,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T03-0",
+   "t": 117.65,
+   "sound": "audio/tension/T03.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q03-doorbell-21-0",
+   "t": 117.67,
+   "sound": "audio/sfx/doorbell.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-swell-20-0",
+   "t": 117.97,
+   "sound": "reverse/fs-244837-rev-cymb-23-wav-1",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q03-knock-22-0",
+   "t": 118.04,
+   "sound": "audio/sfx/knock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-1",
+   "t": 118.15,
+   "sound": "audio/sfx/knock2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-2",
+   "t": 118.26,
+   "sound": "audio/sfx/knock3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-3",
+   "t": 118.37,
+   "sound": "audio/sfx/knock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-4",
+   "t": 118.48,
+   "sound": "audio/sfx/knock2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-23-0",
+   "t": 118.57,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-5",
+   "t": 118.59,
+   "sound": "audio/sfx/knock3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-6",
+   "t": 118.7,
+   "sound": "audio/sfx/knock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-knock-22-7",
+   "t": 118.81,
+   "sound": "audio/sfx/knock2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.christof-58-0",
+   "t": 119.495,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.marina-59-0",
+   "t": 121.776,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.christof-60-0",
+   "t": 123.7825,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.marina-61-0",
+   "t": 126.1,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.christof-62-0",
+   "t": 126.9575,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.angelo-63-0",
+   "t": 127.32,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.marina-64-0",
+   "t": 130.72,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-land.christof-65-0",
+   "t": 132.145,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-26-0",
+   "t": 136.72,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-click2-27-0",
+   "t": 137.67,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-lub-28-0",
+   "t": 138.22,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-latch-29-0",
+   "t": 139.72,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03-lub-30-0",
+   "t": 142.97,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.45
+  },
+  {
+   "id": "Q03-Q03.tally-31-0",
+   "t": 143.96,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q03-Q03.tally-32-0",
+   "t": 144.0433,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.12
+  },
+  {
+   "id": "Q03-Q03.tally-33-0",
+   "t": 144.1267,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.04
+  },
+  {
+   "id": "Q03-Q03.tally-34-0",
+   "t": 144.21,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.04
+  },
+  {
+   "id": "Q03-Q03.tally-35-0",
+   "t": 144.2933,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.12
+  },
+  {
+   "id": "Q03-Q03.tally-36-0",
+   "t": 144.3767,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q03-Q03.tally-37-0",
+   "t": 144.5433,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "Q04-Q04.clink-1-0",
+   "t": 145.335,
+   "sound": "audio/sfx/clink1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3
+  },
+  {
+   "id": "Q04-Q04.clink-2-0",
+   "t": 146.485,
+   "sound": "audio/sfx/clink2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.4
+  },
+  {
+   "id": "Q04-drip-4-0",
+   "t": 147.385,
+   "sound": "audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.christof-22-0",
+   "t": 148.9475,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-Q04.clink-3-0",
+   "t": 150.685,
+   "sound": "audio/sfx/clink3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.5
+  },
+  {
+   "id": "Q04-land.deena-23-0",
+   "t": 151.935,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.christof-24-0",
+   "t": 153.835,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.kay-25-0",
+   "t": 155.8146,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.christof-26-0",
+   "t": 157.5225,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.angelo-27-0",
+   "t": 159.035,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.christof-28-0",
+   "t": 160.8225,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-Q04.clink-9-0",
+   "t": 161.785,
+   "sound": "audio/sfx/clink1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q04-Q04.wipe-10-0",
+   "t": 163.885,
+   "sound": "audio/sfx/wipe.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-Q04.wipe-10-1",
+   "t": 164.385,
+   "sound": "audio/sfx/wipe.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-Q04.tock-11-0",
+   "t": 166.055,
+   "sound": "audio/sfx/tock1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.marina-29-0",
+   "t": 166.841,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.scott-30-0",
+   "t": 167.885,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.marina-31-0",
+   "t": 170.283,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.kay-32-0",
+   "t": 171.8266,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.scott-33-0",
+   "t": 173.285,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.kay-34-0",
+   "t": 174.8766,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-thump-13-0",
+   "t": 176.905,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.4
+  },
+  {
+   "id": "Q04-land.kay-35-0",
+   "t": 177.8682,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-Q04.tick-15-0",
+   "t": 179.685,
+   "sound": "audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-flick-16-0",
+   "t": 182.055,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-whoosh-17-0",
+   "t": 182.735,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.angelo-36-0",
+   "t": 182.835,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-slap-18-0",
+   "t": 182.935,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.christof-37-0",
+   "t": 187.2975,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-land.angelo-38-0",
+   "t": 188.485,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04-riffle-19-0",
+   "t": 189.635,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04-slap-20-0",
+   "t": 190.215,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.chair-0-0",
+   "t": 191.135,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.5
+  },
+  {
+   "id": "Q05-Q05.chair-2-0",
+   "t": 191.835,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.35
+  },
+  {
+   "id": "Q05-Q05.chair-1-0",
+   "t": 192.635,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.45
+  },
+  {
+   "id": "Q05-Q05.chair-3-0",
+   "t": 192.985,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.35
+  },
+  {
+   "id": "Q05-Q05.chair-4-0",
+   "t": 193.635,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": 0.5
+  },
+  {
+   "id": "Q05-Q05.chair-5-0",
+   "t": 194.485,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.2
+  },
+  {
+   "id": "Q05-Q05.clink-6-0",
+   "t": 196.355,
+   "sound": "audio/sfx/clink2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.25
+  },
+  {
+   "id": "Q05-Q05.clink-7-0",
+   "t": 197.205,
+   "sound": "audio/sfx/clink4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q05-riffle-8-0",
+   "t": 198.485,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05-flick-10-0",
+   "t": 199.785,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-whoosh-9-0",
+   "t": 199.915,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-103-0",
+   "t": 200.285,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-104-0",
+   "t": 201.235,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-11-0",
+   "t": 202.935,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.christof-105-0",
+   "t": 203.81,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-13-0",
+   "t": 205.835,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-14-0",
+   "t": 206.135,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-15-0",
+   "t": 206.135,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-16-0",
+   "t": 206.435,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-17-0",
+   "t": 206.435,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-18-0",
+   "t": 206.735,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-19-0",
+   "t": 206.735,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-20-0",
+   "t": 207.035,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-21-0",
+   "t": 207.035,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-22-0",
+   "t": 207.335,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-23-0",
+   "t": 207.335,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-24-0",
+   "t": 207.635,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-25-0",
+   "t": 207.635,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-26-0",
+   "t": 207.935,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.scott-106-0",
+   "t": 208.285,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-27-0",
+   "t": 208.335,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-27-b",
+   "t": 208.635,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-28-0",
+   "t": 208.92,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-28-b",
+   "t": 209.22,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-29-0",
+   "t": 209.505,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-29-b",
+   "t": 209.805,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-30-0",
+   "t": 210.09,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-30-b",
+   "t": 210.39,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-31-0",
+   "t": 210.675,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-31-b",
+   "t": 210.975,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-32-0",
+   "t": 211.26,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-32-b",
+   "t": 211.56,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-33-0",
+   "t": 211.845,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-33-b",
+   "t": 212.145,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-34-0",
+   "t": 212.43,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-34-b",
+   "t": 212.73,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-35-0",
+   "t": 213.015,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.kay-107-0",
+   "t": 213.049,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-35-b",
+   "t": 213.315,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-36-0",
+   "t": 213.6,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-36-b",
+   "t": 213.9,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-37-0",
+   "t": 214.185,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-37-b",
+   "t": 214.485,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-38-0",
+   "t": 214.77,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-38-b",
+   "t": 215.07,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.scott-108-0",
+   "t": 215.285,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-39-0",
+   "t": 215.355,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-39-b",
+   "t": 215.655,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-40-0",
+   "t": 215.94,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-40-b",
+   "t": 216.24,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-41-0",
+   "t": 216.525,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.kay-109-0",
+   "t": 216.5914,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-41-b",
+   "t": 216.825,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-42-0",
+   "t": 217.11,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-42-b",
+   "t": 217.41,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-43-0",
+   "t": 217.695,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-43-b",
+   "t": 217.995,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-44-0",
+   "t": 218.28,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-44-b",
+   "t": 218.58,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-45-0",
+   "t": 218.865,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-45-b",
+   "t": 219.165,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.scott-110-0",
+   "t": 219.385,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-46-0",
+   "t": 219.45,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-46-b",
+   "t": 219.75,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-47-0",
+   "t": 220.035,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-47-b",
+   "t": 220.335,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-48-0",
+   "t": 220.62,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-48-b",
+   "t": 220.92,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-49-0",
+   "t": 221.205,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-49-b",
+   "t": 221.505,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-50-0",
+   "t": 221.79,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-50-b",
+   "t": 222.09,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.kay-111-0",
+   "t": 222.097,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-51-0",
+   "t": 222.375,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-51-b",
+   "t": 222.675,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-52-0",
+   "t": 222.96,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-52-b",
+   "t": 223.26,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-53-0",
+   "t": 223.545,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-53-b",
+   "t": 223.845,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-54-0",
+   "t": 224.13,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.dealq-54-b",
+   "t": 224.43,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-112-0",
+   "t": 224.685,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-113-0",
+   "t": 225.635,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-114-0",
+   "t": 226.685,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-115-0",
+   "t": 235.085,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-116-0",
+   "t": 236.235,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-117-0",
+   "t": 237.585,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.christof-118-0",
+   "t": 239.9975,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-119-0",
+   "t": 243.135,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.marina-120-0",
+   "t": 245.489,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.scott-121-0",
+   "t": 246.085,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-122-0",
+   "t": 247.085,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-64-0",
+   "t": 247.685,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-65-0",
+   "t": 247.885,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-66-0",
+   "t": 248.085,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-67-0",
+   "t": 248.285,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-68-0",
+   "t": 248.485,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-69-0",
+   "t": 248.685,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-70-0",
+   "t": 248.885,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-riffle-71-0",
+   "t": 249.735,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05-flick-72-0",
+   "t": 250.385,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-73-0",
+   "t": 250.685,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-75-0",
+   "t": 251.135,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-76-0",
+   "t": 251.435,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-78-0",
+   "t": 251.885,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-79-0",
+   "t": 252.185,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-81-0",
+   "t": 252.635,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-82-0",
+   "t": 252.935,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-84-0",
+   "t": 253.385,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-85-0",
+   "t": 253.685,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-flick-87-0",
+   "t": 254.135,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-slap-88-0",
+   "t": 254.435,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-123-0",
+   "t": 257.685,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-124-0",
+   "t": 258.985,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.tap-90-0",
+   "t": 259.435,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.tap-91-0",
+   "t": 259.735,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-125-0",
+   "t": 259.985,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.christof-126-0",
+   "t": 262.5725,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-127-0",
+   "t": 264.785,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.marina-128-0",
+   "t": 270.189,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-129-0",
+   "t": 271.785,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-130-0",
+   "t": 273.785,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.tap-92-0",
+   "t": 276.235,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.tap-93-0",
+   "t": 276.485,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-131-0",
+   "t": 276.485,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.deena-132-0",
+   "t": 280.385,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-land.angelo-133-0",
+   "t": 281.735,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.press-94-0",
+   "t": 282.985,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.6
+  },
+  {
+   "id": "Q05-Q05.press-95-0",
+   "t": 283.0683,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "Q05-Q05.press-96-0",
+   "t": 283.1517,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.4
+  },
+  {
+   "id": "Q05-Q05.press-97-0",
+   "t": 283.235,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.15
+  },
+  {
+   "id": "Q05-Q05.press-98-0",
+   "t": 283.3183,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05-Q05.press-99-0",
+   "t": 283.4017,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "tension-T02a-0",
+   "t": 283.5,
+   "sound": "audio/tension/T02a.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q05-land.christof-134-0",
+   "t": 286.185,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.kay-98-0",
+   "t": 290.1222,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-Q06.chair-15-0",
+   "t": 291.035,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.35
+  },
+  {
+   "id": "Q06-land.scott-99-0",
+   "t": 292.285,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.kay-100-0",
+   "t": 294.285,
+   "sound": "chime/fs-404104-glass-ding-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.scott-101-0",
+   "t": 295.735,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-Q06.step-16-0",
+   "t": 297.585,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.6
+  },
+  {
+   "id": "Q06-Q06.step-17-0",
+   "t": 298.205,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.48300000000000026
+  },
+  {
+   "id": "Q06-Q06.step-18-0",
+   "t": 298.825,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2660000000000005
+  },
+  {
+   "id": "Q06-land.kay-102-0",
+   "t": 299.0118,
+   "sound": "chime/fs-404104-glass-ding-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-Q06.step-19-0",
+   "t": 299.445,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.04900000000000082
+  },
+  {
+   "id": "Q06-Q06.step-20-0",
+   "t": 300.065,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1679999999999989
+  },
+  {
+   "id": "Q06-Q06.step-21-0",
+   "t": 300.685,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3849999999999986
+  },
+  {
+   "id": "Q06-Q06.step-22-0",
+   "t": 301.305,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "Q06-Q06.step-23-0",
+   "t": 301.885,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.11199999999999996
+  },
+  {
+   "id": "Q06-Q06.step-24-0",
+   "t": 302.505,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.18639999999999987
+  },
+  {
+   "id": "Q06-Q06.step-25-0",
+   "t": 303.125,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2607999999999998
+  },
+  {
+   "id": "Q06-Q06.step-26-0",
+   "t": 303.745,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.33519999999999966
+  },
+  {
+   "id": "Q06-Q06.step-27-0",
+   "t": 304.365,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.40959999999999963
+  },
+  {
+   "id": "Q06-Q06.step-28-0",
+   "t": 304.985,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.48399999999999943
+  },
+  {
+   "id": "Q06-Q06.farLatch-29-0",
+   "t": 306.405,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.55
+  },
+  {
+   "id": "Q06-flick-30-0",
+   "t": 308.335,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-103-0",
+   "t": 308.385,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-31-0",
+   "t": 308.535,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-32-0",
+   "t": 308.735,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-33-0",
+   "t": 308.935,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-34-0",
+   "t": 309.135,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-35-0",
+   "t": 309.335,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-riffle-36-0",
+   "t": 309.985,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06-slap-37-0",
+   "t": 310.765,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.deena-104-0",
+   "t": 311.085,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-105-0",
+   "t": 312.335,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-riffle-38-0",
+   "t": 312.905,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06-slap-39-0",
+   "t": 313.285,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-40-0",
+   "t": 313.405,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-41-0",
+   "t": 313.765,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-43-0",
+   "t": 313.955,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-44-0",
+   "t": 314.315,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-46-0",
+   "t": 314.505,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-47-0",
+   "t": 314.865,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-49-0",
+   "t": 315.055,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-50-0",
+   "t": 315.415,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-52-0",
+   "t": 315.765,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-53-0",
+   "t": 316.125,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-lub-55-0",
+   "t": 316.675,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-106-0",
+   "t": 317.085,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.christof-107-0",
+   "t": 318.2725,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-108-0",
+   "t": 319.735,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.deena-109-0",
+   "t": 322.635,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-lub-56-0",
+   "t": 325.385,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q06-flick-63-0",
+   "t": 326.985,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-57-0",
+   "t": 327.165,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-64-0",
+   "t": 327.285,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-65-0",
+   "t": 327.335,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-67-0",
+   "t": 327.615,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-66-0",
+   "t": 327.635,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-68-0",
+   "t": 327.885,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-69-0",
+   "t": 328.165,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-70-0",
+   "t": 328.335,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-71-0",
+   "t": 328.635,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-72-0",
+   "t": 328.735,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-73-0",
+   "t": 328.995,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-whoosh-89-0",
+   "t": 329.373,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-90-0",
+   "t": 329.405,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-thump-91-0",
+   "t": 329.405,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q06-land.christof-110-0",
+   "t": 330.18,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-58-0",
+   "t": 330.495,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-74-0",
+   "t": 331.185,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-75-0",
+   "t": 331.425,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-76-0",
+   "t": 331.835,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-77-0",
+   "t": 332.135,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.deena-111-0",
+   "t": 332.385,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-59-0",
+   "t": 333.745,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.christof-112-0",
+   "t": 334.3975,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-78-0",
+   "t": 335.115,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-113-0",
+   "t": 335.885,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-60-0",
+   "t": 337.155,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-79-0",
+   "t": 337.685,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-80-0",
+   "t": 337.985,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.christof-114-0",
+   "t": 338.7725,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-81-0",
+   "t": 339.485,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.marina-115-0",
+   "t": 340.693,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-82-0",
+   "t": 340.985,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-83-0",
+   "t": 341.285,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-61-0",
+   "t": 341.575,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.christof-116-0",
+   "t": 341.685,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.scott-117-0",
+   "t": 343.285,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-84-0",
+   "t": 344.235,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-85-0",
+   "t": 344.535,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-86-0",
+   "t": 345.445,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-Q06.chair-92-0",
+   "t": 346.885,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06-slap-62-0",
+   "t": 347.325,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.christof-118-0",
+   "t": 347.8475,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-flick-87-0",
+   "t": 348.585,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-land.angelo-119-0",
+   "t": 348.785,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-slap-88-0",
+   "t": 348.885,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06-Q06.step-93-0",
+   "t": 349.885,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q06-Q06.step-94-0",
+   "t": 350.415,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q06-Q06.step-95-0",
+   "t": 350.945,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q06-Q06.step-96-0",
+   "t": 351.475,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.45
+  },
+  {
+   "id": "Q06-Q06.step-97-0",
+   "t": 352.005,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.45
+  },
+  {
+   "id": "tension-T02b-0",
+   "t": 360.02,
+   "sound": "audio/tension/T02b.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q07-Q07.tally-3-0",
+   "t": 360.835,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.tally-4-0",
+   "t": 362.435,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q07-Q07.tally-5-0",
+   "t": 362.5183,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q07-Q07.tally-6-0",
+   "t": 362.6017,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.tally-7-0",
+   "t": 362.685,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.15
+  },
+  {
+   "id": "Q07-Q07.tally-8-0",
+   "t": 362.7683,
+   "sound": "tick/fs-130388-clock-ticking-3",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3
+  },
+  {
+   "id": "Q07-land.scott-23-0",
+   "t": 363.685,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.marina-24-0",
+   "t": 366.097,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-thump-9-0",
+   "t": 368.385,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "Q07-land.deena-25-0",
+   "t": 368.585,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-26-0",
+   "t": 370.535,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-27-0",
+   "t": 374.685,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.cork-15-0",
+   "t": 376.985,
+   "sound": "audio/sfx/cork.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.pour-16-0",
+   "t": 377.685,
+   "sound": "audio/sfx/pour.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07-land.deena-28-0",
+   "t": 378.785,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-drip-17-0",
+   "t": 380.085,
+   "sound": "audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-drip-18-0",
+   "t": 380.435,
+   "sound": "audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-29-0",
+   "t": 380.835,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.deena-30-0",
+   "t": 382.635,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.tally-19-0",
+   "t": 384.235,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-31-0",
+   "t": 384.235,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.deena-32-0",
+   "t": 385.785,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-33-0",
+   "t": 386.785,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.deena-34-0",
+   "t": 388.035,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.marina-35-0",
+   "t": 393.375,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-36-0",
+   "t": 395.185,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.angelo-37-0",
+   "t": 398.335,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.marina-38-0",
+   "t": 402.913,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-39-0",
+   "t": 405.485,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.marina-40-0",
+   "t": 408.627,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-41-0",
+   "t": 409.735,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.deena-42-0",
+   "t": 413.185,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-43-0",
+   "t": 414.735,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.deena-44-0",
+   "t": 416.585,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.angelo-45-0",
+   "t": 420.435,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-riffle-21-0",
+   "t": 421.635,
+   "sound": "audio/sfx/riffle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07-slap-22-0",
+   "t": 421.985,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.scott-46-0",
+   "t": 424.185,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-land.angelo-47-0",
+   "t": 425.485,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07-Q07.lub-20-0",
+   "t": 427.785,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-6-0",
+   "t": 428.795,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-7-0",
+   "t": 429.095,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-9-0",
+   "t": 429.235,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-10-0",
+   "t": 429.535,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-12-0",
+   "t": 429.675,
+   "sound": "audio/sfx/card_flick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-13-0",
+   "t": 429.975,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-15-0",
+   "t": 430.115,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-16-0",
+   "t": 430.415,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-18-0",
+   "t": 430.655,
+   "sound": "audio/sfx/card_flick4.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-19-0",
+   "t": 430.955,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-flick-21-0",
+   "t": 432.055,
+   "sound": "audio/sfx/card_flick5.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-22-0",
+   "t": 432.255,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-62-0",
+   "t": 432.275,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-lub-23-0",
+   "t": 432.295,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-63-0",
+   "t": 433.38,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-64-0",
+   "t": 434.66,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-65-0",
+   "t": 439.83,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-66-0",
+   "t": 440.94,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-Q08.chair-33-0",
+   "t": 442.005,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.45
+  },
+  {
+   "id": "Q08-land.angelo-67-0",
+   "t": 442.425,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-lub-34-0",
+   "t": 442.505,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-68-0",
+   "t": 444.325,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-69-0",
+   "t": 446.075,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.marina-70-0",
+   "t": 448.626,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-71-0",
+   "t": 449.711,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-72-0",
+   "t": 452.501,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-73-0",
+   "t": 454.061,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-74-0",
+   "t": 458.011,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-75-0",
+   "t": 460.831,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-Q08.chair-35-0",
+   "t": 463.881,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": -0.3
+  },
+  {
+   "id": "Q08-Q08.chair-36-0",
+   "t": 464.181,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": 0.35
+  },
+  {
+   "id": "Q08-Q08.chair-37-0",
+   "t": 464.531,
+   "sound": "audio/sfx/chair2.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08-Q08.chair-38-0",
+   "t": 464.831,
+   "sound": "audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "start",
+   "pan": 0.6
+  },
+  {
+   "id": "Q08-slap-39-0",
+   "t": 465.681,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-40-0",
+   "t": 466.051,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-41-0",
+   "t": 466.421,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-slap-42-0",
+   "t": 466.891,
+   "sound": "audio/sfx/card_slap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-76-0",
+   "t": 469.121,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02c-0",
+   "t": 474.31,
+   "sound": "audio/tension/T02c.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q08-lub-44-0",
+   "t": 475.931,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-0-0",
+   "t": 476.231,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.marina-78-0",
+   "t": 477.794,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-79-0",
+   "t": 478.774,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-80-0",
+   "t": 479.754,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-swell-54-0",
+   "t": 482.414,
+   "sound": "reverse/fs-148930-cymbal-hits-reversed-wav-1",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q08-land.scott-1-0",
+   "t": 482.434,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-81-0",
+   "t": 483.359,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-2-0",
+   "t": 484.109,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-82-0",
+   "t": 486.644,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-3-0",
+   "t": 487.979,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.marina-83-0",
+   "t": 490.465,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-lub-55-0",
+   "t": 492.45,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-84-0",
+   "t": 492.55,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-85-0",
+   "t": 495.325,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-86-0",
+   "t": 496.125,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-4-0",
+   "t": 497.87,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-87-0",
+   "t": 499.115,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-88-0",
+   "t": 500.225,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.marina-89-0",
+   "t": 501.463,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02a-1",
+   "t": 505.67,
+   "sound": "audio/tension/T02a.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q08-land.scott-91-0",
+   "t": 507.463,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.deena-92-0",
+   "t": 511.775,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-lub-58-0",
+   "t": 514.92,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.scott-5-0",
+   "t": 515.33,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-land.angelo-93-0",
+   "t": 517.01,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-Q08.slip-59-0",
+   "t": 519.06,
+   "sound": "audio/sfx/card_flick3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T04-0",
+   "t": 519.14,
+   "sound": "audio/tension/T04.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08-Q08.release-60-0",
+   "t": 519.1433,
+   "sound": "audio/sfx/card_slap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08-hit-61-0",
+   "t": 519.1433,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.marina-57-0",
+   "t": 522.769,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.deena-58-0",
+   "t": 525.795,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.marina-59-0",
+   "t": 527.915,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-Q09.cloth-0-0",
+   "t": 528.145,
+   "sound": "audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.4
+  },
+  {
+   "id": "Q09-Q09.cloth-1-0",
+   "t": 529.965,
+   "sound": "audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q09-land.marina-60-0",
+   "t": 532.453,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-Q09.cloth-2-0",
+   "t": 534.095,
+   "sound": "audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q09-Q09.step-3-0",
+   "t": 534.245,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q09-Q09.step-4-0",
+   "t": 534.595,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3
+  },
+  {
+   "id": "Q09-Q09.cloth-5-0",
+   "t": 534.795,
+   "sound": "audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.4
+  },
+  {
+   "id": "Q09-Q09.step-6-0",
+   "t": 534.995,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.5
+  },
+  {
+   "id": "Q09-Q09.cloth-7-0",
+   "t": 535.095,
+   "sound": "audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.5
+  },
+  {
+   "id": "Q09-shutter-9-0",
+   "t": 537.845,
+   "sound": "audio/sfx/shutter.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-hit-10-0",
+   "t": 537.845,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T05-0",
+   "t": 537.85,
+   "sound": "audio/tension/T05.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09-hit-11-0",
+   "t": 538.265,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-lub-12-0",
+   "t": 538.295,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.deena-61-0",
+   "t": 540.495,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.marina-62-0",
+   "t": 543.185,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-flick-13-0",
+   "t": 545.295,
+   "sound": "audio/sfx/card_flick1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.angelo-63-0",
+   "t": 546.345,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02b-1",
+   "t": 547.58,
+   "sound": "audio/tension/T02b.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q09-lub-14-0",
+   "t": 549.295,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.scott-65-0",
+   "t": 549.795,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.marina-64-0",
+   "t": 550.167,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.marina-66-0",
+   "t": 554.319,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.scott-67-0",
+   "t": 556.745,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.deena-68-0",
+   "t": 561.895,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-Q09.step-15-0",
+   "t": 561.945,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.5
+  },
+  {
+   "id": "Q09-land.angelo-69-0",
+   "t": 563.545,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-Q09.tally-16-0",
+   "t": 565.145,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.18
+  },
+  {
+   "id": "Q09-Q09.tally-17-0",
+   "t": 565.1658,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.06
+  },
+  {
+   "id": "Q09-Q09.tally-18-0",
+   "t": 565.2283,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.06
+  },
+  {
+   "id": "Q09-Q09.tally-19-0",
+   "t": 565.2908,
+   "sound": "tick/fs-130388-clock-ticking-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.18
+  },
+  {
+   "id": "Q09-Q09.step-20-0",
+   "t": 565.745,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-49-0",
+   "t": 565.795,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-38-0",
+   "t": 565.845,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-30-0",
+   "t": 565.965,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-21-0",
+   "t": 566.195,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-39-0",
+   "t": 566.325,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-50-0",
+   "t": 566.37,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-31-0",
+   "t": 566.525,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-22-0",
+   "t": 566.645,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-40-0",
+   "t": 566.805,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-51-0",
+   "t": 566.945,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-32-0",
+   "t": 567.085,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-23-0",
+   "t": 567.095,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-41-0",
+   "t": 567.285,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-52-0",
+   "t": 567.52,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-24-0",
+   "t": 567.545,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-33-0",
+   "t": 567.645,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-42-0",
+   "t": 567.765,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-25-0",
+   "t": 567.995,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-53-0",
+   "t": 568.095,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-34-0",
+   "t": 568.205,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-43-0",
+   "t": 568.245,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-26-0",
+   "t": 568.445,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-54-0",
+   "t": 568.67,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q09-Q09.step-44-0",
+   "t": 568.725,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-35-0",
+   "t": 568.765,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-27-0",
+   "t": 568.895,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-45-0",
+   "t": 569.205,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-36-0",
+   "t": 569.325,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-Q09.step-28-0",
+   "t": 569.345,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-46-0",
+   "t": 569.685,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-29-0",
+   "t": 569.795,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.05
+  },
+  {
+   "id": "Q09-Q09.step-37-0",
+   "t": 569.885,
+   "sound": "audio/sfx/step2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q09-lub-56-0",
+   "t": 570.095,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-Q09.step-47-0",
+   "t": 570.165,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-Q09.step-48-0",
+   "t": 570.645,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q09-land.marina-70-0",
+   "t": 571.433,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09-land.scott-71-0",
+   "t": 572.345,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.deena-27-0",
+   "t": 581.645,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.marina-28-0",
+   "t": 585.969,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-29-0",
+   "t": 590.195,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.deena-30-0",
+   "t": 591.995,
+   "sound": "audio/sfx/stamp1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-31-0",
+   "t": 592.845,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.marina-32-0",
+   "t": 594.961,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-33-0",
+   "t": 596.195,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-thump-3-0",
+   "t": 596.695,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q10-thump-4-0",
+   "t": 597.345,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q10-thump-5-0",
+   "t": 597.995,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q10-stove-6-0",
+   "t": 598.795,
+   "sound": "audio/sfx/stove.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10-land.angelo-34-0",
+   "t": 599.965,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-35-0",
+   "t": 603.045,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.deena-36-0",
+   "t": 605.295,
+   "sound": "audio/sfx/stamp2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02c-1",
+   "t": 605.78,
+   "sound": "audio/tension/T02c.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q10-hit-10-0",
+   "t": 606.815,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-gasp-11-0",
+   "t": 608.545,
+   "sound": "audio/sfx/gasp.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.marina-37-0",
+   "t": 612.469,
+   "sound": "chime/fs-127149-ding-wav-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-38-0",
+   "t": 613.145,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-thump-13-0",
+   "t": 614.445,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3
+  },
+  {
+   "id": "Q10-hit-16-0",
+   "t": 618.065,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-whoosh-15-0",
+   "t": 618.073,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-39-0",
+   "t": 618.795,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-slap-17-0",
+   "t": 620.105,
+   "sound": "audio/sfx/card_slap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-thump-18-0",
+   "t": 620.315,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q10-land.angelo-40-0",
+   "t": 620.995,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-Q10.flutter-19-0",
+   "t": 622.345,
+   "sound": "audio/sfx/flutter.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10-land.angelo-41-0",
+   "t": 624.795,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-Q10.flutter-20-0",
+   "t": 625.045,
+   "sound": "audio/sfx/flutter.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10-tally-21-0",
+   "t": 627.695,
+   "sound": "tick/fs-188033-ticking-clock-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-Q10.knife-22-0",
+   "t": 631.045,
+   "sound": "audio/sfx/knife.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T06-0",
+   "t": 631.05,
+   "sound": "audio/tension/T06.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10-land.scott-42-0",
+   "t": 631.645,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-43-0",
+   "t": 632.945,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-44-0",
+   "t": 634.045,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-45-0",
+   "t": 637.645,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-46-0",
+   "t": 639.645,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-47-0",
+   "t": 640.345,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02a-2",
+   "t": 644.03,
+   "sound": "audio/tension/T02a.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q10-land.scott-48-0",
+   "t": 645.845,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-49-0",
+   "t": 649.045,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-50-0",
+   "t": 653.645,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-51-0",
+   "t": 655.195,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-52-0",
+   "t": 656.345,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-53-0",
+   "t": 657.845,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-54-0",
+   "t": 659.645,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-55-0",
+   "t": 661.645,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-swell-26-0",
+   "t": 667.945,
+   "sound": "reverse/fs-244837-rev-cymb-23-wav-1",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q10-land.angelo-56-0",
+   "t": 668.745,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-57-0",
+   "t": 671.395,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-58-0",
+   "t": 672.945,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.scott-59-0",
+   "t": 676.945,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10-land.angelo-60-0",
+   "t": 680.645,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-66-0",
+   "t": 686.545,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-swell-0-0",
+   "t": 691.145,
+   "sound": "reverse/fs-148930-cymbal-hits-reversed-wav-1",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q11-drip-1-0",
+   "t": 696.395,
+   "sound": "audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-drip-2-0",
+   "t": 696.535,
+   "sound": "audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-latch-3-0",
+   "t": 697.945,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-lub-4-0",
+   "t": 698.965,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-67-0",
+   "t": 700.945,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-68-0",
+   "t": 702.145,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-69-0",
+   "t": 704.245,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-70-0",
+   "t": 706.045,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-71-0",
+   "t": 707.545,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-72-0",
+   "t": 710.845,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.step-5-0",
+   "t": 712.445,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q11-Q11.step-7-0",
+   "t": 712.945,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.4
+  },
+  {
+   "id": "Q11-Q11.step-6-0",
+   "t": 713.045,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.25
+  },
+  {
+   "id": "Q11-land.scott-73-0",
+   "t": 713.345,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-74-0",
+   "t": 718.345,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-75-0",
+   "t": 721.345,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-76-0",
+   "t": 723.245,
+   "sound": "audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-77-0",
+   "t": 728.345,
+   "sound": "audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-78-0",
+   "t": 732.145,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.angelo-79-0",
+   "t": 733.345,
+   "sound": "audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-80-0",
+   "t": 737.745,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-8-0",
+   "t": 744.645,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-land.scott-81-0",
+   "t": 744.745,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-9-0",
+   "t": 745.205,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-10-0",
+   "t": 745.765,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-11-0",
+   "t": 746.055,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-12-0",
+   "t": 746.615,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-13-0",
+   "t": 747.175,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-14-0",
+   "t": 747.465,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-15-0",
+   "t": 748.025,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-16-0",
+   "t": 748.585,
+   "sound": "audio/sfx/wheel1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.wheel-17-0",
+   "t": 751.715,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-spark-18-0",
+   "t": 751.825,
+   "sound": "audio/sfx/lighter_on.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-whoosh-19-0",
+   "t": 752.725,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.step-20-0",
+   "t": 752.745,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q11-Q11.step-21-0",
+   "t": 752.965,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q11-latch-23-0",
+   "t": 752.995,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.step-22-0",
+   "t": 753.185,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.3
+  },
+  {
+   "id": "Q11-Q11.step-24-0",
+   "t": 753.745,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q11-Q11.step-25-0",
+   "t": 753.925,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q11-thump-26-0",
+   "t": 754.265,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.15
+  },
+  {
+   "id": "Q11-Q11.step-27-0",
+   "t": 754.495,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.1
+  },
+  {
+   "id": "Q11-Q11.step-28-0",
+   "t": 754.895,
+   "sound": "audio/sfx/step3.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q11-Q11.step-29-0",
+   "t": 755.065,
+   "sound": "audio/sfx/step1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q11-Q11.step-30-0",
+   "t": 755.225,
+   "sound": "audio/sfx/step4.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q11-thump-31-0",
+   "t": 755.515,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.15
+  },
+  {
+   "id": "Q11-latch-32-0",
+   "t": 755.545,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.sob-33-0",
+   "t": 755.745,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-scrape-34-0",
+   "t": 756.425,
+   "sound": "audio/sfx/wheel2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T07-0",
+   "t": 756.9,
+   "sound": "audio/tension/T07.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q11-boom-35-0",
+   "t": 756.9583,
+   "sound": "audio/sfx/explosion.flac+boom/fs-636624-deep-hit-2",
+   "weight": "hero",
+   "align": "peak",
+   "visual": "cut",
+   "stop_before": true
+  },
+  {
+   "id": "Q11-glass-36-0",
+   "t": 757.0283,
+   "sound": "audio/sfx/glass2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.5
+  },
+  {
+   "id": "Q11-glass-37-0",
+   "t": 757.1183,
+   "sound": "audio/sfx/glass1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.45
+  },
+  {
+   "id": "Q11-glass-38-0",
+   "t": 757.2583,
+   "sound": "audio/sfx/glass2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.2
+  },
+  {
+   "id": "Q11-Q11.flare-40-0",
+   "t": 757.5583,
+   "sound": "audio/sfx/flare.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-thump-39-0",
+   "t": 757.9083,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.1
+  },
+  {
+   "id": "Q11-Q11.flare-41-0",
+   "t": 759.375,
+   "sound": "audio/sfx/flare.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-thump-43-0",
+   "t": 759.905,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-whoosh-42-0",
+   "t": 760.005,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.smother-44-0",
+   "t": 760.2778,
+   "sound": "audio/sfx/bodyfall.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-thump-45-0",
+   "t": 760.715,
+   "sound": "thump/fs-389665-thump-close-wav-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.cough-46-0",
+   "t": 760.885,
+   "sound": "audio/sfx/cough1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.scuff-47-0",
+   "t": 761.195,
+   "sound": "audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q11-Q11.scuff-48-0",
+   "t": 761.465,
+   "sound": "audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q11-Q11.scuff-49-0",
+   "t": 761.705,
+   "sound": "audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q11-Q11.scuff-50-0",
+   "t": 761.945,
+   "sound": "audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q11-Q11.scuff-51-0",
+   "t": 762.125,
+   "sound": "audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.15
+  },
+  {
+   "id": "Q11-thump-52-0",
+   "t": 762.425,
+   "sound": "thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-whoosh-53-0",
+   "t": 762.855,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.smother-54-0",
+   "t": 763.075,
+   "sound": "audio/sfx/bodyfall.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.cough-55-0",
+   "t": 763.655,
+   "sound": "audio/sfx/cough2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.sob-56-0",
+   "t": 764.445,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-Q11.cough-57-0",
+   "t": 765.195,
+   "sound": "audio/sfx/cough1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.cough-58-0",
+   "t": 766.495,
+   "sound": "audio/sfx/cough2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.sob-59-0",
+   "t": 767.245,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-boom-60-0",
+   "t": 768.045,
+   "sound": "audio/sfx/explosion.flac+boom/fs-636624-deep-hit-2",
+   "weight": "support",
+   "align": "peak",
+   "visual": "cut",
+   "stop_before": true
+  },
+  {
+   "id": "Q11-glass-61-0",
+   "t": 768.145,
+   "sound": "audio/sfx/glass1.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6
+  },
+  {
+   "id": "Q11-Q11.cough-62-0",
+   "t": 769.295,
+   "sound": "audio/sfx/cough1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11-Q11.sob-63-0",
+   "t": 769.845,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-Q11.sob-64-0",
+   "t": 771.245,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11-Q11.sob-65-0",
+   "t": 773.445,
+   "sound": "audio/sfx/sob.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12-latch-11-0",
+   "t": 789.695,
+   "sound": "audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-100-0",
+   "t": 795.095,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.scott-14-0",
+   "t": 800.045,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-15-0",
+   "t": 804.245,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-101-0",
+   "t": 806.645,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.scott-102-0",
+   "t": 809.145,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-103-0",
+   "t": 812.045,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T08-0",
+   "t": 816.4,
+   "sound": "audio/tension/T08.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12-Q12.creak-16-0",
+   "t": 817.545,
+   "sound": "audio/sfx/creak.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12-hit-18-0",
+   "t": 818.025,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-glass-19-0",
+   "t": 818.095,
+   "sound": "audio/sfx/glass2.flac",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.25
+  },
+  {
+   "id": "Q12-whoosh-20-0",
+   "t": 818.413,
+   "sound": "whoosh/fs-30241-swoop2g-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-hit-21-0",
+   "t": 818.465,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-swell-22-0",
+   "t": 818.795,
+   "sound": "reverse/fs-148930-cymbal-hits-reversed-wav-1",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q12-land.scott-104-0",
+   "t": 819.495,
+   "sound": "key/fs-194795-vintage-keyboard-1-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-105-0",
+   "t": 821.345,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.scott-106-0",
+   "t": 823.945,
+   "sound": "key/fs-194797-vintage-keyboard-3-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-107-0",
+   "t": 827.145,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-whoosh-23-0",
+   "t": 831.405,
+   "sound": "whoosh/fs-30240-swoop1-flac-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "tension-T02b-2",
+   "t": 838.58,
+   "sound": "audio/tension/T02b.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q12-hit-40-0",
+   "t": 839.345,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.scott-108-0",
+   "t": 839.545,
+   "sound": "key/fs-194795-vintage-keyboard-1-2",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-109-0",
+   "t": 846.245,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-land.dispatcher-110-0",
+   "t": 853.845,
+   "sound": "audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-lub-42-0",
+   "t": 860.145,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-43-0",
+   "t": 860.7572,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-44-0",
+   "t": 861.378,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-45-0",
+   "t": 862.0122,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-46-0",
+   "t": 862.6605,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-47-0",
+   "t": 862.9483,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.7499588948605476
+  },
+  {
+   "id": "Q12-lub-48-0",
+   "t": 863.3241,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-49-0",
+   "t": 863.5703,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.6823901303367952
+  },
+  {
+   "id": "Q12-lub-50-0",
+   "t": 864.0039,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-51-0",
+   "t": 864.2169,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.5255896794123696
+  },
+  {
+   "id": "Q12-lub-52-0",
+   "t": 864.7014,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-53-0",
+   "t": 864.7768,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.3450255889842495
+  },
+  {
+   "id": "Q12-lub-54-0",
+   "t": 865.4179,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-55-0",
+   "t": 865.4269,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.21707950993721498
+  },
+  {
+   "id": "Q12-land.scott-111-0",
+   "t": 865.845,
+   "sound": "key/fs-194796-vintage-keyboard-2-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-lub-56-0",
+   "t": 866.155,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-57-0",
+   "t": 866.155,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-58-0",
+   "t": 866.9692,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-59-0",
+   "t": 866.9692,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-60-0",
+   "t": 867.7925,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-61-0",
+   "t": 867.7925,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-62-0",
+   "t": 868.6253,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-63-0",
+   "t": 868.6253,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-64-0",
+   "t": 869.4677,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-65-0",
+   "t": 869.4677,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-66-0",
+   "t": 870.3203,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-67-0",
+   "t": 870.3203,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-68-0",
+   "t": 871.1833,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-69-0",
+   "t": 871.1833,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-70-0",
+   "t": 872.0571,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-71-0",
+   "t": 872.0571,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-72-0",
+   "t": 872.9423,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-73-0",
+   "t": 872.9423,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-74-0",
+   "t": 873.8391,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-75-0",
+   "t": 873.8391,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-76-0",
+   "t": 874.7481,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-77-0",
+   "t": 874.7481,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-hit-41-0",
+   "t": 875.645,
+   "sound": "hit/fs-113748-kl-ex1c-wav-3",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-lub-78-0",
+   "t": 875.6698,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-79-0",
+   "t": 875.6698,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-80-0",
+   "t": 876.6047,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-81-0",
+   "t": 876.6047,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-82-0",
+   "t": 877.5535,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-83-0",
+   "t": 877.5535,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-84-0",
+   "t": 878.5167,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-85-0",
+   "t": 878.5167,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-86-0",
+   "t": 879.495,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-87-0",
+   "t": 879.495,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-88-0",
+   "t": 880.4892,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-89-0",
+   "t": 880.4892,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-90-0",
+   "t": 881.5001,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-91-0",
+   "t": 881.5001,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-92-0",
+   "t": 882.5285,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-93-0",
+   "t": 882.5285,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-94-0",
+   "t": 883.5753,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-95-0",
+   "t": 883.5753,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "Q12-lub-96-0",
+   "t": 884.6416,
+   "sound": "audio/sfx/beat2.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": -0.08
+  },
+  {
+   "id": "Q12-lub-97-0",
+   "t": 884.6416,
+   "sound": "audio/sfx/beat.flac+thump/fs-496187-light-body-thud-on-clothing-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.2
+  },
+  {
+   "id": "tension-T09-0",
+   "t": 885.4,
+   "sound": "audio/tension/T09.wav",
+   "weight": "support",
+   "align": "end"
+  },
+  {
+   "id": "Q12-Q12.tally-98-0",
+   "t": 886.345,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12-Q12.tally-99-0",
+   "t": 886.47,
+   "sound": "tick/fs-130388-clock-ticking-1",
+   "weight": "support",
+   "align": "peak",
+   "pan": 0.35
+  }
+ ],
+ "voice": [
+  {
+   "file": "audio/voice/phone/L001.wav",
+   "start_s": 9.05
+  },
+  {
+   "file": "audio/voice/phone/L003.wav",
+   "start_s": 21.05
+  },
+  {
+   "file": "audio/voice/phone/L237.wav",
+   "start_s": 795.15
+  },
+  {
+   "file": "audio/voice/phone/L238.wav",
+   "start_s": 806.6999999999999
+  },
+  {
+   "file": "audio/voice/phone/L240.wav",
+   "start_s": 812.0999999999999
+  },
+  {
+   "file": "audio/voice/phone/L242.wav",
+   "start_s": 821.4
+  },
+  {
+   "file": "audio/voice/phone/L244.wav",
+   "start_s": 827.1999999999999
+  },
+  {
+   "file": "audio/voice/phone/L246.wav",
+   "start_s": 846.3
+  },
+  {
+   "file": "audio/voice/phone/L247.wav",
+   "start_s": 853.9
+  }
+ ]
+}

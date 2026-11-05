@@ -1,0 +1,242 @@
+<!doctype html><meta charset="utf-8"><title>F12</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 12});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f12');
+  // NEGATIVE INVERSION: what was ink is fire-core / ember (the Extra's material); what was light is ink.
+  const BX = 1330, BY = 590;                         // the blast: the back door
+  const GY = 800;                                     // where the house meets the yard
+  const poly = (pts) => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach(q => p.lineTo(q[0], q[1])); p.closePath(); return p; };
+  const rad = (x, y) => Math.hypot(x - BX, (y - BY) * 1.15);
+
+  // flat three-tone tongue, any direction (base at x,y, pointing along ang; tones outer->inner)
+  function tongue(c, x, y, w, h, ang, seed, tones) {
+    c.save(); c.translate(x, y); c.rotate(ang);
+    tones.forEach((col, k) => {
+      const sc = 1 - k * 0.27, sh = S(); const n = 9; const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const u = i / n, bx = (u - 0.5) * w * sc;
+        const t = Math.pow(Math.sin(u * Math.PI), 0.75) * h * sc * (0.5 + 0.8 * OTM.fbm(u * 3 + seed, k * 0.7, seed + k, 3));
+        pts.push([bx + (OTM.vnoise(u * 5, k, seed) - 0.5) * w * 0.14, -t]);
+      }
+      sh.M(-w * sc / 2, 0);
+      for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (i === 0) sh.L(p[0], p[1]); else { const q = pts[i - 1]; sh.Q(q[0] + (p[0] - q[0]) * 0.5, Math.min(q[1], p[1]) - h * 0.07 * sc, p[0], p[1]); } }
+      sh.L(w * sc / 2, 0).Z();
+      c.fillStyle = col; c.fill(sh.path(1.0, seed + k));
+    });
+    c.restore();
+  }
+  const INV = [C.fireMid, C.fireOuter, C.ink];     // an inverted tongue: the hot core is ink
+
+  // ================= SKY (posterised round the blast) =================
+  g.fillStyle = C.fireOuter; g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, BX, BY, [{r: 1650, color: '#C3350F'}, {r: 1250, color: C.fireMid}, {r: 820, color: C.ember}], {sy: 0.87, rough: 3, seed: 5});
+
+  // ================= THE HOUSE: an ink silhouette turned to fire-core =================
+  const HL = 360;                                     // the house's left corner
+  const house = S().poly([[HL, 268], [HL + 250, 120], [W + 40, 120], [W + 40, GY], [HL, GY]]);
+  const houseP = house.path(1.0, 7);
+  const sh2 = OTM.makeCanvas(W, H), hg = sh2.getContext('2d');
+  hg.fillStyle = C.fireMid; hg.fillRect(0, 0, W, H);
+  OTM.lightPool(hg, BX, BY, [{r: 1600, color: C.ember}, {r: 1120, color: C.fireCore}], {sy: 0.87, rough: 3, seed: 6});
+  hg.globalCompositeOperation = 'destination-in'; hg.fill(houseP);
+  g.drawImage(sh2, 0, 0);
+  g.fillStyle = C.fireCore; g.fill(S().rect(820, 52, 72, 80).path(0.8, 9));            // chimney
+  g.fillStyle = C.ink; g.fillRect(808, 44, 96, 11);
+  g.fillStyle = C.ink; g.fill(S().poly([[HL - 6, 262], [W + 40, 262], [W + 40, 275], [HL - 6, 275]]).path(0.8, 11));   // gutter
+
+  // beyond the yard: the neighbours' roof and a tree, dark things turned pale
+  { const t = S(); t.poly([[-20, 640], [60, 560], [150, 560], [230, 640], [230, 720], [-20, 720]]);
+    for (let k = 0; k < 9; k++) { const a = k / 9 * Math.PI * 2; t.circle(300 + Math.cos(a) * 52, 470 + Math.sin(a) * 58, 40 + (k % 3) * 9); }
+    t.circle(300, 470, 70).rect(292, 500, 18, 220);
+    g.fillStyle = C.ember; g.fill(t.path(1.6, 33)); }
+  // the far fence (left), its slats turned bright: count them
+  for (let i = 0; i < 8; i++) { const x = 12 + i * 42; g.fillStyle = i % 2 ? C.ember : C.fireMid; g.fill(S().poly([[x, GY], [x, 650], [x + 16, 632], [x + 32, 650], [x + 32, GY]]).path(0.8, 40 + i)); }
+  g.fillStyle = C.fireOuter; g.fillRect(0, 700, HL, 8);
+
+  // ================= YARD =================
+  g.fillStyle = C.fireMid; g.fillRect(0, GY, W, 60);
+  g.fillStyle = '#C3350F'; g.fillRect(0, GY + 46, W, 56);
+  g.fillStyle = C.fireOuter; g.fillRect(0, GY + 96, W, H - GY - 96);
+  g.fillStyle = C.ink; g.fillRect(0, GY - 3, W, 6);
+
+  // ================= WINDOWS (light -> ink), bursting =================
+  const wins = [[470, 318, 112, 122, 'up'], [1050, 318, 112, 122, 'up'], [1688, 318, 112, 122, 'up'], [905, 492, 168, 136, 'left'], [1670, 500, 160, 132, 'right']];
+  const inkMask = OTM.makeCanvas(W, H).getContext('2d'); inkMask.fillStyle = '#fff';
+  wins.forEach(([x, y, w, h, dir], i) => {
+    const p = S().rect(x, y, w, h).path(1.2, 60 + i); g.fillStyle = C.ink; g.fill(p); inkMask.fill(p);
+    { const st = []; const rs = OTM.rng('wstar' + i); for (let k = 0; k < 18; k++) { const a = k / 18 * Math.PI * 2 + (rs() - 0.5) * 0.25; const q = (k % 2 ? 0.6 + rs() * 0.1 : 0.85 + rs() * rs() * 1.6); st.push([x + w / 2 + Math.cos(a) * w * 0.72 * q, y + h / 2 + Math.sin(a) * h * 0.66 * q]); } const sp = S().poly(st).path(1.4, 77 + i); g.fillStyle = C.ink; g.fill(sp); inkMask.fill(sp); }
+    // jets of inverted tongues out of each window
+    const rr = OTM.rng('win' + i);
+    if (dir === 'up') for (let k = 0; k < 4; k++) tongue(g, x + w * (0.16 + 0.23 * k), y + 10, w * 0.4, 70 + 90 * rr(), (rr() - 0.5) * 0.4, 80 + i * 7 + k, INV);
+    if (dir === 'right') for (let k = 0; k < 5; k++) tongue(g, x + w - 14, y + h * (0.14 + 0.18 * k), h * 0.36, 120 + 120 * rr(), Math.PI / 2 - 0.25 + (rr() - 0.5) * 0.4, 90 + k, INV);
+    // what's left of the glazing bars (were dark: now bright)
+    g.fillStyle = C.fireCore; g.fill(S().poly([[x + w / 2 - 3, y + 4], [x + w / 2 + 3, y + 4], [x + w / 2 + 4, y + h * 0.5], [x + w / 2 - 2, y + h * 0.42]]).path(0.6, 66 + i));
+    g.fill(S().poly([[x + 4, y + h / 2 - 3], [x + w * 0.4, y + h / 2 - 5], [x + w * 0.38, y + h / 2 + 2], [x + 4, y + h / 2 + 3]]).path(0.6, 70 + i));
+    g.fillStyle = C.ink; g.fill(S().rect(x - 3, y + h, w + 6, 8).path(0.6, 75 + i));      // sill
+  });
+
+  // ================= THE BLAST (light -> ink) =================
+  const nS = 22, bpts = [];
+  for (let i = 0; i < nS * 2; i++) {
+    const th = i / (nS * 2) * Math.PI * 2 + (R() - 0.5) * 0.1; const c = Math.cos(th), s = Math.sin(th);
+    const wgt = 1 + 0.55 * Math.max(0, -c) - 0.32 * Math.max(0, c) - 0.12 * Math.max(0, -s) - 0.6 * Math.max(0, s) + (i % 8 === 2 && s < -0.3 ? 0.55 : 0);
+    const r = i % 2 === 0 ? (260 + 260 * R()) * wgt : (170 + 50 * R()) * wgt;
+    bpts.push([BX + c * r, BY + s * r * 0.9]);
+  }
+  const burst = S().poly(bpts);
+  const JX = 800, JY = 632;
+  const jet = S(); { const pts = []; for (let i = 0; i < 56; i++) { const a = i / 56 * Math.PI * 2; const rr = 1 + 0.3 * (OTM.fbm(Math.cos(a) * 1.7 + 3, Math.sin(a) * 1.7, 9, 3) - 0.5) * 2; pts.push([JX + Math.cos(a) * 580 * rr, JY + Math.sin(a) * 215 * rr]); } jet.poly(pts); }
+  const plume = burst.add(jet).add(S().ellipse(BX, BY + 10, 220, 200)).add(S().poly([[BX, BY - 150], [BX, BY + 190], [JX, JY + 200], [JX, JY - 200]]));
+  const plumeP = plume.path(2.4, 13);
+  const probe = OTM.makeCanvas(8, 8).getContext('2d');
+  const edgeTongue = (cx0, cy0, th, i, k) => { k = k || 1;
+    const c = Math.cos(th), s = Math.sin(th);
+    let r = 40; while (r < 1500 && probe.isPointInPath(plumeP, cx0 + c * r, cy0 + s * r)) r += 6;
+    const ex = cx0 + c * (r - 30), ey = cy0 + s * (r - 30);
+    if (ey > GY + 90) return; if (ey > GY - 10) k *= 0.55;
+    tongue(g, ex, ey, (80 + 70 * R()) * k, (90 + 150 * R()) * k, Math.atan2(s, c) + Math.PI / 2, 200 + i, INV);
+  };
+  for (let i = 0; i < 40; i++) { const th = -Math.PI * 0.5 + i / 40 * Math.PI * 1.0 + (R() - 0.5) * 0.05; edgeTongue(BX, BY, th, i, 0.7); }        // right half of the burst
+  for (let i = 0; i < 64; i++) { const th = Math.PI * 0.5 + i / 64 * Math.PI * 1.0 + (R() - 0.5) * 0.05; edgeTongue(JX, JY, th, 60 + i); } // the jet's left/upper/lower edge
+  for (let i = 0; i < 16; i++) { const th = -Math.PI * 0.95 + i / 16 * Math.PI * 0.45; edgeTongue((BX + JX) / 2, BY - 40, th, 140 + i); }  // the top saddle
+  g.fillStyle = C.ink; g.fill(plumeP); inkMask.fill(plumeP);
+  // a few long shock rays
+  [[-2.7, 0.012], [-1.95, 0.01], [-0.5, 0.012], [0.2, 0.01], [2.8, 0.012]].forEach(([th, wd]) => {
+    const L = 2400; const p = poly([[BX, BY], [BX + Math.cos(th - wd) * L, BY + Math.sin(th - wd) * L], [BX + Math.cos(th + wd) * L, BY + Math.sin(th + wd) * L]]);
+    g.fillStyle = C.ink; g.fill(p); inkMask.fill(p);
+  });
+
+  // ================= THE STEPS (four), turned bright; the doorway pours ink =================
+  g.fillStyle = C.ink; g.fill(S().rect(BX - 64, 470, 128, 232).path(1, 95));
+  for (let k = 0; k < 4; k++) {
+    const y0 = 700 + k * 25, x0 = BX - 92 - k * 36, x1 = BX + 86 + k * 8;
+    g.fillStyle = C.fireCore; g.fill(S().rect(x0, y0, x1 - x0, 25).path(0.8, 90 + k));
+    g.fillStyle = C.ink; g.fillRect(x0, y0, x1 - x0, 3);
+  }
+
+  // ================= THE BACK DOOR, blown off its hinges: four panes =================
+  g.save(); g.translate(1150, 268); g.rotate(-0.55);
+  g.fillStyle = C.fireCore; g.fill(S().rect(-56, -118, 112, 236).path(1.0, 96));
+  g.fillStyle = C.ink; [[-42, -102], [3, -102], [-42, -48], [3, -48]].forEach(([x, y], i) => g.fill(S().rect(x, y, 39, 48).path(0.8, 97 + i)));
+  g.fillRect(-56, 110, 112, 8); g.fillRect(48, -118, 8, 236);
+  g.restore();
+
+  // ================= GLASS (60 shards; polarity follows the ground they cross) =================
+  const md = inkMask.getImageData(0, 0, W, H).data; const onInk = (x, y) => { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= W || y >= H) return false; return md[(y * W + x) * 4 + 3] > 128; };
+  const shardSrc = wins.map(w => [w[0], w[1], w[2], w[3]]);
+  let nsh = 0;
+  shardSrc.forEach(([x, y, w, h], wi) => {
+    const cx = x + w / 2, cy = y + h / 2, rr = OTM.rng('shard' + wi);
+    for (let k = 0; k < 12; k++) {
+      const a = rr() * Math.PI * 2, d = 50 + rr() * 280, sx = cx + Math.cos(a) * d * 1.3, sy = cy + Math.sin(a) * d * 0.7 - rr() * 50;
+      const s = 6 + rr() * 14, rot = rr() * 6;
+      const p = poly([[sx + Math.cos(rot) * s, sy + Math.sin(rot) * s], [sx + Math.cos(rot + 2.4) * s * 0.55, sy + Math.sin(rot + 2.4) * s * 0.55], [sx + Math.cos(rot + 3.8) * s * 0.85, sy + Math.sin(rot + 3.8) * s * 0.85]]);
+      g.fillStyle = onInk(sx, sy) ? C.fireCore : C.ink; g.fill(p); nsh++;
+    }
+  });
+
+  // ================= SCOTT, thrown down the steps (ink -> fire-core) =================
+  const pose = {lean: -0.7, neck: 0.25, head: 0.3, armN: {a: 2.42, b: 0.3, hand: 'splay'}, armF: {a: 1.72, b: 0.18, hand: 'open'}, legN: {a: 2.1, b: 0.6}, legF: {a: 1.0, b: 1.5}};
+  const fig = OTM.fig.profile('scott', Object.assign({x: 0, y: 0, scale: 86, facing: 1, anchor: 'hip'}, pose));
+  let sc = fig.shape.rotate(-0.68, 0, 0); const bb = sc.bbox(); sc = sc.translate(745 - (bb.x + bb.w / 2), 612 - (bb.y + bb.h / 2));
+  // motion smear on twos: two stepped echoes trailing back toward the door
+  [[64, -26, C.fireOuter], [32, -13, C.fireMid]].forEach(([dx, dy, col]) => { g.fillStyle = col; g.fill(sc.translate(dx, dy).path(1.6, 50 + dx)); });
+  const sP = sc.path(0.8, 51);
+  g.fillStyle = C.fireCore; g.fill(sP);
+  { const t = OTM.makeCanvas(W, H), tg = t.getContext('2d'); tg.fillStyle = C.ink; tg.fill(sP); tg.globalCompositeOperation = 'destination-out'; tg.translate(-5, 3); tg.fill(sP); g.drawImage(t, 0, 0); }
+  inkMask.globalCompositeOperation = 'destination-out'; inkMask.fill(sP); inkMask.globalCompositeOperation = 'source-over';
+
+  // embers / ash in the air (ink on the bright world, fire-core on the ink)
+  const md2 = inkMask.getImageData(0, 0, W, H).data; const onInk2 = (x, y) => { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= W || y >= H) return false; return md2[(y * W + x) * 4 + 3] > 128; };
+  for (let i = 0; i < 620; i++) {
+    const a = R() * Math.PI * 2, d = Math.pow(R(), 0.55) * 1250; const x = BX - 200 + Math.cos(a) * d * 1.3, y = BY + Math.sin(a) * d * 0.72 - R() * 140;
+    if (x < 0 || x > W || y < 0 || y > H) continue;
+    if (probe.isPointInPath(sP, x, y)) continue;
+    const s = 1.2 + R() * 4.4, rot = R() * 6;
+    g.fillStyle = onInk2(x, y) ? (R() < 0.55 ? C.fireCore : C.ember) : C.ink;
+    g.fill(poly([[x + Math.cos(rot) * s, y + Math.sin(rot) * s], [x + Math.cos(rot + 2.1) * s * 0.7, y + Math.sin(rot + 2.1) * s * 0.7], [x + Math.cos(rot + 4.0) * s * 0.8, y + Math.sin(rot + 4.0) * s * 0.8]]));
+  }
+
+  // ================= FOREGROUND GRASS: heat-washed, so it inverts to ink, flattened away from the blast =================
+  g.fillStyle = C.ink;
+  for (let i = 0; i < 900; i++) {
+    const x = -60 + R() * (W + 120); const base = H + 10; const top = 905 + R() * 90 + Math.abs(x - BX) * 0.02;
+    const lean = Math.sign(x - BX || 1) * (50 + R() * 140) * (0.35 + Math.min(1, Math.abs(x - BX) / 900));
+    const w = 5 + R() * 9;
+    g.beginPath(); g.moveTo(x - w, base); g.quadraticCurveTo(x + lean * 0.25, (base + top) / 2, x + lean, top); g.lineTo(x + w, base); g.fill();
+  }
+  g.fillRect(0, 1010, W, 70);
+
+  // ================= THE MATTES BURN AWAY (the frame is paper too) =================
+  function burnMatte(top) {
+    const seed = top ? 31 : 47;
+    const ef = x => { const u = Math.abs(x - (top ? 1050 : 860)) / 960; return 34 + 140 * Math.pow(u, 1.7) + (OTM.fbm(x * 0.005, 1, seed, 4) - 0.5) * 80 + Math.max(0, OTM.vnoise(x * 0.018, 2, seed + 5) - 0.55) * 120; };
+    const pts = []; for (let x = -10; x <= W + 10; x += 5) pts.push([x, Math.max(6, ef(x))]);
+    const Y = y => top ? y : H - y;
+    const region = (off) => { const p = new Path2D(); p.moveTo(-10, Y(-5)); pts.forEach(([x, y]) => p.lineTo(x, Y(Math.max(0, y - off)))); p.lineTo(W + 10, Y(-5)); p.closePath(); return p; };
+    const edgeLine = () => { const p = new Path2D(); pts.forEach(([x, y], i) => i ? p.lineTo(x, Y(y)) : p.moveTo(x, Y(y))); return p; };
+    const M = OTM.makeCanvas(W, H), mg = M.getContext('2d');
+    mg.fillStyle = C.matte; mg.fill(region(0));
+    mg.globalCompositeOperation = 'source-atop';
+    // char bands just inside the burning edge
+    const band = (off, col) => { const p = new Path2D(); p.rect(-20, -20, W + 40, H + 40); mg.fillStyle = col; mg.save(); mg.clip(region(off)); mg.restore(); return p; };
+    mg.save(); mg.beginPath(); mg.rect(-20, -20, W + 40, H + 40); mg.clip(); 
+    [[14, '#2A0B05'], [7, C.fireOuter], [3, C.fireMid], [1.2, C.fireCore]].forEach(([off, col]) => {
+      // everything of the paper NOT inside region(off) is within `off` px of the edge
+      const t = OTM.makeCanvas(W, H), tc = t.getContext('2d'); tc.fillStyle = col; tc.fillRect(0, 0, W, H); tc.globalCompositeOperation = 'destination-out'; tc.fill(region(off));
+      mg.drawImage(t, 0, 0);
+    });
+    mg.restore();
+    // holes burning through what's left of the paper
+    const hr = OTM.rng('holes' + top);
+    for (let i = 0; i < 14; i++) {
+      const x = 60 + hr() * (W - 120), ey = ef(x), y = ey * (0.3 + hr() * 0.45), r = 4 + hr() * 12;
+      if (y < r * 2.2 || ey - y < r * 2) continue;
+      const blob = S(); const ps = []; const n = 11; for (let k = 0; k < n; k++) { const a = k / n * Math.PI * 2; const q = r * (0.6 + hr() * 0.7); ps.push([x + Math.cos(a) * q * 1.5, Y(y) + Math.sin(a) * q]); } blob.poly(ps);
+      mg.globalCompositeOperation = 'source-atop';
+      [[2.0, '#2A0B05'], [1.45, C.fireOuter], [1.2, C.fireMid], [1.08, C.fireCore]].forEach(([k, col]) => { mg.fillStyle = col; mg.fill(blob.scale(k, k, x, Y(y)).path(1.2, 120 + i)); });
+      mg.globalCompositeOperation = 'destination-out'; mg.fill(blob.path(1.2, 120 + i));
+      E.fillStyle = C.ember; E.fill(blob.scale(1.3, 1.3, x, Y(y)).path(0, 0));
+    }
+    mg.globalCompositeOperation = 'source-over';
+    // the glowing burn front, just outside the paper
+    g.save(); g.strokeStyle = C.fireCore; g.lineWidth = 3; g.lineJoin = 'round'; g.stroke(edgeLine()); g.restore();
+    E.save(); E.strokeStyle = C.ember; E.lineWidth = 9; E.stroke(edgeLine()); E.restore();
+    g.drawImage(M, 0, 0);
+    // a torn strip of matte peeling into the frame, burning along its free edges
+    const fx = top ? 1360 : 420, fl = top ? 300 : 260, fa = top ? 0.32 : -0.26;
+    const fy0 = Math.max(6, ef(fx)) - 6;
+    const flap = S(); const fp = []; const fw = 46;
+    for (let k = 0; k <= 10; k++) { const u = k / 10; fp.push([u * fl, (OTM.vnoise(u * 6, 1, seed) - 0.5) * 14]); }
+    for (let k = 10; k >= 0; k--) { const u = k / 10; fp.push([u * fl - 6, fw * (1 - u * 0.55) + (OTM.vnoise(u * 7, 3, seed) - 0.5) * 16]); }
+    flap.poly(fp);
+    const m = [Math.cos(fa), Math.sin(fa) * (top ? 1 : -1), -Math.sin(fa) * (top ? 1 : -1), Math.cos(fa) * (top ? 1 : -1), fx, Y(fy0)];
+    const fpth = flap.transform(m);
+    g.fillStyle = C.fireCore; g.fill(fpth.path(2, 180)); E.fillStyle = C.ember; E.fill(fpth.path(0, 0));
+    g.fillStyle = C.fireOuter; g.fill(flap.scale(0.97, 0.88, 0, 0).transform(m).path(1.6, 181));
+    g.fillStyle = C.matte; g.fill(flap.scale(0.94, 0.7, 0, 4).transform(m).path(1.4, 182));
+    // scraps torn off, curling and burning
+    for (let i = 0; i < 6; i++) {
+      const x = 120 + hr() * (W - 240), y = Math.max(6, ef(x)) + 30 + hr() * 120, s = 7 + hr() * 13, rot = hr() * 6;
+      const sp = S(); const ps = []; const n = 6; for (let k = 0; k < n; k++) { const a = rot + k / n * Math.PI * 2; const q = s * (0.5 + hr() * 0.7); ps.push([x + Math.cos(a) * q * 1.6, Y(y) + Math.sin(a) * q * 0.6]); } sp.poly(ps);
+      g.fillStyle = C.fireCore; g.fill(sp.scale(1.2, 1.35, x, Y(y)).path(1, 160 + i)); E.fillStyle = C.ember; E.fill(sp.scale(1.4, 1.6, x, Y(y)).path(0, 0));
+      g.fillStyle = C.matte; g.fill(sp.path(1, 170 + i));
+    }
+  }
+  burnMatte(true); burnMatte(false);
+  { const rs = OTM.rng('sparks');
+    for (let i = 0; i < 90; i++) { const top = i % 2 === 0; const x = rs() * W; const d = 10 + Math.pow(rs(), 1.8) * 170; const y = top ? 60 + d + (rs() - 0.5) * 60 : H - 70 - d + (rs() - 0.5) * 60;
+      const s = 1 + rs() * 2.4, l = 3 + rs() * 9, a = (top ? 0.4 : -0.4) + (rs() - 0.5) * 1.2;
+      g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = rs() < 0.5 ? C.fireCore : C.ember; g.fillRect(-l / 2, -s / 2, l, s); g.restore();
+      E.fillStyle = C.ember; E.fillRect(x - 3, y - 3, 6, 6); } }
+
+  f.finish({letterbox: 1.7778, vignette: 0.42, halation: 0.45, grain: 0.09});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 12', 'THE KITCHEN ERUPTS', 1.7778);
+  window.FRAME_READY = true;
+})();
+</script>

@@ -1,0 +1,208 @@
+<!doctype html><meta charset="utf-8"><title>R2 seven hands - RECOUNT</title>
+<script src="../../kit/otm.js"></script><script src="rc.js"></script><script src="people.js"></script><script src="table.js"></script><script src="cast.js"></script>
+<script>
+(async () => {
+  await RC.fonts();
+  const ctx = OTM.stage(); const { P, W, H, rgba, mix, lin, rad, pool, paper, rim, cast, blob, limb, smooth, polyPath, clamp, lerp } = RC;
+  const { LAYOUT, at, xfLocal, COSTUME, lightAt, chair, hairTop, D2R } = TBL;
+  const SHOW_SOURCE = location.hash === '#source';
+  const L = { x: 950, y: 600, r: 690, core: 0.42 };      // the pendant, straight above the table (projected)
+  const LIGHT = { x: L.x, y: L.y };
+  const HS = 80; // head width from above
+
+  // ======================= THE NIGHT: THE COUNT (orthographic overhead) =======================
+  const src = RC.cv(), g = src.getContext('2d');
+  // floorboards
+  g.fillStyle = mix(P.walnut, '#000000', 0.2); g.fillRect(0, 0, W, H);
+  (() => { const r = OTM.rng('boards'); for (let y = -20; y < H; y += 54) { let x = -r() * 300; while (x < W) { const w = 260 + r() * 420; const c = mix(P.walnut, r() < 0.5 ? '#000000' : '#6A4528', r() * 0.25);
+    g.fillStyle = c; g.fillRect(x, y, w - 2, 52); g.fillStyle = 'rgba(0,0,0,0.5)'; g.fillRect(x + w - 2, y, 2, 52);
+    g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 1; for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(x, y + 8 + k * 11 + r() * 4); g.bezierCurveTo(x + w * 0.3, y + 6 + k * 11 + r() * 8, x + w * 0.6, y + 10 + k * 11, x + w, y + 8 + k * 11 + r() * 4); g.stroke(); } x += w; } g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillRect(0, y + 52, W, 2); } })();
+  (() => { const rp = new Path2D(); rp.ellipse(LAYOUT.c[0], LAYOUT.c[1], 560, 520, 0, 0, Math.PI * 2); paper(g, rp, '#3A2A24', { shade: (h) => { h.strokeStyle = 'rgba(0,0,0,0.25)'; h.lineWidth = 10; h.beginPath(); h.ellipse(LAYOUT.c[0], LAYOUT.c[1], 520, 480, 0, 0, Math.PI * 2); h.stroke(); RC.texture(h, 0.5, 'overlay'); } }); })();
+
+  // chairs (six: the gap has none)
+  LAYOUT.seats.forEach(s => { if (s.id !== 'GAP') chair(g, s, L); });
+
+  const people = {};
+  LAYOUT.seats.forEach(s => { if (s.id === 'GAP') return; const ang = (s.a + 180) * D2R, [hx, hy] = at(s.a, LAYOUT.seatR); people[s.id] = { s, ang, hx, hy, X: xfLocal(hx, hy, ang) }; });
+  const clothShade = (p) => (h) => { const lk = lightAt(L, p.hx, p.hy); const [a, b] = p.X(0, -HS * 0.8), [c, d] = p.X(0, HS * 0.5);
+    h.fillStyle = lin(h, a, b, c, d, [[0, '#000000', 0.5], [0.6, P.tungsten, 0.1 * lk], [1, P.tcore, 0.28 * lk]]); h.fillRect(0, 0, W, H); };
+  Object.values(people).forEach(p => {
+    const c = COSTUME[p.s.id], X = p.X, s = HS;
+    const sh = polyPath(smooth([X(-s * 1.38, s * 0.05), X(-s * 1.25, -s * 0.42), X(-s * 0.6, -s * 0.66), X(0, -s * 0.7), X(s * 0.6, -s * 0.66), X(s * 1.25, -s * 0.42), X(s * 1.38, s * 0.05), X(s * 1.0, s * 0.35), X(0, s * 0.42), X(-s * 1.0, s * 0.35)], true, 6));
+    paper(g, sh, mix(c.cloth, '#000000', 0.2), { shadow: { dx: (p.hx - L.x) * 0.04, dy: (p.hy - L.y) * 0.04, blur: 22, alpha: 0.75 }, shade: (h) => {
+      clothShade(p)(h);
+      if (c.rib) { h.strokeStyle = 'rgba(0,0,0,0.2)'; h.lineWidth = 1.6; for (let i = -14; i <= 14; i++) { const [a, b] = X(i * s * 0.09, -s * 0.7), [cc, d] = X(i * s * 0.09, s * 0.42); h.beginPath(); h.moveTo(a, b); h.lineTo(cc, d); h.stroke(); } }
+      if (c.cord) { h.strokeStyle = 'rgba(0,0,0,0.26)'; h.lineWidth = 1.2; for (let i = -24; i <= 24; i++) { const [a, b] = X(i * s * 0.05, -s * 0.7), [cc, d] = X(i * s * 0.05, s * 0.42); h.beginPath(); h.moveTo(a, b); h.lineTo(cc, d); h.stroke(); } }
+      if (c.tee) { const tp = polyPath([X(-s * 0.32, -s * 0.2), X(s * 0.32, -s * 0.2), X(s * 0.22, s * 0.36), X(-s * 0.22, s * 0.36)], true); h.fillStyle = mix(P.tee, '#000000', 0.15); h.fill(tp); }
+      if (p.s.id === 'kay') { h.strokeStyle = 'rgba(0,0,0,0.3)'; h.lineWidth = 2; const [a, b] = X(-s * 0.9, -s * 0.5), [cc, d] = X(-s * 0.3, s * 0.4); h.beginPath(); h.moveTo(a, b); h.lineTo(cc, d); h.stroke(); } // trench seam
+      RC.texture(h, 0.35, 'overlay');
+    }, rim: { dx: L.x - p.hx, dy: L.y - p.hy, w: 2, color: P.tcore, alpha: 0.4 * lightAt(L, p.hx, p.hy) } });
+  });
+  // the table
+  const tp = new Path2D(); tp.arc(LAYOUT.c[0], LAYOUT.c[1], LAYOUT.tr, 0, Math.PI * 2);
+  paper(g, tp, mix(P.walnut, '#6A4528', 0.35), { shadow: { dx: 0, dy: 0, blur: 40, alpha: 0.8 }, shade: (h) => {
+    const r = OTM.rng('grain-t'); h.strokeStyle = 'rgba(0,0,0,0.13)'; h.lineWidth = 1.5; for (let i = 0; i < 70; i++) { const y = LAYOUT.c[1] - 300 + i * 8.6 + r() * 3; h.beginPath(); h.moveTo(600, y); h.bezierCurveTo(800, y + (r() - 0.5) * 20, 1100, y + (r() - 0.5) * 20, 1320, y + (r() - 0.5) * 8); h.stroke(); }
+    h.strokeStyle = 'rgba(0,0,0,0.35)'; h.lineWidth = 6; h.beginPath(); h.arc(LAYOUT.c[0], LAYOUT.c[1], LAYOUT.tr - 4, 0, Math.PI * 2); h.stroke();
+    h.strokeStyle = rgba(P.tcore, 0.25); h.lineWidth = 1.5; h.beginPath(); h.arc(LAYOUT.c[0], LAYOUT.c[1], LAYOUT.tr - 9, Math.PI * 0.9, Math.PI * 1.8); h.stroke();
+  } });
+  // wine ring, the crisps bowl (nudged off the leader's path)
+  (() => { const [x, y] = [LAYOUT.c[0] - 140, LAYOUT.c[1] + 60]; g.save(); g.strokeStyle = rgba(P.wineRing, 0.35); g.lineWidth = 3; g.beginPath(); g.arc(x, y, 17, 0.3, 5.6); g.stroke(); g.restore();
+    const bx = LAYOUT.c[0] - 58, by = LAYOUT.c[1] + 14; const bowl = new Path2D(); bowl.arc(bx, by, 58, 0, Math.PI * 2);
+    paper(g, bowl, '#D8D2C6', { shadow: { dx: (bx - L.x) * 0.06 + 4, dy: (by - L.y) * 0.06 + 6, blur: 14, alpha: 0.6 }, shade: (h) => {
+      h.fillStyle = rad(h, bx - 10, by - 12, 10, 66, [[0, '#FFFFFF', 0.3], [1, '#000000', 0.25]]); h.fillRect(bx - 70, by - 70, 140, 140);
+      const inner = new Path2D(); inner.arc(bx, by, 47, 0, Math.PI * 2); h.fillStyle = '#B9A88E'; h.fill(inner);
+      const r = OTM.rng('crisps'); for (let i = 0; i < 44; i++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 41, x = bx + Math.cos(a) * d, y = by + Math.sin(a) * d; h.fillStyle = mix('#E8C25A', '#B8862A', r()); h.beginPath(); h.ellipse(x, y, 7 + r() * 5, 5 + r() * 3, r() * 3, 0, Math.PI * 2); h.fill(); h.strokeStyle = 'rgba(80,50,10,0.35)'; h.lineWidth = 1; h.stroke(); }
+    } }); })();
+
+  // seven piles (Deena's own pile sits a little to her right, clear of her pointing arm)
+  const piles = LAYOUT.seats.map((s) => ({ s, p: at(s.a, LAYOUT.pileR), rot: (s.a + 90) * D2R }));
+  const PD = piles.find(q => q.s.id === 'deena'); PD.p = [PD.p[0] - 66, PD.p[1] + 20];
+  function cardBack(g, x, y, rot, a) { g.save(); g.translate(x, y); g.rotate(rot); const w = 46, h = 66; g.globalAlpha = a == null ? 1 : a;
+    const cp = new Path2D(); cp.roundRect(-w / 2, -h / 2, w, h, 4); g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 6; g.shadowOffsetX = (x - L.x) * 0.012 + 1; g.shadowOffsetY = (y - L.y) * 0.012 + 2;
+    g.fillStyle = '#F2ECDF'; g.fill(cp); g.shadowColor = 'transparent'; const ip = new Path2D(); ip.roundRect(-w / 2 + 4, -h / 2 + 4, w - 8, h - 8, 2); g.fillStyle = P.cardBack; g.fill(ip);
+    g.save(); g.clip(ip); g.strokeStyle = 'rgba(200,215,240,0.35)'; g.lineWidth = 1; for (let k = -12; k < 12; k++) { g.beginPath(); g.moveTo(-w, k * 7); g.lineTo(w, k * 7 + w); g.stroke(); g.beginPath(); g.moveTo(-w, k * 7 + w); g.lineTo(w, k * 7); g.stroke(); } g.restore();
+    g.restore(); }
+  piles.forEach((pl, i) => { const r = OTM.rng('pile' + i); for (let k = 0; k < 5; k++) { const sp = (k - 2) * 5; cardBack(g, pl.p[0] + Math.cos(pl.rot) * sp + (r() - 0.5) * 4, pl.p[1] + Math.sin(pl.rot) * sp + (r() - 0.5) * 4, pl.rot + (k - 2) * 0.09 + (r() - 0.5) * 0.06); } });
+  // glasses (six: one per seated guest)
+  function glass(g, x, y, fill) { const gp = new Path2D(); gp.arc(x, y, 19, 0, Math.PI * 2);
+    g.save(); g.filter = 'blur(5px)'; g.fillStyle = 'rgba(0,0,0,0.45)'; g.beginPath(); g.arc(x + (x - L.x) * 0.05 + 3, y + (y - L.y) * 0.05 + 4, 20, 0, Math.PI * 2); g.fill(); g.restore();
+    g.save(); g.fillStyle = 'rgba(230,238,245,0.12)'; g.fill(gp); g.strokeStyle = 'rgba(240,235,225,0.75)'; g.lineWidth = 2; g.stroke(gp);
+    g.fillStyle = mix(P.wine, '#000000', 0.1); g.beginPath(); g.arc(x, y, 13 * fill, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,240,220,0.9)'; g.beginPath(); g.ellipse(x - 7, y - 8, 5, 2.2, -0.6, 0, Math.PI * 2); g.fill(); g.restore(); }
+  Object.values(people).forEach(p => { const [x, y] = p.X(HS * 1.0, HS * 2.25); glass(g, x, y, p.s.id === 'deena' ? 0.6 : 0.85); });
+
+  // arms + hands on the table (the detailed hand rig, seen from above)
+  const armShade = (p) => (h) => { const lk = lightAt(L, p.hx, p.hy); h.fillStyle = rad(h, L.x, L.y, 60, L.r, [[0, P.tcore, 0.35 * lk], [1, '#000000', 0.45]]); h.fillRect(0, 0, W, H); };
+  function arm(p, side, wrist, pose, extra) {
+    extra = extra || {}; const c = COSTUME[p.s.id], X = p.X, s = HS; const sh = X(side * s * 1.15, -s * 0.05), el = extra.el || X(side * s * (1.2 + (extra.elbowOut || 0)), s * 1.0), wr = wrist;
+    const roll = c.sleeve === 'roll' ? 0.35 : 0.85;
+    const fore = CAST.sweep([[el[0], el[1], s * 0.22], [lerp(el[0], wr[0], 0.5), lerp(el[1], wr[1], 0.5), s * 0.2], [wr[0], wr[1], s * 0.15]]).path;
+    const sleeve = CAST.sweep([[sh[0], sh[1], s * 0.34], [el[0], el[1], s * 0.29], [lerp(el[0], wr[0], roll), lerp(el[1], wr[1], roll), s * 0.24]], { capEnd: false }).path;
+    paper(g, fore, mix(c.skin, '#000000', 0.15), { shadow: { dx: (p.hx - L.x) * 0.03, dy: (p.hy - L.y) * 0.03, blur: 12, alpha: 0.6 }, shade: armShade(p) });
+    paper(g, sleeve, mix(c.cloth, '#000000', 0.15), { shadow: { dx: (p.hx - L.x) * 0.03, dy: (p.hy - L.y) * 0.03, blur: 14, alpha: 0.65 }, shade: (h) => { armShade(p)(h); RC.texture(h, 0.3, 'overlay'); },
+      rim: { dx: L.x - el[0], dy: L.y - el[1], w: 1.8, color: P.tcore, alpha: 0.5 * lightAt(L, el[0], el[1]) } });
+    const a = Math.atan2(wr[1] - el[1], wr[0] - el[0]) + (extra.da || 0);
+    return CAST.hand(g, Object.assign({ x: wr[0], y: wr[1], s: s * 1.08, a, side: side > 0 ? 1 : -1, skin: c.skin, light: LIGHT, k: clamp(lightAt(L, wr[0], wr[1]) * 1.1, 0.15, 1), amb: 0.5, pose: 'flat',
+      shadow: { dx: (wr[0] - L.x) * 0.03 + 2, dy: (wr[1] - L.y) * 0.03 + 3, blur: 9, alpha: 0.6 }, nails: c.nails || null, rings: c.rings && side > 0 ? [1, 2, 3] : null }, pose));
+  }
+  const pt = (id, x, y) => people[id].X(x * HS, y * HS);
+  const P_ = people;
+  // Scott: left hand flat by his pile, right hand loose, short of the gap
+  arm(P_.scott, -1, pt('scott', -0.7, 2.05), { pose: 'relaxed', da: 0.1 });
+  arm(P_.scott, 1, pt('scott', 0.95, 1.8), { pose: 'relaxed', da: -0.25 });
+  // Kay (rain-slate): one hand round her glass, the other flat; red nails
+  arm(P_.kay, 1, pt('kay', 0.72, 1.95), { pose: 'relaxed', da: -0.3 });
+  arm(P_.kay, -1, pt('kay', -0.8, 1.85), { pose: 'flat', da: 0.2 });
+  // Marina (oxblood knit): hands squared in front, rings on the right
+  arm(P_.marina, 1, pt('marina', 0.38, 2.0), { pose: 'flat', da: -0.6 });
+  arm(P_.marina, -1, pt('marina', -0.42, 2.0), { pose: 'flat', da: 0.6 });
+  // Christof (bottle-green cord): a biscuit in his hand
+  arm(P_.christof, 1, pt('christof', 0.85, 1.85), { pose: 'grip', da: -0.2 });
+  arm(P_.christof, -1, pt('christof', -0.9, 1.9), { pose: 'flat', da: 0.2 });
+  (() => { const [x, y] = pt('christof', 1.1, 2.42); g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 6; g.shadowOffsetX = 2; g.shadowOffsetY = 3; g.fillStyle = '#C8955A'; g.beginPath(); g.arc(x, y, 15, 0, Math.PI * 2); g.fill(); g.shadowColor = 'transparent'; g.fillStyle = '#E0B070'; g.beginPath(); g.arc(x - 2, y - 2, 11, 0, Math.PI * 2); g.fill(); g.fillStyle = '#7A4A20'; for (let k = 0; k < 5; k++) { g.beginPath(); g.arc(x - 6 + (k % 3) * 6, y - 4 + Math.floor(k / 3) * 7, 1.4, 0, 7); g.fill(); } g.restore(); })();
+  // Angelo (card-back navy): the cards left in his hand - a fanned deck in his left, his right resting by his pile
+  arm(P_.angelo, 1, pt('angelo', 0.8, 2.0), { pose: 'relaxed', da: -0.3 });
+  const fanAt = pt('angelo', -0.55, 2.05);
+  (() => { const base = P_.angelo.ang; for (let k = 0; k < 9; k++) { const a = base - 0.75 + k * 0.17; const [x, y] = [fanAt[0] + Math.cos(a) * 30, fanAt[1] + Math.sin(a) * 30]; cardBack(g, x, y, a + Math.PI / 2, 1); } })();
+  arm(P_.angelo, -1, fanAt, { pose: { F: [{ b: [0.5, 1.1, 0.7], f: [0.8, 0.6, 0.5] }, { b: [0.5, 1.1, 0.7], f: [0.8, 0.6, 0.5] }, { b: [0.55, 1.1, 0.7], f: [0.78, 0.58, 0.48] }, { b: [0.6, 1.1, 0.7], f: [0.75, 0.55, 0.45] }], T: { a: 0.4, b: [0.2, 0.15], f: [1, 1], l: 1.1 } }, da: 0.2 }, { el: pt('angelo', -1.25, 1.05) });
+  // the thumb pinning the fan
+  (() => { const a = P_.angelo.ang; const [x, y] = [fanAt[0] + Math.cos(a) * 18, fanAt[1] + Math.sin(a) * 18]; const tp2 = CAST.sweep([[fanAt[0], fanAt[1], 9], [x, y, 7.5]]).path; CAST.form(g, tp2, { light: LIGHT, cx: x, cy: y, base: mix(P.skin.angelo, P.umber, 0.5), lit: mix(P.skin.angelo, P.tungsten, 0.25), band: 6, soft: 4, ao: 0.4, rimC: P.tcore, rimA: 0.6 }); })();
+  // Deena: leaning in, her left arm out across the table, fingertip aimed at the seventh pile
+  const pile7 = piles.find(q => q.s.id === 'GAP').p;
+  const TXT_END = [700, 158];
+  let TIP = null;
+  (() => { const p = P_.deena; const sh = p.X(-HS * 1.15, -HS * 0.05);
+    const dx = pile7[0] - TXT_END[0], dy = pile7[1] - TXT_END[1], d = Math.hypot(dx, dy), ux = dx / d, uy = dy / d;
+    // the point on the text->pile line at arm's reach from her shoulder (≈ 300 px): the hand points along that line
+    let best = null; for (let t = 0; t < d; t += 2) { const x = TXT_END[0] + ux * t, y = TXT_END[1] + uy * t, rr = Math.hypot(x - sh[0], y - sh[1]); if (rr > 300) { best = [x, y]; break; } }
+    const wr = [best[0] - ux * 72, best[1] - uy * 72]; const el = [lerp(sh[0], wr[0], 0.5) + 10, lerp(sh[1], wr[1], 0.5) - 6];
+    const geo = arm(p, -1, wr, { pose: { F: [{ b: [0.0, 0.02, 0.02], f: [1, 1, 1] }, { b: [0.7, 1.3, 0.8], f: [0.62, 0.45, 0.4] }, { b: [0.75, 1.3, 0.8], f: [0.6, 0.45, 0.4] }, { b: [0.8, 1.3, 0.8], f: [0.58, 0.42, 0.38] }], T: { a: 0.45, b: [0.35, 0.3], f: [0.9, 0.8] } }, spread: 0.6, da: Math.atan2(uy, ux) - Math.atan2(wr[1] - el[1], wr[0] - el[0]) }, { el });
+    const t3 = geo.fingers[0].w[3]; TIP = [t3[0], t3[1]];
+    arm(p, 1, pt('deena', 0.9, 1.7), { pose: 'flat', da: -0.2 }); })();
+
+  // heads (identity lives in the silhouette)
+  Object.values(people).forEach(p => { const nk = new Path2D(); const [nx, ny] = p.X(0, -HS * 0.2); nk.arc(nx, ny, HS * 0.3, 0, 7); g.fillStyle = mix(COSTUME[p.s.id].skin, '#000000', 0.5); g.fill(nk);
+    hairTop(g, p.s.id, p.X, HS, L, p.hx, p.hy); });
+  // Scott's cowlick catches the pendant: a bright rim on the flick
+  (() => { const p = P_.scott, s = HS, X = p.X; const [a, b] = X(-s * 0.02, -s * 0.12), [c, d] = X(s * 0.22, -s * 0.42), [e, f] = X(s * 0.14, -s * 0.06); const pp = new Path2D(); pp.moveTo(a, b); pp.quadraticCurveTo(c, d, ...X(s * 0.4, -s * 0.22)); pp.quadraticCurveTo(e, f, a, b);
+    rim(g, pp, { dx: L.x - p.hx, dy: L.y - p.hy, w: 2.6, color: '#FFE6B8', alpha: 1, glow: 0.5 }); })();
+
+  // ---- light: the pendant pool; outside it everything sinks to umber ----
+  g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = rad(g, L.x, L.y, L.r * 0.1, L.r * 1.22, [[0, '#FFF4E4'], [0.45, '#F2DCC0'], [0.62, '#C8A280'], [0.76, '#5A4030'], [1, '#140E0A']]); g.fillRect(0, 0, W, H); g.restore();
+  g.save(); g.globalCompositeOperation = 'soft-light'; g.fillStyle = rad(g, L.x, L.y, 0, L.r * 0.7, [[0, P.tcore, 0.75], [1, P.tcore, 0]]); g.fillRect(0, 0, W, H); g.restore();
+  // the gap: a 4% tungsten-core lift where the seventh place would be - warm before it is understood
+  pool(g, ...at(LAYOUT.seats[1].a, LAYOUT.seatR - 10), 190, P.tcore, 0.04, { core: 0.2 });
+  RC.texture(g, 0.2, 'soft-light');
+
+  if (SHOW_SOURCE) { ctx.drawImage(src, 0, 0); window.FRAME_READY = true; return; }
+
+  // ======================= EXHIBIT 01: the freeze becomes a halftone print lying on a desk under the same pendant =======================
+  // the desk: walnut, the pendant's hot spot and fall-off across it
+  ctx.fillStyle = '#0E0907'; ctx.fillRect(0, 0, W, H);
+  (() => { const r = OTM.rng('desk'); ctx.save(); for (let i = 0; i < 90; i++) { const y = i * 12 + r() * 6; ctx.strokeStyle = rgba(r() < 0.5 ? '#000000' : '#6A4528', 0.12 + r() * 0.12); ctx.lineWidth = 1 + r() * 2.5; ctx.beginPath(); ctx.moveTo(-20, y); ctx.bezierCurveTo(600, y + (r() - 0.5) * 24, 1300, y + (r() - 0.5) * 24, W + 20, y + (r() - 0.5) * 10); ctx.stroke(); } ctx.restore(); })();
+  ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = rad(ctx, 900, 470, 0, 1250, [[0, '#B07A48', 0.75], [0.3, '#7A4E2C', 0.45], [0.65, '#3A2416', 0.2], [1, '#000000', 0]]); ctx.fillRect(0, 0, W, H); ctx.restore();
+  RC.texture(ctx, 0.5, 'overlay');
+  const PS = 0.826, PR = -1.2 * D2R, pcx = W / 2 + 8, pcy = H / 2 + 14; // print scale, rotation, centre
+  ctx.save(); ctx.translate(pcx, pcy); ctx.rotate(PR); ctx.scale(PS, PS); ctx.translate(-W / 2, -H / 2);
+  // print shadow on the desk, deeper under the lifted bottom-right corner
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 12; ctx.shadowOffsetY = 16; ctx.fillStyle = P.card; ctx.fillRect(-30, -30, W + 60, H + 60); ctx.restore();
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.filter = 'blur(26px)'; ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.beginPath(); ctx.moveTo(W - 380, H + 30); ctx.lineTo(W + 30, H - 300); ctx.lineTo(W + 90, H + 40); ctx.lineTo(W - 300, H + 100); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.fillStyle = P.card; ctx.fillRect(-30, -30, W + 60, H + 60);
+  // the tint: the print is hand-coloured, a wash of the frame's own colour under the ink
+  const tint = RC.cv(), tg = tint.getContext('2d'); tg.fillStyle = P.card; tg.fillRect(0, 0, W, H); tg.globalCompositeOperation = 'multiply'; tg.filter = 'saturate(1.12) brightness(1.62) contrast(0.95)'; tg.globalAlpha = 0.85; tg.drawImage(src, 0, 0);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip(); ctx.drawImage(tint, 0, 0);
+  // halftone: fine and crisp inside the pendant pool, coarse only in the fall-off
+  const prep = RC.cv(); prep.getContext('2d').drawImage(src, 0, 0);
+  const fine = RC.cv(), fg = fine.getContext('2d'); RC.halftone(fg, prep, { step: 3.5, angle: Math.PI / 4, gamma: 1.12, levels: [0.03, 0.52, 0.62], ink: P.pip, preBlur: 0.4, maxR: 0.78 });
+  fg.globalCompositeOperation = 'destination-in'; fg.fillStyle = rad(fg, L.x, L.y, 360, 600, [[0, '#000', 1], [1, '#000', 0]]); fg.fillRect(0, 0, W, H);
+  const coarse = RC.cv(), cg = coarse.getContext('2d'); RC.halftone(cg, prep, { step: 6.6, angle: Math.PI / 4, gamma: 1.0, levels: [0.02, 0.46, 0.6], ink: P.pip, preBlur: 1.2, maxR: 0.76 });
+  cg.globalCompositeOperation = 'destination-out'; cg.fillStyle = rad(cg, L.x, L.y, 360, 600, [[0, '#000', 1], [1, '#000', 0]]); cg.fillRect(0, 0, W, H);
+  ctx.drawImage(coarse, 0, 0); ctx.drawImage(fine, 0, 0); ctx.restore();
+  // print border + metadata
+  ctx.strokeStyle = rgba(P.pip, 0.5); ctx.lineWidth = 2; ctx.strokeRect(0, 0, W, H);
+  RC.monoText(ctx, 'EXHIBIT 01 · THE COUNT · OVERHEAD ORTHO 1:20 · 20:58:16.04', 0, H + 24, { size: 17, weight: 500, tracking: 2, alpha: 0.85, color: P.pip });
+  RC.monoText(ctx, 'FRAME 004 917', W, H + 24, { size: 17, weight: 500, tracking: 2, alpha: 0.85, color: P.pip, align: 'right' });
+  // the record measures the empty place between Scott's chair and Angelo's: a straight dimension line, end ticks
+  (() => { const [gx, gy] = at(LAYOUT.seats[1].a, LAYOUT.seatR); const tx = -Math.sin(LAYOUT.seats[1].a * D2R), ty = Math.cos(LAYOUT.seats[1].a * D2R), half = 138;
+    const a = [gx - tx * half, gy - ty * half], b = [gx + tx * half, gy + ty * half];
+    ctx.save(); ctx.strokeStyle = rgba(P.card, 0.95); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    const nx = Math.cos(LAYOUT.seats[1].a * D2R) * 14, ny = Math.sin(LAYOUT.seats[1].a * D2R) * 14;
+    [a, b].forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(x - nx, y - ny); ctx.lineTo(x + nx, y + ny); ctx.stroke(); });
+    [[a, 1], [b, -1]].forEach(([[x, y], sg]) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sg * tx * 12 + ny * 0.3, y + sg * ty * 12 - nx * 0.3); ctx.moveTo(x, y); ctx.lineTo(x + sg * tx * 12 - ny * 0.3, y + sg * ty * 12 + nx * 0.3); ctx.stroke(); });
+    ctx.restore();
+    ctx.save(); ctx.font = RC.font(600, 29, 'IBM Plex Mono'); ctx.letterSpacing = '1.5px'; const label = 'NO CHAIR · 0.62 m', lw = ctx.measureText(label).width; const lx = gx + 30, ly = gy + 12;
+    ctx.fillStyle = rgba(P.pip, 0.78); ctx.fillRect(lx - 10, ly - 30, lw + 20, 42); ctx.fillStyle = P.card; ctx.fillText(label, lx, ly); ctx.restore(); })();
+  // Deena's line, annotating the seventh pile: one clean leader from her words, through her fingertip, to the pile
+  (() => { ctx.save(); ctx.font = RC.font(800, 70, 'Barlow Condensed'); ctx.letterSpacing = '1.4px'; const tw = ctx.measureText("WHO'S THAT FOR?").width; ctx.restore();
+    const tx = TXT_END[0] - tw - 14, ty = TXT_END[1] + 22;
+    RC.sayDeena(ctx, "Who's that for?", tx, ty, { size: 70, scrim: false });
+    ctx.save(); ctx.strokeStyle = P.marker; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(TXT_END[0], TXT_END[1]); ctx.lineTo(TIP[0], TIP[1]); ctx.lineTo(pile7[0], pile7[1]); ctx.stroke();
+    ctx.fillStyle = P.marker; ctx.beginPath(); ctx.arc(TXT_END[0], TXT_END[1], 4, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(TIP[0], TIP[1], 3, 0, 7); ctx.fill();
+    ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(pile7[0], pile7[1], 9, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(pile7[0], pile7[1], 3, 0, 7); ctx.fill(); ctx.restore(); })();
+  // evidence tents 1-7, each on the table in front of its pile (counting from Scott round to the gap)
+  const TENT = { scott: [0, -74], kay: [0.0, -70], marina: [0, -70], deena: [-0.2, -58], christof: [-0.1, -66], angelo: [0, -72], GAP: [-0.25, 34] };
+  ['scott', 'kay', 'marina', 'deena', 'christof', 'angelo', 'GAP'].forEach((id, i) => { const pl = piles.find(q => q.s.id === id); const [da, dr] = TENT[id]; const a = pl.s.a * D2R + da; const r0 = Math.hypot(pl.p[0] - LAYOUT.c[0], pl.p[1] - LAYOUT.c[1]) + dr;
+    let x = LAYOUT.c[0] + Math.cos(a) * r0, y = LAYOUT.c[1] + Math.sin(a) * r0 + 26; if (id === 'deena') { x = PD.p[0] - 78; y = PD.p[1] + 36; } RC.tent(ctx, x, y, i + 1, { s: 1.08, rot: (OTM.rng('t' + i)() - 0.5) * 0.12, shLen: 6 }); });
+  // the exhibit label, stuck on the print
+  (() => { const x = 54, y = H - 158; ctx.save(); ctx.translate(x, y); ctx.rotate(0.6 * D2R); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 3;
+    ctx.fillStyle = P.marker; ctx.fillRect(0, 0, 700, 110); ctx.shadowColor = 'transparent';
+    ctx.fillStyle = P.pip; ctx.font = RC.font(600, 20, 'IBM Plex Mono'); ctx.letterSpacing = '3px'; ctx.fillText('EXHIBIT 01', 24, 34);
+    ctx.font = RC.font(600, 40, 'IBM Plex Mono'); ctx.letterSpacing = '1px'; ctx.fillText('HANDS DEALT 7 · SEATED 6', 24, 84);
+    ctx.fillRect(24 + ctx.measureText('HANDS DEALT 7 · SEATED 6').width + 6, 54, 3, 36); ctx.restore(); })();
+  ctx.restore();
+  // the print lies under the pendant: hot spot, fall-off to the corners, the lifted corner catching light along its curl
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = rad(ctx, 900, 470, 160, 1220, [[0, '#FFF6EA'], [0.5, '#E2CFB4'], [0.8, '#A08268'], [1, '#6A5040']]); ctx.fillRect(0, 0, W, H); ctx.restore();
+  (() => { const c0 = [pcx + (W / 2) * PS, pcy + (H / 2) * PS]; ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.translate(c0[0], c0[1]); ctx.rotate(PR - Math.PI / 4); ctx.fillStyle = lin(ctx, 0, -90, 0, 0, [[0, '#FFE6C0', 0], [0.7, '#FFE6C0', 0.16], [1, '#FFE6C0', 0]]); ctx.fillRect(-260, -90, 520, 90); ctx.restore(); })();
+  RC.texture(ctx, 0.32, 'soft-light');
+  RC.halation(ctx, { thresh: 0.86, alpha: 0.16 });
+  RC.vignette(ctx, 0.55, 900, 520);
+  RC.grain(ctx, 0.06, 5);
+
+  // ======================= THE RECORD =======================
+  RC.brackets(ctx, 0.032, { alpha: 0.55 });
+  RC.slug(ctx, 'DINING TABLE', '20:58:16', { sub: 'THE COUNT · OVERHEAD · FREEZE', x: 104, y: 60, alpha: 0.85 });
+  RC.headcount(ctx, 7, { alpha: 1, x: W - 104, y: 30 });
+  RC.lookLabel(ctx, 'SEVEN HANDS · INT. DINING TABLE · EXHIBIT 01');
+  window.FRAME_READY = true;
+})();
+</script>

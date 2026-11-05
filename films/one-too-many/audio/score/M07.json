@@ -1,0 +1,7 @@
+{
+ "id": "M07",
+ "model": "lyria-3.5",
+ "prompt": "A 34-second instrumental underscore cue of still, haunting suspense for a small chamber string group, all muted (con sordino), without vibrato, recorded close and dry in a small room: two cellos, two violas, two violins. In tune at A = 440. Key centre A, with the B-flat a semitone above as the uneasy note. Beatless free time: no pulse, no rhythm. Very quiet: pianissimo, rising once to mezzo-piano and never louder. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:21] From the first instant, very soft and completely static: a cello holds a low A (A2) and a viola holds the B-flat a ninth above it (B-flat3), sul tasto, pianissimo. Nothing moves and nothing grows; long, slow bow changes only.\n[0:21 - 0:30] One step: the violins enter high on a sustained A (A5) and the B-flat a semitone above it (B-flat5), and the whole texture grows to mezzo-piano, then holds absolutely still. No further swell and no further change.\n[0:30 - 0:34] The strings stop; silence.\nInstrumental only, no vocals, no choir. Avoid: percussion, pulses or ostinatos, tremolo, sul ponticello, clusters, piano, electric piano, glassy or shimmering sounds, deep bass, risers, impacts, stingers, glissandi, melody, crescendos to forte, trailer clich\u00e9s, and melodrama.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

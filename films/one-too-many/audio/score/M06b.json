@@ -1,0 +1,7 @@
+{
+ "id": "M06b",
+ "model": "lyria-3.5",
+ "prompt": "A 30-second instrumental track of ordinary dinner-party music: the next record on the playlist, livelier and a little too loud. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo, a round fingered electric bass, brushes and a soft felt kick. Time signature 7/8, grouped 3+3+1: it lilts like a 6/8 groove, but every bar has one extra eighth note at the end, marked by a single soft rim click, so the groove limps very slightly, with one beat too many in every bar. Eighth note = 210 per minute (each bar lasts 2 seconds). In tune at A = 440. Key: A minor. A four-bar loop, one chord per bar, repeated throughout: Am(add9) | Fmaj7 | B-flat maj7(#11) | E7(b9). Medium level, steady.\n[0:00 - 0:30] Starts on the very first downbeat already in full swing: no intro, no count-in, no fade-in. The Rhodes comps with short fills that circle E and F above the A, the bass plays roots and fifths, and the rim click lands on every seventh eighth; same density and level to the end; no build, no breakdown, no solo, no ending.\nInstrumental only, no vocals, no humming. Avoid: a plain 6/8 or 4/4 feel without the extra beat, drum fills, cymbal crashes, risers, strings, synth pads, horns, guitar solos, tempo or key changes, an intro or outro, and anything cinematic.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]"
+}
