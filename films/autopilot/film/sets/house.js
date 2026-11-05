@@ -30,7 +30,9 @@
       if ((da >= NEAR) !== (db >= NEAR)) { const u = (NEAR - da) / (db - da); out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u]); } }
     return out.map(q => cam.p(q));
   }
-  function Qc(g, cam, pts, col) { const q = clipPts(cam, pts); if (q.length < 3) return null; const p = LC.pathPts(q); g.fillStyle = col; g.fill(p); return p; }
+  function Qc(g, cam, pts, col) { const q = clipPts(cam, pts); if (q.length < 3) return null; const p = LC.pathPts(q); p.q = q; g.fillStyle = col; g.fill(p); return p; }
+  // the screen box of projected points (fills under a clip go over this, not the whole frame)
+  const bb = q => { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; q.forEach(v => { x0 = Math.min(x0, v[0]); y0 = Math.min(y0, v[1]); x1 = Math.max(x1, v[0]); y1 = Math.max(y1, v[1]); }); return [x0 - 2, y0 - 2, x1 - x0 + 4, y1 - y0 + 4]; };
   const seg2 = (g, cam, a, b, w, col) => { const q = clipPts(cam, [a, b, b]); if (q.length < 2) return; g.strokeStyle = col; g.lineWidth = w; g.beginPath(); g.moveTo(q[0][0], q[0][1]); g.lineTo(q[1][0], q[1][1]); g.stroke(); };
   const _scr = {};
   function scratch(name, w, h) { let c = _scr[name]; if (!c || c.width !== w || c.height !== h) c = _scr[name] = OTM.makeCanvas(w, h); const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none'; g.clearRect(0, 0, w, h); return g; }
@@ -78,9 +80,9 @@
     const gp = Qc(g, cam, [[x0 + fw, y1 - fw, z - 0.006], [x1 - fw, y1 - fw, z - 0.006], [x1 - fw, y0 + fw, z - 0.006], [x0 + fw, y0 + fw, z - 0.006]], T.glass);
     if (gp) { g.save(); g.clip(gp);
       // what it gives back: the sky over the street behind the lens (paler at the top), the far roofs low; or the room's warm light
-      const a = cam.p(x0, y1, z), b = cam.p(x0, y0, z); g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], T.lit ? [[0, '#E8EEEA', 0.75], [0.6, '#C4D2D4', 0.45], [1, '#5E6E70', 0.3]] : [[0, '#7A6E7C', 0.5], [0.55, '#4A4A5A', 0.35], [1, '#2A2C36', 0.2]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
-      if (!T.lit) { g.fillStyle = rgba('#E8935A', 0.35); const h = cam.p(x0, lerp(y0, y1, 0.32), z); g.fillRect(-M, h[1], W + 2 * M, Math.max(2, (b[1] - a[1]) * 0.04)); }   // the copper tops of the houses opposite, a thin line
-      if (o.glow) { g.fillStyle = rgba(T.porchIn, o.glow); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); }
+      const a = cam.p(x0, y1, z), b = cam.p(x0, y0, z); g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], T.lit ? [[0, '#E8EEEA', 0.75], [0.6, '#C4D2D4', 0.45], [1, '#5E6E70', 0.3]] : [[0, '#7A6E7C', 0.5], [0.55, '#4A4A5A', 0.35], [1, '#2A2C36', 0.2]]); const box = bb(gp.q); g.fillRect(...box);
+      if (!T.lit) { g.fillStyle = rgba('#E8935A', 0.35); const h = cam.p(x0, lerp(y0, y1, 0.32), z); g.fillRect(box[0], h[1], box[2], Math.max(2, (b[1] - a[1]) * 0.04)); }   // the copper tops of the houses opposite, a thin line
+      if (o.glow) { g.fillStyle = rgba(T.porchIn, o.glow); g.fillRect(...box); }
       LC.glare(g, null, { x: (a[0] + cam.p(x1, y0, z)[0]) / 2, y: (a[1] + b[1]) / 2, angle: -1.1, color: '#FFFFFF', bands: [{ d: -20, w: Math.max(6, (b[1] - a[1]) * 0.18), a: T.lit ? 0.18 : 0.08 }] });
       g.restore(); }
     // casement bars: a mullion and a transom
@@ -148,8 +150,8 @@
     Q([[-30, 0.001, -2.0], [30, 0.001, -2.0], [30, 0.001, 0.3], [-30, 0.001, 0.3]], T.lit ? '#B6B0A4' : mix(T.gravel[1], '#2A2A30', 0.3));
     Q([[-6.5, 0.002, 0.3], [DRIVE.x0, 0.002, 0.3], [DRIVE.x0, 0.002, 8.9], [-6.5, 0.002, 8.9]], T.lawn[0]);
     const gp = Q([[DRIVE.x0, 0.003, DRIVE.z0], [DRIVE.x1, 0.003, DRIVE.z0], [DRIVE.x1, 0.003, DRIVE.z1], [DRIVE.x0, 0.003, DRIVE.z1]], T.gravel[1]);
-    if (gp) { g.save(); g.clip(gp); const a = cam.p(DRIVE.x0, 0, DRIVE.z0), b = cam.p(DRIVE.x0, 0, DRIVE.z1); g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], [[0, T.gravel[0]], [1, T.gravel[1]]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
-      g.globalAlpha = 0.8; g.fillStyle = g.createPattern(gravelTile(), 'repeat'); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); }
+    if (gp) { g.save(); g.clip(gp); const a = cam.p(DRIVE.x0, 0, DRIVE.z0), b = cam.p(DRIVE.x0, 0, DRIVE.z1); g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], [[0, T.gravel[0]], [1, T.gravel[1]]]); const box = bb(gp.q); g.fillRect(...box);
+      g.globalAlpha = 0.8; g.fillStyle = g.createPattern(gravelTile(), 'repeat'); g.fillRect(...box); g.restore(); }
     // the path of paving slabs from the drive to the porch steps
     Q([[DRIVE.x0 - 0.9, 0.004, 7.1], [DRIVE.x0, 0.004, 7.1], [DRIVE.x0, 0.004, 7.75], [DRIVE.x0 - 0.9, 0.004, 7.75]], T.lit ? '#C9C2B2' : T.gravel[2]);
     if (T.lit && !o.noShadows) groundShadows(g, cam, T);
@@ -193,7 +195,7 @@
         Q([[a[0], 0, a[2]], [b[0], 0, b[2]], [b[0], BAY.sill, b[2]], [a[0], BAY.sill, a[2]]], face);
         Q([[a[0], BAY.sill, a[2]], [b[0], BAY.sill, b[2]], [b[0], BAY.head, b[2]], [a[0], BAY.head, a[2]]], F[turned ? 1 : 0]);
         const inset = 0.07, gpts = [[lerp(a[0], b[0], 0.06), BAY.sill + inset, lerp(a[2], b[2], 0.06)], [lerp(a[0], b[0], 0.94), BAY.sill + inset, lerp(a[2], b[2], 0.94)], [lerp(a[0], b[0], 0.94), BAY.head - inset, lerp(a[2], b[2], 0.94)], [lerp(a[0], b[0], 0.06), BAY.head - inset, lerp(a[2], b[2], 0.06)]];
-        const gq = Qc(g, cam, gpts, T.glass); if (gq) { g.save(); g.clip(gq); const t0 = cam.p(gpts[3]), b0 = cam.p(gpts[0]); g.fillStyle = LC.lin(g, 0, t0[1], 0, b0[1], T.lit ? [[0, '#EEF2EE', 0.7], [1, '#7E9294', 0.25]] : [[0, '#8A7684', 0.45], [1, '#2A2C36', 0.2]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
+        const gq = Qc(g, cam, gpts, T.glass); if (gq) { g.save(); g.clip(gq); const t0 = cam.p(gpts[3]), b0 = cam.p(gpts[0]); g.fillStyle = LC.lin(g, 0, t0[1], 0, b0[1], T.lit ? [[0, '#EEF2EE', 0.7], [1, '#7E9294', 0.25]] : [[0, '#8A7684', 0.45], [1, '#2A2C36', 0.2]]); g.fillRect(...bb(gq.q));
           LC.glare(g, null, { x: (t0[0] + b0[0]) / 2 + 20, y: (t0[1] + b0[1]) / 2, angle: -1.15, color: '#FFFFFF', bands: [{ d: 0, w: Math.abs(b0[1] - t0[1]) * 0.2, a: T.lit ? 0.22 : 0.08 }] }); g.restore(); }
         seg2(g, cam, [lerp(a[0], b[0], 0.5), BAY.sill, lerp(a[2], b[2], 0.5)], [lerp(a[0], b[0], 0.5), BAY.head, lerp(a[2], b[2], 0.5)], 3, F[0]); }
       Q([[xs[0] - 0.05, BAY.head, hz], [xs[1], BAY.head, bz - 0.06], [xs[2], BAY.head, bz - 0.06], [xs[3] + 0.05, BAY.head, hz], [xs[3] + 0.05, BAY.head + 0.25, hz], [xs[0] - 0.05, BAY.head + 0.25, hz]], T.lit ? '#6E7472' : '#3A3E40');
@@ -236,7 +238,7 @@
       if (open) { Q([[dx0, 0.3, z1], [dx1, 0.3, z1], [dx1, 2.35, z1], [dx0, 2.35, z1]], T.porchIn); Q([[dx0 + 0.1, 0.3, z1 + 1.5], [dx1 - 0.05, 0.3, z1 + 1.5], [dx1 - 0.05, 2.2, z1 + 1.5], [dx0 + 0.1, 2.2, z1 + 1.5]], mix(T.porchIn, '#FFF0D2', 0.4));
         Q([[dx0, 0.3, z1], [dx0, 2.35, z1], [dx0 + 0.03, 2.35, z1 + 0.75], [dx0 + 0.03, 0.3, z1 + 0.75]], '#2A2420'); }
       else { Q([[dx0, 0.3, z1], [dx1, 0.3, z1], [dx1, 2.35, z1], [dx0, 2.35, z1]], '#2A2E30'); [[dx0 + 0.1, dx0 + 0.36], [dx1 - 0.36, dx1 - 0.1]].forEach(([a, b]) => Q([[a, 1.44, z1 - 0.01], [b, 1.44, z1 - 0.01], [b, 2.2, z1 - 0.01], [a, 2.2, z1 - 0.01]], T.lit ? '#6E7A7C' : '#E2A060')); }
-      if (!T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const c0 = cam.p(1.25, 1.4, z1); g.fillStyle = LC.rad(g, c0[0], c0[1], 0, 2.2 * kAt(cam, 1.25, 1.4, z1), [[0, T.porchIn, 0.45], [1, T.porchIn, 0]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); }
+      if (!T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const c0 = cam.p(1.25, 1.4, z1); g.fillStyle = LC.rad(g, c0[0], c0[1], 0, 2.2 * kAt(cam, 1.25, 1.4, z1), [[0, T.porchIn, 0.45], [1, T.porchIn, 0]]); g.fillRect(...bb(inside.q)); g.restore(); }
       g.restore(); }
     // its side walls' brick bases (the front's base is porchFront: Sarah stands behind it)
     Q([[x1, 0, z0], [x1, 0, z1], [x1, base, z1], [x1, base, z0]], B[T.lit ? 1 : 2]);
@@ -261,7 +263,7 @@
     panes.forEach((pp, i) => { const q = clipPts(cam, pp); if (q.length < 3) return; const p = LC.pathPts(q), a = cam.p(pp[0]), b = cam.p(pp[3]);
       g.save(); g.clip(p); g.globalCompositeOperation = 'screen';
       // the east, behind the lens: the street, the opposite houses; morning: bright sky; evening: dim violet with their copper tops
-      g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], T.lit ? [[0, '#DDE8E6', 0.55], [0.55, '#9AAAA8', 0.3], [1, '#5E5A50', 0.25]] : [[0, '#5E5A70', 0.42], [0.5, '#3A3A4C', 0.3], [0.62, '#C27A4C', 0.22], [1, '#2A2A30', 0.2]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
+      g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], T.lit ? [[0, '#DDE8E6', 0.55], [0.55, '#9AAAA8', 0.3], [1, '#5E5A50', 0.25]] : [[0, '#5E5A70', 0.42], [0.5, '#3A3A4C', 0.3], [0.62, '#C27A4C', 0.22], [1, '#2A2A30', 0.2]]); g.fillRect(...bb(q));
       LC.glare(g, null, { x: (a[0] + cam.p(pp[1])[0]) / 2, y: (a[1] + b[1]) / 2, angle: -1.12, color: '#FFFFFF', bands: [{ d: -30, w: Math.max(8, Math.abs(b[1] - a[1]) * 0.12), a: T.lit ? 0.16 : 0.07 }, { d: 20, w: 6, a: 0.1 }] });
       g.restore(); g.strokeStyle = F[T.lit ? 0 : 1]; g.lineWidth = Math.max(2, 0.04 * kAt(cam, pp[0][0], pp[0][1], pp[0][2])); g.stroke(p); });
     // the door's frame (dark painted timber), its lower solid panel and handle
