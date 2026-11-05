@@ -1,0 +1,7 @@
+{
+ "id": "M11b",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 15 seconds: a slow, dissonant swell of low strings on D with a rubbing E-flat above it and a high bowed-glass tone, rising steadily from near silence to forte, dread and realisation, then stopping dead. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]"
+}

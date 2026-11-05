@@ -19,7 +19,7 @@
   // ===============================================================================================================
   function drive(c, st) {
     const v = SETS.house && SETS.house.views && SETS.house.views.drive, s = { tod: 'morning' };
-    c.camera({ x: 1040, y: 640, zoom: 1.0 + 0.0032 * st });     // a slow push toward the car (0.3% a second)
+    c.camera({ x: 1060, y: 680, zoom: 1.1 * (1 + 0.0032 * st) });     // a slow push toward the car (0.3% a second)
     if (!v) { c.g.fillStyle = '#C9D2CC'; c.g.fillRect(0, 0, W, H); return; }
     v.back(c, st, s);
     const blink = st >= 4.5 ? SETS.car.blink(st, 4.5, 1) : 0;   // the remote, from the porch: one flash, the locks lift
@@ -33,7 +33,7 @@
   // ===============================================================================================================
   function hotwheel(c, st) {
     const v = SETS.car.views.hotwheel, s = { tod: 'morning', heat: 1 }, g = c.g;
-    c.camera({ zoom: 1.0 + 0.0025 * st, x: 980, y: 520 });
+    c.camera({ zoom: 1.2 * (1 + 0.0025 * st), x: 960, y: 455 });
     v.back(c, c.t, s);
     const A = v.anchors, T = tw(st);
     if (A.rimTop) {
@@ -60,9 +60,10 @@
   //     bright far doorway behind it, Daniel bent in through that doorway, Emily in her seat with the rabbit.
   // ===============================================================================================================
   // two cameras on the same spot: the wide (the whole pane) and the close (the harness clip), each with its own caches
+  // the eye is low (1.3 m), so through the near pane we see from the far doorway's top down to her lap
   const FAR_CAMS = {
-    wide: { x: -2.2, y: 1.5, z: -0.45, yaw: 1.62, pitch: -0.12, f: 1500, cx: 960, cy: 470 },
-    close: { x: -2.2, y: 1.5, z: -0.45, yaw: 1.62, pitch: -0.12, f: 3300, cx: 1050, cy: 150 },
+    wide: { x: -2.2, y: 1.2, z: -0.45, yaw: 1.62, pitch: -0.02, f: 2050, cx: 960, cy: 400 },
+    close: { x: -2.2, y: 1.2, z: -0.45, yaw: 1.62, pitch: -0.02, f: 3300, cx: 760, cy: 250 },
   };
   const SUN = [-0.38, 0.62, -0.69];                                  // the house set's morning sun (car space = house axes)
   const FAR = {};                                                    // per camera: the car's window paths for the near rear glass
@@ -90,8 +91,9 @@
     poly(g, cam, [[0.6, 0, -12], [0.6, 0, 12], [3.0, 0, 12], [3.0, 0, -12]], '#DED2B8');
     const R = OTM.rng('Q05hedge'), HX = 2.95, HH = 1.85;
     poly(g, cam, [[HX, 0, -12], [HX, 0, 12], [HX, HH, 12], [HX, HH, -12]], '#5E7444');
-    for (let i = 0; i < 160; i++) { const z = -10 + R() * 20, y = 0.15 + R() * (HH - 0.1), r = 0.16 + R() * 0.2, p = P3(cam, [HX - 0.02, y, z]), k = cam.k(Math.max(0.5, p[2])); g.fillStyle = R() < 0.5 ? '#86994F' : '#4E6438'; g.beginPath(); g.ellipse(p[0], p[1], r * k * 0.6, r * k, 0, 0, Math.PI * 2); g.fill(); }
-    for (let i = 0; i < 60; i++) { const z = -10 + R() * 20, p = P3(cam, [HX - 0.02, HH - 0.05 + R() * 0.12, z]), k = cam.k(Math.max(0.5, p[2])); g.fillStyle = '#B3BC6E'; g.beginPath(); g.ellipse(p[0], p[1], 0.12 * k, 0.15 * k, 0, 0, Math.PI * 2); g.fill(); }
+    for (let i = 0; i < 120; i++) { const z = -10 + R() * 20, y = 0.15 + R() * (HH - 0.1), r = 0.14 + R() * 0.16, p = P3(cam, [HX - 0.02, y, z]), k = cam.k(Math.max(0.5, p[2])); g.fillStyle = R() < 0.5 ? '#6E8248' : '#566B3E'; g.beginPath(); g.ellipse(p[0], p[1], r * k * 0.7, r * k, 0, 0, Math.PI * 2); g.fill(); }
+    // the hedge's sunlit top edge, a ragged band
+    { g.fillStyle = '#93A35E'; g.beginPath(); for (let z = -12; z <= 12.01; z += 0.25) { const q = P3(cam, [HX - 0.03, HH + 0.04 * Math.sin(z * 7.3) + 0.03 * Math.sin(z * 3.1), z]); z === -12 ? g.moveTo(q[0], q[1]) : g.lineTo(q[0], q[1]); } for (let z = 12; z >= -12.01; z -= 0.25) { const q = P3(cam, [HX - 0.03, HH - 0.16, z]); g.lineTo(q[0], q[1]); } g.closePath(); g.fill(); }
   }
   // the cabin as seen through the near rear glass (static part: everything but the people), clipped to that glass
   function farCabin(g, which, world) {
@@ -151,10 +153,10 @@
     const F = farInit(which), b = F.win ? F.win.pane : F.box, img = houseRefl(), s = (b.h / 560) * 1.6;
     g.save(); g.clip(F.glass);
     // mirrored, small and high: the house's roof and first floor across the pane's top, sinking into the dark below
-    g.globalAlpha = 0.34; g.save(); g.translate(b.x + b.w * 0.5, b.y - b.h * 0.42); g.scale(-s * 0.62, s * 0.62); g.drawImage(img, -600, 0); g.restore(); g.globalAlpha = 1;
+    g.globalAlpha = 0.24; g.save(); g.translate(b.x + b.w * 0.62, b.y - b.h * 0.5); g.scale(-s * 0.62, s * 0.62); g.drawImage(img, -600, 0); g.restore(); g.globalAlpha = 1;
     g.globalCompositeOperation = 'destination-out'; g.fillStyle = LC.lin(g, 0, b.y, 0, b.y + b.h, [[0, '#000000', 0], [0.3, '#000000', 0.1], [0.55, '#000000', 0.75], [1, '#000000', 1]]); g.fillRect(b.x - 20, b.y - 20, b.w + 40, b.h + 40); g.globalCompositeOperation = 'source-over';
     g.fillStyle = LC.lin(g, 0, b.y, 0, b.y + b.h, [[0, '#E6EEEA', 0.42], [0.16, '#E6EEEA', 0.08], [0.4, '#E6EEEA', 0]]); g.fillRect(b.x - 20, b.y - 20, b.w + 40, b.h + 40);
-    LC.glare(g, null, { x: b.x + b.w * 0.36, y: b.y + b.h * 0.4, angle: -1.15, color: '#FFFFFF', bands: [{ d: -b.w * 0.08, w: b.w * 0.07, a: 0.13 }, { d: b.w * 0.02, w: b.w * 0.012, a: 0.2 }, { d: b.w * 0.34, w: b.w * 0.16, a: 0.05 }] });
+    LC.glare(g, null, { x: b.x + b.w * 0.74, y: b.y + b.h * 0.4, angle: -1.15, color: '#FFFFFF', bands: [{ d: -b.w * 0.08, w: b.w * 0.07, a: 0.13 }, { d: b.w * 0.02, w: b.w * 0.012, a: 0.2 }, { d: b.w * 0.34, w: b.w * 0.16, a: 0.05 }] });
     LC.specks(g, null, b, 'Q05farDust' + which, { n: which === 'close' ? 140 : 260, color: '#FFF3DA', rMin: 0.5, rMax: which === 'close' ? 2.2 : 1.4, aMin: 0.06, aMax: 0.35, scratch: 0.12 });
     g.restore();
   }
@@ -164,51 +166,60 @@
     const F = farInit(which);
     return c.cache('Q05:far:plate:' + which, gg => {
       const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'close' ? 5 : 2.5), 0, 0);
-      SETS.car.exterior(gg, { cam: F.cam, at: [0, 0, 0], heading: 0, tod: 'morning', sun: SUN, interior: false, reflect: 'house', reflectStrength: 0.5 });
+      SETS.car.exterior(gg, { cam: F.cam, at: [0, 0, 0], heading: 0, tod: 'morning', sun: SUN, interior: false, reflect: SETS.car.reflectCanvas ? SETS.car.reflectCanvas(houseRefl()) : 'house', reflectStrength: 0.42 });
     });
   }
   // the far side's world seen through the far doorway (same camera, unblurred less: it is what the pane looks onto)
   function farWorldLayer(c, which) { const F = farInit(which); return c.cache('Q05:far:world:' + which, gg => { const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'close' ? 4 : 1.6), 0, 0); }); }
+  // the people behind the tinted pane are drawn into a reduced-resolution layer and laid in: the glass softens them anyway,
+  // and it keeps two large figures inside the frame budget
+  const _ppl = {};
+  function peopleLayer(key, box, k) {
+    const w = Math.ceil(box.w * k), h = Math.ceil(box.h * k); let cv = _ppl[key];
+    if (!cv || cv.width !== w || cv.height !== h) cv = _ppl[key] = OTM.makeCanvas(w, h);
+    const g = cv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, w, h); g.setTransform(k, 0, 0, k, -box.x * k, -box.y * k);
+    return { g, cv };
+  }
   function buckleFar(c, st, lt, which) {
-    const F = farInit(which), cam = F.cam, g = c.g, b = F.box;
-    c.camera({ zoom: 1.0 + (which === 'close' ? 0.006 : 0.0022) * st, x: 960, y: which === 'close' ? 560 : 540 });
-    g.drawImage(farPlate(c, which), 0, 0);
+    const F = farInit(which), cam = F.cam, b = F.box;
+    c.camera({ zoom: 1.0 + (which === 'close' ? 0.005 : 0.0022) * st, x: 960, y: 540 });
+    c.g.drawImage(farPlate(c, which), 0, 0);
     const world = farWorldLayer(c, which);
-    g.drawImage(c.cache('Q05:far:cabin:' + which, gg => farCabin(gg, which, world)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h);
-    // the people, inside the near glass
+    c.g.drawImage(c.cache('Q05:far:cabin:' + which, gg => farCabin(gg, which, world)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h);
+    // the people, inside the near glass, at reduced resolution
     const T = tw(lt), L = { x: 2300, y: 160, color: '#FFE6BE', back: 0.35 };
-    g.save(); g.clip(F.glass);
-    const clipS = P3(cam, [0.45, 0.84, -0.5]), k1 = cam.k(clipS[2]), work = Math.sin(T * 2.4);
+    const LAY = peopleLayer(which, b, which === 'close' ? 0.5 : 0.6), g = LAY.g;
+    const work = Math.sin(T * 2.4);
+    // Emily in her seat, three-quarter from our side, the rabbit up under her chin (its worn ear lying flat)
+    const eSeat = P3(cam, [0.42, 0.66, -0.64]), ek = cam.k(P3(cam, [0.42, 1.0, -0.64])[2]);
+    const emily = pose => RIG.draw(g, 'emily', Object.assign({ at: [eSeat[0], eSeat[1]], scale: ek, view: 'three', yaw: 52, facing: -1, body: 'carseat', harness: true, holdR: 'rabbit', armR: 'hug', armL: 'hug', face: 'sleepy' }, pose), { light: L, ambient: '#1F3538', ambientK: 0.14 });
     if (which === 'wide') {
-      // Daniel, bent in through the far doorway against the bright drive, facing us across the cabin: his hands work her
-      // straps on her far side (behind her), his face intent and gentle; he smiles when she looks up at him
-      const far1 = P3(cam, [0.6, 0.98, -0.62]), far2 = P3(cam, [0.62, 0.74, -0.5]);
-      const handR = [far1[0] + 0.02 * k1 * work, far1[1] + 0.015 * k1 * Math.cos(T * 2.4)], handL = [far2[0] - 0.015 * k1 * work, far2[1]];
-      const dFeet = P3(cam, [1.42, 0, -0.66]), dk = cam.k(P3(cam, [1.2, 1.0, -0.66])[2]);
-      RIG.draw(g, 'daniel', { at: [dFeet[0], dFeet[1]], scale: dk, view: 'front', yaw: 8, facing: 1, body: 'stand', lean: key(T, [[12, 1.55], [13.2, 1.72], [21.4, 1.75]]), crouch: 0.55, outfit: 'day', collar: 'straight',
-        armR: { to: handR, depth: 0.55 }, armL: { to: handL, depth: 0.55 }, face: 'tired', eyes: 'down', smile: key(T, [[12, 0.12], [16.4, 0.12], [17.0, 0.45], [19.0, 0.45], [19.8, 0.15]]), browIn: 0.35,
-        head: { nod: key(T, [[12, 0.4], [16.4, 0.4], [17.0, 0.15], [19.0, 0.15], [19.8, 0.45]]), turn: 0.05, tilt: 0.06 }, breath: breathOf(lt) },
-        { light: Object.assign({}, L, { x: 980, y: 300, back: 0.85 }), exposure: 0.95, ambient: '#24363A', ambientK: 0.1 });
-      // Emily in her seat, three-quarter from our side, the rabbit up under her chin; sleepy, then she looks up at him
-      const eSeat = P3(cam, [0.42, 0.66, -0.64]), ek = cam.k(P3(cam, [0.42, 1.0, -0.64])[2]);
-      RIG.draw(g, 'emily', { at: [eSeat[0], eSeat[1]], scale: ek, view: 'three', yaw: 52, facing: -1, body: 'carseat', harness: true, holdR: 'rabbit', armR: 'hug', armL: 'hug', face: 'sleepy',
-        lid: key(T, [[12, 0.45], [16.2, 0.28], [18.8, 0.32], [21, 0.5]]), gaze: [0.4, key(T, [[12, -0.3], [16.2, 0.7], [18.8, 0.7], [19.6, -0.2]])],
-        head: { turn: key(T, [[12, -0.1], [16.0, -0.1], [16.6, -0.45], [18.8, -0.45], [19.6, -0.15]]), nod: key(T, [[12, 0.25], [16.2, -0.25], [18.8, -0.25], [19.6, 0.3]]), tilt: -0.04 } },
-        { light: L, ambient: '#1F3538', ambientK: 0.14 });
+      // Daniel, bent in at the front of the far doorway against the bright drive, turned to her: his hands at her straps, his
+      // face intent and gentle. She looks up at him (16.2) and he smiles; then her eyes go heavy again.
+      const sh1 = P3(cam, [0.56, 0.96, -0.62]), lap = P3(cam, [0.5, 0.72, -0.5]), kS = cam.k(sh1[2]);
+      const handR = [sh1[0] + 0.02 * kS * work, sh1[1] + 0.015 * kS * Math.cos(T * 2.4)], handL = [lap[0] - 0.02 * kS * work, lap[1] - 0.01 * kS * Math.cos(T * 2.0)];
+      const dFeet = P3(cam, [1.34, 0, -0.34]), dk = cam.k(P3(cam, [1.15, 1.0, -0.34])[2]);
+      RIG.draw(g, 'daniel', { at: [dFeet[0], dFeet[1]], scale: dk, view: 'three', yaw: 40, facing: 1, body: 'stand', lean: key(T, [[12, 1.5], [13.0, 1.64], [21.0, 1.66], [22.4, 1.7], [22.62, 1.5]]), crouch: 0.48, outfit: 'day', collar: 'straight',
+        armR: { to: handR }, armL: { to: handL }, face: 'tired', eyes: 'down', smile: key(T, [[12, 0.1], [16.5, 0.1], [17.1, 0.5], [19.0, 0.5], [19.8, 0.15]]), browIn: 0.35,
+        head: { nod: key(T, [[12, 0.38], [16.5, 0.38], [17.1, 0.18], [19.0, 0.18], [19.8, 0.42]]), turn: 0.08, tilt: 0.06 }, breath: breathOf(lt) },
+        { light: Object.assign({}, L, { x: 1250, y: 260, back: 0.75 }), exposure: 0.95, ambient: '#24363A', ambientK: 0.1 });
+      emily({ lid: key(T, [[12, 0.45], [16.2, 0.25], [18.8, 0.3], [21, 0.5]]), gaze: [-0.5, key(T, [[12, -0.3], [16.2, 0.7], [18.8, 0.7], [19.6, -0.2]])],
+        head: { turn: key(T, [[12, 0.0], [16.0, 0.0], [16.6, 0.3], [18.8, 0.3], [19.6, 0.05]]), nod: key(T, [[12, 0.25], [16.2, -0.28], [18.8, -0.28], [19.6, 0.3]]), tilt: -0.04 } });
     } else {
-      // close: her chest and the rabbit's worn ear; his two hands bring the clip's halves together and press: CLICK (22.4)
-      const eSeat = P3(cam, [0.42, 0.66, -0.64]), ek = cam.k(P3(cam, [0.42, 1.0, -0.64])[2]);
-      RIG.draw(g, 'emily', { at: [eSeat[0], eSeat[1]], scale: ek, view: 'three', yaw: 52, facing: -1, body: 'carseat', harness: true, holdR: 'rabbit', armR: 'hug', armL: 'hug', face: 'sleepy', lid: 0.55, gaze: [0.4, -0.3],
-        head: { turn: -0.1, nod: 0.35, tilt: -0.04 } }, { light: L, ambient: '#1F3538', ambientK: 0.14 });
-      const press = seg(T, 22.1, 22.4, 'inCubic'), come = sstep(T, 21.4, 22.0), hs = k1 * 0.19 * 1.05;
-      RIG.hand(g, 'daniel', { at: [clipS[0] + 0.2 * k1 - 0.1 * k1 * come - 0.02 * k1 * press, clipS[1] - 0.12 * k1 + 0.1 * k1 * come], size: hs, pose: 'grip', view: 'side', rot: 160, curl: 0.55 + 0.35 * press, sleeve: 'day', side: 'R' }, { light: L, exposure: 0.95 });
-      RIG.hand(g, 'daniel', { at: [clipS[0] + 0.16 * k1 - 0.06 * k1 * come, clipS[1] + 0.12 * k1 - 0.05 * k1 * come], size: hs, pose: 'grip', view: 'back', rot: 190, curl: 0.6 + 0.3 * press, sleeve: 'day', side: 'L' }, { light: L, exposure: 0.95 });
+      // close: her face and the rabbit through the glass, the house laid over her. His hands are below the sill, at the
+      // buckle: we only feel it. She rocks with the strap's tug, her eyes heavy; CLICK (22.4) and her lids drop a little.
+      const tug = 0.004 * Math.max(0, Math.sin((T - 21.5) * 7)) * (T < 22.0 ? 1 : 0) + 0.006 * Math.exp(-Math.max(0, T - 22.4) * 10) * (T > 22.4 ? 1 : 0);
+      const e2 = P3(cam, [0.42 - tug, 0.66, -0.64]);
+      RIG.draw(g, 'emily', { at: [e2[0], e2[1]], scale: ek, view: 'three', yaw: 50, facing: -1, body: 'carseat', harness: true, holdR: 'rabbit', armR: 'hug', armL: 'hug', face: 'sleepy',
+        lid: key(T, [[21.4, 0.45], [22.3, 0.42], [22.5, 0.62], [22.62, 0.6]]), gaze: [-0.4, 0.2], head: { turn: 0.12, nod: key(T, [[21.4, 0.1], [22.4, 0.14], [22.55, 0.24]]), tilt: -0.05 } },
+        { light: L, ambient: '#1F3538', ambientK: 0.14 });
     }
-    g.restore();
-    farFront(g, which);
+    c.g.save(); c.g.clip(F.glass); c.g.drawImage(LAY.cv, b.x, b.y, b.w, b.h); c.g.restore();
+    const g2 = c.g;
+    farFront(g2, which);
     // the glass: tint (multiply), what it gives back (screen)
-    g.save(); g.globalCompositeOperation = 'multiply'; g.drawImage(c.cache('Q05:far:tint:' + which, gg => farTint(gg, which)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h); g.restore();
-    g.save(); g.globalCompositeOperation = 'screen'; g.drawImage(c.cache('Q05:far:refl:' + which, gg => farGlassReflection(gg, which)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h); g.restore();
+    g2.save(); g2.globalCompositeOperation = 'multiply'; g2.drawImage(c.cache('Q05:far:tint:' + which, gg => farTint(gg, which)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h); g2.restore();
+    g2.save(); g2.globalCompositeOperation = 'screen'; g2.drawImage(c.cache('Q05:far:refl:' + which, gg => farGlassReflection(gg, which)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h); g2.restore();
   }
 
   // ===============================================================================================================
@@ -276,13 +287,15 @@
     v.back(c, c.t, s);
     // his left hand on the mirror: up from his side, the fingers round the housing's far end, a turn, and away
     if (lt > 51.8 && lt < 58.0) {
+      // the housing's far (right) end, as the mirror turns; the hand's curled fingers wrap it, the forearm runs down to him
       const T = tw(lt), tiltNow = E.inOutSine(seg(T, TILT0, TILT1)), Q = mirrorQuadAt(v, tiltNow);
-      const grip = [Q.tr[0] * 0.55 + Q.br[0] * 0.45 + 12, Q.tr[1] * 0.55 + Q.br[1] * 0.45 + 28];
-      const away = [grip[0] + 330, grip[1] + 640];
-      const k = Math.max(seg(T, 51.8, 52.8, 'outCubic') - seg(T, 57.0, 58.0, 'inCubic'), 0);
-      const wrist = [lerp(away[0], grip[0] + 120, k), lerp(away[1], grip[1] + 170, k)];
-      RIG.hand(c.g, 'daniel', { at: wrist, size: 330, pose: 'grip', view: 'back', rot: -128 - 6 * tiltNow, curl: lerp(0.35, 0.95, seg(T, 52.4, 52.9)), sleeve: 'day', side: 'L' },
-        { light: { x: 588, y: 244, color: '#FFF1D8', back: 0.9 }, ambient: '#202826', ambientK: 0.35, exposure: 0.8 });
+      const end = [Q.tr[0] * 0.5 + Q.br[0] * 0.5 + 4, Q.tr[1] * 0.5 + Q.br[1] * 0.5 + 6], size = 300;
+      const held = [end[0] + 0.2 * size, end[1] + 0.97 * size], away = [held[0] + 360, held[1] + 520];
+      const k = Math.max(seg(T, 51.8, 52.7, 'outCubic') - seg(T, 57.0, 57.9, 'inCubic'), 0);
+      const wrist = [lerp(away[0], held[0], k), lerp(away[1], held[1], k)];
+      const curl = lerp(0.35, 1.0, seg(T, 52.45, 52.85)) - 0.5 * seg(T, 56.8, 57.1);
+      RIG.hand(c.g, 'daniel', { at: wrist, size, pose: 'grip', view: 'side', rot: -100 - 5 * tiltNow, curl, sleeve: 'day', side: 'L' },
+        { light: { x: 588, y: 244, color: '#FFF1D8', back: 0.78 }, ambient: '#1E2422', ambientK: 0.3, exposure: 0.78 });
     }
     v.front(c, c.t, s);
   }

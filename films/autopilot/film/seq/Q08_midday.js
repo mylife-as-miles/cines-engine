@@ -25,13 +25,24 @@
   const breath = t => (twos(t) * 0.25) % 1;                          // Daniel's 3 px breath at 0.25 Hz, on twos
   const lit = (v, k) => ({ light: { x: v.light.x, y: v.light.y, color: v.light.color, back: k == null ? 0.45 : k }, ambient: '#6E8682', ambientK: 0.12 });
   const pose = (t, ks) => RIG.key(twos(t), ks);                       // poses tween on twos (strings snap at the midpoint)
+  // a push or reframe that never shows past the sets' frame-sized caches: the frame centre is kept inside the safe box
+  const cam = o => { const z = Math.max(1, o.zoom || 1), x = o.x == null ? W / 2 : o.x, y = o.y == null ? H / 2 : o.y;
+    return Object.assign({}, o, { zoom: z, x: clamp(x, W / 2 / z, W - W / 2 / z), y: clamp(y, H / 2 / z, H - H / 2 / z) }); };
   const DAN = { outfit: 'office', collar: 'straight' };
-  // a figure that holds still, drawn once into its own canvas (at 2x, so pushes stay crisp) and placed by its box
-  function stillFig(c, name, who, p, opts, box) {
-    const [x0, y0, w, h] = box, k = 2;
-    const cv = c.cache('Q08|fig|' + name, g => { g.scale(k, k); g.translate(-x0, -y0); RIG.draw(g, who, p, opts); }, Math.ceil(w * k), Math.ceil(h * k));
-    c.g.drawImage(cv, x0, y0, w, h);
+  // a figure that holds still, drawn once into its own canvas (at 1.5x, so pushes stay crisp) and placed by its box
+  function stillFig(c, name, who, p, opts, box, into, face) {
+    const [x0, y0, w, h] = box, k = 1.5;
+    const cv = c.cache('Q08|fig|' + name, g => { g.scale(k, k); g.translate(-x0, -y0); (face ? RIG.face : RIG.draw)(g, who, p, opts); }, Math.ceil(w * k), Math.ceil(h * k));
+    (into || c.g).drawImage(cv, x0, y0, w, h);
   }
+  // a moving figure drawn once this frame into a reusable canvas, so it can be laid down twice (in the room and in a glass)
+  function liveFig(c, name, who, p, opts, box) {
+    const [x0, y0, w, h] = box, cv = c.cache('Q08|live|' + name, () => {}, Math.ceil(w), Math.ceil(h)), g = cv.getContext('2d');
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.translate(-x0, -y0);
+    const info = RIG.draw(g, who, p, opts); g.setTransform(1, 0, 0, 1, 0, 0);
+    return { cv, box, info };
+  }
+  const boxStand = (at, s) => [at[0] - 0.62 * s, at[1] - 1.98 * s, 1.24 * s, 2.06 * s];
   // the kitchenette's camera (the office set's, from the corridor through the glass door), so figures stand in its room
   const KT = LC.camera({ x: 0.55, y: 1.52, z: -0.9, yaw: deg(-4), pitch: deg(-6), f: 1180, cx: 960, cy: 540 });
   const kt = (x, z) => { const p = KT.p(x, 0, z); return { at: [p[0], p[1]], scale: KT.f / p[2] }; };
@@ -49,12 +60,12 @@
   ];
   const BEAM_NEAR = { name: 'b3', variant: 0, at: [1.25, -0.95], view: 'threeBack', facing: 1, arms: ['desk', 'desk'], turn: 0, seed: 4, ink: '#0A1011' };
   function beamColleague(c, t, b) {
-    const s = pj(b.at[0], b.at[1]), wave = Math.max(0, Math.sin(twos(t) * 1.7 + b.seed)) ** 6, lvl = wave < 0.25 ? 0 : wave < 0.7 ? 1 : 2;
-    const p = { variant: b.variant, at: s.at, scale: s.scale, view: b.view, facing: b.facing, body: 'sit', seat: 0.47, head: { nod: [0.1, 0.22, 0.34][lvl], turn: b.turn }, armR: b.arms[0], armL: b.arms[1] };
+    const s = pj(b.at[0], b.at[1]), wave = Math.max(0, Math.sin(twos(t) * 1.7 + b.seed)) ** 6, lvl = wave < 0.4 ? 0 : 1;
+    const p = { variant: b.variant, at: s.at, scale: s.scale, view: b.view, facing: b.facing, body: 'sit', seat: 0.47, head: { nod: [0.1, 0.3][lvl], turn: b.turn }, armR: b.arms[0], armL: b.arms[1] };
     stillFig(c, 'beam|' + b.name + '|' + lvl, 'colleague', p, { mode: 'silhouette', light: { x: 1340, y: 380, color: '#D8E8EC' }, ink: b.ink || '#0C1314' }, [s.at[0] - 0.85 * s.scale, s.at[1] - 1.2 * s.scale, 1.7 * s.scale, 1.8 * s.scale]);
   }
-  function projectorShot(c, lt, cam) {
-    const v = office().projector; c.camera(cam);
+  function projectorShot(c, lt, view) {
+    const v = office().projector; c.camera(cam(view));
     v.back(c, lt, {});
     // across the table the dark glass top hides their laps: clip the far ones to above its far edge
     const e0 = PJ.p(-1.9, 0.75, 0.6), e1 = PJ.p(1.9, 0.75, 0.6), m = (e1[1] - e0[1]) / (e1[0] - e0[0]), yAt = x => e0[1] + m * (x - e0[0]);
@@ -86,14 +97,15 @@
   }
   function tableShot(c, st, lt, o) {
     const v = office().table, a = v.anchors, g = c.g; o = o || {};
-    c.camera(o.cam || {});
+    c.camera(cam(o.cam || {}));
     v.back(c, lt, { window: o.window || 0 });
     // Daniel at the far end before the slide, the pages in his left hand, fielding questions
     const d = a.daniel, t = twos(lt), extra = o.pose ? o.pose(t) : {};
     const P = Object.assign({ at: [d.x, d.y], scale: d.scale, view: 'front', body: 'stand', breath: breath(lt), face: 'tired', armL: { pose: 'hold', dx: -0.04, dy: 0.08 } }, DAN, extra);
     const LD = { light: { x: 960, y: 300, color: '#E8EEF0', back: 0.85 }, ambient: '#6E8682', ambientK: 0.18 };
-    const info = RIG.draw(g, 'daniel', P, LD);
-    if (info && info.hands) pages(g, info.hands.L, d.scale, o.turn ? o.turn(lt) : 0);
+    const fig = liveFig(c, 'table-daniel', 'daniel', P, LD, boxStand(P.at, d.scale)), fb = fig.box;
+    if (fig.info && fig.info.hands) { const fg = fig.cv.getContext('2d'); fg.translate(-fb[0], -fb[1]); pages(fg, fig.info.hands.L, d.scale, o.turn ? o.turn(lt) : 0); fg.setTransform(1, 0, 0, 1, 0, 0); }
+    g.drawImage(fig.cv, fb[0], fb[1]);
     g.drawImage(tableColleagues(c, v), 0, 0);
     v.front(c, lt, { window: o.window || 0, reflect: (rg, R) => {
       // the colleagues (and, in the wide shots, Daniel) given back by the dark glass
@@ -101,7 +113,7 @@
         const s = R.seats[si], left = si >= 3;
         R.mirror(mg, s.mirrorY, gg => RIG.draw(gg, 'colleague', { variant, at: [s.x, s.y], scale: s.scale, view, facing: left ? 1 : -1, body: 'sit', seat: 0.47, armR: 'desk', armL: 'desk', head: { nod: 0.15 } }, { light: R.light, ambient: '#30494A', ambientK: 0.3 }));
       })), 0, 0);
-      if (o.reflectDaniel) R.mirror(rg, d.y + 4, gg => RIG.draw(gg, 'daniel', P, { light: R.light }));
+      if (o.reflectDaniel) R.mirror(rg, d.y + 4, gg => { gg.globalAlpha = 0.85; gg.drawImage(fig.cv, fb[0], fb[1]); gg.globalAlpha = 1; });
     } });
   }
 
@@ -121,13 +133,13 @@
   }
   function kitchenShot(c, st, lt, o) {
     const v = office().kitchen, g = c.g, s = { stutter: !!o.stutter, ring: !!o.ring };
-    c.camera(o.cam || {});
+    c.camera(cam(o.cam || {}));
     v.back(c, lt, s);
     g.drawImage(smallBag(c), 0, 0);
     const L = lit(v, 0.55), figs = [];
     if (o.priya) figs.push(['priya', o.priya]);
     figs.push(['daniel', Object.assign({ view: 'profile', facing: -1, body: 'stand', breath: breath(lt), face: 'tired' }, DAN, kt(-0.3, 1.4), o.daniel || {})]);
-    figs.sort((A, B) => A[1].scale - B[1].scale).forEach(([who, p]) => RIG.draw(g, who, p, L));   // the farther first
+    figs.sort((A, B) => A[1].scale - B[1].scale).forEach(([who, p]) => p.still ? stillFig(c, p.still, who, p, L, boxStand(p.at, p.scale)) : RIG.draw(g, who, p, L));   // the farther first
     v.front(c, lt, s);
   }
   function priyaWalk(t, t0, t1, from, to) {
@@ -140,7 +152,7 @@
   const BG = { x0: 600, x1: 1380, y0: 400, y1: 1000 };
   function pocketInsert(c, st) {
     const g = c.g, bw = BG.x1 - BG.x0, bh = BG.y1 - BG.y0;
-    c.camera({ x: 960 + st * 4, y: 540, zoom: 1.0 + st * 0.006 });
+    c.camera(cam({ x: 960 + st * 4, y: 540, zoom: 1.0 + st * 0.006 }));
     g.drawImage(c.cache('Q08|bag|back', bg => {
       const l = LC.layer();
       l.fillStyle = '#B9C6C1'; l.fillRect(0, 0, W, H);
@@ -200,9 +212,9 @@
   }
 
   // ---------- the microwave's door: his face (and hers) in its black glass ----------
-  function microwaveShot(c, lt, figs, cam) {
+  function microwaveShot(c, lt, figs, view) {
     const v = office().microwave;
-    c.camera(cam || {});
+    c.camera(cam(view || {}));
     v.back(c, lt, {});
     v.front(c, lt, { reflect: (g, R) => figs(g, R) });
   }
@@ -262,7 +274,7 @@
           projectorShot(c, lt, { zoom: 1.0 + st * 0.008 });
         }, post: { vig: 0.45 } },
       { at: 7.0, name: 'table: Daniel fields questions at the far end', draw(c, st, lt) {
-          tableShot(c, st, lt, { cam: { zoom: 1.0 + st * 0.004 }, reflectDaniel: true, pose: t => pose(t, [
+          tableShot(c, st, lt, { cam: {}, reflectDaniel: true, pose: t => pose(t, [
             [7.0, { head: { turn: -0.15, nod: 0.25 }, armR: 'relaxed' }],
             [7.8, { head: { turn: 0.18, nod: 0.05 }, armR: { pose: 'hold', dx: 0.16, dy: 0.04, dz: -0.06 } }],
             [9.2, { head: { turn: 0.24, nod: 0.02 }, armR: { pose: 'hold', dx: 0.2, dy: 0.02, dz: -0.04 } }],
@@ -284,20 +296,20 @@
         }, post: { vig: 0.45 } },
       { at: 16.4, name: 'table: someone opens the window; the heat pours in; shut', draw(c, st, lt) {
           const w = lt < 17.0 ? 0 : lt < 18.3 ? seg(lt, 17.0, 17.25, E.outCubic) : 1 - seg(lt, 18.3, 18.5, E.inCubic);
-          tableShot(c, st, lt, { window: w, cam: { zoom: 1.02 }, reflectDaniel: true, pose: t => pose(t, [
+          tableShot(c, st, lt, { window: w, cam: {}, reflectDaniel: true, pose: t => pose(t, [
             [16.4, { head: { turn: 0.1, nod: 0.08 }, armR: 'relaxed' }], [17.1, { head: { turn: -0.32, nod: -0.05 }, armR: 'relaxed', face: 'squint' }],
             [18.4, { head: { turn: -0.3, nod: 0.0 }, armR: 'relaxed', face: 'squint' }], [19.0, { head: { turn: 0.05, nod: 0.15 }, armR: 'relaxed', face: 'tired' }]]) });
         } },
       { at: 20.0, name: 'print: the wall clock in its glass, 10:18 to 11:43', draw(c, st, lt) {
-          const v = office().print; c.camera({ x: 1000, y: 520, zoom: 1.0 + st * 0.008 });
+          const v = office().print; c.camera(cam({ x: 1000, y: 520, zoom: 1.0 + st * 0.008 }));
           v.back(c, lt, {}); v.front(c, lt, { time: key(st, [[0.4, 618], [5.0, 703, 'inOutSine']]) });
         } },
       // ===== S11 · the kitchenette =====
       { at: 25.6, name: 'kitchenette: the coffee machine stutters; a phone starts to ring', draw(c, st, lt) {
-          kitchenShot(c, st, lt, { stutter: lt < 27.4, ring: lt > 27.0, cam: { zoom: 1.0 + st * 0.006 }, daniel: { head: { nod: 0.15, turn: lt > 27.2 ? 0.25 : 0 } } });
+          kitchenShot(c, st, lt, { stutter: lt < 27.4, ring: lt > 27.0, cam: {}, daniel: { still: lt > 27.2 ? 'dan-s8b' : 'dan-s8a', head: { nod: 0.15, turn: lt > 27.2 ? 0.25 : 0 } } });
         } },
       { at: 28.0, name: 'phone: someone\'s phone ringing face up on the table', draw(c, st, lt) {
-          const v = office().phone; c.camera({ zoom: 1.0 + st * 0.01 });
+          const v = office().phone; c.camera(cam({ zoom: 1.0 + st * 0.01 }));
           v.back(c, lt, {}); v.front(c, lt, { ring: lt < 30.2 });
         } },
       { at: 30.4, name: 'insert: his hand into the bag\'s outside pocket closes on nothing', draw(c, st) { pocketInsert(c, st); } },
@@ -327,14 +339,14 @@
       // ===== Priya =====
       { at: 40.0, name: 'kitchenette: Priya appears with a fresh mug', draw(c, st, lt) {
           const p = priyaWalk(lt, 40.1, 42.4, [0.95, 0.35], [0.2, 1.9]), turned = lt > 42.2;
-          kitchenShot(c, st, lt, { cam: { zoom: 1.0 + st * 0.004 },
+          kitchenShot(c, st, lt, { cam: {},
             priya: Object.assign(p, { view: turned ? 'profile' : 'threeBack', facing: -1, hold: { r: 'cup' }, armR: 'mug', face: 'warm', head: { turn: turned ? 0 : 0.2 } }),
             daniel: { head: { nod: lt > 41.0 ? 0.05 : 0.2, turn: lt > 41.0 ? 0.55 : 0 }, face: lt > 41.6 ? 'tired' : 'blank' } });
         } },
       { at: 43.8, name: 'kitchenette, closer: "Left my phone at home"', draw(c, st, lt) {
           const d = kt(-0.3, 1.4);
           kitchenShot(c, st, lt, { cam: { x: d.at[0] + 140, y: d.at[1] - 760, zoom: 1.5 + st * 0.008 },
-            priya: Object.assign(kt(0.2, 1.9), { body: 'stand', view: 'profile', facing: -1, hold: { r: 'cup' }, armR: 'mug', face: 'warm', outfit: 'office' }),
+            priya: Object.assign(kt(0.2, 1.9), { still: 'priya-s15', body: 'stand', view: 'profile', facing: -1, hold: { r: 'cup' }, armR: 'mug', face: 'warm', outfit: 'office' }),
             daniel: Object.assign({ view: 'three', yaw: 62, facing: 1, face: 'tired' }, pose(lt, [
               [43.8, { head: { turn: 0.25, nod: 0.12 }, armR: 'relaxed', smile: 0.05 }],
               [44.6, { head: { turn: 0.32, nod: 0.05 }, armR: { pose: 'hold', dx: 0.05, dz: 0.05 }, smile: 0.15 }],
@@ -348,11 +360,11 @@
               [48.4, { armL: 'mug', armR: 'relaxed', head: { turn: -0.05, tilt: 0.05 } }],
               [49.0, { armL: 'mug', armR: { pose: 'phone', dz: 0.1 }, head: { turn: -0.1, tilt: 0.1 } }],
               [50.8, { armL: 'mug', armR: { pose: 'phone', dz: 0.12 }, head: { turn: -0.12, tilt: 0.08 } }]])),
-            daniel: { view: 'three', yaw: 62, facing: 1, head: { turn: 0.3, nod: 0.1 } } });
+            daniel: { still: 'dan-s16', view: 'three', yaw: 62, facing: 1, head: { turn: 0.3, nod: 0.1 } } });
         } },
       { at: 51.0, name: 'microwave: "I know exactly where it is"', draw(c, st, lt) {
           microwaveShot(c, lt, (g, R) => {
-            RIG.face(g, 'priya', { at: [R.x + 560, R.y + 30], size: 330, view: 'three', facing: -1, face: 'warm', head: { turn: 0.15 }, outfit: 'office' }, { light: R.light, exposure: 0.85 });
+            { const at = [R.x + 560, R.y + 30], sz = 330; stillFig(c, 'priya-mw', 'priya', { at, size: sz, view: 'three', facing: -1, face: 'warm', head: { turn: 0.15 }, outfit: 'office' }, { light: R.light, exposure: 0.85 }, [at[0] - 1.4 * sz, at[1] - 1.0 * sz, 2.8 * sz, 2.6 * sz], g, true); }
             const P = pose(lt, [[51.0, { face: 'tired', head: { turn: 0.18, nod: 0.08 }, smile: 0.1 }], [52.2, { face: 'tired', head: { turn: 0.05, nod: 0.12 }, smile: 0.2 }],
               [53.6, { face: 'smile', head: { turn: 0.12, nod: 0.1 }, smile: 0.35 }], [55.0, { face: 'smile', head: { turn: 0.1, nod: 0.1 }, smile: 0.3 }]]);
             RIG.face(g, 'daniel', Object.assign({ at: [R.x - 40, R.y - 10], size: 470, view: 'front', breath: breath(lt) }, DAN, P), { light: R.light });
@@ -360,15 +372,20 @@
         }, post: { vig: 0.48 } },
       { at: 55.0, name: 'kitchenette: he almost laughs. One daft mistake. Priya goes', draw(c, st, lt) {
           const p = priyaWalk(lt, 55.4, 57.6, [0.2, 1.9], [1.05, 0.25]), cup = ktp(-0.76, 0.96, 1.0);
-          kitchenShot(c, st, lt, { cam: { zoom: 1.02 + st * 0.004 },
+          kitchenShot(c, st, lt, { cam: {},
             priya: Object.assign(p, { view: lt > 55.4 ? 'three' : 'profile', facing: lt > 55.4 ? 1 : -1, hold: { r: 'cup' }, armR: 'mug', face: 'warm' }),
             daniel: Object.assign({ face: 'smile' }, pose(lt, [[55.0, { head: { turn: 0.5, nod: 0.1 }, smile: 0.25, lid: 0.4, armL: 'relaxed' }], [55.6, { head: { turn: 0.3, nod: 0.25, tilt: -0.08 }, smile: 0.45, lid: 0.7, armL: 'relaxed' }],
               [56.4, { head: { turn: -0.1, nod: 0.25 }, smile: 0.3, lid: 0.4, armL: { to: cup, depth: 0.25 } }], [57.2, { head: { turn: 0, nod: 0.18 }, smile: 0.15, armL: 'mug', hold: { l: 'cup' } }]])) });
         } },
       // ===== the window: the bright, hot day, held behind glass =====
       { at: 58.0, name: 'window: the hot day held behind glass (V.O.)', draw(c, st, lt) {
-          const v = office().window; c.camera({ x: 960, y: 600, zoom: 1.0 + st * 0.0045 });
+          const v = office().window; c.camera(cam({ x: 960, y: 610, zoom: 1.06 + st * 0.007 }));
           v.back(c, lt, {}); v.front(c, lt, {});
+          // dust turning in the window's light, rising slowly in the warm air against the glass
+          { const g = c.g, R = OTM.rng('q08-win-motes'); g.save(); g.globalCompositeOperation = 'screen';
+            for (let i = 0; i < 70; i++) { const x0 = 380 + R() * 1150, y0 = R() * 900, sp = 4 + R() * 9, ph = R() * TAU, r = 0.8 + R() * 2.2;
+              const y = 120 + ((y0 - st * sp) % 820 + 820) % 820, x = x0 + Math.sin(st * 0.35 + ph) * 18, a = (0.12 + R() * 0.3) * (0.5 + 0.5 * Math.sin(st * 0.6 + ph * 3));
+              g.fillStyle = rgba('#FFFBF0', a); g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill(); } g.restore(); }
           // the wall below the sill in shade: a calm, darker band for the V.O.
           c.reset(); c.g.drawImage(c.cache('Q08|win|band', bg => { bg.fillStyle = LC.lin(bg, 0, 840, 0, H, [[0, '#0B1112', 0], [0.5, '#0B1112', 0.3], [1, '#0B1112', 0.55]]); bg.fillRect(0, 840, W, 240); }), 0, 0);
         }, post: { vig: 0.42 } },

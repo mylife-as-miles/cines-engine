@@ -1,0 +1,7 @@
+{
+ "id": "M11a",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 30 seconds: urgent but restrained, a father driving fast to his daughter's nursery after realising he did not pick her up. A low steady pulse of cello and double-bass pizzicato on D like a heartbeat, a sustained low string note, rising tension without melody, piano growing to mezzo-forte, then dropping suddenly to a single quiet sustained low D. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}
