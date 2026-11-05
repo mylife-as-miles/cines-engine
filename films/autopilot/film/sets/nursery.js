@@ -952,13 +952,13 @@
       [[1540, 300, 1], [380, 760, -1], [1500, 880, 1]].forEach(([cx, cy, dir]) => { for (let j = 0; j < 9; j++) { const ww = 14 + j * 16, len = 520 + j * 30; g.strokeStyle = rgba(j % 2 ? '#6E4A28' : '#A47A4C', 0.14 + (j % 3) * 0.03); g.lineWidth = 3 + (j % 2) * 3;
         g.beginPath(); g.moveTo(cx - len * dir, cy - ww); g.quadraticCurveTo(cx + len * 0.35 * dir, cy - ww * 1.05, cx + len * 0.5 * dir, cy); g.quadraticCurveTo(cx + len * 0.35 * dir, cy + ww * 1.05, cx - len * dir, cy + ww); g.stroke(); } });
       { const cx = 250, cy = 470, n = OTM.rng('knot'); for (let r = 7; r >= 0; r--) { const pts = []; for (let a = 0; a < 24; a++) { const t = a / 24 * TAU, rr = (12 + r * 15) * (0.85 + 0.3 * n()); pts.push([cx + Math.cos(t) * rr * 2.4, cy + Math.sin(t) * rr * 0.8]); }
-          g.strokeStyle = rgba('#6A4426', 0.18 + 0.03 * (7 - r)); g.lineWidth = 2.5; g.stroke(LC.smooth(pts)); }
+          g.strokeStyle = rgba('#6A4426', 0.08 + 0.02 * (7 - r)); g.lineWidth = 3.5; g.stroke(LC.smooth(pts)); }
         g.fillStyle = 'rgba(80,48,24,0.55)'; g.fill(LC.smooth([[cx - 26, cy], [cx - 8, cy - 9], [cx + 24, cy - 6], [cx + 30, cy + 3], [cx + 4, cy + 9], [cx - 20, cy + 6]])); }
       g.fillStyle = LC.lin(g, 0, 0, W, 0, [[0, '#28202E', 0.46], [0.5, '#28202E', 0.12], [1, '#FFC890', 0.14 * k]]); g.fillRect(0, 0, W, H);
       // the notice, a little off true
       g.save(); g.translate(CX, CY); g.rotate(TILT); g.translate(-CX, -CY);
       { const sh = scratch('noteSh'); sh.translate(CX, CY); sh.rotate(TILT); sh.translate(-CX, -CY); sh.fillStyle = 'rgba(28,18,14,0.6)'; sh.fillRect(SL.x - 26, SL.y + 12, SL.w, SL.h); sh.setTransform(1, 0, 0, 1, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(LC.blurred(sh.canvas, 12, false), 0, 0); g.restore(); }
-      g.save(); g.translate(PR.x, PR.y); paintNoticeSheet(g, PR.w, PR.h, k);
+      g.save(); g.translate(PR.x, PR.y); paintNoticeSheet(g, PR.w, PR.h, k * 0.86);
       // the sheet is not quite flat in its sleeve: a soft fall-off along its left edge, a gentle bulge low down, the sun on its right edge
       g.fillStyle = LC.lin(g, 0, 0, PR.w * 0.12, 0, [[0, '#2A2232', 0.2], [1, '#2A2232', 0]]); g.fillRect(0, 0, PR.w * 0.12, PR.h);
       g.fillStyle = LC.lin(g, PR.w * 0.9, 0, PR.w, 0, [[0, '#FFE6C4', 0], [1, '#FFE6C4', 0.16 * k]]); g.fillRect(PR.w * 0.9, 0, PR.w * 0.1, PR.h);
@@ -973,9 +973,12 @@
       g.fillStyle = LC.lin(g, 0, 860, 0, H, [[0, '#0E0C10', 0], [1, '#0E0C10', 0.45]]); g.fillRect(0, 860, W, H - 860);
     }
     // the sky the sleeve gives back, from where Daniel stands: violet-teal above, the copper west on the right
-    function sheenSky(g) { g.fillStyle = LC.lin(g, 0, SL.y, 0, SL.y + SL.h, [[0, '#4A5268'], [0.55, '#6A5A68'], [1, '#2A2228']]); g.fillRect(SL.x - 40, SL.y - 40, SL.w + 80, SL.h + 80);
-      g.fillStyle = LC.lin(g, SL.x, 0, SL.x + SL.w, 0, [[0, '#000000', 0.35], [0.62, '#E8905A', 0.1], [1, '#F2A468', 0.5]]); g.fillRect(SL.x - 40, SL.y - 40, SL.w + 80, SL.h + 80);
-      LC.glare(g, null, { x: SL.x + SL.w * 0.7, y: SL.y + SL.h * 0.25, angle: -0.9, color: '#FFD0A0', bands: [{ d: -70, w: 150, a: 0.35 }, { d: 40, w: 24, a: 0.45 }] }); }
+    function sheenSky(g, amount) {
+      g.fillStyle = LC.lin(g, 0, SL.y, 0, SL.y + SL.h, [[0, '#3A4258'], [0.55, '#4E4654'], [1, '#1E1A20']]); g.fillRect(SL.x - 60, SL.y - 60, SL.w + 120, SL.h + 120);
+      g.fillStyle = LC.lin(g, SL.x, 0, SL.x + SL.w, 0, [[0, '#000000', 0.4], [0.62, '#E8905A', 0.08], [1, '#F2A468', 0.4]]); g.fillRect(SL.x - 60, SL.y - 60, SL.w + 120, SL.h + 120);
+      // the glare: the bright western sky, laid diagonally across the sleeve where it bends toward the light
+      LC.glare(g, null, { x: CX + 40, y: CY - 70, angle: -0.62, color: '#FFE2C2', mode: 'source-over', bands: [{ d: -40, w: 380, a: 0.85 * amount, edge: 0.7 }, { d: 210, w: 40, a: 0.6 * amount }, { d: -290, w: 26, a: 0.35 * amount }] });
+    }
     const view = {
       back(c, t, s) {
         s = s || {}; const g = c.g, tod = s.tod === 'dusk' ? 'dusk' : 'evening';
@@ -984,12 +987,12 @@
           const sh = cache(c, 'note|shadowShape', o => { o.fillStyle = '#000'; o.fill(LC.smooth([[-200, 1200], [-200, 260], [60, 200], [210, 160], [300, 60], [420, 40], [520, 120], [540, 300], [470, 420], [600, 520], [760, 760], [800, 1200]])); }, 900, 1300);
           g.drawImage(LC.blurred(sh, 0.1) && sh, -900 + 900 * a * 0.62, -60); g.restore(); }
         // the sleeve's sheen: the sky behind Daniel, and Daniel in it (front-on), laid over the words with a screen
-        const sheen = s.sheen == null ? 1 : s.sheen;
-        if (sheen > 0 || s.reflect) {
-          const m = g.getTransform(), r = scratch('noteRefl'); r.setTransform(m); sheenSky(r);
+        const sheen = clamp(s.sheen == null ? (s.reflect ? 1 : 0.2) : s.sheen, 0, 1);
+        if (sheen > 0.001) {
+          const m = g.getTransform(), r = scratch('noteRefl'); r.setTransform(m); sheenSky(r, sheen);
           if (s.reflect) s.reflect(r, view.at(s));
           r.setTransform(1, 0, 0, 1, 0, 0);
-          g.save(); g.clip(sleeveP); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.42 * Math.max(sheen, s.reflect ? 0.8 : 0); g.drawImage(r.canvas, 0, 0); g.restore();
+          g.save(); g.clip(sleeveP); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.28 + 0.6 * sheen; g.drawImage(r.canvas, 0, 0); g.restore();
         }
       },
       front(c, t, s) {
