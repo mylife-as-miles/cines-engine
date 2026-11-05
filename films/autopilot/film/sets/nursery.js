@@ -741,7 +741,7 @@
       front(c, t, s) {
         s = s || {}; const g = c.g, set = s.set || 0, L = C3.lightK(set), N = C3.nightK(set), a = th(s), G = geo(a), sa = Math.sin(a);
         const bb = G.glass.reduce((b, q) => [Math.min(b[0], q[0]), Math.min(b[1], q[1]), Math.max(b[2], q[0]), Math.max(b[3], q[1])], [1e9, 1e9, -1e9, -1e9]);
-        if (s.figure) throughPane(c, s.figure, view.at(s), G.glassP, s.figureTint === undefined ? DUSK.figTint : s.figureTint, { x: bb[0], y: bb[1], w: bb[2] - bb[0], h: bb[3] - bb[1] });
+        if (s.figure) throughPane(c, s.figure, view.at(s), G.glassP, s.figureTint === undefined ? '#7A8C90' : s.figureTint, { x: bb[0], y: bb[1], w: bb[2] - bb[0], h: bb[3] - bb[1] });
         // the glass: nearly edge-on it mirrors the sunset along the flank; opened toward us it gives back the dim east
         g.save(); g.clip(G.glassP); g.globalCompositeOperation = 'screen';
         g.fillStyle = LC.lin(g, 0, bb[1], 0, bb[3], [[0, mix('#B8704A', '#56607A', sa), lerp(0.75, 0.3, sa) * (1 - 0.55 * N)], [1, mix('#C47A4A', '#56607A', sa), lerp(0.5, 0.06, sa) * (1 - 0.55 * N)]]); g.fillRect(bb[0], bb[1], bb[2] - bb[0], bb[3] - bb[1]);
@@ -1624,6 +1624,15 @@
     return view;
   })();
 
+  // demos use the real Daniel from RIG where it is loaded (falling back to the stand-ins), so the sheet shows true compositions
+  const hasRig = () => !!(window.RIG && typeof RIG.draw === 'function');
+  const rigOr = (useRig, standIn) => (g, a) => { if (hasRig()) { try { useRig(g, a); return; } catch (e) { FILM.warn('nursery demo: RIG ' + e.message); } } standIn(g, a); };
+  const demoKneel = rigOr((g, a) => RIG.draw(g, 'daniel', { at: a.kneel, scale: a.k, view: 'profile', body: 'kneel', armR: { to: a.hand, palm: 'down' }, armL: 'down', head: { nod: 0.8 }, face: 'down', collar: 'crooked' }, { mode: 'silhouette', light: { x: a.light.x, y: a.light.y, color: a.light.color } }), (g, a) => standInKneel(g, a));
+  const demoStoop = rigOr((g, a) => RIG.draw(g, 'daniel', { at: [a.face[0] - 0.363 * a.k * 0.86, a.face[1] + 1.637 * a.k * 0.86], scale: a.k * 0.86, view: 'profile', body: 'stand', lean: 0.9, armR: 'reachLow', armL: 'down', head: { nod: 0.75 }, face: 'down', eyes: 'down', collar: 'crooked' }, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.9 } }), (g, a) => standInStoop(g, a));
+  const demoReflectFigure = rigOr((g, a) => RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y], scale: a.reflection.k, view: 'front', body: 'stand', face: 'drained' }, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.6 } }), (g, a) => standInFigureFront(g, a));
+  const demoReflectBust = rigOr((g, a) => RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y + 1.62 * a.reflection.k], scale: a.reflection.k, view: 'front', body: 'stand', face: 'drained', head: { nod: 0.3 } }, { light: { x: 2400, y: 300, color: '#E89A5E', back: 0.5 } }), (g, a) => standInHeadFront(g, a));
+  const demoNoticeFace = rigOr((g, a) => RIG.face(g, 'daniel', { at: a.face, size: 0.3 * a.k, face: 'blank' }, { mode: 'silhouette', ink: '#1A1418', light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.7 } }), (g, a) => standInHeadFront(g, a));
+
   // demo stand-in: a hand with a key fob, in the foreground (blink view)
   function standInRemote(g, a) {
     const [x, y] = a.remote, k = a.remoteK / 2600, P = (px, py) => [x + px * k, y + py * k];
@@ -1725,10 +1734,10 @@
       { name: 'entrance: dusk', draw(c, t) { const v = ENTR, s = { tod: 'dusk' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'boarded: evening', draw(c, t) { const v = BOARD, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'notice: insert', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'notice: his face in the sheen (stand-in)', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening', reflect: standInHeadFront }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'notice: his face in the sheen', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening', reflect: demoNoticeFace }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'window: the black mirror', post: { vig: 0.45 }, draw(c, t) { const v = WINV, s = {}; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'window: his reflection (stand-in)', post: { vig: 0.45 }, draw(c, t) { const v = WINV, s = { reflect: standInFigureFront, dist: 6 }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'handle: LOCKED, the yank (stand-ins)', post: { vig: 0.45 }, draw(c, t) { const v = HANDLEV, s = { pull: 1, jolt: 0.4, reflect: standInHeadFront }; v.back(c, t, s); standInHand(c.g, v.at(s)); v.front(c, t, s); } },
+      { name: 'window: his reflection', post: { vig: 0.45 }, draw(c, t) { const v = WINV, s = { reflect: demoReflectFigure, dist: 6 }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'handle: LOCKED, the yank', post: { vig: 0.45 }, draw(c, t) { const v = HANDLEV, s = { pull: 1, jolt: 0.4, reflect: demoReflectBust }; v.back(c, t, s); standInHand(c.g, v.at(s)); v.front(c, t, s); } },
       { name: 'blink: BEEP, amber into the dusk', post: { vig: 0.45 }, draw(c, t) { const v = BLINKV, s = { blink: 1 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'blink: the remote (focus on the hand)', post: { vig: 0.45 }, draw(c, t) { const v = BLINKV, s = { blink: 0.6, focus: 1 }; v.back(c, t, s); standInRemote(c.g, v.at(s)); v.front(c, t, s); } },
       { name: 'carpark: his car alone', post: { vig: 0.45 }, draw(c, t) { const v = PARKV, s = {}; v.back(c, t, s); v.front(c, t, s); } },
@@ -1740,16 +1749,13 @@
       { name: 'playground: silent', post: { vig: 0.45, halation: 0.6 }, draw(c, t) { const v = PLAYV, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open 0 (he pulls)', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 0 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open 0.5', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 0.5 }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'door: open (A106, stand-in)', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 1, figure: standInStoop }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'door: open (A106, Daniel)', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 1, figure: demoStoop }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'door: open, empty', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 1 }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'rigtest: c3 kneel', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const s = { set: 0.3, figure: (g, a) => RIG.draw(g, 'daniel', { at: a.kneel, scale: a.k, view: 'profile', body: 'kneel', armR: 'reachIn', armL: 'down', head: { nod: 0.8 }, face: 'down', collar: 'crooked' }, { mode: 'silhouette', light: { x: a.light.x, y: a.light.y, color: a.light.color } }) }; C3.back(c, t, s); C3.front(c, t, s); } },
-      { name: 'rigtest: door stoop', post: { vig: 0.45 }, draw(c, t) { const v = DOORV, s = { open: 1, figure: (g, a) => RIG.draw(g, 'daniel', { at: a.feet, scale: a.k * 0.86, view: 'profile', body: 'stand', lean: 0.9, armR: 'reachLow', armL: 'down', head: { nod: 0.7 }, face: 'down', eyes: 'down', collar: 'crooked' }, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.85 } }) }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'rigtest: window reflection', post: { vig: 0.45 }, draw(c, t) { const v = WINV, s = { dist: 6, reflect: (g, a) => RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y], scale: a.reflection.k, view: 'front', body: 'stand', face: 'drained' }, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.6 } }) }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'c3: set 0 (the disc whole)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0, figure: standInKneel }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'c3: set 0.3 (the style frame)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.3, figure: standInKneel }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'c3: set 0.55 (the last sliver)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.55, figure: standInKneel }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'c3: set 0.75 (afterglow)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.75, figure: standInKneel }; v.back(c, t, s); v.front(c, t, s); } },
-      { name: 'c3: set 1 (teal-black)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 1, figure: standInKneel }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'c3: set 0 (the disc whole)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0, figure: demoKneel }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'c3: set 0.3 (the style frame)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.3, figure: demoKneel }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'c3: set 0.55 (the last sliver)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.55, figure: demoKneel }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'c3: set 0.75 (afterglow)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 0.75, figure: demoKneel }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'c3: set 1 (teal-black)', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, t) { const v = C3, s = { set: 1, figure: demoKneel }; v.back(c, t, s); v.front(c, t, s); } },
     ],
   };
 })();

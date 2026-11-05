@@ -35,13 +35,24 @@ v.front(c, t, s);         // the pane and what is in front of them (glass, door,
 Three views take a character through or in glass. The view composites it correctly; you pass a draw function.
 
 - **`s.figure(g, a)`** in `c3` and `door`: Daniel *seen through* the open door's privacy glass.
-  - Draw him in world coordinates with `RIG`. Inside the glass he is multiplied by the glass tint (`s.figureTint`, default `#C4D0D1`, the mild cooling the style frame shows). Where he is outside the glass (above the door when he stands) he is left untouched.
+  - Draw him in world coordinates with `RIG`. Inside the glass he is multiplied by the glass tint (`s.figureTint`). Where he is outside the glass (above the door when he stands) he is left untouched.
+  - In `c3` the default tint is `#C4D0D1`, the mild cooling the style frame gives its silhouette.
+  - In `door` the default is `#7A8C90`: his face is seen there, so he is darkened and cooled to sit behind dark glass with the tinted world behind him.
   - Any glare, dust and the door are laid over him.
   - You may also draw him directly between `back` and `front`, untinted, as the style frame does.
 - **`s.reflect(g, a)`** in `window`, `handle`, `entrance`, `boarded` and `notice`: Daniel *as the glass gives him back*.
   - Draw him front-on (a reflection faces the camera) at `a.reflection` (`x, y` = his feet or chin, see the view; `k` px/m) or at `a.face` in `notice`.
   - In the car glass and the sidelight he **occludes** the reflected sky (he replaces it, darkened by the glass's reflectance), so he reads as a dark figure in a black mirror, rimmed on his sun side.
-  - In the notice he is laid into the sleeve's glare band (see `notice`).
+    - Draw him in RIG's normal mode, lit by `a.light`; the view applies the glass.
+    - Do not add RIG's `'reflection'` mode on top: that would darken him twice.
+  - In the notice he is laid into the sleeve's glare band (see `notice`). Draw him **dark**, for example RIG `mode: 'silhouette'` with a rim from screen-right. A fully lit figure (a pale shirt) would screen in as a white ghost.
+
+**RIG and these anchors.** The demos draw the real Daniel from `RIG` where it is loaded (falling back to stand-ins):
+
+- **`c3`**: `RIG.draw(g, 'daniel', { at: a.kneel, scale: a.k, view: 'profile', body: 'kneel', armR: { to: a.hand, palm: 'down' }, armL: 'down', head: { nod: 0.8 }, face: 'down', collar: 'crooked' }, { mode: 'silhouette', light: a.light })`.
+  - Aim the arm at `a.hand`. The rig's named `'reachIn'` drops it below the sill; the approved frame holds it level into the car at window height, behind the hinge frame.
+- **`door`**: `RIG.draw(g, 'daniel', { at: [a.face[0] - 0.31 * a.k, a.face[1] + 1.41 * a.k], scale: 0.86 * a.k, view: 'profile', body: 'stand', lean: 0.9, armR: 'reachLow', head: { nod: 0.75 }, face: 'down', eyes: 'down' }, { light: Object.assign({ back: 0.9 }, a.light) })`. That places his bowed face at `a.face` with the rig as it stands today.
+- **`window`**: `RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y], scale: a.reflection.k, view: 'front', body: 'stand' }, { light: a.light })`.
 
 ## The site, and the sun
 
@@ -116,21 +127,22 @@ The same swing frame and colours appear far off in `c3`.
 
 ### `entrance`: the main entrance (A082–A083)
 
-- **What it shows.** The boarded door, square on, set in the painted wall. The elephant on the east side raises its trunk at it; the giraffe on the west side cranes over it, its head breaking out of the painted panel onto the brick. The low sun rakes the wall from the right above the shade the far trees throw, so the plywood, the lock and the notice catch the copper while the pavement and the foot of the wall lie in cool shade.
+- **What it shows.** The boarded door, almost square on (the camera turns 7° to the west, so the wall recedes gently toward the sun), set in the painted wall. The elephant on the east side raises its trunk at it; the giraffe on the west side cranes over it, its head breaking out of the painted panel onto the brick. The low sun rakes the wall from the right above the shade the far trees throw, so the plywood, the lock and the notice catch the copper while the pavement and the foot of the wall lie in cool shade.
 - **Depth.** The canopy and the eaves are seen from below in true perspective. The step sits before the door. Copper strips of light lie on the paving to the west, and a defocused bollard and railing stand in the left foreground.
 - **The pane.** The glazed sidelight beside the door gives back the car park behind the camera, with his car small in it.
-- **State:** `tod`, and `reflect(g, a)` for Daniel in the sidelight (`a.reflection` is his feet; `k` ≈ 88 px/m; clipped to `a.side`).
+- **State:** `tod`, and `reflect(g, a)` for Daniel in the sidelight (`a.reflection` is his feet; `k` ≈ 86 px/m; clipped to the pane).
 - **Anchors:**
-  - `stop`: (921, 932), his feet when he stops 1.1 m from the door.
-  - `k`: 261 px/m there.
-  - `ground(u, z)`: any point in front of the wall, as `{x, y, k}` (u along the wall, z out from it).
-  - `door`, `notice` (952, 530), `lock` (1050, 640), `side` (the sidelight rect), `wallK` 209.
+  - `stop`: (925, 922), his feet when he stops 1.1 m from the door.
+  - `k`: 254 px/m there.
+  - `ground(u, d)`: any point in front of the wall, as `{x, y, k}` (u along the wall, d metres out from it).
+  - `door` (933, 632), `notice` (925, 530), `lock` (1020, 637), `side` (the sidelight's box), `wallK` 204 at the door.
+  - `camera`: the view's camera (`cs`, `proj`, `path`), for placing anything else in its world.
 - **Light:** `{x: 2500, y: 300, color: '#F2A468'}`, from screen-right.
 
 ```js
 const v = SETS.nursery.views.entrance, a = v.at({});
 v.back(c, t, { tod: 'evening' });
-const p = v.ground(12.4, FILM.key(st, [[0, 4.2], [4, 1.1, 'outCubic']]));    // he hurries in from behind the camera and stops
+const p = v.ground(12.4, FILM.key(st, [[0, 4.2], [4, 1.1, 'outCubic']]));    // he hurries in from behind the camera and stops (d metres from the wall)
 RIG.draw(c.g, 'daniel', 'walkAway', { x: p.x, y: p.y, scale: p.k, light: a.light });
 v.front(c, t, {});
 ```
@@ -165,7 +177,7 @@ The notice, printed on A4 paper in a punched plastic sleeve, taped to the plywoo
 - **Anchors:** `face`, `k`, `sleeve` (its rect), `paper`.
 
 ```js
-v.back(c, t, { sheen: FILM.seg(st, 0, 2.5), reflect: (g, a) => RIG.face(g, 'daniel', 'stare', { x: a.face[0], y: a.face[1], scale: a.k, light: a.light }) });
+v.back(c, t, { sheen: FILM.seg(st, 0, 2.5), reflect: (g, a) => RIG.face(g, 'daniel', { at: a.face, size: 0.3 * a.k, face: 'blank' }, { mode: 'silhouette', light: a.light }) });
 ```
 
 ### `carpark`: his car alone (Q11 68–72, 82–84; Q12)
@@ -193,7 +205,7 @@ v.back(c, t, { sheen: FILM.seg(st, 0, 2.5), reflect: (g, a) => RIG.face(g, 'dani
   - `glass`: the pane's box.
 
 ```js
-v.back(c, t, { dist: 7, reflect: (g, a) => RIG.draw(g, 'daniel', 'standFront', { x: a.reflection.x, y: a.reflection.y, scale: a.reflection.k, light: a.light }) });
+v.back(c, t, { dist: 7, reflect: (g, a) => RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y], scale: a.reflection.k, view: 'front', body: 'stand', face: 'drained' }, { light: a.light }) });
 ```
 
 ### `handle`: LOCKED (A102)
@@ -226,18 +238,18 @@ C3's grammar, with the eye raised to Daniel's stooped face.
   - `open`: 0..1, closed to 75°.
   - `set`: the sunset, as in `c3`; default 0.
   - `figure(g, a)`: Daniel through the glass.
-  - `figureTint`.
+  - `figureTint`: default `#7A8C90`.
 - **Anchors:**
-  - `face`: (1094, 470), where his stooped face sits behind the glass at full open.
-  - `k`: 1165 px/m there.
-  - `ground`: his feet's ground point (below frame).
+  - `face`: (1246, 496), where his stooped face sits behind the glass at full open: over the doorway's outer edge, close to the hinge band, with the sun 270 px to its left.
+  - `k`: 1105 px/m there.
+  - `feet`: his feet's ground point (below frame).
   - `hinge`: x 1413, his reaching arm goes behind it.
   - `sun`: (974, 500).
   - `handleAt(s)`: the door handle's screen point at that opening, for his hand as he pulls.
 - **Light:** `lightAt(s)`, the sun behind-left. Rim the back of his head and shoulder. His face is in shadow, with a faint cool fill from the eastern sky behind the camera.
 
 ```js
-const v = SETS.nursery.views.door, s = { open: FILM.seg(st, 0, 1.6, 'outCubic'), figure: (g, a) => RIG.draw(g, 'daniel', 'stoopDoorway', { face: a.face, scale: a.k, light: a.light }) };
+const v = SETS.nursery.views.door, s = { open: FILM.seg(st, 0, 1.6, 'outCubic'), figure: (g, a) => RIG.draw(g, 'daniel', { at: [a.face[0] - 0.31 * a.k, a.face[1] + 1.41 * a.k], scale: 0.86 * a.k, view: 'profile', body: 'stand', lean: 0.9, armR: 'reachLow', head: { nod: 0.75 }, face: 'down', eyes: 'down' }, { light: Object.assign({ back: 0.9 }, a.light) }) };
 v.back(c, t, s); v.front(c, t, s);
 ```
 
@@ -257,7 +269,7 @@ Ported from `src/C3_door.html`; at `set: 0.3` it reproduces the approved frame.
 | `0.62 → 1` | The afterglow fades and the frame drops toward teal-black (`nightK`, from 0.5). At 1 it is very dark but not black: the door's edge and Daniel's silhouette are still just there, so the cut to black at 59.5 still lands. |
 
 - **Recommended timing.** `set = FILM.seg(st, 0, 28)` across the hold (31.5–59.5): the disc leaves the glass over about 17 s and the last 10 s darken. The sun moves linearly, so ease `set` yourself if you want.
-- **State:** `figure(g, a)`, Daniel through the glass, tinted mildly (`figureTint`); `set`.
+- **State:** `figure(g, a)`, Daniel through the glass, tinted mildly (`figureTint`); `set`. For a pure silhouette the tint is invisible: pass `figureTint: null`, or draw him between `back` and `front`, to save the scratch pass (about 3 ms).
 - **Anchors:**
   - `kneel`: (1106, 1006), the ground point under him (hidden by the door panel).
   - `k`: 470 px/m at his depth.
@@ -274,7 +286,7 @@ Ported from `src/C3_door.html`; at `set: 0.3` it reproduces the approved frame.
 ```js
 // Q12 31.5-59.5
 { at: 31.5, name: 'C3, held', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, st) {
-    const v = SETS.nursery.views.c3, s = { set: FILM.seg(st, 0, 28), figure: (g, a) => RIG.draw(g, 'daniel', 'kneelReach', { x: a.kneel[0], y: a.kneel[1], scale: a.k, light: a.light }) };
+    const v = SETS.nursery.views.c3, s = { set: FILM.seg(st, 0, 28), figure: (g, a) => RIG.draw(g, 'daniel', { at: a.kneel, scale: a.k, view: 'profile', body: 'kneel', armR: { to: a.hand, palm: 'down' }, armL: 'down', head: { nod: 0.8 }, face: 'down', collar: 'crooked' }, { mode: 'silhouette', light: a.light }) };
     v.back(c, st, s); v.front(c, st, s); } }
 ```
 
@@ -344,19 +356,29 @@ M.colors, M.items, M.scale, M.length, M.eaves, M.panel, M.entrance, M.lock, M.no
 
 Render the demos with `node tools/set.js nursery 1` → `out/set_nursery.png`. There is one demo per view and state that matters, plus the mural in its three lights and the Q06 pass.
 
-The demos draw **stand-ins** for Daniel (the style frame's kneeling silhouette in `c3`, and rough shapes elsewhere) only to show placement. The sequences draw him with `RIG` at the anchors.
+The demos draw Daniel with `RIG` where it is loaded, using the calls above; otherwise they draw stand-ins (the style frame's kneeling silhouette, and rough shapes) to show placement. The sequences draw him with `RIG` at the anchors.
 
-Measured cost (ms/frame through `tools/set.js`, engine post included, stand-ins included):
+The demos cover each view and state that matters:
+
+- the mural in its three lights, the Q06 pass, and an entrance detail;
+- `entrance` (evening, dusk), `boarded`, `notice` (insert; his face in the sheen);
+- `window` (empty; his reflection), `handle`;
+- `blink` (BEEP; the remote with focus on the hand), `carpark` (alone; the locks answer);
+- `building` (evening, dusk), `arrive` (braking; stopped), `playground`;
+- `door` (opening 0, 0.5, 1 with Daniel, 1 empty);
+- `c3` at set 0, 0.3, 0.55, 0.75 and 1.
+
+Measured cost (ms/frame through `tools/set.js`, engine post included). The set alone is 10–45 ms; a RIG figure adds roughly 10–40 ms depending on size.
 
 | view | ms |
 | --- | --- |
-| `c3` | 24–46 |
-| `door` | 22–42 (76 with the stand-in figure) |
-| `entrance`, `boarded`, `notice` | 16–28 |
-| `window`, `handle` | 11–44 |
-| `blink`, `carpark`, `playground` | 9–50 |
-| `building` | 27 |
-| `arrive` | 50–65 |
+| `c3` | 25–43 |
+| `door` | 20–31 (50–85 with RIG Daniel at close-up size) |
+| `entrance`, `boarded`, `building`, `playground`, `carpark` | 10–17 |
+| `notice` | about 30 |
+| `window`, `handle` | 11–45 |
+| `blink` | 12–14 |
+| `arrive` | 33–35 |
 
 The first frame of a shot builds its caches: about 100–400 ms once.
 
