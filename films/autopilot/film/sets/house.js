@@ -183,13 +183,16 @@
     brickWall(g, cam, [[-6.5, 0.58, 0.3], [DRIVE.x0, 0.58, 0.3], [DRIVE.x0, 0, 0.3], [-6.5, 0, 0.3]], B[T.lit ? 0 : 1], rgba('#000000', 0.15), 'lowwall', 8);
     Q([[-6.5, 0.58, 0.3], [DRIVE.x0, 0.58, 0.3], [DRIVE.x0, 0.62, 0.15], [-6.5, 0.62, 0.15]], T.lit ? '#C9BCA8' : B[2]);
     Q([[DRIVE.x0 - 0.3, 0, 0.3], [DRIVE.x0, 0, 0.3], [DRIVE.x0, 0.85, 0.3], [DRIVE.x0 - 0.3, 0.85, 0.3]], B[T.lit ? 1 : 2]);
-    { const R = OTM.rng('hedge'); for (let i = 0; i < 26; i++) { const z = 0.4 + i * 0.33, x = DRIVE.x1 + 0.55 + R() * 0.2, c0 = cam.p(x, 0.75 + R() * 0.3, z), k = kAt(cam, x, 1, z); if (c0[2] < 0.6) continue; g.fillStyle = T.hedge[R() < 0.5 ? 1 : 0]; g.beginPath(); g.ellipse(c0[0], c0[1], 0.42 * k, 0.6 * k, 0, 0, Math.PI * 2); g.fill(); } }
-    { const tr = [-2.2, 0, 4.6], c0 = cam.p(tr), k = kAt(cam, ...tr); if (c0[2] > 0.3) { seg2(g, cam, tr, [tr[0], 1.9, tr[2]], Math.max(2, 0.12 * k), T.lit ? '#4A3E32' : '#1E1A18'); const R = OTM.rng('tree');
-      for (let i = 0; i < 16; i++) { const p = cam.p(tr[0] + (R() - 0.5) * 1.6, 2.6 + (R() - 0.5) * 1.2, tr[2] + (R() - 0.5) * 0.6); g.fillStyle = T.lit ? mix('#5A6E4A', '#7E8E58', R()) : mix(T.hedge[1], T.hedge[2], R()); g.beginPath(); g.ellipse(p[0], p[1], (0.45 + R() * 0.3) * k, (0.35 + R() * 0.25) * k, 0, 0, Math.PI * 2); g.fill(); }
+    // (morning: the sun from behind the lens, left: each clump of leaves takes a lit crown toward the upper left)
+    { const R = OTM.rng('hedge'); for (let i = 0; i < 26; i++) { const z = 0.4 + i * 0.33, x = DRIVE.x1 + 0.55 + R() * 0.2, c0 = cam.p(x, 0.75 + R() * 0.3, z), k = kAt(cam, x, 1, z), lc = R(); if (c0[2] < 0.6) continue; g.fillStyle = T.hedge[R() < 0.5 ? 1 : 0]; g.beginPath(); g.ellipse(c0[0], c0[1], 0.42 * k, 0.6 * k, 0, 0, Math.PI * 2); g.fill();
+      if (T.lit && lc < 0.7) { g.fillStyle = rgba('#93A45C', 0.6); g.beginPath(); g.ellipse(c0[0] - 0.1 * k, c0[1] - 0.2 * k, 0.27 * k, 0.34 * k, -0.3, 0, Math.PI * 2); g.fill(); } } }
+    { const tr = LAWN_TREE, c0 = cam.p(tr), k = kAt(cam, ...tr); if (c0[2] > 0.3) { seg2(g, cam, tr, [tr[0], 1.9, tr[2]], Math.max(2, 0.12 * k), T.lit ? '#4A3E32' : '#1E1A18'); const R = OTM.rng('tree');
+      for (let i = 0; i < 16; i++) { const p = cam.p(tr[0] + (R() - 0.5) * 1.6, 2.6 + (R() - 0.5) * 1.2, tr[2] + (R() - 0.5) * 0.6); g.fillStyle = T.lit ? mix('#5A6E4A', '#7E8E58', R()) : mix(T.hedge[1], T.hedge[2], R()); const rx = (0.45 + R() * 0.3) * k, ry = (0.35 + R() * 0.25) * k; g.beginPath(); g.ellipse(p[0], p[1], rx, ry, 0, 0, Math.PI * 2); g.fill();
+        if (T.lit && i % 3 !== 2) { g.fillStyle = rgba('#A2AE66', 0.55); g.beginPath(); g.ellipse(p[0] - 0.25 * rx, p[1] - 0.3 * ry, 0.55 * rx, 0.5 * ry, 0, 0, Math.PI * 2); g.fill(); } }      // (no rng in here: the ground shadow replays these blobs)
       if (T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const sp = cam.p(tr[0] - 0.4, 3.0, tr[2]); g.fillStyle = LC.rad(g, sp[0], sp[1], 0, 0.9 * k, [[0, '#FFE6B4', 0.35], [1, '#FFE6B4', 0]]); g.beginPath(); g.arc(sp[0], sp[1], 0.9 * k, 0, Math.PI * 2); g.fill(); g.restore(); } } }
     // morning: the porch's shadow thrown on the front wall to its right (its front corner's shadow lands where the sun puts it;
     // the bay throws none outside its own footprint: its right flank is turned from the sun and is the darker face instead)
-    if (T.lit) { const S = T.sun, d = hz - PORCH.z0, sx = PORCH.x1 - S[0] / S[2] * d, sy = PORCH.top - S[1] / -S[2] * d;
+    if (T.lit) { const S = T.sun, d = hz - PORCH.z0, sx = PORCH.x1 + S[0] / S[2] * d, sy = PORCH.top - S[1] / -S[2] * d;
       Q([[PORCH.x1, 0.0, hz - 0.003], [sx, 0.0, hz - 0.003], [sx, sy, hz - 0.003], [PORCH.x1, PORCH.top + 0.05, hz - 0.003]], rgba(B[2], 0.6)); }
   }
   // the porch: brick base, glazed walls, a pitched roof; its glazed door; behind, the front door open on the hall (lit at evening)
