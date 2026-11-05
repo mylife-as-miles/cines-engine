@@ -1,0 +1,7 @@
+{
+ "id": "M08",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 35 seconds: quietly uneasy. A man realises he has left his phone at home, laughs it off, and thinks about how he never noticed. A single low cello note held, then sparse felt-piano notes from a gentle D major figure, fragmented, with gaps where notes should be, reflective and a little troubled but calm, pianissimo. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

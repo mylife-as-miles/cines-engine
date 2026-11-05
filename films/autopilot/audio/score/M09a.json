@@ -1,0 +1,7 @@
+{
+ "id": "M09a",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 25-second instrumental: oppressive, still summer heat in a city at the hottest part of the day. High sustained string harmonics and a faint bowed-glass tone, motionless, shimmering, airless, very quiet, with no pulse and no melody. Instrumental only, no drums, no vocals.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}
