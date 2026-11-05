@@ -20,12 +20,16 @@
   // [sequence, its local time at the cut, how long we hold it]. Each flash runs on in real time from its start.
   // A sequence that is not built yet is drawn by a stand-in from its set (standIn below), so the cut is never empty.
   // ===============================================================================================================
+  // Times are read from the built sequences: Q02 'C1' 19.6-24.9 (charging; asleep after), Q05 'mirror: she squints and
+  // turns away' 30.2 (her head turns 29.4-30.9) and 'she leans into the shade' 36.8 (37.4-40.6), Q06 'driving: close, the
+  // drop on his sleeve' 17.6 (the wipe 18.3-19.35) and 'passenger: the painted wall slips past, out of focus' 20.6,
+  // Q07 'arrival' 4-10 and 'space: ... BEEP' 10-16 (BEEP at 13.4).
   const FLASH = {
     phone:  ['Q02', 22.0, 0.85],    // A091 a phone plugged in beside the kettle: the green charging icon (C1)
     sun:    ['Q05', 30.25, 0.80],   // A092 Emily turning her face away from the bad sun (the mirror, close)
     shade:  ['Q05', 39.6, 0.80],    // A093 her head disappearing behind the driver's seat, into the headrest's shade
-    wall:   ['Q06', 24.0, 0.80],    // A094 the nursery's painted wall slipping past the passenger window, out of focus
-    coffee: ['Q06', 17.6, 0.80],    // A095 Daniel wiping coffee from his sleeve, keeping the wheel straight
+    wall:   ['Q06', 21.8, 0.80],    // A094 the nursery's painted wall slipping past the passenger window, out of focus
+    coffee: ['Q06', 18.45, 0.80],   // A095 Daniel wiping coffee from his sleeve, keeping the wheel straight
     office: ['Q07', 6.0, 0.80],     // A096 his car pulling into the OFFICE car park
     beep:   ['Q07', 13.25, 0.95],   // A097 the small, friendly BEEP of the doors locking (Q07's beep is at 13.4)
   };
@@ -52,10 +56,11 @@
     sun(c, t) { return mirrorStandIn(c, t, 'turn'); },
     shade(c, t) { return mirrorStandIn(c, t, 'shade'); },
     wall(c, t) { const v = SETS.roads.views.passenger, s = { tod: 'morning', travel: 4 + t * 9 }; v.back(c, t, s); v.front(c, t, s); },
+    // the wheel close (the car set's view): one hand keeps it straight at ten to two, the other thumb wipes the cuff
     coffee(c, t) {
-      const v = SETS.car.views.driving, s = { tod: 'morning', travel: t * 9, close: 1 }; v.back(c, t, s); const A = v.anchors;
-      if (A.head) RIG.draw(c.g, 'daniel', { at: [A.head[0] - 0.12 * A.ppm, A.head[1] + 0.82 * A.ppm], scale: A.ppm, view: 'profile', body: 'drive', wheel: false, face: 'down', eyes: 'down',
-        head: { nod: 0.5 }, armR: { to: A.wheel }, armL: { to: A.sleeve, palm: 'down' } }, { light: v.light });
+      const v = SETS.car.views.wheel, s = { tod: 'morning', travel: t * 9 }; v.back(c, t, s); const A = v.anchors, L = v.light || { x: 200, y: -300, color: '#FFF1D8' };
+      RIG.hand(c.g, 'daniel', { at: [A.rim11[0] - 0.05 * A.ppm, A.rim11[1] + 0.13 * A.ppm], size: 0.19 * A.ppm, pose: 'wheel', view: 'back', rot: -70, sleeve: 'day' }, { light: Object.assign({ back: 0.3 }, L) });
+      RIG.hand(c.g, 'daniel', { at: [A.sleeve[0] + 0.02 * A.ppm, A.sleeve[1] - 0.05 * A.ppm], size: 0.19 * A.ppm, pose: 'wipe', view: 'side', rot: -40 + 10 * Math.sin(t * 9), roll: -30, side: 'L', sleeve: 'day' }, { light: Object.assign({ back: 0.3 }, L) });
       v.front(c, t, s);
     },
     office(c, t) { const v = SETS.carpark.views.arrival; v.back(c, t, { pull: clamp(0.35 + (t - 6) * 0.25, 0, 1), engine: 1 }); v.front(c, t, {}); },
@@ -83,7 +88,8 @@
   const SARAH_PORCH = [1.2, 0.3, 8.3];                 // her feet on the porch floor, house metres
   const sarahLightFrom = (x, y, k) => ({ x: x + 0.15 * k, y: y - 2.6 * k, color: '#E8A45E', back: 0.78 });
   function shotArrive(c, st, lt) {
-    const v = HV().arrive, ap = lerp(0.32, 1, ease.outCubic(seg(st, 0, 4.6))), s = { tod: 'evening', approach: ap };
+    // the car rolls up the drive and comes to rest by 3.4 s (parked, the set's world is one cached layer)
+    const v = HV().arrive, u = seg(st, 0, 3.4), ap = u >= 1 ? 1 : lerp(0.32, 1, ease.outCubic(u)), s = { tod: 'evening', approach: ap };
     camera(c, lt); v.back(c, lt, s);
     const cam = v.camAt(ap), f = cam.p(SARAH_PORCH[0], SARAH_PORCH[1], SARAH_PORCH[2]), k = cam.f / Math.max(0.5, f[2]);
     RIG.draw(c.g, 'sarah', { at: [f[0], f[1]], scale: k, view: 'front', yaw: -12, face: 'warm', smile: 0.25, armR: 'relaxed', armL: { hand: [0.02, -0.18, 0.12] }, head: { turn: 0.06, nod: 0.04, tilt: 0.03 }, weight: 0.3, breath: breath(lt, 0.22) },
@@ -105,10 +111,10 @@
     const walking = wk > 0 && wk < 1, ph = (5.45 - z) / 1.22;
     RIG.draw(c.g, 'daniel', { at: [p[0], p[1] + (1 - rise) * 0.55 * k], scale: k, view: walking || wk >= 1 ? 'front' : 'threeBack', yaw: walking || wk >= 1 ? -14 : undefined, facing: -1,
       body: walking ? 'walk' : 'stand', phase: ph % 1, lean: (1 - rise) * 1.1, face: 'tired', head: { nod: 0.12, turn: wk > 0 ? -0.2 : 0.35, tilt: 0 }, outfit: 'day', collar: 'crooked', breath: breath(lt), armR: walking ? 'auto' : 'relaxed', hold: { r: 'keys' } },
-      { light: { x: 1000, y: 120, color: '#F2A65E', back: 0.82 }, ambient: '#2A3040', ambientK: 0.22 });
-    const door = t < DRV.door[1] ? ease.outCubic(seg(t, DRV.door[0], DRV.door[1])) * 0.85 : t < DRV.door[2] ? 0.85 : 0.85 * (1 - ease.inCubic(seg(t, DRV.door[2], DRV.door[3])));
-    SETS.car.exterior(c.g, { cam, at: v.car.at, heading: 0, tod: 'evening', sun: v.sun(s), em: c.em, t: lt, doors: { driver: door } });
-    RIG.draw(c.g, 'sarah', { at: A.sarahInPorch, scale: A.sarahPxPerM, view: 'front', face: 'warm', armR: 'relaxed', armL: { hand: [0.02, -0.18, 0.12] }, head: { turn: 0.12, nod: 0.04, tilt: 0.03 }, weight: 0.3, breath: breath(lt, 0.22) },
+      { light: { x: 1000, y: 120, color: '#F2A65E', back: 0.82 }, ambient: '#2A3040', ambientK: 0.3, exposure: 0.85 });
+    // the car; its far (driver's) door is hidden by the body from here, so it is left shut: the sound carries it
+    SETS.car.exterior(c.g, { cam, at: v.car.at, heading: 0, tod: 'evening', sun: v.sun(s), em: c.em, t: lt });
+    RIG.draw(c.g, 'sarah', { at: A.sarahInPorch, scale: A.sarahPxPerM, view: 'front', face: 'warm', armR: 'relaxed', armL: 'relaxed', head: { turn: 0.12, nod: 0.04, tilt: 0.03 }, weight: 0.12, breath: breath(lt, 0.22) },
       { light: sarahLightFrom(A.sarahInPorch[0], A.sarahInPorch[1], A.sarahPxPerM), ambient: '#2A3340', ambientK: 0.14 });
     v.front(c, lt, s);
   }
@@ -118,14 +124,14 @@
   // Then "Daniel--", and the porch door opens as she comes out after him.
   // ===============================================================================================================
   const SARAH_KEYS = [
-    [8.6, { face: 'warm', smile: 0.42, lid: 0.2, gaze: [0.12, 0], open: 0, browIn: 0.1, head: { turn: 0.1, nod: 0.04, tilt: 0.04 }, weight: 0.3 }],
-    [9.7, { face: 'warm', smile: 0.38, lid: 0.18, gaze: [0.15, 0], open: 0, browIn: 0.1, head: { turn: 0.12, nod: 0.04, tilt: 0.04 }, weight: 0.3 }],
-    [10.2, { face: 'past', smile: 0.06, lid: 0.06, gaze: [0.85, 0.05], open: 0.04, browIn: 0.3, head: { turn: 0.24, nod: 0.0, tilt: 0.0 }, weight: 0.15 }],
-    [10.6, { face: 'past', smile: 0, lid: 0.06, gaze: [0.85, 0.02], open: 0.04, browIn: 0.35, head: { turn: 0.26, nod: -0.02, tilt: 0 }, weight: 0.1 }],
+    [8.6, { face: 'warm', smile: 0.42, lid: 0.2, gaze: [0.12, 0], open: 0, browIn: 0.1, head: { turn: 0.1, nod: 0.04, tilt: 0.04 }, weight: 0.12 }],
+    [9.7, { face: 'warm', smile: 0.38, lid: 0.18, gaze: [0.15, 0], open: 0, browIn: 0.1, head: { turn: 0.12, nod: 0.04, tilt: 0.04 }, weight: 0.12 }],
+    [10.2, { face: 'past', smile: 0.06, lid: 0.06, gaze: [0.85, 0.05], open: 0.04, browIn: 0.3, head: { turn: 0.24, nod: 0.0, tilt: 0.0 }, weight: 0.06 }],
+    [10.6, { face: 'past', smile: 0, lid: 0.06, gaze: [0.85, 0.02], open: 0.04, browIn: 0.35, head: { turn: 0.26, nod: -0.02, tilt: 0 }, weight: 0.04 }],
     [11.9, { face: 'past', smile: -0.05, lid: 0.04, gaze: [0.4, 0.0], open: 0.05, browIn: 0.55, brow: 0.45, head: { turn: 0.12, nod: -0.04, tilt: 0 }, weight: 0 }],
     [12.6, { face: 'past', smile: -0.08, lid: 0.04, gaze: [0.3, 0.0], open: 0.05, browIn: 0.6, brow: 0.45, head: { turn: 0.1, nod: -0.04, tilt: 0 }, weight: 0 }],
-    [24.0, { face: 'past', smile: -0.2, lid: 0.02, gaze: [0.5, 0.05], open: 0.08, browIn: 0.9, brow: 0.5, head: { turn: 0.2, nod: -0.04, tilt: 0 }, weight: -0.1 }],
-    [25.0, { face: 'past', smile: -0.25, lid: 0.02, gaze: [0.75, 0.05], open: 0.12, browIn: 1.0, brow: 0.55, head: { turn: 0.32, nod: -0.06, tilt: 0 }, weight: -0.3 }],
+    [24.0, { face: 'past', smile: -0.2, lid: 0.02, gaze: [0.5, 0.05], open: 0.08, browIn: 0.9, brow: 0.5, head: { turn: 0.2, nod: -0.04, tilt: 0 }, weight: 0 }],
+    [25.0, { face: 'past', smile: -0.25, lid: 0.02, gaze: [0.75, 0.05], open: 0.12, browIn: 1.0, brow: 0.55, head: { turn: 0.32, nod: -0.06, tilt: 0 }, weight: -0.08 }],
   ];
   const SARAH_SAYS = [[10.6, 11.5], [24.6, 25.2]];       // her mouth while her lines are on screen (type only)
   function sarahPose(lt, A) {
@@ -133,11 +139,14 @@
     const talk = SARAH_SAYS.some(([a, b]) => t >= a && t < b) ? 0.08 + 0.12 * Math.abs(Math.sin(t * 9.4)) : 0;
     const go = ease.inOutSine(seg(t, 24.7, 25.6));
     return Object.assign({}, p, { at: [A.sarahFeet[0] - go * 0.12 * A.sarahPxPerM, A.sarahFeet[1]], scale: A.sarahPxPerM, view: 'front', open: (p.open || 0) + talk, breath: breath(lt, 0.22),
-      armR: go > 0.01 ? { to: [A.doorHandle[0] + 18, A.doorHandle[1] + 4], palm: 'in' } : 'relaxed', armL: go > 0.01 ? 'relaxed' : { hand: [0.02, -0.18, 0.12] } });
+      armR: go > 0.01 ? { to: [A.doorHandle[0] + 18, A.doorHandle[1] + 4], palm: 'in' } : 'relaxed', armL: 'relaxed' });
   }
+  // closer than the set's framing: a slow push on her face while she looks past him; wider again for "Daniel--" and the door
   function shotPorch(c, st, lt) {
     const v = HV().porch, A = v.anchors, s = { tod: 'evening', door: lt > 25 ? 0.6 * ease.inOutSine(seg(lt, 25.2, 26.0)) : 0 };
-    camera(c, lt); v.back(c, lt, s);
+    const first = lt < 20, u = seg(st, 0, c.shotDur);
+    camera(c, lt, first ? { x: A.sarahHead[0] - 20, y: 520, zoom: lerp(1.3, 1.42, ease.inOutSine(u)) } : { x: 1080, y: 560, zoom: 1.22 });
+    v.back(c, lt, s);
     RIG.draw(c.g, 'sarah', sarahPose(lt, A), { light: { x: v.light.x, y: v.light.y, color: v.light.color, back: 0.6 }, ambient: '#2A3340', ambientK: 0.1 });
     v.front(c, lt, s);
   }
@@ -150,7 +159,7 @@
   // ===============================================================================================================
   const PO = (() => {
     const EYE = [1.12, 1.6, 8.3], DAN = [2.25, 0, 4.75];
-    const FR = { M: { f: 2000, aim: [2.0, 1.12, 4.75], blurFar: 10, blurCar: 4 }, C: { f: 4700, aim: [2.18, 1.62, 4.75], blurFar: 22, blurCar: 12 } };
+    const FR = { M: { f: 2000, aim: [2.5, 1.15, 4.75], blurFar: 10, blurCar: 4 }, C: { f: 5200, aim: [2.42, 1.54, 4.75], blurFar: 24, blurCar: 13 } };
     const camOf = fr => { const F = FR[fr], dx = F.aim[0] - EYE[0], dy = F.aim[1] - EYE[1], dz = F.aim[2] - EYE[2];
       return LC.camera({ x: EYE[0], y: EYE[1], z: EYE[2], yaw: Math.atan2(dx, dz), pitch: Math.atan2(dy, Math.hypot(dx, dz)), f: F.f, cx: W / 2, cy: H / 2 }); };
     const cams = { M: camOf('M'), C: camOf('C') };
@@ -170,9 +179,9 @@
         poly(g, cam, [[x0, eave - 0.9, zf + 0.01], [x1, eave - 0.9, zf + 0.01], [x1, eave, zf + 0.01], [x0, eave, zf + 0.01]], '#6E4A3E');   // the top of the wall catching the light
         [[0.8, 2.2], [4.6, 6.6]].forEach(([a, b], w) => {
           const up = [[x0 + a, 3.2, zf + 0.02], [x0 + b, 3.2, zf + 0.02], [x0 + b, 4.5, zf + 0.02], [x0 + a, 4.5, zf + 0.02]];
-          poly(g, cam, up, R() > 0.35 ? '#C8865A' : '#9A6A58');                                                             // west windows: the sky, copper
+          poly(g, cam, up, R() > 0.6 ? '#9C6A54' : '#4A4250');                                                             // west windows: a little of the sky
           const lo = [[x0 + a, 0.9, zf + 0.02], [x0 + b, 0.9, zf + 0.02], [x0 + b, 2.2, zf + 0.02], [x0 + a, 2.2, zf + 0.02]];
-          poly(g, cam, lo, R() > 0.7 ? '#E8B070' : '#2A2834');                                                             // one or two lit from inside
+          poly(g, cam, lo, R() > 0.8 ? '#C8955E' : '#26242E');                                                             // the odd one lit from inside
         });
         poly(g, cam, [[x0 + 3.0, 0, zf + 0.02], [x0 + 3.9, 0, zf + 0.02], [x0 + 3.9, 2.1, zf + 0.02], [x0 + 3.0, 2.1, zf + 0.02]], '#1E1A20');
       }
@@ -211,13 +220,18 @@
     function pane(c, fr) {
       return cache(c, 'pane|' + fr, g => {
         const C = fr === 'C', w = LC.layer();
-        w.fillStyle = LC.rad(w, 1560, 120, 0, 980, [[0, '#F0B070', 0.32], [0.45, '#D89058', 0.14], [1, '#D89058', 0.03]]); w.fillRect(0, 0, W, H);
-        w.fillStyle = LC.rad(w, 1700, 150, 0, C ? 240 : 120, [[0, '#FFE2B0', 0.5], [0.4, '#FFD49A', 0.18], [1, '#FFD49A', 0]]); w.fillRect(0, 0, W, H);
-        // her reflection: dark against the bright hall behind her (she is lit from behind), soft (nearer than he is)
+        // the hall behind her, given back by the glass: a warm wash, the open front door's bright upright, the lamp
+        w.fillStyle = LC.rad(w, 1640, 160, 0, 1150, [[0, '#F0B070', 0.4], [0.45, '#D89058', 0.17], [1, '#D89058', 0.04]]); w.fillRect(0, 0, W, H);
+        const dx0 = C ? 1560 : 1600, dw = C ? 520 : 300;
+        w.fillStyle = LC.lin(w, dx0, 0, dx0 + dw, 0, [[0, '#FFD8A0', 0], [0.2, '#FFD8A0', 0.2], [0.8, '#FFD8A0', 0.2], [1, '#FFD8A0', 0]]); w.fillRect(dx0, -40, dw, H + 80);
+        w.fillStyle = LC.rad(w, 1760, 120, 0, C ? 260 : 130, [[0, '#FFE6B8', 0.55], [0.4, '#FFD49A', 0.2], [1, '#FFD49A', 0]]); w.fillRect(0, 0, W, H);
+        // her own reflection: a dark head and shoulders against the bright doorway (she is lit from behind), soft: nearer than he is
         const sh = LC.layer(); sh.fillStyle = '#000';
-        sh.beginPath(); sh.ellipse(C ? 1890 : 1830, C ? 300 : 360, C ? 230 : 120, C ? 290 : 150, 0.1, 0, Math.PI * 2); sh.fill();
-        sh.beginPath(); sh.ellipse(C ? 1900 : 1840, C ? 1000 : 760, C ? 420 : 240, C ? 520 : 330, 0, 0, Math.PI * 2); sh.fill();
-        w.globalCompositeOperation = 'destination-out'; w.drawImage(LC.blurred(sh.canvas, C ? 60 : 30, false), 0, 0); w.globalCompositeOperation = 'source-over';
+        const hx = C ? 1990 : 1915, hy = C ? 300 : 360, hs = C ? 2.1 : 1.15;
+        sh.beginPath(); sh.ellipse(hx, hy, 74 * hs, 96 * hs, 0.06, 0, Math.PI * 2); sh.fill();
+        sh.beginPath(); sh.moveTo(hx - 70 * hs, hy + 80 * hs); sh.bezierCurveTo(hx - 120 * hs, hy + 150 * hs, hx - 230 * hs, hy + 170 * hs, hx - 260 * hs, hy + 300 * hs); sh.lineTo(hx - 280 * hs, H + 60);
+        sh.lineTo(hx + 300 * hs, H + 60); sh.lineTo(hx + 280 * hs, hy + 300 * hs); sh.bezierCurveTo(hx + 250 * hs, hy + 170 * hs, hx + 130 * hs, hy + 150 * hs, hx + 70 * hs, hy + 80 * hs); sh.closePath(); sh.fill();
+        w.globalCompositeOperation = 'destination-out'; w.globalAlpha = 0.8; w.drawImage(LC.blurred(sh.canvas, C ? 50 : 26, false), 0, 0); w.globalAlpha = 1; w.globalCompositeOperation = 'source-over';
         g.globalCompositeOperation = 'screen'; g.drawImage(w.canvas, 0, 0);
         LC.glare(g, null, { x: 900, y: 420, angle: -1.1, color: '#FFE6C8', bands: [{ d: -260, w: 160, a: 0.035 }, { d: -180, w: 18, a: 0.05 }, { d: 340, w: 220, a: 0.025 }] });
         LC.specks(g, null, { x: 0, y: 0, w: W, h: H }, 'Q11porch' + fr, { n: C ? 120 : 260, color: '#FFD8A8', rMin: C ? 1.6 : 0.6, rMax: C ? 4 : 1.5, aMin: 0.04, aMax: 0.22, scratch: 0.06, near: { x: 1600, y: 150, r: 900 } });
@@ -228,8 +242,9 @@
       });
     }
     const groundAt = fr => { const q = cams[fr].p(DAN[0], 0, DAN[2]); return { x: q[0], y: q[1], k: cams[fr].f / q[2] }; };
-    const faceAt = fr => { const q = cams[fr].p(DAN[0] + 0.02, 1.72, DAN[2]); return { x: q[0], y: q[1], k: cams[fr].f / q[2] }; };
-    return { cams, layer, pane, groundAt, faceAt, light: { x: 760, y: -380, color: '#EDB272', back: 0.14 } };
+    // the porch's light falls off down his body: it pools on his face and shoulders, and the bottom of the frame stays dark for the type
+    function falloff(c, fr) { return cache(c, 'fall|' + fr, g => { g.fillStyle = LC.lin(g, 0, fr === 'C' ? 640 : 700, 0, H, [[0, '#0C0E12', 0], [0.55, '#0C0E12', 0.38], [1, '#0C0E12', 0.62]]); g.fillRect(0, 0, W, H); }); }
+    return { cams, layer, pane, groundAt, falloff, light: { x: 900, y: -260, color: '#EDB272', back: 0.18 } };
   })();
   // Daniel's face through the scene: incomprehension, then the drain; his speech; the turn away at the end
   const DAN_KEYS = [
@@ -249,18 +264,16 @@
     const talk = DAN_SAYS.some(([a, b]) => t >= a && t < b) ? 0.06 + 0.16 * Math.abs(Math.sin(t * 8.3 + Math.sin(t * 3.1))) : 0;
     p.open = (p.open || 0) + talk; return p;
   }
-  // the colour leaving his face: a slow grade toward grey-green as it drains
-  const drainK = lt => 0.06 + 0.16 * ease.inOutSine(seg(lt, 16.2, 19.4));
+  // the colour leaving his face: a slow grade toward a cold grey as it drains (subtle: the lids, brows and mouth carry it)
+  const drainK = lt => ease.inOutSine(seg(lt, 16.2, 19.4));
   function shotPorchOut(c, st, lt, fr) {
     camera(c, lt);
     c.g.drawImage(PO.layer(c, fr), 0, 0);
-    const p = danielFace(lt), dk = drainK(lt), opts = { light: PO.light, ambient: mix('#363A50', '#7C8684', dk / 0.22 * 0.6), ambientK: 0.2 + dk, exposure: 0.96 - dk * 0.5 };
-    if (fr === 'M') { const G = PO.groundAt('M');
-      RIG.draw(c.g, 'daniel', Object.assign({ at: [G.x, G.y], scale: G.k, view: 'front', yaw: 16, body: 'stand', outfit: 'day', collar: 'crooked', breath: breath(lt), weight: 0.2,
-        armR: 'down', armL: 'relaxed', hold: { r: 'keys' } }, p), opts);
-    } else { const F = PO.faceAt('C');
-      RIG.face(c.g, 'daniel', Object.assign({ at: [F.x, F.y], size: 0.235 * F.k, view: 'front', yaw: 16, outfit: 'day', collar: 'crooked', breath: breath(lt) }, p), opts);
-    }
+    const p = danielFace(lt), dk = drainK(lt), G = PO.groundAt(fr);
+    const opts = { light: PO.light, ambient: mix('#2C3044', '#6E7678', dk * 0.6), ambientK: 0.3 + 0.08 * dk, exposure: 0.84 - 0.06 * dk };
+    RIG.draw(c.g, 'daniel', Object.assign({ at: [G.x, G.y], scale: G.k, view: 'front', yaw: 16, body: 'stand', outfit: 'day', collar: 'crooked', breath: breath(lt), weight: 0.15,
+      armR: 'down', armL: 'relaxed', hold: { r: 'keys' } }, p), opts);
+    c.g.drawImage(PO.falloff(c, fr), 0, 0);
     c.g.drawImage(PO.pane(c, fr), 0, 0);
   }
 
@@ -269,18 +282,23 @@
   // in the windscreen; then the wing mirror holds the house, the lit porch, and her at the end of the drive, receding.
   // ===============================================================================================================
   // her run, house metres and sequence time: out of the porch, down the step, down the drive after the car
-  const SARAH_RUN = [[26.55, [1.2, 0.3, 8.05]], [26.95, [1.25, 0.3, 7.7]], [27.25, [1.3, 0.0, 7.1]], [28.1, [2.3, 0, 5.4]], [29.0, [2.55, 0, 2.6]], [29.6, [2.62, 0, 1.0]], [30.4, [2.65, 0, 0.45]]];
+  // (she has just pushed the porch door open: she is outside it, on the step, as the reverse begins)
+  const SARAH_RUN = [[26.0, [1.25, 0.3, 7.6]], [26.35, [1.28, 0.3, 7.5]], [26.75, [1.32, 0.0, 7.05]], [27.7, [2.3, 0, 5.4]], [28.7, [2.55, 0, 2.6]], [29.4, [2.62, 0, 1.0]], [30.2, [2.65, 0, 0.45]]];
   const sarahAt = t => FILM.key(t, SARAH_RUN.map(([tt, p], i) => [tt, p, i ? 'linear' : undefined]));
   function sarahRunPose(t, k, p) {
-    const moving = t > 26.55 && t < 30.2, d = (() => { let s = 0; for (let i = 1; i < SARAH_RUN.length; i++) { const [t0, a] = SARAH_RUN[i - 1], [t1, b] = SARAH_RUN[i]; const u = clamp((t - t0) / (t1 - t0), 0, 1); s += u * Math.hypot(b[0] - a[0], b[2] - a[2]); } return s; })();
+    const moving = t > 26.05 && t < 30.0, d = (() => { let s = 0; for (let i = 1; i < SARAH_RUN.length; i++) { const [t0, a] = SARAH_RUN[i - 1], [t1, b] = SARAH_RUN[i]; const u = clamp((t - t0) / (t1 - t0), 0, 1); s += u * Math.hypot(b[0] - a[0], b[2] - a[2]); } return s; })();
     return { at: [p[0], p[1]], scale: k, view: 'front', yaw: -10, body: moving ? 'run' : 'stand', phase: (d / 2.0) % 1, face: 'past', lid: 0.04, browIn: 0.9, open: 0.08, head: { nod: -0.02, turn: 0, tilt: 0 }, armR: moving ? 'auto' : 'relaxed', armL: moving ? 'auto' : 'relaxed' };
   }
+  // the windscreen's glass as the house set's cabin frames it (the dash below, the pillars either side)
+  const SCREEN = (() => { const p = new Path2D(); p.moveTo(70, 150); p.lineTo(1690, 150); p.lineTo(1880, 820); p.lineTo(-40, 820); p.closePath(); return p; })();
   function shotReverse(c, st, lt) {
     const v = HV().reverse, b = ease.inOutSine(seg(st, 0.35, 3.6)), s = { tod: 'evening', back: b };
-    camera(c, lt); v.back(c, lt, s);
+    camera(c, lt); v.back(c, lt, s); v.front(c, lt, s);
+    // she is outside the porch, in front of its glass, so she is drawn over the set's front layer, inside the windscreen
     const t = twos(lt), w = sarahAt(t), cam = v.camAt(1 - b), q = cam.p(w[0], w[1], w[2]), k = cam.f / Math.max(0.5, q[2]);
-    if (t > 26.5) RIG.draw(c.g, 'sarah', sarahRunPose(t, k, q), { light: { x: q[0] + 0.3 * k, y: q[1] - 2.4 * k, color: '#E8A45E', back: 0.8 }, ambient: '#2A3340', ambientK: 0.2 });
-    v.front(c, lt, s);
+    c.g.save(); c.g.clip(SCREEN);
+    RIG.draw(c.g, 'sarah', sarahRunPose(t, k, q), { light: { x: q[0] + 0.3 * k, y: q[1] - 2.4 * k, color: '#E8A45E', back: 0.8 }, ambient: '#2A3340', ambientK: 0.24, exposure: 0.9 });
+    c.g.restore();
   }
   function shotWing(c, st, lt) {
     const v = HV().wing, s = { tod: 'evening', away: 0.24 + 0.32 * seg(st, 0, 2.4) };
@@ -306,7 +324,7 @@
   // 42-48 · THE MAIN ENTRANCE (A082, L045, A083): he hurries in from behind the camera, straightening his collar, rehearsing an
   // apology; he slows; he stops, 1.1 m from the boarded door.
   // ===============================================================================================================
-  const ENT = { t0: 42.0, t1: 45.3, u0: 11.7, u1: 12.35, d0: 4.25, d1: 1.1 };
+  const ENT = { t0: 42.0, t1: 45.3, u0: 11.75, u1: 12.35, d0: 3.85, d1: 1.1 };
   function shotEntrance(c, st, lt) {
     const v = NV().entrance, a = v.at({ tod: 'evening' }), t = twos(lt);
     camera(c, lt); v.back(c, lt, { tod: 'evening' });
@@ -327,13 +345,18 @@
     camera(c, lt, { x: W / 2, y: lerp(628, 522, u), zoom: 1.2 });
     v.back(c, lt, { tod: 'evening' }); v.front(c, lt, { tod: 'evening' });
   }
+  // the notice sits a little high in the frame, so the bottom band under it is plywood (dark enough for "No.")
   const NOTE = { sheen: [56.0, 58.8], push: [52.0, 62.2] };
+  // his face as the sleeve gives it back: a dark head (RIG silhouette, rimmed from the sun on his right), drawn once and cached
+  function noticeFace(c, a) {
+    return cache(c, 'noticeFace', g => { g.translate(W / 2 - a.face[0], H / 2 - a.face[1]);
+      RIG.face(g, 'daniel', { at: a.face, size: 0.3 * a.k, view: 'front', face: 'blank', head: { nod: 0.08, turn: 0, tilt: 0 } }, { mode: 'silhouette', ink: '#120E12', light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.7 } }); }, W, H);
+  }
   function shotNotice(c, st, lt) {
-    const v = NV().notice, t = twos(lt);
-    camera(c, lt, { x: W / 2 + 6, y: H / 2 - 12, zoom: lerp(1.0, 1.075, ease.inOutSine(seg(lt, NOTE.push[0], NOTE.push[1]))) });
+    const v = NV().notice, t = twos(lt), push = ease.inOutSine(seg(lt, NOTE.push[0], NOTE.push[1]));
+    camera(c, lt, { x: W / 2 + 6, y: lerp(572, 600, push), zoom: lerp(1.04, 1.1, push) });
     const sheen = lerp(0.2, 1, ease.inOutSine(seg(lt, NOTE.sheen[0], NOTE.sheen[1]))), rise = ease.outCubic(seg(t, NOTE.sheen[0] - 0.2, NOTE.sheen[1]));
-    const s = { tod: 'evening', sheen, reflect: lt < NOTE.sheen[0] - 0.2 ? null : (g, a) => RIG.face(g, 'daniel', { at: [a.face[0] + (1 - rise) * 160, a.face[1] + (1 - rise) * 40], size: 0.3 * a.k * lerp(0.9, 1, rise), view: 'front', face: 'blank', head: { nod: 0.08, turn: 0, tilt: 0 } },
-      { mode: 'silhouette', ink: '#1A1418', light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.7 } }) };
+    const s = { tod: 'evening', sheen, reflect: lt < NOTE.sheen[0] - 0.2 ? null : (g, a) => { const img = noticeFace(c, a); g.save(); g.globalAlpha = rise; g.drawImage(img, a.face[0] - W / 2 + (1 - rise) * 150, a.face[1] - H / 2 + (1 - rise) * 36); g.restore(); } };
     v.back(c, lt, s); v.front(c, lt, s);
   }
 
@@ -343,13 +366,13 @@
   // ===============================================================================================================
   const PARK = { at: [7.25, 0.42], turn: [68.25, 70.9], run0: 82.2 };
   function parkLight(v) { return { x: v.light.x, y: v.light.y, color: v.light.color, back: 0.72 }; }
+  const PARK_OPTS = v => ({ light: parkLight(v), ambient: '#262C3C', ambientK: 0.32, exposure: 0.8 });
   function shotTurn(c, st, lt) {
     const v = NV().carpark, t = twos(lt);
     camera(c, lt); v.back(c, lt, {});
     const G = v.ground(PARK.at[0], PARK.at[1]), u = ease.inOutSine(seg(t, PARK.turn[0], PARK.turn[1]));
     RIG.draw(c.g, 'daniel', { at: [G.x, G.y], scale: G.k, yaw: lerp(8, 192, u), facing: -1, body: 'stand', outfit: 'day', collar: 'straight', face: 'drained', lid: lerp(0.5, 0.2, u), gaze: [0, lerp(-0.4, 0, u)],
-      head: { nod: lerp(0.35, 0.02, u), turn: 0, tilt: 0 }, armR: 'relaxed', armL: 'relaxed', breath: breath(lt), weight: lerp(0.2, -0.2, u) },
-      { light: parkLight(v), ambient: '#2E3446', ambientK: 0.25 });
+      head: { nod: lerp(0.35, 0.02, u), turn: 0, tilt: 0 }, armR: 'relaxed', armL: 'relaxed', breath: breath(lt), weight: lerp(0.2, -0.2, u) }, PARK_OPTS(v));
     v.front(c, lt, {});
   }
   const WIN = { dist: [[72, 6.4], [80.4, 6.4], [82, 5.9, 'inQuad']], call: [74.6, 75.3] };
@@ -368,8 +391,7 @@
     const dir = [1.3 - PARK.at[0], -0.9 - PARK.at[1]], L = Math.hypot(dir[0], dir[1]), x = PARK.at[0] + dir[0] / L * d, z = PARK.at[1] + dir[1] / L * d;
     const G = v.ground(x, z), moving = r > 0;
     RIG.draw(c.g, 'daniel', { at: [G.x, G.y], scale: G.k, yaw: 192, facing: -1, body: moving ? 'run' : 'stand', phase: (d / 2.1) % 1, outfit: 'day', collar: 'straight', face: 'drained',
-      head: { nod: -0.02, turn: 0, tilt: 0 }, armR: moving ? 'auto' : 'relaxed', armL: moving ? 'auto' : 'relaxed', lean: moving ? 0.25 : 0 },
-      { light: parkLight(v), ambient: '#2E3446', ambientK: 0.25 });
+      head: { nod: -0.02, turn: 0, tilt: 0 }, armR: moving ? 'auto' : 'relaxed', armL: moving ? 'auto' : 'relaxed', lean: moving ? 0.25 : 0 }, PARK_OPTS(v));
     v.front(c, lt, {});
   }
 

@@ -17,7 +17,9 @@
   // The kitchen set's API asks Q02 to show the green charging glyph pulsing in the phone's black glass at about 27 s.
   // If Q02 is not built yet, the kitchen counter's own flash state stands in (see standIn below).
   // ---------------------------------------------------------------------------------------------------------------
-  const FLASH = { phone: ['Q02', 27.0, 1.5] };
+  // Q02's C1 shot sleeps at 24.9 s; after it the glyph breathes at 0.42 Hz, brightest at 24.9 and 27.28. Starting at 26.53
+  // puts one whole breath in the flash, its brightest at the middle.
+  const FLASH = { phone: ['Q02', 26.53, 1.5] };
   const FLASH_AT = 30.0;
   function flash(c, name, st) {
     const [id, t0] = FLASH[name];
@@ -42,23 +44,32 @@
   const YANK = [0.42, 1.52];                         // the two yanks
   function pullAt(t) { let p = 0; YANK.forEach((t0, i) => { const hold = i ? 0.55 : 0.42; if (t >= t0) p = Math.max(p, t < t0 + 0.07 ? (t - t0) / 0.07 : t < t0 + hold ? 1 : Math.max(0, 1 - (t - t0 - hold) / 0.06)); }); return p; }
   function joltAt(t) { let j = 0; YANK.forEach((t0, i) => { const d = t - t0 - 0.07; if (d >= 0) j = Math.max(j, (i ? 1 : 0.7) * Math.exp(-d * 7)); }); return j; }
+  // his reflection in the dark glass: near and large, his head bowed to his hand on the handle. A black mirror gives back
+  // only what is lit, so he is a dark head and shoulders rimmed copper on the sun's side, occluding the reflected sky (the
+  // set darkens him by the glass's reflectance). Drawn once and cached; it moves only as a whole (he arrives; he yanks).
+  function handleReflection(c, a) {
+    const r = a.reflection, k = r.k * 1.32;
+    return FILM.cache('Q12|handleRefl', g => { g.translate(W / 2 - r.x, H / 2 - r.y);
+      RIG.draw(g, 'daniel', { at: [r.x + 30, r.y + 1.5 * k], scale: k, view: 'front', yaw: -8, body: 'stand', face: 'drained', eyes: 'down', lid: 0.55, down: 0.9, open: 0.1, collar: 'straight',
+        head: { nod: 0.55, turn: -0.12, tilt: 0.04 }, armR: { hand: [0.1, -0.35, 0.45] }, armL: 'down', breath: 0 },
+        { light: { x: -600, y: 380, color: '#E89A5E', back: 0.86 }, exposure: 0.6, ambient: '#161A22', ambientK: 0.42 }); }, W, H);
+  }
   function drawHandle(c, st) {
     const v = NV().handle, tw = twos(st);
     drift(c, st, 2);
     const pull = pullAt(st), jolt = joltAt(st);
     // he arrives running: his reflection comes into the glass from the left, settles, and jerks with each yank
-    const arrive = ease.outCubic(seg(tw, 0, 0.42)), lurch = pullAt(tw) * 14;
-    const s = { pull, jolt, reflect: (g, a) => { const r = a.reflection, k = r.k;
-      RIG.draw(g, 'daniel', { at: [r.x - (1 - arrive) * 260 + lurch * 0.4, r.y + 1.62 * k - lurch], scale: k, view: 'front', body: 'stand', face: 'drained', lid: 0.3, open: 0.1 + 0.12 * pullAt(tw),
-        head: { nod: 0.34 + 0.06 * pullAt(tw), turn: -0.04, tilt: 0.02 }, armR: { hand: [0.1, -0.35, 0.4] }, breath: 0 },
-        { light: { x: -500, y: 300, color: '#E89A5E', back: 0.45 } }); } };
+    const arrive = ease.outCubic(seg(tw, 0, 0.42)), lurch = pullAt(tw) * 16;
+    const s = { pull, jolt, reflect: (g, a) => { const r = a.reflection; g.save(); g.globalAlpha = 0.64; g.drawImage(handleReflection(c, a), r.x - W / 2 - (1 - arrive) * 300 + lurch * 0.5, r.y - H / 2 + lurch * 0.6); g.restore(); } };
     v.back(c, st, s);
     const a = v.at(s), k = a.k;
-    // his hand: four fingers hooked under the pull bar into the recess (the set draws the bar over them in front())
+    // his hand: four fingers hooked under the pull bar into the recess (the set draws the bar over them in front()); in the
+    // car's shade, rimmed from the low sun behind the car's tail
     const out = 0.028 * pull * k * 0.35, jit = [Math.sin(tw * 41) * 2 * jolt, Math.cos(tw * 37) * 1.5 * jolt];
     const enter = 1 - ease.outCubic(seg(tw, 0.1, 0.42));
     const wrist = [a.handle[0] + 0.15 * k + enter * 180 + out * 0.6 + jit[0], a.handle[1] + 0.06 * k + enter * 260 + jit[1]];
-    RIG.hand(c.g, 'daniel', { at: wrist, size: 0.185 * k, pose: 'handle', obj: null, view: 'back', rot: -168 + 6 * pull, roll: 18, curl: 1.05, sleeve: 'office' }, { light: v.light, ambient: '#2A2E3A', ambientK: 0.25 });
+    RIG.hand(c.g, 'daniel', { at: wrist, size: 0.185 * k, pose: 'handle', obj: null, view: 'back', rot: -168 + 6 * pull, roll: 18, curl: 1.05, sleeve: 'office' },
+      { light: { x: -500, y: 300, color: '#E89A5E', back: 0.8 }, exposure: 0.72, ambient: '#1C2028', ambientK: 0.35 });
     v.front(c, st, s);
   }
 
@@ -77,9 +88,10 @@
     // the thumb: it slides off the button twice before it finds it
     const press = FILM.key(tl, [[4.0, 0], [4.9, 0.0], [5.15, 0.55], [5.35, 0.1], [5.9, 0.15], [6.2, 0.65], [6.4, 0.05], [7.0, 0.2], [7.45, 1, 'outQuad'], [7.9, 1], [8.2, 0.2]]);
     const shake = 1 - seg(tl, 7.4, 7.6), jx = Math.sin(tl * 23) * 5 * shake, jy = Math.cos(tl * 19) * 4 * shake;
-    const lower = ease.inCubic(seg(tl, 7.95, 8.9)) * 620, rise = (1 - ease.outCubic(seg(tl, 4.0, 4.6))) * 560;
-    RIG.hand(c.g, 'daniel', { at: [a.remote[0] + 40 + jx, a.remote[1] + 120 + jy + lower + rise], size: 0.19 * k, pose: 'remote', view: 'side', rot: -52 + 4 * Math.sin(tl * 3), roll: -35, press, sleeve: 'office' },
-      { light: { x: a.sun[0], y: a.sun[1] - 60, color: '#F4AE72', back: 0.85 }, ambient: '#2A2630', ambientK: 0.35 });
+    const lower = ease.inCubic(seg(tl, 7.95, 8.9)) * 640, rise = (1 - ease.outCubic(seg(tl, 4.0, 4.6))) * 560;
+    // the fob lies in his palm, its button under the thumb, toward us; contre-jour: the hand in shade, rimmed by the sun
+    RIG.hand(c.g, 'daniel', { at: [a.remote[0] - 10 + jx, a.remote[1] + 150 + jy + lower + rise], size: 0.19 * k, pose: 'remote', view: 'palm', rot: -62 + 4 * Math.sin(tl * 3), roll: 0, press, sleeve: 'office' },
+      { light: { x: a.sun[0], y: a.sun[1] - 60, color: '#F4AE72', back: 0.82 }, exposure: 0.74, ambient: '#2A2630', ambientK: 0.38 });
     v.front(c, st, s);
   }
 
@@ -88,32 +100,40 @@
   // his eyes settle on something below the frame. For a moment his face does not understand; then it does. His breath
   // catches and stays caught. One hand reaches into the car, behind the hinge band. The broken sound is a sound only.
   // ---------------------------------------------------------------------------------------------------------------
-  const DOOR = { open: [0.35, 1.9], step: [2.0, 3.0], blank: 3.0, knows: [5.0, 6.4], catch: 6.7, reach: [7.4, 10.6], sound: 11.4 };
+  // shot-local times (from 9): the cut lands mid-swing, the door already pulled a quarter open and Daniel already bending
+  // into the doorway behind its glass; his eyes settle below the frame; the face does not understand, then it does; the
+  // breath catches; one hand reaches in behind the hinge band; the broken sound; then nothing moves.
+  const DOOR = { open: [0, 0.55], open0: 0.72, stoop: [0, 1.0], blank: 1.0, knows: [4.0, 4.9], catch: 5.1, reach: [6.4, 9.6], sound: 10.4 };
   function danielAtDoor(g, a, st) {
     const t = twos(st), k = a.k, sc = 0.86 * k;
-    const stoop = ease.inOutSine(seg(t, DOOR.step[0], DOOR.step[1]));
+    const stoop = lerp(0.62, 1, ease.outCubic(seg(t, DOOR.stoop[0], DOOR.stoop[1])));
     const knows = ease.inOutSine(seg(t, DOOR.knows[0], DOOR.knows[1]));
     const reach = ease.inOutSine(seg(t, DOOR.reach[0], DOOR.reach[1]));
     const caught = t >= DOOR.catch;
-    // where he stands: upright at the doorway while he pulls, then stooped into it (his face settles at the anchor)
-    const at = [a.face[0] - 0.363 * sc - (1 - stoop) * 0.05 * sc, a.face[1] + 1.637 * sc];
-    // the face: incomprehension (eyes open, the brow lifted a little, the mouth slack) -> understanding: the inner brow up,
-    // the lids lower, the mouth parted; held. A minute recoil of the head as it lands, then stillness.
-    const recoil = Math.sin(Math.PI * seg(t, DOOR.knows[0], DOOR.knows[0] + 0.7)) * 0.05;
-    const br = caught ? 0.5 + 0.18 : breathAt(st);
+    // he stands in the doorway, bent into it; his face settles at the anchor (C3's grammar, the eye raised to his face).
+    // Seen from the front door he faces into the car about 73 degrees from us: a profile turned a little toward the lens.
+    const at = [a.face[0] - 0.36 * sc - (1 - stoop) * 0.12 * sc, a.face[1] + 1.637 * sc];
+    // incomprehension (the brow lifted a little, the mouth slack) -> understanding (the inner brow up, the lids lower, the
+    // mouth parted), held; a minute recoil of the head as it lands, then stillness
+    // as it lands the eyes open (he sees), the head lifts a little and stops; the breath is drawn in and held (the shoulders
+    // stay up); when the hand goes in, the head goes down with it
+    const lift = 0.15 * knows * (1 - reach);
     const pose = {
-      at, scale: sc, view: 'profile', body: 'stand', collar: 'crooked',
-      lean: 0.08 + 0.82 * stoop, head: { nod: 0.1 + 0.65 * stoop - recoil, turn: 0, tilt: 0.02 },
-      face: 'blank', eyes: stoop > 0.5 ? 'down' : null,
-      lid: lerp(0.2, 0.42, stoop) + 0.14 * knows, down: stoop, brow: lerp(0.3, 0.42, knows), browIn: lerp(0.15, 0.95, knows), smile: -0.28 * knows,
-      open: (t >= DOOR.sound && t < DOOR.sound + 0.5 ? 0.24 : 0.07) + 0.12 * knows, breath: br, breathPx: caught ? 4 : 3,
-      armR: reach > 0.001 ? { pose: 'reachLow', dx: 0.02 - 0.06 * reach, dy: -0.05 * reach, dz: 0.12 * reach } : (st < DOOR.step[0] ? { pose: 'reach', dx: 0, dy: -0.1, dz: 0.05 } : 'down'), armL: 'down',
+      at, scale: sc, yaw: 74, facing: 1, body: 'stand', collar: 'crooked',
+      lean: 0.9 * stoop + 0.06 * reach, head: { nod: 0.75 * stoop - lift + 0.08 * reach, turn: 0, tilt: 0.02 },
+      face: 'blank', eyes: 'down', lid: lerp(0.44, 0.12, knows) + 0.12 * reach, down: 1, brow: lerp(0.3, 0.62, knows), browIn: lerp(0.12, 1, knows), browKnit: 0.08 * knows, smile: -0.32 * knows,
+      open: (t >= DOOR.sound && t < DOOR.sound + 0.55 ? 0.3 : 0.05) + 0.17 * knows, breath: caught ? 0.5 : breathAt(st), breathPx: caught ? 7 : 3,
+      // pulling the door by its frame while it swings, then the arm hangs; then it reaches into the car, low, behind the hinge band
+      armR: reach > 0.001 ? { to: [lerp(1330, 1520, reach), lerp(840, 790, reach)], depth: 0.12, palm: 'down' } : (t < 0.8 ? { to: [lerp(1180, 1300, t / 0.8), 820], depth: 0.2 } : 'down'), armL: 'down',
     };
-    RIG.draw(g, 'daniel', pose, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.9 }, rimK: 0.4 + 0.6 * a.light.k, ambient: '#3A4458', ambientK: 0.18 });
+    RIG.draw(g, 'daniel', pose, { light: { x: a.light.x, y: a.light.y, color: a.light.color, back: 0.82 }, rimK: 0.5 + 0.5 * a.light.k, ambient: '#4A5670', ambientK: 0.24, exposure: 0.96 });
   }
+  // after the broken sound nothing moves at all: his figure is drawn once and held (the door view has no camera move)
+  const DOOR_STILL = DOOR.sound + 0.6;
   function drawDoor(c, st) {
     const v = NV().door;
-    const s = { open: ease.outCubic(seg(st, DOOR.open[0], DOOR.open[1])), set: 0, figure: (g, a) => danielAtDoor(g, a, st) };
+    const fig = twos(st) >= DOOR_STILL ? (g, a) => g.drawImage(FILM.cache('Q12|doorStill', cg => danielAtDoor(cg, a, DOOR_STILL + 1)), 0, 0) : (g, a) => danielAtDoor(g, a, st);
+    const s = { open: lerp(DOOR.open0, 1, ease.outCubic(seg(st, DOOR.open[0], DOOR.open[1]))), set: 0, figureTint: '#8698A0', figure: fig };
     v.back(c, st, s); v.front(c, st, s);
   }
 
@@ -124,7 +144,7 @@
   const C3T = { drop: [0.05, 0.75] };                // shot-local (from 24): the drop to his knees
   // the sunset across the whole of C3 (24-59.5): the disc whole while he drops; half of it under L050 (the style frame);
   // the last sliver gone in the stillness after L051; the afterglow fading as "Autopilot disengaged." lands
-  const setAt = lt => FILM.key(lt, [[24, 0], [31.5, 0.04], [36.0, 0.2], [39.5, 0.3], [44.0, 0.45], [49.5, 0.62, 'inOutSine'], [56.0, 0.84], [59.5, 1.0, 'outQuad']]);
+  const setAt = lt => FILM.key(lt, [[24, 0], [31.5, 0.04], [36.0, 0.2], [39.5, 0.3], [44.0, 0.45], [49.5, 0.62, 'inOutSine'], [56.0, 0.74], [59.5, 1.0, 'inQuad']]);
   function danielKneels(g, a, lt) {
     const st = twos(lt - 24), drop = ease.inQuad(seg(st, C3T.drop[0], C3T.drop[1]));
     const lift = (1 - drop) * 0.42 * a.k;           // the kneeling figure lifted: what the glass shows is his upper body sinking
@@ -153,7 +173,7 @@
     g.save(); g.textAlign = 'center'; g.textBaseline = 'alphabetic';
     type('AUTOPILOT', 54, 21, 534, a);
     type('A film by Osita Miles', 24, 4.5, 590, 0.6 * a);
-    g.restore();
+    g.letterSpacing = '0px'; g.restore();
   }
 
   FILM.seq({
@@ -174,8 +194,8 @@
       S.cue('fob_click', 5.15); S.cue('fob_click', 6.2); S.cue('fob_click', 7.45);
       S.cue('beep', BEEP, { n: 2, what: 'the same polite BEEP as Q07: the locks answer' });
       S.cue('indicator', BEEP, { n: 2, level: -34, what: 'the relays of the two amber blinks' });
-      S.cue('door_open', 9 + DOOR.open[0], { what: 'the latch, the seal letting go' });
-      S.cue('footsteps', 9 + DOOR.step[0], { n: 1, surface: 'tarmac' });
+      S.cue('door_open', 8.8, { what: 'the latch, the seal letting go: he pulls the door (the cut lands mid-swing at 9.0)' });
+      S.cue('footsteps', 9.3, { n: 1, surface: 'tarmac', what: 'one step into the doorway' });
       S.cue('breath', 9 + DOOR.catch, { dur: 0.35, level: -32, what: 'his breath catches, and stays caught (A108)' });
       S.cue('broken_sound', 9 + DOOR.sound, { dur: 0.7, level: -30, what: "a small, broken sound: the beginning of his daughter's name, with nowhere to go (A108). A sound only, never a subtitle" });
       // A109: the world falls SILENT. Only Daniel's voice remains (his three lines add their own takes)
@@ -188,8 +208,8 @@
       { at: 24, name: 'C3: silence; he drops to his knees', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, st, lt) { drawC3(c, lt); } },
       { at: FLASH_AT, name: 'quick flash: the phone, green and peaceful', draw(c, st) { c.post = flash(c, 'phone', st) || {}; } },
       { at: FLASH_AT + FLASH.phone[2], name: 'C3, held: the sun sinks out of the glass', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, st, lt) { drawC3(c, lt); } },
-      { at: 59.5, name: 'black', post: { grain: 0.03, halation: 0, vig: 0 }, draw(c) { c.g.fillStyle = '#000'; c.g.fillRect(0, 0, W, H); } },
-      { at: 62, name: 'end card', post: { grain: 0.03, halation: 0.2, vig: 0 }, draw(c, st) { drawCard(c, st); } },
+      { at: 59.5, name: 'black', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c) { c.g.fillStyle = '#000'; c.g.fillRect(0, 0, W, H); } },
+      { at: 62, name: 'end card', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c, st) { drawCard(c, st); } },
     ],
   });
 })();

@@ -64,13 +64,13 @@
     // then it closes on the phone to pick it up
     const Th = tw(lt);
     if (Th > 7.2) {
-      const rot = key(Th, [[7.3, -34], [8.3, -26], [8.62, -22], [10.2, -20], [10.9, -16]]), curl = key(Th, [[7.3, 0.9], [8.3, 0.62], [8.62, 0.66], [10.2, 0.7], [10.9, 1.15]]);
+      const rot = key(Th, [[7.3, -34], [8.3, -26], [8.62, -22], [10.2, -20], [10.9, -16]]), curl = key(Th, [[7.3, 0.95], [8.3, 0.8], [8.62, 0.85], [10.2, 0.9], [10.9, 1.2]]);
       const d = tipOffset(Math.round(rot), Math.round(curl * 20) / 20);
       const stop = A.stop, slid = [stop[0] + 62, stop[1] + 14];      // the slider's knob travels a little to the right
       const tip = key(Th, [[7.3, [-120, 1060]], [8.3, [stop[0] - 10, stop[1] + 8], 'outCubic'], [8.44, stop], [8.62, slid, 'inOutSine'], [10.2, [slid[0] - 6, slid[1] + 4]], [10.9, [slid[0] - 30, slid[1] + 26], 'inOutSine']]);
       const lv = lit ? 1 : 0.4;
       RIG.hand(g, 'daniel', Object.assign({}, HAND, { at: [tip[0] - d[0], tip[1] - d[1]], rot, curl }),
-        { light: { x: A.phone[0] + 40, y: A.phone[1] - 30, color: '#DCE8EC', back: 0.35 }, ambient: '#0A1416', ambientK: 0.45, exposure: 0.5 + 0.32 * lv, detail: 0.8 });
+        { light: { x: A.phone[0] + 40, y: A.phone[1] - 30, color: '#DCE8EC', back: 0.35 }, ambient: '#0A1416', ambientK: 0.45, exposure: 0.4 + 0.3 * lv, detail: 0.8 });
     }
     v.front(c, lt, s);
   }
@@ -80,12 +80,12 @@
   //           turns it over: the glass foreshortens to an edge and the light goes with it.
   // ===============================================================================================================
   const FL = { x: 480, y: 0, w: 960, h: 900 };
-  let _fl = null; const faceLayer = () => _fl || (_fl = OTM.makeCanvas(FL.w, FL.h));
+  let _fl = null; const faceLayer = () => _fl || (_fl = OTM.makeCanvas(FL.w / 2, FL.h / 2));
   function screen(c, st, lt) {
     const v = V().screen, A = v.anchors;
     const sw = seg(lt, T.swing0, T.swing1, 'inOutSine');
-    const hh = FILM.shake(lt, 1.6, 0.3, 5);                          // the phone is in a tired hand: it drifts a little
-    c.camera({ x: 960, y: 540, zoom: 1.012 + 0.0022 * st, dx: hh.dx, dy: hh.dy });
+    // locked: the phone is held close; only its reflection drifts against the glass as the tired hand moves
+    const hh = FILM.shake(tw(lt), 6, 0.3, 5);
     const s = { swing: sw, glow: 1 - 0.15 * sw };
     v.back(c, lt, s);
     const Th = tw(lt);
@@ -98,15 +98,20 @@
       [17.2, { squint: 0.4, lid: 0.5, brow: 0.05, browKnit: 0.2, head: { nod: 0.2, turn: -0.02, tilt: 0.02 } }],
       [19.2, { squint: 0.35, lid: 0.55, brow: 0.1, browKnit: 0.15, head: { nod: 0.24, turn: 0.0, tilt: 0.0 } }],
     ]);
-    const par = 10 * Math.sin(lt * 0.4);                              // the reflection slides a touch against the glass
+    const par = hh.dx;                                                // the reflection slides a touch against the glass
     // the face is rendered into its own layer, faded out below the chin (the stacked apps are lit: a reflection barely shows
     // over them), then screened into the black glass
-    const fl = faceLayer(), fg = fl.getContext('2d'); fg.setTransform(1, 0, 0, 1, 0, 0); fg.clearRect(0, 0, fl.width, fl.height); fg.translate(-FL.x, -FL.y);
-    RIG.face(fg, 'daniel', Object.assign({ at: [A.face[0] + par, A.face[1] + 48], size: 540, view: 'front', face: 'squint', outfit: 'night', stubble: 0.45, breath: breathOf(lt) }, fp),
-      { mode: 'reflection', blend: 'source-over', alpha: 1, res: 0.5, light: { x: 930, y: 1150, color: '#DCE8EC', back: 0.12 }, mirror: true, mirrorX: A.face[0] + par });
-    fg.setTransform(1, 0, 0, 1, 0, 0); fg.globalCompositeOperation = 'destination-out';
-    fg.fillStyle = LC.lin(fg, 0, 700 - FL.y, 0, 830 - FL.y, [[0, '#000000', 0], [1, '#000000', 1]]); fg.fillRect(0, 700 - FL.y, fl.width, fl.height); fg.globalCompositeOperation = 'source-over';
-    v.inGlass(c, { reflect: 0.3 + 0.05 * sstep(lt, 11, 13) }, g => g.drawImage(fl, FL.x, FL.y));
+    // the face is drawn at half resolution into its own layer (a reflection is soft), graded cool and low, faded out below the
+    // chin (the stacked apps are lit: a reflection barely shows over them), then screened into the black glass. It changes on
+    // twos, so each drawing serves two frames.
+    { const fl = faceLayer(), key2 = Math.floor(tw(lt) * 12 + 0.5);
+      if (fl._key !== key2) { fl._key = key2; const fg = fl.getContext('2d'); fg.setTransform(1, 0, 0, 1, 0, 0); fg.globalCompositeOperation = 'source-over'; fg.clearRect(0, 0, fl.width, fl.height);
+        fg.setTransform(0.5, 0, 0, 0.5, -FL.x * 0.5, -FL.y * 0.5);
+        RIG.face(fg, 'daniel', Object.assign({ at: [A.face[0] + par, A.face[1] + 48 + hh.dy * 0.5], size: 540, view: 'front', face: 'squint', outfit: 'night', stubble: 0.45, breath: breathOf(lt) }, fp),
+          { light: { x: 930, y: 1150, color: '#DCE8EC', back: 0.12 }, ambient: '#5E7A78', ambientK: 0.3, detail: 0.7 });
+        fg.setTransform(1, 0, 0, 1, 0, 0); fg.globalCompositeOperation = 'source-atop'; fg.fillStyle = 'rgba(143,169,166,0.28)'; fg.fillRect(0, 0, fl.width, fl.height);
+        fg.globalCompositeOperation = 'destination-out'; fg.fillStyle = LC.lin(fg, 0, (700 - FL.y) * 0.5, 0, (830 - FL.y) * 0.5, [[0, '#000000', 0], [1, '#000000', 1]]); fg.fillRect(0, 0, fl.width, fl.height); fg.globalCompositeOperation = 'source-over'; }
+      v.inGlass(c, { reflect: 0.34 + 0.06 * sstep(lt, 11, 13) }, g => { g.imageSmoothingEnabled = true; g.drawImage(fl, FL.x, FL.y, FL.w, FL.h); }); }
     // the apps low on the screen are dimmer than the panel: the lower glass falls off toward his thumb (calm under the words)
     if (sw < 0.5) { const g = c.g, q = SETS.bedroom.views.screen.anchors.screen; g.save(); g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.clip();
       g.fillStyle = LC.lin(g, 0, 780, 0, 1100, [[0, '#020405', 0], [1, '#020405', 0.42]]); g.fillRect(0, 780, W, 340); g.restore(); }
@@ -122,16 +127,21 @@
     const s = { dawn: key(lt, [[T.window, 0.12], [T.edge, 0.37, 'inOutSine']]), phoneLight: 1 - seg(lt, T.window, T.window + 1.1, 'outQuad') };
     c.camera({ x: 990, y: 528, zoom: 1.15 + 0.0045 * st });          // close on the bare glass; a slow push toward the empty half (0.4% a second)
     v.back(c, lt, s);
-    v.inGlass(c, s, (g, mc) => himInTheGlass(g, mc, lt, s));
+    // he is composed in his own layer first (so his overlapping shapes do not add up), then screened into the glass once
+    const L = himLayer(), lg = L.getContext('2d'); lg.setTransform(1, 0, 0, 1, 0, 0); lg.clearRect(0, 0, L.width, L.height); lg.translate(-HL.x, -HL.y);
+    himInTheGlass(lg, v.reflectCam, lt, s);
+    v.inGlass(c, s, g => g.drawImage(L, HL.x, HL.y));
     v.front(c, lt, s);
   }
+  const HL = { x: 380, y: 250, w: 760, h: 520 };
+  let _hl = null; const himLayer = () => _hl || (_hl = OTM.makeCanvas(HL.w, HL.h));
   // Daniel lying on his side, propped on his left elbow, turned toward the foot of the bed (toward the window), the phone in
   // his hand against the duvet. A soft shape in the glass: three values of grey (it is screened over the dark garden).
   function himInTheGlass(g, mc, lt, s) {
     const P = (x, y, z) => { const q = mc.p(x, y, z); return [q[0], q[1]]; };
     const Th = tw(lt), br = 0.006 * Math.sin(Th * Math.PI * 2 * 0.25), sink = 0.02 * sstep(lt, 24, 28);      // he settles a little as the light goes
     const pl = s.phoneLight || 0, dawn = s.dawn || 0;
-    const body = '#55666A', shade = '#3C4A4E', face = '#4E5A5C';
+    const body = '#4C5C60', shade = '#3A474A', face = '#465255';
     // his legs under the thrown-back duvet roll, and the hip
     g.fillStyle = shade; g.fill(LC.smooth([P(-0.72, 0.62, 1.55), P(-0.12, 0.62, 1.55), P(-0.08, 0.7, 1.2), P(-0.14, 0.74, 0.95), P(-0.62, 0.74, 0.92), P(-0.76, 0.66, 1.2)]));
     // the torso, propped: from the hip up to the shoulder on the elbow

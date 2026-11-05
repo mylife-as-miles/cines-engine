@@ -61,9 +61,13 @@
   // ===============================================================================================================
   // two cameras on the same spot: the wide (the whole pane) and the close (the harness clip), each with its own caches
   // the eye is low (1.3 m), so through the near pane we see from the far doorway's top down to her lap
+  const FAR_EYE = { x: -2.2, y: 1.2, z: -0.45, yaw: 1.62, pitch: -0.02 };
+  // a camera from the same eye, with focal length f, that puts the car-space point q at the frame point (sx, sy)
+  const aimAt = (q, f, sx, sy) => { const c0 = LC.camera(Object.assign({ f: 1, cx: 0, cy: 0 }, FAR_EYE)), p = c0.p(q[0], q[1], q[2]); return Object.assign({ f, cx: sx - f * p[0], cy: sy - f * p[1] }, FAR_EYE); };
   const FAR_CAMS = {
-    wide: { x: -2.2, y: 1.2, z: -0.45, yaw: 1.62, pitch: -0.02, f: 2050, cx: 960, cy: 400 },
-    close: { x: -2.2, y: 1.2, z: -0.45, yaw: 1.62, pitch: -0.02, f: 3300, cx: 760, cy: 250 },
+    wide: Object.assign({ f: 2050, cx: 960, cy: 400 }, FAR_EYE),
+    medium: aimAt([0.72, 1.06, -0.5], 2900, 960, 470),          // the two of them: her look up, his smile
+    close: aimAt([0.42, 0.98, -0.62], 3300, 860, 520),          // her face and the rabbit, at the click
   };
   const SUN = [-0.38, 0.62, -0.69];                                  // the house set's morning sun (car space = house axes)
   const FAR = {};                                                    // per camera: the car's window paths for the near rear glass
@@ -165,12 +169,12 @@
   function farPlate(c, which) {
     const F = farInit(which);
     return c.cache('Q05:far:plate:' + which, gg => {
-      const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'close' ? 5 : 2.5), 0, 0);
+      const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'wide' ? 2.5 : 4.5), 0, 0);
       SETS.car.exterior(gg, { cam: F.cam, at: [0, 0, 0], heading: 0, tod: 'morning', sun: SUN, interior: false, reflect: SETS.car.reflectCanvas ? SETS.car.reflectCanvas(houseRefl()) : 'house', reflectStrength: 0.42 });
     });
   }
   // the far side's world seen through the far doorway (same camera, unblurred less: it is what the pane looks onto)
-  function farWorldLayer(c, which) { const F = farInit(which); return c.cache('Q05:far:world:' + which, gg => { const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'close' ? 4 : 1.6), 0, 0); }); }
+  function farWorldLayer(c, which) { const F = farInit(which); return c.cache('Q05:far:world:' + which, gg => { const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); farWorld(tg, F.cam); gg.drawImage(LC.blurred(tmp, which === 'wide' ? 1.6 : 3.5), 0, 0); }); }
   // the people behind the tinted pane are drawn into a reduced-resolution layer and laid in: the glass softens them anyway,
   // and it keeps two large figures inside the frame budget
   const _ppl = {};
@@ -182,18 +186,18 @@
   }
   function buckleFar(c, st, lt, which) {
     const F = farInit(which), cam = F.cam, b = F.box;
-    c.camera({ zoom: 1.0 + (which === 'close' ? 0.005 : 0.0022) * st, x: 960, y: 540 });
+    c.camera({ zoom: 1.0 + (which === 'wide' ? 0.0022 : 0.004) * st, x: 960, y: 540 });
     c.g.drawImage(farPlate(c, which), 0, 0);
     const world = farWorldLayer(c, which);
     c.g.drawImage(c.cache('Q05:far:cabin:' + which, gg => farCabin(gg, which, world)), b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h);
     // the people, inside the near glass, at reduced resolution
     const T = tw(lt), L = { x: 2300, y: 160, color: '#FFE6BE', back: 0.35 };
-    const LAY = peopleLayer(which, b, which === 'close' ? 0.5 : 0.6), g = LAY.g;
+    const LAY = peopleLayer(which, b, which === 'wide' ? 0.6 : 0.5), g = LAY.g;
     const work = Math.sin(T * 2.4);
     // Emily in her seat, three-quarter from our side, the rabbit up under her chin (its worn ear lying flat)
     const eSeat = P3(cam, [0.42, 0.66, -0.64]), ek = cam.k(P3(cam, [0.42, 1.0, -0.64])[2]);
     const emily = pose => RIG.draw(g, 'emily', Object.assign({ at: [eSeat[0], eSeat[1]], scale: ek, view: 'three', yaw: 52, facing: -1, body: 'carseat', harness: true, holdR: 'rabbit', armR: 'hug', armL: 'hug', face: 'sleepy' }, pose), { light: L, ambient: '#1F3538', ambientK: 0.14 });
-    if (which === 'wide') {
+    if (which !== 'close') {
       // Daniel, bent in at the front of the far doorway against the bright drive, turned to her: his hands at her straps, his
       // face intent and gentle. She looks up at him (16.2) and he smiles; then her eyes go heavy again.
       const sh1 = P3(cam, [0.56, 0.96, -0.62]), lap = P3(cam, [0.5, 0.72, -0.5]), kS = cam.k(sh1[2]);
@@ -305,12 +309,12 @@
   // ===============================================================================================================
   FILM.seq({
     id: 'Q05', title: 'The mirror', dur: 68,
-    setup() { farInit('wide'); farInit('close'); houseRefl(); },
+    setup() { farInit('wide'); farInit('medium'); farInit('close'); houseRefl(); },
     lines: [
       { id: 'L014', at: 28.0 },          // Emily: "Bad sun."
       { id: 'L015', at: 30.4 },          // Daniel: "What's it done now?"
       { id: 'L016', at: 33.0 },          // Emily: "It's in my eyes. It won't let me have my little sleep."
-      { id: 'L017', at: 44.0 },          // Daniel: "Better?"
+      { id: 'L017', at: 44.0, until: 46.7 },   // Daniel: "Better?" (held so "Mm-hmm." stacks under it, as in C2)
       { id: 'L018', at: 45.4 },          // Emily: "Mm-hmm." (stacks under "Better?", as in C2)
       { id: 'L019', at: 48.0 },          // Daniel: "You can sleep a bit. I'll wake you when we get there."
     ],
@@ -344,7 +348,8 @@
       { at: 0, name: 'ext: the car baking on the drive', draw(c, st, lt) { drive(c, st); } },
       { at: 6, name: 'ext: the hot wheel, through the windscreen', draw(c, st, lt) { hotwheel(c, st); } },
       { at: 12, name: 'ext: buckling her in, through the near rear window', draw(c, st, lt) { buckleFar(c, st, lt, 'wide'); } },
-      { at: 21.4, name: 'ext: the harness clip, close, through the glass', draw(c, st, lt) { buckleFar(c, st, lt, 'close'); } },
+      { at: 16.1, name: 'ext: she looks up at him, he smiles (through the glass)', draw(c, st, lt) { buckleFar(c, st, lt, 'medium'); } },
+      { at: 21.4, name: 'ext: CLICK, her face close through the glass', draw(c, st, lt) { buckleFar(c, st, lt, 'close'); } },
       { at: 22.62, name: 'ext: the door swings shut on the reflected house', draw(c, st, lt) { doorShut(c, st, lt); } },
       { at: 24.2, name: 'pov: the hard white strip across her face', draw(c, st, lt) { pov(c, st, lt, { x: 960, y: 540, z0: 1.0, push: 0.003 }); } },
       { at: 30.2, name: 'mirror: she squints and turns away', draw(c, st, lt) { pov(c, st, lt, { x: 895, y: 566, z0: 1.4, push: 0.0035 }); } },
