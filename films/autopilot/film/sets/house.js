@@ -39,8 +39,8 @@
   // LIGHT BY TIME OF DAY (the front faces east: morning sun on it; evening and dusk behind the roof)
   // =================================================================================================================
   const TODS = {
-    morning: { sky: [[0, '#C9DADC'], [0.45, '#E2E8E0'], [0.8, '#F2ECDA'], [1, '#F8F0DE']], brick: ['#C47A52', '#96583E', '#5E3A2E'], frame: ['#F6F2E6', '#CDD0C6', '#8E948E'], roof: ['#7E5C50', '#5A443E', '#3A2E2C'],
-      gravel: ['#E6DCC6', '#CBBFA6', '#968A74'], lawn: ['#BDB46E', '#A09858', '#6A6640'], hedge: ['#4E6046', '#3A4A36', '#26322A'], glass: '#7E9298', sun: [-0.38, 0.62, -0.69], rim: '#FFE9C4', porchIn: '#3A3530', lit: 1 },
+    morning: { sky: [[0, '#B4CDD3'], [0.45, '#DCE6E0'], [0.8, '#F2ECDA'], [1, '#F8F0DE']], brick: ['#C47A52', '#96583E', '#5E3A2E'], frame: ['#F6F2E6', '#CDD0C6', '#8E948E'], roof: ['#7E5C50', '#5A443E', '#3A2E2C'],
+      gravel: ['#E6DCC6', '#CBBFA6', '#968A74'], lawn: ['#BDB46E', '#A09858', '#6A6640'], hedge: ['#687C46', '#52643A', '#33412B'], glass: '#7E9298', sun: [-0.38, 0.62, -0.69], rim: '#FFE9C4', porchIn: '#3A3530', lit: 1 },
     evening: { sky: [[0, '#3A4250'], [0.5, '#8A6A5E'], [0.82, '#D2874E'], [1, '#EFA35E']], brick: ['#7A5446', '#5E4038', '#3E2C28'], frame: ['#B9B8B4', '#8E908C', '#5E625E'], roof: ['#4A3A36', '#3A2E2C', '#261E1E'],
       gravel: ['#A49C92', '#857E76', '#5E5854'], lawn: ['#6E6E48', '#565638', '#3A3A28'], hedge: ['#3A4636', '#2A342A', '#1A2220'], glass: '#4E5262', sun: [0.55, 0.18, 0.82], rim: '#F2A65E', porchIn: '#E2A868', lit: 0 },
     dusk: { sky: [[0, '#1E2632'], [0.45, '#3A3E4C'], [0.78, '#6A5A5C'], [1, '#C27A4C']], brick: ['#4A3836', '#3A2C2C', '#261E20'], frame: ['#7E8288', '#5E6268', '#3E4248'], roof: ['#2E2628', '#241E20', '#181416'],
@@ -85,6 +85,31 @@
     if (T.lit) { seg2(g, cam, [x0, y1, z - 0.012], [x1, y1, z - 0.012], Math.max(1.5, 0.03 * k), rgba('#3A2A24', 0.5)); }    // the lintel's shadow line (sun from above)
   }
 
+  // morning: the shadows the low sun throws on the ground, drawn before the house so everything stands on them. A street tree's
+  // crown behind the lens lies across the lawn's foot (it keeps the bottom of the frame calm), a few sun-flecks through it;
+  // the lawn tree's own shadow falls toward the bay. Ground shapes on a scratch, softened, multiplied in a cool shade.
+  const LAWN_TREE = [-2.2, 0, 4.6];
+  function groundShadows(g, cam, T) {
+    const S = T.sun, n = Math.hypot(S[0], S[2]), dx = -S[0] / n, dz = -S[2] / n, px = -dz, pz = dx, sinE = S[1] / Math.hypot(S[0], S[1], S[2]);
+    const onGround = (x, y, z) => { const t = y / S[1]; return [x - S[0] * t, z - S[2] * t]; };
+    const sg = scratch('houseShadow', W + 2 * M, H + 2 * M); sg.translate(M, M);
+    const blob = (x, y, z, r) => { const [cx, cz] = onGround(x, y, z), ra = r / sinE, pts = [];
+      for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2, u = Math.cos(a) * ra, v = Math.sin(a) * r; pts.push([cx + dx * u + px * v, 0.005, cz + dz * u + pz * v]); }
+      const q = clipPts(cam, pts); if (q.length > 2) sg.fill(LC.pathPts(q)); };
+    sg.fillStyle = '#9CA4AE';
+    const R = OTM.rng('streetTree'), crown = [];
+    for (let i = 0; i < 16; i++) { const b = [-4.8 + R() * 4.3, 4.6 + R() * 2.6, -2.4 + R() * 1.8, 0.85 + R() * 1.0]; crown.push(b); blob(...b); }
+    // the lawn tree: the same blobs as it is drawn with (its own rng, in the same order)
+    { const tr = LAWN_TREE, Rt = OTM.rng('tree');
+      for (let i = 0; i < 16; i++) { const x = tr[0] + (Rt() - 0.5) * 1.6, y = 2.6 + (Rt() - 0.5) * 1.2, z = tr[2] + (Rt() - 0.5) * 0.6; Rt(); const r = 0.45 + Rt() * 0.3; Rt(); blob(x, y, z, r * 0.9); }
+      const a = onGround(tr[0], 1.9, tr[2]), w = 0.07, q = clipPts(cam, [[tr[0] - px * w, 0.005, tr[2] - pz * w], [tr[0] + px * w, 0.005, tr[2] + pz * w], [a[0] + px * w, 0.005, a[1] + pz * w], [a[0] - px * w, 0.005, a[1] - pz * w]]);
+      if (q.length > 2) sg.fill(LC.pathPts(q)); }
+    // sun-flecks through the street tree's crown
+    sg.globalCompositeOperation = 'destination-out'; sg.fillStyle = '#000000';
+    const Rf = OTM.rng('flecks'); for (let i = 0; i < 9; i++) { const b = crown[Math.floor(Rf() * crown.length)]; blob(b[0] + (Rf() - 0.5) * b[3], b[1], b[2] + (Rf() - 0.5) * b[3], 0.1 + Rf() * 0.18); }
+    g.save(); g.globalCompositeOperation = 'multiply'; g.filter = 'blur(5px)'; g.drawImage(sg.canvas, -M, -M); g.restore();
+  }
+
   // =================================================================================================================
   // THE HOUSE AND ITS DRIVE in a camera (painter's order: sky, the far roofs, the ground, the house, the porch and bay, walls)
   // =================================================================================================================
@@ -96,13 +121,14 @@
       if (!T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const s = cam.p(1.5, 3, 400); g.fillStyle = LC.rad(g, s[0], s[1], 0, 1300, [[0, '#FFD39A', 0.55], [0.35, '#E8955A', 0.25], [1, '#E8955A', 0]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); }
       else { g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.lin(g, 0, top[1], 0, hz[1], [[0, '#FFF2DA', 0.0], [0.7, '#FFF2DA', 0.18], [1, '#FFF6E6', 0.35]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
         g.fillStyle = LC.rad(g, -300, -200, 0, 1400, [[0, '#FFF6E6', 0.5], [0.4, '#FBE7C2', 0.18], [1, '#FBE7C2', 0]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); } }
-    // beyond: the roofs and chimneys of the next street, garden trees over them (hazy in the morning, a dark line at evening)
-    { const R = OTM.rng('farline'), far = T.lit ? '#B4B8B0' : mix(T.roof[2], '#000000', 0.25), farT = T.lit ? '#A2AE9E' : mix(T.hedge[2], '#000000', 0.3), Z = 30;     // morning: hazed by the heat
-      for (let x = -40, w = 6; x < 44; x += w) { w = 5.5 + R() * 2.5; const eave = 5.2 + R() * 0.6, ridge = eave + 2.2 + R() * 0.8;
-        Qc(g, cam, [[x, -0.5, Z], [x + w, -0.5, Z], [x + w, eave, Z], [x + w - 1.2, ridge, Z], [x + 1.2, ridge, Z], [x, eave, Z]], far);
-        if (R() < 0.6) Qc(g, cam, [[x + w * 0.3, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge + 0.9, Z], [x + w * 0.3, ridge + 0.9, Z]], far); }
-      for (let i = 0; i < 26; i++) { const x = -36 + R() * 76, y = 8 + R() * 5, zz = Z - 3 - R() * 4, c0 = cam.p(x, y, zz), k = kAt(cam, x, y, zz); if (c0[2] < 1) continue;
-        g.fillStyle = farT; g.beginPath(); g.ellipse(c0[0], c0[1], (2.2 + R() * 2) * k, (2 + R() * 1.6) * k, 0, 0, Math.PI * 2); g.fill(); } }
+    // beyond: the roofs and chimneys of the next street, garden trees behind them whose crowns rise over the ridges (hazy in the
+    // morning, a dark line at evening). The trees go first, so nothing floats in the sky between them and the roofs.
+    { const R = OTM.rng('farline'), RT = OTM.rng('fartrees'), far = T.lit ? '#B6B4AC' : mix(T.roof[2], '#000000', 0.25), farT = T.lit ? '#A4AC96' : mix(T.hedge[2], '#000000', 0.3), Z = 30;     // morning: hazed by the heat
+      for (let i = 0; i < 34; i++) { const x = -38 + RT() * 82, zz = Z + 4 + RT() * 6, tall = RT() < 0.15, y = tall ? 10.5 + RT() * 1.5 : 7.4 + RT() * 2.2, c0 = cam.p(x, y, zz), k = kAt(cam, x, y, zz), rx = (tall ? 1.6 : 2.2 + RT() * 2) * k, ry = (tall ? 3.6 : 2 + RT() * 1.8) * k; if (c0[2] < 1) continue;
+        g.fillStyle = farT; g.beginPath(); g.ellipse(c0[0], c0[1], rx, ry, 0, 0, Math.PI * 2); g.fill(); }
+      for (let x = -40, w = 6; x < 44; x += w) { w = 5.5 + R() * 2.5; const eave = 5.2 + R() * 0.6, ridge = eave + 2.2 + R() * 0.8, a = x - 0.04, b = x + w + 0.04;     // a hair of overlap: no seams
+        Qc(g, cam, [[a, -0.5, Z], [b, -0.5, Z], [b, eave, Z], [b - 1.2, ridge, Z], [a + 1.2, ridge, Z], [a, eave, Z]], far);
+        if (R() < 0.6) Qc(g, cam, [[x + w * 0.3, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge + 0.9, Z], [x + w * 0.3, ridge + 0.9, Z]], far); } }
     // the ground: pavement, the lawn, the drive's gravel
     Q([[-40, 0, -6], [44, 0, -6], [44, 0, 32], [-40, 0, 32]], T.lawn[2]);
     Q([[-30, 0.001, -2.0], [30, 0.001, -2.0], [30, 0.001, 0.3], [-30, 0.001, 0.3]], T.lit ? '#B6B0A4' : mix(T.gravel[1], '#2A2A30', 0.3));
@@ -112,6 +138,7 @@
       g.globalAlpha = 0.8; g.fillStyle = g.createPattern(gravelTile(), 'repeat'); g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.restore(); }
     // the path of paving slabs from the drive to the porch steps
     Q([[DRIVE.x0 - 0.9, 0.004, 7.1], [DRIVE.x0, 0.004, 7.1], [DRIVE.x0, 0.004, 7.75], [DRIVE.x0 - 0.9, 0.004, 7.75]], T.lit ? '#C9C2B2' : T.gravel[2]);
+    if (T.lit && !o.noShadows) groundShadows(g, cam, T);
     // the neighbour on the right, beyond the drive and the hedge: a gable end, its front, a window
     { const nx0 = 7.2, nx1 = 13.5, nz = 9.8; brickWall(g, cam, [[nx0, 5.2, nz], [nx1, 5.2, nz], [nx1, 0, nz], [nx0, 0, nz]], B[T.lit ? 0 : 1], rgba('#000000', 0.12), 'nextR', 70);
       brickWall(g, cam, [[nx0, 5.2, nz], [nx0, 5.2, nz + 7], [nx0, 0, nz + 7], [nx0, 0, nz]], B[T.lit ? 1 : 2], rgba('#000000', 0.12), 'nextRside', 70);
@@ -142,9 +169,9 @@
     windowOn(g, cam, T, -2.65, -0.55, 3.2, 4.6, hz); windowOn(g, cam, T, 0.62, 1.62, 3.3, 4.6, hz, { glow: T.lit ? 0 : 0.25 }); windowOn(g, cam, T, 2.45, 3.3, 3.5, 4.6, hz); windowOn(g, cam, T, 2.55, 3.25, 1.15, 2.1, hz);
     // the bay: three canted lights under a lead roof, its brick base
     { const bz = BAY.z0, xs = [BAY.x0, BAY.x0 + 0.45, BAY.x1 - 0.45, BAY.x1], zs = [hz, bz, bz, hz];
-      for (let i = 0; i < 3; i++) { const a = [xs[i], 0, zs[i]], b = [xs[i + 1], 0, zs[i + 1]], face = i === 1 ? B[T.lit ? 0 : 1] : B[T.lit ? 1 : 2];
+      for (let i = 0; i < 3; i++) { const a = [xs[i], 0, zs[i]], b = [xs[i + 1], 0, zs[i + 1]], turned = T.lit ? i === 2 : i !== 1, face = turned ? B[T.lit ? 1 : 2] : B[T.lit ? 0 : 1];   // morning: the left flank and the front take the sun, the right flank is turned away
         Q([[a[0], 0, a[2]], [b[0], 0, b[2]], [b[0], BAY.sill, b[2]], [a[0], BAY.sill, a[2]]], face);
-        Q([[a[0], BAY.sill, a[2]], [b[0], BAY.sill, b[2]], [b[0], BAY.head, b[2]], [a[0], BAY.head, a[2]]], F[i === 1 ? 0 : 1]);
+        Q([[a[0], BAY.sill, a[2]], [b[0], BAY.sill, b[2]], [b[0], BAY.head, b[2]], [a[0], BAY.head, a[2]]], F[turned ? 1 : 0]);
         const inset = 0.07, gpts = [[lerp(a[0], b[0], 0.06), BAY.sill + inset, lerp(a[2], b[2], 0.06)], [lerp(a[0], b[0], 0.94), BAY.sill + inset, lerp(a[2], b[2], 0.94)], [lerp(a[0], b[0], 0.94), BAY.head - inset, lerp(a[2], b[2], 0.94)], [lerp(a[0], b[0], 0.06), BAY.head - inset, lerp(a[2], b[2], 0.06)]];
         const gq = Qc(g, cam, gpts, T.glass); if (gq) { g.save(); g.clip(gq); const t0 = cam.p(gpts[3]), b0 = cam.p(gpts[0]); g.fillStyle = LC.lin(g, 0, t0[1], 0, b0[1], T.lit ? [[0, '#EEF2EE', 0.7], [1, '#7E9294', 0.25]] : [[0, '#8A7684', 0.45], [1, '#2A2C36', 0.2]]); g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
           LC.glare(g, null, { x: (t0[0] + b0[0]) / 2 + 20, y: (t0[1] + b0[1]) / 2, angle: -1.15, color: '#FFFFFF', bands: [{ d: 0, w: Math.abs(b0[1] - t0[1]) * 0.2, a: T.lit ? 0.22 : 0.08 }] }); g.restore(); }
@@ -160,10 +187,10 @@
     { const tr = [-2.2, 0, 4.6], c0 = cam.p(tr), k = kAt(cam, ...tr); if (c0[2] > 0.3) { seg2(g, cam, tr, [tr[0], 1.9, tr[2]], Math.max(2, 0.12 * k), T.lit ? '#4A3E32' : '#1E1A18'); const R = OTM.rng('tree');
       for (let i = 0; i < 16; i++) { const p = cam.p(tr[0] + (R() - 0.5) * 1.6, 2.6 + (R() - 0.5) * 1.2, tr[2] + (R() - 0.5) * 0.6); g.fillStyle = T.lit ? mix('#5A6E4A', '#7E8E58', R()) : mix(T.hedge[1], T.hedge[2], R()); g.beginPath(); g.ellipse(p[0], p[1], (0.45 + R() * 0.3) * k, (0.35 + R() * 0.25) * k, 0, 0, Math.PI * 2); g.fill(); }
       if (T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const sp = cam.p(tr[0] - 0.4, 3.0, tr[2]); g.fillStyle = LC.rad(g, sp[0], sp[1], 0, 0.9 * k, [[0, '#FFE6B4', 0.35], [1, '#FFE6B4', 0]]); g.beginPath(); g.arc(sp[0], sp[1], 0.9 * k, 0, Math.PI * 2); g.fill(); g.restore(); } } }
-    // morning: the porch's shadow thrown on the front wall to its right, the bay's on the lawn
-    if (T.lit) { Q([[PORCH.x1, 0.0, hz - 0.003], [PORCH.x1 + 0.75, 0.0, hz - 0.003], [PORCH.x1 + 0.75, PORCH.top - 0.35, hz - 0.003], [PORCH.x1, PORCH.top + 0.35, hz - 0.003]], rgba(B[2], 0.62));
-      Q([[BAY.x1, 0.0, hz - 0.003], [BAY.x1 + 0.42, 0.0, hz - 0.003], [BAY.x1 + 0.42, BAY.head - 0.2, hz - 0.003], [BAY.x1, BAY.head + 0.2, hz - 0.003]], rgba(B[2], 0.58));
-      Q([[BAY.x1 - 0.2, 0.004, BAY.z0], [BAY.x1 + 0.6, 0.004, BAY.z0 + 0.25], [BAY.x1 + 0.6, 0.004, hz], [BAY.x1, 0.004, hz]], rgba(T.lawn[2], 0.7)); }
+    // morning: the porch's shadow thrown on the front wall to its right (its front corner's shadow lands where the sun puts it;
+    // the bay throws none outside its own footprint: its right flank is turned from the sun and is the darker face instead)
+    if (T.lit) { const S = T.sun, d = hz - PORCH.z0, sx = PORCH.x1 - S[0] / S[2] * d, sy = PORCH.top - S[1] / -S[2] * d;
+      Q([[PORCH.x1, 0.0, hz - 0.003], [sx, 0.0, hz - 0.003], [sx, sy, hz - 0.003], [PORCH.x1, PORCH.top + 0.05, hz - 0.003]], rgba(B[2], 0.6)); }
   }
   // the porch: brick base, glazed walls, a pitched roof; its glazed door; behind, the front door open on the hall (lit at evening)
   function porch(g, cam, T, o) {

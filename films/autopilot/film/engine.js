@@ -151,12 +151,18 @@
     let e = FILM._cache.get(keyName);
     if (!e) {
       const cv = O.makeCanvas(w || W, h || H); const g = cv.getContext('2d'); fn(g, cv); e = { cv, used: 0 };
-      FILM._cache.set(keyName, e);
-      if (FILM._cache.size > 48) { let oldest = null; for (const [k, v] of FILM._cache) if (!oldest || v.used < oldest[1].used) oldest = [k, v]; FILM._cache.delete(oldest[0]); }
+      e.px = cv.width * cv.height; FILM._cache.set(keyName, e); FILM._cachePx = (FILM._cachePx || 0) + e.px;
+      // keep the least recently used layers within a memory budget (about 72 full frames) rather than a count, so a sequence
+      // cutting between sets with several full-frame layers each doesn't churn, and small subtitle strips cost little
+      while (FILM._cache.size > 1 && (FILM._cachePx > FILM.cacheBudgetPx || FILM._cache.size > 240)) {
+        let oldest = null; for (const [k, v] of FILM._cache) if (v !== e && (!oldest || v.used < oldest[1].used)) oldest = [k, v];
+        if (!oldest) break; FILM._cachePx -= oldest[1].px; FILM._cache.delete(oldest[0]);
+      }
     }
     e.used = FILM._clock = (FILM._clock || 0) + 1; return e.cv;
   }
   FILM.cache = cache;
+  FILM.cacheBudgetPx = 72 * W * H;
   // camera: c.camera({x, y, zoom, rot, dx, dy}): (x,y) is the world point placed at frame centre; zoom 1 = authored framing
   function camera(g, cam) {
     const z = cam.zoom || 1, r = cam.rot || 0, x = cam.x == null ? W / 2 : cam.x, y = cam.y == null ? H / 2 : cam.y;

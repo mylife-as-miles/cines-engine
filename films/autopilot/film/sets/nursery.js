@@ -1144,7 +1144,6 @@
     function pane(g) {
       LC.glare(g, glassP, { x: GBOX.x + GBOX.w * 0.35, y: GBOX.y + GBOX.h * 0.4, angle: -1.15, color: '#E8ECF2', bands: [{ d: -90, w: 70, a: 0.04 }, { d: -30, w: 12, a: 0.06 }, { d: 260, w: 120, a: 0.03 }] });
       LC.specks(g, glassP, GBOX, 'winDust', { n: 90, color: '#E8DCD0', rMin: 0.5, rMax: 1.0, aMin: 0.02, aMax: 0.08, scratch: 0, near: { x: GBOX.x, y: GBOX.y + GBOX.h, r: 700 } });
-      LC.smudge(g, GBOX.x + GBOX.w * 0.7, GBOX.y + GBOX.h * 0.55, 60, 40, 0.3, 'winSmudge', '#C8D0D8', 0.035);
     }
     const view = {
       back(c, t, s) {
@@ -1201,7 +1200,7 @@
       g.fillStyle = LC.lin(g, 0, hp(0, hr.y1 + 0.02)[1], 0, hp(0, hr.y0 - 0.02)[1], [[0, '#000000', 0.6], [1, '#000000', 0]]); g.fill(recessQ);
       g.fillStyle = LC.lin(g, 0, H - 200, 0, H, [[0, '#06080A', 0], [1, '#06080A', 0.55]]); g.fillRect(0, H - 200, W, 200);
     }
-    function pane(g) { LC.glare(g, glassP, { x: 900, y: 300, angle: -1.15, color: '#E8ECF2', bands: [{ d: -60, w: 60, a: 0.04 }, { d: -10, w: 10, a: 0.06 }] }); LC.smudge(g, 760, 360, 70, 34, -0.2, 'hdlSmudge', '#D0D8E0', 0.04); }
+    function pane(g) { LC.glare(g, glassP, { x: 900, y: 300, angle: -1.15, color: '#E8ECF2', bands: [{ d: -60, w: 60, a: 0.04 }, { d: -10, w: 10, a: 0.06 }] }); }
     const shake = s => { const j = clamp((s && s.jolt) || 0, 0, 1); return [Math.sin(j * 31) * 3.2 * j, Math.cos(j * 23) * 1.6 * j]; };
     const view = {
       back(c, t, s) {
@@ -1218,8 +1217,9 @@
         g.save(); g.translate(d[0], d[1]);
         const bar = LC.rquad([hp(hr.z1, hr.y1, out * 0.4), hp(hr.z0, hr.y1, out), hp(hr.z0, hr.y0, out), hp(hr.z1, hr.y0, out * 0.4)], 10);
         if (pl > 0) { g.fillStyle = 'rgba(0,0,0,0.5)'; g.fill(LC.rquad([hp(hr.z1, hr.y0 + 0.004, 0), hp(hr.z0, hr.y0 + 0.004, 0), hp(hr.z0, hr.y0 - 0.006, 0), hp(hr.z1, hr.y0 - 0.006, 0)], 4)); }
-        g.fillStyle = '#151D20'; g.fill(bar);
-        g.save(); g.clip(bar); g.fillStyle = LC.lin(g, 0, hp(0, hr.y1, out)[1], 0, hp(0, hr.y0, out)[1], [[0, '#4A5266', 0.55], [0.22, '#4A5266', 0.18], [0.5, '#1A2226', 0], [1, '#05080A', 0.5]]); g.fillRect(0, 0, W, H); g.restore();
+        g.save(); g.translate(-6, 7); g.fillStyle = 'rgba(0,0,0,0.45)'; g.fill(bar); g.restore();
+        g.fillStyle = '#10171A'; g.fill(bar);
+        g.save(); g.clip(bar); g.fillStyle = LC.lin(g, 0, hp(0, hr.y1, out)[1], 0, hp(0, hr.y0, out)[1], [[0, '#4A5266', 0.4], [0.16, '#4A5266', 0.1], [0.4, '#1A2226', 0], [1, '#05080A', 0.55]]); g.fillRect(0, 0, W, H); g.restore();
         g.strokeStyle = 'rgba(240,170,110,0.75)'; g.lineWidth = 2.5; const a = hp(hr.z1 - 0.012, hr.y1 - 0.002, out * 0.4), b = hp(hr.z0 + 0.012, hr.y1 - 0.002, out); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
         g.restore();
       },
@@ -1279,8 +1279,11 @@
       if (k === 'mirror') { const m = FLANK.mirror; pts = [[m.x1 + 0.002, m.y0 + 0.03, m.z1 - 0.05], [m.x1 + 0.002, m.y0 + 0.03, m.z0 + 0.03], [m.x1 + 0.002, m.y0 + 0.05, m.z0 + 0.03], [m.x1 + 0.002, m.y0 + 0.05, m.z1 - 0.05]].map(q => cam.p(q[0], q[1], q[2])); }
       else pts = L[k].map(([z, y]) => flankPt(cam, z, y));
       cen = pts.reduce((a, q) => [a[0] + q[0] / pts.length, a[1] + q[1] / pts.length], [0, 0]); const d = cam.p(0.9, 0.9, k === 'tail' ? -1.95 : k === 'head' ? 1.9 : 0.9)[2], sc = 1300 / Math.max(0.5, d);
-      g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, cen[0], cen[1], 0, 0.5 * sc, [[0, AMB, 0.55 * b], [0.4, '#E8902E', 0.18 * b], [1, '#E8902E', 0]]); g.fillRect(cen[0] - 0.5 * sc, cen[1] - 0.5 * sc, sc, sc); g.restore();
-      g.fillStyle = mix('#5A3010', '#FFD080', b); g.fill(LC.pathPts(pts));
+      g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, cen[0], cen[1], 0, 0.75 * sc, [[0, '#FFC050', 0.7 * b], [0.25, AMB, 0.32 * b], [1, '#E8902E', 0]]); g.fillRect(cen[0] - 0.75 * sc, cen[1] - 0.75 * sc, 1.5 * sc, 1.5 * sc);
+      if (k === 'tail') { const gq = flankPt(cam, -1.9, 0.0); g.save(); g.translate(gq[0], gq[1]); g.scale(1, 0.25); g.fillStyle = LC.rad(g, 0, 0, 0, 0.9 * sc, [[0, AMB, 0.3 * b], [1, AMB, 0]]); g.fillRect(-0.9 * sc, -0.9 * sc, 1.8 * sc, 1.8 * sc); g.restore(); }
+      g.restore();
+      g.fillStyle = mix('#5A3010', '#FFE2A0', b); g.fill(LC.pathPts(pts));
+      g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = rgba('#FFFFFF', 0.5 * b); g.beginPath(); g.arc(cen[0], cen[1], Math.max(2, 0.015 * sc), 0, TAU); g.fill(); g.restore();
       E.save(); E.globalAlpha = b; E.fillStyle = AMB; E.beginPath(); E.arc(cen[0], cen[1], Math.max(6, 0.06 * sc), 0, TAU); E.fill(); E.globalAlpha = 0.4 * b; E.beginPath(); E.arc(cen[0], cen[1], Math.max(12, 0.16 * sc), 0, TAU); E.fill(); E.restore();
     });
   }
@@ -1542,11 +1545,12 @@
         g.save(); g.clip(WIN); g.translate(0, dip);
         g.drawImage(cache(c, 'arr|far|' + tod, o => far(o, tod)), 0, -dip);
         const wl = cache(c, 'arr|wall|' + tod, o => wall(o, tod), Math.ceil((SPAN * 2 + 12) * KW), H), wx = CX - (XS - (XS - SPAN - 10)) * KW + sl * KW;   // the wall layer's left edge on screen
-        if (bl < 0.999) g.drawImage(wl, wx, 0);
-        if (bl > 0.001) blit(g, cache(c, 'arr|wallB|' + tod, o => o.drawImage(smear(wl, 46), 0, 0), wl.width, H), wx, 0, bl);
+        const slice = (img, x, a) => { const sx = Math.max(0, -x), sw = Math.min(img.width - sx, W + 2); if (sw <= 0) return; g.save(); if (a != null) g.globalAlpha = a; g.drawImage(img, sx, 0, sw, H, x + sx, 0, sw, H); g.restore(); };
+        if (bl < 0.999) slice(wl, wx);
+        if (bl > 0.001) slice(cache(c, 'arr|wallB|' + tod, o => o.drawImage(smear(wl, 46), 0, 0), wl.width, H), wx, bl);
         const fw = cache(c, 'arr|fore|' + tod, o => fore(o, tod), FW, H), fx = CX - (XS - FU0) * KF + sl * KF;
-        if (bl < 0.999) g.drawImage(fw, fx, 0);
-        if (bl > 0.001) blit(g, cache(c, 'arr|foreB|' + tod, o => o.drawImage(smear(fw, 120), 0, 0), fw.width, H), fx, 0, bl);
+        if (bl < 0.999) slice(fw, fx);
+        if (bl > 0.001) slice(cache(c, 'arr|foreB|' + tod, o => o.drawImage(smear(fw, 120), 0, 0), fw.width, H), fx, bl);
         g.restore();
         // the glass: a fine glare, dust lit from the west; it shows the outside, nothing of the inside
         LC.glare(g, WIN, { x: 1100, y: 420, angle: -1.1, color: '#FFE8CC', bands: [{ d: -160, w: 120, a: 0.035 }, { d: -90, w: 16, a: 0.05 }] });
@@ -1584,9 +1588,8 @@
       { const pts = []; for (let i = 0; i < 64; i++) { const a = i / 64 * TAU; pts.push([36.4 + Math.cos(a) * 1.4, 0.001, -6.4 + Math.sin(a) * 1.4]); } g.strokeStyle = dusk ? 'rgba(160,150,150,0.12)' : 'rgba(236,206,170,0.28)'; g.lineWidth = 3; const q = cam.clip(pts); if (q.length > 2) { g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.stroke(); } }
       // the classroom wing on the left: brick (mapped onto its wall), its windows mirrors of the sunset at this grazing angle
       { const pxm = 120, U0 = 32.2, U1 = 46, el = scratch('plWing', Math.ceil((U1 - U0) * pxm), Math.ceil(2.9 * pxm)), X = u => (u - U0) * pxm, Y = y => (2.9 - y) * pxm;
-        el.fillStyle = MURAL.brickFill ? MURAL.brickFill(el, pxm) : '#6E3828'; el.save(); el.fillStyle = (() => { const pat = (function () { const tmp = OTM.makeCanvas(8, 8); return el.createPattern(tmp, 'repeat'); })(); return '#5A3024'; })(); el.restore();
         MURAL.brickWall(el, 0, 0, (U1 - U0) * pxm, 2.9 * pxm, pxm, U0);
-        el.fillStyle = 'rgba(60,40,44,0.35)'; el.fillRect(0, 0, el.canvas.width, el.canvas.height);
+        el.fillStyle = dusk ? 'rgba(26,22,34,0.66)' : 'rgba(60,40,44,0.35)'; el.fillRect(0, 0, el.canvas.width, el.canvas.height);
         [[34.0, 36.4], [38.2, 40.6], [42.4, 44.8]].forEach(([a2, b2]) => { el.fillStyle = '#C8C4BA'; el.fillRect(X(a2 - 0.07), Y(2.37), (b2 - a2 + 0.14) * pxm, 1.54 * pxm);
           el.fillStyle = LC.lin(el, 0, Y(2.3), 0, Y(0.9), dusk ? [[0, '#3A3446'], [0.6, '#7A5050'], [1, '#2A2228']] : [[0, '#6A5E70'], [0.5, '#E8A070'], [0.62, '#FFD8A8'], [1, '#4A3430']]); el.fillRect(X(a2), Y(2.3), (b2 - a2) * pxm, 1.4 * pxm);
           el.fillStyle = '#C8C4BA'; el.fillRect(X((a2 + b2) / 2 - 0.035), Y(2.3), 0.07 * pxm, 1.4 * pxm); el.fillStyle = '#9A9488'; el.fillRect(X(a2 - 0.1), Y(0.9), (b2 - a2 + 0.2) * pxm, 0.06 * pxm); });
@@ -1602,7 +1605,7 @@
       if (!dusk) { const sh = scratch('plSh'); sh.fillStyle = DUSK.shadow;
         const sq = (a, b, w) => sh.fill(cam.path([[a[0], 0, a[2] - w], [b[0], 0, b[2] - w], [b[0], 0, b[2] + w], [a[0], 0, a[2] + w]]));
         sw.bars.forEach(([p, q, w]) => sq(p[1] < 0.01 ? p : shadowPt(p, SD, SHE, 16), q[1] < 0.01 ? q : shadowPt(q, SD, SHE, 16), w * 1.4));
-        sw.seats.forEach(st => sh.fill(cam.path(st.map(p => shadowPt(p, SD, SHE, 16)).map((p, i) => i < 2 ? [p[0], 0, p[2] - 0.04] : [p[0] - 0.5, 0, p[2] + 0.04]))));
+        sw.seats.forEach(st => { const q = st.map(p => shadowPt(p, SD, 0.16, 16)); sh.fill(cam.path([[q[0][0] + 0.2, 0, q[0][2] - 0.04], [q[1][0] + 0.2, 0, q[1][2] - 0.04], [q[1][0] - 1.4, 0, q[1][2] + 0.1], [q[0][0] - 1.4, 0, q[0][2] + 0.1]])); });   // as C3 lays them: two dark blades out on the tarmac
         for (let x = 33.6; x < 47; x += 0.4) sq([x, 0, -9], shadowPt([x, 1.1, -9], SD, SHE, 16), 0.03);
         g.save(); g.globalAlpha = 0.82; g.drawImage(LC.blurred(sh.canvas, 1.5, false), 0, 0); g.restore(); }
       const swp = new Path2D(); { const tmp = scratch('plSw'); tmp.fillStyle = '#16131A'; sw.bars.forEach(([p, q, w]) => bar3(tmp, cam, p, q, w)); sw.seats.forEach(st => tmp.fill(cam.path(st))); g.drawImage(tmp.canvas, 0, 0);
@@ -1719,6 +1722,7 @@
       { name: 'mural: entrance detail (evening)', draw(c, t) { const g = c.g; g.fillStyle = '#2A3440'; g.fillRect(0, 0, W, H);
         const cv = cache(c, 'test|elevE', o => elevation(o, 8.4, 17.0, 220, 'evening', { ridge: 3.15 }), 1892, 968); g.drawImage(cv, 14, 50); } },
       { name: 'entrance: evening', draw(c, t) { const v = ENTR, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'entrance: dusk', draw(c, t) { const v = ENTR, s = { tod: 'dusk' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'boarded: evening', draw(c, t) { const v = BOARD, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'notice: insert', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'notice: his face in the sheen (stand-in)', post: { vig: 0.35 }, draw(c, t) { const v = NOTE, s = { tod: 'evening', reflect: standInHeadFront }; v.back(c, t, s); v.front(c, t, s); } },
@@ -1730,6 +1734,7 @@
       { name: 'carpark: his car alone', post: { vig: 0.45 }, draw(c, t) { const v = PARKV, s = {}; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'carpark: the locks answer (blink)', post: { vig: 0.45 }, draw(c, t) { const v = PARKV, s = { blink: 1 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'building: evening', draw(c, t) { const v = BUILDV, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
+      { name: 'building: dusk', draw(c, t) { const v = BUILDV, s = { tod: 'dusk' }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'arrive: braking (slide 3 m, blur)', draw(c, t) { const v = ARRIVEV, s = { slide: 3, blur: 0.8, dip: 0.6 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'arrive: stopped, in focus', draw(c, t) { const v = ARRIVEV, s = { slide: 0 }; v.back(c, t, s); v.front(c, t, s); } },
       { name: 'playground: silent', post: { vig: 0.45, halation: 0.6 }, draw(c, t) { const v = PLAYV, s = { tod: 'evening' }; v.back(c, t, s); v.front(c, t, s); } },
