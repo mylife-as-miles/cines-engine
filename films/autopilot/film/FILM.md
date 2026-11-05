@@ -119,6 +119,8 @@ A set draws the environment only; characters come from `RIG` and are placed by t
 
 Aim for under 80 ms per frame in `tools/strip.js` (the headless machine has no GPU). Cache static layers (sets, the pane's static glare), keep particles modest, and avoid full-frame canvas filters per frame (`ctx.filter = blur(...)` on a full frame costs tens of milliseconds: blur once into a cache).
 
+The first draw of a new full-frame cached layer costs 35 to 45 ms, because the browser rasterises it then. So cache what stays still for many frames; a layer whose key changes every few frames (a moving camera) is cheaper drawn live at lower detail. `tools/strip.js` reads one pixel after each frame so its times are the frame's own (otherwise Chrome batches drawing and every few frames shows a false spike).
+
 ## Testing
 
 ```

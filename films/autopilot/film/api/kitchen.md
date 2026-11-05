@@ -270,9 +270,9 @@ Serves Q02 18–24 ("his face distorted in the kettle's chrome") and Q04 6–14.
 - `g` is a 960x540 canvas with a 90° view.
 - `cam = { w, h, cx, cy, f }`. The centre is straight back at the viewer: a face looking at the kettle, at `[cam.cx, cam.cy]`.
 
-It is warped onto the body (a precomputed reflection map, at half resolution) and clipped. Call it between `back()` and `front()`. `front()` adds the chrome's two hot highlights.
+It is warped onto the body (a precomputed reflection map, at half resolution) and clipped. The face counts as near, not at infinity: down the body's upright lower part each row also looks a little higher or lower by its own height, so the whole face lands in the chrome, narrow and tall, instead of one line of it smeared down. Call it between `back()` and `front()`. `front()` adds the chrome's two hot highlights.
 
-**Anchors**: `face` [1060,560] (where the straight-back direction lands), `bodyBox` [590,170,1530,960].
+**Anchors**: `face` [1060,640] (where the straight-back direction, `[cam.cx, cam.cy]`, lands), `bodyBox` [590,170,1530,960].
 
 ```js
 const v = SETS.kitchen.views.kettle; v.back(c, lt, {});
@@ -319,4 +319,4 @@ Times on the sheet are 9 to 55 ms per frame. The demos with RIG figures include 
 - **The afternoon counter's reflection.** The dim hall is a choice: "screen black". If Q09 wants the reflection lighter, it needs a hall render with the kitchen's afternoon light in it, which is not built.
 - **`table` wide.** The window frame takes a lot of the frame. `close` is the stronger image.
 - **The mug's steel.** It still shows broad vertical bands (a true cylinder reflects that way).
-- **The kettle's warp.** It is separable and approximate: a face reads as distorted and slightly tall. That is fine for "distorted".
+- **The kettle's warp.** It is approximate (a direction map plus a height term for a near face) and at half resolution: a face reads as distorted, narrow and tall, its edges a little stepped. That is fine for "distorted".

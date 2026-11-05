@@ -4,9 +4,10 @@
 
 - **The house.** An ordinary Winchester semi in red-brown brick: a canted bay, white casements, a hipped tiled roof with a chimney on the party wall.
 - **The porch.** An enclosed porch with a glazed door. Behind it stands the front door whose frosted panels blaze in the kitchen's hall views. This is where Sarah waits "behind the front door's glass".
-- **The drive.** A gravel drive beside the porch, a hedge along its far side, the neighbour's house beyond, a small tree on the lawn, a low brick wall at the pavement.
+- **The drive.** A gravel drive beside the porch, a clipped privet hedge along its far side, the neighbour's house beyond, a small tree on the lawn, a low brick wall at the pavement.
+- **The street.** More semis of the same brick and hipped roofs go on either side (simpler: plain windows, no brick courses), with their low garden walls, the pavement and the road. Beyond, the next street's roofs, with garden trees whose crowns rise over the ridges.
 - **The light.**
-  - The front faces east. In the morning it takes the sun full on and the car on the drive bakes.
+  - The front faces east. In the morning it takes the sun full on and the car on the drive bakes. The sun is low behind the lens, so everything throws a hard shadow away from us: the porch's on the wall to its right, the lawn tree's toward the bay, and a street tree's (on the verge behind us) across the near lawn, with a few sun-flecks in it. The bay's left flank and front take the sun; its right flank is turned away.
   - In the evening the sun is behind the roof: the front falls into cool shade, every pane gives back the dusky east (with a thin line of copper, the tops of the houses opposite), the ridge and chimney take a copper rim, and the porch glows from the hall's lamp.
   - At dusk all of this is darker, the copper low in a violet-teal sky.
 
@@ -75,7 +76,7 @@ Serves Q05 0–6 (the car baking in the morning sun, heat rising) and Q11 5–10
 
 **State**
 
-- `approach` 0..1, default 1: from the road (0) to parked (1). The world is cached per 1/48 step.
+- `approach` 0..1, default 1: from the road (0) to parked (1). Parked, the world is a cached layer. While the car moves it is drawn live each frame at a lower detail (no brick courses, no dust on the porch glass), so the motion is smooth; that costs about 35 to 45 ms a frame.
 - `tod`: evening or dusk.
 
 **Anchors**: `v.anchorsAt(approach)` gives `porchDoor`, `sarahInPorch`, `sarahPxPerM`, `stepTop`, `stepFoot` and `drive` at any moment.
@@ -143,7 +144,7 @@ The same driver's eye and cabin as `arrive`, run backward. He starts parked, loo
 
 **State**
 
-- `away` 0..1: how far down the road. At 0.15 she is about 115 px/m in the glass; by 0.5 she is small (63 px/m). The picture is cached per 1/40 step.
+- `away` 0..1: how far down the road. The mirror is set well out, so the house and its lit porch come into the glass at about 0.25, at its left, while the drive's end (Sarah) is at its right. Both stay in the glass until about 0.6, shrinking. The picture is drawn live into the glass (it moves), at a lower detail.
 - `tod`: dusk (default) or evening.
 
 **In the mirror**: `v.inGlass(c, s, fn)`. `fn(g, cam)` gets the mirror's own camera (house metres) with the mirror flip already applied, so draw her at `cam.p(x, 0, z)` (for example at the drive's end, `[2.65, 0, 0.4]`) and she lands in the glass.
@@ -151,13 +152,23 @@ The same driver's eye and cabin as `arrive`, run backward. He starts parked, loo
 **Anchors**: `v.anchorsAt(away)`
 
 - `glass` [450,396,980,740].
-- `sarahAtDriveEnd` and `sarahPxPerM`: at 0.15, [663,679] and 116.
-- `porch`.
+- `sarahAtDriveEnd`, `sarahPxPerM` and `porch` (in the glass, after the flip):
+
+| `away` | `sarahAtDriveEnd` | `sarahPxPerM` | `porch` |
+| --- | --- | --- | --- |
+| 0.15 | [785,678] | 116 | [373,548] (outside the glass) |
+| 0.25 | [851,657] | 95 | [462,549] |
+| 0.35 | [897,642] | 80 | [533,550] |
+| 0.5 | [944,626] | 65 | [615,552] |
+
+`v.anchors` is `anchorsAt(0.35)`.
+
+Through the passenger window behind the mirror: our side of the street, darkened and smeared sideways (the car is moving, and the eye belongs on the mirror).
 
 **Light**: `{x: 1200, y: 200, color: '#E89A5E'}`.
 
 ```js
-const v = SETS.house.views.wing, s = { tod: 'dusk', away: FILM.seg(lt, 29, 32) };
+const v = SETS.house.views.wing, s = { tod: 'dusk', away: 0.25 + 0.35 * FILM.seg(lt, 29, 32) };
 v.back(c, lt, s);
 v.inGlass(c, s, (g, cam) => { const f = cam.p(2.65, 0, 0.4), k = cam.f / cam.p(2.65, 1, 0.4)[2];
   RIG.draw(g, 'sarah', { at: [f[0], f[1]], scale: k, view: 'front', face: 'past' }, { light: { x: 700, y: 400, color: '#E89A5E' } }); });
@@ -168,7 +179,7 @@ v.front(c, lt, s);
 
 ## Helper
 
-`SETS.house.facade(g, box, { tod })` draws the house front into any box. Use it for another set's reflection of the house (the car's side glass in Q05). The car set's own `reflect: 'house'` preset is an alternative.
+`SETS.house.facade(g, box, { tod })` draws the house front into any box (without the morning's ground shadows, so it stays cheap). Use it for another set's reflection of the house (the car's side glass in Q05). The car set's own `reflect: 'house'` preset is an alternative.
 
 ## Demos (`node tools/set.js house 1` → `out/set_house.png`)
 
@@ -177,14 +188,14 @@ v.front(c, lt, s);
 3. Arriving through the windscreen.
 4. Sarah behind the porch glass (RIG).
 5. Backing out at dusk.
-6. The wing mirror with Sarah (a stand-in) small in it.
+6. The wing mirror: the house, the lit porch and Sarah (a stand-in) at the drive's end, small in it.
 7. The drive at dusk.
 
-Times are 16 to 45 ms per frame (the car and the figures included).
+Times are 20 to 45 ms per frame (the car and the figures included).
 
 ## Not fully right yet
 
 - **The POVs.** The cabin frame is a simple stand-in after C2, so as not to depend on the car set's interior. If the car set's driver POV can take a host world, these two views should adopt it.
-- **The street.** It is not built: the drive view and the POVs never look at it. The wing view's "our side of the road" is the house scene seen along the road.
+- **The street.** Our side is built (the semis either side, the road); they are plainer than the house. The far side of the road, behind the lens in every view, is not built: the panes give it back only as a soft sky and a dark band.
 - **The heat.** It is the car set's shimmer plus a faint shimmer over the gravel; there is no shimmer off the roof tiles.
 - **Sarah's steps.** They have only two treads.

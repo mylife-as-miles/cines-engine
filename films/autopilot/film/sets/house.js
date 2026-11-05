@@ -60,9 +60,11 @@
   function gravelTile() { if (_grav) return _grav; const c = OTM.makeCanvas(256, 256), g = c.getContext('2d'), R = OTM.rng('gravel'); g.clearRect(0, 0, 256, 256);
     for (let i = 0; i < 1800; i++) { const x = R() * 256, y = R() * 256, r = 0.6 + R() * 1.8, v = R(); g.fillStyle = v < 0.5 ? 'rgba(0,0,0,' + (0.12 + R() * 0.18) + ')' : 'rgba(255,255,255,' + (0.1 + R() * 0.2) + ')'; g.beginPath(); g.ellipse(x, y, r, r * 0.7, R() * 3, 0, Math.PI * 2); g.fill(); }
     return (_grav = c); }
-  // a brick wall plane: the field, mortar courses (subtle), a few darker headers
+  // a brick wall plane: the field, mortar courses (subtle), a few darker headers. LOW (a scene drawn live while the camera
+  // moves: the POVs, the wing mirror) leaves the courses out: through a windscreen at dusk they do not read anyway.
+  let LOW = false;
   function brickWall(g, cam, corners, col, mortar, seed, rows) {
-    const p = Qc(g, cam, corners, col); if (!p) return; g.save(); g.clip(p);
+    const p = Qc(g, cam, corners, col); if (!p || LOW) return; g.save(); g.clip(p);
     const L = (u, v) => [0, 1, 2].map(k => lerp(lerp(corners[0][k], corners[1][k], u), lerp(corners[3][k], corners[2][k], u), v));
     // the mortar courses in one path, one stroke; the darker headers as small quads in one fill (a draw call each is costly)
     const nr = rows || 30, mp = new Path2D(); for (let j = 1; j < nr; j++) { const q = clipPts(cam, [L(0, j / nr), L(1, j / nr), L(1, j / nr)]); if (q.length >= 2) { mp.moveTo(q[0][0], q[0][1]); mp.lineTo(q[1][0], q[1][1]); } }
@@ -116,13 +118,59 @@
     g.save(); g.globalCompositeOperation = 'multiply'; g.filter = 'blur(5px)'; g.drawImage(sg.canvas, -M, -M); g.restore();
   }
 
+  // the hedge on the drive's far side: a clipped box of privet in three values (the faces the camera can see: the side, the
+  // street end, the top; a shadowed base; a few darker hollows), and a soft scalloped top edge. Drawn as a box it reads from
+  // any side, end-on included (the POVs come up the drive beside it). Morning: the drive side and the top take the sun.
+  function hedge(g, cam, T) {
+    const x0 = DRIVE.x1 + 0.1, x1 = DRIVE.x1 + 1.0, z0 = 0.4, z1 = 9.3, h = 1.45, Hc = T.hedge, P = cam.pos, lit = T.lit, Q = (pts, col) => Qc(g, cam, pts, col);
+    const sx = P.x < x0 ? x0 : (P.x > x1 ? x1 : null), drv = sx === x0, sideC = drv ? Hc[lit ? 0 : 1] : Hc[2], topC = lit ? '#7C8E4E' : Hc[1], endC = lit ? Hc[1] : Hc[2];
+    const side = sx == null ? null : Q([[sx, 0, z0], [sx, 0, z1], [sx, h, z1], [sx, h, z0]], sideC);
+    if (P.y > h) Q([[x0, h, z0], [x1, h, z0], [x1, h, z1], [x0, h, z1]], topC);
+    const end = P.z < z0 ? Q([[x0, 0, z0], [x1, 0, z0], [x1, h, z0], [x0, h, z0]], endC) : null;
+    const R = OTM.rng('hedge');
+    [[side, sx, 'z'], [end, z0, 'x']].forEach(([face, at, run]) => { if (!face) return; g.save(); g.clip(face);
+      const pt = (u, y) => run === 'z' ? [at, y, lerp(z0, z1, u)] : [lerp(x0, x1, u), y, at], n = run === 'z' ? 34 : 4;
+      Qc(g, cam, [pt(0, 0), pt(1, 0), pt(1, 0.4), pt(0, 0.4)], rgba(Hc[2], 0.5));           // the base, in its own shade
+      for (let i = 0; i < n; i++) { const u = (i + R()) / n, y = 0.35 + R() * 0.85, c0 = cam.p(pt(u, y)), a = cam.p(pt(u - 0.12 / n, y)), b = cam.p(pt(u + 0.12 / n, y)), k = kAt(cam, ...pt(u, y)); if (c0[2] < 0.3 || a[2] < 0.06 || b[2] < 0.06) continue;
+        g.fillStyle = rgba(Hc[2], 0.15); g.beginPath(); g.ellipse(c0[0], c0[1], Math.max(1.5, Math.abs(b[0] - a[0]) * 1.6), 0.08 * k, 0, 0, Math.PI * 2); g.fill(); }
+      g.restore(); });
+    // the top edge, scalloped: soft bumps along the visible face's top in its own colour (and the sunlit crown in the morning)
+    const ex = sx == null ? (x0 + x1) / 2 : sx + (drv ? 0.1 : -0.1), N = 60;
+    for (let i = 0; i < N; i++) { const z = z0 + (i + 0.5) * (z1 - z0) / N, y = h - 0.05 + R() * 0.04, c0 = cam.p(ex, y, z), k = kAt(cam, ex, y, z); if (c0[2] < 0.3) continue;
+      g.fillStyle = P.y > h ? topC : (sx == null ? endC : sideC); g.beginPath(); g.ellipse(c0[0], c0[1], 0.16 * k, 0.1 * k, 0, 0, Math.PI * 2); g.fill(); }
+  }
+  // the street goes on either side: more semis of the same brick and hipped roofs (simpler: no brick courses, plain windows),
+  // their low garden walls, nearest last. They fill the side of every POV and the wing mirror's look back along the road.
+  const STREET = [[-26.1, -12.5, 0.15], [-43.2, -29.6, -0.2], [-60.3, -46.7, 0.1], [17.0, 30.6, -0.15], [34.1, 47.7, 0.2]];
+  function streetHouses(g, cam, T) {
+    const Q = (pts, col) => Qc(g, cam, pts, col), B = T.brick, R0 = T.roof, F = T.frame, cx = cam.pos.x;
+    const glass = T.lit ? '#9FB2B4' : mix(T.glass, '#000000', 0.25), skyIn = T.lit ? '#C6D4D4' : mix(T.glass, T.sky[1][1], 0.35), wall = T.lit ? B[0] : B[1], side = T.lit ? B[1] : B[2];
+    STREET.slice().sort((a, b) => Math.abs((b[0] + b[1]) / 2 - cx) - Math.abs((a[0] + a[1]) / 2 - cx)).forEach(([x0, x1, dz]) => {
+      const z = HOUSE.z + dz, d = 7, ev = 5.3, rg = 8.1, hi = 1.6, xm = (x0 + x1) / 2;
+      if (cx > x1) { Q([[x1, 0, z], [x1, 0, z + d], [x1, ev, z + d], [x1, ev, z]], side); Q([[x1 + 0.3, ev, z - 0.3], [x1 + 0.3, ev, z + d + 0.3], [x1 - hi, rg, z + d / 2]], R0[2]); }
+      if (cx < x0) { Q([[x0, 0, z], [x0, 0, z + d], [x0, ev, z + d], [x0, ev, z]], side); Q([[x0 - 0.3, ev, z - 0.3], [x0 - 0.3, ev, z + d + 0.3], [x0 + hi, rg, z + d / 2]], R0[2]); }
+      Q([[x0 - 0.3, ev, z - 0.3], [x1 + 0.3, ev, z - 0.3], [x1 - hi, rg, z + d / 2], [x0 + hi, rg, z + d / 2]], R0[T.lit ? 0 : 1]);
+      Q([[xm - 0.35, rg - 0.5, z + d / 2], [xm + 0.35, rg - 0.5, z + d / 2], [xm + 0.35, rg + 0.9, z + d / 2], [xm - 0.35, rg + 0.9, z + d / 2]], wall);
+      Q([[x0, 0, z], [x1, 0, z], [x1, ev, z], [x0, ev, z]], wall);
+      Q([[x0, ev - 0.12, z - 0.003], [x1, ev - 0.12, z - 0.003], [x1, ev, z - 0.003], [x0, ev, z - 0.003]], F[T.lit ? 1 : 2]);
+      [[x0, xm, 0], [xm, x1, 1]].forEach(([a, b, mir]) => { const X = u => lerp(a, b, mir ? 1 - u : u), win = (u0, u1, y0, y1) => {
+          Q([[X(u0), y0, z - 0.01], [X(u1), y0, z - 0.01], [X(u1), y1, z - 0.01], [X(u0), y1, z - 0.01]], F[T.lit ? 0 : 1]);
+          Q([[X(u0 + 0.02), y0 + 0.07, z - 0.012], [X(u1 - 0.02), y0 + 0.07, z - 0.012], [X(u1 - 0.02), y1 - 0.07, z - 0.012], [X(u0 + 0.02), y1 - 0.07, z - 0.012]], glass);
+          Q([[X(u0 + 0.02), lerp(y0, y1, 0.55), z - 0.013], [X(u1 - 0.02), lerp(y0, y1, 0.55), z - 0.013], [X(u1 - 0.02), y1 - 0.07, z - 0.013], [X(u0 + 0.02), y1 - 0.07, z - 0.013]], skyIn); };   // the sky in its upper half
+        win(0.12, 0.42, 3.2, 4.5); win(0.55, 0.78, 3.3, 4.5); win(0.1, 0.48, 0.8, 2.2);
+        Q([[X(0.62), 0, z - 0.01], [X(0.8), 0, z - 0.01], [X(0.8), 2.15, z - 0.01], [X(0.62), 2.15, z - 0.01]], T.lit ? '#4A5458' : '#1E2226'); });
+      Q([[x0, 0, 0.3], [x1 - 3, 0, 0.3], [x1 - 3, 0.55, 0.3], [x0, 0.55, 0.3]], T.lit ? B[0] : B[2]);
+    });
+  }
+
   // =================================================================================================================
   // THE HOUSE AND ITS DRIVE in a camera (painter's order: sky, the far roofs, the ground, the house, the porch and bay, walls)
   // =================================================================================================================
-  const PF = (g, n) => { if (window.__hp) { g.getImageData(0, 0, 1, 1); window.__hp.push([n, performance.now()]); } };
   function houseScene(g, cam, T, o) {
-    PF(g,'start');
-    o = o || {}; const Q = (pts, col) => Qc(g, cam, pts, col), B = T.brick, F = T.frame, R0 = T.roof;
+    o = o || {}; LOW = o.lod === 'low'; try { houseSceneDraw(g, cam, T, o); } finally { LOW = false; }
+  }
+  function houseSceneDraw(g, cam, T, o) {
+    const Q = (pts, col) => Qc(g, cam, pts, col), B = T.brick, F = T.frame, R0 = T.roof;
     // the sky (the east behind the lens in the morning is not seen; above the roof we look west)
     // (it is all smooth gradients, so it is painted at a quarter resolution and scaled up: a full-frame screen blend is costly)
     { const top = [0, Math.min(-M, cam.p(0, 30, 60)[1])], hz = cam.p(0, 0, 400); if (T.lit) top[1] = -M;      // morning: the sky's gradient runs top of frame to horizon (a pale, hot haze)
@@ -132,22 +180,22 @@
       else { sg.fillStyle = LC.lin(sg, 0, top[1], 0, hz[1], [[0, '#FFF2DA', 0.0], [0.7, '#FFF2DA', 0.18], [1, '#FFF6E6', 0.35]]); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M);
         sg.fillStyle = LC.rad(sg, -300, -200, 0, 1400, [[0, '#FFF6E6', 0.5], [0.4, '#FBE7C2', 0.18], [1, '#FBE7C2', 0]]); sg.fillRect(-M, -M, W + 2 * M, H + 2 * M); }
       g.save(); g.imageSmoothingEnabled = true; g.drawImage(sg.canvas, -M, -M, sw * SK, sh * SK); g.restore(); }
-    PF(g,'sky');
     // beyond: the roofs and chimneys of the next street, garden trees behind them whose crowns rise over the ridges (hazy in the
     // morning, a dark line at evening). The trees go first, so nothing floats in the sky between them and the roofs.
     { const R = OTM.rng('farline'), RT = OTM.rng('fartrees'), far = T.lit ? '#B6B4AC' : mix(T.roof[2], '#000000', 0.25), farT = T.lit ? '#A4AC96' : mix(T.hedge[2], '#000000', 0.3), Z = 30;     // morning: hazed by the heat
-      for (let i = 0; i < 34; i++) { const x = -38 + RT() * 82, zz = Z + 4 + RT() * 6, tall = RT() < 0.15, y = tall ? 10.5 + RT() * 1.5 : 7.4 + RT() * 2.2, c0 = cam.p(x, y, zz), k = kAt(cam, x, y, zz), rx = (tall ? 1.6 : 2.2 + RT() * 2) * k, ry = (tall ? 3.6 : 2 + RT() * 1.8) * k; if (c0[2] < 1) continue;
+      for (let i = 0; i < 64; i++) { const x = -80 + RT() * 166, zz = Z + 4 + RT() * 6, tall = RT() < 0.15, y = tall ? 10.5 + RT() * 1.5 : 7.4 + RT() * 2.2, c0 = cam.p(x, y, zz), k = kAt(cam, x, y, zz), rx = (tall ? 1.6 : 2.2 + RT() * 2) * k, ry = (tall ? 3.6 : 2 + RT() * 1.8) * k; if (c0[2] < 1) continue;
         g.fillStyle = farT; g.beginPath(); g.ellipse(c0[0], c0[1], rx, ry, 0, 0, Math.PI * 2); g.fill(); }
       const farW = T.lit ? '#C6B6A6' : mix(T.brick[2], '#000000', 0.3), farWin = T.lit ? '#A2A6A2' : mix(T.glass, '#000000', 0.45);   // their walls (hazed brick), roofs, windows
-      for (let x = -40, w = 6; x < 44; x += w) { w = 5.5 + R() * 2.5; const eave = 5.2 + R() * 0.6, ridge = eave + 2.2 + R() * 0.8, a = x - 0.04, b = x + w + 0.04;     // a hair of overlap: no seams
+      for (let x = -84, w = 6; x < 88; x += w) { w = 5.5 + R() * 2.5; const eave = 5.2 + R() * 0.6, ridge = eave + 2.2 + R() * 0.8, a = x - 0.04, b = x + w + 0.04;     // a hair of overlap: no seams
         Qc(g, cam, [[a, -0.5, Z], [b, -0.5, Z], [b, eave + 0.02, Z], [a, eave + 0.02, Z]], farW);
         [[0.2, 0.42], [0.58, 0.8]].forEach(([u0, u1]) => [[0.8, 1.9], [3.1, 4.2]].forEach(([y0, y1]) => Qc(g, cam, [[x + w * u0, y0, Z], [x + w * u1, y0, Z], [x + w * u1, y1, Z], [x + w * u0, y1, Z]], farWin)));
         Qc(g, cam, [[a, eave, Z], [b, eave, Z], [b - 0.35, ridge, Z], [a + 0.35, ridge, Z]], far);
         if (R() < 0.6) Qc(g, cam, [[x + w * 0.3, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge - 0.4, Z], [x + w * 0.3 + 0.5, ridge + 0.9, Z], [x + w * 0.3, ridge + 0.9, Z]], far); } }
-    PF(g,'far');
     // the ground: pavement, the lawn, the drive's gravel
-    Q([[-40, 0, -6], [44, 0, -6], [44, 0, 32], [-40, 0, 32]], T.lawn[2]);
-    Q([[-30, 0.001, -2.0], [30, 0.001, -2.0], [30, 0.001, 0.3], [-30, 0.001, 0.3]], T.lit ? '#B6B0A4' : mix(T.gravel[1], '#2A2A30', 0.3));
+    Q([[-84, 0, -14], [88, 0, -14], [88, 0, 32], [-84, 0, 32]], T.lawn[2]);
+    Q([[-84, 0.001, -9.5], [88, 0.001, -9.5], [88, 0.001, -2.0], [-84, 0.001, -2.0]], T.lit ? '#8E8A84' : mix(T.gravel[2], '#16181E', 0.45));      // the road
+    Q([[-84, 0.001, -2.0], [88, 0.001, -2.0], [88, 0.001, 0.3], [-84, 0.001, 0.3]], T.lit ? '#B6B0A4' : mix(T.gravel[1], '#2A2A30', 0.3));         // the pavement
+    seg2(g, cam, [-84, 0.002, -2.0], [88, 0.002, -2.0], 2, T.lit ? '#D2CCC0' : mix(T.gravel[1], '#2A2A30', 0.1));                                    // its kerb
     Q([[-6.5, 0.002, 0.3], [DRIVE.x0, 0.002, 0.3], [DRIVE.x0, 0.002, 8.9], [-6.5, 0.002, 8.9]], T.lawn[0]);
     const gp = Q([[DRIVE.x0, 0.003, DRIVE.z0], [DRIVE.x1, 0.003, DRIVE.z0], [DRIVE.x1, 0.003, DRIVE.z1], [DRIVE.x0, 0.003, DRIVE.z1]], T.gravel[1]);
     if (gp) { g.save(); g.clip(gp); const a = cam.p(DRIVE.x0, 0, DRIVE.z0), b = cam.p(DRIVE.x0, 0, DRIVE.z1); g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], [[0, T.gravel[0]], [1, T.gravel[1]]]); const box = bb(gp.q); g.fillRect(...box);
@@ -155,14 +203,14 @@
     // the path of paving slabs from the drive to the porch steps
     Q([[DRIVE.x0 - 0.9, 0.004, 7.1], [DRIVE.x0, 0.004, 7.1], [DRIVE.x0, 0.004, 7.75], [DRIVE.x0 - 0.9, 0.004, 7.75]], T.lit ? '#C9C2B2' : T.gravel[2]);
     if (T.lit && !o.noShadows) groundShadows(g, cam, T);
-    PF(g,'ground');
+    streetHouses(g, cam, T);
     // the neighbour on the right, beyond the drive and the hedge: a gable end, its front, a window
     { const nx0 = 7.2, nx1 = 13.5, nz = 9.8; brickWall(g, cam, [[nx0, 5.2, nz], [nx1, 5.2, nz], [nx1, 0, nz], [nx0, 0, nz]], B[T.lit ? 0 : 1], rgba('#000000', 0.12), 'nextR', 70);
       brickWall(g, cam, [[nx0, 5.2, nz], [nx0, 5.2, nz + 7], [nx0, 0, nz + 7], [nx0, 0, nz]], B[T.lit ? 1 : 2], rgba('#000000', 0.12), 'nextRside', 70);
       Q([[nx0 - 0.25, 5.2, nz - 0.25], [nx1, 5.2, nz - 0.25], [nx1, 7.9, nz + 3.2], [nx0 - 0.25, 7.9, nz + 3.2]], R0[T.lit ? 1 : 2]);
       Q([[nx0, 5.2, nz], [nx0, 7.9, nz + 3.2], [nx0, 5.2, nz + 7]], B[T.lit ? 1 : 2]); seg2(g, cam, [nx0 - 0.25, 5.2, nz - 0.25], [nx0 - 0.25, 7.95, nz + 3.2], 4, R0[2]); seg2(g, cam, [nx0 - 0.25, 7.95, nz + 3.2], [nx0 - 0.25, 5.2, nz + 7.2], 4, R0[2]);
+      if (cam.pos.x > nx1) { Q([[nx1, 0, nz], [nx1, 0, nz + 7], [nx1, 5.2, nz + 7], [nx1, 5.2, nz]], B[2]); Q([[nx1, 5.2, nz - 0.25], [nx1, 7.9, nz + 3.2], [nx1, 5.2, nz + 7]], B[2]); }
       windowOn(g, cam, T, 8.2, 9.8, 3.2, 4.5, nz); windowOn(g, cam, T, 8.0, 10.0, 0.8, 2.2, nz); }
-    PF(g,'neighbour');
     // the house: roof (hipped), the front wall in three values (lit, the bay's and the porch's shade), windows
     const hz = HOUSE.z;
     Q([[HOUSE.x0 - 0.3, HOUSE.eave, hz - 0.3], [HOUSE.x1 + 0.3, HOUSE.eave, hz - 0.3], [HOUSE.x1 - 1.4, HOUSE.ridge, hz + 3], [HOUSE.x0 - 0.3, HOUSE.ridge, hz + 3]], R0[T.lit ? 0 : 1]);
@@ -175,20 +223,16 @@
     Q([[HOUSE.x0 - 0.2, HOUSE.ridge - 0.6, hz + 2.6], [HOUSE.x0 + 0.5, HOUSE.ridge - 0.6, hz + 2.6], [HOUSE.x0 + 0.5, HOUSE.ridge + 1.0, hz + 2.6], [HOUSE.x0 - 0.2, HOUSE.ridge + 1.0, hz + 2.6]], B[T.lit ? 0 : 1]);
     [-0.05, 0.25].forEach(x => Q([[HOUSE.x0 + x, HOUSE.ridge + 1.0, hz + 2.6], [HOUSE.x0 + x + 0.16, HOUSE.ridge + 1.0, hz + 2.6], [HOUSE.x0 + x + 0.14, HOUSE.ridge + 1.35, hz + 2.6], [HOUSE.x0 + x + 0.02, HOUSE.ridge + 1.35, hz + 2.6]], '#8E6A58'));
     if (!T.lit) seg2(g, cam, [HOUSE.x0 + 0.5, HOUSE.ridge - 0.6, hz + 2.6], [HOUSE.x0 + 0.5, HOUSE.ridge + 1.0, hz + 2.6], 2.5, rgba(T.rim, 0.7));
-    PF(g,'roof');
     // the eaves' soffit (a dark strip), then the front wall
     Q([[HOUSE.x0 - 0.3, HOUSE.eave, hz - 0.3], [HOUSE.x1 + 0.3, HOUSE.eave, hz - 0.3], [HOUSE.x1 + 0.3, HOUSE.eave - 0.12, hz - 0.3], [HOUSE.x0 - 0.3, HOUSE.eave - 0.12, hz - 0.3]], F[T.lit ? 1 : 2]);
     brickWall(g, cam, [[HOUSE.x0, HOUSE.eave, hz], [HOUSE.x1, HOUSE.eave, hz], [HOUSE.x1, 0, hz], [HOUSE.x0, 0, hz]], B[T.lit ? 0 : 1], rgba('#000000', 0.12), 'front', 72);
     if (T.lit) Q([[HOUSE.x0, HOUSE.eave - 0.12, hz - 0.002], [HOUSE.x1, HOUSE.eave - 0.12, hz - 0.002], [HOUSE.x1, HOUSE.eave - 0.45, hz - 0.002], [HOUSE.x0, HOUSE.eave - 0.45, hz - 0.002]], rgba(B[2], 0.55));   // the eaves' shadow
-    PF(g,'frontwall');
     // the neighbour's half (left), the same brick, partly seen
     brickWall(g, cam, [[HOUSE.x0 - 6.8, HOUSE.eave, hz], [HOUSE.x0, HOUSE.eave, hz], [HOUSE.x0, 0, hz], [HOUSE.x0 - 6.8, 0, hz]], B[T.lit ? 1 : 2], rgba('#000000', 0.12), 'neigh', 72);
     Q([[HOUSE.x0 - 7.1, HOUSE.eave, hz - 0.3], [HOUSE.x0 - 0.3, HOUSE.eave, hz - 0.3], [HOUSE.x0 - 0.3, HOUSE.ridge, hz + 3], [HOUSE.x0 - 5.6, HOUSE.ridge, hz + 3]], R0[T.lit ? 1 : 2]);
     windowOn(g, cam, T, -5.9, -3.9, 3.2, 4.55, hz); windowOn(g, cam, T, -5.6, -4.2, 0.85, 2.2, hz);
-    PF(g,'neighhalf');
     // first floor: above the bay, the landing window (above the porch), the small one; ground: the little hall window
     windowOn(g, cam, T, -2.65, -0.55, 3.2, 4.6, hz); windowOn(g, cam, T, 0.62, 1.62, 3.3, 4.6, hz, { glow: T.lit ? 0 : 0.25 }); windowOn(g, cam, T, 2.45, 3.3, 3.5, 4.6, hz); windowOn(g, cam, T, 2.55, 3.25, 1.15, 2.1, hz);
-    PF(g,'windows');
     // the bay: three canted lights under a lead roof, its brick base
     { const bz = BAY.z0, xs = [BAY.x0, BAY.x0 + 0.45, BAY.x1 - 0.45, BAY.x1], zs = [hz, bz, bz, hz];
       for (let i = 0; i < 3; i++) { const a = [xs[i], 0, zs[i]], b = [xs[i + 1], 0, zs[i + 1]], turned = T.lit ? i === 2 : i !== 1, face = turned ? B[T.lit ? 1 : 2] : B[T.lit ? 0 : 1];   // morning: the left flank and the front take the sun, the right flank is turned away
@@ -200,21 +244,16 @@
         seg2(g, cam, [lerp(a[0], b[0], 0.5), BAY.sill, lerp(a[2], b[2], 0.5)], [lerp(a[0], b[0], 0.5), BAY.head, lerp(a[2], b[2], 0.5)], 3, F[0]); }
       Q([[xs[0] - 0.05, BAY.head, hz], [xs[1], BAY.head, bz - 0.06], [xs[2], BAY.head, bz - 0.06], [xs[3] + 0.05, BAY.head, hz], [xs[3] + 0.05, BAY.head + 0.25, hz], [xs[0] - 0.05, BAY.head + 0.25, hz]], T.lit ? '#6E7472' : '#3A3E40');
       Q([[xs[1], BAY.head, bz - 0.06], [xs[2], BAY.head, bz - 0.06], [xs[2], BAY.head + 0.08, bz - 0.06], [xs[1], BAY.head + 0.08, bz - 0.06]], T.lit ? '#9AA09C' : '#4A4E50'); }
-    PF(g,'bay');
     porch(g, cam, T, o);
-    PF(g,'porch');
     // the low front wall along the pavement (with a pier at the drive), the hedge on the far side of the drive, a small tree
     brickWall(g, cam, [[-6.5, 0.58, 0.3], [DRIVE.x0, 0.58, 0.3], [DRIVE.x0, 0, 0.3], [-6.5, 0, 0.3]], B[T.lit ? 0 : 1], rgba('#000000', 0.15), 'lowwall', 8);
     Q([[-6.5, 0.58, 0.3], [DRIVE.x0, 0.58, 0.3], [DRIVE.x0, 0.62, 0.15], [-6.5, 0.62, 0.15]], T.lit ? '#C9BCA8' : B[2]);
     Q([[DRIVE.x0 - 0.3, 0, 0.3], [DRIVE.x0, 0, 0.3], [DRIVE.x0, 0.85, 0.3], [DRIVE.x0 - 0.3, 0.85, 0.3]], B[T.lit ? 1 : 2]);
-    // (morning: the sun from behind the lens, left: each clump of leaves takes a lit crown toward the upper left)
-    { const R = OTM.rng('hedge'); for (let i = 0; i < 26; i++) { const z = 0.4 + i * 0.33, x = DRIVE.x1 + 0.55 + R() * 0.2, c0 = cam.p(x, 0.75 + R() * 0.3, z), k = kAt(cam, x, 1, z), lc = R(); if (c0[2] < 0.6) continue; g.fillStyle = T.hedge[R() < 0.5 ? 1 : 0]; g.beginPath(); g.ellipse(c0[0], c0[1], 0.42 * k, 0.6 * k, 0, 0, Math.PI * 2); g.fill();
-      if (T.lit && lc < 0.7) { g.fillStyle = rgba('#93A45C', 0.45); g.beginPath(); g.ellipse(c0[0] - 0.1 * k, c0[1] - 0.2 * k, 0.27 * k, 0.34 * k, -0.3, 0, Math.PI * 2); g.fill(); } } }
+    hedge(g, cam, T);
     { const tr = LAWN_TREE, c0 = cam.p(tr), k = kAt(cam, ...tr); if (c0[2] > 0.3) { seg2(g, cam, tr, [tr[0], 1.9, tr[2]], Math.max(2, 0.12 * k), T.lit ? '#4A3E32' : '#1E1A18'); const R = OTM.rng('tree');
       for (let i = 0; i < 16; i++) { const p = cam.p(tr[0] + (R() - 0.5) * 1.6, 2.6 + (R() - 0.5) * 1.2, tr[2] + (R() - 0.5) * 0.6); g.fillStyle = T.lit ? mix('#5A6E4A', '#7E8E58', R()) : mix(T.hedge[1], T.hedge[2], R()); const rx = (0.45 + R() * 0.3) * k, ry = (0.35 + R() * 0.25) * k; g.beginPath(); g.ellipse(p[0], p[1], rx, ry, 0, 0, Math.PI * 2); g.fill();
         if (T.lit && i % 3 !== 2) { g.fillStyle = rgba('#A2AE66', 0.55); g.beginPath(); g.ellipse(p[0] - 0.25 * rx, p[1] - 0.3 * ry, 0.55 * rx, 0.5 * ry, 0, 0, Math.PI * 2); g.fill(); } }      // (no rng in here: the ground shadow replays these blobs)
       if (T.lit) { g.save(); g.globalCompositeOperation = 'screen'; const sp = cam.p(tr[0] - 0.4, 3.0, tr[2]); g.fillStyle = LC.rad(g, sp[0], sp[1], 0, 0.9 * k, [[0, '#FFE6B4', 0.35], [1, '#FFE6B4', 0]]); g.beginPath(); g.arc(sp[0], sp[1], 0.9 * k, 0, Math.PI * 2); g.fill(); g.restore(); } } }
-    PF(g,'veg');
     // morning: the porch's shadow thrown on the front wall to its right (its front corner's shadow lands where the sun puts it;
     // the bay throws none outside its own footprint: its right flank is turned from the sun and is the darker face instead)
     if (T.lit) { const S = T.sun, d = hz - PORCH.z0, sx = PORCH.x1 + S[0] / S[2] * d, sy = PORCH.top - S[1] / -S[2] * d;
@@ -250,8 +289,9 @@
   }
   // the porch's front face and glass (front layer: anyone in the porch stands behind it): the brick base either side of the door,
   // the side panes and the door's glass (they give back the drive, the car, the sky); o.door 0..1 opens the door
-  function porchGlass(g, cam, T, o) {
-    o = o || {}; const z0 = PORCH.z0, x0 = PORCH.x0, x1 = PORCH.x1, base = 0.95, top = PORCH.top, d0 = PORCH.door[0], d1 = PORCH.door[1], F = T.frame, B = T.brick;
+  function porchGlass(g, cam, T, o) { o = o || {}; LOW = o.lod === 'low'; try { porchGlassDraw(g, cam, T, o); } finally { LOW = false; } }
+  function porchGlassDraw(g, cam, T, o) {
+    const z0 = PORCH.z0, x0 = PORCH.x0, x1 = PORCH.x1, base = 0.95, top = PORCH.top, d0 = PORCH.door[0], d1 = PORCH.door[1], F = T.frame, B = T.brick;
     brickWall(g, cam, [[x0, base, z0], [d0, base, z0], [d0, 0, z0], [x0, 0, z0]], B[T.lit ? 0 : 1], rgba('#000000', 0.15), 'porchL', 12);
     brickWall(g, cam, [[d1, base, z0], [x1, base, z0], [x1, 0, z0], [d1, 0, z0]], B[T.lit ? 0 : 1], rgba('#000000', 0.15), 'porchR', 12);
     const door = clamp(o.door || 0, 0, 1), ang = door * 1.35;
@@ -261,7 +301,9 @@
       [[x1, top - 0.06, z0 + 0.05], [x1, top - 0.06, HOUSE.z - 0.05], [x1, base + 0.05, HOUSE.z - 0.05], [x1, base + 0.05, z0 + 0.05]],
       [L(0.08, 2.05), L(0.92, 2.05), L(0.92, 0.95), L(0.08, 0.95)] ];
     panes.forEach((pp, i) => { const q = clipPts(cam, pp); if (q.length < 3) return; const p = LC.pathPts(q), a = cam.p(pp[0]), b = cam.p(pp[3]);
-      g.save(); g.clip(p); g.globalCompositeOperation = 'screen';
+      g.save(); g.clip(p);
+      if (!T.lit && i === 2) { g.fillStyle = rgba(T.porchIn, 0.5); g.fillRect(...bb(q)); }    // evening: the hall's light fills the porch, seen through its side
+      g.globalCompositeOperation = 'screen';
       // the east, behind the lens: the street, the opposite houses; morning: bright sky; evening: dim violet with their copper tops
       g.fillStyle = LC.lin(g, 0, a[1], 0, b[1], T.lit ? [[0, '#DDE8E6', 0.55], [0.55, '#9AAAA8', 0.3], [1, '#5E5A50', 0.25]] : [[0, '#5E5A70', 0.42], [0.5, '#3A3A4C', 0.3], [0.62, '#C27A4C', 0.22], [1, '#2A2A30', 0.2]]); g.fillRect(...bb(q));
       LC.glare(g, null, { x: (a[0] + cam.p(pp[1])[0]) / 2, y: (a[1] + b[1]) / 2, angle: -1.12, color: '#FFFFFF', bands: [{ d: -30, w: Math.max(8, Math.abs(b[1] - a[1]) * 0.12), a: T.lit ? 0.16 : 0.07 }, { d: 20, w: 6, a: 0.1 }] });
@@ -270,7 +312,7 @@
     const k = kAt(cam, (d0 + d1) / 2, 1, z0), fr = clipPts(cam, [L(0, 2.12), L(1, 2.12), L(1, 0.32), L(0, 0.32)]);
     if (fr.length > 2) { g.strokeStyle = T.lit ? '#3E5058' : '#26323A'; g.lineWidth = 0.06 * k; g.stroke(LC.pathPts(fr)); const lp = clipPts(cam, [L(0.04, 0.9), L(0.96, 0.9), L(0.96, 0.36), L(0.04, 0.36)]); if (lp.length > 2) { g.fillStyle = T.lit ? '#3A4A52' : '#1E2830'; g.fill(LC.pathPts(lp)); }
       const h = cam.p(L(0.88, 1.05)); g.fillStyle = T.lit ? '#E2D2A8' : '#8E7A5A'; g.beginPath(); g.arc(h[0], h[1], 0.025 * k, 0, Math.PI * 2); g.fill(); }
-    LC.specks(g, LC.pathPts(clipPts(cam, [[x0, top, z0], [x1, top, z0], [x1, base, z0], [x0, base, z0]])), { x: 0, y: 0, w: W, h: H }, 'porchDust', { n: 120, color: '#FFFFFF', rMin: 0.5, rMax: 1.2, aMin: 0.04, aMax: 0.16, scratch: 0.1 });
+    if (o.lod !== 'low') LC.specks(g, LC.pathPts(clipPts(cam, [[x0, top, z0], [x1, top, z0], [x1, base, z0], [x0, base, z0]])), { x: 0, y: 0, w: W, h: H }, 'porchDust', { n: 120, color: '#FFFFFF', rMin: 0.5, rMax: 1.2, aMin: 0.04, aMax: 0.16, scratch: 0.1 });
   }
 
   // =================================================================================================================
@@ -344,16 +386,18 @@
   }
   const pov = (rev) => { const st = {}; return {
     camAt: u => povCam(clamp(u, 0, 1), rev),
+    // the world through the glass. At rest (parked: the end of the arrival, the start of the reverse) it is a cached layer;
+    // while the car moves it is drawn live every frame at a lower detail (no brick courses, no dust on the porch glass), so the
+    // motion is smooth: cached steps would judder, and a new full-frame layer every few frames costs more than drawing it.
     back(c, t, s) {
-      s = s || {}; const T = todOf(s), u = rev ? 1 - clamp(s.back || 0, 0, 1) : clamp(s.approach == null ? 1 : s.approach, 0, 1), cam = povCam(u, rev);
-      const g = c.g; g.save(); g.translate(0, 0);
-      // the world through the glass: drawn live (the car moves); the house scene is simple flat geometry
-      const q = Math.round(u * 48) / 48, key = 'house:pov:' + (TODS[s.tod] ? s.tod : 'evening') + ':' + (rev ? 'r' : 'a') + q;
-      drawBig(c, bigCache(c, key, gg => houseScene(gg, povCam(q, rev), T, {})));
-      g.restore(); st.q = q;
+      s = s || {}; const T = todOf(s), u = rev ? 1 - clamp(s.back || 0, 0, 1) : clamp(s.approach == null ? 1 : s.approach, 0, 1), tod = TODS[s.tod] ? s.tod : 'evening';
+      st.u = u; st.still = u >= 0.999;
+      if (st.still) drawBig(c, bigCache(c, 'house:pov:' + tod, gg => houseScene(gg, povCam(1, rev), T, {})));
+      else houseScene(c.g, povCam(u, rev), T, { lod: 'low' });
     },
-    front(c, t, s) { s = s || {}; const T = todOf(s), g = c.g, q = st.q == null ? (rev ? 1 - clamp(s.back || 0, 0, 1) : clamp(s.approach == null ? 1 : s.approach, 0, 1)) : st.q;
-      drawBig(c, bigCache(c, 'house:povFront:' + (TODS[s.tod] ? s.tod : 'evening') + ':' + (rev ? 'r' : 'a') + q, gg => porchGlass(gg, povCam(q, rev), T, {})));
+    front(c, t, s) { s = s || {}; const T = todOf(s), g = c.g, tod = TODS[s.tod] ? s.tod : 'evening', u = st.u == null ? (rev ? 1 - clamp(s.back || 0, 0, 1) : clamp(s.approach == null ? 1 : s.approach, 0, 1)) : st.u;
+      if (u >= 0.999) drawBig(c, bigCache(c, 'house:povFront:' + tod, gg => porchGlass(gg, povCam(1, rev), T, {})));
+      else porchGlass(g, povCam(u, rev), T, { lod: 'low' });
       windscreenFront(g, T, t); cabinFrame(g, T); },
     anchorsAt(u) { const cam = povCam(clamp(u, 0, 1), rev), p = (x, y, z) => cam.p(x, y, z).slice(0, 2).map(Math.round);
       return { porchDoor: p(1.25, 1.2, PORCH.z0), sarahInPorch: p(1.2, 0.3, PORCH.z0 + 0.5), sarahPxPerM: Math.round(kAt(cam, 1.2, 1, PORCH.z0 + 0.5)), stepTop: p(1.25, 0.3, PORCH.z0 - 0.1), stepFoot: p(1.25, 0, PORCH.z0 - 0.6), drive: p(3.2, 0, 7.4) }; },
@@ -379,19 +423,23 @@
   // ---- the wing mirror (Q11 26-32): out on the road and pulling away, the passenger mirror holds the house, the drive and
   //      Sarah at its end, small, receding (away 0..1). The car drives along the road (+x), the house on its left. ----
   const ROADZ = -3.3;
+  // the mirror is set well out (0.5 rad from straight back), so once the car is a few lengths down the road (away > 0.25) the
+  // house and its lit porch come into the glass beside the drive's end, and stay there as they shrink
   const wingMirrorCam = a => { const xc = lerp(5.2, 22, a), mx = xc + 0.9, mz = ROADZ + 0.98;
-    return mkCam({ x: mx, y: 1.02, z: mz, yaw: -Math.PI / 2 + 0.34, pitch: 0.0, f: 760, cx: 700, cy: 560 }); };
+    return mkCam({ x: mx, y: 1.02, z: mz, yaw: -Math.PI / 2 + 0.5, pitch: 0.0, f: 760, cx: 700, cy: 560 }); };
   const wingSt = {};
   const wing = {
     back(c, t, s) {
       s = s || {}; const T = todOf(s), g = c.g, a = clamp(s.away == null ? 0.15 : s.away, 0, 1), tod = TODS[s.tod] ? s.tod : 'dusk';
       // through the passenger window: our side of the road sliding past at dusk (a hedge, a low wall, the next front gardens)
-      drawBig(c, bigCache(c, 'house:wingOut:' + tod, gg => { const cam = mkCam({ x: 14, y: 1.15, z: ROADZ, yaw: -0.25, pitch: -0.02, f: 900, cx: W / 2 + 200, cy: H / 2 }); houseScene(gg, cam, T, {}); gg.fillStyle = rgba('#081014', 0.42); gg.fillRect(-M, -M, W + 2 * M, H + 2 * M); }));
-      // the mirror: housing and glass, its picture the view behind, mirrored
-      const q = Math.round(a * 40) / 40, refl = bigCache(c, 'house:wingRefl:' + tod + ':' + q, gg => { houseScene(gg, wingMirrorCam(q), T, {}); porchGlass(gg, wingMirrorCam(q), T, {}); });
+      // (smeared sideways once, in the cache: the car is moving, and the eye belongs on the mirror)
+      drawBig(c, bigCache(c, 'house:wingOut:' + tod, gg => { const cam = mkCam({ x: 14, y: 1.15, z: ROADZ, yaw: -0.25, pitch: -0.02, f: 900, cx: W / 2 + 200, cy: H / 2 }), sg = scratch('houseWingOut', W + 2 * M, H + 2 * M); sg.translate(M, M); houseScene(sg, cam, T, { lod: 'low' });
+        gg.setTransform(1, 0, 0, 1, 0, 0); for (let i = 0; i < 16; i++) { gg.globalAlpha = 1 / (i + 1); gg.drawImage(sg.canvas, (i / 15 - 0.5) * 40, 0); } gg.globalAlpha = 1; gg.translate(M, M);
+        gg.fillStyle = rgba('#081014', 0.42); gg.fillRect(-M, -M, W + 2 * M, H + 2 * M); }));
+      // the mirror: housing and glass, its picture the view behind, mirrored (drawn live into the glass's small area: it moves)
       const mp = LC.smooth([[500, 420], [900, 396], [980, 470], [972, 700], [900, 740], [510, 728], [450, 652], [458, 470]]);
       g.fillStyle = '#080A0C'; g.save(); g.translate(16, 20); g.fill(mp); g.restore(); g.fillStyle = '#121618'; g.save(); g.translate(715, 568); g.scale(1.07, 1.1); g.translate(-715, -568); g.fill(mp); g.restore();
-      g.save(); g.clip(mp); g.translate(1430, 0); g.scale(-1, 1); g.drawImage(refl, -M, -M); g.restore();
+      g.save(); g.clip(mp); g.translate(1430, 0); g.scale(-1, 1); const mc = wingMirrorCam(a); houseScene(g, mc, T, { lod: 'low', noShadows: true }); porchGlass(g, mc, T, { lod: 'low' }); g.restore();
       g.save(); g.clip(mp); g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgb(192,202,208)'; g.fillRect(0, 0, W, H); g.restore();
       wingSt.mp = mp; wingSt.a = a;
     },
@@ -414,7 +462,7 @@
       return { glass: [450, 396, 980, 740], sarahAtDriveEnd: p(DRIVE.x0 + 0.6, 0, 0.4), sarahPxPerM: Math.round(kAt(cam, DRIVE.x0 + 0.6, 1, 0.4)), porch: p(1.25, 1.2, PORCH.z0) }; },
     light: { x: 1200, y: 200, color: '#E89A5E' },
   };
-  wing.anchors = wing.anchorsAt(0.15);
+  wing.anchors = wing.anchorsAt(0.35);
 
   // =================================================================================================================
   // demo stand-ins
@@ -431,8 +479,8 @@
       { name: 'arrive: through the windscreen, onto the gravel (evening)', draw(c, t) { const s = { tod: 'evening', approach: clamp(0.55 + t * 0.12, 0, 1) }; arrive.back(c, t, s); arrive.front(c, t, s); } },
       { name: 'porch: Sarah behind the porch glass (evening)', draw(c, t) { const s = { tod: 'evening' }; porchView.back(c, t, s); demoSarah(c, porchView.anchors.sarahFeet, porchView.anchors.sarahPxPerM, porchView.light); porchView.front(c, t, s); } },
       { name: 'reverse: backing out, the house receding (dusk)', draw(c, t) { const s = { tod: 'dusk', back: clamp(0.2 + t * 0.15, 0, 1) }; reverse.back(c, t, s); reverse.front(c, t, s); } },
-      { name: 'wing: pulling away, the house and Sarah in the mirror (dusk)', draw(c, t) { const s = { tod: 'dusk', away: clamp(0.08 + t * 0.06, 0, 1) }; wing.back(c, t, s);
-        wing.inGlass(c, s, (g, cam) => { const f = cam.p(DRIVE.x0 + 0.6, 0, 0.4), k = kAt(cam, DRIVE.x0 + 0.6, 1, 0.4); demoSarah({ g }, [f[0], f[1]], k); }); wing.front(c, t, s); } },
+      { name: 'wing: pulling away, the house and Sarah in the mirror (dusk)', draw(c, t) { const s = { tod: 'dusk', away: clamp(0.29 + t * 0.06, 0, 1) }; wing.back(c, t, s);
+        wing.inGlass(c, s, (g, cam) => { const f = cam.p(DRIVE.x0 + 0.6, 0, 0.4), k = kAt(cam, DRIVE.x0 + 0.6, 1, 0.4); demoSarah({ g }, [f[0], f[1]], k, { x: f[0] + 300, y: f[1] - 200, color: '#E89A5E' }); }); wing.front(c, t, s); } },
       { name: 'drive: dusk', draw(c, t) { const s = { tod: 'dusk' }; drive.back(c, t, s); drawCar(c, c.g, driveCam, CAR_AT, 0, s, TODS.dusk); drive.front(c, t, s); } },
     ],
   };

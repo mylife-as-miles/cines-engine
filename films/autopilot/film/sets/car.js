@@ -600,7 +600,7 @@
   // ---- UK number plates: white at the front, yellow at the back, black characters (a condensed face), the blue band ----
   const CAR_REG = 'HN17 WKS';
   function drawPlate(g, sp, which, lod) {
-    const p = polyPath(sp); g.fillStyle = which === 'rear' ? '#C9BF7E' : '#E4E1D6';   // the rear plate is a duller, cooler yellow than Emily's #E0B34F, which belongs to her alone g.fill(p);
+    const p = polyPath(sp); g.fillStyle = which === 'rear' ? '#C9BF7E' : '#E4E1D6'; g.fill(p);   // the rear plate: a duller, cooler yellow than Emily's #E0B34F, which belongs to her alone
     if (lod < 1) return;
     const byX = sp.slice().sort((a, b) => a[0] - b[0]), L2 = byX.slice(0, 2).sort((a, b) => a[1] - b[1]), R2 = byX.slice(2).sort((a, b) => a[1] - b[1]);
     const tl = L2[0], bl = L2[1], tr = R2[0];

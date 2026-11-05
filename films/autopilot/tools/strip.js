@@ -11,7 +11,7 @@ const { open } = require('./film');
     const sheet = document.createElement('canvas'); sheet.width = C * tw; sheet.height = R * (th + 26); const g = sheet.getContext('2d'); g.fillStyle = '#111'; g.fillRect(0, 0, sheet.width, sheet.height);
     const ms = []; const src = document.querySelector('canvas');
     for (let i = 0; i < times.length; i++) {
-      const t0 = performance.now(); FILM.renderAt(times[i]); ms.push(performance.now() - t0);
+      const t0 = performance.now(); FILM.renderAt(times[i]); src.getContext('2d').getImageData(0, 0, 1, 1); ms.push(performance.now() - t0);   // the 1-pixel read makes Chrome finish the frame, so the time is the frame's own
       const x = (i % C) * tw, y = Math.floor(i / C) * (th + 26); g.drawImage(src, x, y, tw, th);
       g.fillStyle = '#ddd'; g.font = '16px monospace'; const sh = seq.shots.filter(s => s.at <= times[i]).pop();
       g.fillText(times[i].toFixed(2) + 's  ' + (sh && sh.name || ''), x + 6, y + th + 18);

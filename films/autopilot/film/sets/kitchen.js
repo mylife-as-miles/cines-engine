@@ -31,7 +31,8 @@
   const inv = T => { const det = T[0] * T[3] - T[1] * T[2]; return [T[3] / det, -T[1] / det, -T[2] / det, T[0] / det, (T[2] * T[5] - T[3] * T[4]) / det, (T[1] * T[4] - T[0] * T[5]) / det]; };
   // scratch canvases reused across frames
   const _scr = {};
-  function scratch(name, w, h) { let c = _scr[name]; if (!c || c.width !== w || c.height !== h) { c = _scr[name] = OTM.makeCanvas(w, h); } const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none'; g.clearRect(0, 0, w, h); return g; }
+  // (readBack: a canvas read back with getImageData every frame is made to stay on the CPU)
+  function scratch(name, w, h, readBack) { let c = _scr[name]; if (!c || c.width !== w || c.height !== h) { c = _scr[name] = OTM.makeCanvas(w, h); if (readBack) c.getContext('2d', { willReadFrequently: true }); } const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.filter = 'none'; g.clearRect(0, 0, w, h); return g; }
 
   // =================================================================================================================
   // THE COUNTER (C1)
@@ -1122,7 +1123,7 @@
   };
 
   // ---- the kettle, close: its chrome holds the room (the table, the window behind the lens, whoever stands there) ----
-  const KC = { cx: 1060, top: 170, bot: 960, r: 470 };
+  const KC = { cx: 1060, top: 170, bot: 960, r: 470 }, KC_EYE = 640, KPY = 0.7;    // KC_EYE: the body row where the straight-back direction (the face's centre) lands
   const kcR = y => { const t = (KC.bot - y) / (KC.bot - KC.top); if (t < 0 || t > 0.99) return 0; if (t >= 0.38) return KC.r * Math.sqrt(Math.max(0, 1 - Math.pow((t - 0.38) / 0.62, 2))); return KC.r * (1 - 0.1 * Math.pow((0.38 - t) / 0.38, 5)); };
   const kcPath = (() => { const L = [], Rr = []; for (let y = KC.top + 2; y <= KC.bot; y += 3) { const r = kcR(y); L.push([KC.cx - r, y]); Rr.push([KC.cx + r, y]); } return LC.pathPts(L.concat(Rr.reverse())); })();
   const kcNormal = (x, y) => { const r = kcR(y); if (r <= 0) return null; const u = (x - KC.cx) / r; if (Math.abs(u) >= 0.999) return null; const dr = (kcR(y + 1) - kcR(y - 1)) / 2, nz = Math.sqrt(1 - u * u), n = [u, dr * nz, nz], l = Math.hypot(n[0], n[1], n[2]); return [n[0] / l, n[1] / l, n[2] / l]; };
@@ -1168,10 +1169,12 @@
     // draw a figure into the chrome: fn(g, cam) draws it as a camera at the kettle sees the room behind the lens
     // (cam: 960x540 canvas, 90-degree view, centre = straight back at the viewer); it is warped onto the body
     reflect(c, s, fn) {
-      const RW2 = 960, RH2 = 540, f = RW2 / 2, rg = scratch('kettleRoom', RW2, RH2); fn(rg, { w: RW2, h: RH2, cx: RW2 / 2, cy: RH2 / 2, f });
+      const RW2 = 960, RH2 = 540, f = RW2 / 2, rg = scratch('kettleRoom', RW2, RH2, true); fn(rg, { w: RW2, h: RH2, cx: RW2 / 2, cy: RH2 / 2, f });
       const src = rg.getImageData(0, 0, RW2, RH2).data, M2 = kcMap(), out = scratch('kettleWarp', M2.w, M2.h), img = out.createImageData(M2.w, M2.h), d = img.data;
+      // (the face is near, not at infinity: down the body's upright lower part every row would reflect the same direction and
+      // smear one line of the face over it, so each row also looks a little higher or lower by its own height: KPY)
       for (let j = 0; j < M2.h; j++) for (let i = 0; i < M2.w; i++) { const k = (j * M2.w + i) * 2, ph = M2.m[k], th = M2.m[k + 1]; if (ph !== ph) continue;
-        if (Math.abs(ph) > 1.3) continue; const x = RW2 / 2 + f * Math.tan(ph), y = RH2 / 2 - f * Math.tan(th) / Math.cos(ph); if (x < 0 || y < 0 || x >= RW2 || y >= RH2) continue;
+        if (Math.abs(ph) > 1.3) continue; const x = RW2 / 2 + f * Math.tan(ph), y = RH2 / 2 - f * Math.tan(th) / Math.cos(ph) + (M2.y0 + (j + 0.5) * M2.s - KC_EYE) * KPY; if (x < 0 || y < 0 || x >= RW2 || y >= RH2) continue;
         const q = ((y | 0) * RW2 + (x | 0)) * 4, o = (j * M2.w + i) * 4; d[o] = src[q]; d[o + 1] = src[q + 1]; d[o + 2] = src[q + 2]; d[o + 3] = src[q + 3] * 0.9; }
       out.putImageData(img, 0, 0); const g = c.g; g.save(); g.clip(kcPath); g.imageSmoothingEnabled = true; g.drawImage(out.canvas, M2.x0, M2.y0, M2.w * M2.s, M2.h * M2.s); g.restore();
     },
@@ -1180,7 +1183,7 @@
       const sp = (x, y, rx, ry, a) => { g.fillStyle = LC.rad(g, x, y, 0, rx, [[0, '#FFFFFF', a], [0.45, '#FFFFFF', a * 0.6], [1, '#FFFFFF', 0]]); g.save(); g.translate(x, y); g.scale(1, ry / rx); g.translate(-x, -y); g.beginPath(); g.arc(x, y, rx, 0, Math.PI * 2); g.fill(); g.restore(); };
       sp(KC.cx - KC.r * 0.78, KC.top + 300, 36, 80, 0.9); sp(KC.cx + KC.r * 0.8, KC.top + 280, 30, 70, 0.8); g.restore();
     },
-    anchors: { face: [KC.cx, 560], bodyBox: [KC.cx - KC.r, KC.top, KC.cx + KC.r, KC.bot] },
+    anchors: { face: [KC.cx, KC_EYE], bodyBox: [KC.cx - KC.r, KC.top, KC.cx + KC.r, KC.bot] },
     light: { x: 960, y: 60, color: '#D9E3DF' },
   };
 
