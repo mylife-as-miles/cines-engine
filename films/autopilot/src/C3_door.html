@@ -85,6 +85,13 @@
   const thr = LC.layer();
   sky(thr); far(thr); tarmac(thr);
   // the car's own lines rush to the vanishing point beyond the hinge: roof rail and sill, edge-on, nothing to see into
+  // the privacy tint: everything through this glass is darker and colder
+  thr.save(); thr.globalCompositeOperation = 'multiply'; thr.fillStyle = '#5E7D83'; thr.fillRect(0, 0, W, H); thr.fillStyle = '#9CB0B2'; thr.fillRect(0, 0, W, H); thr.restore();
+  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1] - 20, 0, 520, [[0, '#E89A5E', 0.55], [0.5, '#B06A44', 0.2], [1, '#B06A44', 0]]); thr.fillRect(0, 0, W, BL + 20); thr.restore();
+  // the sun survives it: a copper disc sinking under the glass's lower edge
+  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1], 0, 300, [[0, '#FFD39A', 0.92], [0.2, '#E8955A', 0.45], [1, '#B4683E', 0]]); thr.fillRect(SUN[0] - 320, SUN[1] - 320, 640, 640); thr.restore();
+  thr.fillStyle = '#FFDCA6'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR, 0, Math.PI * 2); thr.fill();
+  thr.fillStyle = '#FFF2DA'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR * 0.68, 0, Math.PI * 2); thr.fill();
   // ---- DANIEL: kneeling upright beside the door, head bowed over what he holds, the near arm reaching into the car ----
   const dan = (() => { const p = new Path2D();
     p.moveTo(1004, BL + 30);
@@ -109,21 +116,14 @@
     // the near shoulder's deltoid where the arm leaves the body
     p.moveTo(1078, 470); p.bezierCurveTo(1108, 462, 1150, 474, 1166, 500); p.bezierCurveTo(1176, 520, 1170, 542, 1152, 554); p.bezierCurveTo(1120, 558, 1090, 544, 1078, 518); p.closePath();
     return p; })();
-  OTM.silhouette(thr, dan, { fill: '#0A0E10', light: { x: SUN[0] - 40, y: SUN[1] - 110 }, rimColor: '#FFC487', rimW: 3.6, rimSoft: true, spread: 1.25, bbox: { x: 990, y: 370, w: 410, h: 220 } });
+  OTM.silhouette(thr, dan, { fill: '#0A0E10', light: { x: SUN[0] - 40, y: SUN[1] - 110 }, rimColor: '#F4AE72', rimW: 3.6, rimSoft: true, spread: 1.25, bbox: { x: 990, y: 370, w: 410, h: 220 } });
   thr.strokeStyle = 'rgba(242,160,96,0.42)'; thr.lineWidth = 1.4; thr.beginPath(); thr.arc(1146, 432, 8, Math.PI * 0.75, Math.PI * 1.45); thr.stroke();   // the ear
-  // the privacy tint: everything through this glass is darker and colder
-  thr.save(); thr.globalCompositeOperation = 'multiply'; thr.fillStyle = '#5E7D83'; thr.fillRect(0, 0, W, H); thr.fillStyle = '#9CB0B2'; thr.fillRect(0, 0, W, H); thr.restore();
-  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1] - 20, 0, 520, [[0, '#E89A5E', 0.55], [0.5, '#B06A44', 0.2], [1, '#B06A44', 0]]); thr.fillRect(0, 0, W, BL + 20); thr.restore();
-  // the sun survives it: a copper disc sinking under the glass's lower edge
-  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1], 0, 300, [[0, '#FFD39A', 0.92], [0.2, '#E8955A', 0.45], [1, '#B4683E', 0]]); thr.fillRect(SUN[0] - 320, SUN[1] - 320, 640, 640); thr.restore();
-  thr.fillStyle = '#FFDCA6'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR, 0, Math.PI * 2); thr.fill();
-  thr.fillStyle = '#FFF2DA'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR * 0.68, 0, Math.PI * 2); thr.fill();
   // what the glass gives back from our side: the dim eastern sky, a lamp-post behind us; dust lit from behind
   thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.lin(thr, 0, 178, 0, BL, [[0, '#56607A', 0.3], [1, '#56607A', 0.06]]); thr.fillRect(0, 0, W, H); thr.restore();
   LC.glare(thr, null, { x: 860, y: 380, angle: -1.05, color: '#FFE2BC', bands: [{ d: -120, w: 90, a: 0.05 }, { d: -62, w: 15, a: 0.07 }, { d: 290, w: 150, a: 0.035 }] });
   LC.specks(thr, null, { x: 560, y: 178, w: 810, h: 390 }, 'doorDust', { n: 420, color: '#FFD9A8', rMin: 0.5, rMax: 1.4, aMin: 0.06, aMax: 0.5, scratch: 0.05, near: { x: SUN[0], y: SUN[1], r: 300 } });
   g.save(); g.clip(winPath); g.drawImage(thr.canvas, 0, 0); g.restore();
-  E.save(); E.beginPath(); E.rect(0, 0, W, BL); E.clip(); E.fillStyle = '#FFD7A0'; E.beginPath(); E.arc(SUN[0], SUN[1], 66, 0, Math.PI * 2); E.fill(); E.fillStyle = 'rgba(230,140,80,0.5)'; E.beginPath(); E.arc(SUN[0], SUN[1], 200, 0, Math.PI * 2); E.fill(); E.restore();
+  E.save(); E.beginPath(); E.rect(0, 0, W, BL); E.clip(); E.fillStyle = '#FFD7A0'; E.beginPath(); E.arc(SUN[0], SUN[1], 54, 0, Math.PI * 2); E.fill(); E.fillStyle = 'rgba(230,140,80,0.3)'; E.beginPath(); E.arc(SUN[0], SUN[1], 120, 0, Math.PI * 2); E.fill(); E.restore();
 
   // =====================================================================
   // 4. THE DOOR: its sash, its panel (the dim eastern sky laid along it), its free edge catching the sun
@@ -155,7 +155,7 @@
   { const nb = LC.layer();
     // the front door's window, foreshortened to a sliver: a dark mirror holding the reflected door and one copper seam
     const sl = LC.pathPts([[HX + 44, 150], [1500, 124], [1500, HOR], [HX + 44, HOR]]);
-    nb.fillStyle = LC.lin(nb, 0, 112, 0, HOR, [[0, '#101318'], [0.85, '#211C22'], [1, '#5A3A2E']]); nb.fill(sl);
+    nb.fillStyle = LC.lin(nb, 0, 112, 0, HOR, [[0, '#0C0F13'], [0.85, '#191619'], [1, '#4A3028']]); nb.fill(sl);
     nb.fillStyle = 'rgba(232,150,92,0.7)'; nb.fillRect(HX + 44, HOR - 8, 1500 - HX - 44, 4);
     // the near bodywork beyond it, rushing past the lens: A-pillar, the door's front edge, the wing
     const ap = LC.pathPts([[1500, 124], [1680, 20], [W + 40, 20], [W + 40, HOR], [1500, HOR]]);
