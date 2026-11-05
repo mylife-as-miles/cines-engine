@@ -1,0 +1,15 @@
+[
+ {"id": "V01", "scene": "bedroom, dawn", "text": "Have you ever forgotten your phone?", "style": "quiet and intimate, close to the microphone; a man telling you something he has thought about for a long time; understated, almost conversational"},
+ {"id": "V02", "scene": "bedroom, dawn", "text": "I don't mean lost it. Just left it somewhere, and carried on as though you hadn't.", "style": "gentle and unhurried, explaining, with a faint wry warmth"},
+ {"id": "V03", "scene": "bedroom, dawn", "text": "When did you realise?", "style": "soft, a real question put to the listener, after a small pause"},
+ {"id": "V04", "scene": "bathroom, morning", "text": "You do something often enough, and your brain stops asking you to do it. It just does it for you.", "style": "thoughtful and matter-of-fact, calm, like someone who has had to understand how this happens"},
+ {"id": "V05", "scene": "the drive", "text": "Think about the last journey you make every day. What do you actually remember of it?", "style": "calm and inviting, asking the listener to remember, unhurried"},
+ {"id": "V06", "scene": "the drive", "text": "Usually, just getting there.", "style": "quiet and low, a little rueful"},
+ {"id": "V07", "scene": "office kitchenette", "text": "I hadn't remembered leaving it. I'd remembered only when I reached for it and it wasn't there.", "style": "reflective and slower, an unease just beneath the calm"},
+ {"id": "V08", "scene": "office, afternoon", "text": "The strange thing was, I didn't feel anything missing. The day had gone as it always did. My brain had filled in the rest.", "style": "quiet and careful, the calm beginning to thin"},
+ {"id": "V09", "scene": "nursery, turning to the car", "text": "My phone was on the counter.", "style": "numb, almost to himself, barely holding"},
+ {"id": "V10", "scene": "nursery, no answer", "text": "My phone was on the counter.", "style": "repeating it, unsteady, the breath catching"},
+ {"id": "V11", "scene": "kneeling by the car", "text": "My phone was on the counter.", "style": "hollow and very quiet, emptied out"},
+ {"id": "V12", "scene": "kneeling by the car", "text": "And my daughter was dead.", "style": "almost no voice left; flat with grief, not performed, very quiet"},
+ {"id": "V13", "scene": "the end", "text": "Autopilot disengaged.", "style": "utterly still and quiet, final"}
+]
