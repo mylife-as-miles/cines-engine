@@ -56,12 +56,12 @@
     out.fillStyle = '#583834'; out.beginPath(); out.arc(206, 534, 14, 0, Math.PI * 2); out.fill();
     out.fillStyle = '#6E5F50'; out.fillRect(146, 510, 30, 50); out.fillStyle = '#C6BCAA'; out.fillRect(155, 526, 12, 9); }
   // the swings, hanging still; a low railing; the slide
-  const SW = { x0: 96, x1: 430, top: 318, base: HOR + 150 };
+  const SW = { x0: 110, x1: 418, top: 344, base: HOR + 124 };
   const swing = new Path2D();
   { const L = (x0, y0, x1, y1, w) => { const a = Math.atan2(y1 - y0, x1 - x0), nx = -Math.sin(a) * w / 2, ny = Math.cos(a) * w / 2; swing.moveTo(x0 + nx, y0 + ny); swing.lineTo(x1 + nx, y1 + ny); swing.lineTo(x1 - nx, y1 - ny); swing.lineTo(x0 - nx, y0 - ny); swing.closePath(); };
     L(SW.x0 - 62, SW.base, SW.x0, SW.top, 12); L(SW.x0 + 54, SW.base - 26, SW.x0, SW.top, 10); L(SW.x1 - 54, SW.base - 26, SW.x1, SW.top, 10); L(SW.x1 + 62, SW.base, SW.x1, SW.top, 12);
     L(SW.x0 - 10, SW.top, SW.x1 + 10, SW.top, 13);
-    [[170, 226], [298, 354]].forEach(([a, b]) => { L(a, SW.top, a, 590, 3); L(b, SW.top, b, 590, 3); swing.rect(a - 10, 588, b - a + 20, 10); }); }
+    [[176, 226], [296, 346]].forEach(([a, b]) => { L(a, SW.top, a, 584, 3); L(b, SW.top, b, 584, 3); swing.rect(a - 9, 582, b - a + 18, 9); }); }
   out.fillStyle = '#16131A'; out.fill(swing);
   { const rimC = LC.layer(); rimC.fillStyle = '#F2A35E'; rimC.fill(swing); rimC.globalCompositeOperation = 'destination-out'; rimC.translate(-2.6, 1); rimC.fill(swing); out.drawImage(rimC.canvas, 0, 0); }
   const railP = new Path2D(); for (let x = -10; x < RX + 40; x += 14) railP.rect(x, HOR - 16, 2, 16); railP.rect(-10, HOR - 17, RX + 50, 2.5); railP.rect(-10, HOR - 6, RX + 50, 2);
@@ -74,7 +74,7 @@
     // legs, chains and seats: the frame's legs as long bars, the hanging chains as threads, the seats as two dark blades
     [[SW.x0 - 62, SW.base], [SW.x0 + 54, SW.base - 26], [SW.x1 - 54, SW.base - 26], [SW.x1 + 62, SW.base]].forEach(([x, y]) => ray(x, y, 5, 46));
     // the seats hang off the ground, so their shadows begin further along the rays: two dark blades out on the tarmac
-    [[198, 54], [326, 54]].forEach(([x, w]) => { const b = [x + (x - SUN[0]) * 0.32, SW.base + 40]; ray(b[0], b[1], w * 0.42, w * 1.5); });
+    [[201, 50], [321, 50]].forEach(([x, w]) => { const b = [x + (x - SUN[0]) * 0.3, SW.base + 34]; ray(b[0], b[1], w * 0.42, w * 1.5); });
     for (let x = -10; x < RX + 40; x += 32) ray(x, HOR, 0.6, 3.5);
     const shB = LC.blurred(sh.canvas, 1.3, false); out.save(); out.globalAlpha = 0.84; out.beginPath(); out.rect(0, HOR + 1, W, BOT); out.clip(); out.drawImage(shB, 0, 0); out.restore(); }
   g.drawImage(out.canvas, 0, 0);
@@ -94,34 +94,32 @@
   thr.fillStyle = '#FFF2DA'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR * 0.68, 0, Math.PI * 2); thr.fill();
   // ---- DANIEL: kneeling upright beside the door, head bowed over what he holds, the near arm reaching into the car ----
   const dan = (() => { const p = new Path2D();
-    p.moveTo(1004, BL + 30);
-    p.bezierCurveTo(1000, 548, 1010, 512, 1030, 490);                 // the back, kneeling tall but slumped
-    p.bezierCurveTo(1044, 476, 1060, 470, 1076, 468);                 // the shoulder, fallen
-    p.bezierCurveTo(1086, 467, 1094, 462, 1098, 452);                 // the nape: the neck bends forward here
-    p.bezierCurveTo(1094, 436, 1098, 414, 1112, 398);                 // the back of the skull
-    p.bezierCurveTo(1126, 382, 1148, 376, 1166, 382);                 // the crown, tipped toward the car
-    p.bezierCurveTo(1186, 390, 1198, 408, 1202, 428);                 // forehead
-    p.bezierCurveTo(1204, 440, 1204, 448, 1200, 456);                 // brow, the face turned down
-    p.bezierCurveTo(1204, 462, 1204, 468, 1198, 472);                 // the nose, pointing at what he holds
-    p.bezierCurveTo(1194, 478, 1190, 484, 1182, 488);                 // mouth, chin tucked
-    p.bezierCurveTo(1178, 490, 1174, 492, 1172, 496);                 // under the jaw to the collar
-    p.lineTo(1166, 500); p.lineTo(1176, 506);                         // the collar's point, crooked again
-    p.bezierCurveTo(1210, 506, 1250, 512, 1290, 518);                 // the top of the reaching arm
-    p.bezierCurveTo(1320, 522, 1350, 526, HX + 30, 530);              // the forearm, into the car behind the frame
-    p.lineTo(HX + 30, 558);
-    p.bezierCurveTo(1330, 556, 1290, 550, 1250, 548);                 // under the forearm
-    p.bezierCurveTo(1226, 546, 1208, 548, 1198, 556);                 // the elbow, tucked in
-    p.lineTo(1196, BL + 30);
+    p.moveTo(1006, BL + 30);
+    p.bezierCurveTo(1004, 540, 1014, 506, 1034, 486);                 // the back, kneeling, slumped
+    p.bezierCurveTo(1050, 472, 1070, 464, 1090, 462);                 // the shoulder, fallen forward
+    p.bezierCurveTo(1098, 462, 1104, 466, 1108, 468);                 // the nape: the neck bends forward and down
+    p.bezierCurveTo(1108, 452, 1112, 432, 1124, 418);                 // the back of the skull
+    p.bezierCurveTo(1138, 402, 1162, 398, 1180, 408);                 // the crown, tipped toward the car
+    p.bezierCurveTo(1196, 418, 1206, 436, 1208, 454);                 // forehead
+    p.bezierCurveTo(1209, 464, 1208, 472, 1206, 478);                 // the brow; the face turned straight down
+    p.bezierCurveTo(1209, 484, 1208, 490, 1202, 494);                 // the nose, pointing at the seat
+    p.bezierCurveTo(1198, 500, 1192, 504, 1186, 506);                 // mouth, the chin almost on his chest
+    p.lineTo(1180, 508); p.lineTo(1190, 510);                         // the collar's point, crooked again
+    p.bezierCurveTo(1220, 500, 1252, 498, 1284, 500);                 // the top of the arm: the shirt sleeve, held up above the far trees
+    p.bezierCurveTo(1314, 502, 1342, 506, HX + 30, 510);              // the forearm, resting, into the car behind the frame
+    p.lineTo(HX + 30, 546);
+    p.bezierCurveTo(1332, 542, 1298, 538, 1264, 538);                 // under the forearm
+    p.bezierCurveTo(1240, 538, 1222, 542, 1212, 552);                 // the elbow
+    p.lineTo(1206, BL + 30);
     p.closePath();
-    // the near shoulder's deltoid where the arm leaves the body
-    p.moveTo(1078, 470); p.bezierCurveTo(1108, 462, 1150, 474, 1166, 500); p.bezierCurveTo(1176, 520, 1170, 542, 1152, 554); p.bezierCurveTo(1120, 558, 1090, 544, 1078, 518); p.closePath();
+    // the near shoulder's deltoid, rounding where the arm leaves the body
+    p.moveTo(1092, 466); p.bezierCurveTo(1126, 454, 1172, 462, 1192, 488); p.bezierCurveTo(1204, 508, 1198, 532, 1178, 546); p.bezierCurveTo(1142, 554, 1106, 540, 1092, 514); p.closePath();
     return p; })();
-  OTM.silhouette(thr, dan, { fill: '#0A0E10', light: { x: SUN[0] - 40, y: SUN[1] - 110 }, rimColor: '#F4AE72', rimW: 3.6, rimSoft: true, spread: 1.25, bbox: { x: 990, y: 370, w: 410, h: 220 } });
-  thr.strokeStyle = 'rgba(242,160,96,0.42)'; thr.lineWidth = 1.4; thr.beginPath(); thr.arc(1146, 432, 8, Math.PI * 0.75, Math.PI * 1.45); thr.stroke();   // the ear
+  OTM.silhouette(thr, dan, { fill: '#0A0E10', light: { x: SUN[0] - 40, y: SUN[1] - 110 }, rimColor: '#F4AE72', rimW: 3.6, rimSoft: true, spread: 1.25, bbox: { x: 1000, y: 396, w: 400, h: 200 } });
   // what the glass gives back from our side: the dim eastern sky, a lamp-post behind us; dust lit from behind
   thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.lin(thr, 0, 178, 0, BL, [[0, '#56607A', 0.3], [1, '#56607A', 0.06]]); thr.fillRect(0, 0, W, H); thr.restore();
   LC.glare(thr, null, { x: 860, y: 380, angle: -1.05, color: '#FFE2BC', bands: [{ d: -120, w: 90, a: 0.05 }, { d: -62, w: 15, a: 0.07 }, { d: 290, w: 150, a: 0.035 }] });
-  LC.specks(thr, null, { x: 560, y: 178, w: 810, h: 390 }, 'doorDust', { n: 420, color: '#FFD9A8', rMin: 0.5, rMax: 1.4, aMin: 0.06, aMax: 0.5, scratch: 0.05, near: { x: SUN[0], y: SUN[1], r: 300 } });
+  LC.specks(thr, null, { x: 560, y: 178, w: 810, h: 390 }, 'doorDust', { n: 360, color: '#FFD9A8', rMin: 0.5, rMax: 1.3, aMin: 0.05, aMax: 0.42, scratch: 0, near: { x: SUN[0], y: SUN[1], r: 300 } });
   g.save(); g.clip(winPath); g.drawImage(thr.canvas, 0, 0); g.restore();
   E.save(); E.beginPath(); E.rect(0, 0, W, BL); E.clip(); E.fillStyle = '#FFD7A0'; E.beginPath(); E.arc(SUN[0], SUN[1], 54, 0, Math.PI * 2); E.fill(); E.fillStyle = 'rgba(230,140,80,0.3)'; E.beginPath(); E.arc(SUN[0], SUN[1], 120, 0, Math.PI * 2); E.fill(); E.restore();
 

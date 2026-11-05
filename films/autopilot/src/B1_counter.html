@@ -196,9 +196,10 @@
   g.restore();
   // the morning sun made visible: a beam from the kitchen window (off right) down to the patch by the door, motes turning in it
   { const pA = P(0.55, 0, 4.2), pB = P(-1.98, 0, 4.0), pC = P(-1.98, 0, 5.4);
-    const beam = [[W + 80, 60], [W + 80, 470], [pA[0], pA[1]], [pB[0], pB[1] - 40]];
+    // (it passes below Daniel's feet: the beam crosses the kitchen and the hall floor, not the stairwell)
+    const beam = [[W + 80, 230], [W + 80, 560], [pA[0], pA[1]], [pB[0] + 90, pB[1] - 30]];
     LB.shaft(g, beam, '#FFE9B4', 0.26, 26);
-    LB.shaft(g, [[W + 80, 150], [W + 80, 330], [pA[0] - 200, pA[1] - 120], [pB[0] + 120, pB[1] - 160]], '#FFF3D2', 0.12, 18);
+    LB.shaft(g, [[W + 80, 300], [W + 80, 430], [pA[0] - 160, pA[1] - 60], [pB[0] + 220, pB[1] - 60]], '#FFF3D2', 0.12, 18);
     LB.motes(g, beam, 70, '#FFF6DC', 'b1-motes', 2.2); }
 
   // ======================= FOREGROUND (sharp): counter, kettle, phone =======================
