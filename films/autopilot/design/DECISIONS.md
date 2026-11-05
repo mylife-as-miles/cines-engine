@@ -13,4 +13,6 @@ Settled with the author, Osita Miles.
 | Look | **C, Through Glass** (`look_c.md`), chosen from the three candidates on `frames/BOARD_looks.jpg`. |
 | Frame | Full 16:9 (1920x1080): no letterbox bars, and every set runs to the frame's edges. |
 | On-screen text | No title, slate or scene headings on screen. Time is read off glass in the world (the phone, the dashboard clock, the laptop). |
-| Subtitles | In the picture, as in Look B: Libre Franklin, bottom centre, soft dark halo, no box. Scene dialogue bold and white (Emily's in her yellow); Daniel's V.O. lighter, in bone. |
+| Subtitles | In the picture, as in Look B: Libre Franklin, bottom centre, soft dark halo, no box. Scene dialogue bold and white (Emily's in her yellow); Daniel's V.O. lighter, in bone; the radio presenter in a smaller italic. |
+| Title | One small title on black at the very start ("AUTOPILOT", "A film by Osita Miles"), before the alarm. Nothing else on screen but the subtitles and the world's own words. |
+| Build | The film is built in code on the *One Too Many* engine (`film/FILM.md`), shot by shot from `design/SEQUENCES.md`. |
