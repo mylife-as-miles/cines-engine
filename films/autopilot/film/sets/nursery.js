@@ -527,7 +527,8 @@
       // a downpipe
       ITEMS.filter(i => i.kind === 'pipe').forEach(p => { g.fillStyle = '#26292C'; g.fillRect(X(p.u) - 0.05 * pxm, Y(EAVES), 0.1 * pxm, EAVES * pxm); g.fillStyle = 'rgba(255,255,255,0.12)'; g.fillRect(X(p.u) - 0.03 * pxm, Y(EAVES), 0.015 * pxm, EAVES * pxm); });
     }
-    return { LEN, EAVES, RIDGE: RIDGE0, TOP, PLINTH, PANEL, COLORS, ITEMS, ENTRANCE, NOTICE, LOCK, A, paintRaw, ctx, taper };
+    function brickWall(g, x, y, w, h, pxm, u0) { g.save(); g.fillStyle = brickPattern(g, pxm); g.translate(x - (((u0 || 0) * pxm) % (0.225 * 8 * pxm)), y); g.fillRect(0, 0, w + 0.225 * 8 * pxm, h); g.restore(); }
+    return { brickWall, LEN, EAVES, RIDGE: RIDGE0, TOP, PLINTH, PANEL, COLORS, ITEMS, ENTRANCE, NOTICE, LOCK, A, paintRaw, ctx, taper };
   })();
 
   // a sheet of exterior plywood: pale, its grain running long, its edges darker, screwed on at 15 cm; fresh, so it glows
@@ -1568,7 +1569,7 @@
   const PLAYV = (() => {
     const F = 1250, CX = 960, CY = 600, CAM = { x: 33.2, y: 0.95, z: -4.2 };
     const cam = mkCam({ x: CAM.x, y: CAM.y, z: CAM.z, yaw: Math.PI / 2 - 0.05, pitch: 0.02, f: F, cx: CX, cy: CY });
-    const SD = [Math.cos(-0.2), Math.sin(-0.2)], ELEV = 0.045;
+    const SD = [Math.cos(-0.2), Math.sin(-0.2)], ELEV = 0.045, SHE = 0.085;   // SHE: the elevation the shadows are composed at, so the seats' blades lie on the tarmac in frame
     const sunScr = (() => { const q = cam.proj(cam.cs(CAM.x + SD[0] * 900, CAM.y + 900 * ELEV, CAM.z + SD[1] * 900)); return q; })();
     const hz = cam.proj(cam.cs(CAM.x + 900, CAM.y, CAM.z))[1];
     function world(g, tod) {
@@ -1581,17 +1582,17 @@
       if (!dusk) { g.save(); g.globalCompositeOperation = 'screen'; g.translate(sunScr[0], hz); g.scale(1, 0.2); g.fillStyle = LC.rad(g, 0, 0, 0, 800, [[0, '#FFC27E', 0.62], [0.4, '#E89A5E', 0.18], [1, '#E89A5E', 0]]); g.fillRect(-900, -100, 1800, 3000); g.restore(); }
       // a painted ring on the playground, worn: the low sun skims it
       { const pts = []; for (let i = 0; i < 64; i++) { const a = i / 64 * TAU; pts.push([36.4 + Math.cos(a) * 1.4, 0.001, -6.4 + Math.sin(a) * 1.4]); } g.strokeStyle = dusk ? 'rgba(160,150,150,0.12)' : 'rgba(236,206,170,0.28)'; g.lineWidth = 3; const q = cam.clip(pts); if (q.length > 2) { g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.stroke(); } }
-      // the classroom wing on the left: brick, its windows mirrors of the sunset at this grazing angle
-      const wing = [[32.2, 0, 2.2], [46, 0, 2.2], [46, 2.9, 2.2], [32.2, 2.9, 2.2]];
-      g.fillStyle = dusk ? '#2A1E1E' : '#3E2A26'; g.fill(cam.path(wing));
-      g.save(); g.clip(cam.path(wing)); g.fillStyle = 'rgba(0,0,0,0.22)'; for (let y = 0.15; y < 2.9; y += 0.15) g.fill(cam.path([[32.2, y, 2.19], [46, y, 2.19], [46, y + 0.012, 2.19], [32.2, y + 0.012, 2.19]])); g.restore();
-      g.fillStyle = dusk ? '#1A1418' : '#22191A'; g.fill(cam.path([[32.2, 2.9, 2.0], [46, 2.9, 2.0], [46, 3.6, 4.5], [32.2, 3.6, 4.5]]));
-      [[34.0, 36.4], [38.2, 40.6], [42.4, 44.8]].forEach(([a, b]) => { const wq = [[a, 0.9, 2.18], [b, 0.9, 2.18], [b, 2.3, 2.18], [a, 2.3, 2.18]];
-        g.fillStyle = '#C8C4BA'; g.fill(cam.path([[a - 0.07, 0.83, 2.17], [b + 0.07, 0.83, 2.17], [b + 0.07, 2.37, 2.17], [a - 0.07, 2.37, 2.17]]));
-        const gp = cam.path(wq); g.save(); g.clip(gp); const q0 = cam.proj(cam.cs(a, 2.3, 2.18)), q1 = cam.proj(cam.cs(a, 0.9, 2.18));
-        g.fillStyle = LC.lin(g, 0, q0[1], 0, q1[1], dusk ? [[0, '#3A3446'], [0.6, '#7A5050'], [1, '#2A2228']] : [[0, '#6A5E70'], [0.5, '#E8A070'], [0.62, '#FFD8A8'], [1, '#4A3430']]); g.fillRect(0, 0, W, H); g.restore();
-        g.fillStyle = '#C8C4BA'; g.fill(cam.path([[(a + b) / 2 - 0.035, 0.9, 2.17], [(a + b) / 2 + 0.035, 0.9, 2.17], [(a + b) / 2 + 0.035, 2.3, 2.17], [(a + b) / 2 - 0.035, 2.3, 2.17]])); });
-      if (!dusk) { g.fillStyle = 'rgba(232,150,92,0.55)'; g.fill(cam.path([[32.2, 2.86, 2.17], [46, 2.86, 2.17], [46, 2.9, 2.17], [32.2, 2.9, 2.17]])); }
+      // the classroom wing on the left: brick (mapped onto its wall), its windows mirrors of the sunset at this grazing angle
+      { const pxm = 120, U0 = 32.2, U1 = 46, el = scratch('plWing', Math.ceil((U1 - U0) * pxm), Math.ceil(2.9 * pxm)), X = u => (u - U0) * pxm, Y = y => (2.9 - y) * pxm;
+        el.fillStyle = MURAL.brickFill ? MURAL.brickFill(el, pxm) : '#6E3828'; el.save(); el.fillStyle = (() => { const pat = (function () { const tmp = OTM.makeCanvas(8, 8); return el.createPattern(tmp, 'repeat'); })(); return '#5A3024'; })(); el.restore();
+        MURAL.brickWall(el, 0, 0, (U1 - U0) * pxm, 2.9 * pxm, pxm, U0);
+        el.fillStyle = 'rgba(60,40,44,0.35)'; el.fillRect(0, 0, el.canvas.width, el.canvas.height);
+        [[34.0, 36.4], [38.2, 40.6], [42.4, 44.8]].forEach(([a2, b2]) => { el.fillStyle = '#C8C4BA'; el.fillRect(X(a2 - 0.07), Y(2.37), (b2 - a2 + 0.14) * pxm, 1.54 * pxm);
+          el.fillStyle = LC.lin(el, 0, Y(2.3), 0, Y(0.9), dusk ? [[0, '#3A3446'], [0.6, '#7A5050'], [1, '#2A2228']] : [[0, '#6A5E70'], [0.5, '#E8A070'], [0.62, '#FFD8A8'], [1, '#4A3430']]); el.fillRect(X(a2), Y(2.3), (b2 - a2) * pxm, 1.4 * pxm);
+          el.fillStyle = '#C8C4BA'; el.fillRect(X((a2 + b2) / 2 - 0.035), Y(2.3), 0.07 * pxm, 1.4 * pxm); el.fillStyle = '#9A9488'; el.fillRect(X(a2 - 0.1), Y(0.9), (b2 - a2 + 0.2) * pxm, 0.06 * pxm); });
+        if (!dusk) { el.fillStyle = 'rgba(232,150,92,0.55)'; el.fillRect(0, 0, el.canvas.width, 0.04 * pxm); }
+        mapWall(g, cam, el.canvas, U0, U1, 0, 2.9, pxm, 6, 2.2);
+        g.fillStyle = dusk ? '#1A1418' : '#22191A'; g.fill(cam.path([[32.2, 2.9, 2.0], [46, 2.9, 2.0], [46, 3.6, 4.5], [32.2, 3.6, 4.5]])); }
       // the fence along the far side, and the swings: dark against the sun, their copper edges
       const sw = swingParts(39.6, -1.9, 3.2, 2.3, -Math.PI / 2 + 0.06);
       g.fillStyle = '#16131A';
@@ -1600,9 +1601,9 @@
       // the long shadows: legs, chains, seats, fence; all toward us
       if (!dusk) { const sh = scratch('plSh'); sh.fillStyle = DUSK.shadow;
         const sq = (a, b, w) => sh.fill(cam.path([[a[0], 0, a[2] - w], [b[0], 0, b[2] - w], [b[0], 0, b[2] + w], [a[0], 0, a[2] + w]]));
-        sw.bars.forEach(([p, q, w]) => sq(p[1] < 0.01 ? p : shadowPt(p, SD, ELEV, 14), q[1] < 0.01 ? q : shadowPt(q, SD, ELEV, 14), w * 1.4));
-        sw.seats.forEach(st => sh.fill(cam.path(st.map(p => shadowPt(p, SD, ELEV, 14)))));
-        for (let x = 33.6; x < 47; x += 0.4) sq([x, 0, -9], shadowPt([x, 1.1, -9], SD, ELEV, 14), 0.03);
+        sw.bars.forEach(([p, q, w]) => sq(p[1] < 0.01 ? p : shadowPt(p, SD, SHE, 16), q[1] < 0.01 ? q : shadowPt(q, SD, SHE, 16), w * 1.4));
+        sw.seats.forEach(st => sh.fill(cam.path(st.map(p => shadowPt(p, SD, SHE, 16)).map((p, i) => i < 2 ? [p[0], 0, p[2] - 0.04] : [p[0] - 0.5, 0, p[2] + 0.04]))));
+        for (let x = 33.6; x < 47; x += 0.4) sq([x, 0, -9], shadowPt([x, 1.1, -9], SD, SHE, 16), 0.03);
         g.save(); g.globalAlpha = 0.82; g.drawImage(LC.blurred(sh.canvas, 1.5, false), 0, 0); g.restore(); }
       const swp = new Path2D(); { const tmp = scratch('plSw'); tmp.fillStyle = '#16131A'; sw.bars.forEach(([p, q, w]) => bar3(tmp, cam, p, q, w)); sw.seats.forEach(st => tmp.fill(cam.path(st))); g.drawImage(tmp.canvas, 0, 0);
         if (!dusk) { const r = scratch('plRim'); r.drawImage(tmp.canvas, 0, 0); r.globalCompositeOperation = 'source-in'; r.fillStyle = '#F2A35E'; r.fillRect(0, 0, W, H); r.globalCompositeOperation = 'destination-out'; r.drawImage(tmp.canvas, -2.5, 1.2); g.drawImage(r.canvas, 0, 0); } }

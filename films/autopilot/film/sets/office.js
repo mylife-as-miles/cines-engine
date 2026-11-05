@@ -360,6 +360,9 @@
   }
   // for a quad in strong perspective: horizontal slices, each affine
   function texQuadSlices(g, img, q, n, alpha) {
+    // overlapping slices must be laid opaque: at partial alpha the overlaps would double up into stripes
+    if (alpha != null && alpha < 0.999) { const tg = scratch('of-tqs', g.canvas.width, g.canvas.height); tg.setTransform(g.getTransform()); texQuadSlices(tg, img, q, n);
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = alpha; g.drawImage(tg.canvas, 0, 0); g.restore(); return; }
     const [a, b, c2, d] = q, w = img.width, h = img.height, L = (p, r, t) => [p[0] + (r[0] - p[0]) * t, p[1] + (r[1] - p[1]) * t];
     for (let i = 0; i < n; i++) { const t0 = i / n, t1 = (i + 1) / n, A0 = L(d, a, 1 - t0), B0 = L(c2, b, 1 - t0), A1 = L(d, a, 1 - t1), B1 = L(c2, b, 1 - t1), te = Math.min(1, t1 + 0.6 / n), A2 = L(d, a, 1 - te), B2 = L(c2, b, 1 - te);
       g.save(); g.beginPath(); g.moveTo(A0[0], A0[1]); g.lineTo(B0[0], B0[1]); g.lineTo(B2[0], B2[1]); g.lineTo(A2[0], A2[1]); g.closePath(); g.clip();
@@ -608,7 +611,7 @@
         bg.save(); bg.globalCompositeOperation = 'screen'; const qc = [(q[0][0] + q[2][0]) / 2, (q[0][1] + q[2][1]) / 2]; bg.fillStyle = LC.rad(bg, qc[0], qc[1], 0, 520, [[0, '#CFE0E4', 0.22], [1, '#CFE0E4', 0]]); bg.fillRect(qc[0] - 520, qc[1] - 520, 1040, 1040); bg.restore();
         const tp = confTable(bg, cam);
         // the table's glass gives back the slide and the beam
-        const mc = mirrorCam(cam, [0, CR.tableY, 0], [0, 1, 0]); bg.save(); bg.clip(tp); bg.globalAlpha = 0.55; const mq = slideQuad(mc); texQuadSlices(bg, tex, [mq[0], mq[1], mq[2], mq[3]], 20); bg.restore();
+        const mc = mirrorCam(cam, [0, CR.tableY, 0], [0, 1, 0]); bg.save(); bg.clip(tp); const mq = slideQuad(mc); texQuadSlices(bg, tex, [mq[0], mq[1], mq[2], mq[3]], 20, 0.55); bg.restore();
         // papers and a pen on the glass, a water glass
         box3(bg, cam, [-1.2, 0.751, -0.4], [-0.9, 0.754, -0.18], { top: '#E8ECE8' }); box3(bg, cam, [0.6, 0.751, 0.2], [0.9, 0.754, 0.42], { top: '#DCE2DE' });
       }), 0, 0);
@@ -679,7 +682,7 @@
       g.save(); g.clip(tp);
       const mc = mirrorCam(cam, [0, CR.tableY, 0], [0, 1, 0]);
       g.drawImage(cached(c, 'table|refl', rg => { const tex = OTM.makeCanvas(1280, 720); slideTex(tex.getContext('2d'), 1280, 720); const mq = slideQuad(mc);
-        rg.globalAlpha = 0.5; texQuadSlices(rg, tex, [mq[0], mq[1], mq[2], mq[3]], 16); rg.globalAlpha = 1;
+        texQuadSlices(rg, tex, [mq[0], mq[1], mq[2], mq[3]], 16, 0.5);
         for (let x = -3.6; x < 3.0; x += 1.3) { fill3(rg, mc, [[x - 0.02, 0.85, 2.392], [x, 0.85, 2.392], [x, 2.3, 2.392], [x - 0.02, 2.3, 2.392]], 'rgba(246,242,230,0.6)'); } }), 0, 0);
       if (s.reflect) {
         const tb = bboxOf(scr3(cam, [[-1.9, CR.tableY, -0.6], [1.9, CR.tableY, -0.6], [1.9, CR.tableY, 0.6], [-1.9, CR.tableY, 0.6]]));
