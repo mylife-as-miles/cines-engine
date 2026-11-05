@@ -710,7 +710,6 @@
       if (s.bag !== false) hallBag(g, cam);
       hallBeams(g, cam, 1 + 1.5 * door);
       hallE(c, cam, door);
-      this._live = d;
     },
     front(c, t, s) { hallDust(c.g, hallViewCam, t, 70, 'hallDust'); },
     anchors: (() => { const cam = hallViewCam, p = (x, y, z) => cam.p(x, y, z).slice(0, 2).map(Math.round);
@@ -802,7 +801,7 @@
     Q([[-2.05, 0.9, ZB - 0.45], [-1.15, 0.9, ZB - 0.45], [-1.15, 0.92, ZB - 0.02], [-2.05, 0.92, ZB - 0.02]], '#8C7A62');
     Q([[-2.05, 0.92, ZB - 0.25], [-1.15, 0.92, ZB - 0.25], [-1.15, 2.0, ZB - 0.25], [-2.05, 2.0, ZB - 0.25]], '#2F3B3B');
     [1.3, 1.68].forEach(y => { Q([[-2.05, y, ZB - 0.25], [-1.15, y, ZB - 0.25], [-1.15, y + 0.025, ZB - 0.25], [-2.05, y + 0.025, ZB - 0.25]], '#7E6C55');
-      for (let i = 0; i < 5; i++) { const x = -1.98 + i * 0.16; const c0 = cam.p(x + 0.06, y + 0.14, ZB - 0.27), k = kAt(cam, x, y, ZB - 0.27); g.fillStyle = i % 2 ? '#5E6863' : '#6B7570'; g.beginPath(); g.ellipse(c0[0], c0[1], 0.07 * k, 0.12 * k, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = 'rgba(70,80,78,0.35)'; g.beginPath(); g.ellipse(c0[0] + 0.01 * k, c0[1], 0.045 * k, 0.08 * k, 0, 0, Math.PI * 2); g.fill(); } });
+      for (let i = 0; i < 4; i++) { const x = -1.96 + i * 0.2; const c0 = cam.p(x + 0.06, y + 0.13, ZB - 0.27), k = kAt(cam, x, y, ZB - 0.27); g.fillStyle = i % 2 ? '#46524F' : '#505C58'; g.beginPath(); g.ellipse(c0[0], c0[1], 0.065 * k, 0.11 * k, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = 'rgba(30,38,36,0.4)'; g.beginPath(); g.ellipse(c0[0] + 0.01 * k, c0[1], 0.04 * k, 0.075 * k, 0, 0, Math.PI * 2); g.fill(); } });
     // the clock above the table (7:58), small; its own view is SETS.kitchen.views.clock
     clockFace(g, cam.p(0.05, 1.98, ZB - 0.02), 0.15 * kAt(cam, 0.05, 1.98, ZB), 7 + 58 / 60, 0, { tiny: true });
     // a pendant over the table (off)
@@ -811,6 +810,10 @@
       g.fillStyle = 'rgba(232,206,160,0.5)'; g.fillRect(c0[0] - 0.12 * k, c0[1] + 0.02 * k, 0.07 * k, 0.012 * k); }
     // chairs behind the table: Emily's (a booster cushion on it) and the empty one at the right end, pulled out
     chair(g, cam, -0.3, 2.12, 0, '#5A402A', true); chair(g, cam, 0.62, 2.05, -0.35, '#4E3826', false);
+  }
+  // the table and the breakfast things: in front of Emily and Daniel (front layer, under the glass)
+  function tableTop(g, cam, s) {
+    const Q = (pts, col) => Qc(g, cam, pts, col);
     // the table: oak, the sun lying warm across its left half; the near edge in its own shade
     Q([[TBL.x0, TBL.y, TBL.z0], [TBL.x1, TBL.y, TBL.z0], [TBL.x1, TBL.y, TBL.z1], [TBL.x0, TBL.y, TBL.z1]], '#5A422C');
     Q([[TBL.x0, TBL.y + 0.001, 1.22], [0.12, TBL.y + 0.001, 1.22], [0.4, TBL.y + 0.001, TBL.z1], [TBL.x0, TBL.y + 0.001, TBL.z1]], '#B98A56');
@@ -860,16 +863,18 @@
     cams: TABLE_CAMS,
     back(c, t, s) {
       s = s || {}; const fr = TABLE_CAMS[s.frame] ? s.frame : 'wide', cam = TABLE_CAMS[fr];
-      drawBig(c, bigCache(c, `kitchen:table:${fr}:${s.crustCut ? 1 : 0}${s.mug === false ? 0 : 1}${s.cereal === false ? 0 : 1}`, g => { g.fillStyle = '#2A3434'; g.fillRect(-M, -M, W + 2 * M, H + 2 * M); tableInterior(g, cam, s); }));
+      drawBig(c, bigCache(c, `kitchen:table:${fr}`, g => { g.fillStyle = '#2A3434'; g.fillRect(-M, -M, W + 2 * M, H + 2 * M); tableInterior(g, cam, s); }));
       const E = c.em; E.save(); E.fillStyle = 'rgba(232,180,110,0.6)'; const a = cam.p(1.3, 2.0, 5.3), b = cam.p(1.8, 0, 5.3); E.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); E.restore();
     },
     front(c, t, s) {
       s = s || {}; const fr = TABLE_CAMS[s.frame] ? s.frame : 'wide', cam = TABLE_CAMS[fr], g = c.g;
       const glassPts = [[WIN.x0, WIN.y1, 0], [WIN.x1, WIN.y1, 0], [WIN.x1, WIN.y0, 0], [WIN.x0, WIN.y0, 0]];
       const glass = LC.pathPts(glassPts.map(p => cam.p(p)));
+      // the table and the breakfast things, between the lens and the people at it
+      drawBig(c, bigCache(c, `kitchen:tableTop:${fr}:${s.crustCut ? 1 : 0}${s.mug === false ? 0 : 1}${s.cereal === false ? 0 : 1}`, gg => tableTop(gg, cam, s)));
       // the glass gives back the garden (screen: it shows most where the room behind is dark), a breath of sky at the top
       const refl = bigCache(c, 'kitchen:tableRefl', gg => gg.drawImage(gardenReflection('morning'), -M, -M));
-      g.save(); g.clip(glass); g.globalCompositeOperation = 'screen'; g.globalAlpha = s.reflect == null ? 0.36 : s.reflect; g.drawImage(refl, -M, -M); g.restore();
+      g.save(); g.clip(glass); g.globalCompositeOperation = 'screen'; g.globalAlpha = s.reflect == null ? (fr === 'close' ? 0.28 : 0.36) : s.reflect; g.drawImage(refl, -M, -M); g.restore();
       // the static front: glare, dust, the window's frame and the brick around it
       drawBig(c, bigCache(c, 'kitchen:tableFront:' + fr, gg => {
         LC.glare(gg, glass, { x: 700, y: 400, angle: -1.02, color: '#F4F6F0', bands: [{ d: -330, w: 150, a: 0.05 }, { d: -240, w: 22, a: 0.08 }, { d: 260, w: 240, a: 0.035 }, { d: 380, w: 30, a: 0.05 }] });
@@ -946,17 +951,19 @@
     g.restore(); return p;
   };
   const ellipseOn = (g, cam, x, z, r, n) => { const pts = []; for (let i = 0; i < (n || 48); i++) { const a = i / (n || 48) * Math.PI * 2; pts.push(cam.p(x + Math.cos(a) * r, 0.002, z + Math.sin(a) * r)); } return LC.pathPts(pts); };
-  function plateScene(g, cam, crust) {
+  function plateScene(g, cam, crust, part) {
+    const px = 0.04, pz = 0.2;
+    if (part !== 'toast') {
     g.fillStyle = '#2A1F17'; g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
     oak(g, cam, -0.8, 0.8, -0.2, 1.2, false);
     // the sun from the left lies across the table in a long warm slant
     { const pl = LC.layer(W + 2 * M, H + 2 * M); pl.translate(M, M); const q = clipPts(cam, [[-0.8, 0.001, -0.2], [0.05, 0.001, -0.2], [0.42, 0.001, 1.2], [-0.8, 0.001, 1.2]]);
       pl.fillStyle = 'rgba(255,214,150,0.42)'; pl.fill(LC.pathPts(q)); g.save(); g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(pl.canvas, 6, false), -M, -M); g.restore(); }
     // the plate: rim, well, a soft shadow cast to the right
-    const px = 0.04, pz = 0.2;
     { const sh = ellipseOn(g, cam, px + 0.03, pz + 0.012, 0.135); g.fillStyle = 'rgba(30,18,10,0.45)'; g.fill(sh); }
     g.fillStyle = '#E6E4DA'; g.fill(ellipseOn(g, cam, px, pz, 0.13)); g.fillStyle = '#D2D1C6'; g.fill(ellipseOn(g, cam, px, pz, 0.098));
     g.strokeStyle = 'rgba(255,250,236,0.8)'; g.lineWidth = 2; g.stroke(ellipseOn(g, cam, px, pz, 0.128));
+    if (part === 'static') return null; }
     // the toast: a slice with its domed top crust (the far edge), a crust all round; 'crust' 0..1 cuts the domed crust off
     const T = (u, v) => cam.p(px - 0.066 + u * 0.132, 0.009, pz - 0.06 + v * 0.112);           // u across, v away from the lens
     const outline = (inset) => { const pts = [T(inset, inset), T(1 - inset, inset), T(1 - inset, 0.86)]; for (let i = 0; i <= 14; i++) { const u = 1 - inset - (1 - 2 * inset) * i / 14, ang = Math.PI * (u - inset) / (1 - 2 * inset); pts.push(T(u + 0.03 * Math.sin(ang * 2) * (u < 0.5 ? -1 : 1), 0.86 + (0.3 - inset * 1.4) * Math.pow(Math.sin(ang), 0.7))); } pts.push(T(inset, 0.86)); return pts; };
@@ -979,8 +986,9 @@
   const plateView = {
     cam: plateCam,
     back(c, t, s) {
-      s = s || {}; const cr = Math.round(clamp(s.crust || 0, 0, 1) * 24) / 24;
-      drawBig(c, bigCache(c, 'kitchen:plate:' + cr, g => plateScene(g, plateCam, cr)));
+      s = s || {};
+      drawBig(c, bigCache(c, 'kitchen:plate', g => plateScene(g, plateCam, 0, 'static')));
+      plateScene(c.g, plateCam, clamp(s.crust || 0, 0, 1), 'toast');      // the toast is live (the knife cuts it on ones)
     },
     front(c, t, s) {      // Emily's glass of milk in the near left, out of focus: its clear rim and the milk's bright body
       drawBig(c, bigCache(c, 'kitchen:plateFront', g => { const L = LC.layer(W + 2 * M, H + 2 * M); L.translate(M, M);
@@ -1039,12 +1047,14 @@
 
   // ---- the travel mug on the counter by the garden window (C1's light): steel, the lid going on ----
   const MUG = { cx: 900, top: 300, bot: 860, r: 200 };
-  function mugEnv() { return LC.env(512, 256, (e, X, Y) => {
-    e.fillStyle = '#2F3836'; e.fillRect(0, 0, 512, 256); e.fillStyle = LC.lin(e, 0, 0, 0, Y(30), [[0, '#8C9893'], [1, '#56625E']]); e.fillRect(0, 0, 512, Y(30));
+  function mugEnv() { return LC.env(512, 256, (e, X, Y) => {      // brushed steel: the room it holds is soft and low in contrast
+    e.fillStyle = '#4A5452'; e.fillRect(0, 0, 512, 256); e.fillStyle = LC.lin(e, 0, 0, 0, Y(30), [[0, '#9AA6A1'], [1, '#64706C']]); e.fillRect(0, 0, 512, Y(30));
     const R = (a0, a1, t1, t0, c) => { e.fillStyle = c; e.fillRect(X(a0), Y(t1), X(a1) - X(a0), Y(t0) - Y(t1)); };
-    R(-180, -100, 70, 0, '#E6ECE8'); R(100, 180, 70, 0, '#E6ECE8'); R(-180, 180, 0, -6, '#6E7B76');                    // the garden window behind it
-    R(-30, 30, 25, -40, '#1A2120'); R(-12, 12, 20, -38, '#7A6A58');                                                   // the room behind the lens: the table, the doorway
-    R(10, 22, 18, -10, P.amberLight); e.fillStyle = LC.lin(e, 0, Y(-6), 0, 256, [[0, '#7D6E5E'], [1, '#3A3029']]); e.fillRect(0, Y(-6), 512, 256); }); }
+    R(-180, -110, 70, 0, '#C9D2CE'); R(110, 180, 70, 0, '#C9D2CE'); R(-180, 180, 0, -6, '#6E7B76');                    // the garden window behind it
+    R(-30, 30, 25, -40, '#38423F'); R(-12, 12, 20, -38, '#6E6658');                                                   // the room behind the lens: the table, the doorway
+    R(10, 22, 18, -10, '#B98A5A'); e.fillStyle = LC.lin(e, 0, Y(-6), 0, 256, [[0, '#7D6E5E'], [1, '#3A3029']]); e.fillRect(0, Y(-6), 512, 256); }); }
+  const mugBody = () => { const t = MUG.r, b = MUG.r * 0.86, y0 = MUG.top, y1 = MUG.bot + 50; return LC.rquad([[MUG.cx - t, y0], [MUG.cx + t, y0], [MUG.cx + b, y1], [MUG.cx - b, y1]], 26); };
+  const mugR = y => MUG.r * (1 - 0.14 * clamp((y - MUG.top) / (MUG.bot + 50 - MUG.top), 0, 1));
   const mugView = {
     back(c, t, s) {
       s = s || {}; const g = c.g, cap = clamp(s.cap == null ? 1 : s.cap, 0, 1);
@@ -1056,11 +1066,14 @@
         gg.fillStyle = LC.lin(gg, 0, 904, 0, H, [[0, '#76675A'], [1, '#2B2622']]); gg.fillRect(-M, 904, W + 2 * M, H - 904 + M);
         gg.fillStyle = 'rgba(6,9,9,0.6)'; gg.beginPath(); gg.ellipse(MUG.cx, 912, MUG.r * 1.15, 18, 0, 0, Math.PI * 2); gg.fill();
         // the steel body
-        const body = LC.rrect(MUG.cx - MUG.r, MUG.top, MUG.r * 2, MUG.bot - MUG.top + 50, 24);
-        LC.chrome(gg, { x: MUG.cx - MUG.r, y: MUG.top, w: MUG.r * 2, h: MUG.bot - MUG.top + 50 }, (x, y) => { const u = (x - MUG.cx) / MUG.r; if (Math.abs(u) >= 1) return null; const nz = Math.sqrt(1 - u * u); return [u, 0.04, nz]; },
-          LC.sampler(mugEnv()), { ss: 2, gain: 0.95, fresnel: 0.3, clip: body });
-        gg.save(); gg.clip(body); gg.fillStyle = 'rgba(10,14,14,0.55)'; gg.fillRect(MUG.cx - MUG.r, MUG.bot - 40, MUG.r * 2, 30); gg.restore();      // the grip band
-        gg.strokeStyle = 'rgba(236,242,238,0.5)'; gg.lineWidth = 3; gg.stroke(body);
+        const body = mugBody();
+        const steel = LC.chrome(LC.layer(W + 2 * M, H + 2 * M), { x: MUG.cx - MUG.r, y: MUG.top, w: MUG.r * 2, h: MUG.bot - MUG.top + 50 }, (x, y) => { const r = mugR(y), u = (x - MUG.cx) / r; if (Math.abs(u) >= 1) return null; const nz = Math.sqrt(1 - u * u); return [u, 0.14 * nz, nz]; },
+          LC.sampler(mugEnv()), { ss: 2, gain: 0.95, fresnel: 0.25 });
+        // brushed: the reflections smear down the steel (a vertical blur of the chrome, once)
+        const br = OTM.makeCanvas(steel.width, steel.height), bx = br.getContext('2d'); bx.drawImage(steel, 0, 0); for (let i = 1; i <= 6; i++) { bx.globalAlpha = 0.22; bx.drawImage(steel, 0, i * 3); bx.drawImage(steel, 0, -i * 3); }
+        gg.save(); gg.clip(body); gg.drawImage(br, MUG.cx - MUG.r, MUG.top); gg.restore();
+        gg.save(); gg.clip(body); gg.fillStyle = '#151A1A'; gg.fillRect(MUG.cx - MUG.r, MUG.bot - 60, MUG.r * 2, 46); gg.fillStyle = 'rgba(200,214,210,0.18)'; gg.fillRect(MUG.cx - MUG.r, MUG.bot - 60, MUG.r * 2, 3); gg.restore();      // the rubber grip band
+        gg.strokeStyle = 'rgba(236,242,238,0.45)'; gg.lineWidth = 3; gg.stroke(body);
       }));
       // the lid: up and off (cap 0, steam rising), lowering and turning on (cap 1)
       const lift = (1 - sstep(cap, 0, 0.8)) * 190, turn = sstep(cap, 0.6, 1);
@@ -1070,7 +1083,9 @@
       g.save(); g.translate(MUG.cx, ly + 30); g.rotate(tilt); g.translate(-MUG.cx, -(ly + 30));
       if (cap < 0.98) { g.fillStyle = '#0A0C0C'; g.beginPath(); g.ellipse(MUG.cx, ly + 62, MUG.r - 6, 16, 0, 0, Math.PI * 2); g.fill(); }        // its underside, seen as it hangs above
       g.fillStyle = '#0F1212'; g.fill(LC.rrect(MUG.cx - MUG.r - 4, ly, MUG.r * 2 + 8, 64, 16));
-      g.fillStyle = '#1C2121'; g.fill(LC.rrect(MUG.cx - 52, ly - 22, 104, 26, 9)); g.fillStyle = '#2A3030'; g.fill(LC.rrect(MUG.cx - 30, ly - 20, 60, 8, 3));
+      g.fillStyle = '#1C2121'; g.beginPath(); g.ellipse(MUG.cx, ly + 2, MUG.r - 14, 14, 0, Math.PI, Math.PI * 2); g.fill();                       // the lid's domed top
+      g.fillStyle = '#2A3232'; g.fill(LC.rrect(MUG.cx - 70, ly - 12, 140, 16, 7)); g.fillStyle = '#0A0C0C'; g.fill(LC.rrect(MUG.cx + 10, ly - 9, 46, 9, 4));   // the sip slot and its slider
+      g.fillStyle = 'rgba(214,226,222,0.5)'; g.fillRect(MUG.cx - 66, ly - 11, 60, 2);
       g.strokeStyle = 'rgba(220,230,225,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(MUG.cx - MUG.r + 12, ly + 2); g.lineTo(MUG.cx + MUG.r - 12, ly + 2); g.stroke();
       for (let i = 0; i < 11; i++) { const x = MUG.cx - MUG.r + 20 + ((i * 36 + turn * 70) % (MUG.r * 2 - 40)); g.fillStyle = 'rgba(200,214,210,0.16)'; g.fillRect(x, ly + 16, 3, 40); }   // the grip ridges turn with it
       g.restore();
@@ -1125,7 +1140,7 @@
   // per-pixel map from the kettle's face to the reflected direction, at quarter resolution, for warping figures into it
   let _kcMap = null;
   function kcMap() {
-    if (_kcMap) return _kcMap; const s = 4, x0 = KC.cx - KC.r, y0 = KC.top, w = Math.ceil(KC.r * 2 / s), h = Math.ceil((KC.bot - KC.top) / s), m = new Float32Array(w * h * 2).fill(NaN);
+    if (_kcMap) return _kcMap; const s = 2, x0 = KC.cx - KC.r, y0 = KC.top, w = Math.ceil(KC.r * 2 / s), h = Math.ceil((KC.bot - KC.top) / s), m = new Float32Array(w * h * 2).fill(NaN);
     for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const N = kcNormal(x0 + i * s + s / 2, y0 + j * s + s / 2); if (!N) continue; const vn = -N[2], rx = -2 * vn * N[0], ry = -2 * vn * N[1], rz = -1 - 2 * vn * N[2]; m[(j * w + i) * 2] = Math.atan2(rx, rz); m[(j * w + i) * 2 + 1] = Math.asin(clamp(ry, -1, 1)); }
     return (_kcMap = { s, x0, y0, w, h, m });
   }
@@ -1172,6 +1187,12 @@
   // demo stand-ins only (the sequences draw RIG's people): flat figures at a view's anchors, rimmed from its light
   function demoFigures(c, v, A) {
     const g = c.g, L = v.light; A = A || v.anchors;
+    if (A.emilyHead && window.RIG && RIG.draw) {
+      const lt = { x: L.x, y: L.y, color: L.color, back: 0.3 };
+      const d = RIG.draw(g, 'daniel', { at: A.danielFeet, scale: A.danielPxPerM, view: 'three', facing: -1, outfit: 'office', collar: 'crooked', face: 'smile', lean: 0.35, head: { nod: 0.2, turn: 0.1, tilt: 0 } }, { light: lt });
+      RIG.draw(g, 'emily', { at: A.emilySeat, scale: A.emilyPxPerM, view: 'front', body: 'sit', seat: 0.6, armR: 'desk', armL: 'desk', face: 'solemn', head: { nod: 0.15, turn: 0.1, tilt: 0 } }, { light: lt });
+      return;
+    }
     const fig = (cx, cy, k, parts) => { parts.forEach(([pts, col]) => { const p = LC.smooth(pts.map(([x, y]) => [cx + x * k, cy - y * k])); g.fillStyle = col; g.fill(p); OTM.silhouette(g, p, { fill: false, light: { x: L.x, y: L.y }, rimColor: L.color, rimW: 2.2, spread: 1.1 }); }); };
     if (A.emilyHead) {   // Emily on her booster, elbows on the table; Daniel standing beside her
       const k = A.emilyPxPerM, [ex, ey] = A.emilySeat;
@@ -1203,7 +1224,8 @@
       { name: 'pour: cereal, through the milk bottle', draw(c, t) { const s = { pour: 1, fill: clamp(t / 3, 0, 1) }; pourView.back(c, t, s); pourView.front(c, t, s); } },
       { name: 'mug: the travel mug, capped', draw(c, t) { const s = { cap: clamp((t - 0.3) / 1.2, 0, 1) }; mugView.back(c, t, s); mugView.front(c, t, s); } },
       { name: 'clock: 7:58', draw(c, t) { clockView.back(c, t, {}); clockView.front(c, t, {}); } },
-      { name: 'kettle: the room in the chrome (a face in it)', draw(c, t) { kettleView.back(c, t, {}); kettleView.reflect(c, {}, (g, cam) => { g.fillStyle = '#8C624C'; g.beginPath(); g.ellipse(cam.cx + 30, cam.cy - 40, 120, 150, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = '#15100D'; g.beginPath(); g.ellipse(cam.cx + 30, cam.cy - 150, 125, 60, 0, Math.PI, Math.PI * 2); g.fill(); g.fillStyle = '#8FA4B0'; g.fillRect(cam.cx - 140, cam.cy + 100, 340, 300); }); kettleView.front(c, t, {}); } },
+      { name: 'kettle: the room in the chrome (a face in it)', draw(c, t) { kettleView.back(c, t, {}); kettleView.reflect(c, {}, (g, cam) => {
+        if (window.RIG && RIG.face) { RIG.face(g, 'daniel', { at: [cam.cx + 20, cam.cy + 40], size: 380, view: 'front', face: 'tired', outfit: 'night', head: { turn: 0.05, nod: 0.12, tilt: 0 } }, { light: { x: cam.cx - 400, y: cam.cy - 300, color: '#DCE8E4', back: 0.2 } }); return; } g.fillStyle = '#8C624C'; g.beginPath(); g.ellipse(cam.cx + 30, cam.cy - 40, 120, 150, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = '#15100D'; g.beginPath(); g.ellipse(cam.cx + 30, cam.cy - 150, 125, 60, 0, Math.PI, Math.PI * 2); g.fill(); g.fillStyle = '#8FA4B0'; g.fillRect(cam.cx - 140, cam.cy + 100, 340, 300); }); kettleView.front(c, t, {}); } },
       { name: 'table close: the central light (the collar)', draw(c, t) { const s = { frame: 'close', crustCut: true }; table.back(c, t, s); demoFigures(c, table, table.anchorsFor('close')); table.front(c, t, s); } },
     ],
   };

@@ -73,7 +73,7 @@
   // the bed: headboard, mattress, the duvet (Daniel's side thrown back, Sarah's smooth), two pillows (his dented, hers smooth)
   function bed(g, cam, d, o) {
     o = o || {}; const Q = (pts, col) => Qc(g, cam, pts, col), lit = sstep(d, 0, 1), L = (a, b) => mix(a, b, lit);
-    const hb = L('#0C1314', '#2C3434'), base = L('#0A0F10', '#1E2526'), duv = L('#141E21', '#8C9A9C'), duvShade = L('#0F1719', '#5E6C6E'), sheet = L('#121A1C', '#7A8888'), pil = L('#182326', '#B9C3C2'), pilShade = L('#111A1C', '#7E8A8A');
+    const hb = L('#0C1314', '#2C3434'), base = L('#0A0F10', '#1E2526'), duv = L('#141E21', '#A2B0B2'), duvShade = L('#0F1719', '#5E6C6E'), sheet = L('#0E1517', '#44504F'), pil = L('#182326', '#C8D2D0'), pilShade = L('#111A1C', '#7E8A8A'), pilHis = L('#121B1D', '#7C8888');
     Q([[BED.x0 - 0.04, 0, BED.z0 - 0.04], [BED.x1 + 0.04, 0, BED.z0 - 0.04], [BED.x1 + 0.04, 1.12, BED.z0 - 0.04], [BED.x0 - 0.04, 1.12, BED.z0 - 0.04]], hb);
     Q([[BED.x0, 0.12, BED.z1], [BED.x1, 0.12, BED.z1], [BED.x1, BED.top - 0.04, BED.z1], [BED.x0, BED.top - 0.04, BED.z1]], base);
     Q([[BED.x0, 0.12, BED.z0], [BED.x0, 0.12, BED.z1], [BED.x0, BED.top - 0.04, BED.z1], [BED.x0, BED.top - 0.04, BED.z0]], base);
@@ -81,11 +81,13 @@
     // the bottom sheet, seen where his half of the duvet is thrown back
     Q([[BED.x0, BED.top - 0.01, BED.z0], [BED.x1, BED.top - 0.01, BED.z0], [BED.x1, BED.top - 0.01, BED.z1], [BED.x0, BED.top - 0.01, BED.z1]], sheet);
     // pillows: his (left) dented, hers (right) smooth and plump
-    const pillow = (x0, x1, dent, col, sh) => { const z0 = BED.z0 + 0.06, z1 = BED.z0 + 0.6, y0 = BED.top, y1 = BED.top + (dent ? 0.11 : 0.16);
-      Q([[x0, y0, z1], [x1, y0, z1], [x1 - 0.02, y1, z1 - 0.06], [x0 + 0.02, y1, z1 - 0.06]], sh);
-      Q([[x0 + 0.02, y1, z0 + 0.04], [x1 - 0.02, y1, z0 + 0.04], [x1 - 0.02, y1, z1 - 0.06], [x0 + 0.02, y1, z1 - 0.06]], col);
+    const pillow = (x0, x1, dent, col, sh) => { const z0 = BED.z0 + 0.06, z1 = BED.z0 + 0.6, y0 = BED.top, y1 = BED.top + (dent ? 0.075 : 0.17);
+      const rq = (pts, c2, r) => { const q = clipPts(cam, pts); if (q.length === 4) { g.fillStyle = c2; g.fill(LC.rquad(q, r)); } };
+      const kk = kAt(cam, (x0 + x1) / 2, y1, (z0 + z1) / 2);
+      rq([[x0, y0, z1], [x1, y0, z1], [x1 - 0.02, y1, z1 - 0.06], [x0 + 0.02, y1, z1 - 0.06]], sh, 0.05 * kk);
+      rq([[x0 + 0.02, y1, z0 + 0.04], [x1 - 0.02, y1, z0 + 0.04], [x1 - 0.02, y1, z1 - 0.06], [x0 + 0.02, y1, z1 - 0.06]], col, 0.08 * kk);
       if (dent) Q([[x0 + 0.15, y1 + 0.001, z0 + 0.14], [x1 - 0.15, y1 + 0.001, z0 + 0.16], [x1 - 0.12, y1 + 0.001, z1 - 0.16], [x0 + 0.12, y1 + 0.001, z1 - 0.18]], sh); };
-    pillow(BED.x0 + 0.06, -0.04, true, pil, pilShade); pillow(0.04, BED.x1 - 0.06, false, pil, pilShade);
+    pillow(BED.x0 + 0.06, -0.04, true, pilHis, pilShade); pillow(0.04, BED.x1 - 0.06, false, pil, pilShade);
     // the duvet: smooth over her side from the pillows to the foot; on his side thrown back in a rumpled fold
     const fold = BED.z0 + 1.0;
     Q([[0.0, BED.top + 0.06, BED.z0 + 0.62], [BED.x1 + 0.03, BED.top + 0.06, BED.z0 + 0.62], [BED.x1 + 0.03, BED.top + 0.06, BED.z1 + 0.03], [0.0, BED.top + 0.06, BED.z1 + 0.03]], duv);
@@ -137,7 +139,7 @@
     Q([[WINB.x0, WINB.y1, z], [WINB.x1, WINB.y1, z], [WINB.x1, WINB.y1, z + 0.18], [WINB.x0, WINB.y1, z + 0.18]], mix('#0A1213', '#2A3436', lit));
     // the sill: a deep painted board, its front edge catching the window
     Q([[WINB.x0 - 0.14, WINB.y0 - 0.04, z - 0.1], [WINB.x1 + 0.14, WINB.y0 - 0.04, z - 0.1], [WINB.x1 + 0.14, WINB.y0, z - 0.1], [WINB.x0 - 0.14, WINB.y0, z - 0.1]], mix('#0C1415', '#3A4444', lit));
-    Q([[WINB.x0 - 0.14, WINB.y0, z - 0.1], [WINB.x1 + 0.14, WINB.y0, z - 0.1], [WINB.x1, WINB.y0, z + 0.18], [WINB.x0, WINB.y0, z + 0.18]], mix('#16222A', '#A8B0AA', lit));
+    Q([[WINB.x0 - 0.14, WINB.y0, z - 0.1], [WINB.x1 + 0.14, WINB.y0, z - 0.1], [WINB.x1, WINB.y0, z + 0.18], [WINB.x0, WINB.y0, z + 0.18]], mix('#121C22', '#6A7470', lit));
     // the window frame (white, in contre-jour) round the glass, a central mullion
     const fr = mix('#0F1718', '#5E6A68', lit), fz = z + 0.17, fw = 0.05;
     const R2 = (x0, x1, y0, y1) => Q([[x0, y0, fz], [x1, y0, fz], [x1, y1, fz], [x0, y1, fz]], fr);
@@ -218,11 +220,12 @@
   // =================================================================================================================
   // VIEW: the phone on the bedside table (Q01 5-11): face up, shivering, the screen the only light in the room
   // =================================================================================================================
-  const tableCam = mkCam({ x: -1.0, y: 0.99, z: 0.96, yaw: Math.PI + 0.16, pitch: -0.56, f: 2000, cx: W / 2 + 40, cy: H / 2 + 60 });
+  const tableCam = mkCam({ x: -1.02, y: 0.97, z: 0.92, yaw: Math.PI + 0.15, pitch: -0.58, f: 2550, cx: W / 2 + 10, cy: H / 2 + 40 });
   const PHONE = { x: -1.12, z: 0.27, w: 0.072, l: 0.148, ang: 0.32 };
   const phoneCorners = (o) => { o = o || {}; const ca = Math.cos(PHONE.ang), sa = Math.sin(PHONE.ang), y = TABLE_L.top + 0.009, P3 = (u, v) => [PHONE.x + u * ca - v * sa + (o.dx || 0), y, PHONE.z + u * sa + v * ca + (o.dz || 0)];
-    const hw = PHONE.w / 2 - (o.inset || 0), hl = PHONE.l / 2 - (o.inset || 0); return [P3(-hw, hl), P3(hw, hl), P3(hw, -hl), P3(-hw, -hl)]; };    // tl, tr, br, bl as the screen reads (its top away from us)
+    const hw = PHONE.w / 2 - (o.inset || 0), hl = PHONE.l / 2 - (o.inset || 0); return [P3(hw, -hl), P3(-hw, -hl), P3(-hw, hl), P3(hw, hl)]; };    // tl, tr, br, bl as the screen reads: its top away from us
   const screenLevel = s => { const st = s.screen || 'alarm'; return (st === 'alarm' ? 1 : st === 'lock' ? 0.32 : 0) * (s.glow == null ? 1 : s.glow); };
+  const tableSt = {};
   const table = {
     cam: tableCam,
     back(c, t, s) {
@@ -240,10 +243,10 @@
       g.save(); g.clip(LC.rquad(glass, 28)); imageInQuad(g, ui, glass, 28); g.restore();
       // emissive: the screen blooms
       if (lv > 0) { const E = c.em; E.save(); E.globalAlpha = 0.85 * lv; E.fillStyle = '#DCE8EC'; E.fill(LC.rquad(glass, 28)); E.restore(); }
-      this._glass = glass;
+      tableSt.glass = glass;
     },
     front(c, t, s) {
-      s = s || {}; const g = c.g, glass = this._glass; if (!glass) return; const lv = screenLevel(s);
+      s = s || {}; const g = c.g, glass = tableSt.glass; if (!glass) return; const lv = screenLevel(s);
       const p = LC.rquad(glass, 28);
       // the glass: a sheen, a thumb's smudge, dust lit by its own light
       LC.glare(g, p, { x: (glass[0][0] + glass[2][0]) / 2, y: (glass[0][1] + glass[2][1]) / 2, angle: -0.9, color: '#FFFFFF', bands: [{ d: -40, w: 70, a: 0.05 + 0.04 * lv }, { d: 50, w: 12, a: 0.06 }] });
@@ -253,8 +256,8 @@
       if (lv > 0) { const c0 = tableCam.p(PHONE.x, TABLE_L.top, PHONE.z); g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, c0[0], c0[1], 0, 700, [[0, '#BFD8DE', 0.08 * lv], [1, '#BFD8DE', 0]]); g.fillRect(0, 0, W, H); g.restore(); }
     },
     anchors: (() => { const cam = tableCam, gl = clipPts(cam, phoneCorners({ inset: 0.0035 })).map(q => q.slice(0, 2).map(Math.round)), P2 = (x, y, z) => cam.p(x, y, z).slice(0, 2).map(Math.round);
-      const ca = Math.cos(PHONE.ang), sa = Math.sin(PHONE.ang), slider = [PHONE.x + (-0.02) * ca - (-0.05) * sa, TABLE_L.top + 0.01, PHONE.z + (-0.02) * sa + (-0.05) * ca];
-      return { screen: gl, phone: P2(PHONE.x, TABLE_L.top, PHONE.z), stop: P2(...slider), pxPerM: Math.round(kAt(cam, PHONE.x, TABLE_L.top, PHONE.z)), handFrom: [W + 80, 760], pillow: P2(-0.6, 0.7, 0.4) }; })(),
+      const ca = Math.cos(PHONE.ang), sa = Math.sin(PHONE.ang), su = 0.022, sv = 0.05, slider = [PHONE.x + su * ca - sv * sa, TABLE_L.top + 0.01, PHONE.z + su * sa + sv * ca];
+      return { screen: gl, phone: P2(PHONE.x, TABLE_L.top, PHONE.z), stop: P2(...slider), pxPerM: Math.round(kAt(cam, PHONE.x, TABLE_L.top, PHONE.z)), handFrom: [-80, 640] }; })(),
     light: { x: 0, y: 0, color: '#DCE8EC', note: 'the screen, from below: use anchors.phone as the point light' },
   };
   table.light.x = table.anchors.phone[0]; table.light.y = table.anchors.phone[1];
@@ -263,24 +266,30 @@
     const Q = (pts, col) => Qc(g, cam, pts, col), L = (a, b) => lit ? b : a;
     Q([[ROOM.x0, 0, 0], [0.4, 0, 0], [0.4, ROOM.ceil, 0], [ROOM.x0, ROOM.ceil, 0]], L('#060A0B', '#16262A'));
     Q([[ROOM.x0, 0, 0], [ROOM.x0, ROOM.ceil, 0], [ROOM.x0, ROOM.ceil, 1.6], [ROOM.x0, 0, 1.6]], L('#050909', '#0F1B1E'));
-    Q([[ROOM.x0, 0, 0], [0.4, 0, 0], [0.4, 0, 1.6], [ROOM.x0, 0, 1.6]], L('#040707', '#0B1214'));
-    // the headboard and the bed's near corner, the pillow's edge and the duvet, catching the light from the side
-    Q([[BED.x0 - 0.04, 0, BED.z0 - 0.04], [0.4, 0, BED.z0 - 0.04], [0.4, 1.12, BED.z0 - 0.04], [BED.x0 - 0.04, 1.12, BED.z0 - 0.04]], L('#070C0D', '#1E2E31'));
-    Q([[BED.x0, 0.12, BED.z0], [BED.x0, 0.12, 1.6], [BED.x0, BED.top + 0.06, 1.6], [BED.x0, BED.top + 0.06, BED.z0]], L('#060A0A', '#24363A'));
-    Q([[BED.x0, BED.top + 0.06, BED.z0], [0.4, BED.top + 0.06, BED.z0], [0.4, BED.top + 0.06, 1.6], [BED.x0, BED.top + 0.06, 1.6]], L('#080D0E', '#30474B'));
-    Q([[BED.x0 + 0.05, BED.top + 0.06, BED.z0 + 0.06], [0.0, BED.top + 0.06, BED.z0 + 0.06], [0.0, BED.top + 0.17, BED.z0 + 0.54], [BED.x0 + 0.05, BED.top + 0.15, BED.z0 + 0.56]], L('#0A1112', '#5E7A7E'));
-    Q([[BED.x0 + 0.05, BED.top + 0.06, BED.z0 + 0.56], [BED.x0 + 0.05, BED.top + 0.15, BED.z0 + 0.56], [BED.x0 + 0.05, BED.top + 0.15, BED.z0 + 0.06], [BED.x0 + 0.05, BED.top + 0.06, BED.z0 + 0.06]], L('#0B1314', '#86A2A4'));
+    Q([[ROOM.x0, 0, 0], [0.4, 0, 0], [0.4, 0, 0.8], [ROOM.x0, 0, 0.8]], L('#040707', '#0B1214'));
+    // the headboard; the bed's side; the duvet's edge rolling over it and the pillow, soft, catching the light from beside them
+    Q([[BED.x0 - 0.04, 0, BED.z0 - 0.04], [0.4, 0, BED.z0 - 0.04], [0.4, 1.12, BED.z0 - 0.04], [BED.x0 - 0.04, 1.12, BED.z0 - 0.04]], L('#070C0D', '#1A282B'));
+    const ZN = 0.8;     // the bed runs on past the lens: stop it short of the camera
+    Q([[BED.x0, 0.12, BED.z0], [BED.x0, 0.12, ZN], [BED.x0, BED.top, ZN], [BED.x0, BED.top, BED.z0]], L('#050909', '#122024'));
+    Q([[BED.x0 - 0.03, BED.top + 0.07, BED.z0 + 0.6], [0.4, BED.top + 0.07, BED.z0 + 0.6], [0.4, BED.top + 0.07, ZN], [BED.x0 - 0.03, BED.top + 0.07, ZN]], L('#080E0F', '#22363A'));
+    Q([[BED.x0 - 0.03, BED.top + 0.07, BED.z0 + 0.6], [BED.x0 - 0.03, BED.top + 0.07, ZN], [BED.x0 - 0.03, BED.top - 0.18, ZN], [BED.x0 - 0.03, BED.top - 0.18, BED.z0 + 0.6]], L('#070C0D', '#2E464A'));
+    if (lit) seg2(g, cam, [BED.x0 - 0.031, BED.top + 0.07, BED.z0 + 0.6], [BED.x0 - 0.031, BED.top + 0.07, ZN], 3, '#6E9296');      // the duvet's edge, nearest the screen, catching its light
+    { const c0 = cam.p(BED.x0 + 0.28, BED.top + 0.1, BED.z0 + 0.32), k = kAt(cam, BED.x0 + 0.28, BED.top + 0.1, BED.z0 + 0.32);
+      const pil = LC.smooth([[c0[0] - 0.3 * k, c0[1] + 0.02 * k], [c0[0] - 0.26 * k, c0[1] - 0.09 * k], [c0[0] + 0.02 * k, c0[1] - 0.12 * k], [c0[0] + 0.3 * k, c0[1] - 0.06 * k], [c0[0] + 0.32 * k, c0[1] + 0.05 * k], [c0[0], c0[1] + 0.08 * k]]);
+      g.fillStyle = L('#0A1112', '#4E6A6E'); g.fill(pil); if (lit) { g.save(); g.clip(pil); g.fillStyle = 'rgba(200,226,230,0.45)'; g.beginPath(); g.ellipse(c0[0] + 0.24 * k, c0[1] - 0.02 * k, 0.12 * k, 0.1 * k, 0, 0, Math.PI * 2); g.fill(); g.restore(); } }
     // the table: its top in a pool of the screen's light (three flat values), its front in shadow
     const t = TABLE_L, x0 = t.x - t.w / 2, x1 = t.x + t.w / 2, z0 = t.z - t.d / 2, z1 = t.z + t.d / 2;
     Q([[x0, 0, z1], [x1, 0, z1], [x1, t.top, z1], [x0, t.top, z1]], L('#050909', '#0E181A'));
     Q([[x1, 0, z0], [x1, 0, z1], [x1, t.top, z1], [x1, t.top, z0]], L('#060A0A', '#18272A'));
     const top = Q([[x0, t.top, z0], [x1, t.top, z0], [x1, t.top, z1], [x0, t.top, z1]], L('#0A0F10', '#1C2A2C'));
     if (lit && top) { g.save(); g.clip(top); [[0.2, '#2C4044'], [0.12, '#466264'], [0.07, '#62827F']].forEach(([r, col]) => { const pts = []; for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2; pts.push(cam.p(PHONE.x + Math.cos(a) * r * 1.2, t.top + 0.001, PHONE.z + Math.sin(a) * r)); } g.fillStyle = col; g.fill(LC.pathPts(pts)); }); g.restore(); }
-    // the lamp's base and shade (off), their undersides lit
-    const lx = t.x - 0.1, lz = t.z - 0.09;
-    Q([[lx - 0.05, t.top, lz], [lx + 0.05, t.top, lz], [lx + 0.04, t.top + 0.24, lz], [lx - 0.04, t.top + 0.24, lz]], L('#070C0D', '#4A6264'));
-    Q([[lx - 0.13, t.top + 0.26, lz], [lx + 0.13, t.top + 0.26, lz], [lx + 0.11, t.top + 0.46, lz], [lx - 0.11, t.top + 0.46, lz]], L('#080D0E', '#26383A'));
-    Q([[lx - 0.13, t.top + 0.26, lz], [lx + 0.13, t.top + 0.26, lz], [lx + 0.13, t.top + 0.262, lz - 0.2], [lx - 0.13, t.top + 0.262, lz - 0.2]], L('#090F10', '#6E8C8E'));
+    // the lamp (off): a round ceramic base, a drum shade; the screen lights the base's near face and the shade's inner rim
+    { const lx = t.x - 0.1, lz = t.z - 0.1, b0 = cam.p(lx, t.top, lz), kb = kAt(cam, lx, t.top, lz), b1 = cam.p(lx, t.top + 0.2, lz), s0 = cam.p(lx, t.top + 0.24, lz), s1 = cam.p(lx, t.top + 0.42, lz);
+      g.fillStyle = L('#070C0D', '#2C4244'); g.beginPath(); g.moveTo(b0[0] - 0.055 * kb, b0[1]); g.bezierCurveTo(b0[0] - 0.075 * kb, b0[1] - 0.12 * kb, b1[0] - 0.02 * kb, b1[1] + 0.03 * kb, b1[0] - 0.015 * kb, b1[1]); g.lineTo(b1[0] + 0.015 * kb, b1[1]);
+      g.bezierCurveTo(b1[0] + 0.02 * kb, b1[1] + 0.03 * kb, b0[0] + 0.075 * kb, b0[1] - 0.12 * kb, b0[0] + 0.055 * kb, b0[1]); g.closePath(); g.fill();
+      if (lit) { g.fillStyle = 'rgba(150,190,196,0.5)'; g.beginPath(); g.ellipse(b0[0] - 0.02 * kb, b0[1] - 0.05 * kb, 0.02 * kb, 0.04 * kb, 0, 0, Math.PI * 2); g.fill(); }
+      const sw0 = 0.13 * kb, sw1 = 0.11 * kb; g.fillStyle = L('#080D0E', '#1E2E30'); g.beginPath(); g.moveTo(s0[0] - sw0, s0[1]); g.lineTo(s0[0] + sw0, s0[1]); g.lineTo(s1[0] + sw1, s1[1]); g.lineTo(s1[0] - sw1, s1[1]); g.closePath(); g.fill();
+      g.fillStyle = L('#0A1011', '#7A9A9C'); g.beginPath(); g.ellipse(s0[0], s0[1], sw0, 0.025 * kb, 0, 0, Math.PI); g.fill(); }
     // a glass of water: its rim and the light it throws on the table (a caustic crescent)
     const gx = t.x + 0.12, gz = t.z - 0.08; const gc = cam.p(gx, t.top, gz), gk = kAt(cam, gx, t.top, gz);
     if (lit) { g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(200,232,236,0.35)'; g.beginPath(); g.ellipse(gc[0] - 0.05 * gk, gc[1] - 0.02 * gk, 0.05 * gk, 0.018 * gk, 0.3, 0, Math.PI * 2); g.fill(); g.restore(); }
@@ -295,6 +304,7 @@
   // =================================================================================================================
   const SQ = [[612, 36], [1300, 58], [1282, 1100], [588, 1074]];      // the screen's corners in the frame: held close, tipped a little toward him
   let _batt = null;
+  const scrSt = {};
   const screenView = {
     back(c, t, s) {
       s = s || {}; const g = c.g, sw = clamp(s.swing || 0, 0, 1), lv = s.glow == null ? 1 : s.glow;
@@ -312,13 +322,13 @@
         g.fillStyle = '#0C1112'; g.fill(LC.rquad(q, 60 * sw)); g.fillStyle = '#080B0C'; const a = q[0], b = q[1]; g.fill(LC.rrect(a[0] + (b[0] - a[0]) * 0.1, a[1] + 40, (b[0] - a[0]) * 0.36, 160, 30));
         g.strokeStyle = 'rgba(80,100,104,0.35)'; g.lineWidth = 2; g.stroke(LC.rquad(q, 60 * sw));
       }
-      this._q = q; this._sw = sw;
+      scrSt.q = q; scrSt.sw = sw;
     },
     // draw the reflected face (RIG.face, etc.) inside the black glass: fn(g) in frame coordinates. It is screened over the
     // screen's own light, so it shows only where the glass is dark: between the cards, round the panel.
-    inGlass(c, s, fn) { if (!this._q || this._sw >= 0.5) return; const g = c.g; g.save(); g.clip(LC.rquad(this._q, 60)); g.globalCompositeOperation = 'screen'; g.globalAlpha = (s && s.reflect != null ? s.reflect : 0.42) * (1 - 2 * this._sw); fn(g); g.restore(); },
+    inGlass(c, s, fn) { if (!scrSt.q || scrSt.sw >= 0.5) return; const g = c.g; g.save(); g.clip(LC.rquad(scrSt.q, 60)); g.globalCompositeOperation = 'screen'; g.globalAlpha = (s && s.reflect != null ? s.reflect : 0.42) * (1 - 2 * scrSt.sw); fn(g); g.restore(); },
     front(c, t, s) {
-      const g = c.g, q = this._q; if (!q || this._sw >= 0.5) return; const p = LC.rquad(q, 60);
+      const g = c.g, q = scrSt.q; if (!q || scrSt.sw >= 0.5) return; const p = LC.rquad(q, 60);
       LC.glare(g, p, { x: 960, y: 560, angle: -1.05, color: '#FFFFFF', bands: [{ d: -160, w: 140, a: 0.04 }, { d: -60, w: 18, a: 0.06 }, { d: 300, w: 90, a: 0.03 }] });
       LC.specks(g, p, { x: 620, y: 50, w: 680, h: 1040 }, 'battDust', { n: 220, color: '#FFFFFF', rMin: 0.5, rMax: 1.5, aMin: 0.04, aMax: 0.2, scratch: 0.18 });
       LC.smudge(g, 1060, 840, 90, 60, 0.5, 'battThumb', '#FFFFFF', 0.06);
@@ -336,6 +346,7 @@
   // VIEW: the dark window (Q01 20-29): the bare glass under the blind gives back the bed; her side empty, the pillow smooth
   // =================================================================================================================
   const winCam = mkCam({ x: 0.06, y: 1.24, z: 2.6, yaw: 0.0, pitch: -0.11, f: 1480, cx: W / 2, cy: H / 2 - 30 });
+  const winSt = {};
   const windowView = {
     cam: winCam,
     back(c, t, s) {
@@ -343,18 +354,18 @@
       drawBig(c, bigCache(c, 'bedroom:window:' + dq, gg => { gg.fillStyle = '#060B0C'; gg.fillRect(-M, -M, W + 2 * M, H + 2 * M); roomShell(gg, cam, dq * 0.5); windowWall(gg, cam, dq, {}); }));
       // the bed in the glass: the room mirrored through the pane, shown only where it is lit (screen over the dark outside)
       const ref = bigCache(c, 'bedroom:windowRefl:' + dq, gg => { const mc = mirrorZ(cam, WINB.z); gg.fillStyle = '#000'; gg.fillRect(-M, -M, W + 2 * M, H + 2 * M);
-        roomShell(gg, mc, 0.35 + dq * 0.4, { noWindowWall: true }); bed(gg, mc, 0.42 + dq * 0.45); bedsideTable(gg, mc, -1.13, 0.3 + dq * 0.4); bedsideTable(gg, mc, 1.13, 0.3 + dq * 0.4); });
+        roomShell(gg, mc, 0.2 + dq * 0.3, { noWindowWall: true }); bed(gg, mc, 0.66 + dq * 0.34); bedsideTable(gg, mc, -1.13, 0.3 + dq * 0.4); bedsideTable(gg, mc, 1.13, 0.3 + dq * 0.4); });
       const strip = LC.pathPts(clipPts(cam, [[WINB.x0 + 0.05, WINB.y0 + 0.05, WINB.z + 0.17], [WINB.x1 - 0.05, WINB.y0 + 0.05, WINB.z + 0.17], [WINB.x1 - 0.05, BLIND_Y - 0.03, WINB.z + 0.17], [WINB.x0 + 0.05, BLIND_Y - 0.03, WINB.z + 0.17]]));
-      g.save(); g.clip(strip); g.globalCompositeOperation = 'screen'; g.globalAlpha = (s.reflect == null ? 0.62 : s.reflect) * (1 - 0.55 * d); g.drawImage(ref, -M, -M); g.restore();
+      g.save(); g.clip(strip); g.globalCompositeOperation = 'screen'; g.globalAlpha = (s.reflect == null ? 0.78 : s.reflect) * (1 - 0.55 * d); g.drawImage(ref, -M, -M); g.restore();
       // the phone's cold light on the bed, in the glass, if it is still on (it goes as he turns it over)
       const pl = s.phoneLight || 0; if (pl > 0) { const mc = mirrorZ(cam, WINB.z), pc = mc.p(-0.5, 0.9, 0.9); g.save(); g.clip(strip); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, pc[0], pc[1], 0, 260, [[0, '#CFE2E6', 0.5 * pl], [1, '#CFE2E6', 0]]); g.fillRect(0, 0, W, H); g.restore(); }
       // emissive: the blind's glow and its blazing edges
       if (d > 0.02) { const E = c.em; E.save(); E.globalAlpha = 0.5 * sstep(d, 0, 1); E.fillStyle = dawnCol(d).edge; const a = cam.p(WINB.x0, WINB.y1, WINB.z), b = cam.p(WINB.x1, BLIND_Y, WINB.z); E.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); E.restore(); }
-      this._strip = strip;
+      winSt.strip = strip;
     },
     // the reflected room for the sequence's figures (Daniel in the bed, in the glass): the mirrored camera and the clip
     reflectCam: mirrorZ(winCam, WINB.z),
-    inGlass(c, s, fn) { const g = c.g; g.save(); g.clip(this._strip); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.5; fn(g, mirrorZ(winCam, WINB.z)); g.restore(); },
+    inGlass(c, s, fn) { const g = c.g; if (!winSt.strip) return; g.save(); g.clip(winSt.strip); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.5; fn(g, mirrorZ(winCam, WINB.z)); g.restore(); },
     front(c, t, s) {
       s = s || {}; const g = c.g, d = clamp(s.dawn == null ? 0.18 : s.dawn, 0, 1);
       drawBig(c, bigCache(c, 'bedroom:windowFront', gg => { const strip = LC.pathPts(clipPts(winCam, [[WINB.x0 + 0.05, WINB.y0 + 0.05, WINB.z + 0.17], [WINB.x1 - 0.05, WINB.y0 + 0.05, WINB.z + 0.17], [WINB.x1 - 0.05, BLIND_Y - 0.03, WINB.z + 0.17], [WINB.x0 + 0.05, BLIND_Y - 0.03, WINB.z + 0.17]]));
@@ -370,7 +381,7 @@
   // =================================================================================================================
   // VIEW: the bed's edge (Q01 29-40): Daniel sits up, a silhouette against the blind as the dawn grows
   // =================================================================================================================
-  const edgeCam = mkCam({ x: -1.04, y: 1.04, z: 0.34, yaw: 0.27, pitch: 0.13, f: 900, cx: W / 2 + 20, cy: H / 2 + 60 });
+  const edgeCam = mkCam({ x: -1.677, y: 0.79, z: 0.32, yaw: 0.428, pitch: 0.177, f: 1150, cx: W / 2 + 40, cy: H / 2 - 10 });
   const edge = {
     cam: edgeCam,
     back(c, t, s) {
@@ -389,24 +400,27 @@
       g.restore();
     },
     anchors: (() => { const cam = edgeCam, p = (x, y, z) => cam.p(x, y, z).slice(0, 2).map(Math.round);
-      return { seat: p(BED.x0 + 0.04, BED.top + 0.04, 1.32), feet: p(BED.x0 - 0.42, 0, 1.32), headSeated: p(BED.x0 + 0.02, 1.22, 1.32), pxPerM: Math.round(kAt(cam, BED.x0, 0.8, 1.32)), facing: 'left (profile, toward the room\'s left wall)',
-        blind: p(0, (BLIND_Y + WINB.y1) / 2, WINB.z), emptySide: p(0.4, BED.top + 0.08, 1.2) }; })(),
+      return { seat: p(BED.x0 + 0.04, BED.top + 0.04, 1.85), feet: p(BED.x0 - 0.42, 0, 1.85), headSeated: p(BED.x0 - 0.2, 1.16, 1.85), pxPerM: Math.round(kAt(cam, BED.x0, 0.8, 1.85)), facing: 'left (profile, toward the room\'s left wall)',
+        blind: p(0, (BLIND_Y + WINB.y1) / 2, WINB.z) }; })(),
     light: (() => { const b = edgeCam.p(0, 1.7, WINB.z); return { x: Math.round(b[0]), y: Math.round(b[1]), color: '#F3E6CC', note: 'the blind behind him: a rim, growing with s.dawn' }; })(),
   };
 
   // =================================================================================================================
   // demo stand-ins (the sequences draw RIG's people)
-  function demoHand(c, A) {      // a flat hand reaching in from the right toward the stop slider
-    const g = c.g, [x, y] = A.stop, k = A.pxPerM; g.save(); g.fillStyle = '#5F3F33';
-    g.beginPath(); g.moveTo(W + 40, y + 0.08 * k); g.lineTo(x + 0.06 * k, y + 0.03 * k); g.quadraticCurveTo(x - 0.01 * k, y + 0.01 * k, x + 0.015 * k, y - 0.012 * k); g.lineTo(x + 0.09 * k, y - 0.03 * k); g.lineTo(W + 40, y - 0.06 * k); g.closePath(); g.fill();
-    g.strokeStyle = 'rgba(200,226,232,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(x + 0.015 * k, y - 0.012 * k); g.lineTo(x + 0.09 * k, y - 0.03 * k); g.lineTo(W + 40, y - 0.06 * k); g.stroke(); g.restore();
+  function demoHand(c, A) {      // a flat hand reaching in from the bed (frame left) to the stop slider
+    const g = c.g, [x, y] = A.stop, k = A.pxPerM; g.save(); g.fillStyle = '#4A3028';
+    g.beginPath(); g.moveTo(-40, y + 0.1 * k); g.lineTo(x - 0.05 * k, y + 0.035 * k); g.quadraticCurveTo(x + 0.012 * k, y + 0.02 * k, x - 0.006 * k, y - 0.012 * k); g.lineTo(x - 0.08 * k, y - 0.035 * k); g.lineTo(-40, y - 0.04 * k); g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(200,226,232,0.55)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(x + 0.004 * k, y + 0.012 * k); g.quadraticCurveTo(x + 0.012 * k, y + 0.02 * k, x - 0.05 * k, y + 0.035 * k); g.lineTo(-40, y + 0.1 * k); g.stroke(); g.restore();
   }
   function demoFace(c) {         // a faint reflected face in the black glass
+    if (window.RIG && RIG.face) { screenView.inGlass(c, { reflect: 0.36 }, g => RIG.face(g, 'daniel', { at: [930, 470], size: 560, view: 'front', face: 'squint', outfit: 'night', head: { turn: -0.05, nod: 0.1, tilt: 0.03 } }, { mode: 'reflection', light: { x: 930, y: 1100, color: '#DCE8EC', back: 0.1 } })); return; }
     screenView.inGlass(c, { reflect: 0.3 }, g => { g.fillStyle = '#7A5E50'; g.beginPath(); g.ellipse(930, 470, 200, 260, -0.05, 0, Math.PI * 2); g.fill(); g.fillStyle = '#1C1410'; g.beginPath(); g.ellipse(930, 250, 215, 100, 0, Math.PI, Math.PI * 2); g.fill();
       g.fillStyle = '#2A1E18'; g.fillRect(830, 430, 70, 9); g.fillRect(965, 426, 70, 9); });
   }
   function demoSitter(c) {       // Daniel's silhouette on the bed's edge, in profile facing left, forearms on his knees, the phone in his hands
     const g = c.g, A = edge.anchors, k = A.pxPerM, [sx, sy] = A.seat, L = edge.light;
+    if (window.RIG && RIG.draw) { RIG.draw(g, 'daniel', { at: A.seat, scale: k, view: 'profile', facing: -1, body: 'sitbed', seat: 0.47, outfit: 'night', hold: 'phone', armR: 'knee', armL: 'knee', face: 'down', head: { nod: 0.35, turn: 0, tilt: 0 } },
+      { mode: 'silhouette', light: { x: L.x, y: L.y, color: L.color } }); return; }
     const P2 = pts => LC.smooth(pts.map(([x, y]) => [sx + x * k, sy - y * k]));
     const body = P2([[0.16, 0.0], [0.1, 0.24], [0.06, 0.46], [0.02, 0.56], [0.02, 0.6], [0.0, 0.62], [-0.03, 0.66], [-0.07, 0.7], [-0.12, 0.72], [-0.17, 0.7], [-0.2, 0.64], [-0.19, 0.6], [-0.15, 0.57], [-0.12, 0.55],
       [-0.12, 0.5], [-0.16, 0.44], [-0.2, 0.3], [-0.32, 0.12], [-0.36, 0.08], [-0.4, 0.06], [-0.44, 0.02], [-0.47, -0.02], [-0.46, -0.06], [-0.45, -0.5, 1], [-0.32, -0.52, 1], [-0.33, -0.1], [-0.3, -0.04], [-0.02, -0.06]]);
@@ -421,7 +435,11 @@
       { name: 'table: silenced (a hand), the lock screen', draw(c, t) { const s = { screen: 'lock', shiver: 0 }; table.back(c, t, s); demoHand(c, table.anchors); table.front(c, t, s); } },
       { name: 'screen: BATTERY 7%, the apps, his face in the glass', draw(c, t) { const s = {}; screenView.back(c, t, s); demoFace(c); screenView.front(c, t, s); } },
       { name: 'screen: turned over (swing 0.35)', draw(c, t) { const s = { swing: 0.35 }; screenView.back(c, t, s); screenView.front(c, t, s); } },
-      { name: 'window: the bed in the glass, her side empty', draw(c, t) { const s = { dawn: 0.16 }; windowView.back(c, t, s); windowView.front(c, t, s); } },
+      { name: 'window: the bed in the glass, her side empty (a stand-in Daniel in his)', draw(c, t) { const s = { dawn: 0.16 }; windowView.back(c, t, s);
+        windowView.inGlass(c, s, (g, mc) => { const q = (x, y, z) => mc.p(x, y, z); g.fillStyle = '#56666A';      // him, lying on his side under the duvet, his head on the dented pillow
+          const pts = [q(-0.7, BED.top + 0.08, BED.z0 + 0.25), q(-0.12, BED.top + 0.08, BED.z0 + 0.25), q(-0.1, BED.top + 0.3, BED.z0 + 0.5), q(-0.15, BED.top + 0.34, BED.z0 + 1.0), q(-0.2, BED.top + 0.22, BED.z0 + 1.7), q(-0.7, BED.top + 0.12, BED.z0 + 1.7)];
+          g.fill(LC.smooth(pts.map(p => [p[0], p[1]]))); const hd = q(-0.42, BED.top + 0.2, BED.z0 + 0.3), k = mc.f / q(-0.42, 0.7, BED.z0 + 0.3)[2]; g.fillStyle = '#2E3436'; g.beginPath(); g.ellipse(hd[0], hd[1], 0.11 * k, 0.1 * k, 0, 0, Math.PI * 2); g.fill(); });
+        windowView.front(c, t, s); } },
       { name: 'window: the blind\'s edges begin to glow', draw(c, t) { const s = { dawn: 0.38 }; windowView.back(c, t, s); windowView.front(c, t, s); } },
       { name: 'edge: Daniel against the blind (dawn 0.5)', draw(c, t) { const s = { dawn: 0.5 }; edge.back(c, t, s); demoSitter(c); edge.front(c, t, s); } },
       { name: 'edge: dawn grown (1.0)', draw(c, t) { const s = { dawn: 1 }; edge.back(c, t, s); demoSitter(c); edge.front(c, t, s); } },

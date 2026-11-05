@@ -1,0 +1,137 @@
+{
+ "bag_down": {
+  "pick": "var/bag_down/3.wav",
+  "z": 2.2,
+  "verdict": "weak",
+  "prompt_index": null
+ },
+ "cable_click": {
+  "pick": "one-too-many/audio/sfx/latch2.flac",
+  "z": 1.8,
+  "verdict": "no match",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "wardrobe": {
+  "pick": "one-too-many/audio/sfx/creak.flac",
+  "z": 2.84,
+  "verdict": "plausible",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "lid_snap": {
+  "pick": "one-too-many/audio/sfx/latch2.flac",
+  "z": 1.64,
+  "verdict": "no match",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "knife_toast": {
+  "pick": "var/knife_toast/4.wav",
+  "z": 2.82,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "keys": {
+  "pick": "var/keys/3.wav",
+  "z": 2.21,
+  "verdict": "weak",
+  "prompt_index": null
+ },
+ "seatbelt": {
+  "pick": "var/seatbelt/0_original.wav",
+  "z": 1.49,
+  "verdict": "no match"
+ },
+ "window_open_shut": {
+  "pick": "var/window_open_shut/3.wav",
+  "z": 1.11,
+  "verdict": "no match"
+ },
+ "hot_air": {
+  "pick": "var/hot_air/2.wav",
+  "z": 2.59,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "mug_down": {
+  "pick": "one-too-many/audio/sfx/tap1.flac",
+  "z": 2.85,
+  "verdict": "plausible",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "laptop_close": {
+  "pick": "var/laptop_close/1.wav",
+  "z": 1.21,
+  "verdict": "no match"
+ },
+ "gravel": {
+  "pick": "var/gravel/4.wav",
+  "z": 2.55,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "handle_locked": {
+  "pick": "one-too-many/audio/sfx/latch1.flac",
+  "z": 2.16,
+  "verdict": "weak",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "door_open_slow": {
+  "pick": "one-too-many/audio/sfx/latch1.flac",
+  "z": 1.44,
+  "verdict": "no match",
+  "source": "CC0 recording from One Too Many (see its audio/CREDITS.md)"
+ },
+ "inhale": {
+  "pick": "var/inhale/3.wav",
+  "z": 5.8,
+  "verdict": "strong",
+  "prompt_index": null
+ },
+ "coffee_machine": {
+  "pick": "var/coffee_machine/3.wav",
+  "z": 2.81,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "tap_off": {
+  "pick": "var/tap_off/4.wav",
+  "z": 2.71,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "phone_ring": {
+  "pick": "var/phone_ring/0_original.wav",
+  "z": 2.46,
+  "verdict": "weak",
+  "prompt_index": null
+ },
+ "bed_dawn_room": {
+  "pick": "var/bed_dawn_room/2.wav",
+  "z": 3.77,
+  "verdict": "strong",
+  "prompt_index": null
+ },
+ "bed_traffic": {
+  "pick": "var/bed_traffic/0_original.wav",
+  "z": 2.28,
+  "verdict": "weak",
+  "prompt_index": null
+ },
+ "bed_city_heat": {
+  "pick": "var/bed_city_heat/1.wav",
+  "z": 2.78,
+  "verdict": "plausible",
+  "prompt_index": null
+ },
+ "bed_evening": {
+  "pick": "var/bed_evening/2.wav",
+  "z": 3.81,
+  "verdict": "strong",
+  "prompt_index": null
+ },
+ "bed_dusk_still": {
+  "pick": "var/bed_dusk_still/2.wav",
+  "z": 2.34,
+  "verdict": "weak",
+  "prompt_index": null
+ }
+}

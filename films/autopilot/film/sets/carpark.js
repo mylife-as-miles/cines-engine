@@ -869,8 +869,8 @@
     heat.anchors = { car: hA, daniel: { x: st[0], y: st[1], scale: ch.f / st[2], note: 'at the open door, recoiling' }, plume: { x: pl[0], y: pl[1] - 1.9 * pk, w: 2.3 * pk, h: 2.3 * pk } };
     const cc = crossCam(0), im = crossImage(cc);
     crossing.anchors = { reflection: { x: im.x, y: im.y, scale: im.scale, facing: 1, note: 'his virtual image; it moves with the camera (s.track), the cars slide past' } };
-    const ca = arrivalCam(1), ke = ca.p(5.7, 0.13, ARR.eye[2]), en = ca.p(0, 1.2, 0);
-    arrival.anchors = { kerb: [ke[0], ke[1]], entrance: [en[0], en[1]], facadeScale: ca.f / ARR.eye[0] };
+    const ca = arrivalCam(1), ah = ca.p(0, 1.6, ARR.eye[2]), mg = mirrorCam(ca, facadePt(A, 0, 0), A.n), sg = mg.p(add(facadePt(A, 0, 0), mul(sunDir(LA), 5000)));
+    arrival.anchors = { ahead: [ah[0], ah[1]], sunGlint: [sg[0], sg[1]], facadeScale: ca.f / ARR.eye[0], note: 'the camera is the driver\'s eye in his stopped car; block A\'s facade is 7.95 m ahead' };
   })();
 
   // =====================================================================================
