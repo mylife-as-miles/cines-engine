@@ -105,7 +105,7 @@
     RIG.face(fg, 'daniel', Object.assign({ at: [A.face[0] + par, A.face[1] + 48], size: 540, view: 'front', face: 'squint', outfit: 'night', stubble: 0.45, breath: breathOf(lt) }, fp),
       { mode: 'reflection', blend: 'source-over', alpha: 1, res: 0.5, light: { x: 930, y: 1150, color: '#DCE8EC', back: 0.12 }, mirror: true, mirrorX: A.face[0] + par });
     fg.setTransform(1, 0, 0, 1, 0, 0); fg.globalCompositeOperation = 'destination-out';
-    fg.fillStyle = LC.lin(fg, 0, 700 - FL.y, 0, 830 - FL.y, [[0, '#000', 0], [1, '#000', 1]]); fg.fillRect(0, 700 - FL.y, fl.width, fl.height); fg.globalCompositeOperation = 'source-over';
+    fg.fillStyle = LC.lin(fg, 0, 700 - FL.y, 0, 830 - FL.y, [[0, '#000000', 0], [1, '#000000', 1]]); fg.fillRect(0, 700 - FL.y, fl.width, fl.height); fg.globalCompositeOperation = 'source-over';
     v.inGlass(c, { reflect: 0.3 + 0.05 * sstep(lt, 11, 13) }, g => g.drawImage(fl, FL.x, FL.y));
     // the apps low on the screen are dimmer than the panel: the lower glass falls off toward his thumb (calm under the words)
     if (sw < 0.5) { const g = c.g, q = SETS.bedroom.views.screen.anchors.screen; g.save(); g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.clip();
@@ -164,8 +164,9 @@
   function occludeBloom(c, info, k) {
     if (!info || !info.head) return; const e = c.em; e.save(); e.fillStyle = '#000';
     e.beginPath(); e.arc(info.head[0], info.head[1], 0.115 * k, 0, Math.PI * 2); e.fill();
-    const sh = info.shoulders, hp = info.hips; if (sh && hp) { const pts = [sh.L || sh[0], sh.R || sh[1], hp.R || hp[1], hp.L || hp[0]].filter(Boolean);
-      if (pts.length === 4) { const cx = pts.reduce((a, q) => a + q[0], 0) / 4, cy = pts.reduce((a, q) => a + q[1], 0) / 4; e.beginPath(); pts.forEach((q, i) => { const x = cx + (q[0] - cx) * 1.15, y = cy + (q[1] - cy) * 1.05; i ? e.lineTo(x, y) : e.moveTo(x, y); }); e.closePath(); e.fill(); } }
+    const sh = info.shoulders, hp = info.hips;
+    if (sh && sh.R && sh.L && hp) { const w = 0.14 * k; e.beginPath(); e.moveTo(sh.L[0], sh.L[1] - 0.04 * k); e.lineTo(sh.R[0], sh.R[1] - 0.04 * k); e.lineTo(hp[0] + w, hp[1]); e.lineTo(hp[0] - w, hp[1]); e.closePath(); e.fill();
+      [sh.L, sh.R].forEach(q => { e.beginPath(); e.arc(q[0], q[1], 0.07 * k, 0, Math.PI * 2); e.fill(); }); }
     if (info.neck) { e.beginPath(); e.arc(info.neck[0], info.neck[1], 0.08 * k, 0, Math.PI * 2); e.fill(); }
     e.restore();
   }
