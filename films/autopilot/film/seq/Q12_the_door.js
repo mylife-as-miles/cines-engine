@@ -19,11 +19,14 @@
   // ---------------------------------------------------------------------------------------------------------------
   // Q02's C1 shot sleeps at 24.9 s; after it the glyph breathes at 0.42 Hz, brightest at 24.9 and 27.28. Starting at 26.53
   // puts one whole breath in the flash, its brightest at the middle.
-  const FLASH = { phone: ['Q02', 26.53, 1.5] };
+  const FLASH = { phone: ['Q02', 26.53, 1.5, 'C1'] };
   const FLASH_AT = 30.0;
+  // the shot found at that time must be the expected image (Q02 is still being finished): otherwise the stand-in, and a warning
   function flash(c, name, st) {
-    const [id, t0] = FLASH[name];
-    if (FILM.lib[id]) { const p = FILM.drawShot(c, id, t0 + st); if (p) return p; }
+    const [id, t0, , expect] = FLASH[name], seq = FILM.lib[id];
+    if (seq) { const sh = seq.shots.filter(x => x.at <= t0 + st).pop();
+      if (sh && (!expect || (sh.name || '').indexOf(expect) >= 0)) { const p = FILM.drawShot(c, id, t0 + st); if (p) return p; }
+      else FILM.warn('Q12 flash ' + name + ': ' + id + ' at ' + t0 + ' is "' + (sh && sh.name) + '", not the expected image; drawing the stand-in'); }
     return standIn[name](c, t0 + st);
   }
   const standIn = {
@@ -57,7 +60,7 @@
   function drawHandle(c, st) {
     const v = NV().handle, tw = twos(st);
     drift(c, st, 2);
-    const pull = pullAt(st), jolt = joltAt(st);
+    const pull = pullAt(tw), jolt = joltAt(st);          // his pull on twos; the car's shudder on ones
     // he arrives running: his reflection comes into the glass from the left, settles, and jerks with each yank
     const arrive = ease.outCubic(seg(tw, 0, 0.42)), lurch = pullAt(tw) * 16;
     const s = { pull, jolt, reflect: (g, a) => { const r = a.reflection; g.save(); g.globalAlpha = 0.64; g.drawImage(handleReflection(c, a), r.x - W / 2 - (1 - arrive) * 300 + lurch * 0.5, r.y - H / 2 + lurch * 0.6); g.restore(); } };
@@ -151,7 +154,9 @@
     const pose = { at: [a.kneel[0] + (1 - drop) * 0.06 * a.k, a.kneel[1] - lift], scale: a.k, view: 'profile', body: 'kneel',
       armR: { to: [a.hand[0], a.hand[1] + (1 - drop) * 30], palm: 'down' }, armL: 'down',
       head: { nod: 0.62 + 0.18 * drop, turn: 0, tilt: 0 }, lean: 0.25 * (1 - drop), face: 'down', collar: 'crooked', breath: 0.68, breathPx: 4 };
-    RIG.draw(g, 'daniel', pose, { mode: 'silhouette', light: { x: a.light.x, y: a.light.y, color: a.light.color }, rimK: a.light.k });
+    // the rim is the sun's: it thins and cools with the visible disc, to a faint line of afterglow (he is still just there)
+    const k = a.light.k;
+    RIG.draw(g, 'daniel', pose, { mode: 'silhouette', light: { x: a.light.x, y: a.light.y, color: a.light.color }, rimColor: OTM.mix('#3C3646', a.light.color, k), rimW: lerp(1.3, 3.6, k) });
   }
   function drawC3(c, lt) {
     const v = NV().c3, s = { set: setAt(lt) };

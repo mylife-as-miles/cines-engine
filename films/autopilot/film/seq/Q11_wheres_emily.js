@@ -20,25 +20,26 @@
   // [sequence, its local time at the cut, how long we hold it]. Each flash runs on in real time from its start.
   // A sequence that is not built yet is drawn by a stand-in from its set (standIn below), so the cut is never empty.
   // ===============================================================================================================
-  // Times are read from the built sequences: Q02 'C1' 19.6-24.9 (charging; asleep after), Q05 'mirror: she squints and
-  // turns away' 30.2 (her head turns 29.4-30.9) and 'she leans into the shade' 36.8 (37.4-40.6), Q06 'driving: close, the
-  // drop on his sleeve' 17.6 (the wipe 18.3-19.35) and 'passenger: the painted wall slips past, out of focus' 20.6,
-  // Q07 'arrival' 4-10 and 'space: ... BEEP' 10-16 (BEEP at 13.4).
+  // Times: Q05, Q06 and Q07 as their author checked them through FILM.drawShot; Q02 read from its beat table (C1 19.6-24.9,
+  // charging; asleep after) and to be re-checked when Q02 is final. The last field is a fragment of the shot's name: if the
+  // shot found at that time is not the expected image (a sequence re-timed), the flash falls back to its set stand-in.
   const FLASH = {
-    phone:  ['Q02', 22.0, 0.85],    // A091 a phone plugged in beside the kettle: the green charging icon (C1)
-    sun:    ['Q05', 30.25, 0.80],   // A092 Emily turning her face away from the bad sun (the mirror, close)
-    shade:  ['Q05', 39.6, 0.80],    // A093 her head disappearing behind the driver's seat, into the headrest's shade
-    wall:   ['Q06', 21.8, 0.80],    // A094 the nursery's painted wall slipping past the passenger window, out of focus
-    coffee: ['Q06', 18.45, 0.80],   // A095 Daniel wiping coffee from his sleeve, keeping the wheel straight
-    office: ['Q07', 6.0, 0.80],     // A096 his car pulling into the OFFICE car park
-    beep:   ['Q07', 13.25, 0.95],   // A097 the small, friendly BEEP of the doors locking (Q07's beep is at 13.4)
+    phone:  ['Q02', 22.0, 0.85, 'C1'],          // A091 a phone plugged in beside the kettle: the green charging icon (C1)
+    sun:    ['Q05', 31.2, 0.80, 'turns away'],  // A092 Emily turning her face away from the bad sun (the mirror, close)
+    shade:  ['Q05', 40.4, 0.80, 'shade'],       // A093 her head disappearing behind the driver's seat, into the headrest's shade
+    wall:   ['Q06', 22.4, 0.80, 'wall'],        // A094 the nursery's painted wall slipping past the passenger window, out of focus
+    coffee: ['Q06', 18.8, 0.80, 'sleeve'],      // A095 Daniel wiping coffee from his sleeve, keeping the wheel straight
+    office: ['Q07', 5.6, 0.80, 'space'],        // A096 his car pulling into the OFFICE car park
+    beep:   ['Q07', 13.45, 0.95, 'BEEP'],       // A097 the small, friendly BEEP of the doors locking (Q07's beep is at 13.4)
   };
   const FLASH_ORDER = ['phone', 'sun', 'shade', 'wall', 'coffee', 'office', 'beep'];
   const FLASH_AT = 62.2;
   const FLASH_T = (() => { let t = FLASH_AT; const o = {}; FLASH_ORDER.forEach(n => { o[n] = t; t += FLASH[n][2]; }); o.end = t; return o; })();
   function flash(c, name, st) {
-    const [id, t0] = FLASH[name];
-    if (FILM.lib[id]) { const p = FILM.drawShot(c, id, t0 + st); if (p) return p; }
+    const [id, t0, , expect] = FLASH[name], seq = FILM.lib[id];
+    if (seq) { const sh = seq.shots.filter(x => x.at <= t0 + st).pop();
+      if (sh && (!expect || (sh.name || '').indexOf(expect) >= 0)) { const p = FILM.drawShot(c, id, t0 + st); if (p) return p; }
+      else FILM.warn('Q11 flash ' + name + ': ' + id + ' at ' + t0 + ' is "' + (sh && sh.name) + '", not the expected image; drawing the stand-in'); }
     return standIn[name](c, t0 + st) || {};
   }
   // the mirror moment as the car set's POV shows it (C2's camera), Emily drawn into the mirror's own layer
@@ -124,10 +125,10 @@
   // Then "Daniel--", and the porch door opens as she comes out after him.
   // ===============================================================================================================
   const SARAH_KEYS = [
-    [8.6, { face: 'warm', smile: 0.42, lid: 0.2, gaze: [0.12, 0], open: 0, browIn: 0.1, head: { turn: 0.1, nod: 0.04, tilt: 0.04 }, weight: 0.12 }],
-    [9.7, { face: 'warm', smile: 0.38, lid: 0.18, gaze: [0.15, 0], open: 0, browIn: 0.1, head: { turn: 0.12, nod: 0.04, tilt: 0.04 }, weight: 0.12 }],
-    [10.2, { face: 'past', smile: 0.06, lid: 0.06, gaze: [0.85, 0.05], open: 0.04, browIn: 0.3, head: { turn: 0.24, nod: 0.0, tilt: 0.0 }, weight: 0.06 }],
-    [10.6, { face: 'past', smile: 0, lid: 0.06, gaze: [0.85, 0.02], open: 0.04, browIn: 0.35, head: { turn: 0.26, nod: -0.02, tilt: 0 }, weight: 0.04 }],
+    [8.6, { face: 'warm', smile: 0.62, squint: 0.4, lid: 0.22, gaze: [0.1, 0], open: 0.02, browIn: 0.15, head: { turn: 0.06, nod: 0.06, tilt: 0.06 }, weight: 0.12 }],
+    [9.6, { face: 'warm', smile: 0.58, squint: 0.38, lid: 0.2, gaze: [0.12, 0], open: 0.02, browIn: 0.15, head: { turn: 0.08, nod: 0.06, tilt: 0.06 }, weight: 0.12 }],
+    [10.2, { face: 'past', smile: 0.08, squint: 0, lid: 0.04, gaze: [0.9, 0.04], open: 0.04, browIn: 0.3, head: { turn: 0.38, nod: 0.0, tilt: 0.0 }, weight: 0.06 }],
+    [10.6, { face: 'past', smile: 0, squint: 0, lid: 0.04, gaze: [0.9, 0.02], open: 0.04, browIn: 0.38, head: { turn: 0.42, nod: -0.02, tilt: 0 }, weight: 0.04 }],
     [11.9, { face: 'past', smile: -0.05, lid: 0.04, gaze: [0.4, 0.0], open: 0.05, browIn: 0.55, brow: 0.45, head: { turn: 0.12, nod: -0.04, tilt: 0 }, weight: 0 }],
     [12.6, { face: 'past', smile: -0.08, lid: 0.04, gaze: [0.3, 0.0], open: 0.05, browIn: 0.6, brow: 0.45, head: { turn: 0.1, nod: -0.04, tilt: 0 }, weight: 0 }],
     [24.0, { face: 'past', smile: -0.2, lid: 0.02, gaze: [0.5, 0.05], open: 0.08, browIn: 0.9, brow: 0.5, head: { turn: 0.2, nod: -0.04, tilt: 0 }, weight: 0 }],
@@ -147,7 +148,8 @@
     const first = lt < 20, u = seg(st, 0, c.shotDur);
     camera(c, lt, first ? { x: A.sarahHead[0] - 20, y: 520, zoom: lerp(1.3, 1.42, ease.inOutSine(u)) } : { x: 1080, y: 560, zoom: 1.22 });
     v.back(c, lt, s);
-    RIG.draw(c.g, 'sarah', sarahPose(lt, A), { light: { x: v.light.x, y: v.light.y, color: v.light.color, back: 0.6 }, ambient: '#2A3340', ambientK: 0.1 });
+    // the hall lamp behind her rims her warm; the dusky sky in front of the porch gives her face a soft cool fill
+    RIG.draw(c.g, 'sarah', sarahPose(lt, A), { light: { x: v.light.x, y: v.light.y, color: v.light.color, back: 0.48 }, ambient: '#5A6474', ambientK: 0.12, exposure: 1.08 });
     v.front(c, lt, s);
   }
 
@@ -377,7 +379,7 @@
   }
   const WIN = { dist: [[72, 6.4], [80.4, 6.4], [82, 5.9, 'inQuad']], call: [74.6, 75.3] };
   function shotWindow(c, st, lt) {
-    const v = NV().window, t = twos(lt), dist = FILM.key(lt, WIN.dist);
+    const v = NV().window, t = twos(lt), dist = FILM.key(t, WIN.dist);
     const calling = t >= WIN.call[0] && t < WIN.call[1];
     const s = { dist, reflect: (g, a) => RIG.draw(g, 'daniel', { at: [a.reflection.x, a.reflection.y], scale: a.reflection.k, view: 'front', body: 'stand', outfit: 'day', collar: 'straight', face: 'drained',
       lid: calling ? 0.12 : 0.3, open: calling ? 0.32 : 0.08, head: { nod: calling ? -0.06 : 0.06, turn: 0, tilt: 0 }, armR: 'relaxed', armL: 'relaxed', breath: breath(lt), weight: 0.1 },
@@ -462,7 +464,7 @@
       S.bed('traffic', 58, 84, { level: -60, what: 'the far road, almost gone' });
       // the flash cuts: a hard cut each; the last one is the BEEP itself, the same polite sound as Q07's
       FLASH_ORDER.forEach(n => S.cue('flash', FLASH_T[n], { what: 'flash cut: ' + n }));
-      S.cue('beep', FLASH_T.beep + (13.4 - FLASH.beep[1]), { n: 2, what: 'the small, friendly BEEP of the doors locking (A097), as in Q07' });
+      S.cue('beep', FLASH_T.beep + Math.max(0, 13.4 - FLASH.beep[1]), { n: 2, what: 'the small, friendly BEEP of the doors locking (A097), as in Q07: it lands with the cut' });
       S.cue('footsteps', PARK.run0, { n: 6, surface: 'tarmac', pace: 'run', what: 'he runs (A101)' });
     },
     shots,

@@ -138,7 +138,6 @@
       [19.6, { face: 'tired', lid: 0.4, smile: 0.22, gaze: [0.1, 0.2], head: { nod: 0.2, turn: -0.15, tilt: 0.0 } }],     // turning away to the stairs
     ]);
     v.reflect(c, {}, (rg, cam) => {
-      rg.fillStyle = '#2C3A3C'; rg.globalAlpha = 0; rg.globalAlpha = 1;
       RIG.face(rg, 'daniel', Object.assign({ at: [cam.cx - 10, cam.cy + 34], size: 320, view: 'three', facing: -1, outfit: 'night', stubble: 0.4, breath: breathOf(lt) }, fp),
         { light: { x: cam.cx - 200, y: cam.cy - 420, color: '#DCE8E4', back: 0.2 }, ambient: '#2C3A3C', ambientK: 0.12 });
     });

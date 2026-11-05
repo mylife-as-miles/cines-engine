@@ -61,8 +61,8 @@
     if (active) {
       const tip = v.leverTipAt(lever), ang = Math.atan2(tip[1] - A.hub[1], tip[0] - A.hub[0]) * 180 / Math.PI;
       const near = mode === 'on' ? sstep(Th, 0.05, 0.4) * (1 - sstep(Th, 1.3, 1.75)) : sstep(Th, 16.8, 17.0) * (1 - sstep(Th, 17.75, 18.25));
-      const away = [tip[0] + 420, tip[1] + 520], tgt = [lerp(away[0], tip[0], near), lerp(away[1], tip[1], near)];
-      handAt(c.g, { size: 600, pose: 'fist', view: 'back', rot: ang + 90, curl: 0.5 + 0.38 * near, sleeve: 'night' }, tgt, 'fist',
+      const on = mode === 'on', away = on ? [tip[0] + 460, tip[1] + 560] : [tip[0] + 420, tip[1] - 560], tgt = [lerp(away[0], tip[0], near), lerp(away[1], tip[1], near)];
+      handAt(c.g, { size: 600, pose: 'fist', view: 'back', rot: on ? -128 : 128, curl: 0.5 + 0.38 * near, sleeve: 'night' }, tgt, 'fist',
         { light: { x: 200, y: 0, color: '#E6F0EE', back: 0.35 }, ambient: '#5E706C', ambientK: 0.18, exposure: 0.92 });
     }
     v.front(c, lt, s);
@@ -83,7 +83,12 @@
       if (act === 'shampoo') pose = { armR: { hand: [0.03 + 0.02 * scrub, 0.42, 0.08] }, armL: { hand: [0.03 - 0.02 * scrub, 0.4, 0.07] }, head: { nod: 0.28, turn: 0.04 * scrub, tilt: 0 }, lean: 0.08 };
       else if (act === 'rinse') { const back = sstep(Th, 7.8, 8.5); pose = { armR: { hand: [0.06, 0.32 - 0.25 * back, 0.1] }, armL: { hand: [0.06, 0.3 - 0.25 * back, 0.1] }, head: { nod: 0.2 - 0.62 * back, turn: 0, tilt: 0 }, lean: -0.12 * back }; }
       else { const rub = Math.sin(Th * Math.PI * 2 * 1.8); pose = { armR: { hand: [0.06 + 0.03 * rub, 0.36, 0.1] }, armL: { hand: [0.06 - 0.03 * rub, 0.35, 0.1] }, head: { nod: 0.3, turn: 0.06 * rub, tilt: 0 }, lean: 0.1 }; }
-      const info = RIG.draw(g, 'daniel', Object.assign({ at: A.figureFeet, scale: A.pxPerM, view: 'front', outfit: 'night', face: 'closed', breath: br }, pose), Object.assign({ light: v.light, detail: 0.5 }, SKIN));
+      // the set hands us a quarter-resolution layer scaled to frame units; behind the fog he is a soft mass, so we draw him at
+      // that layer's own resolution (the rig then spends nothing on features the blur would take away)
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
+      const info4 = RIG.draw(g, 'daniel', Object.assign({ at: [A.figureFeet[0] / 4, A.figureFeet[1] / 4], scale: A.pxPerM / 4, view: 'front', outfit: 'night', face: 'closed', breath: br }, pose), Object.assign({ light: { x: v.light.x / 4, y: v.light.y / 4, color: v.light.color }, detail: 0.5 }, SKIN));
+      g.restore();
+      const up = q => q && [q[0] * 4, q[1] * 4], info = info4 && { head: up(info4.head), neck: up(info4.neck), shoulders: info4.shoulders && { L: up(info4.shoulders.L), R: up(info4.shoulders.R) } };
       if (act === 'towel' && info && info.head) {     // the towel over his head, hanging to his shoulders: a pale mass of terry
         const hd = info.head, k = A.pxPerM, sl = info.shoulders.L, sr = info.shoulders.R;
         g.fillStyle = '#5E7E76'; g.beginPath(); g.moveTo(Math.min(sl[0], sr[0]) - 0.04 * k, Math.max(sl[1], sr[1]) + 0.12 * k);
