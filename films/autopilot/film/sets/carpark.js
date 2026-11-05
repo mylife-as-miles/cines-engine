@@ -84,9 +84,9 @@
       path: '#BDB9AE', kerb: '#E2DFD5', aTint: '#8FB0BA', bTint: '#7F98A0', spand: ['#9AA6A4', '#717E7D'], mull: ['#E2E7E3', '#7D8A88'], ceil: '#3E4C4E', panel: '#E8EEEA' },
     evening: { az: deg(282), el: deg(9), glow: '#FFD49A', rim: '#FFB877',
       sky: [[-1.6, '#2B2427'], [-0.02, '#4A383A'], [0, '#F2B47A'], [0.06, '#DE9F78'], [0.2, '#B08A88'], [0.55, '#7A7890'], [1.6, '#5C6279']],
-      paintSky: '#9C93A2', paintSun: '#F5A764', shade: 0.6, glassTint: '#D49060', interior: '#120D0E',
+      paintSky: '#9C93A2', paintSun: '#F5A764', sunK: 0.4, shade: 0.6, glassTint: '#D49060', interior: '#120D0E',
       tar: ['#B98460', '#82604C', '#3E3133'], line: '#EDC6A0', hedge: ['#8A6A40', '#4A4232', '#262620'], tree: ['#9A7A48', '#4C4836', '#272A24'],
-      path: '#7E6458', kerb: '#E9B184', aTint: '#8E8090', bTint: '#F0C8A0', spand: ['#B0704A', '#6A4636'], mull: ['#E6A472', '#3A2E30'], ceil: '#2A2730', panel: '#F2D8B8' },
+      path: '#7E6458', kerb: '#E9B184', aTint: '#B7A0A0', bTint: '#F0C8A0', spand: ['#B0704A', '#6A4636'], mull: ['#E6A472', '#3A2E30'], ceil: '#2A2730', panel: '#F2D8B8' },
   };
   const sunDir = L => dirAE(L.az, L.el);
   const withSun = (L, az, el, extra) => Object.assign({}, L, { az: az != null ? az : L.az, el: el != null ? el : L.el }, extra || {});
@@ -307,7 +307,7 @@
     const Wp = q => fr.w(q[0], q[1], q[2]), base = cr.paint;
     const tone = nL => {
       const nW = nrm(add(add(mul(fr.F, nL[0]), [0, nL[1], 0]), mul(fr.R, nL[2]))), d = dot(nW, sun);
-      let c = d > 0.25 ? mix(base, L.paintSun, 0.16 + 0.14 * d) : d > -0.05 ? mix(mix(base, '#55605F', 0.16), L.paintSky, 0.08) : mix(base, '#000000', L.shade);
+      let c = d > 0.25 ? mix(base, L.paintSun, (L.sunK || 0.16) + 0.14 * d) : d > -0.05 ? mix(mix(base, '#55605F', 0.16), L.paintSky, 0.08) : mix(base, '#000000', L.shade);
       if (nW[1] > 0.55) c = mix(c, L.paintSky, 0.3);
       return c;
     };
@@ -591,8 +591,8 @@
         LAMPS.forEach(([x, z]) => { if (x < 14) lamp(lg, cam, x, z, L, tod); });
         const env = (rg, mc, cl, box) => reflectScene(rg, mc, L, tod, { box, sunR: 12, glow: 0.5 });
         parked(tod).filter(cr => cr.x < 23 && cam.view([cr.x, 0.5, cr.z])[2] > 2).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2])
-          .forEach(cr => drawCar(lg, cam, cr, { L, tod, env, upright: tod === 'evening' ? 0.6 : 0.2, glassK: tod === 'evening' ? 1.25 : 1 }));
-        if (tod === 'evening') { lg.save(); lg.globalCompositeOperation = 'multiply'; lg.fillStyle = LC.lin(lg, 0, 0, 0, H, [[0, '#F2E6EA'], [0.55, '#E2CFCC'], [1, '#B8A6A8']]); lg.fillRect(0, 0, W, H); lg.restore(); }
+          .forEach(cr => drawCar(lg, cam, cr, { L, tod, env, upright: tod === 'evening' ? 0.95 : 0.2, uprightSide: tod === 'evening' ? 0.9 : 0.6, glassK: tod === 'evening' ? 1.3 : 1 }));
+        if (tod === 'evening') { lg.save(); lg.globalCompositeOperation = 'soft-light'; lg.fillStyle = LC.lin(lg, W, 0, 0, H, [[0, '#F2A65E', 0.4], [1, '#F2A65E', 0.0]]); lg.fillRect(0, 0, W, H); lg.restore(); }
       });
       g.drawImage(lay, 0, 0);
       const em = quarter(c, 'space|em|' + tod, eg => { const cam = SPC.cam(); sunEm(eg, mirrorCam(cam, facadePt(A, 0, 0), A.n), L, 26, tod === 'evening' ? 0.4 : 0.9); });
@@ -787,7 +787,7 @@
         const all = parked('evening').concat([Object.assign({ type: 'hatch', paint: DCAR.paint, plateR: '#E9C9A4', dan: true }, DANIEL)]);
         all.filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 1.5).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => {
           if (cr.dan) danielsCar(c, lg, cam, DANIEL, {}, L, 'evening', env, { tailRake: 8, reflectStrength: 1, upright: 0.7 });
-          else drawCar(lg, cam, cr, { L, tod: 'evening', env, glassK: 1.35, upright: 0.7 }); });
+          else drawCar(lg, cam, cr, { L, tod: 'evening', env, glassK: 1.35, upright: 0.95, uprightSide: 0.9 }); });
         lg.save(); lg.globalCompositeOperation = 'soft-light'; lg.fillStyle = LC.lin(lg, 0, 0, W, 0, [[0, '#F2A65E', 0.35], [1, '#F2A65E', 0.06]]); lg.fillRect(0, 0, W, H); lg.restore();
       }), 0, 0);
     },
@@ -816,7 +816,7 @@
         facade(lg, cam, B, L, 'evening', { s0: 0, s1: 124, sunR: 20, reflK: 1 });
         ground(lg, cam, L, 'evening', { x0: 0, z: [-30, 36] });
         LAMPS.forEach(([x, z]) => { if (cam.view([x, 0, z])[2] > 6) lamp(lg, cam, x, z, L, 'evening'); });
-        parked('evening').filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 3 && Math.abs(cr.z - DANIEL.z) > 1).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => drawCar(lg, cam, cr, { L, tod: 'evening', env: heatEnv, glassK: 1.35, upright: 0.7 }));
+        parked('evening').filter(cr => cam.view([cr.x, 0.5, cr.z])[2] > 3 && Math.abs(cr.z - DANIEL.z) > 1).sort((a, b) => cam.view([b.x, 0, b.z])[2] - cam.view([a.x, 0, a.z])[2]).forEach(cr => drawCar(lg, cam, cr, { L, tod: 'evening', env: heatEnv, glassK: 1.35, upright: 0.95, uprightSide: 0.9 }));
       }), 0, 0);
       if (s.car !== false) heat.car(c, t, s);
     },

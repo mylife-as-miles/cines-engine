@@ -39,10 +39,12 @@
     const [t0, v0] = ks[i], [t1, v1, e] = ks[i + 1]; const u = seg(t, t0, t1, e || 'inOutSine');
     return mixv(v0, v1, u);
   }
+  // numbers interpolate; arrays and objects recurse; anything else (a pose's 'walk', 'crooked', true) snaps at the midpoint
   function mixv(a, b, u) {
-    if (typeof a === 'number') return lerp(a, b, u);
-    if (Array.isArray(a)) return a.map((v, i) => mixv(v, b[i], u));
-    const o = {}; for (const k in a) o[k] = (k in b) ? mixv(a[k], b[k], u) : a[k]; return o;
+    if (typeof a === 'number' && typeof b === 'number') return lerp(a, b, u);
+    if (Array.isArray(a) && Array.isArray(b)) return a.map((v, i) => i < b.length ? mixv(v, b[i], u) : v);
+    if (a && b && typeof a === 'object' && typeof b === 'object') { const o = {}; for (const k in a) o[k] = (k in b) ? mixv(a[k], b[k], u) : a[k]; for (const k in b) if (!(k in a)) o[k] = b[k]; return o; }
+    return u < 0.5 ? a : b;
   }
   const twos = t => Math.floor(t * 12 + 1e-6) / 12;       // characters animate on twos
   const ones = t => Math.floor(t * 24 + 1e-6) / 24;

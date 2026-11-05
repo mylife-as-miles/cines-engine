@@ -864,7 +864,7 @@
         l.fillStyle = '#C9D2CD'; l.fillRect(150, 60, 1300, 26); l.fillStyle = '#5E6E6A'; l.fillRect(150, 280, 420, 420); l.fillStyle = '#3E4C4A'; l.fillRect(150, 700, 1300, 400);
         rg.globalAlpha = 0.5; rg.drawImage(LC.blurred(l.canvas, 4, false), 0, 0); }), 0, 0);
       if (s.reflect) { const R = { x: 700, y: 520, scale: 2100, light: { x: 1100, y: 300, color: '#E6ECE8' } }; const fg = scratch('of-mw', W, H, { x: 170, y: 130, w: 1240, h: 820 }); fg.save(); fg.beginPath(); fg.rect(170, 130, 1240, 820); fg.clip(); s.reflect(fg, R); fg.restore();
-        g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.8; g.drawImage(fg.canvas, 170, 130, 1240, 820, 170, 130, 1240, 820); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; }
+        g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.62; g.drawImage(fg.canvas, 170, 130, 1240, 820, 170, 130, 1240, 820); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; }
       // the mesh: tiny holes, a dot-matrix over everything behind the glass
       g.drawImage(cached(c, 'micro|mesh', mg => { mg.fillStyle = 'rgba(4,6,6,0.5)'; for (let y = 130; y < 950; y += 7) for (let x = 170 + ((y / 7) % 2) * 3.5; x < 1410; x += 7) { mg.beginPath(); mg.arc(x, y, 2.2, 0, TAU); mg.fill(); } }), 0, 0);
       g.globalCompositeOperation = 'screen'; LC.glare(g, null, { x: 700, y: 500, angle: -1.15, color: '#FFFFFF', bands: [{ d: -260, w: 170, a: 0.05 }, { d: -170, w: 18, a: 0.08 }] }); g.globalCompositeOperation = 'source-over';

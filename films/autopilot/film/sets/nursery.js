@@ -507,9 +507,16 @@
         g.fillStyle = '#5A6066'; g.fillRect(X(d[0] + 0.01), Y(0.32), (d[1] - d[0] - 0.02) * pxm, 0.2 * pxm);
         // the plywood sheet over the door's glass, screwed through to the frame
         paintPlywood(g, X(d[0] + 0.07), Y(2.03), (d[1] - d[0] - 0.19) * pxm, (2.03 - 0.36) * pxm, pxm, 'door');
+        // the notice taped at eye level: white paper in its sleeve (the words themselves are drawn where they can be read)
+        { const N = NOTICE, nx = X(N.u - N.w / 2), ny = Y(N.y0 + N.h), nw = N.w * pxm, nh = N.h * pxm;
+          g.fillStyle = 'rgba(40,28,20,0.3)'; g.fillRect(nx - 0.012 * pxm, ny + 0.006 * pxm, nw + 0.02 * pxm, nh + 0.01 * pxm);
+          g.fillStyle = '#EEE8DC'; g.fillRect(nx, ny, nw, nh);
+          if (pxm > 90) { g.fillStyle = 'rgba(30,28,26,0.55)'; [0.28, 0.36, 0.44, 0.52, 0.6].forEach((t, i) => { const lw = [0.4, 0.62, 0.66, 0.84, 0.86][i]; g.fillRect(nx + nw * (0.5 - lw / 2), ny + nh * t, nw * lw, Math.max(1, nh * 0.045)); }); g.fillRect(nx + nw * 0.24, ny + nh * 0.72, nw * 0.52, Math.max(1, nh * 0.05)); }
+          g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillRect(nx - 0.01 * pxm, ny - 0.008 * pxm, nw + 0.02 * pxm, nh + 0.016 * pxm); }
         // the pull handle and the lock: scored with fresh scratches
         g.fillStyle = '#9AA0A4'; g.fillRect(X(LOCK.u - 0.012), Y(1.42), 0.026 * pxm, 0.42 * pxm);
         g.fillStyle = '#B8BCBE'; g.beginPath(); g.arc(X(LOCK.u), Y(LOCK.y), 0.022 * pxm, 0, TAU); g.fill(); g.fillStyle = '#1A1C1E'; g.fillRect(X(LOCK.u) - 0.003 * pxm, Y(LOCK.y + 0.012), 0.006 * pxm, 0.024 * pxm);
+        if (pxm > 150 && pxm < 420) lockScratches(g, X(LOCK.u), Y(LOCK.y), pxm, 0.9, 'elev');
         g.fillStyle = C.alu; g.fillRect(X(sd[0] - 0.03), Y(2.13), (sd[1] - sd[0] + 0.06) * pxm, 2.01 * pxm);
         // the canopy above
         g.fillStyle = 'rgba(20,14,14,0.55)'; g.fillRect(X(e.u0 + 0.04), Y(2.5), (e.u1 - e.u0 - 0.08) * pxm, 0.06 * pxm);   // its soffit, seen from below
@@ -883,14 +890,6 @@
         for (let i = 0; i < 7; i++) { const u = U1 - 1.6 + i * 0.62; g.fill(Q([[u, 0, -0.1], [u + 0.3, 0, -0.1], [u - 2.2, 0, -1.6], [u - 2.6, 0, -1.6]])); } g.restore(); }
       // the bottom band falls into deeper shade toward us
       g.fillStyle = LC.lin(g, 0, 880, 0, H, [[0, '#0C0E12', 0], [1, '#0C0E12', 0.55]]); g.fillRect(0, 880, W, H - 880);
-      // close to the lens, out of focus: a bollard on the left, and the end of the low railing along the car park
-      { const fg = scratch('entFg'); fg.fillStyle = '#0B0C10'; const bq = ground(10.95, 3.95), bk = bq.k;
-        fg.fill(LC.rrect(bq.x - 0.07 * bk, bq.y - 0.92 * bk, 0.14 * bk, 0.92 * bk + 60, 0.05 * bk));
-        fg.fillStyle = 'rgba(214,190,160,0.3)'; fg.fillRect(bq.x - 0.07 * bk, bq.y - 0.78 * bk, 0.14 * bk, 0.05 * bk); fg.fillStyle = '#0B0C10';
-        [[9.3, 3.7], [10.0, 3.7]].forEach(([u, d]) => { const q = ground(u, d); fg.fillRect(q.x - 0.025 * q.k, q.y - 0.84 * q.k, 0.05 * q.k, 0.84 * q.k + 60); });
-        { const a2 = ground(8.4, 3.7), b2 = ground(10.6, 3.7); fg.fill(LC.pathPts([[a2.x, a2.y - 0.84 * a2.k], [b2.x, b2.y - 0.84 * b2.k], [b2.x, b2.y - 0.79 * b2.k], [a2.x, a2.y - 0.79 * a2.k]])); fg.fill(LC.pathPts([[a2.x, a2.y - 0.44 * a2.k], [b2.x, b2.y - 0.44 * b2.k], [b2.x, b2.y - 0.4 * b2.k], [a2.x, a2.y - 0.4 * a2.k]])); }
-        if (!dusk) { fg.globalCompositeOperation = 'source-atop'; fg.fillStyle = LC.lin(fg, bq.x + 0.02 * bk, 0, bq.x + 0.07 * bk, 0, [[0, '#C8845A', 0], [1, '#C8845A', 0.55]]); fg.fillRect(0, 0, W, H); }
-        g.drawImage(LC.blurred(fg.canvas, 8, false), 0, 0); }
     }
     const view = {
       back(c, t, s) {
