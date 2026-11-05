@@ -1,0 +1,324 @@
+<!doctype html><meta charset="utf-8"><title>C1 · The Counter</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_c.js"></script>
+<script>
+/* AUTOPILOT · LOOK C "THROUGH GLASS" · C1 THE COUNTER (INT. KITCHEN, moments after 6:14 A.M.)
+   The phone, propped against the back-garden window beside the kettle, charging at 7%.
+   Its black glass is the pane: it reflects what is behind the camera. The hall, the sun through the front door,
+   the work bag waiting by that door with its outside pocket empty, and Daniel climbing the stairs toward the landing
+   window, leaving the frame. The kettle's chrome, out of focus in the foreground, says it again, bent round.
+   Warmth exists only inside the glass. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LC.P;
+  const f = OTM.frame(ctx, { seed: 21 });
+  const g = f.world, E = f.emissive;
+  const TOP = 138, BOT = 942;
+
+  // ---------------- layout (frame px) ----------------
+  const RAIL = { y0: 672, y1: 728 };          // window bottom rail; the worktop meets it at y1
+  const MULL = { x0: 1452, x1: 1500 };        // mullion, behind the kettle
+  const REVEAL = 86;                           // plastered reveal at the left edge
+  const PH = { tl: [652, 168], tr: [914, 175], br: [928, 731], bl: [638, 735] };
+
+  // =====================================================================
+  // 1. THE GARDEN, through the glass: the house's shadow still lies over it; only the tall trees have the sun
+  // =====================================================================
+  const gd = LC.layer();
+  gd.fillStyle = LC.lin(gd, 0, TOP, 0, 400, [[0, '#CCD8D4'], [1, '#E0E3D8']]); gd.fillRect(0, 0, W, H);
+  // far tree line: overlapping crowns, cool bodies; the sun rising behind the house only touches their tops
+  const R1 = OTM.rng('trees'); const crowns = [];
+  for (let i = 0; i < 34; i++) { const x = -80 + i * 62 + R1() * 30, y = 236 + R1() * 70 + Math.sin(i * 0.7) * 26, r = 60 + R1() * 60; const pts = [];
+    for (let a = 0; a < 24; a++) { const t = a / 24 * Math.PI * 2, rr = r * (0.82 + 0.3 * OTM.vnoise(Math.cos(t) * 2 + i, Math.sin(t) * 2, 5)); pts.push([x + Math.cos(t) * rr, y + 40 + Math.sin(t) * rr * 0.85]); }
+    crowns.push({ p: LC.pathPts(pts), c: OTM.mix('#5B766A', '#48625A', R1()) }); }
+  crowns.forEach(c => { gd.fillStyle = '#C2A773'; gd.fill(c.p); });
+  crowns.forEach(c => { gd.save(); gd.translate(4, 9); gd.fillStyle = c.c; gd.fill(c.p); gd.restore(); });
+  gd.fillStyle = '#4F695E'; gd.fillRect(0, 360, W, 120);
+  // the fence, weathered boards in shade, a thin line of sun on its top rail
+  const FT = 338, FB = 604;
+  for (let x = -20; x < W + 40; x += 48) { gd.fillStyle = OTM.mix('#A2AEA5', '#94A199', ((x / 48) | 0) % 2 ? 0.15 : 0.8); gd.fillRect(x, FT + ((x * 7) % 9), 46, FB - FT); gd.fillStyle = 'rgba(38,48,44,0.35)'; gd.fillRect(x + 45, FT, 3, FB - FT); }
+  gd.fillStyle = 'rgba(48,60,56,0.5)'; gd.fillRect(0, FT + 64, W, 8); gd.fillRect(0, FB - 64, W, 8);
+  gd.fillStyle = 'rgba(226,186,124,0.75)'; gd.fillRect(0, FT - 4, W, 7);
+  // lawn in shade
+  gd.fillStyle = LC.lin(gd, 0, FB, 0, RAIL.y0 + 40, [[0, '#5A7162'], [1, '#475E50']]); gd.fillRect(0, FB, W, RAIL.y0 + 60 - FB);
+  // a young tree, and a child's swing hanging still from its branch
+  gd.fillStyle = '#3D5047'; gd.beginPath(); gd.moveTo(316, FB + 34); gd.bezierCurveTo(308, 500, 326, 420, 298, 280); gd.lineTo(328, 280); gd.bezierCurveTo(350, 420, 338, 500, 344, FB + 34); gd.closePath(); gd.fill();
+  gd.beginPath(); gd.moveTo(318, 372); gd.bezierCurveTo(280, 344, 232, 338, 168, 342); gd.lineTo(166, 354); gd.bezierCurveTo(226, 350, 270, 358, 316, 388); gd.closePath(); gd.fill();
+  const R2 = OTM.rng('canopy');
+  for (let i = 0; i < 26; i++) { const a = R2() * Math.PI * 2, d = R2(); gd.fillStyle = OTM.mix('#3C5046', '#4C6256', R2()); gd.beginPath(); gd.ellipse(300 + Math.cos(a) * 200 * d, 210 + Math.sin(a) * 100 * d, 90 + R2() * 50, 70 + R2() * 30, 0, 0, Math.PI * 2); gd.fill(); }
+  gd.strokeStyle = '#4A5650'; gd.lineWidth = 3; gd.beginPath(); gd.moveTo(206, 348); gd.lineTo(209, 540); gd.moveTo(262, 346); gd.lineTo(259, 540); gd.stroke();
+  gd.fillStyle = '#6E6152'; gd.fillRect(198, 536, 72, 10);
+  const garden = LC.blurred(gd.canvas, 7);
+
+  // =====================================================================
+  // 2. THE HALL, as the phone's glass sees it: rendered from the phone looking back at the front of the house, then mirrored
+  // =====================================================================
+  const RW = 536, RH = 1160;
+  const hallRender = (() => {
+    const h = LC.layer(RW, RH);
+    const cam = LC.camera({ x: 0, y: 1.0, z: 0, pitch: 0.10, f: 1900, cx: RW / 2, cy: RH / 2 });
+    const Q = (pts, c, a) => LC.quad(h, cam, pts, c, a);
+    const XL = -0.85, XS = 0.10, XR = 1.0, ZD = 9.2, CEIL = 2.62;
+    h.fillStyle = '#100B08'; h.fillRect(0, 0, RW, RH);
+    // stairwell walls, end wall, passage ceiling (all near-black: a black mirror only shows what is lit)
+    Q([[XL, 0, ZD], [XR, 0, ZD], [XR, 5.4, ZD], [XL, 5.4, ZD]], '#1E150F');
+    Q([[XL, CEIL, 3], [XS, CEIL, 3], [XS, CEIL, ZD], [XL, CEIL, ZD]], '#150F0B');
+    Q([[XL, 0, 3], [XL, CEIL, 3], [XL, CEIL, ZD], [XL, 0, ZD]], '#1A120D');
+    Q([[XR, 0, 3], [XR, 5.4, 3], [XR, 5.4, ZD], [XR, 0, ZD]], '#171009');
+    // the landing window at the head of the stairs, full of the morning
+    const LW = { x0: 0.40, x1: 0.98, y0: 3.0, y1: 4.25 };
+    { const a = cam.p(LW.x0, LW.y1, ZD), b = cam.p(LW.x1, LW.y0, ZD);
+      h.fillStyle = LC.lin(h, 0, a[1], 0, b[1], [[0, P.sunWhite], [0.6, P.sunCream], [1, P.honey]]); h.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]);
+      h.fillStyle = '#2A1C12'; const m = cam.p((LW.x0 + LW.x1) / 2, 0, ZD)[0]; h.fillRect(m - 4, a[1], 8, b[1] - a[1]); const mh = cam.p(0, (LW.y0 + LW.y1) / 2, ZD)[1]; h.fillRect(a[0], mh - 5, b[0] - a[0], 10);
+      h.fillStyle = '#1C130D'; h.fillRect(a[0] - 8, a[1] - 8, b[0] - a[0] + 16, 8); h.fillRect(a[0] - 8, b[1], b[0] - a[0] + 16, 10); }
+    // the light it pours down the stairwell
+    { const a = cam.p(LW.x0, LW.y1, ZD), b = cam.p(LW.x1, LW.y0, ZD), c = cam.p(0.3, 0.9, 4.6), d = cam.p(1.0, 0.9, 4.6);
+      LC.beam(h, [[a[0], a[1] + 40], [b[0], a[1] + 40], [d[0] + 40, d[1]], [c[0] - 30, c[1]]], P.honey, 0.16, 0.0, [0, a[1]], [0, c[1]]); }
+    // the front door: architrave, leaf, two glazed panels and the fanlight, blazing
+    const DX0 = -0.75, DX1 = 0.05, DT = 2.05;
+    Q([[DX0 - 0.09, 0, ZD - 0.01], [DX1 + 0.09, 0, ZD - 0.01], [DX1 + 0.09, 2.54, ZD - 0.01], [DX0 - 0.09, 2.54, ZD - 0.01]], '#0C0907');
+    Q([[DX0, 0, ZD - 0.02], [DX1, 0, ZD - 0.02], [DX1, DT, ZD - 0.02], [DX0, DT, ZD - 0.02]], '#1A1612');
+    const glow = (x0, x1, y0, y1) => { const a = cam.p(x0, y1, ZD - 0.03), b = cam.p(x1, y0, ZD - 0.03);
+      h.fillStyle = LC.rad(h, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 2, Math.max(b[0] - a[0], b[1] - a[1]) * 0.75, [[0, P.sunWhite], [0.6, P.sunCream], [1, P.honey]]); h.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); };
+    glow(DX0 + 0.1, DX0 + 0.37, 1.14, 1.9); glow(DX1 - 0.37, DX1 - 0.1, 1.14, 1.9); glow(DX0, DX1, 2.11, 2.45);
+    [-0.55, -0.35, -0.15].forEach(x => { const a = cam.p(x, 2.11, ZD - 0.04), b = cam.p(x, 2.45, ZD - 0.04); h.strokeStyle = '#2A1D13'; h.lineWidth = 4; h.beginPath(); h.moveTo(a[0], a[1]); h.lineTo(b[0], b[1]); h.stroke(); });
+    Q([[-0.47, 0.93, ZD - 0.03], [-0.23, 0.93, ZD - 0.03], [-0.23, 0.99, ZD - 0.03], [-0.47, 0.99, ZD - 0.03]], '#7A5A30');
+    // shafts from the door glass along the passage, and the long patches they lay on the boards
+    { const s0 = cam.p(DX0 + 0.1, 1.9, ZD), s1 = cam.p(DX1 - 0.1, 1.9, ZD), fl = cam.p(-0.85, 0, 6.3), fr = cam.p(0.1, 0, 6.3);
+      LC.beam(h, [s0, s1, fr, fl], P.honey, 0.13, 0.0, [0, s0[1]], [0, fl[1]]); }
+    Q([[XL, 0, 5.2], [XS, 0, 5.2], [XS, 0, ZD], [XL, 0, ZD]], '#1E140D');
+    { const pl = LC.layer(RW, RH); const PQ = (pts, c) => LC.quad(pl, cam, pts, c);
+      PQ([[-0.74, 0, 5.9], [-0.40, 0, 5.9], [-0.31, 0, 8.3], [-0.64, 0, 8.3]], '#A87240'); PQ([[-0.30, 0, 5.9], [0.04, 0, 5.9], [0.04, 0, 8.3], [-0.22, 0, 8.3]], '#A87240');
+      PQ([[-0.69, 0, 6.2], [-0.45, 0, 6.2], [-0.36, 0, 8.0], [-0.60, 0, 8.0]], '#D7A465'); PQ([[-0.25, 0, 6.2], [0.0, 0, 6.2], [0.0, 0, 8.0], [-0.24, 0, 8.0]], '#D7A465');
+      h.drawImage(LC.blurred(pl.canvas, 5, false), 0, 0); }
+    // the stairs: dark risers, the nosings catching the light as warm lines
+    for (let k = 13; k >= 0; k--) {
+      const z = 4.4 + 0.25 * k, y0 = 0.2 * k, y1 = 0.2 * (k + 1);
+      Q([[XS, y1, z], [XR, y1, z], [XR, y1, z + 0.25], [XS, y1, z + 0.25]], y1 < 1.0 ? '#2A1C12' : '#140E0A');
+      Q([[XS, y0, z], [XR, y0, z], [XR, y1, z], [XS, y1, z]], '#120C08');
+      const a = cam.p(XS + 0.12, y1, z - 0.01), b = cam.p(XR, y1, z - 0.01); h.strokeStyle = OTM.rgba('#D9A466', 0.35 + 0.04 * k); h.lineWidth = Math.max(2, 0.025 * cam.k(z)); h.beginPath(); h.moveTo(a[0], a[1]); h.lineTo(b[0], b[1]); h.stroke();
+    }
+    // string and banister
+    Q([[XS, 0, 4.4], [XS, 0.3, 4.4], [XS, 3.1, 7.9], [XS, 2.8, 7.9]], '#0E0A07');
+    const rail = z => 0.8 * Math.max(0, (z - 4.4)) + 0.92;
+    for (let z = 4.55; z < 7.9; z += 0.14) { const a = cam.p(XS + 0.02, rail(z) - 0.86, z), b = cam.p(XS + 0.02, rail(z), z); h.strokeStyle = '#080605'; h.lineWidth = Math.max(2, 0.035 * cam.k(z)); h.beginPath(); h.moveTo(a[0], a[1]); h.lineTo(b[0], b[1]); h.stroke(); }
+    { const pts = []; for (let z = 4.4; z <= 7.95; z += 0.1) pts.push(cam.p(XS + 0.02, rail(z), z)); h.lineCap = 'round'; h.strokeStyle = '#0C0806'; h.lineWidth = 12; h.beginPath(); pts.forEach((q, i) => i ? h.lineTo(q[0], q[1]) : h.moveTo(q[0], q[1])); h.stroke(); }
+    // a lampshade in the hall, dark against the fanlight
+    { const c = cam.p(-0.36, 2.2, 7.6), k = cam.k(7.6); h.fillStyle = '#0B0807'; h.beginPath(); h.moveTo(c[0] - 0.17 * k, c[1]); h.lineTo(c[0] + 0.17 * k, c[1]); h.lineTo(c[0] + 0.12 * k, c[1] - 0.2 * k); h.lineTo(c[0] - 0.12 * k, c[1] - 0.2 * k); h.closePath(); h.fill(); h.fillRect(c[0] - 1.5, c[1] - 0.6 * k, 3, 0.42 * k); }
+
+    // ---- the work bag by the front door, in the door's light: a leather satchel, its outside pocket hanging open and empty ----
+    { const z = 6.35, x = -0.50, k = cam.k(z), b = cam.p(x, 0, z), bw = 0.50 * k, bh = 0.37 * k, X0 = b[0] - bw / 2, Y1 = b[1];
+      h.fillStyle = 'rgba(8,5,4,0.8)'; h.beginPath(); h.ellipse(b[0], Y1 + 2, bw * 0.62, bh * 0.09, 0, 0, Math.PI * 2); h.fill();
+      // body: slightly tapered, the far side lit by the door, the near face in its own shade
+      const body = LC.rquad([[X0 + bw * 0.04, Y1 - bh], [X0 + bw * 0.96, Y1 - bh], [X0 + bw, Y1], [X0, Y1]], 0.05 * k);
+      h.fillStyle = LC.lin(h, X0, 0, X0 + bw, 0, [[0, '#7A4C27'], [0.45, '#40281A'], [1, '#2A190E']]); h.fill(body);
+      // flap over the top third, its edge catching the light
+      const flap = LC.rquad([[X0 + bw * 0.02, Y1 - bh - 2], [X0 + bw * 0.98, Y1 - bh - 2], [X0 + bw * 0.98, Y1 - bh * 0.6], [X0 + bw * 0.02, Y1 - bh * 0.6]], 0.05 * k);
+      h.fillStyle = '#2A190E'; h.fill(flap); h.fillStyle = 'rgba(242,190,120,0.9)'; h.fillRect(X0 + bw * 0.05, Y1 - bh - 3, bw * 0.9, 3.5);
+      h.fillStyle = 'rgba(242,190,120,0.55)'; h.fillRect(X0 + bw * 0.05, Y1 - bh * 0.6, bw * 0.9, 2);
+      // the outside slip pocket: a flat panel, mouth open, a dark slot under a lit lip, nothing inside
+      const px = X0 + bw * 0.12, py = Y1 - bh * 0.5, pw = bw * 0.76, ph = bh * 0.44;
+      h.fillStyle = LC.lin(h, px, 0, px + pw, 0, [[0, '#A06A38'], [0.55, '#62401F'], [1, '#43291A']]); h.fill(LC.rrect(px, py, pw, ph, 0.025 * k));
+      h.fillStyle = '#040202'; h.beginPath(); h.moveTo(px + 3, py + 1); h.quadraticCurveTo(px + pw / 2, py + 0.085 * k, px + pw - 3, py + 1); h.closePath(); h.fill();
+      h.strokeStyle = '#F6C886'; h.lineWidth = 3.5; h.beginPath(); h.moveTo(px + 3, py + 1); h.quadraticCurveTo(px + pw / 2, py + 0.085 * k, px + pw - 3, py + 1); h.stroke();
+      // a short carry handle on top
+      h.strokeStyle = '#1E120A'; h.lineWidth = 0.032 * k; h.lineCap = 'round'; h.beginPath(); h.moveTo(b[0] - bw * 0.14, Y1 - bh - 2); h.bezierCurveTo(b[0] - bw * 0.12, Y1 - bh - 0.13 * k, b[0] + bw * 0.12, Y1 - bh - 0.13 * k, b[0] + bw * 0.14, Y1 - bh - 2); h.stroke();
+      h.strokeStyle = 'rgba(242,190,120,0.7)'; h.lineWidth = 2.5; h.beginPath(); h.moveTo(b[0] - bw * 0.1, Y1 - bh - 0.105 * k); h.bezierCurveTo(b[0] - bw * 0.04, Y1 - bh - 0.125 * k, b[0] + bw * 0.04, Y1 - bh - 0.125 * k, b[0] + bw * 0.1, Y1 - bh - 0.105 * k); h.stroke();
+    }
+
+    // ---- Daniel on the stairs: back turned, climbing toward the landing window; grey tee, pyjama trousers, bare feet ----
+    { const z = 5.0, k = cam.k(z), base = cam.p(0.64, 1.0, z);       // origin: the higher tread (y = 1.0) under his left foot
+      h.save(); h.translate(base[0], base[1]); h.scale(k, -k);          // metres, y up; we see his back, so his right is +x
+      const S = (pts) => h.fill(LC.smooth(pts)); h.fillStyle = '#060404';
+      // left leg: stepping up onto the higher tread, the knee forward and away from us
+      S([[-0.215, 0.93], [-0.01, 0.93], [-0.02, 0.62], [-0.045, 0.42], [-0.06, 0.14], [-0.05, 0.03, 1], [-0.2, 0.02, 1], [-0.2, 0.2], [-0.205, 0.46], [-0.225, 0.7]]);
+      // right leg: long, back on the lower tread, heel lifted off it
+      S([[0.01, 0.93], [0.215, 0.93], [0.215, 0.62], [0.2, 0.3], [0.19, -0.02], [0.175, -0.13], [0.09, -0.14], [0.075, 0.1], [0.05, 0.45], [0.03, 0.7]]);
+      S([[0.085, -0.13], [0.18, -0.12], [0.19, -0.19], [0.175, -0.24], [0.1, -0.23], [0.08, -0.18]]);
+      // torso in the tee, leaning into the climb
+      S([[-0.235, 0.9], [0.235, 0.9], [0.26, 1.15], [0.28, 1.4], [0.245, 1.52], [0.11, 1.57], [0.0, 1.575], [-0.11, 1.57], [-0.245, 1.52], [-0.28, 1.38], [-0.255, 1.12]]);
+      // right arm hanging, a little behind him; left arm reaching forward to the rail
+      S([[0.22, 1.51], [0.305, 1.45], [0.325, 1.2], [0.315, 0.98], [0.305, 0.83], [0.255, 0.81], [0.24, 0.99], [0.225, 1.24]]);
+      S([[-0.22, 1.51], [-0.305, 1.46], [-0.375, 1.33], [-0.445, 1.23], [-0.5, 1.17], [-0.47, 1.105], [-0.39, 1.15], [-0.3, 1.25], [-0.225, 1.33]]);
+      // neck, head bowed a little toward the steps, ears
+      S([[-0.06, 1.54], [0.06, 1.54], [0.065, 1.65], [-0.065, 1.65]]);
+      S([[-0.104, 1.62], [0.104, 1.62], [0.118, 1.745], [0.104, 1.855], [0.0, 1.9], [-0.104, 1.855], [-0.118, 1.745]]);
+      S([[0.11, 1.715], [0.137, 1.73], [0.136, 1.68], [0.112, 1.668]]); S([[-0.11, 1.715], [-0.137, 1.73], [-0.136, 1.68], [-0.112, 1.668]]);
+      // the lifted sole, a pale sliver
+      h.fillStyle = '#4E382C'; S([[0.095, -0.15], [0.175, -0.14], [0.183, -0.19], [0.17, -0.225], [0.105, -0.215]]);
+      // rim from the landing window ahead and above: crown, shoulder tops, the top edge of the reaching arm
+      h.lineCap = 'round'; h.strokeStyle = '#F6CD92'; h.lineWidth = 0.018;
+      h.beginPath(); h.moveTo(-0.096, 1.858); h.quadraticCurveTo(0, 1.925, 0.096, 1.858); h.stroke();
+      h.lineWidth = 0.013; h.beginPath(); h.moveTo(-0.068, 1.578); h.quadraticCurveTo(-0.17, 1.572, -0.246, 1.525); h.moveTo(0.068, 1.578); h.quadraticCurveTo(0.17, 1.572, 0.244, 1.525); h.stroke();
+      h.lineWidth = 0.011; h.beginPath(); h.moveTo(-0.305, 1.462); h.quadraticCurveTo(-0.4, 1.33, -0.495, 1.18); h.stroke();
+      h.restore();
+    }
+    return h.canvas;
+  })();
+  // a black mirror shows only what is lit: crush the darks, keep the glow
+  const hall = (() => { const c = OTM.makeCanvas(RW, RH), x = c.getContext('2d'); x.drawImage(hallRender, 0, 0); const id = x.getImageData(0, 0, RW, RH), d = id.data;
+    for (let i = 0; i < d.length; i += 4) for (let k = 0; k < 3; k++) d[i + k] = 255 * Math.pow(d[i + k] / 255, 1.35);
+    x.putImageData(id, 0, 0); return LC.flipX(LC.blurred(c, 1.1, false)); })();
+
+  // =====================================================================
+  // 3. THE WINDOW GLASS: garden, the kitchen's ghost in the glass, glare and dust
+  // =====================================================================
+  g.drawImage(garden, 0, 0);
+  const glassClip = new Path2D(); glassClip.rect(REVEAL, 0, W - REVEAL, RAIL.y0);
+  { // the room behind the camera, faint in the window: the hall door's warm slot, the dark bulk of the kitchen low down
+    const gh = LC.layer(); gh.fillStyle = 'rgba(255,214,150,1)'; gh.fillRect(968, 300, 120, 380); gh.fillStyle = 'rgba(255,244,220,1)'; gh.fillRect(998, 360, 54, 150);
+    const ghB = LC.blurred(gh.canvas, 14, false); g.save(); g.clip(glassClip); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.13; g.drawImage(ghB, 0, 0); g.restore();
+    g.save(); g.clip(glassClip); g.fillStyle = LC.lin(g, 0, 470, 0, RAIL.y0, [[0, P.ink, 0], [1, P.ink, 0.16]]); g.fillRect(0, 470, W, RAIL.y0 - 470); g.restore();
+  }
+  LC.glare(g, glassClip, { x: 520, y: 420, angle: -0.98, color: '#F6F3EA', bands: [{ d: -250, w: 130, a: 0.06 }, { d: -176, w: 22, a: 0.09 }, { d: 300, w: 220, a: 0.04 }, { d: 405, w: 26, a: 0.06 }] });
+  LC.specks(g, glassClip, { x: REVEAL, y: TOP, w: W - REVEAL, h: RAIL.y0 - TOP }, 'winDust', { n: 300, color: '#FFFFFF', rMin: 0.5, rMax: 1.4, aMin: 0.05, aMax: 0.24, scratch: 0.14 });
+
+  { const bl = LC.layer(); bl.drawImage(garden, 0, 0); bl.globalCompositeOperation = 'destination-in'; bl.fillStyle = LC.lin(bl, 0, TOP, 0, 520, [[0, '#000000', 1], [1, '#000000', 0]]); bl.fillRect(0, 0, W, H);
+    E.save(); E.globalAlpha = 0.28; E.drawImage(bl.canvas, 0, 0); E.restore(); }
+  // =====================================================================
+  // 4. THE WINDOW FRAME (painted timber, contre-jour)
+  // =====================================================================
+  const fFace = '#6F7E78', fEdge = '#B5C2BC', fDark = '#46524F';
+  g.fillStyle = '#BCC7C1'; g.fillRect(REVEAL, RAIL.y0, W, 13);                       // the rail's sloping top, catching the sky
+  g.fillStyle = LC.lin(g, 0, RAIL.y0 + 13, 0, RAIL.y1, [[0, '#869590'], [1, '#64716C']]); g.fillRect(REVEAL, RAIL.y0 + 13, W, RAIL.y1 - RAIL.y0 - 13);
+  g.fillStyle = fDark; g.fillRect(REVEAL, RAIL.y0 - 3, W, 3); g.fillStyle = 'rgba(255,255,255,0.4)'; g.fillRect(REVEAL, RAIL.y0 - 6, W, 2);
+  g.fillStyle = LC.lin(g, REVEAL, 0, 0, 0, [[0, '#A0ADA7'], [1, '#56625E']]); g.fill(LC.pathPts([[0, TOP - 10], [REVEAL, TOP - 10], [REVEAL, RAIL.y1], [0, RAIL.y1 + 30]]));
+  g.fillStyle = fFace; g.fillRect(REVEAL - 12, TOP - 10, 12, RAIL.y1 - TOP + 10); g.fillStyle = fEdge; g.fillRect(REVEAL - 2, TOP - 10, 2, RAIL.y1 - TOP + 10);
+
+  // =====================================================================
+  // 5. THE WORKTOP (oiled oak in cool shade; its satin finish mirrors the window as a bright band)
+  // =====================================================================
+  const WT = RAIL.y1;
+  g.fillStyle = LC.lin(g, 0, WT, 0, BOT, [[0, '#76675A'], [0.3, '#56493F'], [1, '#1E1B19']]);
+  g.fill(LC.pathPts([[0, RAIL.y1 + 30], [REVEAL, WT], [W, WT], [W, H], [0, H]]));
+  { const R = OTM.rng('grain'); g.save(); g.globalAlpha = 0.16; for (let i = 0; i < 64; i++) { const y = WT + 5 + Math.pow(R(), 1.5) * (BOT - WT); g.strokeStyle = R() > 0.5 ? '#251F1A' : '#8C7B68'; g.lineWidth = 0.6 + (y - WT) / 240; g.beginPath(); g.moveTo(-20, y + R() * 4); g.bezierCurveTo(600, y + (R() - 0.5) * 6, 1300, y + (R() - 0.5) * 6, W + 20, y + (R() - 0.5) * 4); g.stroke(); } g.restore(); }
+  { const rf = LC.layer(); rf.fillStyle = LC.lin(rf, 0, WT, 0, WT + 110, [[0, '#CCD5CF', 0.5], [1, '#CCD5CF', 0]]); rf.fillRect(REVEAL, WT, W, 110);
+    rf.globalCompositeOperation = 'destination-out'; rf.fillStyle = '#000'; rf.fillRect(640, WT, 284, 140); rf.fillRect(1150, WT, 510, 140);
+    g.save(); g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(rf.canvas, 6, false), 0, 0); g.restore(); }
+  // the phone's own dark reflection in the satin, and the shadow the window throws toward us
+  { const sh = LC.layer(); sh.fillStyle = 'rgba(6,9,9,0.7)'; sh.beginPath(); sh.ellipse(784, 742, 165, 18, 0, 0, Math.PI * 2); sh.fill();
+    sh.fillStyle = 'rgba(6,9,9,0.32)'; sh.beginPath(); sh.moveTo(640, 738); sh.lineTo(926, 734); sh.lineTo(990, 840); sh.lineTo(590, 846); sh.closePath(); sh.fill();
+    g.drawImage(LC.blurred(sh.canvas, 12, false), 0, 0); }
+  g.save(); g.globalCompositeOperation = 'soft-light'; g.fillStyle = LC.lin(g, 0, 800, 0, BOT, [[0, P.honey, 0], [1, P.honey, 0.3]]); g.fillRect(0, 800, W, BOT - 800); g.restore();
+
+  // =====================================================================
+  // 6. THE PHONE
+  // =====================================================================
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]], addv = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k];
+  // its left flank: the same rounded slab, offset back and left (it is turned a touch to our right)
+  { const off = [-10, 3]; const back = LC.rquad([[PH.tl[0] + off[0], PH.tl[1] + off[1]], [PH.tr[0] + off[0], PH.tr[1] + off[1]], [PH.br[0] + off[0], PH.br[1] - 2], [PH.bl[0] + off[0], PH.bl[1] - 2]], 44);
+    g.fillStyle = LC.lin(g, PH.tl[0] - 12, 0, PH.tl[0] + 20, 0, [[0, '#4A5354'], [0.35, '#262B2C'], [1, '#131617']]); g.fill(back);
+    g.save(); g.clip(back); g.strokeStyle = 'rgba(206,220,214,0.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(PH.tl[0] - 7, PH.tl[1] + 60); g.lineTo(PH.bl[0] - 7, PH.bl[1] - 60); g.stroke(); g.restore();
+    g.fillStyle = '#525B5C'; g.fill(LC.rrect(PH.tl[0] - 11, 300, 4, 46, 2)); g.fill(LC.rrect(PH.tl[0] - 11, 360, 4, 46, 2)); }
+  const body = LC.rquad([PH.tl, PH.tr, PH.br, PH.bl], 44); g.fillStyle = '#171A1B'; g.fill(body);
+  g.save(); g.clip(body); g.lineCap = 'round'; g.strokeStyle = 'rgba(218,230,225,0.9)'; g.lineWidth = 3; g.beginPath(); g.moveTo(PH.tl[0] + 42, PH.tl[1] + 1.5); g.lineTo(PH.tr[0] - 40, PH.tr[1] + 1.5); g.quadraticCurveTo(PH.tr[0] - 1, PH.tr[1] + 1, PH.tr[0] - 0.5, PH.tr[1] + 42); g.lineTo(PH.br[0] - 0.5, PH.br[1] - 80); g.stroke(); g.restore();
+  const inset = 11;
+  const S = { tl: [PH.tl[0] + inset, PH.tl[1] + inset], tr: [PH.tr[0] - inset, PH.tr[1] + inset], br: [PH.br[0] - inset, PH.br[1] - inset], bl: [PH.bl[0] + inset, PH.bl[1] - inset] };
+  const screen = LC.rquad([S.tl, S.tr, S.br, S.bl], 36);
+  const SW = 390, SH = 844, ux = sub(S.tr, S.tl), vy = sub(S.bl, S.tl);
+  const toScreen = c => c.transform(ux[0] / SW, ux[1] / SW, vy[0] / SH, vy[1] / SH, S.tl[0], S.tl[1]);
+  g.fillStyle = '#030606'; g.fill(screen);
+  // the reflection in the black glass
+  g.save(); g.clip(screen); toScreen(g); g.globalCompositeOperation = 'screen'; g.drawImage(hall, 0, 0, SW, SH);
+  g.globalCompositeOperation = 'source-over'; g.fillStyle = LC.lin(g, 0, 0, 0, SH * 0.3, [[0, '#9FB4B0', 0.07], [1, '#9FB4B0', 0]]); g.fillRect(0, 0, SW, SH * 0.3); g.restore();
+  E.save(); toScreen(E); E.globalAlpha = 0.55; E.drawImage(hall, 0, 0, SW, SH); E.restore();
+  // lock screen: island, the 7% and the charging glyph
+  g.save(); g.clip(screen); toScreen(g);
+  g.fillStyle = '#000'; g.fill(LC.rrect(146, 24, 98, 30, 15));
+  const bx = 141, by = 172, bw = 100, bh = 46;
+  g.lineWidth = 3.2; g.strokeStyle = 'rgba(222,232,228,0.92)'; g.stroke(LC.rrect(bx, by, bw, bh, 12.5));
+  g.fillStyle = 'rgba(222,232,228,0.92)'; g.fill(LC.rrect(bx + bw + 4, by + 14, 6, 18, 3));
+  g.fillStyle = P.charge; g.fill(LC.rrect(bx + 5, by + 5, 10, bh - 10, 5));
+  g.beginPath(); g.moveTo(bx + 55, by + 6); g.lineTo(bx + 39, by + 26); g.lineTo(bx + 51, by + 26); g.lineTo(bx + 45, by + 41); g.lineTo(bx + 63, by + 18); g.lineTo(bx + 51, by + 18); g.closePath(); g.fill();
+  g.font = '500 38px "Libre Franklin"'; g.textAlign = 'center'; g.fillStyle = 'rgba(234,240,236,0.96)'; g.fillText('7%', SW / 2 + 3, by - 24);
+  g.restore();
+  E.save(); toScreen(E); E.fillStyle = P.charge; E.globalAlpha = 0.9; E.fillRect(bx + 4, by + 4, 64, bh - 8); E.restore();
+  // glass on glass: a long sheen, a thumb's smudge in the warm light, the refracted lip of the curved edge
+  LC.glare(g, screen, { x: 790, y: 450, angle: -1.12, color: '#FFFFFF', bands: [{ d: -60, w: 80, a: 0.045 }, { d: 64, w: 16, a: 0.055 }] });
+  g.save(); g.clip(screen); g.strokeStyle = 'rgba(212,226,221,0.32)'; g.lineWidth = 2.2; g.stroke(screen); g.restore();
+  // port, plug and cable: off the plug, down onto the oak, away to a socket out of frame
+  const port = addv(PH.bl, sub(PH.br, PH.bl), 0.5);
+  g.fillStyle = '#D3D7D2'; g.fill(LC.rrect(port[0] - 12, port[1] - 4, 24, 26, 4)); g.fillStyle = 'rgba(40,46,46,0.45)'; g.fillRect(port[0] - 12, port[1] + 12, 24, 10);
+  { const cp = new Path2D(); cp.moveTo(port[0], port[1] + 20); cp.bezierCurveTo(port[0] + 8, port[1] + 64, port[0] - 30, port[1] + 84, port[0] - 150, port[1] + 104); cp.bezierCurveTo(port[0] - 300, port[1] + 128, port[0] - 470, port[1] + 136, port[0] - 860, port[1] + 230);
+    const sh = LC.layer(); sh.strokeStyle = 'rgba(6,8,8,0.7)'; sh.lineWidth = 10; sh.translate(0, 9); sh.stroke(cp); g.drawImage(LC.blurred(sh.canvas, 5, false), 0, 0);
+    g.lineCap = 'round'; g.strokeStyle = '#949B97'; g.lineWidth = 9; g.stroke(cp); g.strokeStyle = '#D6DAD5'; g.lineWidth = 4.5; g.save(); g.translate(0, -1.6); g.stroke(cp); g.restore(); }
+  g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, 780, 748, 0, 130, [[0, P.charge, 0.09], [1, P.charge, 0]]); g.fillRect(620, 690, 330, 120); g.restore();
+
+  // =====================================================================
+  // 7. THE KETTLE, in the same plane as the phone, cropped by the frame: chrome, environment-mapped.
+  //    The window wraps its edges; behind the camera the hall's doorway glows in its belly; the phone glints green on its flank.
+  // =====================================================================
+  const KX = 1404, KT = 292, KB = 708, KR = 238, H_ = KB - KT;
+  const envC = LC.env(1024, 512, (e, X, Y) => {
+    const R = (a0, a1, t1, t0, c) => { e.fillStyle = c; e.fillRect(X(a0), Y(t1), X(a1) - X(a0), Y(t0) - Y(t1)); };
+    e.fillStyle = '#2F3836'; e.fillRect(0, 0, 1024, 512);                                                    // the kitchen behind us
+    e.fillStyle = LC.lin(e, 0, 0, 0, Y(32), [[0, '#8C9893'], [1, '#56625E']]); e.fillRect(0, 0, 1024, Y(32));  // ceiling, lit by the window
+    e.fillStyle = '#C3CCC7'; e.beginPath(); e.ellipse(X(-8), Y(57), 26, 11, 0, 0, Math.PI * 2); e.fill();     // a pale pendant shade
+    // wall cupboards and the cupboards under the far worktop, with their door gaps
+    R(-84, -26, 32, 12, '#1D2423'); R(30, 88, 32, 12, '#1D2423'); R(-100, 100, -6, -44, '#191F1E');
+    e.fillStyle = '#323B3A'; [-55, 60].forEach(a => e.fillRect(X(a), Y(32), 2, Y(12) - Y(32)));
+    R(-100, 100, -2, -6, '#8C8476');                                                                            // the far worktop's lit edge
+    // the fridge: a tall pale slab
+    R(-24, -9, 34, -44, '#AAB4B0'); R(-11.5, -10.5, 18, 4, '#5A6462'); R(-24, -9, 9.5, 8.5, '#7E8885');
+    // the doorway to the hall, the front door blazing at the end of it
+    R(5, 23, 30, -44, '#2B1F16'); R(4, 5.5, 30, -44, '#8C9692'); R(22.5, 24, 30, -44, '#8C9692');
+    R(10.5, 16.5, 12, -6, P.amberLight); R(11.5, 15.5, 10.5, 3, P.sunWhite); R(12.5, 14.5, 2, -5, P.honey);
+    // the worktop under the kettle and along the wall: lit by the window
+    e.fillStyle = LC.lin(e, 0, Y(-6), 0, Y(-90), [[0, '#6E6052'], [0.3, '#7D6E5E'], [1, '#5B4F44']]);
+    e.fillRect(X(-180), Y(-3), X(-100) - X(-180), 512); e.fillRect(X(100), Y(-3), X(180) - X(100), 512); e.fillRect(0, Y(-44), 1024, 512);
+    // the window behind the kettle: bright, the garden low, its rail and reveal dark
+    const win = (a0, a1) => { e.fillStyle = LC.lin(e, 0, Y(72), 0, Y(0), [[0, '#F4F7F5'], [0.45, '#E2EAE5'], [0.75, '#B3C3BA'], [1, '#869A8F']]); e.fillRect(X(a0), Y(72), X(a1) - X(a0), Y(0) - Y(72)); };
+    win(102, 180); win(-180, -104);
+    R(-180, -104, 0, -3, '#6E7B76'); R(102, 180, 0, -3, '#6E7B76');
+    R(-116, -100, 80, -3, '#1E2625'); R(98, 114, 80, -3, '#1E2625'); R(-104, -101, 72, -3, '#8E9B95');
+    // the phone right beside the kettle on its left: a dark slab, a warm ghost in its glass, a fleck of green
+    R(-100, -84, 34, -3, '#090C0C'); R(-95, -89, 22, 8, '#5A4129'); R(-94, -91, 28, 25, P.charge);
+  });
+  const samp = LC.sampler(envC);
+  const rOf = y => { const t = (KB - y) / H_; if (t < 0 || t > 0.985) return 0; if (t >= 0.38) return KR * Math.sqrt(Math.max(0, 1 - Math.pow((t - 0.38) / 0.62, 2))); const u = (0.38 - t) / 0.38; return KR * (1 - 0.1 * Math.pow(u, 5)); };
+  const hx = v => KX + v * KR, hy = v => KT + v * H_;
+  const kettlePath = (() => { const pL = [], pR = []; for (let y = KT + 2; y <= KB; y += 2) { const r = rOf(y); pL.push([KX - r, y]); pR.push([KX + r, y]); } return LC.pathPts(pL.concat(pR.reverse())); })();
+  // reflection of the kettle in the satin worktop, and its contact shadow
+  { const sh = LC.layer(); sh.fillStyle = 'rgba(6,9,9,0.75)'; sh.beginPath(); sh.ellipse(KX, KB + 26, KR * 1.05, 14, 0, 0, Math.PI * 2); sh.fill();
+    sh.fillStyle = 'rgba(6,9,9,0.3)'; sh.beginPath(); sh.moveTo(KX - KR, KB + 26); sh.lineTo(KX + KR, KB + 26); sh.lineTo(KX + KR + 70, 850); sh.lineTo(KX - KR - 60, 850); sh.closePath(); sh.fill();
+    g.drawImage(LC.blurred(sh.canvas, 12, false), 0, 0); }
+  // the power base, a black disc
+  g.fillStyle = '#0F1212'; g.beginPath(); g.ellipse(KX, KB + 14, KR * 0.96, 20, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#0F1212'; g.fillRect(KX - KR * 0.96, KB - 2, KR * 1.92, 16);
+  g.strokeStyle = 'rgba(196,210,204,0.5)'; g.lineWidth = 2; g.beginPath(); g.ellipse(KX, KB + 14, KR * 0.96, 20, 0, 0.12, Math.PI - 0.12); g.stroke();
+  // handle: a black loop off the right shoulder, rimmed by the window
+  { const hp = new Path2D(); hp.moveTo(hx(0.62), hy(0.16)); hp.bezierCurveTo(hx(1.12), hy(0.08), hx(1.42), hy(0.34), hx(1.3), hy(0.6)); hp.bezierCurveTo(hx(1.24), hy(0.72), hx(1.08), hy(0.77), hx(0.93), hy(0.75));
+    hp.lineTo(hx(0.94), hy(0.665)); hp.bezierCurveTo(hx(1.07), hy(0.67), hx(1.16), hy(0.58), hx(1.18), hy(0.48)); hp.bezierCurveTo(hx(1.22), hy(0.29), hx(1.0), hy(0.2), hx(0.67), hy(0.24)); hp.closePath();
+    g.fillStyle = '#101313'; g.fill(hp);
+    g.save(); g.clip(hp); g.strokeStyle = 'rgba(220,230,225,0.75)'; g.lineWidth = 3; g.beginPath(); g.moveTo(hx(0.64), hy(0.165)); g.bezierCurveTo(hx(1.13), hy(0.085), hx(1.43), hy(0.34), hx(1.31), hy(0.6)); g.stroke(); g.restore(); }
+  // spout: a tapered chrome tube from the body toward the phone, highlight along its back, the room's dark under it
+  { const A = [hx(-0.8), hy(0.56)], B = [hx(-1.32), hy(0.395)], r0 = 30, r1 = 9;
+    const tube = OTM.S().capsule(A[0], A[1], r0, B[0], B[1], r1).path(0, 1);
+    const ang = Math.atan2(B[1] - A[1], B[0] - A[0]), nx = -Math.sin(ang), ny = Math.cos(ang), mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2;
+    g.fillStyle = LC.lin(g, mx - nx * 26, my - ny * 26, mx + nx * 26, my + ny * 26, [[0, '#2A302F'], [0.18, '#E9EEEB'], [0.3, '#9AA6A1'], [0.55, '#2A302F'], [0.78, '#8B755C'], [1, '#1E2222']]);
+    g.fill(tube); g.strokeStyle = 'rgba(8,10,10,0.5)'; g.lineWidth = 1.2; g.stroke(tube);
+    g.fillStyle = '#0B0D0D'; g.beginPath(); g.ellipse(B[0] + 2, B[1] - 1, 5, 9, ang + 0.3, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = 'rgba(236,242,238,0.8)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(B[0] + 2, B[1] - 1, 5, 9, ang + 0.3, Math.PI * 0.9, Math.PI * 1.7); g.stroke(); }
+  LC.chrome(g, { x: KX - KR - 2, y: KT, w: KR * 2 + 4, h: H_ + 2 }, (x, y) => {
+    const r = rOf(y); if (r <= 0) return null; const u = LC.clamp((x - KX) / r, -0.999, 0.999);
+    const dr = (rOf(y + 1) - rOf(y - 1)) / 2, nz = Math.sqrt(1 - u * u), n = [u, dr * nz, nz], l = Math.hypot(n[0], n[1], n[2]); return [n[0] / l, n[1] / l, n[2] / l];
+  }, samp, { ss: 2, gain: 0.9, fresnel: 0.22, clip: kettlePath });
+  // seams: the lid ring near the top, the body's foot ring
+  g.save(); g.clip(kettlePath); g.strokeStyle = 'rgba(10,14,14,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.ellipse(KX, KT + 46, 98, 12, 0, 0.05, Math.PI - 0.05); g.stroke();
+  g.strokeStyle = 'rgba(232,240,236,0.45)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(KX, KT + 49, 98, 12, 0, 0.3, Math.PI - 0.3); g.stroke();
+  g.strokeStyle = 'rgba(236,242,238,0.55)'; g.lineWidth = 5; g.stroke(kettlePath); g.strokeStyle = 'rgba(14,20,20,0.6)'; g.lineWidth = 2.4; g.stroke(kettlePath); g.restore();
+  { const sp = (x, y, rx, ry, a) => { g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = LC.rad(g, x, y, 0, rx, [[0, '#FFFFFF', a], [0.45, '#FFFFFF', a * 0.6], [1, '#FFFFFF', 0]]); g.translate(x, y); g.scale(1, ry / rx); g.translate(-x, -y); g.beginPath(); g.arc(x, y, rx, 0, Math.PI * 2); g.fill(); g.restore();
+      E.fillStyle = OTM.rgba('#FFFFFF', a * 0.8); E.beginPath(); E.ellipse(x, y, rx * 0.5, ry * 0.5, 0, 0, Math.PI * 2); E.fill(); };
+    g.save(); g.clip(kettlePath); sp(KX - KR * 0.78, KT + H_ * 0.36, 16, 34, 1); sp(KX - KR * 0.78, KT + H_ * 0.36, 6, 16, 1); sp(KX + KR * 0.8, KT + H_ * 0.33, 14, 30, 0.95); sp(KX + KR * 0.8, KT + H_ * 0.33, 5, 13, 1); sp(KX - KR * 0.4, KT + H_ * 0.1, 14, 8, 0.8); g.restore(); }
+  g.fillStyle = '#101313'; g.beginPath(); g.moveTo(KX - 30, KT + 26); g.quadraticCurveTo(KX - 36, KT - 10, KX, KT - 15); g.quadraticCurveTo(KX + 36, KT - 10, KX + 30, KT + 26); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(214,226,220,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(KX - 27, KT - 2); g.quadraticCurveTo(KX - 2, KT - 16, KX + 24, KT - 5); g.stroke();
+  E.fillStyle = 'rgba(255,236,206,0.4)'; E.beginPath(); E.ellipse(KX + 46, KT + 220, 8, 18, 0, 0, Math.PI * 2); E.fill();
+
+  // =====================================================================
+  // 8. FINISH
+  // =====================================================================
+  f.finish({ letterbox: 2.39, grain: 0.055, fibre: 0, vignette: 0, halation: 0.55, matteColor: P.matte,
+    beforePost: c => LC.vignette(c, 0.45, P.ink) });
+  LC.slate(ctx, 'AUTOPILOT  ·  LOOK C  ·  THROUGH GLASS', 'C1  ·  THE COUNTER  ·  INT. KITCHEN, MORNING');
+  window.FRAME_READY = true;
+})();
+</script>

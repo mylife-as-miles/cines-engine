@@ -41,7 +41,18 @@
       return [x1 * cr + y2 * sr, -x1 * sr + y2 * cr, z2];
     };
     const P2 = p => { const v = view(p); return [cx + f * v[0] / v[2], cy - f * v[1] / v[2]]; };
-    return { f, view, P: P2, pts: a => a.map(P2), scaleAt: z => f / z };
+    const proj = v => [cx + f * v[0] / v[2], cy - f * v[1] / v[2]];
+    // a polygon clipped against the near plane before projection (ground planes that run past the lens)
+    const poly = (a, near) => {
+      near = near || 0.15; const V = a.map(view), out = [];
+      for (let i = 0; i < V.length; i++) {
+        const A = V[i], B = V[(i + 1) % V.length], ia = A[2] >= near, ib = B[2] >= near;
+        if (ia) out.push(A);
+        if (ia !== ib) { const t = (near - A[2]) / (B[2] - A[2]); out.push([A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, near]); }
+      }
+      return out.map(proj);
+    };
+    return { f, view, P: P2, pts: a => a.map(P2), poly, scaleAt: z => f / z };
   }
 
   // ---------- paths ----------
@@ -94,6 +105,8 @@
   }
   // paint only inside a path (clip helper)
   function within(g, path, fn) { g.save(); g.clip(path); fn(); g.restore(); }
+  // an opaque foreground shape must also block the bloom of whatever bright thing sits behind it
+  function occlude(E, path) { if (!E) return; E.save(); E.globalCompositeOperation = 'destination-out'; E.fillStyle = '#000'; E.fill(path); E.restore(); }
 
   // ---------- type ----------
   // Time stamps: large, cold type. The digits are big; the A.M./P.M. is a smaller cap set on the same baseline.
@@ -150,6 +163,23 @@
   }
   // transform a list of points by a 2x3 affine [a,b,c,d,e,f]
   const ap = (m, p) => [m[0] * p[0] + m[2] * p[1] + m[4], m[1] * p[0] + m[3] * p[1] + m[5]];
+  // convex hull (monotone chain) of 2D points
+  function hull(pts) {
+    const p = pts.map(a => [a[0], a[1]]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lo = [], up = [];
+    p.forEach(q => { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); });
+    for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+    up.pop(); lo.pop(); return lo.concat(up);
+  }
+  // a hard-edged translucent plane of light in the air (vellum): flat, never a gradient
+  function vellum(g, pts, color, alpha, clipOut) {
+    const path = polyP(hull(pts), 0.8, 9);
+    g.save();
+    if (clipOut) { const c = new Path2D(); c.rect(-10, -10, W + 20, H + 20); c.addPath(clipOut); g.clip(c, 'evenodd'); }
+    g.globalAlpha = alpha; g.fillStyle = color; g.fill(path); g.restore();
+    return path;
+  }
 
-  global.LA = { P, norm, lerp2, cam, polyS, polyP, fillP, fillPts, dither, seam, bands, sunPlane, rim, innerShade, within, stamp, text, slate, finish, smooth, rrect, ap };
+  global.LA = { P, norm, lerp2, cam, polyS, polyP, fillP, fillPts, dither, seam, bands, sunPlane, rim, innerShade, within, occlude, stamp, text, slate, finish, smooth, rrect, ap, hull, vellum };
 })(window);

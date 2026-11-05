@@ -1,0 +1,218 @@
+<!doctype html><meta charset="utf-8"><title>A2 The Mirror</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/look_a.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {W, H, S} = OTM, P = LA.P;
+  const f = OTM.frame(ctx, {seed: 22});
+  const g = f.world, E = f.emissive;
+  const sm = LA.smooth;
+
+  // ================= THROUGH THE WINDSCREEN: the street, eaten white by the sun =================
+  g.fillStyle = '#F4F1EA'; g.fillRect(0, 0, W, H);
+  // houses across the road: barely-there planes, their edges dissolving into the glare
+  // a terrace across the road: overexposed. The brick and the roofs are almost gone; only the deepest shadows survive.
+  LA.fillPts(g, [[-20, 712], [1940, 700], [1940, 872], [-20, 884]], '#EAE7E0', 1.6, 200);
+  // rooflines as a single pale cut edge
+  LA.fillPts(g, [[-20, 712], [90, 712], [90, 642], [250, 596], [410, 642], [410, 708], [690, 706], [690, 640], [850, 594], [1010, 640], [1010, 704], [1250, 702], [1250, 636], [1410, 590], [1570, 636], [1570, 700], [1790, 700], [1790, 640], [1940, 600], [1940, 720], [-20, 730]], '#E3E0D8', 1.8, 201);
+  // the deep shadows that survive: recessed doorways, the gaps under the eaves, a parked car's belly shadow
+  [[318, 770, 34, 86], [912, 766, 34, 88], [1476, 762, 34, 88]].forEach(([x, y, w, h], i) => LA.fillPts(g, [[x, y], [x + w, y], [x + w, y + h], [x, y + h]], '#D9D6CF', 0.6, 220 + i));
+  [[90, 712, 410], [690, 706, 1010], [1250, 702, 1570]].forEach(([x0, y, x1], i) => LA.fillPts(g, [[x0, y], [x1, y - 2], [x1, y + 7], [x0, y + 9]], '#D4D1C9', 0.6, 230 + i));
+  LA.fillPts(g, [[1080, 858], [1360, 852], [1340, 868], [1100, 872]], '#C4C1B9', 1.0, 240);
+  // a lamp post, thin and cool
+  // the road and the far kerb, white
+  LA.fillPts(g, [[0, 840], [1920, 800], [1920, 1100], [0, 1100]], '#F7F5F0', 1.2, 210);
+  // the sun's own hard planes on the road: the strongest whites in the frame
+  LA.sunPlane(g, E, LA.polyP([[0, 860], [1920, 818], [1920, 1100], [0, 1100]], 1.0, 211), {glow: 0.55, glowColor: '#FFF1DA'});
+  // shadow of a tree across the road (cool, hard)
+  LA.fillPts(g, [[1240, 850], [1500, 842], [1620, 900], [1310, 908]], '#E2E0DA', 1.6, 212);
+
+  // ================= THE CAR'S INTERIOR FRAME (foreground, in shade) =================
+  const IN = '#3B3836', IN2 = '#2E2C2B', IN3 = '#4A4643';
+  // headliner + the windscreen's black frit band across the top, with its printed dot gradient
+  const frit = sm([[-20, -20], [1940, -20], [1940, 120], [1500, 150], [900, 158], [300, 150], [-20, 128]]);
+  LA.fillP(g, frit.path(0.6, 1), '#191A1B');
+  g.save(); g.fillStyle = '#191A1B';
+  for (let row = 0; row < 7; row++) {
+    const yy = 150 + row * 11, r = 4.2 - row * 0.55; if (r <= 0.4) break;
+    for (let x = 6 + (row % 2) * 7; x < W; x += 14) { const yb = yy + 10 * Math.pow((x - 900) / 1100, 2); g.beginPath(); g.arc(x, yb, r, 0, 7); g.fill(); }
+  }
+  g.restore();
+  // A-pillar at the left: a dark diagonal blade with a white rim where the sun grazes it
+  const pillar = S().M(-20, 60).L(96, 60).C(76, 300, 40, 600, -20, 900).Z();
+  const pillarP = pillar.path(0.8, 2); LA.fillP(g, pillarP, '#24211F');
+  LA.rim(g, pillarP, LA.norm(1, 0.1), 3.2, P.sun, null, 0.9);
+  // the driver's sun visor, folded down at the top right
+  const visor = sm([[1580, 40], [1960, 40], [1960, 214, 1], [1890, 226], [1700, 218], [1612, 196], [1580, 150]]);
+  const visorP = visor.path(0.8, 3);
+  LA.fillP(g, visorP, '#36322F'); LA.occlude(E, visorP);
+  LA.innerShade(g, visorP, LA.norm(0, -1), 34, '#2B2826', 1);
+  LA.rim(g, visorP, LA.norm(-0.3, 1), 3.4, P.sun, null, 1);
+  // the dashboard top, a dark curve across the bottom
+  const dash = sm([[-20, 1100], [-20, 948], [400, 918], [960, 905], [1500, 912], [1940, 930], [1940, 1100]]);
+  const dashP = dash.path(1.0, 4); LA.fillP(g, dashP, '#211F1D'); LA.occlude(E, dashP);
+  LA.rim(g, dashP, LA.norm(0, -1), 2.6, '#D9D3C8', null, 0.8);
+  // its faint reflection in the glass above (a cool ghost band)
+  LA.fillPts(g, [[300, 905], [1600, 896], [1560, 872], [340, 880]], '#E7E6E1', 1.6, 5);
+
+  // ================= THE MIRROR =================
+  const MX = 936, MY = 506, MW = 1190, MH = 336, ROT = -0.016, MS = 1.31;
+  const M = new DOMMatrix().translate(MX, MY).rotate(ROT * 180 / Math.PI).scale(MS);
+  const toW = (x, y) => { const p = M.transformPoint(new DOMPoint(x, y)); return [p.x, p.y]; };
+  // glass outline (local, centred): a rounded rectangle whose top and bottom edges swell slightly
+  const glassL = (pad) => { const w = MW / 2 + pad, h = MH / 2 + pad, r = 70 + pad * 0.6;
+    return S().M(-w + r, -h).Q(0, -h - 10, w - r, -h).Q(w, -h, w, -h + r).L(w, h - r).Q(w, h, w - r, h).Q(0, h + 12, -w + r, h).Q(-w, h, -w, h - r).L(-w, -h + r).Q(-w, -h, -w + r, -h).Z(); };
+  const xf = (shape) => shape.transform([M.a, M.b, M.c, M.d, M.e, M.f]);
+  // mount: the sensor housing on the glass and the stalk down to the mirror
+  const sensor = LA.rrect(MX - 130, 70, 260, 128, 34);
+  const stalk = S().M(MX - 34, 180).L(MX + 34, 180).L(MX + 44, MY - MH * MS / 2 - 14).L(MX - 44, MY - MH * MS / 2 - 14).Z();
+  const mountP = S().add(sensor).add(stalk).path(0.6, 6);
+  LA.fillP(g, mountP, '#1D1E20');
+  LA.rim(g, mountP, LA.norm(0.25, 1), 2.4, '#CFCBC2', null, 0.8);
+  // housing
+  const housing = xf(glassL(18)), housingP = housing.path(0.7, 7);
+  g.save(); g.globalAlpha = 0.28; g.fillStyle = '#6E6A63'; g.translate(12, 18); g.fill(housingP); g.restore();   // its soft shadow on the bright glass
+  LA.fillP(g, housingP, '#1B1C1E'); LA.occlude(E, housingP);
+  LA.rim(g, housingP, LA.norm(0.1, -1), 3.4, P.sun, null, 1);
+  LA.rim(g, housingP, LA.norm(0.1, 1), 2.0, '#8A867E', null, 0.8);
+  const glassP = xf(glassL(0)).path(0.4, 8);
+  (() => { const c = toW(0, MH / 2 + 11); g.save(); g.fillStyle = '#3A3C3F'; g.beginPath(); g.arc(c[0], c[1], 5.5, 0, 7); g.fill(); g.restore(); })();
+
+  // ================= THE REFLECTION: the back seat =================
+  // drawn in the mirror's local frame (origin at the glass centre), clipped to the glass
+  g.save(); g.clip(glassP);
+  g.setTransform(M);
+  E.save(); E.setTransform(new DOMMatrix().scale(0.25, 0.25).multiply(M));
+  const L = (x, y) => [x - MW / 2, y - MH / 2];          // glass-local from top-left
+  const Lp = a => a.map(p => { const q = L(p[0], p[1]); return p[2] ? [q[0], q[1], 1] : q; });
+  const fillL = (pts, c, r, sd) => LA.fillPts(g, Lp(pts), c, r == null ? 0.6 : r, sd);
+  // cabin roof lining (cool, mid)
+  fillL([[-10, -10], [MW + 10, -10], [MW + 10, 70], [-10, 70]], '#8E908D', 0.4, 30);
+  // rear window: blown white, the street behind eaten by the sun
+  const rw = Lp([[300, 52], [905, 52], [960, 152], [250, 152]]), rwP = LA.polyP(rw, 0.8, 31);
+  LA.sunPlane(g, E, rwP, {layers: [{w: 6, color: '#D8D2C5'}], glow: 0.5, glowColor: '#FFF0D8'});
+  LA.within(g, rwP, () => { fillL([[240, 120], [420, 112], [470, 92], [560, 92], [610, 112], [980, 110], [980, 160], [240, 160]], '#E9E6DE', 1.2, 39);
+    LA.fillP(g, S().ellipse(...L(720, 96), 46, 30, 0).add(S().ellipse(...L(766, 104), 34, 24, 0)).path(1.4, 391), '#E4E1D9'); });
+  // left rear side window, softer (shaded side of the car)
+  fillL([[-10, 20], [175, 34], [150, 158], [-10, 166]], '#E3E1DA', 0.8, 32);
+  // C-pillars and the roof edge
+  fillL([[175, 34], [300, 52], [250, 152], [150, 158]], '#6F716F', 0.6, 33);
+  fillL([[905, 52], [1040, 36], [1110, 160], [960, 152]], '#6F716F', 0.6, 34);
+  // right rear side window: the sun's side (it sends the hard strip across her seat)
+  LA.sunPlane(g, E, LA.polyP(Lp([[1040, 36], [MW + 10, 20], [MW + 10, 170], [1110, 160]]), 0.8, 35), {layers: [{w: 4, color: '#DCD5C7'}], glow: 0.6, glowColor: '#FFF0D8'});
+  // parcel shelf
+  fillL([[150, 152], [1110, 152], [1110, 176], [150, 176]], '#3F4245', 0.5, 36);
+  // rear seat back (upholstery) and its seams
+  fillL([[-10, 168], [MW + 10, 168], [MW + 10, MH + 10], [-10, MH + 10]], '#5B6168', 0.6, 37);
+  fillL([[-10, 162], [MW + 10, 162], [MW + 10, 178], [-10, 178]], '#50565C', 0.5, 38);
+  fillL([[150, 178], [800, 178], [800, 196], [150, 194]], '#6D737A', 0.8, 381);
+  [[300, 318], [560, 320], [760, 318]].forEach(([x, y], i) => { fillL([[x - 16, y - 20], [x + 16, y - 20], [x + 14, y + 10], [x - 14, y + 10]], '#33383D', 0.4, 382 + i); fillL([[x - 8, y - 16], [x + 8, y - 16], [x + 8, y - 10], [x - 8, y - 10]], '#7E848A', 0.2, 386 + i); });
+  g.save(); g.strokeStyle = '#4E545A'; g.lineWidth = 3; [[430, 176, 420, MH], [700, 176, 706, MH]].forEach(([x0, y0, x1, y1]) => { const a = L(x0, y0), b = L(x1, y1); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }); g.restore();
+  // two empty rear headrests against the white rear window
+  [[372, 0], [612, 1]].forEach(([cx, i]) => { const hr = LA.rrect(...L(cx - 62, 96), 124, 80, 30); const p = hr.path(0.6, 40 + i); LA.fillP(g, p, '#454A50'); LA.rim(g, p, LA.norm(0, -1), 2.4, '#DCD7CC', null, 0.9);
+    g.save(); g.strokeStyle = '#3A3F44'; g.lineWidth = 6; const a = L(cx - 26, 176), b = L(cx + 26, 176); g.beginPath(); g.moveTo(a[0], a[1] - 2); g.lineTo(a[0], a[1] + 4); g.moveTo(b[0], b[1] - 2); g.lineTo(b[0], b[1] + 4); g.stroke(); g.restore(); });
+  // the passenger headrest, close to the mirror at the far left (foreground inside the reflection)
+  const phr = sm(Lp([[-30, 40], [70, 30], [118, 80], [124, 230], [80, 300], [-30, 310]]));
+  LA.fillP(g, phr.path(0.8, 44), '#34383C');
+
+  // ---- the child seat behind the driver: high back, head wings ----
+  const CS = sm(Lp([[804, 300, 1], [792, 160], [804, 66], [850, 40], [1000, 30], [1140, 40], [1200, 80], [1210, MH + 20, 1], [804, MH + 20, 1]]));
+  const csP = CS.path(0.7, 50);
+  LA.fillP(g, csP, '#3A424A');
+  // the inner shell where a head rests
+  const wing = sm(Lp([[838, 206], [832, 100], [862, 66], [1000, 56], [1130, 68], [1180, 110], [1190, 214], [1110, 228], [960, 226]]));
+  const wingP = wing.path(0.6, 51);
+  LA.fillP(g, wingP, '#2F363D');
+  LA.rim(g, wingP, LA.norm(-0.2, -1), 2, '#59626A', null, 0.9);
+
+  // ---- the hard white strip of sun across the empty shell: where her face was (a skewed blade, hard-edged) ----
+  const strip = LA.polyP(Lp([[826, 112], [1058, 72], [1074, 118], [826, 168]]), 1.4, 53);
+  LA.within(g, csP, () => LA.sunPlane(g, E, strip, {layers: [{w: 3, color: '#EADCC3'}], glow: 0.55, glowColor: '#FFEBCB'}));
+  // where it crosses the shell's padded rim it kinks (the light wraps the form)
+  LA.within(g, csP, () => LA.sunPlane(g, E, LA.polyP(Lp([[800, 120], [830, 114], [830, 168], [800, 176]]), 0.8, 59), {layers: [{w: 2, color: '#D9CBB2'}], core: '#EFE8DA', glow: 0.3, glowColor: '#FFEBCB'}));
+
+  // ---- EMILY: four, asleep, leaned out of the sun into the shade behind her father's headrest ----
+  const sk = '#DCAA8B', skLit = '#F1D3BE', skS = '#AE8572', hairE = '#4A3126', hairHi = '#5C3E30', tee = '#C3C7C4', teeLit = '#F7F3EA';
+  // torso: small shoulders in a pale T-shirt, leaning right under the harness
+  const torso = sm(Lp([[928, 340], [924, 276], [946, 236], [992, 216], [1056, 216], [1098, 236], [1118, 276], [1124, 340]]));
+  const torsoP = torso.path(0.6, 60);
+  LA.fillP(g, torsoP, tee);
+  // the sun still lies across her near shoulder: her body is in it, only her face has escaped
+  LA.within(g, torsoP, () => LA.sunPlane(g, E, LA.polyP(Lp([[900, 200], [1000, 186], [968, 260], [900, 280]]), 1.2, 73), {layers: [{w: 3, color: '#E7DFD0'}], core: teeLit, glow: 0.4, glowColor: '#FFEBCB'}));
+  // head: tilted onto her right shoulder, against the wing
+  const HCX = 1112, HCY = 150, TILT = 0.46;
+  const hm = new DOMMatrix().translate(...L(HCX, HCY)).rotate(TILT * 180 / Math.PI);
+  const HL = (x, y) => { const p = hm.transformPoint(new DOMPoint(x, y)); return [p.x, p.y]; };
+  const HLp = a => a.map(p => { const q = HL(p[0], p[1]); return p[2] ? [q[0], q[1], 1] : q; });
+  // neck (short, a child's)
+  LA.fillP(g, S().capsule(...L(1064, 222), 20, ...HL(-6, 50), 18).path(0.4, 62), skS);
+  // the hair's back mass, behind the face
+  const hairBack = sm(HLp([[-66, 44], [-74, -6], [-64, -54], [-28, -80], [20, -80], [58, -58], [74, -14], [72, 36], [58, 54], [-50, 58]]));
+  LA.fillP(g, hairBack.path(0.6, 64), hairE);
+  // the face: a big round child's head, the features low, full cheeks, a small chin
+  const faceE = sm(HLp([[-54, -14], [-46, -44], [-14, -58], [24, -54], [50, -30], [56, 4], [48, 34], [24, 54], [-4, 60], [-30, 54], [-48, 32]]));
+  const faceP = faceE.path(0.5, 63);
+  LA.fillP(g, faceP, sk);
+  // the fringe: cut straight across the brow, a little mussed by sleep
+  const fringe = sm(HLp([[-60, -10, 1], [-58, -44], [-30, -70], [14, -74], [50, -54], [62, -20, 1], [44, -22], [30, -14], [14, -20, 1], [-2, -13], [-18, -19], [-34, -12, 1], [-46, -16]]));
+  LA.fillP(g, fringe.path(0.5, 66), hairE);
+  g.save(); g.strokeStyle = hairHi; g.lineWidth = 2; g.lineCap = 'round'; [[[-40, -50], [-10, -64], [24, -62]]].forEach(([a, b, c]) => { const A = HL(...a), B = HL(...b), Cc = HL(...c); g.beginPath(); g.moveTo(A[0], A[1]); g.quadraticCurveTo(B[0], B[1], Cc[0], Cc[1]); g.stroke(); }); g.restore();
+  // a stray lock across the cheek
+  g.save(); g.strokeStyle = hairE; g.lineWidth = 3; g.lineCap = 'round'; { const A = HL(-50, -8), B = HL(-56, 14), Cc = HL(-48, 30); g.beginPath(); g.moveTo(A[0], A[1]); g.quadraticCurveTo(B[0], B[1], Cc[0], Cc[1]); g.stroke(); } g.restore();
+  // cheek: warm, round
+  LA.fillP(g, S().ellipse(...HL(-26, 24), 15, 10, TILT).path(0.4, 65), '#E2A383');
+  // precise cuts only: two closed eyes (soft downward lids), a small mouth parted in sleep
+  g.save(); g.strokeStyle = '#4A3026'; g.lineCap = 'round'; g.lineWidth = 3.2;
+  [[-34, 6, -22, 11, -10, 6], [12, 6, 24, 11, 36, 6]].forEach(([a, b, c, d, e2, f2]) => { const A = HL(a, b), B = HL(c, d), Cc = HL(e2, f2); g.beginPath(); g.moveTo(A[0], A[1]); g.quadraticCurveTo(B[0], B[1] + 2, Cc[0], Cc[1]); g.stroke(); });
+  g.lineWidth = 2.4; { const A = HL(-6, 38), B = HL(2, 41), Cc = HL(9, 38); g.beginPath(); g.moveTo(A[0], A[1]); g.quadraticCurveTo(B[0], B[1], Cc[0], Cc[1]); g.stroke(); }
+  g.restore();
+
+  // harness straps over her shoulders
+  g.save(); g.strokeStyle = '#262C32'; g.lineCap = 'round'; g.lineWidth = 14;
+  [[958, 232, 996, 300], [1090, 236, 1052, 300]].forEach(([x0, y0, x1, y1]) => { const a = L(x0, y0), b = L(x1, y1); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); });
+  g.restore();
+
+  // ---- the rabbit: soft rose, hugged up under her chin; one ear upright, the other worn almost flat ----
+  const rbBody = sm(Lp([[982, 338], [976, 300], [988, 270], [1018, 256], [1054, 262], [1074, 292], [1078, 338]]));
+  const rbHead = S().ellipse(...L(1028, 244), 31, 27, -0.28);
+  const earUp = sm(Lp([[1008, 226], [996, 184], [998, 146], [1012, 136], [1023, 154], [1028, 202], [1024, 228]]));
+  const earFlat = sm(Lp([[1046, 228], [1076, 222], [1110, 230], [1122, 242], [1104, 249], [1068, 246], [1048, 243]]));
+  const rbAll = S().add(rbBody).add(rbHead).add(earUp).add(earFlat), rbP = rbAll.path(0.7, 70);
+  LA.fillP(g, rbP, P.rose);
+  LA.fillP(g, sm(Lp([[1006, 220], [1001, 184], [1005, 158], [1013, 156], [1017, 186], [1015, 218]])).path(0.3, 71), P.roseLt);
+  LA.innerShade(g, rbP, LA.norm(1, 0.25), 16, P.roseSh, 1);
+  // the flat ear: a crease where the wear is
+  g.save(); g.strokeStyle = P.roseSh; g.lineWidth = 2; { const A = L(1056, 236), B = L(1082, 233), Cc = L(1106, 240); g.beginPath(); g.moveTo(A[0], A[1]); g.quadraticCurveTo(B[0], B[1], Cc[0], Cc[1]); g.stroke(); } g.restore();
+  g.save(); g.fillStyle = '#3A2828'; const ey = L(1016, 240); g.beginPath(); g.arc(ey[0], ey[1], 3.4, 0, 7); g.fill(); g.restore();
+  LA.rim(g, rbP, LA.norm(-1, -0.6), 2.2, P.roseLt, null, 0.9);
+  // her arm under it, the hand curled on its side; the sun on the forearm (warm, not white: skin)
+  const armE = S().capsule(...L(956, 246), 14, ...L(966, 312), 12).add(S().capsule(...L(966, 312), 12, ...L(1050, 326), 11));
+  const armP = armE.path(0.5, 61);
+  LA.fillP(g, armP, sk);
+  LA.within(g, armP, () => LA.fillP(g, LA.polyP(Lp([[920, 230], [990, 226], [974, 340], [900, 340]]), 1.0, 74), skLit));
+  LA.fillP(g, sm(Lp([[1048, 296], [1070, 292], [1086, 302], [1084, 320], [1062, 326], [1046, 318]])).path(0.4, 72), sk);
+
+  // ---- the shade behind Daniel's headrest: two flat cool layers over the right of the seat ----
+  const shade1 = LA.polyP(Lp([[1056, -10], [MW + 20, -10], [MW + 20, MH + 20], [1112, MH + 20], [1086, 250], [1068, 140]]), 1.6, 52);
+  const shade2 = LA.polyP(Lp([[1108, -10], [MW + 20, -10], [MW + 20, MH + 20], [1152, MH + 20], [1132, 240]]), 1.6, 54);
+  g.save(); g.globalCompositeOperation = 'multiply';
+  g.save(); g.clip(shade1); g.fillStyle = '#C2C9D2'; g.fillRect(-MW, -MH, MW * 2, MH * 2); g.restore();
+  g.save(); g.clip(shade2); g.fillStyle = '#A9B3BF'; g.fillRect(-MW, -MH, MW * 2, MH * 2); g.restore();
+  g.restore();
+  // ---- Daniel's headrest: its dark edge swallows the other half of her face ----
+  const dhr = sm(Lp([[1132, -20], [1172, -6], [1206, 56], [1214, 250], [1196, 310], [1158, 330], [1134, 262], [1122, 100]]));
+  const dhrP = dhr.path(0.7, 80);
+  LA.fillP(g, dhrP, '#1F2327');
+  LA.rim(g, dhrP, LA.norm(-1, -0.25), 2.2, '#6F747A', null, 0.8);
+  // the glass: a faint cool cast over the whole reflection (it is a mirror, a step removed)
+  g.globalCompositeOperation = 'multiply'; g.fillStyle = '#DDE3E6'; g.fillRect(-MW, -MH, MW * 2, MH * 2); g.globalCompositeOperation = 'source-over';
+  E.restore();
+  g.restore();
+  // the glass edge: a hairline bevel
+  g.save(); g.strokeStyle = '#5F5D59'; g.lineWidth = 2; g.stroke(glassP); g.restore();
+
+  LA.finish(f, ctx, {letterbox: 2.0, halation: 0.5, grain: 0.065, fibre: 0.07, vig: {color: '#3A3530', a: 0.22, inner: 0.5, outer: 1.15}});
+  LA.slate(ctx, 'AUTOPILOT  ·  LOOK A  ·  WHITE HEAT  ·  02', 'THE MIRROR  ·  INT. CAR  ·  MORNING', 2.0);
+  window.FRAME_READY = true;
+})();
+</script>

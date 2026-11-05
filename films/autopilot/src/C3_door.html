@@ -1,0 +1,186 @@
+<!doctype html><meta charset="utf-8"><title>C3 · The Door</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_c.js"></script>
+<script>
+/* AUTOPILOT · LOOK C "THROUGH GLASS" · C3 THE DOOR (EXT. NURSERY CAR PARK, dusk)
+   We look through the glass of the open rear door itself: the same dark privacy glass that hid her all day.
+   The camera crouches against the car's flank, so the doorway is seen exactly edge-on and cannot be seen into; the flank
+   rushes away on the right, the open door stands square to us. Beyond its glass Daniel kneels, a silhouette against the
+   last of the sun, head bowed, his near arm reaching into the car past the edge of the window frame. The camera's eye is at
+   the beltline: the horizon lies on the window's lower edge and the sun is sinking out of the glass.
+   Outside the glass, the silent playground; the swings hang still and their long shadows lie across the tarmac. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LC.P;
+  const f = OTM.frame(ctx, { seed: 47 });
+  const g = f.world, E = f.emissive;
+  const TOP = 138, BOT = 942;
+  const HOR = 560, BL = 562;                    // the camera's eye is at the beltline: the far horizon lies on the window's lower edge
+  const VP = [1300, HOR];                        // the car's flank rushes to this point; the open door stands square to us
+  const SUN = [912, 568], SR = 36;
+  const HX = 1362;                               // hinge-side edge of the glass
+  const RX = 560;                                // the door's free (rear) edge at the beltline
+  const winPath = (() => { const p = new Path2D(); p.moveTo(HX, 178); p.bezierCurveTo(1100, 180, 860, 188, 742, 198); p.bezierCurveTo(664, 206, 626, 236, 612, 282); p.lineTo(RX, BL); p.lineTo(HX, BL); p.closePath(); return p; })();
+
+  // =====================================================================
+  // 1. THE DUSK: sky and the far edge of the world (used outside the glass and, tinted, through it)
+  // =====================================================================
+  const sky = c => {
+    c.fillStyle = LC.lin(c, 0, TOP - 40, 0, HOR, [[0, '#232D38'], [0.35, '#3A4250'], [0.62, '#6A5A5C'], [0.84, '#B26E4A'], [1, '#E39A5C']]); c.fillRect(0, 0, W, HOR + 2);
+    c.save(); c.globalCompositeOperation = 'screen'; c.fillStyle = LC.rad(c, SUN[0], SUN[1], 0, 950, [[0, '#FFD9A0', 0.95], [0.08, '#F7B877', 0.7], [0.3, '#C77A47', 0.32], [1, '#C77A47', 0]]); c.fillRect(0, 0, W, HOR + 2); c.restore();
+    [[540, 0.05], [340, 0.06], [196, 0.08]].forEach(([r, a]) => { c.fillStyle = OTM.rgba('#FFD49A', a); c.beginPath(); c.ellipse(SUN[0], SUN[1], r, r * 0.6, 0, Math.PI, 0); c.fill(); });
+    [[180, 300, 760, 7], [980, 252, 620, 6], [1340, 330, 480, 5], [40, 390, 380, 4], [700, 404, 300, 3]].forEach(([x, y, w, h]) => { c.fillStyle = 'rgba(214,140,96,0.4)'; c.beginPath(); c.ellipse(x + w / 2, y, w / 2, h, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(48,52,66,0.35)'; c.beginPath(); c.ellipse(x + w / 2 + 22, y - h * 0.6, w * 0.45, h * 0.6, 0, 0, Math.PI * 2); c.fill(); });
+  };
+  const far = c => {
+    c.fillStyle = '#3A3038'; c.beginPath(); c.moveTo(-10, HOR + 2);
+    for (let x = -10; x <= W + 10; x += 12) { const n = OTM.fbm(x * 0.006, 2, 9, 3), y = HOR - 10 - n * 40 - (x > 1000 && x < 1180 ? 16 * Math.sin((x - 1000) / 180 * Math.PI) : 0); c.lineTo(x, y); }
+    c.lineTo(W + 10, HOR + 2); c.closePath(); c.fill();
+    c.fillStyle = '#4A3840'; c.fillRect(-10, HOR - 6, W + 20, 8);
+  };
+  const tarmac = c => {
+    c.fillStyle = LC.lin(c, 0, HOR, 0, BOT + 20, [[0, '#CC8650'], [0.1, '#A0663F'], [0.4, '#6C4935'], [1, '#3A2D2A']]); c.fillRect(0, HOR, W, BOT - HOR + 40);
+    c.save(); c.globalCompositeOperation = 'screen'; c.translate(SUN[0], HOR); c.scale(1, 0.2); c.fillStyle = LC.rad(c, 0, 0, 0, 760, [[0, '#FFC27E', 0.62], [0.4, '#E89A5E', 0.18], [1, '#E89A5E', 0]]); c.fillRect(-900, -100, 1800, 3000); c.restore();
+  };
+
+  // =====================================================================
+  // 2. OUTSIDE THE GLASS: the playground, the nursery, the copper tarmac, the swings' long shadows
+  // =====================================================================
+  const out = LC.layer();
+  sky(out); far(out); tarmac(out);
+  // faded parking bay lines running toward us
+  out.strokeStyle = 'rgba(232,200,160,0.3)'; out.lineWidth = 3; [[-260], [210]].forEach(([x0]) => { out.beginPath(); out.moveTo(VP[0] - 300 + (x0 + 300) * 0.02, HOR + 2); out.lineTo(x0, BOT + 40); out.stroke(); });
+  // the nursery: low brick, painted animals gone dim in its own shade, plywood on the front door and a notice on it
+  { out.fillStyle = '#2C2427'; out.fillRect(-20, 488, 250, HOR - 488 + 2); out.fillStyle = '#231C1F'; out.beginPath(); out.moveTo(-30, 492); out.lineTo(244, 492); out.lineTo(230, 474); out.lineTo(-20, 472); out.closePath(); out.fill();
+    out.strokeStyle = 'rgba(240,160,100,0.7)'; out.lineWidth = 2; out.beginPath(); out.moveTo(-20, 473); out.lineTo(230, 475); out.lineTo(244, 492); out.stroke();
+    out.fillStyle = '#3C4C56'; out.beginPath(); out.ellipse(34, 532, 26, 16, 0, 0, Math.PI * 2); out.fill(); out.fillRect(14, 534, 7, 18); out.fillRect(46, 534, 7, 18); out.beginPath(); out.ellipse(64, 526, 11, 10, 0, 0, Math.PI * 2); out.fill();
+    out.fillStyle = '#5C4E34'; out.fillRect(96, 504, 7, 50); out.beginPath(); out.ellipse(106, 534, 16, 11, 0, 0, Math.PI * 2); out.fill(); out.beginPath(); out.ellipse(104, 502, 7, 5, 0, 0, Math.PI * 2); out.fill();
+    out.fillStyle = '#583834'; out.beginPath(); out.arc(206, 534, 14, 0, Math.PI * 2); out.fill();
+    out.fillStyle = '#6E5F50'; out.fillRect(146, 510, 30, 50); out.fillStyle = '#C6BCAA'; out.fillRect(155, 526, 12, 9); }
+  // the swings, hanging still; a low railing; the slide
+  const SW = { x0: 96, x1: 430, top: 318, base: HOR + 150 };
+  const swing = new Path2D();
+  { const L = (x0, y0, x1, y1, w) => { const a = Math.atan2(y1 - y0, x1 - x0), nx = -Math.sin(a) * w / 2, ny = Math.cos(a) * w / 2; swing.moveTo(x0 + nx, y0 + ny); swing.lineTo(x1 + nx, y1 + ny); swing.lineTo(x1 - nx, y1 - ny); swing.lineTo(x0 - nx, y0 - ny); swing.closePath(); };
+    L(SW.x0 - 62, SW.base, SW.x0, SW.top, 12); L(SW.x0 + 54, SW.base - 26, SW.x0, SW.top, 10); L(SW.x1 - 54, SW.base - 26, SW.x1, SW.top, 10); L(SW.x1 + 62, SW.base, SW.x1, SW.top, 12);
+    L(SW.x0 - 10, SW.top, SW.x1 + 10, SW.top, 13);
+    [[170, 226], [298, 354]].forEach(([a, b]) => { L(a, SW.top, a, 590, 3); L(b, SW.top, b, 590, 3); swing.rect(a - 10, 588, b - a + 20, 10); }); }
+  out.fillStyle = '#16131A'; out.fill(swing);
+  { const rimC = LC.layer(); rimC.fillStyle = '#F2A35E'; rimC.fill(swing); rimC.globalCompositeOperation = 'destination-out'; rimC.translate(-2.6, 1); rimC.fill(swing); out.drawImage(rimC.canvas, 0, 0); }
+  const railP = new Path2D(); for (let x = -10; x < RX + 40; x += 14) railP.rect(x, HOR - 16, 2, 16); railP.rect(-10, HOR - 17, RX + 50, 2.5); railP.rect(-10, HOR - 6, RX + 50, 2);
+  out.fillStyle = '#191519'; out.fill(railP);
+  { const sl = new Path2D(); sl.moveTo(26, HOR); sl.lineTo(30, 500); sl.lineTo(40, 500); sl.lineTo(38, HOR); sl.closePath(); sl.moveTo(40, 504); sl.lineTo(120, HOR - 4); sl.lineTo(128, HOR - 4); sl.lineTo(44, 496); sl.closePath(); out.fillStyle = '#191519'; out.fill(sl); }
+  // the long shadows: everything between us and the sun lays a dark ray across the copper, toward us
+  { const sh = LC.layer(); sh.fillStyle = '#1B2226';
+    const ray = (bx, by, w0, w1) => { const dx = bx - SUN[0], dy = Math.max(2, by - HOR), t = (BOT + 80 - by) / dy, ex = bx + dx * t, ey = BOT + 80; const ax = Math.atan2(ey - by, ex - bx), nx = -Math.sin(ax), ny = Math.cos(ax);
+      sh.beginPath(); sh.moveTo(bx + nx * w0, by + ny * w0); sh.lineTo(ex + nx * w1, ey + ny * w1); sh.lineTo(ex - nx * w1, ey - ny * w1); sh.lineTo(bx - nx * w0, by - ny * w0); sh.closePath(); sh.fill(); };
+    // legs, chains and seats: the frame's legs as long bars, the hanging chains as threads, the seats as two dark blades
+    [[SW.x0 - 62, SW.base], [SW.x0 + 54, SW.base - 26], [SW.x1 - 54, SW.base - 26], [SW.x1 + 62, SW.base]].forEach(([x, y]) => ray(x, y, 5, 46));
+    // the seats hang off the ground, so their shadows begin further along the rays: two dark blades out on the tarmac
+    [[198, 54], [326, 54]].forEach(([x, w]) => { const b = [x + (x - SUN[0]) * 0.32, SW.base + 40]; ray(b[0], b[1], w * 0.42, w * 1.5); });
+    for (let x = -10; x < RX + 40; x += 32) ray(x, HOR, 0.6, 3.5);
+    const shB = LC.blurred(sh.canvas, 1.3, false); out.save(); out.globalAlpha = 0.84; out.beginPath(); out.rect(0, HOR + 1, W, BOT); out.clip(); out.drawImage(shB, 0, 0); out.restore(); }
+  g.drawImage(out.canvas, 0, 0);
+
+  // =====================================================================
+  // 3. THROUGH THE GLASS of the open door: the same dusk, darker and colder in the privacy tint; and Daniel
+  // =====================================================================
+  const thr = LC.layer();
+  sky(thr); far(thr); tarmac(thr);
+  // the car's own lines rush to the vanishing point beyond the hinge: roof rail and sill, edge-on, nothing to see into
+  // ---- DANIEL: kneeling upright beside the door, head bowed over what he holds, the near arm reaching into the car ----
+  const dan = (() => { const p = new Path2D();
+    p.moveTo(1004, BL + 30);
+    p.bezierCurveTo(1000, 548, 1010, 512, 1030, 490);                 // the back, kneeling tall but slumped
+    p.bezierCurveTo(1044, 476, 1060, 470, 1076, 468);                 // the shoulder, fallen
+    p.bezierCurveTo(1086, 467, 1094, 462, 1098, 452);                 // the nape: the neck bends forward here
+    p.bezierCurveTo(1094, 436, 1098, 414, 1112, 398);                 // the back of the skull
+    p.bezierCurveTo(1126, 382, 1148, 376, 1166, 382);                 // the crown, tipped toward the car
+    p.bezierCurveTo(1186, 390, 1198, 408, 1202, 428);                 // forehead
+    p.bezierCurveTo(1204, 440, 1204, 448, 1200, 456);                 // brow, the face turned down
+    p.bezierCurveTo(1204, 462, 1204, 468, 1198, 472);                 // the nose, pointing at what he holds
+    p.bezierCurveTo(1194, 478, 1190, 484, 1182, 488);                 // mouth, chin tucked
+    p.bezierCurveTo(1178, 490, 1174, 492, 1172, 496);                 // under the jaw to the collar
+    p.lineTo(1166, 500); p.lineTo(1176, 506);                         // the collar's point, crooked again
+    p.bezierCurveTo(1210, 506, 1250, 512, 1290, 518);                 // the top of the reaching arm
+    p.bezierCurveTo(1320, 522, 1350, 526, HX + 30, 530);              // the forearm, into the car behind the frame
+    p.lineTo(HX + 30, 558);
+    p.bezierCurveTo(1330, 556, 1290, 550, 1250, 548);                 // under the forearm
+    p.bezierCurveTo(1226, 546, 1208, 548, 1198, 556);                 // the elbow, tucked in
+    p.lineTo(1196, BL + 30);
+    p.closePath();
+    // the near shoulder's deltoid where the arm leaves the body
+    p.moveTo(1078, 470); p.bezierCurveTo(1108, 462, 1150, 474, 1166, 500); p.bezierCurveTo(1176, 520, 1170, 542, 1152, 554); p.bezierCurveTo(1120, 558, 1090, 544, 1078, 518); p.closePath();
+    return p; })();
+  OTM.silhouette(thr, dan, { fill: '#0A0E10', light: { x: SUN[0] - 40, y: SUN[1] - 110 }, rimColor: '#FFC487', rimW: 3.6, rimSoft: true, spread: 1.25, bbox: { x: 990, y: 370, w: 410, h: 220 } });
+  thr.strokeStyle = 'rgba(242,160,96,0.42)'; thr.lineWidth = 1.4; thr.beginPath(); thr.arc(1146, 432, 8, Math.PI * 0.75, Math.PI * 1.45); thr.stroke();   // the ear
+  // the privacy tint: everything through this glass is darker and colder
+  thr.save(); thr.globalCompositeOperation = 'multiply'; thr.fillStyle = '#5E7D83'; thr.fillRect(0, 0, W, H); thr.fillStyle = '#9CB0B2'; thr.fillRect(0, 0, W, H); thr.restore();
+  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1] - 20, 0, 520, [[0, '#E89A5E', 0.55], [0.5, '#B06A44', 0.2], [1, '#B06A44', 0]]); thr.fillRect(0, 0, W, BL + 20); thr.restore();
+  // the sun survives it: a copper disc sinking under the glass's lower edge
+  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.rad(thr, SUN[0], SUN[1], 0, 300, [[0, '#FFD39A', 0.92], [0.2, '#E8955A', 0.45], [1, '#B4683E', 0]]); thr.fillRect(SUN[0] - 320, SUN[1] - 320, 640, 640); thr.restore();
+  thr.fillStyle = '#FFDCA6'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR, 0, Math.PI * 2); thr.fill();
+  thr.fillStyle = '#FFF2DA'; thr.beginPath(); thr.arc(SUN[0], SUN[1], SR * 0.68, 0, Math.PI * 2); thr.fill();
+  // what the glass gives back from our side: the dim eastern sky, a lamp-post behind us; dust lit from behind
+  thr.save(); thr.globalCompositeOperation = 'screen'; thr.fillStyle = LC.lin(thr, 0, 178, 0, BL, [[0, '#56607A', 0.3], [1, '#56607A', 0.06]]); thr.fillRect(0, 0, W, H); thr.restore();
+  LC.glare(thr, null, { x: 860, y: 380, angle: -1.05, color: '#FFE2BC', bands: [{ d: -120, w: 90, a: 0.05 }, { d: -62, w: 15, a: 0.07 }, { d: 290, w: 150, a: 0.035 }] });
+  LC.specks(thr, null, { x: 560, y: 178, w: 810, h: 390 }, 'doorDust', { n: 420, color: '#FFD9A8', rMin: 0.5, rMax: 1.4, aMin: 0.06, aMax: 0.5, scratch: 0.05, near: { x: SUN[0], y: SUN[1], r: 300 } });
+  g.save(); g.clip(winPath); g.drawImage(thr.canvas, 0, 0); g.restore();
+  E.save(); E.beginPath(); E.rect(0, 0, W, BL); E.clip(); E.fillStyle = '#FFD7A0'; E.beginPath(); E.arc(SUN[0], SUN[1], 66, 0, Math.PI * 2); E.fill(); E.fillStyle = 'rgba(230,140,80,0.5)'; E.beginPath(); E.arc(SUN[0], SUN[1], 200, 0, Math.PI * 2); E.fill(); E.restore();
+
+  // =====================================================================
+  // 4. THE DOOR: its sash, its panel (the dim eastern sky laid along it), its free edge catching the sun
+  // =====================================================================
+  { const sash = new Path2D(); sash.moveTo(HX + 2, 164); sash.bezierCurveTo(1100, 166, 856, 174, 736, 184); sash.bezierCurveTo(652, 192, 610, 226, 594, 276); sash.lineTo(542, BL + 2); sash.lineTo(RX, BL + 2); sash.lineTo(612, 282); sash.bezierCurveTo(626, 236, 664, 206, 742, 198); sash.bezierCurveTo(860, 188, 1100, 180, HX, 178); sash.closePath();
+    g.fillStyle = '#0C1013'; g.fill(sash);
+    g.strokeStyle = 'rgba(242,164,104,0.6)'; g.lineWidth = 2; g.beginPath(); g.moveTo(HX + 2, 164); g.bezierCurveTo(1100, 166, 856, 174, 736, 184); g.bezierCurveTo(652, 192, 610, 226, 594, 276); g.lineTo(542, BL); g.stroke(); }
+  const panel = LC.pathPts([[542, BL], [HX + 6, BL], [HX + 6, BOT + 10], [556, BOT + 10]]);
+  g.fillStyle = '#0E1417'; g.fill(panel);
+  g.save(); g.clip(panel);
+  g.fillStyle = LC.lin(g, 0, BL, 0, BL + 150, [[0, '#4A5266', 0.75], [1, '#4A5266', 0]]); g.fillRect(500, BL, 900, 150);       // the east, dim, laid along the paint
+  g.fillStyle = 'rgba(200,130,90,0.22)'; g.fillRect(500, BL + 2, 900, 4);
+  g.strokeStyle = 'rgba(118,128,150,0.4)'; g.lineWidth = 2; g.beginPath(); g.moveTo(552, 706); g.quadraticCurveTo(960, 700, HX + 6, 704); g.stroke();
+  g.fillStyle = 'rgba(0,0,0,0.38)'; g.beginPath(); g.moveTo(552, 710); g.quadraticCurveTo(960, 704, HX + 6, 708); g.lineTo(HX + 6, 724); g.quadraticCurveTo(960, 720, 552, 726); g.closePath(); g.fill();
+  g.fillStyle = '#192024'; g.fill(LC.rrect(650, 618, 124, 22, 10)); g.fillStyle = 'rgba(240,170,110,0.6)'; g.fillRect(658, 620, 108, 2);
+  g.restore();
+  // the free edge: the door's thickness, turned to the sun
+  g.fillStyle = '#A9683F'; g.fill(LC.pathPts([[538, BL], [548, BL], [562, BOT + 10], [552, BOT + 10]]));
+  g.fillStyle = '#EC9858'; g.fill(LC.pathPts([[540, BL], [543, BL], [556, BOT + 10], [553, BOT + 10]]));
+  g.fillStyle = '#E28E52'; g.fill(LC.pathPts([[590, 276], [594, 276], [542, BL], [538, BL]]));
+
+  // =====================================================================
+  // 5. THE CAR'S FLANK, rushing to the vanishing point on the right: hinge frame, B-pillar, the front door and its glass
+  //    (at this grazing angle the glass is a mirror: only the sunset, never the inside)
+  // =====================================================================
+  // hinge-side frame of the door and the B-pillar behind it: the dark band his arm passes behind
+  g.fillStyle = '#090C0E'; g.fill(LC.pathPts([[HX - 6, 164], [HX + 40, 150], [HX + 44, BOT + 10], [HX - 6, BOT + 10]]));
+  g.fillStyle = 'rgba(80,90,104,0.45)'; g.fillRect(HX - 4, 178, 3, BL - 178);
+  { const nb = LC.layer();
+    // the front door's window, foreshortened to a sliver: a dark mirror holding the reflected door and one copper seam
+    const sl = LC.pathPts([[HX + 44, 150], [1500, 124], [1500, HOR], [HX + 44, HOR]]);
+    nb.fillStyle = LC.lin(nb, 0, 112, 0, HOR, [[0, '#101318'], [0.85, '#211C22'], [1, '#5A3A2E']]); nb.fill(sl);
+    nb.fillStyle = 'rgba(232,150,92,0.7)'; nb.fillRect(HX + 44, HOR - 8, 1500 - HX - 44, 4);
+    // the near bodywork beyond it, rushing past the lens: A-pillar, the door's front edge, the wing
+    const ap = LC.pathPts([[1500, 124], [1680, 20], [W + 40, 20], [W + 40, HOR], [1500, HOR]]);
+    nb.fillStyle = LC.lin(nb, 1500, 0, W, 0, [[0, '#0D1013'], [1, '#07090B']]); nb.fill(ap);
+    const body = LC.pathPts([[HX + 44, HOR], [W + 40, HOR], [W + 40, BOT + 40], [HX + 44, BOT + 40]]);
+    nb.fillStyle = '#0B1013'; nb.fill(body);
+    nb.save(); nb.clip(body);
+    nb.fillStyle = LC.lin(nb, 0, HOR, 0, HOR + 70, [[0, '#E89A5E', 0.95], [0.25, '#B8683E', 0.45], [1, '#B8683E', 0]]); nb.fillRect(HX, HOR, W, 70);
+    nb.strokeStyle = 'rgba(130,140,160,0.32)'; nb.lineWidth = 3; nb.beginPath(); nb.moveTo(HX + 44, HOR + 120); nb.lineTo(W + 40, BOT - 20); nb.stroke();
+    nb.fillStyle = 'rgba(0,0,0,0.45)'; nb.beginPath(); nb.moveTo(HX + 44, HOR + 126); nb.lineTo(W + 40, BOT - 10); nb.lineTo(W + 40, BOT + 40); nb.lineTo(HX + 44, HOR + 170); nb.closePath(); nb.fill();
+    nb.fillStyle = 'rgba(66,74,94,0.28)'; nb.fill(LC.pathPts([[HX + 44, HOR + 40], [W + 40, HOR + 110], [W + 40, HOR + 230], [HX + 44, HOR + 110]]));
+    nb.restore();
+    nb.strokeStyle = 'rgba(232,150,92,0.3)'; nb.lineWidth = 2; nb.beginPath(); nb.moveTo(1500, 124); nb.lineTo(1680, 20); nb.stroke();
+    // the nearest of it is out of focus
+    g.drawImage(nb.canvas, 0, 0);
+    const soft = LC.layer(); soft.drawImage(nb.canvas, 0, 0); soft.globalCompositeOperation = 'destination-in'; soft.fillStyle = LC.lin(soft, 1560, 0, 1800, 0, [[0, '#000000', 0], [1, '#000000', 1]]); soft.fillRect(0, 0, W, H);
+    g.drawImage(LC.blurred(soft.canvas, 9, false), 0, 0);
+    g.strokeStyle = '#05070A'; g.lineWidth = 4; g.beginPath(); g.moveTo(HX + 44, HOR); g.lineTo(1500, HOR); g.stroke(); }
+
+  // =====================================================================
+  // 6. FINISH: the V.O. sits in the matte, outside the glass
+  // =====================================================================
+  f.finish({ letterbox: 2.39, grain: 0.06, fibre: 0, vignette: 0, halation: 0.6, matteColor: P.matte, beforePost: c => LC.vignette(c, 0.5, P.ink) });
+  LC.slate(ctx, 'AUTOPILOT  ·  LOOK C  ·  THROUGH GLASS', 'C3  ·  THE DOOR  ·  EXT. NURSERY CAR PARK, DUSK');
+  LC.subtitle(ctx, [{ text: 'My phone was on the counter.', color: P.bone, family: 'Cormorant Garamond', weight: 600, style: 'italic', size: 38, tracking: 0.5, alpha: 0.92 }], {});
+  window.FRAME_READY = true;
+})();
+</script>

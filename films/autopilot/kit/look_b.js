@@ -105,15 +105,19 @@
   //   o: {ink, shade, lift, rim, light:{dx,dy} (unit-ish), shadeW, liftW, rimW, rimAlpha, shadeBlur, clip}
   LB.figure = function (g, parts, o) {
     o = Object.assign({ ink: LB.C.ink, shade: LB.C.inkDeep, lift: LB.C.inkLift, rim: null, light: { dx: 1, dy: -0.4 }, shadeW: 14, liftW: 10, rimW: 3, rimAlpha: 1, shadeBlur: 3, liftBlur: 4, liftAlpha: 1 }, o || {});
-    const m = LB.layer(); m.fillStyle = '#fff'; parts.forEach(p => m.fill(p));
+    // the mask is built in device space under the caller's transform (so figures can be drawn inside a rotated mirror, a camera, ...)
+    const m = LB.layer(); m.setTransform(g.getTransform()); m.fillStyle = '#fff'; parts.forEach(p => m.fill(p));
     if (o.extraMask) o.extraMask(m);
+    m.setTransform(1, 0, 0, 1, 0, 0);
     const L = Math.hypot(o.light.dx, o.light.dy) || 1, ux = o.light.dx / L, uy = o.light.dy / L;
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
     g.drawImage(LB.tint(m.canvas, o.ink), 0, 0);
     // shade: the part of the figure far from the light (mask minus mask shifted away from the light)
     if (o.shade && o.shadeW) { const cr = LB.crescent(m.canvas, -ux * o.shadeW, -uy * o.shadeW, o.shadeBlur); g.drawImage(LB.tint(cr, o.shade), 0, 0); }
     if (o.lift && o.liftW) { const cr = LB.crescent(m.canvas, ux * o.liftW, uy * o.liftW, o.liftBlur); g.save(); g.globalAlpha = o.liftAlpha; g.drawImage(LB.tint(cr, o.lift), 0, 0); g.restore(); }
     if (o.rim && o.rimW) { const cr = LB.crescent(m.canvas, ux * o.rimW, uy * o.rimW, 0); g.save(); g.globalAlpha = o.rimAlpha; g.drawImage(LB.tint(cr, o.rim), 0, 0); g.restore(); }
-    return m.canvas;
+    g.restore();
+    return m.canvas;   // device-space mask
   };
 
   // ---------- eyes: big white ovals, lids, pupils ----------
@@ -124,19 +128,21 @@
     g.save(); g.translate(o.x, o.y); g.rotate(o.rot || 0);
     const eyeP = new Path2D(); eyeP.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
     g.save(); g.clip(eyeP);
+    // the lids are SUBTRACTED from the white (the character's own head shows through as the lid): no seams
+    const cut = new Path2D(); cut.rect(-rx * 3, -ry * 4, rx * 6, ry * 8);
+    if (lid > 0) {
+      const yy = -ry + lid * 2 * ry, a = o.lidTilt || 0, c = Math.cos(a), s = Math.sin(a), R2 = (x, y) => [x * c - y * s, x * s + y * c];
+      const p0 = R2(-rx * 2, -ry * 3), p1 = R2(rx * 2, -ry * 3), p2 = R2(rx * 2, yy), q = R2(0, yy + ry * (o.lidCurve == null ? 0.18 : o.lidCurve)), p3 = R2(-rx * 2, yy);
+      cut.moveTo(p0[0], p0[1]); cut.lineTo(p3[0], p3[1]); cut.quadraticCurveTo(q[0], q[1], p2[0], p2[1]); cut.lineTo(p1[0], p1[1]); cut.closePath();
+    }
+    if (lower > 0) { const yy = ry - lower * 2 * ry; cut.moveTo(-rx * 2, ry * 3); cut.lineTo(-rx * 2, yy); cut.quadraticCurveTo(0, yy - ry * 0.25, rx * 2, yy); cut.lineTo(rx * 2, ry * 3); cut.closePath(); }
+    g.clip(cut, 'evenodd');
     g.fillStyle = o.white || LB.C.eye; g.fillRect(-rx * 2, -ry * 2, rx * 4, ry * 4);
     if (o.whiteShade) { g.fillStyle = o.whiteShade; g.beginPath(); g.ellipse(0, -ry * 0.25, rx * 1.3, ry * 0.9, 0, Math.PI, 0); g.rect(-rx * 2, -ry * 2, rx * 4, ry * 1.2); g.fill(); }
     // pupil
     const pr = (o.pr == null ? 0.42 : o.pr) * rx, px = (o.px || 0) * rx, py = (o.py || 0) * ry;
     g.fillStyle = o.ink || LB.C.pupil; g.beginPath(); g.ellipse(px, py, pr, pr * 1.12, 0, 0, Math.PI * 2); g.fill();
     if (o.glint !== false) { g.fillStyle = o.white || LB.C.eye; g.beginPath(); g.arc(px - pr * 0.38, py - pr * 0.42, pr * 0.3, 0, Math.PI * 2); g.fill(); }
-    // upper lid: a big ink shape coming down, tilted
-    g.fillStyle = o.lidColor || o.ink || LB.C.ink;
-    if (lid > 0) {
-      const yy = -ry + lid * 2 * ry; g.save(); g.rotate(o.lidTilt || 0);
-      g.beginPath(); g.moveTo(-rx * 2, -ry * 3); g.lineTo(rx * 2, -ry * 3); g.lineTo(rx * 2, yy); g.quadraticCurveTo(0, yy + ry * (o.lidCurve == null ? 0.18 : o.lidCurve), -rx * 2, yy); g.closePath(); g.fill(); g.restore();
-    }
-    if (lower > 0) { const yy = ry - lower * 2 * ry; g.beginPath(); g.moveTo(-rx * 2, ry * 3); g.lineTo(rx * 2, ry * 3); g.lineTo(rx * 2, yy); g.quadraticCurveTo(0, yy - ry * 0.25, -rx * 2, yy); g.closePath(); g.fill(); }
     g.restore();
     g.restore();
   };
