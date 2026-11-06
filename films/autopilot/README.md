@@ -33,7 +33,7 @@ Daniel's narration and the radio presenter are voiced with Gemini text-to-speech
 | `film/seq/Q01_*.js` to `Q12_*.js` | The twelve sequences, in story order. |
 | `audio/` | The voices, the score, the sound kit, the sound map, the cue sheet, credits and the sound README. |
 | `tools/` | strip, frame, set and board sheets; export; the cue sheet; the sound generation, the score, the mix builder; the player bundle. |
-| `src/`, `frames/` | The style frames and the looks board. |
+| `src/`, `frames/` | The style frames, the looks board and the YouTube thumbnails (`src/THUMB_youtube2.html` draws C, D and E from the film's own frames). |
 
 ## Tools
 
