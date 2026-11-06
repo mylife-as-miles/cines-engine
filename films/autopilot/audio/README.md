@@ -17,12 +17,12 @@ The soundtrack is built from the film's own cue sheet: every sequence declares i
 | Check | Result |
 | --- | --- |
 | Offset, encoded audio against the mix | pass (0 samples) |
-| Loudness | pass: -18.21 LUFS against -18 |
-| True peak | pass: -2.17 dBTP |
-| Voice | pass: the bed sits 13.8 LU under Daniel's voice while he speaks |
+| Loudness | pass: -18.20 LUFS against -18 |
+| True peak | pass: -2.16 dBTP |
+| Voice | pass: the bed sits 13.6 LU under Daniel's voice while he speaks |
 | Silence | pass (the opening title and the door are planned silences) |
 | Sync | every effect within its frame limit |
 | Audible / hero body | many soft effects (keys, footsteps, cloth, a breath) do not stand out by the tool's 3 dB in their band under the score or a voice; that is the film's quiet register |
 | Music | flags the film's intended quiet passages (the title, the car park walk, the office at 5:37, the playground, the door's silence) as dips |
 
-earshot on the final mix: both radio presenter lines read as "a man speaking on the radio" (strong); the narration at the door as "a man speaking quietly" (strong; "a voice-over narration"); the mirror's cue as "a music box melody"; the end card as "a soft solo piano" ("sad and melancholic music"); the lock's beep as a plausible beep.
+earshot on the final mix: both radio presenter lines read as "a man speaking on the radio" (strong); the phone refrain deepening as it should: "a man speaking" at 10:05, a gasp at 10:14 (AudioSet 0.65, and 1.3 dB louder), "someone whispering" at 10:56 (7 dB quieter), then "And my daughter was dead." as a quiet narration; the mirror's cue as "a music box melody"; the end card as "a soft solo piano" ("sad and melancholic music"); the lock's beep as a plausible beep.
