@@ -7,7 +7,8 @@
    ?v=c  the mirror, big and tilted on black, her face being swallowed by the shadow; AUTO / PILOT.
    ?v=d  the forgotten phone on the empty counter, full now: 4 missed calls, nobody named (A054); NOBODY ANSWERED.
    ?v=e  the poster: HIS PHONE WAS ON THE COUNTER. (Daniel's own words at the car) over a huge AUTO / PILOT, the mirror
-   ?v=e2 the author's choice: E with all the type at the top, AUTOPILOT and NOBODY ANSWERED., the mirror below it
+   ?v=e2 E with all the type at the top, AUTOPILOT and NOBODY ANSWERED., the mirror below it
+   ?v=c2 the author's choice: C with NOBODY ANSWERED. as its only type, at the top, the mirror under it
    None of them shows what happened, or where Emily is.
    node tools/shoot.js "src/THUMB_youtube2.html?v=c" frames/THUMB_youtube_c.png 1280 720 3000 */
 (async () => {
@@ -41,14 +42,15 @@
   // the mirror (E2): a crop inside the glass of Q05 at 40.4 s (the glass runs x 425-1475, y 235-600; her face is about
   // x 1060-1180), clipped to rounded glass, the shade carried on over the middle of her face
   function mirror(f, o) {
-    const { x, y, S, rot = -0.05, cx0 = 1100, cy0 = 420, cw = 680, ch = 340 } = o, mw = cw * S, mh = ch * S, r = mh * 0.46;
+    const { x, y, S, rot = -0.05, cx0 = 1100, cy0 = 420, cw = 680, ch = 340, bright = 1.1, contrast = 1.05, blur = 56, drop = 20, lw = 4, edge = 0.3 } = o;
+    const mw = cw * S, mh = ch * S, r = mh * 0.46;
     g.save(); g.translate(x, y); g.rotate(rot);
-    g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 56; g.shadowOffsetY = 20; g.fillStyle = '#0b0d0e'; g.fill(rr(-mw / 2 - 15, -mh / 2 - 13, mw + 30, mh + 26, r + 10)); g.shadowColor = 'transparent';
+    g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = blur; g.shadowOffsetY = drop; g.fillStyle = '#0b0d0e'; g.fill(rr(-mw / 2 - 15, -mh / 2 - 13, mw + 30, mh + 26, r + 10)); g.shadowColor = 'transparent';
     g.save(); g.clip(rr(-mw / 2, -mh / 2, mw, mh, r));
-    g.filter = 'brightness(1.1) contrast(1.05)'; g.drawImage(f, cx0 - cw / 2, cy0 - ch / 2, cw, ch, -mw / 2, -mh / 2, mw, mh); g.filter = 'none';
+    g.filter = `brightness(${bright}) contrast(${contrast})`; g.drawImage(f, cx0 - cw / 2, cy0 - ch / 2, cw, ch, -mw / 2, -mh / 2, mw, mh); g.filter = 'none';
     const fx = (1140 - cx0) * S, sh = g.createLinearGradient(fx - 20, 0, fx + 140, 0); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.83)');
     g.fillStyle = sh; g.fillRect(-mw / 2, -mh / 2, mw, mh); g.restore();
-    g.lineWidth = 4; g.strokeStyle = 'rgba(255,236,206,0.3)'; g.stroke(rr(-mw / 2 - 3, -mh / 2 - 3, mw + 6, mh + 6, r + 2)); g.restore();
+    g.lineWidth = lw; g.strokeStyle = `rgba(255,236,206,${edge})`; g.stroke(rr(-mw / 2 - lw / 2 - 1, -mh / 2 - lw / 2 - 1, mw + lw + 2, mh + lw + 2, r + 2)); g.restore();
   }
 
   if (v === 'c') {
@@ -112,6 +114,17 @@
     bold('NOBODY', 1240, 236, 104, '#FFFFFF', { align: 'right' });
     bold('ANSWERED.', 1240, 356, 104, '#FF3B30', { align: 'right' });
     bold('AUTOPILOT', 1236, 466, 60, '#FFFFFF', { align: 'right', track: 6, stroke: 9 });
+  } else if (v === 'c2') {
+    // C as the author chose it, with NOBODY ANSWERED. for its type, at the top (none along the bottom); the mirror moved
+    // down under it and running off the foot of the frame, her face where the eye lands after the words
+    const f = frame('Q05', 40.4);
+    g.fillStyle = '#030607'; g.fillRect(0, 0, W, H);
+    const halo = g.createRadialGradient(820, 460, 40, 820, 460, 700); halo.addColorStop(0, 'rgba(255,236,196,0.32)'); halo.addColorStop(0.45, 'rgba(160,140,110,0.1)'); halo.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = halo; g.fillRect(0, 0, W, H);
+    mirror(f, { x: 780, y: 470, S: 1.45, rot: -0.05, cx0: 1030, cy0: 418, cw: 840, ch: 352, bright: 1.12, contrast: 1.06, blur: 60, drop: 26, lw: 6, edge: 0.35 });
+    vignette(0.7, 840, 470);
+    bold('NOBODY', 50, 128, 112, '#FFFFFF');
+    bold('ANSWERED.', 50, 248, 112, '#FF3B30');
   } else if (v === 'e2') {
     // E as the author chose it, with all the type at the top (none along the bottom) and NOBODY ANSWERED. for its line:
     // the title in one line top left, the line top right on the title's baseline, the mirror below running off the foot
