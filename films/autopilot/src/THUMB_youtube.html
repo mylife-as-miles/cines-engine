@@ -1,0 +1,46 @@
+<!doctype html><meta charset="utf-8"><title>Autopilot · YouTube thumbnail</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script src="../film/load.js"></script>
+<script>
+/* AUTOPILOT · YouTube thumbnail (1280x720), drawn from the film's own frames by the film's engine.
+   ?v=a  the mirror: Emily half gone into the shade behind her father's headrest (Q05, 40.4 s), the title below
+   ?v=b  the phone and the mirror: the phone charging by the kettle (Q02, 22 s) beside her disappearing face
+   node tools/shoot.js "src/THUMB_youtube.html?v=a" frames/THUMB_youtube_a.png 1280 720
+   Nothing in it gives the ending away. */
+(async () => {
+  const v = new URLSearchParams(location.search).get('v') || 'a';
+  await FILM_LOAD('../', ['Q05', 'Q02']);
+  const W = 1280, H = 720;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; document.body.appendChild(cv);
+  const g = cv.getContext('2d');
+  const frame = (id, t) => { const c = OTM.makeCanvas(1920, 1080); FILM.renderAt(FILM.lib[id].start + t, c.getContext('2d')); return c; };
+  const title = (y, size, track) => {
+    g.save(); g.font = `400 ${size}px "Archivo Black"`; g.letterSpacing = track + 'px'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.filter = 'blur(18px)'; g.fillStyle = 'rgba(0,0,0,0.85)'; g.fillText('AUTOPILOT', W / 2, y + 6); g.filter = 'none';
+    g.fillStyle = '#F4F1EA'; g.fillText('AUTOPILOT', W / 2, y); g.restore();
+  };
+  if (v === 'a') {
+    const f = frame('Q05', 40.4);
+    // tight on the mirror: it fills most of the width so it reads at thumbnail size
+    const sx = 300, sy = 120, sw = 1320, sh = 742.5; g.drawImage(f, sx, sy, sw, sh, 0, 0, W, H);
+    // the dashboard band darkened into a floor for the title
+    const gr = g.createLinearGradient(0, H * 0.58, 0, H); gr.addColorStop(0, 'rgba(6,10,11,0)'); gr.addColorStop(0.55, 'rgba(6,10,11,0.82)'); gr.addColorStop(1, 'rgba(6,10,11,0.95)');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    // a slow vignette that keeps the eye on her
+    const vg = g.createRadialGradient(W * 0.56, H * 0.36, H * 0.25, W * 0.5, H * 0.45, W * 0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+    g.fillStyle = vg; g.fillRect(0, 0, W, H);
+    title(668, 150, 10);
+  } else {
+    const f = frame('Q05', 40.4), p = frame('Q02', 22.0);
+    g.fillStyle = '#05090A'; g.fillRect(0, 0, W, H);
+    // left: the phone on the counter, its green bolt; right: her face going into the shade
+    g.drawImage(p, 560, 140, 430, 605, 0, 0, 512, 720);          // tight on the phone: its black glass, the green bolt, 7%
+    g.drawImage(f, 640, 190, 940, 540, 520, 0, 760, 437);
+    g.fillStyle = '#05090A'; g.fillRect(512, 0, 8, H);
+    const gr = g.createLinearGradient(0, H * 0.5, 0, H); gr.addColorStop(0, 'rgba(5,9,10,0)'); gr.addColorStop(0.5, 'rgba(5,9,10,0.85)'); gr.addColorStop(1, 'rgba(5,9,10,1)');
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    title(672, 146, 9);
+  }
+  window.FRAME_READY = true;
+})();
+</script>
