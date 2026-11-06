@@ -1,5 +1,5 @@
 // Export the film to MP4 with the engine's development soundtrack (the final mix is muxed over the picture: see audio/README.md).
-//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--only Q01,Q02]
+//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--only Q01,Q02] [--no-audio]
 // Frames are rendered headless by FILM.renderAt(i/24) and piped as JPEG into ffmpeg (one encoder per worker, then concatenated).
 // Audio is rendered per sequence by OfflineAudioContext at 48 kHz, concatenated, and muxed.
 const { open } = require('./film');
@@ -49,7 +49,7 @@ async function renderAudio() {
   console.log(`film ${total.toFixed(2)} s, ${seqs.length} sequences; frames ${from}..${to} with ${WORKERS} workers at scale ${SCALE}`);
   const per = Math.ceil((to - from) / WORKERS); const jobs = [];
   for (let k = 0; k < WORKERS; k++) { const a = from + k * per, b = Math.min(to, a + per); if (a < b) jobs.push(renderRange(k, a, b, total)); }
-  const audioP = (from === 0 && to === Math.round(total * 24)) ? renderAudio() : Promise.resolve(null);
+  const audioP = (from === 0 && to === Math.round(total * 24) && !argv.includes('--no-audio')) ? renderAudio() : Promise.resolve(null);   // --no-audio: picture only (the final mix is muxed over it)
   const segs = await Promise.all(jobs); const wav = await audioP;
   const list = path.join(TMP, 'segs.txt'); fs.writeFileSync(list, segs.map(f => `file '${f}'`).join('\n'));
   const video = path.join(TMP, 'video.mp4'); execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', video]);
