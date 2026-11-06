@@ -60,7 +60,7 @@ FILM.seq({
 
 `{ id, at, hold, until, x, y, align, size, maxWidth, alpha, style, when, draw, silent, voiceDelay, level }`
 
-- The text and speaker come from the id. Every line id assigned to your sequence must appear **exactly once**, in screenplay order (overlaps are fine).
+- The text and speaker come from the id. Every line id assigned to your sequence must appear **exactly once**, in screenplay order (overlaps are fine). The one exception is L052, "Autopilot disengaged.", which the author cut from the film (`design/DECISIONS.md`).
 - They are Look C's in-picture subtitles, as the author asked (the Look B idiom): sentence case, Libre Franklin, bottom centre, a soft dark halo and no box, wrapped to at most two balanced rows. The engine sets the screenplay's `--` as a dash and its apostrophes properly; the words stay verbatim.
   - Scene dialogue is only ever type: bold 700, 44 px, white. Emily's lines are in her yellow `#E0B34F`.
   - Daniel's V.O. is voiced: 500, 40 px, bone `#E6E0D2`. Its subtitle holds for the recorded take (`audio/voice.js`), and the take plays from `at`.

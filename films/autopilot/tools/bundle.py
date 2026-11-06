@@ -2,7 +2,7 @@
 """Bundle the film into one player page (artifact format: no doctype/html/head/body tags). The soundtrack is the mixed
    autopilot.mp3 beside it (the same mix as the MP4); the page plays it as the clock.
    python3 tools/bundle.py [out.html]   -> out/player/autopilot.html"""
-import os, re, sys
+import json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'out/player/autopilot.html')
 os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -26,6 +26,9 @@ parts = [
   body,
   '<script>window.SETS = window.SETS || {};</script>',
 ]
+# the takes' lengths only (the voices themselves are in the mp3), so voiced subtitles hold for their takes as in the MP4
+vmap = json.load(open(os.path.join(ROOT, 'audio', 'voice_map.json')))
+parts.append('<script>window.FILM_VOICES = %s;</script>' % json.dumps({k: {'take': v['take'], 'dur': v['dur']} for k, v in vmap.items()}))
 for p in js:
   src = read(p).replace('</script', '<\\/script')
   parts.append('<script>/* %s */\n%s\n</script>' % (p, src))

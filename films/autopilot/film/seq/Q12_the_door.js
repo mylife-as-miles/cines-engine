@@ -1,4 +1,4 @@
-/* AUTOPILOT · Q12 · THE DOOR (72 s) · S23, S24, A102–A113, L050–L052
+/* AUTOPILOT · Q12 · THE DOOR (67 s) · S23, S24, A102–A113, L050–L051 (L052, "Autopilot disengaged.", cut by the author)
    EXT. NURSERY CAR PARK - CONTINUOUS. The handle (LOCKED), the remote and the same polite BEEP, the door pulled open from
    behind it (we do not see inside: we see Daniel), the silence, C3 held while the sun sinks out of the glass, the quick flash
    of the phone's green, black, and the end card.
@@ -141,13 +141,14 @@
   }
 
   // ---------------------------------------------------------------------------------------------------------------
-  // 24-59.5 · C3 (A110-A113): the world falls silent. He drops to his knees beside the open door; then he is still, one arm
+  // 24-54.5 · C3 (A110-A113): the world falls silent. He drops to his knees beside the open door; then he is still, one arm
   // extended into the car behind the hinge frame, while the sun sinks out of the glass and the frame drops toward teal-black.
   // ---------------------------------------------------------------------------------------------------------------
   const C3T = { drop: [0.05, 0.75] };                // shot-local (from 24): the drop to his knees
-  // the sunset across the whole of C3 (24-59.5): the disc whole while he drops; half of it under L050 (the style frame);
-  // the last sliver gone in the stillness after L051; the afterglow fading as "Autopilot disengaged." lands
-  const setAt = lt => FILM.key(lt, [[24, 0], [31.5, 0.04], [36.0, 0.2], [39.5, 0.3], [44.0, 0.45], [49.5, 0.62, 'inOutSine'], [56.0, 0.74], [59.5, 1.0, 'inQuad']]);
+  // the sunset across the whole of C3 (24-54.5): the disc whole while he drops; half of it under L050 (the style frame);
+  // the last sliver gone in the stillness after L051; the afterglow fading through that stillness (A113) to black. The
+  // author cut "Autopilot disengaged." (L052): the film ends on the stillness, about 9 s of it, then the black and the card.
+  const setAt = lt => FILM.key(lt, [[24, 0], [31.5, 0.04], [36.0, 0.2], [39.5, 0.3], [44.0, 0.45], [48.5, 0.62, 'inOutSine'], [52.0, 0.76], [54.5, 1.0, 'inQuad']]);
   function danielKneels(g, a, lt) {
     const st = twos(lt - 24), drop = ease.inQuad(seg(st, C3T.drop[0], C3T.drop[1]));
     const lift = (1 - drop) * 0.42 * a.k;           // the kneeling figure lifted: what the glass shows is his upper body sinking
@@ -166,8 +167,8 @@
   }
 
   // ---------------------------------------------------------------------------------------------------------------
-  // 62-72 · THE END CARD, on black: the opening title's type (Libre Franklin 500, tracked, bone; the credit smaller and
-  // dimmer). It fades in over 1.2 s, holds about 6 s and is gone by 71. Nothing else on it.
+  // 57-67 · THE END CARD, on black: the opening title's type (Libre Franklin 500, tracked, bone; the credit smaller and
+  // dimmer). It fades in over 1.2 s, holds about 6 s and is gone by 66. Nothing else on it.
   // ---------------------------------------------------------------------------------------------------------------
   const CARD = { in: 1.2, hold: 6.0, out: 1.8 };
   function drawCard(c, st) {
@@ -182,12 +183,11 @@
   }
 
   FILM.seq({
-    id: 'Q12', title: 'The door', dur: 72,
+    id: 'Q12', title: 'The door', dur: 67,
     lines: [
-      { id: 'L050', at: 36.0 },                     // My phone was on the counter.
+      { id: 'L050', at: 36.0 },                     // My phone was on the counter. (barely a breath: it comes apart)
       { id: 'L051', at: 42.0 },                     // And my daughter was dead.
-      { id: 'L052', at: 56.0 },                     // Autopilot disengaged.
-    ],
+    ],                                              // (L052, "Autopilot disengaged.", is cut: see design/DECISIONS.md)
     sound(S) {
       // the evening, still there until the door: far traffic, and the ringing carried over from Q11 (A090)
       S.bed('traffic', 0, 24, { level: -46, fi: 0.02, fo: 0.02, what: 'the evening traffic, distant: it disappears at A109' });
@@ -203,8 +203,8 @@
       S.cue('footsteps', 9.3, { n: 1, surface: 'tarmac', what: 'one step into the doorway' });
       S.cue('breath', 9 + DOOR.catch, { dur: 0.35, level: -32, what: 'his breath catches, and stays caught (A108)' });
       S.cue('broken_sound', 9 + DOOR.sound, { dur: 0.7, level: -30, what: "a small, broken sound: the beginning of his daughter's name, with nowhere to go (A108). A sound only, never a subtitle" });
-      // A109: the world falls SILENT. Only Daniel's voice remains (his three lines add their own takes)
-      S.silence(24, 72);
+      // A109: the world falls SILENT. Only Daniel's voice remains (his two lines add their own takes)
+      S.silence(24, 67);
     },
     shots: [
       { at: 0, name: 'handle: LOCKED, the yank; his reflection above', post: { vig: 0.45 }, draw(c, st) { drawHandle(c, st); } },
@@ -213,8 +213,8 @@
       { at: 24, name: 'C3: silence; he drops to his knees', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, st, lt) { drawC3(c, lt); } },
       { at: FLASH_AT, name: 'quick flash: the phone, green and peaceful', draw(c, st) { c.post = flash(c, 'phone', st) || {}; } },
       { at: FLASH_AT + FLASH.phone[2], name: 'C3, held: the sun sinks out of the glass', post: { vig: 0.5, grain: 0.06, halation: 0.6 }, draw(c, st, lt) { drawC3(c, lt); } },
-      { at: 59.5, name: 'black', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c) { c.g.fillStyle = '#000'; c.g.fillRect(0, 0, W, H); } },
-      { at: 62, name: 'end card', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c, st) { drawCard(c, st); } },
+      { at: 54.5, name: 'black', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c) { c.g.fillStyle = '#000'; c.g.fillRect(0, 0, W, H); } },
+      { at: 57, name: 'end card', post: { grain: 0.035, halation: 0, vig: 0 }, draw(c, st) { drawCard(c, st); } },
     ],
   });
 })();

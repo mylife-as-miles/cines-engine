@@ -33,7 +33,7 @@
   "Q10": 474,
   "Q11": 536,
   "Q12": 620,
-  "end": 692
+  "end": 687
  },
  "generator": "lyria-3.5 through the Gemini Interactions API (tools/lyria.py); about $0.08 a cue",
  "cues": [
@@ -184,8 +184,8 @@
   {
    "id": "M12",
    "seq": "Q12",
-   "start_s": 682.0,
-   "end_s": 692.0,
+   "start_s": 677.0,
+   "end_s": 687.0,
    "model": "lyria-3-clip-preview",
    "level_db": -16,
    "prompt": "A 15-second instrumental: a solo felt-muted piano plays a gentle D major figure very slowly, once, softly, with long gaps, and stops before the last note of the phrase, left unresolved, fading into silence. Pianissimo, intimate, grieving and still. Instrumental only, no drums, no vocals.",

@@ -2,7 +2,7 @@
 
 ## Voices
 
-Daniel's narration (13 lines) and the radio presenter (2 lines) are voiced with Google's Gemini text-to-speech (`gemini-3.8-flash-tts`), in British voices from Google's voice library: `en-gb-training-10` (Daniel) and `en-gb-podcaster-3` (the presenter), chosen by the author by ear (`design/DECISIONS.md`). The takes are in `audio/vo/` and `audio/radio/`.
+Daniel's narration (12 lines) and the radio presenter (2 lines) are voiced with Google's Gemini text-to-speech (`gemini-3.8-flash-tts`), in British voices from Google's voice library: `en-gb-training-10` (Daniel) and `en-gb-podcaster-3` (the presenter), chosen by the author by ear (`design/DECISIONS.md`). The takes are in `audio/vo/` and `audio/radio/`.
 
 ## Score
 

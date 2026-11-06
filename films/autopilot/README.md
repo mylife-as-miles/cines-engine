@@ -1,6 +1,6 @@
 # Autopilot
 
-*Autopilot*, a film by Osita Miles, animated entirely in code (Canvas 2D). 11 min 32 s. No image or video generators were used for the picture.
+*Autopilot*, a film by Osita Miles, animated entirely in code (Canvas 2D). 11 min 27 s. No image or video generators were used for the picture.
 
 Daniel leaves his phone charging by the kettle, an ordinary slip. On the hottest day of the year he drives his daughter Emily toward nursery; she leans out of the sun into the shade behind his headrest, and in his mirror her face disappears. The film lets the audience make his mistake with him.
 

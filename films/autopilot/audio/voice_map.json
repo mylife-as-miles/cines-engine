@@ -48,34 +48,28 @@
   "style": "quiet and careful, the calm beginning to thin"
  },
  "L047": {
-  "file": "audio/vo/V09.wav",
-  "take": "V09",
-  "dur": 3.24,
-  "style": "numb, almost to himself, barely holding"
+  "file": "audio/vo/V09d.wav",
+  "take": "V09d",
+  "dur": 2.92,
+  "style": "a man justifying himself under his breath, steady and plain, clinging to a simple fact; the fear not yet in his voice"
  },
  "L049": {
-  "file": "audio/vo/V10.wav",
-  "take": "V10",
-  "dur": 4.2,
-  "style": "repeating it, unsteady, the breath catching"
+  "file": "audio/vo/V10c.wav",
+  "take": "V10c",
+  "dur": 2.72,
+  "style": "panicked and quick, the breath catching between words, the voice tightening with dread"
  },
  "L050": {
-  "file": "audio/vo/V11.wav",
-  "take": "V11",
-  "dur": 2.4,
-  "style": "hollow and very quiet, emptied out"
+  "file": "audio/vo/V11b.wav",
+  "take": "V11b",
+  "dur": 4.76,
+  "style": "barely a breath: a broken whisper with almost no voice, slow, the words falling apart"
  },
  "L051": {
   "file": "audio/vo/V12.wav",
   "take": "V12",
   "dur": 3.24,
   "style": "almost no voice left; flat with grief, not performed, very quiet"
- },
- "L052": {
-  "file": "audio/vo/V13.wav",
-  "take": "V13",
-  "dur": 2.88,
-  "style": "utterly still and quiet, final"
  },
  "L004": {
   "file": "audio/radio/R01.wav",

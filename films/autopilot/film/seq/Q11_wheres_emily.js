@@ -432,7 +432,7 @@
       { id: 'L046', at: 60.9, until: 61.95 },       // Daniel: No.  (gone before the first flash cut)
       { id: 'L047', at: 69.0 },                     // V.O.: My phone was on the counter.
       { id: 'L048', at: 74.6 },                     // Daniel: Emily?
-      { id: 'L049', at: 77.6 },                     // V.O.: My phone was on the counter.
+      { id: 'L049', at: 78.2 },                     // V.O.: My phone was on the counter. (frightened now: it runs into the run)
     ],
     sound(S) {
       // S19 · home: the evening street, a blackbird in the gardens, the far main road; the car rolls up the drive
