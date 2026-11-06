@@ -1,0 +1,1331 @@
+{
+ "fps": 24,
+ "duration_s": 692,
+ "energy": "calm",
+ "lufs": -18,
+ "kit": "/home/user/cines-engine/films/autopilot/audio/kit",
+ "room": {
+  "decay_s": 0.6,
+  "wet_db": -16
+ },
+ "music": {
+  "file": "/home/user/cines-engine/films/autopilot/out/mix/bed.wav",
+  "start_s": 0,
+  "loop": false,
+  "fade_out_s": 0.05
+ },
+ "voice": [
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L001.wav",
+   "start_s": 12
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L002.wav",
+   "start_s": 16.2
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L003.wav",
+   "start_s": 31
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L004.wav",
+   "start_s": 86
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L005.wav",
+   "start_s": 94
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L020.wav",
+   "start_s": 266
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L021.wav",
+   "start_s": 276
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L034.wav",
+   "start_s": 402
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L035.wav",
+   "start_s": 460
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L039.wav",
+   "start_s": 517.6
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L047.wav",
+   "start_s": 605
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L049.wav",
+   "start_s": 613.6
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L050.wav",
+   "start_s": 656
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L051.wav",
+   "start_s": 662
+  },
+  {
+   "file": "/home/user/cines-engine/films/autopilot/out/mix/voice/L052.wav",
+   "start_s": 676
+  }
+ ],
+ "duck_db": 9,
+ "silence_ok": [
+  [
+   0.0,
+   4.6
+  ],
+  [
+   644,
+   692
+  ]
+ ],
+ "cues": [
+  {
+   "id": "Q01.vibrate.0",
+   "t": 4.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/vibrate.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q01.alarm.0",
+   "t": 4.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/alarm.wav",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q01.alarm.1",
+   "t": 6.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/alarm.wav",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q01.click.0",
+   "t": 8.62,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01.sheet_rustle.0",
+   "t": 9.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/sheet_rustle.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01.phone_turned_over.0",
+   "t": 19.8,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01.sheet_rustle.1",
+   "t": 29.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/sheet_rustle.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01.bed_creak.0",
+   "t": 29.6,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/creak.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q01.bed_creak.1",
+   "t": 39,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/creak.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02.footsteps.0",
+   "t": 40,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_floor.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q02.bag_down.0",
+   "t": 42.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/bag_down.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02.cable_click.0",
+   "t": 51.62,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/cable_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q02.chime.0",
+   "t": 53.09,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/chime.wav",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q02.footsteps.1",
+   "t": 59.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/stairs.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.tap_squeak.0",
+   "t": 70.45,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/tap_on.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.glass_wipe.0",
+   "t": 79.98,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/wipe.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.razor.0",
+   "t": 81.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/razor.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.towel_rustle.0",
+   "t": 82.7,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03.toothbrush.0",
+   "t": 84.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/toothbrush.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.tap_squeak.1",
+   "t": 87.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/tap_off.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.drips.0",
+   "t": 87.65,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03.drips.1",
+   "t": 97,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/drip2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03.towel_rustle.1",
+   "t": 104.4,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03.wardrobe.0",
+   "t": 107.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/wardrobe.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q03.hanger_click.0",
+   "t": 108.6,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q03.footsteps.0",
+   "t": 109.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_floor.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04.cereal_pour.0",
+   "t": 117.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/cereal.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04.mug_cap.0",
+   "t": 120.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lid_snap.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.lid_snap.0",
+   "t": 121.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lid_snap.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.chair_creak.0",
+   "t": 122.8,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.knife_plate.0",
+   "t": 133.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/knife_toast.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04.clock_tick.0",
+   "t": 145.4,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tick2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.fabric.0",
+   "t": 154.4,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.radio_click.0",
+   "t": 159.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/radio_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.mug_lift.0",
+   "t": 161,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/mug_lift.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.keys.0",
+   "t": 161.35,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keys.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.bag_lift.0",
+   "t": 164.6,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.handle.0",
+   "t": 166.45,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handle_locked.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q04.front_door_open.0",
+   "t": 166.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/front_door.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04.footsteps.0",
+   "t": 167.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_floor.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q04.door.0",
+   "t": 170.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/front_door.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.car_unlock.0",
+   "t": 182.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lock_chirp.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.footsteps.0",
+   "t": 182.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_gravel.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.door.0",
+   "t": 184.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.breath.0",
+   "t": 186.42,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/inhale.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.door.1",
+   "t": 189.85,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.child_seat_rustle.0",
+   "t": 190.6,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.harness_strap.0",
+   "t": 193.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/harness_strap.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.harness_strap.1",
+   "t": 196.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/harness_strap.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.harness.0",
+   "t": 200.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/seatbelt.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.door.2",
+   "t": 201.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.door.3",
+   "t": 202.55,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.seat_creak.0",
+   "t": 202.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/seat_creak.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.mirror_creak.0",
+   "t": 231,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q05.ignition.0",
+   "t": 236.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/ignition.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q05.radio_click.0",
+   "t": 240.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/radio_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.indicator.0",
+   "t": 246.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/indicator.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06.brakes.0",
+   "t": 249.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/brakes.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.handbrake_click.0",
+   "t": 250.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handbrake.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.indicator.1",
+   "t": 258.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/indicator.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06.mug_cap.0",
+   "t": 261.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lid_snap.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.drip.0",
+   "t": 263.4,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/drip1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.cloth_rub.0",
+   "t": 264.4,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q06.wall_pass.0",
+   "t": 266.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/hot_air.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06.finger_drum.0",
+   "t": 280.15,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tap1.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q06.finger_drum.1",
+   "t": 286.7,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tap2.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.indicator.0",
+   "t": 290.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/indicator.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.handbrake.0",
+   "t": 297.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handbrake.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.engine_off.0",
+   "t": 298.2,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.seatbelt_release.0",
+   "t": 298.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/seatbelt_off.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.door.0",
+   "t": 299.85,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.door.1",
+   "t": 301.35,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.keys.0",
+   "t": 302.95,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keys.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.beep.0",
+   "t": 303.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lock_chirp.flac",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q07.footsteps.0",
+   "t": 301.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.footsteps.1",
+   "t": 306,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.glass_door_sigh.0",
+   "t": 312.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/glass_door.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.bag_down.0",
+   "t": 314.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/bag_down.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.tie_loosen.0",
+   "t": 315.5,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.chair_creak.0",
+   "t": 320.1,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/chair1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q07.pages.0",
+   "t": 321.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pages.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.laugh.0",
+   "t": 329.65,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/laugh_priya.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.footsteps.2",
+   "t": 335.8,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.laptop_wake.0",
+   "t": 337.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/laptop_wake.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q07.keyboard.0",
+   "t": 340.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keyboard.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.pages.0",
+   "t": 355.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pages.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.pen.0",
+   "t": 358.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pen.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.pen.1",
+   "t": 359.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pen.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.window_open.0",
+   "t": 361,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/window_open_shut.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.whoosh.0",
+   "t": 361.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/hot_air.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.papers_lift.0",
+   "t": 361.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pages.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.window_shut.0",
+   "t": 362.3,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.stutter.0",
+   "t": 369.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/coffee_machine.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.ring.0",
+   "t": 371,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/ring.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.bag_rustle.0",
+   "t": 374.9,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.pocket_pat.0",
+   "t": 377.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pocket_pat.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.pocket_pat.1",
+   "t": 377.8,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pocket_pat.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.pocket_pat.2",
+   "t": 378.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pocket_pat.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.bag_rustle.1",
+   "t": 378.85,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/rustle.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.flash.0",
+   "t": 380.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.footsteps.0",
+   "t": 384.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/office_steps.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q08.mug_up.0",
+   "t": 400.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/mug_lift.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q08.footsteps.1",
+   "t": 399.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/office_steps.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.footsteps.0",
+   "t": 432.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/office_steps.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.ice_pour.0",
+   "t": 440.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/ice_pour.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.cans_clink.0",
+   "t": 441.1,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/clink2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09.bus_far.0",
+   "t": 445,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/bus_far.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.pen.0",
+   "t": 451.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pen.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.email_send.0",
+   "t": 453.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/email.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.pen_tick.0",
+   "t": 455.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/pen.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q09.coffee_machine.0",
+   "t": 458.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/coffee_machine.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q09.frame_turn.0",
+   "t": 462.2,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/slide.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.email.0",
+   "t": 478.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/email.wav",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.laptop_close.0",
+   "t": 481.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/laptop_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.footsteps.0",
+   "t": 482,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.coat_rustle.0",
+   "t": 482.6,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.footsteps.1",
+   "t": 485.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.mug_up.0",
+   "t": 488.35,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/mug_lift.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.keys.0",
+   "t": 488.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keys.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.wallet.0",
+   "t": 488.9,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.bag_lift.0",
+   "t": 489.85,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/cloth2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.chair_roll.0",
+   "t": 491.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/chair_roll.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.footsteps.2",
+   "t": 491.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.footsteps.3",
+   "t": 492.8,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.handle.0",
+   "t": 498.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handle_locked.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.car_door_open.0",
+   "t": 498.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_open.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.hot_air.0",
+   "t": 498.55,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/hot_air.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.mug_lid.0",
+   "t": 503.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lid_snap.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.seat_creak.0",
+   "t": 505.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/seat_creak.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.car_door_close.0",
+   "t": 508.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q10.window_motor.0",
+   "t": 508.35,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/window_motor.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.ignition.0",
+   "t": 509.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/ignition.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.vent_cough.0",
+   "t": 509.85,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_vent.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.ac_catch.0",
+   "t": 511.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/ac_catch.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q10.volume_knob.0",
+   "t": 524.9,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/tap3.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.gravel.0",
+   "t": 536.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/gravel.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.handbrake.0",
+   "t": 540.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handbrake.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.engine_off.0",
+   "t": 540.45,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.door_open.0",
+   "t": 541.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_open.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.door.0",
+   "t": 543.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.footsteps.0",
+   "t": 543.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.keys.0",
+   "t": 548.7,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keys.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.footsteps.1",
+   "t": 560,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.door_open.1",
+   "t": 560.9,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_open.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.door.1",
+   "t": 561.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.porch_door.0",
+   "t": 561.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/front_door.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.ignition.0",
+   "t": 562.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/ignition.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.gravel.1",
+   "t": 562.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/gravel.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.footsteps.2",
+   "t": 562.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.brakes.0",
+   "t": 568.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/brakes.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.engine_off.1",
+   "t": 571.2,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch2.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.door.2",
+   "t": 572.5,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/car_door_close.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.footsteps.3",
+   "t": 578,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q11.flash.0",
+   "t": 598.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.1",
+   "t": 599.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.2",
+   "t": 599.85,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.3",
+   "t": 600.65,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.4",
+   "t": 601.45,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.5",
+   "t": 602.25,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.flash.6",
+   "t": 603.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/synth/flash.wav",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q11.beep.0",
+   "t": 603.05,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lock_chirp.flac",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q11.footsteps.4",
+   "t": 618.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12.footsteps.0",
+   "t": 620,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12.handle.0",
+   "t": 620.42,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handle_locked.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.lock_thunk.0",
+   "t": 620.49,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.handle.1",
+   "t": 621.52,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/handle_locked.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.lock_thunk.1",
+   "t": 621.59,
+   "sound": "/home/user/cines-engine/films/one-too-many/audio/sfx/latch1.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.keys.0",
+   "t": 624.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/keys.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.fob_click.0",
+   "t": 625.15,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/fob_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.fob_click.1",
+   "t": 626.2,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/fob_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.fob_click.2",
+   "t": 627.45,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/fob_click.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.beep.0",
+   "t": 627.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/lock_chirp.flac",
+   "weight": "hero",
+   "align": "start"
+  },
+  {
+   "id": "Q12.indicator.0",
+   "t": 627.6,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/indicator.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12.door_open.0",
+   "t": 628.8,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/door_open_slow.flac",
+   "weight": "hero",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.footsteps.1",
+   "t": 629.3,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/steps_tarmac.flac",
+   "weight": "support",
+   "align": "start"
+  },
+  {
+   "id": "Q12.breath.0",
+   "t": 634.1,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/inhale.flac",
+   "weight": "support",
+   "align": "peak"
+  },
+  {
+   "id": "Q12.broken_sound.0",
+   "t": 639.4,
+   "sound": "/home/user/cines-engine/films/autopilot/audio/kit/inhale.flac",
+   "weight": "support",
+   "align": "peak"
+  }
+ ]
+}

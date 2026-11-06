@@ -5,7 +5,7 @@
 """Build the film's soundtrack from its own cue sheet (tools/cuesheet.js), then mix it with opus-sound-layer.
 
   node tools/cuesheet.js out/cuesheet.json
-  uv run tools/build_mix.py [--mix]
+  uv run tools/build_mix.py [--mix [--mux]]
 
 1. The bed (out/mix/bed.wav): every room tone and bed the sequences declare, looped to its span with its fades and
    relative level (audio/sound_map.json), the radio's music through a small speaker, the world's silences and ducks; then
@@ -33,7 +33,9 @@ meter = pyln.Meter(SR)
 
 def resolve(k):
     kind, name = k.split('/', 1)
-    if kind == 'gen': return os.path.join(ROOT, 'audio', 'gen', name + '.wav')
+    if kind == 'gen':                                       # the committed kit (FLAC); audio/gen is the generation scratch
+        k = os.path.join(ROOT, 'audio', 'kit', name + '.flac')
+        return k if os.path.exists(k) else os.path.join(ROOT, 'audio', 'gen', name + '.wav')
     if kind == 'otm': return os.path.join(OTM, name + '.flac')
     if kind == 'synth': return os.path.join(ROOT, 'audio', 'synth', name + '.wav')
     if kind == 'score': return os.path.join(ROOT, 'audio', 'score', name + '.mp3')
@@ -129,6 +131,8 @@ def main():
         e = M['beds'].get(key, 'missing')
         if e == 'missing': missing.add('bed ' + b['name']); continue
         if e is None: continue
+        if e.get('until') is not None and b['t1'] > e['until']:          # the map can end a bed early (the radio fading out)
+            b = dict(b, t1=e['until'], t1g=b['t0g'] + (e['until'] - b['t0']), p=dict(b.get('p', {}), fo=3.0))
         n = int((b['t1g'] - b['t0g']) * SR)
         if n <= 0: continue
         if e.get('synth'):
@@ -148,6 +152,11 @@ def main():
         fo = p.get('fo') if p.get('fo') is not None else (0.04 if abs(b['t1'] - sq['dur']) < 0.01 else 0.8)
         s = int(b['t0g'] * SR); seg = seg * env(len(seg), fi, fo) * undb(rel)
         e2 = min(N, s + len(seg)); world[s:e2] += seg[: e2 - s]
+    # a faint air floor under the whole world from the alarm on, so no moment goes digitally dead (the planned silences
+    # still silence it, with the rest of the world)
+    rng = np.random.default_rng(5); fl = sos_filter(rng.standard_normal((N, 2)), 'lowpass', 900); fl = sos_filter(fl, 'highpass', 60)
+    fl *= undb(-60 - lufs(fl[: 60 * SR])); a0 = int(4.5 * SR); fl[:a0] = 0; fl[a0:a0 + SR] *= np.linspace(0, 1, SR)[:, None]
+    world += fl
     # the world's silences and ducks (the score and the voice are not part of the world)
     ctrl = np.ones(N)
     for x in cs['silences']:
@@ -177,11 +186,11 @@ def main():
         fr = int(0.1 * SR); rms = np.array([np.sqrt(np.mean(x[i:i + fr] ** 2)) for i in range(0, max(1, len(x) - fr), fr)])
         rdb = 20 * np.log10(rms + 1e-9); first = int(np.argmax(rdb > rdb.max() - 18)) * fr
         st = first if first + need <= len(x) else max(0, len(x) - need)
-        seg = x[st:st + need]
-        if len(seg) < need: seg = np.concatenate([seg, np.zeros((need - len(seg), 2))])
+        seg = x[st:st + need]; have = len(seg)                # a take shorter than its span fades at its own end
         fi = c.get('fade_in_s', 2.0 if need > 20 * SR else 1.2)
         fo = c.get('fade_out_s', 0.06 if c['id'] == 'M11b' else 2.5)
-        seg = seg * env(need, fi, fo) * undb(c.get('level_db', -15) + 9)
+        seg = seg * env(have, fi, fo) * undb(c.get('level_db', -15) + 9)
+        if have < need: seg = np.concatenate([seg, np.zeros((need - have, 2))])
         s = int(c['start_s'] * SR); e2 = min(N, s + need); score[s:e2] += seg[: e2 - s]
         placed.append((c['id'], c['start_s'], c['end_s'], round(st / SR, 2), round(cents, 1)))
     bed = world + score
@@ -221,7 +230,7 @@ def main():
     for c in cues:
         if not os.path.exists(c['sound']): missing.add('file ' + c['sound'])
 
-    silence_ok = [[round(a, 2), round(b2, 2)] for a, b2 in sil]
+    silence_ok = [[0.0, 4.6]] + [[round(a, 2), round(b2, 2)] for a, b2 in sil]   # the opening title on black is silent on purpose
     sheet = {'fps': 24, 'duration_s': round(T, 3), 'energy': 'calm', 'lufs': -18, 'kit': os.path.join(ROOT, 'audio', 'kit'),
              'room': {'decay_s': 0.6, 'wet_db': -16}, 'music': {'file': os.path.join(OUT, 'bed.wav'), 'start_s': 0, 'loop': False, 'fade_out_s': 0.05},
              'voice': voices, 'duck_db': 9, 'silence_ok': silence_ok, 'cues': cues}
@@ -231,8 +240,20 @@ def main():
     print(f"voices: {len(voices)}; effects: {len(cues)} -> audio/cues.json")
     if missing: print('MISSING:', ', '.join(sorted(missing)))
     if '--mix' in sys.argv:
-        r = subprocess.run(['uv', 'run', MIXPY, os.path.join(ROOT, 'audio', 'cues.json'), '--out', os.path.join(ROOT, 'out', 'audio')], cwd=ROOT)
-        sys.exit(r.returncode)
+        A = os.path.join(ROOT, 'out', 'audio')
+        r = subprocess.run(['uv', 'run', MIXPY, os.path.join(ROOT, 'audio', 'cues.json'), '--out', A], cwd=ROOT)
+        if r.returncode: sys.exit(r.returncode)
+        # the AAC encode overshoots transient-rich music (the glockenspiel) by about 1.5 dB, so the master's sample peaks
+        # are held at -3 dBFS (latency-compensated: the timing stays sample-exact) before it is encoded
+        os.replace(os.path.join(A, 'mix.wav'), os.path.join(A, 'mix_raw.wav'))
+        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', os.path.join(A, 'mix_raw.wav'), '-af',
+                        'alimiter=limit=0.708:attack=1:release=50:level=false:latency=1', '-c:a', 'pcm_f32le', os.path.join(A, 'mix.wav')], check=True)
+        pic = os.path.join(ROOT, 'out', 'autopilot_picture.mp4')
+        if '--mux' in sys.argv and os.path.exists(pic):
+            subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', pic, '-i', os.path.join(A, 'mix.wav'), '-map', '0:v', '-map', '1:a',
+                            '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart',
+                            os.path.join(ROOT, 'out', 'autopilot.mp4')], check=True)
+            print('wrote out/autopilot.mp4')
 
 
 if __name__ == '__main__':

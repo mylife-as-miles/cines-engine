@@ -74,8 +74,9 @@
    "end_s": 178.0,
    "model": "lyria-3.5",
    "level_db": -14,
-   "prompt": "An instrumental film-score cue, about 60 seconds, the warmest music of a tender animated short: breakfast with a father and his sleepy four-year-old daughter, the toast crust cut off, a kiss on her head, her small hands straightening his collar. A gentle felt-piano figure in D major, rocking eighth notes at about 72 bpm, joined by a warm solo cello melody, intimate and smiling, never sentimental, mezzo-piano. In the last ten seconds it thins to a single held piano note. Minimal modern classical. No drums, no vocals. In tune at A = 440.",
-   "why": "The film's warmth, under Emily's and Daniel's type lines. It thins as he leaves and the phone stays, charging quietly."
+   "prompt": "An instrumental piece, about 60 seconds: light, cheerful and gently playful, a sunny ordinary morning. Felt piano playing a bouncy figure in D major at about 96 bpm, with glockenspiel sparkles and soft pizzicato strings, smiling and carefree, warm and content, mezzo-piano, never building. Bright major harmony throughout, no minor chords, nothing sad or wistful. It ends on a held D major chord. No drums, no vocals. In tune at A = 440.",
+   "why": "The film's warmth, under Emily's and Daniel's type lines. It thins as he leaves and the phone stays, charging quietly.",
+   "take_history": "v1 and two regenerations read as sad to earshot (75%, 64%, 86%); described as music only, without the story or the cello"
   },
   {
    "id": "M05",
@@ -84,8 +85,9 @@
    "end_s": 236.0,
    "model": "lyria-3.5",
    "level_db": -15,
-   "prompt": "An instrumental film-score cue, about 35 seconds: tender and delicate, a little girl in a car seat turning her face away from the morning sun and leaning into the shade to have her little sleep, her father watching in the mirror. A soft, slow celesta and felt-piano melody in D major with a high bowed-glass tone, like a quiet music box, warm, sleepy and loving, not sad and not ominous, pianissimo to piano. It ends gently on a held high note. No drums, no vocals. In tune at A = 440.",
-   "why": "The mirror moment (C2): tender. It must not foreshadow. It ends as the mirror tilts to the traffic."
+   "prompt": "An instrumental film-score cue, about 35 seconds, in a bright major key: tender, sleepy and loving, a little girl in a car seat turning away from the morning sun to have her little sleep, her father smiling at her in the mirror. A soft celesta and felt-piano lullaby melody in D major with a gentle high glass tone, like a sweet music box, warm and content, pianissimo to piano. Not sad, not melancholic, not ominous, no minor chords. It ends gently on a held high major chord. No drums, no vocals. In tune at A = 440.",
+   "why": "The mirror moment (C2): tender. It must not foreshadow. It ends as the mirror tilts to the traffic.",
+   "take_history": "v1 read 72% sad; the regeneration in a bright major key reads 98% warm (M05_v2, in use)"
   },
   {
    "id": "R01",

@@ -64,6 +64,11 @@ def main():
     for k in range(2):
         for i, f in enumerate([1174.7, 1568.0, 1174.7, 1568.0, 1760.0, 1568.0]): place(r, mallet(f, 0.3, decay=6, bright=0.5), k * 2.0 + i * 0.13)
     sf.write(os.path.join(OUT, 'ring.wav'), norm(r, -4), SR)
+    # the flash cut: a soft swelling whoosh into a low, muffled thud (a memory arriving), quiet
+    fl = np.zeros(int(1.2 * SR)); place(fl, 0.7 * noise_sweep(0.32, 300, 2500, seed=7), 0)
+    t = np.arange(int(0.8 * SR)) / SR; thud = np.sin(2 * np.pi * (52 + 30 * np.exp(-18 * t)) * t) * np.exp(-6 * t) * np.minimum(1, t / 0.003)
+    place(fl, thud, 0.28)
+    sf.write(os.path.join(OUT, 'flash.wav'), norm(fl, -4), SR)
     print('wrote', sorted(os.listdir(OUT)))
 
 

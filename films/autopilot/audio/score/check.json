@@ -31,21 +31,21 @@
  },
  "M04": {
   "file": "M04.mp3",
-  "dur_s": 58.57,
-  "tune_cents": -1.0,
+  "dur_s": 61.86,
+  "tune_cents": 6.0,
   "vocal_tag": false,
   "audioset": "AudioSet Music 0",
-  "describe": "58.57 s busy, 1.8 onsets/s, loudness range 7 LU. Music (AudioSet Music 0.79). Unvalidated hints - genre: solo piano music (z +3.1), jazz music (z +3.0); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.6), romantic music (z +2.7). No sound-effect description stands out (closest: a sustained glass harp tone z +1.9, a celesta note z +1.5; tentative). AudioSet: Music 0.79, Cello 0.68, Double bass 0.59. peak -0.2 dBFS, -11.5 LUFS, brightness 651 Hz, bandwidth 10.2 kHz, side/mid -6 dB. Windows that read differently: 0:00.00-0:10.00 a music box melody (z +2.4; AudioSet Music 0.79); 0:48.57-0:58.57 a sustained glass harp tone (z +2.4; AudioSet Music 0.67).",
+  "describe": "61.86 s long recording, loudness range 8 LU. Music (AudioSet Music 0.77). Unvalidated hints - genre: playful children's piano music (z +3.0), jazz music (z +2.9); mood (wrong for ~1 in 5 tracks in a test): romantic music (z +2.9), uplifting and hopeful music (z +2.9). Sounds most like: a magic sparkle chime (z +2.0), a music box melody (z +1.8), a glissando on bar chimes (z +1.2) [weak reading]. Other readings: ice cubes in a glass (water, z +1.1), a success chime (ui, z +1.1). AudioSet: Music 0.77, Jingle, tinkle 0.62, Background music 0.26. peak 0.1 dBFS, -11.8 LUFS, brightness 1.2 kHz, bandwidth 16.3 kHz, side/mid -6 dB. Windows that read differently: 0:00.00-0:10.00 a music box melody (z +2.0; AudioSet Music 0.54); 0:10.00-0:20.00 a magic sparkle chime (z +2.6; AudioSet Music 0.62); 0:51.86-1:01.86 a sustained glass harp tone (z +2.2; AudioSet Music 0.57).",
   "match": "M04.mp3: 'quiet, minimal, gentle piano and strings film score' -> strong (unvalidated: music / instrument / voice description) (z +3.8; would rank #1 among 322 vocabulary descriptions; cosine 0.33).",
   "forced_choice": "Forced choice vs your alternatives: 'quiet, minimal, gentle piano and strings film score' >99%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral trailer' <1%."
  },
  "M05": {
   "file": "M05.mp3",
-  "dur_s": 57.34,
-  "tune_cents": 0.0,
+  "dur_s": 37.17,
+  "tune_cents": 10.0,
   "vocal_tag": false,
   "audioset": "AudioSet Music 0",
-  "describe": "57.34 s busy, 2.5 onsets/s, loudness range 9 LU. Music (AudioSet Music 0.50). Unvalidated hints - genre: playful children's piano music (z +2.2); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.4), romantic music (z +2.7). Sounds most like: a music box melody (z +4.3), a glockenspiel run (z +3.1), a kalimba note (z +2.7) [clear reading]. Other readings: a success chime (ui, z +1.5). AudioSet: Glockenspiel 0.65, Marimba, xylophone 0.58, Mallet percussion 0.56. peak 0.1 dBFS, -11.0 LUFS, brightness 773 Hz, bandwidth 16.3 kHz, side/mid -9 dB. Uniform: all 6 analysed 10 s windows read as a music box melody.",
+  "describe": "37.17 s busy, 2.4 onsets/s, loudness range 6 LU. Music (AudioSet Music 0.74). Unvalidated hints - genre: playful children's piano music (z +3.4), solo piano music (z +3.4); mood (wrong for ~1 in 5 tracks in a test): romantic music (z +3.0), uplifting and hopeful music (z +3.0). Sounds most like: a music box melody (z +2.5), a glockenspiel run (z +1.8), a magic sparkle chime (z +1.6) [plausible reading]. Other readings: ice cubes in a glass (water, z +1.3). AudioSet: Music 0.74, Piano 0.44, Keyboard (musical) 0.32. peak 0.0 dBFS, -11.4 LUFS, brightness 696 Hz, bandwidth 12.9 kHz, side/mid -1 dB. Uniform: all 6 analysed 10 s windows read as a music box melody.",
   "match": "M05.mp3: 'quiet, minimal, gentle piano and strings film score' -> no match (unvalidated: music / instrument / voice description) (z +1.5; would rank #25 among 322 vocabulary descriptions; cosine 0.13).",
   "forced_choice": "Forced choice vs your alternatives: 'quiet, minimal, gentle piano and strings film score' 95%, 'a pop song with vocals' 4%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral trailer' 1%."
  },
@@ -81,11 +81,11 @@
  },
  "M09a": {
   "file": "M09a.mp3",
-  "dur_s": 30.77,
-  "tune_cents": -5.0,
+  "dur_s": 28.21,
+  "tune_cents": -15.0,
   "vocal_tag": false,
   "audioset": "AudioSet Music 0",
-  "describe": "30.77 s steady, few onsets, loudness range 3 LU. Music (AudioSet Music 0.88). Unvalidated hints - genre: uplifting orchestral film score (z +3.2), ambient synth pad music (z +3.2); mood (wrong for ~1 in 5 tracks in a test): dreamy and ethereal music (z +2.9), dark and tense music (z +2.9). No sound-effect description stands out (closest: a rising riser building tension z +1.8, a singing bowl z +1.5; tentative). AudioSet: Music 0.88, Organ 0.28, Keyboard (musical) 0.18. peak -0.2 dBFS, -11.2 LUFS, brightness 1.6 kHz, bandwidth 16.3 kHz, side/mid -3 dB. Windows that read differently: 0:00.00-0:10.00 a rising riser building tension (z +1.7; AudioSet Music 0.78); 0:20.77-0:30.77 a singing bowl (z +2.0; AudioSet Music 0.88).",
+  "describe": "28.21 s 19 separate events, loudness range 8 LU. Music (AudioSet Music 0.86). Unvalidated hints - genre: classical string quartet (z +2.9), ambient synth pad music (z +2.3); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.1), dreamy and ethereal music (z +3.1). Sounds most like: a sustained glass harp tone (z +2.5), a singing bowl (z +2.2), a kettle whistling (z +1.6) [plausible reading]. Other readings: a rising riser building tension (transitions, z +1.6), birds singing in the morning (ambience, z +1.6). AudioSet: Music 0.86, Violin, fiddle 0.82, Musical instrument 0.68. peak -0.0 dBFS, -10.5 LUFS, brightness 1.7 kHz, bandwidth 16.3 kHz, side/mid -8 dB. Windows that read differently: 0:00.00-0:10.00 a singing bowl (z +2.9; AudioSet Music 0.82); 0:18.21-0:28.21 a sustained glass harp tone (z +2.0; AudioSet Violin, fiddle 0.82).",
   "match": "M09a.mp3: 'quiet, minimal, gentle piano and strings film score' -> weak (unvalidated: music / instrument / voice description) (z +2.1; would rank #16 among 322 vocabulary descriptions; cosine 0.25).",
   "forced_choice": "Forced choice vs your alternatives: 'quiet, minimal, gentle piano and strings film score' 7%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral trailer' 92%."
  },

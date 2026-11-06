@@ -313,6 +313,270 @@
    "dur": 20,
    "seed": 112,
    "match": "a very quiet evening outdoors"
+  },
+  "lawnmower": {
+   "prompt": "a distant lawnmower in a suburban garden, far away, summer morning, faint, no music",
+   "dur": 12,
+   "seed": 301,
+   "match": "a distant lawnmower"
+  },
+  "cabin_hush": {
+   "prompt": "inside a parked car with the windows closed, muffled birds outside, a quiet hush, no music",
+   "dur": 15,
+   "seed": 302,
+   "match": "a quiet car interior"
+  },
+  "engine_ticking": {
+   "prompt": "a car engine ticking as it cools after being switched off, slow metallic ticks, quiet, no music",
+   "dur": 8,
+   "seed": 303,
+   "match": "an engine ticking as it cools"
+  },
+  "office_murmur": {
+   "prompt": "a quiet office with distant murmured conversation, no clear words, air conditioning, no music",
+   "dur": 15,
+   "seed": 304,
+   "match": "a quiet office with murmured voices"
+  },
+  "meeting_murmur": {
+   "prompt": "a meeting room with a few people murmuring quietly, papers, no clear words, no music",
+   "dur": 12,
+   "seed": 305,
+   "match": "people murmuring in a meeting room"
+  },
+  "dog_pant": {
+   "prompt": "a dog panting in the heat, lying down, close, no music",
+   "dur": 5,
+   "seed": 306,
+   "match": "a dog panting"
+  },
+  "bag_lift": {
+   "prompt": "picking up a leather work bag from a desk, a strap and a soft creak, close, no music",
+   "dur": 2,
+   "seed": 307,
+   "match": "picking up a bag"
+  },
+  "bag_rustle": {
+   "prompt": "a hand rummaging in the outside pocket of a leather bag, close, no music",
+   "dur": 2.5,
+   "seed": 308,
+   "match": "rummaging in a bag"
+  },
+  "bed_creak": {
+   "prompt": "a bed creaking softly as someone shifts and sits up, close, quiet bedroom, no music",
+   "dur": 2.5,
+   "seed": 309,
+   "match": "a bed creaking"
+  },
+  "breath_tired": {
+   "prompt": "a man exhaling through his nose, a short tired breath, close, no music",
+   "dur": 1.5,
+   "seed": 310,
+   "match": "a man exhaling"
+  },
+  "broken_breath": {
+   "prompt": "a man's breath catching in his throat, a small broken sound, the start of a word that does not come, very quiet, close, no music",
+   "dur": 2,
+   "seed": 311,
+   "match": "a choked breath"
+  },
+  "bus_far": {
+   "prompt": "a bus passing in the distance on a hot city street, no music",
+   "dur": 5,
+   "seed": 312,
+   "match": "a bus passing in the distance"
+  },
+  "cans_clink": {
+   "prompt": "cans clinking together in a bucket of ice water, close, no music",
+   "dur": 2,
+   "seed": 313,
+   "match": "cans clinking in ice water"
+  },
+  "chair_roll": {
+   "prompt": "an office chair rolling a little on a hard floor, close, no music",
+   "dur": 2,
+   "seed": 314,
+   "match": "an office chair rolling"
+  },
+  "child_seat": {
+   "prompt": "a small child settled into a car seat, fabric rustle and a soft plastic creak, close, no music",
+   "dur": 3,
+   "seed": 315,
+   "match": "fabric rustling"
+  },
+  "engine_off": {
+   "prompt": "a small car engine switched off, the engine winding down to silence, no music",
+   "dur": 3,
+   "seed": 316,
+   "match": "a car engine switching off"
+  },
+  "finger_drum": {
+   "prompt": "two fingers drumming lightly on a steering wheel, close, inside a car, no music",
+   "dur": 3,
+   "seed": 317,
+   "match": "fingers drumming"
+  },
+  "flash_cut": {
+   "prompt": "a short soft whoosh with a low muffled thud, a flashback cut in a film, no music",
+   "dur": 1.5,
+   "seed": 318,
+   "match": "a whoosh and a thud"
+  },
+  "fob_click": {
+   "prompt": "a small plastic button pressed on a car key fob, one tiny click, close, no music",
+   "dur": 1,
+   "seed": 319,
+   "match": "a small button click"
+  },
+  "steps_gravel": {
+   "prompt": "footsteps walking on a gravel driveway, close, no music",
+   "dur": 4,
+   "seed": 320,
+   "match": "footsteps on gravel"
+  },
+  "steps_tarmac": {
+   "prompt": "footsteps walking briskly on tarmac in a car park, no music",
+   "dur": 4,
+   "seed": 321,
+   "match": "footsteps walking on tarmac"
+  },
+  "steps_floor": {
+   "prompt": "bare footsteps on wooden floorboards in a quiet house, close, no music",
+   "dur": 3,
+   "seed": 322,
+   "match": "footsteps on a wooden floor"
+  },
+  "frame_turn": {
+   "prompt": "a small photo frame turned on a desk, a soft slide and tap, close, no music",
+   "dur": 1.5,
+   "seed": 323,
+   "match": "an object sliding on a desk"
+  },
+  "handbrake": {
+   "prompt": "a car handbrake pulled up, a ratchet click, inside the car, no music",
+   "dur": 1.5,
+   "seed": 324,
+   "match": "a handbrake ratchet"
+  },
+  "hanger_click": {
+   "prompt": "a clothes hanger lifted off a rail, a small click, close, no music",
+   "dur": 1.5,
+   "seed": 325,
+   "match": "a hanger clicking"
+  },
+  "harness_strap": {
+   "prompt": "a car seat harness strap pulled through, fabric webbing sliding, close, no music",
+   "dur": 2,
+   "seed": 326,
+   "match": "a strap sliding"
+  },
+  "ice_pour": {
+   "prompt": "melting ice poured from a bag into a metal bucket of water, close, no music",
+   "dur": 3,
+   "seed": 327,
+   "match": "ice poured into a bucket"
+  },
+  "laugh_priya": {
+   "prompt": "a woman laughing briefly and warmly at a joke, light and short, close, no music",
+   "dur": 2,
+   "seed": 328,
+   "match": "a woman laughing"
+  },
+  "lock_thunk": {
+   "prompt": "car door locks clunking shut, a solid mechanical thunk, close, no music",
+   "dur": 1.5,
+   "seed": 329,
+   "match": "car door locks clunking"
+  },
+  "mirror_creak": {
+   "prompt": "a car rear-view mirror adjusted by hand, a small plastic creak, close, no music",
+   "dur": 1.5,
+   "seed": 330,
+   "match": "a small plastic creak"
+  },
+  "mug_lift": {
+   "prompt": "a ceramic mug lifted from a desk, a soft scrape, close, no music",
+   "dur": 1.5,
+   "seed": 331,
+   "match": "a mug lifted from a table"
+  },
+  "phone_turn": {
+   "prompt": "a mobile phone turned over in a hand, a soft tap of glass on skin, close, no music",
+   "dur": 1.5,
+   "seed": 332,
+   "match": "a phone handled"
+  },
+  "pocket_pat": {
+   "prompt": "patting trouser and shirt pockets with a hand, soft fabric pats, close, no music",
+   "dur": 2,
+   "seed": 333,
+   "match": "patting pockets"
+  },
+  "radio_click": {
+   "prompt": "a car radio switched on with a small click, close, no music",
+   "dur": 1,
+   "seed": 334,
+   "match": "a small click"
+  },
+  "seat_creak": {
+   "prompt": "a car seat creaking as a man sits down, close, inside a car, no music",
+   "dur": 2,
+   "seed": 335,
+   "match": "a seat creaking"
+  },
+  "seatbelt_off": {
+   "prompt": "a seat belt unbuckled and the belt retracting, inside a car, close, no music",
+   "dur": 2,
+   "seed": 336,
+   "match": "a seat belt unbuckled"
+  },
+  "sip": {
+   "prompt": "a man sipping hot coffee from a travel mug, close, no music",
+   "dur": 1.5,
+   "seed": 337,
+   "match": "sipping a drink"
+  },
+  "tie_loosen": {
+   "prompt": "a necktie loosened, silk sliding against a shirt collar, close, quiet, no music",
+   "dur": 1.5,
+   "seed": 338,
+   "match": "fabric sliding"
+  },
+  "tyres_slow": {
+   "prompt": "car tyres rolling slowly into a parking space on tarmac, quiet, no music",
+   "dur": 3,
+   "seed": 339,
+   "match": "tyres rolling slowly"
+  },
+  "volume_knob": {
+   "prompt": "a car radio volume knob turned, small detent clicks, close, no music",
+   "dur": 1.5,
+   "seed": 340,
+   "match": "a knob turning with clicks"
+  },
+  "wall_pass": {
+   "prompt": "a car passing close beside a wall, a short whoosh of air, no music",
+   "dur": 2,
+   "seed": 341,
+   "match": "a car passing by"
+  },
+  "wallet": {
+   "prompt": "a leather wallet picked up from a desk and slipped into a pocket, close, no music",
+   "dur": 1.5,
+   "seed": 342,
+   "match": "a wallet picked up"
+  },
+  "ac_catch": {
+   "prompt": "a car air conditioning fan kicking in and blowing cool air steadily, inside the car, no music",
+   "dur": 4,
+   "seed": 343,
+   "match": "a car fan blowing"
+  },
+  "sheet_rustle": {
+   "prompt": "bed sheets rustling as someone moves in bed, close, quiet, no music",
+   "dur": 2,
+   "seed": 344,
+   "match": "sheets rustling"
   }
  }
 }
