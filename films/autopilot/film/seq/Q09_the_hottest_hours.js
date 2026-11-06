@@ -159,7 +159,8 @@
     for (let i = 0; i < N; i++) {
       const v0 = i / N, v1 = (i + 1) / N, L0 = [lerp(q[0][0], q[3][0], v0), lerp(q[0][1], q[3][1], v0)], R0 = [lerp(q[1][0], q[2][0], v0), lerp(q[1][1], q[2][1], v0)], L1 = [lerp(q[0][0], q[3][0], v1), lerp(q[0][1], q[3][1], v1)];
       g.save(); g.transform((R0[0] - L0[0]) / TW, (R0[1] - L0[1]) / TW, (L1[0] - L0[0]) / (TH / N), (L1[1] - L0[1]) / (TH / N), L0[0], L0[1]);
-      g.drawImage(tex, 0, TH * v0, TW, Math.min(TH / N + 2, TH - TH * v0), 0, 0, TW, Math.min(TH / N + 2, TH - TH * v0)); g.restore();
+      const sy = Math.max(0, TH * v0 - 2), sh = Math.min(TH - sy, TH / N + 4);   // overlap both edges, so no seam shows
+      g.drawImage(tex, 0, sy, TW, sh, 0, sy - TH * v0, TW, sh); g.restore();
     }
     // the glass: the ceiling's lamps above and behind us slide across it as it turns; turned away it holds the white window
     const ib = (() => { let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; inner.forEach(p => { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); }); return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }; })();
