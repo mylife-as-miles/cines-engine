@@ -18,10 +18,10 @@
   const DAN = { outfit: 'office', collar: 'straight' };
   const cam = o => { const z = Math.max(1, o.zoom || 1), x = o.x == null ? W / 2 : o.x, y = o.y == null ? H / 2 : o.y;
     return Object.assign({}, o, { zoom: z, x: clamp(x, W / 2 / z, W - W / 2 / z), y: clamp(y, H / 2 / z, H - H / 2 / z) }); };
-  function stillFig(c, name, who, p, opts, box) {
+  function stillFig(c, name, who, p, opts, box, into, face) {
     const [x0, y0, w, h] = box, k = 1.5;
-    const cv = c.cache('Q09|fig|' + name, g => { g.scale(k, k); g.translate(-x0, -y0); RIG.draw(g, who, p, opts); }, Math.ceil(w * k), Math.ceil(h * k));
-    c.g.drawImage(cv, x0, y0, w, h);
+    const cv = c.cache('Q09|fig|' + name, g => { g.scale(k, k); g.translate(-x0, -y0); (face ? RIG.face : RIG.draw)(g, who, p, opts); }, Math.ceil(w * k), Math.ceil(h * k));
+    (into || c.g).drawImage(cv, x0, y0, w, h);
   }
   const office = () => SETS.office.views, city = () => SETS.city.views;
   // RIG.hand places a hand by its wrist; to put a fingertip (or the pinch between index and thumb) on a point, the
@@ -282,7 +282,7 @@
       { at: 36.8, name: 'laptop: files an email', draw(c, st, lt) {
           const v = office().laptop; c.camera(cam({ x: 900, y: 520, zoom: 1.06 + st * 0.01 }));
           const s = { wake: 1, content: lt < 37.6 ? 'email' : 'sent', tod: 'afternoon',
-            reflect: (g, R) => RIG.face(g, 'daniel', Object.assign({ at: [R.x, R.y - 40], size: 560, view: 'front', face: 'concentration' }, DAN), { light: R.light, exposure: 0.5 + 0.6 * R.lit }) };
+            reflect: (g, R) => { const at = [R.x, R.y - 40], sz = 560; stillFig(c, 'laptop-face', 'daniel', Object.assign({ at, size: sz, view: 'front', face: 'concentration' }, DAN), { light: R.light, exposure: 0.5 + 0.6 * R.lit }, [at[0] - 1.4 * sz, at[1] - 1.0 * sz, 2.8 * sz, 2.6 * sz], g, true); } };
           v.back(c, lt, s); v.front(c, lt, s);
         } },
       { at: 38.8, name: 'insert: ticks a box', draw(c, st) { deskInsert(c, st, 'tick'); } },
