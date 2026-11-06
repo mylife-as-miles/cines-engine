@@ -24,6 +24,11 @@
     c.g.drawImage(cv, x0, y0, w, h);
   }
   const office = () => SETS.office.views, city = () => SETS.city.views;
+  // RIG.hand places a hand by its wrist; to put a fingertip (or the pinch between index and thumb) on a point, the
+  // fingertip offsets are measured once per pose with a dry run on a tiny canvas, then the wrist is solved for
+  const HG = {}, scratchG = () => FILM.cache('Q09|scratch-hand', () => {}, 8, 8).getContext('2d');
+  function handGeom(p) { const k = JSON.stringify(p); if (!HG[k]) { const r = RIG.hand(scratchG(), 'daniel', Object.assign({}, p, { at: [0, 0] }), {}); HG[k] = { tips: r.tips, thumb: r.thumb }; } return HG[k]; }
+  const pinchOf = gm => [(gm.tips[0][0] + gm.thumb[0]) / 2, (gm.tips[0][1] + gm.thumb[1]) / 2];
 
   // ---------- the empty house: the counter in the afternoon ----------
   function counterShot(c, lt, frame, view) {
@@ -33,7 +38,7 @@
   }
 
   // ---------- the desk-surface insert: the form, the pen, his hand (through the partition's glass, a long lens) ----------
-  const DC = LC.camera({ x: 0.06, y: 1.2, z: -0.5, yaw: deg(-4), pitch: deg(-44), f: 1900, cx: 960, cy: 540 });
+  const DC = LC.camera({ x: 0.06, y: 1.2, z: -0.5, yaw: deg(-9), pitch: deg(-35), f: 2350, cx: 960, cy: 560 });
   const dp = (x, z, y) => { const p = DC.p(x, y == null ? 0.73 : y, z); return [p[0], p[1]]; };
   const FORM = { x: -0.06, z: 0.2, w: 0.21, h: 0.297, rot: deg(-7) };
   // a point on the form in its own units (u across 0..1, v down 0..1) -> screen
@@ -54,7 +59,7 @@
       // the laptop: its aluminium base and keys, the lit screen rising out of frame
       g.fillStyle = '#AEB8B4'; g.fill(LC.pathPts([dp(0.22, 0.42), dp(0.62, 0.42), dp(0.62, 0.7), dp(0.22, 0.7)]));
       g.fillStyle = '#7E8985'; g.fill(LC.pathPts([dp(0.25, 0.47), dp(0.59, 0.47), dp(0.59, 0.64), dp(0.25, 0.64)]));
-      for (let r = 0; r < 5; r++) for (let k = 0; k < 12; k++) { const x0 = 0.26 + k * 0.0275, z0 = 0.475 + r * 0.032; g.fillStyle = '#2E3536'; g.fill(LC.pathPts([dp(x0, z0), dp(x0 + 0.022, z0), dp(x0 + 0.022, z0 + 0.025), dp(x0, z0 + 0.025)])); }
+      for (let r = 0; r < 5; r++) for (let k = 0; k < 12; k++) { const x0 = 0.26 + k * 0.0275, z0 = 0.475 + r * 0.032; g.fillStyle = '#5E6966'; g.fill(LC.pathPts([dp(x0, z0), dp(x0 + 0.023, z0), dp(x0 + 0.023, z0 + 0.027), dp(x0, z0 + 0.027)])); }
       g.fillStyle = '#C8D2CE'; g.fill(LC.pathPts([dp(0.22, 0.7), dp(0.62, 0.7), dp(0.62, 0.705, 0.76), dp(0.22, 0.705, 0.76)]));
       const sc = [dp(0.23, 0.71, 0.76), dp(0.61, 0.71, 0.76), dp(0.61, 0.79, 1.02), dp(0.23, 0.79, 1.02)];
       g.fillStyle = '#E9F0EE'; g.fill(LC.pathPts(sc)); g.fillStyle = 'rgba(120,140,140,0.35)'; for (let i = 0; i < 6; i++) { const a = dp(0.27, 0.72 + i * 0.012, 0.79 + i * 0.04), b = dp(0.5 - (i % 3) * 0.05, 0.72 + i * 0.012, 0.79 + i * 0.04); g.fillRect(a[0], a[1], b[0] - a[0], 3); }
@@ -110,16 +115,19 @@
     // the pen lifts a little between strokes
     const lift = mode === 'sign' ? 0 : (t > 0.95 ? seg(t, 0.95, 1.2) * 22 : 0);
     const tip = formPt(tipU[0], tipU[1]); tip[1] -= lift;
-    // his right hand, from the lower right, the pen between thumb and fingers (the hand on twos: its wrist eases on ones)
-    const dir = deg(-56), wrist = [tip[0] + 330, tip[1] + 250];
-    pen(g, tip, dir, 260);
-    RIG.hand(g, 'daniel', { at: wrist, size: 520, pose: 'grip', grip: 'pinch', view: 'back', rot: -146, roll: 20, sleeve: 'office' }, { light: { x: 760, y: -300, color: '#EEF3EF', back: 0.4 } });
+    // his right hand, from the lower right, the pen held between thumb and index finger: the pen's axis runs from its tip on
+    // the paper up through the pinch and out past the knuckles; the hand is laid over it
+    const HP = { size: 470, pose: 'grip', grip: 'pinch', view: 'back', roll: 25, rot: -150, sleeve: 'office' }, gm = handGeom(HP), pc = pinchOf(gm);
+    const dir = deg(-14), ux = Math.cos(dir), uy = Math.sin(dir), d = 74;     // the pen tip sits 74 px below the pinch along the axis
+    const wrist = [tip[0] + ux * d - pc[0], tip[1] + uy * d - pc[1]];
+    pen(g, tip, dir, 330);
+    RIG.hand(g, 'daniel', Object.assign({ at: wrist }, HP), { light: { x: 760, y: -300, color: '#EEF3EF', back: 0.4 } });
     g.drawImage(deskPane(c), 0, 0);
   }
 
   // ---------- the photograph on his desk (the set's desk behind; this frame, print and glass) ----------
   const PH = { w: 0.178, h: 0.128, pw: 0.152, ph: 0.102, lean: deg(13) };
-  const PC = LC.camera({ x: 0.03, y: 0.33, z: -0.46, yaw: deg(-3), pitch: deg(-29), f: 3100, cx: 960, cy: 540 });
+  const PC = LC.camera({ x: 0.03, y: 0.33, z: -0.46, yaw: deg(-3), pitch: deg(-29), f: 2650, cx: 960, cy: 440 });   // the set's camera, a little wider and the frame higher
   const TW = 1200, TH = 806;
   function printTex(c) {
     return c.cache('Q09|photo|print', pg => {
@@ -181,8 +189,9 @@
     const grip = photoFrame(c, lt, ang);
     const inHand = seg(t, 45.0, 45.9, E.outCubic) * (1 - seg(t, 48.7, 49.6, E.inCubic));
     if (inHand > 0) {
-      const off = (1 - inHand) * 620, at = [grip[0] + 250 + off, grip[1] + 120 + off * 0.35];
-      RIG.hand(g, 'daniel', { at, size: 470, pose: t > 45.8 && t < 48.6 ? 'grip' : 'relaxed', grip: t > 45.8 && t < 48.6 ? 'pinch' : 'relaxed', view: 'back', rot: 200, sleeve: 'office' }, { light: { x: 900, y: -200, color: '#EEF3EF', back: 0.45 } });
+      const holding = t > 45.8 && t < 48.6, HP = { size: 420, pose: 'grip', grip: holding ? 'pinch' : 'relaxed', view: 'back', roll: 15, rot: -160, sleeve: 'office' }, gm = handGeom(HP), pc = pinchOf(gm);
+      const off = (1 - inHand) * 640, at = [grip[0] - pc[0] + 6 + off, grip[1] - pc[1] + off * 0.4];
+      RIG.hand(g, 'daniel', Object.assign({ at }, HP), { light: { x: 900, y: -200, color: '#EEF3EF', back: 0.45 } });
     }
     c.reset(); g.drawImage(c.cache('Q09|photo|band', bg => { bg.fillStyle = LC.lin(bg, 0, 860, 0, H, [[0, '#0D1414', 0], [1, '#0D1414', 0.45]]); bg.fillRect(0, 860, W, 220); }), 0, 0);
   }
@@ -254,11 +263,11 @@
           v.back(c, lt, {}); RIG.draw(c.g, 'dog', { at: [a.x, a.y], scale: a.scale, facing: a.facing, body: 'lie', pant: 1, phase: twos(lt) * 1.4 }, { light: v.light }); v.front(c, lt, {});
         } },
       { at: 24.0, name: 'city: a man at a roadside stall pours melting ice into a bucket', draw(c, st, lt) {
-          const v = city().stall, a = v.anchors.man, s = { pour: seg(lt, 24.6, 25.4) * (1 - seg(lt, 26.6, 27.2)) > 0 ? clamp(seg(lt, 24.6, 26.4), 0.05, 1) : 0 };
+          const v = city().stall, a = v.anchors.man, s = { pour: lt > 24.6 && lt < 26.9 ? 1 : 0 };   // the ice falls while the bag is tipped
           c.camera(cam({ zoom: 1.0 + st * 0.004 }));
           v.back(c, lt, s);
-          const tip = seg(twos(lt), 24.3, 24.9, E.inOutSine);
-          const inf = RIG.draw(c.g, 'stallman', { at: [a.x, a.y], scale: a.scale, view: 'three', yaw: 30, facing: 1, body: 'stand', armR: 'reachLow', armL: 'hold', head: { nod: 0.3 + 0.15 * tip, turn: 0.1 } }, { light: v.light });
+          const tip = seg(twos(lt), 24.3, 24.9, E.inOutSine) * (1 - seg(twos(lt), 26.9, 27.5, E.inOutSine));
+          const inf = RIG.draw(c.g, 'stallman', { at: [a.x, a.y], scale: a.scale, view: 'three', yaw: 30, facing: 1, body: 'stand', armR: 'reachLow', armL: 'hold', hold: { r: 'icebag' }, head: { nod: 0.3 + 0.15 * tip, turn: 0.1 } }, { light: v.light });
           if (inf && inf.hands) s.hands = [(inf.hands.R[0] + inf.hands.L[0]) / 2, (inf.hands.R[1] + inf.hands.L[1]) / 2];
           v.front(c, lt, s);
         } },

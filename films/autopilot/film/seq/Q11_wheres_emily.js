@@ -20,8 +20,8 @@
   // [sequence, its local time at the cut, how long we hold it]. Each flash runs on in real time from its start.
   // A sequence that is not built yet is drawn by a stand-in from its set (standIn below), so the cut is never empty.
   // ===============================================================================================================
-  // Times: Q05, Q06 and Q07 as their author checked them through FILM.drawShot; Q02 read from its beat table (C1 19.6-24.9,
-  // charging; asleep after) and to be re-checked when Q02 is final. The last field is a fragment of the shot's name: if the
+  // Times: as the authors of Q02, Q05, Q06 and Q07 checked them through FILM.drawShot (Q02: C1 charging 19.6-24.9, clean for
+  // this flash at 22.0-23.4; asleep and breathing green after 24.9). The last field is a fragment of the shot's name: if the
   // shot found at that time is not the expected image (a sequence re-timed), the flash falls back to its set stand-in.
   const FLASH = {
     phone:  ['Q02', 22.0, 0.85, 'C1'],          // A091 a phone plugged in beside the kettle: the green charging icon (C1)

@@ -17,8 +17,8 @@
   // The kitchen set's API asks Q02 to show the green charging glyph pulsing in the phone's black glass at about 27 s.
   // If Q02 is not built yet, the kitchen counter's own flash state stands in (see standIn below).
   // ---------------------------------------------------------------------------------------------------------------
-  // Q02's C1 shot sleeps at 24.9 s; after it the glyph breathes at 0.42 Hz, brightest at 24.9 and 27.28. Starting at 26.53
-  // puts one whole breath in the flash, its brightest at the middle.
+  // Q02's C1 shot sleeps at 24.9 s (its author: clean after 25.5; 27.0-28.5 verified); the glyph then breathes at 0.42 Hz,
+  // brightest at 24.9 and 27.28. Starting at 26.53 puts one whole breath in the flash, its brightest at the middle.
   const FLASH = { phone: ['Q02', 26.53, 1.5, 'C1'] };
   const FLASH_AT = 30.0;
   // the shot found at that time must be the expected image (Q02 is still being finished): otherwise the stand-in, and a warning

@@ -188,13 +188,14 @@
     const seq = FILM.lib[seqId]; if (!seq) { warn('drawShot: sequence ' + seqId + ' is not loaded'); return null; }
     if (!seq._setup && seq.setup) seq.setup(); seq._setup = true;
     const shot = shotAt(seq, lt); const shotEnd = (seq.shots[seq.shots.indexOf(shot) + 1] || { at: seq.dur }).at;
-    const c2 = Object.assign({}, c, { lt, st: lt - shot.at, seq, shot, shotDur: shotEnd - shot.at, flash: true });
+    // its own before/after lists (copied into the caller's below once), so a flashed shot's post effects run exactly once
+    const c2 = Object.assign({}, c, { lt, st: lt - shot.at, seq, shot, shotDur: shotEnd - shot.at, flash: true, before: [], after: [], post: {} });
     c.reset();
     try { shot.draw(c2, lt - shot.at, lt); } catch (err) { warn('drawShot ' + seqId + '/' + (shot.name || shot.at) + ': ' + err.message); console.error(err); }
     c.reset();
     c2.before.forEach(fn => c.before.push(fn)); c2.after.forEach(fn => c.after.push(fn));
     if (opts && opts.lines && seq.lines.length) FILM.drawLines(c, seq, lt);
-    return Object.assign({}, seq.post || {}, shot.post || {});
+    return Object.assign({}, seq.post || {}, shot.post || {}, c2.post || {});
   };
 
   let mainCtx = null;
