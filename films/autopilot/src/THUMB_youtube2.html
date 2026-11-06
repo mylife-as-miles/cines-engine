@@ -7,6 +7,7 @@
    ?v=c  the mirror, big and tilted on black, her face being swallowed by the shadow; AUTO / PILOT.
    ?v=d  the forgotten phone on the empty counter, full now: 4 missed calls, nobody named (A054); NOBODY ANSWERED.
    ?v=e  the poster: HIS PHONE WAS ON THE COUNTER. (Daniel's own words at the car) over a huge AUTO / PILOT, the mirror
+   ?v=e2 the author's choice: E with all the type at the top, AUTOPILOT and NOBODY ANSWERED., the mirror below it
    None of them shows what happened, or where Emily is.
    node tools/shoot.js "src/THUMB_youtube2.html?v=c" frames/THUMB_youtube_c.png 1280 720 3000 */
 (async () => {
@@ -37,6 +38,18 @@
   }
   function vignette(a, cx = W / 2, cy = H / 2) { const vg = g.createRadialGradient(cx, cy, H * 0.25, cx, cy, W * 0.78); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(0,0,0,${a})`); g.fillStyle = vg; g.fillRect(0, 0, W, H); }
   const rr = (x, y, w, h, r) => { const p = new Path2D(); p.roundRect(x, y, w, h, r); return p; };
+  // the mirror (E2): a crop inside the glass of Q05 at 40.4 s (the glass runs x 425-1475, y 235-600; her face is about
+  // x 1060-1180), clipped to rounded glass, the shade carried on over the middle of her face
+  function mirror(f, o) {
+    const { x, y, S, rot = -0.05, cx0 = 1100, cy0 = 420, cw = 680, ch = 340 } = o, mw = cw * S, mh = ch * S, r = mh * 0.46;
+    g.save(); g.translate(x, y); g.rotate(rot);
+    g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 56; g.shadowOffsetY = 20; g.fillStyle = '#0b0d0e'; g.fill(rr(-mw / 2 - 15, -mh / 2 - 13, mw + 30, mh + 26, r + 10)); g.shadowColor = 'transparent';
+    g.save(); g.clip(rr(-mw / 2, -mh / 2, mw, mh, r));
+    g.filter = 'brightness(1.1) contrast(1.05)'; g.drawImage(f, cx0 - cw / 2, cy0 - ch / 2, cw, ch, -mw / 2, -mh / 2, mw, mh); g.filter = 'none';
+    const fx = (1140 - cx0) * S, sh = g.createLinearGradient(fx - 20, 0, fx + 140, 0); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.83)');
+    g.fillStyle = sh; g.fillRect(-mw / 2, -mh / 2, mw, mh); g.restore();
+    g.lineWidth = 4; g.strokeStyle = 'rgba(255,236,206,0.3)'; g.stroke(rr(-mw / 2 - 3, -mh / 2 - 3, mw + 6, mh + 6, r + 2)); g.restore();
+  }
 
   if (v === 'c') {
     const f = frame('Q05', 40.4);
@@ -99,6 +112,25 @@
     bold('NOBODY', 1240, 236, 104, '#FFFFFF', { align: 'right' });
     bold('ANSWERED.', 1240, 356, 104, '#FF3B30', { align: 'right' });
     bold('AUTOPILOT', 1236, 466, 60, '#FFFFFF', { align: 'right', track: 6, stroke: 9 });
+  } else if (v === 'e2') {
+    // E as the author chose it, with all the type at the top (none along the bottom) and NOBODY ANSWERED. for its line:
+    // the title in one line top left, the line top right on the title's baseline, the mirror below running off the foot
+    const f = frame('Q05', 40.4);
+    g.fillStyle = '#040707'; g.fillRect(0, 0, W, H);
+    const title = (x, y, size, align = 'left') => {
+      g.save(); g.font = `400 ${size}px "Six Caps"`; g.letterSpacing = '8px';
+      const wa = g.measureText('AUTO').width, w = wa + g.measureText('PILOT').width, x0 = align === 'center' ? x - w / 2 : x;
+      g.fillStyle = '#F1ECE1'; g.fillText('AUTO', x0, y); g.restore();
+      glowText('PILOT', x0 + wa, y, size, '#9CF2BA', 'rgba(123,230,160,0.9)', { font: 'Six Caps', track: 8 });
+    };
+    const line = (text, x, y, size, align = 'left', track = 5) => {
+      g.save(); g.font = `600 ${size}px "Barlow Condensed"`; g.letterSpacing = track + 'px'; g.textAlign = align;
+      g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 14; g.fillStyle = '#F4F1EA'; g.fillText(text, x, y); g.restore();
+    };
+    mirror(f, { x: 640, y: 548, S: 1.4, cx0: 1060, cy0: 425, cw: 800, ch: 300, rot: -0.04 });
+    vignette(0.55, 640, 520);
+    title(56, 292, 290);
+    line('NOBODY', 1224, 200, 80, 'right'); line('ANSWERED.', 1224, 290, 80, 'right');
   } else {
     const f = frame('Q05', 40.4);
     g.fillStyle = '#040707'; g.fillRect(0, 0, W, H);
