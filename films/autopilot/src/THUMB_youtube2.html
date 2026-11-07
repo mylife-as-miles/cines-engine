@@ -9,6 +9,8 @@
    ?v=e  the poster: HIS PHONE WAS ON THE COUNTER. (Daniel's own words at the car) over a huge AUTO / PILOT, the mirror
    ?v=e2 E with all the type at the top, AUTOPILOT and NOBODY ANSWERED., the mirror below it
    ?v=c2 the author's choice: C with NOBODY ANSWERED. as its only type, at the top, the mirror under it
+   ?v=d2 D with NOBODY ANSWERED. as its only type (for testing against C2: the same words, another image)
+   ?v=f  the tilt (Q05, 54.3 s): his hand turning the mirror to the traffic as her face slides out of it; NOBODY ANSWERED.
    None of them shows what happened, or where Emily is.
    node tools/shoot.js "src/THUMB_youtube2.html?v=c" frames/THUMB_youtube_c.png 1280 720 3000 */
 (async () => {
@@ -75,7 +77,7 @@
     vignette(0.7, 800, 300);
     bold('AUTO', 50, 560, 150, '#FFFFFF');
     bold('PILOT.', 50, 690, 150, '#FFD23F');
-  } else if (v === 'd') {
+  } else if (v === 'd' || v === 'd2') {
     const k = frame('Q02', 27.0);
     // the empty kitchen, out of focus behind the phone
     g.filter = 'blur(5px) brightness(0.7)'; g.drawImage(k, 380, 60, 1540, 866, -30, -10, W + 60, H + 20); g.filter = 'none';
@@ -113,7 +115,25 @@
     // the type keeps out of the bottom-right corner, where YouTube puts the running time
     bold('NOBODY', 1240, 236, 104, '#FFFFFF', { align: 'right' });
     bold('ANSWERED.', 1240, 356, 104, '#FF3B30', { align: 'right' });
-    bold('AUTOPILOT', 1236, 466, 60, '#FFFFFF', { align: 'right', track: 6, stroke: 9 });
+    if (v === 'd') bold('AUTOPILOT', 1236, 466, 60, '#FFFFFF', { align: 'right', track: 6, stroke: 9 });
+  } else if (v === 'f') {
+    // the tilt: close on the mirror's right end, his fingers on the housing, her face at the edge going out of it
+    const f = frame('Q05', 54.3), sx = 760, sy = 220, k = W / 800;
+    g.drawImage(f, sx, sy, 800, 450, 0, 0, W, H);
+    const P = (x, y) => [(x - sx) * k, (y - sy) * k];
+    // everything but the mirror and his arm sinks into the dark, softly
+    const o = OTM.makeCanvas(W, H), og = o.getContext('2d');
+    og.fillStyle = 'rgba(3,6,7,0.84)'; og.fillRect(0, 0, W, H);
+    og.globalCompositeOperation = 'destination-out'; og.filter = 'blur(12px)'; og.fillStyle = '#000';   // inset, so the soft edge falls on the dark housing
+    const [mx, my] = P(895, 458); og.save(); og.translate(mx, my); og.rotate(-0.035); og.fill(rr(-850 * k / 2, -296 * k / 2, 850 * k, 296 * k, 148 * k)); og.restore();
+    og.beginPath(); [[1262, 566], [1372, 578], [1404, 700], [1428, 800], [1500, 1080], [1370, 1080], [1316, 762], [1268, 640]].forEach(([x, y], i) => { const [X, Y] = P(x, y); i ? og.lineTo(X, Y) : og.moveTo(X, Y); }); og.closePath(); og.fill();
+    g.drawImage(o, 0, 0);
+    // a little light kept on her face and his hand, where the eye should land
+    const [fx, fy] = P(1255, 470), lg = g.createRadialGradient(fx, fy, 20, fx, fy, 420); lg.addColorStop(0, 'rgba(255,236,206,0.10)'); lg.addColorStop(1, 'rgba(255,236,206,0)');
+    g.fillStyle = lg; g.fillRect(0, 0, W, H);
+    vignette(0.5, 860, 420);
+    bold('NOBODY', 50, 128, 112, '#FFFFFF');
+    bold('ANSWERED.', 50, 248, 112, '#FF3B30');
   } else if (v === 'c2') {
     // C as the author chose it, with NOBODY ANSWERED. for its type, at the top (none along the bottom); the mirror moved
     // down under it and running off the foot of the frame, her face where the eye lands after the words
