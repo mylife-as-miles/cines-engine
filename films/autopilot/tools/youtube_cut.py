@@ -62,7 +62,9 @@ def main():
             b = dict(b, t1=e['until'], t1g=b['t0g'] + (e['until'] - b['t0']), p=dict(b.get('p', {}), fo=3.0))
         t0g, t1g = T(b['t0g']), T(b['t1g'])
         if t1g - t0g < 0.05: continue
-        beds.append(dict(b, t0g=round(t0g, 4), t1g=round(t1g, 4), t0=round(t0g - start[b['seq']], 4), t1=round(t1g - start[b['seq']], 4)))
+        # seed_t0: the bed's start on the director's clock, which seeds where its loop begins, so an untouched scene sounds
+        # exactly as it does in the director's cut
+        beds.append(dict(b, seed_t0=b['t0'], t0g=round(t0g, 4), t1g=round(t1g, 4), t0=round(t0g - start[b['seq']], 4), t1=round(t1g - start[b['seq']], 4)))
     cues, dropped = [], []
     for c in cs['cues']:
         if removed(c['tg']): dropped.append(f"{c['seq']}.{c['name']}@{c['tg']:.2f}"); continue

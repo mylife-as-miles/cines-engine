@@ -151,7 +151,7 @@ def main():
                 af = f'asetrate={SR}*{spec[6:]},aresample={SR}' if spec.startswith('speed:') else None
                 x = load(resolve(e['file']), 2, af); x = apply_filter(x, spec if not spec.startswith('speed:') else None)
                 src_cache[ck] = x * undb(e['lufs'] - lufs(x))
-            seg = loop_to(src_cache[ck], n, seed_of(key + b['seq'] + str(b['t0'])) % max(1, len(src_cache[ck])))
+            seg = loop_to(src_cache[ck], n, seed_of(key + b['seq'] + str(b.get('seed_t0', b['t0']))) % max(1, len(src_cache[ck])))
         p = b.get('p', {}); rel = float(np.clip(p['level'] - med[b['name']], -12, 12)) if p.get('level') is not None and b['name'] in med else 0.0
         sq = seqs[b['seq']]
         fi = p.get('fi') if p.get('fi') is not None else (0.04 if b['t0'] <= 0.01 else 0.8)
