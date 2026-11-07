@@ -9,6 +9,7 @@ Daniel leaves his phone charging by the kettle, an ordinary slip. On the hottest
 - `player/autopilot.html` is the whole film in one page. It plays the mixed soundtrack `player/autopilot.mp3` beside it (the same mix as the MP4). Space plays and pauses, the arrows skip five seconds, and `[` / `]` jump between scenes.
 - `film/index.html` is the same player loading the source files directly, for development.
 - The MP4 is rendered with `node tools/export.js out/autopilot_picture.mp4 --workers 3 --no-audio`, and the soundtrack is muxed over it (`audio/README.md`).
+- **The YouTube cut** (10 min 26 s) sits beside this director's cut: no title card, so it starts on the 6:14 alarm, and about 61 s of wordless shot tails trimmed from the routine, the drive, the office, the heat and 5:37 (`cuts/youtube.json`, every span with its reason). Breakfast, the mirror, the routine montage and the whole ending are untouched; no cut lands during a subtitle. The picture is cut from the director's cut's and the soundtrack rebuilt on the new clock, not chopped: `python3 tools/youtube_cut.py --picture`, then `uv run tools/build_mix.py --cut youtube --mix --mux` (-> `out/youtube/autopilot_youtube.mp4`).
 
 ## Look: "Through Glass"
 
@@ -32,7 +33,8 @@ Daniel's narration and the radio presenter are voiced with Gemini text-to-speech
 | `film/sets/*.js` | Ten sets: bedroom, kitchen, bathroom, house, car, roads, city, car park, office, nursery (`film/api/*.md`). |
 | `film/seq/Q01_*.js` to `Q12_*.js` | The twelve sequences, in story order. |
 | `audio/` | The voices, the score, the sound kit, the sound map, the cue sheet, credits and the sound README. |
-| `tools/` | strip, frame, set and board sheets; export; the cue sheet; the sound generation, the score, the mix builder; the player bundle. |
+| `tools/` | strip, frame, set and board sheets; export; the cue sheet; the sound generation, the score, the mix builder; the player bundle; the YouTube cut. |
+| `cuts/` | Edit lists for other cuts of the film (`youtube.json`). |
 | `src/`, `frames/` | The style frames, the looks board and the YouTube thumbnails (`src/THUMB_youtube2.html` draws C, D and E from the film's own frames). |
 
 ## Tools

@@ -5,7 +5,7 @@
 """Build the film's soundtrack from its own cue sheet (tools/cuesheet.js), then mix it with opus-sound-layer.
 
   node tools/cuesheet.js out/cuesheet.json
-  uv run tools/build_mix.py [--mix [--mux]]
+  uv run tools/build_mix.py [--mix [--mux]] [--cut NAME]
 
 1. The bed (out/mix/bed.wav): every room tone and bed the sequences declare, looped to its span with its fades and
    relative level (audio/sound_map.json), the radio's music through a small speaker, the world's silences and ducks; then
@@ -16,6 +16,8 @@
    sound's peak (or start) on its cue, solves its level against the bed in its own band, adds one shared room, ducks the
    bed under the voice and masters to -18 LUFS.
 With --mix it runs mix.py into out/audio.
+--cut NAME builds another cut of the film from out/NAME/ (tools/youtube_cut.py writes its cue sheet and score plan there,
+remapped to the cut's clock); everything it writes goes to out/NAME/, and the director's cut is left alone.
 """
 import hashlib, json, os, subprocess, sys
 import numpy as np
@@ -27,7 +29,10 @@ SR = 48000
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 OTM = os.path.normpath(os.path.join(ROOT, '..', 'one-too-many', 'audio', 'sfx'))
 MIXPY = os.environ.get('SOUND_LAYER_MIX', '/home/user/bodila51/opus-sound-layer/scripts/mix.py')
-OUT = os.path.join(ROOT, 'out', 'mix')
+CUT = sys.argv[sys.argv.index('--cut') + 1] if '--cut' in sys.argv else None
+BASE = os.path.join(ROOT, 'out', CUT) if CUT else None
+OUT = os.path.join(BASE, 'mix') if CUT else os.path.join(ROOT, 'out', 'mix')
+CUES = os.path.join(BASE, 'cues.json') if CUT else os.path.join(ROOT, 'audio', 'cues.json')
 meter = pyln.Meter(SR)
 
 
@@ -111,9 +116,10 @@ def seed_of(s): return int(hashlib.md5(s.encode()).hexdigest()[:8], 16)
 
 
 def main():
-    cs = json.load(open(os.path.join(ROOT, 'out', 'cuesheet.json')))
+    cs = json.load(open(os.path.join(BASE, 'cuesheet.json') if CUT else os.path.join(ROOT, 'out', 'cuesheet.json')))
+    meta = cs.get('meta', {})                                 # a cut's own clock: where the title's silence and the air floor fall
     M = json.load(open(os.path.join(ROOT, 'audio', 'sound_map.json')))
-    plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
+    plan = json.load(open(os.path.join(BASE, 'score_plan.json') if CUT else os.path.join(ROOT, 'audio', 'score_plan.json')))
     check = json.load(open(os.path.join(ROOT, 'audio', 'score', 'check.json')))
     vmap = json.load(open(os.path.join(ROOT, 'audio', 'voice_map.json')))
     T = cs['total']; N = int(np.ceil(T * SR)); seqs = {s['id']: s for s in cs['seqs']}
@@ -155,7 +161,7 @@ def main():
     # a faint air floor under the whole world from the alarm on, so no moment goes digitally dead (the planned silences
     # still silence it, with the rest of the world)
     rng = np.random.default_rng(5); fl = sos_filter(rng.standard_normal((N, 2)), 'lowpass', 900); fl = sos_filter(fl, 'highpass', 60)
-    fl *= undb(-60 - lufs(fl[: 60 * SR])); a0 = int(4.5 * SR); fl[:a0] = 0; fl[a0:a0 + SR] *= np.linspace(0, 1, SR)[:, None]
+    fl *= undb(-60 - lufs(fl[: 60 * SR])); a0 = int(meta.get('floor_from', 4.5) * SR); fl[:a0] = 0; fl[a0:a0 + SR] *= np.linspace(0, 1, SR)[:, None]
     world += fl
     # the world's silences and ducks (the score and the voice are not part of the world)
     ctrl = np.ones(N)
@@ -230,30 +236,31 @@ def main():
     for c in cues:
         if not os.path.exists(c['sound']): missing.add('file ' + c['sound'])
 
-    silence_ok = [[0.0, 4.6]] + [[round(a, 2), round(b2, 2)] for a, b2 in sil]   # the opening title on black is silent on purpose
+    silence_ok = [meta.get('title_silence', [0.0, 4.6])] + [[round(a, 2), round(b2, 2)] for a, b2 in sil]   # the opening title on black is silent on purpose
     sheet = {'fps': 24, 'duration_s': round(T, 3), 'energy': 'calm', 'lufs': -18, 'kit': os.path.join(ROOT, 'audio', 'kit'),
              'room': {'decay_s': 0.6, 'wet_db': -16}, 'music': {'file': os.path.join(OUT, 'bed.wav'), 'start_s': 0, 'loop': False, 'fade_out_s': 0.05},
              'voice': voices, 'duck_db': 9, 'silence_ok': silence_ok, 'cues': cues}
-    json.dump(sheet, open(os.path.join(ROOT, 'audio', 'cues.json'), 'w'), indent=1)
-    print(f"bed: {len(cs['beds'])} beds, {len(placed)} score cues -> out/mix/bed.wav ({lufs(bed):.1f} LUFS before the mixer)")
+    json.dump(sheet, open(CUES, 'w'), indent=1)
+    print(f"bed: {len(cs['beds'])} beds, {len(placed)} score cues -> {os.path.relpath(os.path.join(OUT, 'bed.wav'), ROOT)} ({lufs(bed):.1f} LUFS before the mixer)")
     for p in placed: print('  score', p)
-    print(f"voices: {len(voices)}; effects: {len(cues)} -> audio/cues.json")
+    print(f"voices: {len(voices)}; effects: {len(cues)} -> {os.path.relpath(CUES, ROOT)}")
     if missing: print('MISSING:', ', '.join(sorted(missing)))
     if '--mix' in sys.argv:
-        A = os.path.join(ROOT, 'out', 'audio')
-        r = subprocess.run(['uv', 'run', MIXPY, os.path.join(ROOT, 'audio', 'cues.json'), '--out', A], cwd=ROOT)
+        A = os.path.join(BASE, 'audio') if CUT else os.path.join(ROOT, 'out', 'audio')
+        r = subprocess.run(['uv', 'run', MIXPY, CUES, '--out', A], cwd=ROOT)
         if r.returncode: sys.exit(r.returncode)
         # the AAC encode overshoots transient-rich music (the glockenspiel) by about 1.5 dB, so the master's sample peaks
         # are held at -3 dBFS (latency-compensated: the timing stays sample-exact) before it is encoded
         os.replace(os.path.join(A, 'mix.wav'), os.path.join(A, 'mix_raw.wav'))
         subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', os.path.join(A, 'mix_raw.wav'), '-af',
                         'alimiter=limit=0.708:attack=1:release=50:level=false:latency=1', '-c:a', 'pcm_f32le', os.path.join(A, 'mix.wav')], check=True)
-        pic = os.path.join(ROOT, 'out', 'autopilot_picture.mp4')
+        pic = os.path.join(BASE, 'picture.mp4') if CUT else os.path.join(ROOT, 'out', 'autopilot_picture.mp4')
+        mp4 = os.path.join(BASE, f'autopilot_{CUT}.mp4') if CUT else os.path.join(ROOT, 'out', 'autopilot.mp4')
         if '--mux' in sys.argv and os.path.exists(pic):
             subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', pic, '-i', os.path.join(A, 'mix.wav'), '-map', '0:v', '-map', '1:a',
                             '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart',
-                            os.path.join(ROOT, 'out', 'autopilot.mp4')], check=True)
-            print('wrote out/autopilot.mp4')
+                            mp4], check=True)
+            print('wrote ' + os.path.relpath(mp4, ROOT))
 
 
 if __name__ == '__main__':

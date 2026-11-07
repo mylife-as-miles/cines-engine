@@ -10,6 +10,7 @@ Settled with the author, Osita Miles.
 | Scene dialogue | On-screen type (Daniel, Emily, Priya, Sarah), as in *One Too Many*. |
 | Emily | Her lines stay on screen as type: a synthetic four-year-old's voice is more likely to sound wrong than moving. |
 | Restraint | Emily is never shown in the car after the mirror moment, and the inside of the car is never shown at the end ("We do not see inside."). |
+| YouTube cut | A second, shorter cut (10:26) for YouTube, kept beside the director's cut (11:27): no title card, so it starts on the 6:14 alarm, and about 61 s of wordless shot tails trimmed (`cuts/youtube.json`). The author kept the twist protected: no cold open, no added line, and breakfast, the mirror and the ending untouched, so the audience still forgets Emily with Daniel. |
 | Look | **C, Through Glass** (`look_c.md`), chosen from the three candidates on `frames/BOARD_looks.jpg`. |
 | Frame | Full 16:9 (1920x1080): no letterbox bars, and every set runs to the frame's edges. |
 | On-screen text | No title, slate or scene headings on screen. Time is read off glass in the world (the phone, the dashboard clock, the laptop). |
