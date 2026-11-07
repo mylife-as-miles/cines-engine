@@ -65,6 +65,7 @@ FILM.seq({
   - Scene dialogue is only ever type: bold 700, 44 px, white. Emily's lines are in her yellow `#E0B34F`.
   - Daniel's V.O. is voiced: 500, 40 px, bone `#E6E0D2`. Its subtitle holds for the recorded take (`audio/voice.js`), and the take plays from `at`.
   - The radio presenter is voiced through a small speaker: italic 500, 36 px, slightly dim.
+- Every subtitle is set with its speaker's name first (`FILM.speakerName`: DANIEL -> "Daniel: ", RADIO PRESENTER -> "Radio: "), V.O. included; `noLabel: true` on a line leaves it off. The name never changes a subtitle's timing.
 - Timing: a 0.12 s fade in, then a hold (voiced: the take + 0.35 s; read: `max(1.3, 0.55 + 0.062 × characters)` s), then a 0.25 s fade out. `hold` / `until` override it. Leave room: a line should not start until the previous speaker's line is readable.
 - Lines are drawn in screen space after the world, so **they survive cuts**. Keep the bottom-centre band (y 900 to 1060) calm and darker in your compositions so white type reads; if a frame is bright there, darken it with the shot's own light (a shadow, a dashboard, a counter edge), never a box.
 - `draw(c, s, o)` replaces the default drawing for a special case (`s.alpha`, `o.rows`, `o.st`). There should be almost none.

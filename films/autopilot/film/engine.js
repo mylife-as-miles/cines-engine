@@ -88,17 +88,25 @@
   }
   // the screenplay's typewriter punctuation, set properly (the words stay verbatim)
   FILM.typeset = s => s.replace(/\.\.\./g, '…').replace(/--/g, '—').replace(/(\w)'(\w)/g, '$1’$2').replace(/'/g, '’').replace(/"([^"]*)"/g, '“$1”');
+  // the speaker's name on a subtitle: the screenplay's DANIEL -> Daniel; the radio presenter is simply "Radio"
+  FILM.speakerLabels = true;
+  FILM.speakerName = s => ({ 'RADIO PRESENTER': 'Radio' })[s] || s.toLowerCase().replace(/\b\w/g, ch => ch.toUpperCase());
   // resolve a line def into timing: {kind, text, at, inEnd, holdEnd, end, voice}
   FILM.lineTiming = function (L) {
     if (L._t) return L._t;
     const e = FILM.byId[L.id]; if (!e) warn('missing line ' + L.id);
-    const text = FILM.typeset((e && e.text) || ''); const kind = L.kind || kindOf(e);
+    const words = FILM.typeset((e && e.text) || ''); const kind = L.kind || kindOf(e);
     const voice = FILM.voices[L.id] || null;
     const ent = L.entrance != null ? L.entrance : 0.12;
-    // voiced: hold for the take plus a breath; read: a comfortable reading speed
-    const hold = L.hold != null ? L.hold : voice ? voice.dur + 0.35 : Math.max(1.3, 0.55 + 0.062 * text.length);
+    // voiced: hold for the take plus a breath; read: a comfortable reading speed (timed on the words alone, so the speaker's
+    // name never changes when a subtitle comes and goes)
+    const hold = L.hold != null ? L.hold : voice ? voice.dur + 0.35 : Math.max(1.3, 0.55 + 0.062 * words.length);
     const inEnd = L.at + ent, holdEnd = L.until != null ? L.until : L.at + hold, end = holdEnd + (L.exit != null ? L.exit : 0.25);
-    return (L._t = { kind, speaker: e && e.speaker, text, at: L.at, ent, inEnd, holdEnd, end, voice });
+    // the speaker named before the words, as film subtitles do, so the audience always knows who is speaking ("Emily: ...",
+    // "Radio: ..."; Daniel's V.O. as "Daniel: ...")
+    const who = FILM.speakerLabels && e && e.speaker && !L.noLabel ? FILM.speakerName(e.speaker) : '';
+    const text = who ? who + ': ' + words : words;
+    return (L._t = { kind, speaker: e && e.speaker, text, words, at: L.at, ent, inEnd, holdEnd, end, voice });
   };
   FILM.lineState = function (L, lt) {
     const T = FILM.lineTiming(L); if (lt < T.at || lt >= T.end) return null;
