@@ -1,256 +1,246 @@
 {
- "voice": "Kokoro bm_lewis (working voice, speed 1.0)",
+ "voice": "Kokoro bm_lewis (working voice, speed 1.1)",
  "sampleRate": 24000,
  "lines": [
   {
    "id": "L01",
    "file": "L01.wav",
-   "dur": 2.754
+   "dur": 2.505
   },
   {
    "id": "L02",
    "file": "L02.wav",
-   "dur": 4.777
-  },
-  {
-   "id": "L03",
-   "file": "L03.wav",
-   "dur": 3.553
+   "dur": 2.142
   },
   {
    "id": "L04",
    "file": "L04.wav",
-   "dur": 3.372
+   "dur": 3.13
   },
   {
    "id": "L05",
    "file": "L05.wav",
-   "dur": 5.645
+   "dur": 3.088
   },
   {
    "id": "L06",
    "file": "L06.wav",
-   "dur": 3.211
+   "dur": 2.94
   },
   {
    "id": "L07",
    "file": "L07.wav",
-   "dur": 5.167
+   "dur": 4.714
   },
   {
    "id": "L08",
    "file": "L08.wav",
-   "dur": 1.819
+   "dur": 1.68
   },
   {
    "id": "L09",
    "file": "L09.wav",
-   "dur": 4.908
+   "dur": 4.534
   },
   {
    "id": "L10",
    "file": "L10.wav",
-   "dur": 1.124
+   "dur": 1.032
   },
   {
    "id": "L11",
    "file": "L11.wav",
-   "dur": 7.928
+   "dur": 6.51
   },
   {
    "id": "L12",
    "file": "L12.wav",
-   "dur": 2.971
+   "dur": 2.794
   },
   {
    "id": "L13",
    "file": "L13.wav",
-   "dur": 6.199
+   "dur": 4.726
   },
   {
    "id": "L14",
    "file": "L14.wav",
-   "dur": 7.203
+   "dur": 5.775
   },
   {
    "id": "L15",
    "file": "L15.wav",
-   "dur": 4.984
+   "dur": 2.95
   },
   {
    "id": "L16",
    "file": "L16.wav",
-   "dur": 2.933
+   "dur": 2.758
   },
   {
    "id": "L17",
    "file": "L17.wav",
-   "dur": 3.015
+   "dur": 2.885
   },
   {
    "id": "L18",
    "file": "L18.wav",
-   "dur": 4.865
+   "dur": 3.54
   },
   {
    "id": "L19",
    "file": "L19.wav",
-   "dur": 4.566
+   "dur": 2.676
   },
   {
    "id": "L20",
    "file": "L20.wav",
-   "dur": 4.193
+   "dur": 2.599
   },
   {
    "id": "L21",
    "file": "L21.wav",
-   "dur": 1.427
+   "dur": 1.284
   },
   {
    "id": "L22",
    "file": "L22.wav",
-   "dur": 5.407
+   "dur": 2.574
   },
   {
    "id": "L23",
    "file": "L23.wav",
-   "dur": 4.734
+   "dur": 3.366
   },
   {
    "id": "L24",
    "file": "L24.wav",
-   "dur": 3.256
+   "dur": 2.725
   },
   {
    "id": "L25",
    "file": "L25.wav",
-   "dur": 1.7
+   "dur": 1.578
   },
   {
    "id": "L26",
    "file": "L26.wav",
-   "dur": 10.331
+   "dur": 5.131
   },
   {
    "id": "L27",
    "file": "L27.wav",
-   "dur": 6.436
+   "dur": 4.275
   },
   {
    "id": "L28",
    "file": "L28.wav",
-   "dur": 2.388
+   "dur": 2.215
   },
   {
    "id": "L29",
    "file": "L29.wav",
-   "dur": 4.685
+   "dur": 4.476
   },
   {
    "id": "L30",
    "file": "L30.wav",
-   "dur": 3.971
+   "dur": 3.313
   },
   {
    "id": "L31",
    "file": "L31.wav",
-   "dur": 5.21
+   "dur": 2.3
   },
   {
    "id": "L32",
    "file": "L32.wav",
-   "dur": 3.207
+   "dur": 2.957
   },
   {
    "id": "L33",
    "file": "L33.wav",
-   "dur": 2.577
+   "dur": 2.445
   },
   {
    "id": "L34",
    "file": "L34.wav",
-   "dur": 4.51
+   "dur": 3.055
   },
   {
    "id": "L35",
    "file": "L35.wav",
-   "dur": 4.927
+   "dur": 3.6
   },
   {
    "id": "L36",
    "file": "L36.wav",
-   "dur": 6.272
+   "dur": 5.366
   },
   {
    "id": "L37",
    "file": "L37.wav",
-   "dur": 6.036
+   "dur": 3.008
   },
   {
    "id": "L38",
    "file": "L38.wav",
-   "dur": 5.73
-  },
-  {
-   "id": "L39",
-   "file": "L39.wav",
-   "dur": 3.371
+   "dur": 4.787
   },
   {
    "id": "L40",
    "file": "L40.wav",
-   "dur": 2.338
+   "dur": 2.23
   },
   {
    "id": "L41",
    "file": "L41.wav",
-   "dur": 3.331
+   "dur": 2.814
   },
   {
    "id": "L42",
    "file": "L42.wav",
-   "dur": 4.237
+   "dur": 3.195
   },
   {
    "id": "L43",
    "file": "L43.wav",
-   "dur": 2.327
+   "dur": 2.195
   },
   {
    "id": "L44",
    "file": "L44.wav",
-   "dur": 3.498
+   "dur": 3.333
   },
   {
    "id": "L45",
    "file": "L45.wav",
-   "dur": 5.208
+   "dur": 4.325
   },
   {
    "id": "L46",
    "file": "L46.wav",
-   "dur": 1.7
+   "dur": 1.616
   },
   {
    "id": "L47",
    "file": "L47.wav",
-   "dur": 4.067
+   "dur": 3.888
   },
   {
    "id": "L48",
    "file": "L48.wav",
-   "dur": 5.254
+   "dur": 4.964
   },
   {
    "id": "L49",
    "file": "L49.wav",
-   "dur": 3.076
+   "dur": 2.896
   },
   {
    "id": "L50",
    "file": "L50.wav",
-   "dur": 3.204
+   "dur": 2.918
   }
  ]
 }
