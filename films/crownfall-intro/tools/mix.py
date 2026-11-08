@@ -23,6 +23,22 @@ MUSIC = [  # file, where it starts in the film (s), gain
 SR = 48000
 
 place = json.load(open(os.path.join(ROOT, f'narration/{SET}/placement.json')))
+_tl = open(os.path.join(ROOT, 'film', 'timeline.js')).read()
+TL = json.loads(_tl[_tl.index('=') + 1:_tl.rindex(';')])
+CUE = {l['id']: l for s_ in TL['scenes'] for l in s_['lines']}
+SC = {s_['n']: s_ for s_ in TL['scenes']}
+# sound effects (audio/sfx, from tools/sfx.py): name, when (s), gain. Times follow the pictures, which follow the lines.
+SFX = [
+    ('pen', 0.5, 0.32),
+    ('tear', CUE['L04']['start'] + 2.0, 0.5),
+    ('crack', CUE['L06']['start'] + 0.35, 0.4),
+    ('shatter', CUE['L06']['start'] + 2.0, 0.62),
+    ('boom', CUE['L06']['start'] + 2.0, 0.5),
+    ('wind', SC[4]['start'] - 0.5, 0.26),
+    ('fire', SC[7]['start'] - 0.2, 0.36),
+    ('swell', TL['title'][0] - 2.0, 0.42),
+    ('boom', TL['title'][0] + 1.9, 0.42),
+]
 total = place['total']
 voice = np.zeros(int(total * SR) + SR, dtype=np.float32)
 for ln in place['lines']:
@@ -43,6 +59,8 @@ args = ['ffmpeg', '-y', '-loglevel', 'error']
 for f, _, _ in MUSIC:
     args += ['-i', os.path.join(ROOT, f)]
 args += ['-i', vpath]
+for name, _, _ in SFX:
+    args += ['-i', os.path.join(ROOT, 'audio', 'sfx', name + '.wav')]
 parts = []
 for i, (_, start, gain) in enumerate(MUSIC):
     d = int(start * 1000)
@@ -51,7 +69,11 @@ n = len(MUSIC)
 parts.append(''.join(f'[m{i}]' for i in range(n)) + f'amix=inputs={n}:normalize=0:duration=longest[mus]')
 parts.append(f'[{n}:a]aformat=channel_layouts=stereo,asplit=2[v1][v2]')
 parts.append('[mus][v1]sidechaincompress=threshold=0.02:ratio=7:attack=40:release=650:knee=4[duck]')
-parts.append(f'[duck][v2]amix=inputs=2:normalize=0:weights=1 1.25,atrim=0:{total:.3f},afade=t=in:st=0:d=1.2,afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
+for j, (name, at, gain) in enumerate(SFX):
+    d = int(at * 1000)
+    parts.append(f'[{n + 1 + j}:a]aresample={SR},aformat=channel_layouts=stereo,volume={gain},adelay={d}|{d}[s{j}]')
+parts.append(''.join(f'[s{j}]' for j in range(len(SFX))) + f'amix=inputs={len(SFX)}:normalize=0:duration=longest[sfx]')
+parts.append(f'[duck][v2][sfx]amix=inputs=3:normalize=0:weights=1 1.25 1,atrim=0:{total:.3f},afade=t=in:st=0:d=1.2,afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
 out_wav = os.path.join(ROOT, 'out', 'intro-mix.wav')
 subprocess.run(args + ['-filter_complex', ';'.join(parts), '-map', '[out]', '-ar', str(SR), out_wav], check=True)
 out_m4a = os.path.join(ROOT, 'audio', 'intro-mix.m4a')
