@@ -98,7 +98,10 @@ node tools/frame.js 120.5 out/s4/a.png --subs               # with subtitles
   They are good stand-ins; draw your own where a figure is the subject of a shot.
 - Heraldry: `HOUSES`, `LESSER`, `BLANK`, `shieldPath`, `device(ctx,name,x,y,s)`, `shield(ctx,x,y,s,house)`,
   `banner(ctx,x,y,w,h,house,t,{wind})`, `bannerCloth`.
-- Maps: `mountain`, `tree`, `compass`, `coast`, `hachure`.
+- Maps: `mountain`, `tree`, `compass`, `coast`, `hachure`; and the map of Aethelgard itself, `K.map` (film/map.js):
+  `K.map.draw(ctx, {region})` in map units (2000×1650), `K.map.paper()` / `K.map.ink()` (cached sheets, ink laid with
+  'multiply'), `K.map.halls()` (the seven halls and their houses), `K.map.place(key)`, `K.map.home` (the player's home,
+  the creator's ring).
 - Air: `smoke(ctx,t,{n,x,y,w,h,color,alpha,rise,size,seed})`, `embers(ctx,t,{n,heat,...})`,
   `specks(ctx,t,{kind:'snow'|'ash'|'dust',n,wind,alpha})`, `rain(ctx,t,{n,angle,alpha})`.
 - Camera and finish: `cam(ctx,cx,cy,zoom,rot)`, `camPath(t,[{t,x,y,z}])`, `shake(t,amp,seed)`, `vignette`, `grade(ctx,
