@@ -314,7 +314,7 @@
     feat.mouth = feat.mouth.map(R);
     feat.headF = { HO: R(feat.head.HO), hx: RV(feat.head.hx), hy: RV(feat.head.hy), hz: RV(feat.head.hz) };
     feat.HP = (x, y, z) => R(HP(x, y, z)); feat.JP = (x, y) => R(JP(x, y));
-    feat.NP = (s, off = [0, 0, 0]) => { const i = clamp(Math.round(s * nn), 0, nn); return R(v3.add(neck[i].p, off)); };
+    feat.NP = (s, off = [0, 0, 0]) => { const i = clamp(Math.round(s * nn), 0, nn); return v3.add(neck[i].p, RV(off)); };   // neck points are already in world space
     feat.neckR = s => neck[clamp(Math.round(s * nn), 0, nn)].r;
     for (const sd of ['L', 'R']) { const w = wings[sd]; for (const k of ['S', 'E', 'Wr', 'thumb', 'attach']) w[k] = R(w[k]); w.tips = w.tips.map(R); const l = legs[sd]; for (const k of ['hipJ', 'Kn', 'An', 'Fb']) l[k] = R(l[k]); }
     return { tubes, membranes, spikes, claws, feat, wings, legs, pose: P0, chest: R(Ch), hip: R(Hp), neckEnd: R(NE), headO: R(HO), saddle: R(T(3.9, 2.35)), T: (s, y, z) => R(T(s, y, z)) };
@@ -1720,7 +1720,7 @@
     // a purple cloth over the shoulders, hanging down the flank in folds; gold border and the device
     const P2 = (s2, y, z) => cam.p(B.T(s2, y, z));
     const top = [], hem = [], n = 12;
-    for (let k = 0; k <= n; k++) { const u = k / n, s2 = lerp(1.0, 4.8, u), sag = Math.sin(u * Math.PI); top.push(P2(s2, 2.2 + 0.25 * sag, 0.4)); hem.push(P2(s2, -0.3 - 0.9 * sag + 0.18 * (k % 2), 2.1)); }
+    for (let k = 0; k <= n; k++) { const u = k / n, s2 = lerp(0.8, 4.4, u), sag = Math.sin(u * Math.PI); top.push(P2(s2, 1.75 + 0.2 * sag, 1.1)); hem.push(P2(s2, -0.6 - 0.8 * sag + 0.18 * (k % 2), 2.1)); }
     const path = () => { x.beginPath(); x.moveTo(top[0][0], top[0][1]); for (const q of top) x.lineTo(q[0], q[1]); for (let i = hem.length - 1; i >= 0; i--) x.lineTo(hem[i][0], hem[i][1]); x.closePath(); };
     x.save(); path();
     const g = x.createLinearGradient(top[6][0], top[6][1], hem[6][0], hem[6][1]); g.addColorStop(0, css(mixc(PURPLE, INK, 0.4))); g.addColorStop(0.45, css(PURPLE)); g.addColorStop(1, css(mixc(PURPLE, INK, 0.5)));
@@ -1788,7 +1788,8 @@
     const sad = B.saddle;
     const FL2 = K.layer('s4:figs2'), f2 = FL2.getContext('2d');
     // riders: two hooded figures at the shoulders
-    const r1 = cam3.p(v3.add(sad, [0.9, 1.0, 0.5])), r2 = cam3.p(v3.add(sad, [-1.3, 0.85, 0.5])), rh = f * 2.15 / cz;
+    drawSaddle(f2, cam3, B);
+    const r1 = cam3.p(B.T(4.5, 2.75, 0.5)), r2 = cam3.p(B.T(3.4, 2.65, 0.5)), rh = f * 2.15 / cz;
     man(f2, r2[0], r2[1] + rh * 0.4, rh, { col: css(mixc(PURPLE, PAPER, 0.35)), seated: true, head: 'hood', kind: 'cloak', cloak: 0.9, t, wind: -1, arms: [[0.8, 1.2], [0.6, 1.0]] });
     man(f2, r1[0], r1[1] + rh * 0.4, rh, { col: tone(0.42), seated: true, head: 'hood', kind: 'cloak', cloak: 0.8, t, wind: -1, hold: 'goad', holdAng: 0.5, arms: [[0.35, 1.3], [1.0, 0.9]] });
     f2.strokeStyle = tone(0.95); f2.lineWidth = 2.5; f2.beginPath(); f2.moveTo(r1[0] + rh * 0.12, r1[1] - rh * 0.25); f2.quadraticCurveTo((r1[0] + mouth[0]) / 2, (r1[1] + mouth[1]) / 2 + 30, mouth[0], mouth[1]); f2.stroke();
@@ -1843,6 +1844,15 @@
     x.strokeStyle = ironC; x.lineWidth = sc(0.09); x.beginPath(); x.moveTo(rodA[0], rodA[1]); x.quadraticCurveTo((rodA[0] + rodB[0]) / 2, Math.min(rodA[1], rodB[1]) - sc(0.6), rodB[0], rodB[1]); x.stroke();
     return { ringN: rn, ringF: rf, collar: collars.length ? collars[0].pts[16] : rn };
   }
+  // a war saddle at the base of the neck: dark leather, a high cantle, iron fittings and girth chains
+  function drawSaddle(x, cam, B) {
+    const P2 = (s2, y, z) => cam.p(B.T(s2, y, z));
+    const a = P2(3.0, 2.15, 0.9), b = P2(4.9, 2.4, 0.9), top1 = P2(3.1, 3.2, 0.7), top2 = P2(4.7, 3.0, 0.7), g1 = P2(3.4, -1.2, 2.0), g2 = P2(4.3, -1.0, 2.0);
+    x.save(); x.fillStyle = tone(0.75); x.beginPath(); x.moveTo(a[0], a[1]); x.quadraticCurveTo(top1[0], top1[1] - 10, top1[0], top1[1]); x.lineTo((top1[0] + top2[0]) / 2, (top1[1] + top2[1]) / 2 + 22); x.lineTo(top2[0], top2[1]); x.quadraticCurveTo(top2[0] + 10, top2[1] + 10, b[0], b[1]); x.closePath(); x.fill();
+    x.strokeStyle = tone(0.5); x.lineWidth = 3; x.stroke();
+    const sc = cam.f * 0.12 / cam.p(B.saddle)[2]; chainLine(x, [lerp(a[0], b[0], 0.3), lerp(a[1], b[1], 0.3)], g1, 10, sc, tone(0.6)); chainLine(x, [lerp(a[0], b[0], 0.7), lerp(a[1], b[1], 0.7)], g2, 10, sc, tone(0.6));
+    x.restore();
+  }
   // breath in the cold: pale puffs from the nostrils, drifting and thinning
   function breath(x, at, s, t, dir = 1) {
     const sp = disc(), tint = K.cached('s4:breath', () => { const c = K.canvas(64, 64), cx = c.getContext('2d'); cx.drawImage(sp, 0, 0); cx.globalCompositeOperation = 'source-in'; cx.fillStyle = css(mixc(SNOW, FOG, 0.3)); cx.fillRect(0, 0, 64, 64); return c; });
@@ -1884,8 +1894,9 @@
     // breath steaming from the nostrils
     const nos = cam3.p(F['nostrilL'].p); breath(x, nos, cam3.f * 0.5 / cz, t, 1);
     // the riders above: hooded, faces hidden, one with the reins, one with the hooked goad
+    drawSaddle(x, cam3, B);
     const rh = cam3.f * 2.15 / cz;
-    const r1 = cam3.p(v3.add(sad, [0.9, 1.0, 0.5])), r2 = cam3.p(v3.add(sad, [-1.3, 0.85, 0.5]));
+    const r1 = cam3.p(B.T(4.5, 2.75, 0.5)), r2 = cam3.p(B.T(3.4, 2.65, 0.5));
     man(x, r2[0], r2[1] + rh * 0.4, rh, { col: css(mixc(PURPLE, INK, 0.55)), seated: true, head: 'hood', kind: 'cloak', cloak: 0.9, t, wind: -0.6, arms: [[0.8, 1.2], [0.6, 1.0]] });
     man(x, r1[0], r1[1] + rh * 0.4, rh, { col: tone(0.85), seated: true, head: 'hood', kind: 'cloak', cloak: 0.85, t, wind: -0.6, hold: 'goad', holdAng: 0.35 + Math.sin(t * 0.9) * 0.04, arms: [[0.35, 1.3], [1.0, 0.9]] });
     x.strokeStyle = tone(0.85); x.lineWidth = 3; x.beginPath(); x.moveTo(r1[0] + rh * 0.13, r1[1] - rh * 0.22); x.quadraticCurveTo((r1[0] + A.ringN[0]) / 2, Math.max(r1[1], A.ringN[1]) + 40, A.ringN[0], A.ringN[1]); x.stroke();

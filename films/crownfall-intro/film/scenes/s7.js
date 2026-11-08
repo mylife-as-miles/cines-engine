@@ -376,60 +376,83 @@
   const BURN = { a: 0.3, b: 3.35, e: 1.4 };
   function burnP(t, sc) { return lerp(-0.05, 1.06, Math.pow(span(t, sc.start + BURN.a, sc.start + BURN.b), BURN.e)); }
   function burnT(f, sc) { const a = sc.start + BURN.a, b = sc.start + BURN.b; return a + (b - a) * Math.pow(clamp((f + 0.05) / 1.11), 1 / BURN.e); }
+  // the ember noise as numbers at the field's size (plus a margin for its drift), read per cell in the burn pass
+  function emberField() {
+    return K.cached('s7:emberF', () => { const w = BW + 80, h = BH + 40, d = new Float32Array(w * h); for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const v = K.fbm(i / 18, j / 18, 4, 5); d[j * w + i] = clamp(0.1 + Math.pow(clamp((v - 0.32) * 2.3), 1.5) * 1.15); } return { d, w, h }; });
+  }
+  // one pass over the arrival field: the page's heat-brown and char (an overlay), what has burnt away (a cut), and the
+  // ember line along the paper's edge (orange, white-hot at its heart), broken into hot and dull stretches by the noise
+  function burnImages(F, p, t) {
+    const B = F.bimg || (F.bimg = { ov: K.canvas(BW, BH), cut: K.canvas(BW, BH), rim: K.canvas(BW, BH) });
+    const ox = B.ov.getContext('2d'), cx = B.cut.getContext('2d'), rx = B.rim.getContext('2d');
+    const io = B.io || (B.io = ox.createImageData(BW, BH)), ic = B.ic || (B.ic = cx.createImageData(BW, BH)), ir = B.ir || (B.ir = rx.createImageData(BW, BH));
+    const o = io.data, c = ic.data, r = ir.data, f = F.f, EN = emberField(), dxn = Math.min(79, (t * 24) | 0), dyn = Math.min(39, (t * 10) | 0);
+    for (let j = 0, k = 0; j < BH; j++) {
+      const er = (j + dyn) * EN.w + dxn;
+      for (let i = 0; i < BW; i++, k++) {
+        const e = p - f[k], q = k * 4;
+        // overlay: brown heat ahead of the front, black char right at it
+        const sc = clamp((e + 0.14) / 0.14), ch = clamp((e + 0.022) / 0.022) * 0.92, a1 = sc * 0.5;
+        const aa = a1 + ch * (1 - a1); o[q] = 112 * a1 * (1 - ch) / (aa || 1); o[q + 1] = 48 * a1 * (1 - ch) / (aa || 1); o[q + 2] = 16 * a1 * (1 - ch) / (aa || 1); o[q + 3] = aa * 255;
+        c[q + 3] = clamp(e / 0.003) * 255;
+        // the ember band on the paper's side of the front: f in (p, p + 0.016)
+        const d = -e;
+        if (d > -0.002 && d < 0.018) {
+          const band = clamp(Math.min((d + 0.002) / 0.002, (0.018 - d) / 0.011)), hot = clamp(1 - Math.abs(d - 0.003) / 0.004), n = EN.d[er + i];
+          const a = band * n, h2 = hot * n;
+          r[q] = 255; r[q + 1] = 150 + 90 * h2; r[q + 2] = 60 + 130 * h2; r[q + 3] = clamp(a + h2 * 0.6) * 255;
+        } else r[q + 3] = 0;
+      }
+    }
+    ox.putImageData(io, 0, 0); cx.putImageData(ic, 0, 0); rx.putImageData(ir, 0, 0);
+    return B;
+  }
   function drawBurn(ctx, t, sc) {
     const p = burnP(t, sc); if (p > 1.06) return;
     PROF_CTX = ctx; mark();
     const F = burnField(), page = s6Frame();
-    // the page: heat-browned ahead of the front, charred black at it, gone behind it
     const L = K.layer('s7:page'), lx = L.getContext('2d');
     lx.drawImage(page, 0, 0);
-    lx.imageSmoothingEnabled = true; lx.imageSmoothingQuality = 'high';
+    let B = null;
     if (p > -0.05) {
-      const m1 = K.mask(F, p + 0.14, 0.14); lx.globalCompositeOperation = 'source-atop'; lx.globalAlpha = 0.5;
-      lx.drawImage(tintMask(m1, [112, 48, 16]), 0, 0, W, H);
-      const m2 = K.mask(F, p + 0.022, 0.022); lx.globalAlpha = 0.92; lx.drawImage(m2, 0, 0, W, H);
-      const m3 = K.mask(F, p, 0.003); lx.globalCompositeOperation = 'destination-out'; lx.globalAlpha = 1; lx.drawImage(m3, 0, 0, W, H);
+      B = burnImages(F, p, t - sc.start);
+      lx.imageSmoothingEnabled = true; lx.imageSmoothingQuality = 'medium';
+      lx.globalCompositeOperation = 'source-atop'; lx.drawImage(B.ov, 0, 0, W, H);
+      lx.globalCompositeOperation = 'destination-out'; lx.drawImage(B.cut, 0, 0, W, H);
     }
     ctx.drawImage(L, 0, 0);
     mark('b.page');
-    if (p <= -0.05) return;
-    // the ember line along the paper's edge: broken into hot and dull stretches, a thin white-hot core, a low red glow
-    const rm = K.rim(F, p + 0.008, 0.008, 0.002);
-    const G = K.layer('s7:rimg', BW, BH), gx = G.getContext('2d'); gx.drawImage(rm, 0, 0);
-    const en = emberNoise(), lt0 = t - sc.start, EW = BW * 380 / 320, EH = BH * 220 / 180;
-    gx.globalCompositeOperation = 'destination-in'; gx.drawImage(en, -lt0 * 24, -lt0 * 10, EW, EH);
-    gx.globalCompositeOperation = 'source-in'; gx.fillStyle = 'rgb(255,150,60)'; gx.fillRect(0, 0, BW, BH);
-    const Q = K.layer('s7:rimq', BW / 6, BH / 6), qx = Q.getContext('2d'); qx.drawImage(G, 0, 0, BW / 6, BH / 6);
+    if (!B) return;
+    // the ember line, and its low red glow (the line shrunk twice and spread back)
+    const Q = K.layer('s7:rimq', BW / 6, BH / 6), qx = Q.getContext('2d'); qx.drawImage(B.rim, 0, 0, BW / 6, BH / 6);
     const Q2 = K.layer('s7:rimq2', BW / 16, BH / 16), q2 = Q2.getContext('2d'); q2.drawImage(Q, 0, 0, BW / 16, BH / 16);
+    qx.globalCompositeOperation = 'lighter'; qx.globalAlpha = 0.9; qx.imageSmoothingQuality = 'medium'; qx.drawImage(Q2, 0, 0, BW / 6, BH / 6); qx.drawImage(Q2, 0, 0, BW / 6, BH / 6);
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'medium';
-    ctx.globalAlpha = 0.55; ctx.drawImage(tintMask(Q2, [200, 60, 20]), 0, 0, W, H); ctx.globalAlpha = 0.5; ctx.drawImage(Q, 0, 0, W, H);
-    ctx.globalAlpha = 1; ctx.drawImage(G, 0, 0, W, H);
-    const rm2 = K.rim(F, p + 0.0025, 0.0025, 0.0015); gx.globalCompositeOperation = 'copy'; gx.drawImage(rm2, 0, 0);
-    gx.globalCompositeOperation = 'destination-in'; gx.drawImage(en, -(EW - BW) + lt0 * 30, -lt0 * 14, EW, EH);
-    gx.globalCompositeOperation = 'source-in'; gx.fillStyle = 'rgb(255,232,180)'; gx.fillRect(0, 0, BW, BH);
-    ctx.globalAlpha = 0.9; ctx.drawImage(G, 0, 0, W, H);
+    ctx.globalAlpha = 0.55; ctx.drawImage(Q, 0, 0, W, H);
+    ctx.globalAlpha = 1; ctx.drawImage(B.rim, 0, 0, W, H);
     ctx.restore();
     mark('b.rim');
     // smoke curling up from the front (lit from beneath), sparks and flakes of char lifting off it
     const src = F.src;
     ctx.save();
     const puff = tinted(K.puff(), [96, 78, 66], 'puffLit');
-    for (let i = 0; i < src.length; i += 8) {
+    for (let i = 0; i < src.length; i += 12) {
       const s = src[i], tb = burnT(s.f, sc), age = t - tb, life = 2.4 + s.r * 1.8; if (age < 0 || age > life) continue;
-      const k = age / life, sz = (70 + s.r2 * 110) * (0.35 + k * 1.5), px = s.x + Math.sin(age * 1.3 + s.r * 9) * 26 * k + age * 14, py = s.y - age * (46 + s.r3 * 60) - k * k * 40;
+      const k = age / life, sz = (60 + s.r2 * 90) * (0.35 + k * 1.5), px = s.x + Math.sin(age * 1.3 + s.r * 9) * 26 * k + age * 14, py = s.y - age * (46 + s.r3 * 60) - k * k * 40;
       ctx.globalAlpha = 0.16 * Math.sin(Math.PI * Math.pow(k, 0.55)) * (0.6 + s.r * 0.4);
       ctx.save(); ctx.translate(px, py); ctx.rotate(s.r * TAU + age * (s.r2 - 0.5) * 0.8); ctx.drawImage(puff, -sz / 2, -sz / 2, sz, sz); ctx.restore();
     }
+    // sparks: short streaks, batched into a few strokes by brightness
     ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+    const bucket = [[], [], [], []];
     for (let i = 0; i < src.length; i += 3) {
       const s = src[i], tb = burnT(s.f, sc), age = t - tb, life = 0.5 + s.r * 1.4; if (age < 0 || age > life) continue;
       const k = age / life, vx = (s.r2 - 0.5) * 110 + 30, vy = 80 + s.r3 * 200, px = s.x + vx * age + Math.sin(age * 7 + s.r * 20) * 6, py = s.y - vy * age + 30 * age * age;
-      const a = (1 - k) * (0.5 + 0.5 * Math.sin(t * 37 + s.r * 50)), dvx = vx, dvy = -vy + 60 * age, dl = 0.022;
-      ctx.strokeStyle = `rgba(255,${170 + (s.r3 * 70 | 0)},${90 + (s.r2 * 60 | 0)},${clamp(a)})`; ctx.lineWidth = 1 + s.r2 * 1.4;
-      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - dvx * dl, py - dvy * dl); ctx.stroke();
+      const a = (1 - k) * (0.5 + 0.5 * Math.sin(t * 37 + s.r * 50)), dl = 0.022; bucket[Math.min(3, (a * 4) | 0)].push(px, py, px - vx * dl, py - (-vy + 60 * age) * dl);
     }
+    bucket.forEach((bk, bi) => { if (!bk.length) return; ctx.strokeStyle = `rgba(255,${190 + bi * 15},${110 + bi * 25},${(bi + 0.6) / 4})`; ctx.lineWidth = 1.2 + bi * 0.3; ctx.beginPath(); for (let k = 0; k < bk.length; k += 4) { ctx.moveTo(bk[k], bk[k + 1]); ctx.lineTo(bk[k + 2], bk[k + 3]); } ctx.stroke(); });
     ctx.globalCompositeOperation = 'source-over';
-    for (let i = 1; i < src.length; i += 16) {      // flakes of char that lift and turn, their edges still glowing
+    for (let i = 1; i < src.length; i += 26) {      // flakes of char that lift and turn, their edges still glowing
       const s = src[i], tb = burnT(s.f, sc), age = t - tb, life = 1.6 + s.r * 1.6; if (age < 0 || age > life) continue;
       const k = age / life, px = s.x + (s.r2 - 0.4) * 80 * age + Math.sin(age * 3 + s.r * 9) * 16, py = s.y - (40 + s.r3 * 80) * age, sz = 2 + s.r * 5, rot = age * (2 + s.r2 * 5) + s.r * 9;
       ctx.save(); ctx.translate(px, py); ctx.rotate(rot); ctx.scale(1, Math.abs(Math.cos(age * 4 + s.r * 7)) * 0.8 + 0.2);
@@ -504,6 +527,27 @@
       return { far, hill, OX, OY };
     });
   }
+  function musterHaze() {
+    return K.cached('s7:musterHaze', () => { const S = musterStatic(), c = K.canvas(S.hill.width, S.hill.height), x = c.getContext('2d'); for (let i = 0; i < 26; i++) { const [px, py] = roadAt((i + 0.5) / 26 * MROAD.G * 0.86), h = hAt(py); glow(x, [150, 66, 26], px + S.OX, py - h * 1.1 + S.OY, h * 2.4, 0.09); } return c; });
+  }
+  function farLights() {
+    return K.cached('s7:farLights', () => {
+      const c = K.canvas(W, 800), x = c.getContext('2d'), r = rng(431);
+      for (let i = 0; i < 16; i++) { const px = r() * W, py = 590 + r() * 120, s2 = 0.5 + r(); glow(x, [220, 100, 40], px, py, 30 * s2, 0.32); glow(x, [255, 200, 120], px, py, 4 * s2, 0.8); }
+      for (let k = 0; k < 3; k++) {
+        const rr = rng(900 + k), n = 80, x0 = 60 + k * 470 + rr() * 80, y0 = 560 + rr() * 50;
+        for (let i = 0; i < n; i++) { const s2 = i / n, px = x0 + s2 * 380 + Math.sin(s2 * 9 + k) * 40, py = y0 + s2 * 80 + Math.sin(s2 * 5 + k * 2) * 18, fl = 0.7 + 0.3 * K.hash(i, k, 9); glow(x, [255, 140, 60], px, py, 8, 0.45 * fl); x.fillStyle = `rgba(255,220,160,${0.75 * fl})`; x.fillRect(px - 0.8, py - 0.8, 1.6, 1.6); }
+      }
+      return c;
+    });
+  }
+  // a small house banner, lit and waved cheaply, for the distant ranks
+  function farBanner(ctx, x, y, h, house, t, seed) {
+    const img = K.cached('s7:farBn:' + house.key, () => { const c = K.canvas(72, 112), bx = c.getContext('2d'); K.banner(bx, 36, 6, 52, 81, house, 0, { wind: 0, key: 'fb' + house.key }); bx.globalCompositeOperation = 'source-atop'; const g = bx.createLinearGradient(0, 0, 0, 112); g.addColorStop(0, 'rgba(10,10,14,0.7)'); g.addColorStop(1, 'rgba(60,26,10,0.35)'); bx.fillStyle = g; bx.fillRect(0, 0, 72, 112); return c; });
+    const bw = h * 0.36, sc2 = bw / 52, top = y - h, sk = Math.sin(t * 1.9 + seed) * 0.12;
+    ctx.fillStyle = RIM_DARK; ctx.fillRect(x - Math.max(1, h * 0.007), top - h * 0.03, Math.max(2, h * 0.014), h);
+    const m = ctx.getTransform(); ctx.transform(sc2, sk * 0.3, sk, sc2, x - 36 * sc2, top - 6 * sc2); ctx.drawImage(img, 0, 0); ctx.setTransform(m);
+  }
   function shotMuster(ctx, t, sh) {
     const u = span(t, sh.a, sh.b), lt = t - sh.a;
     const [sx, sy] = K.shake(t * 0.6, 2.5, 43);
@@ -519,22 +563,14 @@
     if (lf > 0) glow(ctx, [150, 160, 200], 1450, 160, 700, lf * 0.3);
     // far mountains with the camps' fires and smoke
     view(ctx, c, 0.16); ctx.drawImage(S.far, -150, 0);
-    const r = rng(431);
-    for (let i = 0; i < 16; i++) { const x = r() * W, y = 590 + r() * 120, s = 0.5 + r(); glow(ctx, [220, 100, 40], x, y, 30 * s, 0.32 * flick(t, i)); glow(ctx, [255, 200, 120], x, y, 4 * s, 0.8); }
-    K.smoke(ctx, t, { n: 8, x: 0, y: 420, w: W, h: 260, color: [70, 40, 30], alpha: 0.14, rise: 6, size: 260, seed: 47 });
-    // columns of torches winding over the far hills: other houses on the march
-    for (let k = 0; k < 3; k++) {
-      const rr = rng(900 + k), n = 80, x0 = 60 + k * 470 + rr() * 80, y0 = 560 + rr() * 50;
-      for (let i = 0; i < n; i++) {
-        const s = ((i / n + lt * 0.005 * (k % 2 ? 1 : -1)) % 1 + 1) % 1, x = x0 + s * 380 + Math.sin(s * 9 + k) * 40, y = y0 + s * 80 + Math.sin(s * 5 + k * 2) * 18;
-        const fl = flick(t, i + k * 100, 11); glow(ctx, [255, 140, 60], x, y, 8, 0.45 * fl); ctx.fillStyle = `rgba(255,220,160,${0.75 * fl})`; ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6);
-      }
-    }
+    // the camps' fires and the columns of torches winding over the far hills (other houses on the march), painted once
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.85 + 0.15 * flick(t, 3, 5); ctx.drawImage(farLights(), 0, 0); ctx.restore();
+    K.smoke(ctx, t, { n: 5, x: 0, y: 420, w: W, h: 260, color: [70, 40, 30], alpha: 0.14, rise: 6, size: 240, seed: 47 });
     view(ctx, c, 0.25); fog(ctx, 3, [74, 42, 30], 560, 150, lt * 14, 0.4);
     mark('m.far');
     // the hill, its tents and its column
     view(ctx, c, 0.6); ctx.drawImage(S.hill, -S.OX, -S.OY);
-    for (const tn of TENTS) glow(ctx, [230, 120, 50], tn.x, tn.y - tn.h * 0.25, tn.h * 1.2, 0.07 * tn.lit * flick(t, tn.sd, 6));
+    { const gi = glowImg([230, 120, 50]); ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (const tn of TENTS) { const r2 = tn.h * 1.2; ctx.globalAlpha = 0.07 * tn.lit * flick(t, tn.sd, 6); ctx.drawImage(gi, tn.x - r2, tn.y - tn.h * 0.25 - r2, r2 * 2, r2 * 2); } ctx.restore(); }
     for (const [fx0, fy0, k] of FIRES) {
       const h = hAt(fy0), fl = flick(t, fx0, 8);
       glow(ctx, [230, 100, 36], fx0, fy0 - h * 0.1, h * 2.6 * k, 0.2 * fl); flame(ctx, fx0, fy0, h * 0.42 * k * fl, t, fx0); flame(ctx, fx0 + h * 0.1, fy0, h * 0.3 * k * fl, t + 0.3, fx0 + 1);
@@ -557,20 +593,22 @@
     }
     mark('m.hill+fires');
     items.sort((a, b) => a.y - b.y);
+    const M0 = ctx.getTransform();
     for (const p of items) {
-      if (p.banner) { poleBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i, 0.9); continue; }
+      if (p.banner) { if (p.h > 210) poleBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i, 0.9); else farBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i); continue; }
       const fr = Math.floor(((p.ph / TAU) % 1 + 1) % 1 * 8);
-      ctx.save(); ctx.translate(p.x, p.y); ctx.scale(p.face, 1);
-      if (p.horse) { const spr = HS.ph[fr], k = p.h * 0.62 / HS.Hs; ctx.drawImage(spr, -HS.fx * k, -HS.fy * k, spr.width * k, spr.height * k); }
-      else { const S2 = SP[p.v], spr = S2.ph[fr], k = p.h / S2.Hs; ctx.drawImage(spr, -S2.fx * k, -S2.fy * k, spr.width * k, spr.height * k); }
-      ctx.restore();
+      if (p.horse) { const spr = HS.ph[fr], k = p.h * 0.62 / HS.Hs; ctx.setTransform(M0); ctx.transform(p.face * k, 0, 0, k, p.x, p.y); ctx.drawImage(spr, -HS.fx, -HS.fy); }
+      else { const S2 = SP[p.v], spr = S2.ph[fr], k = p.h / S2.Hs; ctx.setTransform(M0); ctx.transform(p.face * k, 0, 0, k, p.x, p.y); ctx.drawImage(spr, -S2.fx, -S2.fy); }
     }
+    ctx.setTransform(M0);
     mark('m.column');
-    for (const o of torches) { const fl = flick(t, o.i); glow(ctx, [240, 110, 40], o.x, o.y, o.h * 1.5, 0.14 * fl); glow(ctx, [255, 190, 110], o.x, o.y, o.h * 0.32, 0.5 * fl); flame(ctx, o.x, o.y + o.h * 0.04, o.h * 0.16 * fl, t, o.i); }
+    { const g1 = glowImg([240, 110, 40]), g2 = glowImg([255, 190, 110]); ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (const o of torches) { const fl = flick(t, o.i), r1 = o.h * 1.5, r2 = o.h * 0.32; ctx.globalAlpha = 0.14 * fl; ctx.drawImage(g1, o.x - r1, o.y - r1, r1 * 2, r1 * 2); ctx.globalAlpha = 0.5 * fl; ctx.drawImage(g2, o.x - r2, o.y - r2, r2 * 2, r2 * 2); }
+      ctx.restore(); for (const o of torches) if (o.h > 75) flame(ctx, o.x, o.y + o.h * 0.04, o.h * 0.16 * flick(t, o.i), t, o.i); }
     mark('m.torches');
     // the torches' smoke and the rain's haze, lit from beneath along the column
-    for (let i = 0; i < 26; i++) { const [x, y] = roadAt((i + 0.5) / 26 * MROAD.G * 0.86), h = hAt(y); glow(ctx, [150, 66, 26], x, y - h * 1.1, h * 2.4, 0.09); }
-    view(ctx, c, 0.7); K.smoke(ctx, t, { n: 12, x: 300, y: 420, w: 1500, h: 420, color: [88, 50, 32], alpha: 0.14, rise: 8, size: 340, seed: 43 });
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(musterHaze(), -S.OX, -S.OY); ctx.restore();
+    view(ctx, c, 0.7); K.smoke(ctx, t, { n: 6, x: 300, y: 420, w: 1500, h: 420, color: [88, 50, 32], alpha: 0.14, rise: 8, size: 300, seed: 43 });
     fog(ctx, 9, [60, 34, 24], 700, 260, -lt * 20, 0.3, -200, W + 400);
     // the near foreground: the lip of the slope and its wet grass, very dark
     view(ctx, c, 1.5);
@@ -579,20 +617,6 @@
     const gr = rng(62); ctx.strokeStyle = '#040303'; ctx.lineCap = 'round';
     for (let i = 0; i < 200; i++) { const x = -300 + gr() * (W + 600), y = 1030 + 40 * Math.sin(x * 0.003 + 1) + gr() * 24, l = 30 + gr() * 80, sw = Math.sin(t * 1.6 + x * 0.01) * 12; ctx.lineWidth = 2 + gr() * 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.4, y - l * 0.6, x + sw + (gr() - 0.5) * 24, y - l); ctx.stroke(); }
     mark('m.smoke');
-    // two sentinels close to the lens, out of focus, watching the column pass: drawn small and enlarged (a soft blur)
-    {
-      const Q = K.layer('s7:fgq', W / 5, H / 5), qx = Q.getContext('2d'), q = proj(c, 1.9, 0, 0);
-      qx.setTransform(q[2] / 5, 0, 0, q[2] / 5, q[0] / 5, q[1] / 5);
-      const fl = flick(t, 5, 7), wob = Math.sin(t * 0.7) * 6;
-      rimLit(qx, (cc, fill) => {
-        K.figure(cc, 1660 + wob, 1500, 1080, { kind: 'cloak', head: 'helm', hold: 'spear', face: -1, fill });
-        K.figure(cc, 1930 - wob * 0.5, 1560, 1120, { kind: 'armour', head: 'kettle', hold: 'none', face: -1, fill, arm: 0.1 });
-      }, { rim: `rgb(${200 * fl | 0},${110 * fl | 0},${56 * fl | 0})`, mid: '#3a1c10', dark: '#030202', dx: 2.2, dy: 0.6 });
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(Q, 0, 0, W, H); ctx.restore();
-    }
-    // rain over everything, warmed near the torches
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const lights = torches.filter(o => o.h > 50).slice(0, 10).map(o => { const q = proj(c, 0.6, o.x, o.y); return { x: q[0], y: q[1], r: o.h * 2.4, rgb: [255, 170, 100], a: 1 }; });
     mark('m.fg');
     rain(ctx, t, { n: 420, angle: 0.2, speed: 1500, len: 52, alpha: 0.17, lights, seed: 431 });
     ctx.restore();
