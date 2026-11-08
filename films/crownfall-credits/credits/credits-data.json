@@ -1,0 +1,947 @@
+{
+  "meta": {
+    "game_title_requested": "Crownfall: Aethelgard",
+    "title_note": "The repository never uses 'Crownfall: Aethelgard' as a title. In-game copy says 'Crownfall' / 'Crownfall — King's Gambit' and the root README says 'Crownfall — A King's Gambit Story'. 'Aethelgard' is the internal name of the My Legacy world/village code (main game/src/legacy/aethelgard). Confirm the on-screen title with the creator.",
+    "title_evidence": [
+      "origin/ccr-4d3989a0-txe83y:main game/src/SettingsDetail.tsx (credits rows)",
+      "origin/ccr-4d3989a0-txe83y:main-game-vr/src/quest-state.ts (credits rows)",
+      "origin/ccr-4d3989a0-txe83y:README.md"
+    ],
+    "compiled": "2026-11-08",
+    "repository": "https://github.com/mylife-as-miles/Crownfall",
+    "branches_scanned": [
+      "origin/main",
+      "origin/ccr-4d3989a0-txe83y",
+      "origin/codex/cloud-arena-handoff",
+      "origin/codex/crownfall-phase-1",
+      "origin/codex/crownfall-sorcerer-v3-1-assets",
+      "origin/codex/crownfall-vertical-slice-polish",
+      "origin/codex/play-baked-arenas",
+      "origin/feat/chronicles-archive",
+      "origin/feat/legacy-characters",
+      "origin/feat/legacy-environment-collection",
+      "origin/feat/legacy-world-environment",
+      "origin/feat/main-game-menu",
+      "origin/feat/my-legacy"
+    ],
+    "method": "Read-only. git fetch, then git show / ls-tree / grep / log on the remote branches. Asset text comes from SOURCES.md, provenance.json, licence files, handoff docs and package lockfiles. Private canon is not included."
+  },
+  "creator": {
+    "name": "Osita Miles",
+    "aliases": [
+      "mylife-as-miles (GitHub)",
+      "myles4miles (music alias; evidence only, per the creator's 8 Nov 2026 request)",
+      "Miles (as named in handoff docs)"
+    ],
+    "roles": [
+      "Created by",
+      "Game direction: approves lore, names, merges, deploys and pull requests",
+      "Game design direction: set the chess-first rules, the Chronicles archive directive (milestones M0-M7) and the village brief and performance model",
+      "World canon and linguistic atlas (kept private, not in the repository)",
+      "Art direction (creator-director review)",
+      "Music: credited as 'Music by Osita Miles' for all six soundtrack tracks (confirmed by the creator on 8 Nov 2026)",
+      "Supplied artwork: menu card art, Home art, Chronicles world map (creator-owned) and the four-armed sorcerer creature",
+      "Chose the source worlds adapted for My Legacy; sourced the arena photogrammetry scans"
+    ],
+    "evidence": [
+      "origin/codex/play-baked-arenas:docs/CODEX_HANDOFF.md §0 'Who decides' (the creator approves lore, names, merges, deploys, PRs); ground rules 'the creator set them'; rule 4 (private world canon and the creator's linguistic atlas)",
+      "origin/codex/play-baked-arenas:docs/CODEX_HANDOFF.md §3 'Art direction (creator-director review)'; §5 'The creator's archive directive (milestones M0–M7)'",
+      "origin/codex/play-baked-arenas:docs/legacy/claude-integration/CLAUDE_HANDOFF_2026-11-08.md §1.1 ('The creator asked for an established banner village…'; 'The creator's performance model')",
+      "origin/codex/play-baked-arenas:docs/CROWNFALL_SOUNDTRACK.md ('The creator supplied six MP3s'; track three artist tag myles4miles)",
+      "Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "origin/codex/play-baked-arenas:main game/public/assets/chronicles/provenance.json (chronicles-map.webp: 'The creator's painted map of the four nations'; licence 'Creator-owned artwork for Crownfall')",
+      "origin/codex/play-baked-arenas:main game/README.md (Environment artwork / Home: user-supplied JPEGs; sorcerer 'actual user-supplied' GLB)",
+      "origin/codex/crownfall-sorcerer-v3-1-assets:assets/characters/crownfall-sorcerer/v3.1/README.md ('the user-provided Crownfall creature and its commissioned editing output')",
+      "origin/feat/legacy-environment-collection:docs/CLAUDE_HANDOFF.md §2 ('Miles wants the recognizable environments from these repositories adapted…')",
+      "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md (the user downloaded the scans from his own Sketchfab account)",
+      "git log --all: 63 commits as 'Osita Miles <siscomilesinfo@gmail.com>' and 21 as 'mylife-as-miles'. Handoff docs show that some of these record Codex work under the creator's identity."
+    ]
+  },
+  "ai": [
+    {
+      "name": "Claude (Claude Code)",
+      "maker": "Anthropic",
+      "kind": "development collaborator (coding agent)",
+      "roles": [
+        "Blender look-development for the King's Gambit eclipse arena (23-25 Oct): procedural modelling pipeline, sky, eclipse and light rig, hero skull and hand, terrain, ruins, materials and vegetation, reference study, photogrammetry scan integration, and the first placement of the four-armed sorcerer (v029)",
+        "My Legacy foundations (to 29 Oct): shared Legacy domain, heraldry rasteriser, chess bridge, and desktop and Quest flows",
+        "Bannerhold environment: blueprint, maps, desktop Three.js and Quest renderers, manor and landmarks",
+        "Chronicles archive: M0 audit and architecture, M1 integration (in progress at handover)",
+        "Source-world fixes (2-3 Nov): Golden Temple, Monolith Wilds and Athenaion LOD and performance work, Alpine Lake rebuild, house banners in source worlds",
+        "Ealdholt village population (6-8 Nov): 100 residents in 25 households built on MakeHuman, 100STYLE-retargeted clip libraries, smithy household with face rigs, prop kits, crowd adapters for both apps, and a headless Blender pipeline",
+        "Paused environment prep: CC0 ground texture sets, asset-source research, LAAS/Fable 5 evaluation",
+        "Handover documents to Codex (29 Oct and 8 Nov)"
+      ],
+      "commits": "151 commits authored 'Claude <noreply@anthropic.com>' (29 Oct - 8 Nov 2026); 150 carry 'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>'",
+      "evidence": [
+        "origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md ('Crownfall environment — Claude track → Codex handoff. Maintained by Claude.')",
+        "origin/codex/cloud-arena-handoff:crownfall-arena/USER_HANDOFF_AS_SUPPLIED.txt ('A previous agent (Claude Code) did everything below.')",
+        "origin/codex/cloud-arena-handoff:crownfall-arena/CLOUD_README.md ('Claude retains authorship of those sources.')",
+        "origin/codex/play-baked-arenas:docs/CODEX_HANDOFF.md §1-§5 (written by Claude, 29 Oct 2026)",
+        "origin/codex/play-baked-arenas:docs/legacy/claude-integration/CLAUDE_HANDOFF_2026-11-08.md",
+        "origin/ccr-4d3989a0-txe83y:docs/legacy/environment/ASSET_SOURCES_2026-11.md; docs/legacy/environment/LAAS_FABLE5_EVALUATION.md; docs/legacy/environment/EALDHOLT_GROUND_SOURCES.md",
+        "git log --all --author=Claude"
+      ]
+    },
+    {
+      "name": "Codex",
+      "maker": "OpenAI",
+      "kind": "development collaborator (coding agent)",
+      "roles": [
+        "Crownfall campaign vertical slice on the King's Gambit chess engine (3-5 Aug): campaign phase one and presentation polish",
+        "The earlier Codex-track arena scene in Blender (v001/v002), which the Claude track aligned to",
+        "Sorcerer v3.1 asset intake, and the arena backup and continuity handoff",
+        "Took over the feature branches from Claude on 29 Oct",
+        "Source-world environment collection for My Legacy (Golden Temple, Monolith Wilds, Athenaion ports) until 2 Nov",
+        "Ealdholt village preview, Legacy UI, match setup, shuffled soundtrack player, Showcase and settings, baked battlefields in Classic and Local Duel, woodland HLOD and terrain streaming, and integration of Claude's village population (codex/play-baked-arenas)"
+      ],
+      "commits": "No separate git author. Codex work is committed under the creator's identity (Osita Miles / mylife-as-miles) on codex/* branches and the feature branches.",
+      "evidence": [
+        "Branch names origin/codex/crownfall-phase-1, origin/codex/crownfall-vertical-slice-polish, origin/codex/crownfall-sorcerer-v3-1-assets, origin/codex/cloud-arena-handoff, origin/codex/play-baked-arenas",
+        "origin/feat/main-game-menu:docs/VERTICAL_SLICE_POLISH_REPORT.md ('Branch: codex/crownfall-vertical-slice-polish')",
+        "origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md (refers to 'Codex's live Blender' and 'Codex pass02')",
+        "origin/ccr-4d3989a0-txe83y:AGENTS.md handover note (29 Oct 2026: work moved from Claude to Codex)",
+        "origin/feat/legacy-environment-collection:docs/CLAUDE_HANDOFF.md ('Crownfall: Codex to Claude handover — 2 November 2026'; 'Miles explicitly stopped Codex implementation')",
+        "origin/codex/play-baked-arenas:docs/CODEX_UI_HANDOFF_2026-11-05.md; docs/legacy/characters/CODEX_INTEGRATION_STATUS_2026-11-08.md",
+        "Creator confirmation, relayed by the coordinator on 8 November 2026: include Codex (OpenAI) as a development collaborator"
+      ]
+    },
+    {
+      "name": "Rork",
+      "maker": "Rork (rork.com)",
+      "kind": "AI app-builder agent (commit author)",
+      "roles": [
+        "Built the original 'King's Gambit' 3D chess web app (web/) in the upstream repository, with 19 commits on 2-3 Aug 2026",
+        "AI-generated the chess figures (static and rigged), their animation clips, and the game's music, ambience, effects and death cries (hosted on r2-pub.rork.com)"
+      ],
+      "evidence": [
+        "git log --all --author=Rork ('Rork <agent@rork.com>', 19 commits)",
+        "origin/main:rork.json ($schema https://rork.com/schema/rork.json)",
+        "origin/main:web/src/assets/generated.ts ('URLs of the AI-generated assets used by the game'; MODEL_BASE r2-pub.rork.com/generated-3d-models; AUDIO_URLS r2-pub.rork.com/generated-audio)",
+        "origin/main:README.md §License ('The 3D characters and audio shipped with the project were generated for it…')"
+      ]
+    },
+    {
+      "name": "Suno",
+      "maker": "Suno (suno.com)",
+      "kind": "generative music tool",
+      "roles": [
+        "Soundtrack track 3, 'La Fêlure Demeure', carries the tag 'made with suno' and a suno.com song link"
+      ],
+      "evidence": [
+        "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/la-felure-demure.mp3 (ID3 comment 'made with suno; created=2026-10-24…'; URL https://suno.com/song/e3d3cc51-0d66-4499-9a40-9d54cf2a388d)"
+      ]
+    },
+    {
+      "name": "Meshy",
+      "maker": "Meshy (meshy.ai)",
+      "kind": "generative 3D tool",
+      "roles": [
+        "Generated the organic set for the arena Blender scene (landmasses, ribs, roots, coral tree and shrubs) from v019 on. Whether these appear in the shipped battlefield release is unconfirmed."
+      ],
+      "evidence": [
+        "origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md (v019 'Meshy organic set'); crownfall-arena/scripts/meshy_make_asset.py; crownfall-arena/scripts/meshy_pipeline.py"
+      ]
+    }
+  ],
+  "music_note": "Credit: 'Music by Osita Miles' for all six tracks. The creator confirmed this on 8 November 2026 (relayed by the coordinator). The alias 'myles4miles' is kept only as evidence: it is the artist tag in track 3's file. The other five files have no embedded tags, so for them the credit rests on the creator's confirmation, not on file metadata. Track 3's ID3 comment also reads 'made with suno' (see the Suno entry under ai).",
+  "music": [
+    {
+      "track": 1,
+      "title": "Sanguis et Terra",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "note": "The file has no ID3 tags. Artist credit rests on the creator's 8 Nov 2026 confirmation.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json; shared/menu/soundtrack.ts; ffprobe of sanguis-et-terra.mp3 (no tags); Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    },
+    {
+      "track": 2,
+      "title": "Le Roi Muet",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "note": "The file has no ID3 tags. Artist credit rests on the creator's 8 Nov 2026 confirmation.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json; ffprobe of le-roi-muet.mp3 (no tags); Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    },
+    {
+      "track": 3,
+      "title": "La Felure Demure",
+      "originalTitleTag": "La Fêlure Demeure",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "madeWith": "Suno (per ID3 comment)",
+      "note": "File artist tag 'myles4miles' (the creator's alias, kept as evidence). The display title follows the creator's list; the tag keeps the original spelling 'La Fêlure Demeure'. This is the startup track. Its ID3 comment says 'made with suno'.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json (originalTags.artist 'myles4miles'); docs/CROWNFALL_SOUNDTRACK.md; shared/menu/soundtrack.ts (STARTUP_TRACK_ID); ID3 TPE1/COMM in la-felure-demure.mp3; Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    },
+    {
+      "track": 4,
+      "title": "Krom Shahid",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "note": "The file has no ID3 tags. Artist credit rests on the creator's 8 Nov 2026 confirmation.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json; ffprobe of krom-shahid.mp3 (no tags); Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    },
+    {
+      "track": 5,
+      "title": "Cyning Slieht",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "note": "The file has no ID3 tags. Artist credit rests on the creator's 8 Nov 2026 confirmation.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json; ffprobe of cyning-slieht.mp3 (no tags); Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    },
+    {
+      "track": 6,
+      "title": "Slay the Iron Slave",
+      "artist": "Osita Miles",
+      "confirmed": true,
+      "note": "The file has no ID3 tags. Artist credit rests on the creator's 8 Nov 2026 confirmation.",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/audio/soundtrack/provenance.json; ffprobe of slay-the-iron-slave.mp3 (no tags); Creator confirmation, relayed by the coordinator on 8 November 2026: credit the soundtrack as 'Music by Osita Miles' for all six tracks; myles4miles is the creator's alias.",
+      "confirmedBy": "Creator, 8 November 2026 (relayed by the coordinator)"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "ORIGINAL KING'S GAMBIT CHESS GAME",
+      "entries": [
+        {
+          "label": "Upstream repository 'rork-medieval-3d-chess' (initial commit)",
+          "names": [
+            "Alex Nguyen"
+          ],
+          "licence": "MIT",
+          "source": "github.com/alexngdev99/rork-medieval-3d-chess (merged into Crownfall on 3 Aug 2026)",
+          "evidence": "git log: ab485ef 'Initial commit' by Alex Nguyen <118056890+duynt99@users.noreply.github.com>, 2 Aug 2026; e2ac0da 'Merge latest updates from upstream (alexngdev99/rork-medieval-3d-chess)'; origin/main:LICENSE ('Copyright (c) 2026 King's Gambit contributors')"
+        },
+        {
+          "label": "Game built with the Rork AI app builder",
+          "names": [
+            "Rork"
+          ],
+          "licence": "MIT",
+          "source": "rork.com",
+          "evidence": "origin/main:rork.json; Rork commits 2-3 Aug 2026"
+        },
+        {
+          "label": "Chess figures, rigs and animation clips (AI-generated)",
+          "names": [
+            "Generated via Rork"
+          ],
+          "licence": "MIT (README: 'generated for it and may be reused under the same terms')",
+          "source": "r2-pub.rork.com/generated-3d-models",
+          "evidence": "origin/main:web/src/assets/generated.ts; origin/main:README.md §License"
+        },
+        {
+          "label": "In-match score, tension cue, ambience, effects and twelve death cries (AI-generated)",
+          "names": [
+            "Generated via Rork"
+          ],
+          "licence": "MIT (README: 'generated for it and may be reused under the same terms')",
+          "source": "r2-pub.rork.com/generated-audio",
+          "evidence": "origin/main:web/src/assets/generated.ts (AUDIO_URLS, CRY_BASE); origin/main:README.md"
+        },
+        {
+          "label": "Computer opponent (negamax / alpha-beta Web Worker, original code)",
+          "names": [
+            "King's Gambit contributors"
+          ],
+          "licence": "MIT",
+          "source": "web/src/ai/engine.worker.ts (no Stockfish)",
+          "evidence": "origin/main:web/src/ai/engine.worker.ts"
+        }
+      ]
+    },
+    {
+      "heading": "SUPPLIED ARTWORK AND CREATURE",
+      "entries": [
+        {
+          "label": "Four Play-card environment paintings (Classic, Local Duel, Chapters, Online Duel)",
+          "names": [
+            "Supplied by the creator (original author not recorded)"
+          ],
+          "licence": "Supplied artwork retains its own rights (no SPDX)",
+          "source": "User-supplied JPEGs from a private ChatGPT Page",
+          "evidence": "origin/codex/play-baked-arenas:main game/README.md §Environment artwork; main game/artifacts/card-artwork.json; origin/ccr-4d3989a0-txe83y:shared/menu/settings.ts (SETTINGS_LICENSE_COPY)"
+        },
+        {
+          "label": "Home artwork: My Legacy (king and throne), Herald Board, and the loading portal environment",
+          "names": [
+            "Supplied by the creator (original author not recorded)"
+          ],
+          "licence": "Supplied artwork retains its own rights",
+          "source": "User-supplied images",
+          "evidence": "origin/codex/play-baked-arenas:main game/artifacts/home-artwork.json; main game/README.md"
+        },
+        {
+          "label": "Chronicles world map of the four nations",
+          "names": [
+            "Osita Miles (creator-owned)"
+          ],
+          "licence": "Creator-owned artwork for Crownfall",
+          "source": "Supplied for Brief E. The central tower was removed by inpainting (creator decision, 29 Oct 2026).",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/chronicles/provenance.json"
+        },
+        {
+          "label": "Four-armed sorcerer creature v3.1 (rig 'Crownfall_FourArm_Rig', clips Idle / Threat_Cast / Attack)",
+          "names": [
+            "Supplied by the creator; commissioned editing (modeller not recorded)"
+          ],
+          "licence": "Not stated; README says no licence is assumed beyond the repository upload",
+          "source": "Crownfall_Sorcerer_Digits_v3_1.glb",
+          "evidence": "origin/codex/crownfall-sorcerer-v3-1-assets:assets/characters/crownfall-sorcerer/v3.1/README.md; origin/codex/cloud-arena-handoff:crownfall-arena/assets/CFCL_Sorcerer/README.md; origin/codex/play-baked-arenas:main game/README.md"
+        },
+        {
+          "label": "Campaign portrait (Cael)",
+          "names": [
+            "Generated during the Codex vertical-slice polish (generator not recorded)"
+          ],
+          "licence": "Not stated",
+          "source": "web/public/assets/portraits/cael.webp",
+          "evidence": "origin/codex/crownfall-vertical-slice-polish:docs/VERTICAL_SLICE_POLISH_REPORT.md ('a generated portrait')"
+        },
+        {
+          "label": "Chronicles archive textures, Legacy procedural textures, Showcase stage, menu procedural score",
+          "names": [
+            "Original Crownfall work"
+          ],
+          "licence": "MIT (repository licence)",
+          "source": "Generated in-repo",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/chronicles/provenance.json; main game/public/assets/legacy/environment/textures/manifest.json; shared/showcase/STAGE.md; main game/README.md (Audio: 'shared original procedural score')"
+        }
+      ]
+    },
+    {
+      "heading": "CHARACTER ART SOURCES (EALDHOLT VILLAGERS)",
+      "entries": [
+        {
+          "label": "Base human bodies, shape targets, 64-bone rig and weights",
+          "names": [
+            "MakeHuman team (Data Collection AB, Joel Palmius, Jonas Hauquier)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "MakeHuman, MPFB2 data (github.com/makehumancommunity/mpfb2 @ 6ff1eb35). The GPL-3.0 MPFB2 program code was not used.",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/characters/*/SOURCES.md and provenance.json (also on origin/codex/play-baked-arenas)"
+        },
+        {
+          "label": "Skin textures, eyes, teeth, tongue and eyelashes",
+          "names": [
+            "makehuman_system (makehuman_system_assets pack)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "files.makehumancommunity.org/asset_packs/makehuman_system_assets",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/characters/village-smith-v1/provenance.json; crowd-v1/SOURCES.md"
+        },
+        {
+          "label": "Facial expression targets (faceunits01) and visemes (visemes02)",
+          "names": [
+            "Mika Suominen"
+          ],
+          "licence": "CC0-1.0",
+          "source": "files.makehumancommunity.org/functional",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/characters/smithy-*-v1/SOURCES.md, village-smith-v1/SOURCES.md"
+        },
+        {
+          "label": "Motion capture (walks, idles and all clips derived from them)",
+          "names": [
+            "Ian Mason",
+            "Sebastian Starke",
+            "Taku Komura"
+          ],
+          "licence": "CC-BY-4.0",
+          "source": "100STYLE dataset (Zenodo record 8127870), doi:10.1145/3522618",
+          "attribution": "100STYLE dataset by Ian Mason, Sebastian Starke and Taku Komura (2022), CC BY 4.0, doi:10.1145/3522618. Retargeted, trimmed, straightened, blended, time-scaled, loop-closed and foot-locked.",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/characters/crowd-v1/clips/SOURCES.md and provenance.json; smithy and village-smith SOURCES.md (also on origin/codex/play-baked-arenas)"
+        },
+        {
+          "label": "Clothing fabrics (Caban, Hessian 230, Poly Wool Herringbone, Rough Linen, Curly Teddy Natural)",
+          "names": [
+            "Rico Cilliers (processing)",
+            "colormass (photography)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven (https://polyhaven.com/license)",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/characters/*/provenance.json"
+        },
+        {
+          "label": "Leather and bark (Fabric Leather 02, Brown Leather, Bark Brown 02)",
+          "names": [
+            "Rob Tuytel"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/*/provenance.json"
+        },
+        {
+          "label": "Cross Pein Hammer",
+          "names": [
+            "Tics"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/crowd-v1/SOURCES.md; village-smith-v1/SOURCES.md"
+        },
+        {
+          "label": "Wicker Basket 01, Wooden Stool 01",
+          "names": [
+            "Kuutti Siitonen"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/crowd-v1/SOURCES.md"
+        },
+        {
+          "label": "Wooden Bowl 01",
+          "names": [
+            "Oliver Harries"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/crowd-v1/SOURCES.md"
+        },
+        {
+          "label": "Wooden Bucket 01",
+          "names": [
+            "James Ray Cock"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/crowd-v1/SOURCES.md"
+        },
+        {
+          "label": "Wooden Spoon",
+          "names": [
+            "Ronnie Barter"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/smithy-elder-v1/SOURCES.md"
+        },
+        {
+          "label": "Garments, hair, beards, headwear, prop models, role animations, face clips and the character pipeline",
+          "names": [
+            "Original Crownfall work (built by Claude)"
+          ],
+          "licence": "MIT (repository licence)",
+          "source": "scripts/characters/",
+          "evidence": "origin/ccr-4d3989a0-txe83y:characters/crowd-v1/SOURCES.md 'Original Crownfall work'; docs/legacy/claude-integration/CLAUDE_HANDOFF_2026-11-08.md"
+        }
+      ]
+    },
+    {
+      "heading": "ENVIRONMENT TEXTURES (EALDHOLT)",
+      "entries": [
+        {
+          "label": "Stony Dirt Path (village earth)",
+          "names": [
+            "eye-candy.xyz"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/legacy/environment/aethelgard/textures/SOURCES.md and provenance.json"
+        },
+        {
+          "label": "Rock Surface",
+          "names": [
+            "Amal Kumar"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/legacy/environment/aethelgard/textures/SOURCES.md"
+        },
+        {
+          "label": "Leafy Grass (canonical grass)",
+          "names": [
+            "Charlotte Baglioni"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/legacy/environment/aethelgard/textures/grass-leafy-v1/SOURCES.md"
+        },
+        {
+          "label": "Grass001 meadow material",
+          "names": [
+            "ambientCG (no individual author listed)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "ambientCG (ambientcg.com/a/Grass001)",
+          "evidence": "origin/codex/play-baked-arenas:main game/public/assets/legacy/environment/aethelgard/textures/grass-meadow-v1/SOURCES.md"
+        },
+        {
+          "label": "Forest Ground 01 (meadow layer), Brown Mud Rocks 01 (bank layer); prepared on Claude's branch, not yet integrated",
+          "names": [
+            "Rob Tuytel"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/textures/ground-meadow-v2/SOURCES.md; ground-bank-v2/SOURCES.md"
+        },
+        {
+          "label": "Forest Leaves 03 (woodland floor); not yet integrated",
+          "names": [
+            "Rob Tuytel",
+            "Dimitrios Savva"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/aethelgard/textures/ground-woodland-floor-v2/SOURCES.md"
+        }
+      ]
+    },
+    {
+      "heading": "SOURCE WORLDS AND ADAPTED CODE",
+      "entries": [
+        {
+          "label": "Golden Temple (source world 'Temple Terraces')",
+          "names": [
+            "Leon Lin"
+          ],
+          "licence": "MIT",
+          "source": "github.com/Leonxlnx/golden-temple @ 97fd9ec3",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/worlds/golden-temple/SOURCES.md; main game/public/assets/legacy/environment/licenses/golden-temple-MIT.txt"
+        },
+        {
+          "label": "Athenaion (source world 'Citadel Terraces'; cottages in the combined estate)",
+          "names": [
+            "Leon Lin"
+          ],
+          "licence": "MIT",
+          "source": "github.com/Leonxlnx/athenaion @ 9b8bd23b",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/worlds/athenaion/SOURCES.md; licenses/athenaion-MIT.txt"
+        },
+        {
+          "label": "Monolith Wilds (source world; woodland, rocks and ruins in the combined estate)",
+          "names": [
+            "Monolith Wilds contributors"
+          ],
+          "licence": "MIT",
+          "source": "github.com/Leonxlnx/monolithwilds @ 02dbcd3e",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/worlds/monolithwilds/PROVENANCE.md; licenses/monolithwilds-MIT.txt"
+        },
+        {
+          "label": "Rendering techniques (HLOD handoffs, surface captures, coverage mips)",
+          "names": [
+            "SamG-Coder"
+          ],
+          "licence": "MIT",
+          "source": "github.com/SamG-Coder/BakedVoxelLighting @ 22f3dc46",
+          "evidence": "origin/codex/play-baked-arenas:shared/legacy/aethelgard/environment/BAKED_VOXEL_LIGHTING_SOURCE.md; licenses/BakedVoxelLighting-MIT.txt"
+        },
+        {
+          "label": "Cloud noise and water-ripple footprint filter",
+          "names": [
+            "ZyFou"
+          ],
+          "licence": "MIT",
+          "source": "github.com/ZyFou/ProceduralTerrains @ 8349b2c8",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/aethelgard/environment/PROCEDURAL_TERRAINS_SOURCES.md"
+        },
+        {
+          "label": "Ground surface material mix (LAAS fable5-world-demo TerrainMaterial)",
+          "names": [
+            "Remi Sebastian Kits"
+          ],
+          "licence": "MIT",
+          "source": "github.com/Braffolk/fable5-world-demo @ fd75fdb7",
+          "evidence": "origin/codex/play-baked-arenas:shared/legacy/aethelgard/environment/provenance.ts; LICENSE.laas.txt"
+        },
+        {
+          "label": "ThreeUI Community SectionButton adaptation",
+          "names": [
+            "Meng To"
+          ],
+          "licence": "MIT",
+          "source": "github.com/MengTo/threeui @ 68802d54",
+          "evidence": "origin/codex/play-baked-arenas:main game/src/legacy/aethelgard/threeui-community/PROVENANCE.json; main game/public/licenses/ThreeUI-MIT.txt"
+        },
+        {
+          "label": "three.js geometry helpers vendored with source worlds",
+          "names": [
+            "three.js authors"
+          ],
+          "licence": "MIT",
+          "source": "three r185",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/worlds/athenaion/THREE-LICENSE; licenses/three-MIT.txt"
+        }
+      ]
+    },
+    {
+      "heading": "ARENA SOURCES (KING'S GAMBIT ECLIPSE ARENA, BLENDER)",
+      "note": "The baked battlefields in Play are installed from GitHub release gameport-2026-11-03. Their loader references this pipeline's naming (cf_vlit, MossShell), but the release GLBs are not in Git, so the arena assets below are not verified as shipped.",
+      "entries": [
+        {
+          "label": "Skull showing treponemal disease (syphilis): the colossal skull",
+          "names": [
+            "Northern Heritage Network (digitised by Open Virtual Worlds, University of St Andrews)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Sketchfab",
+          "courtesy": "\"Skull showing treponemal disease (syphilis)\", Northern Heritage Network",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md"
+        },
+        {
+          "label": "Hand Nadia: the stone hand",
+          "names": [
+            "3dscanservice"
+          ],
+          "licence": "CC-BY-4.0",
+          "source": "Sketchfab",
+          "attribution": "\"Hand Nadia\" by 3dscanservice, licensed under CC BY 4.0, via Sketchfab.",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md"
+        },
+        {
+          "label": "Capitoline Museum Courtyard (downloaded; integration not recorded)",
+          "names": [
+            "artfletch"
+          ],
+          "licence": "CC-BY-4.0",
+          "source": "Sketchfab",
+          "attribution": "\"Capitoline Museum Courtyard\" by artfletch, licensed under CC BY 4.0, via Sketchfab.",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md"
+        },
+        {
+          "label": "Mercati Di Traiano Ruins (not integrated at handoff)",
+          "names": [
+            "artfletch"
+          ],
+          "licence": "CC-BY-4.0",
+          "source": "Sketchfab",
+          "attribution": "\"Mercati Di Traiano Ruins\" by artfletch, licensed under CC BY 4.0, via Sketchfab.",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md; USER_HANDOFF_AS_SUPPLIED.txt"
+        },
+        {
+          "label": "Cela, Ruins of a nuns' cell (NoAI flag)",
+          "names": [
+            "Morbase",
+            "Museu Virtual"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Sketchfab",
+          "courtesy": "\"Cela | Ruins of a nuns' cell\", Morbase | Museu Virtual",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/vendor/scans/SOURCES.md"
+        },
+        {
+          "label": "Board materials Marble014, Onyx013, Metal048B (v027); library Rock030, Rock028, Rock035, Lava002, Moss002, Marble012, Marble016",
+          "names": [
+            "ambientCG (authors not recorded)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "ambientCG",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/USER_HANDOFF_AS_SUPPLIED.txt; crownfall-arena/scripts/pbr_download.py"
+        },
+        {
+          "label": "Rock, cliff and masonry texture library (rock_face_03, cliff_side, marble_cliff_03, dark_rock_02, mossy_rock, lichen_rock, forest_leaves_02, burned_ground_01, mud_cracked_dry_riverbed_002, sand_01, large_sandstone_blocks_01, stone_wall_05, seaworn_stone_tiles, monastery_stone_floor, rock_wall_16)",
+          "names": [
+            "Poly Haven artists (names not in the committed tree)"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/scripts/pbr_download.py (assets/CFCL_PBR/SOURCES.json was not committed)"
+        },
+        {
+          "label": "Floating megastructure modules, 'Secrets of the Luminara'",
+          "names": [
+            "KitBash3D"
+          ],
+          "licence": "Not recorded (commercial kit)",
+          "source": "KitBash3D",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/scripts/kb3d_make_asset.py; HANDOFF.md (v020); USER_HANDOFF_AS_SUPPLIED.txt"
+        },
+        {
+          "label": "Organic set: landmasses, ribs, roots, coral tree and shrubs",
+          "names": [
+            "Generated with Meshy"
+          ],
+          "licence": "Not recorded",
+          "source": "Meshy",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/scripts/meshy_make_asset.py"
+        },
+        {
+          "label": "Living chess armies in the arena",
+          "names": [
+            "The game's own figures (Rork-generated)"
+          ],
+          "licence": "MIT (per README)",
+          "source": "web/src/assets/generated.ts",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md (v022); crownfall-arena/scripts/pieces_make_asset.py"
+        },
+        {
+          "label": "Procedural modelling, sky, eclipse, terrain, ruins, materials and vegetation pipeline",
+          "names": [
+            "Claude track (original)"
+          ],
+          "licence": "Not separately stated (repository MIT)",
+          "source": "crownfall-arena/lib, crownfall-arena/scripts",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md; CLOUD_README.md"
+        }
+      ]
+    },
+    {
+      "heading": "LICENSED PRIVATE INPUTS (NOT IN THE PUBLIC REPOSITORY)",
+      "entries": [
+        {
+          "label": "Elderbloom village model: the base of the Ealdholt village preview",
+          "names": [
+            "Author/seller not recorded (creator identified Fab as the source)"
+          ],
+          "licence": "Fab Standard License (NoAI), per Claude's mirror note",
+          "source": "Fab",
+          "evidence": "origin/codex/play-baked-arenas:docs/CODEX_UI_HANDOFF_2026-11-05.md §Local preview assets; origin/ccr-4d3989a0-txe83y:docs/legacy/claude-integration/environment/elderbloom-mirror-README.md"
+        }
+      ]
+    },
+    {
+      "heading": "REFERENCES AND INSPIRATION (REFERENCE ONLY; NO ASSETS USED)",
+      "entries": [
+        {
+          "label": "Clair Obscur: Expedition 33: arena look, angles and architecture logic",
+          "names": [
+            "Sandfall Interactive",
+            "Carla Devèze (lead environment artist)"
+          ],
+          "licence": "n/a (reference only; © Sandfall Interactive, never used as assets)",
+          "source": "User-supplied ArtStation screenshots",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/research/E33_RITUAL_FLOOR_DIRECTION.md; research/CROWNFALL_CONTEXT_FOR_ENVIRONMENT.md"
+        },
+        {
+          "label": "Game screenshot study: Elden Ring / Shadow of the Erdtree, Crimson Desert, Avatar: Frontiers of Pandora, Black Myth (official Steam screenshots)",
+          "names": [
+            "Publishers not named in repo"
+          ],
+          "licence": "n/a (reference study only)",
+          "source": "Steam store",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/research/reference_study.md"
+        },
+        {
+          "label": "Environment brief inspiration: Expedition 33, FromSoftware's architectural storytelling",
+          "names": [
+            "FromSoftware",
+            "Sandfall Interactive"
+          ],
+          "licence": "n/a",
+          "source": "docs",
+          "evidence": "origin/codex/play-baked-arenas:docs/legacy/ENVIRONMENT_BRIEF.md"
+        },
+        {
+          "label": "Settlement-building clip: aerial composition, autumn colours, placement feedback",
+          "names": [
+            "Winter Cats Studios"
+          ],
+          "licence": "n/a (reference only)",
+          "source": "x.com/wintercatsgames/status/2117604973844267444",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/environment/settlement/SOURCES.md"
+        },
+        {
+          "label": "Exploration and navigation principles",
+          "names": [
+            "Osita Miles (Hello World repository)"
+          ],
+          "licence": "No licence; no code copied",
+          "source": "github.com/mylife-as-miles/hello-world @ 03d937d6",
+          "evidence": "origin/ccr-4d3989a0-txe83y:shared/legacy/exploration/SOURCE.md"
+        },
+        {
+          "label": "Procedural Alpine Lake (inspected; not redistributed; Crownfall's Alpine Lake is an original rebuild)",
+          "names": [
+            "Leon Lin"
+          ],
+          "licence": "No identified reuse licence; permission reported by the creator, no written record",
+          "source": "github.com/Leonxlnx/procedural-alpine-lake @ b84c254b",
+          "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/assets/legacy/environment/licenses/SOURCES.md; shared/legacy/worlds/combined/provenance.ts"
+        },
+        {
+          "label": "Poly Haven collections 'A Verdant Trail' and 'Namaqualand': 3D asset collections (not HDRIs), downloaded privately and evaluated, not integrated",
+          "names": [
+            "Poly Haven"
+          ],
+          "licence": "CC0-1.0",
+          "source": "Poly Haven",
+          "evidence": "origin/codex/play-baked-arenas:docs/CODEX_UI_HANDOFF_2026-11-05.md; origin/ccr-4d3989a0-txe83y:docs/legacy/environment/ASSET_SOURCES_2026-11.md"
+        },
+        {
+          "label": "Blender tutorial and art references supplied with the creator's lookdev kit",
+          "names": [
+            "ChuckCG",
+            "Ioannis Stamatelis",
+            "Gerald IR"
+          ],
+          "licence": "n/a",
+          "source": "ArtStation / YouTube",
+          "evidence": "origin/codex/cloud-arena-handoff:crownfall-arena/tools_from_user/Crownfall_Kings_Gambit_Blender_README.md"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Barlow",
+      "weights": "300, 400, 500, 600",
+      "designer": "The Barlow Project Authors (github.com/jpt/barlow)",
+      "licence": "OFL-1.1",
+      "use": "Desktop menu body, cards and controls; Quest panels",
+      "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/fonts/OFL-Barlow.txt; main game/src/fonts.css; origin/codex/play-baked-arenas:main-game-vr/public/ui/*.uikitml"
+    },
+    {
+      "family": "Barlow Condensed",
+      "weights": "300, 400, 500",
+      "designer": "The Barlow Project Authors (github.com/jpt/barlow)",
+      "licence": "OFL-1.1",
+      "use": "Desktop menu",
+      "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/fonts/OFL-Barlow.txt; main game/src/fonts.css"
+    },
+    {
+      "family": "Noto Serif (Regular, v2.004)",
+      "designer": "Google LLC (Noto project)",
+      "licence": "OFL-1.1",
+      "use": "Legacy house display headings (desktop and Quest)",
+      "evidence": "origin/ccr-4d3989a0-txe83y:main game/public/fonts/SOURCES.md; OFL-NotoSerif.txt"
+    },
+    {
+      "family": "Geist Serif (Regular, v1.003)",
+      "designer": "The Geist Project Authors (Vercel geist-font v1.9.2)",
+      "licence": "OFL-1.1",
+      "use": "Large Legacy masthead (desktop and Quest)",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/fonts/SOURCES.md; GeistSerif-provenance.json; OFL-GeistSerif.txt"
+    },
+    {
+      "family": "Cinzel",
+      "designer": null,
+      "licence": null,
+      "use": "King's Gambit chess app UI and board border text (loaded from Google Fonts)",
+      "confirmed": false,
+      "evidence": "origin/codex/play-baked-arenas:web/index.html; web/src/ui/crownfall.css; web/src/scene/textures.ts (designer and licence not recorded in repo)"
+    },
+    {
+      "family": "Crimson Pro",
+      "designer": null,
+      "licence": null,
+      "use": "King's Gambit chess app (loaded from Google Fonts)",
+      "confirmed": false,
+      "evidence": "origin/codex/play-baked-arenas:web/index.html (designer and licence not recorded in repo)"
+    }
+  ],
+  "software": [
+    {
+      "name": "three.js (r185)",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json, web/package-lock.json; main game/public/assets/legacy/environment/licenses/three-MIT.txt"
+    },
+    {
+      "name": "Immersive Web SDK (@iwsdk/core, cli, vite-plugin-dev, reference) 1.1.0-rc.2",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main-game-vr/package-lock.json"
+    },
+    {
+      "name": "super-three 0.185.0 (IWSDK's Three runtime alias)",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main-game-vr/package-lock.json"
+    },
+    {
+      "name": "pmndrs uikit, uikit-horizon, uikit-lucide (spatial UI)",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main-game-vr/package.json; installed LICENSE texts in the origin/ccr-4d3989a0-txe83y working tree's main-game-vr/node_modules/@pmndrs (Bela Bohlender; Coconut Capital; Meta Platforms for horizon)"
+    },
+    {
+      "name": "React and React DOM 19",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json; web/package-lock.json"
+    },
+    {
+      "name": "Vite (8 for desktop and web, 7 for Quest) and @vitejs/plugin-react",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json; main-game-vr/package-lock.json"
+    },
+    {
+      "name": "TypeScript",
+      "licence": "Apache-2.0",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json"
+    },
+    {
+      "name": "chess.js 1.4.0",
+      "licence": "BSD-2-Clause",
+      "evidence": "origin/codex/play-baked-arenas:package-lock.json; main game/public/licenses/chess-js.txt (Jeff Hlywa)"
+    },
+    {
+      "name": "three-mesh-bvh 0.9.16",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json; main-game-vr/package-lock.json"
+    },
+    {
+      "name": "meshoptimizer 1.1.1",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:package-lock.json; licenses/meshoptimizer-MIT.txt (Arseny Kapoulkine)"
+    },
+    {
+      "name": "sharp 0.35.4",
+      "licence": "Apache-2.0",
+      "evidence": "origin/codex/play-baked-arenas:package-lock.json"
+    },
+    {
+      "name": "Draco 3D decoder (bundled)",
+      "licence": "Apache-2.0",
+      "evidence": "origin/codex/play-baked-arenas:main game/public/decoders/draco/LICENSE-Draco.txt"
+    },
+    {
+      "name": "Playwright 1.60.0 (testing)",
+      "licence": "Apache-2.0",
+      "evidence": "origin/codex/play-baked-arenas:main game/package-lock.json"
+    },
+    {
+      "name": "tsx",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:main-game-vr/package-lock.json"
+    },
+    {
+      "name": "Tailwind CSS 3",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:web/package-lock.json"
+    },
+    {
+      "name": "Radix UI primitives / shadcn/ui",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:web/package-lock.json; origin/main:README.md §License"
+    },
+    {
+      "name": "lucide-react",
+      "licence": "ISC",
+      "evidence": "origin/codex/play-baked-arenas:web/package-lock.json"
+    },
+    {
+      "name": "TanStack Query, React Router, React Hook Form, Zod, Recharts, Sonner",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:web/package-lock.json"
+    },
+    {
+      "name": "Vitest and ESLint (testing and linting)",
+      "licence": "MIT",
+      "evidence": "origin/codex/play-baked-arenas:web/package-lock.json"
+    },
+    {
+      "name": "Blender (headless bpy pipeline for characters and arena; tool, not shipped)",
+      "licence": null,
+      "evidence": "origin/ccr-4d3989a0-txe83y:docs/legacy/claude-integration/CLAUDE_HANDOFF_2026-11-08.md; origin/codex/cloud-arena-handoff:crownfall-arena/HANDOFF.md (licence not recorded in repo)"
+    }
+  ],
+  "unconfirmed": [
+    "Game title: 'Crownfall: Aethelgard' does not appear in any branch. The repo uses 'Crownfall — King's Gambit' and 'Crownfall — A King's Gambit Story'; 'Aethelgard' is the internal My Legacy world name. Confirm the title card.",
+    "Soundtrack: the creator confirmed 'Music by Osita Miles' for all six tracks (8 Nov 2026), but only track 3's file carries an artist tag (myles4miles), and it also says 'made with suno'. Whether to show a Suno note beside the music credit, and whether the other five tracks used Suno, is for the creator to decide; the files do not say.",
+    "Original author or tool for the supplied Play-card, Home and loading artwork is not recorded. The originals came from a private ChatGPT Page.",
+    "Four-armed sorcerer: 'user-provided creature and its commissioned editing output'. No modeller or commissioned editor is named. The rig is described as a 'Mixamo body plus four arms'; whether Adobe Mixamo was used, and on what terms, is not recorded.",
+    "Elderbloom village (Ealdholt base): the Fab listing, author and distribution scope are not recorded. Fab Standard License (NoAI) comes from Claude's mirror note.",
+    "Baked battlefields (release gameport-2026-11-03): the GLBs are outside Git, and README mentions 'the artist' without a name. Which arena sources (scans, ambientCG, Poly Haven, KitBash3D, Meshy) survive in the shipped files is unverified.",
+    "KitBash3D 'Secrets of the Luminara': licence terms not recorded, and the kit's textures were never supplied.",
+    "Arena Poly Haven texture authors are not in the committed tree (assets/CFCL_PBR/SOURCES.json was omitted from the backup). The Codex v002 'CC0 banks' source register was not committed.",
+    "Capitoline Museum Courtyard and Mercati di Traiano: downloaded, but integration is not recorded. Their CC BY lines are included because SOURCES.md says to put them in the game's credits.",
+    "Alex Nguyen: authored the upstream initial commit and owns the upstream repo name (alexngdev99). The 19 Rork commits are agent-authored, and the human prompting Rork is not named.",
+    "Rork-generated figures and audio: the underlying generation services are not recorded.",
+    "Cael campaign portrait: described as 'generated'; the generator is not recorded.",
+    "Cinzel and Crimson Pro (King's Gambit chess app): loaded from Google Fonts; designer and licence are not recorded in the repo.",
+    "Barlow: the repo names 'The Barlow Project Authors' only, not an individual designer.",
+    "Commits authored as Osita Miles / mylife-as-miles mix creator and Codex work. The agent behind the 25-26 Oct desktop and Quest menu commits is not recorded.",
+    "The Quest UIKit runtime ships @pmndrs/msdfonts (redistributes Google Fonts such as Roboto, Apache-2.0). Whether any default MSDF face is visible in the Quest UI is not verified.",
+    "Blender's licence is not recorded in the repository."
+  ],
+  "music_credit_line": "Music by Osita Miles"
+}

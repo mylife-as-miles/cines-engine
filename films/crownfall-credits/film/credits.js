@@ -236,27 +236,45 @@
   const SMALL_FONT = '500 23px Oswald', SMALL_LH = 31;
   const NOTE_FONT = '400 17px "Barlow Condensed"';
 
+  // role labels and notes wrap at a measure so long source names stay readable; names never wrap
+  function wrap(str, font, sp, maxW) {
+    const words = String(str).split(' '); const lines = []; let line = '';
+    for (const w of words) { const t = line ? line + ' ' + w : w; if (line && width(t, font, sp) > maxW) { lines.push(line); line = w; } else line = t; }
+    if (line) lines.push(line); return lines;
+  }
+  function groupLines(g) { return { role: wrap(g.role.toUpperCase(), ROLE_FONT, ROLE_SP, 440), note: g.note ? wrap(g.note, NOTE_FONT, 1, 460) : [] }; }
   function groupSize(g, dense) {
-    const nf = dense ? SMALL_FONT : NAME_FONT, lh = dense ? SMALL_LH : NAME_LH;
-    let w = width(g.role.toUpperCase(), ROLE_FONT, ROLE_SP);
+    const nf = dense ? SMALL_FONT : NAME_FONT, lh = dense ? SMALL_LH : NAME_LH, L = groupLines(g);
+    let w = Math.max(...L.role.map(r => width(r, ROLE_FONT, ROLE_SP)));
     for (const n of g.names) w = Math.max(w, width(n.toUpperCase(), nf, NAME_SP));
-    if (g.note) w = Math.max(w, width(g.note, NOTE_FONT, 1));
-    return { w, h: 26 + g.names.length * lh + (g.note ? 26 : 0) };
+    for (const n of L.note) w = Math.max(w, width(n, NOTE_FONT, 1));
+    return { w, h: 8 + L.role.length * 19 + g.names.length * lh + (L.note.length ? 10 + L.note.length * 21 : 0) };
   }
   function drawGroup(g, x, y, dense, alpha) {
-    const nf = dense ? SMALL_FONT : NAME_FONT, lh = dense ? SMALL_LH : NAME_LH;
-    txt(g.role.toUpperCase(), x, y + 14, ROLE_FONT, ROLE_COL, ROLE_SP, 'center', alpha);
-    g.names.forEach((n, i) => txt(n.toUpperCase(), x, y + 26 + (i + 1) * lh - 8, nf, P.bone, NAME_SP, 'center', alpha));
-    if (g.note) txt(g.note, x, y + 26 + g.names.length * lh + 20, NOTE_FONT, P.dim, 1, 'center', alpha);
+    const nf = dense ? SMALL_FONT : NAME_FONT, lh = dense ? SMALL_LH : NAME_LH, L = groupLines(g);
+    L.role.forEach((r, i) => txt(r, x, y + 14 + i * 19, ROLE_FONT, ROLE_COL, ROLE_SP, 'center', alpha));
+    const ny = y + 8 + L.role.length * 19;
+    g.names.forEach((n, i) => txt(n.toUpperCase(), x, ny + (i + 1) * lh - 8, nf, P.bone, NAME_SP, 'center', alpha));
+    L.note.forEach((n, i) => txt(n, x, ny + g.names.length * lh + 22 + i * 21, NOTE_FONT, P.dim, 1, 'center', alpha));
+  }
+  // groups are packed into rows by measured width (at most three to a row) unless a card keeps its own rows
+  function packRows(c, dense, gapX) {
+    if (c.keepRows) return c.rows;
+    const all = [].concat(...c.rows); const rows = []; let row = [], rw = 0; const maxW = dense ? 1760 : 1700, per = dense ? 4 : 3;
+    for (const g of all) { const w = groupSize(g, dense).w; if (row.length && (row.length >= per || rw + gapX + w > maxW)) { rows.push(row); row = []; rw = 0; } rw += (row.length ? gapX : 0) + w; row.push(g); }
+    if (row.length) rows.push(row);
+    // balance: avoid a lone group under a full row of three
+    if (rows.length >= 2 && rows[rows.length - 1].length === 1 && rows[rows.length - 2].length === 3) rows[rows.length - 1].unshift(rows[rows.length - 2].pop());
+    return rows;
   }
   function card(c, t) {
     const A = window_(t, c.t0, c.t1, 0.75, 0.75); if (A <= 0) return;
-    const rows = c.rows, dense = !!c.dense, gapX = dense ? 64 : 92, gapY = dense ? 38 : 54;
+    const dense = !!c.dense, gapX = dense ? 64 : 92, gapY = dense ? 38 : 50;
+    const rows = c._rows || (c._rows = packRows(c, dense, gapX));
     const meas = rows.map(r => r.map(g => groupSize(g, dense)));
     const rowH = meas.map(r => Math.max(...r.map(m => m.h)));
-    let total = rowH.reduce((a, b) => a + b, 0) + gapY * (rows.length - 1);
-    let headerH = 0;
-    if (c.header) headerH = 70;
+    const total = rowH.reduce((a, b) => a + b, 0) + gapY * (rows.length - 1);
+    const headerH = c.header ? 70 : 0;
     let y = H / 2 - (total + headerH) / 2 + (c.dy || 0);
     if (c.header) { txt(c.header.toUpperCase(), W / 2, y + 22, '500 20px "Barlow Condensed"', P.gold, 6, 'center', A * 0.95); y += headerH; }
     rows.forEach((r, i) => {
@@ -315,7 +333,7 @@
     background(t, heat);
     const C = window.CREDITS || {};
     studio(t, T.studio[0], T.studio[1]);
-    if (C.director) card({ rows: C.director, t0: T.director[0], t1: T.director[1] }, t);
+    if (C.director) card(C._dir || (C._dir = { rows: C.director, keepRows: true, t0: T.director[0], t1: T.director[1] }), t);
     title(t, T.title[0], T.title[1]);
     for (const c of CARDS) if (t >= c.t0 - 0.1 && t <= c.t1 + 0.1) card(c, t);
     closing(t, T.closing[0], T.closing[1]);
