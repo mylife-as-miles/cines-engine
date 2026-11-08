@@ -8,9 +8,6 @@
   const { clamp, lerp, smooth, ease, easeOut, easeIn, span, win, rng } = K;
   const SCENES = window.SCENES = window.SCENES || {};
   const TAU = Math.PI * 2;
-  // opt-in section timings for development (window.S7_PROF = {}): each mark flushes the canvas and records the time since the last
-  let PROF_T = 0, PROF_CTX = null;
-  function mark(name) { const P2 = window.S7_PROF; if (!P2 || !PROF_CTX) return; PROF_CTX.getImageData(0, 0, 1, 1); const now = performance.now(); if (name) P2[name] = (P2[name] || 0) + (now - PROF_T); PROF_T = now; }
 
   // ================================================================ helpers
   // view(ctx, c, d): the transform for a layer at depth d (1 = the focal plane, smaller is farther, larger is nearer)
@@ -64,12 +61,14 @@
   // rimLit(ctx, draw, o): silhouettes lit along one edge. draw(c, fill) paints them in a colour; a dark pass shifted by
   // (o.dx, o.dy) screen px covers all but a sliver, which is the rim. o.rim, o.mid (an inner, dimmer rim), o.dark
   function rimLit(ctx, draw, o) {
-    const L = K.layer('s7:rim'), lc = L.getContext('2d'), m = ctx.getTransform(), n = o.steps || 4;
-    lc.setTransform(m); draw(lc, o.rim);
+    const n = o.steps || 4, bx = o.box ? Math.max(0, Math.floor(o.box[0])) : 0, by = o.box ? Math.max(0, Math.floor(o.box[1])) : 0;
+    const bw = o.box ? Math.max(1, Math.min(W - bx, Math.ceil(o.box[2]))) : W, bh = o.box ? Math.max(1, Math.min(H - by, Math.ceil(o.box[3]))) : H;
+    const L = K.layer(o.box ? 's7:rimb:' + (o.key || 'k') : 's7:rim', bw, bh), lc = L.getContext('2d'), m = ctx.getTransform();
+    lc.setTransform(m.a, m.b, m.c, m.d, m.e - bx, m.f - by); draw(lc, o.rim);
     lc.globalCompositeOperation = 'source-atop';
     // dark passes pushed progressively further from the light: the rim fades into the body instead of outlining it
-    for (let i = 1; i <= n; i++) { const k = i / n; lc.setTransform(m.a, m.b, m.c, m.d, m.e + o.dx * k, m.f + o.dy * k); lc.globalAlpha = i === n ? 1 : 0.42; draw(lc, i === 1 && o.mid ? o.mid : o.dark); }
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); if (o.alpha != null) ctx.globalAlpha = o.alpha; ctx.drawImage(L, 0, 0); ctx.restore();
+    for (let i = 1; i <= n; i++) { const k = i / n; lc.setTransform(m.a, m.b, m.c, m.d, m.e - bx + o.dx * k, m.f - by + o.dy * k); lc.globalAlpha = i === n ? 1 : 0.42; draw(lc, i === 1 && o.mid ? o.mid : o.dark); }
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); if (o.alpha != null) ctx.globalAlpha = o.alpha; ctx.drawImage(L, bx, by); ctx.restore();
   }
   // cheap bloom: the frame shrunk twice, its brights raised, laid back over it with screen
   function bloom(ctx, a = 0.3, th = 2) {
@@ -138,12 +137,18 @@
     });
   }
   // grade and finish a shot: a colour wash, a vignette, bloom
+  function vignetteImg(a, inner) {
+    const qa = Math.round(a * 40) / 40, qi = Math.round(inner * 40) / 40;
+    return K.cached(`s7:vig:${qa}:${qi}`, () => { const c = K.canvas(W, H), x = c.getContext('2d'); K.vignette(x, qa, '0,0,0', qi); return c; });
+  }
+  let MIXING = false;   // while two shots dissolve, each skips its bloom and the mix gets one
   function finish(ctx, o = {}) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    if (o.bloom) bloom(ctx, o.bloom, o.bloomTh || 2);
-    if (o.shadow) K.grade(ctx, o.shadow, 'soft-light', o.shadowA || 0.3);
+    if (o.bloom && !MIXING) bloom(ctx, o.bloom, o.bloomTh || 2);
+    // a cold cast in the shadows: a pale wash multiplied over the frame (cheaper than a soft-light grade)
+    if (o.shadow) { const n = parseInt(o.shadow.slice(1), 16), k = (o.shadowA || 0.3) * 0.55, m = (v) => Math.round(255 - (255 - v) * k); ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = `rgb(${m(n >> 16 & 255) + 0},${m(n >> 8 & 255)},${m(n & 255)})`; ctx.fillRect(0, 0, W, H); ctx.restore(); }
     if (o.warm) K.grade(ctx, o.warm, 'overlay', o.warmA || 0.08);
-    K.vignette(ctx, o.vig != null ? o.vig : 0.6, '0,0,0', o.vigIn != null ? o.vigIn : 0.32);
+    ctx.drawImage(vignetteImg(o.vig != null ? o.vig : 0.6, o.vigIn != null ? o.vigIn : 0.32), 0, 0);
     if (o.lift) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = rgbs(o.lift, 1); ctx.fillRect(0, 0, W, H); ctx.restore(); }
   }
 
@@ -364,14 +369,6 @@
       F.src = src; return F;
     });
   }
-  // hot and dull stretches along the ember line: an alpha-noise canvas a little larger than the field, drifted slowly
-  function emberNoise() {
-    return K.cached('s7:emberN', () => {
-      const w = 380, h = 220, c = K.canvas(w, h), x = c.getContext('2d'), img = x.createImageData(w, h);
-      for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const v = K.fbm(i / 6, j / 6, 4, 5), k = (j * w + i) * 4; img.data[k] = img.data[k + 1] = img.data[k + 2] = 255; img.data[k + 3] = 255 * clamp(0.1 + Math.pow(clamp((v - 0.32) * 2.3), 1.5) * 1.15); }
-      x.putImageData(img, 0, 0); return c;
-    });
-  }
   // the front's progress over the burn, and its inverse (when the front reaches arrival f)
   const BURN = { a: 0.3, b: 3.35, e: 1.4 };
   function burnP(t, sc) { return lerp(-0.05, 1.06, Math.pow(span(t, sc.start + BURN.a, sc.start + BURN.b), BURN.e)); }
@@ -409,29 +406,25 @@
   }
   function drawBurn(ctx, t, sc) {
     const p = burnP(t, sc); if (p > 1.06) return;
-    PROF_CTX = ctx; mark();
     const F = burnField(), page = s6Frame();
     const L = K.layer('s7:page'), lx = L.getContext('2d');
     lx.drawImage(page, 0, 0);
     let B = null;
     if (p > -0.05) {
       B = burnImages(F, p, t - sc.start);
-      lx.imageSmoothingEnabled = true; lx.imageSmoothingQuality = 'medium';
+      lx.imageSmoothingEnabled = true; lx.imageSmoothingQuality = 'low';
       lx.globalCompositeOperation = 'source-atop'; lx.drawImage(B.ov, 0, 0, W, H);
       lx.globalCompositeOperation = 'destination-out'; lx.drawImage(B.cut, 0, 0, W, H);
     }
     ctx.drawImage(L, 0, 0);
-    mark('b.page');
     if (!B) return;
     // the ember line, and its low red glow (the line shrunk twice and spread back)
     const Q = K.layer('s7:rimq', BW / 6, BH / 6), qx = Q.getContext('2d'); qx.drawImage(B.rim, 0, 0, BW / 6, BH / 6);
     const Q2 = K.layer('s7:rimq2', BW / 16, BH / 16), q2 = Q2.getContext('2d'); q2.drawImage(Q, 0, 0, BW / 16, BH / 16);
     qx.globalCompositeOperation = 'lighter'; qx.globalAlpha = 0.9; qx.imageSmoothingQuality = 'medium'; qx.drawImage(Q2, 0, 0, BW / 6, BH / 6); qx.drawImage(Q2, 0, 0, BW / 6, BH / 6);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'medium';
-    ctx.globalAlpha = 0.55; ctx.drawImage(Q, 0, 0, W, H);
-    ctx.globalAlpha = 1; ctx.drawImage(B.rim, 0, 0, W, H);
-    ctx.restore();
-    mark('b.rim');
+    const G2 = K.layer('s7:rimAll', BW, BH), g2 = G2.getContext('2d'); g2.imageSmoothingQuality = 'low';
+    g2.globalAlpha = 0.55; g2.drawImage(Q, 0, 0, BW, BH); g2.globalAlpha = 1; g2.globalCompositeOperation = 'lighter'; g2.drawImage(B.rim, 0, 0);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G2, 0, 0, W, H); ctx.restore();
     // smoke curling up from the front (lit from beneath), sparks and flakes of char lifting off it
     const src = F.src;
     ctx.save();
@@ -445,7 +438,7 @@
     // sparks: short streaks, batched into a few strokes by brightness
     ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
     const bucket = [[], [], [], []];
-    for (let i = 0; i < src.length; i += 3) {
+    for (let i = 0; i < src.length; i += 4) {
       const s = src[i], tb = burnT(s.f, sc), age = t - tb, life = 0.5 + s.r * 1.4; if (age < 0 || age > life) continue;
       const k = age / life, vx = (s.r2 - 0.5) * 110 + 30, vy = 80 + s.r3 * 200, px = s.x + vx * age + Math.sin(age * 7 + s.r * 20) * 6, py = s.y - vy * age + 30 * age * age;
       const a = (1 - k) * (0.5 + 0.5 * Math.sin(t * 37 + s.r * 50)), dl = 0.022; bucket[Math.min(3, (a * 4) | 0)].push(px, py, px - vx * dl, py - (-vy + 60 * age) * dl);
@@ -463,12 +456,8 @@
       ctx.restore();
     }
     ctx.restore();
-    mark('b.particles');
   }
-  function tintMask(m, rgb) {
-    const T = K.layer('s7:tm' + m.width, m.width, m.height), x = T.getContext('2d');
-    x.drawImage(m, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = `rgb(${rgb})`; x.fillRect(0, 0, m.width, m.height); return T;
-  }
+
 
   // ================================================================ L43: the Seven muster on a hillside in the rain
   // the road the column climbs: a switchback up the face of the hill. Positions go by ground distance g, so the pace and
@@ -541,6 +530,20 @@
       return c;
     });
   }
+  // a near house banner from a cached, pre-lit cloth, waved in strips with their own light and shade
+  function nearBanner(ctx, x, y, h, house, t, seed) {
+    const img = K.cached('s7:nearBn:' + house.key, () => { const c = K.canvas(170, 260), bx = c.getContext('2d'); K.banner(bx, 85, 8, 140, 218, house, 0, { wind: 0, key: 'nb' + house.key });
+      bx.globalCompositeOperation = 'multiply'; const g = bx.createLinearGradient(0, 8, 0, 240); g.addColorStop(0, 'rgb(34,34,44)'); g.addColorStop(0.5, 'rgb(70,50,42)'); g.addColorStop(1, 'rgb(150,90,54)'); bx.fillStyle = g; bx.fillRect(0, 0, 170, 260);
+      bx.globalCompositeOperation = 'destination-in'; K.banner(bx, 85, 8, 140, 218, house, 0, { wind: 0, key: 'nb' + house.key }); return c; });
+    const bw = Math.min(150, h * 0.36), sc2 = bw / 140, top = y - h, n = 7, sw = img.width / n;
+    ctx.fillStyle = RIM_DARK; ctx.fillRect(x - Math.max(1, h * 0.007), top - h * 0.03, Math.max(2, h * 0.014), h);
+    for (let i = 0; i < n; i++) {
+      const u = (i + 0.5) / n, ph = t * 2.2 + u * 4 + seed, dy = Math.sin(ph) * 7 * u * sc2, dx = Math.sin(ph * 0.7) * 3 * sc2;
+      const X = x - img.width / 2 * sc2 + i * sw * sc2 + dx, Y = top - 8 * sc2 + dy;
+      ctx.drawImage(img, i * sw, 0, sw + 0.8, img.height, X, Y, (sw + 0.8) * sc2, img.height * sc2);
+      const shd = Math.cos(ph) * 0.18; if (Math.abs(shd) > 0.02) { ctx.fillStyle = shd > 0 ? `rgba(255,200,150,${shd * 0.35})` : `rgba(0,0,0,${-shd})`; ctx.fillRect(X + 2, Y + 10 * sc2, sw * sc2, img.height * sc2 * 0.82); }
+    }
+  }
   // a small house banner, lit and waved cheaply, for the distant ranks
   function farBanner(ctx, x, y, h, house, t, seed) {
     const img = K.cached('s7:farBn:' + house.key, () => { const c = K.canvas(72, 112), bx = c.getContext('2d'); K.banner(bx, 36, 6, 52, 81, house, 0, { wind: 0, key: 'fb' + house.key }); bx.globalCompositeOperation = 'source-atop'; const g = bx.createLinearGradient(0, 0, 0, 112); g.addColorStop(0, 'rgba(10,10,14,0.7)'); g.addColorStop(1, 'rgba(60,26,10,0.35)'); bx.fillStyle = g; bx.fillRect(0, 0, 72, 112); return c; });
@@ -548,81 +551,79 @@
     ctx.fillStyle = RIM_DARK; ctx.fillRect(x - Math.max(1, h * 0.007), top - h * 0.03, Math.max(2, h * 0.014), h);
     const m = ctx.getTransform(); ctx.transform(sc2, sk * 0.3, sk, sc2, x - 36 * sc2, top - 6 * sc2); ctx.drawImage(img, 0, 0); ctx.setTransform(m);
   }
+  // everything that does not move, painted once as one picture at the shot's middle depth: sky, far range and its lights,
+  // the hill with its tents and haze, the dark lip of the slope near us
+  function musterBG() {
+    return K.cached('s7:musterBG', () => {
+      const S = musterStatic(), OX = 220, OY = 160, c = K.canvas(W + 2 * OX, H + 2 * OY), x = c.getContext('2d');
+      x.translate(OX, OY);
+      const sk = sky('muster', 480, 270, { top: [5, 7, 11], mid: [12, 13, 18], low: [40, 22, 16], glow: [170, 70, 28], glowY: 1.0, glowR: 0.8, cloud: [9, 10, 13], moon: [30, 38, 52], cover: 0.6, seed: 4 });
+      x.imageSmoothingQuality = 'high'; x.drawImage(sk, -OX, -OY, W + 2 * OX, 840 + OY);
+      x.drawImage(S.far, -150, 0);
+      x.save(); x.globalCompositeOperation = 'lighter'; x.drawImage(farLights(), 0, 0); x.restore();
+      fog(x, 3, [74, 42, 30], 560, 150, 0, 0.4, -OX, W + 2 * OX);
+      x.drawImage(S.hill, -S.OX, -S.OY);
+      x.save(); x.globalCompositeOperation = 'lighter'; x.drawImage(musterHaze(), -S.OX, -S.OY); x.restore();
+      fog(x, 9, [60, 34, 24], 700, 260, 0, 0.3, -OX, W + 2 * OX);
+      const fr2 = ridge(-OX, W + OX, X => 1030 + 40 * Math.sin(X * 0.003 + 1), 61, 26, 0.01, 6, 4); fillRidge(x, fr2, H + OY, '#030202');
+      return { c, OX, OY };
+    });
+  }
   function shotMuster(ctx, t, sh) {
     const u = span(t, sh.a, sh.b), lt = t - sh.a;
     const [sx, sy] = K.shake(t * 0.6, 2.5, 43);
     const c = { x: lerp(-70, 40, ease(u)) + sx, y: lerp(30, -15, ease(u)) + sy, z: lerp(1.02, 1.12, ease(u)), r: -0.006 + 0.004 * u };
-    PROF_CTX = ctx; mark();
-    const S = musterStatic();
+    const BG = musterBG();
     ctx.save();
-    // sky: storm clouds lit from beneath by the fires of the camps
-    const sk = sky('muster', 480, 270, { top: [5, 7, 11], mid: [12, 13, 18], low: [40, 22, 16], glow: [170, 70, 28], glowY: 1.0, glowR: 0.8, cloud: [9, 10, 13], moon: [30, 38, 52], cover: 0.6, seed: 4 });
-    view(ctx, c, 0.06); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(sk, -140 - lt * 7, -80, W + 380, 800);
+    view(ctx, c, 0.6); ctx.drawImage(BG.c, -BG.OX, -BG.OY);
     // lightning, far off inside the clouds
     const lt2 = lt - 3.3, lf = lt2 > 0 ? Math.max(0, Math.sin(lt2 * 40)) * Math.exp(-lt2 * 5) : 0;
     if (lf > 0) glow(ctx, [150, 160, 200], 1450, 160, 700, lf * 0.3);
-    // far mountains with the camps' fires and smoke
-    view(ctx, c, 0.16); ctx.drawImage(S.far, -150, 0);
-    // the camps' fires and the columns of torches winding over the far hills (other houses on the march), painted once
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.85 + 0.15 * flick(t, 3, 5); ctx.drawImage(farLights(), 0, 0); ctx.restore();
-    K.smoke(ctx, t, { n: 5, x: 0, y: 420, w: W, h: 260, color: [70, 40, 30], alpha: 0.14, rise: 6, size: 240, seed: 47 });
-    view(ctx, c, 0.25); fog(ctx, 3, [74, 42, 30], 560, 150, lt * 14, 0.4);
-    mark('m.far');
-    // the hill, its tents and its column
-    view(ctx, c, 0.6); ctx.drawImage(S.hill, -S.OX, -S.OY);
     { const gi = glowImg([230, 120, 50]); ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (const tn of TENTS) { const r2 = tn.h * 1.2; ctx.globalAlpha = 0.07 * tn.lit * flick(t, tn.sd, 6); ctx.drawImage(gi, tn.x - r2, tn.y - tn.h * 0.25 - r2, r2 * 2, r2 * 2); } ctx.restore(); }
     for (const [fx0, fy0, k] of FIRES) {
       const h = hAt(fy0), fl = flick(t, fx0, 8);
       glow(ctx, [230, 100, 36], fx0, fy0 - h * 0.1, h * 2.6 * k, 0.2 * fl); flame(ctx, fx0, fy0, h * 0.42 * k * fl, t, fx0); flame(ctx, fx0 + h * 0.1, fy0, h * 0.3 * k * fl, t + 0.3, fx0 + 1);
-      for (let q = 0; q < 3; q++) K.figure(ctx, fx0 + (q - 1) * h * 0.55 + h * 0.1, fy0 + h * 0.06 * (q % 2), h * (0.85 + 0.1 * q), { kind: q === 1 ? 'cloak' : 'armour', head: q === 2 ? 'hood' : 'kettle', hold: q === 0 ? 'spear' : 'none', face: q === 2 ? -1 : 1, fill: '#080605' });
+      for (let q = 0; q < 3; q += (k > 0.85 ? 1 : 2)) K.figure(ctx, fx0 + (q - 1) * h * 0.55 + h * 0.1, fy0 + h * 0.06 * (q % 2), h * (0.85 + 0.1 * q), { kind: q === 1 ? 'cloak' : 'armour', head: q === 2 ? 'hood' : 'kettle', hold: q === 0 ? 'spear' : 'none', face: q === 2 ? -1 : 1, fill: '#080605' });
     }
     const SP = soldierSprites('#d98a52', 'muster'), HS = horseSprites('#d98a52', 'muster');
     const items = [], torches = [];
-    const rows = 120, spd = 0.55, gap = MROAD.G / rows;
+    const rows = 74, spd = 0.55, gap = MROAD.G / rows;
     for (let i = 0; i < rows; i++) {
       const g = ((i * gap + lt * spd) % MROAD.G + MROAD.G) % MROAD.G, [x, y, dx, dy] = roadAt(g), h = hAt(y);
       if (y > 1300 || x > 2050) continue;
-      const rr = rng(i * 13 + 5), wide = 4 + (i % 3), dl = Math.hypot(dx, dy) || 1, nx = -dy / dl, ny = dx / dl, face = dx >= 0 ? 1 : -1;
+      const rr = rng(i * 13 + 5), wide = 3 + (i % 3), dl = Math.hypot(dx, dy) || 1, nx = -dy / dl, ny = dx / dl, face = dx >= 0 ? 1 : -1;
       for (let j = 0; j < wide; j++) {
-        const lat = (j - (wide - 1) / 2) * 0.42 * h, px = x + nx * lat * 1.6 + (rr() - 0.5) * h * 0.15, py = y + ny * lat * 0.35 + (rr() - 0.5) * h * 0.05, ph = hAt(py);
-        const horse = i % 13 === 4 && j === 1, v = Math.floor(rr() * SP.length);
+        const lat = (j - (wide - 1) / 2) * 0.48 * h, px = x + nx * lat * 1.6 + (rr() - 0.5) * h * 0.15, py = y + ny * lat * 0.35 + (rr() - 0.5) * h * 0.05, ph = hAt(py);
+        const horse = i % 11 === 4 && j === 1, v = Math.floor(rr() * SP.length);
         items.push({ y: py, x: px, h: ph * (0.92 + rr() * 0.14), v, horse, face, ph: lt * 6 + rr() * 8 });
         if (!horse && SP[v].torch) torches.push({ x: px + 0.3 * ph * face, y: py - 0.96 * ph, h: ph, i: i * 7 + j });
       }
-      if (i % 7 === 3) items.push({ y: y + 0.5, x: x + h * 0.3, h: h * 2.4, banner: K.HOUSES[[0, 3, 6, 5, 2, 0, 1, 4][(i / 7 | 0) % 8]], i });
+      if (i % 5 === 3) items.push({ y: y + 0.5, x: x + h * 0.3, h: h * 2.4, banner: K.HOUSES[[0, 3, 6, 5, 2, 0, 1, 4][(i / 5 | 0) % 8]], i });
     }
-    mark('m.hill+fires');
     items.sort((a, b) => a.y - b.y);
     const M0 = ctx.getTransform();
     for (const p of items) {
-      if (p.banner) { if (p.h > 210) poleBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i, 0.9); else farBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i); continue; }
+      if (p.banner) { ctx.setTransform(M0); if (p.h > 210) nearBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i); else farBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i); continue; }
       const fr = Math.floor(((p.ph / TAU) % 1 + 1) % 1 * 8);
       if (p.horse) { const spr = HS.ph[fr], k = p.h * 0.62 / HS.Hs; ctx.setTransform(M0); ctx.transform(p.face * k, 0, 0, k, p.x, p.y); ctx.drawImage(spr, -HS.fx, -HS.fy); }
       else { const S2 = SP[p.v], spr = S2.ph[fr], k = p.h / S2.Hs; ctx.setTransform(M0); ctx.transform(p.face * k, 0, 0, k, p.x, p.y); ctx.drawImage(spr, -S2.fx, -S2.fy); }
     }
     ctx.setTransform(M0);
-    mark('m.column');
     { const g1 = glowImg([240, 110, 40]), g2 = glowImg([255, 190, 110]); ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      for (const o of torches) { const fl = flick(t, o.i), r1 = o.h * 1.5, r2 = o.h * 0.32; ctx.globalAlpha = 0.14 * fl; ctx.drawImage(g1, o.x - r1, o.y - r1, r1 * 2, r1 * 2); ctx.globalAlpha = 0.5 * fl; ctx.drawImage(g2, o.x - r2, o.y - r2, r2 * 2, r2 * 2); }
+      for (const o of torches) { const fl = flick(t, o.i), r1 = o.h * 1.1, r2 = o.h * 0.3; ctx.globalAlpha = 0.17 * fl; ctx.drawImage(g1, o.x - r1, o.y - r1, r1 * 2, r1 * 2); ctx.globalAlpha = 0.5 * fl; ctx.drawImage(g2, o.x - r2, o.y - r2, r2 * 2, r2 * 2); }
       ctx.restore(); for (const o of torches) if (o.h > 75) flame(ctx, o.x, o.y + o.h * 0.04, o.h * 0.16 * flick(t, o.i), t, o.i); }
-    mark('m.torches');
-    // the torches' smoke and the rain's haze, lit from beneath along the column
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(musterHaze(), -S.OX, -S.OY); ctx.restore();
-    view(ctx, c, 0.7); K.smoke(ctx, t, { n: 6, x: 300, y: 420, w: 1500, h: 420, color: [88, 50, 32], alpha: 0.14, rise: 8, size: 300, seed: 43 });
-    fog(ctx, 9, [60, 34, 24], 700, 260, -lt * 20, 0.3, -200, W + 400);
-    // the near foreground: the lip of the slope and its wet grass, very dark
+    // the torches' smoke over the march, lit from beneath; the near grass
+    const burning = t < K.scene(7).start + BURN.b;
+    if (!burning) { view(ctx, c, 0.7); K.smoke(ctx, t, { n: 4, x: 300, y: 420, w: 1500, h: 420, color: [88, 50, 32], alpha: 0.16, rise: 8, size: 280, seed: 43 }); }
     view(ctx, c, 1.5);
-    const fr2 = ridge(-300, W + 300, x => 1030 + 40 * Math.sin(x * 0.003 + 1), 61, 26, 0.01, 6, 4);
-    fillRidge(ctx, fr2, H + 300, '#030202');
-    const gr = rng(62); ctx.strokeStyle = '#040303'; ctx.lineCap = 'round';
-    for (let i = 0; i < 200; i++) { const x = -300 + gr() * (W + 600), y = 1030 + 40 * Math.sin(x * 0.003 + 1) + gr() * 24, l = 30 + gr() * 80, sw = Math.sin(t * 1.6 + x * 0.01) * 12; ctx.lineWidth = 2 + gr() * 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.4, y - l * 0.6, x + sw + (gr() - 0.5) * 24, y - l); ctx.stroke(); }
-    mark('m.smoke');
-    mark('m.fg');
-    rain(ctx, t, { n: 420, angle: 0.2, speed: 1500, len: 52, alpha: 0.17, lights, seed: 431 });
+    const gr = rng(62); ctx.strokeStyle = '#040303'; ctx.lineCap = 'round'; ctx.lineWidth = 3;
+    ctx.beginPath(); for (let i = 0; i < 110; i++) { const x = -300 + gr() * (W + 600), y = 1030 + 40 * Math.sin(x * 0.003 + 1) + gr() * 24, l = 30 + gr() * 80, sw = Math.sin(t * 1.6 + x * 0.01) * 12; ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.4, y - l * 0.6, x + sw + (gr() - 0.5) * 24, y - l); } ctx.stroke();
+    // rain over everything, warmed near the torches
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const lights = torches.filter(o => o.h > 50).slice(0, 10).map(o => { const q = proj(c, 0.6, o.x, o.y); return { x: q[0], y: q[1], r: o.h * 2.4, rgb: [255, 170, 100], a: 1 }; });
+    rain(ctx, t, { n: burning ? 260 : 420, angle: 0.2, speed: 1500, len: 52, alpha: 0.17, lights, seed: 431 });
     ctx.restore();
-    mark('m.rain');
-    finish(ctx, { bloom: 0.32, shadow: '#1d3040', shadowA: 0.3, vig: 0.7 });
-    mark('m.finish');
+    finish(ctx, { bloom: t < K.scene(7).start + BURN.b ? 0 : 0.32, shadow: '#1d3040', shadowA: 0.3, vig: 0.7 });
   }
 
   // ================================================================ the First-Born: a wyvern built in 3D and projected
@@ -727,9 +728,9 @@
     ctx.save();
     const sk = sky('storm', 480, 270, { top: [7, 9, 13], mid: [14, 17, 23], low: [24, 28, 36], glow: [56, 66, 88], glowY: 0.3, glowR: 0.9, glowA: 0.45, cloud: [8, 9, 12], moon: [46, 56, 76], cover: 0.8, seed: 9 });
     const skL = sky('stormL', 480, 270, { top: [50, 58, 82], mid: [84, 94, 124], low: [60, 70, 92], glow: [200, 210, 245], glowY: 0.15, glowR: 0.6, glowA: 1, cloud: [30, 34, 48], moon: [170, 180, 220], cover: 0.8, seed: 9 });
-    view(ctx, c, 0.1); ctx.imageSmoothingQuality = 'high';
+    view(ctx, c, 0.1); ctx.imageSmoothingQuality = 'low';
     ctx.drawImage(sk, -150 + lt * 22, -80, W + 400, H + 200);
-    if (L > 0) { ctx.globalAlpha = L; ctx.drawImage(skL, -150 + lt * 22, -80, W + 400, H + 200); ctx.globalAlpha = 1; }
+    if (L > 0.01) { ctx.globalAlpha = L; ctx.drawImage(skL, -150 + lt * 22, -80, W + 400, H + 200); ctx.globalAlpha = 1; }
     if (L > 0.3) { ctx.setTransform(1, 0, 0, 1, 0, 0); const q = proj(c, 0.3, 1620, -60); bolt(ctx, q[0], q[1], q[0] - 200, q[1] + 460, 4401 + (lt > 1 ? 7 : 0), clamp((L - 0.3) * 1.8)); }
     view(ctx, c, 0.22); fog(ctx, 13, [40, 46, 58], 100, 300, lt * 140, 0.45);
     // First-Born wheeling around the summit: the far side of each circle passes behind the peak
@@ -741,8 +742,8 @@
     };
     view(ctx, c, 0.32); for (const b of beasts) drawBeast(b, true);
     const PK = peaksImg();
-    view(ctx, c, 0.32); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(PK.base, -200, 0, PK.base.width * PK.S2, PK.base.height * PK.S2);
-    if (L > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = L; ctx.drawImage(PK.flash, -200, 0, PK.flash.width * PK.S2, PK.flash.height * PK.S2); ctx.restore(); }
+    view(ctx, c, 0.32); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(PK.base, -200, 0, PK.base.width * PK.S2, PK.base.height * PK.S2);
+    if (L > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = L; ctx.drawImage(PK.flash, -200, 0, PK.flash.width * PK.S2, PK.flash.height * PK.S2); ctx.restore(); }
     for (const b of beasts) drawBeast(b, false);
     view(ctx, c, 0.5); fog(ctx, 15, [34, 38, 48], 560, 300, lt * 180, 0.5); fog(ctx, 16, [28, 32, 42], 800, 340, lt * 230, 0.55);
     // the great one: it passes over us out of the storm and dives toward the summit, shrinking into the distance
@@ -892,7 +893,7 @@
     const toM = (X, Y) => { const dx = X - MC[0], dy = Y - MC[1]; return [(dx * Au[0] + dy * Au[1]) / MW + 0.5, (dx * Av[0] + dy * Av[1]) / MH + 0.5]; };
     const fromM = (u, v) => [MC[0] + (u - 0.5) * MW * Au[0] + (v - 0.5) * MH * Av[0], MC[1] + (u - 0.5) * MW * Au[1] + (v - 0.5) * MH * Av[1]];
     const TABLE = { x0: -105, x1: 105, y0: -58, y1: 62 };
-    const c1 = fromM(0.06, 0.08), CANDLES = [[c1[0], c1[1], 23, 1.0], [-20, 47, 27, 1.0]];
+    const c1 = fromM(0.06, 0.08), CANDLES = [[c1[0], c1[1], 23, 1.0], [-28, 56, 36, 1.05]];
     const HEARTH = (() => { const v = [0.95, 0.55, 0.3], l = Math.hypot(...v); return v.map(q => q / l); })();
     const cam = camera3([0, -150, 135], [0, 15, 0], 1500, 960, 610);
     return { cam, proj3: cam.proj3, ray: cam.ray, toB, fromB, BW2, BL, BV, psi, A, B, toM, fromM, MW, MH, Au, Av, TABLE, CANDLES, HEARTH };
@@ -934,14 +935,14 @@
   // the map as a texture with the home ringed in red ink (a hand's double stroke); two sizes, read back as pixel arrays
   function mapTex(scale) {
     return K.cached('s7:maptex' + scale, () => {
-      const MP = K.map, w = Math.round(MP.W * scale), h = Math.round(MP.H * scale), c = K.canvas(w, h), x = c.getContext('2d');
-      x.imageSmoothingQuality = 'high'; x.drawImage(MP.paper(), 0, 0, w, h); x.globalCompositeOperation = 'multiply'; x.drawImage(MP.ink(), 0, 0, w, h);
+      const MP = MAPK(), w = Math.round(MP.W * scale), h = Math.round(MP.H * scale), c = K.canvas(w, h), x = c.getContext('2d');
+      x.imageSmoothingQuality = 'high'; if (K.map) { x.drawImage(MP.paper(), 0, 0, w, h); x.globalCompositeOperation = 'multiply'; x.drawImage(MP.ink(), 0, 0, w, h); } else x.drawImage(K.parchment(w, h, 2024), 0, 0);
       x.save(); x.scale(scale, scale); redRing(x); x.restore();
       return { c, w, h, d: x.getImageData(0, 0, w, h).data };
     });
   }
   function redRing(x) {
-    const hm = K.map.home, r = rng(626);
+    const hm = MAPK().home, r = rng(626);
     x.save(); x.globalCompositeOperation = 'source-over'; x.fillStyle = 'rgba(168,30,20,0.86)';
     for (let pass = 0; pass < 2; pass++) {
       const a0 = -2.4 + pass * 0.9, sweep = TAU * (pass ? 0.93 : 1.12), pts = [], rot = (pass ? 0.06 : -0.04), ex = pass ? 1.05 : 0.98, ey = pass ? 0.94 : 1.03;
@@ -1005,7 +1006,7 @@
       for (let pass = 0; pass < 2; pass++) { const tmp = shade.slice(); for (let j = 1; j < GH - 1; j++) for (let i = 1; i < GW - 1; i++) { const k = j * GW + i; shade[k] = (tmp[k] * 4 + tmp[k - 1] + tmp[k + 1] + tmp[k - GW] + tmp[k + GW]) / 8; } }
       const sample = (arr, fx, fy) => { const i = Math.floor(fx), j = Math.floor(fy), u = fx - i, v = fy - j, k = j * GW + i; return (arr[k] * (1 - u) + arr[k + 1] * u) * (1 - v) + (arr[k + GW] * (1 - u) + arr[k + GW + 1] * u) * v; };
       const mk = () => { const c = K.canvas(IW, IH); return [c, c.getContext('2d'), c.getContext('2d').createImageData(IW, IH)]; };
-      const [cA, xA, dA] = mk(), [cC, xC, dC] = mk(), [cH, xH, dH] = mk();
+      const [cA, xA, dA] = mk(), [cC, xC, dC] = mk(), [cH, xH, dH] = mk(), RI = o.rise ? mk() : null;
       const T0 = BC.TABLE, rgb = [0, 0, 0], amb = [0.045, 0.052, 0.07];
       for (let py = 0; py < IH; py++) for (let px = 0; px < IW; px++) {
         const fx = px / G + 0.0001, fy = py / G + 0.0001, o4 = (py * IW + px) * 4, sxp = x0 + px / sc, syp = y0 + py / sc;
@@ -1045,25 +1046,28 @@
         for (let ch = 0; ch < 3; ch++) {
           dA.data[o4 + ch] = clamp(albC[ch] * amb[ch] * ao * (0.7 + 0.3 * nz) * 3.4) * 255;
           dC.data[o4 + ch] = clamp((albC[ch] * (dc * 1.55 + sheen * 0.22 * sheenC) * ao + spec) * [1.0, 0.8, 0.54][ch]) * 255;
-          dH.data[o4 + ch] = clamp(albC[ch] * [1.0, 0.6, 0.32][ch] * (dh * 0.75 + sheen * 0.3 * sh) * ao * (0.35 + 0.65 * clamp((X + 60) / 170))) * 255;
+          dH.data[o4 + ch] = clamp(albC[ch] * [1.0, 0.62, 0.34][ch] * (dh * 1.05 + sheen * 0.35 * sh) * ao * (0.4 + 0.6 * clamp((X + 60) / 170))) * 255;
         }
         const al = clamp(inT + 0.6) * fe * 255; dA.data[o4 + 3] = dC.data[o4 + 3] = dH.data[o4 + 3] = al;
+        if (RI) { const rd = RI[2].data, lift = isCloth ? cov * (0.55 + 0.45 * nz) * (0.75 + 0.25 * Math.max(0, nx * -0.3 + ny * 0.5 + nz * 0.8)) : 0; rd[o4] = clamp(albC[0] * lift * 1.0) * 255; rd[o4 + 1] = clamp(albC[1] * lift * 0.8) * 255; rd[o4 + 2] = clamp(albC[2] * lift * 0.55) * 255; rd[o4 + 3] = al; }
       }
-      xA.putImageData(dA, 0, 0); xC.putImageData(dC, 0, 0); xH.putImageData(dH, 0, 0);
-      return { amb: cA, cand: cC, hear: cH, x0, y0, w, h, sc };
+      // fold the three lights into one picture at the candles' low ebb; the candles alone are kept for their flicker
+      const dd = dA.data, cc = dC.data, hh2 = dH.data;
+      for (let i = 0; i < dd.length; i += 4) { dd[i] = Math.min(255, dd[i] + cc[i] * 0.55 + hh2[i] * 0.78); dd[i + 1] = Math.min(255, dd[i + 1] + cc[i + 1] * 0.55 + hh2[i + 1] * 0.78); dd[i + 2] = Math.min(255, dd[i + 2] + cc[i + 2] * 0.55 + hh2[i + 2] * 0.78); }
+      xA.putImageData(dA, 0, 0); xC.putImageData(dC, 0, 0); cH.width = cH.height = 0; if (RI) RI[1].putImageData(RI[2], 0, 0);
+      return { comb: cA, cand: cC, rise: RI ? RI[0] : null, x0, y0, w, h, sc };
     });
   }
-  function drawBannerRender(ctx, R, ic, ih) {
-    ctx.save(); ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(R.amb, R.x0, R.y0, R.w, R.h);
-    ctx.globalCompositeOperation = 'lighter';
-    for (const [img, I] of [[R.cand, ic], [R.hear, ih]]) { let k = I; while (k > 0.002) { ctx.globalAlpha = Math.min(1, k); ctx.drawImage(img, R.x0, R.y0, R.w, R.h); k -= 1; } }
+  function drawBannerRender(ctx, R, ic) {
+    ctx.save(); ctx.imageSmoothingQuality = R.sc * (ctx.getTransform().a || 1) > 1.4 ? 'medium' : 'low';
+    ctx.drawImage(R.comb, R.x0, R.y0, R.w, R.h);
+    const k = ic - 0.55; if (ic > 0 && k > 0.004) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, k); ctx.drawImage(R.cand, R.x0, R.y0, R.w, R.h); }
     ctx.restore();
   }
   // ---------------------------------------------------------------- L45: the sealed challenge, close: red wax and a crown
   function sealImg() {
     return K.cached('s7:seal', () => {
-      const S2 = 560, c = K.canvas(S2, S2), x = c.getContext('2d'), cx = S2 / 2, cy = S2 / 2, R = 190, r = rng(1801);
+      const S2 = 560, c = K.canvas(S2, S2), x = c.getContext('2d'), cx = S2 / 2, cy = S2 / 2, R = 190;
       const blob = (rad, jit, sd) => { x.beginPath(); for (let i = 0; i <= 90; i++) { const a = i / 90 * TAU, rr = rad * (1 + jit * (K.fbm(Math.cos(a) * 1.3 + sd, Math.sin(a) * 1.3, 4, 1802) - 0.5) * 2); const px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr * 0.96; i ? x.lineTo(px, py) : x.moveTo(px, py); } x.closePath(); };
       // the spread of wax, its shadow, a rim pressed up round the die
       x.save(); x.translate(8, 14); blob(R * 1.08, 0.08, 1); x.fillStyle = 'rgba(0,0,0,0.55)'; x.filter = 'blur(10px)'; x.fill(); x.restore(); x.filter = 'none';
@@ -1087,7 +1091,7 @@
       // gloss
       x.globalCompositeOperation = 'lighter'; g = x.createRadialGradient(cx - 80, cy - 90, 0, cx - 80, cy - 90, 120); g.addColorStop(0, 'rgba(255,220,200,0.35)'); g.addColorStop(1, 'rgba(255,220,200,0)'); x.fillStyle = g; x.fillRect(0, 0, S2, S2);
       x.restore();
-      void r; return c;
+      return c;
     });
   }
   function letterImg() {
@@ -1097,7 +1101,8 @@
       x.fillStyle = 'rgba(60,40,20,0.25)'; x.beginPath(); x.moveTo(0, 0); x.lineTo(w, 0); x.lineTo(w / 2, h * 0.62); x.closePath(); x.fill();
       x.strokeStyle = 'rgba(40,24,10,0.5)'; x.lineWidth = 3; x.beginPath(); x.moveTo(0, 0); x.lineTo(w / 2, h * 0.62); x.lineTo(w, 0); x.stroke();
       x.strokeStyle = 'rgba(255,240,210,0.25)'; x.lineWidth = 2; x.beginPath(); x.moveTo(4, 4); x.lineTo(w / 2, h * 0.62 - 4); x.lineTo(w - 4, 4); x.stroke();
-      return c;
+      const sh = K.canvas(w + 160, h + 160), sx = sh.getContext('2d'); sx.filter = 'blur(22px)'; sx.fillStyle = 'rgba(0,0,0,0.75)'; sx.fillRect(86, 96, w, h); sx.filter = 'none'; sx.drawImage(c, 80, 80);
+      return sh;
     });
   }
   function shotSeal(ctx, t, sh) {
@@ -1108,10 +1113,10 @@
     // the night streaming past: torches and lamps out of focus, rain
     const br = rng(1821);
     for (let i = 0; i < 26; i++) { const sp = 600 + br() * 900, x0 = br() * (W + 800), y0 = br() * H, rr = 30 + br() * 90, xx = ((x0 - lt * sp) % (W + 800) + W + 800) % (W + 800) - 400, warm = br() < 0.7; glow(ctx, warm ? [255, 150, 70] : [120, 150, 200], xx, y0, rr, (warm ? 0.25 : 0.12) * (0.5 + br() * 0.5)); }
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(180,190,210,0.25)'; ctx.lineWidth = 2; for (let i = 0; i < 70; i++) { const x0 = br() * W, y0 = ((br() * H + lt * 1600) % (H + 200)) - 100; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 - 160, y0 + 40); ctx.stroke(); } ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(180,190,210,0.25)'; ctx.lineWidth = 2; ctx.beginPath(); for (let i = 0; i < 70; i++) { const x0 = br() * W, y0 = ((br() * H + lt * 1600) % (H + 200)) - 100; ctx.moveTo(x0, y0); ctx.lineTo(x0 - 160, y0 + 40); } ctx.stroke(); ctx.restore();
     // the letter and its seal, in a gloved hand
     ctx.translate(W / 2 + sx, H / 2 + sy); ctx.rotate(rot); const z = lerp(1.0, 1.08, u); ctx.scale(z, z);
-    const L = letterImg(); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = 40; ctx.drawImage(L, -760, -470, 1500, 900); ctx.restore();
+    const L = letterImg(); ctx.drawImage(L, -840, -550);
     // torchlight sweeping across it as he passes the barrier
     const sweep = lerp(-1200, 1400, span(lt, 0.1, 1.2));
     ctx.save(); ctx.beginPath(); ctx.rect(-760, -470, 1500, 900); ctx.clip(); ctx.globalCompositeOperation = 'multiply'; const sg = ctx.createLinearGradient(-760, 0, 740, 0); sg.addColorStop(0, '#5a4a40'); sg.addColorStop(0.5, '#9a8a7a'); sg.addColorStop(1, '#4a3c34'); ctx.fillStyle = sg; ctx.fillRect(-760, -470, 1500, 900); ctx.restore();
@@ -1151,31 +1156,36 @@
           K.ink(x, cc => K.nib(cc, K.wobble(pts, 1.2, 0.08, wx), { w: 4.2, angle: -0.7, min: 0.3, taper: 0.1, jit: 0.3, seed: wx | 0 }), { color: P.ink, alpha: 0.82, bleed: 0.8 });
         }
       }
-      return { c, lines };
+      const sh = K.canvas(ARC.w + 200, ARC.h + 200), sx = sh.getContext('2d'); sx.filter = 'blur(28px)'; sx.fillStyle = 'rgba(0,0,0,0.8)'; sx.fillRect(110, 120, ARC.w, ARC.h); sx.filter = 'none'; sx.drawImage(c, 100, 100);
+      return { c: sh, lines };
+    });
+  }
+  function archiveShelves() {
+    return K.cached('s7:arcShelves', () => {
+      const c = K.canvas(W + 400, H + 200), x = c.getContext('2d'), sr = rng(1911);
+      for (let row = 0; row < 5; row++) { const y0 = -80 + row * 260 + 100; x.fillStyle = '#0d0a08'; x.fillRect(0, y0 + 220, c.width, 20); let X = 0; while (X < c.width) { const bw = 18 + sr() * 40, bh = 120 + sr() * 90, sh2 = sr(); x.fillStyle = `rgb(${20 + sh2 * 25 | 0},${14 + sh2 * 14 | 0},${10 + sh2 * 8 | 0})`; x.fillRect(X, y0 + 220 - bh, bw - 3, bh); if (sr() < 0.3) { x.fillStyle = 'rgba(180,140,60,0.25)'; x.fillRect(X + 2, y0 + 220 - bh * 0.7, bw - 7, 3); } X += bw; } }
+      return c;
     });
   }
   function shotArchive(ctx, t, sh) {
-    const lt = t - sh.a, u = span(t, sh.a - 0.5, sh.b + 0.5), sc7 = K.scene(7), L45 = K.cue('L45');
+    const lt = t - sh.a, u = span(t, sh.a - 0.5, sh.b + 0.5), L45 = K.cue('L45');
     const c = { x: lerp(-60, 120, ease(u)), y: lerp(-20, 60, ease(u)), z: lerp(1.0, 1.32, ease(u)), r: -0.03 + 0.02 * u };
     const fl = flick(t, 91, 7), AP = archivePage(), line = AP.lines[ARC.line], prog = smooth(span(t, sh.a + 0.2, L45.end + 0.1));
-    void sc7;
     ctx.save();
     ctx.fillStyle = '#060504'; ctx.fillRect(0, 0, W, H);
     // the shelves behind, books and scroll cases in the dark
-    view(ctx, c, 0.4);
-    const sr = rng(1911);
-    for (let row = 0; row < 4; row++) { const y0 = -80 + row * 260; ctx.fillStyle = '#0d0a08'; ctx.fillRect(-200, y0 + 220, W + 400, 20); let X = -200; while (X < W + 200) { const bw = 18 + sr() * 40, bh = 120 + sr() * 90, sh2 = sr(); ctx.fillStyle = `rgb(${20 + sh2 * 25 | 0},${14 + sh2 * 14 | 0},${10 + sh2 * 8 | 0})`; ctx.fillRect(X, y0 + 220 - bh, bw - 3, bh); if (sr() < 0.3) { ctx.fillStyle = 'rgba(180,140,60,0.25)'; ctx.fillRect(X + 2, y0 + 220 - bh * 0.7, bw - 7, 3); } X += bw; } }
+    view(ctx, c, 0.4); ctx.drawImage(archiveShelves(), -200, -200);
     glow(ctx, [255, 150, 70], 260, 420, 700, 0.12 * fl);
     // the desk and the page, lit by the candle at its left
     view(ctx, c, 1.0);
     ctx.fillStyle = '#140d08'; ctx.fillRect(-300, ARC.y + ARC.h - 40, W + 600, 600);
-    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 50; ctx.drawImage(AP.c, ARC.x, ARC.y); ctx.restore();
+    ctx.drawImage(AP.c, ARC.x - 100, ARC.y - 100);
     // the scraped line: the ink lifted, the vellum roughened pale, crumbs of ink and skin
     const lx0 = ARC.x + line.words[0][0] - 10, lx1 = ARC.x + line.words[line.words.length - 1][0] + line.words[line.words.length - 1][1] + 10, ly = ARC.y + line.y, scr = lerp(lx0, lx1, prog);
     if (prog > 0) {
       ctx.save(); ctx.beginPath(); ctx.moveTo(lx0, ly - 26); for (let X = lx0; X <= scr; X += 6) ctx.lineTo(X, ly - 24 - 5 * K.noise(X * 0.05, 1, 1912)); for (let X = scr; X >= lx0; X -= 6) ctx.lineTo(X, ly + 18 + 5 * K.noise(X * 0.05, 2, 1912)); ctx.closePath(); ctx.clip();
       ctx.fillStyle = '#d8c39b'; ctx.fillRect(lx0 - 10, ly - 40, scr - lx0 + 20, 80);
-      ctx.strokeStyle = 'rgba(120,90,60,0.25)'; ctx.lineWidth = 1; const kr = rng(1913); for (let i = 0; i < 220; i++) { const X = lx0 + kr() * (scr - lx0), Y = ly - 24 + kr() * 42; ctx.beginPath(); ctx.moveTo(X, Y); ctx.lineTo(X + 10 + kr() * 26, Y + (kr() - 0.5) * 3); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(120,90,60,0.25)'; ctx.lineWidth = 1; const kr = rng(1913); ctx.beginPath(); for (let i = 0; i < 220; i++) { const X = lx0 + kr() * (scr - lx0), Y = ly - 24 + kr() * 42; ctx.moveTo(X, Y); ctx.lineTo(X + 10 + kr() * 26, Y + (kr() - 0.5) * 3); } ctx.stroke();
       ctx.fillStyle = 'rgba(255,248,230,0.25)'; ctx.fillRect(lx0, ly - 10, scr - lx0, 8);
       ctx.fillStyle = 'rgba(40,26,14,0.12)'; for (let i = 0; i < 60; i++) { const X = lx0 + kr() * (scr - lx0), Y = ly - 20 + kr() * 34; ctx.fillRect(X, Y, 2 + kr() * 4, 1.5); }
       ctx.restore();
@@ -1192,6 +1202,7 @@
       ctx.fillStyle = '#c9ccd2'; ctx.beginPath(); ctx.moveTo(hx - 34, hy - 2); ctx.lineTo(hx + 50, hy - 46); ctx.lineTo(hx + 62, hy - 34); ctx.lineTo(hx - 30, hy + 4); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = 'rgba(255,240,210,0.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - 34, hy - 1); ctx.lineTo(hx + 50, hy - 45); ctx.stroke();
       ctx.fillStyle = '#3a2414'; ctx.save(); ctx.translate(hx + 56, hy - 40); ctx.rotate(-0.5); ctx.fillRect(0, -9, 120, 18); ctx.restore();
+      const q0 = ctx.getTransform(), bxs = q0.a * (hx + 20) + q0.e, bys = q0.d * (hy - 360) + q0.f;
       rimLit(ctx, cc => {
         const capsule = (ax, ay, bx2, by2, ra, rb) => { const dx = bx2 - ax, dy = by2 - ay, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L; cc.beginPath(); cc.moveTo(ax + nx * ra, ay + ny * ra); cc.lineTo(bx2 + nx * rb, by2 + ny * rb); cc.lineTo(bx2 - nx * rb, by2 - ny * rb); cc.lineTo(ax - nx * ra, ay - ny * ra); cc.closePath(); cc.fill(); cc.beginPath(); cc.arc(ax, ay, ra, 0, TAU); cc.fill(); cc.beginPath(); cc.arc(bx2, by2, rb, 0, TAU); cc.fill(); };
         // the sleeve and its cuff, the forearm, the fist round the handle, the index finger laid along it, the thumb
@@ -1200,7 +1211,7 @@
         cc.save(); cc.translate(hx + 128, hy - 66); cc.rotate(-0.5); cc.beginPath(); cc.ellipse(0, 0, 58, 40, 0, 0, TAU); cc.fill(); for (let k = 0; k < 4; k++) { cc.beginPath(); cc.arc(-34 + k * 22, -34, 13, 0, TAU); cc.fill(); } cc.restore();
         capsule(hx + 150, hy - 92, hx + 70, hy - 50, 12, 9);
         capsule(hx + 112, hy - 34, hx + 76, hy - 30, 13, 10);
-      }, { rim: '#ffbf80', mid: '#6a3a1c', dark: '#0c0806', dx: 7, dy: 5, steps: 4 });
+      }, { rim: '#ffbf80', mid: '#6a3a1c', dark: '#0c0806', dx: 7, dy: 5, steps: 4, box: [bxs, bys, W - bxs, 700], key: 'arc' });
       ctx.restore();
     }
     ctx.restore();
@@ -1218,10 +1229,10 @@
       const hz = 640 + OY;
       const h1 = ridge(0, w, X => hz - 120 - 60 * Math.sin(X * 0.002 + 1), 1602, 50, 0.004, 5, 5); fillRidge(x, h1, h, '#0f1218');
       for (let i = 0; i < 160; i++) { const X = r() * w, base = hz - 40 + r() * 70, th = 60 + r() * 140, ww = th * 0.28; x.fillStyle = `rgb(${8 + r() * 5 | 0},${9 + r() * 5 | 0},${12 + r() * 6 | 0})`; x.beginPath(); x.moveTo(X, base - th); for (let k = 1; k <= 5; k++) { const yy = base - th + th * k / 5; x.lineTo(X + ww * k / 5 * (1 + (k % 2) * 0.3), yy); x.lineTo(X + ww * 0.25 * k / 5, yy - th * 0.06); } x.lineTo(X + 4, base); x.lineTo(X - 4, base); for (let k = 5; k >= 1; k--) { const yy = base - th + th * k / 5; x.lineTo(X - ww * 0.25 * k / 5, yy - th * 0.06); x.lineTo(X - ww * k / 5 * (1 + (k % 2) * 0.3), yy); } x.closePath(); x.fill(); }
-      // the ground: mud, a path to the door with puddles
+      // the ground: mud, a path to the door
       const g = x.createLinearGradient(0, hz, 0, h); g.addColorStop(0, '#0b0c0e'); g.addColorStop(1, '#040404'); x.fillStyle = g; x.fillRect(0, hz + 10, w, h - hz);
       x.fillStyle = '#121214'; x.beginPath(); x.moveTo(HALL.x + OX - 30, HALL.y + OY); x.quadraticCurveTo(HALL.x + OX - 200, HALL.y + OY + 200, HALL.x + OX - 600, h); x.lineTo(HALL.x + OX + 350, h); x.quadraticCurveTo(HALL.x + OX + 90, HALL.y + OY + 200, HALL.x + OX + 50, HALL.y + OY); x.closePath(); x.fill();
-      // the hall: a low timber longhouse under a steep dark roof, smoke hole at the ridge
+      // the hall: a low timber longhouse under a steep thatched roof
       const X0 = HALL.x + OX - HALL.w / 2, Y0 = HALL.y + OY;
       x.fillStyle = '#16120f'; x.fillRect(X0, Y0 - HALL.h, HALL.w, HALL.h);
       for (let k = 0; k <= 12; k++) { x.fillStyle = 'rgba(0,0,0,0.45)'; x.fillRect(X0 + k * HALL.w / 12 - 3, Y0 - HALL.h, 6, HALL.h); }
@@ -1230,7 +1241,7 @@
       for (let i = 0; i < 2600; i++) { const px = X0 - 50 + r() * (HALL.w + 100), py = Y0 - HALL.h - HALL.roof + r() * (HALL.roof + 20), L = 8 + r() * 22; x.strokeStyle = `rgba(${r() < 0.6 ? '0,0,0' : '60,62,70'},${0.15 + r() * 0.3})`; x.lineWidth = 1 + r(); x.beginPath(); x.moveTo(px, py); x.lineTo(px + (r() - 0.5) * 4, py + L); x.stroke(); }
       const rg = x.createLinearGradient(0, Y0 - HALL.h - HALL.roof, 0, Y0 - HALL.h); rg.addColorStop(0, 'rgba(70,80,100,0.18)'); rg.addColorStop(1, 'rgba(0,0,0,0.3)'); x.fillStyle = rg; x.fillRect(X0 - 60, Y0 - HALL.h - HALL.roof, HALL.w + 120, HALL.roof + 30); x.restore();
       x.strokeStyle = 'rgba(110,120,140,0.35)'; x.lineWidth = 3; x.beginPath(); x.moveTo(X0 + 90, Y0 - HALL.h - HALL.roof); x.lineTo(X0 + HALL.w - 90, Y0 - HALL.h - HALL.roof); x.stroke();
-      // the door and the window, light leaking warm through the gaps
+      // the door half open on a warm room, the window's glow behind its shutter
       const dx0 = X0 + 380, dw = 90, dtop = Y0 - 170;
       const dg = x.createLinearGradient(0, dtop, 0, Y0); dg.addColorStop(0, '#c97a36'); dg.addColorStop(1, '#ffc27a'); x.fillStyle = dg; x.fillRect(dx0, dtop, dw, 170);
       x.fillStyle = '#120d0a'; x.beginPath(); x.moveTo(dx0 + dw, dtop); x.lineTo(dx0 + dw - 38, dtop + 10); x.lineTo(dx0 + dw - 38, Y0 - 4); x.lineTo(dx0 + dw, Y0); x.closePath(); x.fill();
@@ -1239,10 +1250,9 @@
       x.fillStyle = '#100b08'; x.fillRect(wx0 + 36, wy0, 8, 60); x.fillRect(wx0, wy0 + 26, 80, 7); x.fillRect(wx0 - 6, wy0 - 8, 92, 8); x.fillRect(wx0 + 80, wy0 - 6, 46, 72);
       // the empty banner pole by the door: nothing flies from it yet
       x.fillStyle = '#060505'; x.fillRect(dx0 + dw + 60, Y0 - 520, 9, 520); x.fillRect(dx0 + dw + 30, Y0 - 520, 70, 7);
-      // light on the wet ground and puddles before the door
-      x.save(); x.globalCompositeOperation = 'lighter';
-      const lg = x.createRadialGradient(dx0 + dw / 2, Y0 + 20, 10, dx0 + dw / 2, Y0 + 40, 420); lg.addColorStop(0, 'rgba(200,120,50,0.35)'); lg.addColorStop(1, 'rgba(200,120,50,0)'); x.fillStyle = lg; x.fillRect(0, Y0 - 50, w, 600);
       // the door's light thrown on the mud as a wedge, and long broken reflections in the puddles
+      x.save(); x.globalCompositeOperation = 'lighter';
+      const lg = x.createRadialGradient(dx0 + dw / 2, Y0 + 20, 10, dx0 + dw / 2, Y0 + 40, 420); lg.addColorStop(0, 'rgba(200,120,50,0.3)'); lg.addColorStop(1, 'rgba(200,120,50,0)'); x.fillStyle = lg; x.fillRect(0, Y0 - 50, w, 600);
       const wg = x.createLinearGradient(0, Y0, 0, Y0 + 360); wg.addColorStop(0, 'rgba(255,170,90,0.4)'); wg.addColorStop(1, 'rgba(255,170,90,0)'); x.fillStyle = wg; x.beginPath(); x.moveTo(dx0, Y0); x.lineTo(dx0 + dw - 38, Y0); x.lineTo(dx0 + dw + 130, Y0 + 360); x.lineTo(dx0 - 220, Y0 + 360); x.closePath(); x.fill();
       for (let i = 0; i < 70; i++) { const px = dx0 + dw / 2 + (r() - 0.5) * 380, py = Y0 + 30 + r() * 300, pw = 6 + r() * 40; x.fillStyle = `rgba(255,180,100,${0.06 + r() * 0.16})`; x.fillRect(px - pw / 2, py, pw, 1.5 + r() * 2); }
       for (let i = 0; i < 30; i++) { const px = wx0 + 40 + (r() - 0.5) * 120, py = Y0 + 30 + r() * 200; x.fillStyle = `rgba(255,170,90,${0.04 + r() * 0.1})`; x.fillRect(px - 10, py, 4 + r() * 24, 1.5); }
@@ -1255,11 +1265,11 @@
     const pu = Math.pow(u, 1.6), c = { x: lerp(-30, S.win[0] - W / 2, pu * 0.85), y: lerp(10, S.win[1] - H / 2, pu * 0.8), z: lerp(1.0, 2.6, pu), r: 0 };
     ctx.save();
     const sk = sky('hallNight', 480, 270, { top: [5, 7, 11], mid: [12, 15, 21], low: [22, 26, 34], glow: [60, 70, 90], glowY: 0.35, glowR: 0.7, glowA: 0.6, cloud: [8, 9, 12], moon: [60, 70, 92], cover: 0.7, seed: 21 });
-    view(ctx, c, 0.15); ctx.drawImage(sk, -150 - lt * 8, -100, W + 400, 900);
+    view(ctx, c, 0.15); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(sk, -150 - lt * 8, -100, W + 400, 900);
     glow(ctx, [120, 140, 180], 520, 160, 300, 0.14);
     view(ctx, c, 1.0); ctx.drawImage(S.c, -S.OX, -S.OY);
     // smoke from the roof, lit from beneath by the hearth inside
-    K.smoke(ctx, t, { n: 12, x: S.smoke[0] - 100, y: S.smoke[1] - 560, w: 200, h: 560, color: [96, 90, 86], alpha: 0.3, rise: 22, size: 220, seed: 1611, drift: -8 });
+    K.smoke(ctx, t, { n: 10, x: S.smoke[0] - 100, y: S.smoke[1] - 560, w: 200, h: 560, color: [96, 90, 86], alpha: 0.3, rise: 22, size: 220, seed: 1611, drift: -8 });
     glow(ctx, [200, 110, 50], S.smoke[0], S.smoke[1] + 10, 120, 0.25 * flick(t, 61, 5));
     const fl = flick(t, 62, 6);
     glow(ctx, [255, 160, 80], S.door[0], S.door[1], 260, 0.3 * fl); glow(ctx, [255, 170, 90], S.win[0], S.win[1], 200, 0.3 * fl);
@@ -1369,19 +1379,19 @@
     const fl = flick(t, 51, 6), fl2 = 0.85 + 0.15 * K.noise(t * 3.1, 52, 7);
     ctx.save();
     const B = hallBack();
-    view(ctx, c, 0.45); ctx.drawImage(B.c, -B.OX, -B.OY);
+    view(ctx, c, 0.45); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(B.c, -B.OX, -B.OY);
     // the people's shadows thrown up the back wall
     {
       const Q = K.layer('s7:hsh', W / 6, H / 6), qx = Q.getContext('2d'), sway = (K.noise(t * 2.5, 9, 3) - 0.5) * 30;
       qx.setTransform(1 / 6, 0, 0, 1 / 6, 0, 0); qx.translate(HEARTH.x, HEARTH.y - 60); qx.scale(1.7, 1.55); qx.translate(-HEARTH.x + sway, -HEARTH.y);
       person(qx, { x: 760, y: 880, h: 470, face: 1, sit: 0.27, dress: 'robe', hat: 'hood', stoop: 0.7, beard: 0.6, hold: 'staff', armN: [0.55, 0.9], fill: '#000' });
       person(qx, { x: 1270, y: 885, h: 520, face: -1, dress: 'apron', hat: 'bare', bulk: 1.3, beard: 0.3, hold: 'hammer', armN: [0.05, 0.12], armF: [0.5, 1.9], fill: '#000' });
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.55 * fl2; const q = proj(c, 0.45, 0, 0); ctx.drawImage(Q, q[0] - 0, q[1] - 0, W * q[2], H * q[2]); ctx.restore();
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.55 * fl2; ctx.imageSmoothingQuality = 'low'; const q = proj(c, 0.45, 0, 0); ctx.drawImage(Q, 0, 0, Q.width, Q.height * 0.78, q[0], q[1], W * q[2], H * 0.78 * q[2]); ctx.restore();
     }
     // the fire, its light and smoke
     view(ctx, c, 0.7);
-    glow(ctx, [255, 120, 40], HEARTH.x, HEARTH.y - 120, 900, 0.32 * fl);
-    K.smoke(ctx, t, { n: 10, x: HEARTH.x - 220, y: 120, w: 440, h: 640, color: [96, 66, 46], alpha: 0.12, rise: 22, size: 300, seed: 511 });
+    glow(ctx, [255, 120, 40], HEARTH.x, HEARTH.y - 120, 640, 0.38 * fl);
+    K.smoke(ctx, t, { n: 6, x: HEARTH.x - 200, y: 140, w: 400, h: 600, color: [96, 66, 46], alpha: 0.14, rise: 22, size: 260, seed: 511 });
     fire(ctx, HEARTH.x, HEARTH.y + 6, 250, 340 * fl, t, 501, { n: 9, slot: 'h1' });
     fire(ctx, HEARTH.x - 60, HEARTH.y + 10, 120, 200 * fl2, t + 0.7, 502, { n: 6, slot: 'h2' });
     ctx.save(); ctx.fillStyle = '#0a0503'; for (const [dx, dy, w2, rot] of [[-90, 8, 150, 0.25], [60, 12, 170, -0.3], [0, 18, 190, 0.05]]) { ctx.save(); ctx.translate(HEARTH.x + dx, HEARTH.y + dy); ctx.rotate(rot); ctx.fillRect(-w2 / 2, -10, w2, 20); ctx.restore(); } ctx.restore();
@@ -1395,12 +1405,12 @@
       } else person(cc, { x: 1265, y: 890, h: 525, face: -1, dress: 'apron', hat: 'bare', bulk: 1.3, beard: 0.3, hold: 'hammer', armN: [0.05, 0.12], armF: [0.5, 1.9], tilt: 0.12, fill });
     };
     const rimC = `rgb(${255 * fl | 0},${170 * fl | 0},${90 * fl | 0})`;
-    rimLit(ctx, (cc, f) => people(cc, f, -1), { rim: rimC, mid: '#6a3216', dark: '#070404', dx: -7, dy: 1.5, steps: 5 });
-    rimLit(ctx, (cc, f) => people(cc, f, 1), { rim: rimC, mid: '#6a3216', dark: '#070404', dx: 7, dy: 1.5, steps: 5 });
+    rimLit(ctx, (cc, f) => people(cc, f, -1), { rim: rimC, mid: '#6a3216', dark: '#070404', dx: -7, dy: 1.5, steps: 5, box: [380, 280, 760, 760], key: 'hl' });
+    rimLit(ctx, (cc, f) => people(cc, f, 1), { rim: rimC, mid: '#6a3216', dark: '#070404', dx: 7, dy: 1.5, steps: 5, box: [1050, 280, 480, 720], key: 'hr' });
     K.embers(ctx, t, { n: 22, heat: 0.7, x: HEARTH.x - 260, y: 120, w: 520, h: 760, seed: 512 });
     // the farmer close to us on the bench, his back to the lens, black against the fire; his fork against the bench
     view(ctx, c, 1.45);
-    rimLit(ctx, (cc, f) => { person(cc, { x: 260, y: 1720, h: 1150, face: 1, sit: 0.3, dress: 'tunic', hat: 'hood', lean: 0.28, armN: [0.35, 0.5], armF: [0.3, 0.5], tilt: 0.12, bulk: 1.15, fill: f }); }, { rim: rimC, mid: '#5a2a12', dark: '#030202', dx: -9, dy: 3, steps: 5 });
+    rimLit(ctx, (cc, f) => { person(cc, { x: 260, y: 1720, h: 1150, face: 1, sit: 0.3, dress: 'tunic', hat: 'hood', lean: 0.28, armN: [0.35, 0.5], armF: [0.3, 0.5], tilt: 0.12, bulk: 1.15, fill: f }); }, { rim: rimC, mid: '#5a2a12', dark: '#030202', dx: -9, dy: 3, steps: 5, box: [0, 700, 900, 380], key: 'hf' });
     // the table's edge at the right, out of focus, a candle on it soft as a coin of light
     view(ctx, c, 1.9);
     ctx.fillStyle = '#040303'; ctx.beginPath(); ctx.moveTo(1640, 980); ctx.lineTo(2300, 940); ctx.lineTo(2300, 1400); ctx.lineTo(1640, 1400); ctx.closePath(); ctx.fill();
@@ -1416,14 +1426,16 @@
   // The table as a texture laid flat in the camera's heading frame (drawn with canvas operations and lit by a light map:
   // the candles' pools, the hearth from the right, a cool dark ambient), then drawn in perspective one band of screen
   // rows at a time, so the camera can glide forward over it. The ring's ink catches the candle where its reflection falls.
-  const PASS = (() => {
-    const hm = K.map.home, ring = BC.fromM(hm.x / K.map.W, hm.y / K.map.H), cand = BC.CANDLES[0];
+  const MAPK = () => K.map || { W: 2000, H: 1650, home: { x: 620, y: 575, rx: 104, ry: 74 } };
+  let PASS_ = null;
+  const PASSF = () => PASS_ || (PASS_ = (() => {
+    const hm = MAPK().home, ring = BC.fromM(hm.x / MAPK().W, hm.y / MAPK().H), cand = BC.CANDLES[0];
     const dx = cand[0] - ring[0], dy = cand[1] - ring[1], dl = Math.hypot(dx, dy), hd = [dx / dl, dy / dl], R = [hd[1], -hd[0]];
     return { ring, cand, hd, R, O: [ring[0] - 46 * R[0] - 50 * hd[0], ring[1] - 46 * R[1] - 50 * hd[1]], LW: 92, LF: 100, s: 24 };
-  })();
+  })());
   function passTex() {
     return K.cached('s7:passTex', () => {
-      const P = PASS, w = Math.round(P.LW * P.s), h = Math.round(P.LF * P.s), c = K.canvas(w, h), x = c.getContext('2d');
+      const P = PASSF(), w = Math.round(P.LW * P.s), h = Math.round(P.LF * P.s), c = K.canvas(w, h), x = c.getContext('2d');
       // table cm -> texture px: x along R, y against the heading (forward is up)
       const toT = (X, Y) => { const ox = X - P.O[0], oy = Y - P.O[1]; return [(ox * P.R[0] + oy * P.R[1]) * P.s, h - (ox * P.hd[0] + oy * P.hd[1]) * P.s]; };
       const setT = () => { const a = toT(1, 0), b = toT(0, 1), o = toT(0, 0); x.setTransform(a[0] - o[0], a[1] - o[1], b[0] - o[0], b[1] - o[1], o[0], o[1]); };
@@ -1454,7 +1466,7 @@
   }
   // draw a texture laid on the plane Z = 0 through a heading camera, one band of rows at a time
   function mode7(ctx, tex, cam, y0, bands) {
-    const P = PASS, s = P.s, step = bands || 3;
+    const P = PASSF(), s = P.s, step = bands || 3;
     for (let y = Math.max(0, Math.ceil(y0)); y < H; y += step) {
       const row = (yy) => { const k = -(yy - cam.cy0) / cam.f, d = [cam.F[0] + cam.U[0] * k, cam.F[1] + cam.U[1] * k, cam.F[2] + cam.U[2] * k]; if (d[2] >= -1e-4) return null; const tau = (0.05 - cam.C[2]) / d[2]; return { G: [cam.C[0] + d[0] * tau, cam.C[1] + d[1] * tau], tau }; };
       const a = row(y), b = row(Math.min(H, y + step)); if (!a || !b) continue;
@@ -1464,7 +1476,7 @@
     }
   }
   function shotPass(ctx, t, sh) {
-    const P = PASS, u = span(t, sh.a - 0.5, sh.b + 0.6), k = ease(clamp(u / 0.8)), rise = smooth(span(u, 0.6, 1));
+    const P = PASSF(), u = span(t, sh.a - 0.5, sh.b + 0.6), k = ease(clamp(u / 0.8)), rise = smooth(span(u, 0.6, 1));
     // a glide toward the ring, a little to one side of the candle; the flame's reflection crosses the ink halfway; then up
     const yaw = 0.3, hd = [P.hd[0] * Math.cos(yaw) - P.hd[1] * Math.sin(yaw), P.hd[0] * Math.sin(yaw) + P.hd[1] * Math.cos(yaw)];
     const dist = lerp(46, 19, k) - rise * 4, lat = 2.5 + Math.sin(t * 0.8) * 0.3, hgt = lerp(17, 22, k) + rise * 26;
@@ -1484,11 +1496,11 @@
     { const g = ctx.createLinearGradient(0, hz - 40, 0, hz + 260); g.addColorStop(0, 'rgba(6,5,4,0.9)'); g.addColorStop(1, 'rgba(6,5,4,0)'); ctx.fillStyle = g; ctx.fillRect(0, hz - 40, W, 300); }
     // the ring's ink catches the candle: the glint follows the candle's reflection across the paper
     {
-      const hm = K.map.home, Lc = [P.cand[0], P.cand[1], P.cand[2] + 2];
+      const hm = MAPK().home, Lc = [P.cand[0], P.cand[1], P.cand[2] + 2];
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
       for (let pass = 0; pass < 2; pass++) for (let i = 0; i < 72; i++) {
         const t0 = -2.4 + pass * 0.9 + i / 72 * TAU * (pass ? 0.93 : 1.12), t1 = t0 + TAU / 72 * 1.05;
-        const pt = (tt) => { const ex = pass ? 1.05 : 0.98, ey = pass ? 0.94 : 1.03, rot = pass ? 0.06 : -0.04, ux = Math.cos(tt) * hm.rx * ex, uy = Math.sin(tt) * hm.ry * ey; const mx2 = hm.x + 4 * pass + ux * Math.cos(rot) - uy * Math.sin(rot), my2 = hm.y - 3 * pass + ux * Math.sin(rot) + uy * Math.cos(rot); return BC.fromM(mx2 / K.map.W, my2 / K.map.H); };
+        const pt = (tt) => { const ex = pass ? 1.05 : 0.98, ey = pass ? 0.94 : 1.03, rot = pass ? 0.06 : -0.04, ux = Math.cos(tt) * hm.rx * ex, uy = Math.sin(tt) * hm.ry * ey; const mx2 = hm.x + 4 * pass + ux * Math.cos(rot) - uy * Math.sin(rot), my2 = hm.y - 3 * pass + ux * Math.sin(rot) + uy * Math.cos(rot); return BC.fromM(mx2 / MAPK().W, my2 / MAPK().H); };
         const A = pt(t0), B = pt(t1), M = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
         const V = [C[0] - M[0], C[1] - M[1], C[2]], Ld = [Lc[0] - M[0], Lc[1] - M[1], Lc[2]], vl = Math.hypot(...V), ll = Math.hypot(...Ld), Hh = [V[0] / vl + Ld[0] / ll, V[1] / vl + Ld[1] / ll, V[2] / vl + Ld[2] / ll], hl = Math.hypot(...Hh);
         const cosH = Math.max(0, Hh[2] / hl), spec = Math.pow(cosH, 260) * fl, soft = Math.pow(cosH, 40) * fl;
@@ -1623,8 +1635,8 @@
     person(qx, { x: 820 + sway, y: 560, h: 620, face: 1, sit: 0.27, dress: 'robe', hat: 'hood', stoop: 0.6, beard: 0.5, hold: 'staff', armN: [0.5, 0.9], fill: f });
     person(qx, { x: 1060 + sway * 1.2, y: 600, h: 400, face: -1, child: true, sit: 0.2, dress: 'tunic', hat: 'hair', lean: 0.3, armN: [0.6, 1.4], fill: f });
     person(qx, { x: 1380 + sway * 1.4, y: 640, h: 760, face: -1, dress: 'apron', hat: 'bare', bulk: 1.25, armN: [0.3, 1.9], armF: [0.25, 1.8], fill: f });
-    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = a; ctx.imageSmoothingQuality = 'high'; ctx.filter = 'none';
-    ctx.drawImage(Q, 0, 0, W, H); ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = a; ctx.imageSmoothingQuality = 'low';
+    ctx.drawImage(Q, 520 / 6, 0, 1080 / 6, 560 / 6, 520, 0, 1080, 560); ctx.restore();
   }
   function shotBanner(ctx, t, sh) {
     const lt = t - sh.a, sc7 = K.scene(7), L48 = K.cue('L48'), L49 = K.cue('L49'), L50 = K.cue('L50'), cam = BC.cam;
@@ -1636,20 +1648,25 @@
     const fl = flick(t, 21, 7), hf = 0.85 + 0.15 * K.noise(t * 2.2, 3, 33) + 0.06 * Math.sin(t * 7.1);
     const RW = tableRender('wide', cam, -60, 300, 2040, 860, 1.12, { tex: 0.25 });
     const bb = (() => { const q = [[0, 0], [70, 0], [70, 99], [35, 115], [0, 99]].map(([a, b]) => { const p = BC.fromB(a, b); return cam.proj3(p[0], p[1], 0); }); const xs = q.map(v => v[0]), ys = q.map(v => v[1]); return [Math.min(...xs) - 70, Math.min(...ys) - 60, Math.max(...xs) - Math.min(...xs) + 140, Math.max(...ys) - Math.min(...ys) + 120]; })();
-    const RC = tableRender('close', cam, Math.round(bb[0]), Math.round(bb[1]), Math.round(bb[2]), Math.round(bb[3]), 2.2, { tex: 0.5, feather: 60 });
+    const RC = tableRender('close', cam, Math.round(bb[0]), Math.round(bb[1]), Math.round(bb[2]), Math.round(bb[3]), 2.2, { tex: 0.5, feather: 60, rise: true });
     ctx.save();
     ctx.fillStyle = '#040303'; ctx.fillRect(0, 0, W, H);
     // the wall, its window of rain, the people's shadows on it
     view(ctx, c, 0.75);
-    const WI = wallImg(); ctx.drawImage(WI.c, -WI.OX, 0);
+    const WI = wallImg(); if (cyv - H / 2 / zz < 470) ctx.drawImage(WI.c, -WI.OX, 0);
     { const [wx, wy, ww, wh] = WALL.win; ctx.save(); ctx.beginPath(); ctx.rect(wx, wy, ww, wh); ctx.clip(); ctx.strokeStyle = 'rgba(150,170,200,0.35)'; ctx.lineWidth = 1; const rr = rng(1301); for (let i = 0; i < 40; i++) { const x0 = wx + rr() * ww, sp = 300 + rr() * 300, yy = wy + ((rr() * wh + t * sp) % (wh + 40)) - 20; ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x0 - 4, yy + 18 + rr() * 14); ctx.stroke(); } glow(ctx, [90, 110, 150], wx + ww / 2, wy + wh / 2, ww * 0.9, 0.12); ctx.restore(); }
     wallShadows(ctx, t, 0.62 * (1 - rise * 0.5));
-    glow(ctx, [255, 140, 60], 1900, 300, 900, 0.16 * hf);
+    glow(ctx, [255, 140, 60], 1900, 300, 620, 0.2 * hf);
     // the table, sharper over the standard
     view(ctx, c, 1.0);
-    const ic = 0.95 * fl * (1 + 0.3 * rise), ih = 0.9 * hf * (1 + 0.45 * rise);
-    drawBannerRender(ctx, RW, ic, ih);
-    drawBannerRender(ctx, RC, ic, ih);
+    const ic = 0.92 * fl * (1 + 0.18 * rise), ih = 0.9 * hf * (1 + 0.45 * rise);
+    // the wide picture is only needed while the view reaches beyond the sharp one
+    const vx0 = cxv - W / 2 / zz, vy0 = cyv - H / 2 / zz, vx1 = cxv + W / 2 / zz, vy1 = cyv + H / 2 / zz, m = 70;
+    const wideNeeded = !(vx0 > RC.x0 + m && vy0 > RC.y0 + m && vx1 < RC.x0 + RC.w - m && vy1 < RC.y0 + RC.h - m), sharp = zz > 1.22;
+    // the wide picture carries the room's light; the candles' flicker, and the light rising, play on the sharp one
+    if (wideNeeded) drawBannerRender(ctx, RW, sharp ? 0 : ic);
+    if (sharp) { drawBannerRender(ctx, RC, ic); if (rise > 0.01 && RC.rise) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.3 * rise * (0.9 + 0.1 * fl); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(RC.rise, RC.x0, RC.y0, RC.w, RC.h); ctx.restore(); } }
+    glow(ctx, [255, 120, 50], 1560, 520, 560, 0.1 * (ih - 0.8));
     // the table's front edge
     { const A = cam.proj3(-105, -58, 0), B = cam.proj3(105, -58, 0); ctx.fillStyle = '#060404'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.lineTo(B[0], B[1] + 200); ctx.lineTo(A[0], A[1] + 200); ctx.closePath(); ctx.fill(); }
     crossbar(ctx, cam, 0.62 * ic + 0.25); threadAndNeedle(ctx, cam, t);
@@ -1659,7 +1676,7 @@
     for (let i = 0; i < 70; i++) { const T2 = tops[i % 2], ph = dr() * TAU, rad = 40 + dr() * 260, sp = 0.05 + dr() * 0.12, x = T2[0] + Math.cos(ph + t * sp) * rad, y = T2[1] + Math.sin(ph * 1.3 + t * sp * 0.8) * rad * 0.6 - 30; const a = 0.25 * (1 - rad / 300) * (0.5 + 0.5 * Math.sin(t * 1.3 + ph * 5)); ctx.fillStyle = `rgba(255,220,170,${clamp(a)})`; ctx.fillRect(x, y, 1.6, 1.6); }
     ctx.restore();
     // the light rises on the standard: a warm bloom gathers over the cloth
-    if (rise > 0) { const ctr = BC.fromB(36, 52), q = cam.proj3(ctr[0], ctr[1], 1); glow(ctx, [255, 186, 110], q[0], q[1], 640, 0.16 * rise * fl); glow(ctx, [255, 220, 170], q[0] - 60, q[1] - 80, 300, 0.1 * rise * fl); }
+    if (rise > 0) { const ctr = BC.fromB(36, 52), q = cam.proj3(ctr[0], ctr[1], 1); glow(ctx, [255, 150, 80], q[0] + 40, q[1] + 30, 560, 0.1 * rise * fl); }
     ctx.restore();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     K.embers(ctx, t, { n: 16, heat: 0.5 + 0.3 * rise, x: 900, y: 0, w: 1100, h: 900, seed: 77 });
@@ -1669,11 +1686,6 @@
     void lt;
   }
 
-  // ================================================================ stand-ins for shots still to be built
-  function stand(label, rgb) {
-    return (ctx, t, sh) => { ctx.fillStyle = `rgb(${rgb})`; ctx.fillRect(0, 0, W, H); K.text(ctx, label, W / 2, H / 2, '500 40px Cinzel', P.bone, 6, 'center', 0.7); K.text(ctx, (t - sh.a).toFixed(2), W / 2, H / 2 + 60, '400 28px Cinzel', P.ash, 2, 'center', 0.6); };
-  }
-
   // ================================================================ the cut: shots keyed to the narration
   let PLAN = null;
   function plan(sc) {
@@ -1681,11 +1693,11 @@
     const c = K.cue, L44 = c('L44'), L45 = c('L45'), L46 = c('L46'), L47 = c('L47'), L48 = c('L48');
     const b = [sc.start, L44.start - 0.1, lerp(L44.start, L44.end, 0.5), L45.start - 0.1, lerp(L45.start, L45.end, 0.36), lerp(L45.start, L45.end, 0.58), L45.end + 0.25, L46.start + 0.45, L47.start + 0.4, L48.start - 0.1, sc.end + 2];
     const S = [
-      { id: 'muster', fn: shotMuster, x: 0.3 },
-      { id: 'firstborn', fn: shotFirstborn, x: 0.3 },
-      { id: 'traitor', fn: shotTraitor, x: 0.3 },
-      { id: 'road', fn: shotRoad, x: 0.25 },
-      { id: 'seal', fn: shotSeal, x: 0.25 },
+      { id: 'muster', fn: shotMuster, x: 0 },
+      { id: 'firstborn', fn: shotFirstborn, x: 0 },
+      { id: 'traitor', fn: shotTraitor, x: 0 },
+      { id: 'road', fn: shotRoad, x: 0 },
+      { id: 'seal', fn: shotSeal, x: 0 },
       { id: 'archive', fn: shotArchive, x: 0.6 },
       { id: 'hallOut', fn: shotHallOut, x: 0.7 },
       { id: 'pass', fn: shotPass, x: 0.8 },
@@ -1697,7 +1709,6 @@
   }
 
   SCENES[7] = {
-    _dbg: { tableRender: (...a) => tableRender(...a), BC: () => BC, surf: (...a) => surf(...a), person: (...a) => person(...a), fire: (...a) => fire(...a), rimLit: (...a) => rimLit(...a), wyvern: (...a) => wyvern(...a) },
     join: 'cut',
     draw(ctx, t, sc) {
       const S = plan(sc);
@@ -1706,17 +1717,19 @@
       let i = S.findIndex(s => t < s.b); if (i < 0) i = S.length - 1;
       const cur = S[i], prev = S[i - 1];
       const inPrev = prev && t < cur.a + prev.x / 2;
-      if (inPrev) {
-        prev.fn(ctx, t, prev);
-        const L = K.layer('s7:next'), lx = L.getContext('2d'); cur.fn(lx, t, cur);
-        ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = smooth((t - (cur.a - prev.x / 2)) / prev.x); ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
-      } else {
+      const mixTwo = (A, B, k) => {
+        MIXING = true;
+        A.fn(ctx, t, A);
+        const L = K.layer('s7:next'), lx = L.getContext('2d'); B.fn(lx, t, B);
+        MIXING = false;
+        ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = k; ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
+        bloom(ctx, 0.3);
+      };
+      if (inPrev) mixTwo(prev, cur, smooth((t - (cur.a - prev.x / 2)) / prev.x));
+      else {
         const nxt = S[i + 1];
-        if (nxt && t > cur.b - cur.x / 2) {
-          cur.fn(ctx, t, cur);
-          const L = K.layer('s7:next'), lx = L.getContext('2d'); nxt.fn(lx, t, nxt);
-          ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = smooth((t - (cur.b - cur.x / 2)) / cur.x); ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
-        } else cur.fn(ctx, t, cur);
+        if (nxt && t > cur.b - cur.x / 2) mixTwo(cur, nxt, smooth((t - (cur.b - cur.x / 2)) / cur.x));
+        else cur.fn(ctx, t, cur);
       }
       ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
       if (t < sc.start + 3.6) drawBurn(ctx, t, sc);

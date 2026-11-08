@@ -177,7 +177,8 @@
         let e = cm[2] < NEAR ? 1e9 : Math.hypot(C.cx + f * cm[0] / cm[2] - (sp[0][0] + sp[1][0] + sp[2][0] + sp[3][0]) / 4, C.cy - f * cm[1] / cm[2] - (sp[0][1] + sp[1][1] + sp[2][1] + sp[3][1]) / 4);
         e += Math.hypot(sp[0][0] - sp[1][0] - sp[3][0] + sp[2][0], sp[0][1] - sp[1][1] - sp[3][1] + sp[2][1]) / 4;
         // refine when the affine is off, or when this level's texels are being magnified
-        if (e * k > err || (lev > 0 && ext > sz * tpm * 1.3)) { kids(); continue; }
+        const magG = ext / (sz * tpm);
+        if (e * k > err * clamp(magG / 1.2, 1, 6) || (lev > 0 && ext > sz * tpm * 1.3)) { kids(); continue; }
       }
       cellImg(ctx, mips, GUT + ux * tpm, GUT + uz * tpm, GUT + (ux + sz) * tpm, GUT + (uz + sz) * tpm, sp[0], sp[1], sp[2], sp[3], k, o.pad != null ? o.pad : 1);
     }
@@ -264,9 +265,8 @@
       // seams between the squares
       x.strokeStyle = 'rgba(10,7,4,0.9)'; x.lineWidth = 0.035 * ppm;
       for (let i = 0; i <= 8; i++) { const u = X(-HB + i * SQ); x.beginPath(); x.moveTo(u, X(-HB)); x.lineTo(u, X(HB)); x.moveTo(X(-HB), u); x.lineTo(X(HB), u); x.stroke(); }
-      x.strokeStyle = 'rgba(0,0,0,0.25)'; x.lineWidth = 0.09 * ppm; x.filter = 'blur(2px)';
+      x.strokeStyle = 'rgba(0,0,0,0.16)'; x.lineWidth = 0.12 * ppm;
       for (let i = 0; i <= 8; i++) { const u = X(-HB + i * SQ); x.beginPath(); x.moveTo(u, X(-HB)); x.lineTo(u, X(HB)); x.moveTo(X(-HB), u); x.lineTo(X(HB), u); x.stroke(); }
-      x.filter = 'none';
       return c;
     });
   }
@@ -330,17 +330,23 @@
   function lightImage(C, L, by) {
     const c = K.cached('s6:limg', () => K.canvas(LW, LH)), x = c.getContext('2d');
     if (!LIMG) LIMG = x.createImageData(LW, LH);
-    const d = LIMG.data, ls = L.lights, nl = ls.length;
-    for (let j = 0; j < LH; j++) for (let i = 0; i < LW; i++) {
-      const k = (j * LW + i) * 4, X = ((i + 0.5) * W / LW - C.cx) / C.f, Y = -((j + 0.5) * H / LH - C.cy) / C.f;
-      const dx = X * C.rx + Y * C.ux + C.fx, dy = X * C.ry + Y * C.uy + C.fy, dz = X * C.rz + Y * C.uz + C.fz;
-      if (dy > -1e-6) { d[k] = d[k + 1] = d[k + 2] = 255; d[k + 3] = 0; continue; }
-      let tt = (by - C.py) / dy, px = C.px + tt * dx, pz = C.pz + tt * dz;
-      if (!(by > 0.005 && Math.abs(px) <= BE && Math.abs(pz) <= BE)) { tt = -C.py / dy; px = C.px + tt * dx; pz = C.pz + tt * dz; }
-      let r = L.amb[0], g = L.amb[1], b = L.amb[2];
-      for (let q = 0; q < nl; q++) { const l = ls[q], ex = px - l.x, ez = pz - l.z, e = (ex * ex + ez * ez) / (l.r * l.r); if (e < 1) { const f = l.a * (1 - e) * (1 - e) / (1 + e * 6); r += l.c[0] * f; g += l.c[1] * f; b += l.c[2] * f; } }
-      if (L.fn) { const m = L.fn(px, pz, true); r *= m[0]; g *= m[1]; b *= m[2]; }
-      d[k] = r > 255 ? 255 : r; d[k + 1] = g > 255 ? 255 : g; d[k + 2] = b > 255 ? 255 : b; d[k + 3] = 255;
+    const d = LIMG.data, ls = L.lights, nl = ls.length, LC = new Float64Array(nl * 6);
+    for (let q = 0; q < nl; q++) { const l = ls[q]; LC[q * 6] = l.x; LC[q * 6 + 1] = l.z; LC[q * 6 + 2] = 1 / (l.r * l.r); LC[q * 6 + 3] = l.c[0] * l.a; LC[q * 6 + 4] = l.c[1] * l.a; LC[q * 6 + 5] = l.c[2] * l.a; }
+    const ar = L.amb[0], ag = L.amb[1], ab = L.amb[2], eald = L.eald || 0, arena = L.arena || 0, sx = W / LW, sy = H / LH, f = C.f, raise = by > 0.005;
+    for (let j = 0; j < LH; j++) {
+      const Y = -((j + 0.5) * sy - C.cy) / f;
+      for (let i = 0; i < LW; i++) {
+        const k = (j * LW + i) * 4, X = ((i + 0.5) * sx - C.cx) / f;
+        const dx = X * C.rx + Y * C.ux + C.fx, dy = X * C.ry + Y * C.uy + C.fy, dz = X * C.rz + Y * C.uz + C.fz;
+        if (dy > -1e-6) { d[k] = d[k + 1] = d[k + 2] = 255; d[k + 3] = 0; continue; }
+        let tt = (by - C.py) / dy, px = C.px + tt * dx, pz = C.pz + tt * dz;
+        if (!(raise && px <= BE && px >= -BE && pz <= BE && pz >= -BE)) { tt = -C.py / dy; px = C.px + tt * dx; pz = C.pz + tt * dz; }
+        let r = ar, g = ag, b = ab;
+        for (let q = 0; q < nl * 6; q += 6) { const ex = px - LC[q], ez = pz - LC[q + 1], e = (ex * ex + ez * ez) * LC[q + 2]; if (e < 1) { const w = (1 - e) * (1 - e) / (1 + e * 6); r += LC[q + 3] * w; g += LC[q + 4] * w; b += LC[q + 5] * w; } }
+        if (eald > 0 && pz > 2) { let u = (pz - 2) / 6; u = u > 1 ? 1 : u; u = u * u * (3 - 2 * u) * eald; r *= 1 - 0.38 * u; g *= 1 - 0.22 * u; b *= 1 + 0.1 * u; }
+        if (arena > 0) { const dd = Math.max(Math.abs(px), Math.abs(pz)); if (dd > AW - 1) { let u = (dd - AW + 1) / 2; u = u > 1 ? 1 : u; const kk = 1 - arena * u; r *= kk; g *= kk; b *= kk; } }
+        d[k] = r > 255 ? 255 : r; d[k + 1] = g > 255 ? 255 : g; d[k + 2] = b > 255 ? 255 : b; d[k + 3] = 255;
+      }
     }
     x.putImageData(LIMG, 0, 0);
     return c;
@@ -470,6 +476,10 @@
   }
 
 
+  // soft sprites, drawn scaled instead of building gradients every frame
+  function glowSprite(rgb) { return K.cached('s6:glow:' + rgb.join(','), () => { const n = 128, c = K.canvas(n, n), x = c.getContext('2d'), g = x.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2); g.addColorStop(0, `rgba(${rgb},1)`); g.addColorStop(0.4, `rgba(${rgb},0.35)`); g.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = g; x.fillRect(0, 0, n, n); return c; }); }
+  function glowS(ctx, x, y, r, rgb, a) { if (a <= 0.003 || r < 1) return; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, a); ctx.drawImage(glowSprite(rgb), x - r, y - r, 2 * r, 2 * r); ctx.restore(); }
+  function blobSprite() { return K.cached('s6:blob', () => { const n = 128, c = K.canvas(n, n), x = c.getContext('2d'), g = x.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2); g.addColorStop(0, 'rgba(5,3,2,1)'); g.addColorStop(0.5, 'rgba(5,3,2,0.4)'); g.addColorStop(1, 'rgba(5,3,2,0)'); x.fillStyle = g; x.fillRect(0, 0, n, n); return c; }); }
   // ---------------------------------------------------------------- the state of the world over time
   const BYMAX = 0.55;                                    // the board's slab rises this far above the arena floor
   function boardY(t) { const T = TT(); return BYMAX * ease(span(t, T.rise0 + 0.6, T.rise1)); }
@@ -482,17 +492,17 @@
   function lights(t) {
     const T = TT(), tw = worldT(t), bf = battle(t), L = { amb: [0, 0, 0], lights: [], cold: 0 };
     // the field under a red sky
-    const sky = [lerp(40, 205, bf), lerp(30, 116, bf), lerp(32, 92, bf)];
+    const sky = [lerp(40, 205, bf), lerp(44, 116, bf), lerp(58, 92, bf)];
     L.amb = sky;
     const still = win(t, T.still0, T.still1 + 0.6, 0.5, 0.8), eald = win(t, T.dis0 - 0.8, T.bor1 + 0.6, 1.0, 1.4);
     for (let i = 0; i < 4; i++) {
       const fr = fire(i, t); if (fr <= 0) continue;
       const fl = flick(i, tw) * fr * (1 - 0.35 * still);
       const [bx, bz] = BRAZ[i], dimB = bz > 0 ? 1 - 0.55 * eald : 1;
-      L.lights.push({ x: bx, z: bz, r: 19, c: [255, 158, 82], a: 1.15 * fl * dimB, sa: 1.15 * qn(fr * (1 - 0.35 * still) * dimB, 0.05) * 0.88, y: BRZH, fire: true });
+      L.lights.push({ x: bx, z: bz, r: 20, c: [255, 150, 70], a: 1.25 * fl * dimB, sa: 1.25 * qn(fr * (1 - 0.35 * still) * dimB, 0.05) * 0.88, y: BRZH, fire: true });
     }
-    const arena = 1 - bf;
-    L.lights.push({ x: 0, z: -2, r: 17, c: [150, 118, 104], a: 0.62 * arena * (1 - 0.45 * still), y: 14 });
+    const arena = 1 - bf; L.arena = arena;
+    L.lights.push({ x: 0, z: 0, r: 19, c: [150, 132, 128], a: 0.8 * arena * (1 - 0.45 * still), sa: 0.8 * qn(arena * (1 - 0.45 * still), 0.05), y: 14 });
     // the dais of the Seven
     L.lights.push({ x: 21, z: 0, r: 11, c: [255, 150, 90], a: 0.7 * arena * flick(5, tw), sa: 0.62 * arena, y: 4 });
     // the cold light of the law (L33-L34)
@@ -561,7 +571,7 @@
       const type = BACK[f];
       const q = mk({ id: 'B' + type + f, side: 'B', type, f, rank: 7, house: type === 'K' ? EH : null, ang: Math.PI, own: type !== 'K' });
       walk(q, T.walk0 + st + 0.25, T.walk1 - (0.3 - st * 0.5), sqX(f), sqZ(7) + 9, sqX(f), sqZ(7));
-      if (q.own) { const d0 = T.dis0 + [0.0, 0.5, 0.25, 0.75, 0, 0.35, 0.6, 0.1][f] * (T.dis1 - T.dis0) * 0.75; q.dis = [d0, d0 + 1.1]; }
+      if (q.own) { const d0 = T.dis0 + [0.0, 0.5, 0.25, 0.75, 0, 0.35, 0.6, 0.1][f] * (T.dis1 - T.dis0) * 0.7; q.dis = [d0, d0 + 1.7]; }
       // the borrowed champion of one of the Seven, with its price (a coin and a chain on the pawn before it)
       if (type !== 'K') {
         const i = [0, 1, 2, 3, -1, 4, 5, 6][f], t0 = T.bor0 + i * (T.bor1 - T.bor0 - 1.7) / 6;
@@ -631,7 +641,7 @@
   //   pavise (house|null), arms (house|null), armsA, walk, sway, col: { cloth, cloth2, trim, skin, hair, steel, wood, gold,
   //   leg, boot, veil, field, charge }, beard, seated }
   function person(x, o) {
-    const c = o.col, v = o.view || 'side', front = v !== 'side', back = v === 'back';
+    const c = o.col, v = o.view || 'side', front = v !== 'side', back = v === 'back', lod = o.lod || 0;
     const long = o.kind === 'robe' || o.kind === 'gown', hemY = o.seated ? -0.43 : long ? -0.012 : o.kind === 'rags' ? -0.25 : -0.29;
     const wk = o.walk, sw = wk != null ? Math.sin(wk) : 0, sw2 = wk != null ? Math.cos(wk) : 0, bob = wk != null ? -Math.abs(Math.cos(wk)) * 0.012 : 0;
     const F = (col, fn) => { x.fillStyle = col; x.beginPath(); fn(); x.fill(); };
@@ -659,7 +669,7 @@
       const sx = near ? 0.01 : -0.02, sy = -0.795, ex = sx + Math.sin(a) * 0.165, ey = sy + Math.cos(a) * 0.165, hx = ex + Math.sin(a + b) * 0.15, hy = ey + Math.cos(a + b) * 0.15;
       F(sleeve, () => { const n = Math.atan2(ey - sy, ex - sx) + Math.PI / 2, m = Math.atan2(hy - ey, hx - ex) + Math.PI / 2; x.moveTo(sx + Math.cos(n) * 0.04, sy + Math.sin(n) * 0.04); x.lineTo(ex + Math.cos(n) * 0.033, ey + Math.sin(n) * 0.033); x.lineTo(hx + Math.cos(m) * 0.026, hy + Math.sin(m) * 0.026); x.lineTo(hx - Math.cos(m) * 0.026, hy - Math.sin(m) * 0.026); x.lineTo(ex - Math.cos(n) * 0.033, ey - Math.sin(n) * 0.033); x.lineTo(sx - Math.cos(n) * 0.04, sy - Math.sin(n) * 0.04); x.closePath(); });
       if (wide) F(sleeve, () => { x.moveTo(ex, ey); x.quadraticCurveTo(lerp(ex, hx, 0.8) - 0.03, lerp(ey, hy, 0.8) + 0.06, hx - 0.05, hy + 0.1); x.lineTo(hx + 0.02, hy - 0.01); x.closePath(); });
-      F(hand, () => { x.ellipse(hx + Math.sin(a + b) * 0.018, hy + Math.cos(a + b) * 0.018, 0.022, 0.027, a + b, 0, TAU); });
+      F(shadeHex(hand, -0.18), () => { x.ellipse(hx + Math.sin(a + b) * 0.014, hy + Math.cos(a + b) * 0.014, 0.017, 0.021, a + b, 0, TAU); });
       return [hx + Math.sin(a + b) * 0.02, hy + Math.cos(a + b) * 0.02];
     };
     const wide = o.kind === 'robe';
@@ -670,20 +680,20 @@
     // ---- the body: torso and skirt in one
     const flare = long ? (o.kind === 'gown' ? 1.15 : 1.25) : 0.95;
     if (front) {
+      if (lod) x.strokeStyle = '#000';
       F(o.kind === 'mail' ? c.steel : c.cloth, () => { x.moveTo(-0.035, -0.85); x.quadraticCurveTo(-0.115, -0.845, -0.122, -0.79); x.bezierCurveTo(-0.118, -0.7, -0.088, -0.64, -0.085, -0.58); x.bezierCurveTo(-0.1, -0.45, -0.15 * flare + sway, hemY - 0.1, -0.16 * flare + sway, hemY); x.quadraticCurveTo(0, hemY + 0.015, 0.16 * flare + sway, hemY); x.bezierCurveTo(0.15 * flare + sway, hemY - 0.1, 0.1, -0.45, 0.085, -0.58); x.bezierCurveTo(0.088, -0.64, 0.118, -0.7, 0.122, -0.79); x.quadraticCurveTo(0.115, -0.845, 0.035, -0.85); x.closePath(); });
       // a surcoat or tabard over mail, in the house colours
       if (o.kind === 'mail') F(c.cloth, () => { x.moveTo(-0.08, -0.8); x.lineTo(0.08, -0.8); x.lineTo(0.095, -0.58); x.lineTo(0.12, hemY + 0.02); x.lineTo(-0.12, hemY + 0.02); x.lineTo(-0.095, -0.58); x.closePath(); });
       // folds
-      x.save(); x.globalAlpha *= 0.22; x.strokeStyle = '#000'; x.lineWidth = 0.008;
-      for (const fx of [-0.06, 0.0, 0.06]) { x.beginPath(); x.moveTo(fx * 0.6, -0.56); x.quadraticCurveTo(fx * 1.2, -0.3, fx * 1.9 * flare, hemY + 0.005); x.stroke(); }
-      x.restore();
+      if (!lod) x.save(); if (!lod) x.globalAlpha *= 0.22; x.strokeStyle = '#000'; x.lineWidth = 0.008;
+      if (!lod) { for (const fx of [-0.06, 0.0, 0.06]) { x.beginPath(); x.moveTo(fx * 0.6, -0.56); x.quadraticCurveTo(fx * 1.2, -0.3, fx * 1.9 * flare, hemY + 0.005); x.stroke(); } x.restore(); }
       if (o.belt !== false) F(c.trim, () => x.rect(-0.088, -0.585, 0.176, 0.022));
     } else {
       F(o.kind === 'mail' ? c.steel : c.cloth, () => { const s3 = wk != null ? Math.sin(wk * 2) * 0.01 : 0; x.moveTo(-0.025, -0.85); x.quadraticCurveTo(-0.075, -0.84, -0.075, -0.79); x.bezierCurveTo(-0.08, -0.7, -0.07, -0.63, -0.065, -0.58); x.bezierCurveTo(-0.09, -0.45, -0.13 * flare + sway, hemY - 0.12, -0.14 * flare - s3 + sway, hemY); x.quadraticCurveTo(0, hemY + 0.012, 0.14 * flare + s3 + sway + (wk != null ? 0.02 : 0), hemY); x.bezierCurveTo(0.12 * flare + sway, hemY - 0.12, 0.08, -0.45, 0.07, -0.58); x.bezierCurveTo(0.075, -0.64, 0.085, -0.72, 0.075, -0.79); x.quadraticCurveTo(0.07, -0.84, 0.03, -0.85); x.closePath(); });
       if (o.kind === 'mail') F(c.cloth, () => { x.moveTo(-0.06, -0.8); x.lineTo(0.065, -0.8); x.lineTo(0.075, -0.58); x.lineTo(0.11, hemY + 0.02); x.lineTo(-0.11, hemY + 0.02); x.lineTo(-0.065, -0.58); x.closePath(); });
-      x.save(); x.globalAlpha *= 0.2; x.strokeStyle = '#000'; x.lineWidth = 0.008;
+      if (!lod) { x.save(); x.globalAlpha *= 0.2; x.strokeStyle = '#000'; x.lineWidth = 0.008;
       for (const fx of [-0.05, 0.02, 0.07]) { x.beginPath(); x.moveTo(fx * 0.5, -0.56); x.quadraticCurveTo(fx * 0.9, -0.3, fx * 1.6 * flare, hemY + 0.005); x.stroke(); }
-      x.restore();
+      x.restore(); }
       if (o.belt !== false) F(c.trim, () => x.rect(-0.07, -0.585, 0.145, 0.022));
     }
     if (legs && !front) leg(1, wk || 0, c.leg);
@@ -700,11 +710,12 @@
       const ha = upHold ? 0.5 : 0.12, hb = upHold ? 0.9 : 0.15;
       // right (screen-left when facing us) hangs; left holds
       const s = o.hold === 'none' && wk != null ? sw * 0.15 : 0;
-      x.save(); x.scale(-1, 1); arm(true, 0.12 + s, 0.15, o.kind === 'mail' ? c.steel : c.cloth, c.skin, wide); x.restore();
+      if (!(o.hero && !o.lod)) { x.save(); x.scale(-1, 1); arm(true, 0.12 + s, 0.15, o.kind === 'mail' ? c.steel : c.cloth, c.skin, wide); x.restore(); }
       if (o.hold === 'spear' || o.hold === 'lance' || o.hold === 'banner') { hand = [0.165, -0.56]; holdItem(x, o, c, hand, true); }
       if (o.hold === 'crozier') { hand = [0.16, -0.6]; holdItem(x, o, c, hand, true); }
-      x.save(); arm(true, upHold ? 0.42 : 0.12 - s, upHold ? 0.95 : 0.15, o.kind === 'mail' ? c.steel : c.cloth, c.skin, wide); x.restore();
-      if (o.hold === 'sceptre') holdItem(x, o, c, [0.15, -0.55], true);
+      if (!(o.hero && !o.lod)) { x.save(); arm(true, upHold ? 0.42 : 0.12 - s, upHold ? 0.95 : 0.15, o.kind === 'mail' ? c.steel : c.cloth, c.skin, wide); x.restore(); }
+      if (o.hold === 'sceptre' && !(o.hero && !o.lod)) holdItem(x, o, c, [0.15, -0.55], true);
+      if (o.hero && !o.lod && !back) heroHands(x, o, c);
       if (o.pavise && !back) pavise(x, o, c, true);
     } else {
       const a = upHold ? 0.45 : o.hold === 'sceptre' ? 0.9 : (wk != null ? -0.35 * sw : 0.08), b = upHold ? 1.05 : o.hold === 'sceptre' ? 0.9 : 0.25;
@@ -716,6 +727,13 @@
     x.restore();
   }
   function shadeHex(h, k) { const A = hexRGB(h); return toHex(A[0] * (1 + k), A[1] * (1 + k), A[2] * (1 + k)); }
+  // hands folded on a sceptre held upright before the body (kings), or clasped (queens)
+  function heroHands(x, o, c) {
+    const F = (col, fn) => { x.fillStyle = col; x.beginPath(); fn(); x.fill(); };
+    if (o.hold === 'sceptre' || o.kind === 'robe') { F(c.gold || '#c9a14a', () => x.rect(-0.008, -0.78, 0.016, 0.42)); F(c.gold || '#c9a14a', () => x.arc(0, -0.8, 0.024, 0, TAU)); }
+    for (const s of [-1, 1]) F(shadeHex(c.cloth, -0.1), () => { x.moveTo(s * 0.11, -0.74); x.quadraticCurveTo(s * 0.09, -0.62, s * 0.03, -0.585); x.lineTo(s * 0.012, -0.55); x.quadraticCurveTo(s * 0.08, -0.6, s * 0.135, -0.7); x.closePath(); });
+    F(shadeHex(c.skin, -0.12), () => { x.ellipse(-0.012, -0.575, 0.026, 0.02, 0.3, 0, TAU); x.ellipse(0.014, -0.565, 0.026, 0.02, -0.3, 0, TAU); });
+  }
   function head(x, o, c, front, back) {
     const F = (col, fn) => { x.fillStyle = col; x.beginPath(); fn(); x.fill(); };
     const hy = -0.935, hd = o.head;
@@ -727,13 +745,23 @@
     if (back) { if (hd !== 'hood' && hd !== 'veil' && hd !== 'helm') F(c.hair, () => x.ellipse(0, hy, 0.05, 0.066, 0, 0, TAU)); }
     else if (front) {
       F(c.skin, () => x.ellipse(0, hy + 0.008, 0.045, 0.06, 0, 0, TAU));
-      x.fillStyle = 'rgba(20,10,6,0.55)'; x.beginPath(); x.ellipse(-0.017, hy, 0.007, 0.004, 0, 0, TAU); x.ellipse(0.017, hy, 0.007, 0.004, 0, 0, TAU); x.fill();
-      x.fillStyle = 'rgba(40,20,10,0.25)'; x.beginPath(); x.moveTo(0, hy + 0.005); x.lineTo(0.006, hy + 0.025); x.lineTo(-0.004, hy + 0.027); x.closePath(); x.fill();
-      if (o.beard) F(c.hair, () => { x.moveTo(-0.04, hy + 0.02); x.quadraticCurveTo(-0.035, hy + 0.08, 0, hy + 0.09); x.quadraticCurveTo(0.035, hy + 0.08, 0.04, hy + 0.02); x.quadraticCurveTo(0, hy + 0.045, -0.04, hy + 0.02); x.closePath(); });
+      if (o.hero && !o.lod) {
+        // a finer face: shaded cheek, brows, eyes, nose, mouth
+        const g = x.createRadialGradient(0.012, hy - 0.01, 0.005, 0, hy + 0.01, 0.07); g.addColorStop(0, 'rgba(255,230,210,0.12)'); g.addColorStop(1, 'rgba(40,20,10,0.32)'); x.fillStyle = g; x.beginPath(); x.ellipse(0, hy + 0.008, 0.045, 0.06, 0, 0, TAU); x.fill();
+        x.strokeStyle = 'rgba(40,24,14,0.7)'; x.lineWidth = 0.0045; x.lineCap = 'round';
+        x.beginPath(); x.moveTo(-0.03, hy - 0.016); x.quadraticCurveTo(-0.018, hy - 0.022, -0.007, hy - 0.016); x.moveTo(0.007, hy - 0.016); x.quadraticCurveTo(0.018, hy - 0.022, 0.03, hy - 0.016); x.stroke();
+        x.fillStyle = 'rgba(30,16,10,0.8)'; x.beginPath(); x.ellipse(-0.018, hy - 0.004, 0.008, 0.0042, 0, 0, TAU); x.ellipse(0.018, hy - 0.004, 0.008, 0.0042, 0, 0, TAU); x.fill();
+        x.fillStyle = 'rgba(255,240,220,0.5)'; x.beginPath(); x.arc(-0.016, hy - 0.006, 0.0018, 0, TAU); x.arc(0.02, hy - 0.006, 0.0018, 0, TAU); x.fill();
+        x.strokeStyle = 'rgba(60,30,18,0.45)'; x.lineWidth = 0.004; x.beginPath(); x.moveTo(0.002, hy - 0.002); x.lineTo(0.006, hy + 0.024); x.lineTo(-0.004, hy + 0.027); x.stroke();
+        x.strokeStyle = 'rgba(70,24,16,0.6)'; x.lineWidth = 0.004; x.beginPath(); x.moveTo(-0.012, hy + 0.04); x.quadraticCurveTo(0, hy + 0.043, 0.012, hy + 0.04); x.stroke();
+      }
+      else if (!o.lod) { x.fillStyle = 'rgba(20,10,6,0.55)'; x.beginPath(); x.ellipse(-0.017, hy, 0.007, 0.004, 0, 0, TAU); x.ellipse(0.017, hy, 0.007, 0.004, 0, 0, TAU); x.fill();
+      x.fillStyle = 'rgba(40,20,10,0.25)'; x.beginPath(); x.moveTo(0, hy + 0.005); x.lineTo(0.006, hy + 0.025); x.lineTo(-0.004, hy + 0.027); x.closePath(); x.fill(); }
+      if (o.beard) { F(c.beard || c.hair, () => { x.moveTo(-0.044, hy + 0.0); x.quadraticCurveTo(-0.046, hy + 0.06, -0.016, hy + 0.083); x.quadraticCurveTo(0, hy + 0.09, 0.016, hy + 0.083); x.quadraticCurveTo(0.046, hy + 0.06, 0.044, hy + 0.0); x.quadraticCurveTo(0.03, hy + 0.04, 0.012, hy + 0.034); x.quadraticCurveTo(0, hy + 0.05, -0.012, hy + 0.034); x.quadraticCurveTo(-0.03, hy + 0.04, -0.044, hy + 0.0); x.closePath(); }); if (o.hero && !o.lod) { x.strokeStyle = 'rgba(0,0,0,0.18)'; x.lineWidth = 0.003; for (const bx of [-0.03, -0.015, 0, 0.015, 0.03]) { x.beginPath(); x.moveTo(bx, hy + 0.045); x.lineTo(bx * 0.8, hy + 0.078); x.stroke(); } } }
     } else {
       F(c.skin, () => { x.ellipse(0.006, hy + 0.004, 0.044, 0.06, 0, 0, TAU); x.moveTo(0.042, hy - 0.012); x.lineTo(0.06, hy + 0.012); x.lineTo(0.044, hy + 0.022); x.closePath(); });
       x.fillStyle = 'rgba(20,10,6,0.55)'; x.beginPath(); x.ellipse(0.028, hy - 0.004, 0.006, 0.004, 0, 0, TAU); x.fill();
-      if (o.beard) F(c.hair, () => { x.moveTo(0.044, hy + 0.025); x.quadraticCurveTo(0.04, hy + 0.08, 0.0, hy + 0.075); x.quadraticCurveTo(-0.025, hy + 0.05, -0.02, hy + 0.02); x.closePath(); });
+      if (o.beard) F(c.beard || c.hair, () => { x.moveTo(0.044, hy + 0.03); x.quadraticCurveTo(0.04, hy + 0.075, 0.004, hy + 0.072); x.quadraticCurveTo(-0.02, hy + 0.05, -0.015, hy + 0.025); x.closePath(); });
     }
     // what sits on the head
     const gold = (path) => K.gold(x, path, -0.07, -1.1, 0.07, -0.9, { sheen: o.sheen != null ? o.sheen : 0.5, outline: false });
@@ -808,13 +836,13 @@
     const hs = p.house, r = rng(p.seed), base = p.side === 'A' ? IVORY : EBONY;
     let a = 1;
     if (p.side === 'A' && p.type !== 'P' && !p.lent) a = p.bloom != null ? smooth(span(t, p.bloom, p.bloom + 0.7)) : 0;
-    const col = Object.assign({}, base), o = { col, kind: 'robe', head: 'bare', hold: 'none', arms: null, armsA: 0, beard: r() < 0.4 };
+    const col = Object.assign({}, base), o = { col, kind: 'robe', head: 'bare', hold: 'none', arms: null, armsA: 0, beard: false };
     const dye = (h) => hs ? mixHex(h, hs.field, a) : h;
     if (hs) { col.field = mixHex(base.cloth2, hs.field, a); col.charge = hs.charge; o.arms = hs; o.armsA = a; o.pavise = null; }
     switch (p.type) {
-      case 'K': Object.assign(o, { kind: 'robe', head: p.side === 'A' ? 'crown' : 'circlet', hold: 'sceptre', cloak: true, collar: true, beard: true }); col.cloth = dye(base.cloth); col.cloak = hs ? mixHex(base.cloak, shadeHex(hs.field, -0.25), a) : base.cloak; col.trim2 = '#ece6da';
-        if (p.side === 'B') { o.iron = true; col.cloth = '#5a4632'; col.cloak = '#6e5236'; col.trim2 = '#8a7a5a'; col.charge = EH.charge; col.hair = '#3a2a1c'; } break;
-      case 'Q': Object.assign(o, { kind: 'gown', head: 'veil', hold: 'none', crown2: true, beard: false, cloak: true, cloakLen: 0.01 }); col.cloth = dye(base.cloth); col.cloak = hs ? shadeHex(hs.field, -0.3) : base.cloak; col.veil = '#efe7d6'; break;
+      case 'K': Object.assign(o, { kind: 'robe', head: p.side === 'A' ? 'crown' : 'circlet', hold: 'sceptre', cloak: true, collar: true, beard: true, hero: true }); col.beard = mixHex(base.hair, base.skin, 0.45); col.cloth = dye(base.cloth); col.cloak = hs ? mixHex(base.cloak, shadeHex(hs.field, -0.25), a) : base.cloak; col.trim2 = '#ece6da';
+        if (p.side === 'B') { o.iron = true; col.cloth = '#5a4632'; col.cloak = '#6e5236'; col.trim2 = '#8a7a5a'; col.charge = EH.charge; col.hair = '#5a4a3a'; col.skin = '#b88a68'; col.beard = '#7a6a5a'; } break;
+      case 'Q': Object.assign(o, { kind: 'gown', head: 'veil', hold: 'none', crown2: true, beard: false, cloak: true, cloakLen: 0.01, hero: true }); col.cloth = dye(base.cloth); col.cloak = hs ? shadeHex(hs.field, -0.3) : base.cloak; col.veil = '#efe7d6'; break;
       case 'B': Object.assign(o, { kind: 'robe', head: 'mitre', hold: 'crozier', cloak: true, cloakLen: -0.03 }); col.cloth = base.cloth; col.cloak = dye(base.cloak); col.mitre = p.side === 'A' || hs ? '#efe7d6' : '#4a4440'; break;
       case 'R': Object.assign(o, { kind: 'mail', head: 'helm', hold: 'spear', pavise: hs || { device: 'none' }, beard: false }); col.cloth = dye(base.cloth2); col.field = hs ? mixHex(base.cloth2, hs.field, a) : base.cloth2; col.leg = base.steel; break;
       case 'N': Object.assign(o, { kind: 'mail', head: 'helm', hold: 'lance', seated: true, beard: false, crest: null }); col.cloth = dye(base.cloth2); col.leg = base.steel; o.pennant = hs && a > 0.5 ? hs.field : null; o.coat = p.side === 'A' ? '#b5ada0' : hs ? (hs.key === 'beasts' ? '#211b18' : hs.key === 'roads' ? '#5a3a24' : hs.key === 'frontier' ? '#6a5040' : '#3a2c22') : '#221c19'; break;
@@ -863,15 +891,15 @@
     drawFigureInto(x, ox, oy, p, o, view, face, hs, lc, walk);
     const fig = knight ? hh * 2.6 : hs, top = oy - fig;
     x.globalCompositeOperation = 'source-atop';
-    x.globalAlpha = 0.4; if (!BRUSHPAT || BRUSHPAT.ctx !== x) BRUSHPAT = { ctx: x, p: x.createPattern(brushTex(), 'repeat') }; const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = BRUSHPAT.p; x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); x.globalAlpha = 1;
+    if (walk == null) { x.globalAlpha = 0.4; } else x.globalAlpha = 0; if (walk == null) if (!BRUSHPAT || BRUSHPAT.ctx !== x) BRUSHPAT = { ctx: x, p: x.createPattern(brushTex(), 'repeat') }; if (walk == null) { const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = BRUSHPAT.p; x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); } x.globalAlpha = 1;
     let g = x.createLinearGradient(ox + lx * fig * 0.3, 0, ox - lx * fig * 0.3, 0);
-    g.addColorStop(0, rgbs([255, 200, 140], 0.12 * clamp(keyAmt))); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(6,4,10,0.38)');
+    g.addColorStop(0, rgbs([255, 196, 130], 0.14 * clamp(keyAmt))); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(8,12,24,0.42)');
     x.fillStyle = g; x.fillRect(0, 0, SW, SH);
     g = x.createLinearGradient(0, top, 0, oy); g.addColorStop(0, 'rgba(255,240,220,0.05)'); g.addColorStop(0.55, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(4,2,2,0.5)'); x.fillStyle = g; x.fillRect(0, 0, SW, SH);
     if (fog > 0.01) { x.fillStyle = rgbs([30, 18, 18], fog); x.fillRect(0, 0, SW, SH); }
     x.globalCompositeOperation = 'source-over';
     if (dis > 0) { const m = dissolveMasks()[Math.min(16, Math.round(dis * 16))]; x.globalCompositeOperation = 'destination-in'; x.drawImage(m, 0, top - fig * 0.25, SW, fig * 1.3); x.fillStyle = '#000'; x.fillRect(0, 0, SW, Math.max(0, top - fig * 0.25)); x.globalCompositeOperation = 'source-over'; }
-    if (keyAmt > 0.04) {
+    if (keyAmt > 0.04 && walk == null) {
       const rs = scratch('rim', SW, SH), rx = rs.getContext('2d'), d = clamp(hs / 120, 1.2, 3.5);
       rx.drawImage(spr, 0, 0, SW, SH, 0, 0, SW, SH);
       rx.globalCompositeOperation = 'destination-out'; rx.drawImage(spr, 0, 0, SW, SH, -lx * d, -ly * d, SW, SH);
@@ -884,7 +912,7 @@
   function drawFigureInto(x, ox, oy, p, o, view, face, hs, lc, walk) {
     const knight = !!o.seated, hh = knight ? hs / 1.85 : hs;
     const C2 = {}; for (const key in o.col) C2[key] = litHex(o.col[key], lc);
-    const po = Object.assign({}, o, { col: C2, view, walk, sway: 0, t: 0, sheen: 0.55, pennant: o.pennant ? litHex(o.pennant, lc) : null });
+    const po = Object.assign({}, o, { col: C2, view, walk, sway: 0, t: 0, sheen: 0.55, pennant: o.pennant ? litHex(o.pennant, lc) : null, lod: hs < 70 ? 1 : 0 });
     if (knight) {
       const coat = litHex(o.coat, lc), withArms = o.arms && o.armsA > 0.4;
       const cap = withArms ? { field: litHex(o.arms.field, lc), charge: litHex(o.arms.charge, lc), device: o.arms.device } : { field: litHex(mixHex(o.col.cloth2 || o.col.cloth, '#000000', 0.1), lc), charge: 'none', device: 'none' };
@@ -932,8 +960,8 @@
       // the edge light's direction (toward the strongest fire), in the sprite's upright frame
       let kx = 0, ky = -1;
       if (lt.key) { const kp = pj(C, lt.key.x, lt.key.y || 3, lt.key.z); if (kp) { kx = kp[0] - foot[0]; ky = kp[1] - (foot[1] + head[1]) / 2; } else { const v = toCam(C, lt.key.x, lt.key.y || 3, lt.key.z); kx = v[0]; ky = -v[1]; } }
-      let ang = Math.atan2(ky, kx) - tilt; ang = qn(ang, TAU / 48); const lx = Math.cos(ang), ly = Math.sin(ang);
-      const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, SPRCAP)) * 16) / 16), keyAmt = qn(lt.keyAmt, 0.05), fog = qn(clamp((foot[2] - 18) / 70) * 0.5, 0.05), dis = qn(pr.dis, 1 / 16), aA = qn(o.armsA || 0, 0.05);
+      let ang = Math.atan2(ky, kx) - tilt; ang = qn(ang, TAU / 36); const lx = Math.cos(ang), ly = Math.sin(ang);
+      const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, SPRCAP)) * 10) / 10), keyAmt = qn(lt.keyAmt, 0.05), fog = qn(clamp((foot[2] - 18) / 70) * 0.5, 0.05), dis = qn(pr.dis, 1 / 16), aA = qn(o.armsA || 0, 0.05);
       o.armsA = aA;
       const key = walk == null ? [view, face, hsq.toFixed(2), lc.join(','), keyAmt, ang.toFixed(3), fog, dis, aA, lt.key && lt.key.fire ? 1 : 0].join('|') : null;
       let ent = FIGC.get(p.id);
@@ -998,30 +1026,32 @@
       if ((C.px - ax) * nx + (C.pz - az) * nz < 0.5) continue;           // the camera stands outside this side
       const ux = bx - ax, uz = bz - az, back = TIER1 - TIER0;
       // tiers of watchers (two textured halves), then the parapet against the sky
-      for (const h0 of [0, 0.5]) plane(ctx, C, crowdMips(), [ax + ux * h0 - nx * back, th, az + uz * h0 - nz * back], [ux * 0.5, 0, uz * 0.5], [nx * back, wh - th, nz * back], 2048, 512, { err: 4, roots: [2, 1] });
+      for (const h0 of [0, 0.5]) plane(ctx, C, crowdMips(), [ax + ux * h0 - nx * back, th, az + uz * h0 - nz * back], [ux * 0.5, 0, uz * 0.5], [nx * back, wh - th, nz * back], 2048, 512, { err: 7, roots: [2, 1] });
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       const pb = [[ax - nx * back - ux * 0.3, th, az - nz * back - uz * 0.3], [bx - nx * back + ux * 0.3, th, bz - nz * back + uz * 0.3], [bx - nx * back + ux * 0.3, rh, bz - nz * back + uz * 0.3], [ax - nx * back - ux * 0.3, rh, az - nz * back - uz * 0.3]];
       polyFill(ctx, C, pb, '#140d0a');
       // merlons
       if (rise > 0.95) {
-        ctx.fillStyle = '#100a08';
-        for (let k = 0; k < 30; k++) { const u0 = -0.3 + (k + 0.25) / 30 * 1.6, u1 = u0 + 0.6 / 30 * 1.6; const P0 = [ax - nx * back + ux * u0, rh, az - nz * back + uz * u0], P1 = [ax - nx * back + ux * u1, rh, az - nz * back + uz * u1]; if (quadPath(ctx, C, [P0, P1, [P1[0], rh + 1.2, P1[2]], [P0[0], rh + 1.2, P0[2]]])) ctx.fill(); }
+        ctx.fillStyle = '#100a08'; ctx.beginPath();
+        for (let k = 0; k < 30; k++) { const u0 = -0.3 + (k + 0.25) / 30 * 1.6, u1 = u0 + 0.6 / 30 * 1.6; const q = [[ax - nx * back + ux * u0, rh, az - nz * back + uz * u0], [ax - nx * back + ux * u1, rh, az - nz * back + uz * u1], [ax - nx * back + ux * u1, rh + 1.2, az - nz * back + uz * u1], [ax - nx * back + ux * u0, rh + 1.2, az - nz * back + uz * u0]].map(P2 => pj(C, P2[0], P2[1], P2[2])); if (q.some(v => !v)) continue; ctx.moveTo(q[0][0], q[0][1]); for (let m = 1; m < 4; m++) ctx.lineTo(q[m][0], q[m][1]); ctx.closePath(); }
+        ctx.fill();
       }
       // the wall face with its gilded rail
-      plane(ctx, C, wallStrip(), [ax, wh, az], [ux, 0, uz], [0, -wh, 0], 2048, 256 * hk, { err: 4, roots: [4, 1] });
+      plane(ctx, C, wallStrip(), [ax, wh, az], [ux, 0, uz], [0, -wh, 0], 2048, 256 * hk, { err: 6, roots: [4, 1] });
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      { const m = toCam(C, (ax + bx) / 2, wh / 2, (az + bz) / 2)[2], fa = clamp((m - 14) / 40) * 0.35; if (fa > 0.01 && quadPath(ctx, C, [[ax, 0, az], [bx, 0, bz], [bx, th, bz], [ax, th, az]])) { ctx.fillStyle = `rgba(30,30,40,${fa})`; ctx.fill(); } }
       // torches along the top of the wall
       if (rise > 0.9) for (let k = 1; k < 8; k++) {
         const u = k / 8, X = ax + ux * u + nx * 0.3, Z = az + uz * u + nz * 0.3, q = pj(C, X, wh + 0.5, Z); if (!q) continue;
         const fl = 0.8 + 0.2 * Math.sin(tw * 11 + k * 3 + i), s = q[3];
-        K.glow(ctx, q[0], q[1], s * 3.2, [255, 150, 70], 0.32 * fl);
-        K.glow(ctx, q[0], q[1] + s * 1.6, s * 2.4, [255, 120, 60], 0.12 * fl);
+        glowS(ctx, q[0], q[1], s * 3.2, [255, 150, 70], 0.32 * fl);
+        glowS(ctx, q[0], q[1] + s * 1.6, s * 2.4, [255, 120, 60], 0.12 * fl);
         flame(ctx, q[0], q[1] + s * 0.15, s * 0.55, tw * 1.3 + k + i * 7, 1);
       }
       // banners of the Seven hung over the tiers (the dais side has its own seven)
       if (i !== 2 && rise > 0.98) for (let k = 0; k < 6; k++) {
         const u = (k + 0.5) / 6, hs = HS[(k * 3 + i * 2) % 7], X = ax + ux * u - nx * (back + 0.2), Z = az + uz * u - nz * (back + 0.2);
-        hangBanner(ctx, C, X, rh - 0.4, Z, ux / 52, uz / 52, 2.2, 6.5, hs, tw + k * 1.7 + i, L);
+        hangBanner(ctx, C, X, rh - 0.4, Z, ux / 52, uz / 52, 2.2, 6.5, hs, tw + k * 1.7 + i, L, { strips: 2 });
       }
     }
     // the corner towers
@@ -1133,6 +1163,7 @@
   // a fire: tongues of flame swaying on the noise, bright at the root (additive). s = metres to pixels
   function flame(ctx, x, y, s, tw, amt = 1) {
     if (s < 0.4 || amt <= 0) return;
+    if (s < 9) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter'; const h2 = s * (0.8 + 0.3 * K.noise(tw * 2, 1, 61)) * clamp(amt, 0, 1.4); ctx.fillStyle = 'rgba(255,170,80,0.55)'; ctx.beginPath(); ctx.ellipse(x, y - h2 * 0.4, s * 0.38, h2 * 0.55, 0, 0, TAU); ctx.fill(); ctx.fillStyle = 'rgba(255,240,200,0.7)'; ctx.beginPath(); ctx.ellipse(x, y - h2 * 0.2, s * 0.18, h2 * 0.28, 0, 0, TAU); ctx.fill(); ctx.restore(); return; }
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
     const n = s > 30 ? 9 : 6;
     for (let k = 0; k < n; k++) {
@@ -1363,7 +1394,7 @@
     const T = TT(), by = boardY(t), O = [-BE, by, -BE], U = [2 * BE, 0, 0], V = [0, 0, 2 * BE];
     if (t < T.fill0) return;
     if (half) { /* drawn and lit in the floor layer */ }
-    else if (t >= T.fill1 + 0.05) plane(ctx, C, boardMips(), O, U, V, BT.n, BT.n, { roots: [9, 9], err: 3 });
+    else if (t >= T.fill1 + 0.05) plane(ctx, C, boardMips(), O, U, V, BT.n, BT.n, { roots: [9, 9], err: t > T.red0 + 2 ? 6 : 4 });
     else {
       const n = 18, bAlpha = smooth(span(t, T.fill1 - 0.9, T.fill1));
       for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
@@ -1375,6 +1406,9 @@
       ctx.globalAlpha = 1;
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // Ealdholt's emptied back rank: dark squares where champions should stand (until the borrowed fill them)
+    const T2 = TT(), emp = win(t, T2.dis0 + 0.6, T2.form, 0.9, 0.2);
+    if (emp > 0) { ctx.save(); for (let f = 0; f < 8; f++) { if (f === 4) continue; const p = pieces().find(q => q.id === 'BB' + BACK[f] + f), fill = p ? smooth(span(t, p.arrive - 0.6, p.arrive + 0.2)) : 0, a = emp * (1 - fill) * 0.62; if (a <= 0.01) continue; const x0 = sqX(f) - SQ / 2 + 0.06, z0 = sqZ(7) - SQ / 2 + 0.06; if (quadPath(ctx, C, [[x0, by + 0.004, z0], [x0 + SQ - 0.12, by + 0.004, z0], [x0 + SQ - 0.12, by + 0.004, z0 + SQ - 0.12], [x0, by + 0.004, z0 + SQ - 0.12]])) { ctx.fillStyle = `rgba(4,4,8,${a})`; ctx.fill(); } } ctx.restore(); }
     // the light over the board
     ctx.save(); if (!half && quadPath(ctx, C, [[-BE, by, -BE], [BE, by, -BE], [BE, by, BE], [-BE, by, BE]])) { ctx.clip(); ctx.globalCompositeOperation = 'multiply'; ctx.imageSmoothingQuality = 'low'; ctx.drawImage(Li, 0, 0, W, H); } ctx.restore();
     // ink washing through each square as it turns to stone
@@ -1415,11 +1449,11 @@
     for (const [x0, z0, x1, z1, st, du] of inkLines()) {
       const u = easeOut(clamp((t - st) / du)); if (u <= 0) continue;
       const xe = lerp(x0, x1, u), ze = lerp(z0, z1, u);
-      if (stripPath(ctx, C, x0, y, z0, xe, y, ze, 0.32, 0.22)) { ctx.fillStyle = `rgba(14,8,4,${0.22 * fade})`; ctx.fill(); }
-      if (stripPath(ctx, C, x0, y, z0, xe, y, ze, 0.075, 0.05)) { ctx.fillStyle = `rgba(10,6,3,${0.92 * fade})`; ctx.fill(); }
-      if (u < 1) tips.push([xe, ze, 1 - u]);
+      if (stripPath(ctx, C, x0, y, z0, xe, y, ze, 0.42, 0.3)) { ctx.fillStyle = `rgba(14,8,4,${0.3 * fade})`; ctx.fill(); }
+      if (stripPath(ctx, C, x0, y, z0, xe, y, ze, 0.11, 0.08)) { ctx.fillStyle = `rgba(8,5,2,${0.95 * fade})`; ctx.fill(); }
+      if (u < 1) { tips.push([xe, ze, 1 - u]); const xb = lerp(x0, x1, Math.max(0, u - 0.08)), zb = lerp(z0, z1, Math.max(0, u - 0.08)); if (stripPath(ctx, C, xb, y, zb, xe, y, ze, 0.02, 0.07)) { ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(255,190,110,${0.85 * fade})`; ctx.fill(); ctx.globalCompositeOperation = 'source-over'; } }
     }
-    for (const [x, z, k] of tips) { const q = pj(C, x, y + 0.05, z); if (!q) continue; K.glow(ctx, q[0], q[1], q[3] * 1.4, [255, 190, 100], 0.6 * Math.min(1, k * 3) * fade); ctx.fillStyle = `rgba(255,236,190,${0.9 * fade})`; ctx.beginPath(); ctx.arc(q[0], q[1], Math.max(1, q[3] * 0.06), 0, TAU); ctx.fill(); }
+    for (const [x, z, k] of tips) { const q = pj(C, x, y + 0.05, z); if (!q) continue; glowS(ctx, q[0], q[1], Math.min(200, q[3] * 0.8), [255, 190, 100], 0.5 * Math.min(1, k * 3) * fade); ctx.fillStyle = `rgba(255,236,190,${0.9 * fade})`; ctx.beginPath(); ctx.arc(q[0], q[1], Math.max(1, q[3] * 0.06), 0, TAU); ctx.fill(); }
     ctx.restore();
   }
   // ---------------------------------------------------------------- L34: the law of blood runs from the dais to the champions
@@ -1599,18 +1633,22 @@
     if (e && pl > 0) { const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.rx); g.addColorStop(0, 'rgba(60,4,3,0.8)'); g.addColorStop(0.6, 'rgba(70,6,4,0.45)'); g.addColorStop(1, 'rgba(70,6,4,0)'); ctx.fillStyle = g; ctx.save(); ctx.translate(e.x, e.y); ctx.scale(1, e.ry / e.rx); ctx.translate(-e.x, -e.y); ctx.beginPath(); ctx.arc(e.x, e.y, e.rx, 0, TAU); ctx.fill(); ctx.restore(); }
     const segs = [];
     for (let i = 0; i <= 8; i++) for (let j = 0; j <= 8; j++) { if (i < 8) segs.push([i, j, i + 1, j]); if (j < 8) segs.push([i, j, i, j + 1]); }
-    const tips = [];
-    for (const pass of [0, 1, 2]) {
-      for (const [i0, j0, i1, j1] of segs) {
-        let a = N[i0][j0], b = N[i1][j1], A = [i0, j0], B = [i1, j1]; if (b < a) { [a, b] = [b, a]; [A, B] = [B, A]; }
-        const u = clamp((t - a) / (b - a + 0.5)); if (u <= 0) continue;
-        const d = Math.min(...[[3, 4], [4, 4], [3, 5], [4, 5]].map(([p, q]) => Math.abs(A[0] - p) + Math.abs(A[1] - q))), near = 1 - clamp(d / 9);
-        const x0 = -HB + A[0] * SQ, z0 = -HB + A[1] * SQ, x1 = lerp(x0, -HB + B[0] * SQ, easeOut(u)), z1 = lerp(z0, -HB + B[1] * SQ, easeOut(u));
-        const w = lerp(0.03, 0.085, near);
-        if (pass === 0) { if (stripPath(ctx, C, x0, by, z0, x1, by, z1, w * 4, w * 3)) { ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = `rgba(40,3,2,${0.22 + 0.2 * near})`; ctx.fill(); } }
-        else if (pass === 1) { if (stripPath(ctx, C, x0, by, z0, x1, by, z1, w, w * 0.8)) { ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = `rgba(${Math.round(110 + 40 * near)},10,6,0.95)`; ctx.fill(); } if (u < 1) tips.push([x1, z1, w, near]); }
-        else if (near > 0.5) { if (stripPath(ctx, C, x0, by, z0, x1, by, z1, w * 0.3, w * 0.25)) { ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(200,40,20,${0.35 * (near - 0.5) * 2})`; ctx.fill(); } }
-      }
+    const tips = [], bins = [[], [], []].map(() => [[], [], []]);
+    for (const [i0, j0, i1, j1] of segs) {
+      let a = N[i0][j0], b = N[i1][j1], A = [i0, j0], B = [i1, j1]; if (b < a) { [a, b] = [b, a]; [A, B] = [B, A]; }
+      const u = clamp((t - a) / (b - a + 0.5)); if (u <= 0) continue;
+      const d = Math.min(...[[3, 4], [4, 4], [3, 5], [4, 5]].map(([p, q]) => Math.abs(A[0] - p) + Math.abs(A[1] - q))), near = 1 - clamp(d / 9), nb = near > 0.66 ? 2 : near > 0.33 ? 1 : 0;
+      const x0 = -HB + A[0] * SQ, z0 = -HB + A[1] * SQ, x1 = lerp(x0, -HB + B[0] * SQ, easeOut(u)), z1 = lerp(z0, -HB + B[1] * SQ, easeOut(u)), w = lerp(0.03, 0.085, near);
+      bins[0][nb].push([x0, z0, x1, z1, w * 2.4, w * 2]); bins[1][nb].push([x0, z0, x1, z1, w, w * 0.8]); if (near > 0.5) bins[2][nb].push([x0, z0, x1, z1, w * 0.3, w * 0.25]);
+      if (u < 1) tips.push([x1, z1, w, near]);
+    }
+    const strip = (x0, z0, x1, z1, w0, w1) => { const dx = x1 - x0, dz = z1 - z0, l = Math.hypot(dx, dz) || 1, nx = -dz / l, nz = dx / l, q = [[x0 + nx * w0 / 2, z0 + nz * w0 / 2], [x1 + nx * w1 / 2, z1 + nz * w1 / 2], [x1 - nx * w1 / 2, z1 - nz * w1 / 2], [x0 - nx * w0 / 2, z0 - nz * w0 / 2]].map(([X, Z]) => pj(C, X, by, Z)); if (q.some(v => !v)) return; ctx.moveTo(q[0][0], q[0][1]); for (let m = 1; m < 4; m++) ctx.lineTo(q[m][0], q[m][1]); ctx.closePath(); };
+    for (let pass = 0; pass < 3; pass++) for (let nb = 0; nb < 3; nb++) {
+      const list = bins[pass][nb]; if (!list.length) continue; const near = (nb + 0.5) / 3;
+      ctx.beginPath(); for (const sg of list) strip(...sg);
+      ctx.globalCompositeOperation = pass === 2 ? 'lighter' : 'source-over';
+      ctx.fillStyle = pass === 0 ? `rgba(40,3,2,${0.22 + 0.2 * near})` : pass === 1 ? `rgba(${Math.round(110 + 40 * near)},10,6,0.95)` : `rgba(200,40,20,${0.35 * (near - 0.5) * 2})`;
+      ctx.fill();
     }
     // the running edge of the red: a bead of liquid catching the light
     ctx.globalCompositeOperation = 'source-over';
@@ -1640,25 +1678,56 @@
     ctx.restore();
   }
   // ---------------------------------------------------------------- shadows on the floor: contact, and long ones from the fires
-  function drawShadows(ctx, C, t, L, P) {
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const fires = L.lights.filter(l => l.fire);
+  function drawShadows(ctx, C, t, L, P, k = 1) {
+    ctx.save(); ctx.setTransform(k, 0, 0, k, 0, 0);
+    const fires = L.lights.filter(l => l.fire), blob = blobSprite();
     for (const p of P) {
       const pr = presence(p, t); if (pr.a <= 0.01) continue;
       const w = where(p, t), y = floorAt(w.x, w.z, t) + 0.01, a0 = pr.a * (1 - pr.dis);
-      const e = floorEllipse(C, w.x, y, w.z, p.type === 'N' ? 0.9 : 0.42); if (!e) continue;
-      ctx.globalAlpha = 0.55 * a0; const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.rx); g.addColorStop(0, 'rgba(4,2,2,0.9)'); g.addColorStop(1, 'rgba(4,2,2,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(e.x, e.y, e.rx, e.ry, 0, 0, TAU); ctx.fill();
-      // from each fire nearby, a long soft shadow (an ellipse on the floor, darkest at the feet)
-      const near = fires.map(l => ({ l, d: Math.hypot(w.x - l.x, w.z - l.z) })).filter(q => q.d < 22).sort((a, b) => a.d - b.d).slice(0, 2);
-      for (const { l, d } of near) {
-        const hgt = p.h, len = Math.min(7, hgt * d / Math.max(0.6, BRZH - hgt * 0.7)), dx = (w.x - l.x) / d, dz = (w.z - l.z) / d, k = clamp(l.a) * (1 - d / 22);
-        const q0 = pj(C, w.x, y, w.z), q1 = pj(C, w.x + dx * len, y, w.z + dz * len), qw = pj(C, w.x - dz * 0.38, y, w.z + dx * 0.38); if (!q0 || !q1 || !qw) continue;
-        const rx = Math.hypot(q1[0] - q0[0], q1[1] - q0[1]) / 2, ry = Math.max(1, Math.hypot(qw[0] - q0[0], qw[1] - q0[1])); if (rx < 2) continue;
-        ctx.save(); ctx.translate((q0[0] + q1[0]) / 2, (q0[1] + q1[1]) / 2); ctx.rotate(Math.atan2(q1[1] - q0[1], q1[0] - q0[0])); ctx.scale(rx, ry);
-        const g = ctx.createRadialGradient(-0.85, 0, 0, -0.85, 0, 1.9); g.addColorStop(0, `rgba(6,3,2,${0.42 * k * a0})`); g.addColorStop(0.5, `rgba(6,3,2,${0.16 * k * a0})`); g.addColorStop(1, 'rgba(6,3,2,0)');
-        ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill(); ctx.restore();
-      }
+      const e = floorEllipse(C, w.x, y, w.z, p.type === 'N' ? 0.9 : 0.45); if (!e) continue;
+      ctx.globalAlpha = 0.6 * a0; ctx.drawImage(blob, e.x - e.rx, e.y - e.ry, e.rx * 2, e.ry * 2);
+      if (e.s * p.h < 40) continue;
+      // from the nearest fire, a long soft shadow (darkest at the feet)
+      let best = null, bd = 1e9; for (const l of fires) { const d = Math.hypot(w.x - l.x, w.z - l.z); if (d < bd) { bd = d; best = l; } }
+      if (!best || bd > 22) continue;
+      const l = best, d = bd, hgt = p.h, len = Math.min(4.2, hgt * d / Math.max(0.6, BRZH - hgt * 0.7) * 0.7), dx = (w.x - l.x) / d, dz = (w.z - l.z) / d, kk = clamp(l.a) * (1 - d / 22);
+      const q0 = pj(C, w.x, y, w.z), q1 = pj(C, w.x + dx * len, y, w.z + dz * len), qw = pj(C, w.x - dz * 0.38, y, w.z + dx * 0.38); if (!q0 || !q1 || !qw) continue;
+      const rx = Math.hypot(q1[0] - q0[0], q1[1] - q0[1]) / 2, ry = Math.max(1, Math.hypot(qw[0] - q0[0], qw[1] - q0[1])); if (rx < 2) continue;
+      ctx.save(); ctx.translate((q0[0] + q1[0]) / 2, (q0[1] + q1[1]) / 2); ctx.rotate(Math.atan2(q1[1] - q0[1], q1[0] - q0[0])); ctx.scale(rx, ry);
+      const g = ctx.createLinearGradient(-1, 0, 1, 0); g.addColorStop(0, `rgba(5,3,2,${0.32 * kk * a0})`); g.addColorStop(1, 'rgba(5,3,2,0)');
+      ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, 0, 1, 1, 0, 0, TAU); ctx.fill(); ctx.restore();
     }
+    ctx.restore();
+  }
+  // ---------------------------------------------------------------- dust in the firelight (it hangs still while the law is spoken)
+  function drawMotes(ctx, C, t, L) {
+    const bf = battle(t); if (bf > 0.6) return;
+    const tw = worldT(t), still = win(t, TT().still0, TT().still1 + 0.4, 0.4, 0.6);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 90; i++) {
+      const bx = (K.hash(i, 1, 601) - 0.5) * 26, bz = (K.hash(i, 2, 601) - 0.5) * 26, by = 0.4 + K.hash(i, 3, 601) * 4.5, sp = 0.15 + K.hash(i, 4, 601) * 0.25;
+      const X = bx + Math.sin(tw * sp + i) * 0.8, Y = by + Math.sin(tw * sp * 0.7 + i * 2) * 0.4, Z = bz + Math.cos(tw * sp * 0.8 + i) * 0.8;
+      const q = pj(C, X, Y, Z); if (!q || q[2] < 1.5 || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) continue;
+      const lt = lightAt(L, X, Y, Z, true), b = clamp((lt.c[0] - 0.35) * 1.2); if (b <= 0.02) continue;
+      const r = clamp(q[3] * 0.012, 0.6, 3.2), a = b * (0.35 + 0.25 * Math.sin(tw * 2 + i)) * (1 + still * 0.6) * (1 - bf);
+      ctx.fillStyle = `rgba(255,${200 + 30 * still},${150 + 60 * still},${a})`; ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+  }
+  // ---------------------------------------------------------------- L40: as the bishop falls, a spray of vermilion and his crozier free
+  function drawFallFx(ctx, C, t, P) {
+    const T = TT(), b = P.find(p => p.fall); if (!b || t < T.fall0 - 0.1 || t > T.a41) return;
+    const w = where(b, t), y = floorAt(w.x, w.z, t), u = span(t, T.fall0 + 0.1, T.fall0 + 1.0);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (u > 0 && u < 1) for (let k = 0; k < 26; k++) {
+      const ang = K.hash(k, 1, 501) * Math.PI * 0.9 + 0.1, sp = 1.4 + K.hash(k, 2, 501) * 2.4, tt = u * 0.9;
+      const X = w.x + Math.cos(ang) * 0.2 * (K.hash(k, 3, 501) - 0.5), Z = w.z + 0.2 + sp * tt * 0.7, Y = y + 1.3 + Math.sin(ang) * sp * tt - 4.9 * tt * tt;
+      if (Y < y) continue; const q = pj(C, X, Y, Z); if (!q) continue;
+      const sz = Math.max(0.8, q[3] * 0.02 * (1 + K.hash(k, 4, 501))); ctx.fillStyle = `rgba(140,18,10,${0.9 * (1 - u)})`; ctx.beginPath(); ctx.ellipse(q[0], q[1], sz, sz * 0.7, 0, 0, TAU); ctx.fill();
+    }
+    // drops that reached the stone
+    const ds = smooth(span(t, T.fall0 + 0.5, T.fall0 + 1.2));
+    if (ds > 0) for (let k = 0; k < 9; k++) { const e = floorEllipse(C, w.x + (K.hash(k, 6, 503) - 0.5) * 0.9, y + 0.006, w.z + 0.6 + K.hash(k, 7, 503) * 1.6, 0.05 + K.hash(k, 8, 503) * 0.09); if (e) { ctx.fillStyle = `rgba(110,10,6,${0.85 * ds})`; ctx.beginPath(); ctx.ellipse(e.x, e.y, e.rx, e.ry, 0, 0, TAU); ctx.fill(); } }
     ctx.restore();
   }
   // ---------------------------------------------------------------- Ealdholt's own champions lift away as flakes of ink (L36)
@@ -1679,16 +1748,16 @@
   }
   // ---------------------------------------------------------------- air: low fog, sparks and smoke from the fires
   let FOG = null;
-  function fogBanks() { if (FOG) return FOG; const r = rng(5151); FOG = []; for (let i = 0; i < 34; i++) { const a = r() * TAU, d = 9 + r() * 15; FOG.push({ x: Math.cos(a) * d, z: Math.sin(a) * d, y: 0.6 + r() * 1.2, s: 5 + r() * 7, a: 0.05 + r() * 0.09, sp: 0.15 + r() * 0.3, ph: r() * TAU }); } return FOG; }
+  function fogBanks() { if (FOG) return FOG; const r = rng(5151); FOG = []; for (let i = 0; i < 26; i++) { const a = r() * TAU, d = 14.5 + r() * 10; FOG.push({ x: Math.cos(a) * d, z: Math.sin(a) * d, y: 0.6 + r() * 1.2, s: 5 + r() * 7, a: 0.05 + r() * 0.09, sp: 0.15 + r() * 0.3, ph: r() * TAU }); } return FOG; }
   // fog and smoke are drawn at quarter resolution into two layers: what lies beyond the split depth (behind the pieces)
   // and what lies nearer (over them)
-  function airLayers(C, t, L, amt, split) {
-    const tw = worldT(t), q = 0.25, back = K.layer('s6:fogB', W * q, H * q), front = K.layer('s6:fogF', W * q, H * q), bx = back.getContext('2d'), fx = front.getContext('2d');
-    let nb = 0, nf = 0;
+  function airLayers(C, t, L, amt, split, gx) {
+    const tw = worldT(t), q = 0.25, front = K.layer('s6:fogF', W * q, H * q), fx = front.getContext('2d'), bx = gx;
+    let nb = 0, nf = 0; const bb = [1e9, 1e9, -1e9, -1e9];
     const put = (X, Y, Z, s, a, lt, flat, mode) => {
       const p = pj(C, X, Y, Z); if (!p || p[2] < 2) return; const S = p[3] * s; if (S < 6) return;
-      const near = clamp((p[2] - 2) / 5), x = p[2] > split ? bx : fx; if (p[2] > split) nb++; else nf++;
-      x.globalAlpha = a * near; x.globalCompositeOperation = mode || 'screen'; x.drawImage(tintPuff(lt), (p[0] - S) * q, (p[1] - S * flat) * q, S * 2 * q, S * 2 * flat * q);
+      const near = clamp((p[2] - 2) / 5), x = p[2] > split ? bx : fx; if (p[2] > split) { nb++; bb[0] = Math.min(bb[0], p[0] - S); bb[1] = Math.min(bb[1], p[1] - S * flat); bb[2] = Math.max(bb[2], p[0] + S); bb[3] = Math.max(bb[3], p[1] + S * flat); } else nf++;
+      const qq = x === bx ? 0.5 : q; x.globalAlpha = a * near; x.globalCompositeOperation = mode || 'screen'; x.drawImage(tintPuff(lt), (p[0] - S) * qq, (p[1] - S * flat) * qq, S * 2 * qq, S * 2 * flat * qq);
     };
     if (amt > 0) for (const f of fogBanks()) {
       const X = f.x + Math.sin(tw * 0.05 * f.sp + f.ph) * 2.5, Z = f.z + Math.cos(tw * 0.04 * f.sp + f.ph) * 2;
@@ -1698,10 +1767,12 @@
       const fr = fire(i, t); if (fr <= 0) continue; const [cx, cz] = BRAZ[i];
       for (let k = 0; k < 6; k++) { const ph = (tw / 7 + k / 6) % 1, X = cx + Math.sin(tw * 0.3 + k) * ph * 2 + ph * 3, Z = cz + ph * 1.5, Y = BRZH + 1 + ph * 9; put(X, Y, Z, 1.2 + ph * 4, 0.2 * Math.sin(ph * Math.PI) * clamp(fr), [0.22, 0.16, 0.14], 1, 'source-over'); }
     }
-    // the vignette rides in the front layer (one composite for both)
+    // the vignette rides in the front layer (one composite for both); with nothing in front it is drawn on its own
+    if (!nf) return { front: null, bb };
     const vg = fx.createRadialGradient(W * q / 2, H * q / 2, H * q * 0.3, W * q / 2, H * q / 2, H * q * 0.95); vg.addColorStop(0, 'rgba(8,4,3,0)'); vg.addColorStop(1, 'rgba(8,4,3,0.66)');
     fx.globalAlpha = 1; fx.globalCompositeOperation = 'source-over'; fx.fillStyle = vg; fx.fillRect(0, 0, W * q, H * q);
-    return { back: nb ? back : null, front };
+    bx.globalAlpha = 1; bx.globalCompositeOperation = 'source-over';
+    return { front, bb };
   }
   function drawAir(ctx, lay) { if (!lay) return; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(lay, 0, 0, W, H); ctx.restore(); }
   function tintPuff(lt) {
@@ -1757,8 +1828,8 @@
       k(T.a37 + 2.6, [-9.0, 4.8, 2.4], [0, 0.6, 7.6], 1400),
       k(T.b37 + 0.2, [-10.6, 4.1, 4.2], [0, 0.6, 7.6], 1500),
       // L38: play; along the edge where the stakes appear
-      k(T.a38 + 0.9, [-20.5, 6.8, -15.5], [-6, 0.5, -1.5], 1350),
-      k(T.b38 + 0.1, [-21.5, 5.6, -6.5], [-12.5, 0.6, 5.0], 1450),
+      k(T.a38 + 0.6, [-23.5, 3.4, -4.5], [-8.0, 0.9, 0.6], 1350),
+      k(T.b38 + 0.1, [-24.6, 3.0, 1.2], [-10.0, 1.0, 1.6], 1400),
       // L39: wide over the arena
       k(T.b39 + 0.1, [-22, 31, -24], [2, 0, 2], 1150),
       // L40: down to the bishop as he falls
@@ -1768,7 +1839,7 @@
       k(T.a41, [11.2, 1.7, 12.4], [-6, 1.3, 14.8], 1600, { cut: true }),
       k(T.a42, [7.6, 1.6, 13.1], [-6, 1.3, 14.8], 1850),
       // L42: the surrounded king (cut); rising as red fills the seams; held
-      k(T.a42, [0.3, 2.35, -1.7], [-1.25, 1.8, 1.25], 2100, { cut: true }),
+      k(T.a42, [0.9, 2.5, -3.0], [-1.25, 1.65, 1.25], 1650, { cut: true }),
       k(T.a42 + 3.4, [1.6, 6.0, -5.0], [-1.25, 0.8, 1.25], 1600),
       k(T.e - 1.6, [2.2, 8.6, -6.4], [-1.2, 0.5, 1.3], 1500),
       k(T.e + 2, [2.3, 8.95, -6.6], [-1.2, 0.48, 1.32], 1490),
@@ -1819,10 +1890,13 @@
     const walls = arenaRise(t) > 0.995;
     groundPlane(gx, C, mudLevels(), GT.m, bf > 0.02 ? 150 : 40, { k: 0.5, err: 5, skip: (a0, b0, a1, b1) => (boardDone && a0 >= -BE + 0.01 && a1 <= BE - 0.01 && b0 >= -BE + 0.01 && b1 <= BE - 0.01) || (walls && (a0 > AW + 1 || a1 < -AW - 1 || b0 > AW + 1 || b1 < -AW - 1)) });
     // in close views the board's stone is magnified anyway: draw it into the same half-resolution layer
-    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, half = mag > 1.6 && boardDone;
+    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, nb = unproj(C, W / 2, H), magN = nb ? C.f / Math.max(0.5, nb[2]) / BT.ppm : 0, half = (mag > 1.25 || magN > 3) && t < T.e - 2.6 && boardDone;
     if (half) { plane(gx, C, boardMips(), [-BE, by, -BE], [2 * BE, 0, 0], [0, 0, 2 * BE], BT.n, BT.n, { roots: [9, 9], err: 3, k: 0.5 }); gx.setTransform(1, 0, 0, 1, 0, 0); }
     if (PR) { gx.getImageData(0, 0, 1, 1); mk('gcells' + STAT.cells); }
+    if (half) drawShadows(gx, C, t, L, P, 0.5);
     gx.setTransform(1, 0, 0, 1, 0, 0); gx.globalCompositeOperation = 'multiply'; gx.imageSmoothingQuality = 'low'; gx.drawImage(Li, 0, 0, W / 2, H / 2); gx.globalCompositeOperation = 'source-over';
+    // the low fog that lies beyond the pieces, drawn straight into the floor layer
+    const split = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2])[2] * 0.85, air = airLayers(C, t, L, 1 - bf * 0.6, split, gx);
     if (PR) { gx.getImageData(0, 0, 1, 1); mk('glight'); }
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G, 0, 0, W, H); mk('gup');
     drawFieldDecals(ctx, C, t);
@@ -1830,7 +1904,7 @@
     const c0 = STAT.cells; drawBoardTop(ctx, C, t, Li, L, half); mk('board' + (STAT.cells - c0));
     drawInkLines(ctx, C, t);
     drawReflections(ctx, C, t, L, by);
-    drawShadows(ctx, C, t, L, P); mk('shadows');
+    if (!half) drawShadows(ctx, C, t, L, P); mk('shadows');
     drawRedSeams(ctx, C, t);
     drawBlood(ctx, C, t);
     drawChains(ctx, C, t, L); mk('decals');
@@ -1844,8 +1918,7 @@
     for (let i = 0; i < 4; i++) { const v = toCam(C, BRAZ[i][0], 2, BRAZ[i][1]); if (v[2] > NEAR && !D.noBrz) items.push({ d: v[2], tag: 'brz', draw: () => drawBrazier(ctx, C, i, t, L) }); }
     const tagd = (arr, tg) => arr.map(it => Object.assign(it, { tag: tg }));
     items.push(...tagd(drawDais(ctx, C, t, L), 'dais'), ...tagd(fieldItems(ctx, C, t, L), 'field'), ...tagd(stakeItems(ctx, C, t, L), 'stake'), ...tagd(standardItems(ctx, C, t, L), 'std'));
-    const split = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2])[2] * 0.85, air = airLayers(C, t, L, 1 - bf * 0.6, split);
-    if (!D.noAir) drawAir(ctx, air.back); mk('fogback');
+mk('fogback');
     // the coins: the queen's debt, and the price of each borrowed champion
     if (t > T.coinQ) items.push({ d: toCam(C, sqX(3) + 0.5, 0, sqZ(0) + 0.9)[2], draw: () => drawCoin(ctx, C, sqX(3) + 0.5, sqZ(0) + 0.9, T.coinQ, t, L) });
     for (const p of P) if (p.coin && t > p.coin && t < T.form) { const x = sqX(p.f) - 0.55, z = sqZ(7) - 0.95; items.push({ d: toCam(C, x, 0, z)[2], draw: () => drawCoin(ctx, C, x, z, p.coin, t, L) }); }
@@ -1853,10 +1926,12 @@
     const TG = {};
     for (const it of items) { let t0 = 0; if (PR) { ctx.getImageData(0, 0, 1, 1); t0 = performance.now(); } ctx.save(); it.draw(); ctx.restore(); if (PR) { ctx.getImageData(0, 0, 1, 1); const tg = it.tag || 'other', dt = performance.now() - t0; TG[tg] = (TG[tg] || 0) + dt; if (D.each && it.tag === 'pc') (window.S6EACH = window.S6EACH || []).push([it.id, Math.round(it.hp || 0), dt.toFixed(1)]); } }
     if (PR) PR.push(['items:' + Object.entries(TG).map(([k, v]) => k + '=' + v.toFixed(1)).join(','), performance.now()]);
-    if (!D.noAir) drawAir(ctx, air.front); mk('fogfront');
+    if (!D.noAir) { if (air.front) drawAir(ctx, air.front); else K.vignette(ctx, 0.66, '8,4,3', 0.3); } mk('fogfront');
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     drawSparks(ctx, C, t);
     drawFlakes(ctx, C, t, P);
+    drawFallFx(ctx, C, t, P);
+    drawMotes(ctx, C, t, L);
     drawSkyCrows(ctx, C, t); mk('air');
     return C;
   }
@@ -1870,7 +1945,8 @@
     draw(ctx, t, sc) {
       void sc;
       const T = TT(); t = clamp(t, T.s - 1.5, T.e + 1.5);
-      frame(ctx, t);
+      warm(t);
+      if (insertAlpha(t) < 0.999) frame(ctx, t); else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
       insert(ctx, t);
       if (!(window.S6DBG || {}).noPost) finish(ctx, t);
       if ((window.S6DBG || {}).prof) { ctx.getImageData(0, 0, 1, 1); window.S6PROF.push(['post', performance.now()]); }
@@ -1878,13 +1954,89 @@
     },
   };
   // close inserts drawn over the frame (the pawn's fists in L41)
+  function insertAlpha(t) { const T = TT(); return win(t, T.fist0 - 0.45, T.a42 - 0.02, 0.18, 0.05); }
   function insert(ctx, t) {
-    const T = TT(), a = win(t, T.fist0 - 0.45, T.a42 - 0.02, 0.18, 0.05);
+    const a = insertAlpha(t);
     if (a <= 0) return;
     fists(ctx, t, a);
   }
+  // heavy textures are built during the field's first frames (one per frame), before they are needed
+  const WARM = [() => lightStone(), () => darkStone(), () => boardTex(), () => boardMips(), () => wallStrip(), () => crowdMips(), () => brushTex(), () => dissolveMasks(), () => fistBack()];
+  let WARMI = 0;
+  function warm(t) { const T = TT(); if (t < T.fill0 - 0.4 && WARMI < WARM.length) WARM[WARMI++](); }
+  // L41: a defeated pawn's hand closes into a fist (a painted close-up)
+  function fistBack() {
+    return K.cached('s6:fistbg', () => {
+      const c = K.canvas(W / 2, H / 2), x = c.getContext('2d'), r = rng(4141);
+      const g = x.createLinearGradient(0, 0, W / 2, H / 2); g.addColorStop(0, '#120b09'); g.addColorStop(0.6, '#0b0706'); g.addColorStop(1, '#16090a'); x.fillStyle = g; x.fillRect(0, 0, W / 2, H / 2);
+      // the board's fires far behind, out of focus
+      x.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 16; i++) { const px = W / 2 * (0.05 + r() * 0.9), py = H / 2 * (0.35 + r() * 0.35), rad = 10 + r() * 34, cc = r() < 0.7 ? [255, 150, 70] : [220, 80, 50]; const gg = x.createRadialGradient(px, py, 0, px, py, rad); gg.addColorStop(0, `rgba(${cc},${0.08 + r() * 0.12})`); gg.addColorStop(0.8, `rgba(${cc},${0.05 + r() * 0.06})`); gg.addColorStop(1, `rgba(${cc},0)`); x.fillStyle = gg; x.beginPath(); x.arc(px, py, rad, 0, TAU); x.fill(); }
+      x.globalCompositeOperation = 'source-over';
+      // other defeated figures, soft and dark
+      x.filter = 'blur(6px)';
+      for (let i = 0; i < 5; i++) { const px = W / 2 * (0.08 + i * 0.12 + r() * 0.04), w = 40 + r() * 20, top = H / 2 * (0.15 + r() * 0.1); x.fillStyle = `rgba(6,4,4,${0.7 + r() * 0.2})`; x.beginPath(); x.ellipse(px, top, w * 0.3, w * 0.36, 0, 0, TAU); x.fill(); x.fillRect(px - w / 2, top + w * 0.3, w, H / 2); }
+      x.filter = 'none';
+      return c;
+    });
+  }
   function fists(ctx, t, a) {
-    // placeholder until the close-up is painted
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = a; ctx.fillStyle = '#0b0706'; ctx.fillRect(0, 0, W, H); ctx.restore();
+    const T = TT(), cl = smooth(span(t, T.fist0, T.fist1)), tw = worldT(t);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = a;
+    ctx.imageSmoothingQuality = 'medium'; ctx.drawImage(fistBack(), 0, 0, W, H);
+    ctx.restore();
+    // the arm and hand are painted into their own layer, then lit there
+    const Lr = K.layer('s6:fist'), x = Lr.getContext('2d');
+    const push = 1.18 + 0.08 * span(t, T.fist0 - 0.5, T.a42), tr = cl > 0.92 ? (K.noise(t * 30, 1, 77) - 0.5) * 2.4 : 0;
+    x.translate(W * 0.5 + tr, H * 0.36); x.rotate(-0.12); x.scale(push * H / 1000, push * H / 1000);
+    const skin = '#a2704f', wool = '#5a3f2c', woolD = '#2b1d15', iron = '#3a3a3f';
+    const F = (col, fn) => { x.fillStyle = col; x.beginPath(); fn(); x.fill(); };
+    // the chain from the shackle's ring, swaying
+    const sway = Math.sin(tw * 1.3) * 6 + (cl > 0.4 ? Math.sin(tw * 9) * 3 * (1 - cl) : 0);
+    for (let k = 0; k < 9; k++) { const y0 = 60 + k * 56, x0 = 96 + sway * k / 8 + k * 2.5; x.strokeStyle = k % 2 ? '#262629' : '#45454b'; x.lineWidth = k % 2 ? 9 : 12; x.beginPath(); x.ellipse(x0, y0, k % 2 ? 5 : 15, 33, 0.05, 0, TAU); x.stroke(); }
+    // the sleeve of rough wool, its folds, the frayed cuff
+    F(wool, () => { x.moveTo(-100, -700); x.lineTo(100, -700); x.bezierCurveTo(112, -420, 104, -200, 90, -80); x.lineTo(-86, -74); x.bezierCurveTo(-104, -200, -112, -420, -100, -700); x.closePath(); });
+    x.save(); for (const [fx, w2] of [[-58, 10], [-22, 6], [18, 12], [52, 7], [76, 5]]) { x.strokeStyle = 'rgba(0,0,0,0.3)'; x.lineWidth = w2; x.beginPath(); x.moveTo(fx, -690); x.bezierCurveTo(fx + 18, -480, fx - 14, -260, fx + 6, -95); x.stroke(); x.strokeStyle = 'rgba(255,220,180,0.06)'; x.lineWidth = w2 * 0.6; x.beginPath(); x.moveTo(fx + w2, -690); x.bezierCurveTo(fx + 18 + w2, -480, fx - 14 + w2, -260, fx + 6 + w2, -95); x.stroke(); } x.restore();
+    F(woolD, () => { x.moveTo(-90, -110); x.lineTo(92, -114); for (let k = 0; k <= 14; k++) x.lineTo(lerp(92, -90, k / 14), -72 + (k % 2 ? 13 : 0) + Math.sin(k * 2.3) * 4); x.closePath(); });
+    // wrist and the back of the hand, broadening to an arc of knuckles
+    F(skin, () => { x.moveTo(-60, -84); x.lineTo(62, -84); x.lineTo(60, 12); x.lineTo(-58, 12); x.closePath(); });
+    const kY = 176 - 16 * cl, kA = i => kY - [6, 0, 2, 10][i];
+    F(skin, () => { x.moveTo(-58, 0); x.quadraticCurveTo(-74, kY * 0.5, -72, kA(0)); x.quadraticCurveTo(0, kY + 6, 76, kA(3) + 4); x.quadraticCurveTo(80, kY * 0.5, 60, 0); x.closePath(); });
+    // fingers: hanging loose, then curled away under the knuckles (the visible length shortens)
+    const fw = [37, 38, 36, 31], fl = [172, 188, 178, 142], fx0 = [-52, -16, 21, 55];
+    for (let i = 3; i >= 0; i--) {
+      const c = smooth(clamp((cl - (3 - i) * 0.05) / 0.85)), L = fl[i] * (1 - 0.74 * c) + 16 * c, x0 = fx0[i], y0 = kA(i) - 6, w = fw[i] * (1 + 0.06 * c);
+      F(shadeHex(skin, i % 2 ? 0 : -0.05), () => { x.moveTo(x0 - w / 2, y0); x.lineTo(x0 + w / 2, y0); x.lineTo(x0 + w / 2 - 3, y0 + L - w * 0.45); x.quadraticCurveTo(x0, y0 + L + w * 0.14 * (1 - c), x0 - w / 2 + 3, y0 + L - w * 0.45); x.closePath(); });
+      x.strokeStyle = 'rgba(40,18,10,0.55)'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(x0 + w / 2 - 1, y0 + 6); x.lineTo(x0 + w / 2 - 3, y0 + L - w * 0.5); x.stroke();
+      for (const f2 of [0.44, 0.74]) { const yy = y0 + fl[i] * f2 * (1 - 0.74 * c); if (yy < y0 + L - 12) { x.strokeStyle = 'rgba(60,28,16,0.45)'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(x0 - w * 0.32, yy); x.quadraticCurveTo(x0, yy + 4, x0 + w * 0.32, yy); x.stroke(); } }
+      if (c < 0.6) { x.fillStyle = `rgba(220,170,150,${0.35 * (1 - c / 0.6)})`; x.beginPath(); x.ellipse(x0, y0 + L - w * 0.58, w * 0.26, w * 0.34, 0, 0, TAU); x.fill(); }
+      x.fillStyle = `rgba(255,205,170,${0.06 + 0.16 * c})`; x.beginPath(); x.ellipse(x0 + 3, y0 + 2, w * 0.34, w * 0.2 + 3 * c, 0, 0, TAU); x.fill();
+    }
+    // the thumb: alongside the hand, then tucked across the curled fingers
+    x.save(); x.translate(-64, 64); x.rotate(0.32 - 1.05 * cl);
+    F(shadeHex(skin, -0.1), () => { x.moveTo(-17, 0); x.lineTo(19, -5); x.lineTo(21, 118 - 26 * cl); x.quadraticCurveTo(3, 140 - 26 * cl, -14, 116 - 26 * cl); x.closePath(); });
+    x.fillStyle = 'rgba(220,170,150,0.25)'; x.beginPath(); x.ellipse(3, 110 - 26 * cl, 8, 11, 0, 0, TAU); x.fill();
+    x.restore();
+    // tendons drawn tight
+    x.strokeStyle = `rgba(255,214,184,${0.06 + 0.2 * cl})`; x.lineWidth = 5; x.lineCap = 'round'; for (const x0 of fx0) { x.beginPath(); x.moveTo(x0 * 0.32, 22); x.quadraticCurveTo(x0 * 0.72, kY * 0.55, x0, kY - 12); x.stroke(); }
+    // the shackle and its ring
+    F(iron, () => { x.moveTo(-72, -44); x.lineTo(76, -48); x.lineTo(78, 6); x.lineTo(-74, 10); x.closePath(); });
+    x.fillStyle = 'rgba(255,200,150,0.22)'; x.fillRect(-72, -42, 150, 6);
+    x.fillStyle = '#18181a'; for (const rx of [-52, -12, 28, 62]) { x.beginPath(); x.arc(rx, -19, 5, 0, TAU); x.fill(); }
+    x.strokeStyle = '#4a4a50'; x.lineWidth = 12; x.beginPath(); x.ellipse(94, 22, 16, 22, 0, 0, TAU); x.stroke();
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    // light: the left in shadow, a soft top fall-off, painterly grain
+    x.globalCompositeOperation = 'source-atop';
+    let g = x.createLinearGradient(W * 0.38, 0, W * 0.62, 0); g.addColorStop(0, 'rgba(4,2,3,0.7)'); g.addColorStop(0.55, 'rgba(0,0,0,0.05)'); g.addColorStop(1, 'rgba(255,170,100,0.12)');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(0,0,0,0.6)'); g.addColorStop(0.42, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.3)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.globalAlpha = 0.45; x.fillStyle = x.createPattern(brushTex(), 'repeat'); x.fillRect(0, 0, W, H); x.globalAlpha = 1;
+    x.globalCompositeOperation = 'source-over';
+    // the warm edge where the fire catches the knuckles and the sleeve (from the right)
+    const R = K.layer('s6:fistrim'), rx = R.getContext('2d');
+    rx.drawImage(Lr, 0, 0); rx.globalCompositeOperation = 'destination-out'; rx.drawImage(Lr, -7, 2); rx.globalCompositeOperation = 'source-in'; rx.fillStyle = 'rgb(255,172,104)'; rx.fillRect(0, 0, W, H);
+    x.globalCompositeOperation = 'lighter'; x.globalAlpha = 0.75; x.drawImage(R, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = a; ctx.drawImage(Lr, 0, 0); ctx.restore();
+    K.vignette(ctx, 0.7 * a, '0,0,0', 0.25);
   }
 })();
