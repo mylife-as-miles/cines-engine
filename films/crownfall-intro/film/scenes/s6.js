@@ -150,7 +150,6 @@
       cellImg(ctx, mips, u0 + a0 * tw, v0 + b0 * th, u0 + a1 * tw, v0 + b1 * th, sp[0], sp[1], sp[2], sp[3], k, pad);
     }
   }
-  const floorPlane = (ctx, C, mips, x0, z0, x1, z1, tw, th, o) => plane(ctx, C, mips, [x0, 0, z0], [x1 - x0, 0, 0], [0, 0, z1 - z0], tw, th, o);
   // the tiled ground: a clipmap of pre-tiled levels, so far cells are drawn from coarse, wide textures
   function groundPlane(ctx, C, levels, tileM, R, o = {}) {
     // levels[s] covers 2^s x 2^s tiles in one canvas; root cells are (tileM * 2^top) metres
@@ -946,7 +945,7 @@
     if (foot[0] < -hp * 1.6 || foot[0] > W + hp * 1.6 || foot[1] < -hp * 0.3 || foot[1] > H + hp * 2.4) return;
     const tilt = Math.atan2(head[0] - foot[0], foot[1] - head[1]);
     const o = costume(p, t);
-    const lt = lightAt(L, w.x, y + 1.2, w.z, true), lc = lt.c.map(v => qn(v, 0.04));
+    const lt = lightAt(L, w.x, y + 1.2, w.z, true), lc = lt.c.map(v => qn(v, 0.05));
     const dx = Math.sin(w.ang), dz = Math.cos(w.ang), sr = dx * C.rx + dz * C.rz, toward = -(dx * (w.x - C.px) + dz * (w.z - C.pz)) / (Math.hypot(w.x - C.px, w.z - C.pz) || 1);
     const view = toward > 0.62 ? 'front' : toward < -0.62 ? 'back' : 'side', face = sr >= 0 ? 1 : -1;
     const walk = w.moving && w.sp > 0.25 ? w.phase : undefined;
@@ -962,8 +961,8 @@
       // the edge light's direction (toward the strongest fire), in the sprite's upright frame
       let kx = 0, ky = -1;
       if (lt.key) { const kp = pj(C, lt.key.x, lt.key.y || 3, lt.key.z); if (kp) { kx = kp[0] - foot[0]; ky = kp[1] - (foot[1] + head[1]) / 2; } else { const v = toCam(C, lt.key.x, lt.key.y || 3, lt.key.z); kx = v[0]; ky = -v[1]; } }
-      let ang = Math.atan2(ky, kx) - tilt; ang = qn(ang, TAU / 36); const lx = Math.cos(ang), ly = Math.sin(ang);
-      const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, SPRCAP)) * 10) / 10), keyAmt = qn(lt.keyAmt, 0.05), fog = qn(clamp((foot[2] - 18) / 70) * 0.5, 0.05), dis = qn(pr.dis, 1 / 16), aA = qn(o.armsA || 0, 0.05);
+      let ang = Math.atan2(ky, kx) - tilt; ang = qn(ang, TAU / 24); const lx = Math.cos(ang), ly = Math.sin(ang);
+      const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, SPRCAP)) * 6) / 6), keyAmt = qn(lt.keyAmt, 0.05), fog = qn(clamp((foot[2] - 18) / 70) * 0.5, 0.05), dis = qn(pr.dis, 1 / 16), aA = qn(o.armsA || 0, 0.05);
       o.armsA = aA;
       const key = walk == null ? [view, face, hsq.toFixed(2), lc.join(','), keyAmt, ang.toFixed(3), fog, dis, aA, lt.key && lt.key.fire ? 1 : 0].join('|') : null;
       let ent = FIGC.get(p.id);
@@ -1058,17 +1057,6 @@
     }
     // the corner towers
     ctx.restore();
-  }
-  function drawTower(ctx, C, cx, cz, rise, tw) {
-    const s = 6, h = 24 * rise, faces = [[[cx - s, cz - s], [cx + s, cz - s]], [[cx + s, cz - s], [cx + s, cz + s]], [[cx + s, cz + s], [cx - s, cz + s]], [[cx - s, cz + s], [cx - s, cz - s]]];
-    for (const [a, b] of faces) {
-      const mx = (a[0] + b[0]) / 2, mz = (a[1] + b[1]) / 2, nx = mx - cx, nz = mz - cz; if ((C.px - mx) * nx + (C.pz - mz) * nz <= 0) continue;
-      const shade = nx * 0.3 + nz * 0.1 > 0 ? '#1a110d' : '#120b08';
-      polyFill(ctx, C, [[a[0], 0, a[1]], [b[0], 0, b[1]], [b[0], h, b[1]], [a[0], h, a[1]]], shade);
-      // lit slits
-      for (let k = 0; k < 3; k++) { const u = 0.5, y = h * (0.45 + k * 0.17), q = pj(C, lerp(a[0], b[0], u) + nx * 0.02, y, lerp(a[1], b[1], u) + nz * 0.02); if (q && rise > 0.95) { ctx.fillStyle = `rgba(255,${150 + k * 20},80,${0.5 + 0.2 * Math.sin(tw * 2 + k + cx)})`; ctx.fillRect(q[0] - q[3] * 0.18, q[1] - q[3] * 0.6, q[3] * 0.36, q[3] * 1.2); } }
-    }
-    if (rise > 0.9) { const top = [cx, 24 + 9, cz]; for (const [a, b] of faces) { const mx = (a[0] + b[0]) / 2, mz = (a[1] + b[1]) / 2; if ((C.px - mx) * (mx - cx) + (C.pz - mz) * (mz - cz) <= -50) continue; polyFill(ctx, C, [[a[0] - (a[0] - cx) * -0.15, 24, a[1] - (a[1] - cz) * -0.15], [b[0] - (b[0] - cx) * -0.15, 24, b[1] - (b[1] - cz) * -0.15], top], '#0e0806'); } }
   }
   // a banner hanging from a bar: vertical strips, rippling
   function hangBanner(ctx, C, x, y, z, ux, uz, w, h, hs, tw, L, o = {}) {
@@ -1487,15 +1475,18 @@
     for (const b of bloodPaths()) {
       const u = clamp((t - b.t0) / (b.t1 - b.t0)); if (u <= 0) continue;
       const pts = b.pts, n = Math.max(2, Math.ceil(pts.length * u));
+      const P2 = []; for (let k = 0; k < n; k++) { const [x, z] = pts[k]; P2.push([x, floorAt(x, z, t) + 0.01, z]); }
       for (const pass of [0, 1, 2]) {
+        ctx.beginPath();
         for (let k = 0; k + 1 < n; k++) {
-          const [x0, z0] = pts[k], [x1, z1] = pts[k + 1], y0 = floorAt(x0, z0, t) + 0.01, y1 = floorAt(x1, z1, t) + 0.01;
-          const ww = b.w * (pass === 0 ? 3.2 : pass === 1 ? 1 : 0.32) * (1 - 0.35 * k / pts.length);
-          if (!stripPath(ctx, C, x0, y0, z0, x1, y1, z1, ww, ww)) continue;
-          ctx.globalCompositeOperation = pass === 2 ? 'lighter' : 'source-over';
-          ctx.fillStyle = pass === 0 ? `rgba(40,3,2,${0.3 * fade})` : pass === 1 ? `rgba(128,12,7,${0.95 * fade})` : `rgba(230,70,40,${0.45 * fade})`;
-          ctx.fill();
+          const A = P2[k], B = P2[k + 1], ww = b.w * (pass === 0 ? 3.2 : pass === 1 ? 1 : 0.32) * (1 - 0.35 * k / pts.length);
+          const dx = B[0] - A[0], dz = B[2] - A[2], l = Math.hypot(dx, dz) || 1, nx = -dz / l * ww / 2, nz = dx / l * ww / 2;
+          const q = [pj(C, A[0] + nx, A[1], A[2] + nz), pj(C, B[0] + nx, B[1], B[2] + nz), pj(C, B[0] - nx, B[1], B[2] - nz), pj(C, A[0] - nx, A[1], A[2] - nz)];
+          if (q[0] && q[1] && q[2] && q[3]) { ctx.moveTo(q[0][0], q[0][1]); ctx.lineTo(q[1][0], q[1][1]); ctx.lineTo(q[2][0], q[2][1]); ctx.lineTo(q[3][0], q[3][1]); ctx.closePath(); }
         }
+        ctx.globalCompositeOperation = pass === 2 ? 'lighter' : 'source-over';
+        ctx.fillStyle = pass === 0 ? `rgba(40,3,2,${0.3 * fade})` : pass === 1 ? `rgba(128,12,7,${0.95 * fade})` : `rgba(230,70,40,${0.45 * fade})`;
+        ctx.fill();
       }
       ctx.globalCompositeOperation = 'source-over';
       // nodes of the registry, and a ring closing round each champion's feet
@@ -1522,14 +1513,19 @@
       const cum = [0]; for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1], pts[k][2] - pts[k - 1][2]));
       const total = cum[cum.length - 1], end = total * u, at = (s0) => { let k = 1; while (k < cum.length - 1 && cum[k] < s0) k++; const f = (s0 - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1); return [lerp(pts[k - 1][0], pts[k][0], f), lerp(pts[k - 1][1], pts[k][1], f), lerp(pts[k - 1][2], pts[k][2], f)]; };
       const lt = lightAt(L, sqX(b.f), 0.6, sqZ(6.5), true).c, dark = litHex('#3c3e44', [lt[0] + 0.1, lt[1] + 0.1, lt[2] + 0.15]), mid = litHex('#8a8e98', [lt[0] + 0.2, lt[1] + 0.2, lt[2] + 0.25]), hi = litHex('#e4e8f0', [lt[0] + 0.4, lt[1] + 0.4, lt[2] + 0.4]);
-      const L0 = 0.13;
+      const L0 = 0.13, flats = [], edges = []; let scs = 0, nsc = 0;
       for (let s0 = 0, li = 0; s0 + L0 <= end; s0 += L0 * 0.78, li++) {
         const A = at(s0), B = at(s0 + L0), qa = pj(C, A[0], A[1], A[2]), qb = pj(C, B[0], B[1], B[2]); if (!qa || !qb) continue;
-        const sc = (qa[3] + qb[3]) / 2, flat = li % 2 === 0, wdt = Math.max(0.8, sc * (flat ? 0.055 : 0.02));
-        ctx.strokeStyle = dark; ctx.lineWidth = wdt + Math.max(0.6, sc * 0.012); ctx.beginPath(); ctx.moveTo(qa[0], qa[1]); ctx.lineTo(qb[0], qb[1]); ctx.stroke();
-        if (flat && wdt > 2.2) { ctx.strokeStyle = mid; ctx.lineWidth = wdt * 0.62; ctx.beginPath(); ctx.moveTo(qa[0], qa[1]); ctx.lineTo(qb[0], qb[1]); ctx.stroke(); ctx.strokeStyle = 'rgba(0,0,0,0.85)'; ctx.lineWidth = wdt * 0.3; ctx.beginPath(); ctx.moveTo(lerp(qa[0], qb[0], 0.18), lerp(qa[1], qb[1], 0.18)); ctx.lineTo(lerp(qa[0], qb[0], 0.82), lerp(qa[1], qb[1], 0.82)); ctx.stroke(); }
-        else { ctx.strokeStyle = mid; ctx.lineWidth = Math.max(0.5, wdt * 0.5); ctx.beginPath(); ctx.moveTo(qa[0], qa[1]); ctx.lineTo(qb[0], qb[1]); ctx.stroke(); }
-        ctx.strokeStyle = hi; ctx.globalAlpha = 0.55; ctx.lineWidth = Math.max(0.4, wdt * 0.18); ctx.beginPath(); ctx.moveTo(lerp(qa[0], qb[0], 0.25), lerp(qa[1], qb[1], 0.25) - wdt * 0.2); ctx.lineTo(lerp(qa[0], qb[0], 0.7), lerp(qa[1], qb[1], 0.7) - wdt * 0.2); ctx.stroke(); ctx.globalAlpha = 1;
+        (li % 2 === 0 ? flats : edges).push([qa, qb]); scs += (qa[3] + qb[3]) / 2; nsc++;
+      }
+      if (nsc) {
+        const sc = scs / nsc, wf = Math.max(0.8, sc * 0.055), we = Math.max(0.8, sc * 0.02);
+        const seg = (list, f0, f1, dy) => { ctx.beginPath(); for (const [qa, qb] of list) { ctx.moveTo(lerp(qa[0], qb[0], f0), lerp(qa[1], qb[1], f0) + dy); ctx.lineTo(lerp(qa[0], qb[0], f1), lerp(qa[1], qb[1], f1) + dy); } };
+        ctx.strokeStyle = dark; ctx.lineWidth = wf + Math.max(0.6, sc * 0.012); seg(flats, 0, 1, 0); ctx.stroke();
+        ctx.lineWidth = we + Math.max(0.6, sc * 0.012); seg(edges, 0, 1, 0); ctx.stroke();
+        if (wf > 2.2) { ctx.strokeStyle = mid; ctx.lineWidth = wf * 0.62; seg(flats, 0, 1, 0); ctx.stroke(); ctx.strokeStyle = 'rgba(0,0,0,0.85)'; ctx.lineWidth = wf * 0.3; seg(flats, 0.18, 0.82, 0); ctx.stroke(); }
+        ctx.strokeStyle = mid; ctx.lineWidth = Math.max(0.5, we * 0.5); seg(edges, 0, 1, 0); ctx.stroke();
+        ctx.strokeStyle = hi; ctx.globalAlpha = 0.55; ctx.lineWidth = Math.max(0.4, wf * 0.18); seg(flats.concat(edges), 0.25, 0.7, -wf * 0.2); ctx.stroke(); ctx.globalAlpha = 1;
       }
       // the shackle closing on the pawn's wrist
       if (u >= 1) { const E = pts[pts.length - 1], q = pj(C, E[0], E[1], E[2]); if (q) { const fl = win(t, b.chain.t1 - 0.05, b.chain.t1 + 0.6, 0.05, 0.45); if (fl > 0) star(ctx, q[0], q[1], q[3] * 0.45 * fl, 0.85 * fl); ctx.strokeStyle = mid; ctx.lineWidth = Math.max(1, q[3] * 0.028); ctx.beginPath(); ctx.ellipse(q[0], q[1], q[3] * 0.055, q[3] * 0.032, 0.2, 0, TAU); ctx.stroke(); } }
@@ -1843,8 +1839,8 @@
       // L42: the surrounded king (cut); rising as red fills the seams; held
       k(T.a42, [0.9, 2.5, -3.0], [-1.25, 1.65, 1.25], 1650, { cut: true }),
       k(T.a42 + 3.4, [1.6, 6.0, -5.0], [-1.25, 0.8, 1.25], 1600),
-      k(T.e - 1.6, [2.2, 8.6, -6.4], [-1.2, 0.5, 1.3], 1500),
-      k(T.e + 2, [2.3, 8.95, -6.6], [-1.2, 0.48, 1.32], 1490),
+      k(T.e - 1.6, [1.8, 7.3, -5.1], [-1.2, 0.62, 1.3], 1520),
+      k(T.e + 2, [1.86, 7.55, -5.25], [-1.2, 0.6, 1.32], 1515),
     ];
     return CK;
   }
@@ -1878,7 +1874,6 @@
     return { pos: [out[0] + n(1, 1) * 0.05 * hand, Math.max(0.9, out[1] + n(2, 2) * 0.04 * hand), out[2] + n(3, 3) * 0.05 * hand], tgt: [out[3] + n(4, 4) * 0.04 * hand, out[4] + n(5, 5) * 0.03 * hand, out[5] + n(6, 6) * 0.04 * hand], f: Math.exp(out[6]), roll: n(7, 7) * 0.004 * hand };
   }
 
-  window.__s6cam = camAt; // (debug, removed later)
   // ---------------------------------------------------------------- the frame
   let BLOOMS = false;
   function frame(ctx, t) {
@@ -1886,67 +1881,54 @@
     STAT.cells = 0; const cam = camAt(t), C = camera(cam.pos, cam.tgt, cam.f, cam.roll), L = lights(t), by = boardY(t), bf = battle(t);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
     ctx.fillStyle = '#0b0807'; ctx.fillRect(0, 0, W, H);
-    const D = window.S6DBG || {}; const PR = D.prof ? (window.S6PROF = []) : null; const mk = (n) => { if (PR) { ctx.getImageData(0, 0, 1, 1); PR.push([n, performance.now()]); } }; mk('start');
-    drawSky(ctx, C, t); mk('sky');
-    if (D.only === 'sky') return C;
+    drawSky(ctx, C, t);
     // the floor: the field / arena ground at half resolution, lit; the board at full resolution, lit
-    const Li = lightImage(C, L, by); mk('limg');
+    const Li = lightImage(C, L, by);
     const G = K.layer('s6:ground', W / 2, H / 2), gx = G.getContext('2d');
     gx.fillStyle = '#3e2f22'; floorPath(gx, C, 0.5); gx.fill();
     const boardDone = t > T.fill1 + 0.1;
     const walls = arenaRise(t) > 0.995;
     groundPlane(gx, C, mudLevels(), GT.m, bf > 0.02 ? 150 : 40, { k: 0.5, err: 5, skip: (a0, b0, a1, b1) => (boardDone && a0 >= -BE + 0.01 && a1 <= BE - 0.01 && b0 >= -BE + 0.01 && b1 <= BE - 0.01) || (walls && (a0 > AW + 1 || a1 < -AW - 1 || b0 > AW + 1 || b1 < -AW - 1)) });
     // in close views the board's stone is magnified anyway: draw it into the same half-resolution layer
-    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, nb = unproj(C, W / 2, H), magN = nb ? C.f / Math.max(0.5, nb[2]) / BT.ppm : 0, half = (mag > 1.25 || magN > 3) && t < T.e - 2.6 && boardDone && !D.full;
+    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, nb = unproj(C, W / 2, H), magN = nb ? C.f / Math.max(0.5, nb[2]) / BT.ppm : 0, half = (mag > 1.25 || magN > 3) && t < T.e - 2.6 && boardDone;
     if (half) { plane(gx, C, boardMips(), [-BE, by, -BE], [2 * BE, 0, 0], [0, 0, 2 * BE], BT.n, BT.n, { roots: [9, 9], err: 3, k: 0.5 }); gx.setTransform(1, 0, 0, 1, 0, 0); }
-    if (PR) { gx.getImageData(0, 0, 1, 1); mk('gcells' + STAT.cells); }
     if (half) drawShadows(gx, C, t, L, P, 0.5);
     gx.setTransform(1, 0, 0, 1, 0, 0); gx.globalCompositeOperation = 'multiply'; gx.imageSmoothingQuality = 'low'; gx.drawImage(Li, 0, 0, W / 2, H / 2); gx.globalCompositeOperation = 'source-over';
     // the low fog that lies beyond the pieces, drawn straight into the floor layer
     const split = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2])[2] * 0.85, air = airLayers(C, t, L, 1 - bf * 0.6, split, gx);
-    if (PR) { gx.getImageData(0, 0, 1, 1); mk('glight'); }
-    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G, 0, 0, W, H); mk('gup');
-    if (D.only === 'G') return C;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G, 0, 0, W, H);
     drawFieldDecals(ctx, C, t);
-    if (!D.noSlab) drawSlab(ctx, C, t, L); mk('slab');
-    const c0 = STAT.cells; drawBoardTop(ctx, C, t, Li, L, half); mk('board' + (STAT.cells - c0));
+    drawSlab(ctx, C, t, L);
+    drawBoardTop(ctx, C, t, Li, L, half);
     drawInkLines(ctx, C, t);
     drawReflections(ctx, C, t, L, by);
-    if (!half) drawShadows(ctx, C, t, L, P); mk('shadows');
+    if (!half) drawShadows(ctx, C, t, L, P);
     drawRedSeams(ctx, C, t);
     drawBlood(ctx, C, t);
-    drawChains(ctx, C, t, L); mk('decals');
-    if (D.only === 'floor') return C;
+    drawChains(ctx, C, t, L);
     // the arena stands behind everything on the floor
-    if (!D.noArena) drawArena(ctx, C, t, L);
-    mk('arena'); if (D.only === 'arena') return C;
+    drawArena(ctx, C, t, L);
     // everything that stands, far to near
     const items = [];
-    if (!D.noFig) for (const p of P) { const w = where(p, t), v = toCam(C, w.x, 1, w.z); if (v[2] > NEAR) { const it = { d: v[2], tag: 'pc', id: p.id }; it.draw = () => { const r = drawPiece(ctx, C, p, t, L); if (r) it.hp = r.hp; }; items.push(it); } }
-    for (let i = 0; i < 4; i++) { const v = toCam(C, BRAZ[i][0], 2, BRAZ[i][1]); if (v[2] > NEAR && !D.noBrz) items.push({ d: v[2], tag: 'brz', draw: () => drawBrazier(ctx, C, i, t, L) }); }
-    const tagd = (arr, tg) => arr.map(it => Object.assign(it, { tag: tg }));
-    items.push(...tagd(drawDais(ctx, C, t, L), 'dais'), ...tagd(fieldItems(ctx, C, t, L), 'field'), ...tagd(stakeItems(ctx, C, t, L), 'stake'), ...tagd(standardItems(ctx, C, t, L), 'std'));
-mk('fogback');
+    for (const p of P) { const w = where(p, t), v = toCam(C, w.x, 1, w.z); if (v[2] > NEAR) items.push({ d: v[2], draw: () => drawPiece(ctx, C, p, t, L) }); }
+    for (let i = 0; i < 4; i++) { const v = toCam(C, BRAZ[i][0], 2, BRAZ[i][1]); if (v[2] > NEAR) items.push({ d: v[2], draw: () => drawBrazier(ctx, C, i, t, L) }); }
+    items.push(...drawDais(ctx, C, t, L), ...fieldItems(ctx, C, t, L), ...stakeItems(ctx, C, t, L), ...standardItems(ctx, C, t, L));
     // the coins: the queen's debt, and the price of each borrowed champion
     if (t > T.coinQ) items.push({ d: toCam(C, sqX(3) + 0.5, 0, sqZ(0) + 0.9)[2], draw: () => drawCoin(ctx, C, sqX(3) + 0.5, sqZ(0) + 0.9, T.coinQ, t, L) });
     for (const p of P) if (p.coin && t > p.coin && t < T.form) { const x = sqX(p.f) - 0.55, z = sqZ(7) - 0.95; items.push({ d: toCam(C, x, 0, z)[2], draw: () => drawCoin(ctx, C, x, z, p.coin, t, L) }); }
-    if (D.skipTag) { for (let i = items.length - 1; i >= 0; i--) if (items[i].tag === D.skipTag) items.splice(i, 1); }
-    items.sort((a, b) => b.d - a.d); mk('collect');
-    const TG = {};
-    for (const it of items) { let t0 = 0; if (PR) { ctx.getImageData(0, 0, 1, 1); t0 = performance.now(); } ctx.save(); it.draw(); ctx.restore(); if (PR) { ctx.getImageData(0, 0, 1, 1); const tg = it.tag || 'other', dt = performance.now() - t0; TG[tg] = (TG[tg] || 0) + dt; if (D.each && it.tag === 'pc') (window.S6EACH = window.S6EACH || []).push([it.id, Math.round(it.hp || 0), dt.toFixed(1)]); } }
-    if (PR) PR.push(['items:' + Object.entries(TG).map(([k, v]) => k + '=' + v.toFixed(1)).join(','), performance.now()]);
-    if (!D.noAir) { if (air.front) drawAir(ctx, air.front); else K.vignette(ctx, 0.66, '8,4,3', 0.3); } mk('fogfront');
+    items.sort((a, b) => b.d - a.d);
+    for (const it of items) { ctx.save(); it.draw(); ctx.restore(); }
+    if (air.front) drawAir(ctx, air.front); else K.vignette(ctx, 0.66, '8,4,3', 0.3);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     drawSparks(ctx, C, t);
     drawFlakes(ctx, C, t, P);
     drawFallFx(ctx, C, t, P);
     drawMotes(ctx, C, t, L);
-    drawSkyCrows(ctx, C, t); mk('air');
+    drawSkyCrows(ctx, C, t);
     return C;
   }
   function finish(ctx, t) {
     const bf = battle(t);
-    if ((window.S6DBG || {}).bloom) K.bloom(ctx, 0.28, 12);
     if (bf > 0.02) K.paperTooth(ctx, 0.1 * bf);
   }
   SCENES[6] = {
@@ -1958,8 +1940,7 @@ mk('fogback');
       warm(t);
       if (insertAlpha(t) < 0.999) frame(ctx, t); else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
       insert(ctx, t);
-      if (!(window.S6DBG || {}).noPost) finish(ctx, t);
-      if ((window.S6DBG || {}).prof) { ctx.getImageData(0, 0, 1, 1); window.S6PROF.push(['post', performance.now()]); }
+      finish(ctx, t);
       ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
     },
   };
