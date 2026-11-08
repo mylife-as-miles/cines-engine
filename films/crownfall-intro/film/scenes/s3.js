@@ -163,6 +163,11 @@
     x.save(); x.fillStyle = trim; if (house.device !== 'none') K.device(x, house.device, 0, S(-0.55), S(0.08)); x.restore();
     // head with a small crown of thread
     laid(() => { x.beginPath(); x.ellipse(0, S(-0.87), S(0.06), S(0.075), 0, 0, 6.283); }, '#e0c49a');
+    // a face in a few stitches: brows, eyes, the line of the nose, a mouth
+    x.strokeStyle = '#3a2416'; x.lineWidth = 2.6; x.lineCap = 'round';
+    for (const sx of [-1, 1]) { x.beginPath(); x.moveTo(sx * S(0.012), S(-0.9)); x.lineTo(sx * S(0.04), S(-0.905)); x.stroke(); x.beginPath(); x.arc(sx * S(0.026), S(-0.885), 2.4, 0, 6.283); x.fillStyle = '#3a2416'; x.fill(); }
+    x.beginPath(); x.moveTo(S(0.004), S(-0.88)); x.lineTo(S(-0.004), S(-0.855)); x.lineTo(S(0.008), S(-0.852)); x.stroke();
+    x.beginPath(); x.moveTo(S(-0.016), S(-0.832)); x.lineTo(S(0.018), S(-0.833)); x.stroke();
     x.fillStyle = '#c9a14a'; x.beginPath(); x.moveTo(S(-0.06), S(-0.93)); x.lineTo(S(-0.06), S(-0.99)); x.lineTo(S(-0.03), S(-0.96)); x.lineTo(0, S(-1.01)); x.lineTo(S(0.03), S(-0.96)); x.lineTo(S(0.06), S(-0.99)); x.lineTo(S(0.06), S(-0.93)); x.closePath(); x.fill();
     x.restore();
   }
