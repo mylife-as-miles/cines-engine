@@ -1,2 +1,2 @@
 out/
-narration/working/*.wav
+narration/**/*.wav
