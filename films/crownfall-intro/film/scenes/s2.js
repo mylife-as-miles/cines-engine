@@ -186,11 +186,36 @@
         // shards land and burn small marks into the map
         for (const s of SHARDS) {
           const land = span(t, tBreak + 0.9 + s.delay, tBreak + 2.6 + s.delay);
-          if (land >= 1) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = 'rgba(40,26,16,0.5)'; ctx.beginPath(); ctx.arc(s.land[0], s.land[1], 9, 0, 6.283); ctx.fill(); ctx.restore(); ctx.save(); ctx.translate(s.land[0], s.land[1]); ctx.rotate(s.rot); ctx.scale(0.05, 0.05); ctx.beginPath(); K.poly(ctx, s.tr.map(([px, py]) => [px - s.cx, py - s.cy])); ctx.fillStyle = '#d8b25c'; ctx.fill(); ctx.restore(); K.glow(ctx, s.land[0], s.land[1], 26, s.land[0] === 825 ? [170, 120, 255] : [255, 210, 130], 0.35 * (0.6 + 0.4 * Math.sin(t * 2 + s.cx))); }
+          if (land >= 1) {
+            const [lx, ly] = s.land, sg = ctx.createRadialGradient(lx, ly, 0, lx, ly, 22); sg.addColorStop(0, 'rgba(40,24,12,0.55)'); sg.addColorStop(1, 'rgba(40,24,12,0)');
+            ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(lx, ly, 22, 0, 6.283); ctx.fill(); ctx.restore();
+            ctx.save(); ctx.translate(lx, ly); ctx.rotate(s.rot); K.gold(ctx, c => { c.beginPath(); c.moveTo(0, -13); c.lineTo(6, 4); c.lineTo(-1, 9); c.lineTo(-6, 2); c.closePath(); }, -6, -13, 6, 9, { sheen: 0.5 + 0.4 * Math.sin(t * 2 + s.cx), outlineW: 0.8 }); ctx.restore();
+            K.glow(ctx, lx, ly, 30, lx === 825 ? [170, 120, 255] : [255, 214, 140], 0.4 * (0.6 + 0.4 * Math.sin(t * 2 + s.cx)));
+          }
         }
-        // the Scavenger Wars: fires and red strokes flaring across the land
-        const war = win(t, L8.start - 0.3, L9.start + 1.2, 0.4, 1.0);
-        if (war > 0) { const r = rng(4040); for (let i = 0; i < 34; i++) { const px = 120 + r() * 1760, py = 120 + r() * 1400, t0 = L8.start - 0.3 + r() * 1.8, a = war * smooth(span(t, t0, t0 + 0.4)); if (a <= 0) continue; ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = 'rgba(155,47,31,0.85)'; ctx.lineWidth = 2.4; const ang = r() * 6.283, L = 30 + r() * 50; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(ang) * L, py + Math.sin(ang) * L); ctx.stroke(); ctx.restore(); K.glow(ctx, px, py, 34, [255, 140, 60], 0.55 * a * (0.7 + 0.3 * Math.sin(t * 9 + i))); } K.smoke(ctx, t, { n: 18, x: 0, y: 0, w: 2000, h: 1650, color: [50, 40, 34], alpha: 0.25 * war, size: 260, seed: 909 }); }
+        // the Scavenger Wars: battles marked in ink across the land, campaign arrows in red, fires and smoke
+        const war = win(t, L8.start - 0.4, L9.start + 1.2, 0.3, 1.0);
+        if (war > 0) {
+          const r = rng(4040), t0 = L8.start - 0.4;
+          for (let i = 0; i < 12; i++) {
+            const pts = [], x0 = 160 + r() * 1500, y0 = 160 + r() * 1300, ang = r() * 6.283, len = 220 + r() * 260, bend = (r() - 0.5) * 0.8;
+            for (let k = 0; k <= 20; k++) { const u = k / 20, a2 = ang + bend * (u - 0.5); pts.push([x0 + Math.cos(a2) * len * u, y0 + Math.sin(a2) * len * u + Math.sin(u * 3.1) * 30 * bend]); }
+            if (pts.some(q => q[0] < 120 || q[0] > 1880 || q[1] < 120 || q[1] > 1520)) continue;
+            const p = ease(span(t, t0 + i * 0.22, t0 + i * 0.22 + 0.8)); if (p <= 0) continue;
+            ctx.save(); ctx.globalAlpha = war * 0.85; ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = '#9b2f1f'; K.nib(ctx, pts, { w: 14, angle: 0.4, min: 0.5, taper: 0.2, p, seed: i });
+            if (p > 0.95) { const e = pts[20], d = pts[17], a3 = Math.atan2(e[1] - d[1], e[0] - d[0]); ctx.beginPath(); ctx.moveTo(e[0] + Math.cos(a3) * 26, e[1] + Math.sin(a3) * 26); ctx.lineTo(e[0] + Math.cos(a3 + 2.5) * 22, e[1] + Math.sin(a3 + 2.5) * 22); ctx.lineTo(e[0] + Math.cos(a3 - 2.5) * 22, e[1] + Math.sin(a3 - 2.5) * 22); ctx.closePath(); ctx.fill(); }
+            ctx.restore();
+          }
+          for (let i = 0; i < 14; i++) {
+            const px = 140 + r() * 1720, py = 140 + r() * 1380, ts = t0 + 0.2 + r() * 1.8, p = ease(span(t, ts, ts + 0.35)); if (p <= 0) continue;
+            ctx.save(); ctx.globalAlpha = war; ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = 'rgba(32,21,12,0.92)';
+            for (const sgn of [-1, 1]) { const q = [[px - 34 * sgn, py + 34], [px + 34 * sgn, py - 34]]; K.nib(ctx, K.resample(q, 4), { w: 6, angle: sgn * 0.8, min: 0.4, taper: 0.1, p, seed: i * 2 + sgn }); ctx.fillRect(px + 22 * sgn - 9, py + 22 - 2, 18, 4); }
+            ctx.fillStyle = 'rgba(155,47,31,0.75)'; const rr = rng(i * 13 + 7); for (let k = 0; k < 9; k++) { const a2 = rr() * 6.283, d2 = 10 + rr() * 36; ctx.beginPath(); ctx.arc(px + Math.cos(a2) * d2, py + Math.sin(a2) * d2, 1.5 + rr() * 5 * p, 0, 6.283); ctx.fill(); }
+            ctx.restore();
+            K.glow(ctx, px, py, 70, [255, 140, 60], 0.5 * war * p * (0.7 + 0.3 * Math.sin(t * 9 + i)));
+          }
+          K.smoke(ctx, t, { n: 22, x: 0, y: 0, w: 2000, h: 1650, color: [46, 38, 32], alpha: 0.28 * war, size: 300, seed: 909 });
+        }
         ctx.restore();
         // the crown: whole, cracking, breaking; shards fly out and fall away toward the map
         const crownA = win(t, sc.start - 0.5, tBreak + 2.8, 0.8, 1.2);
