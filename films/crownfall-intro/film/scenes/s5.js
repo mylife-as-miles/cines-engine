@@ -853,7 +853,7 @@
   }));
   // accusations: the screen direction each one points (some at a neighbour, some across the table)
   // [pointing arm angle, its bend, the other arm angle, its bend, other hand]
-  const ACC = [[1.85, 0.1, 2.5, 0.5, 'fist'], [2.08, 0.05, 0.3, 1.2, 'open'], [1.42, 0.12, 0.5, 1.6, 'open'], null, [1.38, 0.1, 0.4, 1.5, 'open'], [2.02, 0.06, 0.3, 1.3, 'open'], [1.8, 0.12, 2.45, 0.55, 'fist']];
+  const ACC = [[2.42, 0.08, 2.75, 0.4, 'fist'], [2.5, 0.04, 0.3, 1.2, 'open'], [1.22, 0.1, 0.5, 1.6, 'open'], null, [1.2, 0.1, 0.4, 1.5, 'open'], [2.46, 0.05, 0.3, 1.3, 'open'], [2.38, 0.1, 2.7, 0.45, 'fist']];
   const TEAR_ORDER = [2, 5, 0, 4, 6, 1, 3], TEAR_AT = [0.42, 0.36, 0.48, 0.4, 0.34, 0.46, 0.38];
   const LS = 372;
   function lordOpts(L, i, t, T) {
@@ -865,7 +865,7 @@
     const turn0 = i === 3 ? 0.15 : 0.55;
     o.turn = i === 3 ? lerp(turn0, lerp(0.9, -0.6, smooth(span(t, T.acc + 0.3, T.acc + 1.2))), look) : lerp(turn0, 0.95, Math.max(look * 0.8, acc));
     const rest = { a: 0.1, b: 1.5, hand: 'open' };
-    if (A) { o.armN = { a: lerp(rest.a, A[0], acc), b: lerp(rest.b, A[1], acc), hand: acc > 0.4 ? 'point' : 'open', fl: lerp(0.22, 1, acc), ul: lerp(0.82, 1, acc) }; o.armF = { a: lerp(0.15, A[2], acc), b: lerp(1.1, A[3], acc), hand: A[4], fl: lerp(0.5, 1, acc) }; }
+    if (A) { o.armN = { a: lerp(rest.a, A[0], acc), b: lerp(rest.b, A[1], acc), hand: acc > 0.4 ? 'point' : 'open', fl: lerp(0.22, 0.88, acc), ul: lerp(0.82, 0.95, acc) }; o.armF = { a: lerp(0.15, A[2], acc), b: lerp(1.1, A[3], acc), hand: A[4], fl: lerp(0.5, 1, acc) }; }
     else { o.armN = { a: lerp(rest.a, 2.5, acc), b: lerp(rest.b, 0.55, acc), hand: acc > 0.3 ? 'palm' : 'open', fl: lerp(0.22, 1, acc), ul: lerp(0.82, 1, acc) }; o.armF = { a: lerp(0.15, 2.2, acc), b: lerp(1.1, 0.8, acc), hand: 'palm', fl: lerp(0.5, 1, acc) }; o.lean = -0.06 * acc; }
     o.y = TABLE.top + lerp(0.56, 0.3, rise) * LS;
     return o;

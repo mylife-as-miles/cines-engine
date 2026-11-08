@@ -1528,7 +1528,7 @@
     const quad = () => { ctx.beginPath(); ctx.moveTo(base[0] - r, base[1]); ctx.lineTo(top[0] - rt, top[1]); ctx.lineTo(top[0] + rt, top[1]); ctx.lineTo(base[0] + r, base[1]); ctx.quadraticCurveTo(base[0], base[1] + r * 0.55, base[0] - r, base[1]); ctx.closePath(); };
     quad(); const g = ctx.createLinearGradient(top[0] - rt, 0, top[0] + rt, 0); g.addColorStop(0, '#3a2a1c'); g.addColorStop(0.28, '#b9976c'); g.addColorStop(0.5, '#e2c79c'); g.addColorStop(0.78, '#8a6a46'); g.addColorStop(1, '#2a1c12'); ctx.fillStyle = g; ctx.fill();
     ctx.save(); quad(); ctx.clip(); const g2 = ctx.createLinearGradient(0, top[1], 0, base[1]); g2.addColorStop(0, `rgba(255,200,130,${0.75 * Math.min(1, I)})`); g2.addColorStop(0.25, `rgba(255,170,90,${0.25 * Math.min(1, I)})`); g2.addColorStop(1, 'rgba(0,0,0,0.35)'); ctx.fillStyle = g2; ctx.fillRect(top[0] - r * 2, top[1] - 4, r * 4, base[1] - top[1] + 8);
-    const rr = rng(seed); ctx.fillStyle = 'rgba(230,200,150,0.55)'; for (let k = 0; k < 3; k++) { const dx = (rr() - 0.5) * rt * 1.4, L = (0.15 + rr() * 0.4) * (base[1] - top[1]); ctx.beginPath(); ctx.ellipse(top[0] + dx, top[1] + L / 2, rt * 0.14, L / 2, 0, 0, TAU); ctx.fill(); }
+    const rr = rng(seed); ctx.fillStyle = 'rgba(230,200,150,0.55)'; for (let k = 0; k < 3; k++) { const dx = (rr() - 0.5) * rt * 1.4, L = (0.15 + rr() * 0.4) * (base[1] - top[1]); if (Math.abs(L) < 1) continue; ctx.beginPath(); ctx.ellipse(top[0] + dx, top[1] + L / 2, rt * 0.14, Math.abs(L) / 2, 0, 0, TAU); ctx.fill(); }
     ctx.restore();
     ctx.fillStyle = '#e8c48c'; ctx.beginPath(); ctx.ellipse(top[0], top[1], rt, rt * 0.42, 0, 0, TAU); ctx.fill();
     ctx.fillStyle = '#140b06'; ctx.fillRect(top[0] - 0.9, top[1] - rt * 0.9, 1.8, rt * 0.9);
