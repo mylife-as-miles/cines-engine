@@ -2,6 +2,7 @@
 
     python tools/narrate_elevenlabs.py voices                     # list the voices this key can use
     python tools/narrate_elevenlabs.py <voice_id> [--model eleven_multilingual_v2] [--only L01,L02] [--stability 0.5]
+    python tools/narrate_elevenlabs.py --reprocess [--tempo 1.06]   # re-cut the WAVs from the recorded MP3s (no API calls)
 
 Reads narration/script.json and writes narration/final/<id>.mp3 and <id>.wav (48 kHz mono) plus
 narration/final/lines.json with each take's duration; tools/build_timeline.js then re-times the film to the voice and
@@ -43,6 +44,8 @@ def main():
             lab = v.get('labels') or {}
             print(f"{v['voice_id']}  {v['name']:<28} {lab.get('gender', ''):<7} {lab.get('accent', ''):<12} {lab.get('age', ''):<12} {lab.get('description', '') or lab.get('use_case', '')}")
         return
+    tempo = float(arg('--tempo', '1.0'))
+    reprocess = sys.argv[1] == '--reprocess'
     voice = sys.argv[1]
     model = arg('--model', 'eleven_multilingual_v2')
     only = arg('--only', '')
@@ -62,16 +65,25 @@ def main():
                 'previous_text': ' '.join(say(l) for l in lines[max(0, i - 2):i]) or None,
                 'next_text': ' '.join(say(l) for l in lines[i + 1:i + 2]) or None}
         mp3 = os.path.join(out_dir, ln['id'] + '.mp3')
-        code = curl('POST', f'{API}/text-to-speech/{voice}?output_format=mp3_44100_192', body, mp3)
-        if code != '200':
-            print(ln['id'], 'failed', code, open(mp3, errors='replace').read()[:400]); sys.exit(1)
+        if not reprocess:
+            code = curl('POST', f'{API}/text-to-speech/{voice}?output_format=mp3_44100_192', body, mp3)
+            if code != '200':
+                print(ln['id'], 'failed', code, open(mp3, errors='replace').read()[:400]); sys.exit(1)
         wav = os.path.join(out_dir, ln['id'] + '.wav')
-        # trim leading and trailing silence, 48 kHz mono
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', mp3, '-af', 'silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.02,areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.08,areverse', '-ac', '1', '-ar', '48000', wav], check=True)
+        # trim leading and trailing silence, optionally quicken the delivery (pitch kept), 48 kHz mono
+        af = 'silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.02,areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.08,areverse'
+        if tempo != 1.0:
+            af += f',atempo={tempo}'
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', mp3, '-af', af, '-ac', '1', '-ar', '48000', wav], check=True)
         dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', wav], capture_output=True, text=True).stdout)
         out.append({'id': ln['id'], 'file': ln['id'] + '.wav', 'dur': round(dur, 3)})
         print(f"{ln['id']} {dur:6.2f}s  {say(ln)[:70]}")
-    json.dump({'voice': f'ElevenLabs {voice} ({model})', 'sampleRate': 48000, 'lines': out}, open(man_path, 'w'), indent=1)
+    if reprocess:
+        prev = json.load(open(man_path)) if os.path.exists(man_path) else {}
+        voice_name = prev.get('voice', 'ElevenLabs').split(' (tempo')[0]
+    else:
+        voice_name = f'ElevenLabs {voice} ({model})'
+    json.dump({'voice': voice_name + (f' (tempo {tempo})' if tempo != 1.0 else ''), 'sampleRate': 48000, 'lines': out}, open(man_path, 'w'), indent=1)
     print('total voice', round(sum(l['dur'] for l in out), 1), 's')
 
 
