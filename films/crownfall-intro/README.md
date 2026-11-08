@@ -1,7 +1,7 @@
 # Crownfall: Aethelgard, opening: "The Seven That Remained"
 
 The opening film of *Crownfall: Aethelgard*, a Project EON game by Osita Miles. It is drawn entirely in code (Canvas 2D):
-a narrated chronicle that begins as a book and ends as a world. 1920×1080, 24 fps, 3 min 49 s; the length
+a narrated chronicle that begins as a book and ends as a world. 1920×1080, 24 fps, 4 min 1 s; the length
 follows the narration.
 
 | Part | What |
@@ -58,8 +58,9 @@ Every scene keys its pictures to its narration lines (`K.cue('L19')`), so a new 
 
 - Music by Osita Miles, from the Crownfall soundtrack: **Cyning Slieht**, then **La Fêlure Demeure** (`audio/`; the
   bytes match the game's copies, SHA-256 feed6d0e… and d961f13a…).
-- Narration: the creator's text. Working voice: Kokoro (kokoro-onnx; model Apache-2.0), voice bm_lewis, until the final
-  ElevenLabs recording replaces it.
+- Narration: the creator's text, read by ElevenLabs' voice George (model eleven_v4), recorded on the creator's account
+  (`narration/final/*.mp3`). The local working voice used while timing the cut was Kokoro (kokoro-onnx, model
+  Apache-2.0), voice bm_lewis.
 - Typefaces (`fonts/fonts.css`, all SIL Open Font License 1.1): Cinzel (`fonts/OFL-Cinzel.txt`), EB Garamond
   (`fonts/OFL-EBGaramond.txt`), Barlow Condensed, Oswald, Archivo.
 - Everything on screen is original code. There are no images, video or generated pictures.
