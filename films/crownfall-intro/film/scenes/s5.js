@@ -8,7 +8,7 @@
   const K = window.KIT, P = K.P, W = K.W, H = K.H;
   const { clamp, lerp, smooth, ease, easeOut, easeIn, span, rng } = K;
   const SCENES = window.SCENES = window.SCENES || {};
-  const DBG = {}, Q = { low: false };
+  const Q = { low: false };
   const TAU = Math.PI * 2;
   const rgba = K.rgba;
 
@@ -939,7 +939,7 @@
     // ---- banners
     const wind = lerp(0.12, 0.75, smooth(span(t, T.L28.start, T.L28.start + 1.5))) * (1 - 0.85 * dark) + 0.2 * smooth(span(t, T.acc, T.rep));
     const gust = late ? Math.max(0, K.noise(t * 1.3, 4, 9) - 0.45) * 1.2 * (1 - dark) : 0;
-    if (!DBG.noBan) for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 7; i++) {
       const tt = T.tearOf[i], tear = t > tt ? { at: TEAR_AT[i], tau: t - tt, seed: 900 + i } : null;
       const jerk = tear ? Math.exp(-tear.tau * 5) * Math.sin(tear.tau * 40) * 0.6 : 0;
       hangBanner(c, bannerTex(K.HOUSES[i], BAN_W, BAN_H), LORD_X(i), ROD_Y, BAN_W, BAN_H, t, { wind: wind + Math.abs(jerk), gust: gust + jerk, seed: i * 1.7, tear, z: v.z });
@@ -948,11 +948,11 @@
     if (!empty) {
       const opts = LORDS.map((L, i) => lordOpts(L, i, t, T)), still = t < T.rise - 0.05;
       if (still) c.drawImage(seatedSeven(T, false), SEV.x, SEV.y, SEV.w, SEV.h);
-      else if (!DBG.noLords) for (let i = 0; i < 7; i++) fig(c, LORDS[i].x, opts[i].y, LS, Object.assign({ fast: true }, opts[i]));
+      else for (let i = 0; i < 7; i++) fig(c, LORDS[i].x, opts[i].y, LS, Object.assign({ fast: true }, opts[i]));
       c.drawImage(front, TF.x, TF.y, TF.w, TF.h);
       c.save(); c.beginPath(); c.rect(0, 0, HW, TABLE.front + 1); c.clip();
       if (still) c.drawImage(seatedSeven(T, true), SEV.x, SEV.y, SEV.w, SEV.h);
-      else if (!DBG.noLords) for (let i = 0; i < 7; i++) fig(c, LORDS[i].x, opts[i].y, LS, Object.assign({}, opts[i], { part: 'arms' }));
+      else for (let i = 0; i < 7; i++) fig(c, LORDS[i].x, opts[i].y, LS, Object.assign({}, opts[i], { part: 'arms' }));
       c.restore();
       // the gallows' shadow is thrown across the whole page, as if the gallows stood between the light and the book
       const gs = smooth(span(t, T.gal, T.gal + 1.3));
@@ -964,8 +964,8 @@
       for (const [px, py, w2, rot, hs, part] of pieces) lyingBanner(c, bannerTex(K.HOUSES[hs], BAN_W, BAN_H), px, py, w2, rot, 300 + hs, part);
     }
     // ---- vermilion ink spreads over the page
-    const vp = t < T.rep - 0.2 ? 0 : lerp(0, 0.5, easeOut(span(t, T.rep - 0.2, T.L30.start)));
-    if (vp > 0.005 && !DBG.noVerm) {
+    const vp = t < T.rep ? 0 : 0.5 * Math.pow(span(t, T.rep, T.L30.start - 0.3), 1.5);
+    if (vp > 0.005) {
       c.save(); hallInner(c); c.clip();
       const F = vermField(), m = K.mask(F, vp, 0.012), L = K.layer('s5:verm', F.w, F.h), lx = L.getContext('2d');
       const dried = smooth(span(t, T.L30.start - 0.5, T.L30.start + 1));
@@ -980,7 +980,7 @@
       const drips = K.cached('s5:drips', () => { const r = rng(66); return Array.from({ length: 18 }, () => ({ x: 120 + r() * 1160, y0: 640 + r() * 200, len: 180 + r() * 420, t0: r() * 1.7, w: 4 + r() * 7, ph: r() * 9 })); });
       c.fillStyle = dried > 0 ? mixHex('#a82a18', '#6e2016', dried) : '#a82a18';
       for (const d of drips) {
-        const g = easeOut(span(t, T.rep + d.t0, T.rep + d.t0 + 2.4)); if (g <= 0) continue;
+        const g = easeOut(span(t, T.rep + 0.45 + d.t0, T.rep + 0.45 + d.t0 + 2.4)); if (g <= 0) continue;
         const y1 = d.y0 + d.len * g, pts = []; for (let k = 0; k <= 10; k++) { const u = k / 10, yy = lerp(d.y0, y1, u); pts.push([d.x + 3 * Math.sin(yy * 0.03 + d.ph), yy]); }
         taper(c, pts, pts.map((q, k) => d.w * (0.5 + 0.5 * k / 10))); c.fill();
         c.beginPath(); c.ellipse(pts[10][0], y1 + d.w * 0.4, d.w * 0.95, d.w * 1.25, 0, 0, TAU); c.fill();
@@ -1011,11 +1011,11 @@
     }
     // the window's shaft and its dust; the gold's glint
     const wl = scr(v, 104, 900), wl2 = scr(v, 760, 1560);
-    if (!empty && !DBG.noBeam && !Q.low) beam(c, t, wl[0], wl[1], wl2[0], wl2[1], 40 * v.z, 260 * v.z, '255,226,170', 0.13 * (1 - dark) * (1 - sky * 0.6), 501, 120);
+    if (!empty && !Q.low) beam(c, t, wl[0], wl[1], wl2[0], wl2[1], 40 * v.z, 260 * v.z, '255,226,170', 0.13 * (1 - dark) * (1 - sky * 0.6), 501, 120);
     else if (!Q.low) { const cs = scr(v, 620, 1150); beam(c, t, cs[0] - 10, cs[1] - 260 * v.z, cs[0] + 40, cs[1] + 200 * v.z, 120 * v.z, 260 * v.z, '255,214,150', 0.04 * relight, 502, 70); }
     const sp = empty ? scr(v, 620, 1150) : [px + 260 * Math.sin(t * 0.21) - (v.x - 700) * 0.6 * v.z, py - 120 + 140 * Math.sin(t * 0.17)];
-    if (gold && !DBG.noSheen && !empty && !Q.low) sheen(c, gold, 0, 0, HW, HH, v, sp[0], sp[1], 480 * v.z, 0.6 * (1 - dark));
-    if (fgold && !DBG.noSheen && empty && !Q.low) sheen(c, fgold, TF.x, TF.y, TF.w, TF.h, v, sp[0], sp[1], 420 * v.z, 0.6 * relight);
+    if (gold && !empty && !Q.low) sheen(c, gold, 0, 0, HW, HH, v, sp[0], sp[1], 480 * v.z, 0.6 * (1 - dark));
+    if (fgold && empty && !Q.low) sheen(c, fgold, TF.x, TF.y, TF.w, TF.h, v, sp[0], sp[1], 420 * v.z, 0.6 * relight);
   }
 
 
@@ -1720,7 +1720,6 @@
   }
   SCENES[5] = {
     join: 'dissolve', joinDur: 1.4,
-    _dev: { fig, M, goldFill, script, sealDisc, at, spline, DBG },
     draw(ctx, t, sc) {
       t = clamp(t, sc.start, sc.end + 1.4);
       const T = sceneTimes(sc);
@@ -1731,6 +1730,10 @@
         { a: T.L28.start - 0.6, b: sc.end + 2, draw: (c, tt) => drawHall(c, tt, hallCam2(tt, T)) },
       ];
       const on = shots.filter(S => t >= S.a && t < S.b);
+      // free the pictures of passed sets (rebuilt the same way if a frame ever goes back to them)
+      if (t > T.L26.start + 1.5) K.release('s5:freeze:0');
+      if (t > T.L27.start + 1.5) { K.release('s5:freeze:1'); K.release('s5:pan:lived'); K.release('s5:pan:married'); K.release('s5:pan:court'); K.release('s5:folio:'); }
+      if (t > T.L28.start + 1.5) { K.release('s5:freeze:2'); K.release('s5:pan:bay'); }
       const draw1 = (c, S, tt) => { c.save(); S.draw(c, tt); c.restore(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.filter = 'none'; };
       if (on.length > 1) {
         // a dissolve: the outgoing shot is frozen once at the dissolve's start (always the same instant, so the picture is

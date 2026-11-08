@@ -8,6 +8,9 @@
   const { clamp, lerp, smooth, ease, easeOut, easeIn, span, win, rng } = K;
   const SCENES = window.SCENES = window.SCENES || {};
   const TAU = Math.PI * 2;
+  // opt-in section timings for development (window.S7_PROF = {}): each mark flushes the canvas and records the time since the last
+  let PROF_T = 0, PROF_CTX = null;
+  function mark(name) { const P2 = window.S7_PROF; if (!P2 || !PROF_CTX) return; PROF_CTX.getImageData(0, 0, 1, 1); const now = performance.now(); if (name) P2[name] = (P2[name] || 0) + (now - PROF_T); PROF_T = now; }
 
   // ================================================================ helpers
   // view(ctx, c, d): the transform for a layer at depth d (1 = the focal plane, smaller is farther, larger is nearer)
@@ -375,6 +378,7 @@
   function burnT(f, sc) { const a = sc.start + BURN.a, b = sc.start + BURN.b; return a + (b - a) * Math.pow(clamp((f + 0.05) / 1.11), 1 / BURN.e); }
   function drawBurn(ctx, t, sc) {
     const p = burnP(t, sc); if (p > 1.06) return;
+    PROF_CTX = ctx; mark();
     const F = burnField(), page = s6Frame();
     // the page: heat-browned ahead of the front, charred black at it, gone behind it
     const L = K.layer('s7:page'), lx = L.getContext('2d');
@@ -387,6 +391,7 @@
       const m3 = K.mask(F, p, 0.003); lx.globalCompositeOperation = 'destination-out'; lx.globalAlpha = 1; lx.drawImage(m3, 0, 0, W, H);
     }
     ctx.drawImage(L, 0, 0);
+    mark('b.page');
     if (p <= -0.05) return;
     // the ember line along the paper's edge: broken into hot and dull stretches, a thin white-hot core, a low red glow
     const rm = K.rim(F, p + 0.008, 0.008, 0.002);
@@ -404,6 +409,7 @@
     gx.globalCompositeOperation = 'source-in'; gx.fillStyle = 'rgb(255,232,180)'; gx.fillRect(0, 0, BW, BH);
     ctx.globalAlpha = 0.9; ctx.drawImage(G, 0, 0, W, H);
     ctx.restore();
+    mark('b.rim');
     // smoke curling up from the front (lit from beneath), sparks and flakes of char lifting off it
     const src = F.src;
     ctx.save();
@@ -434,6 +440,7 @@
       ctx.restore();
     }
     ctx.restore();
+    mark('b.particles');
   }
   function tintMask(m, rgb) {
     const T = K.layer('s7:tm' + m.width, m.width, m.height), x = T.getContext('2d');
@@ -501,6 +508,7 @@
     const u = span(t, sh.a, sh.b), lt = t - sh.a;
     const [sx, sy] = K.shake(t * 0.6, 2.5, 43);
     const c = { x: lerp(-70, 40, ease(u)) + sx, y: lerp(30, -15, ease(u)) + sy, z: lerp(1.02, 1.12, ease(u)), r: -0.006 + 0.004 * u };
+    PROF_CTX = ctx; mark();
     const S = musterStatic();
     ctx.save();
     // sky: storm clouds lit from beneath by the fires of the camps
@@ -523,6 +531,7 @@
       }
     }
     view(ctx, c, 0.25); fog(ctx, 3, [74, 42, 30], 560, 150, lt * 14, 0.4);
+    mark('m.far');
     // the hill, its tents and its column
     view(ctx, c, 0.6); ctx.drawImage(S.hill, -S.OX, -S.OY);
     for (const tn of TENTS) glow(ctx, [230, 120, 50], tn.x, tn.y - tn.h * 0.25, tn.h * 1.2, 0.07 * tn.lit * flick(t, tn.sd, 6));
@@ -546,6 +555,7 @@
       }
       if (i % 7 === 3) items.push({ y: y + 0.5, x: x + h * 0.3, h: h * 2.4, banner: K.HOUSES[[0, 3, 6, 5, 2, 0, 1, 4][(i / 7 | 0) % 8]], i });
     }
+    mark('m.hill+fires');
     items.sort((a, b) => a.y - b.y);
     for (const p of items) {
       if (p.banner) { poleBanner(ctx, p.x, p.y, p.h, p.banner, t, p.i, 0.9); continue; }
@@ -555,7 +565,9 @@
       else { const S2 = SP[p.v], spr = S2.ph[fr], k = p.h / S2.Hs; ctx.drawImage(spr, -S2.fx * k, -S2.fy * k, spr.width * k, spr.height * k); }
       ctx.restore();
     }
+    mark('m.column');
     for (const o of torches) { const fl = flick(t, o.i); glow(ctx, [240, 110, 40], o.x, o.y, o.h * 1.5, 0.14 * fl); glow(ctx, [255, 190, 110], o.x, o.y, o.h * 0.32, 0.5 * fl); flame(ctx, o.x, o.y + o.h * 0.04, o.h * 0.16 * fl, t, o.i); }
+    mark('m.torches');
     // the torches' smoke and the rain's haze, lit from beneath along the column
     for (let i = 0; i < 26; i++) { const [x, y] = roadAt((i + 0.5) / 26 * MROAD.G * 0.86), h = hAt(y); glow(ctx, [150, 66, 26], x, y - h * 1.1, h * 2.4, 0.09); }
     view(ctx, c, 0.7); K.smoke(ctx, t, { n: 12, x: 300, y: 420, w: 1500, h: 420, color: [88, 50, 32], alpha: 0.14, rise: 8, size: 340, seed: 43 });
@@ -566,6 +578,7 @@
     fillRidge(ctx, fr2, H + 300, '#030202');
     const gr = rng(62); ctx.strokeStyle = '#040303'; ctx.lineCap = 'round';
     for (let i = 0; i < 200; i++) { const x = -300 + gr() * (W + 600), y = 1030 + 40 * Math.sin(x * 0.003 + 1) + gr() * 24, l = 30 + gr() * 80, sw = Math.sin(t * 1.6 + x * 0.01) * 12; ctx.lineWidth = 2 + gr() * 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.4, y - l * 0.6, x + sw + (gr() - 0.5) * 24, y - l); ctx.stroke(); }
+    mark('m.smoke');
     // two sentinels close to the lens, out of focus, watching the column pass: drawn small and enlarged (a soft blur)
     {
       const Q = K.layer('s7:fgq', W / 5, H / 5), qx = Q.getContext('2d'), q = proj(c, 1.9, 0, 0);
@@ -580,9 +593,12 @@
     // rain over everything, warmed near the torches
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     const lights = torches.filter(o => o.h > 50).slice(0, 10).map(o => { const q = proj(c, 0.6, o.x, o.y); return { x: q[0], y: q[1], r: o.h * 2.4, rgb: [255, 170, 100], a: 1 }; });
+    mark('m.fg');
     rain(ctx, t, { n: 420, angle: 0.2, speed: 1500, len: 52, alpha: 0.17, lights, seed: 431 });
     ctx.restore();
+    mark('m.rain');
     finish(ctx, { bloom: 0.32, shadow: '#1d3040', shadowA: 0.3, vig: 0.7 });
+    mark('m.finish');
   }
 
   // ================================================================ the First-Born: a wyvern built in 3D and projected

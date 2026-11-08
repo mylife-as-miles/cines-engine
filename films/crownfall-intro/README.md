@@ -55,8 +55,8 @@ Every scene keys its pictures to its narration lines (`K.cue('L19')`), so a new 
 
 ## Sources
 
-- Music by Osita Miles, from the Crownfall soundtrack: **Le Roi Muet** and **La Fêlure Demeure** (`audio/`; the bytes
-  match the game's copies, SHA-256 1f0c2ffe… and d961f13a…).
+- Music by Osita Miles, from the Crownfall soundtrack: **Cyning Slieht**, then **La Fêlure Demeure** (`audio/`; the
+  bytes match the game's copies, SHA-256 feed6d0e… and d961f13a…).
 - Narration: the creator's text. Working voice: Kokoro (kokoro-onnx; model Apache-2.0), voice bm_lewis, until the final
   ElevenLabs recording replaces it.
 - Typefaces (`fonts/fonts.css`, all SIL Open Font License 1.1): Cinzel (`fonts/OFL-Cinzel.txt`), EB Garamond

@@ -44,7 +44,7 @@
     T.still0 = T.a33 - 0.5; T.still1 = T.a34 + 0.15;                             // everything stills
     T.blood0 = at(34, 0.08); T.blood1 = at(34, 0.85);                            // the law of blood runs to the majors
     T.q0 = T.b34 + 0.1; T.q1 = at(35, 0.6); T.ring = at(35, 0.66); T.coinQ = at(35, 0.84); // the queen lent across
-    T.dis0 = at(36, 0.12); T.dis1 = at(36, 0.6);                                 // Ealdholt's back rank empties
+    T.dis0 = at(36, 0.2); T.dis1 = at(36, 0.66);                                 // Ealdholt's back rank empties
     T.bor0 = at(37, 0.02); T.bor1 = at(37, 0.86);                                // the borrowed step in, each at a price
     T.kn0 = at(38, 0.08); T.kn1 = at(38, 0.3);                                   // a knight moves
     T.stake = [0.43, 0.55, 0.66, 0.82].map(u => at(38, u));                      // land, passage, custody, the right to govern
@@ -432,12 +432,20 @@
       const pk = U(0.95); wrap(() => { x.fillStyle = 'rgba(66,18,20,0.5)'; x.beginPath(); x.moveTo(pk - 230, h); x.lineTo(pk - 22, 150); x.lineTo(pk, 144); x.lineTo(pk + 26, 152); x.lineTo(pk + 250, h); x.closePath(); x.fill(); for (let k = 0; k < 10; k++) { const yy = 140 - k * 12, rad = 8 + k * 5; const g = x.createRadialGradient(pk + k * k * 1.5, yy, 0, pk + k * k * 1.5, yy, rad); g.addColorStop(0, `rgba(40,12,12,${0.2 * (1 - k / 10)})`); g.addColorStop(1, 'rgba(40,12,12,0)'); x.fillStyle = g; x.beginPath(); x.arc(pk + k * k * 1.5, yy, rad, 0, TAU); x.fill(); } });
       ridge(305, 50, 300, 433, 'rgba(70,22,22,0.55)');
       ridge(322, 34, 180, 435, 'rgba(46,14,14,0.8)');
-      // the seat of the Blood-Throne on its rise
+      // the seat of the Blood-Throne on its rise: a curtain wall, round towers with cone roofs, a keep, one spire
       const cx = U(-0.2);
       wrap(() => {
-        x.fillStyle = 'rgba(30,8,9,0.92)'; x.beginPath(); x.moveTo(cx - 260, h); x.quadraticCurveTo(cx, 268, cx + 260, h); x.fill();
-        for (let i = 0; i < 22; i++) { const tx = cx - 180 + i * 17 + (K.hash(i, 1, 437) - 0.5) * 8, th = 18 + K.hash(i, 2, 437) * 40 + (Math.abs(i - 11) < 3 ? 34 : 0), tw = 6 + K.hash(i, 3, 437) * 7; x.fillRect(tx, 296 - th, tw, th + 50); if (K.hash(i, 4, 437) < 0.6) { x.beginPath(); x.moveTo(tx - 1.5, 296 - th); x.lineTo(tx + tw / 2, 296 - th - tw * 1.5); x.lineTo(tx + tw + 1.5, 296 - th); x.fill(); } }
-        x.fillRect(cx - 200, 284, 400, 30);
+        x.fillStyle = 'rgba(28,8,9,0.95)';
+        x.beginPath(); x.moveTo(cx - 190, h); x.quadraticCurveTo(cx - 60, 286, cx + 10, 284); x.quadraticCurveTo(cx + 90, 286, cx + 200, h); x.closePath(); x.fill();
+        // the curtain wall with its merlons
+        x.fillRect(cx - 110, 278, 220, 16); for (let i = 0; i < 37; i++) x.fillRect(cx - 110 + i * 6, 274, 3, 5);
+        // round towers, each with a cone
+        for (const [tx, th] of [[-110, 24], [-70, 30], [-28, 22], [40, 28], [78, 24], [110, 20]]) { x.fillRect(cx + tx - 4, 294 - th, 8, th); x.beginPath(); x.moveTo(cx + tx - 6, 294 - th); x.lineTo(cx + tx, 294 - th - 13); x.lineTo(cx + tx + 6, 294 - th); x.closePath(); x.fill(); }
+        // the keep and the spire of the Blood-Throne
+        x.fillRect(cx - 14, 242, 26, 40); x.beginPath(); x.moveTo(cx - 17, 242); x.lineTo(cx - 1, 222); x.lineTo(cx + 15, 242); x.closePath(); x.fill();
+        x.fillRect(cx + 4, 214, 5, 30); x.beginPath(); x.moveTo(cx + 2.5, 214); x.lineTo(cx + 6.5, 186); x.lineTo(cx + 10.5, 214); x.closePath(); x.fill();
+        // a few lit windows
+        x.fillStyle = 'rgba(255,150,70,0.7)'; for (const [wx, wy] of [[-4, 254], [4, 262], [-62, 280], [44, 278], [6, 226]]) x.fillRect(cx + wx, wy, 1.6, 2.4);
       });
       ridge(346, 20, 110, 437, 'rgba(26,8,8,1)');
       // smoke over the field
@@ -480,7 +488,7 @@
     for (let i = 0; i < 4; i++) {
       const fr = fire(i, t); if (fr <= 0) continue;
       const fl = flick(i, tw) * fr * (1 - 0.35 * still);
-      const [bx, bz] = BRAZ[i], dimB = bz > 0 ? 1 - 0.4 * eald : 1;
+      const [bx, bz] = BRAZ[i], dimB = bz > 0 ? 1 - 0.55 * eald : 1;
       L.lights.push({ x: bx, z: bz, r: 19, c: [255, 158, 82], a: 1.15 * fl * dimB, sa: 1.15 * qn(fr * (1 - 0.35 * still) * dimB, 0.05) * 0.88, y: BRZH, fire: true });
     }
     const arena = 1 - bf;
@@ -490,6 +498,8 @@
     // the cold light of the law (L33-L34)
     L.cold = still;
     if (still > 0) L.lights.push({ x: 2, z: 0, r: 22, c: [120, 140, 190], a: 0.5 * still, y: 20 });
+    // a cold, high light on Ealdholt's side while its back rank empties (L36-L37)
+    if (eald > 0) L.lights.push({ x: 0, z: 9, r: 15, c: [130, 150, 205], a: 0.75 * eald, sa: 0.75 * qn(eald, 0.05), y: 16 });
     // the pool on the surrounded king (L42)
     const kp = smooth(span(t, T.a42 - 0.6, T.a42 + 1.2));
     if (kp > 0) L.lights.push({ x: sqX(3), z: sqZ(4), r: 7, c: [255, 200, 150], a: 0.9 * kp, y: 9 });
@@ -497,7 +507,7 @@
     L.eald = eald;
     L.fn = (x, z, floor) => {
       let r = 1, g = 1, b = 1;
-      if (eald > 0 && z > 2) { const k = eald * smooth(clamp((z - 2) / 6)); r -= 0.45 * k; g -= 0.38 * k; b -= 0.2 * k; }
+      if (eald > 0 && z > 2) { const k = eald * smooth(clamp((z - 2) / 6)); r -= 0.38 * k; g -= 0.22 * k; b += 0.1 * k; }
       if (floor && arena > 0) { const d = Math.max(Math.abs(x), Math.abs(z)); if (d > AW - 1) { const k = arena * clamp((d - AW + 1) / 2); r *= 1 - k; g *= 1 - k; b *= 1 - k; } }
       return [r, g, b];
     };
@@ -784,9 +794,9 @@
   }
   // a painterly grain of soft vertical strokes laid over every figure
   function brushTex() {
-    return K.cached('s6:brush', () => {
+    return K.cached('s6:brush2', () => {
       const n = 256, c = K.canvas(n, n), x = c.getContext('2d'), r = rng(808);
-      for (let i = 0; i < 700; i++) { const px = r() * n, py = r() * n, L = 10 + r() * 50, w = 1 + r() * 4, dark = r() < 0.55; for (const ox of [-n, 0, n]) for (const oy of [-n, 0, n]) { x.strokeStyle = dark ? `rgba(0,0,0,${0.05 + r() * 0.12})` : `rgba(255,245,225,${0.04 + r() * 0.08})`; x.lineWidth = w; x.lineCap = 'round'; x.beginPath(); x.moveTo(px + ox, py + oy); x.quadraticCurveTo(px + ox + (r() - 0.5) * 6, py + oy + L / 2, px + ox + (r() - 0.5) * 8, py + oy + L); x.stroke(); } }
+      for (let i = 0; i < 900; i++) { const px = r() * n, py = r() * n, rw = 3 + r() * 9, rh = 2 + r() * 6, a = r() * Math.PI, dark = r() < 0.55; for (const ox of [-n, 0, n]) for (const oy of [-n, 0, n]) { x.fillStyle = dark ? `rgba(0,0,0,${0.04 + r() * 0.08})` : `rgba(255,246,228,${0.03 + r() * 0.07})`; x.beginPath(); x.ellipse(px + ox, py + oy, rw, rh, a, 0, TAU); x.fill(); } }
       return c;
     });
   }
@@ -809,7 +819,7 @@
       case 'R': Object.assign(o, { kind: 'mail', head: 'helm', hold: 'spear', pavise: hs || { device: 'none' }, beard: false }); col.cloth = dye(base.cloth2); col.field = hs ? mixHex(base.cloth2, hs.field, a) : base.cloth2; col.leg = base.steel; break;
       case 'N': Object.assign(o, { kind: 'mail', head: 'helm', hold: 'lance', seated: true, beard: false, crest: null }); col.cloth = dye(base.cloth2); col.leg = base.steel; o.pennant = hs && a > 0.5 ? hs.field : null; o.coat = p.side === 'A' ? '#b5ada0' : hs ? (hs.key === 'beasts' ? '#211b18' : hs.key === 'roads' ? '#5a3a24' : hs.key === 'frontier' ? '#6a5040' : '#3a2c22') : '#221c19'; break;
       case 'P':
-        if (p.retinue) { Object.assign(o, { kind: 'robe', head: r() < 0.5 ? 'hood' : 'hair', hold: r() < 0.5 ? 'banner0' : 'none', cloak: true }); col.cloth = QH.field; col.cloth2 = shadeHex(QH.field, -0.3); col.cloak = shadeHex(QH.field, -0.35); o.arms = QH; o.armsA = 1; col.charge = QH.charge; }
+        if (p.retinue) { Object.assign(o, { kind: 'robe', head: r() < 0.5 ? 'hood' : 'hair', hold: 'none', cloak: true }); col.cloth = QH.field; col.cloth2 = shadeHex(QH.field, -0.3); col.cloak = shadeHex(QH.field, -0.35); o.arms = QH; o.armsA = 1; col.charge = QH.charge; }
         else if (p.side === 'A') { Object.assign(o, { kind: 'tunic', head: 'kettle', hold: 'spear' }); col.cloth = '#cbbd9c'; }
         else { Object.assign(o, { kind: r() < 0.4 ? 'rags' : 'tunic', head: ['hood', 'hair', 'hood', 'coif', 'hair', 'cap'][Math.floor(r() * 6)], hold: 'none' }); col.cloth = COMMON[Math.floor(r() * COMMON.length)]; col.cloth2 = COMMON[Math.floor(r() * COMMON.length)]; col.leg = '#3a2e24'; col.boot = '#1e1610'; col.hair = ['#2a1c12', '#4a3020', '#6a5040', '#1e1610'][Math.floor(r() * 4)]; col.skin = ['#c49a76', '#a87a58', '#8a6248', '#d0a882'][Math.floor(r() * 4)]; col.steel = '#6a6a6c'; }
         break;
@@ -853,7 +863,7 @@
     drawFigureInto(x, ox, oy, p, o, view, face, hs, lc, walk);
     const fig = knight ? hh * 2.6 : hs, top = oy - fig;
     x.globalCompositeOperation = 'source-atop';
-    x.globalAlpha = 0.55; if (!BRUSHPAT || BRUSHPAT.ctx !== x) BRUSHPAT = { ctx: x, p: x.createPattern(brushTex(), 'repeat') }; const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = BRUSHPAT.p; x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); x.globalAlpha = 1;
+    x.globalAlpha = 0.4; if (!BRUSHPAT || BRUSHPAT.ctx !== x) BRUSHPAT = { ctx: x, p: x.createPattern(brushTex(), 'repeat') }; const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = BRUSHPAT.p; x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); x.globalAlpha = 1;
     let g = x.createLinearGradient(ox + lx * fig * 0.3, 0, ox - lx * fig * 0.3, 0);
     g.addColorStop(0, rgbs([255, 200, 140], 0.12 * clamp(keyAmt))); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(6,4,10,0.38)');
     x.fillStyle = g; x.fillRect(0, 0, SW, SH);
@@ -1180,7 +1190,7 @@
     if (FIELD) return FIELD;
     const r = rng(7707), F = { bodies: [], spears: [], flags: [], crows: [], puddles: [], stains: [] };
     const inBoard = (x, z) => Math.abs(x) < BE && Math.abs(z) < BE;
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 52; i++) {
       // the dead lie thickest across the board-to-be and toward the camera's path
       const x = (r() - 0.5) * 44, z = -24 + r() * 40, a = r() * TAU;
       F.bodies.push({ x, z, a, len: 1.7 + r() * 0.2, kind: r() < 0.6 ? 'armour' : r() < 0.5 ? 'tunic' : 'cloak', head: ['helm', 'kettle', 'bare', 'hood', 'coif'][Math.floor(r() * 5)], shield: r() < 0.35 ? HS[Math.floor(r() * 7)] : null, col: ['#4a3a30', '#3a3230', '#5a4636', '#33302c'][Math.floor(r() * 4)], seed: Math.floor(r() * 1e5), board: inBoard(x, z) });
@@ -1256,25 +1266,25 @@
     return items;
   }
   function drawBody(ctx, C, b, st, L, tw) {
-    const ca = Math.cos(b.a), sa = Math.sin(b.a), sink = st * 0.35;
-    const foot = pj(C, b.x - sa * b.len * 0.5, 0.12 - sink, b.z - ca * b.len * 0.5), head = pj(C, b.x + sa * b.len * 0.5, 0.12 - sink, b.z + ca * b.len * 0.5); if (!foot || !head) return;
-    const mid = pj(C, b.x, 0.12, b.z); if (!mid) return;
+    const ca = Math.cos(b.a), sa = Math.sin(b.a), sink = st * 0.35, y = 0.1 - sink;
+    const foot = pj(C, b.x - sa * b.len * 0.5, y, b.z - ca * b.len * 0.5), head = pj(C, b.x + sa * b.len * 0.5, y, b.z + ca * b.len * 0.5), mid = pj(C, b.x, y, b.z);
+    if (!foot || !head || !mid) return;
     const len = Math.hypot(head[0] - foot[0], head[1] - foot[1]), s = mid[3];
-    if (s * b.len < 6) return;
-    const lt = lightAt(L, b.x, 0.3, b.z).c, ink = 1 - st;
-    // the body lies along foot -> head; its thickness rises toward the camera
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = clamp(ink * 1.3);
-    // a dark pool under it
-    ctx.fillStyle = 'rgba(16,6,4,0.55)'; ctx.beginPath(); ctx.ellipse(mid[0], mid[1], Math.max(len * 0.6, s * 0.5), s * 0.25, Math.atan2(head[1] - foot[1], head[0] - foot[0]) * 0.3, 0, TAU); ctx.fill();
-    const ang = Math.atan2(head[1] - foot[1], head[0] - foot[0]);
+    if (s * b.len < 8 || mid[2] < 1) return;
+    const lt = lightAt(L, b.x, 0.3, b.z).c, k = 1 - st;
+    const dark = litHex(mixHex(b.col, '#0a0606', 0.55 + 0.4 * st), lt), rimc = rgbs([255 * clamp(lt[0] * 0.95), 120 * clamp(lt[1] * 1.1), 80 * clamp(lt[2]), 1], 1);
+    const col = { cloth: dark, cloth2: dark, trim: dark, skin: dark, hair: dark, steel: litHex('#2a2a2c', lt), wood: dark, gold: dark, leg: dark, boot: dark, veil: dark, cloak: dark };
+    const across = s * 1.7 * (1 - st * 0.6), side = Math.cos(b.a * 3) > 0 ? 1 : -1, ang = Math.atan2(head[1] - foot[1], head[0] - foot[0]);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = clamp(k * 1.4);
+    // a dark stain beneath, then the body: a rim of red sky along its upper edge, the body over it
+    const e = floorEllipse(C, b.x, 0.02, b.z, b.len * 0.42, 0.6);
+    if (e) { ctx.fillStyle = 'rgba(14,5,3,0.5)'; ctx.beginPath(); ctx.ellipse(e.x, e.y, e.rx, e.ry, 0, 0, TAU); ctx.fill(); }
     ctx.translate(foot[0], foot[1]); ctx.rotate(ang + Math.PI / 2);
-    // figure units: feet at 0, crown at -1; scale along the body by len, across by the depth scale (flattened as it sinks)
-    const across = s * b.len * (0.75 - st * 0.5), side = Math.cos(b.a * 3) > 0 ? 1 : -1;
-    ctx.scale(across / len * side, -1);
-    const col = litHex(mixHex(b.col, '#0c0806', st), lt);
-    K.figure(ctx, 0, 0, len, { style: 'painted', kind: b.kind, head: b.head, hold: 'none', face: 1, arm: 1.4, bend: 0.4, farArm: -0.6, robe: col, hose: litHex('#2a2420', lt), skin: litHex(mixHex('#9a8270', '#0c0806', st), lt), outline: 1.2 });
+    const fo = { view: 'side', kind: b.kind === 'armour' ? 'mail' : b.kind === 'cloak' ? 'tunic' : b.kind, head: b.head === 'bare' ? 'hair' : b.head, hold: 'none', cloak: b.kind === 'cloak', col };
+    if (len > 26) { ctx.save(); ctx.translate(0, 0); ctx.scale(across * side, len); ctx.translate(-0.012 * side, 0); ctx.globalAlpha *= 0.7; person(ctx, Object.assign({}, fo, { col: Object.fromEntries(Object.keys(col).map(q => [q, rimc])) })); ctx.restore(); }
+    ctx.scale(across * side, len); person(ctx, fo);
     ctx.restore();
-    if (b.shield && st < 0.6) { const q = pj(C, b.x + ca * 0.45, 0.1, b.z - sa * 0.45); if (q) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = (1 - st / 0.6) * 0.9; ctx.translate(q[0], q[1]); ctx.scale(1, 0.4); K.shield(ctx, 0, 0, q[3] * 0.32, { field: litHex(b.shield.field, lt), charge: litHex(b.shield.charge, lt), device: b.shield.device }, { shape: 'kite' }); ctx.restore(); } }
+    if (b.shield && st < 0.6) { const q = pj(C, b.x + ca * 0.45, 0.06, b.z - sa * 0.45); if (q && q[2] > 1) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = (1 - st / 0.6) * 0.85; ctx.translate(q[0], q[1]); ctx.scale(1, 0.38); K.shield(ctx, 0, 0, q[3] * 0.3, { field: litHex(mixHex(b.shield.field, '#000000', 0.35), lt), charge: litHex(mixHex(b.shield.charge, '#000000', 0.35), lt), device: b.shield.device }, { shape: 'kite', rim: false }); ctx.restore(); } }
     void tw;
   }
   function drawSpear(ctx, C, s, st, L, tw) {
@@ -1529,7 +1539,7 @@
     return items;
   }
   // ---------------------------------------------------------------- L38: what the board can award, at its edge
-  const STAKES = [-6.25, -1.75, 2.75, 7.0].map((z, i) => ({ x: -(BE + STEP + 1.9), z, i }));
+  const STAKES = [-6.25, -2.0, 2.25, 6.5].map((z, i) => ({ x: -(BE + STEP + 1.7), z, i }));
   function stakeItems(ctx, C, t, L) {
     const T = TT(), items = [];
     for (const s of STAKES) {
@@ -1540,15 +1550,15 @@
     return items;
   }
   function drawStake(ctx, C, s, t, a, L) {
-    const tw = worldT(t), T = TT(), ph = 1.05, lt0 = lightAt(L, s.x, 1, s.z).c, fireA = a * flick(6 + s.i, tw);
-    const lt = [lt0[0] + 0.9 * fireA, lt0[1] + 0.55 * fireA, lt0[2] + 0.3 * fireA];
+    const tw = worldT(t), T = TT(), ph = 0.95, lt0 = lightAt(L, s.x, 1, s.z, true).c, fireA = a * flick(6 + s.i, tw);
+    const lt = [lt0[0] * 0.8 + 0.55 * fireA, lt0[1] * 0.8 + 0.34 * fireA, lt0[2] * 0.8 + 0.18 * fireA];
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = a;
     // the plinth
     const hw = 0.45, faces = [[[s.x + hw, s.z - hw], [s.x + hw, s.z + hw], [1, 0]], [[s.x - hw, s.z - hw], [s.x + hw, s.z - hw], [0, -1]], [[s.x - hw, s.z + hw], [s.x + hw, s.z + hw], [0, 1]], [[s.x - hw, s.z - hw], [s.x - hw, s.z + hw], [-1, 0]]];
-    for (const [A, B, n] of faces) { if ((C.px - (A[0] + B[0]) / 2) * n[0] + (C.pz - (A[1] + B[1]) / 2) * n[1] <= 0) continue; polyFill(ctx, C, [[A[0], 0, A[1]], [B[0], 0, B[1]], [B[0], ph, B[1]], [A[0], ph, A[1]]], litHex(n[0] > 0 ? '#5a4a3a' : '#3a3028', lt)); }
-    polyFill(ctx, C, [[s.x - hw, ph, s.z - hw], [s.x + hw, ph, s.z - hw], [s.x + hw, ph, s.z + hw], [s.x - hw, ph, s.z + hw]], litHex('#6a5a48', lt));
+    for (const [A, B, n] of faces) { if ((C.px - (A[0] + B[0]) / 2) * n[0] + (C.pz - (A[1] + B[1]) / 2) * n[1] <= 0) continue; polyFill(ctx, C, [[A[0], 0, A[1]], [B[0], 0, B[1]], [B[0], ph, B[1]], [A[0], ph, A[1]]], litHex(n[0] > 0 ? '#3a3028' : '#241c16', lt)); polyFill(ctx, C, [[A[0], ph - 0.08, A[1]], [B[0], ph - 0.08, B[1]], [B[0], ph - 0.04, B[1]], [A[0], ph - 0.04, A[1]]], litHex('#8a6a2c', lt)); }
+    polyFill(ctx, C, [[s.x - hw, ph, s.z - hw], [s.x + hw, ph, s.z - hw], [s.x + hw, ph, s.z + hw], [s.x - hw, ph, s.z + hw]], litHex('#4a3e32', lt));
     const q = pj(C, s.x, ph, s.z); if (!q) { ctx.restore(); return; }
-    const S = q[3], X = q[0], Y = q[1], grow = easeOut(clamp(a * 1.2));
+    const S = q[3] * 1.5, X = q[0], Y = q[1], grow = easeOut(clamp(a * 1.2));
     if (s.i === 0) { // land: a clod of earth, a sheaf rising from it, a boundary stone
       ctx.fillStyle = litHex('#3a2a1c', lt); ctx.beginPath(); ctx.ellipse(X, Y - S * 0.06, S * 0.36, S * 0.14, 0, Math.PI, 0); ctx.fill();
       ctx.strokeStyle = litHex('#8a8a3a', lt); ctx.lineWidth = Math.max(1, S * 0.02); for (let k = -4; k <= 4; k++) { ctx.beginPath(); ctx.moveTo(X + k * S * 0.03, Y - S * 0.12); ctx.quadraticCurveTo(X + k * S * 0.05, Y - S * 0.35 * grow, X + k * S * 0.08, Y - S * 0.5 * grow); ctx.stroke(); }
@@ -1559,7 +1569,7 @@
       ctx.save(); ctx.translate(X - S * 0.27, Y - S * 0.5); ctx.rotate(-1.0 * grow); ctx.fillStyle = litHex('#8a2a1d', lt); ctx.fillRect(0, -S * 0.025, S * 0.62, S * 0.05); ctx.fillStyle = litHex('#eadfc6', lt); for (let k = 1; k < 5; k += 2) ctx.fillRect(k * S * 0.12, -S * 0.025, S * 0.06, S * 0.05); ctx.restore();
       K.glow(ctx, X + S * 0.27, Y - S * 0.7, S * 0.35, [255, 190, 110], 0.5 * a);
     } else if (s.i === 2) { // custody: a child, a hand on her shoulder
-      K.figure(ctx, X, Y, S * 1.05, { style: 'painted', kind: 'child', head: 'hood', hold: 'none', face: 1, robe: litHex('#7a6a52', lt), hose: litHex('#3a2e24', lt), skin: litHex('#d8b48e', lt), outline: Math.max(0.8, S / 120) });
+      { const ch = { cloth: litHex('#7a6a52', lt), cloth2: litHex('#5a4a3a', lt), trim: litHex('#3a2a1a', lt), skin: litHex('#d8b48e', lt), hair: litHex('#4a3020', lt), steel: '#555', wood: '#333', gold: '#a80', leg: litHex('#3a2e24', lt), boot: litHex('#1e1610', lt), veil: '#ddd', cloak: litHex('#5a4a3a', lt) }; ctx.save(); ctx.translate(X, Y); ctx.scale(S * 0.62, S * 0.62); person(ctx, { view: 'front', kind: 'tunic', head: 'hood', hold: 'none', col: ch }); ctx.restore(); }
       ctx.fillStyle = litHex('#2a1d14', lt); ctx.beginPath(); ctx.ellipse(X - S * 0.06, Y - S * 0.82, S * 0.07, S * 0.04, 0.3, 0, TAU); ctx.fill(); ctx.fillRect(X - S * 0.32, Y - S * 0.86, S * 0.26, S * 0.05);
     } else { // the right to govern: a crown on a red cushion
       ctx.fillStyle = litHex('#7a1d17', lt); ctx.beginPath(); ctx.ellipse(X, Y - S * 0.07, S * 0.3, S * 0.08, 0, 0, TAU); ctx.fill(); ctx.fillRect(X - S * 0.3, Y - S * 0.07, S * 0.6, S * 0.06);
@@ -1609,6 +1619,26 @@
     if (pl > 0) { const q = pj(C, sqX(3), by, sqZ(4)); if (q) K.glow(ctx, q[0], q[1], Math.min(700, q[3] * 5), [160, 20, 10], 0.18 * pl); }
     ctx.restore();
   }
+  // ---------------------------------------------------------------- the fires mirrored in the polished stone of the board
+  function drawReflections(ctx, C, t, L, by) {
+    if (t < TT().fill1) return;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (!quadPath(ctx, C, [[-BE, by, -BE], [BE, by, -BE], [BE, by, BE], [-BE, by, BE]])) { ctx.restore(); return; }
+    ctx.clip(); ctx.globalCompositeOperation = 'lighter';
+    for (const l of L.lights) {
+      if (!l.fire) continue;
+      const my = 2 * by - (l.y || BRZH), q = pj(C, l.x, my, l.z); if (!q) continue;
+      // where the line of sight to the mirrored flame meets the board
+      const u = (C.py - by) / (C.py - my), fx = C.px + (l.x - C.px) * u, fz = C.pz + (l.z - C.pz) * u;
+      if (Math.abs(fx) > BE + 1 || Math.abs(fz) > BE + 1) continue;
+      const fp = pj(C, fx, by, fz); if (!fp) continue;
+      const rx = Math.min(240, fp[3] * 0.55), ry = Math.min(900, fp[3] * 2.6), a = 0.2 * clamp(l.a);
+      ctx.save(); ctx.translate(q[0], q[1]); ctx.scale(rx, ry);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, `rgba(255,190,110,${a})`); g.addColorStop(0.35, `rgba(255,140,60,${a * 0.45})`); g.addColorStop(1, 'rgba(255,120,50,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill(); ctx.restore();
+    }
+    ctx.restore();
+  }
   // ---------------------------------------------------------------- shadows on the floor: contact, and long ones from the fires
   function drawShadows(ctx, C, t, L, P) {
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -1627,6 +1657,22 @@
         ctx.save(); ctx.translate((q0[0] + q1[0]) / 2, (q0[1] + q1[1]) / 2); ctx.rotate(Math.atan2(q1[1] - q0[1], q1[0] - q0[0])); ctx.scale(rx, ry);
         const g = ctx.createRadialGradient(-0.85, 0, 0, -0.85, 0, 1.9); g.addColorStop(0, `rgba(6,3,2,${0.42 * k * a0})`); g.addColorStop(0.5, `rgba(6,3,2,${0.16 * k * a0})`); g.addColorStop(1, 'rgba(6,3,2,0)');
         ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill(); ctx.restore();
+      }
+    }
+    ctx.restore();
+  }
+  // ---------------------------------------------------------------- Ealdholt's own champions lift away as flakes of ink (L36)
+  function drawFlakes(ctx, C, t, P) {
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    for (const p of P) {
+      if (!p.dis || t < p.dis[0] || t > p.dis[1] + 2.2) continue;
+      const w = where(p, t), y0 = floorAt(w.x, w.z, t);
+      for (let k = 0; k < 34; k++) {
+        const born = p.dis[0] + K.hash(k, p.f, 401) * (p.dis[1] - p.dis[0]), age = t - born; if (age < 0 || age > 2.2) continue;
+        const hx = (K.hash(k, 3, 403) - 0.5) * 0.7, hy = K.hash(k, 5, 405) * p.h, drift = age * (0.5 + K.hash(k, 7, 407) * 0.8);
+        const q = pj(C, w.x + hx + Math.sin(age * 2 + k) * 0.25, y0 + hy + drift, w.z + (K.hash(k, 9, 409) - 0.5) * 0.4 - age * 0.2); if (!q) continue;
+        const sz = Math.max(0.8, q[3] * 0.035 * (1 - age / 2.4)), a = (1 - age / 2.2) * 0.85;
+        ctx.fillStyle = `rgba(14,10,10,${a})`; ctx.beginPath(); ctx.ellipse(q[0], q[1], sz, sz * 0.55, age * 3 + k, 0, TAU); ctx.fill();
       }
     }
     ctx.restore();
@@ -1689,42 +1735,43 @@
       k(T.s - 1.5, [-3.2, 1.4, -28.5], [1.6, 0.9, -11], 1500),
       k(T.a31, [-2.5, 1.55, -25], [1.0, 0.8, -8], 1500),
       // L31: the ink runs; the camera rises and draws back as the board and the arena form
-      k(T.a31 + 2.0, [-4.5, 4.8, -25.5], [0, 0, -5.5], 1400),
-      k(T.b31 + 0.2, [-17, 15, -27], [0, 0, -2], 1250),
+      k(T.a31 + 2.0, [-4.5, 4.8, -24.5], [0, 0, -5.5], 1400),
+      k(T.b31 + 0.2, [-15, 15, -23.5], [0, 0, -2], 1250),
       // L32: down to the ranks as the living take their places
-      k(T.a32 + 1.2, [-17.5, 6.5, -15], [0, 1, -6], 1350),
+      k(T.a32 + 1.2, [-19.5, 7.5, -10], [0, 1, -6], 1350),
       k(T.b32 + 0.1, [-14.5, 1.75, -7.3], [6, 1.3, -7.0], 1500),
       // L33: all is still; a slow push toward the dais of the Seven
       k(T.b33 + 0.2, [-12.2, 1.85, -7.45], [14, 2.6, -3], 1650),
-      // L34: the law of blood runs from the dais to the champions of side A
-      k(T.a34 + 1.7, [-4.2, 5.8, -3.2], [12, 0.4, -6.5], 1400),
-      k(T.b34 + 0.2, [1.6, 3.0, -1.2], [-1.5, 1.2, -9.8], 1500),
-      // L35: the queen lent across, framed between two pawns
-      k(T.a35 + 1.6, [-0.1, 2.5, -1.2], [-0.9, 1.5, -10.5], 1700),
-      k(T.ring, [-0.25, 2.1, -4.4], [-0.1, 1.55, -8.9], 2150),
-      k(T.b35 + 0.3, [-0.05, 2.0, -4.9], [-0.3, 1.5, -8.9], 2300),
+      // L34: the law of blood: a registry's tree inked from the dais to side A's champions
+      k(T.a34 + 1.6, [-2.5, 8.0, 0.2], [3.5, 0, -9.5], 1250),
+      k(T.b34 + 0.2, [0.4, 4.6, -2.0], [-0.3, 0.9, -10], 1450),
+      // L35: the queen lent across, seen over the pawns' heads
+      k(T.a35 + 1.6, [-1.0, 3.4, -1.4], [-0.4, 1.3, -10.5], 1650),
+      k(T.ring, [-0.7, 3.05, -2.6], [-0.2, 1.4, -10], 1750),
+      k(T.b35 + 0.3, [-0.6, 2.95, -2.9], [-0.2, 1.4, -10], 1800),
       // L36: across the board to Ealdholt, whose back rank empties
-      k(T.a36 + 1.8, [3.2, 6.2, -2.5], [0, 0.4, 7.2], 1350),
-      k(T.b36 + 0.1, [1.0, 2.25, 0.8], [0, 1.2, 9.6], 1600),
+      k(T.a36 + 1.4, [-1.6, 4.8, 0.2], [0.2, 1.0, 8.9], 1450),
+      k(T.a36 + 4.2, [-0.9, 3.6, 1.9], [0.2, 1.0, 9.0], 1550),
+      k(T.b36 + 0.1, [-1.2, 2.6, 3.2], [0.2, 1.2, 9.4], 1600),
       // L37: the borrowed step in; each binds a pawn
-      k(T.a37 + 2.6, [-9.5, 3.0, 3.4], [0, 0.8, 7.8], 1450),
-      k(T.b37 + 0.2, [-12.8, 2.4, 6.0], [0, 0.8, 7.5], 1550),
+      k(T.a37 + 2.6, [-9.0, 4.8, 2.4], [0, 0.6, 7.6], 1400),
+      k(T.b37 + 0.2, [-10.6, 4.1, 4.2], [0, 0.6, 7.6], 1500),
       // L38: play; along the edge where the stakes appear
-      k(T.a38 + 0.9, [-16.8, 2.7, -10.8], [2, 0.8, -3], 1400),
-      k(T.b38 + 0.1, [-17.6, 2.3, 4.6], [-10.5, 1.0, 9.6], 1500),
+      k(T.a38 + 0.9, [-20.5, 6.8, -15.5], [-6, 0.5, -1.5], 1350),
+      k(T.b38 + 0.1, [-21.5, 5.6, -6.5], [-12.5, 0.6, 5.0], 1450),
       // L39: wide over the arena
-      k(T.b39 + 0.1, [-22, 31, -25], [2, 0, 2], 1150),
+      k(T.b39 + 0.1, [-22, 31, -24], [2, 0, 2], 1150),
       // L40: down to the bishop as he falls
-      k(T.a40 + 0.5, [12.5, 3.6, 0.4], [6, 1.0, 1.5], 1600),
-      k(T.a41, [10.4, 1.6, 1.25], [6, 0.9, 1.8], 1800),
+      k(T.a40 + 0.5, [13.0, 5.4, -0.5], [6, 0.9, 1.6], 1500),
+      k(T.a41, [11.4, 4.2, 0.2], [6, 0.8, 1.8], 1650),
       // L41: the defeated in shadow (cut)
       k(T.a41, [11.2, 1.7, 12.4], [-6, 1.3, 14.8], 1600, { cut: true }),
       k(T.a42, [7.6, 1.6, 13.1], [-6, 1.3, 14.8], 1850),
       // L42: the surrounded king (cut); rising as red fills the seams; held
-      k(T.a42, [0.7, 2.6, -2.3], [-1.25, 2.0, 1.25], 2200, { cut: true }),
-      k(T.a42 + 3.4, [2.6, 7.4, -6.6], [-1.25, 0.6, 1.25], 1500),
-      k(T.e - 1.6, [3.7, 12.6, -10.1], [-1.2, 0.05, 1.45], 1360),
-      k(T.e + 2, [3.85, 13.2, -10.5], [-1.2, 0.0, 1.5], 1350),
+      k(T.a42, [0.3, 2.35, -1.7], [-1.25, 1.8, 1.25], 2100, { cut: true }),
+      k(T.a42 + 3.4, [1.6, 6.0, -5.0], [-1.25, 0.8, 1.25], 1600),
+      k(T.e - 1.6, [2.2, 8.6, -6.4], [-1.2, 0.5, 1.3], 1500),
+      k(T.e + 2, [2.3, 8.95, -6.6], [-1.2, 0.48, 1.32], 1490),
     ];
     return CK;
   }
@@ -1782,6 +1829,7 @@
     drawSlab(ctx, C, t, L); mk('slab');
     const c0 = STAT.cells; drawBoardTop(ctx, C, t, Li, L, half); mk('board' + (STAT.cells - c0));
     drawInkLines(ctx, C, t);
+    drawReflections(ctx, C, t, L, by);
     drawShadows(ctx, C, t, L, P); mk('shadows');
     drawRedSeams(ctx, C, t);
     drawBlood(ctx, C, t);
@@ -1808,6 +1856,7 @@
     if (!D.noAir) drawAir(ctx, air.front); mk('fogfront');
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     drawSparks(ctx, C, t);
+    drawFlakes(ctx, C, t, P);
     drawSkyCrows(ctx, C, t); mk('air');
     return C;
   }
