@@ -4,7 +4,8 @@
 
 Cyning Slieht opens under the studio card and carries the chronicle; La Felure Demeure rises under it and carries the
 rest, its dip on the YEAR 33 card and its last swell under the title. The music ducks under
-the voice (sidechain compression), and the whole is levelled to -16 LUFS. Writes audio/intro-mix.m4a (and a .wav).
+the voice: an envelope drawn from the narration lowers it while a line is spoken and lets it rise to full in every
+stretch without a voice; the whole is levelled to -16 LUFS. Writes audio/intro-mix.m4a (and a .wav).
 Needs numpy and soundfile, and ffmpeg on the path.
 """
 import json, os, subprocess, sys
@@ -27,9 +28,13 @@ SC = {s_['n']: s_ for s_ in TL['scenes']}
 # the voice, and duck further while it speaks.
 LF = TL['year33'][0] - 147.0 + 0.4
 MUSIC = [  # file, where it starts in the film (s), gain, volume shaping over film time
-    ('audio/cyning-slieht.mp3', 0.0, 0.36, f"(0.45+0.55*min(1,max(0,(t-6)/3)))*(1-min(1,max(0,(t-{LF + 3.0:.2f})/10)))"),
-    ('audio/la-felure-demure.mp3', LF, 0.40, "min(1,t/5)"),
+    ('audio/cyning-slieht.mp3', 0.0, 0.64, lambda t: (0.45 + 0.55 * np.clip((t - 6) / 3, 0, 1)) * (1 - np.clip((t - (LF + 3.0)) / 10, 0, 1))),
+    ('audio/la-felure-demure.mp3', LF, 0.68, lambda t: np.clip((t - LF) / 5, 0, 1)),
 ]
+# the music rides the narration: full in every stretch without a voice, down by DUCK_DB while a line is spoken. Lines closer
+# than MERGE seconds share one duck, so the music never pumps between them; it falls over ATTACK s before a line and comes
+# back over RELEASE s after it.
+DUCK_DB, MERGE, ATTACK, RELEASE, LEAD, TAIL_HOLD = -19.0, 1.4, 0.45, 1.1, 0.25, 0.2
 
 
 def at_time(at):
@@ -78,37 +83,63 @@ voice *= 0.89 / peak
 tmp = os.path.join(ROOT, 'out', 'mix_tmp'); os.makedirs(tmp, exist_ok=True)
 vpath = os.path.join(tmp, 'voice.wav'); sf.write(vpath, voice, SR, subtype='PCM_16')
 
-args = ['ffmpeg', '-y', '-loglevel', 'error']
-for f, _, _, _ in MUSIC:
-    args += ['-i', os.path.join(ROOT, f)]
-args += ['-i', vpath]
-for path, _, _ in SFX:
-    args += ['-i', path]
-parts = []
-for i, (_, start, gain, shape) in enumerate(MUSIC):
-    d = int(start * 1000)
-    parts.append(f"[{i}:a]aresample={SR},aformat=channel_layouts=stereo,volume='{gain}*{shape}':eval=frame,adelay={d}|{d}[m{i}]")
-n = len(MUSIC)
-parts.append(''.join(f'[m{i}]' for i in range(n)) + f'amix=inputs={n}:normalize=0:duration=longest[mus]')
-parts.append(f'[{n}:a]aformat=channel_layouts=stereo,asplit=2[v1][v2]')
-parts.append('[mus][v1]sidechaincompress=threshold=0.012:ratio=12:attack=30:release=700:knee=4,asplit=2[duck][duckst]')
-for j, (path, at, gain) in enumerate(SFX):
-    d = int(at * 1000)
-    parts.append(f'[{n + 1 + j}:a]aresample={SR},aformat=channel_layouts=stereo,volume={gain},adelay={d}|{d}[s{j}]')
-parts.append(''.join(f'[s{j}]' for j in range(len(SFX))) + f'amix=inputs={len(SFX)}:normalize=0:duration=longest[sfx]')
-parts.append(f'[duck][v2][sfx]amix=inputs=3:normalize=0:weights=1 1.25 1,atrim=0:{total:.3f},afade=t=in:st=0:d=1.2,afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
-out_wav = os.path.join(ROOT, 'out', 'intro-mix.wav')
-music_stem = os.path.join(tmp, 'music_ducked.wav')
-subprocess.run(args + ['-filter_complex', ';'.join(parts), '-map', '[out]', '-ar', str(SR), out_wav, '-map', '[duckst]', '-ar', str(SR), music_stem], check=True)
-# how far the music sits under the voice while it speaks (median over the lines, RMS in dB)
-mus, _ = sf.read(music_stem, dtype='float32'); mus = mus.mean(1) if mus.ndim > 1 else mus
+N = len(voice)
+tt = np.arange(N) / SR
+
+
+def decode(path):
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32).reshape(-1, 2)
+
+
+# the envelope from the narration
+ducks = []
+for ln in sorted(place['lines'], key=lambda l: l['start']):
+    a, b = ln['start'] - LEAD, ln['end'] + TAIL_HOLD
+    if ducks and a - ducks[-1][1] < MERGE:
+        ducks[-1][1] = max(ducks[-1][1], b)
+    else:
+        ducks.append([a, b])
+env_t = np.arange(0, total + 1, 0.01)
+down = np.zeros_like(env_t)
+for a, b in ducks:
+    rise = np.clip((env_t - (a - ATTACK)) / ATTACK, 0, 1)
+    fall = 1 - np.clip((env_t - b) / RELEASE, 0, 1)
+    seg = np.minimum(rise, fall)
+    down = np.maximum(down, seg * seg * (3 - 2 * seg))
+duck_gain = 10 ** (DUCK_DB / 20)
+env = np.interp(tt, env_t, 1 - down * (1 - duck_gain)).astype(np.float32)
+music = np.zeros((N, 2), dtype=np.float32)
+for f, start, gain, shape in MUSIC:
+    x = decode(os.path.join(ROOT, f)); a = int(start * SR); n = min(len(x), N - a)
+    if n <= 0:
+        continue
+    music[a:a + n] += x[:n] * (gain * shape(tt[a:a + n]))[:, None]
+music *= env[:, None]
+music[: int(1.2 * SR)] *= np.linspace(0, 1, int(1.2 * SR))[:, None]
+mpath = os.path.join(tmp, 'music_bus.wav'); sf.write(mpath, music, SR, subtype='FLOAT')
+# how far the music sits under the voice while it speaks (median over the lines, RMS in dB, voice weighted as in the mix)
 gaps = []
+mono = music.mean(1)
 for ln in place['lines']:
     a, b = int(ln['start'] * SR), int(ln['end'] * SR)
-    v, m = voice[a:b], mus[a:b]
-    if len(v) and len(m):
-        gaps.append(10 * np.log10((np.mean(v ** 2) + 1e-12) / (np.mean(m ** 2) * 1.25 ** -2 + 1e-12)))
-print(f'music under the voice while it speaks: median {np.median(gaps):.1f} dB, least {np.min(gaps):.1f} dB')
+    v, m = voice[a:b], mono[a:b]
+    if len(v):
+        gaps.append(10 * np.log10((np.mean((1.25 * v) ** 2) + 1e-12) / (np.mean(m ** 2) + 1e-12)))
+free = 1 - down; print(f'music under the voice while it speaks: median {np.median(gaps):.1f} dB, least {np.min(gaps):.1f} dB; '
+                      f'music at full in {np.mean(free > 0.95) * 100:.0f}% of the film')
+
+args = ['ffmpeg', '-y', '-loglevel', 'error', '-i', mpath, '-i', vpath]
+for path, _, _ in SFX:
+    args += ['-i', path]
+parts = ['[0:a]aformat=channel_layouts=stereo[mus]', '[1:a]aformat=channel_layouts=stereo[v]']
+for j, (path, at, gain) in enumerate(SFX):
+    d = int(at * 1000)
+    parts.append(f'[{2 + j}:a]aresample={SR},aformat=channel_layouts=stereo,volume={gain},adelay={d}|{d}[s{j}]')
+parts.append(''.join(f'[s{j}]' for j in range(len(SFX))) + f'amix=inputs={len(SFX)}:normalize=0:duration=longest[sfx]')
+parts.append(f'[mus][v][sfx]amix=inputs=3:normalize=0:weights=1 1.25 1,atrim=0:{total:.3f},afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
+out_wav = os.path.join(ROOT, 'out', 'intro-mix.wav')
+subprocess.run(args + ['-filter_complex', ';'.join(parts), '-map', '[out]', '-ar', str(SR), out_wav], check=True)
 out_m4a = os.path.join(ROOT, 'audio', 'intro-mix.m4a')
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', out_wav, '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', out_m4a], check=True)
 print(f'mixed {SET} narration with {len(MUSIC)} tracks: {total:.1f} s -> {out_m4a} ({os.path.getsize(out_m4a)} bytes)')
