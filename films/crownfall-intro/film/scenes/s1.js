@@ -12,7 +12,7 @@
   // the illumination sits above the map sheet, in the same world units (the map is 0..2000 x 0..1650)
   const PX = 380, PY = -880, PW = 1240, PH = 800, PS = 2;          // panel origin, size, pixels per unit
   const KX = PX + PW / 2, KY = PY + 690, KH = 470;                    // the King's feet and height
-  const FACE = { x: KX + 1, y: KY - KH * 0.86, rx: 17, ry: 22 };
+  const FACE = { x: KX, y: KY - 44 - KH * 0.868, rx: 17, ry: 21 };   // on the head (the King stands 44 up, on the dais)
   const INKC = a => `rgba(32,21,12,${a})`;
 
   // ---------------------------------------------------------------- the panel: frame, diaper grounds, dais, rulers
@@ -111,9 +111,9 @@
       x.beginPath(); x.ellipse(0, 0, FACE.rx, FACE.ry, 0, 0, 6.283); x.fillStyle = '#e6caa6'; x.fill(); x.strokeStyle = INKC(0.85); x.lineWidth = 1.2; x.stroke();
       x.fillStyle = 'rgba(200,120,100,0.25)'; for (const s of [-1, 1]) { x.beginPath(); x.ellipse(s * 9, 7, 5, 3.5, 0, 0, 6.283); x.fill(); }
       x.strokeStyle = INKC(0.85); x.lineWidth = 1.1;
-      for (const s of [-1, 1]) { x.beginPath(); x.moveTo(s * 3, -4); x.quadraticCurveTo(s * 7.5, -7, s * 12, -4); x.stroke(); x.beginPath(); x.moveTo(s * 3.5, -1); x.quadraticCurveTo(s * 7.5, -3.6, s * 11, -1); x.quadraticCurveTo(s * 7.5, 1.2, s * 3.5, -1); x.stroke(); x.fillStyle = INKC(0.9); x.beginPath(); x.arc(s * 7.2, -1.2, 1.5, 0, 6.283); x.fill(); }
+      for (const s of [-1, 1]) { x.beginPath(); x.moveTo(s * 3, -4); x.quadraticCurveTo(s * 7.5, -7, s * 12, -4); x.stroke(); x.beginPath(); x.moveTo(s * 3.5, -1); x.quadraticCurveTo(s * 7.5, -3.6, s * 11, -1); x.quadraticCurveTo(s * 7.5, 1.2, s * 3.5, -1); x.stroke(); x.fillStyle = INKC(0.9); x.beginPath(); x.arc(s * 7.2, -1.0, 1.5, 0, 6.283); x.fill(); x.lineWidth = 1.5; x.beginPath(); x.moveTo(s * 3.4, -1.6); x.quadraticCurveTo(s * 7.5, -4.2, s * 11.2, -1.4); x.stroke(); x.lineWidth = 1.1; }
       x.beginPath(); x.moveTo(0, -2); x.lineTo(-1.5, 8); x.lineTo(1.8, 9); x.stroke();
-      x.beginPath(); x.moveTo(-4.5, 13.5); x.quadraticCurveTo(0, 15, 4.5, 13.5); x.stroke();
+      x.beginPath(); x.moveTo(-5, 13.6); x.quadraticCurveTo(0, 12.8, 5, 13.9); x.stroke();
       x.restore();
     }
     // the Sovereign Crown
