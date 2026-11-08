@@ -52,7 +52,16 @@ def wav_dur(path):
 
 # sound effects: the designed ones (audio/sfx_sa, Stable Audio, from tools/stable_sfx.py, placed by audio/sfx_plan.json)
 # once they exist; until then the code-made ones (audio/sfx, from tools/sfx.py)
-SFX = []
+def loud_db(x, sr, w=0.4):
+    """The level of the loudest 0.4 s of a sound, in dBFS (RMS): what the ear takes as how loud it is."""
+    x = x.mean(1) if x.ndim > 1 else x
+    n = int(w * sr); k = max(1, len(x) // n)
+    return 20 * np.log10(np.sqrt((np.pad(x, (0, max(0, k * n - len(x))))[:k * n].reshape(k, -1) ** 2).mean(1)).max() + 1e-9)
+
+
+# the voice's own level, as it sits in the mix (weighted 1.25 below): each designed sound is set against it
+VREF = float(np.median([loud_db(*sf.read(os.path.join(ROOT, f'narration/{SET}', ln['file']), dtype='float32')) for ln in place['lines']])) + 20 * np.log10(1.25)
+SFX, SFX_DUCK = [], []
 plan = json.load(open(os.path.join(ROOT, 'audio', 'sfx_plan.json')))
 for snd in plan['sounds']:
     path = os.path.join(ROOT, 'audio', 'sfx_sa', snd['id'] + '.wav')
@@ -61,7 +70,13 @@ for snd in plan['sounds']:
     t0 = at_time(snd['at'])
     if snd.get('align') == 'end':
         t0 -= wav_dur(path)
-    SFX.append((path, max(0.0, t0), snd.get('gain', 0.5)))
+    gain = 10 ** ((VREF + snd['level'] - loud_db(*sf.read(path, dtype='float32'))) / 20) if 'level' in snd else snd.get('gain', 0.5)
+    SFX.append((path, max(0.0, t0), round(gain, 4)))
+    # the music gives way under a designed sound: most under the big hits, a little under details, not at all under beds
+    lv = snd.get('level', -10)
+    SFX_DUCK.append((path, max(0.0, t0), snd.get('duck', 8.0 if lv >= -6 else 5.0 if lv >= -9 else 3.0 if lv >= -12 else 0.0)))
+if SFX:
+    print(f'{len(SFX)} designed sounds set against the voice (its loudest 0.4 s at {VREF:.1f} dBFS)')
 if not SFX:
     SFX = [(os.path.join(ROOT, 'audio', 'sfx', n + '.wav'), t, g) for n, t, g in [
         ('pen', 0.5, 0.32), ('tear', CUE['L04']['start'] + 2.0, 0.5), ('crack', CUE['L06']['start'] + 0.35, 0.4),
@@ -108,7 +123,26 @@ for a, b in ducks:
     seg = np.minimum(rise, fall)
     down = np.maximum(down, seg * seg * (3 - 2 * seg))
 duck_gain = 10 ** (DUCK_DB / 20)
-env = np.interp(tt, env_t, 1 - down * (1 - duck_gain)).astype(np.float32)
+env_v = 1 - down * (1 - duck_gain)
+# and from the designed sounds: where one is loud the music dips by its 'duck' dB (from 0.08 s before, back over 0.6 s), so
+# a sound in a gap, where the music is up, is heard and not swallowed; under the voice the music is already lower than that
+red = np.zeros_like(env_t)
+for path, t0, dB in SFX_DUCK:
+    if dB <= 0:
+        continue
+    x, sr = sf.read(path, dtype='float32'); x = x.mean(1) if x.ndim > 1 else x
+    hop = int(0.01 * sr); k = len(x) // hop
+    r = np.sqrt(np.convolve((x[:k * hop].reshape(k, hop) ** 2).mean(1), np.ones(5) / 5, 'same')) + 1e-9
+    e = np.clip((20 * np.log10(r / r.max()) + 12) / 12, 0, 1)
+    held = e.copy()
+    for i in range(1, len(held)):
+        held[i] = max(e[i], held[i - 1] * np.exp(-0.01 / 0.6 * 4))
+    held = np.concatenate([held, held[-1] * np.exp(-np.arange(1, 121) * 0.01 / 0.6 * 4)])
+    ts = t0 - 0.08 + np.arange(len(held)) * 0.01
+    red = np.maximum(red, dB * np.interp(env_t, ts, held, left=0, right=0))
+env_s = 10 ** (-red / 20)
+env = np.interp(tt, env_t, np.minimum(env_v, env_s)).astype(np.float32)
+print(f'the music dips under {sum(1 for _, _, d in SFX_DUCK if d > 0)} designed sounds (up to {red.max():.0f} dB)')
 music = np.zeros((N, 2), dtype=np.float32)
 for f, start, gain, shape in MUSIC:
     x = decode(os.path.join(ROOT, f)); a = int(start * SR); n = min(len(x), N - a)

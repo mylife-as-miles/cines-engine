@@ -8,7 +8,7 @@ follows the narration.
 | --- | --- |
 | Project EON | A pen draws the studio's mark on pale paper under a close lens and pulls back to the whole emblem, engraved; the O floods vermilion. "Project EON presents". |
 | 1. The King Who Vanished | The map of Aethelgard on a candlelit desk, seen low as ink spreads across it; the camera tilts up to an illumination: the Hollow King over an assembly of rulers. His painted face fades and the vellum tears there; he lifts off the page; back on the desk, seven flames stand up on the seven halls. |
-| 2. The Fall of the Crown | The Sovereign Crown shatters; its shards fall across the land; ash, the Scavenger Wars. Four roundels name the powers that endured: Korvenia beneath a violet eclipse, Solforiz's smoking deserts, Kwind's towers in steam and rain, and Aethelgard, whose map rises into a diorama of mountains and forests. |
+| 2. The Fall of the Crown | The Sovereign Crown shatters; its shards fall across the land; ash, the Scavenger Wars. The camera crosses the creator's painted world map to each power as it is named, a ring of gold light drawing itself round each seat: Korvenia beneath a violet eclipse, Solforiz among its volcanoes, Kwind-09's towers, and Aethelgard, where it dives into the map of Aethelgard rising into a diorama of mountains and forests. |
 | 3. The Seven Great Houses | Seven territories around the halls; each house shown by what it holds. A tapestry: the Seven join hands, and the hands become knives. |
 | 4. The Beasts That Devoured Kings | A convoy on a frozen road; the shadow; a First-Born out of the cloud. A procession through the capital, the creature bridled and chained; its eye turns to us, afraid of its rider. |
 | 5. A Kingdom Divided | Illuminated miniatures: who may live where, marry whom, inherit a name, be believed by a court; gates that close; a child stopped by a guard. The Seven's banners torn down. |
@@ -41,6 +41,17 @@ node tools/build_timeline.js [working|final]                         # film/time
 python tools/mix.py [working|final]                                  # audio/intro-mix.m4a
 ```
 
+The designed sounds come from the engine's own audio tools (see `tools/stable_sfx.py` for the install paths):
+
+```sh
+python3 tools/stable_sfx.py [--only E05_tear] [--force]            # Stable Audio via Soundbox + audio.cpp -> audio/sfx_sa/
+<earshot-venv>/bin/python tools/listen_sfx.py [--check-only]        # earshot checks each against what it must not be
+```
+
+`audio/sfx_plan.json` places each sound from the film's own timing (a narration cue, a scene, the studio card, YEAR 33 or the
+title) and gives its level against the narration; `tools/mix.py` sets each one by its measured loudness, and the music dips
+under the louder ones so that a sound in a gap, where the music is up, is still heard.
+
 Every scene keys its pictures to its narration lines (`K.cue('L19')`), so a new voice re-times the whole film.
 `FILM.renderAt(t)` is deterministic: no `Math.random`, no `Date`.
 
@@ -61,6 +72,11 @@ Every scene keys its pictures to its narration lines (`K.cue('L19')`), so a new 
 - Narration: the creator's text, read by ElevenLabs' voice George (model eleven_v4), recorded on the creator's account
   (`narration/final/*.mp3`). The local working voice used while timing the cut was Kokoro (kokoro-onnx, model
   Apache-2.0), voice bm_lewis.
+- Designed sounds (`audio/sfx_sa/`): made for this film with Stable Audio 3.0 Small SFX (Stability AI Community License),
+  run locally through Soundbox and audio.cpp, and checked with earshot; every take and verdict is in `audio/sfx_sa/check.json`.
+- The world map of the four powers (`film/assets/worldmap.js`): painted for Crownfall and supplied by the creator. With the
+  creator's permission the gold rings drawn on it were lifted out (the film draws its own) and the clipped labels were
+  re-lettered in full in Cinzel (KORVENIA, AETHELGARD).
 - Typefaces (`fonts/fonts.css`, all SIL Open Font License 1.1): Cinzel (`fonts/OFL-Cinzel.txt`), EB Garamond
   (`fonts/OFL-EBGaramond.txt`), Barlow Condensed, Oswald, Archivo.
-- Everything on screen is original code. There are no images, video or generated pictures.
+- Everything else on screen is original code. Apart from the world map there are no images, video or generated pictures.

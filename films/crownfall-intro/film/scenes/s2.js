@@ -51,7 +51,9 @@
   // ---------------------------------------------------------------- the creator's world map of the four kingdoms
   const WMAP = () => K.image('worldmap', window.ASSETS.worldmap);
   if (window.ASSETS && window.ASSETS.worldmap) WMAP();
-  const WORLD = { korv: { x: 346, y: 148 }, aeth: { x: 919, y: 166 }, kwind: { x: 318, y: 405 }, solf: { x: 912, y: 451 } };
+  // each realm's seat on the map, and the ring the film draws round it (half-axes and turn in degrees): Korvenia's castle
+  // and Aethelgard's citadel sit clear of their names; Kwind-09 and Solforiz keep the places of the rings once painted there
+  const WORLD = { korv: { x: 372, y: 156, rx: 28, ry: 20, a: -6 }, aeth: { x: 905, y: 212, rx: 34, ry: 24, a: -4 }, kwind: { x: 315.3, y: 408.9, rx: 24.6, ry: 30.2, a: 71.4 }, solf: { x: 909.7, y: 451.7, rx: 26.0, ry: 30.1, a: 110.4 } };
   // ---------------------------------------------------------------- the four roundels (kept, no longer drawn)
   const RD = { aeth: { x: 0, y: -250, r: 240 }, korv: { x: -600, y: 140, r: 200 }, solf: { x: 0, y: 360, r: 200 }, kwind: { x: 600, y: 140, r: 200 } };
   function roundelFrame(c, R, lit, t, name) {
@@ -273,18 +275,22 @@
         x.save(); K.cam(x, cam.x, cam.y, cam.z * sc0); x.imageSmoothingQuality = 'high';
         x.drawImage(WMAP(), 0, 0, 1280, 720);
         // the map lives: the eclipse breathes, lava glows, chimneys steam, mist drifts
-        K.glow(x, 268, 128, 70 + 6 * Math.sin(t * 1.7), [170, 110, 255], 0.28 + 0.08 * Math.sin(t * 2.3));
+        K.glow(x, 302, 112, 74 + 6 * Math.sin(t * 1.7), [170, 110, 255], 0.28 + 0.08 * Math.sin(t * 2.3));
         for (const [vx, vy, vr, ph] of [[1046, 404, 46, 0], [812, 372, 30, 1.7], [930, 484, 40, 3.1], [960, 560, 36, 2.2], [800, 520, 26, 4.0], [726, 640, 34, 5.1]]) K.glow(x, vx, vy, vr, [255, 120, 40], 0.22 + 0.12 * Math.sin(t * 2.6 + ph));
         K.embers(x, t, { n: 26, heat: 0.7, x: 700, y: 300, w: 420, h: 360, seed: 222 });
         K.smoke(x, t, { n: 12, x: 200, y: 250, w: 260, h: 190, color: [214, 210, 204], alpha: 0.32, size: 70, rise: 18, seed: 223 });
         K.smoke(x, t, { n: 8, x: 980, y: 300, w: 140, h: 140, color: [70, 60, 56], alpha: 0.35, size: 80, rise: 14, seed: 224 });
         K.smoke(x, t, { n: 10, x: 520, y: 80, w: 500, h: 260, color: [228, 226, 222], alpha: 0.12, size: 220, rise: 4, drift: 6, seed: 225 });
-        // each realm's ring lights as it is named
+        // as each realm is named a ring of gold light draws itself round its seat, then breathes
         for (const k of ['korv', 'solf', 'kwind', 'aeth']) {
           const r = R[k], l = lit[k]; if (l <= 0) continue;
-          const pulse = 0.75 + 0.25 * Math.sin(t * 4 + r.x);
-          K.glow(x, r.x, r.y, 70, [255, 214, 140], 0.38 * l * pulse);
-          x.save(); x.globalCompositeOperation = 'lighter'; x.strokeStyle = `rgba(255,226,160,${0.85 * l})`; x.lineWidth = 2.2 / cam.z; x.beginPath(); x.ellipse(r.x, r.y, 24 + 3 * pulse, 20 + 2.5 * pulse, 0, 0, 6.283); x.stroke(); x.restore();
+          const pulse = 0.8 + 0.2 * Math.sin(t * 3.2 + r.x), s0 = -1.9 + r.x * 0.01, sweep = 6.283 * Math.min(1, l * 1.15);
+          K.glow(x, r.x, r.y, 64, [255, 214, 140], 0.34 * l * pulse);
+          x.save(); x.globalCompositeOperation = 'lighter'; x.lineCap = 'round';
+          x.strokeStyle = `rgba(255,200,110,${0.3 * l})`; x.lineWidth = 6 / cam.z; x.beginPath(); x.ellipse(r.x, r.y, r.rx + 1, r.ry + 1, r.a * Math.PI / 180, s0, s0 + sweep); x.stroke();
+          x.strokeStyle = `rgba(255,232,170,${0.9 * l})`; x.lineWidth = 1.8 / cam.z; x.beginPath(); x.ellipse(r.x, r.y, r.rx + 1, r.ry + 1, r.a * Math.PI / 180, s0, s0 + sweep); x.stroke();
+          if (l < 0.87) { const e = s0 + sweep, th = r.a * Math.PI / 180, px = r.x + Math.cos(th) * (r.rx + 1) * Math.cos(e) - Math.sin(th) * (r.ry + 1) * Math.sin(e), py = r.y + Math.sin(th) * (r.rx + 1) * Math.cos(e) + Math.cos(th) * (r.ry + 1) * Math.sin(e); K.glow(x, px, py, 10, [255, 236, 190], 0.9 * l); }
+          x.restore();
         }
         x.restore();
         // light falls on the realm being named; the rest of the board sinks into shadow; a close lens softens the edges
