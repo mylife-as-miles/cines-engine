@@ -218,4 +218,32 @@
     ctx.restore();
   };
   M.hallGlyph = hallGlyph;
+  // ---------------------------------------------------------------- the map lying on a desk, seen low and in perspective
+  // V: { cx, cy } the point on the map the camera looks at, th tilt (0 = from above), D distance, f focal length, oy screen offset
+  M.project = (u, v, h, V) => {
+    const du = u - V.cx, dv = v - V.cy, s = Math.sin(V.th), c = Math.cos(V.th);
+    const y = dv * c - h * s, z = V.D - dv * s - h * c; if (z < 30) return null;
+    return [K.W / 2 + V.f * du / z, K.H / 2 + (V.oy || 0) + V.f * y / z, V.f / z];
+  };
+  // drawTilted(ctx, V, o): the sheet on a dark desk lit by a candle. o.ink replaces the ink sheet (e.g. a revealed copy, any
+  //   size), o.light [u, v] the candle's place on the map, o.strips
+  M.drawTilted = (ctx, V, o = {}) => {
+    const W = K.W, H = K.H, paper = M.paper(), ink = o.ink || M.ink(), N = o.strips || 120, ks = ink.width / D.w, ps = paper.width / D.w;
+    const g0 = ctx.createLinearGradient(0, 0, 0, H); g0.addColorStop(0, '#07050a'); g0.addColorStop(0.5, '#120c08'); g0.addColorStop(1, '#1c130b'); ctx.fillStyle = g0; ctx.fillRect(0, 0, W, H);
+    // the desk's grain under the sheet
+    for (let i = 0; i < 40; i++) { const a = M.project(-400, -300 + i * 70, 0, V), b = M.project(2400, -300 + i * 70, 0, V); if (!a || !b) continue; ctx.strokeStyle = `rgba(60,38,20,${0.2 + 0.1 * (i % 3)})`; ctx.lineWidth = Math.max(1, a[2] * 6); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    // a soft shadow under the sheet
+    const c0 = M.project(0, 0, 0, V), c1 = M.project(D.w, 0, 0, V), c2 = M.project(D.w, D.h, 0, V), c3 = M.project(0, D.h, 0, V);
+    if (c0 && c1 && c2 && c3) { ctx.save(); ctx.filter = 'blur(18px)'; ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.moveTo(c0[0] + 10, c0[1] + 14); ctx.lineTo(c1[0] + 10, c1[1] + 14); ctx.lineTo(c2[0] + 18, c2[1] + 24); ctx.lineTo(c3[0] + 18, c3[1] + 24); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    for (let i = 0; i < N; i++) {
+      const v0 = D.h * i / N, v1 = D.h * (i + 1) / N, a = M.project(0, v0, 0, V), b = M.project(0, v1, 0, V); if (!a || !b) continue;
+      const m = M.project(0, (v0 + v1) / 2, 0, V), sc = m[2], y0 = a[1], y1 = b[1]; if (y1 < -4 || y0 > H + 4) continue;
+      const xL = W / 2 + (0 - V.cx) * sc, wpx = D.w * sc;
+      ctx.drawImage(paper, 0, v0 * ps, paper.width, (v1 - v0) * ps + 1, xL, y0, wpx, y1 - y0 + 1);
+      ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(ink, 0, v0 * ks, ink.width, Math.max(1, (v1 - v0) * ks + 1), xL, y0, wpx, y1 - y0 + 1); ctx.restore();
+    }
+    // candlelight: a warm pool where the flame stands, the far sheet falling into shadow
+    const L = o.light ? M.project(o.light[0], o.light[1], 0, V) : [W * 0.62, H * 0.62, 1];
+    if (L) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; const g = ctx.createRadialGradient(L[0], L[1], 40, L[0], L[1], W * 0.85); g.addColorStop(0, 'rgba(255,236,200,1)'); g.addColorStop(0.45, 'rgba(190,150,105,1)'); g.addColorStop(1, 'rgba(40,26,16,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore(); ctx.save(); ctx.globalCompositeOperation = 'screen'; const g2 = ctx.createRadialGradient(L[0], L[1], 0, L[0], L[1], W * 0.35); g2.addColorStop(0, `rgba(255,190,110,${0.22 * (o.flicker || 1)})`); g2.addColorStop(1, 'rgba(255,190,110,0)'); ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+  };
 })();

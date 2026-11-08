@@ -159,99 +159,118 @@
     K.glow(x, px, py - 10 * s, 34 * s, [255, 170, 80], 0.45 * a);
   }
 
-  // ---------------------------------------------------------------- the camera and the reveal
-  let FIELD = null;
-  function inkField() { if (!FIELD) FIELD = K.field(480, 270, [{ x: 0.47, y: 0.55 }, { x: 0.22, y: 0.36, d: 0.08 }, { x: 0.62, y: 0.4, d: 0.12 }, { x: 0.33, y: 0.8, d: 0.15 }, { x: 0.78, y: 0.72, d: 0.2 }], 1301, { warp: 0.22, scale: 3.2, grain: 0.05 }); return FIELD; }
-  function camKeys(sc) {
-    const c = n => K.cue(n);
-    const L1 = c('L01'), L2 = c('L02'), L3 = c('L03'), L4 = c('L04'), L5 = c('L05');
-    return [
-      { t: sc.start, x: 1000, y: 860, z: 0.98 },
-      { t: L1.start - 0.4, x: 1000, y: 780, z: 0.9 },
-      { t: L2.start - 0.2, x: KX, y: PY + PH / 2 + 10, z: 1.3 },
-      { t: L3.start, x: KX, y: KY - 300, z: 1.75 },
-      { t: L4.start - 0.4, x: KX, y: FACE.y + 40, z: 3.1 },
-      { t: L4.start + 1.6, x: FACE.x, y: FACE.y + 4, z: 4.6 },
-      { t: L5.start + 0.5, x: FACE.x, y: FACE.y + 10, z: 4.2 },
-      { t: L5.start + 2.8, x: KX, y: PY + PH / 2 + 30, z: 1.45 },
-      { t: L5.end + 0.6, x: 1040, y: 860, z: 0.96 },
-      { t: sc.end + 1.5, x: 1060, y: 880, z: 1.02 },
-    ];
+  // ---------------------------------------------------------------- the scene: a desk, a page, a king
+  // ink spreads across the map in its own space, so the reveal lies on the page whatever the camera does
+  const MF = () => K.cached('s1:mapField', () => K.field(500, 412, [{ x: 0.44, y: 0.66 }, { x: 0.3, y: 0.42, d: 0.06 }, { x: 0.58, y: 0.36, d: 0.1 }, { x: 0.36, y: 0.9, d: 0.12 }, { x: 0.74, y: 0.76, d: 0.16 }, { x: 0.82, y: 0.3, d: 0.22 }], 1301, { warp: 0.24, scale: 3.4, grain: 0.05 }));
+  function revealedInk(p) {
+    const ink = K.map.ink(), w = Math.round(ink.width / 2), h = Math.round(ink.height / 2), L = K.layer('s1:inkrev', w, h), x = L.getContext('2d');
+    x.drawImage(ink, 0, 0, w, h);
+    const F = MF(), m = K.mask(F, p, 0.03); x.globalCompositeOperation = 'destination-in'; x.imageSmoothingQuality = 'high'; x.drawImage(m, 0, 0, w, h);
+    // the wet front: ink pooling darker where it is still spreading
+    x.globalCompositeOperation = 'source-over'; const r = K.rim(F, p, 0.025, 0.008), R = K.layer('s1:inkrim', w, h), rx = R.getContext('2d'); rx.drawImage(r, 0, 0, w, h); rx.globalCompositeOperation = 'source-in'; rx.fillStyle = 'rgba(30,20,12,0.7)'; rx.fillRect(0, 0, w, h);
+    x.drawImage(R, 0, 0);
+    return L;
+  }
+  function standingFlame(c, b, t, a, i) {
+    if (!b || a <= 0) return; const s = b[2] * 2.3, fl = 1 + 0.12 * Math.sin(t * 11 + i * 3) + 0.08 * Math.sin(t * 17 + i);
+    c.save(); c.globalAlpha = a; c.translate(b[0], b[1]); c.scale(s, s * fl);
+    c.beginPath(); c.moveTo(0, 0); c.bezierCurveTo(-8, -5, -7, -14, 0, -28); c.bezierCurveTo(1, -18, 8, -14, 6, -5); c.quadraticCurveTo(4, 0, 0, 0); c.closePath();
+    const g = c.createLinearGradient(0, 0, 0, -28); g.addColorStop(0, '#9b2f1f'); g.addColorStop(0.5, '#e08a30'); g.addColorStop(1, '#f8dc86'); c.fillStyle = g; c.fill(); c.restore();
+    K.glow(c, b[0], b[1] - 12 * s, 70 * s, [255, 170, 80], 0.55 * a);
+  }
+  // the illumination, seen straight on; cam {x, y, z} in world units
+  function drawPanel(c, t, cam, sc) {
+    const L4 = K.cue('L04'), L5 = K.cue('L05'), z = cam.z;
+    const faceFade = 1 - smooth(span(t, L4.start + 0.15, L4.start + 1.5)), tearP = easeOut(span(t, L4.start + 1.6, L4.start + 2.9));
+    const gone = smooth(span(t, L5.start + 0.2, L5.start + 2.6)), reach = smooth(span(t, L5.start + 1.2, L5.start + 3.0));
+    c.fillStyle = '#100b07'; c.fillRect(0, 0, W, H);
+    c.save(); K.cam(c, cam.x, cam.y, z);
+    const upper = K.cached('s1:upper', () => K.parchment(2000, 1040, 2025, { base: [228, 214, 184], dark: [120, 90, 56], edge: 0.6, stains: 2, foxing: 40 }));
+    c.drawImage(upper, 0, -1030, 2000, 1040);
+    c.drawImage(panelBase(), PX, PY, PW, PH);
+    // the rulers stand a little nearer than the wall behind them: they drift against it as the camera moves
+    c.save(); c.translate((cam.x - KX) * -0.03, (cam.y - (PY + PH / 2)) * -0.02); for (const f of RULERS) drawRuler(c, f, reach); c.restore();
+    if (gone < 1) {
+      const Lk = K.layer('s1:king'), kx = Lk.getContext('2d');
+      kx.save(); K.cam(kx, cam.x, cam.y, z); kx.drawImage(kingSheet(), PX, PY, PW, PH);
+      if (faceFade > 0) { kx.globalAlpha = faceFade; kx.drawImage(faceSheet(), FB[0], FB[1], FB[2], FB[3]); }
+      kx.restore();
+      if (gone > 0) {
+        const F2 = K.cached('s1:liftField', () => K.field(320, 180, [{ x: 0.5, y: 0.0 }, { x: 0.3, y: 0.1, d: 0.1 }, { x: 0.7, y: 0.12, d: 0.12 }], 1777, { warp: 0.3, scale: 4 }));
+        const m = K.mask(F2, gone * 1.15, 0.06), Lm2 = K.layer('s1:kingmask'), mx = Lm2.getContext('2d');
+        mx.save(); K.cam(mx, cam.x, cam.y, z); mx.drawImage(m, KX - 260, KY - KH - 70, 520, KH + 90); mx.restore();
+        kx.save(); kx.globalCompositeOperation = 'destination-out'; kx.drawImage(Lm2, 0, 0); kx.restore();
+      }
+      c.drawImage(Lk, 0, 0, W, H, cam.x - W / 2 / z, cam.y - H / 2 / z, W / z, H / z);
+    }
+    if (gone > 0) { c.save(); c.globalAlpha = 0.08 * gone; c.globalCompositeOperation = 'multiply'; c.drawImage(kingSheet(), PX, PY, PW, PH); c.restore(); }
+    tear(c, tearP, t);
+    if (gone > 0 && gone < 1) {
+      const r = rng(5150); c.save();
+      for (let i = 0; i < 110; i++) { const u = r(), x0 = KX + (r() - 0.5) * 320, y0 = KY - KH * (0.1 + 0.95 * r()), born = u * 0.8, a = clamp((gone - born) * 4) * (1 - clamp((gone - born - 0.3) * 3)); if (a <= 0) continue; const age = gone - born; c.globalAlpha = a; c.fillStyle = i % 3 ? '#d6b25e' : i % 2 ? '#2c3f78' : '#9b2f1f'; c.save(); c.translate(x0 + Math.sin(age * 9 + i) * 14, y0 - age * 200); c.rotate(age * 6 + i); c.fillRect(-2.5, -1.5, 5, 3); c.restore(); }
+      c.restore();
+    }
+    c.restore();
+    // a candle off to the left: its light rakes across the leaf and the paint, breathing
+    const fl = 0.85 + 0.1 * Math.sin(t * 7.3) + 0.05 * Math.sin(t * 13.1), lx = W * (0.18 + 0.05 * Math.sin(t * 0.21)), ly = H * 0.42;
+    c.save(); c.globalCompositeOperation = 'multiply'; const g = c.createRadialGradient(lx, ly, 60, lx, ly, W * 1.05); g.addColorStop(0, 'rgba(255,240,215,1)'); g.addColorStop(0.5, 'rgba(205,168,120,1)'); g.addColorStop(1, 'rgba(58,38,22,1)'); c.fillStyle = g; c.fillRect(0, 0, W, H); c.restore();
+    c.save(); c.globalCompositeOperation = 'screen'; const g2 = c.createRadialGradient(lx, ly, 0, lx, ly, W * 0.6); g2.addColorStop(0, `rgba(255,196,120,${0.2 * fl})`); g2.addColorStop(1, 'rgba(255,196,120,0)'); c.fillStyle = g2; c.fillRect(0, 0, W, H); c.restore();
+    // motes turning in the light
+    K.specks(c, t, { kind: 'dust', n: 70, alpha: 0.5, seed: 101 });
   }
 
   SCENES[1] = {
     join: 'dissolve', joinDur: 1.2,
     draw(ctx, t, sc) {
-      const L4 = K.cue('L04'), L5 = K.cue('L05');
-      const cam = K.camPath(t, camKeys(sc)), z = cam.z;
-      const [hx, hy] = K.shake(t * 0.25, 4, 11);
-      // the blank vellum, then the map arriving under spreading ink
-      ctx.fillStyle = '#15100b'; ctx.fillRect(0, 0, W, H);
-      ctx.save(); K.cam(ctx, cam.x + hx / z, cam.y + hy / z, z);
-      const blank = K.cached('s1:blank', () => K.parchment(2500, 2063, 2024, { base: [228, 214, 184], dark: [120, 90, 56], folds: [{ x: 0.5 }, { y: 0.5 }], edge: 0.75, stains: 4 }));
-      ctx.drawImage(blank, 0, 0, 2000, 1650);
-      // the head of the page, above the map's border: one long sheet, the join sewn
-      const upper = K.cached('s1:upper', () => K.parchment(2000, 1040, 2025, { base: [228, 214, 184], dark: [120, 90, 56], edge: 0.6, stains: 2, foxing: 40 }));
-      ctx.drawImage(upper, 0, -1030, 2000, 1040);
-      ctx.save(); ctx.strokeStyle = 'rgba(60,40,22,0.55)'; ctx.lineWidth = 2; for (let k = 0; k < 66; k++) { const x0 = 20 + k * 30; ctx.beginPath(); ctx.moveTo(x0, -6); ctx.lineTo(x0 + 12, 4); ctx.stroke(); } ctx.restore();
-      ctx.restore();
-      const rv = span(t, sc.start + 0.2, K.cue('L01').start + 1.6);
-      const reg = z > 1.9 ? null : null;
-      if (rv < 1) {
-        const Lm = K.layer('s1:map'), lx = Lm.getContext('2d');
-        lx.save(); K.cam(lx, cam.x + hx / z, cam.y + hy / z, z); K.map.draw(lx, { region: reg }); lx.restore();
-        const F = inkField(), p = ease(rv) * 1.08;
-        K.cutBy(Lm, K.mask(F, p, 0.035)); ctx.drawImage(Lm, 0, 0);
-        // the wet front: a darker band of ink where it is still spreading
-        const rimC = K.rim(F, p, 0.03, 0.01), Rl = K.layer('s1:rim'), rx = Rl.getContext('2d');
-        rx.drawImage(rimC, 0, 0, W, H); rx.globalCompositeOperation = 'source-in'; rx.fillStyle = 'rgba(28,18,10,0.55)'; rx.fillRect(0, 0, W, H);
-        ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(Rl, 0, 0); ctx.restore();
-      } else {
-        ctx.save(); K.cam(ctx, cam.x + hx / z, cam.y + hy / z, z); K.map.draw(ctx, { region: reg }); ctx.restore();
-      }
-      // the illumination above the map
-      const faceFade = 1 - smooth(span(t, L4.start + 0.2, L4.start + 1.9));
-      const tearP = easeOut(span(t, L4.start + 2.0, L4.start + 3.4));
-      const gone = smooth(span(t, L5.start + 0.3, L5.start + 3.2));
-      const reach = smooth(span(t, L5.start + 1.6, L5.start + 3.8));
-      ctx.save(); K.cam(ctx, cam.x + hx / z, cam.y + hy / z, z);
-      if (cam.y - H / 2 / z < 0) {
-        ctx.drawImage(panelBase(), PX, PY, PW, PH);
-        for (const f of RULERS) drawRuler(ctx, f, reach);
-        // the King lifts off the page from the crown down, as flakes of paint
-        if (gone < 1) {
-          const Lk = K.layer('s1:king'), kx = Lk.getContext('2d');
-          kx.save(); K.cam(kx, cam.x + hx / z, cam.y + hy / z, z); kx.drawImage(kingSheet(), PX, PY, PW, PH);
-          if (faceFade > 0) { kx.globalAlpha = faceFade; kx.drawImage(faceSheet(), FB[0], FB[1], FB[2], FB[3]); }
-          kx.restore();
-          if (gone > 0) {
-            const F2 = K.cached('s1:liftField', () => K.field(320, 180, [{ x: 0.5, y: 0.0 }, { x: 0.3, y: 0.1, d: 0.1 }, { x: 0.7, y: 0.12, d: 0.12 }], 1777, { warp: 0.3, scale: 4 }));
-            // the field is laid over the King's own box, so it moves with the camera
-            const m = K.mask(F2, gone * 1.15, 0.06), Lm2 = K.layer('s1:kingmask'), mx = Lm2.getContext('2d');
-            mx.save(); K.cam(mx, cam.x + hx / z, cam.y + hy / z, z); mx.drawImage(m, KX - 260, KY - KH - 70, 520, KH + 90); mx.restore();
-            kx.save(); kx.globalCompositeOperation = 'destination-out'; kx.drawImage(Lm2, 0, 0); kx.restore();
-          }
-          ctx.drawImage(Lk, 0, 0, W, H, cam.x + hx / z - W / 2 / z, cam.y + hy / z - H / 2 / z, W / z, H / z);
-        }
-        // a pale ghost where he stood
-        if (gone > 0) { ctx.save(); ctx.globalAlpha = 0.08 * gone; ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(kingSheet(), PX, PY, PW, PH); ctx.restore(); }
-        tear(ctx, tearP, t);
-        // flakes of gold and paint drifting up as he goes
-        if (gone > 0 && gone < 1) {
-          const r = rng(5150); ctx.save();
-          for (let i = 0; i < 70; i++) { const u = r(), x0 = KX + (r() - 0.5) * 300, y0 = KY - KH * (0.1 + 0.95 * r()), born = u * 0.8, a = clamp((gone - born) * 4) * (1 - clamp((gone - born - 0.25) * 3)); if (a <= 0) continue; const age = gone - born; ctx.globalAlpha = a; ctx.fillStyle = i % 3 ? '#d6b25e' : i % 2 ? '#2c3f78' : '#9b2f1f'; ctx.save(); ctx.translate(x0 + Math.sin(age * 9 + i) * 12, y0 - age * 160); ctx.rotate(age * 6 + i); ctx.fillRect(-2.5, -1.5, 5, 3); ctx.restore(); }
-          ctx.restore();
-        }
-      }
-      // seven flames light at the halls, one after another
-      const fl0 = L5.end + 0.2;
-      K.map.halls().forEach((hl, i) => { const a = smooth(span(t, fl0 + i * 0.28, fl0 + i * 0.28 + 0.6)); flame(ctx, hl.x, hl.y - 13, 1.7, t, a, i * 3.1); });
-      ctx.restore();
-      // light, air and finish
-      K.specks(ctx, t, { kind: 'dust', n: 50, alpha: 0.35, seed: 101 });
-      K.paperTooth(ctx, 0.12);
-      K.vignette(ctx, 0.5, '20,12,6', 0.35);
-      K.grade(ctx, '#e8b070', 'soft-light', 0.12);
+      const L1 = K.cue('L01'), L2 = K.cue('L02'), L4 = K.cue('L04'), L5 = K.cue('L05');
+      const tUp = L1.start + 0.8, tDown = L5.start + 2.4, sw = 0.55;     // the tilt up to the king, the tilt back down to the land
+      const flicker = 0.85 + 0.1 * Math.sin(t * 7.3) + 0.05 * Math.sin(t * 13.1);
+      // A: the map on a desk, low, the camera drifting in as the ink spreads across it
+      const deskA = () => {
+        const u = span(t, sc.start, tUp + sw), V = { cx: lerp(880, 1010, ease(u)), cy: lerp(1240, 760, ease(u)), th: lerp(1.12, 1.0, u), D: lerp(820, 1250, ease(u)), f: 1150, oy: lerp(170, 110, u) };
+        const p = ease(span(t, sc.start + 0.1, L1.start + 0.4)) * 1.12;
+        const Ld = K.layer('s1:deskA'), x = Ld.getContext('2d');
+        K.map.drawTilted(x, V, { ink: p < 1.1 ? revealedInk(p) : null, light: [1250, 1150], flicker });
+        K.specks(x, t, { kind: 'dust', n: 50, alpha: 0.45, seed: 77 });
+        return Ld;
+      };
+      // C: back on the desk; seven flames stand up on the seven halls
+      const deskC = () => {
+        const u = span(t, tDown - sw, sc.end + 1.4), V = { cx: lerp(980, 1060, ease(u)), cy: lerp(700, 930, ease(u)), th: lerp(0.86, 0.98, ease(u)), D: lerp(1500, 1750, ease(u)), f: 1250, oy: 90 };
+        const Ld = K.layer('s1:deskC'), x = Ld.getContext('2d');
+        K.map.drawTilted(x, V, { light: [1000, 1000], flicker });
+        const f0 = L5.end + 0.1;
+        K.map.halls().forEach((hl, i) => standingFlame(x, K.map.project(hl.x, hl.y, 0, V), t, smooth(span(t, f0 + i * 0.22, f0 + i * 0.22 + 0.5)), i));
+        K.specks(x, t, { kind: 'dust', n: 40, alpha: 0.4, seed: 79 });
+        return Ld;
+      };
+      const panelCam = K.camPath(t, [
+        { t: tUp - sw, x: KX, y: PY + PH / 2 - 60, z: 1.22 },
+        { t: L2.start, x: KX, y: PY + PH / 2 + 10, z: 1.35 },
+        { t: L4.start - 0.3, x: KX, y: FACE.y + 70, z: 2.7 },
+        { t: L4.start + 1.3, x: FACE.x, y: FACE.y + 4, z: 4.6 },
+        { t: L5.start + 0.3, x: FACE.x, y: FACE.y + 12, z: 4.1 },
+        { t: L5.start + 2.2, x: KX, y: PY + PH / 2 + 30, z: 1.42 },
+        { t: tDown + sw, x: KX, y: PY + PH / 2 + 80, z: 1.32 },
+      ]);
+      const blurPair = (img, dy, a) => { ctx.save(); ctx.globalAlpha = a; ctx.drawImage(img, 0, dy); ctx.globalAlpha = a * 0.35; ctx.drawImage(img, 0, dy - 24 * Math.sign(dy || 1)); ctx.drawImage(img, 0, dy + 24 * Math.sign(dy || 1)); ctx.restore(); };
+      ctx.fillStyle = '#0c0805'; ctx.fillRect(0, 0, W, H);
+      if (t < tUp - sw) { ctx.drawImage(deskA(), 0, 0); }
+      else if (t < tUp + sw) {
+        // the camera tilts up off the desk to the illumination standing above it
+        const u = ease(span(t, tUp - sw, tUp + sw));
+        const A = deskA(); blurPair(A, u * H * 0.9, 1);
+        const Lp = K.layer('s1:panelL'), px = Lp.getContext('2d'); drawPanel(px, t, panelCam, sc); blurPair(Lp, -(1 - u) * H * 0.9, smooth(u * 1.4));
+      } else if (t < tDown - sw) {
+        drawPanel(ctx, t, panelCam, sc);
+      } else if (t < tDown + sw) {
+        const u = ease(span(t, tDown - sw, tDown + sw));
+        const Lp = K.layer('s1:panelL'), px = Lp.getContext('2d'); drawPanel(px, t, panelCam, sc); blurPair(Lp, -u * H * 0.9, 1);
+        const C = deskC(); blurPair(C, (1 - u) * H * 0.9, smooth(u * 1.4));
+      } else { ctx.drawImage(deskC(), 0, 0); }
+      K.paperTooth(ctx, 0.1);
+      K.vignette(ctx, 0.55, '14,8,4', 0.32);
+      K.grade(ctx, '#e8b070', 'soft-light', 0.1);
     },
   };
 })();

@@ -1,9 +1,9 @@
 """Working narration for the Crownfall intro, made locally with Kokoro (kokoro-onnx; the model is Apache-2.0).
 
-    python tools/narrate_kokoro.py <kokoro-v1.0.onnx> <voices-v1.0.bin> [--voice bm_lewis] [--speed 0.9]
+    python tools/narrate_kokoro.py <kokoro-v1.0.onnx> <voices-v1.0.bin> [--voice bm_lewis] [--speed 1.0] [--set working]
 
 Reads narration/script.json and writes narration/working/<id>.wav (24 kHz mono) plus narration/working/lines.json
-with each line's duration. This is a stand-in voice for timing; tools/narrate_elevenlabs.js writes the final takes into
+with each line's duration. This is a stand-in voice for timing; tools/narrate_elevenlabs.py writes the final takes into
 narration/final/ in the same layout, and tools/build_timeline.js uses whichever set it is given.
 """
 import json, os, sys
@@ -26,8 +26,9 @@ def main():
     model, voices = sys.argv[1], sys.argv[2]
     voice, speed = arg('--voice', 'bm_lewis'), float(arg('--speed', '0.9'))
     only = arg('--only', '')
+    set_name = arg('--set', 'working')
     script = json.load(open(os.path.join(ROOT, 'narration', 'script.json')))
-    out_dir = os.path.join(ROOT, 'narration', 'working')
+    out_dir = os.path.join(ROOT, 'narration', set_name)
     os.makedirs(out_dir, exist_ok=True)
     k = Kokoro(model, voices)
     manifest_path = os.path.join(out_dir, 'lines.json')
@@ -35,7 +36,7 @@ def main():
     if os.path.exists(manifest_path):
         old = {l['id']: l for l in json.load(open(manifest_path)).get('lines', [])}
     lines = []
-    for line in script['lines']:
+    for line in [l for l in script['lines'] if not l.get('cut')]:
         if only and line['id'] not in only.split(','):
             if line['id'] in old:
                 lines.append(old[line['id']])

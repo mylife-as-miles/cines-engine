@@ -49,7 +49,7 @@ def main():
     settings = {'stability': float(arg('--stability', '0.5')), 'similarity_boost': float(arg('--similarity', '0.8')),
                 'style': float(arg('--style', '0.25')), 'use_speaker_boost': True, 'speed': float(arg('--speed', '0.95'))}
     script = json.load(open(os.path.join(ROOT, 'narration', 'script.json')))
-    lines = script['lines']
+    lines = [l for l in script['lines'] if not l.get('cut')]
     out_dir = os.path.join(ROOT, 'narration', 'final'); os.makedirs(out_dir, exist_ok=True)
     man_path = os.path.join(out_dir, 'lines.json')
     old = {l['id']: l for l in json.load(open(man_path))['lines']} if os.path.exists(man_path) else {}
