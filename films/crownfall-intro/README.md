@@ -1,13 +1,13 @@
 # Crownfall: Aethelgard, opening: "The Seven That Remained"
 
 The opening film of *Crownfall: Aethelgard*, a Project EON game by Osita Miles. It is drawn entirely in code (Canvas 2D):
-a narrated chronicle that begins as a book and ends as a world. 1920×1080, 24 fps, about five minutes; the length
+a narrated chronicle that begins as a book and ends as a world. 1920×1080, 24 fps, 3 min 49 s; the length
 follows the narration.
 
 | Part | What |
 | --- | --- |
 | Project EON | A pen draws the studio's mark on pale paper under a close lens and pulls back to the whole emblem, engraved; the O floods vermilion. "Project EON presents". |
-| 1. The King Who Vanished | Ink spreads across the map of Aethelgard. Above it, an illumination: the Hollow King over an assembly of rulers. His painted face fades and the vellum tears there; he lifts off the page; seven flames light at the seven halls. |
+| 1. The King Who Vanished | The map of Aethelgard on a candlelit desk, seen low as ink spreads across it; the camera tilts up to an illumination: the Hollow King over an assembly of rulers. His painted face fades and the vellum tears there; he lifts off the page; back on the desk, seven flames stand up on the seven halls. |
 | 2. The Fall of the Crown | The Sovereign Crown shatters; its shards fall across the land; ash, the Scavenger Wars. Four roundels name the powers that endured: Korvenia beneath a violet eclipse, Solforiz's smoking deserts, Kwind's towers in steam and rain, and Aethelgard, whose map rises into a diorama of mountains and forests. |
 | 3. The Seven Great Houses | Seven territories around the halls; each house shown by what it holds. A tapestry: the Seven join hands, and the hands become knives. |
 | 4. The Beasts That Devoured Kings | A convoy on a frozen road; the shadow; a First-Born out of the cloud. A procession through the capital, the creature bridled and chained; its eye turns to us, afraid of its rider. |
@@ -16,8 +16,9 @@ follows the narration.
 | 7. Your Legacy Begins | The chronicle burns, and the present is behind it: Year 33, the houses mustering. A small banner hall; on its table, a blank standard. |
 | Title | YEAR 33 • ASH & AETHER INTERREGNUM; CROWNFALL / AETHELGARD; "Your Banner. Your People. Your Legacy." |
 
-The story, the narration and the King's Gambit rule are the creator's (narration/script.json; the five lines that
-carry the Gambit rule are marked `added` for the creator's approval). House names in the story concept are working
+The story, the narration and the King's Gambit rule are the creator's. narration/script.json is the tightened text
+of this cut (two lines marked `cut`, the five lines that carry the Gambit rule marked `added`); the full text is in
+narration/script-full.json. House names in the story concept are working
 placeholders and are never shown; each house appears by what it holds and by its arms.
 
 ## Watch and build
