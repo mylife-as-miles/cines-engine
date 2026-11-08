@@ -200,6 +200,9 @@
     for (const w of words) { const tst = ln ? ln + ' ' + w : w; if (ctx.measureText(tst).width > 1180 && ln) { lines.push(ln); ln = w; } else ln = tst; }
     lines.push(ln);
     const y0 = H - 92 - (lines.length - 1) * 42;
+    // a soft band of shade so the words read on pale vellum as well as on night
+    const band = ctx.createLinearGradient(0, y0 - 70, 0, H); band.addColorStop(0, 'rgba(10,6,3,0)'); band.addColorStop(0.45, `rgba(10,6,3,${0.42 * a})`); band.addColorStop(1, `rgba(10,6,3,${0.5 * a})`);
+    ctx.fillStyle = band; ctx.fillRect(0, y0 - 70, W, H - y0 + 70);
     lines.forEach((s, i) => {
       ctx.globalAlpha = a; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.filter = 'blur(6px)'; ctx.fillText(s, W / 2, y0 + i * 42 + 2); ctx.filter = 'none';
       ctx.fillStyle = '#f1e9d8'; ctx.fillText(s, W / 2, y0 + i * 42);
