@@ -1368,15 +1368,16 @@
         glow(hh.X - hh.w * 0.32, hh.Y - hh.h * 0.7, hh.w * 0.14, hh.h * 0.26); glow(hh.X + hh.w * 0.18, hh.Y - hh.h * 0.7, hh.w * 0.14, hh.h * 0.26);
         if (r() < 0.7) { const g3 = x.createLinearGradient(0, hh.Y - hh.h * 0.42, 0, hh.Y); g3.addColorStop(0, 'rgba(240,160,80,0.9)'); g3.addColorStop(1, 'rgba(160,60,24,0.9)'); x.fillStyle = g3; x.fillRect(hh.X - hh.w * 0.06, hh.Y - hh.h * 0.42, hh.w * 0.12, hh.h * 0.42); }
       }
-      // a broken fence, a cart left in the snow
-      x.fillStyle = tone(0.96);
-      for (let X = 40; X < w; X += 34 + r() * 20) { const Y = ground(X) + 110 + 6 * Math.sin(X * 0.01); if (r() < 0.25) continue; x.save(); x.translate(X, Y); x.rotate((r() - 0.5) * 0.4); x.fillRect(-3, -48, 6, 52); x.restore(); }
-      x.fillRect(40, ground(40) + 82, w - 80, 5);
-      { const cx = 1650, cy = ground(1650) + 140; x.fillRect(cx - 90, cy - 50, 180, 26); x.strokeStyle = tone(0.96); x.lineWidth = 6; for (const wx of [cx - 50, cx + 50]) { x.beginPath(); x.arc(wx, cy - 8, 30, 0, TAU); x.stroke(); } x.beginPath(); x.moveTo(cx + 90, cy - 40); x.lineTo(cx + 190, cy - 10); x.stroke(); }
+
       // the snow in front, trampled
       const g = x.createLinearGradient(0, 600, 0, h); g.addColorStop(0, css(mixc(mixc(SNOW, VERM, 0.12), PAPER, 0.3))); g.addColorStop(0.5, tone(0.42)); g.addColorStop(1, tone(0.62));
       x.fillStyle = g; x.beginPath(); x.moveTo(0, h); for (let X = 0; X <= w; X += 10) x.lineTo(X, ground(X) + 70 + 4 * Math.sin(X * 0.03)); x.lineTo(w, h); x.closePath(); x.fill();
       for (let k = 0; k < 300; k++) { const X = r() * w, Y = 650 + r() * 250; x.fillStyle = tone(0.5, 0.12 + r() * 0.1); x.beginPath(); x.ellipse(X, Y, 4 + r() * 6, 1.6 + r() * 1.5, 0, 0, TAU); x.fill(); }
+      // a broken fence, a cart left in the snow
+      const r3 = rng(7171); x.fillStyle = tone(0.96);
+      for (let X = 40; X < w; X += 34 + r3() * 20) { const Y = ground(X) + 128 + 6 * Math.sin(X * 0.01); if (r3() < 0.3) continue; x.save(); x.translate(X, Y); x.rotate((r3() - 0.5) * 0.45); x.fillRect(-3, -50, 6, 54); x.restore(); }
+      for (let X = 40; X < w - 200; X += 300 + r3() * 200) { const Y = ground(X) + 100; x.save(); x.translate(X, Y); x.rotate((r3() - 0.5) * 0.1); x.fillRect(0, -2, 180 + r3() * 100, 5); x.restore(); }
+      { const cx = 1650, cy = ground(1650) + 170; x.fillRect(cx - 90, cy - 50, 180, 26); x.strokeStyle = tone(0.96); x.lineWidth = 6; for (const wx of [cx - 50, cx + 50]) { x.beginPath(); x.arc(wx, cy - 8, 30, 0, TAU); x.stroke(); for (let k = 0; k < 6; k++) { const a2 = k * Math.PI / 3; x.beginPath(); x.moveTo(wx, cy - 8); x.lineTo(wx + Math.cos(a2) * 30, cy - 8 + Math.sin(a2) * 30); x.stroke(); } } x.beginPath(); x.moveTo(cx + 90, cy - 40); x.lineTo(cx + 190, cy - 6); x.stroke(); }
       texFill(x, specTile(), 0.25, 'source-atop', 3, 3);
       c.houses = front; c.back = houses; c.ground = ground; return c;
     });

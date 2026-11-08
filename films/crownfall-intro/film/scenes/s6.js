@@ -1890,7 +1890,7 @@
     const walls = arenaRise(t) > 0.995;
     groundPlane(gx, C, mudLevels(), GT.m, bf > 0.02 ? 150 : 40, { k: 0.5, err: 5, skip: (a0, b0, a1, b1) => (boardDone && a0 >= -BE + 0.01 && a1 <= BE - 0.01 && b0 >= -BE + 0.01 && b1 <= BE - 0.01) || (walls && (a0 > AW + 1 || a1 < -AW - 1 || b0 > AW + 1 || b1 < -AW - 1)) });
     // in close views the board's stone is magnified anyway: draw it into the same half-resolution layer
-    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, nb = unproj(C, W / 2, H), magN = nb ? C.f / Math.max(0.5, nb[2]) / BT.ppm : 0, half = (mag > 1.25 || magN > 3) && t < T.e - 2.6 && boardDone;
+    const tq = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2]), mag = C.f / Math.max(1, tq[2]) / BT.ppm, nb = unproj(C, W / 2, H), magN = nb ? C.f / Math.max(0.5, nb[2]) / BT.ppm : 0, half = (mag > 1.25 || magN > 3) && t < T.e - 2.6 && boardDone && !D.full;
     if (half) { plane(gx, C, boardMips(), [-BE, by, -BE], [2 * BE, 0, 0], [0, 0, 2 * BE], BT.n, BT.n, { roots: [9, 9], err: 3, k: 0.5 }); gx.setTransform(1, 0, 0, 1, 0, 0); }
     if (PR) { gx.getImageData(0, 0, 1, 1); mk('gcells' + STAT.cells); }
     if (half) drawShadows(gx, C, t, L, P, 0.5);
