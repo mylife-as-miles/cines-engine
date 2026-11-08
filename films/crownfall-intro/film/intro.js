@@ -238,6 +238,7 @@
 
   function renderAt(t) {
     t = clamp(t, 0, TOTAL);
+    if (ctx.reset) ctx.reset();          // the whole drawing state back to default each frame: no frame depends on the last
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
     const S = TL.scenes, first = S[0].start, endStory = S[S.length - 1].end;

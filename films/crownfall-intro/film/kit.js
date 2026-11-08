@@ -37,7 +37,9 @@
   const LAYERS = {};
   function layer(name, w = W, h = H) {
     let c = LAYERS[name]; if (!c || c.width !== w || c.height !== h) c = LAYERS[name] = canvas(w, h);
-    const x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.clearRect(0, 0, w, h);
+    const x = c.getContext('2d');
+    // every state back to its default (line caps, dashes, smoothing, shadows, fonts...), so no frame depends on the one before
+    if (x.reset) x.reset(); else { x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.setLineDash([]); x.lineCap = 'butt'; x.lineJoin = 'miter'; x.lineWidth = 1; x.shadowBlur = 0; x.shadowColor = 'rgba(0,0,0,0)'; x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'low'; x.clearRect(0, 0, w, h); }
     return c;
   }
   Object.assign(K, { canvas, cached, release, layer });

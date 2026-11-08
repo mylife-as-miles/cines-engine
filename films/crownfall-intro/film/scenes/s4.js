@@ -21,8 +21,6 @@
   // ================================================================ small helpers
   const fract = v => v - Math.floor(v);
   const smoothstep = (a, b, v) => smooth((v - a) / (b - a));
-  const pulse = (t, a, b) => (t >= a && t < b);
-  function wave(t, f, ph = 0) { return Math.sin(t * f * TAU + ph); }
   // a soft round sprite (white, alpha falloff) for flakes, glows and puffs
   function disc() {
     return K.cached('s4:disc', () => {
@@ -31,6 +29,15 @@
       x.fillStyle = g; x.fillRect(0, 0, s, s); return c;
     });
   }
+  // every drawing property back to its default (K.layer only resets the transform, alpha, composite and filter)
+  function cleanState(x) {
+    x.lineCap = 'butt'; x.lineJoin = 'miter'; x.lineWidth = 1; x.miterLimit = 10; x.setLineDash([]); x.lineDashOffset = 0;
+    x.fillStyle = '#000'; x.strokeStyle = '#000'; x.shadowBlur = 0; x.shadowColor = 'rgba(0,0,0,0)'; x.shadowOffsetX = 0; x.shadowOffsetY = 0;
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'low'; x.font = '10px sans-serif'; x.textAlign = 'start'; x.textBaseline = 'alphabetic';
+    return x;
+  }
+  // a cleared full-frame (or w x h) scratch canvas in a clean state, so a frame never depends on the one drawn before it
+  function scratch(name, w, h) { const c = w ? K.layer(name, w, h) : K.layer(name); cleanState(c.getContext('2d')); return c; }
   // value-noise texture tile (grey, alpha) used for washes, granulation and dry brush
   function noiseTile(key, s, scale, oct, seed, contrast = 1, bias = 0) {
     return K.cached('s4:nt:' + key, () => {
@@ -441,20 +448,6 @@
       if ((st.eye || 0) > 0) K.glow(x, ep[0], ep[1], er * 6, [240, 190, 90], 0.25 * st.eye);
     }
   }
-  // the creature's shadow on the plane y = gy, cast along light direction Ld (a flat, soft silhouette)
-  function shadowPts(B, Ld, gy) {
-    const proj = q => { const k = (q[1] - gy) / -Ld[1]; return [q[0] + Ld[0] * k, gy, q[2] + Ld[2] * k]; };
-    const T = B.tubes.map(t => ({ side: t.side, kind: t.kind, pts: t.pts.map(s => ({ p: proj(s.p), r: s.r })) }));
-    const M = B.membranes.map(m => ({ side: m.side, kind: m.kind, pts: m.pts.map(proj) }));
-    return { tubes: T, membranes: M };
-  }
-  function drawShadow(x, cam, S, color, alpha) {
-    x.save(); x.fillStyle = css(color, alpha);
-    let cs = []; for (const t of S.tubes) cs = cs.concat(projTube(cam, t));
-    circlePath(x, cs); x.fill();
-    for (const m of S.membranes) { const p2 = m.pts.map(q => cam.p(q)); polyPath(x, p2); x.fill(); }
-    x.restore();
-  }
 
   // ================================================================ ink-wash landscape painters (all cached)
   // tileable value-noise arrays for fast per-pixel work
@@ -717,18 +710,6 @@
     }
     texFill(x, specTile(), 0.25, 'source-atop', r() * 256, r() * 256);
     return c;
-  }
-  // a gnarled dead pine / bare tree in ink, drawn upward from (x0, y0)
-  function inkTree(x, x0, y0, hgt, seed, col, o = {}) {
-    const r = rng(seed); x.fillStyle = col; x.strokeStyle = col;
-    const branch = (px, py, ang, len, w, depth) => {
-      const pts = []; let a = ang, qx = px, qy = py; const n = 7;
-      for (let i = 0; i <= n; i++) { pts.push([qx, qy]); a += (r() - 0.5) * 0.35 + (o.lean || 0) * 0.04; qx += Math.cos(a) * len / n; qy += Math.sin(a) * len / n; }
-      taperStroke(x, pts, w, w * 0.35);
-      if (depth > 0) for (let k = 0; k < 2 + (r() < 0.5 ? 1 : 0); k++) { const at = pts[3 + Math.floor(r() * 4)]; branch(at[0], at[1], ang + (r() < 0.5 ? -1 : 1) * (0.5 + r() * 0.7), len * (0.4 + r() * 0.25), w * 0.45, depth - 1); }
-      if (o.needles && depth <= 1) { for (let k = 0; k < 3; k++) { const at = pts[2 + Math.floor(r() * 5)]; x.beginPath(); x.ellipse(at[0], at[1], len * 0.28, len * 0.09, a + (r() - 0.5) * 0.5, 0, TAU); x.globalAlpha = 0.85; x.fill(); x.globalAlpha = 1; } }
-    };
-    branch(x0, y0, -Math.PI / 2 + (o.lean || 0), hgt, hgt * 0.07, o.depth != null ? o.depth : 3);
   }
 
   // ================================================================ people and horses (drawn for this scene: they look up, flee, ride)
@@ -1163,7 +1144,7 @@
     const su = span(t, tS - 0.3, tS + 0.8);
     const shadowPass = () => {
       if (su <= 0 || su >= 1) return null;
-      const Lq = K.layer('s4:shadowq', 480, 270), lq = Lq.getContext('2d');
+      const Lq = scratch('s4:shadowq', 480, 270), lq = Lq.getContext('2d');
       lq.save(); lq.filter = 'blur(2px)'; lq.translate(0, 205); lq.scale(1, 0.42); planform(lq, lerp(860, -400, su), 0, 760, Math.PI + 0.06, Math.sin(t * 3) * 0.2, INK); lq.restore();
       // it falls on the road, never on the air beyond the edge
       const L = layerT(cam, 1);
@@ -1172,7 +1153,7 @@
       return Lq;
     };
     const shq = shadowPass();
-    const FL = K.layer('s4:figs'), fx = FL.getContext('2d');
+    const FL = scratch('s4:figs'), fx = FL.getContext('2d');
     withLayer(fx, cam, 1, () => {
       const x = fx, col = tone(0.95), colFar = tone(0.75);
       for (const m of CVM) {
@@ -1203,7 +1184,7 @@
       x.save(); x.globalAlpha = tilt; const g = x.createLinearGradient(0, cy0 - 200, 0, cy0 + 560); g.addColorStop(0, tone(0.62)); g.addColorStop(0.6, tone(0.42, 0.85)); g.addColorStop(1, tone(0.3, 0)); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
       drawFog(x, fogStrip('cvC', 2200, 420, 97, mixc(FOG, INK, 0.45), 1.3), cy0 + 40, 460, t * 40, 0.9 * tilt);
       const gu = span(t, L19.start - 1.05, L19.start + 0.15);
-      const PL = K.layer('s4:plan'), pl = PL.getContext('2d');
+      const PL = scratch('s4:plan'), pl = PL.getContext('2d');
       planform(pl, lerp(1700, 760, gu), cy0 + 250 - gu * 40, 1000 + gu * 700, Math.PI * 0.9, Math.sin(t * 2.6) * 0.3, mixc(INK, FOG, 0.12));
       x.save(); x.globalAlpha = 0.8 * tilt * (1 - smooth(span(gu, 0.9, 1))); x.drawImage(PL, 0, 0); x.restore();
       drawFog(x, fogStrip('cvD', 2400, 380, 98, mixc(FOG, INK, 0.3), 1.2), cy0 + 200, 420, -t * 55, 0.95 * tilt);
@@ -1252,7 +1233,7 @@
       legL: { a: [lerp(1.1, 1.9, u), lerp(-0.9, -0.5, u), 0.2], curl: lerp(0.3, -0.6, u) }, legR: { a: [lerp(1.0, 1.75, u), lerp(-0.8, -0.45, u), 0.2], curl: lerp(0.3, -0.6, u) }, toes: -0.5,
     });
     const cam = camera({ pos: [sk[0] * 0.02, 0, 0], pitch: el, f: 1500 });
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam, B, { ink: INK, fog: mixc(FOG, INK, 0.3), fogK: (1 - u) * 0.55, rim: 0.3, memb: 0.82, eye: 1, light: [190, 196, 204] });
     x.save(); x.translate(sk[0], sk[1]); x.drawImage(BL, 0, 0); x.restore();
     // torn cloud in front of it early on
@@ -1295,11 +1276,11 @@
     pose.pos = pos; pose.legL = { foot: [1.2, -pos[1], 1.7], curl: 0.15 }; pose.legR = { foot: [-1.4, -pos[1] + Math.max(0, 1.2 - lunge * 1.2) * 2.5, -1.5], curl: 0.4 };
     const B = build(pose);
     const cam3 = camera({ pos: [camX - sk[0] * 26 / f, 1.4 + sk[1] * 26 / f, cz], f, cy });
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam3, B, { ink: INK, rim: 0.35, memb: 0.78, eye: 1, light: [176, 184, 194] });
     x.drawImage(BL, 0, 0);
     // the men scatter; the knight is taken
-    const FLy = K.layer('s4:figs'), fx = FLy.getContext('2d');
+    const FLy = scratch('s4:figs'), fx = FLy.getContext('2d');
     const col = tone(0.95), colFar = tone(0.75), hS = f * 1.8 / cz;
     const run = (i, X0, dir, delay) => { const tt = Math.max(0, t - sh.a - delay); return X0 + dir * (tt * 3.2 + tt * tt * 1.5); };
     const people = [
@@ -1428,9 +1409,9 @@
       for (let k = 0; k < V.back.length; k++) { const hb = V.back[k]; if (k % 2) continue; fires.push([hb.X + OX, hb.top + OY + 30, 70, k + 40]); }
       for (let k = 0; k < V.houses.length; k++) { const hh = V.houses[k], on = smooth(span(t, sh.a - 0.4 + (k % 3) * 0.25, sh.a + 0.3 + (k % 3) * 0.25)); fires.push([hh.X + OX - hh.w * 0.15, hh.top + OY + 60, 150 * (0.4 + 0.6 * on), k]); fires.push([hh.X + OX + hh.w * 0.22, hh.top + OY + 80, 110 * (0.4 + 0.6 * on), k + 9]); }
       // the glow: the same flames, at quarter resolution, blurred and added
-      const GL = K.layer('s4:fireq', 480, 270), gl = GL.getContext('2d'), Lz = layerT(cam, 1);
+      const GL = scratch('s4:fireq', 480, 270), gl = GL.getContext('2d'), Lz = layerT(cam, 1);
       gl.save(); gl.globalCompositeOperation = 'lighter'; gl.setTransform(Lz.Z / 4, 0, 0, Lz.Z / 4, Lz.ox / 4, Lz.oy / 4); for (const f2 of fires) flame(gl, f2[0], f2[1], f2[2] * 1.3, t, f2[3]); gl.restore();
-      const GB = K.layer('s4:fireb', 480, 270), gb = GB.getContext('2d'); gb.filter = 'blur(5px)'; gb.drawImage(GL, 0, 0); gb.filter = 'none';
+      const GB = scratch('s4:fireb', 480, 270), gb = GB.getContext('2d'); gb.filter = 'blur(5px)'; gb.drawImage(GL, 0, 0); gb.filter = 'none';
       x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalCompositeOperation = 'lighter'; x.globalAlpha = 1; x.drawImage(GB, 0, 0, W, H); x.restore();
       x.save(); x.globalAlpha = 0.9; for (const f2 of fires) flame(x, f2[0], f2[1], f2[2] * 0.9, t, f2[3]); x.restore();
       // villagers fleeing across the snow, silhouetted against the fire
@@ -1443,7 +1424,7 @@
     const B = build({ pos: [lerp(40, -46, pu), 23 + Math.sin(pu * 3) * 1.2, 14], yaw: Math.PI - 0.2, pitch: 0.06, roll: 0.1, chest: 0.05, jaw: 0.25, neck: [0.25, 0.05, -0.2], head: { pitch: -0.25 },
       wingL: { w: { spread: 1 }, flap, flapLag: -flap * 0.4 }, wingR: { w: { spread: 1 }, flap, flapLag: -flap * 0.4 }, legL: { a: [-1.0, -0.7, 0.5] }, legR: { a: [-1.1, -0.6, 0.5] }, tail: [0.1, 0, -0.1], tailWave: { amp: 0.35, ph: t * 3, k: 2 } });
     const cam3 = camera({ pos: [0, 3, 40], pitch: 0.36, f: 1150 });
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam3, B, { ink: [10, 11, 15], rim: 0.18, memb: 0.95, eye: 1, light: [190, 110, 70], fog: mixc(FOG, INK, 0.6), fogK: 0.0 });
     // firelight on its underside
     bx.save(); bx.globalCompositeOperation = 'source-atop'; const ug = bx.createLinearGradient(0, H * 0.75, 0, 0); ug.addColorStop(0, 'rgba(210,100,40,0.24)'); ug.addColorStop(0.5, 'rgba(160,60,30,0.06)'); ug.addColorStop(1, 'rgba(0,0,0,0)'); bx.fillStyle = ug; bx.fillRect(0, 0, W, H); bx.restore();
@@ -1652,7 +1633,7 @@
       // the great banners unroll down the towers
       for (const sd of [-1, 1]) hangBanner(x, bx + sd * 640, GY + G.ttop + 30, 250, 820, clamp(unroll * 1.08 - (sd > 0 ? 0.08 : 0)), t + sd, 0.55);
       // the herald holds the proclamation up before him
-      man(x, bx + 4, hy, 300, { col: tone(0.95), head: 'cap', kind: 'robe', cloak: 0, arms: [[1.05, 1.35], [1.1, 1.3]], t });
+      man(x, bx + 4, hy, 300, { col: tone(0.95), head: 'cap', kind: 'robe', cloak: 0, arms: [[0.7, 0.5], [0.75, 0.45]], t });
       const pr = paintProclamation(), ps = 0.17, pw = pr.width * ps, ph = pr.height * ps;
       x.save(); x.translate(bx - pw / 2 + 8, prY); x.rotate(Math.sin(t * 0.8) * 0.012); x.drawImage(pr, 0, 0, pw, ph);
       x.fillStyle = tone(0.95); for (const sd of [0, 1]) { x.beginPath(); x.ellipse(sd ? pw + 2 : -2, ph * 0.12, 7, 10, 0, 0, TAU); x.fill(); }
@@ -1755,7 +1736,7 @@
   }
   // a near crowd out of focus: irregular heads and shoulders of every size, a raised arm, a pennant pole; drawn small, blurred once
   function nearCrowd(x, t, off, seed, y0, size, col) {
-    const Q = K.layer('s4:nearq', 480, 270), q = Q.getContext('2d'), r = rng(seed), n = 14, span2 = 480 + 200;
+    const Q = scratch('s4:nearq', 480, 270), q = Q.getContext('2d'), r = rng(seed), n = 14, span2 = 480 + 200;
     q.fillStyle = css(col); q.strokeStyle = css(col); q.lineCap = 'round'; q.beginPath();
     const people = [];
     for (let i = 0; i < n; i++) people.push({ u: (i + r() * 0.8) / n, s: size / 4 * (0.6 + r() * 0.75), dy: (r() - 0.3) * size / 4 * 0.5, kind: r(), arm: r() < 0.18, pole: r() < 0.1, ph: r() * TAU });
@@ -1772,10 +1753,9 @@
       if (p.arm) { const w = Math.sin(t * 6 + p.ph) * 0.2; taperStroke(q, [[X + s2 * 0.5, Y], [X + s2 * (0.8 + w), Y - s2 * 1.1], [X + s2 * (0.7 + w * 2), Y - s2 * 2.1]], s2 * 0.32, s2 * 0.22); }
       if (p.pole) { q.lineWidth = Math.max(1, s2 * 0.08); q.beginPath(); q.moveTo(X + s2 * 0.6, Y + s2); q.lineTo(X + s2 * 0.7, Y - s2 * 3.2); q.stroke(); q.save(); q.fillStyle = css(mixc(PURPLE, INK, 0.3)); q.beginPath(); q.moveTo(X + s2 * 0.7, Y - s2 * 3.2); q.lineTo(X + s2 * 1.9, Y - s2 * 2.9 + Math.sin(t * 5 + p.ph) * s2 * 0.15); q.lineTo(X + s2 * 0.7, Y - s2 * 2.5); q.closePath(); q.fill(); q.restore(); }
     }
-    const QB = K.layer('s4:nearb', 480, 270), qb = QB.getContext('2d'); qb.filter = 'blur(3px)'; qb.drawImage(Q, 0, 0); qb.filter = 'none';
+    const QB = scratch('s4:nearb', 480, 270), qb = QB.getContext('2d'); qb.filter = 'blur(3px)'; qb.drawImage(Q, 0, 0); qb.filter = 'none';
     x.drawImage(QB, 0, 0, W, H);
   }
-  function catenary(x, a, b, sag, lw, col) { x.strokeStyle = col; x.lineWidth = lw; x.beginPath(); x.moveTo(a[0], a[1]); x.quadraticCurveTo((a[0] + b[0]) / 2, Math.max(a[1], b[1]) + sag, b[0], b[1]); x.stroke(); }
   function chainLine(x, a, b, sag, sz, col) {
     // links along a sagging curve
     x.strokeStyle = col; x.lineWidth = Math.max(1, sz * 0.3);
@@ -1802,11 +1782,11 @@
     // far-side handlers (behind the creature)
     const hS = f * 1.8 / cz, col = tone(0.95), colFar = tone(0.7);
     const handlers = [[-1.5, -4.5], [5.0, -4.6], [10.5, -4.4], [-0.5, 4.6], [6.0, 4.8], [11.5, 4.5]];
-    const FL = K.layer('s4:figs'), fx = FL.getContext('2d');
+    const FL = scratch('s4:figs'), fx = FL.getContext('2d');
     for (const [hx, hz] of handlers) if (hz < 0) { const p2 = cam3.p([X0 + hx, 0, hz]); man(fx, p2[0], p2[1], f * 1.8 / (cz - hz), { col: colFar, walk: (X0 + hx) * 2.2, t, head: 'helm', kind: 'armour', cloak: 0.3, hold: 'pole', holdAng: -0.95, poleLen: 1.9 }); }
     x.drawImage(FL, 0, 0);
     // the creature
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam3, B, { ink: INK, rim: 0.32, memb: 0.92, eye: 0.6, light: [176, 184, 194], eyeOpen: 0.75 });
     drawCaparison(bx, cam3, B);
     drawHarness(bx, cam3, B);
@@ -1814,7 +1794,7 @@
     // the bit, collar, chains to the handlers, reins to the riders
     const F = B.feat, mouth = cam3.p(F.HP(0.75, -0.42, 0.42)), mouthFar = cam3.p(F.HP(0.75, -0.42, -0.42)), collar = cam3.p(F.NP(0.1, [0, -1.2, 1.3]));
     const sad = B.saddle;
-    const FL2 = K.layer('s4:figs2'), f2 = FL2.getContext('2d');
+    const FL2 = scratch('s4:figs2'), f2 = FL2.getContext('2d');
     // riders: two hooded figures at the shoulders
     drawSaddle(f2, cam3, B);
     const r1 = cam3.p(B.T(4.5, 2.75, 0.5)), r2 = cam3.p(B.T(3.4, 2.65, 0.5)), rh = f * 2.15 / cz;
@@ -1907,7 +1887,7 @@
     const sb = streetBlur(); x.save(); x.globalAlpha = 0.85; x.drawImage(sb, ((foc[0] * 30) % 300) + 200, 40 + foc[1] * 6, 1000, 560, 0, 0, W, H * 1.15); x.restore();
     x.save(); x.globalAlpha = 0.4; x.fillStyle = css(FOG); x.fillRect(0, 0, W, H); x.restore();
     // the creature, close
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam3, B, { ink: INK, rim: 0.4, memb: 0.92, eye: 0.35, light: [172, 180, 190], eyeOpen: 0.42 });
     // scales: small arcs over the neck and head, catching the cold light
     bx.save(); bx.globalCompositeOperation = 'source-atop'; bx.strokeStyle = 'rgba(150,160,175,0.22)'; bx.lineWidth = 1.6;
@@ -1967,13 +1947,13 @@
     x.fillStyle = tone(0.3); x.fillRect(0, 0, W, H);
     lay(x, paintYard(), -240, -60, cam, 1);
     // the creature's shadow across the wall: its head and neck, swaying a little
-    const Lq = K.layer('s4:titheq', 480, 270), lq = Lq.getContext('2d');
+    const Lq = scratch('s4:titheq', 480, 270), lq = Lq.getContext('2d');
     {
       const B = build({ pos: [0, 0, 0], yaw: Math.PI, chest: 0.2, neck: [0.7, 0.25, -0.65 + Math.sin(t * 0.7) * 0.06], head: { pitch: -0.15 + Math.sin(t * 0.9) * 0.04 }, jaw: 0.1, wingL: { w: { fold: 1 } }, wingR: { w: { fold: 1 } } });
       const hp = B.feat.HP(1.5, 0, 0), cs = camera({ pos: [hp[0] + 2.5, hp[1] - 1, 26], f: 240, cx: 170 + Math.sin(t * 0.5) * 4, cy: 92 + Math.sin(t * 0.7) * 3 });
       drawBeast(lq, cs, B, { flat: true, ink: INK, far: INK, memb: 1, rim: 0, fog: INK, only: ['neck', 'head', 'jaw', 'horn'] });
     }
-    const LB = K.layer('s4:titheb', 480, 270), lb = LB.getContext('2d'); lb.filter = 'blur(3px)'; lb.drawImage(Lq, 0, 0); lb.filter = 'none';
+    const LB = scratch('s4:titheb', 480, 270), lb = LB.getContext('2d'); lb.filter = 'blur(3px)'; lb.drawImage(Lq, 0, 0); lb.filter = 'none';
     x.save(); x.globalCompositeOperation = 'multiply'; x.globalAlpha = 0.62; x.drawImage(LB, 0, 0, W, H); x.restore();
     withLayer(x, cam, 1, () => {
       const col = tone(0.95), ground = 1000;
@@ -2005,7 +1985,8 @@
     {
       const pts = [], n = 40, tw = Math.sin(t * 1.7) * 0.5 + Math.sin(t * 3.1) * 0.15;
       for (let k = 0; k <= n; k++) { const u = k / n; pts.push([lerp(2100, 260, u) + Math.sin(u * 3 + 0.5) * 60 - cam.x * 1.4, lerp(1150, 980, u) - Math.sin(u * Math.PI) * 70 + (u > 0.7 ? Math.sin((u - 0.7) * 9 + tw) * 40 * (u - 0.7) * 3 : 0)]); }
-      const TL = K.layer('s4:tail'), tx = TL.getContext('2d');
+      // drawn at half resolution (it is out of focus): blurred there, then scaled up
+      const TL = scratch('s4:tail', 960, 540), tx = TL.getContext('2d'); tx.scale(0.5, 0.5);
       tx.fillStyle = css([16, 19, 26]); taperStroke(tx, pts, 190, 10);
       // spikes along its top
       tx.beginPath(); for (let k = 2; k < n - 2; k += 2) { const a2 = pts[k - 1], b2 = pts[k + 1], dx = b2[0] - a2[0], dy = b2[1] - a2[1], l = Math.hypot(dx, dy) || 1; let nx = dy / l, ny = -dx / l; if (ny > 0) { nx = -nx; ny = -ny; } const wd = lerp(190, 10, k / n) * 0.5, sz = lerp(70, 14, k / n); const bx2 = pts[k][0] + nx * wd * 0.9, by2 = pts[k][1] + ny * wd * 0.9; tx.moveTo(bx2 - dx / l * sz * 0.4, by2 - dy / l * sz * 0.4); tx.lineTo(bx2 + nx * sz - dx / l * sz * 0.5, by2 + ny * sz - dy / l * sz * 0.5); tx.lineTo(bx2 + dx / l * sz * 0.4, by2 + dy / l * sz * 0.4); tx.closePath(); } tx.fill();
@@ -2013,8 +1994,8 @@
       const e = pts[n], e2 = pts[n - 2], ang = Math.atan2(e[1] - e2[1], e[0] - e2[0]); tx.save(); tx.translate(e[0], e[1]); tx.rotate(ang); tx.beginPath(); tx.moveTo(-20, 0); tx.lineTo(10, -34); tx.lineTo(70, 0); tx.lineTo(10, 34); tx.closePath(); tx.fill(); tx.restore();
       // cold light along its back
       tx.save(); tx.globalCompositeOperation = 'source-atop'; tx.fillStyle = 'rgba(160,170,185,0.25)'; taperStroke(tx, pts.map((q, k) => [q[0], q[1] - lerp(190, 10, k / n) * 0.28]), 60, 4); tx.restore();
-      const TB = K.layer('s4:tailb'), tb = TB.getContext('2d'); tb.filter = 'blur(2.5px)'; tb.drawImage(TL, 0, 0); tb.filter = 'none';
-      x.drawImage(TB, 0, 0);
+      const TB = scratch('s4:tailb', 960, 540), tb = TB.getContext('2d'); tb.filter = 'blur(1.3px)'; tb.drawImage(TL, 0, 0); tb.filter = 'none';
+      x.drawImage(TB, 0, 0, W, H);
     }
     snow(x, t, { n: 70, wind: -30, fall: 30, alpha: 0.55, seed: 1930 });
     void d;
@@ -2032,7 +2013,7 @@
     // the world goes quiet behind it
     let g = x.createRadialGradient(W * 0.45, H * 0.45, 100, W * 0.5, H * 0.5, 1200); g.addColorStop(0, tone(0.5)); g.addColorStop(1, tone(0.82)); x.fillStyle = g; x.fillRect(0, 0, W, H);
     const sb = streetBlur(); x.save(); x.globalAlpha = 0.35; x.drawImage(sb, 300, 60, 900, 500, 0, 0, W, H); x.restore();
-    const BL = K.layer('s4:beast'), bx = BL.getContext('2d');
+    const BL = scratch('s4:beast'), bx = BL.getContext('2d');
     drawBeast(bx, cam3, B, { ink: [16, 19, 26], rim: 0.55, memb: 0.95, eye: 0.6 + turn * 0.8, light: [170, 180, 194], eyeOpen: lerp(0.55, 1, turn) });
     drawHarness(bx, cam3, B);
     x.drawImage(BL, 0, 0);
@@ -2223,9 +2204,6 @@
     for (let i = 0; i < shots.length; i++) { shots[i].b = i + 1 < shots.length ? shots[i + 1].a : S.end + 1.6; shots[i].tin = shots[i].tin || { kind: 'cut' }; shots[i].i = i; }
     EDL = shots; return EDL;
   }
-  function placeholderShot(name) {
-    return (x, t, sh) => { x.fillStyle = tone(0.1); x.fillRect(0, 0, W, H); K.text(x, name.toUpperCase(), W / 2, H / 2, '500 40px Cinzel', css(INK), 10, 'center', 0.7); K.text(x, (t - sh.a).toFixed(2), W / 2, H / 2 + 60, '400 28px "EB Garamond"', css(INK), 2, 'center', 0.6); };
-  }
 
   // an ink-bleed reveal between shots: the new picture soaks through the paper behind a dark wet front
   function inkField() { return K.cached('s4:inkfield', () => K.field(320, 180, [{ x: 0.55, y: 0.45 }, { x: 0.2, y: 0.7, d: 0.12 }, { x: 0.85, y: 0.25, d: 0.18 }, { x: 0.4, y: 0.1, d: 0.22 }], 4411, { warp: 0.32, scale: 3.2, grain: 0.06 })); }
@@ -2238,18 +2216,19 @@
       const u = (t - sh.a) / tin.d;
       if (tin.kind === 'dissolve') {
         drawShot(ctx, prev, t);
-        const B = K.layer('s4:shotB'), bx = B.getContext('2d'); drawShot(bx, sh, t);
+        const B = scratch('s4:shotB'), bx = B.getContext('2d'); drawShot(bx, sh, t);
         ctx.globalAlpha = smooth(u); ctx.drawImage(B, 0, 0); ctx.globalAlpha = 1;
       } else {
         // ink: the old shot darkens toward the front, the new one is revealed behind it
         drawShot(ctx, prev, t, { out: true });
-        const F = inkField(), p = ease(u) * 1.15, B = K.layer('s4:shotB'), bx = B.getContext('2d');
+        const F = inkField(), p = ease(u) * 1.15, B = scratch('s4:shotB'), bx = B.getContext('2d');
         drawShot(bx, sh, t);
-        const m = K.mask(F, p, 0.05); K.cutBy(B, m);
+        // cut the new shot by the soft mask (scaled with ordinary smoothing: K.cutBy's high-quality scaling costs ~20 ms here)
+        const m = K.mask(F, p, 0.05); bx.save(); bx.setTransform(1, 0, 0, 1, 0, 0); bx.globalCompositeOperation = 'destination-in'; bx.imageSmoothingEnabled = true; bx.imageSmoothingQuality = 'low'; bx.drawImage(m, 0, 0, W, H); bx.restore();
         const rimC = K.rim(F, p, 0.07, 0.03);
         ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.85 * (1 - smooth(span(u, 0.75, 1)));
         ctx.imageSmoothingEnabled = true; ctx.filter = 'none';
-        const R = K.layer('s4:rim', 320, 180), rx = R.getContext('2d'); rx.drawImage(rimC, 0, 0); rx.globalCompositeOperation = 'source-in'; rx.fillStyle = css(INK); rx.fillRect(0, 0, 320, 180);
+        const R = scratch('s4:rim', 320, 180), rx = R.getContext('2d'); rx.drawImage(rimC, 0, 0); rx.globalCompositeOperation = 'source-in'; rx.fillStyle = css(INK); rx.fillRect(0, 0, 320, 180);
         ctx.drawImage(R, 0, 0, W, H); ctx.restore();
         ctx.drawImage(B, 0, 0);
       }
@@ -2258,29 +2237,11 @@
     drawShot(ctx, sh, t);
   }
 
-  // ================================================================ debug hook (used only by working scripts)
-  const DBG = {
-    build, camera, drawBeast, paintRange: o => paintRange(o), peakProfile: (a, b, c, d) => peakProfile(a, b, c, d), man: (...a) => man(...a), steed: (...a) => steed(...a),
-    beast(x, name, o = {}) {
-      x.fillStyle = css(PAPER); x.fillRect(0, 0, W, H);
-      const poses = {
-        side: {}, spread: { wingL: { w: { spread: 1 } }, wingR: { w: { spread: 1 } } },
-        mantle: { wingL: { w: { mantle: 1 } }, wingR: { w: { mantle: 1 } }, jaw: 0.6 },
-        tuck: { wingL: { w: { tuck: 1 } }, wingR: { w: { tuck: 1 } } },
-      };
-      const pose = Object.assign({}, poses[name] || {}, o.pose || {});
-      const B = build(pose);
-      const cam = camera(Object.assign({ pos: [3, 3, 60], f: 1500 }, o.cam || {}));
-      drawBeast(x, cam, B, o.style || {});
-      if (o.man) { const m = cam.p([o.man[0], 0, o.man[1] || 0]); const top = cam.p([o.man[0], 1.8, o.man[1] || 0]); x.fillStyle = css(INK); x.fillRect(m[0] - 3, top[1], 6, m[1] - top[1]); }
-    },
-  };
-
   SCENES[4] = {
     join: 'dissolve', joinDur: 1.4,
-    _dbg: DBG,
     draw(ctx, t, sc) {
       t = clamp(t, sc.start, sc.end + 1.6);
+      cleanState(ctx);
       render(ctx, t);
       finish(ctx, t);
     },

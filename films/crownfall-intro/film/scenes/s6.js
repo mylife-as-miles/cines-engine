@@ -97,7 +97,7 @@
     let L = 0; if (mips.length > 1 && sc < 0.6) L = Math.min(mips.length - 1, Math.floor(Math.log2(0.6 / sc)) + 1);
     const m = 1 << L; a *= m; b *= m; c *= m; d *= m;
     const U0 = u0 / m, V0 = v0 / m, DU = du / m, DV = dv / m;
-    const pu = (ce + pad) / (Math.hypot(a, b) || 1), pv = (ce + pad) / (Math.hypot(c, d) || 1);
+    const pp = Math.min(ce, 6) + pad, pu = pp / (Math.hypot(a, b) || 1), pv = pp / (Math.hypot(c, d) || 1);
     ctx.setTransform(a, b, c, d, cx - exx / 2 - eyx / 2, cy - exy / 2 - eyy / 2);
     ctx.drawImage(mips[L], U0 - pu, V0 - pv, DU + 2 * pu, DV + 2 * pv, -pu, -pv, DU + 2 * pu, DV + 2 * pv);
     STAT.cells++;
@@ -145,7 +145,7 @@
         let e = cm[2] < NEAR ? 1e9 : Math.hypot(C.cx + f * cm[0] / cm[2] - (sp[0][0] + sp[1][0] + sp[2][0] + sp[3][0]) / 4, C.cy - f * cm[1] / cm[2] - (sp[0][1] + sp[1][1] + sp[2][1] + sp[3][1]) / 4);
         e += Math.hypot(sp[0][0] - sp[1][0] - sp[3][0] + sp[2][0], sp[0][1] - sp[1][1] - sp[3][1] + sp[2][1]) / 4;
         const mag = Math.max(Math.hypot(sp[1][0] - sp[0][0], sp[1][1] - sp[0][1]) / ((a1 - a0) * tw || 1), Math.hypot(sp[3][0] - sp[0][0], sp[3][1] - sp[0][1]) / ((b1 - b0) * th || 1)) * k;
-        if (e * k > err * clamp(mag / 1.4, 1, 3)) { stack.push([a0, b0, am, bm, dep + 1], [am, b0, a1, bm, dep + 1], [a0, bm, am, b1, dep + 1], [am, bm, a1, b1, dep + 1]); continue; }
+        if (e * k > err * clamp(mag / 1.4, 1, 2.2)) { stack.push([a0, b0, am, bm, dep + 1], [am, b0, a1, bm, dep + 1], [a0, bm, am, b1, dep + 1], [am, bm, a1, b1, dep + 1]); continue; }
       }
       cellImg(ctx, mips, u0 + a0 * tw, v0 + b0 * th, u0 + a1 * tw, v0 + b1 * th, sp[0], sp[1], sp[2], sp[3], k, pad);
     }
@@ -178,7 +178,7 @@
         e += Math.hypot(sp[0][0] - sp[1][0] - sp[3][0] + sp[2][0], sp[0][1] - sp[1][1] - sp[3][1] + sp[2][1]) / 4;
         // refine when the affine is off, or when this level's texels are being magnified
         const magG = ext / (sz * tpm);
-        if (e * k > err * clamp(magG / 1.2, 1, 6) || (lev > 0 && ext > sz * tpm * 1.3)) { kids(); continue; }
+        if (e * k > err * clamp(magG / 1.2, 1, 2.2) || (lev > 0 && ext > sz * tpm * 1.3)) { kids(); continue; }
       }
       cellImg(ctx, mips, GUT + ux * tpm, GUT + uz * tpm, GUT + (ux + sz) * tpm, GUT + (uz + sz) * tpm, sp[0], sp[1], sp[2], sp[3], k, o.pad != null ? o.pad : 1);
     }
@@ -495,11 +495,12 @@
     const sky = [lerp(40, 205, bf), lerp(44, 116, bf), lerp(58, 92, bf)];
     L.amb = sky;
     const still = win(t, T.still0, T.still1 + 0.6, 0.5, 0.8), eald = win(t, T.dis0 - 0.8, T.bor1 + 0.6, 1.0, 1.4);
+    L.amb = [L.amb[0] * (1 - 0.3 * still), L.amb[1] * (1 - 0.15 * still), L.amb[2] * (1 + 0.15 * still)];
     for (let i = 0; i < 4; i++) {
       const fr = fire(i, t); if (fr <= 0) continue;
-      const fl = flick(i, tw) * fr * (1 - 0.35 * still);
+      const fl = flick(i, tw) * fr * (1 - 0.5 * still);
       const [bx, bz] = BRAZ[i], dimB = bz > 0 ? 1 - 0.55 * eald : 1;
-      L.lights.push({ x: bx, z: bz, r: 20, c: [255, 150, 70], a: 1.25 * fl * dimB, sa: 1.25 * qn(fr * (1 - 0.35 * still) * dimB, 0.05) * 0.88, y: BRZH, fire: true });
+      L.lights.push({ x: bx, z: bz, r: 20, c: [255, 150, 70], a: 1.25 * fl * dimB, sa: 1.25 * qn(fr * (1 - 0.5 * still) * dimB, 0.05) * 0.88, y: BRZH, fire: true });
     }
     const arena = 1 - bf; L.arena = arena;
     L.lights.push({ x: 0, z: 0, r: 19, c: [150, 132, 128], a: 0.8 * arena * (1 - 0.45 * still), sa: 0.8 * qn(arena * (1 - 0.45 * still), 0.05), y: 14 });
@@ -507,7 +508,7 @@
     L.lights.push({ x: 21, z: 0, r: 11, c: [255, 150, 90], a: 0.7 * arena * flick(5, tw), sa: 0.62 * arena, y: 4 });
     // the cold light of the law (L33-L34)
     L.cold = still;
-    if (still > 0) L.lights.push({ x: 2, z: 0, r: 22, c: [120, 140, 190], a: 0.5 * still, y: 20 });
+    if (still > 0) L.lights.push({ x: 2, z: -3, r: 24, c: [110, 135, 200], a: 0.85 * still, sa: 0.85 * qn(still, 0.05), y: 20 });
     // a cold, high light on Ealdholt's side while its back rank empties (L36-L37)
     if (eald > 0) L.lights.push({ x: 0, z: 9, r: 15, c: [130, 150, 205], a: 0.75 * eald, sa: 0.75 * qn(eald, 0.05), y: 16 });
     // the pool on the surrounded king (L42)
@@ -817,7 +818,7 @@
     w = Math.ceil(w); h = Math.ceil(h);
     let c = SPR[name];
     if (!c || c.width < w || c.height < h) c = SPR[name] = K.canvas(Math.min(2048, Math.max(w, c ? c.width : 0, 256)), Math.min(2048, Math.max(h, c ? c.height : 0, 256)));
-    const x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.clearRect(0, 0, w + 2, h + 2);
+    const x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.lineCap = 'butt'; x.lineJoin = 'miter'; x.clearRect(0, 0, c.width, c.height);
     return c;
   }
   // a painterly grain of soft vertical strokes laid over every figure
@@ -835,7 +836,8 @@
   function costume(p, t) {
     const hs = p.house, r = rng(p.seed), base = p.side === 'A' ? IVORY : EBONY;
     let a = 1;
-    if (p.side === 'A' && p.type !== 'P' && !p.lent) a = p.bloom != null ? smooth(span(t, p.bloom, p.bloom + 0.7)) : 0;
+    // the arms' progress is quantised, so a cached sprite and a fresh one always agree
+    if (p.side === 'A' && p.type !== 'P' && !p.lent) a = p.bloom != null ? Math.round(smooth(span(t, p.bloom, p.bloom + 0.7)) * 20) / 20 : 0;
     const col = Object.assign({}, base), o = { col, kind: 'robe', head: 'bare', hold: 'none', arms: null, armsA: 0, beard: false };
     const dye = (h) => hs ? mixHex(h, hs.field, a) : h;
     if (hs) { col.field = mixHex(base.cloth2, hs.field, a); col.charge = hs.charge; o.arms = hs; o.armsA = a; o.pavise = null; }
@@ -887,7 +889,7 @@
     const knight = !!o.seated, hh = knight ? hs / 1.85 : hs;
     const SW = Math.ceil(knight ? hh * (view === 'side' ? 2.2 : 1.1) + 20 : hs * (o.pavise || o.cloak ? 0.75 : 0.6) + 20), SH = Math.ceil(knight ? hh * 2.75 + 16 : hs * 1.62 + 16);
     const ox = SW / 2, oy = SH - 6;
-    const x = spr.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, SW + 2, SH + 2);
+    const x = spr.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.lineCap = 'butt'; x.lineJoin = 'miter'; x.clearRect(0, 0, spr.width, spr.height);
     drawFigureInto(x, ox, oy, p, o, view, face, hs, lc, walk);
     const fig = knight ? hh * 2.6 : hs, top = oy - fig;
     x.globalCompositeOperation = 'source-atop';
@@ -968,7 +970,7 @@
       if (!ent) { ent = { key: null, c: K.canvas(64, 64) }; FIGC.set(p.id, ent); }
       if (key === null || ent.key !== key) {
         const knight = !!o.seated, hh = knight ? hsq / 1.85 : hsq, SW = Math.ceil(knight ? hh * (view === 'side' ? 2.2 : 1.1) + 20 : hsq * (o.pavise || o.cloak ? 0.75 : 0.6) + 20), SH = Math.ceil(knight ? hh * 2.75 + 16 : hsq * 1.62 + 16);
-        if (ent.c.width < SW || ent.c.height < SH) ent.c = K.canvas(Math.max(SW, ent.c.width), Math.max(SH, ent.c.height));
+        if (ent.c.width !== SW || ent.c.height !== SH) { ent.c.width = SW; ent.c.height = SH; }
         ent.dims = renderFigure(ent.c, p, o, view, face, hsq, lc, keyAmt, lx, ly, lt.key && lt.key.fire, fog, dis, walk);
         ent.key = key; ent.hs = hsq;
       }
@@ -1039,7 +1041,7 @@
       // the wall face with its gilded rail
       plane(ctx, C, wallStrip(), [ax, wh, az], [ux, 0, uz], [0, -wh, 0], 2048, 256 * hk, { err: 6, roots: [4, 1] });
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      { const m = toCam(C, (ax + bx) / 2, wh / 2, (az + bz) / 2)[2], fa = clamp((m - 14) / 40) * 0.35; if (fa > 0.01 && quadPath(ctx, C, [[ax, 0, az], [bx, 0, bz], [bx, th, bz], [ax, th, az]])) { ctx.fillStyle = `rgba(30,30,40,${fa})`; ctx.fill(); } }
+      { const m = toCam(C, (ax + bx) / 2, wh / 2, (az + bz) / 2)[2], fa = 0.18 + clamp((m - 14) / 40) * 0.3; if (fa > 0.01 && quadPath(ctx, C, [[ax - nx * back, th, az - nz * back], [bx - nx * back, th, bz - nz * back], [bx, wh, bz], [ax, wh, az]])) { ctx.fillStyle = `rgba(14,12,18,${fa + 0.12})`; ctx.fill(); } if (quadPath(ctx, C, [[ax, 0, az], [bx, 0, bz], [bx, wh, bz], [ax, wh, az]])) { ctx.fillStyle = `rgba(24,24,34,${fa * 0.8})`; ctx.fill(); } }
       // torches along the top of the wall
       if (rise > 0.9) for (let k = 1; k < 8; k++) {
         const u = k / 8, X = ax + ux * u + nx * 0.3, Z = az + uz * u + nz * 0.3, q = pj(C, X, wh + 0.5, Z); if (!q) continue;
@@ -1129,7 +1131,7 @@
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
     for (const f of faces) if ((C.px - f.m[0]) * f.n[0] + (C.pz - f.m[1]) * f.n[1] > 0) { const l2 = lightAt(L, f.m[0] * 0.9, 0.2, f.m[1] * 0.9).c; polyFill(ctx, C, f.pts, litHex('#4a3c30', l2)); }
     // the step's top (a dark stone frame)
-    polyFill(ctx, C, [[-F, hb, -F], [F, hb, -F], [F, hb, F], [-F, hb, F]], litHex('#3a3028', lt));
+    for (const q of [[[-F, -F], [F, -F], [E, -E], [-E, -E]], [[F, -F], [F, F], [E, E], [E, -E]], [[F, F], [-F, F], [-E, E], [E, E]], [[-F, F], [-F, -F], [-E, -E], [-E, E]]]) polyFill(ctx, C, q.map(([X, Z]) => [X, hb, Z]), litHex('#3a3028', lt));
     for (const [ax, az, bx, bz, nx, nz] of [[-E, E, E, E, 0, 1], [E, -E, -E, -E, 0, -1], [E, E, E, -E, 1, 0], [-E, -E, -E, E, -1, 0]]) {
       const mx = (ax + bx) / 2, mz = (az + bz) / 2; if ((C.px - mx) * nx + (C.pz - mz) * nz <= 0) continue;
       const l2 = lightAt(L, mx * 0.95, 0.3, mz * 0.95).c;
@@ -1573,7 +1575,7 @@
     return items;
   }
   // ---------------------------------------------------------------- L38: what the board can award, at its edge
-  const STAKES = [-6.25, -2.0, 2.25, 6.5].map((z, i) => ({ x: -(BE + STEP + 1.7), z, i }));
+  const STAKES = [6.5, 2.25, -2.0, -6.25].map((z, i) => ({ x: -(BE + STEP + 1.7), z, i }));
   function stakeItems(ctx, C, t, L) {
     const T = TT(), items = [];
     for (const s of STAKES) {
@@ -1754,9 +1756,9 @@
   function airLayers(C, t, L, amt, split, gx) {
     const tw = worldT(t), q = 0.25, front = K.layer('s6:fogF', W * q, H * q), fx = front.getContext('2d'), bx = gx;
     let nb = 0, nf = 0; const bb = [1e9, 1e9, -1e9, -1e9];
-    const put = (X, Y, Z, s, a, lt, flat, mode) => {
+    const put = (X, Y, Z, s, a, lt, flat, mode, toFront) => {
       const p = pj(C, X, Y, Z); if (!p || p[2] < 2) return; const S = p[3] * s; if (S < 6) return;
-      const near = clamp((p[2] - 2) / 5), x = p[2] > split ? bx : fx; if (p[2] > split) { nb++; bb[0] = Math.min(bb[0], p[0] - S); bb[1] = Math.min(bb[1], p[1] - S * flat); bb[2] = Math.max(bb[2], p[0] + S); bb[3] = Math.max(bb[3], p[1] + S * flat); } else nf++;
+      const near = clamp((p[2] - 2) / 5), x = p[2] > split && !toFront ? bx : fx; if (x === bx) { nb++; bb[0] = Math.min(bb[0], p[0] - S); bb[1] = Math.min(bb[1], p[1] - S * flat); bb[2] = Math.max(bb[2], p[0] + S); bb[3] = Math.max(bb[3], p[1] + S * flat); } else nf++;
       const qq = x === bx ? 0.5 : q; x.globalAlpha = a * near; x.globalCompositeOperation = mode || 'screen'; x.drawImage(tintPuff(lt), (p[0] - S) * qq, (p[1] - S * flat) * qq, S * 2 * qq, S * 2 * flat * qq);
     };
     if (amt > 0) for (const f of fogBanks()) {
@@ -1765,7 +1767,7 @@
     }
     for (let i = 0; i < 4; i++) {
       const fr = fire(i, t); if (fr <= 0) continue; const [cx, cz] = BRAZ[i];
-      for (let k = 0; k < 6; k++) { const ph = (tw / 7 + k / 6) % 1, X = cx + Math.sin(tw * 0.3 + k) * ph * 2 + ph * 3, Z = cz + ph * 1.5, Y = BRZH + 1 + ph * 9; put(X, Y, Z, 1.2 + ph * 4, 0.2 * Math.sin(ph * Math.PI) * clamp(fr), [0.22, 0.16, 0.14], 1, 'source-over'); }
+      for (let k = 0; k < 6; k++) { const ph = (tw / 7 + k / 6) % 1, X = cx + Math.sin(tw * 0.3 + k) * ph * 2 + ph * 3, Z = cz + ph * 1.5, Y = BRZH + 1 + ph * 9; put(X, Y, Z, 1.2 + ph * 4, 0.2 * Math.sin(ph * Math.PI) * clamp(fr), [0.22, 0.16, 0.14], 1, 'source-over', true); }
     }
     // the vignette rides in the front layer (one composite for both); with nothing in front it is drawn on its own
     if (!nf) return { front: null, bb };
@@ -1828,12 +1830,12 @@
       k(T.a37 + 2.6, [-9.0, 4.8, 2.4], [0, 0.6, 7.6], 1400),
       k(T.b37 + 0.2, [-10.6, 4.1, 4.2], [0, 0.6, 7.6], 1500),
       // L38: play; along the edge where the stakes appear
-      k(T.a38 + 0.6, [-23.5, 3.4, -4.5], [-8.0, 0.9, 0.6], 1350),
-      k(T.b38 + 0.1, [-24.6, 3.0, 1.2], [-10.0, 1.0, 1.6], 1400),
+      k(T.a38 - 0.15, [-22.8, 2.3, 3.2], [-9.0, 1.1, -0.4], 1300, { cut: true }),
+      k(T.b38 + 0.1, [-24.0, 2.0, -1.4], [-9.5, 1.2, 0.2], 1340),
       // L39: wide over the arena
       k(T.b39 + 0.1, [-22, 31, -24], [2, 0, 2], 1150),
       // L40: down to the bishop as he falls
-      k(T.a40 + 0.5, [13.0, 5.4, -0.5], [6, 0.9, 1.6], 1500),
+      k(T.a40 - 0.1, [13.6, 5.9, -0.9], [6, 0.9, 1.6], 1480, { cut: true }),
       k(T.a41, [11.4, 4.2, 0.2], [6, 0.8, 1.8], 1650),
       // L41: the defeated in shadow (cut)
       k(T.a41, [11.2, 1.7, 12.4], [-6, 1.3, 14.8], 1600, { cut: true }),
@@ -1854,10 +1856,14 @@
     let s1 = i; while (s1 < ks.length - 1 && !ks[s1 + 1].cut) s1++;
     const val = (j, f) => f === 'f' ? Math.log(ks[j].f) : null;
     const get = (j) => [...ks[j].pos, ...ks[j].tgt, Math.log(ks[j].f)];
+    // monotone tangents (Fritsch-Carlson), per component: the camera never overshoots a key (or dips through the floor)
+    const sec = (j) => { const pa = get(j), pb = get(j + 1), dt = ks[j + 1].t - ks[j].t; return pa.map((v, q) => (pb[q] - v) / dt); };
     const tan = (j) => {
-      const a = Math.max(s0, j - 1), b = Math.min(s1, j + 1); if (a === b) return get(j).map(() => 0);
-      const pa = get(a), pb = get(b), dt = ks[b].t - ks[a].t, m = pa.map((v, q) => (pb[q] - v) / dt);
-      return (j === s0 || j === s1) ? m.map(v => v * 0.5) : m;
+      const dL = j > s0 ? sec(j - 1) : null, dR = j < s1 ? sec(j) : null;
+      if (!dL && !dR) return get(j).map(() => 0);
+      if (!dL) return dR.map(v => v * 0.5);
+      if (!dR) return dL.map(v => v * 0.5);
+      return dL.map((a, q) => { const b = dR[q]; if (a * b <= 0) return 0; const m = (a + b) / 2, lim = 3 * Math.min(Math.abs(a), Math.abs(b)); return Math.sign(m) * Math.min(Math.abs(m), lim); });
     };
     let out;
     if (i >= s1) { const p = get(s1), m = tan(s1), dt = Math.max(0, t - ks[s1].t); out = p.map((v, q) => v + m[q] * dt * Math.exp(-dt * 0.5)); }
@@ -1869,9 +1875,10 @@
     void val;
     // a hand on the camera: a little drift, stiller while the law is spoken
     const T = TT(), hand = 1 - 0.75 * win(t, T.still0, T.still1, 0.4, 0.4), n = (s, k) => (K.fbm(t * 0.35 + k * 10, s, 2, 991) - 0.5) * 2;
-    return { pos: [out[0] + n(1, 1) * 0.05 * hand, out[1] + n(2, 2) * 0.04 * hand, out[2] + n(3, 3) * 0.05 * hand], tgt: [out[3] + n(4, 4) * 0.04 * hand, out[4] + n(5, 5) * 0.03 * hand, out[5] + n(6, 6) * 0.04 * hand], f: Math.exp(out[6]), roll: n(7, 7) * 0.004 * hand };
+    return { pos: [out[0] + n(1, 1) * 0.05 * hand, Math.max(0.9, out[1] + n(2, 2) * 0.04 * hand), out[2] + n(3, 3) * 0.05 * hand], tgt: [out[3] + n(4, 4) * 0.04 * hand, out[4] + n(5, 5) * 0.03 * hand, out[5] + n(6, 6) * 0.04 * hand], f: Math.exp(out[6]), roll: n(7, 7) * 0.004 * hand };
   }
 
+  window.__s6cam = camAt; // (debug, removed later)
   // ---------------------------------------------------------------- the frame
   let BLOOMS = false;
   function frame(ctx, t) {
@@ -1899,8 +1906,9 @@
     const split = toCam(C, cam.tgt[0], cam.tgt[1], cam.tgt[2])[2] * 0.85, air = airLayers(C, t, L, 1 - bf * 0.6, split, gx);
     if (PR) { gx.getImageData(0, 0, 1, 1); mk('glight'); }
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G, 0, 0, W, H); mk('gup');
+    if (D.only === 'G') return C;
     drawFieldDecals(ctx, C, t);
-    drawSlab(ctx, C, t, L); mk('slab');
+    if (!D.noSlab) drawSlab(ctx, C, t, L); mk('slab');
     const c0 = STAT.cells; drawBoardTop(ctx, C, t, Li, L, half); mk('board' + (STAT.cells - c0));
     drawInkLines(ctx, C, t);
     drawReflections(ctx, C, t, L, by);
@@ -1922,6 +1930,7 @@ mk('fogback');
     // the coins: the queen's debt, and the price of each borrowed champion
     if (t > T.coinQ) items.push({ d: toCam(C, sqX(3) + 0.5, 0, sqZ(0) + 0.9)[2], draw: () => drawCoin(ctx, C, sqX(3) + 0.5, sqZ(0) + 0.9, T.coinQ, t, L) });
     for (const p of P) if (p.coin && t > p.coin && t < T.form) { const x = sqX(p.f) - 0.55, z = sqZ(7) - 0.95; items.push({ d: toCam(C, x, 0, z)[2], draw: () => drawCoin(ctx, C, x, z, p.coin, t, L) }); }
+    if (D.skipTag) { for (let i = items.length - 1; i >= 0; i--) if (items[i].tag === D.skipTag) items.splice(i, 1); }
     items.sort((a, b) => b.d - a.d); mk('collect');
     const TG = {};
     for (const it of items) { let t0 = 0; if (PR) { ctx.getImageData(0, 0, 1, 1); t0 = performance.now(); } ctx.save(); it.draw(); ctx.restore(); if (PR) { ctx.getImageData(0, 0, 1, 1); const tg = it.tag || 'other', dt = performance.now() - t0; TG[tg] = (TG[tg] || 0) + dt; if (D.each && it.tag === 'pc') (window.S6EACH = window.S6EACH || []).push([it.id, Math.round(it.hp || 0), dt.toFixed(1)]); } }
@@ -1945,6 +1954,7 @@ mk('fogback');
     draw(ctx, t, sc) {
       void sc;
       const T = TT(); t = clamp(t, T.s - 1.5, T.e + 1.5);
+      ctx.lineCap = 'butt'; ctx.lineJoin = 'miter'; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'low';
       warm(t);
       if (insertAlpha(t) < 0.999) frame(ctx, t); else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
       insert(ctx, t);
@@ -1986,7 +1996,7 @@ mk('fogback');
     ctx.imageSmoothingQuality = 'medium'; ctx.drawImage(fistBack(), 0, 0, W, H);
     ctx.restore();
     // the arm and hand are painted into their own layer, then lit there
-    const Lr = K.layer('s6:fist'), x = Lr.getContext('2d');
+    const Lr = K.layer('s6:fist'), x = Lr.getContext('2d'); x.lineCap = 'butt'; x.lineJoin = 'miter';
     const push = 1.18 + 0.08 * span(t, T.fist0 - 0.5, T.a42), tr = cl > 0.92 ? (K.noise(t * 30, 1, 77) - 0.5) * 2.4 : 0;
     x.translate(W * 0.5 + tr, H * 0.36); x.rotate(-0.12); x.scale(push * H / 1000, push * H / 1000);
     const skin = '#a2704f', wool = '#5a3f2c', woolD = '#2b1d15', iron = '#3a3a3f';
