@@ -58,10 +58,11 @@ def db(v):
     return float(20 * np.log10(max(float(v), 1e-12)))
 
 
-def decode(path):
-    """any audio file -> float32 (n, 2) at 48 kHz"""
-    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-af', f'aresample={SR}:resampler=soxr:precision=28',
-                          '-f', 'f32le', '-ac', '2', '-'], check=True, capture_output=True).stdout
+def decode(path, resample=True):
+    """any audio file -> float32 (n, 2), at 48 kHz (soxr) or at its own rate"""
+    af = ['-af', f'aresample={SR}:resampler=soxr:precision=28'] if resample else []
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, *af, '-f', 'f32le', '-ac', '2', '-'], check=True,
+                         capture_output=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
 
 
@@ -88,11 +89,7 @@ def onset(x):
 
 
 def finish(x):
-    """the raw take -> the sound as the mix gets it, and what was done"""
-    raw_peak = float(np.abs(x).max())
-    if raw_peak < 10 ** (-70 / 20):
-        raise RuntimeError(f'near-silent take (peak {db(raw_peak):.0f} dBFS)')
-    clipped = int((np.abs(x) >= 0.9999).sum())  # full-scale samples: audio.cpp writes 16-bit PCM and clips there
+    """the take at 48 kHz -> the sound as the mix gets it, and what was done"""
     cut = max(0, onset(x) - int(PREROLL_S * SR))
     y = x[cut:].astype(np.float64)
     n = min(int(DECLICK_S * SR), len(y))
@@ -101,8 +98,8 @@ def finish(x):
     y *= gain
     n = min(int(FADE_OUT_S * SR), len(y))
     y[len(y) - n:] *= (0.5 + 0.5 * np.cos(np.pi * np.arange(1, n + 1) / n))[:, None]
-    return y, {'trimmed_ms': round(1000 * cut / SR, 1), 'raw_peak_dbfs': round(db(raw_peak), 2),
-               'gain_db': round(db(gain), 2), 'clipped_samples': clipped, 'length_s': round(len(y) / SR, 3)}
+    return y, {'trimmed_ms': round(1000 * cut / SR, 1), 'gain_db': round(db(gain), 2),
+               'length_s': round(len(y) / SR, 3)}
 
 
 def generate(prompt, dur, seed, dst):
@@ -120,9 +117,15 @@ def generate(prompt, dur, seed, dst):
         if r.returncode or not os.path.isfile(raw):
             tail = '\n'.join((r.stdout + r.stderr).replace('\r', '\n').strip().splitlines()[-12:])
             raise RuntimeError(f'Soundbox failed ({r.returncode}):\n{tail}')
+        native = decode(raw, resample=False)  # as audio.cpp wrote it: 44.1 kHz, 16-bit
+        peak = float(np.abs(native).max())
+        if peak < 10 ** (-70 / 20):
+            raise RuntimeError(f'near-silent take (peak {db(peak):.0f} dBFS)')
+        clipped = int((np.abs(native) >= 32767 / 32768).sum())  # audio.cpp's 16-bit writer clips at full scale
         y, info = finish(decode(raw))
     encode(y, dst)
-    return {'prompt': prompt, 'seed': int(seed), 'duration_s': dur, 'gen_s': round(gen_s, 1), **info}
+    return {'prompt': prompt, 'seed': int(seed), 'duration_s': dur, 'gen_s': round(gen_s, 1),
+            'raw_peak_dbfs': round(db(peak), 2), 'clipped_samples': clipped, **info}
 
 
 def file_length(path):

@@ -16,249 +16,429 @@
    "prompt": "a quill pen scratching slowly on thick paper, deliberate strokes, close and intimate, no music",
    "seed": 101,
    "duration_s": 5,
-   "gen_s": 14.1,
-   "trimmed_ms": 181.0,
-   "raw_peak_dbfs": -17.83,
-   "gain_db": 16.83,
+   "gen_s": 71.5,
+   "raw_peak_dbfs": -17.7,
    "clipped_samples": 0,
+   "trimmed_ms": 181.0,
+   "gain_db": 16.83,
    "length_s": 4.819,
    "file": "sfx_sa/E01_pen.wav"
   },
   {
    "id": "E02_bloom",
-   "prompt": "a soft low warm swell like ink blooming in water, gentle, dark, no music",
-   "seed": 102,
+   "prompt": "a soft low swell of deep rumbling air, slowly rising and fading away, a dark breathy whoosh, atmospheric sound effect",
+   "seed": 1102,
    "duration_s": 3,
-   "gen_s": 12.2,
-   "trimmed_ms": 44.0,
-   "raw_peak_dbfs": -18.72,
-   "gain_db": 17.72,
+   "gen_s": 11.7,
+   "raw_peak_dbfs": -9.7,
    "clipped_samples": 0,
-   "length_s": 2.956,
+   "trimmed_ms": 66.0,
+   "gain_db": 8.7,
+   "length_s": 2.934,
    "file": "sfx_sa/E02_bloom.wav"
   },
   {
    "id": "E03_ink",
    "prompt": "wet ink spreading across parchment and paper rustling softly, quiet, close, no music",
-   "seed": 103,
+   "seed": 1103,
    "duration_s": 4,
-   "file": null
+   "gen_s": 78.3,
+   "raw_peak_dbfs": -28.41,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 26.49,
+   "length_s": 4.0,
+   "file": "sfx_sa/E03_ink.wav"
   },
   {
    "id": "E04_whoosh_up",
    "prompt": "a deep soft cinematic whoosh, a slow camera move through air, no music",
    "seed": 104,
    "duration_s": 2,
-   "file": null
+   "gen_s": 11.4,
+   "raw_peak_dbfs": -7.46,
+   "clipped_samples": 0,
+   "trimmed_ms": 110.0,
+   "gain_db": 6.62,
+   "length_s": 1.89,
+   "file": "sfx_sa/E04_whoosh_up.wav"
   },
   {
    "id": "E05_tear",
    "prompt": "old parchment slowly tearing, close, dry fibres ripping",
    "seed": 105,
    "duration_s": 2,
-   "file": null
+   "gen_s": 10.7,
+   "raw_peak_dbfs": -15.86,
+   "clipped_samples": 0,
+   "trimmed_ms": 9.0,
+   "gain_db": 14.78,
+   "length_s": 1.991,
+   "file": "sfx_sa/E05_tear.wav"
   },
   {
    "id": "E06_dust",
    "prompt": "a shimmering dissolve of fine gold dust drifting away, airy and dark, soft chimes fading, no music",
-   "seed": 106,
+   "seed": 1106,
    "duration_s": 3,
-   "file": null
+   "gen_s": 74.7,
+   "raw_peak_dbfs": -7.87,
+   "clipped_samples": 0,
+   "trimmed_ms": 10.0,
+   "gain_db": 7.23,
+   "length_s": 2.99,
+   "file": "sfx_sa/E06_dust.wav"
   },
   {
    "id": "E07_flames",
    "prompt": "small flames igniting one after another, soft whoomph of candles catching, gentle crackle",
    "seed": 107,
    "duration_s": 3,
-   "file": null
+   "gen_s": 11.5,
+   "raw_peak_dbfs": -22.49,
+   "clipped_samples": 0,
+   "trimmed_ms": 13.0,
+   "gain_db": 22.52,
+   "length_s": 2.987,
+   "file": "sfx_sa/E07_flames.wav"
   },
   {
    "id": "E08_crack",
    "prompt": "gold metal cracking under strain, sharp ticks and creaks of a crown splitting, tense",
    "seed": 108,
    "duration_s": 2,
-   "file": null
+   "gen_s": 10.2,
+   "raw_peak_dbfs": -12.03,
+   "clipped_samples": 0,
+   "trimmed_ms": 38.0,
+   "gain_db": 11.11,
+   "length_s": 1.962,
+   "file": "sfx_sa/E08_crack.wav"
   },
   {
    "id": "E09_shatter",
    "prompt": "a golden crown shattering into many pieces, a bright metallic burst with ringing shards scattering, cinematic impact",
    "seed": 109,
    "duration_s": 3,
-   "file": null
+   "gen_s": 11.8,
+   "raw_peak_dbfs": -0.0,
+   "clipped_samples": 74,
+   "trimmed_ms": 0.0,
+   "gain_db": -1.96,
+   "length_s": 3.0,
+   "file": "sfx_sa/E09_shatter.wav"
   },
   {
    "id": "E10_shards",
-   "prompt": "small metal shards falling and tinkling onto wood, scattered, settling",
-   "seed": 110,
+   "prompt": "a cascade of small broken metal fragments falling onto a wooden floor, sharp scattered clatter, debris bouncing and settling",
+   "seed": 1110,
    "duration_s": 3,
-   "file": null
+   "gen_s": 11.7,
+   "raw_peak_dbfs": -3.64,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 2.8,
+   "length_s": 3.0,
+   "file": "sfx_sa/E10_shards.wav"
   },
   {
    "id": "E11_war",
-   "prompt": "a distant medieval battle, war drums, clashing swords and far shouting, muffled, no music",
-   "seed": 111,
+   "prompt": "distant combat between two armies, constant clanging of swords and armour, war horns, galloping horses and battle cries echoing across a valley",
+   "seed": 2111,
    "duration_s": 4,
-   "file": null
+   "gen_s": 13.1,
+   "raw_peak_dbfs": -3.21,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 2.19,
+   "length_s": 4.0,
+   "file": "sfx_sa/E11_war.wav"
   },
   {
    "id": "E12_rise",
    "prompt": "a deep rumble of mountains rising from the earth, grinding stone, low wind",
    "seed": 112,
    "duration_s": 4,
-   "file": null
+   "gen_s": 12.0,
+   "raw_peak_dbfs": -0.12,
+   "clipped_samples": 0,
+   "trimmed_ms": 63.0,
+   "gain_db": -0.88,
+   "length_s": 3.937,
+   "file": "sfx_sa/E12_rise.wav"
   },
   {
    "id": "E13_blade",
    "prompt": "a blade drawn slowly from a sheath, a cold metallic ring",
    "seed": 113,
    "duration_s": 2,
-   "file": null
+   "gen_s": 10.4,
+   "raw_peak_dbfs": -8.1,
+   "clipped_samples": 0,
+   "trimmed_ms": 127.0,
+   "gain_db": 7.47,
+   "length_s": 1.873,
+   "file": "sfx_sa/E13_blade.wav"
   },
   {
    "id": "E14_wind",
    "prompt": "howling icy mountain wind with blowing snow, cold and desolate, no music",
    "seed": 114,
    "duration_s": 10,
-   "file": null
+   "gen_s": 20.4,
+   "raw_peak_dbfs": -16.31,
+   "clipped_samples": 0,
+   "trimmed_ms": 49.0,
+   "gain_db": 15.32,
+   "length_s": 9.951,
+   "file": "sfx_sa/E14_wind.wav"
   },
   {
    "id": "E15_wingbeat",
-   "prompt": "an enormous leathery wing beat passing overhead, a deep heavy whoosh, a giant creature flying low",
-   "seed": 115,
+   "prompt": "huge leathery wings flapping, slow powerful wing beats of a giant dragon flying overhead, deep heavy whooshing flaps",
+   "seed": 1115,
    "duration_s": 3,
-   "file": null
+   "gen_s": 12.0,
+   "raw_peak_dbfs": -0.0,
+   "clipped_samples": 10,
+   "trimmed_ms": 6.0,
+   "gain_db": -1.01,
+   "length_s": 2.994,
+   "file": "sfx_sa/E15_wingbeat.wav"
   },
   {
    "id": "E16_roar",
    "prompt": "a colossal dragon roar, deep, guttural and terrifying, echoing between mountains",
    "seed": 116,
    "duration_s": 3,
-   "file": null
+   "gen_s": 11.4,
+   "raw_peak_dbfs": -3.88,
+   "clipped_samples": 0,
+   "trimmed_ms": 72.0,
+   "gain_db": 2.88,
+   "length_s": 2.928,
+   "file": "sfx_sa/E16_roar.wav"
   },
   {
    "id": "E17_strike",
-   "prompt": "a heavy monstrous impact and jaws snapping shut, distant men shouting in fear",
-   "seed": 117,
+   "prompt": "a colossal heavy impact, a huge beast slamming down onto the ground, deep thud with crunching rock and a low rumble",
+   "seed": 1117,
    "duration_s": 2,
-   "file": null
+   "gen_s": 11.3,
+   "raw_peak_dbfs": -4.39,
+   "clipped_samples": 0,
+   "trimmed_ms": 113.0,
+   "gain_db": 3.39,
+   "length_s": 1.887,
+   "file": "sfx_sa/E17_strike.wav"
   },
   {
    "id": "E18_village_fire",
    "prompt": "a village burning at night, roaring fire and crackling timber collapsing, distant screams",
    "seed": 118,
    "duration_s": 5,
-   "file": null
+   "gen_s": 13.9,
+   "raw_peak_dbfs": -9.95,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 8.95,
+   "length_s": 5.0,
+   "file": "sfx_sa/E18_village_fire.wav"
   },
   {
    "id": "E19_cheer",
    "prompt": "a medieval crowd cheering and applauding in a town square, joyful, outdoors",
    "seed": 119,
    "duration_s": 4,
-   "file": null
+   "gen_s": 12.7,
+   "raw_peak_dbfs": -5.44,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 4.44,
+   "length_s": 4.0,
+   "file": "sfx_sa/E19_cheer.wav"
   },
   {
    "id": "E20_chains",
    "prompt": "the heavy slow footsteps of a giant creature with rattling iron chains dragging on stone",
    "seed": 120,
    "duration_s": 5,
-   "file": null
+   "gen_s": 13.8,
+   "raw_peak_dbfs": -4.46,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 3.47,
+   "length_s": 5.0,
+   "file": "sfx_sa/E20_chains.wav"
   },
   {
    "id": "E21_breath",
-   "prompt": "the slow deep breath of a huge beast close by, a low unsettling growl and a faint heartbeat",
-   "seed": 121,
+   "prompt": "the heavy breathing of a large beast close up, slow deep inhales and exhales, raspy and wet, a low rumbling growl",
+   "seed": 1121,
    "duration_s": 4,
-   "file": null
+   "gen_s": 12.4,
+   "raw_peak_dbfs": -0.43,
+   "clipped_samples": 0,
+   "trimmed_ms": 145.0,
+   "gain_db": -0.57,
+   "length_s": 3.855,
+   "file": "sfx_sa/E21_breath.wav"
   },
   {
    "id": "E22_gate",
    "prompt": "a heavy wooden castle gate slamming shut and an iron bolt sliding home",
    "seed": 122,
    "duration_s": 2,
-   "file": null
+   "gen_s": 10.3,
+   "raw_peak_dbfs": -0.0,
+   "clipped_samples": 102,
+   "trimmed_ms": 48.0,
+   "gain_db": -1.36,
+   "length_s": 1.952,
+   "file": "sfx_sa/E22_gate.wav"
   },
   {
    "id": "E23_tear_banners",
    "prompt": "heavy cloth banners ripped and torn down one after another, fabric tearing, falling",
    "seed": 123,
    "duration_s": 3,
-   "file": null
+   "gen_s": 11.4,
+   "raw_peak_dbfs": -9.82,
+   "clipped_samples": 0,
+   "trimmed_ms": 534.0,
+   "gain_db": 8.86,
+   "length_s": 2.466,
+   "file": "sfx_sa/E23_tear_banners.wav"
   },
   {
    "id": "E24_snuff",
-   "prompt": "candles snuffed out one after another, soft hiss and a breath of smoke, a quiet room",
-   "seed": 124,
+   "prompt": "three candle flames blown out with short sharp puffs of human breath, each puff followed by a moment of silence",
+   "seed": 4124,
    "duration_s": 2,
-   "file": null
+   "gen_s": 79.2,
+   "raw_peak_dbfs": -15.64,
+   "clipped_samples": 0,
+   "trimmed_ms": 7.0,
+   "gain_db": 14.63,
+   "length_s": 1.993,
+   "file": "sfx_sa/E24_snuff.wav"
   },
   {
    "id": "E25_board",
-   "prompt": "a great stone floor grinding and settling, deep resonant rumble, stone blocks locking into place",
-   "seed": 125,
+   "prompt": "heavy stone blocks grinding and scraping against each other, rough stone on stone friction, then a heavy thud as they lock into place",
+   "seed": 1125,
    "duration_s": 4,
-   "file": null
+   "gen_s": 35.9,
+   "raw_peak_dbfs": -4.56,
+   "clipped_samples": 0,
+   "trimmed_ms": 189.0,
+   "gain_db": 3.47,
+   "length_s": 3.811,
+   "file": "sfx_sa/E25_board.wav"
   },
   {
    "id": "E26_coin",
    "prompt": "a single gold coin dropped on a stone floor, bouncing and ringing to rest",
    "seed": 126,
    "duration_s": 2,
-   "gen_s": 85.3,
-   "trimmed_ms": 0.0,
-   "raw_peak_dbfs": -12.76,
-   "gain_db": 11.76,
+   "gen_s": 10.4,
+   "raw_peak_dbfs": -12.3,
    "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 11.76,
    "length_s": 2.0,
    "file": "sfx_sa/E26_coin.wav"
   },
   {
    "id": "E27_chains_taut",
-   "prompt": "iron chains pulled taut and clinking, heavy shackles locking",
-   "seed": 127,
+   "prompt": "heavy iron chains dragging across a stone floor and pulled tight, thick links rattling, then a loud metal clank of a shackle",
+   "seed": 3127,
    "duration_s": 3,
-   "file": null
+   "gen_s": 15.3,
+   "raw_peak_dbfs": -5.9,
+   "clipped_samples": 0,
+   "trimmed_ms": 238.0,
+   "gain_db": 4.92,
+   "length_s": 2.762,
+   "file": "sfx_sa/E27_chains_taut.wav"
   },
   {
    "id": "E28_fall",
    "prompt": "a body in robes falling heavily onto a stone floor, a dull thud and cloth",
    "seed": 128,
    "duration_s": 2,
-   "file": null
+   "gen_s": 10.2,
+   "raw_peak_dbfs": -11.3,
+   "clipped_samples": 0,
+   "trimmed_ms": 67.0,
+   "gain_db": 10.29,
+   "length_s": 1.933,
+   "file": "sfx_sa/E28_fall.wav"
   },
   {
    "id": "E29_burn",
    "prompt": "old paper catching fire and burning fast, crackling flames and a rising whoosh",
    "seed": 129,
    "duration_s": 4,
-   "file": null
+   "gen_s": 11.9,
+   "raw_peak_dbfs": -18.21,
+   "clipped_samples": 0,
+   "trimmed_ms": 175.0,
+   "gain_db": 17.23,
+   "length_s": 3.825,
+   "file": "sfx_sa/E29_burn.wav"
   },
   {
    "id": "E30_muster",
-   "prompt": "heavy rain at night with an army marching in the distance, war drums and armour, no music",
-   "seed": 130,
+   "prompt": "heavy rain falling at night as many soldiers march past, boots stomping in step on wet ground, armour rattling, rain splashing",
+   "seed": 1130,
    "duration_s": 6,
-   "file": null
+   "gen_s": 88.3,
+   "raw_peak_dbfs": -0.0,
+   "clipped_samples": 4,
+   "trimmed_ms": 0.0,
+   "gain_db": -1.09,
+   "length_s": 6.0,
+   "file": "sfx_sa/E30_muster.wav"
   },
   {
    "id": "E31_hearth",
    "prompt": "a quiet hearth fire crackling indoors while rain falls on a wooden roof outside, calm, intimate, no music",
    "seed": 131,
    "duration_s": 10,
-   "file": null
+   "gen_s": 18.1,
+   "raw_peak_dbfs": -4.61,
+   "clipped_samples": 0,
+   "trimmed_ms": 34.0,
+   "gain_db": 3.77,
+   "length_s": 9.966,
+   "file": "sfx_sa/E31_hearth.wav"
   },
   {
    "id": "E32_year33",
    "prompt": "a low ominous wind swell with a distant deep drone, dark, slow, no music",
    "seed": 132,
    "duration_s": 5,
-   "file": null
+   "gen_s": 13.1,
+   "raw_peak_dbfs": -4.84,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 3.84,
+   "length_s": 5.0,
+   "file": "sfx_sa/E32_year33.wav"
   },
   {
    "id": "E33_title_boom",
    "prompt": "a deep cinematic boom with a long dark tail, epic, heavy",
    "seed": 133,
    "duration_s": 5,
-   "file": null
+   "gen_s": 12.8,
+   "raw_peak_dbfs": -0.0,
+   "clipped_samples": 121,
+   "trimmed_ms": 0.0,
+   "gain_db": -1.0,
+   "length_s": 5.0,
+   "file": "sfx_sa/E33_title_boom.wav"
   }
  ]
 }
