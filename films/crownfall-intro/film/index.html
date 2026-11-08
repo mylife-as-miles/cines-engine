@@ -15,6 +15,7 @@
 <script src="kit.js"></script>
 <script src="mapdata.js"></script>
 <script src="map.js"></script>
+<script src="assets/worldmap.js"></script>
 <script src="scenes/s1.js"></script>
 <script src="scenes/s2.js"></script>
 <script src="scenes/s3.js"></script>
@@ -28,7 +29,7 @@
   const mix = document.getElementById('mix'), seek = document.getElementById('seek'), time = document.getElementById('time'), btn = document.getElementById('play');
   const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
   document.getElementById('subs').onchange = e => { FILM.opts.subs = e.target.checked; };
-  FILM.loadFonts('../fonts/fonts.css').then(() => {
+  FILM.loadFonts('../fonts/fonts.css').then(() => KIT.whenImages()).then(() => {
     FILM.mount(document.getElementById('stage'));
     const tick = () => { const t = mix.currentTime; FILM.renderAt(t); seek.value = String(Math.round(t / FILM.total * 1000)); time.textContent = fmt(t); requestAnimationFrame(tick); };
     tick();

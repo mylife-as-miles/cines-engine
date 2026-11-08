@@ -42,7 +42,11 @@
     if (x.reset) x.reset(); else { x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.setLineDash([]); x.lineCap = 'butt'; x.lineJoin = 'miter'; x.lineWidth = 1; x.shadowBlur = 0; x.shadowColor = 'rgba(0,0,0,0)'; x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'low'; x.clearRect(0, 0, w, h); }
     return c;
   }
-  Object.assign(K, { canvas, cached, release, layer });
+  // images (embedded as data URIs so the canvas is never tainted): K.image(key, src) registers one, K.whenImages() waits
+  const IMAGES = {};
+  function image(key, src) { if (!IMAGES[key]) { const im = new Image(); im.src = src; IMAGES[key] = im; } return IMAGES[key]; }
+  const whenImages = () => Promise.all(Object.values(IMAGES).map(im => (im.complete && im.naturalWidth) ? null : (im.decode ? im.decode().catch(() => null) : new Promise(r => { im.onload = r; im.onerror = r; }))));
+  Object.assign(K, { canvas, cached, release, layer, image, whenImages });
 
   // ---------------------------------------------------------------- palette (iron-gall ink, vellum, gold leaf, mineral pigments)
   const P = {

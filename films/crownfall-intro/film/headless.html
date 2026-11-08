@@ -4,6 +4,7 @@
 <script src="kit.js"></script>
 <script src="mapdata.js"></script>
 <script src="map.js"></script>
+<script src="assets/worldmap.js"></script>
 <script src="scenes/s1.js"></script>
 <script src="scenes/s2.js"></script>
 <script src="scenes/s3.js"></script>
@@ -16,5 +17,5 @@
   // ?subs=1 draws the subtitles; ?scene=N draws only scene N (any time, for working on one scene)
   const q = new URLSearchParams(location.search);
   FILM.opts.subs = q.get('subs') === '1'; FILM.opts.sceneOnly = +(q.get('scene') || 0);
-  FILM.loadFonts('../fonts/fonts.css').then(() => { FILM.mountHeadless(); window.FILM_READY = true; }).catch(e => { window.FILM_ERROR = String(e); });
+  FILM.loadFonts('../fonts/fonts.css').then(() => KIT.whenImages()).then(() => { FILM.mountHeadless(); window.FILM_READY = true; }).catch(e => { window.FILM_ERROR = String(e); });
 </script>

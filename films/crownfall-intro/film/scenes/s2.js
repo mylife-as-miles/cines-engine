@@ -48,7 +48,11 @@
   // cracks run along shard edges before the break
   const CRACKS = SHARDS.flatMap(s => [[s.tr[0], s.tr[1]], [s.tr[1], s.tr[2]]]).filter((e, i) => i % 3 !== 1);
 
-  // ---------------------------------------------------------------- the four roundels
+  // ---------------------------------------------------------------- the creator's world map of the four kingdoms
+  const WMAP = () => K.image('worldmap', window.ASSETS.worldmap);
+  if (window.ASSETS && window.ASSETS.worldmap) WMAP();
+  const WORLD = { korv: { x: 346, y: 148 }, aeth: { x: 919, y: 166 }, kwind: { x: 318, y: 405 }, solf: { x: 912, y: 451 } };
+  // ---------------------------------------------------------------- the four roundels (kept, no longer drawn)
   const RD = { aeth: { x: 0, y: -250, r: 240 }, korv: { x: -600, y: 140, r: 200 }, solf: { x: 0, y: 360, r: 200 }, kwind: { x: 600, y: 140, r: 200 } };
   function roundelFrame(c, R, lit, t, name) {
     K.gold(c, cc => { cc.beginPath(); cc.arc(R.x, R.y, R.r + 16, 0, 6.283); cc.arc(R.x, R.y, R.r, 0, 6.283); }, R.x - R.r, R.y - R.r, R.x + R.r, R.y + R.r, { sheen: 0.3 + 0.5 * lit, outlineW: 1.6, rule: 'evenodd' });
@@ -247,24 +251,52 @@
         K.specks(ctx, t, { kind: 'ash', n: 90, alpha: 0.5 * smooth(span(t, tBreak, tBreak + 2)), wind: 20, seed: 202 });
       }
       if (t >= tRoundels - 0.01 && t < tDive + 2.2) {
-        // ---- the page of the four powers; the camera goes into Aethelgard
+        // ---- the four powers on the creator's painted world map; the camera goes to each as it is named, then into Aethelgard
         const pageA = smooth(span(t, tRoundels, tRoundels + 1.2));
-        const L = K.layer('s2:page'), x = L.getContext('2d');
-        const lit = { korv: smooth(span(t, tK - 0.3, tK + 0.4)), solf: smooth(span(t, tS - 0.3, tS + 0.4)), kwind: smooth(span(t, tW - 0.3, tW + 0.4)), aeth: smooth(span(t, L10.start - 0.2, L10.start + 0.5)) };
-        const focus = t < tS - 0.2 ? RD.korv : t < tW - 0.2 ? RD.solf : t < L10.start - 0.2 ? RD.kwind : RD.aeth, fA = smooth(span(t, tK - 0.6, tK)) * (1 - smooth(span(t, L10.start + 0.6, L10.end)));
-        const dive = easeIn(span(t, tDive - 0.6, tDive + 1.6));
-        let cx = lerp(0, focus.x, 0.18 * fA), cy = lerp(40, focus.y, 0.18 * fA), z = 0.78 + 0.03 * Math.sin(t * 0.3);
-        cx = lerp(cx, RD.aeth.x, ease(span(t, L10.start, tDive))); cy = lerp(cy, RD.aeth.y, ease(span(t, L10.start, tDive))); z = lerp(z, 1.05, ease(span(t, L10.start, tDive))) * Math.pow(9, dive);
-        x.save(); K.cam(x, cx, cy, z);
-        x.drawImage(K.cached('s2:pagebg', () => K.parchment(2400, 1600, 3030, { base: [226, 211, 178], edge: 0.8, stains: 3 })), -1200, -800, 2400, 1600);
-        // scattered shards on the page, between the powers
-        const r = rng(616); for (let i = 0; i < 22; i++) { const px = (r() - 0.5) * 1900, py = (r() - 0.5) * 1300; if (Object.values(RD).some(R => Math.hypot(px - R.x, py - R.y) < R.r + 60)) continue; x.save(); x.translate(px, py); x.rotate(r() * 6); K.gold(x, c => { c.beginPath(); c.moveTo(0, -14); c.lineTo(10, 6); c.lineTo(-8, 9); c.closePath(); }, -10, -14, 10, 9, { sheen: 0.5 + 0.3 * Math.sin(t + i) }); x.restore(); }
-        for (const [k, fn, name] of [['korv', korvenia, 'KORVENIA'], ['solf', solforiz, 'SOLFORIZ'], ['kwind', kwind, 'KWIND-09'], ['aeth', aethel, 'AETHELGARD']]) {
-          const R = RD[k], l = lit[k];
-          inRoundel(x, R, (c, rr) => { fn(c, rr, t, l); c.fillStyle = `rgba(30,22,14,${0.55 * (1 - l)})`; c.fillRect(-rr, -rr, 2 * rr, 2 * rr); });
-          roundelFrame(x, R, l, t, name);
+        const L = K.layer('s2:world'), x = L.getContext('2d');
+        const R = WORLD, lit = { korv: smooth(span(t, tK - 0.3, tK + 0.4)), solf: smooth(span(t, tS - 0.3, tS + 0.4)), kwind: smooth(span(t, tW - 0.3, tW + 0.4)), aeth: smooth(span(t, L10.start - 0.2, L10.start + 0.5)) };
+        const keys = [
+          { t: tRoundels - 0.4, x: 640, y: 392, z: 1.0 },
+          { t: tK - 0.45, x: 640, y: 380, z: 1.05 },
+          { t: tK + 0.15, x: R.korv.x + 40, y: R.korv.y + 70, z: 1.5 },
+          { t: tS - 0.45, x: R.korv.x + 50, y: R.korv.y + 74, z: 1.56 },
+          { t: tS + 0.15, x: R.solf.x - 40, y: R.solf.y - 30, z: 1.5 },
+          { t: tW - 0.45, x: R.solf.x - 50, y: R.solf.y - 26, z: 1.56 },
+          { t: tW + 0.15, x: R.kwind.x + 50, y: R.kwind.y - 20, z: 1.5 },
+          { t: L10.start - 0.45, x: R.kwind.x + 56, y: R.kwind.y - 16, z: 1.56 },
+          { t: L10.start + 0.2, x: R.aeth.x - 30, y: R.aeth.y + 40, z: 1.55 },
+          { t: tDive - 0.5, x: R.aeth.x - 10, y: R.aeth.y + 20, z: 1.8 },
+          { t: tDive + 1.6, x: R.aeth.x, y: R.aeth.y, z: 7.0, e: K.easeIn },
+        ];
+        const cam = K.camPath(t, keys), sc0 = 1.5;   // the map is 1280 x 720: 1.5 to the frame
+        x.fillStyle = '#060406'; x.fillRect(0, 0, W, H);
+        x.save(); K.cam(x, cam.x, cam.y, cam.z * sc0); x.imageSmoothingQuality = 'high';
+        x.drawImage(WMAP(), 0, 0, 1280, 720);
+        // the map lives: the eclipse breathes, lava glows, chimneys steam, mist drifts
+        K.glow(x, 268, 128, 70 + 6 * Math.sin(t * 1.7), [170, 110, 255], 0.28 + 0.08 * Math.sin(t * 2.3));
+        for (const [vx, vy, vr, ph] of [[1046, 404, 46, 0], [812, 372, 30, 1.7], [930, 484, 40, 3.1], [960, 560, 36, 2.2], [800, 520, 26, 4.0], [726, 640, 34, 5.1]]) K.glow(x, vx, vy, vr, [255, 120, 40], 0.22 + 0.12 * Math.sin(t * 2.6 + ph));
+        K.embers(x, t, { n: 26, heat: 0.7, x: 700, y: 300, w: 420, h: 360, seed: 222 });
+        K.smoke(x, t, { n: 12, x: 200, y: 250, w: 260, h: 190, color: [214, 210, 204], alpha: 0.32, size: 70, rise: 18, seed: 223 });
+        K.smoke(x, t, { n: 8, x: 980, y: 300, w: 140, h: 140, color: [70, 60, 56], alpha: 0.35, size: 80, rise: 14, seed: 224 });
+        K.smoke(x, t, { n: 10, x: 520, y: 80, w: 500, h: 260, color: [228, 226, 222], alpha: 0.12, size: 220, rise: 4, drift: 6, seed: 225 });
+        // each realm's ring lights as it is named
+        for (const k of ['korv', 'solf', 'kwind', 'aeth']) {
+          const r = R[k], l = lit[k]; if (l <= 0) continue;
+          const pulse = 0.75 + 0.25 * Math.sin(t * 4 + r.x);
+          K.glow(x, r.x, r.y, 70, [255, 214, 140], 0.38 * l * pulse);
+          x.save(); x.globalCompositeOperation = 'lighter'; x.strokeStyle = `rgba(255,226,160,${0.85 * l})`; x.lineWidth = 2.2 / cam.z; x.beginPath(); x.ellipse(r.x, r.y, 24 + 3 * pulse, 20 + 2.5 * pulse, 0, 0, 6.283); x.stroke(); x.restore();
         }
         x.restore();
+        // light falls on the realm being named; the rest of the board sinks into shadow; a close lens softens the edges
+        const focus = t < tS - 0.2 ? R.korv : t < tW - 0.2 ? R.solf : t < L10.start - 0.2 ? R.kwind : R.aeth;
+        const fA = smooth(span(t, tK - 0.5, tK + 0.2));
+        const fx = W / 2 + (focus.x - cam.x) * cam.z * sc0, fy = H / 2 + (focus.y - cam.y) * cam.z * sc0;
+        x.save(); x.globalCompositeOperation = 'multiply'; const g = x.createRadialGradient(fx, fy, 120, fx, fy, W * 0.75); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, `rgba(${Math.round(255 - 150 * fA)},${Math.round(255 - 160 * fA)},${Math.round(255 - 170 * fA)},1)`); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
+        const B = K.layer('s2:worldblur', W / 4, H / 4), bx = B.getContext('2d'); bx.filter = 'blur(4px)'; bx.drawImage(L, 0, 0, W / 4, H / 4); bx.filter = 'none';
+        const M = K.layer('s2:worlddof'), mx = M.getContext('2d'); mx.imageSmoothingQuality = 'high'; mx.drawImage(B, 0, 0, W, H); mx.globalCompositeOperation = 'destination-in';
+        const dg = mx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, H * 0.85); dg.addColorStop(0, 'rgba(0,0,0,0)'); dg.addColorStop(1, `rgba(0,0,0,${0.35 + 0.45 * clamp((cam.z - 1) / 0.6)})`); mx.fillStyle = dg; mx.fillRect(0, 0, W, H);
+        x.drawImage(M, 0, 0);
+        K.specks(x, t, { kind: 'dust', n: 40, alpha: 0.35, seed: 226 });
         ctx.globalAlpha = pageA; ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
       }
       if (t >= tDive) {
