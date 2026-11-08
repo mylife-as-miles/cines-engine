@@ -1,0 +1,264 @@
+{
+ "model": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp, Soundbox)",
+ "model_id": "audiocpp-stable-audio-3-sfx",
+ "license": {
+  "name": "Stability AI Community License",
+  "url": "https://stability.ai/license",
+  "note": "Free for commercial use below USD $1M annual revenue; above that an Enterprise licence is needed. The GGUF conversion does not change the licence of the weights."
+ },
+ "engine": "Soundbox 0.4.1 CLI driving audio.cpp v0.9.4 (CPU build, stable_audio family); Soundbox defaults for this model: 8 steps, guidance 1.0; audio.cpp generates 6 s past the asked duration and truncates; 44.1 kHz stereo 16-bit out of audio.cpp",
+ "finish": "48 kHz (soxr); cut 3 ms before the first 1 ms frame within 40 dB of the peak (held in 3 of 10 frames), 2 ms de-click; peak -1 dBFS; 0.15 s raised-cosine fade-out; 24-bit stereo WAV",
+ "sample_rate": 48000,
+ "source": "audio/sfx_plan.json",
+ "sounds": [
+  {
+   "id": "E01_pen",
+   "prompt": "a quill pen scratching slowly on thick paper, deliberate strokes, close and intimate, no music",
+   "seed": 101,
+   "duration_s": 5,
+   "gen_s": 14.1,
+   "trimmed_ms": 181.0,
+   "raw_peak_dbfs": -17.83,
+   "gain_db": 16.83,
+   "clipped_samples": 0,
+   "length_s": 4.819,
+   "file": "sfx_sa/E01_pen.wav"
+  },
+  {
+   "id": "E02_bloom",
+   "prompt": "a soft low warm swell like ink blooming in water, gentle, dark, no music",
+   "seed": 102,
+   "duration_s": 3,
+   "gen_s": 12.2,
+   "trimmed_ms": 44.0,
+   "raw_peak_dbfs": -18.72,
+   "gain_db": 17.72,
+   "clipped_samples": 0,
+   "length_s": 2.956,
+   "file": "sfx_sa/E02_bloom.wav"
+  },
+  {
+   "id": "E03_ink",
+   "prompt": "wet ink spreading across parchment and paper rustling softly, quiet, close, no music",
+   "seed": 103,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E04_whoosh_up",
+   "prompt": "a deep soft cinematic whoosh, a slow camera move through air, no music",
+   "seed": 104,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E05_tear",
+   "prompt": "old parchment slowly tearing, close, dry fibres ripping",
+   "seed": 105,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E06_dust",
+   "prompt": "a shimmering dissolve of fine gold dust drifting away, airy and dark, soft chimes fading, no music",
+   "seed": 106,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E07_flames",
+   "prompt": "small flames igniting one after another, soft whoomph of candles catching, gentle crackle",
+   "seed": 107,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E08_crack",
+   "prompt": "gold metal cracking under strain, sharp ticks and creaks of a crown splitting, tense",
+   "seed": 108,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E09_shatter",
+   "prompt": "a golden crown shattering into many pieces, a bright metallic burst with ringing shards scattering, cinematic impact",
+   "seed": 109,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E10_shards",
+   "prompt": "small metal shards falling and tinkling onto wood, scattered, settling",
+   "seed": 110,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E11_war",
+   "prompt": "a distant medieval battle, war drums, clashing swords and far shouting, muffled, no music",
+   "seed": 111,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E12_rise",
+   "prompt": "a deep rumble of mountains rising from the earth, grinding stone, low wind",
+   "seed": 112,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E13_blade",
+   "prompt": "a blade drawn slowly from a sheath, a cold metallic ring",
+   "seed": 113,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E14_wind",
+   "prompt": "howling icy mountain wind with blowing snow, cold and desolate, no music",
+   "seed": 114,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "E15_wingbeat",
+   "prompt": "an enormous leathery wing beat passing overhead, a deep heavy whoosh, a giant creature flying low",
+   "seed": 115,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E16_roar",
+   "prompt": "a colossal dragon roar, deep, guttural and terrifying, echoing between mountains",
+   "seed": 116,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E17_strike",
+   "prompt": "a heavy monstrous impact and jaws snapping shut, distant men shouting in fear",
+   "seed": 117,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E18_village_fire",
+   "prompt": "a village burning at night, roaring fire and crackling timber collapsing, distant screams",
+   "seed": 118,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "E19_cheer",
+   "prompt": "a medieval crowd cheering and applauding in a town square, joyful, outdoors",
+   "seed": 119,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E20_chains",
+   "prompt": "the heavy slow footsteps of a giant creature with rattling iron chains dragging on stone",
+   "seed": 120,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "E21_breath",
+   "prompt": "the slow deep breath of a huge beast close by, a low unsettling growl and a faint heartbeat",
+   "seed": 121,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E22_gate",
+   "prompt": "a heavy wooden castle gate slamming shut and an iron bolt sliding home",
+   "seed": 122,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E23_tear_banners",
+   "prompt": "heavy cloth banners ripped and torn down one after another, fabric tearing, falling",
+   "seed": 123,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E24_snuff",
+   "prompt": "candles snuffed out one after another, soft hiss and a breath of smoke, a quiet room",
+   "seed": 124,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E25_board",
+   "prompt": "a great stone floor grinding and settling, deep resonant rumble, stone blocks locking into place",
+   "seed": 125,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E26_coin",
+   "prompt": "a single gold coin dropped on a stone floor, bouncing and ringing to rest",
+   "seed": 126,
+   "duration_s": 2,
+   "gen_s": 85.3,
+   "trimmed_ms": 0.0,
+   "raw_peak_dbfs": -12.76,
+   "gain_db": 11.76,
+   "clipped_samples": 0,
+   "length_s": 2.0,
+   "file": "sfx_sa/E26_coin.wav"
+  },
+  {
+   "id": "E27_chains_taut",
+   "prompt": "iron chains pulled taut and clinking, heavy shackles locking",
+   "seed": 127,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "E28_fall",
+   "prompt": "a body in robes falling heavily onto a stone floor, a dull thud and cloth",
+   "seed": 128,
+   "duration_s": 2,
+   "file": null
+  },
+  {
+   "id": "E29_burn",
+   "prompt": "old paper catching fire and burning fast, crackling flames and a rising whoosh",
+   "seed": 129,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "E30_muster",
+   "prompt": "heavy rain at night with an army marching in the distance, war drums and armour, no music",
+   "seed": 130,
+   "duration_s": 6,
+   "file": null
+  },
+  {
+   "id": "E31_hearth",
+   "prompt": "a quiet hearth fire crackling indoors while rain falls on a wooden roof outside, calm, intimate, no music",
+   "seed": 131,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "E32_year33",
+   "prompt": "a low ominous wind swell with a distant deep drone, dark, slow, no music",
+   "seed": 132,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "E33_title_boom",
+   "prompt": "a deep cinematic boom with a long dark tail, epic, heavy",
+   "seed": 133,
+   "duration_s": 5,
+   "file": null
+  }
+ ]
+}
