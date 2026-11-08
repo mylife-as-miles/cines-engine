@@ -17,39 +17,69 @@
   K.scene = n => TL.scenes[n - 1];
   K.TL = TL;
 
-  // ---------------------------------------------------------------- PROJECT EON (the studio mark from the end credits)
-  function studio(t) {
-    const a0 = 0.8, a1 = TL.studio[1] - 0.2, lt = t - a0, A = win(t, a0, a1, 0.6, 1.6);
-    if (A <= 0) return;
-    const cx = W / 2, cy = 520, R0 = 74;
-    ctx.save(); ctx.globalAlpha = A;
-    const ec = smooth(span(lt, 1.0, 4.0));
-    if (ec > 0) {
-      const gx = cx + Math.cos(-0.7) * R0 * 0.35, gy = cy + Math.sin(-0.7) * R0 * 0.35, g = ctx.createRadialGradient(gx, gy, 0, cx, cy, R0 * 1.02);
-      g.addColorStop(0, 'rgba(241,217,160,0)'); g.addColorStop(0.82, `rgba(241,217,160,${0.025 * ec})`); g.addColorStop(0.97, `rgba(241,217,160,${0.16 * ec})`); g.addColorStop(1, 'rgba(241,217,160,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R0 * 1.02, 0, 6.283); ctx.fill();
+  // ---------------------------------------------------------------- PROJECT EON, drawn in ink (after the manner of a studio card where a pen draws the
+  // studio's emblem under a close lens and pulls back to show it whole). The emblem is the studio's own mark: the O an orbit
+  // ring with its spark, between engraved capitals E and N; here it is cut like an engraving, and its O floods vermilion.
+  const ER = 132, ER2 = 117;
+  const EMB = (() => {
+    const ring = []; for (let k = 0; k <= 200; k++) { const a = -Math.PI / 2 + k / 200 * Math.PI * 2; ring.push([Math.cos(a) * ER, Math.sin(a) * ER]); }
+    const inner = []; for (let k = 0; k <= 160; k++) { const a = -Math.PI / 2 - k / 160 * Math.PI * 2; inner.push([Math.cos(a) * ER2, Math.sin(a) * ER2]); }
+    const eR = -ER - 62, eL = eR - 112, nL = ER + 62, nR = nL + 132, top = -ER, bot = ER;
+    const letters = [
+      { pts: [[eL + 14, top], [eL + 14, bot]], w: 13, a: 0.0 },                       // E stem (thick)
+      { pts: [[eL - 4, top + 1], [eR + 2, top + 1], [eR + 6, top + 22]], w: 4.5, a: 1.5 },  // E top arm and serif
+      { pts: [[eL + 14, 0], [eR - 22, 0]], w: 4.5, a: 1.5 },                            // E middle arm
+      { pts: [[eL - 4, bot - 1], [eR + 4, bot - 1], [eR + 8, bot - 26]], w: 4.5, a: 1.5 },  // E foot and serif
+      { pts: [[eL - 4, top], [eL + 34, top]], w: 4, a: 1.5 }, { pts: [[eL - 4, bot], [eL + 34, bot]], w: 4, a: 1.5 },
+      { pts: [[nL + 6, bot], [nL + 6, top]], w: 4.5, a: 1.5 },                          // N left stem (thin)
+      { pts: [[nL + 4, top], [nR - 8, bot]], w: 14, a: 0.55 },                          // N diagonal (thick)
+      { pts: [[nR - 8, bot], [nR - 8, top]], w: 4.5, a: 1.5 },                          // N right stem (thin)
+      { pts: [[nL - 12, bot], [nL + 24, bot]], w: 4, a: 1.5 }, { pts: [[nL - 8, top], [nL + 18, top]], w: 4, a: 1.5 }, { pts: [[nR - 26, top], [nR + 10, top]], w: 4, a: 1.5 },
+    ].map(s => ({ ...s, pts: K.resample(s.pts, 3) }));
+    // engraved shading: a crescent of hatching inside the ring, lit from the upper left
+    const hatch = [];
+    for (let k = -ER2; k <= ER2; k += 5.5) {
+      const seg = []; for (let u = -ER2; u <= ER2; u += 3) { const x = (u + k) * 0.7071, y = (u - k) * 0.7071; const inR = x * x + y * y < (ER2 - 3) * (ER2 - 3), lit = (x + 26) * (x + 26) + (y + 30) * (y + 30) < 104 * 104; if (inR && !lit) seg.push([x, y]); else if (seg.length) { if (seg.length > 2) hatch.push(seg.slice()); seg.length = 0; } }
+      if (seg.length > 2) hatch.push(seg);
     }
-    const draw = ease(span(lt, 0.4, 2.2));
-    ctx.strokeStyle = P.bone; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.arc(cx, cy, R0, -Math.PI / 2, -Math.PI / 2 + draw * Math.PI * 2); ctx.stroke();
-    const ang = lt < 2.2 ? -Math.PI / 2 + draw * Math.PI * 2 : -Math.PI / 2 + Math.PI * 2 + (lt - 2.2) * 1.05, tail = 0.9;
-    ctx.globalCompositeOperation = 'lighter';
-    for (let k = 0; k < 28; k++) { const a = ang - (k / 28) * tail; ctx.strokeStyle = `rgba(241,217,160,${(1 - k / 28) * 0.55})`; ctx.lineWidth = 3.2 * (1 - k / 28) + 0.6; ctx.beginPath(); ctx.arc(cx, cy, R0, a - tail / 28, a); ctx.stroke(); }
-    const sx = cx + Math.cos(ang) * R0, sy = cy + Math.sin(ang) * R0, sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 26);
-    sg.addColorStop(0, 'rgba(255,240,205,0.95)'); sg.addColorStop(0.25, 'rgba(241,190,110,0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 26, 0, 6.283); ctx.fill();
-    ctx.globalCompositeOperation = 'source-over';
-    const hgt = R0 * 2, top = cy - R0, gap = 48, eL = cx - R0 - gap - 86, nL = cx + R0 + gap;
-    const strokes = [[[eL + 86, top], [eL, top], [eL, top + hgt], [eL + 86, top + hgt]], [[eL, cy], [eL + 66, cy]], [[nL, top + hgt], [nL, top], [nL + 100, top + hgt], [nL + 100, top]]];
-    const lp = span(lt, 1.6, 3.0);
-    ctx.strokeStyle = P.bone; ctx.lineWidth = 2.2; ctx.lineJoin = 'miter';
-    strokes.forEach((s, i) => { const p = ease(clamp(lp * 1.6 - i * 0.3, 0, 1)); if (p > 0) K.line(ctx, s, p); });
-    K.text(ctx, 'PROJECT', cx, top - 52, '500 22px "Barlow Condensed"', P.ash, 16, 'center', smooth(span(lt, 2.6, 3.8)));
-    const rw = 300 * ease(span(lt, 2.9, 4.2));
-    if (rw > 1) { ctx.globalAlpha = A * 0.55; ctx.fillStyle = P.gold; ctx.fillRect(cx - rw / 2, top + hgt + 56, rw, 1.2); ctx.globalAlpha = A; }
-    // "presents", in the manner of a studio's opening card
-    K.text(ctx, 'PRESENTS', cx, top + hgt + 112, '500 19px "Barlow Condensed"', P.ash, 14, 'center', smooth(span(lt, 3.9, 5.0)) * 0.85);
-    ctx.restore();
+    return { ring, inner, letters, hatch, spark: [Math.cos(-0.7) * ER, Math.sin(-0.7) * ER] };
+  })();
+  function studioPaper() { return K.cached('studio:paper', () => K.parchment(2400, 1350, 3131, { base: [234, 229, 218], dark: [128, 116, 98], edge: 0.35, stains: 1, foxing: 18 })); }
+  function studio(t) {
+    const A = 1 - smooth(span(t, TL.studio[1] - 0.5, TL.studio[1] + 0.6));
+    if (A <= 0) return;
+    const pRing = ease(span(t, 0.5, 2.5)), pInner = span(t, 2.2, 2.9), pHatch = span(t, 2.5, 3.6), pLet = span(t, 2.7, 4.3), pRed = span(t, 4.4, 5.6);
+    // the camera follows the pen around the ring, then draws back to the whole emblem
+    const tipA = -Math.PI / 2 + pRing * Math.PI * 2, tip = [Math.cos(tipA) * ER, Math.sin(tipA) * ER];
+    const back = ease(span(t, 2.3, 4.8)), z = lerp(3.3, 1.12, back) * (1 - 0.04 * smooth(span(t, 4.8, 9.6))), fx = lerp(tip[0] * 0.92, 0, back), fy = lerp(tip[1] * 0.92, -8, back);
+    const L = K.layer('studio:frame'), x = L.getContext('2d');
+    x.save(); K.cam(x, fx, fy, z);
+    x.drawImage(studioPaper(), -1200, -675, 2400, 1350);
+    x.globalCompositeOperation = 'multiply'; x.fillStyle = 'rgba(30,20,12,0.92)';
+    K.nib(x, K.wobble(EMB.ring, 0.6, 0.05, 2), { w: 8.5, angle: -0.6, min: 0.22, taper: 0.03, p: pRing, jit: 0.15, seed: 2 });
+    if (pInner > 0) { x.strokeStyle = 'rgba(30,20,12,0.85)'; x.lineWidth = 1.3; K.line(x, EMB.inner, pInner); }
+    if (pHatch > 0) { x.strokeStyle = 'rgba(30,20,12,0.62)'; x.lineWidth = 1; const n = EMB.hatch.length; EMB.hatch.forEach((h, i) => { const p = clamp(pHatch * 1.6 - i / n * 0.6); if (p > 0) K.line(x, h, p); }); }
+    EMB.letters.forEach((s, i) => { const p = clamp(pLet * EMB.letters.length * 0.42 - i * 0.42); if (p > 0) K.nib(x, s.pts, { w: s.w, angle: s.a, min: 0.3, taper: 0.06, p, seed: 7 + i }); });
+    // the O floods vermilion from its heart, under the engraving
+    if (pRed > 0) {
+      const rr = ER2 * easeOut(pRed) * 1.02; x.save(); x.beginPath(); x.arc(0, 0, ER2 - 1, 0, 6.283); x.clip();
+      const g = x.createRadialGradient(-20, -24, 0, 0, 0, rr + 1); g.addColorStop(0, 'rgba(178,52,34,0.95)'); g.addColorStop(0.8, 'rgba(150,40,26,0.95)'); g.addColorStop(1, 'rgba(150,40,26,0)');
+      x.fillStyle = g; x.beginPath(); for (let k = 0; k <= 64; k++) { const a = k / 64 * 6.283, e = rr * (0.94 + 0.08 * K.fbm(Math.cos(a) * 2 + 4, Math.sin(a) * 2 + 4, 3, 5)); k ? x.lineTo(Math.cos(a) * e, Math.sin(a) * e) : x.moveTo(Math.cos(a) * e, Math.sin(a) * e); } x.fill(); x.restore();
+    }
+    x.globalCompositeOperation = 'source-over';
+    // the spark: a small engraved star on the ring that catches the light
+    const sp = smooth(span(t, 5.2, 6.2));
+    if (sp > 0) { const [sx, sy] = EMB.spark; x.save(); x.translate(sx, sy); x.globalAlpha = sp; x.fillStyle = '#f4e9cf'; x.beginPath(); x.arc(0, 0, 6, 0, 6.283); x.fill(); x.strokeStyle = 'rgba(30,20,12,0.9)'; x.lineWidth = 1.2; x.stroke(); for (let k = 0; k < 8; k++) { const a = k / 8 * 6.283, l = k % 2 ? 9 : 15; x.beginPath(); x.moveTo(Math.cos(a) * 7, Math.sin(a) * 7); x.lineTo(Math.cos(a) * l, Math.sin(a) * l); x.stroke(); } x.restore(); K.glow(x, sx, sy, 40, [255, 226, 170], 0.35 * sp * (0.8 + 0.2 * Math.sin(t * 3))); }
+    K.text(x, 'PROJECT', 0, -ER - 58, '600 30px Cinzel', 'rgba(30,20,12,0.9)', 22, 'center', smooth(span(t, 3.6, 4.6)));
+    K.text(x, 'PRESENTS', 0, ER + 92, '500 21px Cinzel', 'rgba(30,20,12,0.78)', 16, 'center', smooth(span(t, 5.8, 6.9)));
+    x.restore();
+    // a close lens: the edges of the frame fall out of focus, less as the camera draws back
+    const blurA = clamp((z - 1.1) / 2.0) * 0.95 + 0.15;
+    const B = K.layer('studio:blur', W / 4, H / 4), bx = B.getContext('2d'); bx.filter = 'blur(5px)'; bx.drawImage(L, 0, 0, W / 4, H / 4); bx.filter = 'none';
+    const M = K.layer('studio:dof'), mx = M.getContext('2d'); mx.imageSmoothingQuality = 'high'; mx.drawImage(B, 0, 0, W, H);
+    mx.globalCompositeOperation = 'destination-in'; const g = mx.createRadialGradient(W / 2, H / 2, H * 0.18, W / 2, H / 2, H * 0.78); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${blurA})`); mx.fillStyle = g; mx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.globalAlpha = A; ctx.drawImage(L, 0, 0); ctx.drawImage(M, 0, 0); ctx.restore();
+    K.vignette(ctx, 0.32 * A, '40,30,20', 0.4);
   }
 
   // ---------------------------------------------------------------- embers on black (YEAR 33 and the title)
@@ -212,8 +242,8 @@
     else {
       if (t < first + 1.4) { studio(t); }
       if (t >= first && t < endStory) {
-        if (t < first + 1.4) {          // the first page rises out of the black under the fading mark
-          const L = K.layer('intro:first'); drawScene(L.getContext('2d'), S[0].n, t); ctx.globalAlpha = smooth((t - first) / 1.4); ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1; studio(t);
+        if (t < first + 1.4) {          // the first page of the chronicle comes up over the studio's paper
+          const L = K.layer('intro:first'); drawScene(L.getContext('2d'), S[0].n, t); ctx.globalAlpha = smooth((t - first) / 1.4); ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
         } else scenes(t);
       }
       if (t >= endStory) {

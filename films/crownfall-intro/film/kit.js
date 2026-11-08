@@ -279,14 +279,16 @@
   Object.assign(K, { field, mask, rim, cutBy });
 
   // ---------------------------------------------------------------- gold leaf
-  // gold(ctx, pathFn, x0, y0, x1, y1, o): burnished leaf over a path; o.sheen (0..1) moves the highlight along x0,y0 -> x1,y1
+  // gold(ctx, pathFn, x0, y0, x1, y1, o): burnished leaf over a path; o.sheen (0..1) moves the highlight along x0,y0 -> x1,y1;
+  //   o.rule 'evenodd' for a frame drawn as two nested paths
   function gold(ctx, pathFn, x0, y0, x1, y1, o = {}) {
     const s = o.sheen != null ? o.sheen : 0.45, g = ctx.createLinearGradient(x0, y0, x1, y1);
     g.addColorStop(0, '#6a4a1a'); g.addColorStop(clamp(s - 0.3), '#a9822f'); g.addColorStop(clamp(s - 0.08), '#dcbb68'); g.addColorStop(clamp(s), '#f8e7b0');
     g.addColorStop(clamp(s + 0.1), '#d2ab55'); g.addColorStop(clamp(s + 0.35), '#97722a'); g.addColorStop(1, '#6e4f1d');
-    ctx.save(); ctx.globalAlpha *= o.alpha != null ? o.alpha : 1; pathFn(ctx); ctx.fillStyle = g; ctx.fill();
-    ctx.clip(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha *= 0.5;
-    const bx = Math.min(x0, x1) - 400, by = Math.min(y0, y1) - 400; tile(ctx, goldTex(), bx, by, Math.abs(x1 - x0) + 800, Math.abs(y1 - y0) + 800);
+    const rule = o.rule || 'nonzero';     // 'evenodd' makes a ring of two paths (a frame)
+    ctx.save(); ctx.globalAlpha *= o.alpha != null ? o.alpha : 1; pathFn(ctx); ctx.fillStyle = g; ctx.fill(rule);
+    ctx.clip(rule); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha *= 0.5;
+    const bx = Math.min(x0, x1) - 2, by = Math.min(y0, y1) - 2; tile(ctx, goldTex(), bx, by, Math.abs(x1 - x0) + 4, Math.abs(y1 - y0) + 4, bx * 0.37, by * 0.53);
     ctx.restore();
     if (o.outline !== false) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.strokeStyle = rgba(P.ink, 0.75); ctx.lineWidth = o.outlineW || 1.4; pathFn(ctx); ctx.stroke(); ctx.restore(); }
   }
