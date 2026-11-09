@@ -65,7 +65,7 @@
   // the unsworn cord: her hand knotted in the wool, a plain grey cord at her wrist
   function shotCord(x, t, sh) {
     const lt = t - sh.a, [hx, hy] = K.shake(t * 3, 12, 2111), u = span(t, sh.a, sh.b);
-    const c = { x: hx + lerp(-250, -200, u), y: hy + lerp(40, 60, u), z: lerp(1.55, 1.7, ease(u)) };
+    const c = { x: hx + lerp(-190, -150, u), y: hy + lerp(30, 45, u), z: lerp(1.35, 1.5, ease(u)) };
     x.fillStyle = '#060404'; x.fillRect(0, 0, W, H);
     // torches passing behind, out of focus
     for (let k = 0; k < 4; k++) { const px = ((k * 700 - lt * 1400) % 2800 + 2800) % 2800 - 400; L.glow(x, [255, 150, 70], px, 260 + k * 30, 260, 0.35); }
@@ -77,23 +77,34 @@
     x.restore();
     // her forearm in the grey cloak sleeve
     x.fillStyle = '#1e1e20'; x.beginPath(); x.moveTo(-100, 420); x.bezierCurveTo(200, 400, 420, 430, 600, 470); x.lineTo(600, 700); x.bezierCurveTo(400, 700, 150, 740, -100, 780); x.closePath(); x.fill();
-    // the hand, gripping the wool: the back of it, the knuckles, fingers sunk into the cloth, the thumb along it
-    const sk = [128, 104, 90], skd = L.mix(sk, [20, 12, 8], 0.6);
-    const hg = x.createLinearGradient(700, 380, 820, 760); hg.addColorStop(0, L.rgbs(L.mix(sk, [255, 230, 200], 0.25))); hg.addColorStop(0.5, L.rgbs(sk)); hg.addColorStop(1, L.rgbs(skd));
-    x.fillStyle = hg;
-    x.beginPath(); x.moveTo(590, 470); x.bezierCurveTo(700, 430, 840, 410, 940, 440); x.bezierCurveTo(1000, 470, 1030, 560, 1010, 650); x.bezierCurveTo(960, 720, 800, 730, 600, 712); x.closePath(); x.fill();
-    for (let k = 0; k < 4; k++) { const kx = lerp(950, 1010, k / 3), ky = lerp(462, 640, k / 3); x.beginPath(); x.ellipse(kx, ky, 40, 34, 0.4, 0, TAU); x.fill(); L.taper(x, [[kx + 10, ky], [kx + 60, ky + 26], [kx + 70, ky + 70]], 56, 40); }
-    x.fillStyle = L.rgbs(skd); L.taper(x, [[640, 690], [780, 740], [900, 730]], 48, 34);
-    // the wool bulging over the fingertips
-    x.save(); x.beginPath(); x.ellipse(1150, 790, 250, 150, -0.4, 0, TAU); x.fillStyle = pat; x.fill(); x.restore();
-    x.strokeStyle = L.rgbs(L.mix(skd, [0, 0, 0], 0.4), 0.6); x.lineWidth = 2.5; for (let k = 0; k < 3; k++) { const kx = lerp(970, 1005, (k + 0.5) / 3), ky = lerp(470, 630, (k + 0.5) / 3); x.beginPath(); x.moveTo(kx - 40, ky + 4); x.lineTo(kx + 10, ky + 18); x.stroke(); }
-    x.fillStyle = 'rgba(255,236,210,0.25)'; for (let k = 0; k < 4; k++) { const kx = lerp(950, 1010, k / 3), ky = lerp(462, 640, k / 3); x.beginPath(); x.ellipse(kx - 8, ky - 14, 16, 8, 0.4, 0, TAU); x.fill(); }
-    x.strokeStyle = L.rgbs(skd, 0.7); x.lineWidth = 3; for (let k = 0; k < 3; k++) { const kx = lerp(950, 1010, (k + 0.5) / 3), ky = lerp(462, 640, (k + 0.5) / 3); x.beginPath(); x.moveTo(kx - 150, ky - 20 + k * 6); x.quadraticCurveTo(kx - 60, ky - 8, kx - 4, ky + 2); x.stroke(); }
-    // the unsworn cord: plain grey, wound twice about the wrist and knotted, its two ends hanging
-    const cord = (pts, w) => { x.fillStyle = '#62605a'; L.taper(x, pts, w, w); x.strokeStyle = 'rgba(16,16,16,0.7)'; x.lineWidth = 2.2; for (let i = 1; i < pts.length - 1; i++) { const p0 = pts[i]; x.beginPath(); x.moveTo(p0[0] - w * 0.45, p0[1] - w * 0.2); x.lineTo(p0[0] + w * 0.45, p0[1] + w * 0.25); x.stroke(); } x.strokeStyle = 'rgba(236,230,214,0.4)'; x.lineWidth = 3; x.beginPath(); x.moveTo(pts[0][0] - w * 0.3, pts[0][1]); for (const q of pts) x.lineTo(q[0] - w * 0.3, q[1] - 2); x.stroke(); };
-    for (let k = 0; k < 2; k++) { const x0 = 560 + k * 40; cord(K.resample(K.bez([[x0, 448], [x0 + 30, 520], [x0 + 30, 640], [x0 + 6, 722]], 14), 7), 22); }
-    x.fillStyle = '#62605a'; x.beginPath(); x.ellipse(612, 584, 30, 26, 0.3, 0, TAU); x.fill(); x.strokeStyle = 'rgba(16,16,16,0.7)'; x.lineWidth = 3; x.beginPath(); x.arc(612, 584, 17, 0.4, 3.8); x.stroke(); x.beginPath(); x.moveTo(596, 570); x.lineTo(628, 600); x.stroke();
-    const sw = Math.sin(lt * 7) * 0.15; cord([[606, 600], [592 + sw * 40, 680], [584 + sw * 70, 770]], 15); cord([[620, 602], [640 + sw * 30, 690], [652 + sw * 50, 760]], 14);
+    // the hand, gripping the wool, fingers to the right: the back of it and its tendons, four fingers each its own, the
+    // knuckles catching the torch, the thumb along the top; the fingertips sink into the cloth
+    const sk = [134, 106, 90], skl = L.mix(sk, [255, 226, 196], 0.3), skd = L.mix(sk, [20, 12, 8], 0.55), gap = 'rgba(16,8,6,0.9)';
+    const shade = (y0, y1) => { const g = x.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, L.rgbs(skl)); g.addColorStop(0.55, L.rgbs(sk)); g.addColorStop(1, L.rgbs(skd)); return g; };
+    const KN = [[902, 476, 48, 100], [918, 540, 50, 96], [920, 604, 46, 88], [906, 664, 40, 74]];
+    // the thumb, along the top of the grip
+    x.fillStyle = gap; L.taper(x, [[640, 486], [760, 432], [856, 414]], 54, 42); x.fillStyle = shade(400, 500); L.taper(x, [[640, 486], [760, 432], [856, 414]], 48, 37);
+    x.fillStyle = 'rgba(230,200,180,0.5)'; x.beginPath(); x.ellipse(842, 410, 13, 9, -0.2, 0, TAU); x.fill();
+    // the back of the hand and the wrist
+    x.fillStyle = shade(450, 700); x.beginPath(); x.moveTo(560, 486); x.bezierCurveTo(680, 470, 800, 452, 900, 452); x.bezierCurveTo(936, 500, 944, 620, 918, 690); x.bezierCurveTo(820, 704, 700, 700, 560, 690); x.closePath(); x.fill();
+    x.strokeStyle = L.rgbs(L.mix(skl, [255, 240, 220], 0.3), 0.35); x.lineWidth = 3; for (const [kx, ky] of KN) { x.beginPath(); x.moveTo(680, (ky - 480) * 0.45 + 540); x.quadraticCurveTo(800, (ky - 480) * 0.8 + 500, kx - 18, ky); x.stroke(); }
+    // the fingers, each outlined, curling down at their ends into the wool
+    for (const [kx, ky, fw, fl] of KN) {
+      const pts = [[kx - 16, ky], [kx + fl * 0.6, ky + 4], [kx + fl, ky + 16]];
+      x.fillStyle = gap; L.taper(x, pts, fw + 6, fw * 0.85 + 6); x.fillStyle = shade(ky - fw / 2, ky + fw / 2); L.taper(x, pts, fw, fw * 0.85);
+      x.fillStyle = L.rgbs(skd, 0.6); x.beginPath(); x.ellipse(kx + fl * 0.55, ky + 4, 4, fw * 0.32, 0, 0, TAU); x.fill();
+      x.fillStyle = 'rgba(255,232,206,0.38)'; x.beginPath(); x.ellipse(kx - 2, ky - fw * 0.2, 15, 9, 0.2, 0, TAU); x.fill();
+    }
+    // the wool takes the fingertips
+    x.save(); x.beginPath(); x.ellipse(1050, 900, 900, 520, -0.12, 0, TAU); x.clip();
+    x.beginPath(); x.moveTo(1010, 300); x.bezierCurveTo(1060, 470, 1040, 600, 1000, 760); x.lineTo(1500, 860); x.lineTo(1500, 300); x.closePath(); x.fillStyle = pat; x.fill(); x.fillStyle = 'rgba(0,0,0,0.2)'; x.fill();
+    x.strokeStyle = 'rgba(0,0,0,0.5)'; x.lineWidth = 8; x.beginPath(); x.moveTo(1010, 300); x.bezierCurveTo(1060, 470, 1040, 600, 1000, 760); x.stroke(); x.restore();
+    // the unsworn cord: plain grey, twice about the wrist, knotted on its back, the two ends hanging
+    const cord = (pts, w) => { x.fillStyle = '#1a1816'; L.taper(x, pts, w + 5, w + 5); x.fillStyle = '#66635c'; L.taper(x, pts, w, w); x.strokeStyle = 'rgba(16,16,16,0.7)'; x.lineWidth = 2.4; for (let i = 1; i < pts.length - 1; i++) { const p0 = pts[i]; x.beginPath(); x.moveTo(p0[0] - w * 0.45, p0[1] - w * 0.25); x.lineTo(p0[0] + w * 0.45, p0[1] + w * 0.25); x.stroke(); } x.strokeStyle = 'rgba(236,230,214,0.45)'; x.lineWidth = 3; x.beginPath(); x.moveTo(pts[0][0] + w * 0.25, pts[0][1]); for (const q of pts) x.lineTo(q[0] + w * 0.25, q[1]); x.stroke(); };
+    for (const x0 of [574, 616]) cord(K.resample(K.bez([[x0, 476], [x0 + 26, 540], [x0 + 26, 630], [x0 + 4, 696]], 14), 7), 22);
+    // the knot: two turns of an overhand, plain
+    for (const [kx, ky, rr] of [[588, 566, 26], [610, 586, 24]]) { x.fillStyle = '#1a1816'; x.beginPath(); x.ellipse(kx, ky, rr + 3, rr * 0.85 + 3, 0.5, 0, TAU); x.fill(); x.fillStyle = '#66635c'; x.beginPath(); x.ellipse(kx, ky, rr, rr * 0.85, 0.5, 0, TAU); x.fill(); x.strokeStyle = 'rgba(16,16,16,0.75)'; x.lineWidth = 3; x.beginPath(); x.arc(kx, ky, rr * 0.55, 0.6, 3.9); x.stroke(); x.strokeStyle = 'rgba(236,230,214,0.4)'; x.beginPath(); x.arc(kx - 3, ky - 3, rr * 0.8, 3.6, 4.6); x.stroke(); }
+    const sw = Math.sin(lt * 7) * 0.15; cord([[596, 600], [580 + sw * 40, 680], [570 + sw * 70, 770]], 15); cord([[614, 606], [634 + sw * 30, 690], [646 + sw * 50, 762]], 14);
     x.setTransform(1, 0, 0, 1, 0, 0);
     // torchlight passing over
     const fl = L.flick(t, 5, 10), lx = lerp(1700, 200, ((lt * 0.7) % 1));
