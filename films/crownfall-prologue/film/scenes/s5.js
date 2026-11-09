@@ -619,17 +619,18 @@
 
   // ================================================================ light: the day's shafts, dusk, candlelight
   const MODES = {
-    day: { amb: [58, 52, 50], shaft: [255, 214, 150], sa: 1.0, sdir: norm3([-1.0, -0.85, 0.22]), far: 1.0, cand: 0.4, win: [255, 236, 200], winA: 1.0, door: 0.9, haze: [150, 118, 84], hazeA: 0.34, gal: 0.55 },
+    day: { amb: [58, 52, 50], shaft: [255, 214, 150], sa: 1.0, sdir: norm3([-1.0, -0.85, 0.22]), far: 1.0, cand: 0.4, win: [255, 236, 200], winA: 1.0, door: 0.9, haze: [150, 118, 84], hazeA: 0.24, gal: 0.55 },
     dusk: { amb: [30, 25, 28], shaft: [255, 120, 62], sa: 0.42, sdir: norm3([-1.0, -0.44, 0.12]), far: 0, cand: 1.0, win: [255, 132, 74], winA: 0.8, door: 0, haze: [86, 48, 34], hazeA: 0.26, gal: 1.0 },
-    night: { amb: [22, 22, 30], shaft: [120, 150, 220], sa: 0, sdir: norm3([-1.0, -0.44, 0.12]), far: 0, cand: 1.0, win: [52, 70, 128], winA: 0.55, door: 0, haze: [60, 40, 34], hazeA: 0.2, gal: 1.0 },
+    night: { amb: [34, 30, 36], shaft: [120, 150, 220], sa: 0, sdir: norm3([-1.0, -0.44, 0.12]), far: 0, cand: 1.3, win: [60, 80, 140], winA: 0.6, door: 0, haze: [80, 50, 36], hazeA: 0.22, gal: 1.0 },
   };
   const flk = (t, s) => 0.86 + 0.08 * Math.sin(t * 9.1 + s * 2) + 0.06 * Math.sin(t * 15.7 + s * 5) + 0.05 * (K.noise(t * 3, s * 7, 51) - 0.5);
   function lights(t, mode, boost = 1) {
     const M = MODES[mode], ls = [];
-    CAND.forEach(([x, z], i) => ls.push({ x, y: CANDH, z, r: 12, c: [255, 168, 96], a: 1.25 * M.cand * flk(t, i) * boost, fire: true }));
+    CAND.forEach(([x, z], i) => ls.push({ x, y: CANDH, z, r: 12, c: [255, 168, 96], a: 1.25 * M.cand * flk(t, i) * boost, sa: 1.25 * M.cand * boost, fire: true }));
     if (M.door > 0) ls.push({ x: 0, y: 3, z: ZN - 4, r: 22, c: [255, 232, 196], a: 0.8 * M.door });
+    if (mode === 'night') for (const s of [-1, 1]) ls.push({ x: s * 2.4, y: CANDH, z: -21.4, r: 9, c: [255, 170, 96], a: 1.3 * flk(t, s + 5), sa: 1.3, fire: true });
     // the dais of the Seven has two fires of its own
-    for (const s of [-1, 1]) ls.push({ x: s * 9.5, y: 3.2, z: -23.2, r: 10, c: [255, 150, 80], a: 0.9 * M.cand * flk(t, s + 9), fire: true });
+    for (const s of [-1, 1]) ls.push({ x: s * 9.5, y: 3.2, z: -23.2, r: 10, c: [255, 150, 80], a: 0.9 * M.cand * flk(t, s + 9), sa: 0.9 * M.cand, fire: true });
     return { M, mode, lights: ls, amb: M.amb };
   }
   // how much of a shaft falls on a point (0..~1): trace back along the light to the windows
@@ -651,9 +652,10 @@
     }
     return v;
   }
-  function lightAt(L, x, y, z) {
+  function lightAt(L, x, y, z, steady) {
     const M = L.M; let r = M.amb[0] / 255, g = M.amb[1] / 255, b = M.amb[2] / 255, best = null, bw = 0;
-    for (const l of L.lights) {
+    for (const l0 of L.lights) {
+      const l = steady && l0.sa != null ? { x: l0.x, y: l0.y, z: l0.z, r: l0.r, c: l0.c, a: l0.sa } : l0;
       const dx = x - l.x, dz = z - l.z, dy = y - l.y, e = (dx * dx + dz * dz + dy * dy * 0.4) / (l.r * l.r);
       if (e >= 1.4) continue;
       const f = l.a * Math.max(0, 1.4 - e) / 1.4 / (1 + e * 3);
@@ -839,7 +841,7 @@
   const IVORY = { cloth: '#d8ccb2', cloth2: '#c0b296', trim: '#7a5a34', skin: '#c99f7b', hair: '#4a3324', steel: '#a2a4a8', wood: '#6a4a2c', gold: '#c9a14a', leg: '#ad9d80', boot: '#3a2a1c', veil: '#efe7d6', cloak: '#c4b598' };
   const EBONY = { cloth: '#2f2825', cloth2: '#262020', trim: '#141010', skin: '#8a6a52', hair: '#16100c', steel: '#5a5c60', wood: '#2a1d12', gold: '#8a6a2c', leg: '#221c19', boot: '#100c0a', veil: '#4a4440', cloak: '#241e1c' };
   const COMMON = ['#6e6252', '#5d4c3c', '#7a6a58', '#4e4236', '#655440', '#584536', '#5a5a52'];
-  const CAELC = { cloth: '#4e3a28', cloth2: '#3e2e20', trim: '#2a1d12', skin: '#b88a68', hair: '#17100b', steel: '#8a8a8c', wood: '#5c4026', gold: '#c9a14a', leg: '#3a2e24', boot: '#1e1610', veil: '#efe7d6', cloak: '#6e5236' };
+  const CAELC = { cloth: '#5a4330', cloth2: '#463424', trim: '#2a1d12', skin: '#b88a68', hair: '#17100b', steel: '#9a9a9c', wood: '#6a4a2e', gold: '#c9a14a', leg: '#3a2e24', boot: '#1e1610', veil: '#efe7d6', cloak: '#865c36' };
   function costume(p, type) {
     const hs = p.house, r = rng(p.seed), base = p.side === 'W' ? IVORY : EBONY, col = Object.assign({}, base), o = { col, kind: 'robe', head: 'bare', hold: 'none', arms: null, armsA: 0, beard: false };
     if (p.cael) {
@@ -916,46 +918,60 @@
     const dx = Math.sin(ang), dz = Math.cos(ang), sr = dx * C.rx + dz * C.rz, toward = -(dx * (x - C.px) + dz * (z - C.pz)) / (Math.hypot(x - C.px, z - C.pz) || 1);
     return { view: toward > 0.62 ? 'front' : toward < -0.62 ? 'back' : 'side', face: sr >= 0 ? 1 : -1 };
   }
-  // draw a figure at a projected foot point, as a lit sprite with grain, shading and a rim toward the key light
+  // draw a figure at a projected foot point, as a lit sprite with grain, shading and a rim toward the key light.
+  // Sprites are rendered from quantised inputs (size in ~6% steps, light, rim angle, haze) and kept per figure id, so a
+  // standing figure is redrawn only when one of those steps changes; the picture for a given time never depends on what
+  // was drawn before. Walking figures are drawn fresh (no grain or rim); small ones straight onto the frame.
+  const FIGC = new Map(), qn = (v, s) => Math.round(v / s) * s;
+  function renderSprite(c, o, view, face, hs, lc, keyAmt, lx, ly, fog, fogCol, rim, walk) {
+    const knight = !!o.seated, hh = knight ? hs / 1.85 : hs;
+    const SW = Math.ceil(knight ? hh * (view === 'side' ? 2.2 : 1.1) + 20 : hs * (o.pavise || o.cloak ? 0.78 : 0.62) + 20), SH = Math.ceil(knight ? hh * 2.75 + 16 : hs * 1.62 + 16);
+    if (c.width !== SW || c.height !== SH) { c.width = SW; c.height = SH; }
+    const ox = SW / 2, oy = SH - 6, x = c.getContext('2d');
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.lineCap = 'butt'; x.lineJoin = 'miter'; x.clearRect(0, 0, SW, SH);
+    drawFigureInto(x, ox, oy, o, view, face, hs, lc, walk);
+    const fig = knight ? hh * 2.6 : hs, top = oy - fig;
+    x.globalCompositeOperation = 'source-atop';
+    if (walk == null) { x.globalAlpha = 0.4; const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = x.createPattern(brushTex(), 'repeat'); x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); x.globalAlpha = 1; }
+    let g = x.createLinearGradient(ox + lx * fig * 0.3, 0, ox - lx * fig * 0.3, 0);
+    g.addColorStop(0, rgbs([255, 196, 130], 0.12 * clamp(keyAmt))); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(8,10,20,0.4)');
+    x.fillStyle = g; x.fillRect(0, 0, SW, SH);
+    g = x.createLinearGradient(0, top, 0, oy); g.addColorStop(0, 'rgba(255,240,220,0.05)'); g.addColorStop(0.55, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(4,2,2,0.45)'); x.fillStyle = g; x.fillRect(0, 0, SW, SH);
+    if (fog > 0.01) { x.fillStyle = rgbs(fogCol, fog); x.fillRect(0, 0, SW, SH); }
+    x.globalCompositeOperation = 'source-over';
+    const ka = clamp(keyAmt * 1.1);
+    if (ka > 0.05 && walk == null) {
+      const rs = scratch('rim', SW, SH), rx = rs.getContext('2d'), d = clamp(hs / 110, 1.2, 4.5);
+      rx.drawImage(c, 0, 0);
+      rx.globalCompositeOperation = 'destination-out'; rx.drawImage(c, -lx * d, -ly * d);
+      rx.globalCompositeOperation = 'source-in'; rx.fillStyle = rim; rx.fillRect(0, 0, SW, SH);
+      x.globalCompositeOperation = 'lighter'; x.globalAlpha = ka * 0.9; x.drawImage(rs, 0, 0, SW, SH, 0, 0, SW, SH); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    }
+    return { SW, SH, ox, oy };
+  }
   function figureAt(ctx, C, wx, wy, wz, hgt, o, view, face, lt, t, opt = {}) {
     const foot = pj(C, wx, wy, wz); if (!foot) return null;
     const head = pj(C, wx, wy + hgt, wz); if (!head) return null;
-    const kx = clamp(foot[3] * hgt / Math.max(1, Math.hypot(head[0] - foot[0], head[1] - foot[1])), 1, 2.0);
-    const hp = Math.hypot(head[0] - foot[0], head[1] - foot[1]); if (hp < 3) return null;
+    const hp = Math.max(Math.hypot(head[0] - foot[0], head[1] - foot[1]), foot[3] * hgt * 0.78); if (hp < 3) return null;
     if (foot[0] < -hp * 1.6 || foot[0] > W + hp * 1.6 || foot[1] < -hp * 0.3 || foot[1] > H + hp * 2.4) return null;
-    const tilt = Math.atan2(head[0] - foot[0], foot[1] - head[1]), lc = lt.c, walk = opt.walk, alpha = opt.alpha != null ? opt.alpha : 1;
-    const rot = opt.rot || 0;
-    if (hp < 64) {
+    const kx = clamp(foot[3] * hgt / hp, 1, 1.4), tilt = Math.atan2(head[0] - foot[0], foot[1] - head[1]), walk = opt.walk, alpha = opt.alpha != null ? opt.alpha : 1, rot = opt.rot || 0;
+    const lc = lt.c.map(v => qn(v, 0.05));
+    if (hp < 60) {
       ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = alpha; ctx.translate(foot[0], foot[1]); ctx.rotate(tilt + rot); ctx.scale(kx, 1);
       drawFigureInto(ctx, 0, 0, o, view, face, hp, lc.map(v => v * 0.92), walk);
       ctx.restore(); return { foot, head, hp };
     }
-    const knight = !!o.seated, hh = knight ? hp / 1.85 : hp;
-    const SW = Math.ceil(knight ? hh * (view === 'side' ? 2.2 : 1.1) + 20 : hp * (o.pavise || o.cloak ? 0.78 : 0.62) + 20), SH = Math.ceil(knight ? hh * 2.75 + 16 : hp * 1.62 + 16);
-    const ox = SW / 2, oy = SH - 6, spr = scratch('spr', SW, SH), x = spr.getContext('2d');
-    drawFigureInto(x, ox, oy, o, view, face, hp, lc, walk);
-    const fig = knight ? hh * 2.6 : hp, top = oy - fig;
-    x.globalCompositeOperation = 'source-atop';
-    x.globalAlpha = 0.4; const bs = Math.max(0.5, fig / 300); x.save(); x.scale(bs, bs); x.fillStyle = x.createPattern(brushTex(), 'repeat'); x.fillRect(0, 0, SW / bs, SH / bs); x.restore(); x.globalAlpha = 1;
-    // the key light's direction in the sprite's frame
-    let lx = -0.6, ly = -0.8; if (opt.key) { const a = Math.atan2(opt.key[1], opt.key[0]) - tilt; lx = Math.cos(a); ly = Math.sin(a); }
-    let g = x.createLinearGradient(ox + lx * fig * 0.3, 0, ox - lx * fig * 0.3, 0);
-    g.addColorStop(0, rgbs([255, 196, 130], 0.12 * clamp(lt.keyAmt))); g.addColorStop(0.5, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(8,10,20,0.4)');
-    x.fillStyle = g; x.fillRect(0, 0, SW, SH);
-    g = x.createLinearGradient(0, top, 0, oy); g.addColorStop(0, 'rgba(255,240,220,0.05)'); g.addColorStop(0.55, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(4,2,2,0.45)'); x.fillStyle = g; x.fillRect(0, 0, SW, SH);
-    if (opt.fog > 0.01) { x.fillStyle = rgbs(opt.fogCol || [30, 22, 20], opt.fog); x.fillRect(0, 0, SW, SH); }
-    x.globalCompositeOperation = 'source-over';
-    const ka = clamp(lt.keyAmt * 1.1);
-    if (ka > 0.05) {
-      const rs = scratch('rim', SW, SH), rx = rs.getContext('2d'), d = clamp(hp / 110, 1.2, 4.5);
-      rx.drawImage(spr, 0, 0, SW, SH, 0, 0, SW, SH);
-      rx.globalCompositeOperation = 'destination-out'; rx.drawImage(spr, 0, 0, SW, SH, -lx * d, -ly * d, SW, SH);
-      rx.globalCompositeOperation = 'source-in'; rx.fillStyle = opt.rim || 'rgb(255,190,120)'; rx.fillRect(0, 0, SW, SH);
-      x.globalCompositeOperation = 'lighter'; x.globalAlpha = ka * 0.9; x.drawImage(rs, 0, 0, SW, SH, 0, 0, SW, SH); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
-    }
+    let ang = -Math.PI / 2 - 0.6; if (opt.key) ang = Math.atan2(opt.key[1], opt.key[0]) - tilt; ang = qn(ang, TAU / 24);
+    const lx = Math.cos(ang), ly = Math.sin(ang), cap = opt.cap || 420;
+    const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, cap)) * 12) / 12), keyAmt = qn(lt.keyAmt, 0.05), fog = qn(opt.fog || 0, 0.05), rim = opt.rim || 'rgb(255,190,120)';
+    const id = opt.id || '_', key = walk == null ? [view, face, hsq.toFixed(2), lc.join(','), keyAmt, ang.toFixed(3), fog, rim].join('|') : null;
+    let ent = FIGC.get(id); if (!ent) { ent = { key: null, c: K.canvas(64, 64) }; FIGC.set(id, ent); }
+    if (key === null || ent.key !== key || id === '_') { ent.dims = renderSprite(ent.c, o, view, face, hsq, lc, keyAmt, lx, ly, fog, opt.fogCol || [30, 22, 20], rim, walk); ent.key = key; ent.hs = hsq; }
+    const { SW, SH, ox, oy } = ent.dims, sc = hp / ent.hs;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = alpha;
-    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt + rot); ctx.scale(kx, 1);
-    ctx.drawImage(spr, 0, 0, SW, SH, -ox, -oy, SW, SH);
+    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt + rot); ctx.scale(kx * sc, sc);
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = sc > 1.3 ? 'medium' : 'low';
+    ctx.drawImage(ent.c, 0, 0, SW, SH, -ox, -oy, SW, SH);
     ctx.restore();
     return { foot, head, hp };
   }
@@ -973,20 +989,20 @@
     const T = TT(), w = where(p, t), y = SLAB;
     let type = p.type, alpha = 1, mount = 0;
     if (p.promote) { mount = smooth(span(t, T.kn0 + 0.45, T.kn1)); }
-    const lt = lightAt(L, w.x, y + 1.2, w.z), key = keyDir(C, L, w.x, y + 1.2, w.z, lt);
+    const lt = lightAt(L, w.x, y + 1.2, w.z, true), key = keyDir(C, L, w.x, y + 1.2, w.z, lt);
     const fogd = toCam(C, w.x, 1, w.z)[2], fog = clamp((fogd - 26) / 60) * 0.5;
     const vf = viewOf(C, w.x, w.z, w.ang), walk = w.moving ? w.phase : undefined;
     let rot = 0;
     if (p.fall) { const u = span(t, p.fall[0], p.fall[1]), dir = C.rx * -1 >= 0 ? 1 : -1; rot = dir * (easeIn(u) * 1.52 + (u > 0.92 ? Math.sin((u - 0.92) * 40) * 0.04 * (1 - u) * 10 : 0)); }
     const opt = { key, walk, fog, rot, alpha, rim: lt.key && lt.key.shaft ? 'rgb(255,226,170)' : 'rgb(255,178,106)' };
     let res = null;
-    if (mount < 1) { opt.alpha = 1 - mount; res = figureAt(ctx, C, w.x, y, w.z, p.h, costume(p, type), vf.view, vf.face, lt, t, opt); }
-    if (mount > 0) { opt.alpha = mount; const v2 = vf.view === 'front' || vf.view === 'back' ? { view: 'side', face: vf.face } : vf; res = figureAt(ctx, C, w.x, y, w.z, HEIGHT.N, costume(p, 'N'), v2.view, v2.face, lt, t, opt) || res; }
+    if (mount < 1) { opt.alpha = 1 - mount; opt.id = p.id; opt.cap = p.cael ? 640 : 420; res = figureAt(ctx, C, w.x, y, w.z, p.h, costume(p, type), vf.view, vf.face, lt, t, opt); }
+    if (mount > 0) { opt.alpha = mount; opt.id = p.id + ':N'; const v2 = vf.view === 'front' || vf.view === 'back' ? { view: 'side', face: vf.face } : vf; res = figureAt(ctx, C, w.x, y, w.z, HEIGHT.N, costume(p, 'N'), v2.view, v2.face, lt, t, opt) || res; }
     return res;
   }
 
   // ================================================================ L29-L30: the four ghosts and the gold lines of the fork
-  const GH = [{ type: 'R', x: -0.4, z: -7.3 - 1.6, a: 0.42 }, { type: 'Q', x: -1.5, z: -9.6, a: 0.85 }, { type: 'B', x: -5.0, z: -9.3, a: 0.42 }, { type: 'N', x: -6.1, z: -8.5, a: 0.5 }];
+  const GH = [{ type: 'R', x: -2.0, z: -10.0, a: 0.34 }, { type: 'Q', x: -3.3, z: -10.4, a: 0.55 }, { type: 'B', x: -5.8, z: -9.6, a: 0.34 }, { type: 'N', x: -0.6, z: -8.6, a: 0.42 }];
   function ghostCostume(type) { return costume({ side: 'W', house: null, seed: 99 + type.charCodeAt(0) }, type); }
   function drawGhosts(ctx, C, t, items) {
     const T = TT(), cael = [sqX(5), sqZ(7)];
@@ -1005,19 +1021,27 @@
     const hgt = HEIGHT[type], foot = pj(C, x, y, z), head = pj(C, x, y + hgt, z); if (!foot || !head) return;
     const hp = Math.hypot(head[0] - foot[0], head[1] - foot[1]); if (hp < 4) return;
     const o = ghostCostume(type), vf = type === 'N' ? { view: 'side', face: -1 } : { view: 'front', face: 1 };
-    const knight = type === 'N', hh = knight ? hp / 1.85 : hp, SW = Math.ceil(knight ? hh * 2.3 + 30 : hp * 0.8 + 30), SH = Math.ceil(knight ? hh * 2.8 + 20 : hp * 1.7 + 20), ox = SW / 2, oy = SH - 8;
-    const spr = scratch('ghost', SW, SH), x2 = spr.getContext('2d');
-    drawFigureInto(x2, ox, oy, o, vf.view, vf.face, hp, [1, 1, 1], undefined, '#ffffff');
-    // an inner light: brighter at the heart, rising shimmer
-    x2.globalCompositeOperation = 'source-in';
-    const g = x2.createLinearGradient(0, oy - (knight ? hh * 2.6 : hp), 0, oy);
-    const sh = 0.5 + 0.5 * Math.sin(t * 3 + x);
-    g.addColorStop(0, `rgba(255,246,214,${0.95})`); g.addColorStop(0.5, `rgba(250,214,140,${0.75 + 0.15 * sh})`); g.addColorStop(1, 'rgba(220,160,80,0.25)');
-    x2.fillStyle = g; x2.fillRect(0, 0, SW, SH);
+    const hsq = Math.pow(2, Math.round(Math.log2(Math.min(hp, 420)) * 12) / 12), key = type + hsq.toFixed(2);
+    const knight = type === 'N', hh = knight ? hsq / 1.85 : hsq, SW = Math.ceil(knight ? hh * 2.3 + 30 : hsq * 0.8 + 30), SH = Math.ceil(knight ? hh * 2.8 + 20 : hsq * 1.7 + 20), ox = SW / 2, oy = SH - 8;
+    let ent = FIGC.get('ghost' + type); if (!ent) { ent = { key: null, c: K.canvas(64, 64) }; FIGC.set('ghost' + type, ent); }
+    const spr = ent.c;
+    if (ent.key !== key) {
+      spr.width = SW; spr.height = SH; const x2 = spr.getContext('2d');
+      drawFigureInto(x2, ox, oy, o, vf.view, vf.face, hsq, [1, 1, 1], undefined, '#ffffff');
+      // an inner light: brighter at the heart
+      x2.globalCompositeOperation = 'source-in';
+      const g = x2.createLinearGradient(0, oy - (knight ? hh * 2.6 : hsq), 0, oy);
+      g.addColorStop(0, 'rgba(255,248,222,0.95)'); g.addColorStop(0.45, 'rgba(250,210,130,0.7)'); g.addColorStop(1, 'rgba(200,130,60,0.05)');
+      x2.fillStyle = g; x2.fillRect(0, 0, SW, SH); ent.key = key;
+    }
+    const scl = hp / hsq;
     const tilt = Math.atan2(head[0] - foot[0], foot[1] - head[1]), cy = lerp(foot[1], head[1], 0.55), cx = lerp(foot[0], head[0], 0.55);
-    glowS(ctx, cx, cy, hp * (queen ? 1.25 : 0.75), [255, 200, 120], a * (queen ? 0.55 : 0.3));
+    glowS(ctx, cx, cy, hp * (queen ? 1.3 : 0.8), [255, 196, 110], a * (queen ? 0.5 : 0.4));
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, a);
-    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt); ctx.drawImage(spr, 0, 0, SW, SH, -ox, -oy, SW, SH); ctx.restore();
+    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt); ctx.scale(scl, scl);
+    const sh = 0.85 + 0.15 * Math.sin(t * 2.6 + x * 3);
+    ctx.globalAlpha = Math.min(1, a * 0.35); ctx.drawImage(spr, 0, 0, SW, SH, -ox * 1.06, -oy * 1.03, SW * 1.06, SH * 1.03);
+    ctx.globalAlpha = Math.min(1, a * sh); ctx.drawImage(spr, 0, 0, SW, SH, -ox, -oy, SW, SH); ctx.restore();
     if (queen) { star4(ctx, lerp(foot[0], head[0], 1.02), lerp(foot[1], head[1], 1.02), hp * 0.22 * (0.8 + 0.2 * Math.sin(t * 2.3)), a * 0.9); }
   }
   function star4(ctx, x, y, r, a) {
@@ -1028,7 +1052,7 @@
   }
   // two gold lines leap from the Knight on f8 to the king on h7 and the queen on d7, burning into the stone
   function drawFork(ctx, C, t) {
-    const T = TT(), a = win(t, T.fork0, T.sF1 + 0.5, 0.05, 0.6); if (a <= 0) return;
+    const T = TT(), a = win(t, T.fork0, T.hush0 + 1.2, 0.05, 0.8); if (a <= 0) return;
     const y = SLAB + 0.03, f8 = [sqX(5), sqZ(7)], tg = [[sqX(7), sqZ(6)], [sqX(3), sqZ(6)]];
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.lineCap = 'round';
     tg.forEach((q, i) => {
@@ -1086,9 +1110,9 @@
   function crowdItems(ctx, C, t, L, items, o = {}) {
     const P = crowd(), T = TT(), rise = o.rise || 0;
     for (const p of P) {
-      const v = toCam(C, p.x, 1, p.z); if (v[2] < 0.6) continue;
+      const v = toCam(C, p.x, 1, p.z); if (v[2] < 3.0) continue;
       const lt = lightAt(L, p.x, 1.2, p.z), b = (lt.c[0] + lt.c[1] + lt.c[2]) / 3, lv = b < 0.38 ? 0 : b < 0.58 ? 1 : b < 0.82 ? 2 : b < 1.05 ? 3 : 4;
-      items.push({ k: 'crowd', d: v[2], draw: () => {
+      items.push({ d: v[2], draw: () => {
         if (p.banner) { crowdBanner(ctx, C, p, t, L, lt); return; }
         const sw = Math.sin(t * 0.7 + p.ph) * 0.03, bob = rise > 0 && p.cheer ? Math.abs(Math.sin(t * 6 + p.ph)) * 0.06 * rise : 0;
         const foot = pj(C, p.x + sw, bob, p.z), head = pj(C, p.x + sw, p.h + bob, p.z); if (!foot || !head) return;
@@ -1195,6 +1219,7 @@
       for (let k = 0; k < 3; k++) { const z0 = -30 + k * 20; if (o.skipZ && z0 + 20 > o.skipZ[0] && z0 < o.skipZ[1]) continue; if (quadPath(ctx, C, [[XS, y0, z0], [XS, y0, z0 + 20], [XS, y0 + CS.hm, z0 + 20], [XS, y0 + CS.hm, z0]])) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; const l = M.gal; ctx.fillStyle = rgbs([lerp(150, 235, l), lerp(130, 190, l), lerp(120, 150, l)], 1); ctx.fill(); ctx.restore(); } }
       for (let k = 0; k < 3; k++) plane(ctx, C, parapetTex(), [X, GALY + 1.1, -30 + k * 20], [0, 0, 20], [0, -1.1, 0], 2048, 112, { err: 5, roots: [3, 1] });
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if (!inside && quadPath(ctx, C, [[X, GALY, ZF], [X, GALY, ZN], [X, GALY + 1.1, ZN], [X, GALY + 1.1, ZF]])) { ctx.fillStyle = 'rgba(6,4,4,0.72)'; ctx.fill(); }
       // lamps along the rail
       for (const z of COLZ) for (const dz of [-3.5]) {
         const q = pj(C, X - side * 0.1, GALY + 1.35, z + dz); if (!q) continue; const fl = flk(t, z + side * 3);
@@ -1272,8 +1297,8 @@
         const q = pj(C, x, D.y + 3.6, z + 0.02); if (q && q[3] > 3) { ctx.fillStyle = litHex(hs.charge, lt); K.device(ctx, hs.device, q[0], q[1], q[3] * 0.9); }
         ctx.restore();
         const o = costume({ side: 'W', house: hs, seed: 700 + k }, 'K'); o.head = k === 3 ? 'crown' : 'bare'; o.col.cloth = mixHex(hs.field, '#3a2a20', 0.2); o.col.cloak = shadeHex(hs.field, -0.35); o.beard = k % 2 === 0;
-        const lt2 = lightAt(L, x, D.y + 1.2, z + 1.2);
-        figureAt(ctx, C, x, D.y, z + 1.0, 1.95, o, 'front', 1, lt2, t, { key: keyDir(C, L, x, D.y + 1.2, z + 1.0, lt2), fog: clamp((toCam(C, x, 1, z)[2] - 26) / 60) * 0.5 });
+        const lt2 = lightAt(L, x, D.y + 1.2, z + 1.2, true);
+        figureAt(ctx, C, x, D.y, z + 1.0, 1.95, o, 'front', 1, lt2, t, { id: 'lord' + k, key: keyDir(C, L, x, D.y + 1.2, z + 1.0, lt2), fog: clamp((toCam(C, x, 1, z)[2] - 26) / 60) * 0.5 });
       } });
     }
   }
@@ -1356,25 +1381,26 @@
       k(T.sB1, [11.2, 1.3, 11.6], [-2.5, 1.55, 5.6], 1250, { cut: true, shot: 'B1' }),
       k(T.sB2 + 0.3, [10.2, 1.45, 10.1], [-4.2, 1.5, 5.4], 1400),
       // Cael steps into the front rank
-      k(T.sB2, [sqX(5) - 2.5, 1.05, 1.4], [sqX(5) + 0.4, 1.35, 6.4], 1300, { cut: true, shot: 'B2' }),
-      k(T.sC1 + 0.3, [sqX(5) - 1.8, 1.25, 2.6], [sqX(5) + 0.2, 1.5, 6.2], 1450),
+      k(T.sB2, [-8.4, 0.95, 0.9], [-3.0, 1.4, 5.9], 1600, { cut: true, shot: 'B2' }),
+      k(T.sC1 + 0.3, [-7.4, 1.1, 1.7], [-3.1, 1.45, 5.6], 1950),
       // L29: the final trial seen from above; the pawn walks to the eighth rank
-      k(T.sD1, [-0.6, 31, 9.5], [-1.2, 0, -1.6], 1500, { cut: true, shot: 'D1' }),
-      k(T.sD2 + 0.3, [-2.6, 22.5, 1.2], [-3.0, 0, -5.4], 1550),
+      k(T.sD1, [-2.6, 12.6, 4.8], [-2.9, 0, -5.4], 1300, { cut: true, shot: 'D1' }),
+      k(T.sD2 + 0.3, [-3.2, 9.6, 1.6], [-3.3, 0, -6.8], 1450),
       // low behind him as the ghosts rise and the Knight is chosen
-      k(T.sD2, [-0.8, 1.45, -1.4], [-3.6, 2.2, -10.0], 1300, { cut: true, shot: 'D2' }),
-      k(T.sE2 + 0.3, [-1.6, 1.6, -2.6], [-3.5, 2.3, -10.0], 1450),
+      k(T.sD2, [-1.3, 1.6, -3.0], [-3.5, 2.3, -11.0], 1300, { cut: true, shot: 'D2' }),
+      k(T.sE2 + 0.3, [-1.7, 1.75, -3.8], [-3.5, 2.4, -11.0], 1380),
       // L30: from above, the fork; the king falls; a hush; then down and out as the hall rises
-      k(T.sE2, [-3.1, 18.5, -1.0], [-3.2, 0, -6.4], 1650, { cut: true, shot: 'E2' }),
-      k(T.sE3 + 0.3, [-3.0, 16.2, -1.9], [-3.2, 0, -6.6], 1720),
+      k(T.sE2, [-3.2, 12.6, 2.2], [-3.3, 0, -6.2], 1400, { cut: true, shot: 'E2' }),
+      k(T.sE3 + 0.3, [-3.2, 11.4, 1.2], [-3.3, 0, -6.4], 1480),
       // A03: low across the board to the arbiter in the hush; as the hall rises the camera lifts toward the galleries
-      k(T.sE3, [-1.8, 1.35, 0.8], [-6.6, 2.3, -9.5], 1300, { cut: true, shot: 'E3' }),
-      k(T.rise0, [-2.2, 1.42, 0.2], [-6.6, 2.4, -9.5], 1360),
-      k(T.sF1 + 0.3, [-1.4, 2.4, 2.0], [-6.2, 4.2, -10.0], 1220),
+      k(T.sE3, [-11.7, 1.3, -1.2], [-7.6, 2.1, -6.6], 1250, { cut: true, shot: 'E3' }),
+      k(T.rise0, [-11.55, 1.35, -1.45], [-7.6, 2.25, -6.6], 1300),
+      k(T.sF1 + 0.3, [-11.2, 1.7, -0.6], [-7.2, 4.9, -7.6], 1120),
       // L32: up and back into the high gallery
-      k(T.sG, [1.6, 1.85, -13.6], [0, 1.0, -21.5], 1350, { cut: true, shot: 'G' }),
-      k(T.sG + 2.6, [8.6, 7.4, -9.0], [-0.4, 1.4, -20.5], 1200),
-      k(T.e + 2, [COLX + 2.5, GALY + 1.8, -5.0], [-1.5, 1.2, -19.5], 1100),
+      k(T.sG, [2.6, 2.4, -12.8], [0, 1.25, -20.8], 1350, { cut: true, shot: 'G' }),
+      k(T.sG + 2.2, [9.0, 8.0, 0.5], [1.5, 2.6, -18.0], 1250),
+      k(T.sG + 4.0, [16.6, 8.5, 1.8], [4.0, 4.6, -15.6], 1420),
+      k(T.e + 2, [17.4, 8.45, 0.8], [4.2, 4.7, -15.8], 1450),
     ];
     return CK;
   }
@@ -1405,19 +1431,15 @@
 
   // ================================================================ the hall frame
   function hall(ctx, t, sh) {
-    const PR = window.__prof = window.__prof || {}; let _t0 = performance.now(); const mark = k => { const n = performance.now(); PR[k] = (PR[k] || 0) + n - _t0; _t0 = n; };
     const T = TT(), cam = camAt(t, sh.id), C = camera(cam.pos, cam.tgt, cam.f, cam.roll), mode = sh.mode;
     const riseA = sh.id === 'E3' ? smooth(span(t, T.rise0, T.rise0 + 0.5)) : sh.id === 'G' ? 0.6 : 0;
     const L = lights(t, mode, 1 + 0.25 * riseA);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = '#060506'; ctx.fillRect(0, 0, W, H);
     drawWalls(ctx, C, t, L);
-    mark('drawWalls(ctx,');
     drawGreatBanners(ctx, C, t, L);
-    mark('drawGreatBanne');
     // the floor at half resolution, lit; the board at full resolution, lit
     const Li = lightImage(C, L);
-    mark('const Li = lig');
     const G = K.layer('p5:ground', W / 2, H / 2), gx = G.getContext('2d');
     gx.fillStyle = '#2a221c'; gx.fillRect(0, 0, W / 2, H / 2);
     const fm = floorMips(), Rv = 70;
@@ -1428,41 +1450,35 @@
       plane(gx, C, fm, [x0, 0, z0], [FT.m, 0, 0], [0, 0, FT.m], FT.n, FT.n, { k: 0.5, err: 4, roots: [1, 1] });
     }
     gx.setTransform(1, 0, 0, 1, 0, 0); gx.globalCompositeOperation = 'multiply'; gx.imageSmoothingQuality = 'low'; gx.drawImage(Li.mul, 0, 0, W / 2, H / 2); gx.globalCompositeOperation = 'lighter'; gx.drawImage(Li.add, 0, 0, W / 2, H / 2); gx.globalCompositeOperation = 'source-over';
-    mark('gx.setTransfor');
     // the floor only below the horizon (walls already drawn above it)
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (quadPath(ctx, C, [[-HW, 0, ZF], [HW, 0, ZF], [HW, 0, ZN], [-HW, 0, ZN]])) { ctx.clip(); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(G, 0, 0, W, H); }
     ctx.restore();
     drawSlab(ctx, C, L);
     plane(ctx, C, boardMips(), [-BE, SLAB, -BE], [2 * BE, 0, 0], [0, 0, 2 * BE], BT.n, BT.n, { roots: [8, 8], err: 4 });
-    mark('plane(ctx, C, ');
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.save(); if (quadPath(ctx, C, [[-BE, SLAB, -BE], [BE, SLAB, -BE], [BE, SLAB, BE], [-BE, SLAB, BE]])) { ctx.clip(); ctx.globalCompositeOperation = 'multiply'; ctx.imageSmoothingQuality = 'low'; ctx.drawImage(Li.mul, 0, 0, W, H); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(Li.add, 0, 0, W, H); } ctx.restore();
     drawReflections(ctx, C, L);
-    mark('drawReflection');
     drawFork(ctx, C, t);
     // the galleries stand behind everything on the floor
     const lean = sh.id === 'D2' ? smooth(span(t, T.sD2, T.sD2 + 2.2)) : 0;
-    drawGalleries(ctx, C, t, L, { lean, rise: riseA, cheer: sh.id === 'E3', inGallery: sh.id === 'G', skipZ: sh.id === 'G' ? [-14, 6] : null });
-    mark('drawGalleries(');
+    drawGalleries(ctx, C, t, L, { lean, rise: riseA, cheer: sh.id === 'E3', inGallery: sh.id === 'G', skipZ: sh.id === 'G' ? [-12, 12] : null });
     // everything that stands, far to near
     const items = [];
     const set = sh.set === 'start' ? sets().start : sh.set === 'fin' ? sets().fin : [];
-    for (const p of set) { const w = where(p, t), v = toCam(C, w.x, 1, w.z); if (v[2] > NEAR) items.push({ k: 'piece', d: v[2], draw: () => drawPiece(ctx, C, p, t, L) }); }
-    for (const s of [-1, 1]) for (const z of COLZ) { const v = toCam(C, s * COLX, 6, z); if (v[2] > 0.8) items.push({ k: 'col', d: v[2] + 0.3, draw: () => drawColumn(ctx, C, s * COLX, z, L) }); }
-    CAND.forEach(([x, z], i) => { const v = toCam(C, x, 1.5, z); if (v[2] > 1.0) items.push({ k: 'cand', d: v[2], draw: () => drawCandelabrum(ctx, C, x, z, t, L, i) }); });
+    for (const p of set) { const w = where(p, t), v = toCam(C, w.x, 1, w.z); if (v[2] > NEAR) items.push({ d: v[2], draw: () => drawPiece(ctx, C, p, t, L) }); }
+    for (const s of [-1, 1]) for (const z of COLZ) { const v = toCam(C, s * COLX, 6, z); if (v[2] > 0.8) items.push({ d: v[2] + 0.3, draw: () => drawColumn(ctx, C, s * COLX, z, L) }); }
+    CAND.forEach(([x, z], i) => { const v = toCam(C, x, 1.5, z); if (v[2] > 1.0) items.push({ d: v[2], draw: () => drawCandelabrum(ctx, C, x, z, t, L, i) }); });
     for (const s of [-1, 1]) { const v = toCam(C, s * 9.5, 2, -23.2); if (v[2] > 1) items.push({ d: v[2], draw: () => daisFire(ctx, C, s * 9.5, -23.2, t, L, s) }); }
     crowdItems(ctx, C, t, L, items, { rise: sh.id === 'E3' ? riseA : 0 });
     daisItems(ctx, C, t, L, items);
     if (sh.id === 'D2') drawGhosts(ctx, C, t, items);
-    if (sh.id === 'G') knightingItems(ctx, C, t, L, items);
+    if (sh.id === 'G') { knightingItems(ctx, C, t, L, items); for (const s of [-1, 1]) { const v = toCam(C, s * 2.4, 1.5, -21.4); if (v[2] > 1) items.push({ d: v[2], draw: () => drawCandelabrum(ctx, C, s * 2.4, -21.4, t, L, s + 5) }); } }
     if (sh.id === 'E3') arbiterItems(ctx, C, t, L, items);
     items.sort((a, b) => b.d - a.d);
-    for (const it of items) { const q0 = performance.now(); ctx.save(); it.draw(); ctx.restore(); PR['it:' + (it.k || '?')] = (PR['it:' + (it.k || '?')] || 0) + performance.now() - q0; }
-    mark('for (const it ');
+    for (const it of items) { ctx.save(); it.draw(); ctx.restore(); }
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     drawAir(ctx, C, t, L, { still: (sh.id === 'E2' || sh.id === 'E3') && t > T.hush0 && t < T.rise0 ? T.hush0 : null });
-    mark('drawAir(ctx, C');
     if (sh.id === 'D2') drawGhostSparks(ctx, C, t);
     if (riseA > 0 && sh.id === 'E3') drawRiseFx(ctx, C, t, riseA);
     return C;
@@ -1522,19 +1538,23 @@
   function arbiterItems(ctx, C, t, L, items) {
     const T = TT(), v = toCam(C, ARB.x, 1, ARB.z); if (v[2] < NEAR) return;
     items.push({ d: v[2], draw: () => {
-      const lt = lightAt(L, ARB.x, 1.3, ARB.z), o = { col: { cloth: '#3a3634', cloth2: '#2a2624', trim: '#c9a14a', skin: '#b08868', hair: '#8a8278', steel: '#8a8a8c', wood: '#d8cfbc', gold: '#c9a14a', leg: '#2a2420', boot: '#141010', veil: '#efe7d6', cloak: '#1e1a18', beard: '#9a948a', trim2: '#ece6da' }, kind: 'robe', head: 'cap', hold: 'none', cloak: true, collar: true, beard: true, arms: null, armsA: 0 };
-      const vf = viewOf(C, ARB.x, ARB.z, Math.atan2(sqX(5) - ARB.x, sqZ(7) - ARB.z));
-      const r = figureAt(ctx, C, ARB.x, SLAB, ARB.z, 1.96, o, vf.view, vf.face, lt, t, { key: keyDir(C, L, ARB.x, 1.3, ARB.z, lt), rim: 'rgb(255,178,106)' });
-      // the staff: lifted, then struck down on "Mate"; a ring of dust and light where it lands
-      const lift = smooth(span(t, T.sE3 - 0.6, T.sE3 + 0.5)) * (1 - easeIn(span(t, T.strike - 0.22, T.strike))), sx = ARB.x + 0.42, sz = ARB.z + 0.25, y0 = SLAB + lift * 1.05;
-      const b = pj(C, sx, y0, sz), tp = pj(C, sx, y0 + 2.5, sz); if (!b || !tp) return;
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.lineCap = 'round';
-      ctx.strokeStyle = litHex('#d8cfbc', lt.c); ctx.lineWidth = Math.max(1.5, b[3] * 0.045); ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(tp[0], tp[1]); ctx.stroke();
-      K.gold(ctx, c => { c.beginPath(); c.arc(tp[0], tp[1], Math.max(2, tp[3] * 0.07), 0, TAU); }, tp[0] - 10, tp[1] - 10, tp[0] + 10, tp[1] + 10, { outline: false });
+      const b = pj(C, ARB.x, SLAB, ARB.z), hd = pj(C, ARB.x, SLAB + 1.96, ARB.z), tg = pj(C, sqX(5), SLAB, sqZ(7)); if (!b || !hd) return;
+      const h = b[1] - hd[1]; if (h < 6) return;
+      const face = tg && tg[0] < b[0] ? -1 : 1, lt = lightAt(L, ARB.x, 1.3, ARB.z);
+      // held high through his words; struck down on the stone at their end
+      const up = smooth(span(t, T.sE3 - 0.6, T.sE3 + 0.4)) * (1 - easeIn(span(t, T.strike - 0.22, T.strike)));
+      const sx = b[0] + face * h * 0.3, top = b[1] - lerp(1.3, 1.62, up) * h, bot = b[1] - lerp(0, 0.32, up) * h, grip = lerp(b[1] - 0.78 * h, b[1] - 1.08 * h, up);
+      const pose = { x: b[0], y: b[1], h, face, dress: 'robe', hat: 'cap', beard: 0.9, stoop: 0.25, reachN: [sx, grip], armF: [0.15, 0.3], lean: 0.02 };
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+      rimLit(ctx, (c, fill) => sil(c, Object.assign({}, pose, { fill })), { rim: '#ffbe7a', mid: '#4a3426', dark: litHex('#2a2420', lt.c.map(x => Math.min(1, x * 0.7))), dx: -face * h * 0.012, dy: h * 0.006, steps: 3, box: [b[0] - h * 0.8, b[1] - h * 1.25, h * 1.6, h * 1.3], key: 'arb' });
+      // the staff of office: pale wood, a gilded head
+      ctx.lineCap = 'round'; ctx.strokeStyle = '#2a2018'; ctx.lineWidth = Math.max(2, h * 0.022); ctx.beginPath(); ctx.moveTo(sx, top); ctx.lineTo(sx, bot); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,214,160,0.75)'; ctx.lineWidth = Math.max(1, h * 0.007); ctx.beginPath(); ctx.moveTo(sx - face * h * 0.007, top); ctx.lineTo(sx - face * h * 0.007, bot); ctx.stroke();
+      K.gold(ctx, c => { c.beginPath(); c.arc(sx, top, Math.max(3, h * 0.03), 0, TAU); }, sx - h * 0.03, top - h * 0.03, sx + h * 0.03, top + h * 0.03, { outline: false, sheen: 0.4 + 0.2 * Math.sin(t * 2) });
+      glowS(ctx, sx, top, h * 0.12, [255, 210, 140], 0.35);
       ctx.restore();
       const hit = span(t, T.strike, T.strike + 0.8);
-      if (hit > 0 && hit < 1) { const g = pj(C, sx, SLAB + 0.02, sz); if (g) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.strokeStyle = `rgba(255,214,160,${0.7 * (1 - hit)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(g[0], g[1], g[3] * (0.2 + hit * 1.4), g[3] * (0.08 + hit * 0.5), 0, 0, TAU); ctx.stroke(); ctx.restore(); glowS(ctx, g[0], g[1], g[3] * 0.8, [255, 220, 170], 0.5 * (1 - hit)); } }
-      void r;
+      if (hit > 0 && hit < 1) { const g = [sx, b[1]]; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.strokeStyle = `rgba(255,214,160,${0.75 * (1 - hit)})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(g[0], g[1], h * (0.08 + hit * 0.7), h * (0.025 + hit * 0.18), 0, 0, TAU); ctx.stroke(); ctx.restore(); glowS(ctx, g[0], g[1], h * 0.3, [255, 220, 170], 0.55 * (1 - hit)); }
     } });
   }
 
@@ -1542,26 +1562,25 @@
   const KNEEL = { x: 0, z: -20.8 };
   function knightingItems(ctx, C, t, L, items) {
     const v = toCam(C, KNEEL.x, 1, KNEEL.z); if (v[2] < NEAR) return;
+    const cael = { id: 'gCael', side: 'W', type: 'P', cael: true, seed: 5 }, lordP = { side: 'W', house: HS[4], seed: 712 };
     items.push({ d: v[2], draw: () => {
-      const lt = lightAt(L, KNEEL.x, 1, KNEEL.z), lc = lt.c;
-      const b = pj(C, KNEEL.x, 0, KNEEL.z), hd = pj(C, KNEEL.x, 1.85, KNEEL.z); if (!b || !hd) return;
-      const h = hd[1] < b[1] ? b[1] - hd[1] : 10, face = -C.rz >= 0 ? 1 : -1;
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const fillC = litHex('#5a3e28', lc.map(c => c * 0.8)), rimC = 'rgba(255,186,120,0.9)';
-      const kneel = (fill, dx, dy) => sil(ctx, { x: b[0] + dx, y: b[1] + dy, h, face, fill, dress: 'cloak', hat: 'hair', hold: 'spear', armN: [0.3, 0.9], armF: [0.05, 0.2] });
-      kneel(rimC, -h * 0.012, -h * 0.008); kneel(fillC, 0, 0);
-      const lb = pj(C, KNEEL.x, 0.5, KNEEL.z - 1.25); if (lb) { const lord = (fill, dx) => sil(ctx, { x: lb[0] + dx, y: lb[1], h: h * 1.05, face: -face, fill, dress: 'robe', hat: 'bare', beard: 0.4, armN: [1.5, 0.05], armF: [0.1, 0.2] }); lord(rimC, -h * 0.012); lord(litHex('#4a2a2a', lc.map(c => c * 0.8)), 0); }
-      ctx.restore();
+      const lt = lightAt(L, KNEEL.x, 1.2, KNEEL.z, true), vf = viewOf(C, KNEEL.x, KNEEL.z, Math.PI);
+      figureAt(ctx, C, KNEEL.x, 0, KNEEL.z, 1.8, costume(cael, 'P'), vf.view, vf.face, lt, t, { id: 'gCael', key: keyDir(C, L, KNEEL.x, 1.2, KNEEL.z, lt), rim: 'rgb(255,178,106)' });
+    } });
+    const v2 = toCam(C, KNEEL.x, 1, KNEEL.z - 1.4);
+    if (v2[2] > NEAR) items.push({ d: v2[2], draw: () => {
+      const lt = lightAt(L, KNEEL.x, 1.2, KNEEL.z - 1.4, true), vf = viewOf(C, KNEEL.x, KNEEL.z - 1.4, 0), o = costume(lordP, 'K'); o.head = 'bare'; o.hold = 'none'; o.hero = false;
+      figureAt(ctx, C, KNEEL.x, 0.5, KNEEL.z - 1.4, 1.95, o, vf.view, vf.face, lt, t, { id: 'gLord', key: keyDir(C, L, KNEEL.x, 1.2, KNEEL.z - 1.4, lt), rim: 'rgb(255,178,106)' });
     } });
   }
   // the hooded man: a still shape in the dark of the gallery, a thin gold chain; he speaks to a clerk, then turns away
-  const HOOD = { x: COLX + 0.85, z: -9.6 };
+  const HOOD = { x: COLX + 0.55, z: -3.4 };
   function hoodedMan(ctx, C, t, L) {
     const T = TT(), turn = smooth(span(t, T.turn, T.turn + 0.6)), walk = Math.max(0, t - T.turn - 0.35);
-    const z = HOOD.z + walk * 1.0, x = HOOD.x + walk * 0.15;
+    const z = HOOD.z - walk * 1.0, x = HOOD.x + walk * 0.35;
     const b = pj(C, x, GALY, z), hd = pj(C, x, GALY + 1.92, z); if (!b || !hd) return;
     const h = b[1] - hd[1]; if (h < 8) return;
-    const face = turn < 0.5 ? -1 : 1, fade = 1 - smooth(span(t, T.turn + 1.0, T.turn + 2.4));
+    const hallFace = -C.rx >= 0 ? 1 : -1, face = turn < 0.5 ? hallFace : -hallFace, fade = 1 - smooth(span(t, T.turn + 1.2, T.turn + 2.6));
     const pose = { x: b[0], y: b[1], h, face, dress: 'robe', hat: 'hood', armN: [0.25, 0.9], armF: [0.1, 0.8], lean: 0.04, walk: walk > 0 ? walk * 5.5 : undefined, tilt: turn < 0.5 ? 0.12 : 0 };
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = fade;
     rimLit(ctx, (c, fill) => sil(c, Object.assign({}, pose, { fill })), { rim: '#d9a066', mid: '#4a2c1c', dark: '#070505', dx: face * h * 0.012 + h * 0.004, dy: h * 0.006, steps: 3, box: [b[0] - h * 0.7, b[1] - h * 1.15, h * 1.4, h * 1.25], key: 'hood' });
@@ -1577,9 +1596,9 @@
     ctx.restore();
     // the clerk who is sent for the records: he comes, bows, and hurries off into the dark
     const c0 = T.ask - 0.8, cu = span(t, c0, T.ask + 1.6); if (cu <= 0 || cu >= 1) return;
-    const cz = HOOD.z + 1.3 + (cu < 0.3 ? (1 - cu / 0.3) * 1.8 : cu > 0.7 ? -(cu - 0.7) / 0.3 * 2.6 : 0), cx2 = HOOD.x + 0.6;
+    const cz = HOOD.z - 1.2 - (cu < 0.3 ? (1 - cu / 0.3) * 2.2 : cu > 0.7 ? (cu - 0.7) / 0.3 * 3.0 : 0), cx2 = HOOD.x + 0.9;
     const cb = pj(C, cx2, GALY, cz), ch = pj(C, cx2, GALY + 1.7, cz); if (!cb || !ch) return;
-    const hh = cb[1] - ch[1], bow = cu > 0.32 && cu < 0.68 ? Math.sin((cu - 0.32) / 0.36 * Math.PI) * 0.5 : 0, cface = cu > 0.7 ? 1 : -1;
+    const hh = cb[1] - ch[1], bow = cu > 0.32 && cu < 0.68 ? Math.sin((cu - 0.32) / 0.36 * Math.PI) * 0.5 : 0, cface = cu > 0.7 ? -1 : 1;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = Math.min(1, cu * 6, (1 - cu) * 4);
     sil(ctx, { x: cb[0] - hh * 0.01, y: cb[1], h: hh, face: cface, fill: '#7a4a2a', dress: 'robe', hat: 'cap', lean: bow, armN: [0.6, 1.2], walk: cu < 0.3 || cu > 0.7 ? t * 7 : undefined });
     sil(ctx, { x: cb[0], y: cb[1], h: hh, face: cface, fill: '#0a0807', dress: 'robe', hat: 'cap', lean: bow, armN: [0.6, 1.2], walk: cu < 0.3 || cu > 0.7 ? t * 7 : undefined });
@@ -1589,17 +1608,17 @@
   // ================================================================ 2D: a hall out of focus behind a close shot (cached)
   function bokehBG(key, o) {
     return K.cached('p5:bk:' + key, () => {
-      const c = K.canvas(W + 400, H + 300), x = c.getContext('2d'), r = rng(o.seed || 5);
-      const g = x.createLinearGradient(0, 0, 0, c.height); g.addColorStop(0, o.top || '#0c0908'); g.addColorStop(0.6, o.mid || '#1c1410'); g.addColorStop(1, o.bot || '#0e0a08'); x.fillStyle = g; x.fillRect(0, 0, c.width, c.height);
+      const c = K.canvas((W + 400) / 2, (H + 300) / 2), x = c.getContext('2d'), r = rng(o.seed || 5); x.scale(0.5, 0.5);
+      const g = x.createLinearGradient(0, 0, 0, (H + 300)); g.addColorStop(0, o.top || '#0c0908'); g.addColorStop(0.6, o.mid || '#1c1410'); g.addColorStop(1, o.bot || '#0e0a08'); x.fillStyle = g; x.fillRect(0, 0, (W + 400), (H + 300));
       // columns and banners, soft
-      x.filter = 'blur(14px)';
-      for (const cx of o.cols || []) { const gg = x.createLinearGradient(cx - 70, 0, cx + 70, 0); gg.addColorStop(0, 'rgba(0,0,0,0)'); gg.addColorStop(0.3, 'rgba(70,54,40,0.55)'); gg.addColorStop(0.5, 'rgba(110,86,62,0.6)'); gg.addColorStop(1, 'rgba(10,8,6,0.7)'); x.fillStyle = gg; x.fillRect(cx - 80, 0, 160, c.height); }
+      x.filter = 'blur(7px)';
+      for (const cx of o.cols || []) { const gg = x.createLinearGradient(cx - 70, 0, cx + 70, 0); gg.addColorStop(0, 'rgba(0,0,0,0)'); gg.addColorStop(0.3, 'rgba(70,54,40,0.55)'); gg.addColorStop(0.5, 'rgba(110,86,62,0.6)'); gg.addColorStop(1, 'rgba(10,8,6,0.7)'); x.fillStyle = gg; x.fillRect(cx - 80, 0, 160, (H + 300)); }
       for (const [bx, hi] of o.banners || []) { x.fillStyle = HS[hi].field; x.globalAlpha = 0.5; x.fillRect(bx - 40, 40, 80, 260); x.globalAlpha = 1; }
       if (o.win) { const [wx, wy, wr, col] = o.win; const gg = x.createRadialGradient(wx, wy, 0, wx, wy, wr); gg.addColorStop(0, rgbs(col, 0.8)); gg.addColorStop(1, rgbs(col, 0)); x.fillStyle = gg; x.fillRect(wx - wr, wy - wr, wr * 2, wr * 2); }
       x.filter = 'none';
       // candle bokeh: soft discs with brighter rims
       for (let i = 0; i < (o.n || 40); i++) {
-        const px = r() * c.width, py = (o.by0 || 0.3) * c.height + r() * (o.bh || 0.5) * c.height, rad = 14 + r() * 46, col = P.ember[Math.floor(r() * 4)], a = 0.08 + r() * 0.18;
+        const px = r() * (W + 400), py = (o.by0 || 0.3) * (H + 300) + r() * (o.bh || 0.5) * (H + 300), rad = 14 + r() * 46, col = P.ember[Math.floor(r() * 4)], a = 0.08 + r() * 0.18;
         const gg = x.createRadialGradient(px, py, 0, px, py, rad); gg.addColorStop(0, rgbs(col, a * 0.6)); gg.addColorStop(0.78, rgbs(col, a)); gg.addColorStop(0.9, rgbs(col, a * 0.7)); gg.addColorStop(1, rgbs(col, 0));
         x.globalCompositeOperation = 'lighter'; x.fillStyle = gg; x.beginPath(); x.arc(px, py, rad, 0, TAU); x.fill(); x.globalCompositeOperation = 'source-over';
       }
@@ -1610,9 +1629,9 @@
   // ================================================================ L28: the clerk at his desk; his eyes over his spectacles
   function shotClerk(ctx, t, sh) {
     const lt = t - sh.a, u = span(t, sh.a - 0.3, sh.b + 0.3);
-    const c = { x: lerp(-30, 20, ease(u)), y: lerp(10, -10, ease(u)), z: lerp(1.0, 1.07, ease(u)) };
+    const c = { x: lerp(-60, -35, ease(u)), y: lerp(-40, -70, ease(u)), z: lerp(1.32, 1.42, ease(u)) };
     const BG = bokehBG('clerk', { seed: 28, cols: [240, 1650], banners: [[520, 4], [1900, 2]], n: 46, by0: 0.15, bh: 0.6, mid: '#1a120e' });
-    view(ctx, c, 0.45); ctx.drawImage(BG, -200, -150);
+    view(ctx, c, 0.45); ctx.drawImage(BG, -200, -150, W + 400, H + 300);
     // the eyes: reading (down), a look over the spectacles (up), reading again
     const up = smooth(span(lt, 0.95, 1.25)) * (1 - smooth(span(lt, 1.75, 2.05)));
     const read = lt < 1.0 ? span(lt, 0.0, 0.95) : span(lt, 1.95, 2.9);
@@ -1631,33 +1650,43 @@
     finish(ctx, { bloom: 0.3, vig: 0.7, vigIn: 0.25, warm: '#ffb070', warmA: 0.08 });
   }
   function clerkFigure(ctx, t, up, read, fl) {
-    // the desk and the open register (lit by the candle at the left)
     ctx.save();
-    const dg = ctx.createLinearGradient(0, 760, 0, 1080); dg.addColorStop(0, '#2a1c12'); dg.addColorStop(1, '#0c0806'); ctx.fillStyle = dg; ctx.fillRect(-300, 780, W + 600, 500);
-    // the book: two pages fanned
-    ctx.save(); ctx.translate(820, 930); ctx.rotate(-0.06);
-    const pg = ctx.createLinearGradient(-600, 0, 400, 0); pg.addColorStop(0, '#d8c49a'); pg.addColorStop(0.55, '#a88a5c'); pg.addColorStop(1, '#4a3820'); ctx.fillStyle = pg;
-    ctx.beginPath(); ctx.moveTo(-620, -120); ctx.quadraticCurveTo(-300, -150, -10, -130); ctx.lineTo(10, 140); ctx.quadraticCurveTo(-300, 120, -640, 150); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(-10, -130); ctx.quadraticCurveTo(250, -150, 520, -110); ctx.lineTo(560, 160); ctx.quadraticCurveTo(260, 120, 10, 140); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = 'rgba(40,24,12,0.5)'; ctx.lineWidth = 2;
-    for (let i = 0; i < 9; i++) { const y = -95 + i * 26; ctx.beginPath(); ctx.moveTo(-580, y + 4); ctx.quadraticCurveTo(-300, y - 18, -40, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(30, y); ctx.quadraticCurveTo(250, y - 16, 500, y + 6); ctx.stroke(); }
+    // the desk, dark wood catching the candle
+    const dg = ctx.createLinearGradient(0, 780, 0, 1080); dg.addColorStop(0, '#2a1a10'); dg.addColorStop(1, '#0a0605'); ctx.fillStyle = dg; ctx.fillRect(-300, 800, W + 600, 500);
+    const dl = ctx.createRadialGradient(330, 800, 0, 330, 800, 700); dl.addColorStop(0, 'rgba(255,170,90,0.28)'); dl.addColorStop(1, 'rgba(255,170,90,0)'); ctx.fillStyle = dl; ctx.fillRect(-300, 800, 1400, 400);
+    // the register open on the desk, in the near light; lines of ink
+    ctx.save(); ctx.translate(760, 900); ctx.rotate(-0.08);
+    const page = (sx) => { ctx.beginPath(); ctx.moveTo(sx * 10, -120); ctx.quadraticCurveTo(sx * 300, -150, sx * 610, -112); ctx.lineTo(sx * 650, 160); ctx.quadraticCurveTo(sx * 310, 124, sx * 10, 140); ctx.closePath(); };
+    for (const sx of [-1, 1]) { page(sx); const pg = ctx.createLinearGradient(-700, 0, 650, 0); pg.addColorStop(0, '#d2b888'); pg.addColorStop(0.45, '#a8885a'); pg.addColorStop(1, '#3a2814'); ctx.fillStyle = pg; ctx.fill(); }
+    ctx.strokeStyle = 'rgba(40,24,12,0.45)'; ctx.lineWidth = 2.5;
+    for (let i = 0; i < 9; i++) { const y = -92 + i * 26; for (const sx of [-1, 1]) { const x0 = sx < 0 ? -580 : 40, x1 = sx < 0 ? -40 : 560; ctx.beginPath(); ctx.moveTo(x0, y + 4); ctx.quadraticCurveTo((x0 + x1) / 2, y - 16, x1, y + 2); ctx.stroke(); } }
+    const gs = ctx.createLinearGradient(-30, 0, 30, 0); gs.addColorStop(0, 'rgba(0,0,0,0)'); gs.addColorStop(0.5, 'rgba(20,10,4,0.55)'); gs.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gs; ctx.fillRect(-30, -150, 60, 300);
     ctx.restore();
-    // body: a dark scholar's robe with a pale collar band, shoulders hunched over the desk
-    const bx = 1150, by = 640;
-    ctx.fillStyle = '#15130f'; ctx.beginPath(); ctx.moveTo(bx - 430, 1080); ctx.bezierCurveTo(bx - 420, 760, bx - 300, by + 30, bx - 120, by); ctx.lineTo(bx + 150, by - 10); ctx.bezierCurveTo(bx + 360, by + 30, bx + 470, 760, bx + 500, 1080); ctx.closePath(); ctx.fill();
-    const rg = ctx.createLinearGradient(bx - 430, 0, bx + 300, 0); rg.addColorStop(0, 'rgba(255,170,100,0.22)'); rg.addColorStop(0.35, 'rgba(255,170,100,0.05)'); rg.addColorStop(1, 'rgba(0,0,0,0.3)'); ctx.fillStyle = rg; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,190,120,0.35)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(bx - 425, 1060); ctx.bezierCurveTo(bx - 415, 770, bx - 300, by + 36, bx - 120, by + 6); ctx.stroke();
-    ctx.fillStyle = '#c8baa0'; ctx.beginPath(); ctx.moveTo(bx - 120, by + 4); ctx.quadraticCurveTo(bx - 10, by + 60, bx + 120, by); ctx.lineTo(bx + 100, by + 40); ctx.quadraticCurveTo(bx - 10, by + 95, bx - 100, by + 44); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = 'rgba(30,20,12,0.5)'; ctx.fillRect(bx - 20, by + 50, 40, 110);
-    // the near arm and the hand that holds the quill, moving along the line
-    const hx = lerp(560, 860, read) + Math.sin(read * 18) * 4, hy = 880 - read * 14;
-    ctx.fillStyle = '#121010'; ctx.beginPath(); ctx.moveTo(bx - 330, 820); ctx.quadraticCurveTo(bx - 420, 900, hx + 80, hy + 30); ctx.lineTo(hx + 60, hy + 80); ctx.quadraticCurveTo(bx - 380, 980, bx - 250, 1000); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#7a5038'; ctx.beginPath(); ctx.ellipse(hx + 30, hy + 30, 46, 30, -0.3, 0, TAU); ctx.fill();
-    ctx.fillStyle = 'rgba(255,190,130,0.35)'; ctx.beginPath(); ctx.ellipse(hx + 16, hy + 22, 30, 16, -0.3, 0, TAU); ctx.fill();
-    ctx.strokeStyle = '#efe6d2'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(hx + 10, hy + 18); ctx.quadraticCurveTo(hx + 90, hy - 120, hx + 170, hy - 230); ctx.stroke();
-    ctx.fillStyle = 'rgba(240,232,214,0.75)'; ctx.beginPath(); ctx.moveTo(hx + 90, hy - 110); ctx.quadraticCurveTo(hx + 170, hy - 200, hx + 175, hy - 240); ctx.quadraticCurveTo(hx + 120, hy - 190, hx + 70, hy - 100); ctx.closePath(); ctx.fill();
+    // the robe: a heavy dark gown over hunched shoulders, folds catching the candle on the near side
+    const bx = 1140, by = 650;
+    const robe = () => { ctx.beginPath(); ctx.moveTo(bx - 430, 1090); ctx.bezierCurveTo(bx - 420, 900, bx - 330, by + 170, bx - 250, by + 120); ctx.bezierCurveTo(bx - 190, by + 70, bx - 140, by + 12, bx - 110, by + 4); ctx.quadraticCurveTo(bx, by - 18, bx + 120, by + 4); ctx.bezierCurveTo(bx + 170, by + 30, bx + 240, by + 90, bx + 300, by + 130); ctx.bezierCurveTo(bx + 400, by + 200, bx + 470, 880, bx + 500, 1090); ctx.closePath(); };
+    robe(); ctx.fillStyle = '#17110d'; ctx.fill();
+    ctx.save(); robe(); ctx.clip();
+    const rg = ctx.createLinearGradient(bx - 470, 0, bx + 200, 0); rg.addColorStop(0, 'rgba(255,160,90,0.26)'); rg.addColorStop(0.4, 'rgba(255,150,80,0.06)'); rg.addColorStop(1, 'rgba(0,0,0,0.35)'); ctx.fillStyle = rg; ctx.fillRect(bx - 500, by - 60, 1100, 500);
+    ctx.lineCap = 'round';
+    for (const [x0, k] of [[-300, 0.5], [-220, 0.35], [-120, 0.2], [60, 0.1], [200, 0.08], [320, 0.06]]) { ctx.strokeStyle = `rgba(255,170,100,${0.18 * k})`; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(bx + x0 * 0.5, by + 90); ctx.quadraticCurveTo(bx + x0 * 0.9, by + 260, bx + x0 * 1.25, 1090); ctx.stroke(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(bx + x0 * 0.5 + 12, by + 90); ctx.quadraticCurveTo(bx + x0 * 0.9 + 14, by + 260, bx + x0 * 1.25 + 16, 1090); ctx.stroke(); }
     ctx.restore();
-    clerkHead(ctx, 1100, 420, 330, t, up, read, fl);
+    ctx.strokeStyle = 'rgba(255,186,120,0.45)'; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(bx - 428, 1060); ctx.bezierCurveTo(bx - 418, 900, bx - 330, by + 172, bx - 250, by + 122); ctx.bezierCurveTo(bx - 190, by + 72, bx - 140, by + 14, bx - 110, by + 6); ctx.stroke();
+    // a linen band at the throat, half in shadow
+    ctx.fillStyle = '#8a7c66'; ctx.beginPath(); ctx.moveTo(bx - 120, by + 6); ctx.quadraticCurveTo(bx - 20, by + 44, bx + 90, by); ctx.lineTo(bx + 70, by + 30); ctx.quadraticCurveTo(bx - 20, by + 70, bx - 104, by + 34); ctx.closePath(); ctx.fill();
+    const cg2 = ctx.createLinearGradient(bx - 120, 0, bx + 90, 0); cg2.addColorStop(0, 'rgba(255,200,140,0.35)'); cg2.addColorStop(1, 'rgba(0,0,0,0.5)'); ctx.fillStyle = cg2; ctx.fill();
+    // the near arm along the desk; the hand holds the quill and moves along the line, twice
+    const hx = lerp(500, 780, read) + Math.sin(read * 18) * 3, hy = 845 - read * 12;
+    ctx.fillStyle = '#120d0a'; ctx.beginPath(); ctx.moveTo(bx - 380, 840); ctx.bezierCurveTo(bx - 520, 900, hx + 200, hy - 10, hx + 70, hy + 4); ctx.lineTo(hx + 80, hy + 70); ctx.bezierCurveTo(hx + 260, hy + 90, bx - 420, 1010, bx - 300, 1060); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,180,110,0.4)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(bx - 380, 842); ctx.bezierCurveTo(bx - 520, 902, hx + 200, hy - 8, hx + 70, hy + 6); ctx.stroke();
+    const hg = ctx.createLinearGradient(hx - 30, hy - 30, hx + 80, hy + 60); hg.addColorStop(0, '#c08860'); hg.addColorStop(1, '#4a2a18'); ctx.fillStyle = hg;
+    ctx.beginPath(); ctx.moveTo(hx + 76, hy + 4); ctx.quadraticCurveTo(hx + 20, hy - 18, hx - 10, hy + 8); ctx.quadraticCurveTo(hx - 34, hy + 22, hx - 30, hy + 38); ctx.quadraticCurveTo(hx - 10, hy + 46, hx + 10, hy + 40); ctx.quadraticCurveTo(hx + 40, hy + 66, hx + 80, hy + 66); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(60,30,16,0.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx - 6, hy + 20); ctx.quadraticCurveTo(hx + 20, hy + 26, hx + 40, hy + 22); ctx.stroke();
+    // the quill
+    ctx.strokeStyle = '#e8dcc4'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(hx - 26, hy + 34); ctx.quadraticCurveTo(hx + 40, hy - 100, hx + 110, hy - 220); ctx.stroke();
+    ctx.fillStyle = 'rgba(232,222,200,0.7)'; ctx.beginPath(); ctx.moveTo(hx + 40, hy - 90); ctx.quadraticCurveTo(hx + 120, hy - 190, hx + 116, hy - 234); ctx.quadraticCurveTo(hx + 70, hy - 170, hx + 22, hy - 80); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    clerkHead(ctx, 1110, 430, 360, t, up, read, fl);
   }
   // the clerk's head, three-quarter to the left, lit from the candle at the left: cap, grey hair, spectacles low on the nose
   function clerkHead(ctx, X, Y, S, t, up, read, fl) {
@@ -1668,7 +1697,7 @@
     F('#3a2418', () => { ctx.moveTo(-0.12, 0.38); ctx.lineTo(0.18, 0.3); ctx.lineTo(0.24, 0.72); ctx.lineTo(-0.16, 0.74); ctx.closePath(); });
     // the head's shape
     const face = () => { ctx.moveTo(0.06, -0.5); ctx.bezierCurveTo(-0.14, -0.5, -0.27, -0.4, -0.29, -0.24); ctx.quadraticCurveTo(-0.33, -0.14, -0.325, -0.1); ctx.quadraticCurveTo(-0.31, -0.06, -0.315, -0.03); ctx.lineTo(-0.405, 0.1); ctx.quadraticCurveTo(-0.41, 0.135, -0.37, 0.14); ctx.lineTo(-0.335, 0.16); ctx.quadraticCurveTo(-0.33, 0.2, -0.335, 0.215); ctx.quadraticCurveTo(-0.315, 0.24, -0.325, 0.255); ctx.quadraticCurveTo(-0.33, 0.29, -0.31, 0.3); ctx.bezierCurveTo(-0.3, 0.36, -0.28, 0.42, -0.2, 0.46); ctx.bezierCurveTo(-0.1, 0.5, 0.02, 0.46, 0.12, 0.38); ctx.bezierCurveTo(0.22, 0.3, 0.26, 0.14, 0.29, 0.02); ctx.bezierCurveTo(0.34, -0.2, 0.28, -0.48, 0.06, -0.5); ctx.closePath(); };
-    const g = ctx.createLinearGradient(-0.42, 0, 0.3, 0); g.addColorStop(0, '#c48a5e'); g.addColorStop(0.2, '#9a6644'); g.addColorStop(0.5, '#4a2c1c'); g.addColorStop(1, '#1e1209'); F(g, face);
+    const g = ctx.createLinearGradient(-0.42, 0, 0.3, 0); g.addColorStop(0, '#c88a5a'); g.addColorStop(0.12, '#8a5434'); g.addColorStop(0.3, '#3a2014'); g.addColorStop(0.55, '#170c06'); g.addColorStop(1, '#0c0603'); F(g, face);
     ctx.save(); face(); ctx.clip();
     // planes of the face: a shadow under the brow, along the cheek, under the nose; a warm cheekbone
     const sh = (x, y, rx, ry, a, col = '20,10,4') => { const gg = ctx.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry)); gg.addColorStop(0, `rgba(${col},${a})`); gg.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = gg; ctx.save(); ctx.translate(x, y); ctx.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry)); ctx.translate(-x, -y); ctx.beginPath(); ctx.arc(x, y, Math.max(rx, ry), 0, TAU); ctx.fill(); ctx.restore(); };
@@ -1697,7 +1726,7 @@
       const open = lerp(0.18, 1, up), ry = 0.024 * open;
       F('#120a06', () => ctx.ellipse(ex, ey + 0.005, rx * 1.15, 0.03, 0, 0, TAU));
       if (open > 0.25) {
-        F(near ? '#b8a890' : '#8a7a68', () => ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU));
+        F(near ? '#6a5a4a' : '#8a7660', () => ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU));
         const ix = ex + rx * (0.25 * up - 0.3 * (1 - up) + (read - 0.5) * 0.4 * (1 - up)), iy = ey + 0.004 + (1 - up) * ry * 0.4;
         ctx.save(); ctx.beginPath(); ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU); ctx.clip();
         F('#2a1a10', () => ctx.arc(ix, iy, rx * 0.5, 0, TAU)); F('#050302', () => ctx.arc(ix, iy, rx * 0.24, 0, TAU));
@@ -1786,27 +1815,27 @@
   // ================================================================ L31: the knighting, in the last shaft of the day
   function knightBG() {
     return K.cached('p5:knbg', () => {
-      const c = K.canvas(W + 400, H + 300), x = c.getContext('2d'), OX = 200, OY = 150;
-      x.fillStyle = '#0b0807'; x.fillRect(0, 0, c.width, c.height);
+      const c = K.canvas((W + 400) / 2, (H + 300) / 2), x = c.getContext('2d'), OX = 200, OY = 150; x.scale(0.5, 0.5);
+      x.fillStyle = '#0b0807'; x.fillRect(0, 0, W + 400, H + 300);
       // the board receding: squares in perspective, dark, catching the light
       const hy = 560 + OY, cx = 960 + OX;
       for (let r = 0; r < 18; r++) for (let f = -14; f < 14; f++) {
         const z0 = 1 + r * 0.7, z1 = z0 + 0.7, X = v => cx + v * 900 / zz, Y = z => hy + 1100 / z; let zz = z0;
         const y0 = Y(z0), y1 = Y(z1); zz = z0; const a0 = X(f), a1 = X(f + 1); zz = z1; const b0 = X(f), b1 = X(f + 1);
         const light = (r + f + 100) % 2 === 0, k = 1 - r / 18;
-        x.fillStyle = light ? `rgba(${120 * k + 20 | 0},${100 * k + 16 | 0},${80 * k + 14 | 0},1)` : `rgba(${30 * k + 8 | 0},${24 * k + 7 | 0},${20 * k + 6 | 0},1)`;
+        x.fillStyle = light ? `rgba(${70 * k + 26 | 0},${56 * k + 20 | 0},${44 * k + 16 | 0},1)` : `rgba(${22 * k + 10 | 0},${17 * k + 8 | 0},${14 * k + 7 | 0},1)`;
         x.beginPath(); x.moveTo(a0, y0); x.lineTo(a1, y0); x.lineTo(b1, y1); x.lineTo(b0, y1); x.closePath(); x.fill();
       }
-      const fg = x.createLinearGradient(0, hy, 0, hy + 300); fg.addColorStop(0, 'rgba(11,8,7,1)'); fg.addColorStop(1, 'rgba(11,8,7,0)'); x.fillStyle = fg; x.fillRect(0, hy - 10, c.width, 320);
-      x.filter = 'blur(6px)';
+      const fg = x.createLinearGradient(0, hy, 0, hy + 300); fg.addColorStop(0, 'rgba(11,8,7,1)'); fg.addColorStop(1, 'rgba(11,8,7,0)'); x.fillStyle = fg; x.fillRect(0, hy - 10, (W + 400), 320);
+      x.filter = 'blur(3px)';
       // the crowd's ring, the columns, banners and a high window
-      for (let i = 0; i < 70; i++) { const px = (i + 0.5) / 70 * c.width, h = 150 + (i * 37 % 50); x.fillStyle = '#060504'; x.beginPath(); x.ellipse(px, hy - h * 0.45, 22, h * 0.5, 0, 0, TAU); x.fill(); x.beginPath(); x.arc(px, hy - h * 0.98, 14, 0, TAU); x.fill(); }
+      for (let i = 0; i < 70; i++) { const px = (i + 0.5) / 70 * (W + 400), h = 150 + (i * 37 % 50); x.fillStyle = '#060504'; x.beginPath(); x.ellipse(px, hy - h * 0.45, 22, h * 0.5, 0, 0, TAU); x.fill(); x.beginPath(); x.arc(px, hy - h * 0.98, 14, 0, TAU); x.fill(); }
       for (const px of [180, 640, 1460, 1980]) { const g = x.createLinearGradient(px - 60, 0, px + 60, 0); g.addColorStop(0, '#0a0807'); g.addColorStop(0.7, '#3a2a1e'); g.addColorStop(1, '#0a0807'); x.fillStyle = g; x.fillRect(px - 60, 0, 120, hy - 120); }
       for (const [px, hi] of [[420, 1], [860, 0], [1220, 6], [1720, 4]]) { x.fillStyle = mixHex(HS[hi].field, '#0a0807', 0.45); x.fillRect(px - 50, 30, 100, 300); }
       const wg = x.createRadialGradient(330, 90, 0, 330, 90, 260); wg.addColorStop(0, 'rgba(255,150,80,0.7)'); wg.addColorStop(1, 'rgba(255,120,60,0)'); x.fillStyle = wg; x.fillRect(0, 0, 700, 400);
       x.filter = 'none';
       const r = rng(31); x.globalCompositeOperation = 'lighter';
-      for (let i = 0; i < 30; i++) { const px = r() * c.width, py = hy - 260 + r() * 200, rad = 10 + r() * 30, col = P.ember[Math.floor(r() * 3)]; const g = x.createRadialGradient(px, py, 0, px, py, rad); g.addColorStop(0, rgbs(col, 0.2)); g.addColorStop(0.8, rgbs(col, 0.14)); g.addColorStop(1, rgbs(col, 0)); x.fillStyle = g; x.beginPath(); x.arc(px, py, rad, 0, TAU); x.fill(); }
+      for (let i = 0; i < 30; i++) { const px = r() * (W + 400), py = hy - 260 + r() * 200, rad = 10 + r() * 30, col = P.ember[Math.floor(r() * 3)]; const g = x.createRadialGradient(px, py, 0, px, py, rad); g.addColorStop(0, rgbs(col, 0.2)); g.addColorStop(0.8, rgbs(col, 0.14)); g.addColorStop(1, rgbs(col, 0)); x.fillStyle = g; x.beginPath(); x.arc(px, py, rad, 0, TAU); x.fill(); }
       return { c, OX, OY };
     });
   }
@@ -1815,7 +1844,7 @@
     // F1: a slow push as the sword comes down; F3 ("Rise, Knight of Ealdholt"): the camera lifts with him as he stands
     const c = F3 ? { x: lerp(10, -20, ease(u)), y: lerp(-5, -70, ru) + lerp(0, -10, u), z: lerp(1.1, 1.16, ease(u)) } : { x: lerp(-40, 30, ease(u)), y: lerp(20, -10, ease(u)), z: lerp(1.04, 1.13, ease(u)) };
     const BG = knightBG();
-    view(ctx, c, 0.5); ctx.drawImage(BG.c, -BG.OX, -BG.OY);
+    view(ctx, c, 0.5); ctx.drawImage(BG.c, -BG.OX, -BG.OY, W + 400, H + 300);
     view(ctx, c, 1);
     // the shaft: from a high window at the upper left, down across them
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -1827,7 +1856,7 @@
     const ground = 900, h = 560;
     // Cael kneels, head bowed, his spear laid down beside him
     if (!F3) { ctx.fillStyle = '#0a0807'; ctx.fillRect(520, ground - 8, 560, 7); }
-    const kneel = { x: 760, y: ground, h, face: 1, dress: 'cloak', hat: 'hair', legN: [lerp(1.45, 0.07, ru), lerp(1.45, 0.03, ru)], legF: [lerp(0.12, -0.06, ru), lerp(1.62, 0.04, ru)], lean: lerp(0.2, 0.0, ru), tilt: lerp(0.42, -0.05, ru), armN: [lerp(0.55, 0.06, ru), lerp(0.7, 0.2, ru)], armF: [lerp(0.25, -0.05, ru), lerp(0.5, 0.18, ru)], long: false, t };
+    const kneel = { x: 760, y: ground, h, face: 1, dress: 'cloak', hat: 'hair', legN: [lerp(1.3, 0.07, ru), lerp(1.38, 0.03, ru)], legF: [lerp(0.1, -0.06, ru), lerp(1.66, 0.04, ru)], lean: lerp(0.34, 0.0, ru), tilt: lerp(0.5, -0.05, ru), armN: [lerp(0.55, 0.06, ru), lerp(0.7, 0.2, ru)], armF: [lerp(0.25, -0.05, ru), lerp(0.5, 0.18, ru)], long: false, t };
     const cael = sil(K.layer('p5:dummy', 4, 4).getContext('2d'), Object.assign({}, kneel, { fill: '#000' }));
     rimLit(ctx, (cc, fill) => sil(cc, Object.assign({}, kneel, { fill })), { rim: '#ffb070', mid: '#5a2c18', dark: '#0d0806', dx: 7, dy: 6, steps: 4, box: [380, 140, 760, 780], key: 'kn1' });
     // a touch of russet in the cloak where the light falls
@@ -1840,7 +1869,10 @@
     const hand = sil(K.layer('p5:dummy', 4, 4).getContext('2d'), Object.assign({}, lord, { fill: '#000' })).hand;
     rimLit(ctx, (cc, fill) => sil(cc, Object.assign({}, lord, { fill })), { rim: '#ff9a5a', mid: '#4a1c18', dark: '#0b0606', dx: 6, dy: 5, steps: 4, box: [1000, 80, 600, 860], key: 'kn2' });
     // the sword: a long blade from the lord's hands, its edge catching the shaft
-    const L2 = 520, bx = hand[0], by = hand[1], ex = bx - Math.cos(ang) * L2, ey = by + Math.sin(ang) * L2;
+    // aim the blade at his near shoulder as it comes down
+    const shX = cael.head[0] - h * 0.015, shY = cael.head[1] + h * 0.13, bx = hand[0], by = hand[1], angT = Math.atan2(shY - by, bx - shX), LT = Math.hypot(shX - bx, shY - by) + 6;
+    if (!F3) ang = lerp(-1.25, angT, sw) - lift;
+    const L2 = F3 ? 520 : lerp(520, LT, sw), ex = bx - Math.cos(ang) * L2, ey = by + Math.sin(ang) * L2;
     ctx.save(); ctx.lineCap = 'round';
     ctx.strokeStyle = '#2a2420'; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(bx + Math.cos(ang) * 40, by - Math.sin(ang) * 40); ctx.lineTo(bx, by); ctx.stroke();
     ctx.strokeStyle = '#b08a3a'; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(bx - Math.sin(ang) * 34, by - Math.cos(ang) * 34); ctx.lineTo(bx + Math.sin(ang) * 34, by + Math.cos(ang) * 34); ctx.stroke();
@@ -1863,21 +1895,25 @@
   // ================================================================ L31: the star pinned at the throat of his russet cloak
   function cloakTex() {
     return K.cached('p5:cloak', () => {
-      const w = W + 400, h = H + 300, c = K.linen(w, h, 3131, { base: [118, 84, 54], dark: [40, 24, 12], step: 5 }), x = c.getContext('2d');
-      // folds: soft ridges falling from the shoulder, and the cloak's edge over the tunic
-      const r = rng(77);
-      for (let i = 0; i < 16; i++) {
-        const x0 = r() * w, sw = 60 + r() * 120;
-        const g = x.createLinearGradient(x0 - sw, 0, x0 + sw, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.45, 'rgba(255,220,180,0.12)'); g.addColorStop(0.55, 'rgba(0,0,0,0.25)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-        x.save(); x.translate(x0, 0); x.rotate(0.18 - r() * 0.36); x.translate(-x0, 0); x.fillStyle = g; x.fillRect(x0 - sw, -200, sw * 2, h + 400); x.restore();
+      const w = (W + 400) / 2, h = (H + 300) / 2, c = K.linen(w, h, 3131, { base: [128, 88, 56], dark: [46, 26, 12], step: 3 }), x = c.getContext('2d');
+      x.scale(0.5, 0.5); const r = rng(77), Wf = W + 400, Hf = H + 300;
+      // a broad light from the upper left across the wool
+      const lg = x.createLinearGradient(0, 0, Wf, Hf); lg.addColorStop(0, 'rgba(255,214,170,0.22)'); lg.addColorStop(0.55, 'rgba(0,0,0,0)'); lg.addColorStop(1, 'rgba(10,4,2,0.45)'); x.fillStyle = lg; x.fillRect(0, 0, Wf, Hf);
+      // the drape: long soft folds falling from the right shoulder down to the left
+      for (let i = 0; i < 9; i++) {
+        const x0 = 300 + i * 230 + r() * 80, sw = 90 + r() * 90;
+        x.save(); x.translate(x0, Hf / 2); x.rotate(0.42 + (r() - 0.5) * 0.12);
+        const g = x.createLinearGradient(-sw, 0, sw, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.4, 'rgba(255,214,170,0.16)'); g.addColorStop(0.62, 'rgba(12,4,0,0.34)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = g; x.fillRect(-sw, -Hf, sw * 2, Hf * 2); x.restore();
       }
-      // the opening of the cloak: a darker tunic below and to the left, a quilted edge
-      x.fillStyle = '#2a1e14'; x.beginPath(); x.moveTo(0, 520); x.bezierCurveTo(400, 600, 780, 760, 980, h); x.lineTo(0, h); x.closePath(); x.fill();
-      x.strokeStyle = 'rgba(0,0,0,0.5)'; x.lineWidth = 3; for (let i = 0; i < 9; i++) { x.beginPath(); x.moveTo(0, 600 + i * 70); x.bezierCurveTo(300, 650 + i * 70, 600, 760 + i * 60, 760 + i * 20, h); x.stroke(); }
-      x.strokeStyle = 'rgba(255,200,150,0.25)'; x.lineWidth = 6; x.beginPath(); x.moveTo(0, 515); x.bezierCurveTo(400, 595, 780, 755, 980, h); x.stroke();
-      // his jaw and hair in shadow at the top right
-      x.fillStyle = '#0f0a07'; x.beginPath(); x.moveTo(1150, -10); x.bezierCurveTo(1180, 160, 1320, 260, 1520, 240); x.bezierCurveTo(1700, 230, 1800, 120, 1820, -10); x.closePath(); x.fill();
-      x.strokeStyle = 'rgba(255,180,120,0.3)'; x.lineWidth = 4; x.beginPath(); x.moveTo(1160, 40); x.bezierCurveTo(1200, 170, 1320, 250, 1520, 238); x.stroke();
+      // the cloak's edge: it parts at the lower left over a quilted leather jerkin
+      x.fillStyle = '#2e2016'; x.beginPath(); x.moveTo(-10, 700); x.bezierCurveTo(260, 760, 520, 980, 640, Hf + 10); x.lineTo(-10, Hf + 10); x.closePath(); x.fill();
+      x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 3; for (let i = 0; i < 6; i++) { x.beginPath(); x.moveTo(-10, 770 + i * 70); x.bezierCurveTo(180, 820 + i * 70, 340, 960 + i * 50, 420 + i * 30, Hf); x.stroke(); }
+      const eg = x.createLinearGradient(0, 640, 0, 760); eg.addColorStop(0, 'rgba(0,0,0,0)'); eg.addColorStop(1, 'rgba(0,0,0,0.5)');
+      x.strokeStyle = 'rgba(255,200,150,0.35)'; x.lineWidth = 7; x.beginPath(); x.moveTo(-10, 696); x.bezierCurveTo(260, 756, 520, 976, 640, Hf + 10); x.stroke();
+      x.strokeStyle = 'rgba(20,8,2,0.6)'; x.lineWidth = 12; x.beginPath(); x.moveTo(-10, 712); x.bezierCurveTo(262, 772, 522, 992, 642, Hf + 20); x.stroke();
+      // a leather strap across the top, the throat of the cloak in shadow
+      const tg = x.createLinearGradient(0, 0, 0, 260); tg.addColorStop(0, 'rgba(10,4,2,0.75)'); tg.addColorStop(1, 'rgba(10,4,2,0)'); x.fillStyle = tg; x.fillRect(0, 0, Wf, 260);
       return c;
     });
   }
@@ -1899,7 +1935,7 @@
   function shotStar(ctx, t, sh) {
     const T = TT(), u = span(t, sh.a - 0.3, sh.b + 0.3);
     const c = { x: lerp(-20, 30, ease(u)), y: lerp(10, -10, ease(u)), z: lerp(1.0, 1.12, ease(u)) };
-    view(ctx, c, 0.9); ctx.drawImage(cloakTex(), -200, -150);
+    view(ctx, c, 0.9); ctx.drawImage(cloakTex(), -200, -150, W + 400, H + 300);
     view(ctx, c, 1);
     const sx = 900, sy = 560, R = 74;
     const into = smooth(span(t, T.pin0, T.pin1)), away = smooth(span(t, T.pin1 + 0.1, T.pin1 + 0.7));
@@ -1962,7 +1998,7 @@
     S.forEach((s, i) => { s.a = b[i]; s.b = b[i + 1]; });
     PLAN = S; return S;
   }
-  window.__p5 = { camAt: (t, id) => camAt(t, id), TT, plan };
+  window.__p5 = { camAt: (t, id) => camAt(t, id), TT, plan, pjAt: (t, id, x, y, z) => { const c = camAt(t, id); return pj(camera(c.pos, c.tgt, c.f, c.roll), x, y, z); }, HOOD, COLX, GALY };
   SCENES[5] = {
     join: 'dissolve', joinDur: 1.2,
     draw(ctx, t, sc) {

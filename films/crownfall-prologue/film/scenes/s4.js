@@ -111,7 +111,6 @@
     const pp = Math.min(ce, 6) + pad, pu = pp / (Math.hypot(a, b) || 1), pv = pp / (Math.hypot(c, d) || 1);
     ctx.setTransform(a, b, c, d, cx - exx / 2 - eyx / 2, cy - exy / 2 - eyy / 2);
     ctx.drawImage(mips[L], U0 - pu, V0 - pv, DU + 2 * pu, DV + 2 * pv, -pu, -pv, DU + 2 * pu, DV + 2 * pv);
-    if (window.PROF) window.PROF.cells = (window.PROF.cells || 0) + 1;
   }
   function cellClipped(ctx, C, mips, poly, tw, th) {
     const out = []; for (let i = 0; i < poly.length; i++) { const A = poly[i], B = poly[(i + 1) % poly.length], ia = A[2] >= NEAR, ib = B[2] >= NEAR; if (ia) out.push(A); if (ia !== ib) { const u = (NEAR - A[2]) / (B[2] - A[2]); out.push(A.map((v, j) => v + (B[j] - v) * u)); } }
@@ -136,6 +135,7 @@
     for (let i = 0; i < ns; i++) for (let j = 0; j < nt; j++) stack.push([i / ns, j / nt, (i + 1) / ns, (j + 1) / nt, 0]);
     while (stack.length) {
       const [a0, b0, a1, b1, dep] = stack.pop();
+      if (o.skip && o.skip(a0, b0, a1, b1)) continue;
       const cs = [toC(a0, b0), toC(a1, b0), toC(a1, b1), toC(a0, b1)];
       let oL = 0, oR = 0, oT = 0, oB = 0, bh = 0;
       for (const c of cs) { if (f * c[0] + hw * c[2] < 0) oL++; if (-f * c[0] + hw * c[2] < 0) oR++; if (-f * c[1] + hh * c[2] < 0) oT++; if (f * c[1] + hh * c[2] < 0) oB++; if (c[2] < NEAR) bh++; }
@@ -346,15 +346,22 @@
     ctx.fillStyle = '#2a1d12'; ctx.fillRect(x - w * 0.58, y - h * 0.03, w * 1.16, h * 0.035);
     ctx.restore(); void flyRight;
   }
-  // a flag streaming from a pole in the wind (for the banner raised over the ford): clothOf rotated to fly sideways
+  // a flag streaming from a pole in the wind: its own cloth (landscape), slices displaced by a travelling wave
+  const flagCloth = house => K.cached('s4:flag:' + house.key, () => {
+    const w = 420, h = 260, c = K.canvas(w, h), x = c.getContext('2d');
+    x.beginPath(); x.moveTo(0, 0); x.lineTo(w, 0); x.lineTo(w * 0.86, h / 2); x.lineTo(w, h); x.lineTo(0, h); x.closePath(); x.fillStyle = house.field; x.fill(); x.save(); x.clip();
+    const r = rng(w + house.key.length); for (let i = 0; i < 3000; i++) { x.fillStyle = `rgba(${r() < 0.5 ? '0,0,0' : '255,250,235'},${0.03 + r() * 0.03})`; x.fillRect(r() * w, r() * h, 1 + r() * 2, 1); }
+    houseMark(x, house, w * 0.4, h * 0.5, h * 0.62);
+    x.strokeStyle = house === HILD ? '#b8bec6' : '#c9a14a'; x.lineWidth = 7; x.beginPath(); x.moveTo(0, 0); x.lineTo(w, 0); x.lineTo(w * 0.86, h / 2); x.lineTo(w, h); x.lineTo(0, h); x.closePath(); x.stroke();
+    x.restore(); return c;
+  });
   function drawFlag(ctx, house, x, y, len, wid, t, wind, seed = 0) {
-    const cloth = clothOf(house), n = 22;
-    ctx.save(); ctx.translate(x, y);
+    const cloth = flagCloth(house), n = 28;
+    ctx.save();
     for (let i = 0; i < n; i++) {
-      const u = i / n, sy = u * cloth.height, sh = cloth.height / n + 0.8;
-      const ph = t * 4.2 - u * 7 + seed, dy = Math.sin(ph) * wid * 0.12 * u * wind, X = u * len, ww = sh * len / cloth.height;
-      ctx.save(); ctx.translate(X, dy); ctx.rotate(-Math.PI / 2); ctx.drawImage(cloth, 0, sy, cloth.width, sh, -wid, 0, wid, ww); ctx.restore();
-      const s2 = Math.cos(ph) * 0.3 * wind; ctx.fillStyle = s2 > 0 ? `rgba(255,248,230,${s2 * 0.5})` : `rgba(0,0,0,${-s2 * 0.9})`; ctx.globalCompositeOperation = 'source-atop'; ctx.fillRect(X - 0.5, dy - wid - 2, ww + 1, wid + 4); ctx.globalCompositeOperation = 'source-over';
+      const u = i / n, sx = u * cloth.width, sw = cloth.width / n + 0.8, ph = t * 4.0 - u * 6.5 + seed, dy = Math.sin(ph) * wid * 0.13 * u * wind, X = x + u * len, ww = sw * len / cloth.width, hh = wid * (1 - 0.08 * u * Math.abs(Math.cos(ph)));
+      ctx.drawImage(cloth, sx, 0, sw, cloth.height, X, y + dy + (wid - hh) / 2, ww, hh);
+      const s2 = Math.cos(ph) * 0.3 * wind * (0.3 + u); ctx.fillStyle = s2 > 0 ? `rgba(255,248,230,${s2 * 0.5})` : `rgba(0,0,0,${-s2 * 0.9})`; ctx.globalCompositeOperation = 'source-atop'; ctx.fillRect(X - 0.5, y + dy - 2, ww + 1, wid + 4); ctx.globalCompositeOperation = 'source-over';
     }
     ctx.restore();
   }
@@ -617,9 +624,8 @@
     ctx.restore();
   }
   function drawSky(ctx, C, t) {
-    const yaw = Math.atan2(C.fx, C.fz), pitch = Math.asin(clamp(C.fy, -1, 1)), hy = C.cy + Math.tan(-pitch) * C.f * -1;
-    const hY = C.cy - Math.tan(pitch) * C.f * -1;
-    const horizon = C.cy + Math.tan(-pitch) * C.f; void hy; void hY;
+    const yaw = Math.atan2(C.fx, C.fz), pitch = Math.asin(clamp(C.fy, -1, 1));
+    const horizon = C.cy + Math.tan(pitch) * C.f;
     const g = ctx.createLinearGradient(0, horizon - C.f * 0.9, 0, horizon + 10);
     g.addColorStop(0, '#7f8b96'); g.addColorStop(0.55, '#aeb4b6'); g.addColorStop(0.9, '#d6d4ca'); g.addColorStop(1, '#dedbd0');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, Math.min(H, Math.max(0, horizon + 40)));
@@ -639,9 +645,8 @@
     return horizon;
   }
   // everything in the meadow, from the sky down; o.state (pieces), o.overlay(ctx, C) (lit squares), o.minK
-  const PR = (k, t0) => { const P = window.PROF; if (P) P[k] = (P[k] || 0) + performance.now() - t0; };
   function world(ctx, C, t, o = {}) {
-    C.ctx = ctx; let _t = performance.now();
+    C.ctx = ctx;
     const horizon = drawSky(ctx, C, t);
     // fells: three ridges of aerial perspective, the far south low (the valley the road runs down)
     if (horizon > -200) {
@@ -649,14 +654,18 @@
       hillsRing(C, 1400, 30, 230, 12, '#77867e', 0.75);
       hillsRing(C, 700, 6, 110, 13, '#5f7158', 0.8);
     }
-    PR('sky+hills', _t); _t = performance.now();
-    plane(ctx, C, farMips(), [FX0, 0, FZ0], [FSZ, 0, 0], [0, 0, -FSZ], { roots: [4, 4], err: 7, maxDep: 7 });
-    plane(ctx, C, nearMips(), [-NS / 2, 0.005, NS / 2], [NS, 0, 0], [0, 0, -NS], { roots: [2, 2], err: 4, maxDep: 8 });
+    plane(ctx, C, farMips(), [FX0, 0, FZ0], [FSZ, 0, 0], [0, 0, -FSZ], { roots: [4, 4], err: 14, maxDep: 6, skip: (a0, b0, a1, b1) => { const x0 = FX0 + a0 * FSZ, x1 = FX0 + a1 * FSZ, z0 = FZ0 - b1 * FSZ, z1 = FZ0 - b0 * FSZ; return x0 > -26 && x1 < 26 && z0 > -26 && z1 < 26; } });
+    plane(ctx, C, nearMips(), [-NS / 2, 0.005, NS / 2], [NS, 0, 0], [0, 0, -NS], { roots: [2, 2], err: 6, maxDep: 7, skip: (a0, b0, a1, b1) => { const x0 = -NS / 2 + a0 * NS, x1 = -NS / 2 + a1 * NS, z0 = NS / 2 - b1 * NS, z1 = NS / 2 - b0 * NS; return x0 > -BE + 0.3 && x1 < BE - 0.3 && z0 > -BE + 0.3 && z1 < BE - 0.3; } });
     // haze toward the horizon (over the ground, under everything standing)
     if (horizon > 0) { const g = ctx.createLinearGradient(0, horizon - 30, 0, horizon + C.f * 0.12); g.addColorStop(0, 'rgba(214,214,206,0.7)'); g.addColorStop(0.35, 'rgba(206,208,200,0.25)'); g.addColorStop(1, 'rgba(206,208,200,0)'); ctx.fillStyle = g; ctx.fillRect(0, Math.max(0, horizon - 30), W, C.f * 0.12 + 30); }
     // cloud shadows drifting over the meadow (the light moves)
     cloudShadows(ctx, C, t);
-    PR('ground', _t); _t = performance.now();
+    // the valley's sides: long ridges east and west of the road south, layered by distance
+    for (const [x0, amp, h0, col, sd] of [[-420, 70, 90, '#7d8c84', 1], [520, 90, 120, '#7a8a82', 2], [-260, 40, 45, '#61745a', 3], [300, 50, 60, '#5e7258', 4]]) {
+      const top = [], base = [];
+      for (let z = 260; z >= -1400; z -= 40) { const x = x0 + 60 * Math.sin(z * 0.004 + sd) + (x0 < 0 ? -1 : 1) * Math.max(0, -z - 200) * 0.12, h = h0 + amp * K.fbm(z * 0.006 + sd * 7, sd, 3, 70 + sd); top.push([x, h, z]); base.push([x + (x0 < 0 ? 1 : -1) * Math.min(h * 2.4, Math.abs(x0) * 0.3), 0, z]); }
+      const sp = projPoly(C, top.concat(base.reverse())); if (sp.length > 2) { ctx.fillStyle = col; pathPoly(ctx, sp); ctx.fill(); }
+    }
     // the hold on its rise across the river (north-east), haze over it
     const hold = pj(C, 95, 0, 120); if (hold) { const s = hold[3] * 70; ctx.save(); ctx.globalAlpha = 0.92; ctx.drawImage(holdSprite(), hold[0] - s / 2, hold[1] - s * 260 / 640 * 0.96, s, s * 260 / 640); ctx.restore(); }
     // the river moving: light on the runs, flowing south
@@ -665,7 +674,6 @@
     ctx.restore();
     // the board
     const bm = boardMips(); plane(ctx, C, bm, [-BE, 0.012, BE], [2 * BE, 0, 0], [0, 0, -2 * BE], { roots: [2, 2], err: 2.5, maxDep: 8 });
-    PR('river+board', _t); _t = performance.now();
     if (o.overlay) o.overlay(ctx, C);
     // shadows, then everything standing, far to near
     const items = [];
@@ -679,19 +687,23 @@
     // banners on poles at either end of the board
     for (const [bx, bz, hs, sd, big] of [[-4.5, -13.2, EALD, 1], [4.5, -13.2, EALD, 2], [-4.5, 13.2, HILD, 3], [4.5, 13.2, HILD, 4], ...(o.extraBanners || [])]) {
       const v = toCam(C, bx, 0, bz); if (v[2] < 1) continue;
-      items.push({ d: v[2], fn: () => { const k = big || 1, ph = 6.5 * k, A = pj(C, bx, 0, bz), B = pj(C, bx, ph, bz); if (!A || !B) return; ctx.save(); ctx.strokeStyle = '#2a2016'; ctx.lineWidth = Math.max(1, A[3] * 0.12 * k); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); ctx.restore(); const s = B[3] * k; if (big) drawFlag(ctx, hs, B[0], B[1] + s * 0.1, s * 2.6, s * 1.6, t, 0.9, sd); else drawBanner(ctx, hs, B[0], B[1] + s * 0.3, s * 1.5, s * 2.6, t, 0.7, sd); } });
+      items.push({ d: v[2], fn: () => { const k = big || 1, ph = 6.5 * k, A = pj(C, bx, 0, bz), B = pj(C, bx, ph, bz); if (!A || !B) return; ctx.save(); ctx.strokeStyle = '#2a2016'; ctx.lineWidth = Math.max(1, A[3] * 0.12 * k); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); ctx.restore(); const s = B[3] * k; if (big) drawFlag(ctx, hs, B[0], B[1], s * 2.4, s * 1.5, t, 0.9, sd); else drawBanner(ctx, hs, B[0], B[1] + s * 0.3, s * 1.5, s * 2.6, t, 0.7, sd); } });
     }
     // arbiters at the middle of either side
     for (const [ax, az, fc] of [[-12.3, 0.6, 1], [12.3, -0.6, -1]]) { const v = toCam(C, ax, 0, az); if (v[2] > 1) items.push({ d: v[2], fn: () => drawPiece(ctx, C, { p: { side: 'w', t: 'B' }, x: ax, z: az, kneel: 0, alpha: 1, face: fc }, t, { tint: 'rgba(90,90,96,0.55)', minK: o.minK }), shadow: [ax, az] }); }
     for (const s of (o.state || [])) { const v = toCam(C, s.x, 0, s.z); if (v[2] > 0.5) items.push({ d: v[2], fn: () => drawPiece(ctx, C, s, t, { minK: o.minK, big: o.big, tint: s.p.cael && o.caelLight ? `rgba(255,214,150,${o.caelLight})` : null }), shadow: [s.x, s.z, s.alpha * (1 - (s.lift || 0) / 3)] }); }
     for (const it of items) if (it.shadow) blobShadow(ctx, C, it.shadow[0], it.shadow[1], 0.75, 0.42 * (it.shadow[2] != null ? it.shadow[2] : 1));
-    PR('shadows+setup', _t); _t = performance.now();
-    items.sort((a, b) => b.d - a.d); for (const it of items) { const t1 = performance.now(); it.fn(); PR(it.shadow ? 'pieces' : 'props', t1); }
-    _t = performance.now();
+    items.sort((a, b) => b.d - a.d); for (const it of items) it.fn();
   }
 
   // ---------------------------------------------------------------- shots in the meadow
+  const washTile = () => K.cached('s4:wash', () => {
+    const n = 512, c = K.canvas(n, n), x = c.getContext('2d'), img = x.createImageData(n, n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const u = i / n * TAU, v = j / n * TAU; const f = K.fbm(Math.cos(u) * 1.6 + 3, Math.sin(u) * 1.6 + Math.cos(v) * 1.6, 4, 19) * 0.7 + K.fbm(Math.sin(v) * 5 + 1, Math.cos(v) * 5 + Math.sin(u) * 2, 3, 22) * 0.3; const k = (j * n + i) * 4, val = clamp(128 + (f - 0.5) * 120, 0, 255); img.data[k] = img.data[k + 1] = img.data[k + 2] = val; img.data[k + 3] = 255; }
+    x.putImageData(img, 0, 0); return c;
+  });
   function finishDay(ctx, amt = 1) {
+    ctx.save(); ctx.setTransform(2, 0, 0, 2, 0, 0); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = 0.1; K.tile(ctx, washTile(), 0, 0, W / 2 + 2, H / 2 + 2, 0, 0); ctx.restore();
     K.grade(ctx, '#e8e2d2', 'soft-light', 0.22 * amt);
     K.grade(ctx, '#4a5a66', 'multiply', 0.08 * amt);
     K.vignette(ctx, 0.42, '12,14,16', 0.38);
@@ -701,8 +713,8 @@
     return (ctx, C) => {
       // the open file: light running down d8..d1 while they believe it a mistake, then a faint corridor
       const run = span(t, T.cutFile + 0.35, T.cutFile + 2.4), fileA = win(t, T.cutFile + 0.2, T.m3 + 0.4, 0.4, 0.4);
-      ctx.save(); ctx.globalCompositeOperation = 'screen';
-      for (let r = 6; r >= 0; r--) { const u = 6 - r, lit = smooth(clamp(run * 8 - u)) * (1 - 0.6 * smooth(clamp(run * 8 - u - 1.5))); squareFill(ctx, C, 3, r, '#ffd98c', (0.1 + 0.42 * lit) * fileA, 0.02); }
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (let r = 6; r >= 0; r--) { const u = 6 - r, lit = smooth(clamp(run * 8 - u)) * (1 - 0.55 * smooth(clamp(run * 8 - u - 1.5))); squareFill(ctx, C, 3, r, '#ffc870', (0.08 + 0.34 * lit) * fileA, 0.02); }
       ctx.restore();
       // the champion's path as he charges
       const ch = span(t, T.m2, T.m2 + 1.55); if (t > T.m2 && t < T.m3 + 0.8) groundLine(ctx, C, sqX(3), sqZ(7), sqX(3), lerp(sqZ(7), sqZ(1), smooth(ch)), '#26384a', 0.35, 0.35 * win(t, T.m2, T.m3 + 0.8, 0.2, 0.5));
@@ -738,16 +750,20 @@
     const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#8a96a0'); g.addColorStop(0.55, '#c9cbc6'); g.addColorStop(1, '#d9d4c4'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     const cl = cloudTex(); ctx.save(); ctx.globalAlpha = 0.85; ctx.drawImage(cl, (lt * 6) % 600 + 200, 0, 1400, 512, 0, -40, W, H * 0.7); ctx.restore();
     const par = (k, fn) => { ctx.save(); ctx.translate(W / 2, H * 0.62); ctx.scale(lerp(1, z, k), lerp(1, z, k)); ctx.translate(-W / 2 + px * k, -H * 0.62); fn(); ctx.restore(); };
-    // far fells
+    // far fells, then mist along their feet
     par(0.15, () => { ctx.fillStyle = '#8f9a9a'; ctx.beginPath(); ctx.moveTo(-100, 640); for (let i = 0; i <= 40; i++) ctx.lineTo(-100 + i * 55, 560 - 120 * K.fbm(i * 0.18, 3, 3, 81)); ctx.lineTo(W + 100, 700); ctx.lineTo(-100, 700); ctx.fill(); ctx.fillStyle = '#76857c'; ctx.beginPath(); ctx.moveTo(-100, 700); for (let i = 0; i <= 40; i++) ctx.lineTo(-100 + i * 55, 640 - 70 * K.fbm(i * 0.22, 5, 3, 82)); ctx.lineTo(W + 100, 760); ctx.lineTo(-100, 760); ctx.fill(); });
+    ctx.save(); const mg = ctx.createLinearGradient(0, 520, 0, 700); mg.addColorStop(0, 'rgba(214,214,206,0)'); mg.addColorStop(0.6, 'rgba(214,214,206,0.55)'); mg.addColorStop(1, 'rgba(214,214,206,0.2)'); ctx.fillStyle = mg; ctx.fillRect(0, 520, W, 180); ctx.restore();
     // the palisade and the gate tower (Ealdholt), the russet sprig banner over the gate
     par(0.45, () => {
       const base = 760, gx = 1180;
+      const gg0 = ctx.createLinearGradient(0, base, 0, base + 320); gg0.addColorStop(0, '#6a6a52'); gg0.addColorStop(1, '#4e4836'); ctx.fillStyle = gg0; ctx.fillRect(-300, base - 4, W + 600, 600);
+      ctx.fillStyle = 'rgba(90,80,60,0.6)'; ctx.beginPath(); ctx.moveTo(gx - 140, base); ctx.lineTo(gx + 140, base); ctx.lineTo(gx + 520, base + 330); ctx.lineTo(gx - 700, base + 330); ctx.closePath(); ctx.fill();
       ctx.fillStyle = '#4b3f30';
-      for (let i = 0; i < 58; i++) { const X = -60 + i * 38, hgt = 250 + 18 * K.hash(i, 2, 83); if (X > gx - 150 && X < gx + 150) continue; ctx.beginPath(); ctx.moveTo(X, base); ctx.lineTo(X, base - hgt); ctx.lineTo(X + 17, base - hgt - 26); ctx.lineTo(X + 34, base - hgt); ctx.lineTo(X + 34, base); ctx.fill(); ctx.fillStyle = 'rgba(255,240,210,0.08)'; ctx.fillRect(X, base - hgt, 6, hgt); ctx.fillStyle = '#4b3f30'; }
+      for (let i = 0; i < 58; i++) { const X = -60 + i * 38, hgt = 170 + 16 * K.hash(i, 2, 83); if (X > gx - 150 && X < gx + 150) continue; ctx.beginPath(); ctx.moveTo(X, base); ctx.lineTo(X, base - hgt); ctx.lineTo(X + 17, base - hgt - 26); ctx.lineTo(X + 34, base - hgt); ctx.lineTo(X + 34, base); ctx.fill(); ctx.fillStyle = 'rgba(255,240,210,0.08)'; ctx.fillRect(X, base - hgt, 6, hgt); ctx.fillStyle = '#4b3f30'; }
       // tower over the gate
-      ctx.fillStyle = '#3c3226'; ctx.fillRect(gx - 165, base - 420, 330, 40); ctx.fillRect(gx - 160, base - 380, 26, 380); ctx.fillRect(gx + 134, base - 380, 26, 380);
-      ctx.beginPath(); ctx.moveTo(gx - 190, base - 420); ctx.lineTo(gx, base - 520); ctx.lineTo(gx + 190, base - 420); ctx.fill();
+      ctx.fillStyle = '#3c3226'; ctx.fillRect(gx - 165, base - 400, 330, 40); ctx.fillRect(gx - 160, base - 360, 26, 360); ctx.fillRect(gx + 134, base - 360, 26, 360);
+      ctx.beginPath(); ctx.moveTo(gx - 190, base - 400); ctx.lineTo(gx, base - 490); ctx.lineTo(gx + 190, base - 400); ctx.fill();
+      ctx.fillStyle = 'rgba(255,244,220,0.1)'; ctx.fillRect(gx - 160, base - 360, 8, 360);
       // the open gate: dark within, two leaves swung in
       ctx.fillStyle = '#1c1712'; ctx.fillRect(gx - 134, base - 330, 268, 330);
       ctx.fillStyle = '#5a4a36'; ctx.beginPath(); ctx.moveTo(gx - 134, base - 330); ctx.lineTo(gx - 70, base - 300); ctx.lineTo(gx - 70, base); ctx.lineTo(gx - 134, base); ctx.fill(); ctx.beginPath(); ctx.moveTo(gx + 134, base - 330); ctx.lineTo(gx + 70, base - 300); ctx.lineTo(gx + 70, base); ctx.lineTo(gx + 134, base); ctx.fill();
@@ -759,8 +775,8 @@
     });
     // the riders of Hildmere, the lead one holding out the sealed challenge
     par(0.8, () => {
-      const base = 905, hs = 300;
-      const riders = [[560, 0, 'scroll'], [330, 0.9, 'banner'], [150, 1.7, 'spear']];
+      const base = 960, hs = 360;
+      const riders = [[640, 0, 'scroll'], [380, 0.9, 'banner'], [150, 1.7, 'spear']];
       for (const [rx, ph, hold] of riders) {
         const walk = rx === 560 ? undefined : t * 1.2 + ph, bob = Math.sin(t * 2 + ph) * 2;
         K.horse(ctx, rx, base + bob, hs, { face: 1, walk, fill: '#2a2c30', house: HILD, rider: { kind: 'armour', head: 'helm', hold: hold === 'scroll' ? 'scroll' : hold, arm: hold === 'scroll' ? lerp(0.5, 1.45, smooth(span(t, T.seal - 1.4, T.seal - 0.4))) : undefined, bend: hold === 'scroll' ? 0.1 : undefined, banner: hold === 'banner' ? HILD : undefined, t, fill: '#24272c' } });
@@ -770,6 +786,7 @@
       // the seal: a dot of blue-grey wax on the scroll in the lead rider's hand
       // ground: mud and puddles reflecting the sky
       ctx.fillStyle = '#4a4232'; ctx.fillRect(-200, base + 2, W + 400, 300);
+      ctx.strokeStyle = 'rgba(120,120,80,0.5)'; ctx.lineWidth = 3; for (let i = 0; i < 70; i++) { const X = K.hash(i, 5, 86) * (W + 200) - 100, Y = base + 10 + K.hash(i, 6, 86) * 110, sw = Math.sin(t * 2 + i) * 4; ctx.beginPath(); ctx.moveTo(X, Y); ctx.lineTo(X + sw, Y - 14 - 10 * K.hash(i, 7, 86)); ctx.stroke(); }
       const gg = ctx.createLinearGradient(0, base, 0, base + 200); gg.addColorStop(0, 'rgba(0,0,0,0)'); gg.addColorStop(1, 'rgba(0,0,0,0.3)'); ctx.fillStyle = gg; ctx.fillRect(-200, base, W + 400, 300);
       for (let i = 0; i < 6; i++) { const X = 100 + i * 330 + 60 * K.hash(i, 1, 85), Y = base + 40 + 60 * K.hash(i, 2, 85); ctx.fillStyle = 'rgba(190,196,196,0.35)'; ctx.beginPath(); ctx.ellipse(X, Y, 90 + 40 * K.hash(i, 3, 85), 10, 0, 0, TAU); ctx.fill(); }
     });
@@ -788,7 +805,7 @@
       for (let i = 0; i < 14; i++) { x.fillStyle = 'rgba(30,22,14,0.8)'; x.beginPath(); x.arc(r() * w, (Math.floor(r() * 7) + 0.5) * h / 7, 6, 0, TAU); x.fill(); }
       return c;
     });
-    ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z * 0.62, z * 0.62); ctx.rotate(0.03); ctx.drawImage(wood, -wood.width / 2, -wood.height / 2); ctx.restore();
+    ctx.save(); ctx.translate(W / 2, H / 2); const wz = Math.max(z * 0.62, 0.95); ctx.scale(wz, wz); ctx.rotate(0.03); ctx.drawImage(wood, -wood.width / 2, -wood.height / 2); ctx.restore();
     const page = K.cached('s4:challenge', () => {
       const w = 900, h = 900, c = K.parchment(w, h, 4411, { edge: 1.1, stains: 2 }), x = c.getContext('2d');
       const b0 = 160, bs = (w - 2 * b0) / 8;
@@ -801,10 +818,10 @@
       return c;
     });
     const unroll = smooth(span(t, T.cutSeal + 0.3, T.cutSeal + 1.25));
-    const pw = page.width, ph = page.height * lerp(0.1, 1, unroll), top = -page.height / 2;
+    const pw = page.width, ph = page.height * lerp(0.1, 1, unroll), top = -ph / 2;
     ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z);
     ctx.save(); ctx.filter = 'blur(10px)'; ctx.fillStyle = 'rgba(10,6,2,0.45)'; ctx.fillRect(-pw / 2 + 18, top + 22, pw, ph); ctx.restore();
-    ctx.drawImage(page, 0, 0, pw, ph, -pw / 2, top, pw, ph);
+    ctx.drawImage(page, 0, (page.height - ph) / 2, pw, ph, -pw / 2, top, pw, ph);
     // the rolls: one at the head, one rolling down as it opens
     for (const yy of [top, top + ph]) { const g = ctx.createLinearGradient(0, yy - 22, 0, yy + 22); g.addColorStop(0, '#7a5e3a'); g.addColorStop(0.45, '#e6d4ac'); g.addColorStop(1, '#5e4628'); ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(-pw / 2 - 8, yy - 22, pw + 16, 44, 18); ctx.fill(); }
     // the seal on the head roll: blue-grey wax stamped with the wavy bar; it cracks in two as the roll opens
@@ -824,11 +841,11 @@
     K.glow(ctx, W * 0.72, H * 0.18, 700, [255, 244, 214], 0.35 + 0.15 * smooth(u));
     // the pole swings up from a slant to upright; the flag unfurls and streams in the wind
     const raise = easeOut(span(t, T.cutBanner - 0.2, T.cutBanner + 1.2)), ang = lerp(-0.55, -0.04, raise) + Math.sin(t * 0.9) * 0.012;
-    const bx = W * 0.44 + lerp(0, 60, u), by = H + 60, plen = 1200;
+    const bx = W * 0.4 + lerp(0, 60, u), by = H + 60, plen = 1010;
     ctx.save(); ctx.translate(bx, by); ctx.rotate(ang);
     ctx.fillStyle = '#2a2016'; ctx.fillRect(-9, -plen, 18, plen); ctx.fillStyle = '#c9a14a'; ctx.beginPath(); ctx.arc(0, -plen - 10, 14, 0, TAU); ctx.fill();
     const unf = smooth(span(t, T.cutBanner + 0.2, T.cutBanner + 1.4));
-    drawFlag(ctx, EALD, 8, -plen + 20, lerp(120, 560, unf), lerp(90, 330, unf), t, 0.6 + 0.4 * unf, 0);
+    drawFlag(ctx, EALD, 8, -plen + 12, lerp(140, 620, unf), lerp(110, 380, unf), t, 0.6 + 0.4 * unf, 0);
     ctx.restore();
     // hands on the pole, the people hauling: silhouettes against the bright sky
     ctx.save(); ctx.fillStyle = '#1e1a16';
@@ -860,8 +877,8 @@
         { t: T.cutTop1 + 0.2, p: [-2.55, 1.45, -8.7], g: [2.4, 1.4, 4], fov: 46 }] },
       // the diagram: "He gave ground"
       { t0: T.cutTop1, t1: T.cutFile, cam: [
-        { t: T.cutTop1 - 0.2, p: [0.8, 43, -21.5], g: [0, 0, -0.2], fov: 40 },
-        { t: T.cutFile + 0.2, p: [0.2, 41, -20.5], g: [-0.2, 0, -0.1], fov: 40 }], diagram: true },
+        { t: T.cutTop1 - 0.2, p: [0.8, 29.5, -25.0], g: [0, 0, 1.4], fov: 45 },
+        { t: T.cutFile + 0.2, p: [0.2, 28.5, -24.0], g: [-0.2, 0, 1.4], fov: 45 }], diagram: true },
       // "He let them believe the open file was a mistake": over the champion's shoulder, down the empty file
       { t0: T.cutFile, t1: T.cutCharge, cam: [
         { t: T.cutFile - 0.2, p: [0.05, 2.55, 12.9], g: [-1.25, 0.4, -9], fov: 44 },
@@ -872,13 +889,14 @@
         { t: T.cutTop2 + 0.2, p: [-1.05, 1.3, -14.6], g: [-1.25, 1.5, 6], fov: 41 }], shake: true },
       // the door, the cage, the capture: the diagram again, closer
       { t0: T.cutTop2, t1: T.cutBanner, cam: [
-        { t: T.cutTop2 - 0.2, p: [-0.3, 40, -20], g: [-0.4, 0, -0.4], fov: 40 },
-        { t: T.cutBanner + 0.3, p: [-1.0, 34.5, -17], g: [-1.0, 0, -0.5], fov: 40 }], diagram: true },
+        { t: T.cutTop2 - 0.2, p: [-0.3, 28.5, -24.5], g: [-0.4, 0, 0.4], fov: 44 },
+        { t: T.cutBanner + 0.3, p: [-0.9, 25, -21.5], g: [-0.9, 0, 0.6], fov: 44 }], diagram: true },
       { t0: T.cutBanner, t1: T.cutValley, fn: (c, t) => bannerShot(c, t, T) },
       // push out over the valley and the road south
       { t0: T.cutValley, t1: T.s1 + 2, fade: 0.4, cam: [
-        { t: T.cutValley - 0.4, p: [24.5, 4.2, 13.5], g: [6, 4.5, -40], fov: 50 },
-        { t: T.s1 + 1.2, p: [44, 52, 46], g: [0, 0, -170], fov: 52, e: K.easeInOut || ease }], valley: true },
+        { t: T.cutValley - 0.4, p: [40, 9, 24], g: [4, 0.5, -4], fov: 48 },
+        { t: T.cutValley + 1.6, p: [52, 22, 40], g: [6, 0, -60], fov: 50, e: easeIn },
+        { t: T.s1 + 1.2, p: [74, 52, 74], g: [0, 0, -320], fov: 50, e: easeOut }], valley: true },
     ]);
   }
   function drawShot(ctx, sh, t, T) {

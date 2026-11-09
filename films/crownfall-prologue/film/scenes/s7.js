@@ -73,17 +73,17 @@
   // scratch layer and enlarged so the edges stay soft. o.heat, o.n tongues, o.res (smaller is softer), o.hmax (the
   // tallest h the slot will see: the scratch layer keeps one size), o.slot
   function fire(ctx, x, y, w, h, t, seed, o = {}) {
-    const heat = o.heat != null ? o.heat : 1, n = o.n || 8, res = o.res || 0.3, hm = Math.max(o.hmax || h * 1.3, h);
+    const heat = o.heat != null ? o.heat : 1, n = o.n || 8, res = o.res || 0.3, hm = o.hmax || Math.ceil(h * 1.3 / 50) * 50; h = Math.min(h, hm);
     const cw = Math.ceil(w * 2.4 * res) + 6, ch = Math.ceil(hm * 1.4 * res) + 6;
     const L = K.layer('s7:fire:' + (o.slot || 'a'), cw, ch), lx = L.getContext('2d');
     lx.translate(cw / 2, ch - 3); lx.scale(res, res); lx.globalCompositeOperation = 'lighter';
     const tongue = (bx, hh, ww, sway, col, a) => {
-      const g = lx.createLinearGradient(0, 0, 0, -hh); g.addColorStop(0, rgbs(col, a)); g.addColorStop(0.45, rgbs(col, a * 0.8)); g.addColorStop(1, rgbs(col, 0));
+      const g = lx.createLinearGradient(0, 0, 0, -hh); g.addColorStop(0, rgbs(col, a)); g.addColorStop(0.55, rgbs(col, a * 0.85)); g.addColorStop(0.85, rgbs(col, a * 0.45)); g.addColorStop(1, rgbs(col, 0));
       lx.fillStyle = g; lx.beginPath(); lx.moveTo(bx - ww, 0);
       lx.bezierCurveTo(bx - ww * 1.1, -hh * 0.35, bx - ww * 0.35 + sway * 0.5, -hh * 0.62, bx + sway, -hh);
       lx.bezierCurveTo(bx + ww * 0.4 + sway * 0.5, -hh * 0.6, bx + ww * 1.1, -hh * 0.33, bx + ww, 0); lx.quadraticCurveTo(bx, ww * 0.35, bx - ww, 0); lx.fill();
     };
-    const bg = lx.createRadialGradient(0, -h * 0.05, 0, 0, -h * 0.05, w * 0.7); bg.addColorStop(0, rgbs([255, 170, 70], 0.6 * heat)); bg.addColorStop(0.5, rgbs([230, 90, 20], 0.25 * heat)); bg.addColorStop(1, rgbs([200, 60, 10], 0)); lx.fillStyle = bg; lx.beginPath(); lx.ellipse(0, -h * 0.05, w * 0.7, Math.min(w * 0.7, h * 0.5), 0, 0, TAU); lx.fill();
+    const bg = lx.createRadialGradient(0, -h * 0.05, 0, 0, -h * 0.05, w * 0.7); bg.addColorStop(0, rgbs([255, 170, 70], 0.6 * heat)); bg.addColorStop(0.5, rgbs([230, 90, 20], 0.25 * heat)); bg.addColorStop(1, rgbs([200, 60, 10], 0)); lx.fillStyle = bg; if (o.bed !== false) { lx.beginPath(); lx.ellipse(0, -h * 0.05, w * 0.7, Math.min(w * 0.7, h * 0.5), 0, 0, TAU); lx.fill(); }
     for (let layer = 0; layer < 3; layer++) {
       const col = layer === 0 ? [230, 74, 18] : layer === 1 ? [255, 150, 46] : [255, 232, 170], al = (layer === 0 ? 0.55 : layer === 1 ? 0.6 : 0.8) * heat, shrink = 1 - layer * 0.3;
       for (let i = 0; i < n; i++) {
@@ -93,7 +93,7 @@
         tongue(k * w * 0.95 * shrink, hh, ww, sway, col, al);
       }
     }
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingQuality = 'high';
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingQuality = 'medium';
     ctx.drawImage(L, x - cw / res / 2, y - (ch - 3) / res, cw / res, ch / res); ctx.restore();
   }
   // rimLit(ctx, draw, o): silhouettes lit along one edge. draw(c, fill) paints them in one colour; dark passes shifted by
@@ -273,10 +273,12 @@
     }
     // the cowl: a deep rounded hood falling onto the shoulders
     const hx = turn * 0.016, hy = bow * 0.045;
+    if (o.back) { ctx.translate(0, -0.78); ctx.scale(0.86, 0.9); ctx.translate(0, 0.78); }
     const hood = new Path2D();
     hood.moveTo(-0.138, -0.768); hood.bezierCurveTo(-0.122 + hx * 0.4, -0.84 + hy, -0.104 + hx, -0.985 + hy, -0.01 + hx, -0.998 + hy);
     hood.bezierCurveTo(0.09 + hx, -0.99 + hy, 0.122 + hx * 0.4, -0.86 + hy, 0.138, -0.768); hood.bezierCurveTo(0.07, -0.74, -0.07, -0.74, -0.138, -0.768); hood.closePath();
     ctx.fill(hood);
+    if (o.back && o.brim) { const bs = o.brim; ctx.beginPath(); ctx.moveTo(bs * 0.06, -0.97 + hy); ctx.quadraticCurveTo(bs * 0.16, -0.95 + hy, bs * 0.165, -0.86 + hy); ctx.quadraticCurveTo(bs * 0.15, -0.8, bs * 0.1, -0.78); ctx.lineTo(bs * 0.05, -0.8); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(bs * 0.12, -0.8); ctx.quadraticCurveTo(bs * 0.14, -0.74, bs * 0.12, -0.7); ctx.lineTo(bs * 0.06, -0.72); ctx.closePath(); ctx.fill(); }
     if (!flat) {
       ctx.save(); ctx.clip(hood);
       const hg = ctx.createLinearGradient(-0.13 + hx, 0, 0.13 + hx, 0); hg.addColorStop(0, 'rgba(0,0,0,0.8)'); hg.addColorStop(0.35, 'rgba(0,0,0,0.15)'); hg.addColorStop(0.65, 'rgba(0,0,0,0.15)'); hg.addColorStop(1, 'rgba(0,0,0,0.8)'); ctx.fillStyle = hg; ctx.fillRect(-0.2, -1.05, 0.4, 0.3);
@@ -356,7 +358,7 @@
       return { c, OX, OY };
     });
   }
-  function drawForest(ctx, c, d, key, o) { const F = forest(key, o); view(ctx, c, d); ctx.drawImage(F.c, -F.OX, -F.OY); }
+  function drawForest(ctx, c, d, key, o) { const F = forest(key, o); view(ctx, c, d); ctx.imageSmoothingQuality = 'low'; ctx.drawImage(F.c, -F.OX, -F.OY); ctx.imageSmoothingQuality = 'low'; }
 
   // ================================================================ the pyre: stones, the fire bed, the grate (side view)
   const STONES = (() => {
@@ -376,6 +378,21 @@
     }
     return out;
   })();
+  // the stone piles drawn once at a given scale: the stones dark, and a second image of their fire-lit faces
+  function stoneSprite(s) {
+    return K.cached('s7:stones:' + Math.round(s), () => {
+      const w = Math.ceil(1.3 * s), h = Math.ceil(0.36 * s), ox = w / 2, oy = h - 4;
+      const mk = lit => { const c = K.canvas(w, h), x = c.getContext('2d'); x.translate(ox, oy); x.scale(s, s);
+        for (const st of STONES) {
+          x.beginPath(); st.pts.forEach((p, k) => k ? x.lineTo(p[0], p[1]) : x.moveTo(p[0], p[1])); x.closePath();
+          if (!lit) { x.fillStyle = rgb(mix([30, 23, 19], [58, 46, 38], K.hash(st.cx * 1000 | 0, st.cy * 1000 | 0, 3))); x.fill(); x.save(); x.clip(); x.fillStyle = 'rgba(0,0,0,0.35)'; x.fillRect(st.cx - 0.2, st.cy, 0.4, 0.1); x.restore(); x.strokeStyle = 'rgba(0,0,0,0.6)'; x.lineWidth = 0.003; x.stroke(); }
+          else { x.save(); x.clip(); const lg = x.createLinearGradient(st.cx + st.side * 0.08, 0, st.cx - st.side * 0.09, 0); lg.addColorStop(0, 'rgba(0,0,0,0)'); lg.addColorStop(0.55, rgbs([150, 60, 24], 0.18)); lg.addColorStop(1, rgbs([255, 130, 50], 0.9 * (1 - Math.abs(st.cx) * 0.5))); x.fillStyle = lg; x.fillRect(st.cx - 0.2, st.cy - 0.1, 0.4, 0.2);
+            const tg = x.createLinearGradient(0, st.cy - st.sz * 0.5, 0, st.cy); tg.addColorStop(0, rgbs([255, 140, 60], 0.3)); tg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = tg; x.fillRect(st.cx - 0.2, st.cy - 0.1, 0.4, 0.2); x.restore(); }
+        }
+        return c; };
+      return { c: mk(false), lit: mk(true), ox, oy };
+    });
+  }
   // the pyre in its own units: the grate is 1 long (x -0.5..0.5) at y = -0.33 (its top); the ground at y = 0; drawn at
   // (x, y) scale s. part 'back' (bed, far rail, cross bars) or 'front' (near rail, stones). heat lights the iron and stone
   function pyre(ctx, x, y, s, part, heat, t) {
@@ -401,15 +418,13 @@
       ctx.fillStyle = '#0b0706'; ctx.fillRect(-0.53, gy, 1.06, 0.016);
       const rg = ctx.createLinearGradient(0, gy, 0, gy + 0.016); rg.addColorStop(0, rgbs([255, 120, 50], 0.3 * hot)); rg.addColorStop(0.4, 'rgba(0,0,0,0)'); rg.addColorStop(1, rgbs([255, 150, 70], 0.55 * hot)); ctx.fillStyle = rg; ctx.fillRect(-0.53, gy, 1.06, 0.016);
       ctx.fillStyle = '#0b0706'; for (const lx of [-0.5, 0.5]) ctx.fillRect(lx - 0.008, gy + 0.01, 0.016, 0.07);
-      // the stones the grate stands on, their inner faces lit
-      for (const st of STONES) {
-        ctx.beginPath(); st.pts.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.fillStyle = rgb(mix([14, 10, 9], [34, 26, 22], K.hash(st.cx * 1000 | 0, st.cy * 1000 | 0, 3))); ctx.fill();
-        ctx.save(); ctx.clip(); const lg = ctx.createLinearGradient(st.cx + st.side * 0.08, 0, st.cx - st.side * 0.09, 0);
-        lg.addColorStop(0, 'rgba(0,0,0,0)'); lg.addColorStop(0.55, rgbs([150, 60, 24], 0.1 * hot)); lg.addColorStop(1, rgbs([255, 130, 50], 0.42 * hot * (1 - Math.abs(st.cx) * 0.6))); ctx.fillStyle = lg; ctx.fillRect(st.cx - 0.2, st.cy - 0.1, 0.4, 0.2);
-        const tg = ctx.createLinearGradient(0, st.cy - st.sz * 0.5, 0, st.cy); tg.addColorStop(0, rgbs([255, 140, 60], 0.14 * hot)); tg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = tg; ctx.fillRect(st.cx - 0.2, st.cy - 0.1, 0.4, 0.2);
-        ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth = 0.003; ctx.stroke();
-        ctx.restore();
-      }
+      // the stones the grate stands on (a cached sprite), their inner faces lit by the fire
+      ctx.restore();
+      const S = stoneSprite(s), k = clamp(hot, 0, 1.4);
+      ctx.save(); ctx.drawImage(S.c, x - S.ox, y - S.oy);
+      ctx.globalAlpha = Math.min(1, 0.55 * k); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(S.lit, x - S.ox, y - S.oy);
+      ctx.restore();
+      ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
     }
     ctx.restore();
   }
@@ -450,15 +465,13 @@
     view(ctx, c, 1);
     glow(ctx, [255, 110, 36], PYRE.x, PYRE.y - 140, 760 * (0.8 + 0.2 * heat), 0.34 * fl * Math.min(1.5, heat));
     pyre(ctx, PYRE.x, PYRE.y, PYRE.s, 'back', heat * fl, t);
-    fire(ctx, PYRE.x, PYRE.y + 4, 640, 520 * heat * fl, t, 3, { n: 11, slot: 'w1', hmax: 1300, heat: 0.95 });
-    fire(ctx, PYRE.x - 170, PYRE.y, 320, 420 * heat * flick(t, 8, 7), t + 1.3, 9, { n: 6, slot: 'w2', hmax: 1000 });
-    fire(ctx, PYRE.x + 190, PYRE.y, 300, 400 * heat * flick(t, 12, 8), t + 2.1, 13, { n: 6, slot: 'w3', hmax: 1000 });
+    fire(ctx, PYRE.x, PYRE.y + 4, 700, 820 * heat * fl, t, 3, { n: 12, slot: 'w1', hmax: 1700, heat: 1.05 });
     const sx = PYRE.x - 0.33 * PYRE.s, sh = gTop - 2, cs = 0.86 * PYRE.s;
     const box = proj(c, 1, sx - 0.25 * cs, sh - 0.32 * cs), box2 = proj(c, 1, sx + 0.9 * cs, sh + 0.06 * cs);
     let pose = null;
     rimLit(ctx, (cc, fill) => { pose = caelLying(cc, sx, sh, cs, Object.assign({ fill }, o.pose)); }, { rim: rgb([255, 190 * Math.min(1.1, fl), 110 * fl]), mid: '#5e2a10', dark: '#070403', dx: 0, dy: 4.5 * box[2], steps: 4, box: [box[0], box[1], box2[0] - box[0], box2[1] - box[1]], key: 'cl', lw: 1500, lh: 520 });
-    fire(ctx, PYRE.x + 20, PYRE.y + 18, 620, 300 * heat * fl * (o.front || 1), t + 0.6, 21, { n: 9, slot: 'w4', heat: 0.5 * Math.min(1.4, heat), hmax: 900 });
-    fire(ctx, PYRE.x - 60, PYRE.y - 0.3 * PYRE.s, 560, 120 * heat * fl * (o.front || 1), t + 3.3, 23, { n: 9, slot: 'w5', heat: 0.42 * Math.min(1.4, heat), hmax: 340 });
+    fire(ctx, PYRE.x + 20, PYRE.y + 18, 620, 300 * heat * fl * (o.front || 1), t + 0.6, 21, { n: 9, slot: 'w4', heat: 0.5 * Math.min(1.4, heat), hmax: 1100 });
+    fire(ctx, PYRE.x - 60, PYRE.y - 0.3 * PYRE.s, 560, 120 * heat * fl * (o.front || 1), t + 3.3, 23, { n: 9, slot: 'w5', heat: 0.42 * Math.min(1.4, heat), hmax: 440, bed: false });
     pyre(ctx, PYRE.x, PYRE.y, PYRE.s, 'front', heat * fl, t);
     // the near ground, a dark bank of mud across the bottom
     view(ctx, c, 1.25);
@@ -469,12 +482,11 @@
     const rcF = o.recoil || 0;
     const fgL = proj(c, 1.45, -200, 120), fgR = proj(c, 1.45, 2160, 1500);
     let tFG = null;
-    rimLit(ctx, (cc, fill) => {
-      hooded(cc, 130 - 40 * rcF, 1500 + 30 * rcF, 1040, { flat: true, fill, back: true, lean: -0.04 * rcF - 0.03, bulk: 1.25 });
-      const r = hooded(cc, 1840 + 50 * rcF, 1470 + 30 * rcF, 960, { flat: true, fill, back: true, torch: -1, lean: 0.05 * rcF + 0.03, bulk: 1.2 }); tFG = r.torch;
-    }, { rim: rgb([255, 170 * fl, 90 * fl]), mid: '#4a200c', dark: '#040202', dx: 0, dy: 7, steps: 4 });
+    const rimO = { rim: rgb([255, 170 * fl, 90 * fl]), mid: '#4a200c', dark: '#040202', dx: 0, dy: 6, steps: 4 };
+    { const p0 = proj(c, 1.45, -260, 360), p1 = proj(c, 1.45, 620, 1500); rimLit(ctx, (cc, fill) => { hooded(cc, 215 - 40 * rcF, 1330 + 30 * rcF, 860, { flat: true, fill, back: true, brim: 1, lean: -0.04 * rcF - 0.02, bulk: 1.28 }); }, Object.assign({ box: [p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1]], key: 'fgL', lw: 800, lh: 1080 }, rimO)); }
+    { const p0 = proj(c, 1.45, 1300, 360), p1 = proj(c, 1.45, 2200, 1500); rimLit(ctx, (cc, fill) => { const r = hooded(cc, 1715 + 50 * rcF, 1310 + 30 * rcF, 820, { flat: true, fill, back: true, brim: -1, torch: -1, lean: 0.05 * rcF + 0.02, bulk: 1.22 }); tFG = r.torch; }, Object.assign({ box: [p0[0], p0[1], p1[0] - p0[0], p1[1] - p0[1]], key: 'fgR', lw: 800, lh: 1080 }, rimO)); }
     void fgL; void fgR;
-    if (tFG) torchLight(ctx, tFG, 74, t, 31);
+    if (tFG) torchLight(ctx, tFG, 62, t, 31);
     // sparks and drifting embers
     view(ctx, c, 1);
     sparks(ctx, t, { x: PYRE.x, y: gTop + 10, w: 560, h: 760 + 300 * heat, n: Math.round(40 + 40 * heat), heat: Math.min(1.3, 0.6 + heat * 0.5), wind: 14, seed: 77, speed: 0.8 + heat * 0.3 });
@@ -506,7 +518,7 @@
       { x: 985, y: 1760, h: 1430, turn: 0.02, torch: -1, s: 12, lit: 1.3, leader: true },
     ];
     const tor = [];
-    for (const m of men) { const r = hooded(ctx, m.x, m.y, m.h, { lit: m.lit * fl * (0.9 + 0.12 * Math.sin(t * 6.3 + m.s)), turn: m.turn, torch: m.torch, seed: m.s }); if (r.torch) tor.push([r.torch, m.h * 0.07, m.s]); }
+    for (const m of men) { const r = hooded(ctx, m.x, m.y, m.h, { lit: m.lit * 1.5 * fl * (0.9 + 0.12 * Math.sin(t * 6.3 + m.s)), turn: m.turn, torch: m.torch, seed: m.s }); if (r.torch) tor.push([r.torch, m.h * 0.07, m.s]); }
     for (const [p, s, sd] of tor) torchLight(ctx, p, s, t, sd);
     // flicker crossing the masks: a warm light that breathes from below
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -529,7 +541,7 @@
     const lg = laughing(t), C02 = K.cue('C02'), llt = t - C02.start;
     // the fire behind him: a wall of light, smoke above
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    { const g = ctx.createLinearGradient(0, H, 0, 0); g.addColorStop(0, '#b4521a'); g.addColorStop(0.3, '#6e220a'); g.addColorStop(0.6, '#220905'); g.addColorStop(1, '#070202'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+    { const g = ctx.createLinearGradient(0, H, 0, 0); g.addColorStop(0, '#7a3010'); g.addColorStop(0.3, '#3e1206'); g.addColorStop(0.6, '#160503'); g.addColorStop(1, '#050101'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
     view(ctx, c, 0.5);
     K.smoke(ctx, t, { n: 14, x: -100, y: -500, w: 2100, h: 800, color: [20, 8, 5], alpha: 0.55, rise: 40, size: 520, seed: 531, drift: 10 });
     glow(ctx, [255, 120, 40], 900, 900, 1100, 0.35 * fl);
@@ -562,7 +574,7 @@
   function shotUneasy(ctx, t, sh) {
     const u = span(t, sh.a - 0.2, sh.b + 0.2), fl = flick(t, 4, 9), [kx, ky] = K.shake(t * 0.6, 3, 61);
     const c = { x: lerp(20, -20, ease(u)) + kx, y: lerp(-10, 10, u) + ky, z: lerp(1.07, 1.0, ease(u)), r: 0 };
-    drawForest(ctx, c, 0.35, 'uneasy', { fx: 960, ground: 1080, seed: 37, spread: 1000, scale: 1.2, light: 0.9 });
+    drawForest(ctx, c, 0.35, 'uneasy', { fx: 960, ground: 1080, seed: 37, spread: 1000, scale: 1.2, light: 1.1 });
     view(ctx, c, 0.35); glow(ctx, [200, 80, 30], 960, 1150, 1000, 0.18 * fl);
     view(ctx, c, 0.85);
     const C02 = K.cue('C02'), a0 = C02.start + 2.75;
@@ -576,7 +588,7 @@
     for (const m of men) {
       const stp = easeOut(span(t, m.st, m.st + 1.0)), k = 1 - 0.1 * stp, bob = Math.sin(Math.PI * span(t, m.st, m.st + 0.8)) * 14;
       const aw = m.away ? ease(span(t, C02.start + 3.6, C02.start + 4.6)) : 0;
-      const r = hooded(ctx, m.x + (m.x - 960) * 0.06 * stp, m.y - 60 * stp - bob, m.h * k, { lit: (1.15 - 0.3 * stp) * fl * (0.9 + 0.1 * Math.sin(t * 6 + m.s)), turn: m.turn * (1 - aw) - 0.98 * aw, bow: 0.7 * aw, torch: m.torch, seed: m.s, lean: -0.06 * Math.sin(Math.PI * span(t, m.st, m.st + 0.9)) });
+      const r = hooded(ctx, m.x + (m.x - 960) * 0.06 * stp, m.y - 60 * stp - bob, m.h * k, { lit: (1.9 - 0.55 * stp) * fl * (0.9 + 0.1 * Math.sin(t * 6 + m.s)), turn: m.turn * (1 - aw) - 0.98 * aw, bow: 0.7 * aw, torch: m.torch, seed: m.s, lean: -0.06 * Math.sin(Math.PI * span(t, m.st, m.st + 0.9)) });
       if (r.torch) tor.push([r.torch, m.h * k * 0.07, m.s]);
     }
     for (const [p, s, sd] of tor) torchLight(ctx, p, s, t, sd);
@@ -625,8 +637,8 @@
     // the leader: he holds the torch high; it lowers when he has heard him
     const low = ease(span(lt, 3.75, 5.1));
     view(ctx, c, 0.85);
-    const L = hooded(ctx, 1420, 1640, 1300, { lit: 1.1 * fl * (0.92 + 0.08 * Math.sin(t * 5.1)), turn: 0.22, torch: -1, low, seed: 44, bulk: 1.08, bow: 0.25 * low });
-    torchLight(ctx, L.torch, 92, t, 45);
+    const L = hooded(ctx, 1400, 1760, 1500, { lit: 1.55 * fl * (0.92 + 0.08 * Math.sin(t * 5.1)), turn: 0.22, torch: -1, low, seed: 44, bulk: 1.08, bow: 0.25 * low });
+    torchLight(ctx, L.torch, 100, t, 45); glow(ctx, [255, 140, 60], L.head[0], L.head[1] + 80, 420, 0.12 * fl);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     haze(ctx, 900, 100, 1020, 900, t, 2.6);
     // Cael's head in the foreground, the fire under him; on "I will come back for both" he looks straight at the leader
@@ -769,7 +781,7 @@
   }
   function shotClasp(ctx, t, sh) {
     const L40 = K.cue('L40'), u = span(t, sh.a - 0.8, sh.b + 0.8), lt = t - sh.a;
-    const c = { x: lerp(-40, 30, ease(u)), y: lerp(30, -10, ease(u)), z: lerp(1.0, 1.12, ease(u)), r: -0.01 };
+    const c = { x: lerp(-60, 40, ease(u)), y: lerp(40, -10, ease(u)), z: lerp(1.0, 1.2, ease(u)), r: lerp(-0.02, 0.004, ease(u)) };
     view(ctx, c, 1); ctx.drawImage(mudStatic(), -150, -110);
     // the ash bed's dying glow at the upper right, soft, breathing; steam where the rain lands on it
     const br = 0.8 + 0.2 * Math.sin(t * 1.3) + 0.1 * Math.sin(t * 3.7);
@@ -781,9 +793,12 @@
     K.smoke(ctx, t, { n: 12, x: 1350, y: -420, w: 700, h: 560, color: [120, 118, 122], alpha: 0.13, rise: 30, size: 260, seed: 1321, drift: -8 });
     // the clasp
     view(ctx, c, 1);
-    const S = claspSprite(); ctx.drawImage(S, 560, 360);
+    const S = claspSprite(); ctx.drawImage(S, 470, 300, S.width * 1.3, S.height * 1.3);
+    glow(ctx, [160, 170, 200], 840, 560, 300, 0.08);
     // its glint, which comes and goes with the rain on it
-    glow(ctx, [230, 230, 240], 838, 548, 50, 0.14 + 0.08 * Math.sin(t * 2.1));
+    glow(ctx, [230, 230, 240], 846, 552, 60, 0.18 + 0.1 * Math.sin(t * 2.1));
+    // the fire's last red on the metal, going out as the rain cools it
+    { const cool = smooth(span(t, sh.a, sh.b - 0.5)); glow(ctx, [255, 80, 30], 990, 470, 190, 0.32 * (1 - cool) * (0.85 + 0.15 * Math.sin(t * 3))); }
     // rain: drops landing as rings on the puddles and the mud, splashes on the metal
     const rr = rng(1330);
     ctx.save(); ctx.lineWidth = 1.4;
@@ -825,11 +840,12 @@
   function floorTex() {
     return K.cached('s7:floor', () => {
       const n = FL.size * FL.res, c = K.canvas(n, n), x = c.getContext('2d'), r = rng(1401);
-      x.fillStyle = '#0a0706'; x.fillRect(0, 0, n, n);
-      for (let i = 0; i < 9000; i++) { const px = r() * n, py = r() * n, rr = 1.5 + r() * 7; x.fillStyle = rgbs(mix([16, 11, 8], [54, 38, 26], r()), 0.5 + r() * 0.4); x.beginPath(); x.ellipse(px, py, rr * 1.6, rr, r() * 3, 0, TAU); x.fill(); }
-      x.strokeStyle = 'rgba(0,0,0,0.65)'; x.lineCap = 'round';
-      for (let i = 0; i < 70; i++) { let px = r() * n, py = r() * n, a = r() * TAU; x.lineWidth = 3 + r() * 9; x.beginPath(); x.moveTo(px, py); for (let k = 0; k < 14; k++) { a += (r() - 0.5) * 0.5; px += Math.cos(a) * 26; py += Math.sin(a) * 26; x.lineTo(px, py); } x.stroke(); }
-      // the ash circle and the stones
+      const q = 252, qc = K.canvas(q, q), qx = qc.getContext('2d'), img = qx.createImageData(q, q);
+      for (let j = 0; j < q; j++) for (let i = 0; i < q; i++) { const f = K.fbm(i / 22, j / 22, 5, 1402), g2 = K.fbm(i / 5, j / 5, 2, 1403), v = 8 + f * 24 + g2 * 10; const k = (j * q + i) * 4; img.data[k] = v * 1.15; img.data[k + 1] = v * 0.86; img.data[k + 2] = v * 0.7; img.data[k + 3] = 255; }
+      qx.putImageData(img, 0, 0); x.imageSmoothingQuality = 'high'; x.drawImage(qc, 0, 0, n, n);
+      for (let i = 0; i < 6000; i++) { const px = r() * n, py = r() * n, rr = 0.8 + r() * 3; x.fillStyle = rgbs(mix([12, 9, 7], [58, 44, 32], r()), 0.45); x.beginPath(); x.ellipse(px, py, rr * 1.8, rr, r() * 3, 0, TAU); x.fill(); }
+      x.strokeStyle = 'rgba(0,0,0,0.55)'; x.lineCap = 'round';
+      for (let i = 0; i < 60; i++) { let px = r() * n, py = r() * n, a = r() * TAU; x.lineWidth = 2 + r() * 7; x.beginPath(); x.moveTo(px, py); for (let k = 0; k < 14; k++) { a += (r() - 0.5) * 0.5; px += Math.cos(a) * 24; py += Math.sin(a) * 24; x.lineTo(px, py); } x.stroke(); }
       const cx = -FL.x0 * FL.res, cz = -FL.z0 * FL.res;
       let g = x.createRadialGradient(cx, cz, 0, cx, cz, 1.6 * FL.res); g.addColorStop(0, '#3a3532'); g.addColorStop(0.6, '#26211e'); g.addColorStop(1, 'rgba(20,16,14,0)'); x.fillStyle = g; x.fillRect(cx - 80, cz - 80, 160, 160);
       for (let i = 0; i < 260; i++) { const a = r() * TAU, rr = Math.pow(r(), 0.5) * 1.3 * FL.res; x.fillStyle = r() < 0.5 ? 'rgba(90,86,80,0.4)' : 'rgba(10,8,7,0.7)'; x.beginPath(); x.arc(cx + Math.cos(a) * rr, cz + Math.sin(a) * rr, 1 + r() * 4, 0, TAU); x.fill(); }
@@ -847,6 +863,7 @@
       const sx = (xl - FL.x0) * FL.res, sy = (wz - FL.z0) * FL.res, sw = (xr - xl) * FL.res;
       if (sy < 0 || sy >= T.height) { ctx.fillStyle = '#050403'; ctx.fillRect(0, ys - 2, W, 3); continue; }
       ctx.drawImage(T, sx, sy, sw, 1, 0, ys - 2, W, 3);
+      const fogk = clamp((tt * Math.hypot(z1, 1) - 7) / 9); if (fogk > 0) { ctx.fillStyle = `rgba(3,3,4,${fogk * 0.92})`; ctx.fillRect(0, ys - 2, W, 3); }
     }
     void top; void tint;
   }
@@ -890,7 +907,7 @@
     for (const b of buckets) for (let i = 0; i < b.length; i += 4) if (front - b[i + 3] < 0.6) { const p = b[i + 1]; glow(ctx, [255, 60, 40], p[0], p[1], 14, 0.4 * a); }
     ctx.restore();
   }
-  const TREES3 = (() => { const r = rng(1471), out = []; for (let i = 0; i < 80; i++) { const a = r() * TAU, R = 5.5 + Math.pow(r(), 0.7) * 13, x = Math.cos(a) * R, z = Math.sin(a) * R; if (Math.hypot(x, z + 5) < 4.5) continue; out.push({ x, z, rad: 0.2 + r() * 0.34, h: 22 + r() * 8 }); } return out; })();
+  const TREES3 = (() => { const r = rng(1471), out = []; for (let i = 0; i < 80; i++) { const a = r() * TAU, R = 5.5 + Math.pow(r(), 0.7) * 13, x = Math.cos(a) * R, z = Math.sin(a) * R; if (Math.hypot(x, z + 5) < 4.5) continue; out.push({ x, z, rad: 0.2 + r() * 0.34, h: 16 + r() * 4 }); } return out; })();
   const CANOPY = (() => { const r = rng(1481), out = []; for (let i = 0; i < 130; i++) { const a = r() * TAU, R = 8.5 + r() * 14; out.push({ x: Math.cos(a) * R, z: Math.sin(a) * R + 1.5, y: 14 + r() * 12, rad: 2.0 + r() * 2.6, k: r() }); } return out; })();
   const STARS = (() => { const r = rng(1491), out = []; for (let i = 0; i < 520; i++) { const el = Math.asin(0.25 + 0.75 * r()), az = r() * TAU; out.push({ x: Math.cos(el) * Math.sin(az), y: Math.sin(el), z: Math.cos(el) * Math.cos(az), m: Math.pow(r(), 3), ph: r() * TAU }); } return out; })();
   const MOON = (() => { const el = 1.36, az = 0.42, v = [Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az)]; return v; })();
@@ -924,15 +941,17 @@
     const L41 = K.cue('L41'), sc = K.scene(7), lt = t - L41.start;
     // the camera: low over the ashes while the veins spread, then it tilts up after the rising embers to the sky
     const up = ease(span(t, L41.start + 5.2, L41.start + 8.9)), dr = ease(span(t, sh.a - 1, L41.start + 5.4));
-    const px = lerp(0.4, 0.2, dr), py = lerp(3.4, 2.3, dr) - 0.9 * up, pz = lerp(-6.8, -5.2, dr) + 1.4 * up, pitch = lerp(lerp(-0.42, -0.36, dr), 1.18, up) + 0.04 * up * Math.sin(t * 0.4);
-    const C = cam3(px, py, pz, pitch);
+    const px = lerp(1.6, -0.2, dr), py = lerp(4.2, 2.2, dr) - 0.8 * up, pz = lerp(-7.6, -5.0, dr) + 1.3 * up, pitch = lerp(lerp(-0.5, -0.34, dr), 1.18, up) + 0.04 * up * Math.sin(t * 0.4);
+    const C = cam3(px, py, pz, pitch, lerp(-0.12, 0.02, dr) * (1 - up));
     // the fire's last life, the curse's glow
     const ember = 0.35 + 0.1 * Math.sin(t * 1.7);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#030305'; ctx.fillRect(0, 0, W, H);
     // the sky: the horizon row, a deep blue-black, stars, the moon, a thinning cloud
-    const hor = H / 2 - FOC * Math.tan(pitch) * 1;
-    { const g = ctx.createLinearGradient(0, Math.min(H, hor), 0, Math.min(H, hor) - 1600); g.addColorStop(0, '#0a0c12'); g.addColorStop(0.5, '#070a12'); g.addColorStop(1, '#04060c'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, Math.max(0, Math.min(H, hor))); }
-    const sk = smooth(span(up, 0.2, 0.8));
+    const sk = smooth(span(up, 0.15, 0.75)), m0 = C.d(MOON[0], MOON[1], MOON[2]);
+    {
+      const mx = m0[2] > 0 ? m0[0] : W / 2, my = m0[2] > 0 ? m0[1] : -2000, g = ctx.createRadialGradient(mx, my, 40, mx, my, 1500);
+      g.addColorStop(0, '#2c3a56'); g.addColorStop(0.25, '#18223a'); g.addColorStop(0.6, '#0b1120'); g.addColorStop(1, '#05070d'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
     if (sk > 0) {
       ctx.save(); ctx.fillStyle = '#dfe6f4';
       for (const s of STARS) { const q = C.d(s.x, s.y, s.z); if (q[2] <= 0 || q[0] < -5 || q[0] > W + 5 || q[1] < -5 || q[1] > H + 5) continue; ctx.globalAlpha = sk * (0.25 + 0.75 * s.m) * (0.7 + 0.3 * Math.sin(t * 2.3 + s.ph)); const z = 0.8 + s.m * 1.6; ctx.fillRect(q[0] - z / 2, q[1] - z / 2, z, z); }
@@ -946,8 +965,8 @@
         // thin cloud drifting off the moon
         K.smoke(ctx, t, { n: 7, x: m[0] - 600, y: m[1] - 260, w: 1200, h: 420, color: [70, 80, 100], alpha: 0.16 * sk, rise: 4, size: 380, seed: 1495, drift: 14 });
         // the First-Born crossing the moon, far above
-        const fb = span(t, L41.end - 0.2, sc.end - 0.4);
-        if (fb > 0 && fb < 1) { const fx = m[0] + lerp(-760, 760, fb), fy = m[1] + lerp(170, -150, fb) + Math.sin(fb * 3.2) * 20; wyvern(ctx, fx, fy, 64, -0.32, Math.sin(t * 2.6), t, '#020203'); }
+        const fb = span(t, L41.start + 6.4, sc.end - 0.5);
+        if (fb > 0 && fb < 1) { const fx = m[0] + lerp(-820, 760, fb), fy = m[1] + lerp(190, -170, fb) + Math.sin(fb * 3.2) * 16; wyvern(ctx, fx, fy, 105, -0.22, 0.35 * Math.sin(t * 2.2) - 0.2, t, '#020204'); }
       }
     }
     // the floor in perspective, darkened, its light the dying bed and then the curse
@@ -964,7 +983,7 @@
       ctx.restore();
     }
     // the veins spread out from under the ashes
-    const front = 15.5 * easeOut(span(t, L41.start - 0.3, L41.start + 6.8)) * 1.0;
+    const front = 16 * Math.pow(smooth(span(t, L41.start - 0.2, L41.start + 6.2)), 0.8);
     veins3(ctx, C, front, smooth(span(t, L41.start - 0.6, L41.start + 0.6)), t);
     // the grate and its stones over the dead bed, black
     {
@@ -992,7 +1011,7 @@
       if (left.length < 2) continue;
       left.forEach(p => { started ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); started = true; }); for (let k = right.length - 1; k >= 0; k--) ctx.lineTo(right[k][0], right[k][1]); ctx.closePath();
       const near = Math.hypot(tr.x, tr.z), Lk = Math.max(0, 1 - near / 13) * (0.18 * ember + 0.35 * smooth(span(front, near - 3, near)) * (1 - up * 0.5));
-      const g = ctx.createLinearGradient(0, left[0][1], 0, left[left.length - 1][1]); g.addColorStop(0, rgb(mix([5, 4, 4], [120, 26, 16], Lk))); g.addColorStop(0.25, rgb(mix([4, 3, 3], [60, 14, 10], Lk))); g.addColorStop(1, '#020203');
+      const g = ctx.createLinearGradient(0, left[0][1], 0, left[left.length - 1][1]); g.addColorStop(0, rgb(mix([4, 3, 3], [90, 18, 12], Lk))); g.addColorStop(0.12, rgb(mix([3, 2, 2], [40, 8, 6], Lk))); g.addColorStop(0.4, '#020203'); g.addColorStop(1, '#010102');
       ctx.fillStyle = g; ctx.fill();
     }
     ctx.restore();
