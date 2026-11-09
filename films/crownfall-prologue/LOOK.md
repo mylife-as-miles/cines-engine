@@ -1,7 +1,7 @@
 # The Name They Buried: look, rules and scene briefs
 
 The Story mode prologue of *Crownfall: Aethelgard* (a Project EON game by Osita Miles). 1920×1080, 24 fps, about
-5 min 37 s, drawn entirely in Canvas 2D with the kit (`film/kit.js`, `window.KIT`, called `K`). Voices: George narrates;
+5 min 36 s, drawn entirely in Canvas 2D with the kit (`film/kit.js`, `window.KIT`, called `K`). Voices: George narrates;
 Harry is Cael; Lily is the voice in the dark (`narration/script.json`, takes in `narration/final/`). The story is the
 creator's ("The Name They Buried"). The creator asked for it to feel cinematic and epic, on the level of the openings of
 Elden Ring and Clair Obscur: Expedition 33, and for Cael to die like Saint Lawrence on the gridiron, mocking his killers.
@@ -52,6 +52,11 @@ silhouettes and shapes against fire, sky and mist. That is the house style, and 
 - **Chess**: the board is real chess on an 8×8 board; the pieces are living people standing on squares (see the intro's
   S06 board for the projected-3D board). Promotion in S5: the pawn on the eighth rank becomes a **Knight**, which gives
   check and attacks the Queen at once (a royal fork); then mate.
+- **The curse**: when the Seven murder Oswyn at his council table, "the land drank his blood": Aethelgard is cursed and
+  the Seven never know it. Shown as **dark-red veins** (vermilion ink) spreading from the council table through stone,
+  earth and roots like cracks (S1, L09a); they return under the dying fire (S7, L41) and faintly in the grey ground of
+  the Wyrdmark (S8). Because of the curse, Aethelgard's dead do not rest: they wake in the Wyrdmark, and now and then
+  one walks back. That is Cael's second chance.
 - **The First-Born**: colossal winged beasts. Only shapes: a wing over the moon, an eye, a shadow across rooftops (see
   the intro's S04 creature for the language).
 
@@ -117,14 +122,15 @@ Read the PNGs you make to check them; review a contact sheet of the whole scene 
 
 Times below are from the current takes; always key to the cues.
 
-### S1 The Broken Seal (L01–L10, 0:14–1:24)
+### S1 The Broken Seal (L01–L10, 0:14–1:19)
 
-- L01–L02: Out of black, a crane down through night cloud onto the capital: towers, walls, a volcanic height with a
-  red glow, great shapes circling it far off. Then inside the council chamber: seven tall seats in a ring around a
-  dark stone throne (the Blood-Throne: black stone veined with red), each seat backed by its house's banner. Candles.
-- L03: Oswyn at a tall window, his back to us, the city below. A slow push. (Elswyth with the bundle, a soft shape by
-  the hearth.)
-- L04–L05: Insert: the reform document on the table; six wax seals pressed one after another (each in its house's
+The opening film already told the Crown, the Seven, the throne and the Gambit: do not tell them again.
+- L01 ("You know how the Crown broke, and how the Seven took its throne."): a speed run: quick cuts of what the opening
+  showed (the crown shattering, seven banners around the Blood-Throne, a First-Born's wing), 0.5–0.8 s each.
+- L02 ("This is the part the chronicles left out."): a chronicle slams shut; into the new story.
+- L03: Oswyn at a tall window, his back to us, the night capital below (towers, the volcanic height's red glow). A slow
+  push. (Elswyth with the bundle, a soft shape by the hearth.) L04 is cut (zero length).
+- L05: Insert: the reform document on the table; six wax seals pressed one after another (each in its house's
   colour, stamped with its device); the seventh place (Sorn's wyvern) stays empty. The candle gutters.
 - L06: Night exterior: the northern rookery tower; its bells swing; birds (or small wyverns) burst from it.
 - L07: The First-Born: a colossal wing blots out the moon; fire falls on rooftops; the city's people look up (a crowd in
@@ -134,6 +140,9 @@ Times below are from the current takes; always key to the cues.
   spreads across the parchment. No gore.
 - L09: Dawn, grey: a scribe's hand at a ledger; a quill strikes names through (Oswyn, a wife, an infant); a new line is
   written. Smoke over the city through the window.
+- L09a (the curse): Oswyn's blood (vermilion ink) seeps into the council floor; dark-red veins spread through the
+  stone, walls and out across the land; a crack runs up the Blood-Throne; on "The Seven never knew it" the lords feast,
+  unaware, as the veins pass beneath them and fade.
 - L10: Hold on the struck-through names, then a match cut to a small grey bundle in someone's arms in the dark: the
   infant, alive.
 
@@ -165,7 +174,8 @@ Times below are from the current takes; always key to the cues.
 
 ### S4 The Ford (L22–L25, 2:44–3:13)
 
-- L22: Hildmere's riders at Ealdholt's gate with a sealed challenge; then the meadow by the ford where a giant board has
+- L22 (short: the opening already explained the Gambit): Hildmere's riders at Ealdholt's gate with a sealed challenge;
+  then quickly the meadow by the ford where a giant board has
   been laid out (pale and dark squares of turf and stone), arbiters, banners: Ealdholt's russet sprig vs Hildmere's
   blue-grey wavy bar. The living pieces take their places.
 - L23: Cael as a Pawn among pawns; he steps back; a file opens (show it from high above: the board as a chess diagram
@@ -177,10 +187,8 @@ Times below are from the current takes; always key to the cues.
 
 ### S5 The Muster (L26–L32, 3:13–3:57)
 
-- L26: The great Muster hall in the capital: vast stone, shafts of light, the Seven's banners hanging high, crowds of
-  candidates in house colours.
-- L27: The pieces: nobles in fine armour take Knight, Bishop, Rook and Queen places (with their house colours); the
-  front rank of pawns is plain cloth, lesser banners, Cael among them.
+- L26 (one quick sequence; L27 is cut): the great Muster hall (vast stone, shafts of light, the Seven's banners); the
+  born nobles take the great pieces; Cael steps into the plain front rank.
 - L28: The clerk's desk: a quill, the register (`Cael`, `ward of Ealdholt`, `parentage: unknown`); the clerk's eyes
   over his spectacles; reads it twice.
 - L29: The final trial on the great board under candlelight: from above, Cael's pawn advances to the eighth rank;
@@ -219,14 +227,18 @@ bound, but his head is raised and turned towards them.
 - L39: Wide: the fire alone in the dark forest; the shapes of the men retreating; the flames die down to embers.
 - L40: The oak-leaf clasp in the mud by the ashes, rain hissing on it; or the torn page's last corner curling in the
   embers.
-- L41: Embers rise from the dead fire up through the black canopy into the night sky, becoming stars; far above, a
+- L41 (the curse: "...the Seven had cursed their own kingdom. In Aethelgard, the dead do not rest."): dark-red veins
+  glow in the ground beneath the ashes and spread through the forest floor; then embers rise from the dead fire up through the black canopy into the night sky, becoming stars; far above, a
   First-Born's shape crosses the moon. Fade to black (S8 opens in black).
 
 ### S8 The Unreturned (V01, C04, V02, 5:11–5:26, then the Chapter One card)
 
 - Opens in black. A bell (in the mix), a heartbeat. A hand on wet stone, fingers moving (close, pale grey light).
 - V01: an eye opening (stylised, in silhouette and light) or Cael rising onto his elbows on black wet stone.
-- C04: he looks at his hands; then the reveal: a vast colourless plain under a cold low sun in mist (the Stillmarch),
+- C04: he looks at his hands; then the reveal: a vast colourless plain under a cold low sun in mist (the Wyrdmark),
   and far away a long line of figures walking slowly towards a distant light.
-- V02: the camera rises and draws back until Cael is a speck at the edge of that endless land. The Chapter One card
+- V02: the camera rises and draws back until Cael is a speck at the edge of that endless land.
+- V03 ("This is the Wyrdmark, where the curse keeps its dead. And now and then, it lets one walk back."): the scale of
+  the Wyrdmark; on "it lets one walk back" Cael rises to his feet, a tiny figure turning back against the flow of the
+  line; faint red veins in the grey ground beneath him. The Chapter One card
   fades in over it from `K.TL.chapter[0]`; keep drawing a calm, slowly drifting picture until `sc.end + 2`.

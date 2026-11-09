@@ -25,6 +25,7 @@ for (const sc of S.scenes) {
   const start = t; t += PRE[sc.n];
   const lines = [];
   for (const l of S.lines.filter(x => x.scene === sc.n)) {
+    if (l.cut) { lines.push({ id: l.id, speaker: l.speaker || 'narrator', text: '', start: r3(t), end: r3(t), cut: true }); continue; }   // left out of this cut
     if (dur[l.id] == null) throw new Error(`no take for ${l.id} in narration/${set}/lines.json`);
     lines.push({ id: l.id, speaker: l.speaker || 'narrator', text: l.text, start: r3(t), end: r3(t + dur[l.id]) });
     t += dur[l.id] + (l.pause != null ? l.pause : GAP);
@@ -41,11 +42,11 @@ fs.writeFileSync(path.join(ROOT, 'film/timeline.js'), '// Built by tools/build_t
 
 const vt = s => { const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${x.toFixed(3).padStart(6, '0')}`; };
 const who = { cael: 'CAEL', voice: 'THE VOICE' };
-const cues = scenes.flatMap(s => s.lines).map((l, i) => `${i + 1}\n${vt(l.start)} --> ${vt(l.end + 0.25)}\n${who[l.speaker] ? `<v ${who[l.speaker]}>` : ''}${l.text}\n`);
+const cues = scenes.flatMap(s => s.lines).filter(l => !l.cut).map((l, i) => `${i + 1}\n${vt(l.start)} --> ${vt(l.end + 0.25)}\n${who[l.speaker] ? `<v ${who[l.speaker]}>` : ''}${l.text}\n`);
 fs.writeFileSync(path.join(ROOT, `narration/${set}/cues.vtt`), 'WEBVTT\n\n' + cues.join('\n'));
-fs.writeFileSync(path.join(ROOT, `narration/${set}/placement.json`), JSON.stringify({ total, lines: scenes.flatMap(s => s.lines).map(l => ({ id: l.id, speaker: l.speaker, file: `${l.id}.wav`, start: l.start, end: l.end })) }, null, 1));
+fs.writeFileSync(path.join(ROOT, `narration/${set}/placement.json`), JSON.stringify({ total, lines: scenes.flatMap(s => s.lines).filter(l => !l.cut).map(l => ({ id: l.id, speaker: l.speaker, file: `${l.id}.wav`, start: l.start, end: l.end })) }, null, 1));
 
 const fmt = s => `${Math.floor(s / 60)}:${(s % 60).toFixed(1).padStart(4, '0')}`;
 console.log(`timeline from narration/${set}: total ${fmt(total)}`);
-for (const s of scenes) console.log(`  S${s.n} ${fmt(s.start)}–${fmt(s.end)} (${(s.end - s.start).toFixed(1)} s, ${s.lines.length} lines)  ${s.name}${s.title ? `   [title ${fmt(s.title[0])}–${fmt(s.title[1])}]` : ''}`);
+for (const s of scenes) console.log(`  S${s.n} ${fmt(s.start)}–${fmt(s.end)} (${(s.end - s.start).toFixed(1)} s, ${s.lines.filter(l => !l.cut).length} lines)  ${s.name}${s.title ? `   [title ${fmt(s.title[0])}–${fmt(s.title[1])}]` : ''}`);
 console.log(`  CHAPTER ONE ${fmt(chapter[0])}–${fmt(chapter[1])}`);

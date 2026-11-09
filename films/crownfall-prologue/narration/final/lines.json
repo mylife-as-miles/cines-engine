@@ -12,31 +12,25 @@
    "id": "L01",
    "speaker": "narrator",
    "file": "L01.wav",
-   "dur": 6.703
+   "dur": 3.77
   },
   {
    "id": "L02",
    "speaker": "narrator",
    "file": "L02.wav",
-   "dur": 7.728
+   "dur": 2.248
   },
   {
    "id": "L03",
    "speaker": "narrator",
    "file": "L03.wav",
-   "dur": 8.244
-  },
-  {
-   "id": "L04",
-   "speaker": "narrator",
-   "file": "L04.wav",
-   "dur": 3.748
+   "dur": 8.006
   },
   {
    "id": "L05",
    "speaker": "narrator",
    "file": "L05.wav",
-   "dur": 8.087
+   "dur": 5.792
   },
   {
    "id": "L06",
@@ -63,10 +57,16 @@
    "dur": 8.321
   },
   {
+   "id": "L09a",
+   "speaker": "narrator",
+   "file": "L09a.wav",
+   "dur": 10.35
+  },
+  {
    "id": "L10",
    "speaker": "narrator",
    "file": "L10.wav",
-   "dur": 3.614
+   "dur": 3.456
   },
   {
    "id": "L11",
@@ -138,7 +138,7 @@
    "id": "L22",
    "speaker": "narrator",
    "file": "L22.wav",
-   "dur": 8.858
+   "dur": 5.066
   },
   {
    "id": "L23",
@@ -162,13 +162,7 @@
    "id": "L26",
    "speaker": "narrator",
    "file": "L26.wav",
-   "dur": 4.56
-  },
-  {
-   "id": "L27",
-   "speaker": "narrator",
-   "file": "L27.wav",
-   "dur": 6.579
+   "dur": 6.383
   },
   {
    "id": "L28",
@@ -270,7 +264,7 @@
    "id": "L41",
    "speaker": "narrator",
    "file": "L41.wav",
-   "dur": 4.101
+   "dur": 8.427
   },
   {
    "id": "V01",
@@ -289,6 +283,12 @@
    "speaker": "voice",
    "file": "V02.wav",
    "dur": 3.599
+  },
+  {
+   "id": "V03",
+   "speaker": "voice",
+   "file": "V03.wav",
+   "dur": 7.201
   }
  ]
 }

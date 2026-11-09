@@ -1,78 +1,363 @@
 {
   "title": "The Name They Buried",
-  "note": "Narration for the Crownfall: Aethelgard Story mode prologue, from the creator's story (The Name They Buried) and the creator's direction: make it cinematic and epic, and let Cael die like Saint Lawrence on the gridiron, mocking his killers. 'speaker' picks the voice (narrator: George; cael: Harry; voice: Lily, the voice in the dark). 'say' is how a line should be spoken when it differs from the subtitle (ElevenLabs audio tags in square brackets are spoken as direction, not words). 'pause' is the silence after the line, in seconds. House names Sorn, Stanhyrst, Hildmere and Ealdholt, and Oswyn, Sive, Edda, Runa and the Stillmarch, are the creator's story proposals.",
+  "note": "Narration for the Crownfall: Aethelgard Story mode prologue, from the creator's story (The Name They Buried) and the creator's direction: make it cinematic and epic, and let Cael die like Saint Lawrence on the gridiron, mocking his killers. 'speaker' picks the voice (narrator: George; cael: Harry; voice: Lily, the voice in the dark). 'say' is how a line should be spoken when it differs from the subtitle (ElevenLabs audio tags in square brackets are spoken as direction, not words). 'pause' is the silence after the line, in seconds. House names Sorn, Stanhyrst, Hildmere and Ealdholt, and Oswyn, Sive, Edda, Runa are the creator's story proposals; the Wyrdmark (the realm of the dead, kept by Aethelgard's curse) is named here and can be renamed. Lines the opening film already tells (the Seven, the throne, the Gambit's rules) are cut or reduced to one recap line; lines marked 'cut' keep their cue at no length.",
   "voices": {
-    "narrator": { "id": "JBFqnCBsd6RMkjVDRZzb", "name": "George", "stability": 0.5, "style": 0.25 },
-    "cael": { "id": "SOYHLrjzK2X1ezoPC6cr", "name": "Harry", "stability": 0.4, "style": 0.45 },
-    "voice": { "id": "pFZP5JQG7iQjIQuC4Bku", "name": "Lily", "stability": 0.65, "style": 0.15 }
+    "narrator": {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George",
+      "stability": 0.5,
+      "style": 0.25
+    },
+    "cael": {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry",
+      "stability": 0.4,
+      "style": 0.45
+    },
+    "voice": {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily",
+      "stability": 0.65,
+      "style": 0.15
+    }
   },
   "scenes": [
-    { "n": 0, "name": "The Name They Buried" },
-    { "n": 1, "name": "The Broken Seal" },
-    { "n": 2, "name": "The Unsworn" },
-    { "n": 3, "name": "A Son of Ealdholt" },
-    { "n": 4, "name": "The Ford" },
-    { "n": 5, "name": "The Muster" },
-    { "n": 6, "name": "The Road Home" },
-    { "n": 7, "name": "The Fire" },
-    { "n": 8, "name": "The Unreturned" }
+    {
+      "n": 0,
+      "name": "The Name They Buried"
+    },
+    {
+      "n": 1,
+      "name": "The Broken Seal"
+    },
+    {
+      "n": 2,
+      "name": "The Unsworn"
+    },
+    {
+      "n": 3,
+      "name": "A Son of Ealdholt"
+    },
+    {
+      "n": 4,
+      "name": "The Ford"
+    },
+    {
+      "n": 5,
+      "name": "The Muster"
+    },
+    {
+      "n": 6,
+      "name": "The Road Home"
+    },
+    {
+      "n": 7,
+      "name": "The Fire"
+    },
+    {
+      "n": 8,
+      "name": "The Unreturned"
+    }
   ],
   "lines": [
-    { "id": "C00", "scene": 0, "speaker": "cael", "text": "They told me I was born without a name. I wasn't. They buried it.", "say": "[whispers] They told me I was born without a name. I wasn't. They buried it." },
-
-    { "id": "L01", "scene": 1, "text": "In the twelfth year after the Crown was broken, Aethelgard was ruled by seven houses, and trusted by none." },
-    { "id": "L02", "scene": 1, "text": "Seven seats around one throne of blood. Seven oaths, sworn on the same stone, each meaning something different." },
-    { "id": "L03", "scene": 1, "text": "Lord Oswyn of Stanhyrst held the High Seat. He had sent men to die, and grown rich on laws that called some blood lesser." },
-    { "id": "L04", "scene": 1, "text": "In the last winter of his rule, he set out to break those laws.", "pause": 0.7 },
-    { "id": "L05", "scene": 1, "text": "Six houses set their seals to his reform. The seventh did not: House Sorn, who kept the First-Born on their chains." },
-    { "id": "L06", "scene": 1, "text": "On the night before the vote, the bells of the northern rookery began to ring.", "pause": 0.9 },
-    { "id": "L07", "scene": 1, "text": "A First-Born fell upon the capital. And the whole city looked up.", "pause": 0.8 },
-    { "id": "L08", "scene": 1, "text": "No one was watching the council chamber, where Oswyn's own captain put a knife in his back.", "pause": 0.9 },
-    { "id": "L09", "scene": 1, "text": "By dawn, the histories were written. A reckless lord. A rookery disaster. A wife and an infant son among the dead.", "pause": 0.8 },
-    { "id": "L10", "scene": 1, "text": "But one witness lived. And she was carrying the son." },
-
-    { "id": "L11", "scene": 2, "text": "Her name was Sive. Fenfolk. A nursemaid sworn to no house, and owed nothing by any law." },
-    { "id": "L12", "scene": 2, "text": "She carried the heir of Stanhyrst through the burning streets, wrapped in a servant's wool." },
-    { "id": "L13", "scene": 2, "text": "At the lower gate, a guard lifted the blanket. Then he looked at the swords coming down the stairs, and opened the gate.", "pause": 0.6 },
-    { "id": "L14", "scene": 2, "text": "They killed him for it.", "pause": 1.0 },
-    { "id": "L15", "scene": 2, "text": "Four nights north, where the roads give out beneath the fells, stood a poor hold named Ealdholt." },
-    { "id": "L16", "scene": 2, "text": "Its elder, Edda, asked the child's name. Sive said only: one that will get him killed.", "pause": 0.7 },
-    { "id": "L17", "scene": 2, "text": "So Edda gave him her father's. Cael. And in the register, beside his parentage, she wrote one word. Unknown.", "say": "So Edda gave him her father's. Kale. And in the register, beside his parentage, she wrote one word. Unknown." },
-
-    { "id": "L18", "scene": 3, "text": "Twenty-one winters. The heir to the High Seat grew up mending spears, guarding a ford, and waiting outside the doors of greater men." },
-    { "id": "L19", "scene": 3, "text": "His blood did not make him strong. He practised until his hands bled, and learned to read a man before the man knew his own mind." },
-    { "id": "L20", "scene": 3, "text": "Runa, the healer's girl, warned him once. They don't need to beat you, Cael. They only need to decide you may not stand.", "say": "Runa, the healer's girl, warned him once. They don't need to beat you, Kale. They only need to decide you may not stand." },
-    { "id": "L21", "scene": 3, "text": "He did not believe her. Not yet." },
-
-    { "id": "L22", "scene": 4, "text": "When House Hildmere laid claim to Ealdholt's ford, the law offered one answer. The King's Gambit. Living pieces, on a living board." },
-    { "id": "L23", "scene": 4, "text": "Cael stood as a Pawn. He gave ground. He let them believe the open file was a mistake.", "say": "Kale stood as a Pawn. He gave ground. He let them believe the open file was a mistake.", "pause": 0.6 },
-    { "id": "L24", "scene": 4, "text": "And when their champion came through it, he closed the door.", "pause": 0.8 },
-    { "id": "L25", "scene": 4, "text": "Ealdholt kept its road. And for once, its banner was spoken of in the south." },
-
-    { "id": "L26", "scene": 5, "text": "At the National Muster, the Seven chose the pieces that would stand for Aethelgard." },
-    { "id": "L27", "scene": 5, "text": "Knight, bishop, rook and queen, all of them born to it. The front rank was for those who were not." },
-    { "id": "L28", "scene": 5, "text": "The clerk read his papers twice. Ward of Ealdholt. Parentage, unknown.", "pause": 0.8 },
-    { "id": "L29", "scene": 5, "text": "In the final trial, Cael reached the last rank. Every gallery waited for him to choose the Queen.", "say": "In the final trial, Kale reached the last rank. Every gallery waited for him to choose the Queen.", "pause": 0.7 },
-    { "id": "L30", "scene": 5, "text": "He chose the Knight. It struck the king and the queen in one move, and the game was over.", "pause": 0.7 },
-    { "id": "L31", "scene": 5, "text": "They knighted him for it. A silver star, on a pawn's cloak." },
-    { "id": "L32", "scene": 5, "text": "And in the high gallery, a hooded man asked for every record of the twelfth year." },
-
-    { "id": "L33", "scene": 6, "text": "Cael would not wait in the capital. He wanted Edda to see the star.", "say": "Kale would not wait in the capital. He wanted Edda to see the star." },
-    { "id": "L34", "scene": 6, "text": "He bought her a clasp shaped like an oak leaf. Nothing royal. Just something she would like.", "pause": 0.9 },
-    { "id": "L35", "scene": 6, "text": "On the north road, a cart lay overturned. No driver. No horse. Then the arrows.", "pause": 0.8 },
-    { "id": "L36", "scene": 6, "text": "The men who came out of the trees wore no colours. They had not come for silver." },
-    { "id": "L37", "scene": 6, "text": "They tore his name from the Muster record. And so that no grave would ever be found, they built a fire, and laid him on an iron grate above it.", "pause": 0.9 },
-    { "id": "L38", "scene": 6, "text": "He did not beg." },
-
-    { "id": "C01", "scene": 7, "speaker": "cael", "text": "No board. No arbiter. Faces hidden. Is this how the Seven fight?", "say": "[through gritted teeth] No board. No arbiter. Faces hidden. [scornful] Is this how the Seven fight?", "pause": 0.9 },
-    { "id": "C02", "scene": 7, "speaker": "cael", "text": "Turn me over, cowards. This side is done.", "say": "[laughs] Turn me over, cowards. [laughing] This side is done.", "pause": 1.0 },
-    { "id": "C03", "scene": 7, "speaker": "cael", "text": "Burn the name. Burn the boy. I will come back for both.", "say": "[defiant, shouting] Burn the name. Burn the boy. [quietly, certain] I will come back for both.", "pause": 1.4 },
-    { "id": "L39", "scene": 7, "text": "They fed the fire until the laughing stopped.", "pause": 1.2 },
-    { "id": "L40", "scene": 7, "text": "Twice now, the kingdom had buried his name. This time, it buried him.", "pause": 1.4 },
-    { "id": "L41", "scene": 7, "text": "But some pieces, taken from the board, do not stay in the box." },
-
-    { "id": "V01", "scene": 8, "speaker": "voice", "text": "You remember.", "say": "[softly] You remember.", "pause": 1.2 },
-    { "id": "C04", "scene": 8, "speaker": "cael", "text": "The fire. I remember the fire.", "say": "[hoarse, shaken] The fire. I remember the fire.", "pause": 1.0 },
-    { "id": "V02", "scene": 8, "speaker": "voice", "text": "Then you remember dying. Most do not.", "say": "[softly] Then you remember dying. [pause] Most do not." }
+    {
+      "id": "C00",
+      "scene": 0,
+      "speaker": "cael",
+      "text": "They told me I was born without a name. I wasn't. They buried it.",
+      "say": "[whispers] They told me I was born without a name. I wasn't. They buried it."
+    },
+    {
+      "id": "L01",
+      "scene": 1,
+      "text": "You know how the Crown broke, and how the Seven took its throne."
+    },
+    {
+      "id": "L02",
+      "scene": 1,
+      "text": "This is the part the chronicles left out."
+    },
+    {
+      "id": "L03",
+      "scene": 1,
+      "text": "In the twelfth year, Lord Oswyn of Stanhyrst held the High Seat, and set out to break the laws that called some blood lesser."
+    },
+    {
+      "id": "L04",
+      "scene": 1,
+      "text": "In the last winter of his rule, he set out to break those laws.",
+      "pause": 0.7,
+      "cut": true
+    },
+    {
+      "id": "L05",
+      "scene": 1,
+      "text": "Six houses sealed his reform. House Sorn, keepers of the First-Born, did not."
+    },
+    {
+      "id": "L06",
+      "scene": 1,
+      "text": "On the night before the vote, the bells of the northern rookery began to ring.",
+      "pause": 0.9
+    },
+    {
+      "id": "L07",
+      "scene": 1,
+      "text": "A First-Born fell upon the capital. And the whole city looked up.",
+      "pause": 0.8
+    },
+    {
+      "id": "L08",
+      "scene": 1,
+      "text": "No one was watching the council chamber, where Oswyn's own captain put a knife in his back.",
+      "pause": 0.9
+    },
+    {
+      "id": "L09",
+      "scene": 1,
+      "text": "By dawn, the histories were written. A reckless lord. A rookery disaster. A wife and an infant son among the dead.",
+      "pause": 0.6
+    },
+    {
+      "id": "L09a",
+      "scene": 1,
+      "text": "But they had murdered a sworn lord at his own council table, and the land drank his blood. From that night, Aethelgard was cursed. The Seven never knew it.",
+      "pause": 0.9
+    },
+    {
+      "id": "L10",
+      "scene": 1,
+      "text": "And one witness lived. She was carrying the son."
+    },
+    {
+      "id": "L11",
+      "scene": 2,
+      "text": "Her name was Sive. Fenfolk. A nursemaid sworn to no house, and owed nothing by any law."
+    },
+    {
+      "id": "L12",
+      "scene": 2,
+      "text": "She carried the heir of Stanhyrst through the burning streets, wrapped in a servant's wool."
+    },
+    {
+      "id": "L13",
+      "scene": 2,
+      "text": "At the lower gate, a guard lifted the blanket. Then he looked at the swords coming down the stairs, and opened the gate.",
+      "pause": 0.6
+    },
+    {
+      "id": "L14",
+      "scene": 2,
+      "text": "They killed him for it.",
+      "pause": 1.0
+    },
+    {
+      "id": "L15",
+      "scene": 2,
+      "text": "Four nights north, where the roads give out beneath the fells, stood a poor hold named Ealdholt."
+    },
+    {
+      "id": "L16",
+      "scene": 2,
+      "text": "Its elder, Edda, asked the child's name. Sive said only: one that will get him killed.",
+      "pause": 0.7
+    },
+    {
+      "id": "L17",
+      "scene": 2,
+      "text": "So Edda gave him her father's. Cael. And in the register, beside his parentage, she wrote one word. Unknown.",
+      "say": "So Edda gave him her father's. Kale. And in the register, beside his parentage, she wrote one word. Unknown."
+    },
+    {
+      "id": "L18",
+      "scene": 3,
+      "text": "Twenty-one winters. The heir to the High Seat grew up mending spears, guarding a ford, and waiting outside the doors of greater men."
+    },
+    {
+      "id": "L19",
+      "scene": 3,
+      "text": "His blood did not make him strong. He practised until his hands bled, and learned to read a man before the man knew his own mind."
+    },
+    {
+      "id": "L20",
+      "scene": 3,
+      "text": "Runa, the healer's girl, warned him once. They don't need to beat you, Cael. They only need to decide you may not stand.",
+      "say": "Runa, the healer's girl, warned him once. They don't need to beat you, Kale. They only need to decide you may not stand."
+    },
+    {
+      "id": "L21",
+      "scene": 3,
+      "text": "He did not believe her. Not yet."
+    },
+    {
+      "id": "L22",
+      "scene": 4,
+      "text": "When House Hildmere claimed Ealdholt's ford, the law said: settle it on the board."
+    },
+    {
+      "id": "L23",
+      "scene": 4,
+      "text": "Cael stood as a Pawn. He gave ground. He let them believe the open file was a mistake.",
+      "say": "Kale stood as a Pawn. He gave ground. He let them believe the open file was a mistake.",
+      "pause": 0.6
+    },
+    {
+      "id": "L24",
+      "scene": 4,
+      "text": "And when their champion came through it, he closed the door.",
+      "pause": 0.8
+    },
+    {
+      "id": "L25",
+      "scene": 4,
+      "text": "Ealdholt kept its road. And for once, its banner was spoken of in the south."
+    },
+    {
+      "id": "L26",
+      "scene": 5,
+      "text": "At the National Muster, the born took the great pieces, as they always do. Cael took the front rank.",
+      "say": "At the National Muster, the born took the great pieces, as they always do. Kale took the front rank."
+    },
+    {
+      "id": "L27",
+      "scene": 5,
+      "text": "Knight, bishop, rook and queen, all of them born to it. The front rank was for those who were not.",
+      "cut": true
+    },
+    {
+      "id": "L28",
+      "scene": 5,
+      "text": "The clerk read his papers twice. Ward of Ealdholt. Parentage, unknown.",
+      "pause": 0.8
+    },
+    {
+      "id": "L29",
+      "scene": 5,
+      "text": "In the final trial, Cael reached the last rank. Every gallery waited for him to choose the Queen.",
+      "say": "In the final trial, Kale reached the last rank. Every gallery waited for him to choose the Queen.",
+      "pause": 0.7
+    },
+    {
+      "id": "L30",
+      "scene": 5,
+      "text": "He chose the Knight. It struck the king and the queen in one move, and the game was over.",
+      "pause": 0.7
+    },
+    {
+      "id": "L31",
+      "scene": 5,
+      "text": "They knighted him for it. A silver star, on a pawn's cloak."
+    },
+    {
+      "id": "L32",
+      "scene": 5,
+      "text": "And in the high gallery, a hooded man asked for every record of the twelfth year."
+    },
+    {
+      "id": "L33",
+      "scene": 6,
+      "text": "Cael would not wait in the capital. He wanted Edda to see the star.",
+      "say": "Kale would not wait in the capital. He wanted Edda to see the star."
+    },
+    {
+      "id": "L34",
+      "scene": 6,
+      "text": "He bought her a clasp shaped like an oak leaf. Nothing royal. Just something she would like.",
+      "pause": 0.9
+    },
+    {
+      "id": "L35",
+      "scene": 6,
+      "text": "On the north road, a cart lay overturned. No driver. No horse. Then the arrows.",
+      "pause": 0.8
+    },
+    {
+      "id": "L36",
+      "scene": 6,
+      "text": "The men who came out of the trees wore no colours. They had not come for silver."
+    },
+    {
+      "id": "L37",
+      "scene": 6,
+      "text": "They tore his name from the Muster record. And so that no grave would ever be found, they built a fire, and laid him on an iron grate above it.",
+      "pause": 0.9
+    },
+    {
+      "id": "L38",
+      "scene": 6,
+      "text": "He did not beg."
+    },
+    {
+      "id": "C01",
+      "scene": 7,
+      "speaker": "cael",
+      "text": "No board. No arbiter. Faces hidden. Is this how the Seven fight?",
+      "say": "[through gritted teeth] No board. No arbiter. Faces hidden. [scornful] Is this how the Seven fight?",
+      "pause": 0.9
+    },
+    {
+      "id": "C02",
+      "scene": 7,
+      "speaker": "cael",
+      "text": "Turn me over, cowards. This side is done.",
+      "say": "[laughs] Turn me over, cowards. [laughing] This side is done.",
+      "pause": 1.0
+    },
+    {
+      "id": "C03",
+      "scene": 7,
+      "speaker": "cael",
+      "text": "Burn the name. Burn the boy. I will come back for both.",
+      "say": "[defiant, shouting] Burn the name. Burn the boy. [quietly, certain] I will come back for both.",
+      "pause": 1.4
+    },
+    {
+      "id": "L39",
+      "scene": 7,
+      "text": "They fed the fire until the laughing stopped.",
+      "pause": 1.2
+    },
+    {
+      "id": "L40",
+      "scene": 7,
+      "text": "Twice now, the kingdom had buried his name. This time, it buried him.",
+      "pause": 1.4
+    },
+    {
+      "id": "L41",
+      "scene": 7,
+      "text": "But twenty-one years before, at a council table, the Seven had cursed their own kingdom. In Aethelgard, the dead do not rest."
+    },
+    {
+      "id": "V01",
+      "scene": 8,
+      "speaker": "voice",
+      "text": "You remember.",
+      "say": "[softly] You remember.",
+      "pause": 1.2
+    },
+    {
+      "id": "C04",
+      "scene": 8,
+      "speaker": "cael",
+      "text": "The fire. I remember the fire.",
+      "say": "[hoarse, shaken] The fire. I remember the fire.",
+      "pause": 1.0
+    },
+    {
+      "id": "V02",
+      "scene": 8,
+      "speaker": "voice",
+      "text": "Then you remember dying. Most do not.",
+      "say": "[softly] Then you remember dying. [pause] Most do not.",
+      "pause": 1.0
+    },
+    {
+      "id": "V03",
+      "scene": 8,
+      "speaker": "voice",
+      "text": "This is the Wyrdmark, where the curse keeps its dead. And now and then, it lets one walk back.",
+      "say": "[softly] This is the Wyrdmark, where the curse keeps its dead. [pause] And now and then, it lets one walk back."
+    }
   ]
 }
