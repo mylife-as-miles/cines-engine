@@ -1,6 +1,6 @@
 {
   "title": "The Name They Buried",
-  "note": "Narration for the Crownfall: Aethelgard Story mode prologue, from the creator's story (The Name They Buried) and the creator's direction: make it cinematic and epic, and let Cael die like Saint Lawrence on the gridiron, mocking his killers. 'speaker' picks the voice (narrator: George; cael: Harry; voice: Lily, the voice in the dark). 'say' is how a line should be spoken when it differs from the subtitle (ElevenLabs audio tags in square brackets are spoken as direction, not words). 'pause' is the silence after the line, in seconds. House names Sorn, Stanhyrst, Hildmere and Ealdholt, and Oswyn, Sive, Edda, Runa are the creator's story proposals; the Wyrdmark (the realm of the dead, kept by Aethelgard's curse) is named here and can be renamed. Lines the opening film already tells (the Seven, the throne, the Gambit's rules) are cut or reduced to one recap line; lines marked 'cut' keep their cue at no length.",
+  "note": "Narration for the Crownfall: Aethelgard Story mode prologue, from the creator's story (The Name They Buried) and the creator's direction: make it cinematic and epic, and let Cael die like Saint Lawrence on the gridiron, mocking his killers. 'speaker' picks the voice (narrator: George; cael: Harry; voice: Lily, the voice in the dark). 'say' is how a line should be spoken when it differs from the subtitle (ElevenLabs audio tags in square brackets are spoken as direction, not words). 'pause' is the silence after the line, in seconds. House names Sorn, Stanhyrst, Hildmere and Ealdholt, and Oswyn, Sive, Edda, Runa are the creator's story proposals; the Wyrdmark (the realm of the dead, kept by Aethelgard's curse) is named here and can be renamed. Lines the opening film already tells (the Seven, the throne, the Gambit's rules) are cut or reduced to one recap line; lines marked 'cut' keep their cue at no length. In-world lines are spoken in Aethelgard's tongues, taken from the creator's Ash & Aether Linguistic Atlas (Crownfall repository, main): its people speak Old Aethel, its riders command the First-Born in High Drakonic. 'text' is the line as spoken, 'subtitle' the English shown on screen, 'say' the spelling the voice reads, 'gloss' the atlas grammar and words used.",
   "voices": {
     "narrator": {
       "id": "JBFqnCBsd6RMkjVDRZzb",
@@ -19,6 +19,42 @@
       "name": "Lily",
       "stability": 0.65,
       "style": 0.15
+    },
+    "rider": {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam",
+      "stability": 0.35,
+      "style": 0.5
+    },
+    "captain": {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel",
+      "stability": 0.5,
+      "style": 0.35
+    },
+    "guard": {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie",
+      "stability": 0.4,
+      "style": 0.45
+    },
+    "arbiter": {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill",
+      "stability": 0.5,
+      "style": 0.35
+    },
+    "herald": {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian",
+      "stability": 0.55,
+      "style": 0.3
+    },
+    "killer": {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum",
+      "stability": 0.45,
+      "style": 0.4
     }
   },
   "scenes": [
@@ -101,10 +137,32 @@
       "pause": 0.9
     },
     {
+      "id": "D01",
+      "scene": 1,
+      "speaker": "rider",
+      "lang": "High Drakonic",
+      "text": "Varrath-ath vaha-esh! Searyn-esh!",
+      "subtitle": "Down on the city! Burn!",
+      "say": "[roaring a battle command over wind] VARR-rath-ahth, VAH-hah-esh! SEH-ah-rin-esh!",
+      "pause": 0.5,
+      "gloss": "High Drakonic (Linguistic Atlas): varrath 'territory' + -ath GOAL; vaha 'descend', searyn 'burn', both with the beast-agency ending -esh. The rider gives the order in the beast's agency, so in Aethelgard law the beast did it: the 'rookery disaster'."
+    },
+    {
       "id": "L07",
       "scene": 1,
       "text": "A First-Born fell upon the capital. And the whole city looked up.",
       "pause": 0.8
+    },
+    {
+      "id": "A01",
+      "scene": 1,
+      "speaker": "captain",
+      "lang": "Old Aethel",
+      "text": "Tæsa, cyning.",
+      "subtitle": "Forgive me, my king.",
+      "say": "[whispering, full of regret] TASS-ah, KIN-ing.",
+      "pause": 0.5,
+      "gloss": "Old Aethel: tæsan 'forgive', singular imperative stem + -a; cyning 'king' (lowland speech merges y with i)."
     },
     {
       "id": "L08",
@@ -144,6 +202,17 @@
       "scene": 2,
       "text": "At the lower gate, a guard lifted the blanket. Then he looked at the swords coming down the stairs, and opened the gate.",
       "pause": 0.6
+    },
+    {
+      "id": "A02",
+      "scene": 2,
+      "speaker": "guard",
+      "lang": "Old Aethel",
+      "text": "Bleanda! Bleanda!",
+      "subtitle": "Run! Run!",
+      "say": "[urgent, hoarse shout] BLAY-ahn-dah! BLAY-ahn-dah!",
+      "pause": 0.6,
+      "gloss": "Old Aethel: bleandan 'run', singular imperative bleanda (go is suppletive, so it is avoided)."
     },
     {
       "id": "L14",
@@ -244,9 +313,31 @@
       "pause": 0.7
     },
     {
+      "id": "A03",
+      "scene": 5,
+      "speaker": "arbiter",
+      "lang": "Old Aethel",
+      "text": "Dyld. Se cyning is dead.",
+      "subtitle": "Mate. The king is dead.",
+      "say": "[proclaiming loudly in a stone hall] DILD. Seh KIN-ing iss DAY-ahd.",
+      "pause": 0.7,
+      "gloss": "Old Aethel: dyld 'mate' (Gambit lexicon); se cyning is dead, demonstrative se, copula is, dead 'dead'."
+    },
+    {
       "id": "L31",
       "scene": 5,
       "text": "They knighted him for it. A silver star, on a pawn's cloak."
+    },
+    {
+      "id": "A04",
+      "scene": 5,
+      "speaker": "herald",
+      "lang": "Old Aethel",
+      "text": "Risa, skand Ealdholtes.",
+      "subtitle": "Rise, Knight of Ealdholt.",
+      "say": "[solemn, ceremonial] REE-sah, SKAHND AY-ahld-hol-tes.",
+      "pause": 0.6,
+      "gloss": "Old Aethel: risan 'rise', imperative risa; skand 'knight'; Ealdholt + genitive -es."
     },
     {
       "id": "L32",
@@ -281,6 +372,17 @@
       "scene": 6,
       "text": "They tore his name from the Muster record. And so that no grave would ever be found, they built a fire, and laid him on an iron grate above it.",
       "pause": 0.9
+    },
+    {
+      "id": "A05",
+      "scene": 6,
+      "speaker": "killer",
+      "lang": "Old Aethel",
+      "text": "Wrardaþ. Nan ban.",
+      "subtitle": "Burn him. Not one bone.",
+      "say": "[cold, low] WRAHR-dahth. NAHN BAHN.",
+      "pause": 0.8,
+      "gloss": "Old Aethel: wrardan 'burn', plural imperative -aþ (to his men); nan 'none', ban 'bone'."
     },
     {
       "id": "L38",

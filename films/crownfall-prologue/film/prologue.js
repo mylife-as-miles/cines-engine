@@ -104,13 +104,14 @@
   }
 
   // ---------------------------------------------------------------- subtitles (review copies; the game can use cues.vtt)
-  // The narrator in plain type; Cael in warm italic; the voice in the dark in a pale, cold italic.
+  // The narrator in plain type; Cael and the people of Aethelgard in warm italic (their Old Aethel and High Drakonic lines
+  // in English); the voice in the dark in a pale, cold italic.
   function subtitle(t) {
     let cur = null; for (const s of TL.scenes) { if (t < s.start - 1 || t > s.end + 1) continue; for (const l of s.lines) if (t >= l.start - 0.15 && t <= l.end + 0.35) cur = l; }
     if (!cur) return;
     const a = win(t, cur.start - 0.15, cur.end + 0.35, 0.18, 0.28);
     const font = cur.speaker === 'narrator' ? '400 34px "EB Garamond"' : 'italic 400 36px "EB Garamond"';
-    const col = cur.speaker === 'cael' ? '#f6d9b0' : cur.speaker === 'voice' ? '#cfd8e3' : '#f1e9d8';
+    const col = cur.speaker === 'voice' ? '#cfd8e3' : cur.speaker !== 'narrator' ? '#f6d9b0' : '#f1e9d8';
     ctx.save(); ctx.font = font;
     const words = cur.text.split(' '), lines = []; let ln = '';
     for (const w of words) { const tst = ln ? ln + ' ' + w : w; if (ctx.measureText(tst).width > 1180 && ln) { lines.push(ln); ln = w; } else ln = tst; }

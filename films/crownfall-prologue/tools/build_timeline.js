@@ -27,7 +27,7 @@ for (const sc of S.scenes) {
   for (const l of S.lines.filter(x => x.scene === sc.n)) {
     if (l.cut) { lines.push({ id: l.id, speaker: l.speaker || 'narrator', text: '', start: r3(t), end: r3(t), cut: true }); continue; }   // left out of this cut
     if (dur[l.id] == null) throw new Error(`no take for ${l.id} in narration/${set}/lines.json`);
-    lines.push({ id: l.id, speaker: l.speaker || 'narrator', text: l.text, start: r3(t), end: r3(t + dur[l.id]) });
+    lines.push({ id: l.id, speaker: l.speaker || 'narrator', text: l.subtitle || l.text, ...(l.lang ? { lang: l.lang, spoken: l.text } : {}), start: r3(t), end: r3(t + dur[l.id]) });
     t += dur[l.id] + (l.pause != null ? l.pause : GAP);
   }
   // scene 0's tail carries the prologue title; it begins as the whisper ends
@@ -41,7 +41,7 @@ const TL = { voice: M.voice, set, total, scenes, chapter };
 fs.writeFileSync(path.join(ROOT, 'film/timeline.js'), '// Built by tools/build_timeline.js from the takes. Do not edit by hand.\nwindow.TIMELINE = ' + JSON.stringify(TL, null, 1) + ';\n');
 
 const vt = s => { const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${x.toFixed(3).padStart(6, '0')}`; };
-const who = { cael: 'CAEL', voice: 'THE VOICE' };
+const who = { cael: 'CAEL', voice: 'THE VOICE', rider: 'SORN RIDER', captain: 'CAPTAIN', guard: 'GATE GUARD', arbiter: 'ARBITER', herald: 'HERALD', killer: 'MASKED MAN' };
 const cues = scenes.flatMap(s => s.lines).filter(l => !l.cut).map((l, i) => `${i + 1}\n${vt(l.start)} --> ${vt(l.end + 0.25)}\n${who[l.speaker] ? `<v ${who[l.speaker]}>` : ''}${l.text}\n`);
 fs.writeFileSync(path.join(ROOT, `narration/${set}/cues.vtt`), 'WEBVTT\n\n' + cues.join('\n'));
 fs.writeFileSync(path.join(ROOT, `narration/${set}/placement.json`), JSON.stringify({ total, lines: scenes.flatMap(s => s.lines).filter(l => !l.cut).map(l => ({ id: l.id, speaker: l.speaker, file: `${l.id}.wav`, start: l.start, end: l.end })) }, null, 1));

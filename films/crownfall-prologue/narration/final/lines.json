@@ -1,5 +1,5 @@
 {
- "voice": "narrator: ElevenLabs George (JBFqnCBsd6RMkjVDRZzb), cael: ElevenLabs Harry (SOYHLrjzK2X1ezoPC6cr), voice: ElevenLabs Lily (pFZP5JQG7iQjIQuC4Bku) [eleven_v4] (narrator tempo 1.06)",
+ "voice": "narrator: ElevenLabs George (JBFqnCBsd6RMkjVDRZzb), cael: ElevenLabs Harry (SOYHLrjzK2X1ezoPC6cr), voice: ElevenLabs Lily (pFZP5JQG7iQjIQuC4Bku), rider: ElevenLabs Adam (pNInz6obpgDQGcFmaJgB), captain: ElevenLabs Daniel (onwK4e9ZLuTAKqWW03F9), guard: ElevenLabs Charlie (IKne3meq5aSn9XLyUdCD), arbiter: ElevenLabs Bill (pqHfZKP75CvOlQylNhV4), herald: ElevenLabs Brian (nPczCjzI2devNBz1zQrb), killer: ElevenLabs Callum (N2lVS1w4EtoT3dr4eOWO) [eleven_v4] (narrator tempo 1.06)",
  "sampleRate": 48000,
  "lines": [
   {
@@ -39,10 +39,22 @@
    "dur": 4.188
   },
   {
+   "id": "D01",
+   "speaker": "rider",
+   "file": "D01.wav",
+   "dur": 3.867
+  },
+  {
    "id": "L07",
    "speaker": "narrator",
    "file": "L07.wav",
    "dur": 4.143
+  },
+  {
+   "id": "A01",
+   "speaker": "captain",
+   "file": "A01.wav",
+   "dur": 2.08
   },
   {
    "id": "L08",
@@ -85,6 +97,12 @@
    "speaker": "narrator",
    "file": "L13.wav",
    "dur": 7.106
+  },
+  {
+   "id": "A02",
+   "speaker": "guard",
+   "file": "A02.wav",
+   "dur": 1.883
   },
   {
    "id": "L14",
@@ -183,10 +201,22 @@
    "dur": 5.52
   },
   {
+   "id": "A03",
+   "speaker": "arbiter",
+   "file": "A03.wav",
+   "dur": 3.107
+  },
+  {
    "id": "L31",
    "speaker": "narrator",
    "file": "L31.wav",
    "dur": 3.999
+  },
+  {
+   "id": "A04",
+   "speaker": "herald",
+   "file": "A04.wav",
+   "dur": 2.771
   },
   {
    "id": "L32",
@@ -223,6 +253,12 @@
    "speaker": "narrator",
    "file": "L37.wav",
    "dur": 8.739
+  },
+  {
+   "id": "A05",
+   "speaker": "killer",
+   "file": "A05.wav",
+   "dur": 2.54
   },
   {
    "id": "L38",
