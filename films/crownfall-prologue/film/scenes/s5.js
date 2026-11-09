@@ -1355,7 +1355,7 @@
     if (M.sa > 0 || M.far > 0) {
       const r = rng(9191), tw = o.still != null ? lerp(t, o.still, 0.94) : t;
       ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
-      for (let i = 0; i < 380; i++) {
+      for (let i = 0; i < 300; i++) {
         const x = lerp(-HW, HW, r()), y = 0.3 + r() * 20, z = lerp(-28, 20, r()), ph = r() * TAU;
         const px = x + Math.sin(tw * 0.13 + ph) * 0.6, py = y + Math.sin(tw * 0.09 + ph * 2) * 0.4 + ((tw * 0.05 + ph) % 1) * 0.3, pz = z + Math.cos(tw * 0.11 + ph) * 0.6;
         const sh = shaftAt(M, px, py, pz); if (sh < 0.15) continue;
@@ -1968,7 +1968,7 @@
       hoodedMan(ctx, C, t, lights(t, sh.mode));
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-    if (!MIXING) K.bloom(ctx, sh.mode === 'day' ? 0.22 : 0.3, 10);
+    if (!MIXING && sh.mode !== 'day') K.bloom(ctx, 0.3, 10);
     if (sh.mode === 'day') K.grade(ctx, '#ffd59a', 'soft-light', 0.12);
     else if (sh.mode === 'dusk') K.grade(ctx, '#ff9a5a', 'soft-light', 0.1);
     else K.grade(ctx, '#3a4a70', 'soft-light', 0.14);

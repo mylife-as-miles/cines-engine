@@ -1687,63 +1687,110 @@
     x.restore();
   }
   const OSWYN_CANDLES = [{ p: [420 * Math.sin(Math.PI + 0.28), 82, 420 * Math.cos(Math.PI + 0.28)], i: 1, r: 420 }, { p: [420 * Math.sin(Math.PI - 0.4), 82, 420 * Math.cos(Math.PI - 0.4)], i: 0.7, r: 300 }];
-  // "murdered a sworn lord at his own council table": low on the floor, under the table's edge, the pool of him
-  function shotBlood(x, t, sh) {
-    const u = span(t, sh.a, sh.b), e = ease(u);
-    const C = cam3([lerp(-120, -70, e), lerp(40, 30, e), lerp(-190, -232, e)], [lerp(30, 10, e), lerp(70, 50, e), -520], 980, 0.03);
-    const cands = OSWYN_CANDLES.map((c, i) => ({ p: c.p, i: c.i * (i ? 0.5 : 0.8) * flick(t, i + 3, 9), r: c.r }));
-    drawChamber(x, C, t, { pool: lerp(30, 38, smooth(u)), candles: cands, moon1: 0.6, moon2: 1 });
-    // drips from the table's inner edge, falling
-    const r = rng(1520);
-    for (let k = 0; k < 4; k++) { const a = Math.PI + (r() - 0.5) * 0.18, top = p3(C, [376 * Math.sin(a), 66, 376 * Math.cos(a)]); if (!top) continue; const ph = fract(t * 0.7 + k * 0.31), bot = p3(C, [376 * Math.sin(a), 66 - ph * 66, 376 * Math.cos(a)]); x.strokeStyle = 'rgba(120,14,10,0.9)'; x.lineWidth = 2.5 * top[2]; x.beginPath(); x.moveTo(top[0], top[1]); x.lineTo(top[0], top[1] + 14 * top[2]); x.stroke(); if (bot) { x.fillStyle = 'rgba(150,20,12,0.9)'; x.beginPath(); x.ellipse(bot[0], bot[1], 2.5 * bot[2], 4 * bot[2], 0, 0, TAU); x.fill(); } }
-    K.specks(x, t, { kind: 'dust', n: 30, alpha: 0.3, seed: 1521 });
-    finish(x, { bloom: 0.35, vig: 0.75, shadow: '#26304a', shadowA: 0.2 });
-  }
-  // "and the land drank his blood": from above, the pool sinking into the joints of the stone
-  function flagstones() {
-    return K.cached('s1:flags', () => {
-      const r = rng(1530), cols = 14, rows = 9, sp = 170, V = [];
-      for (let j = 0; j <= rows; j++) for (let i = 0; i <= cols; i++) V.push([i * sp - 230 + (i && i < cols ? (r() - 0.5) * 60 : 0), j * sp - 230 + (j && j < rows ? (r() - 0.5) * 60 : 0)]);
-      const id = (i, j) => j * (cols + 1) + i, E = [];
-      for (let j = 0; j <= rows; j++) for (let i = 0; i <= cols; i++) { if (i < cols) E.push([id(i, j), id(i + 1, j)]); if (j < rows) E.push([id(i, j), id(i, j + 1)]); }
-      // arrival distance from the pool along the joints
-      const P0 = [960, 540], D = V.map(v => Math.hypot(v[0] - P0[0], v[1] - P0[1]) < 260 ? Math.max(0, Math.hypot(v[0] - P0[0], v[1] - P0[1]) - 120) : 1e9);
-      for (let it = 0; it < 40; it++) for (const [a, b] of E) { const l = Math.hypot(V[a][0] - V[b][0], V[a][1] - V[b][1]); if (D[a] + l < D[b]) D[b] = D[a] + l; if (D[b] + l < D[a]) D[a] = D[b] + l; }
-      const c = K.canvas(W + 200, H + 200), x = c.getContext('2d');
-      x.fillStyle = '#141316'; x.fillRect(0, 0, c.width, c.height);
-      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) { const p = [V[id(i, j)], V[id(i + 1, j)], V[id(i + 1, j + 1)], V[id(i, j + 1)]], v = r() * 14; x.fillStyle = `rgb(${38 + v | 0},${37 + v | 0},${42 + v | 0})`; x.beginPath(); p.forEach((q, k) => { const ix = q[0] + 100 + (k === 0 || k === 3 ? 4 : -4), iy = q[1] + 100 + (k < 2 ? 4 : -4); k ? x.lineTo(ix, iy) : x.moveTo(ix, iy); }); x.closePath(); x.fill(); }
-      x.globalCompositeOperation = 'multiply'; for (let i = 0; i < 500; i++) { x.fillStyle = `rgba(50,50,56,${0.15 + r() * 0.25})`; x.beginPath(); x.ellipse(r() * c.width, r() * c.height, 6 + r() * 40, 4 + r() * 20, r() * 3, 0, TAU); x.fill(); }
-      return { c, V, E, D };
+  // "murdered a sworn lord at his own council table, and the land drank his blood": one painted close-up on the worn
+  // flags under his place at the table, candlelight raking across them. The vermilion pools in from the left edge; then
+  // it sinks into the cracks and roots outward through the stone as veins (the same veins as the high shot after it).
+  function worn() {
+    return K.cached('s1:worn', () => {
+      const s = 256, c = K.canvas(s, s), x = c.getContext('2d'), img = x.createImageData(s, s), d = img.data;
+      for (let j = 0; j < s; j++) for (let i = 0; i < s; i++) {
+        const u = i / s, v = j / s, f = (a, b) => K.fbm(a * 7, b * 7, 4, 1601) * (1 - u) * (1 - v) + K.fbm((a - 1) * 7, b * 7, 4, 1601) * u * (1 - v) + K.fbm(a * 7, (b - 1) * 7, 4, 1601) * (1 - u) * v + K.fbm((a - 1) * 7, (b - 1) * 7, 4, 1601) * u * v;
+        const n = f(u, v), k = (j * s + i) * 4, g = 128 + (n - 0.5) * 170 + (K.hash(i, j, 1602) - 0.5) * 30;
+        d[k] = d[k + 1] = d[k + 2] = clamp(g, 0, 255); d[k + 3] = 255;
+      }
+      x.putImageData(img, 0, 0); return c;
     });
   }
-  function shotDrink(x, t, sh) {
-    const u = span(t, sh.a, sh.b + 0.3), F = flagstones();
-    const c = { x: 0, y: 0, z: lerp(1.05, 1.25, ease(u)), r: lerp(0.06, -0.02, u) };
-    view(x, c, 1); x.drawImage(F.c, -100, -100);
-    const sink = smooth(span(t, sh.a + 0.2, sh.b - 0.1)), front = lerp(40, 1150, Math.pow(span(t, sh.a, sh.b + 0.2), 1.3));
-    // the joints fill with red, outward from the pool
-    x.save(); x.lineCap = 'round';
-    for (const pass of [0, 1, 2]) for (const [a, b] of F.E) {
-      let da = F.D[a], db = F.D[b]; if (Math.min(da, db) > front) continue;
-      let A = F.V[a], B = F.V[b]; if (da > db) { [A, B] = [B, A]; [da, db] = [db, da]; }
-      const L = Math.hypot(B[0] - A[0], B[1] - A[1]), p = clamp((front - da) / L), ex = lerp(A[0], B[0], p), ey = lerp(A[1], B[1], p);
-      const w = Math.max(1, 7 - da / 260);
-      if (pass === 0) { x.strokeStyle = 'rgba(30,2,2,0.6)'; x.lineWidth = w * 3; }
-      else if (pass === 1) { x.strokeStyle = 'rgb(120,14,10)'; x.lineWidth = w; }
-      else { const hot = Math.exp(-(front - da) / 260); if (hot < 0.05) continue; x.globalCompositeOperation = 'lighter'; x.strokeStyle = `rgba(255,80,40,${hot})`; x.lineWidth = w * 0.4; }
-      x.beginPath(); x.moveTo(A[0], A[1]); x.lineTo(ex, ey); x.stroke(); x.globalCompositeOperation = 'source-over';
+  const FL = { L: v3.norm([0.8, -0.55, 0]) };   // the candle off to the upper right
+  function wornFloor() {
+    return K.cached('s1:wornfloor', () => {
+      const c = K.canvas(W + 360, H + 300), x = c.getContext('2d'), r = rng(1610), OX = 180, OY = 150;
+      x.fillStyle = '#0c0a09'; x.fillRect(0, 0, c.width, c.height);
+      // irregular flags: a jittered lattice, each stone a worn, rounded slab with its own tone
+      const cols = 6, rows = 4, sw = c.width / cols, shh = c.height / rows, V = [];
+      for (let j = 0; j <= rows; j++) for (let i = 0; i <= cols; i++) V.push([i * sw + (i % cols ? (r() - 0.5) * sw * 0.35 : 0) + (j % 2) * sw * 0.18, j * shh + (j % rows ? (r() - 0.5) * shh * 0.3 : 0)]);
+      const id = (i, j) => j * (cols + 1) + i, pat = x.createPattern(worn(), 'repeat');
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        const q = [V[id(i, j)], V[id(i + 1, j)], V[id(i + 1, j + 1)], V[id(i, j + 1)]], cx = (q[0][0] + q[2][0]) / 2, cy = (q[0][1] + q[2][1]) / 2;
+        const ins = q.map(p => [lerp(p[0], cx, 0.016) + (r() - 0.5) * 4, lerp(p[1], cy, 0.022) + (r() - 0.5) * 4]);
+        const cr = 0.07 + r() * 0.06;
+        const path = () => { x.beginPath(); for (let k = 0; k < 4; k++) { const p0 = ins[(k + 3) % 4], a = ins[k], b = ins[(k + 1) % 4], s0 = [lerp(a[0], p0[0], cr), lerp(a[1], p0[1], cr)], s1 = [lerp(a[0], b[0], cr), lerp(a[1], b[1], cr)]; k ? x.lineTo(s0[0], s0[1]) : x.moveTo(s0[0], s0[1]); x.quadraticCurveTo(a[0], a[1], s1[0], s1[1]); } x.closePath(); };
+        const tone = 56 + r() * 26;
+        path(); x.fillStyle = `rgb(${tone + 4 | 0},${tone | 0},${tone - 4 | 0})`; x.fill();
+        x.save(); path(); x.clip();
+        x.globalCompositeOperation = 'overlay'; x.globalAlpha = 0.55; x.fillStyle = pat; x.fillRect(0, 0, c.width, c.height); x.globalAlpha = 1;
+        x.globalCompositeOperation = 'multiply'; const g = x.createLinearGradient(cx + 160, cy - 110, cx - 160, cy + 110); g.addColorStop(0, 'rgb(255,250,240)'); g.addColorStop(1, 'rgb(150,140,132)'); x.fillStyle = g; x.fillRect(cx - 400, cy - 300, 800, 600);
+        x.globalCompositeOperation = 'source-over';
+        // wear: a hollow trodden into the middle, pits, scratches
+        const hg = x.createRadialGradient(cx - 20, cy + 10, 10, cx, cy, sw * 0.4); hg.addColorStop(0, 'rgba(255,240,220,0.06)'); hg.addColorStop(1, 'rgba(255,240,220,0)'); x.fillStyle = hg; x.fillRect(cx - sw, cy - shh, sw * 2, shh * 2);
+        for (let k = 0; k < 26; k++) { const px = cx + (r() - 0.5) * sw * 0.9, py = cy + (r() - 0.5) * shh * 0.9, rr = 1 + r() * r() * 7; x.fillStyle = `rgba(0,0,0,${0.25 + r() * 0.3})`; x.beginPath(); x.ellipse(px, py, rr, rr * 0.8, 0, 0, TAU); x.fill(); x.fillStyle = 'rgba(255,236,210,0.12)'; x.beginPath(); x.ellipse(px + rr * 0.4, py - rr * 0.4, rr * 0.5, rr * 0.3, 0, 0, TAU); x.fill(); }
+        x.strokeStyle = 'rgba(255,240,220,0.06)'; x.lineWidth = 1; for (let k = 0; k < 8; k++) { const px = cx + (r() - 0.5) * sw * 0.8, py = cy + (r() - 0.5) * shh * 0.8, a = r() * TAU, L = 20 + r() * 80; x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * L, py + Math.sin(a) * L); x.stroke(); }
+        x.restore();
+        // the worn edge: lit where it faces the candle, in shadow where it turns away
+        for (let k = 0; k < 4; k++) {
+          const a = ins[k], b = ins[(k + 1) % 4], ex = b[0] - a[0], ey = b[1] - a[1], l = Math.hypot(ex, ey) || 1, nx = ey / l, ny = -ex / l, dd = nx * FL.L[0] + ny * FL.L[1];
+          x.strokeStyle = dd > 0 ? `rgba(255,226,180,${0.3 * dd})` : `rgba(0,0,0,${0.55 * -dd})`; x.lineWidth = dd > 0 ? 2.5 : 4; x.lineCap = 'round';
+          x.beginPath(); x.moveTo(lerp(a[0], b[0], 0.12) - nx * 3, lerp(a[1], b[1], 0.12) - ny * 3); x.lineTo(lerp(a[0], b[0], 0.88) - nx * 3, lerp(a[1], b[1], 0.88) - ny * 3); x.stroke();
+        }
+      }
+      // two cracks across the stone, a dark split with a lit lip
+      const cracks = [];
+      for (const [x0, y0, a0, L0] of [[OX + 980, OY + 420, 0.35, 760], [OX + 760, OY + 760, -0.5, 520]]) {
+        const pts = []; let px = x0, py = y0, a = a0; for (let k = 0; k <= 24; k++) { pts.push([px, py]); a += (r() - 0.5) * 0.7; px += Math.cos(a) * L0 / 24; py += Math.sin(a) * L0 / 24; }
+        x.fillStyle = 'rgba(255,226,180,0.18)'; taper(x, pts.map(p => [p[0] + 1.5, p[1] - 1.5]), 4, 0.5);
+        x.fillStyle = 'rgba(0,0,0,0.85)'; taper(x, pts, 5, 0.6); cracks.push(pts.map(p => [p[0] - OX, p[1] - OY]));
+      }
+      return { c, OX, OY, cracks };
+    });
+  }
+  // the pool's outline: fed from off the left edge, its front fingering out across the stone
+  const POOL = { x: -120, y: 600 };
+  function poolShape(x, R, k, drain) {
+    x.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const a = i / 80 * TAU, n = K.fbm(Math.cos(a) * 1.1 + 4, Math.sin(a) * 1.1 + k * 0.15, 3, 1620);
+      const lobe = 0.22 * Math.max(0, Math.sin(a * 3 + 0.8)) * Math.max(0, Math.cos(a)), f = 1 + 0.36 * (n - 0.5) * 2 + lobe;
+      const rr = R * f * (1 - drain * 0.15 * (0.5 + n)), px = POOL.x + Math.cos(a) * rr * 1.15, py = POOL.y + Math.sin(a) * rr * 0.8;
+      i ? x.lineTo(px, py) : x.moveTo(px, py);
     }
+    x.closePath();
+  }
+  const rimAt = (R, a) => [POOL.x + Math.cos(a) * R * 1.12, POOL.y + Math.sin(a) * R * 0.78];
+  const SEEP_A = [-1.05, -0.5, 0.02, 0.5, 1.0];
+  const VEIN_SEEP = k => veinTree(1630 + k, { roots: 2, len: 1300, step: 14, width: 10, branch: 0.08, spread: 0.8, dir: SEEP_A[k], arc: 0.95, decay: 0.991, max: 70, wiggle: 1.1 });
+  function shotFloor(x, t, sh) {
+    const L9 = K.cue('L09a'), u = span(t, sh.a, sh.b), lt = t - sh.a;
+    const drank = at('L09a', 0.32);                      // "and the land drank his blood"
+    const R = lerp(60, 640, easeOut(span(t, sh.a - 0.2, drank + 0.4))), seep = span(t, drank - 0.1, sh.b + 0.6), drain = smooth(span(t, drank, sh.b + 0.4));
+    const [hx, hy] = K.shake(t * 0.25, 6, 1626);
+    const c = { x: lerp(-40, 120, ease(u)) + hx, y: lerp(20, -10, u) + hy, z: lerp(1.05, 1.2, ease(u)), r: lerp(-0.035, 0.01, u) };
+    const F = wornFloor(), fl = flick(t, 3, 7);
+    view(x, c, 1); x.drawImage(F.c, -F.OX, -F.OY);
+    // the vermilion: a deep pool, its rim thinner and brighter, the candle's streak on its skin
+    x.save(); poolShape(x, R, lt, drain);
+    x.fillStyle = `rgb(${lerp(70, 44, drain) | 0},${lerp(8, 5, drain) | 0},6)`; x.fill();
+    x.clip();
+    const pg = x.createRadialGradient(POOL.x, POOL.y, 40, POOL.x, POOL.y, R * 1.25); pg.addColorStop(0, 'rgba(20,0,0,0.55)'); pg.addColorStop(0.75, 'rgba(0,0,0,0)'); pg.addColorStop(0.95, 'rgba(120,18,10,0.35)'); pg.addColorStop(1, 'rgba(170,30,16,0.6)'); x.fillStyle = pg; x.fillRect(-400, 0, 1800, 1200);
+    x.globalCompositeOperation = 'lighter'; x.globalAlpha = 0.5 * (1 - drain * 0.6) * fl;
+    const sg = x.createLinearGradient(0, 0, R * 0.9, -R * 0.4); sg.addColorStop(0, 'rgba(255,170,110,0)'); sg.addColorStop(0.55, 'rgba(255,190,130,0.35)'); sg.addColorStop(1, 'rgba(255,170,110,0)');
+    x.fillStyle = sg; x.beginPath(); x.ellipse(POOL.x + R * 0.45, POOL.y - R * 0.3, R * 0.5, 22, -0.3, 0, TAU); x.fill();
     x.restore();
-    // the pool itself, sinking away into the stone
-    const pr = 250 * (1 - sink);
-    if (pr > 2) {
-      x.save(); x.beginPath(); for (let k = 0; k <= 40; k++) { const a = k / 40 * TAU, e = pr * (1 + 0.3 * (K.fbm(Math.cos(a) * 1.4, Math.sin(a) * 1.4 + sink * 2, 3, 1531) - 0.5) * 2); k ? x.lineTo(960 + Math.cos(a) * e * 1.2, 540 + Math.sin(a) * e) : x.moveTo(960 + Math.cos(a) * e * 1.2, 540 + Math.sin(a) * e); } x.closePath();
-      x.fillStyle = `rgb(${lerp(110, 60, sink) | 0},10,8)`; x.fill(); x.clip();
-      x.fillStyle = 'rgba(200,210,235,0.22)'; x.beginPath(); x.ellipse(900, 470, pr * 0.5, pr * 0.12, -0.3, 0, TAU); x.fill(); x.restore();
+    x.save(); poolShape(x, R, lt, drain); x.strokeStyle = 'rgba(30,2,2,0.8)'; x.lineWidth = 3; x.stroke(); x.restore();
+    // then it sinks into the stone: veins root out from the pool's edge, through the cracks and on
+    if (seep > 0) {
+      // the cracks fill first, from their ends nearest the pool
+      F.cracks.forEach((pts, k) => { const p = clamp(seep * 1.6 - 0.15 - k * 0.2); if (p <= 0) return; x.strokeStyle = 'rgba(150,18,12,0.95)'; x.lineWidth = 3.5; x.lineCap = 'round'; K.line(x, pts, p); x.save(); x.globalCompositeOperation = 'lighter'; x.strokeStyle = `rgba(255,90,40,${0.5 * (1 - p * 0.6)})`; x.lineWidth = 1.2; K.line(x, pts, p); x.restore(); });
+      SEEP_A.forEach((a, k) => { const o = rimAt(R * 0.96, a), p = clamp(seep * 1.2 - (k % 3) * 0.07); if (p > 0) drawVeins(x, VEIN_SEEP(k), lerp(0.02, 0.8, easeOut(p)), { map: (fx, fy) => [o[0] + fx, o[1] + fy * 0.85, 1], t, scale: 1.05, hot: 1 }); });
     }
+    // the council table above, out of focus: its edge and a leg in shadow across the top of the frame
     x.setTransform(1, 0, 0, 1, 0, 0);
-    x.save(); x.globalCompositeOperation = 'multiply'; const g = x.createRadialGradient(500, 200, 60, 900, 500, 1400); g.addColorStop(0, 'rgb(200,210,236)'); g.addColorStop(0.6, 'rgb(110,112,130)'); g.addColorStop(1, 'rgb(20,20,26)'); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
-    finish(x, { bloom: 0.35, vig: 0.75 });
+    softDraw(x, cc => { cc.fillStyle = '#000'; cc.fillRect(-100, -60, W + 200, 150); cc.fillRect(1500, -60, 90, 520); }, 6, 0.85);
+    // candlelight raking in from the upper right, warm; the far side falls cold
+    x.save(); x.globalCompositeOperation = 'multiply'; const lg = x.createRadialGradient(W * 1.05, -60, 80, W * 0.8, H * 0.2, W * 1.15 * (0.94 + 0.06 * fl)); lg.addColorStop(0, 'rgb(255,240,210)'); lg.addColorStop(0.5, 'rgb(220,170,124)'); lg.addColorStop(1, 'rgb(46,44,56)'); x.fillStyle = lg; x.fillRect(0, 0, W, H); x.restore();
+    glow(x, [255, 170, 90], W * 0.95, 40, 520, 0.16 * fl);
+    K.specks(x, t, { kind: 'dust', n: 24, alpha: 0.28, seed: 1627 });
+    finish(x, { bloom: 0.35, vig: 0.78, shadow: '#26304a', shadowA: 0.18 });
+    void L9;
   }
   // "From that night...": high over the chamber, the veins root out through the floor, crack the throne, climb the walls
   function shotVeins(x, t, sh) {
@@ -1916,9 +1963,8 @@
       { id: 'spill', a: L08.end - 0.05, draw: shotSpill },
       { id: 'dawn', a: L09.start - 0.25, draw: shotDawn, tin: D(0.8) },
       { id: 'ledger', a: at('L09', 0.3), draw: shotLedger, tin: D(0.25) },
-      { id: 'blood', a: L9a.start - 0.25, draw: shotBlood, tin: D(0.4) },
-      { id: 'drink', a: at('L09a', 0.33), draw: shotDrink, tin: D(0.25) },
-      { id: 'veins', a: at('L09a', 0.54), draw: shotVeins },
+      { id: 'floor', a: L9a.start - 0.25, draw: shotFloor, tin: D(0.4) },
+      { id: 'veins', a: at('L09a', 0.54), draw: shotVeins, tin: D(0.2) },
       { id: 'land', a: at('L09a', 0.72), draw: shotLand, tin: D(0.2) },
       { id: 'feast', a: at('L09a', 0.86), draw: shotFeast, tin: D(0.3) },
       { id: 'ledger2', a: L10.start - 0.15, draw: shotLedger2, tin: D(0.35) },
