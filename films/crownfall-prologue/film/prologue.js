@@ -9,7 +9,7 @@
   const SCENES = window.SCENES = window.SCENES || {};
   const TOTAL = TL.total;
   let ctx, canvas;
-  const OPTS = { subs: false, sceneOnly: -1 };
+  const OPTS = { subs: false, sceneOnly: -1, paint: false };   // paint: the painterly finish (work in progress, off unless asked for)
 
   // line and scene lookups for the scenes
   const LINES = {}; for (const s of TL.scenes) for (const l of s.lines) LINES[l.id] = l;
@@ -152,14 +152,25 @@
     drawScene(ctx, sc.n, t);
   }
 
+  // Work in progress, off by default (?paint=1, or --paint in the tools): the approved film renders without it.
+  // The painterly finish (film/paint.js) goes over the eight scenes, not the title, the chapter card or the subtitles:
+  // it comes up as the cold open's title gives way to scene 1. A scene may set its own look: SCENES[n].look.
+  function paintOver(t, only) {
+    if (!OPTS.paint || !K.paint) return;
+    const S = TL.scenes, first = S.find(s => s.n === 1), n = only > 0 ? only : (S.find(s => t >= s.start && t < s.end) || S[S.length - 1]).n;
+    const amount = only > 0 ? 1 : smooth(span(t, first.start - 0.3, first.start + 1.4));
+    if (amount <= 0) return;
+    K.paint(ctx, Object.assign({}, (SCENES[n] || {}).look, { amount }));
+  }
+
   function renderAt(t) {
     t = clamp(t, 0, TOTAL);
     if (ctx.reset) ctx.reset();          // the whole drawing state back to default each frame: no frame depends on the last
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
-    if (OPTS.sceneOnly >= 0) drawScene(ctx, OPTS.sceneOnly, t);
+    if (OPTS.sceneOnly >= 0) { drawScene(ctx, OPTS.sceneOnly, t); if (OPTS.sceneOnly > 0) paintOver(t, OPTS.sceneOnly); }
     else {
-      if (t < TL.chapter[0] + 2.0) scenes(t);
+      if (t < TL.chapter[0] + 2.0) { scenes(t); paintOver(t, -1); }
       if (t >= TL.chapter[0]) chapterCard(t);
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';

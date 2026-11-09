@@ -2,6 +2,7 @@
 <style>html,body{margin:0;background:#000;overflow:hidden}</style>
 <script src="timeline.js"></script>
 <script src="kit.js"></script>
+<script src="paint.js"></script>
 <script src="mapdata.js"></script>
 <script src="map.js"></script>
 <script src="scenes/s1.js"></script>
@@ -14,8 +15,8 @@
 <script src="scenes/s8.js"></script>
 <script src="prologue.js"></script>
 <script>
-  // ?subs=1 draws the subtitles; ?scene=N draws only scene N (any time, for working on one scene)
+  // ?subs=1 draws the subtitles; ?scene=N draws only scene N (any time, for working on one scene); ?paint=1 adds the painterly finish (work in progress)
   const q = new URLSearchParams(location.search);
-  FILM.opts.subs = q.get('subs') === '1'; FILM.opts.sceneOnly = q.has('scene') ? +q.get('scene') : -1;
+  FILM.opts.subs = q.get('subs') === '1'; FILM.opts.sceneOnly = q.has('scene') ? +q.get('scene') : -1; FILM.opts.paint = q.get('paint') === '1';
   FILM.loadFonts('../fonts/fonts.css').then(() => KIT.whenImages()).then(() => { FILM.mountHeadless(); window.FILM_READY = true; }).catch(e => { window.FILM_ERROR = String(e); });
 </script>
