@@ -1,4 +1,4 @@
-// Render the film to MP4 with its soundtrack (audio/intro-mix.m4a, from tools/mix.py).
+// Render the film to MP4 with its soundtrack (audio/prologue-mix.m4a, from tools/mix.py).
 //   node tools/export.js [out/crownfall-intro.mp4] [--workers 4] [--from 0] [--to <s>] [--scale 1] [--subs] [--no-audio]
 // Frames come from FILM.renderAt(i / 24), piped as JPEG into one ffmpeg encoder per worker, then joined.
 const { open } = require('./film'); const { spawn, execFileSync } = require('child_process'); const fs = require('fs'); const path = require('path');
@@ -9,7 +9,7 @@ const TMP = path.resolve(path.dirname(OUT), 'export_tmp'); fs.mkdirSync(TMP, { r
 async function renderRange(id, a, b) {
   const { browser, page, errs } = await open({ subs: SUBS });
   const w = Math.round(1920 * SCALE / 2) * 2, h = Math.round(1080 * SCALE / 2) * 2, file = path.join(TMP, `seg_${String(id).padStart(2, '0')}.mp4`);
-  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', '24', '-i', '-', '-vf', `scale=${w}:${h}:flags=lanczos`, '-c:v', 'libx264', '-preset', 'medium', '-crf', SCALE < 1 ? '21' : '17', '-tune', 'grain', '-pix_fmt', 'yuv420p', '-r', '24', file]);
+  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', '24', '-i', '-', '-vf', `scale=${w}:${h}:flags=lanczos`, '-c:v', 'libx264', '-preset', 'medium', '-crf', SCALE < 1 ? '21' : '19', '-tune', 'grain', '-pix_fmt', 'yuv420p', '-r', '24', file]);
   ff.stderr.on('data', d => process.stderr.write(`[ffmpeg ${id}] ${d}`)); const t0 = Date.now();
   for (let i = a; i < b; i++) {
     const url = await page.evaluate(t => { FILM.renderAt(t); return document.querySelector('canvas').toDataURL('image/jpeg', 0.94); }, i / 24 + 1e-4);
@@ -29,7 +29,7 @@ async function renderRange(id, a, b) {
   const segs = await Promise.all(jobs); const list = path.join(TMP, 'segs.txt'); fs.writeFileSync(list, segs.map(f => `file '${f}'`).join('\n'));
   const video = path.join(TMP, 'video.mp4'); execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', video]);
   if (!argv.includes('--no-audio')) {
-    const mix = path.resolve(__dirname, '../audio/intro-mix.m4a'), ss = (from / 24).toFixed(3), dur = ((to - from) / 24).toFixed(3);
+    const mix = path.resolve(__dirname, '../audio/prologue-mix.m4a'), ss = (from / 24).toFixed(3), dur = ((to - from) / 24).toFixed(3);
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', video, '-ss', ss, '-t', dur, '-i', mix, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-shortest', '-movflags', '+faststart', OUT]);
   } else fs.copyFileSync(video, OUT);
   console.log('wrote ' + OUT);
