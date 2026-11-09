@@ -55,6 +55,13 @@ under the louder ones so that a sound in a gap, where the music is up, is still 
 Every scene keys its pictures to its narration lines (`K.cue('L19')`), so a new voice re-times the whole film.
 `FILM.renderAt(t)` is deterministic: no `Math.random`, no `Date`.
 
+## In the game
+
+Crownfall plays the cut the creator chose (commit `e0b131f`: George's narration, the code-made sounds) as its opening:
+the whole film the first time the game starts, and only the title sequence (the studio mark, Year 33 and the title)
+on every later start. `tools/game_cut.sh` makes both files from that cut; the game repository records their bytes and
+hashes in `main game/public/video/provenance.json`.
+
 ## How it is made
 
 - `film/kit.js`: the drawing kit: vellum and linen, iron-gall ink with broad-nib strokes, washes, gold leaf, spreading
