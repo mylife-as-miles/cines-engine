@@ -330,8 +330,8 @@
     const C04 = K.cue('C04'), V02 = K.cue('V02'), V03 = K.cue('V03');
     // the camera: behind him, low; it rises and draws back through V02, then keeps drifting up and away
     const k1 = ease(span(t, sh.a + 1.1, V02.end + 0.8)), k2 = span(t, V02.end + 0.2, sc.end + 2.5), k2e = k2 * (0.6 + 0.4 * k2);
-    const px = lerp(0.9, -2.5, k1) + 16 * k2e, py = lerp(1.15, 20, k1) + 14 * k2e, pz = lerp(-2.7, -46, k1) - 26 * k2e;
-    const pitch = lerp(-0.02, -0.17, k1) - 0.05 * k2e, yaw = lerp(0.05, 0.1, k1) - 0.26 * k2e;
+    const px = lerp(1.1, -2.5, k1) + 16 * k2e, py = lerp(0.5, 20, k1) + 14 * k2e, pz = lerp(-2.6, -46, k1) - 26 * k2e;
+    const pitch = lerp(0.075, -0.17, k1) - 0.05 * k2e, yaw = lerp(0.05, 0.1, k1) - 0.26 * k2e;
     const C = cam3(px, py, pz, pitch, yaw);
     // the sky: pale, almost white at the horizon; the cold low sun
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -363,13 +363,15 @@
         ctx.beginPath(); pr.forEach((q, i) => i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])); ctx.closePath();
         g = ctx.createLinearGradient(0, hy, 0, H); g.addColorStop(0, '#45494e'); g.addColorStop(0.15, '#1a1c1f'); g.addColorStop(1, '#08090a'); ctx.fillStyle = g; ctx.fill();
         ctx.save(); ctx.clip();
+        // close to it, the wet stone holds the pale sky along its edge
+        if (py < 4) { const e = C.p(0, 0.12, 0.7), ey = e[2] > 0 ? e[1] : hy, rg = ctx.createLinearGradient(0, ey - 4, 0, ey + 260); rg.addColorStop(0, rgbs([210, 214, 218], 0.4 * (1 - py / 4))); rg.addColorStop(0.35, rgbs([150, 154, 160], 0.12 * (1 - py / 4))); rg.addColorStop(1, 'rgba(120,124,130,0)'); ctx.fillStyle = rg; ctx.fillRect(0, ey - 4, W, 270); }
         // the sun's road across the wet stone
         
-        const rr = rng(873); ctx.fillStyle = 'rgba(220,224,230,0.2)'; for (let i = 0; i < 140; i++) { const q = C.p(lerp(-40, 30, rr()), 0.13, lerp(-120, 0.3, rr())); if (q[2] < 0.3) continue; const w = 1.5 * FOC / q[2]; ctx.fillRect(q[0] - w, q[1], w * 2, Math.max(1, 0.03 * FOC / q[2])); }
+        const rr = rng(873); ctx.fillStyle = 'rgba(220,224,230,0.2)'; for (let i = 0; i < 140; i++) { const q = C.p(lerp(-40, 30, rr()), 0.13, lerp(-120, 0.3, rr())); if (q[2] < 0.3) continue; const w = Math.min(60, 1.5 * FOC / q[2]); ctx.fillRect(q[0] - w, q[1], w * 2, Math.max(1, Math.min(3, 0.03 * FOC / q[2]))); }
         ctx.restore();
         // its front edge, a dark step down to the plain
         const fr = SHELF.slice(60, 120).map(([x, z]) => [C.p(x, 0.12, z), C.p(x, 0, z + 0.05)]).filter(q => q[0][2] > 0.3 && q[1][2] > 0.3);
-        ctx.fillStyle = '#060607'; ctx.beginPath(); fr.forEach((q, i) => i ? ctx.lineTo(q[0][0], q[0][1]) : ctx.moveTo(q[0][0], q[0][1])); for (let i = fr.length - 1; i >= 0; i--) ctx.lineTo(fr[i][1][0], fr[i][1][1] + 1); ctx.closePath(); ctx.fill();
+        if (py > 4) { ctx.fillStyle = '#060607'; ctx.beginPath(); fr.forEach((q, i) => i ? ctx.lineTo(q[0][0], q[0][1]) : ctx.moveTo(q[0][0], q[0][1])); for (let i = fr.length - 1; i >= 0; i--) ctx.lineTo(fr[i][1][0], fr[i][1][1] + 1); ctx.closePath(); ctx.fill(); }
       }
     }
     // the curse in the ground beneath him, faint, waking when he stands
@@ -418,20 +420,32 @@
         cc.save(); cc.translate(q[0], q[1]); cc.scale(hgt, hgt); cc.fillStyle = fill;
         const hk = 1;
         if (up < 0.5) {
-          // kneeling, sitting back on his heels: the cloak pooled on the stone, the back bent, arms hanging, head bowed
-          cc.beginPath(); cc.moveTo(-0.23, 0.005); cc.bezierCurveTo(-0.21, -0.08, -0.18, -0.16, -0.17, -0.27); cc.bezierCurveTo(-0.17, -0.38, -0.19, -0.48, -0.16, -0.555);
-          cc.quadraticCurveTo(-0.15, -0.6, -0.05, -0.615); cc.lineTo(0.05, -0.615); cc.quadraticCurveTo(0.15, -0.6, 0.145, -0.54);
-          cc.bezierCurveTo(0.19, -0.48, 0.17, -0.38, 0.175, -0.27); cc.bezierCurveTo(0.18, -0.16, 0.21, -0.08, 0.23, 0.005); cc.quadraticCurveTo(0, 0.02, -0.23, 0.005); cc.closePath(); cc.fill();
-          for (const sx of [-1, 1]) cap(cc, sx * 0.14, -0.53, sx * 0.17, -0.3, 0.035, 0.03);
-          cap(cc, 0, -0.6, 0, -0.66, 0.035, 0.03);
+          // kneeling, three-quarters from behind, sitting back on his heels: the folded leg along the stone with the knee
+          // forward, the back curved over, one hand down on the stone, the head bowed (lifting as the mist opens)
+          const lift = smooth(span(t, sh.a + 0.2, sh.a + 2.4)), hb = lerp(0, 1, lift);
+          // the cloak falling from his shoulders onto the stone behind his heels
+          cc.beginPath(); cc.moveTo(0.06, -0.6); cc.bezierCurveTo(0.2, -0.56, 0.25, -0.36, 0.27, -0.14); cc.quadraticCurveTo(0.3, -0.04, 0.36, 0.004); cc.lineTo(0.06, 0.004); cc.closePath(); cc.fill();
+          // the folded leg: shin flat on the stone from the knee (forward, left) to the heel, the thigh resting on it
+          cc.beginPath(); cc.moveTo(-0.13, 0.004); cc.quadraticCurveTo(-0.15, -0.045, -0.11, -0.07); cc.bezierCurveTo(-0.02, -0.11, 0.1, -0.17, 0.17, -0.2); cc.quadraticCurveTo(0.25, -0.17, 0.26, -0.08); cc.quadraticCurveTo(0.27, -0.02, 0.24, 0.004); cc.closePath(); cc.fill();
+          // the foot turned under, at the heel
+          cc.beginPath(); cc.moveTo(0.2, 0.004); cc.lineTo(0.3, 0.004); cc.quadraticCurveTo(0.31, -0.03, 0.27, -0.045); cc.closePath(); cc.fill();
+          // the torso: from the hips over the heels, the back curved forward towards the plain
+          cc.beginPath(); cc.moveTo(0.04, -0.17); cc.bezierCurveTo(0.21, -0.2, 0.22, -0.4, 0.15, -0.54); cc.quadraticCurveTo(0.1, -0.62, 0.02, -0.63 + 0.01 * hb);
+          cc.quadraticCurveTo(-0.07, -0.62, -0.09, -0.55); cc.bezierCurveTo(-0.1, -0.44, -0.04, -0.3, -0.02, -0.18); cc.closePath(); cc.fill();
+          // the near arm reaching down, the hand flat on the stone ahead of the knee
+          cap(cc, 0.05, -0.56, -0.1, -0.33, 0.034, 0.028); cap(cc, -0.1, -0.33, -0.2, -0.03, 0.028, 0.022);
+          cc.beginPath(); cc.moveTo(-0.25, 0.004); cc.quadraticCurveTo(-0.24, -0.035, -0.2, -0.04); cc.lineTo(-0.15, -0.02); cc.lineTo(-0.14, 0.004); cc.closePath(); cc.fill();
+          // neck and head: bowed forward, lifting to look out
+          const hx = lerp(-0.07, -0.04, hb), hy1 = lerp(-0.66, -0.71, hb);
+          cap(cc, 0.0, -0.6, hx + 0.02, hy1 + 0.03, 0.034, 0.03);
+          head(cc, hx, hy1, 0.13, lerp(0.75, 0.15, hb) - Math.PI * 0.08, 0);
         } else {
           for (const sx of [-1, 1]) cc.fillRect(sx * 0.035 - 0.025, -0.32, 0.05, 0.32);
           cc.beginPath(); cc.moveTo(-0.17, -0.2); cc.bezierCurveTo(-0.16, -0.45, -0.15, -0.65, -0.12, -0.79); cc.quadraticCurveTo(0, -0.83, 0.12, -0.79); cc.bezierCurveTo(0.15, -0.65, 0.16, -0.45, 0.17, -0.2); cc.quadraticCurveTo(0, -0.17, -0.17, -0.2); cc.closePath(); cc.fill();
+          cc.beginPath(); cc.ellipse(0, -0.87, 0.058, 0.07, 0, 0, TAU); cc.fill();
+          cc.beginPath(); smoothPath(cc, [[-0.066, -0.82], [-0.072, -0.89], [-0.05, -0.938], [0.0, -0.952], [0.05, -0.938], [0.072, -0.89], [0.068, -0.82], [0.05, -0.795], [0.02, -0.82], [-0.02, -0.792], [-0.05, -0.82]]); cc.fill();
         }
-        const hy0 = up < 0.5 ? -0.7 : -0.87;
-        cc.beginPath(); cc.ellipse(0, hy0, 0.058, 0.07, 0, 0, TAU); cc.fill();
-        cc.beginPath(); smoothPath(cc, [[-0.066, hy0 + 0.05], [-0.072, hy0 - 0.02], [-0.05, hy0 - 0.068], [0.0, hy0 - 0.082], [0.05, hy0 - 0.068], [0.072, hy0 - 0.02], [0.068, hy0 + 0.05], [0.05, hy0 + 0.075], [0.02, hy0 + 0.05], [-0.02, hy0 + 0.078], [-0.05, hy0 + 0.05]]); cc.fill();
-        if (russet) { cc.fillStyle = 'rgba(110,82,54,0.16)'; cc.beginPath(); if (up < 0.5) { cc.moveTo(-0.13, -0.56); cc.quadraticCurveTo(0, -0.6, 0.13, -0.56); cc.lineTo(0.27, -0.01); cc.lineTo(-0.27, -0.01); } else { cc.moveTo(-0.12, -0.76); cc.quadraticCurveTo(0, -0.8, 0.12, -0.76); cc.lineTo(0.16, -0.22); cc.lineTo(-0.16, -0.22); } cc.closePath(); cc.fill(); }
+        if (russet) { cc.fillStyle = 'rgba(110,82,54,0.18)'; cc.beginPath(); if (up < 0.5) { cc.moveTo(0.06, -0.6); cc.bezierCurveTo(0.2, -0.56, 0.25, -0.36, 0.27, -0.14); cc.quadraticCurveTo(0.3, -0.04, 0.36, 0.004); cc.lineTo(0.12, 0.004); cc.bezierCurveTo(0.2, -0.2, 0.18, -0.42, 0.06, -0.6); } else { cc.moveTo(-0.12, -0.76); cc.quadraticCurveTo(0, -0.8, 0.12, -0.76); cc.lineTo(0.16, -0.22); cc.lineTo(-0.16, -0.22); } cc.closePath(); cc.fill(); }
         cc.restore();
       };
       if (hgt > 60) rimLit(ctx, (cc, fill) => body(cc, fill, false), { rim: '#eef0f2', mid: '#2e3034', dark: '#0d0e10', dx: 0, dy: Math.min(8, hgt * 0.012), steps: 3 });

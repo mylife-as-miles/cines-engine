@@ -213,103 +213,118 @@
     const eye = rot([0.29 * hh, -0.1 * hh], hr);
     return { head: [x + hc[0] * s, y + hc[1] * s], eye: [x + (hc[0] + eye[0]) * s, y + (hc[1] + eye[1]) * s], hh: hh * s, hr };
   }
-  // hooded(ctx, x, y, h, o): a man in a deep rounded cowl, the lower face wrapped in plain dark cloth, facing us, standing
-  // on (x, y), h tall to the top of the hood, lit from below by the fire. o.lit (light, about 1), o.turn (-1..1, the head
-  // turned; ±1 away), o.bow (head lowered), o.torch (-1 in the hand on screen left, 1 on screen right, 0 none), o.low (0
-  // torch raised .. 1 lowered), o.lean, o.bulk, o.flat + o.fill (one colour, for rim-lit silhouettes; o.back: seen from
-  // behind). Returns {torch, head}.
-  const DARK = [7, 5, 4], WARM = [150, 66, 28];
+  // hooded(ctx, x, y, h, o): one of the killers, facing us, standing on (x, y), h tall to the top of the hood: a near-black
+  // cloak and deep cowl, a plain cloth mask with eye slits, and the fire's light only as a hot rim along the edges that face
+  // it. o.lit (light, about 1), o.fx (where the fire is: -1 to his screen left, 1 to the right, 0 in front and below), o.turn
+  // (-1..1, the head turned; ±1 away), o.bow (head lowered), o.hoodLow (the hood pulled down over the eyes), o.torch (-1 in
+  // the hand on screen left, 1 on screen right, 0 none), o.low (0 torch raised .. 1 lowered), o.lean, o.bulk (shoulders),
+  // o.t (the hem moves), o.seed; o.flat + o.fill (one colour, for rim-lit silhouettes; o.back: seen from behind).
+  // Returns {torch, head}.
+  const DARK = [7, 5, 4], WARM = [150, 66, 28], HOT = [255, 150, 70];
   function hooded(ctx, x, y, h, o = {}) {
     const lit = o.lit != null ? o.lit : 1, b = o.bulk || 1, turn = clamp(o.turn || 0, -1, 1), bow = o.bow || 0, ts = o.torch || 0, low = clamp(o.low || 0);
-    const flat = !!o.flat, sway = o.sway || 0, lean = o.lean || 0;
+    const flat = !!o.flat, sway = o.sway || 0, lean = o.lean || 0, sd = o.seed || 1, t = o.t || 0, fx0 = clamp(o.fx || 0, -1, 1), hl = o.hoodLow || 0;
     ctx.save(); ctx.translate(x, y); if (lean) ctx.rotate(lean); ctx.scale(h, h);
-    const L = k => rgb([DARK[0] + WARM[0] * k * lit, DARK[1] + WARM[1] * k * lit, DARK[2] + WARM[2] * k * lit]);
-    let fs = o.fill;
-    if (!flat) { const g = ctx.createLinearGradient(0, 0, 0, -1); g.addColorStop(0, L(0.5)); g.addColorStop(0.18, L(0.6)); g.addColorStop(0.3, L(0.52)); g.addColorStop(0.55, L(0.32)); g.addColorStop(0.8, L(0.2)); g.addColorStop(1, L(0.13)); fs = g; }
-    ctx.fillStyle = fs;
+    const body = flat ? o.fill : rgb([10 + 6 * lit, 7 + 3 * lit, 6 + 2 * lit]);
+    ctx.fillStyle = body;
     // legs and boots
-    for (const sd of [-1, 1]) {
-      ctx.beginPath(); ctx.moveTo(sd * 0.066, -0.24); ctx.lineTo(sd * 0.016, -0.24); ctx.lineTo(sd * 0.022, -0.04); ctx.lineTo(sd * 0.064, -0.04); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(sd * 0.072, -0.065); ctx.lineTo(sd * 0.014, -0.065); ctx.lineTo(sd * 0.01, 0); ctx.quadraticCurveTo(sd * 0.06, 0.004, sd * 0.09, -0.004); ctx.closePath(); ctx.fill();
+    for (const s2 of [-1, 1]) {
+      ctx.beginPath(); ctx.moveTo(s2 * 0.066, -0.24); ctx.lineTo(s2 * 0.016, -0.24); ctx.lineTo(s2 * 0.022, -0.04); ctx.lineTo(s2 * 0.064, -0.04); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(s2 * 0.072, -0.065); ctx.lineTo(s2 * 0.014, -0.065); ctx.lineTo(s2 * 0.01, 0); ctx.quadraticCurveTo(s2 * 0.06, 0.004, s2 * 0.09, -0.004); ctx.closePath(); ctx.fill();
     }
-    // the cloak, from broad shoulders
-    const cloak = new Path2D();
-    cloak.moveTo(-0.05, -0.83); cloak.bezierCurveTo(-0.11 * b, -0.83, -0.15 * b, -0.82, -0.158 * b, -0.775);
-    cloak.bezierCurveTo(-0.168 * b, -0.68, -0.176 * b, -0.44, -0.188 * b + sway, -0.21);
-    cloak.quadraticCurveTo(-0.12 + sway, -0.19, -0.05 + sway, -0.205); cloak.lineTo(0.05 + sway, -0.2); cloak.quadraticCurveTo(0.12 + sway, -0.19, 0.188 * b + sway, -0.212);
-    cloak.bezierCurveTo(0.176 * b, -0.44, 0.168 * b, -0.68, 0.158 * b, -0.775); cloak.bezierCurveTo(0.15 * b, -0.82, 0.11 * b, -0.83, 0.05, -0.83); cloak.closePath();
+    // the cloak, from the shoulders to a ragged hem that stirs in the fire's draught
+    const cloak = new Path2D(), hw = 0.19 * b;
+    cloak.moveTo(-0.05, -0.83); cloak.bezierCurveTo(-0.11 * b, -0.835, -0.152 * b, -0.822, -0.16 * b, -0.772);
+    cloak.bezierCurveTo(-0.17 * b, -0.68, -0.178 * b, -0.44, -hw + sway, -0.215);
+    for (let k = 1; k < 12; k++) { const u = k / 12, jag = (K.hash(k, sd, 41) - 0.5) * 0.045 + Math.sin(t * 1.9 + k * 1.7 + sd) * 0.007 * (0.4 + Math.abs(u - 0.5)); cloak.lineTo(lerp(-hw, hw, u) + sway + (K.hash(k, sd, 43) - 0.5) * 0.012, -0.2 + jag + (k % 2 ? 0.012 : -0.006)); }
+    cloak.lineTo(hw + sway, -0.217); cloak.bezierCurveTo(0.178 * b, -0.44, 0.17 * b, -0.68, 0.16 * b, -0.772); cloak.bezierCurveTo(0.152 * b, -0.822, 0.11 * b, -0.835, 0.05, -0.83); cloak.closePath();
     ctx.fill(cloak);
+    // the light: a hot inner rim on the side the fire is on (both sides, softer, when it is in front)
+    const side = Math.abs(fx0) > 0.2 ? Math.sign(fx0) : (sd % 2 ? 1 : -1), weak = Math.abs(fx0) > 0.2 ? 0.06 : 0.22;
+    const rimGrad = (x0, x1, a) => { const g = ctx.createLinearGradient(x0, 0, x1, 0), al = side < 0 ? [a, weak * a] : [weak * a, a]; g.addColorStop(0, rgbs(HOT, al[0])); g.addColorStop(0.22, rgbs(HOT, al[0] * 0.12)); g.addColorStop(0.5, rgbs(HOT, 0)); g.addColorStop(0.78, rgbs(HOT, al[1] * 0.12)); g.addColorStop(1, rgbs(HOT, al[1])); return g; };
+    const rimA = Math.min(1, 0.9 * lit);
+    // strongest on the shoulders, the hood and the upper arm; fading down the cloak
+    const rim = (path, x0, x1, w) => {
+      for (const [y0, y1, k] of [[-1.1, -0.5, 1], [-0.5, 0.05, 0.4]]) {
+        ctx.save(); ctx.beginPath(); ctx.rect(-0.4, y0, 0.8, y1 - y0); ctx.clip(); ctx.clip(path); ctx.strokeStyle = rimGrad(x0, x1, rimA * k); ctx.lineWidth = w; ctx.stroke(path); ctx.globalAlpha = 0.3; ctx.lineWidth = w * 3; ctx.stroke(path); ctx.restore();
+      }
+    };
     if (!flat) {
       ctx.save(); ctx.clip(cloak);
-      const sg = ctx.createLinearGradient(-0.19, 0, 0.19, 0); sg.addColorStop(0, 'rgba(0,0,0,0.8)'); sg.addColorStop(0.28, 'rgba(0,0,0,0.15)'); sg.addColorStop(0.55, 'rgba(0,0,0,0)'); sg.addColorStop(0.78, 'rgba(0,0,0,0.22)'); sg.addColorStop(1, 'rgba(0,0,0,0.82)');
-      ctx.fillStyle = sg; ctx.fillRect(-0.2, -0.9, 0.4, 0.75);
-      const sd = (o.seed || 1);
-      for (let k = 0; k < 6; k++) {
-        const fx = -0.13 + k * 0.052 + Math.sin(sd * 3 + k) * 0.012;
-        ctx.strokeStyle = 'rgba(0,0,0,0.42)'; ctx.lineWidth = 0.009; ctx.beginPath(); ctx.moveTo(fx * 0.75, -0.76); ctx.quadraticCurveTo(fx * 1.05, -0.5, fx * 1.25 + sway, -0.2); ctx.stroke();
-        ctx.strokeStyle = rgbs(WARM, 0.12 * lit); ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(fx * 0.75 + 0.009, -0.72); ctx.quadraticCurveTo(fx * 1.05 + 0.009, -0.5, fx * 1.25 + 0.009 + sway, -0.21); ctx.stroke();
+      // long folds: a dark crease beside a thread of light, brighter on the fire's side
+      for (let k = 0; k < 3; k++) {
+        const f = side * (0.04 + k * 0.045) * b + (K.hash(k, sd, 47) - 0.5) * 0.015, y0 = -0.74 + K.hash(k, sd, 49) * 0.12, la = (0.32 - k * 0.08) * rimA;
+        ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 0.014; ctx.beginPath(); ctx.moveTo(f * 0.8 - side * 0.012, y0); ctx.quadraticCurveTo(f * 1.05 - side * 0.012, -0.48, f * 1.25 - side * 0.012 + sway, -0.2); ctx.stroke();
+        ctx.strokeStyle = rgbs(HOT, la); ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(f * 0.8, y0 + 0.03); ctx.quadraticCurveTo(f * 1.05, -0.48, f * 1.25 + sway, -0.23); ctx.stroke();
       }
-      // the leather jerkin where the cloak parts, a belt, a buckle catching the fire
-      ctx.fillStyle = 'rgba(0,0,0,0.38)'; ctx.beginPath(); ctx.moveTo(-0.035, -0.8); ctx.lineTo(0.035, -0.8); ctx.lineTo(0.055 + sway, -0.2); ctx.lineTo(-0.055 + sway, -0.2); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = rgbs(mix(DARK, WARM, 0.22 * lit), 0.95); ctx.fillRect(-0.058, -0.535, 0.116, 0.024);
-      ctx.fillStyle = rgbs([255, 170, 90], 0.35 * Math.min(1, lit)); ctx.fillRect(-0.01, -0.533, 0.02, 0.02);
+      // a dull warmth low on the cloth, nearest the fire
+      const lg = ctx.createLinearGradient(0, -0.2, 0, -0.5); lg.addColorStop(0, rgbs(WARM, 0.12 * lit)); lg.addColorStop(1, rgbs(WARM, 0)); ctx.fillStyle = lg; ctx.fillRect(-0.25, -0.55, 0.5, 0.37);
       ctx.restore();
-      ctx.strokeStyle = rgbs(WARM, 0.4 * lit); ctx.lineWidth = 0.005; ctx.beginPath(); ctx.moveTo(-0.188 * b + sway, -0.21); ctx.quadraticCurveTo(-0.12 + sway, -0.19, -0.05 + sway, -0.205); ctx.lineTo(0.05 + sway, -0.2); ctx.quadraticCurveTo(0.12 + sway, -0.19, 0.188 * b + sway, -0.212); ctx.stroke();
-      ctx.fillStyle = fs;
+      rim(cloak, -hw, hw, 0.011);
+      ctx.fillStyle = body;
     }
     // the torch arm (raised .. lowered) and the torch
-    let torch = null;
+    let torch = null, top = null;
     if (ts) {
-      const S = [ts * 0.135 * b, -0.77], E = [lerp(ts * 0.235, ts * 0.17, low), lerp(-0.6, -0.63, low)], Hd = [lerp(ts * 0.225, ts * 0.185, low), lerp(-0.735, -0.47, low)];
-      cap(ctx, S[0], S[1], E[0], E[1], 0.033, 0.027); cap(ctx, E[0], E[1], Hd[0], Hd[1], 0.027, 0.022);
-      ctx.beginPath(); ctx.arc(Hd[0], Hd[1], 0.025, 0, TAU); ctx.fill();
+      const S = [ts * 0.14 * b, -0.77], E = [lerp(ts * 0.24, ts * 0.175, low), lerp(-0.6, -0.63, low)], Hd = [lerp(ts * 0.23, ts * 0.19, low), lerp(-0.735, -0.47, low)];
+      cap(ctx, S[0], S[1], E[0], E[1], 0.034, 0.028); cap(ctx, E[0], E[1], Hd[0], Hd[1], 0.028, 0.023);
+      ctx.beginPath(); ctx.arc(Hd[0], Hd[1], 0.026, 0, TAU); ctx.fill();
       const da = lerp(-0.16 * ts, 1.95 * ts, ease(low)), dir = [Math.sin(da), -Math.cos(da)];
-      const top = [Hd[0] + dir[0] * 0.17, Hd[1] + dir[1] * 0.17], butt = [Hd[0] - dir[0] * 0.07, Hd[1] - dir[1] * 0.07];
-      ctx.fillStyle = flat ? fs : '#120c08'; cap(ctx, butt[0], butt[1], top[0], top[1], 0.008, 0.01);
+      top = [Hd[0] + dir[0] * 0.17, Hd[1] + dir[1] * 0.17]; const butt = [Hd[0] - dir[0] * 0.07, Hd[1] - dir[1] * 0.07];
+      ctx.fillStyle = flat ? body : '#0d0806'; cap(ctx, butt[0], butt[1], top[0], top[1], 0.008, 0.01);
       cap(ctx, Hd[0] + dir[0] * 0.13, Hd[1] + dir[1] * 0.13, top[0] + dir[0] * 0.012, top[1] + dir[1] * 0.012, 0.015, 0.017);
-      if (!flat) { ctx.fillStyle = 'rgba(255,150,60,0.55)'; ctx.beginPath(); ctx.arc(top[0], top[1], 0.012, 0, TAU); ctx.fill(); ctx.fillStyle = rgbs([255, 160, 80], 0.25 * lit); cap(ctx, S[0], S[1] + 0.02, E[0], E[1] + 0.02, 0.01, 0.008); }
-      ctx.fillStyle = fs;
+      if (!flat) {
+        // the torch lights its own arm along the side towards the flame
+        ctx.strokeStyle = rgbs(HOT, 0.75 * Math.min(1, lit + 0.3)); ctx.lineWidth = 0.007; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(S[0] + ts * 0.02, S[1] - 0.02); ctx.lineTo(E[0] + ts * 0.022, E[1] - 0.004); ctx.lineTo(Hd[0] + ts * 0.02, Hd[1] - 0.012); ctx.stroke();
+        ctx.fillStyle = 'rgba(255,170,80,0.7)'; ctx.beginPath(); ctx.arc(top[0], top[1], 0.012, 0, TAU); ctx.fill();
+      }
+      ctx.fillStyle = body;
       const tl = rot([top[0] * h, top[1] * h], lean); torch = [x + tl[0], y + tl[1]];
     }
-    // the cowl: a deep rounded hood falling onto the shoulders
-    const hx = turn * 0.016, hy = bow * 0.045;
+    // the cowl: a deep rounded hood falling onto the shoulders (pulled low on some)
+    const hx = turn * 0.016, hy = bow * 0.045 + hl * 0.02;
     if (o.back) { ctx.translate(0, -0.78); ctx.scale(0.86, 0.9); ctx.translate(0, 0.78); }
-    const hood = new Path2D();
-    hood.moveTo(-0.138, -0.768); hood.bezierCurveTo(-0.122 + hx * 0.4, -0.84 + hy, -0.104 + hx, -0.985 + hy, -0.01 + hx, -0.998 + hy);
-    hood.bezierCurveTo(0.09 + hx, -0.99 + hy, 0.122 + hx * 0.4, -0.86 + hy, 0.138, -0.768); hood.bezierCurveTo(0.07, -0.74, -0.07, -0.74, -0.138, -0.768); hood.closePath();
+    const hood = new Path2D(), pk = hl * 0.03;
+    hood.moveTo(-0.14, -0.768); hood.bezierCurveTo(-0.124 + hx * 0.4, -0.84 + hy, -0.106 + hx, -0.985 + hy - pk, -0.01 + hx + hl * 0.02, -1.0 + hy - pk);
+    hood.bezierCurveTo(0.09 + hx, -0.99 + hy - pk, 0.124 + hx * 0.4, -0.86 + hy, 0.14, -0.768); hood.bezierCurveTo(0.07, -0.74, -0.07, -0.74, -0.14, -0.768); hood.closePath();
     ctx.fill(hood);
     if (o.back && o.brim) { const bs = o.brim; ctx.beginPath(); ctx.moveTo(bs * 0.06, -0.97 + hy); ctx.quadraticCurveTo(bs * 0.16, -0.95 + hy, bs * 0.165, -0.86 + hy); ctx.quadraticCurveTo(bs * 0.15, -0.8, bs * 0.1, -0.78); ctx.lineTo(bs * 0.05, -0.8); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(bs * 0.12, -0.8); ctx.quadraticCurveTo(bs * 0.14, -0.74, bs * 0.12, -0.7); ctx.lineTo(bs * 0.06, -0.72); ctx.closePath(); ctx.fill(); }
     if (!flat) {
-      ctx.save(); ctx.clip(hood);
-      const hg = ctx.createLinearGradient(-0.13 + hx, 0, 0.13 + hx, 0); hg.addColorStop(0, 'rgba(0,0,0,0.8)'); hg.addColorStop(0.35, 'rgba(0,0,0,0.15)'); hg.addColorStop(0.65, 'rgba(0,0,0,0.15)'); hg.addColorStop(1, 'rgba(0,0,0,0.8)'); ctx.fillStyle = hg; ctx.fillRect(-0.2, -1.05, 0.4, 0.3);
-      const vg = ctx.createLinearGradient(0, -1.0, 0, -0.8); vg.addColorStop(0, 'rgba(0,0,0,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = vg; ctx.fillRect(-0.2, -1.05, 0.4, 0.3);
-      ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 0.007;
-      for (const sd of [-1, 1]) { ctx.beginPath(); ctx.moveTo(hx + sd * 0.06, -0.83 + hy); ctx.quadraticCurveTo(sd * 0.1, -0.8, sd * 0.11, -0.77); ctx.stroke(); }
+      ctx.save(); ctx.clip(hood); ctx.strokeStyle = 'rgba(0,0,0,0.55)'; ctx.lineWidth = 0.008;
+      for (const s2 of [-1, 1]) { ctx.beginPath(); ctx.moveTo(hx + s2 * 0.065, -0.84 + hy); ctx.quadraticCurveTo(s2 * 0.105, -0.8, s2 * 0.115, -0.77); ctx.stroke(); }
       ctx.restore();
+      rim(hood, -0.14, 0.14, 0.01);
     }
     if (!flat && !o.back && Math.abs(turn) < 0.88) {
-      const fx = hx + turn * 0.03, fy = -0.872 + hy, rx = 0.056 * (1 - 0.6 * Math.abs(turn)), ry = 0.078;
-      ctx.save(); ctx.translate(fx, fy);
-      // the dark inside the hood, where the eyes are; the brim overhangs it
+      const fxm = hx + turn * 0.03, fy = -0.872 + hy, rx = 0.056 * (1 - 0.6 * Math.abs(turn)), ry = 0.078;
+      ctx.save(); ctx.translate(fxm, fy);
+      // the hood's mouth, and in it the mask: plain cloth a shade lighter than the cloak, two dark slits for the eyes
       const rec = new Path2D(); rec.moveTo(-rx, ry * 0.6); rec.bezierCurveTo(-rx * 1.08, -ry * 0.4, -rx * 0.62, -ry, 0, -ry); rec.bezierCurveTo(rx * 0.62, -ry, rx * 1.08, -ry * 0.4, rx, ry * 0.6); rec.quadraticCurveTo(0, ry * 0.95, -rx, ry * 0.6); rec.closePath();
       ctx.fillStyle = '#020101'; ctx.fill(rec);
-      // the cloth over the lower face, gathered at the chin, its lower edge catching the fire
-      const mask = new Path2D(); mask.moveTo(-rx * 0.88, ry * 0.16); mask.quadraticCurveTo(-rx * 0.25, ry * 0.0, 0, -ry * 0.06); mask.quadraticCurveTo(rx * 0.25, ry * 0.0, rx * 0.88, ry * 0.16);
-      mask.bezierCurveTo(rx * 0.9, ry * 0.5, rx * 0.5, ry * 0.9, 0, ry * 0.95); mask.bezierCurveTo(-rx * 0.5, ry * 0.9, -rx * 0.9, ry * 0.5, -rx * 0.88, ry * 0.16); mask.closePath();
-      const mg = ctx.createLinearGradient(0, -ry * 0.25, 0, ry); mg.addColorStop(0, rgb(mix([7, 5, 4], WARM, 0.02 * lit))); mg.addColorStop(0.6, rgb(mix([9, 6, 5], WARM, 0.1 * lit))); mg.addColorStop(1, rgb(mix([12, 8, 7], WARM, 0.34 * lit)));
+      const tk = top ? clamp(1 - Math.hypot(top[0] - fxm, top[1] - fy) / 0.35) : 0;
+      const mask = new Path2D(); mask.moveTo(-rx * 0.86, ry * 0.5); mask.bezierCurveTo(-rx * 0.92, -ry * 0.3, -rx * 0.55, -ry * 0.82, 0, -ry * 0.86); mask.bezierCurveTo(rx * 0.55, -ry * 0.82, rx * 0.92, -ry * 0.3, rx * 0.86, ry * 0.5); mask.bezierCurveTo(rx * 0.5, ry * 0.9, -rx * 0.5, ry * 0.9, -rx * 0.86, ry * 0.5); mask.closePath();
+      const mg = ctx.createLinearGradient(0, -ry, 0, ry); mg.addColorStop(0, rgb([18, 13, 11])); mg.addColorStop(0.55, rgb(mix([28, 21, 18], WARM, 0.1 * lit + 0.25 * tk))); mg.addColorStop(1, rgb(mix([34, 25, 21], WARM, 0.28 * lit + 0.3 * tk)));
       ctx.fillStyle = mg; ctx.fill(mask);
-      ctx.save(); ctx.clip(mask); ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 0.005;
-      ctx.beginPath(); ctx.moveTo(-rx * 0.75, ry * 0.3); ctx.quadraticCurveTo(-rx * 0.25, ry * 0.5, rx * 0.12, ry * 0.88); ctx.stroke();
-      ctx.strokeStyle = rgbs([255, 160, 80], 0.18 * Math.min(1, lit)); ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(-rx * 0.6, ry * 0.86); ctx.quadraticCurveTo(0, ry * 1.0, rx * 0.6, ry * 0.86); ctx.stroke();
+      ctx.save(); ctx.clip(mask);
+      ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(-rx * 0.7, ry * 0.3); ctx.quadraticCurveTo(-rx * 0.2, ry * 0.5, rx * 0.15, ry * 0.85); ctx.stroke();
+      // the eye slits
+      ctx.fillStyle = '#010000'; const ey = -ry * 0.28 + hl * ry * 0.15;
+      for (const s2 of [-1, 1]) { const ex = s2 * rx * 0.4 + turn * rx * 0.25; ctx.beginPath(); ctx.moveTo(ex - rx * 0.24, ey); ctx.quadraticCurveTo(ex, ey - ry * 0.12, ex + rx * 0.24, ey + s2 * ry * 0.02); ctx.quadraticCurveTo(ex, ey + ry * 0.07, ex - rx * 0.24, ey); ctx.closePath(); ctx.fill(); }
+      // the brim's shadow over the brow (deeper when the hood is pulled low)
+      const bg = ctx.createLinearGradient(0, -ry, 0, -ry * (0.15 - hl * 0.45)); bg.addColorStop(0, 'rgba(0,0,0,0.95)'); bg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = bg; ctx.fillRect(-rx * 1.2, -ry * 1.1, rx * 2.4, ry * 1.2);
       ctx.restore();
-      // the hood's brim, a shadow over the top of the face
-      const bg = ctx.createLinearGradient(0, -ry, 0, -ry * 0.1); bg.addColorStop(0, 'rgba(0,0,0,0.9)'); bg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = bg; ctx.fill(rec);
       ctx.restore();
-      // the inner lip of the hood, lit along its lower curve only
-      ctx.strokeStyle = rgbs(WARM, 0.22 * Math.min(1.2, lit)); ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(fx - rx * 1.0, fy + ry * 0.62); ctx.quadraticCurveTo(fx, fy + ry * 1.0, fx + rx * 1.0, fy + ry * 0.62); ctx.stroke();
+      ctx.strokeStyle = rgbs(HOT, 0.3 * Math.min(1.2, lit)); ctx.lineWidth = 0.004; ctx.beginPath(); ctx.moveTo(fxm - rx * 1.0, fy + ry * 0.62); ctx.quadraticCurveTo(fxm, fy + ry * 1.0, fxm + rx * 1.0, fy + ry * 0.62); ctx.stroke();
     } else if (!flat && !o.back) {
-      // turned away: only the side of the cowl, a fold where the face would be
-      ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 0.01; ctx.beginPath(); ctx.moveTo(hx + turn * 0.07, -0.95 + hy); ctx.quadraticCurveTo(hx + turn * 0.1, -0.86 + hy, hx + turn * 0.08, -0.79); ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth = 0.01; ctx.beginPath(); ctx.moveTo(hx + turn * 0.07, -0.95 + hy); ctx.quadraticCurveTo(hx + turn * 0.1, -0.86 + hy, hx + turn * 0.08, -0.79); ctx.stroke();
+    }
+    // the torch's warm pool on his chest and mask
+    if (!flat && top) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const pc = [top[0] * 0.55, top[1] + 0.1], pg = ctx.createRadialGradient(pc[0], pc[1], 0, pc[0], pc[1], 0.2); pg.addColorStop(0, rgbs([255, 140, 60], 0.24)); pg.addColorStop(0.5, rgbs([220, 90, 30], 0.08)); pg.addColorStop(1, 'rgba(200,80,30,0)');
+      ctx.fillStyle = pg; ctx.save(); ctx.clip(cloak); ctx.fillRect(-0.3, -1.1, 0.6, 0.9); ctx.restore(); ctx.save(); ctx.clip(hood); ctx.fillRect(-0.3, -1.1, 0.6, 0.4); ctx.restore();
+      ctx.restore();
     }
     ctx.restore();
     const hd = rot([hx * h, (-0.875 + hy) * h], lean);
@@ -432,14 +447,14 @@
   // ================================================================ C01: low, across the fire, to the ring of masked men
   // The ring, behind the fire (depth 0.75); the ones in the middle stand beyond the flames, which hide their legs.
   const RING = [
-    { x: 215, y: 905, h: 450, torch: 1, turn: 0.4, s: 1 },
-    { x: 430, y: 862, h: 395, torch: 0, turn: 0.3, s: 2 },
-    { x: 660, y: 838, h: 362, torch: 0, turn: 0.12, s: 3 },
-    { x: 860, y: 828, h: 345, torch: -1, turn: 0.04, s: 4 },
-    { x: 1090, y: 830, h: 350, torch: 0, turn: -0.08, s: 5 },
-    { x: 1310, y: 842, h: 368, torch: 0, turn: -0.2, s: 6 },
-    { x: 1535, y: 870, h: 410, torch: -1, turn: -0.32, s: 7, leader: true },
-    { x: 1750, y: 912, h: 455, torch: 0, turn: -0.42, s: 8 },
+    { x: 215, y: 905, h: 450, torch: 1, turn: 0.4, s: 1, b: 1.12 },
+    { x: 430, y: 862, h: 395, torch: 0, turn: 0.3, s: 2, b: 0.92, hl: 1 },
+    { x: 660, y: 838, h: 362, torch: 0, turn: 0.12, s: 3, b: 1.18 },
+    { x: 860, y: 828, h: 345, torch: -1, turn: 0.04, s: 4, b: 0.96 },
+    { x: 1090, y: 830, h: 350, torch: 0, turn: -0.08, s: 5, b: 1.05, hl: 0.7 },
+    { x: 1310, y: 842, h: 368, torch: 0, turn: -0.2, s: 6, b: 0.9 },
+    { x: 1535, y: 870, h: 410, torch: -1, turn: -0.32, s: 7, b: 1.22, leader: true },
+    { x: 1750, y: 912, h: 455, torch: 0, turn: -0.42, s: 8, b: 1.0, hl: 1 },
   ];
   // the pyre's world: the master shot and the roar share it. o.heat, o.pose (for Cael), o.recoil (the men flinch)
   const PYRE = { x: 960, y: 905, s: 760 };  // the ground under the fire, and the grate's length
@@ -453,7 +468,7 @@
     for (const m of RING) {
       const d = Math.abs(m.x - 960) / 900, lit = (1.25 - d * 0.7) * fl * Math.min(1.6, 0.55 + heat * 0.5) * (0.92 + 0.08 * Math.sin(t * 7 + m.s));
       const rc = (o.recoil || 0) * (0.6 + 0.4 * Math.sin(m.s * 2.1));
-      const r = hooded(ctx, m.x + (m.x - 960) * 0.04 * rc, m.y - 18 * rc, m.h * (1 - 0.04 * rc), { lit, turn: m.turn + (m.s === 5 ? -0.6 * (o.away || 0) : 0), bow: m.s === 5 ? 0.6 * (o.away || 0) : 0, torch: m.torch, seed: m.s, lean: -0.05 * rc * Math.sign(m.x - 960 || 1), low: m.leader ? (o.low || 0) : 0 });
+      const r = hooded(ctx, m.x + (m.x - 960) * 0.04 * rc, m.y - 18 * rc, m.h * (1 - 0.04 * rc), { lit, fx: clamp((960 - m.x) / 500, -1, 1), t, bulk: m.b, hoodLow: m.hl || 0, turn: m.turn + (m.s === 5 ? -0.6 * (o.away || 0) : 0), bow: m.s === 5 ? 0.6 * (o.away || 0) : 0, torch: m.torch, seed: m.s, lean: -0.05 * rc * Math.sign(m.x - 960 || 1), low: m.leader ? (o.low || 0) : 0 });
       if (r.torch) torches.push([r.torch, m.h * 0.075, m.s]);
     }
     for (const [p, s, sd] of torches) torchLight(ctx, p, s, t, sd);
@@ -512,17 +527,17 @@
     view(ctx, c, 0.35); glow(ctx, [200, 80, 30], 980, 1250, 1100, 0.2 * fl);
     view(ctx, c, 0.8);
     const men = [
-      { x: 1790, y: 1310, h: 880, turn: -0.45, torch: 1, s: 14, lit: 0.85 },
-      { x: 450, y: 1700, h: 1260, turn: 0.32, torch: 0, s: 11, lit: 1.15 },
-      { x: 1500, y: 1690, h: 1270, turn: -0.28, torch: 0, s: 13, lit: 1.15 },
-      { x: 985, y: 1760, h: 1430, turn: 0.02, torch: -1, s: 12, lit: 1.3, leader: true },
+      { x: 1790, y: 1310, h: 880, turn: -0.45, torch: 1, s: 14, lit: 0.85, b: 0.92, hl: 1 },
+      { x: 450, y: 1700, h: 1260, turn: 0.32, torch: 0, s: 11, lit: 1.15, b: 1.14 },
+      { x: 1500, y: 1690, h: 1270, turn: -0.28, torch: 0, s: 13, lit: 1.15, b: 0.94, hl: 0.8 },
+      { x: 985, y: 1760, h: 1430, turn: 0.02, torch: -1, s: 12, lit: 1.3, b: 1.2, leader: true },
     ];
     const tor = [];
-    for (const m of men) { const r = hooded(ctx, m.x, m.y, m.h, { lit: m.lit * 1.5 * fl * (0.9 + 0.12 * Math.sin(t * 6.3 + m.s)), turn: m.turn, torch: m.torch, seed: m.s }); if (r.torch) tor.push([r.torch, m.h * 0.07, m.s]); }
+    for (const m of men) { const r = hooded(ctx, m.x, m.y, m.h, { lit: m.lit * 1.2 * fl * (0.9 + 0.12 * Math.sin(t * 6.3 + m.s)), fx: clamp((960 - m.x) / 600, -1, 1), t, bulk: m.b, hoodLow: m.hl || 0, turn: m.turn, torch: m.torch, seed: m.s }); if (r.torch) tor.push([r.torch, m.h * 0.07, m.s]); }
     for (const [p, s, sd] of tor) torchLight(ctx, p, s, t, sd);
     // flicker crossing the masks: a warm light that breathes from below
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    { const g = ctx.createLinearGradient(0, H, 0, H * 0.25); g.addColorStop(0, rgbs([255, 120, 40], 0.16 * fl)); g.addColorStop(1, 'rgba(255,120,40,0)'); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+    { const g = ctx.createLinearGradient(0, H, 0, H * 0.5); g.addColorStop(0, rgbs([255, 120, 40], 0.07 * fl)); g.addColorStop(1, 'rgba(255,120,40,0)'); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore(); }
     haze(ctx, 120, 160, 1680, 760, t, 3.2);
     // the fire close in front, out of focus
     view(ctx, c, 1.2);
@@ -579,16 +594,16 @@
     view(ctx, c, 0.85);
     const C02 = K.cue('C02'), a0 = C02.start + 2.75;
     const men = [
-      { x: 1660, y: 1300, h: 1000, turn: -0.3, torch: 1, s: 24, st: a0 + 0.35 },
-      { x: 360, y: 1320, h: 1060, turn: 0.35, torch: 0, s: 21, st: 1e9, leader: true },
-      { x: 820, y: 1290, h: 980, turn: 0.15, torch: -1, s: 22, st: a0 },
-      { x: 1240, y: 1285, h: 965, turn: -0.06, torch: 0, s: 23, st: a0 + 0.18, away: true },
+      { x: 1660, y: 1300, h: 1000, turn: -0.3, torch: 1, s: 24, st: a0 + 0.35, b: 0.94 },
+      { x: 360, y: 1320, h: 1060, turn: 0.35, torch: 0, s: 21, st: 1e9, leader: true, b: 1.22 },
+      { x: 820, y: 1290, h: 980, turn: 0.15, torch: -1, s: 22, st: a0, b: 1.04, hl: 1 },
+      { x: 1240, y: 1285, h: 965, turn: -0.06, torch: 0, s: 23, st: a0 + 0.18, away: true, b: 0.9 },
     ];
     const tor = [];
     for (const m of men) {
       const stp = easeOut(span(t, m.st, m.st + 1.0)), k = 1 - 0.1 * stp, bob = Math.sin(Math.PI * span(t, m.st, m.st + 0.8)) * 14;
       const aw = m.away ? ease(span(t, C02.start + 3.6, C02.start + 4.6)) : 0;
-      const r = hooded(ctx, m.x + (m.x - 960) * 0.06 * stp, m.y - 60 * stp - bob, m.h * k, { lit: (1.9 - 0.55 * stp) * fl * (0.9 + 0.1 * Math.sin(t * 6 + m.s)), turn: m.turn * (1 - aw) - 0.98 * aw, bow: 0.7 * aw, torch: m.torch, seed: m.s, lean: -0.06 * Math.sin(Math.PI * span(t, m.st, m.st + 0.9)) });
+      const r = hooded(ctx, m.x + (m.x - 960) * 0.06 * stp, m.y - 60 * stp - bob, m.h * k, { lit: (1.35 - 0.4 * stp) * fl * (0.9 + 0.1 * Math.sin(t * 6 + m.s)), fx: clamp((960 - m.x) / 600, -1, 1), t, bulk: m.b, hoodLow: m.hl || 0, turn: m.turn * (1 - aw) - 0.98 * aw, bow: 0.7 * aw, torch: m.torch, seed: m.s, lean: -0.06 * Math.sin(Math.PI * span(t, m.st, m.st + 0.9)) });
       if (r.torch) tor.push([r.torch, m.h * k * 0.07, m.s]);
     }
     for (const [p, s, sd] of tor) torchLight(ctx, p, s, t, sd);
@@ -632,12 +647,12 @@
     view(ctx, c, 0.35); glow(ctx, [200, 80, 30], 700, 1100, 1000, 0.18 * fl);
     // the others behind him, dimmer
     view(ctx, c, 0.6);
-    hooded(ctx, 1840, 1150, 760, { lit: 0.55 * fl, turn: -0.3, seed: 41 });
-    hooded(ctx, 980, 1100, 700, { lit: 0.6 * fl, turn: 0.2, seed: 42 });
+    hooded(ctx, 1840, 1150, 760, { lit: 0.55 * fl, fx: -1, t, turn: -0.3, seed: 41, bulk: 0.95, hoodLow: 1 });
+    hooded(ctx, 980, 1100, 700, { lit: 0.6 * fl, fx: -0.6, t, turn: 0.2, seed: 42, bulk: 1.12 });
     // the leader: he holds the torch high; it lowers when he has heard him
     const low = ease(span(lt, 3.75, 5.1));
     view(ctx, c, 0.85);
-    const L = hooded(ctx, 1400, 1760, 1500, { lit: 1.55 * fl * (0.92 + 0.08 * Math.sin(t * 5.1)), turn: 0.22, torch: -1, low, seed: 44, bulk: 1.08, bow: 0.25 * low });
+    const L = hooded(ctx, 1400, 1760, 1500, { lit: 1.3 * fl * (0.92 + 0.08 * Math.sin(t * 5.1)), fx: -1, t, turn: 0.22, torch: -1, low, seed: 44, bulk: 1.18, bow: 0.25 * low });
     torchLight(ctx, L.torch, 100, t, 45); glow(ctx, [255, 140, 60], L.head[0], L.head[1] + 80, 420, 0.12 * fl);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     haze(ctx, 900, 100, 1020, 900, t, 2.6);
