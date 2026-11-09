@@ -1355,7 +1355,7 @@
     if (M.sa > 0 || M.far > 0) {
       const r = rng(9191), tw = o.still != null ? lerp(t, o.still, 0.94) : t;
       ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
-      for (let i = 0; i < 520; i++) {
+      for (let i = 0; i < 380; i++) {
         const x = lerp(-HW, HW, r()), y = 0.3 + r() * 20, z = lerp(-28, 20, r()), ph = r() * TAU;
         const px = x + Math.sin(tw * 0.13 + ph) * 0.6, py = y + Math.sin(tw * 0.09 + ph * 2) * 0.4 + ((tw * 0.05 + ph) % 1) * 0.3, pz = z + Math.cos(tw * 0.11 + ph) * 0.6;
         const sh = shaftAt(M, px, py, pz); if (sh < 0.15) continue;
@@ -1697,11 +1697,11 @@
     F('#3a2418', () => { ctx.moveTo(-0.12, 0.38); ctx.lineTo(0.18, 0.3); ctx.lineTo(0.24, 0.72); ctx.lineTo(-0.16, 0.74); ctx.closePath(); });
     // the head's shape
     const face = () => { ctx.moveTo(0.06, -0.5); ctx.bezierCurveTo(-0.14, -0.5, -0.27, -0.4, -0.29, -0.24); ctx.quadraticCurveTo(-0.33, -0.14, -0.325, -0.1); ctx.quadraticCurveTo(-0.31, -0.06, -0.315, -0.03); ctx.lineTo(-0.405, 0.1); ctx.quadraticCurveTo(-0.41, 0.135, -0.37, 0.14); ctx.lineTo(-0.335, 0.16); ctx.quadraticCurveTo(-0.33, 0.2, -0.335, 0.215); ctx.quadraticCurveTo(-0.315, 0.24, -0.325, 0.255); ctx.quadraticCurveTo(-0.33, 0.29, -0.31, 0.3); ctx.bezierCurveTo(-0.3, 0.36, -0.28, 0.42, -0.2, 0.46); ctx.bezierCurveTo(-0.1, 0.5, 0.02, 0.46, 0.12, 0.38); ctx.bezierCurveTo(0.22, 0.3, 0.26, 0.14, 0.29, 0.02); ctx.bezierCurveTo(0.34, -0.2, 0.28, -0.48, 0.06, -0.5); ctx.closePath(); };
-    const g = ctx.createLinearGradient(-0.42, 0, 0.3, 0); g.addColorStop(0, '#c88a5a'); g.addColorStop(0.12, '#8a5434'); g.addColorStop(0.3, '#3a2014'); g.addColorStop(0.55, '#170c06'); g.addColorStop(1, '#0c0603'); F(g, face);
+    const g = ctx.createLinearGradient(-0.42, 0, 0.3, 0); g.addColorStop(0, '#9a5e38'); g.addColorStop(0.07, '#5a3220'); g.addColorStop(0.2, '#22120a'); g.addColorStop(1, '#0c0603'); F(g, face);
     ctx.save(); face(); ctx.clip();
     // planes of the face: a shadow under the brow, along the cheek, under the nose; a warm cheekbone
     const sh = (x, y, rx, ry, a, col = '20,10,4') => { const gg = ctx.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry)); gg.addColorStop(0, `rgba(${col},${a})`); gg.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = gg; ctx.save(); ctx.translate(x, y); ctx.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry)); ctx.translate(-x, -y); ctx.beginPath(); ctx.arc(x, y, Math.max(rx, ry), 0, TAU); ctx.fill(); ctx.restore(); };
-    sh(-0.16, -0.05, 0.14, 0.06, 0.55); sh(-0.06, 0.18, 0.12, 0.2, 0.35); sh(-0.3, 0.17, 0.06, 0.03, 0.5); sh(-0.24, 0.06, 0.06, 0.05, 0.4, '255,190,130'); sh(-0.3, -0.25, 0.08, 0.1, 0.3, '255,200,140');
+    sh(-0.16, -0.05, 0.14, 0.06, 0.55); sh(-0.06, 0.18, 0.12, 0.2, 0.35); sh(-0.3, 0.17, 0.06, 0.03, 0.5); sh(-0.3, 0.06, 0.04, 0.05, 0.3, '255,190,130'); sh(-0.29, -0.25, 0.05, 0.1, 0.25, '255,200,140');
     // wrinkles: the forehead, the eye, the fold from nose to mouth
     ctx.strokeStyle = 'rgba(30,14,6,0.45)'; ctx.lineWidth = 0.006; ctx.lineCap = 'round';
     for (const yy of [-0.33, -0.29, -0.25]) { ctx.beginPath(); ctx.moveTo(-0.27, yy + up * 0.012); ctx.quadraticCurveTo(-0.12, yy - 0.02 + up * 0.01, 0.02, yy + up * 0.008); ctx.stroke(); }
@@ -1712,13 +1712,13 @@
     ctx.save(); ctx.strokeStyle = `rgba(255,200,140,${0.55 * fl})`; ctx.lineWidth = 0.008; ctx.beginPath(); ctx.moveTo(-0.27, -0.38); ctx.bezierCurveTo(-0.3, -0.3, -0.33, -0.15, -0.325, -0.1); ctx.quadraticCurveTo(-0.31, -0.06, -0.315, -0.03); ctx.lineTo(-0.405, 0.1); ctx.moveTo(-0.33, 0.22); ctx.quadraticCurveTo(-0.32, 0.3, -0.3, 0.34); ctx.bezierCurveTo(-0.28, 0.42, -0.24, 0.45, -0.19, 0.46); ctx.stroke(); ctx.restore();
     // the ear, grey hair, the cap
     F('#3a2216', () => ctx.ellipse(0.17, 0.03, 0.05, 0.085, 0.15, 0, TAU)); F('#1e120a', () => ctx.ellipse(0.165, 0.035, 0.022, 0.05, 0.15, 0, TAU));
-    F('#8a8278', () => { ctx.moveTo(0.06, -0.18); ctx.quadraticCurveTo(0.32, -0.2, 0.31, 0.05); ctx.quadraticCurveTo(0.28, 0.12, 0.24, 0.1); ctx.quadraticCurveTo(0.26, -0.02, 0.12, -0.1); ctx.closePath(); });
-    ctx.strokeStyle = 'rgba(200,192,180,0.35)'; ctx.lineWidth = 0.004; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.moveTo(0.12 + i * 0.02, -0.16); ctx.quadraticCurveTo(0.28, -0.1 + i * 0.01, 0.27, 0.04 + i * 0.008); ctx.stroke(); }
+    F('#3e3832', () => { ctx.moveTo(0.06, -0.18); ctx.quadraticCurveTo(0.32, -0.2, 0.31, 0.05); ctx.quadraticCurveTo(0.28, 0.12, 0.24, 0.1); ctx.quadraticCurveTo(0.26, -0.02, 0.12, -0.1); ctx.closePath(); });
+    ctx.strokeStyle = 'rgba(200,170,130,0.18)'; ctx.lineWidth = 0.004; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.moveTo(0.12 + i * 0.02, -0.16); ctx.quadraticCurveTo(0.28, -0.1 + i * 0.01, 0.27, 0.04 + i * 0.008); ctx.stroke(); }
     F('#0e0c0b', () => { ctx.moveTo(-0.27, -0.33); ctx.bezierCurveTo(-0.24, -0.56, 0.2, -0.6, 0.33, -0.3); ctx.quadraticCurveTo(0.34, -0.2, 0.3, -0.16); ctx.quadraticCurveTo(0.02, -0.3, -0.27, -0.33); ctx.closePath(); });
     ctx.strokeStyle = 'rgba(255,190,120,0.3)'; ctx.lineWidth = 0.006; ctx.beginPath(); ctx.moveTo(-0.27, -0.34); ctx.bezierCurveTo(-0.25, -0.5, -0.1, -0.56, 0.05, -0.56); ctx.stroke();
     // brows (they lift when he looks up)
     const bu = up * 0.025;
-    ctx.strokeStyle = '#a49c90'; ctx.lineWidth = 0.022; ctx.lineCap = 'round';
+    ctx.strokeStyle = '#4a4038'; ctx.lineWidth = 0.016; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(-0.29, -0.1 - bu); ctx.quadraticCurveTo(-0.25, -0.13 - bu, -0.2, -0.115 - bu); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(-0.13, -0.12 - bu); ctx.quadraticCurveTo(-0.05, -0.15 - bu, 0.03, -0.11 - bu); ctx.stroke();
     // eyes above the spectacles: lids lowered when reading, open and looking at us when he looks up
@@ -1726,7 +1726,7 @@
       const open = lerp(0.18, 1, up), ry = 0.024 * open;
       F('#120a06', () => ctx.ellipse(ex, ey + 0.005, rx * 1.15, 0.03, 0, 0, TAU));
       if (open > 0.25) {
-        F(near ? '#6a5a4a' : '#8a7660', () => ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU));
+        F(near ? '#3a2e24' : '#6a5440', () => ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU));
         const ix = ex + rx * (0.25 * up - 0.3 * (1 - up) + (read - 0.5) * 0.4 * (1 - up)), iy = ey + 0.004 + (1 - up) * ry * 0.4;
         ctx.save(); ctx.beginPath(); ctx.ellipse(ex, ey + 0.004, rx, ry, 0, 0, TAU); ctx.clip();
         F('#2a1a10', () => ctx.arc(ix, iy, rx * 0.5, 0, TAU)); F('#050302', () => ctx.arc(ix, iy, rx * 0.24, 0, TAU));
@@ -1783,9 +1783,9 @@
     regText(ctx, 'parentage: unknown', REG.par[0], REG.par[1], 'italic 500 56px "EB Garamond"');
     // the finger: under "ward of Ealdholt", then down to "parentage: unknown", where it rests and taps
     const s1 = span(lt, 2.55, 3.55), s2 = span(lt, 3.75, 4.35), s3 = span(lt, 4.35, 5.3);
-    let px = lerp(560, 960, ease(s1)), py = 616;
-    if (s2 > 0) { px = lerp(960, 560, ease(s2)); py = lerp(616, 694, ease(s2)); }
-    if (s3 > 0) { px = lerp(560, 1000, ease(s3)); py = 694; }
+    let px = lerp(560, 960, ease(s1)), py = 622;
+    if (s2 > 0) { px = lerp(960, 560, ease(s2)); py = lerp(622, 700, ease(s2)); }
+    if (s3 > 0) { px = lerp(560, 1000, ease(s3)); py = 700; }
     const tap = lt > 5.4 ? Math.max(0, Math.sin((lt - 5.4) * 7)) * 6 * (1 - span(lt, 5.4, 6.4)) : 0;
     const enter = smooth(span(lt, 2.0, 2.6));
     finger(ctx, px + (1 - enter) * 400, py + tap + (1 - enter) * 300, 1.0);
@@ -1800,10 +1800,10 @@
   }
   // an old forefinger in a dark sleeve, pointing along the line
   function finger(ctx, x, y, s) {
-    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(-0.35);
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(0.55);
     // shadow on the page
     ctx.save(); ctx.translate(26, 30); ctx.filter = 'blur(10px)'; ctx.fillStyle = 'rgba(30,16,6,0.45)'; ctx.beginPath(); ctx.ellipse(130, 40, 210, 60, 0.1, 0, TAU); ctx.fill(); ctx.restore();
-    ctx.fillStyle = '#16120e'; ctx.beginPath(); ctx.moveTo(180, -40); ctx.lineTo(700, -120); ctx.lineTo(760, 140); ctx.lineTo(210, 120); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#1e1812'; ctx.beginPath(); ctx.moveTo(210, -36); ctx.lineTo(520, -70); ctx.lineTo(540, 110); ctx.lineTo(225, 112); ctx.closePath(); ctx.fill(); ctx.strokeStyle = 'rgba(255,200,140,0.25)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(210, -36); ctx.lineTo(520, -70); ctx.stroke();
     const g = ctx.createLinearGradient(0, -40, 0, 100); g.addColorStop(0, '#c89070'); g.addColorStop(0.5, '#9a6648'); g.addColorStop(1, '#4a2c1c');
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.moveTo(-8, 4); ctx.quadraticCurveTo(-10, -14, 10, -16); ctx.lineTo(120, -22); ctx.quadraticCurveTo(170, -40, 230, -30); ctx.lineTo(230, 110); ctx.quadraticCurveTo(160, 120, 110, 80); ctx.quadraticCurveTo(60, 60, 50, 40); ctx.lineTo(10, 22); ctx.quadraticCurveTo(-6, 20, -8, 4); ctx.closePath(); ctx.fill();
@@ -1998,7 +1998,6 @@
     S.forEach((s, i) => { s.a = b[i]; s.b = b[i + 1]; });
     PLAN = S; return S;
   }
-  window.__p5 = { camAt: (t, id) => camAt(t, id), TT, plan, pjAt: (t, id, x, y, z) => { const c = camAt(t, id); return pj(camera(c.pos, c.tgt, c.f, c.roll), x, y, z); }, HOOD, COLX, GALY };
   SCENES[5] = {
     join: 'dissolve', joinDur: 1.2,
     draw(ctx, t, sc) {

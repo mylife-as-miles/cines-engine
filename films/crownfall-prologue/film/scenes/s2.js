@@ -65,7 +65,7 @@
   // the unsworn cord: her hand knotted in the wool, a plain grey cord at her wrist
   function shotCord(x, t, sh) {
     const lt = t - sh.a, [hx, hy] = K.shake(t * 3, 12, 2111), u = span(t, sh.a, sh.b);
-    const c = { x: hx + lerp(-30, 20, u), y: hy, z: lerp(1.0, 1.08, u) };
+    const c = { x: hx + lerp(-250, -200, u), y: hy + lerp(40, 60, u), z: lerp(1.55, 1.7, ease(u)) };
     x.fillStyle = '#060404'; x.fillRect(0, 0, W, H);
     // torches passing behind, out of focus
     for (let k = 0; k < 4; k++) { const px = ((k * 700 - lt * 1400) % 2800 + 2800) % 2800 - 400; L.glow(x, [255, 150, 70], px, 260 + k * 30, 260, 0.35); }
@@ -78,16 +78,17 @@
     // her forearm in the grey cloak sleeve
     x.fillStyle = '#1e1e20'; x.beginPath(); x.moveTo(-100, 420); x.bezierCurveTo(200, 400, 420, 430, 600, 470); x.lineTo(600, 700); x.bezierCurveTo(400, 700, 150, 740, -100, 780); x.closePath(); x.fill();
     // the hand, gripping the wool: the back of it, the knuckles, fingers sunk into the cloth, the thumb along it
-    const sk = [156, 116, 90], skd = L.mix(sk, [20, 12, 8], 0.6);
+    const sk = [128, 104, 90], skd = L.mix(sk, [20, 12, 8], 0.6);
     const hg = x.createLinearGradient(700, 380, 820, 760); hg.addColorStop(0, L.rgbs(L.mix(sk, [255, 230, 200], 0.25))); hg.addColorStop(0.5, L.rgbs(sk)); hg.addColorStop(1, L.rgbs(skd));
     x.fillStyle = hg;
     x.beginPath(); x.moveTo(590, 470); x.bezierCurveTo(700, 430, 840, 410, 940, 440); x.bezierCurveTo(1000, 470, 1030, 560, 1010, 650); x.bezierCurveTo(960, 720, 800, 730, 600, 712); x.closePath(); x.fill();
     for (let k = 0; k < 4; k++) { const kx = lerp(950, 1010, k / 3), ky = lerp(462, 640, k / 3); x.beginPath(); x.ellipse(kx, ky, 40, 34, 0.4, 0, TAU); x.fill(); L.taper(x, [[kx + 10, ky], [kx + 60, ky + 26], [kx + 70, ky + 70]], 56, 40); }
     x.fillStyle = L.rgbs(skd); L.taper(x, [[640, 690], [780, 740], [900, 730]], 48, 34);
     // the wool bulging over the fingertips
-    x.save(); x.beginPath(); x.ellipse(1150, 760, 260, 180, -0.4, 0, TAU); x.fillStyle = pat; x.fill(); x.fillStyle = 'rgba(0,0,0,0.25)'; x.fill(); x.restore();
+    x.save(); x.beginPath(); x.ellipse(1150, 790, 250, 150, -0.4, 0, TAU); x.fillStyle = pat; x.fill(); x.restore();
     x.strokeStyle = L.rgbs(L.mix(skd, [0, 0, 0], 0.4), 0.6); x.lineWidth = 2.5; for (let k = 0; k < 3; k++) { const kx = lerp(970, 1005, (k + 0.5) / 3), ky = lerp(470, 630, (k + 0.5) / 3); x.beginPath(); x.moveTo(kx - 40, ky + 4); x.lineTo(kx + 10, ky + 18); x.stroke(); }
     x.fillStyle = 'rgba(255,236,210,0.25)'; for (let k = 0; k < 4; k++) { const kx = lerp(950, 1010, k / 3), ky = lerp(462, 640, k / 3); x.beginPath(); x.ellipse(kx - 8, ky - 14, 16, 8, 0.4, 0, TAU); x.fill(); }
+    x.strokeStyle = L.rgbs(skd, 0.7); x.lineWidth = 3; for (let k = 0; k < 3; k++) { const kx = lerp(950, 1010, (k + 0.5) / 3), ky = lerp(462, 640, (k + 0.5) / 3); x.beginPath(); x.moveTo(kx - 150, ky - 20 + k * 6); x.quadraticCurveTo(kx - 60, ky - 8, kx - 4, ky + 2); x.stroke(); }
     // the unsworn cord: plain grey, wound twice about the wrist and knotted, its two ends hanging
     const cord = (pts, w) => { x.fillStyle = '#62605a'; L.taper(x, pts, w, w); x.strokeStyle = 'rgba(16,16,16,0.7)'; x.lineWidth = 2.2; for (let i = 1; i < pts.length - 1; i++) { const p0 = pts[i]; x.beginPath(); x.moveTo(p0[0] - w * 0.45, p0[1] - w * 0.2); x.lineTo(p0[0] + w * 0.45, p0[1] + w * 0.25); x.stroke(); } x.strokeStyle = 'rgba(236,230,214,0.4)'; x.lineWidth = 3; x.beginPath(); x.moveTo(pts[0][0] - w * 0.3, pts[0][1]); for (const q of pts) x.lineTo(q[0] - w * 0.3, q[1] - 2); x.stroke(); };
     for (let k = 0; k < 2; k++) { const x0 = 560 + k * 40; cord(K.resample(K.bez([[x0, 448], [x0 + 30, 520], [x0 + 30, 640], [x0 + 6, 722]], 14), 7), 22); }
@@ -237,11 +238,12 @@
     x.save(); x.translate(1150, 420); x.rotate(-0.4 - lift * 1.3); x.scale(1, 1 - lift * 0.4);
     x.fillStyle = pat; x.beginPath(); x.moveTo(-130, 30); x.quadraticCurveTo(-40, -110, 120, -70); x.quadraticCurveTo(150, 10, 60, 70); x.quadraticCurveTo(-40, 80, -130, 30); x.fill();
     x.fillStyle = 'rgba(0,0,0,0.35)'; x.fill(); x.restore();
-    // the gauntlet: leather, a mail cuff
-    const gx = lerp(1360, 1250, lift), gy = lerp(300, 200, lift);
-    x.fillStyle = '#2a1e16'; x.beginPath(); x.moveTo(gx, gy); x.bezierCurveTo(gx + 60, gy - 40, gx + 160, gy - 30, gx + 220, gy + 10); x.lineTo(gx + 520, gy - 60); x.lineTo(gx + 560, gy + 120); x.lineTo(gx + 220, gy + 120); x.bezierCurveTo(gx + 140, gy + 120, gx + 40, gy + 80, gx, gy); x.closePath(); x.fill();
-    for (let k = 0; k < 3; k++) { x.save(); x.translate(gx + 10 + k * 18, gy + 20 + k * 22); x.rotate(2.6 - lift * 0.4); x.beginPath(); x.ellipse(40, 0, 52, 16, 0, 0, TAU); x.fill(); x.restore(); }
-    x.fillStyle = '#3a3634'; x.fillRect(gx + 240, gy - 50, 300, 160); x.strokeStyle = 'rgba(160,150,140,0.4)'; x.lineWidth = 2; for (let k = 0; k < 10; k++) { x.beginPath(); x.moveTo(gx + 240, gy - 40 + k * 16); x.lineTo(gx + 540, gy - 60 + k * 16); x.stroke(); }
+    // his arm from above, a dark sleeve; a leather glove pinching the flap's edge
+    const fa = -0.4 - lift * 1.3, ex2 = 1150 + Math.cos(fa) * 110 - Math.sin(fa) * -40, ey2 = 420 + Math.sin(fa) * 110 + Math.cos(fa) * -40 * (1 - lift * 0.4);
+    x.fillStyle = '#18120e'; x.beginPath(); x.moveTo(ex2 + 20, ey2 - 30); x.bezierCurveTo(ex2 + 200, ey2 - 120, ex2 + 420, ey2 - 300, ex2 + 640, ey2 - 420); x.lineTo(ex2 + 780, ey2 - 200); x.bezierCurveTo(ex2 + 520, ey2 - 80, ex2 + 260, ey2 + 40, ex2 + 60, ey2 + 50); x.closePath(); x.fill();
+    x.fillStyle = '#3a2a1e'; x.beginPath(); x.ellipse(ex2 + 70, ey2, 70, 48, -0.6, 0, TAU); x.fill();
+    L.taper(x, [[ex2 + 30, ey2 - 20], [ex2 - 20, ey2 - 10], [ex2 - 40, ey2 + 10]], 30, 22); L.taper(x, [[ex2 + 40, ey2 + 26], [ex2 - 6, ey2 + 30], [ex2 - 30, ey2 + 18]], 28, 20);
+    x.strokeStyle = 'rgba(255,190,120,0.35)'; x.lineWidth = 3; x.beginPath(); x.ellipse(ex2 + 70, ey2, 70, 48, -0.6, Math.PI * 1.1, Math.PI * 1.7); x.stroke();
     x.setTransform(1, 0, 0, 1, 0, 0);
     const fl = L.flick(t, 4, 10);
     x.save(); x.globalCompositeOperation = 'multiply'; const g = x.createRadialGradient(1700, 200, 60, 1400, 400, 1500); g.addColorStop(0, `rgb(255,${210 * fl | 0},${150 * fl | 0})`); g.addColorStop(0.5, 'rgb(140,100,74)'); g.addColorStop(1, 'rgb(14,10,8)'); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
@@ -525,7 +527,7 @@
   }
 
   // ================================================================ the cut
-  let EDL = null;
+  let EDL = null, RELEASED = false;
   function edl(sc) {
     if (EDL) return EDL;
     const c = K.cue, L12 = c('L12'), L13 = c('L13'), A02 = c('A02'), L15 = c('L15'), L16 = c('L16'), L17 = c('L17');
@@ -557,6 +559,8 @@
     join: 'dissolve', joinDur: 0.6,
     draw(ctx, t, sc) {
       if (!L) L = SCENES[1].lib;
+      if (t > sc.start + 3 && !RELEASED) { K.release('s1:'); RELEASED = true; }
+      if (t < sc.start) RELEASED = false;
       t = clamp(t, sc.start, sc.end + 2.5);
       L.cleanState(ctx);
       L.runEdit(ctx, t, edl(sc), 's2');

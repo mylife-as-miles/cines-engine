@@ -1,10 +1,17 @@
-/* Scene 1: The Broken Seal [L01–L10].
-   Out of the dark, a crane down through a moonlit sea of cloud onto the capital under its volcano, where the First-Born
-   circle; the council chamber, seven seats around the Blood-Throne; Oswyn at his window; the reform and its six seals,
-   the seventh place empty; the rookery bells; a First-Born falls on the city and the city looks up; the knife, told as a
-   shadow on the wall; vermilion ink across the decree; at dawn a scribe strikes the names; and in the dark, the infant,
-   alive. Every shot is keyed to the narration cues (and to the pauses inside the takes); nothing reads the clock.
-   The helpers at the top are shared with scene 2 (SCENES[1].lib). */
+/* Scene 1: The Broken Seal [L01–L10, with D01 and A01, and the curse, L09a].
+   The chronicle open by candlelight, riffling; a speed run through what the opening told (the crown on its dais and its
+   breaking, the rulers reaching for the empty seat, a First-Born's wing over burning roofs, seven fires at seven halls,
+   seven banners about the Blood-Throne); the book slams shut. Then the part it left out: the capital through Oswyn's
+   window and Oswyn at it; the old law struck through; six seals pressed and the seventh place bare as the candle gutters;
+   the rookery's bells and its birds; the Sorn rider on the First-Born against the moon ("Varrath-ath vaha-esh!
+   Searyn-esh!") and the dive; the fall on the city and the city looking up; the knife told as a shadow on the wall
+   ("Taesa, cyning"), with a cutaway to the burning city where no one was watching; vermilion across the decree; at dawn
+   a scribe strikes the names; the curse: his blood drunk by the stone, red veins rooting through the chamber, up the
+   walls and the Blood-Throne, out across the land, and under the feet of the six lords who never knew; then the
+   infant's struck name, and a match cut to the bundle in the dark, alive.
+   Every shot is keyed to the cues (and to the pauses inside the takes); nothing reads the clock. The helpers in the
+   first part are shared with scene 2 through SCENES[1].lib (veinTree / drawVeins draw the curse's red veins, for any
+   scene that brings them back). */
 (function () {
   'use strict';
   const K = window.KIT, P = K.P, W = K.W, H = K.H;
@@ -416,7 +423,6 @@
   // a line's point at share f of its length (f may run past 0..1)
   const at = (id, f) => { const c = K.cue(id); return lerp(c.start, c.end, f); };
 
-
   // ================================================================ the curse: red veins (scene 1 starts it; later scenes bring it back)
   // veinTree(seed, o): roots that branch outward from (0, 0) in a plane, like cracks filling with blood. o.roots, o.len
   //   (reach), o.step, o.width, o.spread (branch angle), o.dir + o.arc (keep the roots in a fan), o.branch (chance per step),
@@ -675,6 +681,7 @@
   //   layers) under the parallax camera c; o.dawn (0..1) turns it grey with smoke columns, o.fire (0..1) sets it burning
   function capital(x, c, t, o = {}) {
     const dawn = o.dawn || 0;
+    const dk = (key, img, f) => dawn ? K.cached('s1:dawn:' + key, () => { const cc = K.canvas(img.width, img.height), cx = cc.getContext('2d'); cx.filter = f; cx.drawImage(img, 0, 0); return cc; }) : img;
     const g = x.createLinearGradient(0, 0, 0, H);
     if (dawn > 0) { g.addColorStop(0, '#6a6e78'); g.addColorStop(0.55, '#a4a29c'); g.addColorStop(1, '#8a8780'); }
     else { g.addColorStop(0, '#07080e'); g.addColorStop(0.45, '#141726'); g.addColorStop(0.7, '#2a2230'); g.addColorStop(1, '#141420'); }
@@ -690,7 +697,6 @@
     view(x, c, 0.35);
     x.fillStyle = dawn ? '#6e6c6a' : '#1a1c2a'; x.beginPath(); x.moveTo(-300, 760); for (let X = -300; X <= W + 400; X += 20) x.lineTo(X, 600 - 50 * K.fbm(X * 0.003, 1, 4, 1170) + 20 * Math.sin(X * 0.002)); x.lineTo(W + 400, 1000); x.lineTo(-300, 1000); x.closePath(); x.fill();
     fog(x, 1171, dawn ? [150, 148, 144] : [44, 46, 64], 520, 200, t * 8, 0.7);
-    const dk = (key, img, f) => dawn ? K.cached('s1:dawn:' + key, () => { const cc = K.canvas(img.width, img.height), cx = cc.getContext('2d'); cx.filter = f; cx.drawImage(img, 0, 0); return cc; }) : img;
     view(x, c, 0.5); x.drawImage(dk('far', CITY.far(), 'grayscale(0.85) brightness(2.1)'), -240, 380);
     if (!dawn) rookerySmall(x, 250, 660, 0.9);
     fog(x, 1172, dawn ? [140, 138, 134] : [40, 42, 60], 610, 160, -t * 12, 0.65);
@@ -1065,8 +1071,8 @@
     if (pw > 0) { drawScript(x, wds, 220, 930, { p: pw, w: 3.4, col: '#1a100a' }); if (pw < 1) { const q = scriptTip(wds, pw); tip = [220 + q[0], 930 + q[1]]; } }
     if (!tip) tip = s1 <= 0 ? [lerp(300, 280, u * 3), 330 - 40 * (1 - u * 3)] : s2 <= 0 && s1 >= 1 ? [lerp(1500, 360, smooth(span(t, at('L03', 0.66), at('L03', 0.7)))), lerp(520, 560, smooth(span(t, at('L03', 0.66), at('L03', 0.7)))) - 30] : [lerp(1480, 220, smooth(span(t, at('L03', 0.8), at('L03', 0.84)))), lerp(380, 930, smooth(span(t, at('L03', 0.8), at('L03', 0.84)))) - 20];
     // the hand's shadow, then the hand (Oswyn's: an old hand, a dark red sleeve with gold at the cuff)
-    x.save(); x.globalAlpha = 0.18; quillHand(x, tip[0] + 34, tip[1] + 46, { ang: 0.5, scale: 1.5, shadow: true }); quillHand(x, tip[0] + 48, tip[1] + 60, { ang: 0.5, scale: 1.5, shadow: true }); x.restore();
-    quillHand(x, tip[0], tip[1], { ang: 0.5, scale: 1.5, skin: [200, 160, 126], sleeve: [80, 18, 14], trim: [190, 150, 70], old: true, lit: 0.9 });
+    x.save(); x.globalAlpha = 0.18; quillHand(x, tip[0] + 30, tip[1] + 40, { ang: 0.5, scale: 1.15, shadow: true }); quillHand(x, tip[0] + 42, tip[1] + 52, { ang: 0.5, scale: 1.15, shadow: true }); x.restore();
+    quillHand(x, tip[0], tip[1], { ang: 0.5, scale: 1.15, skin: [200, 160, 126], sleeve: [80, 18, 14], trim: [190, 150, 70], lit: 0.9 });
     x.restore();
     x.setTransform(1, 0, 0, 1, 0, 0);
     x.save(); x.globalCompositeOperation = 'multiply'; const g = x.createRadialGradient(300, 160, 50, 700, 500, 1500); g.addColorStop(0, 'rgb(255,236,200)'); g.addColorStop(0.5, 'rgb(170,120,80)'); g.addColorStop(1, 'rgb(30,18,10)'); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
@@ -1478,7 +1484,7 @@
     pl.save(); pl.globalCompositeOperation = 'multiply'; pl.drawImage(BL, 0, 0, 550, ph / 2); pl.restore();
     x.drawImage(PL, -pw / 2, -ph / 2, pw, ph);
     x.restore();
-    SEALS.slice(0, 6).forEach((s, i) => { const a = (i / 6) * TAU + 0.4, d = 300 + i * 40, k = easeOut(clamp((lt - 0.1) / 0.6)); waxDisc(x, 980 + Math.cos(a) * d * k * 1.2, 600 + Math.sin(a) * d * k * 0.7, 46, s.house, 1, t); });
+    SEALS.slice(0, 6).forEach((s, i) => { const a = (i / 6) * TAU + 0.4, d = 560 + (i * 37 % 90), k = easeOut(clamp((lt - 0.05) / 0.5)); waxDisc(x, 980 + Math.cos(a) * d * k * 1.1, 560 + Math.sin(a) * d * k * 0.75, 46, s.house, 1, t); });
     // the red runs off the page onto the stone
     x.save(); x.globalCompositeOperation = 'multiply'; x.globalAlpha = 0.9; x.translate(0, 0); x.drawImage(BL, -100, -160, 1200, 675); x.restore();
     x.setTransform(1, 0, 0, 1, 0, 0);
@@ -1505,17 +1511,21 @@
   }
   function shotDawn(x, t, sh) {
     const u = span(t, sh.a, sh.b + 0.3);
-    const c = { x: lerp(-80, 60, ease(u)), y: lerp(-120, 80, ease(u)), z: lerp(1.08, 1.14, u) };
-    // the city at dawn through the window: grey, the smoke still rising
-    const CL = scratch('s1:citydawn'), cx2 = CL.getContext('2d');
-    capital(cx2, { x: 200 - c.x * 0.2, y: 60, z: 1.0 }, t, { dawn: 1 });
+    const c = { x: lerp(-170, 230, ease(u)), y: lerp(-170, 20, ease(u)), z: lerp(1.12, 1.18, u) };
+    // through the window: a pale sky, the city's dark roofs, the smoke of the night still rising
     view(x, c, 1);
-    x.save(); x.beginPath(); x.moveTo(320 - 150, 1000 - 200); x.lineTo(320 - 150, 440 - 200); x.quadraticCurveTo(320 - 150, 50, 560 - 150, 0); x.quadraticCurveTo(800 - 150, 50, 800 - 150, 240); x.lineTo(800 - 150, 800); x.closePath(); x.clip(); x.drawImage(CL, -300, -120, W * 0.9, H * 0.9); x.restore();
+    x.save(); x.beginPath(); x.moveTo(170, 800); x.lineTo(170, 240); x.quadraticCurveTo(170, 50, 410, 0); x.quadraticCurveTo(650, 50, 650, 240); x.lineTo(650, 800); x.closePath(); x.clip();
+    const sg0 = x.createLinearGradient(0, 0, 0, 800); sg0.addColorStop(0, '#9aa0a8'); sg0.addColorStop(0.7, '#d4d2ca'); sg0.addColorStop(1, '#bcb8ae'); x.fillStyle = sg0; x.fillRect(100, -50, 640, 900);
+    x.save(); x.translate(-120 - c.x * 0.15, 520); x.scale(0.55, 0.55); x.globalAlpha = 0.55; x.drawImage(CITY.far(), 0, 0); x.globalAlpha = 1; x.translate(0, 220); x.drawImage(CITY.near(), -200, 0); x.restore();
+    x.fillStyle = 'rgba(30,30,34,0.55)'; x.fillRect(100, 640, 640, 200);
+    for (let k = 0; k < 4; k++) K.smoke(x, t, { n: 7, x: 200 + k * 120, y: -200, w: 70, h: 820, color: [60, 58, 58], alpha: 0.55, rise: 22, size: 150, seed: 1482 + k, drift: 12 });
+    x.restore();
     x.drawImage(scriptoriumImg(), -150, -200);
     // a shaft of grey light across the room, dust in it
     x.save(); x.globalCompositeOperation = 'lighter'; const sg = x.createLinearGradient(400, 300, 1500, 1000); sg.addColorStop(0, 'rgba(200,206,214,0.16)'); sg.addColorStop(1, 'rgba(200,206,214,0)'); x.fillStyle = sg; x.beginPath(); x.moveTo(170, 50); x.lineTo(650, 0); x.lineTo(1900, 900); x.lineTo(1100, 1100); x.closePath(); x.fill(); x.restore();
     // the scribe at the desk, writing
-    rimLit(x, (cc, fill) => { person(cc, { x: 1500, y: 1330, h: 820, face: -1, sit: 0.33, dress: 'robe', hat: 'cap', lean: 0.5, tilt: 0.35, reachN: [1250 + Math.sin(t * 7) * 10, 985], armF: [1.1, 0.9], fill }); cc.fillStyle = fill; cc.beginPath(); cc.moveTo(980, 980); cc.lineTo(2100, 940); cc.lineTo(2100, 1020); cc.lineTo(980, 1060); cc.closePath(); cc.fill(); }, { rim: '#c8ccd4', mid: '#4a4c54', dark: '#1a1b20', dx: 5, dy: 3 });
+    rimLit(x, (cc, fill) => { person(cc, { x: 1330, y: 1200, h: 680, face: -1, sit: 0.33, dress: 'robe', hat: 'cap', lean: 0.5, tilt: 0.35, reachN: [1110 + Math.sin(t * 7) * 10, 900], armF: [1.1, 0.9], fill }); cc.fillStyle = fill; cc.beginPath(); cc.moveTo(880, 905); cc.lineTo(1800, 880); cc.lineTo(1800, 940); cc.lineTo(880, 965); cc.closePath(); cc.fill(); cc.fillRect(920, 960, 30, 300); cc.fillRect(1700, 935, 30, 300); }, { rim: '#c8ccd4', mid: '#4a4c54', dark: '#1a1b20', dx: 5, dy: 3 });
+    x.fillStyle = 'rgba(230,226,214,0.5)'; x.save(); x.translate(1060, 892); x.rotate(-0.03); x.fillRect(-90, -8, 180, 10); x.restore();
     x.setTransform(1, 0, 0, 1, 0, 0);
     K.specks(x, t, { kind: 'dust', n: 50, alpha: 0.35, seed: 1481 });
     finish(x, { bloom: 0.3, vig: 0.6, shadow: '#6a7080', shadowA: 0.3 });
@@ -1650,7 +1660,7 @@
     x.restore();
     // the blood: a pool at his place, drips from the table's edge
     if (o.pool) {
-      x.save(); if (poolPath(x, C, o.pool, 0)) { x.fillStyle = '#2a0404'; x.fill(); x.clip(); const s = onFloor(C, CH.pool[0] - 30, CH.pool[1] + 20); if (s) { const g = x.createRadialGradient(s[0], s[1], 2, s[0], s[1], 120 * s[2]); g.addColorStop(0, 'rgba(150,24,14,0.6)'); g.addColorStop(1, 'rgba(90,8,6,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); } const m = onFloor(C, CH.pool[0] + 40, CH.pool[1] + 30); if (m) { x.fillStyle = 'rgba(190,200,230,0.25)'; x.beginPath(); x.ellipse(m[0], m[1], 40 * m[2], 8 * m[2], 0, 0, TAU); x.fill(); } } x.restore();
+      x.save(); if (poolPath(x, C, o.pool, 0)) { x.fillStyle = '#2a0404'; x.fill(); x.clip(); const s = onFloor(C, CH.pool[0] - 30, CH.pool[1] + 20); if (s) { const g = x.createRadialGradient(s[0], s[1], 2, s[0], s[1], 120 * s[2]); g.addColorStop(0, 'rgba(110,14,10,0.5)'); g.addColorStop(1, 'rgba(60,6,4,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); } const m = onFloor(C, CH.pool[0] + 40, CH.pool[1] + 30); if (m) { x.fillStyle = 'rgba(150,160,190,0.12)'; x.beginPath(); x.ellipse(m[0], m[1], 26 * m[2], 5 * m[2], 0, 0, TAU); x.fill(); } } x.restore();
     }
     if (o.veins) drawVeins(x, VEIN_FLOOR(), o.veins, { map: (fx, fz) => onFloor(C, CH.pool[0] + fx, CH.pool[1] + fz), t, scale: 1, hot: o.hot != null ? o.hot : 1, fade: o.fade || 0 });
     // the banners behind the seats

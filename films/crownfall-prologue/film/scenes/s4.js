@@ -81,6 +81,7 @@
     return { px: pos[0], py: pos[1], pz: pos[2], rx, ry, rz, ux, uy, uz, fx, fy, fz, f, cx: W / 2, cy: H / 2 };
   }
   const fovF = deg => (W / 2) / Math.tan(deg * Math.PI / 360);
+  let BK = 1;                      // the base scale of the frame being drawn (0.5 for the outgoing side of a crossfade)
   function toCam(C, x, y, z) { const dx = x - C.px, dy = y - C.py, dz = z - C.pz; return [dx * C.rx + dy * C.ry + dz * C.rz, dx * C.ux + dy * C.uy + dz * C.uz, dx * C.fx + dy * C.fy + dz * C.fz]; }
   function pj(C, x, y, z) { const v = toCam(C, x, y, z); if (v[2] < NEAR) return null; const s = C.f / v[2]; return [C.cx + v[0] * s, C.cy - v[1] * s, v[2], s]; }
   // a camera from keys {t, p:[x,y,z], g:[x,y,z], fov}
@@ -109,7 +110,7 @@
     const m = 1 << L; a *= m; b *= m; c *= m; d *= m;
     const U0 = u0 / m, V0 = v0 / m, DU = du / m, DV = dv / m;
     const pp = Math.min(ce, 6) + pad, pu = pp / (Math.hypot(a, b) || 1), pv = pp / (Math.hypot(c, d) || 1);
-    ctx.setTransform(a, b, c, d, cx - exx / 2 - eyx / 2, cy - exy / 2 - eyy / 2);
+    ctx.setTransform(a * BK, b * BK, c * BK, d * BK, (cx - exx / 2 - eyx / 2) * BK, (cy - exy / 2 - eyy / 2) * BK);
     ctx.drawImage(mips[L], U0 - pu, V0 - pv, DU + 2 * pu, DV + 2 * pv, -pu, -pv, DU + 2 * pu, DV + 2 * pv);
   }
   function cellClipped(ctx, C, mips, poly, tw, th) {
@@ -120,9 +121,9 @@
     if (Math.abs(det) < 1e-9) return;
     const dx1 = p1[0] - p0[0], dy1 = p1[1] - p0[1], dx2 = p2[0] - p0[0], dy2 = p2[1] - p0[1];
     const a = (dx1 * dv2 - dx2 * dv1) / det, b = (dy1 * dv2 - dy2 * dv1) / det, c = (dx2 * du1 - dx1 * du2) / det, d = (dy2 * du1 - dy1 * du2) / det;
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.beginPath(); sp.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip();
+    ctx.save(); ctx.setTransform(BK, 0, 0, BK, 0, 0); ctx.beginPath(); sp.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip();
     const us = sp.map(p => p[2]), vs = sp.map(p => p[3]), umin = Math.min(...us), umax = Math.max(...us), vmin = Math.min(...vs), vmax = Math.max(...vs);
-    ctx.setTransform(a, b, c, d, p0[0] - a * p0[2] - c * p0[3], p0[1] - b * p0[2] - d * p0[3]);
+    ctx.setTransform(a * BK, b * BK, c * BK, d * BK, (p0[0] - a * p0[2] - c * p0[3]) * BK, (p0[1] - b * p0[2] - d * p0[3]) * BK);
     ctx.drawImage(mips[0], Math.max(0, umin - 2), Math.max(0, vmin - 2), Math.min(tw, umax - umin + 4), Math.min(th, vmax - vmin + 4), Math.max(0, umin - 2), Math.max(0, vmin - 2), Math.min(tw, umax - umin + 4), Math.min(th, vmax - vmin + 4));
     ctx.restore();
   }
@@ -412,7 +413,12 @@
           x = lerp(ax, bx, e); z = lerp(az, bz, e);
           if (u > 0 && u < 1) { moving = 1; walk = Math.hypot(bx - ax, bz - az) * e * (p.champ ? 1.7 : 2.4); if (p.t === 'N') lift = Math.sin(u * Math.PI) * 2.2; }
         }
-        if (m[5] === p.id && t >= m[3]) { const k = span(t, m[4] - 0.15, m[4] + 0.45); kneel = Math.max(kneel, k); alpha = Math.min(alpha, 1 - smooth(span(t, m[4] + 0.25, m[4] + 0.95))); }
+        if (m[5] === p.id && t >= m[3]) {
+          // taken: as the taker comes in, kneel and give back off the square (toward its own side), then go
+          const k = smooth(span(t, lerp(m[3], m[4], 0.45), m[4] + 0.2)); kneel = Math.max(kneel, k);
+          z += (p.side === 'w' ? -1 : 1) * 0.9 * k; x += (x > sqX(3.5) ? 0.35 : -0.35) * k;
+          alpha = Math.min(alpha, 1 - smooth(span(t, m[4] + 0.1, m[4] + 0.8)));
+        }
       }
       if (p.id === 'bKg8') kneel = Math.max(kneel, smooth(span(t, T.kneel, T.kneel + 0.6)) * 0.85);
       if (alpha <= 0.01) continue;
@@ -540,8 +546,10 @@
     return { col: c, kind: 'tunic' };
   }
   // draw one piece into the frame at its projected feet
-  const SPR = [], SCACHE = new Map();
-  function scratch(i, w, h) { let c = SPR[i]; if (!c) c = SPR[i] = K.canvas(8, 8); if (c.width < w || c.height < h) { c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); } const x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, w + 2, h + 2); return c; }
+  const SCACHE = new Map();
+  // use a new canvas once as an image source before it is drawn into the frame, so its first use in a frame takes the same
+  // path in the browser as every later use (otherwise the first draw can differ by a few pixels of antialiasing)
+  const WARM = K.canvas(2, 2), warm = c => { WARM.getContext('2d').drawImage(c, 0, 0, 2, 2); return c; };
   function drawPiece(ctx, C, s, t, o = {}) {
     const p = s.p, ht = HT[p.t] * (p.champ ? 1.12 : 1) * (p.cael ? 1.02 : 1) * (o.big || 1), y0 = s.lift || 0;
     const foot = pj(C, s.x, y0, s.z); if (!foot) return null;
@@ -557,8 +565,8 @@
     const SWp = Math.ceil(wq * (cos.knight ? 0.55 : 0.62) + 8), SHp = Math.ceil(hq * 1.18 + 8);
     let sp = still ? SCACHE.get(key) : null;
     if (!sp) {
-      sp = still ? K.canvas(SWp, SHp) : scratch(0, SWp, SHp); const x = sp.getContext('2d');
-      x.save(); x.translate(SWp / 2, SHp - 4); x.scale(wq, hq * (1 - kq * 0.32));
+      sp = K.canvas(SWp, SHp); const x = sp.getContext('2d');
+      x.save(); x.translate(SWp / 2, SHp - 4); x.scale(wq, hq * (1 - kq * 0.4));
       const opts = Object.assign({}, cos, { back, walk: s.walk, tw: 0 });
       if (cos.knight) knight(x, opts); else person(x, opts);
       x.restore();
@@ -568,11 +576,11 @@
       const g2 = x.createLinearGradient(0, SHp, 0, SHp - hq * 0.4); g2.addColorStop(0, 'rgba(10,12,8,0.35)'); g2.addColorStop(1, 'rgba(10,12,8,0)'); x.fillStyle = g2; x.fillRect(0, 0, SWp, SHp);
       if (o.tint) { x.fillStyle = o.tint; x.fillRect(0, 0, SWp, SHp); }
       x.restore();
-      if (still) { SCACHE.set(key, sp); if (SCACHE.size > 500) { const k0 = SCACHE.keys().next().value; SCACHE.delete(k0); } }
+      if (still) { warm(sp); SCACHE.set(key, sp); if (SCACHE.size > 500) { const k0 = SCACHE.keys().next().value; SCACHE.delete(k0); } }
     }
     const kx = wPx / wq, ky = hPx / hq;
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = s.alpha * (o.alpha != null ? o.alpha : 1);
-    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt); ctx.scale(kx, ky); ctx.imageSmoothingEnabled = true;
+    ctx.save(); ctx.setTransform(BK, 0, 0, BK, 0, 0); ctx.globalAlpha = s.alpha * (o.alpha != null ? o.alpha : 1);
+    ctx.translate(foot[0], foot[1]); ctx.rotate(tilt + s.kneel * 0.22 * (foot[0] < W / 2 ? 1 : -1)); ctx.scale(kx, ky); ctx.imageSmoothingEnabled = true;
     ctx.drawImage(sp, 0, 0, SWp, SHp, -SWp / 2, -(SHp - 4), SWp, SHp);
     ctx.restore();
     return { foot, head, hPx, wPx };
@@ -655,17 +663,17 @@
       hillsRing(C, 700, 6, 110, 13, '#5f7158', 0.8);
     }
     plane(ctx, C, farMips(), [FX0, 0, FZ0], [FSZ, 0, 0], [0, 0, -FSZ], { roots: [4, 4], err: 14, maxDep: 6, skip: (a0, b0, a1, b1) => { const x0 = FX0 + a0 * FSZ, x1 = FX0 + a1 * FSZ, z0 = FZ0 - b1 * FSZ, z1 = FZ0 - b0 * FSZ; return x0 > -26 && x1 < 26 && z0 > -26 && z1 < 26; } });
+    // the valley's sides: long ridges east and west of the road south, layered by distance
+    for (const [x0, amp, h0, col, sd] of [[-420, 70, 90, '#7d8c84', 1], [520, 90, 120, '#7a8a82', 2], [-260, 40, 45, '#6e806a', 3], [300, 50, 60, '#6b7d67', 4]]) {
+      const top = [], base = [];
+      for (let z = 260; z >= -1400; z -= 40) { const x = x0 + 60 * Math.sin(z * 0.004 + sd) + (x0 < 0 ? -1 : 1) * Math.max(0, -z - 200) * 0.12, h = h0 + amp * K.fbm(z * 0.006 + sd * 7, sd, 3, 70 + sd); top.push([x, h, z]); base.push([x + (x0 < 0 ? 1 : -1) * Math.min(h * 2.4, Math.abs(x0) * 0.3), 0, z]); }
+      const sp = projPoly(C, top.concat(base.reverse())); if (sp.length > 2) { ctx.fillStyle = col; pathPoly(ctx, sp); ctx.fill(); }
+    }
     plane(ctx, C, nearMips(), [-NS / 2, 0.005, NS / 2], [NS, 0, 0], [0, 0, -NS], { roots: [2, 2], err: 6, maxDep: 7, skip: (a0, b0, a1, b1) => { const x0 = -NS / 2 + a0 * NS, x1 = -NS / 2 + a1 * NS, z0 = NS / 2 - b1 * NS, z1 = NS / 2 - b0 * NS; return x0 > -BE + 0.3 && x1 < BE - 0.3 && z0 > -BE + 0.3 && z1 < BE - 0.3; } });
     // haze toward the horizon (over the ground, under everything standing)
     if (horizon > 0) { const g = ctx.createLinearGradient(0, horizon - 30, 0, horizon + C.f * 0.12); g.addColorStop(0, 'rgba(214,214,206,0.7)'); g.addColorStop(0.35, 'rgba(206,208,200,0.25)'); g.addColorStop(1, 'rgba(206,208,200,0)'); ctx.fillStyle = g; ctx.fillRect(0, Math.max(0, horizon - 30), W, C.f * 0.12 + 30); }
     // cloud shadows drifting over the meadow (the light moves)
     cloudShadows(ctx, C, t);
-    // the valley's sides: long ridges east and west of the road south, layered by distance
-    for (const [x0, amp, h0, col, sd] of [[-420, 70, 90, '#7d8c84', 1], [520, 90, 120, '#7a8a82', 2], [-260, 40, 45, '#61745a', 3], [300, 50, 60, '#5e7258', 4]]) {
-      const top = [], base = [];
-      for (let z = 260; z >= -1400; z -= 40) { const x = x0 + 60 * Math.sin(z * 0.004 + sd) + (x0 < 0 ? -1 : 1) * Math.max(0, -z - 200) * 0.12, h = h0 + amp * K.fbm(z * 0.006 + sd * 7, sd, 3, 70 + sd); top.push([x, h, z]); base.push([x + (x0 < 0 ? 1 : -1) * Math.min(h * 2.4, Math.abs(x0) * 0.3), 0, z]); }
-      const sp = projPoly(C, top.concat(base.reverse())); if (sp.length > 2) { ctx.fillStyle = col; pathPoly(ctx, sp); ctx.fill(); }
-    }
     // the hold on its rise across the river (north-east), haze over it
     const hold = pj(C, 95, 0, 120); if (hold) { const s = hold[3] * 70; ctx.save(); ctx.globalAlpha = 0.92; ctx.drawImage(holdSprite(), hold[0] - s / 2, hold[1] - s * 260 / 640 * 0.96, s, s * 260 / 640); ctx.restore(); }
     // the river moving: light on the runs, flowing south
@@ -737,7 +745,7 @@
   function notation(ctx, t, T, a) {
     if (a <= 0.01) return;
     const items = [['1. dxe4', T.m1 + 0.3], ['Rd2', T.m2 + 0.6], ['2. Nd5!', T.m3 + 0.4], ['Rxd5', T.m4 + 0.3], ['3. exd5', T.m5 + 0.3]];
-    let x = 120; const y = H - 96;
+    let x = 110; const y = 64;
     ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = 'rgba(14,12,10,0.0)';
     for (const [s, t0] of items) { const v = smooth(span(t, t0, t0 + 0.35)); if (v <= 0) break; K.text(ctx, s, x, y, '500 30px "EB Garamond"', 'rgba(248,242,226,0.92)', 1, 'left', v); x += K.measure(ctx, s, '500 30px "EB Garamond"', 1) + 22; }
     ctx.restore();
@@ -899,7 +907,7 @@
         { t: T.s1 + 1.2, p: [74, 52, 74], g: [0, 0, -320], fov: 50, e: easeOut }], valley: true },
     ]);
   }
-  function drawShot(ctx, sh, t, T) {
+  function drawShot(ctx, sh, t, T, raw = false) {
     if (sh.fn) { sh.fn(ctx, t); return; }
     const C = camKeys(t, sh.cam);
     if (sh.shake && t > T.m2 + 1.3) { const k = Math.exp(-(t - T.m2 - 1.4) * 4) * (t > T.m2 + 1.4 ? 1 : 0), [dx, dy] = K.shake(t, 9 * k, 7); C.cx += dx; C.cy += dy; }
@@ -907,6 +915,7 @@
     const o = { state, minK: sh.diagram ? 0.7 : 0.66, big: sh.diagram ? 1.32 : 1, overlay: sh.setup ? null : boardOverlay(t, T), caelLight: sh.diagram ? 0.12 * win(t, T.m5 + 0.4, T.s1 + 1, 0.3, 0.5) : 0 };
     if (sh.valley) { o.extraBanners = [[riverX(FORDZ) - RIVW / 2 - 2.0, FORDZ - 1.5, EALD, 9, 2.2]]; o.poleH = 8; }
     world(ctx, C, t, o);
+    if (raw) return;
     finishDay(ctx);
     if (sh.diagram) notation(ctx, t, T, win(t, sh.t0 + 0.1, sh.t1, 0.25, 0.2));
   }
@@ -918,7 +927,17 @@
       t = Math.min(t, sc.end + 0.8);
       let i = list.findIndex(s => t >= s.t0 && t < s.t1); if (i < 0) i = t < list[0].t0 ? 0 : list.length - 1;
       const sh = list[i], fd = sh.fade || 0.25;
-      if (i > 0 && t < sh.t0 + fd && sh.fade !== 0) {
+      const prev = list[i - 1];
+      if (i > 0 && t < sh.t0 + fd && sh.cam && prev.cam) {
+        // between two meadow shots: the outgoing one at half size, both ungraded, the grade laid once over the mix
+        const A = K.layer('s4:half', W / 2, H / 2), ax = A.getContext('2d');
+        ax.setTransform(0.5, 0, 0, 0.5, 0, 0); BK = 0.5; try { drawShot(ax, prev, t, T, true); } finally { BK = 1; }
+        drawShot(ctx, sh, t, T, true);
+        ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1 - smooth((t - sh.t0) / fd); ctx.imageSmoothingQuality = 'medium'; ctx.drawImage(A, 0, 0, W, H); ctx.restore();
+        finishDay(ctx);
+        if (sh.diagram) notation(ctx, t, T, win(t, sh.t0 + 0.1, sh.t1, 0.25, 0.2));
+        else if (prev.diagram) notation(ctx, t, T, 1 - smooth((t - sh.t0) / fd));
+      } else if (i > 0 && t < sh.t0 + fd && sh.fade !== 0) {
         const A = K.layer('s4:a'), B = K.layer('s4:b');
         drawShot(A.getContext('2d'), list[i - 1], t, T); drawShot(B.getContext('2d'), sh, t, T);
         ctx.drawImage(A, 0, 0); ctx.globalAlpha = smooth((t - sh.t0) / fd); ctx.drawImage(B, 0, 0); ctx.globalAlpha = 1;
