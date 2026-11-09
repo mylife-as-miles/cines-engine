@@ -38,7 +38,7 @@
   },
   {
    "id": "P06_alarm_bells",
-   "prompt": "frantic clanging alarm bells ringing from a stone tower at night, many bells swinging wildly, birds scattering",
+   "prompt": "iron alarm bells clanging wildly out of rhythm from a stone tower at night, harsh metal clappers banging, urgent and chaotic",
    "dur": 6,
    "seed": 206,
    "at": {
@@ -113,44 +113,6 @@
    "duck": 0
   },
   {
-   "id": "P22_horn_riders",
-   "prompt": "a single war horn blowing in a valley, horses arriving and stopping, harness jingling",
-   "dur": 5,
-   "seed": 222,
-   "at": {
-    "cue": "L22",
-    "edge": "start",
-    "offset": -0.6
-   },
-   "level": -17,
-   "check": "a horn blowing",
-   "not": [
-    "a car horn",
-    "a ship",
-    "a trumpet fanfare"
-   ],
-   "duck": 0
-  },
-  {
-   "id": "P28_piece_mate",
-   "prompt": "a heavy stone chess piece set down firmly on a stone board, a single deep knock echoing in a quiet hall",
-   "dur": 5,
-   "seed": 228,
-   "at": {
-    "cue": "L30",
-    "edge": "start",
-    "offset": 0.2
-   },
-   "level": -17,
-   "check": "a knock on stone",
-   "not": [
-    "a door knock",
-    "a drum",
-    "footsteps"
-   ],
-   "duck": 0
-  },
-  {
    "id": "P33_arrows",
    "prompt": "a volley of arrows whistling out of the trees and thudding into wood and earth, a horse crying out and falling",
    "dur": 4,
@@ -208,7 +170,7 @@
   },
   {
    "id": "P40_bell_heart",
-   "prompt": "a single deep funeral bell toll in darkness, then a slow heavy heartbeat starting, faint and low",
+   "prompt": "a slow deep human heartbeat in total darkness, muffled low thumps, lub-dub, very close, starting faint and growing",
    "dur": 8,
    "seed": 240,
    "at": {
@@ -218,9 +180,9 @@
    "level": -15,
    "check": "a heartbeat",
    "not": [
+    "knocking on a door",
     "a drum",
-    "footsteps",
-    "knocking on a door"
+    "footsteps"
    ],
    "duck": 0
   },
