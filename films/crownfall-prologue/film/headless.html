@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>Crownfall intro, headless</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script src="timeline.js"></script>
+<script src="kit.js"></script>
+<script src="mapdata.js"></script>
+<script src="map.js"></script>
+<script src="scenes/s1.js"></script>
+<script src="scenes/s2.js"></script>
+<script src="scenes/s3.js"></script>
+<script src="scenes/s4.js"></script>
+<script src="scenes/s5.js"></script>
+<script src="scenes/s6.js"></script>
+<script src="scenes/s7.js"></script>
+<script src="scenes/s8.js"></script>
+<script src="prologue.js"></script>
+<script>
+  // ?subs=1 draws the subtitles; ?scene=N draws only scene N (any time, for working on one scene)
+  const q = new URLSearchParams(location.search);
+  FILM.opts.subs = q.get('subs') === '1'; FILM.opts.sceneOnly = q.has('scene') ? +q.get('scene') : -1;
+  FILM.loadFonts('../fonts/fonts.css').then(() => KIT.whenImages()).then(() => { FILM.mountHeadless(); window.FILM_READY = true; }).catch(e => { window.FILM_ERROR = String(e); });
+</script>

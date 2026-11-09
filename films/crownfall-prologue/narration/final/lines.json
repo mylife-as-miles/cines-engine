@@ -1,0 +1,294 @@
+{
+ "voice": "narrator: ElevenLabs George (JBFqnCBsd6RMkjVDRZzb), cael: ElevenLabs Harry (SOYHLrjzK2X1ezoPC6cr), voice: ElevenLabs Lily (pFZP5JQG7iQjIQuC4Bku) [eleven_v4] (narrator tempo 1.06)",
+ "sampleRate": 48000,
+ "lines": [
+  {
+   "id": "C00",
+   "speaker": "cael",
+   "file": "C00.wav",
+   "dur": 4.879
+  },
+  {
+   "id": "L01",
+   "speaker": "narrator",
+   "file": "L01.wav",
+   "dur": 6.703
+  },
+  {
+   "id": "L02",
+   "speaker": "narrator",
+   "file": "L02.wav",
+   "dur": 7.728
+  },
+  {
+   "id": "L03",
+   "speaker": "narrator",
+   "file": "L03.wav",
+   "dur": 8.244
+  },
+  {
+   "id": "L04",
+   "speaker": "narrator",
+   "file": "L04.wav",
+   "dur": 3.748
+  },
+  {
+   "id": "L05",
+   "speaker": "narrator",
+   "file": "L05.wav",
+   "dur": 8.087
+  },
+  {
+   "id": "L06",
+   "speaker": "narrator",
+   "file": "L06.wav",
+   "dur": 4.188
+  },
+  {
+   "id": "L07",
+   "speaker": "narrator",
+   "file": "L07.wav",
+   "dur": 4.143
+  },
+  {
+   "id": "L08",
+   "speaker": "narrator",
+   "file": "L08.wav",
+   "dur": 5.194
+  },
+  {
+   "id": "L09",
+   "speaker": "narrator",
+   "file": "L09.wav",
+   "dur": 8.321
+  },
+  {
+   "id": "L10",
+   "speaker": "narrator",
+   "file": "L10.wav",
+   "dur": 3.614
+  },
+  {
+   "id": "L11",
+   "speaker": "narrator",
+   "file": "L11.wav",
+   "dur": 7.335
+  },
+  {
+   "id": "L12",
+   "speaker": "narrator",
+   "file": "L12.wav",
+   "dur": 5.226
+  },
+  {
+   "id": "L13",
+   "speaker": "narrator",
+   "file": "L13.wav",
+   "dur": 7.106
+  },
+  {
+   "id": "L14",
+   "speaker": "narrator",
+   "file": "L14.wav",
+   "dur": 1.242
+  },
+  {
+   "id": "L15",
+   "speaker": "narrator",
+   "file": "L15.wav",
+   "dur": 5.785
+  },
+  {
+   "id": "L16",
+   "speaker": "narrator",
+   "file": "L16.wav",
+   "dur": 7.107
+  },
+  {
+   "id": "L17",
+   "speaker": "narrator",
+   "file": "L17.wav",
+   "dur": 8.133
+  },
+  {
+   "id": "L18",
+   "speaker": "narrator",
+   "file": "L18.wav",
+   "dur": 8.812
+  },
+  {
+   "id": "L19",
+   "speaker": "narrator",
+   "file": "L19.wav",
+   "dur": 7.935
+  },
+  {
+   "id": "L20",
+   "speaker": "narrator",
+   "file": "L20.wav",
+   "dur": 7.973
+  },
+  {
+   "id": "L21",
+   "speaker": "narrator",
+   "file": "L21.wav",
+   "dur": 2.351
+  },
+  {
+   "id": "L22",
+   "speaker": "narrator",
+   "file": "L22.wav",
+   "dur": 8.858
+  },
+  {
+   "id": "L23",
+   "speaker": "narrator",
+   "file": "L23.wav",
+   "dur": 6.0
+  },
+  {
+   "id": "L24",
+   "speaker": "narrator",
+   "file": "L24.wav",
+   "dur": 3.156
+  },
+  {
+   "id": "L25",
+   "speaker": "narrator",
+   "file": "L25.wav",
+   "dur": 4.855
+  },
+  {
+   "id": "L26",
+   "speaker": "narrator",
+   "file": "L26.wav",
+   "dur": 4.56
+  },
+  {
+   "id": "L27",
+   "speaker": "narrator",
+   "file": "L27.wav",
+   "dur": 6.579
+  },
+  {
+   "id": "L28",
+   "speaker": "narrator",
+   "file": "L28.wav",
+   "dur": 5.717
+  },
+  {
+   "id": "L29",
+   "speaker": "narrator",
+   "file": "L29.wav",
+   "dur": 6.188
+  },
+  {
+   "id": "L30",
+   "speaker": "narrator",
+   "file": "L30.wav",
+   "dur": 5.52
+  },
+  {
+   "id": "L31",
+   "speaker": "narrator",
+   "file": "L31.wav",
+   "dur": 3.999
+  },
+  {
+   "id": "L32",
+   "speaker": "narrator",
+   "file": "L32.wav",
+   "dur": 4.678
+  },
+  {
+   "id": "L33",
+   "speaker": "narrator",
+   "file": "L33.wav",
+   "dur": 4.159
+  },
+  {
+   "id": "L34",
+   "speaker": "narrator",
+   "file": "L34.wav",
+   "dur": 5.551
+  },
+  {
+   "id": "L35",
+   "speaker": "narrator",
+   "file": "L35.wav",
+   "dur": 6.545
+  },
+  {
+   "id": "L36",
+   "speaker": "narrator",
+   "file": "L36.wav",
+   "dur": 4.791
+  },
+  {
+   "id": "L37",
+   "speaker": "narrator",
+   "file": "L37.wav",
+   "dur": 8.739
+  },
+  {
+   "id": "L38",
+   "speaker": "narrator",
+   "file": "L38.wav",
+   "dur": 1.076
+  },
+  {
+   "id": "C01",
+   "speaker": "cael",
+   "file": "C01.wav",
+   "dur": 6.076
+  },
+  {
+   "id": "C02",
+   "speaker": "cael",
+   "file": "C02.wav",
+   "dur": 5.086
+  },
+  {
+   "id": "C03",
+   "speaker": "cael",
+   "file": "C03.wav",
+   "dur": 4.308
+  },
+  {
+   "id": "L39",
+   "speaker": "narrator",
+   "file": "L39.wav",
+   "dur": 2.721
+  },
+  {
+   "id": "L40",
+   "speaker": "narrator",
+   "file": "L40.wav",
+   "dur": 4.709
+  },
+  {
+   "id": "L41",
+   "speaker": "narrator",
+   "file": "L41.wav",
+   "dur": 4.101
+  },
+  {
+   "id": "V01",
+   "speaker": "voice",
+   "file": "V01.wav",
+   "dur": 0.875
+  },
+  {
+   "id": "C04",
+   "speaker": "cael",
+   "file": "C04.wav",
+   "dur": 2.844
+  },
+  {
+   "id": "V02",
+   "speaker": "voice",
+   "file": "V02.wav",
+   "dur": 3.599
+  }
+ ]
+}
