@@ -1,11 +1,13 @@
-"""The soundtrack of the opening: music by Osita Miles under the narration.
+"""The prologue's soundtrack: music by Osita Miles under three voices, with designed sounds.
 
-    python tools/mix.py [working|final]
+    python tools/mix.py [final]
 
-Cyning Slieht opens under the studio card and carries the chronicle; La Felure Demeure rises under it and carries the
-rest, its dip on the YEAR 33 card and its last swell under the title. The music ducks under
-the voice: an envelope drawn from the narration lowers it while a line is spoken and lets it rise to full in every
-stretch without a voice; the whole is levelled to -16 LUFS. Writes audio/intro-mix.m4a (and a .wav).
+Le Roi Muet (the mute king) opens in the dark and carries the coup and the escape; Slay the Iron Slave takes over for
+Cael's rise (the ford, the Muster); Krom Shahid (the martyr) enters with the road home and carries the fire; La Felure
+Demure, the opening film's closing music, rises out of the black of the Stillmarch with its first swell under the
+Chapter One title. The music ducks under the voices: an envelope drawn from the takes lowers it while a line is spoken
+and lets it rise in every stretch without a voice; it also dips under the louder designed sounds. The voice in the dark
+gets a cold, long reverb. The whole is levelled to -16 LUFS. Writes audio/prologue-mix.m4a (and out/prologue-mix.wav).
 Needs numpy and soundfile, and ffmpeg on the path.
 """
 import json, os, subprocess, sys
@@ -23,13 +25,16 @@ _tl = open(os.path.join(ROOT, 'film', 'timeline.js')).read()
 TL = json.loads(_tl[_tl.index('=') + 1:_tl.rindex(';')])
 CUE = {l['id']: l for s_ in TL['scenes'] for l in s_['lines']}
 SC = {s_['n']: s_ for s_ in TL['scenes']}
-# music by Osita Miles: Cyning Slieht opens and carries the story; La Felure Demeure rises under it and takes over, placed
-# so that its dip (147 s into the track) falls on the YEAR 33 card and its last swell under the title. Both sit low, under
-# the voice, and duck further while it speaks.
-LF = TL['year33'][0] - 147.0 + 0.4
+# music by Osita Miles (the Crownfall soundtrack): each track hands over under the end of the scene before
+IS0 = SC[3]['end'] - 18.0          # Slay the Iron Slave: its quiet opening under the last of Ealdholt
+KS0 = SC[6]['start'] - 1.0         # Krom Shahid: with the road home, through the fire
+LF0 = SC[8]['start']               # La Felure Demure: out of the black; its first swell (16 s in) under the Chapter One title
+KS_OUT = CUE['L41']['end'] - 1.0   # the fire's music leaves before the Stillmarch
 MUSIC = [  # file, where it starts in the film (s), gain, volume shaping over film time
-    ('audio/cyning-slieht.mp3', 0.0, 0.64, lambda t: (0.45 + 0.55 * np.clip((t - 6) / 3, 0, 1)) * (1 - np.clip((t - (LF + 3.0)) / 10, 0, 1))),
-    ('audio/la-felure-demure.mp3', LF, 0.68, lambda t: np.clip((t - LF) / 5, 0, 1)),
+    ('audio/le-roi-muet.mp3', 0.0, 0.66, lambda t: 1 - np.clip((t - (IS0 + 6)) / 8, 0, 1)),
+    ('audio/slay-the-iron-slave.mp3', IS0, 0.6, lambda t: np.clip((t - IS0) / 4, 0, 1) * (1 - np.clip((t - (KS0 + 1)) / 5, 0, 1))),
+    ('audio/krom-shahid.mp3', KS0, 0.64, lambda t: np.clip((t - KS0) / 4, 0, 1) * (1 - np.clip((t - KS_OUT) / 5, 0, 1))),
+    ('audio/la-felure-demure.mp3', LF0, 0.62, lambda t: np.clip((t - LF0) / 6, 0, 1)),
 ]
 # the music rides the narration: full in every stretch without a voice, down by DUCK_DB while a line is spoken. Lines closer
 # than MERGE seconds share one duck, so the music never pumps between them; it falls over ATTACK s before a line and comes
@@ -38,9 +43,8 @@ DUCK_DB, MERGE, ATTACK, RELEASE, LEAD, TAIL_HOLD = -19.0, 1.4, 0.45, 1.1, 0.25, 
 
 
 def at_time(at):
-    if 'studio' in at: return TL['studio'][0] + at['studio']
-    if 'year33' in at: return TL['year33'][0] + at['year33']
-    if 'title' in at: return TL['title'][0] + at['title']
+    if 'title' in at: return SC[0]['title'][0] + at['title']       # the prologue title in the cold open
+    if 'chapter' in at: return TL['chapter'][0] + at['chapter']
     if 'scene' in at: return SC[at['scene']]['start'] + at.get('offset', 0)
     c = CUE[at['cue']]
     return (c['start'] if at.get('edge', 'start') == 'start' else c['end']) + at.get('offset', 0)
@@ -77,12 +81,19 @@ for snd in plan['sounds']:
     SFX_DUCK.append((path, max(0.0, t0), snd.get('duck', 8.0 if lv >= -6 else 5.0 if lv >= -9 else 3.0 if lv >= -12 else 0.0)))
 if SFX:
     print(f'{len(SFX)} designed sounds set against the voice (its loudest 0.4 s at {VREF:.1f} dBFS)')
-if not SFX:
-    SFX = [(os.path.join(ROOT, 'audio', 'sfx', n + '.wav'), t, g) for n, t, g in [
-        ('pen', 0.5, 0.32), ('tear', CUE['L04']['start'] + 2.0, 0.5), ('crack', CUE['L06']['start'] + 0.35, 0.4),
-        ('shatter', CUE['L06']['start'] + 2.0, 0.62), ('boom', CUE['L06']['start'] + 2.0, 0.5), ('wind', SC[4]['start'] - 0.5, 0.26),
-        ('fire', SC[7]['start'] - 0.2, 0.36), ('swell', TL['title'][0] - 2.0, 0.42), ('boom', TL['title'][0] + 1.9, 0.42)]]
+# sounds not generated yet are simply left out of this mix
 total = place['total']
+def reverb(x, rt=2.4, wet=0.42):
+    """A cold, long room for the voice in the dark: decaying noise convolved by FFT, a little pre-delay, mixed under the dry voice."""
+    n = int(rt * SR); r = np.random.default_rng(31)
+    ir = (r.standard_normal(n) * np.exp(-6.9 * np.arange(n) / n)).astype(np.float32)
+    ir = np.concatenate([np.zeros(int(0.03 * SR), np.float32), ir]); ir /= np.sqrt(np.sum(ir ** 2))
+    m = len(x) + len(ir); f = 1 << (m - 1).bit_length()
+    w = np.fft.irfft(np.fft.rfft(x, f) * np.fft.rfft(ir, f), f)[:m].astype(np.float32)
+    y = np.concatenate([x, np.zeros(len(ir), np.float32)]) * (1 - wet) + w * wet * (np.max(np.abs(x)) / (np.max(np.abs(w)) + 1e-9))
+    return y.astype(np.float32)
+
+
 voice = np.zeros(int(total * SR) + SR, dtype=np.float32)
 for ln in place['lines']:
     wav, sr = sf.read(os.path.join(ROOT, f'narration/{SET}', ln['file']), dtype='float32')
@@ -91,6 +102,8 @@ for ln in place['lines']:
     if sr != SR:  # resample by linear interpolation (the takes are speech; this is plenty)
         n = int(len(wav) * SR / sr)
         wav = np.interp(np.linspace(0, len(wav) - 1, n), np.arange(len(wav)), wav).astype(np.float32)
+    if ln.get('speaker') == 'voice':
+        wav = reverb(wav)
     a = int(ln['start'] * SR)
     voice[a:a + len(wav)] += wav[:max(0, len(voice) - a)]
 peak = float(np.max(np.abs(voice))) or 1.0
@@ -170,10 +183,13 @@ parts = ['[0:a]aformat=channel_layouts=stereo[mus]', '[1:a]aformat=channel_layou
 for j, (path, at, gain) in enumerate(SFX):
     d = int(at * 1000)
     parts.append(f'[{2 + j}:a]aresample={SR},aformat=channel_layouts=stereo,volume={gain},adelay={d}|{d}[s{j}]')
-parts.append(''.join(f'[s{j}]' for j in range(len(SFX))) + f'amix=inputs={len(SFX)}:normalize=0:duration=longest[sfx]')
-parts.append(f'[mus][v][sfx]amix=inputs=3:normalize=0:weights=1 1.25 1,atrim=0:{total:.3f},afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
-out_wav = os.path.join(ROOT, 'out', 'intro-mix.wav')
+if SFX:
+    parts.append(''.join(f'[s{j}]' for j in range(len(SFX))) + f'amix=inputs={len(SFX)}:normalize=0:duration=longest[sfx]')
+    parts.append(f'[mus][v][sfx]amix=inputs=3:normalize=0:weights=1 1.25 1,atrim=0:{total:.3f},afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
+else:
+    parts.append(f'[mus][v]amix=inputs=2:normalize=0:weights=1 1.25,atrim=0:{total:.3f},afade=t=out:st={total - 3.0:.3f}:d=3.0,loudnorm=I=-16:TP=-1.5:LRA=11[out]')
+out_wav = os.path.join(ROOT, 'out', 'prologue-mix.wav')
 subprocess.run(args + ['-filter_complex', ';'.join(parts), '-map', '[out]', '-ar', str(SR), out_wav], check=True)
-out_m4a = os.path.join(ROOT, 'audio', 'intro-mix.m4a')
+out_m4a = os.path.join(ROOT, 'audio', 'prologue-mix.m4a')
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', out_wav, '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', out_m4a], check=True)
 print(f'mixed {SET} narration with {len(MUSIC)} tracks: {total:.1f} s -> {out_m4a} ({os.path.getsize(out_m4a)} bytes)')

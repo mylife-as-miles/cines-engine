@@ -1,0 +1,327 @@
+{
+ "model": "Stable Audio 3.0 Small SFX (q8_0 GGUF via audio.cpp, Soundbox)",
+ "model_id": "audiocpp-stable-audio-3-sfx",
+ "license": {
+  "name": "Stability AI Community License",
+  "url": "https://stability.ai/license",
+  "note": "Free for commercial use below USD $1M annual revenue; above that an Enterprise licence is needed. The GGUF conversion does not change the licence of the weights."
+ },
+ "engine": "Soundbox 0.4.1 CLI driving audio.cpp v0.9.4 (CPU build, stable_audio family); Soundbox defaults for this model: 8 steps, guidance 1.0; audio.cpp generates 6 s past the asked duration and truncates; 44.1 kHz stereo 16-bit out of audio.cpp",
+ "finish": "48 kHz (soxr); cut 3 ms before the first 1 ms frame within 40 dB of the peak (held in 3 of 10 frames), 2 ms de-click; peak -1 dBFS; 0.15 s raised-cosine fade-out; 24-bit stereo WAV",
+ "sample_rate": 48000,
+ "source": "audio/sfx_plan.json",
+ "sounds": [
+  {
+   "id": "P01_bell",
+   "prompt": "a single distant cathedral bell tolling once in a vast empty night, long fading reverberation",
+   "seed": 201,
+   "duration_s": 6,
+   "gen_s": 62.9,
+   "raw_peak_dbfs": -15.06,
+   "clipped_samples": 0,
+   "trimmed_ms": 50.0,
+   "gain_db": 14.06,
+   "length_s": 5.95,
+   "file": "sfx_sa/P01_bell.wav"
+  },
+  {
+   "id": "P02_title_flare",
+   "prompt": "a soft deep whoosh of fire igniting and flaring up slowly, warm embers crackling",
+   "seed": 202,
+   "duration_s": 4,
+   "gen_s": 23.6,
+   "raw_peak_dbfs": -1.33,
+   "clipped_samples": 0,
+   "trimmed_ms": 151.0,
+   "gain_db": 0.37,
+   "length_s": 3.849,
+   "file": "sfx_sa/P02_title_flare.wav"
+  },
+  {
+   "id": "P03_city_night",
+   "prompt": "a medieval city at night from a high tower, cold wind over rooftops, distant dogs, faint bells",
+   "seed": 203,
+   "duration_s": 10,
+   "gen_s": 18.7,
+   "raw_peak_dbfs": -12.6,
+   "clipped_samples": 0,
+   "trimmed_ms": 0.0,
+   "gain_db": 11.6,
+   "length_s": 10.0,
+   "file": "sfx_sa/P03_city_night.wav"
+  },
+  {
+   "id": "P04_candles",
+   "prompt": "a quiet stone hall with candles burning, soft wax crackle, low murmuring voices far away",
+   "seed": 204,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P05_seals",
+   "prompt": "heavy wax seals pressed onto thick parchment one after another, six firm stamps on a wooden table",
+   "seed": 205,
+   "duration_s": 6,
+   "file": null
+  },
+  {
+   "id": "P06_alarm_bells",
+   "prompt": "frantic clanging alarm bells ringing from a stone tower at night, many bells swinging wildly, birds scattering",
+   "seed": 206,
+   "duration_s": 6,
+   "file": null
+  },
+  {
+   "id": "P07_firstborn",
+   "prompt": "a colossal winged beast roaring overhead, huge leathery wingbeats, a deep monstrous bellow echoing across a city",
+   "seed": 207,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P08_city_burning",
+   "prompt": "a city burning at night, roaring flames, timber collapsing, distant screams and running crowds",
+   "seed": 208,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P09_fall_table",
+   "prompt": "a heavy body falling onto a wooden table, papers and wax seals scattering across a stone floor, a goblet rolling",
+   "seed": 209,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "P10_quill",
+   "prompt": "a quill pen scratching hard strokes across parchment, striking lines through words, close and dry",
+   "seed": 210,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P11_infant",
+   "prompt": "a newborn baby softly whimpering, wrapped in a blanket, very close and quiet",
+   "seed": 211,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "P12_run_passage",
+   "prompt": "hurried footsteps of a woman running on stone through a narrow passage, cloth rustling, heavy breathing, torch crackling",
+   "seed": 212,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P13_streets_fire",
+   "prompt": "running through burning medieval streets, flames roaring on both sides, crackling beams falling, people shouting in panic",
+   "seed": 213,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P14_gate",
+   "prompt": "a heavy iron gate creaking open on old hinges, chains rattling, then swords drawn from scabbards",
+   "seed": 214,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "P15_guard_falls",
+   "prompt": "an armoured man falling heavily onto cobblestones, metal armour clattering, a sword dropping",
+   "seed": 215,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "P16_snow_road",
+   "prompt": "cold wind blowing over a snowy forest at night, footsteps crunching slowly through deep snow",
+   "seed": 216,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P17_hearth",
+   "prompt": "a quiet longhall at night, a hearth fire crackling gently, wind against wooden walls",
+   "seed": 217,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P18_register",
+   "prompt": "a quill dipped in an inkwell and writing slowly on parchment by candlelight, a few careful strokes",
+   "seed": 218,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P19_ford_rain",
+   "prompt": "a shallow river ford flowing over stones in steady rain, a northern valley, distant sheep",
+   "seed": 219,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P20_spear_practice",
+   "prompt": "wooden practice spears clacking together, quick strikes and parries, feet shuffling on wet ground, grunts",
+   "seed": 220,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P21_forge",
+   "prompt": "a blacksmith hammering on an anvil at dusk, bellows breathing, the forge fire roaring softly",
+   "seed": 221,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P22_horn_riders",
+   "prompt": "a single war horn blowing in a valley, horses arriving and stopping, harness jingling",
+   "seed": 222,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P23_board_meadow",
+   "prompt": "an outdoor crowd murmuring in a meadow by a river, armoured soldiers taking positions, banners flapping in wind",
+   "seed": 223,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P24_clash",
+   "prompt": "a sudden clash of steel weapons and a heavy armoured man thrown down on grass, the crowd gasping",
+   "seed": 224,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "P25_ford_cheer",
+   "prompt": "a village crowd cheering outdoors, a banner flapping loudly in strong wind, joyful shouts",
+   "seed": 225,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P26_great_hall",
+   "prompt": "a vast stone hall full of nobles murmuring, footsteps echoing, armour clinking, deep reverberation",
+   "seed": 226,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P27_hush_gasp",
+   "prompt": "a large audience in a stone hall falling silent, then a sudden collective gasp",
+   "seed": 227,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "P28_piece_mate",
+   "prompt": "a heavy stone chess piece set down firmly on a stone board, a deep knock echoing in a hall, then a crowd erupting in applause",
+   "seed": 228,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P29_knighting",
+   "prompt": "a steel sword drawn and laid gently on an armoured shoulder, a clear metallic ring in a quiet stone hall",
+   "seed": 229,
+   "duration_s": 3,
+   "file": null
+  },
+  {
+   "id": "P30_hooves_dawn",
+   "prompt": "a single horse trotting out of a city gate at dawn onto a dirt road, birds waking",
+   "seed": 230,
+   "duration_s": 6,
+   "file": null
+  },
+  {
+   "id": "P31_market",
+   "prompt": "a busy medieval market in the morning, merchants calling, coins and wooden stalls, chickens",
+   "seed": 231,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P32_forest_rain",
+   "prompt": "steady autumn rain in a dark forest, water dripping from leaves onto a muddy road, distant crows",
+   "seed": 232,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P33_arrows",
+   "prompt": "a volley of arrows whistling out of the trees and thudding into wood and earth, a horse crying out and falling",
+   "seed": 233,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "P34_torn_burn",
+   "prompt": "a page of parchment torn slowly from a bound book, then held to a torch and catching fire with a soft whoosh",
+   "seed": 234,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "P35_pyre",
+   "prompt": "a large bonfire roaring in a forest clearing at night, logs crackling and spitting, deep rumble of flames",
+   "seed": 235,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P36_pyre_close",
+   "prompt": "intense close roaring flames beneath an iron grate, hissing and crackling, sparks bursting, a heavy fire roar",
+   "seed": 236,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P37_pyre_flare",
+   "prompt": "a fire suddenly flaring up with a huge whoosh, flames roaring higher, sparks bursting into the night",
+   "seed": 237,
+   "duration_s": 4,
+   "file": null
+  },
+  {
+   "id": "P38_embers_rain",
+   "prompt": "rain falling on dying embers, steam hissing, a few last crackles, a quiet night forest",
+   "seed": 238,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P39_far_roar",
+   "prompt": "a very distant monstrous roar echoing high above the clouds at night, faint and long",
+   "seed": 239,
+   "duration_s": 5,
+   "file": null
+  },
+  {
+   "id": "P40_bell_heart",
+   "prompt": "a single deep funeral bell toll in darkness, then a slow heavy heartbeat starting, faint and low",
+   "seed": 240,
+   "duration_s": 8,
+   "file": null
+  },
+  {
+   "id": "P41_stillmarch",
+   "prompt": "an endless empty plain under a cold sky, a low hollow wind, faint distant voices murmuring like ghosts",
+   "seed": 241,
+   "duration_s": 10,
+   "file": null
+  },
+  {
+   "id": "P42_chapter_boom",
+   "prompt": "a deep cinematic boom with a long dark tail, epic, heavy, slowly fading",
+   "seed": 242,
+   "duration_s": 6,
+   "file": null
+  }
+ ]
+}
