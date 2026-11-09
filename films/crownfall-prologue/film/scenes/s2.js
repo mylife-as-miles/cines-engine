@@ -125,46 +125,113 @@
   }
 
   // ================================================================ L12: through the burning streets
-  function burningRow(key, seed, n, y0, hMin, hMax, col, winA) {
-    return K.cached('s2:row:' + key, () => {
-      const c = K.canvas(5200, 1100), x = c.getContext('2d'), r = rng(seed), roofs = [];
-      for (let X = -50; X < c.width;) {
-        const w = 160 + r() * 260, hh = hMin + r() * (hMax - hMin), top = y0 - hh;
-        x.fillStyle = col; x.fillRect(X, top, w, 1100 - top);
-        x.beginPath(); x.moveTo(X - 10, top); x.lineTo(X + w * (0.3 + r() * 0.4), top - w * (0.4 + r() * 0.4)); x.lineTo(X + w + 10, top); x.closePath(); x.fill();
-        for (let k = 0; k < 6; k++) if (r() < winA) { const wx = X + 20 + r() * (w - 50), wy = top + 30 + r() * (hh - 80); x.fillStyle = `rgba(255,${110 + r() * 80 | 0},40,0.9)`; x.fillRect(wx, wy, 18 + r() * 10, 26 + r() * 10); }
-        roofs.push([X + w / 2, top - w * 0.2, w]);
-        X += w + r() * 30;
+  // a row of timber-framed houses along the street: steep gables at different heights, jettied upper storeys, leaning
+  // chimneys, burnt-through roofs. Returns the canvas and where the fire breaks out (windows and roofs), in its pixels.
+  // o: y0 (the street line), s (scale), far (a dark silhouette row, only edged by the glow)
+  function streetRow(key, seed, o) {
+    return K.cached('s2:srow:' + key, () => {
+      const c = K.canvas(5400, 1200), x = c.getContext('2d'), r = rng(seed), s = o.s, wins = [], roofs = [], chim = [];
+      const plaster = o.far ? [26, 14, 10] : [84, 52, 34], timber = o.far ? '#0e0705' : '#1a0d07', roofCol = o.far ? '#120806' : '#170b07';
+      for (let X = -60; X < c.width;) {
+        const w = (200 + r() * 190) * s, st = 2 + (r() < (o.far ? 0.5 : 0.25) ? 1 : 0), sh = (150 + r() * 40) * s, jet = 18 * s, gable = r() < 0.7;
+        let y = o.y0, left = X, right = X + w;
+        const storeyBoxes = [];
+        for (let k = 0; k < st; k++) { const l = left - (k ? jet : 0) * k * 0.5, rr = right + (k ? jet : 0) * k * 0.5; storeyBoxes.push([l, y - sh, rr, y]); y -= sh; }
+        const top = y, tl = storeyBoxes[st - 1][0], tr = storeyBoxes[st - 1][2], ridge = gable ? top - (tr - tl) * (0.75 + r() * 0.35) : top - (tr - tl) * 0.35;
+        // the facade storey by storey, each upper one jutting out over the one below
+        for (let k = 0; k < st; k++) {
+          const [l, t0, rr, b0] = storeyBoxes[k], lit = o.far ? 0 : 0.6 + r() * 0.4;
+          const g = x.createLinearGradient(0, b0, 0, t0); g.addColorStop(0, L.rgbs(L.mix(plaster, [140, 80, 40], lit * 0.4))); g.addColorStop(1, L.rgbs(L.mix(plaster, [10, 6, 4], 0.35))); x.fillStyle = g; x.fillRect(l, t0, rr - l, b0 - t0);
+          if (!o.far) {
+            x.fillStyle = timber; const bw = 9 * s;
+            x.fillRect(l, t0, bw, b0 - t0); x.fillRect(rr - bw, t0, bw, b0 - t0); x.fillRect(l, b0 - bw, rr - l, bw); x.fillRect(l - 4 * s, t0, rr - l + 8 * s, bw * 1.4);
+            const np = 2 + Math.floor((rr - l) / (110 * s));
+            for (let p = 1; p < np; p++) { const px = lerp(l, rr, p / np); x.fillRect(px - bw / 2, t0, bw, b0 - t0); if (r() < 0.6) { x.save(); x.lineWidth = bw * 0.8; x.strokeStyle = timber; x.beginPath(); const dir = r() < 0.5; x.moveTo(px, dir ? b0 : t0); x.lineTo(lerp(l, rr, (p - 0.5) / np), dir ? t0 + (b0 - t0) * 0.4 : b0 - (b0 - t0) * 0.4); x.stroke(); x.restore(); } }
+            // the jetty's shadow on the storey below
+            if (k > 0) { const sg = x.createLinearGradient(0, b0, 0, b0 + 40 * s); sg.addColorStop(0, 'rgba(0,0,0,0.6)'); sg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = sg; x.fillRect(l, b0, rr - l, 40 * s); }
+          }
+          // windows: some dark, some full of fire (the flames come out of them each frame)
+          const nw = 1 + Math.floor((rr - l) / (120 * s));
+          for (let q = 0; q < nw; q++) {
+            const wx = lerp(l, rr, (q + 0.5) / nw), ww = (30 + r() * 14) * s, wh = (44 + r() * 16) * s, wy = t0 + (b0 - t0) * 0.32, burn = r() < (o.far ? 0.3 : 0.32);
+            if (burn) { const fg = x.createLinearGradient(0, wy, 0, wy + wh); fg.addColorStop(0, '#ffcf70'); fg.addColorStop(1, '#e05a18'); x.fillStyle = fg; x.fillRect(wx - ww / 2, wy, ww, wh); if (!o.far) { const sg = x.createLinearGradient(0, wy - 80 * s, 0, wy); sg.addColorStop(0, 'rgba(10,4,2,0)'); sg.addColorStop(1, 'rgba(10,4,2,0.75)'); x.fillStyle = sg; x.fillRect(wx - ww, wy - 80 * s, ww * 2, 80 * s); } wins.push([wx, wy, ww, 0.6 + r() * 1.1]); }
+            else { x.fillStyle = '#080403'; x.fillRect(wx - ww / 2, wy, ww, wh); }
+            if (!o.far) { x.fillStyle = timber; x.fillRect(wx - ww / 2 - 4 * s, wy + wh, ww + 8 * s, 6 * s); x.fillRect(wx - 2 * s, wy, 4 * s, wh); }
+          }
+        }
+        // the roof: a steep gable to the street, or a long eave; some burnt through to the rafters
+        x.fillStyle = roofCol; x.beginPath();
+        if (gable) { x.moveTo(tl - 14 * s, top + 4); x.lineTo((tl + tr) / 2, ridge); x.lineTo(tr + 14 * s, top + 4); }
+        else { x.moveTo(tl - 20 * s, top + 4); x.lineTo(tl + (tr - tl) * 0.18, ridge); x.lineTo(tr - (tr - tl) * 0.18, ridge); x.lineTo(tr + 20 * s, top + 4); }
+        x.closePath(); x.fill();
+        if (!o.far) { x.strokeStyle = 'rgba(255,140,60,0.35)'; x.lineWidth = 2; x.beginPath(); if (gable) { x.moveTo(tl - 14 * s, top + 4); x.lineTo((tl + tr) / 2, ridge); x.lineTo(tr + 14 * s, top + 4); } else { x.moveTo(tl - 20 * s, top + 4); x.lineTo(tl + (tr - tl) * 0.18, ridge); x.lineTo(tr - (tr - tl) * 0.18, ridge); x.lineTo(tr + 20 * s, top + 4); } x.stroke(); }
+        if (r() < 0.45) {
+          // a hole burnt through: the rafters against the fire inside
+          const hx = lerp(tl, tr, 0.35 + r() * 0.3), hy = lerp(top, ridge, 0.45), hw = (tr - tl) * 0.28;
+          x.fillStyle = '#ff9a3a'; x.beginPath(); x.moveTo(hx - hw / 2, hy + 30 * s); x.lineTo(hx - hw * 0.3, hy - 30 * s); x.lineTo(hx + hw * 0.4, hy - 20 * s); x.lineTo(hx + hw / 2, hy + 34 * s); x.closePath(); x.fill();
+          x.strokeStyle = '#120806'; x.lineWidth = 6 * s; for (let k = 0; k < 4; k++) { const rx = hx - hw / 2 + k * hw / 3; x.beginPath(); x.moveTo(rx, hy + 40 * s); x.lineTo(rx + 20 * s, hy - 40 * s); x.stroke(); }
+          roofs.push([hx, hy, hw]);
+        } else if (r() < 0.5) roofs.push([lerp(tl, tr, 0.3 + r() * 0.4), lerp(top, ridge, 0.3), (tr - tl) * 0.5]);
+        // a chimney, often leaning
+        if (r() < 0.6) { const cx = lerp(tl, tr, r() < 0.5 ? 0.25 : 0.72), cy = lerp(top, ridge, 0.55), lean = (r() - 0.5) * 0.3; x.save(); x.translate(cx, cy); x.rotate(lean); x.fillStyle = roofCol; x.fillRect(-14 * s, -130 * s, 28 * s, 140 * s); x.fillRect(-20 * s, -138 * s, 40 * s, 14 * s); x.restore(); chim.push([cx + Math.sin(lean) * 130 * s, cy - 136 * s]); }
+        x.fillStyle = o.far ? '#0a0504' : '#0c0604'; x.fillRect(left - 30, o.y0, w + 60, 1200 - o.y0);
+        X = right + (r() < 0.3 ? 30 * s : 4);
       }
-      c.roofs = roofs; return c;
+      c.wins = wins; c.roofs = roofs; c.chim = chim; return c;
     });
+  }
+  // a tall tower far back in the smoke: square, buttressed, an open belfry and a spire (no sign on it)
+  function farTower(x, X, Y, s) {
+    x.fillStyle = '#0c0606'; x.fillRect(X - 60 * s, Y - 620 * s, 120 * s, 620 * s); x.fillRect(X - 74 * s, Y - 660 * s, 148 * s, 50 * s);
+    x.beginPath(); x.moveTo(X - 80 * s, Y - 660 * s); x.lineTo(X, Y - 980 * s); x.lineTo(X + 80 * s, Y - 660 * s); x.closePath(); x.fill();
+    for (const sd of [-1, 1]) { x.beginPath(); x.moveTo(X + sd * 60 * s, Y - 300 * s); x.lineTo(X + sd * 110 * s, Y); x.lineTo(X + sd * 60 * s, Y); x.closePath(); x.fill(); }
+    x.fillStyle = 'rgba(255,120,50,0.55)'; for (const ox of [-30, 12]) { x.beginPath(); x.moveTo(X + ox * s, Y - 560 * s); x.lineTo(X + ox * s, Y - 520 * s + 0); x.lineTo(X + (ox + 18) * s, Y - 520 * s); x.lineTo(X + (ox + 18) * s, Y - 560 * s); x.quadraticCurveTo(X + (ox + 9) * s, Y - 590 * s, X + ox * s, Y - 560 * s); x.fill(); }
+  }
+  // a beam that gives way: it swings down from the eaves, burning, and strikes the street in sparks
+  function fallingBeam(x, t, t0, X, Y, len, seed) {
+    if (t < t0 - 0.8) return; const k = easeIn(span(t, t0, t0 + 0.7)), ang = lerp(0.32, 1.3, k) + Math.sin(t * 9) * 0.02 * (1 - k), drop = k * k * 260, hit = t - (t0 + 0.7);
+    x.save(); x.translate(X, Y + drop); x.rotate(ang); x.fillStyle = '#0a0503'; x.fillRect(0, -16, len, 32); x.restore();
+    const ex = X + Math.cos(ang) * len * 0.6, ey = Y + drop + Math.sin(ang) * len * 0.6;
+    L.flame(x, ex, ey, 70, t, seed, 1); L.flame(x, X + Math.cos(ang) * len * 0.25, Y + drop + Math.sin(ang) * len * 0.25, 50, t, seed + 3, 0.9);
+    if (hit > 0 && hit < 1.2) { const rr = rng(seed + 9); x.save(); x.globalCompositeOperation = 'lighter'; for (let i = 0; i < 40; i++) { const a = -Math.PI * rr(), sp = 200 + rr() * 500, px = ex + Math.cos(a) * sp * hit, py = ey + Math.sin(a) * sp * hit + 400 * hit * hit; x.fillStyle = `rgba(255,${180 + rr() * 60 | 0},90,${1 - hit / 1.2})`; x.fillRect(px, py, 3, 3); } x.restore(); }
   }
   function shotStreets(x, t, sh) {
     const lt = t - sh.a, u = span(t, sh.a, sh.b), camX = lerp(0, 1500, u), [hx, hy] = K.shake(t * 2, 6, 2131);
     const c = { x: camX + hx, y: hy, z: 1.04 };
-    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#120806'); g.addColorStop(0.55, '#6a2a12'); g.addColorStop(1, '#1a0c08'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    L.view(x, c, 0.15); K.smoke(x, t, { n: 14, x: -200, y: -300, w: W + 600, h: 800, color: [70, 30, 20], alpha: 0.5, rise: 26, size: 420, seed: 2132 });
-    L.view(x, c, 0.25);
+    const inView = (sx, d, m = 300) => sx > c.x * d - m && sx < c.x * d + W + m;
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#140806'); g.addColorStop(0.55, '#6a2a12'); g.addColorStop(1, '#1a0c08'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    L.view(x, c, 0.12); K.smoke(x, t, { n: 14, x: -200, y: -300, w: W + 600, h: 800, color: [70, 30, 20], alpha: 0.5, rise: 26, size: 420, seed: 2132 });
+    // far back in the smoke: the tower, and a First-Born wheeling over the fires
+    L.view(x, c, 0.2); farTower(x, 1450, 640, 1.05); L.glow(x, [255, 110, 40], 1450, 380, 460, 0.2);
+    L.fog(x, 2139, [110, 46, 24], 120, 420, t * 30, 0.5);
+    L.view(x, c, 0.26);
     const bp = span(t, sh.a - 0.5, sh.b + 1.5); L.rimLit(x, (cc, fill) => L.beastBelow(cc, { x: lerp(2600, -400, bp), y: 120, s: 220, rot: Math.PI - 0.1, flap: Math.sin(t * 3), col: fill, t }), { rim: '#ff7030', mid: '#4a1808', dark: '#0c0505', dx: 0, dy: -4, steps: 2 });
-    // far rows, burning; then the near row
-    const far = burningRow('far', 2133, 0, 640, 260, 480, '#1e0e0a', 0.5);
+    // the far row: silhouettes edged by the glow, fire in their roofs
+    const far = streetRow('far', 2133, { y0: 640, s: 0.72, far: true });
     L.view(x, c, 0.45); x.drawImage(far, -300, 0);
-    for (let i = 0; i < far.roofs.length; i += 2) { const [rx, ry, rw] = far.roofs[i]; const sx = rx - 300; if (sx < c.x * 0.45 - 300 || sx > c.x * 0.45 + W + 300) continue; L.fire(x, sx, ry + 20, rw * 0.5, rw * 0.9, t, i, { n: 6, slot: 'sf' + (i % 4) }); L.glow(x, [255, 110, 40], sx, ry - 60, rw * 1.6, 0.3); }
-    L.fog(x, 2134, [90, 40, 22], 480, 300, t * 40, 0.6);
-    const near = burningRow('near', 2135, 0, 760, 380, 640, '#0e0705', 0.35);
+    let nf = 0;
+    for (const [rx, ry, rw] of far.roofs) { const sx = rx - 300; if (!inView(sx, 0.45) || nf > 5) continue; nf++; L.fire(x, sx, ry + 10, rw * 0.8, rw * 1.3, t, rx, { n: 6, slot: 'sf' + (nf % 4) }); L.glow(x, [255, 110, 40], sx, ry - 60, rw * 2, 0.3); }
+    for (const [wx, wy, ww, big] of far.wins) { const sx = wx - 300; if (!inView(sx, 0.45, 60)) continue; x.save(); x.translate(sx, wy + 6); x.scale(0.55, 1); L.flame(x, 0, 0, ww * big * 1.8 * (0.7 + 0.6 * K.noise(t * 2 + wx, 1, 8)), t, wx, 0.6); x.restore(); }
+    L.fog(x, 2134, [90, 40, 22], 470, 300, t * 40, 0.55);
+    // the near row: timber and plaster lit by its own fires; flames lick out of the windows and up the fronts
+    const near = streetRow('near', 2135, { y0: 830, s: 0.88 });
     L.view(x, c, 0.75); x.drawImage(near, -400, 0);
-    for (let i = 1; i < near.roofs.length; i += 3) { const [rx, ry, rw] = near.roofs[i]; const sx = rx - 400; if (sx < c.x * 0.75 - 300 || sx > c.x * 0.75 + W + 300) continue; L.fire(x, sx, ry + 30, rw * 0.6, rw * 1.1, t, i + 20, { n: 6, slot: 'sn' + (i % 4) }); L.glow(x, [255, 120, 50], sx, ry - 80, rw * 2, 0.3); }
-    // the street: people fleeing every way; Sive among them, small, running on
+    for (const [cx2, cy2] of near.chim) { const sx = cx2 - 400; if (!inView(sx, 0.75)) continue; K.smoke(x, t, { n: 4, x: sx - 40, y: cy2 - 360, w: 80, h: 360, color: [40, 20, 14], alpha: 0.4, rise: 30, size: 120, seed: cx2 | 0 }); }
+    for (const [wx, wy, ww, big] of near.wins) { const sx = wx - 400; if (!inView(sx, 0.75, 80)) continue; const f2 = L.flick(t, wx, 9); x.save(); x.translate(sx, wy + 6); x.transform(0.5, 0, -0.1, 1, 0, 0); for (let k = 0; k < 3; k++) L.flame(x, (k - 1) * ww * 0.7, 0, ww * big * (1.2 + 1.5 * K.noise(t * 2.5 + k, wx * 0.01, 7)) * (k === 1 ? 1.35 : 0.8), t, wx + k * 3.1, k === 1 ? 0.7 : 0.55); x.restore(); L.glow(x, [255, 140, 60], sx, wy - ww * big, ww * 5 * big, 0.22 * f2); }
+    nf = 0;
+    for (const [rx, ry, rw] of near.roofs) { const sx = rx - 400; if (!inView(sx, 0.75) || nf > 4) continue; nf++; L.fire(x, sx, ry + 30, rw * 0.9, rw * 1.6, t, rx + 20, { n: 7, slot: 'sn' + (nf % 4) }); L.glow(x, [255, 120, 50], sx, ry - 80, rw * 2.4, 0.3); }
+    // beams giving way from the eaves
+    fallingBeam(x, t, sh.a + 1.1, camX * 0.75 + 1100, 360, 380, 2140);
+    fallingBeam(x, t, sh.a + 3.4, camX * 0.75 + 600, 330, 320, 2141);
+    // the street: people fleeing, small and dark against the fire; Sive in front, running on
     L.view(x, c, 1);
     x.fillStyle = '#140a07'; x.fillRect(-200, 880, 4000, 400);
-    const ppl = K.cached('s2:flee', () => { const r = rng(2136), o = []; for (let i = 0; i < 30; i++) o.push({ x0: r() * 3600 - 200, v: (r() < 0.6 ? -1 : 1) * (160 + r() * 200), y: 890 + r() * 70, h: 150 + r() * 90, ph: r() * 6, dress: ['cloak', 'tunic', 'gown', 'robe'][Math.floor(r() * 4)], hat: ['hood', 'bare', 'cap', 'hair'][Math.floor(r() * 4)], child: r() < 0.1 }); return o.sort((a, b) => a.y - b.y); });
+    const ppl = K.cached('s2:flee2', () => { const r = rng(2136), o = []; for (let i = 0; i < 24; i++) o.push({ x0: r() * 3600 - 200, v: (r() < 0.6 ? -1 : 1) * (130 + r() * 150), y: 900 + r() * 50, h: 120 + r() * 60, ph: r() * 6, dress: ['cloak', 'robe', 'gown'][Math.floor(r() * 3)], hat: ['hood', 'bare', 'hair'][Math.floor(r() * 3)], child: r() < 0.1 }); return o.sort((a, b) => a.y - b.y); });
     const sx = camX + 900 + 60 * Math.sin(lt * 0.6);
-    L.rimLit(x, (cc, fill, pass) => {
-      for (const p of ppl) { const px = p.x0 + p.v * lt; L.person(cc, { x: px, y: p.y, h: p.child ? p.h * 0.6 : p.h, child: p.child, face: Math.sign(p.v), walk: lt * 9 + p.ph, run: 1, dress: p.dress, hat: p.hat, fill, t, armN: p.ph > 4 ? [2.6, 0.3] : undefined }); }
-    }, { rim: '#ffa060', mid: '#5a2410', dark: '#0a0504', dx: 0, dy: 5 });
+    L.rimLit(x, (cc, fill) => { for (const p of ppl) { const px = p.x0 + p.v * lt; if (px < camX - 300 || px > camX + W + 300) continue; L.person(cc, { x: px, y: p.y, h: p.child ? p.h * 0.6 : p.h, child: p.child, face: Math.sign(p.v), walk: lt * 8 + p.ph, run: 0.45, dress: p.dress, hat: p.hat, fill, t, armN: [0.5, 0.9], armF: [0.4, 1.0] }); } }, { rim: '#9a5028', mid: '#3a1a0c', dark: '#080403', dx: 0, dy: 4, steps: 3 });
     x.fillStyle = 'rgba(0,0,0,0.35)'; x.beginPath(); x.ellipse(sx, 1022, 90, 14, 0, 0, TAU); x.fill();
     L.rimLit(x, (cc, fill, pass) => sive(cc, { x: sx, y: 1020, h: 340, face: 1, walk: lt * 10, run: 1, t }, fill, pass), { rim: '#ffc080', mid: '#6a3018', dark: SIVE_DARK, dx: -4, dy: 4 });
-    // burning beams and wreckage passing close to the lens
+    // wreckage close to the lens
     L.view(x, c, 1.5);
     for (let k = 0; k < 4; k++) { const bx = 500 + k * 1100; x.fillStyle = '#060303'; x.save(); x.translate(bx, 1000); x.rotate(-0.4 + k * 0.3); x.fillRect(-300, -30, 600, 60); x.restore(); L.fire(x, bx + 80, 990, 120, 200, t, k + 60, { n: 5, slot: 'sb' + k }); }
     x.setTransform(1, 0, 0, 1, 0, 0);
