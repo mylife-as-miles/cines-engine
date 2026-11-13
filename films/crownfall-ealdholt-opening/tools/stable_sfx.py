@@ -49,6 +49,19 @@ FINISH = (f'48 kHz (soxr); cut {PREROLL_S * 1000:.0f} ms before the first 1 ms f
           f'{PEAK_DBFS:.0f} dBFS; {FADE_OUT_S:.2f} s raised-cosine fade-out; 24-bit stereo WAV')
 
 
+def engine_build():
+    """Which audio.cpp build made the sounds: the one at SOUNDBOX_AUDIOCPP_BIN when set (its own --version), else the
+    Windows CUDA build Soundbox installs itself."""
+    b = ENV.get('SOUNDBOX_AUDIOCPP_BIN')
+    if not b:
+        return 'the Windows CUDA build Soundbox installs'
+    try:
+        v = subprocess.run([b, '--version'], capture_output=True, text=True, timeout=30).stdout.strip().splitlines()
+    except (OSError, subprocess.SubprocessError):
+        v = []
+    return 'the build at SOUNDBOX_AUDIOCPP_BIN' + (': ' + '; '.join(v) if v else '')
+
+
 def plan_sounds():
     return json.load(open(PLAN))['sounds']
 
@@ -157,7 +170,7 @@ def write_plan(made=None):
             s['differs_from_sfx_plan'] = True  # sfx_plan.json changed since: re-make with --force --only <id>
         sounds.append(s)
     doc = {'model': MODEL_NAME, 'model_id': MODEL, 'license': LICENSE,
-           'engine': 'Soundbox 0.4.1 CLI driving audio.cpp v0.9.4 (the Windows CUDA build Soundbox installs, stable_audio family); Soundbox '
+           'engine': f'Soundbox 0.4.1 CLI driving audio.cpp v0.9.4 ({engine_build()}, stable_audio family); Soundbox '
                      'defaults for this model: 8 steps, guidance 1.0; audio.cpp generates 6 s past the asked '
                      'duration and truncates; 44.1 kHz stereo 16-bit out of audio.cpp',
            'finish': FINISH, 'sample_rate': SR, 'source': 'audio/sfx_plan.json', 'sounds': sounds}

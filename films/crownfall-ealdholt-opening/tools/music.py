@@ -28,7 +28,12 @@ def shape(path):
     rms = [sa.db(np.sqrt(np.mean(x[i:i + step] ** 2))) for i in range(0, len(x) - step + 1, step)]
     # the strongest rise: where a half-second's level most exceeds the half-second before it
     w = sa.SR // 2
-    lvl = np.sqrt(np.convolve(env ** 2, np.ones(w) / w, 'same'))
+    # a centred half-second mean of the squared envelope, by running sums (np.convolve with a 24,000-tap window took
+    # half an hour a take on a CPU machine; this is the same 'same'-mode mean in milliseconds)
+    c = np.concatenate([[0.0], np.cumsum(env ** 2)])
+    i = np.arange(len(env))
+    lo, hi = np.clip(i - w // 2, 0, len(env)), np.clip(i - w // 2 + w, 0, len(env))
+    lvl = np.sqrt((c[hi] - c[lo]) / w)
     rise = lvl[w:] / np.maximum(lvl[:-w], 1e-4)
     onset = (int(np.argmax(rise[: len(rise) - w])) + w // 2) / sa.SR
     return rms, onset, len(x) / sa.SR
