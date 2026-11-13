@@ -1,0 +1,28 @@
+{
+  "note": "Designed sounds for House Ealdholt's opening, as it is now: the watch before dawn, the low run, the leap and the dive, the climb, the spiral round the church, the rise and the forged title. There is no voice: the music carries the film and these sit under it, few and quiet as the creator prefers (see the prologue's plan). 'at' is seconds on the film's clock (film/src/world/timeline.js TIMES; the title's moments are tools/title.html's, 24.8 s plus its own clock). 'gain' is dB applied to the sound once tools/stable_sfx.py has brought its peak to -1 dBFS; 'in' and 'out' are fades in seconds; 'peak' places a sound's loudest moment at that film time; 'check' and 'not' are what earshot must and must not hear (tools/listen_sfx.py). To be made with Stable Audio 3.0 Small SFX (Soundbox + audio.cpp). Nothing here is generated yet.",
+  "sounds": [
+    { "id": "L01_night_air", "prompt": "still night outdoors before dawn in a forest valley, faint cold wind moving through leaves, very quiet, distant", "dur": 6, "seed": 511, "at": 0.0, "gain": -20, "in": 1.0, "out": 1.5, "check": "wind blowing", "not": ["rain", "traffic", "music", "speech"] },
+    { "id": "L02_dawn_birds", "prompt": "the first birds of a dawn chorus in a woodland, a few sparse songbirds, distant, gentle", "dur": 4, "seed": 512, "at": 1.6, "gain": -24, "in": 1.5, "out": 0.6, "check": "birds singing", "not": ["a crowd", "music", "speech", "traffic"] },
+    { "id": "L03_launch", "prompt": "a fast airy whoosh, a sudden rush of air passing close, short, no impact", "dur": 2, "seed": 513, "at": 4.2, "peak": 4.62, "gain": -13, "check": "a whoosh", "not": ["an explosion", "an engine", "a scream"] },
+    { "id": "L04_run_wind", "prompt": "wind rushing fast past the ears while flying low over the ground, steady, airy, no engine", "dur": 11, "seed": 514, "at": 4.6, "gain": -21, "in": 0.2, "out": 0.8, "check": "wind rushing", "not": ["an engine", "rain", "music", "speech"] },
+    { "id": "L05_pond", "prompt": "skimming low and fast over still water, a soft wet hiss and light splashes, close", "dur": 2, "seed": 515, "at": 10.4, "gain": -18, "in": 0.15, "out": 0.5, "check": "water splashing", "not": ["a waterfall", "rain", "the sea"] },
+    { "id": "L06_leaves", "prompt": "bursting upward through leafy tree branches, a quick rustle and swish of leaves, close", "dur": 2, "seed": 516, "at": 11.7, "gain": -15, "in": 0.05, "out": 0.5, "check": "leaves rustling", "not": ["fire", "rain", "paper"] },
+    { "id": "L07_dive", "prompt": "a falling airy whoosh, air rushing as something dives downward quickly, pitch falling, no impact", "dur": 2, "seed": 517, "at": 13.7, "peak": 14.4, "gain": -13, "check": "a whoosh", "not": ["an explosion", "an engine", "a scream"] },
+    { "id": "L08_climb", "prompt": "a soft airy reversed cymbal swell rising smoothly to a peak with a rustle of leaves, breathy, no hit at the end", "dur": 3, "seed": 518, "at": 14.6, "peak": 16.77, "gain": -15, "check": "a rising swell", "not": ["a siren", "an engine", "a scream"] },
+    { "id": "L09_high_air", "prompt": "open wind high above a valley, wide and airy, gentle gusts, no rain", "dur": 9, "seed": 519, "at": 16.8, "gain": -22, "in": 0.3, "out": 2.0, "check": "wind blowing", "not": ["rain", "an engine", "music", "speech"] },
+    { "id": "L10_bell", "prompt": "a single old bronze church bell tolling once from a tower, warm, with a long natural ring, heard from outside", "dur": 5, "seed": 520, "at": 21.2, "gain": -15, "out": 2.0, "check": "a church bell", "not": ["an alarm", "a doorbell", "wind chimes", "music"] },
+    { "id": "L11_embers", "prompt": "a low quiet fire, soft crackle of embers, close and warm, no wind", "dur": 6, "seed": 521, "at": 24.8, "gain": -24, "in": 1.5, "out": 1.0, "check": "fire crackling", "not": ["rain", "frying", "speech", "music"] },
+    { "id": "L12_strike", "prompt": "one deep cinematic boom with a short metallic ring, a heavy seal being struck, dark and resonant", "dur": 4, "seed": 522, "at": 26.2, "peak": 26.75, "gain": -10, "out": 2.0, "check": "a deep boom", "not": ["a gunshot", "thunder", "speech"] },
+    { "id": "L13_forge", "prompt": "a bright metallic shimmer, glowing hot metal settling with soft ringing overtones, short, rising then fading", "dur": 3, "seed": 523, "at": 26.3, "gain": -18, "in": 0.2, "out": 1.2, "check": "a metallic shimmer", "not": ["an alarm", "glass breaking", "speech"] },
+    { "id": "L14_sweep", "prompt": "a soft airy sparkle sweeping across, a gentle glint of light, delicate chimes, short", "dur": 2, "seed": 524, "at": 27.6, "gain": -20, "in": 0.2, "out": 0.8, "check": "a soft shimmer", "not": ["an alarm", "speech", "a siren"] }
+  ],
+  "music": {
+    "note": "The score is one instrumental cue from Stable Audio 3.0 Small Music, chosen from the seeds below by ear (earshot) and by shape: almost nothing under the watch, a hit and a driving pulse from 4.6 s for the run, a lift at 16.8 s for the spiral, and a broad, heavy resolve on the title's strike at 26.75 s. tools/music.py makes the candidates; the chosen one and its placement are recorded in audio/music/pick.json.",
+    "model": "audiocpp-stable-audio-3-small-music",
+    "prompt": "an epic medieval fantasy film cue: a quiet dark drone and a lone low horn, then a sudden drum hit and fast driving war drums with urgent strings and a rising brass theme, soaring into a broad heroic choir-like climax and ending on one long deep resolved chord, 132 BPM, cinematic, orchestral",
+    "dur": 32,
+    "seeds": [601, 602, 603, 604],
+    "check": "orchestral film music with drums and brass",
+    "not": ["electronic dance music", "rock music", "singing", "speech"]
+  }
+}

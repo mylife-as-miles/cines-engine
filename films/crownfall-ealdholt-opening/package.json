@@ -1,0 +1,7 @@
+{
+  "name": "crownfall-ealdholt-opening",
+  "private": true,
+  "type": "module",
+  "description": "House Ealdholt: the 30-second opening of My Legacy. Rendered offline, frame by frame, in three.js.",
+  "dependencies": { "three": "0.187.0" }
+}
