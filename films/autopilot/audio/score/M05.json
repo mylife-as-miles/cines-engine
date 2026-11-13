@@ -1,0 +1,7 @@
+{
+ "id": "M05",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 35 seconds, in a bright major key: tender, sleepy and loving, a little girl in a car seat turning away from the morning sun to have her little sleep, her father smiling at her in the mirror. A soft celesta and felt-piano lullaby melody in D major with a gentle high glass tone, like a sweet music box, warm and content, pianissimo to piano. Not sad, not melancholic, not ominous, no minor chords. It ends gently on a held high major chord. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

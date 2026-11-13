@@ -1,0 +1,7 @@
+{
+ "id": "R01",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 30-second instrumental: bright, breezy, upbeat British morning-radio pop music, light acoustic guitar, hand claps and a simple catchy keyboard hook, cheerful and generic, like music under a radio presenter. Instrumental only, no vocals. It will be heard through a small car speaker.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

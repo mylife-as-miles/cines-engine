@@ -1,0 +1,67 @@
+{
+ "T01": {
+  "query": "a deep low rumble building with dark pressure",
+  "verdict": "strong",
+  "forced": "'a deep low rumble building with dark pressure' >99%",
+  "sounds_like": "a deep cinematic boom (z +3.4), a deep cinematic whoosh (z +3.1), an explosion (z +2.9)"
+ },
+ "T02a": {
+  "query": "a reversed whoosh being sucked inward",
+  "verdict": "strong",
+  "forced": "'a reversed whoosh being sucked inward' >99%",
+  "sounds_like": "a spray can hissing (z +4.6), a soft air whoosh (z +3.2), a reverse cymbal swell (z +3.0)"
+ },
+ "T02b": {
+  "query": "a reversed whoosh being sucked inward",
+  "verdict": "strong",
+  "forced": "'a reversed whoosh being sucked inward' >99%",
+  "sounds_like": "a spray can hissing (z +4.2), a soft air whoosh (z +3.9), a fast whoosh (z +3.7)"
+ },
+ "T02c": {
+  "query": "a reversed whoosh being sucked inward",
+  "verdict": "strong",
+  "forced": "'a reversed whoosh being sucked inward' >99%",
+  "sounds_like": "a spray can hissing (z +4.0), a fast whoosh (z +3.4), a gust of wind rushing past (z +3.3)"
+ },
+ "T03": {
+  "query": "an eerie low tone swelling",
+  "verdict": "plausible",
+  "forced": "'an eerie low tone swelling' >99%",
+  "sounds_like": "a reverse cymbal swell (z +2.9), a swoosh passing by (z +2.9), a sustained glass harp tone"
+ },
+ "T04": {
+  "query": "a deep heavy cinematic impact with a rumbling tail",
+  "verdict": "strong",
+  "forced": "'a deep heavy cinematic impact with a rumbling tail' >99%",
+  "sounds_like": "a deep cinematic boom (z +3.7), an explosion (z +3.0), a sub bass drop (z +2.9)"
+ },
+ "T05": {
+  "query": "a camera flash charging whine",
+  "verdict": "strong",
+  "forced": "Forced choice vs your alternatives: 'a camera flash charging whine' >99%, 'an explosion' <1%, 'fireworks' <1%, 'music with a melody' <1%."
+ },
+ "T06": {
+  "query": "a sustained metallic ringing tone",
+  "verdict": "strong",
+  "forced": "'a sustained metallic ringing tone' >99%",
+  "sounds_like": "a triangle hit (z +4.0), a wine glass ring (z +2.9), a glass ting (z +2.9)"
+ },
+ "T07": {
+  "query": "a tense rising roar building to a peak",
+  "verdict": "strong",
+  "forced": "'a tense rising roar building to a peak' >99%",
+  "sounds_like": "a deep cinematic whoosh (z +3.1), a reverse cymbal swell (z +3.0), a swoosh passing by (z "
+ },
+ "T08": {
+  "query": "a house creaking and groaning, wood straining",
+  "verdict": "strong",
+  "forced": "'a house creaking and groaning",
+  "sounds_like": "footsteps on wood (z +3.0), a wood creak (z +3.0), a body falling on the ground (z +2.5)"
+ },
+ "T09": {
+  "query": "a dark low swell rising",
+  "verdict": "plausible",
+  "forced": "'a dark low swell rising' >99%",
+  "sounds_like": "a deep cinematic whoosh (z +3.2), a gust of wind rushing past (z +3.1), a soft air whoosh "
+ }
+}

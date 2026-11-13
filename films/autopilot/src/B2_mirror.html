@@ -1,0 +1,187 @@
+<!doctype html><meta charset="utf-8"><title>B2 THE MIRROR</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_b.js"></script>
+<script>
+// AUTOPILOT · LOOK B "BRIGHT DAY" · 02 THE MIRROR
+// INT. CAR - CONTINUOUS. The rear-view mirror, close and sharp, against a bright soft-focus morning street. In it: Emily in her
+// child seat behind the driver, leaning out of the sun into the shade of Daniel's headrest, whose edge takes half her face.
+// A hard white strip of sun lies across the empty cushion where her face was. Sleepy, alive, tender.
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM;
+  const f = OTM.frame(ctx, { seed: 21 });
+  const g = f.world, E = f.emissive;
+  const C = LB.C;
+
+  // ======================= OUTSIDE: the street ahead, bright and soft (depth of field) =======================
+  const out = LB.layer(); const O = out;
+  {
+    const hy = 640, vx = 1040;
+    LB.grad(O, LB.poly([[0, 0], [W, 0], [W, hy], [0, hy]]), 0, 0, 0, hy, [[0, '#5DBBFF'], [0.55, '#9ED8FF'], [1, '#DDF3FF']]);
+    O.fillStyle = '#C3B3B8'; O.fill(LB.poly([[vx - 30, hy], [vx + 30, hy], [W + 700, H + 80], [-700, H + 80]]));
+    O.fillStyle = '#FFE9C9'; O.fill(LB.poly([[vx - 60, hy], [vx - 30, hy], [-700, H + 80], [-1500, H + 80]])); O.fill(LB.poly([[vx + 30, hy], [vx + 60, hy], [W + 1500, H + 80], [W + 700, H + 80]]));
+    O.strokeStyle = '#FFFFFF'; O.lineWidth = 12; O.setLineDash([70, 80]); O.beginPath(); O.moveTo(vx, hy + 6); O.lineTo(vx + 160, H + 40); O.stroke(); O.setLineDash([]);
+    const houses = (side) => {
+      for (let i = 0; i < 9; i++) {
+        const t0 = i / 9, t1 = (i + 1) / 9, k0 = Math.pow(1 - t0, 2.3), k1 = Math.pow(1 - t1, 2.3);
+        const xa = vx + side * (70 + k0 * 1500), xb = vx + side * (70 + k1 * 1500);
+        const ha = 40 + k0 * 760, hb = 40 + k1 * 760; const ya = hy - ha * 0.6, yb = hy - hb * 0.6;
+        const col = ['#F0915F', '#FFD7A0', '#EE7C61', '#FFC685', '#E5875E'][i % 5];
+        O.fillStyle = col; O.fill(LB.poly([[xa, hy + k0 * 200], [xb, hy + k1 * 200], [xb, yb], [xa, ya]]));
+        const wx = xa + (xb - xa) * 0.3, ww = (xb - xa) * 0.35;
+        O.fillStyle = '#FFFFFF'; O.fill(LB.poly([[wx, ya + ha * 0.16], [wx + ww, ya + ha * 0.18], [wx + ww, ya + ha * 0.4], [wx, ya + ha * 0.38]]));
+        O.fillStyle = ['#2F8FD8', '#FFC93C', '#8A6BE0', '#F2553F'][i % 4]; O.fill(LB.poly([[wx, ya + ha * 0.55], [wx + ww * 0.5, ya + ha * 0.56], [wx + ww * 0.5, hy + (k0 + k1) * 60], [wx, hy + (k0 + k1) * 62]]));
+      }
+    };
+    houses(-1); houses(1);
+    [[-1, 0.1], [-1, 0.38], [1, 0.16], [1, 0.46]].forEach(([side, t]) => {
+      const k = Math.pow(1 - t, 2.3), x = vx + side * (140 + k * 1000), y = hy - 60 - k * 330, r = 50 + k * 260;
+      O.fillStyle = '#86603F'; O.fillRect(x - r * 0.07, y, r * 0.14, r * 1.4);
+      O.fillStyle = '#A3CF4E'; O.fill(LB.ell(x, y, r, r * 0.85)); O.fillStyle = '#C4E46A'; O.fill(LB.ell(x - r * 0.25, y - r * 0.25, r * 0.55, r * 0.45));
+    });
+    O.fillStyle = '#FFFFFF'; O.fill(LB.rr(1300, 610, 150, 80, 18));
+
+  }
+  g.save(); g.filter = 'blur(10px)'; g.drawImage(out.canvas, 0, 0); g.restore();
+  // the morning sun up to the left floods the glass; a few soft bokeh discs
+  g.save(); g.globalCompositeOperation = 'screen';
+  { const gr = g.createRadialGradient(120, 90, 10, 120, 90, 1000); gr.addColorStop(0, 'rgba(255,250,225,1)'); gr.addColorStop(0.25, 'rgba(255,240,200,0.45)'); gr.addColorStop(1, 'rgba(255,240,200,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+  g.restore();
+  E.fillStyle = 'rgba(255,245,215,0.55)'; E.beginPath(); E.arc(60, 260, 80, 0, 7); E.fill();
+
+  // the bonnet: cherry red, catching the sky (the car's morning colour; at the nursery it will have drained to grey)
+  {
+    const bon = LB.spline([[-40, 960, 1], [-40, 880], [400, 858], [960, 850], [1520, 858], [W + 40, 880], [W + 40, 960, 1]], true);
+    g.save(); g.filter = 'blur(3px)';
+    LB.grad(g, bon, 0, 850, 0, 930, [[0, '#C8474A'], [0.5, '#A8343F'], [1, '#8A2A3A']]);
+    g.globalAlpha = 0.4; g.fillStyle = '#FFC0B0'; g.fill(LB.spline([[300, 874], [960, 860], [1620, 874], [1600, 882], [960, 870], [320, 884]], true));
+    
+    g.restore();
+  }
+  // ======================= THE CABIN: roof lining and windscreen edge (top), dashboard (bottom) =======================
+  const cab = '#3A3243', cabDeep = '#2A2331';
+  g.fillStyle = cab; g.fill(LB.spline([[-20, -20, 1], [W + 20, -20, 1], [W + 20, 78], [1400, 58], [960, 54], [520, 60], [-20, 84]], true));
+  g.fillStyle = '#16131C'; g.fill(LB.spline([[-20, 84], [520, 60], [960, 54], [1400, 58], [W + 20, 78], [W + 20, 104], [1400, 84], [960, 80], [520, 86], [-20, 110]], true));
+  g.fillStyle = '#16131C'; for (let i = 0; i < 70; i++) { const x = i * 28 + 10, y = 82 + Math.pow((x - 960) / 960, 2) * 26 + 18; g.beginPath(); g.arc(x, y, 5 - (i % 2) * 1.2, 0, 7); g.fill(); }
+  // dashboard: a dark curve across the bottom, its top catching the morning sun
+  g.fillStyle = cabDeep; g.fill(LB.spline([[-20, 930], [600, 906], [1300, 904], [W + 20, 924], [W + 20, H + 20, 1], [-20, H + 20, 1]], true));
+  g.strokeStyle = '#7A6470'; g.lineWidth = 5; g.beginPath(); g.moveTo(-20, 931); g.bezierCurveTo(600, 904, 1300, 902, W + 20, 925); g.stroke();
+  g.save(); g.globalAlpha = 0.1; g.fillStyle = '#2A2331'; g.fill(LB.spline([[-20, 930], [600, 880], [1300, 878], [W + 20, 924], [W + 20, 940], [-20, 940]], true)); g.restore();
+  // the steering wheel's top rim, bottom right (right-hand drive)
+  const WC = [1510, 1310], WR = [520, 380];
+  g.strokeStyle = '#1C1824'; g.lineWidth = 50; g.lineCap = 'round'; g.beginPath(); g.ellipse(WC[0], WC[1], WR[0], WR[1], 0, Math.PI * 1.12, Math.PI * 1.88); g.stroke();
+  g.strokeStyle = '#3B3447'; g.lineWidth = 5; g.beginPath(); g.ellipse(WC[0], WC[1] - 20, WR[0] - 4, WR[1] - 2, 0, Math.PI * 1.2, Math.PI * 1.8); g.stroke();
+  // ======================= THE MIRROR =======================
+  const M = { cx: 960, cy: 410, w: 1580, h: 492, rot: -0.025, bez: 26 };
+  g.fillStyle = '#1B1924'; g.fill(LB.rr(M.cx - 40, 36, 80, 60, 18)); g.fill(LB.rr(M.cx - 15, 80, 30, 90, 10));
+  g.save(); g.translate(M.cx, M.cy); g.rotate(M.rot);
+  const outer = LB.rr(-M.w / 2, -M.h / 2, M.w, M.h, 92);
+  const inner = LB.rr(-M.w / 2 + M.bez, -M.h / 2 + M.bez, M.w - 2 * M.bez, M.h - 2 * M.bez, 70);
+  LB.blob(g, LB.rr(-M.w / 2 + 14, -M.h / 2 + 30, M.w, M.h, 92), '#1B1430', 0.38, 26);
+  g.fillStyle = '#1D1B29'; g.fill(outer);
+  g.save(); g.clip(outer); g.fillStyle = '#3A3552'; g.fill(LB.rr(-M.w / 2 + 30, -M.h / 2 + 5, M.w - 60, 14, 7)); g.restore();
+  const x0 = -M.w / 2 + M.bez, y0 = -M.h / 2 + M.bez, mw = M.w - 2 * M.bez, mh = M.h - 2 * M.bez;
+  const U = (u, v) => [x0 + u * mw, y0 + v * mh];
+  // emissive helper in mirror space
+  const em = fn => { E.save(); E.translate(M.cx, M.cy); E.rotate(M.rot); fn(E); E.restore(); };
+  g.save(); g.clip(inner);
+  const G = (px, py) => [x0 + px, y0 + py];          // glass pixels (mw x mh)
+  // ---------- the back of the car, reflected ----------
+  g.fillStyle = '#B9A6B6'; g.fillRect(x0, y0, mw, mh);                                    // rear headliner, warm greige
+  // the rear side window (passenger side): the low sun is out there
+  const sideWin = LB.roundPoly([G(-40, 24), G(118, 20), G(96, 280), G(-40, 310)], 28);
+  g.fillStyle = '#FFF7E4'; g.fill(sideWin);
+  // back window: bright, the road behind
+  const bw = LB.roundPoly([G(160, 18), G(500, 18), G(522, 236), G(146, 244)], 32);
+  LB.grad(g, bw, 0, G(0, 18)[1], 0, G(0, 244)[1], [[0, '#E3F5FF'], [0.6, '#FFFAEE'], [1, '#FFEBCB']]);
+  g.save(); g.clip(bw);
+  g.fillStyle = '#E9DCEF'; g.fill(LB.poly([G(322, 172), G(340, 172), G(430, 250), G(240, 250)]));
+  g.fillStyle = '#FFCDA4'; g.fill(LB.poly([G(140, 110), G(300, 166), G(300, 178), G(140, 250)])); g.fill(LB.poly([G(530, 104), G(364, 166), G(364, 178), G(530, 250)]));
+  g.fillStyle = '#CBE68E'; g.fill(LB.ell(G(206, 118)[0], G(206, 118)[1], 58, 40)); g.fill(LB.ell(G(468, 110)[0], G(468, 110)[1], 62, 40));
+  g.restore();
+  em(e => { e.fillStyle = 'rgba(255,248,225,0.45)'; e.fill(bw); e.fill(sideWin); });
+  // rear seat bench (dusty lavender) and the empty seat's headrest against the back window
+  g.fillStyle = '#A38DBE'; g.fill(LB.roundPoly([G(-60, 240), G(640, 230), G(680, 500), G(-60, 500)], 40));
+  g.fillStyle = '#B1A5D6'; g.fill(LB.roundPoly([G(-30, 254), G(500, 247), G(500, 272), G(-30, 280)], 12));
+  g.fillStyle = '#8576B0'; g.fill(LB.rr(G(232, 136)[0], G(232, 136)[1], 128, 108, 32));
+  g.fillStyle = '#D2CCE0'; [262, 326].forEach(px => g.fillRect(G(px, 242)[0], G(px, 242)[1], 7, 16));
+  // ---------- the child seat behind the driver: coral shell, lilac padding ----------
+  const shell = LB.spline([G(556, 520), G(550, 250), G(580, 70), G(680, -10), G(1000, -14), G(1110, 70), G(1150, 250), G(1160, 520)], true);
+  g.fillStyle = '#FF6F59'; g.fill(shell);
+  const pad = LB.spline([G(620, 520), G(612, 262), G(636, 110), G(712, 40), G(980, 38), G(1070, 110), G(1100, 262), G(1110, 520)], true);
+  g.fillStyle = '#C2B0CC'; g.fill(pad);
+  const cushion = LB.rr(G(686, 50)[0], G(686, 50)[1], 300, 270, 80);
+  g.fillStyle = '#D4C2D8'; g.fill(cushion);
+  g.fillStyle = '#FF8A73'; g.fill(LB.spline([G(560, 300), G(568, 110), G(630, 24), G(672, 38), G(636, 120), G(622, 300)], true));   // left wing
+  // ---------- the light: a soft shaft from the side window, landing as a hard strip across the seat where her face was ----------
+  const S0 = [640, -20], S1 = [912, 520], SW = 92;
+  const strip = LB.poly([G(S0[0], S0[1]), G(S0[0] + SW, S0[1]), G(S1[0] + SW, S1[1]), G(S1[0], S1[1])]);
+  LB.shaft(g, [G(20, 40), G(110, 30), G(S0[0] + SW, S0[1]), G(S1[0] + SW, S1[1]), G(S1[0], S1[1]), G(40, 290)], '#FFF1CF', 0.2, 16);
+  g.save(); g.clip(shell); g.fillStyle = '#FFF9EC'; g.fill(strip); g.restore();
+  em(e => { e.save(); e.clip(shell); e.fillStyle = 'rgba(255,248,230,0.3)'; e.fill(strip); e.restore(); });
+  LB.motes(g, [G(S0[0] + 6, 10), G(S0[0] + SW - 6, 10), G(S1[0] + SW - 30, 300), G(S1[0] - 40, 300)], 16, '#FFFDF4', 'strip-motes', 2.6);
+  // the shade behind Daniel's headrest: the right of the seat in a cool violet shade
+  g.save(); g.clip(shell); g.fillStyle = 'rgba(56,38,120,0.28)'; g.fill(LB.poly([G(S0[0] + SW + 4, -20), G(1700, -20), G(1700, 520), G(S1[0] + SW + 4, 520)])); g.restore();
+  // ---------- EMILY (sharp), leaned over to the right, into the shade ----------
+  const R = 132, hc = G(1006, 196), tilt = 0.22;
+  const parts = [];
+  parts.push(LB.spline([G(816, 520), G(824, 360), G(890, 300), G(1010, 290), G(1110, 340), G(1124, 520)], true));        // body
+  parts.push(LB.ell(hc[0], hc[1], R, R * 0.97, tilt));                                                                     // head
+  const pa = Math.PI + tilt - 0.32, pt = [hc[0] + Math.cos(pa) * R * 1.12, hc[1] + Math.sin(pa) * R * 1.12];
+  parts.push(LB.ell(pt[0], pt[1], R * 0.36, R * 0.42, tilt + 0.25));                                                      // pigtail
+  const tp = a => [hc[0] + Math.sin(tilt) * R * a, hc[1] - Math.cos(tilt) * R * a];
+  parts.push(LB.spline([[tp(0.86)[0] - R * 0.16, tp(0.86)[1]], [tp(1.12)[0] - R * 0.07, tp(1.12)[1]], [tp(1.02)[0] + R * 0.12, tp(1.02)[1]], [tp(0.86)[0] + R * 0.12, tp(0.86)[1]]], true));   // a curl on top
+  const emMask = LB.figure(g, parts, { light: { dx: -1, dy: -0.25 }, shadeW: R * 0.2, liftW: R * 0.11, liftAlpha: 0.7, rim: '#FFF3DE', rimW: 3.2, rimAlpha: 0.95 });
+  // the strip only grazes the tip of her pigtail now
+  g.save(); g.clip(strip); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(LB.tint(LB.crescent(emMask, -6, -2, 0), '#FFF4E2'), 0, 0); g.restore();
+  { const b = [hc[0] + Math.cos(pa) * R * 0.86, hc[1] + Math.sin(pa) * R * 0.86]; g.fillStyle = C.bobble; g.fill(LB.ell(b[0], b[1], R * 0.13, R * 0.15, tilt)); g.fillStyle = '#FFF4B8'; g.fill(LB.ell(b[0] - R * 0.04, b[1] - R * 0.05, R * 0.05, R * 0.05)); }
+  g.save(); g.translate(hc[0], hc[1]); g.rotate(tilt);
+  [-1, 1].forEach(sd => LB.eye(g, { x: sd * R * 0.37, y: R * 0.05, rx: R * 0.27, ry: R * 0.32, lid: 0.6, lidTilt: sd * 0.05 - tilt, lidCurve: -0.16, px: 0.02, py: 0.6, pr: 0.5, glint: true }));
+  g.fillStyle = 'rgba(255,120,165,0.6)'; [-1, 1].forEach(sd => g.fill(LB.ell(sd * R * 0.5, R * 0.5, R * 0.14, R * 0.075)));
+  g.strokeStyle = '#FFB8CE'; g.lineWidth = R * 0.04; g.lineCap = 'round'; g.beginPath(); g.arc(-R * 0.14, R * 0.47, R * 0.075, 0.2 * Math.PI, 0.8 * Math.PI); g.stroke();
+  g.restore();
+  g.strokeStyle = '#625C80'; g.lineWidth = R * 0.14; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(...G(905, 312)); g.lineTo(...G(944, 480)); g.stroke();
+  g.beginPath(); g.moveTo(...G(1080, 326)); g.lineTo(...G(1010, 480)); g.stroke();
+  // ---------- the rabbit in her arms: one ear up, one ear worn flat and flopped over into the sun ----------
+  {
+    const rc = G(912, 376), r = R * 0.48;
+    g.fillStyle = C.rabbit;
+    g.fill(LB.ell(rc[0], rc[1] + r * 0.95, r * 1.05, r * 0.9));
+    g.fill(LB.ell(rc[0], rc[1], r, r * 0.9, -0.15));
+    g.fill(LB.ell(rc[0] + r * 0.45, rc[1] - r * 1.2, r * 0.27, r * 0.72, 0.28));
+    const flat = LB.spline([[rc[0] - r * 0.45, rc[1] - r * 0.62], [rc[0] - r * 1.05, rc[1] - r * 0.62], [rc[0] - r * 1.7, rc[1] - r * 0.15], [rc[0] - r * 1.82, rc[1] + r * 0.25], [rc[0] - r * 1.5, rc[1] + r * 0.22], [rc[0] - r * 0.95, rc[1] - r * 0.15], [rc[0] - r * 0.5, rc[1] - r * 0.25]], true);
+    g.fill(flat);
+    g.fillStyle = C.rabbitEar; g.fill(LB.ell(rc[0] + r * 0.47, rc[1] - r * 1.18, r * 0.12, r * 0.5, 0.28));
+    g.fillStyle = C.rabbitBelly; g.fill(LB.ell(rc[0], rc[1] + r * 1.05, r * 0.58, r * 0.5));
+    g.fillStyle = '#3A2A3A'; g.fill(LB.ell(rc[0] - r * 0.33, rc[1] - r * 0.05, r * 0.1, r * 0.12)); g.fill(LB.ell(rc[0] + r * 0.3, rc[1] - r * 0.1, r * 0.1, r * 0.12));
+    g.fillStyle = '#E2577F'; g.fill(LB.ell(rc[0] - r * 0.02, rc[1] + r * 0.18, r * 0.12, r * 0.08));
+    g.save(); g.clip(strip); g.fillStyle = '#FFE6EE'; g.fill(flat); g.restore();
+    g.fillStyle = C.ink; g.fill(LB.capsule(...G(842, 400), R * 0.13, rc[0] + r * 0.5, rc[1] + r * 1.05, R * 0.12));
+    g.fill(LB.ell(rc[0] + r * 0.55, rc[1] + r * 1.08, R * 0.15, R * 0.13));
+  }
+  // ---------- Daniel's headrest (front seat): near the glass, so softer; its edge takes half her face ----------
+  {
+    const hl = LB.layer(); const hg = hl;
+    hg.setTransform(g.getTransform());
+    const hr = LB.spline([G(1040, 10), G(1250, -16), G(1580, 4), G(1600, 360), G(1320, 404), G(1086, 390), G(1026, 300), G(1022, 116)], true);
+    hg.fillStyle = '#463E5E'; hg.fill(hr);
+    hg.save(); hg.clip(hr); hg.fillStyle = '#544C72'; hg.fill(LB.ell(G(1110, 150)[0], G(1110, 150)[1], 70, 120)); hg.fillStyle = '#393251'; hg.fill(LB.ell(G(1420, 330)[0], G(1420, 330)[1], 320, 140)); hg.restore();
+    hg.fillStyle = '#CBC5DA'; [1130, 1310].forEach(px => hg.fill(LB.rr(G(px, 384)[0], G(px, 384)[1], 12, 120, 6)));
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
+    g.filter = 'blur(12px)'; g.globalAlpha = 0.32; g.drawImage(LB.tint(hl.canvas, '#1C1438'), -16, 0);
+    g.filter = 'blur(3.5px)'; g.globalAlpha = 1; g.drawImage(hl.canvas, 0, 0); g.restore();
+  }
+  // warm morning wash from the sun side across the whole reflection
+  g.save(); g.globalCompositeOperation = 'soft-light'; { const gr = g.createLinearGradient(G(0, 0)[0], 0, G(1528, 0)[0], 0); gr.addColorStop(0, 'rgba(255,214,150,0.55)'); gr.addColorStop(0.6, 'rgba(255,214,150,0.15)'); gr.addColorStop(1, 'rgba(255,214,150,0)'); g.fillStyle = gr; g.fillRect(x0, y0, mw, mh); } g.restore();
+  // glass: a faint cool cast and one soft glare streak
+  g.fillStyle = 'rgba(205,225,255,0.05)'; g.fillRect(x0, y0, mw, mh);
+  g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.12; g.fillStyle = '#FFFFFF'; g.fill(LB.poly([U(0.3, -0.1), U(0.36, -0.1), U(0.27, 1.1), U(0.21, 1.1)])); g.restore();
+  g.restore(); // clip inner
+  g.strokeStyle = '#0F0D16'; g.lineWidth = 5; g.stroke(inner);
+  g.restore(); // mirror transform
+
+  f.finish({ grain: 0.03, fibre: 0, vignette: 0, halation: 0.7, letterbox: 1.7778, beforePost: c => LB.vignette(c, '#2A1F3A', 0.28, 0.55, 1.25) });
+  LB.caption(ctx, [{ t: 'Better?' }, { t: 'Mm-hmm.', color: '#FFC6DA' }], { y: 1040, size: 40, lead: 1.25 });
+  window.FRAME_READY = true;
+})();
+</script>

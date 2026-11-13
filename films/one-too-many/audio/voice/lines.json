@@ -1,0 +1,60 @@
+{
+ "model": "gemini-3.8-flash-tts",
+ "voice": "en-gb-concierge-5",
+ "lines": [
+  {
+   "id": "L001",
+   "text": "Sir? Stay with me. You said there were six people.",
+   "start_s": 9,
+   "end_s": 15.25
+  },
+  {
+   "id": "L003",
+   "text": "How many got out?",
+   "start_s": 21,
+   "end_s": 23.21
+  },
+  {
+   "id": "L237",
+   "text": "Emergency services. What is your address?",
+   "start_s": 795.1,
+   "end_s": 799.85
+  },
+  {
+   "id": "L238",
+   "text": "Are you injured?",
+   "start_s": 806.65,
+   "end_s": 808.95
+  },
+  {
+   "id": "L240",
+   "text": "Help is coming. Is anybody still inside?",
+   "start_s": 812.05,
+   "end_s": 816.6
+  },
+  {
+   "id": "L242",
+   "text": "How many friends?",
+   "start_s": 821.35,
+   "end_s": 823.71
+  },
+  {
+   "id": "L244",
+   "text": "And are they all still inside?",
+   "start_s": 827.15,
+   "end_s": 831.29
+  },
+  {
+   "id": "L246",
+   "text": "Sir, listen to me. You're outside. You're safe for now.",
+   "start_s": 846.25,
+   "end_s": 853.2
+  },
+  {
+   "id": "L247",
+   "text": "How many people made it out?",
+   "start_s": 853.85,
+   "end_s": 858.59
+  }
+ ]
+}

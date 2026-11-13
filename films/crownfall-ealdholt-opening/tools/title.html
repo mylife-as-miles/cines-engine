@@ -1,0 +1,316 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>House Ealdholt title</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// HOUSE EALDHOLT: the title, in the manner of the game's own CROWNFALL / AETHELGARD title (the boot screen and the
+// opening titles): forged gold lettering with enlarged initials, an ornament above it, a smaller line between two
+// rules below. Here the ornament is Ealdholt's arms, a sprig on russet (the film kit's LESSER banner), in a wreath of
+// the same sprig, and the smaller line is the mode's name, MY LEGACY.
+//
+// The gold is made here, not painted: each shape is drawn as a mask, given a chiselled edge from its distance field,
+// and lit from the upper left. It is built once (build()), then draw(g, t) assembles it: gold leaves fly in out of
+// the dark and settle as the wreath, the arms strike, the letters arrive white-hot one by one and cool to gold, and
+// one band of light crosses the name. The ground is clear, so tools/finish.mjs lays it over the village's last shot,
+// which sinks into the dark under it. Deterministic: the same t gives the same picture.
+'use strict';
+const W = 1920, H = 1080, cx = W / 2;
+const T0 = 24.8;                 // film seconds when the dark starts to gather
+const END = 30.0;
+const SS = 2;                    // the gold is forged at twice the size and drawn down, for clean edges
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const span = (t, a, b) => clamp((t - a) / (b - a));
+const smooth = v => v * v * (3 - 2 * v);
+const ease = v => v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
+const easeOut = v => 1 - Math.pow(1 - v, 3);
+const lerp = (a, b, u) => a + (b - a) * u;
+function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let x = s; x = Math.imul(x ^ (x >>> 15), x | 1); x ^= x + Math.imul(x ^ (x >>> 7), x | 61); return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; }
+const EMBER = [[226, 150, 74], [205, 104, 48], [150, 44, 30], [236, 208, 160], [180, 70, 40]];
+
+// ---------------------------------------------------------------- layout (1080p units)
+const NAME = { text: 'HOUSE EALDHOLT', base: 668, small: 128, big: 174, sp: 7, weight: 800 };
+const ARMS = { x: cx, y: 300, s: 64 };          // the shield: (x, y) is the centre of its chief, s its half-width
+const SUB = { text: 'MY LEGACY', y: 772, size: 38, sp: 27 };
+
+// ---------------------------------------------------------------- forging
+// mask: a canvas with the shape in opaque white. Returns a canvas of the same size with the shape in lit gold.
+function forge(mask, bevel, seed) {
+  const w = mask.width, h = mask.height, src = mask.getContext('2d').getImageData(0, 0, w, h).data;
+  const INF = 1e6, d = new Float32Array(w * h);
+  let top = h, bottom = 0;
+  for (let i = 0; i < w * h; i++) { const inside = src[i * 4 + 3] > 127; d[i] = inside ? INF : 0; if (inside) { const y = (i / w) | 0; if (y < top) top = y; if (y > bottom) bottom = y; } }
+  // two-pass chamfer distance to the outside
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x; let v = d[i]; if (v === 0) continue;
+    if (x > 0) v = Math.min(v, d[i - 1] + 1); if (y > 0) { v = Math.min(v, d[i - w] + 1); if (x > 0) v = Math.min(v, d[i - w - 1] + 1.414); if (x < w - 1) v = Math.min(v, d[i - w + 1] + 1.414); }
+    d[i] = v;
+  }
+  for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) {
+    const i = y * w + x; let v = d[i]; if (v === 0) continue;
+    if (x < w - 1) v = Math.min(v, d[i + 1] + 1); if (y < h - 1) { v = Math.min(v, d[i + w] + 1); if (x < w - 1) v = Math.min(v, d[i + w + 1] + 1.414); if (x > 0) v = Math.min(v, d[i + w - 1] + 1.414); }
+    d[i] = v;
+  }
+  // the edge's profile: a chisel that rounds over onto the flat face
+  let hgt = new Float32Array(w * h);
+  for (let i = 0; i < w * h; i++) { const u = Math.min(1, d[i] / bevel); hgt[i] = Math.sin(u * Math.PI / 2); }
+  for (let pass = 0; pass < 2; pass++) {             // soften the chamfer's facets
+    const nx = new Float32Array(w * h);
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; nx[i] = (hgt[i] * 4 + hgt[i - 1] + hgt[i + 1] + hgt[i - w] + hgt[i + w]) / 8; }
+    hgt = nx;
+  }
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const og = out.getContext('2d'), img = og.createImageData(w, h), px = img.data;
+  const L = [-0.46, -0.74, 0.49], Hh = (() => { const v = [L[0], L[1], L[2] + 1], n = Math.hypot(...v); return v.map(c => c / n); })();
+  const R = rng(seed), grain = new Float32Array(w); for (let x = 0; x < w; x++) grain[x] = R();
+  const band = Math.max(1, bottom - top), K = bevel * 0.9;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    const i = y * w + x, a = src[i * 4 + 3]; if (!a) continue;
+    const gx = (hgt[i + 1] - hgt[i - 1]) * K, gy = (hgt[i + w] - hgt[i - w]) * K, nl = Math.hypot(gx, gy, 1);
+    const nx = -gx / nl, ny = -gy / nl, nz = 1 / nl;
+    const diff = Math.max(0, nx * L[0] + ny * L[1] + nz * L[2]), spec = Math.pow(Math.max(0, nx * Hh[0] + ny * Hh[1] + nz * Hh[2]), 46);
+    const v = (y - top) / band, edge = 1 - Math.min(1, d[i] / bevel);
+    // the face: polished gold that mirrors a bright horizon a third of the way down and darkens to bronze below
+    const horizon = Math.exp(-Math.pow((v - 0.36) / 0.13, 2)), low = smooth(clamp((v - 0.42) / 0.5));
+    let r = lerp(0.93, 0.50, low) + horizon * 0.16, gch = lerp(0.72, 0.31, low) + horizon * 0.2, b = lerp(0.36, 0.10, low) + horizon * 0.2;
+    const brushed = 0.955 + 0.09 * (grain[x] - 0.5) + 0.03 * (grain[(x * 7 + y * 3) % w] - 0.5);
+    r *= brushed; gch *= brushed; b *= brushed;
+    // the chiselled edge: lit where it faces the light, in shadow where it turns away
+    const lit = 0.30 + 1.25 * diff;
+    r = lerp(r, 0.88 * lit, edge * 0.92) + spec * 1.0; gch = lerp(gch, 0.66 * lit, edge * 0.92) + spec * 0.93; b = lerp(b, 0.30 * lit, edge * 0.92) + spec * 0.72;
+    px[i * 4] = clamp(r) * 255; px[i * 4 + 1] = clamp(gch) * 255; px[i * 4 + 2] = clamp(b) * 255; px[i * 4 + 3] = a;
+  }
+  og.putImageData(img, 0, 0);
+  return out;
+}
+// a forged piece with its dark seat and shadow under it, at 1x
+function piece(mask, bevel, seed) {
+  const gold = forge(mask, bevel * SS, seed), w = mask.width / SS, h = mask.height / SS;
+  const seat = document.createElement('canvas'); seat.width = w; seat.height = h; const sg = seat.getContext('2d');
+  sg.drawImage(mask, 0, 0, w, h); sg.globalCompositeOperation = 'source-in'; sg.fillStyle = '#120a05'; sg.fillRect(0, 0, w, h);
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  g.imageSmoothingQuality = 'high';
+  // the seat: the shape again, a little larger, near-black, with a soft shadow below
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.9)'; g.shadowBlur = 24; g.shadowOffsetY = 8;
+  for (const [ox, oy] of [[-2.5, 0], [2.5, 0], [0, -2.5], [0, 2.5], [-1.8, -1.8], [1.8, 1.8], [-1.8, 1.8], [1.8, -1.8]]) g.drawImage(seat, ox, oy);
+  g.restore();
+  g.drawImage(gold, 0, 0, w, h);
+  return { canvas: c, mask };
+}
+
+// ---------------------------------------------------------------- the pieces
+let NAMEPIECE = null, ARMSPIECE = null, WREATH = null, SUBPIECE = null, LETTERS = [];
+const PAD = 60;
+function buildName() {
+  const N = NAME, probe = document.createElement('canvas').getContext('2d');
+  const font = size => `${N.weight} ${size}px Cinzel`;
+  let x = 0; const words = N.text.split(' ');
+  LETTERS = [];
+  words.forEach((word, wi) => {
+    [...word].forEach((ch, i) => {
+      const size = i === 0 ? N.big : N.small; probe.font = font(size);
+      const w = probe.measureText(ch).width; LETTERS.push({ ch, size, x, w }); x += w + N.sp;
+    });
+    if (wi < words.length - 1) x += N.small * 0.34;
+  });
+  const total = x - N.sp, mw = Math.ceil(total + PAD * 2), mh = Math.ceil(N.big * 1.25 + PAD * 2), base = PAD + N.big * 0.98;
+  const mask = document.createElement('canvas'); mask.width = mw * SS; mask.height = mh * SS;
+  const m = mask.getContext('2d'); m.scale(SS, SS); m.fillStyle = '#fff'; m.textBaseline = 'alphabetic';
+  for (const l of LETTERS) { m.font = font(l.size); m.fillText(l.ch, PAD + l.x, base); }
+  NAMEPIECE = { ...piece(mask, 5.2, 811), w: mw, h: mh, base, total };
+}
+// Ealdholt's sprig (the kit's device, its four leaves set alternately so it reads at this size): [angle, height]
+const LEAVES = [[-0.62, 0.3], [-2.52, 0.16], [-0.68, -0.02], [-2.46, -0.17]];
+function sprigPath(g, x, y, k) {
+  g.save(); g.translate(x, y); g.scale(k, k); g.lineCap = 'round'; g.lineWidth = 0.075;
+  g.beginPath(); g.moveTo(0, 0.62); g.quadraticCurveTo(0.04, 0.1, 0, -0.47); g.stroke();
+  for (const [a, py] of LEAVES) { g.save(); g.translate(0, py); g.rotate(a); g.beginPath(); g.ellipse(0.2, 0, 0.2, 0.09, 0, 0, 6.283); g.fill(); g.restore(); }
+  g.beginPath(); g.ellipse(0, -0.54, 0.075, 0.1, 0, 0, 6.283); g.fill();
+  g.restore();
+}
+function shieldPath(g, x, y, s) {
+  g.beginPath(); g.moveTo(x - s, y - s); g.lineTo(x + s, y - s); g.lineTo(x + s, y + 0.05 * s);
+  g.bezierCurveTo(x + s, y + 0.75 * s, x + 0.45 * s, y + 1.05 * s, x, y + 1.25 * s);
+  g.bezierCurveTo(x - 0.45 * s, y + 1.05 * s, x - s, y + 0.75 * s, x - s, y + 0.05 * s); g.closePath();
+}
+function buildArms() {
+  const s = ARMS.s, w = Math.ceil(s * 2 + PAD * 2), h = Math.ceil(s * 2.25 + PAD * 2), x = w / 2, y = PAD + s;
+  const mask = document.createElement('canvas'); mask.width = w * SS; mask.height = h * SS;
+  const m = mask.getContext('2d'); m.scale(SS, SS); m.fillStyle = '#fff'; m.strokeStyle = '#fff'; m.lineJoin = 'miter';
+  m.lineWidth = 9; shieldPath(m, x, y, s - 4.5); m.stroke();                 // the rim
+  sprigPath(m, x, y + s * 0.14, s * 1.28);                                    // the charge
+  const p = piece(mask, 3.4, 419);
+  // the field: Ealdholt's russet, under the gold
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  g.save(); g.shadowColor = 'rgba(0,0,0,0.85)'; g.shadowBlur = 24; g.shadowOffsetY = 8; shieldPath(g, x, y, s - 2);
+  const f = g.createLinearGradient(x - s, y - s, x + s * 0.6, y + 1.25 * s); f.addColorStop(0, '#8a6a45'); f.addColorStop(0.55, '#6e5236'); f.addColorStop(1, '#3d2a19');
+  g.fillStyle = f; g.fill(); g.restore();
+  g.save(); shieldPath(g, x, y, s - 2); g.clip();
+  const sh = g.createLinearGradient(x - s, y - s, x + s, y + s); sh.addColorStop(0, 'rgba(255,240,205,0.20)'); sh.addColorStop(0.45, 'rgba(255,240,205,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.34)');
+  g.fillStyle = sh; g.fillRect(0, 0, w, h); g.restore();
+  g.drawImage(p.canvas, 0, 0);
+  ARMSPIECE = { canvas: c, w, h, ox: x, oy: y };
+}
+// the wreath: two sprays of the sprig's leaves rising either side of the arms. Each leaf is its own small piece, so
+// the leaves can fly in and settle.
+let WLEAVES = [];
+const SPRAY = { r: 2.02, cy: 0.28, squash: 1.02, from: 0.62, to: -1.02 };
+const sprayPoint = (side, ang) => [ARMS.x + side * Math.cos(ang) * ARMS.s * SPRAY.r, ARMS.y + ARMS.s * SPRAY.cy + Math.sin(ang) * ARMS.s * SPRAY.r * SPRAY.squash];
+function buildWreath() {
+  const r = rng(2203);
+  const leafMask = (len, wid) => { const w = Math.ceil(len + 24), h = Math.ceil(wid + 24), c = document.createElement('canvas'); c.width = w * SS; c.height = h * SS;
+    const m = c.getContext('2d'); m.scale(SS, SS); m.fillStyle = '#fff'; m.beginPath(); m.moveTo(12, h / 2);
+    m.quadraticCurveTo(12 + len * 0.45, h / 2 - wid * 0.62, 12 + len, h / 2); m.quadraticCurveTo(12 + len * 0.45, h / 2 + wid * 0.62, 12, h / 2); m.fill(); return { c, w, h }; };
+  WLEAVES = [];
+  for (const side of [-1, 1]) {
+    const n = 9;
+    for (let i = 0; i <= n; i++) {
+      const u = Math.min(1, i / (n - 1)), tip = i === n, ang = tip ? SPRAY.to - 0.12 : lerp(SPRAY.from, SPRAY.to, u);
+      const [bx, by] = sprayPoint(side, ang), [ax, ay] = sprayPoint(side, ang - 0.05);
+      const tangent = Math.atan2(ay - by, ax - bx);                             // the way the spray climbs here
+      for (const out of tip ? [0] : [1, -1]) {
+        const len = tip ? 22 : lerp(40, 23, u) * (out > 0 ? 1 : 0.86), wid = tip ? 8 : lerp(15, 9, u);
+        const m = leafMask(len, wid), p = piece(m.c, 2.2, 97 + i * 13 + (side > 0 ? 500 : 0) + (out > 0 ? 50 : 0));
+        // outer leaves lean away from the arms, inner ones toward them
+        WLEAVES.push({ canvas: p.canvas, w: m.w, h: m.h, x: bx, y: by, rot: tangent - side * out * (0.66 - 0.14 * u), k: (i + (out > 0 ? 0 : 0.5)) / (n + 1),
+          fa: r() * 6.283, fd: 520 + r() * 760, fr: (r() - 0.5) * 14 });
+      }
+    }
+  }
+  // the sprays' stems, one piece, placed by the arms' own origin
+  const reach = ARMS.s * SPRAY.r, w = Math.ceil(reach * 2 + PAD * 2), h = Math.ceil(reach * 2.3 + PAD * 2), ox = w / 2 - ARMS.x, oy = PAD + reach * 1.3 - ARMS.y;
+  const mask = document.createElement('canvas'); mask.width = w * SS; mask.height = h * SS; const m = mask.getContext('2d'); m.scale(SS, SS);
+  m.strokeStyle = '#fff'; m.lineWidth = 4.2; m.lineCap = 'round';
+  for (const side of [-1, 1]) { m.beginPath(); for (let i = 0; i <= 40; i++) { const [x, y] = sprayPoint(side, lerp(SPRAY.from + 0.14, SPRAY.to - 0.1, i / 40)); i ? m.lineTo(x + ox, y + oy) : m.moveTo(x + ox, y + oy); } m.stroke(); }
+  WREATH = { canvas: piece(mask, 1.6, 33).canvas, w, h, ox, oy };
+}
+function buildSub() {
+  const S = SUB, probe = document.createElement('canvas').getContext('2d'); probe.font = `600 ${S.size}px Cinzel`;
+  const ws = [...S.text].map(ch => probe.measureText(ch).width), total = ws.reduce((a, b) => a + b, 0) + S.sp * (S.text.length - 1);
+  const w = Math.ceil(total + PAD * 2), h = Math.ceil(S.size * 1.3 + PAD * 2), base = PAD + S.size;
+  const mask = document.createElement('canvas'); mask.width = w * SS; mask.height = h * SS; const m = mask.getContext('2d'); m.scale(SS, SS);
+  m.fillStyle = '#fff'; m.font = `600 ${S.size}px Cinzel`; m.textBaseline = 'alphabetic';
+  let x = PAD; [...S.text].forEach((ch, i) => { m.fillText(ch, x, base); x += ws[i] + S.sp; });
+  SUBPIECE = { canvas: piece(mask, 1.7, 57).canvas, w, h, base, total };
+}
+async function build() {
+  await document.fonts.load(`${NAME.weight} ${NAME.big}px Cinzel`, NAME.text); await document.fonts.load(`600 ${SUB.size}px Cinzel`, SUB.text); await document.fonts.ready;
+  buildName(); buildArms(); buildWreath(); buildSub();
+}
+
+// ---------------------------------------------------------------- the dark, the embers
+const R = rng(5207);
+const BOKEH = Array.from({ length: 64 }, () => ({ x: R() * W, y: R() * H, z: 0.25 + R() * 0.75, r: 8 + R() * 40, c: EMBER[Math.floor(R() * EMBER.length)],
+  a: 0.03 + R() * 0.1, sp: 10 + R() * 22, sw: 10 + R() * 30, f: 0.05 + R() * 0.2, ph: R() * 6.283 }));
+const SPARKS = Array.from({ length: 110 }, () => ({ x: R() * W, y: R() * H, v: 30 + R() * 90, w: 0.6 + R() * 1.6, ph: R() * 6.283, f: 0.4 + R() * 1.4, life: 2 + R() * 3, c: EMBER[Math.floor(R() * 4)] }));
+function glow(g, x, y, rx, ry, rgb, a) {
+  if (a <= 0) return;
+  g.save(); g.translate(x, y); g.scale(1, ry / rx); const gr = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+  gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`);
+  g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(-rx, -rx, 2 * rx, 2 * rx); g.restore();
+}
+// the village sinks into the dark: the edges go first and deepest, the middle keeps a breath of the picture
+function ground(g, t, A) {
+  if (A <= 0) return;
+  g.save(); g.globalAlpha = A;
+  const v = g.createRadialGradient(cx, H * 0.55, H * 0.12, cx, H * 0.55, H * 1.02);
+  v.addColorStop(0, 'rgba(8,5,4,0.84)'); v.addColorStop(0.55, 'rgba(7,4,3,0.93)'); v.addColorStop(1, 'rgba(5,3,2,0.99)');
+  g.fillStyle = v; g.fillRect(0, 0, W, H);
+  const b = 0.1 + 0.03 * Math.sin(t * 0.35), e = g.createRadialGradient(cx, H * 1.15, 40, cx, H * 1.15, H * 0.95);
+  e.addColorStop(0, `rgba(120,34,18,${b})`); e.addColorStop(0.55, `rgba(60,16,10,${b * 0.45})`); e.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = e; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'lighter';
+  for (const p of BOKEH) {
+    const y = ((p.y - t * p.sp * p.z) % (H + 120) + H + 120) % (H + 120) - 60, x = p.x + Math.sin(t * p.f + p.ph) * p.sw * p.z;
+    const a = p.a * (0.65 + 0.35 * Math.sin(t * (0.4 + p.f * 2) + p.ph * 3)), r = p.r * (0.6 + p.z * 0.6), gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, `rgba(${p.c},${a * 0.55})`); gr.addColorStop(0.72, `rgba(${p.c},${a})`); gr.addColorStop(0.86, `rgba(${p.c},${a * 0.65})`); gr.addColorStop(1, `rgba(${p.c},0)`);
+    g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill();
+  }
+  for (const s of SPARKS) {
+    const age = ((t + s.ph * s.life) % s.life) / s.life, y = ((s.y - t * s.v) % H + H) % H, x = s.x + Math.sin(t * s.f + s.ph) * 22;
+    g.fillStyle = `rgba(${s.c},${Math.sin(age * Math.PI) * 0.75})`; g.beginPath(); g.ellipse(x, y, s.w, s.w * 2.4, Math.sin(t * s.f + s.ph) * 0.4, 0, 6.283); g.fill();
+  }
+  g.restore();
+}
+
+// ---------------------------------------------------------------- the title assembles
+function ornament(g, lt, A) {
+  const fly = span(lt, 0.3, 2.3), struck = smooth(span(lt, 1.9, 2.5));
+  // the stems grow up from under the arms
+  const stems = smooth(span(lt, 0.9, 2.1));
+  if (stems > 0) { g.save(); g.globalAlpha = A * stems; g.beginPath(); g.rect(0, ARMS.y + ARMS.s * 2.4 - stems * ARMS.s * 4.6, W, H); g.clip(); g.drawImage(WREATH.canvas, -WREATH.ox, -WREATH.oy); g.restore(); }
+  // the leaves fly in out of the dark, turning, and settle on the sprays from the bottom up
+  for (const l of WLEAVES) {
+    const u = easeOut(clamp((fly - l.k * 0.42) / 0.58)); if (u <= 0) continue;
+    const x = lerp(l.x + Math.cos(l.fa) * l.fd, l.x, u), y = lerp(l.y + Math.sin(l.fa) * l.fd * 0.62, l.y, u), rot = l.rot + l.fr * (1 - u), sc = lerp(1.9, 1, u);
+    g.save(); g.globalAlpha = A * Math.min(1, u * 2.2); g.translate(x, y); g.rotate(rot); g.scale(sc, sc); g.drawImage(l.canvas, -12, -l.h / 2); g.restore();
+    if (u > 0.8 && u < 1) glow(g, x, y, 34, 34, '255,220,150', 0.5 * A * Math.sin((u - 0.8) / 0.2 * Math.PI));
+  }
+  // the arms strike: a flash, and they are there
+  if (struck > 0) { g.save(); g.globalAlpha = A * struck; const k = lerp(1.16, 1, easeOut(struck)); g.translate(ARMS.x, ARMS.y); g.scale(k, k); g.drawImage(ARMSPIECE.canvas, -ARMSPIECE.ox, -ARMSPIECE.oy); g.restore(); }
+  glow(g, ARMS.x, ARMS.y + ARMS.s * 0.2, 250, 250, '255,206,140', 0.42 * A * Math.sin(Math.PI * span(lt, 1.85, 3.1)));
+}
+function name(g, lt, A) {
+  const N = NAMEPIECE, x0 = cx - N.total / 2 - PAD, y0 = NAME.base - N.base;
+  glow(g, cx, NAME.base - NAME.small * 0.42, 860, 250, '170,70,26', 0.2 * A * smooth(span(lt, 1.6, 3.4)));
+  LETTERS.forEach((l, i) => {
+    const start = 1.55 + i * 0.075, p = span(lt, start, start + 0.62); if (p <= 0) return;
+    const sx = Math.max(0, Math.floor(PAD + l.x - NAME.sp / 2 - 9)), sw = Math.ceil(l.w + NAME.sp + 18), q = easeOut(p);
+    // each letter drops a few pixels into its seat as it cools
+    g.save(); g.globalAlpha = A * Math.min(1, p * 2.4); g.drawImage(N.canvas, sx, 0, sw, N.h, x0 + sx, y0 - (1 - q) * 16, sw, N.h); g.restore();
+    const heat = Math.sin(Math.min(1, p * 1.25) * Math.PI) * (1 - p * 0.35);
+    if (heat > 0.01) {
+      // white-hot, then gold: the letter's own shape, lit
+      const hot = layer(sw, N.h), hg = hot.getContext('2d'); hg.globalCompositeOperation = 'source-over'; hg.clearRect(0, 0, sw, N.h);
+      hg.drawImage(N.mask, sx * SS, 0, sw * SS, N.h * SS, 0, 0, sw, N.h); hg.globalCompositeOperation = 'source-in'; hg.fillStyle = '#fff1c9'; hg.fillRect(0, 0, sw, N.h);
+      g.save(); g.globalCompositeOperation = 'lighter'; g.globalAlpha = A * heat * 0.9; g.drawImage(hot, 0, 0, sw, N.h, x0 + sx, y0 - (1 - q) * 16, sw, N.h); g.restore();
+      glow(g, x0 + sx + sw / 2, NAME.base - l.size * 0.36, l.size * 0.95, l.size * 0.95, '255,196,110', 0.34 * A * heat);
+    }
+  });
+  // one band of light across the name
+  const swp = span(lt, 2.75, 4.05);
+  if (swp > 0 && swp < 1) {
+    const band = layer(N.w, N.h), bg = band.getContext('2d'); bg.globalCompositeOperation = 'source-over'; bg.clearRect(0, 0, N.w, N.h);
+    bg.drawImage(N.mask, 0, 0, N.w * SS, N.h * SS, 0, 0, N.w, N.h); bg.globalCompositeOperation = 'source-in';
+    const sx = lerp(-260, N.w + 260, ease(swp)), lg = bg.createLinearGradient(sx - 150, 0, sx + 150, 60);
+    lg.addColorStop(0, 'rgba(255,244,214,0)'); lg.addColorStop(0.5, 'rgba(255,244,214,0.95)'); lg.addColorStop(1, 'rgba(255,244,214,0)');
+    bg.fillStyle = lg; bg.fillRect(0, 0, N.w, N.h);
+    g.save(); g.globalCompositeOperation = 'lighter'; g.globalAlpha = A; g.drawImage(band, 0, 0, N.w, N.h, x0, y0, N.w, N.h); g.restore();
+  }
+  // MY LEGACY between two rules, and a diamond under it
+  const sa = smooth(span(lt, 2.5, 3.3)), S = SUBPIECE;
+  if (sa > 0) {
+    g.save(); g.globalAlpha = A * sa; g.drawImage(S.canvas, cx - S.total / 2 - PAD, SUB.y - S.base); g.restore();
+    const rl = 250 * ease(span(lt, 2.7, 3.8)), ry = SUB.y - SUB.size * 0.36, gap = S.total / 2 + 38;
+    g.save(); g.globalAlpha = A * sa;
+    for (const dir of [-1, 1]) {
+      const lg = g.createLinearGradient(cx + dir * gap, 0, cx + dir * (gap + rl + 1), 0); lg.addColorStop(0, 'rgba(232,196,112,0.95)'); lg.addColorStop(1, 'rgba(160,112,44,0)');
+      g.fillStyle = lg; g.fillRect(Math.min(cx + dir * gap, cx + dir * (gap + rl)), ry - 1, rl, 2);
+      g.fillStyle = '#e8c470'; g.save(); g.translate(cx + dir * (gap - 12), ry); g.rotate(Math.PI / 4); g.fillRect(-3.4, -3.4, 6.8, 6.8); g.restore();
+    }
+    const d = smooth(span(lt, 3.1, 3.8)), dy = SUB.y + 44;
+    if (d > 0) { g.globalAlpha = A * d; g.fillStyle = '#e8c470'; g.beginPath(); g.moveTo(cx, dy - 13 * d); g.lineTo(cx + 8 * d, dy); g.lineTo(cx, dy + 13 * d); g.lineTo(cx - 8 * d, dy); g.closePath(); g.fill();
+      const lg2 = g.createLinearGradient(cx - 150, 0, cx + 150, 0); lg2.addColorStop(0, 'rgba(200,150,64,0)'); lg2.addColorStop(0.5, 'rgba(232,196,112,0.8)'); lg2.addColorStop(1, 'rgba(200,150,64,0)');
+      g.fillStyle = lg2; g.fillRect(cx - 150 * d, dy - 0.7, 300 * d, 1.4); }
+    g.restore();
+  }
+}
+const LAYERS = new Map();
+function layer(w, h) { const key = `${w}x${h}`; let c = LAYERS.get(key); if (!c) { c = document.createElement('canvas'); c.width = w; c.height = h; LAYERS.set(key, c); } return c; }
+
+// t in film seconds: draws the whole title layer, on a clear ground, into g
+function draw(g, t) {
+  g.clearRect(0, 0, W, H);
+  const lt = t - T0; if (lt <= 0) return;
+  const out = smooth(span(t, 29.3, 29.95));        // the title leaves into black with the picture
+  ground(g, t, smooth(span(lt, 0.0, 1.7)));
+  const A = 1 - out;
+  if (A > 0) { ornament(g, lt, A); name(g, lt, A); }
+  if (out > 0) { g.save(); g.globalAlpha = out; g.fillStyle = '#000'; g.fillRect(0, 0, W, H); g.restore(); }
+}
+window.TITLE = { T0, END, W, H, draw, build };
+// preview: title.html?t=28 draws one moment over black
+const q = new URLSearchParams(location.search);
+if (q.has('t')) build().then(() => draw(document.getElementById('c').getContext('2d'), +q.get('t')));
+</script>
+</body></html>

@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><title>film headless</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script src="load.js"></script>
+<script>
+  const q = new URLSearchParams(location.search); const only = q.get('only') ? q.get('only').split(',') : null;
+  FILM_LOAD('../', only).then(() => { FILM.mountHeadless(); window.FILM_READY = true; });
+</script>

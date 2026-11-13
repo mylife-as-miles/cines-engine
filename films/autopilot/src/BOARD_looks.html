@@ -1,0 +1,49 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Autopilot: three looks</title>
+<!-- The comparison board: the three looks (rows) drawn as the same three moments (columns).
+     node tools/shoot.js src/BOARD_looks.html frames/BOARD_looks.png 2880 2160 300 -->
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #0b0b0d; }
+  body { width: 2880px; height: 2160px; position: relative; overflow: hidden; color: #e9e6e0; }
+  .head { position: absolute; left: 60px; right: 60px; top: 52px; }
+  .title { font: 400 104px/1 'Six Caps', sans-serif; letter-spacing: 14px; color: #f2efe8; }
+  .title span { color: #8d8a84; }
+  .cols { position: absolute; left: 60px; top: 196px; display: grid; grid-template-columns: repeat(3, 904px); column-gap: 24px; }
+  .cols div { font: 600 28px/1 'Barlow Condensed', sans-serif; letter-spacing: 7px; color: #b8b4ac; text-transform: uppercase; border-top: 1px solid #34332f; padding-top: 16px; }
+  .cols b { color: #f2efe8; font-weight: 600; margin-right: 14px; }
+  .row { position: absolute; left: 60px; width: 2760px; }
+  .label { display: flex; align-items: baseline; gap: 26px; height: 74px; white-space: nowrap; }
+  .letter { font: 400 64px/1 'Archivo Black', sans-serif; color: #f2efe8; }
+  .name { font: 600 44px/1 'Barlow Condensed', sans-serif; letter-spacing: 9px; text-transform: uppercase; color: #f2efe8; }
+  .pitch { font: italic 400 36px/1.1 'Cormorant Garamond', serif; color: #a9a59d; }
+  .frames { display: grid; grid-template-columns: repeat(3, 904px); column-gap: 24px; }
+  .frames img { width: 904px; height: 508px; display: block; background: #16161a; }
+</style></head>
+<body>
+  <div class="head"><div class="title">AUTOPILOT <span>&nbsp;·&nbsp; THREE LOOKS, ONE BRIEF</span></div></div>
+  <div class="cols"><div><b>1</b>The Counter</div><div><b>2</b>The Mirror</div><div><b>3</b>The Door</div></div>
+  <div id="rows"></div>
+<script>
+  // Pitches from design/look_a.md, look_b.md and look_c.md.
+  const looks = [
+    ['A', 'White Heat', 'Cut paper in daylight, where the sun is the antagonist. Shade is where things are kept, and where they are forgotten.'],
+    ['B', 'Bright Day', 'Round, bright and warm, so that when the colour drains out of the world, it drains out of us too.'],
+    ['C', 'Through Glass', 'Every shot through a pane: the glass that hid Emily all day is the glass we watch her father through.'],
+  ];
+  const moments = ['1_counter', '2_mirror', '3_door'];
+  const rows = document.getElementById('rows');
+  let pending = 0;
+  looks.forEach(([L, name, pitch], i) => {
+    const r = document.createElement('div'); r.className = 'row'; r.style.top = (272 + i * 620) + 'px';
+    r.innerHTML = `<div class="label"><span class="letter">${L}</span><span class="name">${name}</span><span class="pitch">${pitch}</span></div><div class="frames"></div>`;
+    const f = r.querySelector('.frames');
+    moments.forEach(m => {
+      const img = new Image(); pending++;
+      img.onload = img.onerror = () => { if (--pending === 0) document.fonts.ready.then(() => { window.FRAME_READY = true; }); };
+      img.src = `../frames/${L}${m}.jpg`; f.appendChild(img);
+    });
+    rows.appendChild(r);
+  });
+</script>
+</body></html>

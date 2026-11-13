@@ -1,0 +1,3124 @@
+[
+ {
+  "type": "transition",
+  "text": "FADE IN:",
+  "page": 1
+ },
+ {
+  "type": "scene",
+  "text": "EXT. SCOTT'S BACK YARD - NIGHT",
+  "page": 1,
+  "id": "S01"
+ },
+ {
+  "type": "action",
+  "text": "A HOUSE BURNS. Flames breathe through smashed windows. An upstairs curtain lifts in the heat, then disappears.",
+  "page": 1,
+  "id": "A001"
+ },
+ {
+  "type": "action",
+  "text": "SCOTT (late 20s) sits on the grass in his socks. His shirt is torn. One arm is blistered. He holds a phone against an ear that won't stop ringing.",
+  "page": 1,
+  "id": "A002"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "Sir? Stay with me. You said there were six people.",
+  "page": 1,
+  "id": "L001"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Yeah.",
+  "page": 1,
+  "id": "L002"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "How many got out?",
+  "page": 1,
+  "id": "L003"
+ },
+ {
+  "type": "action",
+  "text": "Scott stares at the house. Somewhere inside, glass breaks.",
+  "page": 1,
+  "id": "A003"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I--",
+  "page": 1,
+  "id": "L004"
+ },
+ {
+  "type": "action",
+  "text": "He can't finish.",
+  "page": 1,
+  "id": "A004"
+ },
+ {
+  "type": "transition",
+  "text": "CUT TO:",
+  "page": 1
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - LIVING ROOM - EARLIER",
+  "page": 1,
+  "id": "S02"
+ },
+ {
+  "type": "action",
+  "text": "A hand scoops crisps from a bag into a bowl. Half miss. Scott picks them up, puts them in the bowl anyway.",
+  "page": 1,
+  "id": "A005"
+ },
+ {
+  "type": "action",
+  "text": "The room is modest, tidy in the hurried way a room gets tidy before company. SIX glasses. SIX places at a dining table beyond the couch.",
+  "page": 1,
+  "id": "A006"
+ },
+ {
+  "type": "action",
+  "text": "The doorbell. Scott brushes crumbs off his trousers and opens up.",
+  "page": 1,
+  "id": "A007"
+ },
+ {
+  "type": "action",
+  "text": "DEENA (late 20s) walks straight in, followed by ANGELO (early 30s), who is carrying a six-pack and an unlit cigarette behind one ear.",
+  "page": 1,
+  "id": "A008"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "You moved the sofa.",
+  "page": 1,
+  "id": "L005"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Hi, Deena.",
+  "page": 2,
+  "id": "L006"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "I'm just saying. Last week you said it was too heavy to move.",
+  "page": 2,
+  "id": "L007"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "You know who's coming tonight, right?",
+  "page": 2,
+  "id": "L008"
+ },
+ {
+  "type": "action",
+  "text": "Scott takes the six-pack, gives Angelo a look.",
+  "page": 2,
+  "id": "A009"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "You two can still go home.",
+  "page": 2,
+  "id": "L009"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Aw. He missed us.",
+  "page": 2,
+  "id": "L010"
+ },
+ {
+  "type": "action",
+  "text": "She kisses his cheek. Angelo tries to slip past with the cigarette.",
+  "page": 2,
+  "id": "A010"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Don't smoke in here.",
+  "page": 2,
+  "id": "L011"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I'm not smoking.",
+  "page": 2,
+  "id": "L012"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "You've got one in your hair.",
+  "page": 2,
+  "id": "L013"
+ },
+ {
+  "type": "action",
+  "text": "Angelo takes it down, discovers he has nowhere to put it, puts it back.",
+  "page": 2,
+  "id": "A011"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "It's decorative.",
+  "page": 2,
+  "id": "L014"
+ },
+ {
+  "type": "action",
+  "text": "A KNOCK. Scott reaches the front door a little too quickly.",
+  "page": 2,
+  "id": "A012"
+ },
+ {
+  "type": "action",
+  "text": "KAY (late 20s) is on the step, holding a dripping bag of ice. Rain beads on her hair.",
+  "page": 2,
+  "id": "A013"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Before you tell me I didn't need to bring anything--",
+  "page": 2,
+  "id": "L015"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I wasn't going to.",
+  "page": 2,
+  "id": "L016"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "You were. You did the face.",
+  "page": 2,
+  "id": "L017"
+ },
+ {
+  "type": "action",
+  "text": "He steps back to let her in. Doesn't realize he's blocking the doorway until she nudges past.",
+  "page": 3,
+  "id": "A014"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "It's just-- we've got ice.",
+  "page": 3,
+  "id": "L018"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Then I'm taking it home.",
+  "page": 3,
+  "id": "L019"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "No, no. I'll take it.",
+  "page": 3,
+  "id": "L020"
+ },
+ {
+  "type": "action",
+  "text": "She laughs, hands him the bag. A brief moment between them, almost a question. Neither asks it.",
+  "page": 3,
+  "id": "A015"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": "O.S.",
+  "text": "Kay! Save yourself. He's rearranged the whole room.",
+  "page": 3,
+  "id": "L021"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Is that why it smells like furniture polish?",
+  "page": 3,
+  "id": "L022"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "It does not.",
+  "page": 3,
+  "id": "L023"
+ },
+ {
+  "type": "action",
+  "text": "Kay sniffs the air.",
+  "page": 3,
+  "id": "A016"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "It really does.",
+  "page": 3,
+  "id": "L024"
+ },
+ {
+  "type": "action",
+  "text": "She passes him. He smiles despite himself.",
+  "page": 3,
+  "id": "A017"
+ },
+ {
+  "type": "action",
+  "text": "Another RING, followed at once by impatient KNOCKING.",
+  "page": 3,
+  "id": "A018"
+ },
+ {
+  "type": "action",
+  "text": "CHRISTOF (late 20s) and MARINA (late 20s) wait on the porch, mid-argument.",
+  "page": 3,
+  "id": "A019"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Tell him what you told me.",
+  "page": 3,
+  "id": "L025"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "I said turn left at the second light.",
+  "page": 3,
+  "id": "L026"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "You said the light by the church.",
+  "page": 3,
+  "id": "L027"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "It's the same light.",
+  "page": 3,
+  "id": "L028"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "There are two churches.",
+  "page": 4,
+  "id": "L029"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": "O.S.",
+  "text": "Finally! You two coming in or what?",
+  "page": 4,
+  "id": "L030"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "See? Two people heard that address and only one got us lost.",
+  "page": 4,
+  "id": "L031"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "She's been rehearsing that in the car.",
+  "page": 4,
+  "id": "L032"
+ },
+ {
+  "type": "action",
+  "text": "They come in, laughing over each other. Scott shuts the door.",
+  "page": 4,
+  "id": "A020"
+ },
+ {
+  "type": "action",
+  "text": "The latch CLICKS. Then, just as his hand leaves it, another quiet CLICK.",
+  "page": 4,
+  "id": "A021"
+ },
+ {
+  "type": "action",
+  "text": "He checks the lock. It is secure. He lets it go.",
+  "page": 4,
+  "id": "A022"
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - LIVING ROOM - LATER",
+  "page": 4,
+  "id": "S03"
+ },
+ {
+  "type": "action",
+  "text": "Music. Glasses clink. Somebody's left wet footprints by the door. Everyone is talking at once and nobody minds.",
+  "page": 4,
+  "id": "A023"
+ },
+ {
+  "type": "action",
+  "text": "Christof is telling a story with a biscuit in his hand.",
+  "page": 4,
+  "id": "A024"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "I thought it was a date. That's my point.",
+  "page": 4,
+  "id": "L033"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "You said she brought her brother.",
+  "page": 4,
+  "id": "L034"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "I'm getting to that.",
+  "page": 4,
+  "id": "L035"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Why didn't you leave?",
+  "page": 4,
+  "id": "L036"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "I'd already bought a drink.",
+  "page": 4,
+  "id": "L037"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "That's not a reason.",
+  "page": 4,
+  "id": "L038"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "It was a twelve-quid drink.",
+  "page": 4,
+  "id": "L039"
+ },
+ {
+  "type": "action",
+  "text": "Marina wipes a wine ring off Scott's table. Scott notices, hands her a coaster without thinking.",
+  "page": 5,
+  "id": "A025"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Thank you. The table's going to live.",
+  "page": 5,
+  "id": "L040"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "It's a borrowed table.",
+  "page": 5,
+  "id": "L041"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "That explains the tension.",
+  "page": 5,
+  "id": "L042"
+ },
+ {
+  "type": "action",
+  "text": "Kay leans against the kitchen doorway, watching Scott hover between cups and snacks.",
+  "page": 5,
+  "id": "A026"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Sit down, Scott.",
+  "page": 5,
+  "id": "L043"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I'm sitting.",
+  "page": 5,
+  "id": "L044"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "You're standing.",
+  "page": 5,
+  "id": "L045"
+ },
+ {
+  "type": "action",
+  "text": "Scott glances at his own legs. Sits on the arm of the couch.",
+  "page": 5,
+  "id": "A027"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Better.",
+  "page": 5,
+  "id": "L046"
+ },
+ {
+  "type": "action",
+  "text": "Deena sees them. Almost comments. Decides not to.",
+  "page": 5,
+  "id": "A028"
+ },
+ {
+  "type": "action",
+  "text": "Angelo pulls a deck of cards from its box.",
+  "page": 5,
+  "id": "A029"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Are we doing this, then? Or did we all come here to hear Christof say \"exposure\" again?",
+  "page": 5,
+  "id": "L047"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "You liked that story.",
+  "page": 5,
+  "id": "L048"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I liked when it ended.",
+  "page": 5,
+  "id": "L049"
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - DINING AREA - MOMENTS LATER",
+  "page": 5,
+  "id": "S04"
+ },
+ {
+  "type": "action",
+  "text": "They gather at the table. The kind of rearranging that takes three conversations and twice as long as it should.",
+  "page": 5,
+  "id": "A030"
+ },
+ {
+  "type": "action",
+  "text": "Deena swaps Angelo's glass with her own. He doesn't notice. Christof drags over the last chair for Marina.",
+  "page": 6,
+  "id": "A031"
+ },
+ {
+  "type": "action",
+  "text": "Angelo shuffles. He flashes the cards. A poor magician pretending to be a professional.",
+  "page": 6,
+  "id": "A032"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Just deal them.",
+  "page": 6,
+  "id": "L050"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Can I enjoy something?",
+  "page": 6,
+  "id": "L051"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Not in this house, apparently.",
+  "page": 6,
+  "id": "L052"
+ },
+ {
+  "type": "action",
+  "text": "The first cards fly. One pile. Another. Another.",
+  "page": 6,
+  "id": "A033"
+ },
+ {
+  "type": "action",
+  "text": "Scott is telling Kay something under the noise of the table.",
+  "page": 6,
+  "id": "A034"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I was going to text you about Saturday.",
+  "page": 6,
+  "id": "L053"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "You mean the text you started on Monday?",
+  "page": 6,
+  "id": "L054"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I didn't--",
+  "page": 6,
+  "id": "L055"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Deena told me.",
+  "page": 6,
+  "id": "L056"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks toward Deena. She concentrates very hard on her drink.",
+  "page": 6,
+  "id": "A035"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Right. Good.",
+  "page": 6,
+  "id": "L057"
+ },
+ {
+  "type": "action",
+  "text": "Kay smiles. Doesn't rescue him.",
+  "page": 6,
+  "id": "A036"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "What about Saturday?",
+  "page": 6,
+  "id": "L058"
+ },
+ {
+  "type": "action",
+  "text": "Before he can answer--",
+  "page": 6,
+  "id": "A037"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Angelo.",
+  "page": 6,
+  "id": "L059"
+ },
+ {
+  "type": "action",
+  "text": "The cards stop.",
+  "page": 6,
+  "id": "A038"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "What?",
+  "page": 7,
+  "id": "L060"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Who's that for?",
+  "page": 7,
+  "id": "L061"
+ },
+ {
+  "type": "action",
+  "text": "She points at a pile.",
+  "page": 7,
+  "id": "A039"
+ },
+ {
+  "type": "action",
+  "text": "There are SEVEN HANDS on the table.",
+  "page": 7,
+  "id": "A040"
+ },
+ {
+  "type": "action",
+  "text": "Angelo looks at the pile, then at the cards left in his hand.",
+  "page": 7,
+  "id": "A041"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "That's mine.",
+  "page": 7,
+  "id": "L062"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Then what's that?",
+  "page": 7,
+  "id": "L063"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "...Also mine, I guess.",
+  "page": 7,
+  "id": "L064"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Take both. You'll still lose.",
+  "page": 7,
+  "id": "L065"
+ },
+ {
+  "type": "action",
+  "text": "A couple of laughs. Angelo laughs too, but keeps checking the piles.",
+  "page": 7,
+  "id": "A042"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Hold on. Did someone move one?",
+  "page": 7,
+  "id": "L066"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "No.",
+  "page": 7,
+  "id": "L067"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Just pick them up.",
+  "page": 7,
+  "id": "L068"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I am picking them up.",
+  "page": 7,
+  "id": "L069"
+ },
+ {
+  "type": "action",
+  "text": "He gathers the cards. Shuffles. Deals again, slower this time.",
+  "page": 7,
+  "id": "A043"
+ },
+ {
+  "type": "action",
+  "text": "One. Two. Three. Four. Five. SIX cards.",
+  "page": 7,
+  "id": "A044"
+ },
+ {
+  "type": "action",
+  "text": "Each person at the table has a card. Angelo has the deck, and no card in front of him.",
+  "page": 7,
+  "id": "A045"
+ },
+ {
+  "type": "action",
+  "text": "He looks at his empty place.",
+  "page": 7,
+  "id": "A046"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Right. Okay.",
+  "page": 7,
+  "id": "L070"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "What now?",
+  "page": 8,
+  "id": "L071"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "How have I done it again?",
+  "page": 8,
+  "id": "L072"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "You haven't. There are six.",
+  "page": 8,
+  "id": "L073"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Yeah. There's six. Where's mine?",
+  "page": 8,
+  "id": "L074"
+ },
+ {
+  "type": "action",
+  "text": "Christof looks. He starts to answer, then stops.",
+  "page": 8,
+  "id": "A047"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Did you deal yourself first?",
+  "page": 8,
+  "id": "L075"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "No. I went around.",
+  "page": 8,
+  "id": "L076"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "You're making it into a whole thing.",
+  "page": 8,
+  "id": "L077"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Can you just-- everybody touch the card in front of you.",
+  "page": 8,
+  "id": "L078"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Why?",
+  "page": 8,
+  "id": "L079"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Please.",
+  "page": 8,
+  "id": "L080"
+ },
+ {
+  "type": "action",
+  "text": "Six hands come down on six cards. Angelo still holds the deck.",
+  "page": 8,
+  "id": "A048"
+ },
+ {
+  "type": "action",
+  "text": "One beat. Two.",
+  "page": 8,
+  "id": "A049"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Maybe you don't get to play.",
+  "page": 8,
+  "id": "L081"
+ },
+ {
+  "type": "action",
+  "text": "It's supposed to be funny. Nobody laughs as much as they ought to.",
+  "page": 8,
+  "id": "A050"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "I'm going to the loo. This is making me stupid.",
+  "page": 8,
+  "id": "L082"
+ },
+ {
+  "type": "action",
+  "text": "She stands, stepping around Scott's chair.",
+  "page": 8,
+  "id": "A051"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "You want me to--",
+  "page": 9,
+  "id": "L083"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "No. Save my seat, though.",
+  "page": 9,
+  "id": "L084"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I can manage that.",
+  "page": 9,
+  "id": "L085"
+ },
+ {
+  "type": "line",
+  "speaker": "KAY",
+  "ext": null,
+  "text": "Big night for you.",
+  "page": 9,
+  "id": "L086"
+ },
+ {
+  "type": "action",
+  "text": "She squeezes his shoulder as she goes. Scott watches her disappear down the corridor.",
+  "page": 9,
+  "id": "A052"
+ },
+ {
+  "type": "action",
+  "text": "A bathroom door CLICKS somewhere out of sight.",
+  "page": 9,
+  "id": "A053"
+ },
+ {
+  "type": "action",
+  "text": "Angelo scoops up the cards.",
+  "page": 9,
+  "id": "A054"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Okay. With Kay gone, five people. Yes?",
+  "page": 9,
+  "id": "L087"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Please don't start.",
+  "page": 9,
+  "id": "L088"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Five. It's five.",
+  "page": 9,
+  "id": "L089"
+ },
+ {
+  "type": "action",
+  "text": "He deals. Four around the table. The fifth to himself.",
+  "page": 9,
+  "id": "A055"
+ },
+ {
+  "type": "action",
+  "text": "Perfect.",
+  "page": 9,
+  "id": "A056"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "See?",
+  "page": 9,
+  "id": "L090"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Well done. How old are you?",
+  "page": 9,
+  "id": "L091"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Go on. Laugh. I'm delighted for you.",
+  "page": 9,
+  "id": "L092"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Can we play now?",
+  "page": 9,
+  "id": "L093"
+ },
+ {
+  "type": "action",
+  "text": "Angelo stares at the fifth card, his smile slowly draining. He can't explain what just happened.",
+  "page": 9,
+  "id": "A057"
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - DINING AREA - LATER",
+  "page": 10,
+  "id": "S05"
+ },
+ {
+  "type": "action",
+  "text": "The game has become noisy again. Cards hit the table. Someone is halfway through a story nobody else believes.",
+  "page": 10,
+  "id": "A058"
+ },
+ {
+  "type": "action",
+  "text": "Six piles now. Six people apparently playing. No one acknowledges when Kay came back. Her chair is tucked in, but she isn't visible in any clear, uninterrupted view.",
+  "page": 10,
+  "id": "A059"
+ },
+ {
+  "type": "action",
+  "text": "Christof throws down his last card.",
+  "page": 10,
+  "id": "A060"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Thank you. I'll accept apologies individually.",
+  "page": 10,
+  "id": "L094"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "That was luck.",
+  "page": 10,
+  "id": "L095"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "Keep saying it. Makes it sweeter.",
+  "page": 10,
+  "id": "L096"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Champion's buying the next bottle.",
+  "page": 10,
+  "id": "L097"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "I brought the last one.",
+  "page": 10,
+  "id": "L098"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "You drank most of it.",
+  "page": 10,
+  "id": "L099"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "That's not evidence.",
+  "page": 10,
+  "id": "L100"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "There's another in the kitchen. Left cupboard.",
+  "page": 10,
+  "id": "L101"
+ },
+ {
+  "type": "action",
+  "text": "Christof gets up, eyes Angelo's hand.",
+  "page": 10,
+  "id": "A061"
+ },
+ {
+  "type": "line",
+  "speaker": "CHRISTOF",
+  "ext": null,
+  "text": "And don't touch my cards.",
+  "page": 10,
+  "id": "L102"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Your cards are awful. Why would I?",
+  "page": 10,
+  "id": "L103"
+ },
+ {
+  "type": "action",
+  "text": "Christof goes through to the kitchen.",
+  "page": 10,
+  "id": "A062"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks at Kay's glass. It still holds its first pour. A small red lip mark on the rim, but hardly any wine gone.",
+  "page": 10,
+  "id": "A063"
+ },
+ {
+  "type": "action",
+  "text": "He taps the glass with a fingernail, considering it.",
+  "page": 10,
+  "id": "A064"
+ },
+ {
+  "type": "action",
+  "text": "From the kitchen--",
+  "page": 11,
+  "id": "A065"
+ },
+ {
+  "type": "action",
+  "text": "A short, choking GASP.",
+  "page": 11,
+  "id": "A066"
+ },
+ {
+  "type": "action",
+  "text": "A METALLIC CRASH.",
+  "page": 11,
+  "id": "A067"
+ },
+ {
+  "type": "action",
+  "text": "Everyone jolts. Scott starts up.",
+  "page": 11,
+  "id": "A068"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Christof?",
+  "page": 11,
+  "id": "L104"
+ },
+ {
+  "type": "action",
+  "text": "No response.",
+  "page": 11,
+  "id": "A069"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "What was that?",
+  "page": 11,
+  "id": "L105"
+ },
+ {
+  "type": "action",
+  "text": "Scott takes a step toward the kitchen.",
+  "page": 11,
+  "id": "A070"
+ },
+ {
+  "type": "action",
+  "text": "A bottle of wine comes down onto the table behind him with a soft THUMP.",
+  "page": 11,
+  "id": "A071"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Scott, you're standing on my foot.",
+  "page": 11,
+  "id": "L106"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Sorry.",
+  "page": 11,
+  "id": "L107"
+ },
+ {
+  "type": "action",
+  "text": "He looks down, moves. When he looks up, the bottle is there. So are five fresh glasses. His concern dissolves into the simple habit of being the host.",
+  "page": 11,
+  "id": "A072"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Oh. Thanks.",
+  "page": 11,
+  "id": "L108"
+ },
+ {
+  "type": "action",
+  "text": "No one answers. He uncorks the wine and pours.",
+  "page": 11,
+  "id": "A073"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "That's plenty.",
+  "page": 11,
+  "id": "L109"
+ },
+ {
+  "type": "action",
+  "text": "He stops. He's overfilled her glass.",
+  "page": 11,
+  "id": "A074"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Sorry. Just tell me when.",
+  "page": 11,
+  "id": "L110"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "I did. Twice.",
+  "page": 11,
+  "id": "L111"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks again at Kay's untouched glass.",
+  "page": 11,
+  "id": "A075"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Where's Kay?",
+  "page": 11,
+  "id": "L112"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Bathroom.",
+  "page": 12,
+  "id": "L113"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Still?",
+  "page": 12,
+  "id": "L114"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "I don't know. Go ask her.",
+  "page": 12,
+  "id": "L115"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks along the empty hallway. Bathroom door closed.",
+  "page": 12,
+  "id": "A076"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Don't. She'll come out when she's ready.",
+  "page": 12,
+  "id": "L116"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I just thought she was here a second ago.",
+  "page": 12,
+  "id": "L117"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Maybe she was.",
+  "page": 12,
+  "id": "L118"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks at him. Angelo can't make the sentence mean anything sensible.",
+  "page": 12,
+  "id": "A077"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "We'll start when Christof gets back.",
+  "page": 12,
+  "id": "L119"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "He did come back.",
+  "page": 12,
+  "id": "L120"
+ },
+ {
+  "type": "action",
+  "text": "Marina glances towards the doorway.",
+  "page": 12,
+  "id": "A078"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "He went to get the wine.",
+  "page": 12,
+  "id": "L121"
+ },
+ {
+  "type": "action",
+  "text": "Scott is holding the wine.",
+  "page": 12,
+  "id": "A079"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Yeah. This wine.",
+  "page": 12,
+  "id": "L122"
+ },
+ {
+  "type": "action",
+  "text": "They all look at the bottle. Christof is nowhere in the room.",
+  "page": 12,
+  "id": "A080"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Probably went for a smoke.",
+  "page": 12,
+  "id": "L123"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "He doesn't smoke.",
+  "page": 12,
+  "id": "L124"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Then I don't know, Scott.",
+  "page": 13,
+  "id": "L125"
+ },
+ {
+  "type": "action",
+  "text": "Nobody admits how long they've been avoiding the kitchen door.",
+  "page": 13,
+  "id": "A081"
+ },
+ {
+  "type": "action",
+  "text": "Angelo reaches for the deck.",
+  "page": 13,
+  "id": "A082"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "We can do one quick hand. Until they come back.",
+  "page": 13,
+  "id": "L126"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Both of them?",
+  "page": 13,
+  "id": "L127"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Yeah. Kay and Christof.",
+  "page": 13,
+  "id": "L128"
+ },
+ {
+  "type": "action",
+  "text": "Scott nods. It sounds right. Then it doesn't.",
+  "page": 13,
+  "id": "A083"
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - DINING AREA - CONTINUOUS",
+  "page": 13,
+  "id": "S06"
+ },
+ {
+  "type": "action",
+  "text": "The cards land. Angelo gets through four piles. Then a FIFTH.",
+  "page": 13,
+  "id": "A084"
+ },
+ {
+  "type": "action",
+  "text": "Deena catches his wrist before he can deal again.",
+  "page": 13,
+  "id": "A085"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Angelo. Stop.",
+  "page": 13,
+  "id": "L129"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "What?",
+  "page": 13,
+  "id": "L130"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Count those.",
+  "page": 13,
+  "id": "L131"
+ },
+ {
+  "type": "action",
+  "text": "He does. Five.",
+  "page": 13,
+  "id": "A086"
+ },
+ {
+  "type": "action",
+  "text": "He looks around the table. Scott. Deena. Marina. Himself.",
+  "page": 13,
+  "id": "A087"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "No.",
+  "page": 13,
+  "id": "L132"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "What?",
+  "page": 13,
+  "id": "L133"
+ },
+ {
+  "type": "action",
+  "text": "Angelo shoves his chair back. A sharp scrape across the floor.",
+  "page": 13,
+  "id": "A088"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Is somebody messing with me?",
+  "page": 13,
+  "id": "L134"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Nobody's touching the cards except you.",
+  "page": 14,
+  "id": "L135"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "That's what I'm saying.",
+  "page": 14,
+  "id": "L136"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Angelo, sit down.",
+  "page": 14,
+  "id": "L137"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "No, hang on. Just-- hands. Give me your hands.",
+  "page": 14,
+  "id": "L138"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "What are you doing?",
+  "page": 14,
+  "id": "L139"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I want to count the people. Not the cards. Just give me your hand, Scott.",
+  "page": 14,
+  "id": "L140"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "You're actually scaring me now.",
+  "page": 14,
+  "id": "L141"
+ },
+ {
+  "type": "action",
+  "text": "That lands. Angelo looks at her, softens.",
+  "page": 14,
+  "id": "A089"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I'm not trying to. Come on. It'll take ten seconds.",
+  "page": 14,
+  "id": "L142"
+ },
+ {
+  "type": "action",
+  "text": "Reluctantly they link hands around the table. Four people. In Scott's left hand is Marina's warm, ringed hand. In his right, a hand he takes for Angelo's.",
+  "page": 14,
+  "id": "A090"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "All right. Just say who's on your left. Don't let go. Somebody start.",
+  "page": 14,
+  "id": "L143"
+ },
+ {
+  "type": "action",
+  "text": "A perfectly familiar voice, from somewhere around the table:",
+  "page": 14,
+  "id": "A091"
+ },
+ {
+  "type": "line",
+  "speaker": "VOICE",
+  "ext": "O.S.",
+  "text": "Scott.",
+  "page": 14,
+  "id": "L144"
+ },
+ {
+  "type": "action",
+  "text": "Scott doesn't react. He looks left.",
+  "page": 14,
+  "id": "A092"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Marina.",
+  "page": 14,
+  "id": "L145"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Deena.",
+  "page": 14,
+  "id": "L146"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Angelo.",
+  "page": 15,
+  "id": "L147"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Scott.",
+  "page": 15,
+  "id": "L148"
+ },
+ {
+  "type": "action",
+  "text": "The names hang in the room.",
+  "page": 15,
+  "id": "A093"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Wait.",
+  "page": 15,
+  "id": "L149"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "What?",
+  "page": 15,
+  "id": "L150"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Didn't somebody already say me?",
+  "page": 15,
+  "id": "L151"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I just did.",
+  "page": 15,
+  "id": "L152"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "No. Before that.",
+  "page": 15,
+  "id": "L153"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Yeah. I heard it.",
+  "page": 15,
+  "id": "L154"
+ },
+ {
+  "type": "action",
+  "text": "Angelo looks at each of them. His grip tightens.",
+  "page": 15,
+  "id": "A094"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Okay. Other way. Right this time.",
+  "page": 15,
+  "id": "L155"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Angelo--",
+  "page": 15,
+  "id": "L156"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Just do it.",
+  "page": 15,
+  "id": "L157"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks to his right.",
+  "page": 15,
+  "id": "A095"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Angelo.",
+  "page": 15,
+  "id": "L158"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Deena.",
+  "page": 15,
+  "id": "L159"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Marina.",
+  "page": 15,
+  "id": "L160"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Scott.",
+  "page": 15,
+  "id": "L161"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks from one face to the next. Then down at their hands. He can't make the circle fit.",
+  "page": 16,
+  "id": "A096"
+ },
+ {
+  "type": "action",
+  "text": "Someone at the table says, very softly--",
+  "page": 16,
+  "id": "A097"
+ },
+ {
+  "type": "line",
+  "speaker": "VOICE",
+  "ext": "O.S.",
+  "text": "Angelo.",
+  "page": 16,
+  "id": "L162"
+ },
+ {
+  "type": "action",
+  "text": "No one moves.",
+  "page": 16,
+  "id": "A098"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Who said that?",
+  "page": 16,
+  "id": "L163"
+ },
+ {
+  "type": "action",
+  "text": "No answer. The ordinary hum of the refrigerator suddenly feels loud.",
+  "page": 16,
+  "id": "A099"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Scott, whose hand have you got?",
+  "page": 16,
+  "id": "L164"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks down. He is holding Angelo's hand. Of course he is.",
+  "page": 16,
+  "id": "A100"
+ },
+ {
+  "type": "action",
+  "text": "But there is a FIFTH wineglass between them, set on a coaster.",
+  "page": 16,
+  "id": "A101"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Why's that there?",
+  "page": 16,
+  "id": "L165"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Don't let go yet.",
+  "page": 16,
+  "id": "L166"
+ },
+ {
+  "type": "action",
+  "text": "Marina lets go anyway. They all break contact at once.",
+  "page": 16,
+  "id": "A102"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Okay, that's enough. Somebody take a photo.",
+  "page": 16,
+  "id": "L167"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Of what?",
+  "page": 16,
+  "id": "L168"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Us. All of us. Right now.",
+  "page": 16,
+  "id": "L169"
+ },
+ {
+  "type": "action",
+  "text": "She pulls out her phone, hands it to someone without ever quite looking at who takes it.",
+  "page": 16,
+  "id": "A103"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Just get everyone in.",
+  "page": 16,
+  "id": "L170"
+ },
+ {
+  "type": "action",
+  "text": "A moment of awkward shuffling. Scott, Deena, Angelo and Marina stand together against the wall. Marina's hand trembles on Scott's shoulder.",
+  "page": 16,
+  "id": "A104"
+ },
+ {
+  "type": "action",
+  "text": "A CAMERA SHUTTER.",
+  "page": 17,
+  "id": "A105"
+ },
+ {
+  "type": "action",
+  "text": "And the phone is back in Marina's hand.",
+  "page": 17,
+  "id": "A106"
+ },
+ {
+  "type": "action",
+  "text": "They crowd around the screen. Four people in the photograph. None of them is holding the phone.",
+  "page": 17,
+  "id": "A107"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Four. There's four of us.",
+  "page": 17,
+  "id": "L171"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "I can see that.",
+  "page": 17,
+  "id": "L172"
+ },
+ {
+  "type": "action",
+  "text": "Angelo zooms in. The image is sharp. The photographer stood several feet away.",
+  "page": 17,
+  "id": "A108"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Who took it?",
+  "page": 17,
+  "id": "L173"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Christof.",
+  "page": 17,
+  "id": "L174"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Kay.",
+  "page": 17,
+  "id": "L175"
+ },
+ {
+  "type": "action",
+  "text": "Both answer at once. Then both look towards the empty hall.",
+  "page": 17,
+  "id": "A109"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "No. I gave it to--",
+  "page": 17,
+  "id": "L176"
+ },
+ {
+  "type": "action",
+  "text": "She stops. Looks at her own hand as if it might tell her.",
+  "page": 17,
+  "id": "A110"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Kay's in the bathroom.",
+  "page": 17,
+  "id": "L177"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "And Christof's in the kitchen.",
+  "page": 17,
+  "id": "L178"
+ },
+ {
+  "type": "action",
+  "text": "He doesn't raise his voice. That is somehow worse.",
+  "page": 17,
+  "id": "A111"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Then let's go get them.",
+  "page": 17,
+  "id": "L179"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Together.",
+  "page": 17,
+  "id": "L180"
+ },
+ {
+  "type": "action",
+  "text": "No one argues.",
+  "page": 17,
+  "id": "A112"
+ },
+ {
+  "type": "scene",
+  "text": "INT. SCOTT'S HOUSE - HALLWAY / KITCHEN - CONTINUOUS",
+  "page": 18,
+  "id": "S07"
+ },
+ {
+  "type": "action",
+  "text": "Four people make a slow, uncomfortable procession past the closed bathroom door.",
+  "page": 18,
+  "id": "A113"
+ },
+ {
+  "type": "action",
+  "text": "Scott puts his hand toward its handle. Stops. He has no idea why.",
+  "page": 18,
+  "id": "A114"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Scott?",
+  "page": 18,
+  "id": "L181"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Yeah. Coming.",
+  "page": 18,
+  "id": "L182"
+ },
+ {
+  "type": "action",
+  "text": "They enter the kitchen.",
+  "page": 18,
+  "id": "A115"
+ },
+ {
+  "type": "action",
+  "text": "Empty. A cupboard door stands open. One chair has been pushed away from the little breakfast counter.",
+  "page": 18,
+  "id": "A116"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Christof?",
+  "page": 18,
+  "id": "L183"
+ },
+ {
+  "type": "action",
+  "text": "Nothing.",
+  "page": 18,
+  "id": "A117"
+ },
+ {
+  "type": "action",
+  "text": "A quiet HISS threads through the silence.",
+  "page": 18,
+  "id": "A118"
+ },
+ {
+  "type": "action",
+  "text": "Marina covers her nose.",
+  "page": 18,
+  "id": "A119"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "What's that smell?",
+  "page": 18,
+  "id": "L184"
+ },
+ {
+  "type": "action",
+  "text": "Scott's eyes go to the stove. Two burner knobs are missing. Broken plastic lies half-hidden under the cabinet.",
+  "page": 18,
+  "id": "A120"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Oh, shit. Gas.",
+  "page": 18,
+  "id": "L185"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Turn it off.",
+  "page": 18,
+  "id": "L186"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "The knobs are gone.",
+  "page": 18,
+  "id": "L187"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "So turn it off behind the stove.",
+  "page": 18,
+  "id": "L188"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I'm trying.",
+  "page": 18,
+  "id": "L189"
+ },
+ {
+  "type": "action",
+  "text": "He grips the appliance. It barely budges. He pulls harder. Something heavy shifts inside with a damp, ugly sound.",
+  "page": 18,
+  "id": "A121"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Leave it. We'll get outside and call someone.",
+  "page": 19,
+  "id": "L190"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Just one second.",
+  "page": 19,
+  "id": "L191"
+ },
+ {
+  "type": "action",
+  "text": "His hand finds the oven handle. Deena takes one step toward him.",
+  "page": 19,
+  "id": "A122"
+ },
+ {
+  "type": "line",
+  "speaker": "DEENA",
+  "ext": null,
+  "text": "Scott, don't--",
+  "page": 19,
+  "id": "L192"
+ },
+ {
+  "type": "action",
+  "text": "He opens it.",
+  "page": 19,
+  "id": "A123"
+ },
+ {
+  "type": "action",
+  "text": "CHRISTOF is folded inside the oven. His head is crushed against the back wall. Blood has pooled beneath his bent limbs.",
+  "page": 19,
+  "id": "A124"
+ },
+ {
+  "type": "action",
+  "text": "Scott makes a small sound, not even a scream at first. His legs give way. Then the screaming starts.",
+  "page": 19,
+  "id": "A125"
+ },
+ {
+  "type": "line",
+  "speaker": "MARINA",
+  "ext": null,
+  "text": "Oh, God. Oh, God--",
+  "page": 19,
+  "id": "L193"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "No. No, no--",
+  "page": 19,
+  "id": "L194"
+ },
+ {
+  "type": "action",
+  "text": "Deena grabs Scott by the shoulders to pull him back. Scott turns toward her.",
+  "page": 19,
+  "id": "A126"
+ },
+ {
+  "type": "action",
+  "text": "For an instant, she's fine.",
+  "page": 19,
+  "id": "A127"
+ },
+ {
+  "type": "action",
+  "text": "Then her throat OPENS.",
+  "page": 19,
+  "id": "A128"
+ },
+ {
+  "type": "action",
+  "text": "No knife. No figure. A terrible line appears across her neck and becomes a wound.",
+  "page": 19,
+  "id": "A129"
+ },
+ {
+  "type": "action",
+  "text": "Deena clamps her palms over it. Her eyes fix on Angelo, disbelieving. Something behind her JERKS her head upright as she tries to fall.",
+  "page": 19,
+  "id": "A130"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Dee?",
+  "page": 19,
+  "id": "L195"
+ },
+ {
+  "type": "action",
+  "text": "He moves to her, almost slips in the blood, catches her before she hits the tiles.",
+  "page": 19,
+  "id": "A131"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Hey. Hey, look at me. Look at me.",
+  "page": 19,
+  "id": "L196"
+ },
+ {
+  "type": "action",
+  "text": "Deena tries to breathe. A wet, desperate flutter. Her fingers lose their strength.",
+  "page": 20,
+  "id": "A132"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "No, no. Stay. Come on, Dee. Come on.",
+  "page": 20,
+  "id": "L197"
+ },
+ {
+  "type": "action",
+  "text": "Her body goes quiet. Angelo holds her anyway.",
+  "page": 20,
+  "id": "A133"
+ },
+ {
+  "type": "action",
+  "text": "Scott backs into the counter, grabs a kitchen knife. His hand won't stop shaking.",
+  "page": 20,
+  "id": "A134"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Where is it?",
+  "page": 20,
+  "id": "L198"
+ },
+ {
+  "type": "action",
+  "text": "Angelo looks up.",
+  "page": 20,
+  "id": "A135"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "What?",
+  "page": 20,
+  "id": "L199"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "There was-- something had her. I saw her hair--",
+  "page": 20,
+  "id": "L200"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I didn't see anybody.",
+  "page": 20,
+  "id": "L201"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I know.",
+  "page": 20,
+  "id": "L202"
+ },
+ {
+  "type": "action",
+  "text": "He scans the kitchen, knife out, breathing hard.",
+  "page": 20,
+  "id": "A136"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Marina? Marina, get away from the door.",
+  "page": 20,
+  "id": "L203"
+ },
+ {
+  "type": "action",
+  "text": "No answer. Marina is gone.",
+  "page": 20,
+  "id": "A137"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks to the hall. Empty.",
+  "page": 20,
+  "id": "A138"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Marina?",
+  "page": 20,
+  "id": "L204"
+ },
+ {
+  "type": "action",
+  "text": "He takes a step. Stops. He can't bear to put his back to Angelo.",
+  "page": 20,
+  "id": "A139"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "She was here. She was just here.",
+  "page": 20,
+  "id": "L205"
+ },
+ {
+  "type": "action",
+  "text": "Angelo is staring at the patch of floor beside Deena. There is blood there, pressed into the shape of a hand. No hand remains.",
+  "page": 20,
+  "id": "A140"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I was holding her.",
+  "page": 21,
+  "id": "L206"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I know.",
+  "page": 21,
+  "id": "L207"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I was right there.",
+  "page": 21,
+  "id": "L208"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Angelo, we need to go.",
+  "page": 21,
+  "id": "L209"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Then how did it--",
+  "page": 21,
+  "id": "L210"
+ },
+ {
+  "type": "action",
+  "text": "He looks at the bloody floor again. Breaks off.",
+  "page": 21,
+  "id": "A141"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "We go out the back. Now. Come on.",
+  "page": 21,
+  "id": "L211"
+ },
+ {
+  "type": "action",
+  "text": "Angelo gently lays Deena down. Takes his jacket off and covers her throat, far too late.",
+  "page": 21,
+  "id": "A142"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "When you counted us. You kept saying five.",
+  "page": 21,
+  "id": "L212"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "What?",
+  "page": 21,
+  "id": "L213"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "The cards. The picture. I thought I was--",
+  "page": 21,
+  "id": "L214"
+ },
+ {
+  "type": "action",
+  "text": "He tries again. Can't.",
+  "page": 21,
+  "id": "A143"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Don't. Don't think about that. We get outside.",
+  "page": 21,
+  "id": "L215"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "And whoever did this just comes with us?",
+  "page": 21,
+  "id": "L216"
+ },
+ {
+  "type": "action",
+  "text": "Scott glances over his shoulder toward the empty hallway. He has no answer.",
+  "page": 21,
+  "id": "A144"
+ },
+ {
+  "type": "action",
+  "text": "The HISS grows louder. Or perhaps they are finally listening.",
+  "page": 21,
+  "id": "A145"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "The gas. Angelo, we have to shut the gas off.",
+  "page": 22,
+  "id": "L217"
+ },
+ {
+  "type": "action",
+  "text": "Angelo looks at the stove. Then at Deena.",
+  "page": 22,
+  "id": "A146"
+ },
+ {
+  "type": "action",
+  "text": "He takes the forgotten cigarette from behind his ear. Stares at it, then drops it to the floor.",
+  "page": 22,
+  "id": "A147"
+ },
+ {
+  "type": "action",
+  "text": "He reaches into his pocket and takes out a cheap metal LIGHTER.",
+  "page": 22,
+  "id": "A148"
+ },
+ {
+  "type": "action",
+  "text": "Scott sees it.",
+  "page": 22,
+  "id": "A149"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "No.",
+  "page": 22,
+  "id": "L218"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Back door's there.",
+  "page": 22,
+  "id": "L219"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Put it down.",
+  "page": 22,
+  "id": "L220"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Go, Scott.",
+  "page": 22,
+  "id": "L221"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Just-- think for one second.",
+  "page": 22,
+  "id": "L222"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I have.",
+  "page": 22,
+  "id": "L223"
+ },
+ {
+  "type": "action",
+  "text": "Scott edges toward him. Angelo takes a step back.",
+  "page": 22,
+  "id": "A150"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Come with me. We can call the police from outside.",
+  "page": 22,
+  "id": "L224"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "And say what?",
+  "page": 22,
+  "id": "L225"
+ },
+ {
+  "type": "action",
+  "text": "A beat. Scott glances down at Deena and away again.",
+  "page": 22,
+  "id": "A151"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I don't know.",
+  "page": 22,
+  "id": "L226"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Neither do I.",
+  "page": 22,
+  "id": "L227"
+ },
+ {
+  "type": "action",
+  "text": "The kitchen is silent except for the gas.",
+  "page": 22,
+  "id": "A152"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "You always keep the back gate unlocked?",
+  "page": 23,
+  "id": "L228"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Yeah.",
+  "page": 23,
+  "id": "L229"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Good. Go through it. Don't stop in the yard.",
+  "page": 23,
+  "id": "L230"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Angelo--",
+  "page": 23,
+  "id": "L231"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Scott. Please.",
+  "page": 23,
+  "id": "L232"
+ },
+ {
+  "type": "action",
+  "text": "It is the first time all night he hasn't sounded like himself.",
+  "page": 23,
+  "id": "A153"
+ },
+ {
+  "type": "action",
+  "text": "Scott cannot move.",
+  "page": 23,
+  "id": "A154"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "I don't want you here when I do it.",
+  "page": 23,
+  "id": "L233"
+ },
+ {
+  "type": "action",
+  "text": "He raises the lighter. His thumb trembles against the wheel.",
+  "page": 23,
+  "id": "A155"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "You don't have to--",
+  "page": 23,
+  "id": "L234"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Go.",
+  "page": 23,
+  "id": "L235"
+ },
+ {
+  "type": "action",
+  "text": "A long beat. Angelo looks once more at Deena.",
+  "page": 23,
+  "id": "A156"
+ },
+ {
+  "type": "line",
+  "speaker": "ANGELO",
+  "ext": null,
+  "text": "Sorry about your house.",
+  "page": 23,
+  "id": "L236"
+ },
+ {
+  "type": "action",
+  "text": "His thumb strikes. A SPARK that fails to catch.",
+  "page": 23,
+  "id": "A157"
+ },
+ {
+  "type": "action",
+  "text": "Scott runs.",
+  "page": 23,
+  "id": "A158"
+ },
+ {
+  "type": "scene",
+  "text": "EXT. SCOTT'S BACK YARD - CONTINUOUS",
+  "page": 23,
+  "id": "S08"
+ },
+ {
+  "type": "action",
+  "text": "He flies through the door, nearly falls down the steps, grabs the handle to pull it shut.",
+  "page": 23,
+  "id": "A159"
+ },
+ {
+  "type": "action",
+  "text": "From inside: the tiny, dry SCRAPE of a lighter wheel.",
+  "page": 23,
+  "id": "A160"
+ },
+ {
+  "type": "action",
+  "text": "The kitchen ERUPTS.",
+  "page": 23,
+  "id": "A161"
+ },
+ {
+  "type": "action",
+  "text": "The blast throws Scott down the steps. Windows burst outward. Heat washes the grass. His shirt catches; he rolls, scrambles, rolls again until the fire dies.",
+  "page": 24,
+  "id": "A162"
+ },
+ {
+  "type": "action",
+  "text": "He crawls to the far fence, coughing and sobbing. A second explosion sends sparks into the night.",
+  "page": 24,
+  "id": "A163"
+ },
+ {
+  "type": "action",
+  "text": "For a while, there is nothing he can do but watch.",
+  "page": 24,
+  "id": "A164"
+ },
+ {
+  "type": "scene",
+  "text": "EXT. SCOTT'S BACK YARD - LATER",
+  "page": 24,
+  "id": "S09"
+ },
+ {
+  "type": "action",
+  "text": "Flames eat through the upstairs rooms. Red lights strobe faintly through the fence from the street beyond.",
+  "page": 24,
+  "id": "A165"
+ },
+ {
+  "type": "action",
+  "text": "Scott has found his phone. His thumb shakes so badly he misses the emergency number twice.",
+  "page": 24,
+  "id": "A166"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "Emergency services. What is your address?",
+  "page": 24,
+  "id": "L237"
+ },
+ {
+  "type": "action",
+  "text": "Scott gives it, barely getting the words out. She asks him to stay on the line.",
+  "page": 24,
+  "id": "A167"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "Are you injured?",
+  "page": 24,
+  "id": "L238"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Yeah. I-- yeah.",
+  "page": 24,
+  "id": "L239"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "Help is coming. Is anybody still inside?",
+  "page": 24,
+  "id": "L240"
+ },
+ {
+  "type": "action",
+  "text": "Scott looks at the house. A window collapses inward.",
+  "page": 24,
+  "id": "A168"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "My friends.",
+  "page": 24,
+  "id": "L241"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "How many friends?",
+  "page": 24,
+  "id": "L242"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Five. I had five over.",
+  "page": 24,
+  "id": "L243"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "And are they all still inside?",
+  "page": 24,
+  "id": "L244"
+ },
+ {
+  "type": "action",
+  "text": "He tries to count. Deena. Christof. Angelo. Kay. Marina. He can't make the numbers stay still in his head.",
+  "page": 24,
+  "id": "A169"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "I don't know. I don't know where-- I don't know.",
+  "page": 25,
+  "id": "L245"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "Sir, listen to me. You're outside. You're safe for now.",
+  "page": 25,
+  "id": "L246"
+ },
+ {
+  "type": "action",
+  "text": "He hears her but doesn't believe her.",
+  "page": 25,
+  "id": "A170"
+ },
+ {
+  "type": "line",
+  "speaker": "DISPATCHER",
+  "ext": "V.O.",
+  "text": "How many people made it out?",
+  "page": 25,
+  "id": "L247"
+ },
+ {
+  "type": "action",
+  "text": "Scott wipes his face on his sleeve.",
+  "page": 25,
+  "id": "A171"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Me.",
+  "page": 25,
+  "id": "L248"
+ },
+ {
+  "type": "action",
+  "text": "A pause. He feels something warm close around his free hand.",
+  "page": 25,
+  "id": "A172"
+ },
+ {
+  "type": "action",
+  "text": "He doesn't look down. He just squeezes back. Relief, so sudden it hurts.",
+  "page": 25,
+  "id": "A173"
+ },
+ {
+  "type": "line",
+  "speaker": "SCOTT",
+  "ext": null,
+  "text": "Two.",
+  "page": 25,
+  "id": "L249"
+ },
+ {
+  "type": "action",
+  "text": "He lowers the phone a little. On the grass beside him: THEIR HANDS, held tight.",
+  "page": 25,
+  "id": "A174"
+ },
+ {
+  "type": "action",
+  "text": "No second figure is visible.",
+  "page": 25,
+  "id": "A175"
+ },
+ {
+  "type": "action",
+  "text": "The house burns. The two hands do not separate.",
+  "page": 25,
+  "id": "A176"
+ },
+ {
+  "type": "transition",
+  "text": "FADE OUT.",
+  "page": 25
+ },
+ {
+  "type": "transition",
+  "text": "THE END",
+  "page": 25
+ }
+]

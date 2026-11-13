@@ -1,0 +1,1291 @@
+{
+ "tool": "earshot 0.4.1: api.describe and api.match (CLAP laion/larger_clap_general @ 16c8cc3, AudioSet tagger MIT/ast-finetuned-audioset-10-10-0.4593 @ f826b80)",
+ "rule": "pass = the check beats every 'not' alternative in earshot's forced choice (p_vs_alts), and is 'strong' (z >= 3) or has at least 60% of the choice and 2x the best alternative",
+ "sounds_checked": 13,
+ "passed": 8,
+ "failed": [
+  "P01_bell",
+  "P06_alarm_bells",
+  "P22_horn_riders",
+  "P28_piece_mate",
+  "P40_bell_heart"
+ ],
+ "missing": [],
+ "sounds": [
+  {
+   "id": "P01_bell",
+   "file": "sfx_sa/P01_bell.wav",
+   "sha1": "1b69259653502219d25bb7cc9c830e002903242a",
+   "check": "a bell tolling",
+   "not": [
+    "a gong",
+    "a car horn",
+    "music"
+   ],
+   "prompt": "a single distant cathedral bell tolling once in a vast empty night, long fading reverberation",
+   "seed": 201,
+   "dur": 6,
+   "pass": false,
+   "won": false,
+   "why": "lost to 'a gong' (99% against 1%; z +3.0)",
+   "verdict": "plausible",
+   "z": 2.98,
+   "p_vs_alts": 0.006,
+   "rank_in_vocab": 1,
+   "alts": [
+    {
+     "query": "a gong",
+     "p": 0.994,
+     "z": 3.65
+    },
+    {
+     "query": "a car horn",
+     "p": 0.0,
+     "z": 1.29
+    },
+    {
+     "query": "music",
+     "p": 0.0,
+     "z": -0.2
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "church bells",
+     "z": 2.91
+    },
+    {
+     "term": "a sustained glass harp tone",
+     "z": 2.77
+    },
+    {
+     "term": "a singing bowl",
+     "z": 2.77
+    },
+    {
+     "term": "bells",
+     "z": 2.65
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Gong",
+     "p": 0.89
+    },
+    {
+     "label": "Bell",
+     "p": 0.07
+    }
+   ],
+   "describe": "5.95 s 2 separate events, tonal, pitch ~144 Hz (D3) (attack 173 ms, decays in 3.9 s). Sounds most like: church bells (z +2.9), a sustained glass harp tone (z +2.7), a singing bowl (z +2.7) [plausible reading]. Other readings: a cow mooing (everyday, z +2.2). AudioSet: Gong 0.89, Bell 0.07. peak -1.0 dBFS, -13.0 LUFS, brightness 336 Hz, bandwidth 2.6 kHz, noise floor -74 dBFS, mono.",
+   "match": "P01_bell.wav: 'a bell tolling' -> plausible (z +2.9; would rank #1 among 322 vocabulary descriptions; cosine 0.29). Forced choice vs your alternatives: 'a bell tolling' 1%, 'a gong' 99%, 'a car horn' <1%, 'music' <1%. It sounds most like: 'church bells' (z +2.9), 'a sustained glass harp tone' (z +2.7), 'a singing bowl' (z +2.7), 'bells' (z +2.6). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a single distant cathedral bell tolling once in a vast empty night, long fading reverberation",
+     "seed": 201,
+     "dur": 6,
+     "pass": false,
+     "why": "lost to 'a gong' (99% against 1%; z +3.0)",
+     "verdict": "plausible",
+     "z": 2.98,
+     "p_vs_alts": 0.006,
+     "best_alt": {
+      "query": "a gong",
+      "p": 0.994
+     },
+     "sounds_like": [
+      "church bells",
+      "a sustained glass harp tone"
+     ],
+     "gen_s": 62.9,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -15.06,
+     "sha1": "1b69259653502219d25bb7cc9c830e002903242a",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P02_title_flare",
+   "file": "sfx_sa/P02_title_flare.wav",
+   "sha1": "150afebb7544de90ef9ae226b7a6763da3f2c5a1",
+   "check": "fire igniting",
+   "not": [
+    "wind",
+    "rain",
+    "an airplane"
+   ],
+   "prompt": "a soft deep whoosh of fire igniting and flaring up slowly, warm embers crackling",
+   "seed": 202,
+   "dur": 4,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +5.1, 100%)",
+   "verdict": "strong",
+   "z": 5.13,
+   "p_vs_alts": 1.0,
+   "rank_in_vocab": 1,
+   "alts": [
+    {
+     "query": "wind",
+     "p": 0.0,
+     "z": 1.11
+    },
+    {
+     "query": "rain",
+     "p": 0.0,
+     "z": -0.7
+    },
+    {
+     "query": "an airplane",
+     "p": 0.0,
+     "z": 0.56
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a match being struck",
+     "z": 3.93
+    },
+    {
+     "term": "a crackling fire",
+     "z": 3.52
+    },
+    {
+     "term": "a soft air whoosh",
+     "z": 3.28
+    },
+    {
+     "term": "a spray can hissing",
+     "z": 3.01
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Thunder",
+     "p": 0.12
+    },
+    {
+     "label": "Thunderstorm",
+     "p": 0.08
+    }
+   ],
+   "describe": "3.85 s busy, 3.9 onsets/s (attack 176 ms, decays in 1131 ms). Sounds most like: a match being struck (z +3.9), a crackling fire (z +3.5), a soft air whoosh (z +3.2) [clear reading]. Other readings: an apple falling on grass (nature, z +2.5). AudioSet tagger unsure (Thunder 0.12, Thunderstorm 0.08). peak -1.0 dBFS, -15.9 LUFS, brightness 1.9 kHz, bandwidth 20.5 kHz, noise floor -48 dBFS, mono.",
+   "match": "P02_title_flare.wav: 'fire igniting' -> strong (z +5.1; would rank #1 among 322 vocabulary descriptions; cosine 0.48). Forced choice vs your alternatives: 'fire igniting' >99%, 'wind' <1%, 'rain' <1%, 'an airplane' <1%. It sounds most like: 'a match being struck' (z +3.9), 'a crackling fire' (z +3.5), 'a soft air whoosh' (z +3.2), 'a spray can hissing' (z +3.0). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a soft deep whoosh of fire igniting and flaring up slowly, warm embers crackling",
+     "seed": 202,
+     "dur": 4,
+     "pass": true,
+     "why": "strong (z +5.1, 100%)",
+     "verdict": "strong",
+     "z": 5.13,
+     "p_vs_alts": 1.0,
+     "best_alt": {
+      "query": "wind",
+      "p": 0.0
+     },
+     "sounds_like": [
+      "a match being struck",
+      "a crackling fire"
+     ],
+     "gen_s": 23.6,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -1.33,
+     "sha1": "150afebb7544de90ef9ae226b7a6763da3f2c5a1",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P06_alarm_bells",
+   "file": "sfx_sa/P06_alarm_bells.wav",
+   "sha1": "6ade51d23b1611bdef45b39891fa576c2d3e49d6",
+   "check": "bells ringing",
+   "not": [
+    "a fire engine siren",
+    "a telephone",
+    "music"
+   ],
+   "prompt": "frantic clanging alarm bells ringing from a stone tower at night, many bells swinging wildly, birds scattering",
+   "seed": 206,
+   "dur": 6,
+   "pass": false,
+   "won": false,
+   "why": "lost to 'music' (97% against 0%; z +0.5)",
+   "verdict": "no match",
+   "z": 0.47,
+   "p_vs_alts": 0.003,
+   "rank_in_vocab": 101,
+   "alts": [
+    {
+     "query": "a fire engine siren",
+     "p": 0.008,
+     "z": 1.01
+    },
+    {
+     "query": "a telephone",
+     "p": 0.015,
+     "z": -0.19
+    },
+    {
+     "query": "music",
+     "p": 0.974,
+     "z": 0.46
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a sword being drawn",
+     "z": 2.95
+    },
+    {
+     "term": "a kettle whistling",
+     "z": 2.83
+    },
+    {
+     "term": "digging in soil",
+     "z": 2.79
+    },
+    {
+     "term": "a spray can hissing",
+     "z": 2.73
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Music",
+     "p": 0.62
+    },
+    {
+     "label": "Television",
+     "p": 0.1
+    },
+    {
+     "label": "Speech",
+     "p": 0.07
+    }
+   ],
+   "describe": "6.00 s busy, 4.5 onsets/s (attack 10 ms, decays in 2.5 s). Music (AudioSet Music 0.62). Unvalidated hints - genre: house music (z +1.1), techno music (z +1.0); mood (wrong for ~1 in 5 tracks in a test): aggressive music (z +1.0), suspenseful build-up music (z +0.8). Sounds most like: a sword being drawn (z +2.9), a kettle whistling (z +2.8), digging in soil (z +2.7) [plausible reading]. Other readings: a reverse cymbal swell (transitions, z +2.2). AudioSet: Music 0.62, Television 0.10, Speech 0.07. peak -1.0 dBFS, -13.4 LUFS, brightness 3.1 kHz, bandwidth 16.3 kHz, noise floor -84 dBFS, mono.",
+   "match": "P06_alarm_bells.wav: 'bells ringing' -> no match (unvalidated: music / instrument / voice description) (z +0.4; would rank #101 among 322 vocabulary descriptions; cosine 0.01). Forced choice vs your alternatives: 'bells ringing' <1%, 'a fire engine siren' 1%, 'a telephone' 2%, 'music' 97%. It sounds most like: 'a sword being drawn' (z +2.9), 'a kettle whistling' (z +2.8), 'digging in soil' (z +2.7), 'a spray can hissing' (z +2.7).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "frantic clanging alarm bells ringing from a stone tower at night, many bells swinging wildly, birds scattering",
+     "seed": 206,
+     "dur": 6,
+     "pass": false,
+     "why": "lost to 'music' (97% against 0%; z +0.5)",
+     "verdict": "no match",
+     "z": 0.47,
+     "p_vs_alts": 0.003,
+     "best_alt": {
+      "query": "music",
+      "p": 0.974
+     },
+     "sounds_like": [
+      "a sword being drawn",
+      "a kettle whistling"
+     ],
+     "gen_s": 13.5,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -4.84,
+     "sha1": "6ade51d23b1611bdef45b39891fa576c2d3e49d6",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P07_firstborn",
+   "file": "sfx_sa/P07_firstborn.wav",
+   "sha1": "84ff9eb3e2d8eaf35d560dc14b0dd31772e86509",
+   "check": "a monster roaring",
+   "not": [
+    "a lion",
+    "an airplane",
+    "thunder"
+   ],
+   "prompt": "a colossal winged beast roaring overhead, huge leathery wingbeats, a deep monstrous bellow echoing across a city",
+   "seed": 207,
+   "dur": 5,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +3.2, 94%)",
+   "verdict": "strong",
+   "z": 3.23,
+   "p_vs_alts": 0.935,
+   "rank_in_vocab": 2,
+   "alts": [
+    {
+     "query": "a lion",
+     "p": 0.065,
+     "z": 2.48
+    },
+    {
+     "query": "an airplane",
+     "p": 0.0,
+     "z": 1.1
+    },
+    {
+     "query": "thunder",
+     "p": 0.0,
+     "z": 0.51
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 3.74
+    },
+    {
+     "term": "a fast whoosh",
+     "z": 3.2
+    },
+    {
+     "term": "a swoosh passing by",
+     "z": 3.03
+    },
+    {
+     "term": "a soft air whoosh",
+     "z": 2.48
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Sound effect",
+     "p": 0.28
+    },
+    {
+     "label": "Rumble",
+     "p": 0.17
+    },
+    {
+     "label": "Whoosh, swoosh, swish",
+     "p": 0.11
+    }
+   ],
+   "describe": "4.65 s busy, 4.3 onsets/s, tonal, pitch ~50 Hz (G1) (attack 225 ms, decays in 1361 ms). Sounds most like: a deep cinematic whoosh (z +3.7), a fast whoosh (z +3.2), a swoosh passing by (z +3.0) [clear reading]. Other readings: a cinematic hit with a long tail (impacts, z +2.4). AudioSet: Sound effect 0.28, Rumble 0.17, Whoosh, swoosh, swish 0.11. peak -1.0 dBFS, -15.4 LUFS, brightness 750 Hz, bandwidth 6.5 kHz, noise floor -89 dBFS, mono.",
+   "match": "P07_firstborn.wav: 'a monster roaring' -> strong (z +3.2; would rank #2 among 322 vocabulary descriptions; cosine 0.31). Forced choice vs your alternatives: 'a monster roaring' 94%, 'a lion' 6%, 'an airplane' <1%, 'thunder' <1%. It sounds most like: 'a deep cinematic whoosh' (z +3.7), 'a fast whoosh' (z +3.2), 'a swoosh passing by' (z +3.0), 'a soft air whoosh' (z +2.4). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a colossal winged beast roaring overhead, huge leathery wingbeats, a deep monstrous bellow echoing across a city",
+     "seed": 207,
+     "dur": 5,
+     "pass": true,
+     "why": "strong (z +3.2, 94%)",
+     "verdict": "strong",
+     "z": 3.23,
+     "p_vs_alts": 0.935,
+     "best_alt": {
+      "query": "a lion",
+      "p": 0.065
+     },
+     "sounds_like": [
+      "a deep cinematic whoosh",
+      "a fast whoosh"
+     ],
+     "gen_s": 10.6,
+     "clipped_samples": 32,
+     "raw_peak_dbfs": -0.0,
+     "sha1": "84ff9eb3e2d8eaf35d560dc14b0dd31772e86509",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P09_fall_table",
+   "file": "sfx_sa/P09_fall_table.wav",
+   "sha1": "a120acb3cbc1f8545e765158c0be073c3376ba5a",
+   "check": "a body falling",
+   "not": [
+    "a door slamming",
+    "a drum",
+    "thunder"
+   ],
+   "prompt": "a heavy body falling onto a wooden table, papers and wax seals scattering across a stone floor, a goblet rolling",
+   "seed": 209,
+   "dur": 3,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +3.8, 100%)",
+   "verdict": "strong",
+   "z": 3.83,
+   "p_vs_alts": 1.0,
+   "rank_in_vocab": 1,
+   "alts": [
+    {
+     "query": "a door slamming",
+     "p": 0.0,
+     "z": 1.43
+    },
+    {
+     "query": "a drum",
+     "p": 0.0,
+     "z": 0.51
+    },
+    {
+     "query": "thunder",
+     "p": 0.0,
+     "z": 0.2
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a body falling on the ground",
+     "z": 3.24
+    },
+    {
+     "term": "a heavy thud",
+     "z": 3.12
+    },
+    {
+     "term": "a punchy impact hit",
+     "z": 2.74
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": 2.68
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Thunk",
+     "p": 0.32
+    },
+    {
+     "label": "Door",
+     "p": 0.19
+    },
+    {
+     "label": "Knock",
+     "p": 0.09
+    }
+   ],
+   "describe": "2.93 s busy, 4.1 onsets/s (attack 10 ms, decays in 485 ms). Sounds most like: a body falling on the ground (z +3.2), a heavy thud (z +3.1), a punchy impact hit (z +2.7) [clear reading]. Other readings: an apple falling on grass (nature, z +2.6), footsteps on wood (foley, z +2.6). AudioSet: Thunk 0.32, Door 0.19, Knock 0.09. peak -1.0 dBFS, -20.0 LUFS, brightness 3.2 kHz, bandwidth 20.5 kHz, noise floor -88 dBFS, mono.",
+   "match": "P09_fall_table.wav: 'a body falling' -> strong (z +3.8; would rank #1 among 322 vocabulary descriptions; cosine 0.34). Forced choice vs your alternatives: 'a body falling' >99%, 'a door slamming' <1%, 'a drum' <1%, 'thunder' <1%. It sounds most like: 'a body falling on the ground' (z +3.2), 'a heavy thud' (z +3.1), 'a punchy impact hit' (z +2.7), 'an apple falling on grass' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a heavy body falling onto a wooden table, papers and wax seals scattering across a stone floor, a goblet rolling",
+     "seed": 209,
+     "dur": 3,
+     "pass": true,
+     "why": "strong (z +3.8, 100%)",
+     "verdict": "strong",
+     "z": 3.83,
+     "p_vs_alts": 1.0,
+     "best_alt": {
+      "query": "a door slamming",
+      "p": 0.0
+     },
+     "sounds_like": [
+      "a body falling on the ground",
+      "a heavy thud"
+     ],
+     "gen_s": 9.1,
+     "clipped_samples": 38,
+     "raw_peak_dbfs": -0.0,
+     "sha1": "a120acb3cbc1f8545e765158c0be073c3376ba5a",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P14_gate",
+   "file": "sfx_sa/P14_gate.wav",
+   "sha1": "ac0d5ed0dd1fea9982b2b459b09760e244e88000",
+   "check": "a gate creaking open",
+   "not": [
+    "a door bell",
+    "a car",
+    "a whistle"
+   ],
+   "prompt": "a heavy iron gate creaking open on old hinges, chains rattling, then swords drawn from scabbards",
+   "seed": 214,
+   "dur": 4,
+   "pass": true,
+   "won": true,
+   "why": "clear margin (z +3.0, 98%)",
+   "verdict": "plausible",
+   "z": 2.95,
+   "p_vs_alts": 0.978,
+   "rank_in_vocab": 2,
+   "alts": [
+    {
+     "query": "a door bell",
+     "p": 0.022,
+     "z": 1.66
+    },
+    {
+     "query": "a car",
+     "p": 0.0,
+     "z": -0.63
+    },
+    {
+     "query": "a whistle",
+     "p": 0.0,
+     "z": -0.04
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "dominoes falling",
+     "z": 2.98
+    },
+    {
+     "term": "an old typewriter",
+     "z": 2.9
+    },
+    {
+     "term": "a metal scrape",
+     "z": 2.47
+    },
+    {
+     "term": "lego bricks clicking",
+     "z": 2.4
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Rub",
+     "p": 0.14
+    },
+    {
+     "label": "Wood",
+     "p": 0.1
+    }
+   ],
+   "describe": "3.96 s busy, 3.5 onsets/s (attack 6 ms, decays in 663 ms). Sounds most like: dominoes falling (z +2.9), an old typewriter (z +2.9), a metal scrape (z +2.4) [plausible reading]. Other readings: a sword being drawn (everyday, z +2.3), digging in soil (nature, z +2.3). AudioSet tagger unsure (Rub 0.14, Wood 0.10). peak -1.0 dBFS, -17.4 LUFS, brightness 3.1 kHz, bandwidth 20.5 kHz, noise floor -84 dBFS, side/mid -6 dB.",
+   "match": "P14_gate.wav: 'a gate creaking open' -> plausible (z +2.9; would rank #2 among 322 vocabulary descriptions; cosine 0.21). Forced choice vs your alternatives: 'a gate creaking open' 98%, 'a door bell' 2%, 'a car' <1%, 'a whistle' <1%. It sounds most like: 'dominoes falling' (z +2.9), 'an old typewriter' (z +2.9), 'a metal scrape' (z +2.4), 'lego bricks clicking' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a heavy iron gate creaking open on old hinges, chains rattling, then swords drawn from scabbards",
+     "seed": 214,
+     "dur": 4,
+     "pass": true,
+     "why": "clear margin (z +3.0, 98%)",
+     "verdict": "plausible",
+     "z": 2.95,
+     "p_vs_alts": 0.978,
+     "best_alt": {
+      "query": "a door bell",
+      "p": 0.022
+     },
+     "sounds_like": [
+      "dominoes falling",
+      "an old typewriter"
+     ],
+     "gen_s": 10.2,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -4.24,
+     "sha1": "ac0d5ed0dd1fea9982b2b459b09760e244e88000",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P22_horn_riders",
+   "file": "sfx_sa/P22_horn_riders.wav",
+   "sha1": "9ef5b7d00646a8d202511e9b7c1de9a3b04adce8",
+   "check": "a horn blowing",
+   "not": [
+    "a car horn",
+    "a ship",
+    "a trumpet fanfare"
+   ],
+   "prompt": "a single war horn blowing in a valley, horses arriving and stopping, harness jingling",
+   "seed": 222,
+   "dur": 5,
+   "pass": false,
+   "won": false,
+   "why": "lost to 'a ship' (98% against 0%; z -0.9)",
+   "verdict": "no match",
+   "z": -0.95,
+   "p_vs_alts": 0.002,
+   "rank_in_vocab": 268,
+   "alts": [
+    {
+     "query": "a car horn",
+     "p": 0.003,
+     "z": -0.98
+    },
+    {
+     "query": "a ship",
+     "p": 0.984,
+     "z": -0.21
+    },
+    {
+     "query": "a trumpet fanfare",
+     "p": 0.011,
+     "z": -1.15
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a ratchet clicking",
+     "z": 2.86
+    },
+    {
+     "term": "an old typewriter",
+     "z": 2.85
+    },
+    {
+     "term": "lego bricks clicking",
+     "z": 2.5
+    },
+    {
+     "term": "scissors cutting",
+     "z": 2.46
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Music",
+     "p": 0.56
+    },
+    {
+     "label": "Tambourine",
+     "p": 0.17
+    },
+    {
+     "label": "Rattle",
+     "p": 0.05
+    }
+   ],
+   "describe": "5.00 s busy, 3.6 onsets/s (attack 1 ms, decays in 793 ms). Music (AudioSet Music 0.56). Unvalidated hints - genre: hip hop beat with heavy bass (z +0.4); mood (wrong for ~1 in 5 tracks in a test): suspenseful build-up music (z +0.8). Sounds most like: a ratchet clicking (z +2.8), an old typewriter (z +2.8), lego bricks clicking (z +2.5) [plausible reading]. Other readings: a sword being drawn (everyday, z +2.2), a tape stop slowing down (transitions, z +2.1). AudioSet: Music 0.56, Tambourine 0.17, Rattle 0.05. peak -1.0 dBFS, -18.4 LUFS, brightness 3.2 kHz, bandwidth 20.5 kHz, noise floor -34 dBFS, mono.",
+   "match": "P22_horn_riders.wav: 'a horn blowing' -> no match (z -1.0; would rank #268 among 322 vocabulary descriptions; cosine -0.14). Forced choice vs your alternatives: 'a horn blowing' <1%, 'a car horn' <1%, 'a ship' 98%, 'a trumpet fanfare' 1%. It sounds most like: 'a ratchet clicking' (z +2.8), 'an old typewriter' (z +2.8), 'lego bricks clicking' (z +2.5), 'scissors cutting' (z +2.4).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a single war horn blowing in a valley, horses arriving and stopping, harness jingling",
+     "seed": 222,
+     "dur": 5,
+     "pass": false,
+     "why": "lost to 'a ship' (98% against 0%; z -0.9)",
+     "verdict": "no match",
+     "z": -0.95,
+     "p_vs_alts": 0.002,
+     "best_alt": {
+      "query": "a ship",
+      "p": 0.984
+     },
+     "sounds_like": [
+      "a ratchet clicking",
+      "an old typewriter"
+     ],
+     "gen_s": 11.4,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -10.12,
+     "sha1": "9ef5b7d00646a8d202511e9b7c1de9a3b04adce8",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P28_piece_mate",
+   "file": "sfx_sa/P28_piece_mate.wav",
+   "sha1": "54a9022edf4dbb977fc879bbb6ac8c34efb8623d",
+   "check": "a knock on stone",
+   "not": [
+    "a door knock",
+    "a drum",
+    "footsteps"
+   ],
+   "prompt": "a heavy stone chess piece set down firmly on a stone board, a single deep knock echoing in a quiet hall",
+   "seed": 228,
+   "dur": 5,
+   "pass": false,
+   "won": false,
+   "why": "lost to 'a drum' (100% against 0%; z +1.4)",
+   "verdict": "no match",
+   "z": 1.37,
+   "p_vs_alts": 0.0,
+   "rank_in_vocab": 27,
+   "alts": [
+    {
+     "query": "a door knock",
+     "p": 0.0,
+     "z": 1.41
+    },
+    {
+     "query": "a drum",
+     "p": 0.999,
+     "z": 2.6
+    },
+    {
+     "query": "footsteps",
+     "p": 0.0,
+     "z": 0.45
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a big drum hit",
+     "z": 4.16
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 3.25
+    },
+    {
+     "term": "a kick drum",
+     "z": 3.1
+    },
+    {
+     "term": "a heavy thud",
+     "z": 2.72
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Explosion",
+     "p": 0.33
+    },
+    {
+     "label": "Bang",
+     "p": 0.3
+    },
+    {
+     "label": "Burst, pop",
+     "p": 0.21
+    }
+   ],
+   "describe": "2.70 s sustained (attack 10 ms, decays in 456 ms). Sounds most like: a big drum hit (z +4.1), a deep cinematic boom (z +3.2), a kick drum (z +3.1) [clear reading]. Other readings: a deep cinematic whoosh (transitions, z +2.1). AudioSet: Explosion 0.33, Bang 0.30, Burst, pop 0.21. peak -1.0 dBFS, -24.6 LUFS, brightness 420 Hz, bandwidth 3.2 kHz, noise floor -91 dBFS, mono.",
+   "match": "P28_piece_mate.wav: 'a knock on stone' -> no match (z +1.3; would rank #27 among 322 vocabulary descriptions; cosine 0.06). Forced choice vs your alternatives: 'a knock on stone' <1%, 'a door knock' <1%, 'a drum' >99%, 'footsteps' <1%. It sounds most like: 'a big drum hit' (z +4.1), 'a deep cinematic boom' (z +3.2), 'a kick drum' (z +3.1), 'a heavy thud' (z +2.7).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a heavy stone chess piece set down firmly on a stone board, a single deep knock echoing in a quiet hall",
+     "seed": 228,
+     "dur": 5,
+     "pass": false,
+     "why": "lost to 'a drum' (100% against 0%; z +1.4)",
+     "verdict": "no match",
+     "z": 1.37,
+     "p_vs_alts": 0.0,
+     "best_alt": {
+      "query": "a drum",
+      "p": 0.999
+     },
+     "sounds_like": [
+      "a big drum hit",
+      "a deep cinematic boom"
+     ],
+     "gen_s": 11.7,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -0.09,
+     "sha1": "54a9022edf4dbb977fc879bbb6ac8c34efb8623d",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P33_arrows",
+   "file": "sfx_sa/P33_arrows.wav",
+   "sha1": "530280620af8e6df0576972f1c1ddddc0736efaa",
+   "check": "arrows flying",
+   "not": [
+    "birds",
+    "wind",
+    "a whip"
+   ],
+   "prompt": "a volley of arrows whistling out of the trees and thudding into wood and earth, a horse crying out and falling",
+   "seed": 233,
+   "dur": 4,
+   "pass": true,
+   "won": true,
+   "why": "clear margin (z +2.3, 99%)",
+   "verdict": "weak",
+   "z": 2.3,
+   "p_vs_alts": 0.994,
+   "rank_in_vocab": 9,
+   "alts": [
+    {
+     "query": "birds",
+     "p": 0.0,
+     "z": 0.17
+    },
+    {
+     "query": "wind",
+     "p": 0.0,
+     "z": -0.51
+    },
+    {
+     "query": "a whip",
+     "p": 0.006,
+     "z": 0.56
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a horse neighing",
+     "z": 3.29
+    },
+    {
+     "term": "digging in soil",
+     "z": 3.19
+    },
+    {
+     "term": "a cow mooing",
+     "z": 3.0
+    },
+    {
+     "term": "a basketball bouncing",
+     "z": 2.87
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Slap, smack",
+     "p": 0.08
+    },
+    {
+     "label": "Slam",
+     "p": 0.06
+    },
+    {
+     "label": "Animal",
+     "p": 0.06
+    }
+   ],
+   "describe": "4.00 s busy, 2.8 onsets/s (attack 136 ms, decays in 285 ms). Sounds most like: a horse neighing (z +3.2), digging in soil (z +3.1), a cow mooing (z +3.0) [clear reading]. Other readings: a stick swung fast through the air (transitions, z +2.5), a knife chopping on a board (foley, z +2.5). AudioSet tagger unsure (Slap, smack 0.08, Slam 0.06, Animal 0.06). peak -1.0 dBFS, -20.6 LUFS, brightness 2.4 kHz, bandwidth 20.5 kHz, noise floor -88 dBFS, mono.",
+   "match": "P33_arrows.wav: 'arrows flying' -> weak (z +2.3; would rank #9 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'arrows flying' 99%, 'birds' <1%, 'wind' <1%, 'a whip' 1%. It sounds most like: 'a horse neighing' (z +3.2), 'digging in soil' (z +3.1), 'a cow mooing' (z +3.0), 'a basketball bouncing' (z +2.8). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a volley of arrows whistling out of the trees and thudding into wood and earth, a horse crying out and falling",
+     "seed": 233,
+     "dur": 4,
+     "pass": true,
+     "why": "clear margin (z +2.3, 99%)",
+     "verdict": "weak",
+     "z": 2.3,
+     "p_vs_alts": 0.994,
+     "best_alt": {
+      "query": "a whip",
+      "p": 0.006
+     },
+     "sounds_like": [
+      "a horse neighing",
+      "digging in soil"
+     ],
+     "gen_s": 10.9,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -1.54,
+     "sha1": "530280620af8e6df0576972f1c1ddddc0736efaa",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P36_pyre_close",
+   "file": "sfx_sa/P36_pyre_close.wav",
+   "sha1": "6fd94cefc562ae115df551daab27c04e6b8b07b4",
+   "check": "a fire roaring",
+   "not": [
+    "a waterfall",
+    "wind",
+    "a jet engine"
+   ],
+   "prompt": "intense close roaring flames beneath an iron grate, hissing and crackling, sparks bursting, a heavy fire roar",
+   "seed": 236,
+   "dur": 10,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +4.1, 100%)",
+   "verdict": "strong",
+   "z": 4.06,
+   "p_vs_alts": 1.0,
+   "rank_in_vocab": 1,
+   "alts": [
+    {
+     "query": "a waterfall",
+     "p": 0.0,
+     "z": 0.45
+    },
+    {
+     "query": "wind",
+     "p": 0.0,
+     "z": 1.31
+    },
+    {
+     "query": "a jet engine",
+     "p": 0.0,
+     "z": 1.39
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a crackling fire",
+     "z": 3.74
+    },
+    {
+     "term": "a match being struck",
+     "z": 2.64
+    },
+    {
+     "term": "a gust of wind rushing past",
+     "z": 2.62
+    },
+    {
+     "term": "an explosion",
+     "z": 2.55
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Eruption",
+     "p": 0.56
+    },
+    {
+     "label": "Explosion",
+     "p": 0.25
+    },
+    {
+     "label": "Fire",
+     "p": 0.15
+    }
+   ],
+   "describe": "10.00 s busy, 8.3 onsets/s (attack 174 ms, decays in 7.5 s). Sounds most like: a crackling fire (z +3.7), a match being struck (z +2.6), a gust of wind rushing past (z +2.6) [clear reading]. Other readings: an explosion (impacts, z +2.5), an apple falling on grass (nature, z +2.2). AudioSet: Eruption 0.56, Explosion 0.25, Fire 0.15. peak -1.0 dBFS, -13.5 LUFS, brightness 2.3 kHz, bandwidth 20.5 kHz, noise floor -27 dBFS, mono.",
+   "match": "P36_pyre_close.wav: 'a fire roaring' -> strong (z +4.0; would rank #1 among 322 vocabulary descriptions; cosine 0.38). Forced choice vs your alternatives: 'a fire roaring' >99%, 'a waterfall' <1%, 'wind' <1%, 'a jet engine' <1%. It sounds most like: 'a crackling fire' (z +3.7), 'a match being struck' (z +2.6), 'a gust of wind rushing past' (z +2.6), 'an explosion' (z +2.5). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "intense close roaring flames beneath an iron grate, hissing and crackling, sparks bursting, a heavy fire roar",
+     "seed": 236,
+     "dur": 10,
+     "pass": true,
+     "why": "strong (z +4.1, 100%)",
+     "verdict": "strong",
+     "z": 4.06,
+     "p_vs_alts": 1.0,
+     "best_alt": {
+      "query": "a waterfall",
+      "p": 0.0
+     },
+     "sounds_like": [
+      "a crackling fire",
+      "a match being struck"
+     ],
+     "gen_s": 16.5,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -1.61,
+     "sha1": "6fd94cefc562ae115df551daab27c04e6b8b07b4",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P37_pyre_flare",
+   "file": "sfx_sa/P37_pyre_flare.wav",
+   "sha1": "20aac3669744177f1d16dc27f27a7f9b27fcf901",
+   "check": "fire flaring up",
+   "not": [
+    "an explosion",
+    "wind",
+    "a jet"
+   ],
+   "prompt": "a fire suddenly flaring up with a huge whoosh, flames roaring higher, sparks bursting into the night",
+   "seed": 237,
+   "dur": 4,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +5.1, 100%)",
+   "verdict": "strong",
+   "z": 5.12,
+   "p_vs_alts": 1.0,
+   "rank_in_vocab": 1,
+   "alts": [
+    {
+     "query": "an explosion",
+     "p": 0.0,
+     "z": 1.75
+    },
+    {
+     "query": "wind",
+     "p": 0.0,
+     "z": 0.94
+    },
+    {
+     "query": "a jet",
+     "p": 0.0,
+     "z": 0.26
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a match being struck",
+     "z": 3.19
+    },
+    {
+     "term": "a fast whoosh",
+     "z": 3.07
+    },
+    {
+     "term": "a crackling fire",
+     "z": 2.88
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": 2.76
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Wind noise (microphone)",
+     "p": 0.12
+    },
+    {
+     "label": "Wind",
+     "p": 0.1
+    },
+    {
+     "label": "Eruption",
+     "p": 0.09
+    }
+   ],
+   "describe": "3.94 s busy, 7.9 onsets/s (attack 218 ms, decays in 1006 ms). Sounds most like: a match being struck (z +3.1), a fast whoosh (z +3.0), a crackling fire (z +2.8) [clear reading]. Other readings: an apple falling on grass (nature, z +2.7). AudioSet tagger unsure (Wind noise (microphone) 0.12, Wind 0.10, Eruption 0.09). peak -1.0 dBFS, -14.2 LUFS, brightness 1.8 kHz, bandwidth 20.5 kHz, noise floor -50 dBFS, mono.",
+   "match": "P37_pyre_flare.wav: 'fire flaring up' -> strong (z +5.1; would rank #1 among 322 vocabulary descriptions; cosine 0.52). Forced choice vs your alternatives: 'fire flaring up' >99%, 'an explosion' <1%, 'wind' <1%, 'a jet' <1%. It sounds most like: 'a match being struck' (z +3.1), 'a fast whoosh' (z +3.0), 'a crackling fire' (z +2.8), 'an apple falling on grass' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a fire suddenly flaring up with a huge whoosh, flames roaring higher, sparks bursting into the night",
+     "seed": 237,
+     "dur": 4,
+     "pass": true,
+     "why": "strong (z +5.1, 100%)",
+     "verdict": "strong",
+     "z": 5.12,
+     "p_vs_alts": 1.0,
+     "best_alt": {
+      "query": "an explosion",
+      "p": 0.0
+     },
+     "sounds_like": [
+      "a match being struck",
+      "a fast whoosh"
+     ],
+     "gen_s": 10.2,
+     "clipped_samples": 122,
+     "raw_peak_dbfs": -0.0,
+     "sha1": "20aac3669744177f1d16dc27f27a7f9b27fcf901",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P40_bell_heart",
+   "file": "sfx_sa/P40_bell_heart.wav",
+   "sha1": "b94f32971f3b02dd3740112c7d5cf039b12b4e71",
+   "check": "a heartbeat",
+   "not": [
+    "a drum",
+    "footsteps",
+    "knocking on a door"
+   ],
+   "prompt": "a single deep funeral bell toll in darkness, then a slow heavy heartbeat starting, faint and low",
+   "seed": 240,
+   "dur": 8,
+   "pass": false,
+   "won": false,
+   "why": "lost to 'knocking on a door' (51% against 0%; z -0.6)",
+   "verdict": "no match",
+   "z": -0.61,
+   "p_vs_alts": 0.005,
+   "rank_in_vocab": 232,
+   "alts": [
+    {
+     "query": "a drum",
+     "p": 0.476,
+     "z": -0.03
+    },
+    {
+     "query": "footsteps",
+     "p": 0.006,
+     "z": -0.2
+    },
+    {
+     "query": "knocking on a door",
+     "p": 0.514,
+     "z": 0.72
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "a singing bowl",
+     "z": 2.92
+    },
+    {
+     "term": "a sustained glass harp tone",
+     "z": 2.86
+    },
+    {
+     "term": "a cinematic hit with a long tail",
+     "z": 2.86
+    },
+    {
+     "term": "church bells",
+     "z": 2.82
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Gong",
+     "p": 0.9
+    },
+    {
+     "label": "Bell",
+     "p": 0.14
+    },
+    {
+     "label": "Church bell",
+     "p": 0.05
+    }
+   ],
+   "describe": "7.99 s 2 separate events, tonal, pitch ~110 Hz (A2) (attack 43 ms, decays in 6.0 s). Sounds most like: a singing bowl (z +2.9), a sustained glass harp tone (z +2.8), a cinematic hit with a long tail (z +2.8) [plausible reading]. Character: metallic. AudioSet: Gong 0.90, Bell 0.14, Church bell 0.05. peak -1.0 dBFS, -15.8 LUFS, brightness 341 Hz, bandwidth 3.2 kHz, noise floor -42 dBFS, mono.",
+   "match": "P40_bell_heart.wav: 'a heartbeat' -> no match (z -0.7; would rank #232 among 322 vocabulary descriptions; cosine -0.06). Forced choice vs your alternatives: 'a heartbeat' 0%, 'a drum' 48%, 'footsteps' 1%, 'knocking on a door' 51%. It sounds most like: 'a singing bowl' (z +2.9), 'a sustained glass harp tone' (z +2.8), 'a cinematic hit with a long tail' (z +2.8), 'church bells' (z +2.8).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a single deep funeral bell toll in darkness, then a slow heavy heartbeat starting, faint and low",
+     "seed": 240,
+     "dur": 8,
+     "pass": false,
+     "why": "lost to 'knocking on a door' (51% against 0%; z -0.6)",
+     "verdict": "no match",
+     "z": -0.61,
+     "p_vs_alts": 0.005,
+     "best_alt": {
+      "query": "knocking on a door",
+      "p": 0.514
+     },
+     "sounds_like": [
+      "a singing bowl",
+      "a sustained glass harp tone"
+     ],
+     "gen_s": 14.8,
+     "clipped_samples": 0,
+     "raw_peak_dbfs": -7.7,
+     "sha1": "b94f32971f3b02dd3740112c7d5cf039b12b4e71",
+     "kept": true
+    }
+   ]
+  },
+  {
+   "id": "P42_chapter_boom",
+   "file": "sfx_sa/P42_chapter_boom.wav",
+   "sha1": "2d62d2515d596a17521e70d1515f4a462933f2e8",
+   "check": "a deep boom",
+   "not": [
+    "thunder",
+    "a door slam",
+    "fireworks"
+   ],
+   "prompt": "a deep cinematic boom with a long dark tail, epic, heavy, slowly fading",
+   "seed": 242,
+   "dur": 6,
+   "pass": true,
+   "won": true,
+   "why": "strong (z +3.2, 93%)",
+   "verdict": "strong",
+   "z": 3.2,
+   "p_vs_alts": 0.93,
+   "rank_in_vocab": 3,
+   "alts": [
+    {
+     "query": "thunder",
+     "p": 0.067,
+     "z": 2.0
+    },
+    {
+     "query": "a door slam",
+     "p": 0.003,
+     "z": 1.89
+    },
+    {
+     "query": "fireworks",
+     "p": 0.0,
+     "z": 0.77
+    }
+   ],
+   "sounds_like": [
+    {
+     "term": "an explosion",
+     "z": 3.52
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 3.52
+    },
+    {
+     "term": "a big drum hit",
+     "z": 2.96
+    },
+    {
+     "term": "a cinematic hit with a long tail",
+     "z": 2.59
+    }
+   ],
+   "audioset": [
+    {
+     "label": "Explosion",
+     "p": 0.58
+    },
+    {
+     "label": "Rumble",
+     "p": 0.26
+    },
+    {
+     "label": "Burst, pop",
+     "p": 0.18
+    }
+   ],
+   "describe": "6.00 s busy, 2.0 onsets/s, tonal, pitch ~56 Hz (A1) (attack 228 ms, decays in 3.6 s). Sounds most like: an explosion (z +3.5), a deep cinematic boom (z +3.5), a big drum hit (z +2.9) [clear reading]. Other readings: a deep cinematic whoosh (transitions, z +2.2). AudioSet: Explosion 0.58, Rumble 0.26, Burst, pop 0.18. peak -1.0 dBFS, -15.3 LUFS, brightness 174 Hz, bandwidth 1.0 kHz, noise floor -51 dBFS, mono.",
+   "match": "P42_chapter_boom.wav: 'a deep boom' -> strong (z +3.2; would rank #3 among 322 vocabulary descriptions; cosine 0.33). Forced choice vs your alternatives: 'a deep boom' 93%, 'thunder' 7%, 'a door slam' <1%, 'fireworks' <1%. It sounds most like: 'an explosion' (z +3.5), 'a deep cinematic boom' (z +3.5), 'a big drum hit' (z +2.9), 'a cinematic hit with a long tail' (z +2.5). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+   "tries": 1,
+   "takes": [
+    {
+     "take": 1,
+     "prompt": "a deep cinematic boom with a long dark tail, epic, heavy, slowly fading",
+     "seed": 242,
+     "dur": 6,
+     "pass": true,
+     "why": "strong (z +3.2, 93%)",
+     "verdict": "strong",
+     "z": 3.2,
+     "p_vs_alts": 0.93,
+     "best_alt": {
+      "query": "thunder",
+      "p": 0.067
+     },
+     "sounds_like": [
+      "an explosion",
+      "a deep cinematic boom"
+     ],
+     "gen_s": 13.7,
+     "clipped_samples": 220,
+     "raw_peak_dbfs": -0.0,
+     "sha1": "2d62d2515d596a17521e70d1515f4a462933f2e8",
+     "kept": true
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "id": "M12",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 15-second instrumental: a solo felt-muted piano plays a gentle D major figure very slowly, once, softly, with long gaps, and stops before the last note of the phrase, left unresolved, fading into silence. Pianissimo, intimate, grieving and still. Instrumental only, no drums, no vocals.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

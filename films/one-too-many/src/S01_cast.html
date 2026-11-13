@@ -1,0 +1,80 @@
+<!doctype html><meta charset="utf-8"><title>S01 cast</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx=OTM.stage(), {C,W,H,S}=OTM; const f=OTM.frame(ctx,{seed:5}); const g=f.world;
+  // wall + floor
+  g.fillStyle=C.ink; g.fillRect(0,0,W,H);
+  const FLOOR=742, LIGHT={x:-500,y:120};
+  g.fillStyle=C.soot; g.fillRect(0,0,W,FLOOR);
+  // lamp spill on the wall from the left (posterised)
+  OTM.lightPool(g, 120, 330, [{r:1500,color:'#2A1D14'},{r:980,color:'#3A2715'},{r:560,color:C.tungstenLow}], {sy:0.62, rough:2.2, seed:9});
+  g.fillStyle=C.ink; g.fillRect(0,FLOOR,W,H-FLOOR);
+  OTM.lightPool(g, 760, FLOOR+40, [{r:1300,color:'#24170F'},{r:980,color:C.tungstenLow},{r:620,color:C.tungstenMid},{r:300,color:C.tungsten}], {sy:0.075, seed:4});
+  g.fillStyle=C.ink; g.fillRect(0,FLOOR+64,W,H);
+  // seven slots
+  const X=i=>196+i*254, sc=55;
+  const rim={light:LIGHT, rimColor:C.tungsten, rimW:4};
+  const shadowM=(x)=>[1,0,-1.25,0.16,x*0.0+ (FLOOR)*1.25, FLOOR*0.84];
+  const figs=[
+    ['scott',0,{facing:1, lean:0.2, neck:0.18, head:0.12, armN:{a:0.62,b:1.05,hand:'hold'}, armF:{a:0.42,b:1.2,hand:'hold'}, legN:{a:0.16,b:0.12}, legF:{a:-0.1,b:0.06}}],
+    ['kay',2,{facing:-1, lean:-0.1, head:0.1, neck:0.1, armN:{a:0.22,b:1.35,hand:'hold'}, armF:{a:-0.25,b:0.5}, legN:{a:0.22,b:0.05}, legF:{a:-0.05,b:0.0}}],
+    ['deena',3,{facing:1, lean:-0.02, head:-0.14, swing:0.35, armN:{a:1.28,b:0.02,hand:'point'}, armF:{a:-0.12,b:0.25}, legN:{a:0.1,b:0.02}, legF:{a:-0.12,b:0.04}}],
+    ['angelo',4,{facing:-1, lean:0.04, head:-0.04, armN:{a:2.15,b:0.5,hand:'open',w:-0.2}, armF:{a:0.5,b:1.35,hand:'hold'}, legN:{a:0.2,b:0.08}, legF:{a:-0.15,b:0.1}}],
+    ['marina',5,{facing:1, lean:0.0, head:0.04, armN:{a:0.35,b:1.75,hand:'hold'}, armF:{a:-0.06,b:0.2}, legN:{a:0.04,b:0.0}, legF:{a:-0.04,b:0.0}}],
+    ['christof',6,{facing:-1, lean:-0.08, head:-0.1, armN:{a:2.55,b:-0.35,hand:'hold'}, armF:{a:0.15,b:0.35,hand:'relaxed'}, legN:{a:0.24,b:0.1}, legF:{a:-0.2,b:0.08}}],
+  ];
+  const made={};
+  figs.forEach(([id,slot,pose])=>{
+    const fig=OTM.fig.profile(id,Object.assign({x:X(slot),y:FLOOR,scale:sc},pose));
+    // cast shadow raked to the right across the floor
+    OTM.castShadow(g, fig.shape, [1,0, -1.5,0.1, 1.5*FLOOR, FLOOR*0.9], 0.55);
+    made[id]=fig;
+  });
+  // door frame behind Kay
+  g.fillStyle='#120D0B'; g.fillRect(X(2)+62,250,24,FLOOR-250); g.fillRect(X(2)-60,250,146,20);
+  figs.forEach(([id])=>{ const fig=made[id]; OTM.silhouette(g, fig.shape, rim); OTM.fig.drawDetails(g, fig, {rimColor:C.tungsten}); });
+  // props: Scott's bowl, Kay's ice bag, Angelo's flying card + deck, Marina's glass, Christof's biscuit
+  const s=made.scott.joints; g.fillStyle=C.ink; g.fill(S().M(s.wristN[0]-46,s.wristN[1]-6).C(s.wristN[0]-40,s.wristN[1]+40,s.wristN[0]+40,s.wristN[1]+40,s.wristN[0]+46,s.wristN[1]-6).Z().path());
+  g.fillStyle=C.tungsten; g.fillRect(s.wristN[0]-46,s.wristN[1]-8,92,3);
+  const k=made.kay.joints; const bag=S().M(k.wristN[0]-20,k.wristN[1]).C(k.wristN[0]-40,k.wristN[1]+40,k.wristN[0]-30,k.wristN[1]+80,k.wristN[0]+2,k.wristN[1]+82).C(k.wristN[0]+30,k.wristN[1]+80,k.wristN[0]+30,k.wristN[1]+30,k.wristN[0]+12,k.wristN[1]).Z();
+  OTM.silhouette(g,bag,rim); g.fillStyle=C.rainSilver; [[0,96],[-8,118],[6,140]].forEach(([dx,dy],i)=>{g.globalAlpha=0.8-i*0.2; g.beginPath(); g.ellipse(k.wristN[0]+dx,k.wristN[1]+dy,2,3,0,0,7); g.fill();}); g.globalAlpha=1;
+  const a=made.angelo.joints; g.save(); g.translate(a.wristN[0]-58,a.wristN[1]-46); g.rotate(-0.7); g.fillStyle=C.cardPaper; g.fillRect(-14,-20,28,40); g.strokeStyle=C.cardBlue; g.lineWidth=2; g.strokeRect(-11,-17,22,34); g.restore();
+  g.save(); g.translate(a.wristF[0]-6,a.wristF[1]-10); g.rotate(0.3); g.fillStyle=C.cardBlue; g.fillRect(-12,-17,24,34); g.restore();
+  const m=made.marina.joints; g.fillStyle=C.ink; const gl=S().M(m.wristN[0]+10,m.wristN[1]-62).L(m.wristN[0]+52,m.wristN[1]-62).C(m.wristN[0]+52,m.wristN[1]-24,m.wristN[0]+40,m.wristN[1]-14,m.wristN[0]+33,m.wristN[1]-12).L(m.wristN[0]+33,m.wristN[1]+14).L(m.wristN[0]+46,m.wristN[1]+18).L(m.wristN[0]+16,m.wristN[1]+18).L(m.wristN[0]+29,m.wristN[1]+14).L(m.wristN[0]+29,m.wristN[1]-12).C(m.wristN[0]+22,m.wristN[1]-14,m.wristN[0]+10,m.wristN[1]-24,m.wristN[0]+10,m.wristN[1]-62).Z();
+  OTM.silhouette(g,gl,rim); g.fillStyle=C.wine; g.beginPath(); g.ellipse(m.wristN[0]+31,m.wristN[1]-36,17,9,0,0,Math.PI); g.fill(); g.fillRect(m.wristN[0]+14,m.wristN[1]-44,34,8);
+  const c=made.christof.joints; g.fillStyle=C.cardPaper; g.beginPath(); g.arc(c.wristN[0]-14,c.wristN[1]-26,11,0,7); g.fill();
+  // THE EXTRA: slot 1 is empty; only the hand it will offer at the end, cut through the paper
+  const hx=X(1)+4, hy=560; const hp=OTM.fig.hand('open',{spread:0.16}).transform([0,-74,74,0,0,0]).translate(hx,hy);
+  f.knockout(hp.path(0.6,3),0.85);
+  // slot ticks + numbers on the floor edge
+  for(let i=0;i<7;i++){ g.fillStyle=OTM.rgba(C.cardPaper,0.35); g.fillRect(X(i)-1,FLOOR+70,2,14); OTM.text(g,String(i+1),X(i),FLOOR+108,{family:'Barlow Condensed',weight:600,size:20,color:C.cardPaper,align:'center',alpha:0.45,tracking:2}); }
+  // header
+  OTM.text(g,'THE SIX',96,196,{family:'Six Caps',size:120,color:C.cardPaper,tracking:6});
+  OTM.text(g,'SEVEN PLACES  ·  SIX PEOPLE  ·  ONE LIGHT',300,150,{family:'Barlow Condensed',weight:500,size:24,color:C.cardPaper,tracking:5,alpha:0.7});
+  OTM.text(g,'Every friend is an ink silhouette that reads by shape alone. The Extra is never drawn: it only cuts through the paper to the ember behind.',300,184,{family:'Barlow Condensed',weight:400,size:22,color:C.cardPaper,alpha:0.5,tracking:1});
+  // name, voice, notes
+  const NOTE={family:'Barlow Condensed',weight:500,size:17,color:C.cardPaper,alpha:0.62,tracking:1,align:'center'};
+  const cols=[
+    ['scott',0,'Scott',{family:'Libre Franklin',weight:700,size:38,color:C.tScott},['hover lean · cowlick · socks','types like an unsent text','F2A93B']],
+    ['kay',2,'Kay',{family:'Cormorant Garamond',style:'italic',weight:600,size:44,color:C.tKay},['rain beads · moves slower','breath on glass · lipstick','BCCBD6']],
+    ['deena',3,'Deena',{family:'Archivo Black',size:36,color:C.tDeena},['ponytail · hoop · snaps','hard cut · her type points','E2504A']],
+    ['angelo',4,'Angelo',{family:'Oswald',weight:500,size:42,color:C.tAngelo},['cigarette · long hands','his words are dealt','6A8FE3']],
+    ['marina',5,'Marina',{family:'IBM Plex Mono',weight:500,size:32,color:C.tMarina},['blunt bob · rings · precise','mono grid · wine-ring stops','86C4A2']],
+    ['christof',6,'Christof',{family:'Abril Fatface',size:40,color:C.tChristof},['curl cloud · biscuit baton','marquee bulbs on an arc','EFE5D0']],
+  ];
+  const TY=FLOOR+170;
+  cols.forEach(([id,slot,name,fo,notes])=>{
+    OTM.text(g,name,X(slot),TY,Object.assign({align:'center'},fo));
+    notes.forEach((n,i)=>OTM.text(g,n.toUpperCase(),X(slot),TY+42+i*26,Object.assign({},NOTE,i===2?{alpha:0.38,size:17}:{})));
+  });
+  // the Extra's column: its name is a cut
+  f.knockoutText('—',X(1),TY-6,{family:'Libre Franklin',weight:700,size:46,align:'center'},0.95);
+  ['never drawn · at scott\'s right','borrowed faces · cut through','FF9440 · only in its cuts'].forEach((n,i)=>OTM.text(g,n.toUpperCase(),X(1),TY+42+i*26,Object.assign({},NOTE,{color:i===2?C.ember:C.cardPaper,alpha:i===2?0.7:0.62,size:i===2?17:19})));
+  f.emissive.fillStyle=C.tungsten; f.emissive.beginPath(); f.emissive.ellipse(760,FLOOR+40,300,24,0,0,7); f.emissive.fill();
+  f.finish({vignette:0.45, halation:0.4});
+  OTM.slate(ctx,'ONE TOO MANY  ·  CHARACTER SHEET','THE CAST',1.78);
+  window.FRAME_READY=true;
+})();
+</script>

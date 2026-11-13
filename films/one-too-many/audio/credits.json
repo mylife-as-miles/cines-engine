@@ -1,0 +1,832 @@
+{
+ "sfx/beat": {
+  "id": "332820",
+  "title": "heartbeat-80bpm.wav",
+  "creator": "loudernoises",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/332/332820_5859881-hq.mp3",
+  "duration": 30.0,
+  "downloads": 5101,
+  "landing": "https://freesound.org/people/loudernoises/sounds/332820/"
+ },
+ "sfx/beat2": {
+  "id": "332820",
+  "title": "heartbeat-80bpm.wav",
+  "creator": "loudernoises",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/332/332820_5859881-hq.mp3",
+  "duration": 30.0,
+  "downloads": 5101,
+  "landing": "https://freesound.org/people/loudernoises/sounds/332820/"
+ },
+ "sfx/card_slap1": {
+  "id": "208790",
+  "title": "Cards Sounds",
+  "creator": "uEffects",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/208/208790_2901073-hq.mp3",
+  "duration": 20.5624,
+  "downloads": 4223,
+  "landing": "https://freesound.org/people/uEffects/sounds/208790/"
+ },
+ "sfx/card_slap2": {
+  "id": "208790",
+  "title": "Cards Sounds",
+  "creator": "uEffects",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/208/208790_2901073-hq.mp3",
+  "duration": 20.5624,
+  "downloads": 4223,
+  "landing": "https://freesound.org/people/uEffects/sounds/208790/"
+ },
+ "sfx/card_slap3": {
+  "id": "208790",
+  "title": "Cards Sounds",
+  "creator": "uEffects",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/208/208790_2901073-hq.mp3",
+  "duration": 20.5624,
+  "downloads": 4223,
+  "landing": "https://freesound.org/people/uEffects/sounds/208790/"
+ },
+ "sfx/card_flick1": {
+  "id": "747805",
+  "title": "CountingPlayingCards",
+  "creator": "Hope_sounds_3",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/747/747805_16192654-hq.mp3",
+  "duration": 12.7245,
+  "downloads": 182,
+  "landing": "https://freesound.org/people/Hope_sounds_3/sounds/747805/"
+ },
+ "sfx/card_flick2": {
+  "id": "747805",
+  "title": "CountingPlayingCards",
+  "creator": "Hope_sounds_3",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/747/747805_16192654-hq.mp3",
+  "duration": 12.7245,
+  "downloads": 182,
+  "landing": "https://freesound.org/people/Hope_sounds_3/sounds/747805/"
+ },
+ "sfx/card_flick3": {
+  "id": "747805",
+  "title": "CountingPlayingCards",
+  "creator": "Hope_sounds_3",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/747/747805_16192654-hq.mp3",
+  "duration": 12.7245,
+  "downloads": 182,
+  "landing": "https://freesound.org/people/Hope_sounds_3/sounds/747805/"
+ },
+ "sfx/card_flick4": {
+  "id": "447918",
+  "title": "Shuffle cards",
+  "creator": "Breviceps",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/447/447918_9159316-hq.mp3",
+  "duration": 0.631224,
+  "downloads": 1819,
+  "landing": "https://freesound.org/people/Breviceps/sounds/447918/"
+ },
+ "sfx/card_flick5": {
+  "id": "447918",
+  "title": "Shuffle cards",
+  "creator": "Breviceps",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/447/447918_9159316-hq.mp3",
+  "duration": 0.631224,
+  "downloads": 1819,
+  "landing": "https://freesound.org/people/Breviceps/sounds/447918/"
+ },
+ "sfx/riffle": {
+  "id": "256508",
+  "title": "Riffle Card Shuffle",
+  "creator": "Kodack",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/256/256508_2276808-hq.mp3",
+  "duration": 4.25225,
+  "downloads": 2190,
+  "landing": "https://freesound.org/people/Kodack/sounds/256508/"
+ },
+ "sfx/step1": {
+  "id": "405115",
+  "title": "WoodType_1_Footstep_MensDressShoe_.wav",
+  "creator": "monte32",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/405/405115_5337613-hq.mp3",
+  "duration": 3.824,
+  "downloads": 1373,
+  "landing": "https://freesound.org/people/monte32/sounds/405115/"
+ },
+ "sfx/step2": {
+  "id": "405115",
+  "title": "WoodType_1_Footstep_MensDressShoe_.wav",
+  "creator": "monte32",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/405/405115_5337613-hq.mp3",
+  "duration": 3.824,
+  "downloads": 1373,
+  "landing": "https://freesound.org/people/monte32/sounds/405115/"
+ },
+ "sfx/step3": {
+  "id": "405115",
+  "title": "WoodType_1_Footstep_MensDressShoe_.wav",
+  "creator": "monte32",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/405/405115_5337613-hq.mp3",
+  "duration": 3.824,
+  "downloads": 1373,
+  "landing": "https://freesound.org/people/monte32/sounds/405115/"
+ },
+ "sfx/step4": {
+  "id": "504020",
+  "title": "Wood Floor Classic Shoe Footstep 1_10",
+  "creator": "Joao_Janz",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/504/504020_9961300-hq.mp3",
+  "duration": 1.22056,
+  "downloads": 342,
+  "landing": "https://freesound.org/people/Joao_Janz/sounds/504020/"
+ },
+ "sfx/crisp1": {
+  "id": "674593",
+  "title": "Bag of chips.WAV",
+  "creator": "AnthonyOstrander",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/674/674593_14683378-hq.mp3",
+  "duration": 21.021,
+  "downloads": 24,
+  "landing": "https://freesound.org/people/AnthonyOstrander/sounds/674593/"
+ },
+ "sfx/crisp2": {
+  "id": "674593",
+  "title": "Bag of chips.WAV",
+  "creator": "AnthonyOstrander",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/674/674593_14683378-hq.mp3",
+  "duration": 21.021,
+  "downloads": 24,
+  "landing": "https://freesound.org/people/AnthonyOstrander/sounds/674593/"
+ },
+ "sfx/crisp3": {
+  "id": "674593",
+  "title": "Bag of chips.WAV",
+  "creator": "AnthonyOstrander",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/674/674593_14683378-hq.mp3",
+  "duration": 21.021,
+  "downloads": 24,
+  "landing": "https://freesound.org/people/AnthonyOstrander/sounds/674593/"
+ },
+ "sfx/rustle": {
+  "id": "850557",
+  "title": "Bolsa Arrugandose",
+  "creator": "Mariayolanda511",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/850/850557_18454513-hq.mp3",
+  "duration": 8.31502,
+  "downloads": 30,
+  "landing": "https://freesound.org/people/Mariayolanda511/sounds/850557/"
+ },
+ "sfx/clink1": {
+  "id": "573157",
+  "title": "wine glass clink",
+  "creator": "fleurescence",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/573/573157_12947664-hq.mp3",
+  "duration": 3.0,
+  "downloads": 918,
+  "landing": "https://freesound.org/people/fleurescence/sounds/573157/"
+ },
+ "sfx/clink2": {
+  "id": "573160",
+  "title": "wine glass clink",
+  "creator": "fleurescence",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/573/573160_12947664-hq.mp3",
+  "duration": 2.01562,
+  "downloads": 511,
+  "landing": "https://freesound.org/people/fleurescence/sounds/573160/"
+ },
+ "sfx/clink3": {
+  "id": "560297",
+  "title": "Glass Clink2.m4a",
+  "creator": "RoyalRose",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/560/560297_12560866-hq.mp3",
+  "duration": 2.57741,
+  "downloads": 262,
+  "landing": "https://freesound.org/people/RoyalRose/sounds/560297/"
+ },
+ "sfx/clink4": {
+  "id": "842180",
+  "title": "Glass Clink Free",
+  "creator": "AardsReal",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/842/842180_13307919-hq.mp3",
+  "duration": 1.26986,
+  "downloads": 107,
+  "landing": "https://freesound.org/people/AardsReal/sounds/842180/"
+ },
+ "sfx/laugh_room": {
+  "id": "346039",
+  "title": "Crowd Laughing (Walla).mp3",
+  "creator": "LittleRainySeasons",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/346/346039_5865517-hq.mp3",
+  "duration": 12.0744,
+  "downloads": 941,
+  "landing": "https://freesound.org/people/LittleRainySeasons/sounds/346039/"
+ },
+ "sfx/laugh_room2": {
+  "id": "503620",
+  "title": "crowd_laughing.wav",
+  "creator": "isohoo",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/503/503620_10829062-hq.mp3",
+  "duration": 26.7059,
+  "downloads": 1865,
+  "landing": "https://freesound.org/people/isohoo/sounds/503620/"
+ },
+ "sfx/laugh_s": {
+  "id": "333403",
+  "title": "Laugh 1 pun dad joke.wav",
+  "creator": "jayfrosting",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/333/333403_5884138-hq.mp3",
+  "duration": 2.93333,
+  "downloads": 2837,
+  "landing": "https://freesound.org/people/jayfrosting/sounds/333403/"
+ },
+ "sfx/laugh_m": {
+  "id": "346682",
+  "title": "Crowd awkward laughter.wav",
+  "creator": "deleted_user_2104797",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/346/346682_2104797-hq.mp3",
+  "duration": 5.25754,
+  "downloads": 2017,
+  "landing": "https://freesound.org/people/deleted_user_2104797/sounds/346682/"
+ },
+ "sfx/chair1": {
+  "id": "485145",
+  "title": "Wooden Chair Dragged Across Floor 3_3",
+  "creator": "Joao_Janz",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/485/485145_9961300-hq.mp3",
+  "duration": 2.76071,
+  "downloads": 85,
+  "landing": "https://freesound.org/people/Joao_Janz/sounds/485145/"
+ },
+ "sfx/chair2": {
+  "id": "656682",
+  "title": "Chair Scrape mp3",
+  "creator": "ME_Studios_Official",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/656/656682_9454816-hq.mp3",
+  "duration": 3.69739,
+  "downloads": 255,
+  "landing": "https://freesound.org/people/ME_Studios_Official/sounds/656682/"
+ },
+ "sfx/tap1": {
+  "id": "838083",
+  "title": "Tapping a finger on the table",
+  "creator": "Pixel_Stick",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/838/838083_17625493-hq.mp3",
+  "duration": 1.87935,
+  "downloads": 45,
+  "landing": "https://freesound.org/people/Pixel_Stick/sounds/838083/"
+ },
+ "sfx/tap2": {
+  "id": "838083",
+  "title": "Tapping a finger on the table",
+  "creator": "Pixel_Stick",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/838/838083_17625493-hq.mp3",
+  "duration": 1.87935,
+  "downloads": 45,
+  "landing": "https://freesound.org/people/Pixel_Stick/sounds/838083/"
+ },
+ "sfx/tap3": {
+  "id": "838083",
+  "title": "Tapping a finger on the table",
+  "creator": "Pixel_Stick",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/838/838083_17625493-hq.mp3",
+  "duration": 1.87935,
+  "downloads": 45,
+  "landing": "https://freesound.org/people/Pixel_Stick/sounds/838083/"
+ },
+ "sfx/cloth1": {
+  "id": "19291",
+  "title": "foley cloth rustle.wav",
+  "creator": "martian",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/19/19291_84709-hq.mp3",
+  "duration": 2.67585,
+  "downloads": 17007,
+  "landing": "https://freesound.org/people/martian/sounds/19291/"
+ },
+ "sfx/cloth2": {
+  "id": "872226",
+  "title": "Person Rolling on Floor Clothing Rustle",
+  "creator": "KoimeMatsuchiya",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/872/872226_19256798-hq.mp3",
+  "duration": 1.65865,
+  "downloads": 30,
+  "landing": "https://freesound.org/people/KoimeMatsuchiya/sounds/872226/"
+ },
+ "sfx/cough1": {
+  "id": "743360",
+  "title": "Strong Double Cough",
+  "creator": "qubodup",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/743/743360_71257-hq.mp3",
+  "duration": 1.08476,
+  "downloads": 1084,
+  "landing": "https://freesound.org/people/qubodup/sounds/743360/"
+ },
+ "sfx/cough2": {
+  "id": "151217",
+  "title": "Cough (3)",
+  "creator": "OwlStorm",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/151/151217_140737-hq.mp3",
+  "duration": 0.898413,
+  "downloads": 8255,
+  "landing": "https://freesound.org/people/OwlStorm/sounds/151217/"
+ },
+ "sfx/sob": {
+  "id": "343909",
+  "title": "breath HUUUAH.wav",
+  "creator": "Reitanna",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/343/343909_950925-hq.mp3",
+  "duration": 1.40481,
+  "downloads": 269,
+  "landing": "https://freesound.org/people/Reitanna/sounds/343909/"
+ },
+ "sfx/flutter": {
+  "id": "614568",
+  "title": "Panicked breath .mp3",
+  "creator": "hannahbelle144",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/614/614568_11835707-hq.mp3",
+  "duration": 7.67298,
+  "downloads": 738,
+  "landing": "https://freesound.org/people/hannahbelle144/sounds/614568/"
+ },
+ "sfx/wheel1": {
+  "id": "319804",
+  "title": "Zippo Lighter 4 - Lighting",
+  "creator": "zmobie",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/319/319804_3262745-hq.mp3",
+  "duration": 0.297891,
+  "downloads": 563,
+  "landing": "https://freesound.org/people/zmobie/sounds/319804/"
+ },
+ "sfx/wheel2": {
+  "id": "488525",
+  "title": "lighter2M.wav",
+  "creator": "rayaml",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/488/488525_10528057-hq.mp3",
+  "duration": 1.25,
+  "downloads": 64,
+  "landing": "https://freesound.org/people/rayaml/sounds/488525/"
+ },
+ "sfx/lighter_on": {
+  "id": "130787",
+  "title": "Butane Lighter Turn On",
+  "creator": "Alexsani",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/130/130787_1440889-hq.mp3",
+  "duration": 2.69315,
+  "downloads": 2312,
+  "landing": "https://freesound.org/people/Alexsani/sounds/130787/"
+ },
+ "sfx/flare": {
+  "id": "260555",
+  "title": "Basic Fire Whoosh 2",
+  "creator": "LookIMadeAThing",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/260/260555_3968707-hq.mp3",
+  "duration": 4.89297,
+  "downloads": 5165,
+  "landing": "https://freesound.org/people/LookIMadeAThing/sounds/260555/"
+ },
+ "sfx/bodyfall": {
+  "id": "504626",
+  "title": "BODY FALL - V HVY - DIRT",
+  "creator": "leonelmail",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/504/504626_4437257-hq.mp3",
+  "duration": 1.63372,
+  "downloads": 16169,
+  "landing": "https://freesound.org/people/leonelmail/sounds/504626/"
+ },
+ "sfx/stamp1": {
+  "id": "213003",
+  "title": "Stamp.wav",
+  "creator": "abstraktgeneriert",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/213/213003_3610778-hq.mp3",
+  "duration": 3.75723,
+  "downloads": 5483,
+  "landing": "https://freesound.org/people/abstraktgeneriert/sounds/213003/"
+ },
+ "sfx/stamp2": {
+  "id": "362624",
+  "title": "Stamp",
+  "creator": "kermite607",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/362/362624_3165091-hq.mp3",
+  "duration": 0.582042,
+  "downloads": 7638,
+  "landing": "https://freesound.org/people/kermite607/sounds/362624/"
+ },
+ "sfx/slide": {
+  "id": "470189",
+  "title": "55_Coger_Foto.wav (Sliding Paper)",
+  "creator": "Atrius1",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/470/470189_9982371-hq.mp3",
+  "duration": 0.370794,
+  "downloads": 908,
+  "landing": "https://freesound.org/people/Atrius1/sounds/470189/"
+ },
+ "sfx/burn": {
+  "id": "461075",
+  "title": "1.10_burning-paper.wav",
+  "creator": "15GKovacovaJulie",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/461/461075_9676039-hq.mp3",
+  "duration": 10.2827,
+  "downloads": 3005,
+  "landing": "https://freesound.org/people/15GKovacovaJulie/sounds/461075/"
+ },
+ "sfx/type1": {
+  "id": "793351",
+  "title": "typing-1920s-remington",
+  "creator": "rpnelson",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/793/793351_10461586-hq.mp3",
+  "duration": 18.6456,
+  "downloads": 235,
+  "landing": "https://freesound.org/people/rpnelson/sounds/793351/"
+ },
+ "sfx/type2": {
+  "id": "793351",
+  "title": "typing-1920s-remington",
+  "creator": "rpnelson",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/793/793351_10461586-hq.mp3",
+  "duration": 18.6456,
+  "downloads": 235,
+  "landing": "https://freesound.org/people/rpnelson/sounds/793351/"
+ },
+ "sfx/type3": {
+  "id": "793351",
+  "title": "typing-1920s-remington",
+  "creator": "rpnelson",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/793/793351_10461586-hq.mp3",
+  "duration": 18.6456,
+  "downloads": 235,
+  "landing": "https://freesound.org/people/rpnelson/sounds/793351/"
+ },
+ "sfx/wipe": {
+  "id": "154383",
+  "title": "window wipe.wav",
+  "creator": "semccab",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/154/154383_2592496-hq.mp3",
+  "duration": 1.24104,
+  "downloads": 5847,
+  "landing": "https://freesound.org/people/semccab/sounds/154383/"
+ },
+ "sfx/tick1": {
+  "id": "464402",
+  "title": "Clock_Tick_Tock_Loop.wav",
+  "creator": "michael_grinnell",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/464/464402_7372230-hq.mp3",
+  "duration": 4.0,
+  "downloads": 1701,
+  "landing": "https://freesound.org/people/michael_grinnell/sounds/464402/"
+ },
+ "sfx/tock1": {
+  "id": "464402",
+  "title": "Clock_Tick_Tock_Loop.wav",
+  "creator": "michael_grinnell",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/464/464402_7372230-hq.mp3",
+  "duration": 4.0,
+  "downloads": 1701,
+  "landing": "https://freesound.org/people/michael_grinnell/sounds/464402/"
+ },
+ "sfx/tick2": {
+  "id": "464402",
+  "title": "Clock_Tick_Tock_Loop.wav",
+  "creator": "michael_grinnell",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/464/464402_7372230-hq.mp3",
+  "duration": 4.0,
+  "downloads": 1701,
+  "landing": "https://freesound.org/people/michael_grinnell/sounds/464402/"
+ },
+ "sfx/latch1": {
+  "id": "322434",
+  "title": "Lever Latch Close.wav",
+  "creator": "Glitchedtones",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/322/322434_3294528-hq.mp3",
+  "duration": 1.61381,
+  "downloads": 390,
+  "landing": "https://freesound.org/people/Glitchedtones/sounds/322434/"
+ },
+ "sfx/latch2": {
+  "id": "815493",
+  "title": "Mechanical switch (latch) 02",
+  "creator": "xkeril",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/815/815493_13504080-hq.mp3",
+  "duration": 1.79981,
+  "downloads": 1171,
+  "landing": "https://freesound.org/people/xkeril/sounds/815493/"
+ },
+ "sfx/knock1": {
+  "id": "629987",
+  "title": "Knocking on Wood Door (1)",
+  "creator": "Flem0527",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/629/629987_12715066-hq.mp3",
+  "duration": 0.704422,
+  "downloads": 9043,
+  "landing": "https://freesound.org/people/Flem0527/sounds/629987/"
+ },
+ "sfx/knock2": {
+  "id": "629987",
+  "title": "Knocking on Wood Door (1)",
+  "creator": "Flem0527",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/629/629987_12715066-hq.mp3",
+  "duration": 0.704422,
+  "downloads": 9043,
+  "landing": "https://freesound.org/people/Flem0527/sounds/629987/"
+ },
+ "sfx/knock3": {
+  "id": "629987",
+  "title": "Knocking on Wood Door (1)",
+  "creator": "Flem0527",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/629/629987_12715066-hq.mp3",
+  "duration": 0.704422,
+  "downloads": 9043,
+  "landing": "https://freesound.org/people/Flem0527/sounds/629987/"
+ },
+ "sfx/doorbell": {
+  "id": "442280",
+  "title": "DoorBell Shortened",
+  "creator": "jwheeler91",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/442/442280_3813650-hq.mp3",
+  "duration": 3.01746,
+  "downloads": 11562,
+  "landing": "https://freesound.org/people/jwheeler91/sounds/442280/"
+ },
+ "sfx/cork": {
+  "id": "622150",
+  "title": "Popping Cork",
+  "creator": "milcahrawr",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/622/622150_11995365-hq.mp3",
+  "duration": 0.359909,
+  "downloads": 580,
+  "landing": "https://freesound.org/people/milcahrawr/sounds/622150/"
+ },
+ "sfx/pour": {
+  "id": "757258",
+  "title": "Wine pouring",
+  "creator": "HenKonen",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/757/757258_10938187-hq.mp3",
+  "duration": 10.5127,
+  "downloads": 290,
+  "landing": "https://freesound.org/people/HenKonen/sounds/757258/"
+ },
+ "sfx/glass1": {
+  "id": "336425",
+  "title": "Glass Shattering and Falling",
+  "creator": "221Beimesche",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/336/336425_4663534-hq.mp3",
+  "duration": 3.69197,
+  "downloads": 4998,
+  "landing": "https://freesound.org/people/221Beimesche/sounds/336425/"
+ },
+ "sfx/glass2": {
+  "id": "583065",
+  "title": "FX SaSc Glass Tiles Shatter Crash.wav",
+  "creator": "Profispiesser",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/583/583065_6667441-hq.mp3",
+  "duration": 5.59,
+  "downloads": 1948,
+  "landing": "https://freesound.org/people/Profispiesser/sounds/583065/"
+ },
+ "sfx/crash1": {
+  "id": "50048",
+  "title": "pot_crash.wav",
+  "creator": "dADDoiT",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/50/50048_478853-hq.mp3",
+  "duration": 4.28579,
+  "downloads": 417,
+  "landing": "https://freesound.org/people/dADDoiT/sounds/50048/"
+ },
+ "sfx/crash2": {
+  "id": "488614",
+  "title": "Metal Bowl - Misc 4.wav",
+  "creator": "SpaceJoe",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/488/488614_6150892-hq.mp3",
+  "duration": 5.86304,
+  "downloads": 217,
+  "landing": "https://freesound.org/people/SpaceJoe/sounds/488614/"
+ },
+ "sfx/explosion": {
+  "id": "165910",
+  "title": "Explosion 2.wav",
+  "creator": "Deganoth",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/165/165910_1445941-hq.mp3",
+  "duration": 7.82694,
+  "downloads": 2440,
+  "landing": "https://freesound.org/people/Deganoth/sounds/165910/"
+ },
+ "sfx/gasp": {
+  "id": "343878",
+  "title": "big gasp.wav",
+  "creator": "Reitanna",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/343/343878_950925-hq.mp3",
+  "duration": 0.603719,
+  "downloads": 2397,
+  "landing": "https://freesound.org/people/Reitanna/sounds/343878/"
+ },
+ "sfx/scream": {
+  "id": "673306",
+  "title": "Woman Scream",
+  "creator": "courtneyeck",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/673/673306_13324371-hq.mp3",
+  "duration": 4.46172,
+  "downloads": 998,
+  "landing": "https://freesound.org/people/courtneyeck/sounds/673306/"
+ },
+ "sfx/tear": {
+  "id": "740171",
+  "title": "Sharp and quick teabag paper envelope rip 1",
+  "creator": "FOSSarts",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/740/740171_14631530-hq.mp3",
+  "duration": 3.136,
+  "downloads": 109,
+  "landing": "https://freesound.org/people/FOSSarts/sounds/740171/"
+ },
+ "sfx/drip1": {
+  "id": "22438",
+  "title": "Drip.wav",
+  "creator": "Lunardrive",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/22/22438_120830-hq.mp3",
+  "duration": 2.15692,
+  "downloads": 1554,
+  "landing": "https://freesound.org/people/Lunardrive/sounds/22438/"
+ },
+ "sfx/drip2": {
+  "id": "546279",
+  "title": "Single drip - dripping",
+  "creator": "Mega-X-stream",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/546/546279_4937681-hq.mp3",
+  "duration": 0.246508,
+  "downloads": 909,
+  "landing": "https://freesound.org/people/Mega-X-stream/sounds/546279/"
+ },
+ "sfx/shutter": {
+  "id": "579883",
+  "title": "Pentax K1000 Camera Shutter.wav",
+  "creator": "yfjesse",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/579/579883_2391840-hq.mp3",
+  "duration": 0.874989,
+  "downloads": 507,
+  "landing": "https://freesound.org/people/yfjesse/sounds/579883/"
+ },
+ "sfx/stove": {
+  "id": "740091",
+  "title": "turning on gas stove 1",
+  "creator": "FOSSarts",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/740/740091_14631530-hq.mp3",
+  "duration": 4.44133,
+  "downloads": 100,
+  "landing": "https://freesound.org/people/FOSSarts/sounds/740091/"
+ },
+ "sfx/oven_door": {
+  "id": "503477",
+  "title": "Oven door - open and close",
+  "creator": "bolkmar",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/503/503477_2927958-hq.mp3",
+  "duration": 3.75,
+  "downloads": 309,
+  "landing": "https://freesound.org/people/bolkmar/sounds/503477/"
+ },
+ "sfx/knife": {
+  "id": "320521",
+  "title": "Unsheathed blade",
+  "creator": "deleted_user_2906614",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/320/320521_2906614-hq.mp3",
+  "duration": 3.0,
+  "downloads": 15518,
+  "landing": "https://freesound.org/people/deleted_user_2906614/sounds/320521/"
+ },
+ "sfx/creak": {
+  "id": "683416",
+  "title": "House_Creak_2.wav",
+  "creator": "SholeColtis",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/683/683416_14670263-hq.mp3",
+  "duration": 3.87887,
+  "downloads": 206,
+  "landing": "https://freesound.org/people/SholeColtis/sounds/683416/"
+ },
+ "beds/fire": {
+  "id": "219272",
+  "title": "crackling-fire.aiff",
+  "creator": "alienistcog",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/219/219272_296888-hq.mp3",
+  "duration": 286.502,
+  "downloads": 2053,
+  "landing": "https://freesound.org/people/alienistcog/sounds/219272/"
+ },
+ "beds/fire_roar": {
+  "id": "698209",
+  "title": "Fire Large Roar And Hiss With Crackles.mp3",
+  "creator": "theoneandtruelybitch",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/698/698209_8307157-hq.mp3",
+  "duration": 184.047,
+  "downloads": 633,
+  "landing": "https://freesound.org/people/theoneandtruelybitch/sounds/698209/"
+ },
+ "beds/walla": {
+  "id": "265870",
+  "title": "restaurant ambience.wav",
+  "creator": "sarahmariealice",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/265/265870_2150067-hq.mp3",
+  "duration": 141.777,
+  "downloads": 1914,
+  "landing": "https://freesound.org/people/sarahmariealice/sounds/265870/"
+ },
+ "beds/gas": {
+  "id": "615668",
+  "title": "FOL-gas-leak-01.wav",
+  "creator": "henrikcederblad",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/615/615668_1819746-hq.mp3",
+  "duration": 7.86077,
+  "downloads": 338,
+  "landing": "https://freesound.org/people/henrikcederblad/sounds/615668/"
+ },
+ "beds/siren": {
+  "id": "811916",
+  "title": "Martinshorn (Siren) 2",
+  "creator": "TitanKaempfer",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/811/811916_9713112-hq.mp3",
+  "duration": 13.3667,
+  "downloads": 485,
+  "landing": "https://freesound.org/people/TitanKaempfer/sounds/811916/"
+ },
+ "sfx/typeburst": {
+  "id": "240839",
+  "title": "Typing on a typewriter",
+  "creator": "videog",
+  "license": "cc0",
+  "url": "https://cdn.freesound.org/previews/240/240839_2688492-hq.mp3",
+  "duration": 21.1302,
+  "downloads": 1142,
+  "landing": "https://freesound.org/people/videog/sounds/240839/"
+ }
+}

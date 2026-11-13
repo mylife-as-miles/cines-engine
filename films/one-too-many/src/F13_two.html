@@ -1,0 +1,308 @@
+<!doctype html><meta charset="utf-8"><title>F13 two</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S, mix, rgba} = OTM;
+  const f = OTM.frame(ctx, {seed: 13});
+  const g = f.world, em = f.emissive;
+  const DEBUG = location.hash === '#debug';
+  const R = OTM.rng('f13-two'); const rr = (a, b) => a + (b - a) * R();
+  const sm = (pts) => OTM.fig.smooth(pts, true);
+  const tmp = () => OTM.makeCanvas(W, H).getContext('2d');
+  // rim crescent of `path` (shifted by dx,dy), kept only inside `mask(ctx)`; drawn into gc
+  function rimInside(gc, path, color, dx, dy, mask) {
+    const t = tmp(); t.fillStyle = color; t.fill(path); t.globalCompositeOperation = 'destination-out'; t.translate(dx, dy); t.fill(path); t.setTransform(1, 0, 0, 1, 0, 0);
+    if (mask) { t.globalCompositeOperation = 'destination-in'; t.beginPath(); mask(t); t.fill(); }
+    gc.drawImage(t.canvas, 0, 0);
+  }
+
+  // ================= camera & staging =================
+  // Low camera behind Scott's left shoulder. He faces the burning house (left, beyond); his RIGHT side is screen-right.
+  const SC = 136, HX = 660, HY = 930;          // 1 unit = 1 head; (HX,HY) = ground under the middle of his hips
+  const LEAN = 0.05;                            // his upper body leans toward the held hand
+  const rot = (u, v, a) => [u * Math.cos(a) - v * Math.sin(a), u * Math.sin(a) + v * Math.cos(a)];
+  const U = (u, v) => { const q = rot(u, v, LEAN); return [HX + q[0] * SC, HY + q[1] * SC]; };
+  const B = sh => sh.rotate(LEAN).transform([SC, 0, 0, SC, HX, HY]);
+  const HORIZON = 640;
+
+  // ================= SKY: cold night; the fire's glow printed as three flat bands around the house =================
+  g.fillStyle = C.yardNight; g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, 250, 600, [
+    {r: 1180, color: mix(C.yardNight, C.fireOuter, 0.17)},
+    {r: 780, color: mix(C.yardNight, C.fireOuter, 0.36)},
+    {r: 430, color: mix(C.fireOuter, C.fireMid, 0.08)}], {sy: 0.5, rough: 4, seed: 8});
+
+  // ---- smoke: a heavy bank leaning right on the heat; only its belly near the fire is lit ----
+  const plume = S();
+  for (let i = 0; i <= 36; i++) {
+    const t = i / 36, x = 250 + 1780 * t, y = 210 - 190 * t + 34 * Math.sin(t * 9), r = 90 + 250 * t;
+    for (let k = 0; k < 3; k++) plume.circle(x + rr(-0.5, 0.5) * r, y + rr(-0.3, 0.3) * r, r * rr(0.55, 0.8));
+  }
+  plume.poly([[700, -40], [W + 40, -40], [W + 40, 200], [700, 120]]);
+  const plumeP = plume.path(3, 77);
+  const smoke = mix(C.ink, C.yardNight, 0.36);
+  g.fillStyle = smoke; g.fill(plumeP);
+  rimInside(g, plumeP, mix(smoke, C.fireOuter, 0.3), 14, -30, t => t.ellipse(260, 420, 980, 560, 0, 0, 7));
+  rimInside(g, plumeP, mix(smoke, C.fireOuter, 0.62), 5, -10, t => t.ellipse(240, 420, 420, 300, 0, 0, 7));
+
+  // ================= HOUSE (one ink shape, five burning windows) =================
+  const house = S();
+  house.poly([[-60, 384], [470, 384], [470, HORIZON + 4], [-60, HORIZON + 4]]);
+  house.poly([[-90, 390], [60, 262], [380, 262], [500, 390]]);
+  house.poly([[318, 276], [318, 204], [360, 204], [360, 276]]); house.rect(310, 194, 58, 13);
+  house.poly([[450, 508], [668, 548], [668, 558], [652, 558], [652, HORIZON + 4], [450, HORIZON + 4]]);   // kitchen extension
+  g.fillStyle = C.ink; g.fill(house.path(1.0, 13));
+  // the roof has burned through: a ragged bite out of the ridge, flame standing in it
+  const bite = S().M(104, 262).L(132, 292).L(160, 278).L(188, 312).L(220, 290).L(250, 306).L(272, 276).L(286, 262).Z();
+  g.fillStyle = C.fireOuter; g.fill(bite.path(1.4, 4));
+  OTM.flame(g, 196, 300, 200, 170, 31, 0.6); OTM.flame(g, 146, 292, 86, 104, 47, 1.4); OTM.flame(g, 252, 292, 96, 116, 59, 2.1);
+  em.fillStyle = C.fireMid; em.beginPath(); em.ellipse(196, 232, 110, 74, 0, 0, 7); em.fill();
+
+  const wins = [
+    {x: -6, y: 418, w: 92, h: 98, up: 1}, {x: 156, y: 418, w: 92, h: 98, up: 1}, {x: 318, y: 418, w: 92, h: 98, up: 1},
+    {x: 60, y: 548, w: 116, h: 74}, {x: 512, y: 568, w: 80, h: 60, kitchen: 1},
+  ];
+  wins.forEach((wd, i) => {
+    const wp = S().rect(wd.x, wd.y, wd.w, wd.h).path(1.6, 30 + i);
+    g.save(); g.clip(wp);
+    g.fillStyle = C.fireOuter; g.fillRect(wd.x - 10, wd.y - 10, wd.w + 20, wd.h + 20);
+    OTM.flame(g, wd.x + wd.w * 0.5, wd.y + wd.h + 6, wd.w * 1.3, wd.h * 1.1, 11 + i * 7, 0.3 + i);
+    OTM.flame(g, wd.x + wd.w * 0.25, wd.y + wd.h + 6, wd.w * 0.6, wd.h * 0.75, 51 + i * 5, 1.7 + i);
+    g.fillStyle = C.ink;
+    for (let k = 0; k < 6; k++) {   // broken glass teeth
+      const side = k % 4, u = R(); let a, b, c;
+      if (side === 0) { a = [wd.x + u * wd.w, wd.y]; b = [a[0] + rr(8, 22), wd.y]; c = [a[0] + rr(0, 14), wd.y + rr(12, 28)]; }
+      else if (side === 1) { a = [wd.x + wd.w, wd.y + u * wd.h]; b = [wd.x + wd.w, a[1] + rr(8, 20)]; c = [wd.x + wd.w - rr(10, 26), a[1] + rr(0, 10)]; }
+      else if (side === 2) { a = [wd.x + u * wd.w, wd.y + wd.h]; b = [a[0] + rr(8, 20), wd.y + wd.h]; c = [a[0] + rr(0, 12), wd.y + wd.h - rr(8, 20)]; }
+      else { a = [wd.x, wd.y + u * wd.h]; b = [wd.x, a[1] + rr(8, 22)]; c = [wd.x + rr(10, 26), a[1] + rr(0, 10)]; }
+      g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...c); g.closePath(); g.fill();
+    }
+    g.fillRect(wd.x + wd.w / 2 - 3, wd.y, 6, wd.h * rr(0.3, 0.55));
+    g.restore();
+    em.fillStyle = C.fireMid; em.fillRect(wd.x, wd.y, wd.w, wd.h);
+    if (wd.up) { OTM.flame(g, wd.x + wd.w * 0.55, wd.y + 6, wd.w * 0.9, rr(56, 90), 90 + i * 13, 0.9 + i); }
+    if (wd.kitchen) { OTM.flame(g, wd.x + wd.w * 0.5, wd.y + 4, wd.w * 1.2, 76, 141, 2.2); }
+  });
+
+  // ================= LAWN: heat-washed by the house, cold and dark toward the fence =================
+  g.fillStyle = C.grass; g.fillRect(0, HORIZON, W, H - HORIZON);
+  g.save(); g.beginPath(); g.rect(0, HORIZON, W, H - HORIZON); g.clip();
+  OTM.lightPool(g, 240, HORIZON + 4, [
+    {r: 1180, color: mix(C.grass, C.fireOuter, 0.16)},
+    {r: 760, color: mix(C.grass, C.fireOuter, 0.3)},
+    {r: 420, color: mix(C.grass, C.fireMid, 0.36)}], {sy: 0.26, rough: 2, seed: 12});
+  g.restore();
+  g.fillStyle = C.ink; g.fill(S().rect(-20, HORIZON - 4, 690, 12).path(1.5, 3));
+
+  // ---- the back fence, low along the horizon behind the kitchen ----
+  { const bf = S(); for (let x = 660, i = 0; x < 1160; x += 19, i++) bf.poly([[x, 618 + (i % 2)], [x + 7.5, 612], [x + 15, 618 + (i % 2)], [x + 15, 652], [x, 652]]);
+    bf.rect(660, 628, 500, 5);
+    g.fillStyle = mix(C.ink, C.fireOuter, 0.2); g.fill(bf.path(0.6, 41)); }
+
+  // ================= FENCE (right): countable boards in perspective; the street's strobes sweep through the gaps =================
+  const F0 = {x: 1150, top: 566, bot: 652}, F1 = {x: 2000, top: 372, bot: 870};
+  const fenceAt = x => { const t = (x - F0.x) / (F1.x - F0.x); return {top: OTM.lerp(F0.top, F1.top, t), bot: OTM.lerp(F0.bot, F1.bot, t), t}; };
+  const boards = []; { let x = F0.x; let i = 0; while (x < W + 40) { const fa = fenceAt(x); const bw = 18 + 74 * fa.t; const gap = 3 + 9 * fa.t; boards.push({x, w: bw, gap, i}); x += bw + gap; i++; } }
+  // two sweeps: red catches a run of gaps, blue another; each falls off in one posterised step at its edges
+  const sweep = (i) => { const r = Math.abs(i - 6), bl = Math.abs(i - 14); if (r <= 1) return [C.strobeRed, 1]; if (r <= 3) return [C.strobeRed, 0.42]; if (bl <= 1) return [C.strobeBlue, 1]; if (bl <= 2) return [C.strobeBlue, 0.42]; return null; };
+  boards.forEach(b => {
+    const x = b.x + b.w, a = fenceAt(x), c = fenceAt(x + b.gap);
+    const s2 = sweep(b.i);
+    g.fillStyle = s2 ? mix(C.ink, s2[0], s2[1]) : mix(C.ink, C.yardNight, 0.8);
+    g.beginPath(); g.moveTo(x - 1, a.top + 6); g.lineTo(x + b.gap + 1, c.top + 6); g.lineTo(x + b.gap + 1, c.bot); g.lineTo(x - 1, a.bot); g.closePath(); g.fill();
+    if (s2) { em.save(); em.globalAlpha = s2[1]; em.fillStyle = s2[0]; em.fillRect(x, a.top, b.gap, a.bot - a.top); em.restore(); }
+  });
+  boards.forEach(b => {
+    const a = fenceAt(b.x), c = fenceAt(b.x + b.w), peak = (a.top + c.top) / 2 - 6 - 8 * a.t;
+    const bp = S().poly([[b.x, a.top + 2], [b.x + b.w / 2, peak], [b.x + b.w, c.top + 2], [b.x + b.w, c.bot], [b.x, a.bot]]).path(1.1, 200 + b.i);
+    const band = a.t < 0.3 ? 0 : a.t < 0.62 ? 1 : 2;
+    g.fillStyle = mix(C.ink, C.fireOuter, [0.22, 0.12, 0.05][band]); g.fill(bp);
+    OTM.silhouette(g, bp, {fill: 'rgba(0,0,0,0)', light: {dx: -1, dy: -0.2}, rimColor: [mix(C.ink, C.fireMid, 0.55), mix(C.ink, C.fireMid, 0.36), mix(C.ink, C.fireMid, 0.2)][band], rimW: 2 + 2 * a.t});
+  });
+  g.fillStyle = C.ink; g.fill(S().poly([[F0.x - 6, F0.bot - 4], [W + 30, fenceAt(W + 30).bot - 10], [W + 30, fenceAt(W + 30).bot + 24], [F0.x - 6, F0.bot + 8]]).path(2, 9));
+
+  // ---- the grass around the held hands is a little warmer: two flat steps ----
+  g.save(); g.beginPath(); g.rect(0, HORIZON + 4, W, H); g.clip();
+  OTM.lightPool(g, HX + 2.9 * SC, HY - 0.25 * SC, [{r: 250, color: mix(C.grass, C.fireOuter, 0.2)}, {r: 140, color: mix(C.grass, C.fireOuter, 0.36)}], {sy: 0.28, rough: 3, seed: 21});
+  g.restore();
+  // ---- strobe bars thrown across the lawn from the lit gaps: they pass straight through the place beside him ----
+  function strobeBar(gc, x, col, ang, w0, w1, alpha, len) {
+    const y = fenceAt(x).bot - 2; const dx = Math.cos(ang), dy = Math.sin(ang);
+    const nx = -dy, ny = dx; const p1 = [x + dx * len, y + dy * len];
+    [[1, alpha], [0.42, alpha * 1.9]].forEach(([k, a]) => {
+      gc.save(); gc.globalCompositeOperation = 'screen'; gc.globalAlpha = a; gc.fillStyle = col; gc.beginPath();
+      gc.moveTo(x + nx * w0 * k, y + ny * w0 * k); gc.lineTo(p1[0] + nx * w1 * k, p1[1] + ny * w1 * k);
+      gc.lineTo(p1[0] - nx * w1 * k, p1[1] - ny * w1 * k); gc.lineTo(x - nx * w0 * k, y - ny * w0 * k); gc.closePath(); gc.fill(); gc.restore();
+    });
+  }
+  const gapX = i => { const b = boards[i]; return b.x + b.w + b.gap / 2; };
+  g.save(); g.beginPath(); g.rect(0, HORIZON + 4, W, H); g.clip();
+  strobeBar(g, gapX(6), C.strobeRed, Math.PI - 0.52, 4, 130, 0.2, 900);
+  strobeBar(g, gapX(14), C.strobeBlue, Math.PI - 1.0, 7, 150, 0.18, 700);
+  g.restore();
+
+  // ---- mid-ground grass: sparse ink blades across the lawn, larger as they come toward us ----
+  { const mg = S(); const r3 = OTM.rng('midblades');
+    for (let i = 0; i < 300; i++) { const y = 690 + Math.pow(r3(), 1.6) * 380, x = 760 + r3() * 1200; const k = (y - 640) / 440; const h = (5 + r3() * 9) * (0.6 + 2.2 * k), w = 1.2 + 2.2 * k; const lean = (r3() - 0.5) * 0.7;
+      mg.poly([[x - w, y], [x + w, y], [x + lean * h, y - h]]); }
+    g.save(); g.globalAlpha = 0.8; g.fillStyle = mix(C.ink, C.grass, 0.4); g.fill(mg.path(0.2, 6)); g.restore(); }
+
+  // ---- sparks rising on the heat ----
+  OTM.embers(g, 0, 60, 720, 560, 90, 'f13e1', C.fireMid);
+  OTM.embers(g, 160, 0, 760, 300, 34, 'f13e2', C.fireCore);
+  OTM.embers(em, 0, 60, 720, 560, 40, 'f13e1', C.fireMid);
+
+  // ================= SCOTT, from behind: on the grass in his socks, phone at his LEFT ear, his RIGHT hand held =================
+  const body = S();
+  // back (burned shirt): slumped; left shoulder hitched up by the phone, right shoulder dropped toward the held hand
+  body.add(B(sm([[-0.2, -3.2], [-0.6, -3.06], [-0.95, -2.95], [-1.08, -2.72], [-0.98, -2.28], [-0.84, -1.72], [-0.75, -1.2], [-0.88, -0.6], [-1.04, -0.18], [-0.96, 0.04, 1],
+    [0.96, 0.04, 1], [1.02, -0.18], [0.86, -0.6], [0.74, -1.2], [0.84, -1.7], [0.97, -2.16], [1.04, -2.5], [0.86, -2.74], [0.55, -2.96], [0.2, -3.17]])));
+  // burned hem: tatters hanging
+  const hem = S(); for (let i = 0; i < 8; i++) { const x = -0.9 + i * 0.255 + rr(-0.04, 0.04), y = -0.6 + rr(-0.04, 0.04); hem.poly([[x - 0.09, y - 0.02], [x + 0.1, y - 0.03], [x + rr(-0.02, 0.06), y + rr(0.1, 0.24)]]); }
+  body.add(B(hem));
+  // neck + head (back of the head, tilted into the phone; left cheek in lost profile)
+  body.add(B(S().capsule(-0.03, -3.12, 0.26, -0.1, -3.48, 0.21)));
+  const HEAD = S().ellipse(0, 0, 0.42, 0.51, 0)
+    .add(sm([[-0.18, -0.3], [-0.38, -0.22], [-0.44, -0.12], [-0.47, -0.02, 1], [-0.5, 0.08], [-0.47, 0.2], [-0.42, 0.3], [-0.34, 0.4], [-0.2, 0.47], [-0.04, 0.42], [-0.1, 0.05]]))     // brow, cheekbone & jaw, lost profile
+    .add(S().ellipse(0.44, 0.04, 0.075, 0.13, 0.15))                                                                                                   // right ear
+    .add(sm([[-0.37, -0.12], [-0.42, -0.32], [-0.3, -0.5], [-0.08, -0.6], [0.1, -0.61], [0.17, -0.64], [0.24, -0.66, 1], [0.24, -0.6], [0.36, -0.56], [0.48, -0.42],
+      [0.55, -0.2], [0.55, 0.02], [0.5, 0.18], [0.41, 0.31], [0.34, 0.25], [0.25, 0.37], [0.13, 0.31], [0.0, 0.35], [-0.17, 0.27]]));                  // hair from behind, one cowlick at the crown
+  const HC = [-0.14, -3.84], HROT = -0.15;
+  const headSh = B(HEAD.scale(1.08).rotate(HROT).translate(HC[0], HC[1] - 0.04));
+  body.add(headSh);
+  // LEFT leg: knee up (his elbow rests on it), shin forward, foot in a half-pulled-off sock
+  const legL = S().capsule(-0.7, -0.4, 0.42, -1.6, -1.78, 0.27).capsule(-1.6, -1.78, 0.26, -2.34, -0.86, 0.16);
+  const sock = sm([[-2.22, -1.04], [-2.56, -1.06], [-2.9, -0.98], [-3.04, -0.88], [-3.02, -0.78], [-2.6, -0.7], [-2.28, -0.68, 1], [-2.16, -0.82]]);
+  const sockTip = sm([[-2.98, -0.94], [-3.14, -0.86], [-3.2, -0.72], [-3.17, -0.6, 1], [-3.08, -0.68], [-2.98, -0.76]]);
+  body.add(B(legL)).add(B(sock)).add(B(sockTip));
+  // LEFT arm (phone): shoulder -> elbow on the knee -> hand cupping the phone to his ear
+  const SL = [-0.92, -2.84], EL = [-1.56, -2.12], WL = [-0.74, -3.3];
+  const armL = S().capsule(SL[0], SL[1], 0.27, EL[0], EL[1], 0.19).capsule(EL[0], EL[1], 0.17, WL[0], WL[1], 0.125);
+  armL.add(S().poly([[-1.26, -2.56], [-1.62, -2.5], [-1.5, -2.36], [-1.76, -2.28], [-1.44, -2.2]]));     // torn sleeve flap at the elbow
+  const earL = [-0.5, -3.9]; const handAng = Math.atan2(earL[1] - WL[1], earL[0] - WL[0]);
+  const mitt = sm([[0, -0.15], [0.22, -0.19], [0.48, -0.17], [0.6, -0.08], [0.62, 0.06], [0.5, 0.16], [0.24, 0.17], [0, 0.13]]).transform([Math.cos(handAng), Math.sin(handAng), -Math.sin(handAng), Math.cos(handAng), WL[0], WL[1]]);
+  body.add(B(armL)).add(B(mitt));
+  // the phone: a slab pressed along the cheek, its back to us; only its top shows above his fingers
+  const PH = {c: [-0.74, -3.9], a: 0.24, w: 0.15, h: 0.7};
+  const phone = S().rect(-PH.w / 2, -PH.h / 2, PH.w, PH.h).rotate(PH.a).translate(PH.c[0], PH.c[1]);
+  // RIGHT arm, reaching down to the grass at his side
+  const SR = [0.94, -2.62], ER = [1.74, -1.66];
+  // ---- the clasp ----
+  const CL = [HX + 2.66 * SC, HY - 0.3 * SC], LH = 1.06 * SC;
+  function clasp(Cx, Cy, L, rot, sq) {
+    const m = [Math.cos(rot) * L, Math.sin(rot) * L * sq, -Math.sin(rot) * L, Math.cos(rot) * L * sq, Cx, Cy];
+    const T = sh => sh.transform(m);
+    const sBack = sm([[-0.62, -0.17], [-0.42, -0.25], [-0.16, -0.3], [-0.02, -0.29, 1], [0.03, -0.17], [0.05, -0.04], [0.04, 0.1], [0.0, 0.23, 1], [-0.2, 0.24], [-0.45, 0.17], [-0.62, 0.12]]);
+    const sFing = S();
+    [[-0.235, 0.056, 0.45], [-0.105, 0.06, 0.5], [0.025, 0.057, 0.47], [0.15, 0.048, 0.38]].forEach(([y, r, len]) => {
+      sFing.capsule(-0.04, y, r, len * 0.68, y + 0.015, r * 0.95); sFing.capsule(len * 0.68, y + 0.015, r * 0.95, len * 0.92, y + 0.085, r * 0.82); });
+    const sThumb = S().capsule(-0.4, -0.25, 0.075, -0.13, -0.36, 0.064).capsule(-0.13, -0.36, 0.064, 0.08, -0.37, 0.055);
+    const eBack = sm([[0.64, -0.2], [0.42, -0.27], [0.16, -0.31], [0.03, -0.29, 1], [-0.02, -0.15], [-0.03, 0.0], [-0.01, 0.13], [0.04, 0.25, 1], [0.24, 0.27], [0.46, 0.22], [0.64, 0.15]]);
+    const eArm = S().capsule(0.6, -0.03, 0.17, 1.3, -0.14, 0.2);
+    const eFing = S();
+    [[-0.17, 0.056, 0.44], [-0.045, 0.06, 0.5], [0.08, 0.057, 0.47], [0.2, 0.048, 0.37]].forEach(([y, r, len]) => {
+      eFing.capsule(0.04, y, r, -len * 0.68, y + 0.015, r * 0.95); eFing.capsule(-len * 0.68, y + 0.015, r * 0.95, -len * 0.92, y + 0.085, r * 0.82); });
+    const eThumb = S().capsule(0.36, -0.27, 0.07, 0.12, -0.42, 0.058);
+    const ap = (x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+    return { m, ap, sBack: T(sBack), sFing: T(sFing), sThumb: T(sThumb), eBack: T(eBack), eArm: T(eArm), eFing: T(eFing), eThumb: T(eThumb) };
+  }
+  const K = clasp(CL[0], CL[1], LH, 0.06, 0.92);
+  const WR = K.ap(-0.6, -0.02);           // Scott's right wrist (px)
+  const pxSR = U(...SR), pxER = U(...ER);
+  const armR = S().capsule(pxSR[0], pxSR[1], 0.27 * SC, pxER[0], pxER[1], 0.18 * SC).capsule(pxER[0], pxER[1], 0.16 * SC, WR[0], WR[1], 0.12 * SC);
+  // burned right sleeve: tatters hanging from above the elbow
+  { const a = U(1.34, -2.28), sl = OTM.rng('sleeve'); for (let i = 0; i < 4; i++) { const x = a[0] + (i - 1.5) * 0.12 * SC, y = a[1] + i * 0.06 * SC; armR.poly([[x - 0.07 * SC, y], [x + 0.07 * SC, y + 0.02 * SC], [x + (sl() - 0.3) * 0.08 * SC, y + (0.18 + sl() * 0.16) * SC]]); } }
+  body.add(armR).add(K.sBack).add(K.sFing).add(K.sThumb);
+
+  // ---- his shadow, thrown back toward us by the fire (the place beside him casts none) ----
+  OTM.castShadow(g, body, [1, 0, -0.75, -0.3, HY * 0.75, HY * 1.3], 0.7);
+
+  // ---- the body: ink. The house's fire catches only his crown, left shoulder, the raised arm and the sock ----
+  const bodyNoPhoneP = body.path(0.8, 11);
+  const bodyP = body.add(B(phone)).path(0.8, 11);
+  g.fillStyle = C.ink; g.fill(bodyP);
+  const HEADC = U(HC[0], HC[1]);
+  rimInside(g, bodyNoPhoneP, C.fireMid, 3.4, 2.2, t => t.ellipse(HEADC[0] - 0.7 * SC, HEADC[1] + 0.3 * SC, 1.35 * SC, 1.15 * SC, 0, 0, 7));
+  g.fillStyle = C.ink; g.fill(B(phone).path(0.3, 3));
+  rimInside(g, bodyP, mix(C.ink, C.fireMid, 0.5), 2.4, 1.6, t => { t.rect(0, U(0, -2.5)[1], U(-0.3, 0)[0], H); });
+  rimInside(g, B(S().add(sock).add(sockTip)).path(0.8, 11), C.fireMid, 2.6, 3.2, null);
+  // burned shirt: a smouldering edge on the sleeve tatters and the hem (dim, fire-family, never ember)
+  { const ash = OTM.rng('char'); g.fillStyle = mix(C.ink, C.fireMid, 0.7);
+    for (let i = 0; i < 16; i++) { const p = U(1.18 + ash() * 0.5, -2.3 + ash() * 0.5); g.fillRect(p[0], p[1], 1.8, 1.8); }
+    for (let i = 0; i < 12; i++) { const p = U(-0.9 + ash() * 1.8, -0.46 + ash() * 0.12); g.fillRect(p[0], p[1], 1.6, 1.6); } }
+  // ...and a wisp of smoke still curling off the burned sleeve: a tapered ribbon in two faint flat steps
+  [[0, 0.16, 1], [1, 0.09, 0.55]].forEach(([k, al, wk]) => {
+    const p0 = U(1.28 + k * 0.06, -2.32), N = 40, L2 = [], R2 = [];
+    for (let i = 0; i <= N; i++) { const t = i / N; const cx = p0[0] + 26 * Math.sin(t * 7.5 + k) * (0.3 + t) + 60 * t * t, cy = p0[1] - 300 * t;
+      const w = (3 + 16 * Math.sin(Math.PI * Math.pow(t, 0.7)) * (1 - t * 0.5)) * wk; L2.push([cx - w, cy]); R2.unshift([cx + w * 0.6, cy]); }
+    g.save(); g.globalAlpha = al; g.fillStyle = C.ash; g.fill(S().poly(L2.concat(R2)).path(1.6, 17 + k)); g.restore();
+  });
+  // nothing behind him blooms through him
+  em.save(); em.globalCompositeOperation = 'destination-out'; em.fill(bodyP); em.restore();
+
+  // ---- phone-white: the screen's spill on his cheek, jaw and fingertips (one hard band and the seam) ----
+  {
+    const faceP = S().add(headSh).add(B(mitt)).path(0.8, 11);
+    const pc = U(PH.c[0], PH.c[1] + 0.14);
+    // cheek and jaw in front of the phone: one hard band of phone-white, a thinner second band
+    rimInside(g, faceP, C.phoneWhite, 5.2, -1.6, t => t.ellipse(pc[0] - 2, pc[1] + 0.22 * SC, 0.26 * SC, 0.26 * SC, 0.2, 0, 7));
+    rimInside(g, faceP, mix(C.ink, C.phoneWhite, 0.5), 3.2, -1.0, t => t.ellipse(pc[0] - 2, pc[1] - 0.12 * SC, 0.2 * SC, 0.2 * SC, 0.2, 0, 7));
+    // the screen's light escaping at the phone's top and bottom ends
+    // the screen side of the slab (facing his cheek) glows where it clears his face: a hard seam of light
+    const pe = B(phone).polys[0];   // corners: tl, tr, br, bl
+    g.save(); g.strokeStyle = C.phoneWhite; g.lineCap = 'butt'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(pe[1][0] + 1.5, pe[1][1] + 2); g.lineTo(pe[2][0] + 1.5, pe[2][1] - 2); g.stroke();
+    g.lineWidth = 2; g.beginPath(); g.moveTo(pe[0][0] + 2, pe[0][1] + 1); g.lineTo(pe[1][0] - 1, pe[1][1] + 1); g.stroke();
+    g.restore();
+    em.fillStyle = C.phoneWhite; em.beginPath(); em.ellipse(pc[0] - 8, pc[1] + 0.1 * SC, 0.1 * SC, 0.22 * SC, 0.2, 0, 7); em.fill();
+  }
+  // ---- warmth from his right: the held hand lights the underside of his wrist ----
+  rimInside(g, bodyP, mix(C.ink, C.fireMid, 0.62), -3, -1.4, t => t.ellipse(CL[0] - 0.2 * SC, CL[1], 1.2 * SC, 1.5 * SC, 0, 0, 7));
+  rimInside(g, bodyP, mix(C.ink, C.fireMid, 0.34), -2, -0.6, t => t.ellipse(CL[0] - 0.4 * SC, CL[1] - 1.2 * SC, 1.5 * SC, 2.9 * SC, -0.25, 0, 7));
+
+  // ================= THE HAND OF LIGHT (knockout): its fingers over his, his fingers over it =================
+  {
+    const hc = f.markHoles();
+    hc.save(); hc.fillStyle = '#fff';
+    hc.fill(K.eBack.path(0.7, 21)); hc.fill(K.eThumb.path(0.7, 24));
+    // its wrist: a third of a forearm, then it burns out into the grass in flat steps
+    const arm = K.eArm.path(0.7, 22);
+    const a0 = K.ap(0.55, -0.03), a1 = K.ap(1.3, -0.14);
+    const tm = tmp(); tm.fillStyle = '#fff'; tm.fill(arm);
+    tm.globalCompositeOperation = 'destination-in';
+    const lg = tm.createLinearGradient(a0[0], a0[1], a1[0], a1[1]); lg.addColorStop(0, '#fff'); lg.addColorStop(0.3, '#fff'); lg.addColorStop(0.31, 'rgba(255,255,255,0.72)'); lg.addColorStop(0.46, 'rgba(255,255,255,0.72)'); lg.addColorStop(0.47, 'rgba(255,255,255,0.3)'); lg.addColorStop(0.6, 'rgba(255,255,255,0.3)'); lg.addColorStop(0.61, 'rgba(255,255,255,0)');
+    tm.fillStyle = lg; tm.fillRect(0, 0, W, H);
+    tm.globalCompositeOperation = 'destination-out';
+    const fr = OTM.rng('wristburn');
+    for (let i = 0; i < 220; i++) { const u = 0.2 + fr() * 0.5, p = K.ap(0.55 + u * 0.75, -0.08 + (fr() - 0.5) * 0.46); if (fr() < u * 1.4) { tm.beginPath(); tm.ellipse(p[0], p[1], 1.5 + fr() * 5, 1 + fr() * 3, fr() * 3, 0, 7); tm.fill(); } }
+    hc.drawImage(tm.canvas, 0, 0);
+    hc.globalCompositeOperation = 'destination-out'; hc.fill(K.sFing.path(0.8, 11)); hc.fill(K.sThumb.path(0.8, 11));
+    hc.globalCompositeOperation = 'source-over'; hc.fill(K.eFing.path(0.7, 23));
+    hc.restore();
+  }
+
+  // ================= FOREGROUND: grass blades in ink along the bottom =================
+  {
+    const gr = S(); const r2 = OTM.rng('blades');
+    for (let x = -20; x < W + 20; x += 9 + r2() * 16) {
+      const edge = Math.min(1, Math.abs(x - 1000) / 900); const h = 14 + r2() * 26 + 90 * edge * edge * edge * r2();
+      const lean = (r2() - 0.5) * 0.6; const b = 1084;
+      gr.poly([[x - 3 - h * 0.03, b], [x + 3 + h * 0.03, b], [x + lean * h + 1, b - h]]);
+    }
+    gr.rect(-20, 1066, W + 40, 30);
+    g.fillStyle = C.ink; g.fill(gr.path(0.6, 5));
+  }
+
+  // ================= TYPE =================
+  OTM.say(g, 'dispatcher', 'How many people made it out?', 1330, 214, {timer: '00:02:51', align: 'center'});
+  OTM.say(g, 'scott', 'Two.', 1100, 470, {size: 160});
+
+  if (DEBUG) {
+    [[...U(...SL), 'SL'], [...U(...EL), 'EL'], [...U(...WL), 'WL'], [...pxSR, 'SR'], [...pxER, 'ER'], [...WR, 'WR'], [...CL, 'CL']].forEach(([x, y, k]) => { g.fillStyle = '#f0f'; g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill(); OTM.text(g, k, x + 8, y - 8, {family: 'Barlow Condensed', size: 20, color: '#fff'}); });
+  }
+  f.finish({letterbox: 1.7778, vignette: 0.55, halation: 0.6});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 13', 'TWO.', 1.7778);
+  window.FRAME_READY = true;
+})();
+</script>

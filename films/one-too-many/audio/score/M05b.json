@@ -1,0 +1,7 @@
+{
+ "id": "M05b",
+ "model": "lyria-3.5",
+ "prompt": "A 16-second instrumental underscore cue of quiet, slowly tightening unease, for a small chamber string group, muted (con sordino), sul tasto, without vibrato, recorded close and dry in a small room: two violas and one cello. In tune at A = 440. Key centre A, with the B-flat a semitone above as the unsettling note. Beatless free time: no pulse, no rhythm, no ostinato. Pianissimo, growing only to piano. The top octaves stay empty.\n[0:00 - 0:04] Out of silence, the two violas hold the A above middle C (A4) and the B-flat a semitone above it, very soft, rubbing against each other.\n[0:04 - 0:12] The cello quietly adds a low A two octaves below (A2), and the three notes hold, growing very slowly from pianissimo to piano. Nothing moves.\n[0:12 - 0:16] Hold exactly the same: no change, no resolution, no ending, no fade (it will be cut off).\nInstrumental only, no vocals. Avoid: percussion, any regular pulse, tremolo, sul ponticello, clusters of three close notes, piano, electric piano, glassy or shimmering sounds, risers, impacts, stingers, glissandi, melody, melodrama, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

@@ -1,0 +1,7 @@
+{
+ "id": "M05a",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 30-second instrumental clip of quiet, uncanny chamber music that begins immediately, on the first instant, with no intro. Two muted violas, sul tasto, without vibrato, hold one soft sustained dyad: the A above middle C (A4) and the B-flat a semitone above it (B-flat4), rubbing gently against each other. Pianissimo, close and dry, in tune at A = 440. Beatless, no pulse. The dyad holds exactly the same for the full 30 seconds: no movement, no swell, no new notes, no ending.\nInstrumental only, no vocals. Avoid: percussion, any rhythm, piano, shimmering or glassy high sounds, low bass, swells, risers, impacts, stingers, melody, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

@@ -1,0 +1,5 @@
+node_modules/
+out/
+# The village model is licensed (Fab Standard License) and is never copied here; tools/server.mjs reads it
+# from the Crownfall checkout.
+*.glb

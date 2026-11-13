@@ -1,0 +1,7 @@
+{
+ "id": "M09b",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 30 seconds: a thin, mechanical repeating felt-piano figure in D major, eighth notes at about 72 bpm, quieter and cooler than in the morning, with a soft high string line, an office afternoon of forms and emails and coffee, a man straightening a family photograph on his desk. Calm, pianissimo, a little hollow. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

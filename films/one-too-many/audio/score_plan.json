@@ -1,0 +1,1252 @@
+{
+ "palette": "ONE ROOM, TWO MUSICS.\n(1) THE RECORD, the party's only music, always diegetic: a mellow neo-soul / lounge-jazz trio, recorded clean and close (a Fender Rhodes with soft amp tremolo, a round fingered electric bass, brushes and a soft felt kick). It is in 6/8 at 70 bpm on the dotted quarter, so one bar is 1.714 s, almost the 1.7 s beat of the final unison. Key: D minor (Dorian), Dm9 | G13 | Cmaj9 | A7(b9), with the Rhodes top voice falling E-E-D-B-flat. Where it is heard: through the wall (M03, low-pass 0.9 kHz), in the room (M04a, 8 kHz), through the doorway at the card table (M04b and M06a, 3.2 kHz), and as 'the next record' (M06b, 3.2 kHz): A minor, 7/8, one beat too many in every bar, with no G natural in it.\n(2) THE SCORE, non-diegetic: a small, close, dry chamber string group in a small room (two to four cellos, two violas, two violins), muted (con sordino), no vibrato, mostly sul tasto. There is no double bass. The lowest score note is the cello's low C (65 Hz), and every underscore cue is high-passed at 75 Hz (P5), so the 55 Hz fundamental belongs to the Extra's drone alone. Three solo colours each have one job:\n- a felt-muted upright piano: the count (M01, with its reprise in M12) and the numb call (M11b);\n- a solo cello: grief (Deena's one held note in M10b; five falling notes for the five friends in M11b);\n- the party's Rhodes, close and dry, used exactly once outside the records: one Dm9 at the jacket (M10d).\nDropped from the draft: bowed glass, bass clarinet, double bass, and the 'distant' Rhodes in the dining room, which read as the speaker switching itself back on.\n\nRULES (so the music leaves room for the story's sounds):\n- No drums, percussion, pulse, walking line or ostinato in any underscore. The heartbeat owns tempo, and the cards, slaps and pings own rhythm. The score never counts against the pings.\n- No risers, braams, booms, hits, whooshes or trailer gestures. Every impact is a sound effect. Cues end on holes, hard cuts or designed silence.\n- No choir, voices, synth pads, bells, celesta, chimes or glass.\n- The top octaves stay empty: nothing above about 1.5 kHz in the underscore except a few single soft harmonics. The pings sit at 2.8-7.3 kHz, the gas hiss above 2.8 kHz and the tinnitus at 6.2 kHz.\n- Everything is in tune at A = 440, measured and corrected to within 3 cents (P5). No instrument is asked to be 'detuned' or 'out of tune', because the souring belongs to the pings. The only wobble is a gentle tape wobble on the M10d Rhodes.\n- The Extra's flat seventh (384.7 / 385.4 Hz) belongs to drone7. The score never plays a G in the middle register, so it never covers his partial or beats against it. The score's only Gs are a high G5 (the count's sixth note, and the top of Angelo's A7(b9)) and the kitchen's low lament bass on G2.\n- Prompts name no sound effects, no violence and no existing works. Scenes are described only by feeling.\n\nDYNAMICS:\n- Underscore from Act 1 to Act 3 is ppp to p, capped at mp (M07's one step). There is no tremolo, sul ponticello or three-note cluster before the kitchen.\n- M08b, at the fifth wineglass, is the first mf.\n- The stove struggle (M10a) is the only passage at mf to f, and the first time the score presses (tremolo, ponticello, the A / B-flat / C cluster). The knife tremolo (M10c) stays low and steady.\n- After the oven door nothing is louder than p. The standoff, the run and the blast have no score. The yard and the call are pp to p.",
+ "motifs": [
+  {
+   "name": "THE RUB (one too many)",
+   "description": "A against the B-flat a semitone above: the Phrygian flat second, and the flat ninth of the party's own A7(b9). It is the sound of a count that comes out one too many. It is always a held dyad (sometimes spread wide as a minor ninth, once doubled in three octaves), never a line and never a riser. It presses only once, in the kitchen, where it widens into the A / B-flat / C tremolo cluster.",
+   "where": "M05a: two violas on the seventh pile, the score's first word. M05b: with a low A beneath, from Christof's pause to 'Why?'. M07: A2 against B-flat3 through the corridor and the Christof logic, then up into the violins (A5 / B-flat5) when they look at the bottle, held on the doorway. M08a: the E of the held fifth gives way to B-flat after 'Didn't somebody already say me?'. M08b: in three octaves, the first mf. M10a: the only time it presses (sul ponticello tremolo on A / B-flat / C, forte at the oven handle). M11a: the B-flat inside the unresolved A7(b9). M11b: A3 and B-flat3 from 'Five. I had five over.' to the hole for '6'."
+  },
+  {
+   "name": "THE COUNT (one note too many)",
+   "description": "A felt-muted upright piano plays slow single notes about 1.3 s apart, each left to ring: E5, D5, C5, B4, A4, then a sixth note that does not belong, a high G5 a seventh above the A, left hanging. Both prompts use identical wording and register, so the reprise is recognised. The G5 is in tune and far above the drone's 385 Hz partial: it points at the Extra without playing his note. Its echo is the solo cello's five falling notes for the five friends. The score no longer counts alongside the pings; the draft's countable lines in M08a, M09 and M11c are removed.",
+   "where": "M01: under 'You said there were six people.' (from about 10.0). M12: under 'You're safe for now.' (from about 846.3). Echo: M11b's solo cello plays E, D, C, B-flat, A on the sparks (about 769.6-775.6), one note per friend."
+  },
+  {
+   "name": "THE RECORD AND ITS MEMORY (the friends' warmth)",
+   "description": "The party's record: Dm9 | G13 | Cmaj9 | A7(b9) on a Rhodes trio in 6/8 at 70 bpm, with the top voice falling E-E-D-B-flat. It is source music only while the party lives. Its turnaround chord, A7(b9), already holds the Extra's A, G and B-flat, and the film never lets it resolve. After the party dies it is remembered only twice, never as a 'distant speaker': once in the strings and once on a close, dry Rhodes. Its cadence returns as Angelo's goodbye.",
+   "where": "Source: M03 (through the wall), M04a (in the room), M04b (through the doorway), M06a (ends alone on its unresolved A7(b9) under Angelo's drain), M06b (the next record: A minor, 7/8, no G natural). Memory: M08a (the strings' D minor 9 as the hands join) and M10d (the Rhodes' single Dm9 at the jacket). Cadence: M11a (D minor stepping down D-C-B-flat into the A7(b9), ended before the spark)."
+  },
+  {
+   "name": "THE LAMENT BASS (the house retuned)",
+   "description": "In the kitchen the bass sinks a semitone with each loss, following the old synth dread roots (55, 51.9 and 49 Hz) an octave up, until the house sits on the Extra's pitch class. Each time it is a single held low note, never a moving line.",
+   "where": "M10a: A2 under the stove struggle. M10b: G-sharp2 on one cello for Deena, stopping with her heart. M10c: G2 under the shaking knife tremolo. M10d: G2 under the aftermath's numb A-C-E."
+  },
+  {
+   "name": "HIS NOTE (the 7th harmonic)",
+   "description": "The Extra's only musical identity is the drone's natural 7th (384.7 / 385.4 Hz over 55 Hz, about 31 cents flat of G4), and it swells only when he acts. The score leaves it to drone7 and Q08.seventh. Lyria cannot play a G 31 cents flat, and an equal-tempered G4 would beat at about 7 Hz against his partial. So the score plays no G in the middle register and never covers his swells. It points at him only by displacement: the count's extra high G5, the high G5 at the top of Angelo's A7(b9), and the kitchen's bass sinking to G2.",
+   "where": "drone7 throughout (synth). Score gestures toward it: M01 and M12 (the sixth note), M11a (the top of the goodbye chord), M10c and M10d (the bass on G). The flat G is removed from every cue where the draft had it (its M02b, M05a, M05b, M07b, M08a, M08b, M09, M11b, M12a and M12b)."
+  }
+ ],
+ "key_map": "Everything is tuned to A = 440 and centred on the drone's A (55 Hz), with no G in the score's middle register.\n- Cold open (M01): A minor. A cello's open A3 (220 Hz, the pitch of the final unison) sits under the felt-piano count, whose sixth note is a high G5.\n- Q02: no Lyria score. The film's own synth chord, D major (Q02.warm), stays under the title and the credit.\n- The record (M03, M04a, M04b, M06a): D minor (Dorian), Dm9 | G13 | Cmaj9 | A7(b9). Its A7(b9) holds A, G and B-flat, and M06a ends on it, unresolved.\n- The next record (M06b): A minor, Am(add9) | Fmaj7 | B-flat maj7(#11) | E7(b9). It is the Extra's key and contains his B-flat, but no G natural, which the drone keeps.\n- Underscore from Q05 to Q09: A minor over a low A, with B-flat as the rub. The only remembered harmony is D minor 9 (M08a).\n- Kitchen: A2 at the stove (the A / B-flat / C cluster), G-sharp2 for Deena, then G2 under the knife and the aftermath, with A-C-E above it. The Rhodes plays one Dm9 at the jacket.\n- Goodbye (M11a): D minor steps down D-C-B-flat to an unresolved A7(b9), voiced A2 E3 C-sharp4 B-flat4 G5. The spark cuts it off before it can resolve.\n- Yard (M11b): A minor. Five falling cello notes E-D-C-B-flat-A, then an open fifth A2-E3, then A3 against B-flat3 until the hole for '6'.\n- M12: an open fifth A2-E3 and the count's reprise, narrowing to a bare A3 that goes out with the world. The synth unison (220 + 220.6 Hz) takes that A on 'Two.'. The film's first score note (M01's A3) is the same A, 21 s later in the same call.",
+ "arc": "ARC. The score is held back. It speaks only when a count comes out wrong, and it always gives way to the Extra (his drone, his holes). It builds by restraint:\n- Underscore in Acts 1 to 3 is held dyads at pp to p, capped at mp.\n- M08b is the first mf.\n- The stove struggle (M10a) is the first and only time the score presses.\n- The fire is scored only as grief.\n\nCOLD OPEN (0:00-0:32): the fire comes first. The score enters with the curtain on a cello's A3. Under 'six people' the felt piano counts six notes, and the sixth does not belong. The cue thins away by 25.6, leaving the ear ring, the caret's heartbeats and the smash cut (30.82) to the sound design.\n\nACT 1 (0:32-3:45):\n- No Lyria score for the crisps, the glasses or the title. The film's own synth chord (Q02.warm) stays under the title and the credit 'A Film by Osita Miles'.\n- The party is only its record: through the wall as the guests arrive (cut dead on the tally), in the room for the warmest scene, and through the doorway at the cards, cut dead on 'Angelo.'.\n\nACT 2 (3:45-7:09):\n- The score's first word is a 3.4 s rub on the seventh pile, gone before the joke.\n- It returns at Christof's pause and is cut with the room on 'Please.', so the six hands fall into the hole.\n- The record creeps back, gets nothing on PERFECT, and ends alone on its unresolved A7(b9) under Angelo's drain.\n- The next record is in the Extra's key and limps one beat too many in every bar, until the kitchen takes Christof.\n- The crash, the bottle, the five glasses and 'Oh. Thanks.' play dry.\n- In Kay's corridor one flat texture holds through the Christof logic. It steps once when they look at the bottle, holds on the doorway nobody will look at, and stops as Angelo reaches for the cards.\n\nACT 3 (7:09-9:34):\n- The hand circle is one cue: a static A under the argument; the last warmth as the hands join, cut by hole 1; a still fifth under both roll calls; a held darkening in between.\n- The fridge beat is the fridge alone.\n- The first mf runs from the fifth wineglass to the let-go, and is cut dead.\n- The photo gets cold stillness, with one change on 'Then let's go get them'. It is gone at the bathroom handle.\n\nACT 4, THE KITCHEN (9:34-11:26):\n- The stove struggle presses, and the oven hole cuts it off.\n- No score for the oven, the scream or the throat.\n- One held G-sharp for Deena stops with her heart.\n- A shaking low tremolo on G for the knife is cut with Marina.\n- The aftermath is numb over G, with the party's Rhodes once at the jacket. It withdraws so the hiss gets louder.\n\nACT 5 (11:26-12:54): no score for the standoff; the hiss is its score. Angelo's goodbye steps from D minor into the unresolved A7(b9) and ends before the spark. Nothing for the run, the blast or the crawl.\n\nCODA, TWO (12:54-14:54):\n- Grief comes on the sparks: five falling cello notes.\n- One numb cue carries across LATER and the call, ending in a static rub under the count until the hole for '6'.\n- After the hit, the count returns and narrows to a bare A3 that goes out with the world.\n- 'Me.' and 'Two.' are unscored. The unison takes that A, and the film ends on the unison and the locked hearts.\n\nJOINS: no two cues overlap or crossfade. Every boundary is one of three things:\n- a hard cut on a picture cut or an action: 143.92, 145.09, 191.09, 224.69, 280.97, 326.79, 389.79, 519.15, 631.05, 751.78, 839.35;\n- one of the Extra's holes: M08a crosses 474.34 and 505.70; M09 crosses 547.60; M10a ends inside 605.80; M10c ends inside 644.05; M11b ends inside 838.60;\n- designed silence.\nThe only butt joins are where the record changes on a time cut: 191.09 (M04a / M04b) and 326.79 (M06a / M06b).\n\nBUDGET: 19 generations (15 lyria-3.5, 4 lyria-3-clip-preview). That leaves 3 retakes inside 22; M06b's 7/8 is the likeliest to need one.\nChanges from the draft:\n- Cut: M02a, M02b (the synth Q02.warm stays), M07a, the standoff cue, and M12b.\n- Added: Deena's clip (M10b).\n- M04 is split into M04a / M04b.\n- M05a and the knife cue are now clips.\n- Shared-take generations (one file feeding several cues) are not used, because neither the plan nor the tool can name a shared source.\n- IDs are renumbered in order. The draft's M10b, M10c, M11b, M11c and M12a are now M10c, M10d, M11a, M11b and M12.\n\nPIPELINE: these must be in place before placement. The plan's shape cannot carry these fields.\n- P1 (stem.js --score). When a cue's 'replaces' names a bed instance and the cue's span overlaps it, gate that instance over its whole t0-t1. Equivalently, merge the spans per bed and extend them to the instance's ends.\n  - Without P1, the synth LATER groove plays under M06b: the M06a and M06b gates meet at 326.79, and the first gate's re-open ramp wins.\n  - Without P1, old dread also leaks at 511.58-515.00, 519.15-519.65, 606.82-620.30 (under the oven door and the scream) and 751.78-752.45 (after the spark).\n  - M08a runs its span to 509.80 and M10d to 686.35, past the end of their audio, so the fridge-beat fragment and Q10's last dread tail are gated even with today's tool.\n  - Check the gated-span report, then listen.\n- P2 (done in this plan). 'replaces' lists bare bed names only: 'groove' (Q03's layer, matched by its p.bed), 'Q04.groove', 'Q05.groove', 'Q06.groove', 'dread'.\n- P3 (score_place.py). Apply every score.json duck to the whole music stem, shaped like the engine's bus ducks: 0.2 s down before t0, hold the level to t1, 0.3 s back up. M03, M04a, M06a, M09, M10a and M11b depend on this (the second CLICK, Deena's almost-comment, the bathroom click, PERFECT, the keypad, the last count).\n- P4 (score_place.py). Add a per-cue head trim (in_s), applied before the span trim and set at audition.\n  - Hard starts: trim to the first downbeat or onset for M03, M04a, M04b, M06b, M07, M08b, M10c and M12, and the clips M05a and M10b.\n  - Anchors for fade-in cues: M06a, so that the band's stop lands at 322.59; M11a, so that the arrival on the A7(b9) lands on 'Go.' at 746.45.\n  - Fold any MP3 decoder priming offset into in_s.\n  - Measure loudness on the segment actually used, not the whole file (the clips use 3.4 to 13.25 s of 30 s).\n- P5 (tuning and the low register). Measure each take against A440 and resample it to within 3 cents. Reject takes in the wrong key, with drifting pitch, with any vocal, or with percussion in an underscore cue. High-pass every underscore cue at 75 Hz (2nd order).\n- P6 (filters). source_filter carries only the low-pass the tool implements. Optional, once gain and filter automation exist:\n  - M03's door-open swells, following the old Q03.grow steps: 75.52 +1 dB, 89.22 +1 dB, 116.52 +1.5 dB, 136.02 +2 dB.\n  - M06a's corridor, 301.69-307.79: -10 dB with a 0.7 kHz low-pass.\n- P7 (levels). The level_db values are starting points. Render the stem with and without --score and check:\n  - each source cue sits about 3 to 6 LU above the synth groove it replaces;\n  - each underscore cue sits clearly under the scene's bed over its span (about 6 LU under), except M10a;\n  - M10a is at least 3 dB above every other cue;\n  - the 100 Hz to 1 kHz band stays clear of the slaps and heartbeats.",
+ "keep_synth": [
+  "drone7 (the Extra's leitmotif: A1 partials 1-6 plus the flat 7th at 384.7/385.4 Hz, on the 'extra' bus, never silenced; the score leaves the 7th to it)",
+  "Q08.seventh (the 7th blooming under the VOICE words)",
+  "unison (220 + 220.6 Hz, from 'Two.'; it takes the A that M12 leaves)",
+  "ping (CU.ping, the souring count pings, including the Q02 glass pings and every wrong ping; the only souring in the film)",
+  "tinnitus",
+  "Q01.tinn",
+  "Q01.ring (owns 24.3-30.82 into the smash cut)",
+  "heart (all BD.heart beds, including Q12's second, locking heartbeat)",
+  "Q07.heart",
+  "lub (single heartbeat cues)",
+  "Q02.warm (the film's own in-tune D major chord under the title, 48.98-51.35, and under the credit 'A Film by Osita Miles', 52.30-55.13; no Lyria cue there)"
+ ],
+ "cues": [
+  {
+   "id": "M01",
+   "seq": "Q01",
+   "start_s": 6,
+   "end_s": 25.6,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [],
+   "prompt": "A 20-second instrumental film-score cue: the first music of a quiet, dark, minimalist animated film. A young man sits alone outside at night, in shock, unable to answer a simple question. Haunting, desolate and intimate; very quiet, pianissimo, never above mezzo-piano. In tune at A = 440. Beatless free time with no pulse. Key centre A minor. Instruments, and only these: one muted cello played sul tasto without vibrato, and a felt-muted upright piano, recorded close and dry. The top octaves stay empty.\n[0:00 - 0:04] Out of near silence, the cello's soft open A string (A3, the A below middle C) blooms slowly, then holds perfectly still.\n[0:04 - 0:12] Over the held A, the felt piano plays six slow single notes, about 1.3 seconds apart: E5, D5, C5, B4, A4, and then a sixth note that does not belong, a high G5 a seventh above the A. Each note is left to ring; the last one hangs unresolved. The piano does not play again.\n[0:12 - 0:20] Only the cello's held A remains, very soft and still, thinning to nothing by 0:19. No accents and no new material.\nInstrumental only, no vocals, no choir, no humming. Avoid: drums or any percussion, impacts, booms, risers, swells, reversed sounds, rising or piercing high tones, trailer-style builds, lush strings, any melody beyond the six piano notes, sentimentality, and any major-key resolution.",
+   "sync_points": [
+    {
+     "t_global": 6.6,
+     "event": "the upstairs curtain lifts in the heat (gone by 9.9)",
+     "music": "the cello's A3 blooms with it: the film's first musical sound (1.5 s fade-in from 6.0)"
+    },
+    {
+     "t_global": 8.5,
+     "event": "cut to Scott on the grass (F02); breathing bed begins",
+     "music": "the A holds, still"
+    },
+    {
+     "t_global": 9,
+     "event": "L001 'Sir? Stay with me. You said there were six people.'",
+     "music": "the felt-piano count begins about 1 s later (cue 0:04): E5, D5, C5, B4, A4..."
+    },
+    {
+     "t_global": 15.8,
+     "event": "L002 'Yeah.'",
+     "music": "the count reaches its sixth note, the high G5 that does not belong (around 16.5, loose), and hangs; the piano stops"
+    },
+    {
+     "t_global": 21,
+     "event": "L003 'How many got out?' (heartbeat bed since 17.0)",
+     "music": "only the cello's A, very soft"
+    },
+    {
+     "t_global": 22.95,
+     "event": "glass breaks inside the house",
+     "music": "no hit: the glass belongs to the sound effects"
+    },
+    {
+     "t_global": 24.3,
+     "event": "L004 'I--', dash guillotined at 24.45; Q01.ring starts climbing; the caret blinks with a lub on each blink",
+     "music": "the A fades out from 24.3 and is gone by 25.6"
+    },
+    {
+     "t_global": 30.82,
+     "event": "SMASH CUT TO BLACK",
+     "music": "unscored: the smash cuts sound design to silence; the score left five seconds earlier"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 1.5,
+   "fade_out_s": 1.3,
+   "level_db": -9.0,
+   "source_filter": "",
+   "why": "The fire owns the first six seconds. The score enters with the curtain on a cello's A3, the pitch of the unison that ends the film: the cold open comes 21 s after 'Two.' in the same call (timer 00:02:51 on 'Two.', 00:03:12 on L001), so on a rewatch the first note is the last one the story heard. Under 'six people' the felt piano counts, and its sixth note does not belong. Q01 has no drone, so the G5 sits on nothing of his. The draft's rising ear-ring section (0:18-0:28) is removed, because it was a riser that doubled Q01.ring. M01 ends by 25.6, so the smash cut takes sound design, not music, into silence. (Raised 4 dB after mixing: earshot heard no music here under the fire and the call at the planned level.)"
+  },
+  {
+   "id": "M03",
+   "seq": "Q03",
+   "start_s": 55.62,
+   "end_s": 143.92,
+   "role": "source",
+   "model": "lyria-3.5",
+   "replaces": [
+    "groove"
+   ],
+   "prompt": "A 90-second instrumental track: the record playing on a speaker in the living room at a small, friendly evening gathering of friends at home. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo carrying the chords (soft, round attacks), a round, warm fingered electric bass on roots and fifths, and a very soft kit played with brushes on the snare and a soft felt kick on the first beat of each bar. Slow 6/8 lilt: dotted quarter = 70 bpm, two swaying beats per bar, each divided in three; one bar lasts about 1.7 seconds. In tune at A = 440. Key: D minor (Dorian). A four-bar loop, one chord per bar, repeating throughout: Dm9 | G13 | Cmaj9 | A7(b9); the Rhodes top voice falls E, E, D, B-flat across the four bars. No lead instrument apart from an occasional short, lazy Rhodes fill. Relaxed, comfortable and unflashy.\n[0:00 - 0:20] Already playing from the very first downbeat, sparse: Rhodes chords and bass only, quiet and relaxed.\n[0:20 - 0:34] Soft brushes come in on the same loop.\n[0:34 - 1:01] Fuller: the felt kick and brushes steady, the bass a little busier, a short Rhodes fill every four bars.\n[1:01 - 1:30] Fullest, but still laid-back, with a little more Rhodes movement. Keep playing at the same level right to the last second.\nInstrumental only, no vocals, no humming. Avoid: an intro or count-in, breakdowns or drop-outs, big drum fills, cymbal crashes, risers, saxophone or guitar solos, key or tempo changes, any ending or fade-out, and anything bright, electronic or dance-like.",
+   "sync_points": [
+    {
+     "t_global": 55.62,
+     "event": "hard cut in from black; the doorbell at 55.66",
+     "music": "the record is already playing in the empty living room, sparse (P4: in_s to the first downbeat; 0.6 s fade-in)"
+    },
+    {
+     "t_global": 75.52,
+     "event": "Deena goes through to the living room (walla swell)",
+     "music": "brushes enter around cue 0:20 (loose)"
+    },
+    {
+     "t_global": 89.22,
+     "event": "Angelo goes through (walla swell)",
+     "music": "the fuller groove around cue 0:34"
+    },
+    {
+     "t_global": 104.92,
+     "event": "Kay and Scott's almost-question, only his caret blinking (duck x0.45 until 108.02)",
+     "music": "the record ducks with the room (P3); the arrangement does not break down"
+    },
+    {
+     "t_global": 116.52,
+     "event": "Kay goes through; the door swings shut at 116.82",
+     "music": "the fullest section from about cue 1:01"
+    },
+    {
+     "t_global": 136.02,
+     "event": "Christof and Marina go through, laughing over each other; latch CLICK at 136.72",
+     "music": "fullest"
+    },
+    {
+     "t_global": 137.67,
+     "event": "the second CLICK from nowhere (duck x0.22 from 137.32 to 140.42; drone7 breathes in at -56 dB)",
+     "music": "the record falls away under the duck (P3), so the house's first wrong sound is heard over it"
+    },
+    {
+     "t_global": 143.92,
+     "event": "the tally interstitial (six marks and a faint seventh)",
+     "music": "HARD CUT: the record stops dead (0.03 s)"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.03,
+   "level_db": -21,
+   "source_filter": "Through the wall from the living room, heard in the hall: low-pass 0.9 kHz.",
+   "why": "This is purely diegetic: the host's record playing to his empty living room as the first guests arrive (Deena and Angelo are first through the door). It is heard through the wall and grows in the arrangement as each guest goes through, so the scene is warm without any underscore commenting on the jokes. It stops dead on the tally. The draft's mid-song 'breath' is removed: it only worked if it landed on 104.92, and the x0.45 duck does that job once P3 is in. The door-open gain steps wait for P6. The spec's extra eighth is kept for M06b, because the synth groove the film was cut to is 6/8 throughout and a limping take here would spoil the comedy. (Prompt reworded after Lyria blocked the first version for an unspecified policy reason: \"house party\", \"spoken samples\", \"four-on-the-floor\" and \"cut off mid-bar\" were replaced; the music asked for is unchanged.)"
+  },
+  {
+   "id": "M04a",
+   "seq": "Q04",
+   "start_s": 145.09,
+   "end_s": 191.09,
+   "role": "source",
+   "model": "lyria-3.5",
+   "replaces": [
+    "Q04.groove"
+   ],
+   "prompt": "A 50-second instrumental track: the record a host has put on for friends at a dinner party at home, heard from a good speaker in the same room. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo (chords on the first and fourth eighth of each bar, with a soft pickup on the sixth), a round, warm fingered electric bass on roots and fifths, brushes on the snare with a soft felt kick, played lightly, and a closed hi-hat whispering eighth notes. A simple, singable Rhodes melody in the middle register whose line falls E, E, D, B-flat across the four bars. Time signature 6/8, a slow lilting sway at 70 dotted-quarter beats per minute (one bar about 1.7 seconds). In tune at A = 440. Key: D minor (Dorian). A four-bar loop, one chord per bar, repeating the whole way through: Dm9 | G13 | Cmaj9 | A7(b9). Mood: easy, intimate, unhurried, a little bittersweet, friendly. Mix: warm, close, mid-focused.\n[0:00 - 0:50] Already in full swing on the very first downbeat (no intro, no count-in, no fade-in): Rhodes chords, bass, brushes and kick, with the simple melody on top, at one steady level the whole way through, with only small variations in the Rhodes voicings.\nInstrumental only, no vocals, no humming, no scat. Avoid: an intro or an ending, builds, breakdowns, drum fills, key or tempo changes, a heavy kick, synth bass, a saxophone solo, bright crash cymbals, elevator-music clich\u00e9s, and anything dark, tense or cinematic.",
+   "sync_points": [
+    {
+     "t_global": 145.09,
+     "event": "hard cut in ('LATER'): a laugh and a clink; the party is going",
+     "music": "the record in full groove from the first frame (P4: in_s to the first downbeat; no fade-in)"
+    },
+    {
+     "t_global": 161.34,
+     "event": "the house comes down on 'It was a twelve-quid drink.'",
+     "music": "the record does not react"
+    },
+    {
+     "t_global": 179.29,
+     "event": "Deena sees Scott and Kay and almost comments; the room drops away (duck x0.28 until 180.54; cursor tick at 179.69)",
+     "music": "the record ducks with the room (P3) and is back by 180.84"
+    },
+    {
+     "t_global": 191.09,
+     "event": "hard cut to the dining area (MOMENTS LATER)",
+     "music": "M04a ends (0.02 s); M04b takes over through the doorway on the same frame"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.02,
+   "fade_out_s": 0.02,
+   "level_db": -18,
+   "source_filter": "The living room, the speaker in the room: low-pass 8 kHz.",
+   "why": "This is the party's own record, in the room, and the warmest music in the film. It plays straight and never comments. It is split from the dining area so the in-room party gets its own 8 kHz filter: the placement tool applies one low-pass per cue, and the draft's single M04 would have muffled this scene at 3.2 kHz."
+  },
+  {
+   "id": "M04b",
+   "seq": "Q05",
+   "start_s": 191.09,
+   "end_s": 224.69,
+   "role": "source",
+   "model": "lyria-3.5",
+   "replaces": [
+    "Q05.groove"
+   ],
+   "prompt": "A 36-second instrumental track: a quiet, simple stretch of a mellow dinner-party record a little later in the evening, played by a warm neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo, comping softly and carrying a simple melody whose line falls E, E, D, B-flat across the four bars; a round fingered electric bass on roots and fifths; and brushes only on the snare (no kick, no hi-hat). 6/8 at 70 dotted-quarter beats per minute (one bar about 1.7 seconds). In tune at A = 440. Key: D minor (Dorian). A four-bar loop, one chord per bar, throughout: Dm9 | G13 | Cmaj9 | A7(b9). Soft, easy and intimate.\n[0:00 - 0:36] Already playing on the very first downbeat (no intro, no count-in, no fade-in), at one soft, steady level the whole way through, with no build and no ending; it will be cut off mid-bar.\nInstrumental only, no vocals, no humming, no scat. Avoid: an intro or an ending, drum fills, a kick drum, key or tempo changes, solos, synths, strings, and anything dark, tense or cinematic.",
+   "sync_points": [
+    {
+     "t_global": 191.09,
+     "event": "hard cut to the dining area (MOMENTS LATER): chairs dragged, the gathering",
+     "music": "the record through the doorway, brushes only, from the first frame (P4: in_s to the first downbeat)"
+    },
+    {
+     "t_global": 208.29,
+     "event": "SCOTT: 'I was going to text you about Saturday.' Kay and Scott talk under the dealing",
+     "music": "no change"
+    },
+    {
+     "t_global": 224.69,
+     "event": "DEENA: 'Angelo.' The cards stop",
+     "music": "hard cut to silence (10 ms) together with the walla; the room tone drops 14 dB"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.02,
+   "fade_out_s": 0.01,
+   "level_db": -23,
+   "source_filter": "The dining area, the living-room speaker heard through the doorway: low-pass 3.2 kHz.",
+   "why": "MOMENTS LATER the same speaker is heard through the doorway at the card table: brushes only, low-passed and 5 dB down, like the film's own step from Q04 (-21 dB) to Q05 (-26.5 dB). It is cut dead on 'Angelo.', the first thing the film takes away. It is its own generation because the tool cannot share one file between two placements, so the record jumps at the time cut, which the cut allows. If score_place gains a shared-source field, M04b can reuse M04a's file from 46.0 s and skip its generation."
+  },
+  {
+   "id": "M05a",
+   "seq": "Q05",
+   "start_s": 231.5,
+   "end_s": 234.9,
+   "role": "underscore",
+   "model": "lyria-3-clip-preview",
+   "replaces": [],
+   "prompt": "A 30-second instrumental clip of quiet, uncanny chamber music that begins immediately, on the first instant, with no intro. Two muted violas, sul tasto, without vibrato, hold one soft sustained dyad: the A above middle C (A4) and the B-flat a semitone above it (B-flat4), rubbing gently against each other. Pianissimo, close and dry, in tune at A = 440. Beatless, no pulse. The dyad holds exactly the same for the full 30 seconds: no movement, no swell, no new notes, no ending.\nInstrumental only, no vocals. Avoid: percussion, any rhythm, piano, shimmering or glassy high sounds, low bass, swells, risers, impacts, stingers, melody, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 230.89,
+     "event": "ping 7, the wrong one (detuned, dry, panned right); drone7 enters at 230.87",
+     "music": "nothing yet: the ping decays alone"
+    },
+    {
+     "t_global": 231.5,
+     "event": "the ping's 0.6 s decay is over; heartbeats run 231.32-233.44",
+     "music": "the A / B-flat rub enters, pianissimo (0.5 s fade-in; P4: in_s at the clip's onset)"
+    },
+    {
+     "t_global": 232.09,
+     "event": "cut to the wide: seven piles, the seventh in front of no chair",
+     "music": "the rub holds, motionless, with no pulse against the heart"
+    },
+    {
+     "t_global": 233.89,
+     "event": "drone7 starts to fade (out by 235.09)",
+     "music": "the rub fades with it from 233.9"
+    },
+    {
+     "t_global": 235.09,
+     "event": "ANGELO: 'That's mine.'",
+     "music": "gone (since 234.9), so the three lines of comedy play in a clean room"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.5,
+   "fade_out_s": 1,
+   "level_db": -19,
+   "source_filter": "",
+   "why": "The score's first word in the story is the seventh pile. It enters after the wrong ping has decayed, as a pp A / B-flat rub rather than his G: that note is the drone's, and the drone's count swell is running here. It leaves with the drone, before 'That's mine.', so the comedy is not smothered. It teaches the audience the rule: when music arrives, the count is wrong. It is a 30 s clip held static, so the loudness of the whole file matches the 3.4 s used."
+  },
+  {
+   "id": "M05b",
+   "seq": "Q05",
+   "start_s": 266.89,
+   "end_s": 280.97,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [],
+   "prompt": "A 16-second instrumental underscore cue of quiet, slowly tightening unease, for a small chamber string group, muted (con sordino), sul tasto, without vibrato, recorded close and dry in a small room: two violas and one cello. In tune at A = 440. Key centre A, with the B-flat a semitone above as the unsettling note. Beatless free time: no pulse, no rhythm, no ostinato. Pianissimo, growing only to piano. The top octaves stay empty.\n[0:00 - 0:04] Out of silence, the two violas hold the A above middle C (A4) and the B-flat a semitone above it, very soft, rubbing against each other.\n[0:04 - 0:12] The cello quietly adds a low A two octaves below (A2), and the three notes hold, growing very slowly from pianissimo to piano. Nothing moves.\n[0:12 - 0:16] Hold exactly the same: no change, no resolution, no ending, no fade (it will be cut off).\nInstrumental only, no vocals. Avoid: percussion, any regular pulse, tremolo, sul ponticello, clusters of three close notes, piano, electric piano, glassy or shimmering sounds, risers, impacts, stingers, glissandi, melody, melodrama, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 266.89,
+     "event": "POV of the gap at Scott's right; Christof starts to answer",
+     "music": "the violas' A / B-flat rub enters, pianissimo (0.8 s fade-in)"
+    },
+    {
+     "t_global": 267.79,
+     "event": "Christof stops",
+     "music": "held, motionless"
+    },
+    {
+     "t_global": 269.29,
+     "event": "MARINA: 'Did you deal yourself first?'",
+     "music": "the cello's low A joins (around cue 0:04, loose) and the three notes start to grow"
+    },
+    {
+     "t_global": 273.79,
+     "event": "DEENA: 'You're making it into a whole thing.'",
+     "music": "still growing, piano at most"
+    },
+    {
+     "t_global": 276.49,
+     "event": "ANGELO: 'Can you just-- everybody touch the card in front of you.'",
+     "music": "held at its fullest (piano)"
+    },
+    {
+     "t_global": 280.39,
+     "event": "DEENA: 'Why?' The drone and heart fade over 280.29-280.89 and the room drops",
+     "music": "holding, unresolved"
+    },
+    {
+     "t_global": 280.97,
+     "event": "hard cut to Angelo, 'Please.' (line at 281.74)",
+     "music": "cut out with the room (its 0.25 s fade ends here)"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.8,
+   "fade_out_s": 0.25,
+   "level_db": -17,
+   "source_filter": "",
+   "why": "It is moved from the sixth card (254.44) to Christof's pause (266.89). The card, the wrong ping, the drone's swell and 'How have I done it again?' / 'You haven't. There are six.' are comedy and sound design; the turn in the script is the moment Christof starts to answer and stops. The rub is held sul tasto, with no Rhodes and no tremolo, and it thickens by only one note from 'Did you deal yourself first?'. It cuts out with the room on 'Please.', so the six hands and the hole fall into real silence."
+  },
+  {
+   "id": "M06a",
+   "seq": "Q05/Q06",
+   "start_s": 287.84,
+   "end_s": 326.79,
+   "role": "source",
+   "model": "lyria-3.5",
+   "replaces": [
+    "Q05.groove",
+    "Q06.groove",
+    "dread"
+   ],
+   "prompt": "A 42-second instrumental track of ordinary background music at a late-night dinner party, which nobody is listening to. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo (chords on the first and fourth eighth of each bar with a light pickup on the last eighth; its top voice falls E, E, D, B-flat across the four bars), a round fingered electric bass on roots and fifths, a soft felt kick on the first beat, and brushes sweeping eighth notes on the snare. 6/8 with a gentle rocking lilt, 70 dotted-quarter beats per minute (one bar about 1.7 seconds). In tune at A = 440. Key: D minor (Dorian). One four-bar loop, one chord per bar: Dm9 | G13 | Cmaj9 | A7(b9). Medium-soft.\n[0:00 - 0:35] Already mid-song on the very first downbeat, with no intro and no count-in. The loop simply continues with small variations in the Rhodes voicings and the odd one-note fill; same density and level throughout; no build, no breakdown, no solo.\n[0:35 - 0:42] The song ends: the bass, kick and brushes stop, and the Rhodes alone holds its last chord, an A7 with a flat ninth (A, C-sharp, E, G, B-flat), letting it ring and slowly decay, unresolved. Nothing follows it.\nInstrumental only, no vocals, no humming. Avoid: drum fills, cymbal crashes, shakers, risers, synth pads, strings, horns, guitar, key or tempo changes, a resolving final chord, and any cinematic or dramatic gesture.",
+   "sync_points": [
+    {
+     "t_global": 287.84,
+     "event": "the half-laugh after 'Maybe you don't get to play.' is cut at 287.69 (the line stays on screen until 288.68)",
+     "music": "the record creeps back mid-song over 0.5 s, where the film's own groove returned"
+    },
+    {
+     "t_global": 289.14,
+     "event": "Q06 opens. KAY: 'I'm going to the loo. This is making me stupid.'",
+     "music": "the record just plays"
+    },
+    {
+     "t_global": 298.54,
+     "event": "KAY: 'Big night for you.' and the squeeze on Scott's shoulder",
+     "music": "no change"
+    },
+    {
+     "t_global": 306.41,
+     "event": "the far bathroom CLICK (duck x0.3, 306.46-307.71)",
+     "music": "ducked with the room (P3)"
+    },
+    {
+     "t_global": 316.13,
+     "event": "PERFECT: the fifth card lands at Angelo's place and the overhead turn stops dead (duck x0.12, 316.15-317.13)",
+     "music": "the record falls away under the duck (P3): nothing on PERFECT"
+    },
+    {
+     "t_global": 317.09,
+     "event": "'See?' and the room breathes again",
+     "music": "back"
+    },
+    {
+     "t_global": 322.59,
+     "event": "cut to Angelo staring at the fifth card, his smile draining; 'Can we play now?' at 322.64; one heartbeat at 325.39",
+     "music": "ANCHOR (P4): the band stops here and the Rhodes holds its last chord, A7(b9), alone and unresolved"
+    },
+    {
+     "t_global": 326.79,
+     "event": "hard cut to DINING AREA - LATER",
+     "music": "cut dead (0.03 s); M06b starts on the same frame"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.03,
+   "level_db": -24,
+   "source_filter": "The living-room speaker heard at the card table through the doorway: low-pass 3.2 kHz.",
+   "why": "The party's song creeps back after the dead laugh and carries Q06's surface normality through Kay's goodbye. It gets nothing on PERFECT, so the one count that comes out right lands in a vacuum. Under Angelo's draining grin the song itself ends on its unresolved A7(b9), the chord that holds the Extra's notes, so the old dread pad is not needed, and LATER cuts that chord dead. Two suggestions are rejected. Starting at 288.79 is rejected: the film's own groove creeps back at 287.84, 'Maybe you don't get to play.' is still on screen, and today's gate would leave the synth groove playing for 0.95 s. The corridor step (301.69-307.79) is rejected: splitting the cue would need placements that cannot share one file yet, so it waits for P6 automation. The filter is now 3.2 kHz, the same as M04b and M06b at the same table."
+  },
+  {
+   "id": "M06b",
+   "seq": "Q06",
+   "start_s": 326.79,
+   "end_s": 352.29,
+   "role": "source",
+   "model": "lyria-3.5",
+   "replaces": [
+    "Q06.groove"
+   ],
+   "prompt": "A 30-second instrumental track of ordinary dinner-party music: the next record on the playlist, livelier and a little too loud. A warm, mellow neo-soul / lounge-jazz trio, recorded clean and close: a Fender Rhodes electric piano with soft amp tremolo, a round fingered electric bass, brushes and a soft felt kick. Time signature 7/8, grouped 3+3+1: it lilts like a 6/8 groove, but every bar has one extra eighth note at the end, marked by a single soft rim click, so the groove limps very slightly, with one beat too many in every bar. Eighth note = 210 per minute (each bar lasts 2 seconds). In tune at A = 440. Key: A minor. A four-bar loop, one chord per bar, repeated throughout: Am(add9) | Fmaj7 | B-flat maj7(#11) | E7(b9). Medium level, steady.\n[0:00 - 0:30] Starts on the very first downbeat already in full swing: no intro, no count-in, no fade-in. The Rhodes comps with short fills that circle E and F above the A, the bass plays roots and fifths, and the rim click lands on every seventh eighth; same density and level to the end; no build, no breakdown, no solo, no ending.\nInstrumental only, no vocals, no humming. Avoid: a plain 6/8 or 4/4 feel without the extra beat, drum fills, cymbal crashes, risers, strings, synth pads, horns, guitar solos, tempo or key changes, an intro or outro, and anything cinematic.",
+   "sync_points": [
+    {
+     "t_global": 326.79,
+     "event": "hard cut: DINING AREA - LATER; the walla bursts back",
+     "music": "first downbeat on the cut, already in full swing (P4: in_s to the first downbeat)"
+    },
+    {
+     "t_global": 329.41,
+     "event": "Christof slams down his last card",
+     "music": "no change"
+    },
+    {
+     "t_global": 343.29,
+     "event": "SCOTT: 'There's another in the kitchen. Left cupboard.'",
+     "music": "no change"
+    },
+    {
+     "t_global": 347.49,
+     "event": "CHRISTOF gets up (chair at 346.89): 'And don't touch my cards.'",
+     "music": "no change"
+    },
+    {
+     "t_global": 351.39,
+     "event": "cut to the kitchen doorway, which takes him",
+     "music": "still playing"
+    },
+    {
+     "t_global": 351.79,
+     "event": "the party falls away as the glare starts to eat him",
+     "music": "falls to silence over 0.5 s"
+    },
+    {
+     "t_global": 352.29,
+     "event": "CLEAN: only room tone and the fridge",
+     "music": "gone; the party's record never returns"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.02,
+   "fade_out_s": 0.5,
+   "level_db": -16,
+   "source_filter": "The same speaker heard at the card table, turned up: low-pass 3.2 kHz.",
+   "why": "A new record on the hard cut sells LATER and the room's forced cheer. But it has moved into the Extra's key (A minor, with his B-flat in the loop and no G natural, which the drone keeps), and it limps with one beat too many in every bar. This is the spec's 'the groove gains a beat'. Acceptance test: 2.0 s bars (not 1.714 s) and a soft rim click on every seventh eighth. Allow one retake; after that, accept a 6/8 take with the same A-minor chords, whose key change alone makes the point. 'Too loud' is carried by level only, at or above M04a. It dies with the party as the kitchen doorway takes Christof."
+  },
+  {
+   "id": "M07",
+   "seq": "Q07",
+   "start_s": 389.79,
+   "end_s": 420.3,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [],
+   "prompt": "A 34-second instrumental underscore cue of still, haunting suspense for a small chamber string group, all muted (con sordino), without vibrato, recorded close and dry in a small room: two cellos, two violas, two violins. In tune at A = 440. Key centre A, with the B-flat a semitone above as the uneasy note. Beatless free time: no pulse, no rhythm. Very quiet: pianissimo, rising once to mezzo-piano and never louder. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:21] From the first instant, very soft and completely static: a cello holds a low A (A2) and a viola holds the B-flat a ninth above it (B-flat3), sul tasto, pianissimo. Nothing moves and nothing grows; long, slow bow changes only.\n[0:21 - 0:30] One step: the violins enter high on a sustained A (A5) and the B-flat a semitone above it (B-flat5), and the whole texture grows to mezzo-piano, then holds absolutely still. No further swell and no further change.\n[0:30 - 0:34] The strings stop; silence.\nInstrumental only, no vocals, no choir. Avoid: percussion, pulses or ostinatos, tremolo, sul ponticello, clusters, piano, electric piano, glassy or shimmering sounds, deep bass, risers, impacts, stingers, glissandi, melody, crescendos to forte, trailer clich\u00e9s, and melodrama.",
+   "sync_points": [
+    {
+     "t_global": 389.79,
+     "event": "cut to the corridor: the bathroom door shut, light under it, Kay's 'Big night for you.' afterimage; the heartbeat begins",
+     "music": "the static A2 / B-flat3 texture starts on the cut (P4: in_s at the onset; 0.5 s fade-in)"
+    },
+    {
+     "t_global": 392.14,
+     "event": "MARINA: 'Don't. She'll come out when she's ready.'",
+     "music": "no change"
+    },
+    {
+     "t_global": 398.34,
+     "event": "ANGELO, beside the empty place: 'Maybe she was.'",
+     "music": "no change: the score does not answer him"
+    },
+    {
+     "t_global": 405.49,
+     "event": "'He did come back.' / 'He went to get the wine.' (407.84) / 'Yeah. This wine.' (409.74)",
+     "music": "no thickening under the Christof logic"
+    },
+    {
+     "t_global": 411.44,
+     "event": "they all look at the bottle",
+     "music": "the one step: violins on A5 / B-flat5, up to mp (around cue 0:21.5, loose)"
+    },
+    {
+     "t_global": 418.34,
+     "event": "hold on the hood-yellow kitchen doorway nobody will look at",
+     "music": "motionless at mp: Act 2's ceiling"
+    },
+    {
+     "t_global": 419.69,
+     "event": "Angelo reaches for the deck",
+     "music": "the strings stop (0.6 s fade, 419.7-420.3)"
+    },
+    {
+     "t_global": 420.44,
+     "event": "ANGELO: 'We can do one quick hand.' through 'Then it doesn't.' (duck at 427.64, heavy heartbeat at 427.79)",
+     "music": "unscored: the heartbeat alone"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.6,
+   "level_db": -15,
+   "source_filter": "",
+   "why": "One still, flat texture runs from the corridor cut through the Christof logic. The score does not answer 'Maybe she was' (its flat G is gone) and does not flatten 'This wine.'. It starts on the picture cut rather than on a line, so nothing is underlined. It makes one step when they look at the bottle, holds motionless on the doorway at mp, and stops as Angelo reaches for the deck, leaving 'one quick hand' through 'Then it doesn't.' to the heartbeat. There is no Rhodes, because in the house it read as the speaker switching itself back on. The draft's M07a after the crash is cut, so the bottle, the five pings, the drone's swell and the unanswered 'Oh. Thanks.' play dry."
+  },
+  {
+   "id": "M08a",
+   "seq": "Q08",
+   "start_s": 442.01,
+   "end_s": 509.8,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 66-second instrumental underscore cue: quiet, tense, intimate chamber music for a frightened group of friends holding hands around a table. A small string group, all muted (con sordino), sul tasto, without vibrato, recorded close and dry in a small room: two cellos, two violas, two violins. In tune at A = 440. Key centre A; A minor, with B-flat as the uneasy note. Beatless free time: no pulse, no rhythm, no ostinato. Pianissimo to piano, never louder. The lowest note is the cellos' low C; no double bass. The high register stays empty.\n[0:00 - 0:17] Starting at once and very softly, the cellos hold one low A (A2): static, with no crescendo and no movement.\n[0:17 - 0:34] The low A gives way to one warm, tender D minor 9 chord in the low strings (D3, F3, A3, C4, E4), soft and close, held without moving: the last warmth of the evening. At 0:31 it fades to nothing, and there is silence until 0:34.\n[0:34 - 0:42] A still open fifth, A2 and E3, in the cellos, pianissimo: a held breath. Motionless.\n[0:42 - 0:55] The E gives way to a B-flat (B-flat3, a minor ninth above the low A): a soft, dark, held dyad, with no attacks and no movement.\n[0:55 - 1:06] The open fifth A2 and E3 returns, motionless, then fades to nothing by 1:03; silence to the end.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, pulses or ostinatos, tremolo, sul ponticello, clusters, piano, electric piano, high harmonics, melody, rising lines, swells, crescendos, risers, impacts, stingers, trailer clich\u00e9s, melodrama, and any major-key resolution.",
+   "sync_points": [
+    {
+     "t_global": 442.01,
+     "event": "Angelo shoves his chair back (the loud scrape)",
+     "music": "cue start: the cellos' static low A swells in under the scrape (2.5 s fade-in)"
+    },
+    {
+     "t_global": 442.43,
+     "event": "ANGELO: 'Is somebody messing with me?' through 'Just give me your hand, Scott.' (to 457.92)",
+     "music": "the static A with no crescendo; the heart drives the argument"
+    },
+    {
+     "t_global": 458.02,
+     "event": "DEENA: 'You're actually scaring me now.'",
+     "music": "still the A"
+    },
+    {
+     "t_global": 459.42,
+     "event": "that lands; Angelo softens (duck x0.5, 459.37-461.34); 'I'm not trying to.' at 460.84",
+     "music": "the warm D minor 9 enters in the strings (around cue 0:17), under the duck (P3), and blooms as it releases"
+    },
+    {
+     "t_global": 465.69,
+     "event": "the four hands link (slaps 465.69-466.90); insert of the hand Scott takes for Angelo's at 467.88",
+     "music": "the D minor 9 unchanged: the score does not curdle on the hand the script withholds"
+    },
+    {
+     "t_global": 469.13,
+     "event": "ANGELO: 'All right. Just say who's on your left. Don't let go. Somebody start.' (to 473.41)",
+     "music": "unchanged warmth"
+    },
+    {
+     "t_global": 473.33,
+     "event": "the fridge drains (473.33-473.81)",
+     "music": "the chord fades to nothing (cue 0:31, loose)"
+    },
+    {
+     "t_global": 474.34,
+     "event": "HOLE 1: VOICE 'Scott.' (to 475.84); the drone's 7th blooms at 474.72",
+     "music": "exact silence; the gate takes whatever warmth is left"
+    },
+    {
+     "t_global": 476.24,
+     "event": "the roll call 'Marina.' 'Deena.' 'Angelo.' 'Scott.', a ping on each name (476.55-479.94)",
+     "music": "a still open fifth A2-E3 (cue 0:34); the pings do the counting"
+    },
+    {
+     "t_global": 482.44,
+     "event": "the fifth ping on the burnt 'Scott.' (481.56); 'Wait.'",
+     "music": "the fifth unchanged: no slip, no swell"
+    },
+    {
+     "t_global": 484.11,
+     "event": "'Didn't somebody already say me?' through 'Just do it.' (496.13)",
+     "music": "the E gives way to B-flat3: a dark held dyad with no attacks (cue 0:42)"
+    },
+    {
+     "t_global": 497.88,
+     "event": "the reverse roll call 'Angelo.' 'Deena.' 'Marina.' 'Scott.' (pings 498.19-501.49)",
+     "music": "the open fifth returns (cue 0:55) and holds; the pings count"
+    },
+    {
+     "t_global": 505,
+     "event": "Scott can't make the circle fit; the room thins away",
+     "music": "faded to nothing (cue 1:03), before hole 2 at 505.70"
+    },
+    {
+     "t_global": 507.47,
+     "event": "'Who said that?' and no answer; the fridge steps to -28 dB at 509.43",
+     "music": "no audio; the cue's span runs to 509.80 only to gate the old dread fragment (507.32-509.73)"
+    }
+   ],
+   "holes_crossed": [
+    474.34,
+    505.7
+   ],
+   "fade_in_s": 2.5,
+   "fade_out_s": 1,
+   "level_db": -15,
+   "source_filter": "",
+   "why": "The hand circle is one quiet cue. A static low A sits under the argument, because the heart drives it. The film's last warmth, a D minor 9 in the strings as Angelo softens and the hands join, is held unchanged through the hand insert (the script withholds that hand and then reverses it) until 'Somebody start.'. It fades with the fridge, so hole 1 cuts from warmth to the void. Under both roll calls there is only a still open fifth, so the souring pings do the counting. The darkening after 'Didn't somebody already say me?' is a held dyad with no countable attacks. The span runs to 509.80, past the audio, so the fridge beat is the fridge alone even with today's tool."
+  },
+  {
+   "id": "M08b",
+   "seq": "Q08",
+   "start_s": 515,
+   "end_s": 519.15,
+   "role": "underscore",
+   "model": "lyria-3-clip-preview",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 30-second instrumental clip that begins immediately, on the first instant, with no intro: tense chamber music at its strongest so far. A small string group, muted (con sordino), without vibrato, recorded close and dry: two cellos, two violas, two violins. In tune at A = 440. One held dyad, an A and the B-flat a semitone above it, in three octaves: the cellos on a low A (A2), the violas on A3 and B-flat3, the violins on A4 and B-flat4. Beatless, no pulse.\n[0:00 - 0:03] It grows quickly from piano to mezzo-forte.\n[0:03 - 0:30] It holds at mezzo-forte, unchanging and unresolved, for the rest of the clip: no swell, no fade, no new notes, no ending.\nInstrumental only, no vocals. Avoid: percussion, hits, booms, risers, tremolo, glissandi, piano, synths, melody, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 511.78,
+     "event": "DEENA: 'Scott, whose hand have you got?' He is holding Angelo's hand. Of course he is.",
+     "music": "unscored: the relief beat stands"
+    },
+    {
+     "t_global": 515,
+     "event": "just after the FIFTH wineglass between them (ping 514.89, lub 514.93)",
+     "music": "cue start (0.3 s fade-in; P4: in_s at the onset)"
+    },
+    {
+     "t_global": 515.34,
+     "event": "SCOTT: 'Why's that there?'",
+     "music": "the rub in three octaves grows quickly to mf"
+    },
+    {
+     "t_global": 517.02,
+     "event": "ANGELO: 'Don't let go yet.'",
+     "music": "a plateau at mf, held: no riser"
+    },
+    {
+     "t_global": 519.15,
+     "event": "they all let go on one frame (Marina's slip at 519.07); the heartbeat stops dead with a 44 Hz hit",
+     "music": "HARD CUT (0.03 s); about 4.15 s of the clip are used"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.03,
+   "level_db": -13,
+   "source_filter": "",
+   "why": "The first mf in the film runs from just after the fifth wineglass's ping to the let-go, so 'He is holding Angelo's hand. Of course he is.' keeps its relief beat. It is a held rub in three octaves that reaches mf quickly and plateaus, so the cut lands on a plateau, not on a riser. It cuts dead with the heartbeat on the frame they let go. The dread bed it replaces (511.58-519.65) is gated in full only once P1 is in; until then the old synth dread fills 511.58-515.00 and its 0.5 s tail."
+  },
+  {
+   "id": "M09",
+   "seq": "Q09",
+   "start_s": 540.65,
+   "end_s": 570.3,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 31-second instrumental underscore cue: cold, hushed stillness for a small chamber string group, muted (con sordino), without vibrato, recorded close and dry in a small room: two cellos, two violas, two violins. In tune at A = 440. Key centre A minor. Beatless free time: no pulse, no rhythm, no walking line. Pianissimo throughout, never above piano. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:22] Starting softly: two violins hold quiet natural harmonics on a high A and the E above it (A5 and E6), with a barely audible low cello A (A2) far below: cold, still and wide, with nothing in between. No movement at all.\n[0:22 - 0:29] One quiet change: the high harmonics fade away and the cellos and violas settle together on a low, grave open fifth, A2 and E3, pianissimo and motionless.\n[0:29 - 0:31] It fades to silence.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, pulses, walking bass lines, march rhythms, melody, tremolo, sul ponticello, clusters, piano, music box, risers, swells, impacts, trailer clich\u00e9s, melodrama, and any major-key resolution.",
+   "sync_points": [
+    {
+     "t_global": 540.65,
+     "event": "DEENA: 'Four. There's four of us.' (540.50) has landed into the x0.04 duck (to 540.55)",
+     "music": "cue start: high harmonics A5 / E6 over a faint low A (2 s fade-in)"
+    },
+    {
+     "t_global": 546.35,
+     "event": "ANGELO: 'Who took it?' (the photo was taken from several feet away)",
+     "music": "no change"
+    },
+    {
+     "t_global": 547.6,
+     "event": "HOLE: top shot of the floor where the photographer stood (until 549.20)",
+     "music": "exact silence"
+    },
+    {
+     "t_global": 549.8,
+     "event": "'Christof.' and 'Kay.' at once",
+     "music": "no accent: the collision is in the type, not the music"
+    },
+    {
+     "t_global": 559.45,
+     "event": "ANGELO: 'And Christof's in the kitchen.', undealt and quiet (duck x0.3, 559.20-561.65)",
+     "music": "ducked with the room (P3)"
+    },
+    {
+     "t_global": 561.9,
+     "event": "DEENA: 'Then let's go get them.'",
+     "music": "the one change (around cue 0:22 = 562.65, loose): the harmonics fade and a low open fifth A2-E3 settles in"
+    },
+    {
+     "t_global": 563.55,
+     "event": "ANGELO: 'Together.'",
+     "music": "the fifth holds, with no accent"
+    },
+    {
+     "t_global": 565.65,
+     "event": "after the four-mark tally (565.15, duck x0.25), the procession down the corridor past the closed bathroom door",
+     "music": "the fifth holds, with no walking line"
+    },
+    {
+     "t_global": 570.05,
+     "event": "Scott's hand stops short of the handle; Kay's afterimage dies (duck x0.3)",
+     "music": "gone by 570.3 (0.5 s fade)"
+    },
+    {
+     "t_global": 571.15,
+     "event": "'Scott?' / 'Yeah. Coming.'",
+     "music": "unscored: drone7's swell alone"
+    }
+   ],
+   "holes_crossed": [
+    547.6
+   ],
+   "fade_in_s": 2,
+   "fade_out_s": 0.5,
+   "level_db": -17,
+   "source_filter": "",
+   "why": "This is cold stillness for the photo nobody took: high harmonics far above a faint low A, cut by the hole where the photographer stood. The two names collide in the type, not in the music, because a semitone 0.6 s after the hole would land in the gate or late. One quiet change after 'Then let's go get them.' settles into a low open fifth, which holds through the procession with no line; the draft's walking bass was a pulse against the footsteps and the heart. It is gone under the duck as Scott's hand stops short of the handle, so 'Scott?' / 'Yeah. Coming.' and the empty kitchen belong to the drone."
+  },
+  {
+   "id": "M10a",
+   "seq": "Q10",
+   "start_s": 588.15,
+   "end_s": 606,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 20-second instrumental chamber-music cue of rising physical strain and panic, for a small string group, muted (con sordino), recorded close and dry in a small room: four cellos, two violas, two violins. In tune at A = 440. Key centre A minor, with B-flat. Beatless, with no pulse and no ostinato, but increasingly agitated. The lowest note is the cellos' low C; no double bass. The violins stay in their low and middle range: dark and grinding, never bright.\n[0:00 - 0:07] From silence, the cellos hold a cold low A (A2), pianissimo; around 0:04 the violas add a quiet B-flat against an A (A3 and B-flat3), sul tasto, rubbing.\n[0:07 - 0:13] The strings begin to press: the violas and violins move to a soft sul ponticello tremolo on a close cluster of A, B-flat and C, the cellos sustain the low A, and everything grows slowly from piano toward mezzo-forte without rising in pitch.\n[0:13 - 0:20] At its tightest: a dense, grinding tremolo cluster at forte, held without moving, as if about to break. Do not stop, resolve or fade; it will be cut off.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, timpani, pulses, ostinatos, impacts, booms, braams, risers, whooshes, stingers, glissandi, electronic sounds, piano, a melody, sentimental strings, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 588.15,
+     "event": "cut to the knobs insert (two bare spindles); count pings at 588.60 and 589.05",
+     "music": "the cellos' low A enters from silence under a 4 s fade, low, so the pings stay clear"
+    },
+    {
+     "t_global": 590.2,
+     "event": "SCOTT: 'Oh, shit. Gas.'",
+     "music": "the cold low A"
+    },
+    {
+     "t_global": 592.85,
+     "event": "'The knobs are gone.' / 'So turn it off behind the stove.' (593.95)",
+     "music": "the violas' A / B-flat rub joins (around cue 0:04)"
+    },
+    {
+     "t_global": 595.35,
+     "event": "Scott grips the stove; 'I'm trying.' at 596.20; pulls at 596.70, 597.35 and 598.00",
+     "music": "the strings start to press: sul ponticello tremolo on A / B-flat / C (around cue 0:07)"
+    },
+    {
+     "t_global": 598.8,
+     "event": "the stove shifts with a damp, ugly thud (duck x0.55, 599.30-599.75); the heartbeat starts at 599.50",
+     "music": "ducked briefly (P3); growing toward mf without a pulse"
+    },
+    {
+     "t_global": 603.05,
+     "event": "'Just one second.'; his hand finds the oven handle; 'Scott, don't--' at 605.30",
+     "music": "at its tightest, forte, held (around cue 0:13)"
+    },
+    {
+     "t_global": 605.8,
+     "event": "the Extra's hole (0.6 s) before the oven door falls",
+     "music": "the gate cuts the cue mid-gesture; it ends at 606.0, inside the silence"
+    },
+    {
+     "t_global": 606.4,
+     "event": "the oven door drops (bulb buzz and a 41 Hz hit at 606.82); the small sound at 608.55; the scream at 609.90",
+     "music": "unscored"
+    }
+   ],
+   "holes_crossed": [
+    605.8
+   ],
+   "fade_in_s": 4,
+   "fade_out_s": 0.1,
+   "level_db": -10,
+   "source_filter": "",
+   "why": "This is the first and only time the score presses. A cold A becomes the rub, then sul ponticello tremolo widening to A / B-flat / C as Scott drags the stove, reaching forte at the oven handle; it is the loudest cue in the film. The Extra's 0.6 s hole cuts it mid-gesture, and the cue ends inside the silence. Per the must fix, the oven door, the small sound, the scream, the false calm and the throat hole get no score: the script wants 'a small sound, not even a scream at first', and any cluster in the scream's 220 Hz register would mask it."
+  },
+  {
+   "id": "M10b",
+   "seq": "Q10",
+   "start_s": 620.3,
+   "end_s": 627.7,
+   "role": "underscore",
+   "model": "lyria-3-clip-preview",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 30-second instrumental clip that begins immediately, with no intro: one muted cello, sul tasto, without vibrato, holds a single low G-sharp (G-sharp2) very softly, piano, recorded close and dry, in tune at A = 440. Nothing else plays. The note holds steady for the whole 30 seconds, with only slow, gentle bow changes: no melody, no swell, no fade, no ending.\nInstrumental only, no vocals. Avoid: any other instruments, percussion, vibrato, tremolo, glissandi, melody, swells, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 617.55,
+     "event": "the throat hole restores; her ponytail is yanked up at 618.07; 'Dee?' at 618.80",
+     "music": "unscored"
+    },
+    {
+     "t_global": 620.3,
+     "event": "Angelo catches her before the tiles (thump at 620.32)",
+     "music": "the single low G-sharp enters (1.5 s fade-in; P4: in_s at the onset)"
+    },
+    {
+     "t_global": 621,
+     "event": "ANGELO: 'Hey. Hey, look at me.'; her flutter of breath at 622.35",
+     "music": "the note holds; no lament gestures that mimic her breaths"
+    },
+    {
+     "t_global": 624.8,
+     "event": "ANGELO: 'No, no. Stay. Come on, Dee. Come on.'",
+     "music": "holds"
+    },
+    {
+     "t_global": 627.7,
+     "event": "her heart stops; the letterbox steps to 2.20; the room falls away (duck x0.32)",
+     "music": "the note stops with her heart (0.1 s)"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 1.5,
+   "fade_out_s": 0.1,
+   "level_db": -15,
+   "source_filter": "",
+   "why": "This is the only music that mourns anyone before the fire: one held G-sharp, the lament bass a semitone lower, under Angelo holding Deena, stopping when her heart stops. There is no breaking lament that mimics her breaths. Naming 'dread' also covers the old synth dread instance (606.82-627.90) under P1, so the oven door and the scream lose it entirely."
+  },
+  {
+   "id": "M10c",
+   "seq": "Q10",
+   "start_s": 631.05,
+   "end_s": 644.3,
+   "role": "underscore",
+   "model": "lyria-3-clip-preview",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 30-second instrumental clip of shaking, fearful chamber music that begins immediately, on the first instant, with no intro. A small string group, muted (con sordino), recorded close and dry: cellos and violas only. The cellos hold a low G (G2) in a soft, unsteady bowed tremolo, and the violas tremble on an A above it (A3), mezzo-piano, like a shaking hand. In tune at A = 440. Beatless, no pulse. The tremolo stays exactly the same, low and steady, for the whole 30 seconds: no surge, no swell, no thinning, no ending.\nInstrumental only, no vocals. Avoid: percussion, pulses, ostinatos, violins, high notes, risers, impacts, stingers, glissandi, melody, crescendos, and any resolution.",
+   "sync_points": [
+    {
+     "t_global": 631.05,
+     "event": "the knife leaves the block; Scott's heartbeat starts at 631.45 (108 to 128 bpm)",
+     "music": "hard start: the shaking low tremolo on G2 and A3 (P4: in_s at the onset)"
+    },
+    {
+     "t_global": 631.65,
+     "event": "SCOTT: 'Where is it?'",
+     "music": "steady tremolo; no pulse against the heart"
+    },
+    {
+     "t_global": 634.05,
+     "event": "'There was-- something had her. I saw her hair--'; 'I didn't see anybody.' at 637.65",
+     "music": "unchanged"
+    },
+    {
+     "t_global": 640.35,
+     "event": "after the whip-pan finds nothing (639.95): 'Marina? Marina, get away from the door.'",
+     "music": "unchanged: no surge"
+    },
+    {
+     "t_global": 642.65,
+     "event": "the doorway held in its framing, waiting for her answer",
+     "music": "unchanged: no thinning that would give her away"
+    },
+    {
+     "t_global": 644.05,
+     "event": "Marina is gone: the Extra's hole (1.1 s); the letterbox steps to 2.39",
+     "music": "the gate cuts the tremolo mid-gesture; the cue ends at 644.3 inside the silence and does not return for her"
+    }
+   ],
+   "holes_crossed": [
+    644.05
+   ],
+   "fade_in_s": 0.1,
+   "fade_out_s": 0.1,
+   "level_db": -13,
+   "source_filter": "",
+   "why": "Scott's shaking knife hand is a steady low tremolo, and the bass sinks again, to G, the Extra's pitch class: the house is being retuned. There is no surge and no thinning, which would be the classic warning that gives Marina's vanishing away. The hole cuts the tremolo mid-gesture, the music vanishes the instant she does, and nothing mourns her. At 13 s it fits in a clip."
+  },
+  {
+   "id": "M10d",
+   "seq": "Q10",
+   "start_s": 652.4,
+   "end_s": 686.35,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 34-second instrumental underscore cue of numb, hollow grief. A small chamber string group, muted (con sordino), sul tasto, without vibrato (two cellos, two violas, one violin), and one warm Fender Rhodes electric piano with a slightly worn, vintage sound, all recorded close, dry and intimate in a small room. In tune at A = 440. Key centre A minor over a low G in the cellos: cold, open and unresolved. Beatless free time, very slow. Pianissimo throughout. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:13] Emerging from silence: a low cello G (G2), and above it a quiet, pale viola chord of A, C and E. Numb and motionless.\n[0:13 - 0:18] The only tender moment: the Rhodes plays one slow, soft D minor 9 chord (D, F, A, C, E), warm and close, and lets it ring away. It does not play again.\n[0:18 - 0:28] The strings hold the same numb chord over the low G, unmoving and very quiet.\n[0:28 - 0:34] The chord thins to a single faint high violin harmonic on E, which fades to nothing by 0:32; silence to the end.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, bass guitar, a band or groove, pulses, melody, any further Rhodes notes, tremolo, risers, impacts, stingers, synth pads, lush or sentimental strings, swells, melodrama, and any resolution to a major key.",
+   "sync_points": [
+    {
+     "t_global": 652.4,
+     "event": "the handprint hole ends (a left hand pressed into the blood, no hand there); the swell and drone7 return",
+     "music": "emerges under a 4 s fade: the cello G2 and the viola chord A-C-E"
+    },
+    {
+     "t_global": 653.65,
+     "event": "'I was holding her.' / 'I know.' / 'I was right there.' / 'Angelo, we need to go.' / 'Then how did it--' / 'We go out the back.' (to 665.30)",
+     "music": "numb and unmoving"
+    },
+    {
+     "t_global": 664.95,
+     "event": "Angelo gently lays Deena down; the jacket goes over her throat from 666.75 to 668.05",
+     "music": "the Rhodes' single close Dm9 (around cue 0:13), then never again"
+    },
+    {
+     "t_global": 668.75,
+     "event": "ANGELO: 'When you counted us. You kept saying five.'; 'The cards. The picture. I thought I was--' at 672.95",
+     "music": "the deduction plays on the unmoving strings, so the type is read"
+    },
+    {
+     "t_global": 676.95,
+     "event": "SCOTT: 'Don't. Don't think about that. We get outside.'",
+     "music": "unchanged"
+    },
+    {
+     "t_global": 680.65,
+     "event": "ANGELO: 'And whoever did this just comes with us?'",
+     "music": "thins to one high E harmonic (around cue 0:28)"
+    },
+    {
+     "t_global": 684.4,
+     "event": "Scott's glance at the empty hallway; 'The HISS grows louder. Or perhaps they are finally listening.'",
+     "music": "gone, so the hiss gets louder; the span runs on to 686.35 only to gate the old dread's tail (684.6-686.35)"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 4,
+   "fade_out_s": 2,
+   "level_db": -15,
+   "source_filter": "",
+   "why": "The aftermath is numb and hollow over the cello G. The one tender act, the jacket over her throat, gets the party's Rhodes exactly once: a single close, dry Dm9 as memory, since the record is long dead and the kitchen has no speaker. The spoken deduction plays on unmoving strings rather than on the draft's broken party fragments, so the kinetic type is read. The score withdraws before 'the HISS grows louder', which is how the hiss gets louder. (Reworded after Lyria's filter flagged \"sensitive words\" in the first version; the music asked for is unchanged.)"
+  },
+  {
+   "id": "M11a",
+   "seq": "Q11",
+   "start_s": 738.55,
+   "end_s": 751.78,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [
+    "dread"
+   ],
+   "prompt": "A 20-second instrumental chamber-music cue: a quiet, tender goodbye. A small string group, muted (con sordino), without vibrato, recorded close and dry: two cellos, two violas, two violins. In tune at A = 440. Very slow, about 46 beats per minute, but beatless, with no audible pulse. Piano, then pianissimo; it never swells. The lowest note is the cellos' low C; no double bass. Low and middle registers only, apart from one high harmonic at the end.\n[0:00 - 0:08] A soft, warm D minor chord in the low strings (D3, F3, A3, D4), with no attack: tender, like the memory of a happier evening. From about 0:05 the cellos' bass steps slowly down, D, C, B-flat, and the harmony darkens.\n[0:08 - 0:20] It arrives on an unresolved A dominant chord with a flat ninth: the cellos on A2 and E3, a viola on C-sharp4, a violin on B-flat4, and one violin on a soft high G harmonic (G5). Very quiet. It holds perfectly still to the very end, with no decay, no swell and no resolution back to D; it will be cut off abruptly.\nInstrumental only, no vocals. Avoid: percussion, pulses, tremolo, pizzicato, risers, impacts, piano, synths, choir, a melody, romantic vibrato, crescendos, resolving cadences, trailer clich\u00e9s, melodrama, and anything bright.",
+   "sync_points": [
+    {
+     "t_global": 738.55,
+     "event": "'Angelo--' (737.75); the old dread bed's start",
+     "music": "the warm D minor fades in (0.8 s)"
+    },
+    {
+     "t_global": 738.75,
+     "event": "ANGELO: 'Scott. Please.', the first time all night he doesn't sound like himself (his type turns to undealt cream)",
+     "music": "the D minor, held"
+    },
+    {
+     "t_global": 741.65,
+     "event": "ANGELO: 'I don't want you here when I do it.'",
+     "music": "holding, breathing"
+    },
+    {
+     "t_global": 743.75,
+     "event": "he raises the lighter; the thumb tremor and wheel ticks follow from 744.65",
+     "music": "the cellos step down D, C, B-flat (loose)"
+    },
+    {
+     "t_global": 746.45,
+     "event": "ANGELO: 'Go.'",
+     "music": "ANCHOR (P4): arrives on the unresolved A7(b9), with a high G5 on top, held"
+    },
+    {
+     "t_global": 749.45,
+     "event": "'Sorry about your house.' (the smallest line in the film; the face-down card flips)",
+     "music": "the chord frozen"
+    },
+    {
+     "t_global": 751.78,
+     "event": "after the last wheel tick (751.72), before the SPARK at 751.83",
+     "music": "hard end (0.03 s): the spark lands in music silence and the dominant never resolves"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.8,
+   "fade_out_s": 0.03,
+   "level_db": -14,
+   "source_filter": "",
+   "why": "The music comes back on the frame Angelo stops sounding like himself, after a standoff left to the gas hiss, the drone and the heart. The draft's standoff cue is dropped: ppp strings under the hiss would not register, and the hiss is that scene's score. The party's D minor, remembered, steps down into its own unresolved A7(b9), whose G is now a plain high G5 left for the drone to sour. The cue ends after the last wheel tick, so the spark lands in music silence and the party's cadence never resolves. The old dread's tail up to 752.45 is gated by P1; until then the engine's x0.02 run duck covers most of it."
+  },
+  {
+   "id": "M11b",
+   "seq": "Q11/Q12",
+   "start_s": 768.6,
+   "end_s": 838.9,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [],
+   "prompt": "A 72-second instrumental film-score cue of numb grief and shock, not drama, for a small, close chamber group: a muted string group (two cellos, two violas, two violins; con sordino, no vibrato), one solo cello, and a felt-muted upright piano, all recorded close and dry, in tune at A = 440. Key centre A minor, with the B-flat a semitone above as the uneasy note. Very slow, beatless free time. Piano at the start, then pianissimo and softer. Dark and muffled: the top octaves stay empty. The lowest note is the cellos' low C; no double bass.\n[0:00 - 0:08] From silence, the low strings bloom softly on a dark A minor chord, blurred and distant; over it the solo cello plays one slow falling phrase of five notes, E, D, C, B-flat, A, about one every 1.2 seconds, plain, unadorned and exhausted, and settles on the A.\n[0:08 - 0:26] The strings freeze into one cold, still open fifth, A2 and E3, barely audible, breathing slowly in and out. Nothing moves.\n[0:26 - 0:43] The felt piano plays single low notes far apart, about one every five seconds (A, then E, then C, then A), each left to ring and fade, while the open fifth holds quietly underneath. Grey and numb.\n[0:43 - 0:55] Everything thins to one sustained A on the muted cellos (A3, the A below middle C), very quiet and still, with no accents at all.\n[0:55 - 1:12] A viola joins a semitone above on B-flat (B-flat3), and the two notes hold together, pianissimo, softly grinding, completely static to the very end; do not change, resolve or fade (it will be cut off).\nInstrumental only, no vocals, no choir. Avoid: percussion, timpani, pulses, pizzicato, risers, braams, impacts, swells, crescendos, a big sad melody, a swelling romantic string adagio, lush vibrato, trailer clich\u00e9s, high strings, and anything bright.",
+   "sync_points": [
+    {
+     "t_global": 768.05,
+     "event": "the second explosion sends sparks into the night (boom at -9 dB, glass)",
+     "music": "the cue blooms in 0.55 s after the boom, as the sparks rise (2.5 s fade-in)"
+    },
+    {
+     "t_global": 770.35,
+     "event": "the hold: nothing he can do but watch (drone7 swells from 769.35)",
+     "music": "the solo cello's five falling notes E, D, C, B-flat, A, one per friend (cue 0:01-0:07, loose)"
+    },
+    {
+     "t_global": 774.35,
+     "event": "hard cut to LATER: his face in the phone's cold light; the tinnitus dies away by 780.85",
+     "music": "the phrase settles on A; the frozen open fifth carries across the time cut"
+    },
+    {
+     "t_global": 781.6,
+     "event": "keypad inserts with misdials (ducks x0.45 at 781.60-785.85 and 786.80-790.70); ringback at 790.20",
+     "music": "near stillness, pulled down with the room (P3)"
+    },
+    {
+     "t_global": 795.1,
+     "event": "the call connects (794.60); 'Emergency services. What is your address?'",
+     "music": "felt piano: single low notes about five seconds apart (from cue 0:26)"
+    },
+    {
+     "t_global": 812.05,
+     "event": "DISPATCHER: 'Help is coming. Is anybody still inside?'",
+     "music": "thins to one sustained A3 (cue 0:43)"
+    },
+    {
+     "t_global": 817.55,
+     "event": "the upstairs window collapses inward (creak; crash 818.03; surge 818.47)",
+     "music": "no accent: the A simply holds"
+    },
+    {
+     "t_global": 823.95,
+     "event": "SCOTT: 'Five. I had five over.'",
+     "music": "the viola's B-flat3 joins a semitone above (cue 0:55)"
+    },
+    {
+     "t_global": 831.5,
+     "event": "the count: object inserts and pings 831.50-838.39, in order then shuffled and faster; duck x0.32 from 831.45 to 838.13",
+     "music": "the A / B-flat dyad held static under the duck (P3): the pings and inserts do the counting"
+    },
+    {
+     "t_global": 838.6,
+     "event": "HOLE: the empty insert '6', its wrong ping on the Extra's bus against silence",
+     "music": "gated to exact silence; the cue ends inside the hole (838.9) and never returns"
+    }
+   ],
+   "holes_crossed": [
+    838.6
+   ],
+   "fade_in_s": 2.5,
+   "fade_out_s": 0.1,
+   "level_db": -10.0,
+   "source_filter": "",
+   "why": "No music plays for the spark, the run, the blast or the crawl. Grief is first allowed when the second explosion throws sparks into the night and Scott can only watch: five falling cello notes, one for each friend. The numbness carries across LATER and the call as one cue: piano notes far apart under the operator, and one low A, with no accent, under the window collapse. From 'Five. I had five over.' only a static A / B-flat dyad remains. The pings and the object inserts do the counting; the draft's string entries would have flammed against them. The hole for the empty '6' cuts it dead. (Raised 4 dB after mixing: earshot heard no music here under the fire and the call at the planned level.)"
+  },
+  {
+   "id": "M12",
+   "seq": "Q12",
+   "start_s": 839.35,
+   "end_s": 859.95,
+   "role": "underscore",
+   "model": "lyria-3.5",
+   "replaces": [],
+   "prompt": "A 22-second instrumental film-score cue, cold and hollow, for muted low strings (two cellos, two violas; con sordino, no vibrato) and a felt-muted upright piano, recorded close and dry, in tune at A = 440. Key centre A minor. Beatless free time. Pianissimo throughout. The lowest note is the cellos' low C; no double bass. The top octaves stay empty.\n[0:00 - 0:07] It begins at once: a hollow, soft open fifth, A2 and E3, in the cellos, with no attack, as if the floor has dropped away. Numb and still.\n[0:07 - 0:15] Above it the felt piano plays six slow single notes, about 1.3 seconds apart: E5, D5, C5, B4, A4, and then a sixth note that does not belong, a high G5 a seventh above the A. Each note is left to ring; the last one hangs unresolved. The piano does not play again.\n[0:15 - 0:20] The texture narrows to a single held A (A3, the A below middle C) on one muted cello, very soft and perfectly still.\n[0:20 - 0:22] It fades to complete silence.\nInstrumental only, no vocals, no choir. Avoid: percussion, pulses, risers, impacts, swells, synth pads, any melody beyond the six piano notes, vibrato, crescendos, resolution, trailer clich\u00e9s, and melodrama.",
+   "sync_points": [
+    {
+     "t_global": 839.35,
+     "event": "the hit; the call timer races from 00:00:36 to 00:02:25 (the time he lost); drone7 returns",
+     "music": "the hollow open fifth starts on the hit (0.3 s fade-in; P4: in_s at the onset)"
+    },
+    {
+     "t_global": 839.55,
+     "event": "SCOTT: 'I don't know. I don't know where-- I don't know.'",
+     "music": "numb, still"
+    },
+    {
+     "t_global": 846.25,
+     "event": "DISPATCHER: 'Sir, listen to me. You're outside. You're safe for now.'",
+     "music": "the count from the cold open, same notes and register: E5, D5, C5, B4, A4, then the G5 that does not belong (cue 0:07-0:14, loose)"
+    },
+    {
+     "t_global": 853.85,
+     "event": "profile close: 'How many people made it out?'; he wipes his face at 856.10",
+     "music": "narrowed to a bare A3 on one cello (cue 0:15)"
+    },
+    {
+     "t_global": 859.25,
+     "event": "cut behind him: the world drops out (fire, sirens and drone fade from 859.25, gone by 859.95)",
+     "music": "the A fades with the world, gone at 859.95"
+    },
+    {
+     "t_global": 865.85,
+     "event": "SCOTT: 'Two.'",
+     "music": "unscored: the synth unison (220 + 220.6 Hz) takes the same A"
+    }
+   ],
+   "holes_crossed": [],
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.7,
+   "level_db": -16,
+   "source_filter": "",
+   "why": "After the hit comes a hollow floor. Under 'You're safe for now' the cold open's six piano notes return in the same register, the sixth again one note too many. The score then narrows to a bare A3 and goes out with the world, so 'Me.' is heard in silence and the synth unison takes that same A on 'Two.'. The draft's narrowing to A plus his flat G is dropped, because it doubled the drone and answered the question before 'Me.'. The loop runs from here to the cold open, 21 s later in the same call, which opens on that A. The draft's M12b is cut: 'Two.', the hands and the wide belong to the unison and the locked hearts, and the ambiguity stays open."
+  }
+ ],
+ "unscored": [
+  {
+   "start_s": 0,
+   "end_s": 6,
+   "why": "Black, the tinnitus fading in, then the burn-through and the fire roar swelling to -14 dB at 4.6 s. The world and Scott's ear own the opening; the score enters only with the curtain."
+  },
+  {
+   "start_s": 25.6,
+   "end_s": 30.82,
+   "why": "'I--' is guillotined at 24.45. The caret blinks with a heartbeat on each blink, Q01.ring climbs from -48 to -35 dB, and the fire drains. M01 has thinned away by 25.6 (the draft's rising high tone was a riser that doubled Q01.ring), so the smash cut takes sound design, not music, into silence."
+  },
+  {
+   "start_s": 30.82,
+   "end_s": 32,
+   "why": "SMASH CUT TO BLACK: the thud, then one full second of true digital silence. The film designs this silence."
+  },
+  {
+   "start_s": 32,
+   "end_s": 48.98,
+   "why": "Q02's crisps, the six places, Scott's finger count and the six glass pings. Only room tone and the mantel clock play, so the pings teach the audience to count and the hard cut from fire to quiet tungsten lands."
+  },
+  {
+   "start_s": 48.98,
+   "end_s": 55.62,
+   "why": "There is no Lyria cue on the title or the credit; both keep the film's own synth chord (Q02.warm, kept). It is a warm, in-tune D major chord that blooms on the match cut and is gone before ONE burns, leaving drone7 alone for the audience's first exposure to it. It returns lower under 'A Film by Osita Miles', as the sequence designed it, so the card is not dead air. Then come 12 frames of true black silence before the doorbell. The draft's M02a and M02b clips are cut, for three reasons: a 30 s clip trimmed to 2.35 s and 2.8 s cannot guarantee an instant onset or a predictable level; the synth chord is sample-locked to the stamps; and cutting both pays for retakes. Cutting only M02b, as suggested, would still leave Q02.warm under the credit, because a bed is gated only under a cue."
+  },
+  {
+   "start_s": 143.92,
+   "end_s": 145.09,
+   "why": "The tally interstitial: the hall record cuts dead, leaving six scratches, a faint seventh and the drone at -56 dB."
+  },
+  {
+   "start_s": 224.69,
+   "end_s": 231.5,
+   "why": "'Angelo.' The cards stop, the record and the walla cut dead, and the room drops 14 dB. 'What?', 'Who's that for?' and seven count pings in a dead room: the pings are the music. The score waits until the wrong seventh ping has decayed."
+  },
+  {
+   "start_s": 234.9,
+   "end_s": 266.89,
+   "why": "Two stretches of comedy and sound design need a clean room. First: 'That's mine.' / 'Then what's that?' / '...Also mine, I guess.', the laughs, the gathering, the shuffle and the slow re-deal with its six pings. Then the sixth card in the gap (the wrong ping, drone7's swell, the 72 bpm heart) and 'How have I done it again?' / 'You haven't. There are six.'. The sixth card belongs to the slap, the ping and the drone."
+  },
+  {
+   "start_s": 280.97,
+   "end_s": 287.84,
+   "why": "Designed silence: 'Please.', six hands (282.99-283.41), the Extra's hole (283.53-285.64, exact silence except two heartbeats on his bus), 'Maybe you don't get to play.' and the laugh that stops a beat too early."
+  },
+  {
+   "start_s": 352.29,
+   "end_s": 360.04,
+   "why": "CLEAN: room tone, the fridge and the gas, still subliminal. Scott's fingernail tap on Kay's glass (358.54) rings into drone7's swell (358.69-360.08); the Extra's drone owns the moment."
+  },
+  {
+   "start_s": 360.04,
+   "end_s": 365.49,
+   "why": "The Extra's hole, the choked gasp, the CRASH through the kitchen wall, the tally of five, 'Christof?' and the no-answer duck. No stinger: the crash stands alone, and the silence of no reply is the scene."
+  },
+  {
+   "start_s": 365.49,
+   "end_s": 383.79,
+   "why": "'What was that?', Scott's step, the bottle nobody brought, the five fresh glasses with their five pings and drone7's swell (372.04-375.69), 'Oh. Thanks.' to no one, and the pour. The draft's M07a is cut, for two reasons. Its listening rub and the host's Rhodes explained a joke whose chill is that no one answers. And the Rhodes' in-tune G would have beaten against the loudest seventh in the film. Dry is colder, and it frees a generation."
+  },
+  {
+   "start_s": 383.79,
+   "end_s": 389.79,
+   "why": "Kay's untouched glass and 'Where's Kay?' (letterbox to 2.00), then 'Bathroom.' / 'Still?' / 'Go ask her.' played bare on room tone, fridge and gas, so the question lands. The score returns on the corridor cut."
+  },
+  {
+   "start_s": 420.3,
+   "end_s": 442.01,
+   "why": "'We can do one quick hand' through 'Then it doesn't.' plays on the heartbeat alone (the heavy beat at 427.79 sits in the duck). Then Q08's deal and count: five piles for four players, 'Count those.', the wrong fifth ping. The souring pings are the counting device; the score enters on the chair scrape."
+  },
+  {
+   "start_s": 509.8,
+   "end_s": 515,
+   "why": "From about 505.3: hole 2's soft 'Angelo.', then 'Who said that?' and no answer. This is the fridge beat, where the hum steps to -28 dB at 509.43 and suddenly feels loud. M08a's audio has ended by then, and its span runs to 509.80 only so that the old dread fragment (507.32-509.73) is gated. Then 'Scott, whose hand have you got?': 'He is holding Angelo's hand. Of course he is.' keeps its relief beat. The score returns after the fifth wineglass."
+  },
+  {
+   "start_s": 519.15,
+   "end_s": 540.65,
+   "why": "The let-go: the heartbeat stops dead with a 44 Hz hit. Marina's brittle 'Somebody take a photo.' plays dry. The phone goes to no one into drone7's own swell (530.75-534.15), then the shuffle, the charge whine, the shutter, the flash, and 'Four.' into the x0.04 duck. After the peak, the release is absence."
+  },
+  {
+   "start_s": 570.3,
+   "end_s": 588.15,
+   "why": "'Scott?' / 'Yeah. Coming.' play on drone7's swell. Then the empty kitchen: 'Christof?' gets nothing, the fridge compressor dies (582.95), and a quiet hiss threads through the silence. The count pings on the knobs (588.60, 589.05) land as M10a fades in."
+  },
+  {
+   "start_s": 606,
+   "end_s": 620.3,
+   "why": "The oven door after its 0.6 s hole, the bulb buzz, the 41 Hz hit, the small sound, the scream, the false calm, the Extra's 1.9 s hole with the throat inside it, the ponytail, and 'Dee?'. No score: the script asks for 'a small sound, not even a scream at first', and the synth scream sits around 220 Hz, where any cluster would mask it. The hiss and the heart carry it. Under P1, M10b gates the old dread under this stretch (606.82-627.90) in full."
+  },
+  {
+   "start_s": 627.7,
+   "end_s": 631.05,
+   "why": "Deena's quiet: her heart stops, the matte steps to 2.20, and the room falls away to the hiss (x0.32). The music has died with her, and the void holds until the knife leaves the block."
+  },
+  {
+   "start_s": 644.3,
+   "end_s": 652.4,
+   "why": "Marina is gone (her hole runs 644.05-645.15). 'Marina?' and 'She was here. She was just here.' play in a void of hiss and room, then the handprint hole (651.90-652.40). The score vanishing with her is the effect; no music mourns her."
+  },
+  {
+   "start_s": 686.35,
+   "end_s": 696.6,
+   "why": "Q11 opens on 'The gas. Angelo, we have to shut the gas off.', the missing knobs, Deena and the cigarette. The rising hiss and the drone carried over from Q10 are the score here."
+  },
+  {
+   "start_s": 696.6,
+   "end_s": 724.8,
+   "why": "The lighter and the standoff play in one unbroken take, with the letterbox squeezing from 2.39 to 2.76. The draft's standoff cue (two ppp string lines closing in) is dropped, as the critique allowed. Under the gas hiss at about -12 dBFS, the drone at -35 dB and the heart at -24 dB it would barely register, and the spec lets the hiss carry this scene. That saves a generation."
+  },
+  {
+   "start_s": 724.8,
+   "end_s": 738.55,
+   "why": "The script's 'The kitchen is silent except for the gas', then the back-gate exchange played dry on the gas, the heart and the drone. That way the music's return on 'Scott. Please.' marks Angelo's changed voice."
+  },
+  {
+   "start_s": 751.78,
+   "end_s": 768.6,
+   "why": "The spark, the run (everything ducked to x0.02), the door, the slam, the lighter scrape heard alone, the designed 0.4 s of digital silence, the frame-exact boom, the tinnitus, the burning roll, the crawl and the second blast. Sound only: no musical hit on any boom and no score over the chaos."
+  },
+  {
+   "start_s": 838.9,
+   "end_s": 839.35,
+   "why": "The Extra's hole for the empty '6' (838.60-839.30): exact silence except the wrong ping on his bus. M11b ends inside the hole, and M12 starts on the hit at 839.35."
+  },
+  {
+   "start_s": 859.95,
+   "end_s": 865.85,
+   "why": "The world drops out: 'Me.' with only his ear and his heart, the warmth closing round his hand (862.25), the second heartbeat locking. The film designs this silence."
+  },
+  {
+   "start_s": 865.85,
+   "end_s": 893.95,
+   "why": "'Two.' lands on the exact frame his shoulders drop, and the synth unison (220 + 220.6 Hz) takes the A the score left. The fire returns; then their hands; then the wide with no second figure; then the fade to ink, where the unison and the locked hearts go last. Then the end card ('ONE TOO MANY', 'A Film by Osita Miles') with its two tally scratches, and black. The draft's M12b is cut. It played under almost all of 'Two.', and its flat G on the wide reversed the spec's crossfade of the seventh into the unison and settled what the film keeps open."
+  }
+ ],
+ "generator": {
+  "service": "Gemini API",
+  "models": [
+   "lyria-3.5",
+   "lyria-3-clip-preview"
+  ]
+ }
+}

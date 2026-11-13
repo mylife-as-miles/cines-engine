@@ -1,0 +1,479 @@
+{
+ "name": "NEGATIVE SPACE: a cut-paper noir where the extra guest is the hole",
+ "one_line_pitch": "A cut-paper graphic noir where the six friends are hard black silhouettes, each shot lit by a single source. The extra guest is never drawn. It shows up only as something subtracted: a gap in the count, an empty slot in the composition, a hole cut through the paper to the firelight behind the world. The last image is Scott's black hand holding a hand made of light.",
+ "influences": [
+  "Saul Bass: the title sequences for Anatomy of a Murder, The Man with the Golden Arm, Vertigo and Psycho. Bars as bodies, cut-paper hands, the graphic Vertigo eye, type built from negative space",
+  "Kyle Cooper: the Se7en opening. Scratched, jittering type, single-frame flashes, hand-scratched marks (our tally interstitials)",
+  "Mike Mignola: Hellboy's shadow blocking. Forms defined by spot blacks with almost no interior detail",
+  "Lotte Reiniger (The Adventures of Prince Achmed) and Michel Ocelot (Princes et Princesses): acting in silhouette, profile staging, cut-paper motion on twos",
+  "Playdead's Limbo and Inside: one light source, silhouettes in depth, violence read through shape and sound",
+  "Dave McKean (Arkham Asylum, Cages): paper, fibre and grain layered over hard graphic forms",
+  "Kara Walker: cut-paper silhouettes that carry violence and story with no interior detail",
+  "Genndy Tartakovsky's Primal: flat, colour-keyed violence that hits hard without gore",
+  "Edgar Rubin's figure-ground (vase/faces): the background can itself be a figure",
+  "Coherence (2013): a dinner party whose logic quietly stops adding up"
+ ],
+ "rendering_technique": "ARCHITECTURE. The film is one 1920x1080 Canvas 2D surface driven by render(t). Frame f = round(t*24), so the 14:00 runtime is 20,160 frames. About 150 shots are built from 14 master set-ups. Each shot is a pure function drawShot(ctx, localT). Math.random and Date are never used: all variation comes from mulberry32 seeded by hash(shotId, elementId[, f]). Character animation is quantised to 12 fps (tq = floor(t*12)/12), which gives a cut-paper 'on twos' cadence and hides rig stiffness. Camera, light, type and particles run on ones. Fonts are loaded with the FontFace API and document.fonts.ready is awaited before frame 0. Preview can scrub to any t. Export steps frames headless (Puppeteer to canvas.toBlob to ffmpeg, or WebCodecs + mp4-muxer).\n\nLAYER STACK (offscreen canvases, composited back to front):\n- L0 BACKING LIGHT. A full-frame layer of backing-ember #FF9440 with a slow fire-noise flicker. It is rendered on every frame and is always fully covered, except where the Extra cuts through. It is the lightbox behind the paper world.\n- L1 LIGHT FIELD. Each shot has exactly one motivated source: {position, colour, three falloff radii}. Light is not a smooth gradient. It is three posterised flat bands (tungsten #F2A93B / #A4611F / #4B2B13, for example) with a 2px ordered-dither seam between bands for a screen-print edge. Cones from the pendant lamp and the hood lamp are hard trapezoids.\n- L2 SET. Walls, door frames, the round table, chairs, stove and fence are SVG path strings turned into Path2D, filled in ink or soot with hard edges. Countable sets (glasses, knobs, tiles, slats, windows) are generated in code so their counts are exact and can be animated.\n- L3 CAST SHADOWS. Each silhouette's Path2D is redrawn through a shadow matrix (scale about the light position plus a shear onto the floor or wall plane), filled ink at 80-90% over the light field. Shadows also obey the count rules: the Extra never casts one.\n- L4 CHARACTERS. A 14-joint rig per character. Head-profile (with nose, lips and chin as edge only), hair, torso variants (profile / 3/4 back / front) and signature attachments are authored per character as Path2D. Limbs are tapered capsules driven by 2-bone IK. Hands come from a shared library of about 16 authored poses, scaled per character. Everything is filled in one ink, #0D0A09, so overlapping parts merge with no visible joints. This seamlessness is the core reason silhouette is achievable at high quality in code.\n- L4 edge treatment. Every silhouette path goes through a 'cut paper' pass: it is flattened to about 6px segments, and each vertex is displaced along its normal by frozen seeded noise of +/-0.7px, so edges look hand-cut, not vector-perfect.\n- L4 secondary motion. Damped springs drive Deena's ponytail (k70/c7), Christof's curls (k40/c5), Angelo's jacket hem and Kay's wet hair ends.\n- L4 rim light. Fill the silhouette in the light colour, then fill the same path offset 3px away from the light in ink, clipped to the original path. The result is a crisp 2-5px crescent on the lit side. Its width is also a dramatic control.\n- L4 eyes. The only interior facial features in the film are Bass-style graphic eyes in extreme close-up (almond shape, iris disc, one catchlight, eyelid morph), used at most 8 times.\n- L5 SIGNATURE DETAILS. Small, bright, hand-placed accents: hoop arc, cigarette sliver, ring glints, rain beads, biscuit disc, the lip mark, the lighter glint.\n- L6 ATMOSPHERE. Light cones composited 'screen' at 0.08-0.14. Forty to eighty seeded dust motes inside the cones. Rain in 3 depth layers of 1px diagonal strokes. Gas haze: the stove region is redrawn in 3px horizontal strips offset by 1.5*sin(0.09y + 5.1t) plus noise, tinted gas-blue at 8-14%.\n- L7 TYPE. Per-glyph kinetic typography placed in the composition's negative space. It is depth-sorted, so a line can sit behind a silhouette, and it can be projected onto a set plane with setTransform (words dealt flat onto the table in top-down shots).\n- L8 KNOCKOUT. The Extra's marks (the VOICE letters, the throat line, the handprint hole, the final hand) are drawn with globalCompositeOperation 'destination-out' into the merged set+ink layer, so L0 glows through.\n- L9 POST.\n  - Halation: threshold the light layer, blur with ctx.filter blur(14px), tint #FF4A1C, composite 'screen' at 0.22.\n  - Grain: 8 pre-generated seeded 512x512 noise tiles, chosen by frame, composited 'overlay' at 0.06-0.09 (rising with intensity).\n  - A static procedural paper-fibre texture, 'multiply' at 0.04.\n  - Radial vignette to 0.55 ink.\n  - Seeded gate weave of +/-0.5px.\n  - Animated letterbox mattes.\n  - Single-frame wine flashes.\n\nFIRE. Flat three-tone flame tongues: closed Beziers whose control points ride scrolling 2D value noise, layered #A9280B / #FF6A1F / #FFE6B0. Ember particles use drag, negative gravity and curl-noise turbulence. Each scene's light radius flickers +/-4% from the same noise, so fire and light breathe together.\n\nBLOOD. Flat shapes only, in wine and blood tones, grown by scaling a noise-edged organic path. Anatomy is never shown.\n\nPHONE PHOTO. A real re-render of the four-figure flash composition into a 360x640 offscreen canvas. Its consistency with the room is free because it is the same renderer.",
+ "palette": [
+  {
+   "token": "ink",
+   "hex": "#0D0A09",
+   "role": "All silhouettes and the void. A warm soot black, never #000"
+  },
+  {
+   "token": "soot",
+   "hex": "#1E1714",
+   "role": "Set shapes in shadow; the second-darkest plane"
+  },
+  {
+   "token": "tungsten",
+   "hex": "#F2A93B",
+   "role": "Inner band of every interior lamp; Scott's type (he is the house's light)"
+  },
+  {
+   "token": "tungsten-mid",
+   "hex": "#A4611F",
+   "role": "Second posterised light band"
+  },
+  {
+   "token": "tungsten-low",
+   "hex": "#4B2B13",
+   "role": "Outer light band; hallway spill"
+  },
+  {
+   "token": "tungsten-tired",
+   "hex": "#C98A4B",
+   "role": "The desaturated lamp after Christof's crash"
+  },
+  {
+   "token": "card-paper",
+   "hex": "#EFE5D0",
+   "role": "Card faces, Christof's type, the curtain, Angelo's cigarette sliver, figures in the flash frame"
+  },
+  {
+   "token": "card-blue",
+   "hex": "#2B4C9B",
+   "role": "Card backs; Angelo's object colour; foreshadows the gas"
+  },
+  {
+   "token": "angelo-type",
+   "hex": "#6A8FE3",
+   "role": "Angelo's dealt words (card blue lifted for legibility on ink)"
+  },
+  {
+   "token": "lighter-cream",
+   "hex": "#FFF1D6",
+   "role": "Angelo's final, undealt lines; the spark core"
+  },
+  {
+   "token": "wine",
+   "hex": "#7A1426",
+   "role": "Wine in glasses, the wine ring, the overfilled pour"
+  },
+  {
+   "token": "deena-crimson",
+   "hex": "#D0384F",
+   "role": "Deena's type and pointer rules (wine held up to the light)"
+  },
+  {
+   "token": "lipstick",
+   "hex": "#C4213A",
+   "role": "Kay's lip mark on the glass; the last glyph of her lines that lingers"
+  },
+  {
+   "token": "blood",
+   "hex": "#5C0A17",
+   "role": "Blood: always the darker kin of the wine, never brighter"
+  },
+  {
+   "token": "rain-slate",
+   "hex": "#34424F",
+   "role": "Night seen through the front door"
+  },
+  {
+   "token": "rain-silver",
+   "hex": "#BCCBD6",
+   "role": "Rain streaks, beads in Kay's hair, Kay's type"
+  },
+  {
+   "token": "ring-gold",
+   "hex": "#D4AF5E",
+   "role": "Marina's rings and type"
+  },
+  {
+   "token": "under-door",
+   "hex": "#F6D8A0",
+   "role": "The line of light under the bathroom door"
+  },
+  {
+   "token": "hood-yellow",
+   "hex": "#E2C35B",
+   "role": "Kitchen hood lamp and oven bulb: the wrong, sickly second light"
+  },
+  {
+   "token": "gas-blue",
+   "hex": "#5D8DF2",
+   "role": "Gas-haze tint: the colour of the flame it is waiting to become"
+  },
+  {
+   "token": "backdoor-night",
+   "hex": "#1B2A3F",
+   "role": "The back door's glass rectangle: Scott's way out"
+  },
+  {
+   "token": "backing-ember",
+   "hex": "#FF9440",
+   "role": "The lightbox behind the world. Seen only through cuts the Extra makes; it is also the final hand"
+  },
+  {
+   "token": "fire-core",
+   "hex": "#FFE6B0",
+   "role": "Inner flame; the explosion negative"
+  },
+  {
+   "token": "fire-mid",
+   "hex": "#FF6A1F",
+   "role": "Flame body"
+  },
+  {
+   "token": "fire-outer",
+   "hex": "#A9280B",
+   "role": "Flame edge; the deep ember"
+  },
+  {
+   "token": "blast-white",
+   "hex": "#FFF6E0",
+   "role": "The three white frames of the explosion"
+  },
+  {
+   "token": "flash-white",
+   "hex": "#F8F4EA",
+   "role": "The camera-flash frame"
+  },
+  {
+   "token": "phone-white",
+   "hex": "#D7E7F3",
+   "role": "Phone screen, call timer, Dispatcher type"
+  },
+  {
+   "token": "strobe-red",
+   "hex": "#E3202B",
+   "role": "Emergency strobe through the fence"
+  },
+  {
+   "token": "strobe-blue",
+   "hex": "#2251E6",
+   "role": "Emergency strobe through the fence"
+  },
+  {
+   "token": "yard-night",
+   "hex": "#111926",
+   "role": "Back-yard sky and grass"
+  },
+  {
+   "token": "ash",
+   "hex": "#8C8277",
+   "role": "Scott's type after the fire, until 'Two.'"
+  }
+ ],
+ "colour_arc": [
+  {
+   "section": "Cold open: fire and night (00:00-00:42)",
+   "treatment": "The ink house sits against #111926. Its five windows are flat three-tone fire (#A9280B / #FF6A1F / #FFE6B0); maximum saturation exists only inside them. A phone-white rim lights Scott's ear. On the frame-left edge, where his free hand is cropped, a faint backing-ember flicker plays and is not explained."
+  },
+  {
+   "section": "Title (00:42-01:05)",
+   "treatment": "A tungsten field with six ink bars. The word 'ONE' is knocked out to backing-ember #FF9440: the audience's first, one-second exposure to the colour that will mean the Extra."
+  },
+  {
+   "section": "Arrivals (01:05-02:30)",
+   "treatment": "Warm and cold meet only at the front door. The hall is tungsten in three posterised bands; the doorway is rain-slate #34424F with rain-silver streaks. Each opening lets cold in. The second CLICK seals the house, and no cold light appears again until the phone in the yard. About 40% of the frame is ink."
+  },
+  {
+   "section": "Party, living room (02:30-03:20)",
+   "treatment": "The warmest point of the film: large lamp pools, wine reds in glasses and rings, card-paper ivory. At most four colours per shot. About 40-45% ink."
+  },
+  {
+   "section": "Card table (03:20-05:45)",
+   "treatment": "One pendant lamp throws three hard rings on the round table, with ink beyond. Card-blue backs and ivory faces are the strongest graphic accents. Deena's crimson and Kay's lipstick are the only reds. About 55% ink."
+  },
+  {
+   "section": "After Kay, after Christof (05:45-07:40)",
+   "treatment": "Tungsten drains toward #C98A4B and the lamp pool shrinks 15%. The kitchen doorway introduces a second, wrong light: sick hood-yellow #E2C35B. Kay's untouched lip mark becomes the most saturated thing in the room. About 70% ink."
+  },
+  {
+   "section": "Hand circle (07:40-08:40)",
+   "treatment": "The top-down lamp pool frames exactly the table and the faces are lost. Backing-ember appears indoors for the first time, through the VOICE's knockout letters. About 75% ink."
+  },
+  {
+   "section": "Photo (08:40-09:20)",
+   "treatment": "The flash gives three frames of flash-white #F8F4EA. The four friends become paper-white shapes with hard ink shadows: the only time they are lit from the front, by whoever took it. This is the film's maximum contrast. Then phone-white #D7E7F3 lights faces from below, and tungsten feels far away."
+  },
+  {
+   "section": "Hallway (09:20-09:40)",
+   "treatment": "No key light. There is only the under-door line #F6D8A0 and the far glow of the kitchen. Figures are rim-only. About 85% ink."
+  },
+  {
+   "section": "Kitchen: gas, oven, Deena, Marina (09:40-11:20)",
+   "treatment": "A hood-yellow cone falls on the stove over checker tiles in ink and soot. Gas-blue haze sits over the stove at 8-14%. Opening the oven flips the key to under-lighting from the oven bulb. Blood #5C0A17 is the wine's darker cousin. Deena's cut shows backing-ember for 4 frames before it turns to blood."
+  },
+  {
+   "section": "Lighter standoff (11:20-12:15)",
+   "treatment": "About 92% ink. Angelo stands at the edge of the hood cone; the back door is a night-blue rectangle #1B2A3F behind Scott. The lighter's glint is the brightest point in the frame. Angelo's type is lighter-cream #FFF1D6."
+  },
+  {
+   "section": "Explosion (12:15-12:40)",
+   "treatment": "Blast-white #FFF6E0 for 3 frames. Then 4 frames of negative inversion: ink becomes fire-core and light becomes ink, so the whole world is briefly made of the Extra's material. Then the full fire palette, while the letterbox mattes burn away like paper."
+  },
+  {
+   "section": "Ending (12:40-14:00)",
+   "treatment": "Fire-orange rims Scott's back. Strobe red #E3202B and blue #2251E6 sweep through the fence slats as bars at 1.6 Hz. Phone-white lights his face. Over the last 20 seconds everything dims toward ink except the hand-shaped backing-ember glow, which is the last light in the film."
+  }
+ ],
+ "typography": {
+  "title_face": "Six Caps (Google Fonts). Ultra-condensed capitals set at 300-600 px, so the letters read as vertical bars, like the bodies in the title design. Each glyph gets frozen hand-cut jitter (+/-0.6 deg rotation, +/-2 px baseline) and a paper-edge mask. Six Caps is also used for the end card. The tally interstitials are drawn scratch strokes, not type.",
+  "dialogue_faces": "Scott: Libre Franklin 500, rising to 700 under stress. Deena: Archivo Black, dropping to Archivo 500 when she is frightened. Angelo: Oswald 500 for dealt lines, Oswald 300 once he stops dealing. Kay: Cormorant Garamond Italic 600. Christof: Abril Fatface. Marina: IBM Plex Mono 500. Dispatcher: Barlow Condensed 400. VOICE (O.S.): no face of its own. It borrows the face of the person whose name it speaks and is rendered as knockout.",
+  "utility_face": "Barlow Condensed 500/600 with tabular figures: the call timer, the credit line 'Screenplay by Osita Miles', and any on-screen numerals.",
+  "rationale": "When everyone is a black shape, the type has to do the acting. Each speaker therefore gets four redundant identity cues: a typeface that is their personality made visible, a colour taken from the object they are tied to, an entrance behaviour, and a landing sound. The faces are chosen for maximum contrast with each other:\n- Scott: a plain, everyman sans that tries to stay tidy.\n- Deena: a heavy, blunt grotesque.\n- Angelo: a condensed dealer's sans.\n- Kay: a wet, breathy italic serif.\n- Christof: a fat, theatrical Didone marquee.\n- Marina: a gridded, exacting mono.\n- Dispatcher: a calm, institutional condensed face.\n\nThe Extra has no face of its own, only stolen ones cut out of the dark. That is the negative-space doctrine applied to type. Six Caps is the title face because its narrow caps behave like the film's bars and bodies, and because its name is itself a count.\n\nReadability rules:\n- Body sizes are 44-56 px at 1080p.\n- Each line holds for max(0.8 s, 0.3 s + 55 ms per character) after its entrance finishes.\n- Entrances last 250 ms or less (Kay and Marina are timed per character but stay under 700 ms).\n- No more than three lines are on screen at once."
+ },
+ "characters": [
+  {
+   "name": "Scott",
+   "visual_design": "Late-20s host of medium height. At 1.00 scale he fills 0.42 of the frame height in mediums. Rounded shoulders and a permanent 6-degree forward lean: a man always about to stand up. Neat short hair with one stubborn cowlick at the crown, the one untidy thing in his tidy house. Collared shirt: two collar points break the neckline, and sleeves rolled once give a cuff bump on each forearm. He is in socks all night; the rounded, heel-less sock-foot silhouette shows in every full-figure shot and pays off in the cold open. For the cold open and ending: a torn, jagged right sleeve, a blistered left forearm whose rim light turns ragged ember, and a scorched hem.",
+   "signature_detail": "The cowlick and the hover lean (plus the socks). The cowlick is the first thing the rim light catches in any shot of him.",
+   "colour": "Tungsten #F2A93B: his type is the colour of his own lamps. In the yard his type turns ash #8C8277, until 'Two.' returns it to tungsten.",
+   "motion_trait": "He hovers and never fully settles.\n- Idle sway is 0.8 Hz, +/-3 px.\n- Every pose lands, then makes a second 6 px correction 160 ms later. He tidies himself.\n- His hands fidget every 1.2-2.0 s on a seeded schedule: crumbs, glasses, coasters.\n- Starts are hesitant: easeInQuad with a 3-frame anticipation.\n- In fear, a 9 Hz, +/-1.5 px tremor in his hands (the knife blade shows it).\n- After the explosion he barely moves: only a breathing rise of 4 px at 0.25 Hz.",
+   "dialogue_treatment": "Libre Franklin 500 at 48 px, tungsten, left-aligned in the negative space on his lit side, 40-90 px off his profile.\n- Entry: word by word with a 60 ms stagger. Each word rises 6 px from 85% opacity on a spring (k180, c12), then makes a 1 px 'tidy' correction.\n- Self-interruptions ('I--', 'I didn't--', 'You don't have to--') are guillotined rather than faded. An invisible vertical edge slices the last glyph, and the dash fragment drops 20 px and vanishes in 4 frames.\n- Stress mapping: tracking tightens from 0 to -40, baseline jitter grows from 0 to +/-2 px at 12 Hz, and weight rises to 700. 'Where is it?' and 'No.' jump to 72 px.\n- Yard: 'Me.' is 160 px ash, centred in the night sky, with no animation. 'Two.' is 160 px tungsten and appears on the exact frame his shoulders drop.\n- Exit: a 200 ms fade with a 4 px upward drift.\n- Landing sound: a 25 ms paper rustle."
+  },
+  {
+   "name": "Deena",
+   "visual_design": "Late 20s and slightly shorter (0.95). Straight spine, chin up. A high ponytail: a tapered teardrop path from the crown on a 2-segment spring chain. A large hoop earring: a stroked 2.5 px ellipse that the rim light catches as a bright arc. Fitted top and wide-leg trousers make a clean triangular silhouette.",
+   "signature_detail": "The high ponytail, which is what the Extra grips. Plus the hoop's bright arc.",
+   "colour": "Wine crimson, like a glass of red held up to the light. Type is #D0384F; her object accent is her overfilled glass of wine, #7A1426.",
+   "motion_trait": "Decisive. She snaps pose to pose with only 2 in-betweens on twos (about 4 frames), easeOutExpo, with no hovering. At idle she is almost perfectly still, so the ponytail spring (k70, c7) is the live element: it swings 2-3 times after every head turn. She points with a straight arm. When she is frightened, the ponytail is the only thing that keeps moving.",
+   "dialogue_treatment": "Archivo Black at 52 px in crimson.\n- Hard cut-on: the whole line appears on one frame at 103% and settles to 100% over 2 frames with a 2 px shake.\n- Hard cut-off with no fade. Once she has said it, it's said.\n- Her type points. On 'Who's that for?' and 'Count those.' a 3 px crimson rule draws from the end of the line to its target (pile seven; the fifth pile) in 6 frames and ends in a dot.\n- When she softens ('You're actually scaring me now.') the face drops to Archivo 500: the bold falls away from her.\n- Off-screen lines slide in from the frame edge, already cropped.\n- When she 'almost comments', a crimson text cursor blinks for 6 frames and dies with no words.\n- Her last line, 'Scott, don't--', is sliced in half by the edge of the falling oven door.\n- Landing sound: a dry knuckle knock."
+  },
+  {
+   "name": "Angelo",
+   "visual_design": "Early 30s and the tallest (1.07). Lanky, with long arms and long fingers (the hand library is scaled 1.08 for him). A loose, unstructured jacket with a soft hem that lags on a spring. Hair swept back with volume. The unlit cigarette behind his right ear is a 2x18 px card-paper sliver: the only light-coloured thing on any silhouette in the film. A cheap metal lighter lives in his pocket and shows a 2 px glint when it appears.",
+   "signature_detail": "The cigarette sliver behind his ear and his dealer's hands. In the kitchen his silhouette sheds its signatures one by one: the jacket goes over Deena's throat, the cigarette is dropped, and only the lighter remains.",
+   "colour": "Card-back blue #2B4C9B, from the deck. Type is #6A8FE3. His final lines are lighter-cream #FFF1D6.",
+   "motion_trait": "Loose and showy, a poor magician. He is the only character whose hands animate on ones, during card flourishes: fans and arcs with easeOutBack(1.7). At idle he fiddles with the cigarette or lighter about every 3 s. Over the film the looseness drains out of him. By the standoff he has zero idle motion, only an 11 Hz, +/-0.8 px thumb tremor on the lighter wheel.",
+   "dialogue_treatment": "Oswald 500 at 52 px in card blue. His words are dealt.\n- Each word flicks out from his hand along a 120-260 px arc, rotating from -25 deg to a resting +/-2 deg over 180 ms (easeOutBack), and lands in a left-to-right row like a dealt hand.\n- In top-down shots the words land on the table plane itself.\n- Number words ('Five', 'five', 'six') are dealt at 1.6x size.\n- As his certainty fails, the resting rotation spreads from +/-2 deg to +/-9 deg and words start to overlap.\n- After the photo he stops dealing. 'And Christof's in the kitchen.' simply appears, unanimated.\n- In the kitchen every line is Oswald 300 in lighter-cream, fading in over 400 ms, perfectly level: the first time all night he doesn't sound like himself.\n- 'Sorry about your house.' is the smallest line in the film (36 px).\n- Landing sound: a card snap, which stops when the dealing stops."
+  },
+  {
+   "name": "Kay",
+   "visual_design": "Late 20s, 0.97 height. Shoulder-length hair still wet from the rain: the edge of her hair silhouette carries 6-10 seeded bead specks (1-2 px rain-silver dots). A light rain jacket with the hood down gives a soft bulk at the collar. Her default posture is leaning 8 deg against a door frame or a chair back. After the bathroom door clicks she is never shown again in a clean, full view.",
+   "signature_detail": "The rain-beaded hair edge and the lean. Her trace is the red lip mark on a glass that never empties.",
+   "colour": "Rain silver #BCCBD6 for type. Lipstick #C4213A is her only saturated accent: the lip mark and the lingering last glyph of her lines.",
+   "motion_trait": "Unhurried. Every move takes 1.25x as long as anyone else's, easeInOutSine, with no snaps. She often moves while partly hidden by door frames or Scott's shoulder. Her squeeze of his shoulder holds for 3 frames. Her walk down the corridor is drawn in 5 positions on twos, shrinking into depth.",
+   "dialogue_treatment": "Cormorant Garamond Italic 600 at 52 px in rain silver.\n- Written on like breath on glass: a soft left-to-right mask wipe at 22 ms per character, with a 2 px blur resolving to sharp over 200 ms.\n- Her dry punchlines ('You did the face.', 'Big night for you.') hold 25% longer.\n- On exit the line evaporates except its final glyph, which stays 600 ms in lipstick red and then fades, like the lip mark.\n- Her lines sometimes enter partly behind a door frame. Occlusion is capped at 15% of the first glyph.\n- Landing sound: a single water drip."
+  },
+  {
+   "name": "Christof",
+   "visual_design": "Late 20s, 1.02 height, broad-chested. A big cloud of curls, built as the union of 12-14 seeded circles: the most distinctive head shape in the cast. An open overshirt. He holds a biscuit, a 14 px disc, as a baton through his story. In the oven he is identified by the curl cloud alone.",
+   "signature_detail": "The curl cloud and the biscuit-baton.",
+   "colour": "Card-face ivory #EFE5D0: the showman's marquee white. He is the one who wins the hand.",
+   "motion_trait": "Expansive. Shoulder rotations reach 110 deg. Gestures are led by the biscuit, with 2-frame follow-through and a small bounce on every story beat. His curls sit on a soft spring (k40, c5). He takes up the most screen area of anyone. He walks into the bright kitchen doorway with a rolling gait, and its glare swallows him.",
+   "dialogue_treatment": "Abril Fatface at 54 px in ivory.\n- Marquee entry: words scale from 70% to 100% over 220 ms (easeOutBack) while each letter 'bulbs on' in sequence at 25 ms intervals.\n- Lines sit on a gentle smile-shaped arc, +/-4 deg per word.\n- Punchline words grow: 'twelve-quid drink' is set at 1.4x.\n- When 'Maybe you don't get to play.' falls flat, the bulbs of the last two words fail to light and stay at 35% opacity.\n- His last line, 'And don't touch my cards.', is the last marquee in the film.\n- Landing sound: tiny brass bulb tinks."
+  },
+  {
+   "name": "Marina",
+   "visual_design": "Late 20s, 0.98 height, upright and economical. A blunt geometric bob: a hard-cornered helmet with a horizontal cut line at the jaw. A fitted jacket with squared shoulders. Three ring glints (1.5 px ring-gold dots) on her right hand catch the key light. She holds glasses by the stem.",
+   "signature_detail": "The blunt bob, the gold ring glints, and the circular wiping gesture.",
+   "colour": "Ring gold #D4AF5E.",
+   "motion_trait": "Precise. easeInOutCubic with no overshoot, straight-line paths, stillness between actions. She wipes the wine ring in a 1.4 Hz circle. In the photo, her hand trembles on Scott's shoulder at 7 Hz, +/-1 px, and the ring glints flicker with it. She vanishes between two framings of the same doorway.",
+   "dialogue_treatment": "IBM Plex Mono 500 at 44 px in ring gold, on a strict character grid.\n- A 1 px hairline rule draws first (120 ms). Then characters type into their cells at exactly 28 ms each.\n- Full stops are drawn as tiny stroked rings, like wine rings.\n- Each sentence of 'Us. All of us. Right now.' gets its own grid row.\n- Under stress the grid fails: in 'Oh, God. Oh, God--' the cells jitter +/-3 px and drift off the rule.\n- Landing sound: sub-audible key ticks, then a glass-on-coaster tap when the line completes."
+  },
+  {
+   "name": "Dispatcher",
+   "visual_design": "Never seen. Her body is the phone: a small slab in Scott's hand whose screen throws a cold phone-white rim across his ear and cheekbone, the only cold light in the yard. In inserts we see a minimal call screen (the dialled number and a running call timer) and the keypad as a 3x4 grid of glowing digits.",
+   "signature_detail": "The call timer, the only thing in the film that counts correctly. It reads 00:02:51 at 'Two.' and 00:03:24 in the cold open, which quietly reveals that the cold open happens later in the same call. This is a reward for a second viewing.",
+   "colour": "Phone white #D7E7F3.",
+   "motion_trait": "None, apart from the timer ticking once a second and the fixed cadence of her text: a steady 2.8 words per second, whatever Scott says.",
+   "dialogue_treatment": "Barlow Condensed 400 at 44 px in phone white, always in the same fixed band in the upper third, so her voice arrives from one place like a fixed line.\n- Each word cuts on with a one-frame, 1 px horizontal scanline offset (a narrowband codec feel).\n- No easing, no emotion.\n- A small Barlow Condensed 600 timer (28 px, tabular figures) sits above her text.\n- Landing sound: a phone-line click over a narrowband hiss bed."
+  },
+  {
+   "name": "The Extra / VOICE (O.S.)",
+   "visual_design": "None. It is never a positive shape: no ink, no outline, no shadow, no reflection, no eyes in the dark. It exists only as subtraction: gaps in counts, gaps in compositions, and cuts through the paper world that reveal the backing-ember lightbox behind every set.",
+   "signature_detail": "It is always on Scott's right: the gap between Scott and Angelo, the seat beside Kay's after she has gone. Its one drawable form is a single right-hand path, used twice: as the hole pressed into the blood, and as the warm hand Scott holds at the end.",
+   "colour": "Backing ember #FF9440, visible only through holes it makes. It is effectively the colour of the fire that is coming.",
+   "motion_trait": "It never moves on screen. All of its actions happen between frames, across a cut or while Scott looks away. The only exceptions are Deena's throat line and her lifted ponytail, and even then the effect moves while the cause stays invisible.",
+   "dialogue_treatment": "It has no typeface of its own. It speaks in the face of the name it says: 'Scott.' in Scott's Libre Franklin, 'Angelo.' in Angelo's Oswald. That is the 'perfectly familiar voice'.\n- It is rendered as knockout ('destination-out' through the ink), so the letters are holes glowing backing-ember.\n- No entrance animation: full opacity on its first frame, gone on the next cut.\n- It sits exactly at the empty corner of the hand circle.\n- The second, very soft 'Angelo.' is 28 px at 60% knockout depth.\n- Sound: a 150 ms reversed swell, then every bus drops to digital silence for the length of the word. It has no landing sound and no reverb, so it reads as far too close."
+  }
+ ],
+ "the_extra": "THE NEGATIVE-SPACE DOCTRINE.\n\nThe world is cut paper laid over a lightbox. Every set is painted on top of a hidden full-frame layer of backing-ember (#FF9440, flickering with fire noise), and that layer is always completely covered. The Extra is never drawn. It can only subtract, in five ways:\n\n1. From the COUNT. Seven piles at a six-person table. A fifth wineglass. Five fresh glasses. Five names spoken around a four-person circle.\n\n2. From the COMPOSITION.\n- Every table shot leaves a person-sized gap at Scott's right.\n- The ring of seven card piles sits misregistered against the ring of six chairs (51.4 deg spacing against 60 deg), so the mismatch grows around the clock face and opens widest at Scott's right.\n- The hand circle is a pentagon of arms with only four bodies.\n- In the phone photo, the negative space between the four bodies is person-shaped (Rubin's vase). This is never pointed at; it is there for a second viewing.\n\n3. From the PAPER. When it touches the world, it cuts through to the lightbox: the VOICE's knockout letters, the ruler-straight line across Deena's throat, the hand-shaped hole pressed into the blood. In the explosion, the whole world inverts for 4 frames and briefly becomes the Extra's material.\n\n4. From TIME. It acts only between frames:\n- the second CLICK, played over a frame where nothing changes;\n- the bottle and five glasses that appear across a cut;\n- the phone back in Marina's hand across the flash;\n- Marina, gone between two identical framings of the same doorway.\n\n5. From SOUND. When it speaks, room tone drops to digital silence. Its only musical presence is the 7th natural harmonic (385 Hz over a 55 Hz drone, 31 cents flat of the G it 'should' be): one partial too many.\n\nVISIBILITY LADDER (it escalates with the story):\n- L0, arrivals: the second click; a second trail of wet footprints from the door, although only Kay came in from the rain.\n- L1, seven hands: the misregistered ring of piles.\n- L2, six hands on six cards: five hands come down; the sixth card flattens under no hand, and its drop shadow disappears.\n- L3: the bottle and glasses appear in a cut.\n- L4, hand circle: the empty corner; the knockout VOICE type; the first backing-ember light indoors.\n- L5: a photo taken from several feet away by no one.\n- L6, kitchen: the throat line, the lifted ponytail, the handprint hole with a 2-frame ember flicker inside it.\n- L7: the explosion's negative frames.\n- L8, ending: a whole hand made of warm light, held.\n\nThe same right-hand path is the handprint hole and the final hand, so the attentive viewer recognises it.\n\nCOUNTING AS VISUAL GRAMMAR:\n- Every master set-up is composed around a countable set: glasses, chairs, piles, knobs, tiles, windows, fence slats.\n- In Act 1 the film counts out loud, so the audience learns to count before anything goes wrong. 'Specular counts' ping highlights across a set at 3-frame intervals with glass ticks. 'Count cuts' put one cut on each counted item.\n- Later the counts go wrong in front of the audience, before the characters notice.\n- The letterbox mattes are the master counter. Each loss removes a slice of the frame: 1.78 to 1.85 to 2.00 to 2.20 to 2.39, then down to 2.76 during the standoff, until the explosion blows them away.\n- Four tally interstitials: 12 frames of black with Kyle-Cooper scratched marks and a scratch sound.\n  - After the arrivals: six marks, and a faint seventh that won't stay.\n  - After Christof's crash: five.\n  - Before the kitchen: four.\n  - The end card: two.",
+ "camera_and_editing": [
+  "Frame rate: 24 fps master. Characters animate on twos (12 fps), which gives Reiniger's cut-paper cadence and hides rig stiffness. Camera, light, type and particles run on ones.",
+  "Fourteen reusable master set-ups: front door, living-room frieze, table top-down, table profile two-shot, kitchen doorway, one-point corridor, kitchen stove, oven interior, tile floor top-down, back door exterior, yard wide, yard close, hand inserts, phone screen. Returning to an exact framing makes an absence legible: when a set-up comes back with one person missing, the audience feels the subtraction before the characters do.",
+  "The Extra acts only in the cut. Continuity 'errors' are designed. The bottle and five glasses arrive across the cut when Scott looks down at Deena's foot. The phone returns to Marina's hand across the flash. Marina disappears between two framings of the same doorway. The audience learns to re-scan the frame after every cut.",
+  "Count cuts: when the story counts, the edit counts. The six-card re-deal is six cuts of exactly 12 frames, landing on the groove's eighth notes. The roll call cuts on each name. Angelo's head check is four 10-frame whip pans, then a fifth whip pan nobody asked for, which lands on the empty chair at Scott's right and holds for 30 frames.",
+  "Shot-length curve:\n- Arrivals: average 4.5 s.\n- Cards: 3.2 s.\n- After the gasp: 2.4 s.\n- Kitchen: 1.3 s.\n- Lighter standoff: 7-9 s holds. Tension comes from duration.\n- Explosion: 4-6 frame cuts.\n- Ending: 10-25 s holds.",
+  "Camera moves:\n- Slow push-ins of 0.25-0.5% scale per second during held tension.\n- In table top-downs, an overhead rotation of 1.2 deg/s that stops dead on 'Perfect.'\n- Snap zooms of 6-8 frames (easeInExpo) on shocks.\n- Handheld shake only from the kitchen onward: seeded value noise, 1.5 to 3 px at 4-7 Hz.",
+  "Spatial discipline: Act 1 obeys the 180-degree rule strictly. The hand circle deliberately breaks it, covering four people from five sides, as if the table had a fifth seat. Scott's right is never given a clean, centred shot while something is happening there.",
+  "Shape match cuts (Bass grammar):\n- the six title bars into six glasses;\n- the wine ring into the coaster, and later into the blood pool;\n- the card rectangle into the phone screen, the oven door and the back door;\n- the line of light under the bathroom door into the line of gas haze;\n- Angelo's failed spark into the first fire window;\n- the title bars into the strobing fence slats at the end.",
+  "Parallax: each master has 3-5 depth planes moving at factors 0.2 / 0.5 / 1.0 / 1.3. Deeper planes are lifted 6% toward the key colour, which gives atmospheric perspective even in silhouette.",
+  "Type is staged like actors. It is blocked into the composition, sometimes sits behind a silhouette, sometimes lies on a set plane (Angelo's words dealt onto the table, Scott's 'Christof?' shrinking into perspective down the kitchen doorway), and can be cut by set edges (the oven door slices Deena's last line)."
+ ],
+ "intensity_devices": [
+  "Master intensity curve (ink share of frame / aspect ratio / average shot length / heartbeat bpm / gas hiss level):\n- Party: 40% / 1.78 / 4.5 s / 52 bpm / none.\n- Cards: 55% / 1.85 / 3.2 s / 72 bpm.\n- After the gasp: 70% / 2.00 / 2.4 s / 80 bpm.\n- Hand circle: 75% / 2.00 / 2.0 s / 88 bpm.\n- Kitchen: 85% / 2.20-2.39 / 1.3 s / 96 bpm / hiss -40 to -18 dB.\n- Standoff: 92% / 2.39 to 2.76 / 8 s holds / heartbeat replaced by hiss at -12 dB.\n- Explosion: everything at maximum, then released.",
+  "Letterbox as headcount. The mattes close one step per loss: Kay's door click 1.85, Christof's crash 2.00, Deena 2.20, Marina 2.39, then a continuous squeeze to 2.76 through the lighter standoff until the frame is a slit holding two men and a lighter. Each step takes 2 s, so it is almost subliminal. The explosion rips the mattes away as burning paper strips, and the yard plays full-frame.",
+  "Edge boil. The silhouettes' cut-paper edge noise is frozen through Act 1. After the hand circle it starts re-seeding every 2 frames at +/-0.4 px, and reaches +/-1.4 px in the kitchen, so the outline of reality loosens.",
+  "Vacuum silences: 0.4-1.2 s of true digital silence before the gasp, under each VOICE line, as the oven door drops, at the throat cut and before the final lighter scrape. Silence is the loudest cue in the film.",
+  "The groove turns to 7/8. The diegetic party music quietly gains a seventh beat in every bar after the second CLICK. It starts dropping beats after Christof's crash and stops dead on the oven reveal.",
+  "Specular counts. In Act 1 the film counts for us: highlights ping across glasses, knobs and tiles at 3-frame intervals with glass ticks. Later the same device delivers the wrong number (five fresh glasses).",
+  "Type pressure. Dialogue grows larger and denser as the night goes on, and overlapping lines physically collide. Christof and Marina bumping each other's words at the door is comic. 'Christof.' and 'Kay.' landing on the same spot after the photo is terrifying. In the standoff, the type thins almost to nothing.",
+  "Rim-light thinning. Angelo's rim shrinks from 4 px to 1 px over 3 s as his smile drains, and everyone's rim thins in the kitchen: the light is leaving them.",
+  "Single-frame wine flashes at 30-40% opacity, used only four times: the crash, the oven, the throat, the spark.",
+  "A rising sound floor: the fridge hum steps from -40 to -22 dB, the gas hiss ramps from -40 to -12 dB, and the 7th-harmonic leitmotif swells every time the Extra acts."
+ ],
+ "key_sequences": [
+  {
+   "moment": "Cold open (00:00-00:42)",
+   "treatment": "Two seconds of black with only tinnitus. A vertical slit of fire opens and widens into the wide shot: Scott's house as a hard ink shape against night. Five window rectangles breathe flat three-tone fire at 0.6 Hz. An upstairs curtain (an ivory rectangle) lifts on a heat gust and an ember line eats it from the edge in 30 frames.\n\nCut to the yard-close master: Scott in profile on the grass, in socks, with a torn sleeve and a blistered forearm with a ragged ember rim, phone-white on his ear. His free hand is cropped by the frame edge, where a faint backing-ember flicker lives.\n\nCall timer 00:03:24. Dispatcher, in Barlow at a steady cadence: 'Sir? Stay with me. You said there were six people.' Scott, small and ash-coloured: 'Yeah.' 'How many got out?' Glass breaks inside: one window shatters into 9 triangles. Scott: 'I--'. The 'I' lands, then a hard vertical black cut slices the frame and takes the dashes with it. That cut becomes the first title bar."
+  },
+  {
+   "moment": "Title (00:42-01:05)",
+   "treatment": "The slice opens onto a tungsten field. Six ink vertical bars, with widths that hint at the six bodies (Angelo's tallest), drop in on the beats of a 6/8 groove, each landing with a card slap. On beat seven the bars shuffle apart to make room for a seventh that never arrives. In that empty slot, 'ONE' appears in Six Caps, knocked out to backing-ember: the first glimpse of the Extra's colour, for one second. 'TOO MANY' sets across the bars in tungsten. 'Screenplay by Osita Miles' appears in Barlow Condensed 600, tracked +200. Then the six bars shrink into six glass silhouettes on Scott's counter: a match cut into the party."
+  },
+  {
+   "moment": "Arrivals (01:05-02:30)",
+   "treatment": "A top-down insert: a hand scoops crisps from a bag into a bowl. Half miss. They bounce as ivory flecks on the dark floor and Scott picks them up. A specular count pings across SIX glasses, then six places at the table: the film teaching us to count.\n\nThe front-door master is locked-off and symmetrical, and every arrival plays in this exact frame. Repetition is counting.\n- Doorbell. The door opens on rain-slate night. Deena (ponytail) and Angelo (cigarette sliver) step in. Her lines slam on in Archivo Black. 'It's decorative.' is dealt word by word as Angelo takes the cigarette down and puts it back.\n- KNOCK. Kay in the door rectangle, rain beads glinting along her hair edge, the ice bag dripping. Her italics write on. Scott's 'I wasn't going to.' tidies itself. She nudges past his blocking silhouette.\n- Deena's off-screen 'Kay! Save yourself...' slides in, cropped by frame-left.\n- Ring and knocking. Christof and Marina argue on the porch and their lines physically collide: Marina's mono grid shoulders Christof's marquee words aside. Angelo's off-screen 'Finally!' is dealt in from frame-right.\n\nCut to the living-room frieze: a long horizontal composition where the silhouettes have accumulated, 2, 3, then 6.\n\nThe latch CLICKS (an insert of the bolt sliding home). Scott's hand leaves it. Then a second CLICK over a frame that does not change at all for 36 frames. The 7th harmonic breathes in, and from here the groove is in 7/8. Scott checks the lock. Lets it go."
+  },
+  {
+   "moment": "Party, living room later (02:30-03:20)",
+   "treatment": "The warmest light of the film. Christof's story lights up in Abril marquee; 'It was a twelve-quid drink.' grows 1.4x. Angelo deals 'That's not a reason.' A top-down insert: a crisp wine ring on the borrowed table. Marina's ringed hand wipes it in a circle; Scott's hand slides a coaster (an ivory disc) into the exact spot, circle on circle. This composition will return as the blood pool.\n\nKay is a lean inside the bright kitchen doorway. 'Sit down, Scott.' 'I'm sitting.' 'You're standing.' Scott glances at his own legs in a 4-frame head dip and perches on the couch arm. 'Better.' Deena almost comments: a crimson cursor blinks and dies.\n\nOut of focus by the door, two trails of wet prints lead into the room."
+  },
+  {
+   "moment": "Seven hands (03:20-04:25)",
+   "treatment": "The top-down table master: three posterised lamp rings, six chairs at 60 deg. Angelo's poor-magician flourish fans 52 ivory and blue cards, on ones. In a profile two-shot, Scott and Kay's 'Saturday' exchange plays while cards fly across the background as motion-smear rectangles; Deena 'concentrates very hard' on her glass.\n\n'Angelo.' A card freezes mid-air for 4 frames and drops. The cards stop.\n\nTop-down again: SEVEN piles at 51.4 deg, visibly out of register with the six chairs. The mismatch grows around the circle, and the widest gap is at Scott's right, where pile seven sits in front of no chair. On 'Who's that for?' Deena's crimson pointer rule draws to it. The overhead camera rotates at 1.2 deg/s. Christof's 'Take both. You'll still lose.' is a marquee. Angelo laughs, but his dealt words land crooked (+/-5 deg)."
+  },
+  {
+   "moment": "The skipped card (04:25-04:50)",
+   "treatment": "The slow re-deal is six count cuts of exactly 12 frames, each on a groove eighth with a card slap. Each is a close-up of a card landing in front of a silhouetted hand. The sixth lands in front of the gap at Scott's right, with no hand in frame and no lingering.\n\nTop-down: every place has a card, and Angelo's place is bare wood under the lamp while he holds the deck. 'Right. Okay.' is dealt slowly.\n\n'Everybody touch the card in front of you.' Five ink hands come down, staggered 2 frames apart. The sixth card, at the gap, flattens: its drop shadow vanishes and it slides 2 px, as if pressed. Six cards are pressed; we count five hands. 'One beat. Two.' is played as two heartbeat thumps. Christof's 'Maybe you don't get to play.' lights up, but the bulbs of the last two words fail."
+  },
+  {
+   "moment": "Kay leaves (04:50-05:22)",
+   "treatment": "Kay stands and steps around Scott's chair (the chair back is an ink shape). An insert: her hand squeezes his shoulder under a rain-silver rim. 'Big night for you.' holds, then leaves only its last glyph in lipstick red.\n\nThe one-point corridor master: Kay walks away into the dark in 5 drawings on twos, shrinking toward the bathroom door. It is the last clean view of her in the film. A bathroom-door CLICK, and the under-door line of light appears with two dark gaps: her feet. The mattes move in to 1.85 over 2 s. Hold for 1 s on the line."
+  },
+  {
+   "moment": "Five cards (05:22-05:45, then 07:15-07:40)",
+   "treatment": "FIRST DEAL. 'Okay. With Kay gone, five people. Yes?' 'Five. It's five.' The word 'Five' is dealt at 1.6x onto the table plane. He deals four around and the fifth to himself. Top-down, it is a perfect pentagon, and the overhead rotation stops dead on 'Perfect.' 'See?' Then a slow push on the fifth card while the rim light on Angelo's profile thins from 4 px to 1 px over 3 s: his smile drains, because it shouldn't have worked.\n\nSECOND DEAL (after Christof is gone). He gets through four piles, then deals a FIFTH. Insert: Deena's hand closes around his wrist, a Bass-perfect two-hand silhouette. 'Angelo. Stop.' 'Count those.' Her pointer rule touches the fifth pile.\n\nThen the camera counts: four 10-frame whip pans (Scott, Deena, Marina, Angelo), and a fifth whip pan that lands on the empty chair at Scott's right and holds for 30 frames. 'No.' His chair scrapes back with a hard sound."
+  },
+  {
+   "moment": "Christof's gasp and crash (05:45-07:15)",
+   "treatment": "Christof wins ('I'll accept apologies individually.') and walks into the hood-yellow doorway. Its glare swallows the curl cloud.\n\nScott taps Kay's glass. Insert: the rim with the lipstick mark, the only saturated red in frame. The tap rings, and the ring sustains far too long until it becomes the drone. Then 0.5 s of vacuum. GASP (choked formant noise). METALLIC CRASH. On one frame, every silhouette jumps to a startle pose and the camera jolts 6 px. The mattes step to 2.00, and the lamp drains to tungsten-tired.\n\n'Christof?' Scott's type travels toward the kitchen doorway, shrinks in perspective and disappears into the glare. No reply. A THUMP behind him. 'Scott, you're standing on my foot.' Cut to his socks on her shoe. Cut back up: the bottle, and five fresh glasses in a row, which ping one by one. The film counts five for us. 'Oh. Thanks.' His type drifts toward the gap and no answer appears. The pour is a flat wine ribbon that overfills.\n\n'Where's Kay?' The corridor: the door is closed and the light line is steady. 'He did come back.' 'He went to get the wine.' An insert: the bottle in Scott's hand. They all look at it. 'Then I don't know, Scott.' A long hold on the kitchen doorway nobody looks at."
+  },
+  {
+   "moment": "Hand-circle roll call (07:40-08:40)",
+   "treatment": "'I want to count the people. Not the cards.' Top-down: four silhouettes around the lamp pool link arms. The chain forms a PENTAGON. Four corners are bodies. The fifth is where Scott's right hand and Angelo's hand meet over the empty seat, above a fifth wineglass on a coaster. Inserts: Scott's left hand in Marina's, with ring glints; his right holds a hand whose wrist leaves the frame and which catches no rim light.\n\nThe roll call is staged as a type diagram: each name appears at the speaker's corner in the speaker's face. First comes 'Scott.' at the EMPTY corner, in Scott's own Libre Franklin, knocked out to ember. The room drops to digital silence for the word. Then 'Marina.' (Franklin), 'Deena.' (Plex), 'Angelo.' (Archivo Black), 'Scott.' (Oswald). Five names now sit around a four-person circle.\n\n'Wait.' ... 'Okay. Other way. Right this time.' The coverage breaks the 180-degree line: the circle is shot from five sides. 'Angelo.' 'Deena.' 'Marina.' 'Scott.' Then the soft VOICE: 'Angelo.' in Angelo's Oswald, 28 px, barely there, at the same corner. On the next cut the fridge hum jumps 12 dB.\n\n'Who said that?' 'Scott, whose hand have you got?' Close-up: it is Angelo's long-fingered hand, rim-lit now. Of course it is. Pull back to reveal the fifth glass between them. 'Why's that there?' 'Don't let go yet.' Marina lets go anyway, and every hand releases on the same frame."
+  },
+  {
+   "moment": "The photo (08:40-09:20)",
+   "treatment": "'Somebody take a photo.' Marina's hand pushes the glowing phone toward frame-right, the Extra's side, while her head stays turned away. Cut, and the phone has been taken across the cut. A wide of the four against the wall. Marina's hand trembles on Scott's shoulder and the ring glints flicker. A flash-charge whine.\n\nSHUTTER, then three frames of flash-white. The friends become paper-white figures with four hard ink shadows on the wall: the one time they are lit from the front, by whoever took it. Cut: the phone is back in Marina's hand.\n\nInsert: the screen shows the same four-figure composition, re-rendered small. Angelo pinch-zooms it 1x to 2.2x over 18 frames. It is sharp, taken from several feet away, and the gaps between the bodies are faintly person-shaped. 'Who took it?' 'Christof.' 'Kay.' The two names land on the same spot and interpenetrate, still readable by colour.\n\nReverse POV: the empty patch of floor where the photographer stood, in the lamp's outer band, held for 2 s. 'And Christof's in the kitchen.' Angelo's first undealt, unanimated line, which is somehow worse. Tally interstitial: four marks."
+  },
+  {
+   "moment": "Hallway and kitchen (09:20-09:58)",
+   "treatment": "The corridor master, lit only by the kitchen glow at the far end. Four silhouettes process away from camera, and four long shadows stretch back toward the lens: count them. Insert: Scott's hand reaches toward the bathroom handle. The under-door line is now unbroken, with no feet behind it. He stops. 'Scott?' types out in Marina's grid. 'Yeah. Coming.'\n\nThe kitchen master: a hood-yellow cone over the stove, ink everywhere else, a cupboard door standing open as a black rectangle, one chair pushed out, checker tiles. The hiss threads in. A gas-blue haze shimmers over the stove. Insert: the row of knobs, two of them bare spindles, and white plastic shards under the cabinet. 'Oh, shit. Gas.' Scott grips the stove and it shifts 3 px with a damp, ugly sound. Edge boil starts; handheld shake starts."
+  },
+  {
+   "moment": "Oven reveal (09:58-10:12)",
+   "treatment": "'Scott, don't--' The oven door drops and its edge slices Deena's line in half. The oven bulb (hood-yellow, flickering with a 100 Hz buzz) throws hard under-lighting across Scott. The first image of horror is SHADOW: a huge, distorted projection of the folded body thrown across the ceiling, Nosferatu-scale.\n\nThen an 18-frame insert of the interior: a dense ink mass filling the lit box. The curl cloud is pressed flat against the back wall, its round silhouette squared off on one side, so 'crushed' is told by shape alone. A bent knee. One hand palm-up. A blood pool spreads beneath, and three drops fall over the door lip. Count them. A single-frame wine flash.\n\nCut to Scott: his legs give way in 6 drawings on twos. A thin breath, then the scream carried entirely by the score. Marina's 'Oh, God. Oh, God--' grid shakes apart. Angelo's 'No. No, no--' words drop instead of being dealt."
+  },
+  {
+   "moment": "Deena (10:12-10:42)",
+   "treatment": "Profile two-shot against the oven light. Deena's hands are on Scott's shoulders.\n- Frames 0-12: she is fine.\n- Frame 12: a 1 px, ruler-straight horizontal line of light crosses her neck, the paper itself cut, with no blade and no figure.\n- Frames 12-16: it widens to 4 px and glows backing-ember.\n- Frames 16-20: it floods to blood and three short runs drip.\n- Frame 14: the tip of her ponytail snaps 40 px straight up toward an empty point above her head (gripped by nothing) and her head jerks upright 8 deg. A single-frame wine flash.\n\nHer ink palms come up over the line, and the red glows between her fingers like a rim. The gas hiss drops out for a second under a paper-tear sound.\n\n'Dee?' Angelo catches her before she hits the tiles, a low angle with his silhouette folding over hers. 'Hey. Hey, look at me. Look at me.' These words are no longer dealt; they slide. Her breathing is a wet flutter that slows from 9 Hz to 4 Hz and stops. The mattes step to 2.20. Her crimson type never appears again."
+  },
+  {
+   "moment": "Marina gone, the handprint (10:42-11:20)",
+   "treatment": "Scott backs into the counter with a kitchen knife. The blade is the brightest line in the frame, trembling at 9 Hz. 'Where is it?' (72 px, tracking -40). 'I didn't see anybody.' 'I know.'\n\n'Marina? Marina, get away from the door.' Cut to the kitchen doorway in the exact framing where we saw her four shots earlier: an empty, dim-amber rectangle. The mattes step to 2.39. Scott's 'Marina?' floats into the rectangle and is the only thing inside it. 'She was here. She was just here.'\n\nTop-down on the checker tiles: beside Deena, a hand-shaped clear HOLE pressed into the blood pool, a right hand, with a 2-frame ember flicker inside it. 'I was holding her.'\n\nAngelo lays her down and takes off his jacket, and his silhouette visibly thins as he covers her throat. 'When you counted us. You kept saying five.' He speaks in plain, level Oswald 300. Tally interstitial skipped: there is no time left for counting."
+  },
+  {
+   "moment": "Lighter standoff (11:20-12:15)",
+   "treatment": "The longest takes in the film, 7-9 s each on a 0.4%/s push. A low angle: Angelo at the edge of the hood cone; behind Scott, the night-blue rectangle of the back door. The hiss rises toward -12 dB.\n\nAngelo takes the cigarette from behind his ear. The white sliver leaves his silhouette, he looks at it, and he drops it. It falls on ones over 36 frames and rolls to rest at the edge of the blood. His silhouette now carries none of his signatures. He takes out the cheap metal lighter; its 2 px glint trembles with his thumb.\n\n'No.' 'Back door's there.' His lines are all lighter-cream, undealt and level. Scott's pleas ('Just-- think for one second.', 'Come with me. We can call the police from outside.') grow and crowd toward him. 'And say what?' 'I don't know.' 'Neither do I.' The mattes squeeze continuously from 2.39 to 2.76, until the frame is a slit holding two men and a lighter. 'I don't want you here when I do it.' 'Go.' A long beat on Deena's covered shape. 'Sorry about your house.' (36 px, the smallest line in the film.)\n\nThe thumb strikes: two frames of six radial white spark strokes, and it fails to catch. A single-frame wine flash. Scott runs. Whip cut."
+  },
+  {
+   "moment": "Explosion (12:15-12:40)",
+   "treatment": "The back door from outside, with kitchen light behind it. Scott bursts out as a silhouette in the rectangle, nearly falls down the steps, and grabs the handle. The rectangle of light narrows to a slit as the door shuts, mirroring the front door at the start. Through the glass, a small Angelo with the lighter raised.\n\nTotal silence for 0.4 s. The tiny, dry SCRAPE. Then:\n- Frames 0-2: nothing.\n- Frames 3-5: blast-white.\n- Frames 6-9: negative inversion. Ink becomes fire-core and light becomes ink; the whole world is made of the Extra's material.\n- Frame 10 onward: full fire. The window rectangles burst outward as 60 glass triangles. The letterbox mattes rip away as burning paper strips. A heat wave flattens 500 procedural grass blades outward at 900 px/s.\n\nScott is thrown down the steps, with motion-smear shapes on twos. Small flame tongues catch on his back; he rolls through three alternating poses until they die. He crawls to the far fence. The second explosion throws 400 embers into the night, and a camera shake decays from 18 px to 0 over 1.2 s. Then six seconds of stillness: there is nothing he can do but watch."
+  },
+  {
+   "moment": "Ending: the count and the hands (12:40-14:00)",
+   "treatment": "The yard-close master returns in the exact framing of the cold open. Red and blue strobe bars sweep through the fence slats. Phone insert: the keypad is a grid of glowing digits, and his ink thumb misses between keys twice. Call timer 00:01:12. Dispatcher lines come in Barlow at her steady cadence; Scott's answers are ash Franklin, and his address is a murmur with no type at all.\n\n'Five. I had five over.' Then the count. Five names rise around him in the dark, in their owners' faces at 60%: Deena (Archivo Black), Christof (Abril), Angelo (Oswald), Kay (Cormorant italic), Marina (Plex Mono). With them comes a sixth slot: a name-length knockout bar of ember with no letters. They orbit like a dealt circle. Every time he steadies one, two swap places along Angelo's dealing arc. On 'I don't know where-- I don't know.' they scatter off-frame like thrown cards.\n\n'Sir, listen to me. You're outside. You're safe for now.' 'How many people made it out?' He wipes his face. 'Me.' (160 px, ash.) Two seconds of nothing but fire. At the frame edge where his free hand is cropped, the warm flicker brightens. We see only his forearm tense and his shoulders drop 6 px in relief. 'Two.' (160 px, tungsten again.) The timer reads 00:02:51.\n\nHe lowers the phone. The camera tilts down and widens 20% over 4 s. On the grass, Scott's black hand clasps a right hand made of backing-ember light: the same shape as the handprint, lit from inside by firelight. Its wrist fades into the dark grass within a third of a forearm, and there is no figure. The house burns soft behind them (blur 6 px). Hold 18 s on a 0.2%/s push, under fire, distant sirens and a two-sine unison beating slowly. The hands do not separate.\n\nFade: everything sinks to ink over 4 s and the hand is the last light to go. The end card reads 'ONE TOO MANY' in Six Caps, and beneath it two tally marks scratch in, one, then the other."
+  }
+ ],
+ "sound_design": [
+  {
+   "cue": "Whole-film mix and determinism",
+   "web_audio_recipe": "The full soundtrack is rendered in an OfflineAudioContext (48 kHz stereo) from the same timeline as render(t).\n- All noise comes from mulberry32-seeded AudioBuffers.\n- Reverbs are ConvolverNodes fed generated impulse responses (stereo, exponentially decaying noise): 0.5 s living room, 0.25 s bright kitchen tile, 2.8 s yard.\n- Master chain: DynamicsCompressor (threshold -16 dB, 4:1, attack 4 ms, release 220 ms).\n- The result is written to WAV and muxed with the frames in ffmpeg.\n- Preview scrubbing plays the pre-rendered buffer from an offset with an AudioBufferSourceNode."
+  },
+  {
+   "cue": "Tinnitus (cold open, after the explosion)",
+   "web_audio_recipe": "Two sine oscillators at 6200 Hz and 6205.5 Hz (a 5.5 Hz beat), each through a gain of 0.008.\n- Cold open: 2 s linear fade-in, sitting at -38 dBFS under the fire.\n- After the blast: returns at -26 dBFS and decays with setTargetAtTime (tau 4 s)."
+  },
+  {
+   "cue": "Fire bed",
+   "web_audio_recipe": "Base: a seeded brown-noise buffer (b = (b + 0.02*w) / 1.02, scaled x3.5), looped, then lowpass 700 Hz (Q 0.5), gain 0.22, with a 0.13 Hz LFO at 30% depth on the gain.\n- Crackle: a precomputed Poisson schedule of about 10 events per second. Each event is a 4-15 ms white-noise burst through a bandpass at a random 2.5-4.5 kHz (Q 2) with exponential decay (tau 8 ms).\n- Roar: sines at 41 Hz and 62 Hz, -30 dB, with 0.2 Hz amplitude modulation.\n- Pops: 1-2 per second, 30 ms of noise through lowpass 1.2 kHz."
+  },
+  {
+   "cue": "Party groove, 6/8 that turns into 7/8 (diegetic)",
+   "web_audio_recipe": "Tempo: dotted-quarter at 70 bpm (one eighth = 285.7 ms).\n- FM e-piano voice: a carrier sine, plus a modulator sine at the same frequency feeding carrier.frequency. The frequency deviation envelope falls from 3.0x to 0.6x the note frequency over 350 ms. Amp envelope: 6 ms attack, 1.6 s decay. Tremolo 4.8 Hz at 0.12 depth.\n- Chords: Dm9, G13, Cmaj9, A7(b9), one per bar.\n- Bass: triangle wave through lowpass 400 Hz.\n- Kick: sine sweeping 120 to 48 Hz in 60 ms, 180 ms decay.\n- Brush: white noise through bandpass 6.5 kHz (Q 0.8), 2 ms attack / 90 ms decay, eighth-note velocities [1, .4, .6, .8, .4, .6].\n- After the second CLICK, every bar gains a seventh eighth: a rim click (3 ms noise, bandpass 1.8 kHz, Q 6, velocity 0.5).\n- Heard from another room: lowpass 900 Hz.\n- After Christof's crash: seeded one-beat dropouts. Hard stop on the oven door."
+  },
+  {
+   "cue": "Doorbell, knock, latch clicks",
+   "web_audio_recipe": "- Doorbell: sine E5 (659.25 Hz), then C5 (523.25 Hz) 400 ms later. Partials at x2.0 (-12 dB) and x3.0 (-20 dB), exponential decay 1.2 s.\n- Knock: sine sweeping 95 to 60 Hz over 40 ms, plus 30 ms of noise through lowpass 800 Hz. Three hits, 180 ms apart.\n- First CLICK: 4 ms of noise through highpass 3 kHz and a bandpass at 2.1 kHz (Q 12), 25 ms decay, panned -0.3, through the room reverb.\n- Second CLICK: the identical recipe but completely dry, panned +0.6 (Scott's right) and 1.5 dB quieter. The same sound, from the wrong place."
+  },
+  {
+   "cue": "Cards",
+   "web_audio_recipe": "- Flick: 6 ms of white noise through bandpass 3.2 kHz (Q 2), plus a 15 ms 'thup' sine at 160 Hz.\n- Slap on the table: 20 ms of noise through lowpass 1.5 kHz, 50 ms decay.\n- Riffle: 40 flick grains over 0.8 s, with the gap between them accelerating from 35 to 12 ms, then slowing again.\n- In the six-card re-deal, each slap lands exactly on a groove eighth."
+  },
+  {
+   "cue": "Dialogue landing sounds, one per speaker",
+   "web_audio_recipe": "Each speaker's words land with the sound of their object. Everything sits at -30 to -38 dBFS so it reads as texture, not as game chirps.\n- Scott: paper rustle (25 ms pink noise, bandpass 2.2 kHz, Q 1.2).\n- Deena: knuckle knock (sine 180 to 120 Hz over 25 ms, plus a 3 ms noise tick).\n- Angelo: card snap (the flick recipe at half level). It stops when he stops dealing.\n- Kay: water drip (sine sweep 1.4 to 2.4 kHz in 40 ms, 80 ms decay).\n- Christof: bulb tinks (sines at 1760 and 2640 Hz, 120 ms, one per word).\n- Marina: key ticks (0.8 ms clicks at -44 dB per glyph), then a glass tap when the line completes (inharmonic sines at 2.9, 4.4 and 6.1 kHz, 250 ms).\n- Dispatcher: a line click over a narrowband bed (pink noise through highpass 300 Hz and lowpass 3.4 kHz, -42 dB) with seeded 20 ms dropouts."
+  },
+  {
+   "cue": "The Extra's leitmotif: the 7th harmonic",
+   "web_audio_recipe": "The drone: sines at 55 x n Hz for n = 1 to 6, each at gain 1/n, master level -28 dB, with a slow 0.05 Hz filter 'breath'.\n- The Extra's partial is n = 7: a detuned pair at 384.7 and 385.3 Hz, a natural seventh 31 cents flat of G4.\n- It is normally silent. Whenever the Extra acts, it swells to -20 dB over 1.5 s: the second click, pile seven, the pressed card, the bottle, the VOICE, the photo, the throat, the handprint.\n- In the ending it is the last tone left under the fire, and it resolves into the two-voice unison."
+  },
+  {
+   "cue": "VOICE (O.S.): the hole in the sound",
+   "web_audio_recipe": "For each VOICE line:\n1. A 150 ms reversed swell of the room-tone buffer, gain ramping 0 to +4 dB.\n2. Every bus except the 7th-harmonic pair is set to exactly 0 with setValueAtTime(0), for the word's on-screen duration of about 0.9 s.\n3. The buses return over 300 ms.\nThere is no landing sound and no reverb."
+  },
+  {
+   "cue": "Heartbeat, fridge hum, gas hiss",
+   "web_audio_recipe": "- Heartbeat: a 'lub' sine at 52 Hz (8 ms attack, 120 ms decay), then a 'dub' at 44 Hz 210 ms later, 4 dB quieter. The tempo follows the intensity curve: 52, then 72, 88 and 96 bpm, aligned to cut points.\n- Fridge hum: a 50 Hz sawtooth through lowpass 180 Hz, plus a 100 Hz sine at -6 dB. It sits at -40 dB, steps to -28 dB on the cut after the soft 'Angelo.', and reaches -22 dB in the corridor.\n- Gas hiss: white noise through highpass 2.8 kHz and bandpass 6 kHz (Q 0.7), with a 7 Hz flutter at 8% depth. It ramps from -40 to -12 dB between entering the kitchen and the spark. It drops to silence for 1 s at Deena's throat, then comes back louder."
+  },
+  {
+   "cue": "Christof's gasp and the metallic crash",
+   "web_audio_recipe": "- Gasp: noise through two parallel bandpasses (700 Hz, Q 8; 1200 Hz, Q 10). The envelope rises over 60 ms and is cut to zero at 180 ms, so it sounds choked off.\n- Crash, 120 ms later: eight sine partials at 320 Hz x [1, 2.76, 5.40, 8.93, 13.34, 18.64, 24.6, 31.4] with seeded gains and exponential decays of 0.4-1.6 s, plus a 60 ms noise burst and a 70 Hz thud. It plays through the kitchen reverb and a 4 kHz lowpass, as if heard through a wall."
+  },
+  {
+   "cue": "Bottle thump and the glass count",
+   "web_audio_recipe": "- Bottle thump: sine 110 to 70 Hz over 80 ms, plus noise through lowpass 600 Hz. Dry, panned to Scott's right.\n- Glass count pings: inharmonic sines at 2.8, 4.1, 5.9 and 7.3 kHz with 600 ms decay, one per glass, 125 ms apart, each 2% higher in pitch than the last."
+  },
+  {
+   "cue": "Camera flash and shutter",
+   "web_audio_recipe": "- Charge whine: a sine sweeping exponentially from 2 to 9 kHz over 1.2 s at -42 dB.\n- Shutter: two 5 ms noise clicks, 70 ms apart, through bandpasses at 1.8 and 2.4 kHz (Q 8).\n- On the white frames, all ambience ducks 12 dB for 6 frames."
+  },
+  {
+   "cue": "Oven door, bulb buzz, stove shift, and the scream as score",
+   "web_audio_recipe": "- Oven door: an 80 Hz sawtooth with 6 Hz FM (+/-8 Hz) through lowpass 900 Hz, 600 ms long, plus a hinge squeal (sine 1.2 to 0.9 kHz).\n- Bulb buzz: a 100 Hz square wave through lowpass 800 Hz at -32 dB, gated in sync with the visual flicker.\n- Stove shift ('damp, ugly sound'): brown noise through a bandpass sweeping 220 to 110 Hz (Q 4) over 450 ms, plus a 55 Hz thud.\n- Scream: no voice synthesis. A thin breath (noise through bandpass 900 Hz, Q 4, 400 ms), then nine sawtooth oscillators around 220 Hz detuned +/-25 cents, through a lowpass sweeping 300 Hz to 4.5 kHz over 1.5 s (Q 6) into a soft-clip WaveShaper, with the tinnitus pair rising underneath. Cut dead on the cut to Deena."
+  },
+  {
+   "cue": "Deena's throat",
+   "web_audio_recipe": "- Paper tear: white noise through a bandpass sweeping 4.5 to 1.4 kHz over 300 ms (Q 3), gated by a seeded random 2-6 ms on/off pattern, like fibres tearing. It is the sound of the paper world being cut.\n- Then the wet flutter: noise through lowpass 420 Hz with amplitude modulation at 70% depth, the rate slowing from 9 Hz to 4 Hz, decaying over 2.5 s."
+  },
+  {
+   "cue": "Lighter",
+   "web_audio_recipe": "- Wheel scrape: 6-8 grains of 2 ms noise at 45 per second through bandpass 5 kHz (Q 3).\n- Spark: a 3 ms bright click (highpass 6 kHz) plus an 80 ms sizzle (noise through highpass 8 kHz, exponential decay). The failed strike has no flame tail.\n- The final scrape outside is the same recipe, 6 dB quieter, dry, in total silence."
+  },
+  {
+   "cue": "Explosion",
+   "web_audio_recipe": "0.4 s of digital silence after the scrape, then:\n- Boom: a sine sweeping exponentially from 34 to 18 Hz over 1.2 s at full scale, plus a brown-noise burst through lowpass 180 Hz with a 3 s decay.\n- Crack: 80 ms of unfiltered white noise.\n- Glass: 60 seeded inharmonic pings (3-9 kHz, 80-300 ms) scattered over 1.5 s.\n- The master compressor slams to 20:1 for 1 s.\n- The tinnitus pair replaces the high end for 5 s (hearing loss), then the fire bed fades up.\n- A second explosion 3 s later: the boom 8 dB quieter, plus 400 ember crackles."
+  },
+  {
+   "cue": "Sirens, strobe, and the final 'Two'",
+   "web_audio_recipe": "- Sirens: a distant UK two-tone, triangle waves alternating 770 / 960 Hz every 0.6 s, through lowpass 1.2 kHz and the yard reverb at -32 dB, creeping 6 dB louder over 60 s.\n- Strobe: a faint 1.6 Hz relay tick in sync with the bars.\n- On 'Two.': two sines at 220.0 and 220.6 Hz (beating every 1.7 s) fade in to -26 dB. As the hands are revealed, the 7th partial fades out and the pair holds. In the last 6 s everything else fades and the pair goes last."
+  }
+ ],
+ "feasibility_and_risks": "THE BIG HEDGE. This direction can be built entirely in Canvas 2D, and silhouette is the strongest available answer to the brief's biggest risk, procedurally drawn faces. There are no faces to get wrong. Faces exist only as profiles and as Bass-style graphic eyes in at most 8 extreme close-ups. Silhouettes also merge where limbs overlap, so simple rigs read as seamless.\n\nWHAT IS GENUINELY HARD:\n\n1. Hands. The whole film is built on hands: crisps, dealing, the wrist grab, the hand circle, the shoulder squeeze, the clasp, the knife, the lighter, the final two hands. They need a hand-authored library of about 16 high-quality SVG silhouettes, drawn at 4x size:\n- open, relaxed, card pinch, deal, point;\n- wrist grip, left clasp, right clasp;\n- covering the throat, limp palm-up, knife grip, lighter thumb;\n- shoulder squeeze, slap-flat, tremble-on-shoulder;\n- the Extra's right hand.\nThis is where most of the craft budget should go.\n\n2. Walking and turning. Walks happen only in long shots and in depth, drawn on twos. Turns happen across cuts, as in Reiniger, and a figure is never rotated in 3D.\n\n3. The hand-circle top-down: four linked arm chains plus an empty fifth corner. Build it as one bespoke, hand-tuned composition, not a general IK solve.\n\n4. Fire and explosion. Particle soup would look cheap. Flat three-tone animated flame shapes, ember particles and the negative-inversion frames look designed rather than simulated.\n\n5. The type engine is real software:\n- per-glyph layout using measureText per character, with pair kerning;\n- eight behaviour classes;\n- set-plane transforms and depth sorting;\n- knockout compositing.\nFonts must be force-loaded with the FontFace API before frame 0, or exports will silently fall back to other fonts.\n\n6. Export performance. ctx.filter blur (halation, background defocus) is expensive at 1080p, so cache static blurred layers per shot. Rendering all 20,160 frames headless will likely take 0.1-0.3 s per frame, so 1-2 hours per full export. ctx.filter only works in Chromium and Firefox, so the scrub preview targets Chrome.\n\n7. Readability. With no voice actors, the type is the performance for 14 minutes. Enforce the hold rule (max(0.8 s, 0.3 s + 55 ms per character)), allow at most three active lines, and test-read the assembled cut at full speed before polishing.\n\n8. Telling speakers apart in group silhouettes. Four redundant cues handle it: typeface, colour, placement next to the speaker, and landing sound.\n\n9. Warmth in Act 1. Silhouettes can feel cold. The first act's charm comes from comic timing on twos, Christof's marquee lines, Angelo's dealt words, Kay's lingering lip-mark letters, and the warmest palette in the film.\n\n10. The Extra must stay ambiguous. The visibility ladder needs disciplined review: if any frame gives it an outline or an eye, the film breaks.\n\nHOW IT LOOKS PREMIUM RATHER THAN CHEAP:\n- strict compositional grids and symmetry, in the Bass tradition;\n- posterised three-band light instead of soft gradients;\n- cut-paper edge noise, frozen so edges are still until we choose to let them boil;\n- rim-light crescents;\n- halation on highlights, seeded grain, gate weave and a paper-fibre texture;\n- motion on twos with real anticipation and overshoot;\n- at most four colours per shot;\n- sound doing at least half the work.\n\nVIOLENCE stays implication: it is shown through shape (curls squared off against a wall, a ruler-straight line of light), shadow (the body projected on the ceiling) and colour (wine-dark pools). Each image is held under a second the first time it is seen. It hits hard because it is so clean, and it is never gratuitous."
+}

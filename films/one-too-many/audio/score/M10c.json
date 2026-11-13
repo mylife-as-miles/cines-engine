@@ -1,0 +1,7 @@
+{
+ "id": "M10c",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 30-second instrumental clip of shaking, fearful chamber music that begins immediately, on the first instant, with no intro. A small string group, muted (con sordino), recorded close and dry: cellos and violas only. The cellos hold a low G (G2) in a soft, unsteady bowed tremolo, and the violas tremble on an A above it (A3), mezzo-piano, like a shaking hand. In tune at A = 440. Beatless, no pulse. The tremolo stays exactly the same, low and steady, for the whole 30 seconds: no surge, no swell, no thinning, no ending.\nInstrumental only, no vocals. Avoid: percussion, pulses, ostinatos, violins, high notes, risers, impacts, stingers, glissandi, melody, crescendos, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

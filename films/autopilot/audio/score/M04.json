@@ -1,0 +1,7 @@
+{
+ "id": "M04",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental piece, about 60 seconds: light, cheerful and gently playful, a sunny ordinary morning. Felt piano playing a bouncy figure in D major at about 96 bpm, with glockenspiel sparkles and soft pizzicato strings, smiling and carefree, warm and content, mezzo-piano, never building. Bright major harmony throughout, no minor chords, nothing sad or wistful. It ends on a held D major chord. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

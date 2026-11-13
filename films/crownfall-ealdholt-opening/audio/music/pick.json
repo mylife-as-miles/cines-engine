@@ -1,0 +1,16 @@
+{
+  "file": "cand_602.wav",
+  "offset": 0,
+  "gain": -6,
+  "fade_in": 4.0,
+  "fade_out": 1.0,
+  "seed": 602,
+  "note": "Chosen from seeds 601-604 (tools/music.py). All four are heard by earshot as 'orchestral film music with drums and brass' (strong, z +3.9 to +4.1, >99% against electronic dance music, rock music, singing and speech). Only 602 has the shape the film asks for: a sparse low drum pulse about every 0.9 s over quiet (-20 to -30 dB between hits) under the watch, a hit at 4.5 s as the run starts, a build from 8 s with its strongest rise at 14.6 s through the dive and climb, a broad full section from 23 to 29 s under the title's strike (26.75 s), and its own ring-out to about -35 dB by the black at 29.95 s. 601, 603 and 604 are level at about -14 dB from their first second to their end. The 4 s fade-in keeps the watch almost silent; the 1 s fade-out only finishes the take's own decay.",
+  "model": "Stable Audio 3.0 Small Music (q8_0 GGUF via audio.cpp, Soundbox 0.4.1; the Linux CPU build of audio.cpp at SOUNDBOX_AUDIOCPP_BIN, git f7ac446)",
+  "prompt": "audio/sfx_plan.json, music.prompt (32 s, seeds 601-604, one take each)",
+  "license": {
+    "name": "Stability AI Community License",
+    "url": "https://stability.ai/license",
+    "note": "Free for commercial use below USD $1M annual revenue; above that an Enterprise licence is needed."
+  }
+}

@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>set test</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script src="load.js"></script>
+<script>
+  // Renders a set's (or the rig's) demos as a fake sequence so it can be checked in isolation: settest.html?set=kitchen
+  FILM_LOAD('../', ['none']).then(async () => {
+    const name = new URLSearchParams(location.search).get('set');
+    const set = name === 'rig' ? window.RIG : SETS[name];
+    if (!set || !set.demos) { console.error((name || '?') + ' has no demos'); window.FILM_READY = true; return; }
+    window.FILM_ONLY = null;
+    FILM.seq({ id: 'SET', title: 'set ' + name, dur: set.demos.length * 4,
+      shots: set.demos.map((d, i) => ({ at: i * 4, name: d.name, post: d.post, draw: (c, st, lt) => d.draw(c, (d.t0 || 0) + st, lt) })) });
+    FILM.mountHeadless(); window.FILM_READY = true;
+  });
+</script>

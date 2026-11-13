@@ -1,0 +1,19 @@
+# Autopilot: decisions
+
+Settled with the author, Osita Miles.
+
+| Decision | Choice |
+| --- | --- |
+| Ending | The film ends on the stillness after "And my daughter was dead.": about 9 s as the last of the light goes out of the glass, then black. After about 2.5 s of black and silence, an end card fades in: "AUTOPILOT" and "A film by Osita Miles", in the opening title's type. It holds, then fades to black. (The author first chose no end card, then asked for one.) After a review, the author cut the screenplay's last line, "Autopilot disengaged.": it named the film's idea just after the human consequence had landed, and the end card's title says it in silence. "And my daughter was dead." stays: the inside of the car is never shown, so it keeps the outcome unambiguous. |
+| Daniel's V.O. | Voiced with Gemini text-to-speech (`gemini-3.8-flash-tts`, `tools/vo_tts.py`) in `en-gb-training-10` (Winchester), chosen by the author from an audition of four British voices aged 37 or 38. 12 lines (the screenplay's 13th, "Autopilot disengaged.", is cut), with their per-line directions, in `audio/vo/` (`script_vo.json`). The three "My phone was on the counter." were re-voiced after the review so that each goes deeper than the last: half an excuse (10:05), frightened after "Emily?" (10:14), barely a breath, the line coming apart (10:56). Three takes each, ranked by earshot (`audio/vo/refrain_v2.json`). |
+| Radio presenter | `en-gb-podcaster-3` (a Winchester radio host), with both lines cut off mid-sentence as in the script; `audio/radio/`. Heard through a small-speaker filter in the mix. |
+| Scene dialogue | On-screen type (Daniel, Emily, Priya, Sarah), as in *One Too Many*. |
+| Emily | Her lines stay on screen as type: a synthetic four-year-old's voice is more likely to sound wrong than moving. |
+| Restraint | Emily is never shown in the car after the mirror moment, and the inside of the car is never shown at the end ("We do not see inside."). |
+| YouTube cut | A second, shorter cut (10:26) for YouTube, kept beside the director's cut (11:27): no title card, so it starts on the 6:14 alarm, and about 61 s of wordless shot tails trimmed (`cuts/youtube.json`). The author kept the twist protected: no cold open, no added line, and breakfast, the mirror and the ending untouched, so the audience still forgets Emily with Daniel. |
+| Look | **C, Through Glass** (`look_c.md`), chosen from the three candidates on `frames/BOARD_looks.jpg`. |
+| Frame | Full 16:9 (1920x1080): no letterbox bars, and every set runs to the frame's edges. |
+| On-screen text | No title, slate or scene headings on screen. Time is read off glass in the world (the phone, the dashboard clock, the laptop). |
+| Subtitles | In the picture, as in Look B: Libre Franklin, bottom centre, soft dark halo, no box. Scene dialogue bold and white (Emily's in her yellow); Daniel's V.O. lighter, in bone; the radio presenter in a smaller italic. Every subtitle names its speaker first, as film subtitles do ("Emily: …", "Daniel: …", "Radio: …"; Daniel's V.O. as "Daniel: …"), so the audience always knows who is speaking; the author asked for it. The timing is unchanged: a subtitle still holds for its take, or for its words alone. |
+| Title | One small title on black at the very start ("AUTOPILOT", "A film by Osita Miles"), before the alarm, and the end card after the last black. Nothing else on screen but the subtitles and the world's own words. |
+| Build | The film is built in code on the *One Too Many* engine (`film/FILM.md`), shot by shot from `design/SEQUENCES.md`. |

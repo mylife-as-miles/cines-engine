@@ -1,0 +1,288 @@
+<!doctype html><meta charset="utf-8"><title>R3 hand circle - RECOUNT</title>
+<script src="../../kit/otm.js"></script><script src="rc.js"></script><script src="people.js"></script><script src="cast.js"></script>
+<script>
+(async () => {
+  await RC.fonts();
+  const ctx = OTM.stage(); const { P, W, H, rgba, mix, lin, rad, pool, paper, rim, cast, blob, smooth, polyPath, smoothPath, clamp, lerp } = RC;
+  const { sweep, blobPath, form, hand, clasp, folds } = CAST;
+  // the night is drawn on its own layer so the handheld roll never touches the record
+  const night = RC.cv(), g = night.getContext('2d');
+  const LAMP = [1000, 118], LIGHT = { x: 1000, y: 70 };
+  const TC = [1000, 822], TRX = 690, TRY = 186;            // the borrowed round table, in perspective
+  const CARD = '#F3E2C4', BOUNCE = '#F7B46A';
+  const NIGHT = '#140E0A';
+  const tableY = (x, near) => TC[1] + (near ? 1 : -1) * TRY * Math.sqrt(Math.max(0, 1 - Math.pow((x - TC[0]) / TRX, 2)));
+
+  // ================= ROOM: everything outside the cone is umber-night =================
+  g.fillStyle = NIGHT; g.fillRect(0, 0, W, H);
+  // the faintest bounce from the lit table onto the wall behind Scott (separates his head), nothing else
+  pool(g, 1000, 470, 520, '#3A2416', 0.55, { sy: 0.62, mid: 0.4, midA: 0.35 });
+  RC.texture(g, 0.45, 'overlay');
+  // the kitchen doorway (far right): blacker than the wall, the oven clock blinking 00:00 deep inside
+  (() => { g.fillStyle = '#060404'; g.fillRect(1772, 150, 160, 520);
+    paper(g, polyPath([[1760, 140], [1780, 140], [1780, 670], [1760, 670]]), '#1A120D', { rim: { dx: -1, dy: 0, w: 1.2, color: '#6A4428', alpha: 0.35 } });
+    g.save(); g.font = RC.font(500, 15, 'IBM Plex Mono'); g.letterSpacing = '2px'; g.fillStyle = P.led; g.shadowColor = P.led; g.shadowBlur = 12; g.fillText('00:00', 1800, 452); g.restore();
+    pool(g, 1822, 446, 46, P.led, 0.16); })();
+
+  // light amount helpers (one source: the pendant)
+  const KEY = (x, y, k) => ({ dx: (LIGHT.x - x) * 0.0016, dy: -1, color: P.tungsten, k });
+  const lampRim = (x, y, a, w) => ({ dx: (LIGHT.x - x) / 520, dy: -1, w: w || 2.2, color: P.tcore, alpha: a, blur: 0.6 });
+  const clothCol = (c, k) => ({ base: mix(c, P.umber, 0.66), lit: mix(mix(c, P.tungsten, 0.22), '#FFFFFF', 0.04 * k), k });
+  function torso(pts, c, k, o) {
+    o = o || {}; const p = blobPath(pts, 6), cc = clothCol(c, k), bb = pts.reduce((a, q) => [Math.min(a[0], q[0]), Math.min(a[1], q[1]), Math.max(a[2], q[0]), Math.max(a[3], q[1])], [1e9, 1e9, -1e9, -1e9]);
+    form(g, p, { light: LIGHT, cx: (bb[0] + bb[2]) / 2, cy: bb[1], base: cc.base, lit: mix(cc.base, cc.lit, k), band: o.band || 34, soft: o.soft || 26, rimC: P.tcore, rimW: 2, rimA: 0.75 * k,
+      shadow: o.shadow || { dx: 0, dy: 10, blur: 24, alpha: 0.6 }, ao: 0.3,
+      shade: (h) => { h.fillStyle = lin(h, 0, bb[1], 0, bb[3], [[0, '#000000', 0], [1, '#000000', 0.45]]); h.fillRect(bb[0] - 10, bb[1] - 10, bb[2] - bb[0] + 20, bb[3] - bb[1] + 20); if (o.extra) o.extra(h); } });
+    return p;
+  }
+  // an arm: sleeve (cloth) from the shoulder over the elbow, bare forearm or full sleeve to the wrist
+  function arm(o) {
+    const k = o.k, cc = clothCol(o.cloth, k), skinBase = mix(o.skin, P.umber, 0.64), skinLit = mix(skinBase, mix(mix(o.skin, P.tungsten, 0.25), '#FFFFFF', 0.05), k);
+    const sh = o.sh, el = o.el, wr = o.wr; const cuffT = o.cuffT == null ? 0.42 : o.cuffT;
+    const cuff = [lerp(el[0], wr[0], cuffT), lerp(el[1], wr[1], cuffT)];
+    const R = o.r || [36, 28, 22, 17];
+    // forearm (skin)
+    if (o.bare !== false) { const fa = sweep([[el[0], el[1], R[2] * 0.95], [lerp(el[0], wr[0], 0.45), lerp(el[1], wr[1], 0.45), R[2] * 0.88], [wr[0], wr[1], R[3]]]);
+      form(g, fa.path, { light: LIGHT, cx: el[0], cy: el[1], base: skinBase, lit: skinLit, band: R[2] * 0.9, soft: R[2] * 0.7, rimC: mix(skinLit, '#FFF0D8', 0.4), rimW: 1.6, rimA: 0.7 * k + 0.1, ao: 0.35,
+        bounce: o.under ? { color: o.under, a: 0.25, w: R[2] * 0.5 } : null, shadow: { dx: 0, dy: 6, blur: 10, alpha: 0.5 },
+        shade: (h) => { if (o.forearmShade) o.forearmShade(h); h.save(); h.globalCompositeOperation = 'screen'; h.strokeStyle = rgba(skinLit, 0.12 * k); h.lineWidth = R[2] * 0.25; h.filter = 'blur(3px)'; h.beginPath(); h.moveTo(lerp(el[0], wr[0], 0.15), lerp(el[1], wr[1], 0.15) - R[2] * 0.3); h.lineTo(lerp(el[0], wr[0], 0.8), lerp(el[1], wr[1], 0.8) - R[3] * 0.3); h.stroke(); h.restore(); } }); }
+    // sleeve
+    const end = o.bare === false ? [wr[0], wr[1]] : cuff;
+    const sp = [[sh[0], sh[1], R[0]], [lerp(sh[0], el[0], 0.55), lerp(sh[1], el[1], 0.55), R[1] * 1.05], [el[0], el[1], R[1] * 1.02], [end[0], end[1], o.bare === false ? R[3] * 1.25 : R[2] * 1.18]];
+    const sw = sweep(sp, { capEnd: false });
+    form(g, sw.path, { light: LIGHT, cx: sh[0], cy: sh[1], base: cc.base, lit: mix(cc.base, cc.lit, k), band: R[1] * 0.85, soft: R[1] * 0.6, rimC: P.tcore, rimW: 2, rimA: 0.7 * k + 0.05, ao: 0.35,
+      shadow: { dx: 0, dy: 8, blur: 14, alpha: 0.55 }, bounce: o.under ? { color: o.under, a: 0.18, w: R[1] * 0.5 } : null,
+      shade: (h) => { folds(h, sw, { n: o.nFolds || 5, a: 0.24, seed: o.seed || 'arm', color: '#000000', lit: cc.lit, litA: 0.1 * k });
+        if (o.rib) { h.save(); h.strokeStyle = 'rgba(0,0,0,0.2)'; h.lineWidth = 1.1; for (let j = -6; j <= 6; j++) { h.beginPath(); sw.mid.forEach((p, i) => { const q = sw.mid[Math.min(sw.mid.length - 1, i + 1)], pp = sw.mid[Math.max(0, i - 1)], an = Math.atan2(q[1] - pp[1], q[0] - pp[0]); const x = p[0] - Math.sin(an) * p[2] * j / 6.5, y = p[1] + Math.cos(an) * p[2] * j / 6.5; i ? h.lineTo(x, y) : h.moveTo(x, y); }); h.stroke(); } h.restore(); }
+        if (o.sleeveShade) o.sleeveShade(h); } });
+    // rolled / knitted / denim cuff band
+    if (o.cuffBand !== false) { const a = Math.atan2(wr[1] - el[1], wr[0] - el[0]), r = o.bare === false ? R[3] * 1.3 : R[2] * 1.22, L = o.cuffL || 13;
+      const cb = sweep([[end[0] - Math.cos(a) * L, end[1] - Math.sin(a) * L, r], [end[0], end[1], r * 1.02]], { capStart: false, capEnd: false });
+      form(g, cb.path, { light: LIGHT, cx: end[0], cy: end[1], base: mix(cc.base, '#000000', 0.1), lit: mix(cc.base, cc.lit, k * 1.05), band: r * 0.7, soft: r * 0.4, rimC: P.tcore, rimW: 1.4, rimA: 0.6 * k, ao: 0.55 }); }
+    return sw;
+  }
+  // soft shadow on the tabletop beneath something hovering above it (top light -> straight down)
+  function tableShadow(path, dy, a, blur) { const clip = new Path2D(); clip.ellipse(TC[0], TC[1], TRX, TRY, 0, 0, Math.PI * 2); cast(g, path, [1, 0, 0, 0.55, 0, 0], { alpha: 0, blur: 0 });
+    const t = RC.tmp(2); t.translate(0, dy); t.fillStyle = '#000'; t.fill(path); g.save(); g.clip(clip); g.globalCompositeOperation = 'multiply'; g.globalAlpha = a; g.filter = `blur(${blur}px)`; g.drawImage(t.canvas, 0, 0); g.restore(); }
+
+  // ================= FAR SIDE: ANGELO (rim of the cone) · THE GAP · SCOTT · MARINA =================
+  // chair backs: Angelo's and Marina's; the gap has none
+  [[300, 585, 120, 0.25], [1650, 575, 110, 0.45]].forEach(([x, y, w, k]) => {
+    const cb = smoothPath([[x - w, y + 30], [x - w + 6, y - 8], [x - w * 0.4, y - 24], [x + w * 0.4, y - 24], [x + w - 6, y - 8], [x + w, y + 30], [x + w - 12, y + 30], [x + w - 18, y + 4], [x - w + 18, y + 4], [x - w + 12, y + 30]], 4);
+    paper(g, cb, mix(P.walnut, P.umber, 0.55), { shadow: { dx: 0, dy: 8, blur: 14, alpha: 0.6 }, rim: { dx: 0, dy: -1, w: 1.5, color: P.tcore, alpha: 0.5 * k } }); });
+
+  // --- Angelo body: denim jacket over a white tee, the broadest; 3/4 to screen-right, mostly in the dark
+  const AN = { x: 262, y: 468, s: 166, k: 0.22 };
+  torso([[292, 540], [342, 556], [384, 586], [404, 650], [408, 740], [392, 820], [170, 830], [140, 740], [150, 660], [178, 610], [222, 572]], P.denim, AN.k, {
+    extra: (h) => { // white tee V, lapel seams, the chrome lighter glint in the chest pocket (before we know what it is)
+      h.fillStyle = mix(P.tee, P.umber, 0.55); h.beginPath(); h.moveTo(268, 548); h.lineTo(330, 556); h.lineTo(318, 640); h.lineTo(282, 646); h.closePath(); h.fill();
+      h.fillStyle = rad(h, 300, 560, 0, 90, [[0, P.tcore, 0.25], [1, P.tcore, 0]]); h.fillRect(200, 470, 200, 200);
+      h.strokeStyle = 'rgba(160,180,215,0.16)'; h.lineWidth = 2; h.beginPath(); h.moveTo(262, 550); h.lineTo(250, 760); h.moveTo(336, 560); h.lineTo(330, 760); h.stroke();
+      h.strokeStyle = 'rgba(0,0,0,0.35)'; h.lineWidth = 1.5; h.strokeRect(196, 640, 46, 40);
+      h.save(); h.fillStyle = '#E8ECF0'; h.shadowColor = '#FFFFFF'; h.shadowBlur = 7; h.fillRect(214, 628, 4, 13); h.restore(); } });
+  // neck
+  form(g, sweep([[266, 530, 31], [278, 566, 35]]).path, { light: LIGHT, cx: 270, cy: 520, base: mix(P.skin.angelo, P.umber, 0.75), lit: mix(P.skin.angelo, P.umber, 0.5), band: 12, soft: 10 });
+
+  // --- Scott body: pale blue-grey oxford, sleeves rolled once, arms out to both sides
+  const SC = { x: 1000, y: 372, s: 150, k: 0.95 };
+  torso([[970, 458], [930, 470], [892, 486], [872, 520], [868, 580], [872, 650], [1128, 650], [1132, 580], [1128, 520], [1108, 486], [1070, 470], [1030, 458]], P.oxford, SC.k, { band: 40, soft: 30,
+    extra: (h) => {
+      // the head's own shadow on the chest (top light), the open collar, placket + buttons, tension folds toward the raised arms
+      h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = rad(h, 1000, 478, 0, 95, [[0, '#0A0605', 0.75], [0.6, '#0A0605', 0.3], [1, '#0A0605', 0]]); h.translate(0, 0); h.fillRect(880, 420, 240, 160); h.restore();
+      const cl = mix(mix(P.oxford, P.tungsten, 0.2), '#FFFFFF', 0.05);
+      [[-1], [1]].forEach(([sd]) => { const p = polyPath([[1000 + sd * 22, 460], [1000 + sd * 54, 468], [1000 + sd * 42, 512], [1000 + sd * 9, 490]]); h.fillStyle = mix(cl, P.umber, 0.35); h.fill(p); h.strokeStyle = rgba(P.tcore, 0.35); h.lineWidth = 1.2; h.beginPath(); h.moveTo(1000 + sd * 22, 460); h.lineTo(1000 + sd * 54, 468); h.stroke(); });
+      h.fillStyle = mix(P.skin.scott, P.umber, 0.72); h.beginPath(); h.moveTo(986, 462); h.lineTo(1014, 462); h.lineTo(1004, 504); h.lineTo(996, 504); h.closePath(); h.fill();
+      h.strokeStyle = 'rgba(0,0,0,0.3)'; h.lineWidth = 1.6; h.beginPath(); h.moveTo(1003, 520); h.lineTo(1006, 650); h.stroke();
+      [548, 600].forEach(y => { h.fillStyle = rgba('#F2EEE6', 0.55); h.beginPath(); h.arc(1009, y, 2.6, 0, 7); h.fill(); });
+      folds(h, { mid: [[900, 560, 50], [1000, 600, 60], [1100, 560, 50]] }, { n: 6, a: 0.28, seed: 'scottshirt', color: '#000000', lit: cl, litA: 0.1 });
+      h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = rad(h, 1000, 700, 0, 200, [[0, BOUNCE, 0.22], [1, BOUNCE, 0]]); h.fillRect(820, 500, 360, 200); h.restore(); } });
+  form(g, sweep([[1000, 430, 31], [1000, 466, 34]]).path, { light: LIGHT, cx: 1000, cy: 430, base: mix(P.skin.scott, P.umber, 0.82), lit: mix(P.skin.scott, P.umber, 0.6), band: 8, soft: 8,
+    shade: (h) => { h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = rad(h, 1000, 500, 0, 40, [[0, BOUNCE, 0.2], [1, BOUNCE, 0]]); h.fillRect(940, 430, 120, 90); h.restore(); } });
+
+  // --- Marina body: burgundy fine-knit turtleneck; 3/4 to screen-left
+  const MA = { x: 1612, y: 428, s: 154, k: 0.62 };
+  torso([[1588, 530], [1556, 556], [1538, 600], [1538, 680], [1552, 770], [1704, 796], [1726, 712], [1726, 636], [1706, 600], [1668, 562], [1638, 536]], P.burgundy, MA.k, {
+    extra: (h) => { h.strokeStyle = 'rgba(0,0,0,0.16)'; h.lineWidth = 1.1; for (let i = 0; i < 24; i++) { h.beginPath(); h.moveTo(1520 + i * 10, 540); h.quadraticCurveTo(1524 + i * 10, 680, 1518 + i * 10.5, 800); h.stroke(); } } });
+  // turtleneck roll
+  form(g, blobPath([[1576, 500], [1634, 497], [1644, 544], [1604, 556], [1570, 544]], 5), { light: LIGHT, cx: 1600, cy: 492, base: mix(P.burgundy, P.umber, 0.6), lit: mix(mix(P.burgundy, P.tungsten, 0.25), '#FFFFFF', 0.03), band: 14, soft: 10, rimC: P.tcore, rimA: 0.5, rimW: 1.5,
+    shade: (h) => { h.strokeStyle = 'rgba(0,0,0,0.3)'; h.lineWidth = 1.4; for (let k = 0; k < 4; k++) { h.beginPath(); h.moveTo(1572, 510 + k * 10); h.quadraticCurveTo(1606, 516 + k * 10, 1642, 508 + k * 10); h.stroke(); } } });
+
+  // ================= HEADS (one key: the pendant, straight down; card bounce from below) =================
+  // Angelo: slicked back, the unlit cigarette behind his right ear; at the rim of the cone
+  PPL.head(g, { x: AN.x, y: AN.y, s: AN.s, t: 0.44, facing: 1, tilt: -0.02, jaw: 1.12, skin: P.skin.angelo, hair: 'angelo', hairColor: P.hair.angelo, key: KEY(AN.x, AN.y, 0.42), termK: 0.75, ambientDark: 0.86,
+    top: 0.9, under: { color: BOUNCE, k: 0.25 }, rims: [lampRim(AN.x, AN.y, 0.7, 2.4)], gaze: [0.8, 0.35], brow: { knit: 0.85, raise: 0.1 }, lid: 0.72, glint: '#FFE6C0', glintA: 0.8, hairSheenAt: [AN.x + 30, AN.y - 84], modelK: 0.8,
+    hairStrands: (h, xf) => { h.save(); h.globalCompositeOperation = 'screen'; for (let i = 0; i < 10; i++) { const [a, b] = xf(-0.3 + i * 0.02, -0.5 + i * 0.012), [c, d] = xf(0.0 + i * 0.04, -0.62 + i * 0.03), [e, f] = xf(0.42, -0.36 + i * 0.05); h.strokeStyle = 'rgba(170,185,210,0.07)'; h.lineWidth = 1.3; h.beginPath(); h.moveTo(a, b); h.quadraticCurveTo(c, d, e, f); h.stroke(); } h.restore(); },
+    after: (h, geo) => { const xf = geo.xf; const [ax, ay] = xf(0.33, -0.045), [cx, cy] = xf(0.15, -0.075); h.save(); h.lineCap = 'butt'; h.shadowColor = 'rgba(0,0,0,0.55)'; h.shadowBlur = 4; h.shadowOffsetY = 2;
+      h.strokeStyle = '#EDE8DE'; h.lineWidth = 4.6; h.beginPath(); h.moveTo(ax, ay); h.lineTo(cx, cy); h.stroke(); h.shadowColor = 'transparent'; h.strokeStyle = '#C8823A'; h.beginPath(); h.moveTo(ax, ay); h.lineTo(ax + (cx - ax) * 0.3, ay + (cy - ay) * 0.3); h.stroke();
+      h.strokeStyle = rgba(P.tcore, 0.8); h.lineWidth = 1.2; h.beginPath(); h.moveTo(ax, ay - 2.4); h.lineTo(cx, cy - 2.4); h.stroke(); h.restore(); } });
+  // Scott: front, top-lit, dark sockets, looking to his left (Marina) - he doesn't react to the voice
+  PPL.head(g, { x: SC.x, y: SC.y, s: SC.s, t: 0.06, facing: 1, tilt: 0.025, jaw: 1.1, skin: P.skin.scott, hair: 'scott', hairColor: P.hair.scott, key: KEY(SC.x, SC.y, 0.95), termK: 1.15, ambientDark: 0.72,
+    top: 0.88, under: { color: BOUNCE, k: 0.85 }, rims: [lampRim(SC.x, SC.y, 0.85, 2.6)], gaze: [-0.9, 0.55], brow: { knit: 0.7, raise: 0.2 }, lid: 0.6, glint: '#FFE6C0', hairSheenAt: [SC.x + 4, SC.y - 72], glintDx: -0.1 });
+  // Marina: sleek hair, low chignon pinned with a pen
+  PPL.head(g, { x: MA.x, y: MA.y, s: MA.s, t: 0.55, facing: -1, tilt: 0.05, skin: P.skin.marina, hair: 'marina', hairColor: P.hair.marina, key: KEY(MA.x, MA.y, 0.75), termK: 0.95, ambientDark: 0.74,
+    top: 0.82, under: { color: BOUNCE, k: 0.5 }, jaw: 0.86, rims: [lampRim(MA.x, MA.y, 0.7)], gaze: [-0.4, 0.75], brow: { knit: 0.35, raise: 0.45 }, lid: 0.66, glint: '#FFE6C0', hairSheenAt: [MA.x - 24, MA.y - 70],
+    backHair: (h, geo) => { const xf = geo.xf; const [bx, by] = xf(0.47, 0.16); const bun = new Path2D(); bun.ellipse(bx, by, MA.s * 0.16, MA.s * 0.14, 0.3, 0, Math.PI * 2);
+      paper(h, bun, P.hair.marina, { shadow: { dx: 4, dy: 6, blur: 8, alpha: 0.6 }, shade: (k) => { k.strokeStyle = 'rgba(160,120,100,0.3)'; k.lineWidth = 1.5; for (let i = 0; i < 3; i++) { k.beginPath(); k.ellipse(bx, by, MA.s * (0.05 + i * 0.04), MA.s * (0.04 + i * 0.035), 0.5, 3.6, 6.6); k.stroke(); } k.fillStyle = rad(k, bx - 6, by - 10, 0, MA.s * 0.15, [[0, '#8A6A5A', 0.4], [1, '#8A6A5A', 0]]); k.fillRect(bx - 40, by - 40, 80, 80); }, rim: lampRim(bx, by, 0.6) }); },
+    after: (h, geo) => { const xf = geo.xf; const [ax, ay] = xf(0.3, 0.02), [cx, cy] = xf(0.66, 0.36); h.save(); h.lineCap = 'round'; h.shadowColor = 'rgba(0,0,0,0.6)'; h.shadowBlur = 5; h.shadowOffsetY = 3;
+      h.strokeStyle = '#1E2A48'; h.lineWidth = 6; h.beginPath(); h.moveTo(ax, ay); h.lineTo(cx, cy); h.stroke(); h.shadowColor = 'transparent'; h.strokeStyle = '#D8DDE2'; h.lineWidth = 6.5; h.beginPath(); h.moveTo(ax, ay); h.lineTo(ax + (cx - ax) * 0.16, ay + (cy - ay) * 0.16); h.stroke();
+      h.strokeStyle = 'rgba(220,230,240,0.7)'; h.lineWidth = 1.3; h.beginPath(); h.moveTo(ax + 1, ay - 2); h.lineTo(cx + 1, cy - 2); h.stroke(); h.restore(); } });
+
+  // ================= THE TABLE =================
+  const tableTop = new Path2D(); tableTop.ellipse(TC[0], TC[1], TRX, TRY, 0, 0, Math.PI * 2);
+  const tableEdge = new Path2D(); tableEdge.ellipse(TC[0], TC[1] + 30, TRX, TRY, 0, 0, Math.PI); tableEdge.lineTo(TC[0] - TRX, TC[1]); tableEdge.ellipse(TC[0], TC[1], TRX, TRY, 0, Math.PI, 0, true); tableEdge.closePath();
+  paper(g, tableEdge, '#1C120C', { shade: (h) => { h.fillStyle = lin(h, TC[0] - TRX, 0, TC[0] + TRX, 0, [[0, '#000000', 0.6], [0.5, P.tungsten, 0.1], [1, '#000000', 0.6]]); h.fillRect(0, 0, W, H); } });
+  paper(g, tableTop, mix(P.walnut, '#000000', 0.25), { shadow: { dx: 0, dy: 26, blur: 40, alpha: 0.8 }, shade: (h) => {
+    const r = OTM.rng('tgrain'); h.strokeStyle = 'rgba(0,0,0,0.14)'; h.lineWidth = 1.3; for (let i = 0; i < 44; i++) { const y = TC[1] - TRY + i * 8.6; h.beginPath(); h.moveTo(TC[0] - TRX, y); h.bezierCurveTo(TC[0] - 220, y + (r() - 0.5) * 8, TC[0] + 220, y + (r() - 0.5) * 8, TC[0] + TRX, y + (r() - 0.5) * 4); h.stroke(); }
+    // the pendant's hot spot and its fall-off across the walnut (the only light in the room)
+    h.save(); h.globalCompositeOperation = 'screen'; h.translate(TC[0], TC[1] - 18); h.scale(1, TRY / TRX * 1.05);
+    h.fillStyle = rad(h, 0, 0, 0, TRX * 0.95, [[0, '#FFE2B0', 0.75], [0.22, P.tungsten, 0.5], [0.5, '#A0602A', 0.22], [0.8, '#5A3418', 0.06], [1, '#000000', 0]]); h.fillRect(-TRX, -TRX, TRX * 2, TRX * 2); h.restore();
+    h.strokeStyle = rgba(P.tcore, 0.3); h.lineWidth = 1.6; h.beginPath(); h.ellipse(TC[0], TC[1], TRX - 3, TRY - 2, 0, Math.PI * 1.12, Math.PI * 1.88); h.stroke();
+  } });
+  // the gap: a seat-width of nothing at Scott's right, held warm at 4%
+  pool(g, 622, 470, 210, P.tcore, 0.04);
+
+  // cards left on the table (the game abandoned), card-stock throwing light back up into the faces
+  function tcard(x, y, rot, face) { g.save(); g.translate(x, y); g.scale(1, 0.36); g.rotate(rot); const w = 54, h = 76; const cp = new Path2D(); cp.roundRect(-w / 2, -h / 2, w, h, 5);
+    g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 5; g.shadowOffsetY = 6; g.fillStyle = face ? CARD : '#F0EADC'; g.fill(cp); g.shadowColor = 'transparent';
+    if (!face) { const ip = new Path2D(); ip.roundRect(-w / 2 + 4, -h / 2 + 4, w - 8, h - 8, 2); g.fillStyle = P.cardBack; g.fill(ip); } else { g.fillStyle = face.includes('♥') || face.includes('♦') ? '#B3202E' : P.pip; g.font = RC.font(600, 15, 'IBM Plex Mono'); g.fillText(face, -w / 2 + 5, -h / 2 + 17); g.font = RC.font(400, 32, 'IBM Plex Sans'); g.textAlign = 'center'; g.fillText(face.slice(-1), 0, 14); }
+    const d = Math.hypot(x - 1000, (y - 800) * 2.2), k = clamp(1 - d / 760, 0, 1); g.fillStyle = rgba('#000000', 0.75 * (1 - k)); g.fill(cp); g.restore(); }
+  [[780, 742, 0.3, 0], [800, 750, 0.42, 0], [820, 758, 0.55, 0], [1180, 735, -0.4, '7♠'], [1215, 728, 0.15, 'Q♦'], [1290, 790, 1.2, 'K♥'], [880, 800, -0.6, '9♣'], [905, 812, -0.3, 0], [1240, 860, 0.9, 0], [940, 860, -0.2, '2♣'], [1130, 760, 0.7, '4♥'], [760, 820, 0.4, 0], [1340, 735, -0.5, 'J♠'], [1000, 735, 0.1, 0], [1030, 740, 0.25, 0]].forEach(c => tcard(c[0], c[1], c[2], c[3]));
+
+  // wineglasses: four people... and FIVE glasses. Glass 5 sits on a coaster in the gap, beneath the Scott/Angelo clasp.
+  function wineglass(x, y, s, fill, k, o) { o = o || {}; const bw = 28 * s, bh = 36 * s, st = 46 * s;
+    if (o.coaster) { const cp = new Path2D(); cp.ellipse(x, y + 2, 38 * s, 12 * s, 0, 0, Math.PI * 2); paper(g, cp, '#2E231B', { shadow: { dx: 0, dy: 4, blur: 5, alpha: 0.7 }, shade: (h) => { h.fillStyle = lin(h, 0, y - 12 * s, 0, y + 14 * s, [[0, P.tcore, 0.18 * k + 0.05], [1, '#000000', 0.4]]); h.fillRect(x - 44 * s, y - 16 * s, 88 * s, 34 * s); h.strokeStyle = rgba('#FFE6C8', 0.18 + 0.2 * k); h.lineWidth = 1.2; h.beginPath(); h.ellipse(x, y + 2, 31 * s, 9.5 * s, 0, 0, Math.PI * 2); h.stroke();
+      h.fillStyle = rgba(P.card, 0.18); h.font = RC.font(600, 9 * s, 'IBM Plex Mono'); h.textAlign = 'center'; h.save(); h.translate(x, y + 2); h.scale(1, 0.32); h.fillText('· · ·', 0, 4); h.restore(); } }); }
+    g.save(); g.filter = 'blur(4px)'; g.fillStyle = 'rgba(0,0,0,0.5)'; g.beginPath(); g.ellipse(x + 2, y + 5, 22 * s, 7 * s, 0, 0, Math.PI * 2); g.fill(); g.restore();
+    const a = 0.25 + 0.6 * k; g.save(); g.strokeStyle = rgba('#EBE4D7', a); g.lineWidth = 1.6 * s; g.beginPath(); g.ellipse(x, y, 13 * s, 4 * s, 0, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - st); g.stroke();
+    const top = y - st; const bowl = new Path2D(); bowl.moveTo(x - bw / 2, top - bh); bowl.bezierCurveTo(x - bw / 2, top - bh * 0.2, x - bw * 0.25, top, x, top); bowl.bezierCurveTo(x + bw * 0.25, top, x + bw / 2, top - bh * 0.2, x + bw / 2, top - bh);
+    g.fillStyle = rgba('#E6EEF5', 0.06 + 0.05 * k); g.fill(bowl); if (fill) { g.save(); g.clip(bowl); g.fillStyle = lin(g, x - bw / 2, 0, x + bw / 2, 0, [[0, '#200409'], [0.6, P.wine], [1, mix('#7A1A2A', '#000000', 1 - k)]]); g.fillRect(x - bw, top - bh * fill, bw * 2, bh); g.fillStyle = rgba('#C04050', 0.5 * k); g.fillRect(x - bw, top - bh * fill, bw * 2, 1.6); g.restore(); }
+    g.stroke(bowl); g.beginPath(); g.ellipse(x, top - bh, bw / 2, 3.5 * s, 0, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = rgba('#FFF8E8', 0.25 + 0.7 * k); g.lineWidth = 2.2 * s; g.lineCap = 'round'; g.beginPath(); g.moveTo(x - bw * 0.3, top - bh * 0.82); g.quadraticCurveTo(x - bw * 0.36, top - bh * 0.32, x - bw * 0.12, top - bh * 0.1); g.stroke();
+    g.fillStyle = rgba('#FFFFFF', 0.4 + 0.6 * k); g.shadowColor = '#FFF0D0'; g.shadowBlur = 8; g.beginPath(); g.arc(x - bw * 0.2, top - bh + 1, 1.8 * s, 0, 7); g.fill(); g.restore(); }
+  wineglass(880, 712, 0.9, 0.45, 0.85);                     // 1 Scott's
+  wineglass(1452, 760, 0.95, 0.5, 0.6);                      // 2 Marina's
+  wineglass(452, 808, 1.0, 0.4, 0.35);                       // 3 Angelo's
+  wineglass(1318, 912, 1.12, 0.3, 0.6);                      // 4 Deena's
+
+  // ================= THE CIRCLE: arms + linked hands =================
+  const HS = 104; // hand length at the far side
+  // C1: Scott's right hand (front) across the empty gap, in a hand at the rim of the light that reads as Angelo's (back)
+  const C1 = [604, 616];
+  clasp(g, { c: C1, s: HS, dir: Math.PI, light: LIGHT, under: { color: BOUNCE, k: 0.2 },
+    backArm: (wb) => arm({ sh: [372, 574], el: [452, 640], wr: wb, cloth: P.denim, skin: P.skin.angelo, k: 0.22, bare: false, r: [34, 27, 22, 17], seed: 'anL', nFolds: 4 }),
+    back: { skin: P.skin.angelo, k: 0.32, amb: 0.7 },
+    frontArm: (wf) => arm({ sh: [904, 520], el: [778, 620], wr: wf, cloth: P.oxford, skin: P.skin.scott, k: 0.55, r: [33, 29, 22, 16], seed: 'scR', under: BOUNCE }),
+    front: { skin: P.skin.scott, k: 0.5 } });
+  // C2: Marina's warm, ringed right hand (front) holding Scott's left (back)
+  const C2 = [1384, 622];
+  clasp(g, { c: C2, s: HS, dir: Math.PI, light: LIGHT, under: { color: BOUNCE, k: 0.35 },
+    backArm: (wb) => arm({ sh: [1096, 520], el: [1224, 622], wr: wb, cloth: P.oxford, skin: P.skin.scott, k: 0.8, r: [33, 29, 22, 16], seed: 'scL', under: BOUNCE }),
+    back: { skin: P.skin.scott, k: 0.75 },
+    frontArm: (wf) => arm({ sh: [1560, 584], el: [1502, 664], wr: wf, cloth: P.burgundy, skin: P.skin.marina, k: 0.6, bare: false, rib: true, r: [32, 26, 21, 16], seed: 'maR', nFolds: 3 }),
+    front: { skin: P.skin.marina, k: 0.75, rings: [1, 2, 3] } });
+  // the voice's seat: nothing there. The record measures it later; the image only holds it.
+
+  [[C1, 104, 0.5], [C2, 104, 0.55]].forEach(([c, s0, a]) => { const sp = new Path2D(); sp.ellipse(c[0], c[1], s0 * 0.7, s0 * 0.22, 0, 0, Math.PI * 2); tableShadow(sp, 74, a, 14); });
+  // glass 5 on its coaster, directly beneath the Scott / Angelo clasp, catching the last of the pendant
+  const G5 = [606, 748];
+  wineglass(G5[0], G5[1], 1.0, 0.42, 0.5, { coaster: true });
+
+  // ================= THE PENDANT (the only light) =================
+  // cone volume through the air, with dust
+  (() => { g.save(); g.globalCompositeOperation = 'screen'; g.filter = 'blur(22px)';
+    g.fillStyle = lin(g, 0, LAMP[1], 0, TC[1], [[0, P.tcore, 0.15], [0.45, P.tcore, 0.06], [1, P.tcore, 0.03]]);
+    g.beginPath(); g.moveTo(LAMP[0] - 84, LAMP[1] + 10); g.lineTo(LAMP[0] + 84, LAMP[1] + 10); g.lineTo(TC[0] + 560, TC[1] - 40); g.lineTo(TC[0] - 560, TC[1] - 40); g.closePath(); g.fill();
+    g.fillStyle = lin(g, 0, LAMP[1], 0, TC[1], [[0, '#FFE6C0', 0.14], [0.5, '#FFE6C0', 0.03], [1, '#FFE6C0', 0]]); g.beginPath(); g.moveTo(LAMP[0] - 50, LAMP[1] + 10); g.lineTo(LAMP[0] + 50, LAMP[1] + 10); g.lineTo(TC[0] + 260, TC[1] - 60); g.lineTo(TC[0] - 260, TC[1] - 60); g.closePath(); g.fill(); g.restore();
+    const r = OTM.rng('dust3'); g.save(); g.globalCompositeOperation = 'screen'; for (let i = 0; i < 260; i++) { const v = Math.pow(r(), 0.8), y = LAMP[1] + 30 + v * (TC[1] - LAMP[1] - 120), half = lerp(80, 540, v), x = LAMP[0] + (r() * 2 - 1) * half * Math.sqrt(r());
+      const edge = 1 - Math.abs(x - LAMP[0]) / half; const rr = 0.5 + r() * 1.6; g.fillStyle = rgba(P.tcore, (0.12 + r() * 0.45) * (0.4 + 0.6 * edge) * (1 - v * 0.5)); g.beginPath(); g.arc(x, y, rr, 0, 7); g.fill(); if (r() < 0.06) { g.fillStyle = rad(g, x, y, 0, 5, [[0, P.tcore, 0.3], [1, P.tcore, 0]]); g.fillRect(x - 5, y - 5, 10, 10); } } g.restore(); })();
+  // cord, shade, hot bulb
+  g.strokeStyle = '#0B0806'; g.lineWidth = 3; g.beginPath(); g.moveTo(LAMP[0], 0); g.lineTo(LAMP[0], LAMP[1] - 56); g.stroke();
+  (() => { const sh = smoothPath([[LAMP[0] - 24, LAMP[1] - 58], [LAMP[0] + 24, LAMP[1] - 58], [LAMP[0] + 98, LAMP[1] + 8], [LAMP[0] - 98, LAMP[1] + 8]], 3);
+    paper(g, sh, '#18110D', { shade: (h) => { h.fillStyle = lin(h, LAMP[0] - 98, 0, LAMP[0] + 98, 0, [[0, '#000000', 0.5], [0.42, P.tungsten, 0.16], [1, '#000000', 0.6]]); h.fillRect(LAMP[0] - 100, LAMP[1] - 64, 200, 80); }, rim: { dx: 0, dy: 1, w: 2, color: P.tcore, alpha: 0.9 } });
+    g.save(); g.fillStyle = '#FFF4DC'; g.beginPath(); g.ellipse(LAMP[0], LAMP[1] + 6, 90, 11, 0, 0, Math.PI * 2); g.fill(); g.restore();
+    pool(g, LAMP[0], LAMP[1] + 8, 150, P.tcore, 0.6, { sy: 0.32 }); })();
+
+  // ================= NEAR SIDE: DEENA, back to camera (over her shoulder) =================
+  (() => {
+    const DX = 1064, DY = 948, DS = 190, dk = 0.42;
+    // C4: Deena's left hand (front) and Angelo's right (back) - near left
+    clasp(g, { c: [556, 892], s: 118, dir: Math.PI + 0.38, light: LIGHT, under: { color: BOUNCE, k: 0.25 },
+      backArm: (wb) => arm({ sh: [196, 664], el: [276, 832], wr: wb, cloth: P.denim, skin: P.skin.angelo, k: 0.22, bare: false, r: [42, 34, 27, 20], seed: 'anR', nFolds: 4 }),
+      back: { skin: P.skin.angelo, k: 0.38, amb: 0.68 },
+      frontArm: (wf) => arm({ sh: [860, 1200], el: [742, 1086], wr: wf, cloth: mix(P.mustard, P.umber, 0.35), skin: P.skin.deena, k: 0.16, bare: false, rib: true, r: [58, 48, 32, 23], seed: 'deL', nFolds: 3 }),
+      front: { skin: P.skin.deena, k: 0.5, amb: 0.6 } });
+    // C3: Deena's right hand (front) and Marina's left (back) - near right
+    clasp(g, { c: [1524, 836], s: 122, dir: -0.5, light: LIGHT, under: { color: BOUNCE, k: 0.25 },
+      backArm: (wb) => arm({ sh: [1700, 614], el: [1740, 744], wr: wb, cloth: P.burgundy, skin: P.skin.marina, k: 0.45, bare: false, rib: true, r: [34, 28, 22, 17], seed: 'maL', nFolds: 3 }),
+      back: { skin: P.skin.marina, k: 0.5 },
+      frontArm: (wf) => arm({ sh: [1270, 1200], el: [1400, 1090], wr: wf, cloth: mix(P.mustard, P.umber, 0.35), skin: P.skin.deena, k: 0.16, bare: false, rib: true, r: [58, 48, 32, 23], seed: 'deR', nFolds: 3 }),
+      front: { skin: P.skin.deena, k: 0.52, amb: 0.6 } });
+    [[[556, 892], 0.45], [[1524, 836], 0.45]].forEach(([c, a]) => { const sp = new Path2D(); sp.ellipse(c[0], c[1], 80, 26, 0, 0, Math.PI * 2); tableShadow(sp, 46, a, 16); });
+    // shoulders (mustard rib-knit), in shadow, cropped by the frame
+    torso([[DX - 250, 1120], [DX - 230, 1072], [DX - 150, 1048], [DX - 60, 1040], [DX, 1036], [DX + 60, 1040], [DX + 150, 1048], [DX + 230, 1072], [DX + 250, 1120]], mix(P.mustard, P.umber, 0.4), 0.12, { band: 12, soft: 12, shadow: { dx: 0, dy: -12, blur: 34, alpha: 0.7 },
+      extra: (h) => { h.strokeStyle = 'rgba(0,0,0,0.3)'; h.lineWidth = 2; for (let i = 0; i < 36; i++) { h.beginPath(); h.moveTo(DX - 250 + i * 14, 1040); h.lineTo(DX - 252 + i * 14, 1090); h.stroke(); } } });
+    // neck (back)
+    form(g, sweep([[DX, 1000, 46], [DX, 1060, 54]]).path, { light: LIGHT, cx: DX, cy: 1000, base: mix(P.skin.deena, P.umber, 0.72), lit: mix(P.skin.deena, P.umber, 0.45), band: 10, soft: 10 });
+    // back of the head: short coils under the puff
+    const headB = blobPath([[DX, DY - 112], [DX + 70, DY - 92], [DX + 92, DY - 20], [DX + 80, DY + 56], [DX + 40, DY + 92], [DX, DY + 100], [DX - 40, DY + 92], [DX - 80, DY + 56], [DX - 92, DY - 20], [DX - 70, DY - 92]], 6);
+    // ears + hoops: gold metal hanging from the lobes, seen nearly edge-on from behind, glinting under the pendant
+    const hoop = (sd, front) => { const ex = DX + sd * 90, ey = DY + 8; const hx = ex + sd * 6, hy = ey + 52, rx = 9, ry = 34, rot = sd * 0.16;
+      g.save(); g.lineCap = 'round'; const seg = (a0, a1) => { g.beginPath(); g.ellipse(hx, hy, rx, ry, rot, a0, a1); g.stroke(); };
+      g.lineWidth = 5.5; g.strokeStyle = lin(g, hx - rx, hy - ry, hx + rx, hy + ry, [[0, '#FFE9A8'], [0.3, '#D9A520'], [0.65, '#7A5410'], [1, '#3A2808']]);
+      if (front) seg(-Math.PI / 2 * 0.2 + (sd > 0 ? 0 : Math.PI), Math.PI * 0.55 + (sd > 0 ? 0 : Math.PI)); else seg(0, Math.PI * 2);
+      g.lineWidth = 1.4; g.strokeStyle = rgba('#FFF4D0', 0.85); g.beginPath(); g.ellipse(hx, hy, rx, ry, rot, sd > 0 ? -2.2 : -1.0, sd > 0 ? -1.4 : -0.2); g.stroke();
+      g.fillStyle = '#FFFBEA'; g.shadowColor = '#FFD980'; g.shadowBlur = 12; g.beginPath(); g.arc(hx + sd * rx * 0.2, hy - ry * 0.92, 2.6, 0, 7); g.fill(); g.beginPath(); g.arc(hx - sd * rx * 0.9, hy + ry * 0.15, 1.6, 0, 7); g.fill(); g.restore(); };
+    [-1, 1].forEach(sd => { const ex = DX + sd * 88, ey = DY + 4; hoop(sd, false); const ear = blobPath([[ex - sd * 4, ey - 30], [ex + sd * 12, ey - 20], [ex + sd * 14, ey + 10], [ex + sd * 6, ey + 30], [ex - sd * 6, ey + 24]], 5);
+      form(g, ear, { light: LIGHT, cx: ex, cy: ey, base: mix(P.skin.deena, P.umber, 0.7), lit: mix(P.skin.deena, P.tungsten, 0.2), band: 6, soft: 5, rimC: P.tcore, rimA: 0.5, rimW: 1.4 }); });
+    form(g, headB, { light: LIGHT, cx: DX, cy: DY - 110, base: '#0C0806', lit: '#2E1E14', band: 18, soft: 14, rimC: P.tcore, rimA: 0.4, rimW: 1.6,
+      shade: (h) => { h.save(); h.globalCompositeOperation = 'screen'; h.lineCap = 'round'; for (let i = -14; i <= 14; i++) { const x0 = DX + i * 6.2, y0 = DY + 92 - Math.abs(i) * 1.5; h.strokeStyle = rgba('#7A5A44', 0.1 + 0.05 * Math.cos(i)); h.lineWidth = 1.3; h.beginPath(); h.moveTo(x0, y0); h.quadraticCurveTo(x0 + i * 0.8, DY - 10, DX + i * 2.4, DY - 110); h.stroke(); }
+        h.fillStyle = rad(h, DX - 20, DY - 60, 0, 70, [[0, '#6A4A34', 0.18], [1, '#6A4A34', 0]]); h.fillRect(DX - 100, DY - 140, 200, 160); h.restore();
+        h.save(); h.globalCompositeOperation = 'multiply'; h.fillStyle = lin(h, 0, DY - 110, 0, DY - 50, [[0, '#000000', 0.7], [1, '#000000', 0]]); h.fillRect(DX - 100, DY - 120, 200, 80); h.restore(); } });
+    [-1, 1].forEach(sd => hoop(sd, true));
+    // the afro puff: the strongest silhouette in the cast, backlit by the hot spot on the table
+    const r = OTM.rng('puff'); const pts = []; for (let i = 0; i < 120; i++) { const a = i / 120 * Math.PI * 2; const rr = 138 * (1 + (OTM.vnoise(Math.cos(a) * 3 + 5, Math.sin(a) * 3 + 5, 7) - 0.5) * 0.08 + (r() - 0.5) * 0.025); pts.push([DX + Math.cos(a) * rr * 0.98, DY - 178 + Math.sin(a) * rr * 0.84]); }
+    const puff = polyPath(pts, true);
+    paper(g, puff, '#0D0806', { shadow: { dx: 0, dy: 16, blur: 34, alpha: 0.75 }, shade: (h) => {
+      h.save(); h.globalCompositeOperation = 'screen'; h.fillStyle = rad(h, DX - 30, DY - 300, 0, 200, [[0, '#8A5A38', 0.42], [0.6, '#4A2E1C', 0.14], [1, '#000000', 0]]); h.fillRect(DX - 220, DY - 420, 440, 360);
+      const rr = OTM.rng('kinks'); for (let i = 0; i < 1100; i++) { const a = rr() * Math.PI * 2, d = Math.sqrt(rr()) * 140, x = DX + Math.cos(a) * d * 0.96, y = DY - 178 + Math.sin(a) * d * 0.82; const lit = clamp(1 - (y - (DY - 330)) / 260, 0, 1) * (0.6 + 0.4 * (d / 150)); h.strokeStyle = rgba('#C49060', 0.04 + 0.2 * lit); h.lineWidth = 1.2; h.beginPath(); h.arc(x, y, 1.8 + rr() * 2.8, rr() * 6, rr() * 6 + 3); h.stroke(); }
+      h.restore(); }, rim: [{ dx: -0.05, dy: -1, w: 3.2, color: P.tcore, alpha: 0.9, blur: 1.2, glow: 0.35 }, { dx: -0.05, dy: -1, w: 12, color: P.tungsten, alpha: 0.28, blur: 8 }] });
+  })();
+
+  // ================= LIGHT: the pendant is the only source; outside its fall-off the room sinks to umber-night =================
+  g.save(); g.globalCompositeOperation = 'multiply'; g.translate(1000, 600); g.scale(1, 0.74);
+  g.fillStyle = rad(g, 0, 0, 380, 1020, [[0, '#FFFFFF'], [0.45, '#C9AE98'], [0.75, '#5E4636'], [1, '#2A1E16']]); g.fillRect(-1600, -1200, 3200, 2400); g.restore();
+  g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = lin(g, 0, 0, 0, 260, [[0, '#4A3628'], [1, '#FFFFFF']]); g.fillRect(0, 0, W, 260); g.restore();
+  // the pendant core + glass 5's rim catching the last of it
+  pool(g, LAMP[0], LAMP[1] + 6, 120, '#FFF4DC', 0.55, { sy: 0.25 });
+  // emissive: the oven clock, deep in the dark kitchen doorway
+  g.save(); g.font = RC.font(500, 15, 'IBM Plex Mono'); g.letterSpacing = '2px'; g.fillStyle = P.led; g.shadowColor = P.led; g.shadowBlur = 14; g.fillText('00:00', 1800, 452); g.restore();
+
+  // ================= POST (night + dialogue) =================
+  g.save(); g.globalCompositeOperation = 'soft-light'; g.translate(1000, 640); g.scale(1, 0.7); g.fillStyle = rad(g, 0, 0, 0, 900, [[0, '#FFE2B8', 0.55], [0.5, '#806050', 0.1], [1, '#000000', 0.6]]); g.fillRect(-1400, -1400, 2800, 2800); g.restore();
+  RC.halation(g, { thresh: 0.7, alpha: 0.4, blur: 14 });
+  RC.texture(g, 0.22, 'soft-light');
+  RC.vignette(g, 0.7, 1000, 560);
+  RC.grain(g, 0.12, 7);
+  // handheld: the roll the pitch specifies (night only; the record stays level)
+  ctx.fillStyle = NIGHT; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-1.4 * Math.PI / 180); ctx.scale(1.035, 1.035); ctx.drawImage(night, -W / 2, -H / 2 + 4); ctx.restore();
+
+  // ================= THE VOICE (after post: no grain, no halation, no shake; world-locked in the gap) =================
+  (() => {
+    const FACES = [['500', 'normal', 'IBM Plex Sans'], ['800', 'normal', 'Barlow Condensed'], ['700', 'italic', 'Bodoni Moda'], ['400', 'italic', 'Instrument Serif'], ['800', 'normal', 'Fraunces'], ['500', 'normal', 'Spectral']];
+    const X0 = 462, BASE = 448, WIDTH = 290, CAP = 76; // one box (~106 px type); six voices inside it, each in its own face
+    FACES.forEach(([w, st, fam]) => { ctx.save(); ctx.font = `${st} ${w} 100px "${fam}"`; const cap = ctx.measureText('S').actualBoundingBoxAscent || 70; const k = CAP / cap;
+      ctx.font = `${st} ${w} ${(100 * k).toFixed(1)}px "${fam}"`; const sx = WIDTH / ctx.measureText('Scott.').width;
+      ctx.translate(X0, BASE); ctx.scale(sx, 1); ctx.fillStyle = rgba(P.card, 0.24); ctx.fillText('Scott.', 0, 0); ctx.restore(); });
+    ctx.save(); ctx.strokeStyle = rgba(P.card, 0.5); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X0 + 2, BASE + 18); ctx.lineTo(X0 + 2, BASE + 34); ctx.lineTo(X0 + 22, BASE + 34); ctx.stroke(); ctx.restore();
+    RC.monoText(ctx, 'SPEAKER: UNATTRIBUTED', X0 + 30, BASE + 39, { size: 14, weight: 500, tracking: 2, alpha: 0.72 });
+  })();
+
+  // ================= THE RECORD =================
+  RC.brackets(ctx, 0.05, { alpha: 0.42 });
+  RC.slug(ctx, 'DINING TABLE', '22:07:33', { sub: 'HAND CIRCLE · ROUND 1' });
+  RC.headcount(ctx, 5);
+  RC.lookLabel(ctx, 'THE HAND CIRCLE · VOICE (O.S.): “Scott.”');
+  window.FRAME_READY = true;
+})();
+</script>

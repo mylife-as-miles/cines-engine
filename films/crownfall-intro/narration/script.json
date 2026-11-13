@@ -1,0 +1,306 @@
+{
+  "title": "The Seven That Remained",
+  "note": "Narration for the Crownfall: Aethelgard opening. Lines are the creator's text, tightened for a shorter cut (the full text is in script-full.json) from the revised story concept (The Eighth Oath). Lines marked \"added\" carry the creator's King's Gambit note (each house may only field certain champions; Ealdholt only pawns; a queen can come from another house) and wait for the creator's approval. \"say\" is how the voice should pronounce a line when it differs from the subtitle. \"pause\" is the silence after the line, in seconds. Lines marked \"cut\" are left out of this cut of the film (their pictures carry them); their cues stay in the timeline at no length.",
+  "scenes": [
+    {
+      "n": 1,
+      "name": "The King Who Vanished"
+    },
+    {
+      "n": 2,
+      "name": "The Fall of the Crown"
+    },
+    {
+      "n": 3,
+      "name": "The Seven Great Houses"
+    },
+    {
+      "n": 4,
+      "name": "The Beasts That Devoured Kings"
+    },
+    {
+      "n": 5,
+      "name": "A Kingdom Divided"
+    },
+    {
+      "n": 6,
+      "name": "The King's Gambit"
+    },
+    {
+      "n": 7,
+      "name": "Your Legacy Begins"
+    }
+  ],
+  "lines": [
+    {
+      "id": "L01",
+      "scene": 1,
+      "text": "Every kingdom remembers the Hollow King."
+    },
+    {
+      "id": "L02",
+      "scene": 1,
+      "text": "Some call him the last true sovereign."
+    },
+    {
+      "id": "L03",
+      "scene": 1,
+      "text": "Every chronicle speaks of his disappearance.",
+      "cut": true
+    },
+    {
+      "id": "L04",
+      "scene": 1,
+      "text": "No tomb was found. No successor was acknowledged."
+    },
+    {
+      "id": "L05",
+      "scene": 1,
+      "text": "In his silence, men began to claim what had been his.",
+      "pause": 0.9
+    },
+    {
+      "id": "L06",
+      "scene": 2,
+      "text": "Thirty-three years ago, the Sovereign Crown shattered."
+    },
+    {
+      "id": "L07",
+      "scene": 2,
+      "text": "The world was divided by ash, ambition and the shards of a broken power."
+    },
+    {
+      "id": "L08",
+      "scene": 2,
+      "text": "The Scavenger Wars followed."
+    },
+    {
+      "id": "L09",
+      "scene": 2,
+      "text": "Four great powers endured. Korvenia. Solforiz. Kwind-09.",
+      "say": "Four great powers endured. Korvenia. Solforiz. Kwind Oh-Nine."
+    },
+    {
+      "id": "L10",
+      "scene": 2,
+      "text": "And Aethelgard.",
+      "say": "And Ethelgard."
+    },
+    {
+      "id": "L11",
+      "scene": 2,
+      "text": "Ancient mountains, immense forests, and seven families who believed blood alone gave them the right to govern.",
+      "pause": 0.8
+    },
+    {
+      "id": "L12",
+      "scene": 3,
+      "text": "The Blood-Throne belonged to seven Great Houses."
+    },
+    {
+      "id": "L13",
+      "scene": 3,
+      "text": "One commanded the armies. One guarded the grain. One controlled the roads."
+    },
+    {
+      "id": "L14",
+      "scene": 3,
+      "text": "One forged the weapons. One kept the laws and the blood registries. One held the frontiers."
+    },
+    {
+      "id": "L15",
+      "scene": 3,
+      "text": "And the eldest claimed dominion over the First-Born."
+    },
+    {
+      "id": "L16",
+      "scene": 3,
+      "text": "Together, the Seven swore to preserve Aethelgard.",
+      "say": "Together, the Seven swore to preserve Ethelgard."
+    },
+    {
+      "id": "L17",
+      "scene": 3,
+      "text": "But each believed the others unworthy of ruling it.",
+      "pause": 0.9
+    },
+    {
+      "id": "L18",
+      "scene": 4,
+      "text": "Long before the fortresses, the First-Born haunted these lands."
+    },
+    {
+      "id": "L19",
+      "scene": 4,
+      "text": "Whole settlements vanished beneath their wings."
+    },
+    {
+      "id": "L20",
+      "scene": 4,
+      "text": "Then one Great House proclaimed it could master them."
+    },
+    {
+      "id": "L21",
+      "scene": 4,
+      "text": "The people rejoiced."
+    },
+    {
+      "id": "L22",
+      "scene": 4,
+      "text": "No longer would the beasts devour their children."
+    },
+    {
+      "id": "L23",
+      "scene": 4,
+      "text": "Few dared ask how such creatures were brought to obedience."
+    },
+    {
+      "id": "L24",
+      "scene": 4,
+      "text": "Or why protection grew more costly every year.",
+      "pause": 0.9
+    },
+    {
+      "id": "L25",
+      "scene": 5,
+      "text": "The Seven promised order."
+    },
+    {
+      "id": "L26",
+      "scene": 5,
+      "text": "But ancestry decided where a man lived, whom he married, and whether his word was believed."
+    },
+    {
+      "id": "L27",
+      "scene": 5,
+      "text": "The unrecognized served the very houses that denied them protection."
+    },
+    {
+      "id": "L28",
+      "scene": 5,
+      "text": "Then the Seven turned upon one another."
+    },
+    {
+      "id": "L29",
+      "scene": 5,
+      "text": "Accusations became executions. Executions became reprisals."
+    },
+    {
+      "id": "L30",
+      "scene": 5,
+      "text": "And every house called its violence necessary for peace.",
+      "pause": 0.9
+    },
+    {
+      "id": "L31",
+      "scene": 6,
+      "text": "The King's Gambit offered another way."
+    },
+    {
+      "id": "L32",
+      "scene": 6,
+      "text": "Sixteen living representatives against sixteen."
+    },
+    {
+      "id": "L33",
+      "scene": 6,
+      "text": "But no house may send whomever it pleases.",
+      "added": true
+    },
+    {
+      "id": "L34",
+      "scene": 6,
+      "text": "Only the Seven may raise knights, bishops and rooks.",
+      "added": true
+    },
+    {
+      "id": "L35",
+      "scene": 6,
+      "text": "A queen may be lent between them, to seal a marriage, or a debt.",
+      "added": true
+    },
+    {
+      "id": "L36",
+      "scene": 6,
+      "text": "Houses the registries will not recognize, Ealdholt among them, may raise only pawns.",
+      "added": true
+    },
+    {
+      "id": "L37",
+      "scene": 6,
+      "text": "The rest they must borrow from the Seven. At a price.",
+      "added": true
+    },
+    {
+      "id": "L38",
+      "scene": 6,
+      "text": "By the board's judgment, men won land, passage, custody, and the right to govern."
+    },
+    {
+      "id": "L39",
+      "scene": 6,
+      "text": "A contest of law instead of the slaughter of armies.",
+      "cut": true
+    },
+    {
+      "id": "L40",
+      "scene": 6,
+      "text": "But the board could declare only a victor."
+    },
+    {
+      "id": "L41",
+      "scene": 6,
+      "text": "It could not teach the defeated to accept defeat."
+    },
+    {
+      "id": "L42",
+      "scene": 6,
+      "text": "And every judgment became another reason for hatred.",
+      "pause": 0.9
+    },
+    {
+      "id": "L43",
+      "scene": 7,
+      "text": "Now the Seven prepare for another war."
+    },
+    {
+      "id": "L44",
+      "scene": 7,
+      "text": "Each claims the throne. Each claims to defend the kingdom."
+    },
+    {
+      "id": "L45",
+      "scene": 7,
+      "text": "And somewhere in the histories they guard lies a truth that could destroy them all.",
+      "pause": 0.8
+    },
+    {
+      "id": "L46",
+      "scene": 7,
+      "text": "You are not one of the Seven."
+    },
+    {
+      "id": "L47",
+      "scene": 7,
+      "text": "You command no great army. You inherit no ancient privilege."
+    },
+    {
+      "id": "L48",
+      "scene": 7,
+      "text": "You have only a banner, a handful of people, and the decisions that will become their history.",
+      "pause": 0.6
+    },
+    {
+      "id": "L49",
+      "scene": 7,
+      "text": "In Aethelgard, such things are easily forgotten.",
+      "say": "In Ethelgard, such things are easily forgotten."
+    },
+    {
+      "id": "L50",
+      "scene": 7,
+      "text": "Unless you give the kingdom a reason to remember.",
+      "pause": 1.4
+    }
+  ]
+}

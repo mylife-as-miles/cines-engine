@@ -1,0 +1,209 @@
+<!doctype html><meta charset="utf-8"><title>F09</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 9});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f09');
+  const DEBUG = /debug/.test(location.search);
+  const sm = OTM.fig.smooth;
+
+  // ---------------- helpers ----------------
+  function solve(A, b) { const n = b.length; for (let i = 0; i < n; i++) { let m = i; for (let k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[m][i])) m = k; [A[i], A[m]] = [A[m], A[i]]; [b[i], b[m]] = [b[m], b[i]]; for (let k = i + 1; k < n; k++) { const t = A[k][i] / A[i][i]; for (let j = i; j < n; j++) A[k][j] -= t * A[i][j]; b[k] -= t * b[i]; } } const x = Array(n).fill(0); for (let i = n - 1; i >= 0; i--) { let s = b[i]; for (let j = i + 1; j < n; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; } return x; }
+  function homography(src, dst) { const A = [], b = []; for (let i = 0; i < 4; i++) { const [x, y] = src[i], [u, v] = dst[i]; A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u); A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v); } const h = solve(A, b); return (x, y) => { const w = h[6] * x + h[7] * y + 1; return [(h[0] * x + h[1] * y + h[2]) / w, (h[3] * x + h[4] * y + h[5]) / w]; }; }
+  const warp = (sh, fn, step) => { const s = S(); s.polys = sh.polys.map(p => OTM.resample(p, step || 0.05).map(([x, y]) => fn(x, y))); return s; };
+  const poly = pts => S().poly(pts);
+  const P2 = pts => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach(q => p.lineTo(q[0], q[1])); p.closePath(); return p; };
+  const L2 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  function rim(path, dir, w, color, clip, alpha) {
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.globalAlpha = 1; tg.clearRect(0, 0, W, H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w, -dir[1] * w); tg.fill(path);
+    g.save(); if (clip) g.clip(clip); g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  function ik(id, pose, target, side) {
+    const D = OTM.fig.CHAR[id], k = D.heightK, U = 1.42 * D.armK * k, F = 1.22 * D.armK * k;
+    const fig = OTM.fig.profile(id, pose); const S0 = fig.joints.shoulder; const fc = pose.facing || 1, sc = pose.scale;
+    let vx = (target[0] - S0[0]) / sc * fc, vy = (target[1] - S0[1]) / sc; let d = Math.hypot(vx, vy); const md = (U + F) * 0.995; if (d > md) { vx *= md / d; vy *= md / d; d = md; }
+    const tv = Math.atan2(vx, vy); const al = Math.acos(Math.max(-1, Math.min(1, (U * U + d * d - F * F) / (2 * U * d))));
+    const a = tv + side * al; const Ej = [Math.sin(a) * U, Math.cos(a) * U]; const tf = Math.atan2(vx - Ej[0], vy - Ej[1]); return {a, b: tf - a};
+  }
+
+  // ---------------- the folded body (cavity box 0..6 x 0..4, y down) ----------------
+  function folded(o) {
+    o = Object.assign({}, o || {});
+    const sh = S();
+    // torso along the roof, chest up; shoulders at the left end (a shoulder knob, a chest swell)
+    sh.add(sm([[5.55, 0.95], [4.6, 0.1], [3.5, 0.0], [2.3, 0.0], [1.5, 0.05], [1.05, 0.5], [1.0, 1.08], [1.4, 1.36], [2.4, 1.3], [3.6, 1.24], [4.8, 1.4], [5.5, 1.7]], true));
+    // the crease: hips folded 180deg against the back wall
+    sh.add(sm([[5.2, 0.85], [5.85, 1.1], [5.98, 1.9, 1], [5.98, 2.9, 1], [5.6, 3.62], [5.0, 3.58], [5.25, 2.2]], true));
+    // legs along the floor, heels up
+    sh.capsule(5.2, 3.2, 0.5, 3.3, 3.42, 0.36);
+    sh.capsule(3.3, 3.42, 0.32, 1.6, 3.5, 0.23);
+    sh.add(sm([[1.8, 3.24], [1.35, 3.2], [0.85, 3.38], [0.55, 3.68, 1], [0.66, 3.92, 1], [1.85, 3.9, 1]], true)); // shoe, toes down, at his face
+    sh.capsule(3.3, 3.34, 0.28, 3.95, 2.45, 0.19); sh.capsule(3.95, 2.45, 0.19, 4.7, 2.72, 0.15);   // far knee snapped up the wrong way
+    // neck snapped back: the head hangs upside down inside the fold, curls in the light
+    sh.capsule(1.3, 1.0, 0.36, 2.0, 1.55, 0.27);
+    const a = 2.75, k = 1.42, hm = [k * Math.cos(a), k * Math.sin(a), -k * Math.sin(a), k * Math.cos(a), 2.35, 2.2];
+    sh.add(OTM.fig.headProfile(OTM.fig.CHAR.christof.face).transform(hm));
+    sh.add(OTM.fig.hairProfile('christof', {}, 2).transform(hm));
+    // near arm dropped off the shoulder, elbow bent backward, hand palm-up with fingers splayed in the light
+    sh.capsule(1.1, 0.95, 0.3, 0.42, 1.72, 0.21);
+    sh.capsule(0.42, 1.72, 0.2, 0.62, 2.45, 0.15);
+    sh.add(OTM.fig.hand('splay', {spread: 0.28}).transform([0.2, 0.62, -0.62, 0.2, 0.62, 2.45]));
+    sh.polys = sh.polys.map(p => OTM.resample(p, 0.04).map(([x, y]) => [Math.max(Math.min(x, 5.98), 0.06), Math.max(Math.min(y, 3.92), 0.1)]));
+    return sh;
+  }
+
+  // ---------------- geometry: low camera, stove turned toward camera-left ----------------
+  const HZ = 860, VPX = 560, CEIL = 128, BASE = 884;
+  const SF = {l: 1130, r: 1470, lt: 470, lb: 900, rt: 432, rb: 956};      // stove front: far (left) / near (right) edges
+  const atF = (u, v) => L2(L2([SF.l, SF.lt], [SF.r, SF.rt], u), L2([SF.l, SF.lb], [SF.r, SF.rb], u), v);
+  const mouth = [atF(0.08, 0.3), atF(0.92, 0.3), atF(0.92, 0.9), atF(0.08, 0.9)];
+  // door falls toward the low camera: we see its ink outer face; a crack of glare shows above its top edge
+  const DTL = [mouth[0][0] - 64, mouth[0][1] + 40], DTR = [mouth[1][0] - 24, mouth[1][1] + 30];
+  const door = [DTL, DTR, [mouth[2][0] + 4, mouth[2][1] + 6], [mouth[3][0] - 3, mouth[3][1] + 5]];
+  const CRACK = L2(DTL, DTR, 0.5);
+
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+  g.fillStyle = OTM.mix(C.soot, C.ink, 0.45); g.fillRect(0, CEIL, W, BASE - CEIL);
+  g.fillStyle = '#0B0807'; g.fillRect(0, 0, W, CEIL);
+
+  // ---------------- the projection, raking up-left across wall and ceiling ----------------
+  const fold = (x, y) => y < CEIL ? [x - (CEIL - y) * 0.6, CEIL - (CEIL - y) * 1.3] : [x, y];
+  const DST = [[214, 110], [1090, 292], [1112, 640], [290, 500]];
+  const Hm = homography([[0, 0], [6, 0], [6, 4], [0, 4]], DST);
+  OTM.cone(g, [[CRACK[0] - 110, CRACK[1] + 6], [CRACK[0] + 120, CRACK[1] - 16], [1090, 292], [214, 110], [290, 500]], C.hood, 0.06);
+  const box = warp(poly([[-0.08, -0.08], [6.08, -0.08], [6.08, 4.08], [-0.08, 4.08]]), (x, y) => fold(...Hm(x, y)), 0.1);
+  const boxP = box.path(2.0, 8);
+  g.save(); g.clip(boxP);
+  g.fillStyle = OTM.mix(C.hoodLow, C.ink, 0.62); g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, 920, 440, [{r: 720, color: C.hoodLow}, {r: 560, color: C.hoodMid}, {r: 360, color: C.hood}], {sy: 0.55, rot: -0.2, rough: 3, seed: 5});
+  const shadow = warp(folded(), (x, y) => fold(...Hm(x, y)));
+  const shP = shadow.path(1.8, 31);
+  g.strokeStyle = OTM.rgba(C.ink, 0.5); g.lineWidth = 12; g.lineJoin = 'round'; g.stroke(shP);   // penumbra of a small bulb
+  g.fillStyle = OTM.mix(C.ink, C.hoodLow, 0.1); g.fill(shP);
+  g.restore();
+  // faint beam in the gassy air, from the crack to the wall
+  OTM.dust(g, [[CRACK[0] - 60, CRACK[1]], [CRACK[0] + 80, CRACK[1] - 10], [1100, 330], [1060, 640]], 50, C.hood, 'beamdust');
+  for (let i = 0; i < 6; i++) { const y = 560 + i * 20 + (R() - 0.5) * 8; let x = 900 + R() * 60 + i * 10; while (x < 1110) { const w = 30 + R() * 120; g.fillStyle = OTM.rgba(C.gasBlue, 0.06 + R() * 0.08); g.fillRect(x, y + Math.sin(x * 0.02 + i) * 4, w, 2 + R() * 3); x += w + 16 + R() * 60; } }
+
+  // ---------------- floor: checker tiles of ink and soot ----------------
+  const FY = k => HZ + (BASE - HZ) * k;
+  g.save(); g.beginPath(); g.rect(0, 890, W, H - 890); g.clip();
+  g.fillStyle = C.ink; g.fillRect(0, 890, W, H - 890);
+  const ks = []; for (let i = 0; i < 12; i++) ks.push(1.25 * Math.pow(1.45, i));
+  for (let r = 0; r < ks.length - 1; r++) for (let c = -40; c < 40; c++) {
+    if ((r + c) & 1) continue; const k0 = ks[r], k1 = ks[r + 1], X0 = VPX + c * 70, X1 = X0 + 70;
+    g.fillStyle = C.soot; g.fill(P2([[VPX + (X0 - VPX) * k0, FY(k0)], [VPX + (X1 - VPX) * k0, FY(k0)], [VPX + (X1 - VPX) * k1, FY(k1)], [VPX + (X0 - VPX) * k1, FY(k1)]]));
+  }
+  g.restore();
+  // skirting + broken knob plastic, half under the cabinet kick plate beside the stove
+  const cab = poly([[880, 664], [SF.l + 4, 652], [SF.l + 4, 880], [880, 884]]);
+  g.fillStyle = '#0B0807'; g.fill(cab.path(0.6, 61));
+  g.fillStyle = C.hoodLow; g.fill(poly([[872, 660], [SF.l + 6, 646], [SF.l + 6, 652], [872, 666]]).path(0.3, 62));
+  g.fillStyle = C.ink; g.fill(poly([[884, 884], [SF.l, 880], [SF.l, 900], [884, 902]]).path(0.3, 63));
+  // its door stands open: black void, one shelf, the door swung out toward us
+  g.fillStyle = '#030202'; g.fill(poly([[904, 690], [SF.l - 16, 682], [SF.l - 16, 862], [904, 866]]).path(0.4, 64));
+  g.fillStyle = OTM.mix(C.hoodLow, C.ink, 0.4); g.fillRect(906, 772, SF.l - 924, 4);
+  const cdr = poly([[904, 690], [812, 716], [806, 896], [904, 866]]); const cdP = cdr.path(0.5, 65);
+  g.fillStyle = '#0E0A09'; g.fill(cdP); rim(cdP, [0.6, -0.8], 2.5, C.hoodLow);
+  g.fillStyle = C.ink; g.fillRect(0, 872, SF.l, 18);
+  [[1012, 908, 0.4], [1046, 922, -0.6], [1074, 906, 1.1], [1100, 928, 0.2], [962, 916, -1.2]].forEach(([x, y, a], i) => {
+    g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = i % 2 ? C.hoodMid : C.hoodLow; g.beginPath(); g.moveTo(-9, -3); g.lineTo(7, -6); g.lineTo(10, 3); g.lineTo(-4, 6); g.closePath(); g.fill(); g.restore(); });
+
+  // ---------------- hood + its sick cone over the hob, on checker tiles ----------------
+  const coneP = P2([[1050, 196], [1580, 168], [1650, 470], [1010, 520]]);
+  g.save(); g.clip(coneP);
+  g.fillStyle = OTM.mix(C.soot, C.ink, 0.45); g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, 1310, 190, [{r: 520, color: OTM.mix(C.hoodLow, C.soot, 0.6)}, {r: 320, color: C.hoodLow}, {r: 180, color: C.hoodMid}], {sy: 0.5, rough: 2.5, seed: 41});
+  g.strokeStyle = OTM.rgba(C.ink, 0.6); g.lineWidth = 1.5;
+  for (let ty = 170; ty < 540; ty += 30) { g.beginPath(); g.moveTo(1000, ty); g.lineTo(1700, ty); g.stroke(); }
+  for (let tx = 1004; tx < 1700; tx += 30) { g.beginPath(); g.moveTo(tx, 160); g.lineTo(tx, 540); g.stroke(); }
+  g.restore();
+  g.fillStyle = C.ink; g.fill(poly([[1100, 0], [1520, 0], [1600, 168], [1030, 198]]).path(1, 3));
+  g.fillStyle = C.hood; g.fill(poly([[1050, 192], [1580, 164], [1583, 172], [1052, 200]]).path(0.3, 4));
+  E.fillStyle = C.hood; E.fillRect(1050, 170, 530, 26);
+  // gas haze: horizontal strips shimmering above the hob
+  for (let i = 0; i < 9; i++) {
+    const y = 318 + i * 15 + Math.sin(i * 1.7) * 5; let x = 1040 + R() * 70 + i * 6;
+    while (x < 1540 - i * 6) { const w = 20 + R() * 110; g.fillStyle = OTM.rgba(C.gasBlue, 0.1 + R() * 0.14); g.fillRect(x, y + Math.sin(x * 0.03 + i) * 3, w, 2 + R() * 3); x += w + 10 + R() * 40; }
+  }
+  // hob edge + four pan supports silhouetted in the cone
+  g.fillStyle = C.ink; g.fill(poly([[SF.l - 18, SF.lt - 8], [SF.r + 12, SF.rt - 14], [SF.r + 12, SF.rt + 4], [SF.l - 18, SF.lt + 6]]).path(0.5, 2));
+  [0.13, 0.37, 0.62, 0.87].forEach(u => { const p = L2([SF.l - 12, SF.lt - 8], [SF.r + 6, SF.rt - 14], u); const s = 0.8 + u * 0.35;
+    g.fillStyle = C.ink; g.fillRect(p[0] - 32 * s, p[1] - 18 * s, 7 * s, 18 * s); g.fillRect(p[0] + 25 * s, p[1] - 18 * s, 7 * s, 18 * s); g.fillRect(p[0] - 4 * s, p[1] - 12 * s, 8 * s, 12 * s); g.fillRect(p[0] - 32 * s, p[1] - 6 * s, 64 * s, 6 * s); });
+  g.fillStyle = C.hoodMid; g.fill(poly([[SF.l - 18, SF.lt - 10], [SF.r + 12, SF.rt - 16], [SF.r + 12, SF.rt - 12], [SF.l - 18, SF.lt - 6]]).path(0.3, 3));
+
+  // ---------------- stove front ----------------
+  const front = poly([[SF.l, SF.lt], [SF.r, SF.rt], [SF.r, SF.rb], [SF.l, SF.lb]]);
+  g.fillStyle = C.ink; g.fill(front.path(0.6, 6));
+  // knobs: four positions, two missing
+  [0.17, 0.39, 0.61, 0.83].forEach((u, i) => {
+    const p = atF(u, 0.13); const s = 0.9 + u * 0.35;
+    if (i === 1 || i === 2) { g.fillStyle = '#030202'; g.beginPath(); g.ellipse(p[0], p[1], 9 * s, 11 * s, 0, 0, 7); g.fill(); g.fillStyle = C.hoodMid; g.fillRect(p[0] - 1.5, p[1] - 6 * s, 3, 9 * s); }
+    else { g.fillStyle = '#1A1310'; g.beginPath(); g.ellipse(p[0], p[1], 17 * s, 19 * s, 0, 0, 7); g.fill(); g.strokeStyle = C.hoodMid; g.lineWidth = 3; g.beginPath(); g.ellipse(p[0], p[1], 17 * s, 19 * s, 0, -2.8, -0.5); g.stroke(); g.fillStyle = C.hoodMid; g.fillRect(p[0] - 2, p[1] - 15 * s, 4, 12 * s); }
+  });
+  // mouth: blazing; seen only as a crack above the falling door
+  const mp = P2(mouth);
+  g.fillStyle = C.hood; g.fill(mp);
+  g.fillStyle = '#FFF4CC'; g.fill(P2([L2(mouth[0], mouth[1], 0.2), L2(mouth[0], mouth[1], 0.85), L2(L2(mouth[0], mouth[3], 0.1), L2(mouth[1], mouth[2], 0.1), 0.8), L2(L2(mouth[0], mouth[3], 0.13), L2(mouth[1], mouth[2], 0.13), 0.25)]));
+  E.fillStyle = C.hood; E.fill(P2([mouth[0], mouth[1], DTR, DTL]));
+  // the oven rack, silhouetted in the crack
+  g.strokeStyle = C.ink; g.lineWidth = 3;
+  const rk0 = L2(mouth[0], mouth[3], 0.09), rk1 = L2(mouth[1], mouth[2], 0.09);
+  g.beginPath(); g.moveTo(rk0[0], rk0[1]); g.lineTo(rk1[0], rk1[1]); g.stroke();
+  g.lineWidth = 2; for (let i = 1; i < 16; i++) { const p = L2(rk0, rk1, i / 16); g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(p[0] - 6, p[1] + 30); g.stroke(); }
+  // the door: ink outer face, top edge burning, handle bar
+  const dP = poly(door).path(0.4, 9);
+  g.fillStyle = C.ink; g.fill(dP);
+  g.strokeStyle = C.hood; g.lineWidth = 3; g.beginPath(); g.moveTo(DTL[0], DTL[1]); g.lineTo(DTR[0], DTR[1]); g.stroke();
+  const hb0 = L2(L2(DTL, door[3], 0.1), L2(DTR, door[2], 0.1), 0.12), hb1 = L2(L2(DTL, door[3], 0.1), L2(DTR, door[2], 0.1), 0.88);
+  g.strokeStyle = '#1C1511'; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(hb0[0], hb0[1]); g.lineTo(hb1[0], hb1[1]); g.stroke();
+  g.strokeStyle = C.hoodMid; g.lineWidth = 2; g.beginPath(); g.moveTo(hb0[0], hb0[1] - 4); g.lineTo(hb1[0], hb1[1] - 4); g.stroke();
+
+  // ---------------- figures ----------------
+  // Scott: dark foreground right. One hand still on the handle, the other flying to his mouth; knees going.
+  const handle = L2(hb0, hb1, 0.82);
+  const sp = {x: 1720, y: 1068, scale: 112, facing: -1, lean: 0.14, neck: -0.18, head: -0.32,
+    armF: {a: 1.05, b: 2.15, hand: 'open', w: -0.4}, legN: {a: 0.38, b: 0.62}, legF: {a: -0.12, b: 0.55}};
+  const sa = ik('scott', sp, handle, -1); sp.armN = {a: sa.a, b: sa.b, hand: 'hold', w: 0.2};
+  const scott = OTM.fig.profile('scott', sp);
+  const scP = scott.shape.path(0.8, 11); g.fillStyle = C.ink; g.fill(scP);
+  const scClip = new Path2D(); scClip.rect(1440, 0, 500, 700); rim(scP, [-0.75, 0.66], 4, C.hood, scClip);
+
+  // the kitchen doorway we look in through: a dark jamb at frame left
+  const jamb = poly([[0, 0], [118, 0], [104, 1080], [0, 1080]]); const jP = jamb.path(0.8, 77);
+  g.fillStyle = '#070504'; g.fill(jP); rim(jP, [1, 0], 2.5, C.hoodLow);
+  g.fillStyle = '#0D0A09'; g.fill(poly([[118, 0], [134, 0], [121, 1080], [104, 1080]]).path(0.6, 78));
+  // Deena: big, dark, foreground left; one step toward him, arm out
+  const deena = OTM.fig.profile('deena', {x: 360, y: 1000, scale: 76, facing: 1, lean: 0.2, neck: 0.1, head: 0.04, swing: -0.55,
+    armN: {a: 1.3, b: 0.08, hand: 'open', w: -0.12}, armF: {a: -0.6, b: 0.35}, legN: {a: 0.5, b: 0.15}, legF: {a: -0.38, b: 0.25}});
+  OTM.silhouette(g, deena.shape, {light: {dx: 0.9, dy: 0.1}, rimColor: C.hoodMid, rimW: 3});
+  OTM.fig.drawDetails(g, deena, {rimColor: C.hood});
+
+  // ---------------- dialogue: sliced by the falling door's edge ----------------
+  // the line stands in the door's arc; the edge cuts it, the far half rides down with the door
+  const TY = 806, LINE = 'Scott, don\'t--';
+  const cut0 = DTL, cut1 = door[3];                       // the door's left edge
+  const cutX = y => cut0[0] + (cut1[0] - cut0[0]) * (y - cut0[1]) / (cut1[1] - cut0[1]);
+  const FD = OTM.FACE.deena, Lw = OTM.layout(g, LINE, FD), iN = LINE.indexOf('n');
+  const TX = cutX(TY - 18) - (Lw[iN].x + Lw[iN].w * 0.5);
+  const half = (keepLeft) => { const p = new Path2D(); const far = 4000, d = [cut1[0] - cut0[0], cut1[1] - cut0[1]]; const l = Math.hypot(...d); const u = [d[0] / l, d[1] / l], n = [-u[1], u[0]];
+    const s = keepLeft ? 1 : -1; const a = [cut0[0] - u[0] * far, cut0[1] - u[1] * far], b = [cut0[0] + u[0] * far, cut0[1] + u[1] * far];
+    p.moveTo(a[0], a[1]); p.lineTo(b[0], b[1]); p.lineTo(b[0] + n[0] * far * s, b[1] + n[1] * far * s); p.lineTo(a[0] + n[0] * far * s, a[1] + n[1] * far * s); p.closePath(); return p; };
+  const piv = [cutX(TY - 18), TY - 18];
+  g.save(); g.clip(half(true)); OTM.say(g, 'deena', LINE, TX, TY, {}); g.restore();
+  // the far half rides down with the door: carried along its edge, tipped by its swing
+  g.save(); g.translate(piv[0] + 5, piv[1] + 22); g.rotate(0.12); g.translate(-piv[0], -piv[1]); g.clip(half(false)); OTM.say(g, 'deena', LINE, TX, TY, {}); g.restore();
+  // the blade: the door's edge catches the light where it passes through the line
+  g.strokeStyle = C.hood; g.lineWidth = 2; g.beginPath(); g.moveTo(cutX(TY - 70), TY - 70); g.lineTo(cutX(TY + 30), TY + 30); g.stroke();
+
+  if (DEBUG) { g.fillStyle = 'red'; [DTL, DTR, CRACK, handle].forEach(p => g.fillRect(p[0] - 4, p[1] - 4, 8, 8)); }
+  f.finish({letterbox: 2.0, vignette: 0.5, halation: 0.55});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 09', 'THE KITCHEN  ·  GAS', 2.0);
+  window.FRAME_READY = true;
+})();
+</script>

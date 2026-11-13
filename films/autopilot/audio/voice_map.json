@@ -1,0 +1,86 @@
+{
+ "L001": {
+  "file": "audio/vo/V01.wav",
+  "take": "V01",
+  "dur": 3.28,
+  "style": "quiet and intimate, close to the microphone; a man telling you something he has thought about for a long time; understated, almost conversational"
+ },
+ "L002": {
+  "file": "audio/vo/V02.wav",
+  "take": "V02",
+  "dur": 8.2,
+  "style": "gentle and unhurried, explaining, with a faint wry warmth"
+ },
+ "L003": {
+  "file": "audio/vo/V03.wav",
+  "take": "V03",
+  "dur": 2.2,
+  "style": "soft, a real question put to the listener, after a small pause"
+ },
+ "L005": {
+  "file": "audio/vo/V04.wav",
+  "take": "V04",
+  "dur": 8.44,
+  "style": "thoughtful and matter-of-fact, calm, like someone who has had to understand how this happens"
+ },
+ "L020": {
+  "file": "audio/vo/V05.wav",
+  "take": "V05",
+  "dur": 6.8,
+  "style": "calm and inviting, asking the listener to remember, unhurried"
+ },
+ "L021": {
+  "file": "audio/vo/V06.wav",
+  "take": "V06",
+  "dur": 2.68,
+  "style": "quiet and low, a little rueful"
+ },
+ "L034": {
+  "file": "audio/vo/V07.wav",
+  "take": "V07",
+  "dur": 9.04,
+  "style": "reflective and slower, an unease just beneath the calm"
+ },
+ "L035": {
+  "file": "audio/vo/V08.wav",
+  "take": "V08",
+  "dur": 9.36,
+  "style": "quiet and careful, the calm beginning to thin"
+ },
+ "L047": {
+  "file": "audio/vo/V09d.wav",
+  "take": "V09d",
+  "dur": 2.92,
+  "style": "a man justifying himself under his breath, steady and plain, clinging to a simple fact; the fear not yet in his voice"
+ },
+ "L049": {
+  "file": "audio/vo/V10c.wav",
+  "take": "V10c",
+  "dur": 2.72,
+  "style": "panicked and quick, the breath catching between words, the voice tightening with dread"
+ },
+ "L050": {
+  "file": "audio/vo/V11b.wav",
+  "take": "V11b",
+  "dur": 4.76,
+  "style": "barely a breath: a broken whisper with almost no voice, slow, the words falling apart"
+ },
+ "L051": {
+  "file": "audio/vo/V12.wav",
+  "take": "V12",
+  "dur": 3.24,
+  "style": "almost no voice left; flat with grief, not performed, very quiet"
+ },
+ "L004": {
+  "file": "audio/radio/R01.wav",
+  "take": "R01",
+  "dur": 6.48,
+  "style": "a bright, breezy morning radio presenter, upbeat and chatty, mid-flow"
+ },
+ "L039": {
+  "file": "audio/radio/R02.wav",
+  "take": "R02",
+  "dur": 7.64,
+  "style": "a relaxed evening radio presenter, calm and easy, mid-sentence"
+ }
+}

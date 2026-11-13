@@ -1,0 +1,7 @@
+{
+ "id": "M06",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 35 seconds: hypnotic and calm, a repeating felt-piano figure in D major, eighth notes at about 72 bpm, with a soft sustained string chord underneath, the feeling of a daily drive made on autopilot, turns and traffic lights blurring together, nothing remembered. Even, gently mesmerising, piano dynamic, no build, no ending flourish. Minimal modern classical. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

@@ -1,0 +1,7 @@
+{
+ "id": "M10a",
+ "model": "lyria-3.5",
+ "prompt": "A 20-second instrumental chamber-music cue of rising physical strain and panic, for a small string group, muted (con sordino), recorded close and dry in a small room: four cellos, two violas, two violins. In tune at A = 440. Key centre A minor, with B-flat. Beatless, with no pulse and no ostinato, but increasingly agitated. The lowest note is the cellos' low C; no double bass. The violins stay in their low and middle range: dark and grinding, never bright.\n[0:00 - 0:07] From silence, the cellos hold a cold low A (A2), pianissimo; around 0:04 the violas add a quiet B-flat against an A (A3 and B-flat3), sul tasto, rubbing.\n[0:07 - 0:13] The strings begin to press: the violas and violins move to a soft sul ponticello tremolo on a close cluster of A, B-flat and C, the cellos sustain the low A, and everything grows slowly from piano toward mezzo-forte without rising in pitch.\n[0:13 - 0:20] At its tightest: a dense, grinding tremolo cluster at forte, held without moving, as if about to break. Do not stop, resolve or fade; it will be cut off.\nInstrumental only, no vocals, no choir. Avoid: percussion of any kind, timpani, pulses, ostinatos, impacts, booms, braams, risers, whooshes, stingers, glissandi, electronic sounds, piano, a melody, sentimental strings, and any resolution.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

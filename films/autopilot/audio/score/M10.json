@@ -1,0 +1,7 @@
+{
+ "id": "M10",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 15-second instrumental: a tired, low solo cello line in D, slow, at the end of a long working day in the copper evening light, weary and quiet, then stopping on a held note. Instrumental only, no drums, no vocals.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

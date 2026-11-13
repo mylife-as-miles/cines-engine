@@ -1,0 +1,7 @@
+{
+ "id": "M03",
+ "model": "lyria-3.5",
+ "prompt": "An instrumental film-score cue, about 45 seconds: a steady, mechanical but gentle repeating felt-piano figure in D major, eighth notes at about 76 bpm, with soft pizzicato strings doubling the pulse like clockwork, the sound of a morning routine performed without thinking: shower, shave, brush teeth, towel, shirt. Even, unhurried, slightly hypnotic, mezzo-piano, never building. Minimal modern classical. No drums, no vocals. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

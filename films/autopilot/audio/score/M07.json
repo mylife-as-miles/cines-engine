@@ -1,0 +1,7 @@
+{
+ "id": "M07",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 20-second instrumental: a cool, quiet repeating figure on celesta and soft glassy synth pad in D major, eighth notes at about 72 bpm, clean and refrigerated like an air-conditioned office in the morning, calm, neutral, piano dynamic. Instrumental only, no drums, no vocals.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

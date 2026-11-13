@@ -1,0 +1,133 @@
+<!doctype html><meta charset="utf-8"><title>F10</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 10});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f10');
+  const DEBUG = /debug/.test(location.search);
+  const sm = OTM.fig.smooth;
+
+  // ---------------- helpers ----------------
+  const poly = pts => S().poly(pts);
+  const L2 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  function rim(path, dir, w, color, clip, alpha) {
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.globalAlpha = 1; tg.clearRect(0, 0, W, H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w, -dir[1] * w); tg.fill(path);
+    g.save(); if (clip) g.clip(clip); g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  function ik(id, pose, target, side) {
+    const D = OTM.fig.CHAR[id], k = D.heightK, U = 1.42 * D.armK * k, F = 1.22 * D.armK * k;
+    const fig = OTM.fig.profile(id, pose); const S0 = fig.joints.shoulder; const fc = pose.facing || 1, sc = pose.scale;
+    let vx = (target[0] - S0[0]) / sc * fc, vy = (target[1] - S0[1]) / sc; let d = Math.hypot(vx, vy); const md = (U + F) * 0.995; if (d > md) { vx *= md / d; vy *= md / d; d = md; }
+    const tv = Math.atan2(vx, vy); const al = Math.acos(Math.max(-1, Math.min(1, (U * U + d * d - F * F) / (2 * U * d))));
+    const a = tv + side * al; const Ej = [Math.sin(a) * U, Math.cos(a) * U]; const tf = Math.atan2(vx - Ej[0], vy - Ej[1]); return {a, b: tf - a};
+  }
+  const comp = (M2, m) => [M2[0] * m[0] + M2[2] * m[1], M2[1] * m[0] + M2[3] * m[1], M2[0] * m[2] + M2[2] * m[3], M2[1] * m[2] + M2[3] * m[3], M2[0] * m[4] + M2[2] * m[5] + M2[4], M2[1] * m[4] + M2[3] * m[5] + M2[5]];
+  const ap = (m, p) => [m[0] * p[0] + m[2] * p[1] + m[4], m[1] * p[0] + m[3] * p[1] + m[5]];
+
+  // ---------------- wall under the hood light: a tight sick cone, ink everywhere else ----------------
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+  const LX = 1250, LY = 60;
+  const coneP = poly([[1010, 60], [1470, 60], [1730, 1020], [640, 1020]]).path(1.5, 9);
+  g.save(); g.clip(coneP);
+  g.fillStyle = C.soot; g.fillRect(0, 0, W, H);
+  // a downlight on a tiled wall: posterised scallops opening down from the lamp
+  const scallop = (K, D, Rb, seed) => { const pts = []; for (let x = LX - Rb; x <= LX + Rb; x += 6) { const top = LY + K * Math.sqrt((x - LX) * (x - LX) + D * D); const bot = LY + Math.sqrt(Math.max(0, Rb * Rb - (x - LX) * (x - LX))) * 1.05; if (bot > top) pts.push([x, top]); }
+    for (let x = LX + Rb; x >= LX - Rb; x -= 6) { const top = LY + K * Math.sqrt((x - LX) * (x - LX) + D * D); const bot = LY + Math.sqrt(Math.max(0, Rb * Rb - (x - LX) * (x - LX))) * 1.05; if (bot > top) pts.push([x, bot]); }
+    return S().poly(pts).path(2.2, seed); };
+  [[C.hoodLow, 0.42, 60, 860], [C.hoodMid, 0.5, 80, 560], [C.hood, 0.66, 96, 320]].forEach(([col, K, D, Rb], i) => {
+    const pth = scallop(K, D, Rb, 12 + i); g.fillStyle = col; g.fill(pth);
+    if (i > 0) { g.save(); g.strokeStyle = OTM.rgba(i === 1 ? C.hoodLow : C.hoodMid, 0.9); g.setLineDash([2, 3]); g.lineWidth = 4; g.stroke(pth); g.restore(); } });
+  g.strokeStyle = OTM.rgba(C.ink, 0.5); g.lineWidth = 2;   // grout of the tiled wall, only where the light reaches
+  for (let y = 22; y < 1080; y += 62) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  for (let x = 12; x < W; x += 62) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  g.restore();
+  // counter top behind her, catching the cone
+  g.fillStyle = C.ink; g.fillRect(0, 790, W, 300);
+  g.save(); g.clip(coneP); g.fillStyle = C.hoodMid; g.fillRect(0, 786, W, 6); g.fillStyle = OTM.mix(C.hoodLow, C.ink, 0.4); g.fillRect(0, 792, W, 40); g.restore();
+  // the hood: only its burning lip shows under the top matte
+  g.fillStyle = C.ink; g.fill(poly([[1000, 0], [1500, 0], [1500, 66], [1000, 70]]).path(1, 3));
+  g.fillStyle = C.hood; g.fill(poly([[1040, 64], [1460, 60], [1460, 68], [1040, 72]]).path(0.3, 4));
+  E.fillStyle = C.hood; E.fillRect(1040, 54, 420, 24);
+  OTM.cone(g, [[1010, 70], [1470, 66], [1730, 1020], [640, 1020]], C.hood, 0.05);
+
+  // ---------------- Deena: held upright by nothing ----------------
+  const D0 = OTM.fig.CHAR.deena; OTM.fig.CHAR.deena = Object.assign({}, D0, {hair: 'none'}); // her hair is drawn below
+  const SC = 222;
+  const dp = {x: 1270, y: 1150, anchor: 'hip', scale: SC, facing: -1, lean: 0.1, neck: -0.4, head: -0.3,
+    armN: {a: 0.6, b: 2.38, hand: 'open', w: -0.62, handOpts: {spread: 0.24}}, armF: {a: 0.78, b: 2.1, hand: 'open', w: -0.78, handOpts: {spread: 0.22}},
+    legN: {a: 0.75, b: 1.05}, legF: {a: 0.45, b: 0.95}};
+  const deena = OTM.fig.profile('deena', dp);
+  OTM.fig.CHAR.deena = D0;
+  const hd = deena.details.find(d => d.kind === 'hoop'); const HM = comp(deena.M, hd.headM);
+  const hair = OTM.fig.hairProfile('deena', {swing: 0}, 1);              // [cap, ponytail, tie]
+  const cap = S(); cap.polys = [hair.polys[0], hair.polys[2]];
+  const capW = cap.transform(HM);
+  const tie = ap(HM, [-0.3, -0.58]);
+  // the ponytail, yanked up and back to a point in empty air, cinched where a fist would be
+  // the ponytail: yanked taut up and back, cinched in mid-air by a fist that is not there;
+  // above the grip the ends flop over and fall back like a plume
+  const K = SC / 166;
+  const LEN = 100 * K, ANG = -1.36;
+  const u = [Math.cos(ANG), Math.sin(ANG)], n = [-u[1], u[0]];
+  const at = (t, w, c) => { const q = [tie[0] + u[0] * LEN * t + n[0] * w * K, tie[1] + u[1] * LEN * t + n[1] * w * K]; if (c) q.push(1); return q; };
+  const P = at(1, 0);                                // the grip: nobody's hand
+  const pony = sm([at(-0.1, 25), at(0.3, 24), at(0.62, 19), at(0.88, 11), at(1.0, 5, 1), at(1.06, -5, 1), at(0.88, -11), at(0.62, -17), at(0.3, -21), at(-0.1, -22)], true);
+  pony.ellipse(tie[0] + u[0] * 8 * K, tie[1] + u[1] * 8 * K, 21 * K, 16 * K, ANG);   // the hair tie
+  // the plume: bunched just above the grip, arcing over toward her back and falling
+  const g0 = at(1.03, 0), up2 = [u[0] * K, u[1] * K], bk = [n[0] * K, n[1] * K];   // n points to her back (right)
+  const Pp = (a, b, c) => { const q = [g0[0] + up2[0] * a + bk[0] * b, g0[1] + up2[1] * a + bk[1] * b]; if (c) q.push(1); return q; };
+  pony.add(sm([Pp(0, -7), Pp(26, -20), Pp(52, -14), Pp(66, 6), Pp(62, 34), Pp(40, 62), Pp(12, 80), Pp(-6, 86, 1), Pp(14, 66), Pp(-2, 70, 1), Pp(22, 50), Pp(10, 48, 1), Pp(34, 30), Pp(28, 12), Pp(8, 6)], true));
+  const body = S().add(deena.shape).add(capW).add(pony);
+  const bP = body.path(0.8, 21);
+  g.fillStyle = C.ink; g.fill(bP);
+  rim(bP, [0.15, -1], 4, C.hood, coneP);          // light from above: crown, ponytail, shoulders, forearms
+  OTM.fig.drawDetails(g, Object.assign({}, deena, {details: [hd]}), {rimColor: C.hood, hoopColor: C.hoodMid});
+
+  // the throat: a short ember arc across the front, stopping before the nape
+  const nb = deena.joints.neck, hc = deena.joints.head;
+  const ax = [hc[0] - nb[0], hc[1] - nb[1]]; const al = Math.hypot(...ax); const ua = [ax[0] / al, ax[1] / al];
+  let fr = [-ua[1], ua[0]]; if (fr[0] > 0) fr = [-fr[0], -fr[1]];       // toward her face
+  const c0 = [nb[0] + ax[0] * 0.44, nb[1] + ax[1] * 0.44];
+  const nw = 0.27 * SC * 0.95;
+  const A = [c0[0] + fr[0] * nw * 1.3, c0[1] + fr[1] * nw * 1.3], B = [c0[0] - fr[0] * nw * 0.3, c0[1] - fr[1] * nw * 0.3];
+  const ctl = [(A[0] + B[0]) / 2 - ua[0] * 10, (A[1] + B[1]) / 2 - ua[1] * 10];   // sags toward the chest: a smile
+  const arcPt = t => { const m = 1 - t; return [m * m * A[0] + 2 * m * t * ctl[0] + t * t * B[0], m * m * A[1] + 2 * m * t * ctl[1] + t * t * B[1]]; };
+  function crescent(t0, t1, wmax) { const pts = [], back = []; const N = 30;
+    for (let i = 0; i <= N; i++) { const t = t0 + (t1 - t0) * i / N; const p = arcPt(t), q = arcPt(Math.min(1, t + 0.01)); let tx = q[0] - p[0], ty = q[1] - p[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+      const w = wmax * Math.pow(Math.sin(Math.PI * t), 0.7); pts.push([p[0] - ty * w * 0.5, p[1] + tx * w * 0.5]); back.push([p[0] + ty * w * 0.5, p[1] - tx * w * 0.5]); }
+    return S().poly(pts.concat(back.reverse())); }
+  const holes = f.markHoles();
+  holes.save(); holes.clip(bP); holes.fillStyle = '#fff'; holes.fill(crescent(0.1, 0.82, 9).path(0.3, 5)); holes.restore();
+  // its ends are already turning to blood (darker than wine): three short runs
+  g.save(); g.clip(bP);
+  g.fillStyle = C.blood; g.fill(crescent(0, 0.16, 9).path(0.2, 6)); g.fill(crescent(0.76, 1, 9).path(0.2, 7));
+  [[0.1, 40], [0.34, 26], [0.84, 50]].forEach(([t, L], i) => { const p = arcPt(t); const dx = -ua[0], dy = -ua[1]; // run down the neck
+    const run = S().M(p[0] - 3, p[1]).C(p[0] - 3 + dx * L * 0.5, p[1] + dy * L * 0.5, p[0] + dx * L - 2, p[1] + dy * L - 1, p[0] + dx * L, p[1] + dy * L + 3).C(p[0] + dx * L + 4, p[1] + dy * L, p[0] + 3 + dx * L * 0.5, p[1] + dy * L * 0.5, p[0] + 3, p[1]).Z();
+    g.fillStyle = C.blood; g.fill(run.path(0.2, 30 + i)); g.strokeStyle = OTM.rgba(C.wine, 0.8); g.lineWidth = 1.2; g.stroke(run.path(0.2, 30 + i)); });
+  g.restore();
+  if (DEBUG) { g.fillStyle = 'red'; [A, B, nb, hc, P, tie].forEach(p => g.fillRect(p[0] - 3, p[1] - 3, 6, 6)); }
+
+  // ---------------- Angelo: dark, foreground, reaching ----------------
+  const apo = {x: 120, y: 1520, scale: 290, anchor: 'hip', facing: 1, lean: 0.2, neck: 0.16, head: 0.06,
+    armF: {a: 0.8, b: 0.6}, legN: {a: 0.3, b: 0.2}, legF: {a: -0.2, b: 0.1}};
+  const aik = ik('angelo', apo, [758, 900], -1); apo.armN = {a: aik.a, b: aik.b, hand: 'open', w: 0.55, handOpts: {spread: 0.16}};
+  const ag = OTM.fig.profile('angelo', apo);
+  const aP = ag.shape.path(0.8, 31);
+  g.fillStyle = '#070504'; g.fill(aP);
+  rim(aP, [0.5, -0.86], 3, C.hoodLow, coneP);
+  { const cd = ag.details.find(d => d.kind === 'cigarette'); const m = comp(ag.M, cd.headM); const a = ap(m, [-0.15, 0.0]), b = ap(m, [0.04, -0.05]);
+    g.save(); g.strokeStyle = OTM.mix(C.hoodMid, C.ink, 0.25); g.lineCap = 'round'; g.lineWidth = 7; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); g.restore(); }
+
+  // ---------------- dialogue: dealt crooked into the dark between them ----------------
+  g.save(); g.translate(610, 450); g.rotate(-0.15); OTM.say(g, 'angelo', 'Dee?', 0, 0, {size: 80, seed: 2}); g.restore();
+
+  f.finish({letterbox: 2.0, vignette: 0.55, halation: 0.6});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 10', 'DEENA', 2.0);
+  window.FRAME_READY = true;
+})();
+</script>

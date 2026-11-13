@@ -1,0 +1,82 @@
+{
+ "cold_open_fire": {
+  "t": [
+   22.0,
+   30.7
+  ],
+  "describe": "8.70 s busy, 6.7 onsets/s, tonal, pitch ~689 Hz (F5) (attack 37 ms). Sounds most like: a police siren (z +3.3), a bicycle bell (z +2.6), a glockenspiel run (z +2.2) [clear reading]. Other readings: a cinematic hit with a long tail (impacts, z +2.2), footsteps on gravel (foley, z +2.1). AudioSet: Speech 0.54, Alarm 0.09, Bell 0.07. peak -2.0 dBFS, -16.7 LUFS, brightness 3.0 kHz, bandwidth 20.5 kHz, noise floor -26 dBFS, side/mid -14 dB.",
+  "match": "cold_open_fire.wav: 'a house fire burning with crackling flames and breaking glass' -> strong (z +3.3; would rank #1 among 322 vocabulary descriptions; cosine 0.24). Forced choice vs your alternatives: 'a house fire burning with crackling flames and breaking glass' >99%, 'heavy rain' <1%, 'applause' <1%, 'radio static' <1%. It sounds most like: 'a police siren' (z +3.3), 'a bicycle bell' (z +2.6), 'a glockenspiel run' (z +2.2), 'a cinematic hit with a long tail' (z +2.2). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "doorbell": {
+  "t": [
+   55.4,
+   57.6
+  ],
+  "describe": "2.20 s busy, 2.3 onsets/s, tonal, pitch ~58 Hz (Bb1) (attack 297 ms). Sounds most like: a kalimba note (z +3.0), a music box melody (z +3.0), a success chime (z +2.4) [clear reading]. Other readings: an enter key press (keyboard, z +1.9). Unvalidated hint: a music box (z +3.2). AudioSet: Music 0.39, Marimba, xylophone 0.14, Glockenspiel 0.12. peak -23.6 dBFS, -35.2 LUFS, brightness 1.4 kHz, bandwidth 12.9 kHz, noise floor -51 dBFS, side/mid -14 dB.",
+  "match": "doorbell.wav: 'a doorbell ringing ding dong' -> no match (z +1.5; would rank #20 among 322 vocabulary descriptions; cosine 0.17). Forced choice vs your alternatives: 'a doorbell ringing ding dong' 55%, 'a church bell' 1%, 'a microwave beep' 44%, 'a phone ringing' <1%. It sounds most like: 'a music box' (z +3.2), 'a glockenspiel' (z +3.1), 'a kalimba note' (z +3.0), 'a music box melody' (z +3.0)."
+ },
+ "party": {
+  "t": [
+   160.0,
+   166.0
+  ],
+  "describe": "6.00 s busy, 4.5 onsets/s, tonal, pitch ~62 Hz (B1) (attack 6 ms). Music (AudioSet Music 0.55). Unvalidated hints - genre: jazz music (z +4.2), funk music (z +2.9); mood (wrong for ~1 in 5 tracks in a test): calm and relaxing music (z +2.8), warm and cozy music (z +2.5). Sounds most like: a finger squeaking on glass (z +2.1), footsteps on wood (z +1.8), a bee flying by (z +1.5) [weak reading]. Other readings: a door slam (impacts, z +1.5), a knock on a door (everyday, z +1.3). AudioSet: Music 0.55, Mouse 0.07, Musical instrument 0.05. peak -15.7 dBFS, -28.6 LUFS, brightness 406 Hz, bandwidth 10.2 kHz, noise floor -33 dBFS, side/mid -17 dB.",
+  "match": "party.wav: 'people laughing and chatting at a party' -> no match (unvalidated: music / instrument / voice description) (z +1.1; would rank #37 among 322 vocabulary descriptions; cosine -0.05). Forced choice vs your alternatives: 'people laughing and chatting at a party' 3%, 'an audience applauding' 40%, 'rain on a window' 54%, 'a sports crowd cheering' 3%. It sounds most like: 'jazz music' (z +4.2), 'funk music' (z +2.9), 'calm and relaxing music' (z +2.8), 'warm and cozy music' (z +2.5)."
+ },
+ "crash": {
+  "t": [
+   360.4,
+   362.6
+  ],
+  "describe": "2.20 s busy, 1.8 onsets/s (attack 250 ms). Music (AudioSet Music 0.58). Unvalidated hints - genre: hip hop beat with heavy bass (z +2.1), trap beat (z +1.9); mood (wrong for ~1 in 5 tracks in a test): aggressive music (z +1.3), triumphant and heroic music (z +1.0). Sounds most like: a door slam (z +2.5), an explosion (z +2.5), a wine glass ring (z +2.4) [plausible reading]. Other readings: a finger squeaking on glass (foley, z +1.9), a power drill (everyday, z +1.8). AudioSet: Breaking 0.64, Music 0.58, Glass 0.33. peak -2.0 dBFS, -14.2 LUFS, brightness 2.0 kHz, bandwidth 20.5 kHz, noise floor -30 dBFS, side/mid -25 dB.",
+  "match": "crash.wav: 'pots, pans and glass crashing to the floor' -> strong (z +3.8; would rank #1 among 322 vocabulary descriptions; cosine 0.17). Forced choice vs your alternatives: 'pots, pans and glass crashing to the floor' 70%, 'a door slam' 29%, 'a gunshot' 1%, 'a cymbal crash' 1%. It sounds most like: 'a door slam' (z +2.5), 'an explosion' (z +2.5), 'a wine glass ring' (z +2.4), 'a heavy thud' (z +2.3). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "scream": {
+  "t": [
+   610.3,
+   613.3
+  ],
+  "describe": "3.00 s busy, 5.3 onsets/s, tonal, pitch ~447 Hz (A4) (attack 105 ms). Sounds most like: a kettle whistling (z +3.6), a power drill (z +3.4), a balloon squeak (z +3.3) [clear reading]. Other readings: a phone vibration buzz (ui, z +2.6). Character: harsh. AudioSet: Music 0.22, Speech 0.09, Screaming 0.08. peak -5.5 dBFS, -12.3 LUFS, brightness 3.1 kHz, bandwidth 20.5 kHz, noise floor -25 dBFS, side/mid -9 dB.",
+  "match": "scream.wav: 'a woman screaming in terror' -> strong (unvalidated: music / instrument / voice description) (z +3.6; would rank #1 among 322 vocabulary descriptions; cosine 0.26). Forced choice vs your alternatives: 'a woman screaming in terror' >99%, 'a woman singing' <1%, 'a siren' <1%, 'a child laughing' <1%. It sounds most like: 'a kettle whistling' (z +3.6), 'a power drill' (z +3.4), 'a balloon squeak' (z +3.3), 'a creaking door' (z +2.8)."
+ },
+ "explosion": {
+  "t": [
+   756.6,
+   759.6
+  ],
+  "describe": "3.00 s busy, 6.7 onsets/s, tonal, pitch ~1558 Hz (G6) (attack 290 ms). Sounds most like: a creaking door (z +3.0), a balloon squeak (z +3.0), a microwave beep (z +2.9) [clear reading]. Other readings: a wine glass ring (chimes, z +2.2). AudioSet: Bell 0.33, Bicycle bell 0.23, Sound effect 0.12. peak -6.5 dBFS, -11.8 LUFS, brightness 4.7 kHz, bandwidth 20.5 kHz, noise floor -57 dBFS, side/mid -22 dB.",
+  "match": "explosion.wav: 'a gas explosion in a house' -> strong (z +3.3; would rank #1 among 322 vocabulary descriptions; cosine 0.32). Forced choice vs your alternatives: 'a gas explosion in a house' >99%, 'thunder' <1%, 'a door slam' <1%, 'fireworks' <1%. It sounds most like: 'a creaking door' (z +3.0), 'a balloon squeak' (z +3.0), 'a microwave beep' (z +2.9), 'a finger squeaking on glass' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then)."
+ },
+ "score_M01": {
+  "t": [
+   6.0,
+   25.6
+  ],
+  "describe": "19.60 s busy, 6.0 onsets/s (attack 36 ms). Sounds most like: an alarm clock beeping (z +2.6), footsteps on gravel (z +2.2), a glockenspiel run (z +2.2) [plausible reading]. Other readings: walking through dry leaves (nature, z +2.2), a crackling fire (ambience, z +2.2). AudioSet: Speech 0.56, Music 0.41, Rain 0.32. peak -2.0 dBFS, -14.3 LUFS, brightness 2.3 kHz, bandwidth 20.5 kHz, noise floor -24 dBFS, side/mid -11 dB.",
+  "match": "score_M01.wav: 'a quiet, dark film score with cello and piano' -> no match (unvalidated: music / instrument / voice description) (z +1.2; would rank #41 among 322 vocabulary descriptions; cosine 0.08). Forced choice vs your alternatives: 'a quiet, dark film score with cello and piano' 45%, 'no music, only room noise' 4%, 'a pop song' 7%, 'a fire crackling with no music' 45%. It sounds most like: 'an alarm clock beeping' (z +2.6), 'a woman speaking' (z +2.3), 'footsteps on gravel' (z +2.2), 'a glockenspiel run' (z +2.2)."
+ },
+ "score_M08a": {
+  "t": [
+   450.0,
+   470.0
+  ],
+  "describe": "20.00 s 23 separate events, tonal, pitch ~55 Hz (A1) (attack 24 ms). Sounds most like: a rising riser building tension (z +2.2), an electrical hum (z +1.9), a singing bowl (z +1.9) [weak reading]. Other readings: a saw cutting wood (everyday, z +1.5), being underwater (water, z +1.5). AudioSet: Cello 0.38, Music 0.34, Double bass 0.28. peak -8.8 dBFS, -24.4 LUFS, brightness 770 Hz, bandwidth 8.1 kHz, noise floor -30 dBFS, side/mid -12 dB.",
+  "match": "score_M08a.wav: 'quiet, tense chamber string music' -> strong (unvalidated: music / instrument / voice description) (z +3.1; would rank #1 among 322 vocabulary descriptions; cosine 0.34). Forced choice vs your alternatives: 'quiet, tense chamber string music' >99%, 'no music, only room noise' <1%, 'a pop song' <1%, 'people talking with no music' <1%. It sounds most like: 'dark and tense music' (z +2.6), 'strings ensemble' (z +2.4), 'mysterious music' (z +2.4), 'dreamy and ethereal music' (z +2.3)."
+ },
+ "score_M10a": {
+  "t": [
+   590.0,
+   606.0
+  ],
+  "describe": "16.00 s busy, 7.2 onsets/s, tonal, pitch ~119 Hz (Bb2) (attack 126 ms, decays in 10.5 s). Sounds most like: a kettle whistling (z +2.5), crickets at night (z +1.9), a police siren (z +1.8) [plausible reading]. Other readings: a rising riser building tension (transitions, z +1.6), a balloon squeak (foley, z +1.6). AudioSet: Music 0.44, Cello 0.36, Double bass 0.20. peak -6.9 dBFS, -18.8 LUFS, brightness 1.5 kHz, bandwidth 12.9 kHz, noise floor -26 dBFS, side/mid -5 dB.",
+  "match": "score_M10a.wav: 'tense, grinding string music' -> plausible (unvalidated: music / instrument / voice description) (z +2.7; would rank #2 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'tense, grinding string music' 89%, 'no music, only noise' <1%, 'a pop song' 11%, 'a gas hiss with no music' <1%. It sounds most like: 'singing vocals' (z +2.7), 'a kettle whistling' (z +2.5), 'dreamy and ethereal music' (z +2.3), 'sad and melancholic music' (z +2.0)."
+ },
+ "score_M11b": {
+  "t": [
+   790.0,
+   830.0
+  ],
+  "describe": "40.00 s busy, 4.7 onsets/s, loudness range 11 LU. Music (AudioSet Music 0.54). Unvalidated hints - genre: lo-fi hip hop beat (z +2.0); mood (wrong for ~1 in 5 tracks in a test): aggressive music (z +2.2), suspenseful build-up music (z +1.9). Sounds most like: an alarm clock beeping (z +2.7), a crackling fire (z +2.4), a police siren (z +2.1) [plausible reading]. Other readings: church bells (chimes, z +1.7). AudioSet: Speech 0.56, Music 0.54, Cello 0.24. peak -2.0 dBFS, -15.8 LUFS, brightness 1.3 kHz, bandwidth 20.5 kHz, side/mid -14 dB. Windows that read differently: 0:10.00-0:20.00 an alarm clock beeping (z +3.5; AudioSet Speech 0.33); 0:20.00-0:30.00 a police siren (z +3.0; AudioSet Speech 0.48); 0:30.00-0:40.00 a crackling fire (z +3.1; AudioSet Speech 0.44).",
+  "match": "score_M11b.wav: 'a slow, sad cello film score' -> no match (unvalidated: music / instrument / voice description) (z +0.1; would rank #145 among 322 vocabulary descriptions; cosine 0.03). Forced choice vs your alternatives: 'a slow, sad cello film score' 4%, 'no music, only noise' 13%, 'a pop song' 73%, 'a phone call with no music' 9%. It sounds most like: 'an alarm clock beeping' (z +2.7), 'a woman speaking' (z +2.6), 'a man speaking' (z +2.4), 'a crackling fire' (z +2.4)."
+ }
+}

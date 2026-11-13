@@ -1,0 +1,102 @@
+{
+ "why": "A review found the three \"My phone was on the counter.\" lines (10:05, 10:14, 10:56) carried the same weight; earshot heard the first two as the same plain narration. The author asked for each to go deeper: half an excuse, frightened after \"Emily?\", barely a breath. Three takes per line from tools/vo_tts.py (gemini-3.8-flash-tts, en-gb-training-10), ranked with earshot.",
+ "model": "gemini-3.8-flash-tts",
+ "voice": "en-gb-training-10",
+ "slots": [
+  {
+   "line": "L047",
+   "at": "Q11 69.0 (10:05)",
+   "rank_text": "a man calmly explaining something to himself in a quiet, steady, reasonable voice",
+   "scores": {
+    "V09 (old)": 4.8,
+    "V09c": 4.4,
+    "V09d": 4.2,
+    "V09b": 4.1
+   },
+   "chosen": "V09d",
+   "reason": "All four rank alike; V09d is the plainest speaking voice (\"a man speaking\" +3.0, no whisper among its top tags), so the next two can only go deeper from it."
+  },
+  {
+   "line": "L049",
+   "at": "Q11 78.2 (10:14)",
+   "rank_text": "a frightened man speaking fast and out of breath, gasping",
+   "scores": {
+    "V10c": 6.7,
+    "V10d": 5.7,
+    "V10b": 3.9,
+    "V10 (old)": 3.4
+   },
+   "chosen": "V10c",
+   "reason": "The clearest fear: AudioSet hears a gasp (0.63); quicker than the old take (1.86 s of speech against 3.46)."
+  },
+  {
+   "line": "L050",
+   "at": "Q12 36.0 (10:56)",
+   "rank_text": "a man whispering, broken, with almost no voice",
+   "scores": {
+    "V11d": 5.3,
+    "V11c": 5.0,
+    "V11b": 4.9,
+    "V11 (old)": 4.5
+   },
+   "chosen": "V11b",
+   "reason": "All three are whispers; V11b is the one that comes apart: \"My phone was...\" then a breath of 1.2 s, then \"on the counter.\" Lifted 2.5 dB to the old take's level so it is not lost in the silence."
+  }
+ ],
+ "takes": [
+  {
+   "id": "V09b",
+   "scene": "car park at dusk, turning slowly toward his car (10:05)",
+   "text": "My phone was on the counter.",
+   "style": "quietly reasonable, half an excuse: explaining the day to himself, holding on to the one small fact that still makes sense; puzzled, not yet afraid"
+  },
+  {
+   "id": "V09c",
+   "scene": "car park at dusk, turning slowly toward his car (10:05)",
+   "text": "My phone was on the counter.",
+   "style": "almost matter-of-fact, as if it explains everything; a small, bewildered certainty; quiet, to himself"
+  },
+  {
+   "id": "V09d",
+   "scene": "car park at dusk, turning slowly toward his car (10:05)",
+   "text": "My phone was on the counter.",
+   "style": "a man justifying himself under his breath, steady and plain, clinging to a simple fact; the fear not yet in his voice"
+  },
+  {
+   "id": "V10b",
+   "scene": "after 'Emily?' and no answer, just before he runs (10:14)",
+   "text": "My phone was on the counter.",
+   "style": "frightened: faster and breathless, the words tumbling out as the fear rises; urgent, not shouted"
+  },
+  {
+   "id": "V10c",
+   "scene": "after 'Emily?' and no answer, just before he runs (10:14)",
+   "text": "My phone was on the counter.",
+   "style": "panicked and quick, the breath catching between words, the voice tightening with dread"
+  },
+  {
+   "id": "V10d",
+   "scene": "after 'Emily?' and no answer, just before he runs (10:14)",
+   "text": "My phone was on the counter.",
+   "style": "the realisation hitting him: rapid, shaky and afraid, gasping the words out"
+  },
+  {
+   "id": "V11b",
+   "scene": "kneeling by the open car door, in total silence (10:56)",
+   "text": "My phone was on the counter.",
+   "style": "barely a breath: a broken whisper with almost no voice, slow, the words falling apart"
+  },
+  {
+   "id": "V11c",
+   "scene": "kneeling by the open car door, in total silence (10:56)",
+   "text": "My phone was on the counter.",
+   "style": "whispered, shattered and emptied out, so quiet it is almost only breath"
+  },
+  {
+   "id": "V11d",
+   "scene": "kneeling by the open car door, in total silence (10:56)",
+   "text": "My phone was on the counter.",
+   "style": "a faint, hoarse whisper, slow and broken, as if speaking costs him everything"
+  }
+ ]
+}

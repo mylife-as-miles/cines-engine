@@ -1,0 +1,7 @@
+{
+ "id": "M09a",
+ "model": "lyria-3-clip-preview",
+ "prompt": "A 25-second ambient instrumental: a single sustained high violin harmonic and a soft, airless glass-harmonica drone, motionless, uneasy and oppressive like a city in still midsummer heat. No melody, no pulse, no swell, no resolution, very quiet throughout. Not uplifting. Instrumental only, no drums, no vocals.",
+ "mime_type": "audio/mpeg",
+ "model_text": "<instrumental>"
+}

@@ -1,0 +1,301 @@
+<!doctype html><meta charset="utf-8"><title>B1 THE COUNTER</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_b.js"></script>
+<script>
+// AUTOPILOT · LOOK B "BRIGHT DAY" · 01 THE COUNTER
+// INT. KITCHEN - MOMENTS LATER (just after 6:14 A.M.). Low on the counter: the phone, plugged in beside the kettle, sits in the
+// kettle's cool shadow so its screen and green battery icon glow. Beyond (soft focus): Daniel heads upstairs, back turned;
+// his work bag waits by the front door in a patch of early sun, its outside pocket open and empty.
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM;
+  const f = OTM.frame(ctx, { seed: 11 });
+  const g = f.world, E = f.emissive;
+  const P = LB.cam({ x: 0.08, y: 1.2, z: 0, f: 1400, cx: 960, cy: 410 });
+  const Qp = pts => LB.poly(pts.map(p => P(p[0], p[1], p[2])));
+
+  const K = {
+    kWall: '#FFE0A0', kWallShade: '#F5C27F', ceil: '#FFE9BD',
+    floor: '#E8A15E', floorSun: '#FFD48A', floorLine: '#CF8748', floorLineSun: '#F2B66C',
+    hWall: '#C3C4F4', hWallSun: '#E7E2FF', hWallDark: '#A9A8E6', hCeil: '#D6D3FA',
+    door: '#3A74DA', doorShade: '#2C5DBD', glass: '#FFF3CF', brass: '#F8C24B', mat: '#C2574A',
+    bag: '#C27840', bagSun: '#EBA25F', bagShade: '#9A592D', pocket: '#B26B37', pocketIn: '#4F2A16',
+    tread: '#E3A86E', riser: '#F8E6D0', rail: '#9A5A35', baluster: '#FFFFFF', landing: '#FFEBD2', landWin: '#BFE6FF',
+    fridge: '#F9E4C6', fridgeShade: '#E8C9A6',
+    counter: '#FFF4E4', counterSun: '#FFF9EE', counterEdge: '#F0DCC6', counterShadow: '#C9B3D6',
+    cab: '#4B78DA', cabShade: '#3961C2', handle: '#F8C24B',
+    kettle: '#F2553F', kettleShade: '#BE3A31', kettleHi: '#FF9A7E', chrome: '#EEEBF4', chromeShade: '#B7B2C9', kettleBase: '#2B2838',
+    shadowFloor: '#B4706A',
+  };
+
+  // ======================= BACKGROUND (drawn into its own layer, then softened: depth of field) =======================
+  const bg = LB.layer(); const B = bg;
+  const bq = (pts, col) => { B.fillStyle = col; B.fill(Qp(pts)); };
+  const KZ = 3.6, HX0 = -2.0, HX1 = 0.42, HZ1 = 9.5;     // kitchen far wall depth; hall x-range; hall end
+  B.fillStyle = K.ceil; B.fillRect(0, 0, W, H);
+  // kitchen far wall with the wide opening into the hall
+  bq([[-6, 0, KZ], [6, 0, KZ], [6, 3.2, KZ], [-6, 3.2, KZ]], K.kWall);
+  // ---- the hall, seen through the opening ----
+  B.save(); B.clip(Qp([[HX0, 0, KZ], [HX1, 0, KZ], [HX1, 2.35, KZ], [HX0, 2.35, KZ]]));
+  B.fillStyle = K.hCeil; B.fillRect(0, 0, W, H);
+  bq([[HX0, 0, KZ], [HX0, 0, HZ1], [HX0, 4, HZ1], [HX0, 4, KZ]], K.hWall);              // hall left wall (front door is in it)
+  bq([[HX1, 0, KZ], [HX1, 0, HZ1], [HX1, 4, HZ1], [HX1, 4, KZ]], K.hWallDark);          // hall right wall (stairs run along it)
+  bq([[HX0, 0, KZ], [HX1, 0, KZ], [HX1, 0, HZ1], [HX0, 0, HZ1]], K.floor);              // hall floor
+  B.strokeStyle = K.floorLine; B.lineWidth = 1.6;
+  for (let x = HX0; x < HX1; x += 0.15) { const a = P(x, 0, KZ), b = P(x, 0, HZ1); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+  // landing at the top of the stairs: a bright wall and window (where he is going)
+  const SX0 = -0.95, SX1 = HX1, SZ0 = 4.9, N = 14, RISE = 0.19, GO = 0.25, SZ1 = SZ0 + N * GO;
+  bq([[HX0, 2.4, SZ1 + 0.6], [HX1, 2.4, SZ1 + 0.6], [HX1, 5, SZ1 + 0.6], [HX0, 5, SZ1 + 0.6]], K.landing);
+  bq([[-0.2, 3.05, SZ1 + 0.59], [0.36, 3.05, SZ1 + 0.59], [0.36, 4.4, SZ1 + 0.59], [-0.2, 4.4, SZ1 + 0.59]], K.landWin);
+  { const a = P(-0.2, 3.05, SZ1 + 0.59), b = P(0.36, 4.4, SZ1 + 0.59); f.emissive.fillStyle = 'rgba(200,235,255,0.22)'; f.emissive.fillRect(a[0], b[1], b[0] - a[0], a[1] - b[1]); }
+  // the upstairs ceiling slopes over the stair; a soft band of landing light down the right wall
+  B.save(); B.clip(Qp([[HX1, 0, KZ], [HX1, 0, HZ1], [HX1, 5, HZ1], [HX1, 5, KZ]]));
+  B.fillStyle = '#C9C2F2'; B.fill(Qp([[HX1, 2.2, SZ1 + 0.6], [HX1, 3.6, SZ0 + 1.0], [HX1, 5, SZ0 + 1.0], [HX1, 5, SZ1 + 0.6]])); B.restore();
+  // stairs (far to near)
+  for (let i = N; i >= 1; i--) {
+    const z0 = SZ0 + (i - 1) * GO, y0 = (i - 1) * RISE, y1 = i * RISE;
+    bq([[SX0, y1, z0], [SX1, y1, z0], [SX1, y1, z0 + GO], [SX0, y1, z0 + GO]], K.tread);
+    bq([[SX0, y0, z0], [SX1, y0, z0], [SX1, y1, z0], [SX0, y1, z0]], K.riser);
+  }
+  // stair string (side panel) on the open left side
+  bq([[SX0, 0, SZ0], [SX0, 0.12, SZ0 - 0.02], [SX0, N * RISE + 0.12, SZ1], [SX0, N * RISE - 0.1, SZ1]], '#FFF6EA');
+  B.fillStyle = '#FFFFFF'; B.fill(Qp([[SX0, -0.02, SZ0], [SX0, 0.2, SZ0], [SX0, N * RISE + 0.1, SZ1], [SX0, N * RISE - 0.15, SZ1]]));
+  // bannister: balusters + rail on the left side, newel post at the bottom
+  const railY = i => i * RISE + 0.9;
+  for (let i = 1; i <= N; i++) { const z = SZ0 + (i - 0.5) * GO, a = P(SX0 + 0.03, i * RISE, z), b = P(SX0 + 0.03, railY(i - 0.5), z); B.strokeStyle = K.baluster; B.lineWidth = Math.max(2, 0.035 * P.k(z)); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+  { const a = P(SX0 + 0.03, railY(0), SZ0 - 0.05), b = P(SX0 + 0.03, railY(N), SZ1); B.strokeStyle = K.rail; B.lineCap = 'round'; B.lineWidth = 0.06 * P.k(SZ0 + 1.5); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+  { const s = P.k(SZ0), a = P(SX0 + 0.03, 0, SZ0 - 0.05), b = P(SX0 + 0.03, 1.1, SZ0 - 0.05); B.fillStyle = K.rail; B.fill(LB.rr(a[0] - 0.045 * s, b[1], 0.09 * s, a[1] - b[1], 4)); B.fill(LB.ell(a[0], b[1], 0.065 * s, 0.05 * s)); }
+  // front door in the hall's left wall (seen obliquely), glass glowing with morning outside
+  const DZ0 = 4.15, DZ1 = 5.0;
+  bq([[HX0 + 0.002, 0, DZ0 - 0.07], [HX0 + 0.002, 0, DZ1 + 0.07], [HX0 + 0.002, 2.13, DZ1 + 0.07], [HX0 + 0.002, 2.13, DZ0 - 0.07]], '#FFF6EA');
+  bq([[HX0 + 0.004, 0, DZ0], [HX0 + 0.004, 0, DZ1], [HX0 + 0.004, 2.05, DZ1], [HX0 + 0.004, 2.05, DZ0]], K.door);
+  bq([[HX0 + 0.005, 1.25, DZ0 + 0.12], [HX0 + 0.005, 1.25, DZ1 - 0.12], [HX0 + 0.005, 1.9, DZ1 - 0.12], [HX0 + 0.005, 1.9, DZ0 + 0.12]], K.glass);
+  { const q = [P(HX0, 1.25, DZ0 + 0.12), P(HX0, 1.25, DZ1 - 0.12), P(HX0, 1.9, DZ1 - 0.12), P(HX0, 1.9, DZ0 + 0.12)]; E.fillStyle = 'rgba(255,240,200,0.6)'; E.fill(LB.poly(q)); }
+  bq([[HX0 + 0.005, 0.15, DZ0 + 0.12], [HX0 + 0.005, 0.15, DZ1 - 0.12], [HX0 + 0.005, 1.05, DZ1 - 0.12], [HX0 + 0.005, 1.05, DZ0 + 0.12]], K.doorShade);
+  bq([[HX0 + 0.006, 1.1, DZ0 + 0.25], [HX0 + 0.006, 1.1, DZ1 - 0.25], [HX0 + 0.006, 1.16, DZ1 - 0.25], [HX0 + 0.006, 1.16, DZ0 + 0.25]], K.brass);
+  bq([[HX0 + 0.05, 0.003, DZ0 + 0.02], [HX0 + 0.7, 0.003, DZ0 + 0.02], [HX0 + 0.7, 0.003, DZ1 - 0.02], [HX0 + 0.05, 0.003, DZ1 - 0.02]], K.mat);
+  // the sun patch: kitchen window off-frame right, light falls through the opening onto the hall floor, the bag and the shoes
+  const patch = [[0.55, 0, 2.9], [0.55, 0, 4.2], [-1.98, 0, 5.4], [-1.98, 0, 4.0]];
+  B.save(); B.clip(Qp([[HX0, 0, KZ], [HX1, 0, KZ], [HX1, 0, HZ1], [HX0, 0, HZ1]]));
+  B.fillStyle = K.floorSun; B.fill(Qp(patch));
+  B.save(); B.clip(Qp(patch)); B.strokeStyle = K.floorLineSun; B.lineWidth = 1.6;
+  for (let x = HX0; x < HX1; x += 0.15) { const a = P(x, 0, KZ), b = P(x, 0, HZ1); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+  // the window's cross bar, cast across the patch
+  B.fillStyle = K.floor; B.fill(Qp([[0.55, 0, 3.5], [0.55, 0, 3.6], [-1.98, 0, 4.8], [-1.98, 0, 4.7]]));
+  B.restore(); B.restore();
+  // light climbing the bottom of the left wall and door
+  B.save(); B.clip(Qp([[HX0, 0, KZ], [HX0, 0, HZ1], [HX0, 4, HZ1], [HX0, 4, KZ]])); B.fillStyle = 'rgba(255,236,190,0.55)'; B.fill(Qp([[HX0, 0, 4.0], [HX0, 0, 5.4], [HX0, 0.22, 5.55], [HX0, 0.22, 4.15]])); B.restore();
+  // Emily's little shoes and the work bag, by the door
+  {
+    const z = 4.25, s = P.k(z);
+    // tiny pink trainers
+    [[-1.62, 0], [-1.5, 0.05]].forEach(([x, dz], i) => {
+      const a = P(x, 0, z - 0.2 + dz), w = 0.1 * s, h = 0.055 * s;
+      LB.blob(B, LB.ell(a[0], a[1], w * 0.7, h * 0.25), K.shadowFloor, 0.4, 3);
+      B.fillStyle = '#FF8FB4'; B.fill(LB.rr(a[0] - w * 0.5, a[1] - h, w, h, [h * 0.6, h * 0.9, 2, 2]));
+      B.fillStyle = '#FFFFFF'; B.fill(LB.rr(a[0] - w * 0.5, a[1] - h * 0.28, w, h * 0.28, 2));
+      B.fillStyle = '#FFD23F'; B.fill(LB.rr(a[0] - w * 0.15, a[1] - h * 0.86, w * 0.3, h * 0.2, 2));
+    });
+    // the bag: leather messenger, flap closed, the outside slip pocket gaping open and empty
+    const x0 = -1.38, x1 = -0.9, hh = 0.34, zb = z - 0.05, a = P(x0, 0, zb), b = P(x1, hh, zb), w = b[0] - a[0], h = a[1] - b[1];
+    LB.blob(B, LB.ell(a[0] + w * 0.5, a[1], w * 0.62, h * 0.12), K.shadowFloor, 0.55, 5);
+    B.strokeStyle = K.bagShade; B.lineWidth = 0.035 * s; B.lineCap = 'round';
+    B.beginPath(); B.moveTo(a[0] + w * 0.04, b[1] + h * 0.18); B.bezierCurveTo(a[0] - w * 0.25, b[1] - h * 0.35, a[0] + w * 0.15, b[1] - h * 0.9, a[0] + w * 0.6, b[1] - h * 0.62); B.stroke();
+    const body = LB.rr(a[0], b[1], w, h, [w * 0.12, w * 0.12, w * 0.06, w * 0.06]);
+    B.fillStyle = K.bagSun; B.fill(body);
+    B.save(); B.clip(body); B.fillStyle = K.bag; B.fillRect(a[0] - 4, b[1], w * 0.2, h); B.fillStyle = K.bagShade; B.fillRect(a[0] - 4, a[1] - h * 0.1, w + 8, h * 0.12); B.restore();
+    const flap = LB.rr(a[0] - 1, b[1] - 1, w + 2, h * 0.5, [w * 0.12, w * 0.12, w * 0.1, w * 0.1]);
+    B.fillStyle = K.bag; B.fill(flap);
+    B.fillStyle = K.brass; [0.3, 0.7].forEach(k => { B.fill(LB.rr(a[0] + w * k - w * 0.045, b[1] + h * 0.34, w * 0.09, h * 0.2, 2)); });
+    // outside pocket: open top edge, dark and empty inside
+    const px = a[0] + w * 0.16, pw = w * 0.68, py = b[1] + h * 0.56, ph = h * 0.38;
+    // the gaping mouth of the pocket (dark, nothing in it), then the pocket face sagging open below it
+    B.fillStyle = '#3A1D0E'; B.fill(LB.ell(px + pw / 2, py + h * 0.02, pw * 0.47, h * 0.085));
+    B.fillStyle = K.pocket; B.fill(LB.spline([[px, py + 2, 1], [px + pw * 0.5, py + h * 0.07], [px + pw, py + 2, 1], [px + pw, py + ph, 1], [px, py + ph, 1]], true));
+    B.fillStyle = 'rgba(255,236,190,0.5)'; B.fill(LB.spline([[px + 3, py + 3], [px + pw * 0.5, py + h * 0.075], [px + pw - 3, py + 3], [px + pw * 0.5, py + h * 0.11]], true));
+  }
+  // ---- DANIEL: back turned, climbing, a little hunched (t-shirt and pyjama bottoms: it is before his shower) ----
+  {
+    const z = SZ0 + 2.55 * GO, s = P.k(z), hu = 0.45 * s;           // head unit = head diameter
+    const ft = P(-0.38, 3 * RISE, z);                                  // baseline: right foot on step 3
+    const bx = ft[0], by = ft[1];
+    const T = (x, y) => [bx + x * hu, by - y * hu];
+    const parts = [];
+    // legs (pyjama bottoms, a little baggy): left foot up on step 4, right foot on step 3 with the heel lifting
+    const hipL = T(-0.2, 1.95), kneeL = T(-0.3, 1.38), footL = T(-0.25, 0.58);
+    const hipR = T(0.2, 1.93), kneeR = T(0.25, 1.02), footR = T(0.21, 0.12);
+    parts.push(LB.limb(hipL, kneeL, footL, hu * 0.24, hu * 0.2, hu * 0.16));
+    parts.push(LB.limb(hipR, kneeR, footR, hu * 0.24, hu * 0.2, hu * 0.16));
+    parts.push(LB.ell(footL[0] - hu * 0.02, footL[1] + hu * 0.04, hu * 0.16, hu * 0.085));
+    parts.push(LB.ell(footR[0] + hu * 0.01, footR[1] + hu * 0.0, hu * 0.14, hu * 0.1));
+    // torso: a soft bean, the upper back rounded forward (tired), a gentle waist
+    parts.push(LB.spline([T(-0.42, 1.92), T(-0.47, 2.45), T(-0.6, 3.05), T(-0.48, 3.36), T(-0.16, 3.46), T(0.18, 3.46), T(0.5, 3.36), T(0.62, 3.05), T(0.49, 2.45), T(0.43, 1.92), T(0.0, 1.86)], true));
+    // t-shirt sleeves: short flares at the shoulders
+    parts.push(LB.roundPoly([T(-0.62, 3.22), T(-0.4, 3.32), T(-0.5, 2.82), T(-0.8, 2.86)], hu * 0.07));
+    parts.push(LB.roundPoly([T(0.64, 3.22), T(0.42, 3.32), T(0.52, 2.82), T(0.8, 2.88)], hu * 0.07));
+    // arms: left hand reaching up to the rail (pulling himself up), right arm loose, a slight bend
+    const shL = T(-0.55, 3.08), shR = T(0.55, 3.08);
+    const railHand = P(SX0 + 0.03, railY(3.5) + 0.02, SZ0 + 3.5 * GO);
+    parts.push(LB.limb(shL, T(-0.86, 2.62), [railHand[0] + hu * 0.06, railHand[1] + hu * 0.02], hu * 0.12, hu * 0.105, hu * 0.095));
+    parts.push(LB.ell(railHand[0] + hu * 0.04, railHand[1] + hu * 0.01, hu * 0.12, hu * 0.1));
+    parts.push(LB.limb(shR, T(0.7, 2.56), T(0.62, 2.08), hu * 0.12, hu * 0.105, hu * 0.095));
+    parts.push(LB.ell(T(0.6, 2.0)[0], T(0.6, 2.0)[1], hu * 0.12, hu * 0.13));
+    // head: big and round, sunk low between the shoulders (the hunch); ears a touch high (head bowed); a soft bed-head tuft
+    const hc = T(0.02, 3.6);
+    parts.push(LB.ell(hc[0], hc[1], hu * 0.5, hu * 0.5));
+    parts.push(LB.ell(hc[0] - hu * 0.49, hc[1] - hu * 0.04, hu * 0.08, hu * 0.12));
+    parts.push(LB.ell(hc[0] + hu * 0.49, hc[1] - hu * 0.04, hu * 0.08, hu * 0.12));
+    parts.push(LB.spline([[hc[0] - hu * 0.16, hc[1] - hu * 0.46], [hc[0] - hu * 0.12, hc[1] - hu * 0.62], [hc[0] - hu * 0.02, hc[1] - hu * 0.66], [hc[0] - hu * 0.04, hc[1] - hu * 0.56], [hc[0] + hu * 0.06, hc[1] - hu * 0.6, 1], [hc[0] + hu * 0.16, hc[1] - hu * 0.54], [hc[0] + hu * 0.12, hc[1] - hu * 0.44]], true));
+    LB.blob(B, LB.ell(footR[0], footR[1] + hu * 0.1, hu * 0.3, hu * 0.06), '#9A6A60', 0.45, 4);
+    LB.blob(B, LB.ell(footL[0], footL[1] + hu * 0.1, hu * 0.3, hu * 0.06), '#9A6A60', 0.45, 4);
+    LB.figure(B, parts, { light: { dx: 0.25, dy: -1 }, shadeW: hu * 0.2, liftW: 0, rim: '#FFE6C8', rimW: 1.8, rimAlpha: 0.7 });
+  }
+  B.restore();
+  // opening jambs: the edge of the kitchen wall
+  B.strokeStyle = K.kWallShade; B.lineWidth = 10;
+  [[HX0, KZ], [HX1, KZ]].forEach(([x, z]) => { const a = P(x, 0, z), b = P(x, 2.35, z); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); });
+  { const a = P(HX0, 2.35, KZ), b = P(HX1, 2.35, KZ); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+  // kitchen floor (near), and its sun stripe running into the hall
+  { const nf = Qp([[-6, 0, 0.5], [6, 0, 0.5], [6, 0, KZ], [-6, 0, KZ]]); const yA = P(0, 0, KZ)[1];
+    LB.grad(B, nf, 0, yA, 0, H, [[0, '#DE9660'], [0.45, '#CF845A'], [1, '#B86E55']]);
+    B.save(); B.clip(nf); B.strokeStyle = 'rgba(160,90,60,0.35)'; B.lineWidth = 1.6;
+    for (let x = -6; x < 6; x += 0.15) { const a = P(x, 0, 0.6), b = P(x, 0, KZ); B.beginPath(); B.moveTo(a[0], a[1]); B.lineTo(b[0], b[1]); B.stroke(); }
+    B.fillStyle = K.floorSun; B.fill(Qp([[1.6, 0, 1.9], [1.6, 0, 3.3], [0.55, 0, 4.2], [0.55, 0, 2.9]])); B.restore(); }
+  // a wooden threshold strip where the kitchen floor meets the hall
+  bq([[HX0, 0.004, KZ - 0.07], [HX1, 0.004, KZ - 0.07], [HX1, 0.004, KZ + 0.02], [HX0, 0.004, KZ + 0.02]], '#F3C28A');
+  bq([[HX0, 0.004, KZ - 0.075], [HX1, 0.004, KZ - 0.075], [HX1, 0.004, KZ - 0.06], [HX0, 0.004, KZ - 0.06]], '#B86F45');
+  // the fridge behind the counter, with a crayon sun pinned to it (Emily's)
+  {
+    const z = 3.45; const a = P(0.85, 0, z), b = P(1.55, 1.85, z);
+    B.fillStyle = K.fridge; B.fill(LB.rr(a[0], b[1], b[0] - a[0], a[1] - b[1], 22));
+    B.save(); B.clip(LB.rr(a[0], b[1], b[0] - a[0], a[1] - b[1], 22)); B.fillStyle = K.fridgeShade; B.fillRect(a[0], b[1], (b[0] - a[0]) * 0.14, a[1] - b[1]); B.restore();
+    B.fillStyle = K.fridgeShade; B.fillRect(a[0], P(0.85, 1.25, z)[1], b[0] - a[0], 4);
+    const d0 = P(1.0, 1.32, z - 0.01), d1 = P(1.28, 1.66, z - 0.01);
+    B.fillStyle = '#FFFFFF'; B.fill(LB.rr(d0[0], d1[1], d1[0] - d0[0], d0[1] - d1[1], 4));
+    const cxs = (d0[0] + d1[0]) / 2, cys = (d0[1] + d1[1]) / 2, rs = (d1[0] - d0[0]) * 0.18;
+    B.strokeStyle = '#FFB21F'; B.lineWidth = 3; B.lineCap = 'round';
+    for (let i = 0; i < 9; i++) { const an = i / 9 * Math.PI * 2; B.beginPath(); B.moveTo(cxs + Math.cos(an) * rs * 1.4, cys + Math.sin(an) * rs * 1.4); B.lineTo(cxs + Math.cos(an) * rs * 2.1, cys + Math.sin(an) * rs * 2.1); B.stroke(); }
+    B.fillStyle = '#FFC93A'; B.beginPath(); B.arc(cxs, cys, rs, 0, 7); B.fill();
+    B.fillStyle = '#F2553F'; B.beginPath(); B.arc(cxs, d1[1] - 2, 5, 0, 7); B.fill();
+  }
+  // the window's light thrown onto the far kitchen wall and the fridge (warm, with the cross bar's shadow)
+  { const wp = Qp([[0.62, 0.95, KZ - 0.02], [1.75, 1.08, KZ - 0.02], [1.75, 2.12, KZ - 0.02], [0.62, 1.98, KZ - 0.02]]);
+    B.save(); B.clip(wp); B.globalCompositeOperation = 'soft-light'; B.fillStyle = 'rgba(255,236,170,0.9)'; B.fillRect(0, 0, W, H); B.globalCompositeOperation = 'source-over';
+    B.fillStyle = 'rgba(255,244,214,0.38)'; B.fillRect(0, 0, W, H);
+    B.fillStyle = 'rgba(150,100,90,0.18)'; B.fill(Qp([[1.12, 0.9, KZ - 0.03], [1.2, 0.9, KZ - 0.03], [1.2, 2.2, KZ - 0.03], [1.12, 2.2, KZ - 0.03]])); B.fill(Qp([[0.5, 1.5, KZ - 0.03], [1.9, 1.62, KZ - 0.03], [1.9, 1.69, KZ - 0.03], [0.5, 1.57, KZ - 0.03]]));
+    B.restore(); }
+  // the room is a touch dimmer than the sunlit things in it, so the phone stays the brightest note
+  B.save(); B.globalCompositeOperation = 'multiply'; B.fillStyle = 'rgba(232,222,240,0.55)'; B.fillRect(0, 0, W, H); B.restore();
+  // soften the whole background plate: depth of field
+  g.save(); g.filter = 'blur(1.6px)'; g.drawImage(bg.canvas, 0, 0); g.restore();
+  // gentle light falloff on the big flat walls: warmer and brighter toward the window (right), cooler up in the left corner
+  g.save(); g.globalCompositeOperation = 'multiply';
+  { const gr = g.createRadialGradient(140, 60, 40, 140, 60, 900); gr.addColorStop(0, 'rgba(150,120,200,0.32)'); gr.addColorStop(1, 'rgba(150,120,200,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+  g.restore();
+  g.save(); g.globalCompositeOperation = 'screen';
+  { const gr = g.createRadialGradient(1900, 380, 60, 1900, 380, 760); gr.addColorStop(0, 'rgba(255,230,170,0.35)'); gr.addColorStop(1, 'rgba(255,230,170,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+  g.restore();
+  // the morning sun made visible: a beam from the kitchen window (off right) down to the patch by the door, motes turning in it
+  { const pA = P(0.55, 0, 4.2), pB = P(-1.98, 0, 4.0), pC = P(-1.98, 0, 5.4);
+    // (it passes below Daniel's feet: the beam crosses the kitchen and the hall floor, not the stairwell)
+    const beam = [[W + 80, 230], [W + 80, 560], [pA[0], pA[1]], [pB[0] + 90, pB[1] - 30]];
+    LB.shaft(g, beam, '#FFE9B4', 0.26, 26);
+    LB.shaft(g, [[W + 80, 300], [W + 80, 430], [pA[0] - 160, pA[1] - 60], [pB[0] + 220, pB[1] - 60]], '#FFF3D2', 0.12, 18);
+    LB.motes(g, beam, 70, '#FFF6DC', 'b1-motes', 2.2); }
+
+  // ======================= FOREGROUND (sharp): counter, kettle, phone =======================
+  const CT = 0.92, CX0 = 0.16, CZ1 = 1.15;
+  const sun = [-0.88, -0.3, -0.2];                                    // low morning sun, travelling left and down
+  const onCounter = (x, y, z) => { const t = (y - CT) / -sun[1]; return [x + sun[0] * t, CT, z + sun[2] * t]; };
+  // counter end panel (blue cabinet side, in shade) and top
+  g.fillStyle = K.cabShade; g.fill(Qp([[CX0, CT - 0.04, 0.2], [CX0, CT - 0.04, CZ1], [CX0, -1, CZ1], [CX0, -1, 0.2]]));
+  g.fillStyle = K.cab; g.fill(Qp([[CX0, CT - 0.04, CZ1], [CX0 + 0.02, CT - 0.04, CZ1], [CX0 + 0.02, -1, CZ1], [CX0, -1, CZ1]]));
+  // a brass handle on the end panel
+  { const a = P(CX0 - 0.002, 0.7, 0.42), b = P(CX0 - 0.002, 0.7, 0.62); g.strokeStyle = K.handle; g.lineWidth = 12; g.lineCap = 'round'; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+  g.fillStyle = K.counterEdge; g.fill(Qp([[CX0, CT, 0.2], [CX0, CT, CZ1], [CX0, CT - 0.04, CZ1], [CX0, CT - 0.04, 0.2]]));
+  g.fillStyle = K.counterSun; g.fill(Qp([[CX0, CT, 0.2], [4, CT, 0.2], [4, CT, CZ1], [CX0, CT, CZ1]]));
+
+  // kettle geometry
+  const KX = 0.555, KZp = 0.84, KR = 0.112, KH = 0.2;
+  // shadows on the counter (cool lilac, cel): projected along the sun, hulled, kept on the counter top
+  const hull = pts => { pts = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lo = [], up = []; pts.forEach(p => { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); });
+    pts.slice().reverse().forEach(p => { while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }); return lo.slice(0, -1).concat(up.slice(0, -1)); };
+  const counterTop = Qp([[CX0, CT, 0.2], [4, CT, 0.2], [4, CT, CZ1], [CX0, CT, CZ1]]);
+  const castOnCounter = (pts3, col, alpha) => {
+    const xz = hull(pts3.map(p => onCounter(...p)).map(q => [q[0], q[2]]));
+    g.save(); g.clip(counterTop); g.globalCompositeOperation = 'multiply'; g.globalAlpha = alpha == null ? 1 : alpha; g.fillStyle = col;
+    g.fill(LB.poly(xz.map(q => P(q[0], CT, q[1])))); g.restore();
+  };
+  {
+    const pts = [];
+    for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; pts.push([KX + KR * Math.cos(a), CT, KZp + KR * Math.sin(a)]); pts.push([KX + KR * 0.78 * Math.cos(a), CT + KH * 0.92, KZp + KR * 0.78 * Math.sin(a)]); }
+    pts.push([KX, CT + KH + 0.04, KZp], [KX - KR * 0.55, CT + KH + 0.07, KZp], [KX + KR * 0.55, CT + KH + 0.07, KZp], [KX - KR * 1.45, CT + KH * 0.85, KZp]);
+    castOnCounter(pts, K.counterShadow);
+  }
+  // the phone's own shadow
+  const PZ = 0.7, PX0 = 0.22, PX1 = 0.295, PL = 0.15, lean = 0.085;
+  castOnCounter([[PX0, CT, PZ], [PX1, CT, PZ], [PX1, CT + PL * 0.97, PZ + lean], [PX0, CT + PL * 0.97, PZ + lean]], '#B49DC8', 0.9);
+  // cable: from the phone's port, a lazy loop on the counter, then away behind the kettle
+  {
+    const pts = [[(PX0 + PX1) / 2, CT + 0.004, PZ - 0.003], [0.275, CT, 0.672], [0.33, CT, 0.668], [0.39, CT, 0.69], [0.44, CT, 0.73], [0.5, CT, 0.79]].map(p => P(...p));
+    g.strokeStyle = '#FFFFFF'; g.lineWidth = 7; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(LB.spline(pts, false));
+    g.strokeStyle = 'rgba(150,120,190,0.35)'; g.lineWidth = 2; g.save(); g.translate(0, 2.5); g.stroke(LB.spline(pts, false)); g.restore();
+  }
+  // the kettle: retro dome, tomato red; the window light from the right gives it one hard highlight
+  {
+    const s = P.k(KZp), c = P(KX, CT, KZp), r = KR * s, hgt = KH * s, cx = c[0], cb = c[1];
+    LB.blob(g, LB.ell(cx - r * 0.1, cb - 3, r * 1.1, r * 0.12), '#6E3A55', 0.4, 8);
+    g.fillStyle = K.kettleBase; g.fill(LB.rr(cx - r * 0.98, cb - r * 0.16, r * 1.96, r * 0.2, 10));
+    const body = LB.spline([[cx - r * 0.95, cb - r * 0.12], [cx - r * 1.05, cb - hgt * 0.45], [cx - r * 0.82, cb - hgt * 0.9], [cx - r * 0.42, cb - hgt * 1.07],
+      [cx + r * 0.42, cb - hgt * 1.07], [cx + r * 0.82, cb - hgt * 0.9], [cx + r * 1.05, cb - hgt * 0.45], [cx + r * 0.95, cb - r * 0.12]], true);
+    const spout = LB.spline([[cx - r * 0.8, cb - hgt * 0.34], [cx - r * 1.25, cb - hgt * 0.5], [cx - r * 1.5, cb - hgt * 0.8], [cx - r * 1.46, cb - hgt * 0.88], [cx - r * 1.2, cb - hgt * 0.72], [cx - r * 0.78, cb - hgt * 0.62]], true);
+    g.fillStyle = K.kettle; g.fill(spout); g.fill(body);
+    g.save(); g.clip(body); g.fillStyle = K.kettleShade; g.fill(LB.spline([[cx - r * 1.2, cb], [cx - r * 1.2, cb - hgt * 1.2], [cx - r * 0.25, cb - hgt * 1.2], [cx - r * 0.55, cb - hgt * 0.6], [cx - r * 0.5, cb]], true)); g.restore();
+    g.save(); g.clip(spout); g.fillStyle = K.kettleShade; g.fillRect(cx - r * 2, cb - hgt, r * 1.25, hgt); g.restore();
+    // the phone's screen light picked up on the kettle's shaded flank and spout
+    g.save(); g.clip(body); g.globalCompositeOperation = 'screen'; { const gr = g.createRadialGradient(cx - r * 1.4, cb - hgt * 0.3, 4, cx - r * 1.4, cb - hgt * 0.3, r * 1.1); gr.addColorStop(0, 'rgba(70,200,160,0.4)'); gr.addColorStop(1, 'rgba(70,200,160,0)'); g.fillStyle = gr; g.fillRect(cx - r * 2.5, cb - hgt * 1.5, r * 2.5, hgt * 1.6); } g.restore();
+    g.save(); g.clip(body); g.fillStyle = K.kettleHi; g.fill(LB.spline([[cx + r * 0.52, cb - hgt * 0.95], [cx + r * 0.86, cb - hgt * 0.72], [cx + r * 0.9, cb - hgt * 0.35], [cx + r * 0.78, cb - hgt * 0.36], [cx + r * 0.7, cb - hgt * 0.7]], true)); g.restore();
+    g.fillStyle = K.chromeShade; g.fill(LB.ell(cx, cb - hgt * 1.06, r * 0.5, r * 0.12)); g.fillStyle = K.chrome; g.fill(LB.ell(cx + r * 0.04, cb - hgt * 1.07, r * 0.42, r * 0.09));
+    g.fillStyle = K.kettleBase; g.fill(LB.rr(cx - r * 0.1, cb - hgt * 1.07 - r * 0.24, r * 0.2, r * 0.22, 6));
+    g.strokeStyle = K.chromeShade; g.lineWidth = r * 0.15; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx - r * 0.6, cb - hgt * 0.98); g.bezierCurveTo(cx - r * 0.5, cb - hgt * 1.6, cx + r * 0.5, cb - hgt * 1.6, cx + r * 0.6, cb - hgt * 0.98); g.stroke();
+    g.strokeStyle = K.chrome; g.lineWidth = r * 0.06; g.beginPath(); g.moveTo(cx - r * 0.2, cb - hgt * 1.43); g.bezierCurveTo(cx + r * 0.05, cb - hgt * 1.5, cx + r * 0.35, cb - hgt * 1.42, cx + r * 0.5, cb - hgt * 1.2); g.stroke();
+  }
+  // the phone: standing, tipped back against a little stand, in the kettle's shadow; screen lit with the battery icon
+  {
+    const b0 = P(PX0, CT, PZ), b1 = P(PX1, CT, PZ), t0 = P(PX0 + 0.003, CT + PL * 0.97, PZ + lean), t1 = P(PX1 - 0.003, CT + PL * 0.97, PZ + lean);
+    // stand (white wedge peeking behind)
+    g.fillStyle = '#EDE6F2'; g.fill(LB.poly([P(PX0 + 0.01, CT, PZ + 0.03), P(PX1 - 0.01, CT, PZ + 0.03), P(PX1 - 0.012, CT + 0.06, PZ + 0.07), P(PX0 + 0.012, CT + 0.06, PZ + 0.07)]));
+    const phone = LB.roundPoly([[b0[0], b0[1]], [b1[0], b1[1]], [t1[0], t1[1]], [t0[0], t0[1]]], 20);
+    LB.blob(g, LB.ell((b0[0] + b1[0]) / 2, b0[1] - 2, (b1[0] - b0[0]) * 0.56, 7), '#4A3460', 0.6, 4);
+    g.fillStyle = '#1D1B29'; g.fill(phone);
+    g.save(); g.clip(phone); g.fillStyle = '#2E2B40'; g.fill(LB.poly([[t1[0] - 6, t1[1]], [t1[0] + 4, t1[1]], [b1[0] + 4, b1[1]], [b1[0] - 6, b1[1]]])); g.restore();
+    const cx = (b0[0] + b1[0] + t0[0] + t1[0]) / 4, cy = (b0[1] + b1[1] + t0[1] + t1[1]) / 4;
+    const ins = (p, k) => [p[0] + (cx - p[0]) * k, p[1] + (cy - p[1]) * k];
+    const scr = LB.roundPoly([ins(b0, 0.1), ins(b1, 0.1), ins(t1, 0.09), ins(t0, 0.09)], 13);
+    LB.radial(g, scr, cx, cy + 20, 6, 190, [[0, '#2A3F70'], [1, '#121935']]);
+    // lock-screen time (just after six) and the charging icon
+    const sw = Math.hypot(b1[0] - b0[0], b1[1] - b0[1]);
+    OTM.text(g, '6:17', cx, cy - sw * 0.66, { family: 'Libre Franklin', weight: 500, size: Math.round(sw * 0.25), color: '#E8EEFF', align: 'center' });
+    const bw = sw * 0.56, bh = bw * 0.48, bx = cx - bw / 2 - 2, byy = cy + sw * 0.1;
+    g.lineWidth = 4; g.strokeStyle = '#DFFFE9'; g.stroke(LB.rr(bx, byy - bh / 2, bw, bh, 7));
+    g.fillStyle = '#DFFFE9'; g.fill(LB.rr(bx + bw + 3, byy - bh * 0.2, 6, bh * 0.4, 2));
+    g.fillStyle = LB.C.phoneGreen; g.fill(LB.rr(bx + 5, byy - bh / 2 + 5, bw * 0.16, bh - 10, 3));
+    g.fillStyle = '#FFFFFF'; g.fill(LB.poly([[bx + bw * 0.58, byy - bh * 0.4], [bx + bw * 0.38, byy + bh * 0.06], [bx + bw * 0.5, byy + bh * 0.06], [bx + bw * 0.42, byy + bh * 0.42], [bx + bw * 0.64, byy - bh * 0.1], [bx + bw * 0.52, byy - bh * 0.1]]));
+    OTM.text(g, '7%', cx, byy + bh * 1.35, { family: 'Libre Franklin', weight: 700, size: Math.round(sw * 0.15), color: '#A9F5C4', align: 'center' });
+    // glass sheen
+    g.save(); g.clip(scr); g.globalAlpha = 0.1; g.fillStyle = '#FFFFFF'; g.fill(LB.poly([[t0[0], t0[1]], [t0[0] + sw * 0.45, t0[1]], [b0[0] + sw * 0.05, b0[1]], [b0[0] - sw * 0.4, b0[1]]])); g.restore();
+    // the screen's light spills onto the shaded counter in front of it
+    g.save(); g.clip(counterTop); g.globalCompositeOperation = 'screen';
+    { const gr = g.createRadialGradient(cx, b0[1] + 6, 4, cx, b0[1] + 6, 170); gr.addColorStop(0, 'rgba(90,200,170,0.45)'); gr.addColorStop(1, 'rgba(90,200,170,0)'); g.fillStyle = gr; g.fillRect(cx - 200, b0[1] - 120, 400, 240); }
+    g.restore();
+    // emissive: the screen glows, the icon blooms green
+    E.fillStyle = 'rgba(70,110,230,0.45)'; E.fill(scr);
+    E.fillStyle = 'rgba(70,235,130,1)'; E.fill(LB.rr(bx - 8, byy - bh / 2 - 8, bw + 22, bh + 16, 12));
+    E.fillStyle = 'rgba(70,235,130,0.5)'; E.fill(LB.rr(bx - 30, byy - bh / 2 - 30, bw + 66, bh + 60, 30));
+  }
+
+  f.finish({ grain: 0.03, fibre: 0, vignette: 0, halation: 0.8, letterbox: 1.7778, beforePost: c => LB.vignette(c, '#5B2C3E', 0.32, 0.5, 1.2) });
+  LB.caption(ctx, ['When did you realise?'], { y: 1012, size: 42, x: 620, weight: 500 });
+  window.FRAME_READY = true;
+})();
+</script>

@@ -1,0 +1,18 @@
+{
+ "model": "gemini-3.8-flash-tts",
+ "voice": "en-gb-podcaster-3",
+ "lines": [
+  {
+   "id": "R01",
+   "scene": "bathroom, morning (radio downstairs)",
+   "text": "We're expecting another scorcher today. Temperatures will climb well into the thirties by lunchtime\u2014",
+   "style": "a bright, breezy morning radio presenter, upbeat and chatty, mid-flow"
+  },
+  {
+   "id": "R02",
+   "scene": "the drive home, evening",
+   "text": "...the hottest day of the year so far. Temperatures are expected to ease overnight\u2014",
+   "style": "a relaxed evening radio presenter, calm and easy, mid-sentence"
+  }
+ ]
+}

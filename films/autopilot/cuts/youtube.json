@@ -1,0 +1,166 @@
+{
+ "name": "YouTube cut",
+ "why": "A shorter cut for YouTube, kept beside the director's cut: no title card (the film starts on the 6:14 alarm) and about 61 s of wordless shot tails trimmed from the routine, the drive, the office, the heat and 5:37. Breakfast, the mirror scene, the routine montage, Q11 and Q12 are untouched. Every cut removes the end of a shot after its subtitle has gone, so nothing jumps; the soundtrack is rebuilt on the new clock (tools/youtube_cut.py), not chopped.",
+ "remove": [
+  [
+   0.0,
+   4.5,
+   "Q01 the title card (the alarm starts at 4.5 s, on black)"
+  ],
+  [
+   26.0,
+   29.0,
+   "Q01 the dark window, tail"
+  ],
+  [
+   67.0,
+   70.0,
+   "Q02 C1, tail"
+  ],
+  [
+   174.5,
+   180.0,
+   "Q04 C1, tail; Q05 the car baking, head (keeps the unlock at 182.5)"
+  ],
+  [
+   243.5,
+   246.0,
+   "Q05 the empty road behind, tail"
+  ],
+  [
+   248.0,
+   249.0,
+   "Q06 the bakery, tail"
+  ],
+  [
+   251.0,
+   252.0,
+   "Q06 the first lights, tail"
+  ],
+  [
+   254.0,
+   255.0,
+   "Q06 the second lights, tail"
+  ],
+  [
+   257.0,
+   258.0,
+   "Q06 the crossing, tail"
+  ],
+  [
+   260.0,
+   261.0,
+   "Q06 the van, tail"
+  ],
+  [
+   285.4,
+   290.0,
+   "Q06 thinking about work, tail; the second drumming shot"
+  ],
+  [
+   293.0,
+   294.0,
+   "Q07 8:32, tail"
+  ],
+  [
+   304.0,
+   306.0,
+   "Q07 after the BEEP, tail"
+  ],
+  [
+   309.0,
+   311.0,
+   "Q07 his reflection along the cars, tail"
+  ],
+  [
+   318.0,
+   320.0,
+   "Q07 the cool air, tail"
+  ],
+  [
+   341.5,
+   344.0,
+   "Q07 the laptop wakes, tail"
+  ],
+  [
+   346.2,
+   347.4,
+   "Q08 the projector lens, tail"
+  ],
+  [
+   349.8,
+   351.0,
+   "Q08 numbers on the wall, tail"
+  ],
+  [
+   412.4,
+   416.0,
+   "Q08 the hot day behind glass, tail"
+  ],
+  [
+   421.2,
+   423.2,
+   "Q09 the counter, afternoon, tail"
+  ],
+  [
+   426.7,
+   428.0,
+   "Q09 the counter, tight, tail"
+  ],
+  [
+   431.2,
+   432.0,
+   "Q09 the shop window, tail"
+  ],
+  [
+   435.6,
+   436.4,
+   "Q09 the pedestrian, tail"
+  ],
+  [
+   439.2,
+   440.0,
+   "Q09 the dog, tail"
+  ],
+  [
+   443.2,
+   444.0,
+   "Q09 the ice, tail"
+  ],
+  [
+   447.2,
+   448.0,
+   "Q09 glass and brick and metal, tail"
+  ],
+  [
+   450.0,
+   450.8,
+   "Q09 the refrigerated office, tail"
+  ],
+  [
+   470.5,
+   474.0,
+   "Q09 back to work, tail"
+  ],
+  [
+   486.6,
+   487.4,
+   "Q10 Priya, tail"
+  ],
+  [
+   496.7,
+   498.2,
+   "Q10 the walk to the car, tail"
+  ],
+  [
+   526.4,
+   528.4,
+   "Q10 the radio turned down, tail"
+  ],
+  [
+   534.4,
+   536.0,
+   "Q10 the mirror holds the road, tail"
+  ]
+ ]
+}

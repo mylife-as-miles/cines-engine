@@ -1,0 +1,383 @@
+{
+ "total": 356.029,
+ "lines": [
+  {
+   "id": "C00",
+   "speaker": "cael",
+   "file": "C00.wav",
+   "start": 2.6,
+   "end": 7.479
+  },
+  {
+   "id": "L01",
+   "speaker": "narrator",
+   "file": "L01.wav",
+   "start": 16.619,
+   "end": 20.389
+  },
+  {
+   "id": "L02",
+   "speaker": "narrator",
+   "file": "L02.wav",
+   "start": 20.729,
+   "end": 22.977
+  },
+  {
+   "id": "L03",
+   "speaker": "narrator",
+   "file": "L03.wav",
+   "start": 23.317,
+   "end": 31.323
+  },
+  {
+   "id": "L05",
+   "speaker": "narrator",
+   "file": "L05.wav",
+   "start": 31.663,
+   "end": 37.455
+  },
+  {
+   "id": "L06",
+   "speaker": "narrator",
+   "file": "L06.wav",
+   "start": 37.795,
+   "end": 41.983
+  },
+  {
+   "id": "D01",
+   "speaker": "rider",
+   "file": "D01.wav",
+   "start": 42.883,
+   "end": 46.75
+  },
+  {
+   "id": "L07",
+   "speaker": "narrator",
+   "file": "L07.wav",
+   "start": 47.25,
+   "end": 51.393
+  },
+  {
+   "id": "A01",
+   "speaker": "captain",
+   "file": "A01.wav",
+   "start": 52.193,
+   "end": 54.273
+  },
+  {
+   "id": "L08",
+   "speaker": "narrator",
+   "file": "L08.wav",
+   "start": 54.773,
+   "end": 59.967
+  },
+  {
+   "id": "L09",
+   "speaker": "narrator",
+   "file": "L09.wav",
+   "start": 60.867,
+   "end": 69.188
+  },
+  {
+   "id": "L09a",
+   "speaker": "narrator",
+   "file": "L09a.wav",
+   "start": 69.788,
+   "end": 80.138
+  },
+  {
+   "id": "L10",
+   "speaker": "narrator",
+   "file": "L10.wav",
+   "start": 81.038,
+   "end": 84.494
+  },
+  {
+   "id": "L11",
+   "speaker": "narrator",
+   "file": "L11.wav",
+   "start": 87.434,
+   "end": 94.769
+  },
+  {
+   "id": "L12",
+   "speaker": "narrator",
+   "file": "L12.wav",
+   "start": 95.109,
+   "end": 100.335
+  },
+  {
+   "id": "L13",
+   "speaker": "narrator",
+   "file": "L13.wav",
+   "start": 100.675,
+   "end": 107.781
+  },
+  {
+   "id": "A02",
+   "speaker": "guard",
+   "file": "A02.wav",
+   "start": 108.381,
+   "end": 110.264
+  },
+  {
+   "id": "L14",
+   "speaker": "narrator",
+   "file": "L14.wav",
+   "start": 110.864,
+   "end": 112.106
+  },
+  {
+   "id": "L15",
+   "speaker": "narrator",
+   "file": "L15.wav",
+   "start": 113.106,
+   "end": 118.891
+  },
+  {
+   "id": "L16",
+   "speaker": "narrator",
+   "file": "L16.wav",
+   "start": 119.231,
+   "end": 126.338
+  },
+  {
+   "id": "L17",
+   "speaker": "narrator",
+   "file": "L17.wav",
+   "start": 127.038,
+   "end": 135.171
+  },
+  {
+   "id": "L18",
+   "speaker": "narrator",
+   "file": "L18.wav",
+   "start": 139.511,
+   "end": 148.323
+  },
+  {
+   "id": "L19",
+   "speaker": "narrator",
+   "file": "L19.wav",
+   "start": 148.663,
+   "end": 156.598
+  },
+  {
+   "id": "L20",
+   "speaker": "narrator",
+   "file": "L20.wav",
+   "start": 156.938,
+   "end": 164.911
+  },
+  {
+   "id": "L21",
+   "speaker": "narrator",
+   "file": "L21.wav",
+   "start": 165.251,
+   "end": 167.602
+  },
+  {
+   "id": "L22",
+   "speaker": "narrator",
+   "file": "L22.wav",
+   "start": 170.542,
+   "end": 175.608
+  },
+  {
+   "id": "L23",
+   "speaker": "narrator",
+   "file": "L23.wav",
+   "start": 175.948,
+   "end": 181.948
+  },
+  {
+   "id": "L24",
+   "speaker": "narrator",
+   "file": "L24.wav",
+   "start": 182.548,
+   "end": 185.704
+  },
+  {
+   "id": "L25",
+   "speaker": "narrator",
+   "file": "L25.wav",
+   "start": 186.504,
+   "end": 191.359
+  },
+  {
+   "id": "L26",
+   "speaker": "narrator",
+   "file": "L26.wav",
+   "start": 195.299,
+   "end": 201.682
+  },
+  {
+   "id": "L28",
+   "speaker": "narrator",
+   "file": "L28.wav",
+   "start": 202.022,
+   "end": 207.739
+  },
+  {
+   "id": "L29",
+   "speaker": "narrator",
+   "file": "L29.wav",
+   "start": 208.539,
+   "end": 214.727
+  },
+  {
+   "id": "L30",
+   "speaker": "narrator",
+   "file": "L30.wav",
+   "start": 215.427,
+   "end": 220.947
+  },
+  {
+   "id": "A03",
+   "speaker": "arbiter",
+   "file": "A03.wav",
+   "start": 221.647,
+   "end": 224.754
+  },
+  {
+   "id": "L31",
+   "speaker": "narrator",
+   "file": "L31.wav",
+   "start": 225.454,
+   "end": 229.453
+  },
+  {
+   "id": "A04",
+   "speaker": "herald",
+   "file": "A04.wav",
+   "start": 229.793,
+   "end": 232.564
+  },
+  {
+   "id": "L32",
+   "speaker": "narrator",
+   "file": "L32.wav",
+   "start": 233.164,
+   "end": 237.842
+  },
+  {
+   "id": "L33",
+   "speaker": "narrator",
+   "file": "L33.wav",
+   "start": 241.382,
+   "end": 245.541
+  },
+  {
+   "id": "L34",
+   "speaker": "narrator",
+   "file": "L34.wav",
+   "start": 245.881,
+   "end": 251.432
+  },
+  {
+   "id": "L35",
+   "speaker": "narrator",
+   "file": "L35.wav",
+   "start": 252.332,
+   "end": 258.877
+  },
+  {
+   "id": "L36",
+   "speaker": "narrator",
+   "file": "L36.wav",
+   "start": 259.677,
+   "end": 264.468
+  },
+  {
+   "id": "L37",
+   "speaker": "narrator",
+   "file": "L37.wav",
+   "start": 264.808,
+   "end": 273.547
+  },
+  {
+   "id": "A05",
+   "speaker": "killer",
+   "file": "A05.wav",
+   "start": 274.447,
+   "end": 276.987
+  },
+  {
+   "id": "L38",
+   "speaker": "narrator",
+   "file": "L38.wav",
+   "start": 277.787,
+   "end": 278.863
+  },
+  {
+   "id": "C01",
+   "speaker": "cael",
+   "file": "C01.wav",
+   "start": 281.203,
+   "end": 287.279
+  },
+  {
+   "id": "C02",
+   "speaker": "cael",
+   "file": "C02.wav",
+   "start": 288.179,
+   "end": 293.265
+  },
+  {
+   "id": "C03",
+   "speaker": "cael",
+   "file": "C03.wav",
+   "start": 294.265,
+   "end": 298.573
+  },
+  {
+   "id": "L39",
+   "speaker": "narrator",
+   "file": "L39.wav",
+   "start": 299.973,
+   "end": 302.694
+  },
+  {
+   "id": "L40",
+   "speaker": "narrator",
+   "file": "L40.wav",
+   "start": 303.894,
+   "end": 308.603
+  },
+  {
+   "id": "L41",
+   "speaker": "narrator",
+   "file": "L41.wav",
+   "start": 310.003,
+   "end": 318.43
+  },
+  {
+   "id": "V01",
+   "speaker": "voice",
+   "file": "V01.wav",
+   "start": 325.17,
+   "end": 326.045
+  },
+  {
+   "id": "C04",
+   "speaker": "cael",
+   "file": "C04.wav",
+   "start": 327.245,
+   "end": 330.089
+  },
+  {
+   "id": "V02",
+   "speaker": "voice",
+   "file": "V02.wav",
+   "start": 331.089,
+   "end": 334.688
+  },
+  {
+   "id": "V03",
+   "speaker": "voice",
+   "file": "V03.wav",
+   "start": 335.688,
+   "end": 342.889
+  }
+ ]
+}

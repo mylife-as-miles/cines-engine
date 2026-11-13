@@ -1,0 +1,282 @@
+<!doctype html><meta charset="utf-8"><title>F03</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 3});
+  const g = f.world, E = f.emissive;
+  const R = OTM.rng('f03b');
+
+  // ================= geometry =================
+  // back wall plane: floor line BASE, horizon HZ; floor points (X at the wall, zm metres toward camera)
+  const HZ = 430, BASE = 872, VPX = 1000, PXM = 338, Z0 = 4.2;
+  const floorK = zm => Z0 / (Z0 - zm);
+  const FP = (X, zm) => { const k = floorK(zm); return [VPX + (X - VPX) * k, HZ + (BASE - HZ) * k]; };
+  const xmOf = X => (X - VPX) / PXM;
+  const DOOR = {x0: 1004, x1: 1384, top: 168, bot: BASE};
+  const LAMP = {x: 770, y: 214};                 // mouth of the pendant shade
+  const SC = {LX: 770, LY: 214, D: 150, K: 0.44}; // shade cut-off scallop on the wall
+  const scallopY = x => SC.LY + SC.K * Math.sqrt((x - SC.LX) * (x - SC.LX) + SC.D * SC.D);
+
+  // ---------- helpers ----------
+  const tmpC = OTM.makeCanvas(W, H), tg = tmpC.getContext('2d');
+  // crisp rim crescent: fill offset copy, cut, clip to where the light reaches
+  function rim(path, dir, w, color, clip, alpha) {
+    tg.setTransform(1, 0, 0, 1, 0, 0); tg.globalCompositeOperation = 'source-over'; tg.globalAlpha = 1; tg.clearRect(0, 0, W, H);
+    tg.fillStyle = color; tg.fill(path); tg.globalCompositeOperation = 'destination-out'; tg.translate(-dir[0] * w, -dir[1] * w); tg.fill(path);
+    g.save(); if (clip) g.clip(clip); g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(tmpC, 0, 0); g.restore();
+  }
+  const norm = (x, y) => { const l = Math.hypot(x, y); return [x / l, y / l]; };
+  // two-bone IK for a profile arm: wrist on target (px). side picks the elbow solution.
+  function ik(id, pose, target, side) {
+    const D = OTM.fig.CHAR[id], k = D.heightK, U = 1.42 * D.armK * k, F = 1.22 * D.armK * k;
+    const fig = OTM.fig.profile(id, pose); const S0 = fig.joints.shoulder; const fc = pose.facing || 1, sc = pose.scale;
+    let vx = (target[0] - S0[0]) / sc * fc, vy = (target[1] - S0[1]) / sc; let d = Math.hypot(vx, vy); const md = (U + F) * 0.995; if (d > md) { vx *= md / d; vy *= md / d; d = md; }
+    const tv = Math.atan2(vx, vy); const al = Math.acos(Math.max(-1, Math.min(1, (U * U + d * d - F * F) / (2 * U * d))));
+    const a = tv + side * al; const Ej = [Math.sin(a) * U, Math.cos(a) * U]; const tf = Math.atan2(vx - Ej[0], vy - Ej[1]); return {a, b: tf - a};
+  }
+
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+
+  // ================= OUTSIDE: the only cold light =================
+  const doorRect = new Path2D(); doorRect.rect(DOOR.x0, DOOR.top, DOOR.x1 - DOOR.x0, DOOR.bot - DOOR.top + 6);
+  g.save(); g.clip(doorRect);
+  g.fillStyle = C.rainSlate; g.fillRect(DOOR.x0, DOOR.top, DOOR.x1 - DOOR.x0, DOOR.bot - DOOR.top + 6);
+  // terrace roofline across the street, one chimney stack (posterised: two slate values)
+  const far = S().M(DOOR.x0 - 10, 520).L(1090, 512).L(1090, 470).L(1104, 470).L(1104, 462).L(1126, 462).L(1126, 470).L(1140, 470).L(1140, 506)
+    .L(1236, 474).L(1330, 506).L(1400, 500).L(1400, 900).L(DOOR.x0 - 10, 900).Z();
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.36); g.fill(far.path(1.0, 4));
+  // dark windows of the terrace (no warm light outside)
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.55); [[1040, 548], [1318, 548]].forEach(([x, y]) => g.fillRect(x, y, 34, 48));
+  // garden wall + hedge, nearer and darker
+  const hedge = S(); for (let i = 0; i < 9; i++) hedge.circle(DOOR.x0 + 8 + i * 46, 700 + (R() - 0.5) * 14, 22 + R() * 12); hedge.rect(DOOR.x0 - 10, 700, 400, 60);
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.5); g.fill(hedge.path(1.4, 6));
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.62); g.fillRect(DOOR.x0, 758, DOOR.x1 - DOOR.x0, 62);   // garden wall
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.3); g.fillRect(DOOR.x0, 756, DOOR.x1 - DOOR.x0, 4);    // wet coping catching the sky
+  // the step: wet stone catching a sliver of the hall's warm spill, notched by Scott's shadow
+  g.fillStyle = C.ink; g.fillRect(DOOR.x0, 820, DOOR.x1 - DOOR.x0, 60);
+  g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.25); g.fillRect(DOOR.x0, 818, DOOR.x1 - DOOR.x0, 5);
+  g.fillStyle = C.tungstenLow; g.fill(S().poly([[DOOR.x0, 870], [DOOR.x0 + 30, 836], [DOOR.x1, 836], [DOOR.x1, 870]]).path(0.8, 12));
+  g.fillStyle = C.ink; g.fill(S().poly([[1056, 870], [1094, 836], [1196, 836], [1176, 870]]).path(0.8, 13));
+  OTM.rain(g, DOOR.x0, DOOR.top, DOOR.x1 - DOOR.x0, 720, 120, 'rainfar', C.rainSilver, 0.22);
+  OTM.rain(g, DOOR.x0, DOOR.top, DOOR.x1 - DOOR.x0, 720, 46, 'rainmid', C.rainSilver, 0.5);
+  g.restore();
+
+  // ================= KAY (on the step, leaning back on the far jamb) =================
+  const kpose = {x: 1256, y: 868, scale: 87, facing: -1, lean: -0.14, neck: -0.02, head: -0.2,
+    armN: {a: 0.16, b: 0.5, hand: 'relaxed', w: 0.3}, armF: {a: -0.3, b: 0.12, hand: 'hold', w: 0.9}, legN: {a: 0.2, b: 0.05}, legF: {a: -0.06, b: 0.0}};
+  const kay = OTM.fig.profile('kay', kpose);
+  const kayP = kay.shape.path(0.8, 21);
+  // the ice bag, knotted, held a little behind her (teasing: 'Before you tell me I didn't need to bring anything--')
+  const wk = kay.joints.wristF, bx = wk[0] + 6, by = wk[1] + 20;
+  const bag = S().M(bx - 6, by - 6).L(bx + 6, by - 6)
+    .C(bx + 22, by + 12, bx + 34, by + 30, bx + 33, by + 48).L(bx + 39, by + 56).L(bx + 33, by + 64)
+    .C(bx + 32, by + 84, bx + 16, by + 96, bx - 2, by + 94).L(bx - 9, by + 99).L(bx - 15, by + 91)
+    .C(bx - 30, by + 82, bx - 34, by + 58, bx - 28, by + 42).L(bx - 34, by + 35).L(bx - 25, by + 29)
+    .C(bx - 18, by + 14, bx - 10, by + 4, bx - 6, by - 6).Z()
+    .add(S().M(bx - 4, by - 4).L(bx - 16, by - 24).L(bx - 6, by - 20).L(bx, by - 8).Z())
+    .add(S().M(bx + 2, by - 4).L(bx + 12, by - 22).L(bx + 6, by - 8).Z());
+  const bagP = bag.path(0.6, 9);
+  g.fillStyle = C.ink; g.fill(kayP); g.fill(bagP);
+  // the hall light just reaches her face past Scott's shoulder: a thin warm line on the profile only
+  (() => { const hc = kay.joints.head, c = new Path2D(); c.rect(hc[0] - 60, hc[1] - 70, 60, 120); rim(kayP, norm(-1, -0.25), 2.2, C.tungstenMid, c, 0.95); })();
+
+  // ================= WALL with the door hole =================
+  const wallPath = new Path2D(); wallPath.rect(0, 0, W, BASE); wallPath.rect(DOOR.x0, DOOR.top, DOOR.x1 - DOOR.x0, DOOR.bot - DOOR.top);
+  g.save(); g.clip(wallPath, 'evenodd');
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, BASE);
+  // the scallop: three nested arches of light under the shade, brightest just below its lip
+  const arch = (K, off, cx, cy, rx, ry) => { const p = new Path2D(); const pts = [];
+    for (let x = cx - rx; x <= cx + rx; x += 4) { const u = (x - cx) / rx, yb = cy + ry * Math.sqrt(Math.max(0, 1 - u * u)); const yt = SC.LY + off + K * Math.sqrt((x - SC.LX) * (x - SC.LX) + SC.D * SC.D); if (yt < yb) pts.push([x, yt, yb]); }
+    if (!pts.length) return p; p.moveTo(pts[0][0], pts[0][2]); pts.forEach(q => p.lineTo(q[0], q[1])); for (let i = pts.length - 1; i >= 0; i--) p.lineTo(pts[i][0], pts[i][2]); p.closePath(); return p; };
+  const rough = (p2) => p2;
+  [[SC.K, 0, LAMP.x + 60, 500, 1180, 520, C.tungstenLow], [0.74, 22, LAMP.x + 30, 470, 600, 390, C.tungstenMid], [1.18, 40, LAMP.x + 20, 410, 320, 260, C.tungsten]].forEach(([K, off, cx, cy, rx, ry, col], i) => {
+    g.fillStyle = col; g.fill(arch(K, off, cx, cy, rx, ry));
+    if (i) { g.save(); g.strokeStyle = (() => { const c = OTM.makeCanvas(4, 4), q = c.getContext('2d'); q.fillStyle = col; [[0, 0], [2, 2], [2, 0], [0, 2]].forEach(([x, y]) => q.fillRect(x, y, 1, 1)); return g.createPattern(c, 'repeat'); })(); g.lineWidth = 6; g.stroke(arch(K, off, cx, cy, rx, ry)); g.restore(); }
+  });
+  g.restore();
+  // dado rail: an ink moulding whose top lip catches whichever band it crosses
+  (() => { const y = 668; g.fillStyle = C.ink; g.fillRect(0, y, DOOR.x0 - 34, 9); g.fillRect(DOOR.x1 + 30, y, W - DOOR.x1, 9);
+    [[C.tungstenLow, 0, DOOR.x0 - 34], [C.tungstenLow, DOOR.x1 + 30, 1730]].forEach(([c, x0, x1]) => { g.fillStyle = c; g.fillRect(x0, y - 2, x1 - x0, 2); }); })();
+  // framed photo on the wall in the warm band (ink, its top edge catching the lamp)
+  g.restore();
+  const pic = S().rect(150, 520, 130, 96); g.fillStyle = C.ink; g.fill(pic.path(0.5, 41));
+  g.fillStyle = C.tungstenLow; g.fillRect(156, 526, 118, 3);
+  // coat hooks: a rail of SIX hooks, two coats already hung (Deena's, Angelo's)
+  (() => {
+    const rx0 = 470, rx1 = 770, ry = 470; g.fillStyle = C.ink; g.fill(S().rect(rx0, ry - 8, rx1 - rx0, 16).path(0.5, 51));
+    g.fillStyle = C.tungsten; g.fillRect(rx0 + 2, ry - 8, rx1 - rx0 - 4, 2);
+    const hx = i => rx0 + 26 + i * 50;
+    for (let i = 0; i < 6; i++) { g.fillStyle = C.ink; g.fill(S().capsule(hx(i), ry, 5, hx(i) + 3, ry + 22, 4).add(S().capsule(hx(i) + 3, ry + 22, 4, hx(i) + 12, ry + 16, 3)).path(0.3, i)); }
+    // Deena's short jacket on hook 1, Angelo's long coat on hook 2
+    // hung by the collar loop: pinched neck, sloping shoulders, sleeves hanging free of the body, flared hem
+    const coat = (x, len, w) => { const sh = S().M(x - 6, ry + 16).L(x + 6, ry + 16).C(x + w * 0.3, ry + 24, x + w * 0.42, ry + 34, x + w * 0.44, ry + 52)
+        .L(x + w * 0.4, ry + len * 0.5).L(x + w * 0.52, ry + len).L(x - w * 0.5, ry + len + 4).L(x - w * 0.38, ry + len * 0.5).L(x - w * 0.42, ry + 52)
+        .C(x - w * 0.4, ry + 34, x - w * 0.3, ry + 24, x - 6, ry + 16).Z();
+      sh.capsule(x - w * 0.47, ry + 50, w * 0.13, x - w * 0.54, ry + len * 0.62, w * 0.1); sh.capsule(x + w * 0.47, ry + 50, w * 0.13, x + w * 0.56, ry + len * 0.6, w * 0.1); return sh; };
+    const c1 = coat(hx(0) + 4, 170, 70), c2 = coat(hx(1) + 4, 270, 84);
+    [c1, c2].forEach((c, i) => { const p = c.path(1.0, 60 + i); g.fillStyle = C.ink; g.fill(p); });
+  })();
+
+  // ================= fanlight (five cold panes) =================
+  (() => {
+    const cx = (DOOR.x0 + DOOR.x1) / 2, rx = (DOOR.x1 - DOOR.x0) / 2, ry = 66, by = DOOR.top - 26;
+    const arch = new Path2D(); arch.ellipse(cx, by, rx, ry, 0, Math.PI, 0); arch.closePath();
+    g.save(); g.clip(arch); g.fillStyle = OTM.mix(C.rainSlate, C.ink, 0.12); g.fillRect(DOOR.x0, by - ry, rx * 2, ry);
+    OTM.rain(g, DOOR.x0, by - ry, rx * 2, ry, 22, 'fan', C.rainSilver, 0.4); g.restore();
+    g.strokeStyle = C.ink; g.lineWidth = 7; g.lineCap = 'butt';
+    for (let i = 1; i < 5; i++) { const a = Math.PI + Math.PI * i / 5; g.beginPath(); g.moveTo(cx, by); g.lineTo(cx + Math.cos(a) * rx, by + Math.sin(a) * ry); g.stroke(); }
+    g.fillStyle = C.ink; g.beginPath(); g.ellipse(cx, by, 34, 18, 0, Math.PI, 0); g.fill();
+    g.lineWidth = 16; g.beginPath(); g.ellipse(cx, by, rx + 8, ry + 8, 0, Math.PI, 0); g.stroke();
+    g.fillRect(DOOR.x0 - 10, by - 4, rx * 2 + 20, 34);   // transom bar
+  })();
+  // drips off the lintel in front of the night
+  g.fillStyle = C.rainSilver; [[1046, 196, 2], [1150, 214, 1.6], [1320, 205, 1.8], [1356, 236, 1.5]].forEach(([x, y, r]) => { g.globalAlpha = 0.8; g.beginPath(); g.ellipse(x, y, r, r * 1.8, 0, 0, 7); g.fill(); });
+  g.globalAlpha = 1;
+  // architrave in ink, its lamp-side edge catching a thin warm line; far jamb reveal in shadow
+  g.fillStyle = C.ink;
+  g.fill(S().rect(DOOR.x0 - 34, DOOR.top - 4, 34, BASE - DOOR.top + 4).path(0.6, 2));
+  g.fill(S().rect(DOOR.x1, DOOR.top - 4, 30, BASE - DOOR.top + 4).path(0.6, 3));
+  g.fillStyle = C.tungstenMid; g.fill(S().poly([[DOOR.x0 - 36, scallopY(DOOR.x0 - 36) + 4], [DOOR.x0 - 31, scallopY(DOOR.x0 - 36) + 4], [DOOR.x0 - 31, BASE - 26], [DOOR.x0 - 36, BASE - 26]]).path(0.3, 5));
+  // skirting + sill
+  g.fillStyle = C.ink; g.fillRect(0, BASE - 26, DOOR.x0, 26); g.fillRect(DOOR.x1, BASE - 26, W - DOOR.x1, 26);
+  g.fillStyle = C.tungstenMid; g.fillRect(0, BASE - 27, DOOR.x0 - 36, 2); g.fillStyle = C.tungstenLow; g.fillRect(DOOR.x1 + 30, BASE - 27, 1724 - DOOR.x1 - 30, 2);
+  g.fillStyle = C.ink; g.fill(S().poly([[DOOR.x0 - 18, BASE - 8], [DOOR.x1 + 16, BASE - 8], [DOOR.x1 + 20, BASE + 8], [DOOR.x0 - 22, BASE + 8]]).path(0.5, 2));
+  g.fillStyle = C.tungstenLow; g.fillRect(DOOR.x0 - 18, BASE + 6, DOOR.x1 - DOOR.x0 + 36, 2);
+
+  // ================= FLOOR =================
+  const floorClip = new Path2D(); floorClip.rect(0, BASE + 8, W, H - BASE);
+  g.save(); g.clip(floorClip);
+  g.fillStyle = C.ink; g.fillRect(0, BASE, W, H - BASE);
+  OTM.lightPool(g, LAMP.x + 60, 950, [{r: 1000, color: C.tungstenLow}, {r: 620, color: C.tungstenMid}, {r: 290, color: C.tungsten}], {sy: 0.2, seed: 7, rough: 2.2});
+  // boards in perspective
+  g.strokeStyle = OTM.rgba(C.ink, 0.42); g.lineWidth = 2;
+  for (let X = -1400; X < 3400; X += 64) { const a = FP(X, 0), b = FP(X, 1.6); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+  g.restore();
+
+  // ================= wet footprints (count them) =================
+  const SOLE = {
+    // forefoot pad + separate heel: the classic wet print
+    heel: () => S().M(0.0, -0.032).C(0.06, -0.05, 0.13, -0.042, 0.15, -0.004).C(0.14, 0.036, 0.07, 0.044, 0.0, 0.028).C(-0.018, 0.012, -0.018, -0.016, 0.0, -0.032).Z().add(S().ellipse(-0.11, 0.004, 0.02, 0.018, 0)),
+    shoe: () => S().M(0.0, -0.044).C(0.07, -0.06, 0.15, -0.052, 0.17, -0.004).C(0.155, 0.05, 0.07, 0.058, 0.0, 0.04).C(-0.024, 0.016, -0.024, -0.02, 0.0, -0.044).Z()
+      .add(S().M(-0.075, -0.034).C(-0.11, -0.04, -0.15, -0.028, -0.15, 0.002).C(-0.15, 0.03, -0.11, 0.04, -0.075, 0.032).C(-0.064, 0.012, -0.064, -0.014, -0.075, -0.034).Z()),
+  };
+  function print(kind, xm, zm, ang, wet) {
+    wet = wet == null ? 1 : wet;
+    const sh = SOLE[kind]().transform([1, 0, 0, 1.5, 0, 0]).transform([Math.cos(ang), Math.sin(ang), -Math.sin(ang), Math.cos(ang), xm, zm]);
+    const s2 = S(); sh.polys.forEach(p => s2.poly(p.map(([x, z]) => { const k = floorK(z); return [VPX + x * PXM * k, HZ + (BASE - HZ) * k]; })));
+    g.save(); g.fillStyle = OTM.rgba(C.ink, 0.66 * wet); g.fill(s2.path(0.15, 3)); g.restore();
+    const tip = [xm + Math.cos(ang) * 0.1, zm + Math.sin(ang) * 0.1], k = floorK(tip[1]);
+    const tx = VPX + tip[0] * PXM * k, ty = HZ + (BASE - HZ) * k;
+    g.save(); g.globalAlpha = 0.9 * wet; g.strokeStyle = C.rainSilver; g.lineWidth = 1.6; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(tx - 7 * k, ty - 1); g.lineTo(tx + 4 * k, ty - 2.5); g.stroke(); g.restore();
+  }
+  function walk(kind, pts, n, gauge, wetEnd) {
+    const P = t => { const s = t * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(s)), u = s - i; return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * u, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * u]; };
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1), a = P(Math.max(0, t - 0.02)), b = P(Math.min(1, t + 0.02)), ang = Math.atan2(b[1] - a[1], b[0] - a[0]), side = i % 2 ? 1 : -1, c = P(t);
+      print(kind, c[0] - Math.sin(ang) * gauge * side, c[1] + Math.cos(ang) * gauge * side, ang, 1 - (1 - wetEnd) * t);
+    }
+  }
+  // Deena (heels) and Angelo (shoes): both begin on the sill and dry as they go
+  walk('heel', [[xmOf(1236), 0.06], [xmOf(1010), 0.2], [xmOf(720), 0.36], [xmOf(430), 0.46]], 6, 0.05, 0.35);
+  walk('shoe', [[xmOf(1336), 0.06], [xmOf(1190), 0.42], [xmOf(900), 0.62], [xmOf(560), 0.86]], 5, 0.09, 0.35);
+  // the extra: a standing pair that BEGINS ~0.9 m inside the threshold, at Scott's right; nothing leads to it;
+  // as wet as the first prints at the sill, and it walks toward us, out of frame
+  const ex = xmOf(1064), ez = 0.88;
+  print('shoe', ex - 0.11, ez, Math.PI * 0.5, 1);
+  print('shoe', ex + 0.11, ez + 0.02, Math.PI * 0.48, 1);
+  print('shoe', ex - 0.1, ez + 0.3, Math.PI * 0.52, 0.95);
+  print('shoe', ex + 0.12, ez + 0.56, Math.PI * 0.49, 0.9);
+
+  // haze in the lamp's cone (behind the figures)
+  g.save(); const hazeClip = new Path2D(); hazeClip.rect(0, 0, W, H); hazeClip.rect(DOOR.x0, DOOR.top - 100, DOOR.x1 - DOOR.x0, DOOR.bot - DOOR.top + 100); g.clip(hazeClip, 'evenodd');
+  OTM.cone(g, [[LAMP.x - 78, LAMP.y], [LAMP.x + 78, LAMP.y], [LAMP.x + 560, 1080], [LAMP.x - 640, 1080]], C.tungsten, 0.05);
+  OTM.cone(g, [[LAMP.x - 60, LAMP.y], [LAMP.x + 60, LAMP.y], [LAMP.x + 360, 1080], [LAMP.x - 360, 1080]], C.tungsten, 0.04);
+  g.restore();
+  OTM.dust(g, [[LAMP.x - 60, LAMP.y + 20], [LAMP.x + 60, LAMP.y + 20], [LAMP.x + 420, 820], [LAMP.x - 420, 820]], 70, C.tungsten, 'd3');
+
+  // ================= SCOTT (in the doorway, hover lean, arm up on the frame: blocking it) =================
+  const sp = {x: 1060, y: 906, scale: 92, facing: 1, lean: 0.19, neck: 0.22, head: 0.24,
+    armN: {a: -0.3, b: 0.62, hand: 'side', w: 0.9, handOpts: {curl: 0.8}}, legN: {a: 0.2, b: 0.22}, legF: {a: -0.08, b: 0.02}};
+  sp.armF = Object.assign({hand: 'hold', w: 0.5}, ik('scott', sp, [998, 226], 1));
+  const scott = OTM.fig.profile('scott', sp);
+  // his floor shadow, thrown away from the lamp out over the sill
+  g.save(); g.clip(floorClip); g.fillStyle = OTM.rgba(C.ink, 0.6);
+  g.fill(S().poly([[1012, 906], [1170, 900], [1214, 880], [1060, 880]]).path(1.2, 31)); g.restore();
+  const scottP = scott.shape.path(0.8, 17);
+  g.fillStyle = C.ink; g.fill(scottP);
+  const scottRimClip = new Path2D(); scottRimClip.moveTo(0, 0); for (let x = 0; x <= DOOR.x0 - 30; x += 6) scottRimClip.lineTo(x, scallopY(x) + 10); scottRimClip.lineTo(DOOR.x0 - 30, 700); scottRimClip.lineTo(1300, 470); scottRimClip.lineTo(W, 470); scottRimClip.lineTo(W, 0); scottRimClip.closePath();
+  rim(scottP, norm(-1, -0.75), 3.4, C.tungsten, scottRimClip);
+  g.save(); const collar = new Path2D(); collar.rect(1100, 370, 70, 90); g.clip(collar); g.fillStyle = C.ink; g.fill(scottP); g.restore();   // no rim on the shirt collar point
+  OTM.fig.drawDetails(g, scott, {});
+
+  // ================= STAIRS (dark foreground, countable balusters) =================
+  const NEW = {x: 330, top: 600};
+  const railTop = x => NEW.top - 4 + (NEW.x - x) * 0.8;
+  const stringer = x => railTop(x) + 320;
+  // baluster shadows raked across the floor away from the lamp's foot
+  g.save(); g.clip(floorClip); g.fillStyle = OTM.rgba(C.ink, 0.55);
+  const LF = [LAMP.x + 40, 980];
+  for (let x = NEW.x - 46; x > -60; x -= 46) {
+    const b = [x, Math.min(H - 2, stringer(x))]; const d = norm(b[0] - LF[0], b[1] - LF[1] + 260), n = [-d[1], d[0]], L = 300;
+    g.fill(S().poly([[b[0] + n[0] * 6, b[1]], [b[0] + d[0] * L + n[0] * 16, b[1] + d[1] * L], [b[0] + d[0] * L - n[0] * 16, b[1] + d[1] * L], [b[0] - n[0] * 6, b[1]]]).path(0.8, x | 0));
+  }
+  g.restore();
+  const stairs = S();
+  stairs.poly([[NEW.x + 26, NEW.top - 20], [-80, railTop(-80) - 30], [-80, railTop(-80) + 4], [NEW.x + 26, NEW.top + 14]]);
+  stairs.poly([[NEW.x + 18, stringer(NEW.x) - 24], [-80, stringer(-80) - 24], [-80, H + 40], [NEW.x + 18, H + 40]]);
+  for (let x = NEW.x - 46; x > -40; x -= 46) stairs.rect(x - 7, railTop(x), 14, stringer(x) - railTop(x));
+  stairs.rect(NEW.x - 30, NEW.top, 60, H - NEW.top + 40).add(S().rect(NEW.x - 40, NEW.top - 12, 80, 34)).add(S().ellipse(NEW.x, NEW.top - 26, 30, 22, 0));
+  const stairP = stairs.path(0.9, 8); g.fillStyle = C.ink; g.fill(stairP);
+  rim(stairP, norm(1, -0.5), 3, C.tungstenMid);
+
+  // ================= the open front door (right foreground) =================
+  const SL = {x0: 1724, t0: 92, b0: 1000, x1: 1960, t1: 10, b1: 1120};
+  const sp2 = (u, v) => { const x = SL.x0 + (SL.x1 - SL.x0) * u, t = SL.t0 + (SL.t1 - SL.t0) * u, b = SL.b0 + (SL.b1 - SL.b0) * u; return [x, t + (b - t) * v]; };
+  // its shadow on the floor
+  g.save(); g.clip(floorClip); g.fillStyle = OTM.rgba(C.ink, 0.8); g.fill(S().poly([[1700, BASE + 6], [1960, BASE - 10], [1960, H], [1640, H]]).path(1, 9)); g.restore();
+  g.fillStyle = C.ink; g.fill(S().poly([sp2(0, 0), sp2(1, 0), sp2(1, 1), sp2(0, 1)]).path(0.8, 5));
+  g.fillStyle = OTM.mix(C.ink, C.soot, 0.5); [[0.16, 0.06, 0.84, 0.42], [0.16, 0.5, 0.84, 0.94]].forEach(([u0, v0, u1, v1]) => g.fill(S().poly([sp2(u0, v0), sp2(u1, v0), sp2(u1, v1), sp2(u0, v1)]).path(0.5, 6)));
+  g.fillStyle = C.ink; [[0.22, 0.09, 0.78, 0.39], [0.22, 0.53, 0.78, 0.91]].forEach(([u0, v0, u1, v1]) => g.fill(S().poly([sp2(u0, v0), sp2(u1, v0), sp2(u1, v1), sp2(u0, v1)]).path(0.5, 7)));
+  g.fillStyle = C.tungstenLow; g.fill(S().poly([sp2(0, 0.01), sp2(0.025, 0.01), sp2(0.025, 0.99), sp2(0, 0.99)]).path(0.3, 4));
+  const knob = sp2(0.1, 0.47); g.fillStyle = C.ink; g.beginPath(); g.arc(knob[0], knob[1], 13, 0, 7); g.fill();
+  g.fillStyle = C.tungstenMid; g.beginPath(); g.arc(knob[0] - 4, knob[1] - 4, 4, 0, 7); g.fill();
+
+  // ================= LAMP =================
+  g.fillStyle = C.ink; g.fillRect(LAMP.x - 2, 0, 4, LAMP.y - 60);
+  const shade = S().M(LAMP.x - 26, LAMP.y - 62).L(LAMP.x + 26, LAMP.y - 62).L(LAMP.x + 80, LAMP.y).L(LAMP.x - 80, LAMP.y).Z();
+  g.fillStyle = C.soot2; g.fill(shade.path(0.4, 2));
+  g.fillStyle = C.tungstenLow; g.fill(S().poly([[LAMP.x - 26, LAMP.y - 62], [LAMP.x - 22, LAMP.y - 62], [LAMP.x - 74, LAMP.y - 2], [LAMP.x - 80, LAMP.y]]).path(0.2, 1));
+  g.fillStyle = C.tungsten; g.beginPath(); g.ellipse(LAMP.x, LAMP.y, 77, 8, 0, 0, 7); g.fill();
+  g.fillStyle = '#FFE2A8'; g.beginPath(); g.ellipse(LAMP.x, LAMP.y + 1, 30, 4, 0, 0, 7); g.fill();
+  E.fillStyle = C.tungsten; E.beginPath(); E.ellipse(LAMP.x, LAMP.y + 6, 96, 22, 0, 0, 7); E.fill();
+
+  // ================= cold accents: Kay's beads, the drip =================
+  (() => { const m = kay.M, hm = kay.details[0].headM; const comp = [m[0] * hm[0], m[3] * hm[1], m[0] * hm[2], m[3] * hm[3], m[0] * hm[4] + m[4], m[3] * hm[5] + m[5]];
+    const rb = OTM.rng('kb2'); g.fillStyle = C.rainSilver;
+    [[-0.67, 0.28], [-0.69, 0.47], [-0.63, 0.62], [-0.61, 0.02], [-0.5, -0.38], [-0.3, -0.56], [-0.06, -0.62], [0.16, -0.54]].forEach(([u, v], i) => {
+      const x = comp[0] * u + comp[2] * v + comp[4], y = comp[1] * u + comp[3] * v + comp[5]; const s = 1.6 + rb() * 1.5; g.globalAlpha = 0.75 + rb() * 0.25; g.beginPath(); g.arc(x, y, s, 0, 7); g.fill();
+      if (i % 2 === 0) { E.fillStyle = C.rainSilver; E.beginPath(); E.arc(x, y, 3, 0, 7); E.fill(); } });
+    g.globalAlpha = 1; })();
+  // the bag: a cold wet sheen on its back curve, then the drip, counted down onto the step
+  g.save(); g.strokeStyle = C.rainSilver; g.lineWidth = 2; g.lineCap = 'round'; g.globalAlpha = 0.8;
+  g.lineWidth = 1.6; g.beginPath(); g.arc(bx + 2, by + 58, 28, -0.25, 0.3); g.stroke(); g.restore();
+  g.fillStyle = C.rainSilver; [[16, 40], [-14, 70], [8, 82]].forEach(([dx, dy]) => { g.globalAlpha = 0.7; g.fillRect(bx + dx, by + dy, 3, 2); }); g.globalAlpha = 1;
+  g.fillStyle = C.rainSilver;
+  [[-2, 112, 2.4], [-1, 146, 2.1], [0, 194, 1.9], [0, 252, 1.7]].forEach(([dx, dy, r], i) => { const y = by + dy; if (y > 846) return; g.globalAlpha = 0.95 - i * 0.1; g.beginPath(); g.ellipse(bx + dx, y, r, r * 1.8, 0, 0, 7); g.fill();
+    E.fillStyle = C.rainSilver; E.beginPath(); E.arc(bx + dx, y, 3, 0, 7); E.fill(); });
+  g.globalAlpha = 0.85; [[-9, -2], [-4, -5], [5, -4], [9, -1]].forEach(([dx, dy]) => { g.beginPath(); g.arc(bx + dx, 848 + dy, 1.3, 0, 7); g.fill(); });
+  g.globalAlpha = 1;
+
+  // ================= TYPE =================
+  OTM.say(g, 'scott', "I wasn't going to.", 120, 196, {caret: true, size: 50});
+  OTM.say(g, 'kay', "You were.", 1452, 330, {size: 56});
+  OTM.say(g, 'kay', "You did the face.", 1452, 404, {size: 56, p: 0.6});
+
+  f.finish({letterbox: 1.78, vignette: 0.5});
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 03', 'ARRIVALS  ·  THE FRONT DOOR', 1.78);
+  window.FRAME_READY = true;
+})();
+</script>

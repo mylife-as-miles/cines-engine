@@ -1,0 +1,71 @@
+<!doctype html><meta charset="utf-8"><title>THUMB B</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+// YouTube thumbnail B, the creepy one (rendered 1920x1080, delivered 1280x720). Scott in close-up, eyes sliding to his
+// right shoulder, where a hand burns through the paper (the film's last image of the Extra is a hand); behind him a
+// person-shaped glow he blocks most of. Far back in the dark, the other five stare out at us.
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 47});
+  const g = f.world, E = f.emissive, HO = f.holes;
+
+  // ---- dark room, one weak lamp far back on the left; cold night on the right
+  g.fillStyle = '#07090D'; g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, 420, 470, [{r: 520, color: '#1A1210'}, {r: 360, color: '#3B2416'}, {r: 220, color: '#6E3A14'}, {r: 110, color: C.tungstenLow}],
+    {sy: 0.75, rough: 1.4, seed: 9});
+
+  // ---- the five, small and far, under the lamp: ink busts with pinpoint white eyes, all on us
+  const back = [['marina', 250], ['christof', 345], ['kay', 440], ['deena', 535], ['angelo', 630]];
+  const far = back.map(([id, x], i) => ({id, b: OTM.fig.bust(id, {x, y: 520 + (i % 2) * 8, scale: 44, tilt: (i - 2) * 0.03})}));
+  far.forEach(p => { g.fillStyle = C.ink; g.fill(p.b.shape.path(0.6, 5)); });
+
+  // ---- Scott, close: head right of centre, huge
+  const sc = 330, SX = 1180, SY = 520;
+  const scott = OTM.fig.bust('scott', {x: SX, y: SY, scale: sc, tilt: 0.06});
+  // the seventh behind him, over his right shoulder (screen left): a person-shaped hole he mostly blocks
+  const ghost = OTM.fig.bust('angelo', {x: SX - sc * 1.05, y: SY - sc * 0.3, scale: sc * 1.0, tilt: -0.12});
+  f.knockout(ghost.shape.path(1.4, 61), 0.26);
+  // a hand resting on his right shoulder from behind, fingers draped forward over it
+  const hk = sc * 0.92, ang = 1.05;   // the wrist comes from behind his far side; the fingers drape forward across his shoulder
+  const wrist = [SX - sc * 0.92, SY + sc * 0.86];
+  const handS = OTM.fig.hand('splay', {spread: 1.0, curl: 0.25}).transform([hk * Math.cos(ang), hk * Math.sin(ang), -hk * Math.sin(ang), hk * Math.cos(ang), wrist[0], wrist[1]]);
+  // Scott's body blocks the glow behind him, but not the hand on top of him
+  HO.save(); HO.globalCompositeOperation = 'destination-out'; HO.fill(scott.shape.path(0.8, 3)); HO.restore();
+  f.knockout(handS.path(0.8, 12), 1);
+  E.save(); E.scale(0.25, 0.25); E.fillStyle = C.ember; E.globalAlpha = 0.25; E.fill(ghost.shape.path(1.4, 61)); E.globalAlpha = 1; E.fillStyle = C.emberHot; E.fill(handS.path(0.8, 12)); E.restore();
+
+  // Scott in ink with a cold rim from the night on the right, a warm one from the hand
+  OTM.silhouette(g, scott.shape, {fill: C.ink, light: {x: 2200, y: 300}, rimColor: '#7FA6C9', rimW: 9});
+  OTM.silhouette(g, scott.shape, {fill: C.ink, light: {x: wrist[0] - 200, y: wrist[1] - 300}, rimColor: C.ember, rimW: 6});
+  f.finish({letterbox: 1.78, grain: 0.7, vignette: 1.2});
+
+  // ---- after the finish (crisp): eyes, the far stares, the hook
+  // the far five: two white pinpoints each, dead centre, staring out
+  far.forEach(p => { const [hx, hy] = p.b.head; ctx.fillStyle = '#F4F1EA';
+    [-1, 1].forEach(s => { ctx.beginPath(); ctx.ellipse(hx + s * 44 * 0.17, hy + 4, 4.2, 5.2, 0, 0, 7); ctx.fill(); }); });
+  // Scott: huge whites, pinprick pupils hard in the corners toward the hand
+  { const [hx, hy] = scott.head, r = sc * 0.15;
+    [-1, 1].forEach(side => {
+      const ex = hx + side * sc * 0.2, ey = hy + sc * 0.03;
+      ctx.save(); ctx.translate(ex, ey);
+      ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.ellipse(0, 0, r, r * 1.3, 0, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(190,40,40,0.55)'; ctx.lineWidth = 2.2;      // a few red veins
+      for (let k = 0; k < 4; k++) { const a = 0.4 + k * 0.5 + side; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * 0.98, Math.sin(a) * r * 1.25); ctx.quadraticCurveTo(Math.cos(a) * r * 0.7, Math.sin(a) * r * 0.95 + 4, Math.cos(a + 0.12) * r * 0.55, Math.sin(a + 0.12) * r * 0.7); ctx.stroke(); }
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(-r * 0.62, r * 0.12, r * 0.2, 0, 7); ctx.fill();
+      ctx.restore();
+    });
+    // sweat
+    ctx.fillStyle = '#A9DCFF'; [[hx + sc * 0.42, hy - sc * 0.22, 1], [hx - sc * 0.45, hy + sc * 0.05, 0.75]].forEach(([x, y, k]) => {
+      ctx.beginPath(); ctx.moveTo(x, y - 46 * k); ctx.quadraticCurveTo(x + 26 * k, y + 6 * k, x, y + 24 * k); ctx.quadraticCurveTo(x - 26 * k, y + 6 * k, x, y - 46 * k); ctx.fill(); });
+  }
+  const hook = (str, x, y, size, fill, rot) => {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.font = `${size}px "Archivo Black"`; ctx.textAlign = 'left';
+    ctx.lineJoin = 'round'; ctx.lineWidth = size * 0.24; ctx.strokeStyle = '#000'; ctx.strokeText(str, 0, 0);
+    ctx.fillStyle = fill; ctx.fillText(str, 0, 0); ctx.restore();
+  };
+  hook('ONE TOO', 990, 185, 168, '#FFFFFF', 0.035);
+  hook('MANY.', 1080, 372, 196, '#E3262B', 0.035);
+  window.FRAME_READY = true;
+})();
+</script>

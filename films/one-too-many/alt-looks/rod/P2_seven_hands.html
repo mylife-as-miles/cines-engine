@@ -1,0 +1,154 @@
+<!doctype html><meta charset="utf-8"><title>P2 seven hands</title>
+<script src="../../kit/otm.js"></script><script src="../../kit/figures.js"></script>
+<script src="rod.js"></script><script src="puppets.js"></script><script src="type.js"></script>
+<script>
+(async()=>{
+  await ROD.fonts();
+  const {W,H,S,rng,vnoise,fbm,clamp,lerp} = OTM; const P = ROD.P, {smooth, slit} = ROD.geom;
+  const TC = [960, 494], RX = 462, RY = 276;          // the table (overhead)
+  const st = ROD.stage({lamp: TC, seed: 22}); const g = st.ctx;
+
+  // ---------- lamp + scrim: a pool of tungsten centred on the table, falling off to scrim-umber at the frame edges ----------
+  ROD.scrim(st, { lamp: TC, R: 1010,
+    stops: [[0, '#FFF4E0'], [0.16, '#FCDDA4'], [0.34, '#F2A541'], [0.56, '#C06A2A'], [0.78, '#5A2E1A'], [1, '#341A0E']],
+    after: (c) => {
+      c.save(); c.globalCompositeOperation = 'multiply'; const r = rng('boards');
+      for (let i = -12; i < 40; i++) { const x0 = i * 74 + 20; c.fillStyle = `rgba(120,70,35,${0.10 + r() * 0.08})`; c.beginPath(); c.moveTo(x0, 0); c.lineTo(x0 + 3, 0); c.lineTo(x0 + 3 - 300, H); c.lineTo(x0 - 300, H); c.fill(); }
+      c.restore();
+    } });
+
+  // seats: seven places in a ring (90deg = toward the bottom of frame). Going round: Scott, [empty], Deena, Angelo, Marina, Christof, Kay
+  const ang = k => (90 - k * 360 / 7) * Math.PI / 180;
+  const seat = (k, rr) => [TC[0] + Math.cos(ang(k)) * (RX + rr), TC[1] + Math.sin(ang(k)) * (RY + rr)];
+  const pilePos = k => [TC[0] + Math.cos(ang(k)) * RX * 0.71, TC[1] + Math.sin(ang(k)) * RY * 0.69];
+  const rim = (k, d) => [TC[0] + Math.cos(ang(k)) * (RX + (d || 0)), TC[1] + Math.sin(ang(k)) * (RY + (d || 0))];
+  const who = ['scott', null, 'deena', 'angelo', 'marina', 'christof', 'kay'];
+  const toward = (p, q, t) => [lerp(p[0], q[0], t), lerp(p[1], q[1], t)];
+  const P0 = [0, 1, 2, 3, 4, 5, 6].map(pilePos);
+  const glassAt = k => { const a = ang(k); const r = 0.82; return [TC[0] + Math.cos(a - 0.36) * RX * r, TC[1] + Math.sin(a - 0.36) * RY * r]; };
+  const figs = {}; const fscale = 72;
+  const kpos = k => k === 2 ? [TC[0] + Math.cos(ang(2) + 0.13) * (RX + 62), TC[1] + Math.sin(ang(2) + 0.13) * (RY + 62)] : seat(k, 90);
+  const place = (k, o) => { const id = who[k]; const p = kpos(k); const f = ROD.topFig(id, Object.assign({ x: p[0], y: p[1], dir: ang(k) + (k === 2 ? 0.13 : 0) + Math.PI, scale: fscale }, o)); figs[id] = f; return f; };
+  const lat = (k, d) => { const a = ang(k) + Math.PI / 2; return [Math.cos(a) * d, Math.sin(a) * d]; };
+  const add = (p, q) => [p[0] + q[0], p[1] + q[1]];
+
+  // Scott: hands flat either side of his pile
+  const sP = P0[0]; place(0, { hands: [[sP[0] - 72, sP[1] + 52], [sP[0] + 70, sP[1] + 58]], handPose: ['flat', 'flat'], grip: [-0.45, 0] });
+  // Kay: one hand near her glass, the other drifting toward Scott
+  const kG = glassAt(6); place(6, { hands: [[P0[6][0] - 30, P0[6][1] + 44], [kG[0] + 30, kG[1] + 34]], handPose: ['flat', 'open'], grip: [-0.45, 0] });
+  // Christof: both hands on the table (his biscuit sits by his place)
+  place(5, { hands: [[P0[5][0] - 10, P0[5][1] - 66], [P0[5][0] - 34, P0[5][1] + 62]], handPose: ['flat', 'flat'], grip: [-0.45, -0.3] });
+  // Marina: the ringed hand near her glass
+  const mG = glassAt(4); place(4, { hands: [[P0[4][0] - 62, P0[4][1] - 12], [mG[0] + 22, mG[1] - 30]], handPose: ['flat', 'open'], grip: [-0.3, -0.8] });
+  // Angelo: the deck in his left hand, right hand frozen mid-deal
+  const aP = P0[3]; const aF = place(3, { hands: [[aP[0] + 74, aP[1] - 62], [aP[0] - 44, aP[1] - 70]], handPose: ['clasp', 'open'], grip: [-0.3, 0.8] });
+  // Deena: her left arm straight out, the index finger aimed exactly at the seventh pile
+  const xP = P0[1];
+  let dF = place(2, { hands: [xP, [P0[2][0] + 60, P0[2][1] - 78]], handPose: ['point', 'flat'], grip: [-0.45, 0.3] });
+  { // solve the pointing arm: shoulder -> pile line, fingertip stopping at the pile's near edge
+    const sh = dF.shoulders[0]; const dx = xP[0] - sh[0], dy = xP[1] - sh[1], d = Math.hypot(dx, dy); const ux = dx / d, uy = dy / d;
+    const handL = 0.66 * 1.4 * fscale * 1.12; const wristD = d - 40 - handL; const base = (1.22 + 1.12) * ROD.CAST.deena.armK * fscale * 0.985;
+    const k = (wristD + 4) / base; const wrist = [sh[0] + ux * wristD, sh[1] + uy * wristD];
+    const opt = { hands: [wrist, [P0[2][0] + 60, P0[2][1] - 78]], handPose: ['point', 'flat'], reachK: [k, 1], handK: [1.4, 1], grip: [-0.45, 0.3] };
+    dF = place(2, opt);
+    // bend the wrist so the finger's line runs exactly through the centre of pile 7
+    const h0 = dF.hands[0]; let err = Math.atan2(xP[1] - h0.wrist[1], xP[0] - h0.wrist[0]) - h0.ang; while (err > Math.PI) err -= 2 * Math.PI; while (err < -Math.PI) err += 2 * Math.PI;
+    dF = place(2, Object.assign(opt, { handRot: [err, 0] })); }
+
+  // ---------- the empty place: a seated figure cut clean out of the paper, raw lamp-core, butting the rim beside pile 7 ----------
+  const HA = ang(1) + 0.1, hSeat = [TC[0] + Math.cos(HA) * (RX + 90), TC[1] + Math.sin(HA) * (RY + 90)], hRim = d => [TC[0] + Math.cos(HA) * (RX + d), TC[1] + Math.sin(HA) * (RY + d)];
+  const hLat = d => [Math.cos(HA + Math.PI / 2) * d, Math.sin(HA + Math.PI / 2) * d];
+  const hole = ROD.topFig('scott', { hole: true, x: hSeat[0], y: hSeat[1], dir: HA + Math.PI, scale: fscale, headK: 1.15,
+    hands: [add(hRim(-16), hLat(60)), add(hRim(-16), hLat(-58))], handPose: ['flat', 'flat'], reachK: [0.6, 0.6], handRot: [0.1, -0.1], chair: false });
+
+  // ---------- six coloured rods first (they pass BEHIND the table plane) ----------
+  const LIP = 1004;
+  const rodOpt = id => ({ color: P[id], metal: id === 'marina', lipTop: LIP, w: 8, fw: 30, fh: 64, fy: 46, noSlot: true });
+  const rodX = [['christof', 150], ['marina', 340], ['angelo', 1820]].map(([id, x]) => ROD.rod(st, x, figs[id].grip[0], figs[id].grip[1], rodOpt(id)).lipX);
+
+  // ---------- the table: thin paper oval glowing, lace-cut card border ----------
+  { g.save(); g.filter = 'blur(16px)'; g.fillStyle = 'rgba(30,12,4,0.45)'; g.beginPath(); g.ellipse(TC[0] + 10, TC[1] + 16, RX + 22, RY + 22, 0, 0, 7); g.fill(); g.restore();
+    const top = new Path2D(); top.ellipse(TC[0], TC[1], RX, RY, 0, 0, 7);
+    g.save(); const tg = g.createRadialGradient(TC[0], TC[1], 0, TC[0], TC[1], RX); tg.addColorStop(0, '#FFF3DC'); tg.addColorStop(0.55, '#FBD9A0'); tg.addColorStop(1, '#EDAF62');
+    g.fillStyle = tg; g.fill(top); g.clip(top); g.globalCompositeOperation = 'multiply'; g.drawImage(ROD.fibreTex(), -60, 30); g.restore();
+    st.em.save(); st.em.globalAlpha = 0.22; st.em.fillStyle = '#FFE8C0'; st.em.fill(top); st.em.restore();
+    const L = st.layer(); const ring = S(); ring.ellipse(TC[0], TC[1], RX + 22, RY + 22, 0);
+    const NS = 84; for (let i = 0; i < NS; i++) { const a = i / NS * Math.PI * 2; ring.circle(TC[0] + Math.cos(a) * (RX + 22), TC[1] + Math.sin(a) * (RY + 22), 9.5); }
+    const holes = S(); holes.ellipse(TC[0], TC[1], RX, RY, 0);
+    for (let i = 0; i < NS; i++) { const a = i / NS * Math.PI * 2; const x = TC[0] + Math.cos(a) * (RX + 22), y = TC[1] + Math.sin(a) * (RY + 22); holes.circle(x, y, 3.2);
+      const a2 = (i + 0.5) / NS * Math.PI * 2; const cx = TC[0] + Math.cos(a2) * (RX + 11), cy = TC[1] + Math.sin(a2) * (RY + 11); holes.poly([[cx + Math.cos(a2) * 6, cy + Math.sin(a2) * 6], [cx + Math.cos(a2 + 1.57) * 3, cy + Math.sin(a2 + 1.57) * 3], [cx - Math.cos(a2) * 6, cy - Math.sin(a2) * 6], [cx - Math.cos(a2 + 1.57) * 3, cy - Math.sin(a2 + 1.57) * 3]]); }
+    ROD.piece(L, ring.path(0.6, 5), holes.path(0.2, 3));
+    st.commit(L, { from: TC, shadow: { d: 8, blur: 8, alpha: 0.35 }, rim: { w: 1.6, color: P.lampCore, alpha: 0.6 }, texture: 0.4 }); }
+
+  // ---------- seven card piles in a ring: ink card-backs with a diamond lattice cut through, crimson gel behind ----------
+  function pile(k, n, seed) {
+    const [px, py] = pilePos(k); const a = ang(k) + Math.PI / 2; const r = rng(seed);
+    const L = st.layer(); const w = 62, h = 88; let lastM;
+    for (let i = 0; i < n; i++) {
+      const c = Math.cos(a + (r() - 0.5) * 0.22), s2 = Math.sin(a + (r() - 0.5) * 0.22); const M = [c, s2, -s2, c, px + (r() - 0.5) * 8, py + (r() - 0.5) * 8 - i * 1.2]; lastM = M;
+      const card = OTM.S().M(-w / 2 + 6, -h / 2).L(w / 2 - 6, -h / 2).Q(w / 2, -h / 2, w / 2, -h / 2 + 6).L(w / 2, h / 2 - 6).Q(w / 2, h / 2, w / 2 - 6, h / 2).L(-w / 2 + 6, h / 2).Q(-w / 2, h / 2, -w / 2, h / 2 - 6).L(-w / 2, -h / 2 + 6).Q(-w / 2, -h / 2, -w / 2 + 6, -h / 2).Z();
+      const hl = S(); if (i === n - 1) {
+        hl.add(OTM.S().rect(-w / 2 + 5, -h / 2 + 5, w - 10, 2.2)).add(OTM.S().rect(-w / 2 + 5, h / 2 - 7.2, w - 10, 2.2)).add(OTM.S().rect(-w / 2 + 5, -h / 2 + 5, 2.2, h - 10)).add(OTM.S().rect(w / 2 - 7.2, -h / 2 + 5, 2.2, h - 10));
+        const d = 9.5; for (let yy = -h / 2 + 13; yy < h / 2 - 10; yy += d * 0.75) for (let xx = -w / 2 + 12; xx < w / 2 - 9; xx += d) { const ox = (Math.round((yy + 100) / (d * 0.75)) % 2) ? d / 2 : 0; if (xx + ox < w / 2 - 11) hl.poly([[xx + ox, yy - 3.4], [xx + ox + 3.4, yy], [xx + ox, yy + 3.4], [xx + ox - 3.4, yy]]); }
+      }
+      ROD.piece(L, card.transform(M).path(0.25, 3 + i), hl.polys.length ? hl.transform(M).path(0.1, 2) : null);
+      if (i > 0) { L.save(); L.strokeStyle = 'rgba(220,160,90,0.28)'; L.lineWidth = 1; L.stroke(card.transform(M).path(0.25, 3 + i)); L.restore(); }
+      if (i === n - 1) { L.save(); L.globalCompositeOperation = 'destination-out'; L.fill(hl.transform(M).path(0.1, 2), 'evenodd'); L.restore(); }
+    }
+    const gelP = S().rect(-w / 2, -h / 2, w, h).transform(lastM).path(0, 1);
+    st.commit(L, { from: [px, py], shadow: { d: 6, blur: 5, alpha: 0.4 }, rim: { w: 1.4, color: P.lampCore, alpha: 0.5 }, texture: 0.3, gels: [{ path: gelP, color: P.angelo, alpha: 0.92, glow: 0.38 }] });
+    st.em.save(); st.em.globalAlpha = 0.35; st.em.fillStyle = '#FF5A5A'; st.em.fill(gelP); st.em.restore();
+  }
+  for (let k = 0; k < 7; k++) pile(k, k === 3 ? 4 : 5, 'pile' + k);
+
+  // ---------- glasses from above: rim ring (card), wine gel disc; Kay's lip mark; Deena's bottle-green ----------
+  function glass(x, y, gelC, lip) {
+    const L = st.layer(); const ring = S(); ring.circle(x, y, 23); const hole = S(); hole.circle(x, y, 19.5); const foot = S(); foot.circle(x + 7, y + 9, 27); const footH = S(); footH.circle(x + 7, y + 9, 25);
+    L.globalAlpha = 0.5; ROD.piece(L, foot.path(0.2, 1), footH.path(0.1, 2)); L.globalAlpha = 1; ROD.piece(L, ring.path(0.25, 3), hole.path(0.1, 4));
+    const disc = new Path2D(); disc.arc(x - 2, y + 2, 16, 0, 7);
+    st.commit(L, { from: [x, y], shadow: { d: 5, blur: 4, alpha: 0.35 }, rim: { w: 1.2, color: P.lampCore, alpha: 0.6 }, texture: false, gels: [{ path: disc, color: gelC, alpha: 0.85, glow: 0.3 }] });
+    g.save(); g.fillStyle = 'rgba(255,250,235,0.85)'; g.beginPath(); g.ellipse(x - 8, y - 7, 5, 2.2, -0.7, 0, 7); g.fill(); g.restore();
+    if (lip) { g.save(); g.strokeStyle = P.lipstick; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.arc(x, y, 21.5, -2.6, -1.85); g.stroke(); g.restore(); }
+  }
+  [0, 2, 3, 4, 5, 6].forEach(k => { const id = who[k]; const gp = glassAt(k); glass(gp[0], gp[1], id === 'deena' ? '#2F6E55' : P.wine, id === 'kay'); });
+
+  // ---------- Christof's biscuit, set down on the table by his place ----------
+  { const bx = 560, by = 446; const L = st.layer(); const b = S(); for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2; b.circle(bx + Math.cos(a) * 24, by + Math.sin(a) * 24, 6); } b.circle(bx, by, 25);
+    const bh = S(); [[0, 0], [-10, -7], [10, -7], [-10, 8], [10, 8], [0, -14], [0, 14]].forEach(([dx, dy]) => bh.circle(bx + dx, by + dy, 2.3));
+    ROD.piece(L, b.path(0.2, 2), bh.path(0.1, 1)); st.commit(L, { from: [bx, by], shadow: { d: 5, blur: 4, alpha: 0.4 }, rim: { w: 1.3, color: P.lampCore, alpha: 0.7 }, gels: [{ path: (() => { const q = new Path2D(); q.arc(bx, by, 26, 0, 7); return q; })(), color: '#D8A060', alpha: 0.5, glow: 0.2 }] }); }
+
+  // ---------- the six friends ----------
+  ['marina', 'christof', 'angelo', 'deena', 'kay', 'scott'].forEach(id => ROD.drawPuppet(st, figs[id], { shadowD: 10, shadowBlur: 10, shadowA: 0.42, rimW: 2, eyeGlow: false, seamColor: 'rgba(255,214,160,0.5)', seamW: 1.7 }));
+  // Angelo's deck in his hand (face down, lattice)
+  const dk0 = aF.hands[0]; const deckC = [dk0.wrist[0] + Math.cos(dk0.ang) * 28, dk0.wrist[1] + Math.sin(dk0.ang) * 28];
+  { const h = dk0; const L = st.layer(); const M = [Math.cos(h.ang), Math.sin(h.ang), -Math.sin(h.ang), Math.cos(h.ang), deckC[0], deckC[1]];
+    const dk = S().rect(-28, -20, 56, 40); const hl = S(); for (let yy = -13; yy <= 13; yy += 6.5) for (let xx = -21; xx <= 21; xx += 8.4) hl.poly([[xx, yy - 2.6], [xx + 2.6, yy], [xx, yy + 2.6], [xx - 2.6, yy]]);
+    ROD.piece(L, dk.transform(M).path(0.2, 1), hl.transform(M).path(0.1, 1)); st.commit(L, { from: h.wrist, shadow: { d: 6, blur: 5, alpha: 0.4 }, rim: { w: 1.2, color: P.lampCore, alpha: 0.7 }, gels: [{ path: dk.transform(M).path(0, 1), color: P.angelo, alpha: 0.9, glow: 0.35 }] }); }
+
+  // ---------- punch the empty place: a seated person's shape cut out of every layer, pure lamp-core, 1px char edge ----------
+  const holeP = hole.union.path(0.3, 4);
+  ROD.holes(st, m => m.fill(holeP), { charW: 1.1, charAlpha: 1, emberRim: 0.0, bloom: 0.5, flecks: 0, seed: 'seat' });
+  st.patches = (st.patches || []).concat([{ path: holeP, m: new DOMMatrix() }]);   // no paper there: no fibre, no grain
+  // the rods that do not cross the table come up in front
+  [['kay', 590], ['scott', 860], ['deena', 1650]].forEach(([id, x]) => rodX.push(ROD.rod(st, x, figs[id].grip[0], figs[id].grip[1], rodOpt(id)).lipX));
+
+  // ---------- the bare seventh rod: no ferrule, ending exactly at the empty figure's shoulder pin point ----------
+  const shoulder = hole.shoulders[1][1] > hole.shoulders[0][1] ? hole.shoulders[1] : hole.shoulders[0];
+  const bareX = ROD.rod(st, 1300, shoulder[0], shoulder[1], { color: null, lipTop: LIP, w: 8, noSlot: true }).lipX;
+  // a pin hole where a split pin would be, with nothing pinned to it
+  g.save(); g.fillStyle = P.char; g.beginPath(); g.arc(shoulder[0], shoulder[1], 3.2, 0, 7); g.fill(); g.restore();
+
+  // ---------- stage lip ----------
+  const lipT = ROD.lip(st, { top: LIP, tacks: [60, 1860] }).top;
+  rodX.concat([bareX]).forEach(x => ROD.rodSlot(st, x, lipT, 8));
+
+  // ---------- dialogue: Angelo's card dealt beside his deck hand; Deena's accusation thrust into the centre ----------
+  ROD.type.angeloCard(st, 'What?', deckC[0] + 44, deckC[1] - 30, { size: 38, rot: 0.1 });
+  ROD.type.deena(st, "Who's that for?", 716, 446, { size: 62, tracking: 5, rot: -0.035 });
+
+  ROD.paperDetail(st, 0.55);
+  ROD.finish(st, { halation: 0.6, grain: 0.09, vignette: 0.55, vigR: 1.1, vigColor: '#1c0d06', vigCenter: TC });
+  ROD.slate(st, 'ONE TOO MANY · LOOK C: ONE ROD TOO MANY', 'SEVEN HANDS · INT. DINING AREA · OVERHEAD');
+  window.FRAME_READY = true;
+})().catch(e => { console.error(e && e.stack || e); });
+</script>

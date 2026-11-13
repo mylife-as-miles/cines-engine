@@ -1,0 +1,44 @@
+<!doctype html><meta charset="utf-8"><title>S02 voices</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx=OTM.stage(), {C,W,H,S}=OTM; const f=OTM.frame(ctx,{seed:8}); const g=f.world;
+  g.fillStyle=C.ink; g.fillRect(0,0,W,H);
+  // a low lamp from the left grazing the sheet, posterised
+  OTM.lightPool(g,-220,560,[{r:1250,color:'#140F0C'},{r:820,color:'#1B1410'},{r:420,color:'#241A13'}],{sy:1.25,rough:2.5,seed:12});
+  const L=96, X=640, top=212, rowH=102;
+  OTM.text(g,'EVERY VOICE IS A TYPEFACE',L,152,{family:'Six Caps',size:92,color:C.cardPaper,tracking:5});
+  OTM.text(g,'No voice actors. The words stay exactly as written; the type does the acting.',L+640,112,{family:'Barlow Condensed',weight:500,size:24,color:C.cardPaper,alpha:0.7,tracking:2});
+  OTM.text(g,'Face · colour · entrance · landing sound. Frozen here mid-motion.',L+640,144,{family:'Barlow Condensed',weight:400,size:22,color:C.cardPaper,alpha:0.48,tracking:1.5});
+  const rows=[
+    ['SCOTT','types like a text he never sends · deletes backwards',"caret waits in his silences · '--' is guillotined", (y)=>OTM.say(g,'scott',"I was going to text you about Saturday.",X,y,{caret:true})],
+    ['KAY','fogs on like breath on glass','her last glyph lingers in lipstick', (y)=>OTM.say(g,'kay',"You mean the text you started on Monday?",X,y,{p:0.8})],
+    ['DEENA','hard cut on · hard cut off','her type points at what she means', (y)=>{ const r=OTM.say(g,'deena',"Count those.",X,y,{pointTo:[X+700,y-24]}); for(let i=0;i<5;i++){ g.save(); g.translate(X+730+i*46,y-24); g.rotate((i-2)*0.06); g.fillStyle=C.cardBlue; g.fillRect(-17,-24,34,48); g.strokeStyle=OTM.rgba(C.cardPaper,0.7); g.lineWidth=1.5; g.strokeRect(-13,-20,26,40); g.restore(); } }],
+    ['ANGELO','his words are dealt like cards','a wrong count deals one blank card more', (y)=>OTM.say(g,'angelo',"Okay. With Kay gone, five people. Yes?",X,y,{big:['five'],blankSlot:true,spread:0.25})],
+    ['CHRISTOF','a marquee on a smile-shaped arc','bulbs die when the joke does', (y)=>OTM.say(g,'christof',"Thank you. I'll accept apologies individually.",X,y,{p:0.93,bulbs:true})],
+    ['MARINA','mono on a strict grid','full stops are wine rings · the grid drifts under stress', (y)=>OTM.say(g,'marina',"Okay, that's enough. Somebody take a photo.",X,y,{})],
+    ['DISPATCHER','one fixed band · narrowband line','the only thing in the film that counts correctly', (y)=>OTM.say(g,'dispatcher',"Sir? Stay with me. You said there were six people.",X,y,{align:'left',timer:null})],
+    ['VOICE (O.S.)','no face of its own: borrows the face it echoes','cut through the paper to the fire behind', (y)=>{
+        // a strip of set paper so the cut reads as a hole
+        const pp=S().rect(X-30,y-78,1210,118).path(1.4,6); g.fillStyle='#2A1E17'; g.fill(pp);
+        OTM.say(g,'voice',"Scott.",X+20,y+6,{frame:f,face:'angelo',size:86,align:'left'});
+        OTM.say(g,'voice',"Angelo.",X+330,y-6,{frame:f,face:'scott',size:40,align:'left',depth:0.6});
+        OTM.text(g,"in Angelo's face",X+20,y+28,{family:'Barlow Condensed',weight:500,size:17,color:C.cardPaper,alpha:0.45,tracking:2});
+        OTM.text(g,"in Scott's face, very softly",X+330,y+28,{family:'Barlow Condensed',weight:500,size:17,color:C.cardPaper,alpha:0.45,tracking:2}); }],
+  ];
+  const colors=[C.tScott,C.tKay,C.tDeena,C.tAngelo,C.tChristof,C.tMarina,C.tDispatcher,C.ember];
+  rows.forEach(([name,a,b,draw],i)=>{
+    const y=top+i*rowH+44;
+    g.fillStyle=OTM.rgba(C.cardPaper,0.07); g.fillRect(L,top+i*rowH-16,W-2*L,1);
+    g.fillStyle=colors[i]; g.fillRect(L,y-30,6,36);
+    OTM.text(g,name,L+22,y-8,{family:'Barlow Condensed',weight:600,size:26,color:C.cardPaper,tracking:4});
+    OTM.text(g,a,L+22,y+20,{family:'Barlow Condensed',weight:400,size:19,color:C.cardPaper,alpha:0.6,tracking:0.5});
+    OTM.text(g,b,L+22,y+42,{family:'Barlow Condensed',weight:400,size:19,color:C.cardPaper,alpha:0.42,tracking:0.5});
+    draw(y+4);
+  });
+  f.finish({vignette:0.4, halation:0.5, grain:0.06});
+  OTM.slate(ctx,'ONE TOO MANY  ·  DIALOGUE SYSTEM','EIGHT VOICES',1.78);
+  window.FRAME_READY=true;
+})();
+</script>

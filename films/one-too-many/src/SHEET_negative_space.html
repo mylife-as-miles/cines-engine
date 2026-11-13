@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><title>negative space frames</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  :root{--ink:#0D0A09;--paper:#EFE5D0;--mute:#9A8F80;--amber:#F2A93B}
+  html,body{margin:0;background:var(--ink);color:var(--paper)}
+  .s{width:3200px;padding:56px 64px 64px;box-sizing:border-box}
+  h1{font-family:"Six Caps";font-weight:400;font-size:140px;letter-spacing:6px;margin:0;line-height:1}
+  .sub{font-family:"Barlow Condensed";font-size:30px;letter-spacing:3px;color:var(--mute);margin:6px 0 34px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px 18px}
+  figure{margin:0}
+  figure img{width:100%;aspect-ratio:16/9;display:block;background:#1E1714}
+  figcaption{font-family:"Barlow Condensed";font-size:24px;letter-spacing:2.5px;margin-top:8px;color:var(--mute)}
+  figcaption b{color:var(--amber);font-weight:600;margin-right:10px}
+</style>
+<div class="s">
+  <h1>ONE TOO MANY · NEGATIVE SPACE</h1>
+  <div class="sub">STYLE FRAMES · CUT-PAPER NOIR · THE EXTRA IS NEVER DRAWN, ONLY CUT THROUGH TO THE FIRE</div>
+  <div class="grid" id="g"></div>
+</div>
+<script>
+const F=[['F01_title','01','TITLE'],['F02_cold_open','02','COLD OPEN'],['F03_kay_at_the_door','03','KAY AT THE DOOR'],['F04_the_party','04','THE PARTY'],
+['F05_seven_hands','05','SEVEN HANDS'],['F06_six_hands','06','SIX HANDS ON SIX CARDS'],['F07_hand_circle','07','THE HAND CIRCLE'],['F08_the_photo','08','THE PHOTO'],
+['F09_the_oven','09','THE OVEN'],['F10_deena','10','DEENA'],['F11_the_lighter','11','THE LIGHTER'],['F12_the_kitchen_erupts','12','THE KITCHEN ERUPTS'],
+['F13_two','13','TWO.'],['S01_cast','CAST','SEVEN PLACES · SIX PEOPLE'],['S02_voices','VOICES','EVERY VOICE IS A TYPEFACE'],['S03_colour_script','COLOUR','THE LIGHT, COUNTED']];
+const g=document.getElementById('g');let n=F.length;
+F.forEach(([f,num,cap])=>{const fig=document.createElement('figure');const img=new Image();img.onload=img.onerror=()=>{if(--n===0)document.fonts.ready.then(()=>window.FRAME_READY=true)};img.src='../frames/'+f+'.jpg';fig.appendChild(img);const c=document.createElement('figcaption');c.innerHTML=`<b>${num}</b>${cap}`;fig.appendChild(c);g.appendChild(fig)});
+</script>

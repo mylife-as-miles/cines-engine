@@ -1,0 +1,221 @@
+<!doctype html><meta charset="utf-8"><title>F05</title>
+<script src="../kit/otm.js"></script><script src="../kit/figures.js"></script><script src="../kit/dialogue.js"></script>
+<script>
+(async()=>{
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), {C, W, H, S} = OTM;
+  const f = OTM.frame(ctx, {seed: 5});
+  const g = f.world, E = f.emissive;
+  const smooth = OTM.fig.smooth, hand = OTM.fig.hand;
+  const D2R = Math.PI / 180;
+  const R = OTM.rng('f05');
+
+  // ================= geometry (top-down, clock angles clockwise from 12) =================
+  const CX = 846, CY = 536;        // lamp + table centre
+  const ROT = -6;                  // overhead camera mid-rotation
+  const RT = 352;                  // table radius
+  const RP = 455;                  // seat (shoulder) radius
+  const RPILE = 228;               // card piles
+  const SC = 94;                   // figure scale
+  const P = (deg, r) => { const a = (deg + ROT) * D2R; return [CX + r * Math.sin(a), CY - r * Math.cos(a)]; };
+  const ang = deg => (deg + ROT) * D2R;
+  const faceIn = (x, y) => Math.atan2(CY - y, CX - x);
+
+  // ---------- top-down seated figure (bespoke: foreshortened upper arms, separate head layer) ----------
+  // local: x forward (toward the lamp), y to the figure's RIGHT; 1 unit = 1 head height
+  function topFig(id, o) {
+    const D = OTM.fig.CHAR[id]; o = Object.assign({ scale: 60, dir: 0, poses: ['flat', 'flat'], headTurn: 0, spread: 0.05, lean: 0 }, o);
+    const sc = o.scale, sK = D.shoulderK * (D.chestK > 1.1 ? 1.08 : 1); const cs = Math.cos(o.dir), sn = Math.sin(o.dir);
+    const M = [cs * sc, sn * sc, -sn * sc, cs * sc, o.x, o.y];
+    const toW = (x, y) => [o.x + (x * cs - y * sn) * sc, o.y + (x * sn + y * cs) * sc];
+    const toL = (X, Y) => { const dx = (X - o.x) / sc, dy = (Y - o.y) / sc; return [dx * cs + dy * sn, -dx * sn + dy * cs]; };
+    const body = S(), arms = S();
+    const bk = D.chestK > 1.1 ? 1.12 : D.female ? 0.94 : 1;
+    body.add(smooth([[0.3, -0.92 * sK], [0.38, -0.45], [0.4, 0], [0.38, 0.45], [0.3, 0.92 * sK], [0.06, 1.16 * sK], [-0.3, 1.1 * sK], [-0.52 * bk, 0.68], [-0.6 * bk, 0], [-0.52 * bk, -0.68], [-0.3, -1.1 * sK], [0.06, -1.16 * sK]], true));
+    const lf = 1.1 * D.armK, luMax = 1.25 * D.armK; const out = { hands: [], M };
+    [-1, 1].forEach((side, i) => {
+      const pose = o.poses[i]; const Sx = 0.02, Sy = side * 0.92 * sK;
+      if (pose === 'tuck') { arms.capsule(Sx, Sy, 0.3, Sx + 0.42, Sy + side * 0.06, 0.24); out.hands.push(null); return; }
+      const tw = o.hands && o.hands[i], tl = o.handsL && o.handsL[i];
+      let T2 = tw ? toL(tw[0], tw[1]) : tl.slice();
+      let dx = T2[0] - Sx, dy = T2[1] - Sy, d = Math.hypot(dx, dy);
+      const lu = OTM.clamp(d - lf * 0.92, 0.42, luMax);
+      if (d > lu + lf) { T2 = [Sx + dx / d * (lu + lf) * 0.995, Sy + dy / d * (lu + lf) * 0.995]; dx = T2[0] - Sx; dy = T2[1] - Sy; d = Math.hypot(dx, dy); }
+      const a = Math.atan2(dy, dx); const cosA = OTM.clamp((lu * lu + d * d - lf * lf) / (2 * lu * d), -1, 1);
+      const ea = a + side * Math.acos(cosA);
+      const Ej = [Sx + Math.cos(ea) * lu, Sy + Math.sin(ea) * lu];
+      arms.capsule(Sx, Sy, 0.29, Ej[0], Ej[1], 0.2); arms.capsule(Ej[0], Ej[1], 0.19, T2[0], T2[1], 0.13);
+      const ha = Math.atan2(T2[1] - Ej[1], T2[0] - Ej[0]) + (o.wrist ? o.wrist[i] : 0);
+      const hk = 0.8 * (id === 'angelo' ? 1.12 : D.female ? 0.92 : 1);
+      const hm = [Math.cos(ha) * hk, Math.sin(ha) * hk, -Math.sin(ha) * hk * side, Math.cos(ha) * hk * side, T2[0], T2[1]];
+      if (pose) arms.add(hand(pose, Object.assign({ spread: o.spread }, o.handOpts ? o.handOpts[i] : {})).transform(hm));
+      out.hands.push({ side, wrist: toW(T2[0], T2[1]), hm, ha, T2, E: toW(Ej[0], Ej[1]) });
+    });
+    // head + hair, turned about the neck
+    const hs = S(); const hx = 0.16 + o.lean;
+    hs.ellipse(hx, 0, 0.45, 0.37, 0); hs.ellipse(hx + 0.45, 0, 0.08, 0.06, 0);
+    const r = OTM.rng('tophair' + id);
+    switch (D.hair) {
+      case 'christof': for (let i = 0; i < 15; i++) { const a = i / 15 * Math.PI * 2; hs.circle(hx - 0.04 + Math.cos(a) * 0.36 + (r() - 0.5) * 0.06, Math.sin(a) * 0.33 + (r() - 0.5) * 0.06, 0.17 + r() * 0.05); } hs.ellipse(hx - 0.04, 0, 0.42, 0.38, 0); break;
+      case 'deena': hs.ellipse(hx - 0.02, 0, 0.45, 0.37, 0); hs.circle(hx - 0.4, 0.0, 0.15); { const w = o.swing || 0; hs.add(smooth([[hx - 0.4, -0.16], [hx - 0.66, -0.24 + w * 0.5], [hx - 0.9, -0.16 + w], [hx - 1.02, 0.02 + w * 1.3, 1], [hx - 0.88, 0.2 + w], [hx - 0.64, 0.23 + w * 0.5], [hx - 0.4, 0.16]], true)); } break;
+      case 'kay': hs.add(smooth([[hx + 0.36, -0.3], [hx + 0.05, -0.42], [hx - 0.45, -0.46], [hx - 0.82, -0.52, 1], [hx - 0.7, -0.22], [hx - 0.9, 0.0, 1], [hx - 0.72, 0.2], [hx - 0.84, 0.48, 1], [hx - 0.45, 0.46], [hx + 0.05, 0.42], [hx + 0.36, 0.3]], true)); break;
+      case 'marina': hs.add(smooth([[hx + 0.42, -0.34, 1], [hx, -0.44], [hx - 0.44, -0.4, 1], [hx - 0.5, 0.0], [hx - 0.44, 0.4, 1], [hx, 0.44], [hx + 0.42, 0.34, 1], [hx + 0.46, 0]], true)); break;
+      case 'angelo': hs.add(smooth([[hx + 0.48, -0.18], [hx + 0.4, -0.37], [hx - 0.05, -0.41], [hx - 0.5, -0.33], [hx - 0.66, 0.0], [hx - 0.5, 0.33], [hx - 0.05, 0.41], [hx + 0.4, 0.37], [hx + 0.48, 0.18]], true)); break;
+      case 'scott': hs.ellipse(hx - 0.02, 0, 0.46, 0.38, 0); hs.poly([[hx - 0.3, -0.06], [hx - 0.58, 0.04], [hx - 0.32, 0.1]]); hs.poly([[hx - 0.18, 0.12], [hx - 0.4, 0.26], [hx - 0.12, 0.2]]); break;
+    }
+    const ht = o.headTurn, hc = Math.cos(ht), hsn = Math.sin(ht);
+    const HM = [hc, hsn, -hsn, hc, 0, 0];
+    const head = hs.transform(HM);
+    out.HM = HM; out.toW = toW; out.id = id;
+    out.body = S().add(body).add(head).transform(M);
+    out.torso = body.transform(M); out.arms = arms.transform(M); out.headShape = head.transform(M);
+    out.shape = S().add(body).add(arms).add(head).transform(M);
+    return out;
+  }
+  const apM = (m, p) => [m[0] * p[0] + m[2] * p[1] + m[4], m[1] * p[0] + m[3] * p[1] + m[5]];
+  const compM = (A, B) => [A[0] * B[0] + A[2] * B[1], A[1] * B[0] + A[3] * B[1], A[0] * B[2] + A[2] * B[3], A[1] * B[2] + A[3] * B[3], A[0] * B[4] + A[2] * B[5] + A[4], A[1] * B[4] + A[3] * B[5] + A[5]];
+
+  // ================= ink + floor spill =================
+  g.fillStyle = C.ink; g.fillRect(0, 0, W, H);
+  OTM.lightPool(g, CX, CY, [{ r: 800, color: '#1A120D' }, { r: 610, color: '#2E2016' }], { rough: 3.0, seed: 21 });
+
+  const tableDisc = S().circle(CX, CY, RT).path(1.4, 9);
+  const notTable = new Path2D(); notTable.rect(0, 0, W, H); notTable.addPath(tableDisc);
+
+  // ================= seating (locked plan: Angelo 12, Christof 2, Kay 4, Scott 6, Marina 8, Deena 10) =================
+  const PILE7 = 150;                                     // the place at Scott's right
+  const pileAng = k => PILE7 + k * 360 / 7;              // 51.43 deg ring, misregistered against the 60 deg chairs
+  const seats = [
+    { id: 'angelo', clock: 0, shift: 0 },
+    { id: 'christof', clock: 60, shift: -4 },
+    { id: 'kay', clock: 120, shift: -9 },
+    { id: 'scott', clock: 180, shift: 8 },
+    { id: 'marina', clock: 240, shift: 3 },
+    { id: 'deena', clock: 300, shift: 0 },
+  ];
+  const pileXY = k => P(pileAng(k), RPILE);
+  const P7 = pileXY(0);
+
+  // chairs: six, exactly 60 deg apart (people shift in them; the chairs do not)
+  const rotM = a => [Math.cos(a), Math.sin(a), -Math.sin(a), Math.cos(a), 0, 0];
+  const chairShapes = seats.map(s => {
+    const a = ang(s.clock); const [x, y] = P(s.clock, RP);
+    const rail = S(); const n = 22; const pts = [];
+    for (let i = 0; i <= n; i++) { const u = -1.0 + 2.0 * i / n; pts.push([u, -(0.78 - 0.2 * Math.cos(u * 1.55))]); }
+    for (let i = n; i >= 0; i--) { const u = -1.0 + 2.0 * i / n; pts.push([u * 1.02, -(1.02 - 0.2 * Math.cos(u * 1.55))]); }
+    rail.poly(pts); rail.circle(-1.0, -0.8, 0.13); rail.circle(1.0, -0.8, 0.13);
+    return rail.transform(rotM(a)).scale(SC).translate(x, y);
+  });
+
+  // figures. Local hand targets: x forward toward the lamp, y to the figure's RIGHT. Table edge is at x ~ 1.1.
+  const figs = {};
+  const mk = (s, opts) => {
+    const [x, y] = P(s.clock + s.shift, RP); const dir = faceIn(x, y);
+    // every head turns to pile seven
+    let want = Math.atan2(P7[1] - y, P7[0] - x) - dir; while (want > Math.PI) want -= 2 * Math.PI; while (want < -Math.PI) want += 2 * Math.PI;
+    const fig = topFig(s.id, Object.assign({ x, y, scale: SC, dir, headTurn: OTM.clamp(want * 0.85, -1.1, 1.1) }, opts));
+    figs[s.id] = fig; return fig;
+  };
+  // ANGELO holds the deck at the table edge, both hands on it
+  mk(seats[0], { poses: ['clasp', 'clasp'], handsL: [[1.3, -0.4], [1.3, 0.4]], spread: 0.0, lean: 0.05 });
+  // CHRISTOF: big arms folded on the wood
+  mk(seats[1], { poses: ['clasp', 'clasp'], handsL: [[1.55, 0.42], [1.38, -0.4]], lean: 0.06 });
+  // KAY: the arm nearest the empty place tucked into her lap; right hand resting on the wood
+  mk(seats[2], { poses: ['tuck', 'flat'], handsL: [null, [1.55, 0.5]], handOpts: [null, { spread: 0.0, curl: 0.45 }], wrist: [0, -0.35], lean: 0.02 });
+  // SCOTT: right arm tucked against his ribs; left hand reaching toward his own (misplaced) pile
+  mk(seats[3], { poses: ['flat', 'tuck'], handsL: [[1.62, -0.5], null], handOpts: [{ spread: 0.0, curl: 0.4 }, null], wrist: [0.3, 0], lean: 0.0 });
+  // MARINA: ringed right hand flat on the wood, left hand curled by her
+  mk(seats[4], { poses: ['clasp', 'flat'], handsL: [[1.45, -0.72], [1.68, 0.38]], handOpts: [null, { spread: 0.02, curl: 0.2 }], wrist: [0, -0.3], lean: 0.04 });
+  // DEENA: right arm straight across the table at pile seven
+  mk(seats[5], { poses: ['clasp', 'point'], hands: [null, [P7[0], P7[1]]], handsL: [[1.5, -0.62], null], swing: 0.06, lean: 0.22, wrist: [0, 0.42] });
+
+  // ================= floor: short cut-paper drop shadows (lamp at the centre) =================
+  const radial = k => [k, 0, 0, k, CX - k * CX, CY - k * CY];
+  g.save(); g.clip(notTable, 'evenodd');
+  seats.forEach((s, i) => { OTM.castShadow(g, chairShapes[i], radial(1.025), 0.75); OTM.castShadow(g, figs[s.id].body, radial(1.03), 0.7); });
+  g.restore();
+  chairShapes.forEach((sh, i) => OTM.silhouette(g, sh, { fill: '#0B0807', light: { x: CX, y: CY }, rimColor: C.tungstenMid, rimW: 2.4, seed: 30 + i }));
+
+  // ================= the table: three hard rings =================
+  g.save(); g.clip(tableDisc);
+  OTM.lightPool(g, CX, CY, [{ r: RT + 40, color: C.tungstenLow }, { r: 274, color: C.tungstenMid }, { r: 180, color: C.tungsten }], { rough: 1.8, seed: 13 });
+  g.restore();
+  g.save(); g.strokeStyle = C.ink; g.lineWidth = 6; g.stroke(tableDisc); g.restore();
+
+  // ================= cards =================
+  const CW = 42, CH = 60;
+  function card(x, y, a, top) {
+    g.save(); g.translate(x, y); g.rotate(a);
+    g.fillStyle = C.cardPaper; g.beginPath(); g.roundRect(-CW / 2, -CH / 2, CW, CH, 3.5); g.fill();
+    g.fillStyle = C.cardBlue; g.beginPath(); g.roundRect(-CW / 2 + 3.2, -CH / 2 + 3.2, CW - 6.4, CH - 6.4, 2); g.fill();
+    if (top) { g.strokeStyle = OTM.rgba(C.cardPaper, 0.5); g.lineWidth = 1; g.strokeRect(-CW / 2 + 7, -CH / 2 + 7, CW - 14, CH - 14); }
+    g.restore();
+  }
+  function cardShadow(x, y, a, d, alpha) {
+    const rx = x - CX, ry = y - CY, rl = Math.hypot(rx, ry);
+    g.save(); g.globalAlpha = alpha; g.fillStyle = C.ink; g.translate(x + rx / rl * d, y + ry / rl * d); g.rotate(a); g.beginPath(); g.roundRect(-CW / 2 - 1, -CH / 2 - 1, CW + 2, CH + 2, 4); g.fill(); g.restore();
+  }
+  function pile(x, y, a, n, seed) {
+    const r = OTM.rng(seed);
+    cardShadow(x, y, a, 6, 0.6);
+    for (let i = 0; i < n; i++) { const top = i === n - 1; const j = top ? (r() - 0.5) * 0.08 : (r() - 0.5) * 0.55, dx = top ? 0 : (r() - 0.5) * 9, dy = top ? 0 : (r() - 0.5) * 9; card(x + dx, y + dy, a + j, top); }
+  }
+  for (let k = 0; k < 7; k++) { const [x, y] = pileXY(k); pile(x, y, ang(pileAng(k)), 5, 'pile' + k); }
+
+  // ================= people =================
+  g.save(); g.clip(tableDisc);
+  seats.forEach(s => OTM.castShadow(g, figs[s.id].shape, radial(1.03), 0.5));
+  g.restore();
+  seats.forEach((s, i) => {
+    const F = figs[s.id];
+    OTM.silhouette(g, S().add(F.torso).add(F.arms), { light: { x: CX, y: CY }, rimColor: C.tungsten, rimW: 3.4, seed: 40 + i });
+    OTM.silhouette(g, F.headShape, { light: { x: CX, y: CY }, rimColor: C.tungsten, rimW: 3.2, seed: 60 + i });
+  });
+
+  // the deck: squared in Angelo's hands, a few cards still sprung from the flourish
+  {
+    const a = ang(0) + Math.PI / 2; const [x, y] = figs.angelo.toW(1.52, 0);
+    for (let i = 0; i < 9; i++) { const t = (i - 4) * 0.05; card(x + Math.sin(t) * 6, y + 3 - i * 0.8, a + t, i === 8); }
+    // thumbs pin the deck
+    const A = figs.angelo; g.fillStyle = C.ink;
+    [-1, 1].forEach(s => { const [tx, ty] = A.toW(1.6, s * 0.12); const [bx, by] = A.toW(1.34, s * 0.4); g.fill(S().capsule(bx, by, 0.12 * SC, tx, ty, 0.08 * SC).path(0.6, 3)); });
+  }
+  // details: Angelo's cigarette sliver behind his ear, Marina's ring glints
+  {
+    const A = figs.angelo; const m = compM(A.M, A.HM); const a = apM(m, [0.1, 0.42]), b = apM(m, [-0.25, 0.47]);
+    g.save(); g.strokeStyle = C.cardPaper; g.lineCap = 'round'; g.lineWidth = 4; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); g.restore();
+    const Mr = figs.marina; const hm = compM(Mr.M, Mr.hands[1].hm);
+    g.fillStyle = '#E8C46A'; [[0.5, -0.06], [0.48, 0.05]].forEach(p => { const q = apM(hm, p); g.beginPath(); g.arc(q[0], q[1], 2.6, 0, 7); g.fill(); });
+  }
+
+  // dust hanging in the lamp light (between us and the table)
+  OTM.dust(g, Array.from({ length: 24 }, (_, i) => P(i * 15, 250)), 70, C.cardPaper, 'f05dust');
+
+  // ================= the pendant: a black disc over the hottest ring =================
+  const SHADE_R = 108;
+  const drawShade = c => {
+    c.save(); c.globalAlpha = 0.4; c.fillStyle = C.ink; c.fill(S().circle(CX + 5, CY + 7, SHADE_R + 6).path(1, 3)); c.restore();
+    c.fillStyle = C.ink; c.fill(S().circle(CX, CY, SHADE_R).path(0.8, 4));
+    c.strokeStyle = '#1A1310'; c.lineWidth = 2; c.beginPath(); c.arc(CX, CY, SHADE_R * 0.68, 0, 7); c.stroke();
+    c.fillStyle = '#1A1310'; c.beginPath(); c.arc(CX, CY, 12, 0, 7); c.fill();
+  };
+  drawShade(g);
+  E.save(); E.fillStyle = C.tungsten; E.globalAlpha = 0.85; E.beginPath(); E.arc(CX, CY, 180, 0, 7); E.arc(CX, CY, SHADE_R, 0, 7, true); E.fill('evenodd'); E.restore();
+  E.save(); E.fillStyle = C.tungstenMid; E.globalAlpha = 0.3; E.beginPath(); E.arc(CX, CY, 274, 0, 7); E.fill(); E.restore();
+
+  // ================= dialogue: Deena =================
+  const TS = 54;
+  const a7 = ang(PILE7); const ax = Math.sin(a7), ay = -Math.cos(a7);
+  const TY = 992; const ruleY = TY - TS * 0.32; const tStartX = P7[0] + ax * (ruleY - P7[1]) / ay;
+  OTM.knockBehind(g, tStartX + 10, TY - TS * 0.95, 470, TS * 1.2, 0.55);
+  OTM.say(g, 'deena', "Who's that for?", tStartX + TS * 0.28, TY, { size: TS });
+  g.save(); g.strokeStyle = C.tDeena; g.lineWidth = 3; g.lineCap = 'square';
+  const end = [P7[0] + ax * 4, P7[1] + ay * 4];
+  g.beginPath(); g.moveTo(tStartX, ruleY); g.lineTo(end[0], end[1]); g.stroke();
+  g.fillStyle = C.tDeena; g.beginPath(); g.arc(end[0], end[1], 6, 0, 7); g.fill(); g.restore();
+
+  f.finish({ letterbox: 1.78, vignette: 0.5, halation: 0.5, beforePost: c => drawShade(c) });
+  OTM.slate(ctx, 'ONE TOO MANY  ·  STYLE FRAME 05', 'SEVEN HANDS', 1.78);
+  window.FRAME_READY = true;
+})();
+</script>
