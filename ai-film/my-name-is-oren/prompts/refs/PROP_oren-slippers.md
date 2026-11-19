@@ -2,7 +2,7 @@
 
 Blue tape on the RIGHT slipper, to match the approved Oren sheet (`refs/CHAR_oren_t1.jpg`). The author's prop template with every bracket filled. The YELLOW title, film name and COLOR LOCK palette are swapped for this film's bible. SCREEN / DISPLAY LOCK is deleted, as the template says for non-electronic props. Film-specific items are added at the end of NEGATIVE LOCK.
 
-Dreamina image model (latest Seedream) · **16:9** · highest resolution · 2–4 images · text only.
+Dreamina image model (latest Seedream) · **16:9** · highest resolution · 2–4 images · attach `refs/CHAR_oren_t1.jpg` (the approved image that already shows them).
 
 ## Full version (the author's template, about 11,400 characters)
 
@@ -16,6 +16,8 @@ Create a photorealistic film-production prop reference image for:
 OREN'S SLIPPERS: a pair of big, ugly grey felt slippers with hook-and-loop straps, the right one mended across the toe with blue tape
 
 This is an EXACT CONTINUITY REFERENCE for the short film MY NAME IS OREN.
+
+The attached image shows these exact slippers on Oren. Match them exactly (shape, colour, the wide strap, the chunky sole, and the blue tape on the right toe), but show only the slippers: no person, no legs, no trousers.
 
 This is not advertising photography.
 This is not a product commercial.
@@ -599,10 +601,12 @@ Avoid:
 - cartoon
 ```
 
-## Short version (fits a 3,500-character prompt box: 2970 characters)
+## Short version (fits a 3,500-character prompt box: 3192 characters)
 
 ```
 MY NAME IS OREN — prop reference: OREN'S SLIPPERS, a pair of big, ugly grey felt slippers with hook-and-loop straps, the RIGHT one mended across the toe with blue tape. A photorealistic film-production continuity reference of ONE exact physical object, not advertising, not a product commercial, not concept art. The same object shown in four views on one sheet: HERO 3/4, FRONT, SIDE and BACK, plus one close DETAIL view. Every view is the exact same object, as if rotated in front of the camera; nothing changes between views. In the story: the first sign Oren is not a regulation machine; he plants one in front of a sweeper; Helena notices the tape when she looks at him properly.
+
+The attached image shows these exact slippers on Oren. Match them exactly (shape, colour, the wide strap, the chunky sole, and the blue tape on the right toe), but show only the slippers: no person, no legs, no trousers.
 
 OBJECT: a pair of closed felt house slippers of the kind made for care homes, men's UK size 9: about 30 cm long, 11 cm wide and 10 cm tall. Big, rounded bootee shapes with a wide, high toe box, closed toe and heel, a padded collar, and one wide grey hook-and-loop strap across each instep, fixed on the inner side and closing on the outer side. Heathered mid-grey wool felt, soft, matte and pilled, on a chunky, rounded, darker-grey moulded rubber sole about 2.5 cm thick that makes them look bigger than they are.
 

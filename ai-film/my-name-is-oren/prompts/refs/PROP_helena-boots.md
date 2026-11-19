@@ -2,7 +2,7 @@
 
 The loose sole on the RIGHT boot, to match the approved casting image. The author's prop template with every bracket filled. The YELLOW title, film name and COLOR LOCK palette are swapped for this film's bible. SCREEN / DISPLAY LOCK is deleted, as the template says for non-electronic props. Film-specific items are added at the end of NEGATIVE LOCK.
 
-Dreamina image model (latest Seedream) · **16:9** · highest resolution · 2–4 images · text only.
+Dreamina image model (latest Seedream) · **16:9** · highest resolution · 2–4 images · attach `refs/CAST_helena_t1.jpg` (the approved image that already shows them).
 
 ## Full version (the author's template, about 11,400 characters)
 
@@ -16,6 +16,8 @@ Create a photorealistic film-production prop reference image for:
 HELENA'S BOOTS: a pair of old brown-black leather lace-up combat boots, the right sole coming loose at the toe
 
 This is an EXACT CONTINUITY REFERENCE for the short film MY NAME IS OREN.
+
+The attached image shows these exact boots on Helena. Match them exactly (shape, colour, wear, laces, and the gap at the right toe), but show only the boots: no person, no legs, no trousers.
 
 This is not advertising photography.
 This is not a product commercial.
@@ -599,10 +601,12 @@ Avoid:
 - cartoon
 ```
 
-## Short version (fits a 3,500-character prompt box: 2872 characters)
+## Short version (fits a 3,500-character prompt box: 3064 characters)
 
 ```
 MY NAME IS OREN — prop reference: HELENA'S BOOTS, a pair of old brown-black leather lace-up combat boots, the RIGHT sole coming loose at the toe. A photorealistic film-production continuity reference of ONE exact physical object, not advertising, not a product commercial, not concept art. The same object shown in four views on one sheet: HERO 3/4, FRONT, SIDE and BACK, plus one close DETAIL view. Every view is the exact same object, as if rotated in front of the camera; nothing changes between views. In the story: the first thing we see of Helena; a sweeper bumps the loose toe; she picks at the rubber.
+
+The attached image shows these exact boots on Helena. Match them exactly (shape, colour, wear, laces, and the gap at the right toe), but show only the boots: no person, no legs, no trousers.
 
 OBJECT: a pair of six-inch lace-up combat boots from her service years, women's UK size 6: about 27 cm long and 16 cm tall. Very dark brown-black full-grain leather, worn matte with a little oily sheen left in the creases. A rounded toe, a padded collar and a pull loop at the back. Eight pairs of dulled metal eyelets with worn, slightly frayed dark waxed laces tied in a plain bow. A thick, lugged, dark brown-black rubber sole joined by a stitched welt.
 
