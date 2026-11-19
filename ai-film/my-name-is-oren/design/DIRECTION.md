@@ -106,6 +106,31 @@ H and O are Helena's and Oren's levels on the restraint scale. **Tells** go into
 | B30 Slow down | 5 / 2 | H: tugs his sleeve. O: the light blinks once; his face does not change; **his stride shortens**. | L73 plain and a little breathless, not pleading: the first time she says his name. | follow · steadicam · ground-level · profile · epiphany |
 | B31 The corner | 3 / 1 | H: her face eases a little (relief, not a smile); she keeps hold. O: walks at her pace; the bag swings in time with her. | — | wide · locked-off · one-point-perspective · negative-space · journey · slow-motion |
 
+## Camera words for [CAM] (one term per dimension, always in this order)
+
+The auteur template's [CAM] field asks for shot size, lens in mm, height, angle, and the move with its speed and end point. To keep forty generations speaking one language, write it in this order, with one term from each list and no competing synonyms. The terms are the ones the research benchmarks use (ShotBench, CineTechBench, CineScale, MovieNet).
+
+1. **Size:** extreme close-up · close-up (head and shoulders) · medium close-up (chest up) · medium (waist up) · medium wide (knees up) · wide (head to toe) · extreme wide.
+2. **Framing:** single · two-shot · over the shoulder · insert · profile · back shot.
+3. **Camera level** (height relative to the subject): ground · knee · hip · shoulder · eye. **Angle:** eye level · high angle · low angle. Never Dutch.
+4. **Lens:** 32–35 mm wide · 40–50 mm standard · 65–85 mm medium (mild compression) · 100 mm macro for inserts only. Never fisheye.
+5. **Movement:** locked-off ("no pan, no tilt, no zoom") · slow push-in ("the camera travels forward; no zoom") · handheld (Helena only) · follow at her pace (B30–B31). A push-in is never a zoom: Villeneuve's creep is the camera moving. The benchmarks found camera movement is what models misread most, so state it plainly and check it by eye.
+6. **Light:** overcast daylight, soft, low contrast; the laundrette window as a warm practical. Nothing else.
+7. **Composition:** Oren **symmetrical, centred**; Helena **off-centre, short side** (facing the near edge of frame, with empty space behind her). In two-shots they share the centre only from B21 on.
+
+Example [CAM] for B15: *close-up, single on Helena, eye level, 85 mm, handheld with a slow push-in that ends on her eyes, overcast soft light, off-centre short side.*
+
+## Camera height arc (feet first, in CineScale's terms)
+
+| Beats | Camera level | Why |
+| --- | --- | --- |
+| B01–B04 | ground and knee | We meet the city, Helena and Oren by their feet. |
+| B05–B13 | hip and shoulder; Oren seen from her seated height (low angle) | Faces are earned; he stands over her. |
+| B14–B20 | shoulder; her eye level once he sits (B17) | They are at the same height. |
+| **B21** | **eye level, a still two-shot** | "She looks at him. Properly, this time." The first time. |
+| B22–B29 | eye level and shoulder | The conversation, the doors, standing up. |
+| B30–B31 | ground (slippers and boots in step), then a wide at eye level | Back to the feet; the bag swings in time with her. |
+
 ## Using Cinekive (on the author's own computer)
 
 Cinekive is a local, private archive for film stills: you drop in films or frames you have the right to use, and search them by intention rather than shot size (for example *isolation · overcast · negative-space · lonely*). It runs on Windows and macOS (MIT licence). The intention tags above use its vocabulary, so each beat can be searched in the author's archive while the shot is being planned.
@@ -117,3 +142,4 @@ Cinekive is a local, private archive for film stills: you drop in films or frame
 - FACS vocabulary and dialogue beats: taohuahuangxiaoxie/video_skills, `higgsfield-facs` skill (no licence file found, so ideas only). FACS itself is Ekman & Friesen's standard system.
 - Restraint scale, "hold back rather than release", "the best crying is before the tear": snowfrost/skill-movie, `performance-scene-director` (no licence file found, so ideas only).
 - Intention tag vocabulary: Gianluca-Improta/cinekive (MIT).
+- Camera vocabulary (terms only, no data used): Vchitect/ShotBench (no licence file), PRIS-CV/CineTechBench (data CC BY-NC-ND 4.0), CineScale (research-use agreement), movienet/movienet-tools (Apache-2.0).
