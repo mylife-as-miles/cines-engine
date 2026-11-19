@@ -11,7 +11,7 @@ This draft is cut from the screenplay. The timings are estimates until the table
 - **Oren's left side** (seam, temple light) is the camera side whenever he faces Helena.
 - **No readable text from the model.** Decals, screens and the super come in the finish.
 
-**Continuity line (the whole film).** Overcast early afternoon, 1:31 to about 1:45 pm, a damp pavement and no rain falling. Helena wears the cropped olive field jacket, the charcoal knit and the boots with the loose left sole. Oren wears the navy work shirt (no coat) and the slippers with blue tape on the left one. The bag goes from his right hand (Q01–Q16) to his left (Q17–Q22), sits between his feet (Q23–Q31), goes back to his right (Q32–Q37), and ends in his left with his right arm offered (Q38–Q41).
+**Continuity line (the whole film).** Overcast early afternoon, 1:31 to about 1:45 pm, a damp pavement and no rain falling. Helena wears the cropped olive field jacket, the charcoal knit and the leather boots with the loose right sole. Oren wears the navy work shirt (no coat) and the slippers with blue tape on the right one. The bag goes from his right hand (Q01–Q16) to his left (Q17–Q22), sits between his feet (Q23–Q31), goes back to his right (Q32–Q37), and ends in his left with his right arm offered (Q38–Q41).
 
 ## Index
 
@@ -73,7 +73,7 @@ Black. Sound only: polite synthetic voices layered over traffic, chimes, and a t
 | 1 | 0–4 | Wide, knee height, 32 mm, locked-off | Three kerb sweepers work the gutter in a ragged line, brushes turning. The street's polite chimes are heard. |
 | 2 | 4–8 | Medium, waist to pavement, 50 mm, locked-off | Two city units in hi-vis empty a kerbside bin into a cart. Hands, vests and two pairs of identical grey regulation shoes; no faces. |
 | 3 | 8–11 | Square-on to the laundrette window, 50 mm, **locked-off** (decals go on in the finish) | The window with blank decal areas and the older half-peeled sign. Machines turn inside, and the warm spill of the tubes falls on the glass. |
-| 4 | 11–14 | Tilt down to pavement level, below the window | A pair of scuffed combat boots against the wall, the rubber coming loose from the left sole. Hold. |
+| 4 | 11–14 | Tilt down to pavement level, below the window | A pair of scuffed combat boots against the wall, the rubber coming loose from the right sole. Hold. |
 
 ### Q02 · Helena · 12 s · no dialogue
 | # | Time | Camera | Action / sound |
@@ -128,7 +128,7 @@ Black. Sound only: polite synthetic voices layered over traffic, chimes, and a t
 ### Q09 · Apologies · 12 s
 | # | Time | Camera | Action / sound |
 | --- | --- | --- | --- |
-| 1 | 0–3 | Pavement level, 32 mm, locked-off | A sweeper bumps the toe of her left boot. **Sweeper:** "Apologies." |
+| 1 | 0–3 | Pavement level, 32 mm, locked-off | A sweeper bumps the toe of her right boot (the loose one). **Sweeper:** "Apologies." |
 | 2 | 3–6 | Same | It reverses and tries the same gap again, and bumps again. |
 | 3 | 6–12 | Same, slow push in | Oren's slipper (the one with the blue tape) steps into its path and stays there. The sweeper stalls, turns, and goes round the two of them. |
 

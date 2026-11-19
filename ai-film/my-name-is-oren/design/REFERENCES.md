@@ -16,7 +16,7 @@ These are the film's continuity references, made before any video. Each is cited
 
 | ID | What | Used in |
 | --- | --- | --- |
-| `CHAR_helena` | Three-panel sheet: front full body (head omitted), rear, three-quarter face. The cropped olive field jacket with the mended elbow, the charcoal funnel-neck knit, wide cropped black utility trousers, and the boots with the loose left sole. | Every beat |
+| `CHAR_helena` | Three-panel sheet: front full body (head omitted), rear, three-quarter face. From `refs/CAST_helena_t1.jpg`: the cropped olive jacket with the patched left elbow, the charcoal funnel-neck knit, wide cropped pleated black trousers, and the leather boots with the loose right sole. | Every beat |
 | `CHAR_oren` | Three-panel sheet: the navy band-collar work shirt with a blank badge (no coat), grey trousers, the slippers. Skin a little too even. | B04 (feet only), B05–B31 |
 | `CHAR_oren_detail` | Two stills of his left profile in close-up: the seam below the ear and the temple light **unlit**, then **lit** (soft warm white under the skin), with the scrape on his chin. | Every close-up of Oren; B15, B20, B26–B27, B30 |
 | `CHAR_city-unit` | Costume sheet from the chest down: hi-vis tabard, grey work clothes, grey gloves, seamless grey regulation shoes. One sheet serves both units. | B02 |
@@ -38,8 +38,8 @@ The camera stays on the street side, so the background behind Helena is the laun
 | --- | --- | --- |
 | `PROP_lunch-bag` | Brown paper, top rolled twice, a grease stain through one bottom corner, the weight of a warm boxed meal. | B04–B31 |
 | `PROP_handset` | An older, thicker handset with a cracked top-left corner. Screen off; the screens are made in code. | B03, B14–B15 |
-| `PROP_helena-boots` | Brown-black leather scuffed grey at the toes, worn laces, the left sole's rubber coming loose at the toe. | Every shot showing her feet |
-| `PROP_oren-slippers` | Big, ugly grey felt slippers with wide Velcro straps and thick rubber soles; blue tape across the left toe. | Every shot showing his feet; B08, B21 |
+| `PROP_helena-boots` | Brown-black leather scuffed grey at the toes, worn laces, the **right** sole's rubber coming loose at the toe. | Every shot showing her feet |
+| `PROP_oren-slippers` | Big, ugly grey felt slippers with wide Velcro straps and thick rubber soles; blue tape across the **right** toe. | Every shot showing his feet; B08, B21 |
 | `PROP_sweeper` | A knee-high kerb robot, scuffed hi-vis yellow body, one small rotating brush, no readable text. | B01–B02, B08 |
 
 ### Look
