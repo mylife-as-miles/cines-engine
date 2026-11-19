@@ -23,4 +23,8 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 17 | Camera words in a fixed order, with a camera-level arc; a push-in is never a zoom. | `DIRECTION.md`, from ShotBench, CineTechBench, CineScale and MovieNet. | §3 Prompting |
 | 18 | A private reference archive (Cinekive) for planning; frames from other films are never attached to a generation. | The author's pointer; `DIRECTION.md`. | §9 Honesty, `research.md` |
 
+| 19 | Set 21:9 on every generation, and check: the first take came back 16:9, so 2.35:1 crops 12% top and bottom. Check that framing survives the matte. | Q01 t1 came back 854×480. | §3a Templates (2.35:1) |
+| 20 | A plain, evenly lit grey screen is a natural key: the composited UI sits behind fingers without rotoscoping. Still ask for the finger to hover, not touch. | Q01 t1 shot 5. | §8 Finish |
+| 21 | Keep good shots and regenerate only the failed ones as a short pickup, starting from the frame at the cut. | Q01 t1: shots 1–3 kept, a pickup for 4–6. *Pending.* | §5 Review and selects |
+
 Rows marked *pending* need a generated result before they can be called a lesson.
