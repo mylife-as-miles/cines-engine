@@ -8,7 +8,7 @@
 
 ## The world
 
-The near future, on an ordinary English side street. Machines are everywhere and always polite. Kerb sweepers apologise. Traffic posts settle arguments in calm, measured tones. The laundrette window offers free translation, free legal forms and free tutoring while you wait. None of it feeds anyone. Beside the new decals, an older sign with half its letters peeled away reads FREE WASHES FOR SCHOOL UNIFORMS: the last kindness a person put up by hand.
+The near future, on an ordinary English side street. The year is never said (the design assumes about 2041, to confirm). It is grounded, never sci-fi: the terraces are the ones standing today, retrofitted; the technology is quiet and inside things; the clothes are today's, a few seasons on. Machines are everywhere and always polite. Kerb sweepers apologise. Traffic posts settle arguments in calm, measured tones. The laundrette window offers free translation, free legal forms and free tutoring while you wait. None of it feeds anyone. Beside the new decals, an older sign with half its letters peeled away reads FREE WASHES FOR SCHOOL UNIFORMS: the last kindness a person put up by hand.
 
 ## The people
 

@@ -1,21 +1,23 @@
 # CHAR_helena — Helena Duncan, character sheet
 
-Two steps, as the author's template asks: a casting image first (the sheet's single source of truth), then the sheet itself, generated from the chosen casting image.
+Two steps, as the author's template asks: a casting image first (the sheet's single source of truth), then the sheet itself, generated from the chosen casting image. Version 2: a grounded, fashionable near future, never sci-fi (`DECISIONS.md`, World and wardrobe).
 
 ## Step 1 — Casting
 
 Dreamina image model (latest Seedream) · 2:3 portrait · highest resolution · 4 images. Fill the one bracket (casting), choose one, and record it below.
 
 ```
-Photorealistic full-length casting reference photograph of HELENA DUNCAN, an original fictional character for the short film MY NAME IS OREN. She is not based on, and must not resemble, any real actor or public figure.
+Photorealistic full-length casting reference photograph of HELENA DUNCAN, an original fictional character for the short film MY NAME IS OREN, set in England some years from now. She is not based on, and must not resemble, any real actor or public figure.
 
-WHO SHE IS: a woman in her early-to-mid thirties, a former British Army Second Lieutenant, [CASTING: her heritage and colouring — the author's choice]. She is lean from not eating properly for days: an athletic frame gone tired. A strong, plain, intelligent face with no make-up, faint shadows under the eyes and dry lips. Natural skin texture with real pores and slight unevenness. Her hair is pulled back in a short, practical low ponytail, with a few strands loose around her face.
+COSTUME WORLD: England some years from now, in a world where artificial intelligence stopped getting smarter and only got cheaper. Helpers are everywhere and free; bodies, handsets and clothes are refurbished, rented or repaired. The clothes are recognisably today's, a few seasons evolved and fashionable in a quiet, grown-up way: relaxed boxy silhouettes, high waists, cropped hems, band collars and funnel necks, matte technical-natural fabrics, flat bonded seams, and visible mending as an ordinary habit. Nothing on the body is futuristic: no gadgets, no lights, no chrome.
+
+WHO SHE IS: a woman in her early-to-mid thirties, a former British Army Second Lieutenant, [CASTING: her heritage and colouring — the author's choice]. She is lean from not eating properly for days: an athletic frame gone tired. A strong, plain, intelligent face with no make-up, faint shadows under the eyes and dry lips. Natural skin texture with real pores and slight unevenness. Her hair is pulled back in a short, practical low ponytail, with a few strands loose around her face. She has style, worn thin: good pieces, old now, kept and mended.
 
 WARDROBE (exact):
-- An old olive-green army-surplus field jacket, faded and softened by wear, with frayed cuffs, worn open. No insignia, patches, badges or text.
-- A grey cotton hoodie under the jacket, hood down, slightly pilled.
-- Dark charcoal cargo trousers, worn at the knees, side pockets flat.
-- Scuffed brown-black leather combat boots: toes scuffed to grey, worn laces. The rubber sole of the LEFT boot is coming loose at the toe, with a visible gap between sole and upper.
+- A cropped, boxy field jacket in faded olive recycled ripstop: a modern cut of military issue, kept from her service years. Dropped shoulders, a high funnel collar, flat bonded seams, two flat chest pockets, a concealed zip under a plain placket. No insignia, patches or text. The right elbow is mended with a darker olive patch and neat visible stitching. Worn open.
+- A heavyweight charcoal-grey knit top with a soft funnel neck, slightly pilled at the cuffs.
+- Wide, high-waisted utility trousers in washed black twill with a single front pleat, cropped just above the ankle, worn shiny at the knees.
+- Lean, modern combat boots in brown-black leather with matte textile panels and a one-piece moulded rubber sole: scuffed to grey at the toes, worn laces. The sole of the LEFT boot is coming loose at the toe, with a visible gap between sole and upper.
 
 POSE: standing straight, facing the camera, arms naturally at her sides, weight very slightly on her right leg. Expression serious and guarded; she looks directly into the camera. The entire figure is visible, from the top of her head to the soles of her boots, with a small margin.
 
@@ -23,7 +25,7 @@ BACKGROUND: seamless neutral mid-grey (#808080), even from edge to edge.
 LIGHT: clean soft even studio light, a large diffused key with gentle fill, soft natural shadows, true-to-life skin tones, neutral white balance.
 CAMERA: full-frame camera, 85 mm lens at chest height, deep focus, the whole figure tack-sharp from head to feet.
 
-NEGATIVE: no text, logos, insignia, patches or name tapes; no props, bag or jewellery; no make-up, glamour retouching or fashion styling; no smile; no stylisation, cartoon or CGI look; no rim light or coloured light.
+NEGATIVE: no sci-fi, cyberpunk or futuristic costume; no neon, LEDs, chrome, metallic or glossy fabrics; no visors, holograms, armour or techwear straps and buckles; no text, logos, insignia, patches or name tapes; no props, bag or jewellery; no make-up, glamour retouching or catwalk styling; no smile; no stylisation, cartoon or CGI look; no rim light or coloured light.
 ```
 
 ## Step 2 — Character sheet (the author's template, verbatim)

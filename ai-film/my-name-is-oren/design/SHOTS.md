@@ -11,7 +11,7 @@ This draft is cut from the screenplay. The timings are estimates until the table
 - **Oren's left side** (seam, temple light) is the camera side whenever he faces Helena.
 - **No readable text from the model.** Decals, screens and the super come in the finish.
 
-**Continuity line (the whole film).** Overcast early afternoon, 1:31 to about 1:45 pm, a damp pavement and no rain falling. Helena wears the olive field jacket, the grey hoodie and the boots with the loose left sole. Oren wears the navy fleece and the slippers with blue tape on the left one. The bag goes from his right hand (Q01–Q16) to his left (Q17–Q22), sits between his feet (Q23–Q31), goes back to his right (Q32–Q37), and ends in his left with his right arm offered (Q38–Q41).
+**Continuity line (the whole film).** Overcast early afternoon, 1:31 to about 1:45 pm, a damp pavement and no rain falling. Helena wears the cropped olive field jacket, the charcoal knit and the boots with the loose left sole. Oren wears the navy work shirt (no coat) and the slippers with blue tape on the left one. The bag goes from his right hand (Q01–Q16) to his left (Q17–Q22), sits between his feet (Q23–Q31), goes back to his right (Q32–Q37), and ends in his left with his right arm offered (Q38–Q41).
 
 ## Index
 

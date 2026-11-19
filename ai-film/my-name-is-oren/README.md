@@ -17,6 +17,7 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `design/screenplay.pdf` | The screenplay as the author wrote it: the source of truth for every line. |
 | `design/screenplay.txt` | The same, as text (`pdftotext -layout`). |
 | `design/pages/page-1.png` … `page-9.png` | The screenplay rendered one page per image (`pdftoppm -r 110`): the title page and script pages 1–8. |
+| `design/story.pdf`, `story.txt`, `story-pages/` | The author's prose short story *My Name Is Oren*, told by Helena (6 pages): the world bible behind the screenplay. The screenplay stays the source of every line. |
 | `design/script.json` | The screenplay as numbered elements (L01–L73 dialogue, A01–A58 action), built by `tools/parse_script.py`. Beats, shots and prompts cite these ids. |
 | `design/BEATS.md` | The film in 32 beats and seven movements, with each beat's turn, script ids, and timing for the 6:45 contest cut. |
 | `design/BEATS.pdf` | The beat sheet as a printable PDF (A4 landscape, 7 pages), rendered from `BEATS.md` by `tools/beats_pdf.js`. |

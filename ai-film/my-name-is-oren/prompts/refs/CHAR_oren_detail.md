@@ -7,7 +7,7 @@ Photorealistic two-panel continuity reference sheet of the exact same character 
 
 LAYOUT — Horizontal landscape composition: two panels of exactly equal width side by side, forming one continuous, seamless composition with no divider lines, borders, frames, gutters or gaps. Both panels are shot as if from one locked tripod: identical framing, camera position, focal length, subject scale, head angle, expression and lighting. The ONLY difference between the two panels is the light at his temple.
 
-FRAMING (both panels) — A close-up of his head and neck in left profile. His head is turned about 70 degrees to his right, so the LEFT side of his face faces the camera. The left ear, left temple, left cheek, jaw, chin and the side of the neck down to the fleece collar are all fully in frame, with a little space above the hair. Eyes open, looking ahead out of frame; neutral, calm expression.
+FRAMING (both panels) — A close-up of his head and neck in left profile. His head is turned about 70 degrees to his right, so the LEFT side of his face faces the camera. The left ear, left temple, left cheek, jaw, chin and the side of the neck down to the band collar of his navy shirt are all fully in frame, with a little space above the hair. Eyes open, looking ahead out of frame; neutral, calm expression.
 
 CONTINUITY DETAILS — clearly visible and identical in both panels:
 1. THE SEAM: a very fine, precise hairline seam that starts just below the left earlobe and runs straight down the side of the neck for about six centimetres toward the collar. It is the same colour as the skin: a faint shadow line where two edges of skin meet perfectly. Not a scar, not a wound; no stitches, no gap, no metal.

@@ -1,21 +1,22 @@
 # CHAR_oren — Oren, character sheet
 
-Two steps, as the author's template asks: a casting image first (the sheet's single source of truth), then the sheet itself, generated from the chosen casting image. The template's third panel turns the head to the subject's right, which shows his left side: the seam and the chin scrape.
+Two steps, as the author's template asks: a casting image first (the sheet's single source of truth), then the sheet itself, generated from the chosen casting image. The template's third panel turns the head to the subject's right, which shows his left side: the seam and the chin scrape. Version 2: the story's world (a refurbished rental body; a work shirt, no coat, a blank badge), never sci-fi.
 
 ## Step 1 — Casting
 
 Dreamina image model (latest Seedream) · 2:3 portrait · highest resolution · 4 images. Fill the one bracket (casting), choose one, and record it below.
 
 ```
-Photorealistic full-length casting reference photograph of OREN, an original fictional character for the short film MY NAME IS OREN: a care android who, at a glance, passes for an ordinary man. He is not based on, and must not resemble, any real actor or public figure.
+Photorealistic full-length casting reference photograph of OREN, an original fictional character for the short film MY NAME IS OREN: a care android who, at a glance, passes for an ordinary man, set in England some years from now. He is not based on, and must not resemble, any real actor or public figure.
 
-WHO HE IS: he appears to be a man in his early forties, [CASTING: his heritage and colouring — the author's choice]. Average height, a slightly soft build. A plain, kind, forgettable face with calm, attentive eyes. His skin looks real but a little too even: fewer pores and blemishes than a person, very slightly matte. It is the only hint that he is not human. Short, neat dark hair, conventionally cut; clean-shaven. A small scrape along the left side of his chin, where the outer skin layer is scuffed and slightly paler; no blood. A very fine hairline seam runs from just below his left ear down the side of his neck, the same colour as his skin, visible only up close.
+COSTUME WORLD: England some years from now, in a world where artificial intelligence stopped getting smarter and only got cheaper. Helpers are everywhere and free; bodies, handsets and clothes are refurbished, rented or repaired. The clothes are recognisably today's, a few seasons evolved and fashionable in a quiet, grown-up way: relaxed boxy silhouettes, high waists, cropped hems, band collars and funnel necks, matte technical-natural fabrics, flat bonded seams, and visible mending as an ordinary habit. Nothing on the body is futuristic: no gadgets, no lights, no chrome.
+
+WHO HE IS: he appears to be a man in his early forties, [CASTING: his heritage and colouring — the author's choice]. Average height, a slightly soft build. A plain, kind, forgettable face with calm, attentive eyes. His skin looks real but a little too even: fewer pores and blemishes than a person, very slightly matte. It is the only hint that he is not human. Short, neat dark hair, conventionally cut; clean-shaven. A small scrape along the left side of his chin, where the outer skin layer is scuffed and slightly paler; no blood. A very fine hairline seam runs from just below his left ear down the side of his neck, the same colour as his skin, visible only up close. His body is a refurbished rental: well kept, not new.
 
 WARDROBE (exact):
-- A plain navy-blue zip-up workwear fleece, zipped two-thirds of the way up, slightly bobbled. No logo, badge or text.
-- The collar of a pale blue-grey cotton shirt showing at the neck.
-- Plain mid-grey trousers, straight cut, slightly short, creased.
-- Big, ugly grey felt slippers with wide Velcro straps over the instep and thick rubber soles: house slippers, not shoes. The LEFT slipper is mended across the toe with a strip of bright blue tape.
+- A care agency's work shirt: a soft, boxy navy shirt in brushed cotton with a short band collar, buttoned to the top, sleeves down, hem out. Neat but softened by daily wear. A small plain rectangular badge is clipped to the left chest: blank, no text, no logo. He wears no coat or jacket, though it is a cold grey day.
+- Relaxed, tapered mid-grey trousers, a little short, creased.
+- Deliberately out of place: big, ugly, padded grey felt slippers with two wide hook-and-loop straps over the instep and chunky rubber soles. They are house slippers, clearly not street shoes, and the least fashionable thing in the picture. The LEFT slipper is mended across the toe with a strip of bright blue tape.
 
 POSE: standing straight, facing the camera, arms naturally at his sides, perfectly still and balanced. Expression neutral, attentive and quietly kind; he looks directly into the camera. The entire figure is visible, from the top of his head to the soles of the slippers, with a small margin.
 
@@ -23,7 +24,7 @@ BACKGROUND: seamless neutral mid-grey (#808080), even from edge to edge.
 LIGHT: clean soft even studio light, a large diffused key with gentle fill, soft natural shadows, true-to-life skin tones, neutral white balance.
 CAMERA: full-frame camera, 85 mm lens at chest height, deep focus, the whole figure tack-sharp from head to feet.
 
-NEGATIVE: no visible machinery, metal, wires, panels or robotic joints; no glowing eyes; no plastic or waxy skin; no uncanny smile; no sci-fi costume; no text or logos; no props; no stylisation, cartoon or CGI look; no rim light or coloured light.
+NEGATIVE: no sci-fi, cyberpunk or futuristic costume; no neon, LEDs, chrome or glossy fabrics; no visible machinery, metal, wires, panels or robotic joints; no glowing eyes; no plastic or waxy skin; no uncanny smile; no text or logos; no props; no stylisation, cartoon or CGI look; no rim light or coloured light.
 ```
 
 ## Step 2 — Character sheet (the author's template, verbatim)
