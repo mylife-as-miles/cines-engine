@@ -7,8 +7,8 @@ These are the film's continuity references, made before any video. Each is cited
 - **References per generation:** up to 50 multimodal inputs, reported as about 30 images, 10 videos and 10 audio. Seedance 2.0 took 12. Dreamina's FAQ says the active mode sets the real limits.
 - **Clip length** 4–30 s; **21:9** framing, matted to 2.35:1 in the finish; **native audio** with lip-synced dialogue.
 - **Resolution:** 480p and 720p are confirmed; higher is claimed. Draft at 480p, then make the final from the chosen draft.
-- **Audio references** give a voice its timbre. The model re-speaks the line, so a reference sets *who* is speaking, not the timing.
-- **What it means for us:** the whole kit (both characters, the set, the props, the voices) can go into every generation, and 30 s clips let one generation carry two or three beats. That means fewer joins and steadier faces. The shot list will be re-cut to about 15 sequences of 20–30 s.
+- **Audio references** give a voice its timbre. **This film uses none** (the author's choice): the voices come from the Voice Bible written into each prompt.
+- **What it means for us:** the whole visual kit (both characters, the set, the props) can go into every generation, and 30 s clips let one generation carry two or three beats. That means fewer joins and steadier faces. The shot list will be re-cut to about 15 sequences of 20–30 s.
 
 ## The kit
 
@@ -42,22 +42,13 @@ The camera stays on the street side, so the background behind Helena is the laun
 | `PROP_oren-slippers` | Big, ugly grey felt slippers with wide Velcro straps and thick rubber soles; blue tape across the **right** toe. | Every shot showing his feet; B08, B21 |
 | `PROP_sweeper` | A knee-high kerb robot, scuffed hi-vis yellow body, one small rotating brush, no readable text. | B01–B02, B08 |
 
-### Look
+### Look: in the prompt, not in images
 
-| ID | What | Used in |
-| --- | --- | --- |
-| `STYLE_1` – `STYLE_3` | The three approved style frames of the chosen look: the street wide, the shoe-level shot, the two on the wall. They carry the light, grade and texture. These are our own frames, never stills from the reference films. | Every generation |
+**No style-frame images** (the author's choice). The look is written into every Seedance 2.5 prompt as the auteur template's MOVIE COLOR block: the palette, the six influences with their purposes, the camera package and the look string (`DECISIONS.md`, film bible). It is carried visually by the approved environment references and unified in the grade.
 
-### Voices and sound (audio references)
+### Voices: the Voice Bible, in the prompt
 
-| ID | What | Used in |
-| --- | --- | --- |
-| `VOICE_helena` | 10–15 s of clean speech in her Voice DNA (northern English, tired rasp, quick and dry). | Every line of hers |
-| `VOICE_oren` | 10–15 s in his Voice DNA (warm, even, unhurried, no breaths between phrases, never robotic). | Every line of his |
-| `VOICE_client` | 5–10 s: an elderly English woman, impatient, through a small speaker. | B26–B27 |
-| `VOICE_sweeper` | "Apologies." in a small, bright, courteous synthetic voice. | B08 |
-
-The voices come from a consenting voice actor, or a text-to-speech voice cast to the Voice DNA. A human voice actor strengthens the film's human authorship, which the new Oscar rules weigh.
+**No audio references** (the author's choice). Each character's Voice DNA from the Voice Bible (`DECISIONS.md`) is copied word for word into every prompt where they speak, and Seedance generates the voices from it. If a voice drifts between clips, there are two fallbacks: use the first approved clip's voice as the reference for the rest, or fix the line in post.
 
 ### Motion (video reference)
 
@@ -78,20 +69,19 @@ One **start frame per sequence** (about 15), built from the kit with Dreamina's 
 | `@Image 2` · `@Image 3` · `@Image 4` | `CHAR_helena` · `CHAR_oren` · `CHAR_oren_detail` |
 | `@Image 5` · `@Image 6` | `ENV_low-wall` · `ENV_across-street` |
 | `@Image 7` · `@Image 8` · `@Image 9` | `PROP_lunch-bag` · `PROP_handset` · `PROP_oren-slippers` |
-| `@Image 10` | `STYLE_3` |
 | `@Video 1` | The previous sequence's tail |
-| `@Audio 1` · `@Audio 2` | `VOICE_helena` · `VOICE_oren` |
+
+The look (MOVIE COLOR) and both voices (VOICE DNA) are in the prompt text.
 
 ## Order of work
 
 1. **Casting:** three or four portraits each of Helena and Oren. The author picks.
-2. **Style frames:** looks A, B and C as the same three moments. The author picks the look.
-3. **Sheets:** `CHAR_*`, `ENV_*`, `PROP_*`, in the chosen look.
-4. **Voices:** cast and record or generate `VOICE_*`.
-5. **Motion:** `MOTION_helena-walk`.
-6. **Keyframes:** one per sequence.
+2. **Sheets:** `CHAR_*`, `ENV_*`, `PROP_*`. The look is Look A (overcast), carried in the prompts.
+3. **Voice Bible:** approved by the author, then copied unchanged into every prompt.
+4. **Motion:** `MOTION_helena-walk`.
+5. **Keyframes:** one per sequence.
 
-**Must have for the contest cut:** Helena, Oren and Oren's detail; `ENV_laundrette` and `ENV_low-wall`; the bag, the slippers, the boots and the handset; Helena's and Oren's voices. The rest raises quality if time allows.
+**Must have for the contest cut:** Helena, Oren and Oren's detail; `ENV_laundrette` and `ENV_low-wall`; the bag, the slippers, the boots and the handset; the approved Voice Bible. The rest raises quality if time allows.
 
 ## Made in code (never generated)
 
