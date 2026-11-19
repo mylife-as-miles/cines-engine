@@ -21,6 +21,8 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `design/script.json` | The screenplay as numbered elements (L01–L73 dialogue, A01–A58 action), built by `tools/parse_script.py`. Beats, shots and prompts cite these ids. |
 | `design/BEATS.md` | The film in 32 beats and seven movements, with each beat's turn, script ids, and timing for the 6:45 contest cut. |
 | `design/BEATS.pdf` | The beat sheet as a printable PDF (A4 landscape, 7 pages), rendered from `BEATS.md` by `tools/beats_pdf.js`. |
+| `design/DIRECTION.md` | Performance and intention for each beat (FACS-informed tells, delivery by line id, lip-sync rules, interaction verbs, distances, camera words and the camera-height arc). It fills the auteur template's fields and never changes the template. |
+| `LESSONS.md` | What this production teaches, as it happens, and where each lesson goes in the skill at sign-off. |
 | `design/TREATMENT.md` | Logline, world, people, the camera idea (feet first), motifs, what the film never shows, three looks. |
 | `design/DECISIONS.md` | What is settled, what is proposed and waiting for the author, and the draft film bible (look string, camera package, identities, Voice DNA). |
 | `design/REFERENCES.md` | The character sheets, environment references and prop references to make, and what is made in code instead. |

@@ -2,7 +2,7 @@
 
 Films whose picture comes from generation models (Seedance, Kling, Cinema Studio, MiniMax, Wan and others). Treat the models as a camera crew that cannot hear you twice the same way: what makes a good AI film is the paperwork around them. Lock the look and the references before generating any video, keep every prompt, and keep sound, text and finishing in our own hands.
 
-Contents: 1 Tools · 2 Workflow · 3a The author's templates · 3 Prompting · 4 Continuity · 5 Review and selects · 6 Edit · 7 Sound · 8 Finish · 9 Honesty and rights · 10 Folder layout
+Contents: 1 Tools · 2 Workflow · 3a The author's templates · 3 Prompting · 4 Continuity · 5 Review and selects · 6 Edit · 7 Sound · 8 Finish · 9 Honesty and rights · 10 Folder layout · 11 Lessons in progress (My Name Is Oren)
 
 ## 1. Tools in this environment
 
@@ -113,3 +113,46 @@ Model-generated audio is a guide at most: build the soundtrack ourselves (`sound
 ## 10. Folder layout
 
 `ai-film/<slug>/`: `README.md`, `design/` (TREATMENT.md, DECISIONS.md with the film bible, SHOTS.md), `prompts/` (one auteur prompt per sequence with its take log; `prompts/refs/` the filled reference prompts with chosen job ids), `refs/` (the approved sheets and stills, if they may be committed), `edit/edit.json`, `tools/` (the edit and mix scripts), `audio/`, `out/` (ignored: generated clips, renders). Start it with `scripts/new_production.py ai-film <slug> "<Title>"`.
+
+## 11. Lessons in progress: *My Name Is Oren*
+
+> **In progress.** These come from a production that the author has not yet signed off (`ai-film/my-name-is-oren/`, branch `ccr-a1ca9fd6-0m96vq`). The author asked for them to be recorded now. At sign-off, confirm each one against the finished film, move it into its section above, and delete this box. The running list with its evidence is the production's `LESSONS.md`.
+
+**Reading and planning**
+- **Read the author's screenplay page by page.** Render it with `pdftoppm -r 110 -png`, look at every page, and keep the text (`pdftotext -layout`). The author expects this. Number the screenplay (`tools/parse_script.py`: L01… dialogue, A01… action) and cite lines by id everywhere; never retype dialogue.
+- **If the author has the prose story behind the script**, file it as the world bible (`design/story.pdf`). The screenplay stays the source of every line and event, and wins wherever the two differ.
+- **Beat sheet first** (`design/BEATS.md`): one change per beat, its turn, its script ids, and its time from word counts at each character's pace (about 2.3–2.7 words a second). Then threads (names, objects, motifs) across beats. Render it to PDF on request (`tools/beats_pdf.js`).
+- **Check contest rules on day one**: the length cap (often 7:00), the required tool, deadlines with their time zone, and public-posting or public-prompt rules. A public online release before a qualifying run has historically disqualified Oscar shorts.
+- **Ask which platform the author generates on; never assume a connector.** When the author generates (on Dreamina, for example), Claude writes every prompt with its settings and a take log, then reviews what comes back.
+
+**Seedance 2.5 and Dreamina**
+- **Seedance 2.5 (reported):** up to about 50 references per generation (roughly 30 images, 10 videos, 10 audio), 4–30 s clips, 21:9, native lip-synced dialogue. One generation can carry two or three beats, which means fewer joins.
+- **The prompt box holds about 2,000–3,500 characters** (third-party figures; no official limit found). The author's templates fill out to 5,000–11,500 characters, so keep a **short version under 3,500** beside every full one, with the same content.
+
+**Characters and references**
+- **Casting first.** `character-sheet.md` needs a reference image, so generate a casting portrait at 2:3 (crop a 16:9 one) and let the author pick.
+- **Any change to the reference is an explicit override** (a condition such as hunger, or corrections), placed right after the template's opening. A condition override can age a face, so add an **age lock**.
+- **Models mirror side-specific details** (which boot, which slipper, which elbow). Check every take; adopt what the approved image shows, and update the bible rather than fighting it.
+- **A sheet may drop small identity tells** (a seam, a scrape). A dedicated detail sheet carries them.
+- **Review takes with full-resolution crops** of faces, hands, feet and markers; the downscaled view hides flaws (wires read as a seam, a red mark as a scrape).
+- **Keep real brands out**, even when the source text names one (a blank badge instead).
+- **A grounded future**: buildings as they stand today, retrofitted; quiet technology that doesn't glow; clothes a few seasons on, mended. "Futuristic", "sci-fi" and "cyberpunk" appear only in negatives.
+
+**Look and voices as text (the author's choice on this film)**
+- **No style frames:** a MOVIE COLOR block (palette, influences each with its purpose, camera package, the camera grammar) is copied unchanged into every prompt, and the approved environment references carry the light.
+- **No audio references:** a Voice Bible (VOICE DNA per speaking character, including the pronunciation of names) is copied unchanged into every prompt. If a voice drifts between clips, use the first approved clip's voice as the reference, or fix it in post.
+
+**Performance and dialogue** (`design/DIRECTION.md` fills the auteur template's fields; the template is never changed)
+- **Behaviour, never emotion labels.** Plain anatomy first, FACS codes as optional shorthand. Seedance reads them empirically, with no guarantee.
+- **Three or four expressions per generation, one or two tells per beat.** Give every line a before, a during and an after beat.
+- **A restraint scale out of 10, with a ceiling per character.** No tears unless scripted (wet eyes that catch the light, never spilling). Name every gaze target. Reactions lag 0.3–0.5 s. Listeners are never statues. Apply the anti-template test.
+- **For each character, write how they change under pressure and what they must never do.** Vary the interaction verb beat by beat. Give distances in metres.
+- **Never reword or trim a line to fit a shot; change the coverage instead.**
+  - Decide which lines must show the speaker's mouth.
+  - Hands never cross the mouth during a line, and nothing overlaps inside one generation.
+  - Delivery stays mid-register.
+  - Hold 0.5–1 s of room tone before impact lines.
+  - Split long lines at the script's own beats.
+- **Camera words in a fixed order**: size, framing, camera level (ground, knee, hip, shoulder, eye), lens in mm, movement, light, composition. "Push in, the camera travels; no zoom." A camera-height arc can carry a film's idea.
+- **A private reference archive** (Cinekive, MIT; search by intention tags) helps planning. Frames from other films are never attached to a generation.
+

@@ -36,3 +36,23 @@ Seven public repositories, read in November 2026 (shallow clones; treat their te
 cinetic's hard bans (no serif, no italics, no orange, beige or purple, no particles or lens flares) are launch-film house taste: they would wrongly constrain Claude Film, Claude Game and AI Film. Keep the mechanism — declared bans and brand overrides written in the production's DECISIONS — not the list. Likewise MengTo's personal rules (his voice, his twin, his lighting) are his; take only the general principle ("never grade a presenter's own camera footage without asking").
 
 If cinetic is installed as a plugin beside this skill, its description competes for "make a video about X": when working in this repo, this handbook decides the studio and the pipeline. Keep any HyperFrames setup behind `HYPERFRAMES_SKIP_SKILLS=1` and `HYPERFRAMES_NO_TELEMETRY=1` so its installer does not add skills to `~/.claude/skills`.
+
+## Read for *My Name Is Oren* (in progress; ideas only)
+
+Twelve public repositories the author pointed to in November 2026, read as shallow clones, with no code run. They are used for **ideas only**, rewritten in this repo's voice; nothing is copied. Where they landed: `ai-film.md` §11 and the production's `design/DIRECTION.md`. Confirm at sign-off.
+
+| Repo | What we took | Licence |
+| --- | --- | --- |
+| [Gianluca-Improta/cinekive](https://github.com/Gianluca-Improta/cinekive) | A local, searchable still archive (SigLIP plus craft tags); intention-tag vocabulary (shot types, movements, angles, composition, lighting, lens, grade, emotion, technique) for planning shots | MIT (Pro features paid) |
+| [taohuahuangxiaoxie/video_skills](https://github.com/taohuahuangxiaoxie/video_skills) (`higgsfield-facs`) | FACS as a performance vocabulary; 3–4 expressions per generation; pre/during/post-line beats; physical micro-beats; reaction stagger | No licence file: ideas only |
+| [snowfrost/skill-movie](https://github.com/snowfrost/skill-movie) (`performance-scene-director`) | A restraint scale; "hold back rather than release"; "the best crying is before the tear" | No licence file: ideas only |
+| [badgids/Story-Film-Skills](https://github.com/badgids/Story-Film-Skills) | Character speech, movement and stillness signatures (pressure changes, must-not); mouth visibility per line; "never reword a line, change the coverage" | Apache-2.0 |
+| [wuwangzhang1216/DirectorSKILL](https://github.com/wuwangzhang1216/DirectorSKILL) | Behaviour not emotion; one beat, one turn; reactions as their own beat; silence rules; lip-sync limits | MIT |
+| [jtydhr88/screenwriting-skills](https://github.com/jtydhr88/screenwriting-skills) | Dialogue as action (said, unsaid, unsayable); Chekhov's "the deepest pain in the fewest words"; Ozu's "event off-screen, reaction on-screen" | MIT (quoted book excerpts not relicensed) |
+| [katha-ai/MovieGraphs-Dataset-CVPR2018](https://github.com/katha-ai/MovieGraphs-Dataset-CVPR2018) | Interaction verbs with reasons; relationship and emotion vocabularies | No licence file; research data: ideas only |
+| [declare-lab/MELD](https://github.com/declare-lab/MELD) | Emotion and sentiment as separate axes; how often emotions shift in dialogue | GPL-3.0: ideas only |
+| [Vchitect/ShotBench](https://github.com/Vchitect/ShotBench) | Shot size, framing, angle, lens, lighting, composition and movement labels; camera movement is what models misread most | No licence file: terms only |
+| [PRIS-CV/CineTechBench](https://github.com/PRIS-CV/CineTechBench) | Defined camera terms: focal-length ranges, push-in versus zoom | Data CC BY-NC-ND 4.0: terms only |
+| [CineScale/CineScale.github.io](https://github.com/CineScale/CineScale.github.io) | Camera level (aerial, eye, shoulder, hip, knee, ground) and shot scale | Research-use agreement: terms only |
+| [movienet/movienet-tools](https://github.com/movienet/movienet-tools) | Shot scale and movement labels; dialogue as alternating threads | Apache-2.0 |
+
