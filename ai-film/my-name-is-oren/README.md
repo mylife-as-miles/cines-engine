@@ -19,12 +19,14 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `design/pages/page-1.png` … `page-9.png` | The screenplay rendered one page per image (`pdftoppm -r 110`): the title page and script pages 1–8. |
 | `design/script.json` | The screenplay as numbered elements (L01–L73 dialogue, A01–A58 action), built by `tools/parse_script.py`. Beats, shots and prompts cite these ids. |
 | `design/BEATS.md` | The film in 32 beats and seven movements, with each beat's turn, script ids, and timing for the 6:45 contest cut. |
+| `design/BEATS.pdf` | The beat sheet as a printable PDF (A4 landscape, 7 pages), rendered from `BEATS.md` by `tools/beats_pdf.js`. |
 | `design/TREATMENT.md` | Logline, world, people, the camera idea (feet first), motifs, what the film never shows, three looks. |
 | `design/DECISIONS.md` | What is settled, what is proposed and waiting for the author, and the draft film bible (look string, camera package, identities, Voice DNA). |
 | `design/REFERENCES.md` | The character sheets, environment references and prop references to make, and what is made in code instead. |
 | `design/SHOTS.md` | First draft shot list (41 sequences, 9:13 before trims). It predates the beats and the 7-minute contest cap, and will be re-cut to `BEATS.md`. |
 | `prompts/`, `prompts/refs/` | Auteur prompts per sequence and filled reference prompts (to come). |
 | `tools/parse_script.py` | Builds `design/script.json` from `design/screenplay.txt`. |
+| `tools/beats_pdf.js` | Renders `design/BEATS.md` to `design/BEATS.pdf` with the pre-installed Chromium (`node tools/beats_pdf.js`). |
 | `refs/`, `edit/`, `audio/` | Approved references, the edit list, sound and scripts (to come). `out/` is ignored. |
 
 ## Credits
