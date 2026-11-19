@@ -66,3 +66,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Dreamina) | casting prompt v2 · 2:3 · 1696×2528 | **Candidate.** Photoreal, grounded, fashionable, not sci-fi; face reads early-to-mid thirties with natural skin. Mirrored from the prompt: the loose sole is on her **right** boot (prompt: left) and the mended patch on her **left** elbow (prompt: right). The boots are classic leather lace-ups rather than modern panelled ones, and she reads less hungry than the brief. Saved as `refs/CAST_helena_t1.jpg`. Awaiting the author. |
