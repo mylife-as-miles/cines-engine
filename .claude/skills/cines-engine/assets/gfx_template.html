@@ -1,0 +1,94 @@
+<!doctype html><meta charset="utf-8"><title>graphics</title>
+<!-- Graphics page for scripts/canvas_render.js. Copy into <production>/gfx/, put the fonts beside it (fonts.css with
+     @font-face rules pointing at local files: headless renders must not depend on the network), and drive every word
+     from window.PLAN (render with --plan design/plan.json) so the copy lives in one place.
+     Modes: supers (chips + route bar), subs (captions), title, endcard, notice. Each draws one frame at time t. -->
+<link rel="stylesheet" href="fonts.css">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const W = 1920, H = 1080, c = document.getElementById('c'), g = c.getContext('2d');
+// palette and type: replace per production (DECISIONS.md records the choice)
+const ACCENT = '#46ADB1', ACCENT_L = '#8FD8D9', BOX = 'rgba(16,20,22,0.68)', SANS = '"Inter", system-ui, sans-serif', MONO = '"IBM Plex Mono", monospace';
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), seg = (t, a, b) => clamp((t - a) / (b - a));
+const outC = x => 1 - Math.pow(1 - clamp(x), 3), ease = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const fadeIO = (t, a, b, f = 0.35) => Math.min(seg(t, a, a + f), 1 - seg(t, b - f, b));
+window.PLAN = window.PLAN || { supers: [], route: { stops: [], spans: [] }, subs: [], title: null, endcard: null, notice: null };
+
+function rr(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function T(s, x, y, font, color, o = {}) {
+  g.save(); g.font = font; g.fillStyle = color; g.textAlign = o.align || 'left'; g.letterSpacing = (o.track || 0) + 'px';
+  if (o.alpha != null) g.globalAlpha *= o.alpha; if (o.shadow) { g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = o.shadow; g.shadowOffsetY = 3; }
+  g.fillText(s, x, y); g.restore();
+}
+// balanced wrap into at most two rows (captions, chips); lines() wraps paragraphs
+function wrap(s, max, font) { g.font = font; if (g.measureText(s).width <= max) return [s]; const w = s.split(' '); let best = null;
+  for (let k = 1; k < w.length; k++) { const a = w.slice(0, k).join(' '), b = w.slice(k).join(' '), m = Math.max(g.measureText(a).width, g.measureText(b).width); if (!best || m < best[0]) best = [m, a, b]; } return [best[1], best[2]]; }
+function lines(s, max, font) { g.font = font; const out = []; let cur = '';
+  for (const w of s.split(' ')) { const n = cur ? cur + ' ' + w : w; if (g.measureText(n).width > max && cur) { out.push(cur); cur = w; } else cur = n; } if (cur) out.push(cur); return out; }
+
+// a super: translucent chip with an accent bar; wraps so it never runs under the route bar
+function chip(s, x, y, a, size = 40, weight = 500, maxW = 800) {
+  g.save(); g.globalAlpha = a; const font = `${weight} ${size}px ${SANS}`; const rows = wrap(s, maxW, font); g.font = font;
+  const lh = size * 1.32, pad = size * 0.5, w = Math.max(...rows.map(r => g.measureText(r).width)) + size * 1.95, h = rows.length * lh + pad * 2 - size * 0.32, dx = -14 * (1 - a);
+  g.fillStyle = BOX; rr(x + dx, y, w, h, 7); g.fill(); g.fillStyle = ACCENT; g.fillRect(x + dx + size * 0.47, y + pad * 0.9, 6, h - pad * 1.8);
+  g.fillStyle = '#FFFFFF'; rows.forEach((r, i) => g.fillText(r, x + dx + size * 1.13, y + pad + size * 0.8 + i * lh)); g.restore(); return h;
+}
+// a progress/route bar, top right: stops along a line, the current one ringed
+function route(stops, k, a) {
+  g.save(); g.globalAlpha = a; const step = 180, w = 90 * 2 + step * (stops.length - 1), x0 = W - 96 - w, y0 = 72, h = 122, yl = y0 + 42;
+  g.fillStyle = BOX; rr(x0, y0, w, h, 8); g.fill(); const xs = stops.map((_, i) => x0 + 90 + i * step);
+  g.strokeStyle = 'rgba(255,255,255,0.28)'; g.lineWidth = 3; g.setLineDash([6, 8]); g.beginPath(); g.moveTo(xs[0], yl); g.lineTo(xs.at(-1), yl); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = ACCENT; g.lineWidth = 5; g.beginPath(); g.moveTo(xs[0], yl); g.lineTo(xs[k], yl); g.stroke();
+  stops.forEach((s, i) => { g.beginPath(); g.arc(xs[i], yl, i === k ? 13 : 8, 0, 7); g.fillStyle = i <= k ? ACCENT : '#101416'; g.fill(); g.lineWidth = 2; g.strokeStyle = i <= k ? ACCENT : 'rgba(255,255,255,0.55)'; g.stroke();
+    g.font = `${i === k ? 600 : 500} 26px ${SANS}`; g.textAlign = 'center'; g.fillStyle = i === k ? '#FFFFFF' : 'rgba(255,255,255,0.62)'; g.fillText(s, xs[i], y0 + 100); });
+  g.restore();
+}
+function supers(t) {
+  for (const [a, b, s1, s2] of PLAN.supers) if (t >= a && t < b) { const h = chip(s1, 96, 72, fadeIO(t, a, b)); if (s2) chip(s2, 96, 72 + h + 14, fadeIO(t, a + 0.25, b), 34, 400); }
+  for (const [a, b, k] of PLAN.route.spans) if (t >= a && t < b) route(PLAN.route.stops, k, fadeIO(t, a, b));
+}
+// captions: bottom centre, italic on a dark box, at most two rows; PLAN.subs = [[t0, t1, text], ...] timed to the voice
+function subs(t) {
+  const font = `italic 500 50px ${SANS}`;
+  for (const [a, b, text] of PLAN.subs) { if (t < a || t >= b) continue;
+    const al = Math.min(seg(t, a, a + 0.12), 1 - seg(t, b - 0.2, b)), rows = wrap(text, 1560, font);
+    g.save(); g.globalAlpha = al; g.font = font; g.textAlign = 'center';
+    const lh = 68, wmax = Math.max(...rows.map(r => g.measureText(r).width)), bh = rows.length * lh + 30, by = 1040 - bh;
+    g.fillStyle = 'rgba(14,17,19,0.74)'; rr(W / 2 - wmax / 2 - 30, by, wmax + 60, bh, 6); g.fill();
+    g.fillStyle = '#FFFFFF'; rows.forEach((r, i) => g.fillText(r, W / 2, by + 15 + lh * (i + 1) - 18)); g.restore(); }
+}
+// the product title: lower-left, over a soft scrim; PLAN.title = {t0, t1, name, line}
+function title(t) {
+  const p = PLAN.title; if (!p || t < p.t0 || t >= p.t1) return; const a = fadeIO(t, p.t0, p.t1, 0.45), dx = -20 * (1 - a);
+  g.save(); g.globalAlpha = a; const gr = g.createLinearGradient(0, 600, 0, H); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.45)'); g.fillStyle = gr; g.fillRect(0, 600, W, 480);
+  g.fillStyle = ACCENT; g.fillRect(96 + dx, 742, 6, 118);
+  T(p.name, 124 + dx, 812, `800 84px ${SANS}`, '#FFFFFF', { track: -1, shadow: 18 });
+  T(p.line.toUpperCase(), 128 + dx, 852, `500 24px ${MONO}`, ACCENT_L, { track: 4, shadow: 8 }); g.restore();
+}
+// end card over darkened footage (render as .mov and overlay); PLAN.endcard = {line, cta, small: [..]}; t from the card's start
+function endcard(t) {
+  const p = PLAN.endcard; if (!p) return; const L = 120;
+  const gr = g.createLinearGradient(0, 0, W, 0); gr.addColorStop(0, 'rgba(8,11,13,0.9)'); gr.addColorStop(1, 'rgba(8,11,13,0.45)'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  T(p.line, L, 480, `500 46px ${SANS}`, ACCENT_L, { alpha: outC(seg(t, 0.8, 1.4)) });
+  const ba = outC(seg(t, 1.5, 2.1)); g.save(); g.globalAlpha = ba; g.font = `500 36px ${SANS}`; const bw = g.measureText(p.cta).width + 64;
+  g.fillStyle = 'rgba(70,173,177,0.12)'; rr(L, 552, bw, 86, 8); g.fill(); g.strokeStyle = ACCENT; g.lineWidth = 3; rr(L, 552, bw, 86, 8); g.stroke();
+  g.fillStyle = '#FFFFFF'; g.fillText(p.cta, L + 32, 607); g.restore();
+  (p.small || []).forEach((s, i) => T(s, L, 722 + i * 38, `400 27px ${SANS}`, 'rgba(255,255,255,0.82)', { alpha: outC(seg(t, 2.3, 2.9)) }));
+}
+// a notice/disclaimer card on near-black, appended after the end card; PLAN.notice = {heading, paragraphs: [..], seconds}
+function notice(t) {
+  const p = PLAN.notice; if (!p) return; g.fillStyle = '#0B0E10'; g.fillRect(0, 0, W, H);
+  const a = Math.min(outC(seg(t, 0.3, 1.2)), 1 - seg(t, p.seconds - 0.7, p.seconds)), L = 300, max = 1320, body = `400 38px ${SANS}`, lh = 58;
+  const paras = p.paragraphs.map(s => lines(s, max, body)), total = 92 + paras.flat().length * lh + 34 * (paras.length - 1); let y = (H - total) / 2;
+  g.save(); g.globalAlpha = a; g.fillStyle = ACCENT; g.fillRect(L - 30, y + 4, 6, 40);
+  T(p.heading.toUpperCase(), L, y + 38, `500 30px ${MONO}`, ACCENT_L, { track: 6 }); y += 92;
+  paras.forEach((rows, k) => { if (k) y += 34; rows.forEach(r => { y += lh; T(r, L, y - 14, body, 'rgba(255,255,255,0.9)'); }); });
+  g.restore();
+}
+window.draw = (mode, t) => { g.clearRect(0, 0, W, H); ({ supers, subs, title, endcard, notice })[mode](t); };
+(async () => {
+  for (const f of [`500 40px ${SANS}`, `italic 500 50px ${SANS}`, `800 84px ${SANS}`, `400 38px ${SANS}`, `500 30px ${MONO}`]) { try { await document.fonts.load(f); } catch (e) {} }
+  window.READY = true;
+})();
+</script>

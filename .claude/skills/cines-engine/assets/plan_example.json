@@ -1,0 +1,8 @@
+{
+  "supers": [[1.0, 6.0, "Representative flowline", "Deposit varies by asset"]],
+  "route": {"stops": ["Offshore", "Onshore field", "Manifold", "Tank farm", "Refinery"], "spans": [[0.5, 6.0, 2]]},
+  "subs": [[1.2, 5.6, "A caption timed to the voice, kept to two balanced rows at most when it runs long."]],
+  "title": {"t0": 0.5, "t1": 5.5, "name": "Product", "line": "What it is, in one line"},
+  "endcard": {"line": "The tagline", "cta": "The call to action", "small": ["Company line", "Partner line"]},
+  "notice": {"heading": "Visual simulation notice", "paragraphs": ["First paragraph of the notice, as approved, word for word.", "Second paragraph."], "seconds": 10}
+}
