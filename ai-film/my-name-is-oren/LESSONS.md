@@ -13,7 +13,7 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 7 | Dreamina's prompt box is about 2,000–3,500 characters, so keep a short version (under 3,500) beside every full template prompt. | ENV and PROP prompts are 10,000–11,500 characters in full, and 2,700–3,400 short. | §3a Templates |
 | 8 | Casting before sheets; crop to 2:3; review with full-resolution crops. | `refs/CAST_*`; Oren came back 16:9; wires and a red mark only showed in crops. | §3a Templates |
 | 9 | Changes to a reference are explicit overrides; a condition override needs an age lock. | Helena's hunger override aged her about ten years (sheet t1); v2 adds AGE LOCK. Result: *pending*. | §3a Templates |
-| 10 | Models mirror side-specific details; adopt the approved image's sides. | Helena's loose sole (right, not left), her patch (left elbow), Oren's tape (right slipper). | §4 Continuity |
+| 10 | Models mirror side-specific details; adopt the approved image's sides. | Helena's loose sole (right, not left), her patch (left elbow), Oren's tape (right slipper), Oren's seam (right, not left; Q03 t1), Oren's bag (left hand; Q02 t1). | §4 Continuity |
 | 11 | A sheet can drop small tells; a dedicated detail sheet carries them. | Oren's sheet t1 lost the seam and scrape; `CHAR_oren_detail` carries them. Result: *pending*. | §4 Continuity |
 | 12 | Keep real brands out, even if the source names one. | The story's badge says "Grok"; the film's badge is blank. | §9 Honesty |
 | 13 | A grounded future: today's buildings retrofitted, quiet technology, clothes a few seasons on and mended; sci-fi words only in negatives. | The author asked for "future, not sci-fi or cyberpunk, fashionable"; Helena's casting take hit it first time. | §3 Prompting |
@@ -28,5 +28,7 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 21 | Keep good shots and regenerate only the failed ones as a short pickup, starting from the frame at the cut. | Q01 t1: shots 1–3 kept, a pickup for 4–6. *Pending.* | §5 Review and selects |
 | 22 | A held prop needs "held, never set down": told that the bag "stops", the model put it on the ground. | Q02 t1 shot 5. | §3 Prompting |
 | 23 | Without speech recognition, a voice-band loudness map still shows whether lines fall in the right shots, but the words need ears or speech recognition (huggingface.co must be allowed for Whisper models). | Q02 t1: three bursts in the calling shot; the last line at 19.2 s. | §5 Review and selects |
+| 24 | Write eyes as open with a named gaze: "her eyes drop" made the model close her eyes, and she read as asleep. | Q03 t1 shot 5. | §3 Prompting |
+| 25 | Check frame 0 of every take for a stray frame, and trim it. | Q03 t1 (frame 0 differs from frame 1). | §6 Edit |
 
 Rows marked *pending* need a generated result before they can be called a lesson.

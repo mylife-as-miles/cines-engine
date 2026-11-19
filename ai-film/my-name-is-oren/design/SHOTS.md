@@ -56,7 +56,7 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 ## Continuity across sequences
 
 - **Time and weather:** overcast early afternoon, 1:31 to about 1:45 pm; the pavement damp, no rain falling.
-- **Wardrobe:** as in the approved sheets. Helena's loose sole is on her right boot and her patch on her left elbow. Oren's tape is on his right slipper. His seam and temple light are on his left side.
+- **Wardrobe:** as in the approved sheets. Helena's loose sole is on her right boot and her patch on her left elbow. Oren's tape is on his right slipper. His seam and temple light are on his **RIGHT** side (adopted from Q03 t1).
 - **The bag:**
 
 | Beats | Where the bag is |
@@ -76,6 +76,8 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 - **Contact is explicit.** "Hovers 1 cm above, never touches"; "goes fully into the pocket, the corner catching the lining".
 - **One idea per shot, and no more than six shots in 20 s.**
 - **A held prop stays held.** Say "in his hand, never set down"; told that the bag "stops", Q02 t1 put it on the ground.
+- **Eyes stay open.** "Her eyes drop" made the model close Helena's eyes (Q03 t1); write "eyes open, she glances down at the pavement and back".
+- **Trim the first frame** of every take: Q03 t1's frame 0 was a stray frame.
 - **Q03 opens on singles.** Q02 t1 ends with them 3–4 m apart, so singles hide the distance before the close seam shot.
 
 ## Order of generation
