@@ -19,7 +19,7 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 | Q02 | B04–B05 The bag · Excuse me | 15 s | 0:25 | L01–L02 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag, PROP_oren-slippers | Her view through the foot traffic; the slippers; he stops. |
 | Q03 | B06 The seam | 16 s | 0:40 | L03–L06 | CHAR_helena, CHAR_oren, CHAR_oren_detail, ENV_laundrette, ENV_across-street | Extreme close-up of the seam; "My name is Oren." |
 | Q04 | B07 Hungry | 17 s | 0:56 | L07–L11 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag | Her eyes go to the bag and come back. |
-| Q05 | B08 Apologies · B09a Mercer Street (L13) | 17 s | 1:13 | L12–L13 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag, PROP_helena-boots, PROP_oren-slippers, PROP_sweeper | The sweeper twice; his slipper blocks it; the meal service line. |
+| Q05 | B08 Apologies · B09a Mercer Street (L13) | 17 s | 1:13 | L12–L13 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag, PROP_helena-boots, PROP_oren-slippers, PROP_sweeper | The sweeper twice; his slipper blocks it; the meal service line. **Establish the loose sole here** (Q01 t1 missed it): ground level on her RIGHT boot as the sweeper bumps it, the gap clearly visible for 1.5 s. |
 | Q06 | B09b Waiting still · B10 The pain | 20 s | 1:30 | L14–L20 | CHAR_helena, CHAR_oren, ENV_laundrette, ENV_low-wall, PROP_lunch-bag | Waiting still 3–4 s; tightened by 1 s. |
 | Q07 | B11–B12 The shoulder · Introduction | 17 s | 1:50 | L21–L23 | CHAR_helena, CHAR_oren, ENV_low-wall | The first touch. |
 | Q08 | B13a Somewhere to be (to L25) | 17 s | 2:07 | L24–L25 | CHAR_helena, CHAR_oren, ENV_low-wall, ENV_across-street, PROP_lunch-bag | The bag level with her face; the deadline set. |
@@ -68,6 +68,13 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 | B28–B31 | his left hand, his right arm offered |
 
 - **Positions:** Helena leans under the window, steps out to stop him, then sits on the low wall from B11. Oren stands from B05 to B16, sits beside her (on frame right) from B17 to B22, then stands. From B29 they walk left to right to the corner.
+
+## What every prompt applies (learnt from Q01 t1)
+
+- **21:9 on every generation.** Check the delivered size, because 16:9 loses 12% to the 2.35:1 matte.
+- **A detail the story needs must read on screen.** Hold it 1.5–2 s, near the centre of frame, named in the prompt as clearly visible, with which side it is on ("the RIGHT boot's sole, open at the toe").
+- **Contact is explicit.** "Hovers 1 cm above, never touches"; "goes fully into the pocket, the corner catching the lining".
+- **One idea per shot, and no more than six shots in 20 s.**
 
 ## Order of generation
 
