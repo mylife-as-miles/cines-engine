@@ -1,6 +1,6 @@
 # CHAR_oren_detail — Oren's left profile: seam, temple light (off and on), chin scrape
 
-Made after `CHAR_oren` is approved. Attach the approved Oren sheet and the chosen casting image · 16:9 · highest resolution · 2–4 images. It is cited in every close-up of Oren, and in every beat where the light wakes (B15, B20, B26–B27, B30).
+Made after `CHAR_oren` is approved. Attach `refs/CHAR_oren_t1.jpg` (the approved sheet) and `refs/CAST_oren_t1_2x3.jpg` · 16:9 · highest resolution · 2–4 images. It is cited in every close-up of Oren, and in every beat where the light wakes (B15, B20, B26–B27, B30).
 
 ```
 Photorealistic two-panel continuity reference sheet of the exact same character as the attached reference images (OREN). The attached images are the single source of truth for his identity, age, face, skin, hair and clothing. Do not redesign or reinterpret.
@@ -13,6 +13,7 @@ CONTINUITY DETAILS — clearly visible and identical in both panels:
 1. THE SEAM: a very fine, precise hairline seam that starts just below the left earlobe and runs straight down the side of the neck for about six centimetres toward the collar. It is the same colour as the skin: a faint shadow line where two edges of skin meet perfectly. Not a scar, not a wound; no stitches, no gap, no metal.
 2. THE TEMPLE: a small round area under the skin of the left temple, about the size of a fingertip, between the outer corner of the eye and the hairline.
 3. THE CHIN SCRAPE: a small abrasion along the left side of the chin, where the outer skin layer is scuffed rough and slightly paler, as if he brushed against brick. No blood, no wires, nothing mechanical showing.
+4. THE SKIN: a little too even. Smooth and slightly matte, with fewer pores and blemishes than a person; clean-shaven, no stubble. It is the quiet tell that he is not human, never plastic or waxy.
 
 PANEL 1 — LIGHT OFF: the temple looks like ordinary skin.
 
@@ -22,7 +23,7 @@ BACKGROUND — Neutral mid-grey (#808080) seamless background, identical in both
 
 LIGHTING & RENDER — Clean soft even lighting, a large diffused key light with gentle fill, soft natural shadows, no harsh highlights, true-to-life skin tones, neutral white balance. Shot on a full-frame camera with an 85 mm lens, with focus deep enough that the ear, the seam, the temple and the chin are all tack-sharp.
 
-NEGATIVE — No text, labels, arrows, callouts, measurements or logos. No visible machinery, wires, metal, open panels or exposed circuitry. No glowing eyes. No blue or red light. No sci-fi make-up. No change of face, hair, clothing, head angle, expression or lighting between the panels. No divider lines, borders or gaps between the panels. No rim light or coloured lighting.
+NEGATIVE — No text, labels, arrows, callouts, measurements or logos. No visible machinery, wires, metal, open panels or exposed circuitry. No glowing eyes. No blue or red light. No sci-fi make-up. No change of face, hair, clothing, head angle, expression or lighting between the panels. No seam, wire or line on the right side of the neck; no red marks on the chin; no stubble. No divider lines, borders or gaps between the panels. No rim light or coloured lighting.
 ```
 
 ## Takes

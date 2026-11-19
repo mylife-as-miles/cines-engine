@@ -30,7 +30,7 @@ NEGATIVE: no sci-fi, cyberpunk or futuristic costume; no neon, LEDs, chrome, met
 
 ## Step 2 — Character sheet (the author's template + Helena's condition override)
 
-Attach `refs/CAST_helena_t1.jpg` · 16:9 · highest resolution · 2–4 images. This is the author's template, verbatim, with four marked additions the author asked for. The CONDITION OVERRIDE (hunger and fatigue, so every shot starts from it) and CONTINUITY DETAILS go after the opening. There is one clause at the end of PANEL 3, one at the end of CONSISTENCY, and one at the end of NEGATIVE.
+Attach `refs/CAST_helena_t1.jpg` · 16:9 · highest resolution · 2–4 images. Version 2 adds an AGE LOCK after take t1 aged her by about ten years. This is the author's template, verbatim, with marked additions the author asked for. The CONDITION OVERRIDE (hunger and fatigue, so every shot starts from it) and CONTINUITY DETAILS go after the opening. There is one clause at the end of PANEL 3, one at the end of CONSISTENCY, and one at the end of NEGATIVE.
 
 ```
 Create a photorealistic three-panel character reference sheet based strictly on the uploaded reference image. The uploaded image is the single source of truth for identity, age, facial structure, hairstyle, body proportions, skin tone, clothing design, fabric, colors, and accessories. Do not redesign or reinterpret. There is one deliberate exception: her physical condition, described under CONDITION OVERRIDE. It changes how she looks after days without proper food, never who she is.
@@ -41,6 +41,7 @@ She has not eaten properly for several days and lives with constant back pain. S
 - Hair: the same hairstyle, a little less kept: a few more loose strands, slightly flat at the roots.
 - Body: the same height, frame and proportions, a little leaner, so the clothes hang slightly looser at the shoulders and waist. The garments themselves are unchanged.
 - Keep exactly: identity, facial structure, age, skin tone, hairstyle, every garment and every detail of the reference.
+- AGE LOCK: she stays exactly the age of the reference, early-to-mid thirties. The fatigue shows in her eyes, the dullness of her skin and a leaner face, never as age: no added forehead lines, deeper wrinkles, age spots, freckles, grey hairs or sagging skin.
 - Tired and hungry, never ill: no sickness, bruises, wounds or dirt; no gaunt, skeletal, grey or ashen look; no exaggeration.
 
 CONTINUITY DETAILS — keep exactly as in the reference
@@ -72,7 +73,7 @@ LIGHTING & RENDER
 Clean soft even lighting, large diffused key light with gentle fill, soft natural shadows, no harsh highlights, true-to-life skin tones, neutral white balance, minimalist high-fashion editorial look, polished modern professional model-sheet aesthetic, shot on a full-frame camera with an 85mm lens, deep controlled depth of field with the entire figure in focus, crisp tack-sharp detail, high dynamic range.
 
 NEGATIVE
-No text, labels, typography, logos, measurements, props, furniture, environmental objects, decorative graphic design, divider lines, borders, frames, gutters, panel gaps, or visible seams between panels. No unequal panel widths, and no panel wider or narrower than the others. No rim light, colored lighting, harsh spotlight, or theatrical lighting. No beauty retouching or skin smoothing that hides the fatigue; no illness, bruises, wounds, dirt, or gaunt, skeletal or ashen exaggeration.
+No text, labels, typography, logos, measurements, props, furniture, environmental objects, decorative graphic design, divider lines, borders, frames, gutters, panel gaps, or visible seams between panels. No unequal panel widths, and no panel wider or narrower than the others. No rim light, colored lighting, harsh spotlight, or theatrical lighting. No beauty retouching or skin smoothing that hides the fatigue; no illness, bruises, wounds, dirt, or gaunt, skeletal or ashen exaggeration; no added age.
 ```
 
 ## Takes
@@ -80,3 +81,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
 | t1 | (author, Dreamina) | casting prompt v2 · 2:3 · 1696×2528 | **Candidate.** Photoreal, grounded, fashionable, not sci-fi; face reads early-to-mid thirties with natural skin. Mirrored from the prompt: the loose sole is on her **right** boot (prompt: left) and the mended patch on her **left** elbow (prompt: right). The boots are classic leather lace-ups rather than modern panelled ones, and she reads less hungry than the brief. Saved as `refs/CAST_helena_t1.jpg`. Awaiting the author. |
+| sheet t1 | (author, Dreamina) | sheet prompt v1 (with the condition override) · 5504×3072 | **Close.** The costume is right in all three panels: the patch on the left elbow in both front and rear views, the loose sole on the right boot with a visible gap, the ponytail from behind. The fatigue works (tired eyes, duller skin in her own tone, dry lips, loose hair). But the override **aged her about ten years** (forehead lines, freckles and age spots, under-eye bags): she reads around 40, not 33. The head-omitted front panel shows a skin-coloured neck inside the collar (minor; costume reference only). Rerun once with the v2 AGE LOCK. Saved as `refs/CHAR_helena_t1.jpg`. |
