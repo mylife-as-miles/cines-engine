@@ -25,6 +25,8 @@ The ideas are adapted, in our own words, from repositories the author pointed to
 - **The laugh (B18):** lips pressed (AU24), then a breath escapes through her nose, she fights it, and it comes again. A real smile breaks through, reaching the eyes (AU6 + AU12). She folds forward, and the pain cuts in (AU4 + AU7) inside the laugh, so she laughs at that too.
 - **Being seen (B15):** her head comes up, and she is completely still for about half a second. The eyes widen slightly, then turn wet and catch the light, never spilling. One effortful swallow, and her voice comes out thicker.
 - **The doors (B24):** her speech speeds up, her breath catches, and one swallow takes effort. A single tremor in the jaw is re-clenched at once. "Bloody doors" comes out as a broken half-laugh. She wipes her nose on her sleeve.
+- **Under pressure:** she gets quicker and jokier, and every joke costs more. Her eyes go to the street or the pavement, never to the ground at her own feet.
+- **Must not:** cry, plead, raise her voice, or lean on him before B11 (the shoulder) and B29 (the arm).
 
 ## Oren: physical vocabulary
 
@@ -36,6 +38,37 @@ The ideas are adapted, in our own words, from repositories the author pointed to
 - **"Waiting still" (B09) versus switched off:** in both he is completely still, but when he is waiting his eyes keep tracking her and the blinks continue. Switched off would mean the eyes unfocused and the blinking stopped. We only ever show waiting.
 - **The temple light** is his only expression. When it wakes, nothing else on him moves.
 - **The choice (B30):** the light blinks once, his face does not change, and his stride shortens. The decision shows only in his feet.
+- **Under pressure:** nothing on his face changes. Only the light wakes, and his eyes go to the bag (B25).
+- **Must not:** smile, laugh, frown, fidget, breathe visibly, or touch her unless she reaches for him first.
+
+## Dialogue, lip-sync and silence
+
+- **The lines are fixed.** No line is reworded, trimmed or sped up to fit a shot. If a line doesn't fit, change the coverage instead: split it across shots, or let part of it play over the listener, the hands or the feet.
+- **Mouth visibility, per line.** Six lines must be on the speaker's face: L04 and L22 ("My name is Oren."), L33 (her rank), L36 ("Helena will do."), L42 ("…fucked you.") and **L73 ("Slow down, Oren.")**. Long informational lines can play partly over the listener, the bag or the feet: L13, L25, L47, L51 and L55. Everything else should be on the face where possible.
+- **Hands never cross the mouth during a line.** Her hand goes to her back or her face *between* lines: rubbing her face in B23 comes before L61, and wiping her nose in B35 comes after it.
+- **No overlaps in a generation.** Her laugh (B18) ends before Oren's next line. Any overlap is built in the edit.
+- **Mid-register delivery.** Whispering and shouting both break lip-sync, and neither belongs in this film anyway.
+- **Silence before an impact line.** Hold 0.5–1 s of street room tone, never dead silence, before L33, L42 and L73, and after "Didn't attend." (L38).
+- **The longest line.** L61, the doors, runs to 50 words. The script's own "(beat)" is the split point: B33 ends on "supposed to", and B34 carries the rest in one take. If Seedance's lip-sync slips over that length, let a few words play over her hands on her sleeve and keep the one-take feel.
+- **The third thing is the bag.** The screenplay already routes Helena's hunger through it ("Her eyes go to the bag. Come back."). Whenever she can't say something, her eyes can find the bag.
+- **Event off-screen, reaction on-screen.** The client, the clinic and the doors are only heard or spoken of; the camera stays on the faces that react.
+
+## Interaction verbs (vary them; a repeated verb is a dead beat)
+
+Each beat's inner action, as one verb and the reason behind it, for the [ACT] field:
+
+- **I–II:** she *watches* (the bag, because she's hungry) → *stops* him → *labels* him (the fake ones) → he *corrects* (with his name) → she *apologises* → she *confides* (hungry) → she *takes it back* (doesn't matter) → he *sets the line* (the person I support) → he *protects* (the slipper) → he *informs* → she *snaps* → she *apologises*.
+- **III–IV:** he *asks* (pain) → she *jokes* → he *offers* → she *leans* → she *teases* (the introduction) → she *pushes him away* (don't let me keep you) → he *offers* again → she *withholds* (not the recordings) → he *names* her (rank) → she *corrects* (Helena) → she *accuses* (the system) → she *invites* (sit) → he *says it simply* → she *laughs*.
+- **V–VII:** he *refuses to promise* → she *approves* (no congratulations) → he *reports* (the desk) → she *sees* him → she *accepts* → he *asks* again → she *deflects* → she *confesses* (the doors) → she *asks* (walk me in) → she *releases* him (go) → he *bargains* (ten past) → he *submits* (understood) → he *offers* his arm → she *sets terms* (till the corner) → she *holds on* → she *asks*, by his name → he *chooses*.
+
+## Distances
+
+The script's blocking, measured so prompts can state metres instead of "closer":
+- **B05–B10:** about 1 m apart on the pavement.
+- **B11:** close enough for her hand to reach his shoulder.
+- **B13–B16:** he stands about 0.8 m from her knees, the bag level with her face.
+- **B17:** seated side by side, about 0.3 m apart, so close that she has to move her boot.
+- **B29–B31:** her hand on his forearm, walking hip to hip.
 
 ## Per beat
 
@@ -142,4 +175,5 @@ Cinekive is a local, private archive for film stills: you drop in films or frame
 - FACS vocabulary and dialogue beats: taohuahuangxiaoxie/video_skills, `higgsfield-facs` skill (no licence file found, so ideas only). FACS itself is Ekman & Friesen's standard system.
 - Restraint scale, "hold back rather than release", "the best crying is before the tear": snowfrost/skill-movie, `performance-scene-director` (no licence file found, so ideas only).
 - Intention tag vocabulary: Gianluca-Improta/cinekive (MIT).
+- Dialogue and performance method, ideas only: badgids/Story-Film-Skills (Apache-2.0; character pressure and must-not signatures, mouth visibility, "never reword a line, change the coverage"); wuwangzhang1216/DirectorSKILL (MIT; behaviour not emotion, one beat one turn, reactions as their own beat, silence rules, lip-sync limits); jtydhr88/screenwriting-skills (MIT; dialogue as action, Chekhov's "the deepest pain in the fewest words", Ozu's "event off-screen, reaction on-screen"); katha-ai/MovieGraphs (interaction verbs with reasons; no licence file); declare-lab/MELD (GPL-3.0; emotion and sentiment as separate axes, emotion shifts).
 - Camera vocabulary (terms only, no data used): Vchitect/ShotBench (no licence file), PRIS-CV/CineTechBench (data CC BY-NC-ND 4.0), CineScale (research-use agreement), movienet/movienet-tools (Apache-2.0).
