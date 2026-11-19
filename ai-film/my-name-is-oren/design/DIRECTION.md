@@ -14,7 +14,8 @@ The ideas are adapted, in our own words, from repositories the author pointed to
 6. **No tears.** The script never calls for them. At most the eyes are wet and catch the light, and they never spill. "She wipes her nose on her sleeve" is as far as it goes.
 7. **Name the gaze target.** Write "her eyes drop to the slippers" or "his eyes stay on hers", never "she looks away thoughtfully" or eyes to the ceiling.
 8. **Listeners are alive.** The one who is not speaking still blinks, breathes and tracks the speaker. Oren's stillness is designed, not dead (see below).
-9. **The anti-template test.** Before a prompt goes out, read its performance lines and ask whether they could have come from a template, or whether they read like notes from a director who watched the actor rehearse. If they read templated, rewrite them.
+9. **Give every line its length in seconds, never a speed word.** "Too fast" or "quick" gets exaggerated (Q03 t1 crammed 15 words into 3 s). Use the beat timings: about 2.5 words a second for Helena and 2.3 for Oren.
+10. **The anti-template test.** Before a prompt goes out, read its performance lines and ask whether they could have come from a template, or whether they read like notes from a director who watched the actor rehearse. If they read templated, rewrite them.
 
 ## Helena: physical vocabulary
 
@@ -87,7 +88,7 @@ H and O are Helena's and Oren's levels on the restraint scale. **Tells** go into
 | Beat | H / O | Tells | Delivery | Intention |
 | --- | --- | --- | --- | --- |
 | B05 Excuse me | 3 / 2 | H: catches up stiffly, a hand going to her back. O: stops completely; head turns first, then body; eyes on hers. | L01 lighter than her face; L02 even and polite, no smile. | tracking · handheld · two-shot · tense |
-| B06 The seam | 4 / 2 | H: freezes for 0.3 s; eyes to the seam, then back to his eyes; after L03 her eyes drop, with a one-sided apologetic grimace. O: unchanged; one slow blink after L04. | L03 out before she can stop it. L04 flat, not a correction. L05 too fast, embarrassed. L06 plain fact. | close-up · macro · insert · uncanny · tense |
+| B06 The seam | 4 / 2 | H: freezes for 0.3 s; eyes to the seam, then back to his eyes; after L03 her eyes drop, with a one-sided apologetic grimace. O: unchanged; one slow blink after L04. | L03 out before she can stop it. L04 flat, not a correction. L05 a little hurried and embarrassed, but every word clear: about 6 s for the line. L06 plain fact. | close-up · macro · insert · uncanny · tense |
 | B07 Hungry | 5 / 2 | H: the honesty slips out; her eyes go to the bag and come back; her jaw sets on L10. O: head tilts 5°; eyes to the bag, back to her. | L07 quieter on "really". L08 a genuine question. L09 trails off at "can't even —". L10 clipped. L11 gentle and factual. | close-up · handheld · intimate · tense |
 | B08 Apologies | 3 / 2 | H: a weary glance down at the machine; then her brows lift slightly at his slipper (surprise, AU1 + AU2, small). O: no hesitation; plants the slipper; looks at the sweeper, not at her. | L12 bright, identical both times. | ground-level · wide-angle · locked-off · comic · confrontation |
 | B09 Mercer Street | 4 / 1 | O: **waiting still** for 3–4 s, eyes tracking her, blinks continuing. H: after L14, the inner brows rise (AU1): remorse. | L13 exact ("one thirty-one"). L14 sharp. L15 softened, an apology. | medium-close · locked-off · centered · symmetry · detached |
