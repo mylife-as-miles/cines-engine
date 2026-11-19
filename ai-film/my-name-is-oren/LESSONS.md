@@ -26,5 +26,7 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 19 | Set 21:9 on every generation, and check: the first take came back 16:9, so 2.35:1 crops 12% top and bottom. Check that framing survives the matte. | Q01 t1 came back 854×480. | §3a Templates (2.35:1) |
 | 20 | A plain, evenly lit grey screen is a natural key: the composited UI sits behind fingers without rotoscoping. Still ask for the finger to hover, not touch. | Q01 t1 shot 5. | §8 Finish |
 | 21 | Keep good shots and regenerate only the failed ones as a short pickup, starting from the frame at the cut. | Q01 t1: shots 1–3 kept, a pickup for 4–6. *Pending.* | §5 Review and selects |
+| 22 | A held prop needs "held, never set down": told that the bag "stops", the model put it on the ground. | Q02 t1 shot 5. | §3 Prompting |
+| 23 | Without speech recognition, a voice-band loudness map still shows whether lines fall in the right shots, but the words need ears or speech recognition (huggingface.co must be allowed for Whisper models). | Q02 t1: three bursts in the calling shot; the last line at 19.2 s. | §5 Review and selects |
 
 Rows marked *pending* need a generated result before they can be called a lesson.

@@ -61,11 +61,11 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 
 | Beats | Where the bag is |
 | --- | --- |
-| B04–B13 | his right hand |
-| B14–B16 | his left hand ("He moves the bag into his other hand") |
+| B04–B13 | his **LEFT** hand (as generated in Q02 t1; adopted like the mirrored boot and tape) |
+| B14–B16 | his RIGHT hand ("He moves the bag into his other hand") |
 | B17–B22 | between his feet |
-| B23–B27 | his right hand again (picked up and stood, then lowered) |
-| B28–B31 | his left hand, his right arm offered |
+| B23–B27 | his RIGHT hand (picked up as he stands, then lowered) |
+| B28–B31 | his LEFT hand, his right arm offered (the script's own words) |
 
 - **Positions:** Helena leans under the window, steps out to stop him, then sits on the low wall from B11. Oren stands from B05 to B16, sits beside her (on frame right) from B17 to B22, then stands. From B29 they walk left to right to the corner.
 
@@ -75,6 +75,8 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 - **A detail the story needs must read on screen.** Hold it 1.5–2 s, near the centre of frame, named in the prompt as clearly visible, with which side it is on ("the RIGHT boot's sole, open at the toe").
 - **Contact is explicit.** "Hovers 1 cm above, never touches"; "goes fully into the pocket, the corner catching the lining".
 - **One idea per shot, and no more than six shots in 20 s.**
+- **A held prop stays held.** Say "in his hand, never set down"; told that the bag "stops", Q02 t1 put it on the ground.
+- **Q03 opens on singles.** Q02 t1 ends with them 3–4 m apart, so singles hide the distance before the close seam shot.
 
 ## Order of generation
 
