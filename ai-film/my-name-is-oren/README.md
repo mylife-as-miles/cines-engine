@@ -26,7 +26,7 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `design/TREATMENT.md` | Logline, world, people, the camera idea (feet first), motifs, what the film never shows, three looks. |
 | `design/DECISIONS.md` | What is settled, what is proposed and waiting for the author, and the draft film bible (look string, camera package, identities, Voice DNA). |
 | `design/REFERENCES.md` | The character sheets, environment references and prop references to make, and what is made in code instead. |
-| `design/SHOTS.md` | First draft shot list (41 sequences, 9:13 before trims). It predates the beats and the 7-minute contest cap, and will be re-cut to `BEATS.md`. |
+| `design/SHOTS.md` | The 18 generation sequences (Q01–Q18) for Seedance 2.5: the beats in each, lengths, lines, images to attach, continuity, and the order of generation. The first 41-sequence draft is in `design/archive/SHOTS_draft1.md`. |
 | `prompts/`, `prompts/refs/` | Auteur prompts per sequence and filled reference prompts (to come). |
 | `tools/parse_script.py` | Builds `design/script.json` from `design/screenplay.txt`. |
 | `tools/beats_pdf.js` | Renders `design/BEATS.md` to `design/BEATS.pdf` with the pre-installed Chromium (`node tools/beats_pdf.js`). |
