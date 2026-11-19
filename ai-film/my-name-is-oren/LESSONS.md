@@ -28,8 +28,9 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 21 | Keep good shots and regenerate only the failed ones as a short pickup, starting from the frame at the cut. | Q01 t1: shots 1–3 kept, a pickup for 4–6. *Pending.* | §5 Review and selects |
 | 22 | A held prop needs "held, never set down": told that the bag "stops", the model put it on the ground. | Q02 t1 shot 5. | §3 Prompting |
 | 23 | Without speech recognition, a voice-band loudness map still shows whether lines fall in the right shots, but the words need ears or speech recognition (huggingface.co must be allowed for Whisper models). | Q02 t1: three bursts in the calling shot; the last line at 19.2 s. | §5 Review and selects |
-| 24 | Write eyes as open with a named gaze: "her eyes drop" made the model close her eyes, and she read as asleep. | Q03 t1 shot 5. | §3 Prompting |
+| 24 | Write eyes as open with a named gaze (it held in Q04 t1: eyes open throughout): "her eyes drop" made the model close her eyes, and she read as asleep. | Q03 t1 shot 5. | §3 Prompting |
 | 25 | Check frame 0 of every take for a stray frame, and trim it. | Q03 t1 (frame 0 differs from frame 1). | §6 Edit |
 | 26 | Give every line its length in seconds, never a speed word: "too fast" plus a "quick and clipped" voice crammed 15 words into 3 s. | Q03 t1 shot 5; the author: "she spoke too fast". The Voice Bible was revised. | §3 Prompting, Voice Bible |
+| 27 | Say where a held prop hangs and what the arm does ("arm straight down at his side, the bag beside his thigh"). A point-of-view insert of a prop otherwise tends to be presented toward the camera, which can read as an offer and change the meaning. | Q04 t1 shot 4. | §3 Prompting |
 
 Rows marked *pending* need a generated result before they can be called a lesson.
