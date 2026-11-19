@@ -1,5 +1,7 @@
 # My Name Is Oren: shots (draft)
 
+> **Superseded timing.** This first draft runs 9:13 before trims and predates `BEATS.md`. Both contests cap entries at 7:00, so the shot list will be re-cut to the beats' 6:45 target.
+
 This draft is cut from the screenplay. The timings are estimates until the table read; the shots will change once the look and the faces are settled. Each **Q** is one generated sequence and one auteur prompt (`prompts/Qnn.md`), at most 15 s. Q00 and Q42 are made in code.
 
 **Rules for every shot.** These are proposals in `DECISIONS.md` until the author settles them:
