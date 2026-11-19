@@ -9,6 +9,7 @@ Settled with the author, Osita Miles. Started 2026-11-19. Only the first table i
 | Studio | AI Film: the picture is made with video generation models. The author called it "an AI film". |
 | Script | The screenplay as written, *My Name Is Oren* by Osita Miles (8 pages, uploaded 2026-11-19), filed as `design/screenplay.pdf`. It is the source of truth for every line of dialogue. |
 | Credit | "A film by Osita Miles" (the house default). |
+| Cinematography | **Naturalistic, with Denis Villeneuve's eye** (chosen by the author, 2026-11-19). Helena is filmed in the social-realist grammar of Andrea Arnold, Clio Barnard and Lynne Ramsay: handheld, close, eye level, natural light, body details. The city and Oren are filmed in Villeneuve's: locked-off and symmetrical, slow push-ins, small figures with empty space around them, soft overcast light, one accent colour in a muted world (*Prisoners*, *Arrival*, *Blade Runner 2049*). The two grammars meet when she looks at him properly (B21). The author chose this over a broader "epic" set proposed the same day (*Children of Men*, *Moonlight*, *After Yang*, *Hunger*, Ozu, *In the Mood for Love*, *Under the Skin*). Details in `TREATMENT.md`; the influence lines in the film bible below go into every prompt. |
 
 ## Open: proposals waiting for the author
 
@@ -34,6 +35,14 @@ Settled with the author, Osita Miles. Started 2026-11-19. Only the first table i
 **Look string (A).** Overcast English afternoon, soft flat daylight, muted slate and wet-concrete greys, faded red brick, hi-vis yellow the only saturated colour, warm fluorescent spill from the laundrette, fine 35 mm grain, gentle halation, naturalistic, never glossy, never teal-and-orange.
 
 **Camera package.** ARRI Alexa XT · 2.35:1 · restrained 1.5× anamorphic · Cooke Speed Panchro-inspired rendering: gentle softness, moderate microcontrast, organic falloff, restrained oval bokeh, smooth highlight roll-off. Soft, low-contrast, motivated light: the overcast sky as the primary source, and the laundrette window's warm spill as the secondary.
+
+**Influences, each with its purpose (settled; copied unchanged into the MOVIE COLOR section of every auteur prompt).** Grammar, never imitation: no shot, frame or character is copied, and no frame from these films is used as a reference.
+- Denis Villeneuve, *Prisoners* (Roger Deakins): an ordinary grey street made monumental; soft overcast light; precise, symmetrical compositions in everyday places.
+- Denis Villeneuve, *Arrival* (Bradford Young): muted, soft, overcast intimacy; faces close in diffuse grey light; contact with a non-human played quietly.
+- Denis Villeneuve, *Blade Runner 2049* (Roger Deakins): a synthetic person filmed with dignity and stillness; small figures against large flat planes; negative space.
+- Andrea Arnold, *Fish Tank* (Robbie Ryan): handheld closeness at eye level that breathes with Helena.
+- Clio Barnard, *The Selfish Giant* (Mike Eley): tenderness without sentiment in northern English light, on real streets.
+- Lynne Ramsay, *Ratcatcher* (Alwin Küchler): the story told in body details: feet, hands, fabric.
 
 **Character identity (draft, until the sheets are approved).**
 - *Helena Duncan.* 30s, lean from not eating, an athletic frame gone tired. Hair pulled back in a short practical ponytail with strands loose; no make-up. She wears an old olive army-surplus field jacket (no insignia) over a grey hoodie, dark worn cargo trousers, and scuffed combat boots with the rubber coming loose from the left sole. She keeps a hand flat on the small of her back. Her old handset has a cracked corner.

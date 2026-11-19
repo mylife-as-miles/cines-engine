@@ -27,6 +27,16 @@ The script tells its story through feet: regulation shoes, her failing boots, hi
 - **Two camera grammars.** Helena is filmed handheld, so the frame breathes with her. Oren is filmed locked-off: when he is waiting, the camera is still too. On the walk at the end the camera moves at her pace, not his.
 - **One axis.** The camera stays on the street side, with the laundrette and the low wall behind them. The clinic and the corner are always frame right, and the walk always runs left to right.
 
+## Cinematography: naturalistic, with Villeneuve's eye
+
+*Chosen by the author.* The film is everyday and close, shot with Denis Villeneuve's precision. There are two grammars, and the story brings them together.
+
+- **Helena is filmed like a social-realist film.** The camera is handheld, close and at eye level, breathing with her in natural light. The story is told through body details: boots, hands, the cracked handset. This is Andrea Arnold's closeness (*Fish Tank*), Clio Barnard's tenderness in northern light (*The Selfish Giant*), and Lynne Ramsay's feet, hands and fabric (*Ratcatcher*).
+- **The city and Oren are filmed like Villeneuve.** Frames are locked-off and symmetrical, with slow, deliberate push-ins. Small figures stand against big flat walls and streets with empty space around them. The light is soft and overcast, and one accent colour (hi-vis yellow) sits in a muted world. *Prisoners* shows an ordinary grey street made monumental; *Arrival*, quiet contact with a non-human in muted grey light; *Blade Runner 2049*, a synthetic person filmed with dignity and stillness.
+- **The grammars meet.** As she trusts him, the handheld settles. When she "looks at him properly" (B21), the camera is still, at eye level, with both of them in one frame. The last shot is a Villeneuve wide, two small figures turning the corner of an indifferent street, and it ends at the corner, before the doors.
+
+These films are borrowed for their grammar, never imitated. No shot, frame or character is copied, and no frame from them is ever used as a reference image. Each is named in a prompt only with its purpose.
+
 ## Motifs, played without comment
 
 - **The bag.** It swings with his stride, then stops. It hangs level with her face and sits between his feet; her boot touches it twice. At the end it swings again, slower, in time with her.
@@ -56,6 +66,5 @@ All three looks draw the same three moments: the laundrette window with the swee
 | Light | A flat grey English afternoon: soft top light, no sun, damp pavement. The laundrette's warm fluorescent spill is the one warm source. | A low late-autumn sun raking down the street at half past one, with long shadows. Everything is clean and pleasant, which is the cruelty. | Overcast daylight mixed with the laundrette's green-tinted tubes, with more texture, nearer to documentary. |
 | Palette | Slate, wet concrete and faded brick. Hi-vis yellow is the street's only loud colour (the polite machines); the blue of Oren's tape is the only blue. | Oat, sage, terracotta brick and warm cream civic design. The machines are cream, not hi-vis. | Cool greys, fluorescent green and faded red brick; skin tones kept true. |
 | Texture | Fine 35 mm grain, gentle halation, naturalistic. | Clean, calm, slow lateral moves and still compositions. | 16 mm grain, stronger halation, handheld throughout. |
-| Kin (grammar, never imitation) | Clio Barnard's tenderness without sentiment in northern light; Andrea Arnold's handheld closeness at eye level. | Kogonada's stillness: a synthetic person rendered with grace and no sci-fi spectacle. | Lynne Ramsay's story told in body details: feet, hands, fabric. |
 
-The camera package is the same for all three: the author's *YELLOW* package (ARRI Alexa XT, 2.35:1, restrained 1.5× anamorphic, Cooke Speed Panchro-inspired rendering). Ken Loach's *I, Daniel Blake* shares this film's subject, a benefits system that doesn't see people. Borrow its plainness, never its scenes.
+The camera package and the cinematography (above) are the same for all three looks. The package is the author's *YELLOW* one: ARRI Alexa XT, 2.35:1, restrained 1.5× anamorphic, Cooke Speed Panchro-inspired rendering. Look A's grey overcast light is the nearest of the three to Villeneuve's *Prisoners* and *Arrival*. Ken Loach's *I, Daniel Blake* shares this film's subject, a benefits system that doesn't see people. Borrow its plainness, never its scenes.
