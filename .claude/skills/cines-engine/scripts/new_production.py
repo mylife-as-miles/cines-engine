@@ -14,7 +14,7 @@ STUDIOS = {
     'claude-game':     ['design', 'film', 'audio', 'tools'],
     'claude-youtube':  ['design', 'film', 'audio', 'tools', 'thumbs'],
     'motion-graphics': ['design', 'gfx', 'audio', 'tools'],
-    'ai-film':         ['design', 'prompts', 'refs', 'edit', 'audio', 'tools'],
+    'ai-film':         ['design', 'prompts', 'prompts/refs', 'refs', 'edit', 'audio', 'tools'],
     'claude-blender':  ['design', 'scenes', 'assets', 'audio', 'tools'],
 }
 EXTRA = {
@@ -54,6 +54,8 @@ def main():
         if not os.listdir(os.path.join(root, d)):
             open(os.path.join(root, d, '.gitkeep'), 'w').close()
     print(f'{root}/ created:', ', '.join(sorted(files)))
+    print(f'This production lives on its own branch until the author signs it off: git checkout -b {slug} origin/main '
+          f'(if not already on it). When it is complete, merge to main, then update the skill with what it taught.')
 
 
 if __name__ == '__main__':

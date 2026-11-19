@@ -13,6 +13,7 @@ Films, trailers and videos made with Claude, by Osita Miles. Every production li
 
 ## Working here
 
+- One branch per production, named after its slug and branched from `main`. The production stays on its branch until it is complete; then it merges into `main`, and the studio skill is updated with what it taught.
 - One folder per production: `<studio>/<slug>/`, with a `README.md` (what it is, how to watch it, how it is built), the design documents (`design/DECISIONS.md` records what the author settled), `tools/`, `audio/` and an ignored `out/` for renders.
 - The studio skill in `.claude/skills/cines-engine/` is the production handbook: how each studio works, from brief to delivery, what earlier productions learned, and the shared sound pipeline (Stable Audio, earshot, voices, score, mix). Claude Code loads it whenever a video job comes up here.
 - Renders, generated audio and other large outputs stay out of git (`out/`, `audio/gen/`); private game assets and client footage are never committed.

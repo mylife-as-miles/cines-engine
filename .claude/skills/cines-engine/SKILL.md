@@ -1,6 +1,6 @@
 ---
 name: cines-engine
-description: Production handbook for the cines-engine studios — films, trailers and videos made with Claude. Use it for any video job in this repo or for Osita Miles, even when the word "skill" or "cines-engine" never appears — an animated short made in code (Claude Film, like One Too Many or Autopilot), a game trailer, opening, credits or in-engine film for a game made with Claude (Claude Game, like Crownfall or House Ealdholt), a YouTube video, Short, YouTube cut, thumbnail or captions (Claude YouTube), a product launch, ad, explainer, supers, captions, data cards or disclaimers over footage (Motion Graphics, like FloWell), a film made with Seedance, Kling or other video generation models, with prompts and shot lists (AI Film), or animation made by driving Blender with Python (Claude Blender). Also use it for the shared sound work — voice-over, score, Stable Audio effects, earshot checks, mixing to LUFS — and for fixing, re-cutting, upscaling or re-titling a finished video.
+description: Production handbook for the cines-engine studios — films, trailers and videos made with Claude. Use it for any video job in this repo or for Osita Miles, even if "skill" or "cines-engine" is never said — an animated short made in code (Claude Film, like One Too Many or Autopilot); a trailer, opening, credits or in-engine film for a game made with Claude (Claude Game, like Crownfall or House Ealdholt); a YouTube video, Short, cut, thumbnail or captions (Claude YouTube); a product launch, ad or explainer with supers, captions, data cards or disclaimers (Motion Graphics, like FloWell); a film made with Seedance, Kling or other video models, with reference sheets, auteur video prompts and shot lists (AI Film); or animation made by driving Blender with Python (Claude Blender). Also for online reference research, the shared sound work (voice-over, score, Stable Audio, earshot, mixing to LUFS) and fixing, re-cutting, upscaling or re-titling a finished video.
 ---
 
 # cines-engine studios
@@ -18,19 +18,20 @@ Six studios, one way of working. Every production is a folder `<studio>/<slug>/`
 | Film made with video generation models (Seedance, Kling, …): treatment → prompts → selects → edit | `ai-film/` | `references/ai-film.md` |
 | Animation made by Claude driving Blender (bpy scenes, cameras, lights, renders) | `claude-blender/` | `references/claude-blender.md` |
 
-Always also read `references/sound.md` when the job has any audio (it almost always does), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
+Always also read `references/sound.md` when the job has any audio (it almost always does), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/research.md` is how to look things up (built-in web search first, then Agent Reach for YouTube, Reddit, GitHub, X and clean page reading) without leaking private details. `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
 
 A job can span studios: a game trailer for YouTube is Claude Game for the picture and Claude YouTube for the packaging; a product video with AI shots is AI Film for the shots and Motion Graphics for the graphics. File it under the studio of its main deliverable.
 
 ## The way of working (every studio)
 
 1. **Brief and decisions first.** Restate the brief in a few lines: what, for whom, length, aspect, deliverables, deadline. Ask only what you cannot reasonably decide. Record every choice the author settles in `design/DECISIONS.md` (a two-column table: Decision | Choice, with the reason) — it is the memory of the production, and later sessions will read it before changing anything.
-2. **Start the folder** with `python3 .claude/skills/cines-engine/scripts/new_production.py <studio> <slug> "<Title>"` (README, DECISIONS, the studio's folders, an `.gitignore` for `out/` and generated audio).
+2. **Start the branch and the folder.** Every production lives on its own branch, named after its slug, from `main` (`git checkout -b <slug> origin/main`), and stays there until the author signs it off. Then `python3 .claude/skills/cines-engine/scripts/new_production.py <studio> <slug> "<Title>"` (README, DECISIONS, the studio's folders, an `.gitignore` for `out/` and generated audio).
 3. **Look before building.** Draw style frames, keyframes, a board or test stills and let the author choose between two or three looks before any long render. Cheap pictures settle taste; long renders do not.
 4. **Build in code, deterministically.** Every frame should be reproducible from source: time is a parameter, not the wall clock; random numbers are seeded; assets have paths in the repo or a documented location.
 5. **Look at your work.** Before sending anything, look at it: `scripts/contact_sheet.py` on the render (whole film, and crops of the smallest text at full size), listen to the mix's hardest moments, check frame count and duration with `ffprobe`. Report what you checked; never claim a full watch you did not do.
 6. **Sound is half the film.** Voice, score, effects, room tone, mix and loudness — `references/sound.md`.
-7. **Deliver and document.** Send the file (`SendUserFile`; under 400 MiB), and update the README (what it is, how to watch, how it is built, layout, credits) and DECISIONS. Commit source, not renders.
+7. **Deliver and document.** Send the file (`SendUserFile`; under 400 MiB), and update the README (what it is, how to watch, how it is built, layout, credits) and DECISIONS. Commit source, not renders, to the production's branch.
+8. **When the author says it is complete: merge to `main`, then update this skill.** Merge the production's branch into `main` (a pull request if the author wants one), and only then, on `main`, write what the production taught into the skill: its studio reference (new tools, numbers, settings that worked), the principles here if one changed, a line per lesson. The skill always describes finished, accepted work; experiments on a branch do not change it until they are signed off.
 
 ## Principles the productions taught
 
@@ -54,8 +55,9 @@ For anything the author will judge (looks, a cut, a thumbnail set), get an indep
 | `scripts/contact_sheet.py video out.jpg [times] [--crop] [--scale]` | Look at a render: evenly spaced or chosen frames, or one crop at full size. |
 | `scripts/canvas_render.js page.html stills|seq …` | Render a graphics page frame by frame (stills to review, `.mov` with alpha or opaque `.mp4`). |
 | `assets/gfx_template.html` + `assets/plan_example.json` | Supers, route bar, captions, product title, end card and notice card, all driven by one JSON plan. |
+| `assets/ai-film/` | The author's AI Film templates: environment reference, character sheet, prop reference, auteur video prompt. |
 | `scripts/blender/camrig/` | Blender camera rigs from a `shots.json` (vendored from anyshot, MIT): framing sheets, lens charts, previews, finals. |
-| `references/*.md` | One per studio, plus `sound.md`, `environment.md`, `external.md`. |
+| `references/*.md` | One per studio, plus `sound.md`, `environment.md`, `research.md`, `external.md`. |
 | `THIRD_PARTY.md` | Licences of the outside work this skill adapts. |
 
 ## Keys, privacy and private assets
@@ -64,4 +66,6 @@ API keys live in the environment (`ELEVENLABS_API_KEY` and the Gemini key are pr
 
 ## Git
 
-Work on a branch, commit with a message that says what changed and why (the README style: plain, specific prose), and push it; open a pull request only when the author asks. Large outputs stay ignored (`out/`, `audio/gen/`, renders); if a deliverable must be kept, send it to the author rather than committing it.
+- **One branch per production**, named after its slug (as `autopilot`, `one-too-many`, `crownfall-intro` were), branched from `main`. All of the production's commits go there; push it after each working session so nothing lives only in the container.
+- **Completed means the author said so.** Then the branch merges into `main` (open a pull request only when the author asks for one; otherwise merge and push `main` once they have signed off), and the skill update follows on `main` (way of working, step 8).
+- Commit messages say what changed and why, in the README style: plain, specific prose. Large outputs stay ignored (`out/`, `audio/gen/`, renders); if a deliverable must be kept, send it to the author rather than committing it.

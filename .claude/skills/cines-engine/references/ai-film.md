@@ -2,7 +2,7 @@
 
 Films whose picture comes from generation models (Seedance, Kling, Cinema Studio, MiniMax, Wan and others). Treat the models as a camera crew that cannot hear you twice the same way: what makes a good AI film is the paperwork around them. Lock the look and the references before generating any video, keep every prompt, and keep sound, text and finishing in our own hands.
 
-Contents: 1 Tools · 2 Workflow · 3 Prompting · 4 Continuity · 5 Review and selects · 6 Edit · 7 Sound · 8 Finish · 9 Honesty and rights · 10 Folder layout
+Contents: 1 Tools · 2 Workflow · 3a The author's templates · 3 Prompting · 4 Continuity · 5 Review and selects · 6 Edit · 7 Sound · 8 Finish · 9 Honesty and rights · 10 Folder layout
 
 ## 1. Tools in this environment
 
@@ -16,14 +16,32 @@ Contents: 1 Tools · 2 Workflow · 3 Prompting · 4 Continuity · 5 Review and s
 
 1. **Treatment and decisions** (`design/TREATMENT.md`, `design/DECISIONS.md`): logline, length, aspect ratio (16:9, 2.39:1 letterboxed, or 9:16 for Shorts), the look in words (palette, lens, film stock or grade, era, lighting), the characters, what the film never shows. One page. The author approves before anything is generated.
 2. **Shot list** (`design/SHOTS.md`): one row per shot, 3 to 10 s each (models are best at one clear action per clip). Columns: shot, length, framing, camera move, action, sound, transition, continuity notes, model, prompt file, chosen take, why.
-3. **Look development**: generate keyframes as stills first (cheap, fast to judge): one hero frame per scene, a character sheet per character (front, three-quarter, profile, full body, expressions), location plates. Put them on a board (`scripts/contact_sheet.py` works on image sequences too, or tile them with Pillow) and have the author choose. These become the start frames and references for video.
-4. **Prompts**: one file per shot in `prompts/S01.md` with the prompt, references, model, parameters, and a take log (section 3).
+3. **Reference images, before any video** (the author's templates in `assets/ai-film/`, §3a): a **character sheet** per character, generated from the author's reference photo of them (`character-sheet.md`); an **environment reference** per location (`environment-reference.md`); a **prop reference** per story object that recurs (`prop-reference.md`). Fill each template from the film bible and the scene, generate two to four candidates, put them on a board and let the author choose; save the filled prompt and the chosen job id in `prompts/refs/`. Hero keyframes (one per scene) come after, built from these references. These images are the film's continuity: every video prompt cites them as @Image N.
+4. **Prompts**: one **auteur video prompt** per sequence in `prompts/<SEQ>.md` (`auteur-video-prompt.md`, §3a), with its references, model, parameters, and a take log beneath it.
 5. **Generate**: drafts first, two to four variants per shot with `generate_video_batch`, then finals of the winning prompt. Log each job ID, cost and verdict in the shot's prompt file as it lands.
 6. **Review and select** (section 5), **edit** (section 6), **sound** (section 7), **finish** (section 8), **deliver** with the README written.
 
-## 3. Prompting
+## 3a. The author's templates (use these)
 
-Write each prompt in the same order, so shots read as one film:
+`assets/ai-film/` holds the author's own prompt templates. Use them as written; fill every bracket from the film bible and the scene; never pad them with generic prose.
+
+| Template | For | Output |
+| --- | --- | --- |
+| `environment-reference.md` | A location's master reference: identity, spatial geography, architecture, materials, production design, colour identity, light, camera/optics, composition, atmosphere, realism, continuity and negative locks | One wide or medium-wide eye-level still that later wides, mediums, close-ups, reverses, entrances and exits can all be generated from |
+| `character-sheet.md` | A three-panel character sheet from the author's reference image: front full body (head omitted), rear full body (scale-locked to the front), three-quarter face close-up, on #808080 | The character's identity and wardrobe reference |
+| `prop-reference.md` | One exact object in four views (hero 3/4, front, side, back, optional detail) on #808080, with material, colour, wear, identity markers, components, scale, state and physics locks | The prop's identity reference |
+| `auteur-video-prompt.md` | One generated sequence: title, references, mode/duration/shot count/2.35:1, scene intent, global locks (identity with explicit wardrobe override, location, props and temporal state), movie colour (influences with purpose, camera package), immutable voice DNA, audio design, first-frame anchor, shot by shot (TIME, CAM, BLOCK, ACT, DIALOGUE/V.O., SFX, STATE OUT), performance arc, thematic logic, physics, audio and continuity locks (POSITIVE / NEGATIVE), generation priority order, final state | The video generation prompt |
+
+- **References in plain syntax**: `@Image 1`, `@Image 2`, `@Video 1` — never markdown links. Pass the files to the model's reference slots (`image_references`, `video_references`; the start frame also as `start_image` when the shot must open on it) in the same order as their numbers, and list what each number is under the prompt's title.
+- **The film bible**: the environment and prop templates were written for *YELLOW* and carry its locks — palette (muted yellow, softened lime, warm cream, desaturated olive, restrained amber, warm-neutral blacks; felt, never neon, never teal-and-orange), soft low-contrast motivated light, ARRI Alexa XT, 2.35:1, restrained 1.5× anamorphic, Cooke Speed Panchro-inspired rendering. For another film, keep the structure and swap those blocks for that film's bible, recorded in its DECISIONS.
+- **2.35:1**: the video models render 21:9 (2.33:1) at most (Seedance 2.0/2.5, Kling 4.0, Cinema Studio 3.0/4.0 and MiniMax H3 offer 21:9). Generate at 21:9 and matte to 2.35:1 in the finish (1920×817 picture, or bars inside a 1920×1080 frame); compose with the matte in mind.
+- **Voice DNA is immutable** and **wardrobe overrides are explicit**: copy a character's voice paragraph unchanged into every sequence; if they wear something other than their sheet, say exactly what replaces it.
+- **STATE OUT** of the last shot of one sequence is the **first-frame anchor** of the next.
+- Image models for the sheets: ask `models_explore` (`action: recommend`, `type: image`, `input: image`) for one that holds identity from a reference; upload the author's reference with `media_upload` first; quote cost and wait for the author's yes before batches.
+
+## 3. Prompting (single inserts and general rules)
+
+The auteur prompt (§3a) is the standard for every sequence. For a single insert or a b-roll clip, write a short prompt in the same order every time, so shots read as one film:
 
 ```
 [subject and who they are] [the one action, as it unfolds over the clip]
@@ -42,16 +60,16 @@ Write each prompt in the same order, so shots read as one film:
 - **No on-screen text from the model.** Models misspell; titles, captions and signs that must read go on afterwards (section 8).
 - **Never name lighting gear** ("softbox", "key light on a stand"): models draw the equipment. Describe the light as it falls on the subject ("soft window light from the left, warm on her cheek, the far side in shadow").
 - Describe a reference look in words; never feed another person's frame or face in as a reference.
-- Keep prompts in the user's language, short and concrete; long poetic prompts drift.
+- Length is not the problem; vagueness is. A long auteur prompt where every line names this film's people, places, objects, light and sound holds; generic or poetic prose drifts. Write in the user's language.
 
 **Seedance in practice** (from MengTo's digital-twin and making-of work): pass the start still both as `start_image` and as an image reference; 5 s clips; **draft at 480p, pick, then the final from the draft** (`seedance_2_5` takes `draft` and `draft_job_id`) — one draft per still, each visibly different; for faces, 85 mm at eye level for close shots and 50–65 mm for mediums, with a very slow push-in, a slow lateral slide or a locked-off camera. Seedance re-voices an audio reference, so it cannot hold an external voice-over's timing: lip-sync our own track afterwards (`sync_so`) or cut away. Do not switch models mid-film without the author's say-so.
 
-Prompt file template (`prompts/S04.md`):
+Take log beneath each prompt (`prompts/Q04.md`, after the auteur prompt):
 
 ```markdown
-# S04 — Kitchen, dawn: she finds the phone (6 s)
-Model: seedance_2_5 · 16:9 · 1080p · 6 s · start frame: refs/S04_start.png · element: char_amara
-Prompt: …
+# Q04 — Kitchen, dawn: she finds the phone (12 s, 3 shots)
+Model: seedance_2_5 omni_reference · 21:9 · 1080p · 12 s · @Image 1 refs/CHAR_amara.png · @Image 2 refs/ENV_kitchen.png · @Image 3 refs/PROP_phone.png
+Prompt: (the auteur video prompt above)
 Takes:
 - t1 job 1a2b… draft, 0.x credits — hand warps at 3 s. Rejected.
 - t2 job 3c4d… draft — good timing, light too warm. Adjusted look string.
@@ -60,8 +78,8 @@ Takes:
 
 ## 4. Continuity
 
-- Lock characters as reference elements (Kling elements, Higgsfield reference elements) or as one approved character sheet passed as image references on every shot they appear in.
-- Same wardrobe, same props, same time of day words across a scene. Write a continuity line per scene in `SHOTS.md` and paste it into each prompt of that scene.
+- Lock characters with their approved character sheet (and, where the model supports them, reference elements: Kling elements, Higgsfield reference elements), locations with their environment reference, recurring objects with their prop reference — cited as @Image N in every sequence they appear in.
+- Same wardrobe, same props, same time-of-day words across a scene: the GLOBAL LOCKS and CONTINUITY LOCKS blocks of the auteur prompt carry them; keep a continuity line per scene in `SHOTS.md` so every sequence copies the same words.
 - Chain clips through shared frames (end frame → next start frame) where action continues across a cut.
 - Grade every select to the same look in the finish rather than hoping the model matched it.
 
@@ -94,4 +112,4 @@ Model-generated audio is a guide at most: build the soundtrack ourselves (`sound
 
 ## 10. Folder layout
 
-`ai-film/<slug>/`: `README.md`, `design/` (TREATMENT.md, DECISIONS.md, SHOTS.md), `prompts/` (one per shot, with take logs), `refs/` (approved stills and sheets, if they may be committed), `edit/edit.json`, `tools/` (the edit and mix scripts), `audio/`, `out/` (ignored: generated clips, renders). Start it with `scripts/new_production.py ai-film <slug> "<Title>"`.
+`ai-film/<slug>/`: `README.md`, `design/` (TREATMENT.md, DECISIONS.md with the film bible, SHOTS.md), `prompts/` (one auteur prompt per sequence with its take log; `prompts/refs/` the filled reference prompts with chosen job ids), `refs/` (the approved sheets and stills, if they may be committed), `edit/edit.json`, `tools/` (the edit and mix scripts), `audio/`, `out/` (ignored: generated clips, renders). Start it with `scripts/new_production.py ai-film <slug> "<Title>"`.
