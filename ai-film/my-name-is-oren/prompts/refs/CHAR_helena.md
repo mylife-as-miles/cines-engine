@@ -28,12 +28,25 @@ CAMERA: full-frame camera, 85 mm lens at chest height, deep focus, the whole fig
 NEGATIVE: no sci-fi, cyberpunk or futuristic costume; no neon, LEDs, chrome, metallic or glossy fabrics; no visors, holograms, armour or techwear straps and buckles; no text, logos, insignia, patches or name tapes; no props, bag or jewellery; no make-up, glamour retouching or catwalk styling; no smile; no stylisation, cartoon or CGI look; no rim light or coloured light.
 ```
 
-## Step 2 — Character sheet (the author's template, verbatim)
+## Step 2 — Character sheet (the author's template + Helena's condition override)
 
-Attach the chosen casting image · 16:9 · highest resolution · 2–4 images.
+Attach `refs/CAST_helena_t1.jpg` · 16:9 · highest resolution · 2–4 images. This is the author's template, verbatim, with four marked additions the author asked for. The CONDITION OVERRIDE (hunger and fatigue, so every shot starts from it) and CONTINUITY DETAILS go after the opening. There is one clause at the end of PANEL 3, one at the end of CONSISTENCY, and one at the end of NEGATIVE.
 
 ```
-Create a photorealistic three-panel character reference sheet based strictly on the uploaded reference image. The uploaded image is the single source of truth for identity, age, facial structure, hairstyle, body proportions, skin tone, clothing design, fabric, colors, and accessories. Do not redesign or reinterpret.
+Create a photorealistic three-panel character reference sheet based strictly on the uploaded reference image. The uploaded image is the single source of truth for identity, age, facial structure, hairstyle, body proportions, skin tone, clothing design, fabric, colors, and accessories. Do not redesign or reinterpret. There is one deliberate exception: her physical condition, described under CONDITION OVERRIDE. It changes how she looks after days without proper food, never who she is.
+
+CONDITION OVERRIDE — HUNGER AND FATIGUE
+She has not eaten properly for several days and lives with constant back pain. Show it subtly and realistically: the same woman, after a hard week.
+- Face: very slightly hollower cheeks, a touch more definition at the cheekbones and jaw. Her skin tone stays exactly as in the reference, only duller and less luminous, slightly dry. Lips paler and dry, a little chapped. Deeper, darker shadows under the eyes. Eyes tired, lids a little heavy, but still alert and guarded.
+- Hair: the same hairstyle, a little less kept: a few more loose strands, slightly flat at the roots.
+- Body: the same height, frame and proportions, a little leaner, so the clothes hang slightly looser at the shoulders and waist. The garments themselves are unchanged.
+- Keep exactly: identity, facial structure, age, skin tone, hairstyle, every garment and every detail of the reference.
+- Tired and hungry, never ill: no sickness, bruises, wounds or dirt; no gaunt, skeletal, grey or ashen look; no exaggeration.
+
+CONTINUITY DETAILS — keep exactly as in the reference
+- The rubber sole of her RIGHT boot is coming loose at the toe, with a visible gap (the left side of the image in the front view).
+- A darker olive patch is sewn on her LEFT elbow (the right side of the image in the front view, the left side in the rear view).
+- Classic brown-black leather lace-up boots, scuffed at the toes; the cropped olive jacket with its high collar worn open; the charcoal funnel-neck knit; wide, cropped, pleated washed-black trousers.
 
 LAYOUT — Horizontal landscape composition, read left to right, arranged as three vertical panel areas of equal height and equal width. All three panel areas must have exactly the same width, each occupying one third of the total image width. The first two panels are full-body views, and the third is a face / upper-body close-up. The three panel areas must form one continuous, seamless composition with no visible divider lines, borders, frames, gutters, gaps, spacing, or changes in the background between panels.
 
@@ -47,10 +60,10 @@ PANELS 1 & 2 — SCALE-LOCKED
 Shot consecutively as if from a tripod that never moved: identical focal length, camera height, camera distance, subject scale, and lighting. Identical on-screen shoulder width, torso length, leg length, shoe size, shoulders-to-floor distance, and side margins. Both figures share one identical horizontal ground baseline and one identical horizontal shoulder line, and each figure occupies the same percentage of the panel height. No zoom, crop, vertical shift, or difference in body size between them. Near-orthographic, technical feel with minimal perspective distortion.
 
 PANEL 3 — FACE / UPPER-BODY CLOSE-UP
-Head-and-shoulders portrait of the exact same character, cropped from the upper chest upward. Turn the head slightly to the subject’s right, creating a subtle three-quarter angle while keeping the face mostly toward the camera. The subject’s left cheek and left side of the face must be visibly more exposed than the right side, with the nose pointing slightly toward the subject’s right rather than straight at the camera. Keep both eyes clearly visible and maintain direct eye contact with the camera. Do not use a perfectly frontal, symmetrical face angle. Maintain a serious neutral expression. Keep the entire head, hairstyle, chin, and hair outline fully inside the frame with a small amount of space above the hair. Preserve the exact identity, age, facial structure, hairstyle, skin texture, wrinkles, and natural asymmetry of the reference.
+Head-and-shoulders portrait of the exact same character, cropped from the upper chest upward. Turn the head slightly to the subject’s right, creating a subtle three-quarter angle while keeping the face mostly toward the camera. The subject’s left cheek and left side of the face must be visibly more exposed than the right side, with the nose pointing slightly toward the subject’s right rather than straight at the camera. Keep both eyes clearly visible and maintain direct eye contact with the camera. Do not use a perfectly frontal, symmetrical face angle. Maintain a serious neutral expression. Keep the entire head, hairstyle, chin, and hair outline fully inside the frame with a small amount of space above the hair. Preserve the exact identity, age, facial structure, hairstyle, skin texture, wrinkles, and natural asymmetry of the reference, with the condition override applied.
 
 CONSISTENCY
-Identical character identity, age, skin tone, hairstyle, body proportions, wardrobe (every garment, its cut, and all accessories exactly as in the reference), fabrics, colors, lighting, and color grading across all three panels. This is a technical visual reference / costume documentation sheet, not a creative reinterpretation.
+Identical character identity, age, skin tone, hairstyle, body proportions, wardrobe (every garment, its cut, and all accessories exactly as in the reference), fabrics, colors, lighting, and color grading across all three panels. This is a technical visual reference / costume documentation sheet, not a creative reinterpretation. The condition override applies identically in all three panels.
 
 BACKGROUND
 Neutral mid-grey (#808080) seamless background extending continuously across the entire image without any interruption or panel separation. Identical background color and brightness across all three panel areas.
@@ -59,7 +72,7 @@ LIGHTING & RENDER
 Clean soft even lighting, large diffused key light with gentle fill, soft natural shadows, no harsh highlights, true-to-life skin tones, neutral white balance, minimalist high-fashion editorial look, polished modern professional model-sheet aesthetic, shot on a full-frame camera with an 85mm lens, deep controlled depth of field with the entire figure in focus, crisp tack-sharp detail, high dynamic range.
 
 NEGATIVE
-No text, labels, typography, logos, measurements, props, furniture, environmental objects, decorative graphic design, divider lines, borders, frames, gutters, panel gaps, or visible seams between panels. No unequal panel widths, and no panel wider or narrower than the others. No rim light, colored lighting, harsh spotlight, or theatrical lighting.
+No text, labels, typography, logos, measurements, props, furniture, environmental objects, decorative graphic design, divider lines, borders, frames, gutters, panel gaps, or visible seams between panels. No unequal panel widths, and no panel wider or narrower than the others. No rim light, colored lighting, harsh spotlight, or theatrical lighting. No beauty retouching or skin smoothing that hides the fatigue; no illness, bruises, wounds, dirt, or gaunt, skeletal or ashen exaggeration.
 ```
 
 ## Takes
