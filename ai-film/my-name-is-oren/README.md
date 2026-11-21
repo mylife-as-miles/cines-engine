@@ -31,6 +31,7 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `prompts/sent/` | The exact text sent to the model for each fal job. |
 | `tools/parse_script.py` | Builds `design/script.json` from `design/screenplay.txt`. |
 | `tools/fal_run.py` | Runs one generation on fal (Seedance 2.5 by default) through the queue: local files go as data URIs, the take lands in `out/takes/`, the job record in `out/jobs/`. The key is a network secret the proxy adds; the script never reads it. |
+| `tools/slow_lines.py` | Slows chosen spoken lines in a take, voice and picture together (lip-sync holds): `start:end:tempo` windows. |
 | `tools/q03_shot5_fix.py` | Re-paces Helena's rushed line in Q03 t1 in the edit (two versions in `out/edits/`). |
 | `tools/beats_pdf.js` | Renders `design/BEATS.md` to `design/BEATS.pdf` with the pre-installed Chromium (`node tools/beats_pdf.js`). |
 | `refs/` | Approved references (`CAST_*`, `CHAR_*`, `ENV_*`, `PROP_*`) and frames taken from takes for use as references. |
