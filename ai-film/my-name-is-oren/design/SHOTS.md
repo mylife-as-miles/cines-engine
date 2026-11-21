@@ -17,7 +17,7 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 | --- | --- | --- | --- | --- | --- | --- |
 | Q01 | B02–B03 The street · Helena | 20 s | 0:05 | none | CHAR_helena, CHAR_city-unit, ENV_laundrette, PROP_handset, PROP_helena-boots, PROP_sweeper | Wordless. Handset screen is a code insert (screen off); window decals in post (locked-off). |
 | Q02 | B04–B05 The bag · Excuse me | 15 s | 0:25 | L01–L02 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag, PROP_oren-slippers | Her view through the foot traffic; the slippers; he stops. |
-| Q03 | B06 The seam | 16 s | 0:40 | L03–L06 | CHAR_helena, CHAR_oren, CHAR_oren_detail, ENV_laundrette, ENV_across-street | Extreme close-up of the seam; "My name is Oren." |
+| Q03 | B06 The seam | ~25 s (v3, generated at 26 s) | 0:40 | L03–L06 | CHAR_helena, CHAR_oren, CHAR_oren_detail, ENV_laundrette, ENV_across-street | Extreme close-up of the seam; "My name is Oren." |
 | Q04 | B07 Hungry | 17 s | 0:56 | L07–L11 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag | Her eyes go to the bag and come back. |
 | Q05 | B08 Apologies · B09a Mercer Street (L13) | 17 s | 1:13 | L12–L13 | CHAR_helena, CHAR_oren, ENV_laundrette, PROP_lunch-bag, PROP_helena-boots, PROP_oren-slippers, PROP_sweeper | The sweeper twice; his slipper blocks it; the meal service line. **Establish the loose sole here** (Q01 t1 missed it): ground level on her RIGHT boot as the sweeper bumps it, the gap clearly visible for 1.5 s. |
 | Q06 | B09b Waiting still · B10 The pain | 20 s | 1:30 | L14–L20 | CHAR_helena, CHAR_oren, ENV_laundrette, ENV_low-wall, PROP_lunch-bag | Waiting still 3–4 s; tightened by 1 s. |
@@ -71,6 +71,8 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 - **Positions:** Helena leans under the window, steps out to stop him, then sits on the low wall from B11. Oren stands from B05 to B16, sits beside her (on frame right) from B17 to B22, then stands. From B29 they walk left to right to the corner.
 
 ## What every prompt applies (learnt from Q01 t1)
+
+- **Dialogue gets room to breathe** (the author, after Q03 t2). A generation's length is set by its dialogue, not fixed at 20 s: about 2.5 words a second for Helena and 2 for Oren, a breath at every full stop, each sentence given its start time and length in the prompt, up to 30 s. The cut must still finish under 7:00, so silences and holds are trimmed in the edit, never speech. **Running total:** Q03 grows from 16 s to about 25 s, so the film is about 6:48 (12 s under the cap). Re-plan the later sequences' lengths before writing them.
 
 - **21:9 on every generation.** Check the delivered size, because 16:9 loses 12% to the 2.35:1 matte.
 - **A detail the story needs must read on screen.** Hold it 1.5–2 s, near the centre of frame, named in the prompt as clearly visible, with which side it is on ("the RIGHT boot's sole, open at the toe").
