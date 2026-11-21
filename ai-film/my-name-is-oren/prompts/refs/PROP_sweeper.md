@@ -621,3 +621,4 @@ AVOID: different designs, colours or proportions between views; missing or dupli
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** Faded yellow with the greener replaced panel on its left side, the rubber bumper, the hinged hopper lid, the sensor window and speaker grille at the front; no text. Flaw: the brush's side changes between panels (front view: its front-right corner; rear view: its left), so prompts say "its side brush" without naming a side. |

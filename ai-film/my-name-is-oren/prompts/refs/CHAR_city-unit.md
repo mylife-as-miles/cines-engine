@@ -33,3 +33,4 @@ NEGATIVE — No head, face, neck or chin in any panel. No sci-fi, cyberpunk or f
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** Two identical units: the hi-vis tabard (two torso bands, two shoulder bands), grey long-sleeved top, grey trousers, grey gloves, seamless grey regulation shoes; heads cropped out (panel 1 shows the neck; the film never frames above the chest). |

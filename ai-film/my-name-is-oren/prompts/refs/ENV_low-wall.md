@@ -412,3 +412,4 @@ AVOID: readable text, letters or numbers anywhere; people; cars parked in the fo
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Geography approved; height must be fixed before Q06.** The window edge far left, the door, the wall across the frame, the bin far left, the forecourt with two bicycles on a rail, the neighbour's door: all as asked and continuous with `ENV_laundrette`. Flaw: **the wall is about 1 m high**, so seated characters' feet would dangle. The film needs seat height (≈45–50 cm): the bag sits between Oren's feet (B17–B22) and her boot touches it (B19). Fix: an image edit lowering the wall to seat height (fal), then re-check. |

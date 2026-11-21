@@ -27,10 +27,14 @@ The workflow is the AI Film one (`.claude/skills/cines-engine/references/ai-film
 | `design/DECISIONS.md` | What is settled, what is proposed and waiting for the author, and the draft film bible (look string, camera package, identities, Voice DNA). |
 | `design/REFERENCES.md` | The character sheets, environment references and prop references to make, and what is made in code instead. |
 | `design/SHOTS.md` | The 22 generations of 20 s (Q01–Q22) for Seedance 2.5: the beats in each, lengths, lines, images to attach, continuity, and the order of generation. The first 41-sequence draft is in `design/archive/SHOTS_draft1.md`. |
-| `prompts/`, `prompts/refs/` | Auteur prompts per sequence and filled reference prompts (to come). |
+| `prompts/`, `prompts/refs/` | Auteur prompts per sequence (`Qnn.md`, with their takes) and filled reference prompts (with their takes). |
+| `prompts/sent/` | The exact text sent to the model for each fal job. |
 | `tools/parse_script.py` | Builds `design/script.json` from `design/screenplay.txt`. |
+| `tools/fal_run.py` | Runs one generation on fal (Seedance 2.5 by default) through the queue: local files go as data URIs, the take lands in `out/takes/`, the job record in `out/jobs/`. The key is a network secret the proxy adds; the script never reads it. |
+| `tools/q03_shot5_fix.py` | Re-paces Helena's rushed line in Q03 t1 in the edit (two versions in `out/edits/`). |
 | `tools/beats_pdf.js` | Renders `design/BEATS.md` to `design/BEATS.pdf` with the pre-installed Chromium (`node tools/beats_pdf.js`). |
-| `refs/`, `edit/`, `audio/` | Approved references, the edit list, sound and scripts (to come). `out/` is ignored. |
+| `refs/` | Approved references (`CAST_*`, `CHAR_*`, `ENV_*`, `PROP_*`) and frames taken from takes for use as references. |
+| `edit/`, `audio/` | The edit list, sound and scripts (to come). `out/` (takes, edits, job records) is ignored. |
 
 ## Credits
 

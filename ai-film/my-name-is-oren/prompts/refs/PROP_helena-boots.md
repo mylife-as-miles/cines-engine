@@ -625,3 +625,4 @@ AVOID: different designs, colours or proportions between views; missing or dupli
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** The right boot's sole is open at the toe (front view: the boot on the viewer's left; the close-up panel); scuffed toes, eight eyelets, lugged soles. The left toe shows a faint line but no gap. |

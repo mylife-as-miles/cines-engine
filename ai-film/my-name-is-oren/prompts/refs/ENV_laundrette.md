@@ -408,3 +408,4 @@ AVOID: readable text, letters or numbers anywhere; people; cars parked in the fo
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved, with one flaw.** The window centre-left with three blank decal panels, the door centre-right one step up, the parcel box, the kerbside bin, the lamp post and a young tree; the fascia painted over. Flaw: **the low wall right of the door is about waist height (≈1 m), not the 50 cm asked**; see `ENV_low-wall`. One tiny illegible sign on the inside door. Came back 16:9 (21:9 was asked). |

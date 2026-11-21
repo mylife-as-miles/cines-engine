@@ -410,3 +410,4 @@ AVOID: readable text, letters or numbers anywhere; people; cars parked in the fo
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved** (with the wall-height note from `ENV_low-wall` at the near left). The terrace recedes on the left to a three-storey chamfered corner building with its door on the corner; lamps, barrel planters, the bin on its post. A keep-left bollard (ordinary street furniture, no text). |

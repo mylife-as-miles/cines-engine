@@ -10,6 +10,10 @@ These are the film's continuity references, made before any video. Each is cited
 - **Audio references** give a voice its timbre. **This film uses none** (the author's choice): the voices come from the Voice Bible written into each prompt.
 - **What it means for us:** the whole visual kit (both characters, the set, the props) can go into every generation, and 30 s clips let one generation carry two or three beats. That means fewer joins and steadier faces. The shot list will be re-cut to about 15 sequences of 20–30 s.
 
+**On fal (checked 2026-11-21, `bytedance/seedance-2.5/us/reference-to-video`):** up to 30 images, 10 videos and 10 audio (50 files in all); images are named **`@Image1`, `@Image2`** (no space), videos `@Video1`, audio `@Audio1`; 4–30 s or auto; aspect 21:9, 16:9, 4:3, 1:1, 3:4, 9:16 or auto; 480p, 720p, 1080p or 4K; a **draft** mode renders 480p and returns a `draft_id` to finish at 1080p or 4K within 14 days. Listed price per generated second: 480p $0.2205, 720p $0.473, 1080p $1.164, 4K $1.84 (a 20 s draft ≈ $4.41); any video reference switches billing to tokens over input plus output duration.
+
+**Approved files (reviewed 2026-11-21; verdicts in each `prompts/refs/*.md`):** `refs/CHAR_oren_t1.jpg`, `CHAR_oren_detail_t1.jpg` (+ `_off` crop), `CHAR_city-unit_t1.jpg`, `ENV_laundrette_t1.jpg`, `ENV_low-wall_t1.jpg` (**wall too high: fix before Q06**), `ENV_across-street_t1.jpg`, `ENV_corner_t1.jpg`, `PROP_lunch-bag_t1.jpg`, `PROP_handset_t1.jpg`, `PROP_helena-boots_t1.jpg`, `PROP_oren-slippers_t1.jpg` (labels painted out), `PROP_sweeper_t1.jpg`. Still to make: `CHAR_helena` sheet v2 (AGE LOCK), `MOTION_helena-walk`.
+
 ## The kit
 
 ### Characters (`character-sheet.md`, each made from a chosen casting portrait)
@@ -18,7 +22,7 @@ These are the film's continuity references, made before any video. Each is cited
 | --- | --- | --- |
 | `CHAR_helena` | Three-panel sheet: front full body (head omitted), rear, three-quarter face. From `refs/CAST_helena_t1.jpg`: the cropped olive jacket with the patched left elbow, the charcoal funnel-neck knit, wide cropped pleated black trousers, and the leather boots with the loose right sole. | Every beat |
 | `CHAR_oren` | Three-panel sheet: the navy band-collar work shirt with a blank badge (no coat), grey trousers, the slippers. Skin a little too even. | B04 (feet only), B05–B31 |
-| `CHAR_oren_detail` | Two stills of his left profile in close-up: the seam below the ear and the temple light **unlit**, then **lit** (soft warm white under the skin), with the scrape on his chin. | Every close-up of Oren; B15, B20, B26–B27, B30 |
+| `CHAR_oren_detail` | Two stills of his **right** profile in close-up (changed from left after Q03 t1): the seam below the ear and the temple light **unlit**, then **lit** (soft warm white under the skin), with the scrape on his chin. | Every close-up of Oren; B15, B20, B26–B27, B30 |
 | `CHAR_city-unit` | Costume sheet from the chest down: hi-vis tabard, grey work clothes, grey gloves, seamless grey regulation shoes. One sheet serves both units. | B02 |
 
 ### Environments (`environment-reference.md`, with *YELLOW*'s blocks swapped for this film's bible)

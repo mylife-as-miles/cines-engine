@@ -32,5 +32,8 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 25 | Check frame 0 of every take for a stray frame, and trim it. | Q03 t1 (frame 0 differs from frame 1). | §6 Edit |
 | 26 | Give every line its length in seconds, never a speed word: "too fast" plus a "quick and clipped" voice crammed 15 words into 3 s. | Q03 t1 shot 5; the author: "she spoke too fast". The Voice Bible was revised. | §3 Prompting, Voice Bible |
 | 27 | Say where a held prop hangs and what the arm does ("arm straight down at his side, the bag beside his thigh"). A point-of-view insert of a prop otherwise tends to be presented toward the camera, which can read as an offer and change the meaning. | Q04 t1 shot 4. | §3 Prompting |
+| 28 | Check scale in environment plates against a known size (a door is about 2 m) before the sequences that depend on it: a "low wall, about 50 cm" came back about 1 m in all three plates, which would leave seated feet dangling. | `ENV_laundrette`, `ENV_low-wall`, `ENV_corner` t1. | §3a Templates, §4 Continuity |
+| 29 | When the platform changes, translate the prompt's mechanics, not its content: the reference names (`@Image 1` on Dreamina, `@Image1` on fal) and the frame wording, which must match the aspect parameter. Keep the exact text sent beside the job record. | Q03 v2 moved to fal: `prompts/sent/Q03_v2.txt`, `out/jobs/`. | §1 Tools, §3a Templates |
+| 30 | Sheets can print view labels ("FRONT VIEW") even when told not to; paint them out of the reference before it goes into a video model. | `PROP_oren-slippers` t1. | §3a Templates |
 
 Rows marked *pending* need a generated result before they can be called a lesson.

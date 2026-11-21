@@ -654,3 +654,4 @@ AVOID: different designs, colours or proportions between views; missing or dupli
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** The starburst crack at the top-left corner with a chipped corner; worn frame edges; the camera at the top left of the back; no marks. Flaw, not story-relevant: the front view puts the buttons on the left edge (the right was asked). |

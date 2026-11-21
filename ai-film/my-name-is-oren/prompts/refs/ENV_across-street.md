@@ -410,3 +410,4 @@ AVOID: readable text, letters or numbers anywhere; people; cars parked in the fo
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** Two lanes and a painted cycle lane, the café with chairs, the side alley, the traffic post with its speaker grille, the delivery lockers, the bus shelter with a plain panel, planters, cycle racks, the heat pump on the gable at right. No readable text found. |

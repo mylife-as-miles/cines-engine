@@ -32,3 +32,4 @@ NEGATIVE — No text, labels, arrows, callouts, measurements or logos. No visibl
 | --- | --- | --- | --- |
 
 Note (Q03 t1): the seam first appeared on Oren's **right** side and was adopted, so this prompt now asks for his right profile. His approved sheet (`refs/CHAR_oren_t1.jpg`) shows no seam, so it doesn't conflict.
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved** (`refs/CHAR_oren_detail_t1.jpg`; the light-off panel alone is `refs/CHAR_oren_detail_t1_off.jpg`). Right profile; the seam starts below the right earlobe and runs down the neck to the collar (longer than the 6 cm asked; it reads well); the temple light is small, warm-white and under the skin in panel 2; the scrape is on the right of the chin. Flaw: light stubble on the upper lip and chin (clean-shaven was asked), so every prompt keeps "clean-shaven, no stubble". Use the light-off crop wherever the light must stay off. |

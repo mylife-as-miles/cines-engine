@@ -67,6 +67,7 @@ The film's **32 beats** (`BEATS.md`) become **22 generations of 20 s each** (the
 | B23–B27 | his RIGHT hand (picked up as he stands, then lowered) |
 | B28–B31 | his LEFT hand, his right arm offered (the script's own words) |
 
+- **The low wall is seat height (≈45–50 cm)**, so seated feet rest on the pavement. `ENV_low-wall` t1 drew it about 1 m high; it is fixed before Q06, the first sequence at the wall.
 - **Positions:** Helena leans under the window, steps out to stop him, then sits on the low wall from B11. Oren stands from B05 to B16, sits beside her (on frame right) from B17 to B22, then stands. From B29 they walk left to right to the corner.
 
 ## What every prompt applies (learnt from Q01 t1)

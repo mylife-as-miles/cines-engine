@@ -625,3 +625,4 @@ AVOID: different designs, colours or proportions between views; missing or dupli
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** The blue tape across the RIGHT toe (front view: the slipper on the viewer's left), over a small split in the felt; the wide strap; the chunky sole. The sheet printed four view labels; they are painted out in `refs/PROP_oren-slippers_t1.jpg` so they can't leak into a shot. |

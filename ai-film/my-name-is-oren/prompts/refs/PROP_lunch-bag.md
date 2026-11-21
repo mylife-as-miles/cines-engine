@@ -621,3 +621,4 @@ AVOID: different designs, colours or proportions between views; missing or dupli
 
 | Take | Job id | Settings | Verdict |
 | --- | --- | --- | --- |
+| t1 | (author, Higgsfield, 2026-11-19; reviewed 2026-11-21) | 16:9 · 5504×3072 | **Approved.** The grease stain through the bottom right corner of the front face, wrapping onto the side; the top rolled; the glued seam on the back; plain paper. |
