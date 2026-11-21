@@ -40,5 +40,6 @@ What this production teaches, kept as it happens. At the author's request (2026-
 | 33 | A grimace or wince closes the eyes; direct the mouth alone ("one corner of her mouth tightens, eyes still open") and put "eyes squeezed shut" in AVOID. | Q03 t2 shot 5 (and t1). | §3 Prompting |
 | 34 | Wordless opening shots overrun their times and squeeze the dialogue at the end; keep them short and leave silence before the last line in the prompt. | Q03 t2: 6.4 s instead of 5; the last line started 0.08 s after hers. | §3 Prompting |
 | 35 | Whisper on fal gives word times for review at almost no cost. Never pass the script as its prompt: it treats the prompt as speech already heard and transcribes only what follows. | Q03 t2 review. | §5 Review and selects |
+| 36 | A longer clip and timed pauses do not slow the speech itself: Seedance kept each sentence fast and put the extra time into gaps between sentences. Speech rate has to come from the delivery (stress, breath, behaviour) or from the edit. | Q03 t3 (26 s): sentences at 4–6 words a second with 1–2 s gaps. | §3 Prompting, §6 Edit |
 
 Rows marked *pending* need a generated result before they can be called a lesson.
