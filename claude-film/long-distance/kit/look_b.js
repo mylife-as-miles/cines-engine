@@ -208,7 +208,9 @@
   // build the signed distance function for a character, hair and expression
   function makeSDF(spec, M) {
     const C = CAST[spec.who], hairStyle = spec.hair || (spec.who === 'him' ? 'short' : 'bob');
-    const jw = C.jawW, ch = C.chin, nk = C.nose, nR = C.neckR, sh = spec.mode === 'gloss' ? 0 : 1;
+    const glo = spec.mode === 'gloss';
+    // the generator's 'improvements': a shorter nose, flatter lips, a lifted chin (only ever in gloss)
+    const jw = C.jawW * (glo ? 0.97 : 1), ch = C.chin, nk = C.nose * (glo ? 0.82 : 1), nR = C.neckR, sh = glo ? 0 : 1, lipZ = glo ? -0.012 : 0, lowY = glo ? -0.016 : 0;
     const asym = sh * (spec.asym == null ? 1 : spec.asym);
     const comp = { s: 0, e: 0, h: 0 };
     const hl = HAIRLINE[hairStyle === 'short' ? 'short' : 'long'];
@@ -221,15 +223,16 @@
       // ----- skin
       let d = sdE(x, y + 0.14, z + 0.05, 0.352, 0.41, 0.42);                       // cranium
       d = smin(d, sdE(x, y - 0.075, z - 0.085, 0.316, 0.27, 0.255), 0.08);           // midface
-      d = smin(d, sdE(x, y - 0.27, z - 0.035, jw, 0.165, 0.24), 0.09);               // jaw
-      d = smin(d, sdE(x, y - 0.385, z - 0.19, 0.1 * ch, 0.062, 0.085), 0.07);        // chin
+      d = smin(d, sdE(x, y - 0.27 - lowY, z - 0.035, jw, 0.165, 0.24), 0.09);               // jaw
+      d = smin(d, sdE(x, y - 0.385 - lowY, z - 0.19, 0.1 * ch, 0.062, 0.085), 0.07);        // chin
       d = smin(d, sdE(x, y + 0.075, z - 0.245, 0.272, 0.062, 0.09), 0.06);           // brow ridge
       d = smin(d, sdE(ax - 0.188, y - 0.07, z - 0.2, 0.112, 0.072, 0.09), 0.07);     // cheekbones
+      if (spec.cheek) { const cs = spec.cheekSide || -1, k = spec.cheek; d = smin(d, sdE(x - cs * 0.19, y - 0.25, z - 0.17, 0.09 * k, 0.085 * k, 0.1 * k), 0.07); }   // a mouthful, stopped
       d = smin(d, sdCone(x, y, z, 0, -0.02, 0.322, 0, 0.18, 0.395 + 0.03 * nk, 0.03, 0.046 * nk), 0.05);   // nose
       d = smin(d, sdE(x, y - 0.208, z - 0.352, 0.072 * nk, 0.036, 0.046), 0.03);     // nose wings
       d = smin(d, sdE(x, y - 0.3, z - 0.262, 0.132, 0.074, 0.1), 0.06);              // muzzle
-      d = smin(d, sdE(x, y - 0.287, z - 0.334, 0.07 * C.lipsW, 0.019 * C.lipsT, 0.033), 0.02);   // upper lip
-      d = smin(d, sdE(x, y - 0.33, z - 0.325, 0.064 * C.lipsW, 0.024 * C.lipsT, 0.034), 0.02);   // lower lip
+      d = smin(d, sdE(x, y - 0.287, z - 0.334 - lipZ, 0.07 * C.lipsW, 0.019 * C.lipsT, 0.033), 0.02);   // upper lip
+      d = smin(d, sdE(x, y - 0.33, z - 0.325 - lipZ, 0.064 * C.lipsW, 0.024 * C.lipsT, 0.034), 0.02);   // lower lip
       d = smax(d, -sdE(ax - 0.152, y + 0.006, z - 0.345, 0.084, 0.054, 0.062), 0.05);  // eye sockets
       d = smin(d, sdCap(x, y, z, 0, 0.2, -0.08, 0, 0.2 + neckLen, -0.12, nR), 0.12); // neck
       d = smin(d, sdE(ax - 0.338, y - 0.075, z + 0.045, 0.042, 0.112, 0.068), 0.025); // ears
@@ -332,6 +335,7 @@
       const jit = grain ? (vnoise(wx * 0.045, wy * 0.045, sd + 77) - 0.5) * 0.12 : 0;
       let lr = amb[0], lg = amb[1], lb = amb[2];
       if (grain && o.aoPoster !== false) ao = ao > 0.62 + jit ? 1 : 0.7;
+      if (gloss) ao = lerp(1, ao, 0.35);
       lr *= lerp(1, ao, 0.9); lg *= lerp(1, ao, 0.9); lb *= lerp(1, ao, 0.9);
       let spec2 = 0;
       for (let li = 0; li < lights.length; li++) {
@@ -404,6 +408,8 @@
       }
       // skin
       out[0] = skin[0]; out[1] = skin[1]; out[2] = skin[2];
+      // the throat sits in the chin's shadow (a cheap cast shadow: the renderer has none)
+      if (!gloss && y > 0.42 && z > -0.2) { const k = (spec.neckShade == null ? 0.3 : spec.neckShade) * ss01(0.36, 0.5, y); out[0] *= 1 - k; out[1] *= 1 - k * 1.05; out[2] *= 1 - k * 0.95; }
       // blush
       const bd = ((ax - 0.165) * (ax - 0.165) + (y - 0.13) * (y - 0.13)) / 0.006; const bk = C.blushK * Math.exp(-bd) * (flash ? 0.3 : gloss ? 1.6 : 1);
       out[0] += (blushC[0] - out[0]) * bk; out[1] += (blushC[1] - out[1]) * bk; out[2] += (blushC[2] - out[2]) * bk;
@@ -450,7 +456,7 @@
           if (u < 1 && y > ym - 0.003 && y < ym + gap) {
             const tt = (y - ym) / Math.max(gap, 1e-4);
             if (tt < 0.5 && Math.abs(u) < 0.9) { out[0] = 0.92; out[1] = 0.89; out[2] = 0.84; if (!gloss && Math.abs((ax / wl) * 6 % 1 - 0.5) > 0.46) { out[0] *= 0.8; out[1] *= 0.8; out[2] *= 0.8; } }
-            else { out[0] = 0.32; out[1] = 0.1; out[2] = 0.1; }
+            else { out[0] = flash ? 0.16 : 0.32; out[1] = flash ? 0.04 : 0.1; out[2] = flash ? 0.05 : 0.1; }
           } else if (u < 1 && ((y < ym && y > ym - upT) || (y > ym + gap && y < ym + gap + loT))) {
             const lo = y > ym; const k = lo ? 1 : 0.84; out[0] = lipsC[0] * k; out[1] = lipsC[1] * k; out[2] = lipsC[2] * k;
           } else if (Math.abs(y - ym) < 0.0045 && u < 1.08 && mOpen < 0.05) { out[0] *= 0.55; out[1] *= 0.45; out[2] *= 0.45; }
@@ -458,7 +464,7 @@
       }
     }
     const R = render3D({ sdf, matOf: () => { const cs = comp.s, ce = comp.e, chh = comp.h; return (chh <= cs + 0.002 && chh <= ce + 0.002) ? 2 : (ce < cs ? 1 : 0); },
-      albedo, out, M, s, ss: spec.ss, bounds: b, lights: spec.lights, amb: spec.amb, mode, seed: sd, warp: warpAmp, aoPoster: spec.aoPoster, x: spec.x, y: spec.y });
+      albedo, out, M, s, ss: spec.ss, bounds: b, lights: spec.lights, amb: spec.amb, mode, seed: sd, warp: warpAmp, aoPoster: spec.aoPoster, aoK: spec.aoK, x: spec.x, y: spec.y });
     const proj = (lx, ly, lz) => [spec.x + (M[0][0] * lx + M[0][1] * ly + M[0][2] * lz) * s, spec.y + (M[1][0] * lx + M[1][1] * ly + M[1][2] * lz) * s, (M[2][0] * lx + M[2][1] * ly + M[2][2] * lz)];
     return Object.assign(R, { M, proj,
       anchors: { chin: proj(0, 0.44, 0.2), neck: proj(0, 0.75, -0.1), neckBase: proj(0, 0.2 + (spec.neckLen == null ? 1.1 : spec.neckLen), -0.12), crown: proj(0, -0.58, -0.05), earL: proj(-0.34, 0.07, -0.04), earR: proj(0.34, 0.07, -0.04), nose: proj(0, 0.19, 0.43), mouth: proj(0, 0.31, 0.36), eyeL: proj(-0.152, 0, 0.32), eyeR: proj(0.152, 0, 0.32), jawL: proj(-0.27, 0.3, 0.05), jawR: proj(0.27, 0.3, 0.05) } });
@@ -510,10 +516,11 @@
       UA = [EL[0] + u[0] * L2, EL[1] + u[1] * L2, EL[2] + u[2] * L2]; }
     const comp = { m: 0 };
     const sleeveAt = pose.sleeve == null ? 9 : pose.sleeve;   // distance from the wrist where a sleeve starts
-    const onlyThumb = pose.only === 'thumb';
+    const only = pose.only ? [].concat(pose.only) : null;
+    const onlySegs = only ? segs.filter((q, i) => (only.indexOf('thumb') >= 0 && i >= 12) || (only.indexOf('tips') >= 0 && i < 12 && i % 3 >= 1) || (only.indexOf('dist') >= 0 && i < 12 && i % 3 === 2)) : null;
     function sdf(x, y, z) {
       y *= mir;
-      if (onlyThumb) { let d = 1e3; for (let i = segs.length - 3; i < segs.length; i++) { const q = segs[i]; d = smin(d, sdCone(x, y, z, q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7]), 0.03); } comp.nail = 1e3; comp.d = d; comp.sl = 1e3; return d; }
+      if (onlySegs) { let d = 1e3, nl = 1e3; for (let i = 0; i < onlySegs.length; i++) { const q = onlySegs[i]; const dd = sdCone(x, y, z, q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7]); d = smin(d, dd, 0.03); if (q[8]) nl = Math.min(nl, dd); } comp.nail = nl; comp.d = d; comp.sl = 1e3; return d; }
       // palm: a flattened body from the wrist to the knuckles, with the thumb's mound underneath
       let d = sdE(x - 0.23, y, z + 0.004, 0.245, 0.165, 0.055);
       d = smin(d, sdE(x - 0.43, y + 0.0, z - 0.0, 0.07, 0.15, 0.046), 0.05);
@@ -561,12 +568,18 @@
     him: { dx: 0, dy: 0, yaw: 0.2, pitch: 0.03, roll: 0.07, smile: 0.85, open: 0.3, eyes: 0.5, gaze: [0.05, 0] },
     her: { dx: 0.8, dy: 0.13, yaw: -0.26, pitch: 0.06, roll: -0.34, smile: 0.95, open: 0.2, eyes: 0.3, gaze: [-0.1, 0] },
   };
+  // the same two heads in the same places and the same tilt, as a generator would 'improve' them: square to the lens, symmetric,
+  // eyes open on the camera, the same perfect smile, both lit by one soft frontal light that belongs to their faces
+  const COUPLE_GLOSS = {
+    him: Object.assign({}, COUPLE_LAST.him, { yaw: 0.0, pitch: 0.02, smile: 1, open: 0.32, eyes: 0.95, gaze: [0, 0], brow: 0.3 }),
+    her: Object.assign({}, COUPLE_LAST.her, { yaw: 0.0, pitch: 0.02, smile: 1, open: 0.32, eyes: 0.95, gaze: [0, 0], brow: 0.3 }),
+  };
   // draw the two of them (bodies, then heads) into g. mode: 'flash' (the booth) or 'gloss' (the phone). pose = {him, her} (COUPLE_LAST by default)
   function couple(g, ox, oy, U, mode, o) {
     o = o || {}; const pose = o.pose || COUPLE_LAST, gloss = mode === 'gloss';
     const himC = o.himCloth || (gloss ? '#23324A' : '#2A2C34'), herC = o.herCloth || (gloss ? '#F4EDE4' : '#D9D2C4');
-    const lights = o.lights || (gloss ? [{ dir: [-0.32, -0.3, 0.9], local: true, col: '#FFF1E6', k: 0.8, wrap: 0.35 }] : [{ dir: [0.03, -0.06, 1], col: '#FFF6EC', k: 1.22, poster: [0.22, 0.62], levels: [0.55, 1], jit: 0.3 }]);
-    const amb = o.amb || (gloss ? '#6B605E' : '#2C2A2C');
+    const lights = o.lights || (gloss ? [{ dir: [0, -0.22, 1], local: true, col: '#FFF1E6', k: 0.72, wrap: 0.6 }] : [{ dir: [0.03, -0.06, 1], col: '#FFF6EC', k: 1.22, poster: [0.22, 0.62], levels: [0.55, 1], jit: 0.3 }]);
+    const amb = o.amb || (gloss ? '#7A6E6A' : '#2C2A2C');
     const P2 = (who) => { const q = pose[who]; return [ox + q.dx * U, oy + q.dy * U]; };
     // a body hung from a head's neck point: shoulders, a scooped neckline (drawn AFTER the head, so it cuts the neck and the hair falls behind)
     const body = (nk, wS, lean, col, scoop) => {
@@ -614,10 +627,14 @@
     g.fillStyle = P.photoPaper; g.fillRect(0, 0, w, h);
     const m = w * 0.075, fw = w - 2 * m, fh = fw * 1.06, gap = (h - 2 * m - 4 * fh) / 3;
     const poses = [
-      { him: { dx: 0, dy: 0, yaw: 0.08, roll: 0.03, smile: 0.55, eyes: 0.8 }, her: { dx: 0.86, dy: 0.08, yaw: -0.1, roll: 0.06, smile: 0.6, eyes: 0.75 } },
-      { him: { dx: 0, dy: 0.02, yaw: -0.1, roll: -0.12, smile: 0.9, open: 0.55, eyes: 0.25 }, her: { dx: 0.9, dy: 0.02, yaw: -0.55, roll: 0.02, smile: 0.7, eyes: 0.6, gaze: [-0.5, 0] } },
-      { him: { dx: -0.05, dy: 0.05, yaw: 0.35, roll: 0.1, smile: 0.7, open: 0.2, eyes: 0.55, gaze: [0.4, 0] }, her: { dx: 0.88, dy: 0.0, yaw: -0.3, roll: 0.12, smile: 1.0, open: 0.55, eyes: 0.05 } },
-      COUPLE_LAST,
+      // squeezed in, smiling at the lens
+      { him: { dx: 0, dy: 0.04, yaw: 0.16, pitch: 0.04, roll: 0.1, smile: 0.75, open: 0.3, eyes: 0.75 }, her: { dx: 0.7, dy: -0.02, yaw: -0.22, pitch: 0.02, roll: -0.12, smile: 0.8, open: 0.25, eyes: 0.7 } },
+      // both gone: heads back, mouths wide, eyes shut
+      { him: { dx: -0.04, dy: 0.0, yaw: -0.05, pitch: -0.22, roll: -0.18, smile: 1, open: 1, eyes: 0.05, brow: 0.5 }, her: { dx: 0.86, dy: -0.06, yaw: 0.1, pitch: -0.25, roll: 0.2, smile: 1, open: 1, eyes: 0.0, brow: 0.5 } },
+      // he pulls a face (mouth an O, brows up, eyes rolled); she cracks up at him, half out of the frame
+      { him: { dx: 0.02, dy: 0.06, yaw: -0.05, pitch: 0.0, roll: 0.28, smile: 0, open: 0.85, eyes: 1, brow: 1, gaze: [0.35, -0.45] }, her: { dx: 1.02, dy: 0.12, yaw: -0.65, pitch: 0.3, roll: 0.05, smile: 1, open: 0.8, eyes: 0.0, gaze: [-0.5, 0] } },
+      // the last one: her head tipped against his, both laughing
+      { him: Object.assign({}, COUPLE_LAST.him, { smile: 1, open: 0.7, eyes: 0.2 }), her: Object.assign({}, COUPLE_LAST.her, { smile: 1, open: 0.6, eyes: 0.05 }) },
     ];
     for (let k = 0; k < 4; k++) {
       const fx = m + (r() - 0.5) * w * 0.012, fy = m + k * (fh + gap) + (r() - 0.5) * 3, rot = (r() - 0.5) * 0.02;
@@ -626,13 +643,15 @@
       fg.fillStyle = '#6E7C78'; fg.fillRect(0, 0, FW, FH);
       for (let i = 0; i < 9; i++) { fg.fillStyle = i % 2 ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.06)'; fg.fillRect(i * FW / 9 + FW / 18 * (r() - 0.5), 0, FW / 14, FH); }
       const sh = layer(FW, FH);
-      const U = FW * 0.28, ox = FW * 0.32 + (k === 1 ? -FW * 0.03 : 0), oy = FH * 0.42 + (k === 2 ? FH * 0.03 : 0);
+      const U = FW * [0.33, 0.31, 0.42, 0.33][k], ox = FW * [0.33, 0.22, 0.3, 0.31][k], oy = FH * [0.42, 0.58, 0.42, 0.42][k];
       couple(fg, ox, oy, U, 'flash', { pose: poses[k], shadowDst: sh, ss: o.ss || 1.5 });
       // shadow behind them goes UNDER the people: redraw people over shadow by compositing the shadow destination-over
       fg.save(); fg.globalCompositeOperation = 'destination-over'; fg.drawImage(sh.canvas, 0, 0); fg.restore();
       // flash falloff and a cheap lens
       const vg = fg.createRadialGradient(FW * 0.45, FH * 0.42, FW * 0.15, FW * 0.5, FH * 0.5, FW * 0.85); vg.addColorStop(0, 'rgba(255,248,236,0.16)'); vg.addColorStop(1, 'rgba(10,8,12,0.55)');
       fg.fillStyle = vg; fg.fillRect(0, 0, FW, FH);
+      if (k === 1) { fg.save(); fg.globalCompositeOperation = 'screen'; fg.fillStyle = 'rgba(255,240,220,0.22)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
+      if (k === 2) { fg.save(); fg.globalCompositeOperation = 'multiply'; fg.fillStyle = 'rgba(150,140,150,0.6)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
       // colour cast (a magenta-cyan drift, different per frame) and crushed blacks
       fg.save(); fg.globalCompositeOperation = 'soft-light'; fg.fillStyle = k % 2 ? 'rgba(200,120,170,0.35)' : 'rgba(110,170,180,0.3)'; fg.fillRect(0, 0, FW, FH); fg.restore();
       // noise
@@ -674,7 +693,7 @@
     // portrait-mode softness on the background
     g.filter = `blur(${Math.max(2, w / 110)}px)`; g.drawImage(bg.canvas, 0, 0); g.filter = 'none';
     // the two of them, centred, crisp
-    const U = o.U || w * 0.235; couple(g, w * 0.36, h * 0.66, U, 'gloss', { ss: o.ss || 2 });
+    const U = o.U || w * 0.235; couple(g, w * 0.36, h * 0.66, U, 'gloss', { ss: o.ss || 2, pose: COUPLE_GLOSS });
     // a clean, even bloom from the water over everything (no vignette: nothing is ever dark at the edges)
     const bl = g.createRadialGradient(w * 0.5, h * 0.35, 0, w * 0.5, h * 0.35, w * 0.8); bl.addColorStop(0, 'rgba(255,255,255,0.12)'); bl.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = bl; g.fillRect(0, 0, w, h);
     return c;
@@ -699,5 +718,5 @@
     g.restore();
   }
 
-  G.GG = { P, CAST, toHex, rgb01, layer, hash2, pnoise, pfbm, paperTile, texPattern, texture, piece, crescent, bands, glow, dropShadow, specks, rrect, spline, blob, warp, rotM, basisM, render3D, head, hand, drawHead, COUPLE_LAST, couple, photoStrip, waterfall, subtitle };
+  G.GG = { P, CAST, toHex, rgb01, layer, hash2, pnoise, pfbm, paperTile, texPattern, texture, piece, crescent, bands, glow, dropShadow, specks, rrect, spline, blob, warp, rotM, basisM, render3D, head, hand, drawHead, COUPLE_LAST, COUPLE_GLOSS, couple, photoStrip, waterfall, subtitle };
 })(window);

@@ -189,7 +189,7 @@
       for (let k = 1; k <= 26; k++) { const t = 0.012 * k * k * 0.18 + 0.01 * k; const q = [p[0] + d[0] * t, p[1] + d[1] * t, p[2] + d[2] * t];
         for (let m = 0; m < occ.length; m++) { const hh = occ[m](q[0], q[2]); if (hh != null && hh > q[1] + 0.004) return 1; } if (q[1] > 1.6) break; }
       return 0; };
-    const quads = [];
+    const quads = [], lastCol = [];
     for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
       const a = Y[i][j], b = Y[i + 1][j], c = Y[i + 1][j + 1], d = Y[i][j + 1]; if (a == null || b == null || c == null || d == null) continue;
       const x0 = o.x[0] + i * dx, z0 = o.z[0] + j * dz;
@@ -218,7 +218,10 @@
       const A = alb(C[0], C[2]); const add = o.add || [0, 0, 0];
       const col = 'rgb(' + Math.round(l2s(A[0] * r + add[0])) + ',' + Math.round(l2s(A[1] * gg + add[1])) + ',' + Math.round(l2s(A[2] * bb + add[2])) + ')';
       const poly = [cam.P(P00), cam.P(P10), cam.P(P11), cam.P(P01)];
-      quads.push({ poly, depth: cam.view(C)[2], col, c: C, n: nn });
+      const vd = cam.view(C), vn = cam.rot(nn); const back = vd[0] * vn[0] + vd[1] * vn[1] + vd[2] * vn[2] > 0.02 * Math.hypot(vd[0], vd[1], vd[2]);
+      // a fold turned away from us: it takes its neighbour's colour (no holes, no dark slivers)
+      if (back) { if (lastCol[i] == null) continue; quads.push({ poly, depth: vd[2], col: lastCol[i], c: C, n: nn }); continue; }
+      lastCol[i] = col; quads.push({ poly, depth: vd[2], col, c: C, n: nn });
     }
     quads.sort((p, q) => q.depth - p.depth);
     return quads;
@@ -606,11 +609,11 @@
     const line = [[0, -0.27], [0.45, -0.262], [0.8, -0.19], [1.05, -0.07], [1.2, 0.05], [1.34, -0.01], [1.6, 0.02], [2.1, 0.22], [Math.PI, 0.32]];
     const mask = pl => pl[1] < pw(line, theta(pl)) + 0.02 * (OTM.vnoise(theta(pl) * 11, 2, 5) - 0.5);
     const hm = { mat: 'hair', g: 'hair', ao: 0.3, mask };
-    ell(ob, [0, -0.125, -0.06], [0.345, 0.424, 0.452], hm);
+    ell(ob, [0, -0.128, -0.06], [0.346, 0.43, 0.452], hm);
     // locks: the grown-out top falls forward and to his right, the crown sits up a little
-    const locks = [[-0.06, -0.39, 0.17, 0.2, 0.1, 0.17, 0.35, 0.45, 0.15], [0.12, -0.42, 0.1, 0.17, 0.09, 0.2, -0.3, 0.3, -0.1], [0.0, -0.49, -0.08, 0.24, 0.085, 0.24, 0, 0, 0],
-      [-0.02, -0.45, -0.28, 0.22, 0.1, 0.18, 0, -0.5, 0], [-0.27, -0.27, 0.02, 0.1, 0.17, 0.24, 0, 0, 0.25], [0.27, -0.27, 0.02, 0.1, 0.17, 0.24, 0, 0, -0.25],
-      [-0.2, -0.38, 0.14, 0.13, 0.08, 0.13, 0.5, 0.4, 0.4]];
+    // one haircut from every angle: short at the back and sides, the front a little grown out and swept to his right
+    const locks = [[-0.05, -0.37, 0.2, 0.21, 0.075, 0.15, 0.3, 0.42, 0.12], [-0.2, -0.33, 0.15, 0.13, 0.07, 0.13, 0.5, 0.35, 0.35],
+      [-0.28, -0.24, 0.02, 0.085, 0.15, 0.22, 0, 0, 0.22], [0.28, -0.24, 0.02, 0.085, 0.15, 0.22, 0, 0, -0.22]];
     locks.forEach(l => ell(ob, [l[0], l[1], l[2]], [l[3], l[4], l[5]], { mat: 'hair', g: 'hair', ao: 0.4, rot: [l[6], l[7], l[8]], mask: pl => pl[1] < pw(line, theta(pl)) - 0.01 }));
   }
   // her hair. kind: 'long' (the photographs, the generated images) | 'short' (now: cut above the jaw)
@@ -812,11 +815,12 @@
     // nostrils
     // nostrils: only where the underside of the nose turns toward us (a face seen from below shows them; from above, never)
     { const under = ob.dirCam([0, 1, 0.35]); const showK = clamp((under[2] + 0.05) / 0.4, 0, 1);
-      if (showK > 0) [-1, 1].forEach(sd => { const q = FEAT.nostril(sd); const sv = vis([q[0], q[1] - 0.005, q[2] + 0.01]); const p = P2(q);
+      if (showK > 0 && o.nostrils !== false) [-1, 1].forEach(sd => { const q = FEAT.nostril(sd); const sv = vis([q[0], q[1] - 0.005, q[2] + 0.01]); const p = P2(q);
         const ax = ob.dirCam([1, 0, 0]), ay = ob.dirCam([0, 0, 1]);
         g.save(); g.fillStyle = R.lit(sv, '#2A140D', 0.8); g.globalAlpha = 0.6 * showK; g.translate(p[0], p[1]); g.transform(ax[0], ax[1], ay[0], ay[1], 0, 0);
         g.beginPath(); g.ellipse(0, 0, s0 * 0.012, s0 * 0.007, sd * 0.35, 0, 7); g.fill(); g.restore(); }); }
     // the line of the mouth
+    if (o.mouth === 'none') return;
     if (o.mouth === 'laugh' || o.mouth === 'grin') {
       // an open laugh: a dark mouth shape between the lips, a line of teeth under the upper lip
       const op = o.mouth === 'laugh' ? 1 : 0.45; const sv = vis([0, 0.29, 0.33]);
@@ -862,10 +866,10 @@
     g.fillStyle = '#EEE9DE'; g.fillRect(0, 0, w, h);
     const fw = w * 0.86, fh = (h - w * 0.2) / 4 - w * 0.05, x0 = (w - fw) / 2;
     const exprs = [
-      { him: { eyes: 0.85, mouth: 'smile' }, her: { eyes: 0.9, mouth: 'smile' } },
-      { him: { eyes: 0.55, mouth: 'grin' }, her: { eyes: 0.18, mouth: 'laugh' }, hisYaw: -0.05, herYaw: 0.05 },
-      { him: { eyes: 0.8, mouth: 'smile', look: [-0.9, 0.2] }, her: { eyes: 0.3, mouth: 'laugh' }, hisYaw: -0.45, herYaw: 0.1 },
-      { him: { eyes: 0.75, mouth: 'smile' }, her: { eyes: 0.15, mouth: 'smile' }, tilt: 1 },
+      { him: { eyes: 0.7, mouth: 'grin' }, her: { eyes: 0.55, mouth: 'grin' } },
+      { him: { eyes: 0.35, mouth: 'laugh' }, her: { eyes: 0.12, mouth: 'laugh' }, hisYaw: -0.05, herYaw: 0.05, hisRoll: 0.1 },
+      { him: { eyes: 0.6, mouth: 'grin', look: [-0.9, 0.2] }, her: { eyes: 0.15, mouth: 'laugh' }, hisYaw: -0.45, herYaw: 0.1 },
+      { him: { eyes: 0.6, mouth: 'grin' }, her: { eyes: 0.15, mouth: 'smile' }, tilt: 1 },
     ];
     exprs.forEach((ex, i) => {
       const fy = w * 0.08 + i * (fh + w * 0.05);
@@ -901,31 +905,44 @@
   // the light falls on both faces from the same side in exactly the same way; skin smooth; the water white without a texture.
   function waterfallImage(w, h, o) {
     o = o || {}; const c = OTM.makeCanvas(w, h), g = c.getContext('2d');
-    // background, out of focus (portrait mode): a tall fall of white water between mossy cliffs, mist at its foot, low gold sun from the left
     const bg = OTM.makeCanvas(w, h), b = bg.getContext('2d');
-    b.fillStyle = lg(b, 0, 0, 0, h, [[0, '#EADBC0'], [0.4, '#C9B48E'], [1, '#5E5A40']]); b.fillRect(0, 0, w, h);
-    const cl = (pts, c0, c1, x0, x1) => { b.fillStyle = lg(b, x0, 0, x1, 0, [[0, c0], [1, c1]]); b.fill(smooth(pts)); };
-    cl([[-10, -10, 1], [w * 0.4, -10, 1], [w * 0.37, h * 0.14], [w * 0.41, h * 0.3], [w * 0.36, h * 0.46], [w * 0.3, h * 0.6], [-10, h * 0.66, 1]], '#25392C', '#5F7F4C', 0, w * 0.42);
-    cl([[w + 10, -10, 1], [w * 0.6, -10, 1], [w * 0.63, h * 0.14], [w * 0.59, h * 0.3], [w * 0.64, h * 0.46], [w * 0.7, h * 0.6], [w + 10, h * 0.66, 1]], '#1F3226', '#4E6C42', w, w * 0.58);
-    // moss highlights catching the sun on the left cliff's edges
-    b.fillStyle = 'rgba(214,196,110,0.35)'; b.fill(smooth([[w * 0.32, h * 0.05], [w * 0.38, h * 0.13], [w * 0.36, h * 0.28], [w * 0.33, h * 0.2]]));
-    // the water: white, wide at the foot, untextured
-    b.fillStyle = '#FFFFFF'; b.fill(smooth([[w * 0.41, -10, 1], [w * 0.59, -10, 1], [w * 0.6, h * 0.25], [w * 0.62, h * 0.45], [w * 0.68, h * 0.6], [w * 0.32, h * 0.6], [w * 0.38, h * 0.45], [w * 0.4, h * 0.25]]));
-    b.fillStyle = rg(b, w * 0.5, h * 0.6, 4, w * 0.62, [[0, '#FFFFFF', 0.95], [0.6, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]]); b.fillRect(0, 0, w, h);
-    // the pool and stones below, darker, warm
-    b.fillStyle = lg(b, 0, h * 0.66, 0, h, [[0, '#7C7A5C'], [1, '#3E3A2A']]); b.fill(smooth([[-10, h * 0.68], [w * 0.3, h * 0.64], [w * 0.7, h * 0.64], [w + 10, h * 0.68], [w + 10, h + 10, 1], [-10, h + 10, 1]]));
-    b.fillStyle = lg(b, 0, 0, w, 0, [[0, '#FFC77A', 0.32], [0.55, '#FFC77A', 0.06], [1, '#FFC77A', 0]]); b.fillRect(0, 0, w, h);
-    g.save(); g.filter = `blur(${Math.max(2, w * 0.014)}px)`; g.drawImage(bg, 0, 0); g.restore();
-    // the couple, sharp
-    const sH = w * 0.33;
-    const cp = couple({ s: sH, cx: w * 0.5, cy: h * 0.64, tilt: 1, smooth: true, expr: { hisYaw: -0.1, herYaw: 0.12 }, herTop: '#E8DCC8', hisTop: '#28344A' });
-    const key = [{ type: 'dir', d: [-0.62, -0.35, 0.7], col: [1.75, 1.36, 0.92], steps: [[0.08, 0.45], [0.4, 0.8], [0.75, 1.0]], soft: 0.1, shadow: false, spec: 16, wrap: 0.2 },
-      { type: 'amb', up: [0.22, 0.19, 0.16], down: [0.12, 0.1, 0.08] }];
-    const R = trace([cp.him, cp.her], key, { specMat: { skin: 0.12, lipL: 0.25 } });
-    R.draw(g);
-    features(g, R, cp.him, 'him', { eyes: 0.8, mouth: 'smile', lw: 1.1, catchOff: [-0.35, -0.3] });
-    features(g, R, cp.her, 'her', { eyes: 0.2, mouth: 'smile', lw: 1.1, catchOff: [-0.35, -0.3] });
-    // a soft bloom and a touch of extra saturation: the AI's polish
+    // sky, low gold
+    b.fillStyle = lg(b, 0, 0, 0, h * 0.5, [[0, '#F7E9CD'], [1, '#EBD7B2']]); b.fillRect(0, 0, w, h);
+    // a cliff of dark wet rock and moss across the whole image, the falls coming over its lip in white ribbons
+    b.fillStyle = '#2D3A30'; b.fill(smooth([[-10, h * 0.06, 1], [w * 0.2, h * 0.04], [w * 0.5, h * 0.07], [w * 0.8, h * 0.03], [w + 10, h * 0.06, 1], [w + 10, h * 0.62, 1], [-10, h * 0.62, 1]]));
+    const R = OTM.rng('rocks');
+    for (let i = 0; i < 26; i++) { const x = R() * w, y = h * (0.06 + R() * 0.52), r = w * (0.05 + R() * 0.08); b.fillStyle = R() < 0.5 ? '#3E5A40' : '#24302A'; b.beginPath(); b.ellipse(x, y, r, r * 0.55, R() * 0.6 - 0.3, 0, 7); b.fill(); }
+    b.fillStyle = 'rgba(214,190,120,0.35)'; for (let i = 0; i < 14; i++) { const x = R() * w * 0.5, y = h * (0.08 + R() * 0.45); b.beginPath(); b.ellipse(x, y, w * 0.04, w * 0.015, -0.2, 0, 7); b.fill(); }   // moss in the sun
+    // the water: one wide fall, a curtain of white streaks with ragged edges, brightest down its middle, broken by two rocks
+    { const top = h * 0.05, foot = h * 0.47, cx0 = w * 0.5;
+      const half = y => w * (0.2 + 0.1 * (y - top) / (foot - top));
+      for (let i = 0; i < 260; i++) {
+        const u = (i / 259) * 2 - 1, wob = (OTM.vnoise(i * 0.31, 3, 11) - 0.5) * 0.12;
+        const x0 = cx0 + (u + wob) * half(top) * (0.85 + 0.15 * OTM.vnoise(i * 0.7, 1, 4)), x1 = cx0 + (u + wob) * half(foot) * (1.0 + 0.1 * OTM.vnoise(i * 0.5, 7, 4));
+        const y0 = top + h * 0.02 * OTM.vnoise(i * 0.9, 2, 5), y1 = foot - h * 0.03 * OTM.vnoise(i * 1.3, 5, 6);
+        const edge = 1 - Math.pow(Math.abs(u), 3);
+        b.strokeStyle = `rgba(255,255,255,${(0.35 + 0.65 * OTM.vnoise(i * 2.1, 9, 8)) * edge})`; b.lineWidth = w * 0.006 + w * 0.006 * OTM.vnoise(i * 1.7, 4, 3);
+        b.beginPath(); b.moveTo(x0, y0); b.bezierCurveTo(x0, y0 + (y1 - y0) * 0.4, x1, y1 - (y1 - y0) * 0.4, x1, y1); b.stroke();
+      }
+      b.fillStyle = 'rgba(255,255,255,0.55)'; b.fill(smooth([[cx0 - half(top) * 0.5, top], [cx0 + half(top) * 0.5, top], [cx0 + half(foot) * 0.55, foot], [cx0 - half(foot) * 0.55, foot]]));
+      // two dark rocks the water parts round
+      [[0.36, 0.3, 0.06], [0.63, 0.22, 0.045]].forEach(([x, y, r]) => { b.fillStyle = '#27332B'; b.beginPath(); b.ellipse(w * x, h * y, w * r, w * r * 0.6, -0.2, 0, 7); b.fill(); b.fillStyle = 'rgba(255,255,255,0.8)'; b.beginPath(); b.ellipse(w * x, h * y + w * r * 0.55, w * r * 1.1, w * r * 0.25, 0, 0, Math.PI); b.fill(); });
+    }
+    // spray at the foot, rising into the light
+    b.fillStyle = rg(b, w * 0.5, h * 0.52, 4, w * 0.75, [[0, '#FFFFFF', 0.95], [0.55, '#FFFFFF', 0.6], [1, '#FFFFFF', 0]]); b.fillRect(0, 0, w, h);
+    b.fillStyle = lg(b, 0, 0, w, 0, [[0, '#FFC77A', 0.3], [0.55, '#FFC77A', 0.06], [1, '#FFC77A', 0]]); b.fillRect(0, 0, w, h);
+    g.save(); g.filter = `blur(${Math.max(1.5, w * 0.006)}px)`; g.drawImage(bg, 0, 0); g.restore();   // a little portrait-mode softness
+    // the couple, close, cheek to cheek, filling the lower half: her long hair, her head tipped against his
+    const sH = w * 0.4;
+    const cp = couple({ s: sH, cx: w * 0.5, cy: h * 0.66, tilt: 1, smooth: true, expr: { hisYaw: -0.12, herYaw: 0.14 }, herTop: '#9A5A3E', hisTop: '#232C3F' });
+    // one golden key from the left, the same on both faces; soft and even
+    const key = [{ type: 'dir', d: [-0.62, -0.3, 0.72], col: [1.65, 1.3, 0.9], steps: [[0.08, 0.5], [0.42, 0.82], [0.75, 1.0]], soft: 0.12, shadow: false, spec: 16, wrap: 0.3 },
+      { type: 'amb', up: [0.24, 0.21, 0.18], down: [0.13, 0.11, 0.09] }];
+    const Rt = trace([cp.him, cp.her], key, { specMat: { skin: 0.1, lipL: 0.22 } });
+    Rt.draw(g);
+    features(g, Rt, cp.him, 'him', { eyes: 0.7, mouth: 'smile', lw: 1.2, catchOff: [-0.35, -0.3] });
+    features(g, Rt, cp.her, 'her', { eyes: 0.22, mouth: 'smile', lw: 1.2, catchOff: [-0.35, -0.3] });
+    // the polish: a soft bloom, a warm lift
     g.save(); g.globalCompositeOperation = 'soft-light'; g.fillStyle = lg(g, 0, 0, w, h, [[0, '#FFC27A', 0.35], [1, '#FFB070', 0.15]]); g.fillRect(0, 0, w, h); g.restore();
     return c;
   }

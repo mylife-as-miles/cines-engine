@@ -2,152 +2,145 @@
 <script src="../kit/otm.js"></script><script src="../kit/look_b.js"></script>
 <script>
 /* LONG DISTANCE · LOOK B "GRAIN AND GLOSS" · B1 THE PILLOW (INT. BEDROOM, night)
-   High over the foot of the bed, on her side. His head on the slept-in pillow, turned toward the smooth one; the phone stands
-   on it where her head would be, its back to us, and his hand lies over it like a hand on a sleeping shoulder, the elbow resting
-   in the gap between the pillows. Streetlight from the blinds lies across the made half in cut bands, dead straight; his half is dark.
-   Everything is cut paper except the phone, which is drawn after the grain: the one smooth thing in the room. Its light is the
-   only light in the room that is not cut into bands. */
+   From her side of the bed, looking across it. He lies on his side on the slept-in pillow, facing us and the smooth pillow in front
+   of him; the phone lies on that pillow on its side, where her head would lie, its screen turned to him and away from us. His hand
+   rests over it the way you would touch a sleeping shoulder. His eyes are closing. The phone's light is the only warm light in the
+   room, and it is on his face. Streetlight from the blinds lies across her made half in cut bands, dead straight.
+   Everything is cut paper except the phone, drawn after the grain: the one smooth thing in the room, and its light the only light
+   that is not cut into bands. */
 (async () => {
   await OTM.loadFonts('../fonts/fonts.css');
-  const ctx = OTM.stage(), { W, H } = OTM, P = GG.P, S = OTM.S;
+  const ctx = OTM.stage(), { W, H } = OTM, P = GG.P, S = OTM.S, mix = OTM.mix;
   const f = OTM.frame(ctx, { seed: 11 });
   const g = f.world, E = f.emissive;
+  // the camera pushed in: the paper world is drawn through one transform; the sculpted head and hand are rendered at the scaled size
+  const K = 1.18, PV = [560, 600], T = (x, y) => [PV[0] + (x - PV[0]) * K, PV[1] + (y - PV[1]) * K], Ti = (x, y) => [PV[0] + (x - PV[0]) / K, PV[1] + (y - PV[1]) / K];
+  const CAM = [K, 0, 0, K, PV[0] * (1 - K), PV[1] * (1 - K)];
+  g.setTransform(...CAM);
+  const drawSculpt = (o, opts) => { g.save(); g.setTransform(1, 0, 0, 1, 0, 0); GG.drawHead(g, o, opts); g.restore(); };
+  const BL = { ang: -0.42, step: 96, w: 32 };
 
-  // ---------------------------------------------------------------- key positions
-  const HEAD = { x: 590, y: 392, s: 372 };                          // his head (eye-line centre), px per head height
-  const PH = { A: [1110, 300], B: [1212, 318], C: [1206, 572], D: [1102, 554], side: 12 };   // phone back face: tl tr br bl
-  const GLOW = [1094, 430];                                          // the screen faces him: its light leaves the phone's far edge
-  const BL = { ang: -0.5, step: 88, w: 30 };                         // streetlight slats from the window, off right
-
-  // ---------------------------------------------------------------- the wall and the headboard (plain painted board)
+  // ---------------------------------------------------------------- the far wall, his nightstand
   g.fillStyle = '#0C1019'; g.fillRect(0, 0, W, H);
-  const hbTop = x => 70 - x * 0.025, hbBot = x => 176 - x * 0.012;
-  GG.piece(g, S().poly([[-20, hbTop(-20)], [W + 20, hbTop(W + 20)], [W + 20, hbBot(W + 20)], [-20, hbBot(-20)]]), { fill: '#161B29', rough: 1.4, seed: 2, tex: 0.6, kind: 'card', lift: [0, 10], liftAlpha: 0.7, liftBlur: 8 });
-  g.fillStyle = '#20273A'; g.fill(S().poly([[-20, hbTop(-20)], [W + 20, hbTop(W + 20)], [W + 20, hbTop(W + 20) + 8], [-20, hbTop(-20) + 9]]).path(1, 4));
+  GG.piece(g, S().rect(-20, -20, W + 40, 300), { fill: '#121827', rough: 0, tex: 0.55, seed: 3 });
+  { const ns = S().rect(150, 60, 300, 190); GG.piece(g, ns, { fill: '#1A2030', rough: 1.2, seed: 4, tex: 0.6, kind: 'card', lift: [6, 10], liftAlpha: 0.6 });
+    // his clutter: a glass of water, a paperback face down, the lamp he never switches on
+    const gl = S().M(330, 120).L(362, 120).L(358, 186).L(334, 186).Z(); GG.piece(g, gl, { fill: '#2A3550', rough: 0.6, seed: 5, tex: 0.3 }); g.fillStyle = 'rgba(120,140,180,0.35)'; g.fillRect(338, 140, 4, 40);
+    GG.piece(g, S().poly([[190, 178], [300, 170], [306, 190], [196, 198]]), { fill: '#3B2F38', rough: 0.8, seed: 6, tex: 0.5, lift: [3, 4], liftAlpha: 0.5 });
+    GG.piece(g, S().poly([[220, 30], [290, 30], [310, 100], [200, 100]]), { fill: '#22293B', rough: 0.8, seed: 7, tex: 0.5, lift: [4, 6], liftAlpha: 0.5 });
+    g.fillStyle = '#1C2234'; g.fillRect(250, 100, 8, 70); }
 
-  // ---------------------------------------------------------------- pillows
-  const herPillow = GG.blob([[1004, 128, 1], [1890, 104, 1], [1914, 300], [1900, 546, 1], [1460, 566], [1016, 560, 1], [986, 330]]);
-  const herTop = GG.blob([[1014, 132, 1], [1886, 108, 1], [1896, 250], [1460, 300], [1026, 322], [1006, 220]]);
-  const hisPillow = GG.blob([[40, 150, 1], [990, 138, 1], [1020, 300], [996, 560], [700, 600], [260, 600], [16, 560, 1], [-10, 360]]);
-  const hisTop = GG.blob([[50, 156, 1], [980, 144, 1], [1000, 270], [760, 300], [420, 316], [40, 300]]);
-  GG.piece(g, hisPillow, { fill: '#232B40', rough: 1.6, seed: 21, tex: 0.6, kind: 'cloth', lift: [-4, 16], liftAlpha: 0.75, liftBlur: 12 });
-  GG.piece(g, hisTop, { fill: '#2C3650', rough: 1.6, seed: 22, tex: 0.5, kind: 'cloth' });
-  GG.piece(g, herPillow, { fill: '#2C364E', rough: 1.0, seed: 23, tex: 0.55, kind: 'cloth', lift: [-8, 18], liftAlpha: 0.8, liftBlur: 12 });
-  GG.piece(g, herTop, { fill: '#384560', rough: 1.0, seed: 24, tex: 0.4, kind: 'cloth' });
-  { g.save(); g.strokeStyle = 'rgba(118,136,174,0.5)'; g.lineWidth = 3; g.stroke(GG.spline([[1018, 322], [1240, 314], [1460, 300], [1680, 280], [1896, 252]], false));
-    // the ironed crease: one straight line, never slept out
-    g.strokeStyle = 'rgba(14,18,28,0.55)'; g.lineWidth = 3; g.beginPath(); g.moveTo(1030, 446); g.lineTo(1900, 424); g.stroke();
-    g.strokeStyle = 'rgba(104,122,160,0.4)'; g.lineWidth = 2; g.beginPath(); g.moveTo(1030, 450); g.lineTo(1900, 428); g.stroke(); g.restore(); }
-  [[[90, 236], [250, 262], [380, 262]], [[860, 176], [930, 222], [970, 300]], [[60, 430], [170, 480], [230, 560]], [[150, 330], [300, 350], [380, 340]]].forEach((c, i) => {
-    g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(12,15,24,0.7)'; g.lineWidth = 6; g.stroke(GG.spline(c, false)); g.translate(2, -4); g.strokeStyle = 'rgba(86,102,138,0.45)'; g.lineWidth = 2.5; g.stroke(GG.spline(c, false)); g.restore(); });
-  { const dent = GG.blob([[370, 190], [630, 168], [810, 230], [850, 420], [780, 570], [520, 590], [350, 460], [330, 300]]);
-    g.save(); g.filter = 'blur(14px)'; g.fillStyle = 'rgba(6,8,14,0.6)'; g.fill(dent.path(2, 5)); g.restore(); }
+  // ---------------------------------------------------------------- the bed, seen across: the headboard at left, his half far, her half near
+  // the headboard (upholstered board along the left edge, receding)
+  GG.piece(g, S().poly([[-40, 150], [118, 200], [96, 1100], [-40, 1100]]), { fill: '#1A2030', rough: 1.2, seed: 9, tex: 0.6, kind: 'cloth', lift: [10, 0], liftAlpha: 0.7, liftBlur: 10 });
+  g.fillStyle = '#252D42'; g.fill(S().poly([[104, 196], [118, 200], [96, 1100], [82, 1100]]).path(1, 10));
+  // the mattress under everything
+  GG.piece(g, S().poly([[110, 250], [W + 40, 236], [W + 40, H + 40], [96, H + 40]]), { fill: '#1E2638', rough: 1.4, seed: 12, tex: 0.5, kind: 'cloth' });
 
-  // ---------------------------------------------------------------- streetlight: slats from the window fall on the made half only
-  const winPatch = GG.blob([[2100, 260], [2100, 1300], [1150, 1300], [1080, 760], [1360, 560], [1700, 380]]).path(6, 9);
-  function slats(dst, clip, off, alpha, color) {
-    const L = GG.layer(); const ca = Math.cos(BL.ang), sa = Math.sin(BL.ang), nx = -sa, ny = ca;
-    for (let k = -16; k < 24; k++) {
-      const o = k * BL.step + (off || 0), cx = W * 0.7 + nx * o, cy = H * 0.2 + ny * o;
-      L.fillStyle = color || '#7E93C2'; L.fill(S().poly([[cx - ca * 2600, cy - sa * 2600], [cx + ca * 2600, cy + sa * 2600], [cx + ca * 2600 + nx * BL.w, cy + sa * 2600 + ny * BL.w], [cx - ca * 2600 + nx * BL.w, cy - sa * 2600 + ny * BL.w]]).path(2.2, 300 + k));
-    }
-    L.globalCompositeOperation = 'destination-in'; L.fill(winPatch);
-    dst.save(); dst.clip(clip); dst.globalCompositeOperation = 'screen'; dst.globalAlpha = alpha; dst.drawImage(L.canvas, 0, 0); dst.restore();
-  }
-  slats(g, herPillow.path(1.0, 23), -10, 0.18);
+  // his pillow (far): pushed up against the headboard, dented, rumpled
+  const hisPillow = GG.blob([[150, 262], [420, 246], [700, 262], [748, 330], [736, 470], [680, 520], [400, 530], [170, 512], [134, 400]]);
+  const hpp = GG.piece(g, hisPillow, { fill: '#2A3349', rough: 1.6, seed: 21, tex: 0.6, kind: 'cloth', lift: [8, 18], liftAlpha: 0.8, liftBlur: 14 });
+  GG.crescent(g, hpp, -6, -14, '#3E4A68', 0.9);
+  [[[200, 300], [300, 330], [380, 330]], [[620, 280], [690, 320], [710, 400]], [[180, 460], [260, 490], [330, 500]]].forEach(c => { g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(12,15,24,0.7)'; g.lineWidth = 6; g.stroke(GG.spline(c, false)); g.translate(2, -4); g.strokeStyle = 'rgba(86,102,138,0.4)'; g.lineWidth = 2.5; g.stroke(GG.spline(c, false)); g.restore(); });
+  // the dent his head has made
+  { g.save(); g.filter = 'blur(16px)'; g.fillStyle = 'rgba(6,8,14,0.6)'; g.beginPath(); g.ellipse(430, 420, 230, 120, -0.05, 0, 7); g.fill(); g.restore(); }
 
-  // ---------------------------------------------------------------- the made half: flat, smooth, folded back with a ruler
-  const foldY = x => 594 - (x - 1000) * 0.028;
-  const herDuvet = S().poly([[930, foldY(930) + 6], [W + 30, foldY(W + 30)], [W + 30, H + 30], [960, H + 30]]);
-  const hdP = GG.piece(g, herDuvet, { fill: '#2E3852', rough: 0.9, seed: 51, tex: 0.45, kind: 'cloth', lift: [0, -12], liftAlpha: 0.6, liftBlur: 14 });
-  const herFold = S().poly([[930, foldY(930) - 34], [W + 30, foldY(W + 30) - 36], [W + 30, foldY(W + 30) + 34], [930, foldY(930) + 34]]);
-  const hfP = GG.piece(g, herFold, { fill: '#404E72', rough: 0.8, seed: 52, tex: 0.35, kind: 'cloth', lift: [0, 8], liftAlpha: 0.7, liftBlur: 6 });
-  g.fillStyle = 'rgba(150,168,206,0.4)'; g.fill(S().poly([[930, foldY(930) - 34], [W + 30, foldY(W + 30) - 36], [W + 30, foldY(W + 30) - 30], [930, foldY(930) - 28]]).path(0.6, 53));
-  slats(g, hdP, 0, 0.22); slats(g, hfP, 0, 0.22);
+  // his half of the duvet: his body under it, on his side, shoulder to hip to the knees drawn up toward us
+  const body = GG.blob([[600, 470], [700, 392], [840, 376], [980, 420], [1100, 470], [1240, 420], [1380, 392], [1520, 430], [1640, 500], [1760, 560], [1700, 620], [1400, 600], [1100, 610], [800, 620], [620, 580]]);
+  const bdp = GG.piece(g, body, { fill: '#29324B', rough: 1.8, seed: 61, tex: 0.6, kind: 'cloth', lift: [-6, 16], liftAlpha: 0.8, liftBlur: 16 });
+  GG.crescent(g, bdp, 6, -12, '#3D4A6C', 0.95);
+  [[[760, 420], [860, 470], [900, 560]], [[1180, 460], [1240, 520], [1250, 600]], [[1450, 450], [1520, 520], [1530, 600]], [[980, 440], [1020, 520]]].forEach(c => { g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(10,13,22,0.6)'; g.lineWidth = 6; g.stroke(GG.spline(c, false)); g.translate(-3, -3); g.strokeStyle = 'rgba(80,96,134,0.4)'; g.lineWidth = 2.5; g.stroke(GG.spline(c, false)); g.restore(); });
 
-  // ---------------------------------------------------------------- his half: the duvet over his shoulder and hip, rumpled, in the dark
-  const hisDuvet = GG.blob([[-40, 650], [160, 628], [330, 640], [470, 690], [640, 700], [820, 700], [930, 690], [1000, 720], [1010, 860], [980, H + 40], [-40, H + 40]]);
-  GG.piece(g, hisDuvet, { fill: '#262E45', rough: 1.8, seed: 61, tex: 0.6, kind: 'cloth', lift: [0, -14], liftAlpha: 0.75, liftBlur: 16 });
-  // broad ridges: the duvet over his hip (off the bottom left) and along his flank to the shoulder
-  const ridge = (sp, w0, w1, seed, fill) => { const n = sp.length, up = [], dn = [];
-    for (let i = 0; i < n; i++) { const a = sp[Math.max(0, i - 1)], b = sp[Math.min(n - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, t = i / (n - 1), w = Math.sin(Math.PI * t) * lerp(w0, w1, t) + 4;
-      up.push([sp[i][0] - dy / l * w, sp[i][1] + dx / l * w]); dn.push([sp[i][0] + dy / l * w * 0.7, sp[i][1] - dx / l * w * 0.7]); }
-    const p = GG.piece(g, GG.blob(up.concat(dn.reverse())), { fill, rough: 1.6, seed, tex: 0.5, kind: 'cloth', lift: [-4, 12], liftAlpha: 0.75, liftBlur: 12 });
-    GG.crescent(g, p, 5, -7, '#3A4768', 0.9); return p; };
-  const lerp = OTM.lerp;
-  ridge([[-60, 760], [150, 742], [360, 770], [520, 830], [640, 920]], 46, 30, 62, '#283049');
-  ridge([[-40, 960], [200, 900], [420, 920], [600, 1010], [700, 1120]], 60, 40, 63, '#2A334D');
-  ridge([[560, 820], [700, 830], [820, 880], [900, 980], [930, 1120]], 40, 36, 64, '#29314A');
-  ridge([[180, 1080], [330, 1030], [470, 1060], [540, 1140]], 40, 30, 65, '#283049');
-
-  // ---------------------------------------------------------------- the phone's light on the bed (smooth: the only unbanded light here)
-  GG.glow(g, GLOW[0] - 60, GLOW[1] + 30, 820, '#FFAE8A', 0.34, 'screen', 0.85);
-  GG.glow(g, GLOW[0] - 90, GLOW[1] - 10, 440, '#FFC5A0', 0.46, 'screen', 0.9);
-  GG.glow(g, GLOW[0] + 40, 572, 180, '#FFD2B4', 0.35, 'screen', 0.45);     // a pool on her pillow at the phone's foot
-
-  // ---------------------------------------------------------------- his head
-  const hd = GG.head({ who: 'him', x: HEAD.x, y: HEAD.y, s: HEAD.s, yaw: 0.58, pitch: 0.1, roll: -0.36, eyes: 0.04, smile: 0.55, gaze: [0.4, 0.15],
-    mode: 'grain', seed: 7, ss: 1.4, neckLen: 0.75, bounds: [-0.6, -0.7, 0.62, 0.9], stubble: 0.13,
-    amb: '#363F5A', lights: [
-      { pos: [1.35, 0.05, 0.6], col: '#FFBE96', k: 1.9, falloff: 1.6, wrap: 0.25 },                      // the phone (smooth)
-      { dir: [0.45, -0.65, 0.45], col: '#8EA2CC', k: 0.2, poster: [0.38], levels: [1] },                  // streetlight, cut
+  // ---------------------------------------------------------------- him: on his side, facing us and the pillow in front of him
+  const HEAD = { x: 452, y: 398, s: 300 };
+  const PHONE_AT = [560, 640];                                     // the screen, facing him
+  const HT = T(HEAD.x, HEAD.y);
+  const hd = GG.head({ who: 'him', x: HT[0], y: HT[1], s: HEAD.s * K, yaw: -0.42, pitch: 0.05, roll: -1.36, eyes: 0.06, smile: 0.4, gaze: [0, 0.3],
+    mode: 'grain', seed: 7, ss: 1.3, neckLen: 0.7, bounds: [-0.75, -0.72, 0.75, 1.0], stubble: 0.1, neckShade: 0.35, aoK: 0.6,
+    amb: '#323C58', lights: [
+      { pos: [(PHONE_AT[0] - HEAD.x) / HEAD.s, (PHONE_AT[1] - HEAD.y) / HEAD.s, 0.9], col: '#FFC09A', k: 2.0, falloff: 1.4, wrap: 0.25 },   // the phone (smooth, warm)
+      { dir: [0.3, -0.7, 0.4], col: '#7E92C0', k: 0.22, poster: [0.4], levels: [1] },                                                       // streetlight (cut, cold)
     ] });
-  GG.drawHead(g, hd, { shadow: { dx: -8, dy: 10, blur: 14, alpha: 0.65 }, tex: 0.45, texSeed: 17 });
+  drawSculpt(hd, { shadow: { dx: 10, dy: 10, blur: 14, alpha: 0.6 }, tex: 0.45, texSeed: 17 });
+  // the duvet pulled up to his jaw, its edge turned over his shoulder
+  { const nk = Ti(...hd.proj(0, 0.66, -0.05));
+    const edge = GG.blob([[nk[0] - 30, nk[1] - 70], [nk[0] + 40, nk[1] - 90], [nk[0] + 130, nk[1] - 60], [nk[0] + 200, nk[1] - 10], [nk[0] + 190, nk[1] + 70], [nk[0] + 60, nk[1] + 120], [nk[0] - 40, nk[1] + 100], [nk[0] - 70, nk[1] + 20]]);
+    const ep = GG.piece(g, edge, { fill: '#303B57', rough: 1.6, seed: 72, tex: 0.6, kind: 'cloth', lift: [-6, 12], liftAlpha: 0.75, liftBlur: 12 });
+    GG.crescent(g, ep, 4, -12, '#465579', 0.9);
+    g.save(); g.clip(ep); GG.glow(g, PHONE_AT[0], PHONE_AT[1], 280, '#FFB08A', 0.4); g.restore(); }
 
-  // a sliver of his tee's collar at the duvet's edge
-  { const tee = GG.blob([[600, 640], [680, 600], [770, 596], [840, 630], [800, 664], [660, 676]]);
-    const tp = GG.piece(g, tee, { fill: '#3E4A47', rough: 1.2, seed: 71, tex: 0.6, kind: 'cloth', lift: [0, -4], liftAlpha: 0.5 });
-    GG.crescent(g, tp, 8, -2, '#8E8A72', 0.7);
-    g.save(); g.strokeStyle = 'rgba(16,20,24,0.7)'; g.lineWidth = 4; g.lineCap = 'round'; g.stroke(GG.spline([[640, 630], [700, 640], [770, 612]], false)); g.restore(); }
+  // ---------------------------------------------------------------- her pillow (near): plump, square, untouched, clear of the headboard
+  const herPillow = GG.blob([[168, 560, 1], [720, 548, 1], [770, 640], [756, 820, 1], [430, 846], [186, 836, 1], [150, 700]]);
+  const php = GG.piece(g, herPillow, { fill: '#2E3852', rough: 1.0, seed: 23, tex: 0.55, kind: 'cloth', lift: [-10, 26], liftAlpha: 0.85, liftBlur: 18 });
+  // its soft top: the upper face catches the dark, the near face falls away
+  const herTop = GG.blob([[176, 566, 1], [716, 554, 1], [748, 610], [700, 690], [420, 708], [190, 696], [164, 630]]);
+  const htp = GG.piece(g, herTop, { fill: '#3A4763', rough: 1.0, seed: 24, tex: 0.45, kind: 'cloth' });
+  GG.crescent(g, htp, 0, -10, '#52628A', 0.9);
+  g.save(); g.strokeStyle = 'rgba(16,20,32,0.5)'; g.lineWidth = 3; g.beginPath(); g.moveTo(200, 770); g.lineTo(740, 760); g.stroke(); g.strokeStyle = 'rgba(100,118,156,0.35)'; g.lineWidth = 2; g.beginPath(); g.moveTo(200, 774); g.lineTo(740, 764); g.stroke(); g.restore();   // the ironed crease
+  // the shadow between the made pillow and the headboard
+  g.save(); g.filter = 'blur(10px)'; g.fillStyle = 'rgba(4,6,12,0.7)'; g.fill(S().poly([[108, 560], [160, 560], [150, 850], [100, 850]]).path(1, 25)); g.restore();
 
-  // ---------------------------------------------------------------- his arm and hand over the phone: the elbow rests in the gap
-  const WR = [1086, 284];
-  const hand = GG.hand({ x: WR[0], y: WR[1], s: 286, ss: 1.5, seed: 12, mode: 'grain', skin: '#9A6A50', nail: '#C79C88',
-    basis: { x: [0.62, 0.12, 0.78], z: [-0.1, -0.9, 0.45] },
-    pose: { fingers: [[-0.1, 0.8, 0.42, 0.2], [-0.03, 0.85, 0.45, 0.2], [0.05, 0.85, 0.42, 0.2], [0.13, 0.8, 0.4, 0.2]], thumb: null,
-      fdir: [-0.42, 0.88, 0.3], fore: 1.45, foreR: 0.15 },
-    bounds: [-1.75, -0.45, 0.75, 1.75], amb: '#4A5574',
-    lights: [{ pos: [0.03, 0.62, -0.28], col: '#FFBE96', k: 1.8, falloff: 0.75, wrap: 0.35 },
-      { dir: [0.5, -0.7, 0.4], col: '#8EA2CC', k: 0.26, poster: [0.4], levels: [1] }] });
-  GG.drawHead(g, hand, { shadow: { dx: -10, dy: 16, blur: 12, alpha: 0.6 }, tex: 0.45, texSeed: 18 });
+  // ---------------------------------------------------------------- the made half of the duvet: flat, smooth, folded back with a ruler
+  const foldY = x => 862 - (x - 700) * 0.012;
+  const herDuvet = S().poly([[120, 900], [700, foldY(700) + 30], [W + 40, foldY(W + 40) + 30], [W + 40, H + 40], [100, H + 40]]);
+  const hdP = GG.piece(g, herDuvet, { fill: '#2E3852', rough: 0.9, seed: 51, tex: 0.45, kind: 'cloth', lift: [0, -12], liftAlpha: 0.6, liftBlur: 14 });
+  const herRest = S().poly([[740, 600], [W + 40, 610], [W + 40, foldY(W + 40) + 30], [700, foldY(700) + 30], [760, 760]]);
+  const hrP = GG.piece(g, herRest, { fill: '#323D58', rough: 0.9, seed: 50, tex: 0.45, kind: 'cloth', lift: [0, -10], liftAlpha: 0.6, liftBlur: 12 });
+  const herFold = S().poly([[120, 870], [W + 40, foldY(W + 40) - 4], [W + 40, foldY(W + 40) + 40], [120, 916]]);
+  const hfP = GG.piece(g, herFold, { fill: '#3F4D70', rough: 0.8, seed: 52, tex: 0.35, kind: 'cloth', lift: [0, 8], liftAlpha: 0.7, liftBlur: 6 });
+  g.fillStyle = 'rgba(150,168,206,0.4)'; g.fill(S().poly([[120, 870], [W + 40, foldY(W + 40) - 4], [W + 40, foldY(W + 40) + 2], [120, 876]]).path(0.6, 53));
+  // streetlight slats, cut and straight, across the made half only
+  { const winPatch = GG.blob([[2100, 560], [2100, 1300], [700, 1300], [820, 760], [1300, 600]]).path(6, 9);
+    const Lr = GG.layer(); const ca = Math.cos(BL.ang), sa = Math.sin(BL.ang), nx = -sa, ny = ca;
+    for (let k = -16; k < 24; k++) { const o = k * BL.step, cx = W * 0.7 + nx * o, cy = H * 0.6 + ny * o;
+      Lr.fillStyle = '#7E93C2'; Lr.fill(S().poly([[cx - ca * 2600, cy - sa * 2600], [cx + ca * 2600, cy + sa * 2600], [cx + ca * 2600 + nx * BL.w, cy + sa * 2600 + ny * BL.w], [cx - ca * 2600 + nx * BL.w, cy - sa * 2600 + ny * BL.w]]).path(2.2, 300 + k)); }
+    Lr.globalCompositeOperation = 'destination-in'; Lr.fill(winPatch);
+    [hdP, hrP, hfP].forEach(cp => { g.save(); g.clip(cp); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.22; g.drawImage(Lr.canvas, 0, 0); g.restore(); }); }
 
-  // the duvet pulled up to his jaw: over his shoulder (left), tucked under his chin, round the arm where it comes out
-  { const edge = GG.blob([[120, 640], [260, 600], [420, 572], [540, 588], [640, 636], [740, 650], [850, 650], [930, 650], [1000, 690], [1004, 750], [900, 770], [700, 760], [480, 720], [280, 704], [110, 690]]);
-    const ep = GG.piece(g, edge, { fill: '#29324C', rough: 1.6, seed: 72, tex: 0.65, kind: 'cloth', lift: [-3, -12], liftAlpha: 0.75, liftBlur: 12 });
-    GG.crescent(g, ep, -3, -9, '#3B4868', 0.9);
-    g.save(); g.clip(ep); GG.glow(g, 1040, 600, 340, '#FFB08A', 0.42); g.restore();
-    g.save(); g.strokeStyle = 'rgba(12,15,24,0.55)'; g.lineWidth = 3; g.stroke(GG.spline([[140, 668], [300, 650], [460, 640], [620, 680], [800, 704], [960, 712]], false)); g.restore(); }
+  // ---------------------------------------------------------------- the phone's light (smooth): on the pillow between them, on his face's side
+  GG.glow(g, PHONE_AT[0] - 30, PHONE_AT[1] - 70, 560, '#FFAE8A', 0.32, 'screen', 0.8);
+  GG.glow(g, PHONE_AT[0] - 40, PHONE_AT[1] - 40, 260, '#FFC9A6', 0.45, 'screen', 0.7);
 
-  // the charging cable: out of the phone's foot, across her pillow, off the edge (a real thing, kinked and dusty)
-  { const cab = GG.spline([[1150, 566], [1180, 600], [1300, 592], [1420, 560], [1560, 586], [1700, 548], [1830, 572], [1960, 540]], false);
-    g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(6,8,14,0.6)'; g.lineWidth = 9; g.translate(-3, 6); g.stroke(cab); g.restore();
-    g.save(); g.lineCap = 'round'; g.strokeStyle = '#8A93A8'; g.lineWidth = 6; g.stroke(cab); g.strokeStyle = 'rgba(200,210,230,0.5)'; g.lineWidth = 2; g.translate(-1, -2); g.stroke(cab); g.restore(); }
+  // ---------------------------------------------------------------- the phone, lying on its side on her pillow, screen to him, back to us
+  // back face (a landscape slab leaning back onto the pillow), its top edge toward him
+  const PB = [[468, 604], [668, 596], [676, 692], [472, 702]];
+  // his arm from under the duvet's edge, the hand over the phone's top edge, fingers resting down its back
+  const WR = [602, 556];
+  const WT = T(WR[0], WR[1]);
+  const hand = GG.hand({ x: WT[0], y: WT[1], s: 205 * K, ss: 1.5, seed: 12, mode: 'grain', skin: '#9A6A50', nail: '#C79C88',
+    basis: { x: [-0.55, 0.75, 0.35], z: [0.05, -0.4, 0.92] },
+    pose: { fingers: [[-0.12, 0.45, 0.35, 0.2], [-0.04, 0.5, 0.35, 0.2], [0.05, 0.5, 0.35, 0.2], [0.13, 0.45, 0.3, 0.2]], thumb: null,
+      fdir: [0.75, -0.45, -0.4], fore: 1.2, foreR: 0.15 },
+    bounds: [-0.5, -1.2, 1.4, 0.9], amb: '#3A4462',
+    lights: [{ pos: [(PHONE_AT[0] - WR[0]) / 205, (PHONE_AT[1] + 40 - WR[1]) / 205, -0.3], col: '#FFBE96', k: 1.7, falloff: 0.9, wrap: 0.35 }, { dir: [0.3, -0.7, 0.4], col: '#8EA2CC', k: 0.24, poster: [0.4], levels: [1] }] });
 
-  // ---------------------------------------------------------------- the phone (gloss): built now, composited after the grain
   const phoneL = GG.layer();
-  const quadPath = (q, r) => { const p = new Path2D(); const pt = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
-    for (let i = 0; i < 4; i++) { const a = q[(i + 3) % 4], b = q[i], c = q[(i + 1) % 4]; const la = Math.hypot(b[0] - a[0], b[1] - a[1]), lc = Math.hypot(c[0] - b[0], c[1] - b[1]); const p0 = pt(b, a, r / la), p1 = pt(b, c, r / lc); i ? p.lineTo(p0[0], p0[1]) : p.moveTo(p0[0], p0[1]); p.quadraticCurveTo(b[0], b[1], p1[0], p1[1]); } p.closePath(); return p; };
-  const phoneBack = quadPath([PH.A, PH.B, PH.C, PH.D], 20);
-  const sideP = quadPath([[PH.B[0] - 4, PH.B[1] + 4], [PH.B[0] + PH.side, PH.B[1] + 10], [PH.C[0] + PH.side, PH.C[1] - 12], [PH.C[0] - 4, PH.C[1] - 4]], 8);
-  {
-    const p = phoneL;
-    p.save(); p.filter = 'blur(9px)'; p.strokeStyle = 'rgba(255,214,186,0.95)'; p.lineWidth = 12; p.beginPath(); p.moveTo(PH.A[0] + 4, PH.A[1] + 8); p.lineTo(PH.D[0] + 2, PH.D[1] - 10); p.stroke(); p.restore();
-    p.save(); p.filter = 'blur(2px)'; p.strokeStyle = 'rgba(255,236,220,0.95)'; p.lineWidth = 3; p.beginPath(); p.moveTo(PH.A[0] - 1, PH.A[1] + 14); p.lineTo(PH.D[0] - 2, PH.D[1] - 14); p.stroke(); p.restore();
-    p.fillStyle = (() => { const gr = p.createLinearGradient(PH.B[0], PH.B[1], PH.C[0] + 12, PH.C[1]); gr.addColorStop(0, '#6A6E74'); gr.addColorStop(0.3, '#33363B'); gr.addColorStop(1, '#2A2C30'); return gr; })(); p.fill(sideP);
-    p.fillStyle = (() => { const gr = p.createLinearGradient(PH.A[0], PH.A[1], PH.C[0], PH.C[1]); gr.addColorStop(0, '#34373D'); gr.addColorStop(0.4, '#1B1C20'); gr.addColorStop(1, '#0C0C0E'); return gr; })(); p.fill(phoneBack);
-    p.save(); p.clip(phoneBack);
-    const sg = p.createLinearGradient(PH.A[0], PH.A[1] + 250, PH.B[0], PH.B[1] + 120);
-    sg.addColorStop(0, 'rgba(160,178,220,0)'); sg.addColorStop(0.5, 'rgba(160,178,220,0.2)'); sg.addColorStop(1, 'rgba(160,178,220,0)');
-    p.fillStyle = sg; p.fillRect(PH.A[0] - 20, PH.A[1] - 20, 200, 360);
-    const cx0 = PH.A[0] + 16, cy0 = PH.A[1] + 18; p.fillStyle = '#2B2E33'; p.fill(GG.rrect(cx0, cy0, 48, 54, 14)); p.strokeStyle = 'rgba(200,210,230,0.25)'; p.lineWidth = 1; p.stroke(GG.rrect(cx0, cy0, 48, 54, 14));
-    [[cx0 + 14, cy0 + 15], [cx0 + 14, cy0 + 39], [cx0 + 34, cy0 + 27]].forEach(([x, y]) => { p.fillStyle = '#060607'; p.beginPath(); p.arc(x, y, 8.5, 0, 7); p.fill(); p.fillStyle = 'rgba(150,170,214,0.55)'; p.beginPath(); p.arc(x - 2.5, y - 2.5, 2, 0, 7); p.fill(); });
-    p.strokeStyle = 'rgba(200,210,230,0.22)'; p.lineWidth = 1.4; p.stroke(phoneBack); p.restore();
-    p.save(); p.globalCompositeOperation = 'destination-out'; p.drawImage(hand.canvas, hand.x, hand.y); p.restore();
+  const quadPath = (q, r) => { const pp = new Path2D(); const pt = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+    for (let i = 0; i < 4; i++) { const a = q[(i + 3) % 4], b = q[i], c = q[(i + 1) % 4]; const la = Math.hypot(b[0] - a[0], b[1] - a[1]), lc = Math.hypot(c[0] - b[0], c[1] - b[1]); const p0 = pt(b, a, r / la), p1 = pt(b, c, r / lc); i ? pp.lineTo(p0[0], p0[1]) : pp.moveTo(p0[0], p0[1]); pp.quadraticCurveTo(b[0], b[1], p1[0], p1[1]); } pp.closePath(); return pp; };
+  { const p = phoneL; p.setTransform(...CAM);
+    // the screen's light escaping past its top edge, toward him (smooth, warm)
+    p.save(); p.filter = 'blur(10px)'; p.strokeStyle = 'rgba(255,212,182,0.95)'; p.lineWidth = 14; p.beginPath(); p.moveTo(PB[0][0] + 14, PB[0][1] - 2); p.lineTo(PB[1][0] - 10, PB[1][1] - 2); p.stroke(); p.restore();
+    p.save(); p.filter = 'blur(2px)'; p.strokeStyle = 'rgba(255,236,220,0.95)'; p.lineWidth = 3; p.beginPath(); p.moveTo(PB[0][0] + 16, PB[0][1] - 3); p.lineTo(PB[1][0] - 12, PB[1][1] - 3); p.stroke(); p.restore();
+    // the bottom edge (thickness) toward us
+    const edge = quadPath([[PB[3][0] + 4, PB[3][1] - 4], [PB[2][0] - 4, PB[2][1] - 4], [PB[2][0] - 6, PB[2][1] + 8], [PB[3][0] + 2, PB[3][1] + 9]], 5);
+    p.fillStyle = (() => { const gr = p.createLinearGradient(PB[3][0], 0, PB[2][0], 0); gr.addColorStop(0, '#3A3C40'); gr.addColorStop(0.5, '#6E7278'); gr.addColorStop(1, '#3A3C40'); return gr; })(); p.fill(edge);
+    const back = quadPath(PB, 18);
+    p.fillStyle = (() => { const gr = p.createLinearGradient(PB[0][0], PB[0][1], PB[2][0], PB[2][1]); gr.addColorStop(0, '#2E3136'); gr.addColorStop(0.5, '#17181B'); gr.addColorStop(1, '#0B0B0D'); return gr; })(); p.fill(back);
+    p.save(); p.clip(back);
+    const sg = p.createLinearGradient(PB[0][0], PB[0][1] + 80, PB[0][0] + 120, PB[0][1]); sg.addColorStop(0, 'rgba(150,170,214,0)'); sg.addColorStop(0.5, 'rgba(150,170,214,0.18)'); sg.addColorStop(1, 'rgba(150,170,214,0)'); p.fillStyle = sg; p.fillRect(PB[0][0], PB[0][1] - 10, 220, 120);
+    // the camera island (top corner of the back, landscape)
+    const cx0 = PB[1][0] - 66, cy0 = PB[1][1] + 12; p.fillStyle = '#2B2E33'; p.fill(GG.rrect(cx0, cy0, 52, 44, 12)); p.strokeStyle = 'rgba(200,210,230,0.22)'; p.lineWidth = 1; p.stroke(GG.rrect(cx0, cy0, 52, 44, 12));
+    [[cx0 + 14, cy0 + 13], [cx0 + 37, cy0 + 13], [cx0 + 25, cy0 + 31]].forEach(([x, y]) => { p.fillStyle = '#060607'; p.beginPath(); p.arc(x, y, 7.5, 0, 7); p.fill(); p.fillStyle = 'rgba(150,170,214,0.5)'; p.beginPath(); p.arc(x - 2, y - 2, 1.8, 0, 7); p.fill(); });
+    p.strokeStyle = 'rgba(200,210,230,0.2)'; p.lineWidth = 1.2; p.stroke(back); p.restore();
+    p.save(); p.setTransform(1, 0, 0, 1, 0, 0); p.globalCompositeOperation = 'destination-out'; p.drawImage(hand.canvas, hand.x, hand.y); p.restore();
   }
-  g.drawImage(phoneL.canvas, 0, 0);
-  E.save(); E.fillStyle = 'rgba(255,196,160,0.9)'; E.beginPath(); E.ellipse(GLOW[0] + 10, GLOW[1], 18, 140, 0.04, 0, 7); E.fill(); E.restore();
+  // the phone sinks into the pillow a little: a soft contact shadow
+  g.save(); g.filter = 'blur(8px)'; g.fillStyle = 'rgba(4,6,12,0.7)'; g.beginPath(); g.ellipse(574, 704, 120, 14, -0.02, 0, 7); g.fill(); g.restore();
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(phoneL.canvas, 0, 0); g.restore();
+  drawSculpt(hand, { shadow: { dx: 8, dy: 14, blur: 12, alpha: 0.6 }, tex: 0.45, texSeed: 18 });
+  E.save(); E.transform(...CAM); E.fillStyle = 'rgba(255,196,160,0.9)'; E.beginPath(); E.ellipse(570, 596, 110, 16, -0.02, 0, 7); E.fill(); E.restore();
 
-  f.finish({ grain: 0.1, fibre: 0.09, vignette: 0.62, halation: 0.65, seed: 3, afterPost: (c) => { c.drawImage(phoneL.canvas, 0, 0);
+  f.finish({ grain: 0.1, fibre: 0.09, vignette: 0.6, halation: 0.65, seed: 3, afterPost: (c) => { c.drawImage(phoneL.canvas, 0, 0);
     GG.subtitle(c, 'Her', 'Goodnight. I love you.', { y: H - 64 }); } });
   window.FRAME_READY = true;
 })();

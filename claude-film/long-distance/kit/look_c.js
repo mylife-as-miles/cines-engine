@@ -239,8 +239,8 @@
     const mode = o.mode || 'flash', pose = o.pose || 4, flash = mode === 'flash';
     const R = OTM.rng('couple' + pose + mode);
     // skin & hair per mode: the flash blows his and her faces pale and flat with a hard falloff; the generated light is even and kind
-    const skinH = flash ? '#EBCDB6' : '#D9AE90', skinS = flash ? '#E0BBA0' : '#D1A486', skinHS = flash ? '#B98A70' : '#C3967A';
-    const skinH2 = flash ? '#F2D8C4' : '#D9AE90', hair = flash ? '#1A1210' : '#2A1D17', hairHi = flash ? '#5A463C' : '#7A5A48';
+    const skinH = flash ? '#B98A6C' : '#9C6E54', skinS = flash ? '#E8C9B4' : '#DDB49A', skinHS = flash ? '#8C6250' : '#82583F';
+    const skinH2 = flash ? '#F4DCCB' : '#E2BBA0', hair = flash ? '#1A1210' : '#2A1D17', hairHi = flash ? '#5A463C' : '#7A5A48';
     const clothesH = flash ? '#2B2826' : '#5E6046', clothesS = flash ? '#C98F3E' : '#E6DCCB';
     // pose table: head centres, tilts (radians), mouth (0 closed smile .. 1 open laugh), eyes (0 open .. 1 shut)
     const T = {
@@ -279,7 +279,7 @@
       if (flash) {      // the booth's flash: hot forehead and nose bridge, the cheeks falling off fast at the edges, a hard little shadow under the jaw
         g.fillStyle = rad(g, 0, -fh * 0.2, fw * 0.3, fw * 1.25, [[0, '#FFF6EE', 0.55], [0.6, '#FFF6EE', 0.1], [1, '#8A5440', 0.35]]); g.fillRect(-0.3, -0.3, 0.6, 0.6);
       } else {          // generated: one soft, kind key; the same on both faces; skin as smooth as a gradient
-        g.fillStyle = rad(g, -fw * 0.2, -fh * 0.3, 0, fw * 1.5, [[0, '#F2D0B4', 0.85], [1, '#F2D0B4', 0]]); g.fillRect(-0.3, -0.3, 0.6, 0.6);
+        g.fillStyle = rad(g, -fw * 0.15, -fh * 0.25, 0, fw * 1.6, [[0, '#FFE2CC', H_ ? 0.42 : 0.6], [0.55, '#FFE2CC', 0.12], [1, '#5A3020', 0.18]]); g.fillRect(-0.3, -0.3, 0.6, 0.6);
       }
       g.restore();
       // hair
@@ -379,10 +379,13 @@
     g.fillStyle = lin(g, 0, h * 0.62, 0, h, [[0, '#B9DAD6', 0], [0.25, '#9CC6C4'], [1, '#5E8E8A']]); g.fillRect(0, h * 0.62, w, h * 0.38);
     g.fillStyle = rad(g, w / 2, h * 0.66, 0, w * 0.75, [[0, '#FFFFFF', 1], [0.45, '#FFFFFF', 0.85], [1, '#FFFFFF', 0]]); g.fillRect(0, 0, w, h);
     // the couple, dead centre, heads against the white water
-    g.save(); const s = w * (o.tight ? 1.55 : 1.12); g.translate((w - s) / 2, h * (o.tight ? 0.31 : 0.585)); g.scale(s, s); couple(g, { mode: 'gen', pose: 4 });
-    // his hand round her far shoulder: holding each other
-    g.fillStyle = '#D6AA8C'; g.beginPath(); g.ellipse(0.73, 0.79, 0.045, 0.026, -0.5, 0, 7); g.fill();
-    g.restore();
+    { const cc = OTM.makeCanvas(w, h), cg = cc.getContext('2d'); const s = w * (o.tight ? 1.55 : 1.12); cg.translate((w - s) / 2, h * (o.tight ? 0.31 : 0.585)); cg.scale(s, s); couple(cg, { mode: 'gen', pose: 4 });
+      cg.fillStyle = '#9C6E54'; cg.beginPath(); cg.ellipse(0.73, 0.79, 0.045, 0.026, -0.5, 0, 7); cg.fill();          // his hand round her far shoulder: holding each other
+      // the hair lit from behind by the white water: an even halo on both heads
+      const halo = OTM.makeCanvas(w, h), hg = halo.getContext('2d'); hg.drawImage(cc, 0, 0); hg.globalCompositeOperation = 'source-in'; hg.fillStyle = '#FFF6EE'; hg.fillRect(0, 0, w, h);
+      g.save(); g.globalAlpha = 0.55; g.drawImage(blurred(halo, w / 60, false), 0, -h * 0.004); g.restore();
+      g.drawImage(blurred(cc, Math.max(0.6, w / 320), false), 0, 0);              // airbrushed: nothing in this picture has an edge
+      g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.18; g.drawImage(blurred(cc, w / 50, false), 0, 0); g.restore(); }
     // the 'beautiful' grade: an even, soft vignette and a lift in the shadows
     g.fillStyle = rad(g, w / 2, h * 0.6, w * 0.35, h * 0.75, [[0, '#0E1D18', 0], [1, '#0E1D18', 0.22]]); g.fillRect(0, 0, w, h);
     g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(40,60,58,0.12)'; g.fillRect(0, 0, w, h); g.restore();
@@ -418,21 +421,17 @@
   // ---------- subtitles in the picture ----------
   // caption(g, 'Her', ['line one', 'line two'], {x, y (last baseline), size, color, label colour})
   function caption(g, who, lines, o) {
-    o = Object.assign({ x: W / 2, y: H - 120, size: 40, lead: 1.32, family: 'Libre Franklin', weight: 500, color: '#F3EEE5', label: '#BDB1A2',
-      halo: 'rgba(12,10,9,0.62)', haloBlur: 12, tracking: 0.2 }, o || {});
+    o = Object.assign({ x: W / 2, y: H - 120, size: 40, lead: 1.34, family: 'Libre Franklin', weight: 500, color: '#FFFFFF', label: '#FFFFFF',
+      back: 'rgba(10,9,8,0.62)', pad: 18, tracking: 0.2 }, o || {});
     g.save(); g.textBaseline = 'alphabetic'; g.letterSpacing = o.tracking + 'px';
     const F = (wt) => `${wt} ${o.size}px "${o.family}"`;
-    const n = lines.length;
-    lines.forEach((t, i) => {
-      const y = o.y - (n - 1 - i) * o.size * o.lead;
-      const lab = i === 0 && who ? who + ': ' : '';
-      g.font = F(o.weight); const tw = g.measureText(t).width; g.font = F(o.weight); const lw = lab ? g.measureText(lab).width : 0;
-      const x0 = o.x - (tw + lw) / 2;
-      if (o.halo) { g.save(); g.filter = `blur(${o.haloBlur}px)`; g.fillStyle = o.halo; g.font = F(o.weight); g.textAlign = 'left'; g.fillText(lab + t, x0, y); g.fillText(lab + t, x0, y); g.restore(); }
-      g.textAlign = 'left';
-      if (lab) { g.font = F(o.weight); g.fillStyle = o.label; g.fillText(lab, x0, y); }
-      g.font = F(o.weight); g.fillStyle = o.color; g.fillText(t, x0 + lw, y);
-    });
+    const n = lines.length, rows = lines.map((t, i) => { const lab = i === 0 && who ? who + ': ' : ''; g.font = F(700); const lw = lab ? g.measureText(lab).width : 0; g.font = F(o.weight); const tw = g.measureText(t).width; return { t, lab, lw, tw, y: o.y - (n - 1 - i) * o.size * o.lead }; });
+    // one soft dark backing behind each line
+    rows.forEach(r => { const wdt = r.lw + r.tw, x0 = o.x - wdt / 2; g.save(); g.filter = 'blur(6px)'; g.fillStyle = o.back; g.fill(rrect(x0 - o.pad, r.y - o.size * 0.98, wdt + o.pad * 2, o.size * 1.34, 10)); g.restore(); });
+    rows.forEach(r => { const x0 = o.x - (r.lw + r.tw) / 2; g.textAlign = 'left';
+      g.save(); g.shadowColor = 'rgba(0,0,0,0.85)'; g.shadowBlur = 6; g.shadowOffsetY = 2;
+      if (r.lab) { g.font = F(700); g.fillStyle = o.label; g.fillText(r.lab, x0, r.y); }
+      g.font = F(o.weight); g.fillStyle = o.color; g.fillText(r.t, x0 + r.lw, r.y); g.restore(); });
     g.restore();
   }
 

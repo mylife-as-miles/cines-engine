@@ -39,7 +39,7 @@ Style frames: `frames/B1_pillow.jpg`, `frames/B2_waterfall.jpg`, `frames/B3_betw
 
 ## Colour script
 
-- **The night bedroom (B1).** Blue-black paper. Streetlight through the blinds lies in cut slats across *her* half of the bed only; it is dead straight, because nothing there has moved. His half is dark and rumpled. The phone, its back to us, throws the only warm light in the room: peach, smooth and close. It lands on his face like a hand.
+- **The night bedroom (B1).** Seen from her side, across the bed. Blue-black paper. He lies on his side on the slept-in pillow, facing us. The phone lies on its long edge on the smooth pillow in front of him, where her head would lie, screen to him and back to us, with his hand resting over it. It throws the only warm light in the room: peach, smooth and close, on his face. Streetlight through the blinds lies in cut slats across *her* made half only, dead straight, because nothing there has moved.
 - **The bathroom mornings.**
   - Cold white tile paper and a grey window.
   - The phone propped against the mirror is the warmest object there.
@@ -58,8 +58,15 @@ Style frames: `frames/B1_pillow.jpg`, `frames/B2_waterfall.jpg`, `frames/B3_betw
 - **Her, now.** Pale skin dusted with freckles and a copper bob cut blunt above the jaw, with a side part. Green eyes, composed and tired. She wears a bottle-green wool coat with the collar turned up and keeps it on like a guest, with a tan bag strap across her. Everything about her has texture.
 - **Her, then (in both kinds of photograph).** The same face, laughing, with long copper hair past her shoulders. On the strip she wears a striped top; in the waterfall, a cream sweater.
 - **One face, three renderings.** Each character is one sculpture (`GG.CAST`), so the faces on the strip, in the waterfall and in the doorway are the same faces. Only the rendering changes:
-  - **Flash (the strip).** A frontal strobe in two hard bands, the couple's hard shadow on the booth curtain, crushed blacks, a magenta or cyan cast that drifts frame to frame, heavy noise, a crooked crop, a crease and yellowing paper. It is a real photograph, so it lives in the grain world.
-  - **Gloss (the waterfall, the app's portrait).** Smooth light with a faint sheen and rosier cheeks. Exact mirror symmetry (the grain renderer's small asymmetries of brow, eye and mouth are switched off), no freckles, and stubble only as a smooth tint. The waterfall's gorge is mirrored exactly and the water is pure white, with portrait-mode blur and no vignette. **The light is fixed to the faces rather than to the place.** Both heads are lit from their own upper left, so the tilted head and the upright one shade identically, while the scene's own sun is behind them at the top of the fall. The pose is the strip's last frame: her head tipped against his.
+  - **Flash (the strip).** Four different moments: squeezed in and smiling; both gone with laughter, heads back and mouths wide; him pulling a face while she cracks up half out of frame; and her head tipped against his, both laughing. The look is cheap photo-booth: a frontal strobe in two hard bands, a hard shadow on the booth curtain, one frame blown out and one too dark, a magenta or cyan cast that drifts frame to frame, heavy noise, a crooked crop, a crease and yellowing paper. It is a real photograph, so it lives in the grain world.
+  - **Gloss (the waterfall, the app's portrait).** The strip's last pose, made perfect, as a generator would "improve" it:
+    - Both faces are square to the lens with eyes open on the camera and the same even photo-smile.
+    - Exact mirror symmetry, a shorter nose, flatter lips and a lifted chin.
+    - No freckles, stubble only as a smooth tint, and rosier cheeks.
+    - One soft frontal light **fixed to the faces rather than to the place**, so the tilted head and the upright one shade identically, while the scene's own sun is behind them at the top of the fall.
+    - The gorge is mirrored exactly and the water is pure white, with portrait-mode blur and no vignette.
+
+    The positions and her tilt are exactly the strip's. On a first watch it is a nice photo.
   - **Grain (life).** Posterised light whose terminator wobbles like a scissor cut, freckles, stubble and slight asymmetry, with paper texture laid in.
 - **Hands.** Hands are sculpted too: posable fingers, a thumb that can be drawn alone over an object, and the forearm and elbow. A hand can therefore lie on a phone like a hand on a shoulder, close round a fork, rest at the nape of a neck, or hold a bag from underneath with only the thumb on the zip.
 
@@ -114,8 +121,10 @@ We never see a picture. The phone is tilted to his chest; what we see is his fac
 
 **Budget.** Roughly £150–200k at UK independent rates, almost all labour; render cost is negligible.
 
+**Scale.** Phones are true size in every frame, about 0.7 of the head's height at the same depth. B2 pushes in, so the picture reads at true size.
+
 ## What is not right yet
 
-- The sculpted faces lean toward clay puppets in mid-shot (his nose in B2, her long upper lip in B3). They want a stylisation pass: smaller noses, flatter planes, fewer light bands on skin.
-- Bodies and clothes are simple flat pieces. Her coat is blocky, his sweater is a shapeless mass in B3, and the necks still run long.
-- In B2 the phone is turned more toward the camera than toward him, and it is large; this is a legibility cheat. The tilt in the strip's last frame reads only on a close look at that size.
+- The sculpted faces still lean toward clay puppets in mid-shot. His jaw keeps a faint dark line in B2, and her neck runs a little long in B3.
+- Clothes are simple flat pieces: her coat is blocky, and the arm sleeves are plain tubes.
+- At true size the phone's picture reads as two faces, red hair and white water rather than in detail. The strip's laughs read only on a close look at fridge distance.

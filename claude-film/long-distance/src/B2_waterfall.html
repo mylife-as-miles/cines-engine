@@ -2,232 +2,194 @@
 <script src="../kit/otm.js"></script><script src="../kit/look_b.js"></script>
 <script>
 /* LONG DISTANCE · LOOK B "GRAIN AND GLOSS" · B2 THE WATERFALL (INT. APARTMENT - LIVING ROOM, night)
-   He stands at the counter in his day-old office shirt, the fork stopped over the pan, looking down at the phone propped against
-   the salt. On it, the picture she has just sent: the two of them at a waterfall, her long hair, her head tipped against his.
-   On the fridge behind him, under a magnet, the photo-booth strip: the same two faces, the same tilt of her head, in the last frame.
-   The two pictures bracket him. One is grain (cheap flash, noise, a crooked crop, real paper); the other is gloss (drawn after the
-   film grain: clean gradients, mirror symmetry, water whiter than anything else in the film, both faces lit by one light that
-   belongs to their faces rather than to the place). One warm lamp over the counter; the screen's cold light on his face. */
+   He stands eating from the pan in his day-old office shirt: the pan's handle in one hand at his chest, the fork in the other, and
+   his mouth stopped full. He is looking, for a long time, at the phone propped against the salt on the counter in front of him. On
+   it, the picture she has just sent: the two of them at a waterfall, her long hair, her head tipped against his. On the fridge behind
+   him, under a magnet, the photo-booth strip: the same two faces, the same tilt of her head, in the last frame.
+   The strip is grain (cheap flash, noise, a crooked crop, real paper); the phone is gloss, drawn after the film grain: clean
+   gradients, mirror symmetry, water whiter than anything else in the film, both faces lit by one light that belongs to their faces.
+   One warm pendant over the counter lights the wall and the fridge alike; the screen throws the only smooth light, cold, on his face.
+   Scale is true: the phone stands at his depth and is about 0.7 of his head's height. */
 (async () => {
   await OTM.loadFonts('../fonts/fonts.css');
-  const ctx = OTM.stage(), { W, H } = OTM, P = GG.P, S = OTM.S;
+  const ctx = OTM.stage(), { W, H } = OTM, P = GG.P, S = OTM.S, mix = OTM.mix;
   const f = OTM.frame(ctx, { seed: 23 });
   const g = f.world, E = f.emissive;
-  const LAMP = [900, -40];
+  const LAMP = [960, -40];
+  // the lamp's cone: one set of cut bands, laid on every surface it reaches (wall and fridge alike)
+  const coneP = k => S().poly([[LAMP[0] - 120 - 40 * k, 60], [LAMP[0] + 120 + 40 * k, 60], [LAMP[0] + 560 + 260 * k, 1000], [LAMP[0] - 560 - 260 * k, 1000]]);
+  const CONE = [[1.7, 3], [0.95, 4], [0.38, 5], [-0.08, 6]];
 
-  // ---------------------------------------------------------------- the back wall under the pendant lamp
+  // ---------------------------------------------------------------- the back wall under the pendant
   g.fillStyle = '#1C1822'; g.fillRect(0, 0, W, H);
-  // the lamp's cone on the wall: cut bands that widen as they fall
-  const cone = (k, col, seed) => { const sh = S().poly([[LAMP[0] - 120 - 40 * k, 60], [LAMP[0] + 120 + 40 * k, 60], [LAMP[0] + 520 + 230 * k, 760], [LAMP[0] - 520 - 230 * k, 760]]); g.fillStyle = col; g.fill(sh.path(3, seed)); };
-  cone(1.6, '#2A2329', 41); cone(0.9, '#382D31', 42); cone(0.35, '#4A3C3A', 43); cone(-0.1, '#5C4A42', 44);
+  ['#2A2329', '#382D31', '#4A3C3A', '#5C4A42'].forEach((c, i) => { g.fillStyle = c; g.fill(coneP(CONE[i][0]).path(3, 40 + CONE[i][1])); });
   GG.texture(g, (() => { const p = new Path2D(); p.rect(0, 0, W, H); return p; })(), 0.6, 41, 'paper');
-  // the pendant itself: a cheap metal shade, the bulb's rim glowing
+  // the pale rectangle where a frame used to hang, and its nail
+  { const R = [1190, 40, 220, 250]; const pr = S().rect(R[0], R[1], R[2], R[3]).path(0.6, 8);
+    g.save(); g.filter = 'blur(10px)'; g.strokeStyle = 'rgba(14,10,12,0.35)'; g.lineWidth = 22; g.stroke(pr); g.restore();
+    g.save(); g.clip(pr); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(214,190,160,0.14)'; g.fillRect(R[0] - 4, R[1] - 4, R[2] + 8, R[3] + 8); g.restore();
+    const nx = R[0] + R[2] / 2, ny = R[1] - 16; g.fillStyle = 'rgba(10,8,10,0.6)'; g.beginPath(); g.ellipse(nx + 5, ny + 7, 6, 3, 0.6, 0, 7); g.fill();
+    g.fillStyle = '#2A2224'; g.beginPath(); g.arc(nx, ny, 4.5, 0, 7); g.fill(); g.fillStyle = 'rgba(240,200,140,0.7)'; g.beginPath(); g.arc(nx - 1.4, ny - 1.4, 1.4, 0, 7); g.fill(); }
+  // the shelf and the two mugs: his, rinsed and put back; hers, standing in a ring of dust
+  { const sh = S().poly([[1180, 470], [1460, 470], [1472, 484], [1168, 484]]);
+    GG.piece(g, sh, { fill: '#5C4A40', rough: 0.8, seed: 12, tex: 0.6, lift: [0, 8], liftAlpha: 0.6, liftBlur: 6 });
+    GG.piece(g, S().rect(1168, 484, 304, 14), { fill: '#3A2E2C', rough: 0.6, seed: 13, tex: 0.5 });
+    const mug = (x, col, colD, seed) => { const body = S().M(x - 30, 412).L(x + 30, 412).L(x + 28, 474).Q(x, 480, x - 28, 474).Z();
+      const p = GG.piece(g, body, { fill: col, rough: 0.8, seed, tex: 0.55, lift: [4, 4], liftAlpha: 0.5, liftBlur: 3 });
+      GG.crescent(g, p, -8, 0, colD, 0.9); g.fillStyle = mix(colD, '#000000', 0.3); g.fill(S().ellipse(x, 413, 29, 6, 0).path(0.5, seed + 1));
+      g.save(); g.lineWidth = 7; g.strokeStyle = col; g.stroke(S().ellipse(x + 38, 442, 13, 18, 0).path(0.6, seed + 2)); g.restore(); };
+    g.save(); g.filter = 'blur(1.5px)'; g.strokeStyle = 'rgba(214,200,176,0.8)'; g.lineWidth = 7; g.beginPath(); g.ellipse(1370, 476, 42, 6.5, 0, 0, 7); g.stroke(); g.restore();
+    OTM.dust(g, [[1326, 470], [1416, 470], [1416, 484], [1326, 484]], 40, '#CDBEA6', 'mugdust');
+    mug(1250, '#B98A3C', '#6E4F25', 51); mug(1370, '#7E8E7A', '#46513F', 54);
+    g.save(); g.strokeStyle = 'rgba(200,190,170,0.5)'; g.lineWidth = 2; g.beginPath(); g.ellipse(1370, 413, 28, 5.5, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke(); g.restore(); }
+  // the window: night across the street
+  { const win = S().rect(1680, 30, 280, 640); const wp = GG.piece(g, win, { fill: '#162036', rough: 1, seed: 61, tex: 0.5, lift: [6, 8], liftAlpha: 0.6 });
+    g.save(); g.clip(wp); const r = OTM.rng('city'); g.fillStyle = '#0F1626'; for (let i = 0; i < 6; i++) { const x = 1670 + i * 52, h2 = 200 + r() * 260; g.fill(S().rect(x, 670 - h2, 50, h2).path(0.8, 70 + i)); }
+    for (let i = 0; i < 34; i++) { const x = 1690 + r() * 260, y = 260 + r() * 380; g.fillStyle = r() < 0.75 ? 'rgba(232,184,101,0.8)' : 'rgba(150,180,220,0.7)'; g.fillRect(x, y, 7, 9); }
+    g.restore(); g.fillStyle = '#2A2224'; g.fill(S().rect(1670, 20, 16, 660).path(0.8, 62)); g.fill(S().rect(1670, 330, 300, 14).path(0.8, 63)); }
+  // the pendant itself
   { const shade = S().M(LAMP[0] - 30, -20).L(LAMP[0] + 30, -20).L(LAMP[0] + 96, 58).Q(LAMP[0], 70, LAMP[0] - 96, 58).Z();
     GG.piece(g, shade, { fill: '#2C2A2E', rough: 0.8, seed: 45, tex: 0.4, lift: [4, 6], liftAlpha: 0.6 });
     g.fillStyle = '#FFE2AE'; g.fill(S().ellipse(LAMP[0], 60, 92, 10, 0).path(0.8, 46));
     E.fillStyle = 'rgba(255,214,150,1)'; E.beginPath(); E.ellipse(LAMP[0], 60, 96, 14, 0, 0, 7); E.fill(); }
 
-  // the pale rectangle where a frame used to hang, and its nail
-  { const R = [1108, 66, 214, 262];
-    const pr = S().rect(R[0], R[1], R[2], R[3]).path(0.6, 8);
-    g.save(); g.filter = 'blur(10px)'; g.strokeStyle = 'rgba(14,10,12,0.35)'; g.lineWidth = 22; g.stroke(pr); g.restore();
-    g.save(); g.clip(pr); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(214,190,160,0.14)'; g.fillRect(R[0] - 4, R[1] - 4, R[2] + 8, R[3] + 8); g.restore();
-    const nx = R[0] + R[2] / 2, ny = R[1] - 18; g.fillStyle = 'rgba(10,8,10,0.6)'; g.beginPath(); g.ellipse(nx + 5, ny + 7, 6, 3, 0.6, 0, 7); g.fill();
-    g.fillStyle = '#2A2224'; g.beginPath(); g.arc(nx, ny, 4.5, 0, 7); g.fill(); g.fillStyle = 'rgba(240,200,140,0.7)'; g.beginPath(); g.arc(nx - 1.4, ny - 1.4, 1.4, 0, 7); g.fill(); }
-
-  // the shelf and the two mugs: his, rinsed and put back; hers, standing in a ring of dust
-  { const sh = S().poly([[1060, 494], [1330, 494], [1342, 508], [1048, 508]]);
-    GG.piece(g, sh, { fill: '#5C4A40', rough: 0.8, seed: 12, tex: 0.6, lift: [0, 8], liftAlpha: 0.6, liftBlur: 6 });
-    GG.piece(g, S().rect(1048, 508, 294, 14), { fill: '#3A2E2C', rough: 0.6, seed: 13, tex: 0.5 });
-    const mug = (x, col, colD, seed) => { const body = S().M(x - 30, 436).L(x + 30, 436).L(x + 28, 498).Q(x, 504, x - 28, 498).Z();
-      const p = GG.piece(g, body, { fill: col, rough: 0.8, seed, tex: 0.55, lift: [4, 4], liftAlpha: 0.5, liftBlur: 3 });
-      GG.crescent(g, p, -8, 0, colD, 0.9); g.fillStyle = mix(colD, '#000000', 0.3); g.fill(S().ellipse(x, 437, 29, 6, 0).path(0.5, seed + 1));
-      const hd = S().ellipse(x + 38, 466, 13, 18, 0); const hp = hd.path(0.6, seed + 2); g.save(); g.lineWidth = 7; g.strokeStyle = col; g.stroke(hp); g.restore(); };
-    const mix = OTM.mix;
-    // the ring of dust on the shelf around her mug's base (the shelf is clean round his)
-    g.save(); g.filter = 'blur(1.5px)'; g.strokeStyle = 'rgba(214,200,176,0.8)'; g.lineWidth = 7; g.beginPath(); g.ellipse(1240, 500, 42, 6.5, 0, 0, 7); g.stroke(); g.restore();
-    OTM.dust(g, [[1196, 494], [1286, 494], [1286, 508], [1196, 508]], 40, '#CDBEA6', 'mugdust');
-    mug(1120, '#B98A3C', '#6E4F25', 51);
-    mug(1240, '#7E8E7A', '#46513F', 54);
-    // a film of dust on her mug's rim
-    g.save(); g.strokeStyle = 'rgba(200,190,170,0.5)'; g.lineWidth = 2; g.beginPath(); g.ellipse(1240, 437, 28, 5.5, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke(); g.restore(); }
-
-  // ---------------------------------------------------------------- the window: night across the street (right, behind the phone)
-  { const win = S().rect(1700, 40, 260, 620); const wp = GG.piece(g, win, { fill: '#162036', rough: 1, seed: 61, tex: 0.5, lift: [6, 8], liftAlpha: 0.6 });
-    g.save(); g.clip(wp);
-    const r = OTM.rng('city'); g.fillStyle = '#0F1626'; for (let i = 0; i < 6; i++) { const x = 1690 + i * 52, h2 = 200 + r() * 260; g.fill(S().rect(x, 660 - h2, 50, h2).path(0.8, 70 + i)); }
-    for (let i = 0; i < 34; i++) { const x = 1700 + r() * 250, y = 260 + r() * 380; g.fillStyle = r() < 0.75 ? 'rgba(232,184,101,0.8)' : 'rgba(150,180,220,0.7)'; g.fillRect(x, y, 7, 9); }
-    g.restore();
-    g.fillStyle = '#2A2224'; g.fill(S().rect(1690, 30, 16, 640).path(0.8, 62)); g.fill(S().rect(1690, 330, 280, 14).path(0.8, 63)); }
-
   // ---------------------------------------------------------------- the fridge behind him, and the strip on it
-  const FR = { x0: -60, x1: 560, top: -40, bot: 760 };
-  { const fr = S().rect(FR.x0, FR.top, FR.x1 - FR.x0, FR.bot - FR.top);
-    const fp = GG.piece(g, fr, { fill: '#8E8270', rough: 1.2, seed: 81, tex: 0.6, kind: 'card', lift: [10, 6], liftAlpha: 0.7, liftBlur: 10 });
-    // the lamp's light across the door, in cut bands
-    g.save(); g.clip(fp); g.fillStyle = '#A99B85'; g.fill(S().poly([[260, -60], [700, -60], [700, 900], [-120, 900]]).path(3, 6)); g.fillStyle = '#C6B79D'; g.fill(S().poly([[420, -60], [700, -60], [700, 900], [160, 900]]).path(3, 7)); g.restore();
+  { const fr = S().rect(-60, -40, 600, 1000);
+    const fp = GG.piece(g, fr, { fill: '#8A7E6C', rough: 1.2, seed: 81, tex: 0.6, kind: 'card', lift: [10, 6], liftAlpha: 0.7, liftBlur: 10 });
+    // the same cone, the same bands: the lamp reaches the fridge's right half and fades off it to the left
+    g.save(); g.clip(fp); ['#968A76', '#A99B85', '#BCAD94', '#CDBEA3'].forEach((c, i) => { g.fillStyle = c; g.fill(coneP(CONE[i][0]).path(3, 40 + CONE[i][1])); }); g.restore();
     GG.texture(g, fp, 0.5, 82, 'card');
-    // the door's edge and the handle
-    g.fillStyle = 'rgba(40,32,30,0.45)'; g.fill(S().rect(FR.x1 - 14, FR.top, 14, FR.bot - FR.top).path(0.8, 83));
-    const hdl = S().capsule(FR.x1 - 40, 180, 9, FR.x1 - 40, 520, 9); GG.piece(g, hdl, { fill: '#6B6258', rough: 0.6, seed: 84, tex: 0.3, lift: [5, 3], liftAlpha: 0.5 });
+    g.fillStyle = 'rgba(40,32,30,0.45)'; g.fill(S().rect(526, -40, 14, 1000).path(0.8, 83));
+    const hdl = S().capsule(500, 190, 9, 500, 560, 9); GG.piece(g, hdl, { fill: '#6B6258', rough: 0.6, seed: 84, tex: 0.3, lift: [5, 3], liftAlpha: 0.5 });
     GG.crescent(g, hdl.path(0.6, 84), 4, -2, '#E8DCC4', 0.9);
-    // an old takeaway menu under a magnet, curling
-    const card = S().poly([[150, 470], [246, 462], [250, 524], [154, 532]]); const mp = GG.piece(g, card, { fill: '#B9AE96', rough: 1.0, seed: 85, tex: 0.6, lift: [4, 5], liftAlpha: 0.45 });
-    g.save(); g.clip(mp); [0, 1, 2].forEach(i => { g.fillStyle = 'rgba(80,60,50,0.35)'; g.fillRect(166, 488 + i * 12, 64 - i * 14, 4); }); g.restore();
-    g.fillStyle = '#3B5A7A'; g.beginPath(); g.arc(198, 468, 11, 0, 7); g.fill();
-  }
-  // the photo-booth strip (a real photograph: grain), crooked, under a red magnet
-  const STRIP = { x: 318, y: 120, w: 100, h: 346, rot: -0.045 };
-  {
-    const st = GG.photoStrip({ w: 184, h: 636, seed: 3, scale: 1.2 });
+    const card = S().poly([[96, 470], [192, 462], [196, 524], [100, 532]]); const mp = GG.piece(g, card, { fill: '#B3A88F', rough: 1.0, seed: 85, tex: 0.6, lift: [4, 5], liftAlpha: 0.45 });
+    g.save(); g.clip(mp); [0, 1, 2].forEach(i => { g.fillStyle = 'rgba(80,60,50,0.35)'; g.fillRect(112, 488 + i * 12, 64 - i * 14, 4); }); g.restore();
+    g.fillStyle = '#3B5A7A'; g.beginPath(); g.arc(144, 468, 11, 0, 7); g.fill(); }
+  const STRIP = { x: 266, y: 108, w: 98, h: 340, rot: -0.045 };
+  { const st = GG.photoStrip({ w: 196, h: 680, seed: 3, scale: 1.3 });
     g.save(); g.translate(STRIP.x + STRIP.w / 2, STRIP.y + STRIP.h / 2); g.rotate(STRIP.rot);
     g.fillStyle = 'rgba(30,22,20,0.45)'; g.filter = 'blur(4px)'; g.fillRect(-STRIP.w / 2 + 6, -STRIP.h / 2 + 7, STRIP.w, STRIP.h); g.filter = 'none';
     g.drawImage(st, -STRIP.w / 2, -STRIP.h / 2, STRIP.w, STRIP.h);
-    // a little of the lamp's warmth on the print
-    g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(255,226,180,0.55)'; g.fillRect(-STRIP.w / 2, -STRIP.h / 2, STRIP.w, STRIP.h); g.globalCompositeOperation = 'source-over';
+    g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(255,226,180,0.4)'; g.fillRect(-STRIP.w / 2, -STRIP.h / 2, STRIP.w, STRIP.h); g.globalCompositeOperation = 'source-over';
     g.restore();
     g.fillStyle = '#B23A30'; g.beginPath(); g.ellipse(STRIP.x + STRIP.w / 2 + 2, STRIP.y + 6, 17, 15, 0, 0, 7); g.fill();
-    g.fillStyle = 'rgba(255,200,170,0.6)'; g.beginPath(); g.ellipse(STRIP.x + STRIP.w / 2 - 3, STRIP.y + 1, 6, 4, -0.4, 0, 7); g.fill();
-  }
+    g.fillStyle = 'rgba(255,200,170,0.6)'; g.beginPath(); g.ellipse(STRIP.x + STRIP.w / 2 - 3, STRIP.y + 1, 6, 4, -0.4, 0, 7); g.fill(); }
 
-  // ---------------------------------------------------------------- him: the shirt (a day too long), the head bent to the phone
-  const HEAD = { x: 826, y: 362, s: 236 };
-  const hd = GG.head({ who: 'him', x: HEAD.x, y: HEAD.y, s: HEAD.s, yaw: 0.98, pitch: 0.24, roll: 0.02, eyes: 0.6, gaze: [0.55, 0.32], smile: 0.12, open: 0, brow: 0.3,
-    mode: 'grain', seed: 9, ss: 1.4, neckLen: 0.8, bounds: [-0.62, -0.72, 0.68, 1.0], stubble: 0.08,
-    amb: '#4A3E48', aoPoster: false, lights: [
-      { dir: [0.12, -0.45, 0.88], col: '#FFD6A2', k: 0.72, poster: [0.06, 0.4], levels: [0.78, 1], wrap: 0.15 },  // the lamp above, cut in two
-      { pos: [2.2, 1.1, 1.0], col: '#C8EEF2', k: 0.55, falloff: 2.0, wrap: 0.0 },                               // the screen's cold light (smooth)
-    ] });
+  // ---------------------------------------------------------------- him
+  const HEAD = { x: 846, y: 296, s: 292 };
+  const LAMPL = { dir: [0.1, -0.5, 0.86], col: '#F6D6B0', k: 0.66, poster: [0.04, 0.42], levels: [0.86, 1], wrap: 0.25 };
+  const SCREENL = { pos: [1.85, 2.0, 0.9], col: '#CDEFF3', k: 0.75, falloff: 2.2 };
+  const hd = GG.head({ who: 'him', x: HEAD.x, y: HEAD.y, s: HEAD.s, yaw: 0.72, pitch: 0.48, roll: 0.03, eyes: 0.84, gaze: [0.22, 0.32], smile: 0, open: 0, brow: 0.35,
+    cheek: 0, mode: 'grain', seed: 9, ss: 1.3, neckLen: 0.6, bounds: [-0.62, -0.72, 0.66, 1.0], stubble: 0.1,
+    amb: '#56494F', aoPoster: false, aoK: 0.45, neckShade: 0.38, lights: [LAMPL, SCREENL] });
   const SHIRT = '#727D8C', SHIRT_SH = '#434B5C', SHIRT_LIT = '#A2A9AE';
-  // torso, three-quarter toward the phone: shoulders sloping, the right side turned away
-  const torso = GG.blob([[586, 600], [630, 516], [706, 482], [786, 470], [866, 474], [946, 494], [1008, 530], [1040, 600], [1060, 740], [1056, 830], [600, 830], [584, 720]]);
+  const nk = hd.proj(0, 0.66, -0.06);
+  const torso = GG.blob([[520, 1100], [526, 760], [552, 600], [626, 540], [nk[0] - 96, nk[1] - 6], [nk[0] + 76, nk[1] - 10], [1066, 548], [1130, 604], [1160, 760], [1170, 1100]]);
   const tp = GG.piece(g, torso, { fill: SHIRT, rough: 1.3, seed: 91, tex: 0.6, kind: 'cloth', lift: [-10, 10], liftAlpha: 0.6, liftBlur: 10 });
-  g.save(); g.clip(tp); g.fillStyle = SHIRT_LIT; g.fill(S().poly([[690, 470], [980, 470], [1000, 540], [900, 560], [780, 548], [660, 540]]).path(3, 92)); g.restore();
-  GG.crescent(g, tp, -18, 4, SHIRT_SH, 0.9);
-  GG.crescent(g, tp, 10, 0, '#B7DCE2', 0.5);                       // the screen's light on his right side
-  // creases, the placket, a coffee mark
-  [[[690, 600], [740, 660], [760, 760]], [[900, 600], [930, 680], [928, 780]], [[640, 650], [660, 760]], [[960, 640], [990, 720], [1000, 800]]].forEach((c, i) => {
+  g.save(); g.clip(tp); g.fillStyle = SHIRT_LIT; g.fill(S().poly([[600, 500], [1120, 500], [1130, 600], [980, 630], [800, 620], [580, 600]]).path(3, 92)); g.restore();
+  GG.crescent(g, tp, -18, 4, SHIRT_SH, 0.9); GG.crescent(g, tp, 12, 0, '#B7DCE2', 0.45);
+  [[[700, 700], [740, 780], [752, 900]], [[960, 700], [990, 800], [990, 920]], [[620, 760], [640, 900]], [[1080, 740], [1100, 860]]].forEach(c => {
     g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(52,62,84,0.55)'; g.lineWidth = 5; g.stroke(GG.spline(c, false)); g.translate(-3, -2); g.strokeStyle = 'rgba(220,230,236,0.3)'; g.lineWidth = 2; g.stroke(GG.spline(c, false)); g.restore(); });
-  g.save(); g.strokeStyle = 'rgba(50,58,78,0.6)'; g.lineWidth = 3; g.stroke(GG.spline([[836, 520], [846, 640], [852, 830]], false)); g.restore();
-  [[842, 560], [847, 640], [850, 720]].forEach(([x, y]) => { g.fillStyle = '#D9E0E4'; g.beginPath(); g.arc(x + 9, y, 4, 0, 7); g.fill(); });
-  g.fillStyle = 'rgba(122,86,60,0.45)'; g.fill(S().ellipse(912, 690, 12, 8, 0.4).path(1.4, 95));
+  g.save(); g.strokeStyle = 'rgba(50,58,78,0.6)'; g.lineWidth = 3; g.stroke(GG.spline([[nk[0] - 6, nk[1] + 40], [nk[0], nk[1] + 200], [nk[0] + 6, 1100]], false)); g.restore();
+  [[0, 110], [4, 220], [8, 330]].forEach(([dx, dy]) => { g.fillStyle = '#D9E0E4'; g.beginPath(); g.arc(nk[0] + 12 + dx, nk[1] + dy, 4.5, 0, 7); g.fill(); });
+  g.fillStyle = 'rgba(122,86,60,0.45)'; g.fill(S().ellipse(nk[0] + 70, nk[1] + 300, 13, 9, 0.4).path(1.4, 95));
   GG.drawHead(g, hd, { shadow: { dx: -10, dy: 12, blur: 14, alpha: 0.55 }, tex: 0.45, texSeed: 21 });
-  // the open collar: two pointed wings either side of his neck, one crushed flat
-  { const nk = hd.proj(0, 0.86, -0.05);
-    const L = S().poly([[nk[0] - 66, nk[1] - 40], [nk[0] - 22, nk[1] - 12], [nk[0] + 4, nk[1] + 58], [nk[0] - 62, nk[1] + 26]]);
-    const R = S().poly([[nk[0] + 46, nk[1] - 36], [nk[0] + 88, nk[1] - 8], [nk[0] + 70, nk[1] + 34], [nk[0] + 12, nk[1] + 60], [nk[0] + 26, nk[1] - 4]]);
+  // the open collar
+  { const L = S().poly([[nk[0] - 80, nk[1] - 30], [nk[0] - 26, nk[1] - 4], [nk[0] + 4, nk[1] + 48], [nk[0] - 74, nk[1] + 30]]);
+    const R = S().poly([[nk[0] + 56, nk[1] - 26], [nk[0] + 104, nk[1] + 2], [nk[0] + 84, nk[1] + 38], [nk[0] + 14, nk[1] + 50], [nk[0] + 30, nk[1] + 4]]);
     [L, R].forEach((c, i) => { const cp = GG.piece(g, c, { fill: i ? '#9EA6AC' : '#8E97A0', rough: 1.0, seed: 96 + i, tex: 0.5, kind: 'cloth', lift: [-2, 5], liftAlpha: 0.55, liftBlur: 4 }); GG.crescent(g, cp, -5, 4, SHIRT_SH, 0.6); }); }
+  // sleeves down both sides, rolled to the elbow
+  const sleeve = (pts, seed) => { const p = GG.piece(g, GG.blob(pts), { fill: SHIRT, rough: 1.2, seed, tex: 0.6, kind: 'cloth', lift: [-6, 8], liftAlpha: 0.55, liftBlur: 6 }); GG.crescent(g, p, -10, 0, SHIRT_SH, 0.7); GG.crescent(g, p, 8, -4, SHIRT_LIT, 0.6); return p; };
+  sleeve([[572, 560], [650, 600], [646, 740], [624, 850], [556, 858], [536, 740], [546, 610]], 97);
+  sleeve([[1066, 560], [1136, 590], [1156, 720], [1154, 830], [1090, 840], [1078, 720], [1052, 620]], 98);
+  const cuff = (pts, seed) => { const p = GG.piece(g, GG.blob(pts), { fill: '#8E97A0', rough: 1.0, seed, tex: 0.5, kind: 'cloth', lift: [-3, 5], liftAlpha: 0.5 }); GG.crescent(g, p, 0, -5, '#B8BCBC', 0.8);
+    g.save(); g.strokeStyle = 'rgba(52,62,84,0.5)'; g.lineWidth = 2.5; g.stroke(GG.spline([[pts[0][0] + 4, (pts[0][1] + pts[3][1]) / 2], [(pts[0][0] + pts[2][0]) / 2, (pts[1][1] + pts[2][1]) / 2 + 6], [pts[2][0] - 4, (pts[2][1] + pts[3][1]) / 2]], false)); g.restore(); };
+  cuff([[540, 836], [596, 826], [628, 846], [618, 882], [556, 888], [534, 866]], 99);
+  cuff([[1080, 820], [1142, 812], [1162, 836], [1150, 870], [1092, 874], [1074, 850]], 100);
 
-  // ---------------------------------------------------------------- the counter: his pan, the salt, crumbs
-  const CT = { back: 724, front: 912 };
-  { const top = S().poly([[-40, CT.back], [W + 40, CT.back - 8], [W + 40, CT.front], [-40, CT.front + 10]]);
-    const tp2 = GG.piece(g, top, { fill: '#4A3B36', rough: 1.2, seed: 101, tex: 0.65, kind: 'card', lift: [0, -10], liftAlpha: 0.75, liftBlur: 12 });
-    g.save(); g.clip(tp2); OTM.lightPool(g, 980, 800, [{ r: 760, color: '#56453D' }, { r: 520, color: '#6E5747' }, { r: 320, color: '#876A53' }], { sy: 0.24, rough: 3, seed: 9 }); g.restore();
-    GG.texture(g, tp2, 0.4, 102, 'card');
-    g.fillStyle = 'rgba(214,180,140,0.45)'; g.fill(S().poly([[-40, CT.back], [W + 40, CT.back - 8], [W + 40, CT.back - 3], [-40, CT.back + 5]]).path(0.7, 103));
-    const front = S().poly([[-40, CT.front + 10], [W + 40, CT.front], [W + 40, H + 40], [-40, H + 40]]);
-    const fp2 = GG.piece(g, front, { fill: '#221A1F', rough: 1.0, seed: 104, tex: 0.6, kind: 'card' });
-    [420, 900, 1380].forEach((x, i) => { g.fillStyle = 'rgba(8,6,8,0.6)'; g.fill(S().rect(x, CT.front + 14, 5, 200).path(0.6, 105 + i)); });
-    [[180, 990], [660, 990], [1140, 990], [1620, 990]].forEach(([x, y], i) => { const hh = S().capsule(x, y, 5, x + 110, y, 5); GG.piece(g, hh, { fill: '#5B4F48', rough: 0.5, seed: 110 + i, tex: 0.2 }); GG.crescent(g, hh.path(0.5, 110 + i), 0, -3, '#A88E70', 0.8); });
-    OTM.dust(g, [[700, 760], [1300, 750], [1300, 880], [700, 890]], 120, '#E0C8A0', 'crumbs');
-    // a tea towel over the handle, checked, washed thin
-    const tw = GG.blob([[630, 976], [790, 972], [800, 1000], [806, 1120], [620, 1120], [626, 1000]]);
-    const twp = GG.piece(g, tw, { fill: '#B7AE9E', rough: 1.6, seed: 115, tex: 0.7, kind: 'cloth', lift: [6, 10], liftAlpha: 0.6, liftBlur: 8 });
-    g.save(); g.clip(twp); g.fillStyle = 'rgba(150,60,50,0.45)'; for (let k = 0; k < 6; k++) { g.fillRect(636 + k * 30, 980, 12, 160); g.fillRect(620, 1000 + k * 28, 200, 10); } g.restore();
-    const fold = GG.blob([[628, 970], [792, 966], [800, 1004], [624, 1008]]); const fdp = GG.piece(g, fold, { fill: '#C9C0AE', rough: 1.2, seed: 116, tex: 0.6, kind: 'cloth', lift: [0, 6], liftAlpha: 0.6 });
-    g.save(); g.clip(fdp); g.fillStyle = 'rgba(150,60,50,0.45)'; for (let k = 0; k < 6; k++) g.fillRect(636 + k * 30, 966, 12, 44); g.restore();
-    GG.crescent(g, fdp, 0, -4, '#E6DCC6', 0.5);
-    g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(70,56,70,0.62)'; g.fill(twp); g.fill(fdp); g.restore();
-  }
-  // the pan on the counter in front of him: tomato pasta, a forkful gone
-  { const cx = 960, cy = 806;
-    const hdl = S().capsule(cx - 130, cy - 14, 12, cx - 330, cy - 40, 10); GG.piece(g, hdl, { fill: '#1E1A1C', rough: 0.8, seed: 124, tex: 0.4, lift: [4, 8], liftAlpha: 0.6 }); GG.crescent(g, hdl.path(0.8, 124), 0, -4, '#7A6A60', 0.8);
-    const rim = S().ellipse(cx, cy, 152, 52, -0.02); const rp = GG.piece(g, rim, { fill: '#2A2628', rough: 0.9, seed: 121, tex: 0.5, lift: [8, 12], liftAlpha: 0.7, liftBlur: 10 });
-    GG.crescent(g, rp, 0, -5, '#9A8878', 0.9);
-    const wall = S().ellipse(cx, cy + 2, 138, 44, -0.02); GG.piece(g, wall, { fill: '#171416', rough: 0.9, seed: 122, tex: 0.4 });
-    const floor = S().ellipse(cx + 2, cy + 12, 126, 34, -0.02); GG.piece(g, floor, { fill: '#2E2A2C', rough: 0.9, seed: 125, tex: 0.5 });
-    const food = GG.blob([[cx - 110, cy + 14], [cx - 70, cy - 12], [cx + 10, cy - 20], [cx + 90, cy - 4], [cx + 112, cy + 16], [cx + 50, cy + 36], [cx - 60, cy + 36]]);
+  // ---------------------------------------------------------------- the pan, by its handle, at his chest (tomato pasta, half eaten)
+  const PAN = { x: 862, y: 838, rx: 178, ry: 60 };
+  // his right hand round the handle (near side): the forearm rises out of the cuff, the fist closes on the handle
+  const LIGHTS_H = [Object.assign({}, LAMPL, { levels: [1] , poster: [0.12] }), Object.assign({}, SCREENL, { k: 0.5 })];
+  const panHand = GG.hand({ x: 640, y: 846, s: 210, ss: 1.4, seed: 31, mode: 'grain', skin: '#B47C58', nail: '#D2A894',
+    basis: { x: [0.95, 0.1, 0.25], z: [0.0, -0.55, 0.85] },
+    pose: { fingers: [[-0.05, 1.45, 1.35, 0.6], [0.0, 1.5, 1.35, 0.6], [0.05, 1.5, 1.3, 0.55], [0.1, 1.45, 1.2, 0.5]], thumb: [0.9, 0.2, -0.6, -0.4], fdir: [-0.55, 0.55, -0.6], fore: 0.5, foreR: 0.15 },
+    bounds: [-0.8, -0.6, 0.8, 0.6], amb: '#56494F', lights: LIGHTS_H });
+  { const hdl = S().capsule(PAN.x - PAN.rx + 20, PAN.y - 4, 12, 610, PAN.y + 6, 11); GG.piece(g, hdl, { fill: '#1E1A1C', rough: 0.8, seed: 124, tex: 0.4, lift: [4, 8], liftAlpha: 0.6 }); GG.crescent(g, hdl.path(0.8, 124), 0, -4, '#8A7A70', 0.8); }
+  GG.drawHead(g, panHand, { shadow: { dx: -6, dy: 10, blur: 8, alpha: 0.5 }, tex: 0.45, texSeed: 32 });
+  { const { x: cx, y: cy, rx, ry } = PAN;
+    const rim = S().ellipse(cx, cy, rx, ry, -0.03); const rp = GG.piece(g, rim, { fill: '#2A2628', rough: 0.9, seed: 121, tex: 0.5, lift: [8, 14], liftAlpha: 0.7, liftBlur: 10 });
+    GG.crescent(g, rp, 0, -5, '#A89686', 0.9);
+    GG.piece(g, S().ellipse(cx, cy + 2, rx - 14, ry - 8, -0.03), { fill: '#171416', rough: 0.9, seed: 122, tex: 0.4 });
+    GG.piece(g, S().ellipse(cx + 2, cy + 10, rx - 26, ry - 18, -0.03), { fill: '#2E2A2C', rough: 0.9, seed: 125, tex: 0.5 });
+    const food = GG.blob([[cx - 128, cy + 14], [cx - 80, cy - 14], [cx + 10, cy - 22], [cx + 100, cy - 6], [cx + 132, cy + 14], [cx + 60, cy + 36], [cx - 70, cy + 36]]);
     const fp3 = GG.piece(g, food, { fill: '#A2452C', rough: 1.6, seed: 123, tex: 0.6, lift: [2, 4], liftAlpha: 0.5 });
-    g.save(); g.clip(fp3); const r = OTM.rng('pasta'); for (let i = 0; i < 34; i++) { const x = cx - 110 + r() * 220, y = cy - 22 + r() * 58; g.strokeStyle = r() < 0.55 ? 'rgba(238,196,124,0.8)' : 'rgba(110,36,22,0.6)'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + 18, y - 8 + r() * 16, x + 30, y + r() * 10 - 5); g.stroke(); } g.restore();
+    g.save(); g.clip(fp3); const r = OTM.rng('pasta'); for (let i = 0; i < 40; i++) { const x = cx - 130 + r() * 260, y = cy - 24 + r() * 60; g.strokeStyle = r() < 0.55 ? 'rgba(238,196,124,0.8)' : 'rgba(110,36,22,0.6)'; g.lineWidth = 3.5; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + 20, y - 8 + r() * 16, x + 34, y + r() * 10 - 5); g.stroke(); } g.restore();
     GG.crescent(g, fp3, 0, -6, '#E09060', 0.6); }
+  // the thumb over the handle, on top
+  // the fork in his left hand (far side), stopped over the pan with a twist of pasta still on it
+  const FORK = { top: [1112, 690], tip: [1000, 846] };
+  const drawFork = (lowerOnly) => { const a = lowerOnly ? [FORK.top[0] + (FORK.tip[0] - FORK.top[0]) * 0.55, FORK.top[1] + (FORK.tip[1] - FORK.top[1]) * 0.55] : FORK.top, b = FORK.tip, ux = b[0] - a[0], uy = b[1] - a[1], l = Math.hypot(ux, uy), nx = -uy / l, ny = ux / l;
+    g.save(); g.lineCap = 'round'; g.strokeStyle = '#9EA2A6'; g.lineWidth = 8; g.beginPath(); g.moveTo(a[0] + ux * -0.2, a[1] + uy * -0.2); g.lineTo(b[0] - ux / l * 26, b[1] - uy / l * 26); g.stroke();
+    g.fillStyle = '#9EA2A6'; g.beginPath(); const nb = [b[0] - ux / l * 30, b[1] - uy / l * 30]; g.moveTo(nb[0] + nx * 5, nb[1] + ny * 5); g.lineTo(nb[0] + nx * 12 + ux / l * 10, nb[1] + ny * 12 + uy / l * 10); g.lineTo(nb[0] - nx * 12 + ux / l * 10, nb[1] - ny * 12 + uy / l * 10); g.lineTo(nb[0] - nx * 5, nb[1] - ny * 5); g.closePath(); g.fill();
+    [-9, -3, 3, 9].forEach(o => { g.lineWidth = 3; g.beginPath(); g.moveTo(nb[0] + nx * o + ux / l * 10, nb[1] + ny * o + uy / l * 10); g.lineTo(b[0] + nx * o * 0.9, b[1] + ny * o * 0.9); g.stroke(); });
+    g.strokeStyle = 'rgba(255,240,220,0.7)'; g.lineWidth = 2; g.beginPath(); g.moveTo(a[0] - 2 + ux * -0.2, a[1] - 2 + uy * -0.2); g.lineTo(nb[0] - 2, nb[1] - 2); g.stroke(); g.restore();
+    const tw = GG.blob([[b[0] - 22, b[1] - 28], [b[0] + 16, b[1] - 34], [b[0] + 22, b[1] - 6], [b[0] + 4, b[1] + 10], [b[0] - 20, b[1]]]); const twp = GG.piece(g, tw, { fill: '#B0502F', rough: 1.4, seed: 7, tex: 0.6, lift: [2, 4], liftAlpha: 0.5 });
+    g.save(); g.clip(twp); g.strokeStyle = 'rgba(238,196,124,0.85)'; g.lineWidth = 3; [[-18, -24, 16, -12], [-16, -10, 18, 2], [-10, 0, 14, 6]].forEach(([x0, y0, x1, y1]) => { g.beginPath(); g.moveTo(b[0] + x0, b[1] + y0); g.quadraticCurveTo(b[0], b[1] + y0 - 8, b[0] + x1, b[1] + y1); g.stroke(); }); g.restore();
+    g.save(); g.strokeStyle = '#C9763E'; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath(); g.moveTo(b[0] - 4, b[1] + 6); g.quadraticCurveTo(b[0] - 10, b[1] + 26, b[0] - 2, b[1] + 40); g.stroke(); g.restore(); };
+  drawFork(false);
+  const forkHand = GG.hand({ x: 1118, y: 782, s: 210, ss: 1.4, seed: 33, mode: 'grain', skin: '#B47C58', nail: '#D2A894',
+    basis: { x: [-0.35, -0.75, 0.55], z: [0.75, -0.15, 0.6] },
+    pose: { fingers: [[0.0, 1.5, 1.4, 0.6], [0.02, 1.5, 1.4, 0.6], [0.06, 1.45, 1.3, 0.55], [0.1, 1.4, 1.2, 0.5]], thumb: [1.1, 0.95, -0.9, -0.5], fdir: [0.15, 0.9, -0.4], fore: 0.4, foreR: 0.15 },
+    bounds: [-0.6, -0.9, 0.8, 0.6], amb: '#56494F', lights: LIGHTS_H });
+  GG.drawHead(g, forkHand, { shadow: { dx: -6, dy: 10, blur: 8, alpha: 0.5 }, tex: 0.45, texSeed: 34 });
+  drawFork(true);
 
-  // his hand with the fork, stopped above the pan: the forkful halfway, forgotten
-  // the upper arm: shirt sleeve down his right side, rolled to the elbow
-  { const sl = GG.blob([[960, 530], [1020, 540], [1046, 610], [1040, 690], [990, 704], [966, 640]]);
-    const sp2 = GG.piece(g, sl, { fill: SHIRT, rough: 1.2, seed: 97, tex: 0.6, kind: 'cloth', lift: [-6, 8], liftAlpha: 0.55, liftBlur: 6 });
-    GG.crescent(g, sp2, 8, 0, '#B7DCE2', 0.55); GG.crescent(g, sp2, -10, 0, SHIRT_SH, 0.7);
-    g.save(); g.strokeStyle = 'rgba(52,62,84,0.5)'; g.lineWidth = 3; g.stroke(GG.spline([[990, 580], [1012, 640], [1006, 690]], false)); g.restore(); }
-  const WRF = [1060, 640];
-  const hand = GG.hand({ x: WRF[0], y: WRF[1], s: 176, ss: 1.6, seed: 31, mode: 'grain', skin: '#A87556', nail: '#D2A894',
-    basis: { x: [0.3, 0.2, 0.93], z: [-0.25, -0.92, 0.25] },
-    pose: { fingers: [[0.0, 1.55, 1.45, 0.6], [0.02, 1.55, 1.4, 0.6], [0.06, 1.5, 1.3, 0.55], [0.1, 1.45, 1.2, 0.5]], thumb: [1.1, 0.95, -0.9, -0.5],
-      fdir: [-0.62, 0.62, -0.45], fore: 0.62, foreR: 0.15 },
-    bounds: [-1.0, -0.7, 0.9, 0.9], amb: '#4A3E48',
-    lights: [{ dir: [0.1, -0.62, 0.78], col: '#FFD6A2', k: 0.75, poster: [0.12], levels: [1], wrap: 0.2 }, { dir: [0.9, 0.0, 0.4], col: '#C8EEF2', k: 0.4 }] });
-  GG.drawHead(g, hand, { shadow: { dx: -8, dy: 12, blur: 10, alpha: 0.5 }, tex: 0.45, texSeed: 23 });
-  // the rolled cuff over the forearm's end
-  { const cf = GG.blob([[982, 680], [1030, 670], [1046, 690], [1036, 710], [990, 716], [976, 700]]); const cfp = GG.piece(g, cf, { fill: '#8E97A0', rough: 1.0, seed: 98, tex: 0.5, kind: 'cloth', lift: [-3, 5], liftAlpha: 0.5 });
-    GG.crescent(g, cfp, 0, -5, '#B8BCBC', 0.8); g.save(); g.strokeStyle = 'rgba(52,62,84,0.5)'; g.lineWidth = 2.5; g.stroke(GG.spline([[972, 696], [1010, 690], [1046, 700]], false)); g.restore(); }
-  // the fork, tines down toward the pan, a twist of pasta still on it
-  { const a = [1104, 620], b = [1066, 772];
-    g.save(); g.lineCap = 'round'; g.strokeStyle = '#9EA2A6'; g.lineWidth = 7; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1] - 20); g.stroke();
-    [-6, -2, 2, 6].forEach(o => { g.lineWidth = 2.4; g.beginPath(); g.moveTo(b[0] + o * 0.5, b[1] - 22); g.lineTo(b[0] + o - 1, b[1] + 6); g.stroke(); });
-    g.strokeStyle = 'rgba(255,240,220,0.7)'; g.lineWidth = 2; g.beginPath(); g.moveTo(a[0] - 2, a[1] - 2); g.lineTo(b[0] - 2, b[1] - 22); g.stroke(); g.restore();
-    g.fillStyle = '#B0502F'; g.fill(GG.blob([[1052, 756], [1076, 750], [1084, 772], [1062, 780]]).path(1, 7)); }
-
+  // ---------------------------------------------------------------- the counter in front of him: the salt, the phone propped on it
+  const CT = { back: 952 };
+  { const top = S().poly([[-40, CT.back], [W + 40, CT.back - 10], [W + 40, H + 40], [-40, H + 40]]);
+    const tp2 = GG.piece(g, top, { fill: '#4A3B36', rough: 1.2, seed: 101, tex: 0.65, kind: 'card', lift: [0, -12], liftAlpha: 0.8, liftBlur: 14 });
+    g.save(); g.clip(tp2); OTM.lightPool(g, 980, 1010, [{ r: 900, color: '#56453D' }, { r: 620, color: '#6E5747' }, { r: 380, color: '#876A53' }], { sy: 0.2, rough: 3, seed: 9 }); g.restore();
+    GG.texture(g, tp2, 0.4, 102, 'card');
+    g.fillStyle = 'rgba(214,180,140,0.45)'; g.fill(S().poly([[-40, CT.back], [W + 40, CT.back - 10], [W + 40, CT.back - 5], [-40, CT.back + 5]]).path(0.7, 103));
+    OTM.dust(g, [[600, 970], [1500, 960], [1500, 1070], [600, 1080]], 140, '#E0C8A0', 'crumbs'); }
   // the salt cellar the phone leans on (glass, real, smeared)
-  { const salt = S().M(1500, 714).L(1580, 714).L(1584, 870).Q(1542, 880, 1496, 870).Z(); const sp = GG.piece(g, salt, { fill: '#5E5A60', rough: 0.8, seed: 131, tex: 0.4, lift: [6, 8], liftAlpha: 0.6 });
-    g.save(); g.clip(sp); g.fillStyle = '#D8D2C6'; g.fillRect(1488, 780, 110, 120); g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(1558, 714, 10, 170); g.restore();
-    OTM.dust(g, [[1498, 784], [1584, 784], [1584, 870], [1498, 870]], 60, '#FFFFFF', 'salt');
-    const cap = S().M(1504, 690).L(1576, 690).L(1582, 718).L(1498, 718).Z(); const cpp = GG.piece(g, cap, { fill: '#8E8A86', rough: 0.6, seed: 132, tex: 0.3 }); GG.crescent(g, cpp, 0, -5, '#E4D8C4', 0.8); }
+  { const salt = S().M(1404, 830).L(1468, 830).L(1472, 978).Q(1436, 988, 1400, 978).Z(); const sp = GG.piece(g, salt, { fill: '#5E5A60', rough: 0.8, seed: 131, tex: 0.4, lift: [6, 8], liftAlpha: 0.6 });
+    g.save(); g.clip(sp); g.fillStyle = '#D8D2C6'; g.fillRect(1392, 890, 90, 100); g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(1452, 830, 8, 150); g.restore();
+    OTM.dust(g, [[1402, 894], [1470, 894], [1470, 978], [1402, 978]], 50, '#FFFFFF', 'salt');
+    const cap = S().M(1408, 808).L(1464, 808).L(1470, 834).L(1402, 834).Z(); const cpp = GG.piece(g, cap, { fill: '#8E8A86', rough: 0.6, seed: 132, tex: 0.3 }); GG.crescent(g, cpp, 0, -5, '#E4D8C4', 0.8); }
 
-  // ---------------------------------------------------------------- the phone (gloss), propped on the salt, turned toward him
-  const Q = [[1306, 452], [1498, 430], [1512, 858], [1300, 840]];   // screen: tl tr br bl (turned toward him: the near edge is taller)
+  // ---------------------------------------------------------------- the phone (gloss): true size, leaning on the salt, turned up toward him
+  const Q = [[1276, 784], [1394, 776], [1404, 1000], [1270, 996]];   // screen: tl tr br bl (about 0.72 of his head's height)
   const scr = (() => {
-    const w = 420, h = 860, c = OTM.makeCanvas(w, h), p = c.getContext('2d');
+    const w = 360, h = 760, c = OTM.makeCanvas(w, h), p = c.getContext('2d');
     p.fillStyle = '#000000'; p.fillRect(0, 0, w, h);
-    // status bar
-    p.fillStyle = '#FFFFFF'; p.font = '600 22px "Libre Franklin"'; p.fillText('23:14', 34, 44);
-    p.fillRect(w - 66, 28, 34, 16); p.fillRect(w - 31, 33, 3, 6);
-    [0, 1, 2, 3].forEach(i => p.fillRect(w - 118 + i * 8, 44 - 5 - i * 4, 5, 5 + i * 4));
-    // header: the contact saved as a single heart
-    p.fillStyle = 'rgba(255,255,255,0.08)'; p.fillRect(0, 64, w, 86);
-    p.strokeStyle = '#FFFFFF'; p.lineWidth = 3.5; p.lineCap = 'round'; p.beginPath(); p.moveTo(40, 92); p.lineTo(26, 107); p.lineTo(40, 122); p.stroke();
-    const av = p.createLinearGradient(66, 84, 112, 130); av.addColorStop(0, P.gBubbleA); av.addColorStop(1, P.gBubbleB); p.fillStyle = av; p.beginPath(); p.arc(90, 107, 24, 0, 7); p.fill();
-    p.fillStyle = '#FFFFFF'; p.font = '400 34px "Libre Franklin"'; p.textAlign = 'center'; p.fillText('♥', 90, 119);
-    p.textAlign = 'left'; p.font = '600 30px "Libre Franklin"'; p.fillText('♥', 128, 118);
-    // her last message, in her colour (a clean gradient)
-    const bub = (x, y, bw, bh) => { const gr = p.createLinearGradient(x, y, x + bw, y + bh); gr.addColorStop(0, P.gBubbleA); gr.addColorStop(1, P.gBubbleB); p.fillStyle = gr; p.fill(GG.rrect(x, y, bw, bh, 24)); };
-    bub(24, 196, 174, 58); p.fillStyle = '#FFFFFF'; p.font = '500 25px "Libre Franklin"'; p.fillText('I love you.', 44, 233);
-    // the picture
-    const wf = GG.waterfall({ w: 360, h: 470 });
-    p.save(); const ix = 24, iy = 272, iw = 330, ih = 431; p.clip(GG.rrect(ix, iy, iw, ih, 26)); p.drawImage(wf, ix, iy, iw, ih); p.restore();
-    p.fillStyle = 'rgba(255,255,255,0.45)'; p.font = '400 18px "Libre Franklin"'; p.fillText('23:14', 300, 728);
-    // the input bar
-    p.strokeStyle = 'rgba(255,255,255,0.25)'; p.lineWidth = 2; p.stroke(GG.rrect(24, 776, 300, 54, 27));
-    p.fillStyle = P.gBubbleB; p.beginPath(); p.arc(366, 803, 27, 0, 7); p.fill(); p.fillStyle = '#FFFFFF'; p.beginPath(); p.moveTo(356, 792); p.lineTo(380, 803); p.lineTo(356, 814); p.closePath(); p.fill();
+    // the picture, opened full screen: just arrived from the contact saved as a heart
+    const wf = GG.waterfall({ w: 360, h: 560, U: 360 * 0.3, ss: 1.6 });
+    p.drawImage(wf, 0, 110, w, 560);
+    p.fillStyle = '#FFFFFF'; p.font = '600 26px "Libre Franklin"'; p.fillText('23:14', 30, 46);
+    p.fillRect(w - 64, 30, 34, 16); p.fillRect(w - 29, 35, 3, 6);
+    p.strokeStyle = '#FFFFFF'; p.lineWidth = 4; p.lineCap = 'round'; p.beginPath(); p.moveTo(40, 72); p.lineTo(26, 86); p.lineTo(40, 100); p.stroke();
+    const av = p.createLinearGradient(60, 66, 100, 106); av.addColorStop(0, P.gBubbleA); av.addColorStop(1, P.gBubbleB); p.fillStyle = av; p.beginPath(); p.arc(84, 86, 20, 0, 7); p.fill();
+    p.fillStyle = '#FFFFFF'; p.font = '400 28px "Libre Franklin"'; p.textAlign = 'center'; p.fillText('♥', 84, 96);
     return c;
   })();
   const phoneL = GG.layer();
-  {
-    const p = phoneL;
-    // body and bezel: one clean slab (no texture), its right edge catching the lamp
-    const bodyQ = [[Q[0][0] - 14, Q[0][1] - 16], [Q[1][0] + 16, Q[1][1] - 16], [Q[2][0] + 16, Q[2][1] + 16], [Q[3][0] - 14, Q[3][1] + 16]];
+  { const p = phoneL;
     const quadPath = (q, r) => { const pp = new Path2D(); const pt = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
       for (let i = 0; i < 4; i++) { const a = q[(i + 3) % 4], b = q[i], c = q[(i + 1) % 4]; const la = Math.hypot(b[0] - a[0], b[1] - a[1]), lc = Math.hypot(c[0] - b[0], c[1] - b[1]); const p0 = pt(b, a, r / la), p1 = pt(b, c, r / lc); i ? pp.lineTo(p0[0], p0[1]) : pp.moveTo(p0[0], p0[1]); pp.quadraticCurveTo(b[0], b[1], p1[0], p1[1]); } pp.closePath(); return pp; };
-    const side = quadPath([[bodyQ[1][0] - 6, bodyQ[1][1] + 6], [bodyQ[1][0] + 10, bodyQ[1][1] + 14], [bodyQ[2][0] + 10, bodyQ[2][1] - 8], [bodyQ[2][0] - 6, bodyQ[2][1]]], 8);
-    p.fillStyle = (() => { const gr = p.createLinearGradient(0, bodyQ[1][1], 0, bodyQ[2][1]); gr.addColorStop(0, '#8C8F94'); gr.addColorStop(1, '#3A3C40'); return gr; })(); p.fill(side);
-    p.fillStyle = '#060607'; p.fill(quadPath(bodyQ, 34));
-    const sp = quadPath(Q, 24);
-    p.save(); p.clip(sp); GG.warp(p, scr, Q, 16, 26);
-    // the glass: one soft, perfect sheen of the lamp
-    const sg = p.createLinearGradient(Q[0][0], Q[0][1], Q[0][0] + 160, Q[0][1] + 200); sg.addColorStop(0, 'rgba(255,240,220,0.0)'); sg.addColorStop(0.45, 'rgba(255,240,220,0.10)'); sg.addColorStop(0.55, 'rgba(255,240,220,0.0)');
-    p.fillStyle = sg; p.fillRect(1260, 400, 320, 500); p.restore();
-    p.strokeStyle = 'rgba(200,210,220,0.35)'; p.lineWidth = 1.5; p.stroke(quadPath(bodyQ, 34));
+    const bodyQ = [[Q[0][0] - 7, Q[0][1] - 9], [Q[1][0] + 8, Q[1][1] - 9], [Q[2][0] + 8, Q[2][1] + 9], [Q[3][0] - 7, Q[3][1] + 9]];
+    const side = quadPath([[bodyQ[1][0] - 4, bodyQ[1][1] + 4], [bodyQ[1][0] + 7, bodyQ[1][1] + 9], [bodyQ[2][0] + 7, bodyQ[2][1] - 6], [bodyQ[2][0] - 4, bodyQ[2][1]]], 5);
+    p.fillStyle = (() => { const gr = p.createLinearGradient(0, bodyQ[1][1], 0, bodyQ[2][1]); gr.addColorStop(0, '#9A9EA4'); gr.addColorStop(1, '#3A3C40'); return gr; })(); p.fill(side);
+    p.fillStyle = '#050506'; p.fill(quadPath(bodyQ, 18));
+    const sp = quadPath(Q, 13); p.save(); p.clip(sp); GG.warp(p, scr, Q, 12, 22);
+    const sg = p.createLinearGradient(Q[0][0], Q[0][1], Q[0][0] + 90, Q[0][1] + 110); sg.addColorStop(0, 'rgba(255,240,220,0)'); sg.addColorStop(0.5, 'rgba(255,240,220,0.1)'); sg.addColorStop(0.6, 'rgba(255,240,220,0)');
+    p.fillStyle = sg; p.fillRect(1250, 760, 180, 260); p.restore();
+    p.strokeStyle = 'rgba(200,210,220,0.35)'; p.lineWidth = 1.2; p.stroke(quadPath(bodyQ, 18));
   }
   g.drawImage(phoneL.canvas, 0, 0);
-  // its light: on the counter in front of it and on the salt (smooth)
-  GG.glow(g, 1400, 870, 240, '#CFF4F6', 0.35, 'screen', 0.3);
+  GG.glow(g, 1330, 1000, 200, '#CFF4F6', 0.35, 'screen', 0.35);
+  GG.glow(g, 1200, 760, 420, '#CFF4F6', 0.12, 'screen', 1);
   E.save(); E.globalAlpha = 0.55; E.drawImage(phoneL.canvas, 0, 0); E.restore();
 
   f.finish({ grain: 0.1, fibre: 0.09, vignette: 0.5, halation: 0.45, seed: 5, afterPost: (c) => { c.drawImage(phoneL.canvas, 0, 0); } });
