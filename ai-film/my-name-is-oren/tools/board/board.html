@@ -159,6 +159,24 @@ const stain = new THREE.Mesh(new THREE.CircleGeometry(0.035, 20), mat(0x7a5126, 
 stain.position.set(-0.06, -0.29, 0.056); bag.add(stain);
 oren.userData.hands.left.add(bag); bag.position.set(0, -0.06, 0);
 
+// ---- passers-by who walk along the pavements (moved by window.setTime)
+const walkers = [];
+function passer(x0, z, speed, top, legs) {
+  const g = new THREE.Group();
+  box(0.4, 0.6, 0.26, mat(top), 0, 1.3, 0, g); box(0.32, 0.9, 0.22, mat(legs), 0, 0.47, 0, g);
+  const h = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), mat(0x9a7f6a)); h.position.set(0, 1.74, 0); h.castShadow = true; g.add(h);
+  g.traverse(m => { if (m.isMesh) m.castShadow = true; });
+  g.position.set(x0, 0, z); g.rotation.y = speed > 0 ? Math.PI / 2 : -Math.PI / 2; scene.add(g);
+  walkers.push({ g, x0, speed });
+}
+passer(-9, 0.55, 1.2, 0x5a3a52, 0x2a2a2e);     // near pavement, window side, walking toward the corner
+passer(6, 3.35, -1.3, 0x2e3a4a, 0x3a3a3e);     // near pavement, kerb side, walking the other way
+passer(-14, 0.7, 1.1, 0x7a5a2a, 0x2a2a2e);
+passer(-20, 13.6, 1.3, 0x7a2f2f, 0x2b2b30);    // far pavement
+passer(14, 13.9, -1.2, 0x445566, 0x2b2b30);
+window.setTime = (t = 0) => { for (const w of walkers) w.g.position.x = w.x0 + w.speed * t; };
+window.setTime(4);
+
 // ---- the pavement sweeper that bumps her boot (movable)
 const sweeper = new THREE.Group();
 box(0.62, 0.42, 0.46, mat(0xd9c23a, { roughness: 0.6 }), 0, 0.3, 0, sweeper);

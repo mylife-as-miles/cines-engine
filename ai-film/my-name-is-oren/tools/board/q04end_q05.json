@@ -26,7 +26,8 @@
      "text": "OREN: This belongs to the person I support."
     }
    ],
-   "note": "On the pavement: the laundrette behind her on the right, the kerb and road behind him; the street's life far off."
+   "note": "On the pavement: the laundrette behind her on the right, the kerb and road behind him; the street's life far off. Passers-by walk along the pavement behind her and on the far pavement.",
+   "boardTime": 4.6
   },
   {
    "n": 2,
@@ -60,7 +61,8 @@
      "text": "SWEEPER: Apologies."
     }
    ],
-   "note": "The sweeper bumps the toe of her RIGHT boot: the loose sole's gap clearly visible."
+   "note": "The sweeper bumps the toe of her RIGHT boot: the loose sole's gap clearly visible.",
+   "boardTime": 6
   },
   {
    "n": 3,
@@ -85,7 +87,8 @@
    "handheld": 0.005,
    "camText": "Close-up of Helena \u00b7 85 mm \u00b7 handheld",
    "line": "(no dialogue)",
-   "note": "A weary glance down at the machine."
+   "note": "A weary glance down at the machine. A passer-by crosses soft behind her.",
+   "boardTime": 3.0
   },
   {
    "n": 4,
@@ -116,7 +119,8 @@
    },
    "camText": "Ground level along the pavement \u00b7 24 mm \u00b7 locked-off",
    "line": "(no dialogue)",
-   "note": "It reverses and tries the same gap; his LEFT slipper steps into its way and holds until it goes round them."
+   "note": "It reverses and tries the same gap; his LEFT slipper steps into its way and holds until it goes round them. A passer-by's feet stride past in the background.",
+   "boardTime": 9
   },
   {
    "n": 5,
@@ -141,7 +145,8 @@
    "handheld": 0.005,
    "camText": "Close-up of Helena \u00b7 85 mm \u00b7 handheld",
    "line": "(no dialogue)",
-   "note": "Her brows lift slightly at his slipper."
+   "note": "Her brows lift slightly at his slipper. A passer-by crosses soft behind her.",
+   "boardTime": 5.5
   },
   {
    "n": 6,
@@ -168,7 +173,8 @@
      "text": "OREN: There is a community meal service at the clinic on Mercer Street. Lunch ends at two. It is one thirty-one."
     }
    ],
-   "note": "Exact, unhurried, the time said precisely."
+   "note": "Exact, unhurried, the time said precisely. People pass soft behind him on the far pavement.",
+   "boardTime": 7.5
   }
  ]
 }
