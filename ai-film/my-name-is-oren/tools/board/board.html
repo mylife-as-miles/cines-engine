@@ -58,8 +58,10 @@ box(0.9, 2.2, 0.05, warm, 2.6, 1.1, 0.03);                             // its gl
 for (const x of [-2.1, 2.1, 3.15]) box(0.18, 2.6, 0.14, paint, x, 1.3, 0.07);   // pilasters
 box(4.4, 0.45, 0.1, mat(0xc9cccf), 0, 0.22, 0.05);                     // tiled stallriser
 const win = new THREE.PointLight(0xf3d6a0, 2.2, 6); win.position.set(0, 1.5, 0.6); scene.add(win);
-box(3.0, 0.5, 0.35, mat(0x8a4c3e), 5.2, 0.25, 0.25);                   // the low wall, seat height
-box(3.05, 0.06, 0.4, mat(0xb7ae9c), 5.2, 0.53, 0.25);                  // its stone coping
+box(1.5, 0.48, 0.35, mat(0x8a4c3e), 4.45, 0.24, 0.25);                 // the low wall: knee-high step, where she sits
+box(1.55, 0.06, 0.4, mat(0xb7ae9c), 4.45, 0.51, 0.25);
+box(1.5, 1.0, 0.35, mat(0x8a4c3e), 5.95, 0.5, 0.25);                   // then waist-high, as in Q02
+box(1.55, 0.06, 0.4, mat(0xb7ae9c), 5.95, 1.03, 0.25);
 for (let x = -60; x <= 60; x += 6.5) {                                 // the rest of the terrace
   if (Math.abs(x) < 7) continue;
   box(4.2, 2.0, 0.05, (Math.abs(x) % 13 < 3) ? mat(0xd9cdb5, { emissive: 0x8a7a5a, emissiveIntensity: 0.25 }) : glassDark, x, 1.45, 0.03);
@@ -97,15 +99,18 @@ function capsule(r, len, m, parent, x, y, z) {
 function figure(o) {
   const g = new THREE.Group(), s = o.height / 1.75;
   const skin = mat(o.skin), trou = mat(o.trousers), top = mat(o.top), jack = mat(o.jacket ?? o.top), hair = mat(o.hair), shoe = mat(o.shoes);
-  const legs = {};
+  const legs = {}, HIP = 0.9 * s, KNEE = 0.45 * s;
   for (const [side, sx] of [['right', -1], ['left', 1]]) {
-    const leg = new THREE.Group(); leg.position.set(0.1 * s * sx, 0, 0); g.add(leg);
-    capsule(0.075 * s, 0.72 * s, trou, leg, 0, 0.5 * s, 0);
-    box(0.12 * s, 0.09 * s, 0.27 * s, shoe, 0, 0.045 * s, 0.04 * s, leg);
-    if (side === 'right' && o.tape) box(0.125 * s, 0.03 * s, 0.035 * s, mat(0x2f6fd6, { roughness: 0.4 }), 0, 0.07 * s, 0.15 * s, leg);
-    if (side === 'right' && o.looseSole) box(0.125 * s, 0.012 * s, 0.06 * s, mat(0x0d0b0a), 0, 0.022 * s, 0.155 * s, leg);
-    legs[side] = leg;
+    const leg = new THREE.Group(); leg.position.set(0.1 * s * sx, HIP, 0); g.add(leg);       // pivots at the hip
+    capsule(0.078 * s, 0.32 * s, trou, leg, 0, -0.22 * s, 0);                                  // thigh
+    const knee = new THREE.Group(); knee.position.set(0, -KNEE, 0); leg.add(knee);              // pivots at the knee
+    capsule(0.07 * s, 0.32 * s, trou, knee, 0, -0.22 * s, 0);                                  // shin
+    box(0.12 * s, 0.09 * s, 0.27 * s, shoe, 0, -(HIP - KNEE) + 0.045 * s, 0.04 * s, knee);
+    if (side === 'right' && o.tape) box(0.125 * s, 0.03 * s, 0.035 * s, mat(0x2f6fd6, { roughness: 0.4 }), 0, -(HIP - KNEE) + 0.07 * s, 0.15 * s, knee);
+    if (side === 'right' && o.looseSole) box(0.125 * s, 0.012 * s, 0.06 * s, mat(0x0d0b0a), 0, -(HIP - KNEE) + 0.022 * s, 0.155 * s, knee);
+    leg.userData.knee = knee; legs[side] = leg;
   }
+  g.userData.hipHeight = HIP;
   box(0.36 * s, 0.24 * s, 0.22 * s, trou, 0, 0.97 * s, 0, g);                     // hips
   box(0.38 * s, 0.5 * s, 0.23 * s, top, 0, 1.3 * s, 0, g);                        // torso
   if (o.jacket) box(0.42 * s, o.jacketLen * s, 0.26 * s, jack, 0, (1.55 - o.jacketLen / 2) * s, 0, g);   // the jacket
@@ -189,7 +194,17 @@ const homeH = helena.position.clone(), homeO = oren.position.clone();
 window.setState = (st = {}) => {
   const px = st.pairX ?? 0;                                       // move the pair along the pavement
   helena.position.set(homeH.x + px, 0, st.helenaZ ?? homeH.z);
-  oren.position.set(homeO.x + px, 0, homeO.z);
+  oren.position.set(homeO.x + px, 0, homeO.z); oren.rotation.y = Math.PI;
+  if (st.helenaPos) helena.position.set(st.helenaPos[0], 0, st.helenaPos[1]);
+  if (st.orenPos) { oren.position.set(st.orenPos[0], 0, st.orenPos[1]); oren.rotation.y = st.orenPos[2] ?? Math.PI; }
+  const sit = st.helenaSit ?? 0, seat = st.seatHeight ?? 0.54;     // 0 standing … 1 seated on the wall
+  const hip = helena.userData.hipHeight;
+  helena.position.y = -(hip - (seat + 0.06)) * sit;
+  for (const leg of Object.values(helena.userData.legs)) { leg.rotation.x = -Math.PI / 2 * sit; leg.userData.knee.rotation.x = Math.PI / 2 * sit; }
+  const hl = helena.userData.hands.left;
+  if (!hl.userData.home) hl.userData.home = hl.position.clone();
+  if (st.helenaLeftHand) { helena.updateMatrixWorld(true); hl.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaLeftHand))); }
+  else hl.position.copy(hl.userData.home);
   const hr = helena.userData.hands.right;                         // her right hand, placed in world space (e.g. on the wall)
   if (!hr.userData.home) hr.userData.home = hr.position.clone();
   if (st.helenaRightHand) { helena.updateMatrixWorld(true); hr.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaRightHand))); }

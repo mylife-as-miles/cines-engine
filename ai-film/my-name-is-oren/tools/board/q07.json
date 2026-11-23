@@ -1,0 +1,239 @@
+{
+ "title": "Q07 \u00b7 THE SHOULDER \u00b7 INTRODUCTION",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20133 s",
+   "state": {
+    "helenaPos": [
+     3.35,
+     0.85
+    ],
+    "orenPos": [
+     2.75,
+     1.05,
+     1.5707963267948966
+    ]
+   },
+   "cam": {
+    "pos": [
+     9.2,
+     0.95,
+     2.3
+    ],
+    "target": [
+     4.0,
+     0.85,
+     0.6
+    ],
+    "f": 32
+   },
+   "camText": "Wide, locked-off, camera low on the pavement \u00b7 32 mm",
+   "line": "(no dialogue)",
+   "note": "The low wall beside the laundrette, knee-high at its near end; she limps the last steps to it, Oren close beside her, not touching."
+  },
+  {
+   "n": 2,
+   "time": "3\u20137 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 0.45,
+    "orenPos": [
+     3.85,
+     0.78,
+     1.5707963267948966
+    ],
+    "helenaRightHand": [
+     3.86,
+     1.62,
+     0.6
+    ]
+   },
+   "cam": {
+    "pos": [
+     6.6,
+     1.25,
+     3.3
+    ],
+    "target": [
+     4.15,
+     0.95,
+     0.6
+    ],
+    "f": 32
+   },
+   "handheld": 0.006,
+   "camText": "Medium two-shot, handheld at shoulder height, following her down \u00b7 40 mm",
+   "line": "(no dialogue)",
+   "note": "Her leg wobbles; her hand goes to his shoulder; she lowers herself, jaw clenched, breath held; he is completely still, taking her weight."
+  },
+  {
+   "n": 3,
+   "time": "7\u201310 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.85,
+     0.78,
+     1.5707963267948966
+    ],
+    "helenaRightHand": [
+     3.86,
+     1.62,
+     0.6
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.4,
+     1.9,
+     1.05
+    ],
+    "target": [
+     3.86,
+     1.58,
+     0.6
+    ],
+    "f": 50
+   },
+   "handheld": 0.004,
+   "camText": "Insert: her hand on his shoulder \u00b7 65 mm \u00b7 handheld",
+   "line": "(no dialogue)",
+   "note": "Her hand stays a beat after she is down; then it lifts away and she turns it palm up, looking at it."
+  },
+  {
+   "n": 4,
+   "time": "10\u201313 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.85,
+     0.78,
+     1.5707963267948966
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated, at her eye level \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"That's a hell of an introduction.\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.7,
+     "text": "HELENA: That's a hell of an introduction."
+    }
+   ],
+   "note": "From her palm up to him; a small one-sided smile."
+  },
+  {
+   "n": 5,
+   "time": "13\u201315.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.85,
+     0.78,
+     1.5707963267948966
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.36,
+     1.4,
+     0.64
+    ],
+    "target": [
+     3.86,
+     1.76,
+     0.78
+    ],
+    "f": 32
+   },
+   "camText": "Her point of view, low angle up at Oren standing \u00b7 32 mm \u00b7 locked-off",
+   "line": "OREN: \"My name is Oren.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 2.0,
+     "text": "OREN: My name is Oren."
+    }
+   ],
+   "note": "Exactly as the first time he said it: the repetition is the joke."
+  },
+  {
+   "n": 6,
+   "time": "15.5\u201319 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.85,
+     0.78,
+     1.5707963267948966
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"I know. I got that one.\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.9,
+     "text": "HELENA: I know. I got that one."
+    }
+   ],
+   "note": "A breath-laugh through her nose; then the line."
+  }
+ ]
+}
