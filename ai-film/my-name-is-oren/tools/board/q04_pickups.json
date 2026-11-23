@@ -1,0 +1,59 @@
+{
+ "title": "Q04 pickups \u00b7 on the pavement",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20135 s",
+   "cam": {
+    "pos": [
+     9.0,
+     0.9,
+     1.7
+    ],
+    "target": [
+     0,
+     1.15,
+     1.7
+    ],
+    "f": 32
+   },
+   "camText": "Wide profile two-shot \u00b7 camera at hip height on the pavement \u00b7 32 mm \u00b7 locked-off",
+   "line": "HELENA: \"Sure. Look, I'm just really hungry.\"",
+   "note": "On the pavement a step from the laundrette; sweepers in the gutter, city units at a bin, passers-by far off.",
+   "lines": [
+    {
+     "t0": 1.0,
+     "t1": 4.6,
+     "text": "HELENA: Sure. Look, I'm just really hungry."
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "time": "21\u201326 s",
+   "cam": {
+    "pos": [
+     3.6,
+     1.6,
+     1.7
+    ],
+    "target": [
+     0,
+     1.52,
+     1.7
+    ],
+    "f": 40
+   },
+   "camText": "Medium profile two-shot, waist up \u00b7 eye level \u00b7 40 mm \u00b7 locked-off, symmetrical",
+   "line": "OREN: \"This belongs to the person I support.\"",
+   "note": "On the pavement; the laundrette and shopfronts behind her on the right, the kerb and road behind him.",
+   "lines": [
+    {
+     "t0": 1.4,
+     "t1": 4.6,
+     "text": "OREN: This belongs to the person I support."
+    }
+   ]
+  }
+ ]
+}
