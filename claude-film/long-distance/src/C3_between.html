@@ -102,7 +102,7 @@
   LC.fill(g, lapF, SM.coatS); LC.fill(g, lapN, SM.coatL); WR(lapN, 1, -0.2, 2.5, LC.mix(SM.coatL, '#FFFFFF', 0.2));
   // her raised arm (her left, our right): attached at the shoulder, the upper arm rising out to the side, the elbow bent up by her head;
   // the forearm runs back behind her head to the nape (we see where it goes behind the hair)
-  const sleeveN = LC.smooth(Ls([[0.52, 0.86], [0.78, 0.62], [0.98, 0.32], [1.12, 0.06], [1.17, -0.06, 1], [1.02, -0.09], [0.78, -0.02], [0.44, 0.12], [0.44, 0.3], [0.76, 0.2], [0.94, 0.17], [0.88, 0.38], [0.72, 0.64], [0.6, 0.9]]));
+  const sleeveN = LC.smooth(Ls([[0.5, 0.86], [0.78, 0.6], [1.0, 0.3], [1.14, 0.04], [1.19, -0.08, 1], [1.02, -0.12], [0.78, -0.04], [0.44, 0.1], [0.44, 0.32], [0.74, 0.24], [0.9, 0.22], [0.84, 0.42], [0.66, 0.68], [0.56, 0.92]]));
   LC.fill(g, sleeveN, SM.coat); within(sleeveN, () => { LC.fill(g, LC.smooth(Ls([[0.86, 0.7], [1.4, 0.0], [1.4, -0.3], [1.1, -0.2], [0.98, 0.24], [0.78, 0.6]])), SM.coatL); LC.fill(g, LC.smooth(Ls([[0.4, 0.0], [1.0, -0.2], [1.0, 0.08], [0.4, 0.2]])), SM.coatS); });
   strokeQ(Ls, [[0.94, 0.17], [1.02, 0.08], [1.06, -0.02]], 'rgba(52,30,22,0.5)', 2);          // the crease where the sleeve folds at the elbow
   // the far arm (her right): the upper arm down and forward from the shoulder, a clear elbow, the forearm rising to a bent wrist and the phone
@@ -213,10 +213,10 @@
     LC.fill(g, skull, HM.skinS);
     within(skull, () => {
       LC.fill(g, LC.smooth(L([[-0.2, -0.62], [0.62, -0.62], [0.62, 0.62], [-0.02, 0.56], [-0.1, 0.42], [-0.18, 0.26], [-0.22, 0.1], [-0.2, -0.08], [-0.24, -0.3]])), HM.skin);
-      LC.fill(g, LC.smooth(L([[0.2, -0.42], [0.62, -0.42], [0.62, 0.52], [0.22, 0.46], [0.28, 0.24], [0.28, 0.02]])), LC.mix(HM.skinL, ICE, 0.42));            // the screen's light on the cheek turned toward her
+      { const Lr = LC.layer(); Lr.fillStyle = LC.mix(HM.skinL, ICE, 0.3); Lr.fill(LC.smooth(L([[0.22, -0.42], [0.62, -0.42], [0.62, 0.52], [0.24, 0.46], [0.3, 0.24], [0.3, 0.02]]))); g.drawImage(LC.blurred(Lr.canvas, 7, false), 0, 0); }            // the screen's light on the cheek turned toward her
       g.fillStyle = 'rgba(30,20,16,0.12)'; g.fill(LC.smooth(L([[-0.14, 0.36], [0.16, 0.38], [0.33, 0.34], [0.3, 0.46], [0.12, 0.53], [-0.12, 0.47]])));
       g.fillStyle = 'rgba(40,26,20,0.18)'; g.beginPath(); const so = L1(-0.03, -0.07); g.ellipse(so[0], so[1], 0.08 * hU, 0.04 * hU, 0.2, 0, 7); g.fill(); });
-    WR(skull, 1, 0.2, 4, LC.mix(HM.skinL, ICE, 0.75), { clip: (() => { const q = new Path2D(); const a = L1(0.15, -0.45); q.rect(a[0], a[1], 400, 400); return q; })() });
+    WR(skull, 1, 0.2, 3, LC.mix(HM.skinL, ICE, 0.55), { clip: (() => { const q = new Path2D(); const a = L1(0.15, -0.45); q.rect(a[0], a[1], 400, 400); return q; })() });
     const ear = LC.smooth(L([[-0.38, -0.07], [-0.29, -0.1], [-0.26, 0.02], [-0.28, 0.16], [-0.35, 0.17], [-0.4, 0.06]])); LC.fill(g, ear, HM.skinD);
     const hair = LC.smooth(L([[0.38, -0.25, 1], [0.4, -0.42], [0.25, -0.58], [-0.02, -0.64], [-0.29, -0.57], [-0.46, -0.36], [-0.49, -0.1], [-0.43, 0.12], [-0.37, 0.06], [-0.34, -0.12], [-0.24, -0.25], [-0.06, -0.33], [0.12, -0.32], [0.27, -0.33]]));
     LC.fill(g, hair, HM.hair); WR(hair, 1, -0.3, 4, HM.hairL);
