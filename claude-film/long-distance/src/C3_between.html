@@ -1,0 +1,294 @@
+<!doctype html><meta charset="utf-8"><title>C3 · The Screen Between Them</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_c.js"></script>
+<script>
+/* LONG DISTANCE · LOOK C "HALF EMPTY" · C3 THE SCREEN BETWEEN THEM (INT. APARTMENT, living room, day)
+   The same camera and the same wall as the waterfall, now in grey daylight from the window on her side: for the first time the light
+   comes from the empty half. She stands in it, where the phone stood: coat on, bag on her shoulder, her hair cut short above the jaw,
+   the pale rectangle on the wall behind her. She holds his phone up between them, the screen turned to him: the waterfall, the long
+   hair. Her free hand has gone to the back of her neck, where her hair used to be. He stands in his half, in front of the fridge and
+   the photo-booth strip, the old floral makeup bag in his hands, his thumb on its broken zip, looking at neither of them. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LC.P;
+  const f = OTM.frame(ctx, { seed: 31 });
+  const g = f.world, E = f.emissive;
+  const cam = LC.camera({ x: 0, y: 1.28, z: 0, f: 1500, cx: 960, cy: 662 });
+  const p = cam.p, Q = a => LC.pathPts(cam.pts(a));
+  const WZ = 2.62, CT = 0.92, CF = 2.02;
+  const ICE = '#CBEEF7';
+  // grey daylight from the right (her side); his side in the room's own shade
+  const D = { plaster: '#A0968A', plasterL: '#B3A99C', plasterD: '#857C71', tile: '#BDB3A4', grout: '#978D80', counter: '#857A6C', counterFront: '#5C534A',
+    fridge: '#ABA398', fridgeD: '#8E867B', shelf: '#6E6052' };
+  const cap = (a, b, r1, r2) => OTM.S().capsule(a[0], a[1], r1, b[0], b[1], r2).path(0);
+  const WR = (path, dx, dy, w, col, o) => LC.crescent(g, path, dx, dy, w, col, o);
+
+  // =====================================================================
+  // 1. THE WALL in daylight: brighter toward the window on her side
+  // =====================================================================
+  g.fillStyle = D.plaster; g.fillRect(0, 0, W, H);
+  { g.fillStyle = LC.lin(g, 0, 0, W, 0, [[0, D.plasterD], [0.45, D.plaster], [1, D.plasterL]]); g.fillRect(0, 0, W, H);
+    LC.bands(g, null, 2100, 300, [1500, 1100, 750], ['#A79D91', '#AFA598', '#B8AEA1'], { sy: 0.9, soft: 30, alpha: 0.85 }); }
+  { // the window (off right, on her side) lays a soft panel of grey daylight across her half of the wall
+    const Lr = LC.layer(); const win = Q([[0.08, 2.3, WZ], [1.9, 2.3, WZ], [1.9, 0.98, WZ], [0.32, 0.98, WZ]]);
+    Lr.fillStyle = '#E2DACE'; Lr.fill(win); g.save(); g.globalAlpha = 0.32; g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(Lr.canvas, 34, false), 0, 0); g.restore();
+    const mull = Q([[0.86, 2.3, WZ], [0.92, 2.3, WZ], [1.02, 0.98, WZ], [0.96, 0.98, WZ]]); const Lm = LC.layer(); Lm.fillStyle = '#5A5046'; Lm.fill(mull); g.save(); g.globalAlpha = 0.18; g.globalCompositeOperation = 'multiply'; g.drawImage(LC.blurred(Lm.canvas, 18, false), 0, 0); g.restore(); }
+  LC.mottle(g, null, { x: 0, y: 0, w: W, h: H }, 5, '#3A322A', 0.12, 0.004);
+  // the pale rectangle (in daylight it is plain: the wall around it has yellowed, the square where the frame hung has not) and its nail
+  const PR = [0.3, 0.78, 1.6, 2.02];
+  const prP = Q([[PR[0], PR[3], WZ], [PR[1], PR[3], WZ], [PR[1], PR[2], WZ], [PR[0], PR[2], WZ]]);
+  { g.save(); g.clip(prP); g.fillStyle = 'rgba(214,208,198,0.55)'; g.fill(prP); g.restore(); LC.stroke(g, prP, 'rgba(120,108,94,0.25)', 1.5);
+    const nl = p((PR[0] + PR[1]) / 2, PR[3] - 0.035, WZ); g.fillStyle = '#3A332D'; g.beginPath(); g.arc(nl[0], nl[1], 3.2, 0, 7); g.fill(); g.fillStyle = 'rgba(60,50,40,0.35)'; g.fillRect(nl[0] - 1, nl[1] + 2, 2, 9); }
+  // tiles on his half
+  const TT = 1.58;
+  { const tileClip = Q([[-1.8, TT, WZ], [0, TT, WZ], [0, CT, WZ], [-1.8, CT, WZ]]);
+    LC.fill(g, tileClip, D.tile);
+    g.save(); g.clip(tileClip); g.fillStyle = LC.lin(g, 0, 0, 960, 0, [[0, '#000000', 0.18], [1, '#000000', 0]]); g.fillRect(0, 0, 960, H);
+    g.strokeStyle = D.grout; g.lineWidth = 1.5; g.globalAlpha = 0.8;
+    for (let x = 0; x >= -1.8; x -= 0.1) { const a = p(x, CT, WZ), b = p(x, TT, WZ); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+    for (let y = CT; y <= TT + 0.001; y += 0.1) { const a = p(-1.8, y, WZ), b = p(0, y, WZ); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+    g.restore();
+    const e0 = p(0, TT, WZ), e1 = p(0, CT, WZ); g.fillStyle = '#CFC6B8'; g.fillRect(e0[0] - 2, e0[1], 4, e1[1] - e0[1]);
+    const t0 = p(-1.8, TT, WZ), t1 = p(0, TT, WZ); g.fillRect(t0[0], t0[1] - 2, t1[0] - t0[0] + 2, 4); }
+  // her half: the shelf and the two mugs (in daylight the ring of dust round hers is plain to see)
+  const SH = { x0: 0.12, x1: 0.88, y: 1.44, d: 0.2, t: 0.032 };
+  LC.softShadow(g, Q([[SH.x0, SH.y - SH.t, WZ], [SH.x1, SH.y - SH.t, WZ], [SH.x1, SH.y - SH.t - 0.06, WZ], [SH.x0, SH.y - SH.t - 0.06, WZ]]), '#4A4036', 10, 0.45, -8, 6);
+  LC.fill(g, Q([[SH.x0, SH.y, WZ - SH.d], [SH.x1, SH.y, WZ - SH.d], [SH.x1, SH.y - SH.t, WZ - SH.d], [SH.x0, SH.y - SH.t, WZ - SH.d]]), D.shelf);
+  LC.fill(g, Q([[SH.x0, SH.y, WZ], [SH.x1, SH.y, WZ], [SH.x1, SH.y, WZ - SH.d], [SH.x0, SH.y, WZ - SH.d]]), '#8A7A69');
+  function mug(x, z, side, body, dust) {
+    const k = cam.k(z), r = 0.041 * k, b = p(x, SH.y, z), t = p(x, SH.y + 0.095, z), ey = r * 0.2;
+    if (dust) { g.strokeStyle = 'rgba(214,206,194,0.9)'; g.lineWidth = 3; g.beginPath(); g.ellipse(b[0], b[1], r + 5, ey + 2.5, 0, 0, 7); g.stroke(); g.strokeStyle = 'rgba(214,206,194,0.35)'; g.lineWidth = 7; g.beginPath(); g.ellipse(b[0], b[1], r + 9, ey + 4, 0, 0, 7); g.stroke(); }
+    const hx = b[0] + side * r; g.strokeStyle = LC.mix(body, '#000000', 0.25); g.lineWidth = 0.011 * k; g.beginPath(); g.ellipse(hx, (t[1] + b[1]) / 2 - 2, 0.022 * k, 0.028 * k, 0, -Math.PI / 2, Math.PI / 2, side < 0); g.stroke();
+    const bodyP = new Path2D(); bodyP.moveTo(b[0] - r, t[1]); bodyP.lineTo(b[0] - r, b[1]); bodyP.ellipse(b[0], b[1], r, ey, 0, Math.PI, 0, true); bodyP.lineTo(b[0] + r, t[1]); bodyP.closePath();
+    g.fillStyle = LC.lin(g, b[0] - r, 0, b[0] + r, 0, [[0, LC.mix(body, '#000000', 0.25)], [0.6, body], [1, LC.mix(body, '#FFFFFF', 0.18)]]); g.fill(bodyP);
+    g.fillStyle = LC.mix(body, '#000000', 0.4); g.beginPath(); g.ellipse(t[0], t[1], r, ey, 0, 0, 7); g.fill();
+    g.strokeStyle = LC.mix(body, '#FFFFFF', 0.25); g.lineWidth = 1.6; g.beginPath(); g.ellipse(t[0], t[1], r, ey, 0, Math.PI, Math.PI * 1.9); g.stroke();
+  }
+  mug(0.34, WZ - 0.1, -1, '#8C8378', false); mug(0.54, WZ - 0.11, 1, '#977567', true);
+  // the counter
+  const ctop = Q([[-1.8, CT, WZ], [1.8, CT, WZ], [1.8, CT, CF], [-1.8, CT, CF]]);
+  LC.fill(g, ctop, D.counter); g.save(); g.clip(ctop); g.fillStyle = LC.lin(g, 0, 0, W, 0, [[0, '#000000', 0.2], [1, '#FFFFFF', 0.08]]); g.fillRect(0, 0, W, H); g.restore();
+  LC.fill(g, Q([[-1.8, CT, CF], [1.8, CT, CF], [1.8, CT - 0.035, CF], [-1.8, CT - 0.035, CF]]), '#958978');
+  LC.fill(g, Q([[-1.8, CT - 0.035, CF], [1.8, CT - 0.035, CF], [1.8, 0, CF], [-1.8, 0, CF]]), D.counterFront);
+  [-1.2, -0.6, 0, 0.6, 1.2].forEach(x => { const a = p(x, CT - 0.05, CF), b = p(x, 0, CF); g.fillStyle = 'rgba(0,0,0,0.3)'; g.fillRect(a[0] - 1.5, a[1], 3, b[1] - a[1]); });
+  // the salt, where it was (the phone is gone from beside it)
+  { const SALT = [0.425, 2.26], k = cam.k(SALT[1]), b = p(SALT[0], CT, SALT[1]), t = p(SALT[0], CT + 0.1, SALT[1]), r = 0.028 * k;
+    const glass = new Path2D(); glass.moveTo(b[0] - r, t[1] + 0.022 * k); glass.lineTo(b[0] - r * 0.92, b[1]); glass.ellipse(b[0], b[1], r * 0.92, 3, 0, Math.PI, 0, true); glass.lineTo(b[0] + r, t[1] + 0.022 * k); glass.closePath();
+    LC.fill(g, glass, 'rgba(200,204,200,0.45)'); g.save(); g.clip(glass); g.fillStyle = 'rgba(244,242,236,0.75)'; g.fillRect(b[0] - r, t[1] + 0.045 * k, r * 2, b[1] - t[1]); g.restore();
+    g.fillStyle = '#9A9C9A'; g.fill(LC.rrect(b[0] - r * 1.02, t[1], r * 2.04, 0.024 * k, 4)); g.fillStyle = 'rgba(255,255,255,0.5)'; g.fillRect(b[0] + r * 0.3, t[1] + 2, r * 0.5, 0.02 * k); }
+  // the fridge and the strip under its magnet
+  const FZ = 1.97, FX0 = -1.34, FX1 = -0.7;
+  { LC.fill(g, Q([[FX1, 1.96, FZ], [FX1, 1.96, WZ], [FX1, CT, WZ], [FX1, CT, FZ]]), '#958C80');
+    const door = Q([[FX0, 1.96, FZ], [FX1, 1.96, FZ], [FX1, 0, FZ], [FX0, 0, FZ]]); LC.fill(g, door, D.fridge);
+    g.save(); g.clip(door); g.fillStyle = LC.lin(g, p(FX0, 1, FZ)[0], 0, p(FX1, 1, FZ)[0], 0, [[0, '#000000', 0.16], [1, '#000000', 0.02]]); g.fillRect(0, 0, W, H); g.restore();
+    const fr = p(FX0, 0.98, FZ), fr2 = p(FX1, 0.98, FZ); g.fillStyle = 'rgba(60,52,44,0.45)'; g.fillRect(fr[0], fr[1] - 2, fr2[0] - fr[0], 4);
+    const hd0 = p(FX1 - 0.045, 1.62, FZ), hd1 = p(FX1 - 0.045, 1.08, FZ); g.fillStyle = '#7A7268'; g.fill(LC.rrect(hd0[0] - 7, hd0[1], 14, hd1[1] - hd0[1], 6)); g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(hd0[0] + 2, hd0[1] + 4, 3, hd1[1] - hd0[1] - 8); }
+  { const k = cam.k(FZ), sw = 0.072 * k; const st = LC.boothStrip({ w: Math.round(sw * 2) }); const sc = sw / st.width, sx = p(-0.86, 1.5, FZ);
+    g.save(); g.translate(sx[0], sx[1]); g.rotate(0.05);
+    LC.softShadow(g, (() => { const q = new Path2D(); q.rect(-sw / 2, 0, sw, st.height * sc); return q; })(), '#3A3028', 3, 0.45, -2, 3);
+    g.drawImage(st, -sw / 2, 0, sw, st.height * sc);
+    g.globalCompositeOperation = 'multiply'; g.fillStyle = '#E4DCCF'; g.fillRect(-sw / 2, 0, sw, st.height * sc); g.globalCompositeOperation = 'source-over';
+    g.fillStyle = 'rgba(0,0,0,0.1)'; g.fillRect(-sw / 2, st.height * sc - 9, sw, 9);
+    g.fillStyle = '#6A4438'; g.beginPath(); g.arc(1, 7, 12, 0, 7); g.fill(); g.fillStyle = 'rgba(255,230,210,0.4)'; g.beginPath(); g.arc(4, 3, 4.5, 0, 7); g.fill();
+    g.restore(); }
+  // the pendant, off: a dark dome in the daylight
+  { const LAMP = [-0.54, 1.95, 1.92], k = cam.k(LAMP[2]), r = 0.15 * k, rim = p(LAMP[0], 1.98, LAMP[2]), top = p(LAMP[0], 2.17, LAMP[2]);
+    g.strokeStyle = '#2A2521'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(rim[0], 0); g.lineTo(rim[0], top[1]); g.stroke();
+    const dome = new Path2D(); dome.moveTo(rim[0] - r, rim[1]); dome.bezierCurveTo(rim[0] - r, rim[1] - r * 0.9, rim[0] - r * 0.25, top[1], rim[0], top[1]); dome.bezierCurveTo(rim[0] + r * 0.25, top[1], rim[0] + r, rim[1] - r * 0.9, rim[0] + r, rim[1]); dome.closePath();
+    LC.fill(g, dome, '#3E3833'); g.save(); g.clip(dome); g.fillStyle = LC.lin(g, rim[0] - r, 0, rim[0] + r, 0, [[0, '#000000', 0.25], [0.7, '#FFFFFF', 0.08], [1, '#FFFFFF', 0.15]]); g.fillRect(rim[0] - r, top[1], r * 2, rim[1] - top[1]); g.restore();
+    g.fillStyle = '#1E1B18'; g.beginPath(); g.ellipse(rim[0], rim[1], r * 0.97, r * 0.1, 0, 0, Math.PI); g.fill(); }
+
+  // shared drawing helpers for the figures
+  const strokeQ = (L, pts, col, w) => { const q = L(pts); g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(q[0][0], q[0][1]); if (q.length === 3) g.quadraticCurveTo(q[1][0], q[1][1], q[2][0], q[2][1]); else for (let i = 1; i < q.length; i++) g.lineTo(q[i][0], q[i][1]); g.stroke(); };
+  const within = (path, fn) => { g.save(); g.clip(path); fn(); g.restore(); };
+  // the window is to the right: everything casts a soft shadow onto the wall to its left
+  const wallShadow = (path, dx, a) => { const Lr = LC.layer(); Lr.fillStyle = '#3E352C'; Lr.translate(dx, 10); Lr.fill(path); g.save(); g.globalAlpha = a; g.globalCompositeOperation = 'multiply'; g.drawImage(LC.blurred(Lr.canvas, 26, false), 0, 0); g.restore(); };
+
+  // =====================================================================
+  // 2. HIM, in his half: three-quarters to her, head down, the floral makeup bag held against his chest, his thumb on the broken zip.
+  // =====================================================================
+  const HM = { skin: '#BE9276', skinS: '#94705A', skinD: '#6E5242', hair: '#271E18', hairL: '#5E4838', shirt: '#CDC2AE', shirtS: '#A59885', shirtD: '#857864' };
+  const hw = [-0.43, 1.605, 1.72], hc = p(...hw), hU = 0.235 * cam.k(hw[2]);
+  const Mb = LC.frameM(hc[0], hc[1], hU, 0), Lb = pts => LC.mapPts(Mb, pts), Lb1 = (x, y) => LC.ap(Mb, [x, y]);
+  { // silhouette for the wall shadow
+    const sil = LC.smooth(Lb([[-0.4, -0.5], [0.35, -0.5], [0.4, 0.4], [0.9, 0.95], [1.0, 2.0], [0.9, 3.6], [-1.0, 3.6], [-1.1, 2.0], [-1.0, 0.95], [-0.4, 0.5]])); wallShadow(sil, -70, 0.5); }
+  // torso: the shirt from the night before (open collar, the placket off-centre in three-quarters, sleeves rolled, creased)
+  const torsoH = LC.smooth(Lb([[-0.24, 0.66], [-0.64, 0.8], [-0.96, 0.96], [-1.06, 1.24], [-1.02, 1.9], [-0.94, 2.7], [-0.92, 3.6], [0.84, 3.6], [0.86, 2.7], [0.92, 1.9], [0.96, 1.2], [0.86, 0.94], [0.56, 0.8], [0.2, 0.66]]));
+  LC.fill(g, torsoH, HM.shirtS);
+  within(torsoH, () => {
+    LC.fill(g, LC.smooth(Lb([[-0.46, 0.6], [1.2, 0.6], [1.2, 3.7], [-0.3, 3.7], [-0.4, 2.6], [-0.36, 1.6], [-0.5, 1.0]])), HM.shirt);                       // window side
+    LC.fill(g, LC.smooth(Lb([[-1.3, 0.8], [-0.86, 0.92], [-0.9, 1.6], [-0.84, 2.6], [-0.88, 3.7], [-1.3, 3.7]])), HM.shirtD);                            // the flank away from the window
+    strokeQ(Lb, [[0.16, 0.98], [0.2, 2.2], [0.16, 3.6]], 'rgba(110,98,82,0.6)', 2.4);                                                                     // placket
+    [1.3, 1.85, 2.4, 2.95].forEach(y => { const b = Lb1(0.22, y); g.fillStyle = '#EEE7DA'; g.beginPath(); g.arc(b[0], b[1], 3.2, 0, 7); g.fill(); });
+    strokeQ(Lb, [[-0.56, 1.5], [-0.42, 2.0], [-0.5, 2.6]], 'rgba(100,88,72,0.45)', 2.2); strokeQ(Lb, [[0.58, 1.5], [0.48, 1.95], [0.6, 2.5]], 'rgba(100,88,72,0.4)', 2.2);
+    strokeQ(Lb, [[-0.6, 2.95], [-0.2, 3.1], [0.3, 3.0]], 'rgba(100,88,72,0.4)', 2.2); });
+  // the open collar and the throat
+  const throat = LC.smooth(Lb([[-0.2, 0.44], [0.22, 0.48], [0.28, 0.86], [0.12, 1.12], [-0.08, 0.86]])); LC.fill(g, throat, HM.skinS);
+  within(throat, () => LC.fill(g, LC.smooth(Lb([[0.06, 0.4], [0.4, 0.4], [0.4, 1.2], [0.12, 1.12], [0.1, 0.8]])), HM.skin));
+  const colL = LC.smooth(Lb([[-0.4, 0.62], [-0.1, 0.66], [0.06, 1.12], [-0.12, 1.0], [-0.46, 0.8]])), colR = LC.smooth(Lb([[0.4, 0.6], [0.22, 0.68], [0.14, 1.14], [0.32, 1.0], [0.56, 0.78]]));
+  LC.fill(g, colL, HM.shirtS); LC.fill(g, colR, LC.mix(HM.shirt, '#FFFFFF', 0.2)); LC.stroke(g, colL, 'rgba(110,98,82,0.5)', 1.5);
+  // arms: upper arms down his sides; elbows bent; forearms (sleeves rolled) coming up to the bag at his chest
+  const uaL = LC.smooth(Lb([[-0.92, 0.98], [-1.16, 1.26], [-1.2, 1.9], [-1.14, 2.36], [-0.88, 2.38], [-0.84, 1.7]])); LC.fill(g, uaL, HM.shirtD);
+  const uaR = LC.smooth(Lb([[0.84, 0.96], [1.04, 1.26], [1.06, 1.9], [1.0, 2.34], [0.78, 2.34], [0.78, 1.7]])); LC.fill(g, uaR, HM.shirt); LC.crescent(g, uaR, 1, 0, 4, LC.mix(HM.shirt, '#FFFFFF', 0.25));
+  const fL = LC.smooth(Lb([[-1.12, 2.1], [-0.86, 2.0], [-0.5, 2.06], [-0.2, 2.1], [-0.18, 2.32], [-0.5, 2.4], [-0.9, 2.42], [-1.14, 2.36]])); LC.fill(g, fL, HM.skinS);
+  within(fL, () => LC.fill(g, LC.smooth(Lb([[-1.2, 1.9], [-0.1, 1.9], [-0.1, 2.16], [-1.2, 2.18]])), HM.skin));
+  const fR = LC.smooth(Lb([[1.02, 2.06], [0.8, 2.0], [0.62, 2.0], [0.48, 2.06], [0.48, 2.26], [0.66, 2.32], [0.86, 2.36], [1.02, 2.32]])); LC.fill(g, fR, HM.skin);
+  within(fR, () => LC.fill(g, LC.smooth(Lb([[0.4, 1.9], [1.1, 1.9], [1.1, 2.12], [0.4, 2.12]])), LC.mix(HM.skin, '#FFF2E6', 0.18)));
+  LC.fill(g, LC.smooth(Lb([[-1.2, 2.04], [-0.98, 2.04], [-0.96, 2.42], [-1.18, 2.42]])), HM.shirtD); LC.fill(g, LC.smooth(Lb([[0.82, 2.02], [1.04, 2.02], [1.04, 2.38], [0.82, 2.38]])), HM.shirt);   // rolled cuffs
+  // the makeup bag: old, floral, faded; the zip burst open at the far end
+  { const bc = Lb1(0.14, 1.98), bw = 0.92 * hU, bh = 0.5 * hU, rot = -0.1;
+    g.save(); g.translate(bc[0], bc[1]); g.rotate(rot);
+    const bag = new Path2D(); bag.moveTo(-bw / 2, -bh * 0.38); bag.bezierCurveTo(-bw * 0.3, -bh * 0.55, bw * 0.3, -bh * 0.55, bw / 2, -bh * 0.38); bag.bezierCurveTo(bw * 0.56, 0, bw * 0.52, bh * 0.45, bw * 0.4, bh * 0.5); bag.bezierCurveTo(bw * 0.1, bh * 0.58, -bw * 0.1, bh * 0.58, -bw * 0.4, bh * 0.5); bag.bezierCurveTo(-bw * 0.52, bh * 0.45, -bw * 0.56, 0, -bw / 2, -bh * 0.38); bag.closePath();
+    LC.fill(g, bag, '#D8CBB4');
+    g.save(); g.clip(bag); const R = OTM.rng('floral3');
+    for (let i = 0; i < 30; i++) { const x = (R() - 0.5) * bw * 1.1, y = (R() - 0.5) * bh * 1.1, r = (0.05 + R() * 0.05) * bw, kind = R();
+      if (kind < 0.42) { g.fillStyle = '#BC8A80'; g.beginPath(); g.arc(x, y, r * 0.6, 0, 7); g.fill(); g.strokeStyle = 'rgba(140,84,76,0.65)'; g.lineWidth = 1.3; g.beginPath(); g.arc(x, y, r * 0.3, 0.4, 5.2); g.stroke(); }
+      else if (kind < 0.8) { g.fillStyle = '#929A81'; g.beginPath(); g.ellipse(x, y, r * 0.7, r * 0.28, R() * 3, 0, 7); g.fill(); }
+      else { g.fillStyle = '#C8A870'; g.beginPath(); g.arc(x, y, r * 0.24, 0, 7); g.fill(); } }
+    g.fillStyle = LC.lin(g, -bw / 2, 0, bw / 2, 0, [[0, '#3A2E24', 0.22], [0.6, '#3A2E24', 0], [1, '#FFFFFF', 0.08]]); g.fillRect(-bw, -bh, bw * 2, bh * 2);
+    g.fillStyle = 'rgba(70,56,44,0.14)'; for (let i = 0; i < 5; i++) { g.fillRect(-bw / 2 + i * bw * 0.23, -bh, 1.2, bh * 2); }      // the fabric worn soft at the seams
+    g.restore();
+    const zipPath = () => { g.beginPath(); g.moveTo(-bw * 0.44, -bh * 0.4); g.bezierCurveTo(-bw * 0.2, -bh * 0.5, bw * 0.06, -bh * 0.5, bw * 0.18, -bh * 0.47); };
+    g.strokeStyle = '#7A6D5D'; g.lineWidth = 4.5; zipPath(); g.stroke(); g.strokeStyle = '#B2A592'; g.lineWidth = 1.2; g.setLineDash([2, 2]); zipPath(); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#2E2620'; g.beginPath(); g.moveTo(bw * 0.18, -bh * 0.47); g.quadraticCurveTo(bw * 0.33, -bh * 0.56, bw * 0.47, -bh * 0.5); g.quadraticCurveTo(bw * 0.33, -bh * 0.36, bw * 0.18, -bh * 0.47); g.fill();
+    g.strokeStyle = '#7A6D5D'; g.lineWidth = 3.5; g.beginPath(); g.moveTo(bw * 0.18, -bh * 0.47); g.quadraticCurveTo(bw * 0.33, -bh * 0.56, bw * 0.47, -bh * 0.5); g.moveTo(bw * 0.18, -bh * 0.47); g.quadraticCurveTo(bw * 0.33, -bh * 0.36, bw * 0.47, -bh * 0.37); g.stroke();
+    g.fillStyle = '#958B7E'; g.fill(LC.rrect(-bw * 0.47, -bh * 0.43, bw * 0.05, bh * 0.22, 2));
+    g.restore(); }
+  // hands: the left one holding the bag from underneath, the right one at the burst end, the thumb worrying the zip
+  { const hL = LC.smooth(Lb([[-0.42, 1.96], [-0.24, 1.98], [-0.12, 2.06], [-0.1, 2.24], [-0.24, 2.3], [-0.44, 2.26], [-0.5, 2.1]])); LC.fill(g, hL, HM.skinS);
+    within(hL, () => LC.fill(g, LC.smooth(Lb([[-0.6, 1.9], [0.0, 1.9], [0.0, 2.08], [-0.6, 2.1]])), HM.skin));
+    [[-0.38, 2.12, -0.14, 2.14], [-0.38, 2.2, -0.16, 2.22]].forEach(([a, b, c, d]) => strokeQ(Lb, [[a, b], [c, d]], 'rgba(90,60,46,0.45)', 1.4));
+    const hR = LC.smooth(Lb([[0.66, 1.84], [0.8, 1.88], [0.86, 2.0], [0.84, 2.14], [0.7, 2.2], [0.56, 2.16], [0.52, 2.02]])); LC.fill(g, hR, HM.skin);
+    LC.crescent(g, hR, 1, -0.2, 3, LC.mix(HM.skin, '#FFFFFF', 0.25));
+    const th = OTM.S().capsule(...Lb1(0.6, 1.88), 0.05 * hU, ...Lb1(0.46, 1.8), 0.038 * hU).path(0); LC.fill(g, th, HM.skin); LC.crescent(g, th, 0.4, -1, 2, LC.mix(HM.skin, '#FFFFFF', 0.3));
+    const nail = Lb1(0.465, 1.795); g.fillStyle = 'rgba(240,214,196,0.8)'; g.beginPath(); g.ellipse(nail[0], nail[1], 4, 3, -0.4, 0, 7); g.fill(); }
+  // his head, three-quarters toward her, bowed: he looks at the bag, at neither of them
+  { const Mh = LC.frameM(hc[0] + 0.03 * hU, hc[1] + 0.06 * hU, hU, 0.32), L = pts => LC.mapPts(Mh, pts), L1 = (x, y) => LC.ap(Mh, [x, y]);
+    const neck = LC.smooth(L([[-0.24, 0.2], [0.08, 0.32], [-0.02, 0.58], [-0.32, 0.52]])); LC.fill(g, neck, LC.mix(HM.skinD, '#000000', 0.15));
+    const skull = LC.smooth(L([[0.03, -0.52], [0.25, -0.46], [0.37, -0.3], [0.41, -0.1], [0.415, 0.06], [0.385, 0.2], [0.31, 0.36], [0.2, 0.47], [0.06, 0.52], [-0.08, 0.49], [-0.2, 0.4], [-0.3, 0.26], [-0.38, 0.08], [-0.42, -0.14], [-0.36, -0.36], [-0.18, -0.5]]));
+    LC.fill(g, skull, HM.skinS);
+    within(skull, () => {
+      // lit planes follow the form: brow, the bridge and far side of the nose, the far cheek and jaw
+      LC.fill(g, LC.smooth(L([[-0.2, -0.62], [0.62, -0.62], [0.62, 0.62], [-0.02, 0.56], [-0.1, 0.42], [-0.18, 0.26], [-0.22, 0.1], [-0.2, -0.08], [-0.24, -0.3]])), HM.skin);
+      LC.fill(g, LC.smooth(L([[0.24, -0.4], [0.62, -0.4], [0.62, 0.4], [0.3, 0.3], [0.34, 0.1], [0.3, -0.1]])), LC.mix(HM.skin, '#FFF0E4', 0.12));
+      g.fillStyle = 'rgba(70,52,44,0.1)'; g.fill(LC.smooth(L([[-0.14, 0.36], [0.16, 0.38], [0.33, 0.34], [0.3, 0.45], [0.12, 0.52], [-0.12, 0.47]])));            // a day's stubble
+      g.fillStyle = 'rgba(80,56,44,0.16)'; g.beginPath(); const so = L1(-0.03, -0.07); g.ellipse(so[0], so[1], 0.08 * hU, 0.04 * hU, 0.2, 0, 7); g.fill(); });   // near eye socket
+    const ear = LC.smooth(L([[-0.37, -0.07], [-0.28, -0.1], [-0.25, 0.02], [-0.27, 0.16], [-0.34, 0.17], [-0.39, 0.06]])); LC.fill(g, ear, HM.skinD);
+    strokeQ(L, [[-0.33, -0.04], [-0.29, 0.02], [-0.31, 0.11]], 'rgba(60,40,30,0.5)', 1.6);
+    const hair = LC.smooth(L([[0.37, -0.25, 1], [0.39, -0.42], [0.24, -0.58], [-0.02, -0.63], [-0.28, -0.56], [-0.44, -0.36], [-0.47, -0.1], [-0.42, 0.12], [-0.36, 0.06], [-0.33, -0.12], [-0.24, -0.25], [-0.06, -0.33], [0.12, -0.32], [0.26, -0.33]]));
+    LC.fill(g, hair, HM.hair); LC.crescent(g, hair, 1, -0.3, 4, HM.hairL);
+    within(hair, () => { [[[0.2, -0.5], [0.0, -0.44], [-0.24, -0.3]], [[0.3, -0.42], [0.1, -0.38], [-0.1, -0.3]]].forEach(c => strokeQ(L, c, 'rgba(110,84,64,0.4)', 1.6)); });
+    strokeQ(L, [[-0.13, -0.16], [-0.02, -0.18], [0.08, -0.2]], '#2A201A', 5); strokeQ(L, [[0.2, -0.205], [0.29, -0.19], [0.37, -0.16]], '#2A201A', 4);   // brows: the inner ends lifted
+    // eyes cast down at the bag: the lids lowered almost to the lashes, the crease above heavy
+    [[-0.025, -0.05, 0.062, 1], [0.29, -0.055, 0.044, 0.8]].forEach(([x, y, r, k]) => {
+      LC.fill(g, LC.smooth(L([[x - r, y], [x, y + 0.028 * k], [x + r, y], [x, y + 0.012 * k]])), '#3A2A22');
+      strokeQ(L, [[x - r, y - 0.002], [x, y + 0.03 * k], [x + r, y - 0.002]], '#1A1310', 2.8);
+      [-0.5, 0, 0.5].forEach(t => strokeQ(L, [[x + r * t, y + 0.024 * k], [x + r * t + 0.004, y + 0.048 * k]], 'rgba(26,19,16,0.8)', 1.4));
+      strokeQ(L, [[x - r * 0.9, y - 0.036], [x, y - 0.044], [x + r * 0.9, y - 0.034]], 'rgba(100,70,54,0.55)', 1.6); });
+    // nose: its bridge in light, the near side in shade, the tip and nostril; the mouth pressed shut
+    LC.fill(g, LC.smooth(L([[0.11, 0.0], [0.17, 0.08], [0.22, 0.15], [0.2, 0.19], [0.13, 0.19], [0.1, 0.12]])), HM.skinS);
+    LC.fill(g, LC.smooth(L([[0.15, 0.01], [0.2, 0.09], [0.24, 0.15], [0.22, 0.18], [0.18, 0.13]])), LC.mix(HM.skin, '#FFF0E4', 0.15));
+    g.fillStyle = '#5A3E32'; const ns = L1(0.19, 0.19); g.beginPath(); g.ellipse(ns[0], ns[1], 4.5, 2.3, 0.2, 0, 7); g.fill();
+    LC.fill(g, LC.smooth(L([[0.05, 0.33], [0.17, 0.322], [0.29, 0.33], [0.26, 0.352], [0.16, 0.357], [0.07, 0.35]])), '#A06A5A');
+    strokeQ(L, [[0.04, 0.336], [0.16, 0.322], [0.3, 0.336]], '#5A3428', 2.2); }
+
+  // =====================================================================
+  // 3. HER, in the empty half for the first time: coat on, bag on her shoulder, hair cut short above the jaw.
+  //    The phone held up between them, turned to him; her free hand at the back of her neck, where her hair used to be.
+  // =====================================================================
+  const SM = { skin: '#D4AB90', skinL: '#E4C1A8', skinS: '#B48B72', skinD: '#7E5C4A', hair: '#231914', hairL: '#6E5546', coat: '#8E5F49', coatL: '#AE7A5F', coatS: '#6A4434', coatD: '#4A2E22', strap: '#2E241F', bag: '#3A2C25', knit: '#3C3430', lip: '#AB6B5E' };
+  const sw = [0.52, 1.6, 1.84], sc = p(...sw), sU = 0.228 * cam.k(sw[2]);
+  const Ms = LC.frameM(sc[0], sc[1], sU, 0), Ls = pts => LC.mapPts(Ms, pts), Ls1 = (x, y) => LC.ap(Ms, [x, y]);
+  const PHW = [0.04, 1.47, 1.6], phS = p(...PHW);
+  const phU = [(phS[0] - sc[0]) / sU, (phS[1] - sc[1]) / sU];                 // the phone in her local units
+  { const sil = LC.smooth(Ls([[-0.4, -0.5], [0.4, -0.5], [1.3, 0.1], [1.0, 1.0], [1.0, 3.6], [-0.9, 3.6], [-0.86, 1.2], [phU[0], phU[1] + 0.4], [phU[0], phU[1] - 0.5], [-0.4, 0.5]])); wallShadow(sil, -80, 0.55); }
+  // her bag, hanging at her far hip on its strap
+  { const bg = LC.smooth(Ls([[-1.0, 2.74], [-0.6, 2.7], [-0.56, 3.5], [-1.04, 3.56]])); LC.fill(g, bg, SM.bag); LC.crescent(g, bg, 1, -0.3, 3, '#5A463A'); }
+  // the raised arm (her left, our right): the coat sleeve rising from her shoulder to a bent elbow by her temple; the forearm runs back behind her head
+  const uaN = LC.smooth(Ls([[0.56, 0.9], [0.84, 0.74], [1.02, 0.42], [1.12, 0.12], [1.1, -0.04, 1], [0.96, -0.02], [0.86, 0.2], [0.66, 0.52], [0.44, 0.76]]));
+  const faN = LC.smooth(Ls([[1.1, -0.04, 1], [0.96, -0.12], [0.7, -0.06], [0.44, 0.06], [0.42, 0.22], [0.66, 0.16], [0.92, 0.1]]));
+  LC.fill(g, faN, SM.coatS);
+  LC.fill(g, uaN, SM.coat); within(uaN, () => LC.fill(g, LC.smooth(Ls([[0.86, 1.0], [1.4, 0.4], [1.4, -0.2], [1.06, -0.2], [0.96, 0.3], [0.76, 0.66]])), SM.coatL));
+  strokeQ(Ls, [[0.96, -0.02], [1.0, 0.14], [0.94, 0.3]], 'rgba(60,36,26,0.4)', 2);
+  // the coat: long, wool, a wide collar, buttoned; three-quarters toward him so its front edge runs left of centre
+  const coat = LC.smooth(Ls([[0.16, 0.62], [0.48, 0.74], [0.72, 0.9], [0.8, 1.26], [0.78, 2.2], [0.86, 3.6], [-0.84, 3.6], [-0.78, 2.2], [-0.8, 1.26], [-0.72, 0.94], [-0.48, 0.78], [-0.16, 0.64]]));
+  LC.fill(g, coat, SM.coatS);
+  within(coat, () => {
+    LC.fill(g, LC.smooth(Ls([[-0.3, 0.5], [1.2, 0.5], [1.2, 3.7], [-0.16, 3.7], [-0.22, 2.4], [-0.28, 1.5]])), SM.coat);
+    LC.fill(g, LC.smooth(Ls([[0.4, 0.6], [1.2, 0.6], [1.2, 3.7], [0.56, 3.7], [0.5, 2.2], [0.46, 1.2]])), SM.coatL);
+    strokeQ(Ls, [[-0.1, 1.86], [-0.12, 2.7], [-0.1, 3.6]], 'rgba(52,30,22,0.55)', 2.4);
+    strokeQ(Ls, [[0.3, 2.4], [0.38, 3.0], [0.32, 3.6]], 'rgba(60,36,26,0.3)', 2.2);
+    [2.05, 2.6, 3.15].forEach(y => { const b = Ls1(-0.02, y); g.fillStyle = '#3A2219'; g.beginPath(); g.arc(b[0], b[1], 5, 0, 7); g.fill(); g.fillStyle = 'rgba(255,220,200,0.3)'; g.beginPath(); g.arc(b[0] + 1.5, b[1] - 1.5, 2, 0, 7); g.fill(); });
+    LC.fill(g, LC.smooth(Ls([[-0.5, 0.82], [-0.42, 0.8], [-0.64, 2.74], [-0.72, 2.74]])), SM.strap); });          // the strap over her far shoulder
+  // the wide collar, lapels laid open over the knit
+  const lapN = LC.smooth(Ls([[0.06, 0.58], [0.5, 0.7], [0.62, 0.92], [0.34, 1.34], [-0.08, 1.86, 1], [0.12, 1.2]])), lapF = LC.smooth(Ls([[-0.08, 0.6], [-0.5, 0.72], [-0.62, 0.94], [-0.4, 1.34], [-0.08, 1.86, 1], [-0.2, 1.2]]));
+  LC.fill(g, LC.smooth(Ls([[-0.22, 0.56], [0.2, 0.54], [0.26, 0.86], [0.0, 1.5], [-0.26, 0.86]])), SM.knit);
+  LC.fill(g, lapF, SM.coatS); LC.fill(g, lapN, SM.coatL); LC.crescent(g, lapN, 1, -0.2, 3, LC.mix(SM.coatL, '#FFFFFF', 0.2));
+  // her far arm, reaching across to hold the phone up between them: the elbow bent at her waist, the forearm rising to the phone
+  const shF = Ls1(-0.64, 1.06), elF = Ls1(-1.28, 1.6), wrF = Ls1(phU[0] + 0.14, phU[1] + 0.44);
+  { const ua = OTM.S().capsule(shF[0], shF[1], 0.18 * sU, elF[0], elF[1], 0.145 * sU).path(0), fa = OTM.S().capsule(elF[0], elF[1], 0.14 * sU, wrF[0], wrF[1], 0.1 * sU).path(0);
+    LC.fill(g, ua, SM.coatS); LC.fill(g, fa, SM.coat); LC.crescent(g, fa, 0.8, -0.6, 5, SM.coatL); LC.crescent(g, ua, 0.8, -0.6, 4, SM.coat);
+    { g.strokeStyle = 'rgba(52,30,22,0.5)'; g.lineWidth = 2; g.lineCap = 'round'; g.beginPath(); g.moveTo(elF[0] + 6, elF[1] - 20); g.quadraticCurveTo(elF[0] + 16, elF[1] - 4, elF[0] + 8, elF[1] + 14); g.stroke(); }
+    const cuff = OTM.S().capsule(...Ls1(phU[0] + 0.22, phU[1] + 0.54), 0.11 * sU, ...Ls1(phU[0] + 0.12, phU[1] + 0.4), 0.105 * sU).path(0); LC.fill(g, cuff, SM.coatD); }
+  // the phone, turned to him: we see the screen at three-quarters (the lock screen: the banner, the waterfall, the long hair)
+  const ph = LC.phone3d(cam, { c: PHW, w: 0.08, h: 0.172, t: 0.009, yaw: -0.66, pitch: 0.04 });
+  const scr = ph.Fs.map(q => [q[0], q[1]]), bk = ph.Bs.map(q => [q[0], q[1]]);
+  LC.fill(g, LC.pathPts([scr[1], bk[1], bk[2], scr[2]]), '#1A1A1C');
+  LC.fill(g, LC.rquad(scr, 9), '#0B0C0E');
+  { const lock = LC.lockScreen(LC.waterfall({ w: 360, h: 780, tight: true }), { banner: { from: '♥', text: 'Call me tonight?' }, time: '4:52', date: 'Sunday 14 April' });
+    const ins = (q, kx, ky) => { const cx = (q[0][0] + q[2][0]) / 2, cy2 = (q[0][1] + q[2][1]) / 2; return q.map(v => [cx + (v[0] - cx) * kx, cy2 + (v[1] - cy2) * ky]); };
+    const sq = ins(scr, 0.9, 0.955);
+    LC.quadImage(g, lock, sq, 32, [ph.Fs[0][2], ph.Fs[1][2]]);
+    g.save(); g.clip(LC.pathPts(sq)); g.fillStyle = LC.lin(g, sq[0][0], sq[0][1], sq[2][0], sq[2][1], [[0.1, '#FFFFFF', 0], [0.28, '#FFFFFF', 0.1], [0.45, '#FFFFFF', 0]]); g.fillRect(0, 0, W, H); g.restore();
+    E.save(); E.fillStyle = OTM.rgba(ICE, 0.35); E.fill(LC.pathPts(sq)); E.restore(); }
+  // her hand: fingers round the phone's back edge, the thumb along the near side of the glass
+  { const e1 = [scr[1][0] * 0.45 + scr[2][0] * 0.55, scr[1][1] * 0.45 + scr[2][1] * 0.55];
+    const hand = LC.smooth([[e1[0] - 6, e1[1] - 26], [e1[0] + 10, e1[1] - 30], [e1[0] + 24, e1[1] - 14], [e1[0] + 28, e1[1] + 14], [e1[0] + 22, e1[1] + 40], [e1[0] + 4, e1[1] + 48], [e1[0] - 6, e1[1] + 30], [e1[0] - 4, e1[1] + 6]]);
+    LC.fill(g, hand, SM.skin); LC.crescent(g, hand, 1, -0.3, 3, SM.skinL);
+    [[-4, -8], [-5, 6], [-5, 20]].forEach(([dx, dy]) => { g.fillStyle = SM.skinS; g.beginPath(); g.ellipse(e1[0] + dx, e1[1] + dy, 5.5, 5, 0, 0, 7); g.fill(); });     // fingertips over the edge of the glass
+    const th = OTM.S().capsule(e1[0] + 2, e1[1] + 36, 7, e1[0] - 18, e1[1] + 26, 5.5).path(0); LC.fill(g, th, SM.skinS); }
+  // her head: three-quarters toward him, level; the short hair; tired, composed
+  { const Mh = LC.frameM(sc[0], sc[1], sU, -0.03), L = pts => LC.mapPts(Mh, pts), L1 = (x, y) => LC.ap(Mh, [x, y]);
+    const neck = LC.smooth(L([[-0.2, 0.24], [0.22, 0.2], [0.26, 0.56], [-0.2, 0.58]])); LC.fill(g, neck, SM.skinS); within(neck, () => LC.fill(g, LC.smooth(L([[0.04, 0.1], [0.5, 0.1], [0.5, 0.8], [0.06, 0.8]])), SM.skin));
+    // the back of the bob, behind the head
+    LC.fill(g, LC.smooth(L([[0.0, -0.55], [0.3, -0.5], [0.46, -0.3], [0.5, 0.0], [0.48, 0.28], [0.34, 0.32], [0.1, 0.24], [-0.2, 0.0]])), SM.hair);
+    // the turtleneck, up under the jaw
+    { const tn = LC.smooth(L([[-0.26, 0.4], [-0.08, 0.46], [0.16, 0.42], [0.3, 0.36], [0.34, 0.64], [0.0, 0.76], [-0.3, 0.66]])); LC.fill(g, tn, SM.knit); LC.crescent(g, tn, 1, -0.4, 3, '#5E5550');
+      [[-0.16, 0.5, -0.14, 0.7], [-0.02, 0.5, 0.0, 0.72], [0.12, 0.47, 0.14, 0.7], [0.24, 0.44, 0.26, 0.66]].forEach(([a, b, c, d]) => strokeQ(L, [[a, b], [c, d]], 'rgba(20,16,14,0.35)', 1.4)); }
+    // her hand behind her neck, under the blunt ends of the hair where it used to be long: only the fingers show, round the side of the neck
+    { [[0.5, 0.33, 0.33, 0.35], [0.52, 0.4, 0.34, 0.42], [0.5, 0.47, 0.35, 0.49]].forEach(([a, b, c, d], i) => { const f2 = OTM.S().capsule(...L1(a, b), 0.036 * sU, ...L1(c, d), 0.03 * sU).path(0); LC.fill(g, f2, i === 1 ? SM.skin : SM.skinS); LC.crescent(g, f2, 0.3, -1, 2, SM.skinL); }); }
+    const skull = LC.smooth(L([[-0.03, -0.52], [-0.24, -0.46], [-0.35, -0.3], [-0.39, -0.1], [-0.385, 0.06], [-0.34, 0.22], [-0.26, 0.36], [-0.15, 0.46], [-0.04, 0.505], [0.07, 0.48], [0.19, 0.4], [0.28, 0.26], [0.35, 0.08], [0.39, -0.14], [0.34, -0.36], [0.17, -0.5]]));
+    LC.fill(g, skull, SM.skinS);
+    within(skull, () => {
+      // window light on the near side: forehead, the near cheek, the bridge of the nose; the far cheek, turned to him, in soft shade
+      LC.fill(g, LC.smooth(L([[-0.24, -0.62], [0.6, -0.62], [0.6, 0.62], [-0.2, 0.58], [-0.24, 0.42], [-0.2, 0.3], [-0.26, 0.16], [-0.26, 0.0], [-0.22, -0.14], [-0.28, -0.32]])), SM.skin);
+      LC.fill(g, LC.smooth(L([[0.12, -0.6], [0.6, -0.6], [0.6, 0.6], [0.2, 0.48], [0.24, 0.26], [0.18, 0.08], [0.16, -0.24]])), SM.skinL);
+      g.fillStyle = 'rgba(120,80,66,0.12)'; [[0.15, 0.01], [-0.22, 0.0]].forEach(([x, y]) => { const c = L1(x, y); g.beginPath(); g.ellipse(c[0], c[1], 0.06 * sU, 0.018 * sU, 0, 0, 7); g.fill(); });   // tired under the eyes
+    });
+    // the short hair: cut above the jaw; parted on the near side; the far side swings forward over the far cheek, ending in a blunt line
+    const hair = LC.smooth(L([[0.12, -0.6], [0.36, -0.48], [0.48, -0.24], [0.5, 0.04], [0.48, 0.3, 1], [0.38, 0.31, 1], [0.36, 0.1], [0.32, -0.08], [0.22, -0.24], [0.08, -0.33], [0.02, -0.36, 1], [-0.12, -0.31], [-0.28, -0.2], [-0.36, 0.02], [-0.38, 0.32, 1], [-0.5, 0.33, 1], [-0.52, 0.04], [-0.46, -0.3], [-0.26, -0.54]]));
+    LC.fill(g, hair, SM.hair); LC.crescent(g, hair, 1, -0.3, 5, SM.hairL); LC.crescent(g, hair, 1, -0.3, 2, '#A0826C');
+    within(hair, () => { [[[0.12, -0.5], [0.34, -0.34], [0.4, 0.08]], [[-0.02, -0.52], [-0.3, -0.38], [-0.42, 0.1]], [[0.0, -0.36], [-0.24, -0.26], [-0.34, 0.06]]].forEach(c => strokeQ(L, c, 'rgba(110,86,70,0.4)', 1.5)); });
+    const ear = LC.smooth(L([[0.3, -0.06], [0.36, -0.08], [0.4, 0.02], [0.38, 0.14], [0.32, 0.15]])); LC.fill(g, ear, SM.skin); LC.crescent(g, ear, 1, -0.3, 2, SM.skinL);
+    strokeQ(L, [[0.05, -0.175], [0.15, -0.195], [0.26, -0.165]], '#3A2820', 4); strokeQ(L, [[-0.31, -0.165], [-0.23, -0.185], [-0.14, -0.175]], '#3A2820', 3.4);
+    // eyes on him: almond whites, the irises at the inner corners, the lids heavy with tiredness
+    [[0.15, -0.06, 0.06, 1], [-0.22, -0.065, 0.044, 0.78]].forEach(([x, y, r, k]) => {
+      const e = LC.smooth(L([[x - r, y + 0.002], [x - r * 0.35, y - 0.04 * k], [x + r * 0.4, y - 0.038 * k], [x + r, y], [x + r * 0.2, y + 0.026 * k], [x - r * 0.5, y + 0.024 * k]]));
+      LC.fill(g, e, '#E9DFD4'); within(e, () => { const ir = L1(x - r * 0.3, y - 0.008); g.fillStyle = '#3A2A20'; g.beginPath(); g.arc(ir[0], ir[1], 0.034 * sU * k, 0, 7); g.fill(); g.fillStyle = '#16100C'; g.beginPath(); g.arc(ir[0], ir[1], 0.014 * sU * k, 0, 7); g.fill(); g.fillStyle = 'rgba(255,255,255,0.8)'; g.beginPath(); g.arc(ir[0] + 2, ir[1] - 2, 1.6, 0, 7); g.fill(); });
+      strokeQ(L, [[x - r, y + 0.002], [x - r * 0.25, y - 0.044 * k], [x + r, y]], '#21160F', 3);
+      strokeQ(L, [[x - r * 0.6, y - 0.07 * k], [x, y - 0.078 * k], [x + r * 0.7, y - 0.064 * k]], 'rgba(130,90,72,0.45)', 1.4); });
+    // nose toward him; the mouth closed, level, held
+    LC.fill(g, LC.smooth(L([[-0.1, 0.0], [-0.15, 0.08], [-0.2, 0.16], [-0.18, 0.2], [-0.11, 0.2], [-0.08, 0.13]])), LC.mix(SM.skinS, SM.skin, 0.35));
+    LC.fill(g, LC.smooth(L([[-0.05, -0.02], [-0.12, 0.08], [-0.17, 0.16], [-0.12, 0.19], [-0.06, 0.12]])), SM.skin);
+    g.fillStyle = '#7E5444'; const ns = L1(-0.15, 0.192); g.beginPath(); g.ellipse(ns[0], ns[1], 3.8, 2.1, -0.2, 0, 7); g.fill();
+    LC.fill(g, LC.smooth(L([[-0.19, 0.326], [-0.1, 0.314], [0.0, 0.316], [0.07, 0.326], [0.0, 0.354], [-0.12, 0.352]])), SM.lip);
+    strokeQ(L, [[-0.19, 0.328], [-0.06, 0.326], [0.07, 0.328]], '#5E3328', 1.8); }
+
+  // =====================================================================
+  // 4. FINISH, and the line in the picture
+  // =====================================================================
+  f.finish({ letterbox: LC.ASPECT, grain: 0.045, fibre: 0, vignette: 0, halation: 0.4, beforePost: c => { LC.vignette(c, 0.3, '#2E2620', 1100, 480, 520, 1250); c.save(); c.globalCompositeOperation = 'multiply'; c.fillStyle = LC.lin(c, 0, 0, W, 0, [[0, '#7A7068', 0.55], [0.45, '#FFFFFF', 0], [1, '#FFFFFF', 0]]); c.fillRect(0, 0, W, H); c.restore(); } });
+  LC.caption(ctx, 'Her', ['We’ve never taken this photo.', 'We’ve never been to a waterfall.'], { y: 990, size: 40, lead: 1.3 });
+  LC.slate(ctx, 3, 'THE SCREEN BETWEEN THEM  ·  INT. APARTMENT  ·  DAY');
+  window.FRAME_READY = true;
+})();
+</script>

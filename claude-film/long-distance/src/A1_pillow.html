@@ -1,0 +1,205 @@
+<!doctype html><meta charset="utf-8"><title>A1 · The Pillow</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_a.js"></script>
+<script>
+/* LONG DISTANCE · LOOK A "THE GLOW" · A1 THE PILLOW (INT. BEDROOM, night)
+   We stand at the foot of the bed on the made side and look up it toward the headboard. His half is the far half: he lies on
+   his side under the duvet, facing us and the smooth pillow. The phone rests on that pillow where a head would be, screen turned
+   to him, back to us; his arm reaches across and his hand lies over it the way you would touch a sleeping shoulder. His eyes are
+   closing. The only warm light is the phone's, and a screen lights only what is in front of it: his face, the inside of his arm,
+   his pillow. The street's cold comes through the blinds and lays its slats across his body and the made half, which lies flat
+   and turned down between him and us. World units are metres, y up; the head of the bed is z = 0, his side is x > 0. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LA.P;
+  const f = OTM.frame(ctx, { seed: 11 });
+  const g = f.world, E = f.emissive;
+  const cam = LA.lookAt([-1.02, 1.52, 2.1], [-0.02, 0.62, 0.4], { f: 2750, cy: 520 });
+  const sp = LA.space(cam, 2.3);
+  const V = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k];
+  const N = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const X = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const D3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const poly = (pts, col, a) => { g.save(); if (a != null) g.globalAlpha = a; g.fillStyle = col; g.fill(LA.pathPts(cam.pts(pts))); g.restore(); };
+
+  // ------------------------------------------------------------------ the bedding as heightfields (metres)
+  const MATT = 0.53;
+  const pilHis = LA.dome(0.38, 0.27, 0.33, 0.21, MATT, 0.1, 4, (x, z, s) =>
+    -0.055 * Math.exp(-((x - 0.25) ** 2 / 0.014 + (z - 0.28) ** 2 / 0.016))            // where his head presses in
+    + 0.006 * Math.sin(x * 38 + z * 21) * (1 - s) + 0.005 * Math.sin(z * 47 - x * 13) * s, 0.93);   // slept-on creases
+  const pilSm = LA.dome(-0.4, 0.27, 0.32, 0.205, MATT, 0.118, 4.5, null, 0.93);
+  const pilSmFull = LA.dome(-0.4, 0.27, 0.32, 0.205, MATT, 0.118, 4.5);
+  // his body under the duvet: a ridge along his side (shoulder, ribs, the dip of the waist, hip, knees drawn up a little)
+  const prof = [[0.46, 0.15, 0.25, 0.19], [0.6, 0.2, 0.26, 0.22], [0.82, 0.18, 0.28, 0.24], [1.06, 0.115, 0.3, 0.23], [1.32, 0.205, 0.3, 0.26], [1.56, 0.15, 0.26, 0.24], [1.76, 0.125, 0.18, 0.22], [1.98, 0.09, 0.22, 0.22], [2.1, 0.07, 0.24, 0.24]];
+  const at = z => { let i = 1; while (i < prof.length - 1 && prof[i][0] < z) i++; const a = prof[i - 1], b = prof[i]; const t = LA.clamp((z - a[0]) / (b[0] - a[0]), 0, 1); const u = t * t * (3 - 2 * t); return [a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u, a[3] + (b[3] - a[3]) * u]; };
+  const duvet = (x, z) => {
+    if (z < 0.47 || z > 2.07 || x < -0.03 || x > 0.86) return null;
+    const [hh, xc, w] = at(z); const u = (x - xc) / w;
+    let y = MATT + 0.035 + (Math.abs(u) < 1 ? hh * Math.pow(1 - u * u, 1.1) : 0) + 0.035 * Math.max(0, 1 - (u / 2.4) ** 2);
+    const env = Math.max(0, 1 - Math.abs(u) / 2.6);
+    y += env * (0.009 * Math.sin(z * 17 + x * 9) + 0.006 * Math.sin(z * 31 - x * 22 + 1.3));
+    if (x < 0.02) y -= (0.02 - x) * 1.2;
+    return y; };
+  const made = (x, z) => {
+    if (x < -0.82 || x > 0.0 || z < 0.47 || z > 2.07) return null;
+    let y = MATT + 0.012;
+    if (z > 0.55 && z < 0.86) y += 0.012 + (z < 0.58 ? 0.008 * Math.sin((z - 0.55) / 0.03 * Math.PI) : 0);
+    if (x > -0.04) y -= (x + 0.04) * 0.3;
+    return y; };
+
+  // ------------------------------------------------------------------ the phone, standing in the smooth pillow, and its light
+  const PB = [-0.25, 0.628, 0.285];
+  const n = N([0.78, 0.1, -0.62]);
+  const up = N(V([0, 1, 0], n, -D3([0, 1, 0], n)));
+  const wd = N(X(up, n));
+  const PT = V(PB, up, 0.156);
+  const corner = (a, b) => V(V(PB, up, a * 0.156), wd, b * 0.037);
+  const LP = V(V(PB, up, 0.085), n, 0.03);
+  const LPc = sp.P(LP);
+
+  // ------------------------------------------------------------------ HIM, traced first (the cloth needs his shadow and his depth)
+  const himA = LA.albedoFor({ skin: '#A87452', lip: '#8C5848', hair: '#16100C', stubble: '#2E2420', stubbleK: 0.55, seed: 4, cloth: { shirt: '#5B6672' } });
+  const HC = [0.245, 0.69, 0.285];
+  const fwd = N([-0.66, 0.6, 0.46]), chin0 = [0.12, -0.3, 1];
+  const left = N(X(chin0, fwd)), chin = X(fwd, left);
+  const head = sp.obj(HC, left, chin, 0.23, { albedo: himA });
+  LA.head(head, 'him', { neckLen: 0.7 });
+  LA.hairHim(head);
+  const bodyP = [];
+  sp.ell(bodyP, [0.24, 0.655, 0.47], [0.13, 0.085, 0.07], { albedo: himA, mat: 'shirt', g: 'cloth' });
+  const lamp = { type: 'point', p: LPc, col: [3.1, 1.84, 0.86], d0: 0.24 * sp.k, area: 16, spec: 26, wrap: 0.12, emit: sp.D(n), spill: 0.08, steps: [[0.1, 0.3], [0.3, 0.64], [0.7, 1.0]], soft: 0.06 };
+  const winDir = N([1, 0.86, -0.16]);
+  const tl = [lamp, { type: 'amb', up: [0.016, 0.024, 0.056], down: [0.005, 0.008, 0.018] },
+    { type: 'dir', d: sp.D(winDir), col: [0.1, 0.15, 0.32], steps: [[0.25, 0.6], [0.55, 1]], soft: 0.05, shadow: false }];
+  const R1 = LA.trace([head].concat(bodyP), tl, { add: [0.003, 0.005, 0.012], specMat: { skin: 0.12, lipL: 0.22 } });
+  const arm = [];
+  const SH = [0.22, 0.69, 0.5], EL = [0.035, 0.6, 0.56];
+  const WR = V(V(V(PT, [0, 0, 1], 0.02), n, 0.085), up, 0.03);
+  sp.cap(arm, SH, V(SH, N([EL[0] - SH[0], EL[1] - SH[1], EL[2] - SH[2]]), 0.1), 0.05, { albedo: himA, mat: 'shirt', g: 'arm' });
+  sp.cap(arm, SH, EL, 0.04, { albedo: himA, mat: 'skin', g: 'arm' });
+  const mid = [(EL[0] + WR[0]) / 2, (EL[1] + WR[1]) / 2 + 0.015, (EL[2] + WR[2]) / 2];
+  sp.cap(arm, EL, mid, 0.036, { albedo: himA, mat: 'skin', g: 'arm' });
+  sp.cap(arm, mid, V(WR, N([WR[0] - mid[0], WR[1] - mid[1], WR[2] - mid[2]]), -0.02), 0.029, { albedo: himA, mat: 'skin', g: 'arm' });
+  const fdir = N(V(V([0, -0.25, 0], n, -1.0), [0, 0, -1], 0.1));
+  const palm = N(V([0, -1, 0], n, -0.25));
+  const hnd = sp.obj(WR, fdir, palm, 0.22, { albedo: himA });
+  LA.hand(hnd, 1, { curl: [0.78, 0.82, 0.86, 0.9], spread: 0.05, thumb: { a: 0.55, curl: 0.2, down: 0.55 } }, { forearm: 0.1, g: 'arm' });
+  const lamp2 = Object.assign({}, lamp, { area: 0, shadow: false, wrap: 0.25, spill: 0.3, col: [2.6, 1.55, 0.74] });
+  const R2 = LA.trace(arm.concat([hnd]), [lamp2, tl[1], tl[2]], { add: [0.003, 0.005, 0.012], blend: { arm: 0.06 }, crossBlend: true });
+
+  // ================================================================== 1. the room
+  g.fillStyle = P.n1; g.fillRect(0, 0, W, H);
+  poly([[-3, 0, -0.08], [3, 0, -0.08], [3, 2.7, -0.08], [-3, 2.7, -0.08]], '#0C1322');
+  poly([[1.45, 0, -0.08], [1.45, 0, 5], [1.45, 2.7, 5], [1.45, 2.7, -0.08]], '#101928');
+  poly([[0.8, 0, -0.08], [1.45, 0, -0.08], [1.45, 0, 5], [0.8, 0, 5]], '#070B14');
+  poly([[0.92, 0, 0.0], [1.4, 0, 0.0], [1.4, 0.58, 0.0], [0.92, 0.58, 0.0]], '#0A101C');
+  poly([[0.92, 0.58, -0.05], [1.4, 0.58, -0.05], [1.4, 0.58, 0.42], [0.92, 0.58, 0.42]], '#18233B');
+  poly([[0.92, 0, 0.42], [1.4, 0, 0.42], [1.4, 0.58, 0.42], [0.92, 0.58, 0.42]], '#0D1424');
+  { const b0 = cam.P([1.14, 0.58, 0.16]); const kk = cam.k(b0[2]);
+    g.fillStyle = '#0A101D'; g.fillRect(b0[0] - 0.012 * kk, b0[1] - 0.32 * kk, 0.024 * kk, 0.32 * kk);
+    g.fill(LA.pathPts([[b0[0] - 0.1 * kk, b0[1] - 0.32 * kk], [b0[0] + 0.1 * kk, b0[1] - 0.32 * kk], [b0[0] + 0.07 * kk, b0[1] - 0.54 * kk], [b0[0] - 0.07 * kk, b0[1] - 0.54 * kk]]));
+    g.fillStyle = 'rgba(120,145,190,0.18)'; g.fill(LA.pathPts([[b0[0] - 0.1 * kk, b0[1] - 0.32 * kk], [b0[0] - 0.078 * kk, b0[1] - 0.32 * kk], [b0[0] - 0.052 * kk, b0[1] - 0.54 * kk], [b0[0] - 0.07 * kk, b0[1] - 0.54 * kk]])); }
+  poly([[-0.86, 0.5, -0.06], [0.86, 0.5, -0.06], [0.86, 1.12, -0.06], [-0.86, 1.12, -0.06]], '#0F1829');
+  poly([[-0.86, 1.12, -0.06], [0.86, 1.12, -0.06], [0.86, 1.12, -0.0], [-0.86, 1.12, -0.0]], '#24344F');
+  poly([[-0.86, 1.1, -0.0], [0.86, 1.1, -0.0], [0.86, 1.12, -0.0], [-0.86, 1.12, -0.0]], '#2E4262');
+  // the screen also faces the head of the bed: its warmth climbs the headboard and the wall behind it, in steps
+  { const hbClip = LA.pathPts(cam.pts([[-0.86, 0.5, -0.06], [0.86, 0.5, -0.06], [0.86, 1.12, -0.06], [-0.86, 1.12, -0.06]]));
+    LA.pool3(g, cam, [LP[0] + 0.1, LP[1] + 0.06, -0.059], [1, 0, 0], [0, 1, 0], [[0.36, P.g6, 0.5], [0.24, P.g5, 0.45], [0.14, P.g4, 0.4]], { blur: 14, clip: hbClip });
+    const wallClip = LA.pathPts(cam.pts([[-1.5, 1.12, -0.079], [1.45, 1.12, -0.079], [1.45, 2.7, -0.079], [-1.5, 2.7, -0.079]]));
+    LA.pool3(g, cam, [LP[0] + 0.12, 1.12, -0.078], [1, 0, 0], [0, 1, 0], [[0.45, P.g6, 0.3], [0.26, P.g5, 0.22]], { blur: 22, clip: wallClip, sy: 0.7 }); }
+  poly([[-0.8, 0.27, 2.04], [0.8, 0.27, 2.04], [0.8, 0.5, 2.04], [-0.8, 0.5, 2.04]], '#0E1626');
+  poly([[-0.8, MATT, 0], [0.8, MATT, 0], [0.8, MATT, 2.04], [-0.8, MATT, 2.04]], '#16223A');
+  poly([[-0.82, MATT + 0.012, 0.47], [-0.82, MATT + 0.012, 2.07], [-0.85, 0.16, 2.07], [-0.85, 0.16, 0.47]], '#172540');
+  poly([[-0.82, MATT + 0.024, 0.55], [-0.82, MATT + 0.024, 0.86], [-0.85, 0.24, 0.86], [-0.85, 0.24, 0.55]], '#1F304E');
+
+  // ================================================================== 2. the bedding, lit
+  const occH = [pilHis, pilSmFull, duvet];
+  const lampW = { type: 'point', p: LP, col: [3.1, 1.84, 0.86], d0: 0.24, emit: n, spill: 0.06, steps: [[0.1, 0.28], [0.3, 0.6], [0.7, 1.0]], soft: 0.05 };
+  const streetW = { type: 'dir', d: winDir, col: [0.03, 0.045, 0.09], steps: [[0.5, 1]], soft: 0.5 };   // the street's diffuse cold (the slats are projected below)
+  const ambW = { type: 'amb', up: [0.028, 0.043, 0.095], down: [0.007, 0.011, 0.026] };
+  const occFn = (C, L) => {
+    if (L.type !== 'point') return 0;
+    const a = sp.P(C), b = sp.P(L.p); let d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]]; const dist = Math.hypot(d[0], d[1], d[2]); d = [d[0] / dist, d[1] / dist, d[2] / dist];
+    return (R1.occluded(a[0], a[1], a[2], d[0], d[1], d[2], dist) || R2.occluded(a[0], a[1], a[2], d[0], d[1], d[2], dist)) ? 1 : 0; };
+  const lightsW = [lampW, streetW, ambW];
+  const Q = [].concat(
+    LA.cloth(cam, { x: [-0.04, 0.88], z: [0.46, 2.08], step: 0.012, h: duvet, alb: '#C7CFDB', lights: lightsW, occ: [duvet], occFn }),
+    LA.cloth(cam, { x: [0.04, 0.72], z: [0.05, 0.49], step: 0.007, h: pilHis, alb: '#D2D9E3', lights: lightsW, occ: occH, occFn }),
+    LA.cloth(cam, { x: [-0.73, -0.07], z: [0.06, 0.48], step: 0.007, h: pilSm, alb: '#D9E0EA', lights: lightsW, occ: occH, occFn }));
+  Q.sort((p, q) => q.depth - p.depth);
+  // the pillows' sides: a band from the edge of the top down to the mattress (the heightfield stops short of the steep edge)
+  const sideBand = (cx, cz, a, b, t, p, col) => { const top = [], bot = []; const e = Math.pow(0.93, 1 / p);
+    for (let k = 0; k <= 96; k++) { const an = k / 96 * Math.PI * 2; const c = Math.cos(an), sn = Math.sin(an); const ux = Math.sign(c) * Math.pow(Math.abs(c), 2 / p), uz = Math.sign(sn) * Math.pow(Math.abs(sn), 2 / p);
+      top.push(cam.P([cx + a * e * ux, MATT + t * Math.pow(0.07, 0.38), cz + b * e * uz])); bot.push(cam.P([cx + a * 1.02 * ux, MATT + 0.004, cz + b * 1.02 * uz])); }
+    const pth = new Path2D(); top.forEach((q, i) => i ? pth.lineTo(q[0], q[1]) : pth.moveTo(q[0], q[1])); pth.closePath(); const pb = new Path2D(); bot.forEach((q, i) => i ? pb.lineTo(q[0], q[1]) : pb.moveTo(q[0], q[1])); pb.closePath();
+    g.fillStyle = col; g.fill(pb); g.fill(pth);
+    const hull = LA.layer(); hull.fillStyle = '#000'; hull.fill(pb); return pb; };
+  const pbS = sideBand(-0.4, 0.27, 0.32, 0.205, 0.118, 4.5, '#1F2E4A');
+  const pbH = sideBand(0.38, 0.27, 0.33, 0.21, 0.1, 4, '#1C2A44');
+  // the made half, shaded per pixel: flat cotton under the room's dark, and the street through the blinds lying across it in slats,
+  // with the shadow of his body (the light comes over him from the window on his side). Nobody has lain here.
+  const madeLayer = (() => {
+    const L = LA.layer(); const poly2 = cam.pts([[-0.82, MATT, 0.47], [0.0, MATT, 0.47], [0.0, MATT, 2.07], [-0.82, MATT, 2.07]]);
+    const xs = poly2.map(q => q[0]), ys = poly2.map(q => q[1]); const X0 = Math.max(0, Math.floor(Math.min(...xs))), X1 = Math.min(W, Math.ceil(Math.max(...xs))), Y0 = Math.max(0, Math.floor(Math.min(...ys))), Y1 = Math.min(H, Math.ceil(Math.max(...ys)));
+    const img = L.createImageData(X1 - X0, Y1 - Y0), D = img.data; const alb = LA.L3('#C3CCD9'); const E0 = cam.eye;
+    const occ = (x, y, z) => { for (let k = 1; k <= 40; k++) { const t = 0.03 * k; const px = x + winDir[0] * t, py = y + winDir[1] * t, pz = z + winDir[2] * t; if (py > 1.2) return 0; const hh = duvet(px, pz); if (hh != null && hh > py) return 1; } return 0; };
+    for (let py = Y0; py < Y1; py++) for (let px = X0; px < X1; px++) {
+      const d = cam.ray(px + 0.5, py + 0.5); if (d[1] >= 0) continue;
+      let yP = MATT + 0.012; let t = (yP - E0[1]) / d[1]; let x = E0[0] + d[0] * t, z = E0[2] + d[2] * t;
+      if (z > 0.55 && z < 0.86) { yP = MATT + 0.024; t = (yP - E0[1]) / d[1]; x = E0[0] + d[0] * t; z = E0[2] + d[2] * t; }
+      if (x < -0.82 || x > 0.0 || z < 0.47 || z > 2.07) continue;
+      // ambient + the street's diffuse cold
+      let r = 0.028 + 0.03 * 0.55, gg = 0.043 + 0.045 * 0.55, b = 0.095 + 0.09 * 0.55;
+      // the slats: where the line to the light passes through an open slat of the window, and over him
+      let win = 0; const SS = [[0, 0], [0.33, 0.33], [-0.33, -0.33]];
+      for (let k = 0; k < 3; k++) { const tt = (1.45 - x) / winDir[0]; const yw = yP + winDir[1] * tt + SS[k][0] * 0.003, zw = z + winDir[2] * tt + SS[k][1] * 0.003;
+        if (yw < 0.95 || yw > 2.45 || zw < 0.36 || zw > 1.7) continue; const fr = ((yw - 0.95) / 0.021) % 1; win += fr < 0.5 ? 1 : 0.12; }
+      win /= 3; if (win > 0 && occ(x, yP, z)) win = 0;
+      const ndl = winDir[1]; r += 0.17 * win * ndl * 1.6; gg += 0.24 * win * ndl * 1.6; b += 0.46 * win * ndl * 1.6;
+      // the lip of the turned-down sheet
+      let k2 = 1; if (z > 0.55 && z < 0.572) k2 = 1.3; else if (z > 0.55 && z < 0.86) k2 = 1.06; else if (z >= 0.86 && z < 0.9) k2 = 0.62 + 0.38 * (z - 0.86) / 0.04;
+      k2 *= 1 - 0.55 * Math.max(0, Math.min(1, (x + 0.09) / 0.09)) ** 1.5;          // it dips into the gap where his half begins
+      k2 *= 0.92 + 0.08 * Math.min(1, Math.abs(x + 0.41) / 0.4);                    // a faint sag down the middle of the empty side
+      const q = ((py - Y0) * (X1 - X0) + (px - X0)) * 4;
+      D[q] = LA.l2s(alb[0] * r * k2 + 0.003); D[q + 1] = LA.l2s(alb[1] * gg * k2 + 0.005); D[q + 2] = LA.l2s(alb[2] * b * k2 + 0.012); D[q + 3] = 255;
+    }
+    L.putImageData(img, X0, Y0); return L.canvas; })();
+  const nearer = q => { const c = sp.P(q.c); const s = [(q.poly[0][0] + q.poly[2][0]) / 2, (q.poly[0][1] + q.poly[2][1]) / 2]; const z = R1.zAt(s[0], s[1]); if (!(z > -1e8 && c[2] > z + 4)) return false;
+    const vd = cam.view(q.c), vn = cam.rot(q.n); return (vd[0] * vn[0] + vd[1] * vn[1] + vd[2] * vn[2]) < 0; };
+  { const cl = LA.layer(); LA.drawCloth(cl, Q, q => !nearer(q)); g.save(); g.filter = 'blur(1.2px)'; g.drawImage(cl.canvas, 0, 0); g.restore(); }
+  g.save(); g.filter = 'blur(0.6px)'; g.drawImage(madeLayer, 0, 0); g.restore();
+  { const pts = []; for (let k = 0; k <= 30; k++) { const z = 0.48 + k / 30 * 1.6; pts.push(cam.P([0.005, MATT + 0.01, z])); } g.save(); g.strokeStyle = 'rgba(4,7,15,0.7)'; g.lineWidth = 26; g.filter = 'blur(9px)'; g.stroke(LA.pathPts(pts, true)); g.lineWidth = 5; g.filter = 'blur(2px)'; g.stroke(LA.pathPts(pts, true)); g.restore(); }
+  R1.draw(g);
+  LA.features(g, R1, head, 'him', { eyes: 0.1, mouth: 'smile', brow: 1.1 });
+  { const cl = LA.layer(); LA.drawCloth(cl, Q, nearer); g.save(); g.filter = 'blur(1.2px)'; g.drawImage(cl.canvas, 0, 0); g.restore(); }
+  { g.save(); g.strokeStyle = 'rgba(150,172,210,0.35)'; g.lineWidth = 2; const pts = []; for (let k = 0; k <= 40; k++) { const z = 0.552, x = -0.82 + k / 40 * 0.8; pts.push(cam.P([x, made(x, z) + 0.004, z])); } g.stroke(LA.pathPts(pts, true)); g.restore(); }
+
+  // ================================================================== 3. the phone, back to us
+  const BQ = [corner(1, -1), corner(1, 1), corner(0, 1), corner(0, -1)].map(p => V(p, n, -0.004));
+  const bq = cam.pts(BQ);
+  LA.soft(g, LA.rquad(bq, 18), P.g1, 18, 0.7, 'screen');
+  g.fillStyle = '#0A0E17'; g.fill(LA.rquad(bq, 16));
+  g.save(); g.clip(LA.rquad(bq, 16));
+  g.fillStyle = LA.lg(g, bq[1][0], bq[1][1], bq[3][0], bq[3][1], [[0, 'rgba(120,145,190,0.24)'], [0.55, 'rgba(120,145,190,0.05)'], [1, 'rgba(120,145,190,0)']]); g.fillRect(0, 0, W, H);
+  const cq = cam.pts([corner(0.95, -0.88), corner(0.95, -0.12), corner(0.64, -0.12), corner(0.64, -0.88)].map(p => V(p, n, -0.006)));
+  g.fillStyle = '#05080E'; g.fill(LA.rquad(cq, 9)); g.strokeStyle = 'rgba(130,155,200,0.32)'; g.lineWidth = 1.3; g.stroke(LA.rquad(cq, 9));
+  [[0.87, -0.7], [0.87, -0.3], [0.72, -0.7]].forEach(([a, b]) => { const c = cam.P(V(corner(a, b), n, -0.008)); const r = 0.0085 * cam.k(c[2]); g.fillStyle = '#111725'; g.beginPath(); g.arc(c[0], c[1], r, 0, 7); g.fill(); g.strokeStyle = 'rgba(140,165,210,0.35)'; g.lineWidth = 1.1; g.stroke(); });
+  g.restore();
+  { const e0 = cam.P(corner(0.97, 1)), e1 = cam.P(corner(0.03, 1)); g.save(); g.strokeStyle = P.gHot; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath(); g.moveTo(e0[0], e0[1]); g.lineTo(e1[0], e1[1]); g.stroke(); g.restore();
+    E.strokeStyle = OTM.rgba(P.gHot, 0.9); E.lineWidth = 12; E.beginPath(); E.moveTo(e0[0], e0[1]); E.lineTo(e1[0], e1[1]); E.stroke();
+    const t0 = cam.P(corner(1, -0.9)), t1 = cam.P(corner(1, 0.95)); g.save(); g.strokeStyle = OTM.rgba(P.g1, 0.8); g.lineWidth = 2; g.beginPath(); g.moveTo(t0[0], t0[1]); g.lineTo(t1[0], t1[1]); g.stroke(); g.restore(); }
+  E.fillStyle = OTM.rgba(P.g2, 0.35); E.beginPath(); E.ellipse(LPc[0], LPc[1], 0.05 * sp.k, 0.07 * sp.k, 0, 0, 7); E.fill();
+
+  // ================================================================== 4. his arm across the bed, his hand over the phone
+  { const sh = LA.layer(); sh.drawImage(R2.canvas, R2.x - 8, R2.y + 14); sh.globalCompositeOperation = 'source-in'; sh.fillStyle = 'rgba(3,6,14,0.65)'; sh.fillRect(0, 0, W, H); g.save(); g.filter = 'blur(8px)'; g.drawImage(sh.canvas, 0, 0); g.restore(); }
+  R2.draw(g);
+
+  // ================================================================== 5. the glow in the air between his face and the screen
+  { const hc = sp.P(HC); g.save(); g.globalCompositeOperation = 'screen';
+    g.fillStyle = LA.rg(g, hc[0] * 0.55 + LPc[0] * 0.45, hc[1] * 0.55 + LPc[1] * 0.45, 0, 0.24 * sp.k, [[0, P.g2, 0.08], [0.5, P.g3, 0.035], [1, P.g4, 0]]); g.fillRect(0, 0, W, H); g.restore(); }
+
+  // ================================================================== 6. finish
+  f.finish({ letterbox: 0, grain: 0.06, fibre: 0, vignette: 0, halation: 0.7, beforePost: c => {
+    const hc = sp.P(HC); c.save(); c.fillStyle = LA.rg(c, hc[0] * 0.5 + LPc[0] * 0.5, hc[1] * 0.5 + LPc[1] * 0.5 + 60, 300, 1350, [[0, P.ink, 0], [0.55, P.ink, 0.3], [1, P.ink, 0.66]]); c.fillRect(0, 0, W, H); c.restore(); } });
+  window.FRAME_READY = true;
+})();
+</script>
