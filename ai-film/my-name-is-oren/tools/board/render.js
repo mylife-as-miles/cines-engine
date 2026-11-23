@@ -28,7 +28,7 @@ const server = http.createServer((req, res) => {
   for (const [i, s] of spec.shots.entries()) {
     const url = await page.evaluate(async ({ s, title }) => {
       const load = src => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.src = src; });
-      const main = await load(window.renderShot(s.cam));
+      const main = await load((window.setState(s.state), window.renderShot(s.cam)));
       const inset = s.inset ? await load(window.renderShot(s.inset)) : null;
       const c = document.createElement('canvas'); c.width = 1280; c.height = 720 + 96;
       const g = c.getContext('2d');

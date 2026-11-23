@@ -44,7 +44,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
           cam.target = [cam.target[0] + a * 0.5 * w(0.27, 5), cam.target[1] + a * 0.4 * w(0.37, 6), cam.target[2]];
         }
         const load = src => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.src = src; });
-        const im = await load(window.renderShot(cam));
+        window.setState(s.state); const im = await load(window.renderShot(cam));
         const c = document.createElement('canvas'); c.width = 1280; c.height = 720;
         const g = c.getContext('2d'); g.drawImage(im, 0, 0);
         const band = 1280 / 2.35, bar = (720 - band) / 2;
