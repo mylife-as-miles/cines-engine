@@ -1,0 +1,211 @@
+<!doctype html><meta charset="utf-8"><title>A3 · The Screen Between Them</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_a.js"></script>
+<script>
+/* LONG DISTANCE · LOOK A "THE GLOW" · A3 THE SCREEN BETWEEN THEM (INT. APARTMENT, living room, day)
+   The same corner of the same room as the waterfall, in grey daylight: the first light in the flat that is not a screen. We stand
+   behind him. She faces him in her coat, bag on her shoulder, hair cut short above the jaw, and holds his phone up between them,
+   screen turned to him: the waterfall, the long hair, her younger face in warm light. It hangs in front of the pale rectangle on
+   the wall where their frame used to be. Her free hand has gone to the back of her neck, where her hair used to be. He holds the
+   old floral makeup bag at his side, his thumb on its broken zip, and looks at neither her nor the screen. In this light she is
+   almost colourless beside the phone. On the fridge behind him, the strip.
+   World units are metres, y up; seen from the front, +x is on screen-left. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LA.P;
+  const f = OTM.frame(ctx, { seed: 31 });
+  const g = f.world, E = f.emissive;
+  const cam = LA.lookAt([2.15, 1.45, 4.5], [1.75, 1.25, 2.2], { f: 2040, cy: 540 });
+  const sp = LA.space(cam, 2.4);
+  const V = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k];
+  const N = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const X = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const D3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const S = p => cam.P(p);
+  const K = p => cam.k(cam.view(p)[2]);
+  const poly = (pts, col, a) => { g.save(); if (a != null) g.globalAlpha = a; g.fillStyle = col; g.fill(LA.pathPts(cam.pts(pts))); g.restore(); };
+  const quadP = pts => LA.pathPts(cam.pts(pts));
+  const UP = [0, 1, 0];
+
+  // ------------------------------------------------------------------ the people, in the world
+  const HER = [1.36, 1.6, 2.06], HIS = [2.16, 1.56, 2.82];
+  const herFwd = N([HIS[0] - HER[0], -0.04, HIS[2] - HER[2]]);
+  const herR = N(X(herFwd, UP));                       // her right (toward us)
+  const herN0 = [1.395, 1.445, 2.02];                  // the base of her neck
+  const herRS = V(V(herN0, herR, 0.18), UP, -0.04), herLS = V(V(herN0, herR, -0.18), UP, -0.04);
+  const nape = V(V(HER, herFwd, -0.1), UP, -0.07);
+  const herRE = V(V(V(herRS, herR, 0.16), UP, 0.17), herFwd, -0.12);    // her right elbow, raised out behind
+  const herRW = V(nape, herR, 0.05);                                     // her right wrist, at the back of her neck
+  const PB = [1.79, 1.45, 2.56];                                         // the phone, in her left hand, held up toward him
+  const n = N([HIS[0] - PB[0], HIS[1] - 0.06 - PB[1], HIS[2] - PB[2]]);
+  const up = N(V(UP, n, -D3(UP, n))), wd = N(X(up, n));
+  const PHW = 0.073, PHH = 0.157;
+  const corner = (a, b) => V(V(PB, up, a * PHH), wd, b * PHW / 2);
+  const herLE = [1.62, 1.2, 2.22], herLW = V(V(corner(0.12, 0), n, -0.025), up, -0.06);
+  const LP = V(V(PB, up, PHH * 0.5), n, 0.05), LPc = sp.P(LP);
+  const hisFwd = N([-0.6, -0.46, -0.62]);             // his head bowed toward the bag, away from us
+  const hisL = N(X(UP, [hisFwd[0], 0, hisFwd[2]]));     // his left (toward her side of the frame)
+  const hisN0 = [2.2, 1.49, 2.9];
+  const hisLS = V(V(hisN0, hisL, 0.2), UP, -0.05), hisRS = V(V(hisN0, hisL, -0.2), UP, -0.05);
+  const hisLE = V(V(V(hisLS, UP, -0.28), hisL, 0.05), [hisFwd[0], 0, hisFwd[2]], 0.02), hisLW = [1.98, 1.14, 2.73];
+  const BAG = [1.955, 1.075, 2.71];
+
+  // ------------------------------------------------------------------ light: grey daylight from the window on the left; the phone, warm, small
+  const day = N([1, 0.45, 0.6]);
+  const lightsDay = k => [
+    { type: 'dir', d: sp.D(day), col: [0.66 * k, 0.68 * k, 0.7 * k], steps: [[0.05, 0.55], [0.42, 0.85], [0.75, 1.0]], soft: 0.16, shadow: true, wrap: 0.4, spec: 14 },
+    { type: 'amb', up: [0.33, 0.335, 0.345], down: [0.18, 0.18, 0.185] },
+    { type: 'point', p: LPc, col: [0.8, 0.45, 0.2], d0: 0.25 * sp.k, emit: sp.D(n), spill: 0.1, steps: [[0.12, 0.5], [0.4, 1]], soft: 0.06, shadow: false },
+  ];
+  const herA = LA.albedoFor({ skin: '#D9C5B8', lip: '#AE8B85', hair: '#2A1E18', mole: [0.17, 0.14, 0.27], underEye: '#B4A098', seed: 9, flush: 0.5 });
+  const himA = LA.albedoFor({ skin: '#A87452', lip: '#8C5848', hair: '#16100C', stubble: '#2E2420', stubbleK: 0.6, seed: 4 });
+  // her head and neck
+  const hL = N(X([0, -1, 0], herFwd)), hC = X(herFwd, hL);
+  const herHead = sp.obj(HER, hL, hC, 0.225, { albedo: herA });
+  LA.head(herHead, 'her', { neck: false }); LA.hairHer(herHead, 'short');
+  const herNeck = []; sp.cap(herNeck, V(herN0, UP, -0.03), V(V(HER, hC, 0.225 * 0.27), herFwd, -0.225 * 0.13), 0.047, { albedo: herA, mat: 'skin', g: 'neck' });
+  const RHer = LA.trace([herHead].concat(herNeck), lightsDay(1), { add: [0.006, 0.006, 0.007], specMat: { skin: 0.1, lipL: 0.2 } });
+  // her hands: on her nape (fingers into the short hair), and round the phone
+  const hN = sp.obj(herRW, N(V(V(herFwd, [0, 0, 0], 0), hL, 1)), N(V(herFwd, [0, 0, 0], 1)), 0.2, { albedo: herA });
+  LA.hand(hN, 1, { curl: [0.3, 0.35, 0.4, 0.45], spread: 0.07, thumb: { a: 0.7, curl: 0.2, down: 0.2 } }, { forearm: false, g: 'herHand' });
+  const hP = sp.obj(herLW, N(V(up, n, -0.15)), N(V(n, [0, 0, 0], 1)), 0.19, { albedo: herA });
+  LA.hand(hP, 1, { curl: [0.2, 0.22, 0.25, 0.3], spread: 0.02, thumb: { a: 1.2, curl: 0.15, down: -0.6 } }, { forearm: false, g: 'herHand' });
+  const RHN = LA.trace([hN], lightsDay(1), { add: [0.006, 0.006, 0.007] });
+  const RHP = LA.trace([hP], lightsDay(1), { add: [0.006, 0.006, 0.007] });
+  // his head (from behind) and neck, his hand on the bag
+  const iL = N(X([0, -1, 0], hisFwd)), iC = X(hisFwd, iL);
+  const hisHead = sp.obj(HIS, iL, iC, 0.23, { albedo: himA });
+  LA.head(hisHead, 'him', { neck: false }); LA.hairHim(hisHead);
+  const hisNeck = []; sp.cap(hisNeck, V(hisN0, UP, -0.04), V(V(HIS, iC, 0.23 * 0.25), hisFwd, -0.23 * 0.2), 0.058, { albedo: himA, mat: 'skin', g: 'neck' });
+  const RHis = LA.trace([hisHead].concat(hisNeck), lightsDay(0.9), { add: [0.006, 0.006, 0.007] });
+  const hB = sp.obj(V(V([2.065, 1.115, 2.75], [hisFwd[0], 0, hisFwd[2]], 0.02), UP, 0), N(V(hisL, UP, -0.25)), N([-hisFwd[0], 0.15, -hisFwd[2]]), 0.21, { albedo: himA });
+  LA.hand(hB, -1, { curl: [0.85, 0.9, 0.92, 0.95], spread: 0.02, thumb: { a: 0.2, curl: 0.0, down: 0.0 } }, { forearm: false, g: 'hisHand' });
+  const RHB = LA.trace([hB], lightsDay(0.9), { add: [0.006, 0.006, 0.007] });
+
+  // ================================================================== 1. the room in daylight
+  g.fillStyle = '#A9AAA6'; g.fillRect(0, 0, W, H);
+  { const wl = quadP([[-2, 0, 0], [5, 0, 0], [5, 2.7, 0], [-2, 2.7, 0]]); LA.steps(g, wl, S([4, 1.5, 0]), S([-0.5, 1.5, 0]), ['#C2C3BE', '#B9BAB5', '#AFB0AB', '#A5A6A1'], 0.04); }
+  poly([[-2, 0, 0], [5, 0, 0], [5, 0, 6], [-2, 0, 6]], '#7E7D79');
+  // the window's light lies across the back wall: a pale, soft-edged slab (overcast, so no hard sun), the frame of the window in it
+  { const wp = quadP([[0.55, 0.55, 0.001], [-0.45, 0.42, 0.001], [-0.75, 2.05, 0.001], [0.25, 2.2, 0.001]]); g.save(); g.filter = 'blur(10px)'; g.fillStyle = 'rgba(232,233,228,0.55)'; g.fill(wp); g.restore();
+    const mull = quadP([[0.08, 0.5, 0.001], [0.02, 0.49, 0.001], [-0.28, 2.1, 0.001], [-0.22, 2.11, 0.001]]); g.save(); g.filter = 'blur(6px)'; g.fillStyle = 'rgba(150,151,147,0.4)'; g.fill(mull); g.restore(); }
+
+  // the pale rectangle where their frame used to hang
+  { const pr = [[1.06, 1.52, 0.002], [1.48, 1.52, 0.002], [1.48, 1.84, 0.002], [1.06, 1.84, 0.002]]; const pp = quadP(pr);
+    g.fillStyle = '#CCCDC8'; g.fill(pp); g.save(); g.strokeStyle = 'rgba(120,118,110,0.45)'; g.lineWidth = 1.2; g.stroke(pp); g.restore();
+    const nl = S([1.27, 1.88, 0.003]); g.fillStyle = '#3B3935'; g.beginPath(); g.arc(nl[0], nl[1], 2.6, 0, 7); g.fill(); }
+  // the shelf and the two mugs
+  poly([[0.95, 1.34, 0.0], [1.7, 1.34, 0.0], [1.7, 1.34, 0.2], [0.95, 1.34, 0.2]], '#8F908B');
+  poly([[0.95, 1.32, 0.2], [1.7, 1.32, 0.2], [1.7, 1.34, 0.2], [0.95, 1.34, 0.2]], '#C9CAC5');
+  const mug = (x, z, col, dust) => { const b0 = S([x, 1.34, z]), t0 = S([x, 1.44, z]); const r = 0.042 * cam.k(b0[2]);
+    if (dust) { g.fillStyle = 'rgba(214,212,205,0.95)'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.34, r * 0.4, 0, 0, 7); g.fill(); g.fillStyle = '#8F908B'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.03, r * 0.29, 0, 0, 7); g.fill(); }
+    g.fillStyle = col; g.fillRect(b0[0] - r, t0[1], 2 * r, b0[1] - t0[1]); g.beginPath(); g.ellipse(b0[0], b0[1], r, r * 0.28, 0, 0, Math.PI); g.fill();
+    g.fillStyle = '#3E3E3B'; g.beginPath(); g.ellipse(t0[0], t0[1], r, r * 0.28, 0, 0, 7); g.fill();
+    g.strokeStyle = col; g.lineWidth = r * 0.28; g.beginPath(); g.ellipse(b0[0] - r * 1.15, (b0[1] + t0[1]) / 2, r * 0.38, r * 0.5, 0, Math.PI - 1.3, Math.PI + 1.3); g.stroke();
+    g.fillStyle = 'rgba(255,255,255,0.25)'; g.fillRect(b0[0] + r * 0.6, t0[1], r * 0.35, b0[1] - t0[1]); };
+  mug(1.48, 0.1, '#6E7A86', false); mug(1.24, 0.1, '#8A8079', true);
+  // the counter's end
+  const TOP = 0.91, CX0 = 0.95, CX1 = 1.76, CZ1 = 1.62;
+  poly([[CX0, 0, CZ1], [CX1, 0, CZ1], [CX1, TOP, CZ1], [CX0, TOP, CZ1]], '#71706C');
+  poly([[CX1, 0, 0], [CX1, 0, CZ1], [CX1, TOP, CZ1], [CX1, TOP, 0]], '#8A8985');
+  poly([[CX0 - 0.02, TOP, 0], [CX1 + 0.02, TOP, 0], [CX1 + 0.02, TOP, CZ1 + 0.02], [CX0 - 0.02, TOP, CZ1 + 0.02]], '#9C9B96');
+  poly([[CX0 - 0.02, TOP - 0.035, CZ1 + 0.02], [CX1 + 0.02, TOP - 0.035, CZ1 + 0.02], [CX1 + 0.02, TOP, CZ1 + 0.02], [CX0 - 0.02, TOP, CZ1 + 0.02]], '#BEBDB8');
+  // the fridge, and the strip
+  const FX0 = 2.2, FX1 = 2.94, FZ = 0.7, FH = 1.86;
+  poly([[FX0, 0, 0], [FX0, 0, FZ], [FX0, FH, FZ], [FX0, FH, 0]], '#8E8F8B');
+  const door = [[FX0, 0.02, FZ], [FX1, 0.02, FZ], [FX1, FH, FZ], [FX0, FH, FZ]];
+  { g.save(); g.clip(quadP(door)); LA.steps(g, null, S([FX1, 1.2, FZ]), S([FX0, 1.2, FZ]), ['#DFE0DC', '#D6D7D3', '#CDCECA', '#C4C5C1'], 0.03);
+    poly([[FX0, 1.16, FZ + 0.001], [FX1, 1.16, FZ + 0.001], [FX1, 1.172, FZ + 0.001], [FX0, 1.172, FZ + 0.001]], '#9A9B97'); g.restore(); }
+  { const strip = LA.boothStrip(150, 480); const SC = [2.855, 1.66, FZ + 0.003], sRot = -0.05;
+    const sq = [[0.035, 0.11], [-0.035, 0.11], [-0.035, -0.11], [0.035, -0.11]].map(([u, v]) => S([SC[0] + u * Math.cos(sRot) - v * Math.sin(sRot), SC[1] + u * Math.sin(sRot) + v * Math.cos(sRot), SC[2]]));
+    LA.soft(g, LA.pathPts(sq.map(q => [q[0] + 2, q[1] + 3])), 'rgba(60,60,58,0.5)', 3); LA.quadImage(g, strip, sq, { affine: true });
+    const mg = S([SC[0] + 0.004, SC[1] + 0.105, SC[2] + 0.01]); const r = 0.016 * cam.k(mg[2]); g.fillStyle = '#7A4A48'; g.beginPath(); g.arc(mg[0], mg[1], r, 0, 7); g.fill(); }
+
+  // ================================================================== 2. HER
+  const kH = K(HER);
+  const COAT = '#87837E', COATD = '#6E6A65', COATL = '#9E9A94';
+  // her raised right arm goes behind her head: draw it first
+  LA.limb(g, S(herRS), S(herRE), 0.12 * kH, 0.1 * kH, COATD);
+  LA.limb(g, S(herRE), S(herRW), 0.095 * kH, 0.08 * kH, COATD);
+  RHer.draw(g);
+  // the coat: shoulders square, the collar up, open down the front
+  const cN = S(herN0), cR = S(herRS), cL = S(herLS), wR = S([1.29, 0.85, 2.2]), wL = S([1.53, 0.85, 1.92]);
+  const coat = LA.smooth([[cN[0] - 0.07 * kH, cN[1] - 0.01 * kH], [cL[0] + 0.01 * kH, cL[1] - 0.025 * kH], [cL[0] - 0.05 * kH, cL[1] + 0.06 * kH], [wL[0] - 0.05 * kH, wL[1]], [wL[0] - 0.06 * kH, H + 60],
+    [wR[0] + 0.07 * kH, H + 60], [wR[0] + 0.08 * kH, wR[1]], [cR[0] + 0.07 * kH, cR[1] + 0.08 * kH], [cR[0] + 0.03 * kH, cR[1] - 0.025 * kH], [cN[0] + 0.07 * kH, cN[1] - 0.01 * kH]]);
+  g.fillStyle = COAT; g.fill(coat);
+  g.save(); g.clip(coat); LA.steps(g, null, [cL[0] - 0.08 * kH, 0], [cR[0] + 0.1 * kH, 0], ['#A29E98', '#94908A', '#86827D', '#78746F'], 0.05);
+  g.fillStyle = COATD; g.fill(LA.smooth([[cN[0] - 0.035 * kH, cN[1] + 0.0 * kH], [cN[0] - 0.075 * kH, cN[1] + 0.12 * kH], [cN[0] - 0.005 * kH, cN[1] + 0.34 * kH], [cN[0] + 0.012 * kH, cN[1] + 0.06 * kH]]));
+  g.fillStyle = COATL; g.fill(LA.smooth([[cN[0] + 0.035 * kH, cN[1] + 0.0 * kH], [cN[0] + 0.085 * kH, cN[1] + 0.12 * kH], [cN[0] + 0.015 * kH, cN[1] + 0.34 * kH], [cN[0] + 0.0 * kH, cN[1] + 0.06 * kH]]));
+  g.fillStyle = '#4D4945'; g.fill(LA.smooth([[cN[0] - 0.012 * kH, cN[1] + 0.06 * kH], [cN[0] + 0.012 * kH, cN[1] + 0.06 * kH], [cN[0] + 0.006 * kH, H + 20], [cN[0] - 0.02 * kH, H + 20]]));   // the jumper under it
+  // the coat's weight: a long fold from each shoulder, the shadow under the near lapel, the light on the far side from the window
+  const fold = (a, b, c2, w, al, col) => { g.save(); g.strokeStyle = col || `rgba(40,38,36,${al})`; g.lineWidth = w; g.lineCap = 'round'; g.filter = 'blur(4px)'; g.beginPath(); g.moveTo(a[0], a[1]); g.quadraticCurveTo(b[0], b[1], c2[0], c2[1]); g.stroke(); g.restore(); };
+  fold([cR[0] + 0.04 * kH, cR[1] + 0.12 * kH], [cR[0] + 0.07 * kH, cR[1] + 0.5 * kH], [wR[0] + 0.05 * kH, H], 0.03 * kH, 0.3);
+  fold([cN[0] + 0.07 * kH, cN[1] + 0.35 * kH], [cN[0] + 0.1 * kH, cN[1] + 0.7 * kH], [cN[0] + 0.09 * kH, H], 0.02 * kH, 0.25);
+  fold([cL[0] - 0.03 * kH, cL[1] + 0.1 * kH], [cL[0] - 0.05 * kH, cL[1] + 0.5 * kH], [wL[0] - 0.03 * kH, H], 0.04 * kH, 0, 'rgba(200,198,192,0.3)');
+  g.restore();
+  // the bag's strap over her left shoulder
+  g.save(); g.strokeStyle = '#3B322D'; g.lineWidth = 0.026 * kH; g.lineCap = 'round'; g.beginPath(); g.moveTo(cL[0] + 0.03 * kH, cL[1] - 0.02 * kH); g.bezierCurveTo(cL[0] - 0.02 * kH, cL[1] + 0.15 * kH, wL[0] - 0.02 * kH, wL[1] - 0.2 * kH, wL[0] - 0.01 * kH, H + 20); g.stroke(); g.restore();
+  LA.features(g, RHer, herHead, 'her', { eyes: 0.7, look: [0.45, 0.2], mouth: 'still', brow: 0.85, iris: '#3A2A20', lash: '#1A120E', catchOff: [-0.3, -0.3], lineCol: '#7A5550' });
+  // her fingers in the short hair at her nape, the rest of the hand hidden behind her head
+  { const c2 = LA.layer(); c2.drawImage(RHN.canvas, RHN.x, RHN.y); c2.globalCompositeOperation = 'destination-out'; c2.drawImage(RHer.canvas, RHer.x, RHer.y); g.drawImage(c2.canvas, 0, 0); }
+  // her left arm reaches to the phone
+  LA.limb(g, S(herLS), S(herLE), 0.12 * kH, 0.105 * kH, COAT, { lit: COATL, litSide: -1, litA: 0.7 });
+  LA.limb(g, S(herLE), S(herLW), 0.105 * kH, 0.085 * kH, COAT, { lit: COATL, litSide: -1, litA: 0.7 });
+
+  // ================================================================== 3. the phone between them, in front of the empty rectangle
+  RHP.draw(g);
+  const bq = cam.pts([corner(1, 1), corner(1, -1), corner(0, -1), corner(0, 1)]);
+  const sq2 = cam.pts([corner(0.972, 0.88), corner(0.972, -0.88), corner(0.028, -0.88), corner(0.028, 0.88)].map(p => V(p, n, 0.004)));
+  LA.soft(g, LA.rquad(bq, 14), P.g1, 22, 0.45, 'screen');
+  g.fillStyle = '#15171C'; g.fill(LA.rquad(bq, 14));
+  const wf = LA.waterfallImage(300, 646);
+  g.save(); g.clip(LA.rquad(sq2, 10)); LA.quadImage(g, wf, sq2, { affine: true }); g.restore();
+  E.save(); E.fillStyle = OTM.rgba(P.g1, 0.55); E.fill(LA.rquad(sq2, 10)); E.restore();
+
+  // ================================================================== 4. HIM, in the foreground, his back to us
+  const kG = K(HIS);
+  const SHIRT = '#4D5561', SHIRTL = '#646C78';
+  const gN = S(hisN0), gL = S(hisLS), gR = S(hisRS), gwL = S([2.07, 0.8, 3.05]), gwR = S([2.38, 0.8, 2.78]);
+  // his left arm hangs at his side toward her, the bag in its hand
+  LA.limb(g, S(hisLS), S(hisLE), 0.11 * kG, 0.085 * kG, SHIRT);
+  LA.limb(g, S(V(hisLS, UP, -0.12)), S(hisLE), 0.085 * kG, 0.075 * kG, '#8E6146');
+  LA.limb(g, S(hisLE), S(hisLW), 0.075 * kG, 0.06 * kG, '#8E6146', { lit: '#A5785A', litSide: -1, litA: 0.8 });
+  RHis.draw(g);
+  LA.features(g, RHis, hisHead, 'him', { eyes: 0.3, look: [0, 1], mouth: 'still', brow: 1.1 });
+  const shirt = LA.smooth([[gN[0] + 0.065 * kG, gN[1] - 0.012 * kG], [gR[0] - 0.01 * kG, gR[1] - 0.03 * kG], [gR[0] - 0.07 * kG, gR[1] + 0.05 * kG], [gwR[0] - 0.07 * kG, gwR[1]], [gwR[0] - 0.07 * kG, H + 60],
+    [gwL[0] + 0.07 * kG, H + 60], [gwL[0] + 0.06 * kG, gwL[1]], [gL[0] + 0.05 * kG, gL[1] + 0.06 * kG], [gL[0] + 0.01 * kG, gL[1] - 0.03 * kG], [gN[0] - 0.065 * kG, gN[1] - 0.012 * kG]]);
+  g.fillStyle = SHIRT; g.fill(shirt);
+  g.save(); g.clip(shirt); LA.steps(g, null, [gR[0] - 0.1 * kG, 0], [gL[0] + 0.08 * kG, 0], ['#66707C', '#5A636F', '#4E5662', '#434A55'], 0.05);
+  const crs = (pts, w, a) => { g.save(); g.strokeStyle = `rgba(30,34,40,${a})`; g.lineWidth = w; g.lineCap = 'round'; g.filter = 'blur(3px)'; g.stroke(LA.smooth(pts, true)); g.restore(); };
+  crs([[gN[0] - 0.01 * kG, gN[1] + 0.12 * kG], [gN[0] + 0.03 * kG, gN[1] + 0.35 * kG], [gN[0] + 0.0 * kG, gN[1] + 0.6 * kG]], 10, 0.3);
+  crs([[gL[0] + 0.03 * kG, gL[1] + 0.15 * kG], [gL[0] + 0.07 * kG, gL[1] + 0.35 * kG]], 8, 0.3);
+  g.restore();
+  RHB.draw(g);
+  // the crew neck of his t-shirt at the back of his neck
+  { const c = S([2.2, 1.49, 2.9]); const kk = K(hisN0); g.save(); g.fillStyle = '#434A55'; g.beginPath(); g.ellipse(c[0] + 0.005 * kk, c[1] + 0.012 * kk, 0.085 * kk, 0.03 * kk, 0.08, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#363C46'; g.lineWidth = 0.012 * kk; g.beginPath(); g.ellipse(c[0] + 0.005 * kk, c[1] + 0.004 * kk, 0.075 * kk, 0.022 * kk, 0.08, Math.PI * 0.05, Math.PI * 0.95); g.stroke(); g.restore(); }
+  // the bag: old, floral, faded, the zip broken open at one end; his thumb on it
+  { const bc = BAG, bu = N([hisL[0], 0, hisL[2]]), bv = UP; const bw = 0.11, bh = 0.065;
+    const Q = (a, b) => S(V(V(bc, bu, a * bw), bv, b * bh)); const kb = K(bc);
+    const body = LA.smooth([Q(-1, -0.85), Q(-1.06, 0.45), Q(-0.75, 1.0), Q(0.75, 1.04), Q(1.06, 0.45), Q(1, -0.85), Q(0, -1.04)]);
+    LA.soft(g, body, 'rgba(40,40,40,0.4)', 6);
+    g.fillStyle = '#B99D93'; g.fill(body);
+    g.save(); g.clip(body); LA.steps(g, null, Q(-1, 1), Q(1, -1), ['#CDB4AA', '#C0A59B', '#B1978E', '#9F867E'], 0.05);
+    const rr = OTM.rng('flowers'); for (let i = 0; i < 30; i++) { const p = Q(-1 + rr() * 2, -1 + rr() * 2); const s0 = (0.011 + rr() * 0.011) * kb;
+      const col = ['#9C6E6C', '#A88A63', '#7E8C74', '#C9A7A2'][i % 4]; g.fillStyle = col; for (let k = 0; k < 5; k++) { const a = k / 5 * 6.28 + rr(); g.beginPath(); g.ellipse(p[0] + Math.cos(a) * s0 * 0.6, p[1] + Math.sin(a) * s0 * 0.6, s0 * 0.5, s0 * 0.3, a, 0, 7); g.fill(); }
+      g.fillStyle = '#E3D2B7'; g.beginPath(); g.arc(p[0], p[1], s0 * 0.25, 0, 7); g.fill(); }
+    g.restore();
+    const z0 = Q(-0.9, 0.99), z1 = Q(0.3, 1.03), z2 = Q(0.95, 0.88);
+    g.save(); g.strokeStyle = '#6E6058'; g.lineWidth = 0.007 * kb; g.setLineDash([2, 2]); g.beginPath(); g.moveTo(z0[0], z0[1]); g.lineTo(z1[0], z1[1]); g.stroke(); g.setLineDash([]);
+    g.strokeStyle = '#5A4C45'; g.lineWidth = 0.004 * kb; g.beginPath(); g.moveTo(z1[0], z1[1]); g.quadraticCurveTo((z1[0] + z2[0]) / 2, z1[1] - 0.012 * kb, z2[0], z2[1] - 0.006 * kb); g.moveTo(z1[0], z1[1] + 2); g.quadraticCurveTo((z1[0] + z2[0]) / 2, z1[1] + 0.02 * kb, z2[0], z2[1] + 0.008 * kb); g.stroke();
+    g.fillStyle = '#A9A6A0'; g.fillRect(z1[0] - 0.006 * kb, z1[1] - 0.004 * kb, 0.012 * kb, 0.02 * kb); g.restore(); 
+    // his thumb along the top, at the place where the zip has come apart
+    const t0 = Q(-0.78, 1.0), t1 = Q(0.2, 1.06); LA.limb(g, t0, t1, 0.024 * kb, 0.021 * kb, '#9A6A4E', { lit: '#B58467', litSide: -1, litA: 0.9 });
+    g.fillStyle = 'rgba(235,205,185,0.55)'; g.beginPath(); g.ellipse(t1[0] - 0.008 * kb, t1[1] - 0.002 * kb, 0.008 * kb, 0.005 * kb, Math.atan2(t1[1] - t0[1], t1[0] - t0[0]), 0, 7); g.fill(); }
+
+  // ================================================================== 5. finish: soft daylight grade, the subtitle in the picture
+  f.finish({ letterbox: 0, grain: 0.05, fibre: 0, vignette: 0, halation: 0.45, beforePost: c => {
+    c.save(); c.fillStyle = LA.rg(c, W * 0.55, H * 0.42, 420, 1300, [[0, '#1A1C1F', 0], [1, '#1A1C1F', 0.42]]); c.fillRect(0, 0, W, H); c.restore(); } });
+  LA.caption(ctx, [{ t: 'Her: We’ve never taken this photo.' }, { t: 'We’ve never been to a waterfall.' }], { y: H - 50, size: 42 });
+  window.FRAME_READY = true;
+})();
+</script>

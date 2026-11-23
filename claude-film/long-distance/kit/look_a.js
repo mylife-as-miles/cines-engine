@@ -237,6 +237,19 @@
       let y = y0 + t * Math.pow(1 - s, 0.38); if (extra) y += extra(x, z, s); return y; };
   }
 
+  // a limb in a sleeve, drawn flat: a tapered capsule between two projected points (widths in px), with a lit side
+  function limb(g, a, b, w0, w1, col, o) {
+    o = o || {}; const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, ang = Math.atan2(dy, dx);
+    const p2 = new Path2D();
+    p2.moveTo(a[0] + nx * w0 / 2, a[1] + ny * w0 / 2); p2.lineTo(b[0] + nx * w1 / 2, b[1] + ny * w1 / 2);
+    p2.arc(b[0], b[1], w1 / 2, ang + Math.PI / 2, ang - Math.PI / 2, true); p2.lineTo(a[0] - nx * w0 / 2, a[1] - ny * w0 / 2);
+    p2.arc(a[0], a[1], w0 / 2, ang - Math.PI / 2, ang + Math.PI / 2, true); p2.closePath();
+    g.save(); g.fillStyle = col; g.fill(p2);
+    if (o.lit) { g.clip(p2); const s = o.litSide || 1; g.globalAlpha = o.litA == null ? 1 : o.litA; g.fillStyle = o.lit; g.filter = 'blur(2px)';
+      const q = new Path2D(); q.moveTo(a[0] + nx * s * w0, a[1] + ny * s * w0); q.lineTo(b[0] + nx * s * w1, b[1] + ny * s * w1); q.lineTo(b[0] + nx * s * w1 * 0.12, b[1] + ny * s * w1 * 0.12); q.lineTo(a[0] + nx * s * w0 * 0.12, a[1] + ny * s * w0 * 0.12); q.closePath(); g.fill(q); }
+    g.restore(); return p2;
+  }
+
   // =====================================================================================================
   // CAPTIONS: in the picture, bottom centre, sentence case, speaker named first, soft dark halo, no box
   // =====================================================================================================
@@ -565,16 +578,16 @@
     ell(ob, [0, -0.12, -0.06], [0.325 * fw, 0.4, 0.43], sk(0));                         // cranium
     ell(ob, [0, 0.06, 0.04], [0.29 * fw, 0.4, 0.3], sk(0));                              // face mass (widest at the cheekbones)
     ell(ob, [0, 0.27, 0.0], [0.245 * jw, 0.225, 0.27], sk(0));                          // jaw
-    ell(ob, [0, 0.405, 0.18 + 0.01 * (F.chin - 1)], [0.1 * F.chin, 0.09, 0.1], sk(0.05));   // chin
+    ell(ob, [0, 0.4, 0.17 + 0.01 * (F.chin - 1)], [0.1 * F.chin, 0.09, 0.1], sk(0.0));   // chin
     [-1, 1].forEach(s => ell(ob, [s * 0.165 * fw, 0.1, 0.19], [0.11, 0.09, 0.095], sk(0.0)));   // cheek pads (barely proud of the face)
     ell(ob, [0, -0.085, 0.29], [0.23 * fw, 0.055 * F.brow, 0.08], sk(0.15));            // brow ridge
     cap(ob, [0, -0.04, 0.338], [0, 0.128, 0.425 + 0.015 * (nz - 1)], 0.031 * nz, sk(0.25));   // nose bridge
-    ell(ob, [0, 0.15, 0.418 + 0.015 * (nz - 1)], [0.043 * nz, 0.039, 0.042], sk(0.25));      // nose tip
+    ell(ob, [0, 0.148, 0.405 + 0.015 * (nz - 1)], [0.04 * nz, 0.035, 0.038], sk(0.08));      // nose tip
     [-1, 1].forEach(s => ell(ob, [s * 0.05 * nz, 0.17, 0.37], [0.033 * nz, 0.03, 0.036], sk(0.45)));   // nostril wings
     ell(ob, [0, 0.27, 0.24], [0.15, 0.12, 0.12], sk(0.08));                              // muzzle
     const L = F.lips;
-    ell(ob, [0, 0.256, 0.338], [0.098 * L, 0.019 * L, 0.034], { mat: 'lipU', g: 'skin', ao: 0.2 });
-    ell(ob, [0, 0.297 + 0.004 * L, 0.328], [0.084 * L, 0.026 * L, 0.035], { mat: 'lipL', g: 'skin', ao: 0.3 });
+    ell(ob, [0, 0.258, 0.328], [0.09 * L, 0.017 * L, 0.028], { mat: 'lipU', g: 'skin', ao: 0.12 });
+    ell(ob, [0, 0.298 + 0.003 * L, 0.32], [0.076 * L, 0.022 * L, 0.029], { mat: 'lipL', g: 'skin', ao: 0.18 });
     [-1, 1].forEach(s => ell(ob, [s * 0.315 * fw, 0.075, -0.05], [0.032, 0.115 * F.ear, 0.066 * F.ear], { mat: 'skin', g: 'ear', ao: 0.55, rot: [0, -0.12 * s, -0.16 * s] }));
     if (o.neck !== false) cap(ob, [0, 0.25, -0.1], [0, o.neckLen || 0.95, -0.12], F.neck, { mat: 'skin', g: 'neck', ao: 0 });
   }
@@ -590,7 +603,7 @@
   // his hair: short, dark, a little grown out (he has kept everything as it was, including the haircut)
   function hairHim(ob, o) {
     o = o || {};
-    const line = [[0, -0.27], [0.45, -0.262], [0.8, -0.19], [1.05, -0.07], [1.2, 0.05], [1.34, -0.01], [1.6, 0.0], [2.1, 0.15], [Math.PI, 0.25]];
+    const line = [[0, -0.27], [0.45, -0.262], [0.8, -0.19], [1.05, -0.07], [1.2, 0.05], [1.34, -0.01], [1.6, 0.02], [2.1, 0.22], [Math.PI, 0.32]];
     const mask = pl => pl[1] < pw(line, theta(pl)) + 0.02 * (OTM.vnoise(theta(pl) * 11, 2, 5) - 0.5);
     const hm = { mat: 'hair', g: 'hair', ao: 0.3, mask };
     ell(ob, [0, -0.125, -0.06], [0.345, 0.424, 0.452], hm);
@@ -727,8 +740,8 @@
         return [r, g, b];
       }
       if (mat === 'hair') {
-        const n = spec.smooth ? 0.5 : OTM.vnoise(Math.atan2(pl[0], pl[2]) * 30, pl[1] * 6, seed + 1);
-        const k = 0.85 + 0.3 * n; return [HR[0] * k, HR[1] * k, HR[2] * k];
+        const n = spec.smooth ? 0.5 : OTM.vnoise(Math.atan2(pl[0], pl[2]) * 34, pl[1] * 5, seed + 1), n2 = spec.smooth ? 0.5 : OTM.vnoise(Math.atan2(pl[0], pl[2]) * 90, pl[1] * 9, seed + 3);
+        const k = 0.72 + 0.42 * n + 0.22 * (n2 - 0.5); return [HR[0] * k, HR[1] * k, HR[2] * k];
       }
       return cloth[mat] || null;
     };
@@ -918,5 +931,5 @@
   }
 
   G.LA = { P, CAST, couple, boothStrip, waterfallImage, clamp, lerp, mix, rgba, layer, blurred, lg, rg, stops, pathPts, smooth, rrect, rquad, fill, soft, pool, steps, beam, quadImage, quadAt, homography, hmap, camera, caption,
-    L3, l2s, hexL, scale3, rot3, mul3, app3, basis, Obj, space, lookAt, pool3, cloth, drawCloth, dome, ell, cap, trace, quant, STEPS, head, hairHim, hairHer, hand, bust, albedoFor, features, FEAT, FACE, theta };
+    L3, l2s, hexL, scale3, rot3, mul3, app3, basis, Obj, space, lookAt, pool3, cloth, drawCloth, dome, limb, ell, cap, trace, quant, STEPS, head, hairHim, hairHer, hand, bust, albedoFor, features, FEAT, FACE, theta };
 })(window);

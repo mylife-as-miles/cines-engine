@@ -36,7 +36,7 @@
 
   // ------------------------------------------------------------------ HIM (traced): the head, the near forearm and hand
   const himA = LA.albedoFor({ skin: '#A87452', lip: '#8C5848', hair: '#16100C', stubble: '#2E2420', stubbleK: 0.6, seed: 4, cloth: { shirt: '#56616D' } });
-  const HC = [2.02, 1.465, 0.96];
+  const HC = [1.985, 1.485, 0.985];
   const fwd = N([PB[0] + 0.02 - HC[0], PB[1] + 0.07 - HC[1], PB[2] - HC[2]]);   // his eyes on the screen
   const left = N(X([0, -1, 0], fwd)), chin = X(fwd, left);
   const head = sp.obj(HC, left, chin, 0.23, { albedo: himA });
@@ -57,7 +57,8 @@
   const nkTop = V(V(HC, chin, 0.23 * 0.28), fwd, -0.23 * 0.14), nkBot = [2.09, 1.36, 0.97];
   const neckO = []; sp.cap(neckO, nkBot, nkTop, 0.056, { albedo: himA, mat: 'skin', g: 'neck' });
   const RH = LA.trace([head].concat(neckO), tl, { add: [0.003, 0.005, 0.012], specMat: { skin: 0.12, lipL: 0.22 } });
-  const RA = LA.trace([hR].concat(arm), tl, { add: [0.003, 0.005, 0.012], blend: { armR: 0.07 }, crossBlend: true });
+  const lampArm = Object.assign({}, lamp, { col: [1.9, 1.12, 0.53], spill: 0.12 });
+  const RA = LA.trace([hR].concat(arm), [lampArm, tl[1], tl[2]], { add: [0.003, 0.005, 0.012], blend: { armR: 0.13 }, crossBlend: true });
 
   // ================================================================== 1. the room at night
   g.fillStyle = P.n1; g.fillRect(0, 0, W, H);
@@ -66,14 +67,16 @@
   { const sl = quadP([[4, 0.6, 0.002], [2.15, 0.95, 0.002], [2.15, 2.35, 0.002], [4, 2.2, 0.002]]); g.save(); g.clip(sl);
     g.fillStyle = LA.lg(g, ...S([4, 1.5, 0]).slice(0, 2), ...S([2.15, 1.5, 0]).slice(0, 2), [[0, '#22344F'], [1, '#18263E']]); g.fillRect(0, 0, W, H); g.restore(); }
   // the pale rectangle where a frame used to hang, and its nail
-  { const pr = [[1.04, 1.6, 0.002], [1.5, 1.6, 0.002], [1.5, 1.94, 0.002], [1.04, 1.94, 0.002]];
-    poly(pr, '#111C30'); g.save(); g.strokeStyle = 'rgba(70,88,118,0.35)'; g.lineWidth = 1.2; g.stroke(quadP(pr)); g.restore();
-    const nl = S([1.27, 1.99, 0.003]); g.fillStyle = '#05080F'; g.beginPath(); g.arc(nl[0], nl[1], 2.2, 0, 7); g.fill(); }
+  { const pr = [[1.06, 1.52, 0.002], [1.48, 1.52, 0.002], [1.48, 1.84, 0.002], [1.06, 1.84, 0.002]];
+    // a patch of paint the light never reached, a hairline of dust where the frame's edge sat, the nail
+    const pp = quadP(pr); g.save(); g.filter = 'blur(1.5px)'; g.fillStyle = '#132037'; g.fill(pp); g.restore();
+    g.save(); g.strokeStyle = 'rgba(8,12,22,0.55)'; g.lineWidth = 1.2; g.stroke(pp); g.restore();
+    const nl = S([1.27, 1.88, 0.003]); g.fillStyle = '#04060C'; g.beginPath(); g.arc(nl[0], nl[1], 2.4, 0, 7); g.fill(); g.fillStyle = 'rgba(140,160,200,0.4)'; g.beginPath(); g.arc(nl[0] - 0.6, nl[1] - 0.8, 0.9, 0, 7); g.fill(); }
   // the shelf above the counter, two mugs; one has not moved in a long time
-  poly([[0.95, 1.42, 0.0], [1.7, 1.42, 0.0], [1.7, 1.42, 0.2], [0.95, 1.42, 0.2]], '#1A273E');
-  poly([[0.95, 1.4, 0.2], [1.7, 1.4, 0.2], [1.7, 1.42, 0.2], [0.95, 1.42, 0.2]], '#2C3D5C');
+  poly([[0.95, 1.34, 0.0], [1.7, 1.34, 0.0], [1.7, 1.34, 0.2], [0.95, 1.34, 0.2]], '#1A273E');
+  poly([[0.95, 1.32, 0.2], [1.7, 1.32, 0.2], [1.7, 1.34, 0.2], [0.95, 1.34, 0.2]], '#2C3D5C');
   const mug = (x, z, col, dust) => {
-    const b0 = S([x, 1.42, z]), t0 = S([x, 1.52, z]); const r = 0.042 * cam.k(b0[2]);
+    const b0 = S([x, 1.34, z]), t0 = S([x, 1.44, z]); const r = 0.042 * cam.k(b0[2]);
     if (dust) { g.fillStyle = 'rgba(112,130,160,0.55)'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.34, r * 0.4, 0, 0, 7); g.fill(); g.fillStyle = '#1A273E'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.03, r * 0.29, 0, 0, 7); g.fill(); }
     g.fillStyle = col; g.fillRect(b0[0] - r, t0[1], 2 * r, b0[1] - t0[1]); g.beginPath(); g.ellipse(b0[0], b0[1], r, r * 0.28, 0, 0, Math.PI); g.fill();
     g.fillStyle = '#0A0F1A'; g.beginPath(); g.ellipse(t0[0], t0[1], r, r * 0.28, 0, 0, 7); g.fill();
@@ -151,10 +154,6 @@
   // head
   RH.draw(g);
   LA.features(g, RH, head, 'him', { eyes: 0.5, look: [0.1, 0.9], mouth: 'still', brow: 1.1, catchOff: [0.1, 0.35] });
-  // the t-shirt's crew neck comes up round the base of his neck (drawn over the neck)
-  { const c = S([2.07, 1.37, 0.975]), kk = cam.k(c[2]); const ell = new Path2D(); ell.ellipse(c[0], c[1] + 0.03 * kk, 0.1 * kk, 0.05 * kk, -0.2, 0, Math.PI * 2);
-    g.save(); g.clip(torso); g.fillStyle = '#1B2232'; g.fill(ell); LA.pool(g, ell, LPc[0], LPc[1], 0.75 * sp.k, 0.6 * sp.k, 0, [[0.55, P.g5, 0.55], [0.85, P.g6, 0.5]], { soft: 0.05 });
-    g.strokeStyle = '#10151F'; g.lineWidth = 0.016 * kk; g.beginPath(); g.ellipse(c[0], c[1], 0.07 * kk, 0.03 * kk, -0.2, 0, Math.PI * 2); g.stroke(); g.restore(); }
   // the arm: forearm and hand forward, the fork stopped halfway
   RA.draw(g);
   g.fillStyle = '#1F2737'; g.fill(sleeve); g.save(); g.clip(sleeve); LA.pool(g, null, LPc[0], LPc[1], 0.5 * sp.k, 0.4 * sp.k, 0, [[0.5, P.g5, 0.7], [0.8, P.g6, 0.6]], { soft: 0.05 }); g.restore();
