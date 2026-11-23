@@ -1,0 +1,167 @@
+{
+ "title": "Q04 v5 \u00b7 HUNGRY",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20135 s",
+   "cam": {
+    "pos": [
+     9.0,
+     0.9,
+     1.7
+    ],
+    "target": [
+     0,
+     1.15,
+     1.7
+    ],
+    "f": 32
+   },
+   "camText": "Wide profile two-shot \u00b7 camera at hip height on the pavement \u00b7 32 mm \u00b7 locked-off",
+   "line": "HELENA: \"Sure. Look, I'm just really hungry.\"",
+   "note": "Oren left, Helena right; the street vanishes between them; the laundrette window warm behind her."
+  },
+  {
+   "n": 2,
+   "time": "5\u20138 s",
+   "cam": {
+    "pos": [
+     0.85,
+     1.77,
+     0.95
+    ],
+    "target": [
+     0,
+     1.75,
+     2.2
+    ],
+    "f": 85
+   },
+   "inset": {
+    "pos": [
+     0.6,
+     1.77,
+     1.32
+    ],
+    "target": [
+     0,
+     1.75,
+     2.2
+    ],
+    "f": 85
+   },
+   "insetLabel": "end of the slow dolly-in",
+   "camText": "Close-up of Oren, three-quarters \u00b7 85 mm \u00b7 slow dolly-in (no zoom)",
+   "line": "OREN: \"Hungry?\"",
+   "note": "His head tilts slightly; his eyes on hers (she is off frame right)."
+  },
+  {
+   "n": 3,
+   "time": "8\u201312.5 s",
+   "cam": {
+    "pos": [
+     1.15,
+     1.67,
+     2.5
+    ],
+    "target": [
+     0,
+     1.66,
+     1.2
+    ],
+    "f": 100,
+    "shift": [
+     0.16,
+     0.0
+    ]
+   },
+   "camText": "Big close-up of Helena, forehead to chin \u00b7 100 mm \u00b7 handheld at her shoulder",
+   "line": "HELENA: \"Yeah. Haven't eaten properly for a few days.\"",
+   "note": "Her face off-centre right, grey space on the left; she looks frame left, to him."
+  },
+  {
+   "n": 4,
+   "time": "12.5\u201316.5 s",
+   "cam": {
+    "pos": [
+     -0.6,
+     1.02,
+     1.9
+    ],
+    "target": [
+     -0.235,
+     0.79,
+     1.22
+    ],
+    "f": 65
+   },
+   "camText": "Close-up of her right hand at her side \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA (her voice over her hand): \"They cut off my benefits, so I can't even \u2014\"",
+   "note": "Her thumb rubs the frayed cuff; when her voice stops, her hand stops."
+  },
+  {
+   "n": 5,
+   "time": "16.5\u201318.5 s",
+   "cam": {
+    "pos": [
+     0.02,
+     1.6,
+     1.32
+    ],
+    "target": [
+     -0.25,
+     0.62,
+     2.2
+    ],
+    "f": 50
+   },
+   "camText": "Her point of view: insert, looking down at the bag by his left thigh \u00b7 50 mm \u00b7 handheld, nearly still",
+   "line": "(no dialogue)",
+   "note": "The bag hangs still from his left hand, grease stain toward her; it is never lifted."
+  },
+  {
+   "n": 6,
+   "time": "18.5\u201320.5 s",
+   "cam": {
+    "pos": [
+     1.1,
+     1.67,
+     2.45
+    ],
+    "target": [
+     0,
+     1.66,
+     1.2
+    ],
+    "f": 85,
+    "shift": [
+     0.14,
+     0.0
+    ]
+   },
+   "camText": "Close-up of Helena \u00b7 85 mm \u00b7 handheld at her shoulder",
+   "line": "HELENA: \"Doesn't matter.\"",
+   "note": "Her eyes come back up from the bag to his face; lips pressed, jaw set; then the line."
+  },
+  {
+   "n": 7,
+   "time": "20.5\u201326 s",
+   "cam": {
+    "pos": [
+     3.6,
+     1.6,
+     1.7
+    ],
+    "target": [
+     0,
+     1.52,
+     1.7
+    ],
+    "f": 40
+   },
+   "camText": "Medium profile two-shot, waist up \u00b7 eye level \u00b7 40 mm \u00b7 locked-off, symmetrical",
+   "line": "OREN: \"This belongs to the person I support.\"",
+   "note": "Only his eyes drop toward his left hand, then back to hers. The street recedes between them, the laundrette window warm on the right behind her."
+  }
+ ]
+}
