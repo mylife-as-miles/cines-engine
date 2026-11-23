@@ -54,7 +54,7 @@
   const tl = [lamp, { type: 'amb', up: [0.016, 0.024, 0.056], down: [0.006, 0.008, 0.018] },
     { type: 'dir', d: sp.D(winD), col: [0.12, 0.17, 0.35], steps: [[0.3, 0.6], [0.6, 1]], soft: 0.05, shadow: false }];
   // the neck stays upright from the shoulders; the head pitches over it (world: from the collar to the base of the skull)
-  const nkTop = V(V(HC, chin, 0.23 * 0.28), fwd, -0.23 * 0.14), nkBot = [2.1, 1.33, 0.97];
+  const nkTop = V(V(HC, chin, 0.23 * 0.28), fwd, -0.23 * 0.14), nkBot = [2.09, 1.36, 0.97];
   const neckO = []; sp.cap(neckO, nkBot, nkTop, 0.056, { albedo: himA, mat: 'skin', g: 'neck' });
   const RH = LA.trace([head].concat(neckO), tl, { add: [0.003, 0.005, 0.012], specMat: { skin: 0.12, lipL: 0.22 } });
   const RA = LA.trace([hR].concat(arm), tl, { add: [0.003, 0.005, 0.012], blend: { armR: 0.07 }, crossBlend: true });
@@ -147,10 +147,14 @@
   // the near sleeve over the upper arm
   const sleeve = (() => { const a = S(SHn), b = S(V(SHn, N([ELn[0] - SHn[0], ELn[1] - SHn[1], ELn[2] - SHn[2]]), 0.15)); const kk = cam.k(a[2]);
     const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy), nx = -dy / L, ny = dx / L, w0 = 0.062 * kk, w1 = 0.056 * kk;
-    return LA.smooth([[a[0] - dx * 0.25 + nx * w0 * 0.7, a[1] - dy * 0.25 + ny * w0 * 0.7], [a[0] + nx * w0, a[1] + ny * w0], [b[0] + nx * w1, b[1] + ny * w1], [b[0] - nx * w1, b[1] - ny * w1], [a[0] - nx * w0 * 0.8, a[1] - ny * w0 * 0.8], [a[0] - dx * 0.2, a[1] - dy * 0.2 - w0 * 0.3]]); })();
+    return LA.smooth([[a[0] + nx * w0 * 0.6 + dx * 0.05, a[1] + ny * w0 * 0.6 + dy * 0.05], [a[0] + nx * w0 + dx * 0.3, a[1] + ny * w0 + dy * 0.3], [b[0] + nx * w1, b[1] + ny * w1, 1], [b[0] - nx * w1, b[1] - ny * w1, 1], [a[0] - nx * w0 * 0.9 + dx * 0.3, a[1] - ny * w0 * 0.9 + dy * 0.3], [a[0] - nx * w0 * 0.5, a[1] - ny * w0 * 0.5]]); })();
   // head
   RH.draw(g);
   LA.features(g, RH, head, 'him', { eyes: 0.5, look: [0.1, 0.9], mouth: 'still', brow: 1.1, catchOff: [0.1, 0.35] });
+  // the t-shirt's crew neck comes up round the base of his neck (drawn over the neck)
+  { const c = S([2.07, 1.37, 0.975]), kk = cam.k(c[2]); const ell = new Path2D(); ell.ellipse(c[0], c[1] + 0.03 * kk, 0.1 * kk, 0.05 * kk, -0.2, 0, Math.PI * 2);
+    g.save(); g.clip(torso); g.fillStyle = '#1B2232'; g.fill(ell); LA.pool(g, ell, LPc[0], LPc[1], 0.75 * sp.k, 0.6 * sp.k, 0, [[0.55, P.g5, 0.55], [0.85, P.g6, 0.5]], { soft: 0.05 });
+    g.strokeStyle = '#10151F'; g.lineWidth = 0.016 * kk; g.beginPath(); g.ellipse(c[0], c[1], 0.07 * kk, 0.03 * kk, -0.2, 0, Math.PI * 2); g.stroke(); g.restore(); }
   // the arm: forearm and hand forward, the fork stopped halfway
   RA.draw(g);
   g.fillStyle = '#1F2737'; g.fill(sleeve); g.save(); g.clip(sleeve); LA.pool(g, null, LPc[0], LPc[1], 0.5 * sp.k, 0.4 * sp.k, 0, [[0.5, P.g5, 0.7], [0.8, P.g6, 0.6]], { soft: 0.05 }); g.restore();
