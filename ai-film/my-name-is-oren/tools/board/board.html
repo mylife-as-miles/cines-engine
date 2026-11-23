@@ -185,7 +185,15 @@ box(0.2, 0.06, 0.02, mat(0x1c1c1c), 0.315, 0.38, 0, sweeper).rotation.y = Math.P
 const brush = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.03, 20), mat(0x8a7a60)); brush.position.set(0.3, 0.02, 0.2); sweeper.add(brush);
 sweeper.visible = false; scene.add(sweeper);
 const restR = oren.userData.legs.right.position.clone(), restL = oren.userData.legs.left.position.clone();
+const homeH = helena.position.clone(), homeO = oren.position.clone();
 window.setState = (st = {}) => {
+  const px = st.pairX ?? 0;                                       // move the pair along the pavement
+  helena.position.set(homeH.x + px, 0, st.helenaZ ?? homeH.z);
+  oren.position.set(homeO.x + px, 0, homeO.z);
+  const hr = helena.userData.hands.right;                         // her right hand, placed in world space (e.g. on the wall)
+  if (!hr.userData.home) hr.userData.home = hr.position.clone();
+  if (st.helenaRightHand) { helena.updateMatrixWorld(true); hr.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaRightHand))); }
+  else hr.position.copy(hr.userData.home);
   const offL = st.orenLeftFoot || [0, 0];
   oren.userData.legs.left.position.set(restL.x - offL[0], restL.y, restL.z - offL[1]);
   sweeper.visible = !!st.sweeper;

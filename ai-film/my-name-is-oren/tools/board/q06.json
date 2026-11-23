@@ -1,0 +1,255 @@
+{
+ "title": "Q06 \u00b7 WAITING STILL \u00b7 THE PAIN",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20133.5 s",
+   "state": {
+    "pairX": -1.6
+   },
+   "cam": {
+    "pos": [
+     -1.26,
+     1.7,
+     2.55
+    ],
+    "target": [
+     -1.6,
+     1.62,
+     1.2
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena over his shoulder \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"I know where it is, buddy.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 3.0,
+     "text": "HELENA: I know where it is, buddy."
+    }
+   ],
+   "note": "Sharp. Continues from Q05's last frame (his close-up)."
+  },
+  {
+   "n": 2,
+   "time": "3.5\u20137.5 s",
+   "state": {
+    "pairX": -1.6
+   },
+   "cam": {
+    "pos": [
+     -1.6,
+     1.68,
+     1.38
+    ],
+    "target": [
+     -1.6,
+     1.66,
+     2.2
+    ],
+    "f": 28
+   },
+   "camText": "Her point of view: Oren frontal, centred, chest up \u00b7 28 mm \u00b7 locked-off",
+   "line": "(no dialogue)",
+   "note": "Waiting still: everything moves behind him (people passing both ways, a sweeper), he alone is still; slow blinks; eyes on her."
+  },
+  {
+   "n": 3,
+   "time": "7.5\u201311 s",
+   "state": {
+    "pairX": -1.6
+   },
+   "cam": {
+    "pos": [
+     -1.26,
+     1.7,
+     2.55
+    ],
+    "target": [
+     -1.6,
+     1.62,
+     1.2
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena over his shoulder \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"Sorry. You are trying to help.\"",
+   "lines": [
+    {
+     "t0": 0.9,
+     "t1": 3.2,
+     "text": "HELENA: Sorry. You are trying to help."
+    }
+   ],
+   "note": "Her inner brows rise; softened, an apology."
+  },
+  {
+   "n": 4,
+   "time": "11\u201313.5 s",
+   "state": {
+    "pairX": -1.6,
+    "helenaZ": 0.9,
+    "helenaRightHand": [
+     -2.03,
+     1.15,
+     0.2
+    ]
+   },
+   "cam": {
+    "pos": [
+     -1.5,
+     1.25,
+     1.05
+    ],
+    "target": [
+     -2.04,
+     1.12,
+     0.2
+    ],
+    "f": 50
+   },
+   "handheld": 0.004,
+   "camText": "Insert: her right hand against the laundrette's green pillar \u00b7 50 mm \u00b7 handheld",
+   "line": "(no dialogue)",
+   "note": "Her palm goes flat on the painted pillar; her weight comes off one leg; a short inhale through the teeth."
+  },
+  {
+   "n": 5,
+   "time": "13.5\u201316.5 s",
+   "state": {
+    "pairX": -1.6,
+    "helenaZ": 0.9,
+    "helenaRightHand": [
+     -2.03,
+     1.15,
+     0.2
+    ]
+   },
+   "cam": {
+    "pos": [
+     -1.1,
+     1.66,
+     0.5
+    ],
+    "target": [
+     -1.6,
+     1.74,
+     2.2
+    ],
+    "f": 85,
+    "shift": [
+     -0.08,
+     0
+    ]
+   },
+   "camText": "Close-up of Oren over her shoulder \u00b7 85 mm \u00b7 locked-off",
+   "line": "OREN: \"Are you in pain?\"",
+   "lines": [
+    {
+     "t0": 1.2,
+     "t1": 2.8,
+     "text": "OREN: Are you in pain?"
+    }
+   ],
+   "note": "His eyes go to her hand on the wall and come back to her face."
+  },
+  {
+   "n": 6,
+   "time": "16.5\u201323 s",
+   "state": {
+    "pairX": -1.6,
+    "helenaZ": 0.9,
+    "helenaRightHand": [
+     -2.03,
+     1.15,
+     0.2
+    ]
+   },
+   "cam": {
+    "pos": [
+     -0.7000000000000001,
+     1.62,
+     2.2
+    ],
+    "target": [
+     -1.6,
+     1.63,
+     0.9
+    ],
+    "f": 85,
+    "shift": [
+     0.14,
+     0
+    ]
+   },
+   "handheld": 0.006,
+   "camText": "Big close-up of Helena \u00b7 85 mm \u00b7 handheld",
+   "line": "HELENA: \"Oh, we know each other.\" \u00b7 OREN (off): \"You and \u2014\" \u00b7 HELENA: \"Me and the pain. Yeah.\"",
+   "lines": [
+    {
+     "t0": 0.7,
+     "t1": 2.4,
+     "text": "HELENA: Oh, we know each other."
+    },
+    {
+     "t0": 2.7,
+     "t1": 3.6,
+     "text": "OREN (off): You and \u2014"
+    },
+    {
+     "t0": 3.9,
+     "t1": 6.2,
+     "text": "HELENA: Me and the pain. Yeah."
+    }
+   ],
+   "note": "A pain tell, then a dry half-smile; her lips stay closed while he speaks off-screen; then tired, almost fond."
+  },
+  {
+   "n": 7,
+   "time": "23\u201327 s",
+   "state": {
+    "pairX": -1.6,
+    "helenaZ": 0.9,
+    "helenaRightHand": [
+     -2.03,
+     1.15,
+     0.2
+    ]
+   },
+   "cam": {
+    "pos": [
+     2.8000000000000003,
+     1.55,
+     1.55
+    ],
+    "target": [
+     -1.6,
+     1.4,
+     1.55
+    ],
+    "f": 40
+   },
+   "camText": "Medium profile two-shot on the pavement \u00b7 eye level \u00b7 40 mm \u00b7 locked-off",
+   "line": "OREN: \"Would you like assistance sitting down?\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 3.4,
+     "text": "OREN: Would you like assistance sitting down?"
+    }
+   ],
+   "note": "Asked, not offered: his hands stay at his sides. People pass behind them."
+  }
+ ]
+}
