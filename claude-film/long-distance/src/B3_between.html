@@ -1,0 +1,172 @@
+<!doctype html><meta charset="utf-8"><title>B3 · The Screen Between Them</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_b.js"></script>
+<script>
+/* LONG DISTANCE · LOOK B "GRAIN AND GLOSS" · B3 THE SCREEN BETWEEN THEM (INT. APARTMENT - LIVING ROOM, day)
+   Over his shoulder. Grey daylight from the window behind him falls on her: real, older, her hair cut above the jaw, coat on, bag on
+   her shoulder, freckles, the skin of someone who has been tired for a while. She holds his phone up between them, screen to him: the
+   waterfall, the long hair. Her free hand has gone to the back of her neck, where her hair used to be. He looks at neither: his eyes
+   are on the floor and his thumb is on the broken zip of her old floral makeup bag.
+   Three of her in one frame: the strip on the fridge (a real photograph: grain), the picture on the phone (gloss: drawn after the
+   film grain, the only thing in the room without it), and her (grain, texture, years). */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = GG.P, S = OTM.S, mix = OTM.mix;
+  const f = OTM.frame(ctx, { seed: 37 });
+  const g = f.world, E = f.emissive;
+  const DAY = { dir: [-0.72, -0.28, 0.62], col: '#E6EBEE' };          // the window, off left behind him
+
+  // ---------------------------------------------------------------- the room by day: one broad slant of window light, two thin mullion shadows
+  g.fillStyle = '#7C7B76'; g.fillRect(0, 0, W, H);
+  { const p = new Path2D(); p.rect(0, 0, W, H);
+    g.fillStyle = '#93918A'; g.fill(S().poly([[380, -40], [1300, -40], [1640, 1100], [700, 1100]]).path(4, 3));
+    g.fillStyle = '#A3A098'; g.fill(S().poly([[560, -40], [1140, -40], [1440, 1100], [860, 1100]]).path(4, 4));
+    g.fillStyle = 'rgba(70,68,64,0.35)'; g.fill(S().poly([[842, -40], [858, -40], [1162, 1100], [1146, 1100]]).path(1.5, 5)); g.fill(S().poly([[380, 440], [1300, 470], [1300, 486], [380, 456]]).path(1.5, 6));
+    g.fillStyle = 'rgba(40,40,44,0.28)'; g.fill(S().poly([[1500, -40], [1960, -40], [1960, 1100], [1700, 1100]]).path(4, 8));
+    GG.texture(g, p, 0.6, 11, 'paper'); }
+  // the pale rectangle above the couch, where the frame hung: cleaner wall, a nail
+  { const R = [1360, 52, 280, 228]; const pr = S().rect(R[0], R[1], R[2], R[3]).path(0.6, 8);
+    g.save(); g.filter = 'blur(12px)'; g.strokeStyle = 'rgba(70,66,60,0.35)'; g.lineWidth = 26; g.stroke(pr); g.restore();
+    g.save(); g.clip(pr); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(230,226,214,0.22)'; g.fillRect(R[0] - 4, R[1] - 4, R[2] + 8, R[3] + 8); g.restore();
+    const nx = R[0] + R[2] / 2, ny = R[1] - 16; g.fillStyle = 'rgba(40,36,34,0.4)'; g.beginPath(); g.ellipse(nx + 6, ny + 6, 6, 3, 0.5, 0, 7); g.fill(); g.fillStyle = '#4A4542'; g.beginPath(); g.arc(nx, ny, 4.5, 0, 7); g.fill(); }
+  // through the kitchen opening, right: the fridge's edge and the strip on it
+  { const fr = S().rect(1716, 60, 260, 900); const fp = GG.piece(g, fr, { fill: '#CFCABE', rough: 1.1, seed: 21, tex: 0.6, kind: 'card', lift: [-8, 6], liftAlpha: 0.45, liftBlur: 10 });
+    g.save(); g.clip(fp); g.fillStyle = '#B7B2A6'; g.fillRect(1716, 60, 60, 900); g.restore();
+    const st = GG.photoStrip({ w: 124, h: 430, seed: 3, scale: 1.1 });
+    g.save(); g.translate(1808, 330); g.rotate(-0.045); g.fillStyle = 'rgba(40,36,34,0.35)'; g.filter = 'blur(3px)'; g.fillRect(-34, -112, 72, 248); g.filter = 'none'; g.drawImage(st, -38, -120, 72, 250); g.restore();
+    g.fillStyle = '#B23A30'; g.beginPath(); g.ellipse(1812, 212, 13, 11, 0, 0, 7); g.fill(); }
+  // the couch behind her (where the phone lay): its back, two cushions, an arm
+  { const back = GG.blob([[1020, 720], [1160, 690], [1500, 680], [1760, 690], [1960, 712], [1960, 1100], [1020, 1100]]);
+    const bp = GG.piece(g, back, { fill: '#6B665E', rough: 1.6, seed: 31, tex: 0.65, kind: 'cloth', lift: [0, -10], liftAlpha: 0.5, liftBlur: 12 });
+    GG.crescent(g, bp, -10, -8, '#8E897F', 0.9);
+    [[1180, 706, 1500, 696], [1520, 698, 1830, 704]].forEach(([x0, y0, x1, y1], i) => { const cu = GG.blob([[x0, y0 + 10], [(x0 + x1) / 2, y0 - 10], [x1, y1 + 10], [x1 + 10, y1 + 150], [x0 - 10, y0 + 150]]);
+      const cpp = GG.piece(g, cu, { fill: i ? '#77726A' : '#746F67', rough: 1.6, seed: 32 + i, tex: 0.65, kind: 'cloth', lift: [-6, 8], liftAlpha: 0.5, liftBlur: 8 }); GG.crescent(g, cpp, -8, -8, '#98938A', 0.9); });
+    const arm = GG.blob([[1840, 760], [1900, 740], [1960, 750], [1960, 1100], [1850, 1100]]); const ap = GG.piece(g, arm, { fill: '#625D56', rough: 1.6, seed: 34, tex: 0.65, kind: 'cloth', lift: [-8, 8], liftAlpha: 0.55 }); GG.crescent(g, ap, -8, -6, '#8A857C', 0.9); }
+
+  // ---------------------------------------------------------------- her
+  const HER = { x: 1222, y: 444, s: 212 };
+  const hh = GG.head({ who: 'her', hair: 'bob', x: HER.x, y: HER.y, s: HER.s, yaw: -0.56, pitch: 0.06, roll: 0.05, eyes: 0.72, gaze: [-0.45, 0.06], smile: 0, open: 0.12, brow: -0.15,
+    mode: 'grain', seed: 41, ss: 1.4, neckLen: 0.7, bounds: [-0.62, -0.72, 0.62, 0.95], part: 0.14,
+    amb: '#6A6C72', lights: [{ dir: DAY.dir, col: DAY.col, k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }] });
+  const COAT = '#2C4A44', COAT_SH = '#1A2E2A', COAT_LIT = '#4A7066';
+  // her free hand at the back of her neck: elbow up and out, the forearm behind her head, fingers at the nape under the hem of the bob
+  { const sl = GG.blob([[1330, 664], [1410, 624], [1470, 544], [1488, 476], [1440, 454], [1400, 504], [1352, 572], [1316, 624]]);
+    const slp = GG.piece(g, sl, { fill: COAT, rough: 1.3, seed: 55, tex: 0.75, kind: 'wool', lift: [6, 32], liftAlpha: 0.5 }); GG.crescent(g, slp, -8, -6, COAT_LIT, 0.9); GG.crescent(g, slp, 8, 4, COAT_SH, 0.8);
+    const fa = GG.blob([[1470, 464], [1440, 444], [1360, 476], [1310, 510], [1318, 536], [1380, 514], [1462, 494]]);
+    const fap = GG.piece(g, fa, { fill: COAT, rough: 1.2, seed: 58, tex: 0.75, kind: 'wool', lift: [4, 30], liftAlpha: 0.45 }); GG.crescent(g, fap, -4, -6, COAT_LIT, 0.8); }
+  const nape = GG.hand({ x: 1330, y: 512, s: 140, ss: 1.4, seed: 71, mode: 'grain', skin: '#E3B99E', nail: '#E8C4B4',
+    basis: { x: [-0.75, 0.55, -0.35], z: [0.2, 0.3, 0.93] },
+    pose: { fingers: [[-0.12, 0.5, 0.45, 0.2], [-0.04, 0.55, 0.45, 0.2], [0.05, 0.55, 0.45, 0.2], [0.14, 0.55, 0.4, 0.2]], thumb: [0.6, 0.3, 0.1, 0.1], fdir: [0.9, -0.3, -0.2], fore: 0.3, foreR: 0.12 },
+    bounds: [-0.4, -0.6, 0.9, 0.7], amb: '#6A6C72', lights: [{ dir: DAY.dir, col: DAY.col, k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }] });
+  GG.drawHead(g, nape, { shadow: { dx: 6, dy: 8, blur: 8, alpha: 0.4 }, tex: 0.4, texSeed: 62 });
+  // the coat: bottle green wool, kept on like a guest: shoulders, collar up, buttoned
+  const NK = hh.proj(0, 0.6, -0.04);
+  const coat = GG.blob([[1016, 1100], [1010, 800], [1026, 690], [1060, 652, 1], [NK[0] - 60, NK[1] + 6], [NK[0] + 70, NK[1] + 8], [1404, 656, 1], [1436, 700], [1444, 800], [1450, 1100]]);
+  const cp = GG.piece(g, coat, { fill: COAT, rough: 1.4, seed: 51, tex: 0.75, kind: 'wool', lift: [8, 10], liftAlpha: 0.5, liftBlur: 12 });
+  GG.crescent(g, cp, -22, -6, COAT_LIT, 0.95);
+  GG.crescent(g, cp, 20, 4, COAT_SH, 0.8);
+  { const lap = GG.blob([[1192, 640], [1246, 650], [1234, 760], [1212, 800], [1194, 720]]); const lp = GG.piece(g, lap, { fill: '#25403B', rough: 1.1, seed: 52, tex: 0.7, kind: 'wool', lift: [-4, 6], liftAlpha: 0.5 }); GG.crescent(g, lp, -6, 0, COAT_LIT, 0.8);
+    [[1230, 840], [1236, 930], [1242, 1020]].forEach(([x, y]) => { g.fillStyle = '#16221F'; g.beginPath(); g.arc(x, y, 10, 0, 7); g.fill(); g.fillStyle = 'rgba(180,200,190,0.4)'; g.beginPath(); g.arc(x - 3, y - 3, 3, 0, 7); g.fill(); }); }
+  { const st = S().M(1340, 616).L(1376, 626).L(1170, 1100).L(1130, 1100).Z(); const sp = GG.piece(g, st, { fill: '#8A5C3A', rough: 0.9, seed: 53, tex: 0.6, kind: 'card', lift: [4, 6], liftAlpha: 0.5 }); GG.crescent(g, sp, -5, 0, '#C08E62', 0.9); }
+  GG.drawHead(g, hh, { shadow: { dx: 8, dy: 10, blur: 12, alpha: 0.4 }, tex: 0.4, texSeed: 61 });
+  { const nk = NK;
+    const col = GG.blob([[nk[0] - 84, nk[1] - 40], [nk[0] - 36, nk[1] - 16], [nk[0] + 46, nk[1] - 16], [nk[0] + 96, nk[1] - 46], [nk[0] + 116, nk[1] + 26], [nk[0] + 40, nk[1] + 54], [nk[0] - 50, nk[1] + 56], [nk[0] - 104, nk[1] + 26]]);
+    const clp = GG.piece(g, col, { fill: '#2F4E47', rough: 1.2, seed: 54, tex: 0.75, kind: 'wool', lift: [-3, 6], liftAlpha: 0.55 }); GG.crescent(g, clp, -10, -4, COAT_LIT, 0.9); }
+
+  // her other arm: sleeve toward him, the hand under the phone, holding it up between them; only her thumb comes round onto the glass
+  { const up = GG.blob([[1056, 662], [1112, 668], [1108, 760], [1090, 830], [1040, 836], [1026, 760], [1034, 690]]);
+    const upp = GG.piece(g, up, { fill: COAT, rough: 1.3, seed: 57, tex: 0.75, kind: 'wool', lift: [6, 8], liftAlpha: 0.5 }); GG.crescent(g, upp, -9, -4, COAT_LIT, 0.95); GG.crescent(g, upp, 8, 2, COAT_SH, 0.7);
+    const fo = GG.blob([[1086, 830], [1040, 838], [990, 790], [972, 752], [1002, 734], [1046, 770], [1094, 800]]);
+    const fop = GG.piece(g, fo, { fill: COAT, rough: 1.2, seed: 59, tex: 0.75, kind: 'wool', lift: [5, 7], liftAlpha: 0.5 }); GG.crescent(g, fop, -7, -6, COAT_LIT, 0.95); }
+  const PQ = [[814, 326], [994, 343], [987, 702], [807, 684]];    // the phone's screen: tl tr br bl, turned to him (and to us, behind him)
+  const PHS = { x: 980, y: 736, s: 152, ss: 1.4, seed: 72, mode: 'grain', skin: '#E3B99E', nail: '#E8C4B4',
+    basis: { x: [-0.55, -0.8, -0.2], z: [0.55, -0.3, 0.75] },
+    pose: { fingers: [[-0.1, 1.15, 0.9, 0.4], [-0.03, 1.2, 0.9, 0.4], [0.05, 1.2, 0.85, 0.4], [0.13, 1.15, 0.8, 0.4]], thumb: [0.55, -0.25, 0.35, 0.2], fdir: [0.6, 0.45, 0.6], fore: 0.45, foreR: 0.11 },
+    bounds: [-0.7, -0.9, 0.8, 0.6], amb: '#6A6C72', lights: [{ dir: DAY.dir, col: DAY.col, k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }] };
+  const phoneHand = GG.hand(PHS);
+  GG.drawHead(g, phoneHand, { shadow: { dx: 6, dy: 8, blur: 8, alpha: 0.35 }, tex: 0.4, texSeed: 73 });
+  const thumb = GG.hand(Object.assign({}, PHS, { pose: Object.assign({}, PHS.pose, { only: 'thumb' }) }));
+
+  // ---------------------------------------------------------------- him: over his shoulder, eyes on the floor
+  const HIM = { x: 380, y: 380, s: 320 };
+  const mh = GG.head({ who: 'him', x: HIM.x, y: HIM.y, s: HIM.s, yaw: 1.72, pitch: 0.95, roll: -0.1, eyes: 0.25, gaze: [0, 0.7], mode: 'grain', seed: 81, ss: 1.0, neckLen: 0.6,
+    bounds: [-0.66, -0.72, 0.7, 1.0], stubble: 0.1, amb: '#4E5058', lights: [{ dir: [-0.5, -0.4, 0.75], col: '#DDE3E8', k: 0.5, poster: [0.25], levels: [1] }] });
+  GG.drawHead(g, mh, { shadow: { dx: 10, dy: 10, blur: 16, alpha: 0.45 }, tex: 0.45, texSeed: 82 });
+  // his sweater: shoulder and back, the darkest and largest shape; its collar crosses the back of his neck
+  const SW = '#3D3936', SW_LIT = '#5E5853';
+  { const nk = mh.proj(0, 0.56, -0.16);
+    const back = GG.blob([[-60, 1100], [-60, 640], [30, 600], [nk[0] - 200, nk[1] + 30], [nk[0] - 80, nk[1] - 8], [nk[0] + 50, nk[1] - 6], [nk[0] + 170, nk[1] + 36], [nk[0] + 250, nk[1] + 90], [640, 700], [690, 860], [700, 1100]]);
+    const bkp = GG.piece(g, back, { fill: SW, rough: 1.5, seed: 91, tex: 0.75, kind: 'wool', lift: [14, 8], liftAlpha: 0.55, liftBlur: 16 });
+    GG.crescent(g, bkp, -14, -10, SW_LIT, 0.9); GG.crescent(g, bkp, -3, -6, '#8E8A84', 0.8);
+    const rib = GG.blob([[nk[0] - 160, nk[1] + 14], [nk[0] - 70, nk[1] - 10], [nk[0] + 60, nk[1] - 6], [nk[0] + 160, nk[1] + 44], [nk[0] + 150, nk[1] + 70], [nk[0] + 50, nk[1] + 26], [nk[0] - 70, nk[1] + 22], [nk[0] - 150, nk[1] + 44]]);
+    const rp = GG.piece(g, rib, { fill: '#47423E', rough: 1.2, seed: 92, tex: 0.75, kind: 'wool', lift: [4, 5], liftAlpha: 0.5 }); GG.crescent(g, rp, -6, -6, SW_LIT, 0.8); }
+
+  // ---------------------------------------------------------------- the makeup bag in his hand, his thumb on the broken zip
+  const BAG = { x: 470, y: 770 };
+  // his hand holds it from underneath (the bag hides the fingers); only his thumb lies along the top, on the zip
+  const BH = { x: 430, y: 752, s: 196, ss: 1.5, seed: 111, mode: 'grain', skin: '#9C6A4E', nail: '#C79C88',
+    basis: { x: [1, -0.18, 0], z: [0, 0.3, 0.95] },
+    pose: { fingers: [[-0.08, 1.2, 1.1, 0.4], [-0.02, 1.25, 1.1, 0.4], [0.05, 1.25, 1.05, 0.4], [0.12, 1.2, 1.0, 0.4]], thumb: [0.4, -0.5, 0.0, -0.05], fdir: [-0.9, 0.5, -0.1], fore: 1.25, foreR: 0.14 },
+    bounds: [-1.1, -0.9, 0.9, 0.7], amb: '#4E5058', lights: [{ dir: [-0.6, -0.5, 0.6], col: '#DDE3E8', k: 0.5, poster: [0.15], levels: [1] }] };
+  const bagHand = GG.hand(BH);
+  GG.drawHead(g, bagHand, { shadow: { dx: 8, dy: 12, blur: 10, alpha: 0.45 }, tex: 0.45, texSeed: 112 });
+  g.save(); g.translate(BAG.x, BAG.y); g.scale(0.78, 0.78); g.translate(-BAG.x, -BAG.y);
+  { const bag = GG.blob([[BAG.x - 150, BAG.y - 70], [BAG.x - 40, BAG.y - 92], [BAG.x + 110, BAG.y - 84], [BAG.x + 168, BAG.y - 60], [BAG.x + 176, BAG.y + 50], [BAG.x + 120, BAG.y + 96], [BAG.x - 90, BAG.y + 100], [BAG.x - 158, BAG.y + 50]]);
+    const bp = GG.piece(g, bag, { fill: '#D9C1B4', rough: 1.4, seed: 101, tex: 0.7, kind: 'cloth', lift: [10, 14], liftAlpha: 0.55, liftBlur: 12 });
+    // the faded floral print
+    g.save(); g.clip(bp); const r = OTM.rng('flor');
+    for (let i = 0; i < 26; i++) { const x = BAG.x - 170 + r() * 350, y = BAG.y - 90 + r() * 190, s = 10 + r() * 14, col = ['#B9666A', '#C98A5E', '#7A8E6A', '#9C6E8E'][i % 4];
+      for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2 + r(); g.fillStyle = col; g.beginPath(); g.ellipse(x + Math.cos(a) * s * 0.55, y + Math.sin(a) * s * 0.55, s * 0.42, s * 0.26, a, 0, 7); g.fill(); }
+      g.fillStyle = '#E8C96A'; g.beginPath(); g.arc(x, y, s * 0.2, 0, 7); g.fill();
+      g.strokeStyle = '#6E7E5A'; g.lineWidth = 2.4; g.beginPath(); g.moveTo(x + s * 0.5, y + s * 0.4); g.quadraticCurveTo(x + s, y + s * 1.2, x + s * 1.6, y + s); g.stroke(); }
+    g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(190,180,170,0.4)'; g.fillRect(BAG.x - 200, BAG.y - 120, 420, 260); g.restore();
+    GG.crescent(g, bp, -10, -10, '#F0E2D6', 0.6); GG.crescent(g, bp, 10, 12, '#6E5A56', 0.6);
+    // the zip: teeth along the top; the slider gone, the last inch gaping
+    const zipL = [BAG.x - 140, BAG.y - 70], zipR = [BAG.x + 160, BAG.y - 58];
+    g.save(); g.strokeStyle = '#7A6A50'; g.lineWidth = 9; g.beginPath(); g.moveTo(zipL[0], zipL[1]); g.lineTo(BAG.x + 70, BAG.y - 66); g.stroke();
+    g.strokeStyle = '#C8A858'; g.lineWidth = 3; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(zipL[0], zipL[1] - 1); g.lineTo(BAG.x + 70, BAG.y - 67); g.stroke(); g.setLineDash([]);
+    // the broken end: two rows of teeth apart
+    g.strokeStyle = '#C8A858'; g.lineWidth = 3; g.setLineDash([3, 3]);
+    g.beginPath(); g.moveTo(BAG.x + 70, BAG.y - 70); g.quadraticCurveTo(BAG.x + 120, BAG.y - 84, zipR[0], zipR[1] - 14); g.stroke();
+    g.beginPath(); g.moveTo(BAG.x + 70, BAG.y - 62); g.quadraticCurveTo(BAG.x + 120, BAG.y - 48, zipR[0], zipR[1] + 10); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#2E2624'; g.beginPath(); g.moveTo(BAG.x + 76, BAG.y - 66); g.quadraticCurveTo(BAG.x + 124, BAG.y - 80, zipR[0] - 4, zipR[1] - 10); g.quadraticCurveTo(BAG.x + 124, BAG.y - 52, BAG.x + 76, BAG.y - 66); g.fill();
+    g.restore(); }
+  g.restore();
+  const bagThumb = GG.hand(Object.assign({}, BH, { pose: Object.assign({}, BH.pose, { only: 'thumb' }) }));
+  GG.drawHead(g, bagThumb, { shadow: { dx: 4, dy: 6, blur: 5, alpha: 0.5 }, tex: 0.45, texSeed: 114 });
+  { const cuff = GG.blob([[120, 860], [236, 806], [270, 852], [170, 920], [110, 916]]); const cfp = GG.piece(g, cuff, { fill: '#46413D', rough: 1.3, seed: 113, tex: 0.75, kind: 'wool', lift: [6, 8], liftAlpha: 0.5 }); GG.crescent(g, cfp, -6, -6, SW_LIT, 0.8); }
+
+  // ---------------------------------------------------------------- the phone (gloss): the lock screen, turned to him, in her hand
+  const scr = (() => {
+    const w = 400, h = 820, c = OTM.makeCanvas(w, h), p = c.getContext('2d');
+    const wf = GG.waterfall({ w: 360, h: 738, U: 360 * 0.28, ss: 1.6 });
+    p.drawImage(wf, 0, 0, w, h);
+    p.fillStyle = 'rgba(0,0,0,0.12)'; p.fillRect(0, 0, w, 260);
+    p.fillStyle = '#FFFFFF'; p.textAlign = 'center'; p.font = '300 112px "Libre Franklin"'; p.fillText('14:07', w / 2, 190);
+    p.font = '500 22px "Libre Franklin"'; p.fillText('Saturday 14 November', w / 2, 92);
+    return c;
+  })();
+  const phoneL = GG.layer();
+  { const p = phoneL;
+    const quadPath = (q, r) => { const pp = new Path2D(); const pt = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+      for (let i = 0; i < 4; i++) { const a = q[(i + 3) % 4], b = q[i], c = q[(i + 1) % 4]; const la = Math.hypot(b[0] - a[0], b[1] - a[1]), lc = Math.hypot(c[0] - b[0], c[1] - b[1]); const p0 = pt(b, a, r / la), p1 = pt(b, c, r / lc); i ? pp.lineTo(p0[0], p0[1]) : pp.moveTo(p0[0], p0[1]); pp.quadraticCurveTo(b[0], b[1], p1[0], p1[1]); } pp.closePath(); return pp; };
+    const bodyQ = [[PQ[0][0] - 10, PQ[0][1] - 12], [PQ[1][0] + 10, PQ[1][1] - 12], [PQ[2][0] + 10, PQ[2][1] + 12], [PQ[3][0] - 10, PQ[3][1] + 12]];
+    const side = quadPath([[bodyQ[1][0] - 4, bodyQ[1][1] + 4], [bodyQ[1][0] + 9, bodyQ[1][1] + 12], [bodyQ[2][0] + 9, bodyQ[2][1] - 8], [bodyQ[2][0] - 4, bodyQ[2][1]]], 6);
+    p.fillStyle = (() => { const gr = p.createLinearGradient(0, bodyQ[1][1], 0, bodyQ[2][1]); gr.addColorStop(0, '#B8BCC2'); gr.addColorStop(1, '#6A6E74'); return gr; })(); p.fill(side);
+    p.fillStyle = '#050506'; p.fill(quadPath(bodyQ, 26));
+    const sp = quadPath(PQ, 20); p.save(); p.clip(sp); GG.warp(p, scr, PQ, 14, 24);
+    const sg = p.createLinearGradient(PQ[0][0], PQ[0][1], PQ[0][0] + 120, PQ[0][1] + 160); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,0.1)'); sg.addColorStop(0.6, 'rgba(255,255,255,0)'); p.fillStyle = sg; p.fillRect(780, 300, 240, 420);
+    p.restore(); p.strokeStyle = 'rgba(220,226,232,0.4)'; p.lineWidth = 1.2; p.stroke(quadPath(bodyQ, 26));
+    // only her thumb is in front of it
+    p.save(); p.globalCompositeOperation = 'destination-out'; p.drawImage(thumb.canvas, thumb.x, thumb.y); p.restore();
+  }
+  g.drawImage(phoneL.canvas, 0, 0);
+  GG.drawHead(g, thumb, { shadow: { dx: 4, dy: 6, blur: 6, alpha: 0.4 }, tex: 0.4, texSeed: 74 });
+  // the screen's light on her chin and on the coat (smooth)
+  GG.glow(g, 900, 510, 300, '#BFF3F6', 0.24, 'screen', 1);
+  E.save(); E.globalAlpha = 0.45; E.drawImage(phoneL.canvas, 0, 0); E.restore();
+
+  f.finish({ grain: 0.1, fibre: 0.09, vignette: 0.42, halation: 0.35, seed: 7, afterPost: (c) => { c.drawImage(phoneL.canvas, 0, 0);
+    GG.subtitle(c, 'Her', ['We’ve never taken this photo.', 'We’ve never been to a waterfall.'], { y: H - 62, size: 44 }); } });
+  window.FRAME_READY = true;
+})();
+</script>
