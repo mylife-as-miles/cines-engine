@@ -117,6 +117,17 @@ def main():
     res = '480p' if params.get('draft') else params.get('resolution', '720p')
     secs = float(params.get('duration', 0) or 0)
     est = round(PRICE.get(res, 0) * secs, 2) if o.endpoint.startswith('bytedance/seedance-2.5') else None
+    if est is not None and o.video:
+        # with any video reference fal bills tokens over input + output duration:
+        # tokens = W * H * (input s + output s) * 24 / 1024, at $0.0128 per 1,000 (480p/720p)
+        import subprocess
+        def probe(p, entry):
+            return subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', entry,
+                                   '-of', 'csv=p=0', os.path.join(HERE, p)], capture_output=True, text=True).stdout.strip()
+        w, h = (int(x) for x in probe(o.video[0], 'stream=width,height').split(','))
+        inp = min(30.2, sum(float(probe(v, 'format=duration') or 0) for v in o.video))
+        rate = {'480p': 0.0128, '720p': 0.0128, '1080p': 0.0140, '4k': 0.0058}.get(res, 0.0128) / 1000
+        est = round(w * h * (inp + secs) * 24 / 1024 * rate, 2)
 
     os.makedirs(os.path.join(HERE, 'out', 'jobs'), exist_ok=True)
     rec = {'name': o.name, 'endpoint': o.endpoint, 'prompt_file': o.prompt, 'prompt_chars': len(prompt),
