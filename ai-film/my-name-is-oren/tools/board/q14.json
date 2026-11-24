@@ -1,0 +1,282 @@
+{
+ "title": "Q14 · NO PROMISE",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0–3 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     0
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     4.43,
+     1.08,
+     3.3
+    ],
+    "target": [
+     4.43,
+     1.08,
+     0.5
+    ],
+    "f": 28
+   },
+   "camText": "Opens exactly on Q13's last frame: frontal two-shot from the kerb · 28 mm · locked-off",
+   "line": "(no dialogue)",
+   "note": "He does not laugh; his face calm. She looks down. People pass along the pavement."
+  },
+  {
+   "n": 2,
+   "time": "3–5.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     0
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     5.45,
+     0.4,
+     2.3
+    ],
+    "target": [
+     4.45,
+     0.18,
+     0.95
+    ],
+    "f": 50
+   },
+   "handheld": 0.003,
+   "camText": "Insert at pavement height: her boot against the paper bag · 50 mm · handheld, nearly still",
+   "line": "(no dialogue)",
+   "note": "Her boot is touching the lunch bag again."
+  },
+  {
+   "n": 3,
+   "time": "5.5–10.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     1.2
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     4.1,
+     1.43,
+     3.0
+    ],
+    "target": [
+     4.1,
+     1.42,
+     0.5
+    ],
+    "f": 85
+   },
+   "camText": "Oren in right profile, close-up, from the kerb · 85 mm · locked-off",
+   "line": "OREN: \"I can't add to the appeal. It needs a person to open it.\"",
+   "note": "He turns to her; the laundrette window soft behind him; the fine seam below his right ear.",
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 4.6,
+     "text": "OREN: I can't add to the appeal. It needs a person to open it."
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "time": "10.5–19.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     1.2
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     4.15,
+     1.46,
+     2.3
+    ],
+    "target": [
+     4.75,
+     1.43,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.08,
+     0
+    ]
+   },
+   "move": {
+    "to": {
+     "pos": [
+      4.3,
+      1.45,
+      1.75
+     ],
+     "target": [
+      4.75,
+      1.43,
+      0.5
+     ],
+     "f": 65
+    }
+   },
+   "handheld": 0.005,
+   "camText": "Helena, close-up · 65 mm · handheld, a slow push-in",
+   "line": "OREN (off-screen, over her): \"The clinic has a benefits adviser today. May I ask them?\" · HELENA: \"You can ask. No promise?\"",
+   "note": "Her lips closed while he speaks: her brows lift with hope, then her lips press it down. Then, guarded, her line.",
+   "lines": [
+    {
+     "t0": 0.3,
+     "t1": 4.4,
+     "text": "OREN (off-screen): The clinic has a benefits adviser today. May I ask them?"
+    },
+    {
+     "t0": 5.6,
+     "t1": 8.3,
+     "text": "HELENA: You can ask. No promise?"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "time": "19.5–22.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     4.1,
+     1.44,
+     2.3
+    ],
+    "target": [
+     4.1,
+     1.42,
+     0.5
+    ],
+    "f": 65
+   },
+   "camText": "Oren, frontal close-up, centred · 65 mm · locked-off",
+   "line": "OREN: \"No. I cannot approve the appeal.\"",
+   "note": "He answers at once, plainly.",
+   "lines": [
+    {
+     "t0": 0.3,
+     "t1": 2.7,
+     "text": "OREN: No. I cannot approve the appeal."
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "time": "22.5–28 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ],
+    "orenPos": [
+     4.1,
+     0.5,
+     1.2
+    ],
+    "orenSit": 1
+   },
+   "cam": {
+    "pos": [
+     4.75,
+     1.43,
+     3.0
+    ],
+    "target": [
+     4.75,
+     1.42,
+     0.5
+    ],
+    "f": 85
+   },
+   "handheld": 0.004,
+   "camText": "Helena in left profile, close-up, from the kerb · 85 mm · handheld",
+   "line": "HELENA: \"Good. I don't need another congratulations before anything's happened.\"",
+   "note": "The mirror of shot 3 (the board's Helena cannot turn her head: she faces him, frame left). A bitter one-sided smile, at the system, not at him; her eyes open, on him.",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 4.6,
+     "text": "HELENA: Good. I don't need another congratulations before anything's happened."
+    }
+   ]
+  }
+ ]
+}
