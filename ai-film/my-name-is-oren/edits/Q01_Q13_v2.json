@@ -1,0 +1,17 @@
+{
+ "out": "out/edits/Q01_Q13_v2.mp4",
+ "lufs": -18,
+ "segments": [
+  {"file": "out/takes/Q01_t1.mp4"},
+  {"file": "out/takes/Q02_t1.mp4", "crop": "756:425:120:6", "join": "cut", "note": "21:9 take cropped to the 16:9 framing Q03 opens on (25 dB match)"},
+  {"file": "out/edits/Q03_Q05_v1.mp4", "join": "dissolve:6", "note": "Q03-Q05 as approved; 6 frames so her look up reads as a move, not a jump"},
+  {"file": "out/takes/Q06_t1.mp4", "join": "cut", "note": "Oren's close-up to the reverse on Helena"},
+  {"file": "out/takes/Q07_t2.mp4", "join": "dissolve:3"},
+  {"file": "out/takes/Q08_t1.mp4", "join": "cut", "note": "a cut in, closer, the bag held out"},
+  {"file": "out/takes/Q09_t1.mp4", "join": "dissolve:3"},
+  {"file": "out/takes/Q10_t1.mp4", "to": 549, "join": "dissolve:6", "note": "her head drops between the takes; 6 frames"},
+  {"file": "out/takes/Q11_t1.mp4", "join": "dissolve:3"},
+  {"file": "out/takes/Q12_t1.mp4", "join": "dissolve:3"},
+  {"file": "out/takes/Q13_t1.mp4", "from": 33, "join": "dissolve:3", "note": "starts once the passers-by have cleared the frame"}
+ ]
+}
