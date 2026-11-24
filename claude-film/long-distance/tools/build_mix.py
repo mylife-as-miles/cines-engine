@@ -5,7 +5,7 @@
 """Build Long Distance's soundtrack from its own cue sheet (tools/cuesheet.js), then mix it with opus-sound-layer.
 
   node tools/cuesheet.js out/cuesheet.json
-  uv run tools/build_mix.py [--mix [--mux]]
+  uv run tools/build_mix.py [--mix [--mux]]   |   uv run tools/build_mix.py --mux-only
 
 The idea (design/DECISIONS.md): grain and gloss. Everything the phone makes (its voice, send, receive, the taps on
 glass, lock, wake, the buzz's tone) is clean, synthetic and dry: no room is ever put on it. Everything real (the
@@ -202,7 +202,16 @@ def hold_peaks(path, limit_db=-3.0):
     return float(20 * np.log10(np.max(np.abs(x * g[:, None])) + 1e-12)), int(np.sum(g < 0.999))
 
 
+def mux():
+    segs = os.path.join(ROOT, 'out', 'export_tmp', 'segs.txt')
+    subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', segs, '-i', os.path.join(AUD, 'mix.flac'),
+                    '-map', '0:v', '-map', '1:a', '-vf', 'scale=1280:720', '-c:v', 'libx264', '-crf', '23', '-preset', 'medium',
+                    '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest', '-movflags', '+faststart', REVIEW], check=True)
+    print('wrote ' + os.path.relpath(REVIEW, ROOT))
+
+
 def main():
+    if '--mux-only' in sys.argv: return mux()                  # the mix as it is, over the current picture
     cs = json.load(open(os.path.join(ROOT, 'out', 'cuesheet.json')))
     M = json.load(open(os.path.join(ROOT, 'audio', 'sound_map.json')))
     R, V, SP = M['rooms'], M['voices'], M['spaces']
@@ -374,12 +383,7 @@ def main():
         subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', os.path.join(AUD, 'mix.flac'), '-c:a', 'pcm_s24le', '-ar', '48000', '-ac', '2',
                         os.path.join(OUT, 'long_distance_mix.wav')], check=True)
         print('wrote out/mix/long_distance_mix.wav')
-    if '--mux' in sys.argv:
-        segs = os.path.join(ROOT, 'out', 'export_tmp', 'segs.txt')
-        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', segs, '-i', os.path.join(AUD, 'mix.flac'),
-                        '-map', '0:v', '-map', '1:a', '-vf', 'scale=1280:720', '-c:v', 'libx264', '-crf', '23', '-preset', 'medium',
-                        '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest', '-movflags', '+faststart', REVIEW], check=True)
-        print('wrote ' + os.path.relpath(REVIEW, ROOT))
+    if '--mux' in sys.argv: mux()
 
 
 if __name__ == '__main__':

@@ -34,9 +34,36 @@ Silent on purpose (`null` in the sound map, with the reason in `_silent_on_purpo
    - **the voices** (`out/mix/voice/`): each take through its treatment (`voices` in the sound map), then levelled as heard (`levels.json`);
    - **the effects** (`audio/cues.json`): each real sound with its sequence's room, each gloss sound dry, for opus-sound-layer's `mix.py`, which places each sound's peak (or start) on its cue, solves its level against the bed in its own band, ducks the bed 9 dB under the voices and masters to -18 LUFS with a -2 dBTP limiter. `tools/layer_mix.py` runs that `mix.py` unchanged on disk with two changes made as it loads: the bed keeps the level it was built to (mix.py would lift any "music" to -23 LUFS, which for room tone means 18 dB louder, 7 LU under the voices), and the master and stems are 24-bit FLAC (the disk could not hold WAV and float stems). mix.py's shared room is off: the gloss must stay dry, and the real sounds carry their own rooms.
    - the master's sample peaks are then held at -3 dBFS (the AAC encode overshoots the synthesised taps' transients);
-   - `--mux`: the review copy, `out/long_distance_mixed_720p.mp4`, scaled straight from the picture's three segments (`out/export_tmp/segs.txt`; no full-resolution copy is written).
+   - the final mix is also written as `out/mix/long_distance_mix.wav` (48 kHz stereo, 24-bit) for the 1080p master;
+   - `--mux` (or `--mux-only` to mux an existing mix): the review copy, `out/long_distance_mixed_720p.mp4` (1280×720, CRF 23, AAC 192k, faststart), scaled straight from the picture's three segments (`out/export_tmp/segs.txt`; no full-resolution copy is written).
 4. `uv run tools/layer_qa.py out/long_distance_mixed_720p.mp4 --audio out/audio` (opus-sound-layer's `qa.py`); `<earshot venv>/bin/python tools/listen.py` (the key moments, `audio/reports/earshot_listen.json`).
 
 ## What the checks show
 
-(filled in from the final mix: see below)
+Final mix for the locked picture (cut 4, 517.5 s), `out/mix/long_distance_mix.wav` (48 kHz stereo, 24-bit) and the review copy `out/long_distance_mixed_720p.mp4`.
+
+`tools/layer_qa.py` (opus-sound-layer's `qa.py`):
+
+| Check | Result |
+| --- | --- |
+| Offset, encoded audio against the mix | pass (0 samples) |
+| Loudness | pass: -18.17 LUFS against -18 (mix.py: -18.06; sample peaks held at -3.00 dBFS) |
+| True peak | pass: -2.71 dBTP on the encoded file |
+| Voice | pass: the bed sits 30.0 LU under the voices while they speak |
+| Silence | pass (planned: the held breath and the dropout in Q10, the black and the title) |
+| Sync | all 28 peak-aligned effects within their frame limit |
+| Music | flags the planned quiet: the dropout (416-417 s), the room 6 dB down and ducked under L023 (424.5 s), the silent title (503.5 s on) |
+| Audible / hero body | 32 effects pass, 86 fail the tool's 1.5 dB test (4 heroes its 3 dB): 58 of them are the phone's tiny taps, typing and scrolls; the rest are soft cloth, steps and doors in near-silent rooms. Two reasons, both noted for opus-sound-layer: mix.py solves each gain on the mono sound but pans it at constant power (centre = -3 dB a channel), so every centred effect lands 3 dB under its own target; and both tools floor a band at -60 dB, so in a near-silent room "audible" becomes an absolute threshold. The result is the film's quiet register; `LISTEN.md` asks a human whether the taps are heard. |
+
+earshot (`tools/listen.py` → `audio/reports/earshot_listen.json`):
+
+| Moment | What earshot heard |
+| --- | --- |
+| Q01 murmur (0:15-0:18) | "a man murmuring quietly, the words cannot be understood" 99% against "a man speaking clearly" 0% (strong, z +3.2); about 12 LU under the lines |
+| Q01 her laugh (0:18) | a strong match for "a woman laughing softly" (z +4.7), but in the forced choice 10% laugh against 90% "a woman sighing": every TTS laugh leans that way |
+| "Tell me about your day." (0:06) | "a woman speaking softly, very close and intimate" 66%, telephone 23%, a room with an echo 11% |
+| The three knocks (4:09) | "knocking on a wooden door", strong (z +3.1), 63% against "hammering a nail" 34%; AudioSet Knock; peaks -12.9 to -14.1 dBFS, about 14 LU under the voices, 7 LU over the room before them |
+| The screen going dark (6:56) | the room -40.0 LUFS, then -45.4 as he holds his breath, then nothing (peak -75 dBFS) for about 1.4 s, then back at -47.0 |
+| "Are you there?" / "Yes." (7:51) | 0.12 s apart; him -18.4 LUFS, heard as "a man whispering" (90%); "Yes." -14.5 LUFS, "a woman saying one word softly, very close" >99% |
+| The black and the title (8:23-8:37) | digital silence |
+| Phone against real | the phone's lines 96-98% "very close and dry"; her lines in the flat 93-95% (5-6% "in a room"). earshot hears the room only faintly on a voice; the ear decides (`LISTEN.md` 1) |

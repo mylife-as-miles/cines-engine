@@ -1,6 +1,6 @@
 {
  "fps": 24,
- "duration_s": 523,
+ "duration_s": 517.5,
  "energy": "calm",
  "lufs": -18,
  "kit": "/home/user/cines-engine/claude-film/long-distance/audio/kit",
@@ -11,7 +11,7 @@
   "loop": false,
   "fade_out_s": 0.05
  },
- "music_lufs": -37.8,
+ "music_lufs": -37.78,
  "voice": [
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L001.wav",
@@ -43,83 +43,83 @@
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L008.wav",
-   "start_s": 233
+   "start_s": 227.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L009.wav",
-   "start_s": 291
+   "start_s": 285.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L010.wav",
-   "start_s": 294.3
+   "start_s": 288.8
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L011.wav",
-   "start_s": 304.5
+   "start_s": 299
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L012.wav",
-   "start_s": 339.7
+   "start_s": 334.2
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L013.wav",
-   "start_s": 341.9
+   "start_s": 336.4
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L014.wav",
-   "start_s": 344
+   "start_s": 338.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L015.wav",
-   "start_s": 348.5
+   "start_s": 343
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L016.wav",
-   "start_s": 356
+   "start_s": 350.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L017.wav",
-   "start_s": 371
+   "start_s": 365.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L018.wav",
-   "start_s": 382
+   "start_s": 376.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L019.wav",
-   "start_s": 385.9
+   "start_s": 380.4
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L020.wav",
-   "start_s": 394.5
+   "start_s": 389
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L021.wav",
-   "start_s": 400
+   "start_s": 394.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L022.wav",
-   "start_s": 407.3
+   "start_s": 401.8
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L023.wav",
-   "start_s": 430
+   "start_s": 424.5
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L024.wav",
-   "start_s": 476.5
+   "start_s": 471
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L025.wav",
-   "start_s": 477.45
+   "start_s": 471.95
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L026.wav",
-   "start_s": 479.4
+   "start_s": 473.9
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L027.wav",
-   "start_s": 480.75
+   "start_s": 475.25
   },
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/Q01.laugh_phone.0.wav",
@@ -129,34 +129,34 @@
  "duck_db": 9,
  "silence_ok": [
   [
-   509,
-   523
+   503.5,
+   517.5
   ],
   [
-   418.3,
-   422.4
+   412.8,
+   416.9
   ],
   [
-   421.7,
-   425.9
+   416.2,
+   420.4
   ]
  ],
  "designed": [
   {
    "id": "Q08.knock.0",
-   "t": 254.5,
+   "t": 249,
    "sound": "out/mix/fx/knock_1_flat_f417ba4a.wav",
    "peak_db": -14
   },
   {
    "id": "Q08.knock.1",
-   "t": 255,
+   "t": 249.5,
    "sound": "out/mix/fx/knock_2_flat_10b3ff0c.wav",
    "peak_db": -14
   },
   {
    "id": "Q08.knock.2",
-   "t": 255.5,
+   "t": 250,
    "sound": "out/mix/fx/knock_3_flat_4415e94e.wav",
    "peak_db": -15
   }
@@ -633,7 +633,7 @@
   },
   {
    "id": "Q06.fork_pan.3",
-   "t": 226.3,
+   "t": 224.3,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/fork_pan_2_flat_bb4c242a.wav",
    "weight": "support",
    "align": "peak"
@@ -703,287 +703,287 @@
   },
   {
    "id": "Q07.type.0",
-   "t": 237.75,
+   "t": 232.25,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_1_dry_39b28d43.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.1",
-   "t": 237.917,
+   "t": 232.417,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_2_dry_e8f6151f.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.2",
-   "t": 238.083,
+   "t": 232.583,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_3_dry_3bc23754.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.3",
-   "t": 238.25,
+   "t": 232.75,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_4_dry_696246a2.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.4",
-   "t": 238.333,
+   "t": 232.833,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_5_dry_625e6c5a.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.5",
-   "t": 238.5,
+   "t": 233.0,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_6_dry_e3bb1803.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.6",
-   "t": 238.667,
+   "t": 233.167,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_1_dry_39b28d43.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.7",
-   "t": 238.833,
+   "t": 233.333,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_2_dry_e8f6151f.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.8",
-   "t": 239.0,
+   "t": 233.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_3_dry_3bc23754.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.9",
-   "t": 239.167,
+   "t": 233.667,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_4_dry_696246a2.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.10",
-   "t": 239.333,
+   "t": 233.833,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_5_dry_625e6c5a.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.11",
-   "t": 239.417,
+   "t": 233.917,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_6_dry_e3bb1803.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.type.12",
-   "t": 239.583,
+   "t": 234.083,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/type_1_dry_39b28d43.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.send.0",
-   "t": 240,
+   "t": 234.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/send_dry_7028e96e.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q07.receive.0",
-   "t": 240.15,
+   "t": 234.65,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/receive_dry_631f42d2.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q08.couch_creak.0",
-   "t": 260.4,
+   "t": 254.9,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/couch_creak_flat_ddeda5d3.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q08.phone_down.0",
-   "t": 262.25,
+   "t": 256.75,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/cloth1_flat_bf5934dd.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q08.couch_creak.1",
-   "t": 263.4,
+   "t": 257.9,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/couch_creak_flat_ddeda5d3.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q08.footsteps.0",
-   "t": 263.9,
+   "t": 258.4,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_m_flat_fdb6cbfd.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q08.door_open.0",
-   "t": 264.7,
+   "t": 259.2,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_open_flat_a0954635.wav",
    "weight": "hero",
    "align": "start"
   },
   {
    "id": "Q08.footsteps.1",
-   "t": 282.4,
+   "t": 276.9,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_m2_flat_1607f072.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q08.footsteps.2",
-   "t": 283.8,
+   "t": 278.3,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_f_flat_7205e90c.wav",
    "weight": "hero",
    "align": "start"
   },
   {
    "id": "Q08.door_close.0",
-   "t": 286.5,
+   "t": 281,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_close_flat_66a2cabe.wav",
    "weight": "hero",
    "align": "peak"
   },
   {
    "id": "Q08.coat_rustle.0",
-   "t": 296,
+   "t": 290.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/coat_rustle_flat_42f1c3ff.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q08.footsteps.3",
-   "t": 308.4,
+   "t": 302.9,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_m_flat_fdb6cbfd.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q09.wardrobe_door.0",
-   "t": 313,
+   "t": 307.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/wardrobe_door_bedroom_9085483f.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q09.hangers.0",
-   "t": 314,
+   "t": 308.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/hangers_bedroom_e90c94da.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q09.bag_lift.0",
-   "t": 320.5,
+   "t": 315,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/cloth2_bedroom_bed2ebcd.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q09.buzz_muffled.0",
-   "t": 325,
+   "t": 319.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/buzz_wall_dry_4d404fab.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q09.footsteps.0",
-   "t": 329.5,
+   "t": 324,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_fast_flat_fd608e1d.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q09.phone_pickup.0",
-   "t": 351.1,
+   "t": 345.6,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/cloth1_flat_bf5934dd.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q10.coat_rustle.0",
-   "t": 391.5,
+   "t": 386,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/coat_rustle_flat_42f1c3ff.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q10.trade.0",
-   "t": 425.5,
+   "t": 420,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/trade_flat_d7bdcb1e.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q10.breath_in.0",
-   "t": 437.1,
+   "t": 431.6,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/breath_in_f_flat_fed26956.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q10.door_close_soft.0",
-   "t": 443.7,
+   "t": 438.2,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_close_soft_flat_9f6d3e92.wav",
    "weight": "hero",
    "align": "peak"
   },
   {
    "id": "Q10.street_door.0",
-   "t": 449.5,
+   "t": 444,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/street_door_flat_7b08b5df.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q11.tap.0",
-   "t": 457,
+   "t": 451.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/tap_1_dry_77f78919.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q11.tap.1",
-   "t": 461.5,
+   "t": 456,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/tap_2_dry_087197e9.wav",
    "weight": "support",
    "align": "start"
   },
   {
    "id": "Q11.couch_creak.0",
-   "t": 471,
+   "t": 465.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/couch_creak_flat_ddeda5d3.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q11.couch_creak.1",
-   "t": 482.4,
+   "t": 477.3,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/couch_creak_flat_ddeda5d3.wav",
    "weight": "support",
    "align": "peak"
   },
   {
    "id": "Q11.breath.0",
-   "t": 484,
+   "t": 480.9,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/sigh_m_flat_a34c8532.wav",
    "weight": "support",
    "align": "start"

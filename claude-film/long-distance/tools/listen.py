@@ -3,6 +3,9 @@
   /home/user/leonxlnx/earshot/.venv/bin/python tools/listen.py [out/audio/mix.flac]   -> audio/reports/earshot_listen.json
 
 The moments come from the cue sheet (out/cuesheet.json), so a re-timed picture moves them:
+  murmur       his wordless murmur (Q01), before her laugh
+  laugh        her soft laugh on the phone (Q01 laugh_phone)
+  phone_vs_real  two of the phone's lines and two of hers in the flat, against the same forced choice
   first_line   L001 "Tell me about your day.": the phone's voice, dry and close
   knocks       the three knocks (Q08)
   screen_dark  the screen going dark (Q10 phone_dim): the room's level before, in the drop, and after
@@ -37,6 +40,14 @@ def main():
         return {'window_s': [round(a, 2), round(b, 2)], 'level': level(a, b), 'describe': d.get('summary'), 'match': mt.get('summary')}
 
     rep = {}
+    mb = [x for x in cs['beds'] if x['name'] == 'murmur'][0]; lc = cue('laugh_phone', 'Q01')[0]['tg']
+    rep['murmur'] = hear('murmur', mb['t0g'] + 0.8, lc - 0.05, 'a man murmuring quietly, the words cannot be understood',
+                         ['a man speaking clearly', 'a woman speaking', 'music'])
+    rep['laugh'] = hear('laugh', lc, lc + 2.3, 'a woman laughing softly', ['a woman sighing', 'a woman speaking', 'a man speaking'])
+    rep['laugh']['murmur_gap_before_s'] = 'the laugh starts 0.16 s after the murmur\'s punchline (audio/sound_map.json beds.murmur.offset)'
+    q = 'a woman speaking very close and dry, with no room around her'; qa = ['a woman speaking in a room, a little distant', 'a woman speaking on the telephone']
+    rep['phone_vs_real'] = {lid: api.match(mixp, q, alts=qa, start=voice[lid]['tg'], end=voice[lid]['tg'] + voice[lid]['p']['dur'] + 0.15).get('summary')
+                            for lid in ('L001', 'L027', 'L017', 'L023')}
     L1 = voice['L001']; t = L1['tg']; rep['first_line'] = hear('first_line', t, t + L1['p']['dur'] + 0.1, 'a woman speaking softly, very close and intimate',
                                                              ['a woman speaking in a room with an echo', 'a woman speaking on the telephone', 'a man speaking'])
     k = cue('knock', 'Q08'); a, b = k[0]['tg'] - 0.25, k[-1]['tg'] + 0.6

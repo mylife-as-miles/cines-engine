@@ -1,4 +1,35 @@
 {
+ "murmur": {
+  "window_s": [
+   15.3,
+   18.15
+  ],
+  "level": {
+   "lufs": -26.1,
+   "peak_dbfs": -10.9
+  },
+  "describe": "2.85 s busy, 7.7 onsets/s (attack 127 ms). Sounds most like: a finger squeaking on glass (z +2.7), a phone vibration buzz (z +2.2), people talking in the background (z +2.1) [plausible reading]. Other readings: a heartbeat (everyday, z +1.7). AudioSet: Speech 0.25, Vehicle 0.06. peak -10.9 dBFS, -26.1 LUFS, brightness 1.9 kHz, bandwidth 20.5 kHz, noise floor -43 dBFS, side/mid -34 dB.",
+  "match": "mix.flac [15.300-18.150 s]: 'a man murmuring quietly, the words cannot be understood' -> strong (unvalidated: music / instrument / voice description) (z +3.2; would rank #1 among 322 vocabulary descriptions; cosine 0.23). Forced choice vs your alternatives: 'a man murmuring quietly, the words cannot be understood' 99%, 'a man speaking clearly' 0%, 'a woman speaking' <1%, 'music' <1%. It sounds most like: 'a finger squeaking on glass' (z +2.7), 'people laughing' (z +2.7), 'a man speaking' (z +2.5), 'a man shouting' (z +2.4)."
+ },
+ "laugh": {
+  "window_s": [
+   18.2,
+   20.5
+  ],
+  "level": {
+   "lufs": -17.4,
+   "peak_dbfs": -3.6
+  },
+  "describe": "2.30 s busy, 2.2 onsets/s (attack 244 ms, decays in 161 ms). Sounds most like: a car engine starting (z +2.5), digging in soil (z +2.4), a door slam (z +2.2) [plausible reading]. Other readings: glass clinking (foley, z +1.9). Unvalidated hint: people laughing (z +4.4). AudioSet: Throat clearing 0.49, Speech 0.32. peak -3.6 dBFS, -17.4 LUFS, brightness 2.2 kHz, bandwidth 12.9 kHz, noise floor -45 dBFS, mono.",
+  "match": "mix.flac [18.200-20.500 s]: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.7; would rank #1 among 322 vocabulary descriptions; cosine 0.23). Forced choice vs your alternatives: 'a woman laughing softly' 10%, 'a woman sighing' 90%, 'a woman speaking' <1%, 'a man speaking' <1%. It sounds most like: 'people laughing' (z +4.4), 'a person coughing' (z +3.6), 'a person breathing' (z +2.9), 'children laughing' (z +2.8).",
+  "murmur_gap_before_s": "the laugh starts 0.16 s after the murmur's punchline (audio/sound_map.json beds.murmur.offset)"
+ },
+ "phone_vs_real": {
+  "L001": "mix.flac [6.000-7.380 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +3.5; would rank #1 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 96%, 'a woman speaking in a room, a little distant' 1%, 'a woman speaking on the telephone' 3%. It sounds most like: 'a woman speaking' (z +3.0), 'a light switch flicked' (z +2.3), 'a button being pressed' (z +2.2), 'a toggle switch click' (z +2.1).",
+  "L027": "mix.flac [475.250-476.596 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 98%, 'a woman speaking in a room, a little distant' 0%, 'a woman speaking on the telephone' 2%. It sounds most like: 'a woman speaking' (z +3.5), 'a crackling fire' (z +2.4), 'a match being struck' (z +2.4), 'footsteps on gravel' (z +2.1).",
+  "L017": "mix.flac [365.500-375.430 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.6; would rank #2 among 322 vocabulary descriptions; cosine 0.25). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 93%, 'a woman speaking in a room, a little distant' 6%, 'a woman speaking on the telephone' 1%. It sounds most like: 'a voice-over narration' (z +4.7), 'a woman speaking' (z +4.1), 'high heels walking' (z +2.8), 'a man speaking' (z +2.5).",
+  "L023": "mix.flac [424.500-431.326 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.26). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 95%, 'a woman speaking in a room, a little distant' 5%, 'a woman speaking on the telephone' 1%. It sounds most like: 'a voice-over narration' (z +3.8), 'a woman speaking' (z +3.3), 'high heels walking' (z +2.6), 'a cinematic hit with a long tail' (z +2.2)."
+ },
  "first_line": {
   "window_s": [
    6,
@@ -6,92 +37,92 @@
   ],
   "level": {
    "lufs": -14.7,
-   "peak_dbfs": -4.8
+   "peak_dbfs": -4.9
   },
-  "describe": "1.33 s busy, 5.3 onsets/s, tonal, pitch ~183 Hz (F#3) (attack 110 ms, decays in 594 ms). Sounds most like: an enter key press (z +2.1), a match being struck (z +2.1), a light switch flicked (z +2.0) [weak reading]. Other readings: footsteps on gravel (foley, z +2.0), a crackling fire (ambience, z +1.9). AudioSet: Speech 0.62, Male speech, man speaking 0.06. peak -4.8 dBFS, -14.6 LUFS, brightness 1.1 kHz, bandwidth 12.9 kHz, noise floor -46 dBFS, mono.",
-  "match": "mix.flac [6.000-7.330 s]: 'a woman speaking softly, very close and intimate' -> plausible (unvalidated: music / instrument / voice description) (z +2.7; would rank #3 among 322 vocabulary descriptions; cosine 0.20). Forced choice vs your alternatives: 'a woman speaking softly, very close and intimate' 65%, 'a woman speaking in a room with an echo' 11%, 'a woman speaking on the telephone' 24%, 'a man speaking' <1%. It sounds most like: 'a woman speaking' (z +2.9), 'an enter key press' (z +2.1), 'a match being struck' (z +2.1), 'a light switch flicked' (z +2.0)."
+  "describe": "1.33 s busy, 5.3 onsets/s, tonal, pitch ~183 Hz (F#3) (attack 110 ms, decays in 594 ms). Sounds most like: an enter key press (z +2.1), a match being struck (z +2.1), a button being pressed (z +2.0) [weak reading]. Other readings: footsteps on gravel (foley, z +2.0), a crackling fire (ambience, z +1.9). AudioSet: Speech 0.61, Male speech, man speaking 0.06. peak -4.9 dBFS, -14.7 LUFS, brightness 1.1 kHz, bandwidth 12.9 kHz, noise floor -46 dBFS, mono.",
+  "match": "mix.flac [6.000-7.330 s]: 'a woman speaking softly, very close and intimate' -> plausible (unvalidated: music / instrument / voice description) (z +2.7; would rank #3 among 322 vocabulary descriptions; cosine 0.20). Forced choice vs your alternatives: 'a woman speaking softly, very close and intimate' 66%, 'a woman speaking in a room with an echo' 11%, 'a woman speaking on the telephone' 23%, 'a man speaking' <1%. It sounds most like: 'a woman speaking' (z +2.9), 'an enter key press' (z +2.1), 'a match being struck' (z +2.1), 'a button being pressed' (z +2.0)."
  },
  "knocks": {
   "window_s": [
-   254.25,
-   256.1
+   248.75,
+   250.6
   ],
   "level": {
-   "lufs": -30.5,
-   "peak_dbfs": -13.1
+   "lufs": -30.6,
+   "peak_dbfs": -12.9
   },
-  "describe": "1.85 s busy, 2.2 onsets/s (attack 225 ms). Sounds most like: footsteps on wood (z +3.0), a knock on a door (z +2.9), a wooden knock (z +2.9) [clear reading]. AudioSet: Knock 0.40, Door 0.10, Speech 0.06. peak -13.1 dBFS, -30.2 LUFS, brightness 1.9 kHz, bandwidth 20.5 kHz, noise floor -42 dBFS, side/mid -32 dB.",
-  "match": "mix.flac [254.250-256.100 s]: 'knocking on a wooden door' -> strong (z +3.2; would rank #1 among 322 vocabulary descriptions; cosine 0.35). Forced choice vs your alternatives: 'knocking on a wooden door' 70%, 'footsteps' 1%, 'a door closing' 1%, 'hammering a nail' 28%. It sounds most like: 'footsteps on wood' (z +3.0), 'a knock on a door' (z +2.9), 'a wooden knock' (z +2.9), 'a door slam' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "describe": "1.85 s busy, 2.7 onsets/s (attack 220 ms). Sounds most like: footsteps on wood (z +3.2), a wooden knock (z +2.9), a knock on a door (z +2.8) [clear reading]. AudioSet: Knock 0.38, Door 0.15, Speech 0.09. peak -12.9 dBFS, -30.4 LUFS, brightness 1.9 kHz, bandwidth 20.5 kHz, noise floor -42 dBFS, side/mid -32 dB.",
+  "match": "mix.flac [248.750-250.600 s]: 'knocking on a wooden door' -> strong (z +3.1; would rank #2 among 322 vocabulary descriptions; cosine 0.33). Forced choice vs your alternatives: 'knocking on a wooden door' 63%, 'footsteps' 2%, 'a door closing' 1%, 'hammering a nail' 34%. It sounds most like: 'footsteps on wood' (z +3.2), 'a wooden knock' (z +2.9), 'a knock on a door' (z +2.8), 'a heavy thud' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
   "each": [
    {
-    "lufs": -29.8,
-    "peak_dbfs": -13.3
+    "lufs": -30.0,
+    "peak_dbfs": -12.9
    },
    {
-    "lufs": -28.3,
-    "peak_dbfs": -13.1
+    "lufs": -28.2,
+    "peak_dbfs": -13.2
    },
    {
-    "lufs": -29.8,
-    "peak_dbfs": -13.8
+    "lufs": -30.2,
+    "peak_dbfs": -14.1
    }
   ],
   "room_before": {
    "lufs": -37.1,
-   "peak_dbfs": -23.4
+   "peak_dbfs": -23.5
   }
  },
  "screen_dark": {
-  "t": 422,
+  "t": 416.5,
   "before (-6..-3.5 s)": {
-   "lufs": -39.9,
-   "peak_dbfs": -28.1
+   "lufs": -40.0,
+   "peak_dbfs": -28.0
   },
   "held breath (-2..0 s)": {
-   "lufs": -45.3,
-   "peak_dbfs": -31.6
+   "lufs": -45.4,
+   "peak_dbfs": -31.8
   },
   "drop (+1.3..+2.5 s)": {
    "lufs": null,
-   "peak_dbfs": -75.1
+   "peak_dbfs": -75.3
   },
   "after (+4..+6 s)": {
-   "lufs": -46.9,
-   "peak_dbfs": -34.7
+   "lufs": -47.0,
+   "peak_dbfs": -34.9
   },
-  "describe_drop": "1.60 s busy, 10.0 onsets/s (attack 3 ms). Sounds most like: a deep cinematic boom (z +2.5), a soft thump (z +2.4), a big drum hit (z +2.3) [plausible reading]. Other readings: a soft air whoosh (transitions, z +2.3), a quiet room at night (ambience, z +2.0). AudioSet tagger unsure (Music 0.12, Sound effect 0.11, Silence 0.11). peak -60.5 dBFS, -70.0 LUFS, brightness 2.2 kHz, bandwidth 20.5 kHz, noise floor -88 dBFS, side/mid -20 dB."
+  "describe_drop": "1.60 s busy, 10.0 onsets/s (attack 3 ms). Sounds most like: a soft thump (z +2.4), a deep cinematic boom (z +2.4), a soft air whoosh (z +2.3) [weak reading]. Other readings: a small object dropping on a table (foley, z +2.0), a quiet room at night (ambience, z +2.0). AudioSet tagger unsure (Music 0.12, Silence 0.12, Sound effect 0.10). peak -60.6 dBFS, -70.0 LUFS, brightness 2.2 kHz, bandwidth 20.5 kHz, noise floor -88 dBFS, side/mid -20 dB."
  },
  "are_you": {
   "gap_s": 0.12,
   "him": {
    "window_s": [
-    476.5,
-    477.48
+    471,
+    471.98
    ],
    "level": {
-    "lufs": -18.3,
-    "peak_dbfs": -8.6
+    "lufs": -18.4,
+    "peak_dbfs": -7.8
    },
-   "describe": "0.98 s short one-shot (attack 139 ms, decays in 586 ms). Sounds most like: footsteps on gravel (z +3.2), walking through dry leaves (z +2.5), a crackling fire (z +2.4) [clear reading]. Other readings: keys jingling (everyday, z +1.8). Unvalidated hint: a man speaking (z +3.1). AudioSet: Speech 0.69, Male speech, man speaking 0.05. peak -8.6 dBFS, -17.7 LUFS, brightness 2.1 kHz, bandwidth 12.9 kHz, mono.",
-   "match": "mix.flac [476.500-477.478 s]: 'a man speaking softly in a room' -> plausible (unvalidated: music / instrument / voice description) (z +2.8; would rank #5 among 322 vocabulary descriptions; cosine 0.07). Forced choice vs your alternatives: 'a man speaking softly in a room' 0%, 'a man speaking on the telephone' <1%, 'a woman speaking' <1%, 'a man whispering' 99%. It sounds most like: 'footsteps on gravel' (z +3.2), 'a man speaking' (z +3.1), 'someone whispering' (z +3.0), 'a man shouting' (z +2.8)."
+   "describe": "0.98 s short swell (attack 163 ms, decays in 676 ms). Sounds most like: walking through dry leaves (z +2.7), keys jingling (z +2.5), a crackling fire (z +2.4) [plausible reading]. Other readings: footsteps on gravel (foley, z +2.3), a sustained glass harp tone (chimes, z +1.9). AudioSet: Speech 0.68. peak -7.8 dBFS, -17.8 LUFS, brightness 2.0 kHz, bandwidth 12.9 kHz, mono.",
+   "match": "mix.flac [471.000-471.978 s]: 'a man speaking softly in a room' -> plausible (unvalidated: music / instrument / voice description) (z +2.5; would rank #5 among 322 vocabulary descriptions; cosine 0.02). Forced choice vs your alternatives: 'a man speaking softly in a room' 3%, 'a man speaking on the telephone' 4%, 'a woman speaking' 2%, 'a man whispering' 90%. It sounds most like: 'a man speaking' (z +2.9), 'a voice-over narration' (z +2.9), 'walking through dry leaves' (z +2.7), 'a man shouting' (z +2.6)."
   },
   "yes": {
    "window_s": [
-    477.45,
-    478.11
+    471.95,
+    472.61
    ],
    "level": {
     "lufs": -14.5,
     "peak_dbfs": -3.6
    },
-   "describe": "0.66 s busy, 6.1 onsets/s (attack 268 ms, decays in 112 ms). Sounds most like: a spray can hissing (z +2.4), a match being struck (z +2.3), walking through dry leaves (z +1.9) [weak reading]. Other readings: a page turning (foley, z +1.8), an enter key press (keyboard, z +1.7). AudioSet: Speech 0.65, Male speech, man speaking 0.10, Sigh 0.06. peak -3.6 dBFS, -14.3 LUFS, brightness 4.7 kHz, bandwidth 16.3 kHz, mono.",
-   "match": "mix.flac [477.450-478.110 s]: 'a woman saying one word softly, very close' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'a woman saying one word softly, very close' >99%, 'a woman speaking in a room with an echo' <1%, 'a woman speaking on the telephone' <1%, 'a man speaking' <1%. It sounds most like: 'someone whispering' (z +2.4), 'a spray can hissing' (z +2.4), 'a match being struck' (z +2.3), 'a person breathing' (z +2.1)."
+   "describe": "0.66 s busy, 6.1 onsets/s (attack 268 ms, decays in 112 ms). Sounds most like: a spray can hissing (z +2.4), a match being struck (z +2.3), footsteps on grass (z +2.0) [weak reading]. Other readings: a page turning (foley, z +1.8), a quick swipe (transitions, z +1.7). AudioSet: Speech 0.64, Male speech, man speaking 0.11, Sigh 0.06. peak -3.6 dBFS, -14.4 LUFS, brightness 4.7 kHz, bandwidth 16.3 kHz, mono.",
+   "match": "mix.flac [471.950-472.610 s]: 'a woman saying one word softly, very close' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a woman saying one word softly, very close' >99%, 'a woman speaking in a room with an echo' <1%, 'a woman speaking on the telephone' <1%, 'a man speaking' <1%. It sounds most like: 'someone whispering' (z +2.4), 'a spray can hissing' (z +2.4), 'a match being struck' (z +2.3), 'a person breathing' (z +2.1)."
   }
  },
  "title": {
   "window_s": [
-   509,
-   523
+   503.5,
+   517.5
   ],
   "peak_dbfs": -240.0,
   "rms_dbfs": -200.0
