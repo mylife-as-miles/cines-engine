@@ -10,7 +10,7 @@
    "size": 0.8
   },
   "flat": {
-   "rt": 0.45,
+   "rt": 0.5,
    "top": 8000,
    "wet_db": -13
   },
@@ -83,20 +83,20 @@
    "even": true
   },
   "door": {
-   "what": "the real woman in the flat: the flat's room around her, a touch of distance, her own dynamics",
+   "what": "the real woman in the flat: the flat's room clearly around her (RT 0.5 s, 5 dB under the dry voice), a touch of distance (7.5 kHz), her own dynamics",
    "hp": 90,
-   "lp": 9000,
+   "lp": 7500,
    "room": "flat",
-   "wet_db": -10,
+   "wet_db": -5,
    "lufs": -17.5,
    "spread_db": 3
   },
   "room": {
    "what": "him in the flat: the same room, a little drier",
    "hp": 90,
-   "lp": 10000,
+   "lp": 9000,
    "room": "flat",
-   "wet_db": -14,
+   "wet_db": -8,
    "lufs": -17,
    "spread_db": 3
   },
