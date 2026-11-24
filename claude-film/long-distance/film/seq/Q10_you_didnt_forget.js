@@ -244,7 +244,7 @@
     const u = (a, b) => E.inOutSine(seg(tt, a, b));
     // upper lane: her right hand holds the phone out flat (dark now); his right hand comes from the left and takes it by its end.
     // lower lane: his left hand holds the bag out from underneath; her left hand comes from the right and takes it by its far end.
-    const offer = u(54.0, 55.0), reachT = u(54.8, 55.8), back = u(56.2, 57.4), gone = u(57.2, 58.6);
+    const offer = E.outCubic(seg(tt, 53.3, 54.9)), reachT = u(54.8, 55.8), back = u(56.2, 57.4), gone = u(57.2, 58.9);   // the cut lands with the hands already coming out
     const yU = 520, yL = 790;
     const herO = [lerp(2150, cx + 150, offer) + lerp(0, 1200, back), yU + 40];
     const hisO = [lerp(-230, cx - 170, offer) - lerp(0, 1200, back), yL + 40];
@@ -317,14 +317,12 @@
       S.cue('breath_held', 48.0, { dur: 3, what: 'his: the room going quiet around it' });
       // A057: the screen dims and she lets it go dark. The room goes quiet: the bed dips 6 dB and the window's street drops out
       S.cue('phone_dim', 51.5, { what: 'nothing: the screen going dark makes no sound. The silence is the cue' });
-      S.duck(51.5, 59.5, 0.5);
       S.bed('room_day', 51.5, 86, { level: -52, what: 'the room after: 6 dB under' });
       S.cue('trade', 55.0, { dur: 3, what: 'cloth, the bag changing hands, the broken zip ticking once' });
       S.cue('breath_in', 66.6, { what: 'hers: a breath drawn to say something more, then held, then let go unspoken (68.5)' });
       S.cue('door_close_soft', 73.5, { what: 'the front door pulled shut softly from the landing' });
       S.bed('footsteps_stairs', 75, 81, { level: -40, fo: 1, what: 'her steps going down the stairwell, receding' });
       S.cue('street_door', 81.5, { level: -50, what: 'far below: the street door' });
-      S.bed('street_day', 82, 86, { level: -58, what: 'then nothing but the room' });
     },
     shots: [
       { at: 0, name: 'between: L017; the phone held up to him', draw: twoOpen, post: { vig: 0.45, halation: 0.4 } },
