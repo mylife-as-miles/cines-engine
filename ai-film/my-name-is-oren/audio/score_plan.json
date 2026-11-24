@@ -1,0 +1,28 @@
+{
+ "_about": "The film's one musical cue (design/SOUND_BIBLE.md §4-5): it starts on the last blink, carries the corner, holds over CUT TO BLACK and resolves under the title MY NAME IS OREN, then decays with the fade (A54-A58). Made with Lyria 3.5 through tools/lyria.py: four takes from four wordings of the same controls, each windowed to its best 20-25 s with earshot `find`, checked with `describe`, judged in the order of score-and-sound-design.md §8, then chosen by ear. start_s/end_s are placeholders until Q22 exists; the cue is placed on Q22's own clock then. Prompts give mechanics, not composers or genres.",
+ "motifs": {
+  "M": "the one cue: a small, warm figure never heard before, so it lands as recognition, not as a theme"
+ },
+ "cues": [
+  {
+   "id": "M01a", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "job": "recognition and earned warmth as he matches her pace; resolve under the title",
+   "prompt": "Instrumental film-score cue, about 24 seconds, for the last shot of a quiet British short film: two people turn a street corner together, slowly, and the title appears on black. A single felt piano plays a short, simple, warm melodic figure, slow and rubato with no audible pulse, over a very soft sustained string bed. Start with no attack, almost out of silence. Major key with gentle suspended tones that resolve late; open intervals; very sparse, few notes, lots of space. Close and intimate at first, the register opening gently upward near the end, then a natural decay into silence. Tender, hopeful, restrained, never triumphant or sentimental. No drums, no vocals, no choir, no swells. In tune at A = 440."
+  },
+  {
+   "id": "M01b", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "job": "as M01a, solo string instead of piano",
+   "prompt": "Instrumental film-score cue, about 24 seconds, for the final moment of an intimate British short film as two people walk around a corner at the same slow pace and the screen goes to black for the title. One solo cello plays a slow, simple, warm phrase, rubato, unhurried, over a quiet held chord on harmonium. It begins from near silence, stays low and close, then lifts gently in register as the phrase resolves on a major chord and fades away naturally. Very sparse and calm: sustained tones, few attacks, open fifths and a late resolution. Warm, tender, quietly hopeful. No drums, no vocals, no choir, no build-up. In tune at A = 440."
+  },
+  {
+   "id": "M01c", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "job": "as M01a, plucked string, the most minimal",
+   "prompt": "Instrumental film-score cue, about 24 seconds, quiet ending of a short film. A single nylon-string guitar plays a few slow, warm, plucked notes, free in time, like someone finally slowing down, over a barely audible sustained string pad. Begins almost from silence; major key with one suspended chord that resolves at the very end; long gaps between notes; close and dry, the space opening slightly at the end; a soft natural decay to silence. Gentle, tender, hopeful, understated. No drums, no vocals, no choir, no swells. In tune at A = 440."
+  },
+  {
+   "id": "M01d", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "job": "as M01a, piano and strings in a slightly fuller close",
+   "prompt": "Instrumental film-score cue, about 24 seconds, for an end title. Soft felt piano and a small string quartet, very quiet and slow, no steady beat. The piano states a short, simple, warm figure; the strings answer with long held notes; the harmony moves slowly from a suspended chord to a warm major resolution on the title, then everything decays naturally into silence. Sparse, sustained, intimate, with the register widening only at the very end. Hopeful and tender, never grand. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  }
+ ]
+}

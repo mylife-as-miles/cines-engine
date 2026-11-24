@@ -105,5 +105,23 @@
     "earshot": "no match: read as a thud / paper crumpling"
    }
   ]
+ },
+ "over_black_traffic": {
+  "kind": "bed",
+  "dur": 10,
+  "seeds": [
+   601,
+   1601,
+   2601
+  ],
+  "prompt": "a busy town street close by on a wet afternoon, cars passing on a damp road, tyres hissing, a bus pulling away, footsteps on wet pavement, open outdoor air",
+  "match": "a city street with traffic",
+  "alts": [
+   "a strong wind",
+   "rain falling",
+   "a crowd talking",
+   "music playing"
+  ],
+  "why": "A01-A02 OVER BLACK: the city's traffic under its polite synthetic voices, before the first picture"
  }
 }

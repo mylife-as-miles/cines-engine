@@ -1,0 +1,7 @@
+[
+ {"id": "OB01", "text": "Thank you for your patience. Please proceed in turn.", "style": "a calm, polite synthetic public-information voice, even and measured, unhurried"},
+ {"id": "OB02", "text": "Both of you will be served. There is no need to raise your voice.", "style": "a traffic post settling an argument: calm, measured, perfectly polite, never raising its voice"},
+ {"id": "OB03", "text": "Crossing now. Thank you.", "style": "a soft, polite automated street voice, brief and pleasant"},
+ {"id": "OB04", "text": "Apologies for the delay. Your route has been updated.", "style": "a gentle synthetic announcement voice, friendly and even"},
+ {"id": "OB05", "text": "Please mind the sweeper. Thank you.", "style": "a mild, courteous machine voice, unhurried"}
+]
