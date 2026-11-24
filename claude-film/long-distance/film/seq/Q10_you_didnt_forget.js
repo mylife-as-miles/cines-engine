@@ -58,14 +58,14 @@
   // 21–26.5: studying the picture, her free hand goes to the back of her neck (21–24) where her hair used to be. "Is it Photoshop?"
   function nape(c, st, lt) {
     const tt = twos(lt);
-    const np = E.inOutSine(seg(tt, 21.1, 23.6)), up = E.inOutSine(seg(tt, 23.6, 24.2));
+    // without noticing, her free hand goes to the back of her neck (21.1–22.5), stays a moment, and drops back to her side (24.4–25.4)
+    const np = E.inOutSine(seg(tt, 21.1, 22.5)) * (1 - E.inOutSine(seg(tt, 24.4, 25.4))), up = E.inOutSine(seg(tt, 23.6, 24.2));
     herPhone(c, lt, { hold: 1, nape: np, face: { yaw: lerp(0.2, 0.45, up), pitch: lerp(0.34, 0.1, up), lids: lerp(0.5, 0.66, up), gaze: [lerp(0.1, 0.4, up), lerp(0.5, 0.06, up)], mouth: m('L020', 24.0, lt) } });
   }
-  // 29.3–35.6: "Have you been using AI to make pictures of me?" Quieter. She asks it of him, her hand still at her neck
+  // 29.3–35.6: "Have you been using AI to make pictures of me?" Quieter. She asks it of him
   function herAI(c, st, lt) {
     const tt = twos(lt);
-    // her hand stays at the back of her neck while she asks it (it comes down off screen, on his reply)
-    herPhone(c, lt, { hold: 1, nape: 1, face: { yaw: 0.42, pitch: 0.12, lids: key(tt, [[29.3, 0.62], [33, 0.56], [35.4, 0.6]]), gaze: [0.38, key(tt, [[29.3, 0.08], [34.5, 0.08], [35.3, 0.2]])], mouth: m('L021', 29.5, lt), brows: key(tt, [[30.5, 0], [31.5, 0.25], [34, 0.25], [35, 0]]) } });
+    herPhone(c, lt, { hold: 1, nape: 0, face: { yaw: 0.42, pitch: 0.12, lids: key(tt, [[29.3, 0.62], [33, 0.56], [35.4, 0.6]]), gaze: [0.38, key(tt, [[29.3, 0.08], [34.5, 0.08], [35.3, 0.2]])], mouth: m('L021', 29.5, lt), brows: key(tt, [[30.5, 0], [31.5, 0.25], [34, 0.25], [35, 0]]) } });
   }
   // 40–44: she goes very still
   function still(c, st, lt) {
@@ -180,14 +180,29 @@
     tr.over(c);
   }
 
+  // ------------------------------------------------------------------ 66.2–68.9: her, close. The breath drawn to say more, swallowed
+  // She looks at him. Her chest lifts, her lips part (66.6); a beat; her eyes drop (67.7); her lips close and her throat moves, a
+  // swallow (68.1–68.5); the breath goes out unspoken (68.4–68.9). Then (the two-shot) her eyes go to the door and she turns.
+  function herBreath(c, st, lt) {
+    const tt = twos(lt);
+    const inh = E.inOutSine(seg(tt, 66.5, 66.9)) * (1 - E.inOutSine(seg(tt, 68.4, 68.9)));
+    const open = tt >= 66.7 && tt < 68.1, drop = E.inOutSine(seg(tt, 67.6, 68.0));
+    const sw = key(tt, [[68.1, 0], [68.25, 1], [68.5, 0]]);
+    const her = K.herClose(c, lt, { pose: 'stand', lift: 70, face: { yaw: 0.45, pitch: lerp(lerp(0.06, -0.04, inh), 0.2, drop) + 0.07 * sw, lids: lerp(lerp(0.66, 0.72, inh), 0.42, drop),
+        gaze: [lerp(0.4, 0.15, drop), lerp(0.06, 0.5, drop)], mouth: open ? (tt < 67.3 ? 2 : 1) : 0, brows: lerp(0.25 * inh, 0, drop) },
+      p: { tau: 0.42, breath: 2 + 9 * inh + RIG.breath(lt, 1.5), armL: { to: [-0.1, 2.5], bend: 1, hand: 'strap', front: true }, armR: { to: [0.2, 3.0], bend: -1, hand: 'carry', hp: { flip: true }, front: true } } });
+    const hr = her && her.hands.R, s = 0.23 * LV().between.shots.her.anchors.herBetween[2];
+    if (hr) RIG.bag(c, hr.grip[0], hr.grip[1] + 0.3 * s, 0.95 * s, { light: K.setLight(LV().between.shots.her.lights.day), rot: 0.04 });
+  }
+
   // ------------------------------------------------------------------ 59–70: L023; the breath drawn to say more (66.6), swallowed (68.5)
   // After the trade: she has the bag, one hand still on her bag strap; he has the dark phone in his hand and looks at it. On her beat
   // (63) his eyes come up to her; on "This is not okay." they go back to the phone. She draws a breath to say more (66.6), and he
   // looks up, waiting; she swallows it (68.5), her eyes go to the door, her hand leaves the strap, and she turns to go (69.4).
   function twoAfter(c, st, lt) {
     const tt = twos(lt);
-    const drawn = tt >= 66.5 && tt < 68.5, sw = tt >= 68.5;
-    const door = E.inOutSine(seg(tt, 68.7, 69.3)), go = E.inOutSine(seg(tt, 69.3, 70));
+    const drawn = false, sw = tt >= 68.5;
+    const door = E.inOutSine(seg(tt, 68.9, 69.4)), go = E.inOutSine(seg(tt, 69.4, 70));
     const up = key(tt, [[62.6, 0], [63.1, 1], [64.6, 1], [65.1, 0], [66.7, 0], [67.1, 0.8], [68.6, 0.8], [69.1, 0]]);
     K.two(c, lt, { z: 1 + 0.03 * E.inOutSine(seg(lt, 59, 70)), zAt: [900, 500],
       her: { pose: 'stand', bag: { hand: 'R' }, p: { tau: lerp(0.42, -0.2, go), armL: door < 0.5 ? { to: [-0.1, 2.5], bend: 1, hand: 'strap', front: true } : { a1: -0.06, a2: 0.12, hand: 'relax' },
@@ -275,7 +290,9 @@
       { at: 48, name: 'him: watching the thumb, not breathing', draw: watching, post: { vig: 0.52 } },
       { at: 51, name: 'phone: the screen dims; she lets it go dark', draw: (c, st, lt) => thumbInsert(c, st, lt, { dim: true }), post: { vig: 0.58 } },
       { at: 54, name: 'hands: the trade on the centre line', draw: trade, post: { vig: 0.5 } },
-      { at: 59, name: 'between: L023; the breath drawn and swallowed', draw: twoAfter, post: { vig: 0.45 } },
+      { at: 59, name: 'between: L023', draw: twoAfter, post: { vig: 0.45 } },
+      { at: 66.2, name: 'her, close: the breath drawn to say more; swallowed', draw: herBreath, post: { vig: 0.5 } },
+      { at: 68.9, name: 'between: her eyes go to the door; she turns to go', draw: twoAfter, post: { vig: 0.45 } },
       { at: 70, name: 'door: she leaves; it closes softly', draw: door, post: { vig: 0.45 } },
       { at: 74, name: 'room by day: he stays where he is; her half empty again', draw: roomAlone, post: { vig: 0.45 } },
     ],

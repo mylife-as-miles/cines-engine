@@ -93,15 +93,18 @@
       const base = RIG.POSES.him.couch({ hip: [hip[0], hip[1] + settle], dir: -1, s, u: 0, arm: 'lap', fit });
       const blink = RIG.blink(lt, 3);
       const face = { yaw: 0.28, pitch: lerp(0.32, 0.18, e), lids: lids * blink, gaze: [0.05, 0.45], mouth: mH, smile: key(tt, [[28.2, 0], [28.6, 0.12], [29.6, 0.12], [30.6, 0.2]]) };
-      const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.35, lean: 0, head: face, arms: { R: Object.assign({ order: 2 }, SITR) }, legs: false, crop: 3.5, untucked: true });
+      // his phone arm (the near one, screen right): from the shoulder the upper arm drops in front of his chest to a bent elbow, the
+      // forearm rises to his ear. Lap -> ear through a curve (the elbow swings out a little on the way up), on twos
+      const K3 = [[0, [-0.78, 2.22], [-0.12, 2.8]], [0.5, [-0.92, 2.15], [-0.72, 1.62]], [1, [-0.64, 1.96], [-0.44, 0.8]]];
+      const kA = e < 0.5 ? 0 : 1, uu = e < 0.5 ? e / 0.5 : (e - 0.5) / 0.5, ee = E.inOutSine(uu);
+      const Ea = [lerp(K3[kA][1][0], K3[kA + 1][1][0], ee), lerp(K3[kA][1][1], K3[kA + 1][1][1], ee)], Wa = [lerp(K3[kA][2][0], K3[kA + 1][2][0], ee), lerp(K3[kA][2][1], K3[kA + 1][2][1], ee)];
+      const atEar = e > 0.6;
+      const armL = Object.assign({ E: Ea, W: Wa, front: true, order: 2 }, atEar ? { hand: 'ear', hp: { over: 'all' } } : { hand: 'thumb', hp: { reach: 0.3, over: ['thumb', 'dist'] } });
+      const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.35, lean: 0, head: face, arms: { R: Object.assign({ order: 1 }, SITR), L: armL }, legs: false, crop: 3.5, untucked: true });
       const p0 = base.parts[0], p1 = base.parts[1];
       RIG.drawFigure(c, { who: 'him', x: p0.x, y: p0.y, s, flip: p0.flip, light: L, breath: 0, ops: p0.ops });
-      const br = RIG.breath(lt, 3);
-      const fig = RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: br, ops: up.ops });
-      const shoulder = fig.toWorld(up.SL), tgt = fig.toWorld([lerp(LAPW[0], EARW[0], e), lerp(LAPW[1], EARW[1], e)]);
-      shoulder[1] -= br; tgt[1] -= br;
-      const atEar = e > 0.6;
-      const arm = RIG.arm(c, 'him', { shoulder, target: tgt, s, side: 'L', bend: 'down', light: L, hand: atEar ? 'ear' : 'thumb', hp: atEar ? { over: 'all' } : { reach: 0.3, over: ['thumb', 'dist'] } });
+      const fig = RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: RIG.breath(lt, 3), ops: up.ops });
+      const arm = { hand: fig.hands.L, over: c2 => fig.over(c2) };
       const hand = arm.hand;
       if (hand) {
         const ph = hand.phone || { x: hand.grip[0], y: hand.grip[1], h: 0.7 * s, angle: 0 };

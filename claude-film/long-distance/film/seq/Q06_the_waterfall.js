@@ -52,7 +52,7 @@
   // mouth. The third forkful rises at HALT.lift; the chime stops it about halfway, and it stays there, loaded, until 58.6.
   const TW = 1.1, LIFT = 0.6, HOLD = 0.3, BACK = 0.5, CHEW = 3.0;
   const BITES = [1.9, 5.7, 14.6, 18.4];
-  const HALT = { lift: 20.2, at: 20.5 }, STOP_CHEW = 30.35, PUT_DOWN = [58.6, 59.4];
+  const HALT = { lift: 20.2, at: 20.5 }, STOP_CHEW = 30.35, PUT_DOWN = [56.6, 57.4];
   const twirl = (t, t0) => { const u = (t - t0) / TW; return { fork: 0.03 + 0.05 * (0.5 + 0.5 * Math.sin(u * 14)), loaded: u > 0.45, pan: seg(t, t0, t0 + 0.35, 'inOutSine') }; };
   // the halt: the forkful rises out of the pan; the chime catches it in front of his chest and it stops there
   const haltAt = t => { const k = seg(t, 20.05, 20.85, 'inOutSine'), kStop = seg(20.62, 20.05, 20.85, 'inOutSine'); return Math.min(k, kStop); };
@@ -238,16 +238,21 @@
   // the pushed-in last shot, where the set's layer softens: so the four frames read beside the phone. The lamp's spill on it.
   let STRIP = null;
   // the pendant's warm spill on the fridge door, round the strip: three cut bands (a lamp's light is always posterised), screened on
-  function fridgeSpill(c, view, shot, k, rM) {
-    const R = SETS.living.world, z = R.fridge.z0 - 0.003, P = w => LV(view).project(w, shot);
-    const m = P([R.strip.x + 0.03, R.strip.y + 0.02, z]); if (!m) return;
-    const r = (rM || 0.16) * m[2], key = 'Q06|spill3';
-    const cv = c.cache(key, g => { O.lightPool(g, W / 2, H / 2, [{ r: 0.36 * H, color: '#64401A' }, { r: 0.25 * H, color: '#94642C' }, { r: 0.15 * H, color: '#BC8A46' }], { sy: 1.25, rough: 3, seed: 67 }); }, W, H);
-    // only on the fridge door (X 0.62 to 1.30, up to 1.80 m)
-    const corners = [[R.fridge.x0, 1.8], [R.fridge.x1, 1.8], [R.fridge.x1, 0.0], [R.fridge.x0, 0.0]].map(([x, y]) => P([x, y, z]));
-    const g = c.g; g.save();
-    if (corners.every(Boolean)) { g.beginPath(); corners.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.clip(); }
-    g.globalCompositeOperation = 'screen'; g.globalAlpha = k; const sc = r / (0.36 * H); g.drawImage(cv, m[0] - W / 2 * sc, m[1] - H / 2 * sc, W * sc, H * sc); g.restore();
+  // The pendant's light falling across the fridge door with the rest of the room: a falloff centred on the lamp itself (off to the
+  // right and above), so on the door it is a broad warm wash growing toward the lamp, in two soft steps, never a ring round the
+  // strip. Clipped to the door; screened on. k: strength.
+  function fridgeSpill(c, view, shot, k) {
+    const R = SETS.living.world, z = R.fridge.z0 - 0.003, V = LV(view), P = w => V.project(w, shot);
+    const bulb = P(SETS.living.anchorsWorld.bulb), st = P([R.strip.x, R.strip.y, z]); if (!bulb || !st) return;
+    const cv = c.cache('Q06|spill4|' + view + '|' + shot, g => {
+      const d = Math.hypot(st[0] - bulb[0], st[1] - bulb[1]), blur = 0.05 * st[2];
+      const corners = [[R.fridge.x0, 1.8], [R.fridge.x1, 1.8], [R.fridge.x1, 0.0], [R.fridge.x0, 0.0]].map(([x, y]) => P([x, y, z]));
+      g.save(); if (corners.every(Boolean)) { g.beginPath(); corners.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.clip(); }
+      g.filter = `blur(${Math.round(blur)}px)`;
+      [[1.45, '#3A2818'], [1.12, '#5E4026']].forEach(([f, col]) => { g.fillStyle = col; g.beginPath(); g.arc(bulb[0], bulb[1], d * f, 0, 7); g.fill(); });
+      g.restore();
+    }, W, H);
+    const g = c.g; g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = k; g.drawImage(cv, 0, 0); g.restore();
   }
   function stripOver(c, view, shot, mul) {
     const R = SETS.living.world, s = R.strip, z = R.fridge.z0 - 0.003, cr = Math.cos(s.rot), sr = Math.sin(s.rot);
@@ -264,21 +269,21 @@
   }
 
   FILM.seq({
-    id: 'Q06', title: 'The waterfall', dur: 64,
+    id: 'Q06', title: 'The waterfall', dur: 58.5,
     setup() { PHONE.prepare(['waterfall']); },
     lines: [{ id: 'L007', at: 38.5 }],
     sound(S) {
-      S.bed('room_night', 0, 64, { level: -46 });
-      S.bed('pendant_hum', 0, 64, { level: -52 });
+      S.bed('room_night', 0, 58.5, { level: -46 });
+      S.bed('pendant_hum', 0, 58.5, { level: -52 });
       // the fork in the pan, sparse: each twirl (the room is too far to hear), and the forkful laid back in the pan at the end
-      [13.0, 16.8, 19.2].forEach(t => S.cue('fork_pan', t, { level: -36 })); S.cue('fork_pan', 59.3, { level: -42 });
+      [13.0, 16.8, 19.2].forEach(t => S.cue('fork_pan', t, { level: -36 })); S.cue('fork_pan', 57.3, { level: -42 });
       S.bed('chewing', 14.7, STOP_CHEW, { level: -38 });          // he stops chewing on the close shot
       S.cue('receive', 20.5);
       S.cue('tap', 22.25, { level: -40 });                        // his fingertip on the glass: the picture opens
       S.cue('tap', SET_PRESS, { level: -40 });                    // "Set as wallpaper"
       S.cue('swallow', 37.4, { level: -40 });
       LOCKS.forEach(t => S.cue('lock', t)); WAKES.forEach(t => S.cue('wake', t));
-      S.bed('fridge_hum', 53, 64, { level: -48 });
+      S.bed('fridge_hum', 53, 58.5, { level: -48 });
     },
     shots: [
       // ---------------------------------------------------------------- the room: small, tidy for one, furnished for two; he eats
@@ -294,7 +299,7 @@
         const u = seg(st, 0.3, 5.9, 'inOutSine');
         c.camera({ x: lerp(960, 945, u), y: lerp(540, 600, u), zoom: lerp(1.0, 1.15, u) });
         // the insert is lit warmer than the room: the lamp's spill on the fridge door, and the print itself caught in it
-        const V = LV('fridge'); V.back(c, lt, NIGHT); fridgeSpill(c, 'fridge', 'insert', 0.85, 0.16); stripOver(c, 'fridge', 'insert', '#F4E2C8'); V.front(c, lt, NIGHT);
+        const V = LV('fridge'); V.back(c, lt, NIGHT); fridgeSpill(c, 'fridge', 'insert', 1.0); stripOver(c, 'fridge', 'insert', '#F4E2C8'); V.front(c, lt, NIGHT);
       }, post: { vig: 0.45 } },
       // ---------------------------------------------------------------- B2: he eats; the phone keeps him company across the salt
       { at: 13, name: 'counter: he eats from the pan, the phone propped against the salt; the chime; the forkful stops halfway', draw(c, st, lt) {
@@ -335,9 +340,9 @@
       { at: 53, name: 'counter: the strip at left, the phone at right, him between; slow push; he lays the forkful back in the pan', draw(c, st, lt) {
         // framed on the two pictures: the strip near the left edge, the lit wallpaper near the right, and a slow push that lands
         // (the set's layers end at the frame, so the centre stays at least 960 / zoom from the left and 540 / zoom from the bottom)
-        const u = seg(st, 0.2, 10.8, 'inOutSine'); c.camera({ x: lerp(780, 712, u), y: lerp(640, 680, u), zoom: lerp(1.24, 1.36, u) });
+        const u = seg(st, 0.1, 5.3, 'inOutSine'); c.camera({ x: lerp(780, 712, u), y: lerp(640, 680, u), zoom: lerp(1.24, 1.36, u) });
         const V = LV('counter'); V.back(c, lt, NIGHT);
-        fridgeSpill(c, 'counter', 'main', 0.55, 0.2); stripOver(c, 'counter', 'main', '#E2C8A4');
+        fridgeSpill(c, 'counter', 'main', 0.65); stripOver(c, 'counter', 'main', '#E2C8A4');
         const tt = twos(lt), e = eating(tt);
         const face = Object.assign({}, F_PHONE, { smile: key(tt, [[53, 0.25], [55, 0.375]]), lids: 0.64 });
         counterFig(c, 'counter', 'main', lt, e, face);

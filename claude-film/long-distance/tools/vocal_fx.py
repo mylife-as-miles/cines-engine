@@ -101,7 +101,7 @@ def main():
         if share is None:                                   # the summary carries the forced choice as text
             import re as _re
             mm = _re.search(r"'%s' (<1|>99|\\d+)%%" % _re.escape(L['listen_for']), m.get('summary') or '')
-            share = {'<1': 0.5, '>99': 99.5}.get(mm.group(1), float(mm.group(1)) if mm else 0) if mm else 0
+            g = mm.group(1) if mm else '0'; share = 0.5 if g == '<1' else 99.5 if g == '>99' else float(g)
         rep['laugh_phone'][f't{i}']['laugh_share'] = share
         score = share + (z or 0) - (20 if len(words) > 2 else 0)        # heard as a laugh against a sigh first, then z
         rep['laugh_phone'][f't{i}']['score'] = round(score, 2)
