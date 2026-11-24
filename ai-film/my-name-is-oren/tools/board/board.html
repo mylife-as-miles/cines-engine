@@ -209,6 +209,8 @@ window.setState = (st = {}) => {
   if (!hr.userData.home) hr.userData.home = hr.position.clone();
   if (st.helenaRightHand) { helena.updateMatrixWorld(true); hr.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaRightHand))); }
   else hr.position.copy(hr.userData.home);
+  const bagHand = st.bagHand === 'right' ? oren.userData.hands.right : oren.userData.hands.left;
+  if (bag.parent !== bagHand) bagHand.add(bag);
   const offL = st.orenLeftFoot || [0, 0];
   oren.userData.legs.left.position.set(restL.x - offL[0], restL.y, restL.z - offL[1]);
   sweeper.visible = !!st.sweeper;

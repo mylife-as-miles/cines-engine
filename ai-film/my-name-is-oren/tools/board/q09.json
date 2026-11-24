@@ -1,0 +1,283 @@
+{
+ "title": "Q09 \u00b7 DON'T LET ME KEEP YOU",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20132.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.05,
+     1.3
+    ],
+    "target": [
+     3.97,
+     1.72,
+     0.95
+    ],
+    "f": 40
+   },
+   "camText": "Opens exactly on Q08's last frame: low angle up at Oren \u00b7 35 mm \u00b7 locked-off",
+   "line": "(no dialogue)",
+   "note": "He holds still, the bag still held out at her face height."
+  },
+  {
+   "n": 2,
+   "time": "2.5\u20135.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"Don't let me keep you.\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.4,
+     "text": "HELENA: Don't let me keep you."
+    }
+   ],
+   "note": "Her chin lifts; proud."
+  },
+  {
+   "n": 3,
+   "time": "5.5\u20139 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ]
+   },
+   "cam": {
+    "pos": [
+     9.0,
+     1.6,
+     14.3
+    ],
+    "target": [
+     4.2,
+     1.0,
+     0.6
+    ],
+    "f": 50
+   },
+   "camText": "Wide from across the road, locked-off \u00b7 50 mm",
+   "line": "OREN: \"We are going in the same direction.\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.9,
+     "text": "OREN: We are going in the same direction."
+    }
+   ],
+   "note": "Small figures by the laundrette; people and a sweeper cross between us and them."
+  },
+  {
+   "n": 4,
+   "time": "9\u201312.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"Are we? I didn't say I was going.\"",
+   "lines": [
+    {
+     "t0": 0.7,
+     "t1": 3.0,
+     "text": "HELENA: Are we? I didn't say I was going."
+    }
+   ],
+   "note": "Her eyes go to the street; a little defiant."
+  },
+  {
+   "n": 5,
+   "time": "12.5\u201315 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.75,
+     0.95,
+     1.75
+    ],
+    "target": [
+     3.95,
+     0.8,
+     0.95
+    ],
+    "f": 50
+   },
+   "handheld": 0.004,
+   "camText": "Insert: his hands at bag height \u00b7 50 mm \u00b7 handheld",
+   "line": "(no dialogue)",
+   "note": "He moves the bag from his left hand into his right, out of her face."
+  },
+  {
+   "n": 6,
+   "time": "15\u201319.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     6.3,
+     1.25,
+     1.4
+    ],
+    "target": [
+     4.2,
+     1.15,
+     0.7
+    ],
+    "f": 40
+   },
+   "camText": "Medium side-on two-shot at her shoulder height \u00b7 40 mm \u00b7 locked-off",
+   "line": "OREN: \"Would you like me to look at the benefits notice?\"",
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 3.8,
+     "text": "OREN: Would you like me to look at the benefits notice?"
+    }
+   ],
+   "note": "Oren on the left standing, Helena on the right seated; the offer is of help, not the bag."
+  },
+  {
+   "n": 7,
+   "time": "19.5\u201323 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"It's already been appealed. Twice.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 2.8,
+     "text": "HELENA: It's already been appealed. Twice."
+    }
+   ],
+   "note": "Tired; a short breath out before \"Twice.\""
+  }
+ ]
+}
