@@ -3,3 +3,4 @@ audio/gen/*.wav
 *.log
 frames/*.png
 audio/audition/takes/
+audio/vo/takes/

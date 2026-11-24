@@ -1,0 +1,530 @@
+{
+ "L001": {
+  "file": "audio/vo/L001.wav",
+  "take": "L001_t1",
+  "dur": 1.23,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "Tell me about your day.",
+  "takes": {
+   "L001_t1": {
+    "heard": "Tell me about your day.",
+    "ok": true,
+    "dur": 1.23,
+    "z": 4.03
+   },
+   "L001_t2": {
+    "heard": "Tell me about your day.",
+    "ok": true,
+    "dur": 2.2,
+    "z": 3.29
+   },
+   "L001_t3": {
+    "heard": "Tell me about your day.",
+    "ok": true,
+    "dur": 1.72,
+    "z": 3.62
+   }
+  }
+ },
+ "L002": {
+  "file": "audio/vo/L002.wav",
+  "take": "L002_t1",
+  "dur": 1.047,
+  "speaker": "HIM",
+  "as": "bed",
+  "text": "You first.",
+  "takes": {
+   "L002_t1": {
+    "heard": "You first.",
+    "ok": true,
+    "dur": 1.047
+   }
+  }
+ },
+ "L003": {
+  "file": "audio/vo/L003.wav",
+  "take": "L003_t1",
+  "dur": 2.996,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "Mine’s better now. You go.",
+  "takes": {
+   "L003_t1": {
+    "heard": "Mine's better now. You go.",
+    "ok": true,
+    "dur": 2.996
+   }
+  }
+ },
+ "L004": {
+  "file": "audio/vo/L004.wav",
+  "take": "L004_t1",
+  "dur": 2.293,
+  "speaker": "HIM",
+  "as": "bed",
+  "text": "Goodnight.",
+  "takes": {
+   "L004_t1": {
+    "heard": "Good night.",
+    "ok": true,
+    "dur": 2.293
+   }
+  }
+ },
+ "L005": {
+  "file": "audio/vo/L005.wav",
+  "take": "L005_t1",
+  "dur": 2.152,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "Goodnight. I love you.",
+  "takes": {
+   "L005_t1": {
+    "heard": "Goodnight. I love you.",
+    "ok": true,
+    "dur": 2.152,
+    "z": 5.09
+   },
+   "L005_t2": {
+    "heard": "Goodnight. I love you.",
+    "ok": true,
+    "dur": 3.04,
+    "z": 3.31
+   },
+   "L005_t3": {
+    "heard": "Goodnight. I love you.",
+    "ok": true,
+    "dur": 2.84,
+    "z": 4.64
+   }
+  }
+ },
+ "L006": {
+  "file": "audio/vo/L006.wav",
+  "take": "L006_t1",
+  "dur": 0.921,
+  "speaker": "HIM",
+  "as": "bed",
+  "text": "I love you.",
+  "takes": {
+   "L006_t1": {
+    "heard": "I love you.",
+    "ok": true,
+    "dur": 0.921
+   }
+  }
+ },
+ "L007": {
+  "file": "audio/vo/L007.wav",
+  "take": "L007_t2",
+  "dur": 2.549,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "I love this one.",
+  "takes": {
+   "L007_t1": {
+    "heard": "I love this one.",
+    "ok": true,
+    "dur": 1.4,
+    "z": 3.87
+   },
+   "L007_t2": {
+    "heard": "I love this one.",
+    "ok": true,
+    "dur": 2.549,
+    "z": 4.25
+   },
+   "L007_t3": {
+    "heard": "I love this one.",
+    "ok": true,
+    "dur": 3.92,
+    "z": 3.95
+   }
+  }
+ },
+ "L008": {
+  "file": "audio/vo/L008.wav",
+  "take": "L005_t1",
+  "dur": 2.152,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "Goodnight. I love you.",
+  "same_as": "L005"
+ },
+ "L009": {
+  "file": "audio/vo/L009.wav",
+  "take": "L009_t1",
+  "dur": 1.974,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "Why didn’t you call first?",
+  "takes": {
+   "L009_t1": {
+    "heard": "Why didn't you call first?",
+    "ok": true,
+    "dur": 1.974
+   }
+  }
+ },
+ "L010": {
+  "file": "audio/vo/L010.wav",
+  "take": "L010_t1",
+  "dur": 1.341,
+  "speaker": "HER",
+  "as": "door",
+  "text": "I don’t know.",
+  "takes": {
+   "L010_t1": {
+    "heard": "I don't know.",
+    "ok": true,
+    "dur": 1.341
+   }
+  }
+ },
+ "L011": {
+  "file": "audio/vo/L011.wav",
+  "take": "L011_t1",
+  "dur": 2.778,
+  "speaker": "HER",
+  "as": "door",
+  "text": "I came for my makeup bag. The old one.",
+  "takes": {
+   "L011_t1": {
+    "heard": "I came for my makeup bag. The old one.",
+    "ok": true,
+    "dur": 2.778
+   }
+  }
+ },
+ "L012": {
+  "file": "audio/vo/L012.wav",
+  "take": "L012_t1",
+  "dur": 1.007,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "Don’t look at my phone.",
+  "takes": {
+   "L012_t1": {
+    "heard": "Don't look at my phone.",
+    "ok": true,
+    "dur": 1.007
+   }
+  }
+ },
+ "L013": {
+  "file": "audio/vo/L013.wav",
+  "take": "L013_t1",
+  "dur": 1.125,
+  "speaker": "HER",
+  "as": "door",
+  "text": "What is this?",
+  "takes": {
+   "L013_t1": {
+    "heard": "What is this?",
+    "ok": true,
+    "dur": 1.125
+   }
+  }
+ },
+ "L014": {
+  "file": "audio/vo/L014.wav",
+  "take": "L014_t1",
+  "dur": 3.271,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "It’s just a friend from work. It’s nothing. It’s none of your business.",
+  "takes": {
+   "L014_t1": {
+    "heard": "It's just a friend from work. It's nothing. It's none of your business.",
+    "ok": true,
+    "dur": 3.271
+   }
+  }
+ },
+ "L015": {
+  "file": "audio/vo/L015.wav",
+  "take": "L015_t1",
+  "dur": 1.736,
+  "speaker": "HER",
+  "as": "door",
+  "text": "I’m not talking about the text.",
+  "takes": {
+   "L015_t1": {
+    "heard": "I'm not talking about the text.",
+    "ok": true,
+    "dur": 1.736
+   }
+  }
+ },
+ "L016": {
+  "file": "audio/vo/L016.wav",
+  "take": "L016_t1",
+  "dur": 6.337,
+  "speaker": "HER",
+  "as": "door",
+  "text": "We’ve never taken this photo. We’ve never been to a waterfall.",
+  "takes": {
+   "L016_t1": {
+    "heard": "We've never taken this photo. We've never been to a waterfall.",
+    "ok": true,
+    "dur": 6.337,
+    "z": 5.63
+   },
+   "L016_t2": {
+    "heard": "We've never taken this photo. We've never been to a waterfall.",
+    "ok": true,
+    "dur": 8.28,
+    "z": 5.37
+   },
+   "L016_t3": {
+    "heard": "We've never taken this photo. We've never been to a waterfall.",
+    "ok": true,
+    "dur": 5.16,
+    "z": 5.32
+   }
+  }
+ },
+ "L017": {
+  "file": "audio/vo/L017.wav",
+  "take": "L017_t1",
+  "dur": 9.78,
+  "speaker": "HER",
+  "as": "door",
+  "text": "Maybe it’s not my place. But I’m the background of your phone, and we aren’t together anymore.",
+  "takes": {
+   "L017_t1": {
+    "heard": "Maybe it's not my place, but I'm the background of your phone, and we aren't together anymore.",
+    "ok": true,
+    "dur": 9.78
+   }
+  }
+ },
+ "L018": {
+  "file": "audio/vo/L018.wav",
+  "take": "L018_t1",
+  "dur": 2.576,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "I know. I forgot to change it.",
+  "takes": {
+   "L018_t1": {
+    "heard": "I know. I forgot to change it.",
+    "ok": true,
+    "dur": 2.576
+   }
+  }
+ },
+ "L019": {
+  "file": "audio/vo/L019.wav",
+  "take": "L019_t1",
+  "dur": 1.803,
+  "speaker": "HER",
+  "as": "door",
+  "text": "You didn’t forget.",
+  "takes": {
+   "L019_t1": {
+    "heard": "You didn't forget.",
+    "ok": true,
+    "dur": 1.803
+   }
+  }
+ },
+ "L020": {
+  "file": "audio/vo/L020.wav",
+  "take": "L020_t1",
+  "dur": 1.752,
+  "speaker": "HER",
+  "as": "door",
+  "text": "Is it Photoshop?",
+  "takes": {
+   "L020_t1": {
+    "heard": "Is it photoshop?",
+    "ok": true,
+    "dur": 1.752
+   }
+  }
+ },
+ "L021": {
+  "file": "audio/vo/L021.wav",
+  "take": "L021_t1",
+  "dur": 5.834,
+  "speaker": "HER",
+  "as": "door",
+  "text": "Have you been using AI to make pictures of me?",
+  "takes": {
+   "L021_t1": {
+    "heard": "Have you been using AI to make pictures of me?",
+    "ok": true,
+    "dur": 5.834,
+    "z": 4.86
+   },
+   "L021_t2": {
+    "heard": "Have you been using AI to make pictures of me?",
+    "ok": true,
+    "dur": 4.92,
+    "z": 4.09
+   },
+   "L021_t3": {
+    "heard": "Have you been using AI to make pictures of me?",
+    "ok": true,
+    "dur": 6.36,
+    "z": 4.69
+   }
+  }
+ },
+ "L022": {
+  "file": "audio/vo/L022.wav",
+  "take": "L022_t2",
+  "dur": 2.252,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "I just missed you, is all.",
+  "takes": {
+   "L022_t1": {
+    "heard": "I just missed you, is all.",
+    "ok": true,
+    "dur": 2.88,
+    "z": 3.79
+   },
+   "L022_t2": {
+    "heard": "I just missed you, is all.",
+    "ok": true,
+    "dur": 2.252,
+    "z": 4.13
+   },
+   "L022_t3": {
+    "heard": "I just missed you, that's all.",
+    "ok": false,
+    "dur": 3.08
+   }
+  }
+ },
+ "L023": {
+  "file": "audio/vo/L023.wav",
+  "take": "L023_t1",
+  "dur": 6.676,
+  "speaker": "HER",
+  "as": "door",
+  "text": "We’ve been apart longer than we were ever together. This is not okay.",
+  "takes": {
+   "L023_t1": {
+    "heard": "We've been apart longer than we were ever together. This is not okay.",
+    "ok": true,
+    "dur": 6.676,
+    "z": 5.68
+   },
+   "L023_t2": {
+    "heard": "We've been apart longer than we were ever together. This is not okay.",
+    "ok": true,
+    "dur": 7.56,
+    "z": 3.86
+   },
+   "L023_t3": {
+    "heard": "We've been apart longer than we were ever together. This is not okay.",
+    "ok": true,
+    "dur": 7.08,
+    "z": 4.47
+   }
+  }
+ },
+ "L024": {
+  "file": "audio/vo/L024.wav",
+  "take": "L024_t3",
+  "dur": 0.828,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "Are you there?",
+  "takes": {
+   "L024_t1": {
+    "heard": "Are you there?",
+    "ok": true,
+    "dur": 1.2,
+    "z": 3.45
+   },
+   "L024_t2": {
+    "heard": "Are you there?",
+    "ok": true,
+    "dur": 1.12,
+    "z": 3.68
+   },
+   "L024_t3": {
+    "heard": "Are you there?",
+    "ok": true,
+    "dur": 0.828,
+    "z": 3.76
+   }
+  }
+ },
+ "L025": {
+  "file": "audio/vo/L025.wav",
+  "take": "L025_t1",
+  "dur": 0.56,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "Yes.",
+  "takes": {
+   "L025_t1": {
+    "heard": "Yes.",
+    "ok": true,
+    "dur": 0.56,
+    "z": 5.46
+   },
+   "L025_t2": {
+    "heard": "Yes.",
+    "ok": true,
+    "dur": 1.08,
+    "z": 5.1
+   },
+   "L025_t3": {
+    "heard": "Yes!",
+    "ok": true,
+    "dur": 1.2,
+    "z": 4.76
+   }
+  }
+ },
+ "L026": {
+  "file": "audio/vo/L026.wav",
+  "take": "L026_t1",
+  "dur": 0.835,
+  "speaker": "HIM",
+  "as": "room",
+  "text": "I love you.",
+  "takes": {
+   "L026_t1": {
+    "heard": "I love you.",
+    "ok": true,
+    "dur": 0.835
+   }
+  }
+ },
+ "L027": {
+  "file": "audio/vo/L027.wav",
+  "take": "L027_t1",
+  "dur": 1.196,
+  "speaker": "HER",
+  "as": "phone",
+  "text": "I love you too.",
+  "takes": {
+   "L027_t1": {
+    "heard": "I love you too.",
+    "ok": true,
+    "dur": 1.196,
+    "z": 5.8
+   },
+   "L027_t2": {
+    "heard": "I love you too.",
+    "ok": true,
+    "dur": 1.48,
+    "z": 4.95
+   },
+   "L027_t3": {
+    "heard": "I love you too.",
+    "ok": true,
+    "dur": 1.32,
+    "z": 5.46
+   }
+  }
+ }
+}
