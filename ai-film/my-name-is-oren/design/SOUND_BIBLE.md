@@ -98,6 +98,7 @@ Effects are cues with IDs in `audio/sound_plan.json` (sweepers, bin, the two bru
 - **Intelligibility over everything.** No effect within 2 s of a line unless the picture demands it.
 - **The video model's voices are kept when they are right.** A line the model mangles or drops is re-voiced and lip-synced (DECISIONS).
 - **Every take is checked with `earshot describe` for slipped-in music** (Q10's was removed: lesson 53).
+- **Captions carry the meaningful non-speech sound** alongside the lines, in short consistent labels: "[city voices, chimes]" over black, "[sweepers scrubbing]", "[brush stops]", "[Helena laughs]", "[quiet piano]" for the cue.
 
 ## 9. Mix hierarchy and delivery
 
@@ -109,7 +110,7 @@ Effects are cues with IDs in `audio/sound_plan.json` (sweepers, bin, the two bru
 - The master is −18 LUFS integrated with true peak at −1.5 dBTP or lower (`sound.md` §8). Today's −18.5 LUFS and −1.4 dBTP is within that.
 - Consider gentle master compression if phone playback loses the quietest lines (`audio/LISTEN.md`).
 
-**Stems for the final:** dialogue (the takes and the voice stems), beds, effects, and the cue.
+**Stems for the final:** dialogue (DX: the takes and the voice stems), music (MX: the cue), effects (FX), Foley, ambience (the beds), and an **M&E** (music and effects without dialogue) in case the film is dubbed. Keep every word, the city voices included, in the dialogue stem.
 
 ## 10. Sources and licences
 
@@ -121,4 +122,4 @@ Effects are cues with IDs in `audio/sound_plan.json` (sweepers, bin, the two bru
   - TTS for the over-black synthetic voices (ElevenLabs or Gemini, with consent rules in `sound.md` §6)
   - Freesound CC0 (or CC-BY, credited) and earshot's bank for the tiny foley
 
-Everything is listed in `audio/CREDITS.md` as it is added.
+Everything is listed in `audio/CREDITS.md` as it is added. That file works as a rights ledger, recording for each sound its source type, terms, attribution, commercial use, whether it was modified, the date it was checked, and whether it is final or temporary.

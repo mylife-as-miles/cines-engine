@@ -14,13 +14,15 @@ Seven public repositories, read in November 2026 (shallow clones; treat their te
 
 ### Sound, score and music (added November 2026, at the author's request)
 
-Five more sources, folded into `score-and-sound-design.md` (and `sound.md` §5 and §7, `ai-film.md` §7). Their licences differ, so check before reusing anything:
+Seven more sources, folded into `score-and-sound-design.md` (and `sound.md` §5 and §7, `ai-film.md` §7). Their licences differ, so check before reusing anything:
 
 | Repo | What it is | Best for | Licence |
 | --- | --- | --- | --- |
 | [snowfrost/skill-movie](https://github.com/snowfrost/skill-movie) (`cinematic-music-sound-design`, `score-and-mix-picture`) | Scoring and sound design as a narrative system; spotting locked picture, generation prompts, returned music edited to picture, a dialogue-safe mix verified within 20 ms; a scoring knowledge base | The sound bible in every studio | **No licence file** (all rights reserved): read and summarise only, never copy text, scripts or its bundled SFX |
 | [badgids/Story-Film-Skills](https://github.com/badgids/Story-Film-Skills) (`skills/sound-design`) | Shot-by-shot SFX cue lists (`SFX-###`), routing effects to Stable Audio 3 or to the video model's native sound, "every on-screen action has a sound decision, including silence" | AI Film, Claude Game | Apache-2.0 (Alan Guice): adaptable with attribution |
 | [rubycrocker/FME-24-dataset](https://github.com/rubycrocker/FME-24-dataset) | Film Music & Emotion: 422 film-score excerpts, 98 listeners, valence–arousal over time, 78 acoustic features (Crocker and Fazekas, SMC 2024) | Research on how a score moves feeling over time | Open for research; audio not distributed. Analyse locally, don't commit the CSVs |
+| [SJY051/music-composition](https://github.com/SJY051/music-composition) (`references/genres/film-tv-scoring.md`) | Film and TV scoring craft: what film music is for, underscore and source music, leitmotif payoff, genre conventions, trailer structure, adaptive game music, writing to picture | The score in every studio; trailers in Claude Game and Motion Graphics | CC BY 4.0 (documents), MIT (code): adapt with attribution |
+| [calesthio/generative-media-skills](https://github.com/calesthio/generative-media-skills) (`skills/production/audio-craft/sound-design-foley`) | Sound design and Foley direction for generated media: spotting lists, sound families, materials and perspective, stems and M&E, captions for non-speech sound, rights ledger, repairs, QA | AI Film, Claude Game, Motion Graphics | MIT (generative-media-skills contributors) |
 | [MTG/freesound](https://github.com/MTG/freesound) | The server behind freesound.org | Finding recorded sounds through its API | AGPL-3.0 server code (not vendored); each recording has its own CC licence |
 
 ## Where each idea landed
@@ -43,6 +45,8 @@ Five more sources, folded into `score-and-sound-design.md` (and `sound.md` §5 a
 | Orchestration under dialogue, evaluation order for returned cues, masters within 20 ms | snowfrost `score-and-mix-picture` | `score-and-sound-design.md` §7–8 |
 | `SFX-###` cue lists; every on-screen action has a sound decision; native video-model sound versus post | badgids `skills/sound-design` | `score-and-sound-design.md` §6, `ai-film.md` §7 |
 | Tension follows density and texture, not tempo; film music is mostly uncertainty and anticipation | FME-24 (this handbook's own analysis of its CSVs) | `score-and-sound-design.md` §5 |
+| Film music's five uses, underscore and source music, leitmotif payoff, genre conventions, trailer arc, game music, the order for writing to picture | SJY051 `film-tv-scoring.md` | `score-and-sound-design.md` §1, §3, §4, the conventions table |
+| Spotting list fields, sound families, materials and distance, prompt facts, stems and M&E, captions, rights ledger, repairs, QA | calesthio `sound-design-foley` | `score-and-sound-design.md` §6, §7, §10 |
 | Freesound API search and per-recording licences | MTG/freesound, freesound.org/docs/api | `sound.md` §5 |
 | Blind judges, lower score counts; fix only shared faults | MengTo `workflow/workflow-score-to-target`, `making-of-film/assets/judge-prompt.md` | `SKILL.md`, every studio's review step |
 | earshot commands, pass rule, coded SFX bank | earshot | `sound.md` |
