@@ -1914,7 +1914,7 @@
     const her = RIG.draw(c, 'her', 'trade', { x: p.x + 1.45 * sr, y: p.y - 2.05 * sr, s: sr, light: L, t: p.t, u, line, flip: true, breath: 0 });
     const ph = (him.phone) || her.phone; const T = tradeTime(u);
     // the phone tilted toward us (its back on her palm, then its face as he takes it): never edge-on
-    return { phone: ph ? Object.assign({}, ph, { w: 0.34 * sh, h: 0.7 * sh, angle: T.swap ? -0.35 : -0.2, pitch: 0.55, spin: Math.PI / 2, facing: T.swap ? 'face' : 'back' }) : null, him, her, over: c2 => { him.over(c2 || c); her.over(c2 || c); } };
+    return { phone: ph ? Object.assign({}, ph, { w: 0.7 * sh, h: 0.34 * sh, len: 0.7 * sh, angle: T.swap ? -0.35 : -0.2, pitch: 0.55, spin: Math.PI / 2, facing: T.swap ? 'face' : 'back' }) : null, him, her, over: c2 => { him.over(c2 || c); her.over(c2 || c); } };
   };
   const FILM_ease = u => (a, b) => { const t = clamp((u - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
   // ================================================================ demos: node tools/set.js rig 1  (each 4 s, on plain paper in the shot's palette)
@@ -2074,7 +2074,7 @@
       const ph = him.phone || her.phone; demoPhone(c, ph ? { x: ph.x, y: ph.y, w: 0.7 * 190, h: 0.3 * 190, angle: -0.2 } : null, { back: true }); him.over(c); her.over(c);
       c.g.save(); c.g.strokeStyle = 'rgba(255,255,255,0.12)'; c.g.setLineDash([6, 8]); c.g.beginPath(); c.g.moveTo(960, 0); c.g.lineTo(960, 1080); c.g.stroke(); c.g.restore(); } },
     { name: 'the trade (Q10): phone for bag on the centre line; her fingers never touch his', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day');
-      const tr = RIG.trade(c, seg(tt, 0.1, 3.8), { x: 960, y: 520, s: 330, light: L, t }); demoPhone(c, tr.phone ? { x: tr.phone.x, y: tr.phone.y, w: tr.phone.h * 0.95, h: tr.phone.w * 0.95, angle: tr.phone.angle } : null, { back: true }); tr.over(c); } },
+      const tr = RIG.trade(c, seg(tt, 0.1, 3.8), { x: 960, y: 520, s: 330, light: L, t }); demoPhone(c, tr.phone ? { x: tr.phone.x, y: tr.phone.y, w: tr.phone.w * 0.95, h: tr.phone.h * 0.95, angle: tr.phone.angle } : null, { back: true }); tr.over(c); } },
     { name: 'coworker: a look over the divider (Q03)', draw(c, t) { const tt = twos(t); paperBg(c, 'office'); const L = RIG.light('office');
       RIG.coworker(c, { x: 1100, y: 340, s: 210, light: L, t, rise: seg(tt, 0.2, 1.4), look: seg(tt, 1.4, 2.2) });
       props(c, 'divider', [[{ rect: [-40, 640, 2000, 520] }, '#A3A79E', { lift: [0, -12], edge: [0, 8, '#C8CCC2'] }]]); } },

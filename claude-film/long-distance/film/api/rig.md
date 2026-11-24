@@ -8,7 +8,38 @@
 
 Everything is deterministic: there is no `Math.random` and no `Date`.
 
-Run `node tools/set.js rig 1` to see every demo on one sheet (`out/set_rig.png`, 33 demos with the ms per frame).
+Run `node tools/set.js rig 1` to see every demo on one sheet (`out/set_rig.png`, 35 demos with the ms per frame).
+
+## What changed after rough cut 2
+
+All the old calls still work. What you see changes:
+
+- **The thumb** is a true thumb: tapered, about a quarter of a phone's width at the nail. Every finger and thumb has a nail on the back of its last joint.
+- **Phones in the hand are true size.** The `phone`/`thumb` grips report `hand.phone` at 0.38 × 0.79 hand lengths (it was 0.5 × 1.03); the fingertips curl round its far edge.
+- **The bag hand** (`bag`) now holds the bag by its end: the back of the hand to us, the fingers over the bag's front, the thumb lying along the top on the zip.
+  - Draw the bag first, then the hand.
+  - The pose `bag` puts one hand at the right end, or one at each end (`hands: 2`, the default). There is no spare thumb.
+  - The old palm-up grip is `bagUnder`.
+- **Every arm ends in a hand.** `hand: false` now gives an easy hand (`relax`, slightly closed). Pass `handless: true` only for an arm truly hidden to the wrist.
+- **The bus rail from behind** uses a new `railBack` grip (fingers over the bar toward us).
+- **The trade** has bent elbows and turned wrists. Stand each person about 1.45 heads from the line (it was 1.85). She holds the phone on her palm, tilted to show its back. `RIG.trade().phone` adds `pitch: 0.55`, `spin: π/2` and `facing: 'back' | 'face'`; its `w`/`h` are unchanged.
+- **Her age.** `RIG.head` and every `'her'` pose take `age` (default 0.6 for her in grain, 0 in gloss and flash; him 0). It gives tired eyes (a soft crescent and a faint crease under each eye, lids a touch lower), faint lines from nose to mouth, and a slightly fuller jaw, chin and lower cheeks: the same face, a few years on. Pass `age: 0` for her younger self in grain.
+- **Daylight faces** read as one light and one shadow. In soft light the face is shaded from its big form (an ellipsoid blended into the sculpted normal), the cut does not wobble, the shadow side keeps 68 % of the key, and occlusion is smooth.
+- **Back collars** are flat cloth on the garment: no wider than the neck, square at the ends, in the garment's own colour and bands, unlifted, with one fold line.
+- **Sitting up and lying down** bend at the hips and knees:
+  - The torso tips first, with the bottom hand flat on the seat taking his weight, and the head lags the body.
+  - The legs swing up after, knees lifting.
+  - Getting up runs back the same way. Rising, he leans over his feet with both hands on his knees.
+- **Hand colour** matches the face's in the same light: his hands are cut from `#A47152` and hers from `#DDB59C`. The phone's light on hands is 35 % of a face's dose, so a hand beside the screen no longer glows peach.
+
+**New: `RIG.arm(c, who, p)`.** One arm in its sleeve, from a shoulder to a target, for shots that frame only an arm (setting the phone down, the door edge, Q04's shoulder shot). See *An arm from a shoulder* below.
+
+Sequence code the rig cannot reach:
+
+| Sequence | Its own code | What it needs |
+| --- | --- | --- |
+| Q04 | `shoulderBody` draws its own padded collar and its own `sleeveUp` arm | `RIG.draw(c, 'him', 'stand', { view: 'back', crop, ... })` for the back, and `RIG.arm` for the phone arm |
+| Q08 | `atDoor` and the cushion insert build their arms with `RIG.person` | `RIG.arm` (`bend: 'out'` for the door) |
 
 ## What changed after rough cut 1 (the fix round)
 
@@ -71,6 +102,7 @@ All coordinates are world pixels: the space `c.camera(...)` sets on `c.g`. The r
 | `RIG.passenger(c, p)` | One close paper silhouette on the bus (Q05) | `fig` |
 | `RIG.trade(c, u, p)` | The hands insert: phone for bag on the centre line (Q10), built from the two `trade` poses | `{phone, him, her, over(c)}` |
 | `RIG.tradeTime(u)` | The trade's phases: `{reach, take, swap, back}` | Object |
+| `RIG.arm(c, who, p)` | One arm in its sleeve, from a shoulder point to a target, with a natural elbow and a hand | `{hand, elbow, wrist, shoulder, reach, over(c)}` |
 | `RIG.bag(c, x, y, s, o)` | The floral makeup bag alone (the wardrobe shelf) | |
 | `RIG.faceGlow(c, head, o)` | The screen's smooth light on a face, in `c.gl`, clipped to the head | |
 | `RIG.cacheInfo()`, `RIG.cacheClear()` | Cache state and reset | |
@@ -108,7 +140,7 @@ Options:
 - **`phone: [x, y]`** gives the world point of the lit screen. It adds the phone's light to every sculpture, smooth and never banded, as the look requires.
 - **`phoneCol`, `phoneK`** (strength) and **`phoneZ`** (head units toward the camera, default 0.9) adjust that light.
 - **`keyK`** scales the key lights, **`amb`** replaces the ambient, and **`paper: {...}`** overrides any paper field: `mul`, `gain`, `from` (the screen direction the light comes from), `lit`, `litA`, `shade`, `shadeA`.
-- **`soft`** (0..1) softens the faces' cut. It defaults to 1 for `day` and `dusk`, 0.8 for `bathroom` and `office`, 0.6 for `flat`, 0.5 for `stairwell`, and 0 elsewhere. A key may also carry `floor` (the level of its shadow side) and `jit` (how much its edge wobbles).
+- **`soft`** (0..1) softens the faces' cut. It defaults to 1 for `day` and `dusk`, 0.8 for `bathroom` and `office`, 0.6 for `flat`, 0.5 for `stairwell`, and 0 elsewhere. In soft light a face is shaded from its big form (one light, one shadow), not from every bump. A key may also carry `floor` (the level of its shadow side) and `jit` (how much its edge wobbles).
 
 The phone's light moves with the phone, quantised to 0.1 head. Every change of that light reshades a head (see costs). Keep the phone still while a face holds.
 
@@ -127,6 +159,7 @@ The phone's light moves with the phone, quantised to 0.1 head. Every change of t
 | `flush` | 0..1 | Colour rising on the skin of his neck and throat in two cut steps: 0 is below the collar, 0.8 reaches the jaw's sides, 1 is the ears too. The face's front keeps its colour. Snapped to 1/16 |
 | `ears` | 0..1 | The ears alone go red, lobe first (Q05). Snapped to 1/8 |
 | `pale` | 0..1 | Pallor: the colour leaving his face (Q08). The whole face desaturates and cools, the blush goes and the lips grey. Snapped to 1/12 |
+| `age` | 0..1 | Years: tired eyes, faint lines, a slightly fuller jaw and cheeks. Default 0.6 for her alive (grain), 0 otherwise. Snapped to 0.1 |
 | `neck` | head units | Neck length. In `RIG.draw` the default follows the costume (tee 0.36, sweater 0.38, shirt 0.44, coat 0.5); for a lone `RIG.head` it is 0.6 / 0.56 |
 | `light`, `mode` | | `mode`: `'grain'` (life, the default), `'gloss'` (the generated photos), `'flash'` (the strip) |
 | `shadow` | `{dx, dy, alpha}` head units, or `false` | The lifted shadow under the piece |
@@ -183,10 +216,10 @@ Common fields:
 
 | Pose | Scene | Its own fields |
 | --- | --- | --- |
-| `couch` | **The couch** (Q08, Q11): `u` 0 sitting .. 1 lying on his side along the couch, facing us, knees bent and inside it. `rise` 0..1 takes him from sitting to standing | `hip: [x, y]` (world px: the seat point under his hip; give it for any transition, since the hip stays put and the body turns about it), `dir` (1: feet to screen right, head left; −1 mirrored), `fit` (world x of the far arm's inner face: the knees bend more to keep his feet inside), `arm`, `phone: [x, y]` (lying, `arm: 'rest'`: his top hand comes over from his shoulder and lies on the phone; default spot beside his face, `fig.info.phoneSpot`), `seat` (heads from hip to floor, 1.9), `lie` (the body's angle lying, −1.48). `arm` is `'rest'`, `'hold'` (the phone up in front of his face), `'ear'` (sitting), `'lap'` (sitting) or `'tuck'`. Returns `fig.info.{hip, seat, head, knee, feet, phone, phoneSpot}` (world) and `fig.phone` |
+| `couch` | **The couch** (Q08, Q11): `u` 0 sitting .. 1 lying on his side along the couch, facing us, knees bent and inside it. `rise` 0..1 takes him from sitting to standing. The transitions bend at the hips and knees: the torso tips first, the bottom hand on the seat, then the legs come up | `hip: [x, y]` (world px: the seat point under his hip; give it for any transition, since the hip stays put and the body turns about it), `dir` (1: feet to screen right, head left; −1 mirrored), `fit` (world x of the far arm's inner face: the knees bend more to keep his feet inside), `arm`, `phone: [x, y]` (lying, `arm: 'rest'`: his top hand comes over from his shoulder and lies on the phone; default spot beside his face, `fig.info.phoneSpot`), `seat` (heads from hip to floor, 1.9), `lie` (the body's angle lying, −1.48). `arm` is `'rest'`, `'hold'` (the phone up in front of his face), `'ear'` (sitting), `'lap'` (sitting) or `'tuck'`. Returns `fig.info.{hip, seat, head, knee, feet, phone, phoneSpot}` (world) and `fig.phone` |
 | `liedown` | Sitting to lying: `couch` with `u` 0 → 1 | as `couch` |
 | `getup` | Lying to standing: `u` 0 → 0.5 sits him up, 0.5 → 1 stands him. Then cut or dissolve to `stand` placed at `fig.info.head` | as `couch` |
-| `trade` | His half of the trade, two-shot (Q10 54 to 59 s) | `u` 0..1 (the same `u` for both), `line: [x, y]` (world: where phone and bag cross; stand him about 1.85 heads left of it). He holds the bag out from underneath; his other arm takes the phone's near end; after the swap he holds the phone (`fig.phone`). `fig.info.phone`, `fig.info.bag` |
+| `trade` | His half of the trade, two-shot (Q10 54 to 59 s) | `u` 0..1 (the same `u` for both), `line: [x, y]` (world: where phone and bag cross; stand him about 1.45 heads left of it, so his elbows bend). He holds the bag out from underneath; his other arm takes the phone's near end; after the swap he holds the phone (`fig.phone`). `fig.info.phone`, `fig.info.bag` |
 | `lie` | On his side, head on the pillow at the left, facing us, under the duvet (B1, Q01, Q07). For the couch use `couch` | `arm`: `'rest'` (the hand over the phone; `reach` 0..1 brings it from by his face), `'hold'` (the phone up in front of his face, texting; `thumb`, `tap`), `'tuck'`. `phone: [x, y]` world px. `cover`: the duvet's colour (default `#29324B`) or `false` for the couch (the sweater, the whole body). `sx` is the high camera's squash (0.56 bed, 0.72 couch). `rot` (default −1.42) |
 | `counter` | Eating from the pan at the counter, the phone on the salt (B2, Q06) | `fork` 0 (over the pan) .. 1 (at his mouth). Chewing goes in `face` via `RIG.chew(t)`. `info.pan`, `info.fork` |
 | `basin` | Brushing at the basin, in the mirror (Q02, Q07). The tee | `brush` (stroke phase: `t * 2.2`), `foam` 0..1 |
@@ -195,7 +228,7 @@ Common fields:
 | `bus` | Standing, one hand on the overhead rail, the phone at his chest, earbuds in (Q05) | `rail: [x, y]`, `sway` (±0.05), `thumb`. `view: 'back'`: from behind, the rail arm over his shoulder, the phone hidden in front of him |
 | `walk` | In profile, arms swinging | `phase` (add 0.9 a second: the cycle on twos), `carry: 'bag'`. Move `x` by about 290 px a second at `s` = 120 |
 | `door` | At the door, a hand on its edge (Q08) | `edge: [x, y]` (world px where his hand grips), `tight` 0..1. Pass `clip` in a hand insert so the fingers go behind the edge |
-| `bag` | Holding the makeup bag low in front, from underneath, his thumb on the broken zip, head bowed (Q09, Q10) | `zip` (the thumb's worrying phase: `t * 0.75`), `hands` (2 by default; 1: in one hand from below, the other arm easy), `bagAt: [x, y]` (world), `view: 'back'` (over his shoulder, B3). `fig.info.bag`, `fig.info.zip` |
+| `bag` | Holding the makeup bag low in front by its ends, his thumb along the broken zip, head bowed (Q09, Q10) | `zip` (the thumb's worrying phase: `t * 0.75`), `hands` (2 by default; 1: in his right hand by its end, the other arm easy), `bagAt: [x, y]` (world), `view: 'back'` (over his shoulder, B3). `fig.info.bag`, `fig.info.zip` |
 | `sit` | On the couch, the phone at his ear (the old pose; `couch` with `u: 0, arm: 'ear'` lies down from it) | (the phone at `fig.phone`) |
 | `stand` | Standing, arms easy (stepping aside, the wardrobe) | `armL`, `armR` (arm specs, below), `lean`, `shrug`, `view: 'back'` (from behind; `tau` turns him a little, `face.yaw` about π) |
 
@@ -216,7 +249,7 @@ The defaults per pose follow SEQUENCES.md: the bed is the tee; office, stairs, b
 | `still` | Very still (Q10 40 to 44 s): the phone held low, no breath, no blink | `face` |
 | `walk` | Leaving (Q10 70 s) | `phase`, `carry: 'bag'` |
 | `stand` | Standing | `armL`, `armR` |
-| `trade` | Her half of the trade, two-shot: the phone held out on her palm, her thumb at its edge; her other hand takes the bag by its far end; after the swap she holds the bag at her side | `u`, `line` (stand her about 1.85 heads right of it, `flip: true`). `fig.info.phone` (the phone's centre while she holds it), `fig.info.bag` |
+| `trade` | Her half of the trade, two-shot: the phone held out on her palm, her thumb at its edge; her other hand takes the bag by its far end; after the swap she holds the bag at her side | `u`, `line` (stand her about 1.45 heads right of it, `flip: true`). `fig.info.phone` (the phone's centre while she holds it), `fig.info.bag` |
 
 She always wears the bottle-green coat, collar up, kept on: lapels, buttons, flap pockets, shoulder seams and turned cuffs. The tan strap crosses her to the small bag at her hip. She has the copper bob and freckles.
 
@@ -236,8 +269,8 @@ She always wears the bottle-green coat, collar up, kept on: lapels, buttons, fla
 | `a1`, `a2` | Upper arm and forearm angles from hanging straight down, in rad. + is toward the body's centre |
 | `to: [x, y]` | Or a wrist target in figure units, solved with two-bone IK (`bend` ±1 picks the elbow's side) |
 | `E`, `W` | Or explicit elbow and wrist |
-| `hand` | A pose name from `RIG.HANDS`, or `false` |
-| `hp` | Hand fields: `close`, `tight`, `zip`, `reach`, `tap`, and `over` (which digits redraw over the phone) |
+| `hand` | A pose name from `RIG.HANDS`, or `false` (an easy hand: every arm ends in a hand). `handless: true` draws no hand, for an arm hidden to the wrist |
+| `hp` | Hand fields: `close`, `tight`, `zip`, `reach`, `tap`, `over` (which digits redraw over the phone), and `thumbOver` (the hand without its thumb, then `prop.mid`, then the thumb alone on it) |
 | `front` / `behind` / `order` | Draw order against the torso. `beforeHead`: in front of the body, behind the head (a hand at the nape). `over`: in front of his back in a back view |
 | `handAt`, `handRot` | Place the hand at this point and turn, instead of at the wrist along the forearm (a cheat for foreshortened forearms: B2's fist, the bag) |
 | `roll` | 0..1: the sleeve rolled up the forearm (his shirt, "one sleeve rolled higher") |
@@ -260,14 +293,16 @@ Returns world points: `tips` (4), `thumb`, `grip` (where the held object sits), 
 | Pose | What | Controls |
 | --- | --- | --- |
 | `rest` | Over the phone like a hand on a sleeping shoulder: fingers draped down its back, no thumb (B1) | `foreLen` |
-| `phone` | A phone held in one hand, screen to the viewer: its back on the palm and fingers, only the fingertips round its far edge, the thumb at its near edge (B3) | `reach` 0..1 sends the thumb up the glass, `tap` 0..1 lifts it |
+| `phone` | A phone held in one hand, screen to the viewer: its back on the palm and fingers, only the fingertips round its far edge, the thumb at its near edge (B3). `hand.phone` is the true-size phone (0.38 × 0.79 hand lengths) | `reach` 0..1 sends the thumb up the glass, `tap` 0..1 lifts it |
 | `thumb` | The same grip with the thumb over the glass: typing, scrolling, swiping (the inserts, her thumb in Q10). Draw it whole on `c.g`, the phone at `hand.phone`, then `only: ['thumb', 'dist']` on `c.gl` | `reach` (default 0.5), `tap` |
 | `ear` | The phone at his ear, fingers up its back | |
 | `pan`, `fork` | B2's fists. The fork passes through the fist (draw it before and after) | |
 | `brush` | The toothbrush at his mouth | |
 | `rail` | A fist round the bus's overhead rail | |
 | `door` | Round a door's edge, the back of the hand to us. Use `clip` | `tight` 0..1 (the knuckles lighten) |
-| `bag` | Under the makeup bag, palm up, the fingers flat under it, the thumb over the top on the broken zip. Draw `noThumb: true`, then the bag, then `only: 'thumb'` | `zip` (the worrying phase) |
+| `bag` | Round the makeup bag's end: the back of the hand to us, the fingers over its front, the thumb along the top on the broken zip. Draw the bag, then the hand at its end (`flip: true` for the right-hand end) | `zip` (the worrying phase) |
+| `bagUnder` | The old grip: palm up under the bag, the thumb over the top. Draw `noThumb: true`, the bag, then `only: 'thumb'` | `zip` |
+| `railBack` | The bus rail seen from behind: the fingertips over the bar toward us | |
 | `nape` | Her hand at the back of her neck (B3) | |
 | `offer` | Holding something out, palm up (the trade) | `close` |
 | `take` | Reaching to take, closing to a pinch (the trade) | `close` |
@@ -290,6 +325,28 @@ The fingers never touch: about half a head separates them at the phone and about
 - **Two-shot:** use `RIG.draw(c, 'him', 'trade', { u, line, ... })` and `RIG.draw(c, 'her', 'trade', { u, line, flip: true, ... })`, each one arm out from the shoulder. Draw the phone (lying flat) at `him.phone || her.phone`, then call `him.over(c)` and `her.over(c)`.
 - **Insert:** `RIG.trade(c, u, {x, y, s, light, t})` draws the same two poses seen close, the line at (x, y), hand length `s` (300–400). Their forearms come from shoulders off frame at the two-shot's angles: his sweater from the left, her coat from the right. It returns `{phone: {x, y, w, h, angle: 0, facing: 'flat'}, him, her, over(c)}`.
 
+## An arm from a shoulder: `RIG.arm(c, who, p)`
+
+Use this for a shot that frames only an arm. The arm is solved from the shoulder to the target with a natural elbow and drawn in its sleeve; the hand is at the end, then the cuff.
+
+| Field | Meaning |
+| --- | --- |
+| `shoulder: [x, y]`, `target: [x, y]` | World px. The target is where the wrist goes; the shoulder can be off frame |
+| `s` | px per head. The arm is about 2.4 heads long |
+| `hand`, `hp` | A `RIG.HANDS` pose and its fields (`close`, `reach`, `tight`, `zip`, `over`...) |
+| `side` | `'R'` (his or her right hand, the default) or `'L'` |
+| `bend` | `'down'` (the default: the elbow drops below the line, as gravity has it), `'up'`, `'out'` (away from `body: [x, y]`), or `1` / `-1` |
+| `costume` | `'sweater'` (his default), `'shirt'`, `'tee'` (a bare sculpted arm) or `'coat'` (her default) |
+| `light`, `alpha`, `handAt`, `handRot` | As elsewhere |
+
+The arm never locks straight: past 97 % of its reach it keeps a slight bend and the hand stops short (`out.reach` < 1). It returns `{hand, elbow, wrist, shoulder, reach, over}`. Use `out.hand.phone` / `out.hand.grip` to place what it holds, and call `over(c)` after the phone.
+
+```js
+// Q08: he lays the phone down on the cushion, his arm from his shoulder off the top left
+const a = RIG.arm(c, 'him', { shoulder: [180, -140], target: [grip[0] - 120, grip[1] + 20], s, hand: 'flat', hp: { close: 0.3, over: 'all' }, light: L });
+PHONE.draw(c, P); a.over(c);
+```
+
 ## Background people
 
 - **`RIG.coworker(c, {x, y, s, rise, look, light, t})`** shows the coworker in a cardigan, a sculpted head of his own (`RIG.CAST.coworker`). `rise` 0..1 brings him up over the divider; `look` 0..1 turns his head to the desk. Draw the set's divider after him.
@@ -307,7 +364,7 @@ Measured headless (no GPU) on the demo sheet, with `out/costs.js` clearing the c
 | A hand, s = 150 to 250 | 0.15 to 0.35 s | <1 ms |
 | A bare sculpted arm (the tee) | 0.8 to 1.4 s | <1 ms |
 | A cut-paper layer (one sleeve, a torso, a collar) | 3 to 40 ms | <1 ms |
-| **A whole frame once cached** (33 demos, `tools/set.js`) | | **45 to 126 ms** (B1 bed 126 ms, B3 between 61 ms, the trade insert 73 ms) |
+| **A whole frame once cached** (35 demos, `tools/set.js`) | | **44 to 150 ms** (B1 bed 150 ms, the trade insert 84 ms) |
 | A cold demo frame (everything new) | 0.7 to 8 s (the six-face sheets and the trade insert, about 10 s, are the worst) | |
 | A sequence frame, cold (`tools/frame.js`, Q04 to Q11) | 0.5 to 11 s (the first frame of a shot) | |
 

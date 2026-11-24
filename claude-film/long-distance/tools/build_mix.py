@@ -28,8 +28,8 @@ rooms, the knock, doors, steps, cloth, cutlery, the bus, his voice, her voice wh
    level against the bed in its own band, ducks the bed under the voice and masters to -18 LUFS with a -2 dBTP limiter.
    The sheet turns mix.py's shared room off (the gloss must stay dry; the real sounds carry their own) and keeps the bed
    at the level it was built to (music_lufs; see tools/layer_mix.py).
-With --mix: tools/layer_mix.py into out/audio, then the master's sample peaks are held at -3 dBFS (the AAC encode
-overshoots sharp transients). With --mux: the 720p review copy, the picture's three segments (out/export_tmp/segs.txt)
+With --mix: tools/layer_mix.py into out/audio (mix.flac, stems/*.flac, mix-report.json), then the master's sample
+peaks are held at -3 dBFS (the AAC encode overshoots sharp transients). With --mux: the 720p review copy, the picture's three segments (out/export_tmp/segs.txt)
 scaled straight into out/long_distance_mixed_720p.mp4 (no full-resolution copy is ever written).
 """
 import hashlib, json, os, subprocess, sys
@@ -197,7 +197,7 @@ def hold_peaks(path, limit_db=-3.0):
     need = np.minimum(1.0, lim / (np.max(np.abs(x), axis=1) + 1e-12))
     g = minimum_filter1d(need, size=int(0.004 * sr)); g = uniform_filter1d(g, size=int(0.002 * sr))
     g = np.minimum(g, need)                                                  # never over the limit, even mid-ramp
-    sf.write(path, (x * g[:, None]).astype(np.float32), sr, subtype='PCM_24')
+    sf.write(path, (x * g[:, None]).astype(np.float32), sr, subtype='PCM_24', format='FLAC')
     return float(20 * np.log10(np.max(np.abs(x * g[:, None])) + 1e-12)), int(np.sum(g < 0.999))
 
 
@@ -369,11 +369,11 @@ def main():
     if '--mix' in sys.argv:
         r = subprocess.run(['uv', 'run', os.path.join(HERE, 'layer_mix.py'), CUES, '--out', AUD], cwd=ROOT)
         if r.returncode: sys.exit(r.returncode)
-        pk, n = hold_peaks(os.path.join(AUD, 'mix.wav'))
+        pk, n = hold_peaks(os.path.join(AUD, 'mix.flac'))
         print(f'peak hold: master sample peak {pk:.2f} dBFS ({n} samples held)')
     if '--mux' in sys.argv:
         segs = os.path.join(ROOT, 'out', 'export_tmp', 'segs.txt')
-        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', segs, '-i', os.path.join(AUD, 'mix.wav'),
+        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', segs, '-i', os.path.join(AUD, 'mix.flac'),
                         '-map', '0:v', '-map', '1:a', '-vf', 'scale=1280:720', '-c:v', 'libx264', '-crf', '23', '-preset', 'medium',
                         '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-ar', '48000', '-shortest', '-movflags', '+faststart', REVIEW], check=True)
         print('wrote ' + os.path.relpath(REVIEW, ROOT))
