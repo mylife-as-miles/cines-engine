@@ -63,13 +63,14 @@ def main():
         s, j = segs[i], segs[i].get('join', 'cut')
         if j.startswith('dissolve'):
             d = int(j.split(':')[1]) / FPS
-            chains.append(f"[{v}][v{i}]xfade=transition=fade:duration={d:.5f}:offset={dur - d:.5f}[xv{i}]")
+            chains.append(f"[{v}][v{i}]xfade=transition=fade:duration={d:.5f}:offset={dur - d:.5f},settb=1/{FPS}[xv{i}]")
             chains.append(f"[{au}][a{i}]acrossfade=d={d:.5f}[xa{i}]")
             dur = dur + s['_dur'] - d
         else:
             chains.append(f"[{au}]afade=t=out:st={dur - 0.02:.5f}:d=0.02[fo{i}]")
             chains.append(f"[a{i}]afade=t=in:st=0:d=0.02[fi{i}]")
-            chains.append(f"[{v}][fo{i}][v{i}][fi{i}]concat=n=2:v=1:a=1[xv{i}][xa{i}]")
+            chains.append(f"[{v}][fo{i}][v{i}][fi{i}]concat=n=2:v=1:a=1[cv{i}][xa{i}]")
+            chains.append(f"[cv{i}]settb=1/{FPS},fps={FPS}[xv{i}]")   # concat leaves a microsecond timebase; xfade needs 1/24
             dur = dur + s['_dur']
         s['_at'] = dur - s['_dur']
         v, au = f'xv{i}', f'xa{i}'
