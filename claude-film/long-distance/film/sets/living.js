@@ -83,13 +83,21 @@ window.SETS = window.SETS || {};
   // =====================================================================================================================
   // LIGHT: one motivated light per time of day, cut into bands; colours are albedo x light level, kept between paper and ink
   // =====================================================================================================================
-  // The pendant's light, as B2 draws it: on the walls a wedge with straight sides from the shade's rim, three nested bands (one set
-  // for every vertical surface it reaches, wall and fridge alike); on the counter a soft pool, concentric ellipses under the shade.
-  const WEDGE = { r0: 0.17, t: [1.65, 0.8, 0.42], foot: [0, 1.1, 1.36] };   // half-width at the rim (m), spread (m per m of drop), and the
-  // height below which the band steps up once more, so the light brightens toward the counter (outer to inner)
+  // The pendant's light, as B2 draws it: on the walls a wedge whose straight sides converge toward the shade (one set of bands for every
+  // vertical surface it reaches, wall and fridge alike); on the counter a soft pool, concentric ellipses under the shade. The outer band is
+  // a faint soft glow, barely above the aubergine dark; the steps between bands are small; the brightness sits in a narrow warm core,
+  // hottest just under the shade and just above the counter. Bands, outer to inner: half-width at the rim r0 and spread t (m per m of
+  // drop); y0/y1 limit a band to a span of height (default: from the rim to the floor); soft = drawn as a blurred glow.
+  const WEDGE = [
+    { r0: 0.11, t: 1.05, lv: 'glow', soft: true },
+    { r0: 0.07, t: 0.56, lv: 'mid' },
+    { r0: 0.045, t: 0.3, lv: 'core' },
+    { r0: 0.045, t: 0.3, lv: 'hot', y1: 1.56 },                     // just under the shade
+    { r0: 0.045, t: 0.3, lv: 'foot', y0: 1.22 },                    // just above the counter, toward the pool
+  ];
   const POOL = { rx: [1.0, 0.66, 0.4, 0.21], k: 0.42, z: 3.40 };  // the counter's pool: x radii outer to the hot core, z = x * k, centre z
   const LV = {
-    night: { amb: [0.19, 0.166, 0.246], spill: [0.212, 0.182, 0.25], bands: [[0.3, 0.245, 0.27], [0.4, 0.32, 0.31], [0.52, 0.42, 0.37], [0.68, 0.545, 0.44]], wall: [[0.245, 0.205, 0.25], [0.35, 0.285, 0.29], [0.47, 0.38, 0.345]], wallFoot: [null, [0.41, 0.33, 0.315], [0.58, 0.465, 0.4]],
+    night: { amb: [0.19, 0.166, 0.246], spill: [0.212, 0.182, 0.25], bands: [[0.3, 0.245, 0.27], [0.4, 0.32, 0.31], [0.52, 0.42, 0.37], [0.68, 0.545, 0.44]], wall: { glow: [0.212, 0.184, 0.248], mid: [0.262, 0.215, 0.245], core: [0.4, 0.31, 0.27], hot: [0.6, 0.455, 0.34], foot: [0.53, 0.405, 0.31] }, strip: [0.3, 0.25, 0.26],
       cold: [0.197, 0.182, 0.276], coldCore: [0.212, 0.198, 0.305], shadow: [0.13, 0.12, 0.18], warmDark: [0.25, 0.2, 0.22] },
     day: { steps: [[0.63, 0.67, 0.65], [0.71, 0.76, 0.73], [0.79, 0.84, 0.8]], pen: [0.9, 0.94, 0.9], sun: [1.03, 1.06, 0.99], shadow: [0.5, 0.54, 0.53] },
     dusk: { steps: [[0.3, 0.34, 0.48], [0.34, 0.39, 0.55], [0.39, 0.45, 0.62]], pen: [0.44, 0.5, 0.67], sun: [0.49, 0.55, 0.73], shadow: [0.22, 0.25, 0.37] },
@@ -111,7 +119,7 @@ window.SETS = window.SETS || {};
       if (y >= top) return Math.hypot(vx, y - P.bulb, z - P.z) < 0.7 ? L.spill : L.amb;
       if (n && n[0] && n[0] * vx > 0.05) return L.amb;
       if (n && n[1] > 0.5) { const b = poolBand(x, y, z); return b >= 0 ? L.bands[b] : L.amb; }
-      let b = -1; WEDGE.t.forEach((t, i) => { if (Math.abs(vx) <= WEDGE.r0 + (top - y) * t) b = i; }); return b < 0 ? L.amb : (b > 0 && y < WEDGE.foot[b] ? L.wallFoot[b] : L.wall[b]);
+      let lv = L.amb; WEDGE.forEach(B => { if (y <= (B.y0 || top) && y >= (B.y1 || -1) && Math.abs(vx) <= B.r0 + (top - y) * B.t) lv = L.wall[B.lv]; }); return lv;
     }
     return L.steps[x < DAYX[0] ? 0 : x < DAYX[1] ? 1 : 2];
   }
@@ -129,10 +137,10 @@ window.SETS = window.SETS || {};
   const plPts = (pl, a0, a1, b0, b1) => [[a0, b0], [a1, b0], [a1, b1], [a0, b1]].map(q => P3(pl, q[0], q[1]));
   // the wedge's band i on a vertical plane, as world points. z planes (walls, the fridge's door, seen as elevations): a trapezoid
   // hanging from the rim, straight sides. x planes (the fridge's side): lit below the height where the cone's edge reaches them.
-  function wedgeRegion(pl, i, foot) {
-    const P = R.pendant, t = WEDGE.t[i], r0 = WEDGE.r0, rim = P.rim - 0.01, top = foot ? WEDGE.foot[i] : rim, yb = Math.min(pl.b0, top) - 0.5; if (pl.b0 >= top) return null;
+  function wedgeRegion(pl, B) {
+    const P = R.pendant, t = B.t, r0 = B.r0, rim = P.rim - 0.01, top = B.y0 || rim, yb = B.y1 != null ? B.y1 : Math.min(pl.b0, top) - 0.5; if (pl.b0 >= top || yb >= top) return null;
     if (pl.axis === 'z') { const w = y => r0 + (rim - y) * t; return [P3(pl, P.x - w(top), top), P3(pl, P.x + w(top), top), P3(pl, P.x + w(yb), yb), P3(pl, P.x - w(yb), yb)]; }
-    const dx = Math.abs(pl.v - P.x) - r0, yc = dx <= 0 ? top : top - dx / t; if (yc <= pl.b0) return null;
+    const dx = Math.abs(pl.v - P.x) - r0, yc = Math.min(top, dx <= 0 ? top : rim - dx / t); if (yc <= Math.max(pl.b0, yb)) return null;
     return [P3(pl, pl.a0 - 1, yc), P3(pl, pl.a1 + 1, yc), P3(pl, pl.a1 + 1, yb), P3(pl, pl.a0 - 1, yb)];
   }
   // the pool's band i on a horizontal plane under the shade: an ellipse along the counter (the floor's is wider, under the lamp)
@@ -181,8 +189,9 @@ window.SETS = window.SETS || {};
       if (facing && o.spill !== false && pl.axis === 'y' && pl.v > Pd.bulb) fillW(g, C, spillRegion(pl, 1.0), tone(albedo, L.spill, m), rg, seed + 7);   // the open top of the shade: a warm disc on the ceiling
       const gn = o.gain == null ? 1 : o.gain, boost = lv => lv.map((v, c) => L.amb[c] + (v - L.amb[c]) * gn);
       if (facing && pl.axis === 'y') L.bands.forEach((lv, i) => fillW(g, C, poolRegion(pl, i), tone(albedo, boost(lv), m), rg, seed + 11 + i));
-      else if (facing) L.wall.forEach((lv, i) => { fillW(g, C, wedgeRegion(pl, i), tone(albedo, boost(lv), m), rg * 1.2, seed + 11 + i);
-        if (L.wallFoot[i] && pl.axis === 'z') fillW(g, C, wedgeRegion(pl, i, true), tone(albedo, boost(L.wallFoot[i]), m), rg * 1.2, seed + 15 + i); });
+      else if (facing) WEDGE.forEach((B, i) => { const col = tone(albedo, boost(L.wall[B.lv]), m);
+        if (B.soft) { g.save(); g.filter = `blur(${clamp(kc * 0.05, 6, 40)}px)`; fillW(g, C, wedgeRegion(pl, B), col, 0, seed + 11 + i); g.restore(); }   // a glow, not a shape
+        else fillW(g, C, wedgeRegion(pl, B), col, rg * 1.1, seed + 11 + i); });
       if (o.shadowPts) o.shadowPts.forEach((sp, i) => fillW(g, C, sp, tone(albedo, L.shadow, m), rg * 0.7, seed + 50 + i));
     } else {
       g.fillStyle = tone(albedo, o.level || L.steps[0], m); g.fill(path);
@@ -301,7 +310,7 @@ window.SETS = window.SETS || {};
     const tl = at(-s.w / 2, s.h / 2), tr = at(s.w / 2, s.h / 2), bl = at(-s.w / 2, -s.h / 2), br = at(s.w / 2, -s.h / 2), k = C.k(s.x, s.y, z);
     if (tl[2] < 0.1) return null;
     const l0 = levelAt(L, s.x, s.y, z, [0, 0, -1]), img = stripCanvas(), ld = liftDir(L, C, s.x, s.y, z);
-    const lv = (L.night ? l0.map((v, c) => L.amb[c] + (v - L.amb[c]) * 1.6) : l0).map(v => v * (exposure || 1));   // as bright as the fridge door it is on
+    const lv = (L.night ? l0.map((v, c) => Math.max(L.strip[c], L.amb[c] + (v - L.amb[c]) * 1.6)) : l0).map(v => v * (exposure || 1));   // the print catches the lamp's spill
     const quad = new Path2D(); [tl, tr, br, bl].forEach((p, i) => i ? quad.lineTo(p[0], p[1]) : quad.moveTo(p[0], p[1])); quad.closePath();
     g.save(); g.filter = `blur(${clamp(k * 0.003, 1, 8)}px)`; g.translate(ld[0] * k * 0.004, ld[1] * k * 0.004); g.fillStyle = 'rgba(12,10,12,0.5)'; g.fill(quad); g.restore();
     g.save(); g.setTransform((tr[0] - tl[0]) / img.width, (tr[1] - tl[1]) / img.width, (bl[0] - tl[0]) / img.height, (bl[1] - tl[1]) / img.height, tl[0], tl[1]);

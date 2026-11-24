@@ -251,14 +251,15 @@
     g.fillStyle = '#0A0706'; g.beginPath(); g.arc(cx, iy, 0.0118, 0, Math.PI * 2); g.fill();
     // the upper lid's shadow across the top of the eye
     const lg = g.createLinearGradient(0, -op, 0, -op + 0.026); lg.addColorStop(0, 'rgba(40,20,14,0.6)'); lg.addColorStop(1, 'rgba(40,20,14,0)'); g.fillStyle = lg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
+    const bg2 = g.createLinearGradient(0, 0.024, 0, 0.008); bg2.addColorStop(0, 'rgba(120,80,70,0.3)'); bg2.addColorStop(1, 'rgba(120,80,70,0)'); g.fillStyle = bg2; g.fillRect(cx - w * 1.2, 0, w * 2.4, 0.03);
     g.fillStyle = 'rgba(255,255,255,0.97)'; g.beginPath(); g.ellipse(cx - 0.006, iy - 0.011, 0.0058, 0.0052, 0, 0, Math.PI * 2); g.fill();
     g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.arc(cx + 0.009, iy + 0.008, 0.0022, 0, Math.PI * 2); g.fill();
     g.restore();
     // the pink inner corner
     ell(g, inner[0] + sd * 0.006, inner[1] + 0.001, 0.007, 0.006, '#D8988C', 0.85);
     // the lash line, thicker toward the outer corner, then lashes (hers longer)
-    g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = P.lash; g.lineWidth = 0.0042 * (0.6 + 0.4 * P.lashK); g.stroke(lid);
-    g.lineWidth = 0.0024 * P.lashK; g.globalAlpha = 0.9;
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = rgba(P.lash, 0.85); g.lineWidth = 0.003 * (0.6 + 0.4 * P.lashK); g.stroke(lid);
+    g.lineWidth = 0.0016 * P.lashK; g.globalAlpha = 0.6;
     const lr = O.rng('lash' + sd + P.lash), n = Math.round(16 * P.lashK);
     for (let i = 0; i < n; i++) { const u = 0.15 + 0.85 * i / (n - 1); const x = lerp(inner[0], outer[0], u), y = lerp(inner[1], outer[1], u) - Math.sin(Math.PI * Math.min(1, u * 1.05)) * (op - 0.004) - 0.001;
       const len = (0.008 + 0.014 * u) * P.lashK * (0.85 + 0.3 * lr()), ang = -Math.PI / 2 + sd * (0.25 + 0.9 * u);
@@ -283,7 +284,8 @@
     soft(D, l => { const gr = l.createRadialGradient(0, 0, 0.05, 0, 0, 1); gr.addColorStop(0, rgba(P.skinSh, 0)); gr.addColorStop(0.62, rgba(P.skinSh, 0.0)); gr.addColorStop(0.92, rgba(P.skinSh, 0.55)); gr.addColorStop(1, rgba(P.skinDeep, 0.8));
       l.save(); l.translate(0, -0.02); l.scale(0.345, 0.52); l.fillStyle = gr; l.fillRect(-1.2, -1.2, 2.4, 2.4); l.restore(); }, 0.02, 'multiply', 1, M.c);
     // the face's shadow on the neck, the ears' inner shade
-    soft(D, l => { const gr = l.createLinearGradient(0, 0.3, 0, 0.66); gr.addColorStop(0, rgba(P.skinDeep, 0.85)); gr.addColorStop(0.55, rgba(P.skinSh, 0.35)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
+    soft(D, l => { const gr = l.createLinearGradient(0, 0.36, 0, 0.72); gr.addColorStop(0, rgba(P.skinDeep, 0.45)); gr.addColorStop(0.5, rgba(P.skinSh, 0.22)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
+      l.globalCompositeOperation = 'destination-out'; l.fill(faceP); l.globalCompositeOperation = 'source-over';
       both(sd => ell(l, sd * (earX - 0.004), 0.07, 0.022, 0.062, P.skinDeep, 0.55)); }, 0.012, 'multiply', 1, M.c);
     // sockets, the sides of the nose, under the nose, under the lip, under the jaw
     soft(D, l => {
@@ -306,16 +308,16 @@
     soft(D, l => { both(sd => {
       const r = O.rng('brow' + sd + who); l.lineCap = 'round';
       const bx = u => sd * lerp(0.062, 0.245, u), by = u => -0.112 - 0.028 * Math.sin(Math.PI * Math.min(1, u * 1.25)) + 0.01 * u, th = u => P.brT * (1 - 0.65 * u);
-      l.fillStyle = rgba(P.brow, 0.35); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
-      for (let i = 0; i < 160; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u), x = bx(u), ang = u < 0.18 ? -Math.PI / 2 + sd * 0.4 : (sd > 0 ? -0.25 : Math.PI + 0.25) + (r() - 0.5) * 0.3, len = 0.012 + 0.014 * r();
+      l.fillStyle = rgba(P.brow, 0.6); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
+      for (let i = 0; i < 260; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u), x = bx(u), ang = u < 0.18 ? -Math.PI / 2 + sd * 0.4 : (sd > 0 ? -0.25 : Math.PI + 0.25) + (r() - 0.5) * 0.3, len = 0.012 + 0.014 * r();
         l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.45 + 0.4 * r()); l.lineWidth = 0.0022; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0025, 'source-over', 1);
     // ---- the eyes: the lid crease and lid above, then the eye itself
     soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.5); l.lineWidth = 0.006; l.lineCap = 'round'; l.beginPath(); l.moveTo(sd * 0.094, -0.022); l.quadraticCurveTo(sd * 0.145, -0.068, sd * 0.215, -0.028); l.stroke();
       l.strokeStyle = rgba(P.skinDeep, 0.28); l.lineWidth = 0.004; l.beginPath(); l.moveTo(sd * 0.1, 0.022); l.quadraticCurveTo(sd * 0.155, 0.04, sd * 0.208, 0.012); l.stroke(); }); }, 0.005, 'multiply', 1);
-    { const E = faceLayer(D); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes: o.eyes })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
+    { const E = faceLayer(D); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes: o.eyes })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0017 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
     // ---- the nose: no lines, only the soft wings and nostrils
-    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.55); l.lineWidth = 0.009; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
-      ell(l, sd * 0.021, 0.204, 0.012, 0.0065, mixHex(P.skinDeep, '#2A120C', 0.4), 0.8); }); }, 0.0045, 'multiply', 1);
+    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.38); l.lineWidth = 0.008; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
+      ell(l, sd * 0.02, 0.205, 0.011, 0.0055, mixHex(P.skinDeep, '#2A120C', 0.25), 0.55); }); }, 0.005, 'multiply', 1);
     // ---- the mouth: the same even smile, upper teeth showing
     { const cxm = 0.074 + 0.014 * sm, cym = 0.306 - 0.02 * sm, yu = 0.299, yl = yu + 0.012 + 0.05 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
       ul.moveTo(-cxm, cym); ul.bezierCurveTo(-cxm * 0.75, cym - 0.012, -0.04, yu - 0.026, -0.022, yu - 0.028); ul.quadraticCurveTo(-0.008, yu - 0.022, 0, yu - 0.019); ul.quadraticCurveTo(0.008, yu - 0.022, 0.022, yu - 0.028);
@@ -366,54 +368,65 @@
     const toS = (x, y) => [head.x + (x * cr - y * sr) * U, head.y + (x * sr + y * cr) * U];
     const len = o.len == null ? 1.45 : o.len, part = 0.11;
     // a strand: local path around the head down to `hang` (local y), then it falls in picture space, with a slow wave
-    const strand = (pts, hang, drop, spread, waveK) => {
+    const strand = (pts, hang, drop, spread, wave) => {
       const out = pts.map(([x, y]) => toS(x, y)); const last = out[out.length - 1], prev = out[out.length - 2];
       let dx = last[0] - prev[0], dy = last[1] - prev[1]; const l0 = Math.hypot(dx, dy) || 1; dx /= l0; dy /= l0;
-      const n = 14, step = drop * U / n; let x = last[0], y = last[1];
-      for (let i = 1; i <= n; i++) { const t = i / n, k = Math.min(1, t * 2.2); const vx = lerp(dx, spread, k), vy = lerp(dy, 1, k), vl = Math.hypot(vx, vy);
-        x += vx / vl * step + Math.sin(t * 5.2 + waveK) * 0.006 * U * t; y += vy / vl * step; out.push([x, y]); }
+      const n = 16, step = drop * U / n; let x = last[0], y = last[1];
+      for (let i = 1; i <= n; i++) { const t = i / n, k = Math.min(1, t * 2.4); const vx = lerp(dx, spread * (0.6 + t), k), vy = lerp(dy, 1, k), vl = Math.hypot(vx, vy);
+        x += vx / vl * step + Math.sin(t * wave.f + wave.ph) * wave.a * U * Math.min(1, t * 3) / n * 6; y += vy / vl * step; out.push([x, y]); }
       return out;
     };
     const path = pts => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length - 1; i++) { const mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2; p.quadraticCurveTo(pts[i][0], pts[i][1], mx, my); } const e = pts[pts.length - 1]; p.lineTo(e[0], e[1]); return p; };
+    const lerpPts = (A, B, t) => A.map((q, i) => [lerp(q[0], B[i][0], t), lerp(q[1], B[i][1], t)]);
+    // hair falls in clumps: strands in a clump share a wave and a length
+    const clumps = []; for (let i = 0; i < 70; i++) clumps.push({ f: 3 + r() * 4, ph: r() * 6.3, a: 0.004 + r() * 0.012, len: Math.pow(r(), 1.6) * 0.45, sh: r() });
     const strands = [];
     if (layer === 'back') {
       // the fall behind her neck and shoulders, from under the crown
-      for (let i = 0; i < 260; i++) { const s = r() * 2 - 1, x0 = s * 0.3; strands.push({ pts: strand([[x0 * 0.6, -0.4], [x0 * 1.1, -0.1], [x0 * 1.18, 0.25]], 0.25, len - 0.2 + r() * 0.2, s * 0.12, r() * 6), w: 0.02 + r() * 0.03, tone: r() * 0.5 }); }
+      for (let i = 0; i < 300; i++) { const s = r() * 2 - 1, x0 = s * 0.3, cl = clumps[Math.floor(r() * clumps.length)]; strands.push({ pts: strand([[x0 * 0.6, -0.4], [x0 * 1.1, -0.1], [x0 * 1.18, 0.25]], 0.25, len - 0.25 - cl.len * 0.5 + r() * 0.1, s * 0.16, cl), w: 0.02 + r() * 0.03, tone: 0.3 + r() * 0.5 }); }
     } else {
-      // the crown: from the part over the top of the head, then the two curtains framing the face and falling over the shoulders
+      // from the part: the strands nearest the face form the fringe and the curtains' inner edges; the deeper ones go over the crown
       for (let side of [1, -1]) {
-        const N = side > 0 ? 340 : 420;
+        const N = side > 0 ? 380 : 460;
         for (let i = 0; i < N; i++) {
-          const s = Math.pow(r(), 0.8), jitter = (r() - 0.5) * 0.012;
-          const y0 = -0.5 - 0.07 * r(), x0 = part + (r() - 0.5) * 0.01;
-          // the hairline edge strands (s ~ 0) lie close to the face; deeper ones (s ~ 1) sit further out and higher
-          const ex = 0.3 + 0.075 * s, topY = -0.6 - 0.03 * s;
-          let pts;
-          if (side > 0) pts = [[x0, y0], [lerp(x0, ex, 0.5), topY + 0.04], [ex + 0.015, -0.36 + 0.04 * s], [ex + 0.03 + jitter, -0.12], [ex + 0.02 + jitter - 0.03 * (1 - s), 0.12]];
-          else pts = [[x0, y0], [lerp(x0, -0.05, 0.5), -0.5 + 0.08 * (1 - s) * 0.5 - 0.05 * s], [-0.12 - 0.06 * s, -0.43 + 0.06 * (1 - s)], [-0.27 - 0.06 * s, -0.33 + 0.07 * (1 - s)], [-(ex + 0.02) + jitter, -0.12], [-(ex + 0.005) + jitter + 0.03 * (1 - s), 0.12]];
-          strands.push({ pts: strand(pts, 0.12, len - 0.1 - r() * 0.25 - 0.15 * s, side * (0.05 + 0.12 * s), r() * 6 + side), w: 0.004 + r() * 0.006, tone: s * 0.6 + r() * 0.4 });
+          const s = Math.pow(r(), 0.85), jx = (r() - 0.5) * 0.014, cl = clumps[Math.floor(s * 34 + r() * 36) % clumps.length];
+          const x0 = part + (r() - 0.5) * 0.012, y0 = -0.47 - 0.1 * s;
+          let A, B;
+          if (side > 0) { A = [[x0, y0], [0.2, -0.47], [0.29, -0.36], [0.315, -0.14], [0.3, 0.12]]; B = [[x0, y0], [0.22, -0.61], [0.35, -0.44], [0.385, -0.15], [0.375, 0.12]]; }
+          else { A = [[x0, y0], [-0.04, -0.45], [-0.2, -0.38], [-0.3, -0.22], [-0.31, 0.12]]; B = [[x0, y0], [-0.08, -0.64], [-0.27, -0.55], [-0.385, -0.25], [-0.38, 0.12]]; }
+          const pts = lerpPts(A, B, s).map(([x, y], k) => [x + (k > 1 ? jx : 0), y]);
+          strands.push({ pts: strand(pts, 0.12, len - 0.06 - cl.len - 0.12 * s + r() * 0.06, side * (0.05 + 0.1 * s), cl), w: 0.004 + r() * 0.006, tone: clamp(s * 0.55 + cl.sh * 0.45, 0, 1) });
         }
       }
     }
-    // clumps first (the body of the hair), then fine strands over them, darker within, lighter at the surface
+    // clumps first (the body of the hair), then fine strands over them, darker within, lighter at the surface; every strand tapers to its tip
     g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
     const Hl = mk(g.canvas.width, g.canvas.height), hg = Hl.getContext('2d'); hg.setTransform(g.getTransform()); hg.lineCap = 'round'; hg.lineJoin = 'round';
-    strands.forEach(st => { const p = path(st.pts); hg.strokeStyle = mixHex(P.hairDk, P.hair, 0.55 + 0.3 * (1 - st.tone)); hg.lineWidth = (layer === 'back' ? st.w : 0.034) * U; hg.stroke(p); });
-    strands.forEach(st => { const p = path(st.pts); const c = st.tone < 0.35 ? mixHex(P.hair, P.hairLt, 0.5 * (1 - st.tone)) : mixHex(P.hairDk, P.hair, 0.7); hg.strokeStyle = rgba(c, 0.55); hg.lineWidth = Math.max(0.6, st.w * U * 0.45); hg.stroke(p); });
-    for (let i = 0; i < strands.length; i += 2) { const st = strands[i]; const p = path(st.pts); hg.strokeStyle = rgba(r() < 0.5 ? P.hairLt : P.hair, 0.28); hg.lineWidth = Math.max(0.5, 0.0016 * U); hg.stroke(p); }
+    if (layer === 'front') {   // the cap of hair over the skull, from the part, so no scalp shows between the strands
+      const cap = GG.spline([[0.31, -0.12], [0.36, -0.4], [0.24, -0.585], [0.04, -0.655], [-0.2, -0.61], [-0.35, -0.44], [-0.37, -0.14], [-0.3, -0.2], [-0.19, -0.36], [-0.03, -0.43], [0.11, -0.46], [0.25, -0.34]].map(([x, y]) => toS(x, y)), true);
+      hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.fillStyle = mixHex(P.hairDk, P.hair, 0.55); hg.fill(cap); hg.restore(); }
+    const taper = (st, w, col, a) => { const n = st.pts.length, cut = [Math.floor(n * 0.7), Math.floor(n * 0.86), n];
+      [[0, cut[0] + 1, 1, 1], [cut[0], cut[1] + 1, 0.6, 0.75], [cut[1], cut[2], 0.28, 0.4]].forEach(([i0, i1, wk, ak]) => { const seg = st.pts.slice(i0, i1); if (seg.length < 2) return; hg.strokeStyle = rgba(col, a * ak); hg.lineWidth = Math.max(0.5, w * wk); hg.stroke(path(seg)); }); };
+    strands.forEach(st => taper(st, (layer === 'back' ? st.w : 0.026 + 0.012 * st.tone) * U, mixHex(P.hairDk, P.hair, 0.5 + 0.35 * (1 - st.tone)), 1));
+    strands.forEach(st => taper(st, Math.max(0.6, st.w * U * 0.45), st.tone < 0.35 ? mixHex(P.hair, P.hairLt, 0.5 * (1 - st.tone)) : mixHex(P.hairDk, P.hair, 0.7), 0.55));
+    for (let i = 0; i < strands.length; i += 2) taper(strands[i], Math.max(0.5, 0.0016 * U), r() < 0.5 ? P.hairLt : P.hair, 0.3);
     // the sheen: a soft lighter band over the crown and down the curtains (the light fixed to her, the same as on her face)
     const Sh = mk(g.canvas.width, g.canvas.height), sg = Sh.getContext('2d'); sg.setTransform(g.getTransform()); sg.filter = `blur(${(0.03 * U).toFixed(1)}px)`;
     if (layer === 'front') { const a = toS(-0.02, -0.52), b = toS(0.2, -0.5); sg.fillStyle = rgba(P.hairHi, 0.85); sg.beginPath(); sg.ellipse((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0.2 * U, 0.05 * U, head.roll, 0, Math.PI * 2); sg.fill();
       both(sd => { const c0 = toS(sd * 0.36, 0.05); sg.beginPath(); sg.ellipse(c0[0], c0[1] + 0.25 * U, 0.03 * U, 0.3 * U, 0, 0, Math.PI * 2); sg.fill(); }); }
     sg.filter = 'none'; sg.setTransform(1, 0, 0, 1, 0, 0); sg.globalCompositeOperation = 'destination-in'; sg.drawImage(Hl, 0, 0);
     hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.globalCompositeOperation = 'screen'; hg.globalAlpha = 0.55; hg.drawImage(Sh, 0, 0); hg.restore();
+    if (o.rim !== false) {   // the scene's own sun, behind them at the top of the fall: a thin warm rim along the hair's top right
+      const Rm = mk(g.canvas.width, g.canvas.height), rg = Rm.getContext('2d'); rg.drawImage(Hl, 0, 0); rg.globalCompositeOperation = 'destination-out'; rg.drawImage(Hl, -0.012 * U, 0.016 * U);
+      rg.globalCompositeOperation = 'source-in'; rg.fillStyle = 'rgba(255,236,206,0.75)'; rg.fillRect(0, 0, Rm.width, Rm.height);
+      hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.globalCompositeOperation = 'screen'; hg.filter = `blur(${(0.004 * U).toFixed(1)}px)`; hg.drawImage(Rm, 0, 0); hg.restore(); }
     g.setTransform(1, 0, 0, 1, 0, 0); g.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; g.drawImage(Hl, 0, 0); g.restore();
   }
 
   // clothes: a body hung from a neck point, softly shaded (his navy jacket over a white tee; her cream sweater)
   function paintBody(g, who, nk, U, lean, o) {
     o = o || {}; const her = who === 'her', wS = her ? 0.84 : 1.0, cs = Math.cos(lean), sn = Math.sin(lean), R = (x, y) => [nk[0] + (x * cs - y * sn) * U, nk[1] + (x * sn + y * cs) * U];
-    const pts = [[-0.24, 0.0], [-0.52 * wS, 0.09], [-0.96 * wS, 0.25], [-1.18 * wS, 0.66], [-1.26 * wS, 2.6], [1.26 * wS, 2.6], [1.18 * wS, 0.66], [0.96 * wS, 0.25], [0.52 * wS, 0.09], [0.24, 0.0]].map(q => R(q[0], q[1]));
+    const pts = [[-0.22, 0.0], [-0.42 * wS, 0.1], [-0.78 * wS, 0.24], [-1.04 * wS, 0.46], [-1.14 * wS, 0.9], [-1.2 * wS, 2.6], [1.2 * wS, 2.6], [1.14 * wS, 0.9], [1.04 * wS, 0.46], [0.78 * wS, 0.24], [0.42 * wS, 0.1], [0.22, 0.0], [0.11, 0.1], [0, 0.125], [-0.11, 0.1]].map(q => R(q[0], q[1]));
     const p = GG.spline(pts, true); const base = her ? '#F2EADF' : '#26344C';
     g.save(); const a = R(-1, 0.1), b = R(1, 1.6); const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]); gr.addColorStop(0, mixHex(base, '#FFFFFF', 0.25)); gr.addColorStop(0.5, base); gr.addColorStop(1, mixHex(base, '#000000', 0.2));
     g.fillStyle = gr; g.fill(p); g.clip(p);
@@ -422,9 +435,10 @@
     g.filter = `blur(${(0.02 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 0.03 * U; both(sd => { const s0 = R(sd * 0.5, 0.55), s1 = R(sd * 0.62, 1.2), s2 = R(sd * 0.55, 1.9); g.beginPath(); g.moveTo(s0[0], s0[1]); g.quadraticCurveTo(s1[0], s1[1], s2[0], s2[1]); g.stroke(); });
     g.filter = 'none';
     if (!her) {   // the white tee in the open jacket, its round collar
-      const t = new Path2D(), A = R(-0.25, -0.02), B = R(0.25, -0.02), C = R(0.36, 2.6), Dd = R(-0.33, 2.6); t.moveTo(A[0], A[1]); t.lineTo(B[0], B[1]); t.lineTo(C[0], C[1]); t.lineTo(Dd[0], Dd[1]); t.closePath();
-      const tg = g.createLinearGradient(A[0], A[1], C[0], C[1]); tg.addColorStop(0, '#FBF8F3'); tg.addColorStop(1, '#D9D4CC'); g.fillStyle = tg; g.fill(t);
-      g.filter = `blur(${(0.012 * U).toFixed(1)}px)`; const c0 = R(0, 0.12); g.fillStyle = 'rgba(80,60,50,0.28)'; g.beginPath(); g.ellipse(c0[0], c0[1], 0.17 * U, 0.05 * U, lean, 0, Math.PI); g.fill(); g.filter = 'none';
+      const t = GG.spline([[-0.3, -0.04], [-0.2, 0.0], [0, 0.03], [0.2, 0.0], [0.3, -0.04], [0.36, 0.5], [0.38, 2.6, 1], [-0.36, 2.6, 1], [-0.34, 0.5]].map(q => R(q[0], q[1])), true);
+      const A = R(0, 0), C = R(0.3, 2.0); const tg = g.createLinearGradient(A[0], A[1], C[0], C[1]); tg.addColorStop(0, '#FBF8F3'); tg.addColorStop(1, '#D6D1C9'); g.fillStyle = tg; g.fill(t);
+      // the crew collar: a soft rib round the base of his neck
+      const k0 = R(-0.2, 0.0), k1 = R(-0.1, 0.07), k2 = R(0.1, 0.07), k3 = R(0.2, 0.0); g.strokeStyle = 'rgba(150,140,128,0.55)'; g.lineWidth = 0.028 * U; g.filter = `blur(${(0.006 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(k0[0], k0[1]); g.bezierCurveTo(k1[0], k1[1], k2[0], k2[1], k3[0], k3[1]); g.stroke(); g.filter = 'none';
       both(sd => { const l0 = R(sd * 0.26, -0.01), l1 = R(sd * 0.34, 0.5), l2 = R(sd * 0.36, 2.6); g.strokeStyle = 'rgba(10,14,24,0.55)'; g.lineWidth = 0.02 * U; g.filter = `blur(${(0.01 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(l0[0], l0[1]); g.quadraticCurveTo(l1[0], l1[1], l2[0], l2[1]); g.stroke(); g.filter = 'none'; });
     } else {   // her round neckline, a soft rib
       const L0 = R(-0.2, -0.005), L1 = R(-0.11, 0.13), R1 = R(0.11, 0.13), R0 = R(0.2, -0.005);
@@ -484,11 +498,11 @@
     // her: the hair behind, her body, her face, the hair in front; then him, nearer, over her shoulder
     const herHead = { x: fx, y: fy, U, roll: Pf.roll };
     paintLongHair(g, herHead, 'back', { len: 1.5 });
-    paintBody(g, 'her', along(fx, fy, Pf.roll, 0.62), U, -0.1);
     placeFace(g, paintFace('her', U, { smile: 1, open: 0.28 }), fx, fy, Pf.roll);
+    paintBody(g, 'her', along(fx, fy, Pf.roll, 0.62), U, -0.1);
     paintLongHair(g, herHead, 'front', { len: 1.5 });
-    paintBody(g, 'him', along(hx, hy, Pm.roll, 0.6), U, 0.04);
     placeFace(g, paintFace('him', U, { smile: 1, open: 0.28 }), hx, hy, Pm.roll);
+    paintBody(g, 'him', along(hx, hy, Pm.roll, 0.6), U, 0.04);
     photoFinish(c, 0.16);
     return c;
   }
@@ -500,8 +514,8 @@
       g.filter = `blur(${(w / 40).toFixed(1)}px)`; g.drawImage(b, 0, 0); g.filter = 'none'; }
     const U = h * 0.33, x = w * 0.5, y = h * 0.345, roll = -0.17, head = { x, y, U, roll };
     paintLongHair(g, head, 'back', { len: 1.7, seed: 2 });
-    paintBody(g, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
     placeFace(g, paintFace('her', U, { smile: 0.95, open: 0.24 }), x, y, roll);
+    paintBody(g, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
     paintLongHair(g, head, 'front', { len: 1.7, seed: 2 });
     photoFinish(c, 0.12);
     return c;

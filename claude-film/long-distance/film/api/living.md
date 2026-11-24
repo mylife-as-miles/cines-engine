@@ -54,11 +54,15 @@ X runs along the back wall, left to right as seen from the front door. Y is up. 
 | Floor | kitchen tiles to X 2.66, boards beyond |
 
 **Light.** At night the pendant's light is drawn the way B2 draws it.
-- **On the walls**, a wedge with straight sides hangs from the shade's rim: three nested cut bands, spreads 1.65, 0.8 and 0.42 m per metre of drop. The two inner bands step up once more in their lower part (below Y 1.10 and 1.36), so the light brightens toward the counter. The same wedge lies on every vertical surface it reaches, wall and fridge door alike (the elevation convention); the fridge's side gets straight cuts.
-- **On the counter**, a soft pool: four concentric ellipses under the shade, along the counter (centre Z 3.40). The floor has a wider pool, under the counter's shadow.
-- The open top of the shade lays a warm disc on the ceiling. Outside the light the room is aubergine.
-- Small objects (strip, mugs, salt, pan) take the band of the zone they sit in.
-- Review item 9 (cut 1) replaced the earlier geometric cone, whose stacked hyperbolas read as dunes. A faint cold patch of streetlight lies high on the wall in the empty half, rhyming with B1's slats.
+- **On the walls**, a narrow warm beam: its straight sides converge toward the shade.
+  - It is hottest just under the shade and just above the counter, a smaller step in between.
+  - Around it lies a faint, blurred glow, barely above the dark, so the eye reads light and not a shape.
+  - The steps between bands are small. Most of the contrast is between the lit core and the aubergine wall.
+  - The same bands lie on every vertical surface they reach (the elevation convention).
+- **On the counter**, a soft pool: four concentric ellipses under the shade (centre Z 3.40). The floor has a wider pool, under the counter's shadow.
+- The open top of the shade lays a warm disc on the ceiling.
+- Small objects take the band they sit in. The strip has a floor of lamp spill, so it reads in the fridge insert.
+- Review item 9 (cut 1) replaced first the geometric cone (dunes), then a wide flat-topped wedge (a pyramid).
 
 By day one slant of window light from the right wall crosses the back wall in her half, over the pale rectangle and the couch, with two thin mullion shadows. The kitchen side is a step dimmer, so the empty half is the bright one, and the paper is grey-green. At dusk the same light goes blue.
 
@@ -185,7 +189,7 @@ Measured with `out/living_perf.js` and `out/living_cold.js` (headless, no GPU):
 - **Weak spots:**
   - The night streetlight is a soft rectangle, not slats.
   - The couch's arms read blocky in `couch/main`.
-  - In the night fridge insert, the wedge's outer edge crosses the door as a straight diagonal: the strip sits inside the light, the top-left is dark.
+  - At night the fridge sits outside the beam: aubergine, with the strip lit only by the lamp's spill (readable in the insert, dim in the wide shots).
   - The mugs are simple cylinders.
   - The front wall is bare apart from the door, the hooks and the switch.
 - **Not drawn by the set:** the characters' contact shadows on the floor and wall, the phone's smooth light on surfaces (gloss belongs to `PHONE` and the sequence), and anything in their hands.

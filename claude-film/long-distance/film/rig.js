@@ -111,13 +111,19 @@
     if (o.keys) L.keys = o.keys; else if (o.keyK != null) L.keys = base.keys.map(k => Object.assign({}, k, { k: k.k * o.keyK }));
     if (o.phone) { L.phoneAt = o.phone; L.phone = Object.assign({}, base.phone, o.phoneCol ? { col: o.phoneCol } : {}, o.phoneK != null ? { k: o.phoneK } : {}, o.phoneZ != null ? { z: o.phoneZ } : {}); }
     if (o.phoneAlpha != null && L.phone) L.phone = Object.assign({}, L.phone, { k: L.phone.k * o.phoneAlpha });
+    // soft faces (the review of cut 1): in grey daylight, bathroom and office light the faces take one gentle cut, the shadow side
+    // still holding most of the key, and the cut's edge barely wobbles; no hard pale islands. o.soft 0..1 (0: the old hard bands)
+    const soft = o.soft != null ? o.soft : (SOFT[name] || 0);
+    if (soft > 0) L.keys = L.keys.map(k => k.poster && !k.smooth ? Object.assign({}, k, { poster: [lerp(k.poster[0], 0.22, soft)], levels: [1], floor: 0.6 * soft, jit: lerp(1, 0.3, soft) }) : k);
+    L.soft = soft;
     return L;
   };
+  const SOFT = { day: 1, dusk: 1, bathroom: 0.8, office: 0.8, flat: 0.6 };
   const asLight = l => !l ? RIG.light('flat') : typeof l === 'string' ? RIG.light(l) : (l.paper ? l : Object.assign(RIG.light(l.name || 'flat'), l));
   RIG.asLight = asLight;
   // the lights for one sculpture at world (hx, hy), scale s (px per unit): the phone becomes a point light relative to it
   function sculptLights(L, hx, hy, s, flipX) {
-    const out = (L.keys || []).map(k => Object.assign({}, k));
+    const out = (L.keys || []).map(k => Object.assign({}, k));   // (keys may carry `floor`: the level of the shadow side)
     if (L.phoneAt && L.phone && L.phone.k > 0.01) {
       const ph = L.phone; const px = qf((L.phoneAt[0] - hx) / s, 0.1), py = qf((L.phoneAt[1] - hy) / s, 0.1);
       out.push({ pos: [px, py, ph.z == null ? 0.9 : ph.z], col: ph.col, k: qf(ph.k, 0.05), falloff: ph.falloff || 1.4, wrap: ph.wrap || 0 });
@@ -125,7 +131,7 @@
     if (flipX) out.forEach(k => { if (k.dir) k.dir = [-k.dir[0], k.dir[1], k.dir[2]]; if (k.pos) k.pos = [-k.pos[0], k.pos[1], k.pos[2]]; });
     return { amb: L.amb, lights: out };
   }
-  const lightKey = sl => sl.amb + '|' + sl.lights.map(k => [k.dir ? 'd' + k.dir.map(v => v.toFixed(2)) : 'p' + k.pos.map(v => v.toFixed(2)), k.col, (+k.k).toFixed(2), k.poster || '', k.levels || '', k.wrap || 0, k.falloff || 0, k.local ? 'L' : ''].join(',')).join(';');
+  const lightKey = sl => sl.amb + '|' + sl.lights.map(k => [k.dir ? 'd' + k.dir.map(v => v.toFixed(2)) : 'p' + k.pos.map(v => v.toFixed(2)), k.col, (+k.k).toFixed(2), k.poster || '', k.levels || '', k.wrap || 0, k.falloff || 0, k.local ? 'L' : '', k.floor || 0, k.jit == null ? '' : k.jit].join(',')).join(';');
 
   // ================================================================ the sculpture renderer (the kit's render3D, split in two)
   // geom3D marches the rays (from just in front of the coarse pass's hits, which roughly halves the cost) and keeps, per pixel hit,
@@ -204,7 +210,7 @@
         if (L.pos) { dx = L.pos[0] - hx; dy = L.pos[1] - hy; dz = L.pos[2] - hz; const dl = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1; dx /= dl; dy /= dl; dz /= dl; att = L.falloff ? 1 / (1 + (dl / L.falloff) * (dl / L.falloff)) : 1; }
         else { dx = L.d[0]; dy = L.d[1]; dz = L.d[2]; }
         let k = vx * dx + vy * dy + vz * dz; k = (k + L.wrap) / (1 + L.wrap); k = Math.max(0, k) * att;
-        if (L.poster && (grain || flash) && !L.smooth) { const pts = L.poster; let lv = 0; for (let qq = 0; qq < pts.length; qq++) if (k > pts[qq] + jit * (L.jit == null ? 1 : L.jit)) lv = (L.levels ? L.levels[qq] : (qq + 1) / pts.length); k = lv; }
+        if (L.poster && (grain || flash) && !L.smooth) { const pts = L.poster; let lv = L.floor || 0; for (let qq = 0; qq < pts.length; qq++) if (k > pts[qq] + jit * (L.jit == null ? 1 : L.jit)) lv = (L.levels ? L.levels[qq] : (qq + 1) / pts.length); k = lv; }
         if (L.rim) { const fr = Math.pow(1 - Math.max(0, vz), L.rim); k *= fr; if (grain) k = k > 0.25 + jit ? 1 : 0; }
         k *= L.k * (mat === 1 ? 0.95 : 1) * (L.ao === false ? 1 : lerp(1, ao, 0.5));
         lr += L.c[0] * k; lg += L.c[1] * k; lb += L.c[2] * k;
@@ -341,35 +347,29 @@
     return f;
   }
 
-  // the bands: flush (red paper rising up the neck, over the jaw's sides, the ears last) and pale (the colour draining from the
-  // forehead down). Both have a hand-cut edge that wobbles around the head, and a thin lighter lip where the paper is cut.
-  const FLUSH = '#B5483A', FLUSH_EDGE = '#CF7660';
+  // flush: the colour rising on the skin of his neck, round the jaw's sides, the ears last; cut paper (two cut steps with a
+  // hand-cut edge) but the same skin, reddened, under the same light. pale: pallor, the whole face's colour leaving: desaturated
+  // and cooler, the blush gone, the lips greyed (no band, no patches).
   function headBands(spec, C) {
     const fl = spec.flush || 0, ea = spec.ears || 0, pa = spec.pale || 0, sd = spec.seed || 1, nkEnd = 0.2 + (spec.neckLen == null ? 1.1 : spec.neckLen);
     if (!fl && !ea && !pa) return null;
-    const flushC = rgb01(FLUSH), edgeC = rgb01(FLUSH_EDGE);
-    const skin = rgb01(C.skin), L = 0.299 * skin[0] + 0.587 * skin[1] + 0.114 * skin[2];
-    // ashen, not grey: most of the red goes, a little light comes up, a trace of green-grey under it
-    const paleC = [lerp(skin[0], L * 1.06, 0.48) - 0.012, lerp(skin[1], L * 1.06, 0.48) + 0.012, lerp(skin[2], L * 1.06, 0.48) + 0.004];
-    // neck band top: from below the collar (0) to the jaw's sides (0.8); then the ears, lobe first (0.8..1)
-    const yNeck = lerp(nkEnd + 0.04, 0.27, clamp(fl / 0.8, 0, 1));
-    const yEar = Math.min(fl > 0.8 ? lerp(0.24, -0.08, (fl - 0.8) / 0.2) : 9, ea > 0 ? lerp(0.24, -0.08, ea) : 9);
-    const yPale = lerp(-0.62, nkEnd + 0.05, pa);
+    // the flush's top edge rises from below the collar (0) to the jaw's sides (0.8); the ears go from the lobe up (0.8..1, or `ears`)
+    const yNeck = lerp(nkEnd + 0.06, 0.24, clamp(fl / 0.8, 0, 1));
+    const yEar = Math.min(fl > 0.8 ? lerp(0.24, -0.09, (fl - 0.8) / 0.2) : 9, ea > 0 ? lerp(0.24, -0.09, ea) : 9);
+    const redden = (out, k) => { const r = out[0], g = out[1], b = out[2]; out[0] = lerp(r, Math.min(1, r * 1.16 + 0.05), k); out[1] = lerp(g, g * 0.74, k); out[2] = lerp(b, b * 0.72, k); };
     return function (x, y, z, out, isLip) {
       const ax = Math.abs(x), ang = Math.atan2(x, z);
-      const cut = (vnoise(ang * 2.2 + 3, sd * 0.37, sd + 91) - 0.5) * 0.05 + (vnoise(ang * 9, sd * 0.37 + 4, sd + 92) - 0.5) * 0.018;
-      if (pa > 0) {
-        const yy = yPale + cut * 1.2;
-        if (y < yy) { const k = isLip ? 0.6 : 1; for (let c = 0; c < 3; c++) out[c] = lerp(out[c], out[c] * paleC[c] / skin[c], k); if (y > yy - 0.012) for (let c = 0; c < 3; c++) out[c] *= 1.07; }
-      }
-      // the face's front (cheeks, mouth, chin) stays its own colour: the band rises on the neck and round the jaw's sides
+      if (pa > 0) { const Lm = 0.3 * out[0] + 0.59 * out[1] + 0.11 * out[2], k = 0.62 * pa * (isLip ? 0.8 : 1);
+        out[0] = lerp(out[0], Lm * 1.03 - 0.012, k); out[1] = lerp(out[1], Lm * 1.03 + 0.004, k); out[2] = lerp(out[2], Lm * 1.03 + 0.022, k); }
+      if (!fl && !ea) return;
+      const cut = (vnoise(ang * 2.2 + 3, sd * 0.37, sd + 91) - 0.5) * 0.05 + (vnoise(ang * 9, sd * 0.37 + 4, sd + 92) - 0.5) * 0.016;
+      // the face's front (cheeks, mouth, chin) keeps its colour: the flush climbs the neck, the throat, the jaw's sides
       const front = z > 0.12 && y < 0.47 && ax < 0.26;
       const ear = ax > 0.29 && z < 0.09 && y > -0.1 && y < 0.25;
-      let red = false, edge = false;
-      if (fl > 0 && !front && !ear) { const yy = yNeck + cut; if (y > yy) { red = true; edge = y < yy + 0.014; } }
-      if (ear && yEar < 9) { const yy = yEar + cut * 0.4; if (y > yy) { red = true; edge = y < yy + 0.01; } }
-      if (ear && fl > 0 && !red) { const yy = yNeck + cut; if (y > yy) { red = true; edge = y < yy + 0.014; } }
-      if (red) { const src = edge ? edgeC : flushC; const k = 0.82; for (let c = 0; c < 3; c++) out[c] = lerp(out[c], src[c], k); }
+      let k = 0;
+      if (fl > 0 && !front && !ear) { const yy = yNeck + cut; if (y > yy) k = y > yy + 0.07 ? 0.7 : 0.42; }
+      if (ear) { const yy = Math.min(yEar, fl > 0 ? yNeck : 9) + cut * 0.4; if (y > yy) k = Math.max(k, y > yy + 0.05 ? 0.72 : 0.45); }
+      if (k) redden(out, k);
     };
   }
 
@@ -675,7 +675,7 @@
       d = smin(d, sdE(x - 0.43, y, z, 0.07, 0.15, 0.046), 0.05);
       d = smin(d, sdE(x - 0.13, y + 0.095, z + 0.04, 0.13, 0.075, 0.052), 0.05);
       const fz = 1.3;
-      d = smin(d, sdCone(x, y, z * fz, 0.02, 0, 0, fDir[0] * foreL, fDir[1] * foreL, fDir[2] * foreL * fz, 0.098, foreR * 1.15), 0.08);
+      if (!pose.noFore) d = smin(d, sdCone(x, y, z * fz, 0.02, 0, 0, fDir[0] * foreL, fDir[1] * foreL, fDir[2] * foreL * fz, 0.098, foreR * 1.15), 0.08);
       if (EL) d = smin(d, sdCone(x, y, z, EL[0], EL[1], EL[2], UA[0], UA[1], UA[2], foreR * 1.12, upR), 0.06);
       let nail = 1e3;
       for (let i = 0; i < segs.length; i++) { const qq = segs[i]; const dd = sdCone(x, y, z, qq[0], qq[1], qq[2], qq[3], qq[4], qq[5], qq[6], qq[7]); d = smin(d, dd, 0.03); if (qq[8]) nail = Math.min(nail, dd); }
@@ -694,7 +694,7 @@
     if (!bounds) {
       let x0 = 9, y0 = 9, x1 = -9, y1 = -9; const add = (p, r) => { const vx = M[0][0] * p[0] + M[0][1] * p[1] + M[0][2] * p[2], vy = M[1][0] * p[0] + M[1][1] * p[1] + M[1][2] * p[2]; x0 = Math.min(x0, vx - r); x1 = Math.max(x1, vx + r); y0 = Math.min(y0, vy - r); y1 = Math.max(y1, vy + r); };
       (onlySegs || segs).forEach(qq => { add([qq[0], qq[1], qq[2]], qq[6] + 0.03); add([qq[3], qq[4], qq[5]], qq[7] + 0.03); });
-      if (!onlySegs) { [[0, 0, 0], [0.45, -0.17, 0], [0.45, 0.17, 0], [0.1, 0.17, -0.06]].forEach(pp => add(pp, 0.1)); add([fDir[0] * foreL, fDir[1] * foreL, fDir[2] * foreL], foreR * 1.2 + 0.04); if (EL) add(UA, upR + 0.05); }
+      if (!onlySegs) { [[0, 0, 0], [0.45, -0.17, 0], [0.45, 0.17, 0], [0.1, 0.17, -0.06]].forEach(pp => add(pp, 0.1)); if (!pose.noFore) add([fDir[0] * foreL, fDir[1] * foreL, fDir[2] * foreL], foreR * 1.2 + 0.04); if (EL) add(UA, upR + 0.05); }
       bounds = [x0, y0, x1, y1];
     }
     const R = render3D({ sdf, matOf: () => (comp.nail <= comp.d + 0.004 ? 1 : 0), albedo, out, M, s: spec.s, ss: spec.ss || 1.3,
@@ -713,9 +713,18 @@
     fist: [[-0.05, 1.45, 1.35, 0.6], [0, 1.5, 1.35, 0.6], [0.05, 1.5, 1.3, 0.55], [0.1, 1.45, 1.2, 0.5]],
     grip: [[-0.06, 0.3, 1.45, 0.75], [-0.02, 0.3, 1.5, 0.75], [0.03, 0.3, 1.45, 0.75], [0.08, 0.3, 1.35, 0.7]],
     keys: [[-0.1, 0.5, 0.45, 0.3], [-0.03, 0.45, 0.5, 0.3], [0.04, 0.5, 0.5, 0.3], [0.12, 0.55, 0.5, 0.3]],
+    // behind a phone: straight along its back, the last two joints curling round its far edge
+    phone: [[-0.07, 0.1, 1.3, 0.55], [-0.025, 0.1, 1.35, 0.55], [0.02, 0.1, 1.3, 0.55], [0.065, 0.14, 1.25, 0.5]],
+    // under a soft bag: nearly flat, a little cupped
+    under: [[-0.07, 0.14, 0.22, 0.12], [-0.02, 0.14, 0.24, 0.12], [0.03, 0.14, 0.24, 0.12], [0.08, 0.17, 0.27, 0.14]],
   };
   const lerpF = (a, b, t) => a.map((r, i) => r.map((v, j) => lerp(v, b[i][j], t)));
   RIG.FING = FING;
+  function phoneGrip(p, r0) {
+    const r = p.reach == null ? r0 : p.reach, tp = p.tap || 0;
+    return { basis: { x: [-1, -0.06, 0.04], z: [0.04, 0.1, -1] }, fingers: FING.phone,
+      thumb: [lerp(1.3, 0.62, r), lerp(0.42, 0.52, r) - tp * 0.32, lerp(0.15, 0.32, r), lerp(0.1, 0.25, r)], fdir: [0.3, 0.95, 0.2], fore: 0.5, foreR: 0.13, grip: [0.39, -0.28, 0.1], phoneSize: [0.5, 1.03] };
+  }
   const HANDS = {
     // hanging at the side (front view, his right hand on screen left): palm to the thigh, thumb toward us
     relax: p => ({ basis: { x: [0.1, 1, 0.18], z: [-0.62, 0.05, 0.78] }, fingers: lerpF(FING.relax, FING.cup, p.close || 0), thumb: [0.38, 0.75, 0.45, 0.35], fdir: [-0.04, -1, 0], fore: 0.45, foreR: 0.15 }),
@@ -733,18 +742,18 @@
     keys: p => ({ basis: { x: [0.9, 0.3, -0.4], z: [0, -0.75, 0.66] }, fingers: FING.keys, thumb: [0.45, 0.6, 0.35, 0.25], fdir: [-1, 0.25, 0.35], fore: 0.5, foreR: 0.15 }),
     // the phone held up, screen to the viewer, fingers round its far edge, thumb on the near edge (B3). thumbReach 0..1 moves the
     // thumb across the glass (typing, swiping); tap 0..1 lifts it
-    phone: p => { const r = p.reach || 0, tp = p.tap || 0; return { basis: { x: [-1, -0.08, 0.05], z: [0.05, 0.1, -1] }, fingers: FING.grip,
-      thumb: [lerp(1.15, 1.55, r), lerp(0.55, 0.15, r) - tp * 0.25, lerp(0.25, 0.45, r), lerp(0.2, 0.3, r)], fdir: [0.3, 0.95, 0.2], fore: 0.5, foreR: 0.12, grip: [0.5, -0.32, 0.12] }; },
-    // the phone in the palm, seen from above as the insert sees it: fingers behind, thumb over the glass (typing, swiping)
-    thumb: p => { const r = p.reach == null ? 0.5 : p.reach, tp = p.tap || 0; return { basis: { x: [-0.25, -1, 0.0], z: [0.0, 0.1, -1] }, fingers: FING.grip,
-      thumb: [lerp(1.0, 1.6, r), lerp(0.75, 0.1, r) - tp * 0.3, lerp(0.15, 0.5, r), lerp(0.1, 0.35, r)], fdir: [0.35, 1, 0.1], fore: 0.6, foreR: 0.13, grip: [0.4, -0.05, 0.12] }; },
+    // the phone held in one hand, screen to the viewer (B3, and every insert): the phone's back on the palm and fingers, only the
+    // fingertips round its far edge, the thumb at its near edge; reach 0..1 sends the thumb up across the glass (typing, swiping),
+    // tap 0..1 lifts it. grip is the centre of a true-size phone (0.5 x 1.03 hand lengths), upright when the hand is unturned.
+    phone: p => phoneGrip(p, 0),
+    thumb: p => phoneGrip(p, 0.5),
     // the phone at his ear: fingers up its back, thumb under it
     ear: p => ({ basis: { x: [0.12, -1, 0.05], z: [-0.45, 0, 0.88] }, fingers: lerpF(FING.rest, FING.cup, 0.5), thumb: [0.7, 0.9, 0.4, 0.3], fdir: [0.15, 1, -0.2], fore: 0.6, foreR: 0.15, grip: [0.45, -0.05, -0.12] }),
     // her hand at the back of her neck, where her hair used to be (B3)
     nape: p => ({ basis: { x: [-0.75, 0.55, -0.35], z: [0.2, 0.3, 0.93] }, fingers: [[-0.12, 0.5, 0.45, 0.2], [-0.04, 0.55, 0.45, 0.2], [0.05, 0.55, 0.45, 0.2], [0.14, 0.55, 0.4, 0.2]], thumb: [0.6, 0.3, 0.1, 0.1], fdir: [0.9, -0.3, -0.2], fore: 0.3, foreR: 0.12 }),
     // the bag held from underneath, palm up, the fingers cupping its far side, the thumb over the top on the broken zip. zip 0..1
     // worries the thumb along it
-    bag: p => { const z = p.zip || 0, w = Math.sin(z * Math.PI * 2); return { basis: { x: [1, 0.05, 0.3], z: [0, 1, -0.15] }, fingers: lerpF(FING.cup, FING.rest, 0.3),
+    bag: p => { const z = p.zip || 0, w = Math.sin(z * Math.PI * 2); return { basis: { x: [1, 0.05, 0.3], z: [0, 1, -0.15] }, fingers: FING.under,
       thumb: [0.55 + 0.1 * w, 1.25, 0.5 + 0.2 * w, 0.4 + 0.15 * w], fdir: [-1, 0.1, 0.3], fore: 0.4, foreR: 0.15, grip: [0.45, -0.1, -0.15] }; },
     // the bus rail overhead: a fist round the bar, knuckles to us, the forearm hanging from it
     rail: p => ({ basis: { x: [0.05, -1, 0.2], z: [0, 0.2, 1] }, fingers: lerpF(FING.fist, FING.cup, 0.15), thumb: [0.75, 1.15, 0.7, 0.55], fdir: [0.08, 1, -0.1], fore: 0.5, foreR: 0.15, grip: [0.48, 0, -0.12] }),
@@ -779,7 +788,8 @@
     if (p.foreLen != null) P.fore = qf(p.foreLen, 0.05);
     if (p.foreR != null) P.foreR = p.foreR;
     if (p.upper) P.upper = p.upper;
-    if (p.only) P.only = p.only;
+    if (p.only === 'hand') P.noFore = true; else if (p.only) P.only = p.only;
+    if (p.noThumb) P.thumb = null;
     // the turn: explicit rot, or match the pose's forearm to p.fore (screen direction wrist->elbow; mirrored first when flipped)
     let rot = p.rot || 0;
     if (p.fore && P.fdir) { const d = flip ? [-p.fore[0], p.fore[1]] : p.fore; rot = Math.atan2(d[1], d[0]) - Math.atan2(P.fdir[1], P.fdir[0]); }
@@ -788,7 +798,7 @@
     // a sculpted upper arm given in world space (upperW.dir: elbow -> shoulder on screen): into the pose's own frame
     if (p.upperW) { let d = p.upperW.dir; if (flip) d = [-d[0], d[1]]; const u = [d[0] * cr + d[1] * sr, -d[0] * sr + d[1] * cr]; P.upper = { dir: [u[0], u[1], p.upperW.z || 0], len: qf(p.upperW.len, 0.05), r: p.upperW.r || 0.26 }; }
     const basis = { x: R3(P.basis.x), z: R3(P.basis.z) }; const fdir = R3(P.fdir); const upper = P.upper ? Object.assign({}, P.upper, { dir: R3(P.upper.dir) }) : null;
-    const pose2 = { fingers: P.fingers, thumb: P.thumb, fdir, fore: P.fore, foreR: P.foreR, wristBend: P.wristBend, upper, only: P.only };
+    const pose2 = { fingers: P.fingers, thumb: P.thumb, fdir, fore: P.fore, foreR: P.foreR, wristBend: P.wristBend, upper, only: P.only, noFore: P.noFore };
     const L = asLight(p.light);
     const Rq = qScale(s * devScale(g) * (p.res || 1));
     const sl = sculptLights(L, x, y, s, flip);
@@ -816,8 +826,11 @@
     const W2 = (l) => { const v = e.proj(l[0], l[1], l[2]); return [x + (flip ? -v[0] : v[0]) * s, y + v[1] * s]; };
     const tipsL = e.segs.filter(qq => qq[8]).map(qq => [qq[3], qq[4], qq[5]]);
     const gr = P.grip || [0.45, 0, -0.1];
-    return { x, y, s, rot, flip, key, entry: e, tips: tipsL.slice(0, 4).map(W2), thumb: tipsL[4] ? W2(tipsL[4]) : null, grip: W2(gr), elbow: e.EL ? W2(e.EL) : null, shoulder: e.UA ? W2(e.UA) : null,
+    const res = { x, y, s, rot, flip, key, entry: e, tips: tipsL.slice(0, 4).map(W2), thumb: tipsL[4] ? W2(tipsL[4]) : null, grip: W2(gr), elbow: e.EL ? W2(e.EL) : null, shoulder: e.UA ? W2(e.UA) : null,
       knuckles: W2([0.47, -0.02, 0.03]), angle: Math.atan2(W2([1, 0, 0])[1] - y, W2([1, 0, 0])[0] - x) };
+    // a held phone at true size, centred on the grip, upright when the pose is unturned (angle: radians, the phone's tilt)
+    if (P.phoneSize) res.phone = { x: res.grip[0], y: res.grip[1], w: P.phoneSize[0] * s, h: P.phoneSize[1] * s, angle: flip ? -rot : rot };
+    return res;
   };
   // ================================================================ cut paper: the figure engine
   // A figure is a list of ops in draw order, in figure space (head units, origin at the point between the eyes, y down):
@@ -900,7 +913,11 @@
           op.draw(pen);
           e = cput(key, { img: cv, box: b }); const ms = now() - t0; RIG.stats.layers++; RIG.stats.layerMs += ms; logCost('paper', key, ms);
         }
-        g.save(); g.translate(fig.x, fig.y); if (rot) g.rotate(rot); g.translate(0, -by); if (flip) g.scale(-1, 1); if (sx !== 1) g.scale(sx, 1); if (fig.alpha != null) g.globalAlpha = fig.alpha;
+        g.save();
+        // a collar sits under the jaw: where a bowed chin comes down in front of it, the chin wins
+        const hd0 = out.heads.head; if (op.underJaw && hd0) { const J = [[-2.5, 0.1, -0.05], [-0.37, 0.1, -0.05], [-0.31, 0.29, 0.05], [-0.18, 0.41, 0.17], [0, 0.465, 0.22], [0.18, 0.41, 0.17], [0.31, 0.29, 0.05], [0.37, 0.1, -0.05], [2.5, 0.1, -0.05], [2.5, 6, -0.05], [-2.5, 6, -0.05]].map(q2 => hd0.proj(q2[0], q2[1], q2[2]));
+          g.beginPath(); J.forEach((q2, k) => k ? g.lineTo(q2[0], q2[1]) : g.moveTo(q2[0], q2[1])); g.closePath(); g.clip(); }
+        g.translate(fig.x, fig.y); if (rot) g.rotate(rot); g.translate(0, -by); if (flip) g.scale(-1, 1); if (sx !== 1) g.scale(sx, 1); if (fig.alpha != null) g.globalAlpha = fig.alpha;
         g.drawImage(e.img, b[0] * s, b[1] * s, (b[2] - b[0]) * s, (b[3] - b[1]) * s); g.restore();
       } else if (op.type === 'head') {
         const p = Object.assign({}, op.p); const at = toWorld(op.at || [0, 0], by);
@@ -912,7 +929,7 @@
         p.flip = !!op.p.flip !== flip; if (op.fore) { p.fore = toWorldDir(op.fore); if (p.foreLen) p.foreLen *= squash(op.fore); } else if (rot || flip) p.rot = (flip ? -(op.p.rot || 0) : (op.p.rot || 0)) + rot;
         if (op.p.upperW) p.upperW = Object.assign({}, op.p.upperW, { dir: toWorldDir(op.p.upperW.dir), len: op.p.upperW.len * squash(op.p.upperW.dir) });
         out.hands[op.name || 'hand'] = RIG.hand(c, fig.who, op.pose, p);
-        if (op.p.over) (out.overs = out.overs || []).push({ pose: op.pose, p: Object.assign({}, p, { only: op.p.over === 'all' ? null : op.p.over, target: 'gl', shadow: { alpha: 0.28 } }) });
+        if (op.p.over) (out.overs = out.overs || []).push({ pose: op.pose, p: Object.assign({}, p, { only: op.p.over === 'all' ? (op.p.sleeved ? 'hand' : null) : op.p.over, target: 'gl', shadow: { alpha: 0.28 } }) });
       } else if (op.type === 'live') op.draw(c, u => toWorld(u, by), s, out, toWorldDir);
     }
     // the parts of the hands that hold the phone, again, in the gloss layer: call out.over(c) after the phone module has drawn it
@@ -1032,7 +1049,8 @@
     // -- the head
     if (o.head !== false) {
       // the head pivots on the neck: wherever it turns, its neck meets the collar
-      const hp = Object.assign({ yaw: (back ? Math.PI - tau : tau) * 0.8 }, o.head || {}); const Mh = rotM(hp.yaw || 0, hp.pitch || 0, hp.roll || 0);
+      const NECK = { tee: 0.36, sweater: 0.38, coworker: 0.38, shirt: 0.44, coat: 0.5 };
+      const hp = Object.assign({ yaw: (back ? Math.PI - tau : tau) * 0.8, neck: NECK[o.costume] || 0.45 }, o.head || {}); const Mh = rotM(hp.yaw || 0, hp.pitch || 0, hp.roll || 0);
       const nkx = Mh[0][1] * 0.6 + Mh[0][2] * -0.1, nky = Mh[1][1] * 0.6 + Mh[1][2] * -0.1;
       const at = o.headAt || [nx - nkx, 0.6 - nky];
       ops.push({ type: 'head', p: hp, at });
@@ -1087,12 +1105,12 @@
     const key = 'arm' + side + ',' + key0 + ',' + kq([S0, E, Wr]) + ',' + sleeve + (spec.roll || '');
     const box = bboxOf([S0, E, Wr], 0.45);
     const bare = sleeve === 'short';
-    const handS = HSCALE[who] || 0.72;
+    const handS = HSCALE[who] || 0.72; let sleeveOp = null, handOp = null, cuffOp = null;
     if (spec.prop && spec.prop.before) ops.push(...[].concat(spec.prop.before));
     if (!bare) {
       const w = Pp.armW; const rolled = spec.roll ? clamp(spec.roll, 0, 1) : 0;      // rolled: the sleeve ends between the wrist and the elbow
-      const Wend = rolled ? V.lerp(Wr, E, rolled * 0.75) : Wr;
-      ops.push({ type: 'paper', key: key + ',sl', box, draw(pen) {
+      const Wend = rolled ? V.lerp(Wr, E, rolled * 0.75) : Wr; spec._Wend = Wend;
+      sleeveOp = { type: 'paper', key: key + ',sl', box, draw(pen) {
         const wEnd = rolled ? lerp(w[2], w[1], rolled * 0.6) : w[2];
         const lp = limbPts(S0, E, Wend, w[0], w[1], wEnd, { bulge: 0.02, cap: true });
         const col = cos.body; const folded = V.dot(lp.u1, lp.u2) < -0.35;
@@ -1115,7 +1133,7 @@
           const rp = pen.blob([[...V.add(c0, V.add(V.mul(n, ww / 2), V.mul(u, -0.13))), 1], [...V.add(c0, V.add(V.mul(n, ww / 2 + 0.02), V.mul(u, 0.03))), 1], [...V.add(c0, V.add(V.mul(n, -ww / 2 - 0.02), V.mul(u, 0.03))), 1], [...V.add(c0, V.add(V.mul(n, -ww / 2), V.mul(u, -0.13))), 1]]);
           const rpp = pen.piece(rp, pen.col(cos.cuff || col), { seed: 330, kind: cos.kind, tex: cos.tex, lift: [0.015, 0.02] }); pen.shade(rpp, cos.cuff || col, { lit: 0.04, core: 0.03 });
         }
-      } });
+      } };
     } else {
       // the tee's short sleeve over the top of a sculpted bare arm (drawn after the arm, below)
     }
@@ -1123,21 +1141,29 @@
     const hp = Object.assign({}, spec.hp || {});
     const fore = V.sub(E, Wr);
     if (bare) { const hs = handS; hp.foreLen = qf(V.len(fore) / hs * 0.98, 0.05); const ud = V.sub(S0, E); hp.upperW = { dir: [ud[0], ud[1]], len: V.len(ud) / hs * 0.8, r: 0.28 }; hp.foreR = 0.22; }
-    if (spec.hand !== false) { if (spec.handAt) ops.push({ type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand, rot: spec.handRot || 0 }), at: spec.handAt });
-      else ops.push({ type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand }), at: Wr, fore: V.norm(fore) }); }
+    if (!bare && spec.roll && spec._Wend) hp.foreLen = qf((V.len(V.sub(spec._Wend, Wr)) + 0.06) / handS, 0.05);    // bare forearm up to the roll
+    else if (!bare && hp.foreLen == null && !spec.handAt) hp.foreLen = 0.42;
+    if (!bare) hp.sleeved = true;
+    if (spec.hand !== false) { if (spec.handAt) handOp = { type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand, rot: spec.handRot || 0 }), at: spec.handAt };
+      else handOp = { type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand }), at: Wr, fore: V.norm(fore) }; }
     // the cuff over the wrist
     if (!bare && !spec.roll) {
       const w = Pp.armW[2] * (sleeve === 'coat' ? 1.16 : 1.06); const u = V.norm(V.sub(Wr, E)), n = V.perp(u);
       const cl = sleeve === 'coat' ? 0.2 : sleeve === 'rib' ? 0.16 : 0.13;
-      ops.push({ type: 'paper', key: key + ',cf', box: bboxOf([Wr, E], 0.4), draw(pen) {
+      cuffOp = { type: 'paper', key: key + ',cf', box: bboxOf([Wr, E], 0.4), draw(pen) {
         const c0 = V.add(Wr, V.mul(u, 0.03));
         const pts = [[...V.add(c0, V.add(V.mul(n, w / 2), V.mul(u, -cl))), 1], [...V.add(c0, V.mul(n, w / 2 + 0.01)), 1], V.add(c0, V.mul(u, 0.015)), [...V.add(c0, V.mul(n, -w / 2 - 0.01)), 1], [...V.add(c0, V.add(V.mul(n, -w / 2), V.mul(u, -cl))), 1]];
         const col = cos.cuff || cos.body; const path = pen.piece(pen.blob(pts), pen.col(col), { seed: 340 + (side === 'L' ? 0 : 5), kind: cos.kind, tex: cos.tex, lift: [0.015, 0.025] });
         pen.shade(path, col, { lit: 0.035, core: 0.04 });
         if (sleeve === 'rib') { pen.clip(path); for (let k = -4; k <= 4; k++) { const a = V.add(c0, V.add(V.mul(n, k * w / 9), V.mul(u, -cl))), b = V.add(c0, V.mul(n, k * w / 9)); pen.line([a, b], pen.dark(col, 0.7), 0.008, 0.6); } pen.unclip(); }
         if (sleeve === 'cuff') pen.dot(c0[0] + n[0] * w * 0.3 - u[0] * cl * 0.5, c0[1] + n[1] * w * 0.3 - u[1] * cl * 0.5, 0.018, pen.col(cos.buttons || '#D6DCE0'));
-      } });
+      } };
     }
+    // the order: the hand first, then the sleeve over its forearm, then the cuff at the wrist (no bare forearm above a cuff).
+    // B2's cheat (handAt: the fist above its cuff) keeps sleeve, hand, cuff.
+    if (bare) { if (handOp) ops.push(handOp); }
+    else if (spec.handAt) { ops.push(sleeveOp); if (handOp) ops.push(handOp); if (cuffOp) ops.push(cuffOp); }
+    else { if (handOp) ops.push(handOp); ops.push(sleeveOp); if (cuffOp) ops.push(cuffOp); }
     if (bare) {
       // the short sleeve of the tee over the top of the sculpted arm: a domed cap, flaring a little to a slanted hem
       const w = Pp.armW[0] * 1.05; const u = V.norm(V.sub(E, S0)), n = V.perp(u); const end = V.add(S0, V.mul(u, 0.5));
@@ -1192,7 +1218,7 @@
         pen.fold([[at(1.6).r - 0.14, 1.6], [at(2.0).r - 0.3, 2.0], [at(2.5).r - 0.34, 2.5]], col, { w: 0.022, alpha: 0.55 });
         pen.fold([[at(2.9).l + 0.1, 2.95], [lerp(at(3).l, at(3).r, 0.5), 3.02], [at(2.9).r - 0.1, 2.95]], col, { w: 0.02, alpha: 0.45 });
         if (o.stain !== false) { pen.g.fillStyle = pen.col(cos.stain); pen.g.globalAlpha = 0.5; const p = pen.P([front(2.3) + 0.22, 2.3]); pen.g.beginPath(); pen.g.ellipse(p[0], p[1], 0.05 * pen.R, 0.036 * pen.R, 0.4, 0, 7); pen.g.fill(); pen.g.globalAlpha = 1; }
-        if (yB > 3.25) { pen.g.fillStyle = pen.col('#2A2622'); const a = pen.P([at(3.25).l - 0.1, 3.22]), b = pen.P([at(3.25).r + 0.1, 3.36]); pen.g.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); }
+        if (yB > 3.25 && !o.untucked) { pen.g.fillStyle = pen.col('#2A2622'); const a = pen.P([at(3.25).l - 0.1, 3.22]), b = pen.P([at(3.25).r + 0.1, 3.36]); pen.g.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); }
       }
       if (o.costume === 'tee') {
         pen.fold([[at(1.7).l + 0.2, 1.7], [at(2.2).l + 0.45, 2.25]], col, { w: 0.022, alpha: 0.5 });
@@ -1224,46 +1250,58 @@
     } };
   }
   // the coat's turned-up collar behind the neck (before the head) and its front (after)
+  // ---- collars. Thin pieces of cloth that sit on the garment at the base of the neck (never a pad round it). The parts in front of
+  // the neck are clipped under the jaw at draw time (underJaw), so a bowed chin comes in front of the collar.
   function coatCollarBack(who, o, geo, key0) {
-    const nk = geo.at(0.55); return { type: 'paper', key: 'ccb,' + key0, box: [nk.l - 0.5, -0.1, nk.r + 0.5, 1.2], draw(pen) {
+    const nk = geo.at(0.55); return { type: 'paper', key: 'ccb2,' + key0, box: [nk.l - 0.5, 0.1, nk.r + 0.5, 1.1], draw(pen) {
+      // the turned-up collar's back: a band standing behind the neck, showing either side of it
       const c = COSTUME.coat; const cx = nk.cx;
-      const p = pen.blob([[cx - 0.4, 0.95], [cx - 0.41, 0.6], [cx - 0.3, 0.4], [cx, 0.35], [cx + 0.3, 0.4], [cx + 0.41, 0.6], [cx + 0.4, 0.95]]);
-      const path = pen.piece(p, pen.dark(c.body, 0.55), { seed: 430, kind: 'wool', tex: 0.75, lift: [0.01, 0.02] }); pen.shade(path, c.body, { lit: 0.03, core: 0.05 });
+      const p = pen.blob([[cx - 0.33, 0.78], [cx - 0.33, 0.56], [cx - 0.22, 0.44], [cx, 0.41], [cx + 0.22, 0.44], [cx + 0.33, 0.56], [cx + 0.33, 0.78]]);
+      const path = pen.piece(p, pen.dark(c.body, 0.5), { seed: 430, kind: 'wool', tex: 0.6, lift: [0.006, 0.012] }); pen.shade(path, c.body, { lit: 0.02, core: 0.03 });
     } };
   }
   function crewBack(who, o, cos, geo, key0) {
     const nk = geo.at(0.6), cx = nk.cx; const sw = o.costume !== 'tee';
-    return { type: 'paper', key: 'crewb,' + key0, box: [cx - 0.6, 0.3, cx + 0.6, 0.9], draw(pen) {
-      const col = sw ? cos.body : cos.rib; const hw = sw ? 0.31 : 0.26;
-      const band = pen.blob([[cx - hw, 0.64, 1], [cx - hw * 0.6, 0.5], [cx, 0.47], [cx + hw * 0.6, 0.5], [cx + hw, 0.64, 1], [cx + hw * 0.6, 0.57], [cx, 0.55], [cx - hw * 0.6, 0.57]]);
-      pen.piece(band, pen.dark(col, 0.5), { seed: 447, kind: sw ? 'wool' : 'cloth', tex: 0.6, lift: [0.005, 0.01] });
+    return { type: 'paper', key: 'crewb2,' + key0, box: [cx - 0.5, 0.3, cx + 0.5, 0.8], draw(pen) {
+      // the inside of the band behind the neck: a thin dark arc either side of it
+      const col = sw ? cos.body : cos.rib; const hw = 0.24, th = sw ? 0.045 : 0.035;
+      const band = pen.blob([[cx - hw, 0.62, 1], [cx - hw * 0.55, 0.53], [cx, 0.51], [cx + hw * 0.55, 0.53], [cx + hw, 0.62, 1], [cx + hw * 0.55, 0.53 + th], [cx, 0.51 + th], [cx - hw * 0.55, 0.53 + th]]);
+      pen.piece(band, pen.dark(col, 0.55), { seed: 447, kind: sw ? 'wool' : 'cloth', tex: 0.5, lift: false });
     } };
   }
   function collarOp(who, o, cos, geo, tau, back, key0) {
     const nk = geo.at(0.6); const st = Math.sin(tau), cx = nk.cx, fr = geo.at(0.75).front;
-    return { type: 'paper', key: 'col,' + key0, box: [nk.l - 0.7, 0.1, nk.r + 0.7, 1.5], draw(pen) {
+    return { type: 'paper', key: 'col2,' + key0, box: [nk.l - 0.7, 0.2, nk.r + 0.7, 1.4], underJaw: true, draw(pen) {
       const col = cos.collar || cos.rib || cos.body;
       if (o.costume === 'shirt' && !back) {
-        // the crushed collar: two wings, open at the throat
-        const L = pen.blob([[cx - 0.24, 0.5], [cx - 0.08 + st * 0.12, 0.66], [fr - 0.02, 0.86, 1], [cx - 0.26, 0.86], [cx - 0.33, 0.7]]);
-        const R = pen.blob([[cx + 0.24, 0.5], [cx + 0.33, 0.68], [cx + 0.3, 0.85], [fr + 0.04, 0.88, 1], [cx + 0.1 + st * 0.12, 0.66]]);
-        [L, R].forEach((sh, i) => { const pth = pen.piece(sh, pen.col(i ? mix(col, '#FFFFFF', 0.08) : col), { seed: 440 + i, kind: 'cloth', tex: 0.5, lift: [0.01, 0.025] }); pen.shade(pth, col, { lit: 0.03, core: 0.035 }); });
+        // the shirt's collar: a narrow stand round the neck, and two flat points lying on the shirt, open at the throat; crushed
+        // (the far point a little curled up). The neck shows above it.
+        const V0 = [fr, 0.8], sg = st >= 0 ? 1 : -1;
+        [-1, 1].forEach((side, i) => { const far = side === sg; const k = far ? 0.75 : 1;
+          const stand = pen.blob([[cx + side * 0.215, 0.54, 1], [cx + side * 0.225, 0.6], [lerp(cx + side * 0.2, V0[0], 0.55), 0.73], [V0[0] + side * 0.012, V0[1], 1], [V0[0] + side * 0.03, V0[1] - 0.05], [lerp(cx + side * 0.17, V0[0], 0.5), 0.67], [cx + side * 0.175, 0.56, 1]]);
+          pen.piece(stand, pen.col(mix(col, '#000000', 0.06)), { seed: 438 + i, kind: 'cloth', tex: 0.45, lift: [0.004, 0.008] });
+          const pt = pen.blob([[cx + side * 0.21, 0.57, 1], [cx + side * (0.25 + 0.06 * k), 0.66], [cx + side * (0.27 + 0.07 * k), 0.8 + (far ? -0.02 : 0.02), 1], [lerp(cx + side * 0.12, V0[0], 0.4), 0.8], [V0[0] + side * 0.035, V0[1] - 0.01, 1], [lerp(cx + side * 0.19, V0[0], 0.55), 0.7]]);
+          const pth = pen.piece(pt, pen.col(far ? mix(col, '#FFFFFF', 0.06) : col), { seed: 440 + i, kind: 'cloth', tex: 0.45, lift: [0.008, 0.014], liftAlpha: 0.4 });
+          pen.shade(pth, col, { lit: 0.018, core: 0.02 }); });
       } else if ((o.costume === 'sweater' || o.costume === 'coworker' || o.costume === 'tee') && !back) {
-        // the front of the crew neck: a ribbed band round the base of the neck, dipping at the throat (the sweater's is stretched)
-        const sw = o.costume !== 'tee', dip = sw ? 0.22 : 0.18, th = sw ? 0.09 : 0.06, hw = sw ? 0.3 : 0.26;
-        const band = pen.blob([[cx - hw - 0.02, 0.56, 1], [cx - hw * 0.7, 0.56 + dip * 0.55], [fr, 0.56 + dip], [cx + hw * 0.7, 0.56 + dip * 0.55], [cx + hw + 0.02, 0.56, 1], [cx + hw + 0.04, 0.56 + th * 0.6], [cx + hw * 0.72, 0.56 + dip * 0.55 + th], [fr, 0.56 + dip + th], [cx - hw * 0.72, 0.56 + dip * 0.55 + th], [cx - hw - 0.04, 0.56 + th * 0.6]]);
-        const rc = sw ? col : cos.rib; const pth = pen.piece(band, pen.col(rc), { seed: 445, kind: sw ? 'wool' : 'cloth', tex: 0.65, lift: [0.01, 0.02] });
-        if (sw) { pen.clip(pth); for (let k = -16; k <= 16; k++) { const u = k / 16, x = cx + u * (hw + 0.02); const y0 = 0.56 + dip * (1 - u * u) * 0.98 - 0.02; pen.line([[x, y0 - 0.02], [x + u * 0.01, y0 + th + 0.02]], pen.dark(rc, 0.7), 0.007, 0.55); } pen.unclip(); }
-        pen.shade(pth, rc, { lit: 0.025, core: 0.03 });
+        // the front of the crew neck: a narrow ribbed band at the base of the neck, dipping a little at the throat (the sweater's
+        // stretched a touch more)
+        const sw = o.costume !== 'tee', dip = sw ? 0.17 : 0.14, th = sw ? 0.055 : 0.04, hw = 0.235;
+        const band = pen.blob([[cx - hw - 0.01, 0.58, 1], [cx - hw * 0.7, 0.58 + dip * 0.6], [fr, 0.58 + dip], [cx + hw * 0.7, 0.58 + dip * 0.6], [cx + hw + 0.01, 0.58, 1], [cx + hw + 0.03, 0.58 + th * 0.8], [cx + hw * 0.72, 0.58 + dip * 0.6 + th], [fr, 0.58 + dip + th], [cx - hw * 0.72, 0.58 + dip * 0.6 + th], [cx - hw - 0.03, 0.58 + th * 0.8]]);
+        const rc = sw ? mix(col, '#000000', 0.05) : cos.rib; const pth = pen.piece(band, pen.col(rc), { seed: 445, kind: sw ? 'wool' : 'cloth', tex: 0.55, lift: [0.003, 0.006], liftAlpha: 0.35 });
+        if (sw) { pen.clip(pth); for (let k = -18; k <= 18; k++) { const u = k / 18, x = cx + u * (hw + 0.02); const y0 = 0.58 + dip * (1 - u * u); pen.line([[x, y0 - 0.02], [x, y0 + th + 0.02]], pen.dark(rc, 0.5), 0.005, 0.4); } pen.unclip(); }
+        pen.shade(pth, rc, { lit: 0.012, core: 0.015 });
       } else if (o.costume === 'coat' && !back) {
-        // the turned-up collar's two fronts, rising to the jaw on each side, open in a V at the throat
-        const Lc = pen.blob([[cx - 0.44, 0.95], [cx - 0.4, 0.66], [cx - 0.27, 0.46], [cx - 0.17, 0.5], [fr - 0.04, 0.96, 1], [cx - 0.3, 1.05]]);
-        const Rc = pen.blob([[cx + 0.44, 0.95], [cx + 0.3, 1.05], [fr + 0.05, 0.98, 1], [cx + 0.17, 0.5], [cx + 0.27, 0.46], [cx + 0.4, 0.66]]);
-        [Lc, Rc].forEach((sh, i) => { const c2 = COSTUME.coat; const pth = pen.piece(sh, pen.col(i === (st >= 0 ? 0 : 1) ? c2.body : mix(c2.body, c2.lit, 0.25)), { seed: 450 + i, kind: 'wool', tex: 0.75, lift: [0.015, 0.03] }); pen.shade(pth, c2.body, { lit: 0.04, core: 0.05 }); });
+        // the turned-up collar's two fronts: narrow, lying against the neck's sides and down to a V at the throat
+        const Lc = pen.blob([[cx - 0.33, 0.88], [cx - 0.33, 0.62], [cx - 0.25, 0.5], [cx - 0.17, 0.54], [fr - 0.03, 0.97, 1], [cx - 0.24, 1.0]]);
+        const Rc = pen.blob([[cx + 0.33, 0.88], [cx + 0.24, 1.0], [fr + 0.04, 0.98, 1], [cx + 0.17, 0.54], [cx + 0.25, 0.5], [cx + 0.33, 0.62]]);
+        [Lc, Rc].forEach((sh, i) => { const c2 = COSTUME.coat; const pth = pen.piece(sh, pen.col(i === (st >= 0 ? 0 : 1) ? c2.body : mix(c2.body, c2.lit, 0.2)), { seed: 450 + i, kind: 'wool', tex: 0.6, lift: [0.008, 0.016], liftAlpha: 0.4 }); pen.shade(pth, c2.body, { lit: 0.025, core: 0.03 }); });
       } else if (back) {
-        const outer = pen.blob([[cx - 0.32, 0.56], [cx, 0.5], [cx + 0.32, 0.56], [cx + 0.3, 0.7], [cx, 0.66], [cx - 0.3, 0.7]]);
-        const pth = pen.piece(outer, pen.col(col), { seed: 449, kind: cos.kind, tex: 0.7, lift: [0.01, 0.02] }); pen.shade(pth, col, { lit: 0.03, core: 0.03 });
-        if (cos.kind === 'wool') { pen.clip(pth); for (let k = -14; k <= 14; k++) { const x = cx + k * 0.024; pen.line([[x, 0.5], [x, 0.72]], pen.dark(col, 0.6), 0.007, 0.5); } pen.unclip(); }
+        // from behind: the band across the back of the neck
+        const th = cos.kind === 'wool' ? 0.06 : 0.045;
+        const outer = pen.blob([[cx - 0.25, 0.6], [cx, 0.55], [cx + 0.25, 0.6], [cx + 0.25, 0.6 + th], [cx, 0.55 + th], [cx - 0.25, 0.6 + th]]);
+        const pth = pen.piece(outer, pen.col(col), { seed: 449, kind: cos.kind, tex: 0.55, lift: [0.004, 0.008], liftAlpha: 0.35 }); pen.shade(pth, col, { lit: 0.015, core: 0.015 });
+        if (cos.kind === 'wool') { pen.clip(pth); for (let k = -12; k <= 12; k++) { const x = cx + k * 0.02; pen.line([[x, 0.52], [x, 0.7]], pen.dark(col, 0.5), 0.005, 0.4); } pen.unclip(); }
       }
     } };
   }
@@ -1759,6 +1797,12 @@
       RIG.hand(c, 'him', 'bag', { x: 1430, y: 330, s: 230, light: L, zip: tt * 0.8, flip: true, only: 'thumb' });
       RIG.hand(c, 'her', 'nape', { x: 1640, y: 280, s: 230, light: L });
       const gp = { x: 1300, y: 1010, s: 220, light: L, reach: 0.3 + 0.5 * seg(tt % 2, 0, 1.5) }; const gh = RIG.hand(c, 'her', 'thumb', gp); demoPhone(c, { x: gh.grip[0], y: gh.grip[1] - 40, w: 130, h: 260, angle: gh.rot }, { top: '#9FE6F2', bottom: '#2FAE7D' }); RIG.hand(c, 'her', 'thumb', Object.assign({}, gp, { only: 'thumb', target: 'gl' })); } },
+    { name: 'grips: the phone (true size) in her hand and his, the typing thumb, the bag in one hand', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day');
+      const one = (who, pose, x, y, s, o) => { const hp = Object.assign({ x, y, s, light: L }, o); const h = RIG.hand(c, who, pose, hp); demoPhone(c, h.phone, { top: '#9FE6F2', bottom: '#2FAE7D' }); RIG.hand(c, who, pose, Object.assign({}, hp, { only: ['thumb', 'dist'], target: 'gl', shadow: { alpha: 0.28 } })); return h; };
+      one('her', 'phone', 300, 760, 300, { fore: [0.3, 1] }); one('him', 'thumb', 820, 800, 320, { fore: [0.35, 1], reach: 0.5 + 0.45 * Math.sin(tt * 2.2), tap: (Math.floor(tt * 6) % 3 === 0) ? 0.6 : 0 });
+      const bh = { x: 1270, y: 640, s: 300, light: L, zip: tt * 0.75, fore: [-1, 0.25], noThumb: true };
+      RIG.hand(c, 'him', 'bag', bh); drawFigure(c, { who: 'prop', x: 1530, y: 560, s: 420, light: L, ops: [{ type: 'paper', key: 'gbag', box: [-0.6, -0.4, 0.6, 0.45], draw(pen) { bagShape(pen, [0, 0], 0.74); } }] });
+      RIG.hand(c, 'him', 'bag', Object.assign({}, bh, { noThumb: false, only: 'thumb' })); } },
     { name: 'the trade (Q10): phone for bag on the centre line; her fingers never touch his', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day');
       const tr = RIG.trade(c, seg(tt, 0.1, 3.8), { x: 960, y: 560, s: 340, light: L }); demoPhone(c, tr.phone, { top: '#2A2C30', bottom: '#111216' }); tr.over(c); } },
     { name: 'coworker: a look over the divider (Q03)', draw(c, t) { const tt = twos(t); paperBg(c, 'office'); const L = RIG.light('office');
