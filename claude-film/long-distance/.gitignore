@@ -4,3 +4,5 @@ audio/gen/*.wav
 frames/*.png
 audio/audition/takes/
 audio/vo/takes/
+audio/gen/var/
+audio/gen/**/*.wav
