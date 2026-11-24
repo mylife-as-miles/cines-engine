@@ -19,12 +19,12 @@ window.SETS = window.SETS || {};
   // =====================================================================================================================
   const R = {
     w: 5.4, d: 4.2, h: 2.5,
-    fridge: { x0: 0.62, x1: 1.30, z0: 3.56, h: 1.80, handleX: 1.235, freezerY: 0.62 },
-    strip: { x: 1.045, y: 1.52, w: 0.052, h: 0.19, rot: -0.045 },          // the photo-booth strip under a red magnet (centre)
+    fridge: { x0: 0.62, x1: 1.30, z0: 3.56, h: 1.80, handleX: 1.235, freezerY: 0.62, handle: [0.98, 1.64] },
+    strip: { x: 1.045, y: 1.47, w: 0.052, h: 0.19, rot: -0.045 },          // the photo-booth strip under a red magnet (centre)
     note: { x: 0.80, y: 1.14, w: 0.11, h: 0.075, rot: 0.06 },               // a shopping note under a blue magnet
     kitchen: { x1: 0.60, z0: 2.55, y: 0.90 },                                // a short run along the left wall
     counter: { x0: 1.42, x1: 2.82, z0: 3.12, z1: 3.62, y: 0.92, t: 0.04 },  // the island he eats at, standing
-    pendant: { x: 2.20, z: 3.45, rim: 1.76, top: 1.93, r: 0.19, rt: 0.05, bulb: 1.80 },
+    pendant: { x: 2.00, z: 3.92, rim: 1.98, top: 2.15, r: 0.19, rt: 0.05, bulb: 2.02 },   // over where he stands, close to the wall: B2's cone
     salt: { x: 2.22, z: 3.30, h: 0.10, r: 0.029 },                          // the seam of the counter view
     phoneSalt: { x: 2.35, z: 3.27 },                                        // where the phone leans on the salt (the empty half)
     pan: { x: 1.70, z: 3.36, r: 0.14 },
@@ -83,12 +83,12 @@ window.SETS = window.SETS || {};
   // =====================================================================================================================
   // LIGHT: one motivated light per time of day, cut into bands; colours are albedo x light level, kept between paper and ink
   // =====================================================================================================================
-  const ANG = [79, 62, 48, 35].map(a => a * D2R);                // the pendant's cut bands: half-angles of its cone, outer to inner
+  const ANG = [64, 51, 39, 27].map(a => a * D2R);                // the pendant's cut bands: half-angles of its cone, outer to inner
   const LV = {
-    night: { amb: [0.19, 0.166, 0.246], spill: [0.235, 0.2, 0.265], bands: [[0.29, 0.24, 0.3], [0.38, 0.31, 0.355], [0.5, 0.41, 0.42], [0.64, 0.52, 0.48]],
-      cold: [0.23, 0.25, 0.37], coldCore: [0.28, 0.31, 0.47], shadow: [0.13, 0.12, 0.18] },
-    day: { steps: [[0.64, 0.67, 0.69], [0.74, 0.77, 0.78], [0.85, 0.87, 0.87]], pen: [0.99, 1.0, 0.98], sun: [1.15, 1.14, 1.09], shadow: [0.5, 0.53, 0.56] },
-    dusk: { steps: [[0.3, 0.34, 0.48], [0.35, 0.4, 0.56], [0.41, 0.47, 0.64]], pen: [0.47, 0.53, 0.7], sun: [0.53, 0.59, 0.78], shadow: [0.22, 0.25, 0.37] },
+    night: { amb: [0.19, 0.166, 0.246], spill: [0.212, 0.182, 0.25], bands: [[0.3, 0.245, 0.27], [0.4, 0.32, 0.31], [0.52, 0.42, 0.37], [0.66, 0.53, 0.43]],
+      cold: [0.197, 0.182, 0.276], coldCore: [0.212, 0.198, 0.305], shadow: [0.13, 0.12, 0.18], warmDark: [0.25, 0.2, 0.22] },
+    day: { steps: [[0.63, 0.67, 0.65], [0.71, 0.76, 0.73], [0.79, 0.84, 0.8]], pen: [0.9, 0.94, 0.9], sun: [1.03, 1.06, 0.99], shadow: [0.5, 0.54, 0.53] },
+    dusk: { steps: [[0.3, 0.34, 0.48], [0.34, 0.39, 0.55], [0.39, 0.45, 0.62]], pen: [0.44, 0.5, 0.67], sun: [0.49, 0.55, 0.73], shadow: [0.22, 0.25, 0.37] },
   };
   const TOD = { night: 'night', later: 'night', morning: 'day', day: 'day', afternoon: 'day', evening: 'dusk', dusk: 'dusk' };
   const INK = [17, 20, 30], PAPER = [236, 227, 208];
@@ -104,7 +104,7 @@ window.SETS = window.SETS || {};
   function levelAt(L, x, y, z, n) {
     if (L.night) {
       const P = R.pendant, vx = x - P.x, vy = y - P.bulb, vz = z - P.z, d = Math.hypot(vx, vy, vz) || 1;
-      if (n && (n[0] * vx + n[1] * vy + n[2] * vz) > 0) return L.amb;
+      if (n && (n[0] * vx + n[1] * vy) > 0.05 && !n[2]) return L.amb;
       if (vy < 0) { const th = Math.acos(clamp(-vy / d, -1, 1)); let b = -1; ANG.forEach((a, i) => { if (th < a) b = i; }); if (b >= 0) return L.bands[b]; }
       return d < 1.35 ? L.spill : L.amb;
     }
@@ -126,7 +126,7 @@ window.SETS = window.SETS || {};
   function coneRegion(pl, a) {
     const Pd = R.pendant, t = Math.tan(a), pts = [];
     if (pl.axis === 'y') { const r = (Pd.bulb - pl.v) * t; if (r <= 0) return null; for (let i = 0; i < 72; i++) { const u = i / 72 * Math.PI * 2; pts.push(P3(pl, Pd.x + Math.cos(u) * r, Pd.z + Math.sin(u) * r)); } return pts; }
-    const dd = Math.abs(pl.v - (pl.axis === 'z' ? Pd.z : Pd.x)), c0 = pl.axis === 'z' ? Pd.x : Pd.z;
+    const dd = pl.axis === 'z' ? Math.max(0.2, Math.abs(R.d - Pd.z)) : Math.abs(pl.v - Pd.x), c0 = pl.axis === 'z' ? Pd.x : Pd.z;
     const yTop = Pd.bulb - dd / t, yBot = pl.b0 - 0.3; if (yTop <= pl.b0) return null;
     const Lf = [], Rt = [], N = 30;
     for (let i = 0; i <= N; i++) { const y = yTop - (yTop - yBot) * Math.pow(i / N, 1.8), w = Math.sqrt(Math.max(0, Math.pow((Pd.bulb - y) * t, 2) - dd * dd)); Lf.push(P3(pl, c0 - w, y)); Rt.push(P3(pl, c0 + w, y)); }
@@ -142,7 +142,7 @@ window.SETS = window.SETS || {};
   // the window's light on a plane Z = zp: by day the sky's slant (falling), by night the streetlight's (rising from the street).
   // Returns {quad, mullion, transom} in world points.
   function windowLight(zp, night, grow) {
-    const Wn = R.window, s = night ? [-0.9, 0.2, 0.37] : R.sun; const l = Math.hypot(s[0], s[1], s[2]); const d = s.map(v => v / l); grow = grow || 0;
+    const Wn = R.window, s = night ? [-0.75, 0.2, 0.45] : R.sun; const l = Math.hypot(s[0], s[1], s[2]); const d = s.map(v => v / l); grow = grow || 0;
     const at = (z, y) => { const t = (zp - z) / d[2]; return [R.w + d[0] * t, y + d[1] * t, zp]; };
     if (zp <= Wn.z0) return null;
     const z0 = Wn.z0 - grow, z1 = Math.min(zp - 0.01, Wn.z1 + grow), y0 = Wn.y0 - grow, y1 = Wn.y1 + grow, bw = 0.012 + grow * 0.2;
@@ -163,12 +163,12 @@ window.SETS = window.SETS || {};
     const big = (a0, a1, b0, b1) => plPts(pl, a0, a1, b0, b1);
     g.save(); g.clip(path);
     if (L.night) {
-      const Pd = R.pendant, facing = o.lamp !== false && (pl.axis === 'y' ? (pl.v < Pd.bulb ? o.n !== -1 : o.n === -1) : (o.n || -1) * ((pl.axis === 'z' ? Pd.z : Pd.x) - pl.v) > 0);
-      g.fillStyle = tone(albedo, o.level || L.amb, m); g.fill(path);
+      const Pd = R.pendant, facing = o.lamp !== false && (pl.axis === 'y' ? (pl.v < Pd.bulb ? o.n !== -1 : o.n === -1) : pl.axis === 'z' ? (o.n || -1) < 0 : (o.n || -1) * (Pd.x - pl.v) > 0);
+      g.fillStyle = tone(albedo, o.nightLevel || o.level || L.amb, m); g.fill(path);
       if (o.cold && pl.axis === 'z') { const wl = windowLight(pl.v, true, 0.06), wc = windowLight(pl.v, true, 0);
         if (wl) { fillW(g, C, wl.quad, tone(albedo, L.cold, m), rg, seed + 31); fillW(g, C, wc.quad, tone(albedo, L.coldCore, m), rg, seed + 32);
           fillW(g, C, wc.mullion, tone(albedo, L.cold, m), rg * 0.4, seed + 33); fillW(g, C, wc.transom, tone(albedo, L.cold, m), rg * 0.4, seed + 34); } }
-      if (facing && o.spill !== false) fillW(g, C, spillRegion(pl, 1.45), tone(albedo, L.spill, m), rg, seed + 7);
+      if (facing && o.spill !== false) fillW(g, C, spillRegion(pl, 1.0), tone(albedo, L.spill, m), rg, seed + 7);
       if (facing) ANG.forEach((a, i) => { const gn = o.gain == null ? 1 : o.gain, lv = L.bands[i].map((v, c) => L.amb[c] + (v - L.amb[c]) * gn);
         fillW(g, C, coneRegion(pl, a), tone(albedo, lv, m), rg, seed + 11 + i); });
       if (o.shadowPts) o.shadowPts.forEach((sp, i) => fillW(g, C, sp, tone(albedo, L.shadow, m), rg * 0.7, seed + 50 + i));
@@ -224,7 +224,7 @@ window.SETS = window.SETS || {};
   // =====================================================================================================================
   // OBJECTS
   // =====================================================================================================================
-  const WALL = '#93918A', PALE = '#ABA9A1';
+  const WALL = '#93918A', PALE = '#C0BEB4';
   const Z = (v, a0, a1, b0, b1) => ({ axis: 'z', v, a0, a1, b0, b1 }), X = (v, a0, a1, b0, b1) => ({ axis: 'x', v, a0, a1, b0, b1 }), Y = (v, a0, a1, b0, b1) => ({ axis: 'y', v, a0, a1, b0, b1 });
   // the screen ellipse of a horizontal circle
   function hEll(C, x, y, z, r) { const c = C.p(x, y, z), a = C.p(x - r, y, z), b = C.p(x + r, y, z), f = C.p(x, y, z - r), n = C.p(x, y, z + r);
@@ -253,8 +253,8 @@ window.SETS = window.SETS || {};
       // the pale rectangle: the grime around where the frame hung, then the clean wall inside it, and the nail
       const r = R.rect, q = scr(C, plPts(Z(R.d), r.x0, r.x1, r.y0, r.y1));
       if (q) { const k = C.k(r.x0, r.y0, R.d), pth = shp(q).path(0.35, 8);
-        g.save(); g.filter = `blur(${clamp(k * 0.02, 2, 22)}px)`; g.strokeStyle = L.night ? 'rgba(10,8,14,0.42)' : 'rgba(52,50,46,0.34)'; g.lineWidth = clamp(k * 0.05, 4, 50); g.stroke(pth); g.restore();
-        surface(g, C, L, Z(R.d - 0.0004, r.x0, r.x1, r.y0, r.y1), PALE, { n: -1, seed: 107, cold: true, sun: true, rough: 0.35, tex: 0.32 });
+        g.save(); g.filter = `blur(${clamp(k * 0.02, 2, 22)}px)`; g.strokeStyle = L.night ? 'rgba(8,6,12,0.55)' : 'rgba(52,50,46,0.34)'; g.lineWidth = clamp(k * 0.05, 4, 50); g.stroke(pth); g.restore();
+        surface(g, C, L, Z(R.d - 0.0004, r.x0, r.x1, r.y0, r.y1), PALE, { n: -1, seed: 107, cold: true, sun: true, rough: 0.35, tex: 0.32, dark: L.night ? 1.35 : 1 });
         const nl = C.p(R.nail.x, R.nail.y, R.d - 0.004), nr = clamp(0.0042 * k, 1.6, 12), ld = liftDir(L, C, R.nail.x, R.nail.y, R.d);
         g.fillStyle = shadowCol(L); g.beginPath(); g.ellipse(nl[0] + ld[0] * nr * 1.6, nl[1] + ld[1] * nr * 1.6, nr * 1.4, nr * 0.8, 0.5, 0, 7); g.fill();
         g.fillStyle = tone('#4A4240', levelAt(L, R.nail.x, R.nail.y, R.d)); g.beginPath(); g.arc(nl[0], nl[1], nr, 0, 7); g.fill();
@@ -308,15 +308,20 @@ window.SETS = window.SETS || {};
     const F = R.fridge;
     if (!fwd(C)) return;
     softShadow(g, C, plPts(Z(R.d - 0.002), F.x1 - 0.02, F.x1 + 0.09, 0, F.h + 0.02), shadowCol(L), clamp(C.k(F.x1, 1, R.d) * 0.03, 3, 20));
-    if (C.o.x > F.x1) surface(g, C, L, X(F.x1, F.z0, R.d, 0.02, F.h), '#C4BFB3', { n: 1, seed: 121, dark: 0.8, kind: 'card', gain: 1.5 });
+    { const ld = liftDir(L, C, (F.x0 + F.x1) / 2, 1, F.z0), kb = C.k(F.x1, 1, R.d); softShadow(g, C, plPts(Z(R.d - 0.003), F.x0 + ld[0] * 0.07, F.x1 + ld[0] * 0.07 + 0.03, 0, F.h + 0.03), shadowCol(L), clamp(kb * 0.025, 3, 18));
+      softShadow(g, C, plPts(Y(0.002), F.x0 - 0.02, F.x1 + 0.05, F.z0 - 0.06, R.d), shadowCol(L), clamp(kb * 0.02, 3, 14)); }
+    if (C.o.x > F.x1) surface(g, C, L, X(F.x1, F.z0, R.d, 0.02, F.h), '#D0CABC', { n: 1, seed: 121, dark: L.night ? 0.95 : 0.84, kind: 'card', gain: 1.6 });
     if (C.o.x < F.x0) surface(g, C, L, X(F.x0, F.z0, R.d, 0.02, F.h), '#C4BFB3', { n: -1, seed: 123, dark: 0.75, kind: 'card' });
     if (C.o.y > F.h) face(g, C, L, plPts(Y(F.h), F.x0, F.x1, F.z0, R.d), '#BDB8AC', { n: [0, 1, 0], seed: 124, tex: 0.4 });
-    surface(g, C, L, Z(F.z0, F.x0, F.x1, 0.02, F.h), '#CFCABE', { n: -1, seed: 122, kind: 'card', gain: 1.55, tex: 0.5 });
+    surface(g, C, L, Z(F.z0, F.x0, F.x1, 0.02, F.h), '#DED8CA', { n: -1, seed: 122, kind: 'card', gain: 1.6, tex: 0.5, dark: L.night ? 1 : 1.1, rough: 0.9 });
+    { const lvE = levelAt(L, F.x1, 1.0, F.z0, [1, 0, 0]).map(v => v * (L.night ? 1.5 : 1.2));   // the lit corner, and the top edge
+      face(g, C, L, plPts(Z(F.z0 - 0.002), F.x1 - 0.014, F.x1, 0.03, F.h - 0.01), '#E6DFD0', { lv: lvE, seed: 128, tex: 0.3, rough: 0.5 });
+      face(g, C, L, plPts(Z(F.z0 - 0.002), F.x0 + 0.01, F.x1 - 0.01, F.h - 0.012, F.h), '#E6DFD0', { lv: lvE.map(v => v * 0.9), seed: 129, tex: 0.3, rough: 0.5 }); }
     const k = C.k(F.x1, 1, F.z0), dk = 'rgba(30,24,22,0.5)';
     // the door's seal and the freezer below; the handles
     lineW(g, C, [F.x0 + 0.012, F.freezerY, F.z0 - 0.002], [F.x1 - 0.012, F.freezerY, F.z0 - 0.002], dk, clamp(k * 0.004, 1, 5));
     lineW(g, C, [F.x0 + 0.012, F.h - 0.012, F.z0 - 0.002], [F.x1 - 0.012, F.h - 0.012, F.z0 - 0.002], 'rgba(30,24,22,0.25)', clamp(k * 0.003, 1, 4));
-    [[0.98, 1.46], [0.44, 0.56]].forEach(([y0, y1], i) => { const a = C.p(F.handleX, y0, F.z0 - 0.03), b = C.p(F.handleX, y1, F.z0 - 0.03), r = 0.011 * k;
+    [F.handle, [0.44, 0.56]].forEach(([y0, y1], i) => { const a = C.p(F.handleX, y0, F.z0 - 0.03), b = C.p(F.handleX, y1, F.z0 - 0.03), r = 0.011 * k;
       const lv = levelAt(L, F.handleX, (y0 + y1) / 2, F.z0, [0, 0, -1]);
       const hp = G.piece(g, S().capsule(a[0], a[1], r, b[0], b[1], r), { fill: tone('#8E867A', lv), rough: 0.5, seed: 125 + i, tex: 0.3, lift: [r * 0.6, r * 0.5], liftAlpha: 0.45, liftBlur: r * 0.6 });
       G.crescent(g, hp, -r * 0.5, 0, tone('#F0E4CE', lv), 0.8); });
@@ -342,7 +347,7 @@ window.SETS = window.SETS || {};
   }
   // ---------------------------------------------------------------- the counter, the salt, the pan
   function saltPiece(g, C, L) {
-    const s = R.salt, y0 = R.counter.y, e = hEll(C, s.x, y0, s.z, s.r), t = C.p(s.x, y0 + s.h, s.z), k = e.k, r = e.rx, lv = levelAt(L, s.x, y0 + 0.05, s.z, [0, 0, -1]);
+    const s = R.salt, y0 = R.counter.y, e = hEll(C, s.x, y0, s.z, s.r), t = C.p(s.x, y0 + s.h, s.z), k = e.k, r = e.rx, lv = levelAt(L, s.x, y0 + 0.05, s.z, [0, 1, 0]);
     if (C.depth(s.x, y0, s.z) < 0.15) return;
     const ld = liftDir(L, C, s.x, y0, s.z);
     const body = S().M(t[0] - r, t[1]).L(e.x - r * 0.97, e.y).Q(e.x, e.y + e.ry * 2, e.x + r * 0.97, e.y).L(t[0] + r, t[1]).Z();
@@ -373,10 +378,10 @@ window.SETS = window.SETS || {};
     const K = R.counter, zb = K.z0 + 0.04, yb = K.y - K.t;
     if (!fwd(C) || C.depth(K.x0, K.y, K.z0) < 0.2) return;
     // the body: its front (in its own shadow under the lamp), plinth, door seams; the ends
-    surface(g, C, L, Z(zb, K.x0 + 0.03, K.x1 - 0.03, 0.0, yb), '#7A7065', { n: -1, seed: 161, kind: 'card', dark: 0.92 });
+    surface(g, C, L, Z(zb, K.x0 + 0.03, K.x1 - 0.03, 0.0, yb), '#7A7065', { n: -1, seed: 161, kind: 'card', dark: 0.92, lamp: false, nightLevel: L.warmDark });
     face(g, C, L, plPts(Z(zb - 0.002), K.x0 + 0.03, K.x1 - 0.03, 0, 0.08), '#3E3833', { n: [0, 0, -1], seed: 162, tex: 0.4 });
     [1, 2, 3].forEach(i => { const x = lerp(K.x0 + 0.03, K.x1 - 0.03, i / 4); lineW(g, C, [x, 0.1, zb - 0.003], [x, yb - 0.02, zb - 0.003], 'rgba(14,10,10,0.4)', clamp(C.k(x, 0.5, zb) * 0.003, 1, 4)); });
-    if (C.o.x > K.x1 - 0.03) surface(g, C, L, X(K.x1 - 0.03, zb, K.z1 - 0.03, 0, yb), '#6E655B', { n: 1, seed: 163, kind: 'card', dark: 0.8 });
+    if (C.o.x > K.x1 - 0.03) surface(g, C, L, X(K.x1 - 0.03, zb, K.z1 - 0.03, 0, yb), '#6E655B', { n: 1, seed: 163, kind: 'card', dark: 0.8, lamp: false, nightLevel: L.warmDark });
     if (C.o.x < K.x0 + 0.03) surface(g, C, L, X(K.x0 + 0.03, zb, K.z1 - 0.03, 0, yb), '#6E655B', { n: -1, seed: 164, kind: 'card', dark: 0.75 });
     // the slab: its top takes the lamp's pool; its lit front lip
     if (C.o.y > K.y) surface(g, C, L, Y(K.y, K.x0, K.x1, K.z0, K.z1), '#B39B83', { n: 1, seed: 165, kind: 'card', gain: 1.3 });
@@ -418,7 +423,7 @@ window.SETS = window.SETS || {};
     const body = S().M(e1.x - e1.rx, e1.y).L(e0.x - e0.rx * 0.96, e0.y); for (let i = 1; i < 12; i++) { const a = Math.PI - i / 12 * Math.PI; body.L(e0.x + Math.cos(a) * e0.rx * 0.96, e0.y + Math.sin(a) * e0.ry); }
     body.L(e0.x + e0.rx * 0.96, e0.y).L(e1.x + e1.rx, e1.y); for (let i = 1; i < 12; i++) { const a = -i / 12 * Math.PI; body.L(e1.x + Math.cos(a) * e1.rx, e1.y + Math.sin(a) * e1.ry); } body.Z();
     const bp = G.piece(g, body, { fill: tone(albedo, lv), rough: clamp(k * 0.0012, 0.3, 1.2), seed, tex: 0.5, lift: [ld[0] * k * 0.005, ld[1] * k * 0.004], liftAlpha: 0.5, liftBlur: clamp(k * 0.004, 1, 8) });
-    G.crescent(g, bp, -ld[0] * e1.rx * 0.25, 0, tone(albedo, lv.map(v => v * 0.68)), 0.85);
+    G.crescent(g, bp, ld[0] * e1.rx * 0.3, 0, tone(albedo, lv.map(v => v * 0.68)), 0.85);
     if (e1.above) { g.fillStyle = tone(albedo, lv.map(v => v * 0.45)); g.beginPath(); g.ellipse(e1.x, e1.y + e1.ry * 0.08, e1.rx * 0.86, e1.ry * 0.8, 0, 0, 7); g.fill();
       if (dusty) { g.save(); g.strokeStyle = tone('#CFC4AE', lv); g.globalAlpha = 0.6; g.lineWidth = Math.max(1, k * 0.0025); g.beginPath(); g.ellipse(e1.x, e1.y, e1.rx * 0.93, e1.ry * 0.9, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke(); g.restore(); } }
     if (dusty) G.specks(g, bp, [e1.x - e1.rx, e1.y - e1.ry, e1.rx * 2, e0.y - e1.y + e1.ry], 22, tone('#D9CDB6', lv), 'mugdust' + seed, 0.9, 0.45);
@@ -431,7 +436,7 @@ window.SETS = window.SETS || {};
     [s.x0 + 0.07, s.x1 - 0.07].forEach((x, i) => face(g, C, L, [[x - 0.008, s.y - s.t - 0.1, R.d - 0.003], [x + 0.008, s.y - s.t - 0.1, R.d - 0.003], [x + 0.008, s.y - s.t, z0 + 0.02], [x - 0.008, s.y - s.t, z0 + 0.02]], '#3A3434', { seed: 181 + i, tex: 0.3, rough: 0.4 }));
     if (C.o.y < s.y - s.t) face(g, C, L, plPts(Y(s.y - s.t), s.x0, s.x1, z0, R.d), '#5C4C40', { n: [0, -1, 0], cull: false, seed: 183, tex: 0.45 });
     let top = null; if (C.o.y > s.y) top = face(g, C, L, plPts(Y(s.y), s.x0, s.x1, z0, R.d), '#8C7664', { n: [0, 1, 0], seed: 184, tex: 0.5 });
-    if (top) { const q = scr(C, plPts(Y(s.y + 0.001), R.mugs.hers - 0.13, s.x1 - 0.01, z0 + 0.01, R.d - 0.005)); if (q) OTM.dust(g, q, Math.round(clamp(k * 0.06, 12, 160)), tone('#CDBEA6', levelAt(L, 3.1, s.y, 4.1)), 'sheldust'); }
+    if (top) { const q = scr(C, plPts(Y(s.y + 0.001), R.mugs.hers - 0.13, s.x1 - 0.01, z0 + 0.01, R.d - 0.005)); if (q) { let ar = 0; q.forEach((p, i) => { const r2 = q[(i + 1) % q.length]; ar += p[0] * r2[1] - r2[0] * p[1]; }); ar = Math.abs(ar) / 2; if (ar > 300) OTM.dust(g, q, Math.round(clamp(ar / 700, 6, 140)), tone('#CDBEA6', levelAt(L, 3.1, s.y, 4.1)), 'sheldust'); } }
     face(g, C, L, plPts(Z(z0), s.x0, s.x1, s.y - s.t, s.y), '#7A6656', { n: [0, 0, -1], seed: 185, tex: 0.45, lift: 0.004 });
     mug(g, C, L, R.mugs.his, '#B98A3C', false, 51); mug(g, C, L, R.mugs.hers, '#7E8E7A', true, 54);
   }
@@ -520,7 +525,7 @@ window.SETS = window.SETS || {};
   }
   function frontWall(g, C, L, st) {
     const D = R.door; if (fwd(C)) return;
-    const wp = surface(g, C, L, Z(0, -0.2, R.w + 0.2, 0, R.h), WALL, { n: 1, seed: 261, dark: 0.9 });
+    const wp = surface(g, C, L, Z(0, -0.2, R.w + 0.2, 0, R.h), WALL, { n: 1, seed: 261, dark: 0.9, level: L.night ? undefined : L.steps[1] });
     if (!wp) return;
     const oq = scr(C, plPts(Z(0.002), D.x0, D.x1, 0, D.h));
     if (oq) { const op = shp(oq).path(0.3, 262); g.save(); g.clip(op); if (st.landing !== false) landing(g, C, L); else { g.fillStyle = '#16181C'; g.fill(op); } g.restore();
@@ -561,7 +566,7 @@ window.SETS = window.SETS || {};
     const pq = scr(C, [at(0.12, 0.25), at(Lw - 0.12, 0.25), at(Lw - 0.12, H2 - 0.25), at(0.12, H2 - 0.25)]);
     if (pq) { g.save(); g.strokeStyle = tone(col, lv, 0.8); g.lineWidth = Math.max(1, C.k(B[0], 1, B[2]) * 0.004); g.stroke(shp(pq).path(0.5, 273)); g.restore(); }
     const kk = C.k(B[0], 1, B[2]), lp = C.p(at(Lw - 0.07, 1.02)), lq = C.p(at(Lw - 0.17, 1.0));
-    G.piece(g, S().capsule(lp[0], lp[1], 0.012 * kk, lq[0], lq[1], 0.01 * kk), { fill: tone('#8E8A82', lv), rough: 0.4, seed: 274, tex: 0.3, lift: [3, 4], liftAlpha: 0.4, liftBlur: 3 });
+    g.fillStyle = 'rgba(10,10,12,0.35)'; g.fill(S().capsule(lp[0] + 3, lp[1] + 4, 0.012 * kk, lq[0] + 3, lq[1] + 4, 0.01 * kk).path(0, 1)); g.fillStyle = tone('#8E8A82', lv); g.fill(S().capsule(lp[0], lp[1], 0.012 * kk, lq[0], lq[1], 0.01 * kk).path(0, 1));
     if (camSide) { const sp = C.p(at(Lw / 2, 1.55)); g.fillStyle = tone('#2A2826', lv); g.beginPath(); g.arc(sp[0], sp[1], Math.max(1.5, 0.007 * kk), 0, 7); g.fill(); }
     return { edge: (y) => C.p(B[0], y, B[2]), handle: lp };
   }
@@ -609,14 +614,14 @@ window.SETS = window.SETS || {};
     fridge: { insert: { cam: { x: R.strip.x + 0.012, y: R.strip.y - 0.004, z: R.fridge.z0 - 0.44, f: 1650, cy: 540 }, front: [], split: [R.strip.x + R.strip.w / 2, 1.5, R.fridge.z0],
       exposure: { night: 1.55 }, anchors: ['strip', 'stripLast', 'fridgeHandle'] } },
     counter: {
-      main: { cam: { x: 2.12, y: 1.12, z: 1.92, f: 1250, cy: 680 }, front: ['counter', 'pendant'], split: AW.salt, exposure: { night: 1.12 },
+      main: { cam: { x: 2.12, y: 1.34, z: 1.92, f: 1250, cy: 590 }, front: ['counter', 'pendant'], split: AW.salt, exposure: { night: 1.12 },
         anchors: ['himCounter', 'himCounterChest', 'salt', 'phoneSalt', 'pan', 'strip', 'stripLast', 'rect', 'rectEdge', 'nail', 'mugHis', 'mugHers', 'bulb', 'fridgeHandle'] },
       close: { cam: { x: 2.05, y: 1.25, z: 1.92, f: 1800, cy: 600 }, front: ['counter', 'pendant'], split: AW.salt, exposure: { night: 1.12 },
         anchors: ['himCounter', 'himCounterChest', 'salt', 'phoneSalt', 'pan', 'rect', 'nail', 'bulb'] } },
     couch: {
       main: { cam: { x: K.mid, y: 1.02, z: 1.65, f: 1350, cy: 470 }, front: [], split: AW.couchSeam,
         anchors: ['couchSeam', 'phoneCushion', 'seatL', 'seatR', 'armL', 'armR', 'couchHead', 'couchHeadL', 'couchHeadR', 'rect', 'rectEdge', 'nail', 'mugHis', 'mugHers', 'window'] },
-      close: { cam: { x: K.mid, y: 1.62, z: 2.62, f: 1500, cy: 540, pitch: -0.82 }, front: [], split: AW.couchSeam,
+      close: { cam: { x: K.mid, y: 1.45, z: 2.55, f: 1700, cy: 500, pitch: -0.55 }, front: [], split: AW.couchSeam,
         anchors: ['couchSeam', 'phoneCushion', 'couchHead', 'seatL', 'seatR', 'armL', 'armR'] } },
     door: {
       inside: { cam: { x: 3.45, y: 1.35, z: 2.6, f: 1300, cy: 540, yaw: Math.PI }, front: ['leaf'], split: AW.doorJamb, open: 0,
@@ -630,8 +635,8 @@ window.SETS = window.SETS || {};
         anchors: ['himBetween', 'himBetweenFeet', 'herBetween', 'herBetweenFeet', 'phoneHeld', 'handsMeet', 'bagHeld', 'strip', 'stripLast', 'rect', 'rectEdge', 'nail', 'mugHis', 'mugHers', 'couchSeam', 'phoneCushion', 'salt'] },
       her: { cam: { x: 2.85, y: 1.56, z: 1.55, f: 1900, cy: 560 }, front: [], split: AW.rectEdge, blur: 2.5, anchors: ['herBetween', 'phoneHeld', 'rect', 'rectEdge', 'nail'] },
       him: { cam: { x: 2.25, y: 1.55, z: 3.0, f: 1800, cy: 560, yaw: Math.PI }, front: [], split: AW.doorHinge, blur: 2.5, anchors: ['himBetween', 'bagHeld', 'doorHinge', 'jacket', 'bareHook'] } },
-    mug: { insert: { cam: { x: (R.mugs.his + R.mugs.hers) / 2, y: 1.34, z: 3.42, f: 1500, cy: 600 }, front: [], split: [(R.mugs.his + R.mugs.hers) / 2, 1.3, R.d], anchors: ['mugHis', 'mugHers', 'rect'] } },
-    rect: { insert: { cam: { x: R.rect.x0, y: 1.71, z: 3.10, f: 1500, cy: 540 }, front: [], split: AW.rectEdge, anchors: ['rect', 'rectEdge', 'nail'] } },
+    mug: { insert: { cam: { x: (R.mugs.his + R.mugs.hers) / 2, y: 1.44, z: 3.42, f: 1500, cy: 470 }, front: [], split: [(R.mugs.his + R.mugs.hers) / 2, 1.3, R.d], anchors: ['mugHis', 'mugHers', 'rect'] } },
+    rect: { insert: { cam: { x: R.rect.x0, y: 1.71, z: 3.35, f: 1500, cy: 500 }, front: [], split: AW.rectEdge, anchors: ['rect', 'rectEdge', 'nail'] } },
     hands: { insert: { cam: { x: R.seamX, y: 1.15, z: 1.6, f: 2200, cy: 520 }, front: [], split: AW.handsMeet, blur: 9, anchors: ['handsMeet', 'phoneHeld', 'bagHeld'] } },
   };
   const DEFAULT = { room: 'wide', fridge: 'insert', counter: 'main', couch: 'main', door: 'inside', between: 'two', mug: 'insert', rect: 'insert', hands: 'insert' };
@@ -648,7 +653,7 @@ window.SETS = window.SETS || {};
     return t === 'day' ? { kind: 'window', x: wp[0], y: wp[1], color: '#E6EBEE', dir, poster: [0.12, 0.5], levels: [0.55, 1], k: 0.62, amb: '#6A6C72' }
       : { kind: 'window, going blue', x: wp[0], y: wp[1], color: '#A9B8DA', dir, poster: [0.15, 0.55], levels: [0.5, 1], k: 0.5, amb: '#3C4458' };
   }
-  const stateKey = (view, sp, st) => [st.pan || '', st.bag || '', st.landing === false ? 'nl' : '', st.phone === 'cushion' && (view === 'couch' || view === 'room' || view === 'door') ? 'pc' : ''].join(',');
+  const stateKey = (view, sp, st) => [st.pan || '', st.bag || '', st.landing === false ? 'nl' : '', view === 'between' ? (st.door || 0) : '', st.phone === 'cushion' && (view === 'couch' || view === 'room' || view === 'door') ? 'pc' : ''].join(',');
   const _sh = {};
   // draw one layer of one shot into g (a cache canvas)
   function drawShotLayer(g, view, shotName, sp, tod, st, layer) {
@@ -657,7 +662,7 @@ window.SETS = window.SETS || {};
     const sh = _sh[view + shotName + L.tod] = _sh[view + shotName + L.tod] || {};
     const landingShot = !!sp.landing;
     const want = n => layer === 'back' ? !sp.front.includes(n) : sp.front.includes(n);
-    if (layer === 'back' && !fwd(C)) { shell(g, C, L); frontWall(g, C, L, st); return; }
+    if (layer === 'back' && !fwd(C)) { shell(g, C, L); frontWall(g, C, L, st); if (!sp.front.includes('leaf')) leaf(g, C, L, st.door || 0); return; }
     if (layer === 'front' && landingShot) { outerWall(g, C, L); return; }
     if (layer === 'back') { g.fillStyle = tone(WALL, L.night ? L.amb : L.steps[0]); g.fillRect(0, 0, W, H); }
     for (const n of ROOMLIST) {
@@ -685,7 +690,7 @@ window.SETS = window.SETS || {};
         if (blue > 0 && blue < 1) { c.g.save(); c.g.globalAlpha = blue; c.g.drawImage(layerCanvas(c, view, shotName, sp, 'dusk', s, 'back'), 0, 0); c.g.restore(); }
         const L = lights(blue >= 0.5 ? 'dusk' : tod), C = sp._cam, sh = _sh[view + shotName + L.tod] || {};
         // the door leaf, live, behind whoever stands in the doorway (views from the landing)
-        if (sp.landing) { const open = s.door == null ? sp.open : s.door; if (sp.blur) { c.g.save(); c.g.filter = `blur(${sp.blur * 0.6}px)`; leaf(c.g, C, L, open); c.g.restore(); } else leaf(c.g, C, L, open); }
+        if (sp.landing) leaf(c.g, C, L, s.door == null ? sp.open : s.door);
         // light sources into the bloom buffer: the bulb at night, the window by day
         const em = c.em;
         if (L.night && sh.bulb) { em.fillStyle = 'rgba(255,214,150,1)'; em.beginPath(); em.ellipse(sh.bulb[0], sh.bulb[1], sh.bulb[2] * 0.6, Math.max(2, sh.bulb[3] * 0.8), 0, 0, 7); em.fill(); }

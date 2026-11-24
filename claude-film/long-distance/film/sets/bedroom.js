@@ -35,6 +35,7 @@ window.SETS = window.SETS || {};
     cam.pts = a => a.map(q => cam.p(q));
     cam.xy = a => a.map(q => { const r = cam.p(q); return [r[0], r[1]]; });
     cam.sees = (n, q) => n[0] * (pos[0] - q[0]) + n[1] * (pos[1] - q[1]) + n[2] * (pos[2] - q[2]) > 0;   // back-face test
+    cam.ray = (sx, sy) => { const x1 = fl * (sx - cam.cx) / f, y2 = -(sy - cam.cy) / f, dy = y2 * cp + sp, z1 = -y2 * sp + cp; return [x1 * cyw + z1 * syw, dy, -x1 * syw + z1 * cyw]; };   // the world ray through a screen point
     if (o.place) { const q = cam.p(o.place[0]); cam.cx += o.place[1] - q[0]; cam.cy += o.place[2] - q[1]; }
     return cam;
   }
@@ -232,8 +233,8 @@ window.SETS = window.SETS || {};
   const shadeDay = n => 0.5 + 1.7 * (dot(n, dayL) - dayL[1]);
 
   // ---------------------------------------------------------------- the soft goods (height fields)
-  const hisTop = x => 1.505 + (x + 0.012) * 0.42 + 0.018 * Math.sin(x * 17 + 1.3);           // the line his duvet is thrown back along
-  const foldW = x => 0.10 + Math.max(0, -x) * 0.17;                                          // the turned-back flap, wider at the outer corner
+  const hisTop = x => (x > -0.5 ? 1.625 : 1.625 - (-0.5 - x) * 1.4) + 0.016 * Math.sin(x * 17 + 1.3);   // up to his shoulder; the outer corner thrown back
+  const foldW = x => 0.09 + Math.max(0, -x - 0.3) * 0.3;                                     // the turned-back flap, wider at the outer corner
   const SPINE = [[-0.30, 1.60, 0.25], [-0.40, 1.18, 0.23], [-0.20, 0.80, 0.165], [-0.36, 0.42, 0.11], [-0.42, 0.20, 0.07]];
   function bodyH(x, z) {
     let acc = 0;
@@ -440,7 +441,7 @@ window.SETS = window.SETS || {};
     // the ironed crease across its near end, ruler straight
     { const yy = MT + xp.ht, c1 = cam.xy([[xp.cx + xp.hw * 0.62, yy, xp.cz - xp.hd * 0.8], [xp.cx + xp.hw * 0.62, yy, xp.cz + xp.hd * 0.8]]); onPieces(g, [herP], t => { t.lineCap = 'round'; t.strokeStyle = 'rgba(22,28,44,0.45)'; t.lineWidth = Math.max(1.5, 0.004 * kT); t.beginPath(); t.moveTo(c1[0][0], c1[0][1]); t.lineTo(c1[1][0], c1[1][1]); t.stroke(); t.strokeStyle = 'rgba(120,138,178,0.35)'; t.lineWidth = Math.max(1, 0.002 * kT); t.translate(0, -Math.max(1.5, 0.004 * kT)); t.beginPath(); t.moveTo(c1[0][0], c1[0][1]); t.lineTo(c1[1][0], c1[1][1]); t.stroke(); }); }
     // ---- his duvet over the shape of him: shoulder, hip, knees drawn up; the flap turned back is front() (it crosses his chest)
-    const hisD = F(hisDuvetH, -0.87, -0.012, 0.10, 1.52, N.hisDuvet, 141, { lift: view === 'foot' ? [0, 12] : [-6, 16], liftAlpha: 0.8, liftBlur: 16, bands: [0.3, 0.6], wob: 0.05 });
+    const hisD = F(hisDuvetH, -0.87, -0.012, 0.10, 1.64, N.hisDuvet, 141, { lift: view === 'foot' ? [0, 12] : [-6, 16], liftAlpha: 0.8, liftBlur: 16, bands: [0.3, 0.6], wob: 0.05 });
     rcres(g, hisD, 0, -0.012 * kT, '#3D4A6C', 0.9);
     {
       const P3 = (x, z) => { const y = hisDuvetH(x, z); return y == null ? null : [x, y + 0.003, z]; };
@@ -510,7 +511,7 @@ window.SETS = window.SETS || {};
   // his duvet's turned-back flap (front(): it lies across his chest, over the rig's body)
   function hisFlap(g, cam) {
     const kT = cam.k(0, MT, 1.6), step = clamp(7 / kT, 0.0025, 0.014), blur = clamp(step * kT * 0.42, 1.8, 6);
-    const fl = field(g, cam, { x0: -0.87, x1: -0.014, z0: 1.0, z1: 1.64, h: hisFoldH, step, blur, shade: shadeNight, cols: N.hisFold, bands: [0.3, 0.6], seed: 181, kind: 'cloth', tex: 0.5, lift: cam.flop ? [-6, 12] : [0, 10], liftAlpha: 0.75, liftBlur: 12 });
+    const fl = field(g, cam, { x0: -0.87, x1: -0.014, z0: 0.95, z1: 1.66, h: hisFoldH, step, blur, shade: shadeNight, cols: N.hisFold, bands: [0.3, 0.6], seed: 181, kind: 'cloth', tex: 0.5, lift: cam.flop ? [-6, 12] : [0, 10], liftAlpha: 0.75, liftBlur: 12 });
     const P3 = (x, z) => { const y = hisFoldH(x, z); return y == null ? null : [x, y + 0.003, z]; };
     rcres(g, fl, cam.flop ? 0.004 * kT : 0, -0.012 * kT, '#4E5E84', 0.9);
     [[-0.7, 0.5], [-0.2, 0.4]].forEach(([x, u], i) => { const pts = []; for (let j = 0; j <= 5; j++) { const xx = x + j * 0.03 - 0.07, top = hisTop(xx), w = foldW(xx), q = P3(xx, top - w * (u + 0.25 * Math.sin(j + i))); if (q) pts.push(q); } if (pts.length > 2) onPieces(g, [fl], t => crease(t, cam.xy(pts), { w: Math.max(3, 0.007 * kT), dy: -2, dark: 'rgba(10,13,22,0.45)', light: 'rgba(86,102,138,0.3)' })); });
@@ -560,7 +561,7 @@ window.SETS = window.SETS || {};
       const dx = (MG + LB[0]) * res, dy = (MG + LB[1]) * res, sh = p => p && { cv: p.cv, x: p.x - dx, y: p.y - dy };
       phoneLight(g, cam, [pcs.sheet, pcs.hisP, pcs.herP, pcs.hisD, pcs.herD, pcs.herF].map(sh).concat(pcs.hb || []), 'back');
     }, res);
-    const FB = fieldBox(cam, hisFoldH, -0.87, -0.014, 0.9, 1.6, 40);
+    const FB = fieldBox(cam, hisFoldH, -0.87, -0.014, 0.9, 1.66, 40);
     const flapPiece = {};
     const flap = (c, res) => boxLayer(c, name + ':flap', FB, g => { flapPiece[res] = hisFlap(g, cam); }, res);
     const flapLight = (c, res) => boxLayer(c, name + ':flaplight', FB, g => { if (!flapPiece[res]) { const tg = O.makeCanvas(g.canvas.width, g.canvas.height).getContext('2d'); tg.setTransform(g.getTransform()); flapPiece[res] = hisFlap(tg, cam); } phoneLight(g, cam, [flapPiece[res]], 'front'); }, res);
@@ -724,9 +725,8 @@ window.SETS = window.SETS || {};
     const P = (u, v) => { v += 0.045; const yy = ry - 0.01 - v * Math.cos(sw) + u * Math.sin(sw) * 0.3, uu = u * Math.cos(sw * 0.3); return [rx + uu * c, yy, z + uu * s]; };
     const hook = cam.xy([[rx, ry + 0.004, z], [rx, ry - 0.075, z]]); g.strokeStyle = '#8E8F8C'; g.lineWidth = Math.max(1.5, 0.004 * k); g.lineCap = 'round';
     g.beginPath(); g.moveTo(hook[1][0], hook[1][1]); g.lineTo(hook[1][0], hook[0][1] + 0.004 * k); g.arc(hook[1][0] + 0.011 * k, hook[0][1] + 0.004 * k, 0.011 * k, Math.PI, Math.PI * 1.9); g.stroke();
-    const outer = cam.xy([P(0, 0.0), P(0.12, 0.045), P(0.21, 0.085), P(0.215, 0.105), P(-0.215, 0.105), P(-0.21, 0.085), P(-0.12, 0.045)]);
-    const inner = cam.xy([P(0, 0.024), P(0.165, 0.086), P(-0.165, 0.086)]);
-    const sh = O.S().poly(outer).path(0.4, seed); sh.addPath(O.S().poly(inner.slice().reverse()).path(0.3, seed + 1));
+    const sh = new Path2D();
+    [[P(0, 0.0), P(0.215, 0.086), P(0.21, 0.104), P(0, 0.026)], [P(0, 0.0), P(0, 0.026), P(-0.21, 0.104), P(-0.215, 0.086)], [P(-0.205, 0.092), P(0.205, 0.092), P(0.205, 0.106), P(-0.205, 0.106)]].forEach((q, i) => sh.addPath(O.S().poly(cam.xy(q)).path(0.3, seed + i)));
     shadow(g, sh, 0.035 * k, 0.02 * k, 4, 0.28, '#2A2A2E');
     GG.piece(g, sh, { fill: D.hanger, tex: 0.4, kind: 'card', seed });
     cres(g, sh, 0, -2, D.hangerHi, 0.8);
@@ -803,33 +803,25 @@ window.SETS = window.SETS || {};
   }
   function drawDoor(g, cam, which, a) {
     const d = doorQuad(which, a), w = R.wardrobe;
-    const n = [Math.cos(d.ang), 0, which === 'left' ? Math.sin(d.ang) : -Math.sin(d.ang)];     // the outer face's normal
-    const mid = [(w.x1 + d.free[0]) / 2, 1, (d.hinge[1] + d.free[1]) / 2], outSide = cam.sees(n, mid);
-    const tex = doorTex(outSide ? 'out' : 'in'), S = 28, tw = tex.width, th = tex.height;
-    const P3 = u => [lerp(w.x1, d.free[0], u), lerp(d.hinge[1], d.free[1], u)];
-    // which texture column sits at the hinge: the outer face's knob is at the free edge
-    g.save();
-    const T0 = g.getTransform();
-    for (let i = 0; i < S; i++) {
-      const u0 = i / S, u1 = (i + 1) / S, A = P3(u0), B = P3(u1);
-      const at = cam.p(A[0], d.y1, A[1]), ab = cam.p(A[0], d.y0, A[1]), bt = cam.p(B[0], d.y1, B[1]);
-      const sw = tw / S, sx = i * sw;
-      const dxs = bt[0] - at[0]; if (Math.abs(dxs) < 0.05) continue;
-      g.setTransform(T0); g.transform(dxs / sw + Math.sign(dxs) * 0.6 / sw, (bt[1] - at[1]) / sw, 0, (ab[1] - at[1]) / th, at[0], at[1]);
-      g.drawImage(tex, sx, 0, sw, th, 0, 0, sw, th);
-    }
-    g.restore();
+    const n = [Math.cos(d.ang), 0, which === 'left' ? Math.sin(d.ang) : -Math.sin(d.ang)];       // the outer face's normal
+    const D3 = (u, y) => [lerp(w.x1, d.free[0], u), y, lerp(d.hinge[1], d.free[1], u)];          // a point on the door: u 0 at the hinge .. 1 at the free edge
+    const outSide = cam.sees(n, D3(0.5, 1)), k = cam.k(...D3(0.5, 1));
+    const shp = poly(cam.xy([D3(0, d.y0), D3(1, d.y0), D3(1, d.y1), D3(0, d.y1)])).path(0.6, which === 'left' ? 611 : 612);
+    g.save(); g.fillStyle = outSide ? D.door : D.doorIn; g.fill(shp);
+    g.clip(shp); g.globalCompositeOperation = 'overlay'; g.globalAlpha = 0.55; g.fillStyle = GG.texPattern(g, 'card', which === 'left' ? 601 : 602); g.fill(shp); g.restore();
+    // the outer face's two recessed panels; the inner face plain
+    if (outSide) [[0.1, 0.9, 0.08, 0.5], [0.1, 0.9, 0.56, 0.96]].forEach(([u0, u1, f0, f1], i) => {
+      const y0 = lerp(d.y0, d.y1, f0), y1 = lerp(d.y0, d.y1, f1), q = cam.xy([D3(u0, y0), D3(u1, y0), D3(u1, y1), D3(u0, y1)]), p = poly(q).path(0.5, 603 + i);
+      g.strokeStyle = 'rgba(60,58,54,0.45)'; g.lineWidth = Math.max(2, 0.006 * k); g.stroke(p); g.save(); g.translate(-1.5, -1.5); g.strokeStyle = 'rgba(232,228,218,0.5)'; g.lineWidth = Math.max(1, 0.003 * k); g.stroke(p); g.restore();
+    });
     // its light: posterised by how the face turns to the window
     const Lw = nrm([0.9, 0.2, 0.5]), lit = Math.max(0, dot(outSide ? n : [-n[0], 0, -n[2]], Lw)), band = lit > 0.75 ? 0 : lit > 0.35 ? 0.16 : 0.32;
-    const q = cam.xy([[w.x1, d.y0, d.hinge[1]], [d.free[0], d.y0, d.free[1]], [d.free[0], d.y1, d.free[1]], [w.x1, d.y1, d.hinge[1]]]);
-    const shp = poly(q).path(0.6, which === 'left' ? 611 : 612);
     if (band) { g.save(); g.globalAlpha = band; g.fillStyle = '#2A2B30'; g.fill(shp); g.restore(); }
     g.save(); g.strokeStyle = 'rgba(60,58,54,0.5)'; g.lineWidth = 1.5; g.stroke(shp); g.restore();
     // the free edge's thickness and the knob
-    const e = cam.xy([[d.free[0], d.y0, d.free[1]], [d.free[0], d.y1, d.free[1]]]);
+    const e = cam.xy([D3(1, d.y0), D3(1, d.y1)]);
     g.strokeStyle = D.edge; g.lineWidth = Math.max(2, 0.018 * cam.k(d.free[0], 1, d.free[1]) * Math.abs(Math.sin(d.ang + 0.2))); g.beginPath(); g.moveTo(e[0][0], e[0][1]); g.lineTo(e[1][0], e[1][1]); g.stroke();
-    if (outSide) { const kn = cam.p(lerp(w.x1, d.free[0], 0.9) + 0.02 * Math.cos(d.ang), 1.02, lerp(d.hinge[1], d.free[1], 0.9)); const kk = cam.k(d.free[0], 1, d.free[1]); g.fillStyle = 'rgba(30,28,26,0.4)'; g.beginPath(); g.arc(kn[0] + 2, kn[1] + 3, 0.014 * kk, 0, 7); g.fill(); g.fillStyle = D.knob; g.beginPath(); g.arc(kn[0], kn[1], 0.013 * kk, 0, 7); g.fill(); }
-    // its shadow on the floor and wall when open
+    if (outSide) { const kn = cam.p(...D3(0.9, 1.02)), kk = cam.k(d.free[0], 1, d.free[1]); g.fillStyle = 'rgba(30,28,26,0.4)'; g.beginPath(); g.arc(kn[0] + 2, kn[1] + 3, 0.014 * kk, 0, 7); g.fill(); g.fillStyle = D.knob; g.beginPath(); g.arc(kn[0], kn[1], 0.013 * kk, 0, 7); g.fill(); }
     return shp;
   }
   function wardrobeView(name) {
@@ -900,6 +892,15 @@ window.SETS = window.SETS || {};
     gl.strokeStyle = 'rgba(255,214,186,0.9)'; gl.lineWidth = Math.max(2, h * 0.08); gl.beginPath(); gl.moveTo(-w / 2 + h * 0.2, -h / 2); gl.lineTo(w / 2 - h * 0.2, -h / 2); gl.stroke();
     gl.restore();
   }
+  // a stand-in for him (B1's head, sculpted once and kept), only to check the anchors against a real head; the film's comes from RIG
+  let standHead = null;
+  function standInHead(c, v) {
+    const f = v.anchors.face, k = f[2];
+    if (!standHead) standHead = GG.head({ who: 'him', x: f[0] - 0.02 * k, y: f[1] - 0.01 * k, s: 0.31 * k, yaw: -0.42, pitch: 0.05, roll: -1.36, eyes: 0.06, smile: 0.4, gaze: [0, 0.3],
+      mode: 'grain', seed: 7, ss: 1.2, neckLen: 0.7, bounds: [-0.75, -0.72, 0.75, 1.0], stubble: 0.1, neckShade: 0.35, aoK: 0.6, amb: '#323C58',
+      lights: [{ pos: [(v.anchors.phone[0] - f[0]) / (0.31 * k), (v.anchors.phone[1] - f[1]) / (0.31 * k), 0.9], col: '#FFC09A', k: 2.0, falloff: 1.4, wrap: 0.25 }, { dir: [0.3, -0.7, 0.4], col: '#7E92C0', k: 0.22, poster: [0.4], levels: [1] }] });
+    GG.drawHead(c.g, standHead, { shadow: { dx: 10, dy: 10, blur: 14, alpha: 0.6 }, tex: 0.45, texSeed: 17 });
+  }
   const demo = (name, view, s, extra) => ({ name, draw(c, t) { const v = views[view]; const st = typeof s === 'function' ? s(t) : s; v.back(c, t, st); if (extra) extra(c, v, t); v.front(c, t, st); } });
   SETS.bedroom = {
     views, room: R, bag,
@@ -909,6 +910,7 @@ window.SETS = window.SETS || {};
       demo('foot: night to later (dissolve)', 'foot', t => ({ tod: 'night', later: clamp((t - 0.5) / 1, 0, 1) })),
       demo('across: night (B1)', 'across', { tod: 'night' }, (c, v) => standInPhone(c, v)),
       demo('across: later, no glow', 'across', { tod: 'later', glow: 0 }),
+      demo('across: with a stand-in head (B1, for the anchors)', 'across', { tod: 'night' }, (c, v) => { standInHead(c, v); standInPhone(c, v); }),
       demo('hand: the smooth pillow', 'hand', { tod: 'night' }, (c, v) => standInPhone(c, v)),
       demo('wardrobe: doors opening', 'wardrobe', t => ({ doors: clamp(t / 1.6, 0, 1), swing: clamp((t - 0.8) / 0.4, 0, 1) * Math.exp(-Math.max(0, t - 1.2) * 0.8) })),
       demo('wardrobe: open, the bag on the shelf', 'wardrobe', { doors: 1, bag: true }),

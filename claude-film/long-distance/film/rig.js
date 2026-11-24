@@ -128,7 +128,7 @@
   // ================================================================ the sculpture renderer (the kit's render3D, with near-surface ray starts)
   function render3D(o) {
     const mode = o.mode || 'grain', grain = mode === 'grain', gloss = mode === 'gloss', flash = mode === 'flash';
-    const M = o.M, sdf0 = o.sdf, sdf = _prof.on ? (a, b2, c2) => { _prof.calls++; return sdf0(a, b2, c2); } : sdf0, s = o.s, ss = o.ss || 2, b = o.bounds, out = o.out, sd = o.seed || 1, warpAmp = o.warp || 0;
+    const M = o.M, sdf = o.sdf, s = o.s, ss = o.ss || 2, b = o.bounds, out = o.out, sd = o.seed || 1, warpAmp = o.warp || 0;
     const w = Math.ceil((b[2] - b[0]) * s), h = Math.ceil((b[3] - b[1]) * s), w2 = Math.ceil(w * ss), h2 = Math.ceil(h * ss);
     const cv = makeCanvas(w2, h2), cg = cv.getContext('2d'), img = cg.createImageData(w2, h2), D = img.data;
     const T = [[M[0][0], M[1][0], M[2][0]], [M[0][1], M[1][1], M[2][1]], [M[0][2], M[1][2], M[2][2]]];
@@ -153,7 +153,7 @@
       let m = 1e9; for (let b2 = -1; b2 <= 1; b2++) for (let a2 = -1; a2 <= 1; a2++) { const x2 = ci + a2, y2 = cj + b2; if (x2 < 0 || y2 < 0 || x2 >= cw || y2 >= chh) continue; const v = ct[y2 * cw + x2]; if (v >= 0 && v < m) m = v; }
       cn[cj * cw + ci] = m < 1e9 ? m : -1;
     }
-    const MARGIN = _margin.v;
+    const MARGIN = 0.1;                                   // start this far (head units) in front of the nearest coarse hit
     for (let j = 0; j < h2; j++) for (let i = 0; i < w2; i++) {
       const tn = cn[(j >> 3) * cw + (i >> 3)]; if (tn < 0) continue;
       let px = i, py = j; const wx = (i / ss) + b[0] * s, wy = (j / ss) + b[1] * s;
@@ -165,7 +165,6 @@
       const tEnd = Math.min(ex * 2, tn + (o.depth || 1.5));
       for (let k = 0; k < 110 && t < tEnd; k++) { x = ox + dlx * t; y = oy + dly * t; z = oz + dlz * t; const d = sdf(x, y, z); if (d < 0.0008) { hit = true; break; } t += d * 0.92; }
       if (!hit) continue;
-      _prof.px++;
       const mat = o.matOf ? o.matOf(x, y, z) : 0;
       const a1 = sdf(x + e, y - e, z - e), a2 = sdf(x - e, y - e, z + e), a3 = sdf(x - e, y + e, z - e), a4 = sdf(x + e, y + e, z + e);
       let nx = a1 - a2 - a3 + a4, ny = -a1 - a2 + a3 + a4, nz = -a1 + a2 - a3 + a4; const nl = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1; nx /= nl; ny /= nl; nz /= nl;
@@ -202,7 +201,6 @@
     return { canvas: outC, x: b[0] * s, y: b[1] * s, w, h };
   }
 
-  const _margin = { v: 0.1 }; const _prof = { calls: 0, px: 0, on: false };
   // ================================================================ SDF primitives (as the kit's)
   const rotM = GG.rotM, basisM = GG.basisM;
   const smin = (a, b, k) => { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; };
@@ -397,7 +395,9 @@
         return;
       }
       out[0] = skin[0]; out[1] = skin[1]; out[2] = skin[2];
-      if (!gloss && y > 0.42 && z > -0.2) { const k = (spec.neckShade == null ? 0.3 : spec.neckShade) * ss01(0.36, 0.5, y); out[0] *= 1 - k; out[1] *= 1 - k * 1.05; out[2] *= 1 - k * 0.95; }
+      // the jaw's cast shadow on the throat (the renderer casts none): strongest right under the jaw, a cut edge further down
+      if (!gloss && y > 0.38 && z > -0.24) { const ns = spec.neckShade == null ? 0.3 : spec.neckShade; const edge = 0.56 + 0.05 * (vnoise(x * 18, z * 18, sd + 95) - 0.5) + 0.04 * Math.abs(x);
+        const k = ns * ss01(0.36, 0.44, y) * (grain ? (y < edge ? 1 : 0.35) : 1 - 0.65 * ss01(edge - 0.04, edge + 0.04, y)); out[0] *= 1 - k; out[1] *= 1 - k * 1.05; out[2] *= 1 - k * 0.95; }
       const bd = ((ax - 0.165) * (ax - 0.165) + (y - 0.13) * (y - 0.13)) / 0.006; const bk = C.blushK * Math.exp(-bd) * (flash ? 0.3 : gloss ? 1.6 : 1) * (1 - (spec.pale || 0) * 0.8);
       out[0] += (blushC[0] - out[0]) * bk; out[1] += (blushC[1] - out[1]) * bk; out[2] += (blushC[2] - out[2]) * bk;
       if (ax > 0.3 && z < 0.06 && y > -0.04 && y < 0.18) { const ix = (y - 0.075) / 0.07, iz = (z + 0.04) / 0.045; if (ix * ix + iz * iz < 1 && Math.abs(nlx) > 0.5) { out[0] *= 0.72; out[1] *= 0.62; out[2] *= 0.6; } }
@@ -446,7 +446,7 @@
       }
       if (bands) bands(x, y, z, out, isLip);
     }
-    const R = (spec._kitR ? GG.render3D : render3D)({ sdf, matOf: () => { const cs = comp.s, ce = comp.e, chh = comp.h; return (chh <= cs + 0.002 && chh <= ce + 0.002) ? 2 : (ce < cs ? 1 : 0); },
+    const R = render3D({ sdf, matOf: () => { const cs = comp.s, ce = comp.e, chh = comp.h; return (chh <= cs + 0.002 && chh <= ce + 0.002) ? 2 : (ce < cs ? 1 : 0); },
       albedo, out, M, s, ss: spec.ss, bounds: b, lights: spec.lights, amb: spec.amb, mode, seed: sd, warp: warpAmp, aoPoster: spec.aoPoster, aoK: spec.aoK });
     return Object.assign(R, { M });
   }
@@ -508,8 +508,8 @@
 
   // ================================================================ heads
   const HEAD_DEF = {
-    him: { hair: 'short', lids: 0.72, neck: 0.6, neckR: 0.205, stubble: 0.1, seed: 7, neckShade: 0.32, aoK: 0.6 },
-    her: { hair: 'bob', lids: 0.78, neck: 0.56, neckR: 0.172, stubble: 0, seed: 41, part: 0.14, neckShade: 0.26, aoK: 0.7 },
+    him: { hair: 'short', lids: 0.72, neck: 0.6, neckR: 0.205, stubble: 0.1, seed: 7, neckShade: 0.52, aoK: 0.5 },
+    her: { hair: 'bob', lids: 0.78, neck: 0.56, neckR: 0.172, stubble: 0, seed: 41, part: 0.14, neckShade: 0.34, aoK: 0.7 },
     coworker: { hair: 'short', lids: 0.7, neck: 0.55, neckR: 0.21, stubble: 0.2, seed: 63, neckShade: 0.3, aoK: 0.6 },
   };
   // mouth steps (0 closed .. 3 wide) as the kit's opening; small: faces are quiet
@@ -706,7 +706,7 @@
     // the phone held up, screen to the viewer, fingers round its far edge, thumb on the near edge (B3). thumbReach 0..1 moves the
     // thumb across the glass (typing, swiping); tap 0..1 lifts it
     phone: p => { const r = p.reach || 0, tp = p.tap || 0; return { basis: { x: [-1, -0.08, 0.05], z: [0.05, 0.1, -1] }, fingers: FING.grip,
-      thumb: [lerp(1.15, 1.55, r), lerp(0.55, 0.15, r) - tp * 0.25, lerp(0.25, 0.45, r), lerp(0.2, 0.3, r)], fdir: [0.62, 0.72, 0.25], fore: 0.5, foreR: 0.12, grip: [0.38, -0.02, 0.1] }; },
+      thumb: [lerp(1.15, 1.55, r), lerp(0.55, 0.15, r) - tp * 0.25, lerp(0.25, 0.45, r), lerp(0.2, 0.3, r)], fdir: [0.3, 0.95, 0.2], fore: 0.5, foreR: 0.12, grip: [0.5, -0.32, 0.12] }; },
     // the phone in the palm, seen from above as the insert sees it: fingers behind, thumb over the glass (typing, swiping)
     thumb: p => { const r = p.reach == null ? 0.5 : p.reach, tp = p.tap || 0; return { basis: { x: [-0.25, -1, 0.0], z: [0.0, 0.1, -1] }, fingers: FING.grip,
       thumb: [lerp(1.0, 1.6, r), lerp(0.75, 0.1, r) - tp * 0.3, lerp(0.15, 0.5, r), lerp(0.1, 0.35, r)], fdir: [0.35, 1, 0.1], fore: 0.6, foreR: 0.13, grip: [0.4, -0.05, 0.12] }; },
@@ -791,7 +791,6 @@
     return { x, y, s, rot, flip, key, entry: e, tips: tipsL.slice(0, 4).map(W2), thumb: tipsL[4] ? W2(tipsL[4]) : null, grip: W2(gr), elbow: e.EL ? W2(e.EL) : null, shoulder: e.UA ? W2(e.UA) : null,
       knuckles: W2([0.47, -0.02, 0.03]), angle: Math.atan2(W2([1, 0, 0])[1] - y, W2([1, 0, 0])[0] - x) };
   };
-  G.__RIGI = { sculptHead, makeSDF, setMargin: v => { _margin.v = v; }, calls: () => _prof.calls, pxs: () => _prof.px };
   // ================================================================ cut paper: the figure engine
   // A figure is a list of ops in draw order, in figure space (head units, origin at the point between the eyes, y down):
   //   {type:'paper', key, box:[x0,y0,x1,y1], draw(pen), breath}   a cut-paper layer, cut once per key and kept
@@ -1007,7 +1006,7 @@
       // the head pivots on the neck: wherever it turns, its neck meets the collar
       const hp = Object.assign({ yaw: (back ? Math.PI - tau : tau) * 0.8 }, o.head || {}); const Mh = rotM(hp.yaw || 0, hp.pitch || 0, hp.roll || 0);
       const nkx = Mh[0][1] * 0.6 + Mh[0][2] * -0.1, nky = Mh[1][1] * 0.6 + Mh[1][2] * -0.1;
-      const at = o.headAt || [nx * (back ? -1 : 1) * 0 + nx - nkx, 0.6 - nky];
+      const at = o.headAt || [nx - nkx, 0.6 - nky];
       ops.push({ type: 'head', p: hp, at });
     }
     if (o.extra && o.extra.afterHead) ops.push(...o.extra.afterHead);
@@ -1066,12 +1065,21 @@
       const w = Pp.armW; const rolled = spec.roll ? clamp(spec.roll, 0, 1) : 0;      // rolled: the sleeve ends between the wrist and the elbow
       const Wend = rolled ? V.lerp(Wr, E, rolled * 0.75) : Wr;
       ops.push({ type: 'paper', key: key + ',sl', box, draw(pen) {
-        const lp = limbPts(S0, E, Wend, w[0], w[1], rolled ? lerp(w[2], w[1], rolled * 0.6) : w[2], { bulge: 0.02, cap: true });
-        const sh = pen.blob(lp.pts); const col = cos.body;
-        const path = pen.piece(sh, pen.col(col), { seed: 300 + (side === 'L' ? 0 : 11), kind: cos.kind, tex: cos.tex * 0.8, lift: [0.025, 0.035] });
-        pen.bands(path, col, { seed: 402 });
-        pen.shade(path, col, { lit: 0.045, core: 0.07, litA: 0.6, coreA: 0.65 });
-        if (lp.bent) { const ip = lp.innerPt; [[-0.22, 0.05], [-0.14, -0.06], [0.16, 0.06]].forEach(([d, off], i) => { const a = V.add(ip, V.mul(i < 2 ? lp.u1 : lp.u2, d)), b = V.add(ip, V.mul(V.perp(i < 2 ? lp.u1 : lp.u2), off * (V.dot(V.perp(lp.u1), lp.inner) > 0 ? -1 : 1))); pen.fold([a, V.lerp(a, b, 0.5), b], col, { w: 0.02, alpha: 0.6 }); }); }
+        const wEnd = rolled ? lerp(w[2], w[1], rolled * 0.6) : w[2];
+        const lp = limbPts(S0, E, Wend, w[0], w[1], wEnd, { bulge: 0.02, cap: true });
+        const col = cos.body; const folded = V.dot(lp.u1, lp.u2) < -0.35;
+        let path;
+        if (!folded) { path = pen.piece(pen.blob(lp.pts), pen.col(col), { seed: 300 + (side === 'L' ? 0 : 11), kind: cos.kind, tex: cos.tex * 0.8, lift: [0.025, 0.035] });
+          pen.bands(path, col, { seed: 402 }); pen.shade(path, col, { lit: 0.045, core: 0.07, litA: 0.6, coreA: 0.65 }); }
+        else {
+          // folded hard (a fork at his mouth): the upper arm and the forearm cut as two pieces, the forearm over it, the elbow round
+          const up = limbPts(S0, V.lerp(S0, E, 0.5), V.add(E, V.mul(lp.u1, w[1] * 0.4)), w[0], lerp(w[0], w[1], 0.5), w[1], { bulge: 0.02, cap: true });
+          const pu = pen.piece(pen.blob(up.pts), pen.col(col), { seed: 301 + (side === 'L' ? 0 : 11), kind: cos.kind, tex: cos.tex * 0.8, lift: [0.025, 0.035] }); pen.bands(pu, col, { seed: 402 }); pen.shade(pu, col, { lit: 0.045, core: 0.07, litA: 0.6, coreA: 0.65 });
+          const fo = limbPts(V.add(E, V.mul(lp.u2, -w[1] * 0.35)), V.lerp(E, Wend, 0.5), Wend, w[1] * 1.05, lerp(w[1], wEnd, 0.5), wEnd, { cap: true });
+          path = pen.piece(pen.blob(fo.pts), pen.col(col), { seed: 302 + (side === 'L' ? 0 : 11), kind: cos.kind, tex: cos.tex * 0.8, lift: [0.03, 0.045] }); pen.bands(path, col, { seed: 402 }); pen.shade(path, col, { lit: 0.045, core: 0.07, litA: 0.6, coreA: 0.65 });
+          pen.fold([V.add(E, V.mul(lp.u2, w[1] * 0.3)), V.add(E, V.add(V.mul(lp.u2, w[1] * 0.75), V.mul(lp.n2, w[1] * 0.25)))], col, { w: 0.02, alpha: 0.55 });
+        }
+        if (lp.bent && !folded) { const ip = lp.innerPt; [[-0.22, 0.05], [-0.14, -0.06], [0.16, 0.06]].forEach(([d, off], i) => { const a = V.add(ip, V.mul(i < 2 ? lp.u1 : lp.u2, d)), b = V.add(ip, V.mul(V.perp(i < 2 ? lp.u1 : lp.u2), off * (V.dot(V.perp(lp.u1), lp.inner) > 0 ? -1 : 1))); pen.fold([a, V.lerp(a, b, 0.5), b], col, { w: 0.02, alpha: 0.6 }); }); }
         // set-in sleeve seam at the shoulder (coat, sweater)
         if (cos.kind === 'wool') pen.fold([V.add(S0, V.mul(lp.n1, -w[0] * 0.45)), V.add(S0, V.mul(lp.u1, 0.1)), V.add(S0, V.mul(lp.n1, w[0] * 0.45))], col, { w: 0.016, alpha: 0.45 });
         if (rolled) { // the rolled cuff
@@ -1130,16 +1138,16 @@
       const outline = [];
       outline.push([nk.l + 0.02, T[0][0] + 0.02]);
       outline.push([top.l, T[1][0] - 0.02]);
-      outline.push([SL[0] - 0.02, SL[1] - 0.06]);
-      outline.push([SL[0] - 0.12, SL[1] + 0.12]);
+      outline.push([SL[0] + 0.02, SL[1] - 0.14]);
+      outline.push([SL[0] - 0.12, SL[1] + 0.06]);
       L0.forEach(p => { if (p[1] > SL[1] + 0.35) outline.push(p); });
       const hemL = [L0[L0.length - 1][0], yB], hemR = [R0[R0.length - 1][0], yB];
       outline.push([hemL[0] + 0.02, yB + 0.02, 1]);
       if (o.costume === 'coat') { outline.push([lerp(hemL[0], hemR[0], 0.5), yB + 0.05]); }
       outline.push([hemR[0] - 0.02, yB + 0.02, 1]);
       R0.slice().reverse().forEach(p => { if (p[1] > SR[1] + 0.35) outline.push(p); });
-      outline.push([SR[0] + 0.12, SR[1] + 0.12]);
-      outline.push([SR[0] + 0.02, SR[1] - 0.06]);
+      outline.push([SR[0] + 0.12, SR[1] + 0.06]);
+      outline.push([SR[0] - 0.02, SR[1] - 0.14]);
       outline.push([top.r, T[1][0] - 0.02]);
       outline.push([nk.r - 0.02, T[0][0] + 0.02]);
       const col = cos.body; const sh = pen.blob(outline);
@@ -1314,13 +1322,13 @@
   // standing with the bag held low in front, from underneath, thumb on the broken zip; head bowed, shoulders a little in (Q09, Q10)
   POSES.him.bag = p => {
     const back = p.view === 'back'; const z = p.zip || 0;
-    const bagC = back ? [1.12, 2.3] : [0.3, 2.86];
+    const bagC = back ? [1.2, 1.55] : [0.3, 2.86];
     const hold = { type: 'paper', key: 'bagprop' + (back ? 'b' : ''), box: [bagC[0] - 0.6, bagC[1] - 0.45, bagC[0] + 0.6, bagC[1] + 0.45], breath: 0.6, draw(pen) { bagShape(pen, bagC, 0.74); } };
-    const thumbAt = back ? [bagC[0] + 0.3, bagC[1] + 0.05] : [bagC[0] + 0.38, bagC[1] - 0.02];
+    const thumbAt = back ? [bagC[0] - 0.42, bagC[1] + 0.1] : [bagC[0] + 0.38, bagC[1] - 0.02];
     const thumb = { type: 'hand', name: 'thumb', pose: 'bag', p: { zip: z, only: 'thumb', flip: !back, shadow: { alpha: 0.3 } }, at: thumbAt, fore: back ? null : [1, 0.35], breath: 0.6 };
     const r = person({ who: 'him', costume: p.costume || 'sweater', tau: back ? 2.6 : (p.tau == null ? 0.45 : p.tau), back, lean: 0.06, shrug: 0.25, head: faceOf(p, back ? { yaw: 1.45, pitch: 0.25, roll: 0.78, lids: 0.3, gaze: [0, 0.7] } : { yaw: 0.35, pitch: 0.42, lids: 0.32, gaze: [0, 0.6] }, 3),
-      arms: back ? { L: { to: [0.3, 2.5], bend: 1, hand: false, front: true }, R: { to: [bagC[0] + 0.3, bagC[1] + 0.05], bend: -1, hand: 'bag', hp: { zip: z }, front: true, order: 2, prop: { after: [hold, thumb] } } }
-        : { L: { to: [bagC[0] - 0.36, bagC[1] + 0.14], bend: 1, hand: 'offer', hp: { close: 0.45 }, front: true, order: 1 }, R: { to: thumbAt, bend: -1, hand: 'bag', hp: { zip: z, flip: true }, front: true, order: 2, prop: { after: hold } } },
+      arms: back ? { L: { to: [0.3, 2.5], bend: 1, hand: false, front: true }, R: { to: [bagC[0] - 0.42, bagC[1] + 0.1], bend: -1, hand: 'bag', hp: { zip: z }, front: true, order: 2, prop: { after: [hold, thumb] } } }
+        : { L: { E: [-0.7, 2.42], W: [bagC[0] - 0.36, bagC[1] + 0.14], hand: 'offer', hp: { close: 0.45 }, front: true, order: 1 }, R: { E: [0.84, 2.38], W: thumbAt, hand: 'bag', hp: { zip: z, flip: true }, front: true, order: 2, prop: { after: hold } } },
       legs: p.legs || { stance: 0.1 }, crop: p.crop, extra: back ? null : { end: [thumb] } });
     r.info.bag = bagC; return r;
   };
@@ -1336,36 +1344,36 @@
     const sway = p.sway || 0; const rail = p.rail ? toFig(p, p.rail) : [-0.55, -1.2];
     const buds = { type: 'live', draw(c, toW, s, out) { const hd = out.heads.head; if (!hd) return; const g = targetOf(c, p); [hd.earL, hd.earR].forEach((e, i) => { const vis = i === 0 ? hd.M[2][0] < 0.2 : hd.M[2][0] > -0.2; if (!vis) return; g.fillStyle = '#E6E0D4'; g.beginPath(); g.ellipse(e[0], e[1] + s * 0.03, s * 0.035, s * 0.03, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(0,0,0,0.25)'; g.beginPath(); g.ellipse(e[0] + s * 0.01, e[1] + s * 0.045, s * 0.03, s * 0.012, 0, 0, 7); g.fill(); }); } };
     const r = person({ who: 'him', costume: p.costume || 'shirt', tau: p.tau == null ? 0.2 : p.tau, lean: sway, tilt: sway * 2, head: faceOf(p, { yaw: 0.15, pitch: 0.3, lids: 0.6, gaze: [0.1, 0.5] }, 3),
-      arms: { L: { to: rail, bend: -1, hand: 'rail' }, R: { to: [0.18, 2.05], bend: 1, hand: 'thumb', hp: { flip: true, reach: p.thumb == null ? 0.4 : p.thumb, over: 'thumb' }, front: true } }, legs: p.legs || { stance: 0.16 }, crop: p.crop, extra: { afterHead: [buds] } });
-    return r;
+      arms: { L: { to: rail, bend: -1, hand: 'rail' }, R: { E: [0.7, 2.35], W: [0.2, 2.05], hand: 'thumb', hp: { flip: true, reach: p.thumb == null ? 0.4 : p.thumb, over: 'thumb' }, front: true } }, legs: p.legs || { stance: 0.16 }, crop: p.crop, extra: { afterHead: [buds] } });
+    r.info.phone = [0.2, 1.8]; r.phoneHand = 'R'; return r;
   };
   // eating from the pan at the counter, the fork in the other hand; fork 0 (over the pan) .. 1 (at his mouth) (Q06, B2)
   POSES.him.counter = p => {
     // measured from B2: the sleeves hang to the cuffs, the forearms come at us, foreshortened; the pan at his chest by its handle
     const fk = clamp(p.fork || 0, 0, 1); const PAN = [0.1, 1.88];
-    const fHand = lerpPt([0.93, 1.66], [0.3, 0.8], fk), fRot = 1.5 * fk, fW = lerpPt([0.95, 1.86], [0.6, 1.2], fk), fE = lerpPt([0.98, 1.5], [1.06, 1.72], fk);
-    const rotv = v => [v[0] * Math.cos(fRot) - v[1] * Math.sin(fRot), v[0] * Math.sin(fRot) + v[1] * Math.cos(fRot)];
-    const forkTop = V.add(fHand, rotv([-0.02, -0.3])), forkTip = V.add(fHand, rotv([-0.4, 0.22]));
+    // fork 0: B2's cheat (the sleeve hangs to its cuff, the fist above it); fork 1: the forearm up from the elbow, the tines at his lips
+    const fHand = lerpPt([0.93, 1.66], [0.32, 0.8], fk), fRot = -0.53 * fk, fW = lerpPt([0.95, 1.86], [0.45, 0.97], fk), fE = lerpPt([0.98, 1.5], [1.05, 1.7], fk);
+    const forkTop = lerpPt(V.add(fHand, [-0.02, -0.3]), V.add(fHand, [0.14, 0.06]), fk), forkTip = lerpPt(V.add(fHand, [-0.4, 0.22]), [0.04, 0.38], fk);
     const pan = { type: 'paper', key: 'pan', box: [PAN[0] - 0.95, PAN[1] - 0.35, PAN[0] + 0.8, PAN[1] + 0.35], breath: 0.7, draw(pen) { panPiece(pen, PAN, 0.61, 0.2, [-0.66, 1.9]); } };
     const fk2 = kq([forkTop, forkTip]);
     const forkA = { type: 'paper', key: 'forkA' + fk2, box: bboxOf([forkTop, forkTip], 0.25), breath: 0.7, draw(pen) { forkPiece(pen, forkTop, forkTip, true); } };
     const forkB = { type: 'paper', key: 'forkB' + fk2, box: bboxOf([forkTop, forkTip], 0.25), breath: 0.7, draw(pen) { forkPiece(pen, V.lerp(forkTop, forkTip, 0.5), forkTip, true); } };
     const r = person({ who: 'him', costume: p.costume || 'shirt', tau: p.tau == null ? 0.2 : p.tau, crop: p.crop == null ? 2.45 : p.crop, untucked: true, head: faceOf(p, { yaw: 0.72, pitch: 0.48, lids: 0.82, gaze: [0.22, 0.32], brows: 0.35 }, 3),
-      arms: { L: { E: [-0.92, 1.55], W: [-0.88, 1.92], hand: 'pan', handAt: [-0.705, 1.884], front: true, order: 1 }, R: { E: fE, W: fW, hand: 'fork', handAt: fHand, handRot: fRot, front: true, order: 2, prop: { before: forkA, after: forkB } } },
+      arms: { L: { E: [-0.84, 1.52], W: [-0.8, 1.92], hand: 'pan', handAt: [-0.68, 1.884], front: true, order: 1 }, R: { E: fE, W: fW, hand: 'fork', handAt: fHand, handRot: fRot, flipHand: true, front: true, order: 2, prop: { before: forkA, after: forkB } } },
       legs: false, extra: { afterTorso: [pan] } });
     r.info.pan = PAN; r.info.fork = forkTip; return r;
   };
   // at the basin, brushing (seen in the mirror): brush is the stroke's phase, foam 0..1 (Q02, Q07)
   POSES.him.basin = p => {
     const ph = p.brush == null ? 0 : p.brush, foam = p.foam == null ? 1 : p.foam, dx = Math.sin(ph * Math.PI * 2) * 0.05;
-    const W0 = [-0.2 + dx, 0.7];
+    const W0 = [-0.42 + dx, 0.5];
     const brush = { type: 'paper', key: 'brush' + kq([W0]), box: [W0[0] - 0.5, 0.2, W0[0] + 0.5, 1.1], breath: 1, draw(pen) {
-      const a = V.add(W0, [-0.12, 0.08]), b = V.add(W0, [0.24, -0.38]); pen.line([a, b], pen.col('#4A6E9E'), 0.05, 1); pen.line([V.add(a, [0.01, -0.01]), V.add(b, [0.01, -0.01])], pen.lit('#7A9CC8', 1), 0.012, 0.8); } };
+      const a = V.add(W0, [0.1, 0.0]), b = [0.0 + dx * 0.4, 0.32]; pen.line([a, b], pen.col('#4A6E9E'), 0.05, 1); pen.line([V.add(a, [0.01, -0.012]), V.add(b, [0.01, -0.012])], pen.lit('#7A9CC8', 1), 0.012, 0.8); } };
     const froth = { type: 'live', draw(c, toW, s, out) { const hd = out.heads.head; if (!hd || foam <= 0) return; const g = targetOf(c, p); const m = hd.mouth; const r = rng('foam' + Math.round(ph * 4));
       g.save(); g.fillStyle = '#E6E2D8'; for (let i = 0; i < 7; i++) { const a = (i / 7) * Math.PI * 2 + r(); const rr = s * (0.016 + 0.018 * r()) * foam; g.globalAlpha = 0.9; g.beginPath(); g.ellipse(m[0] + Math.cos(a) * s * 0.06 * (0.7 + r() * 0.5), m[1] + Math.sin(a) * s * 0.018 + s * 0.005, rr, rr * 0.8, 0, 0, 7); g.fill(); }
       g.fillStyle = 'rgba(120,120,128,0.35)'; g.beginPath(); g.ellipse(m[0] + s * 0.02, m[1] + s * 0.03, s * 0.05 * foam, s * 0.008, 0, 0, 7); g.fill(); g.restore(); } };
     const r = person({ who: 'him', costume: p.costume || 'tee', tau: p.tau == null ? -0.08 : p.tau, lean: 0.12, crop: p.crop == null ? 2.9 : p.crop, head: faceOf(p, { yaw: -0.05, pitch: 0.12, lids: 0.6, gaze: [0, 0.1], mouth: 1 }, 3),
-      arms: { L: { E: [-0.72, 1.95], W: W0, hand: 'brush', front: true, order: 2, prop: { after: brush } }, R: { a1: 0.05, a2: 0.1, hand: 'relax' } }, legs: false, extra: { afterHead: [froth] } });
+      arms: { L: { E: [-0.8, 1.85], W: W0, hand: 'brush', front: true, order: 2, prop: { after: brush } }, R: { a1: 0.05, a2: 0.1, hand: 'relax' } }, legs: false, extra: { afterHead: [froth] } });
     return r;
   };
   // at a desk: sitting, hands on the keyboard; reach 0..1 sends the near hand to the phone (p.phone, world px) (Q03)
@@ -1379,21 +1387,25 @@
   };
   // sitting on a step, forearms on his knees, the phone in both hands; tilt 0 (looking at it low) .. 1 (tilted to his chest) (Q04)
   POSES.him.step = p => {
-    const tl = clamp(p.tilt || 0, 0, 1); const P0 = lerpPt([0.0, 2.75], [0.0, 1.95], tl);
-    const knees = { type: 'paper', key: 'knees' + (p.costume || 'shirt'), box: [-1.2, 2.3, 1.2, 6.2], breath: 0, draw(pen) {
-      const tr = LEGS.him.trousers, shoe = LEGS.him.shoe;
-      [[-1, 0.5], [1, 0.5]].forEach(([sg, w], i) => {
-        const K = [sg * 0.45, 2.85], A = [sg * 0.42, 5.2];
-        const shin = pen.blob([[K[0] - 0.24, K[1]], [K[0] + 0.24, K[1]], [A[0] + 0.21, A[1], 1], [A[0] - 0.21, A[1], 1]]); const sp = pen.piece(shin, pen.col(tr), { seed: 600 + i, tex: 0.55, lift: [0.02, 0.03] }); pen.shade(sp, tr, { lit: 0.05, core: 0.07 });
-        const thigh = pen.ell(K[0], K[1] + 0.12, 0.34, 0.3, 0); const tp2 = pen.piece(thigh, pen.col(tr), { seed: 602 + i, tex: 0.55, lift: [0.025, 0.04] }); pen.shade(tp2, tr, { lit: 0.05, core: 0.06 });
-        pen.fold([[K[0] - 0.18, K[1] + 0.25], [K[0], K[1] + 0.32], [K[0] + 0.15, K[1] + 0.22]], tr, { w: 0.02, alpha: 0.5 });
-        const shoeP = pen.blob([[A[0] - 0.24, A[1] - 0.05], [A[0] + 0.24, A[1] - 0.05], [A[0] + 0.28, A[1] + 0.22, 1], [A[0] - 0.28, A[1] + 0.22, 1]]); const shp = pen.piece(shoeP, pen.col(shoe), { seed: 604 + i, kind: 'card', tex: 0.45, lift: [0.02, 0.03] }); pen.shade(shp, shoe, { lit: 0.03, core: 0.04 });
-      });
+    const tl = clamp(p.tilt || 0, 0, 1); const P0 = lerpPt([0.0, 2.3], [0.0, 1.75], tl);
+    const tr = LEGS.him.trousers, shoe = LEGS.him.shoe;
+    // seen from in front and a little below: the shins come down to the step below, the knees up at his belly, the thighs
+    // foreshortened toward us; his forearms rest on them and the phone is between his hands
+    const shins = { type: 'paper', key: 'stepshins', box: [-1.2, 2.2, 1.2, 5.2], breath: 0, draw(pen) {
+      [-1, 1].forEach((sg, i) => { const K = [sg * 0.44, 2.5], A = [sg * 0.47, 4.35];
+        const sh2 = pen.blob([[K[0] - 0.26, K[1]], [K[0] + 0.26, K[1]], [A[0] + 0.21, A[1], 1], [A[0] - 0.21, A[1], 1]]); const sp = pen.piece(sh2, pen.col(tr), { seed: 600 + i, tex: 0.55, lift: [0.02, 0.03] }); pen.shade(sp, tr, { lit: 0.05, core: 0.07 });
+        pen.fold([[A[0] - 0.15, A[1] - 0.25], [A[0], A[1] - 0.2], [A[0] + 0.15, A[1] - 0.26]], tr, { w: 0.016, alpha: 0.45 });
+        const ft = pen.blob([[A[0] - 0.25, A[1] - 0.06], [A[0] + 0.25, A[1] - 0.06], [A[0] + 0.3 + sg * 0.05, A[1] + 0.24, 1], [A[0] - 0.3 + sg * 0.05, A[1] + 0.24, 1]]); const fp = pen.piece(ft, pen.col(shoe), { seed: 604 + i, kind: 'card', tex: 0.45, lift: [0.02, 0.03] }); pen.shade(fp, shoe, { lit: 0.03, core: 0.04 }); });
     } };
-    const r = person({ who: 'him', costume: p.costume || 'shirt', tau: p.tau == null ? 0 : p.tau, lean: 0.25, crop: 3.3, head: faceOf(p, { yaw: 0, pitch: lerp(0.55, 0.3, tl), lids: 0.55, gaze: [0, 0.5] }, 3),
-      arms: { L: { E: [-0.62, 2.62], W: [-0.12, P0[1] + 0.05], hand: 'thumb', hp: { reach: p.thumb == null ? 0.4 : p.thumb, tap: p.tap || 0, over: 'thumb' }, front: true, order: 2 }, R: { E: [0.62, 2.62], W: [0.12, P0[1] + 0.08], hand: 'relax', hp: { close: 0.8, flip: true }, front: true, order: 1 } },
-      legs: false, extra: { afterTorso: [knees] } });
-    r.info.phone = P0; return r;
+    const knees = { type: 'paper', key: 'stepknees', box: [-1.2, 1.9, 1.2, 3.1], breath: 0, draw(pen) {
+      [-1, 1].forEach((sg, i) => { const K = [sg * 0.44, 2.42]; const th = pen.blob([[K[0] - 0.36, K[1] + 0.25], [K[0] - 0.34, K[1] - 0.12], [K[0], K[1] - 0.3], [K[0] + 0.34, K[1] - 0.12], [K[0] + 0.36, K[1] + 0.25], [K[0], K[1] + 0.33]]);
+        const tp2 = pen.piece(th, pen.col(i ? tr : mix(tr, '#000000', 0.08)), { seed: 602 + i, tex: 0.55, lift: [0.025, 0.045] }); pen.bands(tp2, tr, { center: [0, 2.2], size: 1.2, seed: 605 }); pen.shade(tp2, tr, { lit: 0.05, core: 0.06 });
+        pen.fold([[K[0] - 0.2, K[1] + 0.12], [K[0], K[1] + 0.2], [K[0] + 0.2, K[1] + 0.1]], tr, { w: 0.02, alpha: 0.5 }); });
+    } };
+    const r = person({ who: 'him', costume: p.costume || 'shirt', tau: p.tau == null ? 0 : p.tau, lean: 0.3, shrug: 0.2, crop: 2.55, head: faceOf(p, { yaw: 0, pitch: lerp(0.55, 0.32, tl), lids: 0.55, gaze: [0, 0.5] }, 3),
+      arms: { L: { E: [-0.66, 2.18], W: [-0.12, P0[1] + 0.12], hand: 'thumb', hp: { reach: p.thumb == null ? 0.4 : p.thumb, tap: p.tap || 0, over: 'thumb' }, front: true, order: 2 }, R: { E: [0.66, 2.2], W: [0.14, P0[1] + 0.16], hand: 'relax', hp: { close: 0.8, flip: true }, front: true, order: 1 } },
+      legs: false, extra: { afterTorso: [shins, knees] } });
+    r.info.phone = P0; r.phoneHand = 'L'; return r;
   };
   // sitting on the couch, the phone at his ear (Q11)
   POSES.him.sit = p => {
@@ -1414,7 +1426,6 @@
     const lift = Math.abs(b) * -0.05;
     const legJ = sg => { const s2 = sg * a; const H0 = [0.05, Pp.hipY]; const foot = [0.12 + s2 * stride, Pp.ankY - Math.max(0, -sg * b) * 0.22]; const K = [lerp(H0[0], foot[0], 0.5) + 0.12 + Math.max(0, -sg * b) * 0.22, Pp.kneeY - Math.max(0, -sg * b) * 0.12]; return [H0, K, foot]; };
     const carry = p.carry === 'bag';
-    const bagProp = carry ? { type: 'paper', key: 'wbag' + ph.toFixed(2), box: [-1.2, 2.6, 1.2, 4.6], breath: 0, draw(pen) {} } : null;
     const swing = (sg) => ({ a1: -sg * a * 0.32, a2: -sg * a * 0.32 - 0.25, hand: 'relax', hp: {} });
     const armN = carry ? { E: [0.02 - a * 0.1, Pp.shY + Pp.l1 * 0.98], W: [0.05 - a * 0.18, Pp.shY + Pp.l1 + Pp.l2 * 0.96], hand: 'carry' } : swing(1);
     const r = person({ who, costume, tau: 1.25, head: faceOf(p, { yaw: 1.05, pitch: 0.12, lids: 0.68 }, who === 'her' ? 5 : 3), headAt: [0, lift],
@@ -1433,7 +1444,7 @@
     const phone = p.phone ? fromWorld(p.phone) : [-0.9, 0.45]; const rc = clamp(p.reach == null ? 1 : p.reach, 0, 1);
     const armMode = p.arm || 'rest';
     let armR;
-    if (armMode === 'rest') { const tuck = [0.1, 1.55]; const W2 = lerpPt(tuck, V.add(phone, [0.32, 0.05]), rc); armR = { to: W2, bend: 1, hand: rc > 0.4 ? 'rest' : 'relax', hp: rc > 0.4 ? { over: rc > 0.9 ? 'all' : null } : { close: 0.6 }, front: true, order: 2 }; }
+    if (armMode === 'rest') { const tuck = [-0.75, 1.05]; const W2 = lerpPt(tuck, V.add(phone, [0.32, 0.05]), rc); armR = { to: W2, bend: 1, hand: rc > 0.4 ? 'rest' : 'relax', hp: rc > 0.4 ? { over: rc > 0.9 ? 'all' : null } : { close: 0.6 }, front: true, order: 2 }; }
     else if (armMode === 'hold') armR = { E: [0.2, 2.05], W: [-0.95, 0.75], hand: 'thumb', hp: { reach: p.thumb == null ? 0.4 : p.thumb, tap: p.tap || 0, over: 'thumb' }, front: true, order: 2 };
     else armR = { E: [0.25, 2.1], W: [-0.25, 1.4], hand: 'relax', hp: { close: 0.6 }, front: true, order: 2 };
     const legs = { joints: { far: [[0.35, 3.3], [-0.75, 4.35], [-0.35, 5.75]], near: [[-0.2, 3.3], [-1.05, 4.5], [-0.75, 5.85]] } };
@@ -1458,7 +1469,7 @@
       legs: cover ? false : legs, extra });
     if (duvetOps) {
       // the arm comes out from under the duvet's turned edge: put the fold after the arm's sleeve but before its hand
-      const i = r.ops.findIndex(o => o && o.type === 'hand' && o.name === 'R'); if (i >= 0) r.ops.splice(i, 0, duvetOps.fold); else r.ops.push(duvetOps.fold);
+      const i = r.ops.findIndex(o => o && o.type === 'paper' && /armR.*,ts$/.test(o.key)); if (i >= 0) r.ops.splice(i + 1, 0, duvetOps.fold); else r.ops.push(duvetOps.fold);
     }
     r.rot = rot; r.sx = p.sx || (cover ? 0.56 : 0.72); r.info.phone = phone; return r;
   };
@@ -1478,14 +1489,14 @@
     const hold = clamp(p.hold == null ? 0 : p.hold, 0, 1), np = clamp(p.nape || 0, 0, 1), rch = clamp(p.reach || 0, 0, 1);
     const Wup = [1.05, 1.15], Wback = [0.62, 1.95], Wreach = [1.75, 2.0];
     let Wp = lerpPt(Wup, Wback, hold); Wp = lerpPt(Wp, Wreach, rch);
-    const Ep = lerpPt(lerpPt([0.92, 2.35], [0.82, 2.4], hold), [1.25, 1.95], rch);
+    const Ep = lerpPt(lerpPt([0.8, 2.12], [0.82, 2.4], hold), [1.25, 1.95], rch);
     // the nape arm: from hanging to up behind her head
     const Wn = lerpPt([-0.78, 3.15], [-0.42, 0.45], np), En = lerpPt([-0.86, 2.15], [-1.25, 0.95], np);
     const phoneHand = hold < 0.5 ? 'phone' : 'offer';
     const r = person({ who: 'her', costume: 'coat', tau: p.tau == null ? 0.42 : p.tau, head: faceOf(p, { yaw: lerp(0.55, 0.3, hold), pitch: lerp(0.06, 0.4, hold), lids: lerp(0.72, 0.5, hold), gaze: lerp(0, 1, hold) ? [lerp(0.45, 0.1, hold), lerp(0.06, 0.5, hold)] : [0.45, 0.06] }, 5),
       arms: { L: { E: En, W: Wn, hand: np > 0.45 ? 'nape' : 'relax', hp: np > 0.45 ? { flip: true } : {}, behind: np > 0.3 }, R: { E: Ep, W: Wp, hand: rch > 0.5 ? 'offer' : phoneHand, hp: { flip: hold < 0.5, reach: p.thumb || 0, tap: p.tap || 0, close: 0.3, over: rch > 0.5 ? null : 'thumb' }, front: true } },
       legs: p.legs || { stance: 0.06 }, crop: p.crop });
-    r.info.phone = V.add(Wp, hold < 0.5 ? [0.05, -0.32] : [0.24, -0.08]); r.info.phoneFacing = hold < 0.5 ? 'out' : 'her'; return r;
+    r.info.phone = V.add(Wp, hold < 0.5 ? [0.05, -0.32] : [0.24, -0.08]); r.info.phoneFacing = hold < 0.5 ? 'out' : 'her'; r.phoneHand = rch > 0.5 ? null : 'R'; return r;
   };
   POSES.her.phone_up = p => POSES.her.phone(Object.assign({}, p, { hold: p.hold || 0 }));
   POSES.her.phone_back = p => POSES.her.phone(Object.assign({}, p, { hold: p.hold == null ? 1 : p.hold }));
@@ -1515,7 +1526,7 @@
     const out = drawFigure(c, { who, x: p.x, y: p.y, s: p.s, flip: p.flip, rot: built.rot || 0, sx: built.sx || 1, light: p.light, breath, ops: built.ops, target: p.target, alpha: p.alpha, res: p.res });
     const info = {}; for (const k in built.info) { const v = built.info[k]; info[k] = Array.isArray(v) && typeof v[0] === 'number' ? out.toWorld(v) : (Array.isArray(v) ? v.map(q2 => Array.isArray(q2) ? out.toWorld(q2) : q2) : v); }
     out.info = info; out.pose = pose; out.who = who;
-    if (built.info.phone) out.phone = { x: info.phone[0], y: info.phone[1], h: p.s * 0.7, w: p.s * 0.34, facing: built.info.phoneFacing || 'out' };
+    if (built.info.phone) { const ph = built.phoneHand && out.hands[built.phoneHand]; const at = ph ? ph.grip : info.phone; out.phone = { x: at[0], y: at[1], h: p.s * 0.7, w: p.s * 0.34, angle: ph ? (ph.flip ? -ph.rot : ph.rot) : 0, facing: built.info.phoneFacing || 'out', hand: ph || null }; }
     return out;
   };
   // ================================================================ the coworker, the passengers
@@ -1652,7 +1663,7 @@
       props(c, 'step', [[{ rect: [-40, 920, 2000, 200] }, '#8A8A86', { lift: [0, -10], edge: [0, 6, '#ABABA6'] }]]);
       const f0 = { x: 960, y: 300, s: 220 }; const L = RIG.light('stairwell', { phone: [960, 300 + 2.45 * 220], phoneK: 1.2 });
       const f = RIG.draw(c, 'him', 'step', Object.assign({}, f0, { light: L, t, tilt: 0.0, face: { flush: seg(tt, 0.2, 3.6), pitch: 0.5, lids: 0.5 } }));
-      demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y - f0.s * 0.25, w: f0.s * 0.34, h: f0.s * 0.66, angle: 0 } : null, { top: '#E8D2C4', bottom: '#C8A898' }); f.over(c); } },
+      demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y - f0.s * 0.12, w: f0.s * 0.32, h: f0.s * 0.62, angle: f.phone.angle } : null, { top: '#E8D2C4', bottom: '#C8A898' }); f.over(c); } },
     { name: 'him bus: the rail, the stranger close; his ears go red', draw(c, t) { const tt = twos(t); paperBg(c, 'bus');
       props(c, 'buswin', [[{ rect: [0, 80, 1920, 420] }, '#3A4468', { kind: 'paper', lift: [0, 0], liftAlpha: 0 }], [{ rect: [0, 300, 1920, 90] }, '#B8743C', { kind: 'paper', lift: [0, 0], liftAlpha: 0 }]]);
       const L = RIG.light('bus', { phone: [1010, 300 + 2.0 * 240], phoneK: 1.0 });
@@ -1671,7 +1682,7 @@
       props(c, 'rect', [[{ rect: [1360, 52, 280, 228] }, '#868580', { tex: 0.3, lift: [0, 0], liftAlpha: 0 }]]);
       const her = RIG.draw(c, 'her', 'phone_up', { x: 1222, y: 444, s: 212, light: L, t, flip: true, nape: seg(tt, 0.5, 2.6) });
       RIG.draw(c, 'him', 'bag', { x: 344, y: 392, s: 320, light: L, t, view: 'back', zip: tt * 0.6 });
-      demoPhone(c, her.phone ? { x: her.phone.x, y: her.phone.y, w: 80, h: 156, angle: -0.04 } : null, { top: '#9FE6F2', bottom: '#2FAE7D' }); her.over(c); } },
+      demoPhone(c, her.phone ? { x: her.phone.x, y: her.phone.y, w: 80, h: 156, angle: her.phone.angle } : null, { top: '#9FE6F2', bottom: '#2FAE7D' }); her.over(c); } },
     { name: 'him sit: the couch, the phone at his ear', draw(c, t) { const tt = twos(t); paperBg(c, 'dusk'); const L = RIG.light('dusk');
       props(c, 'couch2', [[[[200, 640], [1700, 620], [1720, 1100], [180, 1100]], '#5E6070', { kind: 'cloth', lift: [0, -10] }]]);
       const f = RIG.draw(c, 'him', 'sit', { x: 900, y: 330, s: 230, light: L, t, face: { lids: lerp(0.5, 0.2, seg(tt, 1, 3)) } }); demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y, w: 70, h: 150, angle: 0.1 } : null, { back: true }); f.over(c); } },
@@ -1683,7 +1694,7 @@
       RIG.draw(c, 'her', 'guest', { x: 900, y: 170, s: 118, light: RIG.light('day'), t, face: { yaw, gaze: gz } }); } },
     { name: 'her phone up: the screen to him; her hand rises to her nape', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day');
       const f = RIG.draw(c, 'her', 'phone_up', { x: 1050, y: 300, s: 240, light: L, t, flip: true, nape: seg(tt, 0.6, 2.8) });
-      demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y, w: 0.34 * 240, h: 0.68 * 240, angle: -0.04 } : null, { top: '#9FE6F2', bottom: '#2FAE7D' }); f.over(c); } },
+      demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y, w: 0.34 * 240, h: 0.68 * 240, angle: f.phone.angle } : null, { top: '#9FE6F2', bottom: '#2FAE7D' }); f.over(c); } },
     { name: 'her phone back: she turns it and studies it; thumb on the glass', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day', { phone: [920, 300 + 1.7 * 250], phoneCol: '#C8EEF2', phoneK: 0.5 });
       const f = RIG.draw(c, 'her', 'phone_back', { x: 960, y: 300, s: 250, light: L, t, flip: true, thumb: 0.3 + 0.3 * Math.sin(tt * 1.6) });
       demoPhone(c, f.phone ? { x: f.phone.x, y: f.phone.y, w: 0.3 * 250, h: 0.2 * 250, angle: -0.2 } : null, { back: true }); f.over(c); } },
@@ -1705,7 +1716,7 @@
       const env = G.FILM_VOICE_ENV || {}; [['L014', 420], ['L016', 1100]].forEach(([id, x0]) => { const e2 = env[id] || []; const g = c.g; for (let i = 0; i < Math.min(48, e2.length); i++) { g.fillStyle = i === Math.floor(tt * 12) ? '#F3ECDD' : 'rgba(40,40,44,0.55)'; g.fillRect(x0 + i * 8, 960 - e2[i] * 14 - 3, 6, e2[i] * 14 + 3); } }); } },
     { name: 'hands I: over the phone, the typing thumb, the fork, the rail', draw(c, t) { const tt = twos(t); paperBg(c, '#6E6C68'); const L = RIG.light('flat');
       RIG.hand(c, 'him', 'rest', { x: 300, y: 260, s: 250, light: L, foreLen: 0.9 }); 
-      const tp = { x: 900, y: 560, s: 260, light: L, reach: 0.5 + 0.3 * Math.sin(tt * 4), tap: (Math.floor(tt * 6) % 2) * 0.5 }; RIG.hand(c, 'him', 'thumb', tp); demoPhone(c, { x: 820, y: 330, w: 170, h: 330, angle: 0.05 }, {}); RIG.hand(c, 'him', 'thumb', Object.assign({}, tp, { only: 'thumb', target: 'gl' }));
+      const tp = { x: 880, y: 640, s: 260, light: L, reach: 0.5 + 0.3 * Math.sin(tt * 4), tap: (Math.floor(tt * 6) % 2) * 0.5 }; const th = RIG.hand(c, 'him', 'thumb', tp); demoPhone(c, { x: th.grip[0], y: th.grip[1] - 40, w: 160, h: 320, angle: th.rot }, {}); RIG.hand(c, 'him', 'thumb', Object.assign({}, tp, { only: 'thumb', target: 'gl' }));
       drawFigure(c, { who: 'prop', x: 1360, y: 330, s: 260, light: L, ops: [{ type: 'paper', key: 'hfork', box: [-1, -1, 1, 1], draw(pen) { forkPiece(pen, [-0.02, -0.3], [-0.4, 0.22], true); } }] });
       RIG.hand(c, 'him', 'fork', { x: 1360, y: 330, s: 250, light: L }); drawFigure(c, { who: 'prop', x: 1360, y: 330, s: 260, light: L, ops: [{ type: 'paper', key: 'hfork2', box: [-1, -1, 1, 1], draw(pen) { forkPiece(pen, [-0.21, -0.04], [-0.4, 0.22], true); } }] });
       RIG.hand(c, 'him', 'rail', { x: 1720, y: 300, s: 240, light: L });
@@ -1718,7 +1729,7 @@
       RIG.hand(c, 'him', 'bag', { x: 1430, y: 330, s: 230, light: L, zip: tt * 0.8, flip: true, shadow: false }); drawFigure(c, { who: 'prop', x: 1220, y: 330, s: 300, light: L, ops: [{ type: 'paper', key: 'h2bag', box: [-0.6, -0.4, 0.6, 0.45], draw(pen) { bagShape(pen, [0, 0], 0.74); } }] });
       RIG.hand(c, 'him', 'bag', { x: 1430, y: 330, s: 230, light: L, zip: tt * 0.8, flip: true, only: 'thumb' });
       RIG.hand(c, 'her', 'nape', { x: 1640, y: 280, s: 230, light: L });
-      const gp = { x: 1330, y: 990, s: 230, light: L, reach: 0.3 + 0.5 * seg(tt % 2, 0, 1.5) }; RIG.hand(c, 'her', 'thumb', gp); demoPhone(c, { x: 1250, y: 820, w: 130, h: 250, angle: 0 }, { top: '#9FE6F2', bottom: '#2FAE7D' }); RIG.hand(c, 'her', 'thumb', Object.assign({}, gp, { only: 'thumb', target: 'gl' })); } },
+      const gp = { x: 1300, y: 1010, s: 220, light: L, reach: 0.3 + 0.5 * seg(tt % 2, 0, 1.5) }; const gh = RIG.hand(c, 'her', 'thumb', gp); demoPhone(c, { x: gh.grip[0], y: gh.grip[1] - 40, w: 130, h: 260, angle: gh.rot }, { top: '#9FE6F2', bottom: '#2FAE7D' }); RIG.hand(c, 'her', 'thumb', Object.assign({}, gp, { only: 'thumb', target: 'gl' })); } },
     { name: 'the trade (Q10): phone for bag on the centre line; her fingers never touch his', draw(c, t) { const tt = twos(t); paperBg(c, 'day'); const L = RIG.light('day');
       const tr = RIG.trade(c, seg(tt, 0.1, 3.8), { x: 960, y: 560, s: 340, light: L }); demoPhone(c, tr.phone, { top: '#2A2C30', bottom: '#111216' }); tr.over(c); } },
     { name: 'coworker: a look over the divider (Q03)', draw(c, t) { const tt = twos(t); paperBg(c, 'office'); const L = RIG.light('office');
