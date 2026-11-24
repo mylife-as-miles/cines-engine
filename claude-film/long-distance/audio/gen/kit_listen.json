@@ -1,0 +1,4751 @@
+{
+ "knocks": {
+  "summary": "Ranked 6 files for 'a single knock on a wooden door'. Best: knock2.flac (z +3.7, strong), knock_1.flac (z +3.7, strong), knock1.flac (z +3.6, strong). 6 strong, 0 plausible, 0 weak match(es). In a held-out test 'strong' was right 98% of the time, 61% when a close variant (a mouth pop for a cork pop) counts as wrong.",
+  "query": "a single knock on a wooden door",
+  "n_files": 6,
+  "results": [
+   {
+    "path": "/home/user/cines-engine/claude-film/one-too-many/audio/sfx/knock2.flac",
+    "name": "knock2.flac",
+    "z": 3.79,
+    "cosine": 0.404,
+    "vocab_percentile": 100.0,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a wooden knock (z +2.9)"
+   },
+   {
+    "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/knock_1.flac",
+    "name": "knock_1.flac",
+    "z": 3.76,
+    "cosine": 0.392,
+    "vocab_percentile": 99.7,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a punchy impact hit (z +3.8)"
+   },
+   {
+    "path": "/home/user/cines-engine/claude-film/one-too-many/audio/sfx/knock1.flac",
+    "name": "knock1.flac",
+    "z": 3.64,
+    "cosine": 0.396,
+    "vocab_percentile": 100.0,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a wooden block hit (z +3.1)"
+   },
+   {
+    "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/knock_3.flac",
+    "name": "knock_3.flac",
+    "z": 3.59,
+    "cosine": 0.279,
+    "vocab_percentile": 100.0,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a punchy impact hit (z +3.1)"
+   },
+   {
+    "path": "/home/user/cines-engine/claude-film/one-too-many/audio/sfx/knock3.flac",
+    "name": "knock3.flac",
+    "z": 3.57,
+    "cosine": 0.379,
+    "vocab_percentile": 100.0,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a wooden block hit (z +3.0)"
+   },
+   {
+    "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/knock_2.flac",
+    "name": "knock_2.flac",
+    "z": 3.46,
+    "cosine": 0.337,
+    "vocab_percentile": 100.0,
+    "verdict": "strong",
+    "near_silent": false,
+    "sounds_most_like": "a punchy impact hit (z +3.3)"
+   }
+  ],
+  "skipped": []
+ },
+ "d_zip": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/zip.flac",
+  "start": null,
+  "end": null,
+  "duration": 5.4,
+  "measurements": {
+   "duration": 5.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -0.0,
+   "rms_dbfs": -30.1,
+   "lufs": -24.3,
+   "attack_ms": 19.0,
+   "decay_ms": 27.0,
+   "brightness_hz": 8499,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -62.8,
+   "flatness": 0.0126,
+   "harmonic_ratio": 0.039,
+   "onset_count": 24,
+   "onsets_per_s": 4.44,
+   "width": "mono",
+   "digital_silence_frac": 0.0005
+  },
+  "shape": "busy, 4.4 onsets/s (attack 19 ms, decays in 27 ms)",
+  "top_tags": [
+   {
+    "term": "a spray can hissing",
+    "category": "everyday",
+    "z": 2.7,
+    "cosine": 0.312,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a match being struck",
+    "category": "everyday",
+    "z": 2.64,
+    "cosine": 0.296,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a rubber stretch",
+    "category": "foley",
+    "z": 2.48,
+    "cosine": 0.304,
+    "verdict": "weak"
+   },
+   {
+    "term": "a record scratch",
+    "category": "transitions",
+    "z": 2.45,
+    "cosine": 0.329,
+    "verdict": "weak"
+   },
+   {
+    "term": "a tape stop slowing down",
+    "category": "transitions",
+    "z": 2.34,
+    "cosine": 0.333,
+    "verdict": "weak"
+   },
+   {
+    "term": "a squishy wet squelch",
+    "category": "foley",
+    "z": 2.23,
+    "cosine": 0.247,
+    "verdict": "weak"
+   },
+   {
+    "term": "coins dropping",
+    "category": "foley",
+    "z": 2.09,
+    "cosine": 0.256,
+    "verdict": "weak"
+   },
+   {
+    "term": "a small animal running through grass",
+    "category": "nature",
+    "z": 2.08,
+    "cosine": 0.25,
+    "verdict": "weak"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "crisp hi-hats",
+    "category": "instruments",
+    "z": 1.83,
+    "cosine": 0.244
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.19,
+    "cosine": 0.117
+   },
+   {
+    "term": "someone whispering",
+    "category": "voice",
+    "z": 0.98,
+    "cosine": 0.068
+   },
+   {
+    "term": "a snare roll",
+    "category": "instruments",
+    "z": 0.95,
+    "cosine": 0.091
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.29,
+    "cosine": -0.01
+   },
+   {
+    "term": "a crowd talking",
+    "category": "voice",
+    "z": 0.17,
+    "cosine": -0.105
+   },
+   {
+    "term": "funk music",
+    "category": "music_genre",
+    "z": 0.1,
+    "cosine": 0.058
+   },
+   {
+    "term": "a man speaking",
+    "category": "voice",
+    "z": 0.04,
+    "cosine": -0.116
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a record scratch",
+     "z": 2.45,
+     "cosine": 0.329
+    },
+    {
+     "term": "a tape stop slowing down",
+     "z": 2.34,
+     "cosine": 0.333
+    },
+    {
+     "term": "a stutter glitch transition",
+     "z": 1.81,
+     "cosine": 0.287
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a body falling on the ground",
+     "z": 0.51,
+     "cosine": 0.036
+    },
+    {
+     "term": "a heavy thud",
+     "z": 0.39,
+     "cosine": 0.017
+    },
+    {
+     "term": "a low rumble",
+     "z": 0.29,
+     "cosine": 0.015
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.65,
+     "cosine": 0.186
+    },
+    {
+     "term": "a camera shutter click",
+     "z": 1.55,
+     "cosine": 0.227
+    },
+    {
+     "term": "a scroll wheel tick",
+     "z": 1.26,
+     "cosine": 0.209
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "an old typewriter",
+     "z": 2.06,
+     "cosine": 0.259
+    },
+    {
+     "term": "a spacebar press",
+     "z": 1.5,
+     "cosine": 0.251
+    },
+    {
+     "term": "a laptop keyboard typing",
+     "z": 1.06,
+     "cosine": 0.175
+    }
+   ],
+   "foley": [
+    {
+     "term": "a rubber stretch",
+     "z": 2.48,
+     "cosine": 0.304
+    },
+    {
+     "term": "a squishy wet squelch",
+     "z": 2.23,
+     "cosine": 0.247
+    },
+    {
+     "term": "coins dropping",
+     "z": 2.09,
+     "cosine": 0.256
+    }
+   ],
+   "water": [
+    {
+     "term": "ice cubes in a glass",
+     "z": 0.31,
+     "cosine": 0.044
+    },
+    {
+     "term": "an object plunging into water",
+     "z": 0.22,
+     "cosine": 0.054
+    },
+    {
+     "term": "a dripping tap",
+     "z": -0.05,
+     "cosine": 0.03
+    }
+   ],
+   "nature": [
+    {
+     "term": "a small animal running through grass",
+     "z": 2.08,
+     "cosine": 0.25
+    },
+    {
+     "term": "a bee flying by",
+     "z": 1.8,
+     "cosine": 0.21
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": 1.61,
+     "cosine": 0.195
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a kalimba note",
+     "z": -0.15,
+     "cosine": 0.006
+    },
+    {
+     "term": "a celesta note",
+     "z": -0.17,
+     "cosine": 0.05
+    },
+    {
+     "term": "a glockenspiel run",
+     "z": -0.2,
+     "cosine": 0.051
+    }
+   ],
+   "ambience": [
+    {
+     "term": "a crackling fire",
+     "z": 1.35,
+     "cosine": 0.198
+    },
+    {
+     "term": "an electrical hum",
+     "z": 0.94,
+     "cosine": 0.079
+    },
+    {
+     "term": "wind blowing",
+     "z": 0.67,
+     "cosine": 0.044
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a spray can hissing",
+     "z": 2.7,
+     "cosine": 0.312
+    },
+    {
+     "term": "a match being struck",
+     "z": 2.64,
+     "cosine": 0.296
+    },
+    {
+     "term": "a printer printing",
+     "z": 1.38,
+     "cosine": 0.17
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "funk music",
+     "z": 0.1,
+     "cosine": 0.058
+    },
+    {
+     "term": "hip hop beat with heavy bass",
+     "z": -0.15,
+     "cosine": -0.02
+    },
+    {
+     "term": "minimal electronic music",
+     "z": -0.18,
+     "cosine": 0.066
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "suspenseful build-up music",
+     "z": -0.99,
+     "cosine": -0.054
+    },
+    {
+     "term": "warm and cozy music",
+     "z": -1.0,
+     "cosine": -0.034
+    },
+    {
+     "term": "playful and quirky music",
+     "z": -1.01,
+     "cosine": -0.048
+    }
+   ],
+   "instruments": [
+    {
+     "term": "crisp hi-hats",
+     "z": 1.83,
+     "cosine": 0.244
+    },
+    {
+     "term": "a snare roll",
+     "z": 0.95,
+     "cosine": 0.091
+    },
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 0.29,
+     "cosine": -0.01
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.19,
+     "cosine": 0.117
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.98,
+     "cosine": 0.068
+    },
+    {
+     "term": "a crowd talking",
+     "z": 0.17,
+     "cosine": -0.105
+    }
+   ],
+   "quality": [
+    {
+     "term": "a boomy sound",
+     "z": 1.19,
+     "cosine": 0.188
+    },
+    {
+     "term": "a harsh sound",
+     "z": 1.13,
+     "cosine": 0.153
+    },
+    {
+     "term": "a tight snappy sound",
+     "z": 1.0,
+     "cosine": 0.148
+    }
+   ],
+   "production": [
+    {
+     "term": "a distorted clipped recording",
+     "z": 2.8,
+     "cosine": 0.336
+    },
+    {
+     "term": "a low quality recording with hiss",
+     "z": 1.66,
+     "cosine": 0.183
+    },
+    {
+     "term": "a real recording of a physical object",
+     "z": 1.28,
+     "cosine": 0.213
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Sound effect",
+    "p": 0.17
+   },
+   {
+    "label": "Typewriter",
+    "p": 0.053
+   },
+   {
+    "label": "Heart murmur",
+    "p": 0.051
+   }
+  ],
+  "character": [],
+  "summary": "5.40 s busy, 4.4 onsets/s (attack 19 ms, decays in 27 ms). Sounds most like: a spray can hissing (z +2.7), a match being struck (z +2.6), a rubber stretch (z +2.4) [plausible reading]. Other readings: a record scratch (transitions, z +2.4), a small animal running through grass (nature, z +2.0). AudioSet tagger unsure (Sound effect 0.17, Typewriter 0.05, Heart murmur 0.05). peak -1.0 dBFS, -24.3 LUFS, brightness 8.5 kHz, bandwidth 20.5 kHz, noise floor -63 dBFS, mono."
+ },
+ "d_hangers": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/hangers.flac",
+  "start": null,
+  "end": null,
+  "duration": 2.973,
+  "measurements": {
+   "duration": 2.973,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -0.8,
+   "rms_dbfs": -31.4,
+   "lufs": -25.1,
+   "attack_ms": 181.0,
+   "decay_ms": 201.0,
+   "brightness_hz": 2806,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -75.6,
+   "flatness": 0.0006,
+   "harmonic_ratio": 0.029,
+   "onset_count": 13,
+   "onsets_per_s": 4.37,
+   "width": "mono",
+   "digital_silence_frac": 0.006
+  },
+  "shape": "busy, 4.4 onsets/s (attack 181 ms, decays in 201 ms)",
+  "top_tags": [
+   {
+    "term": "footsteps on wood",
+    "category": "foley",
+    "z": 2.71,
+    "cosine": 0.236,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a rubber stretch",
+    "category": "foley",
+    "z": 2.66,
+    "cosine": 0.282,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a balloon squeak",
+    "category": "foley",
+    "z": 2.61,
+    "cosine": 0.253,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a body falling on the ground",
+    "category": "impacts",
+    "z": 2.58,
+    "cosine": 0.247,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a box lid closing",
+    "category": "foley",
+    "z": 2.49,
+    "cosine": 0.302,
+    "verdict": "weak"
+   },
+   {
+    "term": "an old typewriter",
+    "category": "keyboard",
+    "z": 2.38,
+    "cosine": 0.259,
+    "verdict": "weak"
+   },
+   {
+    "term": "a knife chopping on a board",
+    "category": "foley",
+    "z": 2.18,
+    "cosine": 0.261,
+    "verdict": "weak"
+   },
+   {
+    "term": "a plastic object falling on a table",
+    "category": "foley",
+    "z": 2.17,
+    "cosine": 0.266,
+    "verdict": "weak"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a snare roll",
+    "category": "instruments",
+    "z": 1.45,
+    "cosine": 0.128
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.89,
+    "cosine": 0.049
+   },
+   {
+    "term": "an acoustic guitar",
+    "category": "instruments",
+    "z": 0.83,
+    "cosine": 0.146
+   },
+   {
+    "term": "a synthesizer lead",
+    "category": "instruments",
+    "z": 0.67,
+    "cosine": 0.126
+   },
+   {
+    "term": "a celesta",
+    "category": "instruments",
+    "z": 0.58,
+    "cosine": 0.157
+   },
+   {
+    "term": "acoustic guitar music",
+    "category": "music_genre",
+    "z": 0.56,
+    "cosine": 0.116
+   },
+   {
+    "term": "funk music",
+    "category": "music_genre",
+    "z": 0.29,
+    "cosine": 0.076
+   },
+   {
+    "term": "a cymbal roll",
+    "category": "instruments",
+    "z": 0.29,
+    "cosine": 0.04
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a record scratch",
+     "z": 1.78,
+     "cosine": 0.218
+    },
+    {
+     "term": "a tape stop slowing down",
+     "z": 1.61,
+     "cosine": 0.218
+    },
+    {
+     "term": "a stick swung fast through the air",
+     "z": 1.26,
+     "cosine": 0.135
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a body falling on the ground",
+     "z": 2.58,
+     "cosine": 0.247
+    },
+    {
+     "term": "a wooden knock",
+     "z": 1.59,
+     "cosine": 0.168
+    },
+    {
+     "term": "a heavy thud",
+     "z": 1.32,
+     "cosine": 0.11
+    }
+   ],
+   "ui": [
+    {
+     "term": "a button being pressed",
+     "z": 1.17,
+     "cosine": 0.147
+    },
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.09,
+     "cosine": 0.1
+    },
+    {
+     "term": "a camera shutter click",
+     "z": 0.81,
+     "cosine": 0.123
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "an old typewriter",
+     "z": 2.38,
+     "cosine": 0.259
+    },
+    {
+     "term": "a deep thocky mechanical keyboard",
+     "z": 1.64,
+     "cosine": 0.238
+    },
+    {
+     "term": "a spacebar press",
+     "z": 1.17,
+     "cosine": 0.191
+    }
+   ],
+   "foley": [
+    {
+     "term": "footsteps on wood",
+     "z": 2.71,
+     "cosine": 0.236
+    },
+    {
+     "term": "a rubber stretch",
+     "z": 2.66,
+     "cosine": 0.282
+    },
+    {
+     "term": "a balloon squeak",
+     "z": 2.61,
+     "cosine": 0.253
+    }
+   ],
+   "water": [
+    {
+     "term": "a dripping tap",
+     "z": 0.06,
+     "cosine": 0.041
+    },
+    {
+     "term": "water splashing",
+     "z": -0.32,
+     "cosine": -0.038
+    },
+    {
+     "term": "ice cubes in a glass",
+     "z": -0.34,
+     "cosine": -0.031
+    }
+   ],
+   "nature": [
+    {
+     "term": "a small animal running through grass",
+     "z": 1.8,
+     "cosine": 0.187
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": 1.5,
+     "cosine": 0.157
+    },
+    {
+     "term": "digging in soil",
+     "z": 1.4,
+     "cosine": 0.092
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a celesta note",
+     "z": 0.83,
+     "cosine": 0.159
+    },
+    {
+     "term": "a doorbell",
+     "z": -0.03,
+     "cosine": 0.042
+    },
+    {
+     "term": "a sustained glass harp tone",
+     "z": -0.32,
+     "cosine": -0.075
+    }
+   ],
+   "ambience": [
+    {
+     "term": "an office ambience",
+     "z": 1.16,
+     "cosine": 0.068
+    },
+    {
+     "term": "a crackling fire",
+     "z": 0.37,
+     "cosine": 0.071
+    },
+    {
+     "term": "rain on a window",
+     "z": 0.18,
+     "cosine": 0.053
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a printer printing",
+     "z": 1.84,
+     "cosine": 0.196
+    },
+    {
+     "term": "a cash register",
+     "z": 1.72,
+     "cosine": 0.188
+    },
+    {
+     "term": "a knock on a door",
+     "z": 1.62,
+     "cosine": 0.137
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "acoustic guitar music",
+     "z": 0.56,
+     "cosine": 0.116
+    },
+    {
+     "term": "funk music",
+     "z": 0.29,
+     "cosine": 0.076
+    },
+    {
+     "term": "playful children's piano music",
+     "z": 0.28,
+     "cosine": 0.084
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "playful and quirky music",
+     "z": -0.02,
+     "cosine": 0.072
+    },
+    {
+     "term": "suspenseful build-up music",
+     "z": -0.15,
+     "cosine": 0.05
+    },
+    {
+     "term": "aggressive music",
+     "z": -0.28,
+     "cosine": 0.004
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a snare roll",
+     "z": 1.45,
+     "cosine": 0.128
+    },
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 0.89,
+     "cosine": 0.049
+    },
+    {
+     "term": "an acoustic guitar",
+     "z": 0.83,
+     "cosine": 0.146
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person coughing",
+     "z": 0.28,
+     "cosine": -0.027
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.25,
+     "cosine": -0.027
+    },
+    {
+     "term": "a woman speaking",
+     "z": 0.24,
+     "cosine": -0.083
+    }
+   ],
+   "quality": [
+    {
+     "term": "a dry close sound",
+     "z": 2.22,
+     "cosine": 0.349
+    },
+    {
+     "term": "a punchy sound",
+     "z": 1.11,
+     "cosine": 0.129
+    },
+    {
+     "term": "a boomy sound",
+     "z": 0.8,
+     "cosine": 0.127
+    }
+   ],
+   "production": [
+    {
+     "term": "a real recording of a physical object",
+     "z": 2.03,
+     "cosine": 0.272
+    },
+    {
+     "term": "a close-miked foley recording",
+     "z": 1.54,
+     "cosine": 0.195
+    },
+    {
+     "term": "a robotic synthetic sound",
+     "z": 1.24,
+     "cosine": 0.224
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Door",
+    "p": 0.221
+   },
+   {
+    "label": "Knock",
+    "p": 0.083
+   },
+   {
+    "label": "Typewriter",
+    "p": 0.08
+   }
+  ],
+  "character": [],
+  "summary": "2.97 s busy, 4.4 onsets/s (attack 181 ms, decays in 201 ms). Sounds most like: footsteps on wood (z +2.7), a rubber stretch (z +2.6), a balloon squeak (z +2.6) [plausible reading]. Other readings: a body falling on the ground (impacts, z +2.5), an old typewriter (keyboard, z +2.3). AudioSet: Door 0.22, Knock 0.08, Typewriter 0.08. peak -1.0 dBFS, -25.1 LUFS, brightness 2.8 kHz, bandwidth 20.5 kHz, noise floor -76 dBFS, mono."
+ },
+ "d_streetcar_far": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/streetcar_far.flac",
+  "start": null,
+  "end": null,
+  "duration": 6.925,
+  "measurements": {
+   "duration": 6.925,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -1.0,
+   "rms_dbfs": -17.3,
+   "lufs": -16.4,
+   "lra_lu": 4.7,
+   "attack_ms": 146.0,
+   "decay_ms": 5184.0,
+   "brightness_hz": 734,
+   "bandwidth_hz": 8127,
+   "noise_floor_dbfs": -28.9,
+   "flatness": 0.0,
+   "harmonic_ratio": 0.75,
+   "onset_count": 55,
+   "onsets_per_s": 7.94,
+   "width": "mono",
+   "digital_silence_frac": 0.0026
+  },
+  "shape": "busy, 7.9 onsets/s (attack 146 ms, decays in 5.2 s)",
+  "top_tags": [
+   {
+    "term": "a gust of wind rushing past",
+    "category": "transitions",
+    "z": 3.44,
+    "cosine": 0.348,
+    "verdict": "strong"
+   },
+   {
+    "term": "a soft air whoosh",
+    "category": "transitions",
+    "z": 2.9,
+    "cosine": 0.285,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a deep cinematic whoosh",
+    "category": "transitions",
+    "z": 2.82,
+    "cosine": 0.279,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a downlifter falling sweep",
+    "category": "transitions",
+    "z": 2.68,
+    "cosine": 0.293,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a fast whoosh",
+    "category": "transitions",
+    "z": 2.42,
+    "cosine": 0.243,
+    "verdict": "weak"
+   },
+   {
+    "term": "cloth whipping through the air",
+    "category": "transitions",
+    "z": 2.3,
+    "cosine": 0.221,
+    "verdict": "weak"
+   },
+   {
+    "term": "a swoosh passing by",
+    "category": "transitions",
+    "z": 2.24,
+    "cosine": 0.222,
+    "verdict": "weak"
+   },
+   {
+    "term": "a thunder clap",
+    "category": "everyday",
+    "z": 2.23,
+    "cosine": 0.237,
+    "verdict": "weak"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a cymbal roll",
+    "category": "instruments",
+    "z": 2.03,
+    "cosine": 0.211
+   },
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 1.34,
+    "cosine": 0.143
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.11,
+    "cosine": 0.074
+   },
+   {
+    "term": "a snare roll",
+    "category": "instruments",
+    "z": 0.96,
+    "cosine": 0.061
+   },
+   {
+    "term": "a warm analog synth pad",
+    "category": "instruments",
+    "z": 0.67,
+    "cosine": 0.064
+   },
+   {
+    "term": "jazz music",
+    "category": "music_genre",
+    "z": 0.56,
+    "cosine": 0.06
+   },
+   {
+    "term": "a bass guitar",
+    "category": "instruments",
+    "z": 0.49,
+    "cosine": 0.064
+   },
+   {
+    "term": "someone whispering",
+    "category": "voice",
+    "z": 0.38,
+    "cosine": -0.029
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a gust of wind rushing past",
+     "z": 3.44,
+     "cosine": 0.348
+    },
+    {
+     "term": "a soft air whoosh",
+     "z": 2.9,
+     "cosine": 0.285
+    },
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 2.82,
+     "cosine": 0.279
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a low rumble",
+     "z": 1.89,
+     "cosine": 0.164
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 1.82,
+     "cosine": 0.157
+    },
+    {
+     "term": "a cinematic hit with a long tail",
+     "z": 1.7,
+     "cosine": 0.131
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.14,
+     "cosine": 0.09
+    },
+    {
+     "term": "a touchscreen tap",
+     "z": -0.24,
+     "cosine": -0.003
+    },
+    {
+     "term": "an error buzz",
+     "z": -0.46,
+     "cosine": -0.069
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a keyboard typing fast",
+     "z": -0.05,
+     "cosine": 0.009
+    },
+    {
+     "term": "a laptop keyboard typing",
+     "z": -0.37,
+     "cosine": -0.012
+    },
+    {
+     "term": "an old typewriter",
+     "z": -0.59,
+     "cosine": -0.073
+    }
+   ],
+   "foley": [
+    {
+     "term": "cloth rustling",
+     "z": 1.8,
+     "cosine": 0.19
+    },
+    {
+     "term": "paper rustling",
+     "z": 0.91,
+     "cosine": 0.089
+    },
+    {
+     "term": "a balloon squeak",
+     "z": 0.81,
+     "cosine": 0.046
+    }
+   ],
+   "water": [
+    {
+     "term": "being underwater",
+     "z": 1.25,
+     "cosine": 0.126
+    },
+    {
+     "term": "bubbles underwater",
+     "z": 1.13,
+     "cosine": 0.098
+    },
+    {
+     "term": "a waterfall",
+     "z": 0.52,
+     "cosine": 0.075
+    }
+   ],
+   "nature": [
+    {
+     "term": "a bee flying by",
+     "z": 1.85,
+     "cosine": 0.171
+    },
+    {
+     "term": "a small animal running through grass",
+     "z": 1.5,
+     "cosine": 0.139
+    },
+    {
+     "term": "a tree shaking",
+     "z": 1.31,
+     "cosine": 0.139
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a sustained glass harp tone",
+     "z": 1.41,
+     "cosine": 0.093
+    },
+    {
+     "term": "wind chimes",
+     "z": 0.5,
+     "cosine": 0.063
+    },
+    {
+     "term": "a celesta note",
+     "z": 0.31,
+     "cosine": 0.087
+    }
+   ],
+   "ambience": [
+    {
+     "term": "a thunderstorm",
+     "z": 2.23,
+     "cosine": 0.25
+    },
+    {
+     "term": "wind blowing",
+     "z": 1.99,
+     "cosine": 0.158
+    },
+    {
+     "term": "an airplane flying overhead",
+     "z": 1.44,
+     "cosine": 0.122
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a thunder clap",
+     "z": 2.23,
+     "cosine": 0.237
+    },
+    {
+     "term": "a train passing",
+     "z": 1.58,
+     "cosine": 0.129
+    },
+    {
+     "term": "fireworks exploding",
+     "z": 1.38,
+     "cosine": 0.085
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "jazz music",
+     "z": 0.56,
+     "cosine": 0.06
+    },
+    {
+     "term": "hip hop beat with heavy bass",
+     "z": 0.23,
+     "cosine": 0.006
+    },
+    {
+     "term": "epic trailer music",
+     "z": 0.15,
+     "cosine": 0.066
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "suspenseful build-up music",
+     "z": 0.16,
+     "cosine": 0.067
+    },
+    {
+     "term": "energetic and driving music",
+     "z": 0.12,
+     "cosine": 0.033
+    },
+    {
+     "term": "dark and tense music",
+     "z": -0.27,
+     "cosine": 0.009
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a cymbal roll",
+     "z": 2.03,
+     "cosine": 0.211
+    },
+    {
+     "term": "a deep sub bass",
+     "z": 1.34,
+     "cosine": 0.143
+    },
+    {
+     "term": "a snare roll",
+     "z": 0.96,
+     "cosine": 0.061
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.11,
+     "cosine": 0.074
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.38,
+     "cosine": -0.029
+    },
+    {
+     "term": "people laughing",
+     "z": 0.21,
+     "cosine": -0.128
+    }
+   ],
+   "quality": [
+    {
+     "term": "a muffled sound",
+     "z": 1.87,
+     "cosine": 0.123
+    },
+    {
+     "term": "an airy sound",
+     "z": 1.74,
+     "cosine": 0.157
+    },
+    {
+     "term": "a boomy sound",
+     "z": 1.24,
+     "cosine": 0.159
+    }
+   ],
+   "production": [
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 1.76,
+     "cosine": 0.211
+    },
+    {
+     "term": "white noise",
+     "z": 1.55,
+     "cosine": 0.129
+    },
+    {
+     "term": "a distorted clipped recording",
+     "z": 1.27,
+     "cosine": 0.112
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Vehicle",
+    "p": 0.219
+   },
+   {
+    "label": "Train",
+    "p": 0.134
+   },
+   {
+    "label": "Field recording",
+    "p": 0.113
+   },
+   {
+    "label": "Eruption",
+    "p": 0.076
+   },
+   {
+    "label": "Rumble",
+    "p": 0.058
+   }
+  ],
+  "character": [],
+  "summary": "6.92 s busy, 7.9 onsets/s (attack 146 ms, decays in 5.2 s). Sounds most like: a gust of wind rushing past (z +3.4), a soft air whoosh (z +2.9), a deep cinematic whoosh (z +2.8) [clear reading]. Other readings: a thunder clap (everyday, z +2.2). AudioSet: Vehicle 0.22, Train 0.13, Field recording 0.11. peak -1.0 dBFS, -16.4 LUFS, brightness 734 Hz, bandwidth 8.1 kHz, noise floor -29 dBFS, mono."
+ },
+ "d_chewing": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/chewing.flac",
+  "start": null,
+  "end": null,
+  "duration": 7.4,
+  "measurements": {
+   "duration": 7.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": 0.0,
+   "rms_dbfs": -36.2,
+   "lufs": -31.6,
+   "lra_lu": 8.5,
+   "attack_ms": 290.0,
+   "decay_ms": 14.0,
+   "brightness_hz": 3813,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -50.2,
+   "flatness": 0.0068,
+   "harmonic_ratio": 0.122,
+   "onset_count": 26,
+   "onsets_per_s": 3.51,
+   "width": "mono",
+   "digital_silence_frac": 0.0002
+  },
+  "shape": "busy, 3.5 onsets/s (attack 290 ms, decays in 14 ms)",
+  "top_tags": [
+   {
+    "term": "a rubber stretch",
+    "category": "foley",
+    "z": 2.41,
+    "cosine": 0.268,
+    "verdict": "weak"
+   },
+   {
+    "term": "a spray can hissing",
+    "category": "everyday",
+    "z": 2.25,
+    "cosine": 0.234,
+    "verdict": "weak"
+   },
+   {
+    "term": "a match being struck",
+    "category": "everyday",
+    "z": 2.24,
+    "cosine": 0.224,
+    "verdict": "weak"
+   },
+   {
+    "term": "scissors cutting",
+    "category": "foley",
+    "z": 2.23,
+    "cosine": 0.266,
+    "verdict": "weak"
+   },
+   {
+    "term": "a squishy wet squelch",
+    "category": "foley",
+    "z": 2.17,
+    "cosine": 0.218,
+    "verdict": "weak"
+   },
+   {
+    "term": "a phone vibration buzz",
+    "category": "ui",
+    "z": 2.15,
+    "cosine": 0.227,
+    "verdict": "weak"
+   },
+   {
+    "term": "a record scratch",
+    "category": "transitions",
+    "z": 2.01,
+    "cosine": 0.259,
+    "verdict": "weak"
+   },
+   {
+    "term": "a can opening",
+    "category": "foley",
+    "z": 1.84,
+    "cosine": 0.268,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "someone whispering",
+    "category": "voice",
+    "z": 2.14,
+    "cosine": 0.189
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.67,
+    "cosine": 0.168
+   },
+   {
+    "term": "singing vocals",
+    "category": "voice",
+    "z": 1.22,
+    "cosine": 0.137
+   },
+   {
+    "term": "a vocal chop",
+    "category": "instruments",
+    "z": 1.08,
+    "cosine": 0.214
+   },
+   {
+    "term": "a person coughing",
+    "category": "voice",
+    "z": 1.04,
+    "cosine": 0.077
+   },
+   {
+    "term": "an acoustic guitar",
+    "category": "instruments",
+    "z": 0.72,
+    "cosine": 0.161
+   },
+   {
+    "term": "acoustic guitar music",
+    "category": "music_genre",
+    "z": 0.46,
+    "cosine": 0.133
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.4,
+    "cosine": 0.025
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a record scratch",
+     "z": 2.01,
+     "cosine": 0.259
+    },
+    {
+     "term": "a tape stop slowing down",
+     "z": 1.53,
+     "cosine": 0.23
+    },
+    {
+     "term": "a stick swung fast through the air",
+     "z": 1.44,
+     "cosine": 0.175
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a hand clap",
+     "z": 0.68,
+     "cosine": 0.151
+    },
+    {
+     "term": "a wooden knock",
+     "z": 0.33,
+     "cosine": 0.064
+    },
+    {
+     "term": "a body falling on the ground",
+     "z": 0.23,
+     "cosine": 0.027
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 2.15,
+     "cosine": 0.227
+    },
+    {
+     "term": "a scroll wheel tick",
+     "z": 1.55,
+     "cosine": 0.237
+    },
+    {
+     "term": "a button being pressed",
+     "z": 1.31,
+     "cosine": 0.184
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a laptop keyboard typing",
+     "z": 1.2,
+     "cosine": 0.194
+    },
+    {
+     "term": "a spacebar press",
+     "z": 1.08,
+     "cosine": 0.205
+    },
+    {
+     "term": "slow typing with separate key presses",
+     "z": 1.0,
+     "cosine": 0.177
+    }
+   ],
+   "foley": [
+    {
+     "term": "a rubber stretch",
+     "z": 2.41,
+     "cosine": 0.268
+    },
+    {
+     "term": "scissors cutting",
+     "z": 2.23,
+     "cosine": 0.266
+    },
+    {
+     "term": "a squishy wet squelch",
+     "z": 2.17,
+     "cosine": 0.218
+    }
+   ],
+   "water": [
+    {
+     "term": "a dripping tap",
+     "z": 0.78,
+     "cosine": 0.144
+    },
+    {
+     "term": "ice cubes in a glass",
+     "z": 0.64,
+     "cosine": 0.1
+    },
+    {
+     "term": "an object plunging into water",
+     "z": -0.11,
+     "cosine": 0.047
+    }
+   ],
+   "nature": [
+    {
+     "term": "a small animal running through grass",
+     "z": 1.83,
+     "cosine": 0.207
+    },
+    {
+     "term": "digging in soil",
+     "z": 1.52,
+     "cosine": 0.124
+    },
+    {
+     "term": "footsteps on grass",
+     "z": 0.99,
+     "cosine": 0.09
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a wine glass ring",
+     "z": 0.41,
+     "cosine": 0.049
+    },
+    {
+     "term": "a celesta note",
+     "z": 0.24,
+     "cosine": 0.126
+    },
+    {
+     "term": "a music box melody",
+     "z": -0.07,
+     "cosine": 0.072
+    }
+   ],
+   "ambience": [
+    {
+     "term": "a crackling fire",
+     "z": 0.96,
+     "cosine": 0.158
+    },
+    {
+     "term": "an electrical hum",
+     "z": 0.3,
+     "cosine": 0.024
+    },
+    {
+     "term": "a dog barking",
+     "z": 0.26,
+     "cosine": 0.001
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a spray can hissing",
+     "z": 2.25,
+     "cosine": 0.234
+    },
+    {
+     "term": "a match being struck",
+     "z": 2.24,
+     "cosine": 0.224
+    },
+    {
+     "term": "a heartbeat",
+     "z": 1.41,
+     "cosine": 0.178
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "acoustic guitar music",
+     "z": 0.46,
+     "cosine": 0.133
+    },
+    {
+     "term": "minimal electronic music",
+     "z": 0.35,
+     "cosine": 0.152
+    },
+    {
+     "term": "funk music",
+     "z": 0.24,
+     "cosine": 0.1
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "futuristic music",
+     "z": -0.22,
+     "cosine": 0.081
+    },
+    {
+     "term": "aggressive music",
+     "z": -0.22,
+     "cosine": 0.044
+    },
+    {
+     "term": "warm and cozy music",
+     "z": -0.34,
+     "cosine": 0.085
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a vocal chop",
+     "z": 1.08,
+     "cosine": 0.214
+    },
+    {
+     "term": "an acoustic guitar",
+     "z": 0.72,
+     "cosine": 0.161
+    },
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 0.4,
+     "cosine": 0.025
+    }
+   ],
+   "voice": [
+    {
+     "term": "someone whispering",
+     "z": 2.14,
+     "cosine": 0.189
+    },
+    {
+     "term": "a person breathing",
+     "z": 1.67,
+     "cosine": 0.168
+    },
+    {
+     "term": "singing vocals",
+     "z": 1.22,
+     "cosine": 0.137
+    }
+   ],
+   "quality": [
+    {
+     "term": "a dry close sound",
+     "z": 2.12,
+     "cosine": 0.354
+    },
+    {
+     "term": "a hollow sound",
+     "z": 1.39,
+     "cosine": 0.175
+    },
+    {
+     "term": "a boomy sound",
+     "z": 1.34,
+     "cosine": 0.205
+    }
+   ],
+   "production": [
+    {
+     "term": "a real recording of a physical object",
+     "z": 2.31,
+     "cosine": 0.315
+    },
+    {
+     "term": "a close-miked foley recording",
+     "z": 1.95,
+     "cosine": 0.255
+    },
+    {
+     "term": "a recording made on a phone",
+     "z": 1.75,
+     "cosine": 0.206
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Scrape",
+    "p": 0.085
+   }
+  ],
+  "character": [],
+  "summary": "7.40 s busy, 3.5 onsets/s (attack 290 ms, decays in 14 ms). Sounds most like: a rubber stretch (z +2.4), a spray can hissing (z +2.2), a match being struck (z +2.2) [weak reading]. Other readings: a phone vibration buzz (ui, z +2.1), a record scratch (transitions, z +2.0). AudioSet tagger unsure (Scrape 0.09). peak -1.0 dBFS, -31.6 LUFS, brightness 3.8 kHz, bandwidth 20.5 kHz, noise floor -50 dBFS, mono."
+ },
+ "d_heartbeat": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/heartbeat.flac",
+  "start": null,
+  "end": null,
+  "duration": 7.4,
+  "measurements": {
+   "duration": 7.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -1.0,
+   "rms_dbfs": -16.0,
+   "lufs": -12.5,
+   "lra_lu": 1.9,
+   "attack_ms": 17.0,
+   "decay_ms": 93.0,
+   "brightness_hz": 287,
+   "bandwidth_hz": 507,
+   "noise_floor_dbfs": -51.1,
+   "flatness": 0.0,
+   "harmonic_ratio": 0.961,
+   "f0_hz": 81.3,
+   "onset_count": 24,
+   "onsets_per_s": 3.24,
+   "width": "mono",
+   "digital_silence_frac": 0.0007
+  },
+  "shape": "busy, 3.2 onsets/s, tonal, pitch ~81 Hz (E2) (attack 17 ms, decays in 93 ms)",
+  "top_tags": [
+   {
+    "term": "a phone vibration buzz",
+    "category": "ui",
+    "z": 3.17,
+    "cosine": 0.275,
+    "verdict": "strong"
+   },
+   {
+    "term": "a sub bass drop",
+    "category": "impacts",
+    "z": 3.11,
+    "cosine": 0.29,
+    "verdict": "strong"
+   },
+   {
+    "term": "a soft air whoosh",
+    "category": "transitions",
+    "z": 2.61,
+    "cosine": 0.224,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a sustained glass harp tone",
+    "category": "chimes",
+    "z": 2.6,
+    "cosine": 0.19,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a heartbeat",
+    "category": "everyday",
+    "z": 2.59,
+    "cosine": 0.239,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a deep cinematic whoosh",
+    "category": "transitions",
+    "z": 2.28,
+    "cosine": 0.192,
+    "verdict": "weak"
+   },
+   {
+    "term": "an electrical hum",
+    "category": "ambience",
+    "z": 2.17,
+    "cosine": 0.151,
+    "verdict": "weak"
+   },
+   {
+    "term": "a gust of wind rushing past",
+    "category": "transitions",
+    "z": 1.98,
+    "cosine": 0.164,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 2.56,
+    "cosine": 0.244
+   },
+   {
+    "term": "a warm analog synth pad",
+    "category": "instruments",
+    "z": 1.41,
+    "cosine": 0.117
+   },
+   {
+    "term": "a bass guitar",
+    "category": "instruments",
+    "z": 1.1,
+    "cosine": 0.104
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.08,
+    "cosine": 0.046
+   },
+   {
+    "term": "an acoustic guitar",
+    "category": "instruments",
+    "z": 0.85,
+    "cosine": 0.108
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.78,
+    "cosine": -0.003
+   },
+   {
+    "term": "a synthesizer lead",
+    "category": "instruments",
+    "z": 0.75,
+    "cosine": 0.095
+   },
+   {
+    "term": "ambient synth pad music",
+    "category": "music_genre",
+    "z": 0.74,
+    "cosine": 0.041
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a soft air whoosh",
+     "z": 2.61,
+     "cosine": 0.224
+    },
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 2.28,
+     "cosine": 0.192
+    },
+    {
+     "term": "a gust of wind rushing past",
+     "z": 1.98,
+     "cosine": 0.164
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a sub bass drop",
+     "z": 3.11,
+     "cosine": 0.29
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 1.75,
+     "cosine": 0.123
+    },
+    {
+     "term": "a low rumble",
+     "z": 1.72,
+     "cosine": 0.119
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 3.17,
+     "cosine": 0.275
+    },
+    {
+     "term": "an error buzz",
+     "z": 1.45,
+     "cosine": 0.109
+    },
+    {
+     "term": "a scroll wheel tick",
+     "z": 1.45,
+     "cosine": 0.165
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a soft key release click",
+     "z": 0.32,
+     "cosine": 0.004
+    },
+    {
+     "term": "a single mechanical keyboard key press",
+     "z": -0.09,
+     "cosine": 0.003
+    },
+    {
+     "term": "a keyboard typing fast",
+     "z": -0.21,
+     "cosine": -0.03
+    }
+   ],
+   "foley": [
+    {
+     "term": "a finger squeaking on glass",
+     "z": 1.93,
+     "cosine": 0.124
+    },
+    {
+     "term": "a finger tapping on glass",
+     "z": 0.89,
+     "cosine": 0.086
+    },
+    {
+     "term": "a rubber stretch",
+     "z": 0.78,
+     "cosine": 0.043
+    }
+   ],
+   "water": [
+    {
+     "term": "bubbles underwater",
+     "z": 1.28,
+     "cosine": 0.088
+    },
+    {
+     "term": "being underwater",
+     "z": 1.01,
+     "cosine": 0.075
+    },
+    {
+     "term": "ice cubes in a glass",
+     "z": 0.82,
+     "cosine": 0.052
+    }
+   ],
+   "nature": [
+    {
+     "term": "a bee flying by",
+     "z": 1.75,
+     "cosine": 0.133
+    },
+    {
+     "term": "insects buzzing",
+     "z": 1.27,
+     "cosine": 0.088
+    },
+    {
+     "term": "a horse galloping",
+     "z": 0.87,
+     "cosine": 0.036
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a sustained glass harp tone",
+     "z": 2.6,
+     "cosine": 0.19
+    },
+    {
+     "term": "a singing bowl",
+     "z": 1.43,
+     "cosine": 0.066
+    },
+    {
+     "term": "a wine glass ring",
+     "z": 1.39,
+     "cosine": 0.084
+    }
+   ],
+   "ambience": [
+    {
+     "term": "an electrical hum",
+     "z": 2.17,
+     "cosine": 0.151
+    },
+    {
+     "term": "wind blowing",
+     "z": 1.42,
+     "cosine": 0.071
+    },
+    {
+     "term": "a computer fan hum",
+     "z": 0.91,
+     "cosine": 0.028
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a heartbeat",
+     "z": 2.59,
+     "cosine": 0.239
+    },
+    {
+     "term": "a kettle whistling",
+     "z": 1.18,
+     "cosine": 0.019
+    },
+    {
+     "term": "a horse neighing",
+     "z": 1.14,
+     "cosine": 0.02
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "ambient synth pad music",
+     "z": 0.74,
+     "cosine": 0.041
+    },
+    {
+     "term": "techno music",
+     "z": 0.68,
+     "cosine": 0.06
+    },
+    {
+     "term": "hip hop beat with heavy bass",
+     "z": 0.45,
+     "cosine": 0.006
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "futuristic music",
+     "z": 0.67,
+     "cosine": 0.102
+    },
+    {
+     "term": "calm and relaxing music",
+     "z": -0.15,
+     "cosine": -0.029
+    },
+    {
+     "term": "dark and tense music",
+     "z": -0.2,
+     "cosine": -0.004
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a deep sub bass",
+     "z": 2.56,
+     "cosine": 0.244
+    },
+    {
+     "term": "a warm analog synth pad",
+     "z": 1.41,
+     "cosine": 0.117
+    },
+    {
+     "term": "a bass guitar",
+     "z": 1.1,
+     "cosine": 0.104
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.08,
+     "cosine": 0.046
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.48,
+     "cosine": -0.041
+    },
+    {
+     "term": "singing vocals",
+     "z": 0.15,
+     "cosine": -0.038
+    }
+   ],
+   "quality": [
+    {
+     "term": "a boomy sound",
+     "z": 2.27,
+     "cosine": 0.239
+    },
+    {
+     "term": "an airy sound",
+     "z": 1.59,
+     "cosine": 0.114
+    },
+    {
+     "term": "a muffled sound",
+     "z": 1.27,
+     "cosine": 0.032
+    }
+   ],
+   "production": [
+    {
+     "term": "a computer-generated electronic tone",
+     "z": 3.09,
+     "cosine": 0.303
+    },
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 2.5,
+     "cosine": 0.261
+    },
+    {
+     "term": "a pure sine wave tone",
+     "z": 1.83,
+     "cosine": 0.171
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Heart sounds, heartbeat",
+    "p": 0.788
+   },
+   {
+    "label": "Heart murmur",
+    "p": 0.437
+   },
+   {
+    "label": "Throbbing",
+    "p": 0.387
+   },
+   {
+    "label": "Hum",
+    "p": 0.277
+   }
+  ],
+  "character": [],
+  "summary": "7.40 s busy, 3.2 onsets/s, tonal, pitch ~81 Hz (E2) (attack 17 ms, decays in 93 ms). Sounds most like: a phone vibration buzz (z +3.1), a sub bass drop (z +3.1), a soft air whoosh (z +2.6) [clear reading]. Other readings: a sustained glass harp tone (chimes, z +2.6), a heartbeat (everyday, z +2.5). AudioSet: Heart sounds, heartbeat 0.79, Heart murmur 0.44, Throbbing 0.39. peak -1.0 dBFS, -12.5 LUFS, brightness 287 Hz, bandwidth 507 Hz, noise floor -51 dBFS, mono."
+ },
+ "d_bed_night": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/bed_night.flac",
+  "start": null,
+  "end": null,
+  "duration": 9.4,
+  "measurements": {
+   "duration": 9.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -1.0,
+   "rms_dbfs": -13.8,
+   "lufs": -14.0,
+   "lra_lu": 0.5,
+   "attack_ms": 176.0,
+   "decay_ms": 5414.0,
+   "brightness_hz": 2162,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -16.7,
+   "flatness": 0.0001,
+   "harmonic_ratio": 0.682,
+   "onset_count": 1,
+   "onsets_per_s": 0.11,
+   "width": "mono",
+   "digital_silence_frac": 0.0
+  },
+  "shape": "sustained (attack 176 ms, decays in 5.4 s)",
+  "top_tags": [
+   {
+    "term": "a gust of wind rushing past",
+    "category": "transitions",
+    "z": 2.93,
+    "cosine": 0.26,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a computer fan hum",
+    "category": "ambience",
+    "z": 2.56,
+    "cosine": 0.2,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a vacuum cleaner",
+    "category": "everyday",
+    "z": 2.54,
+    "cosine": 0.208,
+    "verdict": "plausible"
+   },
+   {
+    "term": "an electrical hum",
+    "category": "ambience",
+    "z": 2.31,
+    "cosine": 0.167,
+    "verdict": "weak"
+   },
+   {
+    "term": "bubbles underwater",
+    "category": "water",
+    "z": 2.2,
+    "cosine": 0.187,
+    "verdict": "weak"
+   },
+   {
+    "term": "an airplane flying overhead",
+    "category": "ambience",
+    "z": 1.84,
+    "cosine": 0.143,
+    "verdict": "no match"
+   },
+   {
+    "term": "a crackling fire",
+    "category": "ambience",
+    "z": 1.77,
+    "cosine": 0.184,
+    "verdict": "no match"
+   },
+   {
+    "term": "a downlifter falling sweep",
+    "category": "transitions",
+    "z": 1.76,
+    "cosine": 0.173,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.36,
+    "cosine": 0.083
+   },
+   {
+    "term": "ambient synth pad music",
+    "category": "music_genre",
+    "z": 1.0,
+    "cosine": 0.08
+   },
+   {
+    "term": "a snare roll",
+    "category": "instruments",
+    "z": 0.86,
+    "cosine": 0.038
+   },
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 0.82,
+    "cosine": 0.075
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.82,
+    "cosine": 0.013
+   },
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 0.69,
+    "cosine": -0.087
+   },
+   {
+    "term": "a warm analog synth pad",
+    "category": "instruments",
+    "z": 0.68,
+    "cosine": 0.056
+   },
+   {
+    "term": "an electric guitar",
+    "category": "instruments",
+    "z": 0.64,
+    "cosine": 0.084
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a gust of wind rushing past",
+     "z": 2.93,
+     "cosine": 0.26
+    },
+    {
+     "term": "a downlifter falling sweep",
+     "z": 1.76,
+     "cosine": 0.173
+    },
+    {
+     "term": "a record scratch",
+     "z": 1.49,
+     "cosine": 0.154
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a low rumble",
+     "z": 1.76,
+     "cosine": 0.129
+    },
+    {
+     "term": "a kick drum",
+     "z": 0.98,
+     "cosine": 0.056
+    },
+    {
+     "term": "a big braam",
+     "z": 0.94,
+     "cosine": 0.095
+    }
+   ],
+   "ui": [
+    {
+     "term": "an error buzz",
+     "z": 1.04,
+     "cosine": 0.078
+    },
+    {
+     "term": "a phone vibration buzz",
+     "z": 0.95,
+     "cosine": 0.055
+    },
+    {
+     "term": "a digital glitch",
+     "z": 0.73,
+     "cosine": 0.097
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a keyboard typing fast",
+     "z": 0.31,
+     "cosine": 0.041
+    },
+    {
+     "term": "a laptop keyboard typing",
+     "z": 0.21,
+     "cosine": 0.045
+    },
+    {
+     "term": "a spacebar press",
+     "z": 0.11,
+     "cosine": 0.057
+    }
+   ],
+   "foley": [
+    {
+     "term": "a balloon squeak",
+     "z": 1.71,
+     "cosine": 0.122
+    },
+    {
+     "term": "footsteps on gravel",
+     "z": 1.25,
+     "cosine": 0.021
+    },
+    {
+     "term": "cloth rustling",
+     "z": 1.12,
+     "cosine": 0.102
+    }
+   ],
+   "water": [
+    {
+     "term": "bubbles underwater",
+     "z": 2.2,
+     "cosine": 0.187
+    },
+    {
+     "term": "being underwater",
+     "z": 1.53,
+     "cosine": 0.137
+    },
+    {
+     "term": "a waterfall",
+     "z": 1.33,
+     "cosine": 0.145
+    }
+   ],
+   "nature": [
+    {
+     "term": "insects buzzing",
+     "z": 1.63,
+     "cosine": 0.132
+    },
+    {
+     "term": "a bee flying by",
+     "z": 1.49,
+     "cosine": 0.113
+    },
+    {
+     "term": "a bird flapping its wings",
+     "z": 1.14,
+     "cosine": 0.064
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a sustained glass harp tone",
+     "z": 0.77,
+     "cosine": 0.013
+    },
+    {
+     "term": "a singing bowl",
+     "z": 0.6,
+     "cosine": -0.006
+    },
+    {
+     "term": "wind chimes",
+     "z": 0.31,
+     "cosine": 0.036
+    }
+   ],
+   "ambience": [
+    {
+     "term": "a computer fan hum",
+     "z": 2.56,
+     "cosine": 0.2
+    },
+    {
+     "term": "an electrical hum",
+     "z": 2.31,
+     "cosine": 0.167
+    },
+    {
+     "term": "an airplane flying overhead",
+     "z": 1.84,
+     "cosine": 0.143
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a vacuum cleaner",
+     "z": 2.54,
+     "cosine": 0.208
+    },
+    {
+     "term": "a spray can hissing",
+     "z": 1.44,
+     "cosine": 0.101
+    },
+    {
+     "term": "a car driving past",
+     "z": 1.42,
+     "cosine": 0.078
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "ambient synth pad music",
+     "z": 1.0,
+     "cosine": 0.08
+    },
+    {
+     "term": "lo-fi hip hop beat",
+     "z": 0.44,
+     "cosine": 0.084
+    },
+    {
+     "term": "rock music with electric guitars",
+     "z": -0.26,
+     "cosine": -0.032
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "dreamy and ethereal music",
+     "z": 0.1,
+     "cosine": 0.02
+    },
+    {
+     "term": "energetic and driving music",
+     "z": -0.19,
+     "cosine": -0.002
+    },
+    {
+     "term": "futuristic music",
+     "z": -0.28,
+     "cosine": 0.024
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a snare roll",
+     "z": 0.86,
+     "cosine": 0.038
+    },
+    {
+     "term": "a deep sub bass",
+     "z": 0.82,
+     "cosine": 0.075
+    },
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 0.82,
+     "cosine": 0.013
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.36,
+     "cosine": 0.083
+    },
+    {
+     "term": "people laughing",
+     "z": 0.69,
+     "cosine": -0.087
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.35,
+     "cosine": -0.039
+    }
+   ],
+   "quality": [
+    {
+     "term": "an airy sound",
+     "z": 2.23,
+     "cosine": 0.184
+    },
+    {
+     "term": "a muffled sound",
+     "z": 1.85,
+     "cosine": 0.098
+    },
+    {
+     "term": "a harsh sound",
+     "z": 1.69,
+     "cosine": 0.158
+    }
+   ],
+   "production": [
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 3.31,
+     "cosine": 0.341
+    },
+    {
+     "term": "white noise",
+     "z": 3.04,
+     "cosine": 0.255
+    },
+    {
+     "term": "a distorted clipped recording",
+     "z": 2.49,
+     "cosine": 0.214
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Vehicle",
+    "p": 0.466
+   },
+   {
+    "label": "Aircraft",
+    "p": 0.16
+   },
+   {
+    "label": "Boat, Water vehicle",
+    "p": 0.113
+   },
+   {
+    "label": "Field recording",
+    "p": 0.093
+   },
+   {
+    "label": "Wind noise (microphone)",
+    "p": 0.089
+   }
+  ],
+  "character": [],
+  "summary": "9.40 s sustained (attack 176 ms, decays in 5.4 s). Sounds most like: a gust of wind rushing past (z +2.9), a computer fan hum (z +2.5), a vacuum cleaner (z +2.5) [plausible reading]. Other readings: bubbles underwater (water, z +2.2). AudioSet: Vehicle 0.47, Aircraft 0.16, Boat, Water vehicle 0.11. peak -1.0 dBFS, -14.0 LUFS, brightness 2.2 kHz, bandwidth 20.5 kHz, noise floor -17 dBFS, mono."
+ },
+ "d_bed_day": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/bed_day.flac",
+  "start": null,
+  "end": null,
+  "duration": 9.4,
+  "measurements": {
+   "duration": 9.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -1.0,
+   "rms_dbfs": -14.7,
+   "lufs": -14.8,
+   "lra_lu": 1.2,
+   "attack_ms": 168.0,
+   "decay_ms": 9231.0,
+   "brightness_hz": 2278,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -17.6,
+   "flatness": 0.0001,
+   "harmonic_ratio": 0.761,
+   "onset_count": 4,
+   "onsets_per_s": 0.43,
+   "width": "mono",
+   "digital_silence_frac": 0.0
+  },
+  "shape": "4 separate events (attack 168 ms, decays in 9.2 s)",
+  "top_tags": [
+   {
+    "term": "a gust of wind rushing past",
+    "category": "transitions",
+    "z": 3.25,
+    "cosine": 0.309,
+    "verdict": "strong"
+   },
+   {
+    "term": "an electrical hum",
+    "category": "ambience",
+    "z": 2.44,
+    "cosine": 0.196,
+    "verdict": "weak"
+   },
+   {
+    "term": "a computer fan hum",
+    "category": "ambience",
+    "z": 2.37,
+    "cosine": 0.198,
+    "verdict": "weak"
+   },
+   {
+    "term": "a vacuum cleaner",
+    "category": "everyday",
+    "z": 2.25,
+    "cosine": 0.195,
+    "verdict": "weak"
+   },
+   {
+    "term": "wind blowing",
+    "category": "ambience",
+    "z": 2.08,
+    "cosine": 0.159,
+    "verdict": "weak"
+   },
+   {
+    "term": "a downlifter falling sweep",
+    "category": "transitions",
+    "z": 1.99,
+    "cosine": 0.21,
+    "verdict": "no match"
+   },
+   {
+    "term": "crickets at night",
+    "category": "ambience",
+    "z": 1.91,
+    "cosine": 0.138,
+    "verdict": "no match"
+   },
+   {
+    "term": "a spray can hissing",
+    "category": "everyday",
+    "z": 1.89,
+    "cosine": 0.159,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.51,
+    "cosine": 0.112
+   },
+   {
+    "term": "ambient synth pad music",
+    "category": "music_genre",
+    "z": 0.96,
+    "cosine": 0.09
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 0.89,
+    "cosine": 0.033
+   },
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 0.85,
+    "cosine": 0.091
+   },
+   {
+    "term": "someone whispering",
+    "category": "voice",
+    "z": 0.8,
+    "cosine": 0.017
+   },
+   {
+    "term": "a warm analog synth pad",
+    "category": "instruments",
+    "z": 0.75,
+    "cosine": 0.075
+   },
+   {
+    "term": "a cymbal roll",
+    "category": "instruments",
+    "z": 0.63,
+    "cosine": 0.063
+   },
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 0.54,
+    "cosine": -0.089
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a gust of wind rushing past",
+     "z": 3.25,
+     "cosine": 0.309
+    },
+    {
+     "term": "a downlifter falling sweep",
+     "z": 1.99,
+     "cosine": 0.21
+    },
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 1.85,
+     "cosine": 0.167
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a low rumble",
+     "z": 1.88,
+     "cosine": 0.155
+    },
+    {
+     "term": "a big braam",
+     "z": 1.05,
+     "cosine": 0.119
+    },
+    {
+     "term": "an explosion",
+     "z": 1.05,
+     "cosine": 0.049
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.03,
+     "cosine": 0.077
+    },
+    {
+     "term": "an error buzz",
+     "z": 0.69,
+     "cosine": 0.056
+    },
+    {
+     "term": "a digital glitch",
+     "z": 0.21,
+     "cosine": 0.058
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a keyboard typing fast",
+     "z": 0.16,
+     "cosine": 0.038
+    },
+    {
+     "term": "a single mechanical keyboard key press",
+     "z": 0.01,
+     "cosine": 0.042
+    },
+    {
+     "term": "a laptop keyboard typing",
+     "z": 0.0,
+     "cosine": 0.036
+    }
+   ],
+   "foley": [
+    {
+     "term": "footsteps on gravel",
+     "z": 1.13,
+     "cosine": 0.023
+    },
+    {
+     "term": "paper rustling",
+     "z": 0.99,
+     "cosine": 0.097
+    },
+    {
+     "term": "a balloon squeak",
+     "z": 0.93,
+     "cosine": 0.059
+    }
+   ],
+   "water": [
+    {
+     "term": "bubbles underwater",
+     "z": 1.84,
+     "cosine": 0.166
+    },
+    {
+     "term": "being underwater",
+     "z": 1.52,
+     "cosine": 0.15
+    },
+    {
+     "term": "a waterfall",
+     "z": 1.2,
+     "cosine": 0.146
+    }
+   ],
+   "nature": [
+    {
+     "term": "insects buzzing",
+     "z": 1.55,
+     "cosine": 0.139
+    },
+    {
+     "term": "a bee flying by",
+     "z": 1.1,
+     "cosine": 0.089
+    },
+    {
+     "term": "a bird flapping its wings",
+     "z": 0.94,
+     "cosine": 0.059
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a sustained glass harp tone",
+     "z": 0.73,
+     "cosine": 0.022
+    },
+    {
+     "term": "a singing bowl",
+     "z": 0.64,
+     "cosine": 0.01
+    },
+    {
+     "term": "wind chimes",
+     "z": 0.52,
+     "cosine": 0.07
+    }
+   ],
+   "ambience": [
+    {
+     "term": "an electrical hum",
+     "z": 2.44,
+     "cosine": 0.196
+    },
+    {
+     "term": "a computer fan hum",
+     "z": 2.37,
+     "cosine": 0.198
+    },
+    {
+     "term": "wind blowing",
+     "z": 2.08,
+     "cosine": 0.159
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a vacuum cleaner",
+     "z": 2.25,
+     "cosine": 0.195
+    },
+    {
+     "term": "a spray can hissing",
+     "z": 1.89,
+     "cosine": 0.159
+    },
+    {
+     "term": "a car driving past",
+     "z": 1.67,
+     "cosine": 0.116
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "ambient synth pad music",
+     "z": 0.96,
+     "cosine": 0.09
+    },
+    {
+     "term": "lo-fi hip hop beat",
+     "z": 0.3,
+     "cosine": 0.082
+    },
+    {
+     "term": "techno music",
+     "z": -0.25,
+     "cosine": -0.005
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "dreamy and ethereal music",
+     "z": 0.24,
+     "cosine": 0.045
+    },
+    {
+     "term": "energetic and driving music",
+     "z": -0.04,
+     "cosine": 0.024
+    },
+    {
+     "term": "futuristic music",
+     "z": -0.15,
+     "cosine": 0.047
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 0.89,
+     "cosine": 0.033
+    },
+    {
+     "term": "a deep sub bass",
+     "z": 0.85,
+     "cosine": 0.091
+    },
+    {
+     "term": "a warm analog synth pad",
+     "z": 0.75,
+     "cosine": 0.075
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.51,
+     "cosine": 0.112
+    },
+    {
+     "term": "someone whispering",
+     "z": 0.8,
+     "cosine": 0.017
+    },
+    {
+     "term": "people laughing",
+     "z": 0.54,
+     "cosine": -0.089
+    }
+   ],
+   "quality": [
+    {
+     "term": "an airy sound",
+     "z": 2.55,
+     "cosine": 0.231
+    },
+    {
+     "term": "a muffled sound",
+     "z": 2.05,
+     "cosine": 0.132
+    },
+    {
+     "term": "a harsh sound",
+     "z": 1.15,
+     "cosine": 0.119
+    }
+   ],
+   "production": [
+    {
+     "term": "white noise",
+     "z": 3.02,
+     "cosine": 0.27
+    },
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 2.8,
+     "cosine": 0.307
+    },
+    {
+     "term": "a low quality recording with hiss",
+     "z": 2.31,
+     "cosine": 0.199
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Vehicle",
+    "p": 0.369
+   },
+   {
+    "label": "Boat, Water vehicle",
+    "p": 0.16
+   },
+   {
+    "label": "Wind noise (microphone)",
+    "p": 0.125
+   },
+   {
+    "label": "Car",
+    "p": 0.089
+   },
+   {
+    "label": "Wind",
+    "p": 0.086
+   }
+  ],
+  "character": [
+   "airy"
+  ],
+  "summary": "9.40 s 4 separate events (attack 168 ms, decays in 9.2 s). Sounds most like: a gust of wind rushing past (z +3.2), an electrical hum (z +2.4), a computer fan hum (z +2.3) [clear reading]. Other readings: a vacuum cleaner (everyday, z +2.2). Character: airy. AudioSet: Vehicle 0.37, Boat, Water vehicle 0.16, Wind noise (microphone) 0.12. peak -1.0 dBFS, -14.8 LUFS, brightness 2.3 kHz, bandwidth 20.5 kHz, noise floor -18 dBFS, mono."
+ },
+ "d_street_day": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/street_day.flac",
+  "start": null,
+  "end": null,
+  "duration": 9.4,
+  "measurements": {
+   "duration": 9.4,
+   "peak_dbfs": -1.0,
+   "true_peak_dbtp": -1.0,
+   "rms_dbfs": -14.4,
+   "lufs": -13.1,
+   "lra_lu": 0.8,
+   "attack_ms": 36.0,
+   "decay_ms": 1477.0,
+   "brightness_hz": 1473,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -17.2,
+   "flatness": 0.0001,
+   "harmonic_ratio": 0.808,
+   "f0_hz": 63.4,
+   "onset_count": 2,
+   "onsets_per_s": 0.21,
+   "width": "mono",
+   "digital_silence_frac": 0.0
+  },
+  "shape": "2 separate events, tonal, pitch ~63 Hz (B1) (attack 36 ms, decays in 1477 ms)",
+  "top_tags": [
+   {
+    "term": "a gust of wind rushing past",
+    "category": "transitions",
+    "z": 3.19,
+    "cosine": 0.288,
+    "verdict": "strong"
+   },
+   {
+    "term": "a car driving past",
+    "category": "everyday",
+    "z": 2.32,
+    "cosine": 0.171,
+    "verdict": "weak"
+   },
+   {
+    "term": "an airplane flying overhead",
+    "category": "ambience",
+    "z": 2.07,
+    "cosine": 0.172,
+    "verdict": "weak"
+   },
+   {
+    "term": "a vacuum cleaner",
+    "category": "everyday",
+    "z": 2.03,
+    "cosine": 0.165,
+    "verdict": "weak"
+   },
+   {
+    "term": "an electrical hum",
+    "category": "ambience",
+    "z": 2.02,
+    "cosine": 0.146,
+    "verdict": "weak"
+   },
+   {
+    "term": "a city street with traffic",
+    "category": "ambience",
+    "z": 2.02,
+    "cosine": 0.105,
+    "verdict": "weak"
+   },
+   {
+    "term": "a deep cinematic whoosh",
+    "category": "transitions",
+    "z": 1.96,
+    "cosine": 0.171,
+    "verdict": "no match"
+   },
+   {
+    "term": "a big braam",
+    "category": "impacts",
+    "z": 1.96,
+    "cosine": 0.201,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.33,
+    "cosine": 0.09
+   },
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 1.27,
+    "cosine": -0.021
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 1.25,
+    "cosine": 0.065
+   },
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 1.04,
+    "cosine": 0.107
+   },
+   {
+    "term": "ambient synth pad music",
+    "category": "music_genre",
+    "z": 1.04,
+    "cosine": 0.095
+   },
+   {
+    "term": "an electric guitar",
+    "category": "instruments",
+    "z": 0.92,
+    "cosine": 0.122
+   },
+   {
+    "term": "a man shouting",
+    "category": "voice",
+    "z": 0.83,
+    "cosine": -0.054
+   },
+   {
+    "term": "children laughing",
+    "category": "voice",
+    "z": 0.79,
+    "cosine": -0.028
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a gust of wind rushing past",
+     "z": 3.19,
+     "cosine": 0.288
+    },
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 1.96,
+     "cosine": 0.171
+    },
+    {
+     "term": "a downlifter falling sweep",
+     "z": 1.9,
+     "cosine": 0.194
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a big braam",
+     "z": 1.96,
+     "cosine": 0.201
+    },
+    {
+     "term": "a low rumble",
+     "z": 1.79,
+     "cosine": 0.14
+    },
+    {
+     "term": "an explosion",
+     "z": 1.3,
+     "cosine": 0.069
+    }
+   ],
+   "ui": [
+    {
+     "term": "an error buzz",
+     "z": 0.82,
+     "cosine": 0.067
+    },
+    {
+     "term": "a phone vibration buzz",
+     "z": 0.32,
+     "cosine": 0.008
+    },
+    {
+     "term": "a digital glitch",
+     "z": 0.12,
+     "cosine": 0.052
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a keyboard typing fast",
+     "z": 0.16,
+     "cosine": 0.04
+    },
+    {
+     "term": "a laptop keyboard typing",
+     "z": -0.2,
+     "cosine": 0.02
+    },
+    {
+     "term": "an enter key press",
+     "z": -0.4,
+     "cosine": 0.038
+    }
+   ],
+   "foley": [
+    {
+     "term": "footsteps on gravel",
+     "z": 1.11,
+     "cosine": 0.018
+    },
+    {
+     "term": "a metal scrape",
+     "z": 0.92,
+     "cosine": 0.044
+    },
+    {
+     "term": "cloth rustling",
+     "z": 0.54,
+     "cosine": 0.058
+    }
+   ],
+   "water": [
+    {
+     "term": "bubbles underwater",
+     "z": 1.6,
+     "cosine": 0.137
+    },
+    {
+     "term": "a waterfall",
+     "z": 1.49,
+     "cosine": 0.17
+    },
+    {
+     "term": "being underwater",
+     "z": 1.26,
+     "cosine": 0.12
+    }
+   ],
+   "nature": [
+    {
+     "term": "a bee flying by",
+     "z": 1.03,
+     "cosine": 0.079
+    },
+    {
+     "term": "insects buzzing",
+     "z": 0.89,
+     "cosine": 0.072
+    },
+    {
+     "term": "a bird flapping its wings",
+     "z": 0.76,
+     "cosine": 0.039
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a singing bowl",
+     "z": 0.43,
+     "cosine": -0.009
+    },
+    {
+     "term": "wind chimes",
+     "z": 0.41,
+     "cosine": 0.059
+    },
+    {
+     "term": "church bells",
+     "z": 0.33,
+     "cosine": 0.02
+    }
+   ],
+   "ambience": [
+    {
+     "term": "an airplane flying overhead",
+     "z": 2.07,
+     "cosine": 0.172
+    },
+    {
+     "term": "an electrical hum",
+     "z": 2.02,
+     "cosine": 0.146
+    },
+    {
+     "term": "a city street with traffic",
+     "z": 2.02,
+     "cosine": 0.105
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a car driving past",
+     "z": 2.32,
+     "cosine": 0.171
+    },
+    {
+     "term": "a vacuum cleaner",
+     "z": 2.03,
+     "cosine": 0.165
+    },
+    {
+     "term": "a train passing",
+     "z": 1.7,
+     "cosine": 0.13
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "ambient synth pad music",
+     "z": 1.04,
+     "cosine": 0.095
+    },
+    {
+     "term": "lo-fi hip hop beat",
+     "z": 0.42,
+     "cosine": 0.094
+    },
+    {
+     "term": "trap beat",
+     "z": 0.31,
+     "cosine": 0.085
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "dreamy and ethereal music",
+     "z": 0.53,
+     "cosine": 0.074
+    },
+    {
+     "term": "energetic and driving music",
+     "z": 0.51,
+     "cosine": 0.079
+    },
+    {
+     "term": "suspenseful build-up music",
+     "z": -0.05,
+     "cosine": 0.056
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 1.25,
+     "cosine": 0.065
+    },
+    {
+     "term": "a deep sub bass",
+     "z": 1.04,
+     "cosine": 0.107
+    },
+    {
+     "term": "an electric guitar",
+     "z": 0.92,
+     "cosine": 0.122
+    }
+   ],
+   "voice": [
+    {
+     "term": "a person breathing",
+     "z": 1.33,
+     "cosine": 0.09
+    },
+    {
+     "term": "people laughing",
+     "z": 1.27,
+     "cosine": -0.021
+    },
+    {
+     "term": "a man shouting",
+     "z": 0.83,
+     "cosine": -0.054
+    }
+   ],
+   "quality": [
+    {
+     "term": "an airy sound",
+     "z": 2.17,
+     "cosine": 0.185
+    },
+    {
+     "term": "a muffled sound",
+     "z": 1.99,
+     "cosine": 0.119
+    },
+    {
+     "term": "a harsh sound",
+     "z": 1.68,
+     "cosine": 0.165
+    }
+   ],
+   "production": [
+    {
+     "term": "white noise",
+     "z": 2.84,
+     "cosine": 0.24
+    },
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 2.68,
+     "cosine": 0.284
+    },
+    {
+     "term": "a distorted clipped recording",
+     "z": 2.31,
+     "cosine": 0.202
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Vehicle",
+    "p": 0.483
+   },
+   {
+    "label": "Field recording",
+    "p": 0.149
+   },
+   {
+    "label": "Car",
+    "p": 0.149
+   },
+   {
+    "label": "Bus",
+    "p": 0.124
+   },
+   {
+    "label": "Traffic noise, roadway noise",
+    "p": 0.097
+   }
+  ],
+  "character": [],
+  "summary": "9.40 s 2 separate events, tonal, pitch ~63 Hz (B1) (attack 36 ms, decays in 1477 ms). Sounds most like: a gust of wind rushing past (z +3.1), a car driving past (z +2.3), an airplane flying overhead (z +2.0) [clear reading]. Other readings: a big braam (impacts, z +1.9). AudioSet: Vehicle 0.48, Field recording 0.15, Car 0.15. peak -1.0 dBFS, -13.1 LUFS, brightness 1.5 kHz, bandwidth 20.5 kHz, noise floor -17 dBFS, mono."
+ },
+ "laugh": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/vo/laugh_phone.wav",
+  "start": null,
+  "end": null,
+  "duration": 1.52,
+  "measurements": {
+   "duration": 1.52,
+   "peak_dbfs": -12.1,
+   "true_peak_dbtp": -12.1,
+   "rms_dbfs": -32.1,
+   "lufs": -27.1,
+   "attack_ms": 10.0,
+   "decay_ms": 101.0,
+   "brightness_hz": 2677,
+   "bandwidth_hz": 12901,
+   "noise_floor_dbfs": -64.7,
+   "flatness": 0.0,
+   "harmonic_ratio": 0.001,
+   "onset_count": 4,
+   "onsets_per_s": 2.63,
+   "width": "mono",
+   "digital_silence_frac": 0.0244
+  },
+  "shape": "busy, 2.6 onsets/s (attack 10 ms, decays in 101 ms)",
+  "top_tags": [
+   {
+    "term": "a punchy impact hit",
+    "category": "impacts",
+    "z": 2.79,
+    "cosine": 0.092,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a cow mooing",
+    "category": "everyday",
+    "z": 2.1,
+    "cosine": 0.048,
+    "verdict": "weak"
+   },
+   {
+    "term": "a single mechanical keyboard key press",
+    "category": "keyboard",
+    "z": 2.06,
+    "cosine": 0.144,
+    "verdict": "weak"
+   },
+   {
+    "term": "digging in soil",
+    "category": "nature",
+    "z": 2.05,
+    "cosine": 0.036,
+    "verdict": "weak"
+   },
+   {
+    "term": "an error buzz",
+    "category": "ui",
+    "z": 1.81,
+    "cosine": 0.07,
+    "verdict": "no match"
+   },
+   {
+    "term": "a body falling on the ground",
+    "category": "impacts",
+    "z": 1.79,
+    "cosine": 0.045,
+    "verdict": "no match"
+   },
+   {
+    "term": "a stutter glitch transition",
+    "category": "transitions",
+    "z": 1.79,
+    "cosine": 0.137,
+    "verdict": "no match"
+   },
+   {
+    "term": "a deep cinematic boom",
+    "category": "impacts",
+    "z": 1.62,
+    "cosine": 0.037,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 4.31,
+    "cosine": 0.14
+   },
+   {
+    "term": "a person coughing",
+    "category": "voice",
+    "z": 3.62,
+    "cosine": 0.161
+   },
+   {
+    "term": "children laughing",
+    "category": "voice",
+    "z": 3.25,
+    "cosine": 0.093
+   },
+   {
+    "term": "a vocal chop",
+    "category": "instruments",
+    "z": 3.1,
+    "cosine": 0.254
+   },
+   {
+    "term": "singing vocals",
+    "category": "voice",
+    "z": 2.48,
+    "cosine": 0.114
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 2.14,
+    "cosine": 0.071
+   },
+   {
+    "term": "crisp hi-hats",
+    "category": "instruments",
+    "z": 1.99,
+    "cosine": 0.108
+   },
+   {
+    "term": "a punchy kick drum pattern",
+    "category": "instruments",
+    "z": 1.5,
+    "cosine": 0.003
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a stutter glitch transition",
+     "z": 1.79,
+     "cosine": 0.137
+    },
+    {
+     "term": "a short swish",
+     "z": 1.56,
+     "cosine": 0.109
+    },
+    {
+     "term": "a soft air whoosh",
+     "z": 1.54,
+     "cosine": 0.044
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a punchy impact hit",
+     "z": 2.79,
+     "cosine": 0.092
+    },
+    {
+     "term": "a body falling on the ground",
+     "z": 1.79,
+     "cosine": 0.045
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 1.62,
+     "cosine": 0.037
+    }
+   ],
+   "ui": [
+    {
+     "term": "an error buzz",
+     "z": 1.81,
+     "cosine": 0.07
+    },
+    {
+     "term": "a digital glitch",
+     "z": 0.98,
+     "cosine": 0.054
+    },
+    {
+     "term": "a phone vibration buzz",
+     "z": 0.72,
+     "cosine": -0.029
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a single mechanical keyboard key press",
+     "z": 2.06,
+     "cosine": 0.144
+    },
+    {
+     "term": "a soft key release click",
+     "z": 1.4,
+     "cosine": 0.05
+    },
+    {
+     "term": "an enter key press",
+     "z": 1.33,
+     "cosine": 0.117
+    }
+   ],
+   "foley": [
+    {
+     "term": "a finger squeaking on glass",
+     "z": 1.03,
+     "cosine": -0.027
+    },
+    {
+     "term": "glass clinking",
+     "z": 0.99,
+     "cosine": -0.015
+    },
+    {
+     "term": "a mouth pop",
+     "z": 0.91,
+     "cosine": 0.048
+    }
+   ],
+   "water": [
+    {
+     "term": "ice cubes in a glass",
+     "z": 1.0,
+     "cosine": 0.014
+    },
+    {
+     "term": "a liquid bloop",
+     "z": 0.05,
+     "cosine": -0.016
+    },
+    {
+     "term": "a waterfall",
+     "z": -0.25,
+     "cosine": -0.054
+    }
+   ],
+   "nature": [
+    {
+     "term": "digging in soil",
+     "z": 2.05,
+     "cosine": 0.036
+    },
+    {
+     "term": "a horse galloping",
+     "z": 0.83,
+     "cosine": -0.02
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": 0.79,
+     "cosine": -0.009
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a kalimba note",
+     "z": 1.2,
+     "cosine": 0.049
+    },
+    {
+     "term": "a glass ting",
+     "z": 1.11,
+     "cosine": 0.053
+    },
+    {
+     "term": "a wine glass ring",
+     "z": 0.62,
+     "cosine": -0.044
+    }
+   ],
+   "ambience": [
+    {
+     "term": "birds singing in the morning",
+     "z": 1.08,
+     "cosine": -0.047
+    },
+    {
+     "term": "a quiet countryside morning",
+     "z": 0.94,
+     "cosine": -0.042
+    },
+    {
+     "term": "crickets at night",
+     "z": 0.92,
+     "cosine": -0.039
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a cow mooing",
+     "z": 2.1,
+     "cosine": 0.048
+    },
+    {
+     "term": "a cat meowing",
+     "z": 1.47,
+     "cosine": -0.002
+    },
+    {
+     "term": "a car engine starting",
+     "z": 1.32,
+     "cosine": 0.042
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "cheerful ukulele music",
+     "z": 1.37,
+     "cosine": 0.081
+    },
+    {
+     "term": "solo piano music",
+     "z": 0.85,
+     "cosine": 0.042
+    },
+    {
+     "term": "chiptune video game music",
+     "z": 0.78,
+     "cosine": 0.045
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "celebratory and joyful music",
+     "z": 1.23,
+     "cosine": 0.057
+    },
+    {
+     "term": "playful and quirky music",
+     "z": 0.72,
+     "cosine": 0.061
+    },
+    {
+     "term": "sad and melancholic music",
+     "z": 0.26,
+     "cosine": 0.01
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a vocal chop",
+     "z": 3.1,
+     "cosine": 0.254
+    },
+    {
+     "term": "crisp hi-hats",
+     "z": 1.99,
+     "cosine": 0.108
+    },
+    {
+     "term": "a punchy kick drum pattern",
+     "z": 1.5,
+     "cosine": 0.003
+    }
+   ],
+   "voice": [
+    {
+     "term": "people laughing",
+     "z": 4.31,
+     "cosine": 0.14
+    },
+    {
+     "term": "a person coughing",
+     "z": 3.62,
+     "cosine": 0.161
+    },
+    {
+     "term": "children laughing",
+     "z": 3.25,
+     "cosine": 0.093
+    }
+   ],
+   "quality": [
+    {
+     "term": "a punchy sound",
+     "z": 1.49,
+     "cosine": 0.06
+    },
+    {
+     "term": "a satisfying sound",
+     "z": 1.34,
+     "cosine": 0.108
+    },
+    {
+     "term": "a tight snappy sound",
+     "z": 0.39,
+     "cosine": -0.014
+    }
+   ],
+   "production": [
+    {
+     "term": "an 8-bit sound effect",
+     "z": 2.92,
+     "cosine": 0.189
+    },
+    {
+     "term": "a square wave chiptune blip",
+     "z": 1.6,
+     "cosine": 0.063
+    },
+    {
+     "term": "a cheap synthesized beep",
+     "z": 1.57,
+     "cosine": 0.038
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Speech",
+    "p": 0.295
+   },
+   {
+    "label": "Gasp",
+    "p": 0.288
+   },
+   {
+    "label": "Throat clearing",
+    "p": 0.231
+   },
+   {
+    "label": "Male speech, man speaking",
+    "p": 0.084
+   },
+   {
+    "label": "Sneeze",
+    "p": 0.065
+   }
+  ],
+  "character": [],
+  "summary": "1.52 s busy, 2.6 onsets/s (attack 10 ms, decays in 101 ms). Sounds most like: a punchy impact hit (z +2.7), a cow mooing (z +2.1), a single mechanical keyboard key press (z +2.0) [plausible reading]. Other readings: digging in soil (nature, z +2.0), an error buzz (ui, z +1.8). Unvalidated hint: people laughing (z +4.3). AudioSet: Speech 0.29, Gasp 0.29, Throat clearing 0.23. peak -12.1 dBFS, -27.1 LUFS, brightness 2.7 kHz, bandwidth 12.9 kHz, noise floor -65 dBFS, mono."
+ },
+ "murmur": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/vo/murmur.wav",
+  "start": 10.55,
+  "end": 17.55,
+  "duration": 7.0,
+  "measurements": {
+   "duration": 7.0,
+   "peak_dbfs": -3.2,
+   "true_peak_dbtp": -3.2,
+   "rms_dbfs": -26.5,
+   "lufs": -19.6,
+   "lra_lu": 5.4,
+   "attack_ms": 0.0,
+   "decay_ms": 134.0,
+   "brightness_hz": 189,
+   "bandwidth_hz": 640,
+   "noise_floor_dbfs": -77.9,
+   "flatness": 0.0,
+   "harmonic_ratio": 0.419,
+   "onset_count": 28,
+   "onsets_per_s": 4.0,
+   "width": "mono",
+   "digital_silence_frac": 0.0021
+  },
+  "shape": "busy, 4.0 onsets/s (attack 0 ms, decays in 134 ms)",
+  "top_tags": [
+   {
+    "term": "a sub bass drop",
+    "category": "impacts",
+    "z": 2.7,
+    "cosine": 0.313,
+    "verdict": "plausible"
+   },
+   {
+    "term": "a finger squeaking on glass",
+    "category": "foley",
+    "z": 2.15,
+    "cosine": 0.22,
+    "verdict": "weak"
+   },
+   {
+    "term": "being underwater",
+    "category": "water",
+    "z": 2.13,
+    "cosine": 0.265,
+    "verdict": "weak"
+   },
+   {
+    "term": "a deep cinematic whoosh",
+    "category": "transitions",
+    "z": 2.11,
+    "cosine": 0.248,
+    "verdict": "weak"
+   },
+   {
+    "term": "a deep cinematic boom",
+    "category": "impacts",
+    "z": 2.07,
+    "cosine": 0.23,
+    "verdict": "weak"
+   },
+   {
+    "term": "a stutter glitch transition",
+    "category": "transitions",
+    "z": 2.01,
+    "cosine": 0.311,
+    "verdict": "weak"
+   },
+   {
+    "term": "a soft air whoosh",
+    "category": "transitions",
+    "z": 1.92,
+    "cosine": 0.229,
+    "verdict": "no match"
+   },
+   {
+    "term": "a cow mooing",
+    "category": "everyday",
+    "z": 1.71,
+    "cosine": 0.17,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 2.79,
+    "cosine": 0.183
+   },
+   {
+    "term": "children laughing",
+    "category": "voice",
+    "z": 2.56,
+    "cosine": 0.2
+   },
+   {
+    "term": "a deep sub bass",
+    "category": "instruments",
+    "z": 2.29,
+    "cosine": 0.288
+   },
+   {
+    "term": "a baby crying",
+    "category": "voice",
+    "z": 2.19,
+    "cosine": 0.204
+   },
+   {
+    "term": "a vocal chop",
+    "category": "instruments",
+    "z": 2.11,
+    "cosine": 0.331
+   },
+   {
+    "term": "a person coughing",
+    "category": "voice",
+    "z": 1.62,
+    "cosine": 0.153
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 1.46,
+    "cosine": 0.168
+   },
+   {
+    "term": "singing vocals",
+    "category": "voice",
+    "z": 1.21,
+    "cosine": 0.159
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a deep cinematic whoosh",
+     "z": 2.11,
+     "cosine": 0.248
+    },
+    {
+     "term": "a stutter glitch transition",
+     "z": 2.01,
+     "cosine": 0.311
+    },
+    {
+     "term": "a soft air whoosh",
+     "z": 1.92,
+     "cosine": 0.229
+    }
+   ],
+   "impacts": [
+    {
+     "term": "a sub bass drop",
+     "z": 2.7,
+     "cosine": 0.313
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 2.07,
+     "cosine": 0.23
+    },
+    {
+     "term": "a low rumble",
+     "z": 1.6,
+     "cosine": 0.187
+    }
+   ],
+   "ui": [
+    {
+     "term": "a digital glitch",
+     "z": 1.32,
+     "cosine": 0.23
+    },
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.26,
+     "cosine": 0.162
+    },
+    {
+     "term": "an error buzz",
+     "z": 1.15,
+     "cosine": 0.164
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a laptop keyboard typing",
+     "z": 0.3,
+     "cosine": 0.135
+    },
+    {
+     "term": "a keyboard typing fast",
+     "z": 0.22,
+     "cosine": 0.114
+    },
+    {
+     "term": "a deep thocky mechanical keyboard",
+     "z": 0.12,
+     "cosine": 0.139
+    }
+   ],
+   "foley": [
+    {
+     "term": "a finger squeaking on glass",
+     "z": 2.15,
+     "cosine": 0.22
+    },
+    {
+     "term": "a balloon squeak",
+     "z": 1.54,
+     "cosine": 0.18
+    },
+    {
+     "term": "a zipper",
+     "z": 1.44,
+     "cosine": 0.214
+    }
+   ],
+   "water": [
+    {
+     "term": "being underwater",
+     "z": 2.13,
+     "cosine": 0.265
+    },
+    {
+     "term": "bubbles underwater",
+     "z": 1.64,
+     "cosine": 0.206
+    },
+    {
+     "term": "a liquid bloop",
+     "z": 1.29,
+     "cosine": 0.231
+    }
+   ],
+   "nature": [
+    {
+     "term": "a bee flying by",
+     "z": 1.63,
+     "cosine": 0.201
+    },
+    {
+     "term": "insects buzzing",
+     "z": 0.97,
+     "cosine": 0.146
+    },
+    {
+     "term": "a bird flapping its wings",
+     "z": 0.34,
+     "cosine": 0.069
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a wine glass ring",
+     "z": 0.66,
+     "cosine": 0.101
+    },
+    {
+     "term": "a sustained glass harp tone",
+     "z": 0.55,
+     "cosine": 0.072
+    },
+    {
+     "term": "a celesta note",
+     "z": 0.52,
+     "cosine": 0.182
+    }
+   ],
+   "ambience": [
+    {
+     "term": "a busy cafe",
+     "z": 1.37,
+     "cosine": 0.075
+    },
+    {
+     "term": "an airplane flying overhead",
+     "z": 1.14,
+     "cosine": 0.151
+    },
+    {
+     "term": "a quiet room at night",
+     "z": 0.68,
+     "cosine": 0.073
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a cow mooing",
+     "z": 1.71,
+     "cosine": 0.17
+    },
+    {
+     "term": "a heartbeat",
+     "z": 1.67,
+     "cosine": 0.223
+    },
+    {
+     "term": "a cat meowing",
+     "z": 1.48,
+     "cosine": 0.149
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "hip hop beat with heavy bass",
+     "z": 0.61,
+     "cosine": 0.116
+    },
+    {
+     "term": "trap beat",
+     "z": 0.54,
+     "cosine": 0.174
+    },
+    {
+     "term": "glitch hop music",
+     "z": 0.51,
+     "cosine": 0.172
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "warm and cozy music",
+     "z": 0.32,
+     "cosine": 0.179
+    },
+    {
+     "term": "dark and tense music",
+     "z": 0.22,
+     "cosine": 0.138
+    },
+    {
+     "term": "playful and quirky music",
+     "z": 0.14,
+     "cosine": 0.151
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a deep sub bass",
+     "z": 2.29,
+     "cosine": 0.288
+    },
+    {
+     "term": "a vocal chop",
+     "z": 2.11,
+     "cosine": 0.331
+    },
+    {
+     "term": "a grand piano",
+     "z": 1.02,
+     "cosine": 0.18
+    }
+   ],
+   "voice": [
+    {
+     "term": "people laughing",
+     "z": 2.79,
+     "cosine": 0.183
+    },
+    {
+     "term": "children laughing",
+     "z": 2.56,
+     "cosine": 0.2
+    },
+    {
+     "term": "a baby crying",
+     "z": 2.19,
+     "cosine": 0.204
+    }
+   ],
+   "quality": [
+    {
+     "term": "a boomy sound",
+     "z": 2.28,
+     "cosine": 0.312
+    },
+    {
+     "term": "a deep sound",
+     "z": 1.85,
+     "cosine": 0.266
+    },
+    {
+     "term": "a hollow sound",
+     "z": 1.78,
+     "cosine": 0.232
+    }
+   ],
+   "production": [
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 2.77,
+     "cosine": 0.354
+    },
+    {
+     "term": "a distorted clipped recording",
+     "z": 1.51,
+     "cosine": 0.193
+    },
+    {
+     "term": "an 8-bit sound effect",
+     "z": 1.35,
+     "cosine": 0.214
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Speech",
+    "p": 0.721
+   },
+   {
+    "label": "Stomach rumble",
+    "p": 0.201
+   }
+  ],
+  "character": [],
+  "summary": "7.00 s busy, 4.0 onsets/s (attack 0 ms, decays in 134 ms). Sounds most like: a sub bass drop (z +2.7), a finger squeaking on glass (z +2.1), being underwater (z +2.1) [plausible reading]. Other readings: a deep cinematic whoosh (transitions, z +2.1), a cow mooing (everyday, z +1.7). AudioSet: Speech 0.72, Stomach rumble 0.20. peak -3.2 dBFS, -19.6 LUFS, brightness 189 Hz, bandwidth 640 Hz, noise floor -78 dBFS, mono."
+ },
+ "steps_f": {
+  "summary": "steps_f.flac: 'footsteps on a wooden floor' -> strong (z +4.7; would rank #1 among 322 vocabulary descriptions; cosine 0.34). Forced choice vs your alternatives: 'footsteps on a wooden floor' 99%, 'high heels walking' <1%, 'knocking on a door' <1%, 'a heavy thud' <1%. It sounds most like: 'footsteps on wood' (z +4.3), 'a body falling on the ground' (z +3.6), 'high heels walking' (z +3.2), 'a heavy thud' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/steps_f.flac",
+  "start": null,
+  "end": null,
+  "peak_dbfs": -1.0,
+  "query": "footsteps on a wooden floor",
+  "cosine": 0.336,
+  "z": 4.77,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.994,
+  "verdict": "strong",
+  "validated": true,
+  "alts": [
+   {
+    "query": "high heels walking",
+    "p": 0.002,
+    "z": 3.21,
+    "cosine": 0.172
+   },
+   {
+    "query": "knocking on a door",
+    "p": 0.003,
+    "z": 2.84,
+    "cosine": 0.185
+   },
+   {
+    "query": "a heavy thud",
+    "p": 0.001,
+    "z": 2.78,
+    "cosine": 0.162
+   }
+  ],
+  "results": [
+   {
+    "query": "footsteps on a wooden floor",
+    "cosine": 0.336,
+    "z": 4.77,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": true,
+    "p_vs_alts": 0.994,
+    "alts": [
+     {
+      "query": "high heels walking",
+      "p": 0.002,
+      "z": 3.21,
+      "cosine": 0.172
+     },
+     {
+      "query": "knocking on a door",
+      "p": 0.003,
+      "z": 2.84,
+      "cosine": 0.185
+     },
+     {
+      "query": "a heavy thud",
+      "p": 0.001,
+      "z": 2.78,
+      "cosine": 0.162
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "footsteps on wood",
+    "category": "foley",
+    "z": 4.32,
+    "cosine": 0.291
+   },
+   {
+    "term": "a body falling on the ground",
+    "category": "impacts",
+    "z": 3.6,
+    "cosine": 0.246
+   },
+   {
+    "term": "high heels walking",
+    "category": "foley",
+    "z": 3.21,
+    "cosine": 0.172
+   },
+   {
+    "term": "a heavy thud",
+    "category": "impacts",
+    "z": 2.78,
+    "cosine": 0.162
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "hangers_m": {
+  "summary": "hangers.flac: 'wooden coat hangers knocking together' -> no match (z +1.6; would rank #20 among 322 vocabulary descriptions; cosine 0.19). Forced choice vs your alternatives: 'wooden coat hangers knocking together' 11%, 'footsteps on wood' 80%, 'knocking on a door' 9%, 'wind chimes' <1%. It sounds most like: 'footsteps on wood' (z +2.7), 'a rubber stretch' (z +2.6), 'a balloon squeak' (z +2.6), 'a body falling on the ground' (z +2.5).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/hangers.flac",
+  "start": null,
+  "end": null,
+  "peak_dbfs": -1.0,
+  "query": "wooden coat hangers knocking together",
+  "cosine": 0.186,
+  "z": 1.63,
+  "percentile": 94.1,
+  "rank_in_vocab": 20,
+  "p_vs_alts": 0.114,
+  "verdict": "no match",
+  "validated": true,
+  "alts": [
+   {
+    "query": "footsteps on wood",
+    "p": 0.795,
+    "z": 2.71,
+    "cosine": 0.236
+   },
+   {
+    "query": "knocking on a door",
+    "p": 0.091,
+    "z": 1.83,
+    "cosine": 0.18
+   },
+   {
+    "query": "wind chimes",
+    "p": 0.0,
+    "z": -2.49,
+    "cosine": -0.238
+   }
+  ],
+  "results": [
+   {
+    "query": "wooden coat hangers knocking together",
+    "cosine": 0.186,
+    "z": 1.63,
+    "percentile": 94.1,
+    "rank_in_vocab": 20,
+    "vocab_size": 322,
+    "verdict": "no match",
+    "validated": true,
+    "p_vs_alts": 0.114,
+    "alts": [
+     {
+      "query": "footsteps on wood",
+      "p": 0.795,
+      "z": 2.71,
+      "cosine": 0.236
+     },
+     {
+      "query": "knocking on a door",
+      "p": 0.091,
+      "z": 1.83,
+      "cosine": 0.18
+     },
+     {
+      "query": "wind chimes",
+      "p": 0.0,
+      "z": -2.49,
+      "cosine": -0.238
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "footsteps on wood",
+    "category": "foley",
+    "z": 2.71,
+    "cosine": 0.236
+   },
+   {
+    "term": "a rubber stretch",
+    "category": "foley",
+    "z": 2.66,
+    "cosine": 0.282
+   },
+   {
+    "term": "a balloon squeak",
+    "category": "foley",
+    "z": 2.61,
+    "cosine": 0.253
+   },
+   {
+    "term": "a body falling on the ground",
+    "category": "impacts",
+    "z": 2.58,
+    "cosine": 0.247
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "zip_m": {
+  "summary": "zip.flac: 'a small zipper being fiddled with' -> weak (z +2.2; would rank #8 among 322 vocabulary descriptions; cosine 0.28). Forced choice vs your alternatives: 'a small zipper being fiddled with' 19%, 'a spray can hissing' 77%, 'paper rustling' 2%, 'a pen click' 2%. It sounds most like: 'a spray can hissing' (z +2.7), 'a match being struck' (z +2.6), 'a rubber stretch' (z +2.4), 'a record scratch' (z +2.4). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/audio/kit/zip.flac",
+  "start": null,
+  "end": null,
+  "peak_dbfs": -1.0,
+  "query": "a small zipper being fiddled with",
+  "cosine": 0.276,
+  "z": 2.21,
+  "percentile": 97.8,
+  "rank_in_vocab": 8,
+  "p_vs_alts": 0.19,
+  "verdict": "weak",
+  "validated": true,
+  "alts": [
+   {
+    "query": "a spray can hissing",
+    "p": 0.767,
+    "z": 2.7,
+    "cosine": 0.312
+   },
+   {
+    "query": "paper rustling",
+    "p": 0.025,
+    "z": 1.76,
+    "cosine": 0.224
+   },
+   {
+    "query": "a pen click",
+    "p": 0.018,
+    "z": 1.31,
+    "cosine": 0.215
+   }
+  ],
+  "results": [
+   {
+    "query": "a small zipper being fiddled with",
+    "cosine": 0.276,
+    "z": 2.21,
+    "percentile": 97.8,
+    "rank_in_vocab": 8,
+    "vocab_size": 322,
+    "verdict": "weak",
+    "validated": true,
+    "p_vs_alts": 0.19,
+    "alts": [
+     {
+      "query": "a spray can hissing",
+      "p": 0.767,
+      "z": 2.7,
+      "cosine": 0.312
+     },
+     {
+      "query": "paper rustling",
+      "p": 0.025,
+      "z": 1.76,
+      "cosine": 0.224
+     },
+     {
+      "query": "a pen click",
+      "p": 0.018,
+      "z": 1.31,
+      "cosine": 0.215
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a spray can hissing",
+    "category": "everyday",
+    "z": 2.7,
+    "cosine": 0.312
+   },
+   {
+    "term": "a match being struck",
+    "category": "everyday",
+    "z": 2.64,
+    "cosine": 0.296
+   },
+   {
+    "term": "a rubber stretch",
+    "category": "foley",
+    "z": 2.48,
+    "cosine": 0.304
+   },
+   {
+    "term": "a record scratch",
+    "category": "transitions",
+    "z": 2.45,
+    "cosine": 0.329
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ }
+}

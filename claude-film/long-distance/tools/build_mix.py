@@ -127,7 +127,7 @@ def room_ir(name, R):
 def in_room(x, name, wet_db, R):
     """x (mono) with its room: dry + the room's tail at wet_db (energy-normalised IR), length grows by the tail."""
     ir = room_ir(name, R); y = np.concatenate([x, np.zeros(len(ir))])
-    wet = signal.fftconvolve(x, ir)[: len(y)]
+    wet = np.zeros(len(y)); w = signal.fftconvolve(x, ir); wet[: min(len(y), len(w))] = w[: len(y)]
     return y + wet * undb(wet_db)
 
 
@@ -334,27 +334,26 @@ def main():
         how = p.get('as') or vm['as']
         takes.append({'id': lid, 'file': os.path.join(ROOT, vm['file']), 'as': how, 't': c['tg'], 'seq': c['seq'], 'gain_db': 0, 'align': 'start'})
     takes += voice_cues
+    # each take through its treatment first, then levelled as heard: the phone's every line to the same loudness (too
+    # even); the real voices by their treatment's median, so each keeps its own performance (quieter where it was played
+    # quieter, within the treatment's spread_db: 3 dB in the flat, 1.5 dB in bed)
     for v in takes:
-        x = load(v['file'], 1)[:, 0]; v['raw'] = lufs(x)
-    # each treatment's lines are levelled together: the phone's every line to the same loudness (too even); the real
-    # voices by their median, so each keeps its own performance (quieter where it was played quieter, within 4 dB)
+        space = V[v['as']].get('room_by_seq', {}).get(v['seq'], V[v['as']].get('room')) if V[v['as']].get('room') else None
+        v['y'] = treat(load(v['file'], 1)[:, 0], v['as'], V, R, space); v['heard'] = lufs(v['y'])
     for how, spec in V.items():
         grp = [v for v in takes if v['as'] == how and not v['id'].startswith('Q')]
-        if not grp: continue
-        m = float(np.median([v['raw'] for v in grp]))
+        m = float(np.median([v['heard'] for v in grp])) if grp else spec['lufs']
         for v in [v for v in takes if v['as'] == how]:
-            off = 0.0 if spec.get('even') else float(np.clip(v['raw'] - m, -4, 4))
-            if v['id'].startswith('Q'): off = 0.0                                       # voiced cues use their own gain_db
-            v['gain'] = spec['lufs'] + off - v['raw'] + v['gain_db']
+            sp = spec.get('spread_db', 3); off = 0.0 if (spec.get('even') or v['id'].startswith('Q')) else float(np.clip(v['heard'] - m, -sp, sp))
+            v['gain'] = spec['lufs'] + off - v['heard'] + v['gain_db']                  # voiced cues use their own gain_db
     voices = []
     for v in takes:
-        x = load(v['file'], 1)[:, 0] * undb(v['gain'])
-        space = None
-        if V[v['as']].get('room'): space = V[v['as']].get('room_by_seq', {}).get(v['seq'], V[v['as']]['room'])
-        y = treat(x, v['as'], V, R, space)
+        y = v.pop('y') * undb(v['gain'])
         out = os.path.join(OUT, 'voice', f"{v['id']}.wav"); sf.write(out, y.astype(np.float32), SR, subtype='PCM_24')
         st = v['t'] - (peak_index(y) / SR if v['align'] == 'peak' else 0)
         voices.append({'file': out, 'start_s': round(st, 3)})
+    json.dump({v['id']: {'as': v['as'], 'heard_lufs': round(v['heard'], 1), 'gain_db': round(v['gain'], 1), 'lufs': round(v['heard'] + v['gain'], 1)} for v in takes},
+              open(os.path.join(OUT, 'voice', 'levels.json'), 'w'), indent=1)
 
     silence_ok = [[round(a, 2), round(b2, 2)] for a, b2 in sil] + quiet_ok
     sheet = {'fps': 24, 'duration_s': round(T, 3), 'energy': 'calm', 'lufs': -18, 'kit': os.path.join(ROOT, 'audio', 'kit'),

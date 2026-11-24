@@ -1,49 +1,175 @@
 {
  "_doc": "Which generated take becomes which kit sound, and how it is cut (tools/kit_make.py). Beds are stereo windows the mix loops; one-shots are mono, onset-trimmed and faded. Takes live in audio/gen (gitignored); the kit (audio/kit/*.flac) is committed.",
- "bed_night": {"src": "bed_night.wav", "kind": "bed"},
- "bed_day": {"src": "bed_day.wav", "kind": "bed"},
- "bed_bathroom": {"src": "bed_bathroom.wav", "kind": "bed"},
- "bed_office": {"src": "bed_office.wav", "kind": "bed"},
- "keyboard_near": {"src": "keyboard_near.wav", "kind": "bed"},
- "bed_stairwell": {"src": "bed_stairwell.wav", "kind": "bed"},
- "bed_bus": {"src": "bed_bus.wav", "kind": "bed"},
- "fridge_hum": {"src": "fridge_hum.wav", "kind": "bed"},
- "pendant_hum": {"src": "pendant_hum.wav", "kind": "bed"},
- "street_day": {"src": "street_day.wav", "kind": "bed"},
- "water_tap": {"src": "water_tap.wav", "kind": "bed"},
- "brushing": {"src": "brushing.wav", "kind": "bed"},
- "chewing": {"src": "chewing.wav", "kind": "bed"},
- "heartbeat": {"src": "heartbeat.wav", "kind": "bed"},
- "stairs_down": {"src": "stairs_down.wav", "kind": "bed", "start": 0.0, "end": 6.17, "why": "her steps down the stairwell, receding: played once from its start (Q10 75-81)"},
- "zip": {"src": "zip.wav", "kind": "bed"},
- "knock_1": {"src": "knock.wav", "start": 0.94, "end": 1.14, "key": "knock", "why": "the first rap of the take"},
- "knock_2": {"src": "knock.wav", "start": 1.52, "end": 1.83, "key": "knock", "why": "a rap from the middle of the take"},
- "knock_3": {"src": "knock.wav", "start": 2.06, "end": 2.5, "key": "knock", "why": "the take's last rap, with its full room tail"},
- "door_open": {"src": "door_open.wav"},
- "door_close": {"src": "door_close.wav"},
- "door_close_soft": {"src": "door_close_soft.wav"},
- "street_door": {"src": "street_door.wav"},
- "door_far": {"src": "door_far.wav"},
- "streetcar_far": {"src": "streetcar_far.wav"},
- "duvet": {"src": "duvet.wav"},
- "sigh_m": {"src": "sigh_m.wav"},
- "breath_out": {"src": "breath_out.wav"},
- "breath_in_f": {"src": "breath_in_f.wav"},
- "chair_creak": {"src": "chair_creak.wav"},
- "bus_brakes": {"src": "bus_brakes.wav"},
- "bus_bell": {"src": "bus_bell.wav"},
- "bus_doors": {"src": "bus_doors.wav"},
- "fork_pan_1": {"src": "fork_pan.wav", "start": 0.3, "end": 0.66, "key": "fork_pan", "why": "the take's first scrape"},
- "fork_pan_2": {"src": "fork_pan.wav", "start": 0.64, "end": 1.05, "key": "fork_pan", "why": "the take's second scrape"},
- "couch_creak": {"src": "couch_creak.wav"},
- "steps_m": {"src": "steps_m.wav", "why": "him: four or five unhurried steps (to the door; out of the room)"},
- "steps_m2": {"src": "steps_m.wav", "start": 0.15, "end": 1.05, "key": "steps_m", "why": "him stepping aside: two steps"},
- "steps_f": {"src": "steps_f.wav", "start": 0.5, "end": 1.95, "key": "steps_f", "why": "her: three slow steps in, then she stops just inside the door"},
- "steps_fast": {"src": "steps_fast.wav"},
- "coat_rustle": {"src": "coat_rustle.wav"},
- "wardrobe_door": {"src": "wardrobe_door.wav"},
- "hangers": {"src": "hangers.wav"},
- "bag_lift": {"src": "bag_lift.wav"},
- "trade": {"src": "trade.wav"},
- "phone_cushion": {"src": "phone_cushion.wav"}
+ "bed_night": {
+  "src": "bed_night.wav",
+  "kind": "bed"
+ },
+ "bed_day": {
+  "src": "bed_day.wav",
+  "kind": "bed"
+ },
+ "bed_bathroom": {
+  "src": "bed_bathroom.wav",
+  "kind": "bed"
+ },
+ "bed_office": {
+  "src": "bed_office.wav",
+  "kind": "bed"
+ },
+ "keyboard_near": {
+  "src": "keyboard_near.wav",
+  "kind": "bed"
+ },
+ "bed_stairwell": {
+  "src": "bed_stairwell.wav",
+  "kind": "bed"
+ },
+ "bed_bus": {
+  "src": "bed_bus.wav",
+  "kind": "bed"
+ },
+ "fridge_hum": {
+  "src": "fridge_hum.wav",
+  "kind": "bed"
+ },
+ "pendant_hum": {
+  "src": "pendant_hum.wav",
+  "kind": "bed"
+ },
+ "street_day": {
+  "src": "street_day.wav",
+  "kind": "bed"
+ },
+ "water_tap": {
+  "src": "water_tap.wav",
+  "kind": "bed"
+ },
+ "brushing": {
+  "src": "brushing.wav",
+  "kind": "bed"
+ },
+ "heartbeat": {
+  "src": "heartbeat.wav",
+  "kind": "bed"
+ },
+ "stairs_down": {
+  "src": "stairs_down.wav",
+  "kind": "bed",
+  "start": 0.0,
+  "end": 6.17,
+  "why": "her steps down the stairwell, receding: played once from its start (Q10 75-81)"
+ },
+ "knock_1": {
+  "src": "knock.wav",
+  "start": 0.94,
+  "end": 1.14,
+  "key": "knock",
+  "why": "the first rap of the take"
+ },
+ "knock_2": {
+  "src": "knock.wav",
+  "start": 1.52,
+  "end": 1.83,
+  "key": "knock",
+  "why": "a rap from the middle of the take"
+ },
+ "knock_3": {
+  "src": "knock.wav",
+  "start": 2.06,
+  "end": 2.5,
+  "key": "knock",
+  "why": "the take's last rap, with its full room tail"
+ },
+ "door_open": {
+  "src": "door_open.wav"
+ },
+ "door_close": {
+  "src": "door_close.wav"
+ },
+ "door_close_soft": {
+  "src": "door_close_soft.wav"
+ },
+ "street_door": {
+  "src": "street_door.wav"
+ },
+ "door_far": {
+  "src": "door_far.wav"
+ },
+ "streetcar_far": {
+  "src": "streetcar_far.wav"
+ },
+ "duvet": {
+  "src": "duvet.wav"
+ },
+ "sigh_m": {
+  "src": "sigh_m.wav"
+ },
+ "breath_out": {
+  "src": "breath_out.wav"
+ },
+ "breath_in_f": {
+  "src": "breath_in_f.wav"
+ },
+ "chair_creak": {
+  "src": "chair_creak.wav"
+ },
+ "bus_brakes": {
+  "src": "bus_brakes.wav"
+ },
+ "bus_bell": {
+  "src": "bus_bell.wav"
+ },
+ "bus_doors": {
+  "src": "bus_doors.wav"
+ },
+ "fork_pan_1": {
+  "src": "fork_pan.wav",
+  "start": 0.3,
+  "end": 0.66,
+  "key": "fork_pan",
+  "why": "the take's first scrape"
+ },
+ "fork_pan_2": {
+  "src": "fork_pan.wav",
+  "start": 0.64,
+  "end": 1.05,
+  "key": "fork_pan",
+  "why": "the take's second scrape"
+ },
+ "couch_creak": {
+  "src": "couch_creak.wav"
+ },
+ "steps_m": {
+  "src": "steps_m.wav",
+  "why": "him: four or five unhurried steps (to the door; out of the room)"
+ },
+ "steps_m2": {
+  "src": "steps_m.wav",
+  "start": 0.15,
+  "end": 1.05,
+  "key": "steps_m",
+  "why": "him stepping aside: two steps"
+ },
+ "steps_f": {
+  "src": "steps_f.wav",
+  "start": 0.5,
+  "end": 1.95,
+  "key": "steps_f",
+  "why": "her: three slow steps in, then she stops just inside the door"
+ },
+ "steps_fast": {
+  "src": "steps_fast.wav"
+ },
+ "coat_rustle": {
+  "src": "coat_rustle.wav"
+ },
+ "wardrobe_door": {
+  "src": "wardrobe_door.wav"
+ },
+ "hangers": {
+  "src": "hangers.wav"
+ },
+ "trade": {
+  "src": "trade.wav"
+ }
 }
