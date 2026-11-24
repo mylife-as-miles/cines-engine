@@ -12,6 +12,17 @@ Seven public repositories, read in November 2026 (shallow clones; treat their te
 | [MengTo/Skills](https://github.com/MengTo/Skills) | 184 designer skills; the video ones draw every frame from one clock, time cues to spoken words, render with Playwright + ffmpeg (ProRes 4444 alpha layers), and judge blind | Motion Graphics, Claude YouTube (explainers, reels, making-of films), AI Film (Seedance rules), Claude Game (deterministic capture) | MIT (Meng To). Do not reuse its demo media of a real person, persona corpora, or the bundled Geist fonts (no licence file; get them upstream). Fil-editor and HeyGen steps are paid, optional |
 | [Panniantong/agent-reach](https://github.com/Panniantong/agent-reach) | A read-only CLI that reaches what agents' built-in web tools cannot: YouTube, Reddit, GitHub, X, Bilibili and more, plus clean page reading; JSON out; installs its own skill | Research for every studio (`research.md`) | MIT (Agent Eyes). Install from GitHub only — the PyPI package of the same name is a different project |
 
+### Sound, score and music (added November 2026, at the author's request)
+
+Five more sources, folded into `score-and-sound-design.md` (and `sound.md` §5 and §7, `ai-film.md` §7). Their licences differ, so check before reusing anything:
+
+| Repo | What it is | Best for | Licence |
+| --- | --- | --- | --- |
+| [snowfrost/skill-movie](https://github.com/snowfrost/skill-movie) (`cinematic-music-sound-design`, `score-and-mix-picture`) | Scoring and sound design as a narrative system; spotting locked picture, generation prompts, returned music edited to picture, a dialogue-safe mix verified within 20 ms; a scoring knowledge base | The sound bible in every studio | **No licence file** (all rights reserved): read and summarise only, never copy text, scripts or its bundled SFX |
+| [badgids/Story-Film-Skills](https://github.com/badgids/Story-Film-Skills) (`skills/sound-design`) | Shot-by-shot SFX cue lists (`SFX-###`), routing effects to Stable Audio 3 or to the video model's native sound, "every on-screen action has a sound decision, including silence" | AI Film, Claude Game | Apache-2.0 (Alan Guice): adaptable with attribution |
+| [rubycrocker/FME-24-dataset](https://github.com/rubycrocker/FME-24-dataset) | Film Music & Emotion: 422 film-score excerpts, 98 listeners, valence–arousal over time, 78 acoustic features (Crocker and Fazekas, SMC 2024) | Research on how a score moves feeling over time | Open for research; audio not distributed. Analyse locally, don't commit the CSVs |
+| [MTG/freesound](https://github.com/MTG/freesound) | The server behind freesound.org | Finding recorded sounds through its API | AGPL-3.0 server code (not vendored); each recording has its own CC licence |
+
 ## Where each idea landed
 
 | Idea | Source | In this handbook |
@@ -28,6 +39,11 @@ Seven public repositories, read in November 2026 (shallow clones; treat their te
 | Camera handoff, image pipeline order, film stage, visual validation | three.js pack | `claude-game.md` §7 |
 | Deterministic game capture, plates, stepped clock | MengTo `making-of-film/references/look.md`, `game-combat/game-dev-combat-skill-polish` | `claude-game.md` §7 |
 | Seedance draft → final, start image also as reference, prompt shape, consent | MengTo `media/digital-twin`, `making-of-film/references/camera-and-twin.md` | `ai-film.md` |
+| Cue jobs, entry and exit reasons, selective sync, sound–image relations, motif transformation, feeling → controls | snowfrost `cinematic-music-sound-design`, `score-and-mix-picture/references/scoring-knowledge-base.md` | `score-and-sound-design.md` §1, §3–5 |
+| Orchestration under dialogue, evaluation order for returned cues, masters within 20 ms | snowfrost `score-and-mix-picture` | `score-and-sound-design.md` §7–8 |
+| `SFX-###` cue lists; every on-screen action has a sound decision; native video-model sound versus post | badgids `skills/sound-design` | `score-and-sound-design.md` §6, `ai-film.md` §7 |
+| Tension follows density and texture, not tempo; film music is mostly uncertainty and anticipation | FME-24 (this handbook's own analysis of its CSVs) | `score-and-sound-design.md` §5 |
+| Freesound API search and per-recording licences | MTG/freesound, freesound.org/docs/api | `sound.md` §5 |
 | Blind judges, lower score counts; fix only shared faults | MengTo `workflow/workflow-score-to-target`, `making-of-film/assets/judge-prompt.md` | `SKILL.md`, every studio's review step |
 | earshot commands, pass rule, coded SFX bank | earshot | `sound.md` |
 

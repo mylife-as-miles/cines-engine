@@ -96,6 +96,8 @@ Takes:
 
 ## 7. Sound
 
+Write `design/SOUND_BIBLE.md` with the visual bible (`score-and-sound-design.md`), and decide per take what the video model's own sound keeps, replaces and adds. **Check every take with `earshot describe`:** Seedance can slip a score under the dialogue even when the prompt names only the street and the voices (Oren's Q10 read AudioSet Music 0.85). A scored take keeps its voices through a Demucs stem (`ai-film/my-name-is-oren/tools/stems.py`) over the film's own beds. Level sequences on dialogue, run one bed under every join, and fill the generator's dead air (Oren's `audio/README.md`).
+
 Model-generated audio is a guide at most: build the soundtrack ourselves (`sound.md`). Voice with ElevenLabs or Gemini TTS (lip-sync with `sync_so` if a character speaks on camera), score with Lyria, effects with Stable Audio 3.0 Small checked by earshot, mix to the platform's loudness. Keep the generated audio only when it is genuinely the best take and say so in `DECISIONS.md`.
 
 ## 8. Finish

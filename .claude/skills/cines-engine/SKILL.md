@@ -18,7 +18,7 @@ Six studios, one way of working. Every production is a folder `<studio>/<slug>/`
 | Film made with video generation models (Seedance, Kling, …): treatment → prompts → selects → edit | `ai-film/` | `references/ai-film.md` |
 | Animation made by Claude driving Blender (bpy scenes, cameras, lights, renders) | `claude-blender/` | `references/claude-blender.md` |
 
-Always also read `references/sound.md` when the job has any audio (it almost always does), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/research.md` is how to look things up (built-in web search first, then Agent Reach for YouTube, Reddit, GitHub, X and clean page reading) without leaking private details. `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
+Always also read `references/sound.md` when the job has any audio (it almost always does), `references/score-and-sound-design.md` before any sound is made (the sound bible: spotting, motifs, shot-by-shot soundscape, mix hierarchy, the FME-24 emotion findings, Freesound licences), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/research.md` is how to look things up (built-in web search first, then Agent Reach for YouTube, Reddit, GitHub, X and clean page reading) without leaking private details. `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
 
 A job can span studios: a game trailer for YouTube is Claude Game for the picture and Claude YouTube for the packaging; a product video with AI shots is AI Film for the shots and Motion Graphics for the graphics. File it under the studio of its main deliverable.
 
@@ -29,7 +29,7 @@ A job can span studios: a game trailer for YouTube is Claude Game for the pictur
 3. **Look before building.** Draw style frames, keyframes, a board or test stills and let the author choose between two or three looks before any long render. Cheap pictures settle taste; long renders do not.
 4. **Build in code, deterministically.** Every frame should be reproducible from source: time is a parameter, not the wall clock; random numbers are seeded; assets have paths in the repo or a documented location.
 5. **Look at your work.** Before sending anything, look at it: `scripts/contact_sheet.py` on the render (whole film, and crops of the smallest text at full size), listen to the mix's hardest moments, check frame count and duration with `ffprobe`. Report what you checked; never claim a full watch you did not do.
-6. **Sound is half the film.** Voice, score, effects, room tone, mix and loudness — `references/sound.md`.
+6. **Sound is half the film, and it is part of the bible.** Every production has a `design/SOUND_BIBLE.md` before the first sound is made: the soundtrack's job, its sound world and point of view, themes and motifs, a spotting map, a shot-by-shot soundscape, the dialogue rules, the mix hierarchy and the sources (`references/score-and-sound-design.md`). Then voice, score, effects, room tone, mix and loudness (`references/sound.md`).
 7. **Deliver and document.** Send the file (`SendUserFile`; under 400 MiB), and update the README (what it is, how to watch, how it is built, layout, credits) and DECISIONS. Commit source, not renders, to the production's branch.
 8. **When the author says it is complete: merge to `main`, then update this skill.** Merge the production's branch into `main` (a pull request if the author wants one), and only then, on `main`, write what the production taught into the skill: its studio reference (new tools, numbers, settings that worked), the principles here if one changed, a line per lesson. The skill always describes finished, accepted work; experiments on a branch do not change it until they are signed off.
 
@@ -57,7 +57,7 @@ For anything the author will judge (looks, a cut, a thumbnail set), get an indep
 | `assets/gfx_template.html` + `assets/plan_example.json` | Supers, route bar, captions, product title, end card and notice card, all driven by one JSON plan. |
 | `assets/ai-film/` | The author's AI Film templates: environment reference, character sheet, prop reference, auteur video prompt. |
 | `scripts/blender/camrig/` | Blender camera rigs from a `shots.json` (vendored from anyshot, MIT): framing sheets, lens charts, previews, finals. |
-| `references/*.md` | One per studio, plus `sound.md`, `environment.md`, `research.md`, `external.md`. |
+| `references/*.md` | One per studio, plus `sound.md`, `score-and-sound-design.md`, `environment.md`, `research.md`, `external.md`. |
 | `THIRD_PARTY.md` | Licences of the outside work this skill adapts. |
 
 ## Keys, privacy and private assets

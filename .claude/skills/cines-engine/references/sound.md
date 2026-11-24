@@ -55,7 +55,8 @@ earshot (github.com/Leonxlnx/earshot, MIT, v0.4) runs locally on CPU (CLAP and a
 
 ## 5. Other sources
 
-- **CC0 recordings**: opus-sound-layer's library (`sfx.py browse/search/add` with waveform and spectrogram sheets); Freesound CC0 (scraped search; it and its CDN refused one build machine); One Too Many's committed recordings (`claude-film/one-too-many/audio/sfx/`) are reusable by any production (`otm/<name>` in Autopilot's sound map).
+- **Freesound** (freesound.org, MTG; the site's code is AGPL and not vendored here): use its API v2 (`https://freesound.org/apiv2/search/text/?query=…&filter=license:"Creative Commons 0"&fields=id,name,license,username,previews,duration`, with a token from freesound.org/apiv2/apply saved as a network secret, never in the repo). **Every recording carries its own licence**: CC0 needs nothing; CC-BY needs the author and sound ID in `audio/CREDITS.md`; never use CC-BY-NC in commercial work. Previews are MP3; originals need OAuth2. Its servers refused one build machine, so add `freesound.org` and `cdn.freesound.org` to the environment first.
+- **CC0 recordings**: opus-sound-layer's library (`sfx.py browse/search/add` with waveform and spectrogram sheets); One Too Many's committed recordings (`claude-film/one-too-many/audio/sfx/`) are reusable by any production (`otm/<name>` in Autopilot's sound map).
 - **Synthesised**: sounds that are synthetic in life (alarms, chimes, ringtones, UI) in numpy (`claude-film/autopilot/tools/synth_sfx.py`); beds like tinnitus or heat shimmer from filtered noise.
 - **The author's own music** (Osita Miles's tracks in the Crownfall films): match bytes and SHA-256 to the game's copies, credit as such.
 
@@ -73,6 +74,7 @@ Voice early: take lengths fix subtitle holds and beat timing, so voice the scrip
 
 ## 7. Score
 
+- **Design before generating**: the sound bible's spotting map, themes and motifs and their transformations, and the feeling-to-controls table are in `score-and-sound-design.md` §3–5 (cue jobs, entry and exit reasons, selective sync, tempo arithmetic, orchestration under dialogue, the FME-24 finding that tension follows density and texture rather than tempo), with the order for judging a returned cue in §8.
 - **Lyria 3.5** (Gemini key; POST `v1beta/interactions` with `{"model": "lyria-3.5", "input": prompt}`; the MP3 comes base64 in the `model_output` step; about USD 0.08 a cue; SynthID-watermarked). Prompts: "instrumental film-score cue, about N seconds … No drums, no vocals, no choir. In tune at A = 440." Quirks: it returns roughly 60–90 s whatever you ask and ignores timestamps in the prompt (window each take with earshot `find`), takes drift 0 to +36 cents (measure and retune), some prompts are blocked (reword neutrally, do not retry), connections drop mid-response (retry). Plan in `audio/score_plan.json` (motifs, key map, arc, cues with start/end, level, prompt, why); `audio/SCORE.md` is its readable form. Tools: `claude-film/*/tools/lyria.py`, `score_check.py`, `score_window.py`, `score_place.py`.
 - **Stable Audio Music** for game cues and beds (§3); **Higgsfield** `generate_audio` is another option (quote cost first).
 - One piece shaped to an edit works for ads: a low problem, a lift where the product enters, a peak on the proof, thinning before the end card, a resolve.
