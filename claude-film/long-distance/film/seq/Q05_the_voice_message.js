@@ -140,6 +140,7 @@
     void band;
     // his left hand holds it from below (the palm and fingers under the frame), the thumb up onto the play button
     const hp = thumbOnGlass(c, P, L, tgt, tap > 0.3 ? 0.6 : 0, { flip: true, reaches: [0, 0.25, 0.5], home: [PH.x + 0.1 * PH.h * 0.486, PH.y + 0.66 * PH.h] });
+    hp.only = 'thumb';                                                  // the palm and fingers are below the frame: only the thumb is in it
     // the hand is below the phone; where it crosses the glass (the thumb, the fingertips round the far edge) it is in front of it
     const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 }, over: (gl, inf) => lunchPhoto(c, gl, inf) }, P));

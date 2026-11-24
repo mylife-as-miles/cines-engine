@@ -246,10 +246,14 @@
     else { hx = lerp(IP.cx - w * 1.25, -260, leave); hy = lerp(IP.cy + 120, 1200, leave); pose = 'flat'; hp.close = 0.1; }
     const handP = Object.assign({ x: hx, y: hy, s, fore: [-0.7, 0.75], light: L, foreLen: 1.4 }, hp);
     const face = th > Math.PI / 2;
-    const mask = m => { RIG.hand(c, 'him', pose, Object.assign({}, handP, { target: m, shadow: false })); m.save(); m.fillStyle = '#000'; m.fill(sleeveShape(RIG.hand(c, 'him', pose, Object.assign({}, handP, { target: SCR(), shadow: false }))).path(1.2, 51)); m.restore(); };
+    // where the forearm runs (for the sleeve), from a small probe of the same hand: its positions scale with s
+    const pr = RIG.hand(c, 'him', pose, Object.assign({}, handP, { s: s / 4, x: 0, y: 0, target: SCR(), shadow: false }));
+    const armAt = { x: hx, y: hy, elbow: pr.elbow ? [hx + pr.elbow[0] * 4, hy + pr.elbow[1] * 4] : null };
+    const slv = sleeveShape(armAt).path(1.2, 51);
+    const mask = m => { RIG.hand(c, 'him', pose, Object.assign({}, handP, { target: m, shadow: false })); m.save(); m.fillStyle = '#000'; m.fill(slv); m.restore(); };
     PHONE.draw(c, Object.assign({}, P, face ? { screen: 'black', lit: false } : {}, { buzz: 0, mask, maskShadow: { alpha: 0.45 } }));
-    const hand = RIG.hand(c, 'him', pose, handP);
-    sleeve(c, hand);
+    RIG.hand(c, 'him', pose, handP);
+    sleeve(c, armAt);
     void info;
   }
   function sleeveShape(hand) {

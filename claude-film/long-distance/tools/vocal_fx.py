@@ -1,6 +1,6 @@
 """Voice, check and finish the voiced sounds that are not lines (audio/vo/vocal_fx.json):
 
-  /home/user/leonxlnx/earshot/.venv/bin/python tools/vocal_fx.py [--force] [--pick laugh_phone=3]
+  /home/user/leonxlnx/earshot/.venv/bin/python tools/vocal_fx.py [--force] [--pick laugh_phone=3] [--only murmur]
 
 laugh_phone  her soft laugh on the phone (Q01, 18.2 s): Gemini TTS en-us-tova, several takes. Each take is heard by
              speech recognition (a laugh should not come back as a sentence) and earshot matches it against "a woman
@@ -8,12 +8,13 @@ laugh_phone  her soft laugh on the phone (Q01, 18.2 s): Gemini TTS en-us-tova, s
              alternatives by the widest margin; --pick overrides by ear. -> audio/vo/laugh_phone.wav (trimmed, dry:
              the mix gives it the phone's treatment, like her lines).
 murmur       his voice telling her about an ordinary day (Q01, 14.5-21.5 s): Gemini TTS en-us-varo, then low-passed
-             (steep, at lowpass_hz) with the close low-mids kept, until speech recognition hears no word.
+             (steep, at lowpass_hz) with the close low-mids kept, until speech recognition gives back none of the
+             script's content words (Whisper invents fillers for any speech it cannot make out: "hmm hmm", "the the").
              -> audio/vo/murmur.wav (48 kHz mono) and audio/vo/murmur.json (its pauses, so the bed can be aligned
              for the laugh to land in one).
 Takes stay in audio/vo/takes/ (gitignored). Results: audio/vo/vocal_fx_check.json.
 """
-import json, os, subprocess, sys
+import json, os, re, subprocess, sys
 import numpy as np, soundfile as sf
 from scipy import signal
 
@@ -83,6 +84,9 @@ def main():
     rep = {'laugh_phone': {}, 'murmur': {}}
     # the laugh: trim each take, hear it, match it
     best, best_m = None, -9e9
+    prev = os.path.join(VO, 'vocal_fx_check.json')
+    if '--only' in a and a[a.index('--only') + 1] == 'murmur' and os.path.exists(prev):
+        rep['laugh_phone'] = json.load(open(prev))['laugh_phone']; lt = []
     for i, p in enumerate(lt, 1):
         x = trim(load(p)); tp = os.path.join(TK, f'fx_laugh_phone_t{i}_trim.wav'); sf.write(tp, x.astype(np.float32), SR)
         heard = asr(tp)['text'].strip()
@@ -97,7 +101,7 @@ def main():
         rep['laugh_phone'][f't{i}']['score'] = round(score, 2)
         print(f"laugh t{i}: {len(x) / SR:.2f}s heard {heard!r}  {m.get('summary')}")
         if score > best_m: best, best_m = i, score
-    k = int(picks.get('laugh_phone', best)); rep['laugh_phone']['pick'] = f't{k}'
+    k = int(picks.get('laugh_phone', best or int(rep['laugh_phone'].get('pick', 't1')[1:]))); rep['laugh_phone']['pick'] = f't{k}'
     rep['laugh_phone']['pick_reason'] = 'chosen by ear (--pick)' if 'laugh_phone' in picks else 'highest earshot z against "a woman laughing softly", not heard as a sentence'
     x = load(os.path.join(TK, f'fx_laugh_phone_t{k}_trim.wav')); sf.write(os.path.join(VO, 'laugh_phone.wav'), x.astype(np.float32), SR, subtype='PCM_24')
     print('laugh_phone <- t%d' % k)
@@ -106,9 +110,12 @@ def main():
     lp = float(M.get('lowpass_hz', 420))
     while True:
         y = murmur_filter(x, lp); heard = hear(asr, y)
-        words = [w for w in heard.replace('.', ' ').replace(',', ' ').split() if any(c.isalpha() for c in w)]
-        print(f'murmur lp {lp:.0f} Hz: heard {heard!r}')
-        if not words or lp <= 250: break
+        # Whisper invents fillers ("hmm hmm", "the the") for any speech it cannot make out, so the test is that none of
+        # the script's own content words (four letters or more) comes back
+        got = set(re.sub(r"[^a-z ]", " ", heard.lower()).split()); script = {w for w in re.sub(r"[^a-z ]", " ", M['text'].lower()).split() if len(w) >= 4}
+        hits = sorted(got & script)
+        print(f'murmur lp {lp:.0f} Hz: heard {heard[:80]!r}... script words recognised: {hits}')
+        if not hits or lp <= 250: break
         lp *= 0.85
     out = os.path.join(VO, 'murmur.wav'); sf.write(out, y.astype(np.float32), SR, subtype='PCM_24')
     gaps = pauses(y)

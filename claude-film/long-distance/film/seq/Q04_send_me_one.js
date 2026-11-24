@@ -157,7 +157,10 @@
     else if (th.ch) tgt = info.pt(...keyPt(th.ch)); else tgt = info.pt(250, 690);
     const L = RIG.light('stairwell', { amb: '#5A5C60', keys: [{ dir: [-0.3, -0.8, 0.5], col: '#CFCFCB', k: 0.38, poster: [0.3], levels: [1] }], phone: [IN.x, IN.y], phoneK: 1.2, phoneCol: '#FFC9AC', phoneZ: 0.6 });
     // his right hand holds it low (below the frame), the thumb up over the keys
-    const hp = thumbOnGlass(c, P, L, tgt, th.tap > 0.3 ? 0.5 : 0, { flip: false, home: [IN.x - 0.12 * IN.h * 0.486, IN.y + 0.52 * IN.h] });
+    // (three reaches and no lift: the sculpture this close is large, so the hand keeps few drawings; the key's balloon shows the press)
+    const hp = thumbOnGlass(c, P, L, tgt, 0, { flip: false, reaches: [0, 0.5, 1], home: [IN.x - 0.12 * IN.h * 0.486, IN.y + 0.52 * IN.h] });
+    if (th.tap > 0.3) { hp.x += 6; hp.y += 14; }                       // between letters the thumb lifts a little off the glass
+    hp.only = 'thumb';                                                  // the palm and fingers are below the frame: only the thumb is in it
     const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
     RIG.hand(c, 'him', 'thumb', hp);

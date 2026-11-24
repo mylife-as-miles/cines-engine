@@ -1,0 +1,121 @@
+{
+ "laugh_phone": {
+  "t1": {
+   "text": "Hah... hm hm.",
+   "dur": 4.28,
+   "heard": "Ugh.",
+   "verdict": "strong",
+   "z": 4.39,
+   "summary": "fx_laugh_phone_t1_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.3; would rank #1 among 322 vocabulary descriptions; cosine 0.15). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +3.9), 'people laughing' (z +3.6), 'a person coughing' (z +3.3), 'children laughing' (z +3.1).",
+   "choice": {},
+   "score": 4.39
+  },
+  "t2": {
+   "text": "Ha ha.",
+   "dur": 1.12,
+   "heard": "Ha!",
+   "verdict": "strong",
+   "z": 3.49,
+   "summary": "fx_laugh_phone_t2_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.10). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +3.9), 'a person coughing' (z +3.6), 'crisp hi-hats' (z +2.7), 'a punchy impact hit' (z +2.7).",
+   "choice": {},
+   "score": 3.49
+  },
+  "t3": {
+   "text": "Mm-hah hah.",
+   "dur": 2.56,
+   "heard": "Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh",
+   "verdict": "strong",
+   "z": 4.14,
+   "summary": "fx_laugh_phone_t3_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.1; would rank #1 among 322 vocabulary descriptions; cosine 0.15). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +4.0), 'a person coughing' (z +3.6), 'people laughing' (z +3.2), 'children laughing' (z +2.7).",
+   "choice": {},
+   "score": 2.14
+  },
+  "t4": {
+   "text": "Hah!",
+   "dur": 1.52,
+   "heard": "Hmph.",
+   "verdict": "strong",
+   "z": 4.89,
+   "summary": "fx_laugh_phone_t4_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.8; would rank #1 among 322 vocabulary descriptions; cosine 0.22). Forced choice vs your alternatives: 'a woman laughing softly' 12%, 'a woman speaking' <1%, 'a woman sighing' 88%. It sounds most like: 'people laughing' (z +4.3), 'a person coughing' (z +3.6), 'children laughing' (z +3.2), 'a vocal chop' (z +3.1).",
+   "choice": {},
+   "score": 4.89
+  },
+  "t5": {
+   "text": "Heh heh heh.",
+   "dur": 8.63,
+   "heard": "Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh... Ugh",
+   "verdict": "strong",
+   "z": 3.95,
+   "summary": "fx_laugh_phone_t5_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +3.9; would rank #1 among 322 vocabulary descriptions; cosine 0.09). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a punchy impact hit' (z +2.9), 'a person coughing' (z +2.8), 'a person breathing' (z +2.6), 'a cow mooing' (z +2.6).",
+   "choice": {},
+   "score": 1.95
+  },
+  "pick": "t4",
+  "pick_reason": "highest earshot z against \"a woman laughing softly\", not heard as a sentence"
+ },
+ "murmur": {
+  "dur": 25.32,
+  "heard_unfiltered": "So the bus was late again, obviously. And then at lunch, Dave tried to fix the printer and he ended up apologizing to it out loud to the printer. Anyway, then I came home and I made the pasta thing and I sat there that I thought about you.",
+  "lowpass_hz": 219,
+  "heard_filtered": "the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the",
+  "pauses": [
+   [
+    0.46,
+    1.08
+   ],
+   [
+    1.47,
+    1.66
+   ],
+   [
+    2.58,
+    2.97
+   ],
+   [
+    3.59,
+    4.89
+   ],
+   [
+    5.52,
+    6.0
+   ],
+   [
+    6.63,
+    7.47
+   ],
+   [
+    8.88,
+    9.46
+   ],
+   [
+    11.13,
+    12.23
+   ],
+   [
+    12.82,
+    13.59
+   ],
+   [
+    14.19,
+    16.04
+   ],
+   [
+    16.35,
+    17.9
+   ],
+   [
+    18.78,
+    19.4
+   ],
+   [
+    20.72,
+    22.09
+   ],
+   [
+    22.78,
+    24.08
+   ]
+  ],
+  "describe": "25.32 s busy, 3.5 onsets/s, loudness range 8 LU. Sounds most like: a sub bass drop (z +2.8), a phone vibration buzz (z +2.6), a soft air whoosh (z +2.2) [plausible reading]. Other readings: a bee flying by (nature, z +2.1), a cow mooing (everyday, z +2.0). AudioSet: Speech 0.57, Silence 0.09, Speech synthesizer 0.06. peak -3.0 dBFS, -18.8 LUFS, brightness 134 Hz, bandwidth 320 Hz, mono. Windows that read differently: 0:00.00-0:10.00 a sub bass drop (z +2.7; AudioSet Speech 0.30); 0:15.32-0:25.32 a phone vibration buzz (z +3.1; AudioSet Speech 0.57)."
+ }
+}
