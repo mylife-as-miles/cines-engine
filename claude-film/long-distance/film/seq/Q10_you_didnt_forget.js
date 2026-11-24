@@ -173,7 +173,7 @@
     const tt = twos(lt);
     push(c, 1000, 520, 1 + (o.dim ? 0.02 * seg(lt, 51, 54) : 0.03 * E.inOutSine(seg(lt, 44, 48))));
     c.g.drawImage(coatPlate(c), 0, 0);
-    const L = RIG.light('day', { keys: [{ dir: [0.7, -0.4, 0.55], col: '#E6EBEE', k: 0.5, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [0.8, -0.55] }, phone: [1000, 480], phoneCol: '#C8EEF2', phoneK: o.dim ? 0.2 * (1 - seg(lt, 51.6, 54)) : 0.2 });
+    const L = RIG.light('day', { keys: [{ dir: [0.7, -0.4, 0.55], col: '#E6EBEE', k: 0.5, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [0.8, -0.55] }, phone: [1000, 480], phoneCol: '#C8EEF2', phoneK: o.dim ? 0.1 * Math.round(2 * (1 - seg(lt, 51.6, 54))) : 0.2 });   // the screen's light on her hand in three steps (a reshade each)
     // the thumb rests low on the glass, where one swipe would open everything (44–48); a hair's movement at 46.2; at 51 it lifts away
     const reach = o.dim ? lerp(0.32, 0.04, E.inOutSine(seg(tt, 51.0, 51.5))) : key(tt, [[44, 0.3], [46.2, 0.3], [46.6, 0.38], [47.4, 0.33]]);
     K.arm(c, { who: 'her', side: 'R', s: 1100, flip: true, light: L, shoulder: [1900, 3150], phoneAt: [1000, 500], rot: -0.08, hp: { reach: Math.round(reach * 20) / 20, over: ['thumb', 'dist'] },
