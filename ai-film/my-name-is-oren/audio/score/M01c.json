@@ -1,0 +1,7 @@
+{
+ "id": "M01c",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 24 seconds, quiet ending of a short film. A single nylon-string guitar plays a few slow, warm, plucked notes, free in time, like someone finally slowing down, over a barely audible sustained string pad. Begins almost from silence; major key with one suspended chord that resolves at the very end; long gaps between notes; close and dry, the space opening slightly at the end; a soft natural decay to silence. Gentle, tender, hopeful, understated. No drums, no vocals, no choir, no swells. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

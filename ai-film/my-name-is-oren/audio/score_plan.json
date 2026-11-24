@@ -5,24 +5,69 @@
  },
  "cues": [
   {
-   "id": "M01a", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "id": "M01a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
    "job": "recognition and earned warmth as he matches her pace; resolve under the title",
    "prompt": "Instrumental film-score cue, about 24 seconds, for the last shot of a quiet British short film: two people turn a street corner together, slowly, and the title appears on black. A single felt piano plays a short, simple, warm melodic figure, slow and rubato with no audible pulse, over a very soft sustained string bed. Start with no attack, almost out of silence. Major key with gentle suspended tones that resolve late; open intervals; very sparse, few notes, lots of space. Close and intimate at first, the register opening gently upward near the end, then a natural decay into silence. Tender, hopeful, restrained, never triumphant or sentimental. No drums, no vocals, no choir, no swells. In tune at A = 440."
   },
   {
-   "id": "M01b", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "id": "M01b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
    "job": "as M01a, solo string instead of piano",
    "prompt": "Instrumental film-score cue, about 24 seconds, for the final moment of an intimate British short film as two people walk around a corner at the same slow pace and the screen goes to black for the title. One solo cello plays a slow, simple, warm phrase, rubato, unhurried, over a quiet held chord on harmonium. It begins from near silence, stays low and close, then lifts gently in register as the phrase resolves on a major chord and fades away naturally. Very sparse and calm: sustained tones, few attacks, open fifths and a late resolution. Warm, tender, quietly hopeful. No drums, no vocals, no choir, no build-up. In tune at A = 440."
   },
   {
-   "id": "M01c", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "id": "M01c",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
    "job": "as M01a, plucked string, the most minimal",
    "prompt": "Instrumental film-score cue, about 24 seconds, quiet ending of a short film. A single nylon-string guitar plays a few slow, warm, plucked notes, free in time, like someone finally slowing down, over a barely audible sustained string pad. Begins almost from silence; major key with one suspended chord that resolves at the very end; long gaps between notes; close and dry, the space opening slightly at the end; a soft natural decay to silence. Gentle, tender, hopeful, understated. No drums, no vocals, no choir, no swells. In tune at A = 440."
   },
   {
-   "id": "M01d", "model": "lyria-3.5", "start_s": 0, "end_s": 24,
+   "id": "M01d",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
    "job": "as M01a, piano and strings in a slightly fuller close",
    "prompt": "Instrumental film-score cue, about 24 seconds, for an end title. Soft felt piano and a small string quartet, very quiet and slow, no steady beat. The piano states a short, simple, warm figure; the strings answer with long held notes; the harmony moves slowly from a suspended chord to a warm major resolution on the title, then everything decays naturally into silence. Sparse, sustained, intimate, with the register widening only at the very end. Hopeful and tender, never grand. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  },
+  {
+   "id": "M01e",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
+   "job": "round 2: the same restraint, brighter mode and register (relief, quiet happiness)",
+   "prompt": "Instrumental film-score cue, about 24 seconds, the final moment of a gentle British short film: two people walk round a corner together at the same slow pace, and the title appears on black. Felt piano in a bright, clear major key, playing a short, simple, gently rising figure in the middle-upper register, like quiet relief, over a soft warm string chord. Slow and free in time, sparse, light and open; it begins softly from near silence and settles on a warm major chord, then rings out. Hopeful, kind, quietly happy, never sad or melancholic, never grand. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  },
+  {
+   "id": "M01f",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
+   "job": "round 2: the same restraint, brighter mode and register (relief, quiet happiness)",
+   "prompt": "Instrumental film-score cue, about 24 seconds, end of a warm-hearted short film. A celesta and a soft felt piano share a small, lilting major-key melody, light and tender, in a higher register, over a quiet sustained string major chord. Unhurried and free, gentle and bright, like a smile that arrives slowly; sparse notes, open fifths, consonant throughout, resolving warmly on the tonic and fading out naturally. Hopeful and kind, not sad. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  },
+  {
+   "id": "M01g",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
+   "job": "round 2: the same restraint, brighter mode and register (relief, quiet happiness)",
+   "prompt": "Instrumental film-score cue, about 24 seconds. A solo acoustic guitar picks a simple, warm, gently rising melody in G major, unhurried, with a soft warm string pad underneath that opens up slightly toward the end; light, bright and kind, like finally walking side by side with someone. Sparse and consonant, free in time, ending on a clear major chord that rings into silence. Quietly hopeful and content, never melancholic. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  },
+  {
+   "id": "M01h",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 24,
+   "job": "round 2: the same restraint, brighter mode and register (relief, quiet happiness)",
+   "prompt": "Instrumental film-score cue, about 24 seconds, closing title of an intimate British film. Soft piano and a solo violin in a warm major key: the violin plays a short, simple, rising phrase in a light middle-high register, the piano answers with gentle open chords; slow, free, consonant, tender and hopeful, the harmony settling into a bright major resolution as the title appears, then a natural fade. Uplifting in a quiet way, never sad. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
   }
- ]
+ ],
+ "_round1": "M01a-d (felt piano / cello / guitar / piano+quartet): earshot heard all four as sad, not warm-hopeful (sad 80-97% in forced choice). Round 2 keeps the restraint and moves the levers FME-24 says matter for valence: a clear major key, a lighter mid-high register, relief."
 }

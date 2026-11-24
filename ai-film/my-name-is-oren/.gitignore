@@ -3,3 +3,5 @@ audio/gen/*.wav
 *.log
 node_modules/
 audio/stems/
+audio/gen/over_black_voices/*.wav
+audio/score/*.mp3

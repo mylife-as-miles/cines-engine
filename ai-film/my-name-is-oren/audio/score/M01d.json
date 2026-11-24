@@ -1,0 +1,7 @@
+{
+ "id": "M01d",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 24 seconds, for an end title. Soft felt piano and a small string quartet, very quiet and slow, no steady beat. The piano states a short, simple, warm figure; the strings answer with long held notes; the harmony moves slowly from a suspended chord to a warm major resolution on the title, then everything decays naturally into silence. Sparse, sustained, intimate, with the register widening only at the very end. Hopeful and tender, never grand. No drums, no vocals, no choir, no crescendo. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

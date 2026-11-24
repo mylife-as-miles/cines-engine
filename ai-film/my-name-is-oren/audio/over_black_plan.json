@@ -1,0 +1,82 @@
+{
+ "_about": "A01-A03: OVER BLACK, 'polite synthetic VOICES layered over traffic. Chimes. A traffic post settling an argument in calm, measured tones.' Then FADE IN on Q01. 6.5 s of black: the city heard before it is seen. The voices are background texture (the script gives them no words): small outdoor speakers, panned across the street, overlapping so only the traffic post reads clearly. Built by tools/over_black.py into audio/gen/over_black.wav and out/takes/black_open.mp4; the edit fades from it into Q01 over 0.5 s. Levels are LUFS over each sound; the film's dialogue sits near -18.",
+ "dur": 6.5,
+ "fade_in": 1.2,
+ "thin_from": 5.2,
+ "thin_db": 5,
+ "speaker_af": "highpass=f=320,lowpass=f=5200,aecho=0.8:0.6:38|71:0.22|0.12",
+ "layers": [
+  {
+   "id": "traffic",
+   "file": "audio/sfx/over_black_traffic.flac",
+   "at": 0.0,
+   "level": -26,
+   "pan": 0.0,
+   "why": "the street's traffic under everything"
+  },
+  {
+   "id": "chime1",
+   "file": "audio/sfx/chime_pair.flac",
+   "at": 0.35,
+   "level": -28,
+   "pan": 0.35,
+   "af": "aecho=0.8:0.7:60|120:0.3|0.15",
+   "why": "a crossing chime, the first thing heard"
+  },
+  {
+   "id": "OB01",
+   "file": "audio/gen/over_black_voices/OB01.wav",
+   "at": 0.6,
+   "level": -32,
+   "pan": -0.55,
+   "speaker": true,
+   "why": "a public-information voice, left, far"
+  },
+  {
+   "id": "OB04",
+   "file": "audio/gen/over_black_voices/OB04.wav",
+   "at": 1.1,
+   "level": -34,
+   "pan": 0.6,
+   "speaker": true,
+   "why": "an announcement, right, farther"
+  },
+  {
+   "id": "OB02",
+   "file": "audio/gen/over_black_voices/OB02.wav",
+   "at": 1.7,
+   "level": -27,
+   "pan": 0.1,
+   "speaker": true,
+   "why": "the traffic post settling an argument, nearest: calm, measured"
+  },
+  {
+   "id": "OB03",
+   "file": "audio/gen/over_black_voices/OB03.wav",
+   "at": 2.9,
+   "level": -35,
+   "pan": -0.25,
+   "speaker": true,
+   "why": "a crossing voice, centre, far"
+  },
+  {
+   "id": "chime2",
+   "file": "audio/sfx/chime_pair.flac",
+   "at": 3.6,
+   "level": -31,
+   "pan": -0.4,
+   "af": "aecho=0.8:0.7:60|120:0.3|0.15",
+   "why": "a second chime, farther off"
+  },
+  {
+   "id": "OB05",
+   "file": "audio/gen/over_black_voices/OB05.wav",
+   "at": 3.9,
+   "level": -36,
+   "pan": 0.45,
+   "speaker": true,
+   "why": "a courteous machine voice, right, far; runs under the fade-in"
+  }
+ ],
+ "_levels": "raised 3 dB after the first build measured -26 LUFS: the first sound of the film should be the city at full presence, still under the dialogue's -18"
+}

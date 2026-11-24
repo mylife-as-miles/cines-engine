@@ -1,0 +1,12 @@
+{
+ "model": "gemini-3.8-flash-tts",
+ "voice": "en-gb-concierge-4",
+ "lines": [
+  {
+   "id": "OB04",
+   "text": "Apologies for the delay. Your route has been updated.",
+   "style": "a gentle synthetic announcement voice, friendly and even",
+   "voice": "en-gb-concierge-4"
+  }
+ ]
+}

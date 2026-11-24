@@ -1,0 +1,7 @@
+{
+ "id": "M01a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 24 seconds, for the last shot of a quiet British short film: two people turn a street corner together, slowly, and the title appears on black. A single felt piano plays a short, simple, warm melodic figure, slow and rubato with no audible pulse, over a very soft sustained string bed. Start with no attack, almost out of silence. Major key with gentle suspended tones that resolve late; open intervals; very sparse, few notes, lots of space. Close and intimate at first, the register opening gently upward near the end, then a natural decay into silence. Tender, hopeful, restrained, never triumphant or sentimental. No drums, no vocals, no choir, no swells. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

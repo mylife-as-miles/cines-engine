@@ -1,0 +1,7 @@
+{
+ "id": "M01h",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 24 seconds, closing title of an intimate British film. Soft piano and a solo violin in a warm major key: the violin plays a short, simple, rising phrase in a light middle-high register, the piano answers with gentle open chords; slow, free, consonant, tender and hopeful, the harmony settling into a bright major resolution as the title appears, then a natural fade. Uplifting in a quiet way, never sad. No drums, no vocals, no choir, no crescendo. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}
