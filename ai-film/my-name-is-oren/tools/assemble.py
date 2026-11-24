@@ -7,8 +7,9 @@ The spec lists segments in order:
 - from / to: first and last frame kept (to = null: the last frame).
 - crop: "w:h:x:y" applied before scaling to 854x480 (e.g. a 21:9 take cropped to 16:9).
 - join: how this segment joins the one before it: "cut", or "dissolve:N" (N frames).
-Each segment's sound is set to the same integrated loudness (a static gain, measured here), with a limiter at
--1.5 dBFS, so no sequence jumps in level. Cuts get 20 ms fades so they never click.
+Each segment's sound is set to the same integrated loudness (a static gain, measured here) unless the spec sets
+"gain" (dB), e.g. matched on dialogue level instead; "tail_db" eases a segment's last 2 s down. A limiter at
+-1.5 dBFS follows, so no sequence clips. Cuts get 20 ms fades so they never click.
 The output is 8-bit 4:2:0 H.264 (High profile), 48 kHz AAC, faststart: it plays on phones (lesson 51).
 """
 import json, os, re, subprocess, sys
@@ -34,6 +35,15 @@ def lufs(path, a, b):
     return float(m[-1]) if m else None
 
 
+def tail(s):
+    """tail_db: ease the last 2 s down by this many dB (a busy street bed into a quiet one)."""
+    x = float(s.get('tail_db', 0) or 0)
+    if not x:
+        return ''
+    d, k = s['_dur'], 10 ** (-abs(x) / 20) - 1
+    return f"volume='if(gt(t,{d - 2:.3f}),1+{k:.4f}*(t-{d - 2:.3f})/2,1)':eval=frame,"
+
+
 def main():
     spec = json.load(open(sys.argv[1]))
     target = spec.get('lufs', -18)
@@ -49,13 +59,15 @@ def main():
         s['_a'], s['_b'], s['_dur'] = a, b, (b - a + 1) / FPS
         level = lufs(path, a, b)
         gain = 0.0 if level is None else max(-12.0, min(12.0, target - level))
+        if 'gain' in s:                      # a set gain (dB) wins over the measured one, e.g. matched on dialogue
+            gain = float(s['gain'])
         s['_gain'] = gain
         crop = f"crop={s['crop']}," if s.get('crop') else ''
         chains.append(f"[{i}:v]trim=start_frame={a}:end_frame={b + 1},setpts=PTS-STARTPTS,{crop}"
                       f"scale=854:480,setsar=1,fps={FPS},format=yuv420p,settb=1/{FPS}[v{i}]")
         chains.append(f"[{i}:a]atrim=start={a / FPS:.5f}:end={(b + 1) / FPS:.5f},asetpts=PTS-STARTPTS,"
                       f"aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad,"
-                      f"atrim=end={s['_dur']:.5f},volume={gain:.2f}dB,alimiter=limit=0.841:level=false[a{i}]")
+                      f"atrim=end={s['_dur']:.5f},volume={gain:.2f}dB,{tail(s)}alimiter=limit=0.841:level=false[a{i}]")
         print(f"{s['file']}: frames {a}-{b} ({s['_dur']:.2f} s), {level} LUFS -> gain {gain:+.1f} dB", flush=True)
 
     v, au, dur = 'v0', 'a0', segs[0]['_dur']
