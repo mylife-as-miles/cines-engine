@@ -1,0 +1,124 @@
+<!doctype html><meta charset="utf-8"><title>Long Distance · YouTube thumbnails, round 2 (One Too Many's idiom)</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script src="../film/load.js"></script>
+<script>
+/* LONG DISTANCE · YouTube thumbnails, round 2, in One Too Many's idiom (the author's favourite): a composed image in the
+   film's look rather than a frame grab, one striking idea, the title as the hook in heavy outlined type, tilted, white
+   over an accent; rendered 1920x1080, delivered 1280x720.
+   The idea: the phone lies where her head would be. On the empty pillow, her face (the app's own painted portrait,
+   PHONE.art('portrait')) in the phone's light, long hair spread round the phone. One Too Many counted 1 to 6 and asked "7?"; here the film's own speaker labels
+   ask it: HIM over him, HER? over the light. It is the film's premise, not its twist.
+   ?v=e  the pillow (Q01 16 s, across the bed): his lit face, hers glowing on the pillow round the phone; LONG / DISTANCE., HIM, HER?
+   ?v=f  the poster (Q01 5 s, from the foot of the bed): his half and her half, her face on her pillow in the phone's light;
+         a tall condensed title on the left and a tagline, SHE ALWAYS ANSWERS.
+   node tools/shoot.js "src/THUMB_youtube2.html?v=e" out/thumb_e.png 1920 1080 500 200000 */
+(async () => {
+  const v = new URLSearchParams(location.search).get('v') || 'e';
+  await FILM_LOAD('../', ['Q01']);
+  const W = 1920, H = 1080;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; document.body.appendChild(cv);
+  const g = cv.getContext('2d');
+  const INK = '#07080C', CREAM = '#F3ECDD', PINK = '#FF8FB1', PEACH = '#FFC9A8', HOT = '#FFE6D2';
+  const frame = t => { const c = OTM.makeCanvas(W, H); FILM.renderAt(FILM.lib.Q01.start + t, c.getContext('2d')); return c; };
+
+  // heavy hook type: Archivo Black, a thick round ink outline, a soft shadow (One Too Many's hook)
+  function hook(str, x, y, size, fill, rot, o = {}) {
+    g.save(); g.translate(x, y); g.rotate(rot || 0); g.font = `${size}px "${o.font || 'Archivo Black'}"`;
+    g.textAlign = o.align || 'left'; g.textBaseline = 'alphabetic'; g.lineJoin = 'round'; g.letterSpacing = (o.track || 0) + 'px';
+    g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 30; g.shadowOffsetY = 10;
+    g.lineWidth = size * (o.stroke || 0.24); g.strokeStyle = o.ink || INK; g.strokeText(str, 0, 0);
+    g.shadowColor = 'transparent'; g.fillStyle = fill; g.fillText(str, 0, 0); g.restore();
+  }
+  // her outline in the phone's light: a head lying on the pillow, long hair spread, a shoulder; filled with a soft glow
+  // (screen blend, so the phone stays visible) and rimmed with hot light, like One Too Many's person-shaped hole
+  function ghost(p) {
+    const { x, y, s, rot } = p;
+    const path = new Path2D();
+    g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+    // hair: a long fan spreading from the head over the pillow (unit: the head's half-width = 1)
+    path.moveTo(-1.05, -0.2);
+    path.bezierCurveTo(-1.6, 0.3, -1.9, 1.1, -2.3, 1.9); path.bezierCurveTo(-1.8, 1.75, -1.6, 2.2, -1.1, 2.05);
+    path.bezierCurveTo(-0.7, 2.4, -0.2, 2.15, 0.2, 2.3); path.bezierCurveTo(0.6, 2.05, 1.1, 2.25, 1.35, 1.85);
+    path.bezierCurveTo(1.55, 1.3, 1.25, 0.6, 1.05, -0.1);
+    // the crown of the head, round over the top
+    path.bezierCurveTo(1.05, -0.75, 0.55, -1.15, 0, -1.15); path.bezierCurveTo(-0.6, -1.15, -1.05, -0.75, -1.05, -0.2);
+    path.closePath();
+    // the shoulder under the covers, to the right
+    const sh = new Path2D(); sh.moveTo(0.9, 0.6); sh.bezierCurveTo(1.6, 0.45, 2.6, 0.55, 3.3, 0.9); sh.bezierCurveTo(3.0, 1.4, 2.2, 1.5, 1.3, 1.3); sh.closePath();
+    const tf = g.getTransform(); g.restore();
+    const P = new Path2D(); P.addPath(path, tf); P.addPath(sh, tf);
+    // glow fill
+    g.save(); g.globalCompositeOperation = 'screen';
+    const rg = g.createRadialGradient(p.lx, p.ly, 10, p.lx, p.ly, s * 3.2);
+    rg.addColorStop(0, 'rgba(255,214,186,0.62)'); rg.addColorStop(0.45, 'rgba(255,170,140,0.32)'); rg.addColorStop(1, 'rgba(255,140,150,0.10)');
+    g.fillStyle = rg; g.fill(P); g.restore();
+    // hot rim
+    g.save(); g.shadowColor = '#FF9E86'; g.shadowBlur = 34; g.lineWidth = 7; g.lineJoin = 'round'; g.strokeStyle = HOT; g.stroke(P);
+    g.shadowBlur = 0; g.lineWidth = 3; g.strokeStyle = '#FFFFFF'; g.globalAlpha = 0.8; g.stroke(P); g.restore();
+  }
+  function her(cx, cy, w, rot, alpha, o = {}) {
+    if (window.PHONE && PHONE.prepare) PHONE.prepare(['portrait']);
+    const art = PHONE.art('portrait');                     // 720 x 1560: face and shoulders, long hair, cream sweater
+    const sx = 0, sy = o.top || 120, sw = 720, sh = o.h || 980; // head, hair and shoulders
+    const h = w * sh / sw, m = OTM.makeCanvas(Math.ceil(w), Math.ceil(h)), mg = m.getContext('2d');
+    mg.drawImage(art, sx, sy, sw, sh, 0, 0, w, h);
+    // feather it into light: an oval mask, so it reads as a presence in the glow, not a pasted photo
+    mg.globalCompositeOperation = 'destination-in';
+    // an elliptical fade that reaches nothing before the canvas edges (no straight sides: it must not read as a panel)
+    mg.save(); mg.translate(w / 2, h * 0.44); mg.scale(1, (h / w) * 0.92);
+    const mk = mg.createRadialGradient(0, 0, w * 0.12, 0, 0, w * 0.5);
+    mk.addColorStop(0, 'rgba(0,0,0,1)'); mk.addColorStop(0.55, 'rgba(0,0,0,0.85)'); mk.addColorStop(1, 'rgba(0,0,0,0)');
+    mg.fillStyle = mk; mg.fillRect(-w, -w, w * 2, w * 2); mg.restore();
+    g.save(); g.translate(cx, cy); g.rotate(rot);
+    g.globalCompositeOperation = 'screen'; g.globalAlpha = alpha; g.drawImage(m, -w / 2, -h / 2);
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = alpha * 0.55; g.drawImage(m, -w / 2, -h / 2);
+    g.restore();
+    // and the phone's warm light round her
+    g.save(); g.globalCompositeOperation = 'screen'; const rg = g.createRadialGradient(cx, cy, 10, cx, cy, w * 0.75);
+    rg.addColorStop(0, 'rgba(255,190,160,0.28)'); rg.addColorStop(1, 'rgba(255,170,150,0)'); g.fillStyle = rg; g.fillRect(cx - w, cy - w, w * 2, w * 2); g.restore();
+  }
+  function grain(a) {
+    const R = OTM.rng('ldthumb' + v), n = OTM.makeCanvas(480, 270), ng = n.getContext('2d'), im = ng.createImageData(480, 270);
+    for (let i = 0; i < im.data.length; i += 4) { const k = 128 + (R() - 0.5) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = k; im.data[i + 3] = 255; }
+    ng.putImageData(im, 0, 0); g.save(); g.globalAlpha = a; g.globalCompositeOperation = 'overlay'; g.imageSmoothingEnabled = false; g.drawImage(n, 0, 0, W, H); g.restore();
+  }
+
+  if (v === 'e') {
+    // across the bed, his face in the phone's light; lifted for a small screen
+    g.filter = 'brightness(1.18) contrast(1.08) saturate(1.08)'; g.drawImage(frame(16), 0, 0); g.filter = 'none';
+    // her outline lying on the smooth pillow in front of him, facing him, the phone where her face would be
+    her(760, 800, 470, 1.05, 0.78);
+    // darken the top right a touch for the title
+    const sg = g.createLinearGradient(W, 0, W * 0.45, H * 0.55); sg.addColorStop(0, 'rgba(6,8,14,0.7)'); sg.addColorStop(1, 'rgba(6,8,14,0)');
+    g.fillStyle = sg; g.fillRect(0, 0, W, H);
+    grain(0.1);
+    hook('LONG', 1180, 205, 144, '#FFFFFF', -0.045);
+    hook('DISTANCE.', 1060, 360, 144, PINK, -0.045);
+    // the speaker labels as the puzzle
+    hook('HIM', 300, 150, 92, '#FFFFFF', -0.06, { stroke: 0.22 });
+    hook('HER?', 1180, 820, 150, '#FFFFFF', 0.07, { stroke: 0.2, ink: '#D9527A' });
+  } else {
+    // from the foot of the bed; the bed moved right so the title has the left third
+    g.fillStyle = '#0E1119'; g.fillRect(0, 0, W, H);
+    g.filter = 'brightness(1.2) contrast(1.08)'; g.drawImage(frame(5), 360, 0); g.filter = 'none';
+    // feather the frame's left edge into the dark
+    const fe = g.createLinearGradient(360, 0, 760, 0); fe.addColorStop(0, 'rgba(14,17,25,1)'); fe.addColorStop(1, 'rgba(14,17,25,0)');
+    g.fillStyle = fe; g.fillRect(360, 0, 400, H);
+    // her outline on her half: the head round the phone on the smooth pillow, the body under the tight sheet
+    her(360 + 1170, 640, 400, 0, 0.75);
+    const body = new Path2D(); const bx = 360 + 1185;
+    body.moveTo(bx - 150, 620); body.bezierCurveTo(bx - 175, 760, bx - 150, 900, bx - 120, 1080); body.lineTo(bx + 135, 1080);
+    body.bezierCurveTo(bx + 160, 900, bx + 180, 760, bx + 150, 620); body.bezierCurveTo(bx + 60, 585, bx - 60, 585, bx - 150, 620); body.closePath();
+    g.save(); g.globalCompositeOperation = 'screen'; const bg = g.createLinearGradient(0, 600, 0, 1080);
+    bg.addColorStop(0, 'rgba(255,190,160,0.34)'); bg.addColorStop(1, 'rgba(255,150,160,0.04)'); g.fillStyle = bg; g.fill(body); g.restore();
+    // no hard rim on the body: a rimmed box under the sheet reads as a coffin; the glow alone carries her shape
+    grain(0.1);
+    // the poster's type: a spaced tagline and a tall condensed title (One Too Many's poster)
+    g.save(); g.font = '600 44px "Barlow Condensed"'; g.letterSpacing = '9px'; g.fillStyle = CREAM; g.fillText('SHE ALWAYS ANSWERS.', 92, 120); g.restore();
+    g.save(); g.font = '400 400px "Six Caps"'; g.letterSpacing = '6px'; g.fillStyle = CREAM; g.fillText('LONG', 84, 520); g.restore();
+    g.save(); g.font = '400 400px "Six Caps"'; g.letterSpacing = '6px'; g.shadowColor = '#FF6F96'; g.shadowBlur = 40;
+    g.fillStyle = PINK; g.fillText('DISTANCE', 84, 930); g.restore();
+  }
+  window.FRAME_READY = true;
+})();
+</script>
