@@ -1,0 +1,1072 @@
+{
+ "title": "SC 7 · EXT. SOLFORIZ - THE FALL - CONTINUOUS",
+ "scene": "fall",
+ "shots": [
+  {
+   "n": "7.1",
+   "dur": 5.0,
+   "scene": "fall",
+   "set": "fall",
+   "boardTime": 2.4,
+   "camText": "Medium-wide, handheld · 32 mm · eye level 1.5 m · backing down the flight at her pace",
+   "note": "Panic is the only thing the camera is allowed to shake for. · The lens backs down about 9 m ahead of her rather than 3 m, so she is about 40% of frame height.",
+   "sound": "A roar from above; feet; her breath.",
+   "state": {
+    "look": "fall",
+    "collapse": {
+     "clock": 0.5,
+     "rate": 1
+    },
+    "towerShift": 0,
+    "figures": {
+     "liora": {
+      "pos": [
+       36,
+       -82.7
+      ],
+      "walk": {
+       "to": [
+        46.5,
+        -82.7
+       ],
+       "t0": 0,
+       "speed": 2.0
+      },
+      "walkPose": "run",
+      "pose": "run",
+      "speed": 1.6,
+      "aimR": {
+       "keys": [
+        [
+         0,
+         [
+          50,
+          5.5,
+          -83.4
+         ]
+        ],
+        [
+         5,
+         [
+          60,
+          2.5,
+          -83.4
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "palmR": "out",
+      "handR": 1,
+      "look": [
+       60,
+       1,
+       -84
+      ]
+     },
+     "c1": {
+      "kind": "civilian",
+      "pos": [
+       39.3,
+       -86.7
+      ],
+      "walk": {
+       "to": [
+        60,
+        -86.7
+       ],
+       "t0": 0,
+       "speed": 2.75
+      },
+      "walkPose": "run",
+      "speed": 1.7
+     },
+     "c2": {
+      "kind": "child",
+      "pos": [
+       38.4,
+       -85.3
+      ],
+      "walk": {
+       "to": [
+        60,
+        -85.3
+       ],
+       "t0": 0,
+       "speed": 2.95
+      },
+      "walkPose": "run",
+      "speed": 1.9
+     }
+    },
+    "puffs": [
+     {
+      "at": [
+       25,
+       10,
+       -84
+      ],
+      "t0": 1.0,
+      "n": 16,
+      "spread": [
+       5,
+       5,
+       11
+      ],
+      "r0": 3,
+      "r1": 8,
+      "rise": 0.5,
+      "drift": [
+       3.6,
+       -0.9,
+       0
+      ],
+      "stagger": 0.12,
+      "opacity": 0.9,
+      "lit": "#d9c69c",
+      "shade": "#6F6D66"
+     },
+     {
+      "at": [
+       22,
+       16,
+       -94
+      ],
+      "t0": -1,
+      "n": 10,
+      "spread": [
+       30,
+       8,
+       8
+      ],
+      "r0": 6,
+      "r1": 15,
+      "rise": 1.4,
+      "drift": [
+       2,
+       0,
+       0.6
+      ],
+      "stagger": 0.2,
+      "opacity": 0.8,
+      "lit": "#d9c69c",
+      "shade": "#6F6D66"
+     }
+    ]
+   },
+   "cam": {
+    "pos": [
+     45.5,
+     4.33,
+     -84.6
+    ],
+    "target": [
+     24.0,
+     9.0,
+     -84.6
+    ],
+    "f": 32
+   },
+   "camKeys": [
+    {
+     "t": 0.0,
+     "pos": [
+      45.5,
+      4.33,
+      -84.6
+     ],
+     "target": [
+      24.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 0.5,
+     "pos": [
+      46.5,
+      4.0,
+      -84.6
+     ],
+     "target": [
+      25.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 1.0,
+     "pos": [
+      47.5,
+      3.67,
+      -84.6
+     ],
+     "target": [
+      26.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 1.5,
+     "pos": [
+      48.5,
+      3.33,
+      -84.6
+     ],
+     "target": [
+      27.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 2.0,
+     "pos": [
+      49.5,
+      3.0,
+      -84.6
+     ],
+     "target": [
+      28.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 2.5,
+     "pos": [
+      50.5,
+      2.67,
+      -84.6
+     ],
+     "target": [
+      29.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 3.0,
+     "pos": [
+      51.5,
+      2.33,
+      -84.6
+     ],
+     "target": [
+      30.0,
+      9.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 3.5,
+     "pos": [
+      52.5,
+      2.0,
+      -84.6
+     ],
+     "target": [
+      31.0,
+      8.67,
+      -84.6
+     ]
+    },
+    {
+     "t": 4.0,
+     "pos": [
+      53.5,
+      1.67,
+      -84.6
+     ],
+     "target": [
+      32.0,
+      8.33,
+      -84.6
+     ]
+    },
+    {
+     "t": 4.5,
+     "pos": [
+      54.5,
+      1.5,
+      -84.6
+     ],
+     "target": [
+      33.0,
+      8.0,
+      -84.6
+     ]
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      55.5,
+      1.5,
+      -84.6
+     ],
+     "target": [
+      34.0,
+      7.67,
+      -84.6
+     ]
+    }
+   ],
+   "camEase": "linear",
+   "handheld": 0.05,
+   "handSeed": 3
+  },
+  {
+   "n": "7.2",
+   "dur": 5.0,
+   "scene": "fall",
+   "set": "fall",
+   "boardTime": 2.6,
+   "camText": "Medium, handheld · 35 mm · eye level 1.4 m · follows her in, settles",
+   "note": "She saves the one thing that can still hold light.",
+   "sound": "Glass grinding under her knee; the roar outside.",
+   "state": {
+    "look": "fall",
+    "collapse": {
+     "clock": 5.5,
+     "rate": 1
+    },
+    "towerShift": 0,
+    "arch": {
+     "lantern": "smashed"
+    },
+    "figures": {
+     "boy": {
+      "pos": [
+       69.25,
+       -75.95
+      ],
+      "face": 175,
+      "pose": "stand"
+     },
+     "s1": {
+      "kind": "civilian",
+      "pos": [
+       68.65,
+       -76.35
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s2": {
+      "kind": "civilian",
+      "pos": [
+       71.45,
+       -76.25
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "s3": {
+      "kind": "child",
+      "pos": [
+       70.7,
+       -76.4
+      ],
+      "face": 190,
+      "pose": "crouch"
+     },
+     "s4": {
+      "kind": "civilian",
+      "pos": [
+       69.95,
+       -76.55
+      ],
+      "face": 175,
+      "pose": "sit"
+     },
+     "s5": {
+      "kind": "civilian",
+      "pos": [
+       67.3,
+       -74.95
+      ],
+      "face": 150,
+      "pose": "stand"
+     },
+     "s6": {
+      "kind": "civilian",
+      "pos": [
+       66.7,
+       -75.6
+      ],
+      "face": 120,
+      "pose": "cower"
+     },
+     "s7": {
+      "kind": "civilian",
+      "pos": [
+       72.8,
+       -74.95
+      ],
+      "face": 215,
+      "pose": "stand"
+     },
+     "s8": {
+      "kind": "child",
+      "pos": [
+       73.3,
+       -75.6
+      ],
+      "face": 240,
+      "pose": "crouch"
+     },
+     "s9": {
+      "kind": "civilian",
+      "pos": [
+       67.7,
+       -77.1
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s10": {
+      "kind": "civilian",
+      "pos": [
+       72.4,
+       -77.15
+      ],
+      "face": 200,
+      "pose": "sit"
+     },
+     "s11": {
+      "kind": "civilian",
+      "pos": [
+       69.1,
+       -77.35
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "s12": {
+      "kind": "civilian",
+      "pos": [
+       71.2,
+       -77.45
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       64.6,
+       -77.6
+      ],
+      "walk": {
+       "to": [
+        70.15,
+        -74.25
+       ],
+       "t0": 0,
+       "speed": 4.2
+      },
+      "walkPose": "run",
+      "speed": 1.6,
+      "pose": {
+       "keys": [
+        [
+         1.55,
+         "run"
+        ],
+        [
+         1.6,
+         "kneel"
+        ]
+       ],
+       "ease": "step"
+      },
+      "face": {
+       "keys": [
+        [
+         0,
+         60
+        ],
+        [
+         1.55,
+         60
+        ],
+        [
+         1.9,
+         40
+        ]
+       ]
+      },
+      "mirror": {
+       "keys": [
+        [
+         2.35,
+         false
+        ],
+        [
+         2.4,
+         true
+        ]
+       ],
+       "ease": "step"
+      },
+      "flash": {
+       "keys": [
+        [
+         2.4,
+         0
+        ],
+        [
+         2.65,
+         0.55
+        ],
+        [
+         3.0,
+         0
+        ]
+       ]
+      },
+      "reachR": {
+       "keys": [
+        [
+         1.9,
+         [
+          70.75,
+          0.35,
+          -74.85
+         ]
+        ],
+        [
+         2.4,
+         [
+          70.85,
+          0.12,
+          -74.95
+         ]
+        ],
+        [
+         3.0,
+         [
+          70.5,
+          0.85,
+          -74.5
+         ]
+        ],
+        [
+         3.8,
+         [
+          70.3,
+          0.95,
+          -74.35
+         ]
+        ]
+       ]
+      },
+      "handR": 0.5
+     }
+    },
+    "puffs": [
+     {
+      "at": [
+       66,
+       2,
+       -86
+      ],
+      "t0": -2,
+      "n": 8,
+      "spread": [
+       16,
+       3,
+       4
+      ],
+      "r0": 2,
+      "r1": 5,
+      "rise": 0.4,
+      "drift": [
+       0.6,
+       0,
+       0
+      ],
+      "stagger": 0.3,
+      "opacity": 0.6,
+      "lit": "#d9c69c",
+      "shade": "#6F6D66"
+     }
+    ]
+   },
+   "cam": {
+    "pos": [
+     66.4,
+     1.4,
+     -70.6
+    ],
+    "target": [
+     68.2,
+     1.0,
+     -76.0
+    ],
+    "f": 35
+   },
+   "camKeys": [
+    {
+     "t": 0,
+     "pos": [
+      66.4,
+      1.4,
+      -70.6
+     ],
+     "target": [
+      68.2,
+      1.0,
+      -76.0
+     ]
+    },
+    {
+     "t": 1.0,
+     "pos": [
+      67.6,
+      1.4,
+      -70.4
+     ],
+     "target": [
+      69.6,
+      0.9,
+      -75.8
+     ]
+    },
+    {
+     "t": 1.9,
+     "pos": [
+      68.3,
+      1.38,
+      -70.5
+     ],
+     "target": [
+      70.1,
+      0.85,
+      -75.6
+     ]
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      68.4,
+      1.38,
+      -70.5
+     ],
+     "target": [
+      70.1,
+      0.85,
+      -75.6
+     ]
+    }
+   ],
+   "camEase": "smooth",
+   "handheld": 0.025,
+   "handSeed": 7
+  },
+  {
+   "n": "7.3",
+   "dur": 10.0,
+   "scene": "fall",
+   "set": "fall",
+   "boardTime": 8.3,
+   "camText": "Extreme wide (the fall, held wide) · 32 mm · eye level 1.6 m · locked-off",
+   "note": "Held wide, the fall is a fact, not a spectacle; the small arch tells us who is under it. · The capital is pushed 1.3 km back and turned 50 degrees (fall: state.far) so the stepped stair reads in profile against the dust with the towers at right. The four towers are drawn 2x taller (towerScale). The clock is keyed slow, then fast.",
+   "sound": "A low groan for four seconds; then one rising roar; at 9.0 the sound drops out to a high ringing.",
+   "state": {
+    "look": {
+     "base": "fall",
+     "fog": {
+      "density": 0.00045
+     },
+     "haze": {
+      "amount": 0.0025
+     }
+    },
+    "far": {
+     "x": 149,
+     "z": -934,
+     "rotY": 50
+    },
+    "collapse": {
+     "keys": [
+      [
+       0,
+       0.0
+      ],
+      [
+       4.0,
+       1.3
+      ],
+      [
+       5.5,
+       2.6
+      ],
+      [
+       7.0,
+       4.4
+      ],
+      [
+       10,
+       9.5
+      ]
+     ],
+     "ease": "linear"
+    },
+    "towerShift": 3.4,
+    "towerScale": 2.0,
+    "arch": {
+     "lantern": "smashed"
+    },
+    "figures": {
+     "boy": {
+      "pos": [
+       69.25,
+       -75.95
+      ],
+      "face": 175,
+      "pose": "stand"
+     },
+     "s1": {
+      "kind": "civilian",
+      "pos": [
+       68.65,
+       -76.35
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s2": {
+      "kind": "civilian",
+      "pos": [
+       71.45,
+       -76.25
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "s3": {
+      "kind": "child",
+      "pos": [
+       70.7,
+       -76.4
+      ],
+      "face": 190,
+      "pose": "crouch"
+     },
+     "s4": {
+      "kind": "civilian",
+      "pos": [
+       69.95,
+       -76.55
+      ],
+      "face": 175,
+      "pose": "sit"
+     },
+     "s5": {
+      "kind": "civilian",
+      "pos": [
+       67.3,
+       -74.95
+      ],
+      "face": 150,
+      "pose": "stand"
+     },
+     "s6": {
+      "kind": "civilian",
+      "pos": [
+       66.7,
+       -75.6
+      ],
+      "face": 120,
+      "pose": "cower"
+     },
+     "s7": {
+      "kind": "civilian",
+      "pos": [
+       72.8,
+       -74.95
+      ],
+      "face": 215,
+      "pose": "stand"
+     },
+     "s8": {
+      "kind": "child",
+      "pos": [
+       73.3,
+       -75.6
+      ],
+      "face": 240,
+      "pose": "crouch"
+     },
+     "s9": {
+      "kind": "civilian",
+      "pos": [
+       67.7,
+       -77.1
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s10": {
+      "kind": "civilian",
+      "pos": [
+       72.4,
+       -77.15
+      ],
+      "face": 200,
+      "pose": "sit"
+     },
+     "s11": {
+      "kind": "civilian",
+      "pos": [
+       69.1,
+       -77.35
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "s12": {
+      "kind": "civilian",
+      "pos": [
+       71.2,
+       -77.45
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       70.4,
+       -75.6
+      ],
+      "face": 180,
+      "pose": "kneel",
+      "mirror": true
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     105,
+     1.6,
+     -5
+    ],
+    "target": [
+     84.21,
+     1.6,
+     -102.81
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.25
+    ]
+   }
+  },
+  {
+   "n": "7.4",
+   "dur": 5.0,
+   "scene": "fall",
+   "set": "fall",
+   "boardTime": 2.5,
+   "camText": "Wide (frame inside the frame) · 27 mm · eye level 1.5 m · locked-off",
+   "note": "Aftermath: the absence is the image. · The capital is pushed back as in 7.3. The camera is 16 m behind the survivors so the round head of the arch is in frame.",
+   "sound": "The ringing fades to silence. Grit.",
+   "state": {
+    "look": {
+     "base": "fall",
+     "fog": {
+      "density": 0.00045
+     },
+     "haze": {
+      "amount": 0.0025
+     }
+    },
+    "far": {
+     "x": 149,
+     "z": -934,
+     "rotY": 50
+    },
+    "collapse": {
+     "keys": [
+      [
+       0,
+       15
+      ],
+      [
+       5,
+       24
+      ]
+     ],
+     "ease": "linear"
+    },
+    "dustThin": {
+     "keys": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0.6
+      ],
+      [
+       4,
+       0.12
+      ]
+     ]
+    },
+    "towerShift": 3.4,
+    "towerScale": 2.0,
+    "arch": {
+     "lantern": "smashed"
+    },
+    "figures": {
+     "boy": {
+      "pos": [
+       69.25,
+       -75.95
+      ],
+      "face": 175,
+      "pose": "stand"
+     },
+     "s1": {
+      "kind": "civilian",
+      "pos": [
+       68.65,
+       -76.35
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s2": {
+      "kind": "civilian",
+      "pos": [
+       71.45,
+       -76.25
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "s3": {
+      "kind": "child",
+      "pos": [
+       70.7,
+       -76.4
+      ],
+      "face": 190,
+      "pose": "crouch"
+     },
+     "s4": {
+      "kind": "civilian",
+      "pos": [
+       69.95,
+       -76.55
+      ],
+      "face": 175,
+      "pose": "sit"
+     },
+     "s5": {
+      "kind": "civilian",
+      "pos": [
+       67.3,
+       -74.95
+      ],
+      "face": 150,
+      "pose": "stand"
+     },
+     "s6": {
+      "kind": "civilian",
+      "pos": [
+       66.7,
+       -75.6
+      ],
+      "face": 120,
+      "pose": "cower"
+     },
+     "s7": {
+      "kind": "civilian",
+      "pos": [
+       72.8,
+       -74.95
+      ],
+      "face": 215,
+      "pose": "stand"
+     },
+     "s8": {
+      "kind": "child",
+      "pos": [
+       73.3,
+       -75.6
+      ],
+      "face": 240,
+      "pose": "crouch"
+     },
+     "s9": {
+      "kind": "civilian",
+      "pos": [
+       67.7,
+       -77.1
+      ],
+      "face": 160,
+      "pose": "cower"
+     },
+     "s10": {
+      "kind": "civilian",
+      "pos": [
+       72.4,
+       -77.15
+      ],
+      "face": 200,
+      "pose": "sit"
+     },
+     "s11": {
+      "kind": "civilian",
+      "pos": [
+       69.1,
+       -77.35
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "s12": {
+      "kind": "civilian",
+      "pos": [
+       71.2,
+       -77.45
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       70.4,
+       -75.6
+      ],
+      "face": 0,
+      "pose": "kneel",
+      "mirror": true
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     70,
+     1.5,
+     -60
+    ],
+    "target": [
+     70,
+     1.5,
+     -160
+    ],
+    "f": 27,
+    "shift": [
+     0,
+     -0.25
+    ]
+   }
+  }
+ ]
+}

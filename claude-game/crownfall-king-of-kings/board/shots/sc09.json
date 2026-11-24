@@ -1,0 +1,449 @@
+{
+ "title": "SC 9 · EXT./INT. THE FIRST SHIP - SUNRISE",
+ "scene": "ship",
+ "subtitleNames": true,
+ "shots": [
+  {
+   "n": "9.1",
+   "dur": 5.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ship",
+     "haze": {
+      "amount": 0.0022,
+      "falloff": 14
+     },
+     "fog": {
+      "density": {
+       "keys": [
+        [
+         0,
+         0.00125
+        ],
+        [
+         1.8,
+         0.00115
+        ],
+        [
+         4.2,
+         0.00045
+        ]
+       ],
+       "ease": "smooth"
+      }
+     }
+    },
+    "ship": {
+     "pos": {
+      "keys": [
+       [
+        0,
+        [
+         30,
+         96,
+         -1000
+        ]
+       ],
+       [
+        5,
+        [
+         34,
+         90,
+         -930
+        ]
+       ]
+      ],
+      "ease": "linear"
+     }
+    },
+    "shipLights": {
+     "keys": [
+      [
+       0,
+       3.0
+      ],
+      [
+       2.0,
+       3.0
+      ],
+      [
+       5,
+       1.6
+      ]
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "shadow": {
+     "center": [
+      0,
+      0,
+      300
+     ],
+     "radius": 700
+    }
+   },
+   "cam": {
+    "pos": [
+     0,
+     1.6,
+     480
+    ],
+    "target": [
+     0.0,
+     6.485,
+     380.119
+    ],
+    "f": 35
+   },
+   "boardTime": 3.8,
+   "sound": "Engines rising, felt in the chest before they are heard.",
+   "camText": "Extreme wide · the anchor · 35 mm · eye 1.6 m · on the causeway 480 m out · locked-off",
+   "note": "The towers that looked huge in scene 2 are now the small thing that measures."
+  },
+  {
+   "n": "9.2",
+   "dur": 7.0,
+   "set": "ship",
+   "state": {
+    "look": "ship",
+    "ship": {
+     "pos": {
+      "keys": [
+       [
+        0,
+        [
+         -70,
+         215,
+         -540
+        ]
+       ],
+       [
+        7,
+        [
+         45,
+         82,
+         -430
+        ]
+       ]
+      ],
+      "ease": "out"
+     }
+    },
+    "shipLights": 0.35,
+    "fleet": {
+     "count": 0
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     -20,
+     1.6,
+     -8
+    ],
+    "target": [
+     -31.921,
+     22.391,
+     -105.086
+    ],
+    "f": 27
+   },
+   "camKeys": [
+    {
+     "t": 0,
+     "pos": [
+      -20,
+      1.6,
+      -8
+     ],
+     "target": [
+      -31.921,
+      22.391,
+      -105.086
+     ]
+    },
+    {
+     "t": 3.5,
+     "pos": [
+      -20,
+      1.6,
+      -8
+     ],
+     "target": [
+      -20.0,
+      22.391,
+      -105.815
+     ]
+    },
+    {
+     "t": 7,
+     "pos": [
+      -20,
+      1.6,
+      -8
+     ],
+     "target": [
+      -8.079,
+      22.391,
+      -105.086
+     ]
+    }
+   ],
+   "camEase": "linear",
+   "boardTime": 5.0,
+   "sound": "Its engines bury every other sound; the picture goes quiet with them.",
+   "camText": "Wide · 27 mm · eye 1.6 m, up 12° · behind the army · slow pan right 14° (2°/s)",
+   "note": "Not a weapon but years of work, arriving."
+  },
+  {
+   "n": "9.3",
+   "dur": 6.0,
+   "set": "hull",
+   "state": {
+    "look": {
+     "base": "hull",
+     "key": {
+      "dir": [
+       1,
+       0.25,
+       0.6
+      ]
+     }
+    },
+    "coupling": {
+     "y": 0.05,
+     "turn": {
+      "clock": 0,
+      "rate": 9
+     },
+     "ring": 1,
+     "seam": 0
+    }
+   },
+   "cam": {
+    "pos": [
+     0,
+     4.8,
+     6.75
+    ],
+    "target": [
+     0,
+     4.8,
+     0
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     0.05
+    ]
+   },
+   "boardTime": 3.0,
+   "sound": "Inside: the engine stroke, the deep version of the foundry's. The coupling groans under load.",
+   "pulse": [
+    {
+     "at": 0.6,
+     "kind": "engine",
+     "beats": 2,
+     "interval": 3.0,
+     "gain": 0.7
+    }
+   ],
+   "camText": "Insert · ring template = 1.3 · 50 mm · ring height 4.8 m (airborne, inside the hull) · locked-off",
+   "note": "What we watched being made carries the fleet: years in one cut."
+  }
+ ]
+}

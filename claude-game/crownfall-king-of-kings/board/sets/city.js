@@ -7,10 +7,19 @@ import * as THREE from 'three';
 import { L, buildPlain, buildCauseway, buildWallAndGate, buildGatehouse, buildForecourt, buildBattery, buildArch, poseArch,
   buildStair, buildBlock, poseBlock, buildInnerWall, buildZiggurat, buildCrown, poseCrown, buildArcades, buildCannon,
   makePoints, cityLampPositions, pulseLevel, crownFront, buildMidTowers, poseMidTowers } from './solforiz.js';
+import { buildPuffs, updatePuffs } from './fall.js';
+
+// The ziggurat as one group (tiers, the lower flight, the inner wall and gallery, the block, the Crown, the towers, the
+// arcades and the city's lamps), so a shot can push the whole capital back into the haze: state.far = {z, y, x, s}
+// (metres of offset, and a uniform scale about the tier-0 front centre [0, 0, -90]). The bible's distant silhouette
+// (cover, keys p.5 and p.7) from inside the walls, where the real capital is close and steep. Default: no change.
+export const FAR_PIVOT = [0, 0, -90];
+const PUFF_N = 48;
 
 export function buildCity(E, o = {}) {
   const W = E.world;
   const ctx = {};
+  const U = new THREE.Group(); U.name = 'upper-city'; W.add(U); ctx.upper = U;
   buildPlain(E, W, o);
   buildCauseway(E, W, o);
   const cb = new E.Batch('cannon');
@@ -21,21 +30,24 @@ export function buildCity(E, o = {}) {
   ctx.forecourt = buildForecourt(E, W, { ...o, battery: false });
   ctx.guns = buildBattery(E, W, o);
   ctx.arch = buildArch(E, W, o);
-  ctx.stair = buildStair(E, W, o);
-  ctx.inner = buildInnerWall(E, W, o);
-  ctx.zig = buildZiggurat(E, W, o);
-  ctx.crown = buildCrown(E, W, o);
-  ctx.midTowers = buildMidTowers(E, W, o);
-  ctx.arcades = buildArcades(E, W, o);
-  ctx.block = buildBlock(E, W);
+  ctx.stair = buildStair(E, U, o);
+  ctx.inner = buildInnerWall(E, U, o);
+  ctx.zig = buildZiggurat(E, U, o);
+  ctx.crown = buildCrown(E, U, o);
+  ctx.midTowers = buildMidTowers(E, U, o);
+  ctx.arcades = buildArcades(E, U, o);
+  ctx.block = buildBlock(E, U);
   // lamps: the city's amber lamps (they breathe on the pulse), the arcade muzzle flashes, impacts, the truce lamp
-  ctx.lamps = makePoints(E, W, cityLampPositions(E), { color: '#E08A3A', px: 3.4, nearPx: 7, ref: 500, vary: 0.45 });
+  ctx.lamps = makePoints(E, U, cityLampPositions(E), { color: '#E08A3A', px: 3.4, nearPx: 7, ref: 500, vary: 0.45 });
   ctx.truce = makePoints(E, W, [L.truceLamp], { color: '#F2F4F1', px: 8, nearPx: 14, ref: 300, vary: 0 });
   const tl = new THREE.Group(); tl.position.set(...L.truceLamp); W.add(tl);
-  E.boxMesh(0.55, 0.75, 0.55, E.mat('#15181b', { rim: true }), tl, 0, 0.1, 0);
+  // the lantern's cage: cap, base and four corner posts (a solid box here hid the glass and the point from ~100 m)
+  const cage = E.mat('#15181b', { rim: true });
+  E.boxMesh(0.6, 0.1, 0.6, cage, tl, 0, 0.42, 0); E.boxMesh(0.6, 0.08, 0.6, cage, tl, 0, -0.27, 0);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) E.boxMesh(0.05, 0.7, 0.05, cage, tl, sx * 0.27, 0.07, sz * 0.27);
   ctx.truceGlass = E.boxMesh(0.42, 0.55, 0.42, E.lampMat('#F2F4F1', 7), tl, 0, 0.05, 0, { cast: false });
   ctx.truceMesh = tl;
-  ctx.arcFlash = makePoints(E, W, ctx.arcades.guns, { color: '#FFF3D0', px: 5, nearPx: 14, ref: 500, vary: 0 });
+  ctx.arcFlash = makePoints(E, U, ctx.arcades.guns, { color: '#FFF3D0', px: 5, nearPx: 14, ref: 500, vary: 0 });
   ctx.impacts = makePoints(E, W, Array.from({ length: 24 }, () => [0, -999, 0]), { color: '#FF8A2E', px: 5, nearPx: 18, ref: 600, vary: 0 });
   ctx.impacts.g.attributes.position.setUsage(THREE.DynamicDrawUsage);
   // tracer arcs: a pool of lines reused by salvos
@@ -50,7 +62,47 @@ export function buildCity(E, o = {}) {
   ctx.flashLight = E.pointLight('#ffb070', 0, 60, 2);
   const c = L.battery.reduce((a, p) => [a[0] + p[0] / 3, a[1] + p[1] / 3], [0, 0]);
   ctx.flashLight.position.set(c[0] + 4, 7, c[1] - 9);
+  // extra abandoned cannon, hidden unless a shot places them: state.cannons = [{at: [x, y, z], yaw, elev, len}]
+  ctx.cannons = [0, 1].map(() => {
+    const g = new THREE.Group(); g.visible = false; W.add(g);
+    const b = new E.Batch('extra-cannon');
+    buildCannon(E, b, 0, 0, 0, 0, { elev: 0.22, len: 6.5, mat: E.mat('#101215', { rough: 0.6, metal: 0.5, rim: true }) });
+    b.build(g);
+    return g;
+  });
+  // smoke and dust puffs (soft spheres lit from above), hidden unless a shot asks: state.puffs = [{at, t0, n, spread,
+  // r0, r1, rise, drift: [dx, dy, dz], grow, life, opacity, lit, shade, seed, upper}] (upper: at is in the capital's frame)
+  ctx.puffs = buildPuffs(E, W, PUFF_N);
+  // a thread of hand lamps walking a path (the civilians' lamps coming down the stair, readable at any distance):
+  // state.lampThread = {path: [[x,y,z],...], count, spacing, speed, start, t0, jitter, px, color, level, upper}
+  ctx.thread = makePoints(E, W, Array.from({ length: 96 }, () => [0, -9999, 0]), { color: '#E08A3A', px: 2.6, nearPx: 5, ref: 300, vary: 0.35, seed: 9 });
+  ctx.thread.g.attributes.position.setUsage(THREE.DynamicDrawUsage);
+  ctx.thread.pts.visible = false;
+  // the stalled shutter's slit as a row of fixed-size points, so it reads as the one bright dash at any distance
+  // (the real slit is under a metre tall: sub-pixel from the gatehouse once the capital is pushed back). Opt-in:
+  // state.slitMark = {px, level, color}
+  const O0 = L.crown.opening;
+  ctx.slit = makePoints(E, U, Array.from({ length: 33 }, (_, i) => [-O0.w / 2 + 2 + i * (O0.w - 4) / 32, O0.y + 0.4, crownFront() + 2.4]),
+    { color: '#FFE2B0', px: 2.5, nearPx: 3, ref: 100, vary: 0.25, seed: 12 });
+  ctx.slit.pts.visible = false;
+  // dynamic marks: the capital's marks follow state.far (identical to the static marks when far is unset)
+  const up = (p) => () => U.localToWorld(new THREE.Vector3(...p));
+  const O = L.crown.opening;
+  ctx.dyn = {
+    crownShutter: up([0, O.y + O.h / 2, crownFront()]), crown: up([0, L.crown.y + 30, L.crown.z]),
+    shutterSlit: up([0, O.y + 0.8, crownFront() + 2]), innerGate: up([L.innerWall.gateX, 12, L.innerWall.z]),
+    stairFoot: up(L.stairFoot), stairTop: up(L.stairTop),
+  };
   return ctx;
+}
+// state.far -> the capital's transform; returns true when it moved
+function placeUpper(ctx, far) {
+  const U = ctx.upper; if (!U) return false;
+  const f = far ?? {}, s = f.s ?? 1;
+  U.scale.setScalar(s);
+  U.position.set((1 - s) * FAR_PIVOT[0] + (f.x ?? 0), (1 - s) * FAR_PIVOT[1] + (f.y ?? 0), (1 - s) * FAR_PIVOT[2] + (f.z ?? 0));
+  U.updateMatrixWorld(true);
+  return !!far;
 }
 
 // the target of a salvo: 'crown' (the shutter opening), 'lines' (Aethelgard's lines in the forecourt), 'truce', [x,y,z]
@@ -62,6 +114,7 @@ function targetOf(to, i) {
   return new THREE.Vector3(-24 + (i % 3) * 24, O.y + 4 + (i % 2) * 6, crownFront());
 }
 export function updateCity(E, R, t, ctx) {
+  placeUpper(ctx, R.far);
   // the city's lamps: level, breathing on the four-beat pulse, out together at lamps.outAt
   const lp = R.lamps ?? {};
   const pulse = pulseLevel(t, { beat: lp.beat, outAt: lp.outAt, phase: lp.phase });
@@ -123,8 +176,11 @@ export function updateCity(E, R, t, ctx) {
         const gp = ctx.arcades.guns[gi % ctx.arcades.guns.length];
         arcLevel[gi % arcLevel.length] = Math.max(arcLevel[gi % arcLevel.length], dt < 1 / 24 ? 1 : Math.exp(-(dt - 1 / 24) * 10));
         from = new THREE.Vector3(...gp);
+        if (R.far) ctx.upper.localToWorld(from);
       }
-      const to = targetOf(sv.to ?? (side === 'aethelgard' ? 'crown' : 'lines'), i + (sv.seed ?? 0));
+      const toName = sv.to ?? (side === 'aethelgard' ? 'crown' : 'lines');
+      const to = targetOf(toName, i + (sv.seed ?? 0));
+      if (toName === 'crown' && R.far) ctx.upper.localToWorld(to);
       const flight = sv.flight ?? 2.4;
       if (sv.tracers !== false && dt < flight + 0.8 && tr < ctx.tracers.length) {
         const line = ctx.tracers[tr++], pos = line.geometry.attributes.position;
@@ -141,12 +197,54 @@ export function updateCity(E, R, t, ctx) {
   for (let i = tr; i < ctx.tracers.length; i++) ctx.tracers[i].visible = false;
   impPos.needsUpdate = true;
   ctx.impacts.u.uLevel.value = 3;
-  ctx.arcFlash.u.uLevel.value = 8; ctx.arcFlash.pts.visible = arcLevel.some(v => v > 0.05);
+  // the arcade flash clips to white for one frame, then a small amber point that dies away (as the battery's)
+  const arcMax = Math.max(0, ...arcLevel);
+  ctx.arcFlash.u.uColor.value.set(arcMax >= 0.999 ? '#FFF3D0' : '#FF8A2E');
+  ctx.arcFlash.u.uLevel.value = arcMax >= 0.999 ? 8 : 1.5 + 3 * arcMax; ctx.arcFlash.pts.visible = arcLevel.some(v => v > 0.05);
   ctx.arcFlash.u.uOn.value = arcLevel.some(v => v > 0.05) ? 1 : 0;
+  // only the guns that are firing show a flash (the points used to light every gun in the arcades at once)
+  const ap = ctx.arcFlash.g.attributes.position;
+  ctx.arcades.guns.forEach((gp, i) => { if (arcLevel[i] > 0.05) ap.setXYZ(i, gp[0], gp[1], gp[2]); else ap.setXYZ(i, 0, -9999, 0); });
+  ap.needsUpdate = true;
   ctx.flashLight.intensity = Math.min(flashSum, 2) * (R.flashPower ?? 9000);
+  // the slit marker
+  const SM = R.slitMark;
+  ctx.slit.pts.visible = !!SM;
+  if (SM) { ctx.slit.u.uPx.value = SM.px ?? 2.5; ctx.slit.u.uNearPx.value = SM.px ?? 2.5; ctx.slit.u.uLevel.value = SM.level ?? 2; ctx.slit.u.uColor.value.set(SM.color ?? '#FFE2B0'); }
+  // the lamp thread
+  const LT = R.lampThread, tp = ctx.thread.g.attributes.position;
+  ctx.thread.pts.visible = !!LT;
+  if (LT) {
+    const path = LT.path, seg = [];
+    let tot = 0;
+    for (let i = 1; i < path.length; i++) { const d = Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1], path[i][2] - path[i - 1][2]); seg.push(d); tot += d; }
+    const rr = E.rng(LT.seed ?? 4);
+    for (let i = 0; i < tp.count; i++) {
+      const jx = (rr() - 0.5) * (LT.width ?? 6), jy = 0.9 + rr() * 0.3, ph = rr();
+      let sArc = (LT.start ?? 0) + (LT.speed ?? 1) * (t - (LT.t0 ?? 0)) - i * (LT.spacing ?? 2) + ph * (LT.spacing ?? 2) * (LT.jitter ?? 0.6);
+      if (i >= (LT.count ?? 30) || sArc < 0 || sArc > tot) { tp.setXYZ(i, 0, -9999, 0); continue; }
+      let k = 0; while (k < seg.length - 1 && sArc > seg[k]) { sArc -= seg[k]; k++; }
+      const a = path[k], b = path[k + 1], u = Math.min(1, sArc / seg[k]);
+      const p = new THREE.Vector3(a[0] + (b[0] - a[0]) * u + jx, a[1] + (b[1] - a[1]) * u + jy, a[2] + (b[2] - a[2]) * u);
+      if (LT.upper) ctx.upper.localToWorld(p);
+      tp.setXYZ(i, p.x, p.y, p.z);
+    }
+    tp.needsUpdate = true;
+    ctx.thread.u.uLevel.value = LT.level ?? 1.4; ctx.thread.u.uPx.value = LT.px ?? 2.6;
+    ctx.thread.u.uColor.value.set(LT.color ?? '#E08A3A');
+  }
+  // extra cannon
+  ctx.cannons.forEach((g, i) => {
+    const c = (R.cannons ?? [])[i];
+    g.visible = !!c;
+    if (!c) return;
+    g.position.set(...c.at); g.rotation.set(0, (c.yaw ?? 0) * Math.PI / 180, 0); g.scale.setScalar(c.scale ?? 1);
+  });
+  updatePuffs(E, ctx.puffs, R.puffs, t, ctx.upper);
 }
 export function cityBeforeRender(E, R, t, ctx) {
-  for (const P of [ctx.lamps, ctx.truce, ctx.arcFlash, ctx.impacts]) { P.u.fogColor.value.copy(E.scene.fog.color); P.u.fogDensity.value = E.scene.fog.density; }
+  for (const P of [ctx.lamps, ctx.truce, ctx.arcFlash, ctx.impacts, ctx.thread, ctx.slit]) { P.u.fogColor.value.copy(E.scene.fog.color); P.u.fogDensity.value = E.scene.fog.density; }
+  for (const m of ctx.puffs ?? []) if (m.visible) { m.material.uniforms.fogColor.value.copy(E.scene.fog.color); m.material.uniforms.fogDensity.value = E.scene.fog.density; }
 }
 
 export const CITY_MARKS = {

@@ -2,99 +2,145 @@
 // The ruins set plus the first ship, the fleet behind it, the ward, the bars of sunrise through the rigging, the army
 // under its banners, and the masked ward officer behind the round observation glass.
 // The first ship ("lifting envelopes over an armoured body, Kwind-09 iron hung with Korvenian silver; re-plated, built
-// onto, year after year"): body 420 x 70 x 36 m, three lobed envelopes above, a keel 200 m long and 24 m deep below,
-// silver points and hanging rings along the sides, rigging lines, 13 weapon housings, the observation pod (round
-// glass) on the keel's south face, and the ward emitter at the keel's bottom centre. Its origin is the keel bottom
-// centre; its long axis runs along x. Default hover: keel bottom 22 m over the arch, so the ward drops onto the arch.
+// onto, year after year"): body 420 x 70 x 36 m, three long lobed envelopes above (the scalloped top of key p.9), a keel
+// 200 m long and 26 m deep below, a plated belly (frames, girders, patches), Korvenian silver points and rings hung on
+// lines under both edges, rigging lines, a battery of 13 weapon housings on the south chamfer, the observation glass (a
+// round glass ball half sunk in the belly, silver-rimmed: the officer stands in its lower half) at the west end of the
+// battery, and the ward emitter at the keel's bottom centre. Origin = keel bottom centre; long axis along x.
+// Default hover: keel bottom 17 m over the arch, so the ward drops onto the arch.
+// State keys (all optional, all animatable):
+//   ship: {pos | approach 0..1, yaw, roll, visible}   housings 0..1 (opens the 13 amber points left to right, west first)
+//   shipLights 0..1 (small pale lights along the hull: 9.1 "lights in the dust")
+//   fleet: {count, approach 0..1, ramp, depth}   the first `count` slots; a fractional count brings the next ships out of
+//          the haze one after another (each slides in from `depth` m further back over `ramp` slots of count)
+//   ward: {drop 0..1, radius, light, lamp, core, glow}   bars: {count, x0, spacing, z, width, strength, sweep, top}
+//   bar: 'liora' | [x,y,z] (+ barPower)   maskFlash 0..1   flashes: [{at: [x,y,z], t0, t1, size}] (white spots on the belly)
+//   glint: {at, level} (the mirror's one white point)   podLight 0..1   glass (opacity of the observation glass)
+//   hands2: up to two free detailed hands [{style, side, pos, face, up, open, shake, visible}] (10.6: her hand over her wrist)
 import * as THREE from 'three';
-import { buildRuins, updateRuins, ruinsBeforeRender, ARMY_PLAIN } from './ruins.js';
+import { buildRuins, updateRuins, ruinsBeforeRender } from './ruins.js';
 import { L, makePoints } from './solforiz.js';
+import { makeHeroHand, poseHeroHand } from '../figures.js';
 
 export const SHIP = { len: 420, width: 70, keelH: 24, bodyTop: 60, hover: [L.arch.x, 17, L.arch.z], far: [L.arch.x - 60, 380, -5600],
-  pod: { x: -36, y: 9, z: 9.5 }, housings: 13 };
+  pod: { x: -30, z: 23, r: 2.3 }, housings: 13, battery: { x0: -24.5, dx: 3.6 } };
 
 function profileGeo(E, pts, len) {
   const g = E.extrude(pts, len); g.rotateY(Math.PI / 2); return g;   // extrude along x, profile in (z, y)
 }
+const BODY = (K) => [[-35, K + 36], [35, K + 36], [35, K + 18], [26, K + 2], [-26, K + 2], [-35, K + 18]];
+const KEEL = (K) => [[-15, K + 2], [15, K + 2], [5, 0], [-5, 0]];
+const LOBES = [-142, 0, 142], LOBE = { y: 38, rx: 74, ry: 27, rz: 33 };
 // the first ship (full detail) — returns handles; origin at the keel bottom centre
 export function buildFirstShip(E, parent) {
   const g = new THREE.Group(); parent.add(g);
   const iron = E.mat('#2b2d31', { rough: 0.7, metal: 0.35, rim: true }), soot = E.mat('#141416', { rough: 0.9, rim: true });
   const plate = E.mat('#3B3D40', { rough: 0.6, metal: 0.4, rim: true }), patch = E.mat('#1d1f22', { rough: 0.8, rim: true });
+  const rust = E.mat('#2a2522', { rough: 0.85, rim: true });
   const silver = E.mat('#B9BEC3', { rough: 0.2, metal: 0.9, rim: true });
-  const env = E.mat('#232427', { rough: 0.85, rim: true });
+  const env = E.mat('#26272a', { rough: 0.85, rim: true });
   const b = new E.Batch('ship');
-  const K = SHIP.keelH, len = SHIP.len;
-  // the armoured body: a hexagonal section, flat ends with chamfered plates
-  b.add(profileGeo(E, [[-35, K + 36], [35, K + 36], [35, K + 18], [26, K + 2], [-26, K + 2], [-35, K + 18]], len), iron, E.M4(0, 0, 0));
+  const K = SHIP.keelH, len = SHIP.len, r = E.rng(1201);
+  // the armoured body: a hexagonal section, chamfered end plates
+  b.add(profileGeo(E, BODY(K), len), iron, E.M4(0, 0, 0));
   for (const sx of [-1, 1]) b.box(10, 30, 60, iron, sx * (len / 2 + 3), K + 20, 0, 0, 0, sx * 0.35);
-  // the grid: strakes and frames, re-plated patches (built onto, year after year)
-  for (const y of [K + 8, K + 14, K + 22, K + 30]) for (const sz of [-1, 1]) b.box(len, 0.7, 0.7, plate, 0, y, sz * (y > K + 18 ? 35.4 : 30.5 + (y - K) * 0.3));
+  // the grid: strakes and frames on the sides, re-plated patches (built onto, year after year)
+  for (const y of [K + 8, K + 14, K + 22, K + 30]) for (const sz of [-1, 1]) b.box(len, 0.7, 0.7, plate, 0, y, sz * (y > K + 18 ? 35.4 : 26.6 + (y - K - 2) * 0.56));
   for (let x = -len / 2 + 8; x < len / 2; x += 15) for (const sz of [-1, 1]) b.box(0.9, 18, 0.7, plate, x, K + 27, sz * 35.4);
-  const r = E.rng(1201);
   for (let i = 0; i < 46; i++) { const sz = r() < 0.5 ? -1 : 1; b.box(8 + r() * 26, 3 + r() * 9, 0.9, r() < 0.5 ? patch : plate, (r() - 0.5) * (len - 30), K + 20 + r() * 14, sz * 35.6); }
-  // three lobed lifting envelopes over the body (the scalloped top in key p.9)
-  for (const x of [-140, 0, 140]) { const e = new THREE.SphereGeometry(1, 36, 18); b.add(e, env, E.M4(x, K + 36 + 26, 0, 0, 0, 0, 84, 38, 40)); }
-  for (const x of [-210, -70, 70, 210]) b.box(6, 22, 50, iron, x, K + 44, 0);
-  // the keel: a trapezoid prism under the centre
-  b.add(profileGeo(E, [[-15, K + 2], [15, K + 2], [5, 0], [-5, 0]], 200), soot, E.M4(0, 0, 0));
+  // the belly, seen from below in every shot of scene 10: transverse frames, longitudinal girders, patches of new plate
+  for (let x = -len / 2 + 7; x < len / 2; x += 14) b.box(0.9, 1.2, 52, plate, x, K + 1.4, 0);
+  for (const z of [-20, -10, 10, 20]) b.box(len - 4, 0.9, 0.9, iron, 0, K + 1.55, z);
+  for (let i = 0; i < 60; i++) { const w = 9 + r() * 30, d = 5 + r() * 14; b.box(w, 0.35, d, r() < 0.55 ? patch : (r() < 0.5 ? rust : plate), (r() - 0.5) * (len - 40), K + 1.8, (r() - 0.5) * (50 - d)); }
+  // three long lifting envelopes over the body: the scalloped top of key p.9 (their lower halves sink into the body)
+  for (const x of LOBES) b.add(new THREE.SphereGeometry(1, 48, 20), env, E.M4(x, K + LOBE.y, 0, 0, 0, 0, LOBE.rx, LOBE.ry, LOBE.rz));
+  for (const x of [-213, -71, 71, 213]) b.box(5, 16, 46, iron, x, K + 44, 0);      // the saddles between the lobes
+  for (const x of LOBES) for (const dx of [-44, -22, 22, 44]) {                     // straps over each lobe
+    const k = Math.sqrt(Math.max(0, 1 - (dx / LOBE.rx) ** 2));
+    b.add(new THREE.SphereGeometry(1, 28, 10), iron, E.M4(x + dx, K + LOBE.y, 0, 0, 0, 0, 0.7, LOBE.ry * k + 0.45, LOBE.rz * k + 0.45));
+  }
+  // the keel: a trapezoid prism under the centre, ribbed
+  b.add(profileGeo(E, KEEL(K), 200), soot, E.M4(0, 0, 0));
+  for (let x = -96; x <= 96; x += 12) for (const sz of [-1, 1]) b.box(0.8, 26.2, 0.8, iron, x, 13, sz * 10.2, sz * 0.37, 0, 0);
+  b.box(200, 0.8, 4, iron, 0, -0.3, 0);
   // engines at the ends
   for (const x of [-len / 2 - 6, len / 2 + 6]) for (const sz of [-1, 1]) { const c = new THREE.CylinderGeometry(6, 7, 26, 16); c.rotateZ(Math.PI / 2); b.add(c, soot, E.M4(x, K + 14, sz * 22)); }
   b.build(g);
-  // Korvenian silver: points along both sides and rings hung under them
+  // Korvenian silver: points along both sides, and points and rings hung on lines under the belly edges
   const sb = new E.Batch('ship-silver');
+  const lines = new E.Batch('ship-lines');
+  const rope = E.mat('#121214', { rim: true });
   for (let x = -len / 2 + 15; x < len / 2 - 10; x += 21) for (const sz of [-1, 1]) {
-    sb.add(new THREE.SphereGeometry(1.6, 12, 8), silver, E.M4(x, K + 26, sz * 36));
-    const ring = new THREE.TorusGeometry(2.2, 0.32, 8, 20); sb.add(ring, silver, E.M4(x, K + 21.6, sz * 36.2));
+    sb.add(new THREE.SphereGeometry(1.4, 12, 8), silver, E.M4(x, K + 26, sz * 36));
+    const hx = x + 10.5, drop = 4 + r() * 6;
+    lines.add(new THREE.CylinderGeometry(0.1, 0.1, drop, 4), rope, E.M4(hx, K + 2 - drop / 2, sz * 25.6));
+    sb.add(new THREE.SphereGeometry(0.9, 12, 8), silver, E.M4(hx, K + 2 - drop - 0.6, sz * 25.6));
+    sb.add(new THREE.TorusGeometry(1.5, 0.2, 8, 20), silver, E.M4(hx, K + 2 - drop - 2.4, sz * 25.6, 0, sz * 0.3, 0));
   }
   sb.build(g);
-  // rigging: lines hanging from the body's lower edges, and stays from the envelopes
-  const rb = new E.Batch('rigging');
-  const rope = E.mat('#121214', { rim: true });
+  // rigging: lines hanging from the belly edges and the keel, and stays from the envelopes
   for (let x = -len / 2 + 12; x < len / 2; x += 23) for (const sz of [-1, 1]) {
-    const h = 8 + r() * 22;
-    rb.add(new THREE.CylinderGeometry(0.28, 0.28, h, 4), rope, E.M4(x + (r() - 0.5) * 6, K + 2 - h / 2, sz * 26.5));
+    const h = 8 + r() * 26;
+    if (Math.abs(x) < 30) continue;                       // the ward's air under the keel stays clear
+    if (sz > 0 && x > SHIP.pod.x - 26 && x < SHIP.battery.x0 + 13 * SHIP.battery.dx + 6) continue;   // and the glass's view
+    lines.add(new THREE.CylinderGeometry(0.13, 0.13, h, 4), rope, E.M4(x + (r() - 0.5) * 6, K + 2 - h / 2, sz * (19 + r() * 6)));
   }
-  for (let i = 0; i < 18; i++) { const x = -len / 2 + 20 + i * 22, sz = i % 2 ? 1 : -1; const h = 40; rb.add(new THREE.CylinderGeometry(0.22, 0.22, h, 4), rope, E.M4(x, K + 50, sz * 36, sz * 0.5, 0, 0)); }
-  rb.build(g, { cast: true });
-  // weapon housings: hatches along the near (south, +z) lower chamfer; their points of amber open with `housings`
+  for (let i = 0; i < 18; i++) { const x = -len / 2 + 20 + i * 22, sz = i % 2 ? 1 : -1; lines.add(new THREE.CylinderGeometry(0.12, 0.12, 40, 4), rope, E.M4(x, K + 50, sz * 36, sz * 0.5, 0, 0)); }
+  lines.build(g, { cast: true });
+  // the battery: 13 weapon housings on the south (+z) chamfer, close together, west to east; the points open in order
   const hb = new E.Batch('housings');
-  const hpos = [];
-  for (let i = 0; i < SHIP.housings; i++) { const x = -180 + i * 30; hb.box(6, 3.5, 1.2, patch, x, K + 9, 31.4, 0.5, 0, 0); hpos.push([x, K + 7.6, 33.6]); }
+  const hpos = [], B = SHIP.battery, ang = Math.atan2(9, 16);
+  for (let i = 0; i < SHIP.housings; i++) {
+    const x = B.x0 + i * B.dx;
+    hb.box(2.6, 2.2, 0.6, patch, x, K + 9, 29.6, -ang, 0, 0);
+    hb.box(2.9, 0.35, 0.9, plate, x, K + 10.3, 29.9, -ang, 0, 0);
+    hpos.push([x, K + 8.6, 30.6]);
+  }
+  hb.box(B.dx * 13 + 4, 0.6, 0.8, plate, B.x0 + B.dx * 6, K + 11.5, 30.8, -ang, 0, 0);
   hb.build(g);
-  const housings = makePoints(E, g, hpos, { color: '#FFC070', px: 5, nearPx: 10, ref: 300, vary: 0.2 });
-  // the observation pod: a short open cylinder out of the keel's south face, round glass, silver rim; the officer inside
+  const housings = makePoints(E, g, hpos, { color: '#FFC070', px: 4, nearPx: 9, ref: 300, vary: 0.15 });
+  const hs = housings.g.attributes.seed;
+  for (let i = 0; i < hs.count; i++) hs.setX(i, (i + 0.5) / hs.count);       // left to right (west first)
+  hs.needsUpdate = true;
+  // small pale lights along the hull (seen first, "lights in the dust", 9.1)
+  const lp = [];
+  for (let x = -len / 2 + 10; x < len / 2; x += 34) for (const sz of [-1, 1]) lp.push([x, K + 17, sz * 35.6]);
+  for (const x of [-len / 2 - 4, len / 2 + 4]) lp.push([x, K + 26, 0], [x, K + 8, 0]);
+  const runLights = makePoints(E, g, lp, { color: '#E2D2AC', px: 2.5, nearPx: 5, ref: 900, vary: 0.4, seed: 9 });
+  // the observation glass: a round glass ball half sunk in the belly, a silver rim; the officer stands in its lower half
   const P = SHIP.pod;
-  const pod = new THREE.Group(); pod.position.set(P.x, P.y, P.z); pod.rotation.x = -0.45; g.add(pod);
-  const shell = new THREE.CylinderGeometry(2.7, 2.9, 5.5, 32, 1, true); shell.rotateX(Math.PI / 2);
-  E.mesh(shell, E.mat('#1a1a1d', { double: true, rim: true }), pod, 0, 0, 0);
-  const back = new THREE.CircleGeometry(2.9, 32); E.mesh(back, E.mat('#0e0e10'), pod, 0, 0, -2.75);
-  const rim = new THREE.TorusGeometry(2.75, 0.32, 10, 40); E.mesh(rim, silver, pod, 0, 0, 2.75);
-  const glass = E.mesh(new THREE.CircleGeometry(2.7, 40), E.mat('#9aa4ab', { transparent: true, opacity: 0.18, rough: 0.05, metal: 0.2, depthWrite: false }), pod, 0, 0, 2.7, { cast: false });
+  const pod = new THREE.Group(); pod.position.set(P.x, K + 2, P.z); g.add(pod);
+  const glassMat = E.mat('#e6e4df', { std: true, rough: 0.1, metal: 0.1, transparent: true, opacity: 0.3, depthWrite: false, double: true });
+  const glass = E.mesh(new THREE.SphereGeometry(P.r, 40, 20, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), glassMat, pod, 0, 0, 0, { cast: false, receive: false });
+  glass.renderOrder = 15;
+  const rim = new THREE.TorusGeometry(P.r + 0.12, 0.26, 10, 48); rim.rotateX(Math.PI / 2); E.mesh(rim, silver, pod, 0, -0.1, 0);
+  E.mesh(new THREE.CylinderGeometry(0.55, 0.65, 0.12, 20), E.mat('#1a1726', { rim: true }), pod, 0, -2.04, 0, { cast: false });   // her footplate
   // the ward emitter at the keel's bottom centre: a small bright violet-white lamp (no halo)
-  const emitter = new THREE.Group(); emitter.position.set(0, -0.2, 0); g.add(emitter);
-  const emDisc = E.mesh(new THREE.CylinderGeometry(0.7, 1.0, 0.5, 20), E.lampMat('#b9a4ff', 1.6), emitter, 0, 0, 0, { cast: false });
-  const emCore = E.mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.3, 12), E.lampMat('#ffffff', 4), emitter, 0, -0.35, 0, { cast: false });
-  return { g, housings, pod, glass, emitter, emDisc, emCore };
+  const emitter = new THREE.Group(); emitter.position.set(0, -0.7, 0); g.add(emitter);
+  const emDisc = E.mesh(new THREE.CylinderGeometry(0.9, 1.3, 0.5, 24), E.lampMat('#b9a4ff', 1.6), emitter, 0, 0, 0, { cast: false });
+  const emCore = E.mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 16), E.lampMat('#ffffff', 4), emitter, 0, -0.35, 0, { cast: false });
+  return { g, housings, runLights, pod, glass, glassMat, emitter, emDisc, emCore };
 }
-// one merged far-LOD ship for the fleet (instanced)
+// one merged far-LOD ship for the fleet (instanced): the same silhouette, fewer pieces
 function fleetGeometry(E) {
   const parts = [];
   const add = (geo, m) => { const q = geo.index ? geo.toNonIndexed() : geo; q.applyMatrix4(m); for (const k of Object.keys(q.attributes)) if (k !== 'position' && k !== 'normal') q.deleteAttribute(k); parts.push(q); };
   const K = SHIP.keelH;
-  add(profileGeo(E, [[-35, K + 36], [35, K + 36], [35, K + 18], [26, K + 2], [-26, K + 2], [-35, K + 18]], SHIP.len), new THREE.Matrix4());
-  for (const x of [-140, 0, 140]) add(new THREE.SphereGeometry(1, 24, 12), E.M4(x, K + 62, 0, 0, 0, 0, 84, 38, 40));
-  add(profileGeo(E, [[-15, K + 2], [15, K + 2], [5, 0], [-5, 0]], 200), new THREE.Matrix4());
+  add(profileGeo(E, BODY(K), SHIP.len), new THREE.Matrix4());
+  for (const x of LOBES) add(new THREE.SphereGeometry(1, 28, 12), E.M4(x, K + LOBE.y, 0, 0, 0, 0, LOBE.rx, LOBE.ry, LOBE.rz));
+  add(profileGeo(E, KEEL(K), 200), new THREE.Matrix4());
+  for (const x of [-SHIP.len / 2 - 6, SHIP.len / 2 + 6]) { const c = new THREE.CylinderGeometry(6, 7, 26, 10); c.rotateZ(Math.PI / 2); add(c, E.M4(x, K + 14, 0)); }
   return E.mergeGeometries(parts);
 }
-// the fleet: rows receding into the sunrise; reveal order = the two nearest first, then the formation, then more
+// the fleet: the two ships close behind the first, then the formation in layers, each row further, smaller and paler
 export function fleetSlots() {
   const r = mulberry(4242), slots = [];
-  slots.push({ x: -360, y: 70, z: -560, s: 0.95 }, { x: 330, y: 95, z: -700, s: 0.9 });
-  for (let row = 1; row <= 7; row++) {
-    const n = 3 + row * 2, z = -900 - row * 850, spread = 700 + row * 520;
-    for (let i = 0; i < n; i++) slots.push({ x: -spread + (i + 0.5 + (r() - 0.5) * 0.5) * (2 * spread / n), y: 120 + r() * 160 + row * 22, z: z + (r() - 0.5) * 300, s: 0.55 + r() * 0.4 });
-  }
+  slots.push({ x: -170, y: 75, z: -480, s: 0.92, yaw: 0.12 }, { x: 240, y: 95, z: -680, s: 0.88, yaw: -0.18 });
+  // rows at nearly one altitude, so each further row sits lower toward the horizon with a band of sky between rows
+  const rows = [[4, -1650, 255, 1150], [6, -2550, 245, 1650], [8, -3650, 230, 2300], [12, -5050, 210, 3200], [16, -7050, 190, 4400]];
+  rows.forEach(([n, z, y, spread], k) => {
+    for (let i = 0; i < n; i++) slots.push({ x: -spread + (i + 0.5 + (r() - 0.5) * 0.3) * (2 * spread / n) + (k % 2 ? 0.5 : 0) * (spread / n), y: y + (r() - 0.5) * 16, z: z + (r() - 0.5) * 140, s: 0.82 + r() * 0.14, yaw: (r() - 0.5) * 0.5 });
+  });
   return slots;
 }
 function mulberry(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -112,6 +158,12 @@ function beamMaterial(color, o = {}) {
         #include <colorspace_fragment>
       }`,
   });
+}
+// an open prism (no end caps: a cap facing the lens reads as a bright card), uv.y = 0 at the foot .. 1 at the top
+function shaftGeometry(seg = 8) {
+  const g = new THREE.CylinderGeometry(0.5, 0.5, 1, seg, 1, true); g.translate(0, 0.5, 0);
+  const uv = g.attributes.uv, pos = g.attributes.position; for (let k = 0; k < uv.count; k++) uv.setY(k, pos.getY(k));
+  return g;
 }
 
 const A = L.arch, H = SHIP.hover;
@@ -178,23 +230,39 @@ export default {
     W.add(ctx.fleet); ctx.slots = slots;
     // the ward: a cone of violet light from the emitter, a violet pool on the ground, and its spot light
     const cg = new THREE.CylinderGeometry(0.02, 1, 1, 48, 1, true); cg.translate(0, -0.5, 0);
-    ctx.cone = new THREE.Mesh(cg, beamMaterial('#7C4DF0', { strength: 0.55, top: 0.5 })); ctx.cone.frustumCulled = false; ctx.cone.renderOrder = 30; W.add(ctx.cone);
-    ctx.coneCore = new THREE.Mesh(cg, beamMaterial('#c8b6ff', { strength: 0.35, top: 0.8 })); ctx.coneCore.frustumCulled = false; ctx.coneCore.renderOrder = 31; W.add(ctx.coneCore);
+    ctx.cone = new THREE.Mesh(cg, beamMaterial('#7C4DF0', { strength: 0.42, top: 0.5 })); ctx.cone.frustumCulled = false; ctx.cone.renderOrder = 30; W.add(ctx.cone);
+    ctx.coneCore = new THREE.Mesh(cg, beamMaterial('#b49cff', { strength: 0.16, top: 0.8 })); ctx.coneCore.frustumCulled = false; ctx.coneCore.renderOrder = 31; W.add(ctx.coneCore);
     ctx.wardPool = E.pool('#7C4DF0', 1, 0.8, W, 0, 0.02, 0, { soft: 1.4 });
     ctx.wardLight = E.spotLight('#8a5cff', 0, 160, 0.4, 0.6);
     // bars of sunrise through the rigging: long soft shafts along the sun, and the one spot that crosses Liora
     ctx.bars = [];
+    const sg = shaftGeometry();
     for (let i = 0; i < 10; i++) {
-      const bg = new THREE.BoxGeometry(1, 1, 1); bg.translate(0, 0.5, 0);
-      const uv = bg.attributes.uv; const pos = bg.attributes.position; for (let k = 0; k < uv.count; k++) uv.setY(k, pos.getY(k));
-      const m = new THREE.Mesh(bg, beamMaterial('#FFD48A', { strength: 0.16, top: 0 })); m.frustumCulled = false; m.renderOrder = 25; W.add(m); ctx.bars.push(m);
+      const m = new THREE.Mesh(sg, beamMaterial('#FFD48A', { strength: 0.16, top: 0 })); m.frustumCulled = false; m.renderOrder = 25; W.add(m); ctx.bars.push(m);
     }
     ctx.barLight = E.spotLight('#FFD48A', 0, 300, 0.03, 0.4);
     ctx.flashLight = E.pointLight('#ffffff', 0, 12, 2);
-    // marks that move with the ship: 'pod' (the officer's floor, inside the round glass), 'podOut' (outside the glass),
-    // 'emitter' (the ward lamp under the keel), 'glass' (the centre of the round glass)
+    ctx.podLight = E.pointLight('#efe3cc', 0, 8, 2);
+    // two free detailed hands (the hero-hand model) for inserts that need both of someone's hands
+    ctx.hands2 = [['liora', 'L'], ['liora', 'R']].map(([style, side]) => { const h = makeHeroHand(E, { style, side }); h.root.visible = false; W.add(h.root); return { h, style, side }; });          // sunrise bounced up into the glass (keeps her glove pale)
+    // the glint: the one point of white when the mirror catches a bar of sun (10.1); a fixed-size point at any distance
+    ctx.glint = makePoints(E, W, [[0, 0, 0]], { color: '#ffffff', px: 4, nearPx: 7, ref: 60, vary: 0 });
+    ctx.glint.pts.renderOrder = 40; ctx.glint.pts.material.depthTest = false;
+    // the fleet's housings: 13 amber points along each fleet ship's south chamfer, opening west to east like the first's
+    const fh = [], seeds = [];
+    for (let i = 0; i < slots.length; i++) for (let k = 0; k < 13; k++) { fh.push([0, 0, 0]); seeds.push((k + 0.5) / 13); }
+    ctx.fleetHousings = makePoints(E, W, fh, { color: '#FFC070', px: 2.5, nearPx: 5, ref: 900, vary: 0.2 });
+    const fs = ctx.fleetHousings.g.attributes.seed; seeds.forEach((v, i) => fs.setX(i, v)); fs.needsUpdate = true;
+    // the four white points the mirror throws on the belly (10.2): small unlit discs facing down
+    ctx.flashes = [];
+    for (let i = 0; i < 4; i++) {
+      const m = new THREE.Mesh(new THREE.CircleGeometry(0.5, 20), E.lampMat('#ffffff', 3, { double: true }));
+      m.rotation.x = Math.PI / 2; m.visible = false; m.frustumCulled = false; W.add(m); ctx.flashes.push(m);
+    }
+    // marks that move with the ship: 'pod' (the officer's footplate inside the glass), 'podOut' (below the glass, toward
+    // the arch), 'glass' (the centre of the glass), 'emitter' (the ward lamp under the keel)
     const P = (x, y, z) => () => { ctx.ship.g.updateMatrixWorld(true); return ctx.ship.pod.localToWorld(new THREE.Vector3(x, y, z)); };
-    ctx.dyn = { pod: P(0, -1.75, 0.2), podOut: P(0, -0.6, 14), glass: P(0, 0, 2.7),
+    ctx.dyn = { pod: P(0, -1.98, 0), podOut: P(9, -12.3, -6.9), glass: P(0, -1.2, 0), podEye: P(0, -0.42, 0),
       emitter: () => ctx.ship.emitter.getWorldPosition(new THREE.Vector3()) };
     ctx.presets = PRESETS;
     return ctx;
@@ -209,17 +277,27 @@ export default {
     sh.g.position.set(...pos); sh.g.rotation.set(0, (S.yaw ?? 0) * Math.PI / 180, (S.roll ?? 0) * Math.PI / 180);
     sh.g.visible = S.visible ?? true;
     sh.g.updateMatrixWorld(true);
-    sh.housings.u.uLevel.value = 2.2 * (R.housings ?? 0); sh.housings.pts.visible = (R.housings ?? 0) > 0.01;
-    sh.housings.u.uOn.value = R.housings ?? 0;
-    // the fleet: the first `count` slots, flown in by fleet.approach (0 far .. 1 on station)
-    const F = R.fleet ?? {}, n = Math.min(F.count ?? 0, ctx.slots.length), ap = F.approach ?? 1;
+    const hl = Math.max(0, Math.min(1, R.housings ?? 0));
+    sh.housings.u.uLevel.value = 2.2; sh.housings.pts.visible = hl > 0.001; sh.housings.u.uOn.value = hl;
+    sh.glassMat.opacity = R.glass ?? 0.3;
+    const rl = R.shipLights ?? 0;
+    sh.runLights.pts.visible = rl > 0.01; sh.runLights.u.uLevel.value = 1.6 * rl;
+    // the fleet: the first `count` slots; a fractional count brings the next ones out of the haze one after another
+    const F = R.fleet ?? {}, cnt = Math.max(0, F.count ?? 0), ap = F.approach ?? 1, ramp = Math.max(F.ramp ?? 1, 1e-3), depth = F.depth ?? 2200;
+    const n = Math.min(Math.ceil(cnt), ctx.slots.length);
     const m4 = new THREE.Matrix4();
     for (let i = 0; i < n; i++) {
-      const s = ctx.slots[i];
-      m4.compose(new THREE.Vector3(s.x, s.y, s.z - (1 - ap) * 3000), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, (s.x % 7) * 0.01, 0)), new THREE.Vector3(s.s, s.s, s.s));
+      const s = ctx.slots[i], k = Math.max(0, Math.min(1, (cnt - i) / ramp)), e = k * k * (3 - 2 * k);
+      m4.compose(new THREE.Vector3(s.x, s.y, s.z - (1 - ap) * 3000 - (1 - e) * depth), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, s.yaw ?? 0, 0)), new THREE.Vector3(s.s, s.s, s.s));
       ctx.fleet.setMatrixAt(i, m4);
+      const hp = ctx.fleetHousings.g.attributes.position;
+      for (let k = 0; k < 13; k++) { const v = new THREE.Vector3(-180 + k * 30, SHIP.keelH + 8.6, 31).applyMatrix4(m4); hp.setXYZ(i * 13 + k, v.x, v.y, v.z); }
+      hp.needsUpdate = true;
     }
     ctx.fleet.count = n; ctx.fleet.visible = n > 0; ctx.fleet.instanceMatrix.needsUpdate = true;
+    ctx.fleetHousings.g.setDrawRange(0, n * 13);
+    const fhl = Math.max(0, Math.min(1, R.fleetHousings ?? R.housings ?? 0));
+    ctx.fleetHousings.pts.visible = n > 0 && fhl > 0.001; ctx.fleetHousings.u.uOn.value = fhl; ctx.fleetHousings.u.uLevel.value = 2.0;
     // the ward: drop 0..1 lowers the violet cone from the emitter to the ground
     const Wd = R.ward ?? {}, drop = Wd.drop ?? 0, rad = Wd.radius ?? 8;
     const em = sh.emitter.getWorldPosition(new THREE.Vector3());
@@ -227,13 +305,15 @@ export default {
     ctx.cone.visible = ctx.coneCore.visible = drop > 0.001;
     ctx.cone.position.copy(em); ctx.cone.scale.set(rad * drop, Hh * drop, rad * drop);
     ctx.coneCore.position.copy(em); ctx.coneCore.scale.set(rad * 0.45 * drop, Hh * drop, rad * 0.45 * drop);
+    ctx.cone.material.uniforms.uStrength.value = Wd.glow ?? 0.42;
+    ctx.coneCore.material.uniforms.uStrength.value = Wd.core ?? 0.16;
     ctx.wardPool.position.set(em.x, 0.03, em.z); ctx.wardPool.scale.set(rad * 1.3, rad * 1.3, 1);
-    ctx.wardPool.material.uniforms.uStrength.value = 0.7 * Math.max(0, drop - 0.85) / 0.15;
+    ctx.wardPool.material.uniforms.uStrength.value = (Wd.pool ?? 0.7) * Math.max(0, drop - 0.85) / 0.15;
     ctx.wardLight.position.copy(em); ctx.wardLight.target.position.set(em.x, 0, em.z); ctx.wardLight.target.updateMatrixWorld();
     ctx.wardLight.angle = Math.atan(rad * 1.25 / Hh); ctx.wardLight.intensity = drop >= 0.98 ? (Wd.light ?? 9000) : 0;
     sh.emDisc.visible = sh.emCore.visible = (Wd.lamp ?? drop > 0) ? true : false;
     // bars of sunrise: {count, x0, spacing, z, width, strength, sweep (m/s)} landing along a line on the ground
-    const Bs = R.bars, kd = (E.R.look && typeof E.R.look === 'object' && E.R.look.key?.dir) || (E.LOOKS[typeof R.look === 'string' ? R.look : 'ward']?.key.dir) || [-0.45, 0.35, -1];
+    const Bs = R.bars, kd = (E.R.look && typeof E.R.look === 'object' && E.R.look.key?.dir) || (E.LOOKS[typeof R.look === 'string' ? R.look : (R.look?.base ?? 'ward')]?.key.dir) || [-0.45, 0.35, -1];
     const sun = new THREE.Vector3(...kd).normalize();
     ctx.bars.forEach((m, i) => {
       const on = Bs && i < (Bs.count ?? 6);
@@ -252,9 +332,36 @@ export default {
       ctx.barLight.position.copy(p).addScaledVector(sun, 80); ctx.barLight.target.position.copy(p); ctx.barLight.target.updateMatrixWorld();
       ctx.barLight.intensity = R.barPower ?? 60000;
     } else ctx.barLight.intensity = 0;
-    // the four flashes cross the mask: a white light in the pod (maskFlash 0..1)
-    const pp = sh.pod.localToWorld(new THREE.Vector3(0, 0, 1.6));
+    // the four flashes cross the mask: a white light in the glass (maskFlash 0..1)
+    const pp = sh.pod.localToWorld(new THREE.Vector3(0, -0.6, 0));
     ctx.flashLight.position.copy(pp); ctx.flashLight.intensity = 400 * (R.maskFlash ?? 0);
+    ctx.podLight.position.copy(sh.pod.localToWorld(new THREE.Vector3(0.4, -1.0, 0.6))); ctx.podLight.intensity = 60 * (R.podLight ?? 0);
+    // the free hands: rebuilt only if a shot asks for another style or side
+    const H2 = R.hands2 ?? [];
+    ctx.hands2.forEach((slot, i) => {
+      const p = H2[i];
+      if (!p || p.visible === false) { slot.h.root.visible = false; return; }
+      if ((p.style ?? slot.style) !== slot.style || (p.side ?? slot.side) !== slot.side) {
+        E.world.remove(slot.h.root); slot.style = p.style ?? slot.style; slot.side = p.side ?? slot.side;
+        slot.h = makeHeroHand(E, { style: slot.style, side: slot.side }); E.world.add(slot.h.root);
+      }
+      poseHeroHand(E, slot.h, { ...p, attach: undefined, side: slot.side }, t);
+    });
+    // the glint: {at: mark | [x,y,z], level 0..1}
+    const G = R.glint;
+    ctx.glint.pts.visible = !!G && (G.level ?? 1) > 0.02;
+    if (ctx.glint.pts.visible) { const p = E.where(G.at ?? 'liora.mirror'); ctx.glint.g.attributes.position.setXYZ(0, p.x, p.y, p.z); ctx.glint.g.attributes.position.needsUpdate = true; ctx.glint.u.uLevel.value = 3 * (G.level ?? 1); }
+    // the four white points on the belly: [{at, t0, t1, size}] (shot seconds), on for t0..t1
+    const FL = R.flashes ?? [];
+    ctx.flashes.forEach((m, i) => {
+      const f = FL[i];
+      m.visible = !!f && t >= (f.t0 ?? 0) && t <= (f.t1 ?? 1e9);
+      if (!m.visible) return;
+      m.position.set(...f.at); const s = f.size ?? 1; m.scale.set(s, s, s);
+    });
   },
-  beforeRender: ruinsBeforeRender,
+  beforeRender(E, R, t, ctx, cam) {
+    ruinsBeforeRender(E, R, t, ctx, cam);
+    for (const P of [ctx.ship.housings, ctx.ship.runLights, ctx.glint, ctx.fleetHousings]) { P.u.fogColor.value.copy(E.scene.fog.color); P.u.fogDensity.value = E.scene.fog.density; }
+  },
 };

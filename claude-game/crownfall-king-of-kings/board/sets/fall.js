@@ -12,6 +12,7 @@ import { L, buildPlain, buildCauseway, buildWallAndGate, buildGatehouse, buildFo
   buildStair, buildInnerWall, buildZiggurat, buildTower, crownFront } from './solforiz.js';
 
 const T = L.tiers;
+const FAR_PIVOT = [0, 0, -90];
 // soft dust puffs: a sphere whose edges fade, lit from above (bible p.8: "the cloud is lit from above")
 export function puffMaterial(E, o = {}) {
   const m = new THREE.ShaderMaterial({
@@ -33,6 +34,41 @@ export function puffMaterial(E, o = {}) {
   return m;
 }
 const SPHG = new THREE.SphereGeometry(1, 18, 12);
+
+// a pool of puffs a shot places by state (smoke at a muzzle, dust rolling down a flight, dust where a wall gives):
+// puffs = [{at, t0, n, spread, r0, r1, rise, riseTau, drift: [dx, dy, dz], grow, stagger, jitter, life, fadeIn,
+// opacity, lit, shade, soft, seed, upper}] (upper: `at` is in the capital's frame, state.far, city sets only)
+export function buildPuffs(E, W, n = 48) {
+  return Array.from({ length: n }, () => {
+    const m = new THREE.Mesh(SPHG, puffMaterial(E)); m.frustumCulled = false; m.visible = false; m.renderOrder = 5; W.add(m); return m;
+  });
+}
+export function updatePuffs(E, pool, list, t, upper) {
+  let pi = 0;
+  for (const P of list ?? []) {
+    const r = E.rng(P.seed ?? 5), n = P.n ?? 6, sp = P.spread ?? [6, 3, 6];
+    for (let k = 0; k < n && pi < pool.length; k++) {
+      const m = pool[pi++];
+      const dt0 = (P.stagger ?? 0.25) * k + r() * (P.jitter ?? 0.2);
+      const tau = t - (P.t0 ?? 0) - dt0;
+      const ox = (r() - 0.5) * sp[0], oy = r() * sp[1], oz = (r() - 0.5) * sp[2];
+      const rs = 0.75 + 0.5 * r();
+      if (tau <= 0) { m.visible = false; continue; }
+      m.visible = true;
+      const grow = 1 - Math.exp(-tau / (P.grow ?? 1.6));
+      const rad = (P.r0 ?? 2) + ((P.r1 ?? 8) - (P.r0 ?? 2)) * grow * rs;
+      const d = P.drift ?? [0, 0, 0], rise = (P.rise ?? 1) * (P.riseTau ?? 3) * (1 - Math.exp(-tau / (P.riseTau ?? 3)));
+      const p = new THREE.Vector3(P.at[0] + ox + d[0] * tau, P.at[1] + oy + rise + d[1] * tau, P.at[2] + oz + d[2] * tau);
+      if (P.upper && upper) upper.localToWorld(p);
+      m.position.copy(p); m.scale.set(rad * 1.15, rad, rad);
+      const life = P.life ?? 99, fadeIn = Math.min(1, tau / (P.fadeIn ?? 0.5)), fadeOut = 1 - Math.min(1, Math.max(0, tau - life) / 2);
+      const u = m.material.uniforms;
+      u.uOpacity.value = (P.opacity ?? 0.8) * fadeIn * fadeOut;
+      u.uLit.value.set(P.lit ?? '#d9c69c'); u.uShade.value.set(P.shade ?? '#5e5546'); u.uSoft.value = P.soft ?? 1.6;
+    }
+  }
+  for (; pi < pool.length; pi++) pool[pi].visible = false;
+}
 
 function buildChunks(E, W) {
   const chunks = [];
@@ -97,12 +133,16 @@ export default {
   look: 'fall',
   marks: { stairFlight3Top: [0, T[3].top, T[3].front], stairFlight3Foot: [0, T[2].top, T[3].front + 26], arch: [L.arch.x, 0, L.arch.z], midTowers: L.midTowers.map(([x, z]) => [x, T[3].top, z]) },
   build(E, o = {}) {
-    const W = E.world;
-    buildPlain(E, W, o); buildCauseway(E, W, o); buildWallAndGate(E, W, o);
-    buildGatehouse(E, W, {});
-    buildForecourt(E, W, { ...o, battery: false });
-    const guns = buildBattery(E, W, o);
-    const arch = buildArch(E, W, o);
+    const W0 = E.world;
+    buildPlain(E, W0, o); buildCauseway(E, W0, o); buildWallAndGate(E, W0, o);
+    buildGatehouse(E, W0, {});
+    buildForecourt(E, W0, { ...o, battery: false });
+    const guns = buildBattery(E, W0, o);
+    const arch = buildArch(E, W0, o);
+    // the capital (everything inward of the forecourt) as one group that state.far can push back into the dust and
+    // turn about the tier-0 front centre: far = {x, y, z, s, rotY (deg)}. Default: no change.
+    const farOuter = new THREE.Group(), W = new THREE.Group(); farOuter.add(W); W0.add(farOuter);
+    farOuter.position.set(...FAR_PIVOT); W.position.set(-FAR_PIVOT[0], -FAR_PIVOT[1], -FAR_PIVOT[2]);
     buildStair(E, W, o); buildInnerWall(E, W, o);
     buildZiggurat(E, W, { fromTier: 0, toTier: 1 });
     const chunks = buildChunks(E, W);
@@ -119,11 +159,16 @@ export default {
     }
     for (const tw of towers) for (let k = 0; k < 3; k++) {
       const m = new THREE.Mesh(SPHG, puffMaterial(E)); m.frustumCulled = false; W.add(m);
-      puffs.push({ m, at: tw.piv.position.clone().add(new THREE.Vector3(10 + k * 18, 10 + r() * 20, (r() - 0.5) * 20)), t0: Math.max(0, tw.start) + 1.2 + k * 0.7, v: 10 + r() * 6, r0: 10, r1: 35 + r() * 20, drift: 2 + r() * 2 });
+      puffs.push({ m, at: tw.piv.position.clone().add(new THREE.Vector3(10 + k * 18, 10 + r() * 20, (r() - 0.5) * 20)), t0: Math.max(0, tw.start) + 1.2 + k * 0.7, v: 10 + r() * 6, r0: 10, r1: 35 + r() * 20, drift: 2 + r() * 2, tower: tw.start > -50 });
     }
-    return { guns, arch, chunks, towers, puffs, presets: PRESETS };
+    const extra = buildPuffs(E, W0, 40);
+    return { guns, arch, chunks, towers, puffs, extra, farOuter, presets: PRESETS };
   },
   update(E, R, t, ctx) {
+    const f = R.far ?? {};
+    ctx.farOuter.position.set(FAR_PIVOT[0] + (f.x ?? 0), FAR_PIVOT[1] + (f.y ?? 0), FAR_PIVOT[2] + (f.z ?? 0));
+    ctx.farOuter.rotation.set(0, (f.rotY ?? 0) * Math.PI / 180, 0); ctx.farOuter.scale.setScalar(f.s ?? 1);
+    ctx.farOuter.updateMatrixWorld(true);
     const c = R.collapse ?? 0, g = 4.2;
     for (const ch of ctx.chunks) {
       const tau = Math.max(0, c - ch.delay);
@@ -133,16 +178,19 @@ export default {
       ch.piv.rotation.set(ch.tilt[0] * k, ch.tilt[1] * k, ch.tilt[2] * k);
       ch.piv.visible = k < 0.999;
     }
-    for (const tw of ctx.towers) {
+    const shift = R.towerShift ?? 0;                     // seconds added to every tower's start (they topple later)
+    for (const tw0 of ctx.towers) {
+      const tw = tw0.start < -50 ? tw0 : { ...tw0, start: tw0.start + shift };
       const u = Math.min(1, Math.max(0, (c - tw.start) / tw.dur));
       const a = (tw.start < -50 ? 1 : u * u) * 1.45 * tw.dir;
       if (tw.axis === 'z') tw.piv.rotation.set(0, 0, -a); else tw.piv.rotation.set(a, 0, 0);
       tw.piv.position.y = (tw.axis === 'z' ? T[3].top : T[7].top) - Math.max(0, c - tw.start - tw.dur) * 6;
       tw.piv.visible = c - tw.start < tw.dur + 6 || tw.start < -50 ? true : false;
+      tw.piv.scale.setScalar(tw.axis === 'z' ? (R.towerScale ?? 1) : 1);   // the four pressure towers, taller for a far wide (7.3)
     }
     const thin = R.dustThin ?? 1;
     for (const p of ctx.puffs) {
-      const tau = c - p.t0;
+      const tau = c - p.t0 - (p.tower ? shift : 0);
       if (tau <= 0) { p.m.visible = false; continue; }
       p.m.visible = true;
       const rise = p.v * 4 * (1 - Math.exp(-tau / 4));
@@ -153,8 +201,10 @@ export default {
       p.m.material.uniforms.uOpacity.value = 0.85 * fadeIn * fadeOut * thin;
     }
     poseArch(ctx.arch, { lantern: 'smashed', ...(R.arch ?? {}) }, t);
+    updatePuffs(E, ctx.extra, R.puffs, t, null);
   },
   beforeRender(E, R, t, ctx) {
+    for (const m of ctx.extra) if (m.visible) { m.material.uniforms.fogColor.value.copy(E.scene.fog.color); m.material.uniforms.fogDensity.value = E.scene.fog.density; }
     for (const p of ctx.puffs) { p.m.material.uniforms.fogColor.value.copy(E.scene.fog.color); p.m.material.uniforms.fogDensity.value = E.scene.fog.density; }
   },
 };

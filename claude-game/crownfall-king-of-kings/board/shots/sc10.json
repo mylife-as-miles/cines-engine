@@ -1,0 +1,7191 @@
+{
+ "title": "SC 10 · EXT. FORECOURT - THE RUINS - CONTINUOUS",
+ "scene": "ship",
+ "subtitleNames": true,
+ "shots": [
+  {
+   "n": "10.1",
+   "dur": 4.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": {
+      "keys": [
+       [
+        0,
+        0.0
+       ],
+       [
+        4,
+        0.2
+       ]
+      ],
+      "ease": "in"
+     },
+     "drop": 0
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.9,
+         0
+        ],
+        [
+         2.05,
+         1
+        ],
+        [
+         2.4,
+         0.2
+        ]
+       ]
+      }
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "bars": {
+     "count": 7,
+     "x0": 18.0,
+     "spacing": 15,
+     "z": -71.0,
+     "width": 4.5,
+     "strength": 0.045,
+     "sweep": -0.5,
+     "top": 46
+    },
+    "bar": "liora",
+    "barPower": {
+     "keys": [
+      [
+       0,
+       0
+      ],
+      [
+       1.7,
+       0
+      ],
+      [
+       2.0,
+       60000
+      ],
+      [
+       3.2,
+       60000
+      ],
+      [
+       3.6,
+       0
+      ]
+     ]
+    },
+    "glint": {
+     "at": "liora.mirror",
+     "level": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        1.9,
+        0
+       ],
+       [
+        2.0,
+        1
+       ],
+       [
+        2.35,
+        1
+       ],
+       [
+        2.6,
+        0
+       ]
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     70,
+     1.6,
+     -8
+    ],
+    "target": [
+     70.0,
+     13.787,
+     -107.255
+    ],
+    "f": 32
+   },
+   "boardTime": 2.1,
+   "sound": "Engines, steady. Stone grinding against stone.",
+   "camText": "Wide · 32 mm · eye 1.6 m, up 7° · square to the arch, 68 m · locked-off",
+   "note": "The people who survived the fall are about to be crushed by what is left of it."
+  },
+  {
+   "n": "10.2",
+   "dur": 6.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 0.25,
+     "drop": 0
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       70.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       71.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       72.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       72.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       70.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       71.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       70.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       72.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       66.8,
+       -74.5
+      ],
+      "face": 270,
+      "mirror": true,
+      "pose": "stand",
+      "reachR": {
+       "keys": [
+        [
+         0,
+         [
+          66.6,
+          1.05,
+          -74.75
+         ]
+        ],
+        [
+         0.8,
+         [
+          66.35,
+          1.8,
+          -74.8
+         ]
+        ]
+       ]
+      },
+      "flash": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.55,
+         0
+        ],
+        [
+         1.6,
+         1
+        ],
+        [
+         1.85,
+         1
+        ],
+        [
+         1.9000000000000001,
+         0
+        ],
+        [
+         2.35,
+         0
+        ],
+        [
+         2.4000000000000004,
+         1
+        ],
+        [
+         2.6500000000000004,
+         1
+        ],
+        [
+         2.7,
+         0
+        ],
+        [
+         3.1500000000000004,
+         0
+        ],
+        [
+         3.2,
+         1
+        ],
+        [
+         3.45,
+         1
+        ],
+        [
+         3.5,
+         0
+        ],
+        [
+         3.95,
+         0
+        ],
+        [
+         4.0,
+         1
+        ],
+        [
+         4.25,
+         1
+        ],
+        [
+         4.3,
+         0
+        ],
+        [
+         4.75,
+         0
+        ]
+       ],
+       "ease": "linear"
+      },
+      "look": [
+       -90,
+       41,
+       -96
+      ]
+     },
+     "boy": {
+      "pos": [
+       70.6,
+       -76.0
+      ],
+      "face": 200
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "bars": {
+     "count": 7,
+     "x0": 18.0,
+     "spacing": 15,
+     "z": -71.0,
+     "width": 4.5,
+     "strength": 0.045,
+     "sweep": 0.3,
+     "top": 46
+    },
+    "bar": "liora.handR",
+    "barPower": 50000,
+    "flashes": [
+     {
+      "at": [
+       -86,
+       41.4,
+       -96.0
+      ],
+      "t0": 1.6,
+      "t1": 1.8800000000000001,
+      "size": 1.8
+     },
+     {
+      "at": [
+       -93,
+       41.4,
+       -94.0
+      ],
+      "t0": 2.4000000000000004,
+      "t1": 2.6800000000000006,
+      "size": 1.8
+     },
+     {
+      "at": [
+       -89,
+       41.4,
+       -99.0
+      ],
+      "t0": 3.2,
+      "t1": 3.4800000000000004,
+      "size": 1.8
+     },
+     {
+      "at": [
+       -96,
+       41.4,
+       -97.5
+      ],
+      "t0": 4.0,
+      "t1": 4.28,
+      "size": 1.8
+     }
+    ],
+    "glint": {
+     "at": "liora.mirror",
+     "level": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        1.55,
+        0
+       ],
+       [
+        1.6,
+        1
+       ],
+       [
+        1.85,
+        1
+       ],
+       [
+        1.9000000000000001,
+        0
+       ],
+       [
+        2.35,
+        0
+       ],
+       [
+        2.4000000000000004,
+        1
+       ],
+       [
+        2.6500000000000004,
+        1
+       ],
+       [
+        2.7,
+        0
+       ],
+       [
+        3.1500000000000004,
+        0
+       ],
+       [
+        3.2,
+        1
+       ],
+       [
+        3.45,
+        1
+       ],
+       [
+        3.5,
+        0
+       ],
+       [
+        3.95,
+        0
+       ],
+       [
+        4.0,
+        1
+       ],
+       [
+        4.25,
+        1
+       ],
+       [
+        4.3,
+        0
+       ],
+       [
+        4.75,
+        0
+       ]
+      ],
+      "ease": "linear"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     69.05,
+     1.2,
+     -74.92
+    ],
+    "target": [
+     -29.659,
+     16.843,
+     -71.473
+    ],
+    "f": 35
+   },
+   "boardTime": 1.7,
+   "sound": "Under the engines, nothing marks the flashes; the count is silent and exact.",
+   "camText": "Medium-wide · 35 mm · Liora's shoulder 1.2 m, up 9° · 2.3 m behind her right shoulder · locked-off",
+   "note": "White returns, in her hand: the count her city lived by."
+  },
+  {
+   "n": "10.3",
+   "dur": 5.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     },
+     "exposure": 1.05
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 0
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 0.3,
+     "drop": 0
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "bars": {
+     "count": 7,
+     "x0": 18.0,
+     "spacing": 15,
+     "z": -71.0,
+     "width": 4.5,
+     "strength": 0.045,
+     "sweep": -0.5,
+     "top": 46
+    },
+    "podLight": 0.06,
+    "glass": 0.1,
+    "maskFlash": {
+     "keys": [
+      [
+       0,
+       0
+      ],
+      [
+       0.1,
+       0.9
+      ],
+      [
+       0.3,
+       0
+      ],
+      [
+       0.5,
+       0.9
+      ],
+      [
+       0.7,
+       0
+      ],
+      [
+       0.9,
+       0.9
+      ],
+      [
+       1.1,
+       0
+      ],
+      [
+       1.3,
+       0.9
+      ],
+      [
+       1.5,
+       0
+      ]
+     ],
+     "ease": "linear"
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190
+     },
+     "ward": {
+      "pos": "pod",
+      "face": 165.8,
+      "pose": "stand",
+      "aimR": [
+       66.19,
+       -1.4,
+       -79.42
+      ],
+      "palmR": "out",
+      "handR": {
+       "keys": [
+        [
+         0,
+         0.35
+        ],
+        [
+         1.8,
+         0.35
+        ],
+        [
+         2.3,
+         1
+        ]
+       ]
+      }
+     }
+    },
+    "hand": {
+     "attach": "ward",
+     "side": "R",
+     "style": "ward",
+     "open": {
+      "keys": [
+       [
+        0,
+        0.3
+       ],
+       [
+        1.8,
+        0.3
+       ],
+       [
+        2.3,
+        1
+       ]
+      ]
+     },
+     "view": "back"
+    }
+   },
+   "cam": {
+    "hand": true,
+    "f": 40,
+    "dist": 1.0
+   },
+   "boardTime": 3.0,
+   "sound": "Inside the hull: a hush, the engines as a hum through the floor. Her voice level and procedural; the last t released on the beat.",
+   "camText": "Hand template · 40 mm · 1.0 m behind her hand · her side of the glass, 40 m up, looking down · locked-off",
+   "note": "Open: another protects. The same frame as 3.4 and 6.3, and it is not his hand.",
+   "lines": [
+    {
+     "t0": 2.4,
+     "t1": 3.9,
+     "speaker": "WARD OFFICER",
+     "text": "Hold the stone.",
+     "subtitle": "Hold the stone.",
+     "spoken": "Va-ten-t el sveulea!"
+    }
+   ]
+  },
+  {
+   "n": "10.4",
+   "dur": 6.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        0.8,
+        0
+       ],
+       [
+        1.3,
+        1
+       ]
+      ],
+      "ease": "in"
+     },
+     "radius": 7.5,
+     "glow": 0.16,
+     "core": 0.03
+    },
+    "arch": {
+     "broken": 1,
+     "stones": {
+      "keys": [
+       [
+        0,
+        0.3
+       ],
+       [
+        0.5,
+        0.45
+       ],
+       [
+        1.2,
+        1.0
+       ]
+      ],
+      "ease": "in"
+     },
+     "drop": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        0.5,
+        0.2
+       ],
+       [
+        1.2,
+        1.2
+       ]
+      ],
+      "ease": "in"
+     }
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.7,
+       -74.4
+      ],
+      "face": 180,
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          70.0,
+          1.2,
+          -96.0
+         ]
+        ],
+        [
+         3.8,
+         [
+          70.0,
+          1.2,
+          -96.0
+         ]
+        ],
+        [
+         4.4,
+         [
+          70.0,
+          16,
+          -78.0
+         ]
+        ]
+       ]
+      }
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     },
+     "p1": {
+      "kind": "guard",
+      "pos": [
+       58.6,
+       -55.0
+      ],
+      "face": 160
+     },
+     "p2": {
+      "kind": "guard",
+      "pos": [
+       60.4,
+       -57.6
+      ],
+      "face": 170
+     },
+     "p3": {
+      "kind": "bearer",
+      "pos": [
+       57.4,
+       -59.2
+      ],
+      "face": 150,
+      "banner": "upright"
+     },
+     "p4": {
+      "kind": "soldier",
+      "pos": [
+       61.5,
+       -53.4
+      ],
+      "face": 175
+     }
+    },
+    "bars": {
+     "count": 7,
+     "x0": 18.0,
+     "spacing": 15,
+     "z": -71.0,
+     "width": 4.5,
+     "strength": 0.045,
+     "sweep": -0.5,
+     "top": 46
+    }
+   },
+   "cam": {
+    "pos": [
+     69.4,
+     1.0,
+     -36
+    ],
+    "target": [
+     69.4,
+     19.224,
+     -134.325
+    ],
+    "f": 24
+   },
+   "boardTime": 3.0,
+   "pulse": [
+    {
+     "at": 0.5,
+     "kind": "bell",
+     "beats": 1,
+     "gain": 0.7
+    }
+   ],
+   "sound": "One bell note, long; under it the engines drop away for its length.",
+   "camText": "Wide · 24 mm · the boy's eye 1.0 m, up 10° · 40 m from the arch · locked-off",
+   "note": "Rescue from a stranger: the same miracle as the held stone, with someone else's hand."
+  },
+  {
+   "n": "10.5",
+   "dur": 6.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": {
+      "keys": [
+       [
+        0,
+        0.6
+       ],
+       [
+        1.6,
+        2.6
+       ],
+       [
+        2.0,
+        4
+       ],
+       [
+        3.2,
+        14
+       ],
+       [
+        5.0,
+        40
+       ],
+       [
+        6,
+        48
+       ]
+      ],
+      "ease": "linear"
+     },
+     "ramp": 5,
+     "depth": 2500
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "look": [
+       0,
+       40,
+       -900
+      ]
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180,
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          -30,
+          60,
+          -1400
+         ]
+        ],
+        [
+         3.4,
+         [
+          -30,
+          60,
+          -1400
+         ]
+        ],
+        [
+         3.8,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ]
+       ]
+      }
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     2.4,
+     1.65,
+     -55.0
+    ],
+    "target": [
+     -34.945,
+     9.496,
+     -147.433
+    ],
+    "f": 32
+   },
+   "boardTime": 4.4,
+   "sound": "Engines layering, one pitch over another.",
+   "camText": "Wide · 32 mm · eye 1.7 m · among the army, behind the captain · locked-off",
+   "note": "The sky held open in scene 2 begins to fill.",
+   "lines": [
+    {
+     "t0": 3.6,
+     "t1": 5.2,
+     "speaker": "CAPTAIN",
+     "text": "These are the forward ships.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ]
+  },
+  {
+   "n": "10.6",
+   "dur": 11.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       70.1,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       70.8,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       71.6,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       72.3,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       72.8,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       69.89999999999999,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       70.89999999999999,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       72.2,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       72.39999999999999,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       67.0,
+       -73.4
+      ],
+      "face": 281.0,
+      "visible": false
+     },
+     "boy": {
+      "pos": [
+       66.233,
+       0.45,
+       -74.728
+      ],
+      "face": 281.0,
+      "aimR": {
+       "keys": [
+        [
+         0,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ],
+        [
+         2.2,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ],
+        [
+         3.0,
+         [
+          65.555,
+          0.0,
+          -74.545
+         ]
+        ]
+       ]
+      },
+      "handR": "point"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "hands2": [
+     {
+      "style": "liora",
+      "side": "L",
+      "pos": [
+       66.809,
+       1.22,
+       -73.648
+      ],
+      "face": [
+       66.809,
+       2.22,
+       -73.648
+      ],
+      "up": [
+       -0.829,
+       0,
+       -0.559
+      ],
+      "open": 0.45
+     },
+     {
+      "style": "liora",
+      "side": "R",
+      "open": {
+       "keys": [
+        [
+         0,
+         0.8
+        ],
+        [
+         1.6,
+         0.8
+        ],
+        [
+         2.2,
+         0.35
+        ],
+        [
+         3.0,
+         0.35
+        ],
+        [
+         3.4,
+         0.8
+        ],
+        [
+         4.0,
+         0.55
+        ]
+       ]
+      },
+      "visible": {
+       "keys": [
+        [
+         0,
+         false
+        ],
+        [
+         1.5,
+         false
+        ],
+        [
+         1.55,
+         true
+        ],
+        [
+         3.05,
+         true
+        ],
+        [
+         3.1,
+         false
+        ],
+        [
+         3.35,
+         false
+        ],
+        [
+         3.4,
+         true
+        ]
+       ],
+       "ease": "linear"
+      },
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          65.808,
+          0.6,
+          -74.289
+         ]
+        ],
+        [
+         1.6,
+         [
+          65.808,
+          0.6,
+          -74.289
+         ]
+        ],
+        [
+         2.2,
+         [
+          65.808,
+          1.3,
+          -74.554
+         ]
+        ],
+        [
+         3.0,
+         [
+          65.868,
+          0.68,
+          -74.504
+         ]
+        ],
+        [
+         3.4,
+         [
+          66.591,
+          0.7,
+          -73.932
+         ]
+        ],
+        [
+         4.0,
+         [
+          66.868,
+          1.265,
+          -73.581
+         ]
+        ]
+       ]
+      },
+      "face": {
+       "keys": [
+        [
+         0,
+         [
+          65.808,
+          -0.4,
+          -74.289
+         ]
+        ],
+        [
+         1.6,
+         [
+          65.808,
+          -0.4,
+          -74.289
+         ]
+        ],
+        [
+         2.2,
+         [
+          65.808,
+          0.3,
+          -74.554
+         ]
+        ],
+        [
+         3.0,
+         [
+          65.868,
+          -0.32,
+          -74.504
+         ]
+        ],
+        [
+         3.4,
+         [
+          66.591,
+          -0.3,
+          -73.932
+         ]
+        ],
+        [
+         4.0,
+         [
+          66.868,
+          0.265,
+          -73.581
+         ]
+        ]
+       ]
+      },
+      "up": {
+       "keys": [
+        [
+         0,
+         [
+          -0.982,
+          0,
+          0.191
+         ]
+        ],
+        [
+         3.4,
+         [
+          -0.982,
+          0,
+          0.191
+         ]
+        ],
+        [
+         4.0,
+         [
+          -0.653,
+          0,
+          -0.739
+         ]
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "cam": {
+    "pos": [
+     68.246,
+     1.42,
+     -74.325
+    ],
+    "target": [
+     1.44,
+     -0.98,
+     -57.67
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     0.06
+    ],
+    "dof": {
+     "focus": [
+      66.809,
+      1.22,
+      -73.648
+     ],
+     "fstop": 1400,
+     "max": 22
+    }
+   },
+   "boardTime": 6.0,
+   "sound": "The engines as a floor; the bell's tail; her breath.",
+   "camText": "Close · wrist template (3.5) · 50 mm · Liora's eye line 1.4 m · 1.6 m from the wrist · shallow · long hold",
+   "note": "Far: she sees him small, and her own hand covers the place he held."
+  },
+  {
+   "n": "10.7",
+   "dur": 5.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "intensity": 1.1
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.04,
+     "core": 0.01
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       70.1,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       70.8,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       71.6,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       72.3,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       72.8,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       69.89999999999999,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       70.89999999999999,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       72.2,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       72.39999999999999,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       67.0,
+       -73.4
+      ],
+      "face": 281.0,
+      "pose": "handOverWrist",
+      "look": [
+       0.8,
+       1.7,
+       -60.5
+      ]
+     },
+     "boy": {
+      "pos": [
+       66.233,
+       0.45,
+       -74.728
+      ],
+      "face": 281.0
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     0.8,
+     1.75,
+     -60.5
+    ],
+    "target": [
+     67.0,
+     2.7,
+     -71.4
+    ],
+    "f": 135
+   },
+   "boardTime": 0.8,
+   "sound": "Engines only.",
+   "camText": "Long-lens POV · 135 mm · Cael's eye 1.75 m · 70 m to the arch · locked-off",
+   "note": "His look matches hers at 6.5: the long lens is how these two see each other."
+  },
+  {
+   "n": "10.8",
+   "dur": 5.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "ward",
+     "key": {
+      "dir": [
+       -0.6,
+       0.45,
+       0.65
+      ],
+      "intensity": 1.3
+     },
+     "fill": {
+      "intensity": 0.7
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": {
+       "keys": [
+        [
+         0,
+         102.6
+        ],
+        [
+         3.4,
+         102.6
+        ],
+        [
+         4.4,
+         7.599999999999994
+        ]
+       ]
+      },
+      "pose": "stand",
+      "blood": 0.7,
+      "reachR": [
+       1.1,
+       1.04,
+       -60.075
+      ],
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          70.0,
+          1.7,
+          -76.0
+         ]
+        ],
+        [
+         3.4,
+         [
+          70.0,
+          1.7,
+          -76.0
+         ]
+        ],
+        [
+         4.2,
+         [
+          0,
+          1.7,
+          40
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "hand": {
+     "attach": "cael",
+     "side": "R",
+     "style": "cael",
+     "open": 0.55,
+     "shake": 0.9,
+     "blood": 0.7,
+     "hideFigure": false
+    }
+   },
+   "cam": {
+    "pos": [
+     -0.445,
+     1.0,
+     -59.422
+    ],
+    "target": [
+     57.62,
+     1.52,
+     -74.55
+    ],
+    "f": 50,
+    "dof": {
+     "focus": "cael.handR",
+     "fstop": 2000,
+     "max": 22
+    }
+   },
+   "boardTime": 1.8,
+   "sound": "The engines; his breathing, uneven; the binding creaking with each tremor.",
+   "camText": "Close · wrist template, his side · 50 mm · hand height 1.0 m · 1.6 m from the hand · shallow · locked-off",
+   "note": "Far: his hand stays clear and shakes in front of her, so we see that he knows her."
+  },
+  {
+   "n": "10.9",
+   "dur": 12.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         2.8,
+         0
+        ],
+        [
+         3.6,
+         270
+        ]
+       ]
+      },
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          1.6,
+          300
+         ]
+        ],
+        [
+         2.8,
+         [
+          0,
+          1.6,
+          300
+         ]
+        ],
+        [
+         3.6,
+         [
+          -0.8,
+          1.68,
+          -60.5
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 90,
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ],
+        [
+         4.6,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ],
+        [
+         5.4,
+         [
+          -60,
+          1.6,
+          -45
+         ]
+        ],
+        [
+         7.6,
+         [
+          -60,
+          1.6,
+          -45
+         ]
+        ],
+        [
+         8.0,
+         [
+          0.8,
+          1.72,
+          -60.5
+         ]
+        ]
+       ]
+      }
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     0,
+     1.75,
+     -65.0
+    ],
+    "target": [
+     0,
+     1.75,
+     300
+    ],
+    "f": 40,
+    "shift": [
+     0,
+     0.17
+    ]
+   },
+   "boardTime": 6.0,
+   "sound": "Engines. No score. The captain's voice level and plain.",
+   "camText": "Medium two-shot in profile · 40 mm · eye 1.75 m · 4.5 m from the pair, lens down the road · locked-off",
+   "note": "The road out is right there between them, and the captain will not let him take it.",
+   "lines": [
+    {
+     "t0": 1.0,
+     "t1": 2.4,
+     "speaker": "CAPTAIN",
+     "text": "The stairs were full.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 8.0,
+     "t1": 10.2,
+     "speaker": "CAPTAIN",
+     "text": "You do not get to stop now.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ]
+  },
+  {
+   "n": "10.10",
+   "dur": 5.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 215,
+      "pose": "stand",
+      "aimR": [
+       -30,
+       1.6,
+       -22
+      ],
+      "palmR": "out",
+      "handR": {
+       "keys": [
+        [
+         0,
+         1
+        ],
+        [
+         2.4,
+         1
+        ],
+        [
+         3.4,
+         0
+        ]
+       ]
+      },
+      "shake": {
+       "keys": [
+        [
+         0,
+         0.7
+        ],
+        [
+         2.4,
+         0.7
+        ],
+        [
+         3.4,
+         0
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "hand": {
+     "attach": "cael",
+     "side": "R",
+     "style": "cael",
+     "open": {
+      "keys": [
+       [
+        0,
+        1
+       ],
+       [
+        2.4,
+        1
+       ],
+       [
+        3.4,
+        0
+       ]
+      ]
+     },
+     "shake": {
+      "keys": [
+       [
+        0,
+        0.7
+       ],
+       [
+        2.4,
+        0.7
+       ],
+       [
+        3.4,
+        0
+       ]
+      ]
+     },
+     "blood": 0.7,
+     "view": "back"
+    }
+   },
+   "cam": {
+    "hand": true,
+    "f": 40,
+    "dist": 1.0
+   },
+   "boardTime": 1.2,
+   "sound": "Engines. The leather of the binding creaks as the fist closes.",
+   "camText": "Hand template · 40 mm · 1.0 m behind his hand · level · locked-off",
+   "note": "Closed: war. The last of the four hands, and the only one that does not hold anything up."
+  },
+  {
+   "n": "10.11",
+   "dur": 4.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          0.8,
+          0.6,
+          -66.5
+         ]
+        ],
+        [
+         0.8,
+         [
+          0.8,
+          0.6,
+          -66.5
+         ]
+        ],
+        [
+         1.8,
+         [
+          0.8,
+          60,
+          -360.5
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180,
+      "look": [
+       0,
+       30,
+       -400
+      ],
+      "aimL": {
+       "keys": [
+        [
+         0,
+         [
+          -3,
+          0.5,
+          -58
+         ]
+        ],
+        [
+         3.2,
+         [
+          -3,
+          0.5,
+          -58
+         ]
+        ],
+        [
+         3.6,
+         [
+          -2,
+          4,
+          -66
+         ]
+        ]
+       ]
+      },
+      "palmL": "out"
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     0.8,
+     1.72,
+     -66.7
+    ],
+    "target": [
+     0.8,
+     1.55,
+     -60.5
+    ],
+    "f": 50
+   },
+   "boardTime": 2.4,
+   "sound": "Engines; his voice quiet, not shouted.",
+   "camText": "Medium · 50 mm · eye 1.75 m · in front of him, on his centre line · locked-off",
+   "note": "Symmetry when Cael commands: the line lands on the look, as the bible stages it.",
+   "lines": [
+    {
+     "t0": 1.8,
+     "t1": 3.0,
+     "speaker": "CAEL",
+     "text": "Raise the banners.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ]
+  },
+  {
+   "n": "10.12",
+   "dur": 8.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.0,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.72,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.0,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -12.0,
+       -63.0
+      ],
+      "face": 180,
+      "banner": {
+       "keys": [
+        [
+         0,
+         "shoulder"
+        ],
+        [
+         0.4,
+         "shoulder"
+        ],
+        [
+         0.45,
+         "raised"
+        ]
+       ]
+      },
+      "bannerOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.0,
+         0
+        ],
+        [
+         1.8,
+         1
+        ]
+       ],
+       "ease": "out"
+      },
+      "bannerWind": -90
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     0.0,
+     1.6,
+     -63.4
+    ],
+    "target": [
+     -99.221,
+     4.218,
+     -75.583
+    ],
+    "f": 40
+   },
+   "boardTime": 4.0,
+   "sound": "Cloth cracking open in the wind; his cry, alone; nothing answers for a beat.",
+   "camText": "Medium-wide · 40 mm · eye 1.6 m · side-on to the standard-bearer, 12 m · locked-off",
+   "note": "He wanted to be told it was worth it; now he is told to fight.",
+   "lines": [
+    {
+     "t0": 3.6,
+     "t1": 4.6,
+     "speaker": "STANDARD-BEARER",
+     "text": "Burn the sky!",
+     "subtitle": "Burn the sky!",
+     "spoken": "Vael-bryna!"
+    }
+   ]
+  },
+  {
+   "n": "10.13",
+   "dur": 6.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -115,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         0.0,
+         0
+        ],
+        [
+         0.7,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 10
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -115,
+       -56
+      ],
+      "to": [
+       -105,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         0.3389830508474576,
+         0
+        ],
+        [
+         1.0389830508474576,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 11
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -105,
+       -56
+      ],
+      "to": [
+       -95,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.0279661016949153,
+         0
+        ],
+        [
+         1.7279661016949153,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 12
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -95,
+       -56
+      ],
+      "to": [
+       -85,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.0169491525423728,
+         0
+        ],
+        [
+         1.7169491525423728,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 13
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -85,
+       -56
+      ],
+      "to": [
+       -75,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         1.3559322033898304,
+         0
+        ],
+        [
+         2.0559322033898306,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 14
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -75,
+       -56
+      ],
+      "to": [
+       -65,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         2.044915254237288,
+         0
+        ],
+        [
+         2.744915254237288,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 15
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -65,
+       -56
+      ],
+      "to": [
+       -55,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         2.0338983050847457,
+         0
+        ],
+        [
+         2.733898305084746,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 16
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -55,
+       -56
+      ],
+      "to": [
+       -45,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         2.3728813559322033,
+         0
+        ],
+        [
+         3.0728813559322035,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 17
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -45,
+       -56
+      ],
+      "to": [
+       -35,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         3.061864406779661,
+         0
+        ],
+        [
+         3.7618644067796607,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 18
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -35,
+       -56
+      ],
+      "to": [
+       -25,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         3.0508474576271185,
+         0
+        ],
+        [
+         3.7508474576271187,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 19
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -25,
+       -56
+      ],
+      "to": [
+       -15,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         3.389830508474576,
+         0
+        ],
+        [
+         4.089830508474576,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 20
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -15,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         4.078813559322033,
+         0
+        ],
+        [
+         4.7788135593220336,
+         0.62
+        ]
+       ],
+       "ease": "out"
+      },
+      "seed": 21
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         4.3,
+         0
+        ],
+        [
+         5.0,
+         0.62
+        ]
+       ]
+      },
+      "seed": 22
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -12.0,
+       -63.0
+      ],
+      "face": 180,
+      "banner": "raised",
+      "bannerOpen": 1,
+      "bannerWind": -90
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -131,
+     3.0,
+     -60.0
+    ],
+    "target": [
+     0.8,
+     2.4,
+     -60.5
+    ],
+    "f": 85
+   },
+   "boardTime": 4.0,
+   "sound": "The cry taken up voice after voice, uneven. No score: the voices are the music.",
+   "camText": "Long-lens wide · 85 mm · eye 1.6 m on a rubble block · 6 m past the end of the line · locked-off",
+   "note": "An army choosing, not cheering."
+  },
+  {
+   "n": "10.14",
+   "dur": 4.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.3,
+     "fill": {
+      "intensity": 0.9
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 0
+    },
+    "ward": {
+     "drop": 1,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.62,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.62,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.62,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.62,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -11.0,
+       -58.6
+      ],
+      "face": 180,
+      "banner": "shoulder"
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     },
+     "ward": {
+      "pos": "pod",
+      "face": 165.8,
+      "pose": "stand"
+     },
+     "ob": {
+      "kind": "bearer",
+      "pos": [
+       65.25,
+       51.7
+      ],
+      "face": 180,
+      "banner": "raised",
+      "bannerOpen": 1,
+      "bannerWind": 55
+     }
+    },
+    "housings": {
+     "keys": [
+      [
+       0,
+       0
+      ],
+      [
+       3.25,
+       1
+      ]
+     ],
+     "ease": "linear"
+    },
+    "podLight": 1.0
+   },
+   "cam": {
+    "pos": [
+     64,
+     0.4,
+     56
+    ],
+    "target": [
+     64.0,
+     42.662,
+     -34.631
+    ],
+    "f": 50
+   },
+   "boardTime": 3.6,
+   "sound": "Thirteen mechanical clacks, one per housing, over the engines.",
+   "camText": "Wide · 50 mm · eye 1.6 m, up 25° · among the rear ranks · locked-off",
+   "note": "The fire comes back, on the other side."
+  },
+  {
+   "n": "10.15",
+   "dur": 8.0,
+   "set": "ship",
+   "state": {
+    "look": {
+     "base": "banners",
+     "key": {
+      "dir": [
+       0,
+       0.16,
+       -1
+      ]
+     },
+     "exposure": 1.12,
+     "haze": {
+      "amount": 0.014,
+      "falloff": 12
+     }
+    },
+    "ship": {
+     "pos": [
+      70,
+      17,
+      -76
+     ]
+    },
+    "fleet": {
+     "count": 48,
+     "approach": {
+      "keys": [
+       [
+        0,
+        0.985
+       ],
+       [
+        8,
+        1.0
+       ]
+      ],
+      "ease": "linear"
+     }
+    },
+    "ward": {
+     "drop": 1.0,
+     "radius": 7.5,
+     "glow": 0.18,
+     "core": 0.04
+    },
+    "arch": {
+     "broken": 1,
+     "stones": 1,
+     "drop": 1.2
+    },
+    "army": [
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -125,
+       -56
+      ],
+      "to": [
+       -7,
+       -56
+      ],
+      "bannersOpen": 0.62,
+      "seed": 0
+     },
+     {
+      "rows": 5,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.17,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       7,
+       -56
+      ],
+      "to": [
+       40,
+       -56
+      ],
+      "bannersOpen": 0.62,
+      "seed": 1
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       -240,
+       46
+      ],
+      "to": [
+       -16,
+       46
+      ],
+      "bannersOpen": 0.62,
+      "seed": 2
+     },
+     {
+      "rows": 3,
+      "spacing": 1.6,
+      "rowGap": 2.4,
+      "facing": 180,
+      "poles": 0.1,
+      "jitter": 0.6,
+      "notAll": 0.55,
+      "wind": -70,
+      "from": [
+       16,
+       46
+      ],
+      "to": [
+       240,
+       46
+      ],
+      "bannersOpen": 0.62,
+      "seed": 3
+     }
+    ],
+    "battery": {
+     "at": [
+      -47,
+      -21
+     ],
+     "spacing": [
+      15,
+      -4
+     ],
+     "face": [
+      0,
+      -400
+     ]
+    },
+    "figures": {
+     "sv0": {
+      "kind": "civilian",
+      "pos": [
+       68.8,
+       -75.9
+      ],
+      "face": 155,
+      "pose": "stand"
+     },
+     "sv1": {
+      "kind": "civilian",
+      "pos": [
+       69.5,
+       -76.4
+      ],
+      "face": 192,
+      "pose": "stand"
+     },
+     "sv2": {
+      "kind": "civilian",
+      "pos": [
+       70.3,
+       -75.8
+      ],
+      "face": 179,
+      "pose": "stand"
+     },
+     "sv3": {
+      "kind": "child",
+      "pos": [
+       71.0,
+       -76.3
+      ],
+      "face": 166,
+      "pose": "stand"
+     },
+     "sv4": {
+      "kind": "civilian",
+      "pos": [
+       71.5,
+       -75.65
+      ],
+      "face": 203,
+      "pose": "stand"
+     },
+     "sv5": {
+      "kind": "civilian",
+      "pos": [
+       68.6,
+       -74.5
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "sv6": {
+      "kind": "civilian",
+      "pos": [
+       69.6,
+       -74.1
+      ],
+      "face": 177,
+      "pose": "stand"
+     },
+     "sv7": {
+      "kind": "child",
+      "pos": [
+       70.9,
+       -74.4
+      ],
+      "face": 164,
+      "pose": "stand"
+     },
+     "sv8": {
+      "kind": "civilian",
+      "pos": [
+       69.8,
+       -77.2
+      ],
+      "face": 201,
+      "pose": "stand"
+     },
+     "sv9": {
+      "kind": "civilian",
+      "pos": [
+       71.1,
+       -73.7
+      ],
+      "face": 188,
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": [
+       72.2,
+       -73.7
+      ],
+      "face": 200,
+      "mirror": true,
+      "flash": 0
+     },
+     "boy": {
+      "pos": [
+       69.4,
+       -75.3
+      ],
+      "face": 190,
+      "pose": "stand"
+     },
+     "cael": {
+      "pos": [
+       0.8,
+       -60.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "captain": {
+      "pos": [
+       -0.8,
+       -60.5
+      ],
+      "face": 180
+     },
+     "bearer": {
+      "pos": [
+       -12.0,
+       -63.0
+      ],
+      "face": 180,
+      "banner": "raised",
+      "bannerOpen": 1,
+      "bannerWind": -90
+     },
+     "gc0": {
+      "kind": "gunner",
+      "pos": [
+       -64,
+       -12.5
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc1": {
+      "kind": "gunner",
+      "pos": [
+       -60,
+       -11.8
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc2": {
+      "kind": "gunner",
+      "pos": [
+       -49,
+       -16.2
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc3": {
+      "kind": "gunner",
+      "pos": [
+       -45,
+       -15.5
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "gc4": {
+      "kind": "gunner",
+      "pos": [
+       -34,
+       -20.4
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "gc5": {
+      "kind": "gunner",
+      "pos": [
+       -30,
+       -19.6
+      ],
+      "face": 200,
+      "pose": "stand"
+     },
+     "wd0": {
+      "kind": "wounded",
+      "pos": [
+       -22,
+       -30
+      ],
+      "face": 160,
+      "pose": "sit"
+     },
+     "wd1": {
+      "kind": "wounded",
+      "pos": [
+       -19.5,
+       -31.5
+      ],
+      "face": 185,
+      "pose": "stand"
+     },
+     "wd2": {
+      "kind": "wounded",
+      "pos": [
+       -26,
+       -27.5
+      ],
+      "face": 210,
+      "pose": "sit"
+     },
+     "wd3": {
+      "kind": "wounded",
+      "pos": [
+       -16,
+       -33
+      ],
+      "face": 235,
+      "pose": "stand"
+     }
+    },
+    "housings": 1
+   },
+   "cam": {
+    "pos": [
+     0,
+     2.4,
+     4.0
+    ],
+    "target": [
+     0.696,
+     10.42,
+     -95.675
+    ],
+    "f": 32
+   },
+   "boardTime": 5.0,
+   "sound": "The cry dies away by 4.0. Then only engines, swelling into the cut.",
+   "camText": "Extreme wide · 32 mm · eye 1.6 m on the gate rubble · in the broken gate, 65 m behind Cael · locked-off",
+   "note": "The sky he was given in scene 2 is full."
+  },
+  {
+   "n": "10.16",
+   "dur": 8.0,
+   "black": true,
+   "cam": {
+    "pos": [
+     0,
+     1.6,
+     0
+    ],
+    "target": [
+     0,
+     1.6,
+     -1
+    ],
+    "f": 35
+   },
+   "super": {
+    "text": "CROWNFALL: KING OF KINGS",
+    "t0": 2.0,
+    "t1": 6.5,
+    "size": 30
+   },
+   "pulse": [
+    {
+     "at": 0.8,
+     "kind": "lock",
+     "beats": 1,
+     "gain": 0.9
+    },
+    {
+     "at": 5.5,
+     "kind": "engine",
+     "beats": 1,
+     "gain": 1.0
+    }
+   ],
+   "sound": "The lock, enormous and dry. Silence. One deep engine stroke, left to ring out.",
+   "camText": "Black · the lock · the title · one engine stroke",
+   "note": "The pulse, which began in the foundry, belongs to the fleet now."
+  }
+ ]
+}

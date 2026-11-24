@@ -1,0 +1,1254 @@
+{
+ "title": "SC 8 · THE RUINS AT SUNRISE",
+ "scene": "ruins",
+ "subtitleNames": true,
+ "note": "Scene 8, EXT. FORECOURT - THE RUINS - SUNRISE. Key 8 (bible p.8 bottom): low sun through dust, the first direct sunlight.",
+ "shots": [
+  {
+   "n": "8.1",
+   "dur": 6.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "sunrise",
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": 0.7
+      }
+     },
+     "fill": {
+      "intensity": 0.28
+     }
+    },
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "vents": [
+     {
+      "at": [
+       96.1,
+       -32.5
+      ],
+      "yaw": 0,
+      "h": 9,
+      "life": 4.6,
+      "size": 1.0,
+      "opacity": 0.55,
+      "wind": [
+       0.35,
+       -0.1
+      ]
+     }
+    ],
+    "figures": {
+     "sentry": {
+      "kind": "soldier",
+      "pos": [
+       97.4,
+       -62.0
+      ],
+      "face": 185
+     }
+    },
+    "dust": {
+     "mode": "drift",
+     "color": "#d9c69c",
+     "opacity": 0.3,
+     "px": 1.3,
+     "count": 600,
+     "speed": 0.04,
+     "size": [
+      40,
+      12,
+      40
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     100,
+     1.6,
+     -18
+    ],
+    "target": [
+     99,
+     1.6,
+     -100
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.17
+    ]
+   },
+   "camText": "Extreme wide (the empty sky) · 32 mm · eye level 1.6 m · locked-off",
+   "lines": [],
+   "sound": "Air hissing from broken pipes. No guns. No score.",
+   "note": "The sky is emptied out a second time, and waits."
+  },
+  {
+   "n": "8.2",
+   "dur": 6.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "sunrise",
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": 0.7
+      }
+     },
+     "fill": {
+      "intensity": 0.28
+     }
+    },
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "figures": {
+     "m1": {
+      "kind": "soldier",
+      "pos": [
+       -5.75,
+       -62.12
+      ],
+      "face": 160,
+      "pose": {
+       "keys": [
+        [
+         0,
+         "stand"
+        ],
+        [
+         0.35,
+         "slump"
+        ],
+        [
+         0.9,
+         "kneel"
+        ],
+        [
+         1.5,
+         "sit"
+        ]
+       ],
+       "ease": "step"
+      },
+      "lean": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         0.5,
+         12
+        ],
+        [
+         1.5,
+         -6
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "m2": {
+      "kind": "soldier",
+      "pos": [
+       -1.2,
+       -64.28
+      ],
+      "face": 180,
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.2,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.8,
+         [
+          -6,
+          14
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "g1": {
+      "kind": "soldier",
+      "pos": [
+       6.4,
+       -70.64
+      ],
+      "face": 182
+     },
+     "g2": {
+      "kind": "soldier",
+      "pos": [
+       6.7,
+       -68.47
+      ],
+      "face": 178
+     },
+     "cael": {
+      "pos": [
+       5.5,
+       -52.25
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "bearer": {
+      "kind": "bearer",
+      "pos": [
+       6.5,
+       -66.25
+      ],
+      "face": {
+       "keys": [
+        [
+         0,
+         180
+        ],
+        [
+         3.0,
+         180
+        ],
+        [
+         3.6,
+         250
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "banner": "raised",
+      "bannerBlend": {
+       "from": "shoulder",
+       "to": "raised",
+       "k": {
+        "keys": [
+         [
+          0,
+          0
+         ],
+         [
+          2.6,
+          0
+         ],
+         [
+          3.4,
+          1
+         ]
+        ],
+        "ease": "smooth"
+       }
+      }
+     }
+    },
+    "dust": {
+     "mode": "drift",
+     "color": "#d9c69c",
+     "opacity": 0.3,
+     "px": 1.3,
+     "count": 600,
+     "speed": 0.04,
+     "size": [
+      40,
+      12,
+      40
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     0,
+     1.6,
+     -40
+    ],
+    "target": [
+     0,
+     1.6,
+     -100
+    ],
+    "f": 40,
+    "shift": [
+     0,
+     -0.1
+    ]
+   },
+   "boardTime": 4.0,
+   "camText": "Wide, side-on along the army line · 40 mm · eye level 1.6 m · locked-off",
+   "lines": [
+    {
+     "t0": 3.8,
+     "t1": 4.5,
+     "speaker": "STANDARD-BEARER",
+     "text": "We've won.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Pipes hissing. His voice thin in the open air; no echo comes back.",
+   "note": "One boy says the word everyone else refuses."
+  },
+  {
+   "n": "8.3",
+   "dur": 4.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "sunrise",
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": 0.7
+      }
+     },
+     "fill": {
+      "intensity": 0.28
+     }
+    },
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "figures": {
+     "m1": {
+      "kind": "soldier",
+      "pos": [
+       -5.75,
+       -62.12
+      ],
+      "face": 175
+     },
+     "m2": {
+      "kind": "soldier",
+      "pos": [
+       -1.2,
+       -64.28
+      ],
+      "face": 180
+     },
+     "g1": {
+      "kind": "soldier",
+      "pos": [
+       6.4,
+       -70.64
+      ],
+      "face": 182
+     },
+     "g2": {
+      "kind": "soldier",
+      "pos": [
+       6.7,
+       -68.47
+      ],
+      "face": 178
+     },
+     "cael": {
+      "pos": [
+       5.5,
+       -52.25
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "bearer": {
+      "kind": "bearer",
+      "pos": [
+       6.5,
+       -66.25
+      ],
+      "face": 250,
+      "banner": "raised",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.6,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         2.2,
+         [
+          0,
+          -12
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "bannerBlend": {
+       "from": "raised",
+       "to": "lowered",
+       "k": {
+        "keys": [
+         [
+          0,
+          0
+         ],
+         [
+          2.4,
+          0
+         ],
+         [
+          3.4,
+          1
+         ]
+        ],
+        "ease": "smooth"
+       }
+      }
+     }
+    },
+    "dust": {
+     "mode": "drift",
+     "color": "#d9c69c",
+     "opacity": 0.3,
+     "px": 1.2,
+     "count": 500,
+     "speed": 0.04,
+     "size": [
+      12,
+      6,
+      20
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     5.5,
+     1.7,
+     -49.25
+    ],
+    "target": [
+     5.5,
+     1.7,
+     -110
+    ],
+    "f": 50
+   },
+   "boardTime": 3.6,
+   "camText": "Medium, from behind · 50 mm · eye level 1.7 m · 3 m behind Cael · locked-off",
+   "lines": [],
+   "sound": "Pipes. Nothing else.",
+   "note": "The king's silence is the answer."
+  },
+  {
+   "n": "8.4",
+   "dur": 10.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "sunrise",
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": 0.7
+      }
+     },
+     "fill": {
+      "intensity": 0.28
+     }
+    },
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "figures": {
+     "m1": {
+      "kind": "soldier",
+      "pos": [
+       -5.75,
+       -62.12
+      ],
+      "face": 175
+     },
+     "m2": {
+      "kind": "soldier",
+      "pos": [
+       -1.2,
+       -64.28
+      ],
+      "face": 180
+     },
+     "g1": {
+      "kind": "soldier",
+      "pos": [
+       6.4,
+       -70.64
+      ],
+      "face": 182
+     },
+     "g2": {
+      "kind": "soldier",
+      "pos": [
+       6.7,
+       -68.47
+      ],
+      "face": 178
+     },
+     "cael": {
+      "pos": [
+       5.5,
+       -52.25
+      ],
+      "face": 180,
+      "pose": "stand"
+     },
+     "bearer": {
+      "kind": "bearer",
+      "pos": [
+       6.5,
+       -66.25
+      ],
+      "face": 250,
+      "banner": "lowered"
+     }
+    },
+    "dust": {
+     "mode": "drift",
+     "color": "#d9c69c",
+     "opacity": 0.3,
+     "px": 1.3,
+     "count": 700,
+     "speed": 0.04,
+     "size": [
+      60,
+      14,
+      60
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     -8,
+     1.6,
+     -6
+    ],
+    "target": [
+     -7,
+     1.6,
+     -100
+    ],
+    "f": 40,
+    "shift": [
+     0,
+     -0.2
+    ]
+   },
+   "camText": "Extreme wide (the silence, held wide) · 40 mm · eye level 1.6 m · locked-off · long hold",
+   "lines": [],
+   "sound": "Only the pipes. Held longer than is comfortable.",
+   "note": "Victory with nothing in it."
+  },
+  {
+   "n": "8.5",
+   "dur": 4.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "sunrise",
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": 0.7
+      }
+     },
+     "fill": {
+      "intensity": 0.45
+     }
+    },
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "lightBars": [
+     {
+      "at": [
+       68.32,
+       1.75,
+       -76.3
+      ],
+      "size": [
+       0.22,
+       2.2
+      ],
+      "yaw": 90,
+      "roll": 6,
+      "strength": 0.55,
+      "soft": [
+       0.35,
+       0.15
+      ]
+     }
+    ],
+    "dust": {
+     "mode": "fall",
+     "center": [
+      68.5,
+      1.7,
+      -76.3
+     ],
+     "size": [
+      0.22,
+      2.4,
+      0.2
+     ],
+     "count": 420,
+     "opacity": 0.85,
+     "speed": 0.7,
+     "px": 0.8,
+     "drift": 0.015,
+     "color": "#f3dca6"
+    },
+    "figures": {
+     "liora": {
+      "pos": [
+       70.16,
+       -75.72
+      ],
+      "face": 330,
+      "pose": "sit",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          -10
+         ]
+        ],
+        [
+         1.4,
+         [
+          0,
+          -10
+         ]
+        ],
+        [
+         2.1,
+         [
+          -25,
+          30
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "joints": {
+       "shoulderL": [
+        -20,
+        0,
+        0
+       ]
+      }
+     },
+     "boy": {
+      "pos": [
+       70.55,
+       -76.15
+      ],
+      "face": 320,
+      "pose": "sit",
+      "head": [
+       0,
+       -12
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     71.3,
+     0.9,
+     -73.5
+    ],
+    "target": [
+     69.006,
+     0.9,
+     -76.777
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     -0.08
+    ]
+   },
+   "boardTime": 2.6,
+   "pulse": [
+    {
+     "at": 2.2,
+     "kind": "engine",
+     "beats": 1,
+     "gain": 0.6
+    }
+   ],
+   "camText": "Medium, offset · 50 mm · her seated eye 0.9 m · locked-off",
+   "lines": [],
+   "sound": "A PULSE, slower than the city's, heavier: felt more than heard.",
+   "note": "The arch is failing, and something else is coming."
+  },
+  {
+   "n": "8.6",
+   "dur": 5.0,
+   "set": "ruins",
+   "scene": "ruins",
+   "state": {
+    "post": true,
+    "steam": 1,
+    "army": [
+     {
+      "from": [
+       -80,
+       -62.0
+      ],
+      "to": [
+       5.0,
+       -70.5
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 3
+     },
+     {
+      "from": [
+       8.0,
+       -70.8
+      ],
+      "to": [
+       60,
+       -76
+      ],
+      "rows": 3,
+      "spacing": 1.5,
+      "rowGap": 2.2,
+      "facing": 180,
+      "poles": 0.13,
+      "bannersOpen": 0,
+      "seed": 7
+     }
+    ],
+    "battery": {
+     "at": [
+      -30,
+      -60.4
+     ],
+     "spacing": [
+      25.5,
+      -2.55
+     ],
+     "face": [
+      0,
+      -440
+     ]
+    },
+    "ruinShadows": false,
+    "look": {
+     "base": "sunrise",
+     "fill": {
+      "intensity": 0.28
+     },
+     "key": {
+      "dir": [
+       0.14,
+       0.24,
+       -1
+      ],
+      "intensity": 2.6
+     },
+     "rim": {
+      "strength": {
+       "keys": [
+        [
+         0,
+         0.8
+        ],
+        [
+         3.0,
+         0.8
+        ],
+        [
+         4.4,
+         0.12
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "fog": {
+      "density": 0.0012,
+      "sun": {
+       "amount": {
+        "keys": [
+         [
+          0,
+          0.7
+         ],
+         [
+          3.8,
+          0.7
+         ],
+         [
+          4.7,
+          0.15
+         ]
+        ],
+        "ease": "smooth"
+       }
+      }
+     },
+     "exposure": {
+      "keys": [
+       [
+        0,
+        1.0
+       ],
+       [
+        3.6,
+        1.0
+       ],
+       [
+        4.7,
+        0.5
+       ]
+      ],
+      "ease": "smooth"
+     },
+     "sky": {
+      "sun": {
+       "glow": {
+        "keys": [
+         [
+          0,
+          0.3
+         ],
+         [
+          3.8,
+          0.3
+         ],
+         [
+          4.6,
+          0.0
+         ]
+        ],
+        "ease": "smooth"
+       },
+       "disc": {
+        "keys": [
+         [
+          0,
+          1
+         ],
+         [
+          3.9,
+          1
+         ],
+         [
+          4.3,
+          0
+         ]
+        ],
+        "ease": "smooth"
+       }
+      }
+     }
+    },
+    "shade": {
+     "edge": {
+      "keys": [
+       [
+        0,
+        -140
+       ],
+       [
+        1.5,
+        -77.5
+       ],
+       [
+        3.5,
+        -65.0
+       ],
+       [
+        4.5,
+        -63.3
+       ],
+       [
+        5.0,
+        -61.0
+       ]
+      ],
+      "ease": "smooth"
+     },
+     "height": 45,
+     "width": 1800
+    },
+    "figures": {
+     "captain": {
+      "pos": [
+       -81.33,
+       -65.29
+      ],
+      "face": {
+       "keys": [
+        [
+         0,
+         180
+        ],
+        [
+         0.3,
+         180
+        ],
+        [
+         1.4,
+         160
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         0.4,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.6,
+         [
+          0,
+          32
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     }
+    },
+    "dust": {
+     "mode": "drift",
+     "color": "#d9c69c",
+     "opacity": 0.3,
+     "px": 1.3,
+     "count": 600,
+     "speed": 0.04,
+     "size": [
+      40,
+      12,
+      40
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     -86.0,
+     1.7,
+     -63.5
+    ],
+    "target": [
+     13.0,
+     1.7,
+     -77.4
+    ],
+    "f": 32
+   },
+   "boardTime": 2.4,
+   "pulse": [
+    {
+     "at": 0.4,
+     "kind": "engine",
+     "beats": 3,
+     "interval": 1.6,
+     "gain": 0.7
+    }
+   ],
+   "camText": "Wide, the captain in the foreground third · 32 mm · eye level 1.7 m · locked-off",
+   "lines": [],
+   "sound": "The pulse again, closer; the pipes stop mattering.",
+   "note": "Shadow before shape: the threat arrives as a change in the light."
+  }
+ ]
+}

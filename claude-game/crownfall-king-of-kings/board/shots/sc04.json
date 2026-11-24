@@ -1,0 +1,1554 @@
+{
+ "title": "SC 4 · INT. SHATTERED GATEHOUSE - CONTINUOUS",
+ "scene": "gatehouse",
+ "shots": [
+  {
+   "n": "4.1",
+   "dur": 8.0,
+   "scene": "gatehouse",
+   "boardTime": 6.0,
+   "camText": "Wide, frame inside the frame · 32 mm · 1.6 m · locked-off · from the back wall",
+   "state": {
+    "archDark": 1,
+    "figures": {
+     "cael": {
+      "pos": [
+       19.45,
+       -9.95
+      ],
+      "face": [
+       22.35,
+       -9.75
+      ],
+      "pose": "stand",
+      "lean": 6
+     },
+     "captain": {
+      "pos": [
+       20.57,
+       -12.19
+      ],
+      "face": [
+       22.35,
+       -9.75
+      ],
+      "pose": "stand"
+     },
+     "wounded": {
+      "pos": [
+       22.35,
+       -9.75
+      ],
+      "face": [
+       19.45,
+       -9.95
+      ],
+      "pose": "stand",
+      "lean": {
+       "keys": [
+        [
+         0,
+         30
+        ],
+        [
+         1.5,
+         30
+        ],
+        [
+         2.7,
+         3
+        ]
+       ]
+      },
+      "reachR": {
+       "keys": [
+        [
+         0,
+         [
+          21.86,
+          0.98,
+          -9.95
+         ]
+        ],
+        [
+         1.5,
+         [
+          21.86,
+          0.98,
+          -9.95
+         ]
+        ],
+        [
+         2.7,
+         [
+          22.3,
+          0.86,
+          -10.02
+         ]
+        ]
+       ]
+      },
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          21.72,
+          0.98,
+          -9.45
+         ]
+        ],
+        [
+         1.5,
+         [
+          21.72,
+          0.98,
+          -9.45
+         ]
+        ],
+        [
+         2.7,
+         [
+          22.3,
+          0.86,
+          -9.48
+         ]
+        ]
+       ]
+      },
+      "handR": 0.4,
+      "handL": 0.4
+     },
+     "envoy": {
+      "pos": [
+       22.6,
+       -14.6
+      ],
+      "face": [
+       19.45,
+       -9.95
+      ],
+      "pose": "stand",
+      "look": "cael.head"
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     17.9,
+     1.6,
+     -2.55
+    ],
+    "target": [
+     23.9,
+     1.75,
+     -17.4
+    ],
+    "f": 32
+   },
+   "lines": [
+    {
+     "t0": 4.4,
+     "t1": 7.6,
+     "speaker": "SOLDIER",
+     "text": "Third assault, Cyning. The inner batteries still hold.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Guns outside, muffled by stone; dust ticking from the broken ceiling; the pulse, faint.",
+   "note": "Key 4 as painted: the breach a pale shape of the city with the arch and the boy (4%), Cael black at the table, the envoy the one clean cloth against the dark wall, the room two stops under. 1.5 the soldier straightens to report."
+  },
+  {
+   "n": "4.2",
+   "dur": 7.0,
+   "scene": "gatehouse",
+   "boardTime": 4.4,
+   "camText": "Medium single, offset · 50 mm · 1.7 m · locked-off · from the far end of the table",
+   "state": {
+    "figures": {
+     "envoy": {
+      "pos": [
+       22.6,
+       -14.6
+      ],
+      "face": [
+       23.626,
+       -11.781
+      ],
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          4
+         ]
+        ],
+        [
+         0.6,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         2.7,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         3.5,
+         [
+          22,
+          -9
+         ]
+        ],
+        [
+         4.7,
+         [
+          22,
+          -9
+         ]
+        ],
+        [
+         5.6,
+         [
+          0,
+          0
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     26.05,
+     1.7,
+     -11.7
+    ],
+    "target": [
+     22.846,
+     1.93,
+     -14.86
+    ],
+    "f": 50
+   },
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 1.5,
+     "speaker": "ENVOY",
+     "text": "The Ash-Caliph --",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 1.7,
+     "t1": 2.7,
+     "speaker": "CAEL",
+     "text": "He was speaking.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Cael's line from off frame, flat and quiet. Then room tone only.",
+   "note": "The envoy on the left third against the dark wall; breach light from frame right models half his face. 2.7-7.0 his eyes go to the soldier and back: no one has made him wait for a soldier."
+  },
+  {
+   "n": "4.3",
+   "dur": 12.0,
+   "scene": "gatehouse",
+   "boardTime": 9.4,
+   "camText": "Medium two-shot in profile · 40 mm · 1.6 m · locked-off · side-on to the table",
+   "state": {
+    "figures": {
+     "wounded": {
+      "pos": [
+       21.75,
+       -11.5
+      ],
+      "face": [
+       22.8,
+       -10.84
+      ],
+      "pose": "stand",
+      "lean": 10,
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         3.0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         3.4,
+         [
+          0,
+          -24
+         ]
+        ],
+        [
+         4.3,
+         [
+          0,
+          -24
+         ]
+        ],
+        [
+         4.8,
+         [
+          0,
+          -6
+         ]
+        ]
+       ]
+      }
+     },
+     "cael": {
+      "pos": [
+       22.8,
+       -10.84
+      ],
+      "face": [
+       21.75,
+       -11.5
+      ],
+      "pose": "stand",
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          22.68,
+          0.86,
+          -10.56
+         ]
+        ],
+        [
+         5.6,
+         [
+          22.68,
+          0.86,
+          -10.56
+         ]
+        ],
+        [
+         6.4,
+         [
+          22.08,
+          0.99,
+          -10.38
+         ]
+        ]
+       ]
+      },
+      "handL": {
+       "keys": [
+        [
+         0,
+         0.6
+        ],
+        [
+         5.6,
+         0.6
+        ],
+        [
+         6.4,
+         0.3
+        ],
+        [
+         7.2,
+         0.08
+        ]
+       ]
+      },
+      "lean": {
+       "keys": [
+        [
+         0,
+         2
+        ],
+        [
+         5.8,
+         2
+        ],
+        [
+         6.6,
+         9
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     20.76,
+     1.6,
+     -5.43
+    ],
+    "target": [
+     22.885,
+     0.87,
+     -17.24
+    ],
+    "f": 40
+   },
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.8,
+     "speaker": "SOLDIER",
+     "text": "Half the company reached the wall.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 4.2,
+     "t1": 5.8,
+     "speaker": "SOLDIER",
+     "text": "The slow half came back.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 8.6,
+     "t1": 10.6,
+     "speaker": "CAEL",
+     "text": "Clear the road. Bring them in.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "The soldier's voice past caring who hears him. The table creaks under Cael's grip.",
+   "note": "The soldier grey at left (a rim on his shoulder), Cael black at right against the breach; the envoy left out. 6.0 Cael grips the table; it takes him a breath to answer."
+  },
+  {
+   "n": "4.4",
+   "dur": 8.0,
+   "scene": "gatehouse",
+   "boardTime": 3.0,
+   "camText": "Wide, the doorway · 27 mm · 1.6 m · locked-off · 8 m from the door",
+   "state": {
+    "door": 1,
+    "doorLight": 1,
+    "stretchers": [
+     {
+      "id": "s1",
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          15.0,
+          -9.75
+         ]
+        ],
+        [
+         5.4,
+         [
+          20.0,
+          -7.2
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": 62,
+      "color": "#5d584f",
+      "carried": {
+       "keys": [
+        [
+         0,
+         true
+        ],
+        [
+         5.4,
+         false
+        ]
+       ]
+      },
+      "walking": {
+       "keys": [
+        [
+         0,
+         true
+        ],
+        [
+         5.4,
+         false
+        ]
+       ]
+      },
+      "bearers": true,
+      "bearersStay": true
+     },
+     {
+      "id": "s2",
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          13.4,
+          -10.2
+         ]
+        ],
+        [
+         2.2,
+         [
+          13.4,
+          -10.2
+         ]
+        ],
+        [
+         5.4,
+         [
+          18.6,
+          -6.5
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": 45,
+      "color": "#6f6a5f",
+      "carried": {
+       "keys": [
+        [
+         0,
+         true
+        ],
+        [
+         5.4,
+         false
+        ]
+       ]
+      },
+      "walking": {
+       "keys": [
+        [
+         0,
+         true
+        ],
+        [
+         5.4,
+         false
+        ]
+       ]
+      },
+      "bearers": true,
+      "bearersStay": true
+     }
+    ],
+    "figures": {
+     "aeth": {
+      "kind": "soldier",
+      "on": "s1",
+      "pose": "lie"
+     },
+     "navigator": {
+      "on": "s2",
+      "pose": "lie",
+      "head": [
+       0,
+       0
+      ]
+     },
+     "guard": {
+      "pos": [
+       16.75,
+       -8.05
+      ],
+      "face": [
+       21,
+       -6.5
+      ],
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         4.0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         4.5,
+         [
+          38,
+          0
+         ]
+        ],
+        [
+         6.6,
+         [
+          38,
+          0
+         ]
+        ],
+        [
+         7.2,
+         [
+          0,
+          0
+         ]
+        ]
+       ]
+      }
+     },
+     "cael": {
+      "pos": [
+       20.32,
+       -8.59
+      ],
+      "face": [
+       16,
+       -9.6
+      ],
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         4.7,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         5.0,
+         [
+          0,
+          -16
+         ]
+        ],
+        [
+         5.4,
+         [
+          0,
+          -2
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     24.0,
+     1.6,
+     -5.2
+    ],
+    "target": [
+     17.368,
+     1.6,
+     -9.674
+    ],
+    "f": 27
+   },
+   "sound": "Bearers’ boots, the creak of poles, a groan from the first stretcher. The navigator makes no sound.",
+   "note": "The doorway a grey rectangle in a black wall; the stretchers come through it as silhouettes and are set down in the foreground. 2.6 the navigator’s filmed eyes catch the door light. 4.0 the guard looks to Cael; 4.8 Cael nods."
+  },
+  {
+   "n": "4.5",
+   "dur": 5.0,
+   "scene": "gatehouse",
+   "boardTime": 2.4,
+   "camText": "Insert, low across the table · 50 mm · 1.05 m (15 cm over the top) · locked-off",
+   "state": {
+    "door": 1,
+    "doorLight": 1,
+    "hand": {
+     "style": "cael",
+     "side": "R",
+     "open": 0.85,
+     "pos": {
+      "keys": [
+       [
+        0,
+        [
+         18.55,
+         1.5,
+         -12.6
+        ]
+       ],
+       [
+        3.9,
+        [
+         18.55,
+         1.5,
+         -12.6
+        ]
+       ],
+       [
+        4.8,
+        [
+         19.35,
+         1.04,
+         -11.3
+        ]
+       ]
+      ],
+      "ease": "out"
+     },
+     "face": {
+      "keys": [
+       [
+        0,
+        [
+         18.55,
+         0,
+         -12.6
+        ]
+       ],
+       [
+        3.9,
+        [
+         18.55,
+         0,
+         -12.6
+        ]
+       ],
+       [
+        4.8,
+        [
+         19.35,
+         0,
+         -11.3
+        ]
+       ]
+      ],
+      "ease": "out"
+     },
+     "up": [
+      0.9135454576426009,
+      0,
+      0.4067366430758002
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     22.6,
+     1.05,
+     -10.4
+    ],
+    "target": [
+     14.63,
+     0.99,
+     -11.097
+    ],
+    "f": 50
+   },
+   "lines": [
+    {
+     "t0": 1.1,
+     "t1": 3.6,
+     "speaker": "ENVOY",
+     "text": "The Ash-Caliph asks for another council.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "The envoy's voice off, smooth. Paper stirring in the draught from the breach.",
+   "note": "Three judgments under three seals (round umber, square black, brass ring), folds mended, receding along the table; light rakes along it from the breach. 4.0 Cael’s hand enters at the far end."
+  },
+  {
+   "n": "4.6",
+   "dur": 6.0,
+   "scene": "gatehouse",
+   "boardTime": 3.0,
+   "camText": "Close insert, shallow · 50 mm · 1.37 m, 25° down · 0.9 m from the seal · locked-off",
+   "state": {
+    "door": 1,
+    "doorLight": 0.6,
+    "hand": {
+     "style": "cael",
+     "side": "R",
+     "open": 0.72,
+     "pos": {
+      "keys": [
+       [
+        0,
+        [
+         20.27805686996939,
+         1.32,
+         -10.325103635930036
+        ]
+       ],
+       [
+        0.45,
+        [
+         20.335,
+         1.04,
+         -10.453
+        ]
+       ]
+      ],
+      "ease": "out"
+     },
+     "face": {
+      "keys": [
+       [
+        0,
+        [
+         20.27805686996939,
+         0,
+         -10.325103635930036
+        ]
+       ],
+       [
+        0.45,
+        [
+         20.335,
+         0,
+         -10.453
+        ]
+       ]
+      ],
+      "ease": "out"
+     },
+     "up": [
+      0.4067366430758002,
+      0,
+      -0.9135454576426009
+     ]
+    }
+   },
+   "cam": {
+    "pos": [
+     20.744,
+     1.37,
+     -11.372
+    ],
+    "target": [
+     20.412,
+     0.99,
+     -10.627
+    ],
+    "f": 50,
+    "dof": {
+     "focus": [
+      20.412,
+      0.99,
+      -10.627
+     ],
+     "fstop": 1600,
+     "max": 14
+    }
+   },
+   "lines": [
+    {
+     "t0": 1.0,
+     "t1": 5.0,
+     "speaker": "CAEL",
+     "text": "He wagered his crown and lost it. That is his seal.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "His voice low and slow. Nothing else.",
+   "note": "One of the four shallow shots: only the middle seal and the fingertip sharp. He does not argue; he puts a finger on the evidence."
+  },
+  {
+   "n": "4.7",
+   "dur": 12.0,
+   "scene": "gatehouse",
+   "boardTime": 4.9,
+   "camText": "Wide, symmetrical, frame inside the frame · 35 mm · 1.6 m · locked-off · at the back wall",
+   "state": {
+    "archDark": 1,
+    "stretchers": [
+     {
+      "id": "s1",
+      "pos": [
+       20.0,
+       -7.2
+      ],
+      "face": 62,
+      "color": "#5d584f"
+     },
+     {
+      "id": "s2",
+      "pos": [
+       18.6,
+       -6.5
+      ],
+      "face": 45,
+      "color": "#6f6a5f"
+     }
+    ],
+    "figures": {
+     "aeth": {
+      "kind": "soldier",
+      "on": "s1",
+      "pose": "lie"
+     },
+     "navigator": {
+      "on": "s2",
+      "pose": "lie",
+      "head": [
+       0,
+       0
+      ]
+     },
+     "cael": {
+      "pos": [
+       21.27,
+       -11.376
+      ],
+      "face": [
+       23.7,
+       -10.093
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          23.7,
+          1.86,
+          -10.093
+         ]
+        ],
+        [
+         3.4,
+         [
+          23.7,
+          1.86,
+          -10.093
+         ]
+        ],
+        [
+         4.0,
+         [
+          70,
+          1.0,
+          -75.9
+         ]
+        ],
+        [
+         6.0,
+         [
+          70,
+          1.0,
+          -75.9
+         ]
+        ],
+        [
+         6.6,
+         [
+          23.7,
+          1.86,
+          -10.093
+         ]
+        ]
+       ]
+      }
+     },
+     "envoy": {
+      "pos": [
+       23.7,
+       -10.093
+      ],
+      "face": [
+       21.27,
+       -11.376
+      ],
+      "pose": "stand",
+      "look": "cael.head"
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     17.1,
+     1.6,
+     -3.4
+    ],
+    "target": [
+     27.578,
+     2.05,
+     -18.036
+    ],
+    "f": 35
+   },
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 3.2,
+     "speaker": "ENVOY",
+     "text": "The Ash-Caliph will not live beneath your law.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 4.0,
+     "t1": 5.8,
+     "speaker": "CAEL",
+     "text": "The same law as that boy.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 6.4,
+     "t1": 8.2,
+     "speaker": "ENVOY",
+     "text": "You do not own his people.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 8.8,
+     "t1": 10.3,
+     "speaker": "CAEL",
+     "text": "They have never been his.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 10.8,
+     "t1": 11.5,
+     "speaker": "ENVOY",
+     "text": "Nor yours.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Dry voices in a stone room. Under 'The same law as that boy', the city's pulse, faint. No score.",
+   "note": "The breach on the centre line holds the arch with the boy; Cael a black column at left, the envoy a pale one at right, like two pillars. 3.4 Cael looks through the breach at the boy. 11.5 no answer; cut on the silence."
+  },
+  {
+   "n": "4.8",
+   "dur": 6.0,
+   "scene": "gatehouse",
+   "boardTime": 1.25,
+   "camText": "Hand template · 40 mm · Cael’s eye 1.9 m, 1.0 m from the hand, looking down · locked-off",
+   "state": {
+    "hand": {
+     "style": "cael",
+     "side": "R",
+     "pos": {
+      "keys": [
+       [
+        0,
+        [
+         20.676,
+         0.985,
+         -10.236
+        ]
+       ],
+       [
+        0.8,
+        [
+         20.676,
+         0.985,
+         -10.236
+        ]
+       ],
+       [
+        1.6,
+        [
+         20.676,
+         1.03,
+         -10.236
+        ]
+       ],
+       [
+        3.2,
+        [
+         20.676,
+         1.03,
+         -10.236
+        ]
+       ],
+       [
+        5.0,
+        [
+         20.676,
+         0.985,
+         -10.236
+        ]
+       ]
+      ]
+     },
+     "face": [
+      20.676,
+      0,
+      -10.236
+     ],
+     "up": [
+      0.4067366430758002,
+      0,
+      -0.9135454576426009
+     ],
+     "open": {
+      "keys": [
+       [
+        0,
+        1
+       ],
+       [
+        0.8,
+        1
+       ],
+       [
+        1.6,
+        0
+       ],
+       [
+        3.2,
+        0
+       ],
+       [
+        5.0,
+        1
+       ]
+      ]
+     },
+     "shake": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        1.6,
+        0
+       ],
+       [
+        2.0,
+        0.35
+       ],
+       [
+        3.4,
+        0.35
+       ],
+       [
+        5.0,
+        0.1
+       ]
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     20.505,
+     1.885,
+     -9.852
+    ],
+    "target": [
+     20.69633683215379,
+     0.99,
+     -10.281677272882131
+    ],
+    "f": 40
+   },
+   "sound": "No answer: silence. Map paper crackles under the fist.",
+   "note": "The matched hand frame (3.4, 6.3, 10.3, 10.10): here a closed hand forced open. 0.8 it closes on the map; 2.5 held; 3.2 he makes it open; 5.0 flat. The edges of the judgments at the frame sides."
+  },
+  {
+   "n": "4.9",
+   "dur": 11.0,
+   "scene": "gatehouse",
+   "boardTime": 6.3,
+   "camText": "Medium-wide two-shot from behind, the window · 40 mm · 1.7 m · slow push-in 1.1 m",
+   "state": {
+    "archDark": 1,
+    "figures": {
+     "cael": {
+      "pos": [
+       24.03,
+       -10.42
+      ],
+      "face": [
+       70,
+       -76
+      ],
+      "pose": "stand"
+     },
+     "envoy": {
+      "pos": [
+       25.27,
+       -9.58
+      ],
+      "face": [
+       70,
+       -76
+      ],
+      "pose": "stand"
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     21.1,
+     1.7,
+     -5.75
+    ],
+    "target": [
+     33.561,
+     1.75,
+     -23.881
+    ],
+    "f": 40
+   },
+   "move": {
+    "to": {
+     "pos": [
+      21.723,
+      1.7,
+      -6.657
+     ],
+     "target": [
+      34.184,
+      1.75,
+      -24.788
+     ]
+    },
+    "ease": "smooth"
+   },
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 2.9,
+     "speaker": "ENVOY",
+     "text": "Come to the council. You would be safe.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 3.6,
+     "t1": 4.2,
+     "speaker": "CAEL",
+     "text": "Safe.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 5.6,
+     "t1": 7.2,
+     "speaker": "CAEL",
+     "text": "I was promised that before.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 7.8,
+     "t1": 8.8,
+     "speaker": "ENVOY",
+     "text": "Give him time.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 9.4,
+     "t1": 10.8,
+     "speaker": "CAEL",
+     "text": "I gave him years.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Voices close, no echo; between lines, the far guns. The pulse under ‘I gave him years.’",
+   "note": "Arrival's window: Cael black left of centre against the breach, the envoy pale right of centre; between their shoulders the stair and, small, the arch with the boy. The push (0.1 m/s) is motivated by 'Safe.'"
+  },
+  {
+   "n": "4.10",
+   "dur": 6.0,
+   "scene": "gatehouse",
+   "boardTime": 3.4,
+   "camText": "Medium-wide, low across the table · 35 mm · 1.05 m · locked-off",
+   "state": {
+    "figures": {
+     "envoy": {
+      "pos": [
+       25.27,
+       -9.58
+      ],
+      "face": [
+       18.3,
+       -10.6
+      ],
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         2.6,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         3.0,
+         [
+          0,
+          -12
+         ]
+        ]
+       ]
+      }
+     }
+    },
+    "dust": {
+     "mode": "streak",
+     "center": [
+      22.4,
+      2.2,
+      -10.0
+     ],
+     "size": [
+      2.6,
+      4.4,
+      2.2
+     ],
+     "count": 260,
+     "speed": 1.1,
+     "streak": 0.12,
+     "drift": 0.03,
+     "color": "#aab0ae",
+     "opacity": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        1.0,
+        0
+       ],
+       [
+        1.4,
+        0.34
+       ],
+       [
+        6.0,
+        0.22
+       ]
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     18.3,
+     1.05,
+     -10.6
+    ],
+    "target": [
+     28.3,
+     1.25,
+     -10.6
+    ],
+    "f": 35
+   },
+   "sound": "The arcade gun, close enough to shake the room; a rumble through the stone; grit hissing onto paper.",
+   "note": "Before the fall, dust only falls. 0.4 the gun in the high arcade fires (off); 1.0 dust comes down through the breach light onto the judgments; 2.6 the envoy shuts his eyes. It is one of his."
+  },
+  {
+   "n": "4.11",
+   "dur": 6.0,
+   "scene": "gatehouse",
+   "boardTime": 1.7,
+   "camText": "Medium-wide, centred · 35 mm · 1.7 m · locked-off · on the breach axis, 5 m from Cael",
+   "state": {
+    "archDark": 1,
+    "figures": {
+     "cael": {
+      "pos": [
+       23.6,
+       -12.969
+      ],
+      "face": [
+       20.98,
+       -8.71
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          21.687,
+          1.85,
+          -12.036
+         ]
+        ],
+        [
+         2.6,
+         [
+          21.687,
+          1.85,
+          -12.036
+         ]
+        ],
+        [
+         3.1,
+         [
+          24.06,
+          1.8,
+          -15.438
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          24.06,
+          -15.438
+         ]
+        ],
+        [
+         5.0,
+         [
+          24.06,
+          -15.438
+         ]
+        ],
+        [
+         5.9,
+         [
+          22.35,
+          -14.0
+         ]
+        ]
+       ]
+      },
+      "pose": {
+       "keys": [
+        [
+         0,
+         "stand"
+        ],
+        [
+         5.0,
+         "walk"
+        ],
+        [
+         5.9,
+         "stand"
+        ]
+       ]
+      },
+      "face": [
+       23.6,
+       -12.969
+      ],
+      "look": "cael.head"
+     },
+     "envoy": {
+      "pos": [
+       21.687,
+       -12.036
+      ],
+      "face": [
+       23.6,
+       -12.969
+      ],
+      "pose": "stand"
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     20.98,
+     1.7,
+     -8.71
+    ],
+    "target": [
+     28.706,
+     1.75,
+     -21.568
+    ],
+    "f": 35
+   },
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.6,
+     "speaker": "CAEL",
+     "text": "Look what he built with them.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 3.4,
+     "t1": 5.0,
+     "speaker": "CAEL",
+     "text": "Return him to his Caliph.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Quiet, final. The far guns resume.",
+   "note": "Symmetry when Cael commands: his silhouette on the centre line, the breach a bright jagged frame around him, the arch and the boy over his left shoulder; the captain behind his right; the envoy’s pale edge at frame left."
+  }
+ ]
+}

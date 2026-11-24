@@ -1,0 +1,544 @@
+{
+ "title": "SC 2 · EXT. SOLFORIZ - THE FALLEN GATE - PRE-DAWN",
+ "scene": "city",
+ "shots": [
+  {
+   "n": "2.1",
+   "dur": 10.0,
+   "scene": "city",
+   "set": "city",
+   "boardTime": 3.0,
+   "camText": "Extreme wide (the empty sky) · 32 mm · eye level 1.6 m · locked-off",
+   "note": "The city looks permanent, and the sky is left empty for something that has not come yet. · From the causeway shoulder, about 1.9 km out, so the ziggurat holds the middle of the frame and the causeway runs as the diagonal of key 2.",
+   "sound": "The foundry stroke is now the city's pulse: four low beats, always four. Wind over glass. At 8.0 the first long note of the mourning horn, far off.",
+   "super": {
+    "text": "SOLFORIZ. YEAR 56.",
+    "t0": 1.0,
+    "t1": 5.0,
+    "y": 0.2
+   },
+   "pulse": [
+    {
+     "at": 2.0,
+     "kind": "beat",
+     "beats": 4,
+     "interval": 1.0
+    },
+    {
+     "at": 7.0,
+     "kind": "beat",
+     "beats": 4,
+     "interval": 1.0
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "predawn",
+     "key": {
+      "intensity": 1.3
+     }
+    },
+    "truce": "lit",
+    "crown": {
+     "shutter": 0,
+     "fire": 0.3
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0.8,
+     "beat": 1.0,
+     "phase": 3
+    },
+    "cannons": [
+     {
+      "at": [
+       16.5,
+       -1.2,
+       1905
+      ],
+      "yaw": -140
+     }
+    ],
+    "crowd": [
+     {
+      "kind": "wounded",
+      "path": [
+       [
+        -2.5,
+        0,
+        1352
+       ],
+       [
+        -2.5,
+        0,
+        1500
+       ]
+      ],
+      "count": 3,
+      "spacing": 2.2,
+      "speed": 0.9,
+      "start": 4,
+      "width": 2.5,
+      "pose": "walk"
+     }
+    ]
+   },
+   "cam": {
+    "pos": [
+     8.5,
+     1.3,
+     1927
+    ],
+    "target": [
+     -8,
+     1.3,
+     -200
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.1667
+    ]
+   }
+  },
+  {
+   "n": "2.2",
+   "dur": 6.0,
+   "scene": "city",
+   "set": "city",
+   "boardTime": 2.5,
+   "camText": "Wide (frontal) · 35 mm · eye level 1.6 m · locked-off",
+   "note": "The cost walks out of the city before we go in. · 100 m from the gate: closer in, the outer wall fills the frame. One of the four men is carried on a stretcher between two.",
+   "sound": "The mourning horn, one long falling note under the whole shot. Boots on glass grit. A man's laboured breath as he passes the lens.",
+   "state": {
+    "look": {
+     "base": "predawn",
+     "fog": {
+      "density": 0.003
+     }
+    },
+    "truce": "lit",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5,
+     "beat": 1.0,
+     "phase": 3
+    },
+    "figures": {
+     "w1": {
+      "kind": "wounded",
+      "pos": [
+       0.2,
+       90.3
+      ],
+      "face": 0,
+      "pose": "walk",
+      "walk": {
+       "to": [
+        0.2,
+        112
+       ],
+       "t0": 0,
+       "speed": 1.05
+      }
+     },
+     "w4": {
+      "kind": "wounded",
+      "pos": [
+       0.5,
+       87.4
+      ],
+      "on": "st1",
+      "pose": "lie"
+     }
+    },
+    "stretchers": [
+     {
+      "id": "st1",
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          0.5,
+          87.4
+         ]
+        ],
+        [
+         6,
+         [
+          0.5,
+          93.7
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": 0,
+      "carried": true,
+      "walking": true,
+      "bearers": true,
+      "bearerKind": "wounded"
+     }
+    ],
+    "cannons": [
+     {
+      "at": [
+       9.8,
+       -0.3,
+       80
+      ],
+      "yaw": -100
+     }
+    ]
+   },
+   "cam": {
+    "pos": [
+     2.2,
+     1.6,
+     100
+    ],
+    "target": [
+     2.2,
+     1.6,
+     -100
+    ],
+    "f": 35,
+    "shift": [
+     0,
+     -0.18
+    ]
+   }
+  },
+  {
+   "n": "2.3",
+   "dur": 5.0,
+   "scene": "city",
+   "set": "city",
+   "boardTime": 2.5,
+   "camText": "Long-lens wide · 85 mm · eye level 1.6 m · locked-off",
+   "note": "One white light keeps a whole city's people moving: a promise you can see. · About 60 m east of the causeway, so the great stair stands behind the lamp. The sentry stands in a crenel of the wall in front of the gatehouse. Amber points mark the civilians' hand lamps.",
+   "sound": "The horn fades. The pulse under everything. A far murmur of many feet on stone.",
+   "state": {
+    "look": {
+     "base": "predawn",
+     "fog": {
+      "density": 0.0015
+     }
+    },
+    "truce": "lit",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5,
+     "beat": 1.0,
+     "phase": 3
+    },
+    "figures": {
+     "sentry": {
+      "kind": "guard",
+      "pos": [
+       30.3,
+       13.0,
+       1.4
+      ],
+      "face": 0,
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         2.8,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         3.5,
+         [
+          75,
+          8
+         ]
+        ]
+       ]
+      }
+     }
+    },
+    "crowd": [
+     {
+      "kind": [
+       "civilian",
+       "civilian",
+       "child",
+       "civilian",
+       "civilian"
+      ],
+      "path": [
+       [
+        1.5,
+        80,
+        -225
+       ],
+       [
+        1.5,
+        56,
+        -199
+       ],
+       [
+        1.5,
+        56,
+        -180
+       ],
+       [
+        1.5,
+        32,
+        -154
+       ],
+       [
+        1.5,
+        32,
+        -135
+       ],
+       [
+        1.5,
+        8,
+        -109
+       ],
+       [
+        1.5,
+        8,
+        -96
+       ]
+      ],
+      "count": 36,
+      "spacing": 2.0,
+      "speed": 0.9,
+      "start": 112,
+      "width": 12,
+      "pose": "walk",
+      "lamps": true,
+      "lampShare": 0
+     }
+    ],
+    "lampThread": {
+     "path": [
+      [
+       1.5,
+       80,
+       -225
+      ],
+      [
+       1.5,
+       56,
+       -199
+      ],
+      [
+       1.5,
+       56,
+       -180
+      ],
+      [
+       1.5,
+       32,
+       -154
+      ],
+      [
+       1.5,
+       32,
+       -135
+      ],
+      [
+       1.5,
+       8,
+       -109
+      ],
+      [
+       1.5,
+       8,
+       -96
+      ]
+     ],
+     "count": 64,
+     "spacing": 1.25,
+     "speed": 0.9,
+     "start": 112,
+     "width": 9,
+     "level": 2.6,
+     "px": 3.2
+    }
+   },
+   "cam": {
+    "pos": [
+     66,
+     0.4,
+     250
+    ],
+    "target": [
+     19.46,
+     10.2,
+     -9.73
+    ],
+    "f": 85
+   }
+  },
+  {
+   "n": "2.4",
+   "dur": 5.0,
+   "scene": "crown",
+   "set": "crown",
+   "boardTime": 2.7,
+   "camText": "Long-lens medium wide · 100 mm · eye level 1.6 m · locked-off",
+   "note": "The truce is breaking, and the king is not the one who breaks it. · From the forecourt the tier-4 lip hides the arcades. For this frame the capital is sunk 90 m (state.far) so the 100 mm framing and the shallow tilt of the list work. Pre-dawn sky is seen through the arches (arcadeGlow).",
+   "sound": "Two voices chanting. The report arrives at 3.5 s, a beat after the flash, carried 320 m. The shell's whistle runs over the cut.",
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 2.0,
+     "speaker": "BATTERY IN THE HIGH ARCADES",
+     "text": "Ihriq! Ihriq!",
+     "subtitle": null,
+     "spoken": "Ihriq! Ihriq!"
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "predawn",
+     "fog": {
+      "density": 0.0011
+     }
+    },
+    "truce": "lit",
+    "crown": {
+     "shutter": 0,
+     "fire": 0.3
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0.4,
+     "beat": 1.0,
+     "phase": 3
+    },
+    "salvos": [
+     {
+      "side": "arcade",
+      "t": 2.6,
+      "guns": 1,
+      "gunIndex": 2,
+      "to": "lines",
+      "flight": 2.6
+     }
+    ],
+    "puffs": [
+     {
+      "at": [
+       -90,
+       111.5,
+       -308
+      ],
+      "t0": 2.65,
+      "n": 10,
+      "spread": [
+       6,
+       5,
+       3
+      ],
+      "r0": 2,
+      "r1": 8,
+      "rise": 1.2,
+      "drift": [
+       0,
+       0.3,
+       2.2
+      ],
+      "stagger": 0.18,
+      "opacity": 0.85,
+      "lit": "#8d9797",
+      "shade": "#374651",
+      "upper": true
+     }
+    ],
+    "figures": {
+     "c1": {
+      "kind": "solgunner",
+      "pos": [
+       -92.2,
+       20.0,
+       -312.6
+      ],
+      "face": 10,
+      "pose": "stand"
+     },
+     "c2": {
+      "kind": "solgunner",
+      "pos": [
+       -87.4,
+       20.0,
+       -312.5
+      ],
+      "face": -20,
+      "pose": "stand",
+      "aimR": [
+       -89.6,
+       22.4,
+       -311
+      ],
+      "handR": 0
+     },
+     "c3": {
+      "kind": "solgunner",
+      "pos": [
+       -89.0,
+       20.0,
+       -312.8
+      ],
+      "face": 180,
+      "pose": "stand",
+      "joints": {
+       "shoulderL": [
+        -130,
+        0,
+        0
+       ]
+      }
+     },
+     "c4": {
+      "kind": "solgunner",
+      "pos": [
+       -93.9,
+       20.0,
+       -312.2
+      ],
+      "face": 60,
+      "pose": "crouch"
+     },
+     "c5": {
+      "kind": "solgunner",
+      "pos": [
+       -86.0,
+       20.0,
+       -312.0
+      ],
+      "face": -60,
+      "pose": "stand"
+     }
+    },
+    "arcadeGlow": 1,
+    "far": {
+     "y": -90
+    }
+   },
+   "cam": {
+    "pos": [
+     -80,
+     1.6,
+     -60
+    ],
+    "target": [
+     -90,
+     25.5,
+     -313
+    ],
+    "f": 100
+   }
+  }
+ ]
+}

@@ -1,0 +1,536 @@
+{
+ "title": "SC 1 · INT. KWIND-09 - FOUNDRY - NIGHT",
+ "scene": "foundry",
+ "shots": [
+  {
+   "n": "1.1",
+   "dur": 4.0,
+   "scene": "foundry",
+   "set": "foundry",
+   "boardTime": 2.4,
+   "camText": "Black · sound first · 3.4 s the floor glow of 1.2 rises at the bottom edge",
+   "note": "The film's pulse arrives before any picture, so the audience leans into the dark.",
+   "sound": "Sound first: two strokes, iron on iron, each with a long dry tail. Room tone of a huge hall. No score.",
+   "super": {
+    "text": "YEARS EARLIER.",
+    "t0": 1.2,
+    "t1": 3.6
+   },
+   "pulse": [
+    {
+     "at": 0.6,
+     "kind": "stroke",
+     "beats": 2,
+     "interval": 2.0,
+     "gain": 0.8
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "foundry",
+     "exposure": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        3.4,
+        0
+       ],
+       [
+        4.0,
+        0.12
+       ]
+      ],
+      "ease": "in"
+     },
+     "sky": {
+      "zenith": "#000000",
+      "mid": "#000000",
+      "horizon": "#000000",
+      "ground": "#000000"
+     },
+     "fog": {
+      "color": "#000000"
+     },
+     "haze": {
+      "color": "#000000"
+     },
+     "dust": {
+      "mode": "none"
+     }
+    },
+    "coupling": {
+     "y": 30,
+     "turn": 0,
+     "ring": 1,
+     "seam": 0
+    }
+   },
+   "cam": {
+    "pos": [
+     -6,
+     1.6,
+     48
+    ],
+    "target": [
+     -6,
+     1.6,
+     0
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.2
+    ]
+   }
+  },
+  {
+   "n": "1.2",
+   "dur": 6.0,
+   "scene": "foundry",
+   "set": "foundry",
+   "boardTime": 4.6,
+   "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+   "note": "Nothing has a size until a person stands under it: the film's first lesson in scale. · Lens 48 m from the drum (not 24 m) so the coupling is 45% and the worker 11% of frame height, as the list asks; he walks out of the dark into the furnace pool.",
+   "sound": "Chain running through a block. The stroke again at 1.0 and 5.0. Boots on iron plate. No score.",
+   "pulse": [
+    {
+     "at": 1.0,
+     "kind": "stroke",
+     "beats": 2,
+     "interval": 4.0,
+     "gain": 0.8
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "foundry",
+     "sky": {
+      "zenith": "#030202",
+      "mid": "#050303",
+      "horizon": "#0a0604",
+      "ground": "#050303"
+     },
+     "fog": {
+      "color": "#0a0604"
+     }
+    },
+    "coupling": {
+     "y": {
+      "keys": [
+       [
+        0,
+        9.5
+       ],
+       [
+        3.2,
+        0.6
+       ],
+       [
+        3.55,
+        0.63
+       ],
+       [
+        4.0,
+        0.6
+       ]
+      ],
+      "ease": "out"
+     },
+     "turn": 0,
+     "ring": 1,
+     "seam": 0
+    },
+    "figures": {
+     "worker": {
+      "pos": [
+       -9.0,
+       4.4
+      ],
+      "face": 90,
+      "pose": "stand",
+      "walk": {
+       "to": [
+        3.5,
+        4.4
+       ],
+       "t0": 0.0,
+       "speed": 1.3
+      },
+      "visible": {
+       "keys": [
+        [
+         0,
+         false
+        ],
+        [
+         2.7,
+         true
+        ]
+       ],
+       "ease": "step"
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -6,
+     1.6,
+     48
+    ],
+    "target": [
+     -6,
+     1.6,
+     0
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.2
+    ]
+   }
+  },
+  {
+   "n": "1.3",
+   "dur": 7.0,
+   "scene": "foundry",
+   "set": "foundry",
+   "boardTime": 2.4,
+   "camText": "Insert (the ring template) · 50 mm · level with the ring at 4.8 m (gantry) · locked-off",
+   "note": "The ward's only warning, hidden in plain sight; it means nothing until 10.4. · Coupling hung 0.05 m off the floor so the ring sits at 4.8 m. Lens 4.4 m from the copper (not 2.4 m): the model ring is 0.42 m tall and would fill the frame. The pale gloves are the hero hand (style ward).",
+   "sound": "Two hammer blows. A clean silver click. As the violet runs, one thin sustained tone, the only warning of the ward. No voices.",
+   "state": {
+    "coupling": {
+     "y": 0.05,
+     "turn": 0,
+     "ring": {
+      "keys": [
+       [
+        1.0,
+        0.86
+       ],
+       [
+        1.9,
+        1
+       ]
+      ]
+     },
+     "seam": {
+      "keys": [
+       [
+        2.0,
+        0
+       ],
+       [
+        2.7,
+        0.12
+       ],
+       [
+        3.5,
+        0.3
+       ]
+      ],
+      "ease": "linear"
+     },
+     "seamFrom": 0
+    },
+    "shadow": {
+     "center": [
+      0,
+      4.8,
+      2.2
+     ],
+     "radius": 3.5
+    },
+    "figures": {
+     "w": {
+      "kind": "worker",
+      "pos": [
+       -1.35,
+       3.55,
+       2.55
+      ],
+      "face": 90,
+      "pose": "stand",
+      "reachR": {
+       "keys": [
+        [
+         0,
+         [
+          -1.2,
+          4.8,
+          3.2
+         ]
+        ],
+        [
+         0.22,
+         [
+          -0.62,
+          5.05,
+          2.33
+         ]
+        ],
+        [
+         0.42,
+         [
+          -0.8,
+          5.12,
+          2.75
+         ]
+        ],
+        [
+         0.65,
+         [
+          -0.62,
+          5.05,
+          2.33
+         ]
+        ],
+        [
+         4.5,
+         [
+          -0.62,
+          5.05,
+          2.33
+         ]
+        ],
+        [
+         5.0,
+         [
+          -1.25,
+          4.8,
+          3.2
+         ]
+        ]
+       ]
+      },
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          -1.3,
+          4.4,
+          3.0
+         ]
+        ],
+        [
+         0.3,
+         [
+          -0.78,
+          4.47,
+          2.25
+         ]
+        ],
+        [
+         4.6,
+         [
+          -0.78,
+          4.47,
+          2.25
+         ]
+        ],
+        [
+         5.1,
+         [
+          -1.35,
+          4.4,
+          3.0
+         ]
+        ]
+       ]
+      },
+      "handR": 0,
+      "handL": 0.7
+     }
+    },
+    "hand": {
+     "style": "ward",
+     "side": "L",
+     "open": 0.85,
+     "pos": {
+      "keys": [
+       [
+        1.0,
+        [
+         1.45,
+         4.86,
+         2.72
+        ]
+       ],
+       [
+        1.9,
+        [
+         0.2,
+         4.86,
+         2.62
+        ]
+       ],
+       [
+        5.0,
+        [
+         0.2,
+         4.86,
+         2.62
+        ]
+       ],
+       [
+        5.7,
+        [
+         1.5,
+         4.86,
+         2.9
+        ]
+       ]
+      ]
+     },
+     "face": {
+      "keys": [
+       [
+        1.0,
+        [
+         1.45,
+         4.86,
+         0
+        ]
+       ],
+       [
+        1.9,
+        [
+         0.2,
+         4.86,
+         0
+        ]
+       ],
+       [
+        5.0,
+        [
+         0.2,
+         4.86,
+         0
+        ]
+       ],
+       [
+        5.7,
+        [
+         1.5,
+         4.86,
+         0
+        ]
+       ]
+      ]
+     },
+     "up": [
+      -1,
+      0.12,
+      0
+     ]
+    },
+    "look": "foundry"
+   },
+   "cam": {
+    "pos": [
+     0,
+     4.8,
+     6.75
+    ],
+    "target": [
+     0,
+     4.8,
+     0
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     0.05
+    ]
+   }
+  },
+  {
+   "n": "1.4",
+   "dur": 7.0,
+   "scene": "foundry",
+   "set": "foundry",
+   "boardTime": 3.5,
+   "camText": "Wide · 40 mm · eye level 1.6 m · slow push-in 1.4 m",
+   "note": "Not one machine but a ledger of them: dread by repetition. · The rows re-laid as two lines either side of an aisle with the furnace slot down its centre. The worker stops by the third visible drum, about 12% of frame height.",
+   "sound": "Only the hall. The stroke at 6.8 lands on the cut and becomes the city's pulse.",
+   "pulse": [
+    {
+     "at": 6.8,
+     "kind": "stroke",
+     "beats": 1,
+     "gain": 0.9
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "foundry",
+     "key": {
+      "dir": [
+       0.8,
+       0.25,
+       -0.6
+      ],
+      "intensity": 1.0
+     }
+    },
+    "coupling": {
+     "y": 0.6,
+     "turn": 0,
+     "ring": 1,
+     "seam": 0
+    },
+    "figures": {
+     "worker": {
+      "pos": [
+       -20.74,
+       -56.03
+      ],
+      "face": 167,
+      "pose": "stand",
+      "walk": {
+       "to": [
+        -20.0,
+        -59.25
+       ],
+       "t0": 0,
+       "speed": 1.32
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -27.97,
+     1.6,
+     -16.96
+    ],
+    "target": [
+     1.43,
+     1.6,
+     -143.59
+    ],
+    "f": 40
+   },
+   "move": {
+    "to": {
+     "pos": [
+      -27.65,
+      1.6,
+      -18.32
+     ],
+     "target": [
+      1.75,
+      1.6,
+      -144.95
+     ]
+    },
+    "ease": "smooth"
+   }
+  }
+ ]
+}

@@ -1,0 +1,1943 @@
+{
+ "title": "SC 6 · EXT. THE CROWN / THE BREACH / THE STAIR - CONTINUOUS",
+ "scene": "gatehouse",
+ "shots": [
+  {
+   "n": "6.1",
+   "dur": 5.0,
+   "scene": "crown",
+   "set": "crown",
+   "boardTime": 2.2,
+   "camText": "Long-lens wide · 100 mm · eye level 1.6 m, up 26° · locked-off",
+   "note": "The city is not a target but a body closing its eyes. · At the real 430 m distance the tilt is about 26 degrees, not 9. Plates close top band first. The gunners stand on a short balcony at the west end of the opening.",
+   "sound": "Impacts, then the shutters as an iron cascade, each plate its own clang. The city is protecting itself.",
+   "state": {
+    "look": "burning",
+    "truce": "gone",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5
+    },
+    "crown": {
+     "shutter": {
+      "keys": [
+       [
+        0.8,
+        0
+       ],
+       [
+        3.6,
+        5.0
+       ],
+       [
+        5.0,
+        5.6
+       ]
+      ],
+      "ease": "linear"
+     },
+     "fire": 1,
+     "through": 0
+    },
+    "salvos": [
+     {
+      "side": "aethelgard",
+      "t": -2.4,
+      "spread": 0.35,
+      "flight": 2.4,
+      "to": "crown"
+     }
+    ],
+    "figures": {
+     "g1": {
+      "kind": "solgunner",
+      "pos": [
+       -33.5,
+       186.9,
+       -406.5
+      ],
+      "face": 10,
+      "pose": "stand"
+     },
+     "g2": {
+      "kind": "solgunner",
+      "pos": [
+       -28.6,
+       186.9,
+       -406.9
+      ],
+      "face": -40,
+      "pose": "stand",
+      "aimR": [
+       -24,
+       186,
+       -430
+      ],
+      "handR": 0.4
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     30,
+     1.7,
+     -24
+    ],
+    "target": [
+     0,
+     193,
+     -410
+    ],
+    "f": 100
+   }
+  },
+  {
+   "n": "6.2",
+   "dur": 4.0,
+   "scene": "crown",
+   "set": "crown",
+   "boardTime": 2.0,
+   "camText": "Long-lens · 135 mm · eye level 1.6 m, up 26° · locked-off",
+   "note": "Something is holding the city's eye open; we feel who before we see him. · Same set-up as 6.1, about 26 degrees up.",
+   "sound": "The battle thins to that hum again, over one second.",
+   "state": {
+    "look": "burning",
+    "truce": "gone",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5
+    },
+    "crown": {
+     "shutter": {
+      "keys": [
+       [
+        0,
+        5.6
+       ],
+       [
+        0.4,
+        5.85
+       ]
+      ],
+      "ease": "out"
+     },
+     "fire": 1,
+     "through": 0
+    },
+    "warp": [
+     {
+      "at": "shutterSlit",
+      "r": 20,
+      "amp": {
+       "keys": [
+        [
+         0.5,
+         0
+        ],
+        [
+         0.9,
+         0.7
+        ]
+       ]
+      }
+     }
+    ],
+    "figures": {
+     "g1": {
+      "kind": "solgunner",
+      "pos": [
+       -33.5,
+       186.9,
+       -406.5
+      ],
+      "face": 10,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     30,
+     1.7,
+     -24
+    ],
+    "target": [
+     -4,
+     191,
+     -410
+    ],
+    "f": 135
+   }
+  },
+  {
+   "n": "6.3",
+   "dur": 12.0,
+   "scene": "gatehouse",
+   "set": "gatehouse",
+   "boardTime": 6.5,
+   "camText": "Hand template · 40 mm · 1.0 m behind the hand · hand height 2.0 m · level · locked-off · long hold",
+   "note": "Open: it destroys. The same frame as 3.4, now doing the opposite. · The matched hand template (40 mm, 1.0 m behind the hand, level). The capital is pushed 1.8 km back (state.far) so it reads as the cover's distant silhouette and the level camera sees the slit. slitMark keeps the slit readable at that distance.",
+   "sound": "The hum; his breath straining under it; gun-flashes as soft thumps, as if under water.",
+   "state": {
+    "look": {
+     "base": "burning",
+     "fog": {
+      "density": 0.00024
+     },
+     "rim": {
+      "strength": {
+       "keys": [
+        [
+         0,
+         1.0
+        ],
+        [
+         1.3,
+         1.0
+        ],
+        [
+         1.4,
+         2.6
+        ],
+        [
+         1.9,
+         1.0
+        ],
+        [
+         4.1,
+         1.0
+        ],
+        [
+         4.2,
+         2.4
+        ],
+        [
+         4.7,
+         1.0
+        ],
+        [
+         7.6,
+         1.0
+        ],
+        [
+         7.7,
+         2.8
+        ],
+        [
+         8.2,
+         1.0
+        ],
+        [
+         10.2,
+         1.0
+        ],
+        [
+         10.3,
+         2.4
+        ],
+        [
+         10.8,
+         1.0
+        ]
+       ]
+      }
+     }
+    },
+    "far": {
+     "z": -1800
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": 0
+    },
+    "slitMark": {
+     "px": 3,
+     "level": 2.4
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1,
+     "through": 0
+    },
+    "salvos": [
+     {
+      "side": "arcade",
+      "t": 1.3,
+      "guns": 2,
+      "gunIndex": 4,
+      "spread": 0.3,
+      "flight": 2.6,
+      "to": "lines",
+      "tracers": false
+     },
+     {
+      "side": "arcade",
+      "t": 4.1,
+      "guns": 2,
+      "gunIndex": 7,
+      "spread": 0.25,
+      "flight": 2.6,
+      "to": "lines",
+      "tracers": false
+     },
+     {
+      "side": "arcade",
+      "t": 7.6,
+      "guns": 3,
+      "gunIndex": 2,
+      "spread": 0.25,
+      "flight": 2.6,
+      "to": "lines",
+      "tracers": false
+     },
+     {
+      "side": "arcade",
+      "t": 10.2,
+      "guns": 2,
+      "gunIndex": 9,
+      "spread": 0.3,
+      "flight": 2.6,
+      "to": "lines",
+      "tracers": false
+     }
+    ],
+    "figures": {
+     "cael": {
+      "pos": [
+       27.6,
+       -16.6
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand",
+      "aimR": [
+       27.9,
+       10.5,
+       -26.6
+      ],
+      "palmR": [
+       -150,
+       2.0,
+       -2240
+      ],
+      "handR": 1,
+      "shake": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         2.0,
+         0
+        ],
+        [
+         2.6,
+         0.6
+        ]
+       ]
+      },
+      "blood": 0.4
+     }
+    },
+    "hand": {
+     "attach": "cael",
+     "side": "R",
+     "style": "cael",
+     "open": 1,
+     "shake": {
+      "keys": [
+       [
+        0,
+        0.05
+       ],
+       [
+        2.0,
+        0.05
+       ],
+       [
+        2.8,
+        0.65
+       ]
+      ]
+     },
+     "blood": {
+      "keys": [
+       [
+        0,
+        0.4
+       ],
+       [
+        5.0,
+        0.4
+       ],
+       [
+        6.2,
+        0.76
+       ]
+      ]
+     }
+    }
+   },
+   "cam": {
+    "hand": true,
+    "f": 40,
+    "dist": 1.0
+   }
+  },
+  {
+   "n": "6.4",
+   "dur": 4.0,
+   "scene": "gatehouse",
+   "set": "gatehouse",
+   "boardTime": 1.25,
+   "camText": "Medium, frontal · 50 mm · his eye 0.95 m · locked-off",
+   "note": "The blind man counts what he sees: a Seen report, four beats ahead. · The camera stands in the breach beside Cael's legs, 9.6 m from the navigator (his stretcher in the south of the room), so he is about 45% of frame height. He strikes with the hand at frame right.",
+   "sound": "Two rail strikes, metal, even, loud inside the hum. (The six-minute cut loses this shot.)",
+   "state": {
+    "look": {
+     "base": "burning",
+     "key": {
+      "intensity": {
+       "keys": [
+        [
+         0,
+         0.6
+        ],
+        [
+         0.25,
+         2.6
+        ],
+        [
+         0.6,
+         0.7
+        ],
+        [
+         1.7,
+         0.7
+        ],
+        [
+         1.85,
+         2.4
+        ],
+        [
+         2.3,
+         0.7
+        ],
+        [
+         3.15,
+         0.7
+        ],
+        [
+         3.3,
+         2.2
+        ],
+        [
+         3.8,
+         0.7
+        ]
+       ]
+      }
+     }
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": 0
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1
+    },
+    "far": {
+     "z": -1800
+    },
+    "stretchers": [
+     {
+      "id": "nav",
+      "pos": [
+       26.95,
+       -7.4
+      ],
+      "face": 180
+     }
+    ],
+    "figures": {
+     "navigator": {
+      "on": "nav",
+      "pose": "sitUp",
+      "look": [
+       26.95,
+       1.0,
+       -30
+      ],
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         1.0,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         1.2,
+         [
+          26.65,
+          0.27,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         1.45,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         2.2,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         2.4,
+         [
+          26.65,
+          0.27,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         2.65,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ]
+       ]
+      },
+      "handL": 0
+     },
+     "cael": {
+      "pos": [
+       27.535,
+       -16.6
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand",
+      "aimR": [
+       27.9,
+       10.5,
+       -26.6
+      ],
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.5,
+      "blood": 0.4
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     26.95,
+     0.95,
+     -17.15
+    ],
+    "target": [
+     26.95,
+     0.95,
+     -7.4
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     0.04
+    ]
+   }
+  },
+  {
+   "n": "6.5",
+   "dur": 5.0,
+   "scene": "forecourt",
+   "set": "forecourt",
+   "boardTime": 0.6,
+   "camText": "Long-lens POV · 135 mm · Liora's eye on the lower flight · one move, hand to shutter",
+   "note": "She is the only one who has seen the hand do both things. · From the landing the breach and the shutter lie about 175 degrees apart, so her look is one pan and tilt through the sky, not a 14-degree tilt. The real capital is used here.",
+   "sound": "Her breathing; the hum is thinner out here; grit under her feet.",
+   "state": {
+    "look": "burning",
+    "truce": "gone",
+    "lamps": {
+     "level": 0.8,
+     "breathe": 0.4
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1
+    },
+    "slitMark": {
+     "px": 2,
+     "level": 2
+    },
+    "figures": {
+     "cael": {
+      "pos": [
+       27.6,
+       -16.6
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand",
+      "aimR": [
+       27.9,
+       10.5,
+       -26.6
+      ],
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.5,
+      "blood": 0.4
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     20,
+     9.5,
+     -79
+    ],
+    "target": [
+     27.9,
+     1.6,
+     -17.8
+    ],
+    "f": 135
+   },
+   "camKeys": [
+    {
+     "t": 0,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      30.22,
+      -0.665,
+      -0.309
+     ]
+    },
+    {
+     "t": 1.2,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      30.22,
+      -0.665,
+      -0.309
+     ]
+    },
+    {
+     "t": 1.3,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      30.92,
+      -0.294,
+      -0.356
+     ]
+    },
+    {
+     "t": 1.4,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      32.958,
+      0.788,
+      -0.539
+     ]
+    },
+    {
+     "t": 1.5,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      36.234,
+      2.536,
+      -0.975
+     ]
+    },
+    {
+     "t": 1.6,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      40.627,
+      4.9,
+      -1.842
+     ]
+    },
+    {
+     "t": 1.7,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      45.98,
+      7.823,
+      -3.354
+     ]
+    },
+    {
+     "t": 1.8,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      52.086,
+      11.234,
+      -5.737
+     ]
+    },
+    {
+     "t": 1.9,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      58.683,
+      15.047,
+      -9.194
+     ]
+    },
+    {
+     "t": 2.0,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      65.455,
+      19.16,
+      -13.88
+     ]
+    },
+    {
+     "t": 2.1,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      72.047,
+      23.452,
+      -19.869
+     ]
+    },
+    {
+     "t": 2.2,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      78.097,
+      27.796,
+      -27.135
+     ]
+    },
+    {
+     "t": 2.3,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      83.27,
+      32.059,
+      -35.549
+     ]
+    },
+    {
+     "t": 2.4,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      87.291,
+      36.115,
+      -44.889
+     ]
+    },
+    {
+     "t": 2.5,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      89.976,
+      39.853,
+      -54.873
+     ]
+    },
+    {
+     "t": 2.6,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      91.236,
+      43.184,
+      -65.187
+     ]
+    },
+    {
+     "t": 2.7,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      91.08,
+      46.047,
+      -75.531
+     ]
+    },
+    {
+     "t": 2.8,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      89.586,
+      48.407,
+      -85.639
+     ]
+    },
+    {
+     "t": 2.9,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      86.882,
+      50.257,
+      -95.297
+     ]
+    },
+    {
+     "t": 3.0,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      83.121,
+      51.615,
+      -104.34
+     ]
+    },
+    {
+     "t": 3.1,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      78.46,
+      52.514,
+      -112.648
+     ]
+    },
+    {
+     "t": 3.2,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      73.062,
+      53.006,
+      -120.13
+     ]
+    },
+    {
+     "t": 3.3,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      67.091,
+      53.15,
+      -126.719
+     ]
+    },
+    {
+     "t": 3.4,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      60.721,
+      53.013,
+      -132.37
+     ]
+    },
+    {
+     "t": 3.5,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      54.139,
+      52.664,
+      -137.064
+     ]
+    },
+    {
+     "t": 3.6,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      47.54,
+      52.172,
+      -140.811
+     ]
+    },
+    {
+     "t": 3.7,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      41.127,
+      51.599,
+      -143.663
+     ]
+    },
+    {
+     "t": 3.8,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      35.096,
+      51.002,
+      -145.706
+     ]
+    },
+    {
+     "t": 3.9,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      29.631,
+      50.427,
+      -147.06
+     ]
+    },
+    {
+     "t": 4.0,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      24.896,
+      49.912,
+      -147.869
+     ]
+    },
+    {
+     "t": 4.1,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      21.032,
+      49.484,
+      -148.284
+     ]
+    },
+    {
+     "t": 4.2,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      18.154,
+      49.163,
+      -148.451
+     ]
+    },
+    {
+     "t": 4.3,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      16.364,
+      48.963,
+      -148.494
+     ]
+    },
+    {
+     "t": 4.4,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      15.749,
+      48.894,
+      -148.499
+     ]
+    },
+    {
+     "t": 5.0,
+     "pos": [
+      20,
+      9.5,
+      -79
+     ],
+     "target": [
+      15.749,
+      48.894,
+      -148.499
+     ]
+    }
+   ],
+   "camEase": "linear"
+  },
+  {
+   "n": "6.6",
+   "dur": 2.0,
+   "scene": "gatehouse",
+   "set": "gatehouse",
+   "boardTime": 0.22,
+   "camText": "Insert · 50 mm · rail level · side-on · locked-off",
+   "note": "The count completes; now the cuts speed up. · The stretcher lies on the floor, so its rail is at 0.2 m, not 0.8 m.",
+   "sound": "Two strikes, the same as before. Start of the burst.",
+   "state": {
+    "look": {
+     "base": "burning",
+     "key": {
+      "intensity": {
+       "keys": [
+        [
+         0,
+         0.7
+        ],
+        [
+         0.2,
+         2.4
+        ],
+        [
+         0.5,
+         0.7
+        ],
+        [
+         1.0,
+         0.7
+        ],
+        [
+         1.1,
+         2.4
+        ],
+        [
+         1.5,
+         0.7
+        ]
+       ]
+      }
+     }
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": 0
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1
+    },
+    "far": {
+     "z": -1800
+    },
+    "stretchers": [
+     {
+      "id": "nav",
+      "pos": [
+       26.95,
+       -7.4
+      ],
+      "face": 180
+     }
+    ],
+    "figures": {
+     "navigator": {
+      "on": "nav",
+      "pose": "sitUp",
+      "look": [
+       26.95,
+       1.0,
+       -30
+      ],
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         0.05,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         0.2,
+         [
+          26.65,
+          0.27,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         0.45,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         0.95,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         1.1,
+         [
+          26.65,
+          0.27,
+          -7.8500000000000005
+         ]
+        ],
+        [
+         1.35,
+         [
+          26.65,
+          0.52,
+          -7.8500000000000005
+         ]
+        ]
+       ]
+      },
+      "handL": 0
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     24.55,
+     0.62,
+     -7.8500000000000005
+    ],
+    "target": [
+     26.65,
+     0.3,
+     -7.8500000000000005
+    ],
+    "f": 50,
+    "shift": [
+     0,
+     0.06
+    ]
+   }
+  },
+  {
+   "n": "6.7",
+   "dur": 1.5,
+   "scene": "forecourt",
+   "set": "forecourt",
+   "boardTime": 0.02,
+   "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+   "note": "Fast: the decision is already made. · The battery is regrouped in a line receding north-east (state.battery) so the barrels run down the lower-left diagonal. The capital is pushed back as in 6.3.",
+   "sound": "Three reports at once.",
+   "state": {
+    "look": {
+     "base": "burning",
+     "fog": {
+      "density": 0.00024
+     }
+    },
+    "far": {
+     "z": -1800
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": 0.5,
+     "breathe": 0.3
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1
+    },
+    "slitMark": {
+     "px": 2.5,
+     "level": 2.2
+    },
+    "battery": {
+     "at": [
+      -44,
+      -33
+     ],
+     "spacing": [
+      0,
+      -9
+     ],
+     "face": [
+      0,
+      -2242
+     ]
+    },
+    "gunElev": 0.12,
+    "flashPower": 2500,
+    "salvos": [
+     {
+      "side": "aethelgard",
+      "t": 0.0,
+      "spread": 0.04,
+      "flight": 2.6,
+      "to": "crown",
+      "arc": 0.04
+     }
+    ],
+    "figures": {
+     "k1": {
+      "kind": "gunner",
+      "pos": [
+       -40.6,
+       -30.5
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand"
+     },
+     "k2": {
+      "kind": "gunner",
+      "pos": [
+       -40.8,
+       -38.8
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand"
+     },
+     "k3": {
+      "kind": "gunner",
+      "pos": [
+       -47.5,
+       -36.0
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "crouch"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -36,
+     1.6,
+     -12
+    ],
+    "target": [
+     -61.900000000000006,
+     1.6,
+     -108.6
+    ],
+    "f": 35,
+    "shift": [
+     0,
+     -0.1
+    ]
+   }
+  },
+  {
+   "n": "6.8",
+   "dur": 2.5,
+   "scene": "gatehouse",
+   "set": "gatehouse",
+   "boardTime": 0.4,
+   "camText": "Wide (the cover frame) · 32 mm · eye level 1.7 m · locked-off",
+   "note": "The cover image, used once: the moment the hand lets go. · The cover frame: the capital pushed back 1.8 km (as in 6.3); the camera is 8 m behind Cael so both breach edges frame him.",
+   "sound": "The hum releases at 0.8; real battle noise rushes back.",
+   "state": {
+    "look": {
+     "base": "burning",
+     "fog": {
+      "density": 0.00024
+     },
+     "key": {
+      "intensity": {
+       "keys": [
+        [
+         0,
+         1.1
+        ],
+        [
+         0.05,
+         2.6
+        ],
+        [
+         0.35,
+         1.1
+        ],
+        [
+         0.4,
+         2.4
+        ],
+        [
+         0.7,
+         1.1
+        ],
+        [
+         0.75,
+         2.2
+        ],
+        [
+         1.1,
+         1.1
+        ]
+       ]
+      }
+     },
+     "rim": {
+      "strength": {
+       "keys": [
+        [
+         0,
+         1.3
+        ],
+        [
+         0.05,
+         2.6
+        ],
+        [
+         0.35,
+         1.3
+        ],
+        [
+         0.4,
+         2.4
+        ],
+        [
+         0.7,
+         1.3
+        ],
+        [
+         0.75,
+         2.2
+        ],
+        [
+         1.1,
+         1.3
+        ]
+       ]
+      }
+     }
+    },
+    "far": {
+     "z": -1800
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": 0
+    },
+    "slitMark": {
+     "px": 3,
+     "level": 2.4
+    },
+    "crown": {
+     "shutter": 5.85,
+     "fire": 1
+    },
+    "battery": {
+     "face": [
+      0,
+      -2242
+     ]
+    },
+    "salvos": [
+     {
+      "side": "aethelgard",
+      "t": -1.48,
+      "spread": 0.04,
+      "flight": 2.6,
+      "to": "crown",
+      "arc": 0.05,
+      "tracers": false
+     }
+    ],
+    "stretchers": [
+     {
+      "id": "nav",
+      "pos": [
+       26.95,
+       -7.4
+      ],
+      "face": 180
+     }
+    ],
+    "figures": {
+     "cael": {
+      "pos": [
+       27.6,
+       -16.6
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand",
+      "aimR": {
+       "keys": [
+        [
+         0,
+         [
+          32.0,
+          9.9,
+          -25.7
+         ]
+        ],
+        [
+         0.8,
+         [
+          32.0,
+          9.9,
+          -25.7
+         ]
+        ],
+        [
+         1.8,
+         [
+          28.0,
+          -3.0,
+          -16.7
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.5,
+      "blood": 0.4
+     },
+     "navigator": {
+      "on": "nav",
+      "pose": "sitUp",
+      "look": [
+       26.95,
+       1.0,
+       -30
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     29.358400000000003,
+     1.7,
+     -8.796000000000001
+    ],
+    "target": [
+     7.378400000000003,
+     1.7,
+     -106.346
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.12
+    ]
+   }
+  },
+  {
+   "n": "6.9",
+   "dur": 5.0,
+   "scene": "crown",
+   "set": "crown",
+   "boardTime": 3.95,
+   "camText": "Long-lens wide · 75 mm · eye level 1.6 m, up 26° · locked-off",
+   "note": "The cause is seen, so the fall that follows is his. · At the real distance about 26 degrees up. The Aethelgard gunner cannot share this frame, so the scale comes from the Solforiz gunners on the balcony. Tower 0 is turned to fall across the retaining wall in profile.",
+   "sound": "Slow, then suddenly very fast: a clang, fire building, the tower's long groan, then the wall as one huge low crack.",
+   "state": {
+    "look": "burning",
+    "truce": "gone",
+    "lamps": {
+     "level": 0.8,
+     "breathe": 0.4
+    },
+    "crown": {
+     "shutter": {
+      "keys": [
+       [
+        0,
+        5.85
+       ],
+       [
+        0.35,
+        6
+       ]
+      ],
+      "ease": "in"
+     },
+     "fire": 1,
+     "through": {
+      "keys": [
+       [
+        0.6,
+        0
+       ],
+       [
+        1.0,
+        0.35
+       ],
+       [
+        1.4,
+        0.5
+       ],
+       [
+        2.0,
+        1
+       ]
+      ]
+     },
+     "towers": {
+      "keys": [
+       [
+        2.2,
+        [
+         0,
+         0,
+         0,
+         0
+        ]
+       ],
+       [
+        3.4,
+        [
+         14,
+         0,
+         0,
+         0
+        ]
+       ]
+      ],
+      "ease": "in"
+     },
+     "towerFall": {
+      "keys": [
+       [
+        3.4,
+        0
+       ],
+       [
+        4.25,
+        1
+       ]
+      ],
+      "ease": "in"
+     },
+     "towerFallYaw": 62,
+     "towerFallMax": 112
+    },
+    "puffs": [
+     {
+      "at": [
+       -62,
+       158,
+       -392
+      ],
+      "t0": 4.15,
+      "n": 16,
+      "spread": [
+       70,
+       8,
+       24
+      ],
+      "r0": 4,
+      "r1": 30,
+      "rise": 7,
+      "riseTau": 2.5,
+      "drift": [
+       1,
+       1.5,
+       2
+      ],
+      "stagger": 0.035,
+      "opacity": 0.9,
+      "lit": "#d9c69c",
+      "shade": "#8F7D5F",
+      "upper": true
+     },
+     {
+      "at": [
+       -40,
+       170,
+       -378
+      ],
+      "t0": 4.25,
+      "n": 6,
+      "spread": [
+       20,
+       6,
+       10
+      ],
+      "r0": 3,
+      "r1": 20,
+      "rise": 8,
+      "riseTau": 2,
+      "drift": [
+       0,
+       2,
+       1
+      ],
+      "stagger": 0.05,
+      "opacity": 0.85,
+      "lit": "#d9c69c",
+      "shade": "#8F7D5F",
+      "upper": true
+     }
+    ],
+    "figures": {
+     "g1": {
+      "kind": "solgunner",
+      "pos": [
+       -33.5,
+       186.9,
+       -406.5
+      ],
+      "face": 10,
+      "pose": "stand"
+     },
+     "g2": {
+      "kind": "solgunner",
+      "pos": [
+       -28.6,
+       186.9,
+       -406.9
+      ],
+      "face": -40,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -62,
+     1.6,
+     -36
+    ],
+    "target": [
+     -56,
+     178,
+     -400
+    ],
+    "f": 75
+   }
+  },
+  {
+   "n": "6.10",
+   "dur": 5.0,
+   "scene": "city",
+   "set": "city",
+   "boardTime": 3.6,
+   "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+   "note": "Furnace amber leaves the film: the city's heart stops. · Capital pushed back as in 6.3. The lamps flare on the stumbling beats and go out together at 4.3.",
+   "sound": "The pulse, three beats, two, then none. Its absence is the loudest thing in the film.",
+   "pulse": [
+    {
+     "at": 0.4,
+     "kind": "beat",
+     "beats": 3,
+     "interval": 0.8
+    },
+    {
+     "at": 2.9,
+     "kind": "beat",
+     "beats": 2,
+     "interval": 0.7
+    }
+   ],
+   "state": {
+    "look": {
+     "base": "burning",
+     "fog": {
+      "density": 0.00024
+     }
+    },
+    "far": {
+     "z": -1800
+    },
+    "truce": "gone",
+    "lamps": {
+     "level": {
+      "keys": [
+       [
+        0,
+        0.75
+       ],
+       [
+        0.4,
+        1.15
+       ],
+       [
+        0.75,
+        0.75
+       ],
+       [
+        1.2,
+        1.15
+       ],
+       [
+        1.55,
+        0.75
+       ],
+       [
+        2.0,
+        1.15
+       ],
+       [
+        2.4,
+        0.75
+       ],
+       [
+        2.9,
+        1.1
+       ],
+       [
+        3.25,
+        0.75
+       ],
+       [
+        3.6,
+        1.0
+       ],
+       [
+        4.0,
+        0.75
+       ]
+      ],
+      "ease": "out"
+     },
+     "breathe": 0,
+     "outAt": 4.3
+    },
+    "crown": {
+     "shutter": 6,
+     "fire": 1,
+     "through": 1,
+     "towerFall": 1
+    },
+    "slitMark": {
+     "px": 3,
+     "level": 2.0,
+     "color": "#FF9A40"
+    },
+    "battery": {
+     "face": [
+      0,
+      -2242
+     ]
+    },
+    "puffs": [
+     {
+      "at": [
+       -50,
+       160,
+       -400
+      ],
+      "t0": -3.5,
+      "n": 22,
+      "spread": [
+       200,
+       40,
+       60
+      ],
+      "r0": 25,
+      "r1": 60,
+      "rise": 5,
+      "riseTau": 4,
+      "drift": [
+       2,
+       1,
+       2
+      ],
+      "stagger": 0.08,
+      "opacity": 0.75,
+      "lit": "#c9ad7f",
+      "shade": "#5B4636",
+      "upper": true
+     }
+    ],
+    "figures": {
+     "k1": {
+      "kind": "gunner",
+      "pos": [
+       -27.6,
+       -16.5
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand"
+     },
+     "k2": {
+      "kind": "gunner",
+      "pos": [
+       -21.0,
+       -17.5
+      ],
+      "face": [
+       0,
+       -2242
+      ],
+      "pose": "stand"
+     },
+     "k3": {
+      "kind": "gunner",
+      "pos": [
+       -24.4,
+       -19.0
+      ],
+      "face": [
+       -20,
+       -2242
+      ],
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -24,
+     1.6,
+     -4
+    ],
+    "target": [
+     -18,
+     1.6,
+     -1000
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.1667
+    ]
+   }
+  }
+ ]
+}

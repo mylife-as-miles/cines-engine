@@ -1,0 +1,2552 @@
+{
+ "title": "SC 3 · THE HELD STONE",
+ "scene": "forecourt",
+ "subtitleNames": true,
+ "note": "Scene 3, EXT. GATE FORECOURT - FOOT OF THE GREAT STAIR - CONTINUOUS. Key 3 (bible p.6 top): flat pre-dawn light through dust.",
+ "shots": [
+  {
+   "n": "3.1",
+   "dur": 6.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "dust": {
+     "mode": "fall",
+     "color": "#D7D8D2",
+     "opacity": 0.35,
+     "speed": 0.5,
+     "px": 1.3,
+     "count": 700,
+     "size": [
+      60,
+      16,
+      50
+     ]
+    },
+    "veils": [
+     {
+      "at": [
+       44,
+       6,
+       -88.2
+      ],
+      "size": [
+       70,
+       16
+      ],
+      "opacity": 0.55,
+      "yaw": 0,
+      "grad": 0.15,
+      "noise": 0.4
+     }
+    ],
+    "crowd": [
+     {
+      "kind": [
+       "civilian",
+       "civilian",
+       "child",
+       "civilian"
+      ],
+      "path": [
+       [
+        22,
+        8,
+        -84
+       ],
+       [
+        30,
+        8,
+        -79.6
+       ],
+       [
+        54,
+        0,
+        -79.6
+       ],
+       [
+        60,
+        0,
+        -77
+       ]
+      ],
+      "count": 9,
+      "spacing": 1.7,
+      "speed": 1.15,
+      "start": 18.6,
+      "lamps": true,
+      "lampShare": 0.25,
+      "width": 1.6
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": [
+       45.6,
+       -79.4
+      ],
+      "walk": {
+       "to": [
+        51.6,
+        -79.4
+       ],
+       "t0": 0,
+       "speed": 1.0
+      },
+      "pose": "stand",
+      "joints": {
+       "shoulderL": [
+        -70,
+        0,
+        28
+       ],
+       "elbowL": [
+        -75,
+        0,
+        0
+       ]
+      },
+      "handL": 1
+     },
+     "boy": {
+      "pos": [
+       44.9,
+       -79.0
+      ],
+      "walk": {
+       "to": [
+        50.9,
+        -79.0
+       ],
+       "t0": 0,
+       "speed": 1.0
+      },
+      "reachR": "liora.waist",
+      "lean": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         3.9,
+         0
+        ],
+        [
+         4.15,
+         24
+        ],
+        [
+         4.7,
+         0
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "head": [
+       0,
+       -8
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     54,
+     1.6,
+     -38
+    ],
+    "target": [
+     59.5,
+     1.6,
+     -84
+    ],
+    "f": 32,
+    "shift": [
+     0,
+     -0.16
+    ]
+   },
+   "pulse": [
+    {
+     "at": 0.4,
+     "kind": "beat",
+     "beats": 4,
+     "interval": 0.62,
+     "gain": 0.25
+    }
+   ],
+   "camText": "Wide · 32 mm · eye level 1.6 m · locked-off",
+   "lines": [],
+   "sound": "Feet on stone, a child's breath through a respirator, the far guns muffled. The pulse, faint.",
+   "note": "Meet her working: the signal keeper bringing people down under the one lit lantern."
+  },
+  {
+   "n": "3.2",
+   "dur": 3.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": {
+      "keys": [
+       [
+        0,
+        -83.9
+       ],
+       [
+        1.4,
+        -83.9
+       ],
+       [
+        2.3,
+        -83.7
+       ],
+       [
+        3.0,
+        -83.6
+       ]
+      ],
+      "ease": "smooth"
+     },
+     "y": {
+      "keys": [
+       [
+        0,
+        7.05
+       ],
+       [
+        1.4,
+        7.05
+       ],
+       [
+        2.3,
+        6.55
+       ],
+       [
+        3.0,
+        4.95
+       ]
+      ],
+      "ease": "in"
+     },
+     "rot": {
+      "keys": [
+       [
+        0,
+        [
+         0,
+         0,
+         0
+        ]
+       ],
+       [
+        1.4,
+        [
+         0,
+         0,
+         0
+        ]
+       ],
+       [
+        2.3,
+        [
+         11,
+         5,
+         -7
+        ]
+       ],
+       [
+        3.0,
+        [
+         7,
+         16,
+         -6
+        ]
+       ]
+      ],
+      "ease": "smooth"
+     }
+    },
+    "gallery": {
+     "broken": {
+      "keys": [
+       [
+        0,
+        0
+       ],
+       [
+        1.39,
+        0
+       ],
+       [
+        1.4,
+        1
+       ]
+      ],
+      "ease": "linear"
+     }
+    },
+    "shell": {
+     "t": 0.9,
+     "at": [
+      50.2,
+      7.3,
+      -82.5
+     ],
+     "normal": [
+      0,
+      0.25,
+      1
+     ],
+     "power": 0.45,
+     "light": 900,
+     "size": 0.3,
+     "spread": 0.6,
+     "floor": 0,
+     "puff": {
+      "r0": 0.3,
+      "r1": 1.3,
+      "spread": 1.6,
+      "n": 6,
+      "opacity": 0.5,
+      "lit": "#8f918d",
+      "shade": "#55585b",
+      "life": 2.6
+     }
+    },
+    "bursts": [
+     {
+      "t": 1.4,
+      "at": [
+       55.0,
+       6.8,
+       -82.4
+      ],
+      "n": 5,
+      "r0": 0.3,
+      "r1": 1.2,
+      "spread": 1.4,
+      "rise": -0.5,
+      "life": 2.2,
+      "opacity": 0.4,
+      "lit": "#8f918d",
+      "shade": "#55585b"
+     }
+    ],
+    "dust": {
+     "mode": "fall",
+     "color": "#D7D8D2",
+     "opacity": 0.3,
+     "speed": 0.6,
+     "px": 1.2,
+     "count": 600,
+     "size": [
+      40,
+      14,
+      30
+     ],
+     "center": [
+      52,
+      6,
+      -80
+     ]
+    },
+    "veils": [
+     {
+      "at": [
+       44,
+       6,
+       -88.2
+      ],
+      "size": [
+       70,
+       18
+      ],
+      "opacity": 0.3,
+      "yaw": 0,
+      "grad": 0.15,
+      "noise": 0.4
+     }
+    ],
+    "crowd": [
+     {
+      "kind": [
+       "civilian",
+       "civilian",
+       "child",
+       "civilian"
+      ],
+      "path": [
+       [
+        22,
+        8,
+        -84
+       ],
+       [
+        30,
+        8,
+        -79.6
+       ],
+       [
+        54,
+        0,
+        -79.6
+       ],
+       [
+        60,
+        0,
+        -77
+       ]
+      ],
+      "count": 9,
+      "spacing": 1.7,
+      "speed": 1.15,
+      "start": 24.6,
+      "lamps": true,
+      "lampShare": 0.25,
+      "width": 1.6
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": [
+       51.6,
+       -79.4
+      ],
+      "walk": {
+       "to": [
+        54.6,
+        -79.4
+       ],
+       "t0": 0,
+       "speed": 1.0
+      },
+      "pose": "stand",
+      "joints": {
+       "shoulderL": [
+        -70,
+        0,
+        28
+       ],
+       "elbowL": [
+        -75,
+        0,
+        0
+       ]
+      },
+      "handL": 1,
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.4,
+         [
+          0,
+          25
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "boy": {
+      "pos": [
+       50.9,
+       -79.0
+      ],
+      "walk": {
+       "to": [
+        53.9,
+        -79.0
+       ],
+       "t0": 0,
+       "speed": 1.0
+      },
+      "reachR": "liora.waist",
+      "head": [
+       0,
+       -8
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     58,
+     1.6,
+     -12
+    ],
+    "target": [
+     53,
+     5.2,
+     -84
+    ],
+    "f": 75
+   },
+   "camText": "Long-lens wide · 75 mm · eye level 1.6 m, up 3° · locked-off",
+   "lines": [],
+   "sound": "The whistle (carried from 2.4), a flat crack, stone grinding loose.",
+   "note": "Fast and almost too small to see, so that the stop which follows is huge."
+  },
+  {
+   "n": "3.3",
+   "dur": 10.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": {
+      "keys": [
+       [
+        0,
+        4.95
+       ],
+       [
+        0.12,
+        4.6
+       ]
+      ],
+      "ease": "in"
+     },
+     "rot": [
+      7,
+      16,
+      -6
+     ]
+    },
+    "gallery": {
+     "broken": 1
+    },
+    "dust": {
+     "mode": "streak",
+     "center": [
+      55.0,
+      3.4,
+      -83.4
+     ],
+     "size": [
+      5.5,
+      6.6,
+      3.2
+     ],
+     "count": 300,
+     "opacity": 0.55,
+     "speed": 2.1,
+     "streak": 0.42,
+     "drift": 0.03
+    },
+    "warp": [
+     {
+      "at": [
+       55.0,
+       4.6,
+       -83.6
+      ],
+      "r": 2.1,
+      "amp": 0.35
+     }
+    ],
+    "veils": [
+     {
+      "at": [
+       50,
+       6,
+       -88.2
+      ],
+      "size": [
+       64,
+       16
+      ],
+      "opacity": 0.7,
+      "yaw": 0,
+      "grad": 0.15,
+      "noise": 0.4
+     },
+     {
+      "at": [
+       61.8,
+       2.6,
+       -74.5
+      ],
+      "size": [
+       4.5,
+       6.5
+      ],
+      "opacity": {
+       "keys": [
+        [
+         0,
+         0.74
+        ],
+        [
+         4.6,
+         0.74
+        ],
+        [
+         6.6,
+         0.06
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "grad": 0.3,
+      "noise": 0.7,
+      "soft": [
+       0.35,
+       0.3
+      ]
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": [
+       55.1,
+       -83.2
+      ],
+      "face": 200,
+      "pose": "crouch",
+      "lean": {
+       "keys": [
+        [
+         0.0,
+         13.0
+        ],
+        [
+         0.65,
+         17
+        ],
+        [
+         1.3,
+         13.0
+        ],
+        [
+         1.95,
+         17
+        ],
+        [
+         2.6,
+         13.0
+        ],
+        [
+         3.25,
+         17
+        ],
+        [
+         3.9,
+         13.0
+        ],
+        [
+         4.55,
+         17
+        ],
+        [
+         5.2,
+         13.0
+        ],
+        [
+         5.85,
+         17
+        ],
+        [
+         6.5,
+         13.0
+        ],
+        [
+         7.15,
+         17
+        ],
+        [
+         7.8,
+         13.0
+        ],
+        [
+         8.45,
+         17
+        ],
+        [
+         9.1,
+         13.0
+        ],
+        [
+         9.75,
+         17
+        ],
+        [
+         10.4,
+         13.0
+        ],
+        [
+         11.05,
+         17
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "head": [
+       0,
+       -12
+      ],
+      "reachR": [
+       54.55,
+       0.75,
+       -82.85
+      ]
+     },
+     "boy": {
+      "pos": [
+       54.45,
+       -82.9
+      ],
+      "face": 160,
+      "pose": "stand",
+      "reachR": "liora.chest",
+      "head": [
+       0,
+       10
+      ]
+     },
+     "cael": {
+      "pos": [
+       62.0,
+       -77.0
+      ],
+      "face": [
+       55.0,
+       -83.6
+      ],
+      "pose": "stand",
+      "aimR": [
+       55.0,
+       4.6,
+       -83.6
+      ],
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.3
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     61,
+     1.6,
+     -56.5
+    ],
+    "target": [
+     55.5,
+     1.6,
+     -83.5
+    ],
+    "f": 35,
+    "shift": [
+     0,
+     -0.26
+    ]
+   },
+   "boardTime": 7.0,
+   "camText": "Wide (the anchor) · 35 mm · eye level 1.6 m · locked-off · long hold",
+   "lines": [],
+   "sound": "The battle thins to a low hum, like pressure in the ears, over one second. Only falling grit, close and dry, inside the hum.",
+   "note": "The impossible, without spectacle: we wait under the stone with her and find the cause in the frame ourselves."
+  },
+  {
+   "n": "3.4",
+   "dur": 4.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.28
+     },
+     "key": {
+      "intensity": 0.75,
+      "dir": [
+       0.35,
+       0.8,
+       0.5
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": 4.6,
+     "rot": [
+      7,
+      16,
+      -6
+     ]
+    },
+    "gallery": {
+     "broken": 1
+    },
+    "dust": {
+     "mode": "streak",
+     "center": [
+      55.0,
+      3.4,
+      -83.4
+     ],
+     "size": [
+      5.5,
+      6.6,
+      3.2
+     ],
+     "count": 320,
+     "opacity": 0.55,
+     "speed": 2.1,
+     "streak": 0.42,
+     "drift": 0.03
+    },
+    "warp": [
+     {
+      "at": [
+       55.0,
+       4.6,
+       -83.6
+      ],
+      "r": 2.1,
+      "amp": 0.3
+     }
+    ],
+    "veils": [
+     {
+      "at": [
+       50,
+       6,
+       -88.2
+      ],
+      "size": [
+       64,
+       16
+      ],
+      "opacity": 0.7,
+      "yaw": 0,
+      "grad": 0.15,
+      "noise": 0.4
+     },
+     {
+      "at": [
+       55.0,
+       5.2,
+       -86.7
+      ],
+      "size": [
+       13,
+       5
+      ],
+      "yaw": 0,
+      "opacity": 0.55,
+      "grad": 0.0,
+      "noise": 0.5,
+      "soft": [
+       0.25,
+       0.35
+      ]
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": [
+       55.1,
+       -83.2
+      ],
+      "face": 200,
+      "pose": "crouch",
+      "lean": {
+       "keys": [
+        [
+         0.0,
+         13.0
+        ],
+        [
+         0.65,
+         17
+        ],
+        [
+         1.3,
+         13.0
+        ],
+        [
+         1.95,
+         17
+        ],
+        [
+         2.6,
+         13.0
+        ],
+        [
+         3.25,
+         17
+        ],
+        [
+         3.9,
+         13.0
+        ],
+        [
+         4.55,
+         17
+        ],
+        [
+         5.2,
+         13.0
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "head": [
+       0,
+       -12
+      ],
+      "reachR": [
+       54.55,
+       0.75,
+       -82.85
+      ]
+     },
+     "boy": {
+      "pos": [
+       54.45,
+       -82.9
+      ],
+      "face": 160,
+      "pose": "stand",
+      "reachR": "liora.chest",
+      "head": [
+       0,
+       10
+      ]
+     },
+     "cael": {
+      "pos": [
+       62.0,
+       -77.0
+      ],
+      "face": [
+       55.0,
+       -83.6
+      ],
+      "pose": "stand",
+      "aimR": {
+       "keys": [
+        [
+         0.0,
+         [
+          55.0,
+          4.6,
+          -83.6
+         ]
+        ],
+        [
+         0.575,
+         [
+          55.0,
+          4.76,
+          -83.6
+         ]
+        ],
+        [
+         1.15,
+         [
+          55.0,
+          4.6,
+          -83.6
+         ]
+        ],
+        [
+         1.725,
+         [
+          55.0,
+          4.76,
+          -83.6
+         ]
+        ],
+        [
+         2.3,
+         [
+          55.0,
+          4.6,
+          -83.6
+         ]
+        ],
+        [
+         2.875,
+         [
+          55.0,
+          4.76,
+          -83.6
+         ]
+        ],
+        [
+         3.45,
+         [
+          55.0,
+          4.6,
+          -83.6
+         ]
+        ],
+        [
+         4.025,
+         [
+          55.0,
+          4.76,
+          -83.6
+         ]
+        ],
+        [
+         4.6,
+         [
+          55.0,
+          4.6,
+          -83.6
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.25
+     }
+    },
+    "hand": {
+     "attach": "cael",
+     "side": "R",
+     "style": "cael",
+     "open": 1,
+     "shake": 0.22,
+     "blood": 0
+    }
+   },
+   "cam": {
+    "pos": [
+     62.657,
+     1.528,
+     -77.088
+    ],
+    "target": [
+     61.797,
+     1.821,
+     -77.559
+    ],
+    "f": 40,
+    "near": 0.05
+   },
+   "camText": "Hand template · 40 mm · 1.0 m behind the back of the hand, square to it, up the arm to the stone · locked-off",
+   "lines": [],
+   "sound": "The hum. Close to the lens, Cael's breathing, ragged and held down.",
+   "note": "Open: it saves. The first time we see the hand, it does good."
+  },
+  {
+   "n": "3.5",
+   "dur": 7.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.3
+     },
+     "key": {
+      "intensity": 0.8,
+      "dir": [
+       -0.45,
+       0.85,
+       -0.25
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": 4.6,
+     "rot": [
+      7,
+      16,
+      -6
+     ]
+    },
+    "gallery": {
+     "broken": 1
+    },
+    "dust": {
+     "mode": "streak",
+     "center": [
+      57.5,
+      2.2,
+      -82.8
+     ],
+     "size": [
+      6,
+      4.4,
+      5
+     ],
+     "count": 220,
+     "opacity": 0.45,
+     "speed": 2.1,
+     "streak": 0.3,
+     "drift": 0.03
+    },
+    "veils": [
+     {
+      "at": [
+       60.56,
+       1.6,
+       -83.73
+      ],
+      "size": [
+       8,
+       5
+      ],
+      "opacity": 0.8,
+      "grad": 0.1,
+      "noise": 0.3,
+      "soft": [
+       0.25,
+       0.3
+      ]
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": [
+       55.1,
+       -83.2
+      ],
+      "face": 48.0,
+      "pose": "crouch",
+      "lean": {
+       "keys": [
+        [
+         0.0,
+         10.0
+        ],
+        [
+         0.55,
+         13
+        ],
+        [
+         1.1,
+         10.0
+        ],
+        [
+         1.65,
+         13
+        ],
+        [
+         2.2,
+         10.0
+        ],
+        [
+         2.75,
+         13
+        ],
+        [
+         3.3,
+         10.0
+        ],
+        [
+         3.85,
+         13
+        ],
+        [
+         4.4,
+         10.0
+        ],
+        [
+         4.95,
+         13
+        ],
+        [
+         5.5,
+         10.0
+        ],
+        [
+         6.05,
+         13
+        ],
+        [
+         6.6,
+         10.0
+        ],
+        [
+         7.15,
+         13
+        ],
+        [
+         7.7,
+         10.0
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "reachR": [
+       55.451,
+       0.86,
+       -82.723
+      ],
+      "handR": 0.55,
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          -22
+         ]
+        ],
+        [
+         4.6,
+         [
+          0,
+          -22
+         ]
+        ],
+        [
+         5.4,
+         [
+          4,
+          18
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "boy": {
+      "pos": [
+       54.55,
+       -83.65
+      ],
+      "face": 60,
+      "pose": "stand",
+      "reachR": "liora.waist"
+     },
+     "cael": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          57.456,
+          -81.482
+         ]
+        ],
+        [
+         1.25,
+         [
+          56.029,
+          -82.364
+         ]
+        ]
+       ],
+       "ease": "out"
+      },
+      "face": 228.0,
+      "pose": {
+       "keys": [
+        [
+         0,
+         "walk"
+        ],
+        [
+         1.25,
+         "walk"
+        ],
+        [
+         1.4,
+         "crouch"
+        ]
+       ],
+       "ease": "linear"
+      },
+      "aimR": [
+       55.0,
+       4.6,
+       -83.6
+      ],
+      "palmR": "out",
+      "handR": 1,
+      "shake": 0.3,
+      "lean": {
+       "keys": [
+        [
+         1.2,
+         0
+        ],
+        [
+         1.6,
+         6
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "reachL": "liora.wristR",
+      "handL": {
+       "keys": [
+        [
+         0,
+         0.9
+        ],
+        [
+         1.6,
+         0.9
+        ],
+        [
+         1.9,
+         0.1
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "head": [
+       0,
+       6
+      ]
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     53.942,
+     0.7,
+     -82.183
+    ],
+    "target": [
+     57.836,
+     1.405,
+     -83.096
+    ],
+    "f": 50,
+    "dof": {
+     "focus": "liora.wristR",
+     "fstop": 1400
+    }
+   },
+   "boardTime": 3.4,
+   "camText": "Close, shallow (the wrist template) · 50 mm · Liora's eye 0.7 m, up 10° · 1.6 m to the wrist · locked-off",
+   "lines": [
+    {
+     "t0": 2.4,
+     "t1": 4.4,
+     "speaker": "CAEL",
+     "text": "Look at me. Find your feet.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Inside the hum, his voice close and dry, no reverb. Her breath catches.",
+   "note": "Near: the camera is where she is, close enough to feel the grip."
+  },
+  {
+   "n": "3.6",
+   "dur": 4.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": {
+      "keys": [
+       [
+        2.6,
+        4.6
+       ],
+       [
+        3.05,
+        0.8
+       ]
+      ],
+      "ease": "in"
+     },
+     "rot": {
+      "keys": [
+       [
+        2.6,
+        [
+         7,
+         16,
+         -6
+        ]
+       ],
+       [
+        3.05,
+        [
+         3,
+         18,
+         -2
+        ]
+       ]
+      ],
+      "ease": "smooth"
+     }
+    },
+    "gallery": {
+     "broken": 1
+    },
+    "dust": {
+     "mode": "streak",
+     "center": [
+      55.0,
+      3.2,
+      -83.4
+     ],
+     "size": [
+      5.5,
+      6.6,
+      3.2
+     ],
+     "count": 300,
+     "opacity": {
+      "keys": [
+       [
+        0,
+        0.55
+       ],
+       [
+        2.5,
+        0.55
+       ],
+       [
+        3.2,
+        0.2
+       ]
+      ],
+      "ease": "smooth"
+     },
+     "speed": 2.1,
+     "streak": 0.42,
+     "drift": 0.03
+    },
+    "bursts": [
+     {
+      "t": 3.05,
+      "at": [
+       55.0,
+       0.2,
+       -83.6
+      ],
+      "n": 30,
+      "ground": true,
+      "r0": 0.25,
+      "r1": 1.3,
+      "spread": 10,
+      "life": 3.0,
+      "opacity": 0.42,
+      "drag": 1.2,
+      "rise": 0.3,
+      "stagger": 0.12,
+      "lit": "#7f8281",
+      "shade": "#4a4d50"
+     }
+    ],
+    "veils": [
+     {
+      "at": [
+       44,
+       6,
+       -88.2
+      ],
+      "size": [
+       40,
+       16
+      ],
+      "opacity": 0.45,
+      "yaw": 0,
+      "grad": 0.15,
+      "noise": 0.4
+     }
+    ],
+    "figures": {
+     "liora": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          55.1,
+          -83.2
+         ]
+        ],
+        [
+         0.35,
+         [
+          55.1,
+          -83.2
+         ]
+        ],
+        [
+         2.0,
+         [
+          56.2,
+          -74.2
+         ]
+        ]
+       ],
+       "ease": "in"
+      },
+      "face": 8,
+      "pose": {
+       "keys": [
+        [
+         0,
+         "crouch"
+        ],
+        [
+         0.3,
+         "crouch"
+        ],
+        [
+         0.35,
+         "run"
+        ]
+       ],
+       "ease": "linear"
+      },
+      "speed": 3.2
+     },
+     "boy": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          54.55,
+          -83.65
+         ]
+        ],
+        [
+         0.4,
+         [
+          54.55,
+          -83.65
+         ]
+        ],
+        [
+         2.1,
+         [
+          55.7,
+          -74.6
+         ]
+        ]
+       ],
+       "ease": "in"
+      },
+      "face": 8,
+      "pose": {
+       "keys": [
+        [
+         0,
+         "stand"
+        ],
+        [
+         0.35,
+         "stand"
+        ],
+        [
+         0.4,
+         "run"
+        ]
+       ],
+       "ease": "linear"
+      },
+      "speed": 3.0,
+      "reachR": "liora.waist"
+     },
+     "cael": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          56.029,
+          -82.364
+         ]
+        ],
+        [
+         0.2,
+         [
+          56.029,
+          -82.364
+         ]
+        ],
+        [
+         2.0,
+         [
+          57.2,
+          -76.05
+         ]
+        ],
+        [
+         2.75,
+         [
+          57.2,
+          -76.05
+         ]
+        ],
+        [
+         3.6,
+         [
+          57.6,
+          -73.6
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "face": {
+       "keys": [
+        [
+         0,
+         228
+        ],
+        [
+         0.4,
+         200
+        ],
+        [
+         2.0,
+         196
+        ],
+        [
+         2.8,
+         196
+        ],
+        [
+         3.2,
+         170
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "pose": {
+       "keys": [
+        [
+         0,
+         "crouch"
+        ],
+        [
+         0.2,
+         "crouch"
+        ],
+        [
+         0.25,
+         "walk"
+        ],
+        [
+         1.95,
+         "walk"
+        ],
+        [
+         2.0,
+         "stand"
+        ],
+        [
+         2.75,
+         "stand"
+        ],
+        [
+         2.8,
+         "walk"
+        ]
+       ],
+       "ease": "linear"
+      },
+      "aimR": [
+       55.0,
+       4.6,
+       -83.6
+      ],
+      "palmR": "out",
+      "handR": {
+       "keys": [
+        [
+         0,
+         1
+        ],
+        [
+         2.4,
+         1
+        ],
+        [
+         2.55,
+         0
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "shake": {
+       "keys": [
+        [
+         0,
+         0.4
+        ],
+        [
+         2.4,
+         0.6
+        ],
+        [
+         2.55,
+         0
+        ]
+       ],
+       "ease": "smooth"
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     77,
+     1.6,
+     -83.4
+    ],
+    "target": [
+     55,
+     1.6,
+     -83.4
+    ],
+    "f": 35,
+    "shift": [
+     0,
+     -0.2
+    ]
+   },
+   "boardTime": 2.2,
+   "camText": "Wide, side-on · 35 mm · eye level 1.6 m · locked-off",
+   "lines": [],
+   "sound": "The hum snaps off at 2.5. The block lands, full and low. Then real sound returns all at once: far guns, voices.",
+   "note": "Aftermath over impact: we watch the empty place she was, not the stone hitting her."
+  },
+  {
+   "n": "3.7",
+   "dur": 5.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.3
+     },
+     "key": {
+      "intensity": 0.7,
+      "dir": [
+       -0.2,
+       0.9,
+       0.5
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": 0.8,
+     "rot": [
+      3,
+      18,
+      -2
+     ]
+    },
+    "dust": {
+     "mode": "fall",
+     "color": "#D7D8D2",
+     "opacity": 0.35,
+     "speed": 0.4,
+     "px": 1.2,
+     "count": 500,
+     "size": [
+      10,
+      6,
+      10
+     ]
+    },
+    "veils": [
+     {
+      "at": [
+       69.5,
+       1.6,
+       -75.0
+      ],
+      "size": [
+       6,
+       4
+      ],
+      "opacity": 0.35,
+      "grad": 0.2,
+      "noise": 0.6
+     }
+    ],
+    "figures": {
+     "boy": {
+      "pos": [
+       66.4,
+       -72.7
+      ],
+      "face": 225,
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         1.8,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         2.3,
+         [
+          -8,
+          6
+         ]
+        ],
+        [
+         3.2,
+         [
+          -4,
+          4
+         ]
+        ],
+        [
+         4.3,
+         [
+          0,
+          0
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "liora": {
+      "pos": [
+       65.9,
+       -73.2
+      ],
+      "face": 45,
+      "pose": "kneel",
+      "reachR": "boy.chest",
+      "head": [
+       0,
+       8
+      ]
+     },
+     "cael": {
+      "pos": [
+       65.59,
+       -72.95
+      ],
+      "face": 80,
+      "pose": "kneel",
+      "lean": 30,
+      "reachR": {
+       "keys": [
+        [
+         0,
+         [
+          65.8,
+          1.0,
+          -73.02
+         ]
+        ],
+        [
+         1.5,
+         [
+          65.8,
+          1.0,
+          -73.02
+         ]
+        ],
+        [
+         2.2,
+         [
+          66.2,
+          1.1,
+          -72.87
+         ]
+        ],
+        [
+         3.0,
+         [
+          66.24,
+          1.13,
+          -72.82
+         ]
+        ],
+        [
+         4.3,
+         [
+          66.24,
+          1.13,
+          -72.82
+         ]
+        ],
+        [
+         4.8,
+         [
+          65.95,
+          1.02,
+          -73.05
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "handR": {
+       "keys": [
+        [
+         0,
+         0.6
+        ],
+        [
+         1.6,
+         0.6
+        ],
+        [
+         2.2,
+         0.5
+        ],
+        [
+         2.8,
+         "point"
+        ],
+        [
+         4.3,
+         "point"
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "shake": 0.1
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     64.986,
+     1.13,
+     -71.286
+    ],
+    "target": [
+     67.461,
+     1.13,
+     -73.761
+    ],
+    "f": 50
+   },
+   "boardTime": 3.2,
+   "camText": "Insert (the seal) · 50 mm · the boy's eye 1.13 m · 2 m from him, in profile · locked-off",
+   "lines": [],
+   "sound": "The respirator valve, the boy's breathing through it.",
+   "note": "The hand that held the stone checks a child's seal: care at the smallest scale."
+  },
+  {
+   "n": "3.8",
+   "dur": 3.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.011
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "battery": {
+     "at": [
+      -47,
+      -19
+     ],
+     "spacing": [
+      15,
+      -4
+     ]
+    },
+    "gunElev": 0.08,
+    "dust": {
+     "mode": "fall",
+     "color": "#D7D8D2",
+     "opacity": 0.3,
+     "speed": 0.5,
+     "px": 1.2,
+     "count": 600,
+     "size": [
+      40,
+      14,
+      40
+     ]
+    },
+    "veils": [
+     {
+      "at": [
+       -50,
+       6,
+       -6
+      ],
+      "size": [
+       90,
+       20
+      ],
+      "opacity": 0.55,
+      "yaw": 0,
+      "grad": 0.2,
+      "noise": 0.4
+     },
+     {
+      "at": [
+       -52,
+       3,
+       -25.5
+      ],
+      "size": [
+       30,
+       7
+      ],
+      "opacity": 0.35,
+      "grad": 0.5,
+      "noise": 0.6,
+      "soft": [
+       0.2,
+       0.4
+      ]
+     }
+    ],
+    "figures": {
+     "bearer": {
+      "pos": [
+       -47.0,
+       -33.0
+      ],
+      "walk": {
+       "to": [
+        -48.25,
+        -33.45
+       ],
+       "t0": 0,
+       "speed": 1.3
+      },
+      "banner": "shoulder",
+      "face": {
+       "keys": [
+        [
+         0,
+         -109
+        ],
+        [
+         1.6,
+         -109
+        ],
+        [
+         2.4,
+         117
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "g1": {
+      "kind": "gunner",
+      "pos": [
+       -45.5,
+       -21.8
+      ],
+      "face": 160
+     },
+     "g2": {
+      "kind": "gunner",
+      "pos": [
+       -49.2,
+       -21.0
+      ],
+      "face": 200
+     },
+     "g3": {
+      "kind": "soldier",
+      "pos": [
+       -43.8,
+       -24.5
+      ],
+      "face": 175
+     },
+     "g4": {
+      "kind": "gunner",
+      "pos": [
+       -60.0,
+       -17.8
+      ],
+      "face": 170
+     },
+     "g5": {
+      "kind": "soldier",
+      "pos": [
+       -64.2,
+       -18.6
+      ],
+      "face": 150
+     },
+     "g6": {
+      "kind": "soldier",
+      "pos": [
+       -55.0,
+       -27.5
+      ],
+      "face": 120
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     -33,
+     1.6,
+     -54
+    ],
+    "target": [
+     -49,
+     1.6,
+     -18
+    ],
+    "f": 40,
+    "shift": [
+     0,
+     -0.06
+    ]
+   },
+   "boardTime": 2.6,
+   "camText": "Wide (the bound banner) · 40 mm · eye level 1.6 m · locked-off",
+   "lines": [],
+   "sound": "His steps, then stillness. The pole creaks against its strap.",
+   "note": "Someone saw it; the bound banner is the first sign of what it will cost."
+  },
+  {
+   "n": "3.9",
+   "dur": 12.0,
+   "set": "forecourt",
+   "scene": "forecourt",
+   "state": {
+    "post": true,
+    "look": {
+     "base": "heldStone",
+     "fog": {
+      "density": 0.008
+     },
+     "haze": {
+      "amount": 0.002
+     },
+     "fill": {
+      "intensity": 0.2
+     },
+     "key": {
+      "intensity": 0.4,
+      "dir": [
+       0,
+       1,
+       -0.45
+      ],
+      "soft": 10
+     }
+    },
+    "arch": {
+     "lantern": "lit"
+    },
+    "lanternDrop": 0.7,
+    "truce": "lit",
+    "block": {
+     "x": 55.0,
+     "z": -83.6,
+     "y": 0.8,
+     "rot": [
+      3,
+      18,
+      -2
+     ]
+    },
+    "dust": {
+     "mode": "fall",
+     "color": "#D7D8D2",
+     "opacity": 0.3,
+     "speed": 0.4,
+     "px": 1.2,
+     "count": 600,
+     "size": [
+      24,
+      10,
+      24
+     ]
+    },
+    "veils": [],
+    "lamps": {
+     "level": 1,
+     "breathe": 0.6
+    },
+    "figures": {
+     "boy": {
+      "pos": [
+       70.0,
+       -76.05
+      ],
+      "face": [
+       24.0,
+       -10.5
+      ],
+      "pose": "stand"
+     },
+     "liora": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          70.55,
+          -76.5
+         ]
+        ],
+        [
+         4.4,
+         [
+          70.55,
+          -76.5
+         ]
+        ],
+        [
+         8.0,
+         [
+          74.5,
+          -84.5
+         ]
+        ],
+        [
+         9.6,
+         [
+          71.2,
+          -88.2
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": {
+       "keys": [
+        [
+         0,
+         300
+        ],
+        [
+         4.2,
+         300
+        ],
+        [
+         4.6,
+         335
+        ],
+        [
+         7.9,
+         335
+        ],
+        [
+         8.3,
+         285
+        ]
+       ],
+       "ease": "smooth"
+      },
+      "pose": {
+       "keys": [
+        [
+         0,
+         "stand"
+        ],
+        [
+         0.95,
+         "stand"
+        ],
+        [
+         1.0,
+         "kneel"
+        ],
+        [
+         4.2,
+         "kneel"
+        ],
+        [
+         4.3,
+         "walk"
+        ]
+       ],
+       "ease": "linear"
+      },
+      "speed": 1.8,
+      "reachR": {
+       "keys": [
+        [
+         0,
+         [
+          70.15,
+          0.85,
+          -76.2
+         ]
+        ],
+        [
+         4.2,
+         [
+          70.15,
+          0.85,
+          -76.2
+         ]
+        ],
+        [
+         4.4,
+         [
+          70.6,
+          0.9,
+          -76.6
+         ]
+        ]
+       ],
+       "ease": "smooth"
+      }
+     },
+     "cael": {
+      "pos": [
+       60.88,
+       -59.19
+      ],
+      "walk": {
+       "to": [
+        51.11,
+        -45.27
+       ],
+       "t0": 0,
+       "speed": 1.4
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     79.081,
+     1.0,
+     -88.93
+    ],
+    "target": [
+     52.758,
+     1.0,
+     -51.449
+    ],
+    "f": 35,
+    "shift": [
+     0,
+     -0.23
+    ]
+   },
+   "boardTime": 3.3,
+   "pulse": [
+    {
+     "at": 9.2,
+     "kind": "beat",
+     "beats": 4,
+     "interval": 0.62,
+     "gain": 0.22
+    }
+   ],
+   "camText": "Wide (frame inside the frame) · 35 mm · the boy's eye 1.0 m · locked-off",
+   "lines": [
+    {
+     "t0": 3.0,
+     "t1": 3.6,
+     "speaker": "LIORA",
+     "text": "Stay.",
+     "subtitle": "Stay.",
+     "spoken": "Iwqif."
+    },
+    {
+     "t0": 6.2,
+     "t1": 8.8,
+     "speaker": "LIORA",
+     "text": "May the child survive in the ash.",
+     "subtitle": "May the child survive in the ash.",
+     "spoken": "Lu=yaslam al-walad fi al-rash."
+    }
+   ],
+   "sound": "Her voice dry and near; the second line is almost breath, the way it has always been said. No music. The pulse returns faintly under the last three seconds.",
+   "note": "She leaves the child in sight of the only promise left and goes back for the others."
+  }
+ ]
+}

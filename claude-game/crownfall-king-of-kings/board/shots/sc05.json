@@ -1,0 +1,1577 @@
+{
+ "title": "SC 5 · INT. GATEHOUSE - THE BREACH - LATER",
+ "scene": "gatehouse",
+ "shots": [
+  {
+   "n": "5.1",
+   "dur": 5.0,
+   "scene": "gatehouse",
+   "boardTime": 2.2,
+   "camText": "Long-lens wide through the breach · 85 mm · 1.6 m · locked-off · from the back of the room",
+   "state": {
+    "look": "gatehouseSlate",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5
+    },
+    "truce": "lit",
+    "truceLight": 1,
+    "truceLightAt": [
+     24.6,
+     3.2,
+     -18.2
+    ],
+    "innerGate": {
+     "keys": [
+      [
+       0,
+       1
+      ],
+      [
+       2.9,
+       1
+      ],
+      [
+       3.5,
+       0
+      ]
+     ]
+    },
+    "figures": {
+     "envoy": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          26.9,
+          -86.6
+         ]
+        ],
+        [
+         2.6,
+         [
+          24.45,
+          -90.55
+         ]
+        ],
+        [
+         3.5,
+         [
+          24.15,
+          -92.6
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": [
+       24.0,
+       -95.0
+      ],
+      "pose": "walk",
+      "speed": 1.6
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     26.6,
+     1.6,
+     -4.5
+    ],
+    "target": [
+     24.0,
+     9.0,
+     -92.0
+    ],
+    "f": 85
+   },
+   "sound": "The gate's boom arrives late across the distance, at 4.3.",
+   "note": "Compressed by the long lens, the breach’s jagged edge at frame left lit white by the truce lamp above; the envoy, the one pale fleck, crosses the head of the lower flight into the inner-wall gate (2.6), which shuts behind him (3.4). The last door closes."
+  },
+  {
+   "n": "5.2",
+   "dur": 5.0,
+   "scene": "gatehouse",
+   "boardTime": 3.4,
+   "camText": "Medium, low · 50 mm · 0.6 m, at his eye level lying · 3 m from him · locked-off",
+   "state": {
+    "look": "gatehouseSlate",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5
+    },
+    "truce": "lit",
+    "truceLight": 1,
+    "truceLightAt": [
+     24.9,
+     2.4,
+     -18.0
+    ],
+    "stretchers": [
+     {
+      "id": "snav",
+      "pos": [
+       22.4,
+       -8.6
+      ],
+      "face": 270,
+      "color": "#6f6a5f"
+     },
+     {
+      "id": "saeth",
+      "pos": [
+       20.6,
+       -7.6
+      ],
+      "face": 270,
+      "color": "#5d584f"
+     }
+    ],
+    "figures": {
+     "navigator": {
+      "on": "snav",
+      "pose": "lie",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          21.6,
+          1.0,
+          -6.6
+         ]
+        ],
+        [
+         1.5,
+         [
+          21.6,
+          1.0,
+          -6.6
+         ]
+        ],
+        [
+         2.6,
+         [
+          24.0,
+          15.6,
+          -10.5
+         ]
+        ]
+       ]
+      }
+     },
+     "aeth": {
+      "kind": "soldier",
+      "on": "saeth",
+      "pose": "lie"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     22.139,
+     0.6,
+     -5.775
+    ],
+    "target": [
+     24.838,
+     0.66,
+     -17.467
+    ],
+    "f": 50
+   },
+   "sound": "His slow breath; the pulse; nothing else.",
+   "note": "The blind man sees it first: 1.5 he turns his face up, square to the roof, toward where the lamp hangs. Above him the dark room; the lamp’s white lies on the far stone. Cut a moment before it is struck."
+  },
+  {
+   "n": "5.3",
+   "dur": 3.0,
+   "scene": "forecourt",
+   "boardTime": 0.6,
+   "camText": "Wide, the lamp · 50 mm · 1.6 m · locked-off · in the forecourt, 70 m from the gatehouse",
+   "state": {
+    "look": {
+     "base": "breakCrown",
+     "rim": {
+      "color": "#6f7d87",
+      "strength": 0.55,
+      "power": 2.6
+     },
+     "exposure": {
+      "keys": [
+       [
+        0,
+        1.0
+       ],
+       [
+        1.0,
+        1.0
+       ],
+       [
+        1.12,
+        0.62
+       ]
+      ],
+      "ease": "linear"
+     }
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0
+    },
+    "crown": {
+     "shutter": 0,
+     "fire": 0
+    },
+    "truce": "lit",
+    "truceBurstAt": 1.0,
+    "salvos": [
+     {
+      "side": "arcade",
+      "t": 0.78,
+      "guns": 1,
+      "gunIndex": 6,
+      "flight": 0.22,
+      "to": "truce",
+      "arc": 0.02
+     }
+    ],
+    "dust": {
+     "mode": "none"
+    },
+    "figures": {
+     "gunner": {
+      "kind": "bearer",
+      "banner": "none",
+      "color": "#3b3936",
+      "pos": [
+       10.3,
+       0.55,
+       -72.45
+      ],
+      "face": [
+       24.0,
+       -10.5
+      ],
+      "pose": "stand",
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          10
+         ]
+        ],
+        [
+         1.6,
+         [
+          0,
+          10
+         ]
+        ],
+        [
+         2.1,
+         [
+          -58,
+          2
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     8.0,
+     1.6,
+     -78.0
+    ],
+    "target": [
+     24.0,
+     11.6,
+     -10.5
+    ],
+    "f": 50
+   },
+   "sound": "One crack from the terraces, the glass, then a full second of silence.",
+   "note": "The gatehouse black against slate sky, the lamp the brightest point in the film. 0.8 a single shot from the terraces; 1.0 it bursts (one white frame), then dark, and the frame drops a stop. 1.6 the gunner turns his head. White leaves the film."
+  },
+  {
+   "n": "5.4",
+   "dur": 9.0,
+   "scene": "gatehouse",
+   "boardTime": 6.2,
+   "camText": "Medium two-shot in profile · 35 mm · 1.7 m · locked-off · 4.5 m from them",
+   "state": {
+    "look": "gatehouseSlate",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.5
+    },
+    "truce": "gone",
+    "archDark": 1,
+    "door": 1,
+    "doorLight": 1.0,
+    "stretchers": [
+     {
+      "id": "snav",
+      "pos": [
+       22.4,
+       -8.6
+      ],
+      "face": 270,
+      "color": "#6f6a5f"
+     },
+     {
+      "id": "saeth",
+      "pos": [
+       20.6,
+       -7.6
+      ],
+      "face": 270,
+      "color": "#5d584f"
+     }
+    ],
+    "figures": {
+     "navigator": {
+      "on": "snav",
+      "pose": "lie"
+     },
+     "aeth": {
+      "kind": "soldier",
+      "on": "saeth",
+      "pose": "lie"
+     },
+     "cael": {
+      "pos": [
+       19.47,
+       -8.89
+      ],
+      "face": [
+       20.67,
+       -8.41
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          20.67,
+          1.8,
+          -8.41
+         ]
+        ],
+        [
+         3.2,
+         [
+          20.67,
+          1.8,
+          -8.41
+         ]
+        ],
+        [
+         3.9,
+         [
+          70,
+          1.0,
+          -75.9
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       20.67,
+       -8.41
+      ],
+      "face": {
+       "keys": [
+        [
+         0,
+         [
+          19.47,
+          -8.89
+         ]
+        ],
+        [
+         0.6,
+         [
+          18.0,
+          -9.6
+         ]
+        ]
+       ]
+      },
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          19.47,
+          1.85,
+          -8.89
+         ]
+        ],
+        [
+         2.9,
+         [
+          19.47,
+          1.85,
+          -8.89
+         ]
+        ],
+        [
+         3.4,
+         [
+          16.0,
+          1.35,
+          -9.6
+         ]
+        ]
+       ]
+      },
+      "aimR": {
+       "keys": [
+        [
+         0,
+         [
+          20.9,
+          0.0,
+          -8.1
+         ]
+        ],
+        [
+         0.2,
+         [
+          20.9,
+          0.0,
+          -8.1
+         ]
+        ],
+        [
+         0.9,
+         [
+          16.0,
+          1.35,
+          -9.6
+         ]
+        ],
+        [
+         3.4,
+         [
+          16.0,
+          1.35,
+          -9.6
+         ]
+        ],
+        [
+         4.2,
+         [
+          20.75,
+          0.0,
+          -8.15
+         ]
+        ]
+       ]
+      },
+      "palmR": "out",
+      "handR": 1
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     18.6,
+     1.7,
+     -4.4
+    ],
+    "target": [
+     24.219,
+     1.95,
+     -18.308
+    ],
+    "f": 35
+   },
+   "lines": [
+    {
+     "t0": 0.8,
+     "t1": 2.8,
+     "speaker": "CAPTAIN",
+     "text": "We can withdraw with the wounded.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 5.4,
+     "t1": 7.2,
+     "speaker": "CAEL",
+     "text": "And leave him to finish this?",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "Wind through the door from the gate and the plain; the forecourt’s noise through the breach. One ear each.",
+   "note": "The choice laid out in light: the doorway (the way out to the gate and the causeway) throws cold slate across them from frame left; the breach at right holds the arch and the boy. 0.0 the captain opens his hand toward the road; 3.2 Cael looks the other way, at the boy."
+  },
+  {
+   "n": "5.5",
+   "dur": 4.0,
+   "scene": "gatehouse",
+   "boardTime": 2.9,
+   "camText": "Wide through the breach · 35 mm · 1.6 m · locked-off · the breach’s edges frame left and right",
+   "state": {
+    "look": "gatehouseSlate",
+    "lamps": {
+     "level": 1,
+     "breathe": 0
+    },
+    "truce": "gone",
+    "breachRubble": 1,
+    "archDark": 1,
+    "terraceFire": {
+     "t0": 0.0,
+     "rate": 1.6,
+     "ripple": 0.6,
+     "seed": 3
+    },
+    "salvos": [
+     {
+      "side": "arcade",
+      "t": 0.05,
+      "guns": 8,
+      "spread": 0.07,
+      "flight": 1.9,
+      "to": "lines",
+      "tracers": false
+     },
+     {
+      "side": "arcade",
+      "t": 0.2,
+      "guns": 1,
+      "gunIndex": 4,
+      "flight": 1.0,
+      "to": [
+       42.6,
+       0.6,
+       -66.6
+      ],
+      "tracers": true,
+      "arc": 0.08
+     }
+    ],
+    "flashPower": 0,
+    "army": [
+     {
+      "from": [
+       33.0,
+       -72.4
+      ],
+      "to": [
+       40.4,
+       -68.0
+      ],
+      "rows": 2,
+      "spacing": 1.25,
+      "rowGap": 1.6,
+      "jitter": 0.5,
+      "poles": 0.1,
+      "seed": 1
+     },
+     {
+      "from": [
+       40.4,
+       -68.0
+      ],
+      "to": [
+       45.0,
+       -65.2
+      ],
+      "rows": 2,
+      "spacing": 1.25,
+      "rowGap": 1.6,
+      "jitter": 0.5,
+      "poles": 0.0,
+      "seed": 2,
+      "visible": {
+       "keys": [
+        [
+         0,
+         true
+        ],
+        [
+         1.45,
+         false
+        ]
+       ]
+      }
+     },
+     {
+      "from": [
+       45.0,
+       -65.2
+      ],
+      "to": [
+       54.0,
+       -59.8
+      ],
+      "rows": 2,
+      "spacing": 1.25,
+      "rowGap": 1.6,
+      "jitter": 0.5,
+      "poles": 0.1,
+      "seed": 3
+     }
+    ],
+    "puffs": [
+     {
+      "at": [
+       42.6,
+       0.0,
+       -66.6
+      ],
+      "t0": 1.2,
+      "n": 10,
+      "spread": [
+       8,
+       1.2,
+       4
+      ],
+      "r0": 1.0,
+      "r1": 4.2,
+      "rise": 1.2,
+      "riseTau": 2.5,
+      "stagger": 0.03,
+      "life": 1.2,
+      "opacity": 0.72,
+      "lit": "#4f595e",
+      "shade": "#22292e",
+      "seed": 7
+     }
+    ],
+    "figures": {
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     22.45,
+     1.6,
+     -10.73
+    ],
+    "target": [
+     38.348,
+     3.7,
+     -36.171
+    ],
+    "f": 35
+   },
+   "sound": "The barrage as one rolling wall; the strike as a close concussion; then ringing.",
+   "note": "Aftermath over impact: flashes ripple along the terraces, white for a frame then amber; 1.2 a strike lands among the lines and the dust hides it; 2.6 it thins on gaps in the line. Men who were standing are not. The boy is still under the arch."
+  },
+  {
+   "n": "5.6",
+   "dur": 8.0,
+   "scene": "gatehouse",
+   "boardTime": 4.4,
+   "camText": "Wide, two figures from behind · 40 mm · 1.7 m · locked-off · rising front (lens level, shifted up to the Crown)",
+   "state": {
+    "look": "gatehouseSlate",
+    "lamps": {
+     "level": 1,
+     "breathe": 0.4
+    },
+    "truce": "gone",
+    "breachRubble": 1,
+    "crown": {
+     "shutter": 0,
+     "fire": 0.55
+    },
+    "salvos": [
+     {
+      "side": "arcade",
+      "t": 0.3,
+      "guns": 5,
+      "spread": 0.5,
+      "flight": 3,
+      "to": "lines",
+      "tracers": false
+     },
+     {
+      "side": "arcade",
+      "t": 3.4,
+      "guns": 5,
+      "spread": 0.45,
+      "flight": 3,
+      "to": "lines",
+      "tracers": false,
+      "gunIndex": 1
+     },
+     {
+      "side": "arcade",
+      "t": 6.2,
+      "guns": 4,
+      "spread": 0.5,
+      "flight": 3,
+      "to": "lines",
+      "tracers": false,
+      "gunIndex": 2
+     }
+    ],
+    "crowd": [
+     {
+      "kind": "civilian",
+      "path": [
+       [
+        0,
+        176,
+        -405
+       ],
+       [
+        0,
+        152,
+        -379
+       ],
+       [
+        0,
+        152,
+        -360
+       ],
+       [
+        0,
+        128,
+        -334
+       ],
+       [
+        0,
+        128,
+        -315
+       ],
+       [
+        0,
+        104,
+        -289
+       ],
+       [
+        0,
+        104,
+        -270
+       ],
+       [
+        0,
+        80,
+        -244
+       ],
+       [
+        0,
+        80,
+        -225
+       ],
+       [
+        0,
+        56,
+        -199
+       ]
+      ],
+      "count": 34,
+      "spacing": 3.4,
+      "speed": 1.1,
+      "start": 60,
+      "t0": 0,
+      "width": 14,
+      "lamps": true,
+      "lampShare": 0.75
+     }
+    ],
+    "figures": {
+     "cael": {
+      "pos": [
+       27.45,
+       1.63,
+       -18.05
+      ],
+      "face": [
+       0,
+       -442
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          40,
+          -180
+         ]
+        ],
+        [
+         1.0,
+         [
+          0,
+          195,
+          -410
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       28.6,
+       1.63,
+       -17.95
+      ],
+      "face": [
+       0,
+       -442
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          30,
+          -200
+         ]
+        ],
+        [
+         1.2,
+         [
+          0,
+          30,
+          -200
+         ]
+        ],
+        [
+         1.7,
+         [
+          0,
+          195,
+          -410
+         ]
+        ],
+        [
+         2.3,
+         [
+          0,
+          195,
+          -410
+         ]
+        ],
+        [
+         2.9,
+         [
+          27.45,
+          3.05,
+          -18.05
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     28.0,
+     1.7,
+     -13.6
+    ],
+    "target": [
+     21.373,
+     1.7,
+     -113.38
+    ],
+    "f": 40,
+    "shift": [
+     0,
+     -1.78
+    ]
+   },
+   "lines": [
+    {
+     "t0": 1.8,
+     "t1": 6.6,
+     "speaker": "CAPTAIN",
+     "text": "Those works feed the batteries and the lower city. The stairs are still full.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "The captain low and fast. The terrace guns, steady.",
+   "note": "The picture says it before the line does: between their heads the city climbs to the Crown; lamps keep moving down the stair. They stand on the fallen blocks in the breach; the lens stays level and is shifted up (no tilt), so the terraces stay upright."
+  },
+  {
+   "n": "5.7",
+   "dur": 7.0,
+   "scene": "gatehouse",
+   "boardTime": 3.6,
+   "camText": "Close-up, frontal (clear) · 50 mm · 1.75 m · locked-off · 2.3 m from his face",
+   "state": {
+    "look": {
+     "base": "gatehouseSlate",
+     "key": {
+      "intensity": 7.5,
+      "soft": 8
+     },
+     "exposure": 1.1
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0.4
+    },
+    "truce": "gone",
+    "breachRubble": 1,
+    "figures": {
+     "cael": {
+      "pos": [
+       27.75,
+       -15.3
+      ],
+      "face": [
+       28.374,
+       -18.234
+      ],
+      "pose": "stand",
+      "lean": {
+       "keys": [
+        [
+         0,
+         0
+        ],
+        [
+         0.5,
+         -2.5
+        ],
+        [
+         1.4,
+         3.5
+        ],
+        [
+         2.4,
+         0.5
+        ],
+        [
+         3.2,
+         0
+        ]
+       ]
+      },
+      "head": {
+       "keys": [
+        [
+         0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         0.5,
+         [
+          0,
+          3
+         ]
+        ],
+        [
+         1.4,
+         [
+          -3,
+          -6
+         ]
+        ],
+        [
+         2.4,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         4.0,
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         5.0,
+         [
+          0,
+          -3
+         ]
+        ],
+        [
+         7.0,
+         [
+          0,
+          -4
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     27.99,
+     1.75,
+     -17.587
+    ],
+    "target": [
+     27.75,
+     1.69,
+     -15.3
+    ],
+    "f": 50
+   },
+   "lines": [
+    {
+     "t0": 3.2,
+     "t1": 3.9,
+     "speaker": "CAEL",
+     "text": "I know.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 5.0,
+     "t1": 6.2,
+     "speaker": "CAPTAIN",
+     "text": "Then give them time.",
+     "subtitle": null,
+     "spoken": null
+    }
+   ],
+   "sound": "His breath, very close. The captain’s line from off frame.",
+   "note": "Clear (bible p.12): the one time a face in the gatehouse is not half lost; the breach sky a soft key from frame left. 0.5 he draws breath, 1.4 loses it, 2.4 steadies, 3.2 speaks; then he hears the envoy’s word in his captain’s mouth."
+  },
+  {
+   "n": "5.8",
+   "dur": 12.0,
+   "scene": "gatehouse",
+   "boardTime": 9.9,
+   "camText": "Extreme wide interior, the order held wide · 24 mm · 1.6 m · locked-off, long hold · from the far corner",
+   "state": {
+    "look": {
+     "base": "gatehouseSlate",
+     "exposure": 1.3
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0.4
+    },
+    "truce": "gone",
+    "breachRubble": 1,
+    "archDark": 1,
+    "door": 1,
+    "doorLight": 2.2,
+    "doorLightAt": [
+     17.4,
+     0,
+     -10.1
+    ],
+    "terraceFire": {
+     "t0": 0.0,
+     "rate": 0.7,
+     "ripple": 1,
+     "seed": 5
+    },
+    "stretchers": [
+     {
+      "id": "snav",
+      "pos": [
+       22.4,
+       -8.6
+      ],
+      "face": 270,
+      "color": "#6f6a5f"
+     },
+     {
+      "id": "saeth",
+      "pos": [
+       20.6,
+       -7.6
+      ],
+      "face": 270,
+      "color": "#5d584f"
+     }
+    ],
+    "figures": {
+     "navigator": {
+      "on": "snav",
+      "pose": "lie"
+     },
+     "aeth": {
+      "kind": "soldier",
+      "on": "saeth",
+      "pose": "lie"
+     },
+     "cael": {
+      "pos": [
+       23.503,
+       -15.118
+      ],
+      "face": [
+       27.75,
+       -18.0
+      ],
+      "pose": "stand",
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          27.75,
+          2.0,
+          -18
+         ]
+        ],
+        [
+         1.0,
+         [
+          27.75,
+          2.0,
+          -18
+         ]
+        ],
+        [
+         1.5,
+         [
+          16.0,
+          1.6,
+          -9.6
+         ]
+        ],
+        [
+         2.6,
+         [
+          16.0,
+          1.6,
+          -9.6
+         ]
+        ],
+        [
+         3.1,
+         [
+          27.75,
+          2.0,
+          -18
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": {
+       "keys": [
+        [
+         0,
+         [
+          23.981,
+          0.0,
+          -14.343
+         ]
+        ],
+        [
+         8.0,
+         [
+          23.981,
+          0.0,
+          -14.343
+         ]
+        ],
+        [
+         8.9,
+         [
+          26.6,
+          0.6,
+          -17.0
+         ]
+        ],
+        [
+         9.3,
+         [
+          27.65,
+          1.63,
+          -18.1
+         ]
+        ]
+       ],
+       "ease": "linear"
+      },
+      "face": {
+       "keys": [
+        [
+         0,
+         [
+          23.503,
+          -15.118
+         ]
+        ],
+        [
+         7.9,
+         [
+          23.503,
+          -15.118
+         ]
+        ],
+        [
+         8.1,
+         [
+          27.65,
+          -18.1
+         ]
+        ],
+        [
+         9.2,
+         [
+          27.65,
+          -18.1
+         ]
+        ],
+        [
+         9.4,
+         [
+          -47.0,
+          -19.0
+         ]
+        ]
+       ]
+      },
+      "pose": {
+       "keys": [
+        [
+         0,
+         "stand"
+        ],
+        [
+         8.0,
+         "walk"
+        ],
+        [
+         9.3,
+         "stand"
+        ]
+       ]
+      },
+      "aimR": {
+       "keys": [
+        [
+         0,
+         [
+          24.181,
+          0.0,
+          -14.243
+         ]
+        ],
+        [
+         9.3,
+         [
+          24.181,
+          0.0,
+          -14.243
+         ]
+        ],
+        [
+         9.6,
+         [
+          20.0,
+          9.5,
+          -19.0
+         ]
+        ]
+       ]
+      },
+      "handR": 1
+     },
+     "boy": {
+      "pos": "boyUnderArch",
+      "face": 200,
+      "pose": "stand"
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     16.6,
+     1.6,
+     -3.4
+    ],
+    "target": [
+     21.853,
+     1.75,
+     -17.45
+    ],
+    "f": 24,
+    "shift": [
+     0,
+     0.08
+    ]
+   },
+   "lines": [
+    {
+     "t0": 3.4,
+     "t1": 4.4,
+     "speaker": "CAEL",
+     "text": "Bring it down.",
+     "subtitle": null,
+     "spoken": null
+    },
+    {
+     "t0": 9.2,
+     "t1": 10.8,
+     "speaker": "CAPTAIN",
+     "text": "Break the Crown!",
+     "subtitle": "Break the Crown!",
+     "spoken": "Brecath thone corune!"
+    }
+   ],
+   "sound": "No score. The order is quiet; the captain’s cry is not. The terrace guns go on, far.",
+   "note": "Nobody gets a close-up for this line. The whole room: the open door (the road) at left, the breach at right with the terraces’ flashes and the boy, the two stretchers right, Cael and the captain small at centre. 1.0 Cael looks at the open road once; 3.4 the order; 8.0 the captain turns to the guns and steps up into the breach; 9.2 Old Aethel, subtitled."
+  },
+  {
+   "n": "5.9",
+   "dur": 5.0,
+   "scene": "forecourt",
+   "boardTime": 1.55,
+   "camText": "Wide, the batteries · 35 mm · 1.6 m · locked-off · behind and beside the gun line",
+   "state": {
+    "look": {
+     "base": "breakCrown",
+     "fog": {
+      "density": 0.00085
+     }
+    },
+    "lamps": {
+     "level": 1,
+     "breathe": 0
+    },
+    "truce": "gone",
+    "crown": {
+     "shutter": 0,
+     "fire": 0.5
+    },
+    "far": {
+     "x": 230,
+     "z": -700,
+     "s": 0.5
+    },
+    "battery": {
+     "at": [
+      -2.007,
+      -28.614
+     ],
+     "spacing": [
+      3.2,
+      -6.0
+     ],
+     "face": [
+      230,
+      -1100
+     ]
+    },
+    "gunElev": {
+     "keys": [
+      [
+       0,
+       0.12
+      ],
+      [
+       0.9,
+       0.36
+      ]
+     ],
+     "ease": "smooth"
+    },
+    "salvos": [
+     {
+      "side": "aethelgard",
+      "t": 1.0,
+      "spread": 0.2,
+      "flight": 3.4,
+      "to": "crown",
+      "arc": 0.022
+     }
+    ],
+    "flashPower": 700,
+    "dust": {
+     "mode": "none"
+    },
+    "figures": {
+     "bearer": {
+      "pos": [
+       7.383,
+       -34.458
+      ],
+      "face": [
+       230,
+       -1000
+      ],
+      "banner": "upright",
+      "reachL": {
+       "keys": [
+        [
+         0,
+         [
+          7.083,
+          0.9,
+          -34.458
+         ]
+        ],
+        [
+         2.2,
+         [
+          7.083,
+          0.9,
+          -34.458
+         ]
+        ],
+        [
+         3.0,
+         [
+          7.023,
+          2.15,
+          -34.577999999999996
+         ]
+        ],
+        [
+         3.4,
+         [
+          7.023,
+          2.0,
+          -34.577999999999996
+         ]
+        ],
+        [
+         5.0,
+         [
+          7.023,
+          2.0,
+          -34.577999999999996
+         ]
+        ]
+       ]
+      },
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          230,
+          60,
+          -1000
+         ]
+        ],
+        [
+         2.2,
+         [
+          230,
+          60,
+          -1000
+         ]
+        ],
+        [
+         2.8,
+         [
+          6.983,
+          2.6,
+          -34.558
+         ]
+        ],
+        [
+         3.4,
+         [
+          8.774,
+          1.75,
+          -35.168
+         ]
+        ]
+       ]
+      }
+     },
+     "captain": {
+      "pos": [
+       8.774,
+       -35.168
+      ],
+      "face": [
+       230,
+       -1000
+      ],
+      "pose": "stand",
+      "aimR": [
+       68.774,
+       120,
+       -335.168
+      ],
+      "palmR": "out",
+      "handR": 1,
+      "look": {
+       "keys": [
+        [
+         0,
+         [
+          230,
+          60,
+          -1000
+         ]
+        ],
+        [
+         2.8,
+         [
+          230,
+          60,
+          -1000
+         ]
+        ],
+        [
+         3.2,
+         [
+          7.383,
+          1.6,
+          -34.458
+         ]
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "cam": {
+    "pos": [
+     2.0,
+     1.6,
+     -8.0
+    ],
+    "target": [
+     5.14,
+     4.6,
+     -67.918
+    ],
+    "f": 35
+   },
+   "sound": "Three reports, then the shells’ rising whistle over the cut.",
+   "note": "Key 5 (bible p.7): three barrels rise from the lower left, the flashes clip to white for a frame, the shells arc toward the stepped city at right; the captain’s raised arm and the standard-bearer’s bound pole centre-right. 2.2 the bearer reaches for the bindings; 3.0 the captain looks at him; 3.4 his hand stops. Not yet. The capital is pushed back into the haze (state.far) for the silhouette of the key."
+  }
+ ]
+}

@@ -32,7 +32,9 @@ export function buildCoupling(E, parent, o = {}) {
   }
   b.build(g);
   // the silver ring: two halves hinged at +x; ring = 1 closed, 0 open (halves swung 70 degrees apart)
-  const silver = E.mat('#B9BEC3', { rough: 0.22, metal: 0.9, rim: true });
+  // Korvenian silver: metal enough to catch the light as one cold line, matte enough to read as pale silver with no
+  // environment to reflect (fully metallic it rendered as dark bronze under the furnace key)
+  const silver = E.mat('#B9BEC3', { rough: 0.3, metal: 0.45, rim: true });
   const ringY = Hc - COUPLING.ringFromTop;
   const hinge = new THREE.Group(); hinge.position.set(0, ringY, 0); g.add(hinge);
   const halves = [];
@@ -43,7 +45,7 @@ export function buildCoupling(E, parent, o = {}) {
     const ring = new THREE.Group(); ring.position.set(-(Rc + 0.16), 0, 0); piv.add(ring);
     const m1 = new THREE.Mesh(geo, silver), m2 = new THREE.Mesh(inner, E.mat('#7f8489', { rough: 0.4, metal: 0.8, double: true }));
     ring.add(m1); ring.add(m2);
-    for (const y of [-0.21, 0.21]) { const lip = new THREE.Mesh(new THREE.RingGeometry(Rc + 0.02, Rc + 0.16, 40, 1, k ? 0 : Math.PI, Math.PI), silver); lip.rotation.x = -Math.PI / 2; lip.position.y = y; lip.material = E.mat('#B9BEC3', { rough: 0.22, metal: 0.9, double: true, rim: true }); ring.add(lip); }
+    for (const y of [-0.21, 0.21]) { const lip = new THREE.Mesh(new THREE.RingGeometry(Rc + 0.02, Rc + 0.16, 40, 1, k ? 0 : Math.PI, Math.PI), silver); lip.rotation.x = -Math.PI / 2; lip.position.y = y; lip.material = E.mat('#B9BEC3', { rough: 0.3, metal: 0.45, double: true, rim: true }); ring.add(lip); }
     ring.traverse(x => { if (x.isMesh) { x.castShadow = true; x.receiveShadow = true; } });
     halves.push(piv);
   }
@@ -52,12 +54,29 @@ export function buildCoupling(E, parent, o = {}) {
   const seamGeo = new THREE.CylinderGeometry(Rc + 0.035, Rc + 0.035, 0.045, SEG, 1, true);
   const seam = new THREE.Mesh(seamGeo, E.lampMat('#7C4DF0', 3.2, { fog: true }));
   seam.position.y = ringY - 0.26; g.add(seam);
+  const seamThin = E.lampMat('#7C4DF0', 1.7, { fog: true });       // the clasp seam: a thin violet line, not a clipped bar
+  // the same seam as two halves that run out from one point to both sides (1.3: from the clasp at the front):
+  // seamFrom = the start angle in degrees (0 = local +z, where the ring's halves meet; 'clasp' = -90). Default fill above.
+  const H = SEG / 2, seamM = seam.material;
+  const halfA = new THREE.CylinderGeometry(Rc + 0.17, Rc + 0.17, 0.018, H, 1, true, 0, Math.PI);
+  const halfB = new THREE.CylinderGeometry(Rc + 0.17, Rc + 0.17, 0.018, H, 1, true, -Math.PI, Math.PI);
+  const sA = new THREE.Mesh(halfA, seamThin), sB = new THREE.Mesh(halfB, seamThin);
+  for (const m of [sA, sB]) { m.position.y = ringY - 0.222; m.visible = false; g.add(m); }
   return {
     group: g, drum, halves, seam, seamGeo, ringY, SEG,
     set(st = {}) {
       const ring = st.ring ?? 1, sm = st.seam ?? 1;
       halves[0].rotation.y = (1 - ring) * 1.2; halves[1].rotation.y = -(1 - ring) * 1.2;
-      const n = Math.round(Math.max(0, Math.min(1, sm)) * SEG);
+      const f = Math.max(0, Math.min(1, sm));
+      if (st.seamFrom !== undefined && st.seamFrom !== null) {
+        const n = Math.round(f * H), a0 = (st.seamFrom === 'clasp' ? -90 : +st.seamFrom) * Math.PI / 180;
+        sA.rotation.y = sB.rotation.y = a0;
+        seam.visible = false; sA.visible = sB.visible = n > 0;
+        halfA.setDrawRange(0, n * 6); halfB.setDrawRange((H - n) * 6, n * 6);
+        return;
+      }
+      sA.visible = sB.visible = false;
+      const n = Math.round(f * SEG);
       seam.visible = n > 0;
       seamGeo.setDrawRange(0, n * 6);
     },
@@ -89,22 +108,29 @@ export default {
     const b = new E.Batch('foundry');
     const seamM = E.mat('#070504', { rough: 0.9 });
     for (let i = -30; i <= 30; i++) { b.box(0.05, 0.01, 200, seamM, i * 3, 0.004, -60); b.box(200, 0.01, 0.05, seamM, 0, 0.004, -60 + i * 3); }
-    // the furnace slot: a long glowing gap in the floor beside the rows (the only light from below)
-    const glow = E.lampMat('#ff7a2a', 2.2, { fog: true });
+    // two rows of couplings either side of an aisle that recedes back-left of the hero (row R from (-18.4, -25) to
+    // (1.8, -112); row L opposite it across the aisle, 15 m centre to centre). The furnace slot, a long glowing gap
+    // in the floor, runs down the middle of the aisle: the only light from below, and the lead line of 1.4.
+    const glow = E.lampMat('#ff7a2a', 1.7, { fog: true });
     const ROW0 = [-18.4, -25], ROW1 = [1.8, -112];
     const rowAng = Math.atan2(ROW1[0] - ROW0[0], ROW1[1] - ROW0[1]);
-    const slot = E.boxMesh(0.35, 0.05, 130, glow, W, (ROW0[0] + ROW1[0]) / 2 + 4.2, 0.005, (ROW0[1] + ROW1[1]) / 2 + 22, { cast: false });
+    const dir = [Math.sin(rowAng), Math.cos(rowAng)], right = [-dir[1], dir[0]];   // along the row; toward row R
+    const AISLE = 7.5;
+    const aisle0 = [ROW0[0] - right[0] * AISLE, ROW0[1] - right[1] * AISLE];
+    const slot = E.boxMesh(0.3, 0.05, 118, glow, W, aisle0[0] + dir[0] * 71, 0.005, aisle0[1] + dir[1] * 71, { cast: false });
     slot.rotation.y = rowAng;
     b.build(W, { cast: false });
     // pools of furnace light on the floor (they colour the floor, not the figures: a silhouette stays black)
-    E.pool('#ff6a1e', 7, 0.55, W, -3.6, 0, 3.5, { sx: 1.6, soft: 2.4 });
+    E.pool('#ff6a1e', 4.6, 0.6, W, -1.6, 0, 3.8, { sx: 1.7, soft: 2.2 });   // the worker steps out of the dark into it (1.2)
+    E.pool('#ff6a1e', 9, 0.12, W, -4.5, 0, 1.0, { sx: 1.3, soft: 3 });
     E.pool('#ff6a1e', 14, 0.35, W, -9, 0, -24, { sx: 0.8, sz: 2.4, soft: 2 });
+    for (let k = 0; k < 4; k++) E.pool('#ff6a1e', 6, 0.22, W, aisle0[0] + dir[0] * (36 + k * 21.75), 0, aisle0[1] + dir[1] * (36 + k * 21.75), { sx: 1.4, soft: 2 });
     const vpool = E.pool('#7C4DF0', 3.2, 0.5, W, 0.3, 0, 1.2, { sx: 1.4, soft: 2.5 });
     // rows of identical couplings waiting in the dark, receding from the front left toward the worker
     const rows = new E.Batch('rows');
     const cop = E.mat('#B66A35', { rough: 0.45, metal: 0.65, rim: true }), copDark = E.mat('#4a2814', { rough: 0.7, metal: 0.4 });
     for (let row = 0; row < 2; row++) for (let i = 0; i < 9; i++) {
-      const k = i / 8, x = ROW0[0] + (ROW1[0] - ROW0[0]) * k - row * 14, z = ROW0[1] + (ROW1[1] - ROW0[1]) * k - row * 22;
+      const k = i / 8, x = ROW0[0] + (ROW1[0] - ROW0[0]) * k - row * right[0] * 2 * AISLE, z = ROW0[1] + (ROW1[1] - ROW0[1]) * k - row * right[1] * 2 * AISLE;
       rows.add(new THREE.CylinderGeometry(2.35, 2.35, 7.12, 28, 1), cop, E.M4(x, 0.6 + 3.56, z));
       for (const y of [1.5, 2.5, 3.6, 6.1, 6.8]) rows.add(new THREE.CylinderGeometry(2.38, 2.38, 0.09, 28, 1, true), copDark, E.M4(x, y, z));
       rows.add(new THREE.CylinderGeometry(0.06, 0.06, 30, 5), E.mat('#141210'), E.M4(x - 1, 22.6, z));
@@ -133,7 +159,7 @@ export default {
     const st = R.coupling ?? {};
     ctx.hang.position.set(0, st.y ?? 0.6, 0);         // y = the coupling's bottom above the floor (it descends on chains)
     ctx.hang.rotation.y = (st.turn ?? 0) * Math.PI / 180;
-    ctx.cp.set({ ring: st.ring ?? 1, seam: st.seam ?? 1 });
+    ctx.cp.set({ ring: st.ring ?? 1, seam: st.seam ?? 1, seamFrom: st.seamFrom });
     const sm = Math.max(0, Math.min(1, st.seam ?? 1)) * (st.violet ?? 1);
     ctx.violet.intensity = 3 * sm; ctx.vpool.material.uniforms.uStrength.value = 0.5 * sm;
     ctx.furnace.intensity = 260 * (R.furnace ?? 1); ctx.furnace2.intensity = 120 * (R.furnace ?? 1);
