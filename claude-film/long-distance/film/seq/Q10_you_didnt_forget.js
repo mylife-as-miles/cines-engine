@@ -80,10 +80,11 @@
     const np = E.inOutSine(seg(tt, 21.1, 23.6)), up = E.inOutSine(seg(tt, 23.6, 24.2));
     herPhone(c, lt, { hold: 1, nape: np, face: { yaw: lerp(0.2, 0.45, up), pitch: lerp(0.34, 0.1, up), lids: lerp(0.5, 0.66, up), gaze: [lerp(0.1, 0.4, up), lerp(0.5, 0.06, up)], mouth: m('L020', 24.0, lt) } });
   }
-  // 29.3–35.6: "Have you been using AI to make pictures of me?" Quieter. Her hand comes down from her neck; she asks it of him
+  // 29.3–35.6: "Have you been using AI to make pictures of me?" Quieter. She asks it of him, her hand still at her neck
   function herAI(c, st, lt) {
-    const tt = twos(lt), down = 1 - E.inOutSine(seg(tt, 29.3, 30.6));
-    herPhone(c, lt, { hold: 1, nape: down, face: { yaw: 0.42, pitch: 0.12, lids: key(tt, [[29.3, 0.62], [33, 0.56], [35.4, 0.6]]), gaze: [0.38, key(tt, [[29.3, 0.08], [34.5, 0.08], [35.3, 0.2]])], mouth: m('L021', 29.5, lt), brows: key(tt, [[30.5, 0], [31.5, 0.25], [34, 0.25], [35, 0]]) } });
+    const tt = twos(lt);
+    // her hand stays at the back of her neck while she asks it (it comes down off screen, on his reply)
+    herPhone(c, lt, { hold: 1, nape: 1, face: { yaw: 0.42, pitch: 0.12, lids: key(tt, [[29.3, 0.62], [33, 0.56], [35.4, 0.6]]), gaze: [0.38, key(tt, [[29.3, 0.08], [34.5, 0.08], [35.3, 0.2]])], mouth: m('L021', 29.5, lt), brows: key(tt, [[30.5, 0], [31.5, 0.25], [34, 0.25], [35, 0]]) } });
   }
   // 40–44: she goes very still
   function still(c, st, lt) {
@@ -191,7 +192,10 @@
     const tr = RIG.trade(c, u, { x: 960, y: 600, s: 330, light: L, t: lt });
     if (tr.phone) {
       const T = RIG.tradeTime(u);
-      PHONE.draw(c, { x: tr.phone.x, y: tr.phone.y + (T.swap ? 0 : 30), h: tr.phone.w, spin: Math.PI / 2, pitch: 1.25, screen: 'black', env: '#BCC2C4' });
+      // until the swap it lies on her palm (its far end over her fingers); after, it is in his grip
+      const hp = !T.swap && tr.her && tr.her.hands && tr.her.hands.L, len = tr.phone.w;
+      const at = hp ? [hp.grip[0] - 0.22 * len, hp.grip[1] - 0.06 * len] : [tr.phone.x, tr.phone.y];
+      PHONE.draw(c, { x: at[0], y: at[1], h: len, spin: Math.PI / 2, pitch: 1.25, screen: 'black', env: '#BCC2C4', shadow: hp ? { alpha: 0.35 } : false });
     }
     tr.over(c);
   }

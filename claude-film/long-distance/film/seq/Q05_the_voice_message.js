@@ -38,7 +38,10 @@
   function drawInterior(c, st, lt, last) {
     const v = BUS().views.interior, A = v.anchors;
     const tt = twos(lt);
-    if (last) { const z = lerp(1.18, 1.22, seg(lt, 26, 30, 'inOutSine')); c.camera({ x: 740, y: 430, zoom: z }); }
+    // both interiors sit at zooms that give his figure one render scale (s 187 × 1.04–1.19 rounds to the same step), so the window
+    // shot reuses the opening's sculptures: the opening a touch closer than the set's framing, the window closer still
+    if (last) { const z = lerp(1.165, 1.19, seg(lt, 26, 30, 'inOutSine')); c.camera({ x: 740, y: 430, zoom: z }); }
+    else c.camera({ x: 900, y: 520, zoom: 1.06 });
     const Lt = v.lightAt(tt);
     const L = RIG.light('bus', { keys: Lt.keys, amb: Lt.amb });
     const h = interiorHead(lt);
@@ -111,8 +114,8 @@
     // the thread as it stands (the morning; his "Send me one." at lunch and her reply; the voice message), and a slow push toward
     // the waveform while it plays (0.3 % a second, eased); the second insert holds
     const u = lt < 15 ? seg(lt, 6, 15, 'inOutSine') : 1;
-    const z = lerp(1, 1.03, u);
-    c.camera({ x: W / 2 - 50 * u, y: H / 2 + 40 * u, zoom: z });
+    const z = lerp(1, 1.02, u);                           // (kept under 1.024 so the hand's sculpture keeps one render scale)
+    c.camera({ x: W / 2 - 35 * u, y: H / 2 + 28 * u, zoom: z });
     phoneBg(c);
     const P = Object.assign({}, PH, { screen: 'voice', state: voiceState(lt), t: lt, env: '#8090C0' });
     const info = PHONE.where(P, c);
@@ -133,7 +136,8 @@
     const base = { s: 1000, rot: 0.18, flip: true, reach: 0.5, tap: 0, light: L };
     const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: base.s / 4, x: 0, y: 0, target: SCR() }));
     const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: tap > 0.3 ? 0.6 : 0 });   // two drawings: down, lifted
-    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: ['thumb', 'dist'] }));
+    // the hand is below the phone; where it crosses the glass (the thumb, the fingertips round the far edge) it is in front of it
+    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
     RIG.hand(c, 'him', 'thumb', hp);
   }
