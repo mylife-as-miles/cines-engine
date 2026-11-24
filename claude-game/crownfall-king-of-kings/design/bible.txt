@@ -1,0 +1,780 @@
+VISUAL BIBLE
+
+
+
+
+Crownfall:
+King of Kings
+How the film looks, shot by shot and power by power. Built on the fifth
+draft of the screenplay.
+
+THE FILM'S COLOUR BY RUNNING TIME
+
+1        2        3                 4                              5                   6   7   8   9   10
+
+
+
+
+Scenes 1 to 10 of the full cut, 7:56. Slate until the Crown is hit, gold after it falls.
+
+
+
+
+Osita Miles
+Version 1 / 24 November 2026
+
+
+
+
+CROWNFALL: KING OF KINGS                /   VISUAL BIBLE                                                    01
+THE LOOK
+
+
+
+Cold, dusty and patient
+Every frame keeps a person small against something vast, and bright colour is rationed to
+five things.
+
+1     Keep a person in the frame. The coupling, the block and the ship are only as big as the
+      figure beside them. No shot of scale without someone to measure it.
+
+2     Hold the wide when it matters. At the order (5.8), the fall (7.3) and the silence (8.4) the
+      camera stays back. Close shots are kept for hands, the wrist and the seal.
+
+3     Stay at eye level. The camera stands where a person could stand. It leaves the ground
+      twice only: inside the hull (9.3) and at the ward officer's glass (10.3).
+
+4     Light comes from things we can see. A lamp, a gun, the sun, the ward. Nothing is lit to
+      look beautiful.
+
+5     Ration the colour. Slate, ash and charcoal carry the film. White, copper, silver, violet and
+      red each belong to one thing.
+
+6 The picture says it before the line does. If a shot needs its dialogue to be understood,
+      restage the shot.
+
+
+    THE LOOK IN ONE PARAGRAPH, FOR BRIEFS
+
+    Pre-dawn slate and ash, then a low clean sun through dust. Wide frames at eye level, small figures
+    against terraces, stone and hulls. Deep charcoal shadows that still hold detail. Light from a lamp,
+    gun-flash and sunrise only. One white lamp, one violet light, blood-red banners held back until
+    the last half minute. Fine grain. No glow, no lens flare.
+
+
+KEPT OUT OF THE FILM
+
+    Low, heroic angles on Cael.                                   Handheld camera, except while Liora runs (7.1,
+    Glowing hands, beams or energy for his power.                 7.2).
+
+    A view from the ships looking down on the                     Any colour on the Aethelgard side before 10.12.
+    battle.                                                       A teal-and-orange grade. The orange here is
+                                                                  gun-flash.
+
+HOW TO READ THE TAGS
+
+SCRIPT   in the fifth draft   ATLAS   in the Linguistic Atlas   PROPOSED   a design suggestion for you to approve
+
+
+
+
+CROWNFALL: KING OF KINGS      /   VISUAL BIBLE                                                                      02
+REFERENCES AT WORK
+
+
+
+What we take from Villeneuve's films
+Nine habits from the reference pages, each turned into a rule this film can shoot.
+
+THE HABIT                                   IN CROWNFALL                                                       SHOTS
+
+
+A human anchor. A small, readable           The worker under the coupling. Liora under the block.              1.2, 3.3, 9.1
+figure stays inside the big frame,          The gate towers under the first ship.
+so size reads as force. [1]
+
+Empty sky. The top of the frame is          The horizon sits in the lower third at the gate and in             2.1, 8.1, 10.15
+left open. [1]                              the ruins, so the fleet has a sky to fill.
+
+The held wide. The camera stays             The order, the fall and the silence are held wide.                 5.8, 7.3, 8.4
+back where another film would               Nobody gets a close-up for "Bring it down."
+move in, and the shot outlasts the
+usual cut. [1]
+
+Designed frames. Symmetry for               Cael is centred when he commands. Liora sits                       6.3, 10.6
+power, off-centre for a person              off-centre and low in frame.
+alone. [1]
+
+Low exposure. A dim frame makes             The gatehouse is lit by the breach alone, about two                4.1 to 4.11
+the viewer lean in. [1]                     stops under. Half of each face is lost.
+
+Eye level, wide and medium.                 Deep focus for the city and the fleet. Shallow focus               3.5, 4.6, 10.6,
+Shallow focus used beside deep              only for the wrist, the seal and the two hands.                    10.8
+focus. [2]
+
+Natural sources. A cool,                    Slate before the fall, ochre dust after it, charcoal               whole film
+desaturated grade with a warm,              throughout.
+sandy second palette. [2]
+
+Staged eyelines. Where a                    Liora's look from the hand up to the shutter is one                6.5, 10.10, 10.11
+character looks, and when a line            move. "Raise the banners." lands as his eyes reach
+lands, is set by the director. [3]          the fleet.
+
+An emotional target. Actors get a           Each character has a one-line playing note on the                  People page
+feeling to play, not a mechanical           People page.
+note. [3]
+
+[1] StillsLab, "Denis Villeneuve's Visual Style: Scale, Silence, and Letting the Frame Talk". [2] Framethrower, director page for Denis
+Villeneuve. [3] No Film School, "How Denis Villeneuve Directs". The habits are summarised in my own words. Full links are on the
+last page.
+
+
+
+
+CROWNFALL: KING OF KINGS        /   VISUAL BIBLE                                                                                    03
+COLOUR
+
+
+
+Three grounds, two lights, five accents
+The grounds carry the film. Each accent belongs to one thing and appears nowhere else.
+
+GROUNDS
+
+
+
+
+Slate                   #2B3640   Ash                #8E887D   Charcoal           #141414    Ochre dust        #B59A6A   Bone             #D9D2C2
+Pre-dawn sky, the                 Stone, dust, cloth and       Interiors, hulls, every       From the fall onward.       The judgments, the
+glass plain, the shadow           skin in shade.               silhouette.                   Never before 6.9.           bandage, the envoy's
+side of stone.                                                                                                           robe.
+
+LIGHTS
+
+
+
+
+Furnace amber                                                     #E08A3A    Sunrise gold                                                 #ECD29A
+Solforiz lamps, gun-flash, the fire inside the Crown. It leaves              The first direct sun in the film, at 8.1. It lights the ruins and the
+at 6.10 and returns once: the points in the fleet's open                     fleet alike.
+housings (10.14).
+
+ACCENTS
+
+
+
+
+Truce white             #F2F4F1   Copper             #B66A35   Silver           #B9BEC3      Ward violet       #7C4DF0   Blood red         #8E1B1B
+The truce lamp (2.3 to            Kwind-09. The                Korvenia. The ring (1.3)      Korvenian light. The        Aethelgard's banners.
+5.3), then the four               coupling in the foundry      and the silver hung on        seam (1.3) and the          Bound and near-black
+flashes of her mirror             (1.2) and inside the hull    the hull (9.2, 9.3).          ward (10.4). Never          until 10.12.
+(10.2).                           (9.3).                        SCRIPT                       paint or cloth.              PROPOSED
+ SCRIPT                            SCRIPT                                                    SCRIPT
+
+
+
+
+WHEN EACH COLOUR IS ON SCREEN
+
+
+                    1       2      3             4                       5               6            7    8         9   10
+
+
+
+
+   Truce white
+          Copper
+           Silver
+    Ward violet
+        Blood red
+
+The bar is the full cut by running time, scene 1 to scene 10. The upper band is the ground and the lower band is
+the light. Red arrives at 7:23 in a 7:56 film. Violet is seen at 0:12 and not again until 6:29: the ring in the foundry is
+the only warning of the ward.
+
+CROWNFALL: KING OF KINGS                /   VISUAL BIBLE                                                                                        04
+COLOUR SCRIPT
+
+
+One key per scene
+
+
+
+
+1. The foundry                                                                                  SHOTS 1.1 TO 1.4
+
+Light. Furnace glow from below. One violet seam.
+Nine-tenths of the frame is black. The worker gives the scale: the coupling is four times his height. Faces are
+never seen here, only hands.
+
+
+
+
+2. The fallen gate                                                                             SHOTS 2.1 TO 2.4
+
+Light. Pre-dawn sky. Amber lamps on the terraces. The white truce lamp.
+Two-thirds of the frame is sky. The capital steps up to the Crown, and the truce lamp is the brightest point in
+the film until it bursts.
+
+
+
+
+CROWNFALL: KING OF KINGS   /   VISUAL BIBLE                                                                  05
+COLOUR SCRIPT
+
+
+Colour script, continued
+
+
+
+
+3. The held stone                                                                            SHOTS 3.1 TO 3.9
+
+Light. Flat pre-dawn light through dust. No hard shadows.
+Nothing glows. The block has simply stopped, and dust keeps falling past it. Cael stands ten paces off, hand
+open.
+
+
+
+
+4. The gatehouse                                                                            SHOTS 4.1 TO 4.11
+
+Light. The breach is the only source.
+The boy and the arch stay visible through the breach in every wide. The envoy's robe is the one clean cloth
+in the film; Cael is a shape against the dark.
+
+
+
+
+CROWNFALL: KING OF KINGS   /   VISUAL BIBLE                                                               06
+COLOUR SCRIPT
+
+
+Colour script, continued
+
+
+
+
+5. "Break the Crown!"                                                                                SHOTS 5.1 TO 5.9
+
+Light. Sky, and gun-flash that clips to white for a frame.
+The truce lamp is gone. Amber now means fire from both sides. The standard-bearer's banner is still bound.
+
+
+
+
+6. The open hand                                                                                    SHOTS 6.1 TO 6.10
+
+Light. Gun-flash behind him. The fire in the Crown.
+A pure silhouette, with no fill light. The stalled shutter is the only other bright thing in frame, so the eye joins
+the hand to it.
+
+
+
+
+CROWNFALL: KING OF KINGS    /   VISUAL BIBLE                                                                       07
+COLOUR SCRIPT
+
+
+Colour script, continued
+
+
+
+
+7. The fall                                                                                      SHOTS 7.1 TO 7.4
+
+Light. Sky through rising dust. Contrast drops as the dust climbs.
+The dust is lit from above and rises faster than the towers fall. This is where ochre enters the film.
+
+
+
+
+8. The ruins at sunrise                                                                          SHOTS 8.1 TO 8.6
+
+Light. Low sun through dust. The first direct sunlight.
+The skyline is flat and the sky is empty. The banners are still bound and read almost black. One pole is
+lowered.
+
+
+
+
+CROWNFALL: KING OF KINGS   /   VISUAL BIBLE                                                                   08
+COLOUR SCRIPT
+
+
+Colour script, continued
+
+
+
+
+9. The first ship                                                                               SHOTS 9.1 TO 9.3
+
+Light. The sun is behind the ship. Gold on its upper edge, shadow under it.
+The broken gate towers give its size. Kwind-09 iron hung with Korvenian silver. Its shadow reaches the army
+before the ship does.
+
+
+
+
+10. The ward                                                                                  SHOTS 10.1 TO 10.6
+
+Light. Bars of sunrise through the rigging. Violet from the keel.
+Violet falls on the survivors and gold on everything else. Her mirror is the one point of white. The arch stops
+above their heads.
+
+
+
+
+CROWNFALL: KING OF KINGS   /   VISUAL BIBLE                                                                   09
+COLOUR SCRIPT
+
+
+Colour script, continued
+
+
+
+
+10. The banners                                                                             SHOTS 10.11 TO 10.16
+
+Light. Low sun under the fleet. Amber points where the housings open.
+Red at last, and ragged: not every banner opens. Cael is small and does not turn. The fleet fills the sky he
+was given in scene 2.
+
+
+
+WHAT THE ELEVEN KEYS ADD UP TO
+
+  Cold, then burning, then gold. Scenes 1 to 5 are slate. Scene 6 is the only orange frame. From scene
+  7 the film is ochre and gold.
+  The brightest thing is always small. A lamp, a slit in a shutter, a mirror. Never the sky and never a
+  face.
+  Every key has someone in it. The smallest figure in each frame is the one the scene is about.
+
+
+
+
+CROWNFALL: KING OF KINGS   /   VISUAL BIBLE                                                                    10
+LIGHT
+
+
+
+Every light has a source and an owner
+If the audience cannot see where the light comes from, it does not belong in the shot.
+
+SCENE              SOURCE                              EXPOSURE                      WATCH FOR
+
+1 Foundry          Furnace glow from below. The        Low key. Most of the          Hands only. Copper is lit from
+                   violet seam.                        frame is black.               one side.
+
+2 The gate         Pre-dawn sky. Amber lamps.          Soft and low in contrast.     Nothing brighter than the white
+                   The truce lamp.                                                   lamp.
+
+3 The stair        Pre-dawn sky through dust.          Flat. No hard shadows.        The stopped block is the only
+                                                                                     wrong thing in frame.
+
+4 Gatehouse        The breach, and nothing else.       About two stops under.        The envoy reads pale; Cael
+                                                                                     reads black. The boy stays
+                                                                                     visible outside.
+
+5 The breach       Sky and gun-flash.                  Flashes clip to white for a   The truce lamp bursts at 5.3
+                                                       frame.                        and white leaves the film.
+
+6 The Crown        Gun-flash behind Cael. Fire in      Silhouette, with no fill.     Liora's view (6.5) is flat and
+                   the works.                                                        long-lens: she sees shape, not
+                                                                                     detail.
+
+7 The fall         Sky through rising dust.            Contrast falls as the dust    The cloud is lit from above. No
+                                                       climbs.                       fireball.
+
+8 The ruins        Low sun through dust.               Long shadows, warm            The first direct sun in the film.
+                                                       highlights.
+
+9 The ship         The sun, behind the ship.           Hull in silhouette with a     Its shadow crosses the army
+                                                       gold rim.                     (8.6) before we see it.
+
+10 The ending      Sun in bars through the             Gold on the army, violet on   Weapon housings are small
+                   rigging. The ward.                  the survivors.                amber points (10.14), not
+                                                                                     floodlights.
+
+DUST                                                            SHADOW
+
+  Before the fall it only falls: past the held stone               Shadows are charcoal, not black. Armour and
+  (3.3), onto the judgments (4.10).                                stone keep their texture.
+  After the fall (7.1 to 7.4) it stands between the                Faces may go half dark. Hands never do.
+  survivors and the army.
+                                                                   No fill light from below the lens, except the
+  The ruins stay readable under the ships in 9.1, 10.5             furnace in scene 1.
+  and 10.15.
+
+
+
+
+CROWNFALL: KING OF KINGS     /   VISUAL BIBLE                                                                            11
+CAMERA
+
+
+
+Eye level, wide, and still
+The camera stands where a person could stand, and it moves only when someone in the
+frame gives it a reason.
+
+CHOICE                  RULE                                                                STATUS
+
+
+Frame                   2.39:1. The causeway, the line of the army and the fleet are all    Proposed
+                        horizontals.
+
+Height                  Eye level of whoever the shot belongs to. At the rescue it is       From the references
+                        Liora's eye level, so Cael is seen from below only because
+                        she is on the ground (3.5).
+
+Lenses                  Wide (24 to 35mm) for places. Normal (50mm) for faces and           Proposed
+                        the table. Long (85 to 135mm) for looks across distance: hers
+                        at 6.5, his at 10.7.
+
+Focus                   Deep for the city, the fall and the fleet. Shallow only for the     From the references
+                        wrist (3.5), the seal (4.6), her hand (10.6) and his (10.8).
+
+Movement                Locked off, or one slow push per scene. Handheld only while         Proposed
+                        Liora runs (7.1, 7.2).
+
+Holds                   Six shots run longer than feels comfortable: 3.3, 5.8, 6.3, 8.4,    Proposed
+                        10.6 and 10.9 into 10.10.
+
+Ground rule             The film never looks down on the battle from the air. The first     Proposed
+                        high angle is the ward officer at 10.3, and it belongs to her.
+
+
+NEAR, CLEAR, FAR: HOW THE CAMERA FOLLOWS WHAT LIORA UNDERSTANDS
+
+
+
+
+Near                                       Clear                                    Far
+THE RESCUE (3.5, 3.6)                      THE DECISION (5.7, 6.3)                  THE ENDING (10.6 TO 10.8)
+
+The camera sits at her eye level,          His face at "I know." and his hand at    She sees him small, across dust and
+close enough to see his grip on her        the shutter are fully readable.          an army. His own close-up stays
+wrist. No heroic angle.                    Nothing hides what he does.              clear, so we see that he knows her.
+
+
+
+
+CROWNFALL: KING OF KINGS       /   VISUAL BIBLE                                                                       12
+COMPOSITION
+
+
+
+Four frames to come back to
+Each one is a habit from the references, drawn for this film.
+
+
+
+                                                                    two-thirds sky
+                                                   x4
+
+
+
+
+The anchor                                                    The empty sky
+Something vast, and one small figure to measure it by.        The horizon in the lower third. The sky is held open for
+Shots 1.2, 3.3, 9.1.                                          what will fill it. Shots 2.1, 8.1, 10.15.
+
+
+
+
+Centre and edge                                               The frame inside the frame
+Cael is centred when he commands (6.3). Liora is              The breach holds the boy in every gatehouse wide, so
+off-centre and low when she is alone with it (10.6).          the argument is always about him. Shots 4.1, 4.7, 5.4.
+
+
+THE HAND: ONE GESTURE, FOUR MEANINGS
+
+
+
+
+Open: it saves                   Open: it destroys            Open: another protects        Closed: war
+SHOT 3.4                         SHOT 6.3                     SHOT 10.3                     SHOT 10.10
+
+Cael holds the block above       Cael holds the shutter for   The ward officer holds the    Cael forces his own hand
+Liora.                           the second salvo.            arch.                         shut.
+
+
+
+Give all four the same close shot: the same size in frame and the same angle, so the audience can lay one
+over the other. In the gatehouse (4.8) he forces a closed hand open. At the end he forces an open hand
+closed.
+
+
+
+
+CROWNFALL: KING OF KINGS     /    VISUAL BIBLE                                                                           13
+THE FOUR POWERS
+
+
+
+Aethelgard and Solforiz
+The two that fight, each with its own shape and its own material.
+
+Aethelgard                   THE BLOOD-THRONE
+
+"Blood remembers what stone forgets."
+
+
+
+Cinder         #1B1917   Volcanic grey   #4A4541   Iron      #6E6F72   Bone       #D8CFBD   Blood red    #8E1B1B
+
+
+In this film. Cael, the captain, the army, the batteries, the banners.
+SCRIPT        On screen. Dented armour. A bandaged arm. Banners kept bound until the last minute.
+ATLAS         Canon. Volcanic rookeries, marrow grafts, an angular alphabet cut straight into bone and
+              rock.
+PROPOSED      Shape. Verticals and straight cuts: poles, gun barrels, flat plate. No curves and no ornament.
+PROPOSED      Materials. Black volcanic stone, dull iron, bone fittings, cloth tied down with cord.
+PROPOSED      Rule. No colour until the banners open. The First-Born stay off screen in this film.
+
+
+
+
+Solforiz            THE SCORCHED CALIPHATE
+
+"May your pistons run wet and your glass stay clear."
+
+
+
+Ash           #9A9388    Umber           #5B4636   Glass    #27343A    Brass      #A88445   Amber        #E08A3A
+
+
+In this film. The capital, the Crown, Liora, the boy, the envoy, the navigator.
+SCRIPT        On screen. A causeway over fused glass. Terraces, the great stair, shutters that close plate
+              by plate.
+ATLAS         Canon. The inland sea boiled to glass in six seconds. Ziggurat cities, plated respirator hoods,
+              storm lanterns with an inverted flame, letters scratched into metal.
+PROPOSED      Shape. Steps and horizontals. Everything is stacked: terrace on terrace, plate on plate.
+PROPOSED      Materials. Glass underfoot, brass pipework, scorched stone, cloth the colour of ash.
+PROPOSED      Rule. The city's lamps breathe on the four-beat pulse. At 6.10 they go out together.
+
+
+
+
+CROWNFALL: KING OF KINGS     /   VISUAL BIBLE                                                                14
+THE FOUR POWERS
+
+
+
+Korvenia and Kwind-09
+The two that built the fleet. A ship is their languages combined: the grid hung with rings.
+
+Korvenia               THE GRAND DUCHY
+
+"May the bells find you indoors."
+
+
+
+Indigo               #1B1630       Eclipse violet   #7C4DF0   Silver             #B9BEC3   Mask white          #E8E6E1
+
+
+In this film. The silver ring (1.3), the silver on the hull (9.2), the ward officer (10.3), the ward (10.4).
+SCRIPT        On screen. Pale gloved hands. A silver ring. A masked officer behind glass. Violet light and a
+              bell note.
+ATLAS         Canon. An eternal violet eclipse, ward-bells across the city, masks, speech that avoids "I".
+PROPOSED      Shape. Circles: the ring, the bell, the mask, the round observation glass.
+PROPOSED      Materials. Polished silver, pale lacquer, clear glass. Nothing scratched or dented.
+PROPOSED      Rule. No faces. Violet exists only as light, never as paint or cloth.
+
+
+
+
+Kwind-09                 THE KWIND ZAIBATSU
+
+"Vent your steam before the Board zeroes your ledger."
+
+
+
+Soot                 #0E0D0C       Iron             #3B3D40   Copper             #B66A35   Smog                #5A4A3A
+
+
+In this film. The foundry (scene 1), the iron of the ships (9.2), the coupling (1.2, 9.3).
+SCRIPT        On screen. Soot-black hands. A copper coupling on chains. Rows of them waiting in the
+              dark.
+ATLAS         Canon. Foundry District 09, smog, people counted as assets, a script built from
+              machine-readable cells.
+PROPOSED      Shape. The grid: rows, rivet lines, plating, stencilled unit numbers on every part.
+PROPOSED      Materials. Cast iron, raw copper, chain, soot. Nothing is finished or polished.
+PROPOSED      Rule. No faces in the foundry either. The workers are hands and silhouettes.
+
+
+
+
+CROWNFALL: KING OF KINGS       /    VISUAL BIBLE                                                                    15
+PEOPLE
+
+
+
+Nine figures, each readable in silhouette
+If two characters could be confused as black shapes against the sky, change one of them.
+
+WHO                   SHAPE AND DRESS                       HOW TO FRAME                    PLAYING NOTE (PROPOSED)
+
+Cael                  Broad and cloaked. Dented plate,      Centred, at eye level. Never    Exhaustion held down by
+                      one arm bandaged. Cinder black,       from below except through       giving orders.
+                      no colour, no crown.                  Liora's eyes.
+
+Liora                 Slight, in a long coat the boy can    Off-centre and low in           She keeps working so that
+                      hold. Ash and umber. Carries the      frame. Often over her           she does not have to feel it
+                      lantern mirror after 7.2.             shoulder.                       yet.
+
+The boy               Small. A respirator a size too big    Always inside another           He trusts whoever is
+                      for him.                              frame: the arch, the breach,    holding him.
+                                                            the ward.
+
+The captain           Square and upright. The same          Half a step behind Cael's       Loyal and appalled in the
+                      plate as Cael, kept in better         shoulder. Level with him for    same breath.
+                      order.                                the first time at 10.9.
+
+The envoy             Tall and narrow. A pale robe          Against the dark wall, lit by   More afraid of his own side
+                      without a mark on it.                 the breach.                     than of Cael.
+
+The                   Young and thin. The pole is half      At the edge of the group        He wants to be told it was
+standard-bearer       as tall again as he is.               shots until 10.12, then alone   worth it.
+                                                            in frame.
+
+The wounded           Grey with dust, bandaged,             In a two-shot with Cael, the    Past caring who hears him.
+soldier               leaning on the table.                 envoy left out of frame.
+
+The navigator         On a stretcher. Eyes filmed like      In profile, until he turns      Perfectly calm. He has
+                      glass. A plated hood pushed           square to the thing he sees     already seen it.
+                      back.                                 (5.2, 6.4).
+
+The ward officer      A pale mask, silver at the collar,    Only through the round          Stillness. Procedure, not
+                      one pale gloved hand: the             glass, from outside and         mercy.
+                      foundry's gloves again.               below, then once from her
+                                                            side.
+
+Sources. Dented armour, the bandaged arm, the boy's respirator and coat-holding, the envoy being immaculate, the
+navigator's eyes and the mask are in the script. The respirator hood is the Atlas word qazrin. Colours, the robe and the
+playing notes are proposals.
+
+
+
+
+CROWNFALL: KING OF KINGS      /   VISUAL BIBLE                                                                             16
+MOTIFS AND EFFECTS
+
+
+
+Eight things the film keeps showing
+Each returns at least once with its meaning changed. Shoot the return the same way as the
+first time.
+
+MOTIF                    SHOTS                  RULE
+
+
+The open hand            3.4, 6.3, 10.3,        Four matching close shots. See the Composition page.
+                         10.10
+
+The wrist                3.5, 10.6              The same size in frame both times. In 10.6 her own hand covers
+                                                the place he held.
+
+The truce lamp           2.3, 3.9, 5.2, 5.3     The brightest point in the film until a shot from the terraces bursts
+                                                it.
+
+The mirror               3.1, 7.2, 10.2         The lantern is lit, then smashed, then its mirror throws four
+                                                flashes. White returns in her hand.
+
+The bound banners        3.8, 5.9, 8.2, 10.12   Tied down and near-black for the whole film. The first one opens
+                                                alone.
+
+The seals                4.5, 4.6               Three judgments, three different seals, folds mended many times.
+                                                Paper is the only old thing on the table.
+
+Coupling and ring        1.2, 1.3, 9.3          The same angle and framing in both scenes. In 9.3 it is scarred
+                                                and turning under load.
+
+The pulse                1.1, 2.1, 6.10, 8.5,   Sound first. On screen it is the city's lamps breathing in four
+                         10.16                  beats, then going dark.
+
+
+EFFECTS: WHAT EACH ONE MAY AND MAY NOT DO
+
+Cael's hold                                                   The ward
+  Nothing glows. The object simply stops.                        Violet light drops from the keel on a bell note.
+  Dust keeps falling past it and the air warps at its            It is light, not a wall: the survivors stand in it and
+  edge.                                                          are lit by it.
+  The sound thins to a hum. It costs him: shaking                The stone stops above their heads and stays there.
+  fingers, blood through the binding.
+
+The fall                                                      The fleet
+  The cause is seen: a tower drops across the                    Never whole in one frame until 10.15.
+  retaining wall and the wall gives.                             Size comes from the gate towers and from its
+  Dust rises faster than buildings fall. There is no             shadow.
+  fireball.                                                      Its engines bury every other sound. The picture
+  When the dust thins, the skyline is simply gone.               goes quiet with them.
+
+
+
+
+CROWNFALL: KING OF KINGS    /   VISUAL BIBLE                                                                              17
+FINISH AND OPEN CHOICES
+
+
+
+What is settled and what is yours to decide
+The script fixes most of the look. Six choices on this page are still open.
+
+FINISH                                                                WRITING ON SCREEN
+
+  Grade. Cool and desaturated, with warm dust after                      Solforiz. Ashstroke: consonants scratched into
+  the fall. Skin stays natural.                                          metal and sand.
+  Grain. Fine and even, a little heavier in the                          Aethelgard. Marrowstaves: straight cuts in bone
+  gatehouse.                                                             and volcanic rock.
+  Lens. No flare and no bloom. Highlights clip                           Korvenia. Bellhand, on silver and on masks.
+  cleanly.
+                                                                         Kwind-09. Ledgerline: stencilled cells of letters
+  Titles. Small capitals, widely spaced, bone on                         and numbers.
+  black: "YEARS EARLIER.", "SOLFORIZ. YEAR 56."
+                                                                         Use the glyph charts in the Atlas. Do not invent
+  and the main title.
+                                                                         letters on props.
+  Subtitles. The same face in bone, low in frame, for
+  the four native lines.
+
+
+OPEN CHOICES
+
+CHOICE                        WHAT I HAVE ASSUMED
+
+
+Frame shape                   2.39:1. If the film is delivered for phones, the horizontals (causeway, army, fleet) need
+                              restaging for a taller frame.
+
+Banner colour                 Blood red, from "The Blood-Throne". The script only says banners.
+
+The breathing lamps           The city's lamps pulse in four beats and go dark at 6.10. This puts the sound motif on
+                              screen. It is not in the script.
+
+Liora's hood                  A plated respirator hood worn pushed back, from the Atlas word qazrin. The script
+                              gives her only a coat.
+
+The medium                    The lens and grain rules assume photographed images. For animation or generated
+                              images, keep the rules on scale, eye level, colour and holds.
+
+Six or eight minutes          The keys work for both cuts. In the six-minute cut the navigator loses his two turns
+                              (5.2, 6.4).
+
+REFERENCES
+
+StillsLab, director page: stillslab.com/directors/denis-villeneuve
+StillsLab, "Denis Villeneuve's Visual Style: Scale, Silence, and Letting the Frame Talk":
+stillslab.com/news/denis-villeneuve-s-visual-style-scale-silence-and-letting-the-frame-talk
+No Film School, "How Denis Villeneuve Directs": nofilmschool.com/how-denis-villeneuve-directs
+Framethrower, director page: framethrower.ai/directors/denis-villeneuve
+Crownfall: King of Kings, fifth draft screenplay and timed shot list. The Ash and Aether Linguistic Atlas, Field Edition 1.0.
+
+All eleven colour keys and the diagrams are original drawings made for this document. No film stills are reproduced.
+
+
+
+
+CROWNFALL: KING OF KINGS        /   VISUAL BIBLE                                                                                18
+
