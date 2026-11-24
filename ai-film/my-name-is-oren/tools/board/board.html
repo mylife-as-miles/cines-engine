@@ -201,6 +201,9 @@ window.setState = (st = {}) => {
   const hip = helena.userData.hipHeight;
   helena.position.y = -(hip - (seat + 0.06)) * sit;
   for (const leg of Object.values(helena.userData.legs)) { leg.rotation.x = -Math.PI / 2 * sit; leg.userData.knee.rotation.x = Math.PI / 2 * sit; }
+  const osit = st.orenSit ?? 0, ohip = oren.userData.hipHeight;       // Oren can sit too
+  oren.position.y = -(ohip - (seat + 0.06)) * osit;
+  for (const leg of Object.values(oren.userData.legs)) { leg.rotation.x = -Math.PI / 2 * osit; leg.userData.knee.rotation.x = Math.PI / 2 * osit; }
   const hl = helena.userData.hands.left;
   if (!hl.userData.home) hl.userData.home = hl.position.clone();
   if (st.helenaLeftHand) { helena.updateMatrixWorld(true); hl.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaLeftHand))); }
@@ -211,8 +214,11 @@ window.setState = (st = {}) => {
   else hr.position.copy(hr.userData.home);
   handset.visible = !!st.handset;
   if (st.handset) { handset.position.set(st.handset[0], st.handset[1], st.handset[2]); handset.rotation.set(st.handset[3] || 0, st.handset[4] || 0, 0); }
-  const bagHand = st.bagHand === 'right' ? oren.userData.hands.right : oren.userData.hands.left;
-  if (bag.parent !== bagHand) bagHand.add(bag);
+  if (st.bagFloor) { if (bag.parent !== scene) scene.add(bag); bag.position.set(st.bagFloor[0], 0.33, st.bagFloor[1]); bag.rotation.set(0, 0, 0); }
+  else {
+    const bagHand = st.bagHand === 'right' ? oren.userData.hands.right : oren.userData.hands.left;
+    if (bag.parent !== bagHand) { bagHand.add(bag); bag.position.set(0, -0.06, 0); }
+  }
   const offL = st.orenLeftFoot || [0, 0];
   oren.userData.legs.left.position.set(restL.x - offL[0], restL.y, restL.z - offL[1]);
   sweeper.visible = !!st.sweeper;
