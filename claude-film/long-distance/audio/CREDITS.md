@@ -8,7 +8,7 @@ Every line is voiced with Google's Gemini text-to-speech (`gemini-3.8-flash-tts`
 
 The same voices made two sounds that are not lines (`audio/vo/vocal_fx.json`):
 
-- `laugh_phone`: her soft laugh on the phone (Q01), en-us-tova, the 4th of five takes.
+- `laugh_phone`: her soft laugh on the phone (Q01), en-us-tova, take 6 of nine.
 - `murmur`: his voice telling her about an ordinary day (Q01), en-us-varo, low-passed at 420 Hz until no word can be understood.
 
 ## Effects and room tones

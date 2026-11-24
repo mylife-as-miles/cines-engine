@@ -29,7 +29,8 @@ rooms, the knock, doors, steps, cloth, cutlery, the bus, his voice, her voice wh
    The sheet turns mix.py's shared room off (the gloss must stay dry; the real sounds carry their own) and keeps the bed
    at the level it was built to (music_lufs; see tools/layer_mix.py).
 With --mix: tools/layer_mix.py into out/audio (mix.flac, stems/*.flac, mix-report.json), then the master's sample
-peaks are held at -3 dBFS (the AAC encode overshoots sharp transients). With --mux: the 720p review copy, the picture's three segments (out/export_tmp/segs.txt)
+peaks are held at -3 dBFS (the AAC encode overshoots sharp transients), and the final mix is kept as out/mix/long_distance_mix.wav (48 kHz stereo, 24-bit) for the
+1080p master. With --mux: the 720p review copy (CRF 23, AAC 192k, faststart), the picture's three segments (out/export_tmp/segs.txt)
 scaled straight into out/long_distance_mixed_720p.mp4 (no full-resolution copy is ever written).
 """
 import hashlib, json, os, subprocess, sys
@@ -369,11 +370,15 @@ def main():
         if r.returncode: sys.exit(r.returncode)
         pk, n = hold_peaks(os.path.join(AUD, 'mix.flac'))
         print(f'peak hold: master sample peak {pk:.2f} dBFS ({n} samples held)')
+        # the final mix for the 1080p master: 48 kHz stereo, 24-bit WAV
+        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', os.path.join(AUD, 'mix.flac'), '-c:a', 'pcm_s24le', '-ar', '48000', '-ac', '2',
+                        os.path.join(OUT, 'long_distance_mix.wav')], check=True)
+        print('wrote out/mix/long_distance_mix.wav')
     if '--mux' in sys.argv:
         segs = os.path.join(ROOT, 'out', 'export_tmp', 'segs.txt')
         subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', segs, '-i', os.path.join(AUD, 'mix.flac'),
                         '-map', '0:v', '-map', '1:a', '-vf', 'scale=1280:720', '-c:v', 'libx264', '-crf', '23', '-preset', 'medium',
-                        '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-ar', '48000', '-shortest', '-movflags', '+faststart', REVIEW], check=True)
+                        '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest', '-movflags', '+faststart', REVIEW], check=True)
         print('wrote ' + os.path.relpath(REVIEW, ROOT))
 
 
