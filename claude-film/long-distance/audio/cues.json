@@ -133,8 +133,12 @@
    523
   ],
   [
-   422.9,
-   424.9
+   418.3,
+   422.4
+  ],
+  [
+   421.7,
+   425.9
   ]
  ],
  "designed": [
@@ -834,7 +838,7 @@
    "id": "Q08.door_open.0",
    "t": 264.7,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_open_flat_a0954635.wav",
-   "weight": "support",
+   "weight": "hero",
    "align": "start"
   },
   {
@@ -848,14 +852,14 @@
    "id": "Q08.footsteps.2",
    "t": 283.8,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/steps_f_flat_7205e90c.wav",
-   "weight": "support",
+   "weight": "hero",
    "align": "start"
   },
   {
    "id": "Q08.door_close.0",
    "t": 286.5,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_close_flat_66a2cabe.wav",
-   "weight": "support",
+   "weight": "hero",
    "align": "peak"
   },
   {
@@ -939,7 +943,7 @@
    "id": "Q10.door_close_soft.0",
    "t": 443.7,
    "sound": "/home/user/cines-engine/claude-film/long-distance/out/mix/fx/door_close_soft_flat_9f6d3e92.wav",
-   "weight": "support",
+   "weight": "hero",
    "align": "peak"
   },
   {

@@ -345,7 +345,8 @@
    {
     "file": "gen/steps_f",
     "align": "start",
-    "what": "her: three slow steps in, then she stops"
+    "what": "her: three slow steps in, then she stops",
+    "weight": "hero"
    },
    {
     "file": "gen/steps_m",
@@ -359,10 +360,14 @@
   },
   "door_open": {
    "file": "gen/door_open",
-   "align": "start"
+   "align": "start",
+   "weight": "hero",
+   "why": "he opens the door to her: a story beat, levelled in its main band"
   },
   "door_close": {
-   "file": "gen/door_close"
+   "file": "gen/door_close",
+   "weight": "hero",
+   "why": "she is in"
   },
   "coat_rustle": {
    "file": "gen/coat_rustle"
@@ -403,7 +408,8 @@
      3.6,
      -9
     ]
-   ]
+   ],
+   "silence_ok": true
   },
   "phone_dim": {
    "world": [
@@ -435,7 +441,9 @@
    "align": "start"
   },
   "door_close_soft": {
-   "file": "gen/door_close_soft"
+   "file": "gen/door_close_soft",
+   "weight": "hero",
+   "why": "she has gone"
   },
   "street_door": {
    "file": "gen/street_door",

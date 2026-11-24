@@ -271,9 +271,8 @@ def main():
         cid = f"{c['seq']}.{c['name']}.{k}"
         if 'world' in e:                                                                # an envelope on the world, no sound
             envs.append((c['tg'], e['world']))
-            if e.get('silence_ok'):
-                pts = [c['tg'] + dt for dt, d in e['world'] if d <= -20]
-                if pts: quiet_ok.append([round(min(pts) - 0.3, 2), round(max(pts) + 0.3, 2)])
+            if e.get('silence_ok'):                                                      # a planned quiet: its whole span
+                quiet_ok.append([round(c['tg'] + e['world'][0][0] - 0.2, 2), round(c['tg'] + e['world'][-1][0] + 0.3, 2)])
             continue
         if 'voice' in e:                                                                # a voiced sound that is not a line
             voice_cues.append({'id': cid, 'file': resolve(e['voice']), 'as': e['as'], 'gain_db': e.get('gain_db', 0), 't': c['tg'],
