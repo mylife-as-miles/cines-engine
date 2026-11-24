@@ -1,0 +1,1529 @@
+{
+  "scenes": [
+    {
+      "n": 1,
+      "slug": "INT. KWIND-09 - FOUNDRY - NIGHT",
+      "shots": [
+        {
+          "id": "1.1",
+          "dur": 4.0,
+          "size": "Black (sound only)",
+          "lens": null,
+          "height_m": null,
+          "angle": "none",
+          "move": "none",
+          "subject": "Darkness; the foundry stroke",
+          "set_hint": "foundry",
+          "lines": [],
+          "super": "YEARS EARLIER.",
+          "camText": "Black · sound only",
+          "note": "The film's pulse arrives before any picture, so the audience leans into the dark."
+        },
+        {
+          "id": "1.2",
+          "dur": 6.0,
+          "size": "Extreme wide (the anchor)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The copper coupling on its chains; the worker under it",
+          "set_hint": "foundry",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "Nothing has a size until a person stands under it: the film's first lesson in scale."
+        },
+        {
+          "id": "1.3",
+          "dur": 7.0,
+          "size": "Insert (the ring band)",
+          "lens": 50,
+          "height_m": 4.8,
+          "angle": "eye (on the gantry)",
+          "move": "locked-off",
+          "subject": "Soot-black hands, pale gloved hands, the silver ring, the violet seam",
+          "set_hint": "foundry",
+          "lines": [],
+          "super": null,
+          "camText": "Insert · 50 mm · ring height 4.8 m (gantry) · locked-off",
+          "note": "The ward's only warning, hidden in plain sight; it means nothing until 10.4."
+        },
+        {
+          "id": "1.4",
+          "dur": 7.0,
+          "size": "Wide (the rows)",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "slow push-in 1.4 m",
+          "subject": "Rows of identical couplings waiting in the dark",
+          "set_hint": "foundry",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 40 mm · eye level 1.6 m · slow push-in",
+          "note": "Not one machine but a ledger of them: dread by repetition."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "slug": "EXT. SOLFORIZ - THE FALLEN GATE - PRE-DAWN",
+      "shots": [
+        {
+          "id": "2.1",
+          "dur": 10.0,
+          "size": "Extreme wide (the empty sky)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The glass plain, the causeway, the broken gate, the capital and the Crown",
+          "set_hint": "city",
+          "lines": [],
+          "super": "SOLFORIZ. YEAR 56.",
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "The city looks permanent, and the sky is left empty for something that has not come yet."
+        },
+        {
+          "id": "2.2",
+          "dur": 6.0,
+          "size": "Wide (frontal)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Wounded men walking back along the causeway; abandoned cannon",
+          "set_hint": "city",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "The cost walks out of the city before we go in."
+        },
+        {
+          "id": "2.3",
+          "dur": 5.0,
+          "size": "Long-lens wide (the truce lamp)",
+          "lens": 85,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The white truce lamp over the gatehouse; civilians on the great stair",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 85 mm · eye level 1.6 m · locked-off",
+          "note": "One white light keeps a whole city's people moving: a promise you can see."
+        },
+        {
+          "id": "2.4",
+          "dur": 5.0,
+          "size": "Long-lens medium wide (the high arcade)",
+          "lens": 100,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 6°",
+          "move": "locked-off",
+          "subject": "The Solforiz battery in the high arcades",
+          "set_hint": "city",
+          "lines": [
+            {
+              "t0": 0.4,
+              "t1": 2.0,
+              "speaker": "BATTERY IN THE HIGH ARCADES",
+              "text": "Ihriq! Ihriq!",
+              "subtitle": null,
+              "spoken": "Ihriq! Ihriq!"
+            }
+          ],
+          "super": null,
+          "camText": "Long-lens · 100 mm · eye level 1.6 m, up 6° · locked-off",
+          "note": "The truce is breaking, and the king is not the one who breaks it."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "slug": "EXT. GATE FORECOURT - FOOT OF THE GREAT STAIR - CONTINUOUS",
+      "shots": [
+        {
+          "id": "3.1",
+          "dur": 6.0,
+          "size": "Wide (the mirror)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The arch signal station and its lit lantern; Liora bringing civilians down; the boy on her coat",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "Meet her working: the signal keeper bringing people down under the one lit lantern."
+        },
+        {
+          "id": "3.2",
+          "dur": 3.0,
+          "size": "Long-lens wide (the shell)",
+          "lens": 75,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 8°",
+          "move": "locked-off",
+          "subject": "The shell hitting the terrace above Liora; the block tearing loose",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 75 mm · eye level 1.6 m, up 8° · locked-off",
+          "note": "Fast and almost too small to see, so that the stop which follows is huge."
+        },
+        {
+          "id": "3.3",
+          "dur": 10.0,
+          "size": "Wide (the anchor: the held stone)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off, long hold",
+          "subject": "Liora and the boy under the stopped block; Cael ten paces off",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off · long hold",
+          "note": "The impossible, without spectacle: we wait under the stone with her and find the cause in the frame ourselves."
+        },
+        {
+          "id": "3.4",
+          "dur": 4.0,
+          "size": "Hand close shot (Open: it saves)",
+          "lens": 40,
+          "height_m": 1.95,
+          "angle": "level with the hand",
+          "move": "locked-off",
+          "subject": "Cael's open hand; the block and Liora beyond it",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Hand template · 40 mm · hand height 1.95 m · locked-off",
+          "note": "Open: it saves. The first time we see the hand, it does good."
+        },
+        {
+          "id": "3.5",
+          "dur": 7.0,
+          "size": "Close shot, shallow (the wrist)",
+          "lens": 50,
+          "height_m": 0.7,
+          "angle": "Liora's eye, looking up 10°",
+          "move": "locked-off",
+          "subject": "Cael's grip on Liora's wrist; his face beyond",
+          "set_hint": "forecourt",
+          "lines": [
+            {
+              "t0": 2.4,
+              "t1": 4.4,
+              "speaker": "CAEL",
+              "text": "Look at me. Find your feet.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Close · 50 mm · Liora's eye 0.7 m · locked-off · shallow",
+          "note": "Near: the camera is where she is, close enough to feel the grip."
+        },
+        {
+          "id": "3.6",
+          "dur": 4.0,
+          "size": "Wide, side-on (where she lay)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The empty place under the block; the block landing",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "Aftermath over impact: we watch the empty place she was, not the stone hitting her."
+        },
+        {
+          "id": "3.7",
+          "dur": 5.0,
+          "size": "Insert (the seal)",
+          "lens": 50,
+          "height_m": 1.0,
+          "angle": "the boy's eye level",
+          "move": "locked-off",
+          "subject": "Two fingers testing the boy's respirator seal",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Insert · 50 mm · boy's eye 1.0 m · locked-off",
+          "note": "The hand that held the stone checks a child's seal: care at the smallest scale."
+        },
+        {
+          "id": "3.8",
+          "dur": 3.0,
+          "size": "Wide (the bound banner)",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The standard-bearer turning back",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 40 mm · eye level 1.6 m · locked-off",
+          "note": "Someone saw it; the bound banner is the first sign of what it will cost."
+        },
+        {
+          "id": "3.9",
+          "dur": 12.0,
+          "size": "Wide (frame inside the frame: the arch)",
+          "lens": 35,
+          "height_m": 1.0,
+          "angle": "the boy's eye level",
+          "move": "locked-off",
+          "subject": "The boy set under the arch in sight of the truce lamp; Liora going back up",
+          "set_hint": "forecourt",
+          "lines": [
+            {
+              "t0": 3.0,
+              "t1": 3.6,
+              "speaker": "LIORA",
+              "text": "Stay.",
+              "subtitle": "Stay.",
+              "spoken": "Iwqif."
+            },
+            {
+              "t0": 6.2,
+              "t1": 8.8,
+              "speaker": "LIORA",
+              "text": "May the child survive in the ash.",
+              "subtitle": "May the child survive in the ash.",
+              "spoken": "Lu=yaslam al-walad fi al-rash."
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 35 mm · boy's eye 1.0 m · locked-off",
+          "note": "She leaves the child in sight of the only promise left and goes back for the others."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "slug": "INT. SHATTERED GATEHOUSE - CONTINUOUS",
+      "shots": [
+        {
+          "id": "4.1",
+          "dur": 8.0,
+          "size": "Wide (frame inside the frame)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The command post; the breach holding the arch and the boy",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 4.4,
+              "t1": 7.6,
+              "speaker": "SOLDIER",
+              "text": "Third assault, Cyning. The inner batteries still hold.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "The argument to come is about the boy in the breach, and he is in the first frame."
+        },
+        {
+          "id": "4.2",
+          "dur": 7.0,
+          "size": "Medium single, offset",
+          "lens": 50,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The envoy, stopped",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.6,
+              "t1": 1.5,
+              "speaker": "ENVOY",
+              "text": "The Ash-Caliph --",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 1.7,
+              "t1": 2.7,
+              "speaker": "CAEL",
+              "text": "He was speaking.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium · 50 mm · eye level 1.7 m · locked-off",
+          "note": "The reaction is held longer than the lines: the envoy learns his place in one silence."
+        },
+        {
+          "id": "4.3",
+          "dur": 12.0,
+          "size": "Medium two-shot in profile",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The wounded soldier and Cael; the envoy left out of frame",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.8,
+              "t1": 2.8,
+              "speaker": "SOLDIER",
+              "text": "Half the company reached the wall.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 4.2,
+              "t1": 5.8,
+              "speaker": "SOLDIER",
+              "text": "The slow half came back.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 8.6,
+              "t1": 10.6,
+              "speaker": "CAEL",
+              "text": "Clear the road. Bring them in.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium two-shot · 40 mm · eye level 1.6 m · locked-off",
+          "note": "Two soldiers, level, the diplomat shut out: the king listens to the cost first."
+        },
+        {
+          "id": "4.4",
+          "dur": 8.0,
+          "size": "Wide (the doorway)",
+          "lens": 27,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Two stretchers carried in; the blind navigator; the door guard; Cael's nod",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 27 mm · eye level 1.6 m · locked-off",
+          "note": "An enemy is carried in under the king's nod: the road is cleared for both sides."
+        },
+        {
+          "id": "4.5",
+          "dur": 5.0,
+          "size": "Insert, low across the table (the judgments)",
+          "lens": 50,
+          "height_m": 1.05,
+          "angle": "table level",
+          "move": "locked-off",
+          "subject": "Three judgments under three different seals, under the campaign map",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 1.1,
+              "t1": 3.6,
+              "speaker": "ENVOY",
+              "text": "The Ash-Caliph asks for another council.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Insert · 50 mm · table level 1.05 m · locked-off",
+          "note": "Paper is the only old thing on the table: three promises, broken and kept."
+        },
+        {
+          "id": "4.6",
+          "dur": 6.0,
+          "size": "Close insert, shallow (the seal)",
+          "lens": 50,
+          "height_m": 1.3,
+          "angle": "25° down onto the table",
+          "move": "locked-off",
+          "subject": "Cael's finger on one seal",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 1.0,
+              "t1": 5.0,
+              "speaker": "CAEL",
+              "text": "He wagered his crown and lost it. That is his seal.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Insert · 50 mm · 25° onto the table · locked-off · shallow",
+          "note": "He does not argue; he puts a finger on the evidence."
+        },
+        {
+          "id": "4.7",
+          "dur": 12.0,
+          "size": "Wide, symmetrical (frame inside the frame)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Cael and the envoy flanking the breach; the boy small under the arch between them",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.4,
+              "t1": 3.2,
+              "speaker": "ENVOY",
+              "text": "The Ash-Caliph will not live beneath your law.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 4.0,
+              "t1": 5.8,
+              "speaker": "CAEL",
+              "text": "The same law as that boy.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 6.4,
+              "t1": 8.2,
+              "speaker": "ENVOY",
+              "text": "You do not own his people.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 8.8,
+              "t1": 10.3,
+              "speaker": "CAEL",
+              "text": "They have never been his.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 10.8,
+              "t1": 11.5,
+              "speaker": "ENVOY",
+              "text": "Nor yours.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "The whole argument is staged around a child neither man can reach."
+        },
+        {
+          "id": "4.8",
+          "dur": 6.0,
+          "size": "Hand close shot (the closed hand forced open)",
+          "lens": 40,
+          "height_m": 1.9,
+          "angle": "Cael's own eye, looking down at his hand",
+          "move": "locked-off",
+          "subject": "Cael's hand on the campaign map: closes, then is made to open",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Hand template · 40 mm · Cael's eye, looking down · locked-off",
+          "note": "He forces a closed hand open; holding back costs him."
+        },
+        {
+          "id": "4.9",
+          "dur": 11.0,
+          "size": "Medium-wide two-shot from behind (the window)",
+          "lens": 40,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "slow push-in 1.1 m",
+          "subject": "Cael and the envoy side by side, both facing the breach",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.5,
+              "t1": 2.9,
+              "speaker": "ENVOY",
+              "text": "Come to the council. You would be safe.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 3.6,
+              "t1": 4.2,
+              "speaker": "CAEL",
+              "text": "Safe.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 5.6,
+              "t1": 7.2,
+              "speaker": "CAEL",
+              "text": "I was promised that before.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 7.8,
+              "t1": 8.8,
+              "speaker": "ENVOY",
+              "text": "Give him time.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 9.4,
+              "t1": 10.8,
+              "speaker": "CAEL",
+              "text": "I gave him years.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium-wide · 40 mm · eye level 1.7 m · slow push-in",
+          "note": "Two men looking at the same city and wanting opposite things from it."
+        },
+        {
+          "id": "4.10",
+          "dur": 6.0,
+          "size": "Medium-wide, low across the table",
+          "lens": 35,
+          "height_m": 1.05,
+          "angle": "table level",
+          "move": "locked-off",
+          "subject": "Dust falling on the judgments; the envoy shutting his eyes",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Medium-wide · 35 mm · table level 1.05 m · locked-off",
+          "note": "Before the fall, dust only falls: the envoy knows the shot was his own side's."
+        },
+        {
+          "id": "4.11",
+          "dur": 6.0,
+          "size": "Medium-wide, centred (Cael commands)",
+          "lens": 35,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Cael sends the envoy back",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.8,
+              "t1": 2.6,
+              "speaker": "CAEL",
+              "text": "Look what he built with them.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 3.4,
+              "t1": 5.0,
+              "speaker": "CAEL",
+              "text": "Return him to his Caliph.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium-wide · 35 mm · eye level 1.7 m · locked-off",
+          "note": "Symmetry when Cael commands: the decision has a centre."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "slug": "INT. GATEHOUSE - THE BREACH - LATER",
+      "shots": [
+        {
+          "id": "5.1",
+          "dur": 5.0,
+          "size": "Long-lens wide through the breach",
+          "lens": 85,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The envoy, small on the great stair, reaching the inner wall; its gate shutting",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 85 mm · eye level 1.6 m · locked-off",
+          "note": "The last door closes; talking is over."
+        },
+        {
+          "id": "5.2",
+          "dur": 5.0,
+          "size": "Medium, low (the navigator)",
+          "lens": 50,
+          "height_m": 0.6,
+          "angle": "the navigator's eye level, lying",
+          "move": "locked-off",
+          "subject": "The blind navigator turning his face up to where the truce lamp hangs",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Medium · 50 mm · his eye 0.6 m · locked-off",
+          "note": "The blind man sees it first. (The six-minute cut loses this shot.)"
+        },
+        {
+          "id": "5.3",
+          "dur": 3.0,
+          "size": "Wide (the lamp bursts)",
+          "lens": 50,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The truce lamp over the gatehouse, shot out",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 50 mm · eye level 1.6 m · locked-off",
+          "note": "White leaves the film: the truce dies as one small light going out."
+        },
+        {
+          "id": "5.4",
+          "dur": 9.0,
+          "size": "Medium two-shot in profile (between the road and the boy)",
+          "lens": 35,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The captain showing the open causeway; Cael looking at the boy under the arch",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 0.8,
+              "t1": 2.8,
+              "speaker": "CAPTAIN",
+              "text": "We can withdraw with the wounded.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 5.4,
+              "t1": 7.2,
+              "speaker": "CAEL",
+              "text": "And leave him to finish this?",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium two-shot · 35 mm · eye level 1.7 m · locked-off",
+          "note": "The choice is laid out in space: the open road on one side, the child on the other."
+        },
+        {
+          "id": "5.5",
+          "dur": 4.0,
+          "size": "Wide through the breach (aftermath)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Every gun on the terraces opening up; a strike into Aethelgard's lines",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "Aftermath over impact: we see the gaps, not the bodies."
+        },
+        {
+          "id": "5.6",
+          "dur": 8.0,
+          "size": "Wide, two figures from behind (the vertical city)",
+          "lens": 40,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Cael looking up to the Crown; the captain following his eyes; lamps moving down the stair",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 1.8,
+              "t1": 6.6,
+              "speaker": "CAPTAIN",
+              "text": "Those works feed the batteries and the lower city. The stairs are still full.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 40 mm · eye level 1.7 m · locked-off",
+          "note": "The picture says it before the line does: the stairs are full while he says so."
+        },
+        {
+          "id": "5.7",
+          "dur": 7.0,
+          "size": "Close-up, frontal (clear)",
+          "lens": 50,
+          "height_m": 1.75,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Cael: 'I know.'",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 3.2,
+              "t1": 3.9,
+              "speaker": "CAEL",
+              "text": "I know.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 5.0,
+              "t1": 6.2,
+              "speaker": "CAPTAIN",
+              "text": "Then give them time.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Close-up · 50 mm · eye level 1.75 m · locked-off",
+          "note": "Clear: his face at 'I know.' is fully readable. Nothing hides what he does."
+        },
+        {
+          "id": "5.8",
+          "dur": 12.0,
+          "size": "Extreme wide interior (the order, held wide)",
+          "lens": 24,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off, long hold",
+          "subject": "'Bring it down.' The captain turning to the guns",
+          "set_hint": "gatehouse",
+          "lines": [
+            {
+              "t0": 3.4,
+              "t1": 4.4,
+              "speaker": "CAEL",
+              "text": "Bring it down.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 9.2,
+              "t1": 10.8,
+              "speaker": "CAPTAIN",
+              "text": "Break the Crown!",
+              "subtitle": "Break the Crown!",
+              "spoken": "Brecath thone corune!"
+            }
+          ],
+          "super": null,
+          "camText": "Extreme wide · 24 mm · eye level 1.6 m · locked-off · long hold",
+          "note": "The worst decision in the film is held at a distance, so the audience has to sit with it."
+        },
+        {
+          "id": "5.9",
+          "dur": 5.0,
+          "size": "Wide (the batteries)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Aethelgard's batteries fire; the standard-bearer's hand stopped at the bindings",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "Aethelgard fires; the colour is held back, bound."
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "slug": "EXT. THE CROWN / THE BREACH / THE STAIR - CONTINUOUS",
+      "shots": [
+        {
+          "id": "6.1",
+          "dur": 5.0,
+          "size": "Long-lens wide (the Crown takes the salvo)",
+          "lens": 100,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 9°",
+          "move": "locked-off",
+          "subject": "The works taking the salvo; armoured shutters closing plate by plate",
+          "set_hint": "crown",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 100 mm · eye level 1.6 m, up 9° · locked-off",
+          "note": "The city is not a target but a body closing its eyes."
+        },
+        {
+          "id": "6.2",
+          "dur": 4.0,
+          "size": "Long-lens medium (the stalled shutter)",
+          "lens": 135,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 9°",
+          "move": "locked-off",
+          "subject": "The last shutter stopping; the air warping at its edge",
+          "set_hint": "crown",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens · 135 mm · eye level 1.6 m, up 9° · locked-off",
+          "note": "Something is holding the city's eye open; we feel who before we see him."
+        },
+        {
+          "id": "6.3",
+          "dur": 12.0,
+          "size": "Hand close shot (Open: it destroys)",
+          "lens": 40,
+          "height_m": 2.0,
+          "angle": "level with the hand",
+          "move": "locked-off, long hold",
+          "subject": "Cael's raised open hand in the breach; the stalled shutter beyond",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Hand template · 40 mm · hand height 2.0 m · locked-off · long hold",
+          "note": "Open: it destroys. The same frame as 3.4, now doing the opposite."
+        },
+        {
+          "id": "6.4",
+          "dur": 4.0,
+          "size": "Medium, frontal (the navigator counts)",
+          "lens": 50,
+          "height_m": 0.95,
+          "angle": "the navigator's eye level, sitting",
+          "move": "locked-off",
+          "subject": "The navigator sitting bolt upright, face to the Crown, striking the rail: ONE. TWO.",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Medium · 50 mm · his eye 0.95 m · locked-off",
+          "note": "The blind man counts what he sees: a Seen report, four beats ahead."
+        },
+        {
+          "id": "6.5",
+          "dur": 5.0,
+          "size": "Long-lens POV, flat (Liora's look)",
+          "lens": 135,
+          "height_m": 1.5,
+          "angle": "Liora's eye",
+          "move": "tilt up 14°",
+          "subject": "LIORA'S POV from the lower flight: the king at the breach, the open hand, then the stalled shutter",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens POV · 135 mm · Liora's eye 1.5 m · one tilt up",
+          "note": "She is the only one who has seen the hand do both things."
+        },
+        {
+          "id": "6.6",
+          "dur": 2.0,
+          "size": "Insert (THREE. FOUR.)",
+          "lens": 50,
+          "height_m": 0.8,
+          "angle": "rail level",
+          "move": "locked-off",
+          "subject": "The navigator's hand striking the rail",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Insert · 50 mm · rail level 0.8 m · locked-off",
+          "note": "The count completes; now the cuts speed up."
+        },
+        {
+          "id": "6.7",
+          "dur": 1.5,
+          "size": "Wide (the second salvo)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The second salvo going in",
+          "set_hint": "forecourt",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "Fast: the decision is already made."
+        },
+        {
+          "id": "6.8",
+          "dur": 2.5,
+          "size": "Wide (the cover frame)",
+          "lens": 32,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Only then does the hand come down",
+          "set_hint": "gatehouse",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.7 m · locked-off",
+          "note": "The cover image, used once: the moment the hand lets go."
+        },
+        {
+          "id": "6.9",
+          "dur": 5.0,
+          "size": "Long-lens wide (the Crown falls)",
+          "lens": 75,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 7°",
+          "move": "locked-off",
+          "subject": "The shutter dropping shut; fire coming through; a tower falling across the great retaining wall; the wall giving",
+          "set_hint": "crown",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 75 mm · eye level 1.6 m, up 7° · locked-off",
+          "note": "The cause is seen, so the fall that follows is his."
+        },
+        {
+          "id": "6.10",
+          "dur": 5.0,
+          "size": "Extreme wide (the city goes dark)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The pulse stumbling; the city's lamps going out together",
+          "set_hint": "city",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "Furnace amber leaves the film: the city's heart stops."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "slug": "EXT. SOLFORIZ - THE FALL - CONTINUOUS",
+      "shots": [
+        {
+          "id": "7.1",
+          "dur": 5.0,
+          "size": "Medium-wide, handheld (running)",
+          "lens": 32,
+          "height_m": 1.5,
+          "angle": "eye",
+          "move": "handheld, backing down",
+          "subject": "Liora driving the last civilians down; dust taking the flight behind her",
+          "set_hint": "fall",
+          "lines": [],
+          "super": null,
+          "camText": "Medium-wide · 32 mm · eye level 1.5 m · handheld",
+          "note": "Panic is the only thing the camera is allowed to shake for."
+        },
+        {
+          "id": "7.2",
+          "dur": 5.0,
+          "size": "Medium, handheld (the mirror)",
+          "lens": 35,
+          "height_m": 1.4,
+          "angle": "eye",
+          "move": "handheld, settles",
+          "subject": "Liora reaching the arch; the boy and a dozen others; the smashed lantern; the mirror",
+          "set_hint": "fall",
+          "lines": [],
+          "super": null,
+          "camText": "Medium · 35 mm · eye level 1.4 m · handheld",
+          "note": "She saves the one thing that can still hold light."
+        },
+        {
+          "id": "7.3",
+          "dur": 10.0,
+          "size": "Extreme wide (the fall, held wide)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "A terrace settling; houses leaning together into dust; the stair going; the upper city coming down",
+          "set_hint": "fall",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "Held wide, the fall is a fact, not a spectacle; the small arch tells us who is under it."
+        },
+        {
+          "id": "7.4",
+          "dur": 5.0,
+          "size": "Wide (frame inside the frame: the skyline gone)",
+          "lens": 27,
+          "height_m": 1.5,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "When the dust thins, the skyline is gone",
+          "set_hint": "fall",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 27 mm · eye level 1.5 m · locked-off",
+          "note": "Aftermath: the absence is the image."
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "slug": "EXT. FORECOURT - THE RUINS - SUNRISE",
+      "shots": [
+        {
+          "id": "8.1",
+          "dur": 6.0,
+          "size": "Extreme wide (the empty sky, sunrise)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Silence on both sides; the first direct sun; steam from broken pipes",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "The sky is emptied out a second time, and waits."
+        },
+        {
+          "id": "8.2",
+          "dur": 6.0,
+          "size": "Wide, side-on along the army line",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The men who do not agree on what they have seen; 'We've won.'",
+          "set_hint": "ruins",
+          "lines": [
+            {
+              "t0": 3.8,
+              "t1": 4.5,
+              "speaker": "STANDARD-BEARER",
+              "text": "We've won.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 40 mm · eye level 1.6 m · locked-off",
+          "note": "One boy says the word everyone else refuses."
+        },
+        {
+          "id": "8.3",
+          "dur": 4.0,
+          "size": "Medium, from behind (Not Cael)",
+          "lens": 50,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Nobody answers; the standard-bearer lowering the pole",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Medium · 50 mm · eye level 1.7 m · locked-off",
+          "note": "The king's silence is the answer."
+        },
+        {
+          "id": "8.4",
+          "dur": 10.0,
+          "size": "Extreme wide (the silence, held wide)",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off, long hold",
+          "subject": "The army as a band of small silhouettes; only the pipes",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 40 mm · eye level 1.6 m · locked-off · long hold",
+          "note": "Victory with nothing in it."
+        },
+        {
+          "id": "8.5",
+          "dur": 4.0,
+          "size": "Medium, offset (grit falls)",
+          "lens": 50,
+          "height_m": 1.0,
+          "angle": "Liora's seated eye level",
+          "move": "locked-off",
+          "subject": "Under the arch, grit falling; Liora looking up; the pulse",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Medium · 50 mm · her eye 1.0 m · locked-off",
+          "note": "The arch is failing, and something else is coming."
+        },
+        {
+          "id": "8.6",
+          "dur": 5.0,
+          "size": "Wide, the captain in the foreground third",
+          "lens": 32,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The captain looking at the sky; a shadow sliding across the army",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.7 m · locked-off",
+          "note": "Shadow before shape: the threat arrives as a change in the light."
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "slug": "EXT./INT. THE FIRST SHIP - SUNRISE",
+      "shots": [
+        {
+          "id": "9.1",
+          "dur": 5.0,
+          "size": "Extreme wide (the anchor: the first ship)",
+          "lens": 35,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Out of the sunrise: lights and a dark mass in the dust; the broken gate towers",
+          "set_hint": "ship",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 35 mm · eye level 1.6 m · locked-off",
+          "note": "The towers that looked huge in scene 2 are now the small thing that measures."
+        },
+        {
+          "id": "9.2",
+          "dur": 7.0,
+          "size": "Wide, looking up (the whole vessel)",
+          "lens": 27,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 12°",
+          "move": "slow pan right 14°",
+          "subject": "A keel coming clear; then the whole vessel",
+          "set_hint": "ship",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 27 mm · eye level 1.6 m, up 12° · slow pan",
+          "note": "Not a weapon but years of work, arriving."
+        },
+        {
+          "id": "9.3",
+          "dur": 6.0,
+          "size": "Insert (the ring band, again)",
+          "lens": 50,
+          "height_m": 4.8,
+          "angle": "level with the ring (airborne, inside the hull)",
+          "move": "locked-off",
+          "subject": "The copper coupling from the foundry, turning under load; scarred; the same silver ring",
+          "set_hint": "ship",
+          "lines": [],
+          "super": null,
+          "camText": "Insert · 50 mm · ring height (inside the hull) · locked-off",
+          "note": "What we watched being made carries the fleet: years in one cut."
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "slug": "EXT. FORECOURT - THE RUINS - CONTINUOUS",
+      "shots": [
+        {
+          "id": "10.1",
+          "dur": 4.0,
+          "size": "Wide (the arch gives)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The arch beginning to give; bars of sunrise through the rigging",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "The people who survived the fall are about to be crushed by what is left of it."
+        },
+        {
+          "id": "10.2",
+          "dur": 6.0,
+          "size": "Medium-wide, behind her shoulder (the mirror)",
+          "lens": 35,
+          "height_m": 1.5,
+          "angle": "Liora's eye, tilted up 15°",
+          "move": "locked-off",
+          "subject": "Liora putting the mirror in a bar of sun; four flashes on the ship's belly",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Medium-wide · 35 mm · Liora's eye 1.5 m, up 15° · locked-off",
+          "note": "White returns, in her hand: the count her city lived by."
+        },
+        {
+          "id": "10.3",
+          "dur": 5.0,
+          "size": "Hand close shot (Open: another protects)",
+          "lens": 40,
+          "height_m": 38.0,
+          "angle": "high: the ward officer's side of the glass, looking down 35°",
+          "move": "locked-off",
+          "subject": "The ward officer at the round observation glass: the flashes cross her mask; she opens a hand",
+          "set_hint": "ship",
+          "lines": [
+            {
+              "t0": 2.4,
+              "t1": 3.9,
+              "speaker": "WARD OFFICER",
+              "text": "Hold the stone.",
+              "subtitle": "Hold the stone.",
+              "spoken": "Va-ten-t el sveulea!"
+            }
+          ],
+          "super": null,
+          "camText": "Hand template · 40 mm · her side of the glass, high · locked-off",
+          "note": "Open: another protects. The same frame as 3.4 and 6.3, and it is not his hand."
+        },
+        {
+          "id": "10.4",
+          "dur": 6.0,
+          "size": "Wide, at the boy's eye (the ward)",
+          "lens": 24,
+          "height_m": 1.0,
+          "angle": "the boy's eye level, tilted up 12°",
+          "move": "locked-off",
+          "subject": "A bell note; violet light dropping from the keel; the falling arch stopping above their heads; the boy looking up",
+          "set_hint": "ward",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 24 mm · boy's eye 1.0 m, up 12° · locked-off",
+          "note": "Rescue from a stranger: the same miracle as the held stone, with someone else's hand."
+        },
+        {
+          "id": "10.5",
+          "dur": 6.0,
+          "size": "Wide (more ships)",
+          "lens": 32,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Behind the first ship, two more; then a formation; and more",
+          "set_hint": "ruins",
+          "lines": [
+            {
+              "t0": 3.6,
+              "t1": 5.2,
+              "speaker": "CAPTAIN",
+              "text": "These are the forward ships.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Wide · 32 mm · eye level 1.7 m · locked-off",
+          "note": "The sky held open in scene 2 begins to fill."
+        },
+        {
+          "id": "10.6",
+          "dur": 11.0,
+          "size": "Close shot, shallow (the wrist, again)",
+          "lens": 50,
+          "height_m": 1.5,
+          "angle": "Liora's eye",
+          "move": "locked-off, long hold",
+          "subject": "The boy pointing at Cael; Liora lowering his hand; her hand settling over her wrist",
+          "set_hint": "ward",
+          "lines": [],
+          "super": null,
+          "camText": "Close · 50 mm · Liora's eye 1.5 m · locked-off · shallow · long hold",
+          "note": "Far: she sees him small, and her own hand covers the place he held."
+        },
+        {
+          "id": "10.7",
+          "dur": 5.0,
+          "size": "Long-lens POV, flat (his look)",
+          "lens": 135,
+          "height_m": 1.75,
+          "angle": "Cael's eye",
+          "move": "locked-off",
+          "subject": "Cael sees her; then the boy; then the people under another power's protection",
+          "set_hint": "ward",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens POV · 135 mm · Cael's eye 1.75 m · locked-off",
+          "note": "His look matches hers at 6.5: the long lens is how these two see each other."
+        },
+        {
+          "id": "10.8",
+          "dur": 5.0,
+          "size": "Close shot, shallow (his hand, mirroring her wrist)",
+          "lens": 50,
+          "height_m": 0.95,
+          "angle": "level with the hand",
+          "move": "locked-off",
+          "subject": "It goes through him; the hand at his side will not stop shaking; he looks behind him for the road",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Close · 50 mm · hand height 0.95 m · locked-off · shallow",
+          "note": "Far: his hand stays clear and shakes in front of her, so we see that he knows her."
+        },
+        {
+          "id": "10.9",
+          "dur": 12.0,
+          "size": "Medium two-shot in profile, symmetrical (the road between them)",
+          "lens": 40,
+          "height_m": 1.75,
+          "angle": "eye",
+          "move": "locked-off, long hold",
+          "subject": "The road he was offered, with the fleet's shadow along it; the captain level with Cael for the first time",
+          "set_hint": "ruins",
+          "lines": [
+            {
+              "t0": 1.0,
+              "t1": 2.4,
+              "speaker": "CAPTAIN",
+              "text": "The stairs were full.",
+              "subtitle": null,
+              "spoken": null
+            },
+            {
+              "t0": 8.0,
+              "t1": 10.2,
+              "speaker": "CAPTAIN",
+              "text": "You do not get to stop now.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium two-shot · 40 mm · eye level 1.75 m · locked-off · long hold",
+          "note": "The road out is right there between them, and the captain will not let him take it."
+        },
+        {
+          "id": "10.10",
+          "dur": 5.0,
+          "size": "Hand close shot (Closed: war)",
+          "lens": 40,
+          "height_m": 1.3,
+          "angle": "level with the hand",
+          "move": "locked-off",
+          "subject": "Cael making the hand close, the army beyond it",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Hand template · 40 mm · hand height 1.3 m · locked-off",
+          "note": "Closed: war. The last of the four hands, and the only one that does not hold anything up."
+        },
+        {
+          "id": "10.11",
+          "dur": 4.0,
+          "size": "Medium, centred (Raise the banners)",
+          "lens": 50,
+          "height_m": 1.75,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "Cael raising his eyes to the fleet; 'Raise the banners.'; the captain's signal",
+          "set_hint": "ruins",
+          "lines": [
+            {
+              "t0": 1.8,
+              "t1": 3.0,
+              "speaker": "CAEL",
+              "text": "Raise the banners.",
+              "subtitle": null,
+              "spoken": null
+            }
+          ],
+          "super": null,
+          "camText": "Medium · 50 mm · eye level 1.75 m · locked-off",
+          "note": "Symmetry when Cael commands: the line lands on the look, as the bible stages it."
+        },
+        {
+          "id": "10.12",
+          "dur": 8.0,
+          "size": "Medium-wide, alone in frame (the first banner)",
+          "lens": 40,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The standard-bearer seeing the signal; tearing the bindings off; his banner opening alone",
+          "set_hint": "ruins",
+          "lines": [
+            {
+              "t0": 3.6,
+              "t1": 4.6,
+              "speaker": "STANDARD-BEARER",
+              "text": "Burn the sky!",
+              "subtitle": "Burn the sky!",
+              "spoken": "Vael-bryna!"
+            }
+          ],
+          "super": null,
+          "camText": "Medium-wide · 40 mm · eye level 1.6 m · locked-off",
+          "note": "He wanted to be told it was worth it; now he is told to fight."
+        },
+        {
+          "id": "10.13",
+          "dur": 6.0,
+          "size": "Long-lens wide down the line (ragged)",
+          "lens": 85,
+          "height_m": 1.7,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "This time he is answered: banner after banner, ragged; not every man, not the captain; Cael does not turn",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Long-lens wide · 85 mm · eye level 1.7 m · locked-off",
+          "note": "An army choosing, not cheering."
+        },
+        {
+          "id": "10.14",
+          "dur": 4.0,
+          "size": "Wide, looking up (weapon housings)",
+          "lens": 50,
+          "height_m": 1.6,
+          "angle": "eye, tilted up 25°",
+          "move": "locked-off",
+          "subject": "Weapon housings opening along the nearest hull",
+          "set_hint": "ship",
+          "lines": [],
+          "super": null,
+          "camText": "Wide · 50 mm · eye level 1.6 m, up 25° · locked-off",
+          "note": "The fire comes back, on the other side."
+        },
+        {
+          "id": "10.15",
+          "dur": 8.0,
+          "size": "Extreme wide (the empty sky, filled)",
+          "lens": 32,
+          "height_m": 1.6,
+          "angle": "eye",
+          "move": "locked-off",
+          "subject": "The army under its banners; the ruined capital between; the coalition filling the sky",
+          "set_hint": "ruins",
+          "lines": [],
+          "super": null,
+          "camText": "Extreme wide · 32 mm · eye level 1.6 m · locked-off",
+          "note": "The sky he was given in scene 2 is full."
+        },
+        {
+          "id": "10.16",
+          "dur": 8.0,
+          "size": "Black (title)",
+          "lens": null,
+          "height_m": null,
+          "angle": "none",
+          "move": "none",
+          "subject": "The lock; the title; one engine stroke",
+          "set_hint": "ship",
+          "lines": [],
+          "super": "CROWNFALL: KING OF KINGS",
+          "camText": "Black · sound only",
+          "note": "The pulse, which began in the foundry, belongs to the fleet now."
+        }
+      ]
+    }
+  ]
+}
