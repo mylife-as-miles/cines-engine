@@ -14,7 +14,7 @@ const { openBoard, readSpecs, shotDur, args, dataToBuf } = require('./lib');
   fs.mkdirSync(outDir, { recursive: true });
   const only = opt.only ? String(opt.only).split(',') : null;
   const B = await openBoard();
-  const files = [];
+  const files = [], thumbs = [];
   const t0 = Date.now();
   for (const spec of specs) for (const s of spec.shots) {
     if (only && !only.includes(String(s.n))) continue;
@@ -30,6 +30,7 @@ const { openBoard, readSpecs, shotDur, args, dataToBuf } = require('./lib');
       fs.writeFileSync(path.join(outDir, `pic_${String(s.n).replace(/[^\w.-]/g, '_')}.png`), dataToBuf(pic));
     }
     files.push(path.join(outDir, name));
+    thumbs.push(await B.page.evaluate(() => window.thumb(640)));
     console.log(`shot ${s.n}  ${((Date.now() - ts) / 1000).toFixed(2)} s  -> ${name}`);
   }
   if (files.length) {
@@ -42,7 +43,7 @@ const { openBoard, readSpecs, shotDur, args, dataToBuf } = require('./lib');
       const g = c.getContext('2d'); g.fillStyle = '#141414'; g.fillRect(0, 0, c.width, c.height);
       ims.forEach((im, i) => g.drawImage(im, (i % cols) * cw, Math.floor(i / cols) * ch, cw, ch));
       return c.toDataURL('image/jpeg', 0.9);
-    }, { srcs: files.map(f => 'data:image/png;base64,' + fs.readFileSync(f).toString('base64')), cols });
+    }, { srcs: thumbs, cols });
     fs.writeFileSync(path.join(outDir, 'board.jpg'), dataToBuf(sheet));
     console.log('wrote', path.join(outDir, 'board.jpg'), `(${files.length} shots, ${((Date.now() - t0) / 1000).toFixed(1)} s)`);
   }

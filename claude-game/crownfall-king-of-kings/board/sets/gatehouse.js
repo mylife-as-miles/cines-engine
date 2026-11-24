@@ -21,23 +21,23 @@ const PRESETS = {
       },
       door: 0,
     },
-    cam: { pos: [16.75, 1.6, -3.55], target: [25.0, 2.05, -21.5], f: 32 },
+    cam: { pos: [17.3, 1.35, -5.0], target: [25.0, 3.6, -21.5], f: 20 },
   },
   // bible p.7 key 6 (and the cover): Cael in the breach, black against the gun-flash, hand open at the stalled shutter
   openHand: {
     t: 3,
     state: {
       look: 'burning', truce: 'gone', lamps: { level: 0 },
-      crown: { shutter: 5.72, fire: 1, through: 0 },
+      crown: { shutter: 5.85, fire: 1, through: 0 },
       warp: [{ at: [0, L.crown.opening.y + 1.2, L.crown.z + L.crown.d / 2 + 2], r: 22, amp: 0.6 }],
-      figures: { cael: { pos: [29.0, -14.1], face: [0, L.crown.z], pose: 'stand', aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
+      figures: { cael: { pos: [29.0, -13.9], face: [0, L.crown.z], pose: 'stand', aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
     },
-    cam: { pos: [30.5, 0.9, -11.5], target: [-85.4, 104.3, -323.6], f: 21 },
+    cam: { pos: [30.5, 1.05, -11.2], target: [-85.4, 102, -323.6], f: 21 },
   },
   // 6.3 the open hand, "it destroys": the insert, matched to 3.4, 10.3 and 10.10
   hand63: {
     state: {
-      look: 'burning', truce: 'gone', lamps: { level: 0 }, crown: { shutter: 5.72, fire: 1 },
+      look: 'burning', truce: 'gone', lamps: { level: 0 }, crown: { shutter: 5.85, fire: 1 },
       figures: { cael: { pos: [29.0, -14.1], face: [0, L.crown.z], aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
       hand: { attach: 'cael', side: 'R', style: 'cael', open: 1, shake: 0.6, blood: 0.7 },
     },
@@ -45,8 +45,8 @@ const PRESETS = {
   },
   // 4.7 through the breach: the boy, small under the arch
   breachBoy: {
-    state: { figures: { boy: { pos: boyUnderArch, face: 200, pose: 'stand' }, cael: { pos: [27.3, -15.8], face: 160, pose: 'stand' } } },
-    cam: { pos: [25.2, 1.6, -9.5], target: [L.arch.x, 2.4, L.arch.z], f: 85 },
+    state: { figures: { boy: { pos: boyUnderArch, face: 200, pose: 'stand' } } },
+    cam: { pos: [23.0, 1.6, -8.0], target: [L.arch.x, 2.4, L.arch.z], f: 85 },
   },
 };
 
@@ -54,7 +54,7 @@ export default {
   look: 'gatehouse',
   marks: { ...CITY_MARKS, table: [TABLE.x, TABLE.h, TABLE.z], sealA: [SEALS[0].x, SEALS[0].y, SEALS[0].z], sealB, sealC: [SEALS[2].x, SEALS[2].y, SEALS[2].z],
     door: [16, 0, -9.6], breachCentre: [27.8, 3.5, -18], stretcherA: [29.0, -6.2], stretcherB: [26.2, -5.0], boyUnderArch: [...boyUnderArch] },
-  build(E, o = {}) { const ctx = buildCity(E, { ...o, interior: true }); ctx.presets = PRESETS; ctx.interior = { min: [15.4, -1, -18.7], max: [32.6, 8.6, -2.4], fill: 0.02 }; return ctx; },
+  build(E, o = {}) { const ctx = buildCity(E, { ...o, interior: true }); ctx.presets = PRESETS; ctx.interior = { min: [15.4, -1, -18.7], max: [32.6, 8.6, -2.4], fill: 0.2 }; return ctx; },
   update(E, R, t, ctx) { updateCity(E, R, t, ctx); },
   beforeRender: cityBeforeRender,
 };

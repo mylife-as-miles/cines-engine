@@ -1,5 +1,5 @@
 // Proof: one frame per colour key, beside the bible's key (bible pp.5-10). node proof.js [--only 01_foundry,...]
-// Writes proof/frames/<id>.png (the bare 2.39:1 picture), proof/keys_vs_bible.jpg and proof/extras.jpg (the close
+// Writes proof/frames/<id>.jpg (the bare 2.39:1 picture), proof/keys_vs_bible.jpg and proof/extras.jpg (the close
 // crown set, the hull, the four matching hand inserts), and prints the warm render time per frame.
 const fs = require('fs'), path = require('path');
 const { openBoard, args, dataToBuf } = require('./lib');
@@ -50,19 +50,19 @@ const EXTRAS = [
       const ms = [];
       for (let i = 0; i < 3; i++) { const a = performance.now(); window.setTime((p.t ?? 2) + i / 24); window.drawShot(p.cam); const gl = E.renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4)); ms.push(performance.now() - a); }
       window.setTime(p.t ?? 2); window.drawShot(p.cam);
-      return { url: window.pictureURL('image/png'), ms };
+      return { url: window.pictureURL('image/jpeg', 0.92), ms };
     }, k);
     if (r.err) { console.error(r.err); continue; }
-    fs.writeFileSync(path.join(frDir, `${k.id}.png`), dataToBuf(r.url));
+    fs.writeFileSync(path.join(frDir, `${k.id}.jpg`), dataToBuf(r.url));
     const warm = r.ms.slice(1).reduce((a, b) => a + b, 0) / (r.ms.length - 1);
     times.push({ id: k.id, scene: tScene, warm });
     console.log(`${k.id.padEnd(18)} set ${String(tScene).padStart(6)} ms   frame ${warm.toFixed(0).padStart(5)} ms`);
   }
   // sheets
   const mk = async (list, file, withBible) => {
-    const items = list.filter(k => fs.existsSync(path.join(frDir, `${k.id}.png`))).map(k => ({
+    const items = list.filter(k => fs.existsSync(path.join(frDir, `${k.id}.jpg`))).map(k => ({
       label: k.label,
-      mine: 'data:image/png;base64,' + fs.readFileSync(path.join(frDir, `${k.id}.png`)).toString('base64'),
+      mine: 'data:image/jpeg;base64,' + fs.readFileSync(path.join(frDir, `${k.id}.jpg`)).toString('base64'),
       bible: withBible && fs.existsSync(path.join(outDir, 'bible', `${k.id}.png`)) ? 'data:image/png;base64,' + fs.readFileSync(path.join(outDir, 'bible', `${k.id}.png`)).toString('base64') : null,
     }));
     if (!items.length) return;

@@ -82,8 +82,17 @@ export function grain(g, x0, y0, w, h, amount, seed) {
   g.restore();
 }
 
+// lines may be {who, text, native, sub, spoken} or the shot list's {speaker, text, subtitle, spoken}: a line with a
+// spoken native text shows its English subtitle; one with a spoken text and no subtitle ("Ihriq! Ihriq!") is heard only
+export function normLine(l) {
+  if (l.speaker === undefined) return l;
+  const native = l.spoken != null && l.spoken !== l.text || l.subtitle != null;
+  return { t0: l.t0, t1: l.t1, who: l.speaker, text: l.subtitle ?? l.text, native: l.subtitle != null, spoken: l.spoken,
+    sub: !(l.spoken != null && l.subtitle == null), note: l.note ?? (l.spoken != null && l.subtitle == null ? 'not subtitled' : undefined), _native: native };
+}
 export function compose(out, pic, o) {
-  const { spec, shot: s, t, mode, dur } = o;
+  const { spec, t, mode, dur } = o;
+  const s = { ...o.shot, lines: (o.shot.lines ?? []).map(normLine) };
   if (mode === 'picture') {                            // the bare 2.39:1 picture with grain (proof frames)
     out.width = PIC_W; out.height = PIC_H;
     const g = out.getContext('2d'); g.drawImage(pic, 0, 0); grain(g, 0, 0, PIC_W, PIC_H, o.grain ?? 0.03, t * 24 + 1);
@@ -104,7 +113,7 @@ export function compose(out, pic, o) {
   }
   if (black > 0) { g.fillStyle = `rgba(0,0,0,${black})`; g.fillRect(x0, y0, PIC_W, PIC_H); }
   // supers
-  const sups = s.super ? (Array.isArray(s.super) ? s.super : [s.super]) : [];
+  const sups = (s.super ? (Array.isArray(s.super) ? s.super : [s.super]) : []).map(x => (typeof x === 'string' ? { text: x } : x));
   for (const sup of sups) {
     const t0 = sup.t0 ?? 0, t1 = sup.t1 ?? dur;
     const a = still ? 1 : envelope(t, t0, t1, sup.fade ?? 0.5);
@@ -122,13 +131,13 @@ export function compose(out, pic, o) {
   g.textBaseline = 'alphabetic'; g.textAlign = 'left';
   if (still) {
     g.fillStyle = '#c9a25a'; g.font = 'bold 19px sans-serif';
-    g.fillText(`${spec.title ?? ''}  ·  SHOT ${s.n ?? ''}  ·  ${s.time ?? (dur.toFixed(1) + ' s')}`, 16, 25);
+    g.fillText(`${spec.title ? spec.title + '  ·  ' : ''}SHOT ${s.n ?? s.id ?? ''}  ·  ${s.time ?? (dur.toFixed(1) + ' s')}`, 16, 25);
     g.fillStyle = '#e8e4da'; g.font = '16px sans-serif';
     g.fillText(s.camText ?? '', 16, 49);
   } else {
     g.fillStyle = 'rgba(201,162,90,0.85)'; g.font = 'bold 15px sans-serif';
-    g.fillText(`SHOT ${s.n ?? ''}`, 16, 36);
-    const w = g.measureText(`SHOT ${s.n ?? ''}`).width;
+    g.fillText(`SHOT ${s.n ?? s.id ?? ''}`, 16, 36);
+    const w = g.measureText(`SHOT ${s.n ?? s.id ?? ''}`).width;
     g.fillStyle = 'rgba(232,228,218,0.7)'; g.font = '15px sans-serif';
     g.fillText(`·  ${s.camText ?? ''}`, 24 + w, 36);
     g.textAlign = 'right'; g.fillStyle = 'rgba(232,228,218,0.45)'; g.font = '13px sans-serif';

@@ -1,17 +1,102 @@
 [
  {
+  "id": "01_foundry",
+  "scene": 53,
+  "warm": 241.34999999962747
+ },
+ {
+  "id": "02_gate",
+  "scene": 59,
+  "warm": 170.70000000018626
+ },
+ {
   "id": "03_held_stone",
-  "scene": 85,
-  "warm": 527.4499999999534
+  "scene": 42,
+  "warm": 500.50000000046566
  },
  {
   "id": "04_gatehouse",
-  "scene": 37,
-  "warm": 375.19999999995343
+  "scene": 29,
+  "warm": 491.1999999997206
+ },
+ {
+  "id": "05_break_crown",
+  "scene": 32,
+  "warm": 234.20000000018626
  },
  {
   "id": "06_open_hand",
-  "scene": 3,
-  "warm": 683.25
+  "scene": 27,
+  "warm": 668.2999999998137
+ },
+ {
+  "id": "07_fall",
+  "scene": 41,
+  "warm": 507.35000000009313
+ },
+ {
+  "id": "08_ruins",
+  "scene": 33,
+  "warm": 393.29999999981374
+ },
+ {
+  "id": "09_first_ship",
+  "scene": 55,
+  "warm": 459.35000000009313
+ },
+ {
+  "id": "10_ward",
+  "scene": 2,
+  "warm": 353.85000000009313
+ },
+ {
+  "id": "11_banners",
+  "scene": 6,
+  "warm": 553.1000000005588
+ },
+ {
+  "id": "x1_crown",
+  "scene": 76,
+  "warm": 510.35000000009313
+ },
+ {
+  "id": "x2_arcade",
+  "scene": 1,
+  "warm": 427.75
+ },
+ {
+  "id": "x3_hull",
+  "scene": 20,
+  "warm": 196.85000000009313
+ },
+ {
+  "id": "x4_hand_saves",
+  "scene": 28,
+  "warm": 726.75
+ },
+ {
+  "id": "x5_hand_destroys",
+  "scene": 28,
+  "warm": 421.1999999997206
+ },
+ {
+  "id": "x6_hand_protects",
+  "scene": 31,
+  "warm": 380.79999999981374
+ },
+ {
+  "id": "x7_hand_war",
+  "scene": 4,
+  "warm": 432.39999999990687
+ },
+ {
+  "id": "x8_wrist",
+  "scene": 39,
+  "warm": 969
+ },
+ {
+  "id": "x9_breach_boy",
+  "scene": 23,
+  "warm": 364.60000000009313
  }
 ]

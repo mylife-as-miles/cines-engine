@@ -22,18 +22,21 @@ async function openBoard(o = {}) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   page.on('pageerror', e => console.error('page error:', e.message));
   page.on('console', m => { if ((m.type() === 'error' || m.type() === 'warning') && !/GPU stall|GL Driver Message/.test(m.text())) console.error('page:', m.text()); });
-  const q = o.msaa !== undefined ? `?msaa=${o.msaa}` : '';
+  const qs = []; if (o.msaa !== undefined) qs.push(`msaa=${o.msaa}`); if (o.shadow) qs.push(`shadow=${o.shadow}`);
+  const q = qs.length ? '?' + qs.join('&') : '';
   await page.goto(`http://127.0.0.1:${server.address().port}/board.html${q}`);
   await page.waitForFunction(() => window.ready === true, null, { timeout: 120000 });
   return { server, browser, page, async close() { await page.close(); if (!o.browser) await browser.close(); if (!o.server) server.close(); } };
 }
 
 // a spec: {title, scene?, shots:[...]} — several specs join in order
+// (also the shot list's skeleton: {scenes: [{n, slug, shots: [{id, set_hint, …}]}]})
 function readSpecs(files) {
   return files.map(f => {
     const spec = JSON.parse(fs.readFileSync(f, 'utf8'));
     spec._file = f;
-    spec.shots = (spec.shots ?? []).map(s => ({ ...s, scene: s.scene ?? spec.scene }));
+    const raw = spec.shots ?? (spec.scenes ?? []).flatMap(sc => sc.shots ?? []);
+    spec.shots = raw.map(s => ({ ...s, n: s.n ?? s.id, scene: s.scene ?? s.set ?? s.set_hint ?? spec.scene }));
     return spec;
   });
 }

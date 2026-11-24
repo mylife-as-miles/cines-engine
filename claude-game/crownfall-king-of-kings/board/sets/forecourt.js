@@ -8,13 +8,13 @@ import { buildCity, updateCity, cityBeforeRender, CITY_MARKS } from './city.js';
 import { L } from './solforiz.js';
 
 const B = L.block, A = L.arch;
-const lioraAt = [B.x + 0.1, B.z + 0.4], caelAt = [B.x + 4.9, B.z + 10.0];
+const lioraAt = [B.x + 0.1, B.z + 0.4], caelAt = [B.x + 7.1, B.z + 5.9];
 const PRESETS = {
   // bible p.6 key 3: Liora low under the stopped block, dust falling past it, Cael ten paces off with his hand open
   heldStone: {
     state: {
       block: { y: B.y, rot: [6, 18, -5] },
-      dust: { center: [B.x + 1, 4, B.z + 2], size: [12, 9, 9], count: 520, opacity: 0.4 },
+      dust: { center: [B.x + 0.5, 4, B.z + 1.5], size: [8, 8, 6], count: 420, opacity: 0.45 },
       warp: [{ at: [B.x, B.y, B.z], r: 2.2, amp: 0.5 }],
       figures: {
         liora: { pos: lioraAt, face: 160, pose: 'cower' },
@@ -22,7 +22,7 @@ const PRESETS = {
         cael: { pos: caelAt, face: [B.x, B.z], pose: 'stand', aimR: [B.x, B.y, B.z], palmR: 'out', handR: 1, shake: 0.3, blood: 0 },
       },
     },
-    cam: { pos: [B.x + 2.5, 0.95, B.z + 18.1], target: [B.x + 2.5, 4.05, B.z], f: 24 },
+    cam: { pos: [B.x + 2.6, 0.95, B.z + 20.4], target: [B.x + 2.6, 3.45, B.z], f: 24 },
   },
   // 3.4 the open hand, "it saves" (bible p.13): the same insert as 6.3, 10.3 and 10.10
   hand34: {
@@ -36,13 +36,14 @@ const PRESETS = {
   // 3.5 the wrist, in shallow focus, from Liora's eye level (the only time Cael is seen from below)
   wrist35: {
     state: {
-      block: { y: B.y, rot: [6, 18, -5] }, dust: { center: [B.x, 3, B.z + 1], size: [6, 6, 6] },
+      block: { y: B.y, rot: [6, 18, -5] }, dust: { center: [B.x, 3, B.z + 1], size: [6, 6, 6], count: 300 },
       figures: {
-        liora: { pos: lioraAt, face: 120, pose: 'cower', joints: { shoulderL: [70, 0, 30], elbowL: [10, 0, 0] } },
-        cael: { pos: [B.x + 1.0, B.z + 0.85], face: [B.x, B.z], pose: 'crouch', reachR: 'liora.wristL', aimL: [B.x, B.y, B.z], palmL: 'out', handL: 1, handR: 0.15 },
+        liora: { pos: lioraAt, face: 90, pose: 'crouch', joints: { shoulderL: [-20, 0, 0], elbowL: [30, 0, 0] }, look: 'cael.head' },
+        cael: { pos: [B.x + 1.15, B.z + 0.55], face: -90, pose: 'crouch', lean: 10, reachR: 'liora.wristL', aimL: [B.x, B.y, B.z], palmL: 'out', handL: 1, look: 'liora.head' },
       },
+      hand: { attach: 'cael', side: 'R', style: 'cael', open: 0.35, hideFigure: false },
     },
-    cam: { pos: [B.x - 0.75, 0.62, B.z + 1.1], target: 'liora.wristL', f: 50, dof: { focus: 'liora.wristL', fstop: 2 } },
+    cam: { pos: [B.x - 0.25, 1.45, B.z - 1.45], target: 'liora.wristL', f: 50, dof: { focus: 'liora.wristL', fstop: 2.2 } },
   },
 };
 

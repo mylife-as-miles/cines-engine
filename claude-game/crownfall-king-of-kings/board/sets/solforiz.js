@@ -16,14 +16,15 @@ export const L = {
   truceLamp: [24, 15.6, -10.5],                          // the white truce lamp on its mast over the gatehouse
   causeway: { w: 14, len: 3200 },                        // from the gate (z = 0) out along +z
   forecourt: { x0: -140, x1: 140, z0: -90, z1: -3 },
-  stairFoot: [54, 0, -84], stairTop: [30, 12, -84], stairZ: [-90, -78],  // lower flight climbs west along the tier-0 face
+  stairFoot: [54, 0, -84], stairTop: [30, 8, -84], stairZ: [-90, -78],  // lower flight climbs west along the tier-0 face
   arch: { x: 70, z: -76, span: 3.4, h: 5.6, depth: 1.3 },   // the signal station: opening faces +z (the gate)
   block: { x: 52.4, z: -85.4, y: 4.6, w: 3.2, h: 1.6, d: 2.4 },  // held over Liora at the stair foot; from the parapet above
-  innerWall: { z: -92, y: 12, h: 10, gateX: 24, gateW: 8 },  // on the lip of tier 0, gate at the top of the lower flight
-  tiers: Array.from({ length: 8 }, (_, k) => ({ k, hw: 330 - 31 * k, front: -90 - 45 * k, back: -790 + 45 * k, top: 12 + 24 * k })),
+  innerWall: { z: -92, y: 8, h: 6, gateX: 24, gateW: 7 },  // on the lip of tier 0, gate at the top of the lower flight
+  tiers: Array.from({ length: 8 }, (_, k) => ({ k, hw: 330 - 31 * k, front: -90 - 45 * k, back: -790 + 45 * k, top: 8 + 24 * k })),
   greatStair: { hw: 12 },                                // the central flights, x -12..12, from tier 0 up to tier 7
-  crown: { z: -442, hw: 70, d: 64, y: 180, h: 46, opening: { w: 76, h: 17, y: 191 } },   // pressureworks at the summit
+  crown: { z: -442, hw: 70, d: 64, y: 176, h: 46, opening: { w: 76, h: 17, y: 187 } },   // pressureworks at the summit
   crownTowers: [[-98, -414], [98, -414], [-96, -466], [96, -466]],   // four tall towers with cross-arms by the Crown
+  midTowers: [[38, -238], [70, -243], [102, -248], [134, -253]],   // four pressure towers on tier 3, east of the stair (key p.8)
   arcades: { tier: 5, n: 15 },                           // the battery in the high arcades: tier-5 face
   battery: [[-62, -15], [-47, -19], [-32, -23]],         // Aethelgard's three guns, just inside the outer wall
   cannon: [[22, 120, 2.6], [-34, 260, -0.4], [58, 470, 1.1], [-12, 52, 0.4], [25, 1466, 2.3], [36, 2086, 2.2]],   // abandoned on the plain [x, z, yaw]
@@ -54,7 +55,7 @@ export function buildCauseway(E, W, o = {}) {
   b.box(w, 1.2, len, road, 0, -0.6, len / 2 + 2);
   b.box(w + 5, 0.9, len, side, 0, -0.75, len / 2 + 2);          // the embankment shoulder
   const post = E.mat('#1a1f23');
-  for (let z = 30; z < len; z += 38) for (const sx of [-1, 1]) b.box(0.35, 1.5, 0.35, post, sx * (w / 2 - 0.3), 0.75, z);
+  if (!o.ruined) for (let z = 30; z < len; z += 38) for (const sx of [-1, 1]) b.box(0.35, 1.5, 0.35, post, sx * (w / 2 - 0.3), 0.75, z);
   const out = b.build(W);
   out.forEach(m => { m.userData.ground = true; });
   return out;
@@ -86,7 +87,7 @@ export function buildWallAndGate(E, W, o = {}) {
     segment(x0, x1);
   }
   function segment(a, c) {
-    const h = L.wall.h * (o.ruined ? 0.35 + r() * 0.4 : 0.7 + r() * 0.3);
+    const h = L.wall.h * (o.ruined ? 0.12 + r() * 0.25 : 0.7 + r() * 0.3);
     b.box(c - a, h, th, stone, (a + c) / 2, h / 2, z);
     if (!o.ruined) for (let k = a + 1; k < c - 1; k += 3.2) b.box(1.6, 1.4, th * 0.4, stone, k + 0.8, h + 0.7, z + th * 0.3);
   }
@@ -198,11 +199,12 @@ export function buildForecourt(E, W, o = {}) {
   floor.forEach(m => { m.userData.ground = true; });
   // rubble and debris, more of it after the fall
   const rb = new E.Batch('rubble');
-  const n = o.ruined ? 320 : 110;
+  const n = o.ruined ? 240 : 110;
   for (let i = 0; i < n; i++) {
     const x = F.x0 + 10 + r() * (F.x1 - F.x0 - 20), z = F.z0 + 4 + r() * (F.z1 - F.z0 - 8);
     if (Math.abs(x - L.arch.x) < 6 && Math.abs(z - L.arch.z) < 5) continue;
-    const s = o.ruined ? 0.5 + r() * 3.5 : 0.3 + r() * 1.6;
+    if (o.ruined && Math.abs(x - L.arch.x) < 30 && z > L.arch.z + 4) continue;     // a clear approach to the arch
+    const s = o.ruined ? 0.4 + r() * 2.2 : 0.3 + r() * 1.6;
     rb.box(s, s * (0.3 + r() * 0.5), s * (0.6 + r() * 0.8), stone, x, s * 0.15, z, r() * 0.6, r() * 3, r() * 0.6);
   }
   // Aethelgard's battery: three heavy guns aimed at the Crown (key 5)
@@ -281,7 +283,7 @@ export function buildArch(E, W, o = {}) {
 export function poseArch(arch, st = {}, t = 0) {
   // broken 0..1: the right pier shortens; stones 0..1: the voussoirs come loose and drift up and right (key p.9)
   const br = st.broken ?? 0, sp = st.stones ?? 0, drop = st.drop ?? 0;
-  arch.pierR.scale.y = 1 - 0.38 * br; arch.pierR.position.y = (arch.springY * (1 - 0.38 * br)) / 2;
+  arch.pierR.scale.y = arch.springY * (1 - 0.38 * br); arch.pierR.position.y = (arch.springY * (1 - 0.38 * br)) / 2;
   arch.stones.forEach((s, i) => {
     const k = Math.max(0, (i - 2) / 4);                  // the right half breaks; the left stays
     const lift = sp * k;
@@ -348,20 +350,22 @@ export function buildInnerWall(E, W, o = {}) {
   const h = o.ruined ? I.h * 0.35 : I.h;
   b.box(gx0 + hw, h, 3, stone, (-hw + gx0) / 2, I.y + h / 2, I.z);
   b.box(hw - gx1, h, 3, stone, (gx1 + hw) / 2, I.y + h / 2, I.z);
-  b.box(I.gateW + 2, 3, 3.4, stone, I.gateX, I.y + h - 1.5, I.z);           // lintel over the gate
+  b.box(I.gateW + 2, 1.6, 3.4, stone, I.gateX, I.y + h - 0.8, I.z);           // lintel over the gate
   if (!o.ruined) for (let x = -hw + 2; x < hw; x += 4) b.box(2, 1.6, 3.2, stone, x, I.y + h + 0.8, I.z);   // merlons
   // the parapet cornice over the stair foot: the block tears loose from here (key p.6, top left)
+  if (!o.ruined) {
   // the gallery: a terrace slab projecting from the tier-0 face over the stair foot ("the terrace above her",
   // key p.6 top left). Underside at y = 6.6, front edge at z = -82.6; the block tears loose from its edge.
-  b.box(17, 0.9, 7.6, stone, 54.5, 7.05, -86.4);
-  b.box(17, 1.2, 0.6, stone, 54.5, 8.1, -82.9);
-  for (let x = 47; x < 63; x += 3) b.box(0.7, 2.2, 0.9, stone, x, 5.5, -89.4);   // corbels under it
+  b.box(13, 0.9, 7.6, stone, 50.5, 7.05, -86.4);
+  b.box(13, 1.0, 0.6, stone, 50.5, 7.9, -82.9);
+  for (let x = 45; x < 57; x += 3) b.box(0.7, 2.2, 0.9, stone, x, 5.5, -89.4);   // corbels under it
+  }
   b.build(W);
   // the gate leaves (shut / open 0..1)
   const leaves = [];
   for (const sx of [-1, 1]) {
     const piv = new THREE.Group(); piv.position.set(I.gateX + sx * I.gateW / 2, I.y, I.z + 1.2); W.add(piv);
-    E.boxMesh(I.gateW / 2, I.h - 3, 0.4, E.mat('#1d2125', { rough: 0.8 }), piv, -sx * I.gateW / 4, (I.h - 3) / 2, 0);
+    E.boxMesh(I.gateW / 2, I.h - 1.6, 0.4, E.mat('#1d2125', { rough: 0.8 }), piv, -sx * I.gateW / 4, (I.h - 1.6) / 2, 0);
     leaves.push({ piv, sx });
   }
   return { leaves };
@@ -388,7 +392,7 @@ export function buildZiggurat(E, W, o = {}) {
       const z0 = t.front + 26, z1 = t.front;                                            // from the terrace below up to this lip
       const n = 30, run = (z0 - z1) / n, h = hgt / n;
       for (let i = 0; i < n; i++) b.box(2 * L.greatStair.hw, (i + 1) * h, run, o.stairMat ?? face, 0, base + (i + 1) * h / 2, z0 - (i + 0.5) * run);
-      for (const sx of [-1, 1]) b.box(2, hgt + 1.5, z0 - z1, face, sx * (L.greatStair.hw + 1), base + (hgt + 1.5) / 2 - 0.4, (z0 + z1) / 2);
+
     }
     // houses on the terrace: stacked boxes in rows behind the lip (not on the stair avenue)
     const next = T[k + 1];
@@ -399,9 +403,11 @@ export function buildZiggurat(E, W, o = {}) {
       if (Math.abs(x) < L.greatStair.hw + 6) continue;
       if (k === 0 && z > L.innerWall.z - 6) continue;
       if (k === 7 && Math.abs(x) < L.crown.hw + 30 && z < L.crown.z + 60 && z > L.crown.z - 60) continue;
-      const w = 6 + r() * 12, d = 6 + r() * 10, hh = 3 + r() * (k < 3 ? 9 : 7) * (1 - 0.6 * Math.abs(x) / t.hw);
-      hb.box(w, hh, d, r() < 0.5 ? house : houseD, x, t.top + hh / 2, z, 0, (r() < 0.2 ? 0.2 : 0), 0);
-      if (r() < 0.35) hb.box(w * 0.6, hh * 0.6, d * 0.6, house, x + (r() - 0.5) * 2, t.top + hh + hh * 0.3, z);
+      if (k === 4 && x > -136 && x < -44) continue;                                     // the arcade gun terrace (crown set)
+      const w = 6 + r() * 12, d = 6 + r() * 10, hh = (o.ruined ? 0.35 : 1) * (3 + r() * (k < 3 ? 9 : 7) * (1 - 0.6 * Math.abs(x) / t.hw));
+      if (o.ruined && r() < 0.5) continue;
+      hb.box(w, hh, d, r() < 0.5 ? house : houseD, x, t.top + hh / 2, z, o.ruined ? (r() - 0.5) * 0.4 : 0, (r() < 0.2 ? 0.2 : 0), o.ruined ? (r() - 0.5) * 0.4 : 0);
+      if (!o.ruined && r() < 0.35) hb.box(w * 0.6, hh * 0.6, d * 0.6, house, x + (r() - 0.5) * 2, t.top + hh + hh * 0.3, z);
     }
     const tm = b.build(W); tm.forEach(m => { m.userData.ground = true; });
     const meshes = [...tm, ...hb.build(W)];
@@ -476,21 +482,43 @@ export function poseCrown(c, st = {}, t = 0) {
   c.plates.forEach((p, i) => {
     // plate i lands at the top of the opening first (i = 0), then the next below it ... the last covers the bottom
     const k = Math.max(0, Math.min(1, n - i));
-    const yRest = Op.y + Op.h - (i + 0.5) * c.ph, yUp = Op.y + Op.h + 12 + c.ph / 2;
+    // each plate drops from the housing to its band; the last one's travel is short, so 5.85 leaves a thin slit
+    const yRest = Op.y + Op.h - (i + 0.5) * c.ph, yUp = yRest + (6 - i) * c.ph + 2;
     p.position.y = yUp + (yRest - yUp) * k;
     p.visible = k > 0.001 || i === Math.floor(n);
   });
   const fire = st.fire ?? 0.6;
-  c.fireMat.color.set('#E08A3A').multiplyScalar(0.2 + 4 * fire);
+  c.fireMat.color.set('#E08A3A').multiplyScalar(0.15 + 1.25 * fire);
   c.fire.visible = fire > 0;
   const th = st.through ?? 0;
   c.cracks.visible = th > 0;
-  c.crackMat.color.set('#FF8A2E').multiplyScalar(4 * th);
+  c.crackMat.color.set('#FF8A2E').multiplyScalar(1.6 * th);
   // the towers: lean in degrees about the base (toward +z, over the retaining wall), or fall 0..1 (to 90 degrees)
   c.towers.forEach((tw, i) => {
     const lean = (st.towers?.[i] ?? 0) + (i === 0 ? (st.towerFall ?? 0) * 88 : 0);
     tw.piv.rotation.set(lean * Math.PI / 180, 0, (i % 2 ? -1 : 1) * lean * 0.15 * Math.PI / 180);
   });
+}
+
+// the pressure towers on tier 3 (they topple to the east in the fall, key p.8); pivots at their bases
+export function buildTower(E, parent, h, o = {}) {
+  const tb = new E.Batch('tower');
+  const tm = E.mat(o.color ?? '#283038', { rough: 0.9, rim: true });
+  tb.add(new THREE.CylinderGeometry(1.8, 3.4, h, 4), tm, E.M4(0, h / 2, 0, 0, Math.PI / 4, 0));
+  const n = Math.floor(h / 12);
+  for (let k = 0; k < n; k++) tb.box(13 - k * 1.2, 0.9, 0.9, tm, 0, 14 + k * 10.5, 0);
+  tb.add(new THREE.ConeGeometry(2.0, 6, 4), tm, E.M4(0, h + 3, 0, 0, Math.PI / 4, 0));
+  return tb.build(parent);
+}
+export function buildMidTowers(E, W, o = {}) {
+  return L.midTowers.map(([x, z], i) => {
+    const piv = new THREE.Group(); piv.position.set(x, T[3].top, z); W.add(piv);
+    buildTower(E, piv, 56 + (i % 2) * 6, o);
+    return { piv, x, z };
+  });
+}
+export function poseMidTowers(towers, lean = []) {
+  towers.forEach((tw, i) => { const a = (lean[i] ?? 0) * Math.PI / 180; tw.piv.rotation.set(0, 0, -a); });   // + lean topples east (+x)
 }
 
 // ---------------------------------------------------------------- the high arcades: the Solforiz battery

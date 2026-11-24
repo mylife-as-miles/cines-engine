@@ -34,7 +34,7 @@ function frustumGeo(top, bot, h, round = false) {
 // ---------------------------------------------------------------- the cast (bible pp.14-16; BREAKDOWN §4)
 export const CAST = {
   cael: { h: 1.86, w: 1.28, skin: '#5f473a', body: '#1B1917', legs: '#141312', armour: '#211e1c', pauldrons: true, bandage: 'R',
-    cloak: { color: '#121110', len: 'ground', top: [0.6, 0.34], bot: [1.04, 0.66] }, hair: '#0d0b0a', note: 'broad and cloaked, cinder black, no crown' },
+    cloak: { color: '#121110', len: 'ground', top: [0.46, 0.3], bot: [1.08, 0.7] }, hair: '#0d0b0a', note: 'broad and cloaked, cinder black, no crown' },
   captain: { h: 1.82, w: 1.2, skin: '#62493b', body: '#2a2624', legs: '#1d1b1a', armour: '#3c3835', pauldrons: true, square: true,
     cloak: { color: '#1f1c1a', len: 'knee', top: [0.52, 0.3], bot: [0.62, 0.36] }, hair: '#151210', note: 'square and upright, the same plate kept in better order' },
   soldier: { h: 1.78, w: 1.08, skin: '#62493b', body: '#2b2826', legs: '#1d1b1a', armour: '#35312e', pauldrons: true, helmet: true },
@@ -51,6 +51,7 @@ export const CAST = {
   ward: { h: 1.74, w: 0.9, skin: '#E8E6E1', body: '#1B1630', legs: '#15112a', mask: true, collar: '#B9BEC3', gloves: '#E8E6E1',
     coat: { color: '#1d1833', len: 'calf', top: [0.42, 0.27], bot: [0.6, 0.42] }, note: 'pale mask, silver collar, pale gloves' },
   worker: { h: 1.78, w: 1.02, skin: '#0E0D0C', body: '#0E0D0C', legs: '#0E0D0C', cap: true, note: 'soot silhouette, no face' },
+  solgunner: { h: 1.72, w: 1.0, skin: '#66503f', body: '#5B4636', legs: '#3d3129', hood: 'plated', hoodColor: '#6a5f52', coat: { color: '#4f4439', len: 'knee', top: [0.44, 0.27], bot: [0.6, 0.4] }, note: 'Solforiz gun crew' },
   civilian: { h: 1.66, w: 0.95, skin: '#66503f', body: '#7d766b', legs: '#5B4636', coat: { color: '#6f685d', len: 'calf', top: [0.42, 0.27], bot: [0.62, 0.44] }, hood: 'up', hoodColor: '#6f685d' },
   child: { h: 1.2, child: true, w: 0.85, skin: '#66503f', body: '#7d766b', legs: '#4d4339', hood: 'up', hoodColor: '#7d766b' },
 };
@@ -201,7 +202,11 @@ export function makeFigure(E, kind, o = {}) {
     const m = part(frustumGeo(top, bot, len, round), E.mat(color, { rim: true }), spine, 0, y0, -0.015 * s, 1, 1, 1, f);
     return m;
   };
-  if (spec.cloak) f.props.cloak = garment(spec.cloak, 0.5 * s, spec.cloak.color);
+  if (spec.cloak) {
+    f.props.cloak = garment(spec.cloak, 0.5 * s, spec.cloak.color, true);
+    // a rounded mantle over the shoulders, so the cloaked silhouette has shoulders, not a box top
+    part(SPH, E.mat(spec.cloak.color, { rim: true }), spine, 0, 0.47 * s, -0.01 * s, spec.cloak.top[0] * w * s * 0.62, 0.1 * s, spec.cloak.top[1] * s * 0.62, f);
+  }
   if (spec.coat) f.props.coat = garment(spec.coat, 0.46 * s, spec.coat.color);
   if (spec.robe) f.props.robe = garment({ ...spec.robe, len: 'ground' }, 0.5 * s, spec.robe.color, true);
   // props
@@ -217,7 +222,7 @@ export function makeFigure(E, kind, o = {}) {
     const pos = fg.attributes.position;                 // ragged lower edge
     for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), y = pos.getY(i); if (y < -0.99) pos.setY(i, y + (0.12 * Math.sin(x * 23) + 0.08 * Math.sin(x * 51)) - 0.04); }
     fg.computeVertexNormals();
-    const fm = part(fg, E.mat('#8E1B1B', { double: true, rim: true }), flag, 0.03, 0, 0, 1.15, 0.85, 1);
+    const fm = part(fg, E.mat('#8E1B1B', { double: true, emissive: '#8E1B1B', ei: 0.55 }), flag, 0.03, 0, 0, 1.15, 0.85, 1);
     f.props.bound = bound; f.props.flag = flag; f.props.flagMesh = fm; f.props.flagGeo = fg; f.props.flagBase = Float32Array.from(pos.array); f.poleH = poleH;
   }
   if (spec.spear) { const sp = new THREE.Group(); f.root.add(sp); f.props.spear = sp; part(new THREE.CylinderGeometry(0.02, 0.022, 2.4, 6), E.mat('#211d19', { rim: true }), sp, 0, 1.2, 0, 1, 1, 1); part(new THREE.ConeGeometry(0.035, 0.22, 4), E.mat('#3a3735', { metal: 0.6, rough: 0.4 }), sp, 0, 2.5, 0, 1, 1, 1); }
@@ -398,7 +403,7 @@ export function poseFigure(E, f, p, t, stretchers, second = false) {
   if (!f.root.visible) return;
   resetPose(f);
   // where: pos [x,z] | [x,y,z]; walk: {to, from?, t0, speed} moves along a line; on: stretcher id
-  let pos = p.pos ? [...p.pos] : null, yaw = null, walking = false;
+  let pos = typeof p.pos === 'string' ? E.where(p.pos).toArray() : (p.pos ? [...p.pos] : null), yaw = null, walking = false;
   if (p.walk) {
     const from = p.walk.from ?? p.pos, to = p.walk.to;
     const a = from.length > 2 ? [from[0], from[2]] : from, b = to.length > 2 ? [to[0], to[2]] : to;
@@ -606,6 +611,8 @@ export function poseHeroHand(E, hh, p, t) {
     const f = E.figures.get(p.attach);
     f.hands[side].visible = false;
     f.root.updateMatrixWorld(true);
+    // an insert shows the hand, its forearm and sleeve, not the body behind it (hideFigure: false keeps the body)
+    if (p.hideFigure !== false) f.root.visible = false;
     const wq = f.hands[side].getWorldQuaternion(new Q());
     P = f.j['wrist' + side].getWorldPosition(new V3());
     // figure hand frame: fingers -y, palm normal +x (R) / -x (L)

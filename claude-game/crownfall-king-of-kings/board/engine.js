@@ -16,7 +16,9 @@ const DEG = Math.PI / 180;
 
 // ---------------------------------------------------------------- renderer and targets
 // ?msaa=0 turns antialiasing off (about twice as fast under SwiftShader); the default is 4x.
-const QUALITY = { samples: +(new URLSearchParams(location.search).get('msaa') ?? 4) };
+// ?shadow=basic uses one-tap shadows (about 40% faster on big sets; harder edges); the default is 3x3 PCF.
+const QP = new URLSearchParams(location.search);
+const QUALITY = { samples: +(QP.get('msaa') ?? 4), shadow: QP.get('shadow') ?? 'pcf' };
 const renderer = new THREE.WebGLRenderer({ antialias: QUALITY.samples > 0, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(1);
 renderer.setSize(W, H);
@@ -26,7 +28,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.LinearToneMapping;
 renderer.toneMappingExposure = 1;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
+renderer.shadowMap.type = QUALITY.shadow === 'basic' ? THREE.BasicShadowMap : THREE.PCFShadowMap;
 renderer.setClearColor(0x000000, 1);
 document.body.appendChild(renderer.domElement);
 const rtMain = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: QUALITY.samples, depthBuffer: true });
@@ -88,7 +90,7 @@ THREE.ShaderChunk.fog_fragment = `
     float fogFactor = smoothstep( fogNear, fogFar, fogDist );
   #endif
   vec3 fogDir = fogRay / max( fogDist, 1e-4 );
-  float fogSd = max( dot( fogDir, uFogSun.xyz ), 0.0 ); fogSd *= fogSd; float fogSunAmt = fogSd * fogSd * fogSd * uFogSun.w;
+  float fogS1 = max( dot( fogDir, uFogSun.xyz ), 0.0 ); float fogS8 = fogS1 * fogS1; fogS8 *= fogS8; fogS8 *= fogS8; float fogS32 = fogS8 * fogS8; fogS32 *= fogS32; float fogSunAmt = ( fogS32 * fogS32 * fogS32 * 0.8 + fogS8 * 0.2 ) * uFogSun.w;
   vec3 fogCol = mix( fogColor, uFogSunColor, clamp( fogSunAmt, 0.0, 1.0 ) );
   if ( uHaze.x > 0.0 ) {
     float hc = max( cameraPosition.y - uHaze.y, 0.0 ), hp = max( vFogWorld.y - uHaze.y, 0.0 );
@@ -280,7 +282,7 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(30000, 48, 24), new THREE.Sh
       } else c = mix(cHor, cGnd, smoothstep(0.0, 0.04, -e));
       float sd = max(dot(d, normalize(sunDir)), 0.0);
       // the same in-scatter as the fog, so the horizon and the fogged world meet without a seam
-      float fs = pow(max(dot(d, uFogSun.xyz), 0.0), 6.0) * uFogSun.w * (1.0 - smoothstep(0.0, 0.5, abs(e)) * 0.5);
+      float fsd = max(dot(d, uFogSun.xyz), 0.0); float fs = (0.8 * pow(fsd, 96.0) + 0.2 * pow(fsd, 8.0)) * uFogSun.w;
       c = mix(c, uFogSunColor, clamp(fs, 0.0, 1.0));
       c += cSun * sunGlow * pow(sd, sunGlowPow);
       c = mix(c, cBand, band * exp(-abs(e) / bandWidth));
@@ -328,7 +330,7 @@ const dust = (() => {
       p.x += sin(uTime * 0.31 + seed.x * 40.0) * uDrift + uTime * uDrift * 0.15;
       p.z += cos(uTime * 0.27 + seed.z * 37.0) * uDrift;
       float hy = fract(seed.y - fall / uSize.y);
-      vFade = smoothstep(0.0, 0.1, hy) * smoothstep(1.0, 0.85, hy) * step(seed.x * 0.999, uCount);
+      vFade = smoothstep(0.0, 0.1, hy) * smoothstep(1.0, 0.85, hy) * step(fract(seed.x * 7.137 + seed.z * 3.713 + seed.y * 1.91), uCount);
       return p;
     }`;
   const fCommon = `uniform vec3 uColor, fogColor; uniform float uOpacity, fogDensity; varying float vFade; varying float vDepth;
@@ -532,6 +534,8 @@ export const E = {
       const [id, part] = v.split('.');
       const f = E.figures.get(id);
       if (f) { f.root.updateMatrixWorld(true); return f.partWorld(part || 'chest'); }
+      const d = E.ctx?.dyn?.[v];
+      if (d) return d();
       const m = E.ctx?.marks?.[v] ?? E.set?.marks?.[v];
       if (m) return E.where(m);
     }
@@ -649,7 +653,7 @@ E.makeArmy = function makeArmy(a, ai) {
     const lean = (r() - 0.5) * 0.08;
     m.compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(lean, yaw, 0, 'YXZ')), new THREE.Vector3(sc, sc, sc));
     body.setMatrixAt(k, m);
-    if (r() < poleShare) poles.push({ x, y, z, sc, yaw, rank: r(), h: 1.75 * sc * (1.45 + r() * 0.2) });
+    if (r() < poleShare) poles.push({ x, y, z, sc, yaw, rank: r(), h: 1.75 * sc * (2.0 + r() * 0.45) });
     items.push({ x, y, z, sc, yaw });
     k++;
   }
@@ -659,8 +663,9 @@ E.makeArmy = function makeArmy(a, ai) {
   const np = Math.max(poles.length, 1);
   const poleMesh = new THREE.InstancedMesh(poleGeo, mat('#1a1816'), np);
   const boundMesh = new THREE.InstancedMesh(boundGeo, mat(a.boundColor ?? '#2a1412', { rim: true }), np);
-  const flagMesh = new THREE.InstancedMesh(flagGeo, mat(a.bannerColor ?? '#8E1B1B', { double: true, rim: true }), np);
-  [poleMesh, boundMesh, flagMesh].forEach(x => { x.castShadow = true; x.receiveShadow = true; actors.add(x); });
+  const flagMesh = new THREE.InstancedMesh(flagGeo, mat(a.bannerColor ?? '#8E1B1B', { double: true, emissive: a.bannerColor ?? '#8E1B1B', ei: a.bannerGlow ?? 0.55 }), np);
+  [poleMesh, boundMesh, flagMesh].forEach(x => { x.castShadow = true; x.receiveShadow = true; x.frustumCulled = false; actors.add(x); });
+  body.frustumCulled = false;
   const Z = new THREE.Matrix4().makeScale(0, 0, 0);
   return {
     body, poles,
@@ -676,7 +681,7 @@ E.makeArmy = function makeArmy(a, ai) {
         const top = new THREE.Vector3(p.x + Math.sin(p.yaw) * 0.25, p.y + p.h, p.z + Math.cos(p.yaw) * 0.25);
         if (isOpen) {
           const wave = Math.sin(t * 2.1 + p.rank * 20) * 0.15;
-          const fm = new THREE.Matrix4().compose(top, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, (st.wind ?? a.wind ?? 90) * DEG + wave, 0)), new THREE.Vector3(1.25, 0.9, 1));
+          const fm = new THREE.Matrix4().compose(top, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, (st.wind ?? a.wind ?? 0) * DEG + wave, 0)), new THREE.Vector3(1.5, 1.1, 1));
           flagMesh.setMatrixAt(i, fm); boundMesh.setMatrixAt(i, Z);
         } else {
           const bm = new THREE.Matrix4().compose(top.clone().add(new THREE.Vector3(0, -0.55, 0)), new THREE.Quaternion(), new THREE.Vector3(1, 1.0, 1));
@@ -694,12 +699,11 @@ function soldierGeometry() {
   const parts = [];
   const add = (g, x, y, z, sx = 1, sy = 1, sz = 1) => { const c = g.clone(); c.applyMatrix4(M4(x, y, z, 0, 0, 0, sx, sy, sz)); parts.push(c); };
   add(BOX, -0.1, 0.45, 0, 0.14, 0.9, 0.16); add(BOX, 0.1, 0.45, 0, 0.14, 0.9, 0.16);
-  const body = new THREE.CylinderGeometry(0.21, 0.3, 0.95, 4, 1); body.rotateY(Math.PI / 4); body.scale(1, 1, 0.6);
+  const body = new THREE.CylinderGeometry(0.3, 0.32, 0.95, 4, 1); body.rotateY(Math.PI / 4); body.scale(1, 1, 0.6);
   add(body, 0, 1.0, 0);
-  add(BOX, 0, 1.42, 0, 0.5, 0.1, 0.24);
+  add(new THREE.SphereGeometry(0.17, 10, 6), 0, 1.42, 0, 1.45, 0.55, 0.85);       // rounded shoulders
   add(new THREE.SphereGeometry(0.11, 10, 8), 0, 1.6, 0);
-  add(new THREE.CylinderGeometry(0.15, 0.15, 0.05, 10), 0, 1.69, 0);
-  add(new THREE.CylinderGeometry(0.1, 0.11, 0.12, 10), 0, 1.74, 0);
+  add(new THREE.CylinderGeometry(0.118, 0.122, 0.13, 10), 0, 1.69, 0);             // a flat-topped helmet
   const g = mergeGeometries(parts.map(p => { const q = p.index ? p.toNonIndexed() : p; for (const k of Object.keys(q.attributes)) if (k !== 'position' && k !== 'normal') q.deleteAttribute(k); return q; }));
   return g;
 }
@@ -890,6 +894,12 @@ async function frame(spec, s, t, mode = 'animatic', o = {}) {
   const sk = o.shotKey ?? JSON.stringify([sceneName, s.state]);
   if (!s.black && sk !== lastShotKey) { setState(s.state ?? {}); lastShotKey = sk; }
   const clockT = t + (s.timeOffset ?? 0);
+  // no cam: use the preset's camera (state.preset), else the set's first preset as a placeholder
+  if (!s.cam) {
+    const pr = E.ctx?.presets ?? {};
+    const c = (s.state?.preset && pr[s.state.preset]?.cam) || Object.values(pr)[0]?.cam;
+    s = { ...s, cam: c ?? { pos: [0, 1.6, 30], target: [0, 1.6, 0], f: 35 }, camText: (s.camText ?? '') + (s.state?.preset ? '' : '  [placeholder camera]') };
+  }
   if (!s.black) { setTime(clockT); drawShot(camAt(s, t)); }
   compose(outCanvas, s.black ? null : renderer.domElement, { spec, shot: s, t, mode, dur: shotDur(s), grain: s.grain ?? E.grain, ...o });
   return outCanvas.toDataURL(o.type ?? 'image/jpeg', o.quality ?? 0.9);
@@ -902,6 +912,9 @@ window.renderShot = renderShot;
 window.pictureURL = pictureURL;
 window.drawShot = drawShot;
 window.frame = frame;
+// a small JPEG of the last composed frame (contact sheets)
+window.thumb = (w = 640) => { const c = document.createElement('canvas'); c.width = w; c.height = Math.round(w * outCanvas.height / outCanvas.width);
+  c.getContext('2d').drawImage(outCanvas, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', 0.85); };
 window.shotDur = shotDur;
 window.listScenes = () => ['foundry', 'city', 'forecourt', 'gatehouse', 'crown', 'fall', 'ruins', 'ship', 'hull'];
 window.presets = () => Object.keys(E.ctx?.presets ?? E.set?.presets ?? {});

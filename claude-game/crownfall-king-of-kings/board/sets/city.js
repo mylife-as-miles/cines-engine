@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { L, buildPlain, buildCauseway, buildWallAndGate, buildGatehouse, buildForecourt, buildBattery, buildArch, poseArch,
   buildStair, buildBlock, poseBlock, buildInnerWall, buildZiggurat, buildCrown, poseCrown, buildArcades, buildCannon,
-  makePoints, cityLampPositions, pulseLevel, crownFront } from './solforiz.js';
+  makePoints, cityLampPositions, pulseLevel, crownFront, buildMidTowers, poseMidTowers } from './solforiz.js';
 
 export function buildCity(E, o = {}) {
   const W = E.world;
@@ -25,6 +25,7 @@ export function buildCity(E, o = {}) {
   ctx.inner = buildInnerWall(E, W, o);
   ctx.zig = buildZiggurat(E, W, o);
   ctx.crown = buildCrown(E, W, o);
+  ctx.midTowers = buildMidTowers(E, W, o);
   ctx.arcades = buildArcades(E, W, o);
   ctx.block = buildBlock(E, W);
   // lamps: the city's amber lamps (they breathe on the pulse), the arcade muzzle flashes, impacts, the truce lamp
@@ -77,6 +78,7 @@ export function updateCity(E, R, t, ctx) {
   ctx.truceMesh.visible = (R.truce ?? 'lit') !== 'gone';
   // the crown, the arch, the block, the inner gate
   poseCrown(ctx.crown, R.crown ?? {}, t);
+  poseMidTowers(ctx.midTowers, R.midTowers ?? []);
   poseArch(ctx.arch, R.arch ?? {}, t);
   poseBlock(ctx.block, { visible: !!R.block, ...(R.block ?? {}) }, t);
   const ig = R.innerGate ?? 0;
