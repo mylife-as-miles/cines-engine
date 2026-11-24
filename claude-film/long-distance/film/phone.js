@@ -150,13 +150,13 @@
 
   // ================================================================ art: the generated images (rendered once per process, kept)
   const ART = {};
-  // the couple at the waterfall: the kit's picture, 3:4, the strip's last frame made perfect (GG.waterfall). About 7 s, once.
-  const WF = { w: 720, h: 960, U: 720 * 0.27 };
+  // the generated pictures, painted once per process (PHOTO below): the couple at the waterfall (3:4) and the app's portrait
+  const WF = { w: 960, h: 1280, U: 960 * 0.27 };
   function art(name) {
     if (ART[name]) return ART[name];
     let c = null;
-    if (name === 'waterfall') c = GG.waterfall({ w: WF.w, h: WF.h, U: WF.U, ss: 2 });
-    else if (name === 'portrait') c = makePortrait(540, 1170);
+    if (name === 'waterfall') c = photoWaterfall(WF.w, WF.h);
+    else if (name === 'portrait') c = photoPortrait(720, 1560);
     else if (name === 'abstract') c = makeAbstract(540, 1170);
     else if (name === 'hidden') c = makeHidden();
     ART[name] = c; return c;
@@ -182,42 +182,6 @@
     return (THUMBS[key] = c);
   }
 
-  // the app's portrait: her alone, the photo-booth face and the long hair, square to the lens, the same even smile, one soft frontal light
-  // fixed to her face (the waterfall's gloss rendering, GG.head mode 'gloss'). About 5 s, once.
-  function makePortrait(w, h) {
-    const c = mk(w, h), g = c.getContext('2d');
-    // a seamless studio ground: even, symmetric, warm at the face, cooling to the edges
-    const bg = g.createRadialGradient(w * 0.5, h * 0.3, w * 0.04, w * 0.5, h * 0.4, h * 0.78);
-    bg.addColorStop(0, '#FDF0E4'); bg.addColorStop(0.35, '#F7D6CF'); bg.addColorStop(0.7, '#E6BCD2'); bg.addColorStop(1, '#C3B1E2');
-    g.fillStyle = bg; g.fillRect(0, 0, w, h);
-    const U = w * 0.36, ox = w * 0.5, oy = h * 0.33;
-    const lights = [{ dir: [0, -0.22, 1], local: true, col: '#FFF1E6', k: 0.72, wrap: 0.6 }], amb = '#7A6E6A';
-    // the strip's last pose made perfect (the waterfall's COUPLE_GLOSS): square to the lens, eyes on the camera, the same even smile,
-    // and the strip's tilt kept, toward a shoulder that is not there
-    const pose = Object.assign({}, GG.COUPLE_GLOSS.her, { roll: -0.24, open: 0.22, dx: undefined, dy: undefined });
-    const hd = GG.head(Object.assign({ who: 'her', hair: 'long', x: ox, y: oy, s: U, mode: 'gloss', lights, amb, ss: 1.5, seed: 31, brow: 0.3,
-      neckLen: 0.62, bounds: [-0.85, -0.74, 0.85, 1.75], hairLen: 1.62, stubble: 0 }, pose));
-    // her body first (a cream sweater, the waterfall's), so the long hair falls over it; then a collar band hides the neck's end
-    const nk = hd.proj(0, 0.66, -0.06), lean = -0.05, cs = Math.cos(lean), sn = Math.sin(lean), R = (x, y) => [nk[0] + (x * cs - y * sn) * U, nk[1] + (x * sn + y * cs) * U];
-    { const p = new Path2D(); const pts = [[-0.26, 0.0], [-0.5, 0.09], [-0.86, 0.24], [-1.04, 0.66], [-1.1, 2.6], [1.1, 2.6], [1.04, 0.66], [0.86, 0.24], [0.5, 0.09], [0.26, 0.0]].map(q => R(q[0], q[1]));
-      GG.spline(pts, true, p);
-      const a = R(-1, 0.1), b = R(1, 2.0); const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]); gr.addColorStop(0, '#FCF7F0'); gr.addColorStop(0.55, '#F1E8DC'); gr.addColorStop(1, '#D6CABC');
-      g.fillStyle = gr; g.fill(p); }
-    // the head over the sweater, with the neck below the scoop neckline taken out (the sweater is in front of it; the long hair is not)
-    { const tc = mk(hd.canvas.width, hd.canvas.height), tg = tc.getContext('2d'); tg.drawImage(hd.canvas, 0, 0); tg.translate(-hd.x, -hd.y);
-      const L0 = R(-0.21, -0.01), L1 = R(-0.12, 0.15), R1 = R(0.12, 0.15), R0 = R(0.21, -0.01), B0 = R(0.21, 1.8), B1 = R(-0.21, 1.8);
-      // out along the shoulders to the inner edge of each curtain of hair (they hang in view space: inner edge ~ 0.295 + 0.15 t head units)
-      const inner = vy => (0.295 + 0.15 * clamp((vy + 0.05) / 1.67, 0, 1) - 0.035) * U, sy0 = (nk[1] - oy) / U + 0.05;
-      const cut = new Path2D(); cut.moveTo(L0[0], L0[1]); cut.bezierCurveTo(L1[0], L1[1], R1[0], R1[1], R0[0], R0[1]);
-      cut.lineTo(ox + inner(sy0), oy + sy0 * U); cut.lineTo(ox + inner(1.9), oy + 1.9 * U); cut.lineTo(ox - inner(1.9), oy + 1.9 * U); cut.lineTo(ox - inner(sy0), oy + sy0 * U); cut.closePath();
-      tg.globalCompositeOperation = 'destination-out'; tg.fill(cut); g.drawImage(tc, hd.x, hd.y);
-      // the neckline's soft rib
-      g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(150,130,112,0.32)'; g.lineWidth = U * 0.03; g.beginPath(); g.moveTo(L0[0], L0[1] + U * 0.012); g.bezierCurveTo(L1[0], L1[1] + U * 0.012, R1[0], R1[1] + U * 0.012, R0[0], R0[1] + U * 0.012); g.stroke();
-      g.strokeStyle = 'rgba(255,252,246,0.7)'; g.lineWidth = U * 0.012; g.beginPath(); g.moveTo(L0[0], L0[1] + U * 0.03); g.bezierCurveTo(L1[0], L1[1] + U * 0.03, R1[0], R1[1] + U * 0.03, R0[0], R0[1] + U * 0.03); g.stroke(); g.restore(); }
-    // an even bloom over everything (no vignette: nothing is ever dark at the edges)
-    const bl = g.createRadialGradient(w * 0.5, h * 0.32, 0, w * 0.5, h * 0.32, w * 0.9); bl.addColorStop(0, 'rgba(255,255,255,0.1)'); bl.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = bl; g.fillRect(0, 0, w, h);
-    return c;
-  }
   // the wallpaper before the waterfall (Q01-Q05): a plausible default, smooth bands of indigo and rose
   function makeAbstract(w, h) {
     const c = mk(w, h), g = c.getContext('2d');
@@ -233,6 +197,314 @@
     const c = mk(30, 40), g = c.getContext('2d');
     const gr = g.createLinearGradient(0, 0, 30, 40); gr.addColorStop(0, '#D9AE95'); gr.addColorStop(0.55, '#E6C2AC'); gr.addColorStop(1, '#C99A86'); g.fillStyle = gr; g.fillRect(0, 0, 30, 40);
     const big = mk(120, 160), bg = big.getContext('2d'); bg.imageSmoothingQuality = 'high'; bg.filter = 'blur(6px)'; bg.drawImage(c, -10, -10, 140, 180); return big;
+  }
+
+  // ================================================================ PHOTO: the generated photographs (painted once, kept)
+  // Not cartoons and not 3D avatars: photographs that are too perfect. Each face is painted upright and frontal (the generator squares
+  // both faces to the lens), in soft blurred layers with one frontal light fixed to the face, perfectly symmetric, skin a little too smooth,
+  // no freckles, stubble only as a tint, the same even smile; then rotated to the strip's tilt. Long hair is drawn strand by strand in the
+  // picture's own space, so it hangs. Deterministic (OTM.rng).
+  const PH = {
+    her: { skin: '#EEC9AF', skinSh: '#CE957C', skinDeep: '#A9685A', blush: '#EE8F86', lips: '#D27A74', lipsDk: '#A9524F', iris: '#6C8448', irisDk: '#2E3B20', irisLt: '#B5A562',
+      brow: '#8E4F33', lash: '#2B1B15', sclera: '#F3EDE6', teeth: '#F4EFE8',
+      hair: '#A94D2C', hairDk: '#5C2312', hairLt: '#E8A26A', hairHi: '#F6C894',
+      face: [[0, -0.56], [0.2, -0.53], [0.295, -0.4], [0.312, -0.2], [0.306, 0.02], [0.286, 0.16], [0.245, 0.285], [0.165, 0.385], [0.082, 0.436], [0, 0.45]],
+      neck: 0.148, brT: 0.022, lashK: 1.25, eyeW: 0.064, eyeOpen: 0.036 },
+    him: { skin: '#B98060', skinSh: '#8C5A44', skinDeep: '#5E3A2C', blush: '#B9624E', lips: '#A2675A', lipsDk: '#743E35', iris: '#4A301E', irisDk: '#1C120B', irisLt: '#86603A',
+      brow: '#1F1714', lash: '#17100C', sclera: '#EFE6DA', teeth: '#F1EBE2', stubble: '#7A5444',
+      hair: '#1E1714', hairDk: '#0E0A09', hairLt: '#4E3D33', hairHi: '#6E5A4C',
+      face: [[0, -0.57], [0.215, -0.54], [0.315, -0.4], [0.334, -0.2], [0.33, 0.03], [0.314, 0.18], [0.282, 0.3], [0.2, 0.4], [0.1, 0.452], [0, 0.464]],
+      neck: 0.182, brT: 0.03, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.033 },
+  };
+  const symLoop = half => half.concat(half.slice(1, -1).reverse().map(([x, y]) => [-x, y]));
+  // a layer the size of the face canvas, with the same local transform (origin between the eyes, 1 unit = U px)
+  function faceLayer(D) { const c = mk(D.CW, D.CH), g = c.getContext('2d'); g.setTransform(D.U, 0, 0, D.U, D.OX, D.OY); return { c, g }; }
+  // draw shapes into a fresh layer, blur it, keep it inside a mask, and composite it onto the face
+  function soft(D, fn, blur, op, alpha, mask) {
+    const A = faceLayer(D); fn(A.g);
+    const B = mk(D.CW, D.CH), bg = B.getContext('2d'); if (blur > 0) bg.filter = `blur(${(blur * D.U).toFixed(2)}px)`; bg.drawImage(A.c, 0, 0); bg.filter = 'none';
+    if (mask) { bg.globalCompositeOperation = 'destination-in'; bg.drawImage(mask, 0, 0); }
+    const g = D.F.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = op || 'source-over'; g.globalAlpha = alpha == null ? 1 : alpha; g.drawImage(B, 0, 0); g.restore();
+  }
+  const ell = (g, x, y, rx, ry, col, a) => { g.fillStyle = col; g.globalAlpha = a == null ? 1 : a; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; };
+  const both = (fn) => { fn(1); fn(-1); };
+
+  function paintEye(g, P, sd, o) {
+    // the right eye (sd = 1) or its mirror image; local units, centre (0.152 sd, 0)
+    const cx = 0.152 * sd, w = P.eyeW, op = P.eyeOpen * (o.eyes == null ? 1 : o.eyes), sm = o.smile || 0;
+    const inner = [cx - sd * w * 0.92, 0.006], outer = [cx + sd * w, -0.004], top = [cx - sd * w * 0.12, -op], bot = [cx + sd * w * 0.08, 0.021 - 0.006 * sm];
+    const lid = new Path2D(); lid.moveTo(inner[0], inner[1]);
+    lid.bezierCurveTo(inner[0] + sd * w * 0.25, top[1] + 0.004, top[0] - sd * w * 0.3, top[1], top[0], top[1]);
+    lid.bezierCurveTo(top[0] + sd * w * 0.55, top[1], outer[0] - sd * w * 0.18, outer[1] - op * 0.45, outer[0], outer[1]);
+    const opening = new Path2D(lid); opening.bezierCurveTo(outer[0] - sd * w * 0.3, bot[1] + 0.002, bot[0] + sd * w * 0.35, bot[1], bot[0], bot[1]);
+    opening.bezierCurveTo(bot[0] - sd * w * 0.5, bot[1], inner[0] + sd * w * 0.2, inner[1] + 0.008, inner[0], inner[1]); opening.closePath();
+    // the eye white, shaded at the corners and under the lid
+    g.save(); g.clip(opening);
+    const sg = g.createRadialGradient(cx, 0.0, 0.0, cx, 0.0, w * 1.05); sg.addColorStop(0, P.sclera); sg.addColorStop(0.6, mixHex(P.sclera, '#C9B7A8', 0.35)); sg.addColorStop(1, mixHex(P.sclera, '#8E6E62', 0.6));
+    g.fillStyle = sg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
+    // the iris: a dark limbal ring, the colour, a lighter ring round the pupil, fine fibres; the pupil; a catchlight (the same in both eyes)
+    const ir = 0.0305, iy = -0.003;
+    const ig = g.createRadialGradient(cx, iy, 0, cx, iy, ir); ig.addColorStop(0, P.irisLt); ig.addColorStop(0.42, mixHex(P.irisLt, P.iris, 0.6)); ig.addColorStop(0.72, P.iris); ig.addColorStop(0.9, P.irisDk); ig.addColorStop(1, mixHex(P.irisDk, '#000000', 0.5));
+    g.fillStyle = ig; g.beginPath(); g.arc(cx, iy, ir, 0, Math.PI * 2); g.fill();
+    const r = O.rng('iris' + P.iris); g.lineWidth = 0.0012;
+    for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 + r() * 0.05, r0 = 0.014 + r() * 0.004, r1 = ir * (0.75 + r() * 0.2); g.strokeStyle = r() < 0.5 ? rgba(P.irisLt, 0.35) : rgba(P.irisDk, 0.3); g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, iy + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, iy + Math.sin(a) * r1); g.stroke(); }
+    g.fillStyle = '#0A0706'; g.beginPath(); g.arc(cx, iy, 0.0118, 0, Math.PI * 2); g.fill();
+    // the upper lid's shadow across the top of the eye
+    const lg = g.createLinearGradient(0, -op, 0, -op + 0.026); lg.addColorStop(0, 'rgba(40,20,14,0.6)'); lg.addColorStop(1, 'rgba(40,20,14,0)'); g.fillStyle = lg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
+    g.fillStyle = 'rgba(255,255,255,0.97)'; g.beginPath(); g.ellipse(cx - 0.006, iy - 0.011, 0.0058, 0.0052, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.arc(cx + 0.009, iy + 0.008, 0.0022, 0, Math.PI * 2); g.fill();
+    g.restore();
+    // the pink inner corner
+    ell(g, inner[0] + sd * 0.006, inner[1] + 0.001, 0.007, 0.006, '#D8988C', 0.85);
+    // the lash line, thicker toward the outer corner, then lashes (hers longer)
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = P.lash; g.lineWidth = 0.0042 * (0.6 + 0.4 * P.lashK); g.stroke(lid);
+    g.lineWidth = 0.0024 * P.lashK; g.globalAlpha = 0.9;
+    const lr = O.rng('lash' + sd + P.lash), n = Math.round(16 * P.lashK);
+    for (let i = 0; i < n; i++) { const u = 0.15 + 0.85 * i / (n - 1); const x = lerp(inner[0], outer[0], u), y = lerp(inner[1], outer[1], u) - Math.sin(Math.PI * Math.min(1, u * 1.05)) * (op - 0.004) - 0.001;
+      const len = (0.008 + 0.014 * u) * P.lashK * (0.85 + 0.3 * lr()), ang = -Math.PI / 2 + sd * (0.25 + 0.9 * u);
+      g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(ang) * len * 0.5, y + Math.sin(ang) * len * 0.7, x + Math.cos(ang + sd * 0.35) * len, y + Math.sin(ang + sd * 0.35) * len); g.stroke(); }
+    g.restore();
+    return { lid, opening, inner, outer, top, bot };
+  }
+
+  // one face, upright: returns {c, ox, oy} (the canvas and the pixel position of the point between the eyes)
+  function paintFace(who, U, o) {
+    o = o || {}; const P = PH[who], sm = o.smile == null ? 1 : o.smile, open = o.open == null ? 0.3 : o.open;
+    const D = { U, CW: Math.ceil(U * 1.06), CH: Math.ceil(U * 1.9), OX: Math.ceil(U * 1.06) / 2, OY: U * 0.8 };
+    D.F = faceLayer(D); const g = D.F.g;
+    const faceP = GG.spline(symLoop(P.face), true), nk = P.neck;
+    const neckP = GG.spline([[-nk, 0.12], [nk, 0.12], [nk * 1.04, 0.62], [nk * 1.5, 0.98, 1], [-nk * 1.5, 0.98, 1], [-nk * 1.04, 0.62]], true);
+    const earX = (P.face[4][0] + 0.022), earP = new Path2D(); both(sd => { earP.ellipse(sd * earX, 0.065, 0.042, 0.095, sd * -0.12, 0, Math.PI * 2); });
+    // the skin's mask
+    const M = faceLayer(D); M.g.fillStyle = '#fff'; M.g.fill(neckP); M.g.fill(earP); M.g.fill(faceP);
+    // base colours: the neck a shade deeper, ears, face
+    g.fillStyle = mixHex(P.skin, P.skinSh, 0.25); g.fill(neckP); g.fillStyle = mixHex(P.skin, P.skinSh, 0.15); g.fill(earP); g.fillStyle = P.skin; g.fill(faceP);
+    // ---- form: everything turns away from the one frontal light, softly
+    soft(D, l => { const gr = l.createRadialGradient(0, 0, 0.05, 0, 0, 1); gr.addColorStop(0, rgba(P.skinSh, 0)); gr.addColorStop(0.62, rgba(P.skinSh, 0.0)); gr.addColorStop(0.92, rgba(P.skinSh, 0.55)); gr.addColorStop(1, rgba(P.skinDeep, 0.8));
+      l.save(); l.translate(0, -0.02); l.scale(0.345, 0.52); l.fillStyle = gr; l.fillRect(-1.2, -1.2, 2.4, 2.4); l.restore(); }, 0.02, 'multiply', 1, M.c);
+    // the face's shadow on the neck, the ears' inner shade
+    soft(D, l => { const gr = l.createLinearGradient(0, 0.3, 0, 0.66); gr.addColorStop(0, rgba(P.skinDeep, 0.85)); gr.addColorStop(0.55, rgba(P.skinSh, 0.35)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
+      both(sd => ell(l, sd * (earX - 0.004), 0.07, 0.022, 0.062, P.skinDeep, 0.55)); }, 0.012, 'multiply', 1, M.c);
+    // sockets, the sides of the nose, under the nose, under the lip, under the jaw
+    soft(D, l => {
+      both(sd => { ell(l, sd * 0.152, -0.018, 0.085, 0.05, P.skinSh, 0.55); ell(l, sd * 0.08, 0.0, 0.03, 0.03, P.skinSh, 0.45); });
+      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, 0.55); l.lineWidth = 0.026; l.beginPath(); l.moveTo(sd * 0.05, -0.01); l.quadraticCurveTo(sd * 0.04, 0.08, sd * 0.052, 0.165); l.stroke(); });
+      ell(l, 0, 0.226, 0.05, 0.016, P.skinDeep, 0.5); ell(l, 0, 0.372, 0.05, 0.016, P.skinSh, 0.55);
+      both(sd => ell(l, sd * 0.11, 0.33, 0.022, 0.03, P.skinSh, 0.3));
+      both(sd => ell(l, sd * 0.255, 0.21, 0.05, 0.1, P.skinSh, 0.28));
+    }, 0.02, 'multiply', 1, M.c);
+    // the light: forehead, the bridge and tip of the nose, the cheekbones, the chin, the upper lip's ridge (soft, never banded)
+    soft(D, l => {
+      ell(l, 0, -0.27, 0.15, 0.09, '#FFF6EE', 0.5); ell(l, 0, 0.06, 0.016, 0.09, '#FFF6EE', 0.45); ell(l, 0, 0.158, 0.028, 0.024, '#FFF8F2', 0.6);
+      both(sd => { ell(l, sd * 0.19, 0.06, 0.07, 0.035, '#FFF4EA', 0.35); ell(l, sd * 0.15, -0.075, 0.06, 0.012, '#FFF4EA', 0.25); });
+      ell(l, 0, 0.407, 0.045, 0.022, '#FFF4EA', 0.4); ell(l, 0, 0.262, 0.03, 0.008, '#FFF6EE', 0.35);
+    }, 0.022, 'screen', 0.55, M.c);
+    // rosy cheeks (the generator's improvement), and his stubble as a smooth tint
+    soft(D, l => { both(sd => ell(l, sd * 0.175, 0.13, 0.085, 0.055, P.blush, who === 'her' ? 0.55 : 0.35)); ell(l, 0, -0.2, 0.08, 0.05, P.blush, 0.12); }, 0.035, 'multiply', who === 'her' ? 0.45 : 0.35, M.c);
+    if (P.stubble) soft(D, l => { l.fillStyle = P.stubble; l.beginPath(); l.moveTo(-0.3, 0.2); l.bezierCurveTo(-0.2, 0.24, -0.1, 0.235, 0, 0.24); l.bezierCurveTo(0.1, 0.235, 0.2, 0.24, 0.3, 0.2); l.lineTo(0.3, 0.5); l.lineTo(-0.3, 0.5); l.closePath(); l.fill(); }, 0.02, 'multiply', 0.32, M.c);
+    // ---- the brows: many fine hairs, soft
+    soft(D, l => { both(sd => {
+      const r = O.rng('brow' + sd + who); l.lineCap = 'round';
+      const bx = u => sd * lerp(0.062, 0.245, u), by = u => -0.112 - 0.028 * Math.sin(Math.PI * Math.min(1, u * 1.25)) + 0.01 * u, th = u => P.brT * (1 - 0.65 * u);
+      l.fillStyle = rgba(P.brow, 0.35); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
+      for (let i = 0; i < 160; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u), x = bx(u), ang = u < 0.18 ? -Math.PI / 2 + sd * 0.4 : (sd > 0 ? -0.25 : Math.PI + 0.25) + (r() - 0.5) * 0.3, len = 0.012 + 0.014 * r();
+        l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.45 + 0.4 * r()); l.lineWidth = 0.0022; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0025, 'source-over', 1);
+    // ---- the eyes: the lid crease and lid above, then the eye itself
+    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.5); l.lineWidth = 0.006; l.lineCap = 'round'; l.beginPath(); l.moveTo(sd * 0.094, -0.022); l.quadraticCurveTo(sd * 0.145, -0.068, sd * 0.215, -0.028); l.stroke();
+      l.strokeStyle = rgba(P.skinDeep, 0.28); l.lineWidth = 0.004; l.beginPath(); l.moveTo(sd * 0.1, 0.022); l.quadraticCurveTo(sd * 0.155, 0.04, sd * 0.208, 0.012); l.stroke(); }); }, 0.005, 'multiply', 1);
+    { const E = faceLayer(D); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes: o.eyes })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
+    // ---- the nose: no lines, only the soft wings and nostrils
+    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.55); l.lineWidth = 0.009; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
+      ell(l, sd * 0.021, 0.204, 0.012, 0.0065, mixHex(P.skinDeep, '#2A120C', 0.4), 0.8); }); }, 0.0045, 'multiply', 1);
+    // ---- the mouth: the same even smile, upper teeth showing
+    { const cxm = 0.074 + 0.014 * sm, cym = 0.306 - 0.02 * sm, yu = 0.299, yl = yu + 0.012 + 0.05 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
+      ul.moveTo(-cxm, cym); ul.bezierCurveTo(-cxm * 0.75, cym - 0.012, -0.04, yu - 0.026, -0.022, yu - 0.028); ul.quadraticCurveTo(-0.008, yu - 0.022, 0, yu - 0.019); ul.quadraticCurveTo(0.008, yu - 0.022, 0.022, yu - 0.028);
+      ul.bezierCurveTo(0.04, yu - 0.026, cxm * 0.75, cym - 0.012, cxm, cym); ul.bezierCurveTo(cxm * 0.6, cym + 0.006, 0.04, yu + 0.002, 0, yu + 0.002); ul.bezierCurveTo(-0.04, yu + 0.002, -cxm * 0.6, cym + 0.006, -cxm, cym); ul.closePath();
+      teeth.moveTo(-cxm, cym); teeth.bezierCurveTo(-cxm * 0.6, cym + 0.006, -0.04, yu + 0.001, 0, yu + 0.001); teeth.bezierCurveTo(0.04, yu + 0.001, cxm * 0.6, cym + 0.006, cxm, cym);
+      teeth.bezierCurveTo(cxm * 0.7, cym + 0.018, 0.045, yl, 0, yl); teeth.bezierCurveTo(-0.045, yl, -cxm * 0.7, cym + 0.018, -cxm, cym); teeth.closePath();
+      ll.moveTo(-cxm, cym); ll.bezierCurveTo(-cxm * 0.7, cym + 0.018, -0.045, yl, 0, yl); ll.bezierCurveTo(0.045, yl, cxm * 0.7, cym + 0.018, cxm, cym);
+      ll.bezierCurveTo(cxm * 0.8, cym + 0.03, 0.05, yl + 0.034, 0, yl + 0.035); ll.bezierCurveTo(-0.05, yl + 0.034, -cxm * 0.8, cym + 0.03, -cxm, cym); ll.closePath();
+      const Mo = faceLayer(D), mg = Mo.g;
+      mg.fillStyle = '#4A1C18'; mg.fill(teeth);
+      mg.save(); mg.clip(teeth); const tg = mg.createLinearGradient(-cxm, 0, cxm, 0); tg.addColorStop(0, mixHex(P.teeth, '#6A4A40', 0.7)); tg.addColorStop(0.22, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(0.5, P.teeth); tg.addColorStop(0.78, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(1, mixHex(P.teeth, '#6A4A40', 0.7));
+      mg.fillStyle = tg; mg.beginPath(); mg.moveTo(-cxm, cym); mg.bezierCurveTo(-cxm * 0.6, cym + 0.006, -0.04, yu, 0, yu); mg.bezierCurveTo(0.04, yu, cxm * 0.6, cym + 0.006, cxm, cym); mg.lineTo(cxm, yu + 0.024); mg.bezierCurveTo(0.04, yu + 0.026, -0.04, yu + 0.026, -cxm, yu + 0.024); mg.closePath(); mg.fill();
+      mg.strokeStyle = 'rgba(120,90,80,0.16)'; mg.lineWidth = 0.0015; [-0.034, -0.012, 0.012, 0.034].forEach(x => { mg.beginPath(); mg.moveTo(x * 1.0, yu); mg.lineTo(x * 1.02, yu + 0.022); mg.stroke(); });
+      const sh = mg.createLinearGradient(0, yu, 0, yu + 0.012); sh.addColorStop(0, 'rgba(60,30,25,0.45)'); sh.addColorStop(1, 'rgba(60,30,25,0)'); mg.fillStyle = sh; mg.fillRect(-0.1, yu - 0.01, 0.2, 0.03); mg.restore();
+      const ug = mg.createLinearGradient(0, yu - 0.03, 0, yu + 0.004); ug.addColorStop(0, P.lips); ug.addColorStop(1, P.lipsDk); mg.fillStyle = ug; mg.fill(ul);
+      const lg = mg.createLinearGradient(0, yl, 0, yl + 0.036); lg.addColorStop(0, P.lipsDk); lg.addColorStop(0.35, P.lips); lg.addColorStop(1, mixHex(P.lips, P.skin, 0.35)); mg.fillStyle = lg; mg.fill(ll);
+      mg.save(); mg.clip(ll); mg.filter = `blur(${(0.006 * U).toFixed(2)}px)`; ell(mg, 0.0, yl + 0.016, 0.028, 0.008, '#FFF2EC', 0.55); mg.restore();
+      mg.save(); mg.clip(ul); mg.filter = `blur(${(0.004 * U).toFixed(2)}px)`; ell(mg, 0.0, yu - 0.022, 0.03, 0.004, '#FFE8E0', 0.35); mg.restore();
+      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0016 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
+      // the smile's corners, softly
+      soft(D, l => { both(sd => { ell(l, sd * (cxm + 0.012), cym + 0.004, 0.012, 0.018, P.skinSh, 0.55); l.strokeStyle = rgba(P.skinSh, 0.35); l.lineWidth = 0.008; l.beginPath(); l.moveTo(sd * 0.062, 0.215); l.quadraticCurveTo(sd * 0.105, 0.26, sd * (cxm + 0.018), cym + 0.012); l.stroke(); }); }, 0.012, 'multiply', 0.8, M.c);
+    }
+    // ---- his hair: short, dark, curly, grown out a little
+    if (who === 'him') {
+      const hp = new Path2D(); const hairHalf = [[0, -0.69], [0.2, -0.665], [0.33, -0.55], [0.375, -0.35], [0.36, -0.12], [0.338, -0.04], [0.316, -0.15], [0.28, -0.29], [0.17, -0.36], [0, -0.372]];
+      GG.spline(symLoop(hairHalf), true, hp);
+      soft(D, l => { l.fillStyle = P.skinDeep; l.translate(0, 0.03); l.fill(hp); }, 0.03, 'multiply', 0.55, M.c);   // its soft shadow on the forehead
+      const Hh = faceLayer(D), hg = Hh.g; hg.fillStyle = P.hair; hg.fill(hp);
+      const r = O.rng('curls'); hg.save(); hg.lineCap = 'round';
+      for (let i = 0; i < 900; i++) { const x = (r() - 0.5) * 0.78, y = -0.7 + r() * 0.68; if (!hg.isPointInPath(hp, x * U + D.OX, y * U + D.OY)) continue;
+        const rr = 0.008 + r() * 0.012, a0 = r() * Math.PI * 2, lit = (-y - 0.2) * 1.2 + (r() - 0.5) * 0.6;
+        hg.strokeStyle = lit > 0.35 ? rgba(P.hairHi, 0.45 + 0.3 * r()) : lit > 0 ? rgba(P.hairLt, 0.5 + 0.3 * r()) : rgba(P.hairDk, 0.7); hg.lineWidth = 0.003 + r() * 0.0025;
+        hg.beginPath(); hg.arc(x, y, rr, a0, a0 + 2.2 + r() * 1.5); hg.stroke(); }
+      // a curly silhouette: small coils standing proud of the outline
+      for (let i = 0; i < 140; i++) { const a = -Math.PI * (0.06 + 0.88 * r()), x = Math.cos(a) * 0.37, y = -0.33 + Math.sin(a) * 0.35, rr = 0.012 + r() * 0.01; hg.fillStyle = P.hair; hg.beginPath(); hg.arc(x, y, rr, 0, Math.PI * 2); hg.fill(); }
+      hg.restore();
+      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0018 * U).toFixed(2)}px)`; bg.drawImage(Hh.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
+    }
+    // the whole face a touch soft (a lens, and a beauty filter)
+    const out = mk(D.CW, D.CH), og = out.getContext('2d'); og.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; og.drawImage(D.F.c, 0, 0);
+    return { c: out, ox: D.OX, oy: D.OY, M: M.c };
+  }
+
+  // long copper hair, strand by strand, in the picture's own space (so it hangs): layer 'back' (behind the neck and shoulders) or 'front'.
+  // head: {x, y, U, roll}; o: {len (how far below the eyes it falls, head units), seed}
+  function paintLongHair(g, head, layer, o) {
+    o = o || {}; const P = PH.her, U = head.U, cr = Math.cos(head.roll), sr = Math.sin(head.roll), r = O.rng('hair' + layer + (o.seed || 1));
+    const toS = (x, y) => [head.x + (x * cr - y * sr) * U, head.y + (x * sr + y * cr) * U];
+    const len = o.len == null ? 1.45 : o.len, part = 0.11;
+    // a strand: local path around the head down to `hang` (local y), then it falls in picture space, with a slow wave
+    const strand = (pts, hang, drop, spread, waveK) => {
+      const out = pts.map(([x, y]) => toS(x, y)); const last = out[out.length - 1], prev = out[out.length - 2];
+      let dx = last[0] - prev[0], dy = last[1] - prev[1]; const l0 = Math.hypot(dx, dy) || 1; dx /= l0; dy /= l0;
+      const n = 14, step = drop * U / n; let x = last[0], y = last[1];
+      for (let i = 1; i <= n; i++) { const t = i / n, k = Math.min(1, t * 2.2); const vx = lerp(dx, spread, k), vy = lerp(dy, 1, k), vl = Math.hypot(vx, vy);
+        x += vx / vl * step + Math.sin(t * 5.2 + waveK) * 0.006 * U * t; y += vy / vl * step; out.push([x, y]); }
+      return out;
+    };
+    const path = pts => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length - 1; i++) { const mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2; p.quadraticCurveTo(pts[i][0], pts[i][1], mx, my); } const e = pts[pts.length - 1]; p.lineTo(e[0], e[1]); return p; };
+    const strands = [];
+    if (layer === 'back') {
+      // the fall behind her neck and shoulders, from under the crown
+      for (let i = 0; i < 260; i++) { const s = r() * 2 - 1, x0 = s * 0.3; strands.push({ pts: strand([[x0 * 0.6, -0.4], [x0 * 1.1, -0.1], [x0 * 1.18, 0.25]], 0.25, len - 0.2 + r() * 0.2, s * 0.12, r() * 6), w: 0.02 + r() * 0.03, tone: r() * 0.5 }); }
+    } else {
+      // the crown: from the part over the top of the head, then the two curtains framing the face and falling over the shoulders
+      for (let side of [1, -1]) {
+        const N = side > 0 ? 340 : 420;
+        for (let i = 0; i < N; i++) {
+          const s = Math.pow(r(), 0.8), jitter = (r() - 0.5) * 0.012;
+          const y0 = -0.5 - 0.07 * r(), x0 = part + (r() - 0.5) * 0.01;
+          // the hairline edge strands (s ~ 0) lie close to the face; deeper ones (s ~ 1) sit further out and higher
+          const ex = 0.3 + 0.075 * s, topY = -0.6 - 0.03 * s;
+          let pts;
+          if (side > 0) pts = [[x0, y0], [lerp(x0, ex, 0.5), topY + 0.04], [ex + 0.015, -0.36 + 0.04 * s], [ex + 0.03 + jitter, -0.12], [ex + 0.02 + jitter - 0.03 * (1 - s), 0.12]];
+          else pts = [[x0, y0], [lerp(x0, -0.05, 0.5), -0.5 + 0.08 * (1 - s) * 0.5 - 0.05 * s], [-0.12 - 0.06 * s, -0.43 + 0.06 * (1 - s)], [-0.27 - 0.06 * s, -0.33 + 0.07 * (1 - s)], [-(ex + 0.02) + jitter, -0.12], [-(ex + 0.005) + jitter + 0.03 * (1 - s), 0.12]];
+          strands.push({ pts: strand(pts, 0.12, len - 0.1 - r() * 0.25 - 0.15 * s, side * (0.05 + 0.12 * s), r() * 6 + side), w: 0.004 + r() * 0.006, tone: s * 0.6 + r() * 0.4 });
+        }
+      }
+    }
+    // clumps first (the body of the hair), then fine strands over them, darker within, lighter at the surface
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
+    const Hl = mk(g.canvas.width, g.canvas.height), hg = Hl.getContext('2d'); hg.setTransform(g.getTransform()); hg.lineCap = 'round'; hg.lineJoin = 'round';
+    strands.forEach(st => { const p = path(st.pts); hg.strokeStyle = mixHex(P.hairDk, P.hair, 0.55 + 0.3 * (1 - st.tone)); hg.lineWidth = (layer === 'back' ? st.w : 0.034) * U; hg.stroke(p); });
+    strands.forEach(st => { const p = path(st.pts); const c = st.tone < 0.35 ? mixHex(P.hair, P.hairLt, 0.5 * (1 - st.tone)) : mixHex(P.hairDk, P.hair, 0.7); hg.strokeStyle = rgba(c, 0.55); hg.lineWidth = Math.max(0.6, st.w * U * 0.45); hg.stroke(p); });
+    for (let i = 0; i < strands.length; i += 2) { const st = strands[i]; const p = path(st.pts); hg.strokeStyle = rgba(r() < 0.5 ? P.hairLt : P.hair, 0.28); hg.lineWidth = Math.max(0.5, 0.0016 * U); hg.stroke(p); }
+    // the sheen: a soft lighter band over the crown and down the curtains (the light fixed to her, the same as on her face)
+    const Sh = mk(g.canvas.width, g.canvas.height), sg = Sh.getContext('2d'); sg.setTransform(g.getTransform()); sg.filter = `blur(${(0.03 * U).toFixed(1)}px)`;
+    if (layer === 'front') { const a = toS(-0.02, -0.52), b = toS(0.2, -0.5); sg.fillStyle = rgba(P.hairHi, 0.85); sg.beginPath(); sg.ellipse((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0.2 * U, 0.05 * U, head.roll, 0, Math.PI * 2); sg.fill();
+      both(sd => { const c0 = toS(sd * 0.36, 0.05); sg.beginPath(); sg.ellipse(c0[0], c0[1] + 0.25 * U, 0.03 * U, 0.3 * U, 0, 0, Math.PI * 2); sg.fill(); }); }
+    sg.filter = 'none'; sg.setTransform(1, 0, 0, 1, 0, 0); sg.globalCompositeOperation = 'destination-in'; sg.drawImage(Hl, 0, 0);
+    hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.globalCompositeOperation = 'screen'; hg.globalAlpha = 0.55; hg.drawImage(Sh, 0, 0); hg.restore();
+    g.setTransform(1, 0, 0, 1, 0, 0); g.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; g.drawImage(Hl, 0, 0); g.restore();
+  }
+
+  // clothes: a body hung from a neck point, softly shaded (his navy jacket over a white tee; her cream sweater)
+  function paintBody(g, who, nk, U, lean, o) {
+    o = o || {}; const her = who === 'her', wS = her ? 0.84 : 1.0, cs = Math.cos(lean), sn = Math.sin(lean), R = (x, y) => [nk[0] + (x * cs - y * sn) * U, nk[1] + (x * sn + y * cs) * U];
+    const pts = [[-0.24, 0.0], [-0.52 * wS, 0.09], [-0.96 * wS, 0.25], [-1.18 * wS, 0.66], [-1.26 * wS, 2.6], [1.26 * wS, 2.6], [1.18 * wS, 0.66], [0.96 * wS, 0.25], [0.52 * wS, 0.09], [0.24, 0.0]].map(q => R(q[0], q[1]));
+    const p = GG.spline(pts, true); const base = her ? '#F2EADF' : '#26344C';
+    g.save(); const a = R(-1, 0.1), b = R(1, 1.6); const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]); gr.addColorStop(0, mixHex(base, '#FFFFFF', 0.25)); gr.addColorStop(0.5, base); gr.addColorStop(1, mixHex(base, '#000000', 0.2));
+    g.fillStyle = gr; g.fill(p); g.clip(p);
+    // the shoulders turn away from the light; soft folds
+    g.filter = `blur(${(0.05 * U).toFixed(1)}px)`; both(sd => { const c = R(sd * 1.15, 0.9); g.fillStyle = 'rgba(0,0,0,0.22)'; g.beginPath(); g.ellipse(c[0], c[1], 0.25 * U, 0.9 * U, 0, 0, Math.PI * 2); g.fill(); });
+    g.filter = `blur(${(0.02 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 0.03 * U; both(sd => { const s0 = R(sd * 0.5, 0.55), s1 = R(sd * 0.62, 1.2), s2 = R(sd * 0.55, 1.9); g.beginPath(); g.moveTo(s0[0], s0[1]); g.quadraticCurveTo(s1[0], s1[1], s2[0], s2[1]); g.stroke(); });
+    g.filter = 'none';
+    if (!her) {   // the white tee in the open jacket, its round collar
+      const t = new Path2D(), A = R(-0.25, -0.02), B = R(0.25, -0.02), C = R(0.36, 2.6), Dd = R(-0.33, 2.6); t.moveTo(A[0], A[1]); t.lineTo(B[0], B[1]); t.lineTo(C[0], C[1]); t.lineTo(Dd[0], Dd[1]); t.closePath();
+      const tg = g.createLinearGradient(A[0], A[1], C[0], C[1]); tg.addColorStop(0, '#FBF8F3'); tg.addColorStop(1, '#D9D4CC'); g.fillStyle = tg; g.fill(t);
+      g.filter = `blur(${(0.012 * U).toFixed(1)}px)`; const c0 = R(0, 0.12); g.fillStyle = 'rgba(80,60,50,0.28)'; g.beginPath(); g.ellipse(c0[0], c0[1], 0.17 * U, 0.05 * U, lean, 0, Math.PI); g.fill(); g.filter = 'none';
+      both(sd => { const l0 = R(sd * 0.26, -0.01), l1 = R(sd * 0.34, 0.5), l2 = R(sd * 0.36, 2.6); g.strokeStyle = 'rgba(10,14,24,0.55)'; g.lineWidth = 0.02 * U; g.filter = `blur(${(0.01 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(l0[0], l0[1]); g.quadraticCurveTo(l1[0], l1[1], l2[0], l2[1]); g.stroke(); g.filter = 'none'; });
+    } else {   // her round neckline, a soft rib
+      const L0 = R(-0.2, -0.005), L1 = R(-0.11, 0.13), R1 = R(0.11, 0.13), R0 = R(0.2, -0.005);
+      g.filter = `blur(${(0.008 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(150,128,110,0.4)'; g.lineWidth = 0.024 * U; g.beginPath(); g.moveTo(L0[0], L0[1]); g.bezierCurveTo(L1[0], L1[1], R1[0], R1[1], R0[0], R0[1]); g.stroke(); g.filter = 'none';
+    }
+    g.restore();
+    return { p, R };
+  }
+  // place a painted face (upright canvas) at a head position with the head's roll; the neck below the neckline is cut by the body after
+  function placeFace(g, F, x, y, roll) { g.save(); g.translate(x, y); g.rotate(roll); g.drawImage(F.c, -F.ox, -F.oy); g.restore(); }
+
+  // the gorge behind them, as a phone's portrait mode would show it: lush, symmetric (one half mirrored), the water whiter than anything
+  function paintGorge(w, h) {
+    const c = mk(w, h), g = c.getContext('2d'), r = O.rng('gorge');
+    const sk = g.createLinearGradient(0, 0, 0, h * 0.5); sk.addColorStop(0, '#A9E9F4'); sk.addColorStop(1, '#F1FCFF'); g.fillStyle = sk; g.fillRect(0, 0, w, h);
+    const half = mk(w, h), hg = half.getContext('2d');
+    // the rock wall, dark and wet
+    const cliff = new Path2D(); cliff.moveTo(-10, -10); cliff.lineTo(w * 0.41, -10); cliff.bezierCurveTo(w * 0.42, h * 0.18, w * 0.38, h * 0.32, w * 0.41, h * 0.5); cliff.lineTo(w * 0.43, h * 0.66); cliff.lineTo(-10, h * 0.72); cliff.closePath();
+    const cg = hg.createLinearGradient(0, 0, w * 0.45, h * 0.4); cg.addColorStop(0, '#173A36'); cg.addColorStop(0.6, '#25524B'); cg.addColorStop(1, '#4C7C70'); hg.fillStyle = cg; hg.fill(cliff);
+    hg.save(); hg.clip(cliff); for (let i = 0; i < 90; i++) { const x = r() * w * 0.45, y = r() * h * 0.7; hg.strokeStyle = r() < 0.5 ? 'rgba(10,30,28,0.35)' : 'rgba(150,200,190,0.18)'; hg.lineWidth = 2 + r() * 5; hg.beginPath(); hg.moveTo(x, y); hg.lineTo(x + (r() - 0.5) * 20, y + 40 + r() * 120); hg.stroke(); } hg.restore();
+    // the greenery hanging down the walls: many soft leaf-masses, lit from above (the sun is behind the fall)
+    const greens = ['#0F4A36', '#17603F', '#237A4B', '#2E9157', '#48A862', '#6FC273', '#A3DE8C'];
+    for (let i = 0; i < 420; i++) {
+      const y = Math.pow(r(), 0.9) * h * 0.66, edge = w * (0.36 + 0.05 * Math.sin(y / h * 7)), x = r() * edge * 1.02, rad = w * (0.018 + 0.05 * r()) * (0.6 + y / h);
+      const lit = clamp(0.25 + (1 - y / (h * 0.7)) * 0.5 + (r() - 0.5) * 0.5, 0, 1), base = greens[Math.floor(lit * (greens.length - 1))], top = greens[Math.min(greens.length - 1, Math.floor(lit * (greens.length - 1)) + 2)];
+      const gr = hg.createRadialGradient(x - rad * 0.2, y - rad * 0.45, rad * 0.1, x, y, rad); gr.addColorStop(0, top); gr.addColorStop(0.7, base); gr.addColorStop(1, rgba(base, 0));
+      hg.fillStyle = gr; hg.beginPath(); hg.ellipse(x, y, rad, rad * (0.75 + 0.3 * r()), 0, 0, Math.PI * 2); hg.fill();
+    }
+    // dark rocks at the pool's edge
+    for (let i = 0; i < 9; i++) { const x = w * (0.02 + 0.33 * r()), y = h * (0.66 + 0.06 * r()), rx = w * (0.05 + 0.06 * r()); const gr = hg.createLinearGradient(x, y - rx * 0.6, x, y + rx * 0.4); gr.addColorStop(0, '#5C7A70'); gr.addColorStop(1, '#16302B'); hg.fillStyle = gr; hg.beginPath(); hg.ellipse(x, y, rx, rx * 0.45, 0, 0, Math.PI * 2); hg.fill(); }
+    g.drawImage(half, 0, 0); g.save(); g.translate(w, 0); g.scale(-1, 1); g.drawImage(half, 0, 0); g.restore();
+    // the fall: a column of white, widening, with clean streaks
+    const fall = new Path2D(); fall.moveTo(w * 0.43, -10); fall.lineTo(w * 0.57, -10); fall.bezierCurveTo(w * 0.585, h * 0.25, w * 0.6, h * 0.45, w * 0.66, h * 0.64); fall.lineTo(w * 0.34, h * 0.64); fall.bezierCurveTo(w * 0.4, h * 0.45, w * 0.415, h * 0.25, w * 0.43, -10); fall.closePath();
+    const fg = g.createLinearGradient(w * 0.35, 0, w * 0.65, 0); fg.addColorStop(0, '#DDF6FA'); fg.addColorStop(0.3, '#FFFFFF'); fg.addColorStop(0.7, '#FFFFFF'); fg.addColorStop(1, '#DDF6FA'); g.fillStyle = fg; g.fill(fall);
+    g.save(); g.clip(fall); for (let i = 0; i < 70; i++) { const x = w * (0.34 + 0.32 * r()), sw = w * (0.002 + 0.006 * r()); g.fillStyle = r() < 0.6 ? 'rgba(150,215,228,0.32)' : 'rgba(255,255,255,0.8)'; g.fillRect(x, -10, sw, h); } g.restore();
+    // mist and the pool
+    const pool = g.createLinearGradient(0, h * 0.63, 0, h); pool.addColorStop(0, '#A6F1EE'); pool.addColorStop(0.5, '#4ECFCB'); pool.addColorStop(1, '#16A1A4'); g.fillStyle = pool; g.fillRect(0, h * 0.64, w, h * 0.36);
+    for (let i = 0; i < 26; i++) { const y = h * (0.66 + 0.33 * r()), x = w * r(); g.fillStyle = 'rgba(255,255,255,0.25)'; g.fillRect(x - w * 0.12, y, w * 0.24, 2 + r() * 2); }
+    const rf = g.createLinearGradient(0, h * 0.64, 0, h); rf.addColorStop(0, 'rgba(255,255,255,0.9)'); rf.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rf; g.fillRect(w * 0.36, h * 0.64, w * 0.28, h * 0.36);
+    [[0.5, 0.63, 0.45, 0.95], [0.3, 0.66, 0.26, 0.55], [0.7, 0.66, 0.26, 0.55], [0.5, 0.5, 0.3, 0.45], [0.5, 0.8, 0.5, 0.3]].forEach(([x, y, rr, a]) => { const mg = g.createRadialGradient(w * x, h * y, 0, w * x, h * y, w * rr); mg.addColorStop(0, `rgba(255,255,255,${a})`); mg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = mg; g.fillRect(0, 0, w, h); });
+    // portrait mode: the background far out of focus
+    const out = mk(w, h), og = out.getContext('2d'); og.filter = `blur(${(w / 75).toFixed(1)}px)`; og.drawImage(c, 0, 0); og.filter = 'none';
+    return out;
+  }
+  // a photograph's finish: a little bloom from the whites, no grain, no vignette
+  function photoFinish(c, k) {
+    const w = c.width, h = c.height, b = mk(w, h), bg = b.getContext('2d'); bg.filter = `blur(${(w / 60).toFixed(1)}px)`; bg.drawImage(c, 0, 0);
+    const g = c.getContext('2d'); g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = k == null ? 0.16 : k; g.drawImage(b, 0, 0); g.restore();
+  }
+  // the waterfall: the strip's last frame made perfect, both faces square to the lens and lit by one light fixed to their faces,
+  // while the scene's own sun is behind them at the top of the fall. Pose and her tilt are the strip's (GG.COUPLE_LAST).
+  function photoWaterfall(w, h) {
+    const c = mk(w, h), g = c.getContext('2d'); g.drawImage(paintGorge(w, h), 0, 0);
+    const U = w * 0.27, ox = w * 0.36, oy = h * 0.66, Pm = GG.COUPLE_GLOSS.him, Pf = GG.COUPLE_GLOSS.her;
+    const hx = ox + Pm.dx * U, hy = oy + Pm.dy * U, fx = ox + Pf.dx * U, fy = oy + Pf.dy * U;
+    const along = (x, y, roll, d) => [x - Math.sin(roll) * d * U, y + Math.cos(roll) * d * U];
+    // her: the hair behind, her body, her face, the hair in front; then him, nearer, over her shoulder
+    const herHead = { x: fx, y: fy, U, roll: Pf.roll };
+    paintLongHair(g, herHead, 'back', { len: 1.5 });
+    paintBody(g, 'her', along(fx, fy, Pf.roll, 0.62), U, -0.1);
+    placeFace(g, paintFace('her', U, { smile: 1, open: 0.28 }), fx, fy, Pf.roll);
+    paintLongHair(g, herHead, 'front', { len: 1.5 });
+    paintBody(g, 'him', along(hx, hy, Pm.roll, 0.6), U, 0.04);
+    placeFace(g, paintFace('him', U, { smile: 1, open: 0.28 }), hx, hy, Pm.roll);
+    photoFinish(c, 0.16);
+    return c;
+  }
+  // the app's portrait: her alone, the photo-booth face and the long hair, too smooth; face and shoulders fill the screen
+  function photoPortrait(w, h) {
+    const c = mk(w, h), g = c.getContext('2d');
+    const bg = g.createRadialGradient(w * 0.5, h * 0.32, w * 0.05, w * 0.5, h * 0.45, h * 0.75); bg.addColorStop(0, '#FCEDE2'); bg.addColorStop(0.45, '#F2D3C8'); bg.addColorStop(1, '#D9B7C4'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    { const r = O.rng('bokeh'), b = mk(w, h), bb = b.getContext('2d'); for (let i = 0; i < 14; i++) { const x = w * r(), y = h * 0.5 * r(), rr = w * (0.06 + 0.1 * r()); bb.fillStyle = `rgba(255,244,232,${0.15 + 0.2 * r()})`; bb.beginPath(); bb.arc(x, y, rr, 0, Math.PI * 2); bb.fill(); }
+      g.filter = `blur(${(w / 40).toFixed(1)}px)`; g.drawImage(b, 0, 0); g.filter = 'none'; }
+    const U = h * 0.33, x = w * 0.5, y = h * 0.345, roll = -0.17, head = { x, y, U, roll };
+    paintLongHair(g, head, 'back', { len: 1.7, seed: 2 });
+    paintBody(g, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
+    placeFace(g, paintFace('her', U, { smile: 0.95, open: 0.24 }), x, y, roll);
+    paintLongHair(g, head, 'front', { len: 1.7, seed: 2 });
+    photoFinish(c, 0.12);
+    return c;
   }
 
   // ================================================================ screen furniture
