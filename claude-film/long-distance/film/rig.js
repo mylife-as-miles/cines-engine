@@ -462,7 +462,7 @@
         const ue = (ax - 0.152) / 0.085, yy = y - (0.045 + 0.018 * ue * ue);
         if (Math.abs(ue) < 1 && yy > -0.012 && yy < 0.03) { const k = age * (yy > 0.02 ? 0.14 : 0.08) * (1 - ue * ue); out[0] *= 1 - k; out[1] *= 1 - k * 1.15; out[2] *= 1 - k * 1.05; }
         // from the nose's wings to the mouth's corners, faint
-        if (y > 0.21 && y < 0.36 && ax > 0.05 && ax < 0.15) { const t = clamp((y - 0.22) / 0.12, 0, 1), cx = 0.075 + 0.036 * t, dd = Math.abs(ax - cx); if (dd < 0.004 * (1 - 0.5 * t) + 0.0012) { const k = 0.13 * age; out[0] *= 1 - k; out[1] *= 1 - k * 1.1; out[2] *= 1 - k * 1.1; } }
+        if (y > 0.21 && y < 0.36 && ax > 0.05 && ax < 0.15) { const t = clamp((y - 0.22) / 0.12, 0, 1), cx = 0.075 + 0.036 * t, dd = Math.abs(ax - cx); if (dd < 0.0032 * (1 - 0.5 * t) + 0.001) { const k = 0.075 * age; out[0] *= 1 - k; out[1] *= 1 - k * 1.1; out[2] *= 1 - k * 1.1; } }
       }
       if (smile > 0.35 && z > 0.2 && y > 0.2 && y < 0.36 && ax > 0.05 && ax < 0.14) {
         const t = clamp((y - 0.22) / 0.11, 0, 1), cx = 0.072 + 0.035 * t + 0.012 * smile, d = Math.abs(ax - cx);

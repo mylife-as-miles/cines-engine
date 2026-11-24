@@ -241,13 +241,13 @@
   function fridgeSpill(c, view, shot, k, rM) {
     const R = SETS.living.world, z = R.fridge.z0 - 0.003, P = w => LV(view).project(w, shot);
     const m = P([R.strip.x + 0.03, R.strip.y + 0.02, z]); if (!m) return;
-    const r = (rM || 0.16) * m[2], key = 'Q06|spill2';
-    const cv = c.cache(key, g => { O.lightPool(g, W / 2, H / 2, [{ r: 0.5 * H, color: '#5A361C' }, { r: 0.34 * H, color: '#86562C' }, { r: 0.2 * H, color: '#AE7A44' }], { sy: 1.25, rough: 3, seed: 67 }); }, W, H);
+    const r = (rM || 0.16) * m[2], key = 'Q06|spill3';
+    const cv = c.cache(key, g => { O.lightPool(g, W / 2, H / 2, [{ r: 0.36 * H, color: '#64401A' }, { r: 0.25 * H, color: '#94642C' }, { r: 0.15 * H, color: '#BC8A46' }], { sy: 1.25, rough: 3, seed: 67 }); }, W, H);
     // only on the fridge door (X 0.62 to 1.30, up to 1.80 m)
     const corners = [[R.fridge.x0, 1.8], [R.fridge.x1, 1.8], [R.fridge.x1, 0.0], [R.fridge.x0, 0.0]].map(([x, y]) => P([x, y, z]));
     const g = c.g; g.save();
     if (corners.every(Boolean)) { g.beginPath(); corners.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.clip(); }
-    g.globalCompositeOperation = 'screen'; g.globalAlpha = k; const sc = r / (0.5 * H); g.drawImage(cv, m[0] - W / 2 * sc, m[1] - H / 2 * sc, W * sc, H * sc); g.restore();
+    g.globalCompositeOperation = 'screen'; g.globalAlpha = k; const sc = r / (0.36 * H); g.drawImage(cv, m[0] - W / 2 * sc, m[1] - H / 2 * sc, W * sc, H * sc); g.restore();
   }
   function stripOver(c, view, shot, mul) {
     const R = SETS.living.world, s = R.strip, z = R.fridge.z0 - 0.003, cr = Math.cos(s.rot), sr = Math.sin(s.rot);
