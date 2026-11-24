@@ -1,11 +1,13 @@
-/* LONG DISTANCE · Q02 GOOD MORNING (26 s) · S03, A007–A010 · bathroom (glass, mirror), phone
+/* LONG DISTANCE · Q02 GOOD MORNING (21.5 s) · S03, A007–A010 · bathroom (glass, mirror), phone
    Cold white tile paper and a grey window. Two toothbrushes in a glass: he takes the blue one; the other is stiff and grey with dust,
    and nobody remarks on it. The phone, propped against the mirror in the empty half, is the warmest thing in the room. It lights up:
    "♥ Good morning." He types with a mouth full of foam, "Good morning. I love you.", and the answer is there before his thumb leaves
    the glass: "I love you." He smiles through the foam.
-   The phone is built in metres against the set's mirror and projected through the set's cameras. His reflection is the rig's basin pose
-   drawn through the set's mirror (v.inMirror). The thumb lands on the keys PHONE draws. Q07 repeats the mirror and the thread from here
-   (FILM.lib.Q02.mirror, FILM.lib.Q02.insert), so the two mornings are the same mornings. */
+   The phone is built in metres against the set's mirror and projected through the set's cameras. In the mirror shots he stands at the
+   basin between us and the glass: his back in the foreground (the rig's back view), his reflection beyond (the rig's basin pose drawn
+   through the set's mirror, v.inMirror). In the thread insert he holds the phone in the rig's phone grip, and his thumb is aimed at the
+   very keys PHONE draws. Q07 repeats the mirror and the thread from here (FILM.lib.Q02.mirror, FILM.lib.Q02.insert), so the two
+   mornings are the same mornings. */
 (function () {
   'use strict';
   const O = window.OTM, W = O.W, H = O.H, clamp = O.clamp, lerp = O.lerp;
@@ -30,7 +32,8 @@
   }
 
   // ---------------------------------------------------------------- the thread (A008–A010, verbatim through PHONE.MSG)
-  const THREAD = { clock: 'morning', history: 'routine', steps: [
+  // only this morning: nothing above her "Good morning." but the time, so the exchange plays once, as it happens
+  const THREAD = { clock: 'morning', history: [], steps: [
     { stamp: '07:12', at: 0 },
     { at: 7.0, her: MSG.goodMorning },                                   // A008
     { him: MSG.goodMorningLove, type: [10.2, 15.4], at: 15.8 },         // A009: typed with a mouth full of foam
@@ -43,36 +46,38 @@
     return { screen: 'thread', state: PHONE.exchange(lt, spec.ex) };
   }
 
-  // ---------------------------------------------------------------- the mirror: him at the basin, brushing, in the glass
-  // The rig's basin pose, drawn through RIG.drawFigure with one change: its tee's crew band is cut at the jaw (it floats over the neck
-  // as a loop), so a band is cut here instead where the tee's neckline is.
-  const CREW = { type: 'paper', key: 'q02crew', box: [-0.6, 0.4, 0.6, 1.2], draw(pen) {
-    const rc = RIG.COSTUME.tee.rib, hw = 0.3, y0 = 0.6, dip = 0.33, th = 0.055;
-    const sh = pen.blob([[-hw - 0.02, y0, 1], [-hw * 0.7, y0 + dip * 0.6], [0, y0 + dip], [hw * 0.7, y0 + dip * 0.6], [hw + 0.02, y0, 1], [hw + 0.05, y0 + th * 0.7], [hw * 0.72, y0 + dip * 0.6 + th], [0, y0 + dip + th], [-hw * 0.72, y0 + dip * 0.6 + th], [-hw - 0.05, y0 + th * 0.7]]);
-    const pth = pen.piece(sh, pen.col(rc), { seed: 445, kind: 'cloth', tex: 0.65, lift: [0.01, 0.02] }); pen.shade(pth, rc, { lit: 0.025, core: 0.03 }); } };
-  function basin(c, p) {
-    const ops = RIG.POSES.him.basin(p).ops.map(op => (op && op.key && /^col,/.test(op.key)) ? CREW : op);
-    return RIG.drawFigure(c, { who: 'him', x: p.x, y: p.y, s: p.s, light: p.light, breath: RIG.breath(p.t, 2.2), ops, target: p.target });
-  }
-  // o: {screen: {...}, buzz, glow, gaze, smile, lids, yaw, foamBasin}
+  // ---------------------------------------------------------------- the mirror: him at the basin, brushing; his back and his reflection
+  // o: {screen: {...}, buzz, glow, gaze, smile, lids, yaw, foamBasin}. yaw is his reflection's (+ toward the phone); his real head
+  // turns the same way, seen from behind (pi - yaw).
   function mirror(c, lt, o) {
     const v = BA().views.mirror, s = { brush: 'out', glow: o.glow || 0, foam: !!o.foamBasin };
     c.camera({ x: W / 2, y: H / 2, zoom: 1 });
     v.back(c, lt, s);
-    const g0 = phoneGeo('mirror'), lit = o.screen.lit !== false;
+    const g0 = phoneGeo('mirror'), lit = o.screen.lit !== false, t = c.t, ph = twos(t) * 2.2;
+    const yaw = o.yaw == null ? -0.05 : o.yaw, lids = (o.lids == null ? 0.55 : o.lids) * RIG.blink(t, 9);
     // his reflection: the basin pose, facing us out of the mirror, greyed a step toward the glass by the set
-    const r = v.anchors.reflection, hs = 0.245 * r[2], t = c.t;
+    const r = v.anchors.reflection;
     const L = RIG.light('bathroom', lit ? { phone: [g0.center[0], g0.center[1]], phoneZ: 1.6, phoneK: 0.45 } : {});
-    v.inMirror(c, g => basin(c, { x: r[0] + 6, y: r[1] - 0.02 * r[2], s: hs, light: L, t, target: g, brush: o.brushing === false ? 0.25 : twos(t) * 2.2, foam: 1,
-      face: { gaze: o.gaze || [0.1, 0.45], smile: o.smile || 0, lids: (o.lids == null ? 0.55 : o.lids) * RIG.blink(t, 9), yaw: o.yaw == null ? -0.05 : o.yaw, pitch: 0.12, mouth: 1 } }));
+    v.inMirror(c, g => RIG.draw(c, 'him', 'basin', { x: r[0] + 6, y: r[1] - 0.02 * r[2], s: 0.245 * r[2], light: L, t, target: g, brush: ph, foam: 1,
+      face: { gaze: o.gaze || [0.1, 0.45], smile: o.smile || 0, lids, yaw, pitch: 0.12, mouth: 1 } }));
     v.front(c, lt, s);
+    // his real back at the basin, nearer us and out of the window's light: the brushing arm in front of him, so only its forearm shows
+    // rising past his shoulder to his mouth, working with the stroke
+    const b = v.anchors.back, dx = Math.sin(ph * Math.PI * 2) * 0.04;
+    // (a little left of the honest spot, as if the camera stood a step right, so his reflection's face clears the back of his head)
+    RIG.draw(c, 'him', 'stand', { view: 'back', costume: 'tee', x: b[0] - 20, y: b[1] + 4, s: 0.245 * b[2], t, crop: 3.4,
+      light: RIG.light('bathroom', { keyK: 0.55, amb: '#5E646C' }),
+      armL: { E: [-1.05 + dx, 1.7], W: [-0.35 + dx, 0.5], hand: 'brush', behind: true }, armR: { a1: 0.06, a2: 0.12, hand: 'relax' },
+      face: { yaw: Math.PI - yaw, pitch: 0.12 } });
     PHONE.draw(c, Object.assign({ quad: g0.quad, edge: g0.edge, env: '#C9D0D4', lightDir: [0.7, -0.6], shadow: { alpha: 0.35 }, buzz: o.buzz || 0, t: lt }, o.screen));
   }
 
-  // ---------------------------------------------------------------- the thread, full frame, his thumb on the glass
-  // The phone stands where it was, seen from his eyes: face on, filling the frame's height. Behind it, the bathroom out of focus (the
-  // glass view, blurred once and kept). His hand comes up from below the frame; the thumb is drawn again over the gloss.
-  const INS = { x: 958, y: 506, h: 930, roll: -0.025 };
+  // ---------------------------------------------------------------- the thread, full frame, in his hand
+  // He has taken the phone off the shelf: it sits in the rig's phone grip (his right hand, the fingertips round its left edge, the palm
+  // behind it), seen from his eyes, the bathroom out of focus behind (the glass view, blurred once and kept). Only the thumb moves.
+  // The grip's own thumb sweeps the middle of the screen; the keys are lower, level with the palm, so the thumb's angles are solved
+  // here for each key with the rig's own thumb bones (handBones) and its basis, and drawn as the rig's thumb pose with that aim.
+  const GRIP = { x: 1299, y: 770, s: 903, rot: -0.05 };            // the wrist (world px), the hand's length (px), its turn: the phone lands centred
   function background(c) {
     // centred inside the glass view's own frame (the phone stands at its right edge): the dusty brush falls out of focus at the left
     const v = BA().views.glass, z = 2.1, cx = 1330, cy = 590;
@@ -83,62 +88,77 @@
       g.setTransform(1, 0, 0, 1, 0, 0);
       const t = O.makeCanvas(W, H), tg = t.getContext('2d'); tg.filter = 'blur(9px)'; tg.drawImage(g.canvas, 0, 0); tg.filter = 'none';
       g.clearRect(0, 0, W, H); g.drawImage(t, 0, 0);
-      // a shade of the shelf's front edge under the phone, and the cold light falling off toward the bottom
+      // the cold light falling off toward the bottom, where his hand is
       const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, 'rgba(20,24,30,0.1)'); gr.addColorStop(0.75, 'rgba(20,24,30,0.05)'); gr.addColorStop(1, 'rgba(20,24,30,0.42)'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
     }, W, H);
   }
-  // the key a letter lands on, in screen points (the keyboard fully up); a period is the space bar's double tap
-  function keyPt(ch) {
-    const K = PHONE.KEYS, q = K[(ch || ' ').toLowerCase()] || K[' '], top = PHONE.SH - 290;
-    const x = ch === ' ' || ch === '.' || !K[(ch || ' ').toLowerCase()] ? q.x + q.w * 0.62 : q.x + q.w / 2;
-    return [x, top + q.y + q.h * 0.55];
+  // the hand's frame: hand units to world px, as RIG.hand places the pose (its basis turned by rot)
+  function handFrame(basis, rot, s, x, y) {
+    const cr = Math.cos(rot), sr = Math.sin(rot), R3 = v => [v[0] * cr - v[1] * sr, v[0] * sr + v[1] * cr, v[2]], M = GG.basisM(R3(basis.x), R3(basis.z));
+    return l => [x + (M[0][0] * l[0] + M[0][1] * l[1] + M[0][2] * l[2]) * s, y + (M[1][0] * l[0] + M[1][1] * l[1] + M[1][2] * l[2]) * s];
   }
-  // where the thumb's tip is at time t of a typing span, and whether it is down on the glass. spec: {text, type: [a, b], send, lift}
-  function thumbPath(t, spec, sendPt) {
-    const T = PHONE.typeTimes(spec.type[0], spec.type[1], spec.text), tw = twos(t), n = T.length;
-    const pts = [...spec.text].map(keyPt);
-    if (tw < T[0]) { const u = seg(tw, spec.type[0] - 0.7, T[0], 'inOutSine'); return { p: [lerp(pts[0][0] + 90, pts[0][0], u), lerp(PHONE.SH + 60, pts[0][1], u)], down: false, enter: u }; }
-    let i = 0; while (i < n - 1 && T[i + 1] <= tw) i++;
-    if (i === n - 1 && tw >= T[n - 1]) {
-      // the last letter, then to the send button; it stays on the glass until after her answer arrives
-      const u = seg(tw, T[n - 1] + 0.12, spec.send, 'inOutSine'), p = [lerp(pts[n - 1][0], sendPt[0], u), lerp(pts[n - 1][1], sendPt[1], u)];
-      if (tw < spec.send) return { p, down: tw - T[n - 1] < 1 / 12 };
-      const off = seg(tw, spec.lift, spec.lift + 0.7, 'inOutSine');
-      return { p: [sendPt[0] + 60 * off, sendPt[1] + 520 * off * off], down: tw < spec.lift, exit: off };
+  // the thumb's tip for thumb angles [th, ph, f1, f2], in hand units: the rig's thumb bones (film/rig.js handBones), step for step
+  function thumbTip(tp) {
+    let P = [0.12, -0.115, -0.035]; const [th, ph, f1, f2] = tp, Ls = [0.17, 0.13, 0.11];
+    let d = [Math.cos(th) * Math.cos(ph), -Math.sin(th) * Math.cos(ph), -Math.sin(ph)]; const l = Math.hypot(d[1], d[0]) || 1, k = [d[1] / l, -d[0] / l, 0];
+    const rot = (v, a) => { const c = Math.cos(a), s = Math.sin(a), dt = k[0] * v[0] + k[1] * v[1], cr = [k[1] * v[2] - k[2] * v[1], k[2] * v[0] - k[0] * v[2], k[0] * v[1] - k[1] * v[0]]; return v.map((vi, i) => vi * c + cr[i] * s + k[i] * dt * (1 - c)); };
+    [0, f1, f2].forEach((a, i) => { d = rot(d, a); P = P.map((v, j) => v + d[j] * Ls[i]); });
+    return P;
+  }
+  // the thumb's angles that put its tip on a world point (a coarse grid, so neighbouring targets share one sculpture), kept per target
+  // A lifted thumb (off the glass, risen toward us) is solved to the same point from higher up, so it hovers over its key.
+  const AIM = {};
+  function aim(T, F, up) {
+    const key = Math.round(T[0] / 4) + ',' + Math.round(T[1] / 4) + (up ? 'u' : ''); if (AIM[key]) return AIM[key];
+    const ph0 = up ? aim(T, F, false)[1] + 0.2 : 0.3;
+    let best = null;
+    for (let th = -1.6; th <= 1.6001; th += 0.05) for (let ph = ph0; ph <= Math.max(ph0, 1.3) + 0.01; ph += 0.2) for (let f1 = 0; f1 <= 1.501; f1 += 0.1) {
+      const tp = [+th.toFixed(2), +ph.toFixed(1), +f1.toFixed(1), +(f1 * 0.8).toFixed(2)], w = F(thumbTip(tp));
+      const d = Math.hypot(w[0] - T[0], w[1] - T[1]) + f1 * 6 + ph * 4;                  // the least bent thumb that lands
+      if (!best || d < best[0]) best = [d, tp];
     }
-    const u = seg(tw, T[i] + 1 / 12, T[i + 1], 'inOutSine');
-    return { p: [lerp(pts[i][0], pts[i + 1][0], u), lerp(pts[i][1], pts[i + 1][1], u)], down: tw - T[i] < 1 / 12 - 1e-6 };
+    return (AIM[key] = best[1]);
   }
-  // a thumb placed so its tip lands on a world point: the hand's own geometry is read once per pose from a scratch draw.
-  // His right hand steadies the propped phone from behind (the glass hides the palm; the fingertips show round its left edge).
-  const THUMB = p => RIG.HANDS.thumb(p);
-  const TIP = {};
-  const SCRATCH = (() => { let g = null; return () => g || (g = O.makeCanvas(4, 4).getContext('2d')); })();
-  function thumbAt(c, tip, hp) {
-    const k = JSON.stringify(hp);
-    if (!TIP[k]) { const r = RIG.hand(c, 'him', THUMB, Object.assign({}, hp, { x: 0, y: 0, target: SCRATCH() })); TIP[k] = [r.thumb[0], r.thumb[1]]; }
-    return { x: tip[0] - TIP[k][0], y: tip[1] - TIP[k][1] };
+  const THUMB = tp => p => Object.assign(RIG.HANDS.thumb(p), tp ? { thumb: tp } : {});
+  // the key a letter lands on, in screen points (the keyboard fully up); the space bar for a space and the period
+  function keyPt(ch) {
+    const K = PHONE.KEYS, q = K[(ch || ' ').toLowerCase()];
+    if (!q || ch === ' ') { const sp = K[' ']; return [sp.x + sp.w * 0.62, PHONE.SH - 290 + sp.y + sp.h * 0.55]; }
+    return [q.x + q.w / 2, PHONE.SH - 290 + q.y + q.h * 0.55];
   }
-  // o: {ex (the exchange spec), clock, text, type, send, lift, foam}
+  // where the thumb is at time t (screen points) and whether it is down on the glass, on twos: down on each letter for one drawing,
+  // then lifted over the next; after the last letter, to the send button; it stays there until after her answer, then rests at the
+  // phone's right edge. spec: {text, type: [a, b], send, lift}
+  const REST = [348, 520], SEND = [330, 465];
+  function thumbAt(t, spec) {
+    // (the same clock as PHONE.exchange's, so the thumb is down on the drawing where the key's balloon shows)
+    const T = PHONE.typeTimes(spec.type[0], spec.type[1], spec.text), tw = twos(t) + 2e-4, n = T.length, pts = [...spec.text].map(keyPt);
+    if (tw < T[0] - 0.25) return { p: REST, down: false };
+    if (tw < T[0]) return { p: pts[0], down: false };
+    let i = 0; while (i < n - 1 && T[i + 1] <= tw) i++;
+    if (tw - T[i] < 1 / 12 - 1e-6) return { p: pts[i], down: true };
+    if (i < n - 1) { const u = seg(tw, T[i] + 1 / 12, T[i + 1]); return { p: u < 0.5 ? pts[i] : pts[i + 1], down: false }; }
+    if (tw < spec.send - 0.17) return { p: SEND, down: false };
+    if (tw < spec.lift) return { p: SEND, down: true };
+    return { p: REST, down: false };
+  }
+  // o: {ex (the exchange spec), text, type, send, lift, foam}
   function insert(c, lt, o) {
     c.reset();
     c.g.drawImage(background(c), 0, 0);
-    const st = PHONE.exchange(lt, o.ex);
-    const P = { x: INS.x, y: INS.y, h: INS.h, roll: INS.roll, screen: 'thread', state: st, t: lt, env: '#C9D0D4', lightDir: [0.7, -0.6], shadow: { alpha: 0.3, dx: 14, dy: 22, blur: 40 } };
+    const st = PHONE.exchange(lt, o.ex), base = RIG.HANDS.thumb({}), F = handFrame(base.basis, GRIP.rot, GRIP.s, GRIP.x, GRIP.y);
+    const pc = F(base.grip), ang = GRIP.rot, h = base.phoneSize[1] * GRIP.s;
+    const P = { x: pc[0], y: pc[1], h, roll: ang, screen: 'thread', state: st, t: lt, env: '#C9D0D4', lightDir: [0.7, -0.6] };
     const info = PHONE.where(P, c);
-    // the send button sits at (330, 465) points while the keyboard is up
-    const tp = thumbPath(lt, o, [330, 465]), tip = info.pt(tp.p[0], tp.p[1]);
-    // reach: three steps across the keyboard; tap lifts the thumb between letters (quantised: few sculptures)
-    // the thumb carries the travel across the keys, so the hand shifts less: short reach on the left keys, long on the right
-    const reach = tp.p[0] < 130 ? 0.15 : tp.p[0] < 245 ? 0.5 : 0.85, tap = tp.down ? 0 : 0.45;
     const L = RIG.light('bathroom', { phone: [info.center[0], info.center[1]], phoneZ: 0.3, phoneK: 0.35 });
-    // a right hand holding it from behind: the fingers round the left edge (hidden by the glass but at their tips), the thumb over it
-    const hp = { s: 0.88 * INS.h, rot: -0.75, reach, tap, light: L, res: 0.62, shadow: { dx: 0.02, dy: 0.04, alpha: 0.35 } };
-    const at = thumbAt(c, tip, hp);
-    PHONE.glow(c, { info, x: info.center[0], y: INS.y + INS.h * 0.5, r: INS.h * 0.75, sy: 0.35, k: 0.35 });
-    RIG.hand(c, 'him', THUMB, Object.assign({}, hp, at));
+    const hp = { x: GRIP.x, y: GRIP.y, s: GRIP.s, rot: GRIP.rot, light: L, res: 0.62 };
+    const ta = thumbAt(lt, o), thumb = aim(info.pt(ta.p[0], ta.p[1]), F, !ta.down);
+    PHONE.glow(c, { info, x: info.center[0], y: pc[1] + h * 0.5, r: h * 0.75, sy: 0.35, k: 0.35 });
+    RIG.hand(c, 'him', 'thumb', Object.assign({ noThumb: true, shadow: { dx: 0.02, dy: 0.04, alpha: 0.35 } }, hp));                       // the palm and fingers, behind the phone
     PHONE.draw(c, P);
-    RIG.hand(c, 'him', THUMB, Object.assign({}, hp, at, { only: 'thumb', target: 'gl', shadow: { dx: 0.01, dy: 0.025, alpha: 0.3 } }));
+    RIG.hand(c, 'him', 'thumb', Object.assign({ noThumb: true, only: 'dist', target: 'gl', shadow: { alpha: 0.28 } }, hp));               // the fingertips round its far edge
+    const sh = ta.down ? { dx: 0.01, dy: 0.02, alpha: 0.32 } : { dx: 0.025, dy: 0.05, alpha: 0.2 };                                     // its shadow on the glass: further off when lifted
+    RIG.hand(c, 'him', THUMB(thumb), Object.assign({ only: 'thumb', target: 'gl', shadow: sh }, hp));
     if (o.foam) foamFlecks(c);
     return info;
   }
@@ -149,10 +169,13 @@
       for (let i = 0; i < 9; i++) { const x = 40 + r() * 160, y = 30 + r() * 60, rr = 6 + r() * 16; const p = GG.blob([[x - rr, y], [x - rr * 0.3, y - rr * 0.8], [x + rr * 0.6, y - rr * 0.7], [x + rr, y + rr * 0.1], [x + rr * 0.2, y + rr * 0.7], [x - rr * 0.7, y + rr * 0.5]]);
         const pp = GG.piece(g, p, { fill: '#D2D7D7', rough: 0.8, seed: 900 + i, tex: 0.35, kind: 'paper', lift: [2, 3], liftAlpha: 0.35, liftBlur: 3 }); GG.crescent(g, pp, -2, -2, '#E4E6E3', 0.8); }
     }, 240, 120);
-    c.g.drawImage(cv, W - 300, H - 110);
+    c.g.drawImage(cv, 40, H - 112);
   }
 
   // ---------------------------------------------------------------- the glass: two toothbrushes, his hand takes the blue one
+  // the grip's offset from the wrist for a hand pose, read once from a scratch draw
+  const TIP = {};
+  const SCRATCH = (() => { let g = null; return () => g || (g = O.makeCanvas(4, 4).getContext('2d')); })();
   function glass(c, lt) {
     const v = BA().views.glass;
     c.camera({ x: W / 2, y: H / 2, zoom: 1 + 0.004 * lt });
@@ -178,12 +201,12 @@
 
   const MORNING = { wake: 7.0, thread: 9.5, banner: MSG.goodMorning, clock: 'morning', ex: THREAD };
   const def = FILM.seq({
-    id: 'Q02', title: 'Good morning', dur: 26,
+    id: 'Q02', title: 'Good morning', dur: 21.5,
     setup() { PHONE.prepare(['abstract']); },
     sound(S) {
-      S.bed('bathroom', 0, 26, { level: -44 });
+      S.bed('bathroom', 0, 21.5, { level: -44 });
       S.bed('tap', 0.5, 4.0, { level: -34 });                                  // the tap running
-      S.bed('brushing', 5.0, 9.9, { level: -32 }); S.bed('brushing', 16.6, 26, { level: -32 });   // he stops to type
+      S.bed('brushing', 5.0, 9.9, { level: -32 }); S.bed('brushing', 16.8, 21.5, { level: -32 });   // he stops to type
       S.cue('buzz_glass', 7.0);                                                // the phone vibrating against the mirror
       PHONE.typeTimes(10.2, 15.4, MSG.goodMorningLove).forEach(t => S.cue('type', t, { level: -40 }));   // soft taps, one a letter
       S.cue('send', 15.8);
@@ -197,9 +220,9 @@
             gaze: key(t, [[4.5, [0.05, 0.5]], [7.25, [0.05, 0.5]], [7.5, [0.1, 0.4]]]), smile: key(t, [[7.6, 0], [8.4, 0.3]]), lids: key(t, [[4.5, 0.42], [7.2, 0.42], [7.4, 0.52]]), yaw: key(t, [[7.3, -0.05], [7.8, 0.2]]) }); } },
       { at: 9.5, name: 'phone: the thread; he types with a mouth full of foam, "Good morning. I love you."; "I love you." before his thumb lifts',
         draw(c, st, lt) { insert(c, lt, { ex: THREAD, text: MSG.goodMorningLove, type: [10.2, 15.4], send: 15.8, lift: 16.35, foam: true }); } },
-      { at: 17.5, name: 'mirror: he smiles through the foam; the dusty brush in its glass in the empty half',
+      { at: 17.5, name: 'mirror: he smiles through the foam; the dusty brush in its glass in the empty half (hard cut at 21.5)',
         draw(c, st, lt) { const t = twos(lt);
-          mirror(c, lt, { screen: screenAt(lt, MORNING), glow: 1, foamBasin: true, gaze: key(t, [[17.5, [0.1, 0.4]], [20.5, [0.1, 0.4]], [21.2, [0.02, 0.5]]]), smile: key(t, [[17.5, 0.42], [20, 0.55], [23, 0.36]]), lids: 0.5, yaw: key(t, [[17.5, 0.2], [21, 0.2], [21.7, -0.04]]) }); } },
+          mirror(c, lt, { screen: screenAt(lt, MORNING), glow: 1, foamBasin: true, gaze: key(t, [[17.5, [0.1, 0.4]], [19.4, [0.1, 0.4]], [19.9, [0.02, 0.5]]]), smile: key(t, [[17.5, 0.42], [18.8, 0.55], [21.5, 0.45]]), lids: 0.5, yaw: key(t, [[17.5, 0.2], [19.3, 0.2], [20.0, -0.04]]) }); } },
     ],
   });
   // shared with Q07: the same mirror and the same thread, a day later

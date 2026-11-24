@@ -1,4 +1,4 @@
-/* LONG DISTANCE · Q01 THE PILLOW (60 s) · S01, S02, A001–A006, L001–L006 · bedroom (foot, across, hand)
+/* LONG DISTANCE · Q01 THE PILLOW (51 s) · S01, S02, A001–A006, L001–L006 · bedroom (foot, across, hand)
    The film's first image is its whole idea: his half of the bed lived in, her half untouched, and the phone lying on its long edge on
    the smooth pillow where her head would be, its back to us, its screen to him, its smooth peach light the only warm light in the room.
    He talks; we hear only the murmur. LATER is told by light: the windows across the street go out and the slats creep. "Goodnight."
@@ -177,11 +177,11 @@
   }
 
   FILM.seq({
-    id: 'Q01', title: 'The pillow', dur: 60,
+    id: 'Q01', title: 'The pillow', dur: 51,
     lines: LINES.map(L => Object.assign({}, L)),
     sound(S) {
-      S.bed('room_night', 0, 60, { level: -46 });
-      S.bed('fridge_far', 0, 60, { level: -54 });
+      S.bed('room_night', 0, 51, { level: -46 });
+      S.bed('fridge_far', 0, 51, { level: -54 });
       S.bed('murmur', 14.5, 21.5, { level: -30 });            // his voice, wordless, under
       S.cue('laugh_phone', 18.2);                              // her soft laugh, dry and close, exactly where a laugh should be
       S.cue('streetcar_far', 24, { level: -50 });
@@ -203,8 +203,8 @@
         draw(c, st, lt) { across(c, lt, { zoom: 1.95 + 0.035 * E.inOutSine(seg(lt, 26, 36)), at: [790, 360], res: 2, face: face('across', lt), sheen: 0.16 }); } },
       { at: 36.0, name: 'hand: his hand comes to rest over the phone, the way you would touch a sleeping shoulder',
         draw(c, st, lt) { hand(c, lt, { face: face('hand', lt), hand: { u: E.weary(seg(twos(lt), 36.5, 40.2)), swing: 0.19 } }); } },
-      { at: 42.0, name: 'foot, the same framing as 3.0: he closes his eyes; the glow does not dim',
-        draw(c, st, lt) { foot(c, lt, { later: 1, zoom: 1 + 0.024 * E.inOutSine(seg(lt, 48, 60)), face: face('foot', lt), hand: { u: 1 } }); } },
+      { at: 42.0, name: 'foot, the same framing as 3.0: he closes his eyes; the glow does not dim (hard cut at 51)',
+        draw(c, st, lt) { foot(c, lt, { later: 1, zoom: 1 + 0.015 * E.inOutSine(seg(lt, 44.5, 51)), face: face('foot', lt), hand: { u: 1 } }); } },
     ],
   });
 })();
