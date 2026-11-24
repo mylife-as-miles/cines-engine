@@ -48,7 +48,10 @@ const U = {
 THREE.ShaderChunk.fog_pars_vertex = `
 #ifdef USE_FOG
   varying float vFogDepth;
-  varying vec3 vFogWorld;
+  #ifndef FOG_WORLD_DECLARED
+    #define FOG_WORLD_DECLARED
+    varying vec3 vFogWorld;
+  #endif
 #endif`;
 THREE.ShaderChunk.fog_vertex = `
 #ifdef USE_FOG
@@ -59,7 +62,10 @@ THREE.ShaderChunk.fog_pars_fragment = `
 #ifdef USE_FOG
   uniform vec3 fogColor;
   varying float vFogDepth;
-  varying vec3 vFogWorld;
+  #ifndef FOG_WORLD_DECLARED
+    #define FOG_WORLD_DECLARED
+    varying vec3 vFogWorld;
+  #endif
   uniform vec4 uHaze;
   uniform vec3 uHazeColor;
   uniform vec4 uFogSun;
@@ -95,6 +101,26 @@ THREE.ShaderChunk.fog_fragment = `
   }
   gl_FragColor.rgb = mix( gl_FragColor.rgb, fogCol, fogFactor );
 #endif`;
+// interiors: a box where the sky fill is mostly blocked (the gatehouse is lit by its breach alone, two stops under).
+// Fragments inside uIntMin..uIntMax get the hemisphere fill scaled by uIntFill; the key light is shadowed as usual.
+U.uIntMin = { value: new THREE.Vector3(1e9, 1e9, 1e9) }; U.uIntMax = { value: new THREE.Vector3(-1e9, -1e9, -1e9) }; U.uIntFill = { value: 1 };
+THREE.ShaderChunk.lights_pars_begin = THREE.ShaderChunk.lights_pars_begin + `
+#if defined( USE_FOG ) && !defined( FOG_WORLD_DECLARED )
+  #define FOG_WORLD_DECLARED
+  varying vec3 vFogWorld;
+#endif
+uniform vec3 uIntMin; uniform vec3 uIntMax; uniform float uIntFill;
+float interiorFill() {
+  #ifdef USE_FOG
+    vec3 a = smoothstep( uIntMin - 0.6, uIntMin + 0.6, vFogWorld ) * ( 1.0 - smoothstep( uIntMax - 0.6, uIntMax + 0.6, vFogWorld ) );
+    return mix( 1.0, uIntFill, a.x * a.y * a.z );
+  #else
+    return 1.0;
+  #endif
+}`;
+THREE.ShaderChunk.lights_fragment_begin = THREE.ShaderChunk.lights_fragment_begin.replace(
+  'irradiance += getHemisphereLightIrradiance( hemisphereLights[ i ], geometryNormal );',
+  'irradiance += getHemisphereLightIrradiance( hemisphereLights[ i ], geometryNormal ) * interiorFill();');
 const RIM_DECL = 'uniform vec3 uRimColor;\nuniform vec3 uRimDir;\nuniform float uRimPow;\n';
 const RIM_CODE = `{ vec3 rn = normalize( normal ); vec3 rv = normalize( vViewPosition );
   float rimE = pow( 1.0 - abs( dot( rn, rv ) ), uRimPow );
@@ -346,7 +372,7 @@ function placeCamera(c) {
   const pos = new THREE.Vector3(...c.pos), tgt = new THREE.Vector3(...c.target);
   const dist = pos.distanceTo(tgt);
   camera.fov = focalToVfov(c.f ?? 35);
-  camera.near = c.near ?? Math.min(Math.max(0.01 * dist, 0.05), 3);
+  camera.near = c.near ?? (dist < 40 ? 0.08 : 0.3);   // set cam.near for anything nearer than 0.3 m in a wide
   camera.far = c.far ?? 40000;
   camera.position.copy(pos);
   camera.up.set(0, 1, 0);
@@ -444,6 +470,9 @@ function applyLook(L) {
   postU.uLift.value.copy(C(L.lift ?? '#000000')); postU.uSat.value = L.sat ?? 1;
   const D = L.dust ?? { mode: 'none' };
   dust.cfg = D;
+  const I = L.interior ?? E.ctx?.interior;
+  if (I) { U.uIntMin.value.set(...I.min); U.uIntMax.value.set(...I.max); U.uIntFill.value = I.fill ?? 0.08; }
+  else { U.uIntMin.value.set(1e9, 1e9, 1e9); U.uIntMax.value.set(-1e9, -1e9, -1e9); U.uIntFill.value = 1; }
 }
 
 // ---------------------------------------------------------------- state: keyframes, clocks, resolution

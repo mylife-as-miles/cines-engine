@@ -16,7 +16,7 @@ const PRESETS = {
     state: {
       figures: {
         cael: { pos: [18.95, -9.0], face: [21.6, -11.8], pose: 'stand', lean: 12, reachR: sealB },
-        envoy: { pos: [22.15, -12.45], face: [17.5, -6.5], pose: 'stand', look: 'cael.head' },
+        envoy: { pos: [23.1, -12.9], face: [17.5, -7.5], pose: 'stand', look: 'cael.head' },
         boy: { pos: boyUnderArch, face: 200, pose: 'stand' },
       },
       door: 0,
@@ -30,15 +30,15 @@ const PRESETS = {
       look: 'burning', truce: 'gone', lamps: { level: 0 },
       crown: { shutter: 5.72, fire: 1, through: 0 },
       warp: [{ at: [0, L.crown.opening.y + 1.2, L.crown.z + L.crown.d / 2 + 2], r: 22, amp: 0.6 }],
-      figures: { cael: { pos: [28.6, -17.2], face: 175, pose: 'stand', aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
+      figures: { cael: { pos: [29.0, -14.1], face: [0, L.crown.z], pose: 'stand', aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
     },
-    cam: { pos: [29.6, 1.5, -12.6], target: [16, 64, -230], f: 24 },
+    cam: { pos: [30.5, 0.9, -11.5], target: [-85.4, 104.3, -323.6], f: 21 },
   },
   // 6.3 the open hand, "it destroys": the insert, matched to 3.4, 10.3 and 10.10
   hand63: {
     state: {
       look: 'burning', truce: 'gone', lamps: { level: 0 }, crown: { shutter: 5.72, fire: 1 },
-      figures: { cael: { pos: [28.6, -17.2], face: 175, aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
+      figures: { cael: { pos: [29.0, -14.1], face: [0, L.crown.z], aimR: [0, L.crown.opening.y + 1, L.crown.z + 32], palmR: 'out', handR: 1, shake: 0.6, blood: 0.7 } },
       hand: { attach: 'cael', side: 'R', style: 'cael', open: 1, shake: 0.6, blood: 0.7 },
     },
     cam: { hand: true, f: 50 },
@@ -54,7 +54,7 @@ export default {
   look: 'gatehouse',
   marks: { ...CITY_MARKS, table: [TABLE.x, TABLE.h, TABLE.z], sealA: [SEALS[0].x, SEALS[0].y, SEALS[0].z], sealB, sealC: [SEALS[2].x, SEALS[2].y, SEALS[2].z],
     door: [16, 0, -9.6], breachCentre: [27.8, 3.5, -18], stretcherA: [29.0, -6.2], stretcherB: [26.2, -5.0], boyUnderArch: [...boyUnderArch] },
-  build(E, o = {}) { const ctx = buildCity(E, { ...o, interior: true }); ctx.presets = PRESETS; return ctx; },
+  build(E, o = {}) { const ctx = buildCity(E, { ...o, interior: true }); ctx.presets = PRESETS; ctx.interior = { min: [15.4, -1, -18.7], max: [32.6, 8.6, -2.4], fill: 0.02 }; return ctx; },
   update(E, R, t, ctx) { updateCity(E, R, t, ctx); },
   beforeRender: cityBeforeRender,
 };

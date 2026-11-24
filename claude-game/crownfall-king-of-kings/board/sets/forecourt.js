@@ -8,21 +8,21 @@ import { buildCity, updateCity, cityBeforeRender, CITY_MARKS } from './city.js';
 import { L } from './solforiz.js';
 
 const B = L.block, A = L.arch;
-const lioraAt = [B.x + 0.1, B.z + 0.4], caelAt = [B.x + 7.8, B.z + 1.6];
+const lioraAt = [B.x + 0.1, B.z + 0.4], caelAt = [B.x + 4.9, B.z + 10.0];
 const PRESETS = {
   // bible p.6 key 3: Liora low under the stopped block, dust falling past it, Cael ten paces off with his hand open
   heldStone: {
     state: {
       block: { y: B.y, rot: [6, 18, -5] },
-      dust: { center: [B.x, 6, B.z + 1], size: [9, 12, 8] },
+      dust: { center: [B.x + 1, 4, B.z + 2], size: [12, 9, 9], count: 520, opacity: 0.4 },
       warp: [{ at: [B.x, B.y, B.z], r: 2.2, amp: 0.5 }],
       figures: {
         liora: { pos: lioraAt, face: 160, pose: 'cower' },
-        boy: { pos: [B.x - 1.1, B.z + 0.9], face: 140, pose: 'stand', reachR: 'liora.waist' },
+        boy: { pos: [B.x - 0.9, B.z + 0.8], face: 140, pose: 'stand' },
         cael: { pos: caelAt, face: [B.x, B.z], pose: 'stand', aimR: [B.x, B.y, B.z], palmR: 'out', handR: 1, shake: 0.3, blood: 0 },
       },
     },
-    cam: { pos: [B.x + 0.2, 1.05, B.z + 26], target: [B.x + 1.6, 4.6, B.z], f: 32 },
+    cam: { pos: [B.x + 2.5, 0.95, B.z + 18.1], target: [B.x + 2.5, 4.05, B.z], f: 24 },
   },
   // 3.4 the open hand, "it saves" (bible p.13): the same insert as 6.3, 10.3 and 10.10
   hand34: {

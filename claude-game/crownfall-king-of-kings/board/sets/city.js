@@ -166,16 +166,16 @@ const PRESETS = {
   breakCrown: {
     t: 2.42,
     state: {
-      look: 'breakCrown', truce: 'gone', lamps: { level: 1, breathe: 0 }, crown: { shutter: 0, fire: 0.15 },
-      battery: { at: [-72, 452], spacing: [13, -3] },
+      look: 'breakCrown', truce: 'gone', lamps: { level: 1, breathe: 0 }, crown: { shutter: 0, fire: 0 }, flashPower: 1600,
+      battery: { at: [-52.5, 492], spacing: [0.6, -10.5] },
       salvos: [{ side: 'aethelgard', t: 2.3, spread: 0.04, flight: 2.6, to: 'crown' }, { side: 'aethelgard', t: 0.8, spread: 0.2, flight: 2.6, to: 'crown', seed: 1 },
         { side: 'arcade', t: 2.0, guns: 5, spread: 0.07, flight: 2.0, to: 'lines', tracers: false }],
       figures: {
-        captain: { pos: [-55.5, 437], face: [0, -440], pose: 'stand', aimR: [-30, 200, -440], palmR: 'out', handR: 1 },
-        bearer: { pos: [-53.5, 436.5], face: [0, -440], banner: 'upright' },
+        captain: { pos: [-45.2, 476.5], face: [0, -440], pose: 'stand', aimR: [-30, 200, -440], palmR: 'out', handR: 1 },
+        bearer: { pos: [-43.4, 475.6], face: [0, -440], banner: 'upright' },
       },
     },
-    cam: { pos: [-38, 1.0, 486], target: [-6, 60, -260], f: 24 },
+    cam: { pos: [-40, 1.0, 520], target: [-110, 62.6, -277], f: 24 },
   },
 };
 

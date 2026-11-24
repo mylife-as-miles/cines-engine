@@ -18,7 +18,7 @@ export const L = {
   forecourt: { x0: -140, x1: 140, z0: -90, z1: -3 },
   stairFoot: [54, 0, -84], stairTop: [30, 12, -84], stairZ: [-90, -78],  // lower flight climbs west along the tier-0 face
   arch: { x: 70, z: -76, span: 3.4, h: 5.6, depth: 1.3 },   // the signal station: opening faces +z (the gate)
-  block: { x: 52.4, z: -85.4, y: 5.4, w: 3.2, h: 1.8, d: 2.4 },  // held over Liora at the stair foot; from the parapet above
+  block: { x: 52.4, z: -85.4, y: 4.6, w: 3.2, h: 1.6, d: 2.4 },  // held over Liora at the stair foot; from the parapet above
   innerWall: { z: -92, y: 12, h: 10, gateX: 24, gateW: 8 },  // on the lip of tier 0, gate at the top of the lower flight
   tiers: Array.from({ length: 8 }, (_, k) => ({ k, hw: 330 - 31 * k, front: -90 - 45 * k, back: -790 + 45 * k, top: 12 + 24 * k })),
   greatStair: { hw: 12 },                                // the central flights, x -12..12, from tier 0 up to tier 7
@@ -34,7 +34,7 @@ export const crownFront = () => L.crown.z + L.crown.d / 2;
 // ---------------------------------------------------------------- the plain of fused glass and the causeway
 export function buildPlain(E, W, o = {}) {
   const env = o.envMap ?? null;
-  const glass = E.mat(o.glass ?? (o.ruined ? '#262624' : '#141c22'));
+  const glass = E.mat(o.glass ?? (o.ruined ? '#262624' : '#18212a'));
   const g = new THREE.PlaneGeometry(30000, 30000, 1, 1);
   const m = E.mesh(g, glass, W, 0, L.plainY, 0, { cast: false });
   m.rotation.x = -Math.PI / 2;
@@ -49,7 +49,7 @@ export function buildPlain(E, W, o = {}) {
 }
 export function buildCauseway(E, W, o = {}) {
   const b = new E.Batch('causeway');
-  const road = E.mat(o.road ?? (o.ruined ? '#3e3a34' : '#3e4a52')), side = E.mat('#1d252b');
+  const road = E.mat(o.road ?? (o.ruined ? '#3e3a34' : '#4d5a62')), side = E.mat('#1d252b');
   const len = L.causeway.len, w = L.causeway.w;
   b.box(w, 1.2, len, road, 0, -0.6, len / 2 + 2);
   b.box(w + 5, 0.9, len, side, 0, -0.75, len / 2 + 2);          // the embankment shoulder
@@ -130,7 +130,9 @@ export function buildGatehouse(E, W, o = {}) {
   const wallGeo = E.extrude(outline.map(p => [p[0], p[1]]), th, { holes: [hole.slice().reverse()] });
   b.add(wallGeo, stone, E.M4(0, 0, G.z0 - th / 2));
   // floor and a broken roof (open over the breach side)
-  b.box(G.x1 - G.x0 + 2 * th, 0.3, G.z1 - G.z0 + 2 * th, inner, (G.x0 + G.x1) / 2, -0.15, (G.z0 + G.z1) / 2);
+  const fb = new E.Batch('gatehouse-floor');
+  fb.box(G.x1 - G.x0 + 2 * th, 0.3, G.z1 - G.z0 + 2 * th, E.mat('#1c1d1f', { rough: 0.95 }), (G.x0 + G.x1) / 2, -0.15, (G.z0 + G.z1) / 2);
+  fb.build(W).forEach(m => { m.userData.ground = true; });
   b.box(G.x1 - G.x0 + 2 * th, 0.8, 9.5, stone, (G.x0 + G.x1) / 2, h + 0.4, G.z1 - 3.6);
   b.box(6, 0.8, 6.4, stone, G.x0 + 2.4, h + 0.4, G.z0 + 2.6, 0.05, 0.1, 0.03);
   b.box(4.2, 0.6, 3.2, stone, G.x1 - 3.3, h + 0.2, G.z0 + 1.2, 0.18, -0.2, 0.25);   // a slab sagging into the room
@@ -140,7 +142,6 @@ export function buildGatehouse(E, W, o = {}) {
   b.box(0.3, 6.4, 0.3, E.mat('#15181b'), L.truceLamp[0], h + 3.2, L.truceLamp[2]);
   b.box(1.6, 0.18, 0.18, E.mat('#15181b'), L.truceLamp[0] + 0.7, h + 6.4, L.truceLamp[2]);
   const meshes = b.build(W);
-  meshes.forEach(m => { m.userData.ground = m.material === inner; });
   // interior props
   const ctx = { meshes };
   if (o.interior) Object.assign(ctx, buildGatehouseInterior(E, W, o));
@@ -216,7 +217,7 @@ export function buildForecourt(E, W, o = {}) {
 export function buildBattery(E, W, o = {}) {
   const guns = [];
   // state.battery = {at: [x, z], spacing: [dx, dz], face: [x, z]} moves the three guns (default: the forecourt)
-  const iron = E.mat('#121416', { rough: 0.55, metal: 0.55, rim: true });
+  const iron = E.mat('#0c0d0f', { rough: 0.8 });
   for (const [x, z] of L.battery) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.atan2(0 - x, L.crown.z - z); W.add(g);
     const b = new E.Batch('gun');
@@ -350,9 +351,11 @@ export function buildInnerWall(E, W, o = {}) {
   b.box(I.gateW + 2, 3, 3.4, stone, I.gateX, I.y + h - 1.5, I.z);           // lintel over the gate
   if (!o.ruined) for (let x = -hw + 2; x < hw; x += 4) b.box(2, 1.6, 3.2, stone, x, I.y + h + 0.8, I.z);   // merlons
   // the parapet cornice over the stair foot: the block tears loose from here (key p.6, top left)
-  b.box(34, 1.4, 6.5, stone, 46, I.y - 0.2, -88.6);
-  b.box(34, 3.2, 3, stone, 46, I.y + 1.6, -89.6);
-  for (let x = 30; x < 63; x += 3.4) b.box(0.8, 1.6, 0.8, stone, x, I.y - 1.4, -86.2);   // corbels under it
+  // the gallery: a terrace slab projecting from the tier-0 face over the stair foot ("the terrace above her",
+  // key p.6 top left). Underside at y = 6.6, front edge at z = -82.6; the block tears loose from its edge.
+  b.box(17, 0.9, 7.6, stone, 54.5, 7.05, -86.4);
+  b.box(17, 1.2, 0.6, stone, 54.5, 8.1, -82.9);
+  for (let x = 47; x < 63; x += 3) b.box(0.7, 2.2, 0.9, stone, x, 5.5, -89.4);   // corbels under it
   b.build(W);
   // the gate leaves (shut / open 0..1)
   const leaves = [];
@@ -400,7 +403,8 @@ export function buildZiggurat(E, W, o = {}) {
       hb.box(w, hh, d, r() < 0.5 ? house : houseD, x, t.top + hh / 2, z, 0, (r() < 0.2 ? 0.2 : 0), 0);
       if (r() < 0.35) hb.box(w * 0.6, hh * 0.6, d * 0.6, house, x + (r() - 0.5) * 2, t.top + hh + hh * 0.3, z);
     }
-    const meshes = [...b.build(W), ...hb.build(W)];
+    const tm = b.build(W); tm.forEach(m => { m.userData.ground = true; });
+    const meshes = [...tm, ...hb.build(W)];
     tiers.push({ k, meshes });
   }
   return { tiers };
