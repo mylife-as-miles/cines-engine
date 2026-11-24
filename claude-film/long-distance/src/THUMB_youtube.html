@@ -1,0 +1,50 @@
+<!doctype html><meta charset="utf-8"><title>Long Distance · YouTube thumbnails</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script src="../film/load.js"></script>
+<script>
+/* LONG DISTANCE · YouTube thumbnails (1280x720), drawn from the film's own frames by the film's engine, in the film's
+   colours. One image, one line, the line at the top (the author's preference on Autopilot), nothing in the bottom-right
+   corner (YouTube's timestamp). None of them gives the twist away: the phone is a phone, the picture is a nice photo.
+   ?v=a  the pillow (Q01 16 s): his face in the phone's light, the phone where her head would be. ARE YOU THERE?
+   ?v=b  three of her (Q10 18 s): the phone held up with the waterfall, the strip on the fridge behind him.
+         WE'VE NEVER TAKEN THIS PHOTO.
+   ?v=c  the ending (Q11 40 s): he lies on the couch with the phone beside his face, where a head would be. I LOVE YOU TOO.
+   ?v=d  the picture (Q06 26 s): the waterfall on the phone propped against the salt. I LOVE THIS ONE.
+   node tools/shoot.js "src/THUMB_youtube.html?v=a" frames/THUMB_youtube_a.png 1280 720 500 120000 */
+(async () => {
+  const v = new URLSearchParams(location.search).get('v') || 'a';
+  const V = {
+    a: { seq: 'Q01', t: 16, crop: [300, 40, 1440], text: ['ARE YOU', 'THERE?'], at: 'right' },
+    b: { seq: 'Q10', t: 18, crop: [240, 0, 1680], text: ['WE’VE NEVER', 'TAKEN THIS PHOTO.'], at: 'top' },
+    c: { seq: 'Q11', t: 40, crop: [260, 290, 1400], text: ['I LOVE', 'YOU TOO.'], at: 'left' },
+    d: { seq: 'Q06', t: 26, crop: [0, 0, 1440], text: ['I LOVE', 'THIS ONE.'], at: 'left', size: 88 },
+  }[v];
+  await FILM_LOAD('../', [V.seq]);
+  const W = 1280, H = 720;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; document.body.appendChild(cv);
+  const g = cv.getContext('2d');
+  // the film's own frame at full size, through the engine (paper, gloss, the finish); no subtitle is active at these times
+  const src = OTM.makeCanvas(1920, 1080);
+  FILM.renderAt(FILM.lib[V.seq].start + V.t, src.getContext('2d'));
+  // crop: [x, y, width] in the 1920x1080 frame, 16:9, scaled to 1280x720, a touch brighter for a small screen
+  const [cx, cy, cw] = V.crop, ch = cw * 9 / 16;
+  g.filter = 'brightness(1.12) contrast(1.06) saturate(1.05)'; g.drawImage(src, cx, cy, cw, ch, 0, 0, W, H); g.filter = 'none';
+  // a soft darkening behind the type, from the side it sits on, so cream type reads at 160 px wide
+  const shade = { top: [0, 0, 0, H * 0.55], left: [0, 0, W * 0.62, 0], right: [W, 0, W * 0.38, 0] }[V.at];
+  const sg = g.createLinearGradient(...shade); sg.addColorStop(0, 'rgba(6,8,14,0.78)'); sg.addColorStop(1, 'rgba(6,8,14,0)');
+  g.fillStyle = sg; g.fillRect(0, 0, W, H);
+  // the type: Archivo Black in the subtitles' cream, a dark outline and shadow so it holds on a phone
+  const size = V.size || (V.text.some(s => s.length > 12) ? 78 : 104), lead = size * 1.02;
+  g.font = `400 ${size}px "Archivo Black"`; g.textBaseline = 'alphabetic'; g.lineJoin = 'round';
+  const widest = Math.max(...V.text.map(s => g.measureText(s).width));
+  const x0 = V.at === 'right' ? W - 56 - widest : 56;
+  const y0 = V.at === 'top' ? 40 + size : V.at === 'left' ? 70 + size : 70 + size;
+  V.text.forEach((s, i) => {
+    const y = y0 + i * lead;
+    g.save(); g.shadowColor = 'rgba(0,0,0,0.7)'; g.shadowBlur = 22; g.shadowOffsetY = 6;
+    g.lineWidth = size * 0.14; g.strokeStyle = '#07080c'; g.strokeText(s, x0, y); g.restore();
+    g.fillStyle = '#F3ECDD'; g.fillText(s, x0, y);
+  });
+  window.FRAME_READY = true;
+})();
+</script>
