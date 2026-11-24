@@ -1,0 +1,232 @@
+{
+ "title": "Q11 \u00b7 HELENA WILL DO",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20136.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     5.0,
+     1.42,
+     1.4
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "move": {
+    "to": {
+     "pos": [
+      4.85,
+      1.42,
+      1.15
+     ],
+     "target": [
+      4.45,
+      1.4,
+      0.5
+     ],
+     "f": 65,
+     "shift": [
+      0.1,
+      0
+     ]
+    }
+   },
+   "handheld": 0.002,
+   "camText": "Opens exactly on Q10's end: her close-up \u00b7 65 mm \u00b7 the slow push-in continues",
+   "line": "HELENA: \"Do you know how long it's been since somebody called me that?\"",
+   "lines": [
+    {
+     "t0": 1.4,
+     "t1": 5.6,
+     "text": "HELENA: Do you know how long it's been since somebody called me that?"
+    }
+   ],
+   "note": "Her voice thicker; eyes wet, never spilling."
+  },
+  {
+   "n": 2,
+   "time": "6.5\u20139 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.05,
+     1.3
+    ],
+    "target": [
+     3.97,
+     1.72,
+     0.95
+    ],
+    "f": 50
+   },
+   "camText": "Oren, from her seated height \u00b7 50 mm \u00b7 locked-off",
+   "line": "OREN: \"I don't have access to \u2014\"",
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 1.9,
+     "text": "OREN: I don't have access to \u2014"
+    }
+   ],
+   "note": "He stops on the last word: she cuts in."
+  },
+  {
+   "n": 3,
+   "time": "9\u201316 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.42,
+     1.15
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.004,
+   "camText": "Close-up of Helena \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"A while. That's what I mean.\" (a breath out) \"Helena will do.\"",
+   "lines": [
+    {
+     "t0": 0.3,
+     "t1": 2.6,
+     "text": "HELENA: A while. That's what I mean."
+    },
+    {
+     "t0": 4.0,
+     "t1": 5.6,
+     "text": "HELENA: Helena will do."
+    }
+   ],
+   "note": "A breath out between them: a small decision."
+  },
+  {
+   "n": 4,
+   "time": "16\u201317.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.05,
+     1.3
+    ],
+    "target": [
+     3.97,
+     1.72,
+     0.95
+    ],
+    "f": 50
+   },
+   "camText": "Oren listening \u00b7 50 mm \u00b7 locked-off",
+   "line": "(no dialogue)",
+   "note": "His reaction, its own beat: eyes on her, one slow blink, nothing else."
+  },
+  {
+   "n": 5,
+   "time": "17.5\u201324 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     6.3,
+     1.25,
+     1.4
+    ],
+    "target": [
+     4.2,
+     1.15,
+     0.7
+    ],
+    "f": 40
+   },
+   "camText": "Medium side-on two-shot at her shoulder height \u00b7 40 mm \u00b7 locked-off",
+   "line": "OREN: \"All right, Helena. Your mobility assessment is marked incomplete.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 5.2,
+     "text": "OREN: All right, Helena. Your mobility assessment is marked incomplete."
+    }
+   ],
+   "note": "The first time he says her name; then the information, plain."
+  }
+ ]
+}
