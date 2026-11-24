@@ -1,6 +1,6 @@
 """The rough cut's soundtrack: every voiced line at its place on the film's clock, with the first-pass treatments.
 
-  node tools/cuesheet.js out/cuesheet.json && python3 tools/dialogue_track.py [out/dialogue.wav] [--mux picture.mp4 out.mp4]
+  node tools/cuesheet.js out/cuesheet.json && python3 tools/dialogue_track.py [out/dialogue.wav] [--mux picture.mp4|segs.txt out.mp4 [--720]]
 
 Reads out/cuesheet.json (the 'voice' cues, in global seconds) and audio/vo/voice_map.json, treats each take as
 tools/readthrough.py does (the phone dry, close and too clean; the real woman and him by day in the flat's room;
@@ -44,8 +44,11 @@ def main():
     print('wrote', out, len(voices), 'lines')
     if '--mux' in a:
         pic, dst = a[a.index('--mux') + 1], a[a.index('--mux') + 2]
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', pic, '-i', out, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
-                        '-c:a', 'aac', '-b:a', '192k', '-shortest', dst], check=True)
+        src = ['-f', 'concat', '-safe', '0', '-i', pic] if pic.endswith('.txt') else ['-i', pic]   # a segment list from export --no-join
+        venc = (['-vf', 'scale=1280:720:flags=lanczos', '-c:v', 'libx264', '-preset', 'medium', '-crf', '23', '-pix_fmt', 'yuv420p']
+                if '--720' in a else ['-c:v', 'copy'])
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', *src, '-i', out, '-map', '0:v', '-map', '1:a', *venc,
+                        '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', '-shortest', dst], check=True)
         print('muxed', dst)
 
 

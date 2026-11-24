@@ -1,5 +1,5 @@
 // Export the film to MP4 with the engine's development soundtrack (the final mix is muxed over the picture: see audio/README.md).
-//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--crf 18] [--only Q01,Q02] [--no-audio]
+//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--crf 18] [--only Q01,Q02] [--no-audio] [--no-join]
 // Frames are rendered headless by FILM.renderAt(i/24) and piped as JPEG into ffmpeg (one encoder per worker, then concatenated).
 // Audio is rendered per sequence by OfflineAudioContext at 48 kHz, concatenated, and muxed.
 const { open } = require('./film');
@@ -52,6 +52,9 @@ async function renderAudio() {
   const audioP = (from === 0 && to === Math.round(total * 24) && !argv.includes('--no-audio')) ? renderAudio() : Promise.resolve(null);   // --no-audio: picture only (the final mix is muxed over it)
   const segs = await Promise.all(jobs); const wav = await audioP;
   const list = path.join(TMP, 'segs.txt'); fs.writeFileSync(list, segs.map(f => `file '${f}'`).join('\n'));
+  // --no-join: keep the segments as the picture master (out/export_tmp/segs.txt is a concat list ffmpeg reads directly), so a
+  // tight disk never has to hold two full copies; tools/dialogue_track.py --mux accepts the list
+  if (argv.includes('--no-join')) { console.log('segments kept: ' + list); return; }
   const video = path.join(TMP, 'video.mp4'); execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', video]);
   segs.forEach(f => fs.unlinkSync(f));   // the grainy picture is large: never keep three copies of it on disk
   if (wav) { execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', video, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', OUT]); fs.unlinkSync(video); }
