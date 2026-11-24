@@ -601,7 +601,7 @@ window.SETS = window.SETS || {};
     seatL: [K.seatX0 + K.cw / 2, K.seat, 3.56], seatR: [K.seatX1 - K.cw / 2, K.seat, 3.56], armL: [K.x0 + K.armW / 2, K.arm, 3.62], armR: [K.x1 - K.armW / 2, K.arm, 3.62],
     couchHead: [K.mid - 0.2, K.seat + 0.13, 3.6], couchHeadL: [K.seatX0 + 0.1, K.arm + 0.1, 3.62], couchHeadR: [K.seatX1 - 0.1, K.arm + 0.1, 3.62],
     himBetween: [2.10, 1.62, 2.0], himBetweenFeet: [2.10, 0, 2.0], herBetween: [2.98, 1.56, 2.85], herBetweenFeet: [2.98, 0, 2.85],
-    phoneHeld: [2.52, 1.32, 2.5], handsMeet: [2.70, 1.10, 2.45], bagHeld: [2.30, 1.02, 2.2],
+    phoneHeld: [2.72, 1.34, 2.55], handsMeet: [2.70, 1.10, 2.45], bagHeld: [2.30, 1.02, 2.2],
     herInside: [3.55, 1.56, 0.75], herInsideFeet: [3.55, 0, 0.75],
     herDoorway: [3.45, 1.56, -0.28], herDoorwayFeet: [3.45, 0, -0.28], himDoor: [3.72, 1.66, 0.42], himDoorFeet: [3.72, 0, 0.42],
     himDoorway: [3.42, 1.66, 0.24], himDoorwayFeet: [3.42, 0, 0.24],
@@ -693,7 +693,8 @@ window.SETS = window.SETS || {};
         if (sp.landing) leaf(c.g, C, L, s.door == null ? sp.open : s.door);
         // light sources into the bloom buffer: the bulb at night, the window by day
         const em = c.em;
-        if (L.night && sh.bulb) { em.fillStyle = 'rgba(255,214,150,1)'; em.beginPath(); em.ellipse(sh.bulb[0], sh.bulb[1], sh.bulb[2] * 0.6, Math.max(2, sh.bulb[3] * 0.8), 0, 0, 7); em.fill(); }
+        const bulb = L.night ? bulbOf(C) : null;
+        if (bulb) { em.fillStyle = 'rgba(255,214,150,1)'; em.beginPath(); em.ellipse(bulb[0], bulb[1], bulb[2] * 0.6, Math.max(2, bulb[3] * 0.8), 0, 0, 7); em.fill(); }
         if (!L.night && sh.window) { em.save(); em.globalAlpha = L.tod === 'day' ? 0.35 : 0.18; em.fillStyle = L.tod === 'day' ? '#DCE2E0' : '#8EA0C8'; em.beginPath(); sh.window.forEach((p, i) => i ? em.lineTo(p[0], p[1]) : em.moveTo(p[0], p[1])); em.closePath(); em.fill(); em.restore(); }
       },
       front(c, t, s) {
@@ -715,6 +716,8 @@ window.SETS = window.SETS || {};
     v.project = (w, shot) => project(shotOf(view, shot)._cam, w);
     return v;
   }
+  // where the bulb is on screen (for the bloom), straight from the camera, so back() never depends on front() having run
+  function bulbOf(C) { const P = R.pendant; if (C.depth(P.x, P.rim, P.z) < 0.2) return null; const er = hEll(C, P.x, P.rim, P.z, P.r); return [er.x, er.y - (C.o.y < P.rim ? er.ry * 0.35 : 0), er.rx, er.ry]; }
   function debugMarks(g, sp) {
     const a = anchorsOf(sp); g.save(); g.font = '600 16px monospace'; g.lineWidth = 2;
     Object.keys(a).forEach(n => { const [x, y] = a[n]; g.strokeStyle = '#E0306A'; g.beginPath(); g.moveTo(x - 9, y); g.lineTo(x + 9, y); g.moveTo(x, y - 9); g.lineTo(x, y + 9); g.stroke(); g.fillStyle = '#F0E070'; g.fillText(n, x + 8, y - 6); });
