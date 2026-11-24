@@ -1,0 +1,174 @@
+{
+ "bed_night": {
+  "prompt": "the room tone of a small city bedroom at night, soft still air, a very faint low hum of the city far away through a closed window, calm and quiet",
+  "dur": 10, "seed": 101, "match": "the quiet room tone of a bedroom at night"
+ },
+ "bed_day": {
+  "prompt": "the room tone of a small quiet apartment living room by day, soft air, faint distant traffic outside a closed window, very still",
+  "dur": 10, "seed": 102, "match": "the quiet room tone of an apartment by day"
+ },
+ "bed_bathroom": {
+  "prompt": "the room tone of a small tiled bathroom in the morning, hollow quiet air, a soft ventilation fan running behind the wall",
+  "dur": 10, "seed": 103, "match": "the quiet room tone of a small bathroom with a fan"
+ },
+ "bed_office": {
+  "prompt": "a quiet open plan office, the air conditioning humming, distant keyboards typing and a faint murmur of people far away",
+  "dur": 10, "seed": 104, "match": "a quiet office with air conditioning and distant typing"
+ },
+ "keyboard_near": {
+  "prompt": "a man typing steadily on a computer keyboard at his desk, soft plastic key clicks, close, in a quiet office",
+  "dur": 8, "seed": 105, "match": "typing on a computer keyboard"
+ },
+ "bed_stairwell": {
+  "prompt": "an empty concrete fire stairwell in an office building, cold hollow air with a faint echo, very quiet",
+  "dur": 10, "seed": 106, "match": "the hollow air of an empty concrete stairwell"
+ },
+ "bed_bus": {
+  "prompt": "inside a crowded city bus in the evening, the diesel engine humming and the road rumbling under the floor, steady",
+  "dur": 10, "seed": 107, "match": "the inside of a moving bus"
+ },
+ "fridge_hum": {
+  "prompt": "a kitchen refrigerator humming steadily in a quiet flat at night, a low electric compressor hum",
+  "dur": 10, "seed": 108, "match": "a refrigerator humming"
+ },
+ "pendant_hum": {
+  "prompt": "the faint electrical buzz of a cheap ceiling light bulb in a quiet kitchen at night, a thin steady mains hum",
+  "dur": 8, "seed": 109, "match": "the electrical hum of a light"
+ },
+ "street_day": {
+  "prompt": "distant city street traffic by day heard from inside an apartment through a closed window, muffled and far away, cars passing slowly",
+  "dur": 10, "seed": 110, "match": "distant traffic heard through a window"
+ },
+ "water_tap": {
+  "prompt": "a bathroom tap running into a ceramic basin, a steady thin stream of water, close, in a small tiled room",
+  "dur": 5, "seed": 111, "match": "a tap running water into a sink"
+ },
+ "brushing": {
+  "prompt": "a man brushing his teeth with a manual toothbrush, steady scrubbing strokes, close, in a small bathroom",
+  "dur": 8, "seed": 112, "match": "brushing teeth"
+ },
+ "chewing": {
+  "prompt": "a man eating quietly at a kitchen counter, chewing softly with his mouth closed, close, a quiet room",
+  "dur": 8, "seed": 113, "match": "a person chewing food"
+ },
+ "heartbeat": {
+  "prompt": "a slow soft human heartbeat, low and muffled, heard from very close",
+  "dur": 8, "seed": 114, "match": "a heartbeat"
+ },
+ "stairs_down": {
+  "prompt": "a woman's footsteps going down concrete stairs in an apartment building, receding into the distance, heard from inside a flat through a closed door",
+  "dur": 7, "seed": 115, "match": "footsteps going down stairs, receding"
+ },
+ "knock": {
+  "prompt": "three knocks with the knuckles on a wooden apartment front door, heard from inside the flat, close, firm and polite",
+  "dur": 4, "seed": 116, "match": "knocking on a wooden door"
+ },
+ "door_open": {
+  "prompt": "an apartment front door unlocked and opened from inside, a metal latch turning and a soft creak of the hinge, wooden door",
+  "dur": 3, "seed": 117, "match": "a door opening"
+ },
+ "door_close": {
+  "prompt": "an apartment front door closed gently from inside, a soft wooden thud and the latch clicking shut",
+  "dur": 3, "seed": 118, "match": "a door closing"
+ },
+ "door_close_soft": {
+  "prompt": "a front door pulled shut softly from the landing outside, heard from inside the flat, a muffled thud and a latch click",
+  "dur": 3, "seed": 119, "match": "a door closing softly"
+ },
+ "street_door": {
+  "prompt": "the heavy street door of an apartment building closing far below, heard from several floors up through the stairwell, distant and echoing",
+  "dur": 4, "seed": 120, "match": "a distant door closing"
+ },
+ "door_far": {
+  "prompt": "a heavy metal fire door closing far above in a concrete stairwell, distant, echoing",
+  "dur": 4, "seed": 121, "match": "a distant door closing in a stairwell"
+ },
+ "streetcar_far": {
+  "prompt": "a tram passing along a city street far away at night, heard from inside a quiet bedroom, a distant low rumble and a faint squeal of wheels",
+  "dur": 7, "seed": 122, "match": "a distant tram passing"
+ },
+ "duvet": {
+  "prompt": "a hand sliding slowly across a soft cotton duvet in bed, a gentle rustle of bedsheets, close",
+  "dur": 3, "seed": 123, "match": "bedsheets rustling"
+ },
+ "sigh_m": {
+  "prompt": "a man lying in bed lets out one slow soft breath as he settles to sleep, close, quiet room",
+  "dur": 3, "seed": 124, "match": "a man breathing out softly"
+ },
+ "breath_out": {
+  "prompt": "a man exhales one long slow unsteady breath, close, in a quiet concrete stairwell",
+  "dur": 3, "seed": 125, "match": "a man exhaling"
+ },
+ "breath_in_f": {
+  "prompt": "a woman takes one short soft breath in as if about to speak, then stops, close, in a quiet room",
+  "dur": 2, "seed": 126, "match": "a woman breathing in"
+ },
+ "chair_creak": {
+  "prompt": "an office chair creaking once as a man shifts his weight, a short creak of the seat, close",
+  "dur": 2, "seed": 127, "match": "a chair creaking"
+ },
+ "bus_brakes": {
+  "prompt": "a city bus slowing to a stop, the brakes squealing softly and the air brakes hissing, heard from inside the bus",
+  "dur": 4, "seed": 128, "match": "a bus braking"
+ },
+ "bus_bell": {
+  "prompt": "the stop request bell inside a city bus, a single electronic ding, heard from inside the bus",
+  "dur": 2, "seed": 129, "match": "a bus stop bell ding"
+ },
+ "bus_doors": {
+  "prompt": "the pneumatic doors of a city bus opening with a hiss and a thump, heard from inside the bus",
+  "dur": 3, "seed": 130, "match": "bus doors opening with a hiss"
+ },
+ "fork_pan": {
+  "prompt": "a fork scraping food from a metal frying pan, one light metallic scrape, close, in a quiet kitchen",
+  "dur": 2, "seed": 131, "match": "a fork scraping a pan"
+ },
+ "swallow": {
+  "prompt": "a man swallowing once, a small quiet gulp, very close",
+  "dur": 1.5, "seed": 132, "match": "a person swallowing"
+ },
+ "couch_creak": {
+  "prompt": "a fabric sofa creaking softly as a man sits down on it, the springs and the cushion giving, close",
+  "dur": 3, "seed": 133, "match": "a sofa creaking"
+ },
+ "steps_m": {
+  "prompt": "a man walking a few steps across a wooden floor in a small flat, soft shoes, unhurried",
+  "dur": 3, "seed": 134, "match": "footsteps on a wooden floor"
+ },
+ "steps_f": {
+  "prompt": "a woman in boots taking a few slow steps on a wooden floor inside a small apartment, hesitant",
+  "dur": 3, "seed": 135, "match": "footsteps on a wooden floor"
+ },
+ "steps_fast": {
+  "prompt": "a man walking quickly across a wooden floor, four fast steps and then stopping, inside a small flat",
+  "dur": 3, "seed": 136, "match": "fast footsteps"
+ },
+ "coat_rustle": {
+  "prompt": "the soft rustle of a wool coat sleeve as a woman lifts her arm, fabric movement, close",
+  "dur": 2, "seed": 137, "match": "clothes rustling"
+ },
+ "wardrobe_door": {
+  "prompt": "two wooden wardrobe doors pulled open in a bedroom, a soft creak of old hinges",
+  "dur": 3, "seed": 138, "match": "a wardrobe door opening"
+ },
+ "hangers": {
+  "prompt": "bare wooden coat hangers knocking together on a metal rail inside an empty wardrobe, a hollow wooden clink",
+  "dur": 3, "seed": 139, "match": "coat hangers clinking"
+ },
+ "bag_lift": {
+  "prompt": "a small fabric makeup bag lifted off a dusty wooden shelf, a soft scrape and a little cloth rustle, close",
+  "dur": 2, "seed": 140, "match": "a bag lifted off a shelf"
+ },
+ "trade": {
+  "prompt": "a small fabric makeup bag passed from one hand to another, a soft cloth rustle and one tiny tick of a metal zipper, close",
+  "dur": 3, "seed": 141, "match": "fabric rustling as something is handed over"
+ },
+ "zip": {
+  "prompt": "a thumb fiddling with the small broken metal zipper pull of a makeup bag, tiny metal clicks, very close and quiet",
+  "dur": 6, "seed": 142, "match": "a small zipper being fiddled with"
+ },
+ "phone_cushion": {
+  "prompt": "a mobile phone set down gently on a soft fabric sofa cushion, one soft muffled pat, close",
+  "dur": 1.5, "seed": 143, "match": "an object put down on a cushion"
+ }
+}
