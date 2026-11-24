@@ -23,7 +23,16 @@ All the old calls still work. What you see changes:
 - **Every arm ends in a hand.** `hand: false` now gives an easy hand (`relax`, slightly closed). Pass `handless: true` only for an arm truly hidden to the wrist.
 - **The bus rail from behind** uses a new `railBack` grip (fingers over the bar toward us).
 - **The trade** has bent elbows and turned wrists. Stand each person about 1.45 heads from the line (it was 1.85). She holds the phone on her palm, tilted to show its back. `RIG.trade().phone` adds `pitch: 0.55`, `spin: π/2` and `facing: 'back' | 'face'`; its `w`/`h` are unchanged.
-- **Her age.** `RIG.head` and every `'her'` pose take `age` (default 0.6 for her in grain, 0 in gloss and flash; him 0). It gives tired eyes (a soft crescent and a faint crease under each eye, lids a touch lower), faint lines from nose to mouth, and a slightly fuller jaw, chin and lower cheeks: the same face, a few years on. Pass `age: 0` for her younger self in grain.
+- **Her age** (revised for cut 3). `RIG.head` and every `'her'` pose take `age`: default 0.6 for her in grain, 0 in gloss and flash, and 0 for him. At 0.6 she reads mid-thirties beside her early-twenties photographs, and it is still the same face. It gives:
+  - heavier, less wide eyes (default lids 0.68, a smaller opening, finer lashes)
+  - broad shadows under the eyes
+  - a soft fold from nose to mouth
+  - hollower cheeks under the cheekbones
+  - a firmer, longer jaw and chin
+  - less rosy, more even, tired skin
+  - half the freckles, muted
+
+  Pass `age: 0` for her younger self in grain.
 - **Daylight faces** read as one light and one shadow. In soft light the face is shaded from its big form (an ellipsoid blended into the sculpted normal), the cut does not wobble, the shadow side keeps 68 % of the key, and occlusion is smooth.
 - **Back collars** are flat cloth on the garment: no wider than the neck, square at the ends, in the garment's own colour and bands, unlifted, with one fold line.
 - **Sitting up and lying down** bend at the hips and knees:
@@ -159,7 +168,7 @@ The phone's light moves with the phone, quantised to 0.1 head. Every change of t
 | `flush` | 0..1 | Colour rising on the skin of his neck and throat in two cut steps: 0 is below the collar, 0.8 reaches the jaw's sides, 1 is the ears too. The face's front keeps its colour. Snapped to 1/16 |
 | `ears` | 0..1 | The ears alone go red, lobe first (Q05). Snapped to 1/8 |
 | `pale` | 0..1 | Pallor: the colour leaving his face (Q08). The whole face desaturates and cools, the blush goes and the lips grey. Snapped to 1/12 |
-| `age` | 0..1 | Years: tired eyes, faint lines, a slightly fuller jaw and cheeks. Default 0.6 for her alive (grain), 0 otherwise. Snapped to 0.1 |
+| `age` | 0..1 | Years, readable in mid-shot. Default 0.6 for her alive (grain), 0 otherwise. Snapped to 0.1. See the age entry above for what it does |
 | `neck` | head units | Neck length. In `RIG.draw` the default follows the costume (tee 0.36, sweater 0.38, shirt 0.44, coat 0.5); for a lone `RIG.head` it is 0.6 / 0.56 |
 | `light`, `mode` | | `mode`: `'grain'` (life, the default), `'gloss'` (the generated photos), `'flash'` (the strip) |
 | `shadow` | `{dx, dy, alpha}` head units, or `false` | The lifted shadow under the piece |

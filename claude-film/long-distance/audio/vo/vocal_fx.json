@@ -3,13 +3,47 @@
  "laugh_phone": {
   "voice": "en-us-tova",
   "listen_for": "a woman laughing softly",
-  "alts": ["a woman speaking", "a woman sighing"],
+  "alts": [
+   "a woman speaking",
+   "a woman sighing"
+  ],
   "takes": [
-   {"text": "Hah... hm hm.", "style": "She laughs softly at something he just said, in bed at night, the phone on the pillow by his face: a short, warm, breathy little laugh, close and private. A laugh, not words."},
-   {"text": "Ha ha.", "style": "A soft, fond, breathy laugh at his little joke, close and intimate, under her breath. Laugh it; do not say the words."},
-   {"text": "Mm-hah hah.", "style": "Laughing quietly and warmly, close to his ear in the dark, amused and affectionate, brief. A real laugh, no words."},
-   {"text": "Hah!", "style": "One small surprised laugh that escapes her, warm and close, then a smile. A laugh, not a word."},
-   {"text": "Heh heh heh.", "style": "A soft, delighted, breathy giggle, close and private, quiet, as if lying beside him. Laugh, do not speak."}
+   {
+    "text": "Hah... hm hm.",
+    "style": "She laughs softly at something he just said, in bed at night, the phone on the pillow by his face: a short, warm, breathy little laugh, close and private. A laugh, not words."
+   },
+   {
+    "text": "Ha ha.",
+    "style": "A soft, fond, breathy laugh at his little joke, close and intimate, under her breath. Laugh it; do not say the words."
+   },
+   {
+    "text": "Mm-hah hah.",
+    "style": "Laughing quietly and warmly, close to his ear in the dark, amused and affectionate, brief. A real laugh, no words."
+   },
+   {
+    "text": "Hah!",
+    "style": "One small surprised laugh that escapes her, warm and close, then a smile. A laugh, not a word."
+   },
+   {
+    "text": "Heh heh heh.",
+    "style": "A soft, delighted, breathy giggle, close and private, quiet, as if lying beside him. Laugh, do not speak."
+   },
+   {
+    "text": "Ha ha ha.",
+    "style": "A warm, amused, voiced little laugh at his joke, soft and close, three short notes of real laughter in the throat, smiling. Not a sigh, not breathy: laughing."
+   },
+   {
+    "text": "Hahaha.",
+    "style": "She can't help laughing at what he just told her: a short, bright, genuine laugh, quiet because it is late at night, close to him. Laughter with voice in it."
+   },
+   {
+    "text": "Ha! Ha ha.",
+    "style": "Amused and delighted, a soft giggle with voice, close and intimate, at night. Real laughter, not a breath."
+   },
+   {
+    "text": "Ah ha ha.",
+    "style": "A smooth, pretty, even little laugh, perfectly pitched, soft and close, warm and affectionate. Laughing."
+   }
   ]
  },
  "murmur": {

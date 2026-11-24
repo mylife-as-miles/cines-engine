@@ -71,9 +71,12 @@
     phoneInHand(c, lt, { screen: 'app', state: {}, big: true, z: 0.04 * E.inOutSine(seg(lt, 11, 19)), reach: 0.05 });
   }
 
-  // ------------------------------------------------------------------ 19–32.6: the couch. He sits, the phone to his ear; then lies down
+  // ------------------------------------------------------------------ 19–35: the couch. He sits, the phone to his ear; then lies down
+  // Sitting: the rig's couch body (legs, hips, the turn) with his phone arm drawn by RIG.arm from his shoulder (the elbow bent and
+  // down, the hand at his ear). At the end of "I love you too" his eyes close; he brings the phone down to his chest (30.9–31.7) and
+  // lies down along the couch (the rig's liedown, bending at hips and knees, 31.5–35.0), the phone held up in front of his face.
   const SITR = { E: [0.82, 2.3], W: [0.7, 3.05], hand: 'relax', hp: { close: 0.4 } };
-  const LAP = { E: [-0.75, 2.25], W: [-0.1, 2.85] }, EAR = { E: [-0.66, 1.95], W: [-0.55, 0.62] };
+  const LAPW = [-0.1, 2.85], EARW = [-0.5, 0.66];
   function couchMain(c, st, lt) {
     const V = LV().couch, sh = V.shots.main; const tt = twos(lt); const b = BLUE(lt);
     const s0 = { tod: 'day', blue: b };
@@ -83,35 +86,35 @@
     const mH = Math.min(2, RIG.mouthFor('L024', lt - 25.5) || RIG.mouthFor('L026', lt - 28.4));
     const lids = key(tt, [[19, 0.42], [24.8, 0.42], [26.5, 0.24], [27.6, 0.36], [29.8, 0.36], [31.0, 0.1]]);
     const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [hip[0] + 0.6 * s, hip[1] - 3.1 * s], phoneCol: '#FFC5A0', phoneK: 0.55, phoneZ: 0.3 } });
-    const u = E.inOutSine(seg(tt, 31.0, 33.2));
-    let fig;
-    if (tt < 31.0) {
-      // sitting: the cushion takes him (19.0–19.7); the phone comes up from his lap to his ear (20.6–23.2). The rig's couch frame for
-      // the legs and the turn; the arm keyed between the rig's lap and ear arms
+    if (tt < 31.6) {
+      // the phone: up from his lap to his ear (20.6–23.2); down to his chest as the call ends (30.9–31.6)
       const settle = (1 - E.outCubic(seg(tt, 19.0, 19.7))) * 0.09 * s;
-      const e = E.inOutSine(seg(tt, 20.6, 23.2));
-      const base = RIG.POSES.him.couch({ hip: [hip[0], hip[1] + settle], dir: -1, s, u: 0, arm: 'ear', fit });
-      const armL = Object.assign({ E: [lerp(LAP.E[0], EAR.E[0], e), lerp(LAP.E[1], EAR.E[1], e), ], W: [lerp(LAP.W[0], EAR.W[0], e), lerp(LAP.W[1], EAR.W[1], e)], front: true, order: 1 },
-        e > 0.55 ? { hand: 'ear', hp: { over: 'all' } } : { hand: 'thumb', hp: { reach: 0.3, over: 'thumb' } });
+      const e = E.inOutSine(seg(tt, 20.6, 23.2)) * (1 - E.inOutSine(seg(tt, 30.9, 31.6)));
+      const base = RIG.POSES.him.couch({ hip: [hip[0], hip[1] + settle], dir: -1, s, u: 0, arm: 'lap', fit });
       const blink = RIG.blink(lt, 3);
       const face = { yaw: 0.28, pitch: lerp(0.32, 0.18, e), lids: lids * blink, gaze: [0.05, 0.45], mouth: mH, smile: key(tt, [[28.2, 0], [28.6, 0.12], [29.6, 0.12], [30.6, 0.2]]) };
-      const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.35, lean: 0, head: face, arms: { L: armL, R: Object.assign({ order: 2 }, SITR) }, legs: false, crop: 3.5, untucked: true });
+      const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.35, lean: 0, head: face, arms: { R: Object.assign({ order: 2 }, SITR) }, legs: false, crop: 3.5, untucked: true });
       const p0 = base.parts[0], p1 = base.parts[1];
       RIG.drawFigure(c, { who: 'him', x: p0.x, y: p0.y, s, flip: p0.flip, light: L, breath: 0, ops: p0.ops });
-      fig = RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: RIG.breath(lt, 3), ops: up.ops });
-      const hand = fig.hands.L;
+      const br = RIG.breath(lt, 3);
+      const fig = RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: br, ops: up.ops });
+      const shoulder = fig.toWorld(up.SL), tgt = fig.toWorld([lerp(LAPW[0], EARW[0], e), lerp(LAPW[1], EARW[1], e)]);
+      shoulder[1] -= br; tgt[1] -= br;
+      const atEar = e > 0.6;
+      const arm = RIG.arm(c, 'him', { shoulder, target: tgt, s, side: 'L', bend: 'down', light: L, hand: atEar ? 'ear' : 'thumb', hp: atEar ? { over: 'all' } : { reach: 0.3, over: ['thumb', 'dist'] } });
+      const hand = arm.hand;
       if (hand) {
-        const atEar = e > 0.55, ph = hand.phone || { x: hand.grip[0], y: hand.grip[1], h: 0.7 * s, angle: 0 };
+        const ph = hand.phone || { x: hand.grip[0], y: hand.grip[1], h: 0.7 * s, angle: 0 };
         const P = atEar ? { x: hand.grip[0], y: hand.grip[1], h: 0.7 * s, yaw: Math.PI - 0.5, roll: 0.35, screen: 'app', t: lt, env: '#9AA4B4', spill: 0.6 }
           : { x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, pitch: 0.6, screen: 'app', t: lt, env: '#9AA4B4' };
         PHONE.glow(c, { info: PHONE.where(P, c), k: 0.45 });
-        PHONE.draw(c, P); fig.over(c);
+        PHONE.draw(c, P); arm.over(c);
       }
     } else {
-      // he closes his eyes and lies down along the couch (the rig's liedown, the phone still in his hand); lying, he holds it up in front
-      // of his face and looks at her (33.4–35); the cut to the close lands as he has laid it down beside him
-      fig = RIG.draw(c, 'him', 'liedown', { hip, dir: -1, s, light: L, t: lt, u, arm: 'ear', fit, face: { lids: tt < 32.6 ? 0.08 : 0.34, gaze: [-0.2, 0.2], smile: tt < 33.4 ? 0 : 0.08 } });
-      if (fig.phone) { const ph = fig.phone; PHONE.draw(c, { x: ph.x, y: ph.y, h: 0.7 * s, roll: ph.angle, yaw: Math.PI - 0.4, screen: 'app', t: lt, env: '#9AA4B4', spill: 0.6 }); fig.over(c); }
+      // he lies down: the torso tips onto the cushion, his weight on his hand, his head lagging; the legs swing up after (the rig)
+      const u = E.inOutSine(seg(tt, 31.5, 35.0));
+      const fig = RIG.draw(c, 'him', 'liedown', { hip, dir: -1, s, light: L, t: lt, u, arm: 'hold', fit, face: { lids: tt < 34.4 ? 0.08 : 0.3, gaze: [-0.2, 0.2] } });
+      if (fig.phone) { const ph = fig.phone; PHONE.draw(c, { x: ph.x, y: ph.y, h: ph.h || 0.7 * s, roll: ph.angle, pitch: 0.6, screen: 'app', t: lt, env: '#9AA4B4' }); fig.over(c); }
     }
     V.front(c, lt, s0);
   }
@@ -146,12 +149,16 @@
     V.back(c, lt, s0);
     const s = 0.23 * A.couchSeam[2];
     const hx = 880, hy = 745, fr = lieFrame(hx, hy, s);
-    const rest = [hx + 0.6 * s, hy + 0.85 * s];
-    const P = { x: rest[0], y: rest[1], h: 0.15 * A.couchSeam[2], pitch: 1.0, roll: -0.1, screen: 'app', t: lt, env: '#9AA4B4', shadow: { alpha: 0.4 } };
-    PHONE.glow(c, { info: PHONE.where(P, c), k: 0.75, r: s * 2.4, sy: 0.6 });
-    const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [rest[0] - 0.3 * s, rest[1] - 0.4 * s], phoneCol: '#FFC5A0', phoneK: 1.1, phoneZ: 0.5 } });
+    // continuing the lie-down: the phone held in front of his face (35.0), lowered onto the cushion beside it (35.2–36.6)
+    const rest = [hx + 0.6 * s, hy + 0.85 * s], held = [hx + 0.45 * s, hy + 0.3 * s];
+    const down = E.inOutSine(seg(tt, 35.2, 36.6)), laid = tt >= 36.6;
+    const pc = [lerp(held[0], rest[0], down), lerp(held[1], rest[1], down)];
+    const P = { x: pc[0], y: pc[1], h: 0.15 * A.couchSeam[2], pitch: lerp(0.35, 1.0, down), roll: lerp(-0.5, -0.1, down), screen: 'app', t: lt, env: '#9AA4B4', shadow: laid ? { alpha: 0.4 } : false };
+    PHONE.glow(c, { info: PHONE.where(P, c), k: lerp(0.5, 0.75, down), r: s * 2.4, sy: 0.6 });
+    const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [Math.round((pc[0] - 0.3 * s) / 40) * 40, Math.round((pc[1] - 0.4 * s) / 40) * 40], phoneCol: '#FFC5A0', phoneK: 1.1, phoneZ: 0.5 } });
     const lids = key(tt, [[35, 0.3], [36.6, 0.3], [38.2, 0.18], [41.5, 0.03]]);
-    const armR = { E: fr.F(-0.75, 0.85), W: fr.F(0.28, 0.95), hand: 'rest', flipHand: true, hp: { over: 'all' } };
+    const armR = laid ? { E: fr.F(-0.75, 0.85), W: fr.F(0.28, 0.95), hand: 'rest', flipHand: true, hp: { over: 'all' } }
+      : { E: fr.F(lerp(-0.6, -0.75, down), lerp(0.6, 0.85, down)), W: fr.F(lerp(0.1, 0.28, down), lerp(0.45, 0.95, down)), hand: 'thumb', flipHand: true, hp: { reach: 0.05, over: ['thumb', 'dist'] } };
     const f = drawLying(c, hx, hy, s, L, lt, { yaw: -0.42, pitch: 0.05, roll: 0.06, lids, smile: key(tt, [[38, 0.04], [41, 0.12]]), gaze: [0.2, 0.25] }, armR);
     PHONE.draw(c, P);
     f.over(c);
@@ -221,8 +228,8 @@
       S.cue('tap', 10.5, { what: 'he taps the banner' });
       S.cue('app_open', 11.0, { level: -60, what: 'almost nothing: no dial tone, no ring. The absence of a ring is the point' });
       S.cue('couch_creak', 20.0, { what: 'he sits; the cushion takes him' });
-      S.cue('couch_creak', 31.4, { level: -40, what: 'he lies down along the couch' });
-      S.cue('breath', 33.0, { what: 'his, settling, as he lies down beside the phone' });
+      S.cue('couch_creak', 31.8, { level: -40, dur: 3, what: 'he lies down along the couch, slowly; the cushions take him' });
+      S.cue('breath', 35.4, { what: 'his, settling, as he lays the phone down beside his face' });
       S.duck(31.2, 58, 0.7);
       S.silence(58, 72);   // the cut to black is silent; the title is silent (or the score's last note: the score plan decides)
     },

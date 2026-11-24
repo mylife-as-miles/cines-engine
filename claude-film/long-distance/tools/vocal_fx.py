@@ -1,6 +1,6 @@
 """Voice, check and finish the voiced sounds that are not lines (audio/vo/vocal_fx.json):
 
-  /home/user/leonxlnx/earshot/.venv/bin/python tools/vocal_fx.py [--force] [--pick laugh_phone=3] [--only murmur]
+  /home/user/leonxlnx/earshot/.venv/bin/python tools/vocal_fx.py [--force] [--pick laugh_phone=3] [--only murmur|laugh_phone]
 
 laugh_phone  her soft laugh on the phone (Q01, 18.2 s): Gemini TTS en-us-tova, several takes. Each take is heard by
              speech recognition (a laugh should not come back as a sentence) and earshot matches it against "a woman
@@ -97,14 +97,24 @@ def main():
                                        'verdict': m.get('verdict'), 'z': z, 'summary': m.get('summary'), 'choice': ch}
         # margin: z, minus a penalty if speech recognition hears a sentence (more than two words)
         words = [w for w in heard.replace('.', ' ').replace(',', ' ').split() if w.strip("!?-'")]
-        score = (z or 0) - (2.0 if len(words) > 2 else 0)
+        share = (m.get('forced_choice') or {}).get(L['listen_for'])
+        if share is None:                                   # the summary carries the forced choice as text
+            import re as _re
+            mm = _re.search(r"'%s' (<1|>99|\\d+)%%" % _re.escape(L['listen_for']), m.get('summary') or '')
+            share = {'<1': 0.5, '>99': 99.5}.get(mm.group(1), float(mm.group(1)) if mm else 0) if mm else 0
+        rep['laugh_phone'][f't{i}']['laugh_share'] = share
+        score = share + (z or 0) - (20 if len(words) > 2 else 0)        # heard as a laugh against a sigh first, then z
         rep['laugh_phone'][f't{i}']['score'] = round(score, 2)
         print(f"laugh t{i}: {len(x) / SR:.2f}s heard {heard!r}  {m.get('summary')}")
         if score > best_m: best, best_m = i, score
     k = int(picks.get('laugh_phone', best or int(rep['laugh_phone'].get('pick', 't1')[1:]))); rep['laugh_phone']['pick'] = f't{k}'
-    rep['laugh_phone']['pick_reason'] = 'chosen by ear (--pick)' if 'laugh_phone' in picks else 'highest earshot z against "a woman laughing softly", not heard as a sentence'
+    rep['laugh_phone']['pick_reason'] = 'chosen by ear (--pick)' if 'laugh_phone' in picks else 'the largest share for "a woman laughing softly" in earshot\'s forced choice against a sigh and speech, then z; not heard as a sentence'
     x = load(os.path.join(TK, f'fx_laugh_phone_t{k}_trim.wav')); sf.write(os.path.join(VO, 'laugh_phone.wav'), x.astype(np.float32), SR, subtype='PCM_24')
     print('laugh_phone <- t%d' % k)
+    if '--only' in a and a[a.index('--only') + 1] == 'laugh_phone':
+        prev = os.path.join(VO, 'vocal_fx_check.json')
+        if os.path.exists(prev): rep['murmur'] = json.load(open(prev)).get('murmur', {})
+        json.dump(rep, open(os.path.join(VO, 'vocal_fx_check.json'), 'w'), indent=1, default=str); return
     # the murmur: filter until no word is recognised
     x = trim(load(mt), tail=0.3); raw_heard = hear(asr, x)
     lp = float(M.get('lowpass_hz', 420))

@@ -67,7 +67,7 @@
   const lerp2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
   // arm keys, figure units (head units from between the eyes, in the upper body's own frame). R: his top arm lying, the one that
   // holds the phone; L: the arm under him lying, his near arm sitting.
-  const R_LIE = { E: [0.95, 2.15], W: [-0.12, 1.45] }, R_SIT = { E: [0.9, 2.3], W: [0.35, 2.75] }, R_REST = { E: [0.82, 2.3], W: [0.7, 3.05] };
+  const R_LIE = { E: [0.95, 2.15], W: [0.05, 1.05] }, R_SIT = { E: [0.9, 2.3], W: [0.35, 2.75] }, R_REST = { E: [0.82, 2.3], W: [0.7, 3.05] };
   const L_LIE = { E: [-0.52, 1.85], W: [-0.62, 1.25] }, L_SIT = { E: [-0.82, 2.22], W: [-0.5, 3.0] };
   // o: {g (the getup u: 0 lying, 0.5 sitting, 1 standing), lie (the body's angle lying), lean (rad, toward screen right),
   //     R: {W, hand, hp, bend} or a function of toFig, face, phoneAt}
@@ -101,7 +101,7 @@
     o = o || {}; const hd = fig.armOut ? fig.armOut.hand : fig.hands.R; if (!hd) return null;
     const ph = hd.phone || { x: hd.grip[0], y: hd.grip[1], h: SH() * 0.7, angle: hd.rot };
     const tap = o.typing ? (Math.floor(twos(lt) * 6) % 3 === 0 ? 1 : 0) : 0;
-    const P = Object.assign({ x: ph.x, y: ph.y + tap * 1.2, h: SH() * 0.7, roll: o.roll == null ? -0.35 : o.roll, yaw: o.yaw == null ? -1.0 : o.yaw, pitch: o.pitch == null ? 0.25 : o.pitch,
+    const P = Object.assign({ x: ph.x, y: ph.y + tap * 1.2, h: SH() * 0.7, roll: o.roll == null ? -1.25 : o.roll, yaw: o.yaw == null ? Math.PI - 0.75 : o.yaw, pitch: o.pitch == null ? 0.1 : o.pitch,
       screen: 'thread', state: threadState(), env: '#C8CCC8', spill: 0.9 }, o.p || {});
     const info = PHONE.where(P, c);
     if (o.glow !== false && fig.heads.head) RIG.faceGlow(c, fig.heads.head, { x: P.x - SH() * 0.4, y: P.y - SH() * 0.2, r: SH() * 1.3, color: '#FFC5A0', alpha: o.glowA == null ? 0.32 : o.glowA });
@@ -115,21 +115,21 @@
   function cushionCenter(view, shot) { const q = cushionQuad(view, shot); return [(q[0][0] + q[2][0]) / 2, (q[0][1] + q[2][1]) / 2]; }
   // his face lying: on the screen, smiling, typing; the knocks (8.0, 8.5, 9.0): the thumb stops, the smile goes, then on the third
   // his head snaps to the door (toward us and a little to screen left: the front door is behind the camera) and holds
-  const TEXTING = { yaw: 0.25, pitch: 0.32, gaze: [0.1, 0.5], lids: 0.58 };
-  const DOOR_LOOK = { yaw: -0.02, pitch: -0.22, gaze: [-0.2, -0.38], lids: 0.9, brows: 0.25, smile: 0 };
+  const TEXTING = { yaw: 0.1, pitch: 0.28, gaze: [0.05, 0.38], lids: 0.76 };
+  const DOOR_LOOK = { roll: 0.6, yaw: -0.34, pitch: 0.02, gaze: [-0.3, -0.05], lids: 0.9, brows: 0.25, smile: 0 };
   function knockFace(tt) {
-    if (tt < 8.0) return Object.assign({}, TEXTING, { smile: key(tt, [[0, 0.375], [3.0, 0.5], [4.2, 0.625], [5.6, 0.5], [7.0, 0.5]]) });
-    if (tt < 9.0) return Object.assign({}, TEXTING, { smile: key(tt, [[8.0, 0.5], [8.4, 0.25], [8.8, 0]]), lids: key(tt, [[8.0, 0.58], [8.6, 0.68]]), gaze: tt > 8.5 ? [0.1, 0.3] : TEXTING.gaze });
-    // the snap: two drawings, then held (eyes wide, no blink), the mouth a little open at 11.6
-    const k = seg(tt, 9.0, 9.17);
-    return Object.assign(FILM.mixv(Object.assign({}, TEXTING, { smile: 0, lids: 0.7 }), DOOR_LOOK, k), tt > 11.6 && tt < 12.6 ? { mouth: 1 } : {});
+    if (tt < 8.0) return Object.assign({}, TEXTING, { smile: key(tt, [[0, 0.375], [2.6, 0.375], [3.4, 0.5], [5.0, 0.5], [5.6, 0.375]]) });
+    if (tt < 9.0) return Object.assign({}, TEXTING, { smile: key(tt, [[8.0, 0.375], [8.5, 0.125], [8.9, 0]]), lids: key(tt, [[8.0, 0.76], [8.6, 0.82]]) });
+    // the third knock: head and eyes turn together to the door (it is off to screen left, toward us) as the head lifts; held
+    const k = seg(tt, 9.0, 9.4, 'inOutSine');
+    return Object.assign(FILM.mixv(Object.assign({}, TEXTING, { smile: 0, lids: 0.82 }), DOOR_LOOK, k), tt > 11.6 && tt < 12.6 ? { mouth: 1 } : {});
   }
 
   // ---------------------------------------------------------------- him at the door, facing out, his hand round the door's edge
   // built here with RIG.person so the fingers can go round the edge (a clip at the edge's line). let 0..1 takes the hand off the
   // edge down to his side; tau turns him (toward screen right as he steps aside)
   function atDoor(c, x, y, s, L, t, o) {
-    const f = Object.assign({}, o.face); const bl = RIG.blink(t, 3); if (bl < 1) f.lids = (f.lids == null ? 0.7 : f.lids) * bl;
+    const f = Object.assign({}, o.face); const bl = f.noBlink ? 1 : RIG.blink(t, 3); delete f.noBlink; if (bl < 1) f.lids = (f.lids == null ? 0.7 : f.lids) * bl;
     const flip = !!o.flip, let_ = o.let || 0;
     const toFig = w => [(w[0] - x) / s * (flip ? -1 : 1), (w[1] - y) / s];
     // the wrist a little in from the edge, so the knuckles sit on it and the fingers go behind
@@ -246,48 +246,49 @@
     shots: [
       // ---------------------------------------------------------------- he lies along the couch, texting, smiling at the screen
       // ---------------------------------------------------------------- he lies along the couch, texting, smiling at the screen
-      { at: 0, name: 'couch: he lies along the couch, texting, smiling at the screen; three knocks; his head snaps to the door', draw(c, st, lt) {
-        const u = seg(st, 0, 9.5, 'inOutSine'); cam(c, { x: lerp(960, 820, u), y: lerp(540, 640, u), zoom: lerp(1.0, 1.14, u) });
+      { at: 0, name: 'couch: he lies along the couch, texting, smiling at the screen; three knocks; his head lifts and turns to the door', draw(c, st, lt) {
+        const u = seg(st, 0, 9.5, 'inOutSine'); cam(c, { x: lerp(960, 760, u), y: lerp(540, 650, u), zoom: lerp(1.0, 1.14, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
-        const tt = twos(lt);
-        const fig = couchMe(c, lt, { g: 0, R: Object.assign({ hand: 'thumb', hp: { reach: tt < 8.0 ? 0.3 + 0.25 * (Math.floor(tt * 6) % 3 === 0 ? 1 : 0) : 0.35, over: 'thumb' } }, R_LIE),
+        const tt = twos(lt), typing = tt > 1.0 && tt < 8.0;
+        const fig = couchMe(c, lt, { g: 0, lie: lerp(-1.48, -1.2, seg(tt, 9.0, 9.4, 'inOutSine')),
+          R: { W: R_LIE.W, hand: 'thumb', hp: { reach: typing ? 0.35 + 0.2 * Math.sin(tt * 9) : 0.35, tap: typing && Math.floor(tt * 6) % 3 === 0 ? 0.5 : 0, over: 'thumb' } },
           face: knockFace(tt), blink: tt < 9.0, phoneAt: phoneSpot() });
-        heldPhone(c, fig, lt, { typing: tt > 1.0 && tt < 8.0 });
+        heldPhone(c, fig, lt, { typing });
         V.front(c, lt, DAY);
       } },
       // ---------------------------------------------------------------- close: he holds the look at the door
-      { at: 9.5, name: 'couch, close: he looks at the door as if it has never made that sound before; held', draw(c, st, lt) {
-        const u = seg(st, 0, 4.1, 'inOutSine'); cam(c, { x: lerp(600, 590, u), y: lerp(800, 795, u), zoom: lerp(1.95, 2.02, u) });
+      { at: 9.5, name: 'couch, close: head up off the cushion, he looks at the door as if it has never made that sound before; held', draw(c, st, lt) {
+        const u = seg(st, 0, 4.1, 'inOutSine'); cam(c, { x: lerp(620, 610, u), y: lerp(760, 755, u), zoom: lerp(1.9, 1.97, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
         const tt = twos(lt);
-        // the phone forgotten in his hand, lowered a little, still lit
-        const fig = couchMe(c, lt, { g: 0, R: Object.assign({ hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } }, { E: R_LIE.E, W: lerp2(R_LIE.W, [-0.3, 1.6], seg(tt, 10.4, 11.6, 'inOutSine')) }),
+        // the phone forgotten in his hand, lowering a little, still lit
+        const fig = couchMe(c, lt, { g: 0, lie: -1.2, R: { W: lerp2(R_LIE.W, [-0.15, 1.35], seg(tt, 10.4, 11.8, 'inOutSine')), hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } },
           face: knockFace(tt), blink: tt > 12.4, phoneAt: phoneSpot() });
         heldPhone(c, fig, lt, { glowA: 0.22 });
         V.front(c, lt, DAY);
       }, post: { vig: 0.55 } },
       // ---------------------------------------------------------------- he sits up, sets the phone face up on the cushion, lets go, rises
-      { at: 13.6, name: 'couch: he sits up, eyes on the door; lays the phone face up on the cushion beside him; his hand lets go; he rises', draw(c, st, lt) {
+      { at: 13.6, name: 'couch: he sits up, bending at the hips, eyes on the door; lays the phone face up on the cushion beside him; lets go; rises', draw(c, st, lt) {
         const u = seg(st, 0, 4.4, 'inOutSine'); cam(c, { x: lerp(900, 960, u), y: lerp(580, 560, u), zoom: lerp(1.1, 1.06, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
         const tt = twos(lt);
-        const SIT = [13.7, 14.9], REACH = [14.95, 15.75], LET = [15.95, 16.35], BACK = [16.2, 16.7], RISE = [16.75, 17.9];
+        const SIT = [13.7, 15.4], REACH = [15.45, 16.15], LET = [16.25, 16.6], BACK = [16.4, 16.9], RISE = [16.8, 17.95];
         const g = tt < SIT[1] ? 0.5 * seg(tt, SIT[0], SIT[1], 'inOutSine') : tt < RISE[0] ? 0.5 : 0.5 + 0.5 * seg(tt, RISE[0], RISE[1], 'inOutSine');
-        const lean = 0.3 * seg(tt, REACH[0], REACH[0] + 0.6, 'inOutSine') * (1 - seg(tt, BACK[0], BACK[1], 'inOutSine'));
+        const lean = 0.3 * seg(tt, REACH[0], REACH[0] + 0.5, 'inOutSine') * (1 - seg(tt, BACK[0], BACK[1], 'inOutSine'));
         const reach = seg(tt, REACH[0], REACH[1], 'inOutSine'), down = tt >= REACH[1], letgo = seg(tt, LET[0], LET[1], 'inOutSine');
         const qc = cushionCenter('couch', 'main');
         const R = toFig => {
-          const sit = { E: lerp2(R_LIE.E, R_SIT.E, seg(tt, SIT[0], SIT[1], 'inOutSine')), W: lerp2(R_LIE.W, R_SIT.W, seg(tt, SIT[0], SIT[1], 'inOutSine')) };
-          const tgt = V2a(toFig(qc), [-0.3, 0.12]), tE = V2a(toFig(qc), [-0.35, -1.0]);
-          if (tt < REACH[0]) return Object.assign({ hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } }, sit);
-          if (letgo <= 0) return { hand: 'thumb', hp: { reach: 0.35, over: 'thumb' }, E: lerp2(sit.E, tE, reach), W: lerp2(sit.W, tgt, reach) };
-          return { hand: 'relax', hp: { close: 0.25 }, E: lerp2(tE, R_REST.E, letgo), W: lerp2(V2a(tgt, [0, -0.25 * Math.sin(Math.PI * letgo)]), R_REST.W, letgo) };
+          const k = seg(tt, SIT[0], SIT[1], 'inOutSine'), sitW = lerp2(R_LIE.W, R_SIT.W, k);
+          const tgt = V2a(toFig(qc), [-0.3, 0.12]);
+          if (tt < REACH[0]) return { W: sitW, hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } };
+          if (letgo <= 0) return { W: lerp2(sitW, tgt, reach), hand: 'thumb', hp: { reach: 0.35, over: 'thumb' }, bend: 'out' };
+          return { W: lerp2(V2a(tgt, [0, -0.25 * Math.sin(Math.PI * letgo)]), R_REST.W, letgo), hand: 'relax', hp: { close: 0.25 }, bend: 'out' };
         };
-        // eyes on the door until the phone goes down; a glance down at it as he lets go; back to the door as he rises
-        const face = tt < REACH[0] + 0.3 ? DOOR_LOOK : tt < BACK[1] ? { yaw: 0.35, pitch: 0.35, gaze: [0.25, 0.5], lids: 0.6, pale: 0 } : Object.assign({}, DOOR_LOOK, { lids: 0.78, brows: 0 });
+        // eyes on the door through the sit-up; a glance down at the phone as he lays it down and lets go; back to the door as he rises
+        const face = tt < REACH[0] + 0.3 ? DOOR_LOOK : tt < BACK[1] ? { yaw: 0.35, pitch: 0.35, gaze: [0.25, 0.5], lids: 0.6 } : Object.assign({}, DOOR_LOOK, { lids: 0.78, brows: 0 });
         if (down) phoneOnCushion(c, 'couch', 'main', { k: 0.8, r: 2.6 });
-        const fig = couchMe(c, lt, { g, lean, R, face: Object.assign({}, face), phoneAt: down ? null : phoneSpot() });
-        if (!down) heldPhone(c, fig, lt, { roll: lerp(-0.35, 0.15, reach), yaw: lerp(-1.0, 0, reach), pitch: lerp(0.25, 1.3, reach), glowA: 0.2 * (1 - reach) });
+        const fig = couchMe(c, lt, { g, lie: -1.2, lean, R, face: Object.assign({}, face), phoneAt: down ? null : phoneSpot() });
+        if (!down) heldPhone(c, fig, lt, { roll: lerp(-1.25, 0.15, Math.max(reach, seg(tt, SIT[0], SIT[1]))), yaw: lerp(Math.PI - 0.75, 0, reach), pitch: lerp(0.1, 1.3, reach), glowA: 0.2 * (1 - reach) });
         V.front(c, lt, DAY);
       } },
       { at: 18.0, name: 'door: from inside; he opens it', draw(c, st, lt) {
@@ -316,11 +317,15 @@
       // ---------------------------------------------------------------- him, close, from the landing: the colour leaves his face
       { at: 27.0, name: 'door, close: him; he does not smile; the colour leaves his face; his hand tightens on the edge', draw(c, st, lt) {
         const V = LV('door'), A = V.shots.close.anchors, tt = twos(lt);
+        // a slow push in on his face while the colour goes; it lands as his hand tightens
+        const u = seg(st, 0.3, 3.8, 'inOutSine'); cam(c, { x: lerp(960, 1080, u), y: lerp(540, 520, u), zoom: lerp(1.0, 1.1, u) });
         const S0 = Object.assign({ shot: 'close', door: 0.9 }, DAY); V.back(c, lt, S0);
         const s = HEAD_M * A.himDoorway[2];
         const L = dayLight('door', 'close');
-        atDoor(c, A.himDoorway[0], A.himDoorway[1], s, L, lt, { edge: V.doorEdge(0.9, 1.1, 'close'), edgeTop: V.doorEdge(0.9, 1.6, 'close'), tight: seg(tt, 30.4, 30.9, 'outCubic'), flip: true,
-          face: { yaw: -0.06, pitch: 0.04, gaze: [0.05, 0.12], lids: 0.86, brows: 0.25, smile: 0, pale: seg(tt, 27.2, 30.0) } });
+        atDoor(c, A.himDoorway[0], A.himDoorway[1], s, L, lt, { edge: V.doorEdge(0.9, 1.1, 'close'), edgeTop: V.doorEdge(0.9, 1.6, 'close'), tight: seg(tt, 30.3, 31.0, 'outCubic'), flip: true,
+          // held stillness: the start of a smile at the cut goes; the lips part; the eyes fixed on her (no blink); the colour drains
+          face: { yaw: -0.06, pitch: 0.04, gaze: [0.05, 0.1], lids: 0.88, brows: tt < 28.2 ? 0.25 : 0, smile: 0.25 * (1 - seg(tt, 27.0, 27.7, 'inOutSine')),
+            mouth: tt >= 28.0 ? 1 : 0, pale: seg(tt, 27.3, 30.2, 'inOutSine'), noBlink: true } });
         V.front(c, lt, S0);
       }, post: { vig: 0.55 } },
       // ---------------------------------------------------------------- past him to the couch: the phone still lit; he lets go and steps aside
