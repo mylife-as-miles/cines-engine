@@ -43,7 +43,7 @@ window.SETS = window.SETS || {};
     return out;
   }
   // an anchor: screen point, px per metre, and the RIG.head scale (a head is about 0.23 m crown to chin)
-  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0)) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
+  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0) || Math.abs(p[0] - W / 2) > 3 * W || Math.abs(p[1] - H / 2) > 3 * H) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
   // a flat rectangle lying on a horizontal plane (a phone's footprint): centre, size (w across x, d along z), turned by rot
   function footprint(cam, c, w, d, rot) { const cr = Math.cos(rot || 0), sr = Math.sin(rot || 0); return [[-w / 2, d / 2], [w / 2, d / 2], [w / 2, -d / 2], [-w / 2, -d / 2]].map(([a, b]) => { const p = cam.p([c[0] + a * cr + b * sr, c[1], c[2] - a * sr + b * cr]); return [Math.round(p[0]), Math.round(p[1])]; }); }
   const _scr = {};
@@ -95,6 +95,12 @@ window.SETS = window.SETS || {};
     if (o.lit) { const s0 = o.litSide || -1, k = 0.35; g.fillStyle = o.lit; g.fill(S().poly([[p0[0] + nx * w0 * s0, p0[1] + ny * w0 * s0], [p1[0] + nx * w1 * s0, p1[1] + ny * w1 * s0], [p1[0] + nx * w1 * s0 * (1 - k * 2), p1[1] + ny * w1 * s0 * (1 - k * 2)], [p0[0] + nx * w0 * s0 * (1 - k * 2), p0[1] + ny * w0 * s0 * (1 - k * 2)]]).path(0.2, (o.seed || 5) + 1)); }
     return path;
   }
+  // build a set's cached layers ahead of time (a sequence's setup()): each view drawn once into a scratch frame with its default state
+  function prepare(views, names, states) {
+    const g = OTM.makeCanvas(W, H).getContext('2d'), em = OTM.makeCanvas(W / 4, H / 4).getContext('2d'); em.scale(0.25, 0.25);
+    const c = { g, gl: g, em, cache: FILM.cache, post: {}, shot: {}, after: [], before: [], t: 0, lt: 0, st: 0, reset() { }, camera() { } };
+    (names || Object.keys(views)).forEach(n => { const v = views[n]; if (!v) return; const s = Object.assign({}, (states && states[n]) || {}); v.back(c, 0, s); v.front(c, 0, s); });
+  }
   function rectPath(x, y, w, h) { const p = new Path2D(); p.rect(x, y, w, h); return p; }
   // a cached full-frame layer with a margin; drawn under whatever camera the sequence set
   function layer(c, key, draw) { const cv = c.cache(key, g => { g.translate(M, M); draw(g); }, W + 2 * M, H + 2 * M); c.g.drawImage(cv, -M, -M); return cv; }
@@ -104,9 +110,11 @@ window.SETS = window.SETS || {};
     const A = v.anchors; g.save(); g.lineWidth = 2; g.font = '500 18px "Libre Franklin"';
     const dot = (a, name, col) => { if (!a || a.x == null || !(a.scale >= 0)) return; g.strokeStyle = col || 'rgba(255,214,120,0.9)'; g.fillStyle = g.strokeStyle; g.beginPath(); g.arc(a.x, a.y, a.scale ? a.scale * 0.115 : 6, 0, 7); g.stroke(); g.fillRect(a.x - 2, a.y - 2, 4, 4); g.fillText(name, a.x + 8, a.y - 8); };
     Object.keys(A).forEach(k => { const a = A[k]; if (a && a.quad) { g.strokeStyle = 'rgba(120,230,255,0.9)'; g.beginPath(); a.quad.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.stroke(); g.fillStyle = g.strokeStyle; g.fillText(k, a.x + 10, a.y + 24); } else if (a && a.x != null) dot(a, k); else if (a && typeof a === 'object') Object.keys(a).forEach(j => { if (a[j] && a[j].x != null) dot(a[j], k + '.' + j, 'rgba(255,150,120,0.9)'); }); });
-    g.strokeStyle = 'rgba(255,255,255,0.35)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
+    g.strokeStyle = 'rgba(236,227,208,0.4)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
   }
 
+  // the office's pieces: the nearer a piece, the more its hand-cut edge shows (as in the style frames, about 1.5-2 px up close)
+  const pcK = pc; pc = function (g, cam, pts, o) { if (o && o.rough == null) { const d = cam.view(pts[0])[2]; o.rough = d > 0 ? clamp(5 / d, 0.6, 2.2) : 1; } return pcK(g, cam, pts, o); };
   // =====================================================================================
   // THE ROOM (metres: x across, y up, z away from the windows' end of the floor toward them; floor y = 0)
   // =====================================================================================
@@ -179,7 +187,7 @@ window.SETS = window.SETS || {};
     if (o.posts !== false && d < 5) for (let k = -20; k < 30; k++) { const x = R.postX(k); if (x <= x0 + 0.01 || x >= x1 - 0.01) continue;
       pc(g, cam, [[x - 0.018, 0, z - t / 2 - 0.004], [x + 0.018, 0, z - t / 2 - 0.004], [x + 0.018, h, z - t / 2 - 0.004], [x - 0.018, h, z - t / 2 - 0.004]], { fill: hz(C.post, d), rough: 0.3, tex: 0.3, seed: seed + 10 + k }); }
     // the top rail: its upper face catches the tubes
-    const rt = pc(g, cam, [[x0, h, z - t / 2 - 0.01], [x1, h, z - t / 2 - 0.01], [x1, h, z + t / 2 + 0.01], [x0, h, z + t / 2 + 0.01]], { fill: hz(C.railLit, d), rough: 0.4, tex: 0.3, seed: seed + 3 });
+    const rt = pc(g, cam, [[x0, h, z - t / 2 - 0.01], [x1, h, z - t / 2 - 0.01], [x1, h, z + t / 2 + 0.01], [x0, h, z + t / 2 + 0.01]], { fill: hz(C.railLit, d), rough: 0.4, tex: 0.3, seed: seed + 3, lift: d < 5 ? [0, 4] : null, liftAlpha: 0.4, liftBlur: 4 });
     pc(g, cam, [[x0, h - 0.035, z - t / 2 - 0.01], [x1, h - 0.035, z - t / 2 - 0.01], [x1, h, z - t / 2 - 0.01], [x0, h, z - t / 2 - 0.01]], { fill: hz(C.rail, d), rough: 0.4, tex: 0.3, seed: seed + 4 });
   }
   // a side screen along z at x (its face toward +x or -x, whichever the camera sees)
@@ -204,7 +212,7 @@ window.SETS = window.SETS || {};
     if (P[0] < x0 && cols.left) f.push([[[x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0]], cols.left]);
     if (P[0] > x1 && cols.right) f.push([[[x1, y0, z0], [x1, y0, z1], [x1, y1, z1], [x1, y1, z0]], cols.right]);
     if (P[1] < y0 && cols.bottom) f.push([[[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]], cols.bottom]);
-    return f.map(([q, col], i) => pc(g, cam, q, { fill: col, rough: o.rough == null ? 0.5 : o.rough, tex: o.tex == null ? 0.45 : o.tex, seed: (o.seed || 1) + i, kind: o.kind || 'card' }));
+    return f.map(([q, col], i) => pc(g, cam, q, { fill: col, rough: o.rough, tex: o.tex == null ? 0.45 : o.tex, seed: (o.seed || 1) + i, kind: o.kind || 'card' }));
   }
   // a far figure over a divider: head and shoulders in flat paper, the tube light on the crown (no face: background)
   function farFigure(g, cam, x, y, z, seed, turn) {
@@ -250,7 +258,7 @@ window.SETS = window.SETS || {};
     // the coworker's half of the cluster, beyond his divider: his chair back low, a jacket over it (only the top shows)
     // the right neighbour's divider continues past the aisle edge; the far side screen of his cluster
     sideScreen(g, cam, 2.95, 0.84, 3.3, R.div.h, 760);
-    [[0.6, 4.6], [3.0, 7.6], [-1.8, 7.6], [0.6, 10.6], [5.4, 4.6]].forEach(([x, z], i) => tubeCone(g, cam, x, z, [2.2, 1.4, 0.7], 0.055, 1200 + i * 5));
+    [[0.6, 4.6], [3.0, 7.6], [-1.8, 7.6], [0.6, 10.6], [5.4, 4.6]].forEach(([x, z], i) => tubeCone(g, cam, x, z, [2.2, 1.4, 0.7], 0.035, 1200 + i * 5));
   }
   // ---------------------------------------------------------------- his cubicle: the back divider, the left screen, his desk and things
   function sheetCanvas() {
@@ -347,8 +355,6 @@ window.SETS = window.SETS || {};
       GG.texture(g, sp, 0.3, 1006, 'paper');
       // the screen is lit paper: one lighter cut band down its upper part
       g.save(); g.clip(sp); g.globalAlpha = 0.12; g.fillStyle = '#E4EADC'; const t0 = screenPt(0, 0), t1 = screenPt(1, 0), t2 = screenPt(1, 0.42), t3 = screenPt(0, 0.38); g.fill(cam.shape([t0, t1, t2, t3]).path(1.5, 1007)); g.restore(); }
-    // the panel over the coworker's desk lays its cone over the back divider and the empty half of his desk; the one behind him on his chair
-    tubeCone(g, cam, 0.6, 1.6, [2.0, 1.25, 0.6], 0.06, 1250); tubeCone(g, cam, 0.6, -1.4, [2.0, 1.25, 0.6], view === 'wide' ? 0.04 : 0.0, 1260);
     // his chair: the star base and the column (the seat and back are his and the rig's to cover; the back is in front())
     if (view === 'wide') { const [sx, , sz] = R.seat;
       for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 + 0.3; ln(g, cam, [sx, 0.07, sz], [sx + Math.cos(a) * 0.32, 0.04, sz + Math.sin(a) * 0.32], '#262829', Math.max(3, cam.p([sx, 0, sz])[2] * 0.03)); }
@@ -448,6 +454,7 @@ window.SETS = window.SETS || {};
   const ghostHead = (c, a, col) => { const g = c.g; g.save(); g.fillStyle = col || 'rgba(40,36,34,0.85)'; g.beginPath(); g.ellipse(a.x, a.y - a.scale * 0.02, a.scale * 0.09, a.scale * 0.12, 0, 0, 7); g.fill(); g.restore(); };
   SETS.office = {
     views,
+    prepare: (names, states) => prepare(views, names, states),
     demos: [
       { name: 'wide', draw: (c, t) => stand(c, views.wide, t, {}) },
       { name: 'wide: the coworker hook (a stand-in head over the divider)', draw: (c, t) => stand(c, views.wide, t, { coworker: (cc, a) => ghostHead(cc, { x: lerp(a.down.x, a.over.x, FILM.seg(t, 0.5, 2, 'inOutSine')), y: lerp(a.down.y, a.over.y, FILM.seg(t, 0.5, 2, 'inOutSine')), scale: a.over.scale }) }) },

@@ -43,7 +43,7 @@ window.SETS = window.SETS || {};
     return out;
   }
   // an anchor: screen point, px per metre, and the RIG.head scale (a head is about 0.23 m crown to chin)
-  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0)) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
+  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0) || Math.abs(p[0] - W / 2) > 3 * W || Math.abs(p[1] - H / 2) > 3 * H) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
   // a flat rectangle lying on a horizontal plane (a phone's footprint): centre, size (w across x, d along z), turned by rot
   function footprint(cam, c, w, d, rot) { const cr = Math.cos(rot || 0), sr = Math.sin(rot || 0); return [[-w / 2, d / 2], [w / 2, d / 2], [w / 2, -d / 2], [-w / 2, -d / 2]].map(([a, b]) => { const p = cam.p([c[0] + a * cr + b * sr, c[1], c[2] - a * sr + b * cr]); return [Math.round(p[0]), Math.round(p[1])]; }); }
   const _scr = {};
@@ -95,6 +95,12 @@ window.SETS = window.SETS || {};
     if (o.lit) { const s0 = o.litSide || -1, k = 0.35; g.fillStyle = o.lit; g.fill(S().poly([[p0[0] + nx * w0 * s0, p0[1] + ny * w0 * s0], [p1[0] + nx * w1 * s0, p1[1] + ny * w1 * s0], [p1[0] + nx * w1 * s0 * (1 - k * 2), p1[1] + ny * w1 * s0 * (1 - k * 2)], [p0[0] + nx * w0 * s0 * (1 - k * 2), p0[1] + ny * w0 * s0 * (1 - k * 2)]]).path(0.2, (o.seed || 5) + 1)); }
     return path;
   }
+  // build a set's cached layers ahead of time (a sequence's setup()): each view drawn once into a scratch frame with its default state
+  function prepare(views, names, states) {
+    const g = OTM.makeCanvas(W, H).getContext('2d'), em = OTM.makeCanvas(W / 4, H / 4).getContext('2d'); em.scale(0.25, 0.25);
+    const c = { g, gl: g, em, cache: FILM.cache, post: {}, shot: {}, after: [], before: [], t: 0, lt: 0, st: 0, reset() { }, camera() { } };
+    (names || Object.keys(views)).forEach(n => { const v = views[n]; if (!v) return; const s = Object.assign({}, (states && states[n]) || {}); v.back(c, 0, s); v.front(c, 0, s); });
+  }
   function rectPath(x, y, w, h) { const p = new Path2D(); p.rect(x, y, w, h); return p; }
   // a cached full-frame layer with a margin; drawn under whatever camera the sequence set
   function layer(c, key, draw) { const cv = c.cache(key, g => { g.translate(M, M); draw(g); }, W + 2 * M, H + 2 * M); c.g.drawImage(cv, -M, -M); return cv; }
@@ -104,8 +110,11 @@ window.SETS = window.SETS || {};
     const A = v.anchors; g.save(); g.lineWidth = 2; g.font = '500 18px "Libre Franklin"';
     const dot = (a, name, col) => { if (!a || a.x == null || !(a.scale >= 0)) return; g.strokeStyle = col || 'rgba(255,214,120,0.9)'; g.fillStyle = g.strokeStyle; g.beginPath(); g.arc(a.x, a.y, a.scale ? a.scale * 0.115 : 6, 0, 7); g.stroke(); g.fillRect(a.x - 2, a.y - 2, 4, 4); g.fillText(name, a.x + 8, a.y - 8); };
     Object.keys(A).forEach(k => { const a = A[k]; if (a && a.quad) { g.strokeStyle = 'rgba(120,230,255,0.9)'; g.beginPath(); a.quad.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.stroke(); g.fillStyle = g.strokeStyle; g.fillText(k, a.x + 10, a.y + 24); } else if (a && a.x != null) dot(a, k); else if (a && typeof a === 'object') Object.keys(a).forEach(j => { if (a[j] && a[j].x != null) dot(a[j], k + '.' + j, 'rgba(255,150,120,0.9)'); }); });
-    g.strokeStyle = 'rgba(255,255,255,0.35)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
+    g.strokeStyle = 'rgba(236,227,208,0.4)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
   }
+
+  // the office's pieces: the nearer a piece, the more its hand-cut edge shows (as in the style frames, about 1.5-2 px up close)
+  const pcK = pc; pc = function (g, cam, pts, o) { if (o && o.rough == null) { const d = cam.view(pts[0])[2]; o.rough = d > 0 ? clamp(5 / d, 0.6, 2.2) : 1; } return pcK(g, cam, pts, o); };
 
   // =====================================================================================
   // THE BUS
@@ -190,23 +199,25 @@ window.SETS = window.SETS || {};
       g.save(); g.clip(bp); g.lineCap = 'round'; [-1, 1].forEach(sg => { const x0 = hx + sg * sw * 0.62; g.strokeStyle = 'rgba(8,9,14,0.45)'; g.lineWidth = Math.max(1, k * 0.006); g.beginPath(); g.moveTo(x0, sy + 0.1 * k); g.lineTo(x0 + sg * 0.02 * k, sy + low); g.stroke(); g.strokeStyle = 'rgba(120,130,160,0.16)'; g.lineWidth = Math.max(1, k * 0.003); g.beginPath(); g.moveTo(x0 - 1.5, sy + 0.1 * k); g.lineTo(x0 - 1.5 + sg * 0.02 * k, sy + low); g.stroke(); }); g.restore(); }
     if (P.bag) GG.piece(g, S().poly([[hx - sw * 0.75, sy + 0.02 * k], [hx - sw * 0.52, sy - 0.02 * k], [hx + sw * 0.95, sy + low], [hx + sw * 0.7, sy + low]]), { fill: fillOf('#15161C'), rough: 0.6, tex: ghost ? 0 : 0.4, seed: seed + 8 });
     // the neck, then the head: a profile cut with forehead, nose, lips, chin; or the round of a head from behind or before
-    GG.piece(g, S().rect(hx - 0.048 * k + side * 0.015 * k, hy + 0.05 * k, 0.096 * k, 0.13 * k), { fill: fillOf(away ? mix(hair, coat, 0.4) : face), rough: 0.5, tex: ghost ? 0 : 0.4, seed: seed + 2 });
+    GG.piece(g, S().rect(hx - 0.048 * k + side * 0.015 * k, hy + 0.05 * k, 0.096 * k, 0.13 * k), { fill: fillOf(face), rough: 0.5, tex: ghost ? 0 : 0.4, seed: seed + 2 });
     const f = side, head = prof ? GG.blob([[hx - f * 0.1 * k, hy - 0.06 * k], [hx - f * 0.02 * k, hy - 0.125 * k], [hx + f * 0.075 * k, hy - 0.08 * k], [hx + f * 0.1 * k, hy - 0.02 * k], [hx + f * 0.098 * k, hy + 0.0 * k, 1], [hx + f * 0.128 * k, hy + 0.045 * k, 1], [hx + f * 0.104 * k, hy + 0.062 * k, 1], [hx + f * 0.11 * k, hy + 0.075 * k], [hx + f * 0.104 * k, hy + 0.092 * k, 1], [hx + f * 0.1 * k, hy + 0.105 * k], [hx + f * 0.06 * k, hy + 0.135 * k], [hx - f * 0.02 * k, hy + 0.12 * k], [hx - f * 0.1 * k, hy + 0.05 * k]])
       : GG.blob([[hx, hy - 0.125 * k], [hx + 0.088 * k, hy - 0.07 * k], [hx + 0.092 * k, hy + 0.02 * k], [hx + 0.06 * k, hy + 0.1 * k], [hx, hy + 0.13 * k], [hx - 0.06 * k, hy + 0.1 * k], [hx - 0.092 * k, hy + 0.02 * k], [hx - 0.088 * k, hy - 0.07 * k]]);
     const hp = GG.piece(g, head, { fill: fillOf(away ? hair : face), rough: 0.5, tex: ghost ? 0 : 0.45, seed: seed + 3, lift: lift ? [0, lift[1] * 0.5] : null, liftAlpha: 0.35, liftBlur: 4 });
     out.head = hp;
     if (hp && rimA && !away) cres(g, hp, -(f || 1) * Math.max(1.5, k * 0.007), 0, C.rimCool, 0.6);
     // ears for heads seen square on
-    if (!prof) [-1, 1].forEach(e => GG.piece(g, S().ellipse(hx + e * 0.093 * k, hy + 0.02 * k, 0.018 * k, 0.034 * k, 0), { fill: fillOf(mix(face, '#000000', 0.1)), rough: 0.3, tex: 0, seed: seed + 20 + e }));
+    const ears = () => [-1, 1].forEach(e => { const ep = GG.piece(g, S().ellipse(hx + e * 0.096 * k, hy + 0.025 * k, 0.02 * k, 0.036 * k, 0), { fill: fillOf(mix(face, '#000000', 0.05)), rough: 0.3, tex: ghost ? 0 : 0.3, seed: seed + 20 + e }); if (ep && rimA) cres(g, ep, e * Math.max(1, k * 0.004), 0, C.rimCool, 0.22); });
+    if (!prof && !away) ears();
     // hair or hat over the head
     let hs = null;
     if (P.hat === 'beanie') hs = GG.blob([[hx - 0.098 * k, hy - 0.02 * k], [hx - 0.09 * k, hy - 0.1 * k], [hx, hy - 0.155 * k], [hx + 0.09 * k, hy - 0.1 * k], [hx + 0.098 * k, hy - 0.02 * k], [hx, hy - 0.04 * k]]);
     else if (P.hat === 'hood') hs = GG.blob([[hx - 0.13 * k, hy + 0.14 * k], [hx - 0.142 * k, hy - 0.04 * k], [hx - 0.03 * k, hy - 0.17 * k], [hx + 0.08 * k, hy - 0.15 * k], [hx + 0.142 * k, hy - 0.04 * k], [hx + 0.13 * k, hy + 0.14 * k]].concat(away ? [] : prof ? [[hx + f * 0.06 * k, hy + 0.1 * k], [hx + f * 0.075 * k, hy - 0.08 * k], [hx - f * 0.02 * k, hy - 0.06 * k]] : [[hx + 0.07 * k, hy + 0.1 * k], [hx + 0.08 * k, hy - 0.06 * k], [hx - 0.08 * k, hy - 0.06 * k], [hx - 0.07 * k, hy + 0.1 * k]]));
     else if (P.hat === 'cap') hs = S().poly([[hx - 0.098 * k, hy - 0.035 * k], [hx - 0.085 * k, hy - 0.115 * k], [hx + 0.07 * k, hy - 0.118 * k], [hx + 0.098 * k + f * 0.07 * k, hy - 0.04 * k]]);
-    else if (away) hs = GG.blob([[hx - 0.096 * k, hy + 0.07 * k], [hx - 0.102 * k, hy - 0.05 * k], [hx - 0.03 * k, hy - 0.138 * k], [hx + 0.05 * k, hy - 0.135 * k], [hx + 0.102 * k, hy - 0.05 * k], [hx + 0.096 * k, hy + 0.07 * k], [hx, hy + 0.11 * k]]);
+    else if (away) hs = GG.blob([[hx - 0.094 * k, hy + 0.06 * k], [hx - 0.102 * k, hy - 0.05 * k], [hx - 0.03 * k, hy - 0.138 * k], [hx + 0.05 * k, hy - 0.135 * k], [hx + 0.102 * k, hy - 0.05 * k], [hx + 0.094 * k, hy + 0.06 * k], [hx + 0.04 * k, hy + 0.085 * k], [hx - 0.04 * k, hy + 0.085 * k]]);
     else if (prof) hs = GG.blob([[hx - f * 0.112 * k, hy + 0.07 * k], [hx - f * 0.11 * k, hy - 0.06 * k], [hx - f * 0.03 * k, hy - 0.14 * k], [hx + f * 0.06 * k, hy - 0.13 * k], [hx + f * 0.088 * k, hy - 0.07 * k], [hx + f * 0.02 * k, hy - 0.06 * k], [hx - f * 0.03 * k, hy + 0.0 * k], [hx - f * 0.05 * k, hy + 0.08 * k]]);
     else hs = GG.blob([[hx - 0.1 * k, hy + 0.02 * k], [hx - 0.095 * k, hy - 0.08 * k], [hx, hy - 0.14 * k], [hx + 0.095 * k, hy - 0.08 * k], [hx + 0.1 * k, hy + 0.02 * k], [hx + 0.07 * k, hy - 0.06 * k], [hx - 0.07 * k, hy - 0.06 * k]]);
     const hr = GG.piece(g, hs, { fill: fillOf(P.hat === 'hood' ? mix(coat, '#000000', 0.08) : P.hat && P.hat !== 'bun' ? (P.hatCol || '#2E3242') : hair), rough: 0.7, tex: ghost ? 0 : 0.6, seed: seed + 4, kind: P.hat === 'beanie' ? 'wool' : 'paper' });
+    if (away && !P.hat) ears();
     if (P.hat === 'bun') GG.piece(g, S().ellipse(hx - (f || 0) * 0.1 * k, hy - 0.08 * k, 0.045 * k, 0.045 * k, 0), { fill: fillOf(hair), rough: 0.5, tex: ghost ? 0 : 0.5, seed: seed + 9 });
     if (P.headphones) { g.save(); g.strokeStyle = fillOf('#0E0F14'); g.lineWidth = Math.max(2, 0.02 * k); g.beginPath(); g.ellipse(hx, hy - 0.01 * k, 0.108 * k, 0.13 * k, 0, Math.PI * 1.08, Math.PI * 1.92); g.stroke(); g.restore(); [-1, 1].forEach(e => { if (prof && e !== -f) return; GG.piece(g, S().ellipse(hx + e * 0.098 * k, hy + 0.02 * k, 0.03 * k, 0.046 * k, 0), { fill: fillOf('#121318'), rough: 0.4, tex: 0, seed: seed + 10 + e }); }); }
     if (hr && rimA) { cres(g, hr, 0, -Math.max(2, k * 0.009), C.rimTop, 0.55); if (P.rim !== false) cres(g, hr, (f || (hx < W / 2 ? 1 : -1)) * -Math.max(1.5, k * 0.008), 0, C.rimCool, 0.5); }
@@ -290,7 +301,7 @@ window.SETS = window.SETS || {};
   // VIEWS
   // =====================================================================================
   const CAMS = {
-    interior: mkCam({ pos: [0.15, 1.47, -1.12], at: [0.1, 1.47, 1.2], f: 960 }),
+    interior: mkCam({ pos: [0.15, 1.47, -1.12], at: [0.1, 1.4, 1.2], f: 1010 }),
     close: mkCam({ pos: [-0.1, 1.64, 0.9], at: [-0.38, 1.6, 0.0], f: 1250 }),
   };
   const SIDE = { interior: R.zFar, close: R.zNear };
@@ -324,11 +335,11 @@ window.SETS = window.SETS || {};
   // the dark glass: a tint, and what it gives back of the lit bus (the strip light, the others' faces)
   function glass(g, cam, view) {
     const z = SIDE[view], s = z > 0 ? 1 : -1, clip = panePath(cam, z);
-    g.save(); g.clip(clip); g.fillStyle = C.glass; g.globalAlpha = 0.28; g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.globalAlpha = 1;
+    g.save(); g.clip(clip); g.fillStyle = C.glass; g.globalAlpha = 0.18; g.fillRect(-M, -M, W + 2 * M, H + 2 * M); g.globalAlpha = 1;
     g.globalCompositeOperation = 'screen';
     // the strip light's reflection, a pale line across the upper panes
     const mirror = q => [q[0], q[1], 2 * z - q[2]];
-    [-0.28, 0.28].forEach((zz, i) => { g.globalAlpha = 0.35; fl(g, cam, [[-6, R.ceil, zz - 0.05], [6, R.ceil, zz - 0.05], [6, R.ceil, zz + 0.05], [-6, R.ceil, zz + 0.05]].map(mirror), '#5C6782', 0.5, 140 + i); });
+    [-0.28, 0.28].forEach((zz, i) => { g.globalAlpha = 0.16; fl(g, cam, [[-6, R.ceil, zz - 0.05], [6, R.ceil, zz - 0.05], [6, R.ceil, zz + 0.05], [-6, R.ceil, zz + 0.05]].map(mirror), '#5C6782', 0.5, 140 + i); });
     // the passengers' reflections: pale ghosts at their mirror positions
     const crowd = view === 'interior' ? CROWD_NEAR.concat(CROWD_FAR.filter(p => p.eye > 1.4)) : CROWD_CLOSE_BACK.filter(p => p.eye > 1.4);
     const gl = OTM.makeCanvas(g.canvas.width, g.canvas.height).getContext('2d'); gl.setTransform(g.getTransform());
@@ -373,7 +384,8 @@ window.SETS = window.SETS || {};
     A.phone = anchor(cam, h.phone, { held: 'in his left hand at his chest, screen to his face' });
     A.hips = anchor(cam, h.hips);
     A.stranger = anchor(cam, [STRANGER.x + STRANGER.w * 0.85, STRANGER.eye - 0.3, STRANGER.z], { note: 'the stranger\'s shoulder against his left arm (drawn by the set: CROWD in back(), the pressed one in front() for close)' });
-    if (view === 'interior') { const mz = 2 * R.zFar; A.reflection = anchor(cam, [h.head[0], h.head[1], mz - h.head[2]], { yaw: r3(Math.PI - phone.yaw), note: 'his head in the glass (mirror image across z = 1.2); draw it with s.reflect' }); }
+    if (view === 'interior') { const mz = 2 * R.zFar, mph = cam.headAngles([h.phone[0] - h.head[0], h.phone[1] - h.head[1], -(h.phone[2] - h.head[2])]);
+      A.reflection = anchor(cam, [h.head[0], h.head[1], mz - h.head[2]], { yaw: r3(mph.yaw), pitch: r3(mph.pitch), flip: true, note: 'his head in the glass, the mirror image across z = 1.2 (draw it mirrored left to right, with s.reflect)' }); }
     return A;
   }
   const LIGHT = {
@@ -387,7 +399,7 @@ window.SETS = window.SETS || {};
     const cam = CAMS[view];
     const v = {
       cam, anchors: makeAnchors(view), light: LIGHT[view], lightAt: t => lightAt(view, t), sweep: t => sweepAt(view, t),
-      split: +(cam.p([0, 1.5, SIDE[view]])[0] / W).toFixed(3),
+      split: +((view === 'interior' ? cam.p([0, 1.5, SIDE[view]]) : cam.p([-0.8, 1.5, -0.42]))[0] / W).toFixed(3),     // the centre pillar and its pole; in the close, the pole between him and the stranger
       back(c, t, s) {
         s = s || {};
         outside(c, cam, view, t);
@@ -395,7 +407,7 @@ window.SETS = window.SETS || {};
         if (s.reflect && view === 'interior') reflectHook(c, cam, v.anchors.reflection, s.reflect);
         layer(c, 'bus|' + view + '|shell', g => drawShell(g, cam, view));
         layer(c, 'bus|' + view + '|crowd', g => drawCrowdBack(g, cam, view));
-        emLayer(c, 'bus|' + view + '|em', g => { g.fillStyle = 'rgba(174,185,202,0.4)'; [-0.28, 0.28].forEach(zz => g.fill(cam.path([[-6, R.ceil, zz - 0.05], [6, R.ceil, zz - 0.05], [6, R.ceil, zz + 0.05], [-6, R.ceil, zz + 0.05]]))); });
+        emLayer(c, 'bus|' + view + '|em', g => { g.fillStyle = 'rgba(174,185,202,0.18)'; [-0.28, 0.28].forEach(zz => g.fill(cam.path([[-6, R.ceil, zz - 0.05], [6, R.ceil, zz - 0.05], [6, R.ceil, zz + 0.05], [-6, R.ceil, zz + 0.05]]))); });
       },
       front(c, t, s) {
         s = s || {};
@@ -422,6 +434,7 @@ window.SETS = window.SETS || {};
   const ghost = (g, a) => { g.save(); g.fillStyle = '#9A8C86'; g.beginPath(); g.ellipse(a.x, a.y, a.scale * 0.09, a.scale * 0.12, 0, 0, 7); g.fill(); g.restore(); };
   SETS.bus = {
     views,
+    prepare: (names, states) => prepare(views, names, states),
     demos: [
       { name: 'interior', draw: (c, t) => stand(c, views.interior, t, {}) },
       { name: 'interior: a streetlight passing', t0: 0.9, draw: (c, t) => stand(c, views.interior, t, {}) },

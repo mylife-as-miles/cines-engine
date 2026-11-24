@@ -45,7 +45,7 @@ window.SETS = window.SETS || {};
     return out;
   }
   // an anchor: screen point, px per metre, and the RIG.head scale (a head is about 0.23 m crown to chin)
-  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0)) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
+  function anchor(cam, q, extra) { const p = cam.p(q); if (!(p[2] > 0) || Math.abs(p[0] - W / 2) > 3 * W || Math.abs(p[1] - H / 2) > 3 * H) return Object.assign({ x: null, y: null, scale: 0, s: 0, world: q.slice(), behind: true }, extra || {}); return Object.assign({ x: Math.round(p[0]), y: Math.round(p[1]), scale: +p[2].toFixed(1), s: +(p[2] * 0.23).toFixed(1), world: q.slice() }, extra || {}); }
   // a flat rectangle lying on a horizontal plane (a phone's footprint): centre, size (w across x, d along z), turned by rot
   function footprint(cam, c, w, d, rot) { const cr = Math.cos(rot || 0), sr = Math.sin(rot || 0); return [[-w / 2, d / 2], [w / 2, d / 2], [w / 2, -d / 2], [-w / 2, -d / 2]].map(([a, b]) => { const p = cam.p([c[0] + a * cr + b * sr, c[1], c[2] - a * sr + b * cr]); return [Math.round(p[0]), Math.round(p[1])]; }); }
   const _scr = {};
@@ -97,6 +97,12 @@ window.SETS = window.SETS || {};
     if (o.lit) { const s0 = o.litSide || -1, k = 0.35; g.fillStyle = o.lit; g.fill(S().poly([[p0[0] + nx * w0 * s0, p0[1] + ny * w0 * s0], [p1[0] + nx * w1 * s0, p1[1] + ny * w1 * s0], [p1[0] + nx * w1 * s0 * (1 - k * 2), p1[1] + ny * w1 * s0 * (1 - k * 2)], [p0[0] + nx * w0 * s0 * (1 - k * 2), p0[1] + ny * w0 * s0 * (1 - k * 2)]]).path(0.2, (o.seed || 5) + 1)); }
     return path;
   }
+  // build a set's cached layers ahead of time (a sequence's setup()): each view drawn once into a scratch frame with its default state
+  function prepare(views, names, states) {
+    const g = OTM.makeCanvas(W, H).getContext('2d'), em = OTM.makeCanvas(W / 4, H / 4).getContext('2d'); em.scale(0.25, 0.25);
+    const c = { g, gl: g, em, cache: FILM.cache, post: {}, shot: {}, after: [], before: [], t: 0, lt: 0, st: 0, reset() { }, camera() { } };
+    (names || Object.keys(views)).forEach(n => { const v = views[n]; if (!v) return; const s = Object.assign({}, (states && states[n]) || {}); v.back(c, 0, s); v.front(c, 0, s); });
+  }
   function rectPath(x, y, w, h) { const p = new Path2D(); p.rect(x, y, w, h); return p; }
   // a cached full-frame layer with a margin; drawn under whatever camera the sequence set
   function layer(c, key, draw) { const cv = c.cache(key, g => { g.translate(M, M); draw(g); }, W + 2 * M, H + 2 * M); c.g.drawImage(cv, -M, -M); return cv; }
@@ -106,8 +112,11 @@ window.SETS = window.SETS || {};
     const A = v.anchors; g.save(); g.lineWidth = 2; g.font = '500 18px "Libre Franklin"';
     const dot = (a, name, col) => { if (!a || a.x == null || !(a.scale >= 0)) return; g.strokeStyle = col || 'rgba(255,214,120,0.9)'; g.fillStyle = g.strokeStyle; g.beginPath(); g.arc(a.x, a.y, a.scale ? a.scale * 0.115 : 6, 0, 7); g.stroke(); g.fillRect(a.x - 2, a.y - 2, 4, 4); g.fillText(name, a.x + 8, a.y - 8); };
     Object.keys(A).forEach(k => { const a = A[k]; if (a && a.quad) { g.strokeStyle = 'rgba(120,230,255,0.9)'; g.beginPath(); a.quad.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.stroke(); g.fillStyle = g.strokeStyle; g.fillText(k, a.x + 10, a.y + 24); } else if (a && a.x != null) dot(a, k); else if (a && typeof a === 'object') Object.keys(a).forEach(j => { if (a[j] && a[j].x != null) dot(a[j], k + '.' + j, 'rgba(255,150,120,0.9)'); }); });
-    g.strokeStyle = 'rgba(255,255,255,0.35)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
+    g.strokeStyle = 'rgba(236,227,208,0.4)'; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(v.split * W, 0); g.lineTo(v.split * W, H); g.stroke(); g.restore();
   }
+
+  // the office's pieces: the nearer a piece, the more its hand-cut edge shows (as in the style frames, about 1.5-2 px up close)
+  const pcK = pc; pc = function (g, cam, pts, o) { if (o && o.rough == null) { const d = cam.view(pts[0])[2]; o.rough = d > 0 ? clamp(5 / d, 0.6, 2.2) : 1; } return pcK(g, cam, pts, o); };
 
   // =====================================================================================
   // THE STAIR (metres: x across the flight (+x toward the well), y up, z up the flight; the half landing at y = 0)
@@ -134,7 +143,6 @@ window.SETS = window.SETS || {};
     door: '#5C6560', doorDk: '#4A524E', frame: '#3F4542', bar: '#8A8F8C',
     sky: '#C2C6C0', skyLo: '#B3B8B1', mesh: '#959B96', winFrame: '#3A3E3B', sill: '#8D8B84',
     bag: '#9A8361', bagLit: '#B29A74', bagDk: '#6F5C43', bagFold: '#85704F',
-    patch: '#A9A69D', patch2: '#9A978F',
   };
   // the wall's colour at a height: cut bands, lighter toward the window band
   const WALLH = [-9, 1.05, 2.25, 3.3];
@@ -184,10 +192,9 @@ window.SETS = window.SETS || {};
     return p;
   }
   function winEm(g, cam) { const w = R.win, z = R.endZ; g.fillStyle = 'rgba(205,210,202,0.5)'; g.fill(cam.path([[w.x0, w.y0, z], [w.x1, w.y0, z], [w.x1, w.y1, z], [w.x0, w.y1, z]])); }
-  // the window's daylight: where it falls on the far wall past the well, and on the top of the stair (cut, two steps)
+  // the window's daylight: shallow, over his head, onto the wall above him (cut, two steps; see leftWall)
   const LDIR = [-0.2, -0.45, -0.8];
   function onPlaneX(q, X) { const t = (X - q[0]) / LDIR[0]; return [X, q[1] + LDIR[1] * t, q[2] + LDIR[2] * t]; }
-  function onPlaneY(q, Y) { const t = (Y - q[1]) / LDIR[1]; return [q[0] + LDIR[0] * t, Y, q[2] + LDIR[2] * t]; }
   function winCorners(grow) { const w = R.win, e = grow || 0; return [[w.x0 - e, w.y0 - e, R.endZ], [w.x1 + e, w.y0 - e, R.endZ], [w.x1 + e, w.y1 + e, R.endZ], [w.x0 - e, w.y1 + e, R.endZ]]; }
   function farWall(g, cam) {
     wall(g, cam, 'x', R.wallR, R.backZ, R.endZ, -3.5, 6.5, 400, { shade: 0.22 });
@@ -293,18 +300,6 @@ window.SETS = window.SETS || {};
     if (ft) cres(g, ft, 0, Math.max(2, k * 0.008), C.bagLit, 0.9);
     if (cam.pos[1] > by + h) pc(g, cam, [P(-w / 2 - 0.004, h + 0.012, -d / 2 - 0.006), P(w / 2 + 0.004, h + 0.012, -d / 2 - 0.006), P(w / 2, h + 0.01, d / 2), P(-w / 2, h + 0.01, d / 2)], { fill: C.bagLit, rough: 0.6, tex: 0.6, seed: 803, kind: 'paper' });
   }
-  // the light from the window band coming down the stair: two cut steps laid over the upper flight and the landing
-  function daylight(g, cam) {
-    const z = R.endZ;
-    g.save(); g.globalCompositeOperation = 'screen';
-    // on the top treads and risers: a falling patch, strongest near the landing
-    [[0.32, 0.18], [0.12, 0.26]].forEach(([e, a], i) => {
-      const P = winCorners(e).map(c => onPlaneY(c, R.land1.y - 0.4)).map(q => [q[0], q[1], q[2]]);
-      g.globalAlpha = a; const pts = [[R.x0, 1.25, 1.9 - i * 0.2], [R.x1, 1.25, 1.9 - i * 0.2], [R.x1, 1.75, 2.6], [R.x0, 1.75, 2.6]];
-      fl(g, cam, pts.map(q => [q[0], pitchY(q[2]) - 0.02, q[2]]), '#B4B2AA', 2.6, 900 + i); });
-    g.restore();
-  }
-
   // =====================================================================================
   // VIEWS
   // =====================================================================================
@@ -317,6 +312,7 @@ window.SETS = window.SETS || {};
   function drawBack(g, cam, view) {
     g.fillStyle = C.base; g.fillRect(-M, -M, W + 2 * M, H + 2 * M);
     endWall(g, cam); farWall(g, cam);
+    if (cam.pos[2] > R.backZ + 0.5 && Math.cos(cam.yaw) < 0.3) wall(g, cam, 'z', R.backZ, R.wallL - 0.2, R.wallR + 0.2, -3.5, 6.5, 450);     // the wall behind the half landing (seen looking down the flight)
     flightB(g, cam);
     flightC(g, cam);
     leftWall(g, cam);
@@ -340,7 +336,7 @@ window.SETS = window.SETS || {};
       A.phone.screen = 'tl tr br bl, as he sees it';
       A.shoulder = anchor(cam, [R.head[0] - 0.2, 1.62, R.head[2] + 0.12]); A.ear = anchor(cam, [R.head[0] - 0.075, R.head[1] - 0.02, R.head[2] + 0.02]); }
     A.bag = anchor(cam, R.bag);
-    A.above = anchor(cam, [0.05, R.land1.y + 1.0, R.door.z0]); A.below = anchor(cam, [0.0, 0.3, 0.4]);
+    A.above = anchor(cam, [0.05, R.land1.y + 0.1, R.land1.z0 + 0.1]); A.below = anchor(cam, [0.0, 0.3, 0.4]);
     return A;
   }
   const LIGHT_KEYS = { amb: '#5A5C60', keys: [{ dir: [0.0, -0.75, -0.6], col: '#DCDCD8', k: 0.45, poster: [0.3], levels: [1] }] };
@@ -359,7 +355,9 @@ window.SETS = window.SETS || {};
         s = s || {};
         // the heaviest grain and fibre in the film, unless the shot has its own finish
         const sp = (c.shot && c.shot.post) || {}; if (c.post) { if (c.post.grain == null && sp.grain == null && s.finish !== false) c.post.grain = 0.135; if (c.post.fibre == null && sp.fibre == null && s.finish !== false) c.post.fibre = 0.14; }
-        layer(c, 'stairwell|' + view, g => drawBack(g, cam, view));
+        layer(c, 'stairwell|' + view, g => { drawBack(g, cam, view);
+          // over his shoulder the stair is out of focus: a little blur baked into the cut paper, once
+          if (view === 'shoulder') { const t = OTM.makeCanvas(g.canvas.width, g.canvas.height).getContext('2d'); t.filter = 'blur(2.2px)'; t.drawImage(g.canvas, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(t.canvas, 0, 0); g.restore(); } });
         if (view !== 'shoulder') layer(c, 'stairwell|' + view + '|bag|' + (s.lunch || 'unopened'), g => lunchBag(g, cam, s.lunch || 'unopened'));
         emLayer(c, 'stairwell|' + view + '|em', g => winEm(g, cam));
       },
@@ -375,6 +373,7 @@ window.SETS = window.SETS || {};
   const stand = (c, v, t, s) => { v.back(c, t, s); v.front(c, t, s); };
   SETS.stairwell = {
     views,
+    prepare: (names, states) => prepare(views, names, states),
     demos: [
       { name: 'wide: lunch unopened', draw: (c, t) => stand(c, views.wide, t, {}) },
       { name: 'wide: lunch none', draw: (c, t) => stand(c, views.wide, t, { lunch: 'none' }) },
