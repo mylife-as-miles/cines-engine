@@ -1,0 +1,366 @@
+{
+ "title": "Q13 · SPEAKING SIMPLY",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0–3.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.43,
+     1.08,
+     3.3
+    ],
+    "target": [
+     4.43,
+     1.08,
+     0.5
+    ],
+    "f": 28
+   },
+   "camText": "Opens exactly on Q12's last frame: frontal two-shot from the kerb · 28 mm · locked-off",
+   "line": "OREN: \"May I speak simply?\"",
+   "note": "He turns his head to her; earnest. People pass along the pavement.",
+   "lines": [
+    {
+     "t0": 1.1,
+     "t1": 3.0,
+     "text": "OREN: May I speak simply?"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "time": "3.5–5.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.15,
+     1.46,
+     2.3
+    ],
+    "target": [
+     4.75,
+     1.43,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.08,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena · 65 mm · handheld",
+   "line": "HELENA: \"Go on.\"",
+   "note": "A dry sideways look at him; wary.",
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 1.5,
+     "text": "HELENA: Go on."
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "time": "5.5–10 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.1,
+     1.42,
+     2.6
+    ],
+    "target": [
+     4.1,
+     1.33,
+     0.5
+    ],
+    "f": 50
+   },
+   "camText": "Oren, frontal medium close-up, centred · 50 mm · locked-off",
+   "line": "OREN: \"The benefits office appears to have fucked you.\"",
+   "note": "Total calm, factual; the laundrette window behind him.",
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 3.7,
+     "text": "OREN: The benefits office appears to have fucked you."
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "time": "10–17 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.4,
+     1.28,
+     3.0
+    ],
+    "target": [
+     4.75,
+     1.15,
+     0.5
+    ],
+    "f": 40
+   },
+   "handheld": 0.007,
+   "camText": "The laugh: Helena, medium, waist up, room above · 40 mm · handheld",
+   "line": "(the laugh, no words)",
+   "note": "Lips pressed; a breath escapes through her nose; she fights it; it comes again; she folds forward laughing, a hand to her lower back, and laughs at that too."
+  },
+  {
+   "n": 5,
+   "time": "17–20.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.43,
+     1.35,
+     11.0
+    ],
+    "target": [
+     4.43,
+     0.95,
+     0.5
+    ],
+    "f": 65
+   },
+   "camText": "From across the street, wide on a long lens · 65 mm · locked-off",
+   "line": "HELENA: \"Oh, Jesus. Yeah. Those fuckers sure did.\"",
+   "note": "People pass through the foreground; she comes back up laughing beside him; he sits upright and still.",
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 3.2,
+     "text": "HELENA: Oh, Jesus. Yeah. Those fuckers sure did."
+    }
+   ],
+   "boardTime": 7
+  },
+  {
+   "n": 6,
+   "time": "20.5–23 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.75,
+     1.44,
+     2.25
+    ],
+    "target": [
+     4.1,
+     1.43,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     -0.06,
+     0
+    ]
+   },
+   "camText": "Close-up of Oren from her height · 65 mm · locked-off",
+   "line": "OREN: \"Was that simple enough?\"",
+   "note": "A genuine question; his eyes on hers.",
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 1.9,
+     "text": "OREN: Was that simple enough?"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "time": "23–25.5 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.15,
+     1.46,
+     2.3
+    ],
+    "target": [
+     4.75,
+     1.43,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.08,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena · 65 mm · handheld",
+   "line": "HELENA: \"Yeah, buddy. About right.\"",
+   "note": "The smile still in her eyes; light, warm.",
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 2.0,
+     "text": "HELENA: Yeah, buddy. About right."
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "time": "25.5–28 s",
+   "state": {
+    "helenaPos": [
+     4.75,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     4.1,
+     0.5,
+     0.35
+    ],
+    "orenSit": 1,
+    "bagFloor": [
+     4.1,
+     0.95
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.43,
+     1.08,
+     3.3
+    ],
+    "target": [
+     4.43,
+     1.08,
+     0.5
+    ],
+    "f": 28
+   },
+   "camText": "Frontal two-shot from the kerb · 28 mm · locked-off",
+   "line": "OREN: \"Oh. Good.\"",
+   "note": "No smile; after the line his head inclines a degree. She is still smiling, eyes open. People pass.",
+   "lines": [
+    {
+     "t0": 0.4,
+     "t1": 1.4,
+     "text": "OREN: Oh. Good."
+    }
+   ]
+  }
+ ]
+}
