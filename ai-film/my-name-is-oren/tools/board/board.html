@@ -209,6 +209,8 @@ window.setState = (st = {}) => {
   if (!hr.userData.home) hr.userData.home = hr.position.clone();
   if (st.helenaRightHand) { helena.updateMatrixWorld(true); hr.position.copy(helena.worldToLocal(new THREE.Vector3(...st.helenaRightHand))); }
   else hr.position.copy(hr.userData.home);
+  handset.visible = !!st.handset;
+  if (st.handset) { handset.position.set(st.handset[0], st.handset[1], st.handset[2]); handset.rotation.set(st.handset[3] || 0, st.handset[4] || 0, 0); }
   const bagHand = st.bagHand === 'right' ? oren.userData.hands.right : oren.userData.hands.left;
   if (bag.parent !== bagHand) bagHand.add(bag);
   const offL = st.orenLeftFoot || [0, 0];
@@ -218,6 +220,12 @@ window.setState = (st = {}) => {
   const off = st.orenRightFoot || [0, 0];                        // world offset for his right leg (he faces -z)
   oren.userData.legs.right.position.set(restR.x - off[0], restR.y, restR.z - off[1]);
 };
+
+// ---- her handset (movable): a dark slab with a plain grey screen, for the share-menu insert
+const handset = new THREE.Group();
+box(0.072, 0.011, 0.145, mat(0x26282b, { roughness: 0.4 }), 0, 0, 0, handset);
+box(0.064, 0.002, 0.13, new THREE.MeshStandardMaterial({ color: 0x9a9da0, emissive: 0x8a8d90, emissiveIntensity: 0.6 }), 0, 0.007, 0, handset);
+handset.visible = false; scene.add(handset);
 
 // ---- cameras: hfov from focal length on a Super 35 width (23.76 mm), drawn 16:9
 function cameraFor(c) {

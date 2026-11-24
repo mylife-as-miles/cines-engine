@@ -1,0 +1,335 @@
+{
+ "title": "Q10 \u00b7 NOT THE RECORDINGS \u00b7 SECOND LIEUTENANT",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20132.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right",
+    "handset": [
+     4.46,
+     0.7,
+     0.8,
+     -0.35,
+     0.15
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Opens exactly on Q09's last frame: her close-up \u00b7 65 mm \u00b7 handheld",
+   "line": "(no dialogue)",
+   "note": "He waits. She takes the handset from her jacket pocket and unlocks it."
+  },
+  {
+   "n": 2,
+   "time": "2.5\u20136.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right",
+    "handset": [
+     4.46,
+     0.7,
+     0.8,
+     -0.35,
+     0.15
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.62,
+     1.38,
+     1.12
+    ],
+    "target": [
+     4.46,
+     0.7,
+     0.8
+    ],
+    "f": 40
+   },
+   "handheld": 0.003,
+   "camText": "Overhead insert: the handset in her hands \u00b7 50 mm",
+   "line": "(no dialogue)",
+   "note": "The screen an even, plain grey (the share menu goes in later, in code); her thumb hovers, then taps twice. The cracked top-left corner."
+  },
+  {
+   "n": 3,
+   "time": "6.5\u20139.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right",
+    "handset": [
+     4.46,
+     0.7,
+     0.8,
+     -0.35,
+     0.15
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"Those. Not the recordings.\"",
+   "lines": [
+    {
+     "t0": 0.7,
+     "t1": 2.4,
+     "text": "HELENA: Those. Not the recordings."
+    }
+   ],
+   "note": "Her eyes come up to him; quiet and firm: a boundary."
+  },
+  {
+   "n": 4,
+   "time": "9.5\u201311.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right",
+    "handset": [
+     4.46,
+     0.7,
+     0.8,
+     -0.35,
+     0.15
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.6,
+     1.05,
+     1.1
+    ],
+    "target": [
+     4.46,
+     0.7,
+     0.8
+    ],
+    "f": 65
+   },
+   "camText": "Insert: her thumb presses send \u00b7 65 mm",
+   "line": "(no dialogue)",
+   "note": "One press; a soft click."
+  },
+  {
+   "n": 5,
+   "time": "11.5\u201316 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.75,
+     2.15
+    ],
+    "target": [
+     3.95,
+     1.74,
+     0.95
+    ],
+    "f": 85
+   },
+   "camText": "Close-up of Oren's right profile \u00b7 85 mm \u00b7 very slow dolly-in",
+   "line": "HELENA (off): \"Hey. Buddy. You okay?\"",
+   "lines": [
+    {
+     "t0": 1.8,
+     "t1": 3.4,
+     "text": "HELENA (off): Hey. Buddy. You okay?"
+    }
+   ],
+   "move": {
+    "to": {
+     "pos": [
+      4.64,
+      1.75,
+      1.87
+     ],
+     "target": [
+      3.95,
+      1.74,
+      0.95
+     ],
+     "f": 85
+    }
+   },
+   "note": "A small warm-white light wakes under the skin at his right temple; nothing else moves, not a blink. Then the light goes out."
+  },
+  {
+   "n": 6,
+   "time": "16\u201319 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     4.85,
+     1.05,
+     1.3
+    ],
+    "target": [
+     3.97,
+     1.72,
+     0.95
+    ],
+    "f": 40
+   },
+   "camText": "Low angle on Oren from her seated height \u00b7 40 mm \u00b7 locked-off",
+   "line": "OREN: \"Yes, Second Lieutenant Helena Duncan.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 2.7,
+     "text": "OREN: Yes, Second Lieutenant Helena Duncan."
+    }
+   ],
+   "note": "Her full rank, evenly."
+  },
+  {
+   "n": 7,
+   "time": "19\u201323 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.95,
+     2.220666776206844
+    ],
+    "bagHand": "right"
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.003,
+   "camText": "Close-up of Helena \u00b7 65 mm \u00b7 a slow push-in",
+   "line": "(no dialogue)",
+   "move": {
+    "to": {
+     "pos": [
+      5.0,
+      1.42,
+      1.4
+     ],
+     "target": [
+      4.45,
+      1.4,
+      0.5
+     ],
+     "f": 65,
+     "shift": [
+      0.1,
+      0
+     ]
+    }
+   },
+   "note": "Her head comes up; still for half a second; her eyes widen slightly, wet, catching the light; one swallow."
+  }
+ ]
+}
