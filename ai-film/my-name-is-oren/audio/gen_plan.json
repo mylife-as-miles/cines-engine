@@ -1,0 +1,33 @@
+{
+ "_about": "Sounds made with Stable Audio 3.0 Small SFX (Stability AI Community License) on CPU through audio.cpp, as in Claude Film (claude-film/autopilot/tools/sfx_gen.py). Each key is made at every seed; earshot ranks the takes against `match` and checks the best against `alts`. Prompts describe texture, source and space only (the text encoder ignores negation). DECISIONS: no music under dialogue, so these are a street bed, the laundrette, and a few quiet effects where the picture shows their source.",
+ "street_bed": {
+  "kind": "bed", "dur": 45, "seeds": [101, 1101, 2101],
+  "prompt": "outdoor ambience of a quiet street of red-brick terraced houses and small shops in a northern English town on a grey damp afternoon, a low distant hum of traffic, a soft breeze, faraway footsteps on wet pavement, wide open air",
+  "match": "a quiet street ambience with distant traffic",
+  "alts": ["rain falling", "a crowd talking", "music playing", "a strong wind"]
+ },
+ "laundrette_hum": {
+  "kind": "bed", "dur": 30, "seeds": [201, 1201],
+  "prompt": "the steady low hum and soft rumble of tumble dryers turning inside a small laundrette, heard from the pavement outside through the shop window, muffled and even",
+  "match": "a tumble dryer running",
+  "alts": ["a car engine idling", "rain falling", "an electric fan", "music playing"]
+ },
+ "sweeper_brush": {
+  "kind": "cue", "dur": 5, "seeds": [301, 1301, 2301],
+  "prompt": "rotating bristle brushes of a small street-cleaning machine scrubbing wet tarmac along a gutter, a gritty swishing scrape with a quiet electric motor underneath, outdoors, close",
+  "match": "a street sweeper brushing the road",
+  "alts": ["a power drill", "rain falling", "a car engine idling", "someone sweeping a floor with a broom"]
+ },
+ "sweeper_bump": {
+  "kind": "cue", "dur": 4, "seeds": [401, 1401, 2401],
+  "prompt": "a rotating bristle brush of a small street-cleaning machine pressing against a leather boot on wet pavement, a dense scrubbing that slows and stops as the quiet electric motor winds down, outdoors, very close",
+  "match": "a brush scrubbing then slowing to a stop",
+  "alts": ["a power drill", "footsteps", "a car engine idling", "rain falling"]
+ },
+ "bin_bag": {
+  "kind": "cue", "dur": 4, "seeds": [501, 1501, 2501],
+  "prompt": "a full black plastic bin bag pulled out of a metal street litter bin, loud plastic crinkling and rustling, the bin lid knocking once, outdoors, close",
+  "match": "a plastic bag rustling",
+  "alts": ["paper crumpling", "rain falling", "footsteps", "a door closing"]
+ }
+}

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Assemble the film from its takes in one pass: python3 tools/assemble.py edits/Q01_Q13_v2.json
+"""Assemble the film from its takes in one pass: python3 tools/assemble.py edits/Q01_Q13_v2.json [--edl-only]
+
+Also writes <out>.edl.json: where every segment lands on the film's clock (tools/sound_mix.py places sounds with it);
+--edl-only writes that alone, without rendering.
 
 The spec lists segments in order:
   {"out": "out/edits/Q01_Q13_v2.mp4", "lufs": -18,
@@ -63,7 +66,7 @@ def main():
         if b is None:
             b = nframes(path) - 1
         s['_a'], s['_b'], s['_dur'] = a, b, (b - a + 1) / FPS
-        level = lufs(path, a, b)
+        level = None if '--edl-only' in sys.argv else lufs(path, a, b)
         gain = 0.0 if level is None else max(-12.0, min(12.0, target - level))
         if 'gain' in s:                      # a set gain (dB) wins over the measured one, e.g. matched on dialogue
             gain = float(s['gain'])
@@ -92,7 +95,16 @@ def main():
             dur = dur + s['_dur']
         s['_at'] = dur - s['_dur']
         v, au = f'xv{i}', f'xa{i}'
+    segs[0]['_at'] = 0.0
     out = os.path.join(HERE, spec['out'])
+    # the edit decision list: where every take lands on the film's clock, so sounds can be placed on a take's own clock
+    edl = {'out': spec['out'], 'fps': FPS, 'duration': round(dur, 4),
+           'segments': [{'file': s['file'], 'from': s['_a'], 'to': s['_b'], 'at': round(s['_at'], 4),
+                         'dur': round(s['_dur'], 4), 'join': s.get('join', 'cut')} for s in segs]}
+    with open(os.path.splitext(out)[0] + '.edl.json', 'w') as f:
+        json.dump(edl, f, indent=1)
+    if '--edl-only' in sys.argv:
+        return print('wrote', os.path.splitext(spec['out'])[0] + '.edl.json')
     cmd = ['ffmpeg', '-v', 'error', '-y'] + args + ['-filter_complex', ';'.join(chains), '-map', f'[{v}]',
            '-map', f'[{au}]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p',
            '-profile:v', 'high', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', out]
