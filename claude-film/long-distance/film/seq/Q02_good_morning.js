@@ -77,7 +77,14 @@
   // behind it), seen from his eyes, the bathroom out of focus behind (the glass view, blurred once and kept). Only the thumb moves.
   // The grip's own thumb sweeps the middle of the screen; the keys are lower, level with the palm, so the thumb's angles are solved
   // here for each key with the rig's own thumb bones (handBones) and its basis, and drawn as the rig's thumb pose with that aim.
-  const GRIP = { x: 1299, y: 770, s: 903, rot: -0.05 };            // the wrist (world px), the hand's length (px), its turn: the phone lands centred
+  // the phone's centre and height on the frame, and the hand's turn; the hand is sized from the phone (the rig's true-size grip) and its
+  // wrist placed so the phone lands here
+  const GRIP = { at: [946, 520], h: 930, rot: -0.05 };
+  function gripFrame() {
+    const base = RIG.HANDS.thumb({}), s = GRIP.h / base.phoneSize[1], F0 = handFrame(base.basis, GRIP.rot, s, 0, 0), g = F0(base.grip);
+    const x = GRIP.at[0] - g[0], y = GRIP.at[1] - g[1];
+    return { base, s, x, y, F: handFrame(base.basis, GRIP.rot, s, x, y) };
+  }
   function background(c) {
     // centred inside the glass view's own frame (the phone stands at its right edge): the dusty brush falls out of focus at the left
     const v = BA().views.glass, z = 2.1, cx = 1330, cy = 590;
@@ -114,7 +121,8 @@
     let best = null;
     for (let th = -1.6; th <= 1.6001; th += 0.05) for (let ph = ph0; ph <= Math.max(ph0, 1.3) + 0.01; ph += 0.2) for (let f1 = 0; f1 <= 1.501; f1 += 0.1) {
       const tp = [+th.toFixed(2), +ph.toFixed(1), +f1.toFixed(1), +(f1 * 0.8).toFixed(2)], w = F(thumbTip(tp));
-      const d = Math.hypot(w[0] - T[0], w[1] - T[1]) + f1 * 6 + ph * 4;                  // the least bent thumb that lands
+      // the least bent thumb that lands, coming down on the key from above (a tap, not a thumb laid flat across the row)
+      const d = Math.hypot(w[0] - T[0], w[1] - T[1]) + f1 * 6 + (up ? ph * 4 : Math.abs(ph - 0.9) * 30);
       if (!best || d < best[0]) best = [d, tp];
     }
     return (AIM[key] = best[1]);
@@ -148,12 +156,12 @@
     c.g.drawImage(background(c), 0, 0);
     // the keyboard stays up, so the newest message sits above the field and clear of his fingertips; it is there at once (A010
     // "Instantly"), never rising from under the field
-    const st = Object.assign(PHONE.exchange(lt, o.ex), { arrive: 1 }), base = RIG.HANDS.thumb({}), F = handFrame(base.basis, GRIP.rot, GRIP.s, GRIP.x, GRIP.y);
-    const pc = F(base.grip), ang = GRIP.rot, h = base.phoneSize[1] * GRIP.s;
+    const st = Object.assign(PHONE.exchange(lt, o.ex), { arrive: 1 }), G = gripFrame(), F = G.F;
+    const pc = F(G.base.grip), ang = GRIP.rot, h = G.base.phoneSize[1] * G.s;
     const P = { x: pc[0], y: pc[1], h, roll: ang, screen: 'thread', state: st, t: lt, env: '#C9D0D4', lightDir: [0.7, -0.6] };
     const info = PHONE.where(P, c);
     const L = RIG.light('bathroom', { phone: [info.center[0], info.center[1]], phoneZ: 0.3, phoneK: 0.35 });
-    const hp = { x: GRIP.x, y: GRIP.y, s: GRIP.s, rot: GRIP.rot, light: L, res: 0.62 };
+    const hp = { x: G.x, y: G.y, s: G.s, rot: GRIP.rot, light: L, res: 0.62 };
     const ta = thumbAt(lt, o), thumb = aim(info.pt(ta.p[0], ta.p[1]), F, !ta.down);
     PHONE.glow(c, { info, x: info.center[0], y: pc[1] + h * 0.5, r: h * 0.75, sy: 0.35, k: 0.35 });
     RIG.hand(c, 'him', 'thumb', Object.assign({ noThumb: true, shadow: { dx: 0.02, dy: 0.04, alpha: 0.35 } }, hp));                       // the palm and fingers, behind the phone

@@ -226,57 +226,38 @@
   }
 
   // ---------------------------------------------------------------- 5 · shoulder (26–32.5): the thread, out of focus, by rule
-  // His head and shoulder dark at the left, the back of his head turned down to the phone, his ear red; the phone held up in the
-  // right half against bare concrete; his forearm rising to it from below; the screen a blurred grid that never comes into focus.
-  function shoulderQuad(A) { const q = A.phone.quad; return [q[1], q[0], q[3], q[2]]; }   // the set's quad is listed mirrored; as seen
+  // His back and right shoulder (the rig's back view, dark, filling the left), the back of his head bowed to the phone, his ear and
+  // nape red; his right arm from that shoulder (RIG.arm, a natural elbow) holds the phone up in the right half against bare
+  // concrete, the thumb flicking the thread; the screen a blurred grid that never comes into focus.
+  const SH = { x: 600, y: 150, s: 500 };                 // his head (between the eyes), from behind and above
   function shotShoulder(c, st, lt) {
     const v = SW().views.shoulder, A = v.anchors;
     v.back(c, lt, {});
+    // he is in his own shade (the window is above and behind the camera's side of him): the paper dark, the phone's light faint on him
+    const L = RIG.light('stairwell', { keys: [{ dir: [0.25, -0.8, 0.5], col: '#A8A8A4', k: 0.26, poster: [0.35], levels: [1] }], amb: '#2C2E32',
+      phone: [A.phone.x, A.phone.y], phoneK: 0.4, phoneCol: '#FFB894', paper: { mul: '#62656C', gain: 0.9 } });
+    // him from behind: both arms forward, hidden by his back (the phone arm is drawn from his shoulder below)
+    const fig = RIG.draw(c, 'him', 'stand', { view: 'back', costume: 'shirt', x: SH.x, y: SH.y, s: SH.s, light: L, t: lt, crop: 2.4, tau: 0.3,
+      face: { yaw: Math.PI - 0.42, pitch: -0.4, lids: 0.35, flush: 0.55, ears: 1, neck: 0.32 },
+      armL: { to: [-0.3, 2.3], hand: false, handless: true, front: true }, armR: { to: [0.4, 2.2], hand: false, handless: true, front: true } });
+    // the phone in his right hand, the thumb on the glass: the arm's target is solved so the grip's phone lands on the set's spot
+    const pulse = FLICKS.reduce((m, a) => (lt > a - 0.25 && lt < a + 0.25) ? Math.max(m, 1 - Math.abs(lt - a) / 0.25) : m, 0);
+    const reach = Math.round(lerp(0.3, 0.75, pulse) * 4) / 4;
+    const shoulder = fig.info.shoulders ? fig.info.shoulders[1] : [SH.x + 0.75 * SH.s, SH.y + 1.07 * SH.s];
+    const want = [A.phone.x, A.phone.y];
+    const armP = { shoulder: [shoulder[0] - 0.08 * SH.s, shoulder[1] + 0.05 * SH.s], s: 470, hand: 'thumb', hp: { reach, over: 'thumb' }, costume: 'shirt', light: L, side: 'R' };
+    let target = [want[0] - 40, want[1] + 190];
+    for (let k = 0; k < 2; k++) { const pr = RIG.arm(c, 'him', Object.assign({}, armP, { target, canvas: SCR() })); const ph = pr.hand && pr.hand.phone; if (!ph) break; target = [target[0] + want[0] - ph.x, target[1] + want[1] - ph.y]; }
+    const arm = RIG.arm(c, 'him', Object.assign({}, armP, { target }));
+    const ph = arm.hand && arm.hand.phone;
     const scroll = PHONE.flicks(lt, { at: FLICKS, dist: 420, tau: 0.32 });
-    const P = { quad: shoulderQuad(A), edge: [-7, 5], screen: 'grid', state: { scroll, live: true, clock: 'lunch' }, t: lt, blur: 2, env: '#9C9EA0' };
+    const P = { x: ph ? ph.x : want[0], y: ph ? ph.y : want[1], h: ph ? ph.h : 260, roll: ph ? ph.angle : 0, yaw: -0.35, pitch: 0.12,
+      screen: 'grid', state: { scroll, live: true, clock: 'lunch' }, t: lt, blur: 2, env: '#9C9EA0' };
     const info = PHONE.where(P, c);
     PHONE.glow(c, { info, x: info.center[0] - 60, y: info.center[1] + 20, r: 560, k: 0.5, tone: 'skin' });
-    const L = RIG.light('stairwell', { keys: [{ dir: [0.25, -0.8, 0.5], col: '#B8B8B4', k: 0.32, poster: [0.35], levels: [1] }], amb: '#34363A',
-      phone: [info.center[0], info.center[1]], phoneK: 0.7, phoneCol: '#FFB894', paper: { mul: '#8C8C8A' } });
-    const by = RIG.breath(lt, 3);
-    // the back of his head, turned down and a little to the phone: hair, the right ear (red), the edge of the jaw
-    RIG.head(c, 'him', { x: 560, y: 120 - by, s: 540, yaw: 2.72, pitch: -0.42, lids: 0.35, flush: 0.7, ears: 1, neck: 0.3, light: L });
-    shoulderBody(c, lt);
-    // his right forearm, up from below the frame to the phone; the hand: the phone in the palm, the thumb flicking the thread up
-    const pulse = FLICKS.reduce((m, a) => (lt > a - 0.25 && lt < a + 0.25) ? Math.max(m, 1 - Math.abs(lt - a) / 0.25) : m, 0);
-    const up = info.at(0.5, 0.0), dn = info.at(0.5, 1.0), ang = Math.atan2(up[1] - dn[1], up[0] - dn[0]) + Math.PI / 2;
-    const tgt = info.at(0.45, lerp(0.72, 0.45, pulse));
-    const hp = handOnPhone(c, info, L, tgt, 0, { u: 0.4, v: 0.78, s: 255, rot: ang - 0.05, flip: false, foreLen: 0.35 });
-    sleeveUp(c, hp, RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: SCR() })));
-    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: 'thumb' }));
-    PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.35 } }, P));
-    RIG.hand(c, 'him', 'thumb', hp);
-  }
-  // the shirt sleeve over his forearm, from the wrist down out of the frame (dark: he is in his own shade)
-  function sleeveUp(c, hp, hand) {
-    const g = c.g; const fa = hand.angle + Math.PI;                       // the forearm runs opposite the fingers
-    const u = [Math.cos(fa), Math.sin(fa)], n = [-u[1], u[0]], r = 64;
-    const a = [hp.x + u[0] * 40, hp.y + u[1] * 40], b = [hp.x + u[0] * 900, hp.y + u[1] * 900];
-    const sh = GG.blob([[a[0] + n[0] * r, a[1] + n[1] * r, 1], [b[0] + n[0] * r * 1.6, b[1] + n[1] * r * 1.6, 1], [b[0] - n[0] * r * 1.6, b[1] - n[1] * r * 1.6, 1], [a[0] - n[0] * r, a[1] - n[1] * r, 1]]);
-    const p = GG.piece(g, sh, { fill: '#3A424E', rough: 1.3, seed: 95, tex: 0.6, kind: 'cloth', lift: [10, 8], liftAlpha: 0.5, liftBlur: 16 });
-    GG.crescent(g, p, 5, -6, '#4C5664', 0.8);
-  }
-  function shoulderBody(c, lt) {
-    const cv = c.cache('Q04|shoulder|body2', g => {
-      // the back of his shirt and his right shoulder, very close: one big dark piece, its top edge the shoulder's line
-      const col = '#39414C';
-      const back = GG.blob([[-140, 300], [180, 250], [470, 300], [700, 430], [880, 700], [960, 960], [980, 1220], [-140, 1220]]);
-      const bp = GG.piece(g, back, { fill: col, rough: 1.4, seed: 91, tex: 0.6, kind: 'cloth', lift: [16, 12], liftAlpha: 0.55, liftBlur: 26 });
-      GG.bands(g, bp, [150, 1100], [650, 300], ['#262C35', '#303741', '#3C444F'], { stops: [0, 0.5, 0.86], rough: 3, seed: 92 });
-      GG.crescent(g, bp, 6, -10, '#525C69', 0.7);
-      // the collar standing round the base of his neck, from behind
-      const col2 = GG.blob([[300, 300], [440, 262], [610, 300], [690, 380], [640, 410], [470, 352], [330, 360]]);
-      const cp = GG.piece(g, col2, { fill: '#465060', rough: 1.2, seed: 93, tex: 0.5, kind: 'cloth', lift: [6, 8], liftAlpha: 0.5, liftBlur: 10 });
-      GG.crescent(g, cp, 3, -6, '#5A6474', 0.8);
-      g.save(); g.strokeStyle = 'rgba(16,20,26,0.55)'; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.moveTo(120, 560); g.quadraticCurveTo(400, 640, 540, 880); g.stroke(); g.restore();
-    });
-    const by = RIG.breath(lt, 3);
-    c.g.drawImage(cv, 0, -by);
+    PHONE.draw(c, P);
+    arm.over(c);
+    void st;
   }
 
   FILM.seq({

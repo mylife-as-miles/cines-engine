@@ -82,19 +82,20 @@
     const Lk = { E: lerp2(L_SIT.E, L_LIE.E, e), W: lerp2(L_SIT.W, L_LIE.W, e) };
     const armL = Object.assign(Lk, e > 0.5 ? { hand: false, behind: true } : { hand: 'relax', hp: { close: 0.4 }, front: true, order: 1 });
     const R = typeof o.R === 'function' ? o.R(toFig) : o.R;
-    const armR = Object.assign({ front: true, order: 2 }, R);
-    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.12, lean: 0, head: face, arms: { L: armL, R: armR }, legs: false, crop: 3.5, untucked: true });
+    // the body without its right arm: that arm is RIG.arm's, from his shoulder to where the hand has to be
+    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.12, lean: 0, head: face, arms: { L: armL }, legs: false, crop: 3.5, untucked: true });
     const breath = RIG.breath(lt, 2.5 * Math.min(2, s / 250));
     RIG.drawFigure(c, { who: 'him', x: legs.x, y: legs.y, s, flip: legs.flip, light: L, breath: 0, ops: legs.ops });
     const fig = RIG.drawFigure(c, { who: 'him', x: origin[0], y: origin[1], s, rot, light: L, breath, ops: up.ops });
-    // a world point into the upper body's frame (for reaching to the cushion)
+    const sh = fig.toWorld(up.SR), wr = fig.toWorld(R.W);
+    fig.armOut = RIG.arm(c, 'him', { shoulder: sh, target: wr, s, hand: R.hand, hp: R.hp, bend: R.bend || 'down', body: H, light: L });
     fig.toFig = toFig;
     fig.light = L;
     return fig;
   }
   // the phone in his hand: its screen turned to his face, so we see it edge-on with its glow; the screen's smooth light on his face
   function heldPhone(c, fig, lt, o) {
-    o = o || {}; const hd = fig.hands.R; if (!hd) return null;
+    o = o || {}; const hd = fig.armOut ? fig.armOut.hand : fig.hands.R; if (!hd) return null;
     const ph = hd.phone || { x: hd.grip[0], y: hd.grip[1], h: SH() * 0.7, angle: hd.rot };
     const tap = o.typing ? (Math.floor(twos(lt) * 6) % 3 === 0 ? 1 : 0) : 0;
     const P = Object.assign({ x: ph.x, y: ph.y + tap * 1.2, h: SH() * 0.7, roll: o.roll == null ? -0.35 : o.roll, yaw: o.yaw == null ? -1.0 : o.yaw, pitch: o.pitch == null ? 0.25 : o.pitch,
@@ -102,7 +103,7 @@
     const info = PHONE.where(P, c);
     if (o.glow !== false && fig.heads.head) RIG.faceGlow(c, fig.heads.head, { x: P.x - SH() * 0.4, y: P.y - SH() * 0.2, r: SH() * 1.3, color: '#FFC5A0', alpha: o.glowA == null ? 0.32 : o.glowA });
     PHONE.draw(c, P);
-    fig.over(c);
+    fig.over(c); if (fig.armOut) fig.armOut.over(c);
     return info;
   }
 
@@ -133,9 +134,12 @@
     const hang = [x + (flip ? -1 : 1) * 0.82 * s, y + 3.4 * s];
     const wrist = [lerp(onEdge[0], hang[0], let_), lerp(onEdge[1], hang[1], let_)];
     const clip = flip ? { a: o.edgeTop, b: o.edge.slice(0, 2) } : { a: o.edge.slice(0, 2), b: o.edgeTop };
-    const R = let_ < 0.25 ? { to: toFig(wrist), bend: -1, hand: 'door', hp: { tight: o.tight || 0, clip }, front: true } : { to: toFig(wrist), bend: -1, hand: 'relax', hp: { close: 0.5 }, front: let_ < 0.9 };
-    const fig = RIG.person({ who: 'him', costume: 'sweater', tau: o.tau == null ? -0.15 : o.tau, head: f, arms: { L: { a1: -0.06, a2: 0.12, hand: 'relax' }, R }, legs: {} });
-    return RIG.drawFigure(c, { who: 'him', x, y, s, flip, light: L, breath: RIG.breath(t, 2.5 * Math.min(2, s / 250)), ops: fig.ops });
+    const fig = RIG.person({ who: 'him', costume: 'sweater', tau: o.tau == null ? -0.15 : o.tau, head: f, arms: { L: { a1: -0.06, a2: 0.12, hand: 'relax' } }, legs: {} });
+    const out = RIG.drawFigure(c, { who: 'him', x, y, s, flip, light: L, breath: RIG.breath(t, 2.5 * Math.min(2, s / 250)), ops: fig.ops });
+    // the arm on the edge's side, from his shoulder, its elbow out from his body; the fingers go round the edge (clipped)
+    out.armOut = RIG.arm(c, 'him', { shoulder: out.toWorld(fig.SR), target: wrist, s, side: o.side || 'R', bend: 'down', light: L,
+      hand: let_ < 0.25 ? 'door' : 'relax', hp: let_ < 0.25 ? { tight: o.tight || 0, clip } : { close: 0.5 } });
+    return out;
   }
 
   // ---------------------------------------------------------------- him at the door, from behind, opening it (the rig's back view)

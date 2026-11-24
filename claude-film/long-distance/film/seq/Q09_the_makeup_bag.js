@@ -118,39 +118,32 @@
     return { hand, info };
   };
 
-  // one arm of a figure whose body is off the frame (an insert): the rig's own sleeve, cuff and hand, from the shoulder. o: {who,
-  // costume, side ('R' | 'L'), x, y, s (the off-frame figure's head and scale), flip, tau, light, wrist: [x, y] world, bend, hand,
-  // hp, phone: PHONE params or null (the phone in the grip, drawn at the hand's true-size phone)}. Returns {fig, hand, info}
+  // one arm whose body is off the frame (an insert): the rig's RIG.arm, from a shoulder (world px) to the wrist, in its sleeve, with
+  // its hand. o: {who, shoulder, s (px per head), light, hand, hp, side, bend, rot (the hand's turn), wrist | phoneAt (where the
+  // phone in the grip must land: the wrist is found from it), phone: PHONE params (drawn at the grip's true-size phone), glow}
   const ARMOFF = {};
+  const armP = o => ({ shoulder: o.shoulder, target: o.wrist, s: o.s, hand: o.hand || 'thumb', hp: o.hp || {}, side: o.side || 'R', bend: o.bend, light: o.light, handRot: o.rot });
   K.arm = function (c, o) {
-    const side = o.side || 'R', sgn = o.flip ? -1 : 1;
-    if (o.phoneAt && !o._probe) {   // place the grip so the phone's centre lands at phoneAt: measure the wrist -> phone offset once
-      const k = [o.who, o.s, o.rot, o.flip, JSON.stringify(o.hp || {})].join('|');
-      if (!ARMOFF[k]) {
+    if (o.phoneAt) {
+      const k = [o.who, o.s, o.rot, o.side, o.hand, JSON.stringify(o.hp || {}), Math.round(o.shoulder[0] - o.phoneAt[0]), Math.round(o.shoulder[1] - o.phoneAt[1])].join('|');
+      if (!ARMOFF[k]) {   // measure the wrist -> phone offset once, drawing into a scratch canvas
         const tg = K._probe || (K._probe = OTM.makeCanvas(W, H).getContext('2d')); tg.setTransform(1, 0, 0, 1, 0, 0); tg.clearRect(0, 0, W, H);
-        const w0 = [W / 2, H * 0.8], sh0 = [w0[0] + o.shoulder[0] - o.phoneAt[0], w0[1] + o.shoulder[1] - o.phoneAt[1]];
-        const r = K.arm(c, Object.assign({}, o, { _probe: true, wrist: w0, shoulder: sh0, phone: null, target: tg }));
-        ARMOFF[k] = r.hand && r.hand.phone ? [r.hand.phone.x - w0[0], r.hand.phone.y - w0[1]] : [0, -0.5 * o.s];
+        const fake = Object.assign({}, c, { g: tg, gl: tg, em: dummyEm(), before: [], after: [] });
+        const w0 = [W / 2, H / 2], sh0 = [w0[0] + o.shoulder[0] - o.phoneAt[0], w0[1] + o.shoulder[1] - o.phoneAt[1]];
+        const r = RIG.arm(fake, o.who, Object.assign(armP(o), { shoulder: sh0, target: w0 }));
+        ARMOFF[k] = r.hand && r.hand.phone ? [r.hand.phone.x - (r.wrist ? r.wrist[0] : w0[0]), r.hand.phone.y - (r.wrist ? r.wrist[1] : w0[1])] : [0, -0.3 * o.s];
       }
       o = Object.assign({}, o, { wrist: [o.phoneAt[0] - ARMOFF[k][0], o.phoneAt[1] - ARMOFF[k][1]] });
     }
-    if (o.shoulder) {   // place the off-frame figure by its shoulder (world px) instead of its head
-      const Pp = RIG.PROP[o.who], ct = Math.cos(o.tau || 0), sx = (side === 'R' ? 1 : -1) * Pp.sw * ct;
-      o = Object.assign({}, o, { x: o.shoulder[0] - sgn * sx * o.s, y: o.shoulder[1] - Pp.shY * o.s });
-    }
-    const to = [(o.wrist[0] - o.x) / o.s * sgn, (o.wrist[1] - o.y) / o.s];
-    const spec = Object.assign({ to, bend: o.bend || -1, hand: o.hand || 'thumb', hp: o.hp || {}, front: true }, o.rot != null ? { handAt: to, handRot: o.rot } : {}, o.spec || {});
-    const r = RIG.person({ who: o.who, costume: o.costume || (o.who === 'her' ? 'coat' : 'sweater'), tau: o.tau || 0, head: false, arms: side === 'R' ? { R: spec } : { L: spec }, legs: false, crop: 4 });
-    const ops = r.ops.filter(op => (op.type === 'hand' && op.name === side) || (op.key && op.key.indexOf('arm' + side + ',') === 0));
-    const fig = RIG.drawFigure(c, { who: o.who, x: o.x, y: o.y, s: o.s, flip: o.flip, light: o.light, breath: o.breath || 0, ops, target: o.target });
-    const hand = fig.hands[side]; let info = null;
+    const r = RIG.arm(c, o.who, armP(o));
+    const hand = r.hand; let info = null;
     if (o.phone && hand && hand.phone) {
       const hp2 = hand.phone, P = Object.assign({ x: hp2.x, y: hp2.y, h: hp2.h, roll: hp2.angle }, o.phone);
       info = PHONE.where(P, c);
       if (o.glow !== false) PHONE.glow(c, Object.assign({ info, k: 0.55, r: hp2.h * 1.8 }, o.glow || {}));
-      PHONE.draw(c, P); fig.over(c);
+      PHONE.draw(c, P); r.over(c);
     }
-    return { fig, hand, info };
+    return { fig: r, hand, info };
   };
 
   // the two-shot, side-on to the line between them (between/two's camera): him in his half, three-quarter to screen right, the fridge,

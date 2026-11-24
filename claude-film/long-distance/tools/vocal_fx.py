@@ -37,6 +37,11 @@ def trim(x, sr=SR, thr_db=-45, head=0.03, tail=0.15):
     return y
 
 
+def hear(asr, x):
+    """What speech recognition makes of x (48 kHz mono): Whisper wants 16 kHz."""
+    return asr({'raw': signal.resample_poly(x, 1, 3).astype(np.float32), 'sampling_rate': 16000})['text'].strip()
+
+
 def pauses(x, sr=SR, min_gap=0.18):
     """Gaps in the speech (seconds): where the 30 ms envelope stays 30 dB under the take's peak for min_gap."""
     n = int(0.03 * sr); env = np.sqrt(np.convolve(x * x, np.ones(n) / n, mode='same'))
@@ -97,10 +102,10 @@ def main():
     x = load(os.path.join(TK, f'fx_laugh_phone_t{k}_trim.wav')); sf.write(os.path.join(VO, 'laugh_phone.wav'), x.astype(np.float32), SR, subtype='PCM_24')
     print('laugh_phone <- t%d' % k)
     # the murmur: filter until no word is recognised
-    x = trim(load(mt), tail=0.3); raw_heard = asr({'raw': x.astype(np.float32), 'sampling_rate': SR})['text'].strip()
+    x = trim(load(mt), tail=0.3); raw_heard = hear(asr, x)
     lp = float(M.get('lowpass_hz', 420))
     while True:
-        y = murmur_filter(x, lp); heard = asr({'raw': y.astype(np.float32), 'sampling_rate': SR})['text'].strip()
+        y = murmur_filter(x, lp); heard = hear(asr, y)
         words = [w for w in heard.replace('.', ' ').replace(',', ' ').split() if any(c.isalpha() for c in w)]
         print(f'murmur lp {lp:.0f} Hz: heard {heard!r}')
         if not words or lp <= 250: break

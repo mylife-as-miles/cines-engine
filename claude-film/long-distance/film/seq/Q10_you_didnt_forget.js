@@ -172,11 +172,10 @@
     const u = E.inOutSine(seg(tt, 53.6, 58.8));
     const tr = RIG.trade(c, u, { x: 960, y: 600, s: 330, light: L, t: lt });
     if (tr.phone) {
-      const T = RIG.tradeTime(u);
-      // until the swap it lies on her palm (its far end over her fingers); after, it is in his grip
-      const hp = !T.swap && tr.her && tr.her.hands && tr.her.hands.L, len = tr.phone.w;
-      const at = hp ? [hp.grip[0] - 0.22 * len, hp.grip[1] - 0.06 * len] : [tr.phone.x, tr.phone.y];
-      PHONE.draw(c, { x: at[0], y: at[1] - 0.04 * len, h: 0.95 * len, spin: Math.PI / 2, yaw: Math.PI, pitch: -0.78, roll: 0.04, screen: 'black', env: '#BCC2C4', sheen: 0.06, shadow: hp ? { alpha: 0.35 } : false });
+      // the rig's phone: on her palm tilted to show its back (the camera bump, its edges); in his hand after the swap. Never edge-on
+      const ph = tr.phone, T = RIG.tradeTime(u), hh = !T.swap && tr.her && tr.her.hands && tr.her.hands.L;
+      const at = hh ? [hh.grip[0] - 0.18 * ph.w, hh.grip[1] - 0.12 * ph.w] : [ph.x, ph.y];   // until the swap it rests on her palm
+      PHONE.draw(c, { x: at[0], y: at[1], h: ph.w, spin: ph.spin == null ? Math.PI / 2 : ph.spin, pitch: ph.pitch == null ? 0.55 : ph.pitch, yaw: ph.facing === 'face' ? 0 : Math.PI, roll: ph.angle || 0, screen: 'black', env: '#BCC2C4', sheen: 0.06 });
     }
     tr.over(c);
   }

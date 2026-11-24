@@ -133,30 +133,22 @@
     RIG.drawFigure(c, { who: 'him', x: p0.x, y: p0.y, s, flip: p0.flip, light: L, breath: 0, ops: p0.ops });
     return RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: RIG.breath(lt, 2.2), ops: up.ops });
   }
-  // 32.6–44: B1 by day, turned. He holds the phone a moment in front of his face, then lays it face up on the cushion beside his
-  // face, across the seam into the empty half, and leaves his hand by it. Its smooth light on his face. His eyes close.
+  // 35–44: B1 by day, turned. He has laid the phone face up on the cushion beside his face, across the seam into the empty half,
+  // and his hand rests over it from his shoulder (the rig's couch, arm 'rest'). Its smooth light on his face. His eyes close.
   function close(c, st, lt) {
     const V = LV().couch, sh = V.shots.close, A = sh.anchors; const tt = twos(lt); const b = BLUE(lt);
     const s0 = { tod: 'day', blue: b, shot: 'close' };
-    push(c, 960, 800, 1 + 0.03 * E.inOutSine(seg(lt, 32.6, 44)));
+    push(c, 960, 800, 1 + 0.03 * E.inOutSine(seg(lt, 35, 44)));
     V.back(c, lt, s0);
     const s = 0.23 * A.couchSeam[2];
-    // the last of lying down: his head settles onto the cushion (32.6–33.3)
-    const settle = (1 - E.outCubic(seg(tt, 32.6, 33.3))) * 30;
-    const hx = 880, hy = 745 - settle, fr = lieFrame(hx, hy, s);
-    const down = E.inOutSine(seg(tt, 34.0, 36.0)), laid = tt >= 36.0;
-    const rest = [hx + 0.55 * s, hy + 0.85 * s], held = [hx + 0.42 * s, hy + 0.25 * s];
-    const pc = [lerp(held[0], rest[0], down), lerp(held[1], rest[1], down)];
-    const P = { x: pc[0], y: pc[1], h: 0.15 * A.couchSeam[2], pitch: lerp(0.35, 1.0, down), roll: lerp(-0.6, 0, down), screen: 'app', t: lt, env: '#9AA4B4', shadow: laid ? { alpha: 0.4 } : false };
-    const info = PHONE.where(P, c);
-    PHONE.glow(c, { info, k: lerp(0.5, 0.75, down), r: s * 2.4, sy: 0.6 });
-    const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [Math.round(pc[0] / 40) * 40, Math.round(pc[1] / 40) * 40], phoneCol: '#FFC5A0', phoneK: 1.1, phoneZ: 0.5 } });
-    // the arm: from his shoulder, the elbow in front of his chest; the hand under the phone while he holds it, then by it on the cushion
-    const E0 = fr.F(lerp(-0.55, -0.75, down), lerp(0.55, 0.85, down)), W0 = fr.F(lerp(0.15, 0.25, down), lerp(0.45, 0.95, down));
-    const armR = laid ? { E: E0, W: W0, hand: 'rest', flipHand: true, hp: { over: 'all' } } : { E: E0, W: W0, hand: 'thumb', flipHand: true, hp: { reach: 0.1, over: ['thumb', 'dist'] } };
-    const lids = key(tt, [[32.6, 0.32], [36.6, 0.34], [38.2, 0.2], [41.5, 0.03]]);
-    const face = { yaw: -0.42, pitch: 0.05, roll: 0.06, lids, smile: key(tt, [[38, 0.04], [41, 0.12]]), gaze: [0.2, 0.25] };
-    const f = drawLying(c, hx, hy, s, L, lt, face, armR);
+    const hx = 880, hy = 745, fr = lieFrame(hx, hy, s);
+    const rest = [hx + 0.62 * s, hy + 0.78 * s];
+    const P = { x: rest[0], y: rest[1], h: 0.15 * A.couchSeam[2], pitch: 1.0, roll: -0.1, screen: 'app', t: lt, env: '#9AA4B4', shadow: { alpha: 0.4 } };
+    PHONE.glow(c, { info: PHONE.where(P, c), k: 0.75, r: s * 2.4, sy: 0.6 });
+    const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [rest[0] - 0.3 * s, rest[1] - 0.4 * s], phoneCol: '#FFC5A0', phoneK: 1.1, phoneZ: 0.5 } });
+    const lids = key(tt, [[35, 0.3], [36.6, 0.3], [38.2, 0.18], [41.5, 0.03]]);
+    const f = RIG.draw(c, 'him', 'couch', { hip: fr.hip, dir: -1, s, light: L, t: lt, u: 1, lie: LIE, fit: -4000, arm: 'rest', phone: rest, breathAmp: 2.2,
+      face: { yaw: -0.42, pitch: 0.05, roll: 0.06, lids, smile: key(tt, [[38, 0.04], [41, 0.12]]), gaze: [0.2, 0.25] } });
     PHONE.draw(c, P);
     f.over(c);
   }
@@ -235,7 +227,7 @@
       { at: 6, name: 'phone: he touches it; the waterfall blooms back; he taps the banner', draw: bloom, post: { vig: 0.55 } },
       { at: 11, name: 'INSERT: the app in his hand. Her face, the long hair, the line waiting; nothing rings', draw: app, post: { vig: 0.6, halation: 0.4 } },
       { at: 19, name: 'couch: he sits, the phone to his ear; L024-L027; he lies down', draw: couchMain, post: { vig: 0.5 } },
-      { at: 32.6, name: 'couch, close: B1 by day; the phone where a head would be, his hand by it', draw: close, post: { vig: 0.55, halation: 0.55 } },
+      { at: 35, name: 'couch, close: B1 by day; the phone where a head would be, his hand over it', draw: close, post: { vig: 0.55, halation: 0.55 } },
       { at: 44, name: 'room: the couch, and the strip on the fridge behind him; the daylight going blue', draw: room, post: { vig: 0.5 } },
       { at: 52.6, name: 'fridge: the strip. Long hair. Laughing', draw: strip, post: { vig: 0.35 } },
       { at: 58, name: 'CUT TO BLACK', draw: black, post: { grain: 0, fibre: 0, halation: 0, vig: 0 } },
