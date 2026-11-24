@@ -70,7 +70,7 @@
   // looking down at his chest: the phone in his left hand, his thumb on the play button; behind it his shirt, the stranger's coat
   // pressed in at the left, and the passing streetlights crossing it all in one cut band of sodium every 3.4 s
   const BGM = 320;
-  const PH = { x: 1000, y: 190, h: 1180, roll: 0.05, pitch: 0.08, yaw: 0.05 };
+  const PH = { x: 1000, y: 556, h: 950, roll: 0.05, pitch: 0.08, yaw: 0.05 };     // low in the frame: his hand is below it
   function phoneBg(c) {
     const cv = c.cache('Q05|phone|bg', g => {
       g.translate(BGM, BGM);                       // a margin round the frame, so the push never shows an edge
@@ -99,17 +99,21 @@
     return clamp(1 - Math.abs(x - PH.x) / 600, 0, 1);
   }
   let _scr = null; const SCR = () => _scr || (_scr = OTM.makeCanvas(8, 8).getContext('2d'));
-  function handOnPhone(c, info, L, tgt, tap, H) {
-    // the reaches are compared on small probe sculptures (positions scale with s), so only the chosen one is sculpted full size
-    const gp = info.at(H.u, H.v); const k = 4; let best = null;
-    for (let i = 0; i <= 4; i++) {
-      const reach = i / 4, base = { s: H.s, rot: H.rot, flip: !!H.flip, reach, tap: 0, light: L, foreLen: H.foreLen };
-      const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: H.s / k, x: 0, y: 0, target: SCR() }));
-      const x = gp[0] - pr.grip[0] * k, y = gp[1] - pr.grip[1] * k; const d = Math.hypot(pr.thumb[0] * k + x - tgt[0], pr.thumb[1] * k + y - tgt[1]);
-      if (!best || d < best.d) best = { d, p: Object.assign(base, { x, y, tap }) };
+  // A true-size hand on a phone seen close: the hand's grip phone is the same size and turn as the phone on screen (hand length
+  // s = phone height / 0.79), and the hand is placed so its thumb tip lands on the target; of the reaches tried, the one whose hand
+  // stays nearest `home` (a world point for the grip's phone centre) wins, so the hand holds still while the thumb travels.
+  // Framed with the phone low, the palm and fingers fall below the frame and the thumb comes up into it.
+  function thumbOnGlass(c, P, L, tgt, tap, o) {
+    const s = P.h / 0.79, rot = o.flip ? -(P.roll || 0) : (P.roll || 0), k = 4; let best = null;
+    for (const reach of o.reaches || [0, 0.25, 0.5, 0.75, 1]) {
+      const pr = RIG.hand(c, 'him', 'thumb', { s: s / k, x: 0, y: 0, rot, flip: !!o.flip, reach, tap: 0, light: L, target: SCR() });
+      const x = tgt[0] - pr.thumb[0] * k, y = tgt[1] - pr.thumb[1] * k; const ph = [x + pr.phone.x * k, y + pr.phone.y * k];
+      const d = Math.hypot(ph[0] - o.home[0], ph[1] - o.home[1]);
+      if (!best || d < best.d) best = { d, p: { s, rot, flip: !!o.flip, reach, tap, light: L, x, y } };
     }
     return best.p;
   }
+
 
   function shotPhone(c, st, lt) {
     // a slow push toward the waveform while it plays (0.3 % a second, eased in and out); the second insert holds
@@ -121,7 +125,7 @@
     phoneBg(c);
     const P = Object.assign({}, PH, { screen: 'voice', state: voiceState(lt), t: lt, env: '#8090C0' });
     const info = PHONE.where(P, c);
-    PHONE.glow(c, { info, x: PH.x - 40, y: PH.y + 420, r: 1100, k: 0.6, tone: 'night' });
+    PHONE.glow(c, { info, x: PH.x - 40, y: PH.y + 200, r: 1000, k: 0.6, tone: 'night' });
     const band = sodium(c, lt);
     // the thumb: hovering, then onto the play button (a press at 7.0 and again at 25.0), resting by it while it plays
     const press = t0 => tk(lt, [[t0 - 0.55, 0.0], [t0 - 0.2, 0.7], [t0, 0.0, 'inQuad'], [t0 + 0.35, 0.45]]);
@@ -130,14 +134,12 @@
     // the thumb: from below-left, its tip on the play button for the press; resting just under the bubble while it plays
     const away = lt < PLAY1 - 0.6 || (lt > END1 + 0.3 && lt < PLAY2 - 0.6);
     const near = (lt > PLAY1 + 0.5 && lt < END1) || lt > PLAY2 + 0.5;
-    const tgt = away ? [play[0] - 40, play[1] + 150] : near ? [play[0] - 10, play[1] + 70] : play;
+    const tgt = away ? [play[0] - 30, play[1] + 120] : near ? [play[0] - 8, play[1] + 55] : play;
     const L = RIG.light('bus', { keys: [{ dir: [0.3, -0.7, 0.6], col: '#7E90BE', k: 0.42, poster: [0.3], levels: [1] }],
-      amb: '#2E3550', phone: [PH.x, PH.y + 300], phoneK: 1.1, phoneZ: 0.6 });
+      amb: '#2E3550', phone: [PH.x, PH.y + 150], phoneK: 1.1, phoneZ: 0.6 });
     void band;
-    // the hand placed so the thumb's tip lands on its mark (one reach, one turn: only the tap changes the sculpture)
-    const base = { s: 1000, rot: 0.18, flip: true, reach: 0.5, tap: 0, light: L };
-    const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: base.s / 4, x: 0, y: 0, target: SCR() }));
-    const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: tap > 0.3 ? 0.6 : 0 });   // two drawings: down, lifted
+    // his left hand holds it from below (the palm and fingers under the frame), the thumb up onto the play button
+    const hp = thumbOnGlass(c, P, L, tgt, tap > 0.3 ? 0.6 : 0, { flip: true, reaches: [0, 0.25, 0.5], home: [PH.x + 0.1 * PH.h * 0.486, PH.y + 0.66 * PH.h] });
     // the hand is below the phone; where it crosses the glass (the thumb, the fingertips round the far edge) it is in front of it
     const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 }, over: (gl, inf) => lunchPhoto(c, gl, inf) }, P));
@@ -185,7 +187,7 @@
     const f = Object.assign({}, face);
     if (lt != null && !(f.lids < 0.2)) { const b = RIG.blink(lt, 3); if (b < 1) f.lids = (f.lids == null ? 0.6 : f.lids) * b; }
     const P = RIG.person({ who: 'him', costume: 'shirt', tau: 0.2, head: f, legs: false, crop: 2.4,
-      arms: { L: { to: [-1.3, -1.9], bend: 1, hand: false, behind: true }, R: { E: [0.74, 2.3], W: [0.32, 2.8], hand: false, front: true } },
+      arms: { L: { to: [-1.3, -1.9], bend: 1, hand: false, handless: true, behind: true }, R: { E: [0.74, 2.3], W: [0.32, 2.8], hand: false, handless: true, front: true } },
       extra: { afterHead: [buds] } });
     return RIG.drawFigure(c, { who: 'him', x: A.head.x, y: A.head.y, s: A.head.s, light: L, breath: RIG.breath(lt, 2.5), ops: P.ops });
   }

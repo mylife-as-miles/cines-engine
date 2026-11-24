@@ -71,8 +71,8 @@
       legs: false, extra: { afterTorso: [SIT_LEGS] } });
     const breath = o.t != null ? RIG.breath(o.t, o.breathAmp == null ? 2.5 * Math.min(2, o.s / 250) : o.breathAmp) : 0;
     const fig = RIG.drawFigure(c, { who: 'him', x: o.x, y: o.y, s: o.s, light: o.light, breath, ops: P.ops });
-    const h = fig.hands.L; const at = h ? h.grip : fig.toWorld(P0);
-    fig.phone = { x: at[0], y: at[1], h: o.s * 0.7, w: o.s * 0.34, angle: h ? (h.flip ? -h.rot : h.rot) : 0, facing: 'out', hand: h || null };
+    const h = fig.hands.L; const hp = h && h.phone; const at = h ? h.grip : fig.toWorld(P0);
+    fig.phone = hp ? { x: hp.x, y: hp.y, h: hp.h, w: hp.w, angle: hp.angle, facing: 'out', hand: h } : { x: at[0], y: at[1], h: o.s * 0.7, w: o.s * 0.34, angle: 0, facing: 'out', hand: h || null };
     return fig;
   }
   function drawPhoneBack(c, fig, o) {
@@ -103,7 +103,7 @@
 
   // ---------------------------------------------------------------- 2 · the phone: "Send me one." (6.0–10.2)
   // looking down over his hands: the phone big, his right thumb on the glass; beyond it the concrete tread below his feet, his knees
-  const IN = { x: 1010, y: 548, h: 940, roll: -0.05, pitch: 0.12, yaw: -0.05 };
+  const IN = { x: 1000, y: 610, h: 940, roll: -0.05, pitch: 0.1, yaw: -0.04 };     // its bottom at the frame's foot: the hand is below
   function insertBg(c) {
     const cv = c.cache('Q04|insert|bg', g => {
       g.fillStyle = '#4A4A4C'; g.fillRect(0, 0, W, H);
@@ -156,26 +156,26 @@
     if (th.ch === 'send') tgt = info.targets.send || info.pt(330, 500);
     else if (th.ch) tgt = info.pt(...keyPt(th.ch)); else tgt = info.pt(250, 690);
     const L = RIG.light('stairwell', { amb: '#5A5C60', keys: [{ dir: [-0.3, -0.8, 0.5], col: '#CFCFCB', k: 0.38, poster: [0.3], levels: [1] }], phone: [IN.x, IN.y], phoneK: 1.2, phoneCol: '#FFC9AC', phoneZ: 0.6 });
-    const hp = handOnPhone(c, info, L, tgt, th.tap, HAND_IN);
-    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: 'thumb' }));
+    // his right hand holds it low (below the frame), the thumb up over the keys
+    const hp = thumbOnGlass(c, P, L, tgt, th.tap > 0.3 ? 0.5 : 0, { flip: false, home: [IN.x - 0.12 * IN.h * 0.486, IN.y + 0.52 * IN.h] });
+    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
     RIG.hand(c, 'him', 'thumb', hp);
   }
-  // where the hand sits on the phone (screen u, v of the grip), its size and turn
-  const HAND_IN = { u: 0.66, v: 0.8, s: 760, rot: -0.1, flip: true };
-  // the hand on the phone: the grip fixed to the phone, the reach (of five) whose thumb tip lands nearest the target
-  function handOnPhone(c, info, L, tgt, tap, H) {
-    // the reaches are compared on small probe sculptures (positions scale with s), so only the chosen one is sculpted full size
-    const gp = info.at(H.u, H.v); const k = 4; let best = null;
-    for (let i = 0; i <= 4; i++) {
-      const reach = i / 4, base = { s: H.s, rot: H.rot, flip: !!H.flip, reach, tap: 0, light: L, foreLen: H.foreLen };
-      const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: H.s / k, x: 0, y: 0, target: SCR() }));
-      const x = gp[0] - pr.grip[0] * k, y = gp[1] - pr.grip[1] * k; const d = Math.hypot(pr.thumb[0] * k + x - tgt[0], pr.thumb[1] * k + y - tgt[1]);
-      if (!best || d < best.d) best = { d, p: Object.assign(base, { x, y, tap }) };
+  // A true-size hand on a phone seen close: the hand's grip phone is the same size and turn as the phone on screen (hand length
+  // s = phone height / 0.79), and the hand is placed so its thumb tip lands on the target; of the reaches tried, the one whose hand
+  // stays nearest `home` (a world point for the grip's phone centre) wins, so the hand holds still while the thumb travels.
+  // Framed with the phone low, the palm and fingers fall below the frame and the thumb comes up into it.
+  function thumbOnGlass(c, P, L, tgt, tap, o) {
+    const s = P.h / 0.79, rot = o.flip ? -(P.roll || 0) : (P.roll || 0), k = 4; let best = null;
+    for (const reach of o.reaches || [0, 0.25, 0.5, 0.75, 1]) {
+      const pr = RIG.hand(c, 'him', 'thumb', { s: s / k, x: 0, y: 0, rot, flip: !!o.flip, reach, tap: 0, light: L, target: SCR() });
+      const x = tgt[0] - pr.thumb[0] * k, y = tgt[1] - pr.thumb[1] * k; const ph = [x + pr.phone.x * k, y + pr.phone.y * k];
+      const d = Math.hypot(ph[0] - o.home[0], ph[1] - o.home[1]);
+      if (!best || d < best.d) best = { d, p: { s, rot, flip: !!o.flip, reach, tap, light: L, x, y } };
     }
     return best.p;
   }
-
   let _scr = null; const SCR = () => _scr || (_scr = OTM.makeCanvas(8, 8).getContext('2d'));
   // ---------------------------------------------------------------- 3 · close (10.2–18): above; below; to his chest; then he looks
   function closeFace(lt) {

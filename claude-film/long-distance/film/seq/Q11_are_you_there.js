@@ -125,8 +125,20 @@
     const thW = -LIE, cr = Math.cos(thW), sr = Math.sin(thW);
     return { hip: [hx - 3.3 * Math.sin(thW) * s, hy + 3.3 * Math.cos(thW) * s], F: (dx, dy) => { const fxw = dx * cr + dy * sr, fy = -dx * sr + dy * cr; return [-fxw, fy]; } };
   }
+  // the rig's couch figure (legs, hips and body turned about the hip) with his top arm keyed for this high camera: from his shoulder
+  // down in front of his chest to the cushion beside his face. (The couch pose's own 'rest' arm is built for the front camera; seen
+  // from above it arcs over his head.) The arm, sleeve, cuff and hand are the rig's.
+  function drawLying(c, hx, hy, s, L, lt, face, armR) {
+    const fr = lieFrame(hx, hy, s);
+    const base = RIG.POSES.him.couch({ hip: fr.hip, dir: -1, s, u: 1, arm: 'tuck', lie: LIE, fit: -4000 });
+    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.2, lean: 0, head: face,
+      arms: { L: { E: [-0.52, 1.85], W: [-0.62, 1.25], handless: true, behind: true }, R: Object.assign({ front: true, order: 2 }, armR) }, legs: false, crop: 3.5, untucked: true });
+    const p0 = base.parts[0], p1 = base.parts[1];
+    RIG.drawFigure(c, { who: 'him', x: p0.x, y: p0.y, s, flip: p0.flip, light: L, breath: 0, ops: p0.ops });
+    return RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: RIG.breath(lt, 2.2), ops: up.ops });
+  }
   // 35–44: B1 by day, turned. He has laid the phone face up on the cushion beside his face, across the seam into the empty half,
-  // and his hand rests over it from his shoulder (the rig's couch, arm 'rest'). Its smooth light on his face. His eyes close.
+  // and his hand rests by it, the fingers over its edge. Its smooth light on his face. His eyes close.
   function close(c, st, lt) {
     const V = LV().couch, sh = V.shots.close, A = sh.anchors; const tt = twos(lt); const b = BLUE(lt);
     const s0 = { tod: 'day', blue: b, shot: 'close' };
@@ -134,13 +146,13 @@
     V.back(c, lt, s0);
     const s = 0.23 * A.couchSeam[2];
     const hx = 880, hy = 745, fr = lieFrame(hx, hy, s);
-    const rest = [hx + 0.62 * s, hy + 0.78 * s];
+    const rest = [hx + 0.6 * s, hy + 0.85 * s];
     const P = { x: rest[0], y: rest[1], h: 0.15 * A.couchSeam[2], pitch: 1.0, roll: -0.1, screen: 'app', t: lt, env: '#9AA4B4', shadow: { alpha: 0.4 } };
     PHONE.glow(c, { info: PHONE.where(P, c), k: 0.75, r: s * 2.4, sy: 0.6 });
     const L = blueLight(sh.lights.day, sh.lights.dusk, b, { rig: { phone: [rest[0] - 0.3 * s, rest[1] - 0.4 * s], phoneCol: '#FFC5A0', phoneK: 1.1, phoneZ: 0.5 } });
     const lids = key(tt, [[35, 0.3], [36.6, 0.3], [38.2, 0.18], [41.5, 0.03]]);
-    const f = RIG.draw(c, 'him', 'couch', { hip: fr.hip, dir: -1, s, light: L, t: lt, u: 1, lie: LIE, fit: -4000, arm: 'rest', phone: rest, breathAmp: 2.2,
-      face: { yaw: -0.42, pitch: 0.05, roll: 0.06, lids, smile: key(tt, [[38, 0.04], [41, 0.12]]), gaze: [0.2, 0.25] } });
+    const armR = { E: fr.F(-0.75, 0.85), W: fr.F(0.28, 0.95), hand: 'rest', flipHand: true, hp: { over: 'all' } };
+    const f = drawLying(c, hx, hy, s, L, lt, { yaw: -0.42, pitch: 0.05, roll: 0.06, lids, smile: key(tt, [[38, 0.04], [41, 0.12]]), gaze: [0.2, 0.25] }, armR);
     PHONE.draw(c, P);
     f.over(c);
   }
