@@ -1,0 +1,87 @@
+{
+ "out": "out/edits/Q01_Q13_v3.mp4",
+ "lufs": -18,
+ "segments": [
+  {
+   "file": "out/takes/Q01_t1.mp4",
+   "gain": 5.0
+  },
+  {
+   "file": "out/takes/Q02_t1.mp4",
+   "crop": "756:425:120:6",
+   "join": "cut",
+   "note": "21:9 take cropped to the 16:9 framing Q03 opens on (25 dB match)",
+   "gain": 2.0
+  },
+  {
+   "file": "out/edits/Q03_Q05_v1.mp4",
+   "join": "dissolve:6",
+   "note": "Q03 as approved (to its last frame, 29.04 s); 6 frames so her look up from Q02 reads as a move, not a jump",
+   "gain": 4.6,
+   "to": 697
+  },
+  {
+   "file": "out/takes/Q04x_t1.mp4",
+   "to": 124,
+   "join": "cut",
+   "gain": 4.6,
+   "note": "replaces Q04x t2's opening wide (the pair in the middle of an empty road): x t1's first shot, the extension of Q03 (3 frames of Oren's close-up, then Helena's close-up on the pavement): 'Sure. Look, I'm just really hungry.' word for word"
+  },
+  {
+   "file": "out/edits/Q03_Q05_v1.mp4",
+   "from": 813,
+   "join": "cut",
+   "gain": 4.6,
+   "note": "Q04 from x t2's shot 2 (Oren's close-up, 'Hungry?') to the end of Q05"
+  },
+  {
+   "file": "out/takes/Q06_t1.mp4",
+   "join": "cut",
+   "note": "Oren's close-up to the reverse on Helena",
+   "gain": 3.0
+  },
+  {
+   "file": "out/takes/Q07_t2.mp4",
+   "join": "dissolve:3",
+   "gain": 6.7,
+   "head_db": 7
+  },
+  {
+   "file": "out/takes/Q08_t1.mp4",
+   "join": "cut",
+   "note": "a cut in, closer, the bag held out",
+   "gain": 1.4
+  },
+  {
+   "file": "out/takes/Q09_t1.mp4",
+   "join": "dissolve:3",
+   "gain": 2.3
+  },
+  {
+   "file": "out/takes/Q10_t1.mp4",
+   "to": 549,
+   "join": "cut",
+   "note": "a straight cut: her head drops between the takes, and any dissolve shows two faces at once",
+   "gain": 4.4,
+   "tail_db": 9
+  },
+  {
+   "file": "out/takes/Q11_t1.mp4",
+   "join": "dissolve:3",
+   "gain": 2.0
+  },
+  {
+   "file": "out/takes/Q12_t1.mp4",
+   "join": "dissolve:3",
+   "gain": 3.8
+  },
+  {
+   "file": "out/takes/Q13_t1.mp4",
+   "from": 33,
+   "join": "dissolve:3",
+   "note": "starts once the passers-by have cleared the frame",
+   "gain": 2.0
+  }
+ ],
+ "level_note": "Gains match each sequence's dialogue level (90th percentile of momentary loudness to -15 LUFS) while keeping the street bed within a few dB across joins; Q01's is held back because its loudest moments are street, not voice. Q10's last 2 s ease down 6 dB into Q11's quieter street. Q07's first 2.5 s ease up from 7 dB down (its bed starts louder than Q06's; its first line is at 3.3 s); Q10's tail eases 9 dB."
+}
