@@ -8,7 +8,7 @@ The spec lists segments in order:
 - crop: "w:h:x:y" applied before scaling to 854x480 (e.g. a 21:9 take cropped to 16:9).
 - join: how this segment joins the one before it: "cut", or "dissolve:N" (N frames).
 Each segment's sound is set to the same integrated loudness (a static gain, measured here) unless the spec sets
-"gain" (dB), e.g. matched on dialogue level instead; "tail_db" eases a segment's last 2 s down. A limiter at
+"gain" (dB), e.g. matched on dialogue level instead; "tail_db" eases a segment's last 2 s down and "head_db" eases its first 2.5 s up. A limiter at
 -1.5 dBFS follows, so no sequence clips. Cuts get 20 ms fades so they never click.
 The output is 8-bit 4:2:0 H.264 (High profile), 48 kHz AAC, faststart: it plays on phones (lesson 51).
 """
@@ -36,12 +36,18 @@ def lufs(path, a, b):
 
 
 def tail(s):
-    """tail_db: ease the last 2 s down by this many dB (a busy street bed into a quiet one)."""
+    """tail_db: ease the last 2 s down by this many dB (a busy street bed into a quiet one);
+    head_db: start this many dB down and ease up over the first 2.5 s (a quiet bed into a busy one)."""
+    out = ''
     x = float(s.get('tail_db', 0) or 0)
-    if not x:
-        return ''
-    d, k = s['_dur'], 10 ** (-abs(x) / 20) - 1
-    return f"volume='if(gt(t,{d - 2:.3f}),1+{k:.4f}*(t-{d - 2:.3f})/2,1)':eval=frame,"
+    if x:
+        d, k = s['_dur'], 10 ** (-abs(x) / 20) - 1
+        out += f"volume='if(gt(t,{d - 2:.3f}),1+{k:.4f}*(t-{d - 2:.3f})/2,1)':eval=frame,"
+    y = float(s.get('head_db', 0) or 0)
+    if y:
+        g = 10 ** (-abs(y) / 20)
+        out += f"volume='if(lt(t,2.5),{g:.4f}+{1 - g:.4f}*t/2.5,1)':eval=frame,"
+    return out
 
 
 def main():

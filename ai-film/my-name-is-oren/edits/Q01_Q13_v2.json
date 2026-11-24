@@ -28,7 +28,8 @@
   {
    "file": "out/takes/Q07_t2.mp4",
    "join": "dissolve:3",
-   "gain": 6.7
+   "gain": 6.7,
+   "head_db": 7
   },
   {
    "file": "out/takes/Q08_t1.mp4",
@@ -47,7 +48,7 @@
    "join": "cut",
    "note": "a straight cut: her head drops between the takes, and any dissolve shows two faces at once",
    "gain": 4.4,
-   "tail_db": 6
+   "tail_db": 9
   },
   {
    "file": "out/takes/Q11_t1.mp4",
@@ -67,5 +68,5 @@
    "gain": 2.0
   }
  ],
- "level_note": "Gains match each sequence's dialogue level (90th percentile of momentary loudness to -15 LUFS) while keeping the street bed within a few dB across joins; Q01's is held back because its loudest moments are street, not voice. Q10's last 2 s ease down 6 dB into Q11's quieter street."
+ "level_note": "Gains match each sequence's dialogue level (90th percentile of momentary loudness to -15 LUFS) while keeping the street bed within a few dB across joins; Q01's is held back because its loudest moments are street, not voice. Q10's last 2 s ease down 6 dB into Q11's quieter street. Q07's first 2.5 s ease up from 7 dB down (its bed starts louder than Q06's; its first line is at 3.3 s); Q10's tail eases 9 dB."
 }
