@@ -8,9 +8,11 @@
    once per pose state. The rig keeps its own least-recently-used cache with a memory budget (RIG.cacheBudgetPx).
 
    The rig carries its own copy of the kit's head sculpture and renderer (kit/look_b.js: makeSDF, head, render3D), unchanged in
-   shape and shading, with three additions the film needs: the red paper band that rises up his neck and ears (flush), the band
-   of colour draining from his face (pale), and a jaw that drops a little with the mouth. The renderer also starts each ray near
-   the surface (from its coarse pass), which roughly halves the cost. If the kit's sculpture changes, change it here too.
+   shape and shading, with what the film needs added: the red paper band that rises up his neck and ears (flush), the band of
+   colour draining from his face (pale), a jaw that drops a little with the mouth, and the jaw's shadow on the throat. The
+   renderer starts each ray near the surface and skips features that provably cannot change the surface (about half the cost),
+   and keeps each head's geometry (a G-buffer) so lids, gaze, flush, pale and light changes only reshade it. If the kit's
+   sculpture changes, change it here too.
    Deterministic: no Math.random, no Date. API: film/api/rig.md. Demos: node tools/set.js rig 1 */
 (function (G) {
   'use strict';
@@ -1120,7 +1122,7 @@
     // the hand (bare arms: the whole forearm and upper arm sculpted)
     const hp = Object.assign({}, spec.hp || {});
     const fore = V.sub(E, Wr);
-    if (bare) { const hs = handS; hp.foreLen = qf(V.len(fore) / hs * 0.98, 0.05); const ud = V.sub(S0, E); hp.upperW = { dir: [ud[0], ud[1]], len: V.len(ud) / hs * 0.8, r: 0.31 }; hp.foreR = 0.245; }
+    if (bare) { const hs = handS; hp.foreLen = qf(V.len(fore) / hs * 0.98, 0.05); const ud = V.sub(S0, E); hp.upperW = { dir: [ud[0], ud[1]], len: V.len(ud) / hs * 0.8, r: 0.28 }; hp.foreR = 0.22; }
     if (spec.hand !== false) { if (spec.handAt) ops.push({ type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand, rot: spec.handRot || 0 }), at: spec.handAt });
       else ops.push({ type: 'hand', name: side, pose: spec.hand || 'relax', p: Object.assign(hp, { flip: (side === 'R') !== !!spec.flipHand }), at: Wr, fore: V.norm(fore) }); }
     // the cuff over the wrist
@@ -1470,7 +1472,8 @@
     const phone = p.phone ? fromWorld(p.phone) : [-0.9, 0.45]; const rc = clamp(p.reach == null ? 1 : p.reach, 0, 1);
     const armMode = p.arm || 'rest';
     let armR;
-    if (armMode === 'rest') { const tuck = [-0.75, 1.05]; const W2 = lerpPt(tuck, V.add(phone, [0.32, 0.05]), rc); armR = { to: W2, bend: 1, hand: rc > 0.4 ? 'rest' : 'relax', hp: rc > 0.4 ? { over: rc > 0.9 ? 'all' : null } : { close: 0.6 }, front: true, order: 2 }; }
+    // B1: the wrist above and behind the phone's top edge, the forearm coming from above, the fingers draped down its back
+    if (armMode === 'rest') { const W2 = lerpPt([-0.75, 1.05], V.add(phone, [0.56, 0.1]), rc), E2 = lerpPt([-0.05, 1.75], V.add(phone, [1.45, 0.72]), rc); armR = { E: E2, W: W2, hand: rc > 0.4 ? 'rest' : 'relax', flipHand: true, hp: rc > 0.4 ? { over: rc > 0.9 ? 'all' : null } : { close: 0.6 }, front: true, order: 2 }; }
     else if (armMode === 'hold') armR = { E: [0.2, 2.05], W: [-0.95, 0.75], hand: 'thumb', hp: { reach: p.thumb == null ? 0.4 : p.thumb, tap: p.tap || 0, over: 'thumb' }, front: true, order: 2 };
     else armR = { E: [0.25, 2.1], W: [-0.25, 1.4], hand: 'relax', hp: { close: 0.6 }, front: true, order: 2 };
     const legs = { joints: { far: [[0.35, 3.3], [-0.75, 4.35], [-0.35, 5.75]], near: [[-0.2, 3.3], [-1.05, 4.5], [-0.75, 5.85]] } };
