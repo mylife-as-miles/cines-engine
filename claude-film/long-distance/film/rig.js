@@ -265,7 +265,9 @@
     const C = spec.cast || CAST[spec.who], hairStyle = spec.hair || (spec.who === 'her' ? 'bob' : 'short');
     const glo = spec.mode === 'gloss';
     const age = spec.age || 0;
-    const jw = C.jawW * (glo ? 0.97 : 1) * (1 + 0.04 * age), ch = C.chin * (1 + 0.06 * age), nk = C.nose * (glo ? 0.82 : 1), nR = spec.neckR || C.neckR, sh = glo ? 0 : 1, lipZ = glo ? -0.012 : 0;
+    // age (her, now): a longer, firmer jaw, a squarer chin set a little lower, the cheeks hollowed under the cheekbones
+    const jw = C.jawW * (glo ? 0.97 : 1) * (1 + 0.035 * age), ch = C.chin * (1 + 0.1 * age), nk = C.nose * (glo ? 0.82 : 1), nR = spec.neckR || C.neckR, sh = glo ? 0 : 1, lipZ = glo ? -0.012 : 0;
+    const jawL = 0.025 * age, jawRy = 0.165 * (1 + 0.1 * age);
     const drop = (spec.open || 0) >= 0.2 ? 0.0085 : 0;          // the jaw drops a little when the mouth is open (two states: cheap to keep)
     const lowY = (glo ? -0.016 : 0) - drop * 0.6, lowY2 = (glo ? -0.016 : 0) - drop;
     const asym = sh * (spec.asym == null ? 1 : spec.asym);
@@ -283,11 +285,11 @@
       const ax = Math.abs(x);
       let d = sdE(x, y + 0.14, z + 0.05, 0.352, 0.41, 0.42);
       d = smin(d, sdE(x, y - 0.075, z - 0.085, 0.316, 0.27, 0.255), 0.08);
-      d = smin(d, sdE(x, y - 0.27 - lowY, z - 0.035, jw, 0.165, 0.24), 0.09);
-      if (L3(x, y - 0.385 - lowY2, z - 0.19) - 0.1 * ch - 0.09 < d) d = smin(d, sdE(x, y - 0.385 - lowY2, z - 0.19, 0.1 * ch, 0.062, 0.085), 0.07);
+      d = smin(d, sdE(x, y - 0.27 - lowY - jawL * 0.6, z - 0.035, jw, jawRy, 0.24), 0.09 - 0.02 * age);
+      if (L3(x, y - 0.385 - lowY2 - jawL, z - 0.19) - 0.1 * ch - 0.09 < d) d = smin(d, sdE(x, y - 0.385 - lowY2 - jawL, z - 0.19, 0.1 * ch, 0.062 * (1 + 0.15 * age), 0.085), 0.07 - 0.015 * age);
       if (L3(x, y + 0.075, z - 0.245) - 0.272 - 0.08 < d) d = smin(d, sdE(x, y + 0.075, z - 0.245, 0.272, 0.062, 0.09), 0.06);
       if (L3(ax - 0.188, y - 0.07, z - 0.2) - 0.112 - 0.09 < d) d = smin(d, sdE(ax - 0.188, y - 0.07, z - 0.2, 0.112, 0.072, 0.09), 0.07);
-      if (age && L3(ax - 0.17, y - 0.22, z - 0.15) - 0.1 - 0.08 < d) d = smin(d, sdE(ax - 0.17, y - 0.22, z - 0.15, 0.1, 0.085, 0.085 + 0.012 * age), 0.08);   // the lower cheeks, a little fuller
+
       if (cheekK && L3(x - cheekS * 0.19, y - 0.25, z - 0.17) - 0.1 * cheekK - 0.09 < d) d = smin(d, sdE(x - cheekS * 0.19, y - 0.25, z - 0.17, 0.09 * cheekK, 0.085 * cheekK, 0.1 * cheekK), 0.07);
       if (L3(x, y - 0.2 - drop * 0.5, z - 0.33) - 0.27 - drop - 0.08 < d) {
         d = smin(d, sdCone(x, y, z, 0, -0.02, 0.322, 0, 0.18, 0.395 + 0.03 * nk, 0.03, 0.046 * nk), 0.05);
@@ -297,6 +299,8 @@
         d = smin(d, sdE(x, y - 0.33 - drop, z - 0.325 - lipZ, 0.064 * C.lipsW, 0.024 * C.lipsT, 0.034), 0.02);
       }
       if (L3(ax - 0.152, y + 0.006, z - 0.345) - 0.084 - 0.06 + d < 0) d = smax(d, -sdE(ax - 0.152, y + 0.006, z - 0.345, 0.084, 0.054, 0.062), 0.05);
+      // the hollow under each cheekbone (age): a shallow scoop, less baby roundness
+      if (age && L3(ax - 0.215, y - 0.245, z - 0.2) - 0.1 < 0.04) d = smax(d, -sdE(ax - 0.215, y - 0.245, z - 0.215, 0.07, 0.065, 0.006 + 0.026 * age), 0.05);
       d = smin(d, sdCap(x, y, z, 0, 0.2, -0.08, 0, 0.2 + neckLen, -0.12, nR), 0.12);
       if (L3(ax - 0.338, y - 0.075, z + 0.045) - 0.112 - 0.035 < d) d = smin(d, sdE(ax - 0.338, y - 0.075, z + 0.045, 0.042, 0.112, 0.068), 0.025);
       comp.s = d;
@@ -408,12 +412,12 @@
         return;
       }
       if (mat === 1) {
-        const ex = (ax - 0.152), ey = y + (grain ? asym * side * 0.0035 : 0), hw = 0.074 * C.eyeK; const u = clamp(ex / hw, -1.2, 1.2);
+        const eK = C.eyeK * (1 - 0.07 * age), ex = (ax - 0.152), ey = y + (grain ? asym * side * 0.0035 : 0), hw = 0.074 * eK; const u = clamp(ex / hw, -1.2, 1.2);
         const uu = Math.max(0, 1 - u * u);
         const closedLine = 0.012 * Math.pow(uu, 0.8);
-        const upOpen = -0.046 * C.eyeK * Math.pow(uu, 0.62) * (1 - 0.12 * u);
+        const upOpen = -0.046 * eK * (1 - 0.14 * age) * Math.pow(uu, 0.62) * (1 - 0.12 * u);
         const upper = lerp(closedLine, upOpen, eyesOpen), lower = (0.024 - 0.024 * smile * smile) * Math.pow(uu, 0.75) - 0.012 * smile * smile * Math.pow(uu, 1.5) + 0.002;
-        const lashT = (0.006 + 0.004 * clamp(u, 0, 1)) * C.lashK * (0.7 + 0.3 * eyesOpen) + (eyesOpen < 0.25 ? 0.002 : 0);
+        const lashT = (0.006 + 0.004 * clamp(u, 0, 1)) * C.lashK * (1 - 0.3 * age) * (0.7 + 0.3 * eyesOpen) + (eyesOpen < 0.25 ? 0.002 : 0);
         out[0] = skin[0] * 0.97; out[1] = skin[1] * 0.93; out[2] = skin[2] * 0.93;
         if (Math.abs(u) < 1 && ey > upper - lashT && ey < upper + 0.0025) { out[0] = lashC[0]; out[1] = lashC[1]; out[2] = lashC[2]; return; }
         if (Math.abs(u) < 1 && ey > upper && ey < lower) {
@@ -422,7 +426,7 @@
           if (ang < 0.17) { out[0] = 0.05; out[1] = 0.04; out[2] = 0.04; }
           else if (ang < 0.47) { const r = ang > 0.42 ? 0.6 : 1; out[0] = iris[0] * r; out[1] = iris[1] * r; out[2] = iris[2] * r; }
           else { const cd = 1 - 0.18 * Math.abs(u); out[0] = scl[0] * cd; out[1] = scl[1] * cd; out[2] = scl[2] * cd; }
-          if (ey < upper + 0.012) { out[0] *= 0.72; out[1] *= 0.72; out[2] *= 0.74; }
+          if (ey < upper + 0.012 + 0.006 * age) { out[0] *= 0.72; out[1] *= 0.72; out[2] *= 0.74; }
           return;
         }
         if (eyesOpen > 0.3 && Math.abs(u) < 0.95 && Math.abs(ey - (upper - 0.024 - 0.008 * uu)) < 0.0035) { out[0] *= 0.82; out[1] *= 0.78; out[2] *= 0.78; }
@@ -433,7 +437,7 @@
       // the jaw's cast shadow on the throat (the renderer casts none): strongest right under the jaw, a cut edge further down
       if (!gloss && y > 0.38 && z > -0.24) { const ns = spec.neckShade == null ? 0.3 : spec.neckShade; const edge = 0.56 + 0.05 * (vnoise(x * 18, z * 18, sd + 95) - 0.5) + 0.04 * Math.abs(x);
         const k = ns * ss01(0.36, 0.44, y) * (grain ? (y < edge ? 1 : 0.35) : 1 - 0.65 * ss01(edge - 0.04, edge + 0.04, y)); out[0] *= 1 - k; out[1] *= 1 - k * 1.05; out[2] *= 1 - k * 0.95; }
-      const bd = ((ax - 0.165) * (ax - 0.165) + (y - 0.13) * (y - 0.13)) / 0.006; const bk = C.blushK * Math.exp(-bd) * (flash ? 0.3 : gloss ? 1.6 : 1) * (1 - (spec.pale || 0) * 0.8);
+      const bd = ((ax - 0.165) * (ax - 0.165) + (y - 0.13) * (y - 0.13)) / 0.006; const bk = C.blushK * Math.exp(-bd) * (flash ? 0.3 : gloss ? 1.6 : 1) * (1 - (spec.pale || 0) * 0.8) * (1 - 0.75 * age);
       out[0] += (blushC[0] - out[0]) * bk; out[1] += (blushC[1] - out[1]) * bk; out[2] += (blushC[2] - out[2]) * bk;
       if (ax > 0.3 && z < 0.06 && y > -0.04 && y < 0.18) { const ix = (y - 0.075) / 0.07, iz = (z + 0.04) / 0.045; if (ix * ix + iz * iz < 1 && Math.abs(nlx) > 0.5) { out[0] *= 0.72; out[1] *= 0.62; out[2] *= 0.6; } }
       if (C.stubble && z > -0.05 && y > 0.12) {
@@ -446,8 +450,8 @@
         const dens = Math.exp(-((ax - 0.1) * (ax - 0.1) / 0.02 + (y - 0.085) * (y - 0.085) / 0.006)) + 0.6 * Math.exp(-(x * x / 0.002 + (y - 0.14) * (y - 0.14) / 0.004));
         const fx = x * 75, fy = y * 75 + z * 30, ix = Math.floor(fx), iy = Math.floor(fy);
         const hh = GG.hash2(ix, iy, sd + 41);
-        if (hh < dens * 0.42) { const cx = ix + 0.25 + 0.5 * GG.hash2(ix, iy, sd + 42), cy = iy + 0.25 + 0.5 * GG.hash2(ix, iy, sd + 43); const r = 0.18 + 0.2 * GG.hash2(ix, iy, sd + 44);
-          if ((fx - cx) * (fx - cx) + (fy - cy) * (fy - cy) < r * r) { out[0] *= 0.8; out[1] *= 0.68; out[2] *= 0.6; } }
+        if (hh < dens * 0.42 * (1 - 0.5 * age)) { const cx = ix + 0.25 + 0.5 * GG.hash2(ix, iy, sd + 42), cy = iy + 0.25 + 0.5 * GG.hash2(ix, iy, sd + 43); const r = 0.18 + 0.2 * GG.hash2(ix, iy, sd + 44);
+          if ((fx - cx) * (fx - cx) + (fy - cy) * (fy - cy) < r * r) { const fk = 1 - 0.55 * age; out[0] *= 1 - 0.2 * fk; out[1] *= 1 - 0.32 * fk; out[2] *= 1 - 0.4 * fk; } }
       }
       if (z > 0.2 && ax > 0.05 && ax < 0.26 && y < -0.05 && y > -0.2) {
         const u = (ax - 0.158) / 0.088; if (Math.abs(u) < 1) {
@@ -457,12 +461,18 @@
         }
       }
       if (y > 0.2 && y < 0.25 && ax < 0.06 && nly > 0.35 && z > 0.3) { const nx2 = (ax - 0.032) / 0.017, ny2 = (y - 0.232) / 0.009; if (nx2 * nx2 + ny2 * ny2 < 1) { out[0] *= 0.35; out[1] *= 0.28; out[2] *= 0.28; return; } }
-      if (age > 0 && !gloss && z > 0.17) {
-        // under the eyes: a soft darker crescent below the lower lid and a faint cut crease at its foot
-        const ue = (ax - 0.152) / 0.085, yy = y - (0.045 + 0.018 * ue * ue);
-        if (Math.abs(ue) < 1 && yy > -0.012 && yy < 0.03) { const k = age * (yy > 0.02 ? 0.14 : 0.08) * (1 - ue * ue); out[0] *= 1 - k; out[1] *= 1 - k * 1.15; out[2] *= 1 - k * 1.05; }
-        // from the nose's wings to the mouth's corners, faint
-        if (y > 0.21 && y < 0.36 && ax > 0.05 && ax < 0.15) { const t = clamp((y - 0.22) / 0.12, 0, 1), cx = 0.075 + 0.036 * t, dd = Math.abs(ax - cx); if (dd < 0.0032 * (1 - 0.5 * t) + 0.001) { const k = 0.075 * age; out[0] *= 1 - k; out[1] *= 1 - k * 1.1; out[2] *= 1 - k * 1.1; } }
+      if (age > 0 && !gloss && z > 0.15) {
+        // the skin: less rosy, more even, tired (a little of the colour out, a little grey-olive in)
+        { const Lm = 0.3 * out[0] + 0.59 * out[1] + 0.11 * out[2], k = 0.22 * age; out[0] = lerp(out[0], Lm * 1.02, k); out[1] = lerp(out[1], Lm * 0.99, k); out[2] = lerp(out[2], Lm * 0.95, k); }
+        // under the eyes: a broad shadow (violet-brown) below the lower lid, deepest at the inner corner, a cut edge at its foot
+        const ue = (ax - 0.145) / 0.1, yy = y - (0.04 + 0.022 * ue * ue);
+        if (ue > -1 && ue < 1 && yy > -0.014 && yy < 0.05) { const inner = 1 - 0.4 * clamp((ue + 1) / 2, 0, 1); const k = age * (yy > 0.034 ? 0.3 : 0.2) * (1 - ue * ue) * inner; out[0] *= 1 - k * 0.95; out[1] *= 1 - k * 1.08; out[2] *= 1 - k * 1.0; }
+        // from the nose's wings to the mouth's corners: a cut shadow line, and short lines at the corners of the mouth
+        // (a soft fold, not a drawn line: the shade lies on the cheek's side of it and fades out over the cheek)
+        if (y > 0.2 && y < 0.36 && ax > 0.06 && ax < 0.17) { const t = clamp((y - 0.21) / 0.13, 0, 1), cx = 0.072 + 0.04 * t, dd = ax - cx, wd = 0.03 * (1 - 0.45 * t);
+          if (dd > -0.004 && dd < wd) { const k = 0.17 * age * (dd < 0.006 ? 1 : 0.55) * (1 - 0.5 * t); out[0] *= 1 - k; out[1] *= 1 - k * 1.1; out[2] *= 1 - k * 1.08; } }
+        // the hollow under the cheekbone, a soft cut shade (the sculpted scoop alone is too shallow to read in mid-shot)
+        { const hx = (ax - 0.215) / 0.075, hy = (y - 0.25) / 0.07; const r2 = hx * hx + hy * hy; if (r2 < 1 && ax > 0.15) { const k = 0.1 * age * (r2 < 0.55 ? 1 : 0.5); out[0] *= 1 - k; out[1] *= 1 - k * 1.08; out[2] *= 1 - k * 1.05; } }
       }
       if (smile > 0.35 && z > 0.2 && y > 0.2 && y < 0.36 && ax > 0.05 && ax < 0.14) {
         const t = clamp((y - 0.22) / 0.11, 0, 1), cx = 0.072 + 0.035 * t + 0.012 * smile, d = Math.abs(ax - cx);
@@ -574,7 +584,7 @@
     const mouthOpen = p.open != null ? p.open : (p.mouth == null ? 0 : (Number.isInteger(p.mouth) ? MOUTH[clamp(p.mouth, 0, 3)] : p.mouth));
     const spec = {
       who, hair: p.hair || D.hair, mode, yaw: qf(p.yaw, 0.04), pitch: qf(p.pitch, 0.04), roll: qf(p.roll, 0.04),
-      eyes: qf(p.lids != null ? p.lids : (p.eyes != null ? p.eyes : D.lids - (who === 'her' && (p.mode || 'grain') === 'grain' && p.age !== 0 ? 0.06 : 0)), 0.1), gaze: [qf((p.gaze || [0, 0])[0], 0.1), qf((p.gaze || [0, 0])[1], 0.1)],
+      eyes: qf(p.lids != null ? p.lids : (p.eyes != null ? p.eyes : D.lids - (who === 'her' && (p.mode || 'grain') === 'grain' && p.age !== 0 ? 0.1 : 0)), 0.1), gaze: [qf((p.gaze || [0, 0])[0], 0.1), qf((p.gaze || [0, 0])[1], 0.1)],
       brow: qf(p.brows != null ? p.brows : p.brow, 0.25), smile: qf(p.smile, 0.125), open: qf(mouthOpen, 0.01), cheek: qf(p.cheek, 0.25), cheekSide: p.cheekSide || -1,
       flush: qf(p.flush, 1 / 16), ears: qf(p.ears, 1 / 8), pale: qf(p.pale, 1 / 12), neckLen: qf(p.neck != null ? p.neck : D.neck, 0.05), neckR: p.neckR || D.neckR,
       stubble: p.stubble != null ? p.stubble : D.stubble, seed: p.seed || D.seed, part: D.part, neckShade: qf(p.neckShade != null ? p.neckShade : D.neckShade * (1 - 0.45 * (L.soft || 0)), 0.02), aoK: D.aoK,

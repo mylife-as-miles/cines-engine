@@ -69,28 +69,31 @@
   // holds the phone; L: the arm under him lying, his near arm sitting.
   const R_LIE = { E: [0.95, 2.15], W: [-0.12, 1.45] }, R_SIT = { E: [0.9, 2.3], W: [0.35, 2.75] }, R_REST = { E: [0.82, 2.3], W: [0.7, 3.05] };
   const L_LIE = { E: [-0.52, 1.85], W: [-0.62, 1.25] }, L_SIT = { E: [-0.82, 2.22], W: [-0.5, 3.0] };
-  // o: {g (the getup u: 0 lying, 0.5 sitting, 1 standing), lean (rad, toward screen right), R: {E, W, hand, hp}, face, phoneAt}
+  // o: {g (the getup u: 0 lying, 0.5 sitting, 1 standing), lie (the body's angle lying), lean (rad, toward screen right),
+  //     R: {W, hand, hp, bend} or a function of toFig, face, phoneAt}
+  // The rig's own couch figure (its legs, its torso bending at the hips, its head lagging, its bottom hand on the seat), without its
+  // right arm: that arm is RIG.arm's, from the same shoulder to where his hand has to be (the phone up in front of his face, on the
+  // cushion).
   function couchMe(c, lt, o) {
     const s = SH(), hip = HIP(), face = Object.assign({}, o.face);
     if (o.blink !== false) { const bl = RIG.blink(lt, 3); if (bl < 1) face.lids = (face.lids == null ? 0.7 : face.lids) * bl; }
     const L = dayLight('couch', 'main', o.phoneAt ? { phone: o.phoneAt, phoneCol: '#FFC5A0', phoneK: o.phoneK == null ? 0.9 : o.phoneK } : {});
-    const built = RIG.POSES.him.getup({ x: hip[0], y: hip[1] - 3.5 * s, s, u: o.g, arm: 'rest', hip, dir: 1, fit: FIT(), light: L, t: lt, face });
-    const e = o.g < 0.5 ? 1 - 2 * o.g : 0;                                    // 1 lying .. 0 sitting
+    const p = { x: hip[0], y: hip[1] - 3.5 * s, s, u: o.g, arm: 'rest', hip, dir: 1, fit: FIT(), light: L, t: lt, face, blink: false };
+    if (o.lie != null) p.lie = o.lie;
+    const built = RIG.POSES.him.getup(p);
     const legs = built.parts[0], body = built.parts[1], H = built.worldInfo.hip;
     const rot = body.rot + (o.lean || 0), origin = [H[0] + 3.3 * Math.sin(rot) * s, H[1] - 3.3 * Math.cos(rot) * s];
-    const toFig = w => { const dx = w[0] - origin[0], dy = w[1] - origin[1], cr = Math.cos(rot), sr = Math.sin(rot); return [(dx * cr + dy * sr) / s, (-dx * sr + dy * cr) / s]; };
-    const Lk = { E: lerp2(L_SIT.E, L_LIE.E, e), W: lerp2(L_SIT.W, L_LIE.W, e) };
-    const armL = Object.assign(Lk, e > 0.5 ? { hand: false, behind: true } : { hand: 'relax', hp: { close: 0.4 }, front: true, order: 1 });
-    const R = typeof o.R === 'function' ? o.R(toFig) : o.R;
-    // the body without its right arm: that arm is RIG.arm's, from his shoulder to where the hand has to be
-    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.12, lean: 0, head: face, arms: { L: armL }, legs: false, crop: 3.5, untucked: true });
-    const breath = RIG.breath(lt, 2.5 * Math.min(2, s / 250));
+    const cr = Math.cos(rot), sr = Math.sin(rot), breath = RIG.breath(lt, 2.5 * Math.min(2, s / 250));
+    const toW = f => { const fx = f[0] * s, fy = f[1] * s - breath; return [origin[0] + fx * cr - fy * sr, origin[1] + fx * sr + fy * cr]; };
+    const toFig = w => { const dx = w[0] - origin[0], dy = w[1] - origin[1]; return [(dx * cr + dy * sr) / s, (-dx * sr + dy * cr + breath) / s]; };
+    const ops = body.ops.filter(op => op && !(op.type === 'hand' && op.name === 'R') && !(op.type === 'paper' && /^armR/.test(op.key || '')));
     RIG.drawFigure(c, { who: 'him', x: legs.x, y: legs.y, s, flip: legs.flip, light: L, breath: 0, ops: legs.ops });
-    const fig = RIG.drawFigure(c, { who: 'him', x: origin[0], y: origin[1], s, rot, light: L, breath, ops: up.ops });
-    const sh = fig.toWorld(up.SR), wr = fig.toWorld(R.W);
-    fig.armOut = RIG.arm(c, 'him', { shoulder: sh, target: wr, s, hand: R.hand, hp: R.hp, bend: R.bend || 'down', body: H, light: L });
+    const fig = RIG.drawFigure(c, { who: 'him', x: origin[0], y: origin[1], s, rot, light: L, breath, ops });
+    // his right shoulder, as the rig's couch figure places it (tau goes 0.35 sitting to 0.2 lying)
+    const e = o.g < 0.5 ? 1 - 2 * o.g : 0, tau = lerp(0.35, 0.2, e), SR = [0.74 * Math.cos(tau) - 0.12 * Math.sin(tau), 1.07];
+    const R = typeof o.R === 'function' ? o.R(toFig) : o.R;
+    fig.armOut = RIG.arm(c, 'him', { shoulder: toW(SR), target: toW(R.W), s, hand: R.hand, hp: R.hp, bend: R.bend || 'down', body: H, light: L });
     fig.toFig = toFig;
-    fig.light = L;
     return fig;
   }
   // the phone in his hand: its screen turned to his face, so we see it edge-on with its glow; the screen's smooth light on his face

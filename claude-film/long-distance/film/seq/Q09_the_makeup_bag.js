@@ -178,7 +178,7 @@
   // =================================================================================================================================
   const setLight = K.setLight, push = K.push;
   const ROOM = { tod: 'day' };
-  const W_HER = [3.86, 1.56, 3.08];        // standing over the couch, beside the phone on the middle cushion, looking down at it
+  const W_HER = [4.4, 1.5, 3.1];          // standing over the couch at its far end, turned to the phone on the middle cushion, looking down at it
 
   // ------------------------------------------------------------------ 0–6 the wardrobe: from behind him, he opens it, steps aside
   // a door knob's screen point as the doors open (the wardrobe's own geometry, bedroom.js)
@@ -246,21 +246,24 @@
   }
   function roomArrive(c, st, lt) {
     const V = LV().room;
-    push(c, 1180, 620, 1 + 0.13 * E.inOutSine(seg(lt, 17, 22)));   // a slow push toward her, over the couch
+    // he comes out (17.2) and stops (18.9); then the frame closes in on her (19.0–21.6), so we read her before the insert
+    push(c, 1420, 700, 1 + 0.15 * E.inOutSine(seg(lt, 18.8, 21.8)));
     V.back(c, lt, ROOM); V.front(c, lt, ROOM);
-    const L = setLight(V.shots.wide.lights.day); const tt = twos(lt);
+    const tt = twos(lt);
     phoneOnCushion(c, V);
-    const p = V.project(W_HER);
-    // turned to the couch, bent a little over it, her head down to the lit phone; at 20.6 she hears him and does not look up
-    RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1], s: 0.23 * p[2], light: L, t: lt, tau: 1.2, armL: { to: [0.1, 2.5], bend: 1, hand: 'strap', front: true },
-      face: { yaw: 1.05, pitch: 0.72, lids: 0.4, gaze: [0.3, 0.6] } });
-    const a = V.anchors.himBetween, s = 0.23 * a[2];
+    const p = V.project(W_HER), ph = V.anchors.phoneCushion;
+    // at the couch's far end, turned to the lit phone on the cushion and bent to it, her head down, her face in its cool light;
+    // she does not look up when he comes in
+    const L = setLight(V.shots.wide.lights.day, { rig: { phone: [ph[0], ph[1] - 20], phoneCol: '#C8EEF2', phoneK: 0.55, phoneZ: 0.4 } });
+    RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1], s: 0.23 * p[2], light: L, t: lt, flip: true, tau: 0.55, armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true },
+      face: { yaw: 0.55, pitch: 0.85, roll: 0.12, lids: 0.38, gaze: [0.35, 0.6] } });
+    const L2 = setLight(V.shots.wide.lights.day), a = V.anchors.himBetween, s = 0.23 * a[2];
     if (tt < 18.92) {
       const u = seg(tt, 17.25, 18.92); const x = lerp(-150, a[0] - 20, u);
-      if (tt >= 17.25) RIG.draw(c, 'him', 'walk', { x, y: a[1], s, light: L, t: lt, phase: 0.5 + (tt - 17.25) * 1.5, carry: 'bag', face: { yaw: 1.05, pitch: 0.12, lids: 0.75 } });
+      if (tt >= 17.25) RIG.draw(c, 'him', 'walk', { x, y: a[1], s, light: L2, t: lt, phase: 0.5 + (tt - 17.25) * 1.5, carry: 'bag', face: { yaw: 1.05, pitch: 0.12, lids: 0.75 } });
     } else {
       const tau = tt < 19.05 ? 0.95 : tt < 19.2 ? 0.66 : 0.42;
-      RIG.draw(c, 'him', 'bag', { x: a[0], y: a[1], s, light: L, t: lt, tau, face: { yaw: 0.55, pitch: 0.16, lids: 0.8, gaze: [0.35, 0.1] } });
+      RIG.draw(c, 'him', 'bag', { x: a[0], y: a[1], s, light: L2, t: lt, tau, face: { yaw: 0.55, pitch: 0.16, lids: 0.8, gaze: [0.35, 0.1] } });
     }
   }
 

@@ -229,7 +229,9 @@
       brow: '#231914', lash: '#1A110D', sclera: '#E8DED2', teeth: '#F1EBE2', stubble: '#6E4A3A',
       hair: '#241A15', hairDk: '#120D0B', hairLt: '#4E3A2E', hairHi: '#76604E',
       face: [[0, -0.6], [0.21, -0.57], [0.305, -0.43], [0.322, -0.21], [0.318, 0.02], [0.3, 0.18], [0.264, 0.315], [0.19, 0.425], [0.095, 0.486], [0, 0.498]],
-      neck: 0.17, brT: 0.036, browArch: 0.014, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.03, earK: 1.05 },
+      neck: 0.17, brT: 0.036, browArch: 0.014,
+      // under the booth's strobe the print is brighter overall, so his skin and hair are set a step deeper to land on the rig's #B47C58 and dark curls
+      flashOver: { skin: '#AA7250', skinSh: '#8E5C42', skinDeep: '#6E4232', hairLt: '#2E221C', hairHi: '#4A3A30', hair: '#1C1410' }, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.03, earK: 1.05 },
   };
   const symLoop = half => half.concat(half.slice(1, -1).reverse().map(([x, y]) => [-x, y]));
   // a layer the size of the face canvas, with the same local transform (origin between the eyes, 1 unit = U px)
@@ -291,7 +293,7 @@
   //    turn -1..1 (features toward +x: the face turned), lift -1..1 (head back: features up; negative: head down), pucker (an 'O' mouth),
   //    mode 'gloss' (the generated pictures) or 'flash' (the booth: flatter, hot specular spots, freckles and stubble faintly kept)
   function paintFace(who, U, o) {
-    o = o || {}; const P = PH[who], sm = o.smile == null ? 1 : o.smile, open = o.open == null ? 0.3 : o.open, flash = o.mode === 'flash';
+    o = o || {}; const flash = o.mode === 'flash', P = flash && PH[who].flashOver ? Object.assign({}, PH[who], PH[who].flashOver) : PH[who], sm = o.smile == null ? 1 : o.smile, open = o.open == null ? 0.3 : o.open;
     const turn = o.turn || 0, lift = o.lift || 0, eyes = o.eyes == null ? (who === 'him' ? 0.85 : 1) : o.eyes;
     const D = { U, CW: Math.ceil(U * 1.12), CH: Math.ceil(U * 1.95), OX: Math.ceil(U * 1.12) / 2, OY: U * 0.82 };
     D.F = faceLayer(D); const g = D.F.g;
@@ -625,8 +627,10 @@
       const S = mk(FW, FH), sg = S.getContext('2d');
       paintCouple(sg, ox, oy, U, STRIP_POSES[k], { mode: 'flash', rim: false, hairLen: 1.5,
         himBody: { base: '#2A2C34', tee: '#CFC8BA' }, herBody: { base: '#D9D2C4', stripes: 'rgba(40,60,90,0.55)' } });
-      // the strobe: their faces near blown, flat (screen a warm white over them only)
-      sg.save(); sg.globalCompositeOperation = 'source-atop'; const fl = sg.createRadialGradient(ox + 0.4 * U, oy, U * 0.2, ox + 0.4 * U, oy, U * 2.2); fl.addColorStop(0, 'rgba(255,246,232,0.55)'); fl.addColorStop(1, 'rgba(255,246,232,0.12)'); sg.globalCompositeOperation = 'source-atop'; sg.fillStyle = fl; sg.fillRect(0, 0, FW, FH); sg.restore();
+      // the strobe: their faces bright and flat; soft-light keeps his skin tan and his hair dark (screen would bleach both)
+      const S2 = mk(FW, FH); S2.getContext('2d').drawImage(S, 0, 0);
+      sg.save(); sg.globalCompositeOperation = 'source-atop'; const fl = sg.createRadialGradient(ox + 0.4 * U, oy, U * 0.2, ox + 0.4 * U, oy, U * 2.2); fl.addColorStop(0, 'rgba(255,246,232,0.5)'); fl.addColorStop(1, 'rgba(255,246,232,0.1)'); sg.globalCompositeOperation = 'soft-light'; sg.fillStyle = fl; sg.fillRect(0, 0, FW, FH);
+      sg.globalCompositeOperation = 'destination-in'; sg.drawImage(S2, 0, 0); sg.restore();
       // the strobe's hard shadow on the curtain, down and right, under them
       const sh = mk(FW, FH), shg = sh.getContext('2d'); shg.filter = `blur(${Math.max(1, U * 0.03).toFixed(1)}px)`; shg.drawImage(S, U * 0.16, U * 0.12); shg.filter = 'none';
       shg.globalCompositeOperation = 'source-in'; shg.fillStyle = 'rgba(0,0,0,0.42)'; shg.fillRect(0, 0, FW, FH);
@@ -634,9 +638,10 @@
       // flash falloff and a cheap lens
       const vg = fg.createRadialGradient(FW * 0.45, FH * 0.42, FW * 0.15, FW * 0.5, FH * 0.5, FW * 0.85); vg.addColorStop(0, 'rgba(255,248,236,0.16)'); vg.addColorStop(1, 'rgba(10,8,12,0.45)');
       fg.fillStyle = vg; fg.fillRect(0, 0, FW, FH);
-      if (k === 1) { fg.save(); fg.globalCompositeOperation = 'screen'; fg.fillStyle = 'rgba(255,240,220,0.22)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
+      if (k === 1) { fg.save(); fg.globalCompositeOperation = 'soft-light'; fg.fillStyle = 'rgba(255,240,220,0.2)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }   // the bright frame: lifted, never bleached
       if (k === 2) { fg.save(); fg.globalCompositeOperation = 'multiply'; fg.fillStyle = 'rgba(150,140,150,0.6)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
-      fg.save(); fg.globalCompositeOperation = 'soft-light'; fg.fillStyle = k % 2 ? 'rgba(200,120,170,0.35)' : 'rgba(110,170,180,0.3)'; fg.fillRect(0, 0, FW, FH); fg.restore();
+      // the cast drifts frame to frame (cyan, magenta); multiplied, so it tints without lifting the darks (his skin stays tan, his hair dark)
+      fg.save(); fg.globalCompositeOperation = 'multiply'; fg.fillStyle = k % 2 ? 'rgba(236,212,226,0.55)' : 'rgba(205,236,240,0.5)'; fg.fillRect(0, 0, FW, FH); fg.restore();
       // a cheap sensor: soft, then noise
       const F2 = mk(FW, FH), f2 = F2.getContext('2d'); f2.filter = `blur(${(FW / 260).toFixed(2)}px)`; f2.drawImage(F, 0, 0);
       const id = f2.getImageData(0, 0, FW, FH), dd = id.data; const rn = O.rng('noise' + k + (o.seed || 1));
