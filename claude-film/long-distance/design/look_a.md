@@ -119,7 +119,7 @@ The amber family belongs to the phone alone. No lamp in the flat is ever switche
   - The waterfall is lit exactly like the fridge strip's last frame is posed.
 - **The knock.**
   - The visit is the first daylight scene, and the glow has nowhere to hide.
-  - A3 makes the comparison for us. She holds the warm, long-haired, young face up beside her own grey, short-haired, real face, in front of the pale rectangle where their real frame used to hang. The strip from the booth watches from the fridge.
+  - A3 makes the comparison for us. It is shot over his shoulder from behind him, so the screen she holds up faces him (and us). She holds the warm, long-haired, young face up beside her own grey, short-haired, real face, in front of the pale rectangle where their real frame used to hang. Her other hand is at the back of her neck, under the short hair. He holds the floral bag low in his palm, with his thumb on the split zip. The strip from the booth watches from the fridge.
   - Three images of one woman sit in one frame, and only one of them is lit like a person.
 - **The ending.** He chooses the glow. The last image puts him back inside the amber pocket, with the real photograph left in the grey behind him.
 
@@ -168,4 +168,5 @@ The amber family belongs to the phone alone. No lamp in the flat is ever switche
 **Known gaps to close before production:**
 - Clothed bodies are the weakest part of the frames. They are flat planes, and arms can look jointed like a mannequin.
 - Close-up faces need a softer pass on the lower face, where bands can still read as lumps.
-- The phone's image in A3 should be framed a little larger, so the long hair reads at small sizes.
+- The phone's image in A3 is now about 85×210 px. On the board it is still small, so in the film the shot needs a push-in or an insert for the long hair to read.
+- Her lower face reads a little heavy from A3's angle.

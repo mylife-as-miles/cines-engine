@@ -623,7 +623,8 @@
     const hm = (mask, ao) => ({ mat: 'hair', g: 'hair', ao: (ao == null ? 0.5 : ao) * 0.35, mask });
     if (kind === 'short') {
       const bot = pl => { const th = Math.abs(theta(pl)); return pl[1] < lerp(0.3, 0.24, clamp((th - 1.1) / 1.8, 0, 1)) + 0.012 * (OTM.vnoise(theta(pl) * 16, 1, 3) - 0.5); };
-      ell(ob, [0, -0.11, -0.05], [0.358, 0.452, 0.468], hm(pl => front(pl) && bot(pl), 0.7));
+      // (below the temple the cap stays off the cheek: only the hanging locks frame the face there)
+      ell(ob, [0, -0.11, -0.05], [0.358, 0.452, 0.468], hm(pl => front(pl) && bot(pl) && !(pl[1] > 0.0 && Math.abs(theta(pl)) < 1.35), 0.7));
       // the swept front: from the part across the forehead to above her left eye, then down past the temple
       ell(ob, [0.07, -0.33, 0.24], [0.25, 0.085, 0.16], Object.assign(hm(pl => true, 0.35), { rot: [0.25, 0.55, 0.22] }));
       ell(ob, [0.23, -0.17, 0.17], [0.11, 0.17, 0.12], Object.assign(hm(pl => true, 0.35), { rot: [0.5, 0.2, -0.15] }));
@@ -925,8 +926,11 @@
         b.beginPath(); b.moveTo(x0, y0); b.bezierCurveTo(x0, y0 + (y1 - y0) * 0.4, x1, y1 - (y1 - y0) * 0.4, x1, y1); b.stroke();
       }
       b.fillStyle = 'rgba(255,255,255,0.55)'; b.fill(smooth([[cx0 - half(top) * 0.5, top], [cx0 + half(top) * 0.5, top], [cx0 + half(foot) * 0.55, foot], [cx0 - half(foot) * 0.55, foot]]));
-      // two dark rocks the water parts round
-      [[0.36, 0.3, 0.06], [0.63, 0.22, 0.045]].forEach(([x, y, r]) => { b.fillStyle = '#27332B'; b.beginPath(); b.ellipse(w * x, h * y, w * r, w * r * 0.6, -0.2, 0, 7); b.fill(); b.fillStyle = 'rgba(255,255,255,0.8)'; b.beginPath(); b.ellipse(w * x, h * y + w * r * 0.55, w * r * 1.1, w * r * 0.25, 0, 0, Math.PI); b.fill(); });
+      // dark rocks the water parts round: broken, uneven shapes at different heights, so they never pair up into a face
+      const RK = OTM.rng('wf-rocks');
+      [[0.27, 0.4, 0.07, 0.5], [0.71, 0.13, 0.035, 0.8], [0.58, 0.47, 0.03, 0.45]].forEach(([x, y, r, sq]) => { const pts = []; for (let k = 0; k < 9; k++) { const a = k / 9 * 6.283; const rr = w * r * (0.7 + 0.5 * RK()); pts.push([w * x + Math.cos(a) * rr * 1.3, h * y + Math.sin(a) * rr * sq]); }
+        b.fillStyle = '#27332B'; b.beginPath(); pts.forEach((p, i) => i ? b.lineTo(p[0], p[1]) : b.moveTo(p[0], p[1])); b.closePath(); b.fill();
+        b.fillStyle = 'rgba(255,255,255,0.75)'; b.beginPath(); b.ellipse(w * x, h * y + w * r * sq * 0.8, w * r * 1.5, w * r * 0.22, 0, 0, Math.PI); b.fill(); });
     }
     // spray at the foot, rising into the light
     b.fillStyle = rg(b, w * 0.5, h * 0.52, 4, w * 0.75, [[0, '#FFFFFF', 0.95], [0.55, '#FFFFFF', 0.6], [1, '#FFFFFF', 0]]); b.fillRect(0, 0, w, h);

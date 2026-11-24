@@ -28,3 +28,9 @@ Two independent reviewers saw only the nine frames and the brief: an art directo
 
 ## What the reviewers suggest B borrows from C
 C's matching room and half-and-half staging: the phone in the empty half, and the pale rectangle directly behind her in moment 3.
+
+## Round 2 (after the fixes)
+Each look's artist fixed the agreed defects; the board was re-rendered (`frames/BOARD_looks.jpg`).
+- **A:** the phone lies flat on the pillow under his hand; the strip catches light and laughs; he looks at the phone; A3 is shot over his shoulder so the screen faces him, with her hand at her nape and his thumb on the split zip. His haircut now matches across frames. Still open: her lower face reads heavy in A3, and the phone image is small at board size.
+- **B:** the phone lies on the pillow under his hand and lights his face; a true-size phone on the salt; too-even generated faces; a laughing strip; readable hands; in B3 his head is bowed to the bag and the phone is in her grip. Still open: "mid-chew" is only closed lips; the strip's laughs read only up close.
+- **C:** no slates; C1 lifted with real lamps and the phone lighting his face; C2 in profile looking at the phone, with a smoother phone image against the flash-lit strip; C3 has a full-strength subtitle and her hand at the nape. Still open: her arms are stiff, and in C3 the phone still mostly faces us.
