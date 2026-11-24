@@ -1,0 +1,660 @@
+[
+  {
+    "n": 1,
+    "slug": "INT. KWIND-09 - FOUNDRY - NIGHT",
+    "pages": [
+      1
+    ],
+    "pdf_pages": [
+      3
+    ],
+    "eighths": 3,
+    "seconds": 24,
+    "timecode": "0:00-0:24",
+    "bible_shots": "1.1-1.4",
+    "characters": [
+      "WORKER (Kwind-09, silhouette)",
+      "soot-black hands (Kwind-09 workers)",
+      "pale gloved hands (Korvenian; the ward officer's gloves, bible p16)"
+    ],
+    "beats": [
+      "Dark. A mechanical STROKE. Another. (bible 1.1: the pulse, sound first)",
+      "SUPER: \"YEARS EARLIER.\"",
+      "A copper coupling descends on chains; nothing gives its size until a WORKER walks under it: four times his height (bible 1.2, the anchor)",
+      "Soot-black hands lock the copper. Pale gloved hands close a silver ring around it. Violet light runs the seam (bible 1.3; violet at 0:12, not seen again until 6:29)",
+      "Behind it, more couplings wait in the dark. Rows. No one speaks.",
+      "CUT TO:"
+    ],
+    "lines": [],
+    "visuals": [
+      "Coupling four times the worker's height, hung on chains; the worker is the only scale",
+      "Hands only, never faces: soot-black hands on copper, pale gloved hands closing the silver ring",
+      "One violet seam of light: the only warning of the ward",
+      "Rows of identical couplings receding into black; nine-tenths of the frame is black",
+      "Furnace glow from below (the only under-lighting in the film); copper lit from one side"
+    ],
+    "supers": [
+      "YEARS EARLIER."
+    ]
+  },
+  {
+    "n": 2,
+    "slug": "EXT. SOLFORIZ - THE FALLEN GATE - PRE-DAWN",
+    "pages": [
+      1
+    ],
+    "pdf_pages": [
+      3
+    ],
+    "eighths": 3,
+    "seconds": 26,
+    "timecode": "0:24-0:50",
+    "bible_shots": "2.1-2.4",
+    "characters": [
+      "Aethelgard army (wounded men walking back along the causeway)",
+      "civilians on the great stair",
+      "Solforiz battery in the high arcades (off, chanting)"
+    ],
+    "beats": [
+      "SUPER: \"SOLFORIZ. YEAR 56.\"",
+      "The stroke is now a city's pulse. Four beats. Always four. (bible 2.1)",
+      "Wide: a causeway crosses a plain of fused glass to a broken gate; beyond it the capital climbs, terrace on terrace, to the pressureworks at its summit: THE CROWN (bible 2.1, the empty sky)",
+      "Aethelgard holds the gate and the forecourt behind it; Solforiz holds everything above: an inner wall, the terraces, the guns",
+      "Between them: abandoned cannon, and wounded men walking back along the causeway under a mourning horn",
+      "Over the gatehouse burns a white truce lamp (bible 2.3); under it the fighting has paused and civilians are coming down the great stair",
+      "One battery in the high arcades FIRES anyway, to a chanted order"
+    ],
+    "lines": [
+      {
+        "speaker": "BATTERY IN THE HIGH ARCADES (chanted order, from the action line)",
+        "text": "Ihriq! Ihriq!",
+        "language": "Kharzani",
+        "subtitled": false,
+        "note": "Quoted inside the action. Appendix: Kharzani, not subtitled. Ignite!"
+      }
+    ],
+    "visuals": [
+      "Horizon in the lower third, two-thirds of the frame sky",
+      "Causeway as a long diagonal across the glass plain to the broken gate",
+      "The capital as a stepped ziggurat of terraces climbing to the Crown",
+      "The white truce lamp over the gatehouse: the brightest point in the film until it bursts",
+      "Amber lamps on the terraces breathing on the four-beat pulse (bible proposal, not in the script)",
+      "Abandoned cannon in the foreground; wounded men walking back under a mourning horn",
+      "A battery in the high arcades firing despite the truce"
+    ],
+    "supers": [
+      "SOLFORIZ. YEAR 56."
+    ]
+  },
+  {
+    "n": 3,
+    "slug": "EXT. GATE FORECOURT - FOOT OF THE GREAT STAIR - CONTINUOUS",
+    "pages": [
+      1,
+      2
+    ],
+    "pdf_pages": [
+      3,
+      4
+    ],
+    "eighths": 8,
+    "seconds": 54,
+    "timecode": "0:50-1:44",
+    "bible_shots": "3.1-3.9",
+    "characters": [
+      "LIORA",
+      "BOY",
+      "CAEL",
+      "STANDARD-BEARER",
+      "civilians"
+    ],
+    "beats": [
+      "A stone arch where the great stair meets the forecourt: a signal station, its mirrored storm lantern lit (bible 3.1, the mirror)",
+      "LIORA, a young signal keeper, brings civilians down the damaged stair, one hand raised in the shelter sign; a small BOY keeps hold of her coat",
+      "A Solforiz shell falls short and hits the terrace above her. A block tears loose.",
+      "It stops. Dust keeps falling past it. The battle thins to a low hum, like pressure in the ears (bible 3.3, Liora under the block; a long hold)",
+      "CAEL, King of Aethelgard, stands ten paces off with one hand open: dented armour, an arm already bandaged, breathing too hard for a man standing still (bible 3.4, open hand: it saves)",
+      "He comes to her, drops to her level and takes her wrist (bible 3.5, the wrist; camera at Liora's eye level)",
+      "CAEL: \"Look at me. Find your feet.\"",
+      "She finds them. He pulls her clear (bible 3.6). Only then does he close his hand, and the block comes down where she lay",
+      "He stays with her a moment. Then the boy: he straightens the child's respirator and tests the seal with two fingers",
+      "A young STANDARD-BEARER has seen it all, a bound banner on his shoulder; he was leaving the wall; he turns back (bible 3.8, the bound banner)",
+      "Cael goes on to the gatehouse. Liora sets the boy under the arch, in sight of the truce lamp (bible 3.9)",
+      "LIORA (Kharzani, subtitled): \"Stay.\"",
+      "Already turning for the stair, she says the rest to no one, under her breath: \"May the child survive in the ash.\"",
+      "She goes back up for the others"
+    ],
+    "lines": [
+      {
+        "speaker": "CAEL",
+        "text": "Look at me. Find your feet."
+      },
+      {
+        "speaker": "LIORA",
+        "text": "Stay.",
+        "parenthetical": "(in Kharzani, subtitled)",
+        "language": "Kharzani",
+        "subtitled": true,
+        "spoken": "Iwqif."
+      },
+      {
+        "speaker": "LIORA",
+        "text": "May the child survive in the ash.",
+        "cue": "LIORA (CONT'D)",
+        "parenthetical": "(under her breath)",
+        "language": "Kharzani",
+        "subtitled": true,
+        "spoken": "Lu=yaslam al-walad fi al-rash."
+      }
+    ],
+    "visuals": [
+      "The stone arch signal station with its mirrored storm lantern lit",
+      "The block stopped in mid-air above Liora, dust falling past it; nothing glows",
+      "Cael ten paces off, one hand open, bandaged arm",
+      "Close: his grip on her wrist at her eye level (shallow focus)",
+      "The block coming down where she lay only when his hand closes",
+      "Two fingers testing the seal of the boy's oversized respirator",
+      "The young standard-bearer with the bound banner turning back",
+      "The boy set under the arch, in sight of the truce lamp"
+    ],
+    "supers": []
+  },
+  {
+    "n": 4,
+    "slug": "INT. SHATTERED GATEHOUSE - CONTINUOUS",
+    "pages": [
+      2,
+      3,
+      4
+    ],
+    "pdf_pages": [
+      4,
+      5,
+      6
+    ],
+    "eighths": 14,
+    "seconds": 87,
+    "timecode": "1:44-3:11",
+    "bible_shots": "4.1-4.11",
+    "characters": [
+      "CAEL",
+      "ENVOY",
+      "CAPTAIN",
+      "SOLDIER (wounded)",
+      "NAVIGATOR (on a stretcher)",
+      "wounded Aethelgard soldier (on a stretcher)",
+      "door guard",
+      "BOY (seen through the breach)"
+    ],
+    "beats": [
+      "A command post in a ruin. One wall is gone. Through the breach: the forecourt, the arch, the boy (bible 4.1, the frame inside the frame)",
+      "An ENVOY of Solforiz waits, immaculate. Cael's CAPTAIN stands by. A wounded SOLDIER reports",
+      "SOLDIER: \"Third assault, Cyning. The inner batteries still hold.\"",
+      "ENVOY starts: \"The Ash-Caliph --\"; CAEL cuts in: \"He was speaking.\" The envoy stops; no one has made him wait for a soldier",
+      "SOLDIER: \"Half the company reached the wall.\" (beat) \"The slow half came back.\"",
+      "Cael grips the table. It takes him a breath to answer: \"Clear the road. Bring them in.\"",
+      "Two stretchers come in: a soldier of Aethelgard, then a NAVIGATOR of Solforiz, his eyes filmed like glass. The door guard looks to Cael; Cael nods; both are set down inside",
+      "Under the campaign map lie three judgments under three different seals, their folds mended many times (bible 4.5, 4.6, the seals)",
+      "ENVOY: \"The Ash-Caliph asks for another council.\" Cael puts a finger on one of the seals: \"He wagered his crown and lost it. That is his seal.\"",
+      "ENVOY: \"The Ash-Caliph will not live beneath your law.\" Through the breach: the boy, small under the arch (bible 4.7)",
+      "CAEL: \"The same law as that boy.\" / ENVOY: \"You do not own his people.\" / CAEL: \"They have never been his.\" / ENVOY: \"Nor yours.\"",
+      "No answer. Cael's hand closes on the table. He makes it open (bible 4.8: he forces a closed hand open)",
+      "ENVOY: \"Come to the council. You would be safe.\" / CAEL: \"Safe.\" The envoy does not say it twice. CAEL: \"I was promised that before.\"",
+      "ENVOY: \"Give him time.\" / CAEL: \"I gave him years.\"",
+      "The gun in the high arcade FIRES again. Dust falls on the judgments (bible 4.10). The envoy shuts his eyes. It is one of his",
+      "CAEL: \"Look what he built with them.\" (to his captain) \"Return him to his Caliph.\""
+    ],
+    "lines": [
+      {
+        "speaker": "SOLDIER",
+        "text": "Third assault, Cyning. The inner batteries still hold."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "The Ash-Caliph --"
+      },
+      {
+        "speaker": "CAEL",
+        "text": "He was speaking."
+      },
+      {
+        "speaker": "SOLDIER",
+        "text": "Half the company reached the wall."
+      },
+      {
+        "speaker": "SOLDIER",
+        "text": "The slow half came back.",
+        "parenthetical": "(beat)"
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Clear the road. Bring them in."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "The Ash-Caliph asks for another council."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "He wagered his crown and lost it. That is his seal."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "The Ash-Caliph will not live beneath your law."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "The same law as that boy."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "You do not own his people."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "They have never been his."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "Nor yours."
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "Come to the council. You would be safe.",
+        "cue": "ENVOY (CONT'D)"
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Safe."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "I was promised that before.",
+        "cue": "CAEL (CONT'D)"
+      },
+      {
+        "speaker": "ENVOY",
+        "text": "Give him time."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "I gave him years."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Look what he built with them.",
+        "cue": "CAEL (CONT'D)"
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Return him to his Caliph.",
+        "cue": "CAEL (CONT'D)",
+        "parenthetical": "(to his captain)"
+      }
+    ],
+    "visuals": [
+      "The breach framing the forecourt, the arch and the small boy in every wide",
+      "Lit by the breach alone, about two stops under; half of each face lost; Cael reads black, the envoy pale",
+      "The immaculate envoy against the dark wall: the one clean cloth in the film",
+      "The campaign map table; three judgments under three different seals, folds mended many times",
+      "Cael's finger on one seal (shallow focus)",
+      "Cael's hand closing on the table and being forced open",
+      "Two stretchers: an Aethelgard soldier and the blind Solforiz navigator, eyes filmed like glass",
+      "Dust falling on the judgments when the arcade gun fires; the envoy shutting his eyes"
+    ],
+    "supers": []
+  },
+  {
+    "n": 5,
+    "slug": "INT. GATEHOUSE - THE BREACH - LATER",
+    "pages": [
+      4,
+      5
+    ],
+    "pdf_pages": [
+      6,
+      7
+    ],
+    "eighths": 9,
+    "seconds": 58,
+    "timecode": "3:11-4:09",
+    "bible_shots": "5.1-5.9",
+    "characters": [
+      "CAEL",
+      "CAPTAIN",
+      "NAVIGATOR",
+      "ENVOY (seen through the breach)",
+      "BOY (under the arch)",
+      "LIORA (among the lamps on the stair)",
+      "STANDARD-BEARER",
+      "Aethelgard gun crews and lines"
+    ],
+    "beats": [
+      "Through the breach: the envoy, small on the great stair, reaches the inner wall. Its gate shuts behind him",
+      "On his stretcher, the blind navigator turns his face up, to where the truce lamp hangs (bible 5.2)",
+      "A single shot from the terraces. The lamp bursts (bible 5.3: white leaves the film)",
+      "The captain shows Cael the causeway behind them. Open. Empty",
+      "CAPTAIN: \"We can withdraw with the wounded.\" Cael looks at the boy under the arch (bible 5.4). CAEL: \"And leave him to finish this?\"",
+      "Every gun on the terraces opens up. A strike tears into Aethelgard's lines. Men who were standing are not",
+      "Cael looks up, past the terraces, to the Crown. The captain follows his eyes and knows what he is about to be asked",
+      "CAPTAIN: \"Those works feed the batteries and the lower city. The stairs are still full.\" They are: lamps moving down, Liora among them",
+      "Cael draws breath to speak. Loses it. Steadies. CAEL: \"I know.\" (bible 5.7, his face fully readable)",
+      "CAPTAIN: \"Then give them time.\" The envoy's word in his own captain's mouth. The open road is still behind them; Cael looks at it once",
+      "CAEL: \"Bring it down.\" (bible 5.8: held wide, no close-up)",
+      "The captain does not move. He warned him. He stayed. Now the order must pass through him to become fire. He turns to the guns",
+      "CAPTAIN (Old Aethel, subtitled): \"Break the Crown!\"",
+      "Aethelgard's batteries swing up and FIRE. The standard-bearer reaches for the bindings of his banner; the captain's look stops his hand. Not yet (bible 5.9)"
+    ],
+    "lines": [
+      {
+        "speaker": "CAPTAIN",
+        "text": "We can withdraw with the wounded."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "And leave him to finish this?"
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "Those works feed the batteries and the lower city. The stairs are still full."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "I know."
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "Then give them time."
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Bring it down."
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "Break the Crown!",
+        "parenthetical": "(in Old Aethel, subtitled)",
+        "language": "Old Aethel",
+        "subtitled": true,
+        "spoken": "Brecath thone corune!"
+      }
+    ],
+    "visuals": [
+      "The envoy small on the great stair, the inner-wall gate shutting behind him",
+      "The blind navigator turning his face to the truce lamp a moment before it is struck",
+      "The truce lamp bursting; white leaves the film",
+      "The causeway behind them: open, empty",
+      "The boy under the arch, framed by the breach",
+      "Terrace guns opening up; men who were standing are not",
+      "Lamps moving down the stairs, Liora among them",
+      "\"Bring it down.\" held wide, no close-up",
+      "Aethelgard's batteries swinging up and firing; flashes clip to white for a frame",
+      "The standard-bearer's hand stopped at the bindings by the captain's look"
+    ],
+    "supers": []
+  },
+  {
+    "n": 6,
+    "slug": "EXT. THE CROWN / THE BREACH / THE STAIR - CONTINUOUS",
+    "pages": [
+      5,
+      6
+    ],
+    "pdf_pages": [
+      7,
+      8
+    ],
+    "eighths": 5,
+    "seconds": 46,
+    "timecode": "4:09-4:55",
+    "bible_shots": "6.1-6.10",
+    "characters": [
+      "CAEL",
+      "NAVIGATOR",
+      "LIORA",
+      "civilians on the stair"
+    ],
+    "beats": [
+      "THE CROWN. The works take the salvo. Armoured shutters close over them, plate by plate. The city is protecting itself. The last shutter starts down across the last opening",
+      "It stops. The air at its edge warps. The battle thins to that hum again",
+      "THE BREACH. Cael stands in the gap, black against the gun-flash, bandaged arm raised, hand open. His fingers shake. Blood soaks the binding. He holds (bible 6.3, open hand: it destroys; centred; long hold)",
+      "Behind him the blind navigator sits bolt upright, his face to the Crown, and strikes the stretcher rail. ONE. TWO. (bible 6.4)",
+      "THE STAIR. LIORA'S POV from the lower flight: the king at the breach, that open hand. She knows what that hand does. She looks up: the stalled shutter (bible 6.5, flat long lens)",
+      "THREE. FOUR.",
+      "The second salvo goes in. Only then does the hand come down",
+      "THE CROWN. The shutter drops shut. Fire shows around its edges, then comes through. A tower leans and falls across the great retaining wall. The wall gives",
+      "The pulse of the city stumbles. Three beats. Two. None. (bible 6.10: the city's lamps go out together)"
+    ],
+    "lines": [],
+    "visuals": [
+      "Armoured shutters closing over the Crown plate by plate; the last one stalled, air warping at its edge",
+      "Cael in pure silhouette against gun-flash, bandaged arm raised, hand open, fingers shaking, blood through the binding",
+      "The stalled shutter as the only other bright thing in frame, so the eye joins the hand to it",
+      "The navigator bolt upright striking the stretcher rail: ONE. TWO. ... THREE. FOUR.",
+      "Liora's long-lens view from the lower flight: shape, not detail",
+      "The hand coming down only after the second salvo",
+      "Fire through the shutter; a tower leaning and falling across the great retaining wall; the wall giving",
+      "The city's lamps going dark as the pulse stops; the film's only orange scene"
+    ],
+    "supers": []
+  },
+  {
+    "n": 7,
+    "slug": "EXT. SOLFORIZ - THE FALL - CONTINUOUS",
+    "pages": [
+      6
+    ],
+    "pdf_pages": [
+      8
+    ],
+    "eighths": 2,
+    "seconds": 25,
+    "timecode": "4:55-5:20",
+    "bible_shots": "7.1-7.4",
+    "characters": [
+      "LIORA",
+      "BOY",
+      "a dozen others (civilians)"
+    ],
+    "beats": [
+      "Liora is already running, driving the last of them down ahead of her. Dust takes the flight behind her (bible 7.1, handheld)",
+      "She reaches the arch. The boy. A dozen others. The lantern lies smashed. She pulls its mirror free and keeps it (bible 7.2, handheld)",
+      "Above the broken wall a terrace settles. Its houses lean together and go into dust. The stair goes. Then the whole upper city comes down (bible 7.3, held wide)",
+      "When the dust thins, the skyline is gone (bible 7.4)"
+    ],
+    "lines": [],
+    "visuals": [
+      "Liora driving the last civilians down the stair with dust swallowing the flight behind her (the only handheld shots)",
+      "The smashed lantern; Liora pulling the mirror free",
+      "A terrace settling, houses leaning together into dust; the stair going; the upper city coming down",
+      "Dust lit from above, rising faster than the towers fall; no fireball",
+      "The empty skyline once the dust thins; ochre enters the film"
+    ],
+    "supers": []
+  },
+  {
+    "n": 8,
+    "slug": "EXT. FORECOURT - THE RUINS - SUNRISE",
+    "pages": [
+      6,
+      7
+    ],
+    "pdf_pages": [
+      8,
+      9
+    ],
+    "eighths": 4,
+    "seconds": 35,
+    "timecode": "5:20-5:55",
+    "bible_shots": "8.1-8.6",
+    "characters": [
+      "STANDARD-BEARER",
+      "CAEL",
+      "CAPTAIN",
+      "LIORA",
+      "men of Aethelgard",
+      "BOY (implied, under the arch)"
+    ],
+    "beats": [
+      "Silence on both sides. Air hisses from broken pipes (bible 8.1: the first direct sun; the empty sky)",
+      "The men of Aethelgard do not agree on what they have seen: one sinks against a gun, simply glad the batteries have stopped; one cannot look away from the terraces",
+      "The standard-bearer lifts his bound banner and finds his voice: \"We've won.\" (bible 8.2)",
+      "Nobody answers. Not Cael. The standard-bearer hears the silence and lowers the pole",
+      "The silence holds. Only the pipes (bible 8.4: held wide)",
+      "Under the arch, grit falls from the stone. Liora looks up",
+      "Beneath the hiss, a PULSE. Slower than the city's. Heavier (bible 8.5)",
+      "The captain turns from the ruins and looks at the sky. A shadow slides across the army. It keeps coming (bible 8.6)"
+    ],
+    "lines": [
+      {
+        "speaker": "STANDARD-BEARER",
+        "text": "We've won."
+      }
+    ],
+    "visuals": [
+      "Flat ruined skyline under an empty sky, low sun through dust, the first direct sunlight",
+      "Steam hissing from broken pipes",
+      "The army as small silhouettes; banners still bound and near-black",
+      "One pole lowered: the standard-bearer's",
+      "Grit falling from the arch",
+      "The ship's shadow sliding across the army before the ship is seen"
+    ],
+    "supers": []
+  },
+  {
+    "n": 9,
+    "slug": "EXT./INT. THE FIRST SHIP - SUNRISE",
+    "pages": [
+      7
+    ],
+    "pdf_pages": [
+      9
+    ],
+    "eighths": 2,
+    "seconds": 18,
+    "timecode": "5:55-6:13",
+    "bible_shots": "9.1-9.3",
+    "characters": [
+      "(no named characters; the army below)"
+    ],
+    "beats": [
+      "Out of the sunrise: lights, and a dark mass in the dust. The broken gate towers give its size (bible 9.1, the anchor)",
+      "A keel comes clear. Then the whole vessel: lifting envelopes over an armoured body, Kwind-09 iron hung with Korvenian silver. Re-plated. Built onto, year after year (bible 9.2)",
+      "It keeps coming. Its engines bury every other sound",
+      "INSIDE THE HULL. The copper coupling from the foundry, turning under load. Scarred now. The same silver ring (bible 9.3; same angle and framing as 1.2/1.3)"
+    ],
+    "lines": [],
+    "visuals": [
+      "Ship emerging from sunrise and dust, sized only by the broken gate towers below it",
+      "Hull in silhouette with a gold rim; the sun behind it",
+      "Lifting envelopes over an armoured body; Kwind-09 iron hung with Korvenian silver; re-plated, built onto",
+      "Inside the hull: the scarred copper coupling turning under load with the same silver ring (one of two shots where the camera leaves the ground)"
+    ],
+    "supers": []
+  },
+  {
+    "n": 10,
+    "slug": "EXT. FORECOURT - THE RUINS - CONTINUOUS",
+    "pages": [
+      7,
+      8
+    ],
+    "pdf_pages": [
+      9,
+      10
+    ],
+    "eighths": 13,
+    "seconds": 103,
+    "timecode": "6:13-7:56",
+    "bible_shots": "10.1-10.16",
+    "characters": [
+      "LIORA",
+      "BOY",
+      "WARD OFFICER",
+      "CAEL",
+      "CAPTAIN",
+      "STANDARD-BEARER",
+      "survivors",
+      "the army (the wounded, the gun crews)"
+    ],
+    "beats": [
+      "The arch begins to give",
+      "Sunrise comes through the gaps in the ship's rigging in long moving bars. One crosses Liora. She puts the mirror in it and throws the light up at the dark belly of the ship",
+      "FOUR flashes. The count her city lived by (bible 10.2)",
+      "ABOVE, at the observation glass: a masked WARD OFFICER of Korvenia. Four flashes cross the mask. She opens a hand (bible 10.3, open hand: another protects; first high angle)",
+      "WARD OFFICER (High Korvenic, subtitled): \"Hold the stone.\"",
+      "A bell note. Violet light drops from the keel (bible 10.4). The falling arch stops above their heads. The boy looks up",
+      "Behind the first ship, two more. Then a formation. And more (bible 10.5)",
+      "CAPTAIN: \"These are the forward ships.\"",
+      "Under the ward, the boy finds Cael among the soldiers and points. Liora lowers his hand. Hers settles over her wrist (bible 10.6, the wrist; long hold)",
+      "She does not look away. Across the forecourt Cael sees her. Then the boy. Then the people standing under another power's protection (bible 10.7, long lens)",
+      "It goes through him. The hand at his side will not stop shaking (bible 10.8). He looks behind him for the road he was offered. It is still there. The shadow of the fleet lies along it",
+      "CAPTAIN: \"The stairs were full.\" Cael turns. No pardon in the captain's face, but his eyes go past the king to the army: the wounded, the gun crews, the standard-bearer. All waiting on one man",
+      "CAPTAIN: \"You do not get to stop now.\" (bible 10.9, the captain level with Cael for the first time; held into 10.10)",
+      "Cael looks at them. No one can give this order for him. He makes the hand close (bible 10.10, closed hand: war). He raises his eyes to the fleet",
+      "CAEL: \"Raise the banners.\" (bible 10.11: the line lands as his eyes reach the fleet)",
+      "The captain gives the signal. His eyes stay on the city",
+      "The standard-bearer sees the signal. He tears the bindings off. His banner opens, alone (bible 10.12; red arrives at 7:23)",
+      "STANDARD-BEARER (High Drakonic, subtitled): \"Burn the sky!\"",
+      "This time he is answered: the men nearest take it up, then the line, ragged, banner after banner opening under the ships. Not every man. Not the captain. Cael does not turn",
+      "Above them, weapon housings open along the nearest hull (bible 10.14: small amber points)",
+      "The army under its banners. The ruined capital between. The coalition filling the sky (bible 10.15: the fleet whole in frame for the first time)",
+      "CUT TO BLACK. A great mechanical lock CLOSES",
+      "SUPER: \"CROWNFALL: KING OF KINGS\"",
+      "One deep engine STROKE (bible 10.16, the pulse). THE END"
+    ],
+    "lines": [
+      {
+        "speaker": "WARD OFFICER",
+        "text": "Hold the stone.",
+        "parenthetical": "(in High Korvenic, subtitled)",
+        "language": "High Korvenic",
+        "subtitled": true,
+        "spoken": "Va-ten-t el sveulea!"
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "These are the forward ships."
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "The stairs were full."
+      },
+      {
+        "speaker": "CAPTAIN",
+        "text": "You do not get to stop now.",
+        "cue": "CAPTAIN (CONT'D)"
+      },
+      {
+        "speaker": "CAEL",
+        "text": "Raise the banners."
+      },
+      {
+        "speaker": "STANDARD-BEARER",
+        "text": "Burn the sky!",
+        "parenthetical": "(in High Drakonic, subtitled)",
+        "language": "High Drakonic",
+        "subtitled": true,
+        "spoken": "Vael-bryna!"
+      }
+    ],
+    "visuals": [
+      "Long moving bars of sunrise through the ship's rigging",
+      "Liora's mirror throwing four white flashes up at the dark belly of the ship (the last white in the film)",
+      "The masked ward officer behind the round observation glass, flashes crossing the mask, a pale gloved hand opening",
+      "Violet light dropping from the keel on a bell note; the falling arch stopped above the survivors' heads; violet on the survivors, gold on everything else",
+      "The boy looking up; then pointing at Cael; Liora lowering his hand, hers over her wrist",
+      "More ships behind the first: two, a formation, more",
+      "Cael small across dust and an army; his shaking hand",
+      "The open road behind him with the fleet's shadow along it",
+      "The captain level with Cael; Cael forcing his hand closed",
+      "One blood-red banner opening alone, then a ragged line of banners under the ships; not every man, not the captain",
+      "Weapon housings opening along the nearest hull as small amber points",
+      "Final wide: the army under its banners, the ruined capital between, the fleet filling the sky",
+      "Black; a great mechanical lock closes; title super; one deep engine stroke"
+    ],
+    "supers": [
+      "CROWNFALL: KING OF KINGS"
+    ]
+  }
+]
