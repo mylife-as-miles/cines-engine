@@ -1,0 +1,236 @@
+{
+ "title": "Q08 \u00b7 SOMEWHERE TO BE",
+ "shots": [
+  {
+   "n": 1,
+   "time": "0\u20132.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Opens exactly on Q07's last frame: her seated close-up \u00b7 65 mm \u00b7 handheld",
+   "line": "(no dialogue)",
+   "note": "Her smile fades; the paper bag comes into the edge of frame beside her face, hanging from his hand; she turns her head away from it and swallows."
+  },
+  {
+   "n": 2,
+   "time": "2.5\u20136 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.25,
+     0.35,
+     3.05
+    ],
+    "target": [
+     4.2,
+     1.0,
+     0.6
+    ],
+    "f": 28
+   },
+   "camText": "Low two-shot from the kerb, near the ground \u00b7 28 mm \u00b7 locked-off",
+   "line": "(no dialogue)",
+   "note": "Oren stands beside her, towering, facing the street; the bag hangs from his LEFT hand right beside her turned-away face; people pass behind."
+  },
+  {
+   "n": 3,
+   "time": "6\u20138.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.25,
+     1.42,
+     1.75
+    ],
+    "target": [
+     4.45,
+     1.4,
+     0.5
+    ],
+    "f": 65,
+    "shift": [
+     0.1,
+     0
+    ]
+   },
+   "handheld": 0.005,
+   "camText": "Close-up of Helena seated \u00b7 65 mm \u00b7 handheld",
+   "line": "HELENA: \"You got somewhere to be?\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 2.1,
+     "text": "HELENA: You got somewhere to be?"
+    }
+   ],
+   "note": "Her eyes on the street, then up to him; dry."
+  },
+  {
+   "n": 4,
+   "time": "8.5\u201315 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.75,
+     0.95,
+     1.55
+    ],
+    "target": [
+     3.97,
+     1.74,
+     0.88
+    ],
+    "f": 35
+   },
+   "camText": "Low angle up at Oren from beside her, below her seated eye line \u00b7 35 mm \u00b7 locked-off",
+   "line": "OREN: \"Yes. I am delivering this to my client at the clinic. Her daughter is with her.\"",
+   "lines": [
+    {
+     "t0": 0.5,
+     "t1": 6.0,
+     "text": "OREN: Yes. I am delivering this to my client at the clinic. Her daughter is with her."
+    }
+   ],
+   "note": "Even, plain; the grey sky behind him."
+  },
+  {
+   "n": 5,
+   "time": "15\u201318.5 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     5.05,
+     1.36,
+     1.55
+    ],
+    "target": [
+     4.4,
+     1.38,
+     0.5
+    ],
+    "f": 50
+   },
+   "handheld": 0.004,
+   "camText": "Close on Helena listening, the bag soft at the edge of frame \u00b7 50 mm \u00b7 handheld",
+   "line": "OREN (off): \"It needs to arrive by two.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 2.4,
+     "text": "OREN (off): It needs to arrive by two."
+    }
+   ],
+   "note": "Her lips closed, jaw tight, eyes on the street; the deadline lands on her face."
+  },
+  {
+   "n": 6,
+   "time": "18.5\u201324 s",
+   "state": {
+    "helenaPos": [
+     4.45,
+     0.5
+    ],
+    "helenaSit": 1,
+    "orenPos": [
+     3.95,
+     0.88,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     4.75,
+     0.95,
+     1.55
+    ],
+    "target": [
+     3.97,
+     1.74,
+     0.88
+    ],
+    "f": 35
+   },
+   "camText": "Low angle up at Oren from beside her, below her seated eye line \u00b7 35 mm \u00b7 locked-off",
+   "line": "OREN: \"I can assist you, provided it still arrives on time.\"",
+   "lines": [
+    {
+     "t0": 0.6,
+     "t1": 4.2,
+     "text": "OREN: I can assist you, provided it still arrives on time."
+    }
+   ],
+   "note": "He looks down at her; then still."
+  }
+ ]
+}
