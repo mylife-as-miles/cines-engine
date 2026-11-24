@@ -237,7 +237,19 @@
   // the strip on the fridge, redrawn crisp over the set's (the same print: GG.photoStrip seed 3, the set's size, place and tilt) for
   // the pushed-in last shot, where the set's layer softens: so the four frames read beside the phone. The lamp's spill on it.
   let STRIP = null;
-  function stripOver(c, view, shot) {
+  // the pendant's warm spill on the fridge door, round the strip: three cut bands (a lamp's light is always posterised), screened on
+  function fridgeSpill(c, view, shot, k, rM) {
+    const R = SETS.living.world, z = R.fridge.z0 - 0.003, P = w => LV(view).project(w, shot);
+    const m = P([R.strip.x + 0.03, R.strip.y + 0.02, z]); if (!m) return;
+    const r = (rM || 0.16) * m[2], key = 'Q06|spill2';
+    const cv = c.cache(key, g => { O.lightPool(g, W / 2, H / 2, [{ r: 0.5 * H, color: '#5A361C' }, { r: 0.34 * H, color: '#86562C' }, { r: 0.2 * H, color: '#AE7A44' }], { sy: 1.25, rough: 3, seed: 67 }); }, W, H);
+    // only on the fridge door (X 0.62 to 1.30, up to 1.80 m)
+    const corners = [[R.fridge.x0, 1.8], [R.fridge.x1, 1.8], [R.fridge.x1, 0.0], [R.fridge.x0, 0.0]].map(([x, y]) => P([x, y, z]));
+    const g = c.g; g.save();
+    if (corners.every(Boolean)) { g.beginPath(); corners.forEach((q, i) => i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1])); g.closePath(); g.clip(); }
+    g.globalCompositeOperation = 'screen'; g.globalAlpha = k; const sc = r / (0.5 * H); g.drawImage(cv, m[0] - W / 2 * sc, m[1] - H / 2 * sc, W * sc, H * sc); g.restore();
+  }
+  function stripOver(c, view, shot, mul) {
     const R = SETS.living.world, s = R.strip, z = R.fridge.z0 - 0.003, cr = Math.cos(s.rot), sr = Math.sin(s.rot);
     const at = (u, v) => LV(view).project([s.x + u * cr - v * sr, s.y + u * sr + v * cr, z], shot);
     const tl = at(-s.w / 2, s.h / 2), tr = at(s.w / 2, s.h / 2), bl = at(-s.w / 2, -s.h / 2);
@@ -245,7 +257,7 @@
     STRIP = STRIP || GG.photoStrip({ w: 240, h: 876, seed: 3, scale: 1.3 });
     const g = c.g; g.save(); g.transform((tr[0] - tl[0]) / STRIP.width, (tr[1] - tl[1]) / STRIP.width, (bl[0] - tl[0]) / STRIP.height, (bl[1] - tl[1]) / STRIP.height, tl[0], tl[1]);
     g.imageSmoothingQuality = 'high'; g.drawImage(STRIP, 0, 0);
-    g.globalCompositeOperation = 'multiply'; g.fillStyle = '#C9B094'; g.fillRect(0, 0, STRIP.width, STRIP.height); g.restore();
+    g.globalCompositeOperation = 'multiply'; g.fillStyle = mul || '#DCC4A4'; g.fillRect(0, 0, STRIP.width, STRIP.height); g.restore();
     // the red magnet over its top
     const m = at(0, s.h / 2 - 0.004), r = 0.011 * m[2];
     g.save(); g.fillStyle = '#8A2A24'; g.beginPath(); g.ellipse(m[0], m[1], r, r * 0.9, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(230,170,140,0.5)'; g.beginPath(); g.ellipse(m[0] - r * 0.3, m[1] - r * 0.35, r * 0.35, r * 0.25, -0.4, 0, 7); g.fill(); g.restore();
@@ -281,8 +293,9 @@
       { at: 7, name: 'fridge: insert, the photo-booth strip; push down to the last frame', draw(c, st, lt) {
         const u = seg(st, 0.3, 5.9, 'inOutSine');
         c.camera({ x: lerp(960, 945, u), y: lerp(540, 600, u), zoom: lerp(1.0, 1.15, u) });
-        const V = LV('fridge'); V.back(c, lt, NIGHT); V.front(c, lt, NIGHT);
-      }, post: { vig: 0.55 } },
+        // the insert is lit warmer than the room: the lamp's spill on the fridge door, and the print itself caught in it
+        const V = LV('fridge'); V.back(c, lt, NIGHT); fridgeSpill(c, 'fridge', 'insert', 0.85, 0.16); stripOver(c, 'fridge', 'insert', '#F4E2C8'); V.front(c, lt, NIGHT);
+      }, post: { vig: 0.45 } },
       // ---------------------------------------------------------------- B2: he eats; the phone keeps him company across the salt
       { at: 13, name: 'counter: he eats from the pan, the phone propped against the salt; the chime; the forkful stops halfway', draw(c, st, lt) {
         const V = LV('counter'); V.back(c, lt, NIGHT);
@@ -324,7 +337,7 @@
         // (the set's layers end at the frame, so the centre stays at least 960 / zoom from the left and 540 / zoom from the bottom)
         const u = seg(st, 0.2, 10.8, 'inOutSine'); c.camera({ x: lerp(780, 712, u), y: lerp(640, 680, u), zoom: lerp(1.24, 1.36, u) });
         const V = LV('counter'); V.back(c, lt, NIGHT);
-        stripOver(c, 'counter', 'main');
+        fridgeSpill(c, 'counter', 'main', 0.55, 0.2); stripOver(c, 'counter', 'main', '#E2C8A4');
         const tt = twos(lt), e = eating(tt);
         const face = Object.assign({}, F_PHONE, { smile: key(tt, [[53, 0.25], [55, 0.375]]), lids: 0.64 });
         counterFig(c, 'counter', 'main', lt, e, face);

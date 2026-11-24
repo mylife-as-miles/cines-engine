@@ -193,10 +193,22 @@
     return c;
   }
   // Q04: an image that is never shown. A blurred, unreadable placeholder: two flat skin tones, blurred past any shape.
+  // Q04: an image that is never shown. A photo too blurred to see (restraint, as the grid): a dim room's tones, a lamp's warm patch, a cool
+  // shadow, and a few soft skin-toned masses of different values, irregular, overlapping, blurred past any shape. No outline, no body.
   function makeHidden() {
-    const c = mk(30, 40), g = c.getContext('2d');
-    const gr = g.createLinearGradient(0, 0, 30, 40); gr.addColorStop(0, '#D9AE95'); gr.addColorStop(0.55, '#E6C2AC'); gr.addColorStop(1, '#C99A86'); g.fillStyle = gr; g.fillRect(0, 0, 30, 40);
-    const big = mk(120, 160), bg = big.getContext('2d'); bg.imageSmoothingQuality = 'high'; bg.filter = 'blur(6px)'; bg.drawImage(c, -10, -10, 140, 180); return big;
+    const s = mk(36, 48), g = s.getContext('2d'), r = O.rng('hidden-photo');
+    const bg = g.createLinearGradient(0, 0, 36, 48); bg.addColorStop(0, '#6E5A52'); bg.addColorStop(0.5, '#8A6E62'); bg.addColorStop(1, '#4E4048'); g.fillStyle = bg; g.fillRect(0, 0, 36, 48);
+    const blob = (x, y, rx, ry, col, a) => { g.globalAlpha = a; g.fillStyle = col; g.beginPath(); g.ellipse(x, y, rx, ry, r() * 3, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; };
+    blob(29, 7, 9, 7, '#F2D8B4', 0.55);                 // a lamp's warm patch, top right
+    blob(5, 42, 10, 8, '#3A3340', 0.6);                 // a cool shadow, bottom left
+    [['#E3B89C', 15, 20, 10, 8], ['#D2A086', 22, 28, 9, 10], ['#EBC8B0', 12, 32, 7, 6], ['#C58D74', 26, 16, 6, 5], ['#DDB094', 18, 40, 9, 5], ['#B98068', 8, 22, 5, 7]]
+      .forEach(([col, x, y, rx, ry]) => blob(x + (r() - 0.5) * 3, y + (r() - 0.5) * 3, rx * (0.85 + 0.3 * r()), ry * (0.85 + 0.3 * r()), col, 0.75 + 0.2 * r()));
+    for (let i = 0; i < 10; i++) blob(r() * 36, r() * 48, 2 + r() * 4, 2 + r() * 4, r() < 0.5 ? '#F0D2BC' : '#7A5A50', 0.25);   // soft tonal noise
+    const big = mk(150, 200), bb = big.getContext('2d'); bb.imageSmoothingQuality = 'high'; bb.filter = 'blur(9px)'; bb.drawImage(s, -16, -16, 182, 232); bb.filter = 'none';
+    // a phone photo's soft corners and a little bloom from the lamp
+    const vg = bb.createRadialGradient(75, 95, 40, 75, 100, 135); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(20,14,18,0.35)'); bb.fillStyle = vg; bb.fillRect(0, 0, 150, 200);
+    const gl = bb.createRadialGradient(118, 28, 0, 118, 28, 60); gl.addColorStop(0, 'rgba(255,236,210,0.28)'); gl.addColorStop(1, 'rgba(255,236,210,0)'); bb.fillStyle = gl; bb.fillRect(0, 0, 150, 200);
+    return big;
   }
 
   // ================================================================ PHOTO: the generated photographs (painted once, kept)
