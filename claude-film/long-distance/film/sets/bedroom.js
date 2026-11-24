@@ -787,20 +787,7 @@ window.SETS = window.SETS || {};
     return p;
   }
   const wState = s => { s = s || {}; return { doors: s.doors == null ? 1 : clamp(s.doors, 0, 1), bag: s.bag === false || s.bag === 0 || s.bag === 'gone' ? 0 : 1, swing: s.swing || 0, res: s.res || 1 }; };
-  // the doors, drawn live: each a pre-cut panel warped into its swung quad in vertical strips (pitch 0 keeps the hinges vertical)
-  const DOORTEX = {};
-  function doorTex(side) {
-    if (DOORTEX[side]) return DOORTEX[side];
-    const pw = 300, ph = 1000, c = O.makeCanvas(pw, ph), g = c.getContext('2d');
-    const out = side === 'out', col = out ? D.door : D.doorIn;
-    g.fillStyle = col; g.fillRect(0, 0, pw, ph); GG.texture(g, (() => { const p = new Path2D(); p.rect(0, 0, pw, ph); return p; })(), 0.6, out ? 601 : 602, 'card');
-    if (out) {                                                        // a recessed panel, a knob near the meeting edge
-      [[30, 40, 240, 440], [30, 520, 240, 440]].forEach(([x, y, w2, h2], i) => { const p = O.S().rect(x, y, w2, h2).path(0.8, 603 + i); g.strokeStyle = 'rgba(60,58,54,0.45)'; g.lineWidth = 5; g.stroke(p); g.save(); g.translate(-2, -2); g.strokeStyle = 'rgba(232,228,218,0.5)'; g.lineWidth = 2.5; g.stroke(p); g.restore(); });
-    } else {
-      g.strokeStyle = 'rgba(70,68,64,0.25)'; g.lineWidth = 3; g.strokeRect(18, 18, pw - 36, ph - 36);
-    }
-    return (DOORTEX[side] = c);
-  }
+  // the doors, drawn live: cut polygons in the swung door's plane, the paper laid in
   function drawDoor(g, cam, which, a) {
     const d = doorQuad(which, a), w = R.wardrobe;
     const n = [Math.cos(d.ang), 0, which === 'left' ? Math.sin(d.ang) : -Math.sin(d.ang)];       // the outer face's normal

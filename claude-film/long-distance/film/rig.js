@@ -59,8 +59,8 @@
     while (RIG.stats.px > RIG.cacheBudgetPx && LRU.size > 1) { const k = LRU.keys().next().value; if (k === key) break; RIG.stats.px -= LRU.get(k).px; LRU.delete(k); RIG.stats.evicted++; }
     return e;
   }
-  RIG.cacheClear = () => { LRU.clear(); RIG.stats.px = 0; };
-  RIG.cacheInfo = () => ({ entries: LRU.size, mpx: +(RIG.stats.px / 1e6).toFixed(1), budgetMpx: RIG.cacheBudgetPx / 1e6, hits: RIG.stats.hits, misses: RIG.stats.misses, sculpts: RIG.stats.sculpts, sculptMs: Math.round(RIG.stats.sculptMs), layers: RIG.stats.layers, layerMs: Math.round(RIG.stats.layerMs), evicted: RIG.stats.evicted });
+  RIG.cacheClear = () => { LRU.clear(); RIG.stats.px = 0; if (typeof GLRU !== 'undefined') { GLRU.clear(); gBytes = 0; } };
+  RIG.cacheInfo = () => ({ entries: LRU.size, mpx: +(RIG.stats.px / 1e6).toFixed(1), budgetMpx: RIG.cacheBudgetPx / 1e6, gbufs: GLRU.size, gbufMB: Math.round(gBytes / 1e6), hits: RIG.stats.hits, misses: RIG.stats.misses, sculpts: RIG.stats.sculpts, reshades: RIG.stats.reshades || 0, sculptMs: Math.round(RIG.stats.sculptMs), layers: RIG.stats.layers, layerMs: Math.round(RIG.stats.layerMs), evicted: RIG.stats.evicted });
   function logCost(kind, key, ms) { RIG.stats.log.push([kind, key.slice(0, 90), Math.round(ms)]); if (RIG.stats.log.length > 400) RIG.stats.log.shift(); }
 
   // ================================================================ light
@@ -125,35 +125,30 @@
   }
   const lightKey = sl => sl.amb + '|' + sl.lights.map(k => [k.dir ? 'd' + k.dir.map(v => v.toFixed(2)) : 'p' + k.pos.map(v => v.toFixed(2)), k.col, (+k.k).toFixed(2), k.poster || '', k.levels || '', k.wrap || 0, k.falloff || 0, k.local ? 'L' : ''].join(',')).join(';');
 
-  // ================================================================ the sculpture renderer (the kit's render3D, with near-surface ray starts)
-  function render3D(o) {
-    const mode = o.mode || 'grain', grain = mode === 'grain', gloss = mode === 'gloss', flash = mode === 'flash';
-    const M = o.M, sdf = o.sdf, s = o.s, ss = o.ss || 2, b = o.bounds, out = o.out, sd = o.seed || 1, warpAmp = o.warp || 0;
+  // ================================================================ the sculpture renderer (the kit's render3D, split in two)
+  // geom3D marches the rays (from just in front of the coarse pass's hits, which roughly halves the cost) and keeps, per pixel hit,
+  // where it hit, its normal, occlusion and material: a G-buffer. shade3D lights it with the kit's own shading. Anything that only
+  // colours the surface (lids, gaze, brows, smile, flush, pale, the light) reshades a kept G-buffer instead of sculpting again.
+  const GSTRIDE = 14;
+  function geom3D(o) {
+    const M = o.M, sdf = o.sdf, s = o.s, ss = o.ss || 2, b = o.bounds, sd = o.seed || 1, warpAmp = o.warp || 0;
     const w = Math.ceil((b[2] - b[0]) * s), h = Math.ceil((b[3] - b[1]) * s), w2 = Math.ceil(w * ss), h2 = Math.ceil(h * ss);
-    const cv = makeCanvas(w2, h2), cg = cv.getContext('2d'), img = cg.createImageData(w2, h2), D = img.data;
     const T = [[M[0][0], M[1][0], M[2][0]], [M[0][1], M[1][1], M[2][1]], [M[0][2], M[1][2], M[2][2]]];
     const dlx = -T[0][2], dly = -T[1][2], dlz = -T[2][2];
-    const lights = (o.lights || [{ dir: [-0.5, -0.4, 0.75], col: [1, 0.95, 0.9], k: 1, poster: [0.12, 0.5] }]).map(L => {
-      const qq = Object.assign({ k: 1, wrap: 0 }, L);
-      if (qq.dir) { let [x, y, z] = qq.dir; if (qq.local) { const vx = M[0][0] * x + M[0][1] * y + M[0][2] * z, vy = M[1][0] * x + M[1][1] * y + M[1][2] * z, vz = M[2][0] * x + M[2][1] * y + M[2][2] * z; x = vx; y = vy; z = vz; } const l = Math.hypot(x, y, z) || 1; qq.d = [x / l, y / l, z / l]; }
-      qq.c = Array.isArray(qq.col) ? qq.col : rgb01(qq.col || '#FFFFFF'); return qq;
-    });
-    const amb = o.amb ? (Array.isArray(o.amb) ? o.amb : rgb01(o.amb)) : [0.25, 0.25, 0.3];
     const ex = (o.extent || 3), e = o.eps || 0.0016, aoK = o.aoK == null ? 1 : o.aoK;
     const inv = 1 / (s * ss);
-    // coarse pass: one ray per 8x8 block; keep where it met the surface so the fine rays can start just in front of it
     const cw = Math.ceil(w2 / 8), chh = Math.ceil(h2 / 8); const ct = new Float32Array(cw * chh).fill(-1);
     for (let j = 0; j < h2; j += 8) for (let i = 0; i < w2; i += 8) {
       const X = b[0] + (i + 4) * inv, Y = b[1] + (j + 4) * inv; const ox = T[0][0] * X + T[0][1] * Y + T[0][2] * ex, oy = T[1][0] * X + T[1][1] * Y + T[1][2] * ex, oz = T[2][0] * X + T[2][1] * Y + T[2][2] * ex;
       let t = 0; for (let k = 0; k < 80 && t < ex * 2; k++) { const d = sdf(ox + dlx * t, oy + dly * t, oz + dlz * t); if (d < 8 * inv * 1.5) { ct[(j >> 3) * cw + (i >> 3)] = t; break; } t += d * 0.9; }
     }
-    // per block: the nearest hit among its 3x3 neighbours (or -1: nothing near, skip)
     const cn = new Float32Array(cw * chh).fill(-1);
     for (let cj = 0; cj < chh; cj++) for (let ci = 0; ci < cw; ci++) {
       let m = 1e9; for (let b2 = -1; b2 <= 1; b2++) for (let a2 = -1; a2 <= 1; a2++) { const x2 = ci + a2, y2 = cj + b2; if (x2 < 0 || y2 < 0 || x2 >= cw || y2 >= chh) continue; const v = ct[y2 * cw + x2]; if (v >= 0 && v < m) m = v; }
       cn[cj * cw + ci] = m < 1e9 ? m : -1;
     }
     const MARGIN = 0.1;                                   // start this far (head units) in front of the nearest coarse hit
+    let cap = 1 << 16, data = new Float32Array(cap * GSTRIDE), idx = new Int32Array(cap), n = 0;
     for (let j = 0; j < h2; j++) for (let i = 0; i < w2; i++) {
       const tn = cn[(j >> 3) * cw + (i >> 3)]; if (tn < 0) continue;
       let px = i, py = j; const wx = (i / ss) + b[0] * s, wy = (j / ss) + b[1] * s;
@@ -165,13 +160,36 @@
       const tEnd = Math.min(ex * 2, tn + (o.depth || 1.5));
       for (let k = 0; k < 110 && t < tEnd; k++) { x = ox + dlx * t; y = oy + dly * t; z = oz + dlz * t; const d = sdf(x, y, z); if (d < 0.0008) { hit = true; break; } t += d * 0.92; }
       if (!hit) continue;
-      const mat = o.matOf ? o.matOf(x, y, z) : 0;
+      const mat = o.matOf ? o.matOf(x, y, z) : 0;          // the last march step evaluated the sdf at this very point
       const a1 = sdf(x + e, y - e, z - e), a2 = sdf(x - e, y - e, z + e), a3 = sdf(x - e, y + e, z - e), a4 = sdf(x + e, y + e, z + e);
       let nx = a1 - a2 - a3 + a4, ny = -a1 - a2 + a3 + a4, nz = -a1 + a2 - a3 + a4; const nl = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1; nx /= nl; ny /= nl; nz /= nl;
       const o1 = sdf(x + nx * 0.025 * aoK, y + ny * 0.025 * aoK, z + nz * 0.025 * aoK), o2 = sdf(x + nx * 0.07 * aoK, y + ny * 0.07 * aoK, z + nz * 0.07 * aoK);
-      let ao = clamp(1 - 5 / aoK * (Math.max(0, 0.025 * aoK - o1) + 0.5 * Math.max(0, 0.07 * aoK - o2)), 0.35, 1);
-      const vx = M[0][0] * nx + M[0][1] * ny + M[0][2] * nz, vy = M[1][0] * nx + M[1][1] * ny + M[1][2] * nz, vz = M[2][0] * nx + M[2][1] * ny + M[2][2] * nz;
-      const hx = M[0][0] * x + M[0][1] * y + M[0][2] * z, hy = M[1][0] * x + M[1][1] * y + M[1][2] * z, hz = M[2][0] * x + M[2][1] * y + M[2][2] * z;
+      const ao = clamp(1 - 5 / aoK * (Math.max(0, 0.025 * aoK - o1) + 0.5 * Math.max(0, 0.07 * aoK - o2)), 0.35, 1);
+      if (n >= cap) { const d2 = new Float32Array(cap * 2 * GSTRIDE); d2.set(data); data = d2; const i2 = new Int32Array(cap * 2); i2.set(idx); idx = i2; cap *= 2; }
+      const q0 = n * GSTRIDE; idx[n] = j * w2 + i;
+      data[q0] = x; data[q0 + 1] = y; data[q0 + 2] = z; data[q0 + 3] = nx; data[q0 + 4] = ny; data[q0 + 5] = nz; data[q0 + 6] = mat; data[q0 + 7] = ao;
+      data[q0 + 8] = M[0][0] * nx + M[0][1] * ny + M[0][2] * nz; data[q0 + 9] = M[1][0] * nx + M[1][1] * ny + M[1][2] * nz; data[q0 + 10] = M[2][0] * nx + M[2][1] * ny + M[2][2] * nz;
+      data[q0 + 11] = M[0][0] * x + M[0][1] * y + M[0][2] * z; data[q0 + 12] = M[1][0] * x + M[1][1] * y + M[1][2] * z; data[q0 + 13] = M[2][0] * x + M[2][1] * y + M[2][2] * z;
+      n++;
+    }
+    return { w, h, w2, h2, n, data: data.subarray(0, n * GSTRIDE), idx: idx.subarray(0, n), b, s, ss, M, seed: sd, bytes: n * (GSTRIDE * 4 + 4) };
+  }
+  function shade3D(gb, o) {
+    const mode = o.mode || 'grain', grain = mode === 'grain', gloss = mode === 'gloss', flash = mode === 'flash';
+    const M = gb.M, out = o.out, sd = gb.seed, { w, h, w2, h2, b, s, ss } = gb;
+    const cv = makeCanvas(w2, h2), cg = cv.getContext('2d'), img = cg.createImageData(w2, h2), D = img.data;
+    const lights = (o.lights || [{ dir: [-0.5, -0.4, 0.75], col: [1, 0.95, 0.9], k: 1, poster: [0.12, 0.5] }]).map(L => {
+      const qq = Object.assign({ k: 1, wrap: 0 }, L);
+      if (qq.dir) { let [x, y, z] = qq.dir; if (qq.local) { const vx = M[0][0] * x + M[0][1] * y + M[0][2] * z, vy = M[1][0] * x + M[1][1] * y + M[1][2] * z, vz = M[2][0] * x + M[2][1] * y + M[2][2] * z; x = vx; y = vy; z = vz; } const l = Math.hypot(x, y, z) || 1; qq.d = [x / l, y / l, z / l]; }
+      qq.c = Array.isArray(qq.col) ? qq.col : rgb01(qq.col || '#FFFFFF'); return qq;
+    });
+    const amb = o.amb ? (Array.isArray(o.amb) ? o.amb : rgb01(o.amb)) : [0.25, 0.25, 0.3];
+    const G = gb.data, I = gb.idx;
+    for (let k0 = 0; k0 < gb.n; k0++) {
+      const q0 = k0 * GSTRIDE, pix = I[k0], i = pix % w2, j = (pix - i) / w2;
+      const wx = (i / ss) + b[0] * s, wy = (j / ss) + b[1] * s;
+      const x = G[q0], y = G[q0 + 1], z = G[q0 + 2], nx = G[q0 + 3], ny = G[q0 + 4], nz = G[q0 + 5], mat = G[q0 + 6]; let ao = G[q0 + 7];
+      const vx = G[q0 + 8], vy = G[q0 + 9], vz = G[q0 + 10], hx = G[q0 + 11], hy = G[q0 + 12], hz = G[q0 + 13];
       o.albedo(x, y, z, nx, ny, nz, mat, vx, vy, vz);
       const jit = grain ? (vnoise(wx * 0.045, wy * 0.045, sd + 77) - 0.5) * 0.12 : 0;
       let lr = amb[0], lg = amb[1], lb = amb[2];
@@ -193,13 +211,18 @@
       let r = out[0] * lr, g2 = out[1] * lg, bb = out[2] * lb;
       if (gloss) { r += spec2; g2 += spec2 * 0.95; bb += spec2 * 0.92; }
       if (flash) { r = r * 1.08 + 0.03; g2 = g2 * 1.04 + 0.03; bb = bb * 0.98 + 0.02; }
-      const qi = (j * w2 + i) * 4; D[qi] = clamp(r * 255, 0, 255); D[qi + 1] = clamp(g2 * 255, 0, 255); D[qi + 2] = clamp(bb * 255, 0, 255); D[qi + 3] = 255;
+      const qi = pix * 4; D[qi] = clamp(r * 255, 0, 255); D[qi + 1] = clamp(g2 * 255, 0, 255); D[qi + 2] = clamp(bb * 255, 0, 255); D[qi + 3] = 255;
     }
     cg.putImageData(img, 0, 0);
     if (ss === 1) return { canvas: cv, x: b[0] * s, y: b[1] * s, w, h };
     const outC = makeCanvas(w, h), og = outC.getContext('2d'); og.imageSmoothingQuality = 'high'; og.drawImage(cv, 0, 0, w, h);
     return { canvas: outC, x: b[0] * s, y: b[1] * s, w, h };
   }
+  function render3D(o) { return shade3D(o.gbuf || geom3D(o), o); }
+  // the kept G-buffers: their own small LRU (they are large: ~10 MB for a 300 px head)
+  const GLRU = new Map(); let gBytes = 0; RIG.gbufBudgetBytes = 160e6;
+  function gget(key) { const e = GLRU.get(key); if (e) { GLRU.delete(key); GLRU.set(key, e); } return e; }
+  function gput(key, gb) { GLRU.set(key, gb); gBytes += gb.bytes; while (gBytes > RIG.gbufBudgetBytes && GLRU.size > 1) { const k = GLRU.keys().next().value; if (k === key) break; gBytes -= GLRU.get(k).bytes; GLRU.delete(k); } return gb; }
 
   // ================================================================ SDF primitives (as the kit's)
   const rotM = GG.rotM, basisM = GG.basisM;
@@ -227,7 +250,7 @@
     const C = spec.cast || CAST[spec.who], hairStyle = spec.hair || (spec.who === 'her' ? 'bob' : 'short');
     const glo = spec.mode === 'gloss';
     const jw = C.jawW * (glo ? 0.97 : 1), ch = C.chin, nk = C.nose * (glo ? 0.82 : 1), nR = spec.neckR || C.neckR, sh = glo ? 0 : 1, lipZ = glo ? -0.012 : 0;
-    const drop = (spec.open || 0) * 0.026;                      // the jaw follows the mouth a little
+    const drop = (spec.open || 0) >= 0.2 ? 0.0085 : 0;          // the jaw drops a little when the mouth is open (two states: cheap to keep)
     const lowY = (glo ? -0.016 : 0) - drop * 0.6, lowY2 = (glo ? -0.016 : 0) - drop;
     const asym = sh * (spec.asym == null ? 1 : spec.asym);
     const comp = { s: 0, e: 0, h: 0 };
@@ -362,7 +385,7 @@
     const sd = spec.seed || 1, asym = sdf.asym;
     const warpAmp = grain ? (spec.warp == null ? 1.1 : spec.warp) : (flash ? 0.5 : 0);
     const bands = grain ? headBands(spec, C) : null;
-    const drop = mOpen * 0.026;
+    const drop = mOpen >= 0.2 ? 0.0085 : 0;
     const out = [0, 0, 0];
     function albedo(x, y, z, nlx, nly, nlz, mat) {
       const ax = Math.abs(x), side = x < 0 ? -1 : 1;
@@ -446,9 +469,10 @@
       }
       if (bands) bands(x, y, z, out, isLip);
     }
-    const R = render3D({ sdf, matOf: () => { const cs = comp.s, ce = comp.e, chh = comp.h; return (chh <= cs + 0.002 && chh <= ce + 0.002) ? 2 : (ce < cs ? 1 : 0); },
-      albedo, out, M, s, ss: spec.ss, bounds: b, lights: spec.lights, amb: spec.amb, mode, seed: sd, warp: warpAmp, aoPoster: spec.aoPoster, aoK: spec.aoK });
-    return Object.assign(R, { M });
+    let gb = spec.gkey ? gget(spec.gkey) : null; const fresh = !gb;
+    if (!gb) { gb = geom3D({ sdf, matOf: () => { const cs = comp.s, ce = comp.e, chh = comp.h; return (chh <= cs + 0.002 && chh <= ce + 0.002) ? 2 : (ce < cs ? 1 : 0); }, M, s, ss: spec.ss, bounds: b, seed: sd, warp: warpAmp, aoK: spec.aoK }); if (spec.gkey) gput(spec.gkey, gb); }
+    const R = shade3D(gb, { albedo, out, lights: spec.lights, amb: spec.amb, mode, aoPoster: spec.aoPoster });
+    return Object.assign(R, { M, fresh });
   }
 
   // the bounds of a posed head (view units around its origin): a box round the skull, hair and neck, turned with the head
@@ -532,7 +556,7 @@
     const spec = {
       who, hair: p.hair || D.hair, mode, yaw: qf(p.yaw, 0.04), pitch: qf(p.pitch, 0.04), roll: qf(p.roll, 0.04),
       eyes: qf(p.lids != null ? p.lids : (p.eyes != null ? p.eyes : D.lids), 0.1), gaze: [qf((p.gaze || [0, 0])[0], 0.1), qf((p.gaze || [0, 0])[1], 0.1)],
-      brow: qf(p.brows != null ? p.brows : p.brow, 0.25), smile: qf(p.smile, 0.125), open: qf(mouthOpen, 0.01), cheek: qf(p.cheek, 0.25),
+      brow: qf(p.brows != null ? p.brows : p.brow, 0.25), smile: qf(p.smile, 0.125), open: qf(mouthOpen, 0.01), cheek: qf(p.cheek, 0.25), cheekSide: p.cheekSide || -1,
       flush: qf(p.flush, 1 / 16), ears: qf(p.ears, 1 / 8), pale: qf(p.pale, 1 / 12), neckLen: qf(p.neck != null ? p.neck : D.neck, 0.05), neckR: p.neckR || D.neckR,
       stubble: p.stubble != null ? p.stubble : D.stubble, seed: p.seed || D.seed, part: D.part, neckShade: p.neckShade != null ? p.neckShade : D.neckShade, aoK: D.aoK,
       hairLen: p.hairLen, hairTop: p.hairTop, hem: p.hem, aoPoster: p.aoPoster, teeth: p.teeth,
@@ -546,9 +570,11 @@
       const t0 = now();
       const bounds = p.bounds || headBounds(spec);
       const ss = p.ss || (Rq < 330 ? 1.3 : Rq < 560 ? 1.15 : 1.0);
-      const R = sculptHead(Object.assign({}, spec, { s: Rq, ss, bounds, lights: sl.lights, amb: sl.amb }));
+      // the geometry depends only on these; lids, gaze, brows, smile, flush, pale and the light only reshade it
+      const gkey = 'G|' + who + '|' + Rq.toFixed(2) + '|' + ss + '|' + JSON.stringify([spec.hair, spec.mode, spec.aoK, spec.warp, spec.yaw, spec.pitch, spec.roll, spec.open >= 0.2, spec.cheek, spec.cheekSide, spec.neckLen, spec.neckR, spec.seed, spec.part, spec.hairLen, spec.hairTop, spec.hem, bounds.map(v => +v.toFixed(3))]);
+      const R = sculptHead(Object.assign({}, spec, { s: Rq, ss, bounds, lights: sl.lights, amb: sl.amb, gkey }));
       e = bakeSculpt(R, { tex, texSeed: (spec.seed || 5) + 10, kind: 'paper', texScale: Rq / s, shadowBlur: mode === 'gloss' ? null : 0.04 * Rq, shadowColor: L.shadow });
-      e.Rq = Rq; const ms = now() - t0; e.ms = ms; RIG.stats.sculpts++; RIG.stats.sculptMs += ms; logCost('head', key, ms);
+      e.Rq = Rq; const ms = now() - t0; e.ms = ms; if (R.fresh) RIG.stats.sculpts++; else RIG.stats.reshades = (RIG.stats.reshades || 0) + 1; RIG.stats.sculptMs += ms; logCost(R.fresh ? 'head' : 'reshade', key, ms);
       cput(key, e);
     }
     const k = s / Rq;
