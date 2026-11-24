@@ -71,12 +71,27 @@
     c.g.drawImage(K.kitchenPlate(c), 0, 0);
     return RIG.draw(c, 'him', 'bag', { x: 830, y: 500, s: 414, light: K.kitchenLight(), t: lt, tau: 0.3, zip: o.zip || 0, crop: 3.2, breath: o.breath, blink: o.blink, face: o.face });
   };
+  // her singles' background: the set's between/her, with the pendant painted out. One floor plan for the argument: the kitchen,
+  // the fridge and the pendant are on his side, behind him; the pale rectangle, the shelf, the window's light and the couch on hers
+  K.herPlate = function (c) {
+    return c.cache('END|herPlate', (g, cv) => {
+      const fake = Object.assign({}, c, { g, gl: g, em: dummyEm(), before: [], after: [] });
+      g.setTransform(1, 0, 0, 1, 0, 0); LV().between.back(fake, 0, { tod: 'day', shot: 'her' });
+      // the plain wall to its right, moved over it, with a feathered edge (the plate is out of focus, so the patch is invisible)
+      const pw = 400, ph = 330, x0 = 90, src = 440;
+      const tmp = OTM.makeCanvas(pw, ph), tg = tmp.getContext('2d');
+      tg.drawImage(cv, src, 0, pw, ph, 0, 0, pw, ph);
+      const m = OTM.makeCanvas(pw, ph), mg = m.getContext('2d'); mg.filter = 'blur(22px)'; mg.fillStyle = '#000'; mg.fillRect(34, -60, pw - 68, ph + 60 - 44);
+      tg.globalCompositeOperation = 'destination-in'; tg.drawImage(m, 0, 0);
+      g.drawImage(tmp, x0, 0);
+    });
+  };
   // her, close: the pale rectangle and the window's light behind her (between/her); she faces screen left (toward him)
   K.herClose = function (c, lt, o) {
     o = o || {};
     const V = LV().between, sh = V.shots.her, A = sh.anchors;
     if (o.z) K.push(c, 1180, 520, o.z);
-    V.back(c, lt, { tod: 'day', shot: 'her' });
+    c.g.drawImage(K.herPlate(c), 0, 0);
     const s = 0.23 * A.herBetween[2], x = A.herBetween[0] + 30, y = A.herBetween[1] - (o.lift == null ? 70 : o.lift);
     const L = K.setLight(sh.lights.day, { rig: o.phoneAt ? { phone: o.phoneAt, phoneCol: '#C8EEF2', phoneK: o.phoneK == null ? 0.5 : o.phoneK } : {} });
     return RIG.draw(c, 'her', o.pose || 'stand', Object.assign({ x, y, s, light: L, t: o.still ? null : lt, flip: true, crop: 3.2, face: o.face, blink: o.blink }, o.p || {}));
@@ -138,12 +153,39 @@
     return { fig, hand, info };
   };
 
+  // the two-shot, side-on to the line between them (between/two's camera): him in his half, three-quarter to screen right, the fridge,
+  // the counter and the pendant behind him; her in front of the pale rectangle, three-quarter to screen left, the window's light and
+  // the couch behind her. o.him / o.her: {pose, p (pose fields), face}. o.herPhone: PHONE params for the phone in her hand.
+  // o.himPhone: PHONE params for the phone in his (after the trade). Returns {him, her}
+  K.W_HIM = [2.2, 1.62, 2.6];
+  K.two = function (c, lt, o) {
+    o = o || {};
+    const V = LV().between, A = V.anchors;
+    if (o.z) K.push(c, o.zAt ? o.zAt[0] : 870, o.zAt ? o.zAt[1] : 520, o.z);
+    V.back(c, lt, { tod: 'day' });
+    const Ls = V.shots.two.lights.day, hp = V.project(K.W_HIM, 'two'), her0 = A.herBetween;
+    const ho = o.her || {}, mo = o.him || {};
+    const Lh = K.setLight(Ls, o.herPhone ? { rig: { phone: [A.phoneHeld[0] + 100, A.phoneHeld[1] - 20], phoneCol: '#C8EEF2', phoneK: 0.4 } } : {});
+    const her = RIG.draw(c, 'her', ho.pose || 'phone', Object.assign({ x: her0[0] + 20, y: her0[1], s: 0.23 * her0[2], light: Lh, t: lt, flip: true, tau: 0.42, crop: 5.2, face: ho.face }, ho.p || {}));
+    if (o.herPhone && her.phone) {
+      const ph = her.phone, P = Object.assign({ x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, yaw: -0.3, screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.07 }, o.herPhone);
+      PHONE.glow(c, { info: PHONE.where(P, c), k: 0.42, r: ph.h * 2.6 });
+      PHONE.draw(c, P); her.over(c);
+    }
+    if (ho.bag && her.hands[ho.bag.hand || 'R']) { const g2 = her.hands[ho.bag.hand || 'R'].grip; RIG.bag(c, g2[0] + (ho.bag.dx || 0), g2[1] + 0.3 * 0.23 * her0[2], 0.23 * her0[2] * 0.95, { light: Lh, rot: 0.04 }); }
+    const Lm = K.setLight(Ls, o.himPhone ? { rig: { phone: [hp[0] + 0.5 * 0.23 * hp[2], hp[1] + 2.3 * 0.23 * hp[2]], phoneCol: '#BCC2C4', phoneK: 0 } } : {});
+    const him = RIG.draw(c, 'him', mo.pose || 'bag', Object.assign({ x: hp[0], y: hp[1], s: 0.23 * hp[2], light: Lm, t: lt, tau: 0.45, crop: 5.6, face: mo.face }, mo.p || {}));
+    const hph = o.himPhone && (him.phone || (him.hands.R && him.hands.R.phone) || (him.hands.L && him.hands.L.phone));
+    if (hph) { PHONE.draw(c, Object.assign({ x: hph.x, y: hph.y, h: hph.h, roll: hph.angle, pitch: 0.75, screen: 'black', env: '#B8BEC0' }, o.himPhone)); him.over(c); }
+    return { him, her };
+  };
+
   // =================================================================================================================================
   // Q09
   // =================================================================================================================================
   const setLight = K.setLight, push = K.push;
   const ROOM = { tod: 'day' };
-  const W_HER = [3.5, 1.56, 3.0];          // standing over the couch, by its left cushion (room view)
+  const W_HER = [3.86, 1.56, 3.08];        // standing over the couch, beside the phone on the middle cushion, looking down at it
 
   // ------------------------------------------------------------------ 0–6 the wardrobe: from behind him, he opens it, steps aside
   // a door knob's screen point as the doors open (the wardrobe's own geometry, bedroom.js)
@@ -161,8 +203,9 @@
     const s = 0.23 * A.head[2] * 1.12;
     const step = E.inOutSine(seg(tt, 2.5, 3.6)), x = lerp(960, 640, step), y = A.head[1] + 30 + 10 * Math.sin(Math.PI * step);
     const held = E.inOutSine(seg(Math.min(tt, 1.3), 0.45, 2.05)), let_ = E.inOutSine(seg(tt, 1.25, 1.8));
-    const arm = (wh, sg) => { const k = knob(wh, held); const kf = [(k[0] - x) / s, (k[1] - y) / s]; const rest = [sg * 0.62, 2.95];
-      return { to: [lerp(kf[0], rest[0], let_), lerp(kf[1], rest[1], let_)], bend: sg, hand: false, front: true }; };
+    const arm = (wh, sg) => { const k = knob(wh === 'left' ? 'right' : 'left', held); const kf = [-(k[0] - x) / s, (k[1] - y) / s]; const rest = [sg * 0.62, 2.95];
+      return let_ < 0.5 ? { to: [lerp(kf[0], rest[0], let_), lerp(kf[1], rest[1], let_)], bend: sg, hand: 'door', hp: { tight: 0.3 }, behind: true }
+        : { to: [lerp(kf[0], rest[0], let_), lerp(kf[1], rest[1], let_)], bend: sg, hand: 'relax', hp: { close: 0.4 } }; };
     RIG.draw(c, 'him', 'stand', { view: 'back', x, y, s, light: L, t: lt, crop: 4.0, armL: arm('left', -1), armR: arm('right', 1), face: { yaw: Math.PI - lerp(0.1, 0.55, step), pitch: 0.08 } });
   }
 
@@ -209,12 +252,15 @@
     PHONE.draw(c, P);
   }
   function roomArrive(c, st, lt) {
-    const V = LV().room; V.back(c, lt, ROOM); V.front(c, lt, ROOM);
+    const V = LV().room;
+    push(c, 1180, 620, 1 + 0.13 * E.inOutSine(seg(lt, 17, 22)));   // a slow push toward her, over the couch
+    V.back(c, lt, ROOM); V.front(c, lt, ROOM);
     const L = setLight(V.shots.wide.lights.day); const tt = twos(lt);
     phoneOnCushion(c, V);
     const p = V.project(W_HER);
-    RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1], s: 0.23 * p[2], light: L, t: lt, tau: 0.5, armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true },
-      face: { yaw: 0.62, pitch: 0.5, lids: 0.5, gaze: [0.2, 0.55] } });
+    // turned to the couch, bent a little over it, her head down to the lit phone; at 20.6 she hears him and does not look up
+    RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1], s: 0.23 * p[2], light: L, t: lt, tau: 1.2, armL: { to: [0.1, 2.5], bend: 1, hand: 'strap', front: true },
+      face: { yaw: 1.05, pitch: 0.72, lids: 0.4, gaze: [0.3, 0.6] } });
     const a = V.anchors.himBetween, s = 0.23 * a[2];
     if (tt < 18.92) {
       const u = seg(tt, 17.25, 18.92); const x = lerp(-150, a[0] - 20, u);
@@ -278,22 +324,14 @@
 
   // ------------------------------------------------------------------ 38.5–43.3 between (B3): she turns the screen to him
   function between(c, st, lt) {
-    const V = LV().between; const A = V.anchors; const tt = twos(lt);
-    V.back(c, lt, { tod: 'day' });
-    const Ls = V.shots.two.lights.day;
+    const tt = twos(lt);
     const hold = key(tt, [[38.5, 0.85], [39.9, 0, 'inOutSine']]);
-    const her0 = A.herBetween, s = 0.23 * her0[2];
-    const L = setLight(Ls, { rig: { phone: [A.phoneHeld[0] + 120, A.phoneHeld[1] - 20], phoneCol: '#C8EEF2', phoneK: 0.45 } });
-    const her = RIG.draw(c, 'her', 'phone', { x: her0[0] + 20, y: her0[1], s, light: L, t: lt, flip: true, hold, tau: 0.42,
-      face: { yaw: lerp(0.5, 0.6, hold), pitch: lerp(0.08, 0.36, hold), lids: lerp(0.68, 0.5, hold), gaze: [lerp(0.42, 0.1, hold), lerp(0.08, 0.5, hold)] } });
-    // him: over his shoulder, bowed to the bag; his head turned with his shoulders (a lost profile), his eyes on neither of them
-    const h0 = A.himBetween;
-    RIG.draw(c, 'him', 'bag', { x: h0[0] + 10, y: h0[1] + 10, s: 0.23 * h0[2], light: setLight(Ls), t: lt, view: 'back', zip: tt * 0.6, crop: 4.6, face: { yaw: 2.0, pitch: 0.4, roll: 0.35, lids: 0.3, gaze: [0, 0.7] } });
-    if (her.phone) {
-      const ph = her.phone; const P = { x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, yaw: lerp(-0.3, -2.6, hold * hold), screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.07 };
-      PHONE.glow(c, { info: PHONE.where(P, c), k: 0.42, r: ph.h * 2.6 });
-      PHONE.draw(c, P); her.over(c);
-    }
+    // he lifts his eyes to the screen as it turns to him (39.6), sees it, and looks away, down at the bag (41.4)
+    const see = key(tt, [[39.3, 0], [39.7, 1, 'outCubic'], [40.9, 1], [41.5, 0]]);
+    K.two(c, lt, { z: 1 + 0.025 * E.inOutSine(seg(lt, 38.5, 43.3)),
+      her: { pose: 'phone', p: { hold }, face: { yaw: lerp(0.5, 0.6, hold), pitch: lerp(0.08, 0.36, hold), lids: lerp(0.68, 0.5, hold), gaze: [lerp(0.42, 0.1, hold), lerp(0.08, 0.5, hold)] } },
+      herPhone: { yaw: lerp(-0.3, -2.6, hold * hold) },
+      him: { pose: 'bag', p: { zip: tt * 0.6 }, face: { yaw: lerp(0.3, 0.42, see), pitch: lerp(0.45, 0.16, see), lids: lerp(0.3, 0.7, see), gaze: [lerp(0.05, 0.35, see), lerp(0.6, 0.15, see)], brows: lerp(0, 0.25, see) } } });
   }
 
   // ------------------------------------------------------------------ 43.3–50.5 over his shoulder: the screen between them (L016)
@@ -308,7 +346,7 @@
     o = o || {};
     const V = LV().between, sh = V.shots.her, A = sh.anchors;
     K.push(c, 1100, 560, 1 + (o.zp || 0));
-    V.back(c, lt, { tod: 'day', shot: 'her' });
+    c.g.drawImage(K.herPlate(c), 0, 0);
     const s = 0.23 * A.herBetween[2] * 0.92;
     const L = K.setLight(sh.lights.day, { rig: { phone: [800, 720], phoneCol: '#C8EEF2', phoneK: 0.5 } });
     const her = RIG.draw(c, 'her', 'phone_up', { x: A.herBetween[0] + 120, y: A.herBetween[1] - 150, s, light: L, t: lt, flip: true, crop: 3.4, face: o.face });
@@ -337,7 +375,7 @@
     // her phone is just above the frame, held up between them: only its cool light reaches down into the empty half
     PHONE.glow(c, { x: 1180, y: -60, r: 900, tone: 'water', k: 0.5 });
     // him, close at hand height: his head is far above the frame; the bag held low in both hands, his thumb on the zip
-    RIG.draw(c, 'him', 'bag', { x: 600, y: -760, s: 520, light: L, t: lt, tau: 0.4, zip: 0.2 + Math.max(0, tt - 50.9) * 0.62, breathAmp: 3 });
+    RIG.draw(c, 'him', 'bag', { x: 600, y: -760, s: 520, light: L, t: lt, tau: 0.4, hands: 1, zip: 0.2 + Math.max(0, tt - 50.9) * 0.62, breathAmp: 3 });
   }
 
   FILM.seq({

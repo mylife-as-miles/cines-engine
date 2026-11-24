@@ -21,7 +21,11 @@
   const PHONE_M = 0.15;                                 // the phone's body, in metres
 
   // ---------------------------------------------------------------- the phone's day: what its screen shows at local time lt
-  const THREAD = { clock: 'night', history: 'morning', steps: [{ stamp: '23:14', at: 0 }, { at: 20.5, her: { image: 'waterfall' } }] };
+  // the thread holds the day, in order: the morning (Q02), "Send me one." and the blurred image (Q04), the voice note (Q05), then
+  // tonight's picture. Every word is a screenplay message; the image and the voice note are PHONE's own unreadable bubbles.
+  const DAY_SO_FAR = [['stamp', '07:12'], ['her', PHONE.MSG.goodMorning], ['him', PHONE.MSG.goodMorningLove], ['her', PHONE.MSG.iLoveYou],
+    ['stamp', '12:47'], ['him', PHONE.MSG.sendMeOne], ['her', { image: 'hidden' }], ['stamp', '18:21'], ['her', { voice: 9 }]];
+  const THREAD = { clock: 'night', history: DAY_SO_FAR, steps: [{ stamp: '23:14', at: 20.5 }, { at: 20.5, her: { image: 'waterfall' } }] };
   const OPEN = [22.4, 23.3];                            // the bubble grows to the viewer
   const SET_IN = 42.2, SET_PRESS = 43.4, SET_OUT = 43.9;
   const LOCKS = [44.9, 47.0, 50.0], WAKES = [45.5, 48.5, 51.5];
@@ -50,8 +54,10 @@
   const BITES = [1.9, 5.7, 14.6, 18.4];
   const HALT = { lift: 20.2, at: 20.5 }, STOP_CHEW = 30.35, PUT_DOWN = [58.6, 59.4];
   const twirl = (t, t0) => { const u = (t - t0) / TW; return { fork: 0.03 + 0.05 * (0.5 + 0.5 * Math.sin(u * 14)), loaded: u > 0.45, pan: seg(t, t0, t0 + 0.35, 'inOutSine') }; };
+  // the halt: the forkful rises out of the pan; the chime catches it in front of his chest and it stops there
+  const haltAt = t => { const k = seg(t, 20.05, 20.85, 'inOutSine'), kStop = seg(20.62, 20.05, 20.85, 'inOutSine'); return Math.min(k, kStop); };
   function eating(t) {
-    const st = { fork: 0.12, loaded: false, pan: 0, bite: 0, mouth: null, chew: false };
+    const st = { fork: 0.12, loaded: false, pan: 0, bite: 0, mouth: null, chew: false, halt: 0 };
     for (const b of BITES) {
       const t0 = b - LIFT - TW;
       if (t >= t0 && t < b - LIFT) Object.assign(st, twirl(t, t0));
@@ -60,21 +66,18 @@
       else if (t >= b + HOLD && t < b + HOLD + BACK) { const u = seg(t, b + HOLD, b + HOLD + BACK, 'inOutSine'); Object.assign(st, { fork: lerp(1, 0.12, u), bite: 1 - u }); }
       if (t >= b + 0.15 && t < b + 0.15 + CHEW) st.chew = true;
     }
-    // the third forkful: twirled, lifted, stopped by the chime about halfway; it hangs there while he looks
-    const tw0 = HALT.lift - TW;
-    if (t >= tw0 && t < HALT.lift) Object.assign(st, twirl(t, tw0));
-    else if (t >= HALT.lift) {
-      const uAt = seg(HALT.at, HALT.lift, HALT.lift + LIFT, 'inOutSine');
-      const u = t < HALT.at ? seg(t, HALT.lift, HALT.lift + LIFT, 'inOutSine') : uAt + 0.04 * seg(t, HALT.at, HALT.at + 0.2, 'outCubic');
-      const head = t < HALT.at ? u * 0.5 : uAt * 0.5 * (1 - seg(t, HALT.at + 0.1, HALT.at + 0.5, 'inOutSine'));
-      Object.assign(st, { fork: lerp(0.08, 1, u), loaded: true, pan: 1 - seg(t, HALT.lift, HALT.lift + 0.3), bite: head });
-      if (t >= PUT_DOWN[0]) st.fork = lerp(st.fork, 0.04, seg(t, PUT_DOWN[0], PUT_DOWN[1], 'inOutSine'));     // laid back in the pan
+    // the third forkful: twirled, lifted out of the pan, stopped by the chime in front of his chest, tines up; it stays there
+    const tw0 = 20.05 - TW;
+    if (t >= tw0 && t < 20.05) Object.assign(st, twirl(t, tw0));
+    else if (t >= 20.05) {
+      const h = haltAt(t) / haltAt(30), down = seg(t, PUT_DOWN[0], PUT_DOWN[1], 'inOutSine');
+      Object.assign(st, { fork: lerp(0.05, 0.08, h) * (1 - down) + 0.04 * down, loaded: true, pan: (1 - seg(t, 20.05, 20.4)) * (t < 20.5 ? 1 : 0), halt: h * (1 - down) });
     }
     if (t >= 18.55 && t < STOP_CHEW) st.chew = true;     // he chews on through the picture, slower, until he stops
     return st;
   }
   // the looks: down at the phone on the salt (it stands low and to his right, nearer the camera), down at the pan, up to the fork
-  const F_PHONE = { yaw: 0.66, pitch: 0.62, gaze: [0.35, 0.4], lids: 0.62 };
+  const F_PHONE = { yaw: 0.8, pitch: 0.56, gaze: [0.45, 0.34], lids: 0.64 };
   const F_PAN = { yaw: 0.32, pitch: 0.82, gaze: [0, 0.45], lids: 0.45 };
   const F_BITE = { yaw: 0.18, pitch: 0.12, gaze: [0.3, 0.35], lids: 0.6 };
   function eatFace(st, t, extra) {
@@ -131,12 +134,16 @@
     const built = RIG.POSES.him.counter(p);
     // the fork's two ends, as the pose computes them
     const fk = clamp(st.fork, 0, 1), fHand = lerpPt([0.93, 1.66], [0.32, 0.8], fk);
-    const top = lerpPt(V2.add(fHand, [-0.02, -0.3]), V2.add(fHand, [0.14, 0.06]), fk), tip = lerpPt(V2.add(fHand, [-0.4, 0.22]), [0.04, 0.38], fk);
+    let top = lerpPt(V2.add(fHand, [-0.02, -0.3]), V2.add(fHand, [0.14, 0.06]), fk), tip = lerpPt(V2.add(fHand, [-0.4, 0.22]), [0.04, 0.38], fk);
+    // halted: the fork through the fist, its tines up and to the left at about 35 degrees, the pasta on them, in front of his chest
+    if (st.halt > 0) { const hTop = V2.add(fHand, [0.18, 0.09]), hTip = V2.add(fHand, [-0.42, -0.2]); top = lerpPt(top, hTop, st.halt); tip = lerpPt(tip, hTip, st.halt); }
+    const fbox = (a, b) => [Math.min(a[0], b[0]) - 0.28, Math.min(a[1], b[1]) - 0.28, Math.max(a[0], b[0]) + 0.28, Math.max(a[1], b[1]) + 0.28];
     built.ops.forEach(op => {
       if (!op || op.type !== 'paper') return;
+      if (/^fork[AB]/.test(op.key)) op.box = fbox(top, tip);
       if (op.key === 'pan') { op.key = 'Q06pan'; op.draw = panPiece; op.box = [-1.0, 1.55, 1.0, 2.25]; }
-      else if (/^forkA/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E'); op.draw = pen => forkPiece(pen, top, tip, st.loaded); }
-      else if (/^forkB/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E'); op.draw = pen => forkPiece(pen, V2.lerp(top, tip, 0.5), tip, st.loaded); }
+      else if (/^forkA/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E') + (st.halt > 0 ? 'h' + st.halt.toFixed(2) : ''); op.draw = pen => forkPiece(pen, top, tip, st.loaded); }
+      else if (/^forkB/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E') + (st.halt > 0 ? 'h' + st.halt.toFixed(2) : ''); op.draw = pen => forkPiece(pen, V2.lerp(top, tip, 0.5), tip, st.loaded); }
     });
     return RIG.drawFigure(c, { who: 'him', x: p.x, y: p.y, s, light: L, breath: RIG.breath(t, 2.5 * Math.min(2, s / 250)), ops: built.ops });
   }
@@ -295,11 +302,9 @@
         const u = seg(st, 0, 12, 'inOutSine'); c.camera({ x: lerp(960, 1000, u), y: lerp(540, 560, u), zoom: lerp(1.0, 1.045, u) });
         const V = LV('counter'); V.back(c, lt, Object.assign({ shot: 'close' }, NIGHT));
         const tt = twos(lt), e = eating(tt);
-        const swallow = 37.4, up = 38.1, back = 41.3;
-        // the look: down at the phone; at 38.1 his eyes lift to the empty room for the line; at 41.3 back down to the picture
-        const look = key(tt, [[up, 0], [up + 0.5, 1, 'inOutSine'], [back, 1], [back + 0.6, 0, 'inOutSine']]);
-        const room = { yaw: 0.42, pitch: 0.08, gaze: [0.35, -0.05], lids: 0.68 };
-        const f = mixv(Object.assign({}, F_PHONE, { lids: key(tt, [[30.3, 0.7], [33.6, 0.7], [35.5, 0.62]]) }), room, look);
+        const swallow = 37.4, up = 38.1;
+        // the look: his eyes stay on the phone, the whole time, the line included ("I love this one." is said to the picture)
+        const f = Object.assign({}, F_PHONE, { lids: key(tt, [[30.3, 0.7], [33.6, 0.7], [35.5, 0.62]]) });
         const mouthful = tt >= STOP_CHEW && tt < swallow ? { mouth: 0, cheek: 0.6, cheekSide: -1 } : {};
         const face = Object.assign(f, e.chew ? RIG.chew(lt) : mouthful, {
           brows: tt < 33 ? 0.25 : 0, smile: key(tt, [[34.4, 0], [36.6, 0.25], [up, 0.25], [up + 0.4, 0.125], [41, 0.125], [42, 0.25]]) },

@@ -1,0 +1,11 @@
+{
+ "note": "Long Distance has no score yet: the author has not decided whether there is one. This file is the hook. tools/build_mix.py places every cue listed here into the bed (out/mix/bed.flac) on the film's clock, under the voices (the bed is ducked under them by mix.py), and the world's silences do not silence it, so a cue can carry the title. An empty list builds the film without music. When a score is wanted, spot it against the moments below, generate the takes (audio/score/<id>.wav|flac|mp3; Lyria via a lyria.py copied from autopilot, or the author's own), and add cues; nothing else changes.",
+ "decided": false,
+ "cue_format": {"id": "M01 (file audio/score/M01.*)", "seq": "Q01", "start_s": "global seconds", "end_s": "global seconds", "level_db": "-15 = the house level (the take is normalised to -23 LUFS, then level_db + 9 dB)", "from_s": "where in the take to start (window past its intro)", "tune_cents": "measured detune to remove", "fade_in_s": 1.2, "fade_out_s": 2.5, "prompt": "...", "why": "..."},
+ "silences_to_keep": [
+  "Q10 51.5-55 s (global 422-425.5): the room drops out as the screen goes dark; music here would undo it",
+  "Q11 11 s (global 464): the app opens with no sound at all; nothing dials, nothing rings",
+  "Q11 58-72 s (global 511-525): the black and the title are silent, unless the score's last note is decided to carry the title"
+ ],
+ "cues": []
+}

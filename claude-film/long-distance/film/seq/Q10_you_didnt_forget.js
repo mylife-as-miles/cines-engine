@@ -19,34 +19,15 @@
   const DAY = { tod: 'day' };
   const m = (id, at, lt, cap) => Math.min(cap == null ? 3 : cap, RIG.mouthFor(id, lt - at));
 
-  // ------------------------------------------------------------------ the two-shot, B3 (0–4.6, 59–70)
-  function two(c, lt, o) {
-    const V = LV().between, A = V.anchors, tt = twos(lt);
-    V.back(c, lt, DAY);
-    const Ls = V.shots.two.lights.day;
-    const her0 = A.herBetween, s = 0.23 * her0[2], h0 = A.himBetween, hs = 0.23 * h0[2];
-    const himFace = Object.assign({ yaw: 2.0, pitch: 0.4, roll: 0.35, lids: 0.3, gaze: [0, 0.7] }, o.himFace || {});
-    if (o.after) {
-      // after the trade: the bag held at her side (the rig's trade pose, done); he has the phone in front of him, where we cannot see it
-      RIG.draw(c, 'her', 'trade', { x: her0[0] + 20, y: her0[1], s, light: setLight(Ls), t: lt, flip: true, u: 1, line: A.handsMeet, tau: 0.42, face: o.face });
-      RIG.draw(c, 'him', 'stand', { view: 'back', x: h0[0] + 10, y: h0[1] + 10, s: hs, light: setLight(Ls), t: lt, crop: 4.6, tau: 0.55, breathAmp: 3,
-        armL: { a1: -0.1, a2: 0.1, hand: false }, armR: { to: [0.3, 2.4], bend: -1, hand: false, front: true }, face: himFace });
-      return;
-    }
-    const L = setLight(Ls, { rig: { phone: [A.phoneHeld[0] + 120, A.phoneHeld[1] - 20], phoneCol: '#C8EEF2', phoneK: 0.45 } });
-    const her = RIG.draw(c, 'her', 'phone', { x: her0[0] + 20, y: her0[1], s, light: L, t: lt, flip: true, hold: o.hold || 0, tau: 0.42, face: o.face });
-    RIG.draw(c, 'him', 'bag', { x: h0[0] + 10, y: h0[1] + 10, s: hs, light: setLight(Ls), t: lt, view: 'back', zip: tt * 0.6, crop: 4.6, face: himFace });
-    if (her.phone) {
-      const ph = her.phone; const P = { x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, yaw: -0.3, screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.07 };
-      PHONE.glow(c, { info: PHONE.where(P, c), k: 0.42, r: ph.h * 2.6 });
-      PHONE.draw(c, P); her.over(c);
-    }
-  }
-  // 0–4.6: "Maybe it's not my place." She says it holding the phone up to him; he does not look up
+  // ------------------------------------------------------------------ the two-shot (0–4.6, 59–70): the floor plan's master (K.two)
+  // 0–4.6: "Maybe it's not my place." She holds the phone up to him; he does not look up from the bag
   function twoOpen(c, st, lt) {
-    two(c, lt, { face: { yaw: 0.52, pitch: 0.08, lids: key(twos(lt), [[0.5, 0.7], [3.2, 0.62]]), gaze: [0.42, 0.08], mouth: m('L017', 0.5, lt) } });
+    const tt = twos(lt);
+    K.two(c, lt, { z: 1 + 0.02 * E.inOutSine(seg(lt, 0, 4.6)),
+      her: { pose: 'phone', p: { hold: 0 }, face: { yaw: 0.52, pitch: 0.08, lids: key(tt, [[0.5, 0.7], [3.2, 0.62]]), gaze: [0.42, 0.08], mouth: m('L017', 0.5, lt) } },
+      herPhone: {},
+      him: { pose: 'bag', p: { zip: tt * 0.6 }, face: { yaw: 0.3, pitch: 0.45, lids: 0.3, gaze: [0.05, 0.6] } } });
   }
-
   // ------------------------------------------------------------------ her close-ups with the phone (between/her)
   // hold 0: the phone up between them, the screen to him; 1: turned back to her, studying it (we see its back)
   function herPhone(c, lt, o) {
@@ -195,51 +176,67 @@
       // until the swap it lies on her palm (its far end over her fingers); after, it is in his grip
       const hp = !T.swap && tr.her && tr.her.hands && tr.her.hands.L, len = tr.phone.w;
       const at = hp ? [hp.grip[0] - 0.22 * len, hp.grip[1] - 0.06 * len] : [tr.phone.x, tr.phone.y];
-      PHONE.draw(c, { x: at[0], y: at[1], h: len, spin: Math.PI / 2, pitch: 1.25, screen: 'black', env: '#BCC2C4', shadow: hp ? { alpha: 0.35 } : false });
+      PHONE.draw(c, { x: at[0], y: at[1] - 0.04 * len, h: 0.95 * len, spin: Math.PI / 2, yaw: Math.PI, pitch: -0.78, roll: 0.04, screen: 'black', env: '#BCC2C4', sheen: 0.06, shadow: hp ? { alpha: 0.35 } : false });
     }
     tr.over(c);
   }
 
   // ------------------------------------------------------------------ 59–70: L023; the breath drawn to say more (66.6), swallowed (68.5)
+  // After the trade: she has the bag, one hand still on her bag strap; he has the dark phone in his hand and looks at it. On her beat
+  // (63) his eyes come up to her; on "This is not okay." they go back to the phone. She draws a breath to say more (66.6), and he
+  // looks up, waiting; she swallows it (68.5), her eyes go to the door, her hand leaves the strap, and she turns to go (69.4).
   function twoAfter(c, st, lt) {
     const tt = twos(lt);
     const drawn = tt >= 66.5 && tt < 68.5, sw = tt >= 68.5;
-    two(c, lt, { after: true,
-      face: { yaw: 0.5, pitch: drawn ? -0.04 : sw ? 0.1 : 0.06, lids: key(tt, [[59, 0.66], [62.5, 0.58], [64.5, 0.66], [68.6, 0.5]]), gaze: [key(tt, [[59, 0.4], [62.6, 0.15], [64.4, 0.4], [68.6, 0.25]]), key(tt, [[59, 0.08], [62.6, 0.35], [64.4, 0.08], [68.6, 0.4]])], mouth: drawn ? 1 : m('L023', 59.5, lt), brows: drawn ? 0.25 : 0 },
-      himFace: { pitch: key(tt, [[59, 0.4], [63.4, 0.4], [64.0, 0.3], [66.4, 0.3], [67.0, 0.42]]) } });
+    const door = E.inOutSine(seg(tt, 68.7, 69.3)), go = E.inOutSine(seg(tt, 69.3, 70));
+    const up = key(tt, [[62.6, 0], [63.1, 1], [64.6, 1], [65.1, 0], [66.7, 0], [67.1, 0.8], [68.6, 0.8], [69.1, 0]]);
+    K.two(c, lt, { z: 1 + 0.03 * E.inOutSine(seg(lt, 59, 70)), zAt: [900, 500],
+      her: { pose: 'stand', bag: { hand: 'R' }, p: { tau: lerp(0.42, -0.2, go), armL: door < 0.5 ? { to: [-0.1, 2.5], bend: 1, hand: 'strap', front: true } : { a1: -0.06, a2: 0.12, hand: 'relax' },
+          armR: { to: [0.2, 3.0], bend: -1, hand: 'carry', hp: { flip: true }, front: true } },
+        face: { yaw: lerp(0.5, -0.35, door), pitch: drawn ? -0.04 : sw ? 0.1 : 0.06, lids: key(tt, [[59, 0.66], [62.5, 0.58], [64.5, 0.66], [68.6, 0.5], [69.0, 0.62]]),
+          gaze: [lerp(key(tt, [[59, 0.4], [62.6, 0.15], [64.4, 0.4]]), -0.3, door), key(tt, [[59, 0.08], [62.6, 0.35], [64.4, 0.08], [68.6, 0.4], [69.0, 0.05]])], mouth: drawn ? 1 : m('L023', 59.5, lt), brows: drawn ? 0.25 : 0 } },
+      him: { pose: 'stand', p: { tau: 0.4, breathAmp: 3.5, armL: { a1: -0.06, a2: 0.1, hand: 'relax' }, armR: { E: [0.72, 2.3], W: [0.32, 2.85], hand: 'thumb', hp: { reach: 0.1, flip: true, over: 'thumb' }, front: true } },
+        face: { yaw: lerp(0.2, 0.4, up), pitch: lerp(0.52, 0.18, up), lids: lerp(0.3, 0.6, up), gaze: [lerp(0.05, 0.35, up), lerp(0.6, 0.1, up)], brows: lerp(0, 0.25, up) } },
+      himPhone: {} });
   }
 
-  // ------------------------------------------------------------------ 70–75: the door. She leaves; it closes softly behind her
+  // ------------------------------------------------------------------ 70–74: the door. She leaves; it closes softly behind her
   function door(c, st, lt) {
     const V = LV().door; const tt = twos(lt); const A = V.anchors;
-    const open = lt < 72.3 ? 0.85 : lerp(0.85, 0, E.inOutSine(seg(lt, 72.3, 73.5)));
+    const open = lt < 72.0 ? 0.85 : lerp(0.85, 0, E.inOutSine(seg(lt, 72.0, 73.2)));
     const s0 = { tod: 'day', door: open };
     V.back(c, lt, s0);
-    const x = lerp(1140, 610, seg(tt, 70.3, 72.4));
-    if (tt < 72.4) {
+    const x = lerp(1140, 610, seg(tt, 70.0, 72.1));
+    if (tt < 72.1) {
       const g = c.g; g.save(); g.beginPath(); g.rect(A.doorJamb[0] + 2, 150, A.doorHinge[0] - A.doorJamb[0], 960); g.clip();
-      RIG.draw(c, 'her', 'walk', { x, y: A.herDoorway[1], s: 0.23 * A.herDoorway[2], light: setLight(V.shots.inside.lights.day), t: lt, phase: (tt - 70.3) * 0.95, flip: true, carry: 'bag', face: { yaw: 1.05, pitch: 0.18, lids: 0.6 } });
+      RIG.draw(c, 'her', 'walk', { x, y: A.herDoorway[1], s: 0.23 * A.herDoorway[2], light: setLight(V.shots.inside.lights.day), t: lt, phase: (tt - 70.0) * 0.95, flip: true, carry: 'bag', face: { yaw: 1.05, pitch: 0.18, lids: 0.6 } });
       g.restore();
     }
     V.front(c, lt, s0);
   }
 
-  // ------------------------------------------------------------------ 75–82.5: the room by day. He stays where he is
-  // He listens to her go down the stairs (his head turns toward the door), the street door (81.5), then he looks down at the phone
+  // ------------------------------------------------------------------ 74–80.5: the room by day. He stays where he is
+  // Her half of the room is empty again. He listens to her go down the stairs: his head turns to the door (74.4), a breath goes out
+  // (76.2); his eyes go to her half, the pale rectangle and the couch (77.4); the street door (79.0); he looks down at the phone (79.6).
   function roomAlone(c, st, lt) {
     const V = LV().room; const tt = twos(lt);
+    push(c, 760, 560, 1 + 0.07 * E.inOutSine(seg(lt, 74, 80.5)));
     V.back(c, lt, DAY); V.front(c, lt, DAY);
     const L = setLight(V.shots.wide.lights.day);
     const a = V.anchors.himBetween, s = 0.23 * a[2];
-    const turn = key(tt, [[75.6, 0], [76.6, 1], [81.2, 1], [81.9, 0]]), down = E.inOutSine(seg(tt, 81.7, 82.3));
-    const f = RIG.draw(c, 'him', 'stand', { x: a[0], y: a[1], s, light: L, t: lt, tau: 0.3,
+    const turn = key(tt, [[74.3, 0], [75.0, 1], [77.0, 1], [77.5, 0.4], [79.0, 0.4], [79.3, 0.7], [79.7, 0]]);
+    const look = key(tt, [[77.2, 0], [77.6, 1], [78.8, 1], [79.2, 0]]);
+    const down = E.inOutSine(seg(tt, 79.6, 80.2));
+    const sag = tt >= 76.2 && tt < 77.2 ? -2.5 : 0;
+    const f = RIG.draw(c, 'him', 'stand', { x: a[0], y: a[1] + sag, s, light: L, t: lt, tau: 0.3, breathAmp: tt >= 75.8 && tt < 77.2 ? 4.5 : 2.5,
       armL: { a1: -0.06, a2: 0.1, hand: 'relax' }, armR: { E: [0.7, 2.32], W: [0.3, 2.95], hand: 'thumb', hp: { reach: 0.1, flip: true, over: 'thumb' }, front: true },
-      face: { yaw: lerp(0.15, 0.62, turn), pitch: lerp(lerp(0.36, 0.2, turn), 0.55, down), lids: lerp(lerp(0.34, 0.5, turn), 0.3, down), gaze: [lerp(0, 0.3, turn), lerp(lerp(0.4, 0.2, turn), 0.6, down)] } });
+      face: { yaw: lerp(lerp(0.15, 0.7, turn), 0.45, look), pitch: lerp(lerp(lerp(0.36, 0.2, turn), 0.1, look), 0.55, down), lids: lerp(lerp(lerp(0.34, 0.5, turn), 0.55, look), 0.3, down),
+        gaze: [lerp(lerp(0, 0.35, turn), 0.45, look), lerp(lerp(lerp(0.4, 0.2, turn), 0.0, look), 0.6, down)] } });
     const hr = f.hands.R; if (hr) { const ph = hr.phone || { x: hr.grip[0], y: hr.grip[1], h: 0.7 * s, angle: 0 }; PHONE.draw(c, { x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, pitch: 0.7, screen: 'black', env: '#BCC2C4' }); f.over(c); }
   }
 
   FILM.seq({
-    id: 'Q10', title: "You didn't forget", dur: 82.5,
+    id: 'Q10', title: "You didn't forget", dur: 80.5,
     setup() { PHONE.prepare(['waterfall']); },
     lines: [
       { id: 'L017', at: 0.5 },      // Her: Maybe it's not my place. But I'm the background of your phone, and we aren't together anymore.
@@ -257,12 +254,12 @@
       S.cue('breath_held', 48.0, { dur: 3, what: 'his: the room going quiet around it' });
       // A057: the screen dims and she lets it go dark. The room goes quiet: the bed dips 6 dB and the window's street drops out
       S.cue('phone_dim', 51.5, { what: 'nothing: the screen going dark makes no sound. The silence is the cue' });
-      S.bed('room_day', 51.5, 82.5, { level: -52, what: 'the room after: 6 dB under' });
+      S.bed('room_day', 51.5, 80.5, { level: -52, what: 'the room after: 6 dB under' });
       S.cue('trade', 55.0, { dur: 3, what: 'cloth, the bag changing hands, the broken zip ticking once' });
       S.cue('breath_in', 66.6, { what: 'hers: a breath drawn to say something more, then held, then let go unspoken (68.5)' });
-      S.cue('door_close_soft', 73.5, { what: 'the front door pulled shut softly from the landing' });
-      S.bed('footsteps_stairs', 75, 81, { level: -40, fo: 1, what: 'her steps going down the stairwell, receding' });
-      S.cue('street_door', 81.5, { level: -50, what: 'far below: the street door. Then nothing (it carries on into Q11\'s silence)' });
+      S.cue('door_close_soft', 73.2, { what: 'the front door pulled shut softly from the landing' });
+      S.bed('footsteps_stairs', 73.8, 78.6, { level: -40, fo: 1, what: 'her steps going down the stairwell, receding' });
+      S.cue('street_door', 79.0, { level: -50, what: 'far below: the street door. Then nothing (it carries on into Q11\'s silence)' });
     },
     shots: [
       { at: 0, name: 'between: L017; the phone held up to him', draw: twoOpen, post: { vig: 0.45, halation: 0.4 } },
@@ -281,7 +278,7 @@
       { at: 54, name: 'hands: the trade on the centre line', draw: trade, post: { vig: 0.5 } },
       { at: 59, name: 'between: L023; the breath drawn and swallowed', draw: twoAfter, post: { vig: 0.45 } },
       { at: 70, name: 'door: she leaves; it closes softly', draw: door, post: { vig: 0.45 } },
-      { at: 75, name: 'room by day: he stays where he is; her half empty again', draw: roomAlone, post: { vig: 0.45 } },
+      { at: 74, name: 'room by day: he stays where he is; her half empty again', draw: roomAlone, post: { vig: 0.45 } },
     ],
   });
 })();

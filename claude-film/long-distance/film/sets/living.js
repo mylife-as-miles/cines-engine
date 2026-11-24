@@ -303,7 +303,8 @@ window.SETS = window.SETS || {};
     return q;
   }
   // ---------------------------------------------------------------- the fridge, the strip under its magnet, a note
-  let _strip = null; const stripCanvas = () => _strip || (_strip = G.photoStrip({ w: 240, h: 876, seed: 3, scale: 1.3 }));
+  // the photo-booth strip: the same two people as the rig, painted by the phone's photograph painter in 'flash' mode (PHONE.strip)
+  let _strip = null; const stripCanvas = () => _strip || (_strip = (window.PHONE && PHONE.strip ? PHONE.strip : G.photoStrip)({ w: 240, h: 876, seed: 3, scale: 1.3 }));
   function stripPiece(g, C, L, exposure) {
     const s = R.strip, z = R.fridge.z0 - 0.003, cr = Math.cos(s.rot), sr = Math.sin(s.rot);
     const at = (u, v) => C.p(s.x + u * cr - v * sr, s.y + u * sr + v * cr, z);

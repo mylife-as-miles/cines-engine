@@ -200,21 +200,24 @@
   }
 
   // ================================================================ PHOTO: the generated photographs (painted once, kept)
-  // Not cartoons and not 3D avatars: photographs that are too perfect. Each face is painted upright and frontal (the generator squares
+  // Not cartoons and not 3D avatars: photographs that are too perfect (and, in 'flash' mode, the cheap real photograph of the strip). Each face is painted upright and frontal (the generator squares
   // both faces to the lens), in soft blurred layers with one frontal light fixed to the face, perfectly symmetric, skin a little too smooth,
   // no freckles, stubble only as a tint, the same even smile; then rotated to the strip's tilt. Long hair is drawn strand by strand in the
   // picture's own space, so it hangs. Deterministic (OTM.rng).
+  // The two people, as the rig draws them (film/rig.js, GG.CAST), younger: HIM medium-brown skin (#B47C58), short dark curly hair grown out a
+  // little, a long gentle face, heavy lids; HER pale skin with freckles (only a real photograph keeps them), copper hair, green eyes, a long
+  // narrow face and a pointed chin. The same painter draws them in the generated pictures (mode 'gloss') and in the photo-booth strip ('flash').
   const PH = {
-    her: { skin: '#F0C9AD', skinSh: '#DD937B', skinDeep: '#BC6A5C', blush: '#EE8F86', lips: '#D27A74', lipsDk: '#A9524F', iris: '#6C8448', irisDk: '#2E3B20', irisLt: '#B5A562',
-      brow: '#8E4F33', lash: '#2B1B15', sclera: '#F3EDE6', teeth: '#F4EFE8',
-      hair: '#A94D2C', hairDk: '#5C2312', hairLt: '#E8A26A', hairHi: '#F6C894',
-      face: [[0, -0.56], [0.2, -0.53], [0.29, -0.4], [0.305, -0.2], [0.303, 0.0], [0.283, 0.14], [0.238, 0.262], [0.158, 0.37], [0.078, 0.428], [0, 0.442]],
-      neck: 0.142, brT: 0.032, lashK: 1.2, eyeW: 0.068, eyeOpen: 0.04 },
-    him: { skin: '#B98060', skinSh: '#8C5A44', skinDeep: '#5E3A2C', blush: '#B9624E', lips: '#A2675A', lipsDk: '#743E35', iris: '#4A301E', irisDk: '#1C120B', irisLt: '#86603A',
-      brow: '#1F1714', lash: '#17100C', sclera: '#EFE6DA', teeth: '#F1EBE2', stubble: '#7A5444',
-      hair: '#1E1714', hairDk: '#0E0A09', hairLt: '#4E3D33', hairHi: '#6E5A4C',
-      face: [[0, -0.57], [0.215, -0.54], [0.315, -0.4], [0.334, -0.2], [0.33, 0.03], [0.314, 0.18], [0.282, 0.3], [0.2, 0.4], [0.1, 0.452], [0, 0.464]],
-      neck: 0.182, brT: 0.04, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.033 },
+    her: { skin: '#F1CAAF', skinSh: '#D9957E', skinDeep: '#B8705F', blush: '#EE8F86', lips: '#D27A74', lipsDk: '#A9524F', iris: '#6C8448', irisDk: '#2E3B20', irisLt: '#B5A562',
+      brow: '#9A4E2E', lash: '#3A2219', sclera: '#EEE6DC', teeth: '#F4EFE8', freckle: '#B8704E',
+      hair: '#B3502A', hairDk: '#6A2814', hairLt: '#E08850', hairHi: '#F4B888',
+      face: [[0, -0.57], [0.195, -0.54], [0.28, -0.41], [0.295, -0.2], [0.29, 0.0], [0.27, 0.14], [0.226, 0.27], [0.15, 0.38], [0.072, 0.44], [0, 0.455]],
+      neck: 0.138, brT: 0.026, browArch: 0.012, lashK: 1.15, eyeW: 0.066, eyeOpen: 0.038, earK: 0.9 },
+    him: { skin: '#C48D6A', skinSh: '#A87254', skinDeep: '#87563F', blush: '#B9624E', lips: '#A86C5C', lipsDk: '#7A4438', iris: '#4A301E', irisDk: '#1C120B', irisLt: '#86603A',
+      brow: '#231914', lash: '#1A110D', sclera: '#E8DED2', teeth: '#F1EBE2', stubble: '#6E4A3A',
+      hair: '#241A15', hairDk: '#120D0B', hairLt: '#4E3A2E', hairHi: '#76604E',
+      face: [[0, -0.6], [0.21, -0.57], [0.305, -0.43], [0.322, -0.21], [0.318, 0.02], [0.3, 0.18], [0.264, 0.315], [0.19, 0.425], [0.095, 0.486], [0, 0.498]],
+      neck: 0.17, brT: 0.036, browArch: 0.014, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.03, earK: 1.05 },
   };
   const symLoop = half => half.concat(half.slice(1, -1).reverse().map(([x, y]) => [-x, y]));
   // a layer the size of the face canvas, with the same local transform (origin between the eyes, 1 unit = U px)
@@ -231,140 +234,160 @@
 
   function paintEye(g, P, sd, o) {
     // the right eye (sd = 1) or its mirror image; local units, centre (0.152 sd, 0)
-    const cx = 0.152 * sd, w = P.eyeW, op = P.eyeOpen * (o.eyes == null ? 1 : o.eyes), sm = o.smile || 0;
-    const inner = [cx - sd * w * 0.92, 0.006], outer = [cx + sd * w, -0.004], top = [cx - sd * w * 0.12, -op], bot = [cx + sd * w * 0.08, 0.021 - 0.006 * sm];
+    const cx = 0.152 * sd, w = P.eyeW, ek = o.eyes == null ? 1 : o.eyes, op = P.eyeOpen * ek, sm = o.smile || 0;
+    const inner = [cx - sd * w * 0.92, 0.006], outer = [cx + sd * w, -0.004];
+    if (ek < 0.15) {   // shut with laughter: the lid's lash line arched, short lashes down, a crease under it
+      g.save(); g.lineCap = 'round'; g.strokeStyle = rgba(P.lash, 0.85); g.lineWidth = 0.0045;
+      g.beginPath(); g.moveTo(inner[0], inner[1] + 0.002); g.quadraticCurveTo(cx, -0.016 - 0.006 * sm, outer[0], outer[1] + 0.004); g.stroke();
+      g.strokeStyle = rgba(P.skinDeep, 0.45); g.lineWidth = 0.004; g.beginPath(); g.moveTo(inner[0] + sd * 0.01, 0.018); g.quadraticCurveTo(cx, 0.008, outer[0] - sd * 0.008, 0.016); g.stroke();
+      g.restore(); return null;
+    }
+    const top = [cx - sd * w * 0.12, -op], bot = [cx + sd * w * 0.08, 0.021 - 0.006 * sm];
     const lid = new Path2D(); lid.moveTo(inner[0], inner[1]);
     lid.bezierCurveTo(inner[0] + sd * w * 0.25, top[1] + 0.004, top[0] - sd * w * 0.3, top[1], top[0], top[1]);
     lid.bezierCurveTo(top[0] + sd * w * 0.55, top[1], outer[0] - sd * w * 0.18, outer[1] - op * 0.45, outer[0], outer[1]);
     const opening = new Path2D(lid); opening.bezierCurveTo(outer[0] - sd * w * 0.3, bot[1] + 0.002, bot[0] + sd * w * 0.35, bot[1], bot[0], bot[1]);
     opening.bezierCurveTo(bot[0] - sd * w * 0.5, bot[1], inner[0] + sd * w * 0.2, inner[1] + 0.008, inner[0], inner[1]); opening.closePath();
-    // the eye white, shaded at the corners and under the lid
     g.save(); g.clip(opening);
     const sg = g.createRadialGradient(cx, 0.0, 0.0, cx, 0.0, w * 1.05); sg.addColorStop(0, P.sclera); sg.addColorStop(0.6, mixHex(P.sclera, '#C9B7A8', 0.35)); sg.addColorStop(1, mixHex(P.sclera, '#8E6E62', 0.6));
     g.fillStyle = sg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
-    // the iris: a dark limbal ring, the colour, a lighter ring round the pupil, fine fibres; the pupil; a catchlight (the same in both eyes)
-    const ir = 0.0305, iy = -0.004, icx = cx - sd * w * 0.05;
+    // the iris (limbal ring, colour, fibres), the pupil, a catchlight: the same in both eyes
+    const gz = o.gaze || [0, 0], ir = 0.0305, iy = -0.004 + gz[1] * 0.016, icx = cx - sd * w * 0.05 + gz[0] * 0.022;
     const ig = g.createRadialGradient(icx, iy, 0, icx, iy, ir); ig.addColorStop(0, P.irisLt); ig.addColorStop(0.42, mixHex(P.irisLt, P.iris, 0.6)); ig.addColorStop(0.72, P.iris); ig.addColorStop(0.9, P.irisDk); ig.addColorStop(1, mixHex(P.irisDk, '#000000', 0.5));
     g.fillStyle = ig; g.beginPath(); g.arc(icx, iy, ir, 0, Math.PI * 2); g.fill();
     const r = O.rng('iris' + P.iris); g.lineWidth = 0.0012;
     for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 + r() * 0.05, r0 = 0.014 + r() * 0.004, r1 = ir * (0.75 + r() * 0.2); g.strokeStyle = r() < 0.5 ? rgba(P.irisLt, 0.35) : rgba(P.irisDk, 0.3); g.beginPath(); g.moveTo(icx + Math.cos(a) * r0, iy + Math.sin(a) * r0); g.lineTo(icx + Math.cos(a) * r1, iy + Math.sin(a) * r1); g.stroke(); }
     g.fillStyle = '#0A0706'; g.beginPath(); g.arc(icx, iy, 0.0118, 0, Math.PI * 2); g.fill();
-    // the upper lid's shadow across the top of the eye
     const lg = g.createLinearGradient(0, -op, 0, -op + 0.026); lg.addColorStop(0, 'rgba(40,20,14,0.6)'); lg.addColorStop(1, 'rgba(40,20,14,0)'); g.fillStyle = lg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
     const bg2 = g.createLinearGradient(0, 0.024, 0, 0.008); bg2.addColorStop(0, 'rgba(120,80,70,0.3)'); bg2.addColorStop(1, 'rgba(120,80,70,0)'); g.fillStyle = bg2; g.fillRect(cx - w * 1.2, 0, w * 2.4, 0.03);
-    g.fillStyle = 'rgba(255,255,255,0.97)'; g.beginPath(); g.ellipse(icx - 0.006, iy - 0.011, 0.0058, 0.0052, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.arc(icx + 0.009, iy + 0.008, 0.0022, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.95)'; g.beginPath(); g.ellipse(icx - 0.006, iy - 0.011, 0.005, 0.0045, 0, 0, Math.PI * 2); g.fill();
     g.restore();
-    // the pink inner corner
-    ell(g, inner[0] + sd * 0.006, inner[1] + 0.001, 0.007, 0.006, '#D8988C', 0.85);
-    // the lash line, thicker toward the outer corner, then lashes (hers longer)
-    g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = rgba(P.lash, 0.85); g.lineWidth = 0.003 * (0.6 + 0.4 * P.lashK); g.stroke(lid);
-    g.lineWidth = 0.0016 * P.lashK; g.globalAlpha = 0.6;
+    ell(g, inner[0] + sd * 0.006, inner[1] + 0.001, 0.007, 0.006, '#D8988C', 0.8);
+    // the lash line (soft, not an outline), then fine lashes
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = rgba(P.lash, 0.7); g.lineWidth = 0.0028 * (0.6 + 0.4 * P.lashK); g.stroke(lid);
+    g.lineWidth = 0.0014 * P.lashK; g.globalAlpha = 0.5;
     const lr = O.rng('lash' + sd + P.lash), n = Math.round(16 * P.lashK);
     for (let i = 0; i < n; i++) { const u = 0.15 + 0.85 * i / (n - 1); const x = lerp(inner[0], outer[0], u), y = lerp(inner[1], outer[1], u) - Math.sin(Math.PI * Math.min(1, u * 1.05)) * (op - 0.004) - 0.001;
-      const len = (0.008 + 0.014 * u) * P.lashK * (0.85 + 0.3 * lr()), ang = -Math.PI / 2 + sd * (0.25 + 0.9 * u);
+      const len = (0.007 + 0.012 * u) * P.lashK * (0.85 + 0.3 * lr()), ang = -Math.PI / 2 + sd * (0.25 + 0.9 * u);
       g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(ang) * len * 0.5, y + Math.sin(ang) * len * 0.7, x + Math.cos(ang + sd * 0.35) * len, y + Math.sin(ang + sd * 0.35) * len); g.stroke(); }
     g.restore();
-    return { lid, opening, inner, outer, top, bot };
+    return { lid, opening };
   }
 
-  // one face, upright: returns {c, ox, oy} (the canvas and the pixel position of the point between the eyes)
+  // one face, upright: returns {c, ox, oy} (the canvas and the pixel position of the point between the eyes).
+  // o: smile 0..1, open 0..1 (a laugh opens the jaw), eyes 0..1 (below 0.15 shut with laughter), brow (raised), gaze [x, y],
+  //    turn -1..1 (features toward +x: the face turned), lift -1..1 (head back: features up; negative: head down), pucker (an 'O' mouth),
+  //    mode 'gloss' (the generated pictures) or 'flash' (the booth: flatter, hot specular spots, freckles and stubble faintly kept)
   function paintFace(who, U, o) {
-    o = o || {}; const P = PH[who], sm = o.smile == null ? 1 : o.smile, open = o.open == null ? 0.3 : o.open;
-    const D = { U, CW: Math.ceil(U * 1.06), CH: Math.ceil(U * 1.9), OX: Math.ceil(U * 1.06) / 2, OY: U * 0.8 };
+    o = o || {}; const P = PH[who], sm = o.smile == null ? 1 : o.smile, open = o.open == null ? 0.3 : o.open, flash = o.mode === 'flash';
+    const turn = o.turn || 0, lift = o.lift || 0, eyes = o.eyes == null ? (who === 'him' ? 0.85 : 1) : o.eyes;
+    const D = { U, CW: Math.ceil(U * 1.12), CH: Math.ceil(U * 1.95), OX: Math.ceil(U * 1.12) / 2, OY: U * 0.82 };
     D.F = faceLayer(D); const g = D.F.g;
-    const faceP = GG.spline(symLoop(P.face), true), nk = P.neck;
+    // the outline: the jaw drops with a laugh, rises with the head back
+    const half = P.face.map(([x, y]) => { let yy = y; if (y > 0.22) yy += (y - 0.22) * (0.3 * open - 0.22 * Math.max(0, lift)); return [x, yy]; });
+    const faceP = GG.spline(symLoop(half), true), nk = P.neck;
     const neckP = GG.spline([[-nk, 0.12], [nk, 0.12], [nk * 1.04, 0.62], [nk * 1.5, 0.98, 1], [-nk * 1.5, 0.98, 1], [-nk * 1.04, 0.62]], true);
-    const earX = (P.face[4][0] + 0.022), earP = new Path2D(); both(sd => { earP.ellipse(sd * earX, 0.065, 0.042, 0.095, sd * -0.12, 0, Math.PI * 2); });
-    // the skin's mask
+    const earX = (P.face[4][0] + 0.02), earP = new Path2D();
+    both(sd => { const hide = clamp(1 - Math.max(0, sd * turn) * 1.6, 0, 1); if (hide > 0.05) earP.ellipse(sd * (earX - 0.02 * (1 - hide)), 0.065, 0.04 * P.earK * hide, 0.092 * P.earK, sd * -0.12, 0, Math.PI * 2); });
+    // the features move with the turn and the lift (a 2.5D approximation; fine at photograph sizes)
+    const ft = l => { l.translate(turn * 0.075, -lift * 0.055); l.scale(1 - 0.14 * Math.abs(turn), 1 - 0.1 * Math.abs(lift)); };
     const M = faceLayer(D); M.g.fillStyle = '#fff'; M.g.fill(neckP); M.g.fill(earP); M.g.fill(faceP);
-    // base colours: the neck a shade deeper, ears, face
-    g.fillStyle = mixHex(P.skin, P.skinSh, 0.25); g.fill(neckP); g.fillStyle = mixHex(P.skin, P.skinSh, 0.15); g.fill(earP); g.fillStyle = P.skin; g.fill(faceP);
-    // ---- form: everything turns away from the one frontal light, softly
-    soft(D, l => { const gr = l.createRadialGradient(0, 0, 0.05, 0, 0, 1); gr.addColorStop(0, rgba(P.skinSh, 0)); gr.addColorStop(0.62, rgba(P.skinSh, 0.0)); gr.addColorStop(0.92, rgba(P.skinSh, 0.55)); gr.addColorStop(1, rgba(P.skinDeep, 0.8));
-      l.save(); l.translate(0, -0.02); l.scale(0.345, 0.52); l.fillStyle = gr; l.fillRect(-1.2, -1.2, 2.4, 2.4); l.restore(); }, 0.02, 'multiply', 1, M.c);
-    // the face's shadow on the neck, the ears' inner shade
+    g.fillStyle = mixHex(P.skin, P.skinSh, 0.22); g.fill(neckP); g.fillStyle = mixHex(P.skin, P.skinSh, 0.12); g.fill(earP); g.fillStyle = P.skin; g.fill(faceP);
+    const formK = (flash ? 0.45 : 1) * (who === 'him' ? 0.75 : 1);
+    // ---- form: everything turns away from the one frontal light, softly; a little colour variation, as real skin has
+    soft(D, l => { l.translate(turn * 0.03, 0); const gr = l.createRadialGradient(0, 0, 0.05, 0, 0, 1); gr.addColorStop(0, rgba(P.skinSh, 0)); gr.addColorStop(0.6, rgba(P.skinSh, 0.0)); gr.addColorStop(0.9, rgba(P.skinSh, 0.5)); gr.addColorStop(1, rgba(P.skinDeep, 0.7));
+      l.save(); l.translate(0, -0.02); l.scale(0.34, 0.54); l.fillStyle = gr; l.fillRect(-1.2, -1.2, 2.4, 2.4); l.restore(); }, 0.02, 'multiply', formK, M.c);
+    soft(D, l => { ft(l); ell(l, 0, -0.3, 0.2, 0.12, '#F6D9A8', 0.35); ell(l, 0, 0.12, 0.06, 0.07, '#F0A08C', 0.3); ell(l, 0, 0.38, 0.12, 0.06, '#C89080', 0.25); }, 0.05, 'soft-light', 0.8, M.c);
     soft(D, l => { const gr = l.createLinearGradient(0, 0.36, 0, 0.72); gr.addColorStop(0, rgba(P.skinDeep, 0.32)); gr.addColorStop(0.5, rgba(P.skinSh, 0.14)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
       l.globalCompositeOperation = 'destination-out'; l.fill(faceP); l.globalCompositeOperation = 'source-over';
-      both(sd => ell(l, sd * (earX - 0.004), 0.07, 0.022, 0.062, P.skinDeep, 0.55)); }, 0.012, 'multiply', 1, M.c);
-    // sockets, the sides of the nose, under the nose, under the lip, under the jaw
-    soft(D, l => {
+      both(sd => ell(l, sd * (earX - 0.004), 0.07, 0.02 * P.earK, 0.06 * P.earK, P.skinDeep, 0.5)); }, 0.012, 'multiply', 1, M.c);
+    soft(D, l => { ft(l);
       both(sd => { ell(l, sd * 0.152, -0.02, 0.085, 0.048, P.skinSh, 0.5); ell(l, sd * 0.085, -0.005, 0.025, 0.025, P.skinSh, 0.18); });
-      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.16 : 0.3); l.lineWidth = 0.022; l.beginPath(); l.moveTo(sd * 0.048, -0.01); l.quadraticCurveTo(sd * 0.04, 0.07, sd * 0.05, 0.14); l.stroke(); });
-      ell(l, 0, 0.226, 0.05, 0.016, P.skinDeep, 0.5); ell(l, 0, 0.372, 0.05, 0.016, P.skinSh, 0.55);
-      both(sd => ell(l, sd * 0.25, 0.22, 0.045, 0.09, P.skinSh, 0.22)); both(sd => ell(l, sd * 0.15, 0.045, 0.05, 0.012, P.skinSh, 0.22));
-      // the contour under the cheekbones, and the jaw's underside, as a key light from just above makes them
-      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.2 : 0.38); l.lineWidth = 0.05; l.beginPath(); l.moveTo(sd * 0.285, 0.07); l.quadraticCurveTo(sd * 0.24, 0.17, sd * 0.2, 0.22); l.stroke(); });
-      { const jp = new Path2D(); const half = P.face.slice(5); jp.moveTo(half[0][0], half[0][1]); half.forEach(q => jp.lineTo(q[0], q[1])); half.slice().reverse().forEach(q => jp.lineTo(-q[0], q[1])); l.strokeStyle = rgba(P.skinDeep, who === 'her' ? 0.14 : 0.4); l.lineWidth = 0.05; l.stroke(jp); }
-    }, 0.02, 'multiply', 1, M.c);
-    // the light: forehead, the bridge and tip of the nose, the cheekbones, the chin, the upper lip's ridge (soft, never banded)
-    soft(D, l => {
+      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.16 : 0.26); l.lineWidth = 0.022; l.beginPath(); l.moveTo(sd * 0.048, -0.01); l.quadraticCurveTo(sd * 0.04, 0.07, sd * 0.05, 0.14); l.stroke(); });
+      ell(l, 0, 0.226, 0.05, 0.016, P.skinDeep, 0.45); ell(l, 0, 0.372 + 0.05 * open, 0.05, 0.016, P.skinSh, 0.5);
+      both(sd => ell(l, sd * 0.25, 0.22, 0.045, 0.09, P.skinSh, 0.2)); both(sd => ell(l, sd * 0.15, 0.045, 0.05, 0.012, P.skinSh, 0.2));
+      both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.1 : 0.3); l.lineWidth = 0.05; l.beginPath(); l.moveTo(sd * 0.285, 0.07); l.quadraticCurveTo(sd * 0.24, 0.17, sd * 0.2, 0.22); l.stroke(); });
+    }, 0.02, 'multiply', formK, M.c);
+    { const jp = new Path2D(); const hh = half.slice(5); jp.moveTo(hh[0][0], hh[0][1]); hh.forEach(q => jp.lineTo(q[0], q[1])); hh.slice().reverse().forEach(q => jp.lineTo(-q[0], q[1]));
+      soft(D, l => { l.strokeStyle = rgba(P.skinDeep, who === 'her' ? 0.14 : 0.3); l.lineWidth = 0.05; l.stroke(jp); }, 0.02, 'multiply', formK, M.c); }
+    // the light: forehead, the bridge and tip of the nose, the cheekbones, the chin (soft, never banded); the flash adds hot spots
+    soft(D, l => { ft(l);
       ell(l, 0, -0.27, 0.15, 0.09, '#FFF6EE', 0.5); ell(l, 0, 0.06, 0.016, 0.09, '#FFF6EE', 0.45); ell(l, 0, 0.158, 0.028, 0.024, '#FFF8F2', 0.6);
       both(sd => { ell(l, sd * 0.19, 0.06, 0.07, 0.035, '#FFF4EA', 0.35); ell(l, sd * 0.15, -0.075, 0.06, 0.012, '#FFF4EA', 0.25); });
-      ell(l, 0, 0.407, 0.045, 0.022, '#FFF4EA', 0.4); ell(l, 0, 0.262, 0.03, 0.008, '#FFF6EE', 0.35);
-      both(sd => ell(l, sd * 0.15, 0.115, 0.06, 0.045, '#FFF2E8', 0.4 * sm));      // the apples of the cheeks, lifted by the smile
-    }, 0.022, 'screen', 0.55, M.c);
-    // a dewy sheen, the beauty filter's: small, bright, perfectly placed
-    soft(D, l => { ell(l, 0, 0.0, 0.009, 0.05, '#FFFFFF', 0.5); ell(l, 0, 0.15, 0.012, 0.009, '#FFFFFF', 0.6); both(sd => ell(l, sd * 0.2, 0.03, 0.035, 0.014, '#FFFFFF', 0.35)); ell(l, 0, -0.3, 0.07, 0.03, '#FFFFFF', 0.25); }, 0.012, 'screen', 0.3, M.c);
-    // rosy cheeks (the generator's improvement), and his stubble as a smooth tint
-    soft(D, l => { both(sd => ell(l, sd * 0.175, 0.13, 0.085, 0.055, P.blush, who === 'her' ? 0.55 : 0.35)); ell(l, 0, -0.2, 0.08, 0.05, P.blush, 0.12); }, 0.035, 'multiply', who === 'her' ? 0.45 : 0.35, M.c);
-    if (P.stubble) soft(D, l => { l.fillStyle = P.stubble; l.beginPath(); l.moveTo(-0.3, 0.2); l.bezierCurveTo(-0.2, 0.24, -0.1, 0.235, 0, 0.24); l.bezierCurveTo(0.1, 0.235, 0.2, 0.24, 0.3, 0.2); l.lineTo(0.3, 0.5); l.lineTo(-0.3, 0.5); l.closePath(); l.fill(); }, 0.02, 'multiply', 0.32, M.c);
-    // ---- the brows: many fine hairs, soft
-    soft(D, l => { both(sd => {
+      ell(l, 0, 0.407 + 0.05 * open, 0.045, 0.022, '#FFF4EA', 0.4); ell(l, 0, 0.262, 0.03, 0.008, '#FFF6EE', 0.35);
+      both(sd => ell(l, sd * 0.15, 0.115, 0.06, 0.045, '#FFF2E8', 0.4 * sm));
+    }, 0.022, 'screen', flash ? 0.75 : 0.5, M.c);
+    soft(D, l => { ft(l); ell(l, 0, 0.0, 0.009, 0.05, '#FFFFFF', 0.5); ell(l, 0, 0.15, 0.012, 0.009, '#FFFFFF', 0.6); both(sd => ell(l, sd * 0.2, 0.03, 0.035, 0.014, '#FFFFFF', 0.35)); ell(l, 0, -0.3, 0.07, 0.03, '#FFFFFF', 0.25); },
+      flash ? 0.008 : 0.012, 'screen', flash ? 0.6 : 0.26, M.c);
+    // cheeks: rosier in the generated pictures; her freckles survive only in a real photograph (faint under the flash)
+    soft(D, l => { ft(l); both(sd => ell(l, sd * 0.175, 0.13, 0.085, 0.055, P.blush, who === 'her' ? 0.55 : 0.3)); ell(l, 0, -0.2, 0.08, 0.05, P.blush, 0.1); }, 0.035, 'multiply', flash ? 0.25 : (who === 'her' ? 0.42 : 0.3), M.c);
+    if (flash && P.freckle) soft(D, l => { ft(l); const r = O.rng('freckle'); for (let i = 0; i < 110; i++) { const x = (r() - 0.5) * 0.5, y = 0.02 + r() * 0.17; const d = Math.exp(-((Math.abs(x) - 0.1) ** 2 / 0.012 + (y - 0.09) ** 2 / 0.004)) + 0.6 * Math.exp(-(x * x / 0.0015 + (y - 0.13) ** 2 / 0.003)); if (r() > d) continue; ell(l, x, y, 0.004 + r() * 0.003, 0.0035 + r() * 0.002, P.freckle, 0.5 + 0.4 * r()); } }, 0.0015, 'multiply', 0.55, M.c);
+    if (P.stubble) soft(D, l => { ft(l); l.fillStyle = P.stubble; l.beginPath(); l.moveTo(-0.3, 0.2); l.bezierCurveTo(-0.2, 0.24, -0.1, 0.235, 0, 0.24); l.bezierCurveTo(0.1, 0.235, 0.2, 0.24, 0.3, 0.2); l.lineTo(0.3, 0.6); l.lineTo(-0.3, 0.6); l.closePath(); l.fill(); }, 0.025, 'multiply', flash ? 0.14 : 0.18, M.c);
+    // ---- the brows: fine hairs, soft
+    const bRaise = (o.brow || 0) * 0.026;
+    soft(D, l => { ft(l); l.translate(0, -bRaise); both(sd => {
       const r = O.rng('brow' + sd + who); l.lineCap = 'round';
-      const bx = u => sd * lerp(0.064, 0.24, u), by = u => -0.106 - 0.026 * Math.sin(Math.PI * Math.min(1, u * 1.2)) + 0.012 * u, th = u => P.brT * (0.9 - 0.6 * u);
-      l.fillStyle = rgba(P.brow, who === 'her' ? 0.5 : 0.7); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
+      const bx = u => sd * lerp(0.064, 0.24, u), by = u => -0.11 - P.browArch * Math.sin(Math.PI * Math.min(1, u * 1.2)) + 0.006 * u - (o.brow || 0) * 0.008 * (1 - u), th = u => P.brT * (0.9 - 0.6 * u);
+      l.fillStyle = rgba(P.brow, who === 'her' ? 0.5 : 0.65); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
       for (let i = 0; i < 220; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u) * 0.8, x = bx(u), ang = u < 0.15 ? -Math.PI / 2 + sd * 0.9 : (sd > 0 ? -0.18 : Math.PI + 0.18) + (r() - 0.5) * 0.25, len = 0.008 + 0.01 * r();
-        l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.35 + 0.35 * r()); l.lineWidth = 0.0017; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0032, 'source-over', 1);
-    // ---- the eyes: the lid crease and lid above, then the eye itself
-    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.5); l.lineWidth = 0.006; l.lineCap = 'round'; l.beginPath(); l.moveTo(sd * 0.094, -0.022); l.quadraticCurveTo(sd * 0.145, -0.068, sd * 0.215, -0.028); l.stroke();
-      l.strokeStyle = rgba(P.skinDeep, 0.28); l.lineWidth = 0.004; l.beginPath(); l.moveTo(sd * 0.1, 0.022); l.quadraticCurveTo(sd * 0.155, 0.04, sd * 0.208, 0.012); l.stroke(); }); }, 0.005, 'multiply', 1);
-    { const E = faceLayer(D); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes: o.eyes })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0017 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
-    // ---- the nose: no lines, only the soft wings and nostrils
-    soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.38); l.lineWidth = 0.008; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
-      ell(l, sd * 0.02, 0.205, 0.011, 0.0055, mixHex(P.skinDeep, '#2A120C', 0.25), 0.6); });
-      ell(l, 0, 0.2, 0.03, 0.01, P.skinDeep, 0.35); }, 0.005, 'multiply', 1);
-    soft(D, l => { ell(l, 0, 0.165, 0.022, 0.018, '#FFFFFF', 0.5); ell(l, 0, 0.04, 0.008, 0.06, '#FFFFFF', 0.35); }, 0.008, 'screen', 0.35, M.c);
-    // ---- the mouth: the same even smile, upper teeth showing
-    { const cxm = 0.08 + 0.016 * sm, cym = 0.306 - 0.02 * sm, yu = 0.301, yl = yu + 0.014 + 0.05 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
+        l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.35 + 0.35 * r()); l.lineWidth = 0.0017; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0034, 'source-over', 1);
+    // ---- the eyes: the lid crease (heavy lids for him: the crease low, the lid's shadow over the iris), then the eye itself
+    soft(D, l => { ft(l); both(sd => { const cy0 = who === 'him' ? -0.04 : -0.06; l.strokeStyle = rgba(P.skinDeep, 0.45); l.lineWidth = 0.006; l.lineCap = 'round'; l.beginPath(); l.moveTo(sd * 0.094, -0.02); l.quadraticCurveTo(sd * 0.145, cy0 - 0.008 * (o.brow || 0), sd * 0.215, -0.026); l.stroke();
+      l.strokeStyle = rgba(P.skinDeep, 0.25); l.lineWidth = 0.004; l.beginPath(); l.moveTo(sd * 0.1, 0.022); l.quadraticCurveTo(sd * 0.155, 0.04, sd * 0.208, 0.012); l.stroke(); }); }, 0.005, 'multiply', 1);
+    { const E = faceLayer(D); ft(E.g); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes, gaze: o.gaze })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0017 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
+    // ---- the nose: no lines, only the soft wings and nostrils (his a little wider)
+    const nw = who === 'him' ? 1.18 : 1;
+    soft(D, l => { ft(l); both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.36); l.lineWidth = 0.008; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036 * nw, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
+      ell(l, sd * 0.02 * nw, 0.205, 0.011, 0.0055, mixHex(P.skinDeep, '#2A120C', 0.25), 0.6); });
+      ell(l, 0, 0.2, 0.03 * nw, 0.01, P.skinDeep, 0.32); }, 0.005, 'multiply', 1);
+    soft(D, l => { ft(l); ell(l, 0, 0.165, 0.022, 0.018, '#FFFFFF', 0.5); ell(l, 0, 0.04, 0.008, 0.06, '#FFFFFF', 0.35); }, 0.008, 'screen', 0.35, M.c);
+    // ---- the mouth
+    if (o.pucker) {   // an 'O': he pulls a face
+      const Mo = faceLayer(D), mg = Mo.g; ft(mg); mg.fillStyle = P.lips; mg.beginPath(); mg.ellipse(0, 0.33, 0.05, 0.058, 0, 0, Math.PI * 2); mg.fill();
+      mg.fillStyle = '#3A1512'; mg.beginPath(); mg.ellipse(0, 0.332, 0.028, 0.036, 0, 0, Math.PI * 2); mg.fill();
+      mg.fillStyle = 'rgba(255,240,234,0.4)'; mg.beginPath(); mg.ellipse(0, 0.375, 0.022, 0.007, 0, 0, Math.PI * 2); mg.fill();
+      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0015 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
+    } else {
+      const cxm = 0.08 + 0.016 * sm + 0.012 * open, cym = 0.306 - 0.02 * sm, yu = 0.301, yl = yu + 0.014 + 0.065 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
       ul.moveTo(-cxm, cym); ul.bezierCurveTo(-cxm * 0.75, cym - 0.011, -0.045, yu - 0.024, -0.023, yu - 0.026); ul.quadraticCurveTo(-0.009, yu - 0.021, 0, yu - 0.018); ul.quadraticCurveTo(0.009, yu - 0.021, 0.023, yu - 0.026);
       ul.bezierCurveTo(0.045, yu - 0.024, cxm * 0.75, cym - 0.011, cxm, cym); ul.bezierCurveTo(cxm * 0.6, cym + 0.006, 0.04, yu + 0.002, 0, yu + 0.002); ul.bezierCurveTo(-0.04, yu + 0.002, -cxm * 0.6, cym + 0.006, -cxm, cym); ul.closePath();
       teeth.moveTo(-cxm, cym); teeth.bezierCurveTo(-cxm * 0.6, cym + 0.006, -0.04, yu + 0.001, 0, yu + 0.001); teeth.bezierCurveTo(0.04, yu + 0.001, cxm * 0.6, cym + 0.006, cxm, cym);
-      teeth.bezierCurveTo(cxm * 0.7, cym + 0.018, 0.045, yl, 0, yl); teeth.bezierCurveTo(-0.045, yl, -cxm * 0.7, cym + 0.018, -cxm, cym); teeth.closePath();
-      ll.moveTo(-cxm, cym); ll.bezierCurveTo(-cxm * 0.7, cym + 0.018, -0.045, yl, 0, yl); ll.bezierCurveTo(0.045, yl, cxm * 0.7, cym + 0.018, cxm, cym);
-      ll.bezierCurveTo(cxm * 0.8, cym + 0.034, 0.055, yl + 0.04, 0, yl + 0.041); ll.bezierCurveTo(-0.055, yl + 0.04, -cxm * 0.8, cym + 0.034, -cxm, cym); ll.closePath();
-      const Mo = faceLayer(D), mg = Mo.g;
+      teeth.bezierCurveTo(cxm * 0.7, cym + 0.018 + 0.03 * open, 0.045, yl, 0, yl); teeth.bezierCurveTo(-0.045, yl, -cxm * 0.7, cym + 0.018 + 0.03 * open, -cxm, cym); teeth.closePath();
+      ll.moveTo(-cxm, cym); ll.bezierCurveTo(-cxm * 0.7, cym + 0.018 + 0.03 * open, -0.045, yl, 0, yl); ll.bezierCurveTo(0.045, yl, cxm * 0.7, cym + 0.018 + 0.03 * open, cxm, cym);
+      ll.bezierCurveTo(cxm * 0.8, cym + 0.034 + 0.03 * open, 0.055, yl + 0.04, 0, yl + 0.041); ll.bezierCurveTo(-0.055, yl + 0.04, -cxm * 0.8, cym + 0.034 + 0.03 * open, -cxm, cym); ll.closePath();
+      const Mo = faceLayer(D), mg = Mo.g; ft(mg);
       mg.fillStyle = '#4A1C18'; mg.fill(teeth);
-      mg.save(); mg.clip(teeth); const tg = mg.createLinearGradient(-cxm, 0, cxm, 0); tg.addColorStop(0, mixHex(P.teeth, '#6A4A40', 0.7)); tg.addColorStop(0.22, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(0.5, P.teeth); tg.addColorStop(0.78, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(1, mixHex(P.teeth, '#6A4A40', 0.7));
+      mg.save(); mg.clip(teeth);
+      if (open > 0.45) { mg.fillStyle = '#B4545A'; mg.beginPath(); mg.ellipse(0, yl - 0.004, cxm * 0.55, 0.018, 0, 0, Math.PI * 2); mg.fill(); }   // the tongue in a laugh
+      const tg = mg.createLinearGradient(-cxm, 0, cxm, 0); tg.addColorStop(0, mixHex(P.teeth, '#6A4A40', 0.7)); tg.addColorStop(0.22, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(0.5, P.teeth); tg.addColorStop(0.78, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(1, mixHex(P.teeth, '#6A4A40', 0.7));
       mg.fillStyle = tg; mg.beginPath(); mg.moveTo(-cxm, cym); mg.bezierCurveTo(-cxm * 0.6, cym + 0.006, -0.04, yu, 0, yu); mg.bezierCurveTo(0.04, yu, cxm * 0.6, cym + 0.006, cxm, cym); mg.lineTo(cxm, yu + 0.024); mg.bezierCurveTo(0.04, yu + 0.026, -0.04, yu + 0.026, -cxm, yu + 0.024); mg.closePath(); mg.fill();
       mg.strokeStyle = 'rgba(120,90,80,0.16)'; mg.lineWidth = 0.0015; [-0.034, -0.012, 0.012, 0.034].forEach(x => { mg.beginPath(); mg.moveTo(x * 1.0, yu); mg.lineTo(x * 1.02, yu + 0.022); mg.stroke(); });
-      const sh = mg.createLinearGradient(0, yu, 0, yu + 0.012); sh.addColorStop(0, 'rgba(60,30,25,0.45)'); sh.addColorStop(1, 'rgba(60,30,25,0)'); mg.fillStyle = sh; mg.fillRect(-0.1, yu - 0.01, 0.2, 0.03); mg.restore();
+      const sh = mg.createLinearGradient(0, yu, 0, yu + 0.012); sh.addColorStop(0, 'rgba(60,30,25,0.45)'); sh.addColorStop(1, 'rgba(60,30,25,0)'); mg.fillStyle = sh; mg.fillRect(-0.12, yu - 0.01, 0.24, 0.03); mg.restore();
       const ug = mg.createLinearGradient(0, yu - 0.03, 0, yu + 0.004); ug.addColorStop(0, P.lips); ug.addColorStop(1, P.lipsDk); mg.fillStyle = ug; mg.fill(ul);
       const lg = mg.createLinearGradient(0, yl, 0, yl + 0.036); lg.addColorStop(0, P.lipsDk); lg.addColorStop(0.35, P.lips); lg.addColorStop(1, mixHex(P.lips, P.skin, 0.35)); mg.fillStyle = lg; mg.fill(ll);
-      mg.save(); mg.clip(ll); mg.filter = `blur(${(0.006 * U).toFixed(2)}px)`; ell(mg, 0.0, yl + 0.016, 0.028, 0.008, '#FFF2EC', 0.55); mg.restore();
-      mg.save(); mg.clip(ul); mg.filter = `blur(${(0.004 * U).toFixed(2)}px)`; ell(mg, 0.0, yu - 0.022, 0.03, 0.004, '#FFE8E0', 0.35); mg.restore();
-      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0011 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
-      // the smile's corners, softly
-      soft(D, l => { both(sd => { ell(l, sd * (cxm + 0.012), cym + 0.004, 0.012, 0.018, P.skinSh, who === 'her' ? 0.35 : 0.55); l.strokeStyle = rgba(P.skinSh, 0.35); l.lineWidth = 0.008; l.beginPath(); l.moveTo(sd * 0.062, 0.215); l.quadraticCurveTo(sd * 0.105, 0.26, sd * (cxm + 0.018), cym + 0.012); l.stroke(); }); }, 0.012, 'multiply', 0.8, M.c);
+      mg.save(); mg.clip(ll); mg.filter = `blur(${(0.006 * U).toFixed(2)}px)`; ell(mg, 0.0, yl + 0.016, 0.028, 0.008, '#FFF2EC', 0.5); mg.restore();
+      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0013 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
+      soft(D, l => { ft(l); both(sd => { ell(l, sd * (cxm + 0.012), cym + 0.004, 0.012, 0.018, P.skinSh, who === 'her' ? 0.3 : 0.5); l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.14 : 0.3); l.lineWidth = 0.008; l.beginPath(); l.moveTo(sd * 0.062, 0.215); l.quadraticCurveTo(sd * 0.105, 0.26, sd * (cxm + 0.018), cym + 0.012); l.stroke(); }); }, 0.012, 'multiply', 0.8, M.c);
     }
-    // ---- his hair: short, dark, curly, grown out a little
+    // ---- his hair: short, dark, curly, grown out a little, fuller on top (the rig's shape)
     if (who === 'him') {
-      const hp = new Path2D(); const hairHalf = [[0, -0.69], [0.2, -0.665], [0.33, -0.55], [0.375, -0.35], [0.36, -0.12], [0.338, -0.04], [0.316, -0.15], [0.28, -0.29], [0.17, -0.36], [0, -0.372]];
+      const hp = new Path2D(); const hairHalf = [[0, -0.715], [0.17, -0.7], [0.3, -0.63], [0.37, -0.48], [0.372, -0.27], [0.352, -0.1], [0.328, -0.2], [0.295, -0.32], [0.19, -0.39], [0.06, -0.405], [0, -0.395]];
       GG.spline(symLoop(hairHalf), true, hp);
-      soft(D, l => { l.fillStyle = P.skinDeep; l.translate(0, 0.03); l.fill(hp); }, 0.03, 'multiply', 0.55, M.c);   // its soft shadow on the forehead
-      const Hh = faceLayer(D), hg = Hh.g; hg.fillStyle = P.hair; hg.fill(hp);
+      soft(D, l => { l.fillStyle = P.skinDeep; l.translate(0, 0.03); l.fill(hp); }, 0.03, 'multiply', 0.45, M.c);
+      const Hh = faceLayer(D), hg = Hh.g; const hgr = hg.createLinearGradient(0, -0.72, 0, -0.1); hgr.addColorStop(0, P.hairLt); hgr.addColorStop(0.35, P.hair); hgr.addColorStop(1, P.hairDk); hg.fillStyle = hgr; hg.fill(hp);
       const r = O.rng('curls'); hg.save(); hg.lineCap = 'round';
-      for (let i = 0; i < 900; i++) { const x = (r() - 0.5) * 0.78, y = -0.7 + r() * 0.68; if (!hg.isPointInPath(hp, x * U + D.OX, y * U + D.OY)) continue;
-        const rr = 0.008 + r() * 0.012, a0 = r() * Math.PI * 2, lit = (-y - 0.2) * 1.2 + (r() - 0.5) * 0.6;
-        hg.strokeStyle = lit > 0.35 ? rgba(P.hairHi, 0.45 + 0.3 * r()) : lit > 0 ? rgba(P.hairLt, 0.5 + 0.3 * r()) : rgba(P.hairDk, 0.7); hg.lineWidth = 0.003 + r() * 0.0025;
+      for (let i = 0; i < 1300; i++) { const x = (r() - 0.5) * 0.78, y = -0.73 + r() * 0.7; if (!hg.isPointInPath(hp, x * U + D.OX, y * U + D.OY)) continue;
+        const rr = 0.007 + r() * 0.01, a0 = r() * Math.PI * 2, lit = (-y - 0.3) * 1.4 + (r() - 0.5) * 0.7;
+        hg.strokeStyle = lit > 0.35 ? rgba(P.hairHi, 0.4 + 0.3 * r()) : lit > 0 ? rgba(P.hairLt, 0.45 + 0.3 * r()) : rgba(P.hairDk, 0.65); hg.lineWidth = 0.0028 + r() * 0.0022;
         hg.beginPath(); hg.arc(x, y, rr, a0, a0 + 2.2 + r() * 1.5); hg.stroke(); }
-      // a curly silhouette: small coils standing proud of the outline
-      for (let i = 0; i < 140; i++) { const a = -Math.PI * (0.06 + 0.88 * r()), x = Math.cos(a) * 0.37, y = -0.33 + Math.sin(a) * 0.35, rr = 0.012 + r() * 0.01; hg.fillStyle = P.hair; hg.beginPath(); hg.arc(x, y, rr, 0, Math.PI * 2); hg.fill(); }
+      for (let i = 0; i < 170; i++) { const a = -Math.PI * (0.04 + 0.92 * r()), x = Math.cos(a) * 0.37, y = -0.36 + Math.sin(a) * 0.35, rr = 0.01 + r() * 0.01; hg.strokeStyle = rgba(r() < 0.5 ? P.hair : P.hairLt, 0.8); hg.lineWidth = 0.004; hg.beginPath(); hg.arc(x, y, rr, r() * 6, r() * 6 + 3.5); hg.stroke(); }
       hg.restore();
       const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0018 * U).toFixed(2)}px)`; bg.drawImage(Hh.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
     }
-    // the whole face a touch soft (a lens, and a beauty filter)
-    const out = mk(D.CW, D.CH), og = out.getContext('2d'); og.filter = `blur(${(0.0008 * U).toFixed(2)}px)`; og.drawImage(D.F.c, 0, 0);
+    // the lens: everything a touch soft, and the silhouette feathered (a photograph has no cut edge)
+    const out = mk(D.CW, D.CH), og = out.getContext('2d'); og.filter = `blur(${(0.0009 * U).toFixed(2)}px)`; og.drawImage(D.F.c, 0, 0); og.filter = 'none';
+    const fm = mk(D.CW, D.CH), fg = fm.getContext('2d'); fg.filter = `blur(${(0.004 * U).toFixed(2)}px)`; fg.drawImage(out, 0, 0);
+    og.globalCompositeOperation = 'destination-in'; og.drawImage(fm, 0, 0);
     return { c: out, ox: D.OX, oy: D.OY, M: M.c };
   }
 
@@ -437,21 +460,28 @@
   function paintBody(g, who, nk, U, lean, o) {
     o = o || {}; const her = who === 'her', wS = her ? 0.84 : 1.0, cs = Math.cos(lean), sn = Math.sin(lean), R = (x, y) => [nk[0] + (x * cs - y * sn) * U, nk[1] + (x * sn + y * cs) * U];
     const pts = [[-0.2, 0.0, 1], [-0.42 * wS, 0.1], [-0.78 * wS, 0.24], [-1.04 * wS, 0.46], [-1.14 * wS, 0.9], [-1.2 * wS, 2.6, 1], [1.2 * wS, 2.6, 1], [1.14 * wS, 0.9], [1.04 * wS, 0.46], [0.78 * wS, 0.24], [0.42 * wS, 0.1], [0.2, 0.0, 1], [0.1, 0.075], [0, 0.095], [-0.1, 0.075]].map(q => { const v = R(q[0], q[1]); return q[2] ? [v[0], v[1], 1] : v; });
-    const p = GG.spline(pts, true); const base = her ? '#F2EADF' : '#26344C';
+    const p = GG.spline(pts, true); const base = o.base || (her ? '#F2EADF' : '#26344C');
     g.save(); const a = R(-1, 0.1), b = R(1, 1.6); const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]); gr.addColorStop(0, mixHex(base, '#FFFFFF', 0.25)); gr.addColorStop(0.5, base); gr.addColorStop(1, mixHex(base, '#000000', 0.2));
-    g.fillStyle = gr; g.fill(p); g.clip(p);
-    // the shoulders turn away from the light; soft folds
+    g.save(); g.filter = `blur(${(0.0025 * U).toFixed(2)}px)`; g.fillStyle = gr; g.fill(p); g.restore(); g.clip(p);
+    // the chin's soft shadow on the collar
+    { const c0 = R(0, 0.06); g.save(); g.filter = `blur(${(0.05 * U).toFixed(1)}px)`; g.fillStyle = 'rgba(40,24,20,0.3)'; g.beginPath(); g.ellipse(c0[0], c0[1], 0.32 * U, 0.12 * U, lean, 0, Math.PI * 2); g.fill(); g.restore(); }
+    // the shoulders turn away from the light, their tops catch it; soft folds
+    g.save(); g.filter = `blur(${(0.08 * U).toFixed(1)}px)`; both(sd => { const c = R(sd * 0.62, 0.32); g.fillStyle = 'rgba(255,250,240,0.16)'; g.beginPath(); g.ellipse(c[0], c[1], 0.32 * U, 0.12 * U, 0, 0, Math.PI * 2); g.fill(); }); g.restore();
     g.filter = `blur(${(0.05 * U).toFixed(1)}px)`; both(sd => { const c = R(sd * 1.15, 0.9); g.fillStyle = 'rgba(0,0,0,0.22)'; g.beginPath(); g.ellipse(c[0], c[1], 0.25 * U, 0.9 * U, 0, 0, Math.PI * 2); g.fill(); });
     g.filter = `blur(${(0.02 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 0.03 * U; both(sd => { const s0 = R(sd * 0.5, 0.55), s1 = R(sd * 0.62, 1.2), s2 = R(sd * 0.55, 1.9); g.beginPath(); g.moveTo(s0[0], s0[1]); g.quadraticCurveTo(s1[0], s1[1], s2[0], s2[1]); g.stroke(); });
     g.filter = 'none';
     if (!her) {   // the white tee in the open jacket, its round collar
       const t = GG.spline([[-0.3, -0.04], [-0.2, 0.0], [0, 0.03], [0.2, 0.0], [0.3, -0.04], [0.36, 0.5], [0.38, 2.6, 1], [-0.36, 2.6, 1], [-0.34, 0.5]].map(q => R(q[0], q[1])), true);
-      const A = R(0, 0), C = R(0.3, 2.0); const tg = g.createLinearGradient(A[0], A[1], C[0], C[1]); tg.addColorStop(0, '#FBF8F3'); tg.addColorStop(1, '#D6D1C9'); g.fillStyle = tg; g.fill(t);
+      const A = R(0, 0), C = R(0.3, 2.0); const tg = g.createLinearGradient(A[0], A[1], C[0], C[1]); const tee = o.tee || '#FBF8F3'; tg.addColorStop(0, tee); tg.addColorStop(1, mixHex(tee, '#5A5650', 0.18)); g.fillStyle = tg; g.fill(t);
       // the crew collar: a soft rib round the base of his neck
       const k0 = R(-0.2, 0.0), k1 = R(-0.1, 0.07), k2 = R(0.1, 0.07), k3 = R(0.2, 0.0); g.strokeStyle = 'rgba(150,140,128,0.55)'; g.lineWidth = 0.028 * U; g.filter = `blur(${(0.006 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(k0[0], k0[1]); g.bezierCurveTo(k1[0], k1[1], k2[0], k2[1], k3[0], k3[1]); g.stroke(); g.filter = 'none';
-      both(sd => { const l0 = R(sd * 0.26, -0.01), l1 = R(sd * 0.34, 0.5), l2 = R(sd * 0.36, 2.6); g.strokeStyle = 'rgba(10,14,24,0.55)'; g.lineWidth = 0.02 * U; g.filter = `blur(${(0.01 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(l0[0], l0[1]); g.quadraticCurveTo(l1[0], l1[1], l2[0], l2[1]); g.stroke(); g.filter = 'none'; });
-    } else {   // her round neckline, a soft rib; a fine knit (too even)
-      g.save(); g.globalAlpha = 0.06; g.strokeStyle = '#6E5A48'; g.lineWidth = Math.max(1, 0.006 * U); for (let k = -40; k <= 40; k++) { const a0 = R(k * 0.035, 0.05), a1 = R(k * 0.035 + 0.02, 2.6); g.beginPath(); g.moveTo(a0[0], a0[1]); g.lineTo(a1[0], a1[1]); g.stroke(); } g.restore();
+      // the jacket's lapels fold back over the tee: a soft shadow under each, a lit roll on its edge
+      both(sd => { const l0 = R(sd * 0.3, -0.02), l1 = R(sd * 0.5, 0.45), l2 = R(sd * 0.42, 1.3), l3 = R(sd * 0.38, 2.6);
+        g.save(); g.filter = `blur(${(0.03 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 0.09 * U; g.beginPath(); g.moveTo(l0[0], l0[1]); g.bezierCurveTo(l1[0], l1[1], l2[0], l2[1], l3[0], l3[1]); g.stroke();
+        g.filter = `blur(${(0.008 * U).toFixed(1)}px)`; g.strokeStyle = rgba(mixHex(o.base || '#26344C', '#FFFFFF', 0.25), 0.5); g.lineWidth = 0.014 * U; g.beginPath(); g.moveTo(l0[0] - sd * 0.02 * U, l0[1]); g.bezierCurveTo(l1[0] - sd * 0.03 * U, l1[1], l2[0] - sd * 0.03 * U, l2[1], l3[0] - sd * 0.03 * U, l3[1]); g.stroke(); g.restore(); });
+    } else {   // her round neckline, a soft rib; a fine knit (too even), or the strip's striped top
+      if (o.stripes) { g.save(); g.strokeStyle = o.stripes; g.lineWidth = U * 0.06; for (let k = 0; k < 11; k++) { const a0 = R(-1.6, 0.3 + k * 0.2), a1 = R(1.6, 0.3 + k * 0.2); g.beginPath(); g.moveTo(a0[0], a0[1]); g.lineTo(a1[0], a1[1]); g.stroke(); } g.restore(); }
+      g.save(); g.globalAlpha = o.stripes ? 0 : 0.06; g.strokeStyle = '#6E5A48'; g.lineWidth = Math.max(1, 0.006 * U); for (let k = -40; k <= 40; k++) { const a0 = R(k * 0.035, 0.05), a1 = R(k * 0.035 + 0.02, 2.6); g.beginPath(); g.moveTo(a0[0], a0[1]); g.lineTo(a1[0], a1[1]); g.stroke(); } g.restore();
       const L0 = R(-0.2, -0.005), L1 = R(-0.11, 0.13), R1 = R(0.11, 0.13), R0 = R(0.2, -0.005);
       g.filter = `blur(${(0.008 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(150,128,110,0.4)'; g.lineWidth = 0.024 * U; g.beginPath(); g.moveTo(L0[0], L0[1]); g.bezierCurveTo(L1[0], L1[1], R1[0], R1[1], R0[0], R0[1]); g.stroke(); g.filter = 'none';
     }
@@ -499,21 +529,41 @@
     const w = c.width, h = c.height, b = mk(w, h), bg = b.getContext('2d'); bg.filter = `blur(${(w / 60).toFixed(1)}px)`; bg.drawImage(c, 0, 0);
     const g = c.getContext('2d'); g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = k == null ? 0.16 : k; g.drawImage(b, 0, 0); g.restore();
   }
+  // the people go on their own layer, then onto the background with the background's light wrapping round their edges, as a lens does
+  function lightWrap(c, S, bgBlur, k, r) {
+    const w = c.width, h = c.height, g = c.getContext('2d');
+    const E = mk(w, h), eg = E.getContext('2d'); eg.filter = `blur(${r.toFixed(1)}px)`; eg.drawImage(S, 0, 0);
+    const L = mk(w, h), lg = L.getContext('2d'); lg.drawImage(bgBlur, 0, 0); lg.globalCompositeOperation = 'destination-in'; lg.drawImage(S, 0, 0); lg.globalCompositeOperation = 'destination-out'; lg.drawImage(E, 0, 0);
+    g.drawImage(S, 0, 0); g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = k; g.drawImage(L, 0, 0); g.restore();
+  }
+  // a soft shadow of one head onto what is already on layer g (her, behind him): contact, not a cast silhouette
+  function contactShadow(g, x, y, rx, ry, U, a) {
+    g.save(); g.globalCompositeOperation = 'source-atop'; g.filter = `blur(${(0.07 * U).toFixed(1)}px)`; g.fillStyle = `rgba(60,30,24,${a})`; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill(); g.restore();
+  }
+  // the couple in the strip's last pose: her hair, her face, her body, her hair in front; then him, nearer, over her shoulder.
+  // pose: {him: {dx, dy, roll, ...face}, her: {...}}; o: {mode, himBody, herBody, hairLen}
+  function paintCouple(g, ox, oy, U, pose, o) {
+    o = o || {}; const Pm = pose.him, Pf = pose.her, hx = ox + Pm.dx * U, hy = oy + Pm.dy * U, fx = ox + Pf.dx * U, fy = oy + Pf.dy * U;
+    const along = (x, y, roll, d) => [x - Math.sin(roll) * d * U, y + Math.cos(roll) * d * U];
+    const herHead = { x: fx, y: fy, U, roll: Pf.roll };
+    paintLongHair(g, herHead, 'back', { len: o.hairLen || 1.5, rim: o.rim });
+    placeFace(g, paintFace('her', U, Object.assign({ mode: o.mode }, Pf)), fx, fy, Pf.roll);
+    paintBody(g, 'her', along(fx, fy, Pf.roll, 0.62), U, -0.1, o.herBody);
+    paintLongHair(g, herHead, 'front', { len: o.hairLen || 1.5, rim: o.rim });
+    // where his head and shoulder meet her: a soft contact shadow on her side
+    contactShadow(g, hx + 0.42 * U, hy + 0.1 * U, 0.2 * U, 0.55 * U, U, 0.32);
+    contactShadow(g, hx + 0.6 * U, hy + 0.95 * U, 0.3 * U, 0.4 * U, U, 0.3);
+    placeFace(g, paintFace('him', U, Object.assign({ mode: o.mode }, Pm)), hx, hy, Pm.roll);
+    paintBody(g, 'him', along(hx, hy, Pm.roll, 0.58), U, 0.04, o.himBody);
+  }
   // the waterfall: the strip's last frame made perfect, both faces square to the lens and lit by one light fixed to their faces,
   // while the scene's own sun is behind them at the top of the fall. Pose and her tilt are the strip's (GG.COUPLE_LAST).
   function photoWaterfall(w, h) {
-    const c = mk(w, h), g = c.getContext('2d'); g.drawImage(paintGorge(w, h), 0, 0);
-    const U = w * 0.27, ox = w * 0.36, oy = h * 0.66, Pm = GG.COUPLE_GLOSS.him, Pf = GG.COUPLE_GLOSS.her;
-    const hx = ox + Pm.dx * U, hy = oy + Pm.dy * U, fx = ox + Pf.dx * U, fy = oy + Pf.dy * U;
-    const along = (x, y, roll, d) => [x - Math.sin(roll) * d * U, y + Math.cos(roll) * d * U];
-    // her: the hair behind, her body, her face, the hair in front; then him, nearer, over her shoulder
-    const herHead = { x: fx, y: fy, U, roll: Pf.roll };
-    paintLongHair(g, herHead, 'back', { len: 1.5 });
-    placeFace(g, paintFace('her', U, { smile: 1, open: 0.28 }), fx, fy, Pf.roll);
-    paintBody(g, 'her', along(fx, fy, Pf.roll, 0.62), U, -0.1);
-    paintLongHair(g, herHead, 'front', { len: 1.5 });
-    placeFace(g, paintFace('him', U, { smile: 1, open: 0.28 }), hx, hy, Pm.roll);
-    paintBody(g, 'him', along(hx, hy, Pm.roll, 0.6), U, 0.04);
+    const c = mk(w, h), g = c.getContext('2d'), bgc = paintGorge(w, h); g.drawImage(bgc, 0, 0);
+    const S = mk(w, h), sg = S.getContext('2d');
+    paintCouple(sg, w * 0.36, h * 0.66, w * 0.27, { him: Object.assign({}, GG.COUPLE_GLOSS.him, { smile: 1, open: 0.28, eyes: 0.9, gaze: [0, 0] }), her: Object.assign({}, GG.COUPLE_GLOSS.her, { smile: 1, open: 0.28, gaze: [0, 0] }) });
+    const bb = mk(w, h), bbg = bb.getContext('2d'); bbg.filter = `blur(${(w / 40).toFixed(1)}px)`; bbg.drawImage(bgc, 0, 0);
+    lightWrap(c, S, bb, 0.55, w * 0.012);
     photoFinish(c, 0.16);
     return c;
   }
@@ -523,13 +573,70 @@
     const bg = g.createRadialGradient(w * 0.5, h * 0.32, w * 0.05, w * 0.5, h * 0.45, h * 0.75); bg.addColorStop(0, '#FCEDE2'); bg.addColorStop(0.45, '#F2D3C8'); bg.addColorStop(1, '#D9B7C4'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
     { const r = O.rng('bokeh'), b = mk(w, h), bb = b.getContext('2d'); for (let i = 0; i < 14; i++) { const x = w * r(), y = h * 0.5 * r(), rr = w * (0.06 + 0.1 * r()); bb.fillStyle = `rgba(255,244,232,${0.15 + 0.2 * r()})`; bb.beginPath(); bb.arc(x, y, rr, 0, Math.PI * 2); bb.fill(); }
       g.filter = `blur(${(w / 40).toFixed(1)}px)`; g.drawImage(b, 0, 0); g.filter = 'none'; }
+    const bgc = mk(w, h); bgc.getContext('2d').drawImage(c, 0, 0);
+    const S = mk(w, h), sg = S.getContext('2d');
     const U = h * 0.385, x = w * 0.5, y = h * 0.33, roll = -0.15, head = { x, y, U, roll };
-    paintLongHair(g, head, 'back', { len: 1.45, seed: 2 });
-    placeFace(g, paintFace('her', U, { smile: 0.95, open: 0.24 }), x, y, roll);
-    paintBody(g, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
-    paintLongHair(g, head, 'front', { len: 1.45, seed: 2 });
+    paintLongHair(sg, head, 'back', { len: 1.45, seed: 2, rim: false });
+    placeFace(sg, paintFace('her', U, { smile: 0.95, open: 0.24, gaze: [0, 0] }), x, y, roll);
+    paintBody(sg, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
+    paintLongHair(sg, head, 'front', { len: 1.45, seed: 2, rim: false });
+    lightWrap(c, S, bgc, 0.4, w * 0.015);
     photoFinish(c, 0.12);
     return c;
+  }
+
+  // ---------------------------------------------------------------- the photo-booth strip (a real photograph: grain world)
+  // The same two people (the painter above in 'flash' mode), four moments: squeezed in and smiling; both gone with laughter, heads back;
+  // him pulling a face while she cracks up half out of frame; her head tipped against his, both laughing (GG.COUPLE_LAST, the pose the
+  // waterfall copies). Cheap booth: a frontal strobe, a hard shadow on the curtain, one frame blown out and one too dark, a drifting magenta
+  // or cyan cast, heavy noise, a crooked crop, a crease, yellowing paper. Same arguments and result as the kit's GG.photoStrip.
+  const STRIP_POSES = [
+    { him: { dx: 0, dy: 0.04, roll: 0.1, turn: 0.18, smile: 0.75, open: 0.25, eyes: 0.7 }, her: { dx: 0.7, dy: -0.02, roll: -0.12, turn: -0.2, smile: 0.85, open: 0.3, eyes: 0.75 } },
+    { him: { dx: -0.04, dy: 0.0, roll: -0.18, lift: 0.7, smile: 1, open: 1, eyes: 0.05, brow: 0.5 }, her: { dx: 0.86, dy: -0.06, roll: 0.2, lift: 0.75, smile: 1, open: 0.95, eyes: 0.05, brow: 0.5 } },
+    { him: { dx: 0.02, dy: 0.06, roll: 0.28, pucker: true, smile: 0, open: 0, eyes: 1.15, brow: 1, gaze: [0.4, -0.9] }, her: { dx: 1.02, dy: 0.12, roll: 0.05, turn: -0.65, lift: -0.6, smile: 1, open: 0.8, eyes: 0.05 } },
+    { him: Object.assign({}, GG.COUPLE_LAST.him, { turn: 0.2, smile: 1, open: 0.65, eyes: 0.1, gaze: [0, 0] }), her: Object.assign({}, GG.COUPLE_LAST.her, { turn: -0.26, smile: 1, open: 0.55, eyes: 0.05, gaze: [0, 0] }) },
+  ];
+  const STRIP_MEMO = {};
+  function photoStrip(o) {
+    o = o || {}; const key = JSON.stringify([o.w, o.h, o.seed, o.scale]); if (STRIP_MEMO[key]) return STRIP_MEMO[key];
+    const w = o.w || 300, h = o.h || 1040, c = mk(w, h), g = c.getContext('2d'), r = O.rng('strip' + (o.seed || 1));
+    g.fillStyle = '#F2EEE4'; g.fillRect(0, 0, w, h);
+    const m = w * 0.075, fw = w - 2 * m, fh = fw * 1.06, gap = (h - 2 * m - 4 * fh) / 3;
+    const SC = Math.max(2, o.scale || 1.25);
+    for (let k = 0; k < 4; k++) {
+      const fx = m + (r() - 0.5) * w * 0.012, fy = m + k * (fh + gap) + (r() - 0.5) * 3, rot = (r() - 0.5) * 0.02;
+      const F = mk(fw * SC, fh * SC), fg = F.getContext('2d'), FW = F.width, FH = F.height;
+      // the booth curtain, lit by the flash
+      fg.fillStyle = '#6E7C78'; fg.fillRect(0, 0, FW, FH);
+      for (let i = 0; i < 9; i++) { fg.fillStyle = i % 2 ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.06)'; fg.fillRect(i * FW / 9 + FW / 18 * (r() - 0.5), 0, FW / 14, FH); }
+      const U = FW * [0.33, 0.31, 0.42, 0.33][k], ox = FW * [0.33, 0.22, 0.3, 0.31][k], oy = FH * [0.42, 0.58, 0.42, 0.42][k];
+      const S = mk(FW, FH), sg = S.getContext('2d');
+      paintCouple(sg, ox, oy, U, STRIP_POSES[k], { mode: 'flash', rim: false, hairLen: 1.5,
+        himBody: { base: '#2A2C34', tee: '#CFC8BA' }, herBody: { base: '#D9D2C4', stripes: 'rgba(40,60,90,0.55)' } });
+      // the strobe: their faces near blown, flat (screen a warm white over them only)
+      sg.save(); sg.globalCompositeOperation = 'source-atop'; const fl = sg.createRadialGradient(ox + 0.4 * U, oy, U * 0.2, ox + 0.4 * U, oy, U * 2.2); fl.addColorStop(0, 'rgba(255,246,232,0.55)'); fl.addColorStop(1, 'rgba(255,246,232,0.12)'); sg.globalCompositeOperation = 'source-atop'; sg.fillStyle = fl; sg.fillRect(0, 0, FW, FH); sg.restore();
+      // the strobe's hard shadow on the curtain, down and right, under them
+      const sh = mk(FW, FH), shg = sh.getContext('2d'); shg.filter = `blur(${Math.max(1, U * 0.03).toFixed(1)}px)`; shg.drawImage(S, U * 0.16, U * 0.12); shg.filter = 'none';
+      shg.globalCompositeOperation = 'source-in'; shg.fillStyle = 'rgba(0,0,0,0.42)'; shg.fillRect(0, 0, FW, FH);
+      fg.drawImage(sh, 0, 0); fg.drawImage(S, 0, 0);
+      // flash falloff and a cheap lens
+      const vg = fg.createRadialGradient(FW * 0.45, FH * 0.42, FW * 0.15, FW * 0.5, FH * 0.5, FW * 0.85); vg.addColorStop(0, 'rgba(255,248,236,0.16)'); vg.addColorStop(1, 'rgba(10,8,12,0.45)');
+      fg.fillStyle = vg; fg.fillRect(0, 0, FW, FH);
+      if (k === 1) { fg.save(); fg.globalCompositeOperation = 'screen'; fg.fillStyle = 'rgba(255,240,220,0.22)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
+      if (k === 2) { fg.save(); fg.globalCompositeOperation = 'multiply'; fg.fillStyle = 'rgba(150,140,150,0.6)'; fg.fillRect(0, 0, FW, FH); fg.restore(); }
+      fg.save(); fg.globalCompositeOperation = 'soft-light'; fg.fillStyle = k % 2 ? 'rgba(200,120,170,0.35)' : 'rgba(110,170,180,0.3)'; fg.fillRect(0, 0, FW, FH); fg.restore();
+      // a cheap sensor: soft, then noise
+      const F2 = mk(FW, FH), f2 = F2.getContext('2d'); f2.filter = `blur(${(FW / 260).toFixed(2)}px)`; f2.drawImage(F, 0, 0);
+      const id = f2.getImageData(0, 0, FW, FH), dd = id.data; const rn = O.rng('noise' + k + (o.seed || 1));
+      for (let i = 0; i < dd.length; i += 4) { const n = (rn() + rn() - 1) * 34, nc = (rn() - 0.5) * 12; dd[i] = clamp(dd[i] + n + nc, 0, 255); dd[i + 1] = clamp(dd[i + 1] + n, 0, 255); dd[i + 2] = clamp(dd[i + 2] + n - nc, 0, 255); }
+      f2.putImageData(id, 0, 0);
+      g.save(); g.translate(fx + fw / 2, fy + fh / 2); g.rotate(rot); g.imageSmoothingQuality = 'high'; g.drawImage(F2, -fw / 2, -fh / 2, fw, fh); g.restore();
+    }
+    // the paper: a soft yellowing, a crease, specks
+    g.save(); g.globalCompositeOperation = 'multiply'; const yg = g.createLinearGradient(0, 0, w, h); yg.addColorStop(0, 'rgba(255,240,210,0.5)'); yg.addColorStop(1, 'rgba(230,215,190,0.6)'); g.fillStyle = yg; g.fillRect(0, 0, w, h); g.restore();
+    g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(0, h * 0.61); g.lineTo(w, h * 0.6); g.stroke();
+    for (let i = 0; i < 60; i++) { g.fillStyle = r() < 0.6 ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'; g.fillRect(r() * w, r() * h, 1 + r() * 2, 1 + r() * 2); }
+    return (STRIP_MEMO[key] = c);
   }
 
   // ================================================================ screen furniture
@@ -1296,5 +1403,8 @@
     } },
   ];
   G.PHONE = { draw, glow, light, where, screen: (name, st, k, t, seq) => renderScreen(name, withDefaults(name, st || {}, seq), k || 1, t || 0, 0, seq).cv,
-    exchange, typed, typeTimes, flicks, prepare, art, MSG, CLOCK, SEQ_CLOCK, TONE, DIM, SW, SH, HISTORY, KEYS, demos, _S: S };
+    exchange, typed, typeTimes, flicks, prepare, art, strip: photoStrip, stripKit: GG.photoStrip, MSG, CLOCK, SEQ_CLOCK, TONE, DIM, SW, SH, HISTORY, KEYS, demos, _S: S };
+  // One man, one woman, in every picture: the strip on the fridge is drawn by GG.photoStrip in the set and in three sequences, so the kit's
+  // function is pointed at the phone's painter (same arguments, same result shape), and every strip in the film is these two people.
+  GG.photoStrip = photoStrip;
 })(window);

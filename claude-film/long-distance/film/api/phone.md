@@ -267,6 +267,14 @@ A screen rendered flat (360 k × 780 k), for a use the body doesn't cover. The c
 
 The generated pictures themselves: `'waterfall'` (960 × 1280, 3:4), `'portrait'` (720 × 1560), `'abstract'`, `'hidden'`.
 
+**The same two people everywhere.** The waterfall, the lock screen, the app portrait and the photo-booth strip all show the rig's Him and Her, younger. He has medium-brown skin (`#B47C58`), short dark curly hair grown out a little, a long gentle face and heavy lids. She has pale skin, copper hair (long in every picture) and green eyes. Her freckles survive only in the strip, a real photograph; the generator smooths them away.
+
+### `PHONE.strip(o)` → canvas (and `GG.photoStrip`)
+
+The photo-booth strip on the fridge, a real photograph in the grain world, painted by the same face painter in `'flash'` mode. It has four laughing moments, the last one the pose the waterfall copies: her head tipped against his (`GG.COUPLE_LAST`). The booth look is the cheap strobe: near-blown faces, a hard shadow on the curtain, one frame too bright and one too dark, a drifting cast, heavy noise, a crooked crop and a crease.
+
+It takes the kit's arguments `{w, h, seed, scale}` and is memoised, so the same arguments return the same canvas. It costs about 1 s at 240 × 876. `film/phone.js` points `GG.photoStrip` at it, so the set (`film/sets/living.js`) and the sequences that call `GG.photoStrip` (Q06, Q09, Q10) all show the same strip. The kit's original is kept as `PHONE.stripKit`.
+
 The two generated photographs are painted by `film/phone.js` itself (no longer `GG.waterfall` / `GG.head`), as a generator would "improve" the strip's last frame. Each face is painted upright and frontal in soft, blurred layers: form shadows, sockets, the nose's soft sides, highlights on the forehead, nose and cheekbones, rosy cheeks, a dewy sheen, fine brow hairs, and eyes with iris fibres and identical catchlights. It is mirror-symmetric, with skin a little too smooth, no freckles, and his stubble only as a tint. The face is then turned to the strip's tilt (`GG.COUPLE_GLOSS`, positions and rolls exactly the strip's). Long hair is drawn strand by strand in clumps in picture space, so it hangs, with a warm rim from the sun behind the fall. In the waterfall the gorge is mirrored, the water is pure white, the background is in portrait-mode blur, and there is no vignette. Both faces are lit identically, while the scene's sun is behind them.
 
 ---
@@ -319,7 +327,7 @@ Measured in `tools/set.js` / 24-frame medians on this machine (no GPU). An empty
 
 | What | Cost |
 |---|---|
-| **One-time art** (per process, kept for the whole run) | the waterfall ~0.6 s, the app portrait ~0.9 s, the rest < 50 ms. Call `PHONE.prepare` in `setup()` |
+| **One-time art** (per process, kept for the whole run) | the waterfall ~1 s, the app portrait ~1.2 s, the strip ~1 s (`PHONE.strip`, memoised), the rest < 50 ms. Call `PHONE.prepare` in `setup()` |
 | A phone at true size (h ≤ 420), upright, still screen | 1–3 ms |
 | + spill (turned away or on its edge) | +2–5 ms (drawn at half resolution) |
 | A full-frame insert (h ≈ 960), upright | 8–12 ms |

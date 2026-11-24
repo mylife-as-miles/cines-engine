@@ -40,7 +40,7 @@
     { at: 0, him: PHONE.MSG.goodMorning2 }, { at: 0, her: PHONE.MSG.iLoveYou2 }] };
   const threadState = () => PHONE.exchange(1, THREAD);
   // where it lies: on the right-hand cushion just past the seam, clear of where he sat (world metres)
-  const PH_W = { x: 4.38, y: 0.472, z: 3.53, a: 0.3 };
+  const PH_W = { x: 4.3, y: 0.472, z: 3.5, a: 0.3 };
   function cushionQuad(view, shot) {
     const hw = 0.0338, hh = 0.0718, ca = Math.cos(PH_W.a), sa = Math.sin(PH_W.a);
     const at = (u, v) => [PH_W.x + ca * u - sa * v, PH_W.y, PH_W.z + sa * u + ca * v];
@@ -55,22 +55,70 @@
     return info;
   }
 
-  // ---------------------------------------------------------------- him on the couch: the rig's couch pose, his hip on the seat
-  // Lying, his head on the left arm and his knees bent inside the couch; sitting up and rising pivot on the same hip.
+  // ---------------------------------------------------------------- him on the couch
+  // The rig's couch pose gives the frame: the legs, the hip on the seat, the body's angle lying, sitting and rising. His upper body
+  // is built here on that frame (RIG.person) so his arms can act: lying on his side, his top arm holds the phone up in front of his
+  // face, screen to him, its light on his face; sitting up he keeps it; leaning, he lays it face up on the cushion beside him and
+  // his hand lets go of it; then he rises.
   const CM = () => LV('couch').shots.main.anchors;
+  const SH = () => HEAD_M * CM().seatL[2];
   const HIP = () => [960, CM().seatL[1]];
   const FIT = () => CM().armR[0] - 45;
-  function onCouch(c, lt, pose, u, arm, face, o) {
-    o = o || {}; const A = CM(), s = HEAD_M * A.seatL[2];
-    const L = dayLight('couch', 'main', o.phoneAt ? { phone: o.phoneAt, phoneCol: '#FFC5A0', phoneK: 0.7 } : {});
-    return RIG.draw(c, 'him', pose, { x: HIP()[0], y: HIP()[1] - 3.5 * s, s, u, arm, hip: HIP(), dir: 1, fit: FIT(), light: L, t: lt, face, blink: o.blink });
+  const lerp2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
+  // arm keys, figure units (head units from between the eyes, in the upper body's own frame). R: his top arm lying, the one that
+  // holds the phone; L: the arm under him lying, his near arm sitting.
+  const R_LIE = { E: [0.95, 2.15], W: [-0.12, 1.45] }, R_SIT = { E: [0.9, 2.3], W: [0.35, 2.75] }, R_REST = { E: [0.82, 2.3], W: [0.7, 3.05] };
+  const L_LIE = { E: [-0.52, 1.85], W: [-0.62, 1.25] }, L_SIT = { E: [-0.82, 2.22], W: [-0.5, 3.0] };
+  // o: {g (the getup u: 0 lying, 0.5 sitting, 1 standing), lean (rad, toward screen right), R: {E, W, hand, hp}, face, phoneAt}
+  function couchMe(c, lt, o) {
+    const s = SH(), hip = HIP(), face = Object.assign({}, o.face);
+    if (o.blink !== false) { const bl = RIG.blink(lt, 3); if (bl < 1) face.lids = (face.lids == null ? 0.7 : face.lids) * bl; }
+    const L = dayLight('couch', 'main', o.phoneAt ? { phone: o.phoneAt, phoneCol: '#FFC5A0', phoneK: o.phoneK == null ? 0.9 : o.phoneK } : {});
+    const built = RIG.POSES.him.getup({ x: hip[0], y: hip[1] - 3.5 * s, s, u: o.g, arm: 'rest', hip, dir: 1, fit: FIT(), light: L, t: lt, face });
+    const e = o.g < 0.5 ? 1 - 2 * o.g : 0;                                    // 1 lying .. 0 sitting
+    const legs = built.parts[0], body = built.parts[1], H = built.worldInfo.hip;
+    const rot = body.rot + (o.lean || 0), origin = [H[0] + 3.3 * Math.sin(rot) * s, H[1] - 3.3 * Math.cos(rot) * s];
+    const toFig = w => { const dx = w[0] - origin[0], dy = w[1] - origin[1], cr = Math.cos(rot), sr = Math.sin(rot); return [(dx * cr + dy * sr) / s, (-dx * sr + dy * cr) / s]; };
+    const Lk = { E: lerp2(L_SIT.E, L_LIE.E, e), W: lerp2(L_SIT.W, L_LIE.W, e) };
+    const armL = Object.assign(Lk, e > 0.5 ? { hand: false, behind: true } : { hand: 'relax', hp: { close: 0.4 }, front: true, order: 1 });
+    const R = typeof o.R === 'function' ? o.R(toFig) : o.R;
+    const armR = Object.assign({ front: true, order: 2 }, R);
+    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.12, lean: 0, head: face, arms: { L: armL, R: armR }, legs: false, crop: 3.5, untucked: true });
+    const breath = RIG.breath(lt, 2.5 * Math.min(2, s / 250));
+    RIG.drawFigure(c, { who: 'him', x: legs.x, y: legs.y, s, flip: legs.flip, light: L, breath: 0, ops: legs.ops });
+    const fig = RIG.drawFigure(c, { who: 'him', x: origin[0], y: origin[1], s, rot, light: L, breath, ops: up.ops });
+    // a world point into the upper body's frame (for reaching to the cushion)
+    fig.toFig = toFig;
+    fig.light = L;
+    return fig;
   }
-  // the phone in his hand while he lies texting: screen to his face, its back to us; its light spills past the edges
+  // the phone in his hand: its screen turned to his face, so we see it edge-on with its glow; the screen's smooth light on his face
   function heldPhone(c, fig, lt, o) {
-    const ph = fig.phone; if (!ph) return;
-    const tap = o && o.typing ? (Math.floor(twos(lt) * 6) % 3 === 0 ? 1 : 0) : 0;
-    PHONE.draw(c, { x: ph.x, y: ph.y + tap * 1.5, h: ph.h, roll: ph.angle || 0, yaw: Math.PI - 0.5, pitch: 0.15, screen: 'thread', state: threadState(), env: '#C8CCC8', spill: 0.9 });
+    o = o || {}; const hd = fig.hands.R; if (!hd) return null;
+    const ph = hd.phone || { x: hd.grip[0], y: hd.grip[1], h: SH() * 0.7, angle: hd.rot };
+    const tap = o.typing ? (Math.floor(twos(lt) * 6) % 3 === 0 ? 1 : 0) : 0;
+    const P = Object.assign({ x: ph.x, y: ph.y + tap * 1.2, h: SH() * 0.7, roll: o.roll == null ? -0.35 : o.roll, yaw: o.yaw == null ? -1.0 : o.yaw, pitch: o.pitch == null ? 0.25 : o.pitch,
+      screen: 'thread', state: threadState(), env: '#C8CCC8', spill: 0.9 }, o.p || {});
+    const info = PHONE.where(P, c);
+    if (o.glow !== false && fig.heads.head) RIG.faceGlow(c, fig.heads.head, { x: P.x - SH() * 0.4, y: P.y - SH() * 0.2, r: SH() * 1.3, color: '#FFC5A0', alpha: o.glowA == null ? 0.32 : o.glowA });
+    PHONE.draw(c, P);
     fig.over(c);
+    return info;
+  }
+
+  const V2a = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  const phoneSpot = () => { const A = CM(), s = SH(); return [A.couchHeadL[0] + 1.4 * s, A.couchHeadL[1] + 0.5 * s]; };
+  function cushionCenter(view, shot) { const q = cushionQuad(view, shot); return [(q[0][0] + q[2][0]) / 2, (q[0][1] + q[2][1]) / 2]; }
+  // his face lying: on the screen, smiling, typing; the knocks (8.0, 8.5, 9.0): the thumb stops, the smile goes, then on the third
+  // his head snaps to the door (toward us and a little to screen left: the front door is behind the camera) and holds
+  const TEXTING = { yaw: 0.25, pitch: 0.32, gaze: [0.1, 0.5], lids: 0.58 };
+  const DOOR_LOOK = { yaw: -0.02, pitch: -0.22, gaze: [-0.2, -0.38], lids: 0.9, brows: 0.25, smile: 0 };
+  function knockFace(tt) {
+    if (tt < 8.0) return Object.assign({}, TEXTING, { smile: key(tt, [[0, 0.375], [3.0, 0.5], [4.2, 0.625], [5.6, 0.5], [7.0, 0.5]]) });
+    if (tt < 9.0) return Object.assign({}, TEXTING, { smile: key(tt, [[8.0, 0.5], [8.4, 0.25], [8.8, 0]]), lids: key(tt, [[8.0, 0.58], [8.6, 0.68]]), gaze: tt > 8.5 ? [0.1, 0.3] : TEXTING.gaze });
+    // the snap: two drawings, then held (eyes wide, no blink), the mouth a little open at 11.6
+    const k = seg(tt, 9.0, 9.17);
+    return Object.assign(FILM.mixv(Object.assign({}, TEXTING, { smile: 0, lids: 0.7 }), DOOR_LOOK, k), tt > 11.6 && tt < 12.6 ? { mouth: 1 } : {});
   }
 
   // ---------------------------------------------------------------- him at the door, facing out, his hand round the door's edge
@@ -86,7 +134,7 @@
     const wrist = [lerp(onEdge[0], hang[0], let_), lerp(onEdge[1], hang[1], let_)];
     const clip = flip ? { a: o.edgeTop, b: o.edge.slice(0, 2) } : { a: o.edge.slice(0, 2), b: o.edgeTop };
     const R = let_ < 0.25 ? { to: toFig(wrist), bend: -1, hand: 'door', hp: { tight: o.tight || 0, clip }, front: true } : { to: toFig(wrist), bend: -1, hand: 'relax', hp: { close: 0.5 }, front: let_ < 0.9 };
-    const fig = RIG.person({ who: 'him', costume: 'sweater', tau: o.tau == null ? 0.3 : o.tau, head: f, arms: { L: { a1: -0.06, a2: 0.12, hand: 'relax' }, R }, legs: {} });
+    const fig = RIG.person({ who: 'him', costume: 'sweater', tau: o.tau == null ? -0.15 : o.tau, head: f, arms: { L: { a1: -0.06, a2: 0.12, hand: 'relax' }, R }, legs: {} });
     return RIG.drawFigure(c, { who: 'him', x, y, s, flip, light: L, breath: RIG.breath(t, 2.5 * Math.min(2, s / 250)), ops: fig.ops });
   }
 
@@ -176,8 +224,8 @@
       S.bed('street_day', 0, 66, { level: -50 });
       S.bed('type', 1.0, 8.0, { level: -44 });                       // his thumb on the glass, soft
       S.cue('knock', 8.0); S.cue('knock', 8.5); S.cue('knock', 9.0);   // three, real, close
-      S.cue('couch_creak', 14.4);                                     // he sits up
-      S.cue('phone_down', 16.0, { level: -42 });                      // the phone laid face up on the cushion
+      S.cue('couch_creak', 13.9);                                     // he sits up
+      S.cue('phone_down', 15.75, { level: -42 });                     // the phone laid face up on the cushion
       S.cue('couch_creak', 16.9, { level: -46 });                     // he rises
       S.cue('footsteps', 17.4, { level: -40 });                       // to the door
       S.cue('door_open', 18.2);
@@ -190,75 +238,51 @@
     },
     shots: [
       // ---------------------------------------------------------------- he lies along the couch, texting, smiling at the screen
-      { at: 0, name: 'couch: he lies along the couch, texting, smiling; three knocks', draw(c, st, lt) {
+      // ---------------------------------------------------------------- he lies along the couch, texting, smiling at the screen
+      { at: 0, name: 'couch: he lies along the couch, texting, smiling at the screen; three knocks; his head snaps to the door', draw(c, st, lt) {
+        const u = seg(st, 0, 9.5, 'inOutSine'); cam(c, { x: lerp(960, 820, u), y: lerp(540, 640, u), zoom: lerp(1.0, 1.14, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
         const tt = twos(lt);
-        const onPhone = { gaze: [0.15, 0.5] };
-        const face = Object.assign({}, onPhone, tt >= 8.0 ? { smile: key(tt, [[8.0, 0.5], [8.7, 0.25], [9.3, 0]]), lids: key(tt, [[8.0, 0.58], [8.6, 0.72]]), gaze: tt > 9.1 ? [0.05, 0.1] : onPhone.gaze }
-          : { smile: key(tt, [[0, 0.375], [3.0, 0.5], [4.2, 0.625], [5.6, 0.5]]), lids: 0.58 });
-        const fig = onCouch(c, lt, 'couch', 1, 'hold', face, { phoneAt: [CM().couchHeadL[0] + 120, CM().couchHeadL[1] + 230] });
+        const fig = couchMe(c, lt, { g: 0, R: Object.assign({ hand: 'thumb', hp: { reach: tt < 8.0 ? 0.3 + 0.25 * (Math.floor(tt * 6) % 3 === 0 ? 1 : 0) : 0.35, over: 'thumb' } }, R_LIE),
+          face: knockFace(tt), blink: tt < 9.0, phoneAt: phoneSpot() });
         heldPhone(c, fig, lt, { typing: tt > 1.0 && tt < 8.0 });
         V.front(c, lt, DAY);
       } },
-      // ---------------------------------------------------------------- close: he looks at the door as if it has never made that sound
-      { at: 9.5, name: 'couch, close: he looks at the door as if it has never made that sound before', draw(c, st, lt) {
-        const u = seg(st, 0, 4.5, 'inOutSine');
-        cam(c, { x: 560, y: 800, zoom: lerp(1.98, 2.05, u) });
+      // ---------------------------------------------------------------- close: he holds the look at the door
+      { at: 9.5, name: 'couch, close: he looks at the door as if it has never made that sound before; held', draw(c, st, lt) {
+        const u = seg(st, 0, 4.1, 'inOutSine'); cam(c, { x: lerp(600, 590, u), y: lerp(800, 795, u), zoom: lerp(1.95, 2.02, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
         const tt = twos(lt);
-        // his eyes leave the phone and come up to the door (toward us); the head lifts a little off the arm; brows up; held
-        const look = seg(tt, 10.1, 10.8, 'inOutSine');
-        const face = { yaw: lerp(0, 0.12, look), pitch: lerp(0, -0.1, look), gaze: [lerp(0.15, -0.05, look), lerp(0.5, -0.12, look)], lids: lerp(0.72, 0.88, look), brows: look > 0.5 ? 0.25 : 0, smile: 0, mouth: tt > 11.6 && tt < 12.6 ? 1 : 0 };
-        const fig = onCouch(c, lt, 'couch', 1, 'hold', face, { blink: tt < 12.6 ? false : undefined, phoneAt: [CM().couchHeadL[0] + 120, CM().couchHeadL[1] + 230] });
-        heldPhone(c, fig, lt);
+        // the phone forgotten in his hand, lowered a little, still lit
+        const fig = couchMe(c, lt, { g: 0, R: Object.assign({ hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } }, { E: R_LIE.E, W: lerp2(R_LIE.W, [-0.3, 1.6], seg(tt, 10.4, 11.6, 'inOutSine')) }),
+          face: knockFace(tt), blink: tt > 12.4, phoneAt: phoneSpot() });
+        heldPhone(c, fig, lt, { glowA: 0.22 });
         V.front(c, lt, DAY);
       }, post: { vig: 0.55 } },
-      // ---------------------------------------------------------------- he sits up, the phone in his hand, still looking at the door
-      { at: 14.0, name: 'couch: he sits up, the phone in his hand, eyes on the door', draw(c, st, lt) {
+      // ---------------------------------------------------------------- he sits up, sets the phone face up on the cushion, lets go, rises
+      { at: 13.6, name: 'couch: he sits up, eyes on the door; lays the phone face up on the cushion beside him; his hand lets go; he rises', draw(c, st, lt) {
+        const u = seg(st, 0, 4.4, 'inOutSine'); cam(c, { x: lerp(900, 960, u), y: lerp(580, 560, u), zoom: lerp(1.1, 1.06, u) });
         const V = LV('couch'); V.back(c, lt, DAY);
-        const tt = twos(lt), u = 0.5 * seg(tt, 14.1, 15.2, 'inOutSine');
-        const face = { yaw: lerp(0.1, -0.15, seg(tt, 14.1, 15.2)), pitch: 0.04, gaze: [-0.1, 0.05], lids: 0.84, brows: 0.25 };
-        const fig = onCouch(c, lt, 'getup', u, 'hold', face);
-        heldPhone(c, fig, lt);
-        V.front(c, lt, DAY);
-      } },
-      // ---------------------------------------------------------------- the cushion: he lays the phone down, face up, lit; his hand leaves it
-      { at: 15.6, name: 'cushion: insert, he lays the phone face up, lit, beside him; his hand leaves it', draw(c, st, lt) {
-        const V = LV('couch'); const S0 = Object.assign({ shot: 'close' }, DAY);
-        const q0 = cushionQuad('couch', 'close'), cx = (q0[0][0] + q0[2][0]) / 2, cy = (q0[0][1] + q0[2][1]) / 2;
-        const Z = 2.0, camX = clamp(cx - 150, 480, W - 480), camY = clamp(cy - 40, 270, H - 270); cam(c, { x: camX, y: camY, zoom: Z });
-        V.back(c, lt, S0);
         const tt = twos(lt);
-        const down = seg(tt, 15.6, 16.0, 'outCubic'), off = seg(tt, 16.25, 16.65, 'inCubic');
-        const lift = (1 - down) * 30;
-        const P = { quad: q0.map(p => [p[0] - (1 - down) * 18, p[1] - lift]), edge: [0, 3], screen: 'thread', state: threadState(), env: '#C8CCC8', shadow: { dx: 0, dy: 3 + lift * 0.4, blur: 5 + lift * 0.4, alpha: 0.4 } };
-        const info = PHONE.where(P, c);
-        PHONE.glow(c, { info, x: info.center[0], y: info.center[1] + 6, r: 220, sy: 0.6, k: 0.6 });
-        // his arm, in its sleeve, from his shoulder just off the frame's left edge (he sits beside the phone): the hand palm down over
-        // the phone's lower half lays it down, then draws back out of frame; the fingers are drawn again over the glass
-        const s = HEAD_M * 1233, L = dayLight('couch', 'close', { phone: info.center, phoneCol: '#FFC5A0', phoneK: 0.5 });
-        const grip = info.at(0.42, 0.78), hs = 0.68 * s;
-        const wrist = [grip[0] - 0.6 * hs - off * 1.4 * s, grip[1] + 0.12 * hs - off * 0.5 * s];
-        // the shoulder just above the frame's top edge, up and left of the phone, within reach so the elbow bends
-        const wr0 = [grip[0] - 0.6 * hs, grip[1] + 0.12 * hs], Sh = [wr0[0] - 1.1 * s, camY - 540 / Z - 0.35 * s], x0 = Sh[0] - 0.72 * s, y0 = Sh[1] - 1.07 * s;
-        const fig = RIG.person({ who: 'him', costume: 'sweater', tau: 0.3, head: false, legs: false, crop: 2.0,
-          arms: { L: { a1: -0.06, a2: 0.12, hand: 'relax' }, R: { to: [(wrist[0] - x0) / s, (wrist[1] - y0) / s], bend: 1, hand: 'flat', hp: { close: 0.25 + 0.4 * off, over: 'all' }, front: true } } });
-        // only the arm: its sleeve, its cuff and its hand (the body is off frame)
-        const armOps = fig.ops.filter(op => op && ((op.type === 'hand' && op.name === 'R') || (op.type === 'paper' && /^armR/.test(op.key || ''))));
-        const arm = RIG.drawFigure(c, { who: 'him', x: x0, y: y0, s, light: L, breath: 0, ops: armOps });
-        PHONE.draw(c, P);
-        if (off < 0.35) arm.over(c);
-      }, post: { vig: 0.5 } },
-      // ---------------------------------------------------------------- he rises from beside it and goes to the door
-      { at: 16.6, name: 'couch: he rises; the phone lit on the cushion beside where he sat', draw(c, st, lt) {
-        const V = LV('couch'); V.back(c, lt, DAY);
-        phoneOnCushion(c, 'couch', 'main', { k: 0.8, r: 2.6 });
-        const tt = twos(lt), u = 0.5 + 0.5 * seg(tt, 16.8, 17.9, 'inOutSine');
-        const face = { yaw: -0.2, pitch: 0.06, gaze: [-0.15, 0.08], lids: 0.8 };
-        onCouch(c, lt, 'getup', u, 'rest', face);
+        const SIT = [13.7, 14.9], REACH = [14.95, 15.75], LET = [15.95, 16.35], BACK = [16.2, 16.7], RISE = [16.75, 17.9];
+        const g = tt < SIT[1] ? 0.5 * seg(tt, SIT[0], SIT[1], 'inOutSine') : tt < RISE[0] ? 0.5 : 0.5 + 0.5 * seg(tt, RISE[0], RISE[1], 'inOutSine');
+        const lean = 0.3 * seg(tt, REACH[0], REACH[0] + 0.6, 'inOutSine') * (1 - seg(tt, BACK[0], BACK[1], 'inOutSine'));
+        const reach = seg(tt, REACH[0], REACH[1], 'inOutSine'), down = tt >= REACH[1], letgo = seg(tt, LET[0], LET[1], 'inOutSine');
+        const qc = cushionCenter('couch', 'main');
+        const R = toFig => {
+          const sit = { E: lerp2(R_LIE.E, R_SIT.E, seg(tt, SIT[0], SIT[1], 'inOutSine')), W: lerp2(R_LIE.W, R_SIT.W, seg(tt, SIT[0], SIT[1], 'inOutSine')) };
+          const tgt = V2a(toFig(qc), [-0.3, 0.12]), tE = V2a(toFig(qc), [-0.35, -1.0]);
+          if (tt < REACH[0]) return Object.assign({ hand: 'thumb', hp: { reach: 0.35, over: 'thumb' } }, sit);
+          if (letgo <= 0) return { hand: 'thumb', hp: { reach: 0.35, over: 'thumb' }, E: lerp2(sit.E, tE, reach), W: lerp2(sit.W, tgt, reach) };
+          return { hand: 'relax', hp: { close: 0.25 }, E: lerp2(tE, R_REST.E, letgo), W: lerp2(V2a(tgt, [0, -0.25 * Math.sin(Math.PI * letgo)]), R_REST.W, letgo) };
+        };
+        // eyes on the door until the phone goes down; a glance down at it as he lets go; back to the door as he rises
+        const face = tt < REACH[0] + 0.3 ? DOOR_LOOK : tt < BACK[1] ? { yaw: 0.35, pitch: 0.35, gaze: [0.25, 0.5], lids: 0.6, pale: 0 } : Object.assign({}, DOOR_LOOK, { lids: 0.78, brows: 0 });
+        if (down) phoneOnCushion(c, 'couch', 'main', { k: 0.8, r: 2.6 });
+        const fig = couchMe(c, lt, { g, lean, R, face: Object.assign({}, face), phoneAt: down ? null : phoneSpot() });
+        if (!down) heldPhone(c, fig, lt, { roll: lerp(-0.35, 0.15, reach), yaw: lerp(-1.0, 0, reach), pitch: lerp(0.25, 1.3, reach), glowA: 0.2 * (1 - reach) });
         V.front(c, lt, DAY);
       } },
-      // ---------------------------------------------------------------- the front door from inside: he opens it
       { at: 18.0, name: 'door: from inside; he opens it', draw(c, st, lt) {
         const V = LV('door'), tt = twos(lt);
         const open = 0.9 * seg(lt, 18.2, 19.9, 'inOutSine');
@@ -305,7 +329,7 @@
         const face = { yaw: lerp(-0.04, -0.5, turn), pitch: 0.04, gaze: [lerp(0.04, -0.3, turn), lerp(0.1, 0.25, turn)], lids: lerp(0.86, 0.6, letGo), brows: letGo < 0.5 ? 0.25 : 0, pale: 1 };
         if (tt < 35.7) {
           const at = V.project(P0, 'deep'), s = HEAD_M * at[2];
-          atDoor(c, at[0], at[1], s, L, lt, { edge: V.doorEdge(0.9, 1.1, 'deep'), edgeTop: V.doorEdge(0.9, 1.6, 'deep'), tight: 1 - letGo, let: letGo, tau: lerp(0.3, -1.0, turn), flip: true, face });
+          atDoor(c, at[0], at[1], s, L, lt, { edge: V.doorEdge(0.9, 1.1, 'deep'), edgeTop: V.doorEdge(0.9, 1.6, 'deep'), tight: 1 - letGo, let: letGo, tau: lerp(-0.15, -1.0, turn), flip: true, face });
         } else {
           // two steps to the latch side, out of her way, the jamb taking him
           const s0 = HEAD_M * V.project(P0, 'deep')[2], d = (tt - 35.7) * STRIDE(s0) / V.project(P0, 'deep')[2];   // metres walked

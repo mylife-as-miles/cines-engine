@@ -55,7 +55,9 @@
   }
   // 0–6: black glass; his own face in it
   function blackGlass(c, st, lt) {
-    phoneInHand(c, lt, { screen: 'black', state: { reflection: reflection(c), amount: 0.3 }, z: 0.03 * E.inOutSine(seg(lt, 0, 6)), lightK: 0 });
+    const tt = twos(lt);
+    const reach = key(tt, [[1.9, 0], [2.4, 0.3], [3.3, 0.3], [3.8, 0.05], [5.4, 0.05], [5.9, 0.15]]);
+    phoneInHand(c, lt, { screen: 'black', state: { reflection: reflection(c), amount: 0.3 }, z: 0.04 * E.inOutSine(seg(lt, 0, 6)), lightK: 0, reach: Math.round(reach * 20) / 20 });
   }
   // 6–11: he touches it; the waterfall blooms back (6.0–6.8); the banner, never dismissed; his thumb goes to it, taps (10.5)
   function bloom(c, st, lt) {
@@ -181,12 +183,17 @@
   function strip(c, st, lt) {
     const V = LV().fridge, A = V.shots.insert.anchors; const b = BLUE(lt);
     push(c, A.stripLast[0], A.stripLast[1], 1 + 0.16 * E.inOutSine(seg(lt, 52.6, 58.6)));
-    V.back(c, lt, { tod: 'day', blue: 0.3 * b });
-    // the window's last light on the fridge door, cut in two bands (it is real light, so it is posterised)
-    const g = c.g, S = OTM.S; g.save(); g.globalCompositeOperation = 'screen';
-    g.fillStyle = 'rgba(150,158,178,0.1)'; g.fill(S().poly([[A.strip[0] - 520, -200], [A.strip[0] + 700, -200], [A.strip[0] + 380, 1300], [A.strip[0] - 840, 1300]]).path(3, 1140));
-    g.fillStyle = 'rgba(150,158,178,0.08)'; g.fill(S().poly([[A.strip[0] - 300, -200], [A.strip[0] + 420, -200], [A.strip[0] + 140, 1300], [A.strip[0] - 600, 1300]]).path(3, 1141));
+    V.back(c, lt, { tod: 'day', blue: b });
+    // the window's last light on the fridge door, cut in two cool bands (real light, so it is posterised); it falls round the strip,
+    // and on the strip itself only lifts the print a little (soft light), so the four laughing frames keep their contrast in the blue
+    const g = c.g, S = OTM.S, cx = A.strip[0], cy = A.strip[1], sw = 0.052 * A.strip[2], sh = 0.19 * A.strip[2];
+    const stripPath = new Path2D(); { const m = new DOMMatrix().translateSelf(cx, cy).rotateSelf(0.045 * 180 / Math.PI); const q = [[-sw / 2 - 5, -sh / 2 - 5], [sw / 2 + 5, -sh / 2 - 5], [sw / 2 + 5, sh / 2 + 5], [-sw / 2 - 5, sh / 2 + 5]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]); stripPath.moveTo(q[0][0], q[0][1]); q.slice(1).forEach(p2 => stripPath.lineTo(p2[0], p2[1])); stripPath.closePath(); }
+    const outside = new Path2D(); outside.rect(-2000, -2000, 6000, 6000); outside.addPath(stripPath);
+    g.save(); g.clip(outside, 'evenodd'); g.globalCompositeOperation = 'screen';
+    g.fillStyle = 'rgba(126,147,194,0.22)'; g.fill(S().poly([[cx - 520, -200], [cx + 700, -200], [cx + 380, 1300], [cx - 840, 1300]]).path(3, 1140));
+    g.fillStyle = 'rgba(126,147,194,0.16)'; g.fill(S().poly([[cx - 300, -200], [cx + 420, -200], [cx + 140, 1300], [cx - 600, 1300]]).path(3, 1141));
     g.restore();
+    g.save(); g.clip(stripPath); g.globalCompositeOperation = 'soft-light'; g.fillStyle = 'rgba(214,222,240,0.55)'; g.fillRect(cx - 400, cy - 600, 800, 1200); g.restore();
   }
 
   // ------------------------------------------------------------------ 58–72: cut to black; the title; fade out
