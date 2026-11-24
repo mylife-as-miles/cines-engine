@@ -205,16 +205,16 @@
   // no freckles, stubble only as a tint, the same even smile; then rotated to the strip's tilt. Long hair is drawn strand by strand in the
   // picture's own space, so it hangs. Deterministic (OTM.rng).
   const PH = {
-    her: { skin: '#EEC9AF', skinSh: '#CE957C', skinDeep: '#A9685A', blush: '#EE8F86', lips: '#D27A74', lipsDk: '#A9524F', iris: '#6C8448', irisDk: '#2E3B20', irisLt: '#B5A562',
+    her: { skin: '#F0C9AD', skinSh: '#DD937B', skinDeep: '#BC6A5C', blush: '#EE8F86', lips: '#D27A74', lipsDk: '#A9524F', iris: '#6C8448', irisDk: '#2E3B20', irisLt: '#B5A562',
       brow: '#8E4F33', lash: '#2B1B15', sclera: '#F3EDE6', teeth: '#F4EFE8',
       hair: '#A94D2C', hairDk: '#5C2312', hairLt: '#E8A26A', hairHi: '#F6C894',
-      face: [[0, -0.56], [0.2, -0.53], [0.295, -0.4], [0.312, -0.2], [0.306, 0.02], [0.286, 0.16], [0.245, 0.285], [0.165, 0.385], [0.082, 0.436], [0, 0.45]],
-      neck: 0.148, brT: 0.022, lashK: 1.25, eyeW: 0.064, eyeOpen: 0.036 },
+      face: [[0, -0.56], [0.2, -0.53], [0.29, -0.4], [0.305, -0.2], [0.303, 0.0], [0.283, 0.14], [0.238, 0.262], [0.158, 0.37], [0.078, 0.428], [0, 0.442]],
+      neck: 0.142, brT: 0.032, lashK: 1.2, eyeW: 0.068, eyeOpen: 0.04 },
     him: { skin: '#B98060', skinSh: '#8C5A44', skinDeep: '#5E3A2C', blush: '#B9624E', lips: '#A2675A', lipsDk: '#743E35', iris: '#4A301E', irisDk: '#1C120B', irisLt: '#86603A',
       brow: '#1F1714', lash: '#17100C', sclera: '#EFE6DA', teeth: '#F1EBE2', stubble: '#7A5444',
       hair: '#1E1714', hairDk: '#0E0A09', hairLt: '#4E3D33', hairHi: '#6E5A4C',
       face: [[0, -0.57], [0.215, -0.54], [0.315, -0.4], [0.334, -0.2], [0.33, 0.03], [0.314, 0.18], [0.282, 0.3], [0.2, 0.4], [0.1, 0.452], [0, 0.464]],
-      neck: 0.182, brT: 0.03, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.033 },
+      neck: 0.182, brT: 0.04, lashK: 0.7, eyeW: 0.062, eyeOpen: 0.033 },
   };
   const symLoop = half => half.concat(half.slice(1, -1).reverse().map(([x, y]) => [-x, y]));
   // a layer the size of the face canvas, with the same local transform (origin between the eyes, 1 unit = U px)
@@ -243,17 +243,17 @@
     const sg = g.createRadialGradient(cx, 0.0, 0.0, cx, 0.0, w * 1.05); sg.addColorStop(0, P.sclera); sg.addColorStop(0.6, mixHex(P.sclera, '#C9B7A8', 0.35)); sg.addColorStop(1, mixHex(P.sclera, '#8E6E62', 0.6));
     g.fillStyle = sg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
     // the iris: a dark limbal ring, the colour, a lighter ring round the pupil, fine fibres; the pupil; a catchlight (the same in both eyes)
-    const ir = 0.0305, iy = -0.003;
-    const ig = g.createRadialGradient(cx, iy, 0, cx, iy, ir); ig.addColorStop(0, P.irisLt); ig.addColorStop(0.42, mixHex(P.irisLt, P.iris, 0.6)); ig.addColorStop(0.72, P.iris); ig.addColorStop(0.9, P.irisDk); ig.addColorStop(1, mixHex(P.irisDk, '#000000', 0.5));
-    g.fillStyle = ig; g.beginPath(); g.arc(cx, iy, ir, 0, Math.PI * 2); g.fill();
+    const ir = 0.0305, iy = -0.004, icx = cx - sd * w * 0.05;
+    const ig = g.createRadialGradient(icx, iy, 0, icx, iy, ir); ig.addColorStop(0, P.irisLt); ig.addColorStop(0.42, mixHex(P.irisLt, P.iris, 0.6)); ig.addColorStop(0.72, P.iris); ig.addColorStop(0.9, P.irisDk); ig.addColorStop(1, mixHex(P.irisDk, '#000000', 0.5));
+    g.fillStyle = ig; g.beginPath(); g.arc(icx, iy, ir, 0, Math.PI * 2); g.fill();
     const r = O.rng('iris' + P.iris); g.lineWidth = 0.0012;
-    for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 + r() * 0.05, r0 = 0.014 + r() * 0.004, r1 = ir * (0.75 + r() * 0.2); g.strokeStyle = r() < 0.5 ? rgba(P.irisLt, 0.35) : rgba(P.irisDk, 0.3); g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, iy + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, iy + Math.sin(a) * r1); g.stroke(); }
-    g.fillStyle = '#0A0706'; g.beginPath(); g.arc(cx, iy, 0.0118, 0, Math.PI * 2); g.fill();
+    for (let i = 0; i < 60; i++) { const a = i / 60 * Math.PI * 2 + r() * 0.05, r0 = 0.014 + r() * 0.004, r1 = ir * (0.75 + r() * 0.2); g.strokeStyle = r() < 0.5 ? rgba(P.irisLt, 0.35) : rgba(P.irisDk, 0.3); g.beginPath(); g.moveTo(icx + Math.cos(a) * r0, iy + Math.sin(a) * r0); g.lineTo(icx + Math.cos(a) * r1, iy + Math.sin(a) * r1); g.stroke(); }
+    g.fillStyle = '#0A0706'; g.beginPath(); g.arc(icx, iy, 0.0118, 0, Math.PI * 2); g.fill();
     // the upper lid's shadow across the top of the eye
     const lg = g.createLinearGradient(0, -op, 0, -op + 0.026); lg.addColorStop(0, 'rgba(40,20,14,0.6)'); lg.addColorStop(1, 'rgba(40,20,14,0)'); g.fillStyle = lg; g.fillRect(cx - w * 1.2, -0.06, w * 2.4, 0.1);
     const bg2 = g.createLinearGradient(0, 0.024, 0, 0.008); bg2.addColorStop(0, 'rgba(120,80,70,0.3)'); bg2.addColorStop(1, 'rgba(120,80,70,0)'); g.fillStyle = bg2; g.fillRect(cx - w * 1.2, 0, w * 2.4, 0.03);
-    g.fillStyle = 'rgba(255,255,255,0.97)'; g.beginPath(); g.ellipse(cx - 0.006, iy - 0.011, 0.0058, 0.0052, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.arc(cx + 0.009, iy + 0.008, 0.0022, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.97)'; g.beginPath(); g.ellipse(icx - 0.006, iy - 0.011, 0.0058, 0.0052, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.arc(icx + 0.009, iy + 0.008, 0.0022, 0, Math.PI * 2); g.fill();
     g.restore();
     // the pink inner corner
     ell(g, inner[0] + sd * 0.006, inner[1] + 0.001, 0.007, 0.006, '#D8988C', 0.85);
@@ -284,48 +284,55 @@
     soft(D, l => { const gr = l.createRadialGradient(0, 0, 0.05, 0, 0, 1); gr.addColorStop(0, rgba(P.skinSh, 0)); gr.addColorStop(0.62, rgba(P.skinSh, 0.0)); gr.addColorStop(0.92, rgba(P.skinSh, 0.55)); gr.addColorStop(1, rgba(P.skinDeep, 0.8));
       l.save(); l.translate(0, -0.02); l.scale(0.345, 0.52); l.fillStyle = gr; l.fillRect(-1.2, -1.2, 2.4, 2.4); l.restore(); }, 0.02, 'multiply', 1, M.c);
     // the face's shadow on the neck, the ears' inner shade
-    soft(D, l => { const gr = l.createLinearGradient(0, 0.36, 0, 0.72); gr.addColorStop(0, rgba(P.skinDeep, 0.45)); gr.addColorStop(0.5, rgba(P.skinSh, 0.22)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
+    soft(D, l => { const gr = l.createLinearGradient(0, 0.36, 0, 0.72); gr.addColorStop(0, rgba(P.skinDeep, 0.32)); gr.addColorStop(0.5, rgba(P.skinSh, 0.14)); gr.addColorStop(1, rgba(P.skinSh, 0)); l.fillStyle = gr; l.fill(neckP);
       l.globalCompositeOperation = 'destination-out'; l.fill(faceP); l.globalCompositeOperation = 'source-over';
       both(sd => ell(l, sd * (earX - 0.004), 0.07, 0.022, 0.062, P.skinDeep, 0.55)); }, 0.012, 'multiply', 1, M.c);
     // sockets, the sides of the nose, under the nose, under the lip, under the jaw
     soft(D, l => {
-      both(sd => { ell(l, sd * 0.152, -0.018, 0.085, 0.05, P.skinSh, 0.55); ell(l, sd * 0.08, 0.0, 0.03, 0.03, P.skinSh, 0.45); });
-      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, 0.55); l.lineWidth = 0.026; l.beginPath(); l.moveTo(sd * 0.05, -0.01); l.quadraticCurveTo(sd * 0.04, 0.08, sd * 0.052, 0.165); l.stroke(); });
+      both(sd => { ell(l, sd * 0.152, -0.02, 0.085, 0.048, P.skinSh, 0.5); ell(l, sd * 0.085, -0.005, 0.025, 0.025, P.skinSh, 0.18); });
+      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.16 : 0.3); l.lineWidth = 0.022; l.beginPath(); l.moveTo(sd * 0.048, -0.01); l.quadraticCurveTo(sd * 0.04, 0.07, sd * 0.05, 0.14); l.stroke(); });
       ell(l, 0, 0.226, 0.05, 0.016, P.skinDeep, 0.5); ell(l, 0, 0.372, 0.05, 0.016, P.skinSh, 0.55);
-      both(sd => ell(l, sd * 0.11, 0.33, 0.022, 0.03, P.skinSh, 0.3));
-      both(sd => ell(l, sd * 0.255, 0.21, 0.05, 0.1, P.skinSh, 0.28));
+      both(sd => ell(l, sd * 0.25, 0.22, 0.045, 0.09, P.skinSh, 0.22)); both(sd => ell(l, sd * 0.15, 0.045, 0.05, 0.012, P.skinSh, 0.22));
+      // the contour under the cheekbones, and the jaw's underside, as a key light from just above makes them
+      l.lineCap = 'round'; both(sd => { l.strokeStyle = rgba(P.skinSh, who === 'her' ? 0.2 : 0.38); l.lineWidth = 0.05; l.beginPath(); l.moveTo(sd * 0.285, 0.07); l.quadraticCurveTo(sd * 0.24, 0.17, sd * 0.2, 0.22); l.stroke(); });
+      { const jp = new Path2D(); const half = P.face.slice(5); jp.moveTo(half[0][0], half[0][1]); half.forEach(q => jp.lineTo(q[0], q[1])); half.slice().reverse().forEach(q => jp.lineTo(-q[0], q[1])); l.strokeStyle = rgba(P.skinDeep, who === 'her' ? 0.14 : 0.4); l.lineWidth = 0.05; l.stroke(jp); }
     }, 0.02, 'multiply', 1, M.c);
     // the light: forehead, the bridge and tip of the nose, the cheekbones, the chin, the upper lip's ridge (soft, never banded)
     soft(D, l => {
       ell(l, 0, -0.27, 0.15, 0.09, '#FFF6EE', 0.5); ell(l, 0, 0.06, 0.016, 0.09, '#FFF6EE', 0.45); ell(l, 0, 0.158, 0.028, 0.024, '#FFF8F2', 0.6);
       both(sd => { ell(l, sd * 0.19, 0.06, 0.07, 0.035, '#FFF4EA', 0.35); ell(l, sd * 0.15, -0.075, 0.06, 0.012, '#FFF4EA', 0.25); });
       ell(l, 0, 0.407, 0.045, 0.022, '#FFF4EA', 0.4); ell(l, 0, 0.262, 0.03, 0.008, '#FFF6EE', 0.35);
+      both(sd => ell(l, sd * 0.15, 0.115, 0.06, 0.045, '#FFF2E8', 0.4 * sm));      // the apples of the cheeks, lifted by the smile
     }, 0.022, 'screen', 0.55, M.c);
+    // a dewy sheen, the beauty filter's: small, bright, perfectly placed
+    soft(D, l => { ell(l, 0, 0.0, 0.009, 0.05, '#FFFFFF', 0.5); ell(l, 0, 0.15, 0.012, 0.009, '#FFFFFF', 0.6); both(sd => ell(l, sd * 0.2, 0.03, 0.035, 0.014, '#FFFFFF', 0.35)); ell(l, 0, -0.3, 0.07, 0.03, '#FFFFFF', 0.25); }, 0.012, 'screen', 0.3, M.c);
     // rosy cheeks (the generator's improvement), and his stubble as a smooth tint
     soft(D, l => { both(sd => ell(l, sd * 0.175, 0.13, 0.085, 0.055, P.blush, who === 'her' ? 0.55 : 0.35)); ell(l, 0, -0.2, 0.08, 0.05, P.blush, 0.12); }, 0.035, 'multiply', who === 'her' ? 0.45 : 0.35, M.c);
     if (P.stubble) soft(D, l => { l.fillStyle = P.stubble; l.beginPath(); l.moveTo(-0.3, 0.2); l.bezierCurveTo(-0.2, 0.24, -0.1, 0.235, 0, 0.24); l.bezierCurveTo(0.1, 0.235, 0.2, 0.24, 0.3, 0.2); l.lineTo(0.3, 0.5); l.lineTo(-0.3, 0.5); l.closePath(); l.fill(); }, 0.02, 'multiply', 0.32, M.c);
     // ---- the brows: many fine hairs, soft
     soft(D, l => { both(sd => {
       const r = O.rng('brow' + sd + who); l.lineCap = 'round';
-      const bx = u => sd * lerp(0.062, 0.245, u), by = u => -0.112 - 0.028 * Math.sin(Math.PI * Math.min(1, u * 1.25)) + 0.01 * u, th = u => P.brT * (1 - 0.65 * u);
-      l.fillStyle = rgba(P.brow, 0.6); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
-      for (let i = 0; i < 260; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u), x = bx(u), ang = u < 0.18 ? -Math.PI / 2 + sd * 0.4 : (sd > 0 ? -0.25 : Math.PI + 0.25) + (r() - 0.5) * 0.3, len = 0.012 + 0.014 * r();
-        l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.45 + 0.4 * r()); l.lineWidth = 0.0022; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0025, 'source-over', 1);
+      const bx = u => sd * lerp(0.064, 0.24, u), by = u => -0.106 - 0.026 * Math.sin(Math.PI * Math.min(1, u * 1.2)) + 0.012 * u, th = u => P.brT * (0.9 - 0.6 * u);
+      l.fillStyle = rgba(P.brow, who === 'her' ? 0.5 : 0.7); l.beginPath(); for (let i = 0; i <= 20; i++) { const u = i / 20; l.lineTo(bx(u), by(u) - th(u) / 2); } for (let i = 20; i >= 0; i--) { const u = i / 20; l.lineTo(bx(u), by(u) + th(u) / 2); } l.fill();
+      for (let i = 0; i < 220; i++) { const u = r(), y = by(u) + (r() - 0.5) * th(u) * 0.8, x = bx(u), ang = u < 0.15 ? -Math.PI / 2 + sd * 0.9 : (sd > 0 ? -0.18 : Math.PI + 0.18) + (r() - 0.5) * 0.25, len = 0.008 + 0.01 * r();
+        l.strokeStyle = rgba(r() < 0.8 ? P.brow : mixHex(P.brow, '#000000', 0.4), 0.35 + 0.35 * r()); l.lineWidth = 0.0017; l.beginPath(); l.moveTo(x, y); l.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); l.stroke(); } }); }, 0.0032, 'source-over', 1);
     // ---- the eyes: the lid crease and lid above, then the eye itself
     soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.5); l.lineWidth = 0.006; l.lineCap = 'round'; l.beginPath(); l.moveTo(sd * 0.094, -0.022); l.quadraticCurveTo(sd * 0.145, -0.068, sd * 0.215, -0.028); l.stroke();
       l.strokeStyle = rgba(P.skinDeep, 0.28); l.lineWidth = 0.004; l.beginPath(); l.moveTo(sd * 0.1, 0.022); l.quadraticCurveTo(sd * 0.155, 0.04, sd * 0.208, 0.012); l.stroke(); }); }, 0.005, 'multiply', 1);
     { const E = faceLayer(D); both(sd => paintEye(E.g, P, sd, { smile: sm, eyes: o.eyes })); const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0017 * U).toFixed(2)}px)`; bg.drawImage(E.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore(); }
     // ---- the nose: no lines, only the soft wings and nostrils
     soft(D, l => { both(sd => { l.strokeStyle = rgba(P.skinDeep, 0.38); l.lineWidth = 0.008; l.lineCap = 'round'; l.beginPath(); l.arc(sd * 0.036, 0.186, 0.022, sd > 0 ? -1.1 : Math.PI + 1.1, sd > 0 ? 1.4 : Math.PI - 1.4, sd < 0); l.stroke();
-      ell(l, sd * 0.02, 0.205, 0.011, 0.0055, mixHex(P.skinDeep, '#2A120C', 0.25), 0.55); }); }, 0.005, 'multiply', 1);
+      ell(l, sd * 0.02, 0.205, 0.011, 0.0055, mixHex(P.skinDeep, '#2A120C', 0.25), 0.6); });
+      ell(l, 0, 0.2, 0.03, 0.01, P.skinDeep, 0.35); }, 0.005, 'multiply', 1);
+    soft(D, l => { ell(l, 0, 0.165, 0.022, 0.018, '#FFFFFF', 0.5); ell(l, 0, 0.04, 0.008, 0.06, '#FFFFFF', 0.35); }, 0.008, 'screen', 0.35, M.c);
     // ---- the mouth: the same even smile, upper teeth showing
-    { const cxm = 0.074 + 0.014 * sm, cym = 0.306 - 0.02 * sm, yu = 0.299, yl = yu + 0.012 + 0.05 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
-      ul.moveTo(-cxm, cym); ul.bezierCurveTo(-cxm * 0.75, cym - 0.012, -0.04, yu - 0.026, -0.022, yu - 0.028); ul.quadraticCurveTo(-0.008, yu - 0.022, 0, yu - 0.019); ul.quadraticCurveTo(0.008, yu - 0.022, 0.022, yu - 0.028);
-      ul.bezierCurveTo(0.04, yu - 0.026, cxm * 0.75, cym - 0.012, cxm, cym); ul.bezierCurveTo(cxm * 0.6, cym + 0.006, 0.04, yu + 0.002, 0, yu + 0.002); ul.bezierCurveTo(-0.04, yu + 0.002, -cxm * 0.6, cym + 0.006, -cxm, cym); ul.closePath();
+    { const cxm = 0.08 + 0.016 * sm, cym = 0.306 - 0.02 * sm, yu = 0.301, yl = yu + 0.014 + 0.05 * open, ul = new Path2D(), ll = new Path2D(), teeth = new Path2D();
+      ul.moveTo(-cxm, cym); ul.bezierCurveTo(-cxm * 0.75, cym - 0.011, -0.045, yu - 0.024, -0.023, yu - 0.026); ul.quadraticCurveTo(-0.009, yu - 0.021, 0, yu - 0.018); ul.quadraticCurveTo(0.009, yu - 0.021, 0.023, yu - 0.026);
+      ul.bezierCurveTo(0.045, yu - 0.024, cxm * 0.75, cym - 0.011, cxm, cym); ul.bezierCurveTo(cxm * 0.6, cym + 0.006, 0.04, yu + 0.002, 0, yu + 0.002); ul.bezierCurveTo(-0.04, yu + 0.002, -cxm * 0.6, cym + 0.006, -cxm, cym); ul.closePath();
       teeth.moveTo(-cxm, cym); teeth.bezierCurveTo(-cxm * 0.6, cym + 0.006, -0.04, yu + 0.001, 0, yu + 0.001); teeth.bezierCurveTo(0.04, yu + 0.001, cxm * 0.6, cym + 0.006, cxm, cym);
       teeth.bezierCurveTo(cxm * 0.7, cym + 0.018, 0.045, yl, 0, yl); teeth.bezierCurveTo(-0.045, yl, -cxm * 0.7, cym + 0.018, -cxm, cym); teeth.closePath();
       ll.moveTo(-cxm, cym); ll.bezierCurveTo(-cxm * 0.7, cym + 0.018, -0.045, yl, 0, yl); ll.bezierCurveTo(0.045, yl, cxm * 0.7, cym + 0.018, cxm, cym);
-      ll.bezierCurveTo(cxm * 0.8, cym + 0.03, 0.05, yl + 0.034, 0, yl + 0.035); ll.bezierCurveTo(-0.05, yl + 0.034, -cxm * 0.8, cym + 0.03, -cxm, cym); ll.closePath();
+      ll.bezierCurveTo(cxm * 0.8, cym + 0.034, 0.055, yl + 0.04, 0, yl + 0.041); ll.bezierCurveTo(-0.055, yl + 0.04, -cxm * 0.8, cym + 0.034, -cxm, cym); ll.closePath();
       const Mo = faceLayer(D), mg = Mo.g;
       mg.fillStyle = '#4A1C18'; mg.fill(teeth);
       mg.save(); mg.clip(teeth); const tg = mg.createLinearGradient(-cxm, 0, cxm, 0); tg.addColorStop(0, mixHex(P.teeth, '#6A4A40', 0.7)); tg.addColorStop(0.22, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(0.5, P.teeth); tg.addColorStop(0.78, mixHex(P.teeth, '#B8A89A', 0.3)); tg.addColorStop(1, mixHex(P.teeth, '#6A4A40', 0.7));
@@ -336,9 +343,9 @@
       const lg = mg.createLinearGradient(0, yl, 0, yl + 0.036); lg.addColorStop(0, P.lipsDk); lg.addColorStop(0.35, P.lips); lg.addColorStop(1, mixHex(P.lips, P.skin, 0.35)); mg.fillStyle = lg; mg.fill(ll);
       mg.save(); mg.clip(ll); mg.filter = `blur(${(0.006 * U).toFixed(2)}px)`; ell(mg, 0.0, yl + 0.016, 0.028, 0.008, '#FFF2EC', 0.55); mg.restore();
       mg.save(); mg.clip(ul); mg.filter = `blur(${(0.004 * U).toFixed(2)}px)`; ell(mg, 0.0, yu - 0.022, 0.03, 0.004, '#FFE8E0', 0.35); mg.restore();
-      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0016 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
+      const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0011 * U).toFixed(2)}px)`; bg.drawImage(Mo.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
       // the smile's corners, softly
-      soft(D, l => { both(sd => { ell(l, sd * (cxm + 0.012), cym + 0.004, 0.012, 0.018, P.skinSh, 0.55); l.strokeStyle = rgba(P.skinSh, 0.35); l.lineWidth = 0.008; l.beginPath(); l.moveTo(sd * 0.062, 0.215); l.quadraticCurveTo(sd * 0.105, 0.26, sd * (cxm + 0.018), cym + 0.012); l.stroke(); }); }, 0.012, 'multiply', 0.8, M.c);
+      soft(D, l => { both(sd => { ell(l, sd * (cxm + 0.012), cym + 0.004, 0.012, 0.018, P.skinSh, who === 'her' ? 0.35 : 0.55); l.strokeStyle = rgba(P.skinSh, 0.35); l.lineWidth = 0.008; l.beginPath(); l.moveTo(sd * 0.062, 0.215); l.quadraticCurveTo(sd * 0.105, 0.26, sd * (cxm + 0.018), cym + 0.012); l.stroke(); }); }, 0.012, 'multiply', 0.8, M.c);
     }
     // ---- his hair: short, dark, curly, grown out a little
     if (who === 'him') {
@@ -357,7 +364,7 @@
       const B = mk(D.CW, D.CH), bg = B.getContext('2d'); bg.filter = `blur(${(0.0018 * U).toFixed(2)}px)`; bg.drawImage(Hh.c, 0, 0); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(B, 0, 0); g.restore();
     }
     // the whole face a touch soft (a lens, and a beauty filter)
-    const out = mk(D.CW, D.CH), og = out.getContext('2d'); og.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; og.drawImage(D.F.c, 0, 0);
+    const out = mk(D.CW, D.CH), og = out.getContext('2d'); og.filter = `blur(${(0.0008 * U).toFixed(2)}px)`; og.drawImage(D.F.c, 0, 0);
     return { c: out, ox: D.OX, oy: D.OY, M: M.c };
   }
 
@@ -379,7 +386,7 @@
     const path = pts => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length - 1; i++) { const mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2; p.quadraticCurveTo(pts[i][0], pts[i][1], mx, my); } const e = pts[pts.length - 1]; p.lineTo(e[0], e[1]); return p; };
     const lerpPts = (A, B, t) => A.map((q, i) => [lerp(q[0], B[i][0], t), lerp(q[1], B[i][1], t)]);
     // hair falls in clumps: strands in a clump share a wave and a length
-    const clumps = []; for (let i = 0; i < 70; i++) clumps.push({ f: 3 + r() * 4, ph: r() * 6.3, a: 0.004 + r() * 0.012, len: Math.pow(r(), 1.6) * 0.45, sh: r() });
+    const clumps = []; for (let i = 0; i < 70; i++) clumps.push({ f: 3 + r() * 4, ph: r() * 6.3, a: 0.006 + r() * 0.016, len: Math.pow(r(), 1.6) * 0.45, sh: r() });
     const strands = [];
     if (layer === 'back') {
       // the fall behind her neck and shoulders, from under the crown
@@ -392,10 +399,10 @@
           const s = Math.pow(r(), 0.85), jx = (r() - 0.5) * 0.014, cl = clumps[Math.floor(s * 34 + r() * 36) % clumps.length];
           const x0 = part + (r() - 0.5) * 0.012, y0 = -0.47 - 0.1 * s;
           let A, B;
-          if (side > 0) { A = [[x0, y0], [0.2, -0.47], [0.29, -0.36], [0.315, -0.14], [0.3, 0.12]]; B = [[x0, y0], [0.22, -0.61], [0.35, -0.44], [0.385, -0.15], [0.375, 0.12]]; }
-          else { A = [[x0, y0], [-0.04, -0.45], [-0.2, -0.38], [-0.3, -0.22], [-0.31, 0.12]]; B = [[x0, y0], [-0.08, -0.64], [-0.27, -0.55], [-0.385, -0.25], [-0.38, 0.12]]; }
+          if (side > 0) { A = [[x0, y0], [0.2, -0.47], [0.29, -0.36], [0.315, -0.14], [0.3, 0.12]]; B = [[x0, y0], [0.23, -0.64], [0.37, -0.45], [0.4, -0.15], [0.39, 0.12]]; }
+          else { A = [[x0, y0], [-0.04, -0.45], [-0.2, -0.38], [-0.3, -0.22], [-0.31, 0.12]]; B = [[x0, y0], [-0.08, -0.675], [-0.29, -0.57], [-0.4, -0.25], [-0.395, 0.12]]; }
           const pts = lerpPts(A, B, s).map(([x, y], k) => [x + (k > 1 ? jx : 0), y]);
-          strands.push({ pts: strand(pts, 0.12, len - 0.06 - cl.len - 0.12 * s + r() * 0.06, side * (0.05 + 0.1 * s), cl), w: 0.004 + r() * 0.006, tone: clamp(s * 0.55 + cl.sh * 0.45, 0, 1) });
+          strands.push({ pts: strand(pts, 0.12, len - 0.06 - cl.len - 0.12 * s + r() * 0.06, side * (0.09 + 0.14 * s), cl), w: 0.004 + r() * 0.006, tone: clamp(s * 0.55 + cl.sh * 0.45, 0, 1) });
         }
       }
     }
@@ -403,7 +410,7 @@
     g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
     const Hl = mk(g.canvas.width, g.canvas.height), hg = Hl.getContext('2d'); hg.setTransform(g.getTransform()); hg.lineCap = 'round'; hg.lineJoin = 'round';
     if (layer === 'front') {   // the cap of hair over the skull, from the part, so no scalp shows between the strands
-      const cap = GG.spline([[0.31, -0.12], [0.36, -0.4], [0.24, -0.585], [0.04, -0.655], [-0.2, -0.61], [-0.35, -0.44], [-0.37, -0.14], [-0.3, -0.2], [-0.19, -0.36], [-0.03, -0.43], [0.11, -0.46], [0.25, -0.34]].map(([x, y]) => toS(x, y)), true);
+      const cap = GG.spline([[0.31, -0.12], [0.37, -0.4], [0.25, -0.6], [0.04, -0.685], [-0.21, -0.63], [-0.36, -0.45], [-0.38, -0.14], [-0.3, -0.2], [-0.19, -0.36], [-0.03, -0.43], [0.11, -0.46], [0.25, -0.34]].map(([x, y]) => toS(x, y)), true);
       hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.fillStyle = mixHex(P.hairDk, P.hair, 0.55); hg.fill(cap); hg.restore(); }
     const taper = (st, w, col, a) => { const n = st.pts.length, cut = [Math.floor(n * 0.7), Math.floor(n * 0.86), n];
       [[0, cut[0] + 1, 1, 1], [cut[0], cut[1] + 1, 0.6, 0.75], [cut[1], cut[2], 0.28, 0.4]].forEach(([i0, i1, wk, ak]) => { const seg = st.pts.slice(i0, i1); if (seg.length < 2) return; hg.strokeStyle = rgba(col, a * ak); hg.lineWidth = Math.max(0.5, w * wk); hg.stroke(path(seg)); }); };
@@ -420,13 +427,16 @@
       const Rm = mk(g.canvas.width, g.canvas.height), rg = Rm.getContext('2d'); rg.drawImage(Hl, 0, 0); rg.globalCompositeOperation = 'destination-out'; rg.drawImage(Hl, -0.012 * U, 0.016 * U);
       rg.globalCompositeOperation = 'source-in'; rg.fillStyle = 'rgba(255,236,206,0.75)'; rg.fillRect(0, 0, Rm.width, Rm.height);
       hg.save(); hg.setTransform(1, 0, 0, 1, 0, 0); hg.globalCompositeOperation = 'screen'; hg.filter = `blur(${(0.004 * U).toFixed(1)}px)`; hg.drawImage(Rm, 0, 0); hg.restore(); }
-    g.setTransform(1, 0, 0, 1, 0, 0); g.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; g.drawImage(Hl, 0, 0); g.restore();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    if (layer === 'front') { const Sd = mk(Hl.width, Hl.height), sd2 = Sd.getContext('2d'); sd2.filter = `blur(${(0.02 * U).toFixed(1)}px)`; sd2.drawImage(Hl, 0, 0.012 * U); sd2.filter = 'none'; sd2.globalCompositeOperation = 'source-in'; sd2.fillStyle = 'rgba(90,40,30,1)'; sd2.fillRect(0, 0, Sd.width, Sd.height);
+      g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = 0.22; g.drawImage(Sd, 0, 0); g.restore(); }   // the hair's soft shadow on her face and neck
+    g.filter = `blur(${(0.0012 * U).toFixed(2)}px)`; g.drawImage(Hl, 0, 0); g.restore();
   }
 
   // clothes: a body hung from a neck point, softly shaded (his navy jacket over a white tee; her cream sweater)
   function paintBody(g, who, nk, U, lean, o) {
     o = o || {}; const her = who === 'her', wS = her ? 0.84 : 1.0, cs = Math.cos(lean), sn = Math.sin(lean), R = (x, y) => [nk[0] + (x * cs - y * sn) * U, nk[1] + (x * sn + y * cs) * U];
-    const pts = [[-0.22, 0.0], [-0.42 * wS, 0.1], [-0.78 * wS, 0.24], [-1.04 * wS, 0.46], [-1.14 * wS, 0.9], [-1.2 * wS, 2.6], [1.2 * wS, 2.6], [1.14 * wS, 0.9], [1.04 * wS, 0.46], [0.78 * wS, 0.24], [0.42 * wS, 0.1], [0.22, 0.0], [0.11, 0.1], [0, 0.125], [-0.11, 0.1]].map(q => R(q[0], q[1]));
+    const pts = [[-0.2, 0.0, 1], [-0.42 * wS, 0.1], [-0.78 * wS, 0.24], [-1.04 * wS, 0.46], [-1.14 * wS, 0.9], [-1.2 * wS, 2.6, 1], [1.2 * wS, 2.6, 1], [1.14 * wS, 0.9], [1.04 * wS, 0.46], [0.78 * wS, 0.24], [0.42 * wS, 0.1], [0.2, 0.0, 1], [0.1, 0.075], [0, 0.095], [-0.1, 0.075]].map(q => { const v = R(q[0], q[1]); return q[2] ? [v[0], v[1], 1] : v; });
     const p = GG.spline(pts, true); const base = her ? '#F2EADF' : '#26344C';
     g.save(); const a = R(-1, 0.1), b = R(1, 1.6); const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]); gr.addColorStop(0, mixHex(base, '#FFFFFF', 0.25)); gr.addColorStop(0.5, base); gr.addColorStop(1, mixHex(base, '#000000', 0.2));
     g.fillStyle = gr; g.fill(p); g.clip(p);
@@ -440,7 +450,8 @@
       // the crew collar: a soft rib round the base of his neck
       const k0 = R(-0.2, 0.0), k1 = R(-0.1, 0.07), k2 = R(0.1, 0.07), k3 = R(0.2, 0.0); g.strokeStyle = 'rgba(150,140,128,0.55)'; g.lineWidth = 0.028 * U; g.filter = `blur(${(0.006 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(k0[0], k0[1]); g.bezierCurveTo(k1[0], k1[1], k2[0], k2[1], k3[0], k3[1]); g.stroke(); g.filter = 'none';
       both(sd => { const l0 = R(sd * 0.26, -0.01), l1 = R(sd * 0.34, 0.5), l2 = R(sd * 0.36, 2.6); g.strokeStyle = 'rgba(10,14,24,0.55)'; g.lineWidth = 0.02 * U; g.filter = `blur(${(0.01 * U).toFixed(1)}px)`; g.beginPath(); g.moveTo(l0[0], l0[1]); g.quadraticCurveTo(l1[0], l1[1], l2[0], l2[1]); g.stroke(); g.filter = 'none'; });
-    } else {   // her round neckline, a soft rib
+    } else {   // her round neckline, a soft rib; a fine knit (too even)
+      g.save(); g.globalAlpha = 0.06; g.strokeStyle = '#6E5A48'; g.lineWidth = Math.max(1, 0.006 * U); for (let k = -40; k <= 40; k++) { const a0 = R(k * 0.035, 0.05), a1 = R(k * 0.035 + 0.02, 2.6); g.beginPath(); g.moveTo(a0[0], a0[1]); g.lineTo(a1[0], a1[1]); g.stroke(); } g.restore();
       const L0 = R(-0.2, -0.005), L1 = R(-0.11, 0.13), R1 = R(0.11, 0.13), R0 = R(0.2, -0.005);
       g.filter = `blur(${(0.008 * U).toFixed(1)}px)`; g.strokeStyle = 'rgba(150,128,110,0.4)'; g.lineWidth = 0.024 * U; g.beginPath(); g.moveTo(L0[0], L0[1]); g.bezierCurveTo(L1[0], L1[1], R1[0], R1[1], R0[0], R0[1]); g.stroke(); g.filter = 'none';
     }
@@ -512,11 +523,11 @@
     const bg = g.createRadialGradient(w * 0.5, h * 0.32, w * 0.05, w * 0.5, h * 0.45, h * 0.75); bg.addColorStop(0, '#FCEDE2'); bg.addColorStop(0.45, '#F2D3C8'); bg.addColorStop(1, '#D9B7C4'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
     { const r = O.rng('bokeh'), b = mk(w, h), bb = b.getContext('2d'); for (let i = 0; i < 14; i++) { const x = w * r(), y = h * 0.5 * r(), rr = w * (0.06 + 0.1 * r()); bb.fillStyle = `rgba(255,244,232,${0.15 + 0.2 * r()})`; bb.beginPath(); bb.arc(x, y, rr, 0, Math.PI * 2); bb.fill(); }
       g.filter = `blur(${(w / 40).toFixed(1)}px)`; g.drawImage(b, 0, 0); g.filter = 'none'; }
-    const U = h * 0.33, x = w * 0.5, y = h * 0.345, roll = -0.17, head = { x, y, U, roll };
-    paintLongHair(g, head, 'back', { len: 1.7, seed: 2 });
+    const U = h * 0.385, x = w * 0.5, y = h * 0.33, roll = -0.15, head = { x, y, U, roll };
+    paintLongHair(g, head, 'back', { len: 1.45, seed: 2 });
     placeFace(g, paintFace('her', U, { smile: 0.95, open: 0.24 }), x, y, roll);
     paintBody(g, 'her', [x - Math.sin(roll) * 0.62 * U, y + Math.cos(roll) * 0.62 * U], U, -0.04);
-    paintLongHair(g, head, 'front', { len: 1.7, seed: 2 });
+    paintLongHair(g, head, 'front', { len: 1.45, seed: 2 });
     photoFinish(c, 0.12);
     return c;
   }
@@ -838,15 +849,16 @@
   function drawApp(g, st, env) {
     const clock = clockOf(st.clock, env.seq), t = env.t;
     g.drawImage(art('portrait'), 0, 0, SW, SH);
-    const sh = g.createLinearGradient(0, SH * 0.72, 0, SH); sh.addColorStop(0, 'rgba(42,28,52,0)'); sh.addColorStop(1, 'rgba(42,28,52,0.6)'); g.fillStyle = sh; g.fillRect(0, SH * 0.72, SW, SH * 0.28);
+    const sh = g.createLinearGradient(0, SH * 0.66, 0, SH); sh.addColorStop(0, 'rgba(26,16,30,0)'); sh.addColorStop(0.45, 'rgba(26,16,30,0.62)'); sh.addColorStop(1, 'rgba(18,10,22,0.9)'); g.fillStyle = sh; g.fillRect(0, SH * 0.66, SW, SH * 0.34);
     statusBar(g, clock, { color: C.white });
     g.fillStyle = 'rgba(255,255,255,0.92)'; g.fill(heartPath(SW / 2, 64, 13));
     // the line: thin, white, waiting; it breathes (no number, no dial, no ring)
-    const y = 688, x0 = 84, x1 = SW - 84, br = 0.5 - 0.5 * Math.cos(2 * Math.PI * t / 2.6), amp = (st.amp == null ? 1 : st.amp) * (0.8 + 3.4 * br);
+    const y = 690, x0 = 54, x1 = SW - 54, br = 0.5 - 0.5 * Math.cos(2 * Math.PI * t / 2.6), amp = (st.amp == null ? 1 : st.amp) * (1.5 + 7 * br);
     const line = () => { g.beginPath(); for (let i = 0; i <= 64; i++) { const u = i / 64, x = lerp(x0, x1, u), win = Math.sin(Math.PI * u) ** 2; const yy = y + amp * win * Math.sin(u * Math.PI * 6 + t * 2.1) * Math.cos(u * Math.PI * 2 - t * 0.7); i ? g.lineTo(x, yy) : g.moveTo(x, yy); } };
     g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
-    line(); g.strokeStyle = `rgba(255,255,255,${0.12 + 0.1 * br})`; g.lineWidth = 7; g.stroke();
-    line(); g.strokeStyle = `rgba(255,255,255,${0.8 + 0.2 * br})`; g.lineWidth = 1.8; g.stroke(); g.restore();
+    line(); g.strokeStyle = `rgba(255,214,226,${0.1 + 0.12 * br})`; g.lineWidth = 22; g.stroke();
+    line(); g.strokeStyle = `rgba(255,232,240,${0.22 + 0.18 * br})`; g.lineWidth = 9; g.stroke();
+    line(); g.strokeStyle = `rgba(255,255,255,${0.88 + 0.12 * br})`; g.lineWidth = 3; g.stroke(); g.restore();
     homeBar(g, 0.8);
     env.lay.targets.line = [SW / 2, y]; env.lay.targets.face = [SW / 2, SH * 0.36];
   }

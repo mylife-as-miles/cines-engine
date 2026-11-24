@@ -223,7 +223,7 @@ Three columns of soft square thumbnails in flat skin tones, rendered at half res
 
 ### `app`: not a phone call
 
-Her gloss portrait fills the screen: the photo-booth face, the long copper hair over a cream sweater, square to the lens, eyes on the camera, the same even smile, one soft frontal light fixed to her face, the strip's tilt kept toward a shoulder that isn't there (the kit's gloss sculpture, `GG.head` mode `'gloss'`, the waterfall's rendering). A small heart at the top. Below, a thin white line that breathes (a 2.6 s cycle), waiting. No number, no buttons, nothing dials, nothing rings. `amp` scales the line. Always live. Light: warm peach. Targets: `line`, `face`.
+Her portrait fills the screen, face and shoulders: the photo-booth face as a photograph that is too smooth. She is square to the lens with her eyes on the camera and the same even smile, lit by one soft frontal light fixed to her face. Her long copper hair falls over her shoulders in strands, over a cream sweater, and she keeps the strip's tilt toward a shoulder that isn't there. It is painted by the same photographic method as the waterfall (§4, `PHONE.art`). A small heart sits at the top. Over a dark band at the foot, a thin white line breathes on a 2.6 s cycle, waiting: a 3-point core with a soft pink glow, swelling to about ±8 points, so it reads at true size and in the insert. No number, no buttons, nothing dials, nothing rings. `amp` scales the line. Always live. Light: warm peach. Targets: `line`, `face`.
 
 In Q01 the screen nobody sees is this one: the "call" was the app all along, so its light on his face is the app's.
 
@@ -265,7 +265,9 @@ A screen rendered flat (360 k × 780 k), for a use the body doesn't cover. The c
 
 ### `PHONE.art(name)` → canvas
 
-The generated pictures themselves: `'waterfall'` (`GG.waterfall`, 720 × 960, 3:4), `'portrait'` (540 × 1170), `'abstract'`, `'hidden'`.
+The generated pictures themselves: `'waterfall'` (960 × 1280, 3:4), `'portrait'` (720 × 1560), `'abstract'`, `'hidden'`.
+
+The two generated photographs are painted by `film/phone.js` itself (no longer `GG.waterfall` / `GG.head`), as a generator would "improve" the strip's last frame. Each face is painted upright and frontal in soft, blurred layers: form shadows, sockets, the nose's soft sides, highlights on the forehead, nose and cheekbones, rosy cheeks, a dewy sheen, fine brow hairs, and eyes with iris fibres and identical catchlights. It is mirror-symmetric, with skin a little too smooth, no freckles, and his stubble only as a tint. The face is then turned to the strip's tilt (`GG.COUPLE_GLOSS`, positions and rolls exactly the strip's). Long hair is drawn strand by strand in clumps in picture space, so it hangs, with a warm rim from the sun behind the fall. In the waterfall the gorge is mirrored, the water is pure white, the background is in portrait-mode blur, and there is no vignette. Both faces are lit identically, while the scene's sun is behind them.
 
 ---
 
@@ -317,7 +319,7 @@ Measured in `tools/set.js` / 24-frame medians on this machine (no GPU). An empty
 
 | What | Cost |
 |---|---|
-| **One-time art** (per process, kept for the whole run) | the waterfall ~7 s, the app portrait ~5–6 s (SDF heads), the rest < 50 ms. Call `PHONE.prepare` in `setup()` |
+| **One-time art** (per process, kept for the whole run) | the waterfall ~0.6 s, the app portrait ~0.9 s, the rest < 50 ms. Call `PHONE.prepare` in `setup()` |
 | A phone at true size (h ≤ 420), upright, still screen | 1–3 ms |
 | + spill (turned away or on its edge) | +2–5 ms (drawn at half resolution) |
 | A full-frame insert (h ≈ 960), upright | 8–12 ms |
@@ -337,8 +339,8 @@ The demos run at 47–75 ms per frame (median), all under 100 ms.
 - **Order.** Glow (on `c.g`), then `PHONE.draw`, then anything paper that sits over the phone (the hand) on `c.g`. A mask is in world coordinates under the same camera as `c.gl`.
 - **Pure white and black** are only in the gloss. The `under` copy puts the phone into the paper world beneath an occluder; only the occluder's anti-aliased edge can show it.
 - **Perspective** quads are warped by affine cells with a two-pixel overlap: fine for any phone-sized perspective; a phone filling the frame at a grazing angle could show a faint seam. Keep such shots in 3D mode or a little smaller.
-- **Resolution.** Screens render up to 2.5× (1950 px tall). The waterfall is 720 × 960: on a lock screen taller than about 1000 px on the frame it is upscaled and goes soft.
-- **The faces** in the waterfall and the app are the kit's gloss sculptures. At insert size they still lean a little toward clay (look_b.md, "What is not right yet"); keep the app insert's screen under about 1000 px tall.
+- **Resolution.** Screens render up to 2.5× (1950 px tall). The waterfall is 960 × 1280 and the portrait 720 × 1560: both hold up to about a 1300 px tall screen on the frame.
+- **The faces** in the waterfall and the app are painted, not sculpted, so they never match the paper people's sculptures exactly; that is the point (the two kinds of image). They are stylised photographs: up close a sharp eye can still find them a little illustrated, but they no longer read as 3D avatars.
 - **Q04** keeps its restraint by construction: `{image: 'hidden'}` and `grid` are abstract and blurred; never draw a real image into a bubble other than the waterfall.
 - **Q03 and Q08** have no scripted message: use `redact` or keep the text unreadable by distance; the verbatim check warns on anything else.
 - **The heart** is a vector shape (not a font glyph), so it renders the same everywhere and never turns into an emoji.
