@@ -14,7 +14,8 @@
   // the exchange (A014 verbatim; the reply is a hidden placeholder and is cut away from before it can arrive)
   const THREAD = () => ({ clock: 'lunch', history: 'morning', steps: [{ stamp: '12:47', at: 0 }, { him: PHONE.MSG.sendMeOne, type: [6.5, 9.5], at: 10.0 }, { at: 10.2, her: { image: 'hidden' } }] });
   const CUT_PHONE = 10.2;                               // the chime: we cut to him on it, before anything of the reply can rise
-  const FLICKS = [26.4, 28.1, 29.9, 31.6, 33.5, 35.2, 37.0, 38.8, 40.5];   // he scrolls; it keeps coming (and on, in the last wide)
+  const FLICKS = [26.4, 28.0, 29.6, 31.2, 33.3, 35.0, 36.8];   // he scrolls; it keeps coming (and on, in the last wide)
+  const WIDE2 = 32.5, DUR = 38.5;                       // the grid holds 6.5 s; the last wide 6 s
 
   // ---------------------------------------------------------------- him on the step (wide, close, tight)
   // the phone: held in both hands over his knees, screen to his face (its back to us). tilt 1 = held to his chest, screen in.
@@ -29,10 +30,49 @@
     const tilt = o.tilt || 0;
     // where the phone will be (from the pose), to light his face before he is drawn
     const ph = o.phoneAt || [A.phone.x, A.phone.y];
-    const L = stepLight(v, ph, o.phoneK == null ? 1.1 : o.phoneK, o.tone);
-    const fig = RIG.draw(c, 'him', 'step', { x: A.head.x + (o.dx || 0), y: A.head.y + (o.dy || 0), s, light: L, t: o.t, tilt, thumb: o.thumb == null ? 0.4 : o.thumb,
-      breath: o.breath, blink: o.blink, crop: o.crop, face: o.face });
+    const L = o.light || stepLight(v, ph, o.phoneK == null ? 1.1 : o.phoneK, o.tone);
+    const fig = sitting(c, { x: A.head.x + (o.dx || 0), y: A.head.y + (o.dy || 0), s, light: L, t: o.t, tilt, thumb: o.thumb == null ? 0.4 : o.thumb,
+      breathAmp: o.breathAmp, blink: o.blink, face: o.face });
     fig._reach = o.thumb == null ? 0.4 : o.thumb; fig._L = L;
+    return fig;
+  }
+  // Sitting on the step: the rig's step pose (its arms, its hands round the phone, its face), rebuilt here with legs that sit.
+  // Seen from in front and a little above: the thighs come at us from his lap, foreshortened, their tops in the window's light;
+  // the knees round and apart, level with his hands; the shins drop in their own shade to his feet on the step below.
+  const SIT_LEGS = { type: 'paper', key: 'q04sitlegs2', box: [-1.6, 2.2, 1.6, 5.0], breath: 0.3, draw(pen) {
+    const tr = '#363B45', shoe = '#2A211C';
+    [-1, 1].forEach((sg, i) => {
+      const K = [sg * 0.66, 3.0], A = [sg * 0.3 + (i ? 0.04 : 0), 4.5];
+      // the shin, in the shade under the knee, slanting in toward the other foot (the legs bent, not standing)
+      const d = [A[0] - K[0], A[1] - K[1]], l = Math.hypot(d[0], d[1]), n = [-d[1] / l, d[0] / l];
+      const shin = pen.blob([[K[0] + n[0] * 0.27, K[1] + n[1] * 0.27 - 0.04], [K[0] - n[0] * 0.27, K[1] - n[1] * 0.27 - 0.04], [A[0] - n[0] * 0.19, A[1] - n[1] * 0.19, 1], [A[0] + n[0] * 0.19, A[1] + n[1] * 0.19, 1]]);
+      const sp = pen.piece(shin, pen.dark(tr, 0.6), { seed: 620 + i, tex: 0.55, lift: [0.02, 0.03] }); pen.shade(sp, tr, { lit: 0.025, core: 0.06 });
+      pen.fold([[A[0] - 0.13, A[1] - 0.28], [A[0], A[1] - 0.2], [A[0] + 0.13, A[1] - 0.28]], tr, { w: 0.016, alpha: 0.4 });
+      // the shoe, toe toward us: short and wide
+      const ft = pen.blob([[A[0] - 0.23, A[1] - 0.06], [A[0] + 0.23, A[1] - 0.06], [A[0] + 0.29, A[1] + 0.22, 1], [A[0] - 0.29, A[1] + 0.22, 1]]);
+      const fp = pen.piece(ft, pen.col(shoe), { seed: 624 + i, kind: 'card', tex: 0.45, lift: [0.02, 0.03] }); pen.shade(fp, shoe, { lit: 0.03, core: 0.04 });
+      // the thigh, from his lap toward us and out to the knee: its top in the window's light, the knee's round front
+      const th = pen.blob([[sg * 0.04, 2.4], [sg * 0.44, 2.3], [sg * 0.88, 2.5], [sg * 1.0, 2.86], [sg * 0.92, 3.16], [sg * 0.66, 3.26], [sg * 0.42, 3.14], [sg * 0.22, 2.78]]);
+      const tp = pen.piece(th, pen.lit(tr, 0.25), { seed: 626 + i, tex: 0.55, lift: [0.03, 0.06], liftAlpha: 0.6 });
+      pen.bands(tp, tr, { center: [sg * 0.6, 2.85], size: 0.45, seed: 628, stops: [0, 0.3, 0.62] });
+      pen.shade(tp, tr, { lit: 0.07, core: 0.08 });
+      // the crease over the knee, and the fold from the lap toward the hip
+      pen.fold([[sg * 0.4, 3.1], [sg * 0.66, 3.2], [sg * 0.9, 3.1]], tr, { w: 0.022, alpha: 0.6 });
+      pen.fold([[sg * 0.14, 2.48], [sg * 0.36, 2.64], [sg * 0.52, 2.92]], tr, { w: 0.018, alpha: 0.45 });
+    });
+  } };
+  function sitting(c, o) {
+    const tl = clamp(o.tilt || 0, 0, 1), P0 = [0, lerp(2.3, 1.75, tl)];
+    const face = Object.assign({ yaw: 0, pitch: lerp(0.55, 0.32, tl), lids: 0.55, gaze: [0, 0.5] }, o.face || {});
+    if (o.t != null && o.blink !== false && !(face.lids < 0.2)) { const b = RIG.blink(o.t, 3); if (b < 1) face.lids = face.lids * b; }
+    const P = RIG.person({ who: 'him', costume: 'shirt', tau: 0, lean: 0.3, shrug: 0.2, crop: 2.55, head: face,
+      arms: { L: { E: [-0.7, 2.2], W: [-0.12, P0[1] + 0.12], hand: 'thumb', hp: { reach: o.thumb == null ? 0.4 : o.thumb, tap: 0, over: 'thumb' }, front: true, order: 2 },
+              R: { E: [0.7, 2.22], W: [0.14, P0[1] + 0.16], hand: 'relax', hp: { close: 0.8, flip: true }, front: true, order: 1 } },
+      legs: false, extra: { afterTorso: [SIT_LEGS] } });
+    const breath = o.t != null ? RIG.breath(o.t, o.breathAmp == null ? 2.5 * Math.min(2, o.s / 250) : o.breathAmp) : 0;
+    const fig = RIG.drawFigure(c, { who: 'him', x: o.x, y: o.y, s: o.s, light: o.light, breath, ops: P.ops });
+    const h = fig.hands.L; const at = h ? h.grip : fig.toWorld(P0);
+    fig.phone = { x: at[0], y: at[1], h: o.s * 0.7, w: o.s * 0.34, angle: h ? (h.flip ? -h.rot : h.rot) : 0, facing: 'out', hand: h || null };
     return fig;
   }
   function drawPhoneBack(c, fig, o) {
@@ -44,11 +84,11 @@
     return PHONE.draw(c, P);
   }
 
-  // ---------------------------------------------------------------- 1 · wide (0–6, 36–42)
+  // ---------------------------------------------------------------- 1 · wide (0–6, 32.5–38.5)
   function shotWide(c, st, lt) {
     const v = SW().views.wide, A = v.anchors;
     v.back(c, lt, { lunch: 'unopened' });
-    const late = lt > 30;
+    const late = lt > WIDE2 - 1;
     const look = A.head.looks.phone;
     const face = late
       ? { yaw: look.yaw, pitch: 0.95, lids: 0.45, gaze: [0, 0.5], flush: 1 }
@@ -177,15 +217,15 @@
       mouth: lt > 18.45 && lt < 19.35 ? 1 : 0, brows: lt > 19.5 ? 0.25 : 0 };
     // the screen held low at his chest, below the frame: its smooth light comes up under his chin and nose
     const ph = [A.head.x - 20, A.head.y + 1.7 * A.head.s];
-    const L = RIG.light('stairwell', { keys: v.light.keys, amb: v.light.amb, phone: ph, phoneK: 2.1, phoneZ: 1.1, phoneCol: '#FFC4A4' });
-    RIG.draw(c, 'him', 'step', { x: A.head.x, y: A.head.y + drop * 9, s: A.head.s, light: L, t: lt, tilt: 0.55, crop: 1.9, blink: !(lt > 21.8 && lt < 24),
+    const L = RIG.light('stairwell', { keys: v.light.keys, amb: v.light.amb, phone: ph, phoneK: 1.7, phoneZ: 1.1, phoneCol: '#FFC4A4' });
+    sitting(c, { x: A.head.x, y: A.head.y + drop * 9, s: A.head.s, light: L, t: lt, tilt: 0, blink: !(lt > 21.8 && lt < 24),
       breathAmp: 2.5 * (1 - 0.4 * drop), face });
     v.front(c, lt, {});
     // the screen's own light coming up from below the frame (smooth, never banded): on his chin and collar
     PHONE.glow(c, { x: A.head.x - 30, y: 1110, r: 760, k: 0.5, tone: 'skin', sy: 0.8, em: 0.12 });
   }
 
-  // ---------------------------------------------------------------- 5 · shoulder (26–36): the thread, out of focus, by rule
+  // ---------------------------------------------------------------- 5 · shoulder (26–32.5): the thread, out of focus, by rule
   // His head and shoulder dark at the left, the back of his head turned down to the phone, his ear red; the phone held up in the
   // right half against bare concrete; his forearm rising to it from below; the screen a blurred grid that never comes into focus.
   function shoulderQuad(A) { const q = A.phone.quad; return [q[1], q[0], q[3], q[2]]; }   // the set's quad is listed mirrored; as seen
@@ -240,19 +280,19 @@
   }
 
   FILM.seq({
-    id: 'Q04', title: 'Send me one', dur: 42,
+    id: 'Q04', title: 'Send me one', dur: DUR,
     setup() { if (SETS.stairwell.prepare) SETS.stairwell.prepare(); PHONE.prepare(['hidden']); },
     lines: [],
     sound(S) {
-      S.bed('stairwell', 0, 42, { level: -42 });                       // concrete air, a far door, the building
+      S.bed('stairwell', 0, DUR, { level: -42 });                       // concrete air, a far door, the building
       PHONE.typeTimes(6.5, 9.5, PHONE.MSG.sendMeOne).forEach(t => S.cue('type', t, { level: -8 }));
       S.cue('send', 10.0);
       S.cue('receive', 10.2);                                          // instantly
       S.cue('door_far', 12.0);                                         // somewhere above; nobody comes
       S.cue('breath_out', 18.4);
       S.bed('heartbeat_soft', 19, 26, { level: -50 });                 // barely
-      FLICKS.filter(t => t < 36).forEach(t => S.cue('scroll', t, { level: -14 }));   // very soft
-      S.bed('scroll', 26, 36, { level: -56 });
+      FLICKS.forEach(t => S.cue('scroll', t, { level: t < WIDE2 ? -14 : -20 }));      // very soft; fainter from the far wide
+      S.bed('scroll', 26, WIDE2, { level: -56 });
     },
     shots: [
       { at: 0, name: 'wide: he sits alone on the step; the lunch unopened', draw(c, st, lt) { shotWide(c, st, lt); } },
@@ -260,7 +300,7 @@
       { at: CUT_PHONE, name: 'close: above; below; the screen to his chest; he looks', draw(c, st, lt) { shotClose(c, st, lt); } },
       { at: 18, name: 'tight: the breath goes out; the colour comes up his neck', draw(c, st, lt) { shotTight(c, st, lt); } },
       { at: 26, name: 'shoulder: the thread out of focus; it keeps coming', draw(c, st, lt) { shotShoulder(c, st, lt); } },
-      { at: 36, name: 'wide: small on the stair, scrolling; the lunch unopened', draw(c, st, lt) { shotWide(c, st, lt); } },
+      { at: WIDE2, name: 'wide: small on the stair, scrolling; the lunch unopened', draw(c, st, lt) { shotWide(c, st, lt); } },
     ],
   });
 })();

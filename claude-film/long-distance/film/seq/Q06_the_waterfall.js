@@ -2,15 +2,19 @@
    The living room at night under the pendant. He eats from the pan standing at the counter, the phone propped against the salt
    in the empty half, where a person would sit across from him. A chime: she sends a picture of the two of them in front of a
    waterfall. It is the strip on the fridge, the last frame, made perfect: the same two faces in the same tilt, too even. Nobody
-   says so. He stops chewing and looks for a long time, says "I love this one." to the empty room, sets it as his wallpaper, and
-   locks and wakes the phone three times to see them there. The last shot holds the strip and the phone in one frame: the rhyme,
-   in plain sight, unremarked.
+   says so. The forkful he was lifting stops halfway; he stops chewing and looks for a long time, says "I love this one." to the
+   empty room, sets it as his wallpaper, and locks and wakes the phone three times to see them there. The last shot holds the
+   strip and the phone in one frame: the rhyme, in plain sight, unremarked.
    Shots: room (0) · fridge insert, push down to the last frame (7) · counter (13) · the image, gloss insert (22) · counter close
-   (30) · wallpaper, lock and wake, insert (42) · counter, the strip and the phone in one frame, slow push (53). */
+   (30) · wallpaper, lock and wake, insert (42) · counter, the strip at left and the phone at right, slow push (53).
+   Fix round 1 (REVIEW_cut1 item 14): real bites (the fork to his mouth, then chewing); the third forkful stops halfway at the
+   chime; his eyeline goes down to the phone on the salt; the pan has a handle into his fist; his hand at true scale taps the
+   glass and presses the side button; the last shot frames the strip and the phone together. */
 (function () {
   'use strict';
   const O = window.OTM, W = O.W, H = O.H;
-  const { seg, key, twos, clamp, lerp } = FILM;
+  const { seg, key, twos, clamp, lerp, mixv } = FILM;
+  const V2 = RIG.V;
   const LV = n => SETS.living.views[n];
   const NIGHT = { tod: 'night' };
   const HEAD_M = 0.23;                                  // a head, crown to chin, in metres (living.md)
@@ -38,20 +42,46 @@
   const toneAt = lt => lt < OPEN[0] + 0.4 ? { col: '#FFC5A0', k: 0.55 } : { col: '#CDEFF3', k: 0.8 };
   const litAt = lt => { const s = screenAt(lt); return s.screen === 'black' ? 0 : s.screen === 'wake' ? s.state.p : 1; };
 
-  // ---------------------------------------------------------------- his eating: a forkful, chewed while he watches the phone
-  // fork 0 = over the pan, 1 = at his mouth. Bites land at these times; between bites he chews and looks at the phone.
-  const BITES = [1.2, 5.4, 13.6, 17.4];
+  // ---------------------------------------------------------------- his eating
+  // A bite: he twirls in the pan (eyes on the pan), lifts (the head comes up to meet the fork, the mouth opens), closes on it,
+  // brings the fork back down empty (eyes back to the phone), and chews watching the phone. BITES are when the fork reaches his
+  // mouth. The third forkful rises at HALT.lift; the chime stops it about halfway, and it stays there, loaded, until 58.6.
+  const TW = 1.1, LIFT = 0.6, HOLD = 0.3, BACK = 0.5, CHEW = 3.0;
+  const BITES = [1.9, 5.7, 14.6, 18.4];
+  const HALT = { lift: 20.2, at: 20.5 }, STOP_CHEW = 30.35, PUT_DOWN = [58.6, 59.4];
+  const twirl = (t, t0) => { const u = (t - t0) / TW; return { fork: 0.03 + 0.05 * (0.5 + 0.5 * Math.sin(u * 14)), loaded: u > 0.45, pan: seg(t, t0, t0 + 0.35, 'inOutSine') }; };
   function eating(t) {
-    let fork = 0, chew = false, look = 1;               // look 1 = at the phone, 0 = at the pan
+    const st = { fork: 0.12, loaded: false, pan: 0, bite: 0, mouth: null, chew: false };
     for (const b of BITES) {
-      if (t >= b - 1.6 && t < b - 0.55) { look = 0; fork = 0.08 * Math.sin((t - b) * 9) + 0.08; }            // twirling
-      if (t >= b - 0.55 && t < b + 0.5) { look = t < b - 0.2 ? 0 : 1; fork = t < b ? seg(t, b - 0.55, b, 'inOutSine') : 1 - seg(t, b + 0.15, b + 0.5, 'inOutSine'); }
-      if (t >= b && t < b + 3.2) chew = true;
+      const t0 = b - LIFT - TW;
+      if (t >= t0 && t < b - LIFT) Object.assign(st, twirl(t, t0));
+      else if (t >= b - LIFT && t < b) { const u = seg(t, b - LIFT, b, 'inOutSine'); Object.assign(st, { fork: lerp(0.08, 1, u), loaded: true, pan: 1 - seg(t, b - LIFT, b - LIFT + 0.3), bite: u, mouth: u > 0.55 ? 2 : 0 }); }
+      else if (t >= b && t < b + HOLD) Object.assign(st, { fork: 1, loaded: t < b + 0.12, bite: 1, mouth: t < b + 0.1 ? 2 : 0 });
+      else if (t >= b + HOLD && t < b + HOLD + BACK) { const u = seg(t, b + HOLD, b + HOLD + BACK, 'inOutSine'); Object.assign(st, { fork: lerp(1, 0.12, u), bite: 1 - u }); }
+      if (t >= b + 0.15 && t < b + 0.15 + CHEW) st.chew = true;
     }
-    return { fork, chew, look };
+    // the third forkful: twirled, lifted, stopped by the chime about halfway; it hangs there while he looks
+    const tw0 = HALT.lift - TW;
+    if (t >= tw0 && t < HALT.lift) Object.assign(st, twirl(t, tw0));
+    else if (t >= HALT.lift) {
+      const uAt = seg(HALT.at, HALT.lift, HALT.lift + LIFT, 'inOutSine');
+      const u = t < HALT.at ? seg(t, HALT.lift, HALT.lift + LIFT, 'inOutSine') : uAt + 0.04 * seg(t, HALT.at, HALT.at + 0.2, 'outCubic');
+      const head = t < HALT.at ? u * 0.5 : uAt * 0.5 * (1 - seg(t, HALT.at + 0.1, HALT.at + 0.5, 'inOutSine'));
+      Object.assign(st, { fork: lerp(0.08, 1, u), loaded: true, pan: 1 - seg(t, HALT.lift, HALT.lift + 0.3), bite: head });
+      if (t >= PUT_DOWN[0]) st.fork = lerp(st.fork, 0.04, seg(t, PUT_DOWN[0], PUT_DOWN[1], 'inOutSine'));     // laid back in the pan
+    }
+    if (t >= 18.55 && t < STOP_CHEW) st.chew = true;     // he chews on through the picture, slower, until he stops
+    return st;
   }
-  // the face for a look (1: at the phone, B2; 0: down at the pan), eased through intermediate angles on twos
-  function faceFor(look) { return { yaw: lerp(0.3, 0.72, look), pitch: lerp(0.56, 0.48, look), gaze: [lerp(0.05, 0.22, look), lerp(0.42, 0.32, look)] }; }
+  // the looks: down at the phone on the salt (it stands low and to his right, nearer the camera), down at the pan, up to the fork
+  const F_PHONE = { yaw: 0.66, pitch: 0.62, gaze: [0.35, 0.4], lids: 0.62 };
+  const F_PAN = { yaw: 0.32, pitch: 0.82, gaze: [0, 0.45], lids: 0.45 };
+  const F_BITE = { yaw: 0.18, pitch: 0.12, gaze: [0.3, 0.35], lids: 0.6 };
+  function eatFace(st, t, extra) {
+    let f = mixv(F_PHONE, F_PAN, st.pan); f = mixv(f, F_BITE, st.bite);
+    if (st.chew && st.mouth == null) Object.assign(f, RIG.chew(t)); else f.mouth = st.mouth || 0;
+    return Object.assign(f, extra || {});
+  }
 
   // ---------------------------------------------------------------- the phone propped against the salt (true size)
   // it stands on its bottom edge just right of the salt and leans over onto it: in the empty half, its screen turned up to him
@@ -68,56 +98,74 @@
     return info;
   }
 
-  // his trousers and belt, below the untucked shirt, down behind the counter's edge (the counter pose stops at the hem)
-  function trousers(c, x, y, s) {
-    const k = Math.max(1, Math.round(s)), w = Math.ceil(1.6 * k), h = Math.ceil(1.3 * k);
-    const cv = c.cache('Q06|trousers2|' + k, g => {
-      const S = O.S; const sh = GG.blob([[0.14 * k, 0.05 * k], [w - 0.14 * k, 0.02 * k], [w - 0.12 * k, h, 1], [0.12 * k, h, 1]]);
-      const p = GG.piece(g, sh, { fill: '#2B2E37', rough: 0.9, seed: 641, tex: 0.55, kind: 'cloth' });
-      GG.crescent(g, p, 0, 0.04 * k, '#4A4C56', 0.7);
-      // the untucked shirt's hem throws a soft shadow onto them (no belt shows under an untucked shirt)
-      const gr = g.createLinearGradient(0, 0, 0, 0.16 * k); gr.addColorStop(0, 'rgba(10,8,10,0.55)'); gr.addColorStop(1, 'rgba(10,8,10,0)');
-      g.save(); g.clip(p); g.fillStyle = gr; g.fillRect(0, 0, w, 0.16 * k); g.restore();
-    }, w, h);
-    c.g.drawImage(cv, x - w / 2 + 0.02 * s, y + 3.21 * s, w * s / k, h * s / k);
+  // ---------------------------------------------------------------- him at the counter: the rig's counter pose, with our pan and fork
+  // The pose's own pan is held at its rim (its handle runs from the rim into the fist and is hidden by it). Here the pan sits a
+  // little further right so its handle shows between the rim and his fist; and the fork's twirl of pasta is gone once he has eaten it.
+  function panPiece(pen) {
+    const c = [0.36, 1.9], rx = 0.56, ry = 0.19, to = [-0.9, 1.93];
+    const hd = pen.poly([[c[0] - rx + 0.05, c[1] - 0.03], [to[0], to[1] - 0.034], [to[0], to[1] + 0.034], [c[0] - rx + 0.05, c[1] + 0.035]]);
+    const hp = pen.piece(hd, pen.col('#1E1A1C'), { seed: 520, kind: 'card', tex: 0.4, lift: [0.015, 0.03] }); pen.shade(hp, '#5A5054', { lit: 0.014, core: 0 });
+    pen.line([[c[0] - rx + 0.04, c[1] - 0.022], [to[0] + 0.05, to[1] - 0.026]], pen.lit('#8A7A70', 0.8), 0.008, 0.7);     // the lit top edge of the handle
+    const rim = pen.piece(pen.ell(c[0], c[1], rx, ry, -0.03), pen.col('#2A2628'), { seed: 521, kind: 'card', tex: 0.5, lift: [0.03, 0.05] }); pen.shade(rim, '#6A5E58', { lit: 0.018, core: 0 });
+    pen.piece(pen.ell(c[0], c[1] + 0.01, rx - 0.05, ry - 0.03, -0.03), pen.col('#171416'), { seed: 522, kind: 'card', tex: 0.4, lift: false });
+    pen.piece(pen.ell(c[0] + 0.01, c[1] + 0.035, rx - 0.09, ry - 0.06, -0.03), pen.col('#2E2A2C'), { seed: 523, kind: 'card', tex: 0.5, lift: false });
+    const food = pen.blob([[c[0] - rx * 0.72, c[1] + 0.05], [c[0] - rx * 0.45, c[1] - 0.05], [c[0] + 0.03, c[1] - 0.075], [c[0] + rx * 0.56, c[1] - 0.02], [c[0] + rx * 0.74, c[1] + 0.05], [c[0] + rx * 0.34, c[1] + 0.12], [c[0] - rx * 0.4, c[1] + 0.12]]);
+    const fp = pen.piece(food, pen.col('#A2452C'), { seed: 524, kind: 'paper', tex: 0.6, lift: [0.006, 0.012] });
+    pen.clip(fp); const r = O.rng('Q06pasta'); for (let i = 0; i < 26; i++) { const x = c[0] - rx * 0.75 + r() * rx * 1.5, y = c[1] - 0.08 + r() * 0.2; pen.line([[x, y], [x + 0.06, y - 0.02 + r() * 0.04], [x + 0.11, y + r() * 0.03 - 0.015]], r() < 0.55 ? pen.col('#EEC47C') : pen.col('#6E2416'), 0.012, 0.8); } pen.unclip();
   }
-  // ---------------------------------------------------------------- him at the counter in any counter or room framing
-  function him(c, view, shot, t, o) {
-    const A = LV(view).shots[shot].anchors, s = HEAD_M * A.himCounter[2];
-    const ph = propped(view, shot), lt = c.lt;
-    const tone = toneAt(lt), lit = litAt(lt);
-    const L = RIG.light('pendant', { phone: [ph.x, ph.y], phoneCol: tone.col, phoneK: tone.k * lit * (o.phoneK == null ? 1 : o.phoneK) });
-    trousers(c, A.himCounter[0], A.himCounter[1], s);
-    // crop 2.95 keeps the shirt's hem at 3.25 heads: past that the rig draws a belt band across even an untucked shirt
-    // (rig.js, the shirt's torso); the trousers above fill the rest down to the counter
-    return RIG.draw(c, 'him', 'counter', Object.assign({ x: A.himCounter[0], y: A.himCounter[1], s, light: L, t, crop: 2.95 }, o.fig || {}, { face: o.face, fork: o.fork }));
+  function forkPiece(pen, a, b, loaded) {
+    const u = V2.norm(V2.sub(b, a)), n = V2.perp(u); pen.line([a, V2.add(b, V2.mul(u, -0.1))], pen.col('#9EA2A6'), 0.028, 1);
+    const nb = V2.add(b, V2.mul(u, -0.11)); const head = pen.poly([V2.add(nb, V2.mul(n, 0.02)), V2.add(V2.add(nb, V2.mul(n, 0.045)), V2.mul(u, 0.035)), V2.add(V2.add(nb, V2.mul(n, -0.045)), V2.mul(u, 0.035)), V2.add(nb, V2.mul(n, -0.02))]);
+    pen.g.fillStyle = pen.col('#9EA2A6'); pen.g.fill(pen.path(head, 0.3, 510));
+    [-0.033, -0.011, 0.011, 0.033].forEach(o2 => pen.line([V2.add(V2.add(nb, V2.mul(n, o2)), V2.mul(u, 0.034)), V2.add(b, V2.mul(n, o2 * 0.9))], pen.col('#9EA2A6'), 0.01, 1));
+    pen.line([V2.add(a, V2.mul(n, 0.008)), V2.add(nb, V2.mul(n, 0.008))], pen.lit('#C8CCD0', 1), 0.008, 0.8);
+    if (loaded) { const tw = pen.blob([V2.add(b, [-0.08, -0.1]), V2.add(b, [0.06, -0.12]), V2.add(b, [0.08, -0.02]), V2.add(b, [0.015, 0.035]), V2.add(b, [-0.07, 0])]); pen.piece(tw, pen.col('#B0502F'), { seed: 511, kind: 'paper', tex: 0.6, lift: [0.008, 0.015] });
+      [[-0.06, -0.08, 0.06, -0.04], [-0.055, -0.035, 0.065, 0.005]].forEach(([x0, y0, x1, y1]) => pen.line([V2.add(b, [x0, y0]), V2.add(b, [0, y0 - 0.03]), V2.add(b, [x1, y1])], pen.col('#EEC47C'), 0.011, 0.85)); }
+  }
+  const lerpPt = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t)];
+  function counterFig(c, view, shot, t, st, face, o) {
+    o = o || {}; const A = LV(view).shots[shot].anchors, s = HEAD_M * A.himCounter[2];
+    const ph = propped(view, shot), lt = c.lt, tone = toneAt(lt), lit = litAt(lt);
+    const L = RIG.light('pendant', { phone: [ph.x, ph.y], phoneCol: tone.col, phoneK: tone.k * lit });
+    const p = { x: A.himCounter[0], y: A.himCounter[1], s, light: L, t, fork: st.fork, face, crop: 3.7, blink: o.blink };
+    const built = RIG.POSES.him.counter(p);
+    // the fork's two ends, as the pose computes them
+    const fk = clamp(st.fork, 0, 1), fHand = lerpPt([0.93, 1.66], [0.32, 0.8], fk);
+    const top = lerpPt(V2.add(fHand, [-0.02, -0.3]), V2.add(fHand, [0.14, 0.06]), fk), tip = lerpPt(V2.add(fHand, [-0.4, 0.22]), [0.04, 0.38], fk);
+    built.ops.forEach(op => {
+      if (!op || op.type !== 'paper') return;
+      if (op.key === 'pan') { op.key = 'Q06pan'; op.draw = panPiece; op.box = [-1.0, 1.55, 1.0, 2.25]; }
+      else if (/^forkA/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E'); op.draw = pen => forkPiece(pen, top, tip, st.loaded); }
+      else if (/^forkB/.test(op.key)) { op.key = 'Q06' + op.key + (st.loaded ? 'L' : 'E'); op.draw = pen => forkPiece(pen, V2.lerp(top, tip, 0.5), tip, st.loaded); }
+    });
+    return RIG.drawFigure(c, { who: 'him', x: p.x, y: p.y, s, light: L, breath: RIG.breath(t, 2.5 * Math.min(2, s / 250)), ops: built.ops });
   }
 
   // ---------------------------------------------------------------- the insert: the phone filling the frame, propped on the salt
-  // the counter top close and warm, the salt cellar beside it in focus, the wall and the cone far behind and soft
-  const INS = { x: 1040, y: 545, h: 930, yaw: -0.1, pitch: 0.06, roll: -0.07 };
+  // the counter top close and warm, the salt cellar beside it in focus, the wall and the beam far behind and soft
+  const INS = { x: 1000, y: 540, h: 760, yaw: -0.1, pitch: 0.06, roll: -0.07 };
   function insertBg(c) {
-    const cv = c.cache('Q06|insertBg', g => {
+    const cv = c.cache('Q06|insertBg3', g => {
       const S = O.S;
-      // the wall under the pendant, far and soft: the cone's cut bands, blurred by the lens
-      const L = GG.layer(); L.fillStyle = '#231D24'; L.fillRect(0, 0, W, H);
-      [['#2A2329', 1.0], ['#382D31', 0.75], ['#4A3C3A', 0.52], ['#5C4A42', 0.3]].forEach(([col, k]) => { L.fillStyle = col; L.beginPath(); L.moveTo(820 - 900 * k, -60); L.lineTo(820 + 900 * k, -60); L.lineTo(820 + 1500 * k, 820); L.lineTo(820 - 1500 * k, 820); L.closePath(); L.fill(); });
+      // the wall under the pendant, far and soft: the lamp's narrow beam, blurred by the lens
+      const L = GG.layer(); L.fillStyle = '#1E1920'; L.fillRect(0, 0, W, H);
+      [['#2A2329', 1.0], ['#3A2F33', 0.66], ['#4C3E3B', 0.4]].forEach(([col, k]) => { L.fillStyle = col; L.beginPath(); L.moveTo(760 - 260 * k, -60); L.lineTo(760 + 260 * k, -60); L.lineTo(760 + 620 * k, 820); L.lineTo(760 - 620 * k, 820); L.closePath(); L.fill(); });
       // his shirt and the pan's dark rim, behind the phone and out of focus
-      L.fillStyle = '#5C6880'; L.beginPath(); L.ellipse(330, 300, 420, 520, 0.1, 0, 7); L.fill();
-      L.fillStyle = '#7A8496'; L.beginPath(); L.ellipse(380, 160, 300, 260, 0.1, 0, 7); L.fill();
-      L.fillStyle = '#1E1A1C'; L.beginPath(); L.ellipse(260, 640, 380, 80, -0.04, 0, 7); L.fill();
-      L.fillStyle = '#9A4A30'; L.beginPath(); L.ellipse(270, 622, 280, 46, -0.04, 0, 7); L.fill();
-      g.filter = 'blur(26px)'; g.drawImage(L.canvas, 0, 0); g.filter = 'none';
+      L.fillStyle = '#3E4658'; L.beginPath(); L.ellipse(300, 300, 420, 520, 0.1, 0, 7); L.fill();
+      L.fillStyle = '#4A5264'; L.beginPath(); L.ellipse(350, 160, 300, 260, 0.1, 0, 7); L.fill();
+      L.fillStyle = '#1E1A1C'; L.beginPath(); L.ellipse(240, 640, 380, 80, -0.04, 0, 7); L.fill();
+      L.fillStyle = '#4A2A22'; L.beginPath(); L.ellipse(250, 622, 280, 46, -0.04, 0, 7); L.fill();
+      g.filter = 'blur(30px)'; g.drawImage(L.canvas, 0, 0); g.filter = 'none';
       GG.texture(g, (() => { const p = new Path2D(); p.rect(0, 0, W, H); return p; })(), 0.35, 61, 'paper');
       // the counter top, near and in focus at the phone: warm cut bands of the pendant's pool
       const top = S().poly([[-40, 770], [W + 40, 756], [W + 40, H + 40], [-40, H + 40]]);
       const tp = GG.piece(g, top, { fill: '#4A3B36', rough: 1.4, seed: 601, tex: 0.6, kind: 'card', lift: [0, -10], liftAlpha: 0.7, liftBlur: 16 });
-      g.save(); g.clip(tp); O.lightPool(g, 900, 860, [{ r: 1300, color: '#56453D' }, { r: 900, color: '#6E5747' }, { r: 520, color: '#876A53' }], { sy: 0.22, rough: 3, seed: 61 }); g.restore();
+      g.save(); g.clip(tp); O.lightPool(g, 860, 860, [{ r: 1300, color: '#56453D' }, { r: 900, color: '#6E5747' }, { r: 520, color: '#876A53' }], { sy: 0.22, rough: 3, seed: 61 }); g.restore();
       GG.texture(g, tp, 0.45, 602, 'card');
       g.fillStyle = 'rgba(214,180,140,0.4)'; g.fill(S().poly([[-40, 770], [W + 40, 756], [W + 40, 762], [-40, 776]]).path(0.8, 603));
       O.dust(g, [[200, 860], [1700, 850], [1700, 1070], [200, 1080]], 160, '#E0C8A0', 'Q06crumbs');
       // the salt cellar the phone leans on: glass, salt, a dented lid
-      const sx = 640, sb = 905, sw = 150, sh = 500;
+      const sx = 660, sb = 905, sw = 150, sh = 500;
       const salt = S().M(sx - sw, sb - sh).L(sx + sw, sb - sh).L(sx + sw + 8, sb - 10).Q(sx, sb + 16, sx - sw - 8, sb - 10).Z();
       const sp = GG.piece(g, salt, { fill: '#4C484E', rough: 0.9, seed: 611, tex: 0.35, lift: [-18, 10], liftAlpha: 0.55, liftBlur: 14 });
       g.save(); g.clip(sp); g.fillStyle = '#C9C2B4'; g.fill(S().M(sx - sw - 20, sb - sh * 0.56).Q(sx, sb - sh * 0.6, sx + sw + 20, sb - sh * 0.54).L(sx + sw + 20, sb + 20).L(sx - sw - 20, sb + 20).Z().path(1.6, 612));
@@ -130,64 +178,70 @@
     });
     c.g.drawImage(cv, 0, 0);
   }
-  // his index finger, out from the fist (the fork laid in the pan off frame): cut paper at the insert's scale, pointing to -x,
-  // its tip at (60, 210) of the canvas, the back of the hand trailing off to the right
-  const FT = [60, 210];
-  function fingerCanvas(c) {
-    return c.cache('Q06|finger', g => {
-      const S = O.S, SK = '#A4704F', LIT = '#D49B74', SH = '#6A4636';
-      const back = GG.blob([[620, 118], [900, 64], [1300, 52], [1540, 70], [1540, 430], [1200, 440], [900, 404], [700, 336], [636, 282]]);
-      const bp = GG.piece(g, back, { fill: '#96664A', rough: 1.1, seed: 651, tex: 0.5, lift: [10, 18], liftAlpha: 0.5, liftBlur: 14 });
-      GG.crescent(g, bp, 0, -14, LIT, 0.75); GG.crescent(g, bp, 0, 16, SH, 0.7);
-      [[800, 132], [930, 110], [1060, 100]].forEach(([x, y], i) => { const kn = S().ellipse(x, y + 18, 58, 34, -0.1); const kp = GG.piece(g, kn, { fill: '#9E6C4E', rough: 0.8, seed: 652 + i, tex: 0.45 }); GG.crescent(g, kp, 0, -8, LIT, 0.6); });
-      const mid = GG.blob([[548, 252], [660, 236], [776, 266], [800, 334], [716, 378], [604, 360], [540, 306]]);
-      const mp = GG.piece(g, mid, { fill: '#9A6849', rough: 0.9, seed: 656, tex: 0.5, lift: [6, 10], liftAlpha: 0.45, liftBlur: 8 }); GG.crescent(g, mp, 0, -8, LIT, 0.6); GG.crescent(g, mp, 0, 10, SH, 0.6);
-      const idx = GG.blob([[60, 200], [84, 164], [190, 148], [420, 142], [700, 136], [780, 148], [786, 290], [700, 286], [420, 274], [190, 270], [84, 258], [58, 226]]);
-      const ip = GG.piece(g, idx, { fill: SK, rough: 0.9, seed: 657, tex: 0.5, lift: [8, 14], liftAlpha: 0.5, liftBlur: 10 });
-      GG.crescent(g, ip, 0, -12, LIT, 0.85); GG.crescent(g, ip, 0, 14, SH, 0.75); GG.crescent(g, ip, -6, 6, 'rgba(160,190,196,0.6)', 0.35);
-      const nail = S().ellipse(132, 206, 56, 40, 0.02); const np = GG.piece(g, nail, { fill: '#C79A82', rough: 0.6, seed: 658, tex: 0.35 }); GG.crescent(g, np, 0, -8, '#E6C2AA', 0.8);
-      g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(92,58,44,0.55)'; g.lineWidth = 3;
-      [[250, 0.9], [262, 0.7], [460, 1], [474, 0.8]].forEach(([x, k]) => { g.beginPath(); g.moveTo(x - 6, 178 + 14 * (1 - k)); g.quadraticCurveTo(x + 8, 208, x - 6, 240 - 14 * (1 - k)); g.stroke(); });
-      g.restore();
-    }, 1560, 460);
-  }
-  // where his fingertip is at lt: a tip point and the direction it points, or null when it is out of frame
-  const TAPS = [{ t0: 21.75, t1: 22.3, t2: 22.55, t3: 23.05, uv: [0.36, 0.72] }, { t0: 42.75, t1: 43.33, t2: 43.75, t3: 44.15, uv: [0.5, 0.905] }];
-  const SIDE = { t0: 44.2, t1: 44.75, t2: 51.9, t3: 52.5, v: 0.3 };
-  function fingerAt(lt, info) {
-    const D = 1150;
+  // his right hand at true scale (a hand is about 1.06 phone heights), the index out and the other fingers curled: the forearm
+  // runs off the frame's edge, its sleeve rolled. It taps the glass twice (the picture; "Set as wallpaper"), then rests its
+  // fingertip on the side button and presses it for each lock and each wake.
+  const POINT = { basis: { x: [-0.75, -0.5, -0.4], z: [-0.15, -0.45, 0.88] }, fingers: [[-0.03, 0.12, 0.1, 0.06], [0.02, 1.35, 1.25, 0.6], [0.06, 1.4, 1.2, 0.55], [0.1, 1.35, 1.1, 0.5]],
+    thumb: [0.85, 0.9, 0.55, 0.4], fdir: [0.75, 0.5, 0.4], fore: 1.6, foreR: 0.13 };
+  const TAPS = [{ t0: 21.7, t1: 22.25, t2: 22.45, t3: 23.05, at: inf => inf.targets.last || inf.at(0.4, 0.75) },
+    { t0: 42.8, t1: 43.33, t2: 43.7, t3: 44.15, at: inf => inf.targets.row || inf.at(0.5, 0.9) }];
+  const SIDE = { t0: 44.0, t1: 44.6, t2: 52.0, t3: 52.7 };
+  function handAt(lt, info) {
+    const D = 1300;
     for (const T of TAPS) if (lt >= T.t0 && lt < T.t3) {
-      const d = lt < T.t1 ? D * (1 - seg(lt, T.t0, T.t1, 'outCubic')) : lt < T.t2 ? 0 : D * seg(lt, T.t2, T.t3, 'inCubic');
-      const a = Math.PI - 0.26; const tip = info.at(T.uv[0], T.uv[1]);
-      return { tip: [tip[0] - Math.cos(a) * d, tip[1] - Math.sin(a) * d], a };
+      const k = lt < T.t1 ? seg(lt, T.t0, T.t1, 'outCubic') : lt < T.t2 ? 1 : 1 - seg(lt, T.t2, T.t3, 'inCubic');
+      const f = [0.55, 0.83]; const tgt = T.at(info); return { tip: [tgt[0] + f[0] * D * (1 - k), tgt[1] + f[1] * D * (1 - k)], fore: f, rel: [info.center[0] - tgt[0], info.center[1] - tgt[1]] };
     }
     if (lt >= SIDE.t0 && lt < SIDE.t3) {
-      // parked at the side button, pressing on each beat: lock, wake; lock, wake; lock, wake
       let push = 0; LOCKS.concat(WAKES).forEach(b => { push = Math.max(push, 1 - Math.abs(lt - b) / 0.16); });
-      const d = lt < SIDE.t1 ? D * (1 - seg(lt, SIDE.t0, SIDE.t1, 'outCubic')) : lt < SIDE.t2 ? 16 * (1 - clamp(push, 0, 1)) : D * seg(lt, SIDE.t2, SIDE.t3, 'inCubic');
-      const a = Math.PI - 0.12, e = info.at(1, SIDE.v); const tip = [e[0] + 26, e[1]];
-      return { tip: [tip[0] - Math.cos(a) * d, tip[1] - Math.sin(a) * d], a };
+      const k = lt < SIDE.t1 ? seg(lt, SIDE.t0, SIDE.t1, 'outCubic') : lt < SIDE.t2 ? 1 : 1 - seg(lt, SIDE.t2, SIDE.t3, 'inCubic');
+      const f = [0.86, 0.51]; const e = info.at(1.0, 0.3), e2 = info.at(0.9, 0.3), out = [e[0] - e2[0], e[1] - e2[1]], ol = Math.hypot(out[0], out[1]) || 1;
+      const tgt = [e[0] + out[0] / ol * 16, e[1] + out[1] / ol * 16];             // on the frame's edge, where the button is
+      const d = D * (1 - k) + 12 * (1 - clamp(push, 0, 1));
+      return { tip: [tgt[0] + f[0] * d, tgt[1] + f[1] * d], fore: f, rel: [info.center[0] - tgt[0], info.center[1] - tgt[1]] };
     }
     return null;
   }
-  const placeFinger = (g, f, cv) => { g.save(); g.translate(f.tip[0], f.tip[1]); g.rotate(f.a - Math.PI); g.drawImage(cv, -FT[0], -FT[1]); g.restore(); };
   function insert(c, st, lt) {
     insertBg(c);
     const P = Object.assign({}, INS, screenAt(lt), { env: '#F0D8B8', lightDir: [-0.3, -1], shadow: { dx: 14, dy: 6, blur: 18, alpha: 0.6 } });
     const info = PHONE.where(P, c);
-    PHONE.glow(c, { info, x: INS.x - 60, y: 900, r: 1500, sy: 0.3, k: 0.9 });
-    PHONE.glow(c, { info, x: INS.x, y: 520, r: 1200, k: 0.25 });
-    // the finger is real paper: it is cut out of the gloss (mask) and drawn on the paper world, so it takes the grain
-    const f = fingerAt(twos(lt), info), cv = f ? fingerCanvas(c) : null;
-    if (f) P.mask = m => placeFinger(m, f, cv);
+    PHONE.glow(c, { info, x: INS.x - 60, y: 900, r: 1300, sy: 0.3, k: 0.9 });
+    PHONE.glow(c, { info, x: INS.x, y: 520, r: 1000, k: 0.25 });
     PHONE.draw(c, P);
-    if (f) placeFinger(c.g, f, cv);
+    const h = handAt(twos(lt), info);
+    if (h) {
+      // the hand is real: drawn in the gloss layer over the phone, with the frame's grain laid into it; the screen's light on it
+      // is placed relative to the hand, so the sculpture is reshaded only when the screen goes dark or wakes
+      const s = 1.06 * INS.h, lit = litAt(lt) > 0.5 ? 1 : 0;
+      const L = (x, y) => RIG.light('pendant', { phone: [x + h.rel[0], y + h.rel[1]], phoneCol: '#CDEFF3', phoneK: 0.45 * lit, phoneZ: 0.5 });
+      const probe = RIG.hand(c, 'him', POINT, { x: 0, y: 0, s, fore: h.fore, light: L(0, 0), target: 'gl', alpha: 0 });
+      const off = [h.tip[0] - probe.tips[0][0], h.tip[1] - probe.tips[0][1]];
+      // the tip's own offset from the wrist is in the probe; the light rides with it
+      RIG.hand(c, 'him', POINT, { x: off[0], y: off[1], s, fore: h.fore, light: L(off[0] + probe.tips[0][0], off[1] + probe.tips[0][1]), target: 'gl', shadow: { dx: 0.03, dy: 0.05, alpha: 0.45 } });
+    }
   }
 
   // the counter's near edge, out of the pendant's pool: darker toward the bottom of the frame, so the subtitle sits on calm paper
   function nearEdge(c) {
     const g = c.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); const gr = g.createLinearGradient(0, 900, 0, H); gr.addColorStop(0, 'rgba(14,10,12,0)'); gr.addColorStop(0.55, 'rgba(14,10,12,0.32)'); gr.addColorStop(1, 'rgba(14,10,12,0.55)');
     g.fillStyle = gr; g.fillRect(0, 900, W, H - 900); g.restore();
+  }
+  // the strip on the fridge, redrawn crisp over the set's (the same print: GG.photoStrip seed 3, the set's size, place and tilt) for
+  // the pushed-in last shot, where the set's layer softens: so the four frames read beside the phone. The lamp's spill on it.
+  let STRIP = null;
+  function stripOver(c, view, shot) {
+    const R = SETS.living.world, s = R.strip, z = R.fridge.z0 - 0.003, cr = Math.cos(s.rot), sr = Math.sin(s.rot);
+    const at = (u, v) => LV(view).project([s.x + u * cr - v * sr, s.y + u * sr + v * cr, z], shot);
+    const tl = at(-s.w / 2, s.h / 2), tr = at(s.w / 2, s.h / 2), bl = at(-s.w / 2, -s.h / 2);
+    if (!tl || !tr || !bl) return;
+    STRIP = STRIP || GG.photoStrip({ w: 240, h: 876, seed: 3, scale: 1.3 });
+    const g = c.g; g.save(); g.transform((tr[0] - tl[0]) / STRIP.width, (tr[1] - tl[1]) / STRIP.width, (bl[0] - tl[0]) / STRIP.height, (bl[1] - tl[1]) / STRIP.height, tl[0], tl[1]);
+    g.imageSmoothingQuality = 'high'; g.drawImage(STRIP, 0, 0);
+    g.globalCompositeOperation = 'multiply'; g.fillStyle = '#C9B094'; g.fillRect(0, 0, STRIP.width, STRIP.height); g.restore();
+    // the red magnet over its top
+    const m = at(0, s.h / 2 - 0.004), r = 0.011 * m[2];
+    g.save(); g.fillStyle = '#8A2A24'; g.beginPath(); g.ellipse(m[0], m[1], r, r * 0.9, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(230,170,140,0.5)'; g.beginPath(); g.ellipse(m[0] - r * 0.3, m[1] - r * 0.35, r * 0.35, r * 0.25, -0.4, 0, 7); g.fill(); g.restore();
   }
 
   FILM.seq({
@@ -197,23 +251,22 @@
     sound(S) {
       S.bed('room_night', 0, 64, { level: -46 });
       S.bed('pendant_hum', 0, 64, { level: -52 });
-      // the fork in the pan, sparse: each twirl and lift (the bites at 13.6 and 17.4 in the counter shot; the room is too far to hear)
-      [13.0, 16.0, 16.9, 26.0].forEach(t => S.cue('fork_pan', t, { level: -36 }));
-      S.bed('chewing', 14.0, 30.0, { level: -38 });
+      // the fork in the pan, sparse: each twirl (the room is too far to hear), and the forkful laid back in the pan at the end
+      [13.0, 16.8, 19.2].forEach(t => S.cue('fork_pan', t, { level: -36 })); S.cue('fork_pan', 59.3, { level: -42 });
+      S.bed('chewing', 14.7, STOP_CHEW, { level: -38 });          // he stops chewing on the close shot
       S.cue('receive', 20.5);
-      S.cue('tap', OPEN[0] - 0.05, { level: -40 });               // his knuckle on the glass: the picture opens
+      S.cue('tap', 22.25, { level: -40 });                        // his fingertip on the glass: the picture opens
       S.cue('tap', SET_PRESS, { level: -40 });                    // "Set as wallpaper"
       S.cue('swallow', 37.4, { level: -40 });
-      S.cue('lock', LOCKS[0]); S.cue('lock', LOCKS[1]); S.cue('lock', LOCKS[2]);
-      WAKES.forEach(t => S.cue('wake', t));
+      LOCKS.forEach(t => S.cue('lock', t)); WAKES.forEach(t => S.cue('wake', t));
       S.bed('fridge_hum', 53, 64, { level: -48 });
     },
     shots: [
-      // ---------------------------------------------------------------- the room: small, tidy for one, furnished for two
+      // ---------------------------------------------------------------- the room: small, tidy for one, furnished for two; he eats
       { at: 0, name: 'room: the elevation, night; he eats at the counter in the kitchen half', draw(c, st, lt) {
         const V = LV('room'); V.back(c, lt, NIGHT);
         const e = eating(twos(lt));
-        him(c, 'room', 'wide', lt, { fork: e.fork, face: Object.assign(faceFor(e.look), e.chew ? RIG.chew(lt) : {}) });
+        counterFig(c, 'room', 'wide', lt, e, eatFace(e, lt));
         drawPropped(c, 'room', 'wide', lt, { k: 0.9 });
         V.front(c, lt, NIGHT);
       } },
@@ -224,57 +277,52 @@
         const V = LV('fridge'); V.back(c, lt, NIGHT); V.front(c, lt, NIGHT);
       }, post: { vig: 0.55 } },
       // ---------------------------------------------------------------- B2: he eats; the phone keeps him company across the salt
-      { at: 13, name: 'counter: he eats from the pan; the phone propped against the salt in the empty half; the chime', draw(c, st, lt) {
+      { at: 13, name: 'counter: he eats from the pan, the phone propped against the salt; the chime; the forkful stops halfway', draw(c, st, lt) {
         const V = LV('counter'); V.back(c, lt, NIGHT);
-        const tt = twos(lt); const e = eating(tt);
-        // 20.5: the chime. He is chewing, eyes on the pan; they go to the phone and stay
-        let look = e.look; if (tt > 20.6) look = 1;
-        const chewing = tt < 21.6 ? e.chew : true;
-        const face = Object.assign(faceFor(look), chewing ? RIG.chew(lt) : {}, tt > 20.7 ? { lids: 0.86, brows: 0.25 } : {});
-        him(c, 'counter', 'main', lt, { fork: tt > 20.6 ? Math.min(e.fork, 0.15) : e.fork, face });
+        const tt = twos(lt), e = eating(tt);
+        counterFig(c, 'counter', 'main', lt, e, eatFace(e, lt, tt > 20.7 ? { lids: 0.7, brows: 0.25 } : null));
         drawPropped(c, 'counter', 'main', lt);
         V.front(c, lt, NIGHT);
       } },
-      // ---------------------------------------------------------------- the image: the bubble, his knuckle, the picture opens
-      { at: 22, name: 'phone: the image, full frame, gloss; it arrives as a bubble and opens', draw(c, st, lt) {
+      // ---------------------------------------------------------------- the image: the bubble, his fingertip, the picture opens
+      { at: 22, name: 'phone: the image, full frame, gloss; it arrives as a bubble and opens under his fingertip', draw(c, st, lt) {
         // once the picture is open, the camera leans in on it, slowly, as he does
         const u = seg(st, 1.6, 8, 'inOutSine'); c.camera({ x: lerp(960, 1005, u), y: lerp(540, 565, u), zoom: lerp(1.0, 1.06, u) });
         insert(c, st, lt);
       }, post: { vig: 0.42, halation: 0.55 } },
       // ---------------------------------------------------------------- he stops chewing; he looks for a long time; L007
-      { at: 30, name: 'counter close: he stops chewing and looks for a long time; "I love this one." to the empty room', draw(c, st, lt) {
+      { at: 30, name: 'counter close: he stops chewing, the fork halfway; he looks for a long time; "I love this one." to the empty room', draw(c, st, lt) {
         const u = seg(st, 0, 12, 'inOutSine'); c.camera({ x: lerp(960, 1000, u), y: lerp(540, 560, u), zoom: lerp(1.0, 1.045, u) });
         const V = LV('counter'); V.back(c, lt, Object.assign({ shot: 'close' }, NIGHT));
-        const tt = twos(lt);
-        const stop = 30.35, swallow = 37.4, up = 37.9, back = 41.4;
-        const chew = tt < stop ? RIG.chew(lt) : tt < swallow ? { mouth: 0, cheek: 0.6, cheekSide: -1 } : {};
-        // the look: B2's eyes on the phone; at 37.9 they lift to the empty room for the line; at 41.4 back down
-        const look = key(tt, [[up, 1], [up + 0.5, 0, 'inOutSine'], [back, 0], [back + 0.5, 1, 'inOutSine']]);
-        const face = Object.assign({ yaw: lerp(0.4, 0.72, look), pitch: lerp(0.1, 0.48, look), gaze: [lerp(0.35, 0.22, look), lerp(-0.05, 0.32, look)],
-          lids: key(tt, [[30.3, 0.86], [33.6, 0.86], [35.5, 0.74], [up, 0.74], [up + 0.4, 0.68]]), brows: tt < 33 ? 0.25 : 0,
-          smile: key(tt, [[34.4, 0], [36.6, 0.25], [up, 0.25], [up + 0.4, 0.125], [41, 0.125], [42, 0.25]]) },
-          chew, tt >= swallow && tt < swallow + 0.25 ? { pitch: lerp(0.1, 0.48, look) + 0.06 } : {},
-          { mouth: RIG.mouthFor('L007', lt - 38.5) });
+        const tt = twos(lt), e = eating(tt);
+        const swallow = 37.4, up = 38.1, back = 41.3;
+        // the look: down at the phone; at 38.1 his eyes lift to the empty room for the line; at 41.3 back down to the picture
+        const look = key(tt, [[up, 0], [up + 0.5, 1, 'inOutSine'], [back, 1], [back + 0.6, 0, 'inOutSine']]);
+        const room = { yaw: 0.42, pitch: 0.08, gaze: [0.35, -0.05], lids: 0.68 };
+        const f = mixv(Object.assign({}, F_PHONE, { lids: key(tt, [[30.3, 0.7], [33.6, 0.7], [35.5, 0.62]]) }), room, look);
+        const mouthful = tt >= STOP_CHEW && tt < swallow ? { mouth: 0, cheek: 0.6, cheekSide: -1 } : {};
+        const face = Object.assign(f, e.chew ? RIG.chew(lt) : mouthful, {
+          brows: tt < 33 ? 0.25 : 0, smile: key(tt, [[34.4, 0], [36.6, 0.25], [up, 0.25], [up + 0.4, 0.125], [41, 0.125], [42, 0.25]]) },
+          tt >= swallow && tt < swallow + 0.25 ? { pitch: f.pitch + 0.06 } : {});
+        if (tt >= 38.5) face.mouth = RIG.mouthFor('L007', lt - 38.5);
         if (tt > 33.4 && tt < 33.6) face.lids = 0.1;              // one slow blink, mid-look
-        him(c, 'counter', 'close', lt, { fork: 0.22, face, fig: { blink: false } });
+        counterFig(c, 'counter', 'close', lt, e, face, { blink: false });
         drawPropped(c, 'counter', 'close', lt);
         V.front(c, lt, Object.assign({ shot: 'close' }, NIGHT));
         nearEdge(c);
       } },
       // ---------------------------------------------------------------- wallpaper; locks, wakes: there they are, three times
-      { at: 42, name: 'phone: set as wallpaper; locks, wakes, there they are (x3)', draw(c, st, lt) { insert(c, st, lt); }, post: { vig: 0.42, halation: 0.55 } },
+      { at: 42, name: 'phone: set as wallpaper; his fingertip on the side button: locks, wakes, there they are (x3)', draw(c, st, lt) { insert(c, st, lt); }, post: { vig: 0.42, halation: 0.55 } },
       // ---------------------------------------------------------------- the rhyme: the strip on the fridge and the phone in one frame
-      { at: 53, name: 'counter, wider: the strip on the fridge and the phone in one frame; slow push', draw(c, st, lt) {
-        // a slow push that drifts toward the fridge and lands with the strip at the left edge and the phone at the right
-        // (the set's layers end at the frame: x >= 960 / zoom keeps the fridge side covered)
-        const u = seg(st, 0.3, 10.9, 'inOutSine'); c.camera({ x: lerp(960, 826, u), y: lerp(540, 585, u), zoom: lerp(1.0, 1.17, u) });
+      { at: 53, name: 'counter: the strip at left, the phone at right, him between; slow push; he lays the forkful back in the pan', draw(c, st, lt) {
+        // framed on the two pictures: the strip near the left edge, the lit wallpaper near the right, and a slow push that lands
+        // (the set's layers end at the frame, so the centre stays at least 960 / zoom from the left and 540 / zoom from the bottom)
+        const u = seg(st, 0.2, 10.8, 'inOutSine'); c.camera({ x: lerp(780, 712, u), y: lerp(640, 680, u), zoom: lerp(1.24, 1.36, u) });
         const V = LV('counter'); V.back(c, lt, NIGHT);
-        const tt = twos(lt);
-        // he looks at them on the lock screen; then, at 60, back down to the pan, and the fork goes on
-        const look = key(tt, [[60.2, 1], [60.8, 0, 'inOutSine']]);
-        const fork = tt < 60.6 ? 0.22 : 0.08 + 0.08 * Math.sin((tt - 60.6) * 9);
-        const face = Object.assign(faceFor(look), { smile: tt < 60 ? key(tt, [[53, 0.25], [55, 0.375]]) : 0.125, lids: tt < 60.2 ? 0.7 : 0.6 });
-        him(c, 'counter', 'main', lt, { fork, face });
+        stripOver(c, 'counter', 'main');
+        const tt = twos(lt), e = eating(tt);
+        const face = Object.assign({}, F_PHONE, { smile: key(tt, [[53, 0.25], [55, 0.375]]), lids: 0.64 });
+        counterFig(c, 'counter', 'main', lt, e, face);
         drawPropped(c, 'counter', 'main', lt);
         V.front(c, lt, NIGHT);
         nearEdge(c);

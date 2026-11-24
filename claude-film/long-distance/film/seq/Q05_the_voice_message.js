@@ -12,32 +12,20 @@
   const tk = (t, ks) => key(twos(t), ks);
   const MSG_DUR = 17;                                   // her voice message, 0:17: played 7.0–24.0, then again from 25.0
   const PLAY1 = 7.0, END1 = PLAY1 + MSG_DUR, PLAY2 = 25.0;
+  // the evening's thread, continuous with the day: the morning's three messages; at lunch his "Send me one." (A014) and her reply,
+  // the hidden placeholder (abstract, blurred, two flat tones: nothing in it can be seen); then her voice message at 18:21
+  const MSGS = () => PHONE.HISTORY.morning.concat([['stamp', '12:47'], ['him', PHONE.MSG.sendMeOne], ['her', { image: 'hidden' }], ['stamp', '18:21'], ['her', { voice: MSG_DUR }]]);
   function voiceState(lt) {
-    if (lt < PLAY1) return { progress: 0, playing: false, dur: MSG_DUR, clock: 'bus' };
-    if (lt < END1) return { progress: (lt - PLAY1) / MSG_DUR, playing: true, dur: MSG_DUR, clock: 'bus' };
-    if (lt < PLAY2) return { progress: 1, playing: false, dur: MSG_DUR, clock: 'bus' };
-    return { progress: clamp((lt - PLAY2) / MSG_DUR, 0, 1), playing: true, dur: MSG_DUR, clock: 'bus' };
+    const base = { dur: MSG_DUR, clock: 'bus', msgs: MSGS() };
+    if (lt < PLAY1) return Object.assign(base, { progress: 0, playing: false });
+    if (lt < END1) return Object.assign(base, { progress: (lt - PLAY1) / MSG_DUR, playing: true });
+    if (lt < PLAY2) return Object.assign(base, { progress: 1, playing: false });
+    return Object.assign(base, { progress: clamp((lt - PLAY2) / MSG_DUR, 0, 1), playing: true });
   }
-  const earsAt = lt => lt < 15 ? 0 : tk(lt, [[15.0, 0], [18.0, 1, 'inOutSine']]);
+  // his ears colour in the stretch between two passing streetlights (15.7–18.0), so the red is seen against his own skin
+  const earsAt = lt => lt < 15 ? 0 : tk(lt, [[15.8, 0], [17.6, 1, 'inOutSine']]);
 
-  // the shirt's yoke below the collar, seen from behind: it covers the neck where it goes into the shirt (cut paper, the shirt's
-  // colour), so from above and behind his neck meets the collar, not a gap of skin
-  const YOKE = { type: 'paper', key: 'q345yoke', box: [-0.7, 0.4, 0.7, 1.3], breath: 1, draw(pen) {
-    const col = RIG.COSTUME.shirt.body; const sh = pen.blob([[-0.34, 0.66], [-0.12, 0.6], [0.12, 0.6], [0.34, 0.66], [0.5, 1.1], [0, 1.18], [-0.5, 1.1]]);
-    const p = pen.piece(sh, pen.col(col), { seed: 431, kind: 'cloth', tex: 0.55, lift: false }); pen.bands(p, col, { seed: 401 }); } };
-  // ---------------------------------------------------------------- him from behind (interior): the shirt, the rail, an earbud
   const PI2 = Math.PI * 2;
-  function himBack(c, o) {
-    const up = o.up == null ? 0.12 : o.up;
-    const buds = { type: 'live', draw(cc, toW, s, out) { const hd = out.heads.head; if (!hd) return; const g = cc.g;
-      [hd.earL, hd.earR].forEach((e, i) => { const nx = hd.M ? hd.M[2][0] : 0; const vis = i === 0 ? nx < 0.35 : nx > -0.35; if (!vis || !e) return;
-        g.fillStyle = '#A9A49A'; g.beginPath(); g.ellipse(e[0], e[1] + s * 0.03, s * 0.03, s * 0.026, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(20,20,28,0.35)'; g.beginPath(); g.ellipse(e[0] + s * 0.006, e[1] + s * 0.042, s * 0.024, s * 0.01, 0, 0, 7); g.fill(); }); } };
-    const P = RIG.person({ who: 'him', costume: 'shirt', back: true, tau: o.tau, lean: o.lean || 0, tilt: o.tilt || 0, head: false,
-      arms: { L: o.armL || null, R: o.armR || null }, legs: o.legs === undefined ? { stance: 0.14 } : o.legs, crop: o.crop,
-      extra: { afterTorso: [{ type: 'head', p: Object.assign({ neck: 0.42 }, o.head), at: [o.headDx || 0, up], breath: 1 }, YOKE], afterHead: [buds] } });
-    const breath = o.t != null ? RIG.breath(o.t, 2.5 * Math.min(2, o.s / 250)) : 0;
-    return RIG.drawFigure(c, { who: 'him', x: o.x + (o.dx || 0), y: o.y - up * o.s, s: o.s, light: o.light, breath, ops: P.ops });
-  }
 
   // ---------------------------------------------------------------- 1 · interior (0–6) and 5 · the window (26–30)
   // his head: down at the phone; at 27.5 (in the last shot) he lifts it to the glass, and his face in it looks back at him
@@ -64,17 +52,19 @@
     // the brakes at 3.0: everyone sways; he gives a little toward the front and comes back (on twos)
     const lurch = tk(lt, [[2.95, 0], [3.35, 1, 'outCubic'], [4.3, 0, 'inOutSine']]);
     const rail = [(A.hands.rail.x - A.head.x) / A.head.s, (A.hands.rail.y - A.head.y) / A.head.s];
-    himBack(c, { x: A.head.x, y: A.head.y, s: A.head.s, tau: 2.85, lean: -0.04 * lurch, tilt: 0.02 * lurch, dx: lurch * 9, light: L, t: lt, up: 0.1,
-      head: { yaw: h.yaw, pitch: h.pitch, lids: 0.5, ears },
-      armR: { to: [rail[0] - 0.05, rail[1] + 0.3], bend: 1, hand: 'rail', flipHand: true, hp: {} },
-      armL: { to: [-0.15, 1.6], bend: -1, hand: false, front: true } });
+    // him from behind: the rig's back view (the phone hidden in front of him, an earbud), mirrored so the raised arm is his right
+    // (screen right from behind, as the rail is, and the same arm the close sees raised); a mirrored figure turns its head the
+    // other way, so the yaw goes in negated
+    RIG.draw(c, 'him', 'bus', { view: 'back', flip: true, x: A.head.x + lurch * 9, y: A.head.y, s: A.head.s, light: L, t: lt, sway: 0.04 * lurch,
+      rail: [A.hands.rail.x, A.hands.rail.y], face: { yaw: -h.yaw, pitch: h.pitch, lids: 0.5, ears } });
+    void rail;
     v.front(c, lt, {});
   }
 
   // ---------------------------------------------------------------- 2, 4 · the phone (6–15, 23–26)
   // looking down at his chest: the phone in his left hand, his thumb on the play button; behind it his shirt, the stranger's coat
   // pressed in at the left, and the passing streetlights crossing it all in one cut band of sodium every 3.4 s
-  const BGM = 80;
+  const BGM = 320;
   const PH = { x: 1000, y: 190, h: 1180, roll: 0.05, pitch: 0.08, yaw: 0.05 };
   function phoneBg(c) {
     const cv = c.cache('Q05|phone|bg', g => {
@@ -89,7 +79,7 @@
       [140, 520, 900].forEach((y, i) => { const x = 1530 - 0.06 * y - 18; g.fillStyle = '#8C96AE'; g.beginPath(); g.ellipse(x, y, 13, 12, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(30,34,50,0.6)'; g.beginPath(); g.arc(x - 3, y - 2, 2.2, 0, 7); g.arc(x + 3, y + 2, 2.2, 0, 7); g.fill(); });
       [[[200, 150], [520, 330], [700, 560]], [[1200, 700], [1300, 900], [1260, 1100]]].forEach(f => { g.save(); g.strokeStyle = 'rgba(22,26,40,0.55)'; g.lineWidth = 9; g.lineCap = 'round'; g.stroke(GG.spline(f, false)); g.restore(); });
       // the stranger's coat sleeve, pressed against his arm at the left edge: near-black paper with a sodium rim
-      const coat = GG.blob([[-120, -80], [260, -80], [360, 260], [330, 700], [250, 1180], [-120, 1180]]);
+      const coat = GG.blob([[-BGM - 40, -BGM - 40], [260, -BGM - 40], [360, 260], [330, 700], [250, H + BGM + 40], [-BGM - 40, H + BGM + 40]]);
       const cp = GG.piece(g, coat, { fill: '#141A2A', rough: 1.4, seed: 23, tex: 0.55, kind: 'wool', lift: [14, 6], liftAlpha: 0.6, liftBlur: 20 });
       GG.crescent(g, cp, 6, 0, '#9A6A44', 0.75);
       g.save(); g.strokeStyle = 'rgba(8,10,18,0.6)'; g.lineWidth = 6; g.beginPath(); g.moveTo(120, 380); g.quadraticCurveTo(230, 520, 200, 760); g.stroke(); g.restore();
@@ -99,7 +89,7 @@
   // the passing streetlight: one cut band of sodium crossing the frame every 3.4 s (the set's period), never more than one change a second
   function sodium(c, lt) {
     const T = 3.4, ph = ((lt + 1.1) / T) % 1, x = W + 500 - ph * (W + 1000), g = c.g, sk = 300;
-    const band = (half, a, seed) => { g.globalAlpha = a; g.fillStyle = '#E09048'; g.fill(OTM.S().poly([[x - half + sk, -80], [x + half + sk, -80], [x + half - sk, H + 80], [x - half - sk, H + 80]]).path(3, seed)); };
+    const band = (half, a, seed) => { g.globalAlpha = a; g.fillStyle = '#E09048'; g.fill(OTM.S().poly([[x - half + sk * 1.3, -340], [x + half + sk * 1.3, -340], [x + half - sk * 1.3, H + 340], [x - half - sk * 1.3, H + 340]]).path(3, seed)); };
     g.save(); g.globalCompositeOperation = 'soft-light'; band(330, 0.4, 150); band(150, 0.45, 151); g.restore();
     return clamp(1 - Math.abs(x - PH.x) / 600, 0, 1);
   }
@@ -118,8 +108,11 @@
 
   function shotPhone(c, st, lt) {
     // a slow push toward the waveform while it plays (0.3 % a second, eased in and out); the second insert holds
-    const z = lt < 15 ? lerp(1, 1.025, seg(lt, 6, 15, 'inOutSine')) : 1.025;
-    c.camera({ x: W / 2 - 60 * (z - 1) / 0.025, y: H / 2 + 40 * (z - 1) / 0.025, zoom: z });
+    // the thread as it stands (the morning; his "Send me one." at lunch and her reply; the voice message), and a slow push toward
+    // the waveform while it plays (0.3 % a second, eased); the second insert holds
+    const u = lt < 15 ? seg(lt, 6, 15, 'inOutSine') : 1;
+    const z = lerp(1, 1.03, u);
+    c.camera({ x: W / 2 - 50 * u, y: H / 2 + 40 * u, zoom: z });
     phoneBg(c);
     const P = Object.assign({}, PH, { screen: 'voice', state: voiceState(lt), t: lt, env: '#8090C0' });
     const info = PHONE.where(P, c);
@@ -129,12 +122,18 @@
     const press = t0 => tk(lt, [[t0 - 0.55, 0.0], [t0 - 0.2, 0.7], [t0, 0.0, 'inQuad'], [t0 + 0.35, 0.45]]);
     const tap = lt < 16 ? press(PLAY1) : press(PLAY2);
     const play = info.targets.play || info.pt(37, 640);
-    const tgt = [play[0] + (lt < PLAY1 - 0.6 ? 60 : 0), play[1] + (lt < PLAY1 - 0.6 ? 70 : 0)];
+    // the thumb: from below-left, its tip on the play button for the press; resting just under the bubble while it plays
+    const away = lt < PLAY1 - 0.6 || (lt > END1 + 0.3 && lt < PLAY2 - 0.6);
+    const near = (lt > PLAY1 + 0.5 && lt < END1) || lt > PLAY2 + 0.5;
+    const tgt = away ? [play[0] - 40, play[1] + 150] : near ? [play[0] - 10, play[1] + 70] : play;
     const L = RIG.light('bus', { keys: [{ dir: [0.3, -0.7, 0.6], col: '#7E90BE', k: 0.42, poster: [0.3], levels: [1] }],
       amb: '#2E3550', phone: [PH.x, PH.y + 300], phoneK: 1.1, phoneZ: 0.6 });
     void band;
-    const hp = handOnPhone(c, info, L, tgt, Math.round(tap * 4) / 4, { u: 0.6, v: 0.9, s: 980, rot: -0.1, flip: true });
-    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: 'thumb' }));
+    // the hand placed so the thumb's tip lands on its mark (one reach, one turn: only the tap changes the sculpture)
+    const base = { s: 1100, rot: 0.18, flip: true, reach: 0.5, tap: 0, light: L };
+    const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: base.s / 4, x: 0, y: 0, target: SCR() }));
+    const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: Math.round(tap * 4) / 4 });
+    const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: ['thumb', 'dist'] }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
     RIG.hand(c, 'him', 'thumb', hp);
   }
@@ -142,24 +141,56 @@
   // ---------------------------------------------------------------- 3 · close (15–23): his ears; the stranger; the floor
   function closeFace(lt) {
     const ph = { yaw: 0.3, pitch: 0.5, lids: 0.45, gaze: [0.1, 0.6] };
-    const str = { yaw: 0.62, pitch: 0.3, lids: 0.62, gaze: [0.6, 0.15] };
-    const flr = { yaw: 0.12, pitch: 0.52, lids: 0.28, gaze: [0, 0.7] };
-    return tk(lt, [[15, ph], [19.4, ph], [19.7, str, 'outCubic'], [20.6, str], [21.0, flr, 'inOutSine']]);
+    const str = { yaw: 0.78, pitch: 0.26, lids: 0.66, gaze: [0.6, 0.12] };    // a glance at the stranger: head and eyes, and held
+    const flr = { yaw: 0.08, pitch: 0.55, lids: 0.26, gaze: [0, 0.7] };
+    return tk(lt, [[15, ph], [19.15, ph], [19.4, str, 'outCubic'], [20.4, str], [20.8, flr, 'inOutSine']]);
+  }
+  // Him in the close: the rig's standing man (the shirt), built here so the raised arm goes up and out to the rail at the left,
+  // clear of his ear, its sleeve tucked under the shirt's shoulder (drawn behind the torso), and the other arm goes down out of
+  // the frame to the phone with no hand in shot. Small earbuds sit in his ears so the red of the ears shows round them.
+  function closeHim(c, A, L, lt, face) {
+    const buds = { type: 'live', draw(cc, toW, s, out) { const hd = out.heads.head; if (!hd) return; const g = cc.g;
+      [hd.earL, hd.earR].forEach((e, i) => { const nx = hd.M ? hd.M[2][0] : 0; const vis = i === 0 ? nx < 0.25 : nx > -0.25; if (!vis || !e) return;
+        g.fillStyle = '#BDB7AC'; g.beginPath(); g.ellipse(e[0] + (i ? -1 : 1) * s * 0.012, e[1] + s * 0.035, s * 0.02, s * 0.018, 0, 0, 7); g.fill();
+        g.fillStyle = 'rgba(16,16,24,0.45)'; g.beginPath(); g.ellipse(e[0] + (i ? -1 : 1) * s * 0.012, e[1] + s * 0.05, s * 0.017, s * 0.007, 0, 0, 7); g.fill(); }); } };
+    const f = Object.assign({}, face);
+    if (lt != null && !(f.lids < 0.2)) { const b = RIG.blink(lt, 3); if (b < 1) f.lids = (f.lids == null ? 0.6 : f.lids) * b; }
+    const P = RIG.person({ who: 'him', costume: 'shirt', tau: 0.2, head: f, legs: false, crop: 2.4,
+      arms: { L: { to: [-1.3, -1.9], bend: 1, hand: false, behind: true }, R: { E: [0.74, 2.3], W: [0.32, 2.8], hand: false, front: true } },
+      extra: { afterHead: [buds] } });
+    return RIG.drawFigure(c, { who: 'him', x: A.head.x, y: A.head.y, s: A.head.s, light: L, breath: RIG.breath(lt, 2.5), ops: P.ops });
   }
   function shotClose(c, st, lt) {
     const v = BUS().views.close, A = v.anchors;
-    const tt = twos(lt);
+    // a slow push toward his face while his ears colour (15–18), then it holds for the glance and the floor
+    const z = lerp(1, 1.08, seg(lt, 15, 18, 'inOutSine')), u = (z - 1) / 0.08;
+    c.camera({ x: W / 2 + (840 - W / 2) * u, y: H / 2 + (480 - H / 2) * u, zoom: z });
     v.back(c, lt, {});
-    // his face keeps the shot's own light (the passing sodium band still crosses him as the set's overlay), so the red of his
-    // ears reads against his skin rather than against the orange of a streetlight
+    // his face keeps the shot's own light (the passing sodium band still crosses him as the overlay), so the red of his ears reads
+    // against his skin rather than against the orange of a streetlight
     const L = RIG.light('bus', { keys: v.light.keys, amb: v.light.amb, phone: [A.phone.x - 120, A.phone.y - 120], phoneK: 1.0 });
-    void tt;
-    const f = closeFace(lt);
-    RIG.draw(c, 'him', 'bus', { x: A.head.x, y: A.head.y, s: A.head.s, light: L, t: lt, rail: [A.hands.rail.x, A.hands.rail.y], crop: 2.3,
-      face: Object.assign({ ears: earsAt(lt), mouth: 0 }, f) });
+    closeHim(c, A, L, lt, Object.assign({ ears: earsAt(lt), mouth: 0 }, closeFace(lt)));
     // the phone's light from below the frame, on his chin and collar (smooth)
     PHONE.glow(c, { x: A.phone.x - 160, y: 1130, r: 700, k: 0.45, tone: 'night', em: 0.1 });
-    v.front(c, lt, {});
+    v.front(c, lt, { sweep: false });
+    strangerCollar(c);
+    sweepClose(c, v, lt);
+  }
+  // the pressed stranger (the set's): a turned-up coat collar over the back of the neck, so no neck shows through it
+  function strangerCollar(c) {
+    const cv = c.cache('Q05|close|collar', g => {
+      const sh = GG.blob([[1588, 492, 1], [1596, 418], [1624, 384], [1700, 372], [1782, 384], [1812, 418], [1822, 492, 1], [1704, 506]]);
+      const p = GG.piece(g, sh, { fill: '#2D2927', rough: 1.1, seed: 171, tex: 0.5, kind: 'wool', lift: [0, 6], liftAlpha: 0.5, liftBlur: 10 });
+      GG.crescent(g, p, 0, -4, '#3E3936', 0.8);
+      g.save(); g.strokeStyle = 'rgba(124,134,160,0.55)'; g.lineWidth = 3; g.beginPath(); g.moveTo(1598, 420); g.quadraticCurveTo(1640, 380, 1700, 374); g.quadraticCurveTo(1770, 378, 1808, 414); g.stroke(); g.restore();
+    });
+    c.g.drawImage(cv, 0, 0);
+  }
+  // the set's passing sodium band, drawn here after the collar (the same band at the same place: SETS.bus.views.close.sweep)
+  function sweepClose(c, v, t) {
+    const sw = v.sweep(t), g = c.g, w = 330, sk = 260 * (v.sweep(0).x > W ? 1 : -1);
+    const band = (x, half, a, seed) => { g.globalAlpha = a; g.fillStyle = '#E39A52'; g.fill(OTM.S().poly([[x - half + sk, -80], [x + half + sk, -80], [x + half - sk * 0.4, H + 80], [x - half - sk * 0.4, H + 80]]).path(3, seed)); };
+    g.save(); g.globalCompositeOperation = 'soft-light'; band(sw.x, w * 0.9, 0.42, 150); band(sw.x, w * 0.45, 0.5, 151); g.restore();
   }
 
   FILM.seq({

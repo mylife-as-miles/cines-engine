@@ -2,235 +2,342 @@
    The wardrobe is C's grammar exactly: his clothes on the left, bare hangers on the right. He lifts down her old bag and leaves a
    clean rectangle in the dust. Then the phone does the one thing he cannot stop: it buzzes. The lock screen is the first time the
    audience sees the waterfall with something else on top of it: "Call me tonight?". She turns the screen to him.
-   Shots: 0 wardrobe (his hands open it) · 6 shelf (the bag lifted, the rectangle) · 12.5 wardrobe close (the buzz; rigid, eyes shut)
-   · 17 room by day (he comes out fast; she stands over the couch) · 22 INSERT the lock screen · 27 room (L012–L015; she reaches for
-   it) · 38.5 between, B3 (she turns the screen to him; L016) · 50.5 hands (his thumb worries the broken zip). */
+   One geography for the whole argument (Q09–Q10): she stands in the empty half, the pale rectangle and the window's light behind
+   her, looking screen left; he stands in his half, the kitchen (the fridge, the counter) behind him, looking screen right.
+   Shots: 0 wardrobe (from behind him, he opens it) · 6 shelf (his arm lifts the bag; the rectangle) · 12 wardrobe close (the buzz;
+   rigid, eyes shut) · 17 room by day (he comes out fast; she stands over the couch) · 22 INSERT the lock screen · 27 / 29.2 / 31.3 /
+   35.8 him and her, close (L012–L015) · 38.5 between, B3 (she turns the screen to him) · 43.3 over his shoulder: the screen between
+   them (L016) · 50.5 his hands, his thumb on the broken zip. */
 (function () {
   'use strict';
   const { W, H } = OTM; const seg = FILM.seg, key = FILM.key, twos = FILM.twos, E = FILM.ease, clamp = FILM.clamp, lerp = FILM.lerp;
   const LV = () => SETS.living.views, BV = () => SETS.bedroom.views;
-  const MSG = () => PHONE.MSG;
   const CALL = () => ({ banner: { text: PHONE.MSG.callMeTonight, in: 1 } });
+
+  // =================================================================================================================================
+  // The kit shared by Q09, Q10 and Q11 (the last three sequences): light, pushes, the two close-up backgrounds, softened layers,
+  // a phone held in a hand. Q10 and Q11 read it from window.LD_END (this file loads first).
+  // =================================================================================================================================
+  const K = window.LD_END = {};
   // the visit's light, from the window on the right wall, read by the sculptures and the paper (one light per shot)
-  function setLight(L, o) {
+  K.setLight = function (L, o) {
     o = o || {};
     const from = o.from || [L.dir[0] > 0 ? 0.82 : -0.82, -0.55];
     return RIG.light('day', Object.assign({ keys: [{ dir: L.dir, col: L.color, k: L.k * (o.keyK || 1), poster: L.poster, levels: L.levels }], amb: L.amb, paper: { from } }, o.rig || {}));
-  }
-  const ROOM = { tod: 'day' };
+  };
   // a push that keeps the screen point (px, py) still while the frame closes in on it
-  const push = (c, px, py, z) => c.camera({ x: px + (W / 2 - px) / z, y: py + (H / 2 - py) / z, zoom: z });
-  // where people stand (world metres) and where that lands in each camera
+  K.push = (c, px, py, z) => c.camera({ x: px + (W / 2 - px) / z, y: py + (H / 2 - py) / z, zoom: z });
+  // a context that draws into an offscreen canvas (to soften a figure or a set layer once and keep it)
+  const dummyEm = () => K._em || (K._em = OTM.makeCanvas(8, 8).getContext('2d'));
+  K.soft = function (c, keyName, blur, fn) {
+    return c.cache(keyName, (g, cv) => {
+      const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d');
+      const fake = Object.assign({}, c, { g: tg, gl: tg, em: dummyEm(), before: [], after: [] });
+      fn(fake, tg);
+      g.filter = `blur(${blur}px)`; g.drawImage(tmp, 0, 0); g.filter = 'none';
+    });
+  };
+  // his light in the close-ups against the kitchen side: the window is behind the camera, to the right
+  K.kitchenLight = (o) => RIG.light('day', Object.assign({ keys: [{ dir: [0.72, -0.32, 0.6], col: '#E6EBEE', k: 0.6, poster: [0.12, 0.5], levels: [0.55, 1] }], amb: '#62645F', paper: { from: [0.82, -0.55] } }, o || {}));
+  // the reverse on him: from her side of the room, looking back at the kitchen. Behind him, out of focus: the fridge (the strip on
+  // it), the end of the counter, the pendant, the kitchen wall in shade; the window's light on the wall at the right
+  K.kitchenPlate = function (c) {
+    return c.cache('END|kitchen', (g, cv) => {
+      const S = OTM.S, P = p => { const q = new Path2D(); q.rect(0, 0, W, H); return q; };
+      g.fillStyle = '#6A6C66'; g.fillRect(0, 0, W, H); GG.texture(g, P(), 0.55, 1201, 'paper');
+      g.save(); g.globalCompositeOperation = 'multiply'; const sh = g.createLinearGradient(0, 0, W, 0); sh.addColorStop(0, 'rgba(70,72,74,0.7)'); sh.addColorStop(0.6, 'rgba(120,122,124,0.15)'); sh.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = sh; g.fillRect(0, 0, W, H); g.restore();
+      // the window's light lies on the far wall at the right, in two cut bands
+      g.save(); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(196,202,196,0.16)'; g.fill(S().poly([[1180, -60], [2000, -60], [2000, 1140], [1440, 1140]]).path(3, 1202)); g.fillStyle = 'rgba(196,202,196,0.12)'; g.fill(S().poly([[1460, -60], [2000, -60], [2000, 1140], [1700, 1140]]).path(3, 1203)); g.restore();
+      // the fridge, cream card, its door seam, its handle; the strip under its red magnet
+      const fr = GG.piece(g, S().rect(-60, -60, 640, 1260), { fill: '#BDB8AC', rough: 1.1, seed: 1204, tex: 0.6, kind: 'card', lift: [12, 6], liftAlpha: 0.5, liftBlur: 16 });
+      g.save(); g.clip(fr); g.fillStyle = 'rgba(70,66,60,0.35)'; g.fillRect(500, -60, 80, 1260); g.fillStyle = 'rgba(60,58,54,0.45)'; g.fillRect(-60, 690, 640, 7); g.restore();
+      g.fillStyle = '#8E8A80'; g.fillRect(470, 300, 16, 330);
+      const st = GG.photoStrip({ w: 124, h: 430, seed: 3, scale: 1.1 });
+      g.save(); g.translate(250, 400); g.rotate(-0.045); g.fillStyle = 'rgba(40,36,34,0.3)'; g.fillRect(-34, -118, 80, 260); g.drawImage(st, -40, -124, 78, 254); g.restore();
+      g.fillStyle = '#A8392F'; g.beginPath(); g.ellipse(254, 282, 14, 12, 0, 0, 7); g.fill();
+      // the pendant over the counter, unlit by day
+      g.fillStyle = '#3A3A38'; g.fillRect(1236, -60, 5, 150); GG.piece(g, S().poly([[1170, 150], [1306, 150], [1352, 236], [1124, 236]]), { fill: '#3E3E3C', rough: 0.6, seed: 1205, tex: 0.4, lift: [4, 8], liftAlpha: 0.45 });
+      // the counter's end at hip height across the right of the frame
+      GG.piece(g, S().rect(560, 880, 1460, 300), { fill: '#5A544C', rough: 1.2, seed: 1206, tex: 0.6, kind: 'card', lift: [0, -10], liftAlpha: 0.45 });
+      const top = GG.piece(g, S().rect(540, 852, 1480, 40), { fill: '#9A8A74', rough: 1, seed: 1207, tex: 0.5, kind: 'card', lift: [0, 8], liftAlpha: 0.5 }); GG.crescent(g, top, 0, -5, '#B8A68C', 0.8);
+      // the lens is on him: everything behind him is soft
+      const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); tg.filter = 'blur(7px)'; tg.drawImage(cv, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(tmp, 0, 0);
+    });
+  };
+  // him, close, against the kitchen: he faces screen right (toward her), the bag held low in both hands
+  K.himClose = function (c, lt, o) {
+    o = o || {};
+    if (o.z) K.push(c, 820, 520, o.z);
+    c.g.drawImage(K.kitchenPlate(c), 0, 0);
+    return RIG.draw(c, 'him', 'bag', { x: 830, y: 500, s: 414, light: K.kitchenLight(), t: lt, tau: 0.3, zip: o.zip || 0, crop: 3.2, breath: o.breath, blink: o.blink, face: o.face });
+  };
+  // her, close: the pale rectangle and the window's light behind her (between/her); she faces screen left (toward him)
+  K.herClose = function (c, lt, o) {
+    o = o || {};
+    const V = LV().between, sh = V.shots.her, A = sh.anchors;
+    if (o.z) K.push(c, 1180, 520, o.z);
+    V.back(c, lt, { tod: 'day', shot: 'her' });
+    const s = 0.23 * A.herBetween[2], x = A.herBetween[0] + 30, y = A.herBetween[1] - (o.lift == null ? 70 : o.lift);
+    const L = K.setLight(sh.lights.day, { rig: o.phoneAt ? { phone: o.phoneAt, phoneCol: '#C8EEF2', phoneK: o.phoneK == null ? 0.5 : o.phoneK } : {} });
+    return RIG.draw(c, 'her', o.pose || 'stand', Object.assign({ x, y, s, light: L, t: o.still ? null : lt, flip: true, crop: 3.2, face: o.face, blink: o.blink }, o.p || {}));
+  };
+  // a phone held in one hand, the hand placed so the phone lands at P (world): the rig's true-size grip. Draws the hand, the phone
+  // (gloss), then the thumb and fingertips over the glass. o: {who, pose ('thumb' | 'phone'), fore, flip, reach, tap, light, phone:
+  // PHONE params (screen, state, env...)}. Returns {hand, info}
+  const GRIP = {};
+  K.heldPhone = function (c, P, h, o) {
+    const who = o.who || 'him', pose = o.pose || 'thumb', s = h / 1.03, fore = o.fore || [0.3, 1], flip = !!o.flip;
+    const gk = [who, pose, Math.round(s), fore.join(','), flip, o.rot || 0].join('|');
+    if (!GRIP[gk]) {   // the offset from the wrist to the phone's centre, measured once on a scratch canvas
+      const tg = OTM.makeCanvas(16, 16).getContext('2d');
+      const pr = RIG.hand(c, who, pose, { x: 0, y: 0, s, fore, flip, rot: o.rot, light: o.light, target: tg, reach: o.reach, tap: o.tap });
+      GRIP[gk] = pr.phone ? { dx: pr.phone.x, dy: pr.phone.y, angle: pr.phone.angle, h: pr.phone.h } : { dx: 0, dy: -0.5 * h, angle: 0, h };
+    }
+    const G = GRIP[gk], hp = { x: P[0] - G.dx, y: P[1] - G.dy, s, fore, flip, rot: o.rot, light: o.light, reach: o.reach, tap: o.tap };
+    const hand = RIG.hand(c, who, pose, hp);
+    const ph = Object.assign({ x: P[0], y: P[1], h: G.h, roll: G.angle }, o.phone || {});
+    const info = PHONE.where(ph, c);
+    if (o.glow !== false) PHONE.glow(c, Object.assign({ info, k: 0.55, r: G.h * 1.8 }, o.glow || {}));
+    PHONE.draw(c, ph);
+    RIG.hand(c, who, pose, Object.assign({}, hp, { only: ['thumb', 'dist'], target: 'gl', shadow: { alpha: 0.28 } }));
+    return { hand, info };
+  };
+
+  // one arm of a figure whose body is off the frame (an insert): the rig's own sleeve, cuff and hand, from the shoulder. o: {who,
+  // costume, side ('R' | 'L'), x, y, s (the off-frame figure's head and scale), flip, tau, light, wrist: [x, y] world, bend, hand,
+  // hp, phone: PHONE params or null (the phone in the grip, drawn at the hand's true-size phone)}. Returns {fig, hand, info}
+  const ARMOFF = {};
+  K.arm = function (c, o) {
+    const side = o.side || 'R', sgn = o.flip ? -1 : 1;
+    if (o.phoneAt && !o._probe) {   // place the grip so the phone's centre lands at phoneAt: measure the wrist -> phone offset once
+      const k = [o.who, o.s, o.rot, o.flip, JSON.stringify(o.hp || {})].join('|');
+      if (!ARMOFF[k]) {
+        const tg = K._probe || (K._probe = OTM.makeCanvas(W, H).getContext('2d')); tg.setTransform(1, 0, 0, 1, 0, 0); tg.clearRect(0, 0, W, H);
+        const w0 = [W / 2, H * 0.8], sh0 = [w0[0] + o.shoulder[0] - o.phoneAt[0], w0[1] + o.shoulder[1] - o.phoneAt[1]];
+        const r = K.arm(c, Object.assign({}, o, { _probe: true, wrist: w0, shoulder: sh0, phone: null, target: tg }));
+        ARMOFF[k] = r.hand && r.hand.phone ? [r.hand.phone.x - w0[0], r.hand.phone.y - w0[1]] : [0, -0.5 * o.s];
+      }
+      o = Object.assign({}, o, { wrist: [o.phoneAt[0] - ARMOFF[k][0], o.phoneAt[1] - ARMOFF[k][1]] });
+    }
+    if (o.shoulder) {   // place the off-frame figure by its shoulder (world px) instead of its head
+      const Pp = RIG.PROP[o.who], ct = Math.cos(o.tau || 0), sx = (side === 'R' ? 1 : -1) * Pp.sw * ct;
+      o = Object.assign({}, o, { x: o.shoulder[0] - sgn * sx * o.s, y: o.shoulder[1] - Pp.shY * o.s });
+    }
+    const to = [(o.wrist[0] - o.x) / o.s * sgn, (o.wrist[1] - o.y) / o.s];
+    const spec = Object.assign({ to, bend: o.bend || -1, hand: o.hand || 'thumb', hp: o.hp || {}, front: true }, o.rot != null ? { handAt: to, handRot: o.rot } : {}, o.spec || {});
+    const r = RIG.person({ who: o.who, costume: o.costume || (o.who === 'her' ? 'coat' : 'sweater'), tau: o.tau || 0, head: false, arms: side === 'R' ? { R: spec } : { L: spec }, legs: false, crop: 4 });
+    const ops = r.ops.filter(op => (op.type === 'hand' && op.name === side) || (op.key && op.key.indexOf('arm' + side + ',') === 0));
+    const fig = RIG.drawFigure(c, { who: o.who, x: o.x, y: o.y, s: o.s, flip: o.flip, light: o.light, breath: o.breath || 0, ops, target: o.target });
+    const hand = fig.hands[side]; let info = null;
+    if (o.phone && hand && hand.phone) {
+      const hp2 = hand.phone, P = Object.assign({ x: hp2.x, y: hp2.y, h: hp2.h, roll: hp2.angle }, o.phone);
+      info = PHONE.where(P, c);
+      if (o.glow !== false) PHONE.glow(c, Object.assign({ info, k: 0.55, r: hp2.h * 1.8 }, o.glow || {}));
+      PHONE.draw(c, P); fig.over(c);
+    }
+    return { fig, hand, info };
+  };
+
+  // =================================================================================================================================
+  // Q09
+  // =================================================================================================================================
+  const setLight = K.setLight, push = K.push;
+  const ROOM = { tod: 'day' };
   const W_HER = [3.5, 1.56, 3.0];          // standing over the couch, by its left cushion (room view)
 
-  // ------------------------------------------------------------------ the POV hands at the wardrobe doors (shot 1)
-  // a sweater sleeve, cut once: drawn along the forearm from the wrist off the bottom of the frame
-  function sleeve(c) {
-    return c.cache('Q09|sleeve', (g) => {
-      const S = OTM.S; const sh = GG.blob([[40, 18], [120, 0], [214, 14], [236, 140], [250, 700], [20, 700], [14, 140]]);
-      const p = GG.piece(g, sh, { fill: '#4A4541', rough: 1.4, seed: 931, tex: 0.75, kind: 'wool', lift: [6, 10], liftAlpha: 0.5, liftBlur: 10 });
-      GG.crescent(g, p, -12, -6, '#7A746C', 0.9); GG.crescent(g, p, 14, 4, '#2C2826', 0.8);
-      const cf = GG.blob([[34, 14], [124, -2], [218, 12], [226, 70], [126, 62], [26, 74]]);
-      const cp = GG.piece(g, cf, { fill: '#524D48', rough: 1.1, seed: 932, tex: 0.75, kind: 'wool', lift: [3, 5], liftAlpha: 0.5 }); GG.crescent(g, cp, -6, -6, '#8E877E', 0.9);
-      g.save(); g.clip(cp); g.strokeStyle = 'rgba(30,26,24,0.35)'; g.lineWidth = 3; for (let k = 0; k < 14; k++) { g.beginPath(); g.moveTo(40 + k * 13, 0); g.lineTo(38 + k * 13, 80); g.stroke(); } g.restore();
-    }, 260, 720);
-  }
-  // draw the sleeve so its cuff sits at the wrist, running toward `to` (a point off the frame)
-  function drawSleeve(c, wrist, to, scale, flip) {
-    const cv = sleeve(c), g = c.g; const a = Math.atan2(to[1] - wrist[1], to[0] - wrist[0]) - Math.PI / 2;
-    g.save(); g.translate(wrist[0], wrist[1]); g.rotate(a); if (flip) g.scale(-1, 1); g.scale(scale, scale); g.drawImage(cv, -125, -30); g.restore();
-  }
+  // ------------------------------------------------------------------ 0–6 the wardrobe: from behind him, he opens it, steps aside
   // a door knob's screen point as the doors open (the wardrobe's own geometry, bedroom.js)
   function knob(which, a) {
     const cam = BV().wardrobe.cam, ang = a * 1.83, hz = which === 'left' ? 1.2 : 0, dirz = which === 'left' ? -1 : 1;
-    const x = -1.80 + 0.9 * 0.6 * Math.sin(ang), z = hz + dirz * 0.9 * 0.6 * Math.cos(ang); const q = cam.p(x, 1.02, z); return [q[0], q[1], q[2], cam.k(x, 1.02, z)];
+    const x = -1.80 + 0.9 * 0.6 * Math.sin(ang), z = hz + dirz * 0.9 * 0.6 * Math.cos(ang); return cam.p(x, 1.02, z);
   }
   function wardrobeOpen(c, st, lt) {
-    const V = BV().wardrobe; const tt = twos(lt);
-    // his hands are on the two knobs from the first frame; he pulls (0.45), the doors come with his hands to about half open (1.25),
-    // he lets go and they swing on and settle; the bare hangers knock together
+    const V = BV().wardrobe, A = V.anchors; const tt = twos(lt);
+    // his hands on the two knobs; he pulls (0.45), the doors come with his hands (to 1.3) and swing on; he steps back to his side
     const doors = E.inOutSine(seg(lt, 0.45, 2.05));
     const swing = lt < 1.4 ? 0 : 0.9 * Math.exp(-(lt - 1.4) * 0.9);
     V.back(c, lt, { doors, swing, bag: true });
-    const L = RIG.light('day'), cam = V.cam;
-    const rel = 1.25, drop = E.inQuad(seg(tt, rel, rel + 0.45));
-    if (drop >= 1) return;
-    const held = E.inOutSine(seg(Math.min(tt, rel), 0.45, 2.05));
-    [['left', -1], ['right', 1]].forEach(([wh, sg]) => {
-      const kn = knob(wh, held), k = kn[3];
-      const sc = Math.round(k / 732 * 4) / 4;                 // the hand grows as the knob comes toward us (in quarter steps: few sculpts)
-      const wr = [kn[0] - sg * 38 * sc + sg * 160 * drop, kn[1] + 62 * sc + 560 * drop];
-      drawSleeve(c, [wr[0] + sg * 18 * sc, wr[1] + 34 * sc], [wr[0] + sg * 700, wr[1] + 1250], 0.66 * sc, sg < 0);
-      RIG.hand(c, 'him', 'door', { x: wr[0], y: wr[1], s: 150 * sc, light: L, fore: [sg * 0.55, 1], foreLen: 0.35, flip: sg > 0, tight: 0.4 });
-    });
+    const L = RIG.light('day', { keys: [{ dir: [-0.8, -0.3, -0.45], col: '#E6EBEE', k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [-0.82, -0.5] } });
+    const s = 0.23 * A.head[2] * 1.12;
+    const step = E.inOutSine(seg(tt, 2.5, 3.6)), x = lerp(960, 640, step), y = A.head[1] + 30 + 10 * Math.sin(Math.PI * step);
+    const held = E.inOutSine(seg(Math.min(tt, 1.3), 0.45, 2.05)), let_ = E.inOutSine(seg(tt, 1.25, 1.8));
+    const arm = (wh, sg) => { const k = knob(wh, held); const kf = [(k[0] - x) / s, (k[1] - y) / s]; const rest = [sg * 0.62, 2.95];
+      return { to: [lerp(kf[0], rest[0], let_), lerp(kf[1], rest[1], let_)], bend: sg, hand: false, front: true }; };
+    RIG.draw(c, 'him', 'stand', { view: 'back', x, y, s, light: L, t: lt, crop: 4.0, armL: arm('left', -1), armR: arm('right', 1), face: { yaw: Math.PI - lerp(0.1, 0.55, step), pitch: 0.08 } });
   }
 
-  // ------------------------------------------------------------------ the shelf: his hand lifts the bag; the clean rectangle (shot 2)
+  // ------------------------------------------------------------------ 6–12 the shelf: his arm reaches up, lifts the bag down
   function shelfShot(c, st, lt) {
     const V = BV().shelf, A = V.anchors; const tt = twos(lt);
     const lifted = tt >= 8.08;
-    // a very slow push toward where it sat
-    const z = 1 + 0.035 * E.inOutSine(seg(lt, 6, 12.5));
-    push(c, 1423, 760, z);
+    push(c, 1423, 760, 1 + 0.035 * E.inOutSine(seg(lt, 6, 12.5)));
     V.back(c, lt, { bag: !lifted, doors: 1 });
-    const L = RIG.light('day');
-    // the hand: in from the lower right (7.0–8.0), closes on the bag's top (8.0), lifts it up and out (8.1–9.3)
+    const L = RIG.light('day', { keys: [{ dir: [-0.8, -0.4, -0.3], col: '#E6EBEE', k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [-0.82, -0.5] } });
+    // the arm: up from his shoulder below the frame (7.0–8.0), the hand closes on the bag's top (8.0), lifts it up and toward him (8.1–9.4)
     const inK = E.inOutSine(seg(tt, 7.0, 8.0)), up = E.inOutSine(seg(tt, 8.1, 9.4));
     if (tt < 7.0 || up >= 1) return;
-    const bag = A.bag; const grip = [bag[0] + 30, bag[1] - 70];
-    const start = [1700, 1250];
-    let wr = [lerp(start[0], grip[0] + 70, inK), lerp(start[1], grip[1] + 120, inK)];
-    const lift = [lerp(0, 380, up), lerp(0, -260, up) + lerp(0, 900, up * up)];
+    const bag = A.bag, s = 540, fx = 1200, fy = 1440;
+    const grip = [bag[0] + 10, bag[1] - 40], start = [1520, 1240];
+    let wr = [lerp(start[0], grip[0], inK), lerp(start[1], grip[1], inK)];
+    const lift = [lerp(0, 140, up), lerp(0, -200, up) + lerp(0, 820, up * up)];
     wr = [wr[0] + lift[0], wr[1] + lift[1]];
-    const fore = [1, 1.25];
     if (lifted) SETS.bedroom.bag(c, bag[0] + lift[0], bag[1] + lift[1] - 6 * Math.sin(up * 3), 1614, -0.12 * up);
-    drawSleeve(c, [wr[0] + 40, wr[1] + 60], [wr[0] + 900, wr[1] + 1200], 1.25, false);
-    RIG.hand(c, 'him', 'take', { x: wr[0], y: wr[1], s: 300, light: L, fore, foreLen: 0.45, close: tt < 8.0 ? 0.3 : 0.85 });
+    RIG.draw(c, 'him', 'stand', { view: 'back', x: fx, y: fy, s, light: L, t: lt, armL: { a1: -0.1, a2: 0.1, hand: false },
+      armR: { to: [(wr[0] - fx) / s, (wr[1] + 0.25 * s - fy) / s], bend: -1, hand: 'take', hp: { close: tt < 8.0 ? 0.3 : 0.85 }, over: true } });
   }
 
-  // ------------------------------------------------------------------ the wardrobe, close: the buzz through the wall (shot 3)
+  // ------------------------------------------------------------------ 12–17 close: the buzz through the wall; rigid, eyes shut
   function wardrobeClose(c, st, lt) {
-    const V = BV().wardrobe, A = V.anchors; const tt = twos(lt);
-    push(c, 700, 500, 1.42 + 0.03 * E.inOutSine(seg(lt, 12, 17)));
-    V.back(c, lt, { doors: 1, bag: false, res: 2, swing: 0 });
-    const L = RIG.light('day');
-    // before the buzz: eyes on the bag in his hands, thumb on the zip. The buzz (12.5): the head comes up, then he shuts his eyes
+    const V = BV().wardrobe; const tt = twos(lt);
+    // the open wardrobe behind him, out of focus (he stands well in front of it)
+    const bg = K.soft(c, 'Q09|wardrobeSoft', 6, (fc, tg) => { tg.setTransform(1.3, 0, 0, 1.3, 960 - 1.3 * 860, 540 - 1.3 * 470); V.back(fc, 0, { doors: 1, bag: false, swing: 0 }); });
+    c.g.drawImage(bg, 0, 0);
+    push(c, 760, 520, 1 + 0.03 * E.inOutSine(seg(lt, 12, 17)));
+    const L = RIG.light('day', { keys: [{ dir: [-0.75, -0.3, 0.55], col: '#E6EBEE', k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [-0.82, -0.55] } });
+    // eyes on the bag in his hands, thumb on the zip. The buzz (12.5): his head comes up, toward the wall; then he shuts his eyes
     const up = E.outCubic(seg(tt, 12.62, 12.95)), shut = E.inOutSine(seg(tt, 14.0, 14.7));
-    const face = { yaw: lerp(0.3, 0.16, up), pitch: lerp(0.4, 0.06, up), lids: lerp(lerp(0.34, 0.86, up), 0, shut), gaze: [lerp(0, 0.2, up), lerp(0.6, 0.05, up)], brows: lerp(0, 0.25, up) };
-    const jolt = tt >= 12.58 && tt < 12.75 ? -3 : 0;
-    RIG.draw(c, 'him', 'bag', { x: 640, y: A.head[1] + 6 + jolt, s: 0.23 * A.head[2], light: L, t: lt, crop: 4.2, tau: 0.32, zip: tt < 12.6 ? tt * 0.75 : 12.6 * 0.75, breath: tt < 12.6 ? undefined : 0, blink: false, face });
+    const face = { yaw: lerp(0.32, 0.12, up), pitch: lerp(0.42, 0.06, up), lids: lerp(lerp(0.34, 0.86, up), 0, shut), gaze: [lerp(0, 0.25, up), lerp(0.6, 0.05, up)], brows: lerp(0, 0.25, up) };
+    const jolt = tt >= 12.58 && tt < 12.75 ? -4 : 0;
+    RIG.draw(c, 'him', 'bag', { x: 760, y: 430 + jolt, s: 380, light: L, t: lt, crop: 3.3, tau: 0.3, zip: tt < 12.6 ? tt * 0.75 : 12.6 * 0.75, breath: tt < 12.6 ? undefined : 0, blink: false, face });
   }
 
-  // ------------------------------------------------------------------ the room by day (shots 4 and 6)
+  // ------------------------------------------------------------------ 17–22 the room by day: he comes out fast; too late
   function phoneOnCushion(c, V) {
     const a = V.anchors.phoneCushion;
     const P = { x: a[0] + 2, y: a[1] - 3, h: 0.15 * a[2] * 0.98, pitch: 1.32, spin: 0.35, screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.08 };
-    const info = PHONE.where(P, c);
-    PHONE.glow(c, { info, k: 0.5, sy: 0.32, r: a[2] * 0.42 });
+    PHONE.glow(c, { info: PHONE.where(P, c), k: 0.5, sy: 0.32, r: a[2] * 0.42 });
     PHONE.draw(c, P);
-    return info;
   }
-  // her, standing over the couch (her body turned toward it, her head down to the phone); `look` 0..1 turns her head to him
-  function herOverCouch(c, V, lt, o) {
-    o = o || {}; const tt = twos(lt); const p = V.project(W_HER); const L = o.light;
-    const look = o.look || 0, reach = o.reach || 0;
-    const face = { yaw: lerp(0.62, -0.42, look), pitch: lerp(0.5, 0.1, look), lids: lerp(0.5, 0.72, look), gaze: [lerp(0.2, -0.35, look), lerp(0.55, 0.05, look)], mouth: o.mouth || 0 };
-    const armR = reach > 0 ? { to: [lerp(0.95, 1.55, reach), lerp(2.9, 3.3, reach)], bend: -1, hand: 'take', hp: { close: 0.2, flip: true }, front: true } : { a1: -0.05, a2: 0.1, hand: 'relax' };
-    return RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1] + reach * 4, s: 0.23 * p[2], light: L, t: lt, tau: 0.5 + 0.1 * reach, armR, armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true }, face });
-  }
-  // him, in his half in front of the counter, the bag held low; or walking in fast from the bedroom (frame left)
-  function himRoom(c, V, lt, o) {
-    o = o || {}; const tt = twos(lt); const a = V.anchors.himBetween, L = o.light, s = 0.23 * a[2];
-    if (o.walk != null) {
-      return RIG.draw(c, 'him', 'walk', { x: o.walk, y: a[1], s, light: L, t: lt, phase: o.phase, carry: 'bag', face: { yaw: 1.05, pitch: 0.12, lids: 0.75 } });
-    }
-    return RIG.draw(c, 'him', 'bag', { x: a[0], y: a[1], s, light: L, t: lt, tau: o.tau == null ? 0.42 : o.tau, zip: o.zip || 0, face: o.face });
-  }
-  function roomBack(c, lt) { const V = LV().room; V.back(c, lt, ROOM); V.front(c, lt, ROOM); return V; }
   function roomArrive(c, st, lt) {
-    const V = roomBack(c, lt); const L = setLight(V.shots.wide.lights.day); const tt = twos(lt);
+    const V = LV().room; V.back(c, lt, ROOM); V.front(c, lt, ROOM);
+    const L = setLight(V.shots.wide.lights.day); const tt = twos(lt);
     phoneOnCushion(c, V);
-    herOverCouch(c, V, lt, { light: L });
-    // he comes out of the bedroom fast (17.2) and stops short (18.9): too late
-    const a = V.anchors.himBetween;
+    const p = V.project(W_HER);
+    RIG.draw(c, 'her', 'stand', { x: p[0], y: p[1], s: 0.23 * p[2], light: L, t: lt, tau: 0.5, armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true },
+      face: { yaw: 0.62, pitch: 0.5, lids: 0.5, gaze: [0.2, 0.55] } });
+    const a = V.anchors.himBetween, s = 0.23 * a[2];
     if (tt < 18.92) {
       const u = seg(tt, 17.25, 18.92); const x = lerp(-150, a[0] - 20, u);
-      if (tt >= 17.25) himRoom(c, V, lt, { light: L, walk: x, phase: 0.5 + (tt - 17.25) * 1.5 });
+      if (tt >= 17.25) RIG.draw(c, 'him', 'walk', { x, y: a[1], s, light: L, t: lt, phase: 0.5 + (tt - 17.25) * 1.5, carry: 'bag', face: { yaw: 1.05, pitch: 0.12, lids: 0.75 } });
     } else {
       const tau = tt < 19.05 ? 0.95 : tt < 19.2 ? 0.66 : 0.42;
-      himRoom(c, V, lt, { light: L, tau, face: { yaw: 0.55, pitch: 0.16, lids: 0.8, gaze: [0.35, 0.1] } });
+      RIG.draw(c, 'him', 'bag', { x: a[0], y: a[1], s, light: L, t: lt, tau, face: { yaw: 0.55, pitch: 0.16, lids: 0.8, gaze: [0.35, 0.1] } });
     }
   }
-  function roomTalk(c, st, lt) {
-    const V = roomBack(c, lt); const L = setLight(V.shots.wide.lights.day); const tt = twos(lt);
-    const mH = RIG.mouthFor('L012', lt - 27.2) || RIG.mouthFor('L014', lt - 31.5);
-    const mS = RIG.mouthFor('L013', lt - 29.4) || RIG.mouthFor('L015', lt - 36.0);
-    phoneOnCushion(c, V);
-    // she looks up at him on his line (28.3), and back down to the phone as she says she is not talking about the text (36.9)
-    const look = key(tt, [[28.3, 0], [28.9, 1, 'outCubic'], [36.7, 1], [37.3, 0.25]]);
-    const reach = E.inOutSine(seg(tt, 37.6, 38.4));
-    herOverCouch(c, V, lt, { light: L, look, mouth: mS, reach });
-    // him: on "Don't look at my phone" he looks at her; on "It's just a friend from work" his eyes go to the bag
-    const away = key(tt, [[31.3, 0], [31.9, 1], [35.6, 1], [36.2, 0.4]]);
-    himRoom(c, V, lt, { light: L, tau: 0.42, zip: tt > 32 ? (tt - 32) * 0.75 : 0, face: { yaw: lerp(0.55, 0.3, away), pitch: lerp(0.16, 0.42, away), lids: lerp(0.8, 0.42, away), gaze: [lerp(0.35, 0.1, away), lerp(0.1, 0.55, away)], mouth: mH, brows: lerp(0.15, 0, away) } });
-  }
 
-  // ------------------------------------------------------------------ INSERT: the lock screen on the cushion (shot 5)
+  // ------------------------------------------------------------------ 22–27 INSERT: the lock screen on the cushion
   function cushionPlate(c) {
     return c.cache('Q09|cushion', (g) => {
       const S = OTM.S; g.fillStyle = '#5E5A53'; g.fillRect(0, 0, W, H);
-      // two seat cushions meeting on a soft seam, seen from above, a little out of focus; the window's light on the right one
       const a = GG.blob([[-80, -80], [1180, -80], [1060, 400], [1000, 760], [1040, 1180], [-80, 1180]]);
       const pa = GG.piece(g, a, { fill: '#6B665E', rough: 2.2, seed: 941, tex: 0.7, kind: 'cloth', lift: [10, 12], liftAlpha: 0.55, liftBlur: 22 });
       GG.crescent(g, pa, 18, 10, '#4E4A44', 0.7);
       const b = GG.blob([[1230, -80], [2000, -80], [2000, 1180], [1110, 1180], [1080, 780], [1130, 380]]);
       const pb = GG.piece(g, b, { fill: '#716C64', rough: 2.2, seed: 942, tex: 0.7, kind: 'cloth', lift: [-8, 10], liftAlpha: 0.55, liftBlur: 22 });
       GG.crescent(g, pb, -18, -6, '#8E897F', 0.85);
-      // the window's slant, cut in two bands
       g.save(); g.clip(pb); g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgba(200,204,196,0.16)'; g.fill(S().poly([[1500, -100], [2100, -100], [2100, 1200], [1220, 1200]]).path(3, 943)); g.fillStyle = 'rgba(200,204,196,0.12)'; g.fill(S().poly([[1700, -100], [2100, -100], [2100, 1200], [1500, 1200]]).path(3, 944)); g.restore();
-      // the dent the phone has pressed, and the weave's slack
       g.save(); g.filter = 'blur(28px)'; g.fillStyle = 'rgba(24,22,20,0.32)'; g.beginPath(); g.ellipse(960, 560, 380, 470, -0.1, 0, 7); g.fill(); g.restore();
       [[[200, 300], [420, 360], [600, 330]], [[260, 900], [480, 860], [700, 920]], [[1400, 200], [1600, 260], [1820, 230]], [[1380, 860], [1600, 820], [1840, 880]]].forEach(cv => { g.save(); g.lineCap = 'round'; g.filter = 'blur(3px)'; g.strokeStyle = 'rgba(40,36,32,0.45)'; g.lineWidth = 8; g.stroke(GG.spline(cv, false)); g.restore(); });
-      // soften the whole plate: the lens is on the glass
       const tmp = OTM.makeCanvas(W, H), tg = tmp.getContext('2d'); tg.filter = 'blur(6px)'; tg.drawImage(g.canvas, 0, 0); g.clearRect(0, 0, W, H); g.drawImage(tmp, 0, 0);
     });
   }
   function lockInsert(c, st, lt) {
-    const z = 1 + 0.07 * E.inOutSine(seg(lt, 22, 27));
-    c.camera({ x: 960, y: 520, zoom: z });
+    c.camera({ x: 960, y: 520, zoom: 1 + 0.07 * E.inOutSine(seg(lt, 22, 27)) });
     c.g.drawImage(cushionPlate(c), -20, -20, W + 40, H + 40);
     const P = { x: 960, y: 540, h: 880, roll: -0.07, pitch: 0.12, persp: 2600, screen: 'lock', state: CALL(), env: '#C0C4C2', sheen: 0.06, shadow: { dx: 26, dy: 34, blur: 46, alpha: 0.55 } };
-    const info = PHONE.where(P, c);
-    PHONE.glow(c, { info, k: 0.55, r: 1300 });
+    PHONE.glow(c, { info: PHONE.where(P, c), k: 0.55, r: 1300 });
     PHONE.draw(c, P);
   }
 
-  // ------------------------------------------------------------------ between (B3): she turns the screen to him (shot 7)
+  // ------------------------------------------------------------------ 27–38.5 the exchange, close: him (kitchen side), her (the empty half)
+  const mHim = lt => Math.min(2, RIG.mouthFor('L012', lt - 27.2) || RIG.mouthFor('L014', lt - 31.5));
+  const mHer = lt => RIG.mouthFor('L013', lt - 29.4) || RIG.mouthFor('L015', lt - 36.0);
+  // 27.0: "Don't look at my phone." He looks at her: too sharp, then ashamed of it
+  function himDont(c, st, lt) {
+    const tt = twos(lt);
+    K.himClose(c, lt, { zip: 0, face: { yaw: 0.32, pitch: 0.12, lids: key(tt, [[27, 0.8], [28.4, 0.8], [28.9, 0.62]]), gaze: [0.35, 0.05], brows: 0.25, mouth: mHim(lt) } });
+  }
+  // 29.2: "What is this?" She looks at him, the phone below her, out of frame
+  function herWhat(c, st, lt) {
+    const tt = twos(lt);
+    K.herClose(c, lt, { face: { yaw: 0.45, pitch: 0.1, lids: key(tt, [[29.2, 0.6], [29.8, 0.72]]), gaze: [0.4, 0.06], mouth: mHer(lt) }, p: { tau: 0.5, armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true } } });
+  }
+  // 31.3: "It's just a friend from work. It's nothing. It's none of your business." His eyes go to the bag; his thumb finds the zip
+  function himFriend(c, st, lt) {
+    const tt = twos(lt);
+    const away = key(tt, [[31.6, 0], [32.4, 1], [34.0, 1], [34.5, 0.55], [35.2, 0.85]]);
+    K.himClose(c, lt, { zip: Math.max(0, tt - 32.4) * 0.75, face: { yaw: lerp(0.32, 0.18, away), pitch: lerp(0.12, 0.42, away), lids: lerp(0.72, 0.36, away), gaze: [lerp(0.35, 0.05, away), lerp(0.05, 0.55, away)], brows: lerp(0.25, 0, away), mouth: mHim(lt) } });
+  }
+  // 35.8: "I'm not talking about the text." She holds his eyes, then looks down at the phone and bends to it (cut on the look)
+  function herText(c, st, lt) {
+    const tt = twos(lt);
+    const down = E.inOutSine(seg(tt, 37.6, 38.3));
+    K.herClose(c, lt, { face: { yaw: lerp(0.45, 0.2, down), pitch: lerp(0.1, 0.5, down), lids: lerp(0.7, 0.45, down), gaze: [lerp(0.4, 0.1, down), lerp(0.06, 0.55, down)], mouth: mHer(lt) },
+      p: { tau: lerp(0.5, 0.62, down), armL: { to: [-0.15, 2.5], bend: 1, hand: 'strap', front: true }, armR: { to: [lerp(0.4, 0.9, down), lerp(2.9, 3.2, down)], bend: -1, hand: 'relax', hp: { close: 0.3, flip: true } } } });
+  }
+
+  // ------------------------------------------------------------------ 38.5–43.3 between (B3): she turns the screen to him
   function between(c, st, lt) {
     const V = LV().between; const A = V.anchors; const tt = twos(lt);
     V.back(c, lt, { tod: 'day' });
     const Ls = V.shots.two.lights.day;
-    // her: the phone comes up from her side and turns to him (38.5–39.9), then holds there between them
     const hold = key(tt, [[38.5, 0.85], [39.9, 0, 'inOutSine']]);
     const her0 = A.herBetween, s = 0.23 * her0[2];
-    const mS = RIG.mouthFor('L016', lt - 43.5);
-    // where the phone will be (for her face's light): measured from her figure once it is drawn; first pass uses the anchor
     const L = setLight(Ls, { rig: { phone: [A.phoneHeld[0] + 120, A.phoneHeld[1] - 20], phoneCol: '#C8EEF2', phoneK: 0.45 } });
     const her = RIG.draw(c, 'her', 'phone', { x: her0[0] + 20, y: her0[1], s, light: L, t: lt, flip: true, hold, tau: 0.42,
-      face: { yaw: lerp(0.5, 0.6, hold), pitch: lerp(0.08, 0.36, hold), lids: lerp(0.68, 0.5, hold), gaze: [lerp(0.42, 0.1, hold), lerp(0.08, 0.5, hold)], mouth: mS } });
-    // him: over his shoulder, bowed to the bag, his thumb on the broken zip; he looks at neither of them
+      face: { yaw: lerp(0.5, 0.6, hold), pitch: lerp(0.08, 0.36, hold), lids: lerp(0.68, 0.5, hold), gaze: [lerp(0.42, 0.1, hold), lerp(0.08, 0.5, hold)] } });
+    // him: over his shoulder, bowed to the bag; his head turned with his shoulders (a lost profile), his eyes on neither of them
     const h0 = A.himBetween;
-    RIG.draw(c, 'him', 'bag', { x: h0[0] + 10, y: h0[1] + 10, s: 0.23 * h0[2], light: setLight(Ls), t: lt, view: 'back', zip: tt * 0.6, crop: 4.6 });
-    // the phone in her hand (gloss), its screen to him; its cool light on her chin and coat
+    RIG.draw(c, 'him', 'bag', { x: h0[0] + 10, y: h0[1] + 10, s: 0.23 * h0[2], light: setLight(Ls), t: lt, view: 'back', zip: tt * 0.6, crop: 4.6, face: { yaw: 2.0, pitch: 0.4, roll: 0.35, lids: 0.3, gaze: [0, 0.7] } });
     if (her.phone) {
-      const ph = her.phone; const P = { x: ph.x, y: ph.y, h: ph.h * 1.02, roll: ph.angle, yaw: lerp(-0.42, -2.6, hold * hold), screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.07 };
-      const info = PHONE.where(P, c);
-      PHONE.glow(c, { info, k: 0.42, r: ph.h * 2.6 });
+      const ph = her.phone; const P = { x: ph.x, y: ph.y, h: ph.h, roll: ph.angle, yaw: lerp(-0.3, -2.6, hold * hold), screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.07 };
+      PHONE.glow(c, { info: PHONE.where(P, c), k: 0.42, r: ph.h * 2.6 });
       PHONE.draw(c, P); her.over(c);
     }
   }
 
-  // ------------------------------------------------------------------ hands: his thumb worries the broken zip (shot 8)
-  // his front at hand height, without the head (the insert sees only his hands): the 'bag' pose, rebuilt from rig.js, head off
-  function bagHands(p) {
-    const z = p.zip || 0, bagC = [0.3, 2.86];
-    const hold = { type: 'paper', key: 'bagprop', box: [bagC[0] - 0.6, bagC[1] - 0.45, bagC[0] + 0.6, bagC[1] + 0.45], breath: 0.6, draw(pen) { RIG.bagShape(pen, bagC, 0.74); } };
-    const thumbAt = [bagC[0] + 0.38, bagC[1] - 0.02];
-    const thumb = { type: 'hand', name: 'thumb', pose: 'bag', p: { zip: z, only: 'thumb', flip: true, shadow: { alpha: 0.3 } }, at: thumbAt, fore: [1, 0.35], breath: 0.6 };
-    return RIG.person({ who: 'him', costume: 'sweater', tau: 0.45, lean: 0.06, shrug: 0.25, head: false,
-      arms: { L: { E: [-0.7, 2.42], W: [bagC[0] - 0.36, bagC[1] + 0.14], hand: 'offer', hp: { close: 0.45 }, front: true, order: 1 }, R: { E: [0.84, 2.38], W: thumbAt, hand: 'bag', hp: { zip: z, flip: true }, front: true, order: 2, prop: { after: hold } } },
-      legs: false, crop: 3.7, extra: { end: [thumb] } });
+  // ------------------------------------------------------------------ 43.3–50.5 over his shoulder: the screen between them (L016)
+  // his shoulder and the back of his head, close and out of focus at the left; her, the phone held up to him: the picture readable
+  K.hisShoulder = function (c) {
+    return K.soft(c, 'END|hisShoulder', 9, (fc, tg) => {
+      const L = RIG.light('day', { keys: [{ dir: [0.6, -0.4, -0.6], col: '#E6EBEE', k: 0.62, poster: [0.12, 0.5], levels: [0.55, 1] }], paper: { from: [0.82, -0.55] } });
+      RIG.draw(fc, 'him', 'stand', { view: 'back', x: 230, y: 330, s: 640, light: L, tau: 0.45, crop: 2.6, target: tg, breath: 0, blink: false, face: { yaw: Math.PI - 1.0, pitch: 0.3, roll: 0.15, lids: 0.3 } });
+    });
+  };
+  K.oss = function (c, lt, o) {
+    o = o || {};
+    const V = LV().between, sh = V.shots.her, A = sh.anchors;
+    K.push(c, 1100, 560, 1 + (o.zp || 0));
+    V.back(c, lt, { tod: 'day', shot: 'her' });
+    const s = 0.23 * A.herBetween[2] * 0.92;
+    const L = K.setLight(sh.lights.day, { rig: { phone: [800, 720], phoneCol: '#C8EEF2', phoneK: 0.5 } });
+    const her = RIG.draw(c, 'her', 'phone_up', { x: A.herBetween[0] + 120, y: A.herBetween[1] - 150, s, light: L, t: lt, flip: true, crop: 3.4, face: o.face });
+    if (her.phone) {
+      const ph = her.phone; const P = { x: ph.x, y: ph.y, h: ph.h * 1.1, roll: ph.angle, yaw: -0.18, screen: 'lock', state: CALL(), env: '#B8BEC0', sheen: 0.06 };
+      PHONE.glow(c, { info: PHONE.where(P, c), k: 0.5, r: ph.h * 2.4 });
+      PHONE.draw(c, P); her.over(c);
+    }
+    c.reset();
+    c.g.drawImage(K.hisShoulder(c), (o.dx || 0) + RIG.breath(lt, 0) * 0, RIG.breath(lt, 2.5));
+    return her;
+  };
+  function overHim(c, st, lt) {
+    const tt = twos(lt);
+    // she says it to him, steadily; at the end ("a waterfall") her eyes go to the phone a moment, and back
+    const look = key(tt, [[47.3, 0], [47.8, 1], [48.9, 1], [49.4, 0]]);
+    K.oss(c, lt, { zp: 0.03 * E.inOutSine(seg(lt, 43.3, 50.5)), face: { yaw: 0.5, pitch: lerp(0.06, 0.18, look), lids: lerp(0.68, 0.56, look), gaze: [lerp(0.42, 0.28, look), lerp(0.08, 0.35, look)], mouth: RIG.mouthFor('L016', lt - 43.5) } });
   }
+
+  // ------------------------------------------------------------------ 50.5–58 his hands: his thumb worries the broken zip
   function hands(c, st, lt) {
     const V = LV().hands; const tt = twos(lt);
-    push(c, 700, 720, 1 + 0.05 * E.inOutSine(seg(lt, 50.5, 58)));
+    push(c, 760, 700, 1 + 0.05 * E.inOutSine(seg(lt, 50.5, 58)));
     V.back(c, lt, { tod: 'day' });
     const L = setLight(V.shots.insert.lights.day);
     // her phone is just above the frame, held up between them: only its cool light reaches down into the empty half
     PHONE.glow(c, { x: 1180, y: -60, r: 900, tone: 'water', k: 0.5 });
-    const s = 430, bag = [700, 720];
-    const zip = 0.2 + Math.max(0, tt - 50.9) * 0.62;
-    RIG.drawFigure(c, { who: 'him', x: bag[0] - 0.3 * s, y: bag[1] - 2.86 * s, s, light: L, breath: RIG.breath(lt, 3), ops: bagHands({ zip }).ops });
+    // him, close at hand height: his head is far above the frame; the bag held low in both hands, his thumb on the zip
+    RIG.draw(c, 'him', 'bag', { x: 600, y: -760, s: 520, light: L, t: lt, tau: 0.4, zip: 0.2 + Math.max(0, tt - 50.9) * 0.62, breathAmp: 3 });
   }
 
   FILM.seq({
@@ -260,8 +367,12 @@
       { at: 12.0, name: 'wardrobe, close: the buzz through the wall; rigid, eyes shut', draw: wardrobeClose, post: { vig: 0.5 } },
       { at: 17, name: 'room by day: he comes out fast; she stands over the couch', draw: roomArrive, post: { vig: 0.45 } },
       { at: 22, name: 'INSERT: the lock screen, "Call me tonight?" over the waterfall', draw: lockInsert, post: { vig: 0.55, halation: 0.35 } },
-      { at: 27, name: 'room: L012-L015; she reaches for the phone', draw: roomTalk, post: { vig: 0.45 } },
-      { at: 38.5, name: 'between (B3): she turns the screen to him; L016', draw: between, post: { vig: 0.45, halation: 0.4 } },
+      { at: 27, name: 'him, close: "Don\'t look at my phone."', draw: himDont, post: { vig: 0.5 } },
+      { at: 29.2, name: 'her, close: "What is this?"', draw: herWhat, post: { vig: 0.5 } },
+      { at: 31.3, name: 'him, close: "It\'s just a friend from work."', draw: himFriend, post: { vig: 0.5 } },
+      { at: 35.8, name: 'her, close: "I\'m not talking about the text."; she looks down at the phone', draw: herText, post: { vig: 0.5 } },
+      { at: 38.5, name: 'between (B3): she turns the screen to him', draw: between, post: { vig: 0.45, halation: 0.4 } },
+      { at: 43.3, name: 'over his shoulder: the screen between them; L016', draw: overHim, post: { vig: 0.48, halation: 0.4 } },
       { at: 50.5, name: 'hands: his thumb worries the broken zip', draw: hands, post: { vig: 0.5 } },
     ],
   });
