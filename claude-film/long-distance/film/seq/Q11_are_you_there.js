@@ -108,8 +108,9 @@
         PHONE.draw(c, P); fig.over(c);
       }
     } else {
-      // he closes his eyes and lies down along the couch (the rig's liedown, the phone still in his hand); the cut lands mid-way
-      fig = RIG.draw(c, 'him', 'liedown', { hip, dir: -1, s, light: L, t: lt, u, arm: 'ear', fit, face: { lids: 0.08 } });
+      // he closes his eyes and lies down along the couch (the rig's liedown, the phone still in his hand); lying, he holds it up in front
+      // of his face and looks at her (33.4–35); the cut to the close lands as he has laid it down beside him
+      fig = RIG.draw(c, 'him', 'liedown', { hip, dir: -1, s, light: L, t: lt, u, arm: 'ear', fit, face: { lids: tt < 32.6 ? 0.08 : 0.34, gaze: [-0.2, 0.2], smile: tt < 33.4 ? 0 : 0.08 } });
       if (fig.phone) { const ph = fig.phone; PHONE.draw(c, { x: ph.x, y: ph.y, h: 0.7 * s, roll: ph.angle, yaw: Math.PI - 0.4, screen: 'app', t: lt, env: '#9AA4B4', spill: 0.6 }); fig.over(c); }
     }
     V.front(c, lt, s0);
@@ -123,15 +124,6 @@
   function lieFrame(hx, hy, s) {
     const thW = -LIE, cr = Math.cos(thW), sr = Math.sin(thW);
     return { hip: [hx - 3.3 * Math.sin(thW) * s, hy + 3.3 * Math.cos(thW) * s], F: (dx, dy) => { const fxw = dx * cr + dy * sr, fy = -dx * sr + dy * cr; return [-fxw, fy]; } };
-  }
-  function drawLying(c, hx, hy, s, L, lt, face, armR, fit) {
-    const fr = lieFrame(hx, hy, s);
-    const base = RIG.POSES.him.couch({ hip: fr.hip, dir: -1, s, u: 1, arm: 'tuck', lie: LIE, fit: fit == null ? -4000 : fit });
-    const up = RIG.person({ who: 'him', costume: 'sweater', tau: 0.2, lean: 0, head: face,
-      arms: { L: { E: [-0.52, 1.85], W: [-0.62, 1.25], hand: false, behind: true }, R: Object.assign({ front: true, order: 2 }, armR) }, legs: false, crop: 3.5, untucked: true });
-    const p0 = base.parts[0], p1 = base.parts[1];
-    RIG.drawFigure(c, { who: 'him', x: p0.x, y: p0.y, s, flip: p0.flip, light: L, breath: 0, ops: p0.ops });
-    return RIG.drawFigure(c, { who: 'him', x: p1.x, y: p1.y, s, flip: p1.flip, rot: p1.rot || 0, light: L, breath: RIG.breath(lt, 2.2), ops: up.ops });
   }
   // 35–44: B1 by day, turned. He has laid the phone face up on the cushion beside his face, across the seam into the empty half,
   // and his hand rests over it from his shoulder (the rig's couch, arm 'rest'). Its smooth light on his face. His eyes close.
