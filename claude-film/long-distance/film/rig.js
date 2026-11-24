@@ -114,7 +114,7 @@
     // soft faces (the review of cut 1): in grey daylight, bathroom and office light the faces take one gentle cut, the shadow side
     // still holding most of the key, and the cut's edge barely wobbles; no hard pale islands. o.soft 0..1 (0: the old hard bands)
     const soft = o.soft != null ? o.soft : (SOFT[name] || 0);
-    if (soft > 0) L.keys = L.keys.map(k => k.poster && !k.smooth ? Object.assign({}, k, { poster: [lerp(k.poster[0], 0.22, soft)], levels: [1], floor: 0.6 * soft, jit: lerp(1, 0.3, soft) }) : k);
+    if (soft > 0) L.keys = L.keys.map(k => k.poster && !k.smooth ? Object.assign({}, k, { poster: [lerp(k.poster[0], 0.18, soft)], levels: [1], floor: 0.68 * soft, jit: lerp(1, 0.3, soft) }) : k);
     L.soft = soft;
     return L;
   };
@@ -203,7 +203,7 @@
       // neck's cylinder below the jaw), the cut does not wobble, and the occlusion is soft. One light, one shadow.
       let lvx = vx, lvy = vy, lvz = vz;
       if (soft > 0 && o.proxy === 'head') { let px2, py2, pz2; if (y > 0.46) { px2 = x; py2 = 0; pz2 = z + 0.08; } else { px2 = x / 0.13; py2 = (y - 0.05) / 0.2; pz2 = (z + 0.02) / 0.18; }
-        const pl = Math.sqrt(px2 * px2 + py2 * py2 + pz2 * pz2) || 1; const kk = 0.6 * soft; let bx = nx * (1 - kk) + px2 / pl * kk, by = ny * (1 - kk) + py2 / pl * kk, bz = nz * (1 - kk) + pz2 / pl * kk; const bl = Math.sqrt(bx * bx + by * by + bz * bz) || 1; bx /= bl; by /= bl; bz /= bl;
+        const pl = Math.sqrt(px2 * px2 + py2 * py2 + pz2 * pz2) || 1; const kk = (mat === 2 ? 0.45 : 0.85) * soft; let bx = nx * (1 - kk) + px2 / pl * kk, by = ny * (1 - kk) + py2 / pl * kk, bz = nz * (1 - kk) + pz2 / pl * kk; const bl = Math.sqrt(bx * bx + by * by + bz * bz) || 1; bx /= bl; by /= bl; bz /= bl;
         lvx = M[0][0] * bx + M[0][1] * by + M[0][2] * bz; lvy = M[1][0] * bx + M[1][1] * by + M[1][2] * bz; lvz = M[2][0] * bx + M[2][1] * by + M[2][2] * bz; }
       const jit = grain ? (vnoise(wx * 0.045, wy * 0.045, sd + 77) - 0.5) * 0.12 * (1 - soft) : 0;
       let lr = amb[0], lg = amb[1], lb = amb[2];
@@ -803,7 +803,9 @@
     carry: p => ({ basis: { x: [0.08, 1, 0.1], z: [-0.5, 0, 0.86] }, fingers: lerpF(FING.cup, FING.fist, 0.6), thumb: [0.55, 1.0, 0.55, 0.45], fdir: [0, -1, 0], fore: 0.45, foreR: 0.15, grip: [0.55, -0.05, -0.12] }),
   };
   RIG.HANDS = HANDS;
-  const SKIN = { him: { skin: '#B47C58', nail: '#D2A894' }, her: { skin: '#E6BDA2', nail: '#EDCBBB' }, coworker: { skin: '#C9A088', nail: '#DDB8A6' } };
+  // the hands' skin, matched to the face's in the same light (cut 2: the hands read peach-orange against his face). A hand turns more
+  // of itself to the light than a face (no brow, no stubble, no eye sockets), so its paper is cut a little darker than the face's.
+  const SKIN = { him: { skin: '#A47152', nail: '#C49A86' }, her: { skin: '#DDB59C', nail: '#E6C4B4' }, coworker: { skin: '#BC967F', nail: '#D2AE9C' } };
 
   /* RIG.hand(c, who, pose, p): a sculpted hand. pose: a name from RIG.HANDS (or a pose object). p: {x, y (the wrist, world px),
      s (px per hand length), rot (radians, turns the pose about the view axis) or fore ([dx,dy]: screen direction from the wrist to
