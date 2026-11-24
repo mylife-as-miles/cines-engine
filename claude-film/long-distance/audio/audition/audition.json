@@ -1,0 +1,39 @@
+{
+  "note": "Voice audition for Long Distance. Each candidate reads the same lines, verbatim from film/script.json, with a direction that is never spoken. Her candidates read both the phone's lines and the real woman's: the same voice plays both, and the mix makes the difference (the phone dry, close and too clean; the real woman with the room, the breath and the years).",
+  "roles": {
+    "him": {
+      "candidates": [
+        {"key": "him_1", "engine": "gemini", "voice": "en-gb-csagent-5", "label": "Liverpool, 38, warm"},
+        {"key": "him_2", "engine": "gemini", "voice": "en-gb-podcaster-1", "label": "Winchester (southern English), 31, intimate"},
+        {"key": "him_3", "engine": "gemini", "voice": "en-us-varo", "label": "American (Northwest), 36, laid-back"},
+        {"key": "him_4", "engine": "gemini", "voice": "en-us-tutor-22", "label": "American (Northwest), 39, gentle"},
+        {"key": "him_5", "engine": "elevenlabs", "voice": "iP95p4xoKVk53GoZ742B", "label": "ElevenLabs Chris, American, down-to-earth"}
+      ],
+      "lines": [
+        {"id": "L002", "text": "You first.", "style": "Lying in bed in the dark, the phone on the pillow beside his face. Sleepy, smiling, warm and close, almost a murmur.", "tag": "[sleepy, smiling, murmuring]"},
+        {"id": "L007", "text": "I love this one.", "style": "Alone in his kitchen at night, saying it to nobody. Quietly moved, a little breathless, tender.", "tag": "[quietly moved, to himself]"},
+        {"id": "L009", "text": "Why didn’t you call first?", "style": "Shocked; the colour has gone from his face. Quiet and careful, not angry, his voice a little unsteady.", "tag": "[shaken, quiet]"},
+        {"id": "L014", "text": "It’s just a friend from work. It’s nothing. It’s none of your business.", "style": "Caught out. Defensive, too quick, tripping over himself, his voice tight.", "tag": "[defensive, too quick]"},
+        {"id": "L022", "text": "I just missed you, is all.", "style": "Ashamed, barely audible, eyes on the floor; a small helpless shrug in the voice.", "tag": "[ashamed, barely audible]"},
+        {"id": "L024", "text": "Are you there?", "style": "Alone after she has gone, the phone at his ear. Small, hopeful, a little hoarse.", "tag": "[small, hopeful, hoarse]"}
+      ]
+    },
+    "her": {
+      "candidates": [
+        {"key": "her_1", "engine": "gemini", "voice": "en-gb-tutor-12", "label": "Winchester (southern English), 32, deep and unhurried"},
+        {"key": "her_2", "engine": "gemini", "voice": "en-gb-csagent-4", "label": "Winchester (southern English), 35, warm, dry"},
+        {"key": "her_3", "engine": "gemini", "voice": "en-us-tova", "label": "American (Northwest), 36, textured"},
+        {"key": "her_4", "engine": "gemini", "voice": "en-us-zuri", "label": "American (East Coast), 33, natural"},
+        {"key": "her_5", "engine": "elevenlabs", "voice": "pFZP5JQG7iQjIQuC4Bku", "label": "ElevenLabs Lily, British, velvety"}
+      ],
+      "lines": [
+        {"id": "L001", "text": "Tell me about your day.", "style": "On the phone in bed at night. Warm, close and intimate, perfectly smooth, with no hesitation at all.", "tag": "[warm, intimate, close]", "as": "phone"},
+        {"id": "L003", "text": "Mine’s better now. You go.", "style": "Teasing and affectionate, a soft smile in the voice, effortless.", "tag": "[teasing, affectionate]", "as": "phone"},
+        {"id": "L025", "text": "Yes.", "style": "Immediate, warm and intimate: one soft word, right at his ear.", "tag": "[warm, soft]", "as": "phone"},
+        {"id": "L011", "text": "I came for my makeup bag. The old one.", "style": "Standing just inside her ex's flat with her coat on. Tired, composed, quietly awkward.", "tag": "[tired, awkward]", "as": "real"},
+        {"id": "L016", "text": "We’ve never taken this photo. We’ve never been to a waterfall.", "style": "Holding his phone up to him. Controlled, quietly appalled, careful with every word.", "tag": "[controlled, quietly appalled]", "as": "real"},
+        {"id": "L023", "text": "We’ve been apart longer than we were ever together. This is not okay.", "style": "Sad, gentle and final, with a pause between the two sentences.", "tag": "[sad, gentle, final]", "as": "real"}
+      ]
+    }
+  }
+}
