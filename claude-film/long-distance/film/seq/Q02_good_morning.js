@@ -54,8 +54,7 @@
     const ops = RIG.POSES.him.basin(p).ops.map(op => (op && op.key && /^col,/.test(op.key)) ? CREW : op);
     return RIG.drawFigure(c, { who: 'him', x: p.x, y: p.y, s: p.s, light: p.light, breath: RIG.breath(p.t, 2.2), ops, target: p.target });
   }
-  // o: {screen: {...}, buzz, glow, gaze, smile, lids, foamBasin}
-  const MIRROR_P = [960, 420];
+  // o: {screen: {...}, buzz, glow, gaze, smile, lids, yaw, foamBasin}
   function mirror(c, lt, o) {
     const v = BA().views.mirror, s = { brush: 'out', glow: o.glow || 0, foam: !!o.foamBasin };
     c.camera({ x: W / 2, y: H / 2, zoom: 1 });
@@ -72,7 +71,7 @@
 
   // ---------------------------------------------------------------- the thread, full frame, his thumb on the glass
   // The phone stands where it was, seen from his eyes: face on, filling the frame's height. Behind it, the bathroom out of focus (the
-  // glass view, blurred once and kept). His hand steadies its lower corner; the thumb is drawn again over the gloss.
+  // glass view, blurred once and kept). His hand comes up from below the frame; the thumb is drawn again over the gloss.
   const INS = { x: 958, y: 506, h: 930, roll: -0.025 };
   function background(c) {
     // centred inside the glass view's own frame (the phone stands at its right edge): the dusty brush falls out of focus at the left
@@ -140,11 +139,11 @@
     RIG.hand(c, 'him', THUMB, Object.assign({}, hp, at));
     PHONE.draw(c, P);
     RIG.hand(c, 'him', THUMB, Object.assign({}, hp, at, { only: 'thumb', target: 'gl', shadow: { dx: 0.01, dy: 0.025, alpha: 0.3 } }));
-    if (o.foam) foamFlecks(c, at, hp);
+    if (o.foam) foamFlecks(c);
     return info;
   }
   // toothpaste foam on his thumb's knuckle and on the shelf at the frame's edge (cut paper, never pure white)
-  function foamFlecks(c, at, hp) {
+  function foamFlecks(c) {
     const cv = c.cache('Q02:foam', g => {
       const r = O.rng('q02foam');
       for (let i = 0; i < 9; i++) { const x = 40 + r() * 160, y = 30 + r() * 60, rr = 6 + r() * 16; const p = GG.blob([[x - rr, y], [x - rr * 0.3, y - rr * 0.8], [x + rr * 0.6, y - rr * 0.7], [x + rr, y + rr * 0.1], [x + rr * 0.2, y + rr * 0.7], [x - rr * 0.7, y + rr * 0.5]]);

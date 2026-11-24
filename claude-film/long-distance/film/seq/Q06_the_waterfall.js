@@ -79,7 +79,7 @@
       const gr = g.createLinearGradient(0, 0, 0, 0.16 * k); gr.addColorStop(0, 'rgba(10,8,10,0.55)'); gr.addColorStop(1, 'rgba(10,8,10,0)');
       g.save(); g.clip(p); g.fillStyle = gr; g.fillRect(0, 0, w, 0.16 * k); g.restore();
     }, w, h);
-    c.g.drawImage(cv, x - w / 2 + 0.02 * s, y + 3.2 * s, w * s / k, h * s / k);
+    c.g.drawImage(cv, x - w / 2 + 0.02 * s, y + 3.21 * s, w * s / k, h * s / k);
   }
   // ---------------------------------------------------------------- him at the counter in any counter or room framing
   function him(c, view, shot, t, o) {
@@ -88,7 +88,9 @@
     const tone = toneAt(lt), lit = litAt(lt);
     const L = RIG.light('pendant', { phone: [ph.x, ph.y], phoneCol: tone.col, phoneK: tone.k * lit * (o.phoneK == null ? 1 : o.phoneK) });
     trousers(c, A.himCounter[0], A.himCounter[1], s);
-    return RIG.draw(c, 'him', 'counter', Object.assign({ x: A.himCounter[0], y: A.himCounter[1], s, light: L, t, crop: o.crop == null ? 3.7 : o.crop }, o.fig || {}, { face: o.face, fork: o.fork }));
+    // crop 2.95 keeps the shirt's hem at 3.25 heads: past that the rig draws a belt band across even an untucked shirt
+    // (rig.js, the shirt's torso); the trousers above fill the rest down to the counter
+    return RIG.draw(c, 'him', 'counter', Object.assign({ x: A.himCounter[0], y: A.himCounter[1], s, light: L, t, crop: 2.95 }, o.fig || {}, { face: o.face, fork: o.fork }));
   }
 
   // ---------------------------------------------------------------- the insert: the phone filling the frame, propped on the salt
@@ -196,7 +198,7 @@
       S.bed('room_night', 0, 64, { level: -46 });
       S.bed('pendant_hum', 0, 64, { level: -52 });
       // the fork in the pan, sparse: each twirl and lift (the bites at 13.6 and 17.4 in the counter shot; the room is too far to hear)
-      [12.2, 13.1, 16.0, 16.9, 26.0].forEach(t => S.cue('fork_pan', t, { level: -36 }));
+      [13.0, 16.0, 16.9, 26.0].forEach(t => S.cue('fork_pan', t, { level: -36 }));
       S.bed('chewing', 14.0, 30.0, { level: -38 });
       S.cue('receive', 20.5);
       S.cue('tap', OPEN[0] - 0.05, { level: -40 });               // his knuckle on the glass: the picture opens
@@ -211,7 +213,7 @@
       { at: 0, name: 'room: the elevation, night; he eats at the counter in the kitchen half', draw(c, st, lt) {
         const V = LV('room'); V.back(c, lt, NIGHT);
         const e = eating(twos(lt));
-        him(c, 'room', 'wide', lt, { fork: e.fork, face: Object.assign(faceFor(e.look), e.chew ? RIG.chew(lt) : {}), crop: 4.2 });
+        him(c, 'room', 'wide', lt, { fork: e.fork, face: Object.assign(faceFor(e.look), e.chew ? RIG.chew(lt) : {}) });
         drawPropped(c, 'room', 'wide', lt, { k: 0.9 });
         V.front(c, lt, NIGHT);
       } },
