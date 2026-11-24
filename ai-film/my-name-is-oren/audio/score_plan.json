@@ -69,5 +69,17 @@
    "prompt": "Instrumental film-score cue, about 24 seconds, closing title of an intimate British film. Soft piano and a solo violin in a warm major key: the violin plays a short, simple, rising phrase in a light middle-high register, the piano answers with gentle open chords; slow, free, consonant, tender and hopeful, the harmony settling into a bright major resolution as the title appears, then a natural fade. Uplifting in a quiet way, never sad. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
   }
  ],
- "_round1": "M01a-d (felt piano / cello / guitar / piano+quartet): earshot heard all four as sad, not warm-hopeful (sad 80-97% in forced choice). Round 2 keeps the restraint and moves the levers FME-24 says matter for valence: a clear major key, a lighter mid-high register, relief."
+ "_round1": "M01a-d (felt piano / cello / guitar / piano+quartet): earshot heard all four as sad, not warm-hopeful (sad 80-97% in forced choice). Round 2 keeps the restraint and moves the levers FME-24 says matter for valence: a clear major key, a lighter mid-high register, relief.",
+ "chosen": {
+  "id": "M01c",
+  "by": "the author, 2026-11-25",
+  "take": "audio/score/M01c.mp3 (Lyria 3.5, 62.1 s; raw take, not committed)",
+  "window_s": [
+   24,
+   48
+  ],
+  "file": "audio/score/M01c_cue.flac",
+  "why": "a single nylon-string guitar, slow plucked notes free in time over a barely audible string pad: the most minimal of the takes, like someone finally slowing down",
+  "placement": "on Q22's own clock once it exists: entering on the last blink, carrying the corner, resolving under the title. Re-window then with earshot `find` so the take's resolving chord lands on the title (the take resolves late), and measure its tuning (Lyria drifts 0 to +36 cents; it plays alone, so only correct a drift you can hear)."
+ }
 }

@@ -53,13 +53,15 @@ We are in Helena's ears, at street level: close voices, the near pavement, the c
 | Tempo | free and rubato; no audible pulse, matching the walk without driving it |
 | Mode | major, or a major-leaning mode with suspended tones that resolve late (valence is carried mostly by picture and story; the mode tilts it) |
 | Harmony | open intervals; consonance arriving gradually; one held suspension that resolves on the title |
-| Instruments | one exposed solo voice (felt piano, or a single bowed or plucked string) over a soft sustained bed (strings or harmonium) |
+| Instruments | **chosen: M01c**, a single nylon-string guitar, slow plucked notes over a barely audible sustained string pad (the author, 2026-11-25) |
 | Register | mid to low at entry, opening upward on the title |
 | Density | very low: few attacks, sustained tones, low spectral activity |
 | Dynamics and space | close and dry at entry, the room widening slightly on the title |
 | Ending | resolves under the title, then a natural decay into the fade-out, so no hard button |
 
-**To generate it:** Lyria 3.5 (`sound.md` §7), prompted with these controls. Window the best passage with earshot `find`, check its mood with `earshot describe` against "warm, tender, hopeful, quiet", and judge it in the order of `score-and-sound-design.md` §8. Ears decide.
+**Made:** seven Lyria takes over two rounds; the author chose **M01c** (`audio/score/M01c_cue.flac`, its 24–48 s window). Placed on Q22 once it exists, re-windowed so its late resolution lands on the title.
+
+**How it was generated:** Lyria 3.5 (`sound.md` §7), prompted with these controls. Window the best passage with earshot `find`, check its mood with `earshot describe` against "warm, tender, hopeful, quiet", and judge it in the order of `score-and-sound-design.md` §8. Ears decide.
 
 ## 6. Spotting map
 
