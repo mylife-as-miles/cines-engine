@@ -1,0 +1,1296 @@
+{
+ "L001": {
+  "summary": "mix.flac [6.000-7.380 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +3.5; would rank #1 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 96%, 'a woman speaking in a room, a little distant' 1%, 'a woman speaking on the telephone' 3%. It sounds most like: 'a woman speaking' (z +3.0), 'a light switch flicked' (z +2.3), 'a button being pressed' (z +2.2), 'a toggle switch click' (z +2.1).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 6,
+  "end": 7.380000000000001,
+  "peak_dbfs": -4.8,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.269,
+  "z": 3.57,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.964,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.008,
+    "z": 2.85,
+    "cosine": 0.144
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.028,
+    "z": 3.0,
+    "cosine": 0.178
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.269,
+    "z": 3.57,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.964,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.008,
+      "z": 2.85,
+      "cosine": 0.144
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.028,
+      "z": 3.0,
+      "cosine": 0.178
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 3.09,
+    "cosine": 0.15
+   },
+   {
+    "term": "a light switch flicked",
+    "category": "ui",
+    "z": 2.31,
+    "cosine": 0.249
+   },
+   {
+    "term": "a button being pressed",
+    "category": "ui",
+    "z": 2.24,
+    "cosine": 0.219
+   },
+   {
+    "term": "a toggle switch click",
+    "category": "ui",
+    "z": 2.16,
+    "cosine": 0.25
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "L005": {
+  "summary": "mix.flac [30.400-32.702 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +3.9; would rank #1 among 322 vocabulary descriptions; cosine 0.32). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 99%, 'a woman speaking in a room, a little distant' <1%, 'a woman speaking on the telephone' 1%. It sounds most like: 'a woman speaking' (z +2.8), 'someone whispering' (z +2.6), 'a light switch flicked' (z +2.5), 'a button being pressed' (z +2.4).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 30.4,
+  "end": 32.702,
+  "peak_dbfs": -3.0,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.315,
+  "z": 3.93,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.989,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.004,
+    "z": 2.99,
+    "cosine": 0.17
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.007,
+    "z": 2.93,
+    "cosine": 0.187
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.315,
+    "z": 3.93,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.989,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.004,
+      "z": 2.99,
+      "cosine": 0.17
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.007,
+      "z": 2.93,
+      "cosine": 0.187
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 2.86,
+    "cosine": 0.148
+   },
+   {
+    "term": "someone whispering",
+    "category": "voice",
+    "z": 2.62,
+    "cosine": 0.184
+   },
+   {
+    "term": "a light switch flicked",
+    "category": "ui",
+    "z": 2.5,
+    "cosine": 0.276
+   },
+   {
+    "term": "a button being pressed",
+    "category": "ui",
+    "z": 2.46,
+    "cosine": 0.248
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "L027": {
+  "summary": "mix.flac [480.750-482.096 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 97%, 'a woman speaking in a room, a little distant' 0%, 'a woman speaking on the telephone' 2%. It sounds most like: 'a woman speaking' (z +3.5), 'a crackling fire' (z +2.4), 'a match being struck' (z +2.3), 'footsteps on gravel' (z +2.2).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 480.75,
+  "end": 482.096,
+  "peak_dbfs": -3.0,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.273,
+  "z": 4.24,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.974,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.005,
+    "z": 3.32,
+    "cosine": 0.139
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.021,
+    "z": 3.51,
+    "cosine": 0.174
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.273,
+    "z": 4.24,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.974,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.005,
+      "z": 3.32,
+      "cosine": 0.139
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.021,
+      "z": 3.51,
+      "cosine": 0.174
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 3.54,
+    "cosine": 0.142
+   },
+   {
+    "term": "a crackling fire",
+    "category": "ambience",
+    "z": 2.41,
+    "cosine": 0.204
+   },
+   {
+    "term": "a match being struck",
+    "category": "everyday",
+    "z": 2.39,
+    "cosine": 0.143
+   },
+   {
+    "term": "footsteps on gravel",
+    "category": "foley",
+    "z": 2.2,
+    "cosine": 0.078
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "L016": {
+  "summary": "mix.flac [356.000-362.487 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.7; would rank #1 among 322 vocabulary descriptions; cosine 0.26). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 99%, 'a woman speaking in a room, a little distant' 1%, 'a woman speaking on the telephone' <1%. It sounds most like: 'a voice-over narration' (z +4.0), 'a woman speaking' (z +3.1), 'high heels walking' (z +2.8), 'walking through dry leaves' (z +2.6).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 356,
+  "end": 362.48699999999997,
+  "peak_dbfs": -3.0,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.261,
+  "z": 4.7,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.993,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.006,
+    "z": 3.8,
+    "cosine": 0.131
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.0,
+    "z": 2.23,
+    "cosine": 0.049
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.261,
+    "z": 4.7,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.993,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.006,
+      "z": 3.8,
+      "cosine": 0.131
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.0,
+      "z": 2.23,
+      "cosine": 0.049
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a voice-over narration",
+    "category": "voice",
+    "z": 4.09,
+    "cosine": 0.219
+   },
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 3.18,
+    "cosine": 0.078
+   },
+   {
+    "term": "high heels walking",
+    "category": "foley",
+    "z": 2.85,
+    "cosine": 0.102
+   },
+   {
+    "term": "walking through dry leaves",
+    "category": "nature",
+    "z": 2.67,
+    "cosine": 0.139
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "L017": {
+  "summary": "mix.flac [371.000-380.930 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.8; would rank #2 among 322 vocabulary descriptions; cosine 0.27). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 95%, 'a woman speaking in a room, a little distant' 4%, 'a woman speaking on the telephone' <1%. It sounds most like: 'a voice-over narration' (z +4.8), 'a woman speaking' (z +4.4), 'a man speaking' (z +2.7), 'high heels walking' (z +2.3).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 371,
+  "end": 380.92999999999995,
+  "peak_dbfs": -3.0,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.267,
+  "z": 4.82,
+  "percentile": 99.7,
+  "rank_in_vocab": 2,
+  "p_vs_alts": 0.951,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.045,
+    "z": 4.7,
+    "cosine": 0.188
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.004,
+    "z": 3.46,
+    "cosine": 0.128
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.267,
+    "z": 4.82,
+    "percentile": 99.7,
+    "rank_in_vocab": 2,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.951,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.045,
+      "z": 4.7,
+      "cosine": 0.188
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.004,
+      "z": 3.46,
+      "cosine": 0.128
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a voice-over narration",
+    "category": "voice",
+    "z": 4.89,
+    "cosine": 0.27
+   },
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 4.41,
+    "cosine": 0.157
+   },
+   {
+    "term": "a man speaking",
+    "category": "voice",
+    "z": 2.7,
+    "cosine": 0.03
+   },
+   {
+    "term": "high heels walking",
+    "category": "foley",
+    "z": 2.39,
+    "cosine": 0.068
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "L023": {
+  "summary": "mix.flac [430.000-436.826 s]: 'a woman speaking very close and dry, with no room around her' -> strong (unvalidated: music / instrument / voice description) (z +4.3; would rank #1 among 322 vocabulary descriptions; cosine 0.26). Forced choice vs your alternatives: 'a woman speaking very close and dry, with no room around her' 97%, 'a woman speaking in a room, a little distant' 2%, 'a woman speaking on the telephone' <1%. It sounds most like: 'a voice-over narration' (z +4.0), 'a woman speaking' (z +3.3), 'walking through dry leaves' (z +2.8), 'high heels walking' (z +2.3).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 430,
+  "end": 436.82599999999996,
+  "peak_dbfs": -3.0,
+  "query": "a woman speaking very close and dry, with no room around her",
+  "cosine": 0.263,
+  "z": 4.35,
+  "percentile": 100.0,
+  "rank_in_vocab": 1,
+  "p_vs_alts": 0.974,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman speaking in a room, a little distant",
+    "p": 0.025,
+    "z": 3.98,
+    "cosine": 0.168
+   },
+   {
+    "query": "a woman speaking on the telephone",
+    "p": 0.001,
+    "z": 2.53,
+    "cosine": 0.094
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman speaking very close and dry, with no room around her",
+    "cosine": 0.263,
+    "z": 4.35,
+    "percentile": 100.0,
+    "rank_in_vocab": 1,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.974,
+    "alts": [
+     {
+      "query": "a woman speaking in a room, a little distant",
+      "p": 0.025,
+      "z": 3.98,
+      "cosine": 0.168
+     },
+     {
+      "query": "a woman speaking on the telephone",
+      "p": 0.001,
+      "z": 2.53,
+      "cosine": 0.094
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a voice-over narration",
+    "category": "voice",
+    "z": 4.02,
+    "cosine": 0.239
+   },
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 3.33,
+    "cosine": 0.113
+   },
+   {
+    "term": "walking through dry leaves",
+    "category": "nature",
+    "z": 2.82,
+    "cosine": 0.173
+   },
+   {
+    "term": "high heels walking",
+    "category": "foley",
+    "z": 2.36,
+    "cosine": 0.093
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "laugh": {
+  "summary": "mix.flac [18.200-19.750 s]: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.0; would rank #2 among 322 vocabulary descriptions; cosine 0.16). Forced choice vs your alternatives: 'a woman laughing softly' 4%, 'a woman sighing' 96%, 'a man speaking' <1%, 'a woman speaking' <1%. It sounds most like: 'a person coughing' (z +4.3), 'people laughing' (z +3.7), 'a vocal chop' (z +3.2), 'digging in soil' (z +2.8).",
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 18.2,
+  "end": 19.75,
+  "peak_dbfs": -3.0,
+  "query": "a woman laughing softly",
+  "cosine": 0.161,
+  "z": 4.07,
+  "percentile": 99.7,
+  "rank_in_vocab": 2,
+  "p_vs_alts": 0.037,
+  "verdict": "strong",
+  "validated": false,
+  "alts": [
+   {
+    "query": "a woman sighing",
+    "p": 0.963,
+    "z": 4.71,
+    "cosine": 0.245
+   },
+   {
+    "query": "a man speaking",
+    "p": 0.0,
+    "z": 1.07,
+    "cosine": -0.103
+   },
+   {
+    "query": "a woman speaking",
+    "p": 0.0,
+    "z": 0.14,
+    "cosine": -0.163
+   }
+  ],
+  "results": [
+   {
+    "query": "a woman laughing softly",
+    "cosine": 0.161,
+    "z": 4.07,
+    "percentile": 99.7,
+    "rank_in_vocab": 2,
+    "vocab_size": 322,
+    "verdict": "strong",
+    "validated": false,
+    "p_vs_alts": 0.037,
+    "alts": [
+     {
+      "query": "a woman sighing",
+      "p": 0.963,
+      "z": 4.71,
+      "cosine": 0.245
+     },
+     {
+      "query": "a man speaking",
+      "p": 0.0,
+      "z": 1.07,
+      "cosine": -0.103
+     },
+     {
+      "query": "a woman speaking",
+      "p": 0.0,
+      "z": 0.14,
+      "cosine": -0.163
+     }
+    ]
+   }
+  ],
+  "closest_vocab": [
+   {
+    "term": "a person coughing",
+    "category": "voice",
+    "z": 4.32,
+    "cosine": 0.222
+   },
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 3.74,
+    "cosine": 0.099
+   },
+   {
+    "term": "a vocal chop",
+    "category": "instruments",
+    "z": 3.24,
+    "cosine": 0.269
+   },
+   {
+    "term": "digging in soil",
+    "category": "nature",
+    "z": 2.84,
+    "cosine": 0.103
+   }
+  ],
+  "verdict_thresholds_z": {
+   "strong": 3.0,
+   "plausible": 2.5,
+   "weak": 2.0
+  },
+  "verdict_evidence": {
+   "strong": {
+    "z": ">= 3",
+    "lr": 1289,
+    "precision_library": 0.98,
+    "precision_even_odds": 1.0,
+    "lr_strict": 51,
+    "precision_library_strict": 0.61,
+    "recall_at_or_above": 0.51
+   },
+   "plausible": {
+    "z": "2.5 - 3",
+    "lr": 21,
+    "precision_library": 0.41,
+    "precision_even_odds": 0.95,
+    "lr_strict": 9.1,
+    "precision_library_strict": 0.22,
+    "recall_at_or_above": 0.63
+   },
+   "weak": {
+    "z": "2 - 2.5",
+    "lr": 12,
+    "precision_library": 0.28,
+    "precision_even_odds": 0.92,
+    "lr_strict": 6.6,
+    "precision_library_strict": 0.17,
+    "recall_at_or_above": 0.76
+   },
+   "no match": {
+    "z": "< 2",
+    "lr": 0.25,
+    "precision_library": 0.008,
+    "precision_even_odds": 0.2,
+    "lr_strict": 0.25,
+    "precision_library_strict": 0.008
+   }
+  }
+ },
+ "murmur": {
+  "path": "/home/user/cines-engine/claude-film/long-distance/out/audio/mix.flac",
+  "start": 14.8,
+  "end": 18.1,
+  "duration": 3.3,
+  "measurements": {
+   "duration": 3.3,
+   "peak_dbfs": -10.8,
+   "true_peak_dbtp": -10.8,
+   "rms_dbfs": -30.8,
+   "lufs": -26.8,
+   "attack_ms": 1.0,
+   "brightness_hz": 1956,
+   "bandwidth_hz": 20480,
+   "noise_floor_dbfs": -43.4,
+   "flatness": 0.0,
+   "harmonic_ratio": 0.479,
+   "onset_count": 24,
+   "onsets_per_s": 7.27,
+   "width": "side/mid -34 dB",
+   "digital_silence_frac": 0.0001
+  },
+  "shape": "busy, 7.3 onsets/s (attack 1 ms)",
+  "top_tags": [
+   {
+    "term": "a finger squeaking on glass",
+    "category": "foley",
+    "z": 2.19,
+    "cosine": 0.211,
+    "verdict": "weak"
+   },
+   {
+    "term": "people talking in the background",
+    "category": "ambience",
+    "z": 2.13,
+    "cosine": 0.118,
+    "verdict": "weak"
+   },
+   {
+    "term": "crickets at night",
+    "category": "ambience",
+    "z": 1.99,
+    "cosine": 0.188,
+    "verdict": "no match"
+   },
+   {
+    "term": "a busy cafe",
+    "category": "ambience",
+    "z": 1.94,
+    "cosine": 0.112,
+    "verdict": "no match"
+   },
+   {
+    "term": "a quiet room at night",
+    "category": "ambience",
+    "z": 1.87,
+    "cosine": 0.165,
+    "verdict": "no match"
+   },
+   {
+    "term": "a phone vibration buzz",
+    "category": "ui",
+    "z": 1.85,
+    "cosine": 0.199,
+    "verdict": "no match"
+   },
+   {
+    "term": "a heartbeat",
+    "category": "everyday",
+    "z": 1.85,
+    "cosine": 0.223,
+    "verdict": "no match"
+   },
+   {
+    "term": "a crowd cheering",
+    "category": "ambience",
+    "z": 1.77,
+    "cosine": 0.139,
+    "verdict": "no match"
+   }
+  ],
+  "music_hints": [
+   {
+    "term": "people laughing",
+    "category": "voice",
+    "z": 2.96,
+    "cosine": 0.193
+   },
+   {
+    "term": "a person breathing",
+    "category": "voice",
+    "z": 2.73,
+    "cosine": 0.275
+   },
+   {
+    "term": "a man shouting",
+    "category": "voice",
+    "z": 2.59,
+    "cosine": 0.164
+   },
+   {
+    "term": "a man speaking",
+    "category": "voice",
+    "z": 2.58,
+    "cosine": 0.167
+   },
+   {
+    "term": "a person coughing",
+    "category": "voice",
+    "z": 2.53,
+    "cosine": 0.227
+   },
+   {
+    "term": "singing vocals",
+    "category": "voice",
+    "z": 2.31,
+    "cosine": 0.248
+   },
+   {
+    "term": "a woman speaking",
+    "category": "voice",
+    "z": 2.14,
+    "cosine": 0.136
+   },
+   {
+    "term": "a crowd talking",
+    "category": "voice",
+    "z": 2.08,
+    "cosine": 0.113
+   }
+  ],
+  "tags": {
+   "transitions": [
+    {
+     "term": "a soft air whoosh",
+     "z": 1.41,
+     "cosine": 0.163
+    },
+    {
+     "term": "a stutter glitch transition",
+     "z": 1.06,
+     "cosine": 0.202
+    },
+    {
+     "term": "a gust of wind rushing past",
+     "z": 0.87,
+     "cosine": 0.114
+    }
+   ],
+   "impacts": [
+    {
+     "term": "an explosion",
+     "z": 1.12,
+     "cosine": 0.097
+    },
+    {
+     "term": "a low rumble",
+     "z": 0.99,
+     "cosine": 0.108
+    },
+    {
+     "term": "a deep cinematic boom",
+     "z": 0.9,
+     "cosine": 0.099
+    }
+   ],
+   "ui": [
+    {
+     "term": "a phone vibration buzz",
+     "z": 1.85,
+     "cosine": 0.199
+    },
+    {
+     "term": "an error buzz",
+     "z": 1.67,
+     "cosine": 0.194
+    },
+    {
+     "term": "a digital glitch",
+     "z": 0.95,
+     "cosine": 0.172
+    }
+   ],
+   "keyboard": [
+    {
+     "term": "a laptop keyboard typing",
+     "z": 0.44,
+     "cosine": 0.119
+    },
+    {
+     "term": "a soft key release click",
+     "z": 0.28,
+     "cosine": 0.068
+    },
+    {
+     "term": "an enter key press",
+     "z": 0.16,
+     "cosine": 0.129
+    }
+   ],
+   "foley": [
+    {
+     "term": "a finger squeaking on glass",
+     "z": 2.19,
+     "cosine": 0.211
+    },
+    {
+     "term": "glass clinking",
+     "z": 0.76,
+     "cosine": 0.083
+    },
+    {
+     "term": "a balloon squeak",
+     "z": 0.64,
+     "cosine": 0.071
+    }
+   ],
+   "water": [
+    {
+     "term": "being underwater",
+     "z": 0.18,
+     "cosine": 0.057
+    },
+    {
+     "term": "a liquid bloop",
+     "z": 0.16,
+     "cosine": 0.097
+    },
+    {
+     "term": "ice cubes in a glass",
+     "z": 0.06,
+     "cosine": 0.043
+    }
+   ],
+   "nature": [
+    {
+     "term": "a bee flying by",
+     "z": 0.89,
+     "cosine": 0.109
+    },
+    {
+     "term": "insects buzzing",
+     "z": 0.75,
+     "cosine": 0.1
+    },
+    {
+     "term": "an apple falling on grass",
+     "z": -0.14,
+     "cosine": 0.015
+    }
+   ],
+   "chimes": [
+    {
+     "term": "a wine glass ring",
+     "z": 1.15,
+     "cosine": 0.123
+    },
+    {
+     "term": "a singing bowl",
+     "z": 0.39,
+     "cosine": 0.026
+    },
+    {
+     "term": "a glissando on bar chimes",
+     "z": 0.17,
+     "cosine": 0.088
+    }
+   ],
+   "ambience": [
+    {
+     "term": "people talking in the background",
+     "z": 2.13,
+     "cosine": 0.118
+    },
+    {
+     "term": "crickets at night",
+     "z": 1.99,
+     "cosine": 0.188
+    },
+    {
+     "term": "a busy cafe",
+     "z": 1.94,
+     "cosine": 0.112
+    }
+   ],
+   "everyday": [
+    {
+     "term": "a heartbeat",
+     "z": 1.85,
+     "cosine": 0.223
+    },
+    {
+     "term": "a kettle whistling",
+     "z": 1.53,
+     "cosine": 0.118
+    },
+    {
+     "term": "a bird chirping",
+     "z": 1.25,
+     "cosine": 0.101
+    }
+   ],
+   "music_genre": [
+    {
+     "term": "trap beat",
+     "z": 0.27,
+     "cosine": 0.119
+    },
+    {
+     "term": "hip hop beat with heavy bass",
+     "z": 0.17,
+     "cosine": 0.045
+    },
+    {
+     "term": "techno music",
+     "z": 0.16,
+     "cosine": 0.075
+    }
+   ],
+   "music_mood": [
+    {
+     "term": "calm and relaxing music",
+     "z": 0.6,
+     "cosine": 0.115
+    },
+    {
+     "term": "warm and cozy music",
+     "z": 0.52,
+     "cosine": 0.17
+    },
+    {
+     "term": "sad and melancholic music",
+     "z": 0.28,
+     "cosine": 0.119
+    }
+   ],
+   "instruments": [
+    {
+     "term": "a vocal chop",
+     "z": 1.48,
+     "cosine": 0.255
+    },
+    {
+     "term": "an electric piano",
+     "z": 0.68,
+     "cosine": 0.165
+    },
+    {
+     "term": "a deep sub bass",
+     "z": 0.55,
+     "cosine": 0.102
+    }
+   ],
+   "voice": [
+    {
+     "term": "people laughing",
+     "z": 2.96,
+     "cosine": 0.193
+    },
+    {
+     "term": "a person breathing",
+     "z": 2.73,
+     "cosine": 0.275
+    },
+    {
+     "term": "a man shouting",
+     "z": 2.59,
+     "cosine": 0.164
+    }
+   ],
+   "quality": [
+    {
+     "term": "an airy sound",
+     "z": 1.4,
+     "cosine": 0.159
+    },
+    {
+     "term": "a boomy sound",
+     "z": 1.34,
+     "cosine": 0.207
+    },
+    {
+     "term": "a muffled sound",
+     "z": 1.09,
+     "cosine": 0.078
+    }
+   ],
+   "production": [
+    {
+     "term": "a low bitrate mp3 with artifacts",
+     "z": 2.54,
+     "cosine": 0.324
+    },
+    {
+     "term": "a low quality recording with hiss",
+     "z": 2.31,
+     "cosine": 0.241
+    },
+    {
+     "term": "a recording made on a phone",
+     "z": 2.27,
+     "cosine": 0.26
+    }
+   ]
+  },
+  "audioset": [
+   {
+    "label": "Speech",
+    "p": 0.217
+   }
+  ],
+  "character": [],
+  "summary": "3.30 s busy, 7.3 onsets/s (attack 1 ms). Sounds most like: a finger squeaking on glass (z +2.1), people talking in the background (z +2.1), crickets at night (z +1.9) [weak reading]. Other readings: a phone vibration buzz (ui, z +1.8), a heartbeat (everyday, z +1.8). AudioSet: Speech 0.22. peak -10.8 dBFS, -26.8 LUFS, brightness 2.0 kHz, bandwidth 20.5 kHz, noise floor -43 dBFS, side/mid -34 dB."
+ }
+}
