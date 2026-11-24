@@ -1,22 +1,82 @@
 {
  "_about": "Every added sound on the film's clock, placed from data (sound.md §2). `at`/`from`/`to` are either seconds on the edit's clock, or 'Qxx_tN@s': seconds on that take's own clock, mapped through the edit decision list, so a re-cut moves them with their picture. `level` is the sound's loudness in the mix (LUFS over its length); the dialogue sits near -18, so beds are 22-29 dB under it and the few effects 11-14 dB under (the author wants few, quiet effects). The takes' own sync sound stays; these glue it and point up what the picture shows.",
- "edl": "out/edits/Q01_Q13_v3.edl.json",
- "video": "out/edits/Q01_Q13_v3.mp4",
- "out": "out/edits/Q01_Q13_v3_sound.mp4",
+ "edl": "out/edits/Q01_Q13_v5.edl.json",
+ "video": "out/edits/Q01_Q13_v5.mp4",
+ "out": "out/edits/Q01_Q13_v5_sound.mp4",
  "beds": [
-  {"id": "street", "sound": "street_bed", "from": 0, "to": "end", "level": -40, "fade_in": 1.5, "fade_out": 3.0, "offset_seed": 1,
-   "why": "one continuous street under every take, so the joins between generations stop changing the world"},
-  {"id": "laundrette", "sound": "laundrette_hum", "from": "Q01_t1@6.79", "to": "end", "level": -47, "fade_in": 1.0, "fade_out": 3.0, "offset_seed": 2,
-   "why": "from the first sight of the laundrette window, the machines turning behind them for the rest of the film"}
+  {
+   "id": "street",
+   "sound": "street_bed",
+   "from": 0,
+   "to": "end",
+   "level": -40,
+   "fade_in": 1.5,
+   "fade_out": 3.0,
+   "offset_seed": 1,
+   "why": "one continuous street under every take, so the joins between generations stop changing the world",
+   "af": "highpass=f=120:poles=2",
+   "af_why": "earshot read the street take as partly wind (77% in forced choice against traffic); the high-pass takes out the rumble that carries it and keeps the bed out of the voices",
+   "boost": [
+    {
+     "from": "Q10_t1@0",
+     "to": "Q10_t1@22.9",
+     "db": 6,
+     "ramp": 0.4,
+     "why": "Q10 keeps only its voices; the street carries its ground"
+    }
+   ]
+  },
+  {
+   "id": "laundrette",
+   "sound": "laundrette_hum",
+   "from": "Q01_t1@6.79",
+   "to": "end",
+   "level": -47,
+   "fade_in": 1.0,
+   "fade_out": 3.0,
+   "offset_seed": 2,
+   "why": "from the first sight of the laundrette window, the machines turning behind them for the rest of the film",
+   "boost": [
+    {
+     "from": "Q10_t1@0",
+     "to": "Q10_t1@22.9",
+     "db": 4,
+     "ramp": 0.4
+    }
+   ]
+  }
  ],
  "cues": [
-  {"id": "sweepers_open", "sound": "sweeper_brush", "at": "Q01_t1@0.0", "level": -31, "fade_out": 0.6,
-   "why": "the first picture: the yellow sweepers scrubbing the gutter"},
-  {"id": "bin", "sound": "bin_bag", "at": "Q01_t1@4.25", "level": -32,
-   "why": "the city units lift the bag out of the street bin"},
-  {"id": "brush_on_boot", "sound": "sweeper_bump", "at": 95.75, "level": -31,
-   "why": "Q05's insert: the sweeper's brush runs into Helena's boot and stops (\"Apologies.\")"},
-  {"id": "brush_on_slipper", "sound": "sweeper_brush", "at": 99.83, "level": -33, "max": 2.6, "fade_out": 0.5,
-   "why": "the brush against Oren's taped slipper"}
+  {
+   "id": "sweepers_open",
+   "sound": "sweeper_brush",
+   "at": "Q01_t1@0.0",
+   "level": -31,
+   "fade_out": 0.6,
+   "why": "the first picture: the yellow sweepers scrubbing the gutter"
+  },
+  {
+   "id": "bin",
+   "sound": "bin_bag",
+   "at": "Q01_t1@4.25",
+   "level": -32,
+   "why": "the city units lift the bag out of the street bin"
+  },
+  {
+   "id": "brush_on_boot",
+   "sound": "sweeper_bump",
+   "at": 95.75,
+   "level": -31,
+   "why": "Q05's insert: the sweeper's brush runs into Helena's boot and stops (\"Apologies.\")"
+  },
+  {
+   "id": "brush_on_slipper",
+   "sound": "sweeper_brush",
+   "at": 99.83,
+   "level": -33,
+   "max": 2.6,
+   "fade_out": 0.5,
+   "why": "the brush against Oren's taped slipper"
+  }
  ]
 }

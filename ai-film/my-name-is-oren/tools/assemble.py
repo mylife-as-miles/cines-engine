@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Assemble the film from its takes in one pass: python3 tools/assemble.py edits/Q01_Q13_v2.json [--edl-only]
 
+A segment may take its sound from another file on the take's own clock ("audio": e.g. its voice stem from
+tools/stems.py, where the generator put music under the dialogue).
 Also writes <out>.edl.json: where every segment lands on the film's clock (tools/sound_mix.py places sounds with it);
 --edl-only writes that alone, without rendering.
 
@@ -60,7 +62,12 @@ def main():
     args, chains = [], []
     for i, s in enumerate(segs):
         path = os.path.join(HERE, s['file'])
+        n_in = len(args) // 2                # this segment's input number (extra audio files shift the count)
         args += ['-i', path]
+        v_in, a_in = f'{n_in}:v', f'{n_in}:a'
+        if s.get('audio'):                   # the segment's sound from another file on the take's clock (e.g. its voice stem)
+            args += ['-i', os.path.join(HERE, s['audio'])]
+            a_in = f'{n_in + 1}:a'
         a = s.get('from') or 0
         b = s.get('to')
         if b is None:
@@ -72,9 +79,9 @@ def main():
             gain = float(s['gain'])
         s['_gain'] = gain
         crop = f"crop={s['crop']}," if s.get('crop') else ''
-        chains.append(f"[{i}:v]trim=start_frame={a}:end_frame={b + 1},setpts=PTS-STARTPTS,{crop}"
+        chains.append(f"[{v_in}]trim=start_frame={a}:end_frame={b + 1},setpts=PTS-STARTPTS,{crop}"
                       f"scale=854:480,setsar=1,fps={FPS},format=yuv420p,settb=1/{FPS}[v{i}]")
-        chains.append(f"[{i}:a]atrim=start={a / FPS:.5f}:end={(b + 1) / FPS:.5f},asetpts=PTS-STARTPTS,"
+        chains.append(f"[{a_in}]atrim=start={a / FPS:.5f}:end={(b + 1) / FPS:.5f},asetpts=PTS-STARTPTS,"
                       f"aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad,"
                       f"atrim=end={s['_dur']:.5f},volume={gain:.2f}dB,{tail(s)}alimiter=limit=0.841:level=false[a{i}]")
         print(f"{s['file']}: frames {a}-{b} ({s['_dur']:.2f} s), {level} LUFS -> gain {gain:+.1f} dB", flush=True)

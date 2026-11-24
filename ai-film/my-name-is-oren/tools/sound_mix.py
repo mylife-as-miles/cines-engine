@@ -4,7 +4,8 @@
     python3 tools/sound_mix.py [audio/sound_plan.json]
 
 Beds loop with 0.6 s equal-power crossfades from a seeded offset (keep the seed when re-cutting, so untouched scenes
-keep their sound), with fades in and out; cues start on their mark. Each sound is set to its `level` (integrated
+keep their sound), with fades in and out, an optional filter ("af", e.g. a high-pass) and boosts over stretches
+where a take's own ground was removed; cues start on their mark. Each sound is set to its `level` (integrated
 LUFS over its length in the mix). The edit's sound (dialogue and the takes' sync sound) is kept as it is; the sum
 goes through a limiter at -1.5 dBFS and the picture is copied untouched. Writes the film, out/audio/layers.wav and
 out/audio/mix.json (every placement on the film's clock).
@@ -20,8 +21,8 @@ def run(cmd, **kw):
     return subprocess.run(cmd, capture_output=True, **kw)
 
 
-def load(path):
-    r = run(['ffmpeg', '-v', 'error', '-i', path, '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'])
+def load(path, af=None):
+    r = run(['ffmpeg', '-v', 'error', '-i', path] + (['-af', af] if af else []) + ['-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'])
     return np.frombuffer(r.stdout, dtype=np.float32).reshape(-1, 2).copy()
 
 
@@ -84,11 +85,21 @@ def main():
     sfx = json.load(open(os.path.join(HERE, 'audio', 'sfx', 'plan.json')))
     layers, record = np.zeros((N, 2), np.float32), []
     for b in plan.get('beds', []):
-        src = load(os.path.join(HERE, sfx[b['sound']]['file']))
+        src = load(os.path.join(HERE, sfx[b['sound']]['file']), b.get('af'))
         t0, t1 = T(b['from']), T(b['to'])
         n = int((t1 - t0) * SR)
         y = loop_bed(src, n, b.get('offset_seed', 1))
         y *= 10 ** ((b['level'] - lufs(y)) / 20)
+        env = np.ones(n, np.float32)         # boosts: a bed comes up where a take's own ground was taken away
+        for bo in b.get('boost', []):
+            u0, u1, ramp = int((T(bo['from']) - t0) * SR), int((T(bo['to']) - t0) * SR), int(bo.get('ramp', 0.5) * SR)
+            g = 10 ** (bo['db'] / 20)
+            seg = np.full(max(0, u1 - u0), g, np.float32)
+            k = min(ramp, len(seg) // 2)
+            if k:
+                seg[:k] = np.linspace(1, g, k); seg[-k:] = np.linspace(g, 1, k)
+            env[max(0, u0):max(0, u0) + len(seg)] = seg[:n - max(0, u0)]
+        y *= env[:, None]
         y = fades(y, b.get('fade_in', 1.0), b.get('fade_out', 2.0))
         i = int(t0 * SR); layers[i:i + len(y)] += y[:N - i]
         record.append({'id': b['id'], 'sound': b['sound'], 'from': round(t0, 3), 'to': round(t1, 3), 'level': b['level']})
