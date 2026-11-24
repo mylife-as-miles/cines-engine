@@ -36,14 +36,14 @@
   const THREAD = { clock: 'morning', history: [], steps: [
     { stamp: '07:12', at: 0 },
     { at: 7.0, her: MSG.goodMorning },                                   // A008
-    { him: MSG.goodMorningLove, type: [10.2, 15.4], at: 15.8 },         // A009: typed with a mouth full of foam
+    { him: MSG.goodMorningLove, type: [10.2, 15.4], at: 15.8, keyboard: [9.75, 99] },   // A009: typed with a mouth full of foam (the keyboard stays up)
     { at: 15.95, her: MSG.iLoveYou },                                    // A010: before his thumb leaves the glass
   ] };
   // what the phone shows on the shelf at time lt of a morning: dark, then the banner on the lock screen, then the thread
   function screenAt(lt, spec) {
     if (lt < spec.wake) return { screen: 'black', lit: false };
     if (lt < spec.thread) return { screen: 'banner', state: { text: spec.banner, in: seg(lt, spec.wake, spec.wake + 0.3), clock: spec.clock, wallpaper: 'abstract' } };
-    return { screen: 'thread', state: PHONE.exchange(lt, spec.ex) };
+    return { screen: 'thread', state: Object.assign(PHONE.exchange(lt, spec.ex), { keyboard: 0 }) };   // put down: the keyboard gone
   }
 
   // ---------------------------------------------------------------- the mirror: him at the basin, brushing; his back and his reflection
@@ -146,7 +146,9 @@
   function insert(c, lt, o) {
     c.reset();
     c.g.drawImage(background(c), 0, 0);
-    const st = PHONE.exchange(lt, o.ex), base = RIG.HANDS.thumb({}), F = handFrame(base.basis, GRIP.rot, GRIP.s, GRIP.x, GRIP.y);
+    // the keyboard stays up, so the newest message sits above the field and clear of his fingertips; it is there at once (A010
+    // "Instantly"), never rising from under the field
+    const st = Object.assign(PHONE.exchange(lt, o.ex), { arrive: 1 }), base = RIG.HANDS.thumb({}), F = handFrame(base.basis, GRIP.rot, GRIP.s, GRIP.x, GRIP.y);
     const pc = F(base.grip), ang = GRIP.rot, h = base.phoneSize[1] * GRIP.s;
     const P = { x: pc[0], y: pc[1], h, roll: ang, screen: 'thread', state: st, t: lt, env: '#C9D0D4', lightDir: [0.7, -0.6] };
     const info = PHONE.where(P, c);

@@ -13,7 +13,7 @@
   // the next morning's thread, as in Q02 only what has happened: the time, his "Good morning." (A031), her "I love you." at once (A032)
   const THREAD = { clock: 'morning2', history: [], steps: [
     { stamp: '07:12', at: 0 },
-    { him: MSG.goodMorning2, type: [6.7, 8.6], at: 9.0 },
+    { him: MSG.goodMorning2, type: [6.7, 8.6], at: 9.0, keyboard: [6.25, 99] },     // the keyboard stays up through the insert
     { at: 9.15, her: MSG.iLoveYou2 },
   ] };
 
@@ -36,7 +36,7 @@
         draw(c, st, lt) { Q02().insert(c, lt, { ex: THREAD, text: MSG.goodMorning2, type: [6.7, 8.6], send: 9.0, lift: 9.55, foam: true }); } },
       { at: 11.0, name: 'mirror, Q02\'s framing: brushing; the dusty toothbrush in its glass in the empty half (hard cut at 15.5)',
         draw(c, st, lt) { const t = twos(lt);
-          Q02().mirror(c, lt, { screen: { screen: 'thread', state: PHONE.exchange(lt, THREAD) }, glow: 1, foamBasin: true,
+          Q02().mirror(c, lt, { screen: { screen: 'thread', state: Object.assign(PHONE.exchange(lt, THREAD), { keyboard: 0 }) }, glow: 1, foamBasin: true,
             gaze: key(t, [[11, [0.05, 0.5]], [12.4, [0.05, 0.5]], [12.7, [0.1, 0.4]], [13.9, [0.1, 0.4]], [14.2, [0.02, 0.5]]]),
             smile: key(t, [[11, 0.12], [12.8, 0.12], [13.4, 0.3], [15.5, 0.25]]), lids: 0.45, yaw: key(t, [[12.5, -0.05], [13.0, 0.2], [14.0, 0.2], [14.5, -0.04]]) }); } },
     ],

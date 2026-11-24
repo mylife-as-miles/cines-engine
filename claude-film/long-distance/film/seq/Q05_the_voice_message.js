@@ -23,6 +23,7 @@
     return Object.assign(base, { progress: clamp((lt - PLAY2) / MSG_DUR, 0, 1), playing: true });
   }
   // his ears colour in the stretch between two passing streetlights (15.7–18.0), so the red is seen against his own skin
+  const SODIUM = 0.45;                                  // the passing streetlight's strength (of the set's): a warm pass, not a recolour
   const earsAt = lt => lt < 15 ? 0 : tk(lt, [[15.8, 0], [17.6, 1, 'inOutSine']]);
 
   const PI2 = Math.PI * 2;
@@ -61,7 +62,8 @@
     RIG.draw(c, 'him', 'bus', { view: 'back', flip: true, x: A.head.x + lurch * 9, y: A.head.y, s: A.head.s, light: L, t: lt, sway: 0.04 * lurch,
       rail: [A.hands.rail.x, A.hands.rail.y], face: { yaw: -h.yaw, pitch: h.pitch, lids: 0.5, ears } });
     void rail;
-    v.front(c, lt, {});
+    v.front(c, lt, { sweep: false });
+    sweepBand(c, v, lt);
   }
 
   // ---------------------------------------------------------------- 2, 4 · the phone (6–15, 23–26)
@@ -93,7 +95,7 @@
   function sodium(c, lt) {
     const T = 3.4, ph = ((lt + 1.1) / T) % 1, x = W + 500 - ph * (W + 1000), g = c.g, sk = 300;
     const band = (half, a, seed) => { g.globalAlpha = a; g.fillStyle = '#E09048'; g.fill(OTM.S().poly([[x - half + sk * 1.3, -340], [x + half + sk * 1.3, -340], [x + half - sk * 1.3, H + 340], [x - half - sk * 1.3, H + 340]]).path(3, seed)); };
-    g.save(); g.globalCompositeOperation = 'soft-light'; band(330, 0.4, 150); band(150, 0.45, 151); g.restore();
+    g.save(); g.globalCompositeOperation = 'soft-light'; band(330, 0.4 * SODIUM, 150); band(150, 0.45 * SODIUM, 151); g.restore();
     return clamp(1 - Math.abs(x - PH.x) / 600, 0, 1);
   }
   let _scr = null; const SCR = () => _scr || (_scr = OTM.makeCanvas(8, 8).getContext('2d'));
@@ -138,8 +140,31 @@
     const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: tap > 0.3 ? 0.6 : 0 });   // two drawings: down, lifted
     // the hand is below the phone; where it crosses the glass (the thumb, the fingertips round the far edge) it is in front of it
     const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false }));
-    PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
+    PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 }, over: (gl, inf) => lunchPhoto(c, gl, inf) }, P));
     RIG.hand(c, 'him', 'thumb', hp);
+  }
+  // Her reply at lunch, in the thread above the voice message: a small blurred thumbnail, by the same rule as Q04's grid: soft
+  // skin-toned shapes past any form, nothing legible. It replaces the thread's flat placeholder (its bubble, 196 × 261 points under
+  // "Send me one.", is blacked out) with a smaller thumbnail at its top, on her side.
+  const PHOTO = { x: 12, y: 343, w: 196, h: 261, tw: 128, th: 170 };
+  function photoArt(c) {
+    return c.cache('Q05|lunch|photo', g => {
+      const w = 256, h = 340, r = OTM.rng('q05-lunch-photo');
+      g.fillStyle = '#4A3B36'; g.fillRect(0, 0, w, h);
+      const tones = ['#C99A80', '#B07A62', '#DDB59C', '#8E6352', '#E8CBB6', '#6A4A40'];
+      g.filter = 'blur(26px)';
+      for (let i = 0; i < 9; i++) { g.fillStyle = tones[i % tones.length]; g.globalAlpha = 0.55 + 0.4 * r(); const x = r() * w, y = r() * h, a = 60 + r() * 110, b = 50 + r() * 120;
+        g.save(); g.translate(x, y); g.rotate(r() * 3); g.fillRect(-a / 2, -b / 2, a, b); g.restore(); }
+      g.globalAlpha = 1; g.filter = 'none';
+      const t = OTM.makeCanvas(w, h), tg = t.getContext('2d'); tg.filter = 'blur(10px)'; tg.drawImage(g.canvas, 0, 0); g.clearRect(0, 0, w, h);
+      g.save(); g.beginPath(); g.roundRect(0, 0, w, h, 34); g.clip(); g.drawImage(t, 0, 0); g.restore();
+    }, 256, 340);
+  }
+  function lunchPhoto(c, gl, info) {
+    const P0 = PHOTO, q = (x, y) => info.pt(x, y);
+    gl.save(); gl.fillStyle = '#000000'; gl.beginPath(); [q(P0.x - 2, P0.y - 2), q(P0.x + P0.w + 2, P0.y - 2), q(P0.x + P0.w + 2, P0.y + P0.h + 2), q(P0.x - 2, P0.y + P0.h + 2)].forEach((p, i) => i ? gl.lineTo(p[0], p[1]) : gl.moveTo(p[0], p[1])); gl.closePath(); gl.fill();
+    const y0 = P0.y, x0 = P0.x; GG.warp(gl, photoArt(c), [q(x0, y0), q(x0 + P0.tw, y0), q(x0 + P0.tw, y0 + P0.th), q(x0, y0 + P0.th)], 4, 4);
+    gl.restore();
   }
 
   // ---------------------------------------------------------------- 3 · close (15–23): his ears; the stranger; the floor
@@ -178,7 +203,7 @@
     PHONE.glow(c, { x: A.phone.x - 160, y: 1130, r: 700, k: 0.45, tone: 'night', em: 0.1 });
     v.front(c, lt, { sweep: false });
     strangerCollar(c);
-    sweepClose(c, v, lt);
+    sweepBand(c, v, lt);
   }
   // the pressed stranger (the set's): a turned-up coat collar over the back of the neck, so no neck shows through it
   function strangerCollar(c) {
@@ -190,11 +215,12 @@
     });
     c.g.drawImage(cv, 0, 0);
   }
-  // the set's passing sodium band, drawn here after the collar (the same band at the same place: SETS.bus.views.close.sweep)
-  function sweepClose(c, v, t) {
+  // the set's passing sodium band (the same band at the same place, on the set's clock: view.sweep), drawn here instead of by the
+  // set and at a gentler strength (SODIUM), so the streetlight warms him as it passes but his shirt stays the same pale blue
+  function sweepBand(c, v, t) {
     const sw = v.sweep(t), g = c.g, w = 330, sk = 260 * (v.sweep(0).x > W ? 1 : -1);
     const band = (x, half, a, seed) => { g.globalAlpha = a; g.fillStyle = '#E39A52'; g.fill(OTM.S().poly([[x - half + sk, -80], [x + half + sk, -80], [x + half - sk * 0.4, H + 80], [x - half - sk * 0.4, H + 80]]).path(3, seed)); };
-    g.save(); g.globalCompositeOperation = 'soft-light'; band(sw.x, w * 0.9, 0.42, 150); band(sw.x, w * 0.45, 0.5, 151); g.restore();
+    g.save(); g.globalCompositeOperation = 'soft-light'; band(sw.x, w * 0.9, 0.42 * SODIUM, 150); band(sw.x, w * 0.45, 0.5 * SODIUM, 151); g.restore();
   }
 
   FILM.seq({
