@@ -51,7 +51,7 @@
   // hold 0: the phone up between them, the screen to him; 1: turned back to her, studying it (we see its back)
   function herPhone(c, lt, o) {
     const hold = o.hold == null ? 1 : o.hold;
-    const lift = o.still ? 150 : lerp(70, 150, E.inOutSine(clamp(hold, 0, 1)));
+    const lift = o.still ? 220 : lerp(70, 220, E.inOutSine(clamp(hold, 0, 1)));
     const V = LV().between, A = V.shots.her.anchors, s = 0.23 * A.herBetween[2];
     const her = K.herClose(c, lt, { pose: o.still ? 'still' : 'phone', lift, still: o.still, blink: o.blink, face: o.face,
       phoneAt: hold > 0.5 ? [A.herBetween[0] - 0.2 * s, A.herBetween[1] + 1.8 * s] : null, phoneK: o.screen == null ? 0.5 : 0.5 * o.screen,
@@ -191,7 +191,7 @@
     const tr = RIG.trade(c, u, { x: 960, y: 600, s: 330, light: L, t: lt });
     if (tr.phone) {
       const T = RIG.tradeTime(u);
-      PHONE.draw(c, { x: tr.phone.x, y: tr.phone.y + (T.swap ? 0 : 16), h: tr.phone.w, spin: Math.PI / 2, pitch: 1.25, screen: 'black', env: '#BCC2C4' });
+      PHONE.draw(c, { x: tr.phone.x, y: tr.phone.y + (T.swap ? 0 : 30), h: tr.phone.w, spin: Math.PI / 2, pitch: 1.25, screen: 'black', env: '#BCC2C4' });
     }
     tr.over(c);
   }

@@ -130,9 +130,9 @@
       amb: '#2E3550', phone: [PH.x, PH.y + 300], phoneK: 1.1, phoneZ: 0.6 });
     void band;
     // the hand placed so the thumb's tip lands on its mark (one reach, one turn: only the tap changes the sculpture)
-    const base = { s: 1100, rot: 0.18, flip: true, reach: 0.5, tap: 0, light: L };
+    const base = { s: 1000, rot: 0.18, flip: true, reach: 0.5, tap: 0, light: L };
     const pr = RIG.hand(c, 'him', 'thumb', Object.assign({}, base, { s: base.s / 4, x: 0, y: 0, target: SCR() }));
-    const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: Math.round(tap * 4) / 4 });
+    const hp = Object.assign({}, base, { x: tgt[0] - pr.thumb[0] * 4, y: tgt[1] - pr.thumb[1] * 4, tap: tap > 0.3 ? 0.6 : 0 });   // two drawings: down, lifted
     const mask = m => RIG.hand(c, 'him', 'thumb', Object.assign({}, hp, { target: m, shadow: false, only: ['thumb', 'dist'] }));
     PHONE.draw(c, Object.assign({ mask, maskShadow: { alpha: 0.4 } }, P));
     RIG.hand(c, 'him', 'thumb', hp);
