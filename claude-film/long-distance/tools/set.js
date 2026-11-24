@@ -1,4 +1,4 @@
-// Render every demo of a set (or of the character rig: node tools/set.js rig): node tools/set.js kitchen [timeOffsetInDemo=1] [out.png]
+// Render every demo of a set (or of the character rig: node tools/set.js rig; or of the phone: node tools/set.js phone): node tools/set.js kitchen [timeOffsetInDemo=1] [out.png]
 // Each demo gets 4 s; the sheet shows each demo at the given offset plus its render time.
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
 (async () => {

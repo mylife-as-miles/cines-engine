@@ -5,7 +5,7 @@
   // Renders a set's (or the rig's) demos as a fake sequence so it can be checked in isolation: settest.html?set=kitchen
   FILM_LOAD('../', ['none']).then(async () => {
     const name = new URLSearchParams(location.search).get('set');
-    const set = name === 'rig' ? window.RIG : SETS[name];
+    const set = name === 'rig' ? window.RIG : name === 'phone' ? window.PHONE : SETS[name];
     if (!set || !set.demos) { console.error((name || '?') + ' has no demos'); window.FILM_READY = true; return; }
     window.FILM_ONLY = null;
     FILM.seq({ id: 'SET', title: 'set ' + name, dur: set.demos.length * 4,
