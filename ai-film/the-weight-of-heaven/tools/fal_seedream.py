@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Generate location reference candidates on fal with Seedream 5.5 Edit, from the current prompts.
+"""Generate reference candidates on fal from the current prompts: locations with Seedream 5.5 Edit, props with
+Nano Banana Pro (the author's choice for each).
 
     python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py E02 E04 ... [--n 2] [--take t2] [--dry-run]
+    python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py P01 P02 ... --model nbp [--n 2] [--take t1]
+
+Nano Banana Pro (fal-ai/nano-banana-pro, or /edit when reference images are attached) makes 16:9 sheets at 2K for
+props, 21:9 for locations; $0.15 per image, reference images free; "@Image N" is sent as "Image N".
 
 For each location: takes its current prompt and reference images from env_prompts.current(), sends them to
 bytedance/seedream/v5.5/edit at 21:9 (3276x1404, the largest 21:9 the endpoint allows), waits, saves the full-size
@@ -19,6 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, '..'))
 sys.path.insert(0, HERE)
 import env_prompts as E  # noqa: E402
+import prop_prompts as PP  # noqa: E402
 
 ENDPOINT = 'bytedance/seedream/v5.5/edit'
 SIZE = {'width': 3276, 'height': 1404}           # 21:9, 4.6 MP (endpoint max 4,624,220 px)
@@ -31,17 +37,37 @@ def data_uri(path):
         return 'data:image/jpeg;base64,' + base64.b64encode(f.read()).decode()
 
 
-def submit(code, n):
-    prompt, imgs, kind = E.current(code)
-    sent = re.sub(r'@Image (\d+)', r'Figure \1', prompt)
-    payload = {'prompt': sent, 'image_urls': [data_uri(p) for p in imgs], 'image_size': SIZE,
-               'num_images': n, 'output_format': 'png'}
-    r = requests.post(f'https://queue.fal.run/{ENDPOINT}', headers=HDR, json=payload, timeout=120)
+NBP_PRICE = 0.15                                 # per output image at 1K or 2K (fal, Nov 2026)
+
+
+def module(code):
+    return PP if code.startswith('P') else E
+
+
+def cost(model, n, imgs):
+    return round(n * (NBP_PRICE if model == 'nbp' else PRICE_OUT + PRICE_IN * len(imgs)), 4)
+
+
+def submit(code, n, model='seedream'):
+    prompt, imgs, kind = module(code).current(code)
+    if model == 'nbp':
+        sent = re.sub(r'@Image (\d+)', r'Image \1', prompt)
+        endpoint = 'fal-ai/nano-banana-pro/edit' if imgs else 'fal-ai/nano-banana-pro'
+        payload = {'prompt': sent, 'num_images': n, 'output_format': 'png', 'resolution': '2K',
+                   'aspect_ratio': '16:9' if code.startswith('P') else '21:9'}
+        if imgs:
+            payload['image_urls'] = [data_uri(p) for p in imgs]
+    else:
+        sent = re.sub(r'@Image (\d+)', r'Figure \1', prompt)
+        endpoint = ENDPOINT
+        payload = {'prompt': sent, 'image_urls': [data_uri(p) for p in imgs], 'image_size': SIZE,
+                   'num_images': n, 'output_format': 'png'}
+    r = requests.post(f'https://queue.fal.run/{endpoint}', headers=HDR, json=payload, timeout=120)
     r.raise_for_status()
     j = r.json()
-    return dict(code=code, kind=kind, imgs=imgs, n=n, request_id=j['request_id'],
+    return dict(code=code, kind=kind, imgs=imgs, n=n, request_id=j['request_id'], endpoint=endpoint, model=model,
                 status_url=j['status_url'], response_url=j['response_url'],
-                cost=round(n * (PRICE_OUT + PRICE_IN * len(imgs)), 4), words=len(sent.split()))
+                cost=cost(model, n, imgs), words=len(sent.split()))
 
 
 def wait(job, timeout=900):
@@ -72,21 +98,24 @@ def save(job, out, take):
 
 
 def log(job, files, take, error=None):
-    path = next(os.path.join(E.OUT, f) for f in os.listdir(E.OUT) if f.startswith(f"ENV_{job['code']}_"))
+    pre = 'PROP' if job['code'].startswith('P') else 'ENV'
+    path = next(os.path.join(E.OUT, f) for f in os.listdir(E.OUT) if f.startswith(f"{pre}_{job['code']}_"))
+    label = 'Nano Banana Pro' if job.get('model') == 'nbp' else 'Seedream 5.5 Edit'
+    endpoint = job.get('endpoint', ENDPOINT)
     s = open(path).read()
     s = s.replace('\n## Takes\n\n(none yet)\n', '\n## Takes\n\n')
     refs = ', '.join(f'`{p}`' for p in job['imgs'])
     when = datetime.date.today().isoformat()
     if error:
-        s = s.rstrip('\n') + (f"\n- {take} · fal `{ENDPOINT}` job `{job['request_id']}` · {when} · FAILED: {error}\n")
+        s = s.rstrip('\n') + (f"\n- {take} · fal `{endpoint}` job `{job['request_id']}` · {when} · FAILED: {error}\n")
     for tag, url, size in files:
         s = s.rstrip('\n') + (f"\n- {tag} · `refs/candidates/{tag}.jpg` (full size `out/refs/{tag}.png`, {size[0]}x{size[1]}) · "
-                              f"Seedream 5.5 Edit on fal, job `{job['request_id']}`, prompt {job['kind']} "
+                              f"{label} on fal (`{endpoint}`), job `{job['request_id']}`, prompt {job['kind']} "
                               f"({job['words']} words), images {refs} · ${job['cost'] / job['n']:.4f} · {when} · verdict pending\n")
     open(path, 'w').write(s)
     with open(os.path.join(E.OUT, 'jobs.jsonl'), 'a') as f:
         f.write(json.dumps({**{k: job[k] for k in ('code', 'kind', 'imgs', 'n', 'request_id', 'cost', 'words')},
-                            'endpoint': ENDPOINT, 'size': SIZE, 'take': take, 'date': when, 'error': error,
+                            'endpoint': endpoint, 'model': job.get('model', 'seedream'), 'take': take, 'date': when, 'error': error,
                             'outputs': [{'tag': t, 'url': u, 'size': list(sz)} for t, u, sz in files]}) + '\n')
 
 
@@ -94,19 +123,20 @@ def main():
     args = sys.argv[1:]
     n = int(args[args.index('--n') + 1]) if '--n' in args else 2
     take = args[args.index('--take') + 1] if '--take' in args else 't2'
-    codes = [a for a in args if re.fullmatch(r'E\d\d', a)]
+    model = args[args.index('--model') + 1] if '--model' in args else 'seedream'
+    codes = [a for a in args if re.fullmatch(r'[EP]\d\d', a)]
     total = 0
     for c in codes:
-        _, imgs, kind = E.current(c)
-        cost = n * (PRICE_OUT + PRICE_IN * len(imgs))
-        total += cost
-        print(f'{c}: {kind}, {len(imgs)} reference image(s), {n} output(s), ${cost:.4f}')
+        _, imgs, kind = module(c).current(c)
+        cc = cost(model, n, imgs)
+        total += cc
+        print(f'{c}: {kind}, {len(imgs)} reference image(s), {n} output(s), {model}, ${cc:.4f}')
     print(f'total ${total:.4f}')
     if '--dry-run' in args:
         return
     jobs = []
     for c in codes:
-        job = submit(c, n)
+        job = submit(c, n, model)
         print('submitted', c, job['request_id'])
         jobs.append(job)
     for job in jobs:
