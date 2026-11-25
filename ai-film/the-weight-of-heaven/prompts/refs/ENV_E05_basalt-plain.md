@@ -2,7 +2,22 @@
 
 Scenes: 5, 8, 10, 11 · State in this reference: Grey day under the kingdom (scenes 5 and 6). The dusk (8, 10) and last-light (11) versions are made from this one once it is chosen.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, round 4: an edit of take E05_t1 (the Weir drawn as six white lights; the rock too close). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E05_t1.jpg`.
+
+```text
+Edit Figure 1, the basalt plain beneath the floating kingdom. This is a photoreal film location reference.
+
+Keep exactly: the black hexagonal basalt plain and its clusters of columns, the old fort on the left horizon, the small figure, the dark rock underside overhead with its roots and hanging chains, its shape and its place in the frame, the camera position, the lens and the grey light.
+
+Change only these two things:
+
+1. On the far horizon, replace the row of white lights with the Weir: a long, low wall of seamless black stone across the horizon, with nine tall round-arched gates along it. Two gates are shut, black like the wall. Through the seven open gates, a glimpse of a green valley beyond, darker than the sky. Nothing glows.
+2. Add haze between the camera and the rock overhead, so it reads as far higher above the plain: softer, a lighter grey, less detailed, still filling the top of the frame from edge to edge.
+
+Do not add: lights, glowing openings, bright white arches, blue sky, sunbeams, people, text.
+```
+
+## Prompt v1 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

@@ -2,7 +2,22 @@
 
 Scenes: 5, 8, 10 · State in this reference: Grey day (scene 5): nine gates, two shut. Dusk versions (8, 10) are made from this one.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, round 4: an edit of take E06_t1 (a mill water-wheel with paddles; too many gates, none shut; no flattened grass). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E06_t1.jpg`.
+
+```text
+Edit Figure 1, the Weir at Sarn. This is a photoreal film location reference.
+
+Keep exactly: the seamless wall of black stone, its arched gates receding along it, the green vale and hearth smoke seen through the nearest gate, the path, the basalt ground, the two small figures, the dark sky, the camera position and the lens.
+
+Change only these two things:
+
+1. The wheel: a plain upright spoked wheel of dark oak bound with iron, forty feet across, with no paddles, buckets or blades on its rim. Its spokes are worn smooth and pale by eight hundred years of hands. It stands in a heavy oak-and-iron frame against the wall, with a thick iron lock-pin through the frame beside the hub. Its lower spokes are at shoulder height for the two figures.
+2. The gates: the wall has exactly nine gates along its whole length, the far ones small in the distance. The second and the fourth gates from the camera are shut by flush black slabs of the same stone as the wall. On the ground beneath each open gate, the grass lies combed flat in one direction, toward the vale.
+
+Do not add: a water-wheel, paddles, water, a mill, carvings or joints in the stone, glow, people, text.
+```
+
+## Prompt v1 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

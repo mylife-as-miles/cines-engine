@@ -2,7 +2,25 @@
 
 Scenes: 1, 3, 10.20 · State in this reference: Day, the wedding (scene 1). Nave empty of guests; banners, petals and the bell in place.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, round 4: an edit of take E01_t1 (airships beyond the arches; banners draped over the rails; no petals in the air). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E01_t1.jpg`.
+
+```text
+Edit Figure 1, the nave of the Cathedral of the Ascension. This is a photoreal film location reference.
+
+Keep exactly: the slender marble columns climbing into mist, the galleries and their balustrades, the open arches onto cloud, the open tower at the far end with the bronze bell on its stone beam, the small figure in white in the aisle, the small gold cup on the right gallery rail, the camera position, the lens and the soft shadowless cloud light.
+
+Change only these three things:
+
+1. Remove the airships from the cloud beyond the arches on both sides; leave only cloud.
+2. Add white petals in the air throughout the nave, falling very slowly: many still high up near the galleries, some at head height, a few resting on the aisle.
+3. The banners hang free from the galleries instead of lying draped over the rails, and drift slowly sideways in the still air, as if under water.
+
+Full photographic detail throughout.
+
+Do not add: ships, airships, balloons, red or pink petals, people, text, glow, sunbeams, lens flare.
+```
+
+## Prompt v1 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

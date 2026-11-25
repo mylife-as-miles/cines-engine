@@ -2,7 +2,19 @@
 
 Scenes: 2 · State in this reference: Day, before the collapse. The mountain whole.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, round 4: an edit of take E03_t1 (a flying saucer in the sky). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E03_t1.jpg`.
+
+```text
+Edit Figure 1, a field in Anvil Vale. This is a photoreal film location reference.
+
+Keep exactly: the ploughed field, the dry-stone wall, the buttressed stone farmhouse, the flat-topped mountain, the plough and yoke, the path and the trough, the camera position, the lens and the low grey light.
+
+Change only the sky. Remove the saucer-shaped dark object. In its place, the underside of a floating kingdom fills the upper half of the sky: an immense ceiling of dark rock very far above, seen from far below, soft and indistinct in the haze like a low storm ceiling, only a faint rock texture showing through. It runs off the frame on the left, the right and the top, with no visible outline and no visible end. Its lower edge dissolves into the grey overcast about halfway down the sky; below that, grey cloud to the horizon.
+
+Do not add: a disc, a saucer, a spaceship, a floating island with visible edges, sharp rock detail, blue sky, sunshine, people, text, glow.
+```
+
+## Prompt v1 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

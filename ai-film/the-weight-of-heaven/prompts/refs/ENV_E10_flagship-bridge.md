@@ -2,7 +2,7 @@
 
 Scenes: 9 · State in this reference: Dusk. No light inside: everything lit by the dusk through the glass.
 
-Prompt v3, an edit of take E10_t2b (round two: the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E10_t2b.png` (full size).
+Prompt v3, round 3: an edit of take E10_t2b (the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E10_t2b.png`.
 
 ```text
 Edit Figure 1, the bridge of the flagship of a fleet of white ships that sail the air. This is a photoreal film location reference.
@@ -19,7 +19,7 @@ Change only these four things:
 Do not add: sea, water, sails, balloons, airships, flags, red seals, people, text, lens flare, glow or sunbeams.
 ```
 
-## Prompt v2 (made the round-two takes)
+## Prompt v2 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

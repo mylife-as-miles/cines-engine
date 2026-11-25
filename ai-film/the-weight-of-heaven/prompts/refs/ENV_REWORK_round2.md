@@ -4,6 +4,29 @@ Six locations redone after round one. E02 and E07 are edits of their first take;
 
 ---
 
+# E01 — THE CATHEDRAL OF THE ASCENSION — NAVE AND OPEN TOWER
+
+Scenes: 1, 3, 10.20 · State in this reference: Day, the wedding (scene 1). Nave empty of guests; banners, petals and the bell in place.
+
+Prompt v2, round 4: an edit of take E01_t1 (airships beyond the arches; banners draped over the rails; no petals in the air). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E01_t1.jpg`.
+
+```text
+Edit Figure 1, the nave of the Cathedral of the Ascension. This is a photoreal film location reference.
+
+Keep exactly: the slender marble columns climbing into mist, the galleries and their balustrades, the open arches onto cloud, the open tower at the far end with the bronze bell on its stone beam, the small figure in white in the aisle, the small gold cup on the right gallery rail, the camera position, the lens and the soft shadowless cloud light.
+
+Change only these three things:
+
+1. Remove the airships from the cloud beyond the arches on both sides; leave only cloud.
+2. Add white petals in the air throughout the nave, falling very slowly: many still high up near the galleries, some at head height, a few resting on the aisle.
+3. The banners hang free from the galleries instead of lying draped over the rails, and drift slowly sideways in the still air, as if under water.
+
+Full photographic detail throughout.
+
+Do not add: ships, airships, balloons, red or pink petals, people, text, glow, sunbeams, lens flare.
+```
+---
+
 # E02 — THE COUNCIL CHAMBER OF ORISON
 
 Scenes: 4, 10.21 · State in this reference: Day, three days after the wedding. The city is sinking: cloud rising through the lower terraces outside.
@@ -24,6 +47,23 @@ Change only these three things:
 Keep the same grey, cool, high-key cloud light and the same muted palette. Nothing else changes.
 
 Do not add: ochre, brown or honey-coloured stone, medieval houses, tiled roofs, Italian hill-town buildings, bell towers with pointed roofs, people, text, signage, lens flare, glow or sunbeams.
+```
+---
+
+# E03 — ANVIL VALE — A FIELD AND A HOUSE BUILT TO BEAR
+
+Scenes: 2 · State in this reference: Day, before the collapse. The mountain whole.
+
+Prompt v2, round 4: an edit of take E03_t1 (a flying saucer in the sky). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E03_t1.jpg`.
+
+```text
+Edit Figure 1, a field in Anvil Vale. This is a photoreal film location reference.
+
+Keep exactly: the ploughed field, the dry-stone wall, the buttressed stone farmhouse, the flat-topped mountain, the plough and yoke, the path and the trough, the camera position, the lens and the low grey light.
+
+Change only the sky. Remove the saucer-shaped dark object. In its place, the underside of a floating kingdom fills the upper half of the sky: an immense ceiling of dark rock very far above, seen from far below, soft and indistinct in the haze like a low storm ceiling, only a faint rock texture showing through. It runs off the frame on the left, the right and the top, with no visible outline and no visible end. Its lower edge dissolves into the grey overcast about halfway down the sky; below that, grey cloud to the horizon.
+
+Do not add: a disc, a saucer, a spaceship, a floating island with visible edges, sharp rock detail, blue sky, sunshine, people, text, glow.
 ```
 ---
 
@@ -420,11 +460,51 @@ Avoid:
 
 ---
 
+# E05 — THE BASALT PLAIN
+
+Scenes: 5, 8, 10, 11 · State in this reference: Grey day under the kingdom (scenes 5 and 6). The dusk (8, 10) and last-light (11) versions are made from this one once it is chosen.
+
+Prompt v2, round 4: an edit of take E05_t1 (the Weir drawn as six white lights; the rock too close). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E05_t1.jpg`.
+
+```text
+Edit Figure 1, the basalt plain beneath the floating kingdom. This is a photoreal film location reference.
+
+Keep exactly: the black hexagonal basalt plain and its clusters of columns, the old fort on the left horizon, the small figure, the dark rock underside overhead with its roots and hanging chains, its shape and its place in the frame, the camera position, the lens and the grey light.
+
+Change only these two things:
+
+1. On the far horizon, replace the row of white lights with the Weir: a long, low wall of seamless black stone across the horizon, with nine tall round-arched gates along it. Two gates are shut, black like the wall. Through the seven open gates, a glimpse of a green valley beyond, darker than the sky. Nothing glows.
+2. Add haze between the camera and the rock overhead, so it reads as far higher above the plain: softer, a lighter grey, less detailed, still filling the top of the frame from edge to edge.
+
+Do not add: lights, glowing openings, bright white arches, blue sky, sunbeams, people, text.
+```
+---
+
+# E06 — THE WEIR AT SARN
+
+Scenes: 5, 8, 10 · State in this reference: Grey day (scene 5): nine gates, two shut. Dusk versions (8, 10) are made from this one.
+
+Prompt v2, round 4: an edit of take E06_t1 (a mill water-wheel with paddles; too many gates, none shut; no flattened grass). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E06_t1.jpg`.
+
+```text
+Edit Figure 1, the Weir at Sarn. This is a photoreal film location reference.
+
+Keep exactly: the seamless wall of black stone, its arched gates receding along it, the green vale and hearth smoke seen through the nearest gate, the path, the basalt ground, the two small figures, the dark sky, the camera position and the lens.
+
+Change only these two things:
+
+1. The wheel: a plain upright spoked wheel of dark oak bound with iron, forty feet across, with no paddles, buckets or blades on its rim. Its spokes are worn smooth and pale by eight hundred years of hands. It stands in a heavy oak-and-iron frame against the wall, with a thick iron lock-pin through the frame beside the hub. Its lower spokes are at shoulder height for the two figures.
+2. The gates: the wall has exactly nine gates along its whole length, the far ones small in the distance. The second and the fourth gates from the camera are shut by flush black slabs of the same stone as the wall. On the ground beneath each open gate, the grass lies combed flat in one direction, toward the vale.
+
+Do not add: a water-wheel, paddles, water, a mill, carvings or joints in the stone, glow, people, text.
+```
+---
+
 # E07 — SARN VALE AND THE ONE ROAD
 
 Scenes: 5, 8, 9, 11 · State in this reference: Grey day (scene 5): the vale lived in, hearths lit. The crowded road (8, 9) and the night hearths (11) are made from this one.
 
-Prompt v3, an edit of take E07_t2b (round two: a floating rock with a hard outline in the sky). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E07_t2b.png` (full size).
+Prompt v3, round 3: an edit of take E07_t2b (a floating rock with a hard outline in the sky). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E07_t2b.png`.
 
 ```text
 Edit Figure 1, Sarn Vale. This is a photoreal film location reference.
@@ -437,11 +517,400 @@ Do not add any floating object, rock, island, disc or shape in the sky. No blue 
 ```
 ---
 
+# E09 — THE TREATY HOUSE — THE HALL OF THE TREATY
+
+Scenes: 7 · State in this reference: Day, shutters open (after 7.4). The closed-shutter state is the same room in the dark.
+
+Prompt v2, a new generation (round one: not made in round one; the courtyard is attached so the masonry matches). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E08_t1.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+
+## THE TREATY HOUSE — THE HALL OF THE TREATY
+
+Create a photorealistic cinematic environment reference image for THE TREATY HOUSE — THE HALL OF THE TREATY.
+
+This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
+
+The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the Treaty House courtyard (round-one take). Use it for: the Treaty House masonry: old dark basalt blocks worn smooth, heavy buttresses, plain arches, dark oak doors with iron bands.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
+
+---
+
+# LOCATION IDENTITY
+
+LOCATION:
+The hall of the Treaty House: the treaty wall, the shutters, and the floor of warrants
+
+COUNTRY / REGION:
+The ground: the bearing-lands of the eleven nations, beneath the floating kingdom of Orison (an invented world, built from real northern volcanic and upland country: columnar basalt, slate, dry-stone, heavy soil).
+
+SETTING:
+a long dark stone hall inside the old fort
+
+TIME PERIOD:
+Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
+
+SOCIAL / ECONOMIC CHARACTER:
+The place where the treaty was made. Kept by the ground; never visited from above.
+
+OVERALL FEEL:
+Dark, solemn, uncertain, archival. Thirty years of paper on the floor.
+
+The location should feel like a place that existed before the camera arrived.
+
+It must not feel production-designed for symbolism.
+
+---
+
+# SPATIAL GEOGRAPHY
+
+Establish clear, believable geography.
+
+Include:
+
+- one long wall is a single face of natural basalt, cut with writing in two invented scripts side by side, the same size
+- under both, worn almost flat, runs a third, larger script of broad worn curves that belongs to neither; the two scripts were cut straight across it
+- at the foot of that wall, on one line: seven round carved crests, then eleven square carved seals, all the same size
+- opposite the treaty wall: one tall opening closed by heavy wooden shutters, here open, showing daylight and the black plain
+- the floor: covered with hundreds of white paper warrants laid in rows, each held down by a stone (a hearthstone, a roof slate, the corner of a doorstep), each with one small red wax seal
+- narrow aisles between the rows of warrants to walk along
+- one heavy door from the courtyard in an end wall
+- camera positions: eye level from the door end looking along the hall, the treaty wall on one side and the shutters on the other; facing the treaty wall; from the shutters back
+
+The geography must be easy to understand and remain reproducible from different camera angles.
+
+Do not create impossible architecture.
+
+Do not create furniture that blocks basic movement.
+
+Do not create a room that changes scale from one side to another.
+
+---
+
+# ARCHITECTURE
+
+Preserve believable architecture appropriate to:
+
+- country
+- building age
+- social class
+- function
+- climate
+
+Specify:
+
+WALLS:
+The treaty face is one natural slab of basalt, cut with the scripts; the other walls are dark basalt masonry.
+
+CEILING:
+Low and heavy: dark timber beams on stone corbels.
+
+FLOOR:
+Old flagstones, almost entirely covered by the warrants.
+
+WINDOWS:
+One tall opening with heavy wooden shutters, open.
+
+DOORS:
+One heavy dark oak door from the courtyard.
+
+TRIM / MOULDING:
+None.
+
+FIXTURES:
+Iron brackets on the walls, empty (no lamps lit).
+
+Architectural details should feel ordinary and regionally credible.
+
+---
+
+# MATERIALS + TEXTURE
+
+Use tactile, photorealistic materials.
+
+For this location:
+
+- natural basalt cut with fine chiselled letters
+- dark masonry
+- old timber
+- white rag paper, slightly curled
+- small red wax seals
+- assorted stones: hearthstone, slate, broken doorstep
+
+Surfaces should contain subtle wear.
+
+Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+---
+
+# PRODUCTION DESIGN
+
+Include only story-relevant objects.
+
+PRIMARY OBJECTS:
+
+- the treaty wall with its two scripts and the worn third beneath
+- the seven crests and eleven seals on one line
+- the floor of warrants under stones
+
+SECONDARY LIVED-IN DETAILS:
+
+- the open shutters
+- the narrow aisles between the rows
+- iron brackets
+
+Objects should feel casually accumulated over time.
+
+Avoid excessive dressing.
+
+Avoid obvious symbolic props unless specifically requested.
+
+The environment should remain visually usable for performance.
+
+---
+
+# COLOR IDENTITY
+
+LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
+
+Permanent THE WEIGHT OF HEAVEN palette:
+
+- marble #E9E6DE (never pure white)
+- cloud #AEB4B8
+- slate #4B5258
+- rock dust #8A857B
+- basalt #141517 (dark, never pure black; stone keeps its texture)
+
+Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
+
+For this environment specifically:
+
+DOMINANT:
+basalt #141517
+
+SECONDARY:
+paper white, close to marble #E9E6DE
+
+ACCENT:
+seal red #9E2A22: hundreds of small red wax seals on the floor
+
+NEUTRALS:
+slate #4B5258 in the shadows
+
+The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
+
+Never neon.
+
+Never saturated.
+
+Never generic teal-and-orange cinema grading.
+
+---
+
+# LIGHTING DESIGN
+
+LIGHT ABOVE, HEAVY BELOW.
+LOW KEY, ABOUT TWO STOPS UNDER.
+
+Primary motivated source:
+
+grey daylight from the open shutters, falling across the floor of paper
+
+Secondary motivated source:
+
+spill from the door; nothing else
+
+Maintain:
+
+- broad soft illumination
+- gentle highlight roll-off
+- retained shadow information
+- natural falloff
+- realistic practical-light behavior
+- believable exposure
+
+For this location:
+
+- the paper takes the light and the basalt does not
+- most of the treaty wall stays in the dark, its letters read by raking light only
+- no lamps lit
+
+No beauty lighting.
+
+No hard artificial key unless story requires it.
+
+No exaggerated rim light.
+
+No glossy commercial lighting.
+
+No glow, no beams, no god rays, no visible light shafts, no shimmer.
+
+---
+
+# CAMERA / OPTICAL LANGUAGE
+
+CAMERA:
+ARRI Alexa 65, large format
+
+ASPECT RATIO:
+2.39:1 (compose for a 2.39:1 frame)
+
+LENS:
+spherical large-format primes, no anamorphic
+
+LENS CHARACTER:
+clean, modern, high-resolving rendering; low distortion; no flare; no bloom
+
+THIS REFERENCE:
+50 mm, eye level from the door end, looking down the hall: the treaty wall on one side, the open shutters on the other, the floor of warrants between.
+
+Maintain:
+
+- deep focus: the whole location sharp from foreground to far distance
+- dimensional space
+- natural microcontrast
+- smooth highlight roll-off, whites holding their detail
+- fine, even, film-like grain
+- natural textures
+
+The environment should look like a frame from THE WEIGHT OF HEAVEN, not a location catalogue.
+
+---
+
+# COMPOSITION
+
+Create a useful master environment reference.
+
+Prefer:
+
+- wide or medium-wide view
+- clear room geography
+- human eye-level perspective
+- enough negative space to understand circulation
+- major architectural anchors visible simultaneously
+
+Do not use an extreme cinematic angle that hides geography.
+
+The image must be useful later for generating:
+
+- wides
+- mediums
+- close-ups
+- reverse angles
+- entrances
+- exits
+
+---
+
+# ATMOSPHERE
+
+Atmosphere:
+
+Dim and still. Dust in the air near the shutters, not lit as beams.
+
+Physical conditions:
+
+- daylight from one opening
+- dust settled on the paper edges
+- cool still air
+
+Atmosphere must emerge from physical conditions, not digital effects.
+
+---
+
+# REALISM LOCK
+
+Photorealistic.
+
+Physically believable.
+
+Architecturally coherent.
+
+Regionally credible.
+
+Lived-in.
+
+Understated.
+
+No fantasy architecture unless explicitly required.
+
+No impossible reflections.
+
+No floating props.
+
+No warped furniture.
+
+No excessive depth-of-field blur that hides the location.
+
+---
+
+# CONTINUITY LOCK
+
+The final environment must establish a stable reference for:
+
+- architecture
+- room dimensions
+- major furniture
+- doors
+- windows
+- practical lights
+- material palette
+- object positions
+- camera geography
+
+Future generations should be able to reproduce this exact location.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- generic AI interiors
+- luxury redesign
+- excessive décor
+- glossy architectural visualization
+- showroom cleanliness
+- extreme HDR
+- oversaturation
+- neon
+- cyberpunk lighting
+- random signage
+- impossible room proportions
+- duplicated furniture
+- floating objects
+- distorted architecture
+- fisheye
+- dramatic concept-art composition
+- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
+- lens flare, bloom, halation
+- readable text, English or Latin lettering, numbers, signage, words on banners
+- electric light, modern objects, plastic, concrete, steel girders, engines
+- fire, smoke from guns, explosions
+- fantasy-game styling, glowing runes, magic effects, crystals
+- teal-and-orange grading
+- readable letters of any real alphabet in the scripts
+- Latin, Greek, runes or Chinese characters
+- lit lamps or candles
+- light beams through the shutters
+- warrants without stones
+```
+
+---
+
 # E10 — THE FLAGSHIP OF ORISON — THE BRIDGE
 
 Scenes: 9 · State in this reference: Dusk. No light inside: everything lit by the dusk through the glass.
 
-Prompt v3, an edit of take E10_t2b (round two: the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E10_t2b.png` (full size).
+Prompt v3, round 3: an edit of take E10_t2b (the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E10_t2b.png`.
 
 ```text
 Edit Figure 1, the bridge of the flagship of a fleet of white ships that sail the air. This is a photoreal film location reference.
@@ -463,7 +932,7 @@ Do not add: sea, water, sails, balloons, airships, flags, red seals, people, tex
 
 Scenes: 10.15 to 10.23, 11.16 to 11.19 · State in this reference: Blue dusk, descending, low over the plain; the last sun only on the cathedral's open tower.
 
-Prompt v3, an edit of take E12_t2a (round two: a grey day instead of blue dusk; a halo round the tower; too small). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E12_t2a.png` (full size).
+Prompt v3, round 3: an edit of take E12_t2a (a grey day instead of blue dusk; a halo round the tower; too small). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E12_t2a.png`.
 
 ```text
 Edit Figure 1, the floating city of Orison over a black basalt plain. This is a photoreal film location reference.

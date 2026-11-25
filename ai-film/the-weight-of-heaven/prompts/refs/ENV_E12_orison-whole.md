@@ -2,7 +2,7 @@
 
 Scenes: 10.15 to 10.23, 11.16 to 11.19 · State in this reference: Blue dusk, descending, low over the plain; the last sun only on the cathedral's open tower.
 
-Prompt v3, an edit of take E12_t2a (round two: a grey day instead of blue dusk; a halo round the tower; too small). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E12_t2a.png` (full size).
+Prompt v3, round 3: an edit of take E12_t2a (a grey day instead of blue dusk; a halo round the tower; too small). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E12_t2a.png`.
 
 ```text
 Edit Figure 1, the floating city of Orison over a black basalt plain. This is a photoreal film location reference.
@@ -18,7 +18,7 @@ Change only these three things:
 Do not add: halo, glow, god rays, sunbeams, lit windows, light coming from the city, banners, coloured flags, people, text.
 ```
 
-## Prompt v2 (made the round-two takes)
+## Prompt v2 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

@@ -983,10 +983,14 @@ R_E06 = ('refs/candidates/E06_t1.jpg', 'the Weir (round-one take)',
 R_E11 = ('refs/candidates/E11_t1.jpg', 'a gun deck of the fleet (round-one take)',
          "the fleet's building language: white-painted timber framing, pointed lancet openings, dark iron, scrubbed planking")
 
+R_E08 = ('refs/candidates/E08_t1.jpg', 'the Treaty House courtyard (round-one take)',
+         'the Treaty House masonry: old dark basalt blocks worn smooth, heavy buttresses, plain arches, dark oak doors with iron bands')
+
 SHIP_WORDS = ('white hulls shaped like church naves laid on their side: one tall spire for a mast, long rows of pointed '
               'lancet gunports, a keel like an upturned roof; no sails, no balloons, no gas bags')
 
 REWORK = {
+    'E09': dict(kind='regen', refs=[R_E08], fixes='not made in round one; the courtyard is attached so the masonry matches', over={}),
     'E02': dict(kind='edit', base='refs/candidates/E02_t1.jpg', refs=[R_E01], fixes='the city outside is an Italian hill town; dark-dressed figures; a figure out of scale at the door', text="""Edit @Image 1, the council chamber of Orison. This is a photoreal film location reference.
 
 Keep the room exactly as it is: the ring of round-headed open arches, the shallow dome, the marble floor, the long white stone table and the gold cup on it, the low marble benches, the open pale door, the camera position, the lens and the soft grey cloud light with no shadows.
@@ -1155,6 +1159,64 @@ Do not add: halo, glow, god rays, sunbeams, lit windows, light coming from the c
 }
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Round 4 (25 November). The small edits to the first-round takes that were kept (E01, E03, E05, E06), each sent with
+# only the image being edited, as in round 3. The first-round images are 1024 px wide; the edits come back full size.
+# ---------------------------------------------------------------------------------------------------------------
+
+ROUND4 = {
+    'E01': dict(base='E01_t1', fixes='airships beyond the arches; banners draped over the rails; no petals in the air', text="""Edit Figure 1, the nave of the Cathedral of the Ascension. This is a photoreal film location reference.
+
+Keep exactly: the slender marble columns climbing into mist, the galleries and their balustrades, the open arches onto cloud, the open tower at the far end with the bronze bell on its stone beam, the small figure in white in the aisle, the small gold cup on the right gallery rail, the camera position, the lens and the soft shadowless cloud light.
+
+Change only these three things:
+
+1. Remove the airships from the cloud beyond the arches on both sides; leave only cloud.
+2. Add white petals in the air throughout the nave, falling very slowly: many still high up near the galleries, some at head height, a few resting on the aisle.
+3. The banners hang free from the galleries instead of lying draped over the rails, and drift slowly sideways in the still air, as if under water.
+
+Full photographic detail throughout.
+
+Do not add: ships, airships, balloons, red or pink petals, people, text, glow, sunbeams, lens flare."""),
+
+    'E03': dict(base='E03_t1', fixes='a flying saucer in the sky', text="""Edit Figure 1, a field in Anvil Vale. This is a photoreal film location reference.
+
+Keep exactly: the ploughed field, the dry-stone wall, the buttressed stone farmhouse, the flat-topped mountain, the plough and yoke, the path and the trough, the camera position, the lens and the low grey light.
+
+Change only the sky. Remove the saucer-shaped dark object. In its place, the underside of a floating kingdom fills the upper half of the sky: an immense ceiling of dark rock very far above, seen from far below, soft and indistinct in the haze like a low storm ceiling, only a faint rock texture showing through. It runs off the frame on the left, the right and the top, with no visible outline and no visible end. Its lower edge dissolves into the grey overcast about halfway down the sky; below that, grey cloud to the horizon.
+
+Do not add: a disc, a saucer, a spaceship, a floating island with visible edges, sharp rock detail, blue sky, sunshine, people, text, glow."""),
+
+    'E05': dict(base='E05_t1', fixes='the Weir drawn as six white lights; the rock too close', text="""Edit Figure 1, the basalt plain beneath the floating kingdom. This is a photoreal film location reference.
+
+Keep exactly: the black hexagonal basalt plain and its clusters of columns, the old fort on the left horizon, the small figure, the dark rock underside overhead with its roots and hanging chains, its shape and its place in the frame, the camera position, the lens and the grey light.
+
+Change only these two things:
+
+1. On the far horizon, replace the row of white lights with the Weir: a long, low wall of seamless black stone across the horizon, with nine tall round-arched gates along it. Two gates are shut, black like the wall. Through the seven open gates, a glimpse of a green valley beyond, darker than the sky. Nothing glows.
+2. Add haze between the camera and the rock overhead, so it reads as far higher above the plain: softer, a lighter grey, less detailed, still filling the top of the frame from edge to edge.
+
+Do not add: lights, glowing openings, bright white arches, blue sky, sunbeams, people, text."""),
+
+    'E06': dict(base='E06_t1', fixes='a mill water-wheel with paddles; too many gates, none shut; no flattened grass', text="""Edit Figure 1, the Weir at Sarn. This is a photoreal film location reference.
+
+Keep exactly: the seamless wall of black stone, its arched gates receding along it, the green vale and hearth smoke seen through the nearest gate, the path, the basalt ground, the two small figures, the dark sky, the camera position and the lens.
+
+Change only these two things:
+
+1. The wheel: a plain upright spoked wheel of dark oak bound with iron, forty feet across, with no paddles, buckets or blades on its rim. Its spokes are worn smooth and pale by eight hundred years of hands. It stands in a heavy oak-and-iron frame against the wall, with a thick iron lock-pin through the frame beside the hub. Its lower spokes are at shoulder height for the two figures.
+2. The gates: the wall has exactly nine gates along its whole length, the far ones small in the distance. The second and the fourth gates from the camera are shut by flush black slabs of the same stone as the wall. On the ground beneath each open gate, the grass lies combed flat in one direction, toward the vale.
+
+Do not add: a water-wheel, paddles, water, a mill, carvings or joints in the stone, glow, people, text."""),
+}
+
+for _k, _v in ROUND3.items():
+    _v.update(round=3, base_path=f"out/refs/{_v['base']}_full.jpg", base_show=f"out/refs/{_v['base']}.png")
+for _k, _v in ROUND4.items():
+    _v.update(round=4, base_path=f"refs/candidates/{_v['base']}.jpg", base_show=f"refs/candidates/{_v['base']}.jpg")
+EDITS = {**ROUND3, **ROUND4}   # the latest edit prompt of each location that has one
+
+
 def resolve(L):
     """The location as it stands now: round-one data with any round-two regeneration applied."""
     R = REWORK.get(L['code'])
@@ -1167,8 +1229,8 @@ def resolve(L):
 
 def current(code):
     """(prompt, image paths in @Image order, kind) of the location's current prompt, for the generation tools."""
-    if code in ROUND3:
-        return ROUND3[code]['text'], [f"out/refs/{ROUND3[code]['base']}_full.jpg"], 'edit3'
+    if code in EDITS:
+        return EDITS[code]['text'], [EDITS[code]['base_path']], f"edit{EDITS[code]['round']}"
     L = next(l for l in LOCATIONS if l['code'] == code)
     R = REWORK.get(code)
     if R and R['kind'] == 'edit':
@@ -1208,12 +1270,13 @@ def main():
                      f"resolution, two to four candidates. Images, in this order: {refs}.\n\n")
             body = (f"```text\n{R['text']}\n```\n\n## Prompt v1 (made t1; still the description of this location)\n\n"
                     f"```text\n{v1}```\n")
-        if L['code'] in ROUND3:
-            R3 = ROUND3[L['code']]
+        if L['code'] in EDITS:
+            R3 = EDITS[L['code']]
+            n = 3 if R else 2
             head = (f"# {L['code']} — {L['name']}\n\nScenes: {L['scenes']} · State in this reference: {L['state']}\n\n"
-                    f"Prompt v3, an edit of take {R3['base']} (round two: {R3['fixes']}). Generate: 21:9, highest "
-                    f"resolution, two candidates. One image only, as Figure 1: `out/refs/{R3['base']}.png` (full size).\n\n")
-            body = (f"```text\n{R3['text']}\n```\n\n## Prompt v2 (made the round-two takes)\n\n" + body)
+                    f"Prompt v{n}, round {R3['round']}: an edit of take {R3['base']} ({R3['fixes']}). Generate: 21:9, "
+                    f"highest resolution, two candidates. One image only, as Figure 1: `{R3['base_show']}`.\n\n")
+            body = (f"```text\n{R3['text']}\n```\n\n## Prompt v{n - 1} (made the earlier takes)\n\n" + body)
         log = '\n## Takes\n\n(none yet)\n'
         path = os.path.join(OUT, f"ENV_{L['code']}_{L['slug']}.md")
         if os.path.exists(path):  # keep the take log already written under the prompt
@@ -1224,7 +1287,7 @@ def main():
             f.write(head + body + log)
         current = body.split('\n\n## Prompt v')[0] + ('' if body.endswith('\n') else '\n')
         combined.append('\n---\n\n' + head + current)
-        if R or L['code'] in ROUND3:
+        if R or L['code'] in EDITS:
             rework.append('\n---\n\n' + head + current)
     with open(os.path.join(OUT, 'ENV_ALL.md'), 'w') as f:
         f.write(''.join(combined))

@@ -2,7 +2,7 @@
 
 Scenes: 7 · State in this reference: Day, shutters open (after 7.4). The closed-shutter state is the same room in the dark.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: not made in round one; the courtyard is attached so the masonry matches). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E08_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -14,6 +14,14 @@ Create a photorealistic cinematic environment reference image for THE TREATY HOU
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the Treaty House courtyard (round-one take). Use it for: the Treaty House masonry: old dark basalt blocks worn smooth, heavy buttresses, plain arches, dark oak doors with iron bands.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
 
 ---
 
