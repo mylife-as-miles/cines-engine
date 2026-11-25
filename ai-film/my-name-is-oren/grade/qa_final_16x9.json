@@ -1,0 +1,1846 @@
+{
+ "render": "out/edits/Oren_Q01_Q13_v7_graded.mp4",
+ "tags": "bt709,bt709,bt709",
+ "tags_ok": true,
+ "shots": [
+  {
+   "id": "S002",
+   "t": 8.25,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.49,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S003",
+   "t": 11.4,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.18,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S004",
+   "t": 14.17,
+   "clipped": [
+    0.83,
+    0.0
+   ],
+   "crushed": [
+    0.0,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S005",
+   "t": 18.02,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.52,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S006",
+   "t": 21.73,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.02,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S007",
+   "t": 24.5,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.47,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S008",
+   "t": 27.77,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.16,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S009",
+   "t": 30.67,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.54,
+    0.0
+   ],
+   "faces": [
+    0.475
+   ],
+   "skin_hue_shift": [
+    6.8
+   ],
+   "skin_off_line": [
+    [
+     11.9,
+     5.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S010",
+   "t": 33.15,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.26,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S011",
+   "t": 37.04,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.64,
+    0.0
+   ],
+   "faces": [
+    0.571
+   ],
+   "skin_hue_shift": [
+    6.6
+   ],
+   "skin_off_line": [
+    [
+     10.0,
+     3.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S012",
+   "t": 40.92,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.52,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S013",
+   "t": 45.48,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.2,
+    0.0
+   ],
+   "faces": [
+    0.408
+   ],
+   "skin_hue_shift": [
+    4.7
+   ],
+   "skin_off_line": [
+    [
+     11.7,
+     7.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S014",
+   "t": 50.06,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.02,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S015",
+   "t": 53.29,
+   "clipped": [
+    0.78,
+    0.0
+   ],
+   "crushed": [
+    1.0,
+    0.0
+   ],
+   "faces": [
+    0.457
+   ],
+   "skin_hue_shift": [
+    7.5
+   ],
+   "skin_off_line": [
+    [
+     7.9,
+     0.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S016",
+   "t": 57.04,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    2.56,
+    0.0
+   ],
+   "faces": [
+    0.414
+   ],
+   "skin_hue_shift": [
+    8.5
+   ],
+   "skin_off_line": [
+    [
+     8.9,
+     0.3
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S017",
+   "t": 63.96,
+   "clipped": [
+    0.72,
+    0.0
+   ],
+   "crushed": [
+    0.64,
+    0.0
+   ],
+   "faces": [
+    0.35
+   ],
+   "skin_hue_shift": [
+    7.2
+   ],
+   "skin_off_line": [
+    [
+     14.5,
+     7.3
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S018",
+   "t": 70.5,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    2.3,
+    0.0
+   ],
+   "faces": [
+    0.434
+   ],
+   "skin_hue_shift": [
+    8.0
+   ],
+   "skin_off_line": [
+    [
+     7.8,
+     0.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S019",
+   "t": 72.33,
+   "clipped": [
+    1.22,
+    0.0
+   ],
+   "crushed": [
+    0.64,
+    0.0
+   ],
+   "faces": [
+    0.363
+   ],
+   "skin_hue_shift": [
+    7.7
+   ],
+   "skin_off_line": [
+    [
+     14.4,
+     6.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S020",
+   "t": 73.88,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    2.25,
+    0.0
+   ],
+   "faces": [
+    0.43
+   ],
+   "skin_hue_shift": [
+    7.4
+   ],
+   "skin_off_line": [
+    [
+     6.3,
+     1.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S021",
+   "t": 77.58,
+   "clipped": [
+    1.44,
+    0.0
+   ],
+   "crushed": [
+    1.2,
+    0.0
+   ],
+   "faces": [
+    0.364
+   ],
+   "skin_hue_shift": [
+    8.3
+   ],
+   "skin_off_line": [
+    [
+     16.5,
+     8.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S022",
+   "t": 81.83,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.55,
+    0.0
+   ],
+   "faces": [
+    0.367
+   ],
+   "skin_hue_shift": [
+    9.6
+   ],
+   "skin_off_line": [
+    [
+     7.6,
+     2.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S023",
+   "t": 85.58,
+   "clipped": [
+    0.01,
+    0.0
+   ],
+   "crushed": [
+    1.37,
+    0.0
+   ],
+   "faces": [
+    0.328
+   ],
+   "skin_hue_shift": [
+    8.1
+   ],
+   "skin_off_line": [
+    [
+     16.5,
+     8.3
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S024",
+   "t": 89.42,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    5.0,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S025",
+   "t": 92.38,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.13,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S026",
+   "t": 95.04,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.35,
+    0.0
+   ],
+   "faces": [
+    0.333
+   ],
+   "skin_hue_shift": [
+    8.6
+   ],
+   "skin_off_line": [
+    [
+     16.8,
+     8.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S027",
+   "t": 99.12,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.48,
+    0.0
+   ],
+   "faces": [
+    0.306,
+    0.336
+   ],
+   "skin_hue_shift": [
+    5.5,
+    5.6
+   ],
+   "skin_off_line": [
+    [
+     7.6,
+     2.1
+    ],
+    [
+     4.2,
+     1.3
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S028",
+   "t": 103.0,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    4.43,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S029",
+   "t": 105.04,
+   "clipped": [
+    0.97,
+    0.0
+   ],
+   "crushed": [
+    0.73,
+    0.0
+   ],
+   "faces": [
+    0.27
+   ],
+   "skin_hue_shift": [
+    7.0
+   ],
+   "skin_off_line": [
+    [
+     16.9,
+     9.9
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S030",
+   "t": 108.29,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    2.33,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S031",
+   "t": 111.77,
+   "clipped": [
+    0.01,
+    0.0
+   ],
+   "crushed": [
+    2.03,
+    0.0
+   ],
+   "faces": [
+    0.295,
+    0.418
+   ],
+   "skin_hue_shift": [
+    6.9,
+    6.1
+   ],
+   "skin_off_line": [
+    [
+     17.3,
+     10.4
+    ],
+    [
+     23.8,
+     17.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S032",
+   "t": 116.1,
+   "clipped": [
+    0.0,
+    0.06
+   ],
+   "crushed": [
+    3.01,
+    0.0
+   ],
+   "faces": [
+    0.437
+   ],
+   "skin_hue_shift": [
+    6.9
+   ],
+   "skin_off_line": [
+    [
+     8.9,
+     2.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S033",
+   "t": 121.62,
+   "clipped": [
+    1.84,
+    0.0
+   ],
+   "crushed": [
+    2.14,
+    0.0
+   ],
+   "faces": [
+    0.336
+   ],
+   "skin_hue_shift": [
+    6.1
+   ],
+   "skin_off_line": [
+    [
+     15.3,
+     9.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S034",
+   "t": 125.46,
+   "clipped": [
+    0.0,
+    0.04
+   ],
+   "crushed": [
+    2.54,
+    0.0
+   ],
+   "faces": [
+    0.462
+   ],
+   "skin_hue_shift": [
+    6.3
+   ],
+   "skin_off_line": [
+    [
+     7.3,
+     1.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S035",
+   "t": 128.75,
+   "clipped": [
+    1.48,
+    0.0
+   ],
+   "crushed": [
+    1.97,
+    0.0
+   ],
+   "faces": [
+    0.341
+   ],
+   "skin_hue_shift": [
+    6.2
+   ],
+   "skin_off_line": [
+    [
+     15.7,
+     9.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S036",
+   "t": 131.75,
+   "clipped": [
+    0.0,
+    0.05
+   ],
+   "crushed": [
+    0.98,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S037",
+   "t": 134.69,
+   "clipped": [
+    0.02,
+    0.09
+   ],
+   "crushed": [
+    2.5,
+    0.0
+   ],
+   "faces": [
+    0.473
+   ],
+   "skin_hue_shift": [
+    6.8
+   ],
+   "skin_off_line": [
+    [
+     6.9,
+     0.1
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S038",
+   "t": 139.27,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.95,
+    0.0
+   ],
+   "faces": [
+    0.311
+   ],
+   "skin_hue_shift": [
+    6.6
+   ],
+   "skin_off_line": [
+    [
+     12.8,
+     6.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S039",
+   "t": 145.81,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.35,
+    0.0
+   ],
+   "faces": [
+    0.321,
+    0.4
+   ],
+   "skin_hue_shift": [
+    5.1,
+    5.4
+   ],
+   "skin_off_line": [
+    [
+     4.5,
+     0.6
+    ],
+    [
+     4.5,
+     0.9
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S040",
+   "t": 151.06,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.91,
+    0.0
+   ],
+   "faces": [
+    0.248
+   ],
+   "skin_hue_shift": [
+    4.5
+   ],
+   "skin_off_line": [
+    [
+     11.7,
+     7.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S041",
+   "t": 154.58,
+   "clipped": [
+    0.0,
+    0.28
+   ],
+   "crushed": [
+    0.82,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S042",
+   "t": 157.81,
+   "clipped": [
+    0.0,
+    0.05
+   ],
+   "crushed": [
+    0.97,
+    0.0
+   ],
+   "faces": [
+    0.517
+   ],
+   "skin_hue_shift": [
+    4.5
+   ],
+   "skin_off_line": [
+    [
+     9.6,
+     5.1
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S043",
+   "t": 160.5,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.83,
+    0.0
+   ],
+   "faces": [
+    0.24,
+    0.291
+   ],
+   "skin_hue_shift": [
+    5.0,
+    3.2
+   ],
+   "skin_off_line": [
+    [
+     10.0,
+     5.1
+    ],
+    [
+     4.6,
+     1.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S044",
+   "t": 163.58,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.77,
+    0.0
+   ],
+   "faces": [
+    0.489
+   ],
+   "skin_hue_shift": [
+    4.6
+   ],
+   "skin_off_line": [
+    [
+     10.5,
+     6.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S045",
+   "t": 167.1,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.52,
+    0.0
+   ],
+   "faces": [
+    0.424
+   ],
+   "skin_hue_shift": [
+    5.5
+   ],
+   "skin_off_line": [
+    [
+     9.0,
+     3.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S046",
+   "t": 170.54,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.29,
+    0.0
+   ],
+   "faces": [
+    0.511,
+    0.262
+   ],
+   "skin_hue_shift": [
+    8.7,
+    6.8
+   ],
+   "skin_off_line": [
+    [
+     14.8,
+     6.1
+    ],
+    [
+     10.2,
+     3.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S047",
+   "t": 173.81,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.46,
+    0.0
+   ],
+   "faces": [
+    0.52
+   ],
+   "skin_hue_shift": [
+    6.1
+   ],
+   "skin_off_line": [
+    [
+     7.0,
+     0.9
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S048",
+   "t": 178.12,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.6,
+    0.0
+   ],
+   "faces": [
+    0.274
+   ],
+   "skin_hue_shift": [
+    5.0
+   ],
+   "skin_off_line": [
+    [
+     5.7,
+     0.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S049",
+   "t": 182.73,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.62,
+    0.0
+   ],
+   "faces": [
+    0.419
+   ],
+   "skin_hue_shift": [
+    5.2
+   ],
+   "skin_off_line": [
+    [
+     7.9,
+     2.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S050",
+   "t": 187.75,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.66,
+    0.0
+   ],
+   "faces": [
+    0.278
+   ],
+   "skin_hue_shift": [
+    4.5
+   ],
+   "skin_off_line": [
+    [
+     5.1,
+     0.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S051",
+   "t": 192.5,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.49,
+    0.0
+   ],
+   "faces": [
+    0.422
+   ],
+   "skin_hue_shift": [
+    2.7
+   ],
+   "skin_off_line": [
+    [
+     10.5,
+     7.8
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S052",
+   "t": 196.19,
+   "clipped": [
+    0.12,
+    0.0
+   ],
+   "crushed": [
+    0.6,
+    0.0
+   ],
+   "faces": [
+    0.519
+   ],
+   "skin_hue_shift": [
+    10.0
+   ],
+   "skin_off_line": [
+    [
+     15.7,
+     5.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S053",
+   "t": 200.75,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.35,
+    0.0
+   ],
+   "faces": [
+    0.406
+   ],
+   "skin_hue_shift": [
+    3.2
+   ],
+   "skin_off_line": [
+    [
+     8.6,
+     5.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S054",
+   "t": 204.44,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.93,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S055",
+   "t": 207.1,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.04,
+    0.0
+   ],
+   "faces": [
+    0.292,
+    0.457
+   ],
+   "skin_hue_shift": [
+    4.3,
+    5.3
+   ],
+   "skin_off_line": [
+    [
+     1.0,
+     3.3
+    ],
+    [
+     0.4,
+     4.8
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S056",
+   "t": 210.35,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.96,
+    0.0
+   ],
+   "faces": [
+    0.397
+   ],
+   "skin_hue_shift": [
+    2.2
+   ],
+   "skin_off_line": [
+    [
+     9.9,
+     7.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S057",
+   "t": 213.29,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    1.1,
+    0.0
+   ],
+   "faces": [
+    0.369
+   ],
+   "skin_hue_shift": [
+    3.0
+   ],
+   "skin_off_line": [
+    [
+     8.4,
+     5.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S058",
+   "t": 216.33,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.17,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S059",
+   "t": 220.65,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.66,
+    0.0
+   ],
+   "faces": [
+    0.414
+   ],
+   "skin_hue_shift": [
+    3.8
+   ],
+   "skin_off_line": [
+    [
+     8.9,
+     5.1
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S060",
+   "t": 223.54,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.1,
+    0.0
+   ],
+   "faces": [],
+   "problems": []
+  },
+  {
+   "id": "S061",
+   "t": 226.0,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.0,
+    0.0
+   ],
+   "faces": [
+    0.332
+   ],
+   "skin_hue_shift": [
+    6.3
+   ],
+   "skin_off_line": [
+    [
+     0.6,
+     5.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S062",
+   "t": 229.58,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.41,
+    0.0
+   ],
+   "faces": [
+    0.239
+   ],
+   "skin_hue_shift": [
+    4.0
+   ],
+   "skin_off_line": [
+    [
+     6.1,
+     2.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S063",
+   "t": 236.21,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.82,
+    0.0
+   ],
+   "faces": [
+    0.402
+   ],
+   "skin_hue_shift": [
+    3.0
+   ],
+   "skin_off_line": [
+    [
+     9.1,
+     6.1
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S064",
+   "t": 242.65,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.5,
+    0.0
+   ],
+   "faces": [
+    0.264
+   ],
+   "skin_hue_shift": [
+    4.9
+   ],
+   "skin_off_line": [
+    [
+     5.7,
+     0.8
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S065",
+   "t": 247.38,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.67,
+    0.0
+   ],
+   "faces": [
+    0.408
+   ],
+   "skin_hue_shift": [
+    0.9
+   ],
+   "skin_off_line": [
+    [
+     9.5,
+     8.7
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S066",
+   "t": 251.73,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.51,
+    0.0
+   ],
+   "faces": [
+    0.272
+   ],
+   "skin_hue_shift": [
+    4.4
+   ],
+   "skin_off_line": [
+    [
+     4.9,
+     0.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S067",
+   "t": 256.96,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.41,
+    0.0
+   ],
+   "faces": [
+    0.341,
+    0.435,
+    0.352
+   ],
+   "skin_hue_shift": [
+    4.6,
+    6.1,
+    9.3
+   ],
+   "skin_off_line": [
+    [
+     1.6,
+     3.1
+    ],
+    [
+     4.5,
+     1.6
+    ],
+    [
+     24.8,
+     15.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S068",
+   "t": 265.35,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.64,
+    0.0
+   ],
+   "faces": [
+    0.377
+   ],
+   "skin_hue_shift": [
+    3.2
+   ],
+   "skin_off_line": [
+    [
+     11.4,
+     8.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S069",
+   "t": 270.77,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.21,
+    0.0
+   ],
+   "faces": [
+    0.332
+   ],
+   "skin_hue_shift": [
+    6.3
+   ],
+   "skin_off_line": [
+    [
+     4.5,
+     1.8
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S070",
+   "t": 274.79,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.28,
+    0.0
+   ],
+   "faces": [
+    0.419
+   ],
+   "skin_hue_shift": [
+    4.4
+   ],
+   "skin_off_line": [
+    [
+     10.0,
+     5.6
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S071",
+   "t": 279.71,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.33,
+    0.0
+   ],
+   "faces": [
+    0.459,
+    0.348
+   ],
+   "skin_hue_shift": [
+    5.7,
+    4.9
+   ],
+   "skin_off_line": [
+    [
+     4.0,
+     1.7
+    ],
+    [
+     1.4,
+     3.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S072",
+   "t": 282.77,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.88,
+    0.0
+   ],
+   "faces": [
+    0.43
+   ],
+   "skin_hue_shift": [
+    4.0
+   ],
+   "skin_off_line": [
+    [
+     7.1,
+     3.2
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S073",
+   "t": 286.52,
+   "clipped": [
+    0.15,
+    0.0
+   ],
+   "crushed": [
+    0.08,
+    0.0
+   ],
+   "faces": [
+    0.352,
+    0.29
+   ],
+   "skin_hue_shift": [
+    8.9,
+    7.6
+   ],
+   "skin_off_line": [
+    [
+     11.6,
+     2.7
+    ],
+    [
+     13.0,
+     5.4
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S074",
+   "t": 290.73,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.57,
+    0.0
+   ],
+   "faces": [
+    0.303
+   ],
+   "skin_hue_shift": [
+    1.3
+   ],
+   "skin_off_line": [
+    [
+     11.9,
+     10.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S075",
+   "t": 294.29,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.05,
+    0.0
+   ],
+   "faces": [
+    0.566
+   ],
+   "skin_hue_shift": [
+    5.0
+   ],
+   "skin_off_line": [
+    [
+     9.0,
+     4.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S076",
+   "t": 299.69,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.38,
+    0.0
+   ],
+   "faces": [
+    0.41
+   ],
+   "skin_hue_shift": [
+    1.9
+   ],
+   "skin_off_line": [
+    [
+     8.4,
+     6.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S077",
+   "t": 304.73,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.15,
+    0.0
+   ],
+   "faces": [
+    0.343,
+    0.292
+   ],
+   "skin_hue_shift": [
+    7.2,
+    8.2
+   ],
+   "skin_off_line": [
+    [
+     11.9,
+     4.7
+    ],
+    [
+     14.7,
+     6.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S078",
+   "t": 308.0,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.17,
+    0.0
+   ],
+   "faces": [
+    0.343
+   ],
+   "skin_hue_shift": [
+    6.7
+   ],
+   "skin_off_line": [
+    [
+     11.2,
+     4.5
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S079",
+   "t": 311.23,
+   "clipped": [
+    0.0,
+    0.0
+   ],
+   "crushed": [
+    0.5,
+    0.0
+   ],
+   "faces": [
+    0.322
+   ],
+   "skin_hue_shift": [
+    2.3
+   ],
+   "skin_off_line": [
+    [
+     15.3,
+     13.0
+    ]
+   ],
+   "problems": []
+  },
+  {
+   "id": "S080",
+   "t": 313.71,
+   "clipped": [
+    0.19,
+    0.0
+   ],
+   "crushed": [
+    0.25,
+    0.0
+   ],
+   "faces": [
+    0.491,
+    0.444
+   ],
+   "skin_hue_shift": [
+    8.1,
+    7.4
+   ],
+   "skin_off_line": [
+    [
+     9.0,
+     0.9
+    ],
+    [
+     8.8,
+     1.5
+    ]
+   ],
+   "problems": []
+  }
+ ],
+ "failing": []
+}

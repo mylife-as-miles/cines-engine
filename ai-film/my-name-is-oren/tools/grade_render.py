@@ -78,18 +78,32 @@ def grain(shape, frame_no, cfg, luma):
 
 
 def paint_out(img, p):
-    """inpaint the dark strokes inside a rectangle (sign lettering on a light board) from their surroundings;
-    p = {"rect": [x0, y0, x1, y1], "dark_below": 0.45}: static, for locked-off shots"""
+    """inpaint the lettering on a light board inside a rectangle, from the board around it.
+    p = {"rect": [x0, y0, x1, y1], "kernel": 21, "delta": 0.03, "bright": 0.5}: the rectangle holds the board for the
+    whole shot. A stroke is any pixel darker than the board around it: a grey-level closing (kernel wider than the
+    bold letters) rebuilds the blank board, and pixels more than `delta` under it, on board brighter than `bright`, are
+    filled. (A fixed luma threshold missed soft lettering: on Oren's S062 the "CBK PY" strokes sit at 0.45-0.55 in most
+    frames and stayed legible.) Dark things beside the board (a sleeve, a jacket) are shown to the inpaint as board,
+    or it smears them into the fill."""
     import cv2
     x0, y0, x1, y1 = p['rect']
+    k, delta, bright = p.get('kernel', 21), p.get('delta', 0.03), p.get('bright', 0.5)
     y = img[..., 0] * 0.2126 + img[..., 1] * 0.7152 + img[..., 2] * 0.0722
+    yp = cv2.copyMakeBorder(y, k, k, k, k, cv2.BORDER_REFLECT)
+    board = cv2.morphologyEx(yp, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k)))[k:-k, k:-k]
     m = np.zeros(img.shape[:2], np.uint8)
-    m[y0:y1, x0:x1] = (y[y0:y1, x0:x1] < p.get('dark_below', 0.45)).astype(np.uint8) * 255
+    m[y0:y1, x0:x1] = (((board - y) > delta) & (board > bright))[y0:y1, x0:x1].astype(np.uint8) * 255
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))       # the counters of bold letters
     m = cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=p.get('grow', 2))
-    u8 = (np.clip(img, 0, 1) * 255 + .5).astype(np.uint8)
-    fixed = cv2.inpaint(u8, m, p.get('radius', 4), cv2.INPAINT_TELEA).astype(np.float32) / 255
-    k = (m > 0)[..., None]
-    return np.where(k, fixed, img)
+    src = img.copy()
+    near = np.zeros(m.shape, bool)
+    near[max(0, y0 - 10):y1 + 10, max(0, x0 - 10):x1 + 30] = True
+    clean = (m == 0) & near & (y > bright)
+    if clean.any():
+        src[near & (y < p.get('shield', 0.3)) & (m == 0)] = np.median(img[clean], axis=0)
+    u8 = (np.clip(src, 0, 1) * 255 + .5).astype(np.uint8)
+    fixed = cv2.inpaint(u8, m, p.get('radius', 5), cv2.INPAINT_TELEA).astype(np.float32) / 255
+    return np.where((m > 0)[..., None], fixed, img)
 
 
 def main():

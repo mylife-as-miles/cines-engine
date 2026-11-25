@@ -100,6 +100,7 @@ It is GPL-3: use the released config and tools as they are; a port of its code i
   - no new clipped or crushed pixels against the source
   - every face's brightness between 0.18 and 0.88
   - skin on the skin line (§3)
+  - Faces are YuNet detections scoring 0.8 or more. On Oren every real face scored 0.82–0.96. Below that came the backs of heads, a hand, an ear, out-of-focus passers-by, and washing-machine portholes, whose warm drums failed the skin check as if they were skin. Look at what was flagged before changing the grade.
   - BT.709 tags present
   - duration within one frame of the source
   - sync unchanged: the sound is copied from the cut
@@ -107,6 +108,10 @@ It is GPL-3: use the released config and tools as they are; a port of its code i
   - banding in skies and walls
   - flicker and colour crawl in generated texture
   - halos at edges
+- **Readable model text is painted out before the grade** (`grade/paint.json`, `paint_out` in `tools/grade_render.py`):
+  - **The mask is local contrast, not a fixed threshold.** A grey-level closing wider than the letters rebuilds the blank board, and everything darker than it on the board is filled. Oren's soft "CBK PY" sat at 0.45–0.55 luma and stayed legible under a 0.42 cut-off.
+  - **Shield dark neighbours from the inpaint,** or a sleeve smears into the fill.
+  - **Check it in the graded render, zoomed in,** at the start, middle and end of the shot.
 - **Captions and supers** are checked for contrast after the grade (WCAG: 4.5:1 for text). The grade changes what is under them.
 - **Hand off:**
   - the per-shot CDLs (`grade/shots.json`)

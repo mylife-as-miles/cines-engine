@@ -15,7 +15,10 @@ import cv2
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 854, 480
 SKIN_LINE = 123.0   # the vectorscope skin (I) line, degrees from +Cb toward +Cr; complexion moves along it, not off it
-DET = cv2.FaceDetectorYN.create(os.environ.get('YUNET', '/home/user/ocio/models/yunet.onnx'), '', (W, H), 0.6, 0.3, 50)
+# score 0.8: on Oren's v7 cut every real face scores 0.82-0.96; everything from 0.6 to 0.76 was a back of a head, a hand,
+# an ear, a washing-machine porthole or an out-of-focus passer-by (out/review/mp/lowfaces.png), and the portholes'
+# warm drums failed the skin-line check as if they were skin
+DET = cv2.FaceDetectorYN.create(os.environ.get('YUNET', '/home/user/ocio/models/yunet.onnx'), '', (W, H), 0.8, 0.3, 50)
 
 
 def frame(video, t):

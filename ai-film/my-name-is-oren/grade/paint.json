@@ -1,15 +1,2 @@
-{
- "_about": "Text in frame painted out before the grade (locked-off shots; static rectangles in the 854x480 source; dark strokes inside are inpainted from the light board around them). tools/grade_render.py applies it.",
- "S062": [
-  {
-   "rect": [
-    0,
-    398,
-    120,
-    474
-   ],
-   "dark_below": 0.42,
-   "why": "the half-legible shop sign 'CBK PY...' behind Oren (Q10/Q11 low angle): becomes a blank sign board"
-  }
- ]
-}
+{"S062": [{"rect": [0, 398, 125, 474], "kernel": 21, "delta": 0.03, "bright": 0.5,
+           "why": "the 'CBK PY...' shop sign behind Oren, bottom left (no readable model text)"}]}
