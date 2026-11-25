@@ -1113,6 +1113,26 @@ Do not add: a monolith, a free-standing slab, a disc or saucer in the sky, a flo
 }
 
 
+def resolve(L):
+    """The location as it stands now: round-one data with any round-two regeneration applied."""
+    R = REWORK.get(L['code'])
+    if R and R['kind'] == 'regen':
+        L = {**L, **R['over'], 'refs': R['refs']}
+        if L.get('realism_note'):
+            L['materials_note'] = (L.get('materials_note', '') + ' ' + L['realism_note']).strip()
+    return L
+
+
+def current(code):
+    """(prompt, image paths in @Image order, kind) of the location's current prompt, for the generation tools."""
+    L = next(l for l in LOCATIONS if l['code'] == code)
+    R = REWORK.get(code)
+    if R and R['kind'] == 'edit':
+        return R['text'], [R['base']] + [f for f, _, _ in R['refs']], 'edit'
+    L = resolve(L)
+    return render(L), [f for f, _, _ in L.get('refs', [])], ('regen' if R else 'v1')
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     intro = ('Each prompt fills the author\'s environment template with this film\'s bible. Generate at 21:9, highest '
@@ -1126,10 +1146,7 @@ def main():
     for L in LOCATIONS:
         R = REWORK.get(L['code'])
         v1 = render(L)
-        if R and R['kind'] == 'regen':
-            L = {**L, **R['over'], 'refs': R['refs']}
-            if L.get('realism_note'):
-                L['materials_note'] = (L.get('materials_note', '') + ' ' + L['realism_note']).strip()
+        L = resolve(L)
         prompt = render(L)
         head = f"# {L['code']} — {L['name']}\n\nScenes: {L['scenes']} · State in this reference: {L['state']}\n\n"
         if not R:
