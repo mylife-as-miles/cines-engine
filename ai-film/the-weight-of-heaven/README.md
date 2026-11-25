@@ -26,6 +26,8 @@ Treatment, decisions and the film bible first (`design/`), then a reference stil
 | `tools/env_prompts.py`, `prop_prompts.py`, `char_prompts.py` | Build the location, prop and ship, and character prompts from the author's templates and this film's bible |
 | `tools/fal_seedream.py` | Generates on fal (Seedream 5.5, Nano Banana Pro, Nano Banana 2.1), saves previews and logs every take |
 | `tools/` | Edit, finish and mix scripts |
+| `design/VOICE_BIBLE.md` | How everyone speaks: registers, a Voice DNA paragraph per speaker, delivery, rooms, how the voices are made |
+| `audio/lines.json` | Every spoken line, exactly as written, with speaker, scene, direction and room |
 | `audio/` | Sound sources and mix |
 | `out/` | Generated clips and renders (not committed) |
 
