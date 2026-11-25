@@ -2,7 +2,7 @@
 
 *The Weight of Heaven*, written by Osita Miles. A short film of about fourteen minutes made with video generation models: a floating kingdom, sinking under its own weight, is brought down out of the sky by the admiral sent to save it. Eleven scenes, about 140 shots, 2.39:1.
 
-Status: pre-production. Treatment and decisions written; the thirteen location reference prompts are ready (`prompts/refs/ENV_*.md`, built by `tools/env_prompts.py`). Nothing has been generated yet.
+Status: pre-production. The reference set is locked: 65 approved images in `refs/` (locations, props, ships, character sheets, supporting characters, crowds), each with its prompt, every take and its verdict under `prompts/refs/`. Next: voices, then the shot list and the video prompts.
 
 ## Watch
 
@@ -23,7 +23,8 @@ Treatment, decisions and the film bible first (`design/`), then a reference stil
 | `prompts/` | One auteur prompt per sequence with its take log; `prompts/refs/` the reference-still prompts with chosen job ids |
 | `refs/` | Approved reference stills |
 | `edit/edit.json` | The edit list |
-| `tools/env_prompts.py` | Builds the location reference prompts from the author's template and this film's bible |
+| `tools/env_prompts.py`, `prop_prompts.py`, `char_prompts.py` | Build the location, prop and ship, and character prompts from the author's templates and this film's bible |
+| `tools/fal_seedream.py` | Generates on fal (Seedream 5.5, Nano Banana Pro, Nano Banana 2.1), saves previews and logs every take |
 | `tools/` | Edit, finish and mix scripts |
 | `audio/` | Sound sources and mix |
 | `out/` | Generated clips and renders (not committed) |
