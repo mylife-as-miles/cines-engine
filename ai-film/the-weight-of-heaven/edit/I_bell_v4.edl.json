@@ -1,0 +1,149 @@
+{
+ "name": "I_bell_v4",
+ "fps": 24,
+ "duration": 34.75,
+ "premaster": {
+  "I": -26.2,
+  "TP": -8.0,
+  "gain_dB": 5.5
+ },
+ "picture": [
+  {
+   "n": 1,
+   "label": "Q01 the rite",
+   "take": "Q01_t1",
+   "src_in": 0.0,
+   "src_out": 16.292,
+   "start": 0.0,
+   "filter": null,
+   "purpose": "The nave, the Hierophant, the couple and the bell, the answer from the gallery."
+  },
+  {
+   "n": 2,
+   "label": "Unread",
+   "take": "Q02A_t2",
+   "src_in": 8.667,
+   "src_out": 11.375,
+   "start": 16.292,
+   "filter": null,
+   "purpose": "The aide brings the warrant; her hand goes out; her eyes stay on the tower."
+  },
+  {
+   "n": 3,
+   "label": "The seal",
+   "take": "Q02A_t2",
+   "src_in": 11.5,
+   "src_out": 14.875,
+   "start": 19.0,
+   "filter": null,
+   "purpose": "The ring into the wax; the seal left on the page."
+  },
+  {
+   "n": 4,
+   "label": "The warrant lifted",
+   "take": "Q02B_t1",
+   "src_in": 0.125,
+   "src_out": 2.25,
+   "start": 22.375,
+   "filter": "crop=754:328:0:104,scale=992:432:flags=lanczos,unsharp=5:5:0.4",
+   "purpose": "The cause: the sealed warrant raised, and the tilt up the tower to the bell in its chains. Cropped so the stray panel beside the bell is out of frame."
+  },
+  {
+   "n": 5,
+   "label": "The barge lets go",
+   "take": "Q02_t1",
+   "src_in": 13.625,
+   "src_out": 17.625,
+   "start": 24.5,
+   "filter": null,
+   "purpose": "The effect, wide: the bell drops, the chains fall away."
+  },
+  {
+   "n": 6,
+   "label": "The hammer",
+   "take": "Q02B_t1",
+   "src_in": 6.875,
+   "src_out": 10.625,
+   "start": 28.5,
+   "filter": "crop=768:334:224:58,scale=992:432:flags=lanczos,unsharp=5:5:0.5",
+   "purpose": "Drawn back, the swing, the stroke, a hold. Cropped so the ringers are out of frame; the ropes run off the left."
+  },
+  {
+   "n": 7,
+   "label": "The still cup",
+   "take": "Q02_t1",
+   "src_in": 24.75,
+   "src_out": 26.0,
+   "start": 32.25,
+   "filter": "minterpolate=fps=48:mi_mode=mci:mc_mode=aobmc:vsbmc=1,setpts=2*PTS,fps=24",
+   "purpose": "The first cup, as the author prefers; slowed to half speed so it can be read (Orison moves slowly)."
+  }
+ ],
+ "sound": [
+  {
+   "name": "Q01 production",
+   "take": "Q01_t1",
+   "src_in": 0.0,
+   "src_out": 17.6,
+   "start": 0.0,
+   "gain_dB": 0.0,
+   "fade_in": 0.0,
+   "fade_out": 1.3
+  },
+  {
+   "name": "choir (Q02 t1 0-6.9 s, looped three times at 1.83 s with 1.2 s crossfades)",
+   "take": "audio/work/choir_extended.wav",
+   "src_in": 0.0,
+   "src_out": 15.5,
+   "start": 9.2,
+   "gain_dB": 1.0,
+   "fade_in": 2.6,
+   "fade_out": 2.2
+  },
+  {
+   "name": "Q02A production",
+   "take": "Q02A_t2",
+   "src_in": 8.667,
+   "src_out": 15.04,
+   "start": 16.292,
+   "gain_dB": 0.0,
+   "fade_in": 0.5,
+   "fade_out": 0.45
+  },
+  {
+   "name": "release",
+   "take": "Q02_t1",
+   "src_in": 11.5,
+   "src_out": 18.85,
+   "start": 22.375,
+   "gain_dB": 0.0,
+   "fade_in": 0.8,
+   "fade_out": 1.2
+  },
+  {
+   "name": "hammer + stroke",
+   "take": "Q02B_t1",
+   "src_in": 6.475,
+   "src_out": 12.0,
+   "start": 28.1,
+   "gain_dB": -5.0,
+   "fade_in": 0.4,
+   "fade_out": 1.3
+  },
+  {
+   "name": "applause",
+   "take": "Q02B_t1",
+   "src_in": 11.7,
+   "src_out": 14.4,
+   "start": 32.25,
+   "gain_dB": -2.0,
+   "fade_in": 0.3,
+   "fade_out": 0.7
+  },
+  {
+   "name": "air bed",
+   "source": "pink noise, 90 to 900 Hz, slow swell",
+   "gain_dB": -24.0
+  }
+ ]
+}
