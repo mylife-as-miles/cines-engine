@@ -6509,3 +6509,7423 @@ Avoid:
 - a mill
 - a wall behind the wheel
 ```
+
+---
+
+# P13 — THE PETAL GIRL'S BASKET
+
+Shots: 1.2, 1.7
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE PETAL GIRL'S BASKET
+
+Create a photorealistic film-production prop reference image for:
+
+THE PETAL GIRL'S BASKET
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+A small basket of white petals carried by the petal girl at the wedding
+
+OWNER / USER:
+The petal girl
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The Kingdom of Orison, a city of white marble that floats in the cloud (an invented world).
+
+FUNCTION:
+Holds the petals she strews; it slips from her hands and drifts, and Serath catches it without looking.
+
+STORY FUNCTION:
+Above, everything falls slowly: the basket leaves her hands and drifts.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A small round hand basket with one arched handle.
+
+OVERALL SHAPE:
+A shallow round basket with a single arched handle.
+
+PROPORTIONS:
+Twice as wide as deep.
+
+DIMENSIONS / SCALE:
+About 24 cm across, 10 cm deep; handle 18 cm high.
+
+PRIMARY COLOR:
+Pale cream woven cane.
+
+SECONDARY COLOR:
+White petals.
+
+CONSTRUCTION:
+Finely woven pale cane, a wrapped handle.
+
+DISTINCTIVE GEOMETRY:
+A tight, even weave; a plain rim; the handle wrapped in white ribbon.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Woven cane.
+
+SECONDARY MATERIAL:
+White ribbon; white petals.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- pale woven cane
+- white silk ribbon
+- white petals
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Pale cream cane, white ribbon, white petals; never red or pink petals.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+New, made for the wedding.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the white-ribbon-wrapped handle
+2. the even pale weave
+3. heaped white petals
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — BASKET
+
+Shape:
+Shallow round woven basket.
+
+Position:
+Bottom.
+
+Material:
+Cane.
+
+Color:
+Pale cream.
+
+Scale:
+24 cm.
+
+## COMPONENT 2 — HANDLE
+
+Shape:
+Arched, ribbon-wrapped.
+
+Position:
+Top.
+
+Material:
+Cane and ribbon.
+
+Color:
+White.
+
+Scale:
+18 cm.
+
+## COMPONENT 3 — PETALS
+
+Shape:
+Loose white petals heaped.
+
+Position:
+Inside.
+
+Material:
+Petals.
+
+Color:
+White.
+
+Scale:
+Each 2 to 3 cm.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 28 cm with the handle.
+
+WIDTH:
+24 cm.
+
+DEPTH:
+24 cm.
+
+WEIGHT / PHYSICAL FEEL:
+Very light.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Full of white petals, upright.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the ribbon-wrapped handle and the petals
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- the petals rest in the basket
+- light, delicate weave
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+```
+
+---
+
+# P14 — THE STONES ON THE WARRANTS
+
+Shots: 7.6, 7.7
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE STONES ON THE WARRANTS
+
+Create a photorealistic film-production prop reference image for:
+
+THE STONES ON THE WARRANTS
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+Three of the stones that hold down the warrants on the Treaty House floor: a hearthstone, a roof slate and the corner of a doorstep
+
+OWNER / USER:
+The people of the bearing-lands
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The ground beneath Orison: the bearing-lands of the eleven nations (an invented world).
+
+FUNCTION:
+Each holds down one warrant; each came from a house that the warrant's weight destroyed.
+
+STORY FUNCTION:
+Hundreds of warrants, each held down by a stone from a place it fell on. Thirty years of her hand.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+Three broken pieces of houses, shown together.
+
+OVERALL SHAPE:
+A square-ish hearthstone fragment blackened on one face; a broken grey roof slate with a nail hole; the broken corner of a worn stone doorstep.
+
+PROPORTIONS:
+Each about hand to forearm size.
+
+DIMENSIONS / SCALE:
+Hearthstone 25 × 20 × 6 cm; slate 30 × 18 × 1.5 cm; doorstep corner 22 × 18 × 12 cm.
+
+PRIMARY COLOR:
+Dark grey and brown-grey stone.
+
+SECONDARY COLOR:
+Soot black on the hearthstone.
+
+CONSTRUCTION:
+Natural stone, cut by masons long ago, broken recently.
+
+DISTINCTIVE GEOMETRY:
+The hearthstone soot-black on its top face; the slate with one square nail hole and a chipped edge; the doorstep corner with a worn, rounded tread edge.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Sandstone, slate, limestone.
+
+SECONDARY MATERIAL:
+None.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- soot-blackened sandstone
+- grey roof slate
+- worn limestone
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Greys and browns; soot black.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Old, newly broken.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the soot-black face of the hearthstone
+2. the nail hole in the slate
+3. the worn tread edge of the doorstep
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HEARTHSTONE
+
+Shape:
+Square-ish fragment, soot on top.
+
+Position:
+Left.
+
+Material:
+Sandstone.
+
+Color:
+Brown-grey, black top.
+
+Scale:
+25 cm.
+
+## COMPONENT 2 — ROOF SLATE
+
+Shape:
+Broken slate with a nail hole.
+
+Position:
+Middle.
+
+Material:
+Slate.
+
+Color:
+Blue-grey.
+
+Scale:
+30 cm.
+
+## COMPONENT 3 — DOORSTEP CORNER
+
+Shape:
+Corner with a worn tread.
+
+Position:
+Right.
+
+Material:
+Limestone.
+
+Color:
+Pale grey.
+
+Scale:
+22 cm.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+Up to 12 cm.
+
+WIDTH:
+Up to 30 cm.
+
+DEPTH:
+Up to 20 cm.
+
+WEIGHT / PHYSICAL FEEL:
+Heavy stones.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+The three lying side by side.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the worn tread edge of the doorstep corner
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- real broken stone edges
+- lying flat on the floor
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+```
+
+---
+
+# P15 — THE SPEARS OF THE GROUND
+
+Shots: 6.3 to 6.5, 8.5, 11.13
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE SPEARS OF THE GROUND
+
+Create a photorealistic film-production prop reference image for:
+
+THE SPEARS OF THE GROUND
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The plain spear Marl hands out in the Treaty House yard, and the bundle she hands them from
+
+OWNER / USER:
+The armies of the ground; the farmer holds one
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The ground beneath Orison: the bearing-lands of the eleven nations (an invented world).
+
+FUNCTION:
+A thrusting spear for farmers made soldiers.
+
+STORY FUNCTION:
+She puts one into the farmer's hands. At the end his knuckles are white on it; the spear does not move.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A long spear, and a tied bundle of the same spears.
+
+OVERALL SHAPE:
+A straight ash shaft with a leaf-shaped iron head on a socket, a plain iron butt cap.
+
+PROPORTIONS:
+Long and thin.
+
+DIMENSIONS / SCALE:
+About 2.4 m long; head 25 cm.
+
+PRIMARY COLOR:
+Pale grey-brown ash wood.
+
+SECONDARY COLOR:
+Dark forged iron.
+
+CONSTRUCTION:
+Hand-shaved ash shaft; forged iron head riveted through its socket; iron butt cap.
+
+DISTINCTIVE GEOMETRY:
+Some heads forged from strips of white-painted hull-plate, a fleck of white paint still on them; the shafts unvarnished, hand-shaved facets visible.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Ash wood.
+
+SECONDARY MATERIAL:
+Forged iron.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- ash wood
+- forged iron, some from hull-plate
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Pale ash, dark iron, a fleck of white paint on some heads.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+New-made, rough.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. leaf-shaped head on a socket with one rivet
+2. hand-shaved shaft facets
+3. a fleck of white hull paint on the head
+4. the bundle tied with rope
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — SPEAR
+
+Shape:
+One spear lying full length.
+
+Position:
+Top of the sheet.
+
+Material:
+Ash and iron.
+
+Color:
+Pale wood, dark iron.
+
+Scale:
+2.4 m.
+
+## COMPONENT 2 — BUNDLE
+
+Shape:
+About twelve spears tied with rope.
+
+Position:
+Below.
+
+Material:
+Ash, iron, rope.
+
+Color:
+Same.
+
+Scale:
+2.4 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+Lying: 10 cm.
+
+WIDTH:
+2.4 m.
+
+DEPTH:
+Bundle 30 cm across.
+
+WEIGHT / PHYSICAL FEEL:
+About 2 kg each.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+One spear lying flat; the bundle lying beside it.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the leaf head with its rivet and the fleck of white paint
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- straight shafts
+- rope tight round the bundle
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+```
+
+---
+
+# P16 — THE OX OF ANVIL VALE AND ITS YOKE
+
+Shots: 2.5, 2.6
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE OX OF ANVIL VALE AND ITS YOKE
+
+Create a photorealistic film-production prop reference image for:
+
+THE OX OF ANVIL VALE AND ITS YOKE
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The farmer's ox and its wooden yoke
+
+OWNER / USER:
+The farmer
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The ground beneath Orison: the bearing-lands of the eleven nations (an invented world).
+
+FUNCTION:
+Pulls the plough; it drags at its rope before the mountain falls.
+
+STORY FUNCTION:
+The causes come first: the trembling water, the ox, the crows, a line of dust.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A living working ox with a wooden neck yoke, shown as an animal reference.
+
+OVERALL SHAPE:
+A heavy, low-built ox, short horns, a deep chest; a single carved wooden yoke over its neck with a rope.
+
+PROPORTIONS:
+Long-bodied and heavy.
+
+DIMENSIONS / SCALE:
+About 1.4 m at the shoulder, 2.6 m long.
+
+PRIMARY COLOR:
+Dusty grey-brown coat.
+
+SECONDARY COLOR:
+Dark worn wood yoke; hemp rope.
+
+CONSTRUCTION:
+A real animal; the yoke carved from one piece of wood, pegged, with an iron ring.
+
+DISTINCTIVE GEOMETRY:
+Short forward-curving horns; a pale muzzle; the yoke worn smooth where it sits; a hemp lead rope.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Living animal.
+
+SECONDARY MATERIAL:
+Wood, iron, hemp.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- a real ox
+- carved wood
+- iron ring
+- hemp rope
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Grey-brown, dusty.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+A working animal, strong, thin.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. short forward-curving horns
+2. the pale muzzle
+3. the worn single yoke with an iron ring
+4. the hemp lead
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — OX
+
+Shape:
+Heavy working ox.
+
+Position:
+Whole sheet.
+
+Material:
+Animal.
+
+Color:
+Grey-brown.
+
+Scale:
+1.4 m at shoulder.
+
+## COMPONENT 2 — YOKE
+
+Shape:
+Carved single neck yoke, iron ring.
+
+Position:
+On the neck.
+
+Material:
+Wood, iron.
+
+Color:
+Dark wood.
+
+Scale:
+1 m wide.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+1.4 m at the shoulder.
+
+WIDTH:
+About 70 cm.
+
+DEPTH:
+2.6 m.
+
+WEIGHT / PHYSICAL FEEL:
+About 700 kg.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Standing square, head level, the yoke on its neck.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the yoke where it sits on the neck, with its iron ring
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- a real animal's weight and stance
+- the rope hangs naturally
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- a cartoon animal
+- decorations or bells
+```
+
+---
+
+# P17 — THE BANNERS OF THE SEVEN KINGDOMS
+
+Shots: 1.3, 10.20
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE BANNERS OF THE SEVEN KINGDOMS
+
+Create a photorealistic film-production prop reference image for:
+
+THE BANNERS OF THE SEVEN KINGDOMS
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The seven long banners of the seven kingdoms that hang in the Cathedral of the Ascension
+
+OWNER / USER:
+The seven kingdoms; the cathedral
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The Kingdom of Orison, a city of white marble that floats in the cloud (an invented world).
+
+FUNCTION:
+Hang from the high galleries at the wedding.
+
+STORY FUNCTION:
+They have floated for eight hundred years; when the kingdom lands they drop and hang straight.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+Seven long cloth banners, shown hanging side by side.
+
+OVERALL SHAPE:
+Long narrow rectangles with a pointed lower end, hanging from plain white rods.
+
+PROPORTIONS:
+About one to six.
+
+DIMENSIONS / SCALE:
+About 1.2 m wide, 7 m long.
+
+PRIMARY COLOR:
+Undyed cream and pale grey cloth.
+
+SECONDARY COLOR:
+A woven border in mid grey, different on each.
+
+CONSTRUCTION:
+Fine woven cloth, hemmed, hung from white rods by loops.
+
+DISTINCTIVE GEOMETRY:
+Each banner differs only in its woven border: a plain band, a double band, a chevron, a step, a wave, a line of dots, a key pattern. No emblems, no colours, no words.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Fine wool and linen cloth.
+
+SECONDARY MATERIAL:
+Painted white rods.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- fine cream and pale grey cloth
+- woven grey borders
+- white rods
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Cream and pale grey, borders mid grey (as in the approved cathedral).
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Old, perfectly kept.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. seven different woven grey borders
+2. pointed lower ends
+3. no emblems
+4. white rods
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — BANNERS
+
+Shape:
+Seven long cloths.
+
+Position:
+Side by side.
+
+Material:
+Cloth.
+
+Color:
+Cream and pale grey.
+
+Scale:
+7 m.
+
+## COMPONENT 2 — BORDERS
+
+Shape:
+Seven different woven patterns.
+
+Position:
+Along the edges.
+
+Material:
+Woven cloth.
+
+Color:
+Mid grey.
+
+Scale:
+10 cm wide.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+7 m.
+
+WIDTH:
+About 10 m for all seven.
+
+DEPTH:
+Thin cloth.
+
+WEIGHT / PHYSICAL FEEL:
+Light cloth.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging straight down under their own weight (the landed state).
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+three of the woven borders side by side
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- cloth hangs straight with real weight
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- emblems, crests, animals
+- bright colours
+- gold thread
+```
+
+---
+
+# P18 — A FLEET GUN AND ITS LANYARD
+
+Shots: 8.3, 10.4
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E11_gun-deck.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## A FLEET GUN AND ITS LANYARD
+
+Create a photorealistic film-production prop reference image for:
+
+A FLEET GUN AND ITS LANYARD
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+One of the fleet's guns on its carriage, with the firing lanyard
+
+OWNER / USER:
+The gun crews
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+A muzzle-loading cannon fired by pulling a lanyard. It never fires in this film.
+
+STORY FUNCTION:
+A gunner of nineteen with the lanyard round his fist and the road in his sight; nobody will be first.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A muzzle-loading cannon on a wooden truck carriage, with a lanyard.
+
+OVERALL SHAPE:
+A long dark iron barrel with reinforcing rings on a four-wheeled oak carriage, ropes and rings at the sides, a lanyard from the firing lock.
+
+PROPORTIONS:
+Long barrel, low carriage.
+
+DIMENSIONS / SCALE:
+Barrel about 3 m; carriage 1.5 m long.
+
+PRIMARY COLOR:
+Dark iron barrel.
+
+SECONDARY COLOR:
+Pale oak carriage; hemp ropes.
+
+CONSTRUCTION:
+Cast iron barrel; oak carriage with iron fittings; hemp breeching rope.
+
+DISTINCTIVE GEOMETRY:
+A flintlock-style lock at the breech with a lanyard of thin cord running back, its end in a loop. The carriage painted white like the deck. No markings on the barrel.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Cast iron.
+
+SECONDARY MATERIAL:
+Oak, iron, hemp.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- cast iron
+- white-painted oak
+- hemp rope
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Dark iron; white-painted carriage; pale hemp.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Well kept, never fired in years.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the white-painted carriage
+2. the lock at the breech with its lanyard loop
+3. no markings on the barrel
+4. the breeching rope
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — BARREL
+
+Shape:
+Long iron barrel with rings.
+
+Position:
+On the carriage.
+
+Material:
+Cast iron.
+
+Color:
+Dark.
+
+Scale:
+3 m.
+
+## COMPONENT 2 — CARRIAGE
+
+Shape:
+Four-wheeled truck carriage.
+
+Position:
+Beneath.
+
+Material:
+Oak.
+
+Color:
+White-painted.
+
+Scale:
+1.5 m.
+
+## COMPONENT 3 — LANYARD
+
+Shape:
+Thin cord from the lock, a loop at its end.
+
+Position:
+From the breech.
+
+Material:
+Cord.
+
+Color:
+Pale.
+
+Scale:
+3 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 1.2 m.
+
+WIDTH:
+About 1 m.
+
+DEPTH:
+About 3.5 m.
+
+WEIGHT / PHYSICAL FEEL:
+Several tons.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Run out, loaded, the lanyard slack.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the lock at the breech with the lanyard
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- real iron weight
+- ropes hang naturally
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- firing, smoke or flame
+- engraving
+```
+
+---
+
+# P19 — THE FARMER'S FLASK
+
+Shots: 11.4
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE FARMER'S FLASK
+
+Create a photorealistic film-production prop reference image for:
+
+THE FARMER'S FLASK
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The farmer's water flask, on a strap
+
+OWNER / USER:
+The farmer
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The ground beneath Orison: the bearing-lands of the eleven nations (an invented world).
+
+FUNCTION:
+Carries water; at the end he pours from it into the bowl, and the water does not move.
+
+STORY FUNCTION:
+The last pour of water in the film.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A flat round leather water flask with a wooden stopper.
+
+OVERALL SHAPE:
+A flat round body of stitched leather, a short neck, a wooden stopper on a thong, a leather shoulder strap.
+
+PROPORTIONS:
+Round and flat.
+
+DIMENSIONS / SCALE:
+About 20 cm across, 7 cm thick.
+
+PRIMARY COLOR:
+Dark brown leather.
+
+SECONDARY COLOR:
+Pale wood stopper; worn strap.
+
+CONSTRUCTION:
+Two discs of hardened leather stitched round the edge, a turned wooden neck and stopper.
+
+DISTINCTIVE GEOMETRY:
+Heavy stitching round the rim; a dark water stain at the neck; the strap knotted where it was mended.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Hardened leather.
+
+SECONDARY MATERIAL:
+Wood, thong.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- hardened leather
+- turned wood
+- leather strap
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Dark brown leather, pale wood.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Old, much used, mended.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. heavy stitching round the rim
+2. the stopper on a thong
+3. the knotted mended strap
+4. the water stain at the neck
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — BODY
+
+Shape:
+Flat round stitched leather body.
+
+Position:
+Centre.
+
+Material:
+Leather.
+
+Color:
+Dark brown.
+
+Scale:
+20 cm.
+
+## COMPONENT 2 — NECK AND STOPPER
+
+Shape:
+Turned wooden neck and stopper on a thong.
+
+Position:
+Top.
+
+Material:
+Wood.
+
+Color:
+Pale.
+
+Scale:
+5 cm.
+
+## COMPONENT 3 — STRAP
+
+Shape:
+Leather strap, knotted once.
+
+Position:
+From the shoulders of the body.
+
+Material:
+Leather.
+
+Color:
+Worn brown.
+
+Scale:
+1 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 25 cm with the neck.
+
+WIDTH:
+20 cm.
+
+DEPTH:
+7 cm.
+
+WEIGHT / PHYSICAL FEEL:
+About 1.5 kg full.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Full, stoppered, strap loose.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the stitched rim and the stopper on its thong
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- the strap hangs with gravity
+- leather with real thickness
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+```
+
+---
+
+# P21 — THE HAMMER OF THE MARRIAGE BELL
+
+Shots: 1.10
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/PROP_P01_marriage-bell.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE HAMMER OF THE MARRIAGE BELL
+
+Create a photorealistic film-production prop reference image for:
+
+THE HAMMER OF THE MARRIAGE BELL
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the approved marriage bell. Use it for: the bronze and iron it belongs with, and its scale.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The great hammer that strikes the marriage bell from outside: "a hammer the size of a door"
+
+OWNER / USER:
+The Cathedral of the Ascension
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The Kingdom of Orison, a city of white marble that floats in the cloud (an invented world).
+
+FUNCTION:
+Hangs beside the bell on a swinging arm; drawn back and released, it strikes the bell's flat striking patch.
+
+STORY FUNCTION:
+The bell is struck. One stroke. It does not fade.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A great swinging striker: a heavy head on a long arm pivoting from a beam.
+
+OVERALL SHAPE:
+A long white timber arm with a heavy rounded head of dark iron bound in leather on the striking face, pivoting at its top on an iron pin.
+
+PROPORTIONS:
+The head about the size of a door laid on its side.
+
+DIMENSIONS / SCALE:
+Head about 2 m long, 1 m tall, 60 cm thick; arm about 5 m.
+
+PRIMARY COLOR:
+Dark iron head.
+
+SECONDARY COLOR:
+White-painted timber arm; pale leather striking pad.
+
+CONSTRUCTION:
+Forged iron head bolted to a timber arm with iron straps; leather pad riveted on the face; iron pivot pin.
+
+DISTINCTIVE GEOMETRY:
+A plain rounded rectangular head; a pale leather pad on the striking face; two iron straps binding it to the arm.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Forged iron.
+
+SECONDARY MATERIAL:
+Painted timber, leather.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- forged iron
+- white-painted timber
+- thick leather
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Dark iron, white arm, pale leather.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+New, made with the bell.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the pale leather striking pad
+2. two iron straps
+3. the white timber arm
+4. the pivot pin at the top
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HEAD
+
+Shape:
+Rounded rectangular iron head, leather pad.
+
+Position:
+Bottom of the arm.
+
+Material:
+Iron, leather.
+
+Color:
+Dark, pale pad.
+
+Scale:
+2 × 1 m.
+
+## COMPONENT 2 — ARM
+
+Shape:
+Long white timber arm.
+
+Position:
+Above the head.
+
+Material:
+Painted timber.
+
+Color:
+White.
+
+Scale:
+5 m.
+
+## COMPONENT 3 — PIVOT
+
+Shape:
+Iron pin through the top of the arm.
+
+Position:
+Top.
+
+Material:
+Iron.
+
+Color:
+Black.
+
+Scale:
+20 cm.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 6 m.
+
+WIDTH:
+2 m.
+
+DEPTH:
+60 cm.
+
+WEIGHT / PHYSICAL FEEL:
+Several tons.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging still, vertical.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# MOVING / FUNCTIONAL PARTS
+
+If the object has moving components, preserve their mechanical logic.
+
+For this prop:
+
+- the arm on its pivot
+
+Define:
+
+RESTING POSITION:
+hanging vertical
+
+RANGE OF MOVEMENT:
+swings back about 60 degrees and forward to strike
+
+HINGE / PIVOT LOCATION:
+the iron pin at the top
+
+Nothing should articulate in an impossible way.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the leather striking pad and the iron straps
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs plumb from its pin
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- a sledgehammer
+- a clapper inside a bell
+- a mallet
+```
+
+---
+
+# V01 — THE FLAGSHIP OF ORISON
+
+Shots: 8.1 to 8.9, 9 (from inside), 10.1, 10.8
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E10_flagship-bridge.jpg` · @Image 2 = `refs/ENV_E11_gun-deck.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE FLAGSHIP OF ORISON
+
+Create a photorealistic film-production prop reference image for:
+
+THE FLAGSHIP OF ORISON
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the flagship bridge with the fleet outside at dusk (approved location). Use it for: the look of the fleet as already established: white church-nave superstructures with spires and lancet windows on long hulls, hanging in the air.
+@Image 2 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The flagship of the fleet of Orison: the greatest ship of the line, a cathedral nave built as a hull, hanging in the air
+
+OWNER / USER:
+The Grand Admiral's flag; its Flag Captain
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+Command ship of the fleet: the bridge at the bow, gun decks along the sides, signal posts on deck, the anchor at the keel.
+
+STORY FUNCTION:
+The fleet is Orison under arms: every order is a picture the whole fleet can read; no gun ever fires in this film. From here Serath lowers her hand and orders anchors; from its keel the first anchor falls a mile.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A great air-ship of the line built like a church: a long white hull carrying a nave superstructure and one tall spire.
+
+OVERALL SHAPE:
+A long, narrow hull whose keel is shaped like an upturned pitched roof; on it, a long nave with pointed lancet windows and buttresses, one tall slender spire rising from the middle as a mast, and at the bow the glazed bridge with its tall gridded lancet glass.
+
+PROPORTIONS:
+About eight times as long as it is wide; the spire about as tall as the hull is long divided by three.
+
+DIMENSIONS / SCALE:
+About 320 m long, 40 m wide; the spire about 110 m tall above the deck.
+
+PRIMARY COLOR:
+Hull white #E9E6DE: white-painted timber, warm where the light reaches, never pure white.
+
+SECONDARY COLOR:
+Brass fittings; dark chain iron at the hawse; slate-grey roofing on the nave.
+
+CONSTRUCTION:
+White-painted timber planking and framing over a timber keel, iron-strapped; brass at the bridge and the signal posts.
+
+DISTINCTIVE GEOMETRY:
+Three rows of pointed lancet gunports along each side of the hull, closed. A great white banner on the spire. Two fleet signal posts (white masts with lancet-tipped arms and round brass lamps) on the deck. An anchor hawse at the bow of the keel. The bridge glass at the bow: a tall wall of gridded lancet panes.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Painted timber.
+
+SECONDARY MATERIAL:
+Brass, glass, forged iron, slate.
+
+SURFACE FINISH:
+Satin paint, slightly weathered.
+
+TEXTURE:
+Planking seams and paint texture.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low; brass and glass soft.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white-painted timber
+- brass
+- glass
+- forged iron
+- slate roofing
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Hull white with slate-grey nave roofs and brass details.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Well kept, eight hundred years of the same pattern.
+
+Specify physical history:
+
+- paint weathered on the keel
+- brass worn at the bridge rails
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the single tall spire mid-ship carrying the great white banner
+2. three rows of lancet gunports each side
+3. the glazed lancet bridge at the bow
+4. the keel shaped like an upturned roof
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HULL AND KEEL
+
+Shape:
+Long narrow hull, keel like an upturned pitched roof.
+
+Position:
+Bottom.
+
+Material:
+Painted timber, iron straps.
+
+Color:
+Hull white.
+
+Scale:
+320 m long.
+
+## COMPONENT 2 — NAVE
+
+Shape:
+Long nave with lancet windows and buttresses, slate roof.
+
+Position:
+On the deck, most of the length.
+
+Material:
+Painted timber and slate.
+
+Color:
+White, slate roof.
+
+Scale:
+200 m long.
+
+## COMPONENT 3 — SPIRE
+
+Shape:
+One tall slender spire with the great white banner.
+
+Position:
+Mid-ship.
+
+Material:
+Painted timber.
+
+Color:
+White.
+
+Scale:
+110 m tall.
+
+## COMPONENT 4 — BRIDGE
+
+Shape:
+Glazed bow with tall gridded lancet glass.
+
+Position:
+The bow.
+
+Material:
+Timber, brass, glass.
+
+Color:
+White and brass.
+
+Scale:
+30 m wide.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 150 m from keel to spire tip.
+
+WIDTH:
+About 40 m.
+
+DEPTH:
+About 320 m long.
+
+WEIGHT / PHYSICAL FEEL:
+Immense, yet it hangs as if weightless.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging level, gunports closed, banner hanging from the spire, anchor stowed.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the glazed lancet bridge at the bow and the first row of gunports below it
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs level in the air with no visible means: no balloons, sails, propellers, engines, jets, smoke or glow
+- a soft shadow on the floor beneath it, as if it hovered a little above a studio floor
+- real timber, iron and brass thickness and joinery
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- sails, balloons, gas bags, propellers, engines, jets or exhausts
+- a sea, water or waves
+- a zeppelin or airship
+- steampunk pipes and gears
+- flags with emblems or colours
+- glow beneath the hull
+```
+
+---
+
+# V02 — A SHIP OF THE LINE (CASSIEL'S SHIP IS ONE)
+
+Shots: 8, 10, 11.19
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E10_flagship-bridge.jpg` · @Image 2 = `refs/ENV_E11_gun-deck.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## A SHIP OF THE LINE (CASSIEL'S SHIP IS ONE)
+
+Create a photorealistic film-production prop reference image for:
+
+A SHIP OF THE LINE (CASSIEL'S SHIP IS ONE)
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the flagship bridge with the fleet outside at dusk (approved location). Use it for: the look of the fleet as already established: white church-nave superstructures with spires and lancet windows on long hulls, hanging in the air.
+@Image 2 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+A standard ship of the line of the fleet of Orison: a smaller sister of the flagship
+
+OWNER / USER:
+The fleet; the second ship of the line is Cassiel's
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+A gunship of the line, hundreds in the fleet, rank above rank.
+
+STORY FUNCTION:
+The fleet is Orison under arms: every order is a picture the whole fleet can read; no gun ever fires in this film. Cassiel's ship does not strike its colours; it turns, alone, and climbs back into the cloud.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+An air-ship of the line built like a church.
+
+OVERALL SHAPE:
+The flagship's pattern, shorter: a narrow hull with a keel like an upturned roof, a nave with lancet windows, one spire, a small glazed bow.
+
+PROPORTIONS:
+About seven times as long as wide.
+
+DIMENSIONS / SCALE:
+About 180 m long, 25 m wide; spire about 60 m.
+
+PRIMARY COLOR:
+Hull white #E9E6DE.
+
+SECONDARY COLOR:
+Slate roofs, brass, iron.
+
+CONSTRUCTION:
+As the flagship.
+
+DISTINCTIVE GEOMETRY:
+Two rows of lancet gunports each side; one spire with a white banner; one signal post with a lancet-tipped arm on the deck near the bow; an anchor hawse in the keel.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Painted timber.
+
+SECONDARY MATERIAL:
+Brass, glass, iron, slate.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white-painted timber
+- brass
+- iron
+- slate
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Hull white, slate roofs, brass.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Well kept.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. one spire with a white banner
+2. two rows of lancet gunports
+3. one signal post near the bow
+4. the upturned-roof keel
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HULL
+
+Shape:
+Narrow hull, upturned-roof keel.
+
+Position:
+Bottom.
+
+Material:
+Timber.
+
+Color:
+White.
+
+Scale:
+180 m.
+
+## COMPONENT 2 — NAVE AND SPIRE
+
+Shape:
+Nave with lancets, one spire.
+
+Position:
+Deck.
+
+Material:
+Timber, slate.
+
+Color:
+White.
+
+Scale:
+Spire 60 m.
+
+## COMPONENT 3 — SIGNAL POST
+
+Shape:
+White mast, lancet-tipped arm, brass lamp.
+
+Position:
+Deck, near the bow.
+
+Material:
+Timber, brass.
+
+Color:
+White and brass.
+
+Scale:
+6 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 85 m.
+
+WIDTH:
+25 m.
+
+DEPTH:
+180 m long.
+
+WEIGHT / PHYSICAL FEEL:
+Immense.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging level, ports closed, banner up, signal arm down.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the signal post on the deck and the spire's banner
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs level in the air with no visible means: no balloons, sails, propellers, engines, jets, smoke or glow
+- a soft shadow on the floor beneath it, as if it hovered a little above a studio floor
+- real timber, iron and brass thickness and joinery
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- sails, balloons, gas bags, propellers, engines, jets or exhausts
+- a sea, water or waves
+- a zeppelin or airship
+- steampunk pipes and gears
+- flags with emblems or colours
+- glow beneath the hull
+```
+
+---
+
+# V03 — THE SMALL SHIP THAT ANCHORS FIRST
+
+Shots: 10.6
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E10_flagship-bridge.jpg` · @Image 2 = `refs/ENV_E11_gun-deck.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE SMALL SHIP THAT ANCHORS FIRST
+
+Create a photorealistic film-production prop reference image for:
+
+THE SMALL SHIP THAT ANCHORS FIRST
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the flagship bridge with the fleet outside at dusk (approved location). Use it for: the look of the fleet as already established: white church-nave superstructures with spires and lancet windows on long hulls, hanging in the air.
+@Image 2 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+One of the fleet's smallest ships: a chapel-sized hull, far down the line
+
+OWNER / USER:
+The fleet
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+A light ship of the line.
+
+STORY FUNCTION:
+The fleet is Orison under arms: every order is a picture the whole fleet can read; no gun ever fires in this film. After Cassiel signals fire and no gun answers, this small ship lets go its anchor first, and then the sky rains iron.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A small air-ship built like a chapel.
+
+OVERALL SHAPE:
+A short hull with an upturned-roof keel, a small chapel-like cabin with lancet windows, a short spire.
+
+PROPORTIONS:
+About four times as long as wide.
+
+DIMENSIONS / SCALE:
+About 45 m long, 11 m wide; spire about 18 m.
+
+PRIMARY COLOR:
+Hull white.
+
+SECONDARY COLOR:
+Slate roof, iron.
+
+CONSTRUCTION:
+As the larger ships.
+
+DISTINCTIVE GEOMETRY:
+One row of four lancet gunports each side; a short spire with a small white banner; an anchor hawse.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Painted timber.
+
+SECONDARY MATERIAL:
+None.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white-painted timber
+- iron
+- slate
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Hull white, slate roof.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Well kept, a little weathered.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. one short spire
+2. four lancet gunports each side
+3. the small chapel cabin
+4. the upturned-roof keel
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HULL
+
+Shape:
+Short hull, upturned-roof keel.
+
+Position:
+Bottom.
+
+Material:
+Timber.
+
+Color:
+White.
+
+Scale:
+45 m.
+
+## COMPONENT 2 — CHAPEL CABIN AND SPIRE
+
+Shape:
+Small cabin with lancet windows, a short spire.
+
+Position:
+Deck.
+
+Material:
+Timber, slate.
+
+Color:
+White.
+
+Scale:
+Spire 18 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 28 m.
+
+WIDTH:
+11 m.
+
+DEPTH:
+45 m.
+
+WEIGHT / PHYSICAL FEEL:
+Heavy.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging level, anchor stowed.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the anchor hawse in the keel
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs level in the air with no visible means: no balloons, sails, propellers, engines, jets, smoke or glow
+- a soft shadow on the floor beneath it, as if it hovered a little above a studio floor
+- real timber, iron and brass thickness and joinery
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- sails, balloons, gas bags, propellers, engines, jets or exhausts
+- a sea, water or waves
+- a zeppelin or airship
+- steampunk pipes and gears
+- flags with emblems or colours
+- glow beneath the hull
+```
+
+---
+
+# V04 — THE NAVAL CUTTER
+
+Shots: 5.1 to 5.3, 6.1 to 6.3
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E10_flagship-bridge.jpg` · @Image 2 = `refs/ENV_E11_gun-deck.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE NAVAL CUTTER
+
+Create a photorealistic film-production prop reference image for:
+
+THE NAVAL CUTTER
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the flagship bridge with the fleet outside at dusk (approved location). Use it for: the look of the fleet as already established: white church-nave superstructures with spires and lancet windows on long hulls, hanging in the air.
+@Image 2 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The small fast ship that carries the Grand Admiral down to the ground
+
+OWNER / USER:
+The fleet
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+A courier and passenger ship; it can set down on level ground.
+
+STORY FUNCTION:
+Serath has never seen her kingdom from below. The cutter drops out of the cloud beneath it, the only white thing in the frame, and sets her down in the Treaty House yard.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A small air-ship built like a covered boat with a chapel roof.
+
+OVERALL SHAPE:
+A slim pointed hull with an upturned-roof keel and two short landing skids, an open deck aft, a small enclosed cabin with lancet windows forward, a low stubby spire.
+
+PROPORTIONS:
+About five times as long as wide.
+
+DIMENSIONS / SCALE:
+About 24 m long, 5 m wide.
+
+PRIMARY COLOR:
+Hull white.
+
+SECONDARY COLOR:
+Brass rails, slate roof on the cabin.
+
+CONSTRUCTION:
+Painted timber, brass rails, iron skids.
+
+DISTINCTIVE GEOMETRY:
+Two iron landing skids under the keel; a short gangway that folds down from the side; no guns.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Painted timber.
+
+SECONDARY MATERIAL:
+Brass, iron.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white-painted timber
+- brass
+- iron
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Hull white, brass rails.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Well kept.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. two iron landing skids
+2. the folding side gangway
+3. the small lancet-windowed cabin forward
+4. no gunports
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HULL AND SKIDS
+
+Shape:
+Slim hull, two iron skids.
+
+Position:
+Bottom.
+
+Material:
+Timber, iron.
+
+Color:
+White, black iron.
+
+Scale:
+24 m.
+
+## COMPONENT 2 — CABIN
+
+Shape:
+Small cabin with lancet windows and a slate roof, a stubby spire.
+
+Position:
+Forward.
+
+Material:
+Timber, slate.
+
+Color:
+White.
+
+Scale:
+8 m.
+
+## COMPONENT 3 — GANGWAY
+
+Shape:
+A short folding gangway.
+
+Position:
+Side, amidships.
+
+Material:
+Timber, brass.
+
+Color:
+White.
+
+Scale:
+3 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 9 m.
+
+WIDTH:
+5 m.
+
+DEPTH:
+24 m.
+
+WEIGHT / PHYSICAL FEEL:
+Light for a ship.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging just above the floor on its skids' height, gangway up.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# MOVING / FUNCTIONAL PARTS
+
+If the object has moving components, preserve their mechanical logic.
+
+For this prop:
+
+- the side gangway
+
+Define:
+
+RESTING POSITION:
+folded up against the hull
+
+RANGE OF MOVEMENT:
+folds down to the ground
+
+HINGE / PIVOT LOCATION:
+a hinge at the deck edge
+
+Nothing should articulate in an impossible way.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the landing skids and the folded gangway
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs level in the air with no visible means: no balloons, sails, propellers, engines, jets, smoke or glow
+- a soft shadow on the floor beneath it, as if it hovered a little above a studio floor
+- real timber, iron and brass thickness and joinery
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- sails, balloons, gas bags, propellers, engines, jets or exhausts
+- a sea, water or waves
+- a zeppelin or airship
+- steampunk pipes and gears
+- flags with emblems or colours
+- glow beneath the hull
+- cannon
+```
+
+---
+
+# V05 — THE FLEET BARGE THAT LIFTS THE BELL
+
+Shots: 1.4 to 1.9
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E10_flagship-bridge.jpg` · @Image 2 = `refs/ENV_E11_gun-deck.jpg` · @Image 3 = `refs/PROP_P01_marriage-bell.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE FLEET BARGE THAT LIFTS THE BELL
+
+Create a photorealistic film-production prop reference image for:
+
+THE FLEET BARGE THAT LIFTS THE BELL
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the flagship bridge with the fleet outside at dusk (approved location). Use it for: the look of the fleet as already established: white church-nave superstructures with spires and lancet windows on long hulls, hanging in the air.
+@Image 2 — a gun deck of the fleet (approved location). Use it for: the ships' building language: white-painted timber framing, pointed lancet gunports, dark iron cannon.
+@Image 3 — the approved marriage bell. Use it for: the bell slung beneath the barge, at its true size.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+A heavy lifting barge of the fleet, with the ninety-ton marriage bell slung beneath it in chains
+
+OWNER / USER:
+The fleet
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The fleet of Orison: white ships that sail the air (an invented world).
+
+FUNCTION:
+Lifts and sets down great weights: here, the new bell, lowered into the cathedral's open tower.
+
+STORY FUNCTION:
+The barge lets go, its chains fall slack, the bell settles onto the cathedral's own beam, and the kingdom takes its weight. Ninety tons; in Anvil Vale, the same hour, a mountain falls.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+A broad, flat-bottomed air-barge with a lifting frame.
+
+OVERALL SHAPE:
+A wide, shallow white hull with an upturned-roof keel; on deck, a tall white timber lifting frame like an open bell-cote, with great iron chains running down through the hull to a cradle that holds the bell beneath.
+
+PROPORTIONS:
+About twice as long as wide.
+
+DIMENSIONS / SCALE:
+About 60 m long, 30 m wide; the bell 6 m tall beneath.
+
+PRIMARY COLOR:
+Hull white.
+
+SECONDARY COLOR:
+Dark chain iron; the bell's dark bronze.
+
+CONSTRUCTION:
+Painted timber, iron chains and cradle.
+
+DISTINCTIVE GEOMETRY:
+Four great chains from the lifting frame to an iron cradle round the bell's shoulder. A small spire at one end of the frame.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+Painted timber.
+
+SECONDARY MATERIAL:
+Forged iron chain; the bronze bell.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white-painted timber
+- forged iron chain
+- cast bronze bell
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+Hull white, black iron, dark bronze.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Working ship, well kept.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. the open lifting frame like a bell-cote on deck
+2. four chains to an iron cradle
+3. the bell hanging beneath
+4. the wide shallow hull
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — HULL
+
+Shape:
+Wide shallow hull.
+
+Position:
+Top.
+
+Material:
+Timber.
+
+Color:
+White.
+
+Scale:
+60 × 30 m.
+
+## COMPONENT 2 — LIFTING FRAME
+
+Shape:
+Tall open timber frame.
+
+Position:
+On deck.
+
+Material:
+Painted timber.
+
+Color:
+White.
+
+Scale:
+25 m tall.
+
+## COMPONENT 3 — CHAINS AND BELL
+
+Shape:
+Four chains to an iron cradle holding the bell.
+
+Position:
+Beneath.
+
+Material:
+Iron, bronze.
+
+Color:
+Black and dark bronze.
+
+Scale:
+Bell 6 m.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+About 50 m with the bell.
+
+WIDTH:
+30 m.
+
+DEPTH:
+60 m.
+
+WEIGHT / PHYSICAL FEEL:
+The bell is ninety tons.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging level, the bell slung beneath in its chains, chains taut.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the iron cradle round the bell's shoulder
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- it hangs level in the air with no visible means: no balloons, sails, propellers, engines, jets, smoke or glow
+- a soft shadow on the floor beneath it, as if it hovered a little above a studio floor
+- real timber, iron and brass thickness and joinery
+- the chains hang taut and straight under the bell's weight
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- sails, balloons, gas bags, propellers, engines, jets or exhausts
+- a sea, water or waves
+- a zeppelin or airship
+- steampunk pipes and gears
+- flags with emblems or colours
+- glow beneath the hull
+```
+
+---
+
+# V06 — THE SIX OTHER KINGDOMS
+
+Shots: 11.16 to 11.19 (far on the horizon)
+
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/ENV_E12_orison-whole.jpg`.
+
+```text
+# THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
+
+## THE SIX OTHER KINGDOMS
+
+Create a photorealistic film-production prop reference image for:
+
+THE SIX OTHER KINGDOMS
+
+This is an EXACT CONTINUITY REFERENCE for the feature film THE WEIGHT OF HEAVEN.
+
+This is not advertising photography.
+This is not a product commercial.
+This is not stylized concept art.
+
+The primary goal is to establish one specific physical object that can remain visually identical across multiple scenes, camera angles, lighting conditions, and generated video clips.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — Orison seen whole (approved location). Use it for: the kind of thing a kingdom is: a city of white stone on a mountain of raw rock hanging in the air; the other six differ in shape.
+
+Take from each reference only the object's design as listed. The sheet itself is the plain grey reference described below: no environment, no other objects from the reference.
+
+---
+
+# PROP IDENTITY
+
+PROP:
+The six other floating kingdoms of the Ascension, each a city on a mountain of rock in the sky, shown side by side for reference
+
+OWNER / USER:
+The six other kingdoms (still in the air)
+
+STORY PERIOD:
+Year 800 of the Ascension. Pre-industrial: cast bronze, forged iron, gold, brass, glass, oak, paper, wax. No electricity, no plastic, no machine-made modern parts.
+
+COUNTRY / REGION:
+The sky over the ground (an invented world).
+
+FUNCTION:
+Seen only far away, on the horizon, in the last sun, with signal lamps passing between them.
+
+STORY FUNCTION:
+When Orison has landed, six more are still in the air; a lone white ship climbs toward the nearest.
+
+The object should feel like a real physical item that existed before the camera arrived.
+
+It must not look artificially designed to communicate symbolism.
+
+---
+
+# CORE DESIGN
+
+Establish one exact design.
+
+OBJECT TYPE:
+Six floating kingdoms, each a city on an inverted mountain of rock, shown as six small elevations in a row.
+
+OVERALL SHAPE:
+Each a different silhouette: one tall and needle-towered, one long and low with terraces, one domed, one stepped like a ziggurat, one ringed by walls, one with a single great tower. All white stone above, raw dark rock below.
+
+PROPORTIONS:
+Each about as wide as it is tall, rock included.
+
+DIMENSIONS / SCALE:
+Each between eight and fifteen miles across.
+
+PRIMARY COLOR:
+White and pale stone cities.
+
+SECONDARY COLOR:
+Dark raw rock undersides.
+
+CONSTRUCTION:
+Stone cities on floating rock.
+
+DISTINCTIVE GEOMETRY:
+Six clearly different city silhouettes in one row, the same scale, each with its rock underside and a few hanging chains.
+
+The silhouette must be immediately recognizable from multiple angles.
+
+Do not redesign the object between views.
+
+---
+
+# MATERIAL LOCK
+
+PRIMARY MATERIAL:
+White stone.
+
+SECONDARY MATERIAL:
+Raw dark rock.
+
+SURFACE FINISH:
+Matte to satin.
+
+TEXTURE:
+Natural.
+
+TRANSPARENCY / OPACITY:
+Opaque.
+
+REFLECTIVITY:
+Low.
+
+EDGE CHARACTER:
+Softened by use.
+
+Materials must behave physically correctly.
+
+For this prop:
+
+- white stone
+- raw dark rock
+
+Do not substitute materials.
+
+---
+
+# COLOR LOCK
+
+Exact object color:
+
+White cities, dark rock.
+
+Maintain the same color across all views.
+
+Color response should remain physically believable under neutral reference lighting.
+
+This film's palette, for reference only: marble #E9E6DE, cloud #AEB4B8, slate #4B5258, rock dust #8A857B, basalt #141517. Five accents each belong to one thing and appear on nothing else: gold #C8A45A (her collar and the cup), seal red #9E2A22 (her wax seal), vale green #5D7A4A (Sarn Vale), lamp amber #E0A050 (Karst's lamp, the hearths), signal white (the signal lamps). Cool and muted; never neon, never saturated.
+
+However:
+
+DO NOT force the film's palette onto an object that should naturally be another color.
+
+Object credibility comes first.
+
+---
+
+# AGE + CONDITION
+
+The prop is:
+
+Ancient, kept.
+
+Specify physical history:
+
+
+
+Wear must be subtle and physically plausible.
+
+The object must not appear artificially distressed.
+
+---
+
+# UNIQUE IDENTITY MARKERS
+
+Preserve these exact identifying features:
+
+1. six distinct silhouettes
+2. each on an inverted mountain of rock
+3. white above, dark below
+4. none of them glows
+
+These details distinguish this specific prop from generic versions of the same object.
+
+These markers must survive every later generation.
+
+---
+
+# COMPONENT GEOMETRY
+
+Define important components individually.
+
+## COMPONENT 1 — CITIES
+
+Shape:
+Six different white stone cities.
+
+Position:
+Above each rock.
+
+Material:
+Stone.
+
+Color:
+White.
+
+Scale:
+Each 8 to 15 miles.
+
+## COMPONENT 2 — ROCK UNDERSIDES
+
+Shape:
+Inverted mountains of raw rock with roots and chains.
+
+Position:
+Beneath each city.
+
+Material:
+Rock.
+
+Color:
+Dark.
+
+Scale:
+Each as deep as the city is wide.
+
+Maintain the exact spatial relationship between components.
+
+No component may move, disappear, duplicate, or change design between views.
+
+---
+
+# SCALE REFERENCE
+
+The object must maintain believable real-world scale.
+
+APPROXIMATE DIMENSIONS:
+
+HEIGHT:
+Each several miles.
+
+WIDTH:
+Each 8 to 15 miles.
+
+DEPTH:
+Same.
+
+WEIGHT / PHYSICAL FEEL:
+Immense.
+
+If relevant, communicate scale through neutral visual presentation rather than adding random objects.
+
+Do not accidentally enlarge or miniaturize the prop.
+
+---
+
+# FUNCTIONAL STATE
+
+Default reference state:
+
+Hanging in the air, in even neutral light.
+
+The reference establishes the object's DEFAULT physical state.
+
+---
+
+# REFERENCE-SHEET COMPOSITION
+
+Create a clean multi-view production reference showing the SAME EXACT PROP.
+
+## VIEW 1 — HERO 3/4
+
+Primary identifying view.
+
+Show the complete object.
+
+Natural three-quarter angle.
+
+Clearly establish:
+
+- silhouette
+- proportions
+- primary materials
+- major identifying features
+
+---
+
+## VIEW 2 — FRONT
+
+Straight-on view.
+
+Minimal perspective distortion.
+
+Clearly show the object's face/front geometry.
+
+---
+
+## VIEW 3 — SIDE
+
+Exact same object.
+
+Clear profile.
+
+Show:
+
+- thickness
+- depth
+- side controls
+- seams
+- structural geometry
+
+---
+
+## VIEW 4 — BACK
+
+Exact same object.
+
+Show rear construction and identifying details.
+
+---
+
+# OPTIONAL DETAIL VIEW
+
+If useful, include a close detail showing the prop's most important continuity marker:
+
+the underside of one kingdom with its hanging chains
+
+The detail must belong to the exact same object.
+
+---
+
+# BACKGROUND LOCK
+
+Use a plain neutral mid-grey seamless background.
+
+Approximately:
+
+#808080
+
+No environmental context.
+
+No table unless structurally necessary.
+
+No hands.
+
+No character holding the object.
+
+No unrelated accessories.
+
+No decorative background.
+
+The prop must be easy to isolate and reference later.
+
+---
+
+# LIGHTING LOCK
+
+Neutral soft studio reference lighting.
+
+LOW CONTRAST.
+
+Use:
+
+- broad diffused source
+- gentle fill
+- soft contact shadow
+- realistic material response
+- readable dark surfaces
+- controlled highlights
+
+The purpose is to reveal physical construction.
+
+No dramatic cinematic lighting.
+
+No colored light.
+
+No hard spotlight.
+
+No glossy commercial beauty lighting.
+
+---
+
+# CAMERA / OPTICAL REFERENCE
+
+Natural perspective.
+
+Approximately 50–85mm equivalent perspective depending on prop size.
+
+Keep geometry accurate.
+
+Moderate depth of field.
+
+Entire object readable.
+
+Avoid extreme shallow focus.
+
+Avoid wide-angle distortion.
+
+Avoid exaggerated perspective.
+
+This is primarily an IDENTITY REFERENCE.
+
+---
+
+# PHOTOREALISM LOCK
+
+Photorealistic physical object.
+
+Maintain:
+
+- realistic materials
+- real manufacturing seams
+- realistic edge thickness
+- believable mechanical construction
+- correct reflections
+- correct contact shadows
+- appropriate surface imperfections
+
+It must look physically manufacturable and usable.
+
+No concept-art abstraction.
+
+---
+
+# IDENTITY CONSISTENCY — ABSOLUTE LOCK
+
+EVERY VIEW DEPICTS THE EXACT SAME PHYSICAL OBJECT.
+
+Maintain exactly:
+
+- shape
+- proportions
+- dimensions
+- materials
+- colors
+- seams
+- controls
+- logos if specifically required
+- wear
+- scratches
+- attachments
+- openings
+- hardware
+
+Think of the prop as one object being rotated in front of the camera.
+
+Not several similar objects.
+
+---
+
+# PHYSICS LOCK
+
+Maintain:
+
+- they hang still with no visible means
+- no glow, no lights
+
+The object's physical behavior must match its real material.
+
+---
+
+# CONTINUITY LOCK
+
+This image becomes the authoritative reference for the prop's:
+
+- identity
+- silhouette
+- dimensions
+- proportions
+- construction
+- color
+- materials
+- hardware
+- wear
+- unique identifying details
+
+Every future THE WEIGHT OF HEAVEN scene containing this prop should preserve these properties.
+
+Lighting and physical orientation may change later.
+
+THE OBJECT ITSELF DOES NOT.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- alternate designs between views
+- different colors between views
+- different proportions
+- material changes
+- duplicated components
+- missing components
+- floating pieces
+- impossible construction
+- oversized object
+- miniature object
+- glossy advertising aesthetic
+- luxury product photography
+- dramatic reflections
+- extreme depth of field
+- dramatic cinematic background
+- environmental scene
+- random hands
+- random characters
+- random accessories
+- random labels
+- random logos
+- unnecessary typography
+- generic AI redesign
+- stylization
+- concept art
+- cartoon
+- readable text, English or Latin lettering, numbers, logos, makers' marks
+- view labels, captions, arrows, measurements or any typography on the sheet
+- glow, sparkle, magic effects, glowing runes
+- fantasy-game or steampunk styling
+- teal-and-orange grading
+- glowing cities or lights
+- fantasy-game castles
+- identical copies of Orison
+- clouds hiding them
+```
