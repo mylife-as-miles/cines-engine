@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K03_t1a · `refs/candidates/K03_t1a.jpg` (full size `out/refs/K03_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b390-7b32-b43f-8848bfe8a83c`, prompt crowd (380 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** All ages, a baby carried, an old man with a stick; undyed layers, bundles, a pot, baskets; grey with dust.

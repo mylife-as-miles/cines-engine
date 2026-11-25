@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K05_t1a · `refs/candidates/K05_t1a.jpg` (full size `out/refs/K05_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b4d5-7680-9993-895f1b03ca1a`, prompt crowd (354 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES, with a note.** Officers, signalmen in caps, gunners in smocks with lanyards and belts; all white. The two officers' coats are double-breasted, where the fleet pattern elsewhere is one row of buttons.

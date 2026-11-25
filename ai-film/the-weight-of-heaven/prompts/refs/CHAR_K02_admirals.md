@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K02_t1a · `refs/candidates/K02_t1a.jpg` (full size `out/refs/K02_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b2f6-7d70-b57c-d82b998183e9`, prompt crowd (326 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Six admirals, men and women, in the long white coat with covered buttons, gloves and boots; no gold collars.

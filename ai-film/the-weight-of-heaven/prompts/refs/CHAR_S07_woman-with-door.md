@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S07_t1a · `refs/candidates/S07_t1a.jpg` (full size `out/refs/S07_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b1a1-75a3-9255-01c2e18a671a`, prompt casting (456 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** A whole weathered plank door with iron hinges roped to her back, taller than she is; headscarf, apron, set face.

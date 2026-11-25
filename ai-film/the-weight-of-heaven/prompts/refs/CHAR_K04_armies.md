@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K04_t1a · `refs/candidates/K04_t1a.jpg` (full size `out/refs/K04_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b435-7a41-9556-34331355a117`, prompt crowd (397 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES, with a note.** Eleven fighters with long spears, padded jerkins and beaten hull-plate, each nation a little different. The helmets lean toward a familiar medieval look.

@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K01_t1a · `refs/candidates/K01_t1a.jpg` (full size `out/refs/K01_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b244-7561-b028-9a07ab3c7a20`, prompt crowd (393 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Ten guests all in white, eight to eighty, varied faces; long coats, gowns, veils and gloves; no gold. One guest's veil could be confused with the bride's in a wide.

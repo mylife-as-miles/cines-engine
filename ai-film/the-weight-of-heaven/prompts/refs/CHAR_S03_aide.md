@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S03_t1a · `refs/candidates/S03_t1a.jpg` (full size `out/refs/S03_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-af20-76d3-b3c8-c5ed2908bc2c`, prompt casting (399 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Junior officer's knee-length white coat, gloves, boots, the white document case across his body.

@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S05_t1a · `refs/candidates/S05_t1a.jpg` (full size `out/refs/S05_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b05e-77e3-bb20-35040fb8ad4a`, prompt casting (443 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** The father steady in a blue-grey tunic with a blanket roll, holding the boy's ankles; the boy on his shoulders shading his eyes.

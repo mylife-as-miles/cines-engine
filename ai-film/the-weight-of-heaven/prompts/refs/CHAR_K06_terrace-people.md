@@ -41,5 +41,4 @@ No text, labels, captions, names, numbers or typography anywhere. No glamour, no
 ```
 
 ## Takes
-
-(none yet)
+- K06_t1a · `refs/candidates/K06_t1a.jpg` (full size `out/refs/K06_t1a.png`, 3168x1344) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b56e-7401-8931-e385501f0a1c`, prompt crowd (371 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Ten ordinary people of Orison in everyday white (apron, smock, long coat), a small child held by the hand, some gloved.

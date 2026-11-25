@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S01_t1a · `refs/candidates/S01_t1a.jpg` (full size `out/refs/S01_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-add6-7ec2-8537-0f538519cd6d`, prompt casting (410 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Warm brown skin, black hair under a floor-length veil, a layered white gown that drapes, gloves, slippers; no gold.

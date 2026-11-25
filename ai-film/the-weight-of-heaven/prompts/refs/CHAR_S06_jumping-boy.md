@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S06_t1a · `refs/candidates/S06_t1a.jpg` (full size `out/refs/S06_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-b0f6-7930-b71b-7cdd9ec1ae2f`, prompt casting (414 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** A thin boy in a padded jerkin too big for him, a piece of white hull-plate strapped on his chest, dusty.

@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- S04_t1a · `refs/candidates/S04_t1a.jpg` (full size `out/refs/S04_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a213c2-afbe-70b1-9edc-b5ae9a5aebaa`, prompt casting (393 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Red-brown hair and beard, a tight jaw; the officer's knee-length white coat, gloves, boots.
