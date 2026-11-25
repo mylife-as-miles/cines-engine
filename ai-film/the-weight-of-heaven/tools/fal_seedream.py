@@ -43,7 +43,7 @@ NB21_PRICE, NB21_PRICE_REF = 0.059, 0.063        # Nano Banana 2.1 at 2K, withou
 
 
 def module(code):
-    return {'P': PP, 'C': CP}.get(code[0], E)
+    return {'P': PP, 'C': CP, 'S': CP, 'K': CP}.get(code[0], E)
 
 
 def cost(model, n, imgs):
@@ -59,7 +59,7 @@ def submit(code, n, model='seedream'):
         base = 'fal-ai/nano-banana-pro' if model == 'nbp' else 'google/nano-banana-2.1'
         endpoint = base + '/edit' if imgs else base
         payload = {'prompt': sent, 'num_images': n, 'output_format': 'png', 'resolution': '2K',
-                   'aspect_ratio': '21:9' if code.startswith('E') else '16:9'}
+                   'aspect_ratio': '21:9' if code[0] in 'EK' else '16:9'}
         if imgs:
             payload['image_urls'] = [data_uri(p) for p in imgs]
     else:
@@ -103,7 +103,7 @@ def save(job, out, take):
 
 
 def log(job, files, take, error=None):
-    pre = {'P': 'PROP', 'C': 'CHAR'}.get(job['code'][0], 'ENV')
+    pre = {'P': 'PROP', 'C': 'CHAR', 'S': 'CHAR', 'K': 'CHAR'}.get(job['code'][0], 'ENV')
     path = next(os.path.join(E.OUT, f) for f in os.listdir(E.OUT) if f.startswith(f"{pre}_{job['code']}_"))
     label = {'nbp': 'Nano Banana Pro', 'nb21': 'Nano Banana 2.1'}.get(job.get('model'), 'Seedream 5.5 Edit')
     endpoint = job.get('endpoint', ENDPOINT)
@@ -129,7 +129,7 @@ def main():
     n = int(args[args.index('--n') + 1]) if '--n' in args else 1  # one candidate per reference (author, 25 Nov)
     take = args[args.index('--take') + 1] if '--take' in args else 't2'
     model = args[args.index('--model') + 1] if '--model' in args else 'seedream'
-    codes = [a for a in args if re.fullmatch(r'[EPC]\d\d', a)]
+    codes = [a for a in args if re.fullmatch(r'[EPCSK]\d\d', a)]
     total = 0
     for c in codes:
         _, imgs, kind = module(c).current(c)

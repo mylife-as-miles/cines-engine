@@ -1,6 +1,6 @@
 # The Weight of Heaven: locked references
 
-Approved by the author on 25 November. Full size, JPEG quality 93, from the take named (its PNG and fal URL are in `prompts/refs/jobs.jsonl`; its prompt and verdict under `prompts/refs/`). Every shot cites these as @Image N. `candidates/` keeps every take, approved or not, as 2048-wide previews.
+Approved by the author on 25 November (locations and props, then the twelve character sheets). Full size, JPEG quality 93, from the take named (its PNG and fal URL are in `prompts/refs/jobs.jsonl`; its prompt and verdict under `prompts/refs/`). Every shot cites these as @Image N. `candidates/` keeps every take, approved or not, as 2048-wide previews.
 
 | File | Reference | Take | Size |
 | --- | --- | --- | --- |
@@ -29,5 +29,17 @@ Approved by the author on 25 November. Full size, JPEG quality 93, from the take
 | `refs/PROP_P10_signal-post.jpg` | P10 | P10_t1a | 2752x1536 |
 | `refs/PROP_P11_anchor-and-chain.jpg` | P11 | P11_t1a | 2752x1536 |
 | `refs/PROP_P12_weir-wheel.jpg` | P12 | P12_t1a | 2752x1536 |
+| `refs/CHAR_C01_serath.jpg` | C01 | C01_t2a (sheet, from casting C01_t1a) | 2752x1536 |
+| `refs/CHAR_C02_karst.jpg` | C02 | C02_t2a (sheet, from casting C02_t1a) | 2752x1536 |
+| `refs/CHAR_C03_marl.jpg` | C03 | C03_t3a (sheet, from casting C03_t2a) | 2752x1536 |
+| `refs/CHAR_C04_cassiel.jpg` | C04 | C04_t2a (sheet, from casting C04_t1a) | 2752x1536 |
+| `refs/CHAR_C05_hierophant.jpg` | C05 | C05_t2a (sheet, from casting C05_t1a) | 2752x1536 |
+| `refs/CHAR_C06_chancellor.jpg` | C06 | C06_t2a (sheet, from casting C06_t1a) | 2752x1536 |
+| `refs/CHAR_C07_flag-captain.jpg` | C07 | C07_t2a (sheet, from casting C07_t1a) | 2752x1536 |
+| `refs/CHAR_C08_engineer.jpg` | C08 | C08_t3a (sheet, from casting C08_t1a) | 2752x1536 |
+| `refs/CHAR_C09_farmer.jpg` | C09 | C09_t2a (sheet, from casting C09_t1a) | 2752x1536 |
+| `refs/CHAR_C10_petal-girl.jpg` | C10 | C10_t2a (sheet, from casting C10_t1a) | 2752x1536 |
+| `refs/CHAR_C11_gunner.jpg` | C11 | C11_t2a (sheet, from casting C11_t1a) | 2752x1536 |
+| `refs/CHAR_C12_farmers-daughter.jpg` | C12 | C12_t2a (sheet, from casting C12_t1a) | 2752x1536 |
 
 Open items: E06 still shows the old wheel with buckets; the approved wheel is P12, to be edited into E06 before the Weir's shots. The prop sheets carry printed view labels: crop the views, or remove the text, before attaching a sheet to a video model.
