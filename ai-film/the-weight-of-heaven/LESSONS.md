@@ -17,6 +17,17 @@ What this production teaches, kept as it happens, as *My Name Is Oren* kept its 
 | 9 | **No 1080p** (the author, 25 November). Takes are not completed to 1080p. | | All generations at 480p. |
 | 10 | **The author sees everything before anything is generated:** the storyboard and animatic, the references in order, the exact prompt, the parameters and the cost. Nothing is sent without their go. | The author, 25 November. | Q02 onward. |
 
+## From Q02 t1
+
+| # | Lesson | Evidence | Applied in |
+| --- | --- | --- | --- |
+| 11 | **An opening on a start frame holds long, every time.** Q01's opening ran 6.7 s for 5.7, Q02's 6.9 s for 2.9: the model lingers on the image it was given. Do not give the start-frame shot anything to do; plan to trim it in the edit, and expect the time it takes to come out of the shots after it. | Q02 t1 shot 1. | The next pickup opens on its first action, with no start-frame shot. |
+| 12 | **For scale, the reference beats the words (a second time).** "The size of a door: longer than a man is tall, half the height of the bell", in a wide with the bell, still produced the sledgehammer of the sheet. Either remake the reference at its true scale (the hammer beside a man, beside the bell) or leave the reference out and describe it. | Q01 t1 shot 6; Q02 t1 shot 6. | Proposed: a new hammer sheet at scale before the pickup. |
+| 13 | **A face next to a page looks at the page.** "Her eyes never go to the page" was lost once her face was in the close shot: lowered eyes read as reading. Frame a hands insert below the chin (no eyes in frame), or name where the eyes are, out of frame ("her eyes up and to the left of camera, on the tower"). | Q02 t1 shot 4. | The seal pickup: hands only, cut at the collar. |
+| 14 | **Wax confuses it.** The seal was on the page before the press, and after it the red wax was stuck to her palm. Write the before and after plainly: "a soft pool of red wax on the page, no mark in it; she presses the ring into it; the ring lifts away clean; the anchor and stars are left in the wax on the page". | Q02 t1 shot 4. | The seal pickup. |
+| 15 | **Two shots with the same framing merge.** Shots 2 and 3 were both 40 mm from the tower side, and came back as one continuous shot. It worked here, but a planned cut needs a change of size or angle to survive. | Q02 t1 shots 2 and 3. | Consecutive shots always change size or angle. |
+| 16 | **The last shot is still squeezed.** Even as a quiet insert after the climax, the cup got 1.3 s of 2.8. Add a few seconds of tail that the edit can throw away, or end on something that can be short. | Q02 t1 shot 8. | Pickups end on a tail shot. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
