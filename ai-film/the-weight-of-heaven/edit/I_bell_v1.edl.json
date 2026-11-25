@@ -1,0 +1,149 @@
+{
+ "name": "I_bell_v1",
+ "fps": 24,
+ "duration": 33.542,
+ "premaster": {
+  "I": -25.6,
+  "TP": -8.0,
+  "gain_dB": 5.5
+ },
+ "picture": [
+  {
+   "n": 1,
+   "label": "Q01 the rite",
+   "take": "Q01_t1",
+   "src_in": 0.0,
+   "src_out": 16.292,
+   "start": 0.0,
+   "filter": null,
+   "purpose": "The nave, the Hierophant, the couple and the bell, the answer from the gallery."
+  },
+  {
+   "n": 2,
+   "label": "Unread",
+   "take": "Q02A_t2",
+   "src_in": 8.667,
+   "src_out": 11.375,
+   "start": 16.292,
+   "filter": null,
+   "purpose": "The aide brings the warrant; her hand goes out; her eyes stay on the tower."
+  },
+  {
+   "n": 3,
+   "label": "The seal",
+   "take": "Q02A_t2",
+   "src_in": 11.5,
+   "src_out": 14.875,
+   "start": 19.0,
+   "filter": null,
+   "purpose": "The ring into the wax; the seal left on the page."
+  },
+  {
+   "n": 4,
+   "label": "The warrant lifted",
+   "take": "Q02B_t1",
+   "src_in": 0.125,
+   "src_out": 1.042,
+   "start": 22.375,
+   "filter": null,
+   "purpose": "The cause: the sealed warrant raised to the tower. Cut as the camera starts up."
+  },
+  {
+   "n": 5,
+   "label": "The barge lets go",
+   "take": "Q02_t1",
+   "src_in": 13.625,
+   "src_out": 17.625,
+   "start": 23.292,
+   "filter": null,
+   "purpose": "The effect, wide: the bell drops, the chains fall away."
+  },
+  {
+   "n": 6,
+   "label": "The hammer",
+   "take": "Q02B_t1",
+   "src_in": 6.875,
+   "src_out": 10.625,
+   "start": 27.292,
+   "filter": "crop=768:334:224:58,scale=992:432:flags=lanczos,unsharp=5:5:0.5",
+   "purpose": "Drawn back, the swing, the stroke, a hold. Cropped so the ringers are out of frame; the ropes run off the left."
+  },
+  {
+   "n": 7,
+   "label": "The still cup",
+   "take": "Q02_t1",
+   "src_in": 24.75,
+   "src_out": 26.0,
+   "start": 31.042,
+   "filter": "minterpolate=fps=48:mi_mode=mci:mc_mode=aobmc:vsbmc=1,setpts=2*PTS,fps=24",
+   "purpose": "The first cup, as the author prefers; slowed to half speed so it can be read (Orison moves slowly)."
+  }
+ ],
+ "sound": [
+  {
+   "name": "Q01 production",
+   "take": "Q01_t1",
+   "src_in": 0.0,
+   "src_out": 17.4,
+   "start": 0.0,
+   "gain_dB": 0.0,
+   "fade_in": 0.0,
+   "fade_out": 1.1
+  },
+  {
+   "name": "choir (from Q02 t1)",
+   "take": "Q02_t1",
+   "src_in": 0.0,
+   "src_out": 6.9,
+   "start": 11.4,
+   "gain_dB": 1.0,
+   "fade_in": 1.5,
+   "fade_out": 2.0
+  },
+  {
+   "name": "Q02A production",
+   "take": "Q02A_t2",
+   "src_in": 8.667,
+   "src_out": 14.875,
+   "start": 16.292,
+   "gain_dB": 0.0,
+   "fade_in": 0.25,
+   "fade_out": 0.05
+  },
+  {
+   "name": "lift + release",
+   "take": "Q02_t1",
+   "src_in": 12.708,
+   "src_out": 17.625,
+   "start": 22.375,
+   "gain_dB": 0.0,
+   "fade_in": 0.05,
+   "fade_out": 0.05
+  },
+  {
+   "name": "hammer + stroke",
+   "take": "Q02B_t1",
+   "src_in": 6.875,
+   "src_out": 12.0,
+   "start": 27.292,
+   "gain_dB": -5.0,
+   "fade_in": 0.05,
+   "fade_out": 1.3
+  },
+  {
+   "name": "applause",
+   "take": "Q02B_t1",
+   "src_in": 11.7,
+   "src_out": 14.2,
+   "start": 31.042,
+   "gain_dB": -2.0,
+   "fade_in": 0.25,
+   "fade_out": 0.5
+  },
+  {
+   "name": "air bed",
+   "source": "pink noise, 120 Hz to 1.4 kHz",
+   "gain_dB": -46
+  }
+ ]
+}
