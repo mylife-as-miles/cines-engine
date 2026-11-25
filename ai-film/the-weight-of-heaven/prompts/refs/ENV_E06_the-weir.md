@@ -381,4 +381,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E06_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP, with an edit. Proposed master for the Weir.** Holds: seamless black stone, arched gates receding, the vale green through them with hearth smoke, the wheel with two figures for scale, the dark sky. Short: more than nine gates and none shut; the wheel is a mill water-wheel with paddles on its rim (it should be a plain spoked wheel, spokes worn bright); no flattened grass under the gates.

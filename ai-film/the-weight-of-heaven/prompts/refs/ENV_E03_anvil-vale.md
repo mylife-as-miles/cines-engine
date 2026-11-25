@@ -379,4 +379,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E03_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP the ground; edit the sky.** Holds: the buttressed house, the dry-stone wall, the furrows, the anvil mountain, the low grey light. Short: the shape overhead is a flying saucer: hard-edged, low, a separate object. It must be the underside of the kingdom, vast and very high, soft in the haze, covering half the sky, its edge running out of frame.

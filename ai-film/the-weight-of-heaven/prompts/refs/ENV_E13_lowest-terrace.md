@@ -374,4 +374,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E13_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO, with E01 attached as reference.** Short: looks like a game render, not a photograph; hard sun and cast shadows in a clear sky (it should be shadowless blue last light); the terrace is three storeys where it should climb out of frame, tier over tier; the anchor chain is thin and diagonal where it should hang straight from a ship a mile up.

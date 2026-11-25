@@ -975,6 +975,10 @@ def main():
         body = f"```text\n{prompt}```\n"
         log = '\n## Takes\n\n(none yet)\n'
         path = os.path.join(OUT, f"ENV_{L['code']}_{L['slug']}.md")
+        if os.path.exists(path):  # keep the take log already written under the prompt
+            old = open(path).read()
+            if '\n## Takes\n' in old:
+                log = old[old.index('\n## Takes\n'):]
         with open(path, 'w') as f:
             f.write(head + body + log)
         combined.append('\n---\n\n' + head + body)

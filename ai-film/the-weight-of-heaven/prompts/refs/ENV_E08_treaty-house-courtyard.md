@@ -372,4 +372,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E08_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP.** Holds: the buttressed fort, the arched door, the dusty yard, the outer gate, racks of spears, the dark roof overhead. Note: refugees are in it though the prompt asked for an empty yard; usable as it is.

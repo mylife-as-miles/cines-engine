@@ -383,4 +383,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E01_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP, with a small edit. Proposed master for Orison's architecture.** Holds: columns climbing into mist, shadowless high key, the bell the darkest thing in the room, the open tower, the figure in white for scale, the gold cup on the right gallery rail. Short: the ships beyond the arches are dirigibles (the fleet is nave-shaped hulls); the banners drape over the rails instead of drifting free; no petals in the air. Edit: remove the airships, add petals hanging in the air.

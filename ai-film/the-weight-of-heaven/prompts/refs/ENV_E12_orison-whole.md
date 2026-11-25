@@ -377,4 +377,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E12_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO, with E01 attached as reference.** Short: a fantasy island about a mile across, ringed like a cake, with cypress trees and domes; Orison is twelve miles across and wider than the horizon from the plain. No last sun on the open tower.

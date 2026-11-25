@@ -377,4 +377,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E02_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO, with E01 attached as reference.** Holds: the round arcade, the dome, the table and the gold cup, the open door, cloud rising. Short: the city outside is an Italian medieval hill town in ochre-grey stone, not Orison; the figures wear dark clothes (everyone above wears white) and the one at the door is out of scale.

@@ -375,4 +375,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E05_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP, with an edit. Proposed master for the underside seen from the ground.** Holds: the best heavy top in the set; the columns, the clusters, the fort on the horizon, the figure for scale. Short: the Weir's gates read as six white lights (they are nine dark openings onto green, two shut); the rock sits a few hundred feet up, where the bible puts it two miles up at noon.

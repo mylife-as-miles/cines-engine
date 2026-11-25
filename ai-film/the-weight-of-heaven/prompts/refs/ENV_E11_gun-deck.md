@@ -368,4 +368,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E11_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP.** Holds: white timber, lancet gunports, cannon on carriages, rope, dusk through the ports, the road far below. Matches the fleet design in the bible.

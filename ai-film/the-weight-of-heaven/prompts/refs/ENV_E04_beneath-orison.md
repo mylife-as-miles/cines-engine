@@ -379,4 +379,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E04_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO.** Holds: the plain of columns, the Weir and the green vale below. Short: the underside has ends on both sides, so it reads as a floating island, not a ceiling wider than the horizon; the cutter is a sailing ship with masts and sails; the chains read as ordinary chain, not thick as towers.

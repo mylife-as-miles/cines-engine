@@ -374,4 +374,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E10_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO.** Short: reads as a Victorian conservatory: room for ten, not a hundred; white-painted and lit inside; pink dusk instead of amber; the ships outside are dirigibles. It should be long and nave-like, brass and glass, the interior in silhouette, amber below and cold above.

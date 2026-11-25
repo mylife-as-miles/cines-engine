@@ -374,4 +374,4 @@ Avoid:
 
 ## Takes
 
-(none yet)
+- t1 · `refs/candidates/E07_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **REDO, with E06 and E05 attached as references.** Holds: the vale itself: terraces, orchards, stone houses, smoke, the road between dry-stone walls. Short: the Weir is a single black monolith, not the end of the long arched wall; the shape overhead is a saucer again.
