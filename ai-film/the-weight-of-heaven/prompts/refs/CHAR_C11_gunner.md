@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C11_t1a · `refs/candidates/C11_t1a.jpg` (full size `out/refs/C11_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-d0d8-7402-9fe9-f1a1182ed9f2`, prompt casting (397 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Nineteen, dark brown skin, white smock with rolled sleeves, belt, the lanyard in his right hand.
+- C11_t2a · `refs/candidates/C11_t2a.jpg` (full size `out/refs/C11_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-4afc-7ea3-8ed2-bf9741801a8e`, prompt sheet (701 words), images `out/refs/C11_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Smock, belt, white trousers and shoes; the lanyard round his right fist in both body panels.

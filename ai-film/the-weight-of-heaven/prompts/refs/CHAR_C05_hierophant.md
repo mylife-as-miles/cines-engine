@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C05_t1a · `refs/candidates/C05_t1a.jpg` (full size `out/refs/C05_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-ccf5-7da1-b773-db5977e90bce`, prompt casting (436 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES, with a question.** Light brown skin, white beard, layered robes. The tall white headdress reads close to a chef's toque or a dervish hat; it may want a more architectural shape.
+- C05_t2a · `refs/candidates/C05_t2a.jpg` (full size `out/refs/C05_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-3a9b-7561-8a8e-2e4776d048e5`, prompt sheet (701 words), images `out/refs/C05_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Robes front and back, the headdress in the back and face panels; the face as cast.

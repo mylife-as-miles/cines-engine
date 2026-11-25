@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C09_t1a · `refs/candidates/C09_t1a.jpg` (full size `out/refs/C09_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cf8c-79d2-8e54-9442c302a00b`, prompt casting (439 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Broad, weathered, dark beard flecked with grey; undyed patched wool, wrapped legs, old boots.
+- C09_t2a · `refs/candidates/C09_t2a.jpg` (full size `out/refs/C09_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-4787-7881-a648-e4e4ab54d8c4`, prompt sheet (701 words), images `out/refs/C09_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Patched overshirt front and back, wrapped legs, boots; the face as cast.

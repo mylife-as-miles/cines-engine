@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C10_t1a · `refs/candidates/C10_t1a.jpg` (full size `out/refs/C10_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-d034-7532-af02-f8cff33c5873`, prompt casting (389 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Olive skin, dark curls with a white ribbon, white dress, white shoes.
+- C10_t2a · `refs/candidates/C10_t2a.jpg` (full size `out/refs/C10_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-4a43-7ec3-ad8f-644327152305`, prompt sheet (701 words), images `out/refs/C10_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** White dress front and back, curls and ribbon; the face as cast.

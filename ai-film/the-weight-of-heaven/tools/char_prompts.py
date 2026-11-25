@@ -208,6 +208,7 @@ CHARS = [
 # Approved casting stills, as the author approves them: code -> take tag (refs/candidates/<tag>.jpg). The sheet is
 # then made from that still with the template.
 APPROVED_CASTING = {c: f'{c}_t1a' for c in ('C01', 'C02', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09', 'C10', 'C11', 'C12')}
+APPROVED_CASTING['C03'] = 'C03_t2a'   # Marl recast younger, dust on dark hair
 
 # One correction appended after the template, where the approved still has a fault the sheet should not keep.
 SHEET_CORRECTIONS = {
@@ -215,7 +216,26 @@ SHEET_CORRECTIONS = {
 }
 
 
+# Edits of a finished sheet, sent with only that sheet attached.
+SHEET_EDITS = {
+    'C08': dict(base='C08_t2a', text="""Edit Image 1, a three-panel character reference sheet of an old engineer in white working robes. This is a photoreal costume reference.
+
+Keep everything exactly as it is: the three panels, the person, his face, the robes, the cord belt, the grey dust on the robes up to the knee, the shoes, the background, the light and the framing.
+
+Change only the hem of the robe in the two full-body panels: the hem is whole and straight, neatly finished, not torn, frayed or ragged. Keep the dust on it.
+
+No text, no labels."""),
+}
+
+
 def current(code):
+    if code in SHEET_EDITS:
+        E = SHEET_EDITS[code]
+        full = f"out/refs/{E['base']}_full.jpg"
+        if not os.path.exists(os.path.join(ROOT, full)):
+            from PIL import Image
+            Image.open(os.path.join(ROOT, f"out/refs/{E['base']}.png")).convert('RGB').save(os.path.join(ROOT, full), quality=95)
+        return E['text'], [full], 'sheet-edit'
     C = next(c for c in CHARS if c['code'] == code)
     if code in APPROVED_CASTING:
         tag = APPROVED_CASTING[code]

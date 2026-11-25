@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C07_t1a · `refs/candidates/C07_t1a.jpg` (full size `out/refs/C07_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-ce50-7de1-9762-4e301972064b`, prompt casting (393 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** East Asian, square, steady; white coat to the knee, gloves, boots.
+- C07_t2a · `refs/candidates/C07_t2a.jpg` (full size `out/refs/C07_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-3dce-74e1-9469-597daf3e29e1`, prompt sheet (701 words), images `out/refs/C07_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Knee-length coat front and back, boots, gloves; three-quarter face.

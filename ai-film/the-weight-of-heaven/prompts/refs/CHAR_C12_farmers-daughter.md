@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C12_t1a · `refs/candidates/C12_t1a.jpg` (full size `out/refs/C12_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-d178-79f0-a563-1ae5f72bcd27`, prompt casting (398 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Six, fair-brown plait, grey eyes, undyed smock and knitted shawl. Her hair is fairer than the farmer's.
+- C12_t2a · `refs/candidates/C12_t2a.jpg` (full size `out/refs/C12_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-4bb6-7391-b4c5-d71a2929d635`, prompt sheet (701 words), images `out/refs/C12_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Smock, shawl and plait front and back; the face as cast.

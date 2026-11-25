@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C06_t1a · `refs/candidates/C06_t1a.jpg` (full size `out/refs/C06_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cdac-7ab2-9798-afda92542267`, prompt casting (398 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Pale and freckled, tired and decent, grey braid, plain white robe-coat, gloves.
+- C06_t2a · `refs/candidates/C06_t2a.jpg` (full size `out/refs/C06_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-3b63-7382-8b23-475f07cd5041`, prompt sheet (701 words), images `out/refs/C06_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Robe-coat front and back, the long grey braid down her back, gloves.

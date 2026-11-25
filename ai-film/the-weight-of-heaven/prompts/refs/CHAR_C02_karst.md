@@ -34,3 +34,4 @@ No text, labels, typography, logos, measurements, props, furniture, environmenta
 
 ## Takes
 - C02_t1a · `refs/candidates/C02_t1a.jpg` (full size `out/refs/C02_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cb08-7600-b0a7-b3c43fb6f23e`, prompt casting (485 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** South Asian, tired, grey-black beard; the imperial coat worn to dust-grey with clean patches where the insignia were cut away. Ink on the fingers not visible at this size.
+- C02_t2a · `refs/candidates/C02_t2a.jpg` (full size `out/refs/C02_t2a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a213be-358a-7680-abec-670e781bd0c9`, prompt sheet (701 words), images `out/refs/C02_t1a_full.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Coat, patches, trousers and boots match front and back; the face as cast.
