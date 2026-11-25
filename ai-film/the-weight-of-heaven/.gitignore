@@ -1,3 +1,4 @@
 out/
 audio/gen/*.wav
 *.log
+tools/board/node_modules/

@@ -1,0 +1,347 @@
+{
+ "title": "Q01 · THE RITE",
+ "audio": "../../out/review/Q01_animatic_audio.wav",
+ "bpm": 84,
+ "shots": [
+  {
+   "n": 0,
+   "black": true,
+   "time": "0–3 s",
+   "camText": "B01 · OVER BLACK (made in post)",
+   "card": "A bell. One stroke. It does not fade. It hangs.",
+   "cam": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "target": [
+     0,
+     0,
+     -1
+    ],
+    "f": 24
+   }
+  },
+  {
+   "n": 1,
+   "time": "0–5.71 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0
+   },
+   "cam": {
+    "pos": [
+     0,
+     3.0,
+     14
+    ],
+    "target": [
+     0,
+     12,
+     -95
+    ],
+    "f": 24
+   },
+   "move": {
+    "to": {
+     "pos": [
+      0,
+      3.0,
+      5
+     ],
+     "target": [
+      0,
+      12,
+      -95
+     ]
+    }
+   },
+   "camText": "The nave · 24 mm · slightly above head height, centred on the aisle, symmetrical · a slow drift toward the tower",
+   "line": "HIEROPHANT: \"Heaven chose us from the earth and raised us above the unworthy.\" (begins)",
+   "note": "Song: intro, 2 bars. Columns into mist; petals falling at a quarter speed; ten thousand in white; the bell far off, still in the barge's chains.",
+   "lines": [
+    {
+     "t0": 2.6,
+     "t1": 5.71,
+     "text": "HIEROPHANT: Heaven chose us from the earth"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "time": "5.71–8.57 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.15
+   },
+   "stateTo": {
+    "hieroArms": 0.85
+   },
+   "cam": {
+    "pos": [
+     0,
+     1.9,
+     -79.5
+    ],
+    "target": [
+     0,
+     1.9,
+     -90.2
+    ],
+    "f": 50
+   },
+   "move": {
+    "to": {
+     "pos": [
+      0,
+      1.95,
+      -81.0
+     ],
+     "target": [
+      0,
+      2.0,
+      -90.2
+     ]
+    }
+   },
+   "camText": "The Hierophant · 50 mm · frontal and symmetrical, past the kneeling couple · a slow push in",
+   "line": "HIEROPHANT: \"… and raised us above the unworthy.\"",
+   "note": "His arms rise easily. Frontal, like the building. No face brighter than the white around it.",
+   "lines": [
+    {
+     "t0": 0.0,
+     "t1": 2.5,
+     "text": "… and raised us above the unworthy."
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "time": "8.57–11.43 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "cam": {
+    "pos": [
+     0,
+     1.3,
+     -81.5
+    ],
+    "target": [
+     0,
+     1.6,
+     -90
+    ],
+    "f": 28
+   },
+   "move": {
+    "to": {
+     "pos": [
+      0,
+      1.3,
+      -81.5
+     ],
+     "target": [
+      0,
+      31,
+      -95
+     ]
+    }
+   },
+   "camText": "Behind the bride and groom · 28 mm · low · a tilt up from the kneeling couple to the bell in the barge's chains",
+   "line": "HIEROPHANT: \"What heaven has raised —\"",
+   "note": "Height by tilting, not a taller frame (bible). The bell is the darkest thing in the room.",
+   "lines": [
+    {
+     "t0": 0.3,
+     "t1": 2.7,
+     "text": "HIEROPHANT: What heaven has raised —"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "time": "11.43–14.29 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "cam": {
+    "pos": [
+     -8.7,
+     17.5,
+     -36
+    ],
+    "target": [
+     3,
+     0.5,
+     -62
+    ],
+    "f": 28
+   },
+   "move": {
+    "to": {
+     "pos": [
+      -8.7,
+      17.5,
+      -39.5
+     ],
+     "target": [
+      3,
+      0.5,
+      -65
+     ]
+    }
+   },
+   "camText": "From the gallery · 28 mm · high, looking along the congregation · a slow drift",
+   "line": "TEN THOUSAND VOICES: \"Let no hand bring down.\"",
+   "note": "Song: the hook. The response murmured, not shouted: habit, not passion. Banners drifting below the rail.",
+   "lines": [
+    {
+     "t0": 0.2,
+     "t1": 2.7,
+     "text": "TEN THOUSAND: Let no hand bring down."
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "time": "14.29–17.14 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "stateTo": {
+    "bellSlung": 0,
+    "chainSlack": 1
+   },
+   "stateStart": 0.3,
+   "stateEnd": 0.85,
+   "cam": {
+    "pos": [
+     3,
+     2,
+     -91
+    ],
+    "target": [
+     0,
+     70,
+     -96
+    ],
+    "f": 20
+   },
+   "move": {
+    "to": {
+     "pos": [
+      2.6,
+      2,
+      -91.6
+     ],
+     "target": [
+      0,
+      70,
+      -96
+     ]
+    }
+   },
+   "camText": "Up the open tower · 20 mm · from the tower floor, looking straight up · near-still",
+   "line": "The barge lets go. Its chains fall slack. The bell settles onto the cathedral's own beam.",
+   "note": "The kingdom takes its weight. A fall that takes its time: above, everything falls slowly.",
+   "lines": []
+  },
+  {
+   "n": 6,
+   "time": "17.14–18.57 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "stateTo": {
+    "hammer": 1.0
+   },
+   "cam": {
+    "pos": [
+     24,
+     29.5,
+     -86
+    ],
+    "target": [
+     2,
+     30.5,
+     -95
+    ],
+    "f": 35
+   },
+   "camText": "The hammer · 35 mm · level with the beam, side on · locked off",
+   "line": "A hammer the size of a door swings back.",
+   "note": "Half a bar: the pick-up into the strike.",
+   "lines": []
+  },
+  {
+   "n": 7,
+   "time": "18.57–20 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 1.0,
+    "hieroArms": 0.85
+   },
+   "stateTo": {
+    "hammer": -0.3
+   },
+   "stateStart": 0.45,
+   "stateEnd": 1.0,
+   "cam": {
+    "pos": [
+     0,
+     1.7,
+     -56
+    ],
+    "target": [
+     0,
+     27,
+     -95
+    ],
+    "f": 32
+   },
+   "camText": "The strike · 32 mm · from the aisle, looking up at the tower · locked off",
+   "line": "The bell is struck.",
+   "note": "The strike lands on the downbeat that cuts to Anvil Vale (Q03): the mountain lets go in silence.",
+   "lines": []
+  },
+  {
+   "n": 8,
+   "black": true,
+   "time": "0–2.5 s",
+   "camText": "END OF Q01 · in the montage, cut to Q03",
+   "card": "The note hangs. Cut to Anvil Vale: the face of the mountain lets go.",
+   "cam": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "target": [
+     0,
+     0,
+     -1
+    ],
+    "f": 24
+   }
+  }
+ ]
+}

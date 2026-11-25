@@ -1,0 +1,207 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Blocking board</title>
+<style>html,body{margin:0;background:#111}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head><body>
+<script type="module">
+// A plain blocking set for The Weight of Heaven: the Cathedral of the Ascension (ENV_E01), for Q01.
+// Interface as in My Name Is Oren's board.html: window.setState, window.setTime, window.renderShot, window.ready.
+// World: metres, y up. The nave runs along z: the congregation from z = +6 to -78, the rite at z -84 to -90, the open
+// tower centred on (0, -95). The aisle is x -3…3. Above, light comes from everywhere: no sun and no cast shadows.
+import * as THREE from 'three';
+
+const W = 1280, H = 720;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const MIST = 0xf1efe9;
+scene.background = new THREE.Color(MIST);
+scene.fog = new THREE.Fog(MIST, 35, 190);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xa9a49a, 1.9));        // cloud light from every side
+scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+const key = new THREE.DirectionalLight(0xfffaf0, 0.9); key.position.set(-30, 60, 40); scene.add(key);   // soft form only, no cast shadows
+
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.9, ...o });
+const box = (w, h, d, m, x, y, z, parent = scene) => {
+  const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); parent.add(b); return b;
+};
+const cyl = (r1, r2, h, m, x, y, z, parent = scene, seg = 20) => {
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, seg), m); c.position.set(x, y, z); parent.add(c); return c;
+};
+
+const marble = mat(0xe9e6de), marbleWarm = mat(0xece7dc), marbleShade = mat(0xd9d5cc), bronze = mat(0x3a3128, { roughness: 0.6, metalness: 0.3 });
+const iron = mat(0x2a2b2d, { roughness: 0.7, metalness: 0.4 }), gold = mat(0xc8a45a, { roughness: 0.4, metalness: 0.6 });
+
+// ---- floor and aisle
+box(40, 0.1, 210, marble, 0, -0.05, -45);
+box(6, 0.02, 92, marbleWarm, 0, 0.005, -36);
+
+// ---- columns: "no thicker than a man", two hundred feet into mist; inner rows x = ±8, outer arcade x = ±16
+for (let z = 8; z >= -86; z -= 7) for (const x of [-8, 8, -16, 16]) cyl(0.32, 0.36, 70, marble, x, 35, z);
+// ---- galleries at y = 14 between the rows, with balustrades on the nave side, and the outer arches beyond
+for (const sx of [-1, 1]) {
+  box(8.4, 0.6, 96, marbleShade, 12 * sx, 14, -39);
+  box(0.25, 1.1, 96, marble, 7.9 * sx, 14.85, -39);
+  for (let z = 8; z >= -86; z -= 7) box(1.0, 0.5, 1.0, marble, 16 * sx, 22, z);   // springing of the outer arches
+}
+// ---- the end wall around the open tower, and the open tower: four piers, an open top, one stone beam
+for (const sx of [-1, 1]) box(9, 60, 2, marbleShade, 13 * sx, 30, -86);           // the wall either side of the tower
+box(18, 0.4, 18, marble, 0, 0.2, -95);                                              // floor of the tower
+for (const [x, z] of [[-8, -87], [8, -87], [-8, -103], [8, -103]]) box(2.4, 52, 2.4, marble, x, 26, z);
+box(18.4, 1.6, 1.6, marble, 0, 34, -95);                                            // the beam the bell hangs from
+box(18.4, 1.2, 2.4, marble, 0, 51.4, -87); box(18.4, 1.2, 2.4, marble, 0, 51.4, -103); // open top: ring beams only
+box(10, 0.3, 4, marble, 0, 0.15, -89);                                              // the low step where the rite is held
+
+// ---- the bell (PROP_P01): about 6 m tall, 5.8 m across the mouth, dark bronze; crown loops, an iron strap
+const bellProfile = [[0, 6], [1.15, 6], [1.75, 5.75], [2.0, 5.2], [2.06, 4.3], [2.16, 3.3], [2.4, 2.3], [2.75, 1.2], [2.9, 0.45], [2.88, 0.12], [2.7, 0]]
+  .map(([r, y]) => new THREE.Vector2(r, y));
+const bell = new THREE.Group();
+const bellBody = new THREE.Mesh(new THREE.LatheGeometry(bellProfile, 48), new THREE.MeshStandardMaterial({ color: 0x3a3128, roughness: 0.6, metalness: 0.3, side: THREE.DoubleSide }));
+bell.add(bellBody);
+for (let i = 0; i < 6; i++) { const t = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.1, 10, 20), bronze); t.position.set(Math.cos(i * Math.PI / 3) * 0.6, 6.25, Math.sin(i * Math.PI / 3) * 0.6); t.rotation.y = -i * Math.PI / 3; bell.add(t); }
+box(0.3, 1.6, 0.3, iron, 0, 6.9, 0, bell);                                          // the strap up to the beam
+const BELL_TOP = 33.2;                                                               // settled: the crown just under the beam
+bell.position.set(0, BELL_TOP - 6.0, -95); scene.add(bell);
+
+// ---- the hammer (PROP_P21): a door-sized iron head on a white arm, pivoting from a bracket on the beam
+const hammer = new THREE.Group(); hammer.position.set(4.2, 34.2, -95); scene.add(hammer);
+box(0.4, 5.2, 0.4, mat(0xe6e2d8), 0, -2.6, 0, hammer);
+box(0.7, 1.0, 2.0, iron, 0, -5.4, 0, hammer);
+box(0.06, 0.9, 1.8, mat(0xc9b48a), -0.37, -5.4, 0, hammer);                          // leather striking pad, facing the bell
+
+// ---- the barge (SHIP_V05) high above the open top, and its four chains to the bell's crown
+const barge = new THREE.Group(); barge.position.set(0, 74, -95); scene.add(barge);
+box(26, 5, 54, mat(0xe9e6de), 0, 0, 0, barge);
+const keel = new THREE.Mesh(new THREE.ConeGeometry(14, 6, 4), mat(0xdcd7cc)); keel.rotation.set(Math.PI, Math.PI / 4, 0); keel.scale.set(0.9, 1, 1.9); keel.position.set(0, -5, 0); barge.add(keel);
+box(10, 18, 10, mat(0xece8df), 0, 11.5, 0, barge);                                   // the lifting frame like a bell-cote
+cyl(0, 2, 10, mat(0xe9e6de), 0, 25.5, 0, barge, 4);                                  // its small spire
+const chainMat = mat(0x232426, { roughness: 0.6, metalness: 0.5 });
+let chains = [];
+function buildChains(slack) {
+  for (const c of chains) scene.remove(c);
+  chains = [];
+  const top = bell.position.y + 6.4;
+  for (const [x, z] of [[-6, -101], [6, -101], [-6, -89], [6, -89]]) {
+    const a = new THREE.Vector3(x, 70, z), b = new THREE.Vector3(x * 0.12, top, -95 + (z + 95) * 0.12);
+    const mid = a.clone().lerp(b, 0.5); mid.x += x * 0.9 * slack; mid.z += (z + 95) * 0.9 * slack; mid.y -= 14 * slack;
+    const curve = new THREE.CatmullRomCurve3([a, a.clone().lerp(mid, 0.5).add(new THREE.Vector3(0, -3 * slack, 0)), mid, mid.clone().lerp(b, 0.5), b]);
+    const m = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.32, 8, false), chainMat); scene.add(m); chains.push(m);
+  }
+}
+
+// ---- figures: robed mannequins. Built facing +z; rotation.y = PI turns them to face the tower (-z).
+function capsule(r, len, m, parent, x, y, z) {
+  const c = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 16), m); c.position.set(x, y, z); parent.add(c); return c;
+}
+function figure(o) {
+  const g = new THREE.Group(), s = (o.height ?? 1.75) / 1.75, body = new THREE.Group(); g.add(body);
+  const skin = mat(o.skin ?? 0x9a7a62), robe = mat(o.robe ?? 0xe9e6de), hair = mat(o.hair ?? 0x2a2420);
+  const robeLen = o.kneel ? 0.95 : 1.45;
+  const r = new THREE.Mesh(new THREE.CylinderGeometry(0.2 * s, 0.34 * s, robeLen * s, 20), robe);
+  r.position.set(0, (o.kneel ? 0.5 : robeLen / 2) * s, 0); body.add(r);                      // the robe or long coat, to the floor
+  const torsoY = (o.kneel ? 1.0 : 1.3) * s;
+  box(0.38 * s, 0.5 * s, 0.24 * s, robe, 0, torsoY, 0, body);
+  const headY = torsoY + 0.42 * s;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.105 * s, 24, 18), skin); head.scale.set(0.92, 1.12, 1); head.position.set(0, headY, 0); body.add(head);
+  const capH = new THREE.Mesh(new THREE.SphereGeometry(0.112 * s, 24, 10, 0, Math.PI * 2, 0, Math.PI * 0.3), hair); capH.scale.set(0.95, 1.12, 1.03); capH.position.set(0, headY, 0); body.add(capH);
+  if (o.collar) { const t = new THREE.Mesh(new THREE.TorusGeometry(0.08 * s, 0.025 * s, 10, 24), gold); t.rotation.x = Math.PI / 2; t.position.set(0, headY - 0.13 * s, 0); body.add(t); }
+  if (o.headdress) cyl(0.09 * s, 0.11 * s, 0.4 * s, robe, 0, headY + 0.28 * s, 0, body);
+  if (o.veil) { const v = new THREE.Mesh(new THREE.ConeGeometry(0.3 * s, 1.2 * s, 20, 1, true), new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.45, side: THREE.DoubleSide })); v.position.set(0, headY - 0.45 * s, -0.03); body.add(v); }
+  const arms = {};
+  for (const [side, sx] of [['right', -1], ['left', 1]]) {
+    const arm = new THREE.Group(); arm.position.set(0.25 * s * sx, torsoY + 0.22 * s, 0); body.add(arm);   // pivots at the shoulder
+    capsule(0.055 * s, 0.5 * s, robe, arm, 0, -0.3 * s, 0);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.05 * s, 12, 10), o.gloves ? robe : skin); hand.position.set(0, -0.62 * s, 0); arm.add(hand);
+    arms[side] = arm;
+  }
+  g.userData = { arms, s };
+  return g;
+}
+const place = (f, x, z, faceTower = true, y = 0) => { f.position.set(x, y, z); f.rotation.y = faceTower ? Math.PI : 0; scene.add(f); return f; };
+
+// the rite: the Hierophant on the step facing the congregation; the bride and groom kneeling, facing him
+const hierophant = place(figure({ height: 1.8, skin: 0x8a6a50, robe: 0xeeeae2, headdress: true }), 0, -90.2, false, 0.3);
+place(figure({ height: 1.65, skin: 0x7a5640, veil: true, kneel: true, gloves: true }), -0.65, -86.6);
+place(figure({ height: 1.8, skin: 0xb08a6a, kneel: true, gloves: true }), 0.65, -86.6);
+// the admirals, front left; Serath among them with the gold collar; the petal girl beside her
+for (const [x, z, sk] of [[-4.6, -78.5, 0x8a6a50], [-5.4, -79.6, 0xb89070], [-6.2, -78.5, 0x6e4e3a], [-7.0, -79.6, 0xc49c7f], [-7.8, -78.5, 0x9a7a62]])
+  place(figure({ height: 1.8, skin: sk, gloves: true }), x, z);
+const serath = place(figure({ height: 1.78, skin: 0x4a3226, hair: 0x2b2b2b, collar: true, gloves: true }), -4.0, -79.8);
+place(figure({ height: 1.15, skin: 0x9a7458, hair: 0x1e1814 }), -3.4, -78.6);
+
+// ---- the congregation: ten thousand in white, instanced, both sides of the aisle, facing the tower
+{
+  const bodyG = new THREE.CylinderGeometry(0.2, 0.3, 1.5, 10), headG = new THREE.SphereGeometry(0.11, 10, 8);
+  const pos = [];
+  for (let z = -77; z <= 6; z += 1.1) for (let x = 3.6; x <= 15.4; x += 0.75) for (const sx of [-1, 1]) {
+    const xx = x * sx + (Math.sin(z * 12.9 + x * 7.1) * 0.12);
+    if (sx < 0 && z < -76 && x > 3.0 && x < 8.5) continue;                      // leave room for the admirals
+    if (Math.abs(Math.abs(xx) - 8) < 0.45 || Math.abs(Math.abs(xx) - 16) < 0.45) continue;   // not inside the columns
+    pos.push([xx, z]);
+  }
+  const bodies = new THREE.InstancedMesh(bodyG, mat(0xd6d1c6), pos.length), heads = new THREE.InstancedMesh(headG, mat(0x8a6a52), pos.length);
+  const m4 = new THREE.Matrix4(), skins = [0x5a3e2e, 0x8a6a52, 0xb08a6c, 0xc9a68a, 0x6e4e3a, 0xa07a5c].map(c => new THREE.Color(c));
+  pos.forEach(([x, z], i) => {
+    const h = 0.9 + ((i * 37) % 23) / 100;
+    m4.compose(new THREE.Vector3(x, 0.75 * h, z), new THREE.Quaternion(), new THREE.Vector3(1, h, 1)); bodies.setMatrixAt(i, m4);
+    m4.compose(new THREE.Vector3(x, 1.62 * h, z), new THREE.Quaternion(), new THREE.Vector3(1, 1, 1)); heads.setMatrixAt(i, m4);
+    heads.setColorAt(i, skins[i % skins.length]);
+  });
+  scene.add(bodies); scene.add(heads);
+}
+
+// ---- banners of the seven kingdoms (PROP_P17), hanging from the galleries, drifting sideways as if under water
+const banners = [];
+for (const sx of [-1, 1]) for (let z = 4, i = 0; z >= -82; z -= 12, i++) {
+  const b = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 7.5, 1, 6), new THREE.MeshStandardMaterial({ color: 0xebe4d2, side: THREE.DoubleSide, roughness: 1 }));
+  const g = new THREE.Group(); g.position.set(8.1 * sx, 14.5, z); b.position.y = -3.75; g.add(b); scene.add(g); banners.push({ g, phase: i * 0.9 + sx });
+}
+// ---- warships at anchor in the cloud beyond the arches (SHIP_V02, far and pale)
+for (const [x, y, z] of [[-70, 18, -40], [-90, 26, -80], [75, 20, -30], [95, 30, -95], [60, 12, 20]]) {
+  const sh = new THREE.Group(); box(30, 5, 6, mat(0xe4e0d6), 0, 0, 0, sh); box(16, 6, 4, mat(0xeae6dd), 0, 5.5, 0, sh); cyl(0, 1.2, 12, mat(0xeae6dd), 0, 14, 0, sh, 4);
+  sh.position.set(x, y, z); sh.rotation.y = Math.PI / 2 + (x > 0 ? 0.3 : -0.3); scene.add(sh);
+}
+// ---- petals: white, falling at about a quarter of normal speed
+const PET = 700, petals = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.16, 0.11), new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide, roughness: 1 }), PET);
+const petalSeed = Array.from({ length: PET }, (_, i) => [((i * 97) % 280) / 10 - 14, ((i * 53) % 400) / 10, -((i * 71) % 960) / 10 + 6, (i % 13) / 13]);
+scene.add(petals);
+
+window.setTime = (t = 0) => {
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
+  petalSeed.forEach(([x, y, z, p], i) => {
+    const yy = ((y - 0.45 * t) % 40 + 40) % 40;                                  // a quarter-speed fall
+    e.set(t * 0.6 + p * 6, t * 0.4 + p * 3, 0);
+    m4.compose(new THREE.Vector3(x + 0.6 * Math.sin(t * 0.5 + p * 9), yy, z), q.setFromEuler(e), new THREE.Vector3(1, 1, 1)); petals.setMatrixAt(i, m4);
+  });
+  petals.instanceMatrix.needsUpdate = true;
+  for (const b of banners) { b.g.rotation.z = 0.18 * Math.sin(t * 0.35 + b.phase) * Math.sign(b.g.position.x) * -1; b.g.rotation.x = 0.08 * Math.sin(t * 0.27 + b.phase); }
+};
+
+// state: bellSlung 1 = held 0.8 m up in the barge's chains, 0 = settled on the beam; chainSlack 0 = taut, 1 = fallen slack;
+// hammer: angle in radians (0 rest, +1 drawn back away from the bell, -0.3 striking); hieroArms 0 = down, 1 = raised.
+window.setState = (st = {}) => {
+  bell.position.y = BELL_TOP - 6.0 + 0.8 * (st.bellSlung ?? 0);
+  buildChains(st.chainSlack ?? 0);
+  hammer.rotation.z = st.hammer ?? 0;
+  const a = st.hieroArms ?? 0, arms = hierophant.userData.arms;
+  arms.left.rotation.set(-2.4 * a, 0, 0.45 * a); arms.right.rotation.set(-2.4 * a, 0, -0.45 * a);
+};
+
+// ---- cameras: hfov from focal length on a Super 35 width (23.76 mm), drawn 16:9 (as Oren's)
+function cameraFor(c) {
+  const hfov = 2 * Math.atan(23.76 / 2 / c.f);
+  const vfov = 2 * Math.atan(Math.tan(hfov / 2) / (W / H)) * 180 / Math.PI;
+  const cam = new THREE.PerspectiveCamera(vfov, W / H, 0.05, 600);
+  cam.position.set(...c.pos); cam.lookAt(new THREE.Vector3(...c.target));
+  if (c.shift) cam.setViewOffset(W, H, -c.shift[0] * W, c.shift[1] * H, W, H);
+  return cam;
+}
+window.renderShot = (c) => { renderer.render(scene, cameraFor(c)); return renderer.domElement.toDataURL('image/png'); };
+window.setState({}); window.setTime(4);
+window.ready = true;
+</script></body></html>
