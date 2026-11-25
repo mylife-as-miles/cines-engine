@@ -19,7 +19,10 @@ Treatment, decisions and the film bible first (`design/`), then a reference stil
 | `design/source/` | The screenplay (third draft) and the Visual Bible (v1), the production's sources of truth |
 | `design/TREATMENT.md` | The film on one page: logline, deliverable, look, people, what it never shows, structure |
 | `design/DECISIONS.md` | What is settled, what the bible proposes, what is still open, and the film bible blocks for the templates |
-| `design/SHOTS.md` | The shot list, one row per shot |
+| `design/screenplay.txt`, `design/script.json` | The screenplay as text, numbered by `tools/parse_script.py` (Oren's parser): L01–L45 dialogue, A01–A121 action |
+| `design/CUT_PLAN.md`, `design/SONG.md` | The 6:40 cut: four montages cut to an original song, four held blocks |
+| `design/BEATS.md` | 42 beats in eight movements, as in *My Name Is Oren* |
+| `design/SHOTS.md` | 26 generations, Q01–Q26: beats, lines, images to attach, continuity |
 | `prompts/` | One auteur prompt per sequence with its take log; `prompts/refs/` the reference-still prompts with chosen job ids |
 | `refs/` | Approved reference stills |
 | `edit/edit.json` | The edit list |
