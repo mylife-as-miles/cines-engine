@@ -1,0 +1,3 @@
+out/
+audio/gen/*.wav
+*.log
