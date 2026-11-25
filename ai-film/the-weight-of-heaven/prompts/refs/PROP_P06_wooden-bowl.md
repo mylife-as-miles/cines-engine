@@ -2,7 +2,7 @@
 
 Shots: 2.3, 6.5, 11.4, 11.13
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -528,5 +528,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P06_t1a · `refs/candidates/P06_t1a.jpg` (full size `out/refs/P06_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b8d5-7d53-8a78-31be49257e8a`, prompt prop (1558 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** The turned bowl, the iron staple across the crack (clear in the close-up), the leather thong through the rim, the pale rubbed rim. Short: small labels; the wood a little orange.
+- P06_t1b · `refs/candidates/P06_t1b.jpg` (full size `out/refs/P06_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b8d5-7d53-8a78-31be49257e8a`, prompt prop (1558 words), images  · $0.1500 · 2026-11-25 · verdict: Same design with a large printed title. Second choice.

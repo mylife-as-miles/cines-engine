@@ -2,7 +2,7 @@
 
 Shots: 1.8, 7.6, 7.8 (and on every warrant)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -528,5 +528,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P03_t1a · `refs/candidates/P03_t1a.jpg` (full size `out/refs/P03_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b6fd-7253-8ff1-7fcac0cafb7f`, prompt prop (1697 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** Blackened silver signet; anchor with crossbar stock in a ring of stars; the red wax impression beside it; clean views. Short: the face is nearer round than oval.
+- P03_t1b · `refs/candidates/P03_t1b.jpg` (full size `out/refs/P03_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b6fd-7253-8ff1-7fcac0cafb7f`, prompt prop (1697 words), images  · $0.1500 · 2026-11-25 · verdict: Oval face, but the stars only arc over the top and the sheet carries labels. Second choice.

@@ -2,7 +2,7 @@
 
 Shots: 10.1, 10.5 to 10.7, 11.7 (seen in E13)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: @Image 1 = `refs/candidates/E13_t2b.jpg`.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/candidates/E13_t2b.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -551,5 +551,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P11_t1a · `refs/candidates/P11_t1a.jpg` (full size `out/refs/P11_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a21368-bbea-7601-921b-e93d70a5ae24`, prompt prop (1700 words), images `refs/candidates/E13_t2b.jpg` · $0.1500 · 2026-11-25 · verdict: **PICK.** Admiralty anchor with its ring, straight crossbar stock and curved fluked arms, hanging plumb from its chain: the silhouette of the seal. Short: open links, not the stud-link chain of E13.
+- P11_t1b · `refs/candidates/P11_t1b.jpg` (full size `out/refs/P11_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a21368-bbea-7601-921b-e93d70a5ae24`, prompt prop (1700 words), images `refs/candidates/E13_t2b.jpg` · $0.1500 · 2026-11-25 · verdict: Reject: smoke pouring off the anchor; mixed scales.

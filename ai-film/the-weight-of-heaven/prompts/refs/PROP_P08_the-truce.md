@@ -2,7 +2,7 @@
 
 Shots: 7 (scene 7), folded into her coat
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -526,5 +526,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P08_t1a · `refs/candidates/P08_t1a.jpg` (full size `out/refs/P08_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-ba1a-74f2-950c-5dd02cbffda4`, prompt prop (1519 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK, with a note.** Coarse grey-white paper, ten grey seals with simple emblems in one row, the empty eleventh place (in the detail). Short: the script uses Latin-looking letters, as on the warrant.
+- P08_t1b · `refs/candidates/P08_t1b.jpg` (full size `out/refs/P08_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-ba1a-74f2-950c-5dd02cbffda4`, prompt prop (1519 words), images  · $0.1500 · 2026-11-25 · verdict: Similar, with a printed title. Second choice.

@@ -2,7 +2,7 @@
 
 Shots: 3.2, 4.1 (seen in E01 and E02)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -526,5 +526,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P07_t1a · `refs/candidates/P07_t1a.jpg` (full size `out/refs/P07_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b977-7e13-9a85-9cdfd9bad11c`, prompt prop (1491 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** Plain gold goblet with one knop and the raised ring on the foot; the top-down view of still dark wine. Short: some views show it empty; the gold leans brassy.
+- P07_t1b · `refs/candidates/P07_t1b.jpg` (full size `out/refs/P07_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b977-7e13-9a85-9cdfd9bad11c`, prompt prop (1491 words), images  · $0.1500 · 2026-11-25 · verdict: Similar; three small empty copies and a printed title. Second choice.

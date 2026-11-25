@@ -2,7 +2,7 @@
 
 Shots: 1.4 to 1.10, recalled in 7.9; seen in E01
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: @Image 1 = `refs/candidates/E01_t4a.jpg`.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/candidates/E01_t4a.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -537,5 +537,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P01_t1a · `refs/candidates/P01_t1a.jpg` (full size `out/refs/P01_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a21368-b5bd-72c3-bccf-d05c7d292b2f`, prompt prop (1750 words), images `refs/candidates/E01_t4a.jpg` · $0.1500 · 2026-11-25 · verdict: **PICK.** Dark bronze, never golden; six crown loops and the iron strap; raised bands at shoulder, waist and sound-bow; the flat striking patch; no clapper. Short: view labels and a title printed on the sheet.
+- P01_t1b · `refs/candidates/P01_t1b.jpg` (full size `out/refs/P01_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a21368-b5bd-72c3-bccf-d05c7d292b2f`, prompt prop (1750 words), images `refs/candidates/E01_t4a.jpg` · $0.1500 · 2026-11-25 · verdict: Reject: a clapper hangs below the lip.

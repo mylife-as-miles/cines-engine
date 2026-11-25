@@ -2,7 +2,7 @@
 
 Shots: 8.7, 9.11, 10.4, 10.11 to 10.14 (seen in E06)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -570,5 +570,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P12_t1a · `refs/candidates/P12_t1a.jpg` (full size `out/refs/P12_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-bc89-7dd3-946e-7ba6d135e13c`, prompt prop (1840 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** A giant ship's-wheel of oak and iron: spokes running out into pale worn handles, no buckets or paddles; an oak frame; the iron lock-pin with its ring between two low handles (detail). Short: nothing on the sheet gives its forty-foot size.
+- P12_t1b · `refs/candidates/P12_t1b.jpg` (full size `out/refs/P12_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-bc89-7dd3-946e-7ba6d135e13c`, prompt prop (1840 words), images  · $0.1500 · 2026-11-25 · verdict: Same design, fewer views of the pin. Second choice.

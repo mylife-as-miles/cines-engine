@@ -1,6 +1,6 @@
 # The Weight of Heaven: hero prop reference prompts
 
-Twelve hero props. Each prompt fills the author's prop template with this film's bible. Generate a 16:9 sheet at 2K, two candidates; where reference images are listed, attach them in order.
+Twelve hero props. Each prompt fills the author's prop template with this film's bible. Generate a 16:9 sheet at 2K, one candidate; where reference images are listed, attach them in order.
 
 ---
 
@@ -8,7 +8,7 @@ Twelve hero props. Each prompt fills the author's prop template with this film's
 
 Shots: 1.4 to 1.10, recalled in 7.9; seen in E01
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: @Image 1 = `refs/candidates/E01_t4a.jpg`.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/candidates/E01_t4a.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -548,7 +548,7 @@ Avoid:
 
 Shots: 1.6, 6.2, 9.16, 11.6
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -1101,7 +1101,7 @@ Avoid:
 
 Shots: 1.8, 7.6, 7.8 (and on every warrant)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -1632,7 +1632,7 @@ Avoid:
 
 Shots: 1.8, 7.6 (hundreds on the hall floor)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -2162,7 +2162,7 @@ Avoid:
 
 Shots: 7.8, 7.10, 9.8, 11.9
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -2691,7 +2691,7 @@ Avoid:
 
 Shots: 2.3, 6.5, 11.4, 11.13
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -3222,7 +3222,7 @@ Avoid:
 
 Shots: 3.2, 4.1 (seen in E01 and E02)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -3751,7 +3751,7 @@ Avoid:
 
 Shots: 7 (scene 7), folded into her coat
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -4280,7 +4280,7 @@ Avoid:
 
 Shots: 7.6 (scene 7)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -4835,7 +4835,7 @@ Avoid:
 
 Shots: 8.4, 9.9, 9.14, 10.3, 10.4
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -5389,7 +5389,7 @@ Avoid:
 
 Shots: 10.1, 10.5 to 10.7, 11.7 (seen in E13)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: @Image 1 = `refs/candidates/E13_t2b.jpg`.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: @Image 1 = `refs/candidates/E13_t2b.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -5943,7 +5943,7 @@ Avoid:
 
 Shots: 8.7, 9.11, 10.4, 10.11 to 10.14 (seen in E06)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT

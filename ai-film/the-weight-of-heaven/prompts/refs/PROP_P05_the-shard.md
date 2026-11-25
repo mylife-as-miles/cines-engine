@@ -2,7 +2,7 @@
 
 Shots: 7.8, 7.10, 9.8, 11.9
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -526,5 +526,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P05_t1a · `refs/candidates/P05_t1a.jpg` (full size `out/refs/P05_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b83d-7c12-b20f-08ad60e536e5`, prompt prop (1536 words), images  · $0.1500 · 2026-11-25 · verdict: The views do not show one stone: the back view is a different, darker rock.
+- P05_t1b · `refs/candidates/P05_t1b.jpg` (full size `out/refs/P05_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b83d-7c12-b20f-08ad60e536e5`, prompt prop (1536 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** One stone in every view: sharp grey fracture faces, the white vein crossing two faces, a darker weathered back with a lichen spot, dust in the detail. Short: a printed title.

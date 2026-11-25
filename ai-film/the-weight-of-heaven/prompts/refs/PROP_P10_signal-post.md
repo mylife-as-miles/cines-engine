@@ -2,7 +2,7 @@
 
 Shots: 8.4, 9.9, 9.14, 10.3, 10.4
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -551,5 +551,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P10_t1a · `refs/candidates/P10_t1a.jpg` (full size `out/refs/P10_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-bb5a-7a01-8150-05cacb49d998`, prompt prop (1698 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** White mast, lancet-tipped arm, brass pivot boss, a louvred brass lamp under a lancet hood. Short: the arm carries two dark bands instead of one; arm drawn out level rather than hanging down.
+- P10_t1b · `refs/candidates/P10_t1b.jpg` (full size `out/refs/P10_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-bb5a-7a01-8150-05cacb49d998`, prompt prop (1698 words), images  · $0.1500 · 2026-11-25 · verdict: The arm changes position from view to view. Second choice.

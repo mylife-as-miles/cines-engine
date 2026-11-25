@@ -2,7 +2,7 @@
 
 Shots: 1.8, 7.6 (hundreds on the hall floor)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -527,5 +527,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P04_t1a · `refs/candidates/P04_t1a.jpg` (full size `out/refs/P04_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b799-7d42-aad9-255100b187b4`, prompt prop (1590 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK, with a note.** Warm rag paper, Karst's ink plan of a valley with one marked circle, the fold, the red seal centred at the foot. Short: the six lines use Latin-looking letters (no English words); to be fixed with an edit like the hall's if the warrant is seen close.
+- P04_t1b · `refs/candidates/P04_t1b.jpg` (full size `out/refs/P04_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b799-7d42-aad9-255100b187b4`, prompt prop (1590 words), images  · $0.1500 · 2026-11-25 · verdict: Reject: the circle on the plan is labelled "FALL" in English.

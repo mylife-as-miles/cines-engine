@@ -2,7 +2,7 @@
 
 Shots: 7.6 (scene 7)
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -552,5 +552,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P09_t1a · `refs/candidates/P09_t1a.jpg` (full size `out/refs/P09_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-baba-7f10-b0dd-022432cbf9ec`, prompt prop (1641 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** Worn brass surveyor's lantern, a small real flame, the rough filed patch on the top (detail), four uprights, a hinged hood. Short: the hood is a round shield rather than a curved door.
+- P09_t1b · `refs/candidates/P09_t1b.jpg` (full size `out/refs/P09_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-baba-7f10-b0dd-022432cbf9ec`, prompt prop (1641 words), images  · $0.1500 · 2026-11-25 · verdict: Curved hinged hood as asked, but the views disagree. Second choice.

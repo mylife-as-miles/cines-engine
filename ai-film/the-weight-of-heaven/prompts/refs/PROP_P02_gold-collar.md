@@ -2,7 +2,7 @@
 
 Shots: 1.6, 6.2, 9.16, 11.6
 
-Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: none.
+Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: none.
 
 ```text
 # THE WEIGHT OF HEAVEN — PROP REFERENCE PROMPT
@@ -550,5 +550,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P02_t1a · `refs/candidates/P02_t1a.jpg` (full size `out/refs/P02_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b65d-7002-9575-fcbd0ac4a3c2`, prompt prop (1669 words), images  · $0.1500 · 2026-11-25 · verdict: The band reads as an even bracelet, not taller at the front. Second choice.
+- P02_t1b · `refs/candidates/P02_t1b.jpg` (full size `out/refs/P02_t1b.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a21368-b65d-7002-9575-fcbd0ac4a3c2`, prompt prop (1669 words), images  · $0.1500 · 2026-11-25 · verdict: **PICK.** The band rises at the front and tapers to the back; barrel hinge; box clasp in the detail; satin gold. Short: labels on the sheet; the gold leans a little yellow.

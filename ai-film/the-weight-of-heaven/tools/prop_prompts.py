@@ -970,12 +970,12 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     combined = ['# The Weight of Heaven: hero prop reference prompts\n\n',
                 'Twelve hero props. Each prompt fills the author\'s prop template with this film\'s bible. Generate a '
-                '16:9 sheet at 2K, two candidates; where reference images are listed, attach them in order.\n']
+                '16:9 sheet at 2K, one candidate; where reference images are listed, attach them in order.\n']
     for P in PROPS:
         prompt = render(P)
         refs = ' · '.join(f'@Image {i} = `{f}`' for i, (f, _, _) in enumerate(P.get('refs', []), 1)) or 'none'
         head = (f"# {P['code']} — {P['name']}\n\nShots: {P['shots']}\n\n"
-                f"Prompt v1. Generate: 16:9, 2K, two candidates. Reference images: {refs}.\n\n")
+                f"Prompt v1. Generate: 16:9, 2K, one candidate. Reference images: {refs}.\n\n")
         body = f"```text\n{prompt}```\n"
         log = '\n## Takes\n\n(none yet)\n'
         path = os.path.join(OUT, f"PROP_{P['code']}_{P['slug']}.md")

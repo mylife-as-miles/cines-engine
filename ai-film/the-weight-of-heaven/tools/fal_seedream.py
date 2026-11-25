@@ -2,8 +2,8 @@
 """Generate reference candidates on fal from the current prompts: locations with Seedream 5.5 Edit, props with
 Nano Banana Pro (the author's choice for each).
 
-    python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py E02 E04 ... [--n 2] [--take t2] [--dry-run]
-    python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py P01 P02 ... --model nbp [--n 2] [--take t1]
+    python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py E02 E04 ... [--n 1] [--take t2] [--dry-run]
+    python3 ai-film/the-weight-of-heaven/tools/fal_seedream.py P01 P02 ... --model nbp [--n 1] [--take t1]
 
 Nano Banana Pro (fal-ai/nano-banana-pro, or /edit when reference images are attached) makes 16:9 sheets at 2K for
 props, 21:9 for locations; $0.15 per image, reference images free; "@Image N" is sent as "Image N".
@@ -121,7 +121,7 @@ def log(job, files, take, error=None):
 
 def main():
     args = sys.argv[1:]
-    n = int(args[args.index('--n') + 1]) if '--n' in args else 2
+    n = int(args[args.index('--n') + 1]) if '--n' in args else 1  # one candidate per reference (author, 25 Nov)
     take = args[args.index('--take') + 1] if '--take' in args else 't2'
     model = args[args.index('--model') + 1] if '--model' in args else 'seedream'
     codes = [a for a in args if re.fullmatch(r'[EP]\d\d', a)]
