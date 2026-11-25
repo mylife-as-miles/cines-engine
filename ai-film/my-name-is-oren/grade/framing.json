@@ -1,0 +1,72 @@
+{
+ "S067": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 10
+ },
+ "S068": {
+  "y0": 32,
+  "reason": "cannot frame",
+  "faces": 5
+ },
+ "S069": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 5
+ },
+ "S070": {
+  "y0": 11,
+  "reason": "clean",
+  "faces": 5
+ },
+ "S071": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 10
+ },
+ "S072": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 5
+ },
+ "S073": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 1
+ },
+ "S074": {
+  "y0": 0,
+  "reason": "cannot frame",
+  "faces": 5
+ },
+ "S075": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 5
+ },
+ "S076": {
+  "y0": 0,
+  "reason": "cannot frame",
+  "faces": 5
+ },
+ "S077": {
+  "y0": 54,
+  "reason": "no faces: detail",
+  "faces": 0
+ },
+ "S078": {
+  "y0": 8,
+  "reason": "cannot frame",
+  "faces": 5
+ },
+ "S079": {
+  "y0": 0,
+  "reason": "cannot frame",
+  "faces": 5
+ },
+ "S080": {
+  "y0": 0,
+  "reason": "clean",
+  "faces": 2
+ }
+}

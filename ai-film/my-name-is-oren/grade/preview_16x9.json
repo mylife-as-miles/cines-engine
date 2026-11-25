@@ -1,0 +1,19 @@
+{
+ "video": "out/edits/Q01_Q13_v6_sound.mp4",
+ "shots": "grade/shots.json",
+ "look": "250D Daylight",
+ "look_mix": 1.0,
+ "grain": {
+  "amount": 0.012,
+  "size": 1.2,
+  "chroma": 0.15,
+  "seed": 7
+ },
+ "framing": "grade/framing.json",
+ "range": [
+  259.08,
+  314.67
+ ],
+ "matte": null,
+ "out": "out/review/grade_Q12_Q13_16x9.mp4"
+}

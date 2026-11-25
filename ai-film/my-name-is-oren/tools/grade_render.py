@@ -6,7 +6,8 @@
 
 grade/grade.json: {"video": the cut to grade (picture and sound), "shots": "grade/shots.json" (tools/grade_match.py),
   "look": an OpenEmulsion preset name or null, "look_mix": 0..1, "grain": {"amount": 0.012, "size": 1.2, "chroma": 0.15,
-  "seed": 7}, "matte": null or 2.35, "out": "out/edits/....mp4"}
+  "seed": 7}, "matte": null or 2.35, "framing": "grade/framing.json", "range": null or [start, end], "out": "out/edits/....mp4"}
+With a matte, each shot's picture is moved so the rows its framing chose (tools/grade_frame.py) fill the 2.35:1 band.
 Frames are decoded as 16-bit RGB, the shot's LUT applied with trilinear interpolation, grain added in display space
 weighted toward the midtones (film grain is strongest in the mids and fades in deep shadow and highlight) and seeded
 per frame so a re-render is identical, then encoded. The LUTs are written to grade/luts/ for review and reuse.
@@ -91,19 +92,24 @@ def main():
     p = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
                         '-of', 'csv=p=0', video], capture_output=True, text=True)
     W, H = (int(x) for x in p.stdout.strip().split(','))
-    dec = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', video, '-f', 'rawvideo', '-pix_fmt', 'rgb48le', '-'],
+    rng = spec.get('range')                                  # [start, end] seconds: a preview of part of the film
+    cut = ['-ss', f'{rng[0]:.3f}', '-t', f'{rng[1] - rng[0]:.3f}'] if rng else []
+    dec = subprocess.Popen(['ffmpeg', '-v', 'error'] + cut + ['-i', video, '-f', 'rawvideo', '-pix_fmt', 'rgb48le', '-'],
                            stdout=subprocess.PIPE)
+    framing = {}
+    band = H
+    if spec.get('matte'):                                    # 2.35:1 inside the 16:9 frame, reframed per shot
+        band = int(round(W / spec['matte'] / 2) * 2)
+        framing = json.load(open(os.path.join(HERE, spec.get('framing', 'grade/framing.json'))))
+    top = (H - band) // 2
     vf = ['format=yuv420p']
-    if spec.get('matte'):                                    # letterbox inside the 16:9 frame
-        hh = int(round(W / spec['matte'] / 2) * 2)
-        vf = [f'drawbox=x=0:y=0:w={W}:h={(H - hh) // 2}:color=black:t=fill',
-              f'drawbox=x=0:y={H - (H - hh) // 2}:w={W}:h={(H - hh) // 2}:color=black:t=fill'] + vf
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb48le', '-s', f'{W}x{H}', '-r', '24',
-                            '-i', '-', '-i', video, '-map', '0:v', '-map', '1:a', '-vf', ','.join(vf),
+                            '-i', '-'] + cut + ['-i', video, '-map', '0:v', '-map', '1:a', '-vf', ','.join(vf),
                             '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-profile:v', 'high',
                             '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv',
                             '-c:a', 'copy', '-movflags', '+faststart', out], stdin=subprocess.PIPE)
-    fsz, k, idx = W * H * 6, 0, 0
+    fsz, idx = W * H * 6, 0
+    k = int(round(rng[0] * 24)) if rng else 0               # frame number on the film's clock
     g = spec.get('grain')
     while True:
         buf = dec.stdout.read(fsz)
@@ -118,6 +124,10 @@ def main():
             if g:
                 y = img @ np.array([0.2126, 0.7152, 0.0722], np.float32)
                 img = img + grain(img.shape, k, g, y)
+        if band < H:
+            y0 = framing.get(shots[idx]['id'], {}).get('y0', top)
+            boxed = np.zeros_like(img); boxed[top:top + band] = img[y0:y0 + band]
+            img = boxed
         enc.stdin.write((np.clip(img, 0, 1) * 65535 + 0.5).astype('<u2').tobytes())
         k += 1
         if k % 480 == 0:
