@@ -2,7 +2,23 @@
 
 Scenes: 10.15 to 10.23, 11.16 to 11.19 · State in this reference: Blue dusk, descending, low over the plain; the last sun only on the cathedral's open tower.
 
-Prompt v2, a new generation (round one: a fantasy island about a mile across, ringed like a cake, with cypress trees; no last sun on the tower). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E01_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
+Prompt v3, an edit of take E12_t2a (round two: a grey day instead of blue dusk; a halo round the tower; too small). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E12_t2a.png` (full size).
+
+```text
+Edit Figure 1, the floating city of Orison over a black basalt plain. This is a photoreal film location reference.
+
+Keep exactly: the city's architecture (stepped terraces of white marble arcades, bridges between towers, hanging gardens, the cathedral tower and its bell at the summit), the dark rock underside with its roots and hanging chains, the basalt plain, the fort and the long low wall on the horizon, the line of small figures, and the camera.
+
+Change only these three things:
+
+1. Time of day: blue dusk. The sun has set on the plain. The sky is a deep blue-grey; the whole city stands in cool blue shade, its marble a cool grey-white; the plain is nearly black.
+2. The last warm sunlight touches only the top of the cathedral tower, as plain sunlit stone, with no halo, no glow, no rays and no light around it.
+3. Scale: the city is twelve miles across. Add deep atmospheric haze, so the left and right ends of the city fade pale and soft into the dusk, and only the middle is sharp.
+
+Do not add: halo, glow, god rays, sunbeams, lit windows, light coming from the city, banners, coloured flags, people, text.
+```
+
+## Prompt v2 (made the round-two takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

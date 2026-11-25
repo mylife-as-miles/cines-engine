@@ -2,7 +2,19 @@
 
 Scenes: 5, 8, 9, 11 · State in this reference: Grey day (scene 5): the vale lived in, hearths lit. The crowded road (8, 9) and the night hearths (11) are made from this one.
 
-Prompt v2, an edit of the first take (round one: the Weir drawn as a single black slab; a saucer-shaped mass in the sky). Generate: 21:9, highest resolution, two to four candidates. Images, in this order: @Image 1 = `refs/candidates/E07_t1.jpg` · @Image 2 = `refs/candidates/E06_t1.jpg` · @Image 3 = `refs/candidates/E05_t1.jpg`.
+Prompt v3, an edit of take E07_t2b (round two: a floating rock with a hard outline in the sky). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E07_t2b.png` (full size).
+
+```text
+Edit Figure 1, Sarn Vale. This is a photoreal film location reference.
+
+Keep everything exactly as it is: the valley, the terraced fields and orchards, the stone houses and their hearth smoke, the road and its dry-stone walls, the long black wall with its arched gates on the right, the camera position, the lens and the grey overcast light.
+
+Change only one thing: remove the floating rock mass from the top left of the sky completely. Fill that part of the sky with the same soft grey overcast cloud as the rest of the sky, a little darker toward the top edge of the frame.
+
+Do not add any floating object, rock, island, disc or shape in the sky. No blue sky, no sunshine, no people, no text.
+```
+
+## Prompt v2 (made the round-two takes)
 
 ```text
 Edit @Image 1, Sarn Vale. This is a photoreal film location reference.

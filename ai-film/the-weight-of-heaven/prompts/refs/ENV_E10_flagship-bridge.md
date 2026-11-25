@@ -2,7 +2,24 @@
 
 Scenes: 9 · State in this reference: Dusk. No light inside: everything lit by the dusk through the glass.
 
-Prompt v2, a new generation (round one: a small Victorian glasshouse, lit inside, pink dusk, airships outside). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E11_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
+Prompt v3, an edit of take E10_t2b (round two: the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E10_t2b.png` (full size).
+
+```text
+Edit Figure 1, the bridge of the flagship of a fleet of white ships that sail the air. This is a photoreal film location reference.
+
+Keep exactly: the ribbed vault of white-painted timber and its glass, the pointed gothic windows and their tracery, the brass rails, speaking tubes and sighting glass, the chart table, the rows of stations, the dark rock and roots of the kingdom overhead through the glass, the white church-nave ships with their spires, the camera position and the lens.
+
+Change only these four things:
+
+1. There is no sea. The ships hang in the air in long ranks, each at its own height, high above a floor of cloud lit amber from below by the dusk; far below the cloud, glimpses of a dark plain. Remove all water, waves and reflections. The far ranks fade into haze. Every ship has a warm amber belly and a cold grey back.
+2. Dusk light only: amber from beneath the cloud through the forward glass, cold slate-grey from the glass overhead. No lamps lit and no light inside. The interior falls into near silhouette: ribs, desks and stools are dark shapes, and the brass catches thin lines of amber.
+3. Remove the flag on the left.
+4. Remove the red wax seals from the desks; leave plain papers.
+
+Do not add: sea, water, sails, balloons, airships, flags, red seals, people, text, lens flare, glow or sunbeams.
+```
+
+## Prompt v2 (made the round-two takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

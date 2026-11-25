@@ -1113,6 +1113,48 @@ Do not add: a monolith, a free-standing slab, a disc or saucer in the sky, a flo
 }
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Round 3 (25 November). One more edit each for the three round-two takes that were right in structure. On the
+# author's instruction only the image being edited is attached (no round-one references): the full-size round-two
+# PNG, sent as a quality-95 JPEG (out/refs/<tag>_full.jpg, made by fal_seedream.py).
+# ---------------------------------------------------------------------------------------------------------------
+
+ROUND3 = {
+    'E07': dict(base='E07_t2b', fixes='a floating rock with a hard outline in the sky', text="""Edit Figure 1, Sarn Vale. This is a photoreal film location reference.
+
+Keep everything exactly as it is: the valley, the terraced fields and orchards, the stone houses and their hearth smoke, the road and its dry-stone walls, the long black wall with its arched gates on the right, the camera position, the lens and the grey overcast light.
+
+Change only one thing: remove the floating rock mass from the top left of the sky completely. Fill that part of the sky with the same soft grey overcast cloud as the rest of the sky, a little darker toward the top edge of the frame.
+
+Do not add any floating object, rock, island, disc or shape in the sky. No blue sky, no sunshine, no people, no text."""),
+
+    'E10': dict(base='E10_t2b', fixes='the fleet on a sea; a lit interior; a national-looking flag; red wax seals on the desks', text="""Edit Figure 1, the bridge of the flagship of a fleet of white ships that sail the air. This is a photoreal film location reference.
+
+Keep exactly: the ribbed vault of white-painted timber and its glass, the pointed gothic windows and their tracery, the brass rails, speaking tubes and sighting glass, the chart table, the rows of stations, the dark rock and roots of the kingdom overhead through the glass, the white church-nave ships with their spires, the camera position and the lens.
+
+Change only these four things:
+
+1. There is no sea. The ships hang in the air in long ranks, each at its own height, high above a floor of cloud lit amber from below by the dusk; far below the cloud, glimpses of a dark plain. Remove all water, waves and reflections. The far ranks fade into haze. Every ship has a warm amber belly and a cold grey back.
+2. Dusk light only: amber from beneath the cloud through the forward glass, cold slate-grey from the glass overhead. No lamps lit and no light inside. The interior falls into near silhouette: ribs, desks and stools are dark shapes, and the brass catches thin lines of amber.
+3. Remove the flag on the left.
+4. Remove the red wax seals from the desks; leave plain papers.
+
+Do not add: sea, water, sails, balloons, airships, flags, red seals, people, text, lens flare, glow or sunbeams."""),
+
+    'E12': dict(base='E12_t2a', fixes='a grey day instead of blue dusk; a halo round the tower; too small', text="""Edit Figure 1, the floating city of Orison over a black basalt plain. This is a photoreal film location reference.
+
+Keep exactly: the city's architecture (stepped terraces of white marble arcades, bridges between towers, hanging gardens, the cathedral tower and its bell at the summit), the dark rock underside with its roots and hanging chains, the basalt plain, the fort and the long low wall on the horizon, the line of small figures, and the camera.
+
+Change only these three things:
+
+1. Time of day: blue dusk. The sun has set on the plain. The sky is a deep blue-grey; the whole city stands in cool blue shade, its marble a cool grey-white; the plain is nearly black.
+2. The last warm sunlight touches only the top of the cathedral tower, as plain sunlit stone, with no halo, no glow, no rays and no light around it.
+3. Scale: the city is twelve miles across. Add deep atmospheric haze, so the left and right ends of the city fade pale and soft into the dusk, and only the middle is sharp.
+
+Do not add: halo, glow, god rays, sunbeams, lit windows, light coming from the city, banners, coloured flags, people, text."""),
+}
+
+
 def resolve(L):
     """The location as it stands now: round-one data with any round-two regeneration applied."""
     R = REWORK.get(L['code'])
@@ -1125,6 +1167,8 @@ def resolve(L):
 
 def current(code):
     """(prompt, image paths in @Image order, kind) of the location's current prompt, for the generation tools."""
+    if code in ROUND3:
+        return ROUND3[code]['text'], [f"out/refs/{ROUND3[code]['base']}_full.jpg"], 'edit3'
     L = next(l for l in LOCATIONS if l['code'] == code)
     R = REWORK.get(code)
     if R and R['kind'] == 'edit':
@@ -1164,6 +1208,12 @@ def main():
                      f"resolution, two to four candidates. Images, in this order: {refs}.\n\n")
             body = (f"```text\n{R['text']}\n```\n\n## Prompt v1 (made t1; still the description of this location)\n\n"
                     f"```text\n{v1}```\n")
+        if L['code'] in ROUND3:
+            R3 = ROUND3[L['code']]
+            head = (f"# {L['code']} — {L['name']}\n\nScenes: {L['scenes']} · State in this reference: {L['state']}\n\n"
+                    f"Prompt v3, an edit of take {R3['base']} (round two: {R3['fixes']}). Generate: 21:9, highest "
+                    f"resolution, two candidates. One image only, as Figure 1: `out/refs/{R3['base']}.png` (full size).\n\n")
+            body = (f"```text\n{R3['text']}\n```\n\n## Prompt v2 (made the round-two takes)\n\n" + body)
         log = '\n## Takes\n\n(none yet)\n'
         path = os.path.join(OUT, f"ENV_{L['code']}_{L['slug']}.md")
         if os.path.exists(path):  # keep the take log already written under the prompt
@@ -1172,9 +1222,9 @@ def main():
                 log = old[old.index('\n## Takes\n'):]
         with open(path, 'w') as f:
             f.write(head + body + log)
-        current = body.split('\n\n## Prompt v1')[0] + ('' if body.endswith('\n') else '\n')
+        current = body.split('\n\n## Prompt v')[0] + ('' if body.endswith('\n') else '\n')
         combined.append('\n---\n\n' + head + current)
-        if R:
+        if R or L['code'] in ROUND3:
             rework.append('\n---\n\n' + head + current)
     with open(os.path.join(OUT, 'ENV_ALL.md'), 'w') as f:
         f.write(''.join(combined))
