@@ -28,6 +28,20 @@ What this production teaches, kept as it happens, as *My Name Is Oren* kept its 
 | 15 | **Two shots with the same framing merge.** Shots 2 and 3 were both 40 mm from the tower side, and came back as one continuous shot. It worked here, but a planned cut needs a change of size or angle to survive. | Q02 t1 shots 2 and 3. | Consecutive shots always change size or angle. |
 | 16 | **The last shot is still squeezed.** Even as a quiet insert after the climax, the cup got 1.3 s of 2.8. Add a few seconds of tail that the edit can throw away, or end on something that can be short. | Q02 t1 shot 8. | Pickups end on a tail shot. |
 
+## From the author's verdict on Q02 t1, and the block-out method
+
+The author rejected Q02 t1 whole (25 November): "Everything is wrong... even the basket scene", and its opening, with singing under it, does not connect with the end of Q01, where the congregation has just spoken. My own review had called half of it usable; the author's eye is the measure. From here the previs is no longer only for approval: it goes to the model as a block-out reference video.
+
+| # | Lesson | Evidence | Applied in |
+| --- | --- | --- | --- |
+| 17 | **Words alone do not direct.** A prompt of shots, lenses and timings gave generic coverage twice: the model chose its own staging, merged shots, and ignored sizes. The staging has to be shown. | Q01 t1 shots 5–7; Q02 t1 throughout. | Q02 v2: the previs itself is attached as @Video 1, a coarse block-out. |
+| 18 | **A block-out gives blocking, paths, timing, camera and cuts, and nothing else** (fal's Seedance 2.5 guide, "Blockout References and Rendering"). Say so in the first line; forbid its look ("do not use its blockout appearance, materials or scene"); map every shape to its subject, one sentence each; give appearance with images. Do not restate every move in words, or the words fight the reference. | fal.ai/learn/devs/how-to-use-seedance-2-5. | Q02A and Q02B v2 prompts follow that template line for line. |
+| 19 | **Keep the block-out clean and simple.** No labels, mattes, path lines, axes or camera frustums: they leak. Simple geometry; limbs only where the action is complete. Colour-code the principals so the mapping cannot be mistaken. | fal's guide; the export is `CLEAN=1 node animatic.js`. | `refs/blockout/Q02A_blockout.mp4`, `Q02B_blockout.mp4`. |
+| 20 | **Scale comes from people in the frame.** The hammer's sheet is left out; two bell-ringers stand beside it in the block-out and haul it on ropes. | Lesson 12, twice. | Q02B shot 2. |
+| 21 | **Never re-open on the last shot of the previous sequence.** Q02 t1 opened on Q01's gallery and held it 6.9 s under invented singing, straight after the same people had spoken. Open on a cut to something new, and keep sound concrete: "reverberation" in a cathedral came back as a choir. | Q02 t1 shot 1; the author. | Q02A opens on a cut to Serath; it is generated silent, and Q01's own tail is laid under it in the edit. |
+| 22 | **Shorter generations.** fal's guide recommends 5 to 10 s per reference video; a failed 15 s costs half of a failed 30 s. | fal's guide; Q02 t1 ($5.73 for nothing kept). | Q02 is split into Q02A (15 s) and Q02B (16 s). |
+| 23 | **With a video reference the bill changes**: tokens = output height × width × (input + output seconds) × 24 / 1024, at $0.0128 per 1,000 at 480p: about $0.129 for every second of block-out plus every second generated. | fal's model page. | Costs in `prompts/Q02.md`. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
@@ -48,6 +62,18 @@ What this production teaches, kept as it happens, as *My Name Is Oren* kept its 
 ## Villeneuve for the camera, Cameron for the storytelling
 
 The Visual Bible's own list ("What we take from Villeneuve and Cameron"), applied to every prompt. It borrows the method only, never a frame.
+
+Studied for Q02 v2 on StillsLab's Villeneuve pages (Dune: Part Two, Dune: Part One, Blade Runner 2049, Arrival: about 230 frames) and its essay on his style, "Scale, Silence, and Letting the Frame Talk". What recurs, and where Q02 uses it:
+
+| What recurs in his frames | Used in Q02 v2 |
+| --- | --- |
+| One figure centred and alone in a pale, almost empty frame; symmetry; a slow push | A1: Serath one step ahead of the rank, frontal |
+| Profiles and silhouettes read against empty space; the eyes off camera | A2: the catch in profile, her eyes forward |
+| A dark or large foreground shape with the face beyond it, from low | A3: the warrant low in the frame, her face above |
+| The extreme insert of hands and one small object | A4: the ring into the wax, hands only |
+| The tilt or low angle that reveals a huge object in haze; a held frame after it | B1: from the seal up the tower to the bell |
+| Small people beside a vast machine, so its size can be felt | B2: two ringers and the hammer |
+| The graphic top-down frame | B3: the cup |
 
 **Villeneuve (cinematography):**
 - **A human anchor:** a small figure in the big frame, so its size can be judged.

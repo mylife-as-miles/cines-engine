@@ -1,0 +1,292 @@
+{
+ "title": "Q02A · UNREAD",
+ "bpm": 84,
+ "shots": [
+  {
+   "n": 1,
+   "time": "0.00–2.86 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "aideHidden": 1
+   },
+   "cam": {
+    "pos": [
+     -5.4,
+     1.45,
+     -87.0
+    ],
+    "target": [
+     -5.4,
+     1.32,
+     -80.6
+    ],
+    "f": 35
+   },
+   "move": {
+    "to": {
+     "pos": [
+      -5.4,
+      1.45,
+      -86.0
+     ],
+     "target": [
+      -5.4,
+      1.32,
+      -80.6
+     ]
+    }
+   },
+   "camText": "The admirals · 35 mm · frontal and symmetrical, Serath centred one step ahead of the rank, empty white above her · a slow push in, 1 m",
+   "line": "Cut from the gallery's answer to the people who gave it: Grand Admiral Serath, centred, the gold collar at her throat; the rank of admirals behind her; ten thousand behind them. Nobody moves.",
+   "note": "Villeneuve: a designed symmetrical frame, one figure isolated in white on white, a slow push. The girl with her basket is planted small in the background, right.",
+   "lines": []
+  },
+  {
+   "n": 2,
+   "time": "2.86–8.57 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "aideHidden": 1
+   },
+   "clock": "tripT",
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "tripT": 2.9,
+    "aideHidden": 1
+   },
+   "cam": {
+    "pos": [
+     2.6,
+     1.3,
+     -79.9
+    ],
+    "target": [
+     -5.4,
+     1.25,
+     -79.9
+    ],
+    "f": 40
+   },
+   "move": {
+    "to": {
+     "pos": [
+      2.6,
+      1.3,
+      -80.7
+     ],
+     "target": [
+      -5.4,
+      1.25,
+      -80.7
+     ]
+    }
+   },
+   "camText": "The basket · 40 mm · side on from the aisle, Serath in profile facing right · the camera tracks 0.8 m right with the basket",
+   "line": "The girl comes out from behind an admiral, strewing petals; she trips at 1.4 s; the basket leaves her hands and drifts. At 3.2 s Serath's right hand takes it out of the air; her head never turns. She lowers it; the girl takes it in both hands by 5.0 s.",
+   "note": "In profile, 'without looking' cannot be missed: the eyes stay on the tower while the arm does the work. Cameron: cause, then effect: the foot, the basket, the hand. Two bars.",
+   "lines": []
+  },
+  {
+   "n": 3,
+   "time": "8.57–11.43 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -4.5,
+     -81.26
+    ],
+    "aideHold": 1,
+    "warrant": [
+     -5.146,
+     1.13,
+     -81.26,
+     0,
+     0
+    ],
+    "warrantRise": -0.4,
+    "serathArm": 0
+   },
+   "keys": [
+    [
+     0.0,
+     {
+      "warrantRise": -0.4,
+      "serathArm": 0
+     }
+    ],
+    [
+     0.3,
+     {
+      "warrantRise": 0,
+      "serathArm": 0
+     }
+    ],
+    [
+     0.8,
+     {
+      "serathArm": 0.85
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -4.5,
+     -81.26
+    ],
+    "aideHold": 1,
+    "warrant": [
+     -5.146,
+     1.13,
+     -81.26,
+     0,
+     0
+    ],
+    "serathArm": 0.85
+   },
+   "cam": {
+    "pos": [
+     -6.3,
+     0.9,
+     -83.9
+    ],
+    "target": [
+     -5.25,
+     1.5,
+     -80.9
+    ],
+    "f": 35
+   },
+   "camText": "Unread · 35 mm · low, from the front, looking up past the warrant to her face · locked off",
+   "line": "The aide brings the warrant up into the bottom of the frame, red wax on it. Her hand goes out over it. Her face, above, never tilts: her eyes are on the tower.",
+   "note": "The premise of the film in one frame: the page and the eyes, apart. Villeneuve: low angle, the foreground object large, the face beyond it.",
+   "lines": []
+  },
+  {
+   "n": 4,
+   "time": "11.43–15.00 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -4.5,
+     -81.26
+    ],
+    "aideHold": 1,
+    "warrant": [
+     -5.146,
+     1.13,
+     -81.26,
+     0,
+     0
+    ],
+    "serathArm": 0.85,
+    "sealed": 0
+   },
+   "keys": [
+    [
+     0.0,
+     {
+      "serathArm": 0.85,
+      "sealed": 0
+     }
+    ],
+    [
+     0.22,
+     {
+      "serathArm": 0.75,
+      "sealed": 0
+     }
+    ],
+    [
+     0.25,
+     {
+      "sealed": 1
+     }
+    ],
+    [
+     0.5,
+     {
+      "serathArm": 0.75
+     }
+    ],
+    [
+     0.64,
+     {
+      "serathArm": 0.9
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -4.5,
+     -81.26
+    ],
+    "aideHold": 1,
+    "warrant": [
+     -5.146,
+     1.13,
+     -81.26,
+     0,
+     0
+    ],
+    "serathArm": 0.75,
+    "sealed": 1
+   },
+   "cam": {
+    "pos": [
+     -5.9,
+     1.5,
+     -81.95
+    ],
+    "target": [
+     -5.15,
+     1.15,
+     -81.2
+    ],
+    "f": 85
+   },
+   "camText": "The seal · 85 mm · close on the hands only, no face in frame · locked off",
+   "line": "Her gloved hand comes down; the ring goes into the soft wax at 0.8 s and lifts away clean at 1.8 s. The mark is left in the wax on the page: an anchor in a ring of stars. Hold.",
+   "note": "The hand thread, gloved: it seals. No eyes in frame, so nothing can read (lesson 13). The wax stays on the page (lesson 14). The last second is a tail for the edit.",
+   "lines": []
+  }
+ ]
+}

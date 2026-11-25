@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
   const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   page.on('pageerror', e => console.error('page error:', e.message));
-  await page.goto(`http://127.0.0.1:${server.address().port}/board.html`);
+  await page.goto(`http://127.0.0.1:${server.address().port}/board.html${process.env.CLEAN ? '?clean=1' : ''}`);
   await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 });
 
   const frames = [];

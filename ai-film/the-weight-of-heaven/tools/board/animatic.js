@@ -12,6 +12,7 @@ const { chromium } = require('playwright');
 const [, , shotsFile, outFile, leadIn, leadSecs] = process.argv;
 const spec = JSON.parse(fs.readFileSync(shotsFile, 'utf8'));
 const FPS = 24, root = __dirname;
+const CLEAN = !!process.env.CLEAN;   // a block-out export: no labels, no matte, principals colour-coded (crop to 21:9 afterwards)
 const frameDir = fs.mkdtempSync(path.join(os.tmpdir(), 'animatic-'));
 const server = http.createServer((req, res) => {
   const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
@@ -26,7 +27,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
   const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   page.on('pageerror', e => console.error('page error:', e.message));
-  await page.goto(`http://127.0.0.1:${server.address().port}/board.html`);
+  await page.goto(`http://127.0.0.1:${server.address().port}/board.html${CLEAN || process.env.COLOR ? '?clean=1' : ''}`);
   await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 });
   let n = 0;
   let t0 = 0;
@@ -35,7 +36,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
     const frames = Math.round(dur(s) * FPS);
     for (let i = 0; i < frames; i++) {
       const t = i / FPS, u = frames > 1 ? i / (frames - 1) : 0;
-      const jpg = await page.evaluate(async ({ s, t, u, title }) => {
+      const jpg = await page.evaluate(async ({ s, t, u, title, clean }) => {
         const ease = x => x * x * (3 - 2 * x);
         const lerp = (a, b, k) => a.map((v, j) => v + (b[j] - v) * k);
         if (s.black) {
@@ -57,6 +58,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
           return c.toDataURL('image/jpeg', 0.92);
         }
         let st = JSON.parse(JSON.stringify(s.state || {}));
+        if (s.clock) st[s.clock] = t;           // a state key that simply counts seconds into the shot
         if (s.stateTo) {
           const k2 = ease(Math.min(1, Math.max(0, (u - (s.stateStart ?? 0)) / ((s.stateEnd ?? 1) - (s.stateStart ?? 0)))));
           for (const [key, v] of Object.entries(s.stateTo)) {
@@ -88,6 +90,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
         window.setState(st); window.setTime(s.t0 + t); const im = await load(window.renderShot(cam));
         const c = document.createElement('canvas'); c.width = 1280; c.height = 720;
         const g = c.getContext('2d'); g.drawImage(im, 0, 0);
+        if (clean) return c.toDataURL('image/jpeg', 0.95);
         const band = 1280 / 2.35, bar = (720 - band) / 2;
         g.fillStyle = '#000'; g.fillRect(0, 0, 1280, bar); g.fillRect(0, 720 - bar, 1280, bar);   // the 2.35:1 matte, as the film will be
         g.fillStyle = 'rgba(245,197,66,0.9)'; g.font = 'bold 18px sans-serif';
@@ -99,7 +102,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
           g.fillStyle = '#fff'; g.fillText(line.text, 640, 720 - bar + 46);
         }
         return c.toDataURL('image/jpeg', 0.92);
-      }, { s, t, u, title: spec.title });
+      }, { s, t, u, title: spec.title, clean: CLEAN });
       fs.writeFileSync(path.join(frameDir, `f${String(n++).padStart(5, '0')}.jpg`), Buffer.from(jpg.split(',')[1], 'base64'));
     }
     console.log(`shot ${s.n}: ${frames} frames`);

@@ -1,0 +1,32 @@
+@Video 1 is a coarse blockout reference. It provides only the subject blocking, the motion paths, the timing of each action, the camera positions, the camera movement and the two cuts. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set.
+The green figure in @Video 1 corresponds to the aide.
+The white card with the red dot in his raised hand corresponds to the sealed lifting warrant.
+The large dark bell shape in @Video 1 corresponds to the marriage bell.
+The four dark lines running up from the bell correspond to the four iron chains of the fleet barge. The pale mass above the tower corresponds to the barge.
+The long dark block on a pale arm beside the bell corresponds to the bell's hammer.
+The two purple figures on the small platform correspond to two bell-ringers. The two thin lines from their hands to the dark block correspond to their ropes.
+The small grey dots falling from the beam correspond to stone dust.
+The small gold ring with a dark centre in the last shot corresponds to the gold cup of wine, seen from directly above.
+
+[Characters]
+The aide corresponds to @Image 1. Use only his face and short white officer's coat with white gloves.
+The two bell-ringers are men in plain white working coats and white gloves. They are the same height as the aide.
+[Props]
+The sealed lifting warrant corresponds to @Image 2: one sheet of heavy paper with a red wax seal at its foot.
+The marriage bell corresponds to @Image 3. Use only its form, dark bronze and iron strap. It is six metres tall.
+The fleet barge corresponds to @Image 4. Use only its white hull, lifting frame and four iron chains.
+The hammer has no reference image. It is a striking hammer: one long block of dark riveted iron, its striking face wrapped in pale leather, hung on a long arm of white timber. It is exactly as large against the bell and the ringers as the block in @Video 1: its head is longer than a man is tall and half the height of the bell.
+The gold cup corresponds to @Image 5. It holds dark red wine.
+[Scene]
+The Cathedral of the Ascension references @Image 6. Use only the space, architecture, white marble, the open tower with one stone beam across it, and the soft cloud light.
+
+Generate a wordless film scene in three consecutive shots, cut exactly where @Video 1 cuts.
+Shot 1 (0-5.7 seconds): From behind the aide. He lifts the sealed warrant toward the tower, its red seal visible. The camera tilts straight up from the warrant to the bell, which hangs just under the stone beam in the four taut chains of the barge, and holds there. Then the barge lets go, like a ship's crane setting a load down on a quay: the four chains go slack and fall in long, slow loops; the bell drops a hand's breadth until the stone beam takes its weight; dust shakes out of the beam and drifts down slowly; the barge, lightened, rises a little. End state: the bell hangs still from the beam; the chains hang slack.
+Shot 2 (5.7-11.4 seconds): Side on, level with the bell: the whole bell, the whole hammer and the two ringers on their stone platform are in the frame. The ringers lean back on their ropes and haul the hammer away from the bell. They let go. The hammer swings in and its leather face strikes the side of the bell. The bell shudders and barely sways; it is immensely heavy. End state: the hammer at rest beside the bell; the bell settling; the ringers standing upright.
+Shot 3 (11.4-15.7 seconds): Straight down onto the white marble rail of a gallery: the gold cup of dark red wine stands on it. Far below, out of focus, guests in white applaud with gloved hands. The surface of the wine is perfectly flat and still, like a mirror. End state: unchanged; nothing in the cup has moved.
+
+Keep the blocking, the motion paths, the timing of the release, the haul and the strike, the camera positions, the tilt up, and the two cuts from @Video 1. The camera is locked off after the tilt and in the last two shots.
+
+The final video is photoreal live action, clean and sharp, shot on large-format digital (ARRI Alexa 65) with spherical lenses and deep focus. White marble in cloud, lit softly and evenly from every side, with no hard shadows; the whites keep their detail. Cool and muted: white, pale grey, the bell's dark bronze and the hammer's iron, and three small accents alone: the red of the seal, the gold of the cup, the dark red of the wine. White petals hang in the air, falling very slowly. Everything here falls slowly, as if through water. Composed for a 2.35:1 frame.
+
+Audio includes only these sounds: <heavy iron chains running slack>, <stone dust pattering down>, <two ropes creaking under strain>, <one deep bronze bell stroke at the instant the hammer lands, its note hanging on to the end>, <soft gloved applause, almost silent, in the last shot>.

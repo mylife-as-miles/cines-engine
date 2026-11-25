@@ -11,6 +11,7 @@
 import * as THREE from 'three';
 
 const W = 1280, H = 720;
+const CLEAN = new URLSearchParams(location.search).has('clean');   // block-out export: principals colour-coded, to be mapped in the prompt
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setSize(W, H);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -52,7 +53,8 @@ for (const sx of [-1, 1]) {
 // ---- the end wall around the open tower, and the open tower: four piers, an open top, one stone beam
 for (const sx of [-1, 1]) box(9, 60, 2, marbleShade, 13 * sx, 30, -86);           // the wall either side of the tower
 box(18, 0.4, 18, marble, 0, 0.2, -95);                                              // floor of the tower
-for (const [x, z] of [[-8, -87], [8, -87], [-8, -103], [8, -103]]) box(2.4, 52, 2.4, marble, x, 26, z);
+const backPiers = [];
+for (const [x, z] of [[-8, -87], [8, -87], [-8, -103], [8, -103]]) { const b = box(2.4, 52, 2.4, marble, x, 26, z); if (z < -100) backPiers.push(b); }
 box(18.4, 1.6, 1.6, marble, 0, 34, -95);                                            // the beam the bell hangs from
 box(18.4, 1.2, 2.4, marble, 0, 51.4, -87); box(18.4, 1.2, 2.4, marble, 0, 51.4, -103); // open top: ring beams only
 box(10, 0.3, 4, marble, 0, 0.15, -89);                                              // the low step where the rite is held
@@ -77,13 +79,13 @@ for (const bx of [-0.9, 0.9]) box(0.18, 1.36, 1.36, mat(0x1c1c1e), bx, -5.0, 0, 
 box(0.08, 1.2, 1.2, mat(0xc9b48a), -1.44, -5.0, 0, hammer);                            // leather striking pad, facing the bell
 // the ropes that draw it back: from the head to a block on the right-hand pier
 const ropeMat = mat(0xcfc6b2, { roughness: 1 });
-// two ropes from the back of the head, through blocks on the two right-hand piers, so it is hauled up and back
-const ropes = [[-88.4, 0.5], [-101.6, -0.5]].map(([z, hz]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1, 8), ropeMat); scene.add(m); box(0.5, 0.5, 0.5, mat(0x2a2a2c), 7.1, 37, z); return { m, z, hz }; });
+// two ropes from the back of the head to the hands of two bell-ringers on a platform beside the tower (set below)
+const ropes = [0.35, -0.35].map(hz => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1, 8), ropeMat); scene.add(m); return { m, hz, hand: new THREE.Vector3() }; });
 function setRope() {
   hammer.updateMatrixWorld(true);
   for (const r of ropes) {
-    const a = new THREE.Vector3(1.2, -4.6, r.hz).applyMatrix4(hammer.matrixWorld), b = new THREE.Vector3(7.1, 37, r.z);
-    r.m.position.copy(a).lerp(b, 0.5); r.m.scale.set(1, a.distanceTo(b), 1);
+    const a = new THREE.Vector3(1.3, -4.7, r.hz).applyMatrix4(hammer.matrixWorld), b = r.hand;
+    r.m.position.copy(a).lerp(b, 0.5); r.m.scale.set(1, Math.max(0.01, a.distanceTo(b)), 1);
     r.m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
   }
 }
@@ -96,12 +98,13 @@ box(10, 18, 10, mat(0xece8df), 0, 11.5, 0, barge);                              
 cyl(0, 2, 10, mat(0xe9e6de), 0, 25.5, 0, barge, 4);                                  // its small spire
 const chainMat = mat(0x232426, { roughness: 0.6, metalness: 0.5 });
 let chains = [];
+let bargeLift = 0;
 function buildChains(slack) {
   for (const c of chains) scene.remove(c);
   chains = [];
   const top = bell.position.y + 6.4;
   for (const [x, z] of [[-6, -101], [6, -101], [-6, -89], [6, -89]]) {
-    const a = new THREE.Vector3(x, 70, z), b = new THREE.Vector3(x * 0.12, top, -95 + (z + 95) * 0.12);
+    const a = new THREE.Vector3(x, 70 + bargeLift, z), b = new THREE.Vector3(x * 0.12, top, -95 + (z + 95) * 0.12);
     const mid = a.clone().lerp(b, 0.5); mid.x += x * 0.9 * slack; mid.z += (z + 95) * 0.9 * slack; mid.y -= 14 * slack;
     const curve = new THREE.CatmullRomCurve3([a, a.clone().lerp(mid, 0.5).add(new THREE.Vector3(0, -3 * slack, 0)), mid, mid.clone().lerp(b, 0.5), b]);
     const m = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.32, 8, false), chainMat); scene.add(m); chains.push(m);
@@ -142,25 +145,33 @@ const place = (f, x, z, faceTower = true, y = 0) => { f.position.set(x, y, z); f
 const hierophant = place(figure({ height: 1.8, skin: 0x8a6a50, robe: 0xeeeae2, headdress: true }), 0, -90.2, false, 0.3);
 place(figure({ height: 1.65, skin: 0x7a5640, veil: true, kneel: true, gloves: true }), -0.65, -86.6);
 place(figure({ height: 1.8, skin: 0xb08a6a, kneel: true, gloves: true }), 0.65, -86.6);
-// the admirals, front left; Serath among them with the gold collar; the petal girl beside her
-for (const [x, z, sk] of [[-4.6, -78.5, 0x8a6a50], [-5.4, -79.6, 0xb89070], [-6.2, -78.5, 0x6e4e3a], [-7.0, -79.6, 0xc49c7f], [-7.8, -78.5, 0x9a7a62]])
+// the admirals, front left: a rank of four; Serath one step forward of it, centred; Cassiel at her left shoulder
+const C = { serath: CLEAN ? 0x2f6fd0 : 0xe9e6de, girl: CLEAN ? 0xf2c230 : 0xe9e6de, aide: CLEAN ? 0x3aa85a : 0xe9e6de, ringer: CLEAN ? 0x9a5fd0 : 0xe9e6de };
+for (const [x, z, sk] of [[-7.6, -79.0, 0x8a6a50], [-6.5, -79.0, 0xb89070], [-5.4, -79.0, 0x6e4e3a], [-3.7, -79.0, 0xc49c7f], [-6.15, -80.1, 0x9a7a62]])
   place(figure({ height: 1.8, skin: sk, gloves: true }), x, z);
-const serath = place(figure({ height: 1.78, skin: 0x4a3226, hair: 0x2b2b2b, collar: true, gloves: true }), -4.0, -79.8);
-place(figure({ height: 1.15, skin: 0x9a7458, hair: 0x1e1814 }), -3.3, -79.4);
-
+const serath = place(figure({ height: 1.78, skin: 0x4a3226, hair: 0x2b2b2b, collar: true, gloves: true, robe: C.serath }), -5.4, -80.6);
+const girl = place(figure({ height: 1.15, skin: 0x9a7458, hair: 0x1e1814, robe: C.girl }), -4.6, -78.6);
 { const r = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.009, 8, 16), iron); r.position.set(0, -0.66, 0); r.rotation.x = Math.PI / 2; serath.userData.arms.right.add(r); }   // the seal ring, over the glove
-// ---- Q02 additions: the aide (beside Serath, facing her), the basket, the warrant with its red wax, the gold cup on a rail
-const aide = place(figure({ height: 1.76, skin: 0x8a6a50, gloves: true }), -2.9, -79.8, false); aide.rotation.y = -Math.PI / 2;
+// ---- Q02: the aide; the basket; the warrant (the aide's two gloved hands on its edge, red wax, the pressed mark); the cup
+const aide = place(figure({ height: 1.76, skin: 0x8a6a50, gloves: true, robe: C.aide }), -2.2, -78.2, false); aide.rotation.y = -Math.PI / 2;
 const basket = new THREE.Group(); scene.add(basket);
-cyl(0.13, 0.1, 0.1, mat(0xd8c9a2), 0, 0, 0, basket);
-const handle = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.012, 8, 20, Math.PI), mat(0xffffff)); handle.position.y = 0.05; basket.add(handle);
+cyl(0.13, 0.1, 0.1, mat(CLEAN ? 0xe07a1f : 0xd8c9a2), 0, 0, 0, basket);
+const handle = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.012, 8, 20, Math.PI), mat(CLEAN ? 0xe07a1f : 0xffffff)); handle.position.y = 0.05; basket.add(handle);
 for (let i = 0; i < 10; i++) box(0.04, 0.005, 0.03, mat(0xffffff), (i % 5 - 2) * 0.04, 0.055, (i < 5 ? -1 : 1) * 0.03, basket);
 const warrant = new THREE.Group(); scene.add(warrant);
-box(0.24, 0.002, 0.36, mat(0xf3efe4), 0, 0, 0, warrant);
-const seal = cyl(0.025, 0.025, 0.006, mat(0x9e2a22), 0, 0.003, 0.13, warrant);
+box(0.24, 0.004, 0.36, mat(0xf3efe4), 0, 0, 0, warrant);
+const wax = mat(0x9e2a22);
+cyl(0.03, 0.03, 0.006, wax, 0, 0.005, 0.13, warrant); cyl(0.03, 0.03, 0.006, wax, 0, -0.005, 0.13, warrant);   // the wax, seen from either face
+const sealMark = new THREE.Mesh(new THREE.TorusGeometry(0.016, 0.004, 6, 20), mat(0x5a1410)); sealMark.rotation.x = Math.PI / 2; sealMark.position.set(0, 0.009, 0.13); warrant.add(sealMark);
+const aideHands = [0.1, -0.1].map(z => { const h = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 10), mat(C.aide)); h.position.set(0.15, 0, z); warrant.add(h); return h; });
 const cup = new THREE.Group(); cup.position.set(-7.9, 15.42, -60); scene.add(cup);
 cyl(0.045, 0.02, 0.07, gold, 0, 0.13, 0, cup); cyl(0.008, 0.008, 0.08, gold, 0, 0.06, 0, cup); cyl(0.035, 0.035, 0.01, gold, 0, 0.005, 0, cup);
 cyl(0.043, 0.043, 0.003, mat(0x3a0f12, { roughness: 0.05 }), 0, 0.167, 0, cup);   // the wine's surface
+// two bell-ringers on a platform beside the tower: they haul the hammer back on its ropes, and give its size
+box(2.8, 0.3, 2.8, marble, 12.2, 29.85, -95); box(0.7, 29.7, 0.7, marble, 13.2, 14.85, -95);
+const ringers = [[11.7, -94.6], [12.5, -95.4]].map(([x, z]) => { const f = place(figure({ height: 1.8, skin: 0x8a6a50, gloves: true, robe: C.ringer }), x, z, false, 30.0); f.rotation.y = -Math.PI / 2; return f; });
+// dust shaken from the beam when it takes the bell's weight
+const DUST = 90, dust = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 6, 5), mat(0xbdb7aa), DUST); dust.visible = false; scene.add(dust);
 
 // ---- the congregation: ten thousand in white, instanced, both sides of the aisle, facing the tower
 {
@@ -216,24 +227,61 @@ window.setTime = (t = 0) => {
 // hammer: angle in radians (0 rest, +1 drawn back away from the bell, -0.3 striking); hieroArms 0 = down, 1 = raised.
 window.setState = (st = {}) => {
   bell.position.y = BELL_TOP - 6.0 + 0.8 * (st.bellSlung ?? 0);
+  hammer.rotation.z = st.hammer ?? 0;
+  // the ringers lean back as they haul (haul 0..1); their hands hold the ropes; released, the ropes run slack to the head
+  const haul = st.haul ?? 0;
+  ringers.forEach((f, i) => { f.rotation.set(0, -Math.PI / 2, 0); f.rotateX(-0.28 * haul); for (const a of Object.values(f.userData.arms)) a.rotation.set(-1.25, 0, 0);
+    ropes[i].hand.set(f.position.x - 0.55 + 0.25 * haul, 31.25, f.position.z); });
+  setRope();
+  for (const b of backPiers) b.visible = !st.hidePiers;
+  bargeLift = 4 * (st.bargeLift ?? 0); barge.position.y = 74 + bargeLift;
   buildChains(st.chainSlack ?? 0);
-  hammer.rotation.z = st.hammer ?? 0; setRope();
+  dust.visible = (st.dust ?? 0) > 0.001;
+  if (dust.visible) { const m4 = new THREE.Matrix4(), d = st.dust;
+    for (let i = 0; i < DUST; i++) { const x = ((i * 53) % 170) / 10 - 8.5, z = -95 + (((i * 31) % 16) - 8) / 10, lag = ((i * 17) % 10) / 25;
+      m4.makeTranslation(x, 33.1 - 9 * Math.max(0, d - lag) * (0.6 + ((i * 7) % 5) / 10), z); dust.setMatrixAt(i, m4); }
+    dust.instanceMatrix.needsUpdate = true; }
   shudder = st.shudder ?? 0;
-  // basketT: 0 in the girl's hands; drifts up and toward Serath; 0.6 caught in her right hand (serathArm follows); 1 back with the girl
-  if (st.basketT != null) {
-    const K = [[0, [-3.3, 0.6, -79.62]], [0.2, [-3.25, 0.95, -79.85]], [0.45, [-3.55, 1.25, -80.25]], [0.6, [-3.75, 1.16, -80.36]], [0.72, [-3.75, 1.16, -80.36]], [1, [-3.3, 0.6, -79.62]]];
-    const u = Math.min(1, Math.max(0, st.basketT)); let i = 0; while (i < K.length - 2 && u > K[i + 1][0]) i++;
-    const k = (u - K[i][0]) / (K[i + 1][0] - K[i][0]); basket.position.set(...K[i][1].map((v, j) => v + (K[i + 1][1][j] - v) * k));
-    basket.rotation.z = u > 0.05 && u < 0.6 ? 0.5 * Math.sin((u - 0.05) / 0.55 * Math.PI) : 0;
-    st.serathArm = u < 0.42 ? 0 : u < 0.6 ? 0.9 * (u - 0.42) / 0.18 : u < 0.72 ? 0.9 : u < 1 ? 0.9 * (1 - (u - 0.72) / 0.28) * 0.6 : 0;
-  } else basket.position.set(...(st.basket ?? [-3.3, 0.6, -79.62]));
+  // tripT: seconds into the basket shot. The girl walks past Serath's right side strewing petals, trips at 1.4 s; the basket
+  // leaves her hands and drifts; Serath's right hand takes it out of the air at 3.2 s, her head never turning; she lowers it
+  // and the girl, turned back to her, takes it in both hands by 5.0 s.
+  const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a))), sm = x => x * x * (3 - 2 * x), mix = (a, b, k) => a + (b - a) * k;
+  girl.rotation.set(0, Math.PI, 0); girl.userData.arms.left.rotation.set(0, 0, 0); girl.userData.arms.right.rotation.set(0, 0, 0);
+  if (st.tripT != null) {
+    const t = st.tripT;
+    const gz = t < 1.4 ? mix(-78.7, -79.75, t / 1.4) : mix(-79.75, -81.5, sm(seg(t, 1.4, 3.0)));   // she stumbles on past Serath, under the drifting basket
+    const gx = mix(-4.6, -5.0, sm(seg(t, 3.0, 3.9)));
+    girl.position.set(gx, 0, gz);
+    const lean = t < 1.4 ? 0 : t < 1.9 ? 0.5 * sm(seg(t, 1.4, 1.9)) : 0.5 * (1 - sm(seg(t, 1.9, 2.9)));
+    girl.rotation.set(-lean, Math.PI * (1 - sm(seg(t, 3.7, 4.3))), 0);                       // stumbles forward, then turns back to face Serath
+    const reach = t < 1.4 ? 0.55 : t < 3.9 ? mix(0.9, 0.2, sm(seg(t, 1.5, 3.0))) : mix(0.2, 0.75, sm(seg(t, 3.9, 4.6)));
+    girl.userData.arms.left.rotation.set(-reach, 0, 0); girl.userData.arms.right.rotation.set(-reach, 0, 0);
+    const held = [gx, 0.6, gz - 0.22], apex = [-4.85, 1.3, -80.55], caught = [-5.146, 1.14, -81.18], low = [-5.1, 0.84, -81.12], back = [-5.0, 0.62, -81.26];
+    const L = (a, b, k) => a.map((v, j) => v + (b[j] - v) * k);
+    const bp = t < 1.4 ? held : t < 2.3 ? L([-4.6, 0.6, -79.97], apex, sm(seg(t, 1.4, 2.3))) : t < 3.2 ? L(apex, caught, sm(seg(t, 2.3, 3.2)))
+      : t < 3.9 ? caught : t < 4.7 ? L(caught, low, sm(seg(t, 3.9, 4.7))) : L(low, back, sm(seg(t, 4.7, 5.1)));
+    if (t >= 2.3 && t < 3.2) bp[1] += 0.06 * Math.sin(seg(t, 2.3, 3.2) * Math.PI);        // a slow float at the top
+    basket.position.set(...bp); basket.rotation.z = t > 1.4 && t < 3.2 ? 0.6 * Math.sin(seg(t, 1.4, 3.2) * Math.PI) : 0;
+    st.serathArm = t < 2.5 ? 0 : t < 3.2 ? 0.9 * sm(seg(t, 2.5, 3.2)) : t < 3.9 ? 0.9 : t < 4.7 ? mix(0.9, 0.5, sm(seg(t, 3.9, 4.7))) : mix(0.5, 0, sm(seg(t, 4.9, 5.5)));
+  } else {
+    if (st.girlPos) girl.position.set(st.girlPos[0], 0, st.girlPos[1]); else girl.position.set(-4.6, 0, -78.7);
+    girl.userData.arms.left.rotation.set(-0.55, 0, 0); girl.userData.arms.right.rotation.set(-0.55, 0, 0);
+    basket.rotation.z = 0; basket.position.set(...(st.basket || [girl.position.x, 0.6, girl.position.z - 0.22]));
+  }
   basket.visible = st.basket !== 0;
   warrant.visible = !!st.warrant;
-  if (st.warrant) { warrant.position.set(st.warrant[0], st.warrant[1], st.warrant[2]); warrant.rotation.set(st.warrant[3] ?? 0, st.warrant[4] ?? 0, 0); }
+  if (st.warrant) { warrant.position.set(st.warrant[0], st.warrant[1] + (st.warrantRise ?? 0), st.warrant[2]); warrant.rotation.set(st.warrant[3] ?? 0, st.warrant[4] ?? 0, 0); }
+  sealMark.visible = (st.sealed ?? 0) > 0.5; for (const h of aideHands) h.visible = st.aideHands !== 0;
   const sa = st.serathArm ?? 0; serath.userData.arms.right.rotation.set(-1.3 * sa, 0, 0);
-  const aa = st.aideArm ?? 0; aide.userData.arms.left.rotation.set(-2.6 * aa, 0, 0);
-  if (st.aidePos) aide.position.set(st.aidePos[0], 0, st.aidePos[1]); else aide.position.set(-2.4, 0, -78.7);
+  const aa = st.aideArm ?? 0, ah = st.aideHold ?? 0; aide.userData.arms.left.rotation.set(-2.6 * aa - 0.75 * ah, 0, 0); aide.userData.arms.right.rotation.set(-0.75 * ah, 0, 0);
+  if (st.aidePos) aide.position.set(st.aidePos[0], 0, st.aidePos[1]); else aide.position.set(-2.2, 0, -78.2);
   aide.rotation.y = st.aideFace ?? -Math.PI / 2;
+  aide.visible = !st.aideHidden;
+  if (st.warrantInHand) {                       // the sealed warrant in the aide's raised left hand
+    aide.updateMatrixWorld(true);
+    warrant.visible = true; warrant.position.copy(new THREE.Vector3(0, -0.72, 0.02).applyMatrix4(aide.userData.arms.left.matrixWorld));
+    warrant.rotation.set(-1.0, 0, 0);
+  }
   const a = st.hieroArms ?? 0, arms = hierophant.userData.arms;
   arms.left.rotation.set(-2.4 * a, 0, 0.45 * a); arms.right.rotation.set(-2.4 * a, 0, -0.45 * a);
 };

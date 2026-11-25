@@ -1,0 +1,30 @@
+@Video 1 is a coarse blockout reference. It provides only the subject blocking, the motion paths, the timing of each action, the camera positions, the camera movement and the three cuts. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set.
+The blue figure in @Video 1 corresponds to Grand Admiral Serath.
+The small yellow figure in @Video 1 corresponds to the petal girl.
+The orange basket shape in @Video 1 corresponds to the petal basket.
+The green figure in @Video 1 corresponds to the aide.
+The white card with the red disc in @Video 1 corresponds to the lifting warrant and its red wax.
+The pale standing figures beside and behind the blue figure correspond to the admirals. The rows of pale figures beyond them correspond to the guests.
+
+[Characters]
+Serath corresponds to @Image 1. Use only her face, cropped grey-black hair, long white coat, white gloves and rigid gold collar. She is a woman of fifty-five with deep brown skin, upright and composed.
+The petal girl corresponds to @Image 2. Use only her face, dark curls with a white ribbon, and white dress. She is seven.
+The aide corresponds to @Image 3. Use only his face and short white officer's coat with white gloves.
+The admirals correspond to @Image 4. Use only their faces and long white coats.
+Do not interchange the characters' appearances, clothing, positions or actions. There is one Serath, one girl and one aide.
+[Props]
+The petal basket corresponds to @Image 5 and belongs to the petal girl. It is full of white petals.
+The lifting warrant corresponds to @Image 6: one sheet of heavy paper with a pool of red wax at its foot. The aide holds it.
+The seal ring and the seal it makes correspond to @Image 7: blackened silver, worn over the white glove on Serath's right hand; its mark is an anchor in a ring of seven stars.
+[Scene]
+The Cathedral of the Ascension references @Image 8. Use only the space, architecture, white marble and soft cloud light. Ten thousand guests in white fill the nave.
+
+Generate a wordless film scene in four consecutive shots, cut exactly where @Video 1 cuts.
+Shot 1 (0-2.9 seconds): Serath stands one step ahead of a rank of admirals, facing the camera, perfectly still, her eyes open and level on the tower far beyond the camera. The guests in white stand behind. End state: nobody has moved.
+Shot 2 (2.9-8.6 seconds): Seen from the side. The petal girl walks past Serath's right side, strewing petals, and trips. The basket leaves her hands and drifts up through the air, slowly, as if under water, petals floating out of it. Serath's right gloved hand rises and takes the basket out of the air by its handle. Her head does not turn and her eyes stay on the tower. She lowers the basket, and the girl, turned back to her, takes it in both hands. End state: the girl holds the basket in both hands; Serath's arm is back at her side; she still faces the tower.
+Shot 3 (8.6-11.4 seconds): From low in front of her. The aide brings the warrant up on both gloved hands into the lower part of the frame; the red wax on it is soft and unmarked. Serath's right hand moves out over the wax. Her chin stays level and her eyes stay open on the tower, far above the page. End state: her hand is poised over the wax; her eyes are on the tower.
+Shot 4 (11.4-15 seconds): Close on the hands only; no face is in the frame. Her gloved hand presses the ring down into the soft red wax and lifts away clean. The wax stays on the page and now carries her seal, the anchor in a ring of seven stars. End state: the sealed red wax on the page, her hand above it, held still.
+
+Keep the blocking, the motion paths, the timing of the trip, the catch and the press, the camera positions, the slow push in, the sideways track and the three cuts from @Video 1.
+
+The final video is photoreal live action, clean and sharp, shot on large-format digital (ARRI Alexa 65) with spherical lenses. White marble in cloud, lit softly and evenly from every side, with no hard shadows; the whites keep their detail and faces are never the brightest thing. Cool and muted: white, pale grey, and two small accents alone, the gold of her collar and the red of the wax. White petals hang in the air, falling very slowly. Composed for a 2.35:1 frame: keep faces and hands inside the middle band.

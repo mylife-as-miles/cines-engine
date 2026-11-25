@@ -1,0 +1,259 @@
+{
+ "title": "Q02B · THE BELL",
+ "bpm": 84,
+ "shots": [
+  {
+   "n": 5,
+   "time": "0.00–5.71 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -1.9,
+     -85.2
+    ],
+    "aideFace": 3.14159,
+    "warrantInHand": 1,
+    "aideHands": 0,
+    "sealed": 1,
+    "aideArm": 0.25
+   },
+   "keys": [
+    [
+     0.0,
+     {
+      "aideArm": 0.25
+     }
+    ],
+    [
+     0.16,
+     {
+      "aideArm": 0.9
+     }
+    ],
+    [
+     0.44,
+     {
+      "chainSlack": 0
+     }
+    ],
+    [
+     0.455,
+     {
+      "bellSlung": 1
+     }
+    ],
+    [
+     0.47,
+     {
+      "bargeLift": 0
+     }
+    ],
+    [
+     0.58,
+     {
+      "bellSlung": 0,
+      "dust": 0
+     }
+    ],
+    [
+     0.75,
+     {
+      "chainSlack": 1
+     }
+    ],
+    [
+     0.96,
+     {
+      "bargeLift": 1
+     }
+    ],
+    [
+     1.0,
+     {
+      "dust": 1
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "aidePos": [
+     -1.9,
+     -85.2
+    ],
+    "aideFace": 3.14159,
+    "warrantInHand": 1,
+    "aideHands": 0,
+    "sealed": 1,
+    "aideArm": 0.9
+   },
+   "cam": {
+    "pos": [
+     -0.6,
+     1.55,
+     -83.9
+    ],
+    "target": [
+     -2.1,
+     2.0,
+     -85.65
+    ],
+    "f": 20
+   },
+   "camText": "The release · 20 mm · from behind the aide's shoulder: his raised hand and the sealed warrant, then a tilt straight up the tower · held on the bell",
+   "line": "The aide lifts the sealed warrant toward the tower (0–0.9 s). The camera tilts up from the red seal to the bell in its chains under the barge (0.9–2.3 s) and holds. At 2.5 s the barge obeys: its four chains go slack and fall in long loops; the bell drops a hand's breadth and the beam takes it; dust shakes out of the stone. The barge, lightened, rises.",
+   "note": "Cameron: the cause, then the effect, joined by one camera move: the red seal, then the weight. A crane ship lifts when it sets its load down. Villeneuve: the tilt that reveals size, then a held, symmetrical frame. Two bars.",
+   "lines": [],
+   "move": {
+    "start": 0.16,
+    "end": 0.4,
+    "to": {
+     "pos": [
+      -0.6,
+      1.55,
+      -83.9
+     ],
+     "target": [
+      0,
+      33.0,
+      -95
+     ]
+    }
+   }
+  },
+  {
+   "n": 6,
+   "time": "5.71–11.43 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "bargeLift": 1,
+    "hidePiers": 1,
+    "haul": 0
+   },
+   "keys": [
+    [
+     0.05,
+     {
+      "hammer": 0,
+      "haul": 0
+     }
+    ],
+    [
+     0.42,
+     {
+      "hammer": 0.85,
+      "haul": 1
+     }
+    ],
+    [
+     0.49,
+     {
+      "hammer": 0.85,
+      "haul": 1
+     }
+    ],
+    [
+     0.52,
+     {
+      "haul": 0
+     }
+    ],
+    [
+     0.6,
+     {
+      "shudder": 0
+     }
+    ],
+    [
+     0.61,
+     {
+      "hammer": -0.06,
+      "shudder": 1
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0.85,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "bargeLift": 1,
+    "hidePiers": 1,
+    "haul": 1
+   },
+   "cam": {
+    "pos": [
+     4.5,
+     30.6,
+     -127.0
+    ],
+    "target": [
+     4.5,
+     30.4,
+     -95.0
+    ],
+    "f": 35
+   },
+   "camText": "The hammer · 35 mm · side on, level with the bell: the whole bell, the whole hammer, two ringers for scale · locked off",
+   "line": "Two bell-ringers lean back on their ropes and haul the hammer away from the bell: its iron head is longer than they are tall. They let go at 2.8 s; it swings in and strikes the bell's side at 3.5 s. The bell shudders. Hold.",
+   "note": "Scale from people in the frame, not from a prop sheet (lesson 12): the hammer reference is left out. Cameron: a real striker, hauled by hand. The stroke comes mid-shot and is held (lesson 3).",
+   "lines": []
+  },
+  {
+   "n": 7,
+   "time": "11.43–15.71 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "girlPos": [
+     -3.3,
+     -83.6
+    ],
+    "bargeLift": 1
+   },
+   "cam": {
+    "pos": [
+     -7.9,
+     17.1,
+     -59.97
+    ],
+    "target": [
+     -7.9,
+     15.5,
+     -60
+    ],
+    "f": 85
+   },
+   "camText": "The still cup · 85 mm · straight down onto the gallery rail · locked off",
+   "line": "The bell's note is still in the air. A gold cup of wine on the rail; far below, out of focus, ten thousand gloved hands applaud, almost soundless. The wine's surface is perfectly still.",
+   "note": "The water thread's first insert, top-down, as the bowl below will be. The last bar and a half includes a tail for the edit.",
+   "lines": []
+  }
+ ]
+}

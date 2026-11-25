@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# (Copied from My Name Is Oren, branch ccr-a1ca9fd6-0m96vq; unchanged.)
+# (Copied from My Name Is Oren, branch ccr-a1ca9fd6-0m96vq; one line added to the cost estimate for video references.)
 """Run one generation on fal.ai through its queue, then save the take and a job record.
 
     python3 tools/fal_run.py --name Q03_t2 --prompt prompts/sent/Q03_v2.txt \
@@ -126,6 +126,8 @@ def main():
             return subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', entry,
                                    '-of', 'csv=p=0', os.path.join(HERE, p)], capture_output=True, text=True).stdout.strip()
         w, h = (int(x) for x in probe(o.video[0], 'stream=width,height').split(','))
+        # (The Weight of Heaven) a reference, unlike an extension, is billed on the OUTPUT size: 480p at 21:9 is 992x432
+        if params.get('task') == 'reference' and res == '480p' and params.get('aspect_ratio') == '21:9': w, h = 992, 432
         inp = min(30.2, sum(float(probe(v, 'format=duration') or 0) for v in o.video))
         rate = {'480p': 0.0128, '720p': 0.0128, '1080p': 0.0140, '4k': 0.0058}.get(res, 0.0128) / 1000
         est = round(w * h * (inp + secs) * 24 / 1024 * rate, 2)
