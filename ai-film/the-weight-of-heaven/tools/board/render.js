@@ -9,7 +9,7 @@ const [, , shotsFile, outDir] = process.argv;
 const spec = JSON.parse(fs.readFileSync(shotsFile, 'utf8'));
 fs.mkdirSync(outDir, { recursive: true });
 const root = __dirname;
-const types = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json' };
+const types = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png' };
 const server = http.createServer((req, res) => {
   const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
   if (!p.startsWith(root) || !fs.existsSync(p)) { res.writeHead(404); return res.end(); }
@@ -29,7 +29,7 @@ const server = http.createServer((req, res) => {
   for (const [i, s] of spec.shots.filter(x => !x.black).entries()) {
     const url = await page.evaluate(async ({ s, title }) => {
       const load = src => new Promise(r => { const im = new Image(); im.onload = () => r(im); im.src = src; });
-      const main = await load((window.setState(s.state), window.setTime(s.boardTime ?? 4), window.renderShot(s.cam)));
+      const main = s.image ? await (async () => { const im = await load('/' + s.image); const c = document.createElement('canvas'); c.width = 1280; c.height = 720; const g = c.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, 1280, 720); const h = 1280 * im.height / im.width; g.drawImage(im, 0, 360 - h / 2, 1280, h); return load(c.toDataURL('image/png')); })() : await load((window.setState(s.boardState ?? s.state), window.setTime(s.boardTime ?? 4), window.renderShot(s.cam)));
       const inset = s.inset ? await load(window.renderShot(s.inset)) : null;
       const c = document.createElement('canvas'); c.width = 1280; c.height = 720 + 96;
       const g = c.getContext('2d');

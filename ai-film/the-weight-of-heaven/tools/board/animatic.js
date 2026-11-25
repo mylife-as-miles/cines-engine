@@ -1,7 +1,7 @@
 // Animatic from a board spec: node animatic.js <shots.json> <out.mp4> [lead-in.mp4 lead-in-seconds]
 // (Copied from My Name Is Oren. Added for The Weight of Heaven: "stateTo" moves the set within a shot (numbers in the
 // state are eased from "state" to "stateTo" between stateStart and stateEnd, as fractions of the shot); "black": true
-// is a card over black; spec.audio (a WAV path) replaces the silent track, e.g. a click on the song's bars.)
+// is a card over black; "keys" are keyframes [[u, {key: number}]] for moves that go and come back; spec.audio (a WAV path) replaces the silent track, e.g. a click on the song's bars.)
 // Each shot is held for its length at 24 fps; "move" animates the camera (e.g. a dolly-in to "move.to"), "handheld"
 // adds a small drift (metres); "lines" are subtitles [{t0, t1, text}] in seconds from the shot's start.
 // An optional lead-in clip (e.g. the end of the previous sequence) plays first, so the join can be judged.
@@ -16,7 +16,7 @@ const frameDir = fs.mkdtempSync(path.join(os.tmpdir(), 'animatic-'));
 const server = http.createServer((req, res) => {
   const p = path.join(root, decodeURIComponent(req.url.split('?')[0]));
   if (!p.startsWith(root) || !fs.existsSync(p)) { res.writeHead(404); return res.end(); }
-  res.writeHead(200, { 'Content-Type': p.endsWith('.html') ? 'text/html' : 'text/javascript' });
+  res.writeHead(200, { 'Content-Type': p.endsWith('.html') ? 'text/html' : p.endsWith('.jpg') ? 'image/jpeg' : 'text/javascript' });
   fs.createReadStream(p).pipe(res);
 });
 const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] - +m[1]; };
@@ -45,10 +45,34 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
           if (s.card) { g.font = 'italic 28px serif'; g.fillStyle = '#bbb'; g.textAlign = 'center'; g.fillText(s.card, 640, 372); }
           return c.toDataURL('image/jpeg', 0.92);
         }
+        if (s.image) {                          // a still frame from a take, with a slow push (zoom) across the shot
+          const im = await new Promise(r => { const x = new Image(); x.onload = () => r(x); x.src = '/' + s.image; });
+          const c = document.createElement('canvas'); c.width = 1280; c.height = 720;
+          const g = c.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, 1280, 720);
+          const band = 1280 / 2.35, bar = (720 - band) / 2, z = 1 + (s.imageZoom ?? 0.04) * u;
+          const w = 1280 * z, h = w * im.height / im.width;
+          g.drawImage(im, (1280 - w) / 2, 360 - h / 2, w, h);
+          g.fillStyle = '#000'; g.fillRect(0, 0, 1280, bar); g.fillRect(0, 720 - bar, 1280, bar);
+          g.fillStyle = 'rgba(245,197,66,0.9)'; g.font = 'bold 18px sans-serif'; g.fillText(`${title} · SHOT ${s.n} · ${s.camText}`, 14, 26);
+          return c.toDataURL('image/jpeg', 0.92);
+        }
         let st = JSON.parse(JSON.stringify(s.state || {}));
         if (s.stateTo) {
           const k2 = ease(Math.min(1, Math.max(0, (u - (s.stateStart ?? 0)) / ((s.stateEnd ?? 1) - (s.stateStart ?? 0)))));
-          for (const [key, v] of Object.entries(s.stateTo)) if (typeof v === 'number') st[key] = (st[key] ?? 0) + (v - (st[key] ?? 0)) * k2;
+          for (const [key, v] of Object.entries(s.stateTo)) {
+            if (typeof v === 'number') st[key] = (st[key] ?? 0) + (v - (st[key] ?? 0)) * k2;
+            else if (Array.isArray(v) && Array.isArray(st[key])) st[key] = lerp(st[key], v, k2);
+          }
+        }
+        if (s.keys) {                           // keyframes [[u, {key: number}], ...]: eased piecewise between them
+          const names = new Set(s.keys.flatMap(([, o]) => Object.keys(o)));
+          for (const key of names) {
+            const ks = s.keys.filter(([, o]) => key in o).map(([ku, o]) => [ku, o[key]]);
+            if (u <= ks[0][0]) { st[key] = ks[0][1]; continue; }
+            let j = 0; while (j < ks.length - 1 && u > ks[j + 1][0]) j++;
+            if (j >= ks.length - 1) { st[key] = ks[ks.length - 1][1]; continue; }
+            const kk = ease((u - ks[j][0]) / (ks[j + 1][0] - ks[j][0])); st[key] = ks[j][1] + (ks[j + 1][1] - ks[j][1]) * kk;
+          }
         }
         let cam = JSON.parse(JSON.stringify(s.cam));
         if (s.move && s.move.to) {
@@ -89,7 +113,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
   if (leadIn) {
     const lead = path.join(frameDir, 'lead.mp4');
     execFileSync('ffmpeg', ['-v', 'error', '-y', '-sseof', `-${leadSecs || 3}`, '-i', leadIn, '-vf',
-      'scale=1280:720,setsar=1,fps=24,drawbox=x=0:y=0:w=1280:h=87:color=black:t=fill,drawbox=x=0:y=633:w=1280:h=87:color=black:t=fill',
+      'scale=1280:-2,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=24,drawbox=x=0:y=0:w=1280:h=87:color=black:t=fill,drawbox=x=0:y=633:w=1280:h=87:color=black:t=fill',
       '-af', 'aresample=48000', '-ac', '2', '-c:v', 'libx264', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', lead]);
     execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', lead, '-i', body, '-filter_complex',
       '[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[v][a]', '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-crf', '18',

@@ -1,0 +1,352 @@
+{
+ "title": "Q02 · UNREAD · THE BELL",
+ "audio": "../../out/review/Q02_animatic_audio.wav",
+ "bpm": 84,
+ "shots": [
+  {
+   "n": 1,
+   "time": "0–2.86 s",
+   "image": "frames/Q01_t1_f391_16.29s.jpg",
+   "imageZoom": 0.03,
+   "camText": "Opens exactly on Q01 t1's frame 391 (16.29 s): the gallery, the congregation opposite · the drift continues",
+   "line": "(no words) The congregation still after its answer.",
+   "note": "One bar. The start frame is the take's own; the join is a 2–3-frame dissolve.",
+   "lines": [],
+   "cam": {
+    "pos": [
+     0,
+     0,
+     0
+    ],
+    "target": [
+     0,
+     0,
+     -1
+    ],
+    "f": 28
+   }
+  },
+  {
+   "n": 2,
+   "time": "2.86–5.71 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "cam": {
+    "pos": [
+     -1.0,
+     2.5,
+     -86.0
+    ],
+    "target": [
+     -4.2,
+     1.5,
+     -79.6
+    ],
+    "f": 40
+   },
+   "move": {
+    "to": {
+     "pos": [
+      -1.9,
+      2.5,
+      -86.3
+     ],
+     "target": [
+      -4.2,
+      1.5,
+      -79.6
+     ]
+    }
+   },
+   "camText": "Serath among the admirals · 40 mm · from the tower side, slightly high, the congregation behind them · the camera glides 1 m left",
+   "line": "Grand Admiral Serath among the admirals, the gold collar at her throat; the petal girl beside her.",
+   "note": "Villeneuve: one figure isolated in white on white. She watches the rite the way she would watch a harbour.",
+   "lines": []
+  },
+  {
+   "n": 3,
+   "time": "5.71–8.57 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "basketT": 0
+   },
+   "cam": {
+    "pos": [
+     -0.6,
+     1.5,
+     -84.8
+    ],
+    "target": [
+     -3.6,
+     1.15,
+     -79.6
+    ],
+    "f": 40
+   },
+   "camText": "The basket · 40 mm · eye height, from the tower side · locked off",
+   "line": "The girl trips; the basket leaves her hands and drifts; Serath takes it out of the air without looking, and gives it back.",
+   "note": "Above, things fall slowly: the basket drifts as if under water. Her eyes stay on the tower.",
+   "lines": [],
+   "keys": [
+    [
+     0.105,
+     {
+      "basketT": 0
+     }
+    ],
+    [
+     0.63,
+     {
+      "basketT": 0.6
+     }
+    ],
+    [
+     0.7,
+     {
+      "basketT": 0.72
+     }
+    ],
+    [
+     0.91,
+     {
+      "basketT": 1
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "basketT": 0.5
+   }
+  },
+  {
+   "n": 4,
+   "time": "8.57–11.43 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "serathArm": 0.85,
+    "warrant": [
+     -3.746,
+     1.13,
+     -80.46,
+     0,
+     0
+    ]
+   },
+   "cam": {
+    "pos": [
+     -3.03,
+     1.54,
+     -81.08
+    ],
+    "target": [
+     -3.75,
+     1.15,
+     -80.34
+    ],
+    "f": 85
+   },
+   "camText": "The hand · 85 mm · close, shallow focus · locked off",
+   "line": "The aide holds out the warrant and red wax; her gloved hand presses the ring into the wax without reading.",
+   "note": "The hand thread, gloved: it seals. The same close shot and size as the bare hand (Q11), the raised and flat hands (Q17), the girl's palms (Q25).",
+   "lines": [],
+   "keys": [
+    [
+     0.1,
+     {
+      "serathArm": 0.85
+     }
+    ],
+    [
+     0.28,
+     {
+      "serathArm": 0.75
+     }
+    ],
+    [
+     0.6,
+     {
+      "serathArm": 0.75
+     }
+    ],
+    [
+     0.7,
+     {
+      "serathArm": 0.86
+     }
+    ]
+   ],
+   "boardState": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "serathArm": 0.75,
+    "warrant": [
+     -3.746,
+     1.13,
+     -80.46,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "n": 5,
+   "time": "11.43–17.14 s",
+   "state": {
+    "bellSlung": 1,
+    "chainSlack": 0,
+    "hammer": 0,
+    "hieroArms": 0.85,
+    "aidePos": [
+     1.4,
+     -84.6
+    ],
+    "aideFace": 3.14159,
+    "aideArm": 0
+   },
+   "stateTo": {
+    "aideArm": 0.9,
+    "bellSlung": 0,
+    "chainSlack": 1
+   },
+   "stateStart": 0.05,
+   "stateEnd": 0.75,
+   "cam": {
+    "pos": [
+     0,
+     1.6,
+     -30
+    ],
+    "target": [
+     0,
+     40,
+     -95
+    ],
+    "f": 20
+   },
+   "camText": "The release · 20 mm · from the nave floor, low · held, locked off",
+   "line": "The aide lifts the sealed warrant toward the tower. Above, the barge lets go: the chains run slack and fall in long loops; the bell settles onto the beam.",
+   "note": "Two bars, a held wide (Villeneuve). Cameron: a ship's crane setting a load on a quay. Release at 1.5 s; by 4 s the chains hang loose and the bell rests on the beam. The guests tiny below.",
+   "lines": []
+  },
+  {
+   "n": 6,
+   "time": "17.14–20 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "stateTo": {
+    "hammer": 1.0
+   },
+   "stateStart": 0.1,
+   "stateEnd": 0.8,
+   "cam": {
+    "pos": [
+     -4.74,
+     30.97,
+     -126.3
+    ],
+    "target": [
+     4.8,
+     30.8,
+     -95.0
+    ],
+    "f": 35
+   },
+   "camText": "The hammer · 35 mm · level with the bell, side on, wide enough for the whole bell and the whole hammer · locked off",
+   "line": "A hammer the size of a door is drawn back on its ropes.",
+   "note": "Its iron head as long as a door, half the bell's height; two ropes haul it up and back. Cameron: a real church striker on ropes.",
+   "lines": [],
+   "boardState": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 1.0,
+    "hieroArms": 0.85
+   }
+  },
+  {
+   "n": 7,
+   "time": "20–22.86 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 1.0,
+    "hieroArms": 0.85
+   },
+   "stateTo": {
+    "hammer": -0.06,
+    "shudder": 1
+   },
+   "stateStart": 0.0,
+   "stateEnd": 0.28,
+   "cam": {
+    "pos": [
+     0,
+     1.7,
+     -56
+    ],
+    "target": [
+     0,
+     28,
+     -95
+    ],
+    "f": 28
+   },
+   "camText": "The strike · 28 mm · from the aisle, looking up at the tower · locked off",
+   "line": "The hammer swings in and strikes the bell's side at 0.8 s; the bell shudders; the camera holds.",
+   "note": "The climax early in its shot, then a hold (lesson 3). In the montage, this cuts to Anvil Vale (Q03).",
+   "lines": [],
+   "boardState": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": -0.06,
+    "hieroArms": 0.85,
+    "shudder": 1
+   }
+  },
+  {
+   "n": 8,
+   "time": "22.86–25.71 s",
+   "state": {
+    "bellSlung": 0,
+    "chainSlack": 1,
+    "hammer": 0,
+    "hieroArms": 0.85
+   },
+   "cam": {
+    "pos": [
+     -7.9,
+     17.1,
+     -59.97
+    ],
+    "target": [
+     -7.9,
+     15.5,
+     -60
+    ],
+    "f": 85
+   },
+   "camText": "The still cup · 85 mm · top-down insert · locked off",
+   "line": "The bell's note is still in the air. A gold cup of wine on a gallery rail; gloved hands applauding, almost soundless, behind. The wine's surface is perfectly still.",
+   "note": "The water thread's first insert: still above. Q04 opens on the same insert, the wine trembling.",
+   "lines": []
+  }
+ ]
+}
