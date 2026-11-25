@@ -377,3 +377,5 @@ Avoid:
 ## Takes
 
 - t1 · `refs/candidates/E11_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP.** Holds: white timber, lancet gunports, cannon on carriages, rope, dusk through the ports, the road far below. Matches the fleet design in the bible.
+- E11_t5a · `refs/candidates/E11_t5a.jpg` (full size `out/refs/E11_t5a.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21360-3c7e-7442-bd93-9aba44f1b594`, prompt edit5 (47 words), images `refs/candidates/E11_t1.jpg` · $0.0525 · 2026-11-25 · verdict: **PICK.** The round-one gun deck reproduced unchanged at full size.
+- E11_t5b · `refs/candidates/E11_t5b.jpg` (full size `out/refs/E11_t5b.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21360-3c7e-7442-bd93-9aba44f1b594`, prompt edit5 (47 words), images `refs/candidates/E11_t1.jpg` · $0.0525 · 2026-11-25 · verdict: Same as t5a. Second choice.

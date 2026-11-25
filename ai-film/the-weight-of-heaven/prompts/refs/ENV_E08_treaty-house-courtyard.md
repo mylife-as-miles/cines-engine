@@ -381,3 +381,5 @@ Avoid:
 ## Takes
 
 - t1 · `refs/candidates/E08_t1.jpg` · author's generation from prompt v1, received 25 Nov at 1024 px wide · **KEEP.** Holds: the buttressed fort, the arched door, the dusty yard, the outer gate, racks of spears, the dark roof overhead. Note: refugees are in it though the prompt asked for an empty yard; usable as it is.
+- E08_t5a · `refs/candidates/E08_t5a.jpg` (full size `out/refs/E08_t5a.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21360-394a-7203-9434-721937dee2c0`, prompt edit5 (47 words), images `refs/candidates/E08_t1.jpg` · $0.0525 · 2026-11-25 · verdict: **PICK.** The round-one courtyard reproduced unchanged at full size.
+- E08_t5b · `refs/candidates/E08_t5b.jpg` (full size `out/refs/E08_t5b.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21360-394a-7203-9434-721937dee2c0`, prompt edit5 (47 words), images `refs/candidates/E08_t1.jpg` · $0.0525 · 2026-11-25 · verdict: Same as t5a. Second choice.
