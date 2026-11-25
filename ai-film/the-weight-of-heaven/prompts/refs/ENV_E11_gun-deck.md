@@ -2,7 +2,15 @@
 
 Scenes: 10.4 · State in this reference: Dusk, ports open, guns run out.
 
-Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, round 5: an edit of take E11_t1 (full-size version of the first-round take, unchanged). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `refs/candidates/E11_t1.jpg`.
+
+```text
+Reproduce Figure 1 exactly, at full resolution: the same composition, camera, objects, people, light and colour, unchanged. Add only real photographic detail and texture where the original is soft. Change nothing else, add nothing, remove nothing.
+
+Do not add: text, glow, lens flare, new objects, new people.
+```
+
+## Prompt v1 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

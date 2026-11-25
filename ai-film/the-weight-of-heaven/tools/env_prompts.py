@@ -1210,11 +1210,35 @@ Change only these two things:
 Do not add: a water-wheel, paddles, water, a mill, carvings or joints in the stone, glow, people, text."""),
 }
 
+# Round 5 (25 November): the hall's lettering, and full-size versions of the two first-round keeps still at 1024 px.
+FULL_SIZE = """Reproduce Figure 1 exactly, at full resolution: the same composition, camera, objects, people, light and colour, unchanged. Add only real photographic detail and texture where the original is soft. Change nothing else, add nothing, remove nothing.
+
+Do not add: text, glow, lens flare, new objects, new people."""
+
+ROUND5 = {
+    'E09': dict(base='E09_t4a', fixes='Latin letters and some English in the scripts; the third script crisp, not worn', text="""Edit Figure 1, the hall of the Treaty House. This is a photoreal film location reference.
+
+Keep exactly: the room, the basalt treaty wall and its layout (two blocks of carved script side by side, then seven round crests and eleven square seals on one line at its foot), the stone walls, the beams, the door, the daylight opening onto the plain, the floor of white papers under stones with their small red wax seals, the camera position, the lens and the light.
+
+Change only the lettering on the treaty wall:
+
+1. The two blocks side by side: replace every character with invented scripts that belong to no real language: the left block small upright angular marks in neat lines, the right block small flowing looped marks in neat lines, both cut to the same size. No Latin, Greek, Cyrillic, runic, Arabic, Hebrew or Asian characters; no letter, number or word that can be read.
+2. The third script: replace the crisp line beneath the blocks with a much older script of large, broad, shallow curves running the whole width of the wall behind and through both blocks, worn almost flat into the stone and barely visible; the two blocks are cut straight across it.
+
+Do not add: readable words, English, Latin letters, numbers, glow, people."""),
+    'E08': dict(base='E08_t1', fixes='full-size version of the first-round take, unchanged', text=FULL_SIZE),
+    'E11': dict(base='E11_t1', fixes='full-size version of the first-round take, unchanged', text=FULL_SIZE),
+}
+
 for _k, _v in ROUND3.items():
     _v.update(round=3, base_path=f"out/refs/{_v['base']}_full.jpg", base_show=f"out/refs/{_v['base']}.png")
 for _k, _v in ROUND4.items():
     _v.update(round=4, base_path=f"refs/candidates/{_v['base']}.jpg", base_show=f"refs/candidates/{_v['base']}.jpg")
-EDITS = {**ROUND3, **ROUND4}   # the latest edit prompt of each location that has one
+for _k, _v in ROUND5.items():
+    _full = _v['base'][-2:] != 't1'
+    _v.update(round=5, base_path=f"out/refs/{_v['base']}_full.jpg" if _full else f"refs/candidates/{_v['base']}.jpg",
+              base_show=f"out/refs/{_v['base']}.png" if _full else f"refs/candidates/{_v['base']}.jpg")
+EDITS = {**ROUND3, **ROUND4, **ROUND5}   # the latest edit prompt of each location that has one
 
 
 def resolve(L):

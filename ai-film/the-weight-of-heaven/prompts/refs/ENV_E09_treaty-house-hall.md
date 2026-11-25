@@ -2,7 +2,22 @@
 
 Scenes: 7 · State in this reference: Day, shutters open (after 7.4). The closed-shutter state is the same room in the dark.
 
-Prompt v2, a new generation (round one: not made in round one; the courtyard is attached so the masonry matches). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E08_t1.jpg`.
+Prompt v3, round 5: an edit of take E09_t4a (Latin letters and some English in the scripts; the third script crisp, not worn). Generate: 21:9, highest resolution, two candidates. One image only, as Figure 1: `out/refs/E09_t4a.png`.
+
+```text
+Edit Figure 1, the hall of the Treaty House. This is a photoreal film location reference.
+
+Keep exactly: the room, the basalt treaty wall and its layout (two blocks of carved script side by side, then seven round crests and eleven square seals on one line at its foot), the stone walls, the beams, the door, the daylight opening onto the plain, the floor of white papers under stones with their small red wax seals, the camera position, the lens and the light.
+
+Change only the lettering on the treaty wall:
+
+1. The two blocks side by side: replace every character with invented scripts that belong to no real language: the left block small upright angular marks in neat lines, the right block small flowing looped marks in neat lines, both cut to the same size. No Latin, Greek, Cyrillic, runic, Arabic, Hebrew or Asian characters; no letter, number or word that can be read.
+2. The third script: replace the crisp line beneath the blocks with a much older script of large, broad, shallow curves running the whole width of the wall behind and through both blocks, worn almost flat into the stone and barely visible; the two blocks are cut straight across it.
+
+Do not add: readable words, English, Latin letters, numbers, glow, people.
+```
+
+## Prompt v2 (made the earlier takes)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
