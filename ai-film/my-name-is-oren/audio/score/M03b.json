@@ -1,0 +1,7 @@
+{
+ "id": "M03b",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 15 seconds. Soft, warm strings hold a quiet A minor chord that slowly opens into F major; a nylon-string guitar answers with two gentle plucked notes and a pause. Slow, free in time, intimate, a little shy, never sentimental. It begins from near silence and fades on a suspended chord, unresolved. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

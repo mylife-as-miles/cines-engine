@@ -1,0 +1,7 @@
+{
+ "id": "M03a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 15 seconds. A tender, hesitant moment between two strangers. A nylon-string guitar plays four slow, warm notes moving from A minor towards C major, free in time, over a soft string chord that swells gently once and recedes. Very quiet, close and intimate, like a hand resting on a shoulder a moment too long. Begins from silence and ends softly on an unresolved chord. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

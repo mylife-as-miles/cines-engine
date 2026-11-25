@@ -1,0 +1,7 @@
+{
+ "id": "M02b",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 35 seconds, opening of a quiet British drama on a grey street. A solo cello plays very long, soft notes low in its range, A and then C and then back to A, barely moving, over a faint sustained viola harmonic. Around the middle a nylon-string guitar plays a small, slow, falling three-note figure in A minor, pauses, and repeats it once, softer. Free in time, no beat, lots of silence between notes. Melancholy, intimate, restrained, like someone nobody sees. Fades to silence. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}

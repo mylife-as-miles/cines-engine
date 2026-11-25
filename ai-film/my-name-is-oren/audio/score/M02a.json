@@ -1,0 +1,7 @@
+{
+ "id": "M02a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 35 seconds, for the opening of an intimate British short film: a grey, busy city street where one woman goes unnoticed. A very quiet, sustained low string drone on A, cellos and violas, almost subliminal, breathing slowly between A minor and A minor with an added ninth. After about 14 seconds a single nylon-string guitar enters with three slow, low, plucked notes, a small falling minor figure, then a long silence, then the same three notes once more, a step lower, like a memory. Free in time, no pulse. Sparse, close and dry, melancholy and tender, never sentimental. The guitar stops; the drone thins and fades to silence at the end. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

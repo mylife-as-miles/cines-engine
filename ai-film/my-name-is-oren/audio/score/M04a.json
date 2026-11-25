@@ -1,0 +1,7 @@
+{
+ "id": "M04a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 40 seconds, the turning point of an intimate short film, when someone is finally recognised. It begins almost inaudibly: quiet strings hold an open fifth on A and E. Over about fifteen seconds a soft C sharp enters in the violas, so the bare chord slowly turns warm and major. Then a nylon-string guitar plays a short, simple, rising phrase in A major, three or four slow notes, free in time, and pauses; the strings answer with one gentle swell and settle; the guitar repeats the phrase once, a little higher, unfinished. The cue thins to a single held string note and fades to silence. Moved, restrained, intimate, never grand. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]\n[[D3]]"
+}
