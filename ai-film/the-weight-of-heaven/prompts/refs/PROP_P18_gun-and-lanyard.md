@@ -530,5 +530,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P18_t1a · `refs/candidates/P18_t1a.jpg` (full size `out/refs/P18_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-8948-78d1-a509-538fadc6152c`, prompt prop (1433 words), images `refs/ENV_E11_gun-deck.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES.** Dark iron gun on a white-painted truck carriage, breeching rope, the lanyard from the breech with its loop.

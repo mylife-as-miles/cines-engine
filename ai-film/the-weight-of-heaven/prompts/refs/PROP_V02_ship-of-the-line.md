@@ -537,5 +537,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V02_t1a · `refs/candidates/V02_t1a.jpg` (full size `out/refs/V02_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-822e-7fd3-9496-066b34a432d0`, prompt prop (1576 words), images `refs/ENV_E10_flagship-bridge.jpg`, `refs/ENV_E11_gun-deck.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** A white nave and spire on a long hull, two rows of ports, a signal post with lamp and arm near the bow: agrees with the fleet in E10. Short: a bowsprit gives it a sailing-ship look.

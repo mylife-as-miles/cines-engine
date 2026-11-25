@@ -520,5 +520,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P19_t1a · `refs/candidates/P19_t1a.jpg` (full size `out/refs/P19_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-89e9-7a00-b79b-f1ea9ac6d523`, prompt prop (1335 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES.** Flat round stitched leather flask, a wooden stopper on a thong, the knotted strap.

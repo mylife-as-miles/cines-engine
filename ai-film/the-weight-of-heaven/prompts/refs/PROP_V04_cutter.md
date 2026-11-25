@@ -560,5 +560,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V04_t1a · `refs/candidates/V04_t1a.jpg` (full size `out/refs/V04_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-83d2-7622-a4f9-69ea39bad716`, prompt prop (1592 words), images `refs/ENV_E10_flagship-bridge.jpg`, `refs/ENV_E11_gun-deck.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES.** Slim white hull, a small lancet-windowed cabin with a stubby spire, two iron landing skids, the side gangway; no guns.

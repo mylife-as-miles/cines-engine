@@ -538,5 +538,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V05_t1a · `refs/candidates/V05_t1a.jpg` (full size `out/refs/V05_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-84d1-7430-9980-aa5222ec591a`, prompt prop (1621 words), images `refs/ENV_E10_flagship-bridge.jpg`, `refs/ENV_E11_gun-deck.jpg`, `refs/PROP_P01_marriage-bell.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** An open lifting frame like a bell-cote with chains down to the bell slung beneath; the approved bell. Short: the hull is long and narrow rather than wide and shallow; printed labels.

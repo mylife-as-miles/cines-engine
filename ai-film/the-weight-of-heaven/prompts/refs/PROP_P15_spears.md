@@ -502,5 +502,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P15_t1a · `refs/candidates/P15_t1a.jpg` (full size `out/refs/P15_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-875d-7ca2-95e4-60fb5d64f735`, prompt prop (1352 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** Ash shafts, leaf heads riveted on sockets, the tied bundle. The fleck of white paint is drawn as a small white mark that could read as an emblem.

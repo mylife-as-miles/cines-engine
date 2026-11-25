@@ -519,5 +519,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P14_t1a · `refs/candidates/P14_t1a.jpg` (full size `out/refs/P14_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-86c0-74a3-acae-16c1251f68ee`, prompt prop (1387 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES.** The soot-black hearthstone, the slate with its nail hole, the doorstep corner with a worn tread.

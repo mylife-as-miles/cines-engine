@@ -505,5 +505,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P17_t1a · `refs/candidates/P17_t1a.jpg` (full size `out/refs/P17_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-889d-78b1-9b93-ddbc6dbffbdb`, prompt prop (1356 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES.** Seven long cream banners on white rods with pointed ends, each with a different grey woven border; no emblems, no colour.

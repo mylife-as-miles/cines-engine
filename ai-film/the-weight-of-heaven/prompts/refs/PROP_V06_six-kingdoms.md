@@ -514,5 +514,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V06_t1a · `refs/candidates/V06_t1a.jpg` (full size `out/refs/V06_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-857a-7963-823a-eb1897ccf052`, prompt prop (1466 words), images `refs/ENV_E12_orison-whole.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** White cities on inverted mountains of rock with hanging chains, each a different silhouette (needle towers, terraces, a dome, a ziggurat, a walled ring, a single tower). Short: it shows nine, not six; choose six when the shot is made.

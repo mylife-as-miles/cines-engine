@@ -519,5 +519,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V03_t1a · `refs/candidates/V03_t1a.jpg` (full size `out/refs/V03_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-8302-71d3-aac3-5b6e0494389b`, prompt prop (1492 words), images `refs/ENV_E10_flagship-bridge.jpg`, `refs/ENV_E11_gun-deck.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES.** A chapel-sized hull with a short spire and small banner, lancet gunports, the anchor hawse in the bow (detail).

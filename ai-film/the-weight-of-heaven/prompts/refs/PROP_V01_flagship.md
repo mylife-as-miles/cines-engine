@@ -556,5 +556,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- V01_t1a · `refs/candidates/V01_t1a.jpg` (full size `out/refs/V01_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-815a-7d70-8f07-c7483ada8999`, prompt prop (1819 words), images `refs/ENV_E10_flagship-bridge.jpg`, `refs/ENV_E11_gun-deck.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES, with notes.** Long white hull with a nave of lancet windows, one tall spire with the great white banner, the glazed brass-framed bridge at the bow, an anchor at the bow. Short: the gunports are square, not lancet; two small extra masts fore and aft; printed labels.

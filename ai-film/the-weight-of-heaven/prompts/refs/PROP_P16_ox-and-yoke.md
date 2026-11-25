@@ -506,5 +506,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P16_t1a · `refs/candidates/P16_t1a.jpg` (full size `out/refs/P16_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-8800-7f60-8041-e067040e6465`, prompt prop (1344 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** A heavy grey-brown working ox with a pale muzzle and short horns, a hemp lead. Short: the yoke is a head yoke on the horns rather than a neck yoke; "#808080 background" printed on the sheet.

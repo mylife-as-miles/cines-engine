@@ -553,5 +553,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P21_t1a · `refs/candidates/P21_t1a.jpg` (full size `out/refs/P21_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro/edit`), job `01a213c9-8b17-7310-a21d-51f2afc192bb`, prompt prop (1516 words), images `refs/PROP_P01_marriage-bell.jpg` · $0.1500 · 2026-11-25 · verdict: **PASSES, with a note.** A great iron head with a riveted leather striking pad on a white timber arm with a pivot at the top. Short: it reads like a giant sledgehammer; a "60cm" label printed on the sheet.

@@ -519,5 +519,4 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- P13_t1a · `refs/candidates/P13_t1a.jpg` (full size `out/refs/P13_t1a.png`, 2752x1536) · Nano Banana Pro on fal (`fal-ai/nano-banana-pro`), job `01a213c9-8621-7803-aa7c-fd25aca4fdfe`, prompt prop (1317 words), images  · $0.1500 · 2026-11-25 · verdict: **PASSES.** Pale woven cane, the handle wrapped in white ribbon, heaped white petals.
