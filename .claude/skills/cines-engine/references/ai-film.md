@@ -116,6 +116,17 @@ Grade before the finish, in the order of `color.md`: management path (generated 
 - **Upscale before text.** Upscalers and enhancers rewrite fine text (a FloWell upscale turned "1,000 ppm" into "1.000 ppn" and middle dots into dashes). Upscale and deflicker the clean picture, then lay titles, captions and graphics on top (`motion-graphics.md` for the graphics pipeline and the repair recipe if text was upscaled by mistake).
 - Grade for consistency (ffmpeg `eq`, `curves`, `colorbalance`, or a `.cube` LUT with `lut3d`), add grain last so it unifies clips from different models.
 - Titles, captions and end cards from `assets/gfx_template.html` via `scripts/canvas_render.js`.
+- **Movie-standard subtitles** (Oren's `tools/subtitles.py`, `subs/`): the screenplay's words, verbatim, timed to the cut's speech. The rules follow Netflix's timed-text guides:
+  - **Layout:** at most 2 lines of 42 characters, one line unless longer, and a break never inside a sentence that could stand alone.
+  - **Reading speed:** 17 characters a second, 20 at most.
+  - **Duration:** 5/6 s to 7 s.
+  - **Gaps:** 2 frames between subtitles; a gap under 12 frames is closed to 2.
+  - **Cuts:** in- and out-cues within 12 frames of a cut snap to it.
+  - **Two speakers:** "-Line" per speaker, with no space after the hyphen.
+  - **Interruptions:** "--" closed up onto the word.
+  - **Italics:** only for a voice not in the scene.
+  - **Timing:** faster-whisper's word starts run 0.2–0.9 s early, so the in- and out-cues are refined on the cut's own sound (lesson 61).
+  - **Delivery:** an SRT and WebVTT sidecar, a switchable `mov_text` track, and a burned-in copy (libass, Arial metrics, white with a black edge, bottom centre in title-safe).
 
 ## 9. Honesty and rights
 

@@ -1,0 +1,73 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 854
+PlayResY: 480
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Liberation Sans,25,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,1.6,0.8,2,60,60,30,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:36.88,0:00:40.96,Default,,0,0,0,,Excuse me. Hey, buddy. Excuse me.
+Dialogue: 0,0:00:45.25,0:00:46.25,Default,,0,0,0,,Good afternoon.
+Dialogue: 0,0:00:52.67,0:00:53.50,Default,,0,0,0,,Oh.
+Dialogue: 0,0:00:54.04,0:00:55.71,Default,,0,0,0,,You're one of the fake ones.
+Dialogue: 0,0:00:57.58,0:00:58.79,Default,,0,0,0,,My name is Oren.
+Dialogue: 0,0:01:01.29,0:01:03.50,Default,,0,0,0,,Right. Right, sorry.
+Dialogue: 0,0:01:04.00,0:01:06.54,Default,,0,0,0,,Recognising you\Nas an individual and stuff.
+Dialogue: 0,0:01:07.33,0:01:08.96,Default,,0,0,0,,I didn't mean any offence.
+Dialogue: 0,0:01:10.21,0:01:11.88,Default,,0,0,0,,I am not offended.
+Dialogue: 0,0:01:13.21,0:01:14.17,Default,,0,0,0,,I can't be.
+Dialogue: 0,0:01:16.79,0:01:17.62,Default,,0,0,0,,Sure.
+Dialogue: 0,0:01:18.71,0:01:20.62,Default,,0,0,0,,Look, I'm just really hungry.
+Dialogue: 0,0:01:22.71,0:01:24.42,Default,,0,0,0,,Hungry?
+Dialogue: 0,0:01:24.50,0:01:25.33,Default,,0,0,0,,Yeah.
+Dialogue: 0,0:01:25.92,0:01:28.17,Default,,0,0,0,,Haven't eaten properly for a few days.
+Dialogue: 0,0:01:28.83,0:01:31.71,Default,,0,0,0,,They cut off my benefits,\Nso I can't even--
+Dialogue: 0,0:01:35.42,0:01:36.46,Default,,0,0,0,,Doesn't matter.
+Dialogue: 0,0:01:39.79,0:01:42.21,Default,,0,0,0,,This belongs to the person I support.
+Dialogue: 0,0:01:43.79,0:01:44.79,Default,,0,0,0,,Apologies.
+Dialogue: 0,0:01:53.17,0:01:56.54,Default,,0,0,0,,There is a community meal service\Nat the clinic on Mercer Street.
+Dialogue: 0,0:01:56.62,0:01:59.38,Default,,0,0,0,,Lunch ends at two. It is one thirty-one.
+Dialogue: 0,0:02:02.04,0:02:03.71,Default,,0,0,0,,I know where it is, buddy.
+Dialogue: 0,0:02:09.08,0:02:10.88,Default,,0,0,0,,Sorry. You are trying to help.
+Dialogue: 0,0:02:15.29,0:02:16.75,Default,,0,0,0,,Are you in pain?
+Dialogue: 0,0:02:17.50,0:02:18.96,Default,,0,0,0,,Oh, we know each other.
+Dialogue: 0,0:02:20.08,0:02:22.21,Default,,0,0,0,,-You and--\N-Me and the pain. Yeah.
+Dialogue: 0,0:02:24.00,0:02:26.42,Default,,0,0,0,,Would you like assistance sitting down?
+Dialogue: 0,0:02:38.08,0:02:40.04,Default,,0,0,0,,That's a hell of an introduction.
+Dialogue: 0,0:02:40.67,0:02:41.67,Default,,0,0,0,,My name is Oren.
+Dialogue: 0,0:02:43.67,0:02:45.33,Default,,0,0,0,,I know. I got that one.
+Dialogue: 0,0:02:53.92,0:02:55.83,Default,,0,0,0,,You got somewhere to be?
+Dialogue: 0,0:02:56.38,0:02:59.83,Default,,0,0,0,,Yes. I am delivering this\Nto my client at the clinic.
+Dialogue: 0,0:02:59.92,0:03:03.33,Default,,0,0,0,,Her daughter is with her.\NIt needs to arrive by two.
+Dialogue: 0,0:03:04.88,0:03:08.21,Default,,0,0,0,,I can assist you,\Nprovided it still arrives on time.
+Dialogue: 0,0:03:12.79,0:03:14.54,Default,,0,0,0,,Don't let me keep you.
+Dialogue: 0,0:03:16.54,0:03:18.83,Default,,0,0,0,,We are going in the same direction.
+Dialogue: 0,0:03:20.83,0:03:23.08,Default,,0,0,0,,Are we? I didn't say I was going.
+Dialogue: 0,0:03:26.38,0:03:29.29,Default,,0,0,0,,Would you like me\Nto look at the benefits notice?
+Dialogue: 0,0:03:30.12,0:03:32.12,Default,,0,0,0,,It's already been appealed. Twice.
+Dialogue: 0,0:03:40.88,0:03:42.92,Default,,0,0,0,,Those. Not the recordings.
+Dialogue: 0,0:03:45.67,0:03:47.83,Default,,0,0,0,,Hey. Buddy. You okay?
+Dialogue: 0,0:03:49.08,0:03:51.75,Default,,0,0,0,,Yes, Second Lieutenant Helena Duncan.
+Dialogue: 0,0:03:58.42,0:04:02.04,Default,,0,0,0,,Do you know how long it's been\Nsince somebody called me that?
+Dialogue: 0,0:04:03.17,0:04:04.71,Default,,0,0,0,,I don't have access to--
+Dialogue: 0,0:04:04.79,0:04:07.25,Default,,0,0,0,,A while. That's what I mean.
+Dialogue: 0,0:04:09.54,0:04:10.54,Default,,0,0,0,,Helena will do.
+Dialogue: 0,0:04:15.04,0:04:16.17,Default,,0,0,0,,All right, Helena.
+Dialogue: 0,0:04:16.83,0:04:19.54,Default,,0,0,0,,Your mobility assessment\Nis marked incomplete.
+Dialogue: 0,0:04:24.12,0:04:27.17,Default,,0,0,0,,Their lift was broken.\NI couldn't get upstairs.
+Dialogue: 0,0:04:28.21,0:04:30.12,Default,,0,0,0,,They put that I didn't attend.
+Dialogue: 0,0:04:33.54,0:04:36.67,Default,,0,0,0,,Two tours.\NCame home with a hole in my back.
+Dialogue: 0,0:04:36.75,0:04:38.21,Default,,0,0,0,,Didn't attend.
+Dialogue: 0,0:04:42.12,0:04:44.71,Default,,0,0,0,,Can you sit? Here. With me.
+Dialogue: 0,0:04:48.00,0:04:49.17,Default,,0,0,0,,May I speak simply?
+Dialogue: 0,0:04:51.38,0:04:52.71,Default,,0,0,0,,Go on.
+Dialogue: 0,0:04:54.29,0:04:57.29,Default,,0,0,0,,The benefits office appears\Nto have fucked you.
+Dialogue: 0,0:05:03.75,0:05:06.38,Default,,0,0,0,,Oh, Jesus. Yeah. Those fuckers sure did.
+Dialogue: 0,0:05:08.38,0:05:10.04,Default,,0,0,0,,Was that simple enough?
+Dialogue: 0,0:05:10.83,0:05:13.17,Default,,0,0,0,,Yeah, buddy. About right.
+Dialogue: 0,0:05:13.25,0:05:14.62,Default,,0,0,0,,Oh. Good.

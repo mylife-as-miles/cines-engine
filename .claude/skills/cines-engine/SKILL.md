@@ -37,7 +37,7 @@ A job can span studios: a game trailer for YouTube is Claude Game for the pictur
 
 - **The author's taste decides; offer real alternatives.** Three looks drawn as the same three moments (Autopilot's `frames/BOARD_looks.jpg`) beat a description of three looks. When the author picks, write it down and keep to it.
 - **Restraint carries emotion.** Autopilot never shows the inside of the car at the end; a line that names the film's idea right after the human consequence was cut. Prefer what the audience discovers to what it is told.
-- **Text is part of the picture.** Subtitles name their speaker ("Emily: …"); captions stay legible on a phone (`motion-graphics.md` §8); a bigger caption can cover a disclaimer — check every card.
+- **Text is part of the picture.** In-picture captions in the house style name their speaker ("Emily: …"). Movie-standard subtitles don't: two speakers in one subtitle get a leading hyphen each (`ai-film.md` §8, Oren's `tools/subtitles.py`). Captions stay legible on a phone (`motion-graphics.md` §8); a bigger caption can cover a disclaimer — check every card.
 - **Upscalers rewrite text.** Upscale the clean picture, then add graphics. If a texted video was upscaled, repair it with the mask recipe in `motion-graphics.md` §9.
 - **Fix the cause, cut nothing silently.** A YouTube cut rebuilds the soundtrack on its new clock rather than chopping the mix; a re-voiced line gets three takes ranked before one is chosen.
 - **Honesty.** Sources on every claim; "illustrative" where it is; a notice card for simulated or AI visuals; YouTube's synthetic-content disclosure for realistic generated footage; no real person's likeness or voice without consent; no recreation of someone else's film, game or characters.

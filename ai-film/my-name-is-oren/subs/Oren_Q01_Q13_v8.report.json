@@ -1,0 +1,1113 @@
+{
+ "name": "Oren_Q01_Q13_v8",
+ "rules": {
+  "max_chars": 42,
+  "max_lines": 2,
+  "cps": 17.0,
+  "cps_max": 20.0,
+  "min_frames": 20,
+  "max_frames": 168,
+  "gap_frames": 2,
+  "chain_frames": 12,
+  "lag_frames": 12
+ },
+ "aligned_words": "329/329",
+ "events": [
+  {
+   "n": 1,
+   "lines": [
+    "L01"
+   ],
+   "in": 36.875,
+   "out": 40.958,
+   "rows": [
+    "Excuse me. Hey, buddy. Excuse me."
+   ],
+   "cps": 8.1,
+   "speech": [
+    36.88,
+    40.46
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 2,
+   "lines": [
+    "L02"
+   ],
+   "in": 45.25,
+   "out": 46.25,
+   "rows": [
+    "Good afternoon."
+   ],
+   "cps": 15.0,
+   "speech": [
+    45.25,
+    45.75
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 3,
+   "lines": [
+    "L03"
+   ],
+   "in": 52.667,
+   "out": 53.5,
+   "rows": [
+    "Oh."
+   ],
+   "cps": 3.6,
+   "speech": [
+    52.67,
+    52.88
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 4,
+   "lines": [
+    "L03"
+   ],
+   "in": 54.042,
+   "out": 55.708,
+   "rows": [
+    "You're one of the fake ones."
+   ],
+   "cps": 16.8,
+   "speech": [
+    54.04,
+    54.88
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 5,
+   "lines": [
+    "L04"
+   ],
+   "in": 57.583,
+   "out": 58.792,
+   "rows": [
+    "My name is Oren."
+   ],
+   "cps": 13.2,
+   "speech": [
+    57.58,
+    58.29
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 6,
+   "lines": [
+    "L05"
+   ],
+   "in": 61.292,
+   "out": 63.5,
+   "rows": [
+    "Right. Right, sorry."
+   ],
+   "cps": 9.1,
+   "speech": [
+    61.29,
+    63.0
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 7,
+   "lines": [
+    "L05"
+   ],
+   "in": 64.0,
+   "out": 66.542,
+   "rows": [
+    "Recognising you",
+    "as an individual and stuff."
+   ],
+   "cps": 16.9,
+   "speech": [
+    64.0,
+    65.88
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 8,
+   "lines": [
+    "L05"
+   ],
+   "in": 67.333,
+   "out": 68.958,
+   "rows": [
+    "I didn't mean any offence."
+   ],
+   "cps": 16.0,
+   "speech": [
+    67.33,
+    68.21
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 9,
+   "lines": [
+    "L06"
+   ],
+   "in": 70.208,
+   "out": 71.875,
+   "rows": [
+    "I am not offended."
+   ],
+   "cps": 10.8,
+   "speech": [
+    70.21,
+    70.96
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 10,
+   "lines": [
+    "L06"
+   ],
+   "in": 73.208,
+   "out": 74.167,
+   "rows": [
+    "I can't be."
+   ],
+   "cps": 11.5,
+   "speech": [
+    73.21,
+    73.67
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 11,
+   "lines": [
+    "L07"
+   ],
+   "in": 76.792,
+   "out": 77.625,
+   "rows": [
+    "Sure."
+   ],
+   "cps": 6.0,
+   "speech": [
+    76.79,
+    77.0
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 12,
+   "lines": [
+    "L07"
+   ],
+   "in": 78.708,
+   "out": 80.625,
+   "rows": [
+    "Look, I'm just really hungry."
+   ],
+   "cps": 15.1,
+   "speech": [
+    78.71,
+    79.75
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 13,
+   "lines": [
+    "L08"
+   ],
+   "in": 82.708,
+   "out": 84.417,
+   "rows": [
+    "Hungry?"
+   ],
+   "cps": 4.1,
+   "speech": [
+    82.71,
+    83.04
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 14,
+   "lines": [
+    "L09"
+   ],
+   "in": 84.5,
+   "out": 85.333,
+   "rows": [
+    "Yeah."
+   ],
+   "cps": 6.0,
+   "speech": [
+    84.5,
+    84.71
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 15,
+   "lines": [
+    "L09"
+   ],
+   "in": 85.917,
+   "out": 88.167,
+   "rows": [
+    "Haven't eaten properly for a few days."
+   ],
+   "cps": 16.9,
+   "speech": [
+    85.92,
+    87.33
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 16,
+   "lines": [
+    "L09"
+   ],
+   "in": 88.833,
+   "out": 91.708,
+   "rows": [
+    "They cut off my benefits,",
+    "so I can't even--"
+   ],
+   "cps": 15.0,
+   "speech": [
+    88.83,
+    90.58
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 17,
+   "lines": [
+    "L10"
+   ],
+   "in": 95.417,
+   "out": 96.458,
+   "rows": [
+    "Doesn't matter."
+   ],
+   "cps": 14.4,
+   "speech": [
+    95.42,
+    95.96
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 18,
+   "lines": [
+    "L11"
+   ],
+   "in": 99.792,
+   "out": 102.208,
+   "rows": [
+    "This belongs to the person I support."
+   ],
+   "cps": 15.3,
+   "speech": [
+    99.79,
+    101.21
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 19,
+   "lines": [
+    "L12"
+   ],
+   "in": 103.792,
+   "out": 104.792,
+   "rows": [
+    "Apologies."
+   ],
+   "cps": 10.0,
+   "speech": [
+    103.79,
+    104.25
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 20,
+   "lines": [
+    "L13"
+   ],
+   "in": 113.167,
+   "out": 116.542,
+   "rows": [
+    "There is a community meal service",
+    "at the clinic on Mercer Street."
+   ],
+   "cps": 19.3,
+   "speech": [
+    113.17,
+    115.92
+   ],
+   "cuts_inside": 0,
+   "flags": [
+    "cps 19.3"
+   ]
+  },
+  {
+   "n": 21,
+   "lines": [
+    "L13"
+   ],
+   "in": 116.625,
+   "out": 119.375,
+   "rows": [
+    "Lunch ends at two. It is one thirty-one."
+   ],
+   "cps": 14.5,
+   "speech": [
+    116.62,
+    118.92
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 22,
+   "lines": [
+    "L14"
+   ],
+   "in": 122.042,
+   "out": 123.708,
+   "rows": [
+    "I know where it is, buddy."
+   ],
+   "cps": 15.6,
+   "speech": [
+    122.04,
+    122.96
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 23,
+   "lines": [
+    "L15"
+   ],
+   "in": 129.083,
+   "out": 130.875,
+   "rows": [
+    "Sorry. You are trying to help."
+   ],
+   "cps": 16.7,
+   "speech": [
+    129.08,
+    130.29
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 24,
+   "lines": [
+    "L16"
+   ],
+   "in": 135.292,
+   "out": 136.75,
+   "rows": [
+    "Are you in pain?"
+   ],
+   "cps": 11.0,
+   "speech": [
+    135.29,
+    135.92
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 25,
+   "lines": [
+    "L17"
+   ],
+   "in": 137.5,
+   "out": 138.958,
+   "rows": [
+    "Oh, we know each other."
+   ],
+   "cps": 15.8,
+   "speech": [
+    137.5,
+    138.46
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 26,
+   "lines": [
+    "L18",
+    "L19"
+   ],
+   "in": 140.083,
+   "out": 142.208,
+   "rows": [
+    "-You and--",
+    "-Me and the pain. Yeah."
+   ],
+   "cps": 16.0,
+   "speech": [
+    140.08,
+    141.83
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 27,
+   "lines": [
+    "L20"
+   ],
+   "in": 144.0,
+   "out": 146.417,
+   "rows": [
+    "Would you like assistance sitting down?"
+   ],
+   "cps": 16.1,
+   "speech": [
+    144.0,
+    145.92
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 28,
+   "lines": [
+    "L21"
+   ],
+   "in": 158.083,
+   "out": 160.042,
+   "rows": [
+    "That's a hell of an introduction."
+   ],
+   "cps": 16.9,
+   "speech": [
+    158.08,
+    159.04
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 29,
+   "lines": [
+    "L22"
+   ],
+   "in": 160.667,
+   "out": 161.667,
+   "rows": [
+    "My name is Oren."
+   ],
+   "cps": 16.0,
+   "speech": [
+    160.67,
+    161.33
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 30,
+   "lines": [
+    "L23"
+   ],
+   "in": 163.667,
+   "out": 165.333,
+   "rows": [
+    "I know. I got that one."
+   ],
+   "cps": 13.8,
+   "speech": [
+    163.67,
+    165.12
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 31,
+   "lines": [
+    "L24"
+   ],
+   "in": 173.917,
+   "out": 175.833,
+   "rows": [
+    "You got somewhere to be?"
+   ],
+   "cps": 12.5,
+   "speech": [
+    173.92,
+    174.71
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 32,
+   "lines": [
+    "L25"
+   ],
+   "in": 176.375,
+   "out": 179.833,
+   "rows": [
+    "Yes. I am delivering this",
+    "to my client at the clinic."
+   ],
+   "cps": 15.3,
+   "speech": [
+    176.38,
+    179.92
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 33,
+   "lines": [
+    "L25"
+   ],
+   "in": 179.917,
+   "out": 183.333,
+   "rows": [
+    "Her daughter is with her.",
+    "It needs to arrive by two."
+   ],
+   "cps": 15.2,
+   "speech": [
+    179.92,
+    182.83
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 34,
+   "lines": [
+    "L25"
+   ],
+   "in": 184.875,
+   "out": 188.208,
+   "rows": [
+    "I can assist you,",
+    "provided it still arrives on time."
+   ],
+   "cps": 15.6,
+   "speech": [
+    184.88,
+    187.71
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 35,
+   "lines": [
+    "L26"
+   ],
+   "in": 192.792,
+   "out": 194.542,
+   "rows": [
+    "Don't let me keep you."
+   ],
+   "cps": 12.6,
+   "speech": [
+    192.79,
+    193.46
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 36,
+   "lines": [
+    "L27"
+   ],
+   "in": 196.542,
+   "out": 198.833,
+   "rows": [
+    "We are going in the same direction."
+   ],
+   "cps": 15.3,
+   "speech": [
+    196.54,
+    197.54
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 37,
+   "lines": [
+    "L28"
+   ],
+   "in": 200.833,
+   "out": 203.083,
+   "rows": [
+    "Are we? I didn't say I was going."
+   ],
+   "cps": 14.7,
+   "speech": [
+    200.83,
+    202.92
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 38,
+   "lines": [
+    "L29"
+   ],
+   "in": 206.375,
+   "out": 209.292,
+   "rows": [
+    "Would you like me",
+    "to look at the benefits notice?"
+   ],
+   "cps": 16.8,
+   "speech": [
+    206.38,
+    207.88
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 39,
+   "lines": [
+    "L30"
+   ],
+   "in": 210.125,
+   "out": 212.125,
+   "rows": [
+    "It's already been appealed. Twice."
+   ],
+   "cps": 17.0,
+   "speech": [
+    210.12,
+    211.83
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 40,
+   "lines": [
+    "L31"
+   ],
+   "in": 220.875,
+   "out": 222.917,
+   "rows": [
+    "Those. Not the recordings."
+   ],
+   "cps": 12.7,
+   "speech": [
+    220.88,
+    222.67
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 41,
+   "lines": [
+    "L32"
+   ],
+   "in": 225.667,
+   "out": 227.833,
+   "rows": [
+    "Hey. Buddy. You okay?"
+   ],
+   "cps": 9.7,
+   "speech": [
+    225.67,
+    227.62
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 42,
+   "lines": [
+    "L33"
+   ],
+   "in": 229.083,
+   "out": 231.75,
+   "rows": [
+    "Yes, Second Lieutenant Helena Duncan."
+   ],
+   "cps": 13.9,
+   "speech": [
+    229.08,
+    231.0
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 43,
+   "lines": [
+    "L34"
+   ],
+   "in": 238.417,
+   "out": 242.042,
+   "rows": [
+    "Do you know how long it's been",
+    "since somebody called me that?"
+   ],
+   "cps": 16.8,
+   "speech": [
+    238.42,
+    240.29
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 44,
+   "lines": [
+    "L35"
+   ],
+   "in": 243.167,
+   "out": 244.708,
+   "rows": [
+    "I don't have access to--"
+   ],
+   "cps": 15.6,
+   "speech": [
+    243.17,
+    245.04
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 45,
+   "lines": [
+    "L36"
+   ],
+   "in": 244.792,
+   "out": 247.25,
+   "rows": [
+    "A while. That's what I mean."
+   ],
+   "cps": 11.4,
+   "speech": [
+    244.79,
+    246.75
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 46,
+   "lines": [
+    "L36"
+   ],
+   "in": 249.542,
+   "out": 250.542,
+   "rows": [
+    "Helena will do."
+   ],
+   "cps": 15.0,
+   "speech": [
+    249.54,
+    250.21
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 47,
+   "lines": [
+    "L37"
+   ],
+   "in": 255.042,
+   "out": 256.167,
+   "rows": [
+    "All right, Helena."
+   ],
+   "cps": 16.0,
+   "speech": [
+    255.04,
+    255.67
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 48,
+   "lines": [
+    "L37"
+   ],
+   "in": 256.833,
+   "out": 259.542,
+   "rows": [
+    "Your mobility assessment",
+    "is marked incomplete."
+   ],
+   "cps": 17.0,
+   "speech": [
+    256.83,
+    258.75
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 49,
+   "lines": [
+    "L38"
+   ],
+   "in": 264.125,
+   "out": 267.167,
+   "rows": [
+    "Their lift was broken.",
+    "I couldn't get upstairs."
+   ],
+   "cps": 15.5,
+   "speech": [
+    264.12,
+    266.67
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 50,
+   "lines": [
+    "L38"
+   ],
+   "in": 268.208,
+   "out": 270.125,
+   "rows": [
+    "They put that I didn't attend."
+   ],
+   "cps": 15.7,
+   "speech": [
+    268.21,
+    269.25
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 51,
+   "lines": [
+    "L38"
+   ],
+   "in": 273.542,
+   "out": 276.667,
+   "rows": [
+    "Two tours.",
+    "Came home with a hole in my back."
+   ],
+   "cps": 14.1,
+   "speech": [
+    273.54,
+    276.12
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 52,
+   "lines": [
+    "L38"
+   ],
+   "in": 276.75,
+   "out": 278.208,
+   "rows": [
+    "Didn't attend."
+   ],
+   "cps": 9.6,
+   "speech": [
+    276.75,
+    277.71
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 53,
+   "lines": [
+    "L39"
+   ],
+   "in": 282.125,
+   "out": 284.708,
+   "rows": [
+    "Can you sit? Here. With me."
+   ],
+   "cps": 10.5,
+   "speech": [
+    282.12,
+    284.21
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 54,
+   "lines": [
+    "L40"
+   ],
+   "in": 288.0,
+   "out": 289.167,
+   "rows": [
+    "May I speak simply?"
+   ],
+   "cps": 16.3,
+   "speech": [
+    288.0,
+    288.96
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 55,
+   "lines": [
+    "L41"
+   ],
+   "in": 291.375,
+   "out": 292.708,
+   "rows": [
+    "Go on."
+   ],
+   "cps": 4.5,
+   "speech": [
+    291.38,
+    291.62
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 56,
+   "lines": [
+    "L42"
+   ],
+   "in": 294.292,
+   "out": 297.292,
+   "rows": [
+    "The benefits office appears",
+    "to have fucked you."
+   ],
+   "cps": 15.7,
+   "speech": [
+    294.29,
+    296.79
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 57,
+   "lines": [
+    "L43"
+   ],
+   "in": 303.75,
+   "out": 306.375,
+   "rows": [
+    "Oh, Jesus. Yeah. Those fuckers sure did."
+   ],
+   "cps": 15.2,
+   "speech": [
+    303.75,
+    306.42
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  },
+  {
+   "n": 58,
+   "lines": [
+    "L44"
+   ],
+   "in": 308.375,
+   "out": 310.042,
+   "rows": [
+    "Was that simple enough?"
+   ],
+   "cps": 13.8,
+   "speech": [
+    308.38,
+    309.08
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 59,
+   "lines": [
+    "L45"
+   ],
+   "in": 310.833,
+   "out": 313.167,
+   "rows": [
+    "Yeah, buddy. About right."
+   ],
+   "cps": 10.7,
+   "speech": [
+    310.83,
+    312.5
+   ],
+   "cuts_inside": 1,
+   "flags": []
+  },
+  {
+   "n": 60,
+   "lines": [
+    "L46"
+   ],
+   "in": 313.25,
+   "out": 314.625,
+   "rows": [
+    "Oh. Good."
+   ],
+   "cps": 6.5,
+   "speech": [
+    313.25,
+    314.12
+   ],
+   "cuts_inside": 0,
+   "flags": []
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "_about": "English subtitles for the v8 cut (Q01-Q13, 5:14.5): L01 'Excuse me. Hey, buddy. Excuse me.' to L46 'Oh. Good.'. The transcript is v6's (out/review/v6_transcript.json, faster-whisper medium.en with word times); v7/v8 dropped 4 frames at v6 203.17-203.33 (Q09's flash), so every word after that is 4 frames earlier here. Shot changes from grade/shots_v7.json (v8 keeps v7's timing).",
+ "name": "Oren_Q01_Q13_v8",
+ "script": "design/script.json",
+ "upto": "L46",
+ "transcript": "out/review/v6_transcript.json",
+ "clock_map": [
+  {
+   "from": 203.25,
+   "shift": -0.166667
+  }
+ ],
+ "shots": "grade/shots_v7.json",
+ "style": {
+  "play_res": [
+   854,
+   480
+  ],
+  "font": "Liberation Sans",
+  "size": 25,
+  "outline": 1.6,
+  "shadow": 0.8,
+  "margin_v": 30,
+  "margin_lr": 60
+ },
+ "audio": "out/edits/Q01_Q13_v8.mp4",
+ "audio_note": "the cut's own sound (dialogue and the takes' sync sound; Q10 from its voice stem), before the beds are added: the subtitles' starts and ends are refined on it"
+}
