@@ -2,13 +2,13 @@
 
 The author's decision (25 November): the film runs **6:30 to 6:50**, not 14:05, and parts of it become **montages cut to music** to move the story faster. The model is the music-driven montage of game cinematics and animated series (Arcane, the League of Legends cinematics): parallel actions intercut on the beat, a musical hook carrying time forward, and a hard stop into silence when a moment must land. We borrow the technique only. The film stays live action, its look stays the Visual Bible's, and the music is our own.
 
-Everything below is a proposal until the author approves it. Nothing is cut from the script without the author's yes: the line table in section 5 is a proposal.
+The running time is set at **6:40** (author, 25 November). Everything else below is a proposal until the author approves it. Nothing is cut from the script without the author's yes: the line table in section 5 is a proposal.
 
 ---
 
 ## 1. The shape
 
-Four montages carry time; four held blocks carry meaning. The film is planned at **6:40**. The hall (block D) can grow or shrink by ten seconds, and the opening and ending by five each, so the same plan cuts to 6:30 or 6:50.
+Four montages carry time; four held blocks carry meaning. The film runs **6:40**.
 
 | Block | Time (6:40) | Script | Kind | Music |
 | --- | --- | --- | --- | --- |
@@ -78,7 +78,7 @@ The score is built on one original theme: the cathedral's response, **"Let no ha
 | M4 "Come Down" | F (late) and G | Enters as the anchors rain; the hymn in full choir, slower and heavier, the hum rising inside it | Stops with the hum on the landing |
 | End note | H | One sustained choral note | Into the title |
 
-**Words or no words.** The montages in the reference works are often driven by songs with lyrics. Here the hymn's one line, "Let no hand bring down", can be the only sung words, and its meaning turns by the end. Score, choir and the hymn are made in house: Lyria for the instrumental score; a choral or song model for the sung hymn, chosen when we audition. Each cue is cut to the picture, and then the picture is recut to the beat.
+**An original song with lyrics (author, 25 November).** The montages are driven by one original song, as Arcane's songs drive its montages. A low woman's voice from below sings the lead; the choir of Orison answers with the hymn's words; at the end both sing "we would have you come down". The lyrics, structure and timing are in `design/SONG.md`. The cues above are the song's sections, and the instrumental score fills the held blocks.
 
 ---
 
