@@ -25,6 +25,7 @@ ROOT = os.path.normpath(os.path.join(HERE, '..'))
 sys.path.insert(0, HERE)
 import env_prompts as E  # noqa: E402
 import prop_prompts as PP  # noqa: E402
+import char_prompts as CP  # noqa: E402
 
 ENDPOINT = 'bytedance/seedream/v5.5/edit'
 SIZE = {'width': 3276, 'height': 1404}           # 21:9, 4.6 MP (endpoint max 4,624,220 px)
@@ -38,23 +39,27 @@ def data_uri(path):
 
 
 NBP_PRICE = 0.15                                 # per output image at 1K or 2K (fal, Nov 2026)
+NB21_PRICE, NB21_PRICE_REF = 0.059, 0.063        # Nano Banana 2.1 at 2K, without / with input images (fal, Nov 2026)
 
 
 def module(code):
-    return PP if code.startswith('P') else E
+    return {'P': PP, 'C': CP}.get(code[0], E)
 
 
 def cost(model, n, imgs):
+    if model == 'nb21':
+        return round(n * (NB21_PRICE_REF if imgs else NB21_PRICE), 4)
     return round(n * (NBP_PRICE if model == 'nbp' else PRICE_OUT + PRICE_IN * len(imgs)), 4)
 
 
 def submit(code, n, model='seedream'):
     prompt, imgs, kind = module(code).current(code)
-    if model == 'nbp':
+    if model in ('nbp', 'nb21'):
         sent = re.sub(r'@Image (\d+)', r'Image \1', prompt)
-        endpoint = 'fal-ai/nano-banana-pro/edit' if imgs else 'fal-ai/nano-banana-pro'
+        base = 'fal-ai/nano-banana-pro' if model == 'nbp' else 'google/nano-banana-2.1'
+        endpoint = base + '/edit' if imgs else base
         payload = {'prompt': sent, 'num_images': n, 'output_format': 'png', 'resolution': '2K',
-                   'aspect_ratio': '16:9' if code.startswith('P') else '21:9'}
+                   'aspect_ratio': '21:9' if code.startswith('E') else '16:9'}
         if imgs:
             payload['image_urls'] = [data_uri(p) for p in imgs]
     else:
@@ -98,9 +103,9 @@ def save(job, out, take):
 
 
 def log(job, files, take, error=None):
-    pre = 'PROP' if job['code'].startswith('P') else 'ENV'
+    pre = {'P': 'PROP', 'C': 'CHAR'}.get(job['code'][0], 'ENV')
     path = next(os.path.join(E.OUT, f) for f in os.listdir(E.OUT) if f.startswith(f"{pre}_{job['code']}_"))
-    label = 'Nano Banana Pro' if job.get('model') == 'nbp' else 'Seedream 5.5 Edit'
+    label = {'nbp': 'Nano Banana Pro', 'nb21': 'Nano Banana 2.1'}.get(job.get('model'), 'Seedream 5.5 Edit')
     endpoint = job.get('endpoint', ENDPOINT)
     s = open(path).read()
     s = s.replace('\n## Takes\n\n(none yet)\n', '\n## Takes\n\n')
@@ -124,7 +129,7 @@ def main():
     n = int(args[args.index('--n') + 1]) if '--n' in args else 1  # one candidate per reference (author, 25 Nov)
     take = args[args.index('--take') + 1] if '--take' in args else 't2'
     model = args[args.index('--model') + 1] if '--model' in args else 'seedream'
-    codes = [a for a in args if re.fullmatch(r'[EP]\d\d', a)]
+    codes = [a for a in args if re.fullmatch(r'[EPC]\d\d', a)]
     total = 0
     for c in codes:
         _, imgs, kind = module(c).current(c)
