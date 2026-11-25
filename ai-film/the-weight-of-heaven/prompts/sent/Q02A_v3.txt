@@ -1,4 +1,5 @@
-@Video 1 is a coarse blockout reference. It provides only the subject blocking, the motion paths, the timing of each action, the camera positions, the camera movement and the three cuts. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set.
+@Video 1 is a coarse blockout reference. Use it only for the camera positions, the camera movement, the three cuts, where each subject stands and travels in the frame, and when each event happens. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set, and do not copy the stiff way its figures move: it is a rough guide to staging, not to motion.
+All movement is yours and must be real: living people with weight, balance and momentum, natural gait and reflexes, cloth and hair that follow the body, hands that really grip, objects that obey real-world physics. One rule of this place: loose things in the air (petals, the basket) fall slowly, as if through water.
 The blue figure in @Video 1 corresponds to Grand Admiral Serath.
 The small yellow figure in @Video 1 corresponds to the petal girl.
 The orange basket shape in @Video 1 corresponds to the petal basket.
@@ -25,7 +26,7 @@ Shot 2 (2.9-8.6 seconds): Seen from the side; Serath is in profile, facing right
 Shot 3 (8.6-11.4 seconds): From low in front of her. The aide brings the warrant up on both gloved hands into the lower part of the frame; the red wax on it is soft and unmarked. Serath's right hand moves out over the wax. Her chin stays level and her eyes stay open on the tower, far above the page. Behind her are only the admirals, the guests in white, white arches and open cloud. End state: her hand is poised over the wax; her eyes are on the tower.
 Shot 4 (11.4-15 seconds): Close on the hands only; no face is in the frame. Her gloved hand presses the ring down into the soft red wax and lifts away clean. The wax stays on the page and now carries her seal, the anchor in a ring of seven stars. End state: the sealed red wax on the page, her hand above it, held still.
 
-Keep the blocking, the motion paths, the low arc of the basket, the timing of the trip, the landing, the catch and the press, the camera positions, the slow push in, the sideways track and the three cuts from @Video 1.
+From @Video 1 keep the camera positions, the slow push in, the sideways track, the three cuts, where everyone stands, and the moment of the trip, the landing, the catch and the press. Perform the fall, the basket's flight, the catch and the handing back with natural human movement and real physics, not as the mannequins do it.
 
 The final video is photoreal live action, clean and sharp, shot on large-format digital (ARRI Alexa 65) with spherical lenses. White marble in cloud, lit softly and evenly from every side, with no hard shadows; the whites keep their detail and faces are never the brightest thing. Cool and muted: white, pale grey, and two small accents alone, the gold of her collar and the red of the wax. White petals hang in the air, falling very slowly. Composed for a 2.35:1 frame: keep faces and hands inside the middle band.
 
