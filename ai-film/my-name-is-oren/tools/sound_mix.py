@@ -119,9 +119,12 @@ def main():
     json.dump({'film': plan['out'], 'placements': record}, open(os.path.join(HERE, 'out', 'audio', 'mix.json'), 'w'), indent=1)
     out = os.path.join(HERE, plan['out'])
     r = run(['ffmpeg', '-v', 'error', '-y', '-i', os.path.join(HERE, plan['video']), '-i', lay, '-filter_complex',
-             '[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[f];'
-             '[1:a]aformat=sample_fmts=fltp:channel_layouts=stereo[l];'
-             '[f][l]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.841:level=false[a]',
+             # both padded and the sum trimmed to the edit's length: amix alone ended ~0.1 s early; the limiter
+             # compensates its 5 ms look-ahead, or the whole soundtrack sits 5 ms late
+             f'[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_len={N}[f];'
+             f'[1:a]aformat=sample_fmts=fltp:channel_layouts=stereo,apad=whole_len={N}[l];'
+             f'[f][l]amix=inputs=2:normalize=0:duration=longest,alimiter=limit=0.841:level=false:latency=1,'
+             f'atrim=end_sample={N}[a]',
              '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-ar', '48000',
              '-movflags', '+faststart', out])
     if r.returncode:

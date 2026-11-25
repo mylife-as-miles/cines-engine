@@ -69,11 +69,13 @@ A montage needs an argument: a transformation, a contrast, an accumulation, or a
 - **When the head drops between takes,** a longer dissolve shows two faces at once; use a straight cut (Oren Q09→Q10).
 - **When the next take changes framing,** the join is a real cut: let it be one.
 - **Check every join:** the frames either side, the level of the background sound (sequences are levelled on dialogue, not loudness; Oren lesson 52), and lip sync, by cross-correlating the take's audio against the cut (within one frame).
+- **Scan for flash cuts inside takes.** A generator can cut to a near-identical framing for 4 frames and then jump (Oren Q09). Look for frame-difference spikes more than 3.5× their neighbours' median away from the shot cuts. Drop the flash frames where they fall in a pause.
+- **Keep the sound unbroken where it runs on.** When a cut's sound continues the same file frame for frame, as in a cover shot that keeps the replaced shot's sound, leave out the click fades. A per-segment limiter must compensate its look-ahead (`alimiter … latency=1`), or every join gets a 5 ms gap (Oren lesson 56).
 - **Hide, motivate or separate continuity failures:**
   - hide: a cutaway, a reaction, a trim, a crop
   - motivate: a time jump or a memory
   - separate: a sound bridge or a card
-- **Replace a take** when the failure corrupts identity or the story's geography. Oren's empty-road wide was replaced by an earlier take's close-up of the same line.
+- **Replace a take** when the failure corrupts identity or the story's geography. Oren's empty-road wide was replaced by an earlier take's close-up of the same line. When nothing else covers the moment, build a **cover shot** from a still stretch of the right angle. Push in so it reads as its own shot, play it back then forward rather than slow it, and keep the replaced shot's sound (`tools/cover_shot.py`). Oren's Q13 wide, which put the pair inside another laundrette, is covered this way until its pickup.
 - **Build the film in one pass from the takes,** never by re-encoding the last edit (Oren lesson 52). Keep rejected takes with the reason they were rejected.
 
 ## 5. The cut list (plan) and the edit QA (check)

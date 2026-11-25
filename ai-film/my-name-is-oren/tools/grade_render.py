@@ -6,7 +6,7 @@
 
 grade/grade.json: {"video": the cut to grade (picture and sound), "shots": "grade/shots.json" (tools/grade_match.py),
   "look": an OpenEmulsion preset name or null, "look_mix": 0..1, "grain": {"amount": 0.012, "size": 1.2, "chroma": 0.15,
-  "seed": 7}, "matte": null or 2.35, "framing": "grade/framing.json", "range": null or [start, end], "out": "out/edits/....mp4"}
+  "seed": 7}, "paint": "grade/paint.json" (text painted out per shot), "matte": null or 2.35, "framing": "grade/framing.json", "range": null or [start, end], "out": "out/edits/....mp4"}
 With a matte, each shot's picture is moved so the rows its framing chose (tools/grade_frame.py) fill the 2.35:1 band.
 Frames are decoded as 16-bit RGB, the shot's LUT applied with trilinear interpolation, grain added in display space
 weighted toward the midtones (film grain is strongest in the mids and fades in deep shadow and highlight) and seeded
@@ -77,6 +77,21 @@ def grain(shape, frame_no, cfg, luma):
     return mono
 
 
+def paint_out(img, p):
+    """inpaint the dark strokes inside a rectangle (sign lettering on a light board) from their surroundings;
+    p = {"rect": [x0, y0, x1, y1], "dark_below": 0.45}: static, for locked-off shots"""
+    import cv2
+    x0, y0, x1, y1 = p['rect']
+    y = img[..., 0] * 0.2126 + img[..., 1] * 0.7152 + img[..., 2] * 0.0722
+    m = np.zeros(img.shape[:2], np.uint8)
+    m[y0:y1, x0:x1] = (y[y0:y1, x0:x1] < p.get('dark_below', 0.45)).astype(np.uint8) * 255
+    m = cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=p.get('grow', 2))
+    u8 = (np.clip(img, 0, 1) * 255 + .5).astype(np.uint8)
+    fixed = cv2.inpaint(u8, m, p.get('radius', 4), cv2.INPAINT_TELEA).astype(np.float32) / 255
+    k = (m > 0)[..., None]
+    return np.where(k, fixed, img)
+
+
 def main():
     spec = json.load(open(os.path.join(HERE, sys.argv[1])))
     shots = json.load(open(os.path.join(HERE, spec['shots'])))['shots']
@@ -108,6 +123,7 @@ def main():
                             '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-profile:v', 'high',
                             '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv',
                             '-c:a', 'copy', '-movflags', '+faststart', out], stdin=subprocess.PIPE)
+    paint = json.load(open(os.path.join(HERE, spec['paint']))) if spec.get('paint') else {}
     fsz, idx = W * H * 6, 0
     k = int(round(rng[0] * 24)) if rng else 0               # frame number on the film's clock
     g = spec.get('grain')
@@ -119,6 +135,8 @@ def main():
         while idx < len(luts) - 1 and k >= luts[idx][1]:
             idx += 1
         lut = luts[idx][2]
+        for pt in paint.get(shots[idx]['id'], []):          # text in frame painted out before the grade
+            img = paint_out(img, pt)
         if lut is not None:
             img = apply_lut(img, lut)
             if g:

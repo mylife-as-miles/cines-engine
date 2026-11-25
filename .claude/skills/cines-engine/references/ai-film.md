@@ -87,6 +87,10 @@ Takes:
 
 - Pull a contact sheet of every take (`python3 scripts/contact_sheet.py take.mp4 sheet.jpg --n 8`) and watch the full clip at speed once. Check hands, faces and eyes, physics (liquids, cloth, collisions), morphing between frames, flicker, accidental text, and whether the camera move ends where the cut needs it.
 - Choose with the author for hero shots; record the choice and the reason in `SHOTS.md`. Usable portions count: a 6 s clip with 3 good seconds is a select.
+- **The mistakes pass on the cut.** Before the grade:
+  - **Words:** transcribe the cut with faster-whisper (`medium.en`, word timestamps) and check every line against the script word for word. If faster-whisper's PyAV decoder fails (`open() got an unexpected keyword argument 'metadata_errors'`), decode with ffmpeg to float32 at 16 kHz and pass the samples.
+  - **Flash cuts:** scan for frame-difference spikes away from the shot cuts; a generated take can hide a 4-frame flash (Oren lesson 54).
+  - **Then look at every shot** for artefacts, readable text and broken geography.
 
 ## 6. Edit
 
@@ -94,6 +98,7 @@ Cut by `editing.md`: emotion and story before continuity; join re-rendered start
 
 - Keep an edit list (`edit/edit.json`: clip path, in, out, transition, notes) and build the cut with ffmpeg from it, so the edit is repeatable: conform every clip first (`fps=24,scale=1920:1080:flags=lanczos,setsar=1,format=yuv420p`), then trim/concat or `xfade`.
 - Cut on action and on sound; generated clips often start and end slow, so trim the first and last half second.
+- **Cover a broken shot with the film's own footage before paying for a pickup.** Use a still stretch of the right angle, pushed in, played back then forward, with the broken shot's own sound (`tools/cover_shot.py`; the assembler's `audio` + `audio_from`). Oren's Q13 wide put the pair inside another laundrette (lesson 57).
 - Vertical versions: re-generate with `aspect_ratio: "9:16"` for hero shots, or use the Reframe model, or crop with a keyed pan (`crop=ih*9/16:ih:x='…'`) — never letterbox a 16:9 into a Short.
 
 ## 7. Sound
@@ -106,6 +111,7 @@ Model-generated audio is a guide at most: build the soundtrack ourselves (`sound
 
 Grade before the finish, in the order of `color.md`: management path (generated video is display-referred Rec.709), per-shot correction matched to the best shot (CDL in ACEScct), the author's chosen look (an OpenEmulsion look board first), grain once, framing, then measured QA. Oren's `grade/` and `tools/grade_*.py` are the worked example.
 
+- **Screens are built in code, never generated.** A handset prompt gives a blank display, and can leave a pure-black hole under the thumb. Track the display with an affine ECC warp on what the thumb never covers, warp the UI on, and keep skin in front. Add the glass's own detail back, measured on bare glass only (Oren's `tools/handset_insert.py` and `tools/handset_ui.py`, lesson 55).
 - **Upscale before text.** Upscalers and enhancers rewrite fine text (a FloWell upscale turned "1,000 ppm" into "1.000 ppn" and middle dots into dashes). Upscale and deflicker the clean picture, then lay titles, captions and graphics on top (`motion-graphics.md` for the graphics pipeline and the repair recipe if text was upscaled by mistake).
 - Grade for consistency (ffmpeg `eq`, `curves`, `colorbalance`, or a `.cube` LUT with `lut3d`), add grain last so it unifies clips from different models.
 - Titles, captions and end cards from `assets/gfx_template.html` via `scripts/canvas_render.js`.

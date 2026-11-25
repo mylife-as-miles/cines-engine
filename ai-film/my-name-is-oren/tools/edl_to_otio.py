@@ -2,7 +2,7 @@
 """Export the cut as an editorial timeline any NLE can open: OpenTimelineIO (.otio), CMX3600 (.edl) and Final Cut 7 XML
 (.xml, which DaVinci Resolve and Premiere import), from the edit decision list tools/assemble.py writes.
 
-    /home/user/ocio/.venv/bin/python tools/edl_to_otio.py out/edits/Q01_Q13_v6.edl.json edits/Q01_Q13_v6
+    /home/user/ocio/.venv/bin/python tools/edl_to_otio.py out/edits/Q01_Q13_v7.edl.json edits/Q01_Q13_v7
 
 One video track: each segment is a clip of its take (media path relative to the production folder, source range in
 frames at 24 fps); a "dissolve:N" join becomes an N-frame SMPTE dissolve centred on the cut, a "cut" a straight cut.
@@ -56,7 +56,7 @@ def main():
             n2 = int(nxt.split(':')[1]); b -= n2 - n2 // 2
         clip = otio.schema.Clip(name=f"{i + 1:03d} {name}", media_reference=ref,
                                 source_range=otio.opentime.TimeRange(rt(a), rt(b - a + 1)))
-        clip.metadata['cines'] = {k: s.get(k) for k in ('join', 'at', 'crop', 'gain_db', 'audio', 'tail_db', 'head_db')}
+        clip.metadata['cines'] = {k: s.get(k) for k in ('join', 'at', 'crop', 'gain_db', 'audio', 'audio_from', 'tail_db', 'head_db')}
         if i and j.startswith('dissolve'):
             v.append(otio.schema.Transition(name=f'dissolve {n}f', transition_type=otio.schema.TransitionTypes.SMPTE_Dissolve,
                                             in_offset=rt(n // 2), out_offset=rt(n - n // 2)))

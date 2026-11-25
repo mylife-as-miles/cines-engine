@@ -1,8 +1,8 @@
 {
- "_about": "Every added sound on the film's clock, placed from data (sound.md §2). `at`/`from`/`to` are either seconds on the edit's clock, or 'Qxx_tN@s': seconds on that take's own clock, mapped through the edit decision list, so a re-cut moves them with their picture. `level` is the sound's loudness in the mix (LUFS over its length); the dialogue sits near -18, so beds are 22-29 dB under it and the few effects 11-14 dB under (the author wants few, quiet effects). The takes' own sync sound stays; these glue it and point up what the picture shows.",
- "edl": "out/edits/Q01_Q13_v6.edl.json",
- "video": "out/edits/Q01_Q13_v6.mp4",
- "out": "out/edits/Q01_Q13_v6_sound.mp4",
+ "_about": "Every added sound on the film's clock, placed from data (sound.md \u00a72). `at`/`from`/`to` are either seconds on the edit's clock, or 'Qxx_tN@s': seconds on that take's own clock, mapped through the edit decision list, so a re-cut moves them with their picture. `level` is the sound's loudness in the mix (LUFS over its length); the dialogue sits near -18, so beds are 22-29 dB under it and the few effects 11-14 dB under (the author wants few, quiet effects). The takes' own sync sound stays; these glue it and point up what the picture shows.",
+ "edl": "out/edits/Q01_Q13_v7.edl.json",
+ "video": "out/edits/Q01_Q13_v7.mp4",
+ "out": "out/edits/Q01_Q13_v7_sound.mp4",
  "beds": [
   {
    "id": "street",
@@ -18,8 +18,8 @@
    "af_why": "earshot read the street take as partly wind (77% in forced choice against traffic); the high-pass takes out the rumble that carries it and keeps the bed out of the voices",
    "boost": [
     {
-     "from": "Q10_t1@0",
-     "to": "Q10_t1@22.9",
+     "from": "Q10_t1_menu@0",
+     "to": "Q10_t1_menu@22.9",
      "db": 6,
      "ramp": 0.4,
      "why": "Q10 keeps only its voices; the street carries its ground"
@@ -38,8 +38,8 @@
    "why": "from the first sight of the laundrette window, the machines turning behind them for the rest of the film",
    "boost": [
     {
-     "from": "Q10_t1@0",
-     "to": "Q10_t1@22.9",
+     "from": "Q10_t1_menu@0",
+     "to": "Q10_t1_menu@22.9",
      "db": 4,
      "ramp": 0.4
     }

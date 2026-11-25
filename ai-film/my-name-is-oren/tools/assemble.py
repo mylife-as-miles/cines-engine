@@ -2,7 +2,8 @@
 """Assemble the film from its takes in one pass: python3 tools/assemble.py edits/Q01_Q13_v2.json [--edl-only]
 
 A segment may take its sound from another file on the take's own clock ("audio": e.g. its voice stem from
-tools/stems.py, where the generator put music under the dialogue).
+tools/stems.py, where the generator put music under the dialogue). "audio_from" starts that sound at another frame of
+its file: a cover shot whose picture comes from elsewhere keeps the sound of the shot it replaces.
 Also writes <out>.edl.json: where every segment lands on the film's clock (tools/sound_mix.py places sounds with it);
 --edl-only writes that alone, without rendering.
 
@@ -14,7 +15,7 @@ The spec lists segments in order:
 - join: how this segment joins the one before it: "cut", or "dissolve:N" (N frames).
 Each segment's sound is set to the same integrated loudness (a static gain, measured here) unless the spec sets
 "gain" (dB), e.g. matched on dialogue level instead; "tail_db" eases a segment's last 2 s down and "head_db" eases its first 2.5 s up. A limiter at
--1.5 dBFS follows, so no sequence clips. Cuts get 20 ms fades so they never click.
+-1.5 dBFS follows, so no sequence clips. Cuts get 20 ms fades so they never click, unless the sound runs on unbroken across the cut (same file, next frame).
 The output is 8-bit 4:2:0 H.264 (High profile), 48 kHz AAC, faststart: it plays on phones (lesson 51).
 """
 import json, os, re, subprocess, sys
@@ -81,9 +82,11 @@ def main():
         crop = f"crop={s['crop']}," if s.get('crop') else ''
         chains.append(f"[{v_in}]trim=start_frame={a}:end_frame={b + 1},setpts=PTS-STARTPTS,{crop}"
                       f"scale=854:480,setsar=1,fps={FPS},format=yuv420p,settb=1/{FPS}[v{i}]")
-        chains.append(f"[{a_in}]atrim=start={a / FPS:.5f}:end={(b + 1) / FPS:.5f},asetpts=PTS-STARTPTS,"
+        aa = s.get('audio_from', a) if s.get('audio') else a      # the sound's first frame on its own file's clock
+        s['_afile'], s['_aa'] = (s.get('audio') or s['file']), aa
+        chains.append(f"[{a_in}]atrim=start={aa / FPS:.5f}:end={(aa + b - a + 1) / FPS:.5f},asetpts=PTS-STARTPTS,"
                       f"aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,apad,"
-                      f"atrim=end={s['_dur']:.5f},volume={gain:.2f}dB,{tail(s)}alimiter=limit=0.841:level=false[a{i}]")
+                      f"atrim=end={s['_dur']:.5f},volume={gain:.2f}dB,{tail(s)}alimiter=limit=0.841:level=false:latency=1[a{i}]")
         print(f"{s['file']}: frames {a}-{b} ({s['_dur']:.2f} s), {level} LUFS -> gain {gain:+.1f} dB", flush=True)
 
     v, au, dur = 'v0', 'a0', segs[0]['_dur']
@@ -95,8 +98,10 @@ def main():
             chains.append(f"[{au}][a{i}]acrossfade=d={d:.5f}[xa{i}]")
             dur = dur + s['_dur'] - d
         else:
-            chains.append(f"[{au}]afade=t=out:st={dur - 0.02:.5f}:d=0.02[fo{i}]")
-            chains.append(f"[a{i}]afade=t=in:st=0:d=0.02[fi{i}]")
+            p = segs[i - 1]                 # the sound runs on unbroken (same file, next frame): no anti-click fades
+            seamless = p['_afile'] == s['_afile'] and p['_aa'] + (p['_b'] - p['_a']) + 1 == s['_aa'] and p['_gain'] == s['_gain']
+            chains.append(f"[{au}]afade=t=out:st={dur - 0.02:.5f}:d={0 if seamless else 0.02}[fo{i}]" if not seamless else f"[{au}]anull[fo{i}]")
+            chains.append(f"[a{i}]afade=t=in:st=0:d=0.02[fi{i}]" if not seamless else f"[a{i}]anull[fi{i}]")
             chains.append(f"[{v}][fo{i}][v{i}][fi{i}]concat=n=2:v=1:a=1[cv{i}][xa{i}]")
             chains.append(f"[cv{i}]settb=1/{FPS},fps={FPS}[xv{i}]")   # concat leaves a microsecond timebase; xfade needs 1/24
             dur = dur + s['_dur']
@@ -108,7 +113,8 @@ def main():
     edl = {'out': spec['out'], 'fps': FPS, 'duration': round(dur, 4),
            'segments': [{'file': s['file'], 'from': s['_a'], 'to': s['_b'], 'at': round(s['_at'], 4),
                          'dur': round(s['_dur'], 4), 'join': s.get('join', 'cut'), 'crop': s.get('crop'),
-                         'gain_db': round(s['_gain'], 2), 'audio': s.get('audio'), 'tail_db': s.get('tail_db'),
+                         'gain_db': round(s['_gain'], 2), 'audio': s.get('audio'), 'audio_from': s.get('audio_from'),
+                         'tail_db': s.get('tail_db'),
                          'head_db': s.get('head_db')} for s in segs]}
     with open(os.path.splitext(out)[0] + '.edl.json', 'w') as f:
         json.dump(edl, f, indent=1)

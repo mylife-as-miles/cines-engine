@@ -1,0 +1,20 @@
+{
+ "out": "out/takes/Q13_cover_wide.mp4",
+ "frames": 83,
+ "parts": [
+  {
+   "file": "out/takes/Q12_t1.mp4",
+   "from": 652,
+   "to": 692,
+   "reverse": true
+  },
+  {
+   "file": "out/takes/Q12_t1.mp4",
+   "from": 653,
+   "to": 694
+  }
+ ],
+ "dissolve": 0,
+ "crop": "640:360:100:70",
+ "_about": "Covers Q13's wide (v6 5:03.17-5:06.62, take frames 397-479), which shows the pair on a bench INSIDE a different laundrette while Helena laughs 'Oh, Jesus. Yeah. Those fuckers sure did.' The script has them on a low wall beside the laundrette. The cover is the one still stretch of the right wide: both seated on the wall, the bag between his feet (Q12 frames 652-694, after he has sat down), played back from 692 to 652 and forward again to 694 (83 frames at their own speed; the turn is on frame 652, where nothing moves), and pushed in 1.33x to a closer two-shot so it reads as its own shot, not the wide seen 15 s before. (Q12's end into Q13's head was tried first: the two takes' framings differ by a few pixels, so their dissolve ghosted Oren's head mid-shot, and a pedestrian from Q13 walked in.) Her line keeps its own sound (Q13_t1 from frame 397). She is upright here after folding forward in the shot before: she sits back up across the cut, as she is in the two shots after it. The proper fix is still the wide pickup (design: ~$1.10, needs fal funds)."
+}
