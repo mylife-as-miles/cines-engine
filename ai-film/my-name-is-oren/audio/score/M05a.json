@@ -1,0 +1,7 @@
+{
+ "id": "M05a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 25 seconds. A single low cello holds a long, soft note on A with slow bowing, over a very quiet double-bass pedal an octave below. Now and then a viola adds a note a semitone above that hangs, unresolved, then falls back. Grave, dignified, quietly angry, with no real melody, just weight and patience. It never swells. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

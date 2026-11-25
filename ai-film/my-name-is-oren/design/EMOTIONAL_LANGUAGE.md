@@ -1,5 +1,7 @@
 # The emotional language of *My Name Is Oren*
 
+**Helena first:** `design/HELENA.md` is who the language serves.
+
 **The author's direction (2026-11-25):** cinematography, music, editing, symbolism, performance and history work as parts of one emotional language. The film should make you feel something before it makes you understand it.
 
 The reference is *La Bola Negra* (Javier Calvo and Javier Ambrossi; cinematography Gris Jordana; editing Alberto Gutiérrez; music Raül Refree). Its lessons are summarised in our words, and nothing in this document copies it. The author noted that the film barely had music, and that music would carry this language.
@@ -15,7 +17,7 @@ The screenplay is unchanged. Every line stays verbatim (`design/script.json`), a
 - **The theme, planted, developed and resolved.** A small falling figure in M02 (her past, on the boot sketch) becomes a rising phrase in M04 (on her rank) and the whole warm figure in M01c (the corner). The ending lands as recognition, because we have heard it grow.
 - **Feel before understand.** Every cue enters *before* the moment it belongs to is explained:
   - M02 starts on the fade-in, before we meet her.
-  - M04's strings warm under the share menu, before the light wakes and before he says her rank.
+  - M04's strings enter when she presses Send (her choice to trust), before the light wakes and before he says her rank.
   - M06 waits until her laugh has broken, then joins it.
 - **Silence is part of the score.** M05 cuts out hard after "Didn't attend.", so the next line ("Can you sit? Here. With me.") lands in quiet. Her laugh is first heard dry.
 - **Under dialogue:** 12–16 dB under the voice, ducked further while anyone speaks, with a gentle dip around 2.5 kHz to leave room for the words. Every line stays clear (`tools/sound_mix.py`).
@@ -24,7 +26,7 @@ The screenplay is unchanged. Every line stays verbatim (`design/script.json`), a
 | --- | --- | --- | --- |
 | M02 Unseen | 0:06–0:37 | Her solitude, before we meet her | A barely audible low string drone on A minor. The guitar's three falling notes land on her boot sketch (her past). |
 | M03 Her hand | 2:26–2:38 | The wordless gesture: her hand stays on his shoulder (A45–A46) | A few hesitant guitar notes and one string swell, unresolved. |
-| M04 Recognised | 3:34–4:10 | The turn: someone sees her | The strings warm from a bare fifth to A major under the share menu and the temple light. The guitar's rising phrase answers "Yes, Second Lieutenant Helena Duncan." |
+| M04 Recognised | 3:43–4:10 | The turn: someone sees her | Silence while she chooses what to share ("Not the recordings."). The strings enter as she presses Send and warm under the temple light. The guitar's rising phrase answers "Yes, Second Lieutenant Helena Duncan." with a suspension left open: her rank is honour and wound at once (`HELENA.md`). |
 | M05 Didn't attend | 4:16–4:37 | Weight, injustice, dignity | A low cello pedal, then a hard cut to silence. |
 | M06 The laugh | 4:57–5:14 (into Q14) | The film's first warmth | A light, bright guitar figure in A major, after the laugh has broken. |
 | M01c The corner | Q22, the last blink to the title | Recognition: she lets him keep her pace | The whole theme (already chosen). |

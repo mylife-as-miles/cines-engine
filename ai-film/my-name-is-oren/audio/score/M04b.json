@@ -1,0 +1,7 @@
+{
+ "id": "M04b",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 40 seconds. A very slow, very quiet string chord on A rises from silence and warms from an open fifth to a full, soft A major over twenty seconds, like a face lifting. At its warmest a nylon-string guitar plays a slow, simple melodic phrase of a few notes, tender and plain, and the strings hold underneath; then everything gently recedes to a single held note and silence. Free in time, no pulse, intimate and restrained, deeply felt but understated. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}

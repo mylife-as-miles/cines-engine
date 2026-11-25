@@ -1,6 +1,6 @@
 # Sound bible: *My Name Is Oren*
 
-The sound half of the film bible, written to `.claude/skills/cines-engine/references/score-and-sound-design.md`. It holds to the screenplay (`design/script.json`) and DECISIONS: **no music under dialogue; one small cue starts on the last blink and carries the corner into the title.** Every sound below is a decision about what the audience hears and why. What is already built is marked *(built)*; the rest is the plan for Q14–Q22 and the finish.
+The sound half of the film bible, written to `.claude/skills/cines-engine/references/score-and-sound-design.md`. It holds to the screenplay (`design/script.json`) and DECISIONS. **Changed 2026-11-25 (the author):** the film now has a score through it, one small ensemble with one theme planted and completed at the corner (`design/EMOTIONAL_LANGUAGE.md` §1, `design/HELENA.md`). Where this bible says there is no music under dialogue or only one cue, those plans now read as their history. Every sound below is a decision about what the audience hears and why. What is already built is marked *(built)*; the rest is the plan for Q14–Q22 and the finish.
 
 ## 1. The soundtrack's job
 

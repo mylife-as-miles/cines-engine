@@ -1,0 +1,7 @@
+{
+ "id": "M06a",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 25 seconds. A nylon-string guitar plays a light, warm, gently lilting plucked figure in A major, a little quicker than before but still free and unhurried, over a soft, bright string chord. The first warm, sunny moment in a grey day, like a laugh that surprises the person laughing. Small, kind and gentle, never comedic, never sentimental. Begins from silence, stays quiet, ends on an open A major chord that rings. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[B1]]\n[[C2]]"
+}
