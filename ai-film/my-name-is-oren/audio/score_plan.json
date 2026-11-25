@@ -147,6 +147,22 @@
    "end_s": 0,
    "job": "The laugh, take 2: pizzicato strings with the guitar",
    "prompt": "Instrumental film-score cue, about 25 seconds. Soft pizzicato violas and a nylon-string guitar trade small, light, warm figures in A major, playful but tender, unhurried, over a quiet held cello note; a little smile in music, the first warmth of a grey afternoon. Quiet, close, simple; it ends on a gently ringing A major chord. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "S01a",
+   "model": "lyria-3-pro-preview",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "S01 'Slow Down', vocal version (take a)",
+   "prompt": "Create an original slow, dreamy, intimate dream-pop ballad, about two and a half minutes long, at about 70 BPM, in A major. A clean electric guitar drenched in long reverb plays slow, arpeggiated major-seventh chords; a warm, round bass; very soft brushed drums that enter only at the first chorus and stay quiet; a faint organ pad underneath. A hushed, breathy, gentle androgynous lead vocal, sung close to the microphone, unhurried, tender and melancholic, romantic and spacious, like a grey afternoon that slowly turns warm. Long instrumental intro of about 15 seconds before the voice. Sparse arrangement with lots of air; no loud climax, no belting, no harmonies stacked high, no electronic beats. Sing these original lyrics exactly:\n\n[Intro]\n(slow reverb guitar, no voice)\n\n[Verse 1]\nGrey on the window, rain on the street\nEveryone passing, nobody sees\nYou held the paper, warm in your hand\nI didn't ask you, you understand\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Verse 2]\nBoots on the pavement, laces undone\nHalf of a drawing I never got done\nYou waited still like you had all day\nI nearly told you to go away\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Bridge]\nRound the corner\nDon't let go\n\n[Outro]\nSlow down\nSlow down\n(guitar rings out)"
+  },
+  {
+   "id": "S01b",
+   "model": "lyria-3-pro-preview",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "S01 'Slow Down', vocal version (take b)",
+   "prompt": "Create an original slow, dreamy, intimate dream-pop ballad, about two and a half minutes long, at about 70 BPM, in A major. A clean electric guitar drenched in long reverb plays slow, arpeggiated major-seventh chords; a warm, round bass; very soft brushed drums that enter only at the first chorus and stay quiet; a faint organ pad underneath. A hushed, breathy, gentle androgynous lead vocal, sung close to the microphone, unhurried, tender and melancholic, romantic and spacious, like a grey afternoon that slowly turns warm. Long instrumental intro of about 15 seconds before the voice. Sparse arrangement with lots of air; no loud climax, no belting, no harmonies stacked high, no electronic beats. Sing these original lyrics exactly:\n\n[Intro]\n(slow reverb guitar, no voice)\n\n[Verse 1]\nGrey on the window, rain on the street\nEveryone passing, nobody sees\nYou held the paper, warm in your hand\nI didn't ask you, you understand\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Verse 2]\nBoots on the pavement, laces undone\nHalf of a drawing I never got done\nYou waited still like you had all day\nI nearly told you to go away\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Bridge]\nRound the corner\nDon't let go\n\n[Outro]\nSlow down\nSlow down\n(guitar rings out)"
   }
  ],
  "_round1": "M01a-d (felt piano / cello / guitar / piano+quartet): earshot heard all four as sad, not warm-hopeful (sad 80-97% in forced choice). Round 2 keeps the restraint and moves the levers FME-24 says matter for valence: a clear major key, a lighter mid-high register, relief.",
@@ -162,5 +178,12 @@
   "why": "a single nylon-string guitar, slow plucked notes free in time over a barely audible string pad: the most minimal of the takes, like someone finally slowing down",
   "placement": "on Q22's own clock once it exists: entering on the last blink, carrying the corner, resolving under the title. Re-window then with earshot `find` so the take's resolving chord lands on the title (the take resolves late), and measure its tuning (Lyria drifts 0 to +36 cents; it plays alone, so only correct a drift you can hear)."
  },
- "_about_2": "2026-11-25, the author: the film should make you feel before it makes you understand, with music as part of one emotional language (design/EMOTIONAL_LANGUAGE.md). The score now runs through the film in one small ensemble (nylon-string guitar, strings) in A: minor and bare early, warming to A major; M01c stays the full statement at the end."
+ "_about_2": "2026-11-25, the author: the film should make you feel before it makes you understand, with music as part of one emotional language (design/EMOTIONAL_LANGUAGE.md). The score now runs through the film in one small ensemble (nylon-string guitar, strings) in A: minor and bare early, warming to A major; M01c stays the full statement at the end.",
+ "songs": {
+  "S01": {
+   "title": "Slow Down",
+   "lyrics": "[Intro]\n(slow reverb guitar, no voice)\n\n[Verse 1]\nGrey on the window, rain on the street\nEveryone passing, nobody sees\nYou held the paper, warm in your hand\nI didn't ask you, you understand\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Verse 2]\nBoots on the pavement, laces undone\nHalf of a drawing I never got done\nYou waited still like you had all day\nI nearly told you to go away\n\n[Chorus]\nSlow down, slow down\nStay at my side\nTell me your name\nAnd I'll tell you mine\n\n[Bridge]\nRound the corner\nDon't let go\n\n[Outro]\nSlow down\nSlow down\n(guitar rings out)",
+   "about": "The author's request (2026-11-25): 'a song like Cigarettes After Sex playing'. An original song in that kind of sound (slow dream pop: reverb-drenched clean guitar, breathy close vocal, brushed drums), with an original melody and original lyrics from Helena's story; the prompt names no artist and borrows no words. Its hook is the film's last line ('Slow down, Oren.') and its story is the film's spine (the names). The vocal plays only where nobody speaks; under dialogue the song's own accompaniment (its Demucs instrumental stem) plays."
+  }
+ }
 }

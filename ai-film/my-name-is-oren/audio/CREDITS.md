@@ -7,5 +7,7 @@
 | Q10's voice stem | Separated from the Seedance take with Demucs htdemucs (Meta) | Demucs: MIT; the audio remains the take's |
 | Listening checks | earshot (MIT), with the LAION CLAP and MIT AST models | — |
 | The final cue, M01c (`audio/score/M01c_cue.flac`) | Lyria 3.5 (Google), prompt in `audio/score_plan.json`; window 24–48 s of the 62 s take, faded | Google Gemini API terms; SynthID-watermarked; commercial use not yet verified against Google's current terms: check before release; final, chosen by the author (2026-11-25) |
+| The score cues M02–M06 (`audio/score/M02a`–`M06a`, `M05a`) | Lyria 3.5 (Google), prompts in `audio/score_plan.json`; windows in `audio/sound_plan_v9_nylon.json` (v9); M05a also in v10 | Google Gemini API terms; SynthID-watermarked; commercial use not yet verified: check before release |
+| The song "Slow Down" (S01b; take S01a unused) and its Demucs stems | Lyria 3 Pro (Google), original lyrics written for the film (`audio/songs/S01_slow_down.md`); an original song in a dream-pop style, no artist named in the prompt and no words borrowed | Google Gemini API terms; SynthID-watermarked; commercial use not yet verified: check before release |
 | The over-black city voices (`audio/gen/over_black_voices/`) | Gemini TTS (gemini-3.8-flash-tts; en-gb concierge 1–4, assistant 1), lines in `audio/over_black_voices.json` | Google Gemini API terms; generated voices, no real person's likeness |
 | The two-note chime | earshot `make --sound notify/pair` (made in code) | earshot MIT; no recording |

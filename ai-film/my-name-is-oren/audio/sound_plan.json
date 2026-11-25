@@ -2,7 +2,7 @@
  "_about": "Every added sound on the film's clock, placed from data (sound.md \u00a72). `at`/`from`/`to` are either seconds on the edit's clock, or 'Qxx_tN@s': seconds on that take's own clock, mapped through the edit decision list, so a re-cut moves them with their picture. `level` is the sound's loudness in the mix (LUFS over its length); the dialogue sits near -18, so beds are 22-29 dB under it and the few effects 11-14 dB under (the author wants few, quiet effects). The takes' own sync sound stays; these glue it and point up what the picture shows.",
  "edl": "out/edits/Q01_Q13_v8.edl.json",
  "video": "out/edits/Q01_Q13_v8.mp4",
- "out": "out/edits/Q01_Q13_v9_sound.mp4",
+ "out": "out/edits/Q01_Q13_v10_sound.mp4",
  "beds": [
   {
    "id": "street",
@@ -81,7 +81,7 @@
  ],
  "music_duck": {
   "speech": "subs/Oren_Q01_Q13_v8.report.json",
-  "db": 8,
+  "db": 9,
   "pre": 0.12,
   "post": 0.3,
   "ramp": 0.15,
@@ -89,40 +89,38 @@
  },
  "music": [
   {
-   "id": "M02",
-   "file": "audio/score/M02a.mp3",
-   "from": 1.5,
-   "to": 31.85,
-   "sync": 15.8,
-   "at": 20.55,
-   "level": -26,
-   "fade_in": 3.0,
-   "fade_out": 3.0,
-   "why": "Unseen: the low string drone on A minor from the fade-in; the guitar's first falling notes land on the sketch of her boots (A10, 0:20.5); gone before 'Excuse me.' (HELENA.md \u00a75)"
-  },
-  {
-   "id": "M03",
-   "file": "audio/score/M03b.mp3",
-   "from": 5.5,
-   "to": 17.4,
-   "sync": 12.2,
-   "at": 152.6,
-   "level": -27,
+   "id": "S01-open",
+   "file": "audio/score/S01b.mp3",
+   "from": 0.0,
+   "to": 30.6,
+   "at": 6.25,
+   "level": -24,
    "fade_in": 1.5,
-   "fade_out": 1.5,
-   "why": "Her hand: the strings swell as she lowers herself onto his shoulder; the guitar's notes fall on her hand on him (2:32.6) and her open palm (2:35.2); out before she jokes it away"
+   "fade_out": 2.0,
+   "why": "the song from the fade-in: 16 s of reverb guitar under the street; the voice enters on the sketch of her boots (0:22): 'Grey on the window, rain on the street / Everyone passing, nobody sees' over her watching the passing feet and the bag; gone before 'Excuse me.'"
   },
   {
-   "id": "M04",
-   "file": "audio/score/M04a.mp3",
-   "from": 10.0,
-   "to": 37.3,
-   "sync": 18.0,
+   "id": "S01-hand",
+   "file": "audio/stems/S01b.rest.wav",
+   "from": 2.0,
+   "to": 13.9,
+   "at": 145.9,
+   "level": -28,
+   "fade_in": 1.2,
+   "fade_out": 1.5,
+   "why": "the song's opening guitar returns as she lowers herself onto his shoulder and looks at her palm: the street's song, now about him"
+  },
+  {
+   "id": "S01-rank",
+   "file": "audio/stems/S01b.rest.wav",
+   "from": 34.0,
+   "to": 61.3,
+   "sync": 42.0,
    "at": 231.25,
-   "level": -27,
+   "level": -28.5,
    "fade_in": 2.0,
    "fade_out": 3.0,
-   "why": "Recognised: silence while she chooses ('Not the recordings.'); the strings enter as she presses Send (3:43.3) and warm under the temple light; the guitar's phrase answers her rank as her head comes up (3:51.3); the swell fills her wordless reaction; it eases out under 'Helena will do.'"
+   "why": "silence while she chooses; the band enters as she presses Send; the 'Slow down' chorus harmony arrives as her head comes up after her rank and fills her silence; out under 'Helena will do.'"
   },
   {
    "id": "M05",
@@ -133,20 +131,20 @@
    "level": -30,
    "fade_in": 2.5,
    "fade_out": 0.08,
-   "why": "Didn't attend: a low string pedal under the lift and the two tours; a hard cut to silence after 'Didn't attend.', so 'Can you sit? Here. With me.' lands in quiet"
+   "why": "Didn't attend: a low string pedal (E minor, within the song's D major), then a hard cut to silence"
   },
   {
-   "id": "M06",
-   "file": "audio/score/M06a.mp3",
-   "from": 1.8,
-   "to": 16.3,
-   "sync": 2.0,
-   "at": 300.2,
+   "id": "S01-laugh",
+   "file": "audio/stems/S01b.rest.wav",
+   "from": 68.0,
+   "to": 82.5,
+   "at": 300.0,
    "level": -27,
-   "fade_in": 0.6,
+   "fade_in": 0.8,
    "fade_out": 2.5,
-   "why": "The laugh: heard dry first; once it has broken, a light plucked guitar in C joins it, the film's first warmth (runs on into Q14 when it exists)"
+   "why": "after the laugh has broken, the song's band comes back, lighter, into the second verse (runs on into Q14)"
   }
  ],
- "music_level_note": "levels raised 1-2 dB after the author's note that the film barely had music: the score speaks in the silences, and ducks 8 dB under every line (each line stays 16 dB or more above it)"
+ "music_level_note": "levels raised 1-2 dB after the author's note that the film barely had music: the score speaks in the silences, and ducks 8 dB under every line (each line stays 16 dB or more above it)",
+ "music_note": "v10: the author asked for 'a song like Cigarettes After Sex playing'. S01 'Slow Down' (take b, D major; audio/score_plan.json songs) is the film's song and its score: the vocal song only where nobody speaks (the opening), and the song's own instrumental stem (Demucs, audio/stems/S01b.rest.wav) under dialogue, so the whole film sounds like one record. The 'Slow down' chorus is the theme her last line will complete. M05 stays the low pedal and the hard silence. The v9 nylon score is kept in audio/sound_plan_v9_nylon.json."
 }
