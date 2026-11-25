@@ -116,8 +116,8 @@ CHARS = [
     dict(code='C03', slug='marl', name='MARL',
          who='A fighter of the ground in her thirties, from Anvil Vale; she dug for two days. Grief that has not been given leave yet.',
          world=GROUND,
-         face='A woman of thirty-four with light brown skin and freckles; a broad face, a strong jaw, a nose broken once and healed slightly crooked, watchful grey-green eyes.',
-         hair='Dark brown hair in one thick braid, grey with rock dust from Anvil Vale.',
+         face='A woman of thirty-four, clearly in her early thirties: young, strong, unlined but for a frown line; light brown skin with freckles; a broad face, a strong jaw, a nose broken once and healed slightly crooked, watchful grey-green eyes.',
+         hair='Dark brown hair, not grey, in one thick braid. A fine powder of pale rock dust from Anvil Vale lies on the top of the hair and the braid like flour, so the dark brown shows clearly underneath it.',
          wardrobe='Armour beaten from imperial hull-plate: a breastplate, a back-plate and shoulder guards hammered from the white-painted hull plates of the sky fleet, the white paint scuffed and flaking to rust-brown metal beneath, joined with rivets and leather straps. Under it, rough undyed wool and linen in grey-brown; leather bracers; heavy boots. Everything mended.',
          hands='Bare, scarred, dirt in the knuckles.',
          bearing='Broad and planted, always with her hands on something.',
@@ -207,13 +207,27 @@ CHARS = [
 
 # Approved casting stills, as the author approves them: code -> take tag (refs/candidates/<tag>.jpg). The sheet is
 # then made from that still with the template.
-APPROVED_CASTING = {}
+APPROVED_CASTING = {c: f'{c}_t1a' for c in ('C01', 'C02', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09', 'C10', 'C11', 'C12')}
+
+# One correction appended after the template, where the approved still has a fault the sheet should not keep.
+SHEET_CORRECTIONS = {
+    'C08': 'WARDROBE CORRECTION: the hem of the white robe is whole, not torn or frayed; keep the grey dust up to the knee exactly as in the reference.',
+}
 
 
 def current(code):
     C = next(c for c in CHARS if c['code'] == code)
     if code in APPROVED_CASTING:
-        return sheet_prompt(), [f"refs/candidates/{APPROVED_CASTING[code]}.jpg"], 'sheet'
+        tag = APPROVED_CASTING[code]
+        full = f'out/refs/{tag}_full.jpg'
+        if not os.path.exists(os.path.join(ROOT, full)) and os.path.exists(os.path.join(ROOT, f'out/refs/{tag}.png')):
+            from PIL import Image
+            Image.open(os.path.join(ROOT, f'out/refs/{tag}.png')).convert('RGB').save(os.path.join(ROOT, full), quality=95)
+        img = full if os.path.exists(os.path.join(ROOT, full)) else f'refs/candidates/{tag}.jpg'
+        prompt = sheet_prompt()
+        if code in SHEET_CORRECTIONS:
+            prompt += '\n' + SHEET_CORRECTIONS[code] + '\n'
+        return prompt, [img], 'sheet'
     return casting(C), [f for f, _, _ in C.get('refs', [])], 'casting'
 
 

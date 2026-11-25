@@ -19,10 +19,10 @@ WORLD
 the ground beneath Orison, the bearing-lands of the eleven nations (an invented world, Year 800 of the Ascension; no electricity). Ground people are broad and bare-handed; everything they wear is undyed, worn and mended, and they have carried weight all their lives.
 
 FACE AND BODY
-A woman of thirty-four with light brown skin and freckles; a broad face, a strong jaw, a nose broken once and healed slightly crooked, watchful grey-green eyes.
+A woman of thirty-four, clearly in her early thirties: young, strong, unlined but for a frown line; light brown skin with freckles; a broad face, a strong jaw, a nose broken once and healed slightly crooked, watchful grey-green eyes.
 
 HAIR
-Dark brown hair in one thick braid, grey with rock dust from Anvil Vale.
+Dark brown hair, not grey, in one thick braid. A fine powder of pale rock dust from Anvil Vale lies on the top of the hair and the braid like flour, so the dark brown shows clearly underneath it.
 
 WARDROBE
 Armour beaten from imperial hull-plate: a breastplate, a back-plate and shoulder guards hammered from the white-painted hull plates of the sky fleet, the white paint scuffed and flaking to rust-brown metal beneath, joined with rivets and leather straps. Under it, rough undyed wool and linen in grey-brown; leather bracers; heavy boots. Everything mended.
