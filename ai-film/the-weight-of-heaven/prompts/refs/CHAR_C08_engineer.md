@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C08_t1a · `refs/candidates/C08_t1a.jpg` (full size `out/refs/C08_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-ceec-7d63-899c-4e42e4971e76`, prompt casting (435 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES, with a note.** Ruddy, bald with a white fringe, white robes grey with dust to the knee. The hem is torn, where Orison's cloth should be whole and only dusty.

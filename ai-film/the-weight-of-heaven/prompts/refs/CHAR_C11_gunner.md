@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C11_t1a · `refs/candidates/C11_t1a.jpg` (full size `out/refs/C11_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-d0d8-7402-9fe9-f1a1182ed9f2`, prompt casting (397 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Nineteen, dark brown skin, white smock with rolled sleeves, belt, the lanyard in his right hand.

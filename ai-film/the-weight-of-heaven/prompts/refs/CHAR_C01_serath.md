@@ -51,5 +51,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C01_t1a · `refs/candidates/C01_t1a.jpg` (full size `out/refs/C01_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1/edit`), job `01a21377-ca4f-7570-af0b-3fba11724b98`, prompt casting (569 words), images `refs/PROP_P02_gold-collar.jpg`, `refs/PROP_P03_seal-ring.jpg` · $0.0630 · 2026-11-25 · verdict: **PASSES.** Deep brown skin, cropped grey-black hair, a lean, composed face; the ankle-length white coat with covered buttons, white gloves and boots; the gold collar at her throat matches P02. The seal ring is too small to judge here.

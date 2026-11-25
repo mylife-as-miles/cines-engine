@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C06_t1a · `refs/candidates/C06_t1a.jpg` (full size `out/refs/C06_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cdac-7ab2-9798-afda92542267`, prompt casting (398 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Pale and freckled, tired and decent, grey braid, plain white robe-coat, gloves.

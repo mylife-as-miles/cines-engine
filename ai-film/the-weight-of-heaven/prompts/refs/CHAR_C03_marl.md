@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C03_t1a · `refs/candidates/C03_t1a.jpg` (full size `out/refs/C03_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cbac-7a42-9f54-3edc433b56b9`, prompt casting (473 words), images  · $0.0590 · 2026-11-25 · verdict: **REDO.** The armour is right (white hull-plate flaking to rust, riveted, over undyed wool), but "grey with rock dust" became grey hair: she reads fifty, not thirty-four, and her skin reads pale rather than light brown.

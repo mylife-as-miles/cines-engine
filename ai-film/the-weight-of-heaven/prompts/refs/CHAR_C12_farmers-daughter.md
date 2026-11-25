@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C12_t1a · `refs/candidates/C12_t1a.jpg` (full size `out/refs/C12_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-d178-79f0-a563-1ae5f72bcd27`, prompt casting (398 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** Six, fair-brown plait, grey eyes, undyed smock and knitted shawl. Her hair is fairer than the farmer's.

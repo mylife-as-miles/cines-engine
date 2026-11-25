@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C05_t1a · `refs/candidates/C05_t1a.jpg` (full size `out/refs/C05_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-ccf5-7da1-b773-db5977e90bce`, prompt casting (436 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES, with a question.** Light brown skin, white beard, layered robes. The tall white headdress reads close to a chef's toque or a dervish hat; it may want a more architectural shape.

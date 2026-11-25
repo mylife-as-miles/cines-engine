@@ -47,5 +47,4 @@ No text, labels, captions, names, numbers or typography anywhere. No props unles
 ```
 
 ## Takes
-
-(none yet)
+- C02_t1a · `refs/candidates/C02_t1a.jpg` (full size `out/refs/C02_t1a.png`, 2752x1536) · Nano Banana 2.1 on fal (`google/nano-banana-2.1`), job `01a21377-cb08-7600-b0a7-b3c43fb6f23e`, prompt casting (485 words), images  · $0.0590 · 2026-11-25 · verdict: **PASSES.** South Asian, tired, grey-black beard; the imperial coat worn to dust-grey with clean patches where the insignia were cut away. Ink on the fingers not visible at this size.
