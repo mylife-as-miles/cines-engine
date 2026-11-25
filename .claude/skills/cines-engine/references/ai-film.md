@@ -90,6 +90,8 @@ Takes:
 
 ## 6. Edit
 
+Cut by `editing.md`: emotion and story before continuity; join re-rendered start frames with a 3-frame dissolve, real reframes with a cut; build in one pass from the takes (`tools/assemble.py`); export the timeline as OTIO / FCP XML / CMX EDL (`tools/edl_to_otio.py`) for any NLE.
+
 - Keep an edit list (`edit/edit.json`: clip path, in, out, transition, notes) and build the cut with ffmpeg from it, so the edit is repeatable: conform every clip first (`fps=24,scale=1920:1080:flags=lanczos,setsar=1,format=yuv420p`), then trim/concat or `xfade`.
 - Cut on action and on sound; generated clips often start and end slow, so trim the first and last half second.
 - Vertical versions: re-generate with `aspect_ratio: "9:16"` for hero shots, or use the Reframe model, or crop with a keyed pan (`crop=ih*9/16:ih:x='…'`) — never letterbox a 16:9 into a Short.

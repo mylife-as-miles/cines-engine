@@ -107,7 +107,9 @@ def main():
     # the edit decision list: where every take lands on the film's clock, so sounds can be placed on a take's own clock
     edl = {'out': spec['out'], 'fps': FPS, 'duration': round(dur, 4),
            'segments': [{'file': s['file'], 'from': s['_a'], 'to': s['_b'], 'at': round(s['_at'], 4),
-                         'dur': round(s['_dur'], 4), 'join': s.get('join', 'cut')} for s in segs]}
+                         'dur': round(s['_dur'], 4), 'join': s.get('join', 'cut'), 'crop': s.get('crop'),
+                         'gain_db': round(s['_gain'], 2), 'audio': s.get('audio'), 'tail_db': s.get('tail_db'),
+                         'head_db': s.get('head_db')} for s in segs]}
     with open(os.path.splitext(out)[0] + '.edl.json', 'w') as f:
         json.dump(edl, f, indent=1)
     if '--edl-only' in sys.argv:

@@ -32,3 +32,11 @@ The MIT licence: Permission is hereby granted, free of charge, to any person obt
 - **OpenColorIO** (https://github.com/AcademySoftwareFoundation/OpenColorIO), BSD-3-Clause, used as an installed library.
 - **Open Display Transform / OpenDRT** (https://github.com/jedypod/open-display-transform), GPL-3.0: referenced only; nothing is copied.
 - **YuNet** face detector (https://huggingface.co/opencv/face_detection_yunet), used as a downloaded model outside the repo (see its licence there).
+
+## Editing sources (November 2026)
+
+- `references/editing.md` adapts the text of the `film-editor` skill from **Vidmoat Skills** (https://github.com/vidmoat/skills), CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); changes: summarised and rewritten.
+- `references/editing.md` adapts `editing-montage` from **generative-media-skills** (https://github.com/calesthio/generative-media-skills), Copyright (c) 2026 generative-media-skills contributors, MIT.
+- `references/editing.md` adapts `cut-list` from **cinema-skills** (https://github.com/Benitoow/cinema-skills), Copyright (c) 2026 Benjamin Leleu, MIT.
+- **OpenMontage** (https://github.com/OpenMontageInc/OpenMontage), AGPL-3.0: ideas summarised in this repo's own words; no text or code copied.
+- **OpenTimelineIO** (https://github.com/AcademySoftwareFoundation/OpenTimelineIO), Apache-2.0, used as an installed library with its CMX3600 and FCP XML adapters.

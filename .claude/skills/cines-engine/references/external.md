@@ -87,3 +87,14 @@ Folded into `color.md`:
 - snowfrost's look-honesty levels (no licence, summarised)
 
 Details and links in `color.md` §9.
+
+### Editing (added November 2026, at the author's request)
+
+Folded into `editing.md`:
+- vidmoat `film-editor` (CC BY 4.0)
+- calesthio `editing-montage` (MIT)
+- Benitoow `cinema-skills` `cut-list` (MIT)
+- OpenMontage `cinematic.md` (AGPL-3.0, summarised only)
+- OpenTimelineIO (Apache-2.0, used as a library)
+
+Details and links in `editing.md` §8.
