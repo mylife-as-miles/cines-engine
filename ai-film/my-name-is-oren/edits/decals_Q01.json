@@ -1,0 +1,91 @@
+{
+ "_about": "Q01's window shot (take frames 163-228, film 0:12.8-0:15.5), script A06. The three clean decals go on the generator's blank plates; the older sign is printed across the two peeled notices above the right plate, with about half its letters gone (and none across the bare wall between the notices).",
+ "take": "out/takes/Q01_t1.mp4",
+ "out": "out/takes/Q01_t1_decals.mkv",
+ "frames": [
+  163,
+  228
+ ],
+ "ink": [
+  34,
+  64,
+  70
+ ],
+ "plates": [
+  {
+   "rect": [
+    53,
+    174,
+    252,
+    242
+   ],
+   "lines": [
+    "FREE",
+    "TRANSLATION"
+   ]
+  },
+  {
+   "rect": [
+    317,
+    174,
+    512,
+    241
+   ],
+   "lines": [
+    "FREE",
+    "LEGAL FORMS"
+   ]
+  },
+  {
+   "rect": [
+    577,
+    175,
+    770,
+    242
+   ],
+   "lines": [
+    "FREE TUTORING",
+    "WHILE YOU WAIT"
+   ]
+  }
+ ],
+ "old_sign": {
+  "rect": [
+   553,
+   124,
+   771,
+   174
+  ],
+  "lines": [
+   "FREE WASHES FOR",
+   "SCHOOL UNIFORMS"
+  ],
+  "remnants": [
+   [
+    553,
+    123,
+    636,
+    173
+   ],
+   [
+    672,
+    127,
+    771,
+    176
+   ]
+  ],
+  "ink": [
+   168,
+   74,
+   62
+  ],
+  "seed": 3,
+  "opacity": 0.8,
+  "peeled": [
+   "FR E W   E  FOR",
+   "SC OOL   I ORM "
+  ],
+  "peeled_note": "a space drops the letter: FR E W(ASH)E FOR / SC OOL (UN)I ORM, where the bare wall between the two notices takes ASH and UN"
+ },
+ "soft": 0.55
+}

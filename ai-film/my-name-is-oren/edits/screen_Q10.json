@@ -1,0 +1,22 @@
+{
+ "_about": "Q10's two handset inserts (script A60-A64): the share menu over the blank display, the black ghost under her thumb removed. The thumb tip, read from the take (--proof logs it as display height v): rests at v 0.50-0.53 (the NOTICES row) to frame 70, drops through 0.59-0.66 (APPOINTMENTS) at 76-80, hovers at 0.70-0.77 (RECORDINGS) from 82 and again at 118-124, and never presses it. In the second shot it reaches 0.82 (Send) at frame 268 and lifts away from 271.",
+ "take": "out/takes/Q10_t1.mp4",
+ "out": "out/takes/Q10_t1_menu.mp4",
+ "track": "edits/handset_track.json",
+ "shots": [[52, 145], [259, 284]],
+ "ref": 53,
+ "display": [[153, 136], [332, 38], [533, 348], [367, 438]],
+ "ecc_mask": [[-0.12, -0.16, 1.12, 0.33], [-0.10, 0.33, 0.18, 1.06]],
+ "ecc_mask_note": "the cracked top of the glass, and the left bezel: the thumb comes from the right",
+ "seed_template": [110, 0, 360, 200],
+ "ui": "share_menu",
+ "timeline": [[52, {"ticks": [], "send": "off"}], [59, {"ticks": [], "send": "off", "press": 0}],
+              [62, {"ticks": [0], "send": "on"}], [77, {"ticks": [0], "send": "on", "press": 1}],
+              [80, {"ticks": [0, 1], "send": "on"}], [259, {"ticks": [0, 1], "send": "on"}],
+              [267, {"ticks": [0, 1], "send": "pressed"}], [271, {"ticks": [0, 1], "send": "sent"}]],
+ "screen_level": 0.8,
+ "soft": 0.7,
+ "shadow": [5, -3, 0.35],
+ "tip": "min_u",
+ "proof": [55, 63, 81, 100, 122, 262, 268, 278]
+}

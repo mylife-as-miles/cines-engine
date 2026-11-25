@@ -90,6 +90,7 @@ Takes:
 - **The mistakes pass on the cut.** Before the grade:
   - **Words:** transcribe the cut with faster-whisper (`medium.en`, word timestamps) and check every line against the script word for word. If faster-whisper's PyAV decoder fails (`open() got an unexpected keyword argument 'metadata_errors'`), decode with ffmpeg to float32 at 16 kHz and pass the samples.
   - **Flash cuts:** scan for frame-difference spikes away from the shot cuts; a generated take can hide a 4-frame flash (Oren lesson 54).
+  - **Inserts and on-screen words:** check every INSERT and every sign, decal or screen the script names against the cut. Oren's window decals and boot sketch were still blank after the first pass (lesson 60). Words go on in code over the blank plates the generator was asked for (`tools/window_decals.py`); screens go on with `tools/handset_insert.py`.
   - **Then look at every shot** for artefacts, readable text and broken geography.
 
 ## 6. Edit

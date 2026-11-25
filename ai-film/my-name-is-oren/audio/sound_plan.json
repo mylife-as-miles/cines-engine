@@ -1,8 +1,8 @@
 {
  "_about": "Every added sound on the film's clock, placed from data (sound.md \u00a72). `at`/`from`/`to` are either seconds on the edit's clock, or 'Qxx_tN@s': seconds on that take's own clock, mapped through the edit decision list, so a re-cut moves them with their picture. `level` is the sound's loudness in the mix (LUFS over its length); the dialogue sits near -18, so beds are 22-29 dB under it and the few effects 11-14 dB under (the author wants few, quiet effects). The takes' own sync sound stays; these glue it and point up what the picture shows.",
- "edl": "out/edits/Q01_Q13_v7.edl.json",
- "video": "out/edits/Q01_Q13_v7.mp4",
- "out": "out/edits/Q01_Q13_v7_sound.mp4",
+ "edl": "out/edits/Q01_Q13_v8.edl.json",
+ "video": "out/edits/Q01_Q13_v8.mp4",
+ "out": "out/edits/Q01_Q13_v8_sound.mp4",
  "beds": [
   {
    "id": "street",
@@ -29,7 +29,7 @@
   {
    "id": "laundrette",
    "sound": "laundrette_hum",
-   "from": "Q01_t1@6.79",
+   "from": "Q01_t1_fix@6.79",
    "to": "end",
    "level": -47,
    "fade_in": 1.0,
@@ -50,7 +50,7 @@
   {
    "id": "sweepers_open",
    "sound": "sweeper_brush",
-   "at": "Q01_t1@0.0",
+   "at": "Q01_t1_fix@0.0",
    "level": -31,
    "fade_out": 0.6,
    "why": "the first picture: the yellow sweepers scrubbing the gutter"
@@ -58,7 +58,7 @@
   {
    "id": "bin",
    "sound": "bin_bag",
-   "at": "Q01_t1@4.25",
+   "at": "Q01_t1_fix@4.25",
    "level": -32,
    "why": "the city units lift the bag out of the street bin"
   },

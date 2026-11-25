@@ -1,5 +1,5 @@
 {
- "video": "out/edits/Q01_Q13_v7_sound.mp4",
+ "video": "out/edits/Q01_Q13_v8_sound.mp4",
  "shots": "grade/shots_v7.json",
  "look": "250D Daylight",
  "look_mix": 1.0,
@@ -12,6 +12,6 @@
  "paint": "grade/paint.json",
  "matte": null,
  "range": null,
- "out": "out/edits/Oren_Q01_Q13_v7_graded.mp4",
- "_about": "The 16:9 full-frame grade of the v7 cut (the user's choice after the 2.35 previews): look C, 250D Daylight, over the per-shot CDLs matched to the hero shot S026; grain seeded per frame; the 'CBK PY' sign in S062 painted out."
+ "out": "out/edits/Oren_Q01_Q13_v8_graded.mp4",
+ "_about": "The 16:9 full-frame grade of the v8 cut (the user's choice after the 2.35 previews): look C, 250D Daylight, over the per-shot CDLs matched to the hero shot S026; grain seeded per frame; the 'CBK PY' sign in S062 painted out. The shot list and corrections are v7's (shots_v7.json): v8 changes no timing."
 }

@@ -1,0 +1,73 @@
+{
+ "_about": "Q01's handset insert (script A09-A10, film 0:20.5-0:23.0): 'A drawing app. Half a page of sketched boots. Hers. The laces unfinished.' over the blank display, and the translucent grey ghost under her index finger removed. The display's corners are measured on take frame 400, where her finger is off the glass; the tracking uses the cracked top of the phone and the upper right bezel, which neither her index finger (from the left) nor her right thumb covers.",
+ "take": "out/takes/Q01_t1_decals.mkv",
+ "out": "out/takes/Q01_t1_fix.mp4",
+ "track": "edits/handset_track_Q01.json",
+ "shots": [
+  [
+   348,
+   406
+  ]
+ ],
+ "ref": 400,
+ "display": [
+  [
+   518,
+   115
+  ],
+  [
+   648,
+   167
+  ],
+  [
+   511,
+   413
+  ],
+  [
+   366,
+   342
+  ]
+ ],
+ "ecc_mask": [
+  [
+   -0.25,
+   -0.22,
+   1.1,
+   0.0
+  ],
+  [
+   1.0,
+   0.0,
+   1.16,
+   0.45
+  ]
+ ],
+ "ecc_mask_note": "the cracked top of the phone above the display, and the bezel along the upper right",
+ "ui": "boot_sketch",
+ "timeline": [
+  [
+   348,
+   {}
+  ]
+ ],
+ "screen_level": 0.8,
+ "soft": 0.7,
+ "ghost_rel": 0.75,
+ "shadow": [
+  8,
+  -6,
+  0.3
+ ],
+ "tip": "max_u",
+ "proof": [
+  350,
+  360,
+  370,
+  380,
+  385,
+  392,
+  400,
+  406
+ ],
+ "skin_rel": 0.7
+}

@@ -2,7 +2,7 @@
 """Export the cut as an editorial timeline any NLE can open: OpenTimelineIO (.otio), CMX3600 (.edl) and Final Cut 7 XML
 (.xml, which DaVinci Resolve and Premiere import), from the edit decision list tools/assemble.py writes.
 
-    /home/user/ocio/.venv/bin/python tools/edl_to_otio.py out/edits/Q01_Q13_v7.edl.json edits/Q01_Q13_v7
+    /home/user/ocio/.venv/bin/python tools/edl_to_otio.py out/edits/Q01_Q13_v8.edl.json edits/Q01_Q13_v8
 
 One video track: each segment is a clip of its take (media path relative to the production folder, source range in
 frames at 24 fps); a "dissolve:N" join becomes an N-frame SMPTE dissolve centred on the cut, a "cut" a straight cut.
