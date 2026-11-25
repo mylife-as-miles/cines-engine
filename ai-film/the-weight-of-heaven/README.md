@@ -2,7 +2,7 @@
 
 *The Weight of Heaven*, written by Osita Miles. A short film of about fourteen minutes made with video generation models: a floating kingdom, sinking under its own weight, is brought down out of the sky by the admiral sent to save it. Eleven scenes, about 140 shots, 2.39:1.
 
-Status: pre-production. The treatment and decisions are written from the third draft and the Visual Bible; nothing has been generated yet.
+Status: pre-production. Treatment and decisions written; the thirteen location reference prompts are ready (`prompts/refs/ENV_*.md`, built by `tools/env_prompts.py`). Nothing has been generated yet.
 
 ## Watch
 
@@ -23,6 +23,7 @@ Treatment, decisions and the film bible first (`design/`), then a reference stil
 | `prompts/` | One auteur prompt per sequence with its take log; `prompts/refs/` the reference-still prompts with chosen job ids |
 | `refs/` | Approved reference stills |
 | `edit/edit.json` | The edit list |
+| `tools/env_prompts.py` | Builds the location reference prompts from the author's template and this film's bible |
 | `tools/` | Edit, finish and mix scripts |
 | `audio/` | Sound sources and mix |
 | `out/` | Generated clips and renders (not committed) |

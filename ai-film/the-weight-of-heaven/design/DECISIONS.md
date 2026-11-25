@@ -21,6 +21,12 @@ Settled with the author. Started 2026-11-25. Sources: the screenplay, third draf
 | Words on screen | No readable English on any prop. The only words are the three supers and the main title, set in the finish, small capitals widely spaced, marble on black. No text from the models. |
 | Model audio | A guide only. Voices, the hum (in the ground from 2.1, gone at 10.23), the bell, the anchor's iron note, score and effects are made and mixed in house. |
 | Sources in the repo | The screenplay and the bible are kept in `design/source/` as the production's reference. |
+| Medium | Live action: every reference and every shot is photoreal, as if photographed (author, 25 November). The bible's lens and grain rules apply as written. |
+| Order of work | References first, locations before characters and props (author, 25 November). |
+| Locations | Thirteen environment references, E01 to E13 (`prompts/refs/ENV_*.md`). The whole city (E12) and the foot of its lowest terrace (E13) are separate, because scene 11 plays at that stair. |
+| Environment prompts | Built by `tools/env_prompts.py` from the author's template, with the title, palette, light and camera blocks swapped for this film's, as the template asks. Three further changes: the template's generic "Examples" lists (laminate, carpet, English mornings) are replaced by each location's own materials and conditions; a SCALE line is added where the bible asks for a person in the frame; the film's own negatives (glow, beams, flare, readable lettering, electric light, gunfire, game styling) are added under the template's. |
+| Master states | Each location is referenced in one state: the plain and the Weir in the grey day of scene 5, the bridge and gun deck at dusk, the city descending at blue dusk, the terrace foot at last light. The dusk and last-light versions of the plain, the Weir and the vale are made from the chosen master, so the geography stays the same. |
+| Details the prompts fix (proposed, from the bible's keys) | The Weir about a hundred feet high, its gates about sixty; the wheel upright, as in the key for scene 10, its lower spokes at shoulder height. The mountain broad, flat-topped and sheer, like an anvil. Banners of undyed cream and pale grey, each kingdom marked only by a grey border; petals white (seal red belongs to the seal alone). Ship interiors in pale painted timber and brass; the bridge with a gridded forward wall of glass and a glass roof. |
 | Branch | This session works on `ccr-0244e8fe-7z8rbw` (the environment's required branch) rather than a branch named after the slug; it merges to `main` only when the author signs the film off. |
 
 ## Proposed in the bible, awaiting the author's yes
@@ -43,11 +49,10 @@ Settled with the author. Started 2026-11-25. Sources: the screenplay, third draf
 | Question | Notes |
 | --- | --- |
 | Which cut | 14:05 (about 140 shots) or the twelve-minute cut (twelve small shots out, among them 2.5 and 11.3). Or a proof-of-concept sequence first. |
-| The medium | The bible's lens and grain rules assume photographed images; the colour keys are flat drawings. Photoreal generated picture, or a painted / illustrated finish that follows the keys? |
 | The timed shot list | The bible numbers about 140 shots and cites "the timed shot list". `SHOTS.md` is built from that list if the author shares it; otherwise drafted here from the script and the bible. |
 | Model and service | The handbook's route is the Higgsfield connector, which is not connected in this session; fal.ai (Seedance, Kling and others) is. Which service, which model, and the budget. One model for the whole film. |
 | Faces | The character-sheet template starts from a reference image of each character. None exist yet. Generate original faces (no real person's likeness) for the author to choose, or use reference images the author supplies. |
-| Camera package words | The template's YELLOW package (Alexa XT, 1.5× anamorphic, Cooke Panchro) does not fit this bible: no flare, no bloom, deep focus. Proposed instead: large-format digital rendering, spherical primes, clean highlight roll-off, no flare, fine even grain added in the finish. |
+| Camera package words | The template's YELLOW package (Alexa XT, 1.5× anamorphic, Cooke Panchro) does not fit this bible: no flare, no bloom, deep focus. Proposed instead, and used in the location prompts until the author says otherwise: ARRI Alexa 65 large format, spherical large-format primes, clean high-resolving rendering, no flare, no bloom, fine even grain. |
 | Voices | Voice DNA for each speaking character (Hierophant, Engineer, Serath, Chancellor, Karst, Marl, Flag Captain, the ten thousand). Lip-sync on camera, or staging that keeps mouths small and far. |
 
 ## Film bible for the templates
