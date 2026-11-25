@@ -2,7 +2,7 @@
 
 Scenes: 6 · State in this reference: Day, before Serath lands. The yard empty of refugees (they are added per shot).
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

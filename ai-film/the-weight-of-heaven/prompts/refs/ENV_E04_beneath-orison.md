@@ -1,8 +1,8 @@
 # E04 — BENEATH ORISON — THE UNDERSIDE OF THE KINGDOM
 
-Scenes: 5, 10 · State in this reference: Day (scene 5): the cutter has just dropped out of the cloud.
+Scenes: 5, 10 · State in this reference: Day (scene 5). Seen from the cutter as it drops out of the cloud. The cutter itself is added later from its own reference.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: the underside had visible ends (a floating island); the cutter was a sailing ship; the chains read as ordinary chain). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E05_t1.jpg` · @Image 2 = `refs/candidates/E06_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -14,6 +14,15 @@ Create a photorealistic cinematic environment reference image for BENEATH ORISON
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+@Image 2 — the Weir (round-one take). Use it for: the Weir: a seamless wall of fused black stone with tall round-arched gates and green vale seen through them.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
 
 ---
 
@@ -49,14 +58,13 @@ Establish clear, believable geography.
 
 Include:
 
-- the top half of the frame: the underside of the kingdom fills the sky from edge to edge: raw rock in inverted crags, hanging roots, and ancient iron chains as thick as towers hanging down from it, their lower ends free in the air
-- where the rock meets the cloud, the city itself is hidden above
-- between the rock and the ground, one narrow band of grey daylight at the horizon
-- below: a plain of black basalt to the horizon, in columns, like a city no one finished
-- at the far edge of the plain, across the head of a green valley, the Weir: a long low black wall with nine arched gates
+- the top half of the frame: the underside of the kingdom fills the sky from edge to edge and runs out of the frame on the left, on the right and at the top: a ceiling of raw rock wider than the horizon, with no visible end, edge or outline anywhere
+- its surface: inverted crags, hanging earth and roots, and ancient iron chains hanging down from it, each link larger than a house, their lower ends free in the air, the farther chains fading into haze
+- one narrow band of grey daylight at the horizon, between the rock and the ground
+- below: a plain of black basalt to the horizon, in columns, like a city no one finished, as in @Image 1
+- at the far edge of the plain, across the head of a green valley, the Weir as in @Image 2: a long low black wall, nine round-arched gates, two shut
 - beyond it, Sarn Vale: terraces, orchards, the thin smoke of many hearths
-- a small white naval cutter, just below the rock, gives the size of everything
-- camera position: at the cutter's height, level, looking along between the rock and the plain
+- camera position: in the air just below the cloud, level, looking along between the rock and the plain
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -128,15 +136,15 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the underside of the kingdom
-- the tower-thick chains
+- the underside of the kingdom, edge to edge
+- the house-sized chains
 - the basalt plain
 - the Weir and Sarn Vale at the far edge
 
 SECONDARY LIVED-IN DETAILS:
 
 - hanging roots and earth trailing from the rock
-- the tiny white cutter
+- mist clinging to the crags
 
 Objects should feel casually accumulated over time.
 
@@ -174,7 +182,7 @@ ACCENT:
 vale green #5D7A4A: Sarn Vale, the only colour
 
 NEUTRALS:
-dark greys; the cutter is the only white
+dark greys
 
 The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
 
@@ -211,8 +219,8 @@ Maintain:
 For this location:
 
 - the underside sits two stops under the band of day
-- the cutter is the only white
 - the valley is the only colour
+- the rock is lit only from below and from the horizon, never from above
 
 No beauty lighting.
 
@@ -241,7 +249,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-24 mm, level at the cutter's height, the underside across the top of the frame, the plain and the Weir across the bottom.
+24 mm, level, from the air just under the cloud: the underside across the whole top of the frame, the band of day, the plain and the Weir across the bottom.
 
 Maintain:
 
@@ -279,7 +287,7 @@ The image must be useful later for generating:
 - entrances
 - exits
 
-Scale: the small white cutter below the rock: the underside is hundreds of times its size.
+Scale: the Weir, a mile long, is a thin line at the far edge of the plain; each chain link is bigger than a house.
 
 ---
 
@@ -370,6 +378,10 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a floating island
+- visible ends or edges of the rock
+- a separate object in the sky
+- ships, boats, sailing ships, airships, balloons
 - open blue sky
 - sunbeams
 - waterfalls pouring from the rock

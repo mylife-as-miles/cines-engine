@@ -2,7 +2,7 @@
 
 Scenes: 2 · State in this reference: Day, before the collapse. The mountain whole.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

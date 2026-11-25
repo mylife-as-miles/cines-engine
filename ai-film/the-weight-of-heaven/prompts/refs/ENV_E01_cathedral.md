@@ -2,7 +2,7 @@
 
 Scenes: 1, 3, 10.20 · State in this reference: Day, the wedding (scene 1). Nave empty of guests; banners, petals and the bell in place.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

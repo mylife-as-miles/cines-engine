@@ -2,7 +2,7 @@
 
 Scenes: 11.1 to 11.15 · State in this reference: Last light, after the landing. Open sky for the first time. Crowds on the rails added per shot.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a game-render look; hard sun and cast shadows; three storeys; a thin diagonal chain). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E01_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -14,6 +14,15 @@ Create a photorealistic cinematic environment reference image for THE FIRST GROU
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the Cathedral of the Ascension (round-one take). Use it for: Orison's architecture and materials: honed white marble, slender columns, round arches, balustraded galleries, open-topped tower, shadowless cloud light.
+@Image 2 — the basalt plain (round-one take). Use it for: the black hexagonal basalt ground only; ignore its sky and the rock overhead, which are gone now.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
 
 ---
 
@@ -49,12 +58,13 @@ Establish clear, believable geography.
 
 Include:
 
-- a wall of white marble terraces rising tier over tier into the dusk, its base resting on the black basalt
-- at the foot of the lowest terrace, an arched gate, dark inside
-- its stair of marble steps, which ended in air for eight hundred years, now ends on the ground: the last step rests on the basalt
-- in front of the stair, open basalt plain, dust settled in a thin even layer
-- nearby, a great iron anchor chain hanging from far above, its anchor sunk into the plain
-- over all, open sky for the first time: blue last light, one band of sun on the far horizon
+- the lowest terrace wall of Orison rises straight from the basalt, and tier over tier of white marble terraces climb above it and out of the top of the frame, filling the left two-thirds of the frame: a wall of white marble where this morning there was sky
+- every terrace lined with plain marble balustrades, its face an arcade of round arches, in the architecture of @Image 1
+- at the foot of the lowest terrace, an arched gate, dark inside, with a broad marble stair coming down from it
+- the stair ended in air for eight hundred years; now its last step rests on the black basalt, the lowest steps dusted grey
+- in front of the stair, the open basalt plain of natural hexagonal column-tops, as in @Image 2, with a thin even layer of settled grey dust
+- near the stair, a colossal iron anchor chain hanging perfectly vertical from out of the top of the frame (from a ship a mile up), each link taller than a man, its lower end sunk into broken basalt where the anchor bit
+- on the right, open sky for the first time: blue last light, one thin band of sun on the far horizon
 - camera positions: eye level and level for both peoples, from the plain toward the stair; from the stair out across the plain
 
 The geography must be easy to understand and remain reproducible from different camera angles.
@@ -110,14 +120,16 @@ Use tactile, photorealistic materials.
 
 For this location:
 
-- white marble, now with dust at its foot
-- black basalt
+- white marble, honed and matte, real stone with fine veining and dust at its foot
+- black hexagonal basalt column-tops
 - settled grey dust
-- dark iron chain
+- dark heavy iron chain, rough and pitted
 
 Surfaces should contain subtle wear.
 
 Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+Photographed on location at dusk with a cinema camera: real stone, real dust, real light. Not CGI, not a 3D render, not a game engine.
 
 ---
 
@@ -208,7 +220,8 @@ Maintain:
 
 For this location:
 
-- no warm light on the marble
+- shadowless: the sun is below the horizon, the light is the blue sky alone
+- no warm light on the marble, no cast shadows
 - the camera is level: no low angle
 
 No beauty lighting.
@@ -238,7 +251,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level, level, from the plain toward the stair, the terraces rising to the top of frame.
+35 mm, eye level, level, from the plain toward the stair: the terraces rising out of the top of the frame on the left, the vertical chain, open blue dusk on the right.
 
 Maintain:
 
@@ -367,7 +380,14 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
-- warm golden-hour light on the city
+- a CGI or 3D render, game-engine or architectural-visualization look
+- clean plastic-looking marble
+- cobblestones or paving
+- hard sunlight, sun on the marble, cast shadows
+- a clear midday sky
+- a thin chain, a diagonal chain, a chain lying on the ground
+- a three-storey building, a government building
+- warm golden-hour light
 - crowds on the rails (added per shot)
 - debris or damage
 ```

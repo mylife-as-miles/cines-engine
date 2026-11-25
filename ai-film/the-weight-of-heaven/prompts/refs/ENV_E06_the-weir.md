@@ -2,7 +2,7 @@
 
 Scenes: 5, 8, 10 · State in this reference: Grey day (scene 5): nine gates, two shut. Dusk versions (8, 10) are made from this one.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

@@ -90,6 +90,11 @@ def bullets(items):
 def render(L):
     scale = f"\n\nScale: {L['scale']}" if L.get('scale') else ''
     materials_note = f"\n\n{L['materials_note']}" if L.get('materials_note') else ''
+    refs_block = ''
+    if L.get('refs'):
+        refs_block = ('\n---\n\n# REFERENCE IMAGES\n\n'
+                      + '\n'.join(f'@Image {i} — {what}. Use it for: {use}.' for i, (_, what, use) in enumerate(L['refs'], 1))
+                      + '\n\nTake from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.\n')
     return f"""# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
 
 ## {L['name']}
@@ -99,7 +104,7 @@ Create a photorealistic cinematic environment reference image for {L['name']}.
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
-
+{refs_block}
 ---
 
 # LOCATION IDENTITY
@@ -961,18 +966,187 @@ LOCATIONS = [
 ]
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Round 2 (25 November). The author's first takes (refs/candidates/*_t1.jpg) were reviewed against the bible; six are
+# redone. E02 and E07 are edits of their first take (the room and the valley were right); E04, E10, E12 and E13 are
+# new generations from a revised prompt. All six carry the round-one images that hold, as references: E01 for
+# Orison's architecture, E05 for the underside seen from the ground and the basalt, E06 for the Weir, E11 for the
+# fleet's interiors. Ships stay out of the location references until the ship references exist.
+# ---------------------------------------------------------------------------------------------------------------
+
+R_E01 = ('refs/candidates/E01_t1.jpg', 'the Cathedral of the Ascension (round-one take)',
+         "Orison's architecture and materials: honed white marble, slender columns, round arches, balustraded galleries, open-topped tower, shadowless cloud light")
+R_E05 = ('refs/candidates/E05_t1.jpg', 'the basalt plain under the kingdom (round-one take)',
+         'the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt')
+R_E06 = ('refs/candidates/E06_t1.jpg', 'the Weir (round-one take)',
+         'the Weir: a seamless wall of fused black stone with tall round-arched gates and green vale seen through them')
+R_E11 = ('refs/candidates/E11_t1.jpg', 'a gun deck of the fleet (round-one take)',
+         "the fleet's building language: white-painted timber framing, pointed lancet openings, dark iron, scrubbed planking")
+
+SHIP_WORDS = ('white hulls shaped like church naves laid on their side: one tall spire for a mast, long rows of pointed '
+              'lancet gunports, a keel like an upturned roof; no sails, no balloons, no gas bags')
+
+REWORK = {
+    'E02': dict(kind='edit', base='refs/candidates/E02_t1.jpg', refs=[R_E01], fixes='the city outside is an Italian hill town; dark-dressed figures; a figure out of scale at the door', text="""Edit @Image 1, the council chamber of Orison. This is a photoreal film location reference.
+
+Keep the room exactly as it is: the ring of round-headed open arches, the shallow dome, the marble floor, the long white stone table and the gold cup on it, the low marble benches, the open pale door, the camera position, the lens and the soft grey cloud light with no shadows.
+
+Change only these three things:
+
+1. Through the arches, replace the town with the lower terraces of Orison, built exactly in the architecture of @Image 2: honed white marble arcades and slender columns, balustraded terraces stepping down and away below the chamber, a few tall slender towers with open tops. Cloud is rising up through the lower terraces like a tide, swallowing the lowest ones. Everything outside is white marble and grey cloud.
+2. Remove the person standing at the arch.
+3. Remove the person standing at the door.
+
+Keep the same grey, cool, high-key cloud light and the same muted palette. Nothing else changes.
+
+Do not add: ochre, brown or honey-coloured stone, medieval houses, tiled roofs, Italian hill-town buildings, bell towers with pointed roofs, people, text, signage, lens flare, glow or sunbeams."""),
+
+    'E07': dict(kind='edit', base='refs/candidates/E07_t1.jpg', refs=[R_E06, R_E05], fixes='the Weir drawn as a single black slab; a saucer-shaped mass in the sky', text="""Edit @Image 1, Sarn Vale. This is a photoreal film location reference.
+
+Keep the valley exactly as it is: the terraced green slopes, the orchards, the stone houses with slate roofs and their hearth smoke, the road between its dry-stone walls, the camera position, the lens and the grey overcast light.
+
+Change only these two things:
+
+1. Replace the single black slab on the right with the end of the Weir, exactly as in @Image 2: a very long wall of seamless fused black stone, about a hundred feet high, with tall round-arched gates through it at even intervals. It stands across the head of the valley and runs away from camera into the distance toward the plain, the green of the vale showing through its nearer gates. The road climbs past its near end. No joints, no blocks, no carvings.
+2. Remove the saucer-shaped mass from the sky. In its place, along the very top edge of the frame only, the far edge of the kingdom's underside, as in @Image 3: raw dark rock, very high above, soft and hazy, running out of frame left and right, with no visible outline and no visible end. Below it, grey overcast.
+
+Keep the same muted green, grey day, and haze down the valley. Nothing else changes.
+
+Do not add: a monolith, a free-standing slab, a disc or saucer in the sky, a floating object with a visible edge, blue sky, sunshine, people, text, glow."""),
+
+    'E04': dict(kind='regen', refs=[R_E05, R_E06], fixes='the underside had visible ends (a floating island); the cutter was a sailing ship; the chains read as ordinary chain', over=dict(
+        state='Day (scene 5). Seen from the cutter as it drops out of the cloud. The cutter itself is added later from its own reference.',
+        geography=[
+            'the top half of the frame: the underside of the kingdom fills the sky from edge to edge and runs out of the frame on the left, on the right and at the top: a ceiling of raw rock wider than the horizon, with no visible end, edge or outline anywhere',
+            'its surface: inverted crags, hanging earth and roots, and ancient iron chains hanging down from it, each link larger than a house, their lower ends free in the air, the farther chains fading into haze',
+            'one narrow band of grey daylight at the horizon, between the rock and the ground',
+            'below: a plain of black basalt to the horizon, in columns, like a city no one finished, as in @Image 1',
+            'at the far edge of the plain, across the head of a green valley, the Weir as in @Image 2: a long low black wall, nine round-arched gates, two shut',
+            'beyond it, Sarn Vale: terraces, orchards, the thin smoke of many hearths',
+            'camera position: in the air just below the cloud, level, looking along between the rock and the plain',
+        ],
+        primary=['the underside of the kingdom, edge to edge', 'the house-sized chains', 'the basalt plain', 'the Weir and Sarn Vale at the far edge'],
+        secondary=['hanging roots and earth trailing from the rock', 'mist clinging to the crags'],
+        neutrals='dark greys',
+        light_rules=['the underside sits two stops under the band of day', 'the valley is the only colour', 'the rock is lit only from below and from the horizon, never from above'],
+        lens='24 mm, level, from the air just under the cloud: the underside across the whole top of the frame, the band of day, the plain and the Weir across the bottom.',
+        scale='the Weir, a mile long, is a thin line at the far edge of the plain; each chain link is bigger than a house.',
+        negative=['a floating island', 'visible ends or edges of the rock', 'a separate object in the sky', 'ships, boats, sailing ships, airships, balloons', 'open blue sky', 'sunbeams', 'waterfalls pouring from the rock', 'floating rocks or debris', 'a city visible from below'],
+    )),
+
+    'E10': dict(kind='regen', refs=[R_E11, R_E05], fixes='a small Victorian glasshouse, lit inside, pink dusk, airships outside', over=dict(
+        setting='the command bridge of the flagship: long and high like the nave of a church, brass and glass, in the air at dusk',
+        feel='Brass, glass, quiet. A church run like a navy: room for a hundred officers at their stations, and no one speaking.',
+        geography=[
+            'a long, high bridge built like the nave of a church: a central aisle running forward from camera, between two long rows of officers\' stations, room for a hundred people',
+            'tall ribs of white-painted timber arch overhead like a nave vault, as in @Image 1, and the vault is glazed between the ribs',
+            'the forward end is a tall wall of glass in pointed lancet panes divided by slender mullions, facing the fleet',
+            'through the forward glass: the fleet in long ranks at dusk under the amber underside of the cloud, ' + SHIP_WORDS + '; the far ranks go to haze',
+            'overhead, through the glazed vault: the roots and dark rock of Orison hanging low, as in @Image 2',
+            'the chart table: a broad table with a brass edge in the aisle near the forward glass',
+            'the sighting glass: a long brass telescope on a brass pedestal at the forward glass',
+            'along both rows: brass speaking tubes, signal-record desks, brass rails; a signal station facing a side window',
+            'camera positions: eye level at the rear of the aisle looking forward to the glass; beside the sighting glass; across the chart table',
+        ],
+        walls='White-painted timber ribs and panelling between tall lancet windows, the fleet\'s building language as in @Image 1.',
+        ceiling='A pointed nave vault of white-painted timber ribs, glazed between the ribs.',
+        floor='Long scrubbed deck planking running down the aisle.',
+        windows='The tall forward wall of lancet panes; lancet side windows; the glazed vault.',
+        doors='A plain door at the rear.',
+        trim='Brass rails and fittings.',
+        fixtures='The chart table, the sighting glass, two long rows of stations with speaking tubes.',
+        materials=['brass, worn soft at the edges', 'old glass with faint ripples', 'white-painted timber ribs, in shadow', 'scrubbed planking'],
+        primary=['the lancet forward glass and the fleet beyond', 'the long aisle between two rows of stations', 'the chart table', 'the brass sighting glass'],
+        secondary=['brass speaking tubes', 'signal desks', 'stools at the stations'],
+        dominant='dusk amber #D98A3D in the forward glass and on the bellies of the ships',
+        secondary_colour='basalt-dark silhouettes: the whole interior',
+        accent='brass picking up the amber dusk',
+        neutrals='cold slate #4B5258 in the glazed vault overhead',
+        light_head='SILHOUETTE. THE DUSK THROUGH THE GLASS. NO LIGHT INSIDE.',
+        light_primary='amber dusk light from beneath the cloud, through the forward glass',
+        light_secondary='cold slate light from the glazed vault overhead',
+        light_rules=['no practical lights lit, no lamps, no candles', 'the interior falls to silhouette: ribs, stations and stools are dark shapes; brass picks up the dusk in thin lines', 'every ship outside has a warm amber belly and a cold grey back'],
+        lens='24 mm, eye level at the rear of the aisle, symmetrical, looking down the bridge to the forward glass, the chart table in the middle ground.',
+        negative=['a conservatory or greenhouse', 'a small room', 'a Victorian glasshouse', 'a lit interior', 'pink, purple or rose sky', 'airships, zeppelins, dirigibles, balloons, gas bags', 'sails or sailing ships', 'screens, dials or electrics', "a ship's wheel", 'steampunk gears and pipes', 'officers (added per shot)'],
+    )),
+
+    'E12': dict(kind='regen', refs=[R_E01, R_E05], fixes='a fantasy island about a mile across, ringed like a cake, with cypress trees; no last sun on the tower', over=dict(
+        setting='exterior: a floating city twelve miles across, hanging low over the plain, seen from many miles away',
+        geography=[
+            'the city is twelve miles across: even from many miles away on the plain it spans almost the whole width of the frame, its far ends dissolving into haze',
+            'the underside: an inverted mountain range of raw dark rock, roots and hanging chains, as in @Image 2, wider than anything on the ground',
+            'on top of the rock, the city climbs like a stepped mountain: broad irregular terraces of white marble, tier over tier, each tier an arcade of round arches, in the architecture of @Image 1',
+            'long thin bridges spanning between towers, hanging gardens trailing over the terrace edges, many slender towers with open tops',
+            'at the summit, the cathedral and its tall open-topped tower: the only thing still in the sun',
+            'mist streaming off the terraces as the city descends',
+            'below: the black basalt plain; the Weir a thin low black line at one side; a line of tiny figures on the plain in the foreground',
+            'camera position: eye level on the plain, many miles away',
+        ],
+        materials=['white marble terraces, cool in shade', 'raw dark rock underside', 'muted grey-green hanging gardens', 'black basalt plain'],
+        primary=['the whole city with its rock underside, almost frame-wide', "the cathedral's open tower at the summit, catching the last sun"],
+        secondary=['hanging gardens', 'long bridges between towers', 'mist streaming off the tiers'],
+        accent='the last warm sun on the top of the open tower only; nothing else warm',
+        light_rules=['no light comes from the kingdom itself: no lit windows', 'the whole city is in blue shade; only the top of the cathedral tower is warm', 'atmospheric haze grows with distance: the far ends of the city are pale'],
+        lens='35 mm, eye level on the plain many miles away: the kingdom almost frame-wide, the plain and the tiny figures across the bottom.',
+        scale='a line of tiny standing figures on the plain in the foreground; the lowest terraces alone are the height of mountains.',
+        negative=['a floating island', 'a ring wall or circular wall around the city', 'a cake-like or wedding-cake shape', 'cypress trees', 'Mediterranean or Italian village styling', 'domes', 'fairy-tale castle', 'symmetry', 'sunlit city', 'glowing windows or lights in the city', 'waterfalls pouring off the edges', 'anime or video-game fantasy styling', 'magic or energy beneath the city'],
+    )),
+
+    'E13': dict(kind='regen', refs=[R_E01, ('refs/candidates/E05_t1.jpg', 'the basalt plain (round-one take)',
+                                            'the black hexagonal basalt ground only; ignore its sky and the rock overhead, which are gone now')], fixes='a game-render look; hard sun and cast shadows; three storeys; a thin diagonal chain', over=dict(
+        geography=[
+            'the lowest terrace wall of Orison rises straight from the basalt, and tier over tier of white marble terraces climb above it and out of the top of the frame, filling the left two-thirds of the frame: a wall of white marble where this morning there was sky',
+            'every terrace lined with plain marble balustrades, its face an arcade of round arches, in the architecture of @Image 1',
+            'at the foot of the lowest terrace, an arched gate, dark inside, with a broad marble stair coming down from it',
+            'the stair ended in air for eight hundred years; now its last step rests on the black basalt, the lowest steps dusted grey',
+            'in front of the stair, the open basalt plain of natural hexagonal column-tops, as in @Image 2, with a thin even layer of settled grey dust',
+            'near the stair, a colossal iron anchor chain hanging perfectly vertical from out of the top of the frame (from a ship a mile up), each link taller than a man, its lower end sunk into broken basalt where the anchor bit',
+            'on the right, open sky for the first time: blue last light, one thin band of sun on the far horizon',
+            'camera positions: eye level and level for both peoples, from the plain toward the stair; from the stair out across the plain',
+        ],
+        materials=['white marble, honed and matte, real stone with fine veining and dust at its foot', 'black hexagonal basalt column-tops', 'settled grey dust', 'dark heavy iron chain, rough and pitted'],
+        light_rules=['shadowless: the sun is below the horizon, the light is the blue sky alone', 'no warm light on the marble, no cast shadows', 'the camera is level: no low angle'],
+        lens='35 mm, eye level, level, from the plain toward the stair: the terraces rising out of the top of the frame on the left, the vertical chain, open blue dusk on the right.',
+        realism_note='Photographed on location at dusk with a cinema camera: real stone, real dust, real light. Not CGI, not a 3D render, not a game engine.',
+        negative=['a CGI or 3D render, game-engine or architectural-visualization look', 'clean plastic-looking marble', 'cobblestones or paving', 'hard sunlight, sun on the marble, cast shadows', 'a clear midday sky', 'a thin chain, a diagonal chain, a chain lying on the ground', 'a three-storey building, a government building', 'warm golden-hour light', 'crowds on the rails (added per shot)', 'debris or damage'],
+    )),
+}
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    combined = ['# The Weight of Heaven: environment reference prompts\n',
-                'Thirteen locations. Each prompt fills the author\'s environment template with this film\'s bible. '
-                'Generate each at 21:9 at the highest resolution, with no reference image; two to four candidates per '
-                'location. The chosen image becomes @Image N for every shot set there.\n']
+    intro = ('Each prompt fills the author\'s environment template with this film\'s bible. Generate at 21:9, highest '
+             'resolution, two to four candidates. Pass the reference images to the model in the order of their @Image '
+             'numbers. The chosen image becomes @Image N for every shot set there.\n')
+    combined = ['# The Weight of Heaven: environment reference prompts (current)\n\n', intro]
+    rework = ['# The Weight of Heaven: location rework, round 2\n\n',
+              'Six locations redone after round one. E02 and E07 are edits of their first take; E04, E10, E12 and E13 '
+              'are new generations. Pass the images to the model in the order of their @Image numbers. Generate at '
+              '21:9, highest resolution, two to four candidates each.\n']
     for L in LOCATIONS:
+        R = REWORK.get(L['code'])
+        v1 = render(L)
+        if R and R['kind'] == 'regen':
+            L = {**L, **R['over'], 'refs': R['refs']}
+            if L.get('realism_note'):
+                L['materials_note'] = (L.get('materials_note', '') + ' ' + L['realism_note']).strip()
         prompt = render(L)
-        head = (f"# {L['code']} — {L['name']}\n\n"
-                f"Scenes: {L['scenes']} · State in this reference: {L['state']}\n\n"
-                f"Generate: 21:9, highest resolution, no reference image. Two to four candidates.\n\n")
-        body = f"```text\n{prompt}```\n"
+        head = f"# {L['code']} — {L['name']}\n\nScenes: {L['scenes']} · State in this reference: {L['state']}\n\n"
+        if not R:
+            head += 'Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.\n\n'
+            body = f"```text\n{prompt}```\n"
+        elif R['kind'] == 'regen':
+            refs = ' · '.join(f'@Image {i} = `{f}`' for i, (f, _, _) in enumerate(R['refs'], 1))
+            head += (f"Prompt v2, a new generation (round one: {R['fixes']}). Generate: 21:9, highest resolution, "
+                     f"two to four candidates. Reference images, in this order: {refs}.\n\n")
+            body = f"```text\n{prompt}```\n"
+        else:
+            imgs = [(R['base'], 'the first take, to edit')] + [(f, what) for f, what, _ in R['refs']]
+            refs = ' · '.join(f'@Image {i} = `{f}`' for i, (f, _) in enumerate(imgs, 1))
+            head += (f"Prompt v2, an edit of the first take (round one: {R['fixes']}). Generate: 21:9, highest "
+                     f"resolution, two to four candidates. Images, in this order: {refs}.\n\n")
+            body = (f"```text\n{R['text']}\n```\n\n## Prompt v1 (made t1; still the description of this location)\n\n"
+                    f"```text\n{v1}```\n")
         log = '\n## Takes\n\n(none yet)\n'
         path = os.path.join(OUT, f"ENV_{L['code']}_{L['slug']}.md")
         if os.path.exists(path):  # keep the take log already written under the prompt
@@ -981,10 +1155,15 @@ def main():
                 log = old[old.index('\n## Takes\n'):]
         with open(path, 'w') as f:
             f.write(head + body + log)
-        combined.append('\n---\n\n' + head + body)
+        current = body.split('\n\n## Prompt v1')[0] + ('' if body.endswith('\n') else '\n')
+        combined.append('\n---\n\n' + head + current)
+        if R:
+            rework.append('\n---\n\n' + head + current)
     with open(os.path.join(OUT, 'ENV_ALL.md'), 'w') as f:
         f.write(''.join(combined))
-    print(f'{len(LOCATIONS)} environment prompts written to {os.path.normpath(OUT)}')
+    with open(os.path.join(OUT, 'ENV_REWORK_round2.md'), 'w') as f:
+        f.write(''.join(rework))
+    print(f'{len(LOCATIONS)} environment prompts written to {os.path.normpath(OUT)} ({len(REWORK)} reworked)')
 
 
 if __name__ == '__main__':

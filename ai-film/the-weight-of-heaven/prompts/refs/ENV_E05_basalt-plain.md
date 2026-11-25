@@ -2,7 +2,7 @@
 
 Scenes: 5, 8, 10, 11 · State in this reference: Grey day under the kingdom (scenes 5 and 6). The dusk (8, 10) and last-light (11) versions are made from this one once it is chosen.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

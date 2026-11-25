@@ -2,7 +2,7 @@
 
 Scenes: 9 · State in this reference: Dusk. No light inside: everything lit by the dusk through the glass.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a small Victorian glasshouse, lit inside, pink dusk, airships outside). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E11_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -17,6 +17,15 @@ The environment must feel physically real, inhabited, spatially coherent, and su
 
 ---
 
+# REFERENCE IMAGES
+
+@Image 1 — a gun deck of the fleet (round-one take). Use it for: the fleet's building language: white-painted timber framing, pointed lancet openings, dark iron, scrubbed planking.
+@Image 2 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
+
+---
+
 # LOCATION IDENTITY
 
 LOCATION:
@@ -26,7 +35,7 @@ COUNTRY / REGION:
 The fleet of Orison: white ships that sail the air, built by the same hands as the cathedral (an invented world). Every ship is a church nave laid on its side: a spire for a mast, lancet gunports, a keel like an upturned roof.
 
 SETTING:
-the command bridge of a great white ship of the air: brass, glass, quiet
+the command bridge of the flagship: long and high like the nave of a church, brass and glass, in the air at dusk
 
 TIME PERIOD:
 Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
@@ -35,7 +44,7 @@ SOCIAL / ECONOMIC CHARACTER:
 A navy run like a church: ordered, ceremonial, silent.
 
 OVERALL FEEL:
-Brass, glass, quiet. A hundred people at their stations and no one speaking.
+Brass, glass, quiet. A church run like a navy: room for a hundred officers at their stations, and no one speaking.
 
 The location should feel like a place that existed before the camera arrived.
 
@@ -49,13 +58,15 @@ Establish clear, believable geography.
 
 Include:
 
-- a long high bridge; the forward wall is tall windows divided by slender mullions into a grid, and there is glass overhead
-- through the forward glass: the fleet in ranks at dusk under the amber underside of the cloud
-- overhead, through the glass roof: the roots of Orison hanging low
-- the chart table: a broad table with a brass edge in the centre near the glass
-- the sighting glass: a long brass telescope on a pedestal at the forward glass
-- stations along both sides: brass speaking tubes, signal-record desks, a signal station facing a side window
-- camera positions: eye level from the rear of the bridge looking forward into the glass; beside the sighting glass; across the chart table
+- a long, high bridge built like the nave of a church: a central aisle running forward from camera, between two long rows of officers' stations, room for a hundred people
+- tall ribs of white-painted timber arch overhead like a nave vault, as in @Image 1, and the vault is glazed between the ribs
+- the forward end is a tall wall of glass in pointed lancet panes divided by slender mullions, facing the fleet
+- through the forward glass: the fleet in long ranks at dusk under the amber underside of the cloud, white hulls shaped like church naves laid on their side: one tall spire for a mast, long rows of pointed lancet gunports, a keel like an upturned roof; no sails, no balloons, no gas bags; the far ranks go to haze
+- overhead, through the glazed vault: the roots and dark rock of Orison hanging low, as in @Image 2
+- the chart table: a broad table with a brass edge in the aisle near the forward glass
+- the sighting glass: a long brass telescope on a brass pedestal at the forward glass
+- along both rows: brass speaking tubes, signal-record desks, brass rails; a signal station facing a side window
+- camera positions: eye level at the rear of the aisle looking forward to the glass; beside the sighting glass; across the chart table
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -80,25 +91,25 @@ Preserve believable architecture appropriate to:
 Specify:
 
 WALLS:
-Pale painted panelling between the windows; slender pale stone-white ribs like a nave.
+White-painted timber ribs and panelling between tall lancet windows, the fleet's building language as in @Image 1.
 
 CEILING:
-Glass in a light framework of white ribs.
+A pointed nave vault of white-painted timber ribs, glazed between the ribs.
 
 FLOOR:
-Pale scrubbed deck planking.
+Long scrubbed deck planking running down the aisle.
 
 WINDOWS:
-The forward wall of tall gridded windows; the glass roof.
+The tall forward wall of lancet panes; lancet side windows; the glazed vault.
 
 DOORS:
 A plain door at the rear.
 
 TRIM / MOULDING:
-Brass fittings, plain mouldings.
+Brass rails and fittings.
 
 FIXTURES:
-The chart table, the sighting glass, the speaking tubes, the stations.
+The chart table, the sighting glass, two long rows of stations with speaking tubes.
 
 Architectural details should feel ordinary and regionally credible.
 
@@ -112,7 +123,7 @@ For this location:
 
 - brass, worn soft at the edges
 - old glass with faint ripples
-- pale painted wood
+- white-painted timber ribs, in shadow
 - scrubbed planking
 
 Surfaces should contain subtle wear.
@@ -127,13 +138,14 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the gridded forward glass and the fleet beyond
+- the lancet forward glass and the fleet beyond
+- the long aisle between two rows of stations
 - the chart table
 - the brass sighting glass
 
 SECONDARY LIVED-IN DETAILS:
 
-- speaking tubes
+- brass speaking tubes
 - signal desks
 - stools at the stations
 
@@ -164,16 +176,16 @@ Accents, each belonging to one thing only and appearing on nothing else: gold #C
 For this environment specifically:
 
 DOMINANT:
-dusk amber #D98A3D in the glass
+dusk amber #D98A3D in the forward glass and on the bellies of the ships
 
 SECONDARY:
-basalt-dark silhouettes of the bridge interior
+basalt-dark silhouettes: the whole interior
 
 ACCENT:
-brass catching the dusk
+brass picking up the amber dusk
 
 NEUTRALS:
-cold slate in the glass overhead
+cold slate #4B5258 in the glazed vault overhead
 
 The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
 
@@ -192,11 +204,11 @@ SILHOUETTE. THE DUSK THROUGH THE GLASS. NO LIGHT INSIDE.
 
 Primary motivated source:
 
-amber dusk light from the forward glass
+amber dusk light from beneath the cloud, through the forward glass
 
 Secondary motivated source:
 
-cold slate light from the glass overhead
+cold slate light from the glazed vault overhead
 
 Maintain:
 
@@ -209,9 +221,9 @@ Maintain:
 
 For this location:
 
-- no practical lights lit
-- the interior falls to silhouette; brass picks up the dusk
-- faces would barely read
+- no practical lights lit, no lamps, no candles
+- the interior falls to silhouette: ribs, stations and stools are dark shapes; brass picks up the dusk in thin lines
+- every ship outside has a warm amber belly and a cold grey back
 
 No beauty lighting.
 
@@ -240,7 +252,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level from the rear of the bridge, looking forward to the glass, the chart table in the middle ground.
+24 mm, eye level at the rear of the aisle, symmetrical, looking down the bridge to the forward glass, the chart table in the middle ground.
 
 Maintain:
 
@@ -366,6 +378,13 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a conservatory or greenhouse
+- a small room
+- a Victorian glasshouse
+- a lit interior
+- pink, purple or rose sky
+- airships, zeppelins, dirigibles, balloons, gas bags
+- sails or sailing ships
 - screens, dials or electrics
 - a ship's wheel
 - steampunk gears and pipes

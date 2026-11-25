@@ -2,7 +2,7 @@
 
 Scenes: 10.15 to 10.23, 11.16 to 11.19 · State in this reference: Blue dusk, descending, low over the plain; the last sun only on the cathedral's open tower.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a fantasy island about a mile across, ringed like a cake, with cypress trees; no last sun on the tower). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E01_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -17,6 +17,15 @@ The environment must feel physically real, inhabited, spatially coherent, and su
 
 ---
 
+# REFERENCE IMAGES
+
+@Image 1 — the Cathedral of the Ascension (round-one take). Use it for: Orison's architecture and materials: honed white marble, slender columns, round arches, balustraded galleries, open-topped tower, shadowless cloud light.
+@Image 2 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
+
+---
+
 # LOCATION IDENTITY
 
 LOCATION:
@@ -26,7 +35,7 @@ COUNTRY / REGION:
 The Kingdom of Orison, one of seven kingdoms that float two miles up in the cloud (an invented world). Its architecture is impossible by design and explicitly required: spans too long, columns too thin, towers with open tops, nothing braced. Everything else obeys real stone, cloth and light.
 
 SETTING:
-exterior: a floating city about twelve miles across, hanging low over the plain
+exterior: a floating city twelve miles across, hanging low over the plain, seen from many miles away
 
 TIME PERIOD:
 Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
@@ -49,13 +58,14 @@ Establish clear, believable geography.
 
 Include:
 
-- the underside: a ceiling of raw dark rock, wider than the horizon, tapering down like an inverted mountain, roots and chains hanging from it
-- on top, terraces of white marble climbing tier over tier, each tier an arcade of arches
-- bridges between towers, hanging gardens trailing over the terrace edges, towers with open tops
-- at the summit, the cathedral, its open tower holding the last of the sun
+- the city is twelve miles across: even from many miles away on the plain it spans almost the whole width of the frame, its far ends dissolving into haze
+- the underside: an inverted mountain range of raw dark rock, roots and hanging chains, as in @Image 2, wider than anything on the ground
+- on top of the rock, the city climbs like a stepped mountain: broad irregular terraces of white marble, tier over tier, each tier an arcade of round arches, in the architecture of @Image 1
+- long thin bridges spanning between towers, hanging gardens trailing over the terrace edges, many slender towers with open tops
+- at the summit, the cathedral and its tall open-topped tower: the only thing still in the sun
 - mist streaming off the terraces as the city descends
-- below: the black basalt plain, the Weir a low black line at one side
-- camera position: eye level on the plain, far away, the whole city in frame
+- below: the black basalt plain; the Weir a thin low black line at one side; a line of tiny figures on the plain in the foreground
+- camera position: eye level on the plain, many miles away
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -110,9 +120,9 @@ Use tactile, photorealistic materials.
 
 For this location:
 
-- white marble terraces
+- white marble terraces, cool in shade
 - raw dark rock underside
-- muted green of hanging gardens
+- muted grey-green hanging gardens
 - black basalt plain
 
 Surfaces should contain subtle wear.
@@ -129,13 +139,13 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the whole city with its rock underside
-- the cathedral's open tower at the summit
+- the whole city with its rock underside, almost frame-wide
+- the cathedral's open tower at the summit, catching the last sun
 
 SECONDARY LIVED-IN DETAILS:
 
 - hanging gardens
-- bridges between towers
+- long bridges between towers
 - mist streaming off the tiers
 
 Objects should feel casually accumulated over time.
@@ -171,7 +181,7 @@ SECONDARY:
 marble #E9E6DE in shade, cool
 
 ACCENT:
-the last warm sun on the open tower only
+the last warm sun on the top of the open tower only; nothing else warm
 
 NEUTRALS:
 basalt #141517 below
@@ -210,8 +220,9 @@ Maintain:
 
 For this location:
 
-- no light comes from the kingdom itself
-- the city is in shade; only the tower is warm
+- no light comes from the kingdom itself: no lit windows
+- the whole city is in blue shade; only the top of the cathedral tower is warm
+- atmospheric haze grows with distance: the far ends of the city are pale
 
 No beauty lighting.
 
@@ -240,7 +251,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level on the plain, the whole kingdom in frame, a line of tiny figures on the plain in the foreground.
+35 mm, eye level on the plain many miles away: the kingdom almost frame-wide, the plain and the tiny figures across the bottom.
 
 Maintain:
 
@@ -278,7 +289,7 @@ The image must be useful later for generating:
 - entrances
 - exits
 
-Scale: a line of tiny standing figures on the plain in the foreground, dark against the basalt.
+Scale: a line of tiny standing figures on the plain in the foreground; the lowest terraces alone are the height of mountains.
 
 ---
 
@@ -369,6 +380,15 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a floating island
+- a ring wall or circular wall around the city
+- a cake-like or wedding-cake shape
+- cypress trees
+- Mediterranean or Italian village styling
+- domes
+- fairy-tale castle
+- symmetry
+- sunlit city
 - glowing windows or lights in the city
 - waterfalls pouring off the edges
 - anime or video-game fantasy styling

@@ -2,7 +2,7 @@
 
 Scenes: 10.4 · State in this reference: Dusk, ports open, guns run out.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

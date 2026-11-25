@@ -1,5 +1,6 @@
-# The Weight of Heaven: environment reference prompts
-Thirteen locations. Each prompt fills the author's environment template with this film's bible. Generate each at 21:9 at the highest resolution, with no reference image; two to four candidates per location. The chosen image becomes @Image N for every shot set there.
+# The Weight of Heaven: environment reference prompts (current)
+
+Each prompt fills the author's environment template with this film's bible. Generate at 21:9, highest resolution, two to four candidates. Pass the reference images to the model in the order of their @Image numbers. The chosen image becomes @Image N for every shot set there.
 
 ---
 
@@ -7,7 +8,7 @@ Thirteen locations. Each prompt fills the author's environment template with thi
 
 Scenes: 1, 3, 10.20 · State in this reference: Day, the wedding (scene 1). Nave empty of guests; banners, petals and the bell in place.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -392,386 +393,30 @@ Avoid:
 
 Scenes: 4, 10.21 · State in this reference: Day, three days after the wedding. The city is sinking: cloud rising through the lower terraces outside.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, an edit of the first take (round one: the city outside is an Italian hill town; dark-dressed figures; a figure out of scale at the door). Generate: 21:9, highest resolution, two to four candidates. Images, in this order: @Image 1 = `refs/candidates/E02_t1.jpg` · @Image 2 = `refs/candidates/E01_t1.jpg`.
 
 ```text
-# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+Edit @Image 1, the council chamber of Orison. This is a photoreal film location reference.
 
-## THE COUNCIL CHAMBER OF ORISON
+Keep the room exactly as it is: the ring of round-headed open arches, the shallow dome, the marble floor, the long white stone table and the gold cup on it, the low marble benches, the open pale door, the camera position, the lens and the soft grey cloud light with no shadows.
 
-Create a photorealistic cinematic environment reference image for THE COUNCIL CHAMBER OF ORISON.
+Change only these three things:
 
-This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
+1. Through the arches, replace the town with the lower terraces of Orison, built exactly in the architecture of @Image 2: honed white marble arcades and slender columns, balustraded terraces stepping down and away below the chamber, a few tall slender towers with open tops. Cloud is rising up through the lower terraces like a tide, swallowing the lowest ones. Everything outside is white marble and grey cloud.
+2. Remove the person standing at the arch.
+3. Remove the person standing at the door.
 
-The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+Keep the same grey, cool, high-key cloud light and the same muted palette. Nothing else changes.
 
----
-
-# LOCATION IDENTITY
-
-LOCATION:
-The Council Chamber of Orison, a round chamber high on the city, open to the cloud on every side
-
-COUNTRY / REGION:
-The Kingdom of Orison, one of seven kingdoms that float two miles up in the cloud (an invented world). Its architecture is impossible by design and explicitly required: spans too long, columns too thin, towers with open tops, nothing braced. Everything else obeys real stone, cloth and light.
-
-SETTING:
-round council chamber ringed with open arches, looking down over the lower terraces of the city
-
-TIME PERIOD:
-Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
-
-SOCIAL / ECONOMIC CHARACTER:
-The seat of government of the richest kingdom in the sky: austere, plain, certain of itself.
-
-OVERALL FEEL:
-Cool, grey-white, quiet. Grand without weight. Something is wrong outside: the cloud is coming up.
-
-The location should feel like a place that existed before the camera arrived.
-
-It must not feel production-designed for symbolism.
-
----
-
-# SPATIAL GEOGRAPHY
-
-Establish clear, believable geography.
-
-Include:
-
-- a round room; a ring of tall round-headed open arches all the way round, no glazing
-- through the arches: the city falling away below in terraces and towers, and cloud rising up through the lower terraces like a tide
-- a single long plain white stone table near the centre of the room; on it a gold cup of wine
-- one arch on the far side, where a person can stand at the edge and look down (Serath stands here)
-- one tall plain doorway in a short section of wall opposite that arch, with a pale door standing open (Cassiel waits here)
-- the middle of the floor is open, with nothing to lean on (the engineer stands here)
-- a few low plain marble benches against the piers
-- camera positions: eye level across the table to the arches; from the far arch back to the doorway; along the ring of arches
-
-The geography must be easy to understand and remain reproducible from different camera angles.
-
-Do not create impossible architecture.
-
-Do not create furniture that blocks basic movement.
-
-Do not create a room that changes scale from one side to another.
-
----
-
-# ARCHITECTURE
-
-Preserve believable architecture appropriate to:
-
-- country
-- building age
-- social class
-- function
-- climate
-
-Specify:
-
-WALLS:
-Slender marble piers between tall round-headed arches, open to the air.
-
-CEILING:
-A shallow plain dome high above, pale, barely distinct from the light.
-
-FLOOR:
-Honed pale marble, plain, matte.
-
-WINDOWS:
-The arches themselves; no glass.
-
-DOORS:
-One tall plain doorway with a pale wooden door standing open.
-
-TRIM / MOULDING:
-None beyond plain mouldings at the springing of the arches.
-
-FIXTURES:
-The table; the low benches.
-
-Architectural details should feel ordinary and regionally credible.
-
----
-
-# MATERIALS + TEXTURE
-
-Use tactile, photorealistic materials.
-
-For this location:
-
-- honed white marble
-- pale limed wood on the door
-- the gold cup and dark red wine
-
-Surfaces should contain subtle wear.
-
-Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
-
-Story requires it here: nothing in Orison is worn, patched or dusty. Clean, honed, cared for; never glossy or new.
-
----
-
-# PRODUCTION DESIGN
-
-Include only story-relevant objects.
-
-PRIMARY OBJECTS:
-
-- the long white stone table
-- the gold cup of wine on it, its surface visible
-- the ring of open arches onto the cloud
-
-SECONDARY LIVED-IN DETAILS:
-
-- the low marble benches
-- outside, distant bell towers of the city
-- the lower terraces going under the cloud
-
-Objects should feel casually accumulated over time.
-
-Avoid excessive dressing.
-
-Avoid obvious symbolic props unless specifically requested.
-
-The environment should remain visually usable for performance.
-
----
-
-# COLOR IDENTITY
-
-LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
-
-Permanent THE WEIGHT OF HEAVEN palette:
-
-- marble #E9E6DE (never pure white)
-- cloud #AEB4B8
-- slate #4B5258
-- rock dust #8A857B
-- basalt #141517 (dark, never pure black; stone keeps its texture)
-
-Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
-
-For this environment specifically:
-
-DOMINANT:
-marble #E9E6DE and cloud #AEB4B8
-
-SECONDARY:
-slate #4B5258 in the rising cloud below
-
-ACCENT:
-gold #C8A45A: the cup, and nothing else
-
-NEUTRALS:
-cool greys and whites
-
-The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
-
-Never neon.
-
-Never saturated.
-
-Never generic teal-and-orange cinema grading.
-
----
-
-# LIGHTING DESIGN
-
-LIGHT ABOVE, HEAVY BELOW.
-SOFT LIGHT FROM EVERY SIDE. HIGH KEY, COOLER AND GREYER THAN THE CATHEDRAL.
-
-Primary motivated source:
-
-diffuse grey cloud light through all the arches at once
-
-Secondary motivated source:
-
-soft bounce from the marble floor and the white table
-
-Maintain:
-
-- broad soft illumination
-- gentle highlight roll-off
-- retained shadow information
-- natural falloff
-- realistic practical-light behavior
-- believable exposure
-
-For this location:
-
-- no hard shadow
-- the cup is lit softly from every side
-- a slightly greyer, cooler day than the wedding
-
-No beauty lighting.
-
-No hard artificial key unless story requires it.
-
-No exaggerated rim light.
-
-No glossy commercial lighting.
-
-No glow, no beams, no god rays, no visible light shafts, no shimmer.
-
----
-
-# CAMERA / OPTICAL LANGUAGE
-
-CAMERA:
-ARRI Alexa 65, large format
-
-ASPECT RATIO:
-2.39:1 (compose for a 2.39:1 frame)
-
-LENS:
-spherical large-format primes, no anamorphic
-
-LENS CHARACTER:
-clean, modern, high-resolving rendering; low distortion; no flare; no bloom
-
-THIS REFERENCE:
-28 mm, slightly above head height, looking across the table and the cup to the far arch and the city below.
-
-Maintain:
-
-- deep focus: the whole location sharp from foreground to far distance
-- dimensional space
-- natural microcontrast
-- smooth highlight roll-off, whites holding their detail
-- fine, even, film-like grain
-- natural textures
-
-The environment should look like a frame from THE WEIGHT OF HEAVEN, not a location catalogue.
-
----
-
-# COMPOSITION
-
-Create a useful master environment reference.
-
-Prefer:
-
-- wide or medium-wide view
-- clear room geography
-- human eye-level perspective
-- enough negative space to understand circulation
-- major architectural anchors visible simultaneously
-
-Do not use an extreme cinematic angle that hides geography.
-
-The image must be useful later for generating:
-
-- wides
-- mediums
-- close-ups
-- reverse angles
-- entrances
-- exits
-
----
-
-# ATMOSPHERE
-
-Atmosphere:
-
-A grey day. Cloud is welling up from below through the lower terraces and drifting in at the foot of the arches.
-
-Physical conditions:
-
-- cloud rising from below the city
-- flat grey cloud light
-- still air
-
-Atmosphere must emerge from physical conditions, not digital effects.
-
----
-
-# REALISM LOCK
-
-Photorealistic.
-
-Physically believable.
-
-Architecturally coherent.
-
-Regionally credible.
-
-Lived-in.
-
-Understated.
-
-No fantasy architecture unless explicitly required.
-
-No impossible reflections.
-
-No floating props.
-
-No warped furniture.
-
-No excessive depth-of-field blur that hides the location.
-
----
-
-# CONTINUITY LOCK
-
-The final environment must establish a stable reference for:
-
-- architecture
-- room dimensions
-- major furniture
-- doors
-- windows
-- practical lights
-- material palette
-- object positions
-- camera geography
-
-Future generations should be able to reproduce this exact location.
-
----
-
-# NEGATIVE LOCK
-
-Avoid:
-
-- generic AI interiors
-- luxury redesign
-- excessive décor
-- glossy architectural visualization
-- showroom cleanliness
-- extreme HDR
-- oversaturation
-- neon
-- cyberpunk lighting
-- random signage
-- impossible room proportions
-- duplicated furniture
-- floating objects
-- distorted architecture
-- fisheye
-- dramatic concept-art composition
-- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
-- lens flare, bloom, halation
-- readable text, English or Latin lettering, numbers, signage, words on banners
-- electric light, modern objects, plastic, concrete, steel girders, engines
-- fire, smoke from guns, explosions
-- fantasy-game styling, glowing runes, magic effects, crystals
-- teal-and-orange grading
-- a council of people
-- thrones
-- gold anywhere but the cup
-- glass in the arches
+Do not add: ochre, brown or honey-coloured stone, medieval houses, tiled roofs, Italian hill-town buildings, bell towers with pointed roofs, people, text, signage, lens flare, glow or sunbeams.
 ```
-
 ---
 
 # E03 — ANVIL VALE — A FIELD AND A HOUSE BUILT TO BEAR
 
 Scenes: 2 · State in this reference: Day, before the collapse. The mountain whole.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -1150,9 +795,9 @@ Avoid:
 
 # E04 — BENEATH ORISON — THE UNDERSIDE OF THE KINGDOM
 
-Scenes: 5, 10 · State in this reference: Day (scene 5): the cutter has just dropped out of the cloud.
+Scenes: 5, 10 · State in this reference: Day (scene 5). Seen from the cutter as it drops out of the cloud. The cutter itself is added later from its own reference.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: the underside had visible ends (a floating island); the cutter was a sailing ship; the chains read as ordinary chain). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E05_t1.jpg` · @Image 2 = `refs/candidates/E06_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -1164,6 +809,15 @@ Create a photorealistic cinematic environment reference image for BENEATH ORISON
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+@Image 2 — the Weir (round-one take). Use it for: the Weir: a seamless wall of fused black stone with tall round-arched gates and green vale seen through them.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
 
 ---
 
@@ -1199,14 +853,13 @@ Establish clear, believable geography.
 
 Include:
 
-- the top half of the frame: the underside of the kingdom fills the sky from edge to edge: raw rock in inverted crags, hanging roots, and ancient iron chains as thick as towers hanging down from it, their lower ends free in the air
-- where the rock meets the cloud, the city itself is hidden above
-- between the rock and the ground, one narrow band of grey daylight at the horizon
-- below: a plain of black basalt to the horizon, in columns, like a city no one finished
-- at the far edge of the plain, across the head of a green valley, the Weir: a long low black wall with nine arched gates
+- the top half of the frame: the underside of the kingdom fills the sky from edge to edge and runs out of the frame on the left, on the right and at the top: a ceiling of raw rock wider than the horizon, with no visible end, edge or outline anywhere
+- its surface: inverted crags, hanging earth and roots, and ancient iron chains hanging down from it, each link larger than a house, their lower ends free in the air, the farther chains fading into haze
+- one narrow band of grey daylight at the horizon, between the rock and the ground
+- below: a plain of black basalt to the horizon, in columns, like a city no one finished, as in @Image 1
+- at the far edge of the plain, across the head of a green valley, the Weir as in @Image 2: a long low black wall, nine round-arched gates, two shut
 - beyond it, Sarn Vale: terraces, orchards, the thin smoke of many hearths
-- a small white naval cutter, just below the rock, gives the size of everything
-- camera position: at the cutter's height, level, looking along between the rock and the plain
+- camera position: in the air just below the cloud, level, looking along between the rock and the plain
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -1278,15 +931,15 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the underside of the kingdom
-- the tower-thick chains
+- the underside of the kingdom, edge to edge
+- the house-sized chains
 - the basalt plain
 - the Weir and Sarn Vale at the far edge
 
 SECONDARY LIVED-IN DETAILS:
 
 - hanging roots and earth trailing from the rock
-- the tiny white cutter
+- mist clinging to the crags
 
 Objects should feel casually accumulated over time.
 
@@ -1324,7 +977,7 @@ ACCENT:
 vale green #5D7A4A: Sarn Vale, the only colour
 
 NEUTRALS:
-dark greys; the cutter is the only white
+dark greys
 
 The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
 
@@ -1361,8 +1014,8 @@ Maintain:
 For this location:
 
 - the underside sits two stops under the band of day
-- the cutter is the only white
 - the valley is the only colour
+- the rock is lit only from below and from the horizon, never from above
 
 No beauty lighting.
 
@@ -1391,7 +1044,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-24 mm, level at the cutter's height, the underside across the top of the frame, the plain and the Weir across the bottom.
+24 mm, level, from the air just under the cloud: the underside across the whole top of the frame, the band of day, the plain and the Weir across the bottom.
 
 Maintain:
 
@@ -1429,7 +1082,7 @@ The image must be useful later for generating:
 - entrances
 - exits
 
-Scale: the small white cutter below the rock: the underside is hundreds of times its size.
+Scale: the Weir, a mile long, is a thin line at the far edge of the plain; each chain link is bigger than a house.
 
 ---
 
@@ -1520,6 +1173,10 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a floating island
+- visible ends or edges of the rock
+- a separate object in the sky
+- ships, boats, sailing ships, airships, balloons
 - open blue sky
 - sunbeams
 - waterfalls pouring from the rock
@@ -1533,7 +1190,7 @@ Avoid:
 
 Scenes: 5, 8, 10, 11 · State in this reference: Grey day under the kingdom (scenes 5 and 6). The dusk (8, 10) and last-light (11) versions are made from this one once it is chosen.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -1910,7 +1567,7 @@ Avoid:
 
 Scenes: 5, 8, 10 · State in this reference: Grey day (scene 5): nine gates, two shut. Dusk versions (8, 10) are made from this one.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -2293,383 +1950,29 @@ Avoid:
 
 Scenes: 5, 8, 9, 11 · State in this reference: Grey day (scene 5): the vale lived in, hearths lit. The crowded road (8, 9) and the night hearths (11) are made from this one.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, an edit of the first take (round one: the Weir drawn as a single black slab; a saucer-shaped mass in the sky). Generate: 21:9, highest resolution, two to four candidates. Images, in this order: @Image 1 = `refs/candidates/E07_t1.jpg` · @Image 2 = `refs/candidates/E06_t1.jpg` · @Image 3 = `refs/candidates/E05_t1.jpg`.
 
 ```text
-# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+Edit @Image 1, Sarn Vale. This is a photoreal film location reference.
 
-## SARN VALE AND THE ONE ROAD
+Keep the valley exactly as it is: the terraced green slopes, the orchards, the stone houses with slate roofs and their hearth smoke, the road between its dry-stone walls, the camera position, the lens and the grey overcast light.
 
-Create a photorealistic cinematic environment reference image for SARN VALE AND THE ONE ROAD.
+Change only these two things:
 
-This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
+1. Replace the single black slab on the right with the end of the Weir, exactly as in @Image 2: a very long wall of seamless fused black stone, about a hundred feet high, with tall round-arched gates through it at even intervals. It stands across the head of the valley and runs away from camera into the distance toward the plain, the green of the vale showing through its nearer gates. The road climbs past its near end. No joints, no blocks, no carvings.
+2. Remove the saucer-shaped mass from the sky. In its place, along the very top edge of the frame only, the far edge of the kingdom's underside, as in @Image 3: raw dark rock, very high above, soft and hazy, running out of frame left and right, with no visible outline and no visible end. Below it, grey overcast.
 
-The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+Keep the same muted green, grey day, and haze down the valley. Nothing else changes.
 
----
-
-# LOCATION IDENTITY
-
-LOCATION:
-Sarn Vale, the green valley below the Weir, and the one road out of it
-
-COUNTRY / REGION:
-The ground: the bearing-lands of the eleven nations, beneath the floating kingdom of Orison (an invented world, built from real northern volcanic and upland country: columnar basalt, slate, dry-stone, heavy soil). Sarn Vale is not bearing-land: nothing there is built to carry weight.
-
-SETTING:
-a long green farmed valley of terraces, orchards and villages, with a single road climbing out
-
-TIME PERIOD:
-Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
-
-SOCIAL / ECONOMIC CHARACTER:
-Forty thousand people. Ordinary farming villages, modest and settled.
-
-OVERALL FEEL:
-Green, alive, ordinary. The only living colour on the ground.
-
-The location should feel like a place that existed before the camera arrived.
-
-It must not feel production-designed for symbolism.
-
----
-
-# SPATIAL GEOGRAPHY
-
-Establish clear, believable geography.
-
-Include:
-
-- from the head of the vale, a long green valley falling away from camera
-- terraced slopes of small fields and orchards on both sides
-- villages of modest stone houses with slate roofs scattered down the valley, thin smoke rising from many hearths
-- the one road: a single unpaved road winding up the side of the valley toward camera and out past the far end of the Weir onto the plain
-- at one side of the frame, the black end of the Weir wall
-- overhead: grey overcast; the edge of the kingdom's shadow
-- camera positions: eye level on the road at the head of the vale looking down the valley; from the valley floor looking up at the road and the Weir
-
-The geography must be easy to understand and remain reproducible from different camera angles.
-
-Do not create impossible architecture.
-
-Do not create furniture that blocks basic movement.
-
-Do not create a room that changes scale from one side to another.
-
----
-
-# ARCHITECTURE
-
-Preserve believable architecture appropriate to:
-
-- country
-- building age
-- social class
-- function
-- climate
-
-Specify:
-
-WALLS:
-Ordinary dry-stone field walls and modest stone houses; no buttresses.
-
-CEILING:
-Open-air: grey overcast, the edge of the kingdom's shadow at the top of the frame.
-
-FLOOR:
-Green fields, orchard grass, the pale dirt road.
-
-WINDOWS:
-Small house windows in the villages.
-
-DOORS:
-House doors of plain wood.
-
-TRIM / MOULDING:
-None.
-
-FIXTURES:
-Field walls, orchard rows, chimneys.
-
-Architectural details should feel ordinary and regionally credible.
-
----
-
-# MATERIALS + TEXTURE
-
-Use tactile, photorealistic materials.
-
-For this location:
-
-- green grass and orchard trees
-- grey stone houses and slate roofs
-- packed pale earth on the road
-- thin grey woodsmoke
-
-Surfaces should contain subtle wear.
-
-Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
-
----
-
-# PRODUCTION DESIGN
-
-Include only story-relevant objects.
-
-PRIMARY OBJECTS:
-
-- the terraced green valley
-- the one road climbing out
-- the end of the Weir
-
-SECONDARY LIVED-IN DETAILS:
-
-- orchard rows
-- hearth smoke from the villages
-- field walls
-
-Objects should feel casually accumulated over time.
-
-Avoid excessive dressing.
-
-Avoid obvious symbolic props unless specifically requested.
-
-The environment should remain visually usable for performance.
-
----
-
-# COLOR IDENTITY
-
-LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
-
-Permanent THE WEIGHT OF HEAVEN palette:
-
-- marble #E9E6DE (never pure white)
-- cloud #AEB4B8
-- slate #4B5258
-- rock dust #8A857B
-- basalt #141517 (dark, never pure black; stone keeps its texture)
-
-Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
-
-For this environment specifically:
-
-DOMINANT:
-vale green #5D7A4A, muted, never lush or saturated
-
-SECONDARY:
-slate #4B5258 and rock dust #8A857B in the houses and road
-
-ACCENT:
-none by day
-
-NEUTRALS:
-grey overcast
-
-The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
-
-Never neon.
-
-Never saturated.
-
-Never generic teal-and-orange cinema grading.
-
----
-
-# LIGHTING DESIGN
-
-LIGHT ABOVE, HEAVY BELOW.
-LOW LIGHT UNDER A DARK ROOF. LOW CONTRAST.
-
-Primary motivated source:
-
-grey daylight, brighter than on the plain, from the open sky down the valley
-
-Secondary motivated source:
-
-soft overcast fill
-
-Maintain:
-
-- broad soft illumination
-- gentle highlight roll-off
-- retained shadow information
-- natural falloff
-- realistic practical-light behavior
-- believable exposure
-
-For this location:
-
-- the green is felt, not saturated
-- no sunshine, no cast shadows
-
-No beauty lighting.
-
-No hard artificial key unless story requires it.
-
-No exaggerated rim light.
-
-No glossy commercial lighting.
-
-No glow, no beams, no god rays, no visible light shafts, no shimmer.
-
----
-
-# CAMERA / OPTICAL LANGUAGE
-
-CAMERA:
-ARRI Alexa 65, large format
-
-ASPECT RATIO:
-2.39:1 (compose for a 2.39:1 frame)
-
-LENS:
-spherical large-format primes, no anamorphic
-
-LENS CHARACTER:
-clean, modern, high-resolving rendering; low distortion; no flare; no bloom
-
-THIS REFERENCE:
-35 mm, eye level on the road at the head of the vale, looking down the valley, the end of the Weir at one edge of the frame.
-
-Maintain:
-
-- deep focus: the whole location sharp from foreground to far distance
-- dimensional space
-- natural microcontrast
-- smooth highlight roll-off, whites holding their detail
-- fine, even, film-like grain
-- natural textures
-
-The environment should look like a frame from THE WEIGHT OF HEAVEN, not a location catalogue.
-
----
-
-# COMPOSITION
-
-Create a useful master environment reference.
-
-Prefer:
-
-- wide or medium-wide view
-- clear room geography
-- human eye-level perspective
-- enough negative space to understand circulation
-- major architectural anchors visible simultaneously
-
-Do not use an extreme cinematic angle that hides geography.
-
-The image must be useful later for generating:
-
-- wides
-- mediums
-- close-ups
-- reverse angles
-- entrances
-- exits
-
----
-
-# ATMOSPHERE
-
-Atmosphere:
-
-A grey, ordinary afternoon. Smoke rising straight from the hearths.
-
-Physical conditions:
-
-- overcast
-- light haze down the valley
-- still air
-
-Atmosphere must emerge from physical conditions, not digital effects.
-
----
-
-# REALISM LOCK
-
-Photorealistic.
-
-Physically believable.
-
-Architecturally coherent.
-
-Regionally credible.
-
-Lived-in.
-
-Understated.
-
-No fantasy architecture unless explicitly required.
-
-No impossible reflections.
-
-No floating props.
-
-No warped furniture.
-
-No excessive depth-of-field blur that hides the location.
-
----
-
-# CONTINUITY LOCK
-
-The final environment must establish a stable reference for:
-
-- architecture
-- room dimensions
-- major furniture
-- doors
-- windows
-- practical lights
-- material palette
-- object positions
-- camera geography
-
-Future generations should be able to reproduce this exact location.
-
----
-
-# NEGATIVE LOCK
-
-Avoid:
-
-- generic AI interiors
-- luxury redesign
-- excessive décor
-- glossy architectural visualization
-- showroom cleanliness
-- extreme HDR
-- oversaturation
-- neon
-- cyberpunk lighting
-- random signage
-- impossible room proportions
-- duplicated furniture
-- floating objects
-- distorted architecture
-- fisheye
-- dramatic concept-art composition
-- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
-- lens flare, bloom, halation
-- readable text, English or Latin lettering, numbers, signage, words on banners
-- electric light, modern objects, plastic, concrete, steel girders, engines
-- fire, smoke from guns, explosions
-- fantasy-game styling, glowing runes, magic effects, crystals
-- teal-and-orange grading
-- picture-postcard village
-- bright saturated green
-- blue sky
-- people on the road (added per shot)
+Do not add: a monolith, a free-standing slab, a disc or saucer in the sky, a floating object with a visible edge, blue sky, sunshine, people, text, glow.
 ```
-
 ---
 
 # E08 — THE TREATY HOUSE — COURTYARD
 
 Scenes: 6 · State in this reference: Day, before Serath lands. The yard empty of refugees (they are added per shot).
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -3043,7 +2346,7 @@ Avoid:
 
 Scenes: 7 · State in this reference: Day, shutters open (after 7.4). The closed-shutter state is the same room in the dark.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -3424,7 +2727,7 @@ Avoid:
 
 Scenes: 9 · State in this reference: Dusk. No light inside: everything lit by the dusk through the glass.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a small Victorian glasshouse, lit inside, pink dusk, airships outside). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E11_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -3439,6 +2742,15 @@ The environment must feel physically real, inhabited, spatially coherent, and su
 
 ---
 
+# REFERENCE IMAGES
+
+@Image 1 — a gun deck of the fleet (round-one take). Use it for: the fleet's building language: white-painted timber framing, pointed lancet openings, dark iron, scrubbed planking.
+@Image 2 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
+
+---
+
 # LOCATION IDENTITY
 
 LOCATION:
@@ -3448,7 +2760,7 @@ COUNTRY / REGION:
 The fleet of Orison: white ships that sail the air, built by the same hands as the cathedral (an invented world). Every ship is a church nave laid on its side: a spire for a mast, lancet gunports, a keel like an upturned roof.
 
 SETTING:
-the command bridge of a great white ship of the air: brass, glass, quiet
+the command bridge of the flagship: long and high like the nave of a church, brass and glass, in the air at dusk
 
 TIME PERIOD:
 Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
@@ -3457,7 +2769,7 @@ SOCIAL / ECONOMIC CHARACTER:
 A navy run like a church: ordered, ceremonial, silent.
 
 OVERALL FEEL:
-Brass, glass, quiet. A hundred people at their stations and no one speaking.
+Brass, glass, quiet. A church run like a navy: room for a hundred officers at their stations, and no one speaking.
 
 The location should feel like a place that existed before the camera arrived.
 
@@ -3471,13 +2783,15 @@ Establish clear, believable geography.
 
 Include:
 
-- a long high bridge; the forward wall is tall windows divided by slender mullions into a grid, and there is glass overhead
-- through the forward glass: the fleet in ranks at dusk under the amber underside of the cloud
-- overhead, through the glass roof: the roots of Orison hanging low
-- the chart table: a broad table with a brass edge in the centre near the glass
-- the sighting glass: a long brass telescope on a pedestal at the forward glass
-- stations along both sides: brass speaking tubes, signal-record desks, a signal station facing a side window
-- camera positions: eye level from the rear of the bridge looking forward into the glass; beside the sighting glass; across the chart table
+- a long, high bridge built like the nave of a church: a central aisle running forward from camera, between two long rows of officers' stations, room for a hundred people
+- tall ribs of white-painted timber arch overhead like a nave vault, as in @Image 1, and the vault is glazed between the ribs
+- the forward end is a tall wall of glass in pointed lancet panes divided by slender mullions, facing the fleet
+- through the forward glass: the fleet in long ranks at dusk under the amber underside of the cloud, white hulls shaped like church naves laid on their side: one tall spire for a mast, long rows of pointed lancet gunports, a keel like an upturned roof; no sails, no balloons, no gas bags; the far ranks go to haze
+- overhead, through the glazed vault: the roots and dark rock of Orison hanging low, as in @Image 2
+- the chart table: a broad table with a brass edge in the aisle near the forward glass
+- the sighting glass: a long brass telescope on a brass pedestal at the forward glass
+- along both rows: brass speaking tubes, signal-record desks, brass rails; a signal station facing a side window
+- camera positions: eye level at the rear of the aisle looking forward to the glass; beside the sighting glass; across the chart table
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -3502,25 +2816,25 @@ Preserve believable architecture appropriate to:
 Specify:
 
 WALLS:
-Pale painted panelling between the windows; slender pale stone-white ribs like a nave.
+White-painted timber ribs and panelling between tall lancet windows, the fleet's building language as in @Image 1.
 
 CEILING:
-Glass in a light framework of white ribs.
+A pointed nave vault of white-painted timber ribs, glazed between the ribs.
 
 FLOOR:
-Pale scrubbed deck planking.
+Long scrubbed deck planking running down the aisle.
 
 WINDOWS:
-The forward wall of tall gridded windows; the glass roof.
+The tall forward wall of lancet panes; lancet side windows; the glazed vault.
 
 DOORS:
 A plain door at the rear.
 
 TRIM / MOULDING:
-Brass fittings, plain mouldings.
+Brass rails and fittings.
 
 FIXTURES:
-The chart table, the sighting glass, the speaking tubes, the stations.
+The chart table, the sighting glass, two long rows of stations with speaking tubes.
 
 Architectural details should feel ordinary and regionally credible.
 
@@ -3534,7 +2848,7 @@ For this location:
 
 - brass, worn soft at the edges
 - old glass with faint ripples
-- pale painted wood
+- white-painted timber ribs, in shadow
 - scrubbed planking
 
 Surfaces should contain subtle wear.
@@ -3549,13 +2863,14 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the gridded forward glass and the fleet beyond
+- the lancet forward glass and the fleet beyond
+- the long aisle between two rows of stations
 - the chart table
 - the brass sighting glass
 
 SECONDARY LIVED-IN DETAILS:
 
-- speaking tubes
+- brass speaking tubes
 - signal desks
 - stools at the stations
 
@@ -3586,16 +2901,16 @@ Accents, each belonging to one thing only and appearing on nothing else: gold #C
 For this environment specifically:
 
 DOMINANT:
-dusk amber #D98A3D in the glass
+dusk amber #D98A3D in the forward glass and on the bellies of the ships
 
 SECONDARY:
-basalt-dark silhouettes of the bridge interior
+basalt-dark silhouettes: the whole interior
 
 ACCENT:
-brass catching the dusk
+brass picking up the amber dusk
 
 NEUTRALS:
-cold slate in the glass overhead
+cold slate #4B5258 in the glazed vault overhead
 
 The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
 
@@ -3614,11 +2929,11 @@ SILHOUETTE. THE DUSK THROUGH THE GLASS. NO LIGHT INSIDE.
 
 Primary motivated source:
 
-amber dusk light from the forward glass
+amber dusk light from beneath the cloud, through the forward glass
 
 Secondary motivated source:
 
-cold slate light from the glass overhead
+cold slate light from the glazed vault overhead
 
 Maintain:
 
@@ -3631,9 +2946,9 @@ Maintain:
 
 For this location:
 
-- no practical lights lit
-- the interior falls to silhouette; brass picks up the dusk
-- faces would barely read
+- no practical lights lit, no lamps, no candles
+- the interior falls to silhouette: ribs, stations and stools are dark shapes; brass picks up the dusk in thin lines
+- every ship outside has a warm amber belly and a cold grey back
 
 No beauty lighting.
 
@@ -3662,7 +2977,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level from the rear of the bridge, looking forward to the glass, the chart table in the middle ground.
+24 mm, eye level at the rear of the aisle, symmetrical, looking down the bridge to the forward glass, the chart table in the middle ground.
 
 Maintain:
 
@@ -3788,6 +3103,13 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a conservatory or greenhouse
+- a small room
+- a Victorian glasshouse
+- a lit interior
+- pink, purple or rose sky
+- airships, zeppelins, dirigibles, balloons, gas bags
+- sails or sailing ships
 - screens, dials or electrics
 - a ship's wheel
 - steampunk gears and pipes
@@ -3800,7 +3122,7 @@ Avoid:
 
 Scenes: 10.4 · State in this reference: Dusk, ports open, guns run out.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v1. Generate: 21:9, highest resolution, no reference image. Two to four candidates.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -4170,7 +3492,7 @@ Avoid:
 
 Scenes: 10.15 to 10.23, 11.16 to 11.19 · State in this reference: Blue dusk, descending, low over the plain; the last sun only on the cathedral's open tower.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a fantasy island about a mile across, ringed like a cake, with cypress trees; no last sun on the tower). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E01_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -4185,6 +3507,15 @@ The environment must feel physically real, inhabited, spatially coherent, and su
 
 ---
 
+# REFERENCE IMAGES
+
+@Image 1 — the Cathedral of the Ascension (round-one take). Use it for: Orison's architecture and materials: honed white marble, slender columns, round arches, balustraded galleries, open-topped tower, shadowless cloud light.
+@Image 2 — the basalt plain under the kingdom (round-one take). Use it for: the underside of the kingdom (raw dark rock in inverted crags, hanging roots, hanging iron chains) and the black hexagonal basalt.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
+
+---
+
 # LOCATION IDENTITY
 
 LOCATION:
@@ -4194,7 +3525,7 @@ COUNTRY / REGION:
 The Kingdom of Orison, one of seven kingdoms that float two miles up in the cloud (an invented world). Its architecture is impossible by design and explicitly required: spans too long, columns too thin, towers with open tops, nothing braced. Everything else obeys real stone, cloth and light.
 
 SETTING:
-exterior: a floating city about twelve miles across, hanging low over the plain
+exterior: a floating city twelve miles across, hanging low over the plain, seen from many miles away
 
 TIME PERIOD:
 Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
@@ -4217,13 +3548,14 @@ Establish clear, believable geography.
 
 Include:
 
-- the underside: a ceiling of raw dark rock, wider than the horizon, tapering down like an inverted mountain, roots and chains hanging from it
-- on top, terraces of white marble climbing tier over tier, each tier an arcade of arches
-- bridges between towers, hanging gardens trailing over the terrace edges, towers with open tops
-- at the summit, the cathedral, its open tower holding the last of the sun
+- the city is twelve miles across: even from many miles away on the plain it spans almost the whole width of the frame, its far ends dissolving into haze
+- the underside: an inverted mountain range of raw dark rock, roots and hanging chains, as in @Image 2, wider than anything on the ground
+- on top of the rock, the city climbs like a stepped mountain: broad irregular terraces of white marble, tier over tier, each tier an arcade of round arches, in the architecture of @Image 1
+- long thin bridges spanning between towers, hanging gardens trailing over the terrace edges, many slender towers with open tops
+- at the summit, the cathedral and its tall open-topped tower: the only thing still in the sun
 - mist streaming off the terraces as the city descends
-- below: the black basalt plain, the Weir a low black line at one side
-- camera position: eye level on the plain, far away, the whole city in frame
+- below: the black basalt plain; the Weir a thin low black line at one side; a line of tiny figures on the plain in the foreground
+- camera position: eye level on the plain, many miles away
 
 The geography must be easy to understand and remain reproducible from different camera angles.
 
@@ -4278,9 +3610,9 @@ Use tactile, photorealistic materials.
 
 For this location:
 
-- white marble terraces
+- white marble terraces, cool in shade
 - raw dark rock underside
-- muted green of hanging gardens
+- muted grey-green hanging gardens
 - black basalt plain
 
 Surfaces should contain subtle wear.
@@ -4297,13 +3629,13 @@ Include only story-relevant objects.
 
 PRIMARY OBJECTS:
 
-- the whole city with its rock underside
-- the cathedral's open tower at the summit
+- the whole city with its rock underside, almost frame-wide
+- the cathedral's open tower at the summit, catching the last sun
 
 SECONDARY LIVED-IN DETAILS:
 
 - hanging gardens
-- bridges between towers
+- long bridges between towers
 - mist streaming off the tiers
 
 Objects should feel casually accumulated over time.
@@ -4339,7 +3671,7 @@ SECONDARY:
 marble #E9E6DE in shade, cool
 
 ACCENT:
-the last warm sun on the open tower only
+the last warm sun on the top of the open tower only; nothing else warm
 
 NEUTRALS:
 basalt #141517 below
@@ -4378,8 +3710,9 @@ Maintain:
 
 For this location:
 
-- no light comes from the kingdom itself
-- the city is in shade; only the tower is warm
+- no light comes from the kingdom itself: no lit windows
+- the whole city is in blue shade; only the top of the cathedral tower is warm
+- atmospheric haze grows with distance: the far ends of the city are pale
 
 No beauty lighting.
 
@@ -4408,7 +3741,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level on the plain, the whole kingdom in frame, a line of tiny figures on the plain in the foreground.
+35 mm, eye level on the plain many miles away: the kingdom almost frame-wide, the plain and the tiny figures across the bottom.
 
 Maintain:
 
@@ -4446,7 +3779,7 @@ The image must be useful later for generating:
 - entrances
 - exits
 
-Scale: a line of tiny standing figures on the plain in the foreground, dark against the basalt.
+Scale: a line of tiny standing figures on the plain in the foreground; the lowest terraces alone are the height of mountains.
 
 ---
 
@@ -4537,6 +3870,15 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
+- a floating island
+- a ring wall or circular wall around the city
+- a cake-like or wedding-cake shape
+- cypress trees
+- Mediterranean or Italian village styling
+- domes
+- fairy-tale castle
+- symmetry
+- sunlit city
 - glowing windows or lights in the city
 - waterfalls pouring off the edges
 - anime or video-game fantasy styling
@@ -4549,7 +3891,7 @@ Avoid:
 
 Scenes: 11.1 to 11.15 · State in this reference: Last light, after the landing. Open sky for the first time. Crowds on the rails added per shot.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, a new generation (round one: a game-render look; hard sun and cast shadows; three storeys; a thin diagonal chain). Generate: 21:9, highest resolution, two to four candidates. Reference images, in this order: @Image 1 = `refs/candidates/E01_t1.jpg` · @Image 2 = `refs/candidates/E05_t1.jpg`.
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
@@ -4561,6 +3903,15 @@ Create a photorealistic cinematic environment reference image for THE FIRST GROU
 This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
 
 The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the Cathedral of the Ascension (round-one take). Use it for: Orison's architecture and materials: honed white marble, slender columns, round arches, balustraded galleries, open-topped tower, shadowless cloud light.
+@Image 2 — the basalt plain (round-one take). Use it for: the black hexagonal basalt ground only; ignore its sky and the rock overhead, which are gone now.
+
+Take from each reference only what it is listed for. Do not copy its framing, its camera position or anything it gets wrong.
 
 ---
 
@@ -4596,12 +3947,13 @@ Establish clear, believable geography.
 
 Include:
 
-- a wall of white marble terraces rising tier over tier into the dusk, its base resting on the black basalt
-- at the foot of the lowest terrace, an arched gate, dark inside
-- its stair of marble steps, which ended in air for eight hundred years, now ends on the ground: the last step rests on the basalt
-- in front of the stair, open basalt plain, dust settled in a thin even layer
-- nearby, a great iron anchor chain hanging from far above, its anchor sunk into the plain
-- over all, open sky for the first time: blue last light, one band of sun on the far horizon
+- the lowest terrace wall of Orison rises straight from the basalt, and tier over tier of white marble terraces climb above it and out of the top of the frame, filling the left two-thirds of the frame: a wall of white marble where this morning there was sky
+- every terrace lined with plain marble balustrades, its face an arcade of round arches, in the architecture of @Image 1
+- at the foot of the lowest terrace, an arched gate, dark inside, with a broad marble stair coming down from it
+- the stair ended in air for eight hundred years; now its last step rests on the black basalt, the lowest steps dusted grey
+- in front of the stair, the open basalt plain of natural hexagonal column-tops, as in @Image 2, with a thin even layer of settled grey dust
+- near the stair, a colossal iron anchor chain hanging perfectly vertical from out of the top of the frame (from a ship a mile up), each link taller than a man, its lower end sunk into broken basalt where the anchor bit
+- on the right, open sky for the first time: blue last light, one thin band of sun on the far horizon
 - camera positions: eye level and level for both peoples, from the plain toward the stair; from the stair out across the plain
 
 The geography must be easy to understand and remain reproducible from different camera angles.
@@ -4657,14 +4009,16 @@ Use tactile, photorealistic materials.
 
 For this location:
 
-- white marble, now with dust at its foot
-- black basalt
+- white marble, honed and matte, real stone with fine veining and dust at its foot
+- black hexagonal basalt column-tops
 - settled grey dust
-- dark iron chain
+- dark heavy iron chain, rough and pitted
 
 Surfaces should contain subtle wear.
 
 Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+Photographed on location at dusk with a cinema camera: real stone, real dust, real light. Not CGI, not a 3D render, not a game engine.
 
 ---
 
@@ -4755,7 +4109,8 @@ Maintain:
 
 For this location:
 
-- no warm light on the marble
+- shadowless: the sun is below the horizon, the light is the blue sky alone
+- no warm light on the marble, no cast shadows
 - the camera is level: no low angle
 
 No beauty lighting.
@@ -4785,7 +4140,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS REFERENCE:
-35 mm, eye level, level, from the plain toward the stair, the terraces rising to the top of frame.
+35 mm, eye level, level, from the plain toward the stair: the terraces rising out of the top of the frame on the left, the vertical chain, open blue dusk on the right.
 
 Maintain:
 
@@ -4914,7 +4269,14 @@ Avoid:
 - fire, smoke from guns, explosions
 - fantasy-game styling, glowing runes, magic effects, crystals
 - teal-and-orange grading
-- warm golden-hour light on the city
+- a CGI or 3D render, game-engine or architectural-visualization look
+- clean plastic-looking marble
+- cobblestones or paving
+- hard sunlight, sun on the marble, cast shadows
+- a clear midday sky
+- a thin chain, a diagonal chain, a chain lying on the ground
+- a three-storey building, a government building
+- warm golden-hour light
 - crowds on the rails (added per shot)
 - debris or damage
 ```

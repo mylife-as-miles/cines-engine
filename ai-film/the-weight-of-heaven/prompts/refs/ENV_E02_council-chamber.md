@@ -2,7 +2,25 @@
 
 Scenes: 4, 10.21 · State in this reference: Day, three days after the wedding. The city is sinking: cloud rising through the lower terraces outside.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, an edit of the first take (round one: the city outside is an Italian hill town; dark-dressed figures; a figure out of scale at the door). Generate: 21:9, highest resolution, two to four candidates. Images, in this order: @Image 1 = `refs/candidates/E02_t1.jpg` · @Image 2 = `refs/candidates/E01_t1.jpg`.
+
+```text
+Edit @Image 1, the council chamber of Orison. This is a photoreal film location reference.
+
+Keep the room exactly as it is: the ring of round-headed open arches, the shallow dome, the marble floor, the long white stone table and the gold cup on it, the low marble benches, the open pale door, the camera position, the lens and the soft grey cloud light with no shadows.
+
+Change only these three things:
+
+1. Through the arches, replace the town with the lower terraces of Orison, built exactly in the architecture of @Image 2: honed white marble arcades and slender columns, balustraded terraces stepping down and away below the chamber, a few tall slender towers with open tops. Cloud is rising up through the lower terraces like a tide, swallowing the lowest ones. Everything outside is white marble and grey cloud.
+2. Remove the person standing at the arch.
+3. Remove the person standing at the door.
+
+Keep the same grey, cool, high-key cloud light and the same muted palette. Nothing else changes.
+
+Do not add: ochre, brown or honey-coloured stone, medieval houses, tiled roofs, Italian hill-town buildings, bell towers with pointed roofs, people, text, signage, lens flare, glow or sunbeams.
+```
+
+## Prompt v1 (made t1; still the description of this location)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT

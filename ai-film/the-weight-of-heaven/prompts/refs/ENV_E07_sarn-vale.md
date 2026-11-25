@@ -2,7 +2,24 @@
 
 Scenes: 5, 8, 9, 11 · State in this reference: Grey day (scene 5): the vale lived in, hearths lit. The crowded road (8, 9) and the night hearths (11) are made from this one.
 
-Generate: 21:9, highest resolution, no reference image. Two to four candidates.
+Prompt v2, an edit of the first take (round one: the Weir drawn as a single black slab; a saucer-shaped mass in the sky). Generate: 21:9, highest resolution, two to four candidates. Images, in this order: @Image 1 = `refs/candidates/E07_t1.jpg` · @Image 2 = `refs/candidates/E06_t1.jpg` · @Image 3 = `refs/candidates/E05_t1.jpg`.
+
+```text
+Edit @Image 1, Sarn Vale. This is a photoreal film location reference.
+
+Keep the valley exactly as it is: the terraced green slopes, the orchards, the stone houses with slate roofs and their hearth smoke, the road between its dry-stone walls, the camera position, the lens and the grey overcast light.
+
+Change only these two things:
+
+1. Replace the single black slab on the right with the end of the Weir, exactly as in @Image 2: a very long wall of seamless fused black stone, about a hundred feet high, with tall round-arched gates through it at even intervals. It stands across the head of the valley and runs away from camera into the distance toward the plain, the green of the vale showing through its nearer gates. The road climbs past its near end. No joints, no blocks, no carvings.
+2. Remove the saucer-shaped mass from the sky. In its place, along the very top edge of the frame only, the far edge of the kingdom's underside, as in @Image 3: raw dark rock, very high above, soft and hazy, running out of frame left and right, with no visible outline and no visible end. Below it, grey overcast.
+
+Keep the same muted green, grey day, and haze down the valley. Nothing else changes.
+
+Do not add: a monolith, a free-standing slab, a disc or saucer in the sky, a floating object with a visible edge, blue sky, sunshine, people, text, glow.
+```
+
+## Prompt v1 (made t1; still the description of this location)
 
 ```text
 # THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
