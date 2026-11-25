@@ -23,3 +23,12 @@ The MIT licence: Permission is hereby granted, free of charge, to any person obt
 - **Freesound** (https://github.com/MTG/freesound) server code is AGPL-3.0 and is not included. Sounds fetched from freesound.org keep their individual Creative Commons licences and are credited per production in `audio/CREDITS.md`.
 - `references/score-and-sound-design.md` adapts `references/genres/film-tv-scoring.md` from **music-composition** (https://github.com/SJY051/music-composition). Based on "Music Composition Agent Skill v1.0" by the Music Composition Agent Skill contributors, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: summarised and rewritten in this repo's voice, merged with other sources, composer lists left out, mechanics kept.
 - `references/score-and-sound-design.md` adapts `skills/production/audio-craft/sound-design-foley/SKILL.md` from **generative-media-skills** (https://github.com/calesthio/generative-media-skills), Copyright (c) 2026 generative-media-skills contributors, MIT licence (text above). Changes: summarised and rewritten; no files copied.
+
+## Colour sources (November 2026)
+
+- `references/color.md` adapts `color-grading-finishing` from **generative-media-skills** (https://github.com/calesthio/generative-media-skills), Copyright (c) 2026 generative-media-skills contributors, MIT licence. Changes: summarised and rewritten.
+- `references/color.md` adapts the text of the `colourist`, `colour-grade` and `reframing` skills from **Vidmoat Skills** (https://github.com/vidmoat/skills), licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); scripts there are Apache-2.0 and none are copied. Changes: summarised, rewritten and merged.
+- **OpenEmulsion** (https://github.com/technomancer702/openemulsion), MPL-2.0: built and run outside this repo (`tools/oe_look.py` drives its ColorBench library); no OpenEmulsion source is included here.
+- **OpenColorIO** (https://github.com/AcademySoftwareFoundation/OpenColorIO), BSD-3-Clause, used as an installed library.
+- **Open Display Transform / OpenDRT** (https://github.com/jedypod/open-display-transform), GPL-3.0: referenced only; nothing is copied.
+- **YuNet** face detector (https://huggingface.co/opencv/face_detection_yunet), used as a downloaded model outside the repo (see its licence there).

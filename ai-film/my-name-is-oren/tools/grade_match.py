@@ -8,8 +8,8 @@ toward the film's own consensus with an ASC CDL applied in ACEScct through OpenC
 Shots: scene cuts in the cut (ffmpeg scene score > 0.25), merged under 0.5 s. Each shot is sampled at 25/50/75 % at
 320x180 and measured in ACEScct (from "Gamma 2.4 Encoded Rec.709", the generated footage being display-referred):
 exposure (median luma), black and white points (2nd and 98th percentiles), the cast of its near-neutral pixels and its
-mean chroma. The target is the median over all shots (one street, one overcast afternoon): each shot moves part of
-the way toward it, within limits, so wides and close-ups keep their own nature (grade/match.json holds the strengths
+mean chroma. The target is the best shot (vidmoat colourist: match to the best shot, not the average), named in grade/match.json
+or picked as the shot most typical of the film in exposure and range; each shot moves part of the way toward it, within limits, so wides and close-ups keep their own nature (grade/match.json holds the strengths
 and limits). The result per shot is a CDL (slope, offset, power, saturation) in ACEScct; tools/grade_render.py bakes
 it with the chosen look into one LUT per shot.
 """
@@ -90,7 +90,17 @@ def analyse(video, out):
 def solve(data, match=None):
     m = dict(DEFAULT_MATCH, **(match or {}))
     live = [s for s in data['shots'] if not s.get('skip')]
-    T = {k: float(np.median([s[k] for s in live])) for k in ('exposure', 'black', 'white', 'chroma')}
+    med = {k: float(np.median([s[k] for s in live])) for k in ('exposure', 'black', 'white', 'chroma')}
+    # match to the BEST shot, not the average (vidmoat colourist): the named reference, or the shot whose exposure and
+    # black-to-white range are most typical of the film without being the flattest
+    ref = m.get('reference')
+    if not ref:
+        rng = med['white'] - med['black']
+        ref = min(live, key=lambda s: abs(s['exposure'] - med['exposure']) / 0.057 +
+                  abs((s['white'] - s['black']) - rng) / 0.05 + (0.5 if (s['white'] - s['black']) < rng else 0))['id']
+    R = next(s for s in live if s['id'] == ref)
+    T = {k: R[k] for k in ('exposure', 'black', 'white', 'chroma')}
+    data['reference'] = ref
     T['cast'] = [0.0, 0.0, 0.0]                     # neutrals neutral: the look adds the colour
     for s in data['shots']:
         if s.get('skip'):

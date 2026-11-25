@@ -102,6 +102,8 @@ Model-generated audio is a guide at most: build the soundtrack ourselves (`sound
 
 ## 8. Finish
 
+Grade before the finish, in the order of `color.md`: management path (generated video is display-referred Rec.709), per-shot correction matched to the best shot (CDL in ACEScct), the author's chosen look (an OpenEmulsion look board first), grain once, framing, then measured QA. Oren's `grade/` and `tools/grade_*.py` are the worked example.
+
 - **Upscale before text.** Upscalers and enhancers rewrite fine text (a FloWell upscale turned "1,000 ppm" into "1.000 ppn" and middle dots into dashes). Upscale and deflicker the clean picture, then lay titles, captions and graphics on top (`motion-graphics.md` for the graphics pipeline and the repair recipe if text was upscaled by mistake).
 - Grade for consistency (ffmpeg `eq`, `curves`, `colorbalance`, or a `.cube` LUT with `lut3d`), add grain last so it unifies clips from different models.
 - Titles, captions and end cards from `assets/gfx_template.html` via `scripts/canvas_render.js`.

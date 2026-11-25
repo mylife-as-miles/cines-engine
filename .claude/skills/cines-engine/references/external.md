@@ -76,3 +76,14 @@ Twelve public repositories the author pointed to in November 2026, read as shall
 | [CineScale/CineScale.github.io](https://github.com/CineScale/CineScale.github.io) | Camera level (aerial, eye, shoulder, hip, knee, ground) and shot scale | Research-use agreement: terms only |
 | [movienet/movienet-tools](https://github.com/movienet/movienet-tools) | Shot scale and movement labels; dialogue as alternating threads | Apache-2.0 |
 
+### Colour (added November 2026, at the author's request)
+
+Folded into `color.md`:
+- calesthio `color-grading-finishing` (MIT)
+- vidmoat `colourist`, `colour-grade` and `reframing` (CC BY 4.0 text, Apache-2.0 scripts)
+- OpenEmulsion (MPL-2.0, built outside the repo)
+- OpenColorIO (BSD-3)
+- OpenDRT (GPL-3, referenced)
+- snowfrost's look-honesty levels (no licence, summarised)
+
+Details and links in `color.md` §9.

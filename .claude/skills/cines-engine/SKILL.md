@@ -18,7 +18,7 @@ Six studios, one way of working. Every production is a folder `<studio>/<slug>/`
 | Film made with video generation models (Seedance, Kling, …): treatment → prompts → selects → edit | `ai-film/` | `references/ai-film.md` |
 | Animation made by Claude driving Blender (bpy scenes, cameras, lights, renders) | `claude-blender/` | `references/claude-blender.md` |
 
-Always also read `references/sound.md` when the job has any audio (it almost always does), `references/score-and-sound-design.md` before any sound is made (the sound bible: spotting, motifs, shot-by-shot soundscape, mix hierarchy, the FME-24 emotion findings, Freesound licences), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/research.md` is how to look things up (built-in web search first, then Agent Reach for YouTube, Reddit, GitHub, X and clean page reading) without leaking private details. `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
+Always also read `references/sound.md` when the job has any audio (it almost always does), `references/score-and-sound-design.md` before any sound is made, `references/color.md` before any grade (colour management, shot matching to the best shot, film looks with OpenEmulsion, grain, 2.35 reframing, measured QA) (the sound bible: spotting, motifs, shot-by-shot soundscape, mix hierarchy, the FME-24 emotion findings, Freesound licences), and `references/environment.md` before the first render in a session (headless browser, GPU-less WebGL, memory, disk and size limits). `references/research.md` is how to look things up (built-in web search first, then Agent Reach for YouTube, Reddit, GitHub, X and clean page reading) without leaking private details. `references/external.md` summarises the outside skill libraries this handbook learned from, with pointers for deeper techniques (three.js graphics, Blender, cinematic camera language, motion design).
 
 A job can span studios: a game trailer for YouTube is Claude Game for the picture and Claude YouTube for the packaging; a product video with AI shots is AI Film for the shots and Motion Graphics for the graphics. File it under the studio of its main deliverable.
 
@@ -57,7 +57,7 @@ For anything the author will judge (looks, a cut, a thumbnail set), get an indep
 | `assets/gfx_template.html` + `assets/plan_example.json` | Supers, route bar, captions, product title, end card and notice card, all driven by one JSON plan. |
 | `assets/ai-film/` | The author's AI Film templates: environment reference, character sheet, prop reference, auteur video prompt. |
 | `scripts/blender/camrig/` | Blender camera rigs from a `shots.json` (vendored from anyshot, MIT): framing sheets, lens charts, previews, finals. |
-| `references/*.md` | One per studio, plus `sound.md`, `score-and-sound-design.md`, `environment.md`, `research.md`, `external.md`. |
+| `references/*.md` | One per studio, plus `sound.md`, `score-and-sound-design.md`, `color.md`, `environment.md`, `research.md`, `external.md`. |
 | `THIRD_PARTY.md` | Licences of the outside work this skill adapts. |
 
 ## Keys, privacy and private assets
