@@ -112,8 +112,36 @@ def main():
         t0 = T(c['at']); i = int(t0 * SR)
         layers[i:i + len(y)] += y[:N - i]
         record.append({'id': c['id'], 'sound': c['sound'], 'at': round(t0, 3), 'dur': round(len(y) / SR, 3), 'level': c['level']})
+    # the score: each cue an excerpt of its take (from/to, seconds), set to its level (LUFS over the excerpt), placed
+    # so that a chosen moment of the music ("sync": the take's second) lands on a moment of the film ("at"), with a
+    # gentle dip where the voice lives, and ducked under every line (the speech spans the subtitles measured)
+    music, mrec = np.zeros((N, 2), np.float32), []
+    for m in plan.get('music', []):
+        y = load(os.path.join(HERE, m['file']), m.get('af', 'equalizer=f=2500:t=q:w=1.2:g=-3'))
+        y = y[int(m['from'] * SR):int(m['to'] * SR)].copy()
+        y *= 10 ** ((m['level'] - lufs(y)) / 20)
+        y = fades(y, m.get('fade_in', 1.5), m.get('fade_out', 2.5))
+        t0 = T(m['at']) - (m['sync'] - m['from'] if 'sync' in m else 0)
+        i = int(round(t0 * SR))
+        a, b = max(0, -i), min(len(y), N - i)
+        music[i + a:i + b] += y[a:b]
+        mrec.append({'id': m['id'], 'file': m['file'], 'at': round(t0, 3), 'dur': round(len(y) / SR, 3),
+                     'level': m['level'], 'excerpt': [m['from'], m['to']]})
+    duck = plan.get('music_duck')
+    if duck and mrec:
+        spans = [e['speech'] for e in json.load(open(os.path.join(HERE, duck['speech'])))['events']]
+        g, ramp = 10 ** (-duck['db'] / 20), int(duck.get('ramp', 0.15) * SR)
+        env = np.ones(N, np.float32)
+        for a0, b0 in spans:
+            u0, u1 = max(0, int((a0 - duck.get('pre', 0.12)) * SR)), min(N, int((b0 + duck.get('post', 0.3)) * SR))
+            env[u0:u1] = np.minimum(env[u0:u1], g)
+        k = np.ones(ramp, np.float32) / ramp                           # smooth every step into a ramp
+        env = np.convolve(env, k, 'same').astype(np.float32)
+        music *= env[:, None]
+    record += mrec
     os.makedirs(os.path.join(HERE, 'out', 'audio'), exist_ok=True)
     lay = os.path.join(HERE, 'out', 'audio', 'layers.wav')
+    layers += music
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', '-c:a', 'pcm_s24le', lay],
         input=layers.tobytes())
     json.dump({'film': plan['out'], 'placements': record}, open(os.path.join(HERE, 'out', 'audio', 'mix.json'), 'w'), indent=1)

@@ -1,7 +1,7 @@
 {
- "_about": "The film's one musical cue (design/SOUND_BIBLE.md §4-5): it starts on the last blink, carries the corner, holds over CUT TO BLACK and resolves under the title MY NAME IS OREN, then decays with the fade (A54-A58). Made with Lyria 3.5 through tools/lyria.py: four takes from four wordings of the same controls, each windowed to its best 20-25 s with earshot `find`, checked with `describe`, judged in the order of score-and-sound-design.md §8, then chosen by ear. start_s/end_s are placeholders until Q22 exists; the cue is placed on Q22's own clock then. Prompts give mechanics, not composers or genres.",
+ "_about": "The film's one musical cue (design/SOUND_BIBLE.md \u00a74-5): it starts on the last blink, carries the corner, holds over CUT TO BLACK and resolves under the title MY NAME IS OREN, then decays with the fade (A54-A58). Made with Lyria 3.5 through tools/lyria.py: four takes from four wordings of the same controls, each windowed to its best 20-25 s with earshot `find`, checked with `describe`, judged in the order of score-and-sound-design.md \u00a78, then chosen by ear. start_s/end_s are placeholders until Q22 exists; the cue is placed on Q22's own clock then. Prompts give mechanics, not composers or genres.",
  "motifs": {
-  "M": "the one cue: a small, warm figure never heard before, so it lands as recognition, not as a theme"
+  "M": "the theme: a small, warm guitar figure in A. Planted as fragments (M02's falling three notes, M04's rising phrase on her rank), heard whole only at the end (M01c), so the ending lands as recognition"
  },
  "cues": [
   {
@@ -67,6 +67,86 @@
    "end_s": 24,
    "job": "round 2: the same restraint, brighter mode and register (relief, quiet happiness)",
    "prompt": "Instrumental film-score cue, about 24 seconds, closing title of an intimate British film. Soft piano and a solo violin in a warm major key: the violin plays a short, simple, rising phrase in a light middle-high register, the piano answers with gentle open chords; slow, free, consonant, tender and hopeful, the harmony settling into a bright major resolution as the title appears, then a natural fade. Uplifting in a quiet way, never sad. No drums, no vocals, no choir, no crescendo. In tune at A = 440."
+  },
+  {
+   "id": "M02a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Unseen: the opening street, 0:06-0:37. Feel her solitude before we meet her; the guitar's first notes land on her boot sketch (her past).",
+   "prompt": "Instrumental film-score cue, about 35 seconds, for the opening of an intimate British short film: a grey, busy city street where one woman goes unnoticed. A very quiet, sustained low string drone on A, cellos and violas, almost subliminal, breathing slowly between A minor and A minor with an added ninth. After about 14 seconds a single nylon-string guitar enters with three slow, low, plucked notes, a small falling minor figure, then a long silence, then the same three notes once more, a step lower, like a memory. Free in time, no pulse. Sparse, close and dry, melancholy and tender, never sentimental. The guitar stops; the drone thins and fades to silence at the end. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M02b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Unseen, take 2: a solo cello line instead of the drone",
+   "prompt": "Instrumental film-score cue, about 35 seconds, opening of a quiet British drama on a grey street. A solo cello plays very long, soft notes low in its range, A and then C and then back to A, barely moving, over a faint sustained viola harmonic. Around the middle a nylon-string guitar plays a small, slow, falling three-note figure in A minor, pauses, and repeats it once, softer. Free in time, no beat, lots of silence between notes. Melancholy, intimate, restrained, like someone nobody sees. Fades to silence. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M03a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Her hand: she lowers herself onto the wall, her hand stays on his shoulder a beat too long, 2:26-2:38. Hesitant tenderness, unresolved.",
+   "prompt": "Instrumental film-score cue, about 15 seconds. A tender, hesitant moment between two strangers. A nylon-string guitar plays four slow, warm notes moving from A minor towards C major, free in time, over a soft string chord that swells gently once and recedes. Very quiet, close and intimate, like a hand resting on a shoulder a moment too long. Begins from silence and ends softly on an unresolved chord. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M03b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Her hand, take 2: strings first, guitar answers",
+   "prompt": "Instrumental film-score cue, about 15 seconds. Soft, warm strings hold a quiet A minor chord that slowly opens into F major; a nylon-string guitar answers with two gentle plucked notes and a pause. Slow, free in time, intimate, a little shy, never sentimental. It begins from near silence and fades on a suspended chord, unresolved. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M04a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Recognised: from the handset share to 'Helena will do', 3:34-4:10. The strings warm as the temple light wakes; the guitar's first statement of the theme as he says her rank.",
+   "prompt": "Instrumental film-score cue, about 40 seconds, the turning point of an intimate short film, when someone is finally recognised. It begins almost inaudibly: quiet strings hold an open fifth on A and E. Over about fifteen seconds a soft C sharp enters in the violas, so the bare chord slowly turns warm and major. Then a nylon-string guitar plays a short, simple, rising phrase in A major, three or four slow notes, free in time, and pauses; the strings answer with one gentle swell and settle; the guitar repeats the phrase once, a little higher, unfinished. The cue thins to a single held string note and fades to silence. Moved, restrained, intimate, never grand. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M04b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Recognised, take 2: one long string crescendo of warmth, guitar on top",
+   "prompt": "Instrumental film-score cue, about 40 seconds. A very slow, very quiet string chord on A rises from silence and warms from an open fifth to a full, soft A major over twenty seconds, like a face lifting. At its warmest a nylon-string guitar plays a slow, simple melodic phrase of a few notes, tender and plain, and the strings hold underneath; then everything gently recedes to a single held note and silence. Free in time, no pulse, intimate and restrained, deeply felt but understated. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M05a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Didn't attend: her account of the lift and the two tours, 4:16-4:37. Weight, injustice, dignity; then a hard cut to silence.",
+   "prompt": "Instrumental film-score cue, about 25 seconds. A single low cello holds a long, soft note on A with slow bowing, over a very quiet double-bass pedal an octave below. Now and then a viola adds a note a semitone above that hangs, unresolved, then falls back. Grave, dignified, quietly angry, with no real melody, just weight and patience. It never swells. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M05b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "Didn't attend, take 2: low strings in slow chords",
+   "prompt": "Instrumental film-score cue, about 25 seconds. Low strings, cellos and basses, play slow, soft minor chords on A and F, each held a long time, with no melody; the harmony is heavy and patient, like someone holding back anger with dignity. Very quiet throughout, no build, no resolution. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M06a",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "The laugh: her laugh breaks after 'appears to have fucked you', to the end of Q13, 4:57-5:14 (it carries on into Q14). The film's first warmth.",
+   "prompt": "Instrumental film-score cue, about 25 seconds. A nylon-string guitar plays a light, warm, gently lilting plucked figure in A major, a little quicker than before but still free and unhurried, over a soft, bright string chord. The first warm, sunny moment in a grey day, like a laugh that surprises the person laughing. Small, kind and gentle, never comedic, never sentimental. Begins from silence, stays quiet, ends on an open A major chord that rings. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
+  },
+  {
+   "id": "M06b",
+   "model": "lyria-3.5",
+   "start_s": 0,
+   "end_s": 0,
+   "job": "The laugh, take 2: pizzicato strings with the guitar",
+   "prompt": "Instrumental film-score cue, about 25 seconds. Soft pizzicato violas and a nylon-string guitar trade small, light, warm figures in A major, playful but tender, unhurried, over a quiet held cello note; a little smile in music, the first warmth of a grey afternoon. Quiet, close, simple; it ends on a gently ringing A major chord. No drums, no percussion, no vocals, no choir, no synthesizers. In tune at A = 440."
   }
  ],
  "_round1": "M01a-d (felt piano / cello / guitar / piano+quartet): earshot heard all four as sad, not warm-hopeful (sad 80-97% in forced choice). Round 2 keeps the restraint and moves the levers FME-24 says matter for valence: a clear major key, a lighter mid-high register, relief.",
@@ -81,5 +161,6 @@
   "file": "audio/score/M01c_cue.flac",
   "why": "a single nylon-string guitar, slow plucked notes free in time over a barely audible string pad: the most minimal of the takes, like someone finally slowing down",
   "placement": "on Q22's own clock once it exists: entering on the last blink, carrying the corner, resolving under the title. Re-window then with earshot `find` so the take's resolving chord lands on the title (the take resolves late), and measure its tuning (Lyria drifts 0 to +36 cents; it plays alone, so only correct a drift you can hear)."
- }
+ },
+ "_about_2": "2026-11-25, the author: the film should make you feel before it makes you understand, with music as part of one emotional language (design/EMOTIONAL_LANGUAGE.md). The score now runs through the film in one small ensemble (nylon-string guitar, strings) in A: minor and bare early, warming to A major; M01c stays the full statement at the end."
 }
