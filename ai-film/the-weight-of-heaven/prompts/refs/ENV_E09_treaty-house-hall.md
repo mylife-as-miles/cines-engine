@@ -386,5 +386,5 @@ Avoid:
 ```
 
 ## Takes
-
-(none yet)
+- E09_t4a · `refs/candidates/E09_t4a.jpg` (full size `out/refs/E09_t4a.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21334-b8ab-7f52-9c66-03c924358a1b`, prompt regen (1498 words), images `refs/candidates/E08_t1.jpg` · $0.0525 · 2026-11-25 · verdict: **BASE FOR ONE MORE EDIT.** The hall is right: the basalt treaty wall with two blocks of script side by side and a third line beneath, seven round crests then eleven square seals on one line, the floor of white warrants under stones with red seals, the daylight opening onto the plain, the beams and the door; the masonry matches the courtyard. Short: the scripts use Latin letters and some English shows ("THE"); the third script is crisp, not worn almost flat.
+- E09_t4b · `refs/candidates/E09_t4b.jpg` (full size `out/refs/E09_t4b.png`, 3276x1404) · Seedream 5.5 Edit on fal, job `01a21334-b8ab-7f52-9c66-03c924358a1b`, prompt regen (1498 words), images `refs/candidates/E08_t1.jpg` · $0.0525 · 2026-11-25 · verdict: Reject: large Latin lettering reads as words ("Verseek Svoren").
