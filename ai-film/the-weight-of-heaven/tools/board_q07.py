@@ -44,7 +44,7 @@ def sheet(cells, path):
     rows = (len(cells) + 1) // 2
     S = Image.new('RGB', (pad * 2 + W * 2 + gap, hd + rows * (H + cap) + pad), INK)
     d = ImageDraw.Draw(S)
-    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q07  ·  BENEATH ORISON: THE UNDERSIDE  ·  storyboard  ·  montage, 14 s, five shots', fill=GOLD, font=f0)
+    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q07  ·  BENEATH ORISON: THE UNDERSIDE  ·  storyboard  ·  montage, 16 s, five shots', fill=GOLD, font=f0)
     d.text((pad, 48), 'Staging sketches from the approved references as they are sent (cropped to what each shot needs). Shots 1, 3 and 5 are from the air. '
                       'Five separate views, hard cuts, to be cut to the song in the edit.', fill=PAPER, font=f2)
     for k, (im, title, text) in enumerate(cells):
@@ -113,15 +113,15 @@ def main():
     note(d, (36, 380), 'from above the wall\'s top. The first green in the film')
 
     cells = [
-        (c1, 'SHOT 1 · 0–3 s · from the air, extreme wide, locked off · the cutter under the kingdom',
+        (c1, 'SHOT 1 · 0–3.2 s · from the air, extreme wide, locked off · the cutter under the kingdom',
          'The underside of Orison fills the top two thirds of the frame and runs out of it. The white cutter, small, comes straight down out of a bank of cloud into the pale band of day, beside a chain whose every link is longer than it is.'),
-        (c2, 'SHOT 2 · 3–6 s · inside the cutter · Serath, close, in profile at the window',
-         'Cloud streams past the glass and tears away: the top of the window goes dark with rock. The light on her face falls to its cold shade. Her chin lifts and her eyes go up to it, and stay. She has never seen it from below.'),
-        (c3, 'SHOT 3 · 6–8 s · from the cutter, looking down and ahead · the basalt plain',
+        (c2, 'SHOT 2 · 3.2–6.8 s · inside the cutter · Serath, close, in profile at the window',
+         'Cloud streams past the glass and tears away: the top of the window goes dark with rock. The light on her face falls to its cold shade. Her chin lifts and her eyes go up to it; then they come down. She has never seen it from below.'),
+        (c3, 'SHOT 3 · 6.8–9.2 s · from the cutter, looking down and ahead · the basalt plain',
          'Below: the tops of black six-sided columns in rows and steps, mist between them, and far off the black wall along the plain\'s edge. The cutter\'s brass rail is soft in the corner, so the height can be felt.'),
-        (c4, 'SHOT 4 · 8–11.4 s · on the ground, low and locked off, close to an open gate · the bird',
+        (c4, 'SHOT 4 · 9.2–12.8 s · on the ground, low and locked off, close to an open gate · the bird',
          'The open gate fills the left half of the frame, the wall running away to the right. The grass in the gateway lies pressed flat. A crow crosses the bright opening; its wings shut and it falls straight down. The weight is invisible; this is how it shows.'),
-        (c5, 'SHOT 5 · 11.4–14 s · from just above the wall\'s top, locked off · Sarn Vale',
+        (c5, 'SHOT 5 · 12.8–16 s · from just above the wall\'s top, locked off · Sarn Vale',
          'Beyond the wall, the valley she has been ordered to drown: green terraces, orchards, farms, smoke rising from many chimneys. Nothing happens in it. It is held.'),
     ]
     sheet(cells, P('design/boards/Q07_board.jpg'))

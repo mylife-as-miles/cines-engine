@@ -1,7 +1,7 @@
 # AUTEUR VIDEO PROMPT
 ## THE WEIGHT OF HEAVEN — Q07 · BENEATH ORISON · THE UNDERSIDE
 References: @Image 1 — environment: the underside of the kingdom and the pale band of day under it · @Image 2 — environment: the basalt plain · @Image 3 — environment: the black wall and its gates · @Image 4 — environment: Sarn Vale, the valley beyond the wall · @Image 5 — the naval cutter · @Image 6 — character sheet: SERATH
-Reference mode · 14 s · 5 shots · 2.35:1 · photoreal live action · no speech · no music
+Reference mode · 16 s · 5 shots · 2.35:1 · photoreal live action · no speech · no music
 
 ## SCENE INTENT
 Serath has lived her whole life on top of Orison, the kingdom that floats above the cloud. Now she comes down beneath it for the first time, in a small white naval cutter. Five separate views, cut hard, one clear thing in each: the cutter comes down out of the cloud under the kingdom's underside; her face as she sees it; the black plain below; the ancient black wall at the plain's edge, and a bird that falls in front of its open gate; the green valley beyond the wall, its chimneys smoking. From below the kingdom is only enormous.
@@ -28,7 +28,7 @@ None. Shot 1 opens on a hard cut.
 
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
-[TIME] 0.0–3.0 s
+[TIME] 0.0–3.2 s
 [CAM] extreme wide, 24 mm, from the air, level with the cutter and far from it; locked off. The only ground is the plain far below.
 [BLOCK] The top two thirds of the frame are the underside of Orison as @Image 1: black rock, roots and chains, running out of the top and both sides of the frame. The bottom third is the pale band of day, with a thin strip of the black plain, greyed by mist, along the very bottom. Right of centre a bank of grey cloud hangs below the rock into the top of the pale band. Beside it one chain hangs from the rock down through the band, each of its links longer than the cutter. The cutter is small, one twenty-fifth of the frame wide, but plainly a white boat with a spire; at the first frame only its keel and runners show under the cloud.
 [ACT] The cutter comes straight down out of the bottom of the cloud, level, a thin trail of vapour pulling off its spire. By 1.2 s all of it is clear, white against the pale band, clear air under its keel. By the last frame it is twice its own length lower, level with one link of the chain. Cloud drifts slowly across the rock. Nothing else moves.
@@ -37,16 +37,16 @@ None. Shot 1 opens on a hard cut.
 [STATE OUT] The cutter small and white in the band of day, still coming down.
 
 ### SHOT 2
-[TIME] 3.0–6.0 s
+[TIME] 3.2–6.8 s
 [CAM] close-up, 75 mm, inside the cutter's small pilothouse, at her eye height, shallow focus; the camera holds still.
 [BLOCK] Serath alone in the frame, in profile, facing the left of the frame, from the collar up, her head on the right third, her hands below the frame. The left half of the frame is one tall pointed window, close beyond her face, soft. Behind her head, on the right, the white-painted boards of the pilothouse wall, soft. The only light comes through the window, onto her brow, nose, mouth and the gold at her throat.
-[ACT] Her mouth is closed from the first frame to the last. At the first frame the whole window is bright grey-white cloud streaming past, its light bright and soft on her face; her eyes are level, on the glass. By 3.8 s the cloud tears away: the upper two thirds of the window go dark, the black rock of the underside, far off and soft, and a strip of pale day is left along the bottom of the glass. The light on her face falls by half and turns cold blue-grey; her eye and the line of her nose and mouth stay readable. By 4.4 s her chin has lifted a little and her eyes have gone up to the dark in the top of the window. They rest there to the cut, and one breath goes in through her nose.
+[ACT] Her mouth is closed from the first frame to the last. At the first frame the whole window is bright grey-white cloud streaming past, its light bright and soft on her face; her eyes are level, on the glass. By 4.0 s the cloud tears away: the upper two thirds of the window go dark, the black rock of the underside, far off and soft, and a strip of pale day is left along the bottom of the glass. The light on her face falls by half and turns cold blue-grey; her eye and the line of her nose and mouth stay readable. By 4.6 s her chin has lifted a little and her eyes have gone up to the dark in the top of the window; they rest there, and one breath goes in through her nose. At 5.6 s her chin comes level, her eyes go down through the bottom of the glass, and they stay down to the cut.
 [DIALOGUE] / V.O. none
 [SFX] wind on the glass; the wood creaks.
-[STATE OUT] Serath in profile in the cold shade, her chin a little lifted, her eyes up, her mouth closed.
+[STATE OUT] Serath in profile in the cold shade, her chin level, her eyes down, her mouth closed.
 
 ### SHOT 3
-[TIME] 6.0–8.0 s
+[TIME] 6.8–9.2 s
 [CAM] high wide, 35 mm, from the cutter, in the air high above the plain, looking down and ahead toward the wall; the camera glides steadily forward.
 [BLOCK] The basalt plain as @Image 2, seen from high above, fills the frame from the bottom edge almost to the top: the tops of black six-sided columns packed edge to edge, in broken rows and steps, taller stacks standing up out of them, thin mist between the tallest; the nearest stacks are far below and small. Across the top of the frame, under a thin strip of pale sky, the black wall lies straight along the far edge of the plain, small with distance, its nine arched gates a row of small openings, the open ones bright with green. In the bottom left corner, close and soft, the cutter's brass rail and a corner of its white deck.
 [ACT] The plain slides steadily down the frame and under the rail; each stack of columns travels a fifth of the frame's height in the shot. Mist drifts between the tallest stacks.
@@ -55,16 +55,16 @@ None. Shot 1 opens on a hard cut.
 [STATE OUT] The plain from above, the wall along its far edge, the rail in the corner.
 
 ### SHOT 4
-[TIME] 8.0–11.4 s
+[TIME] 9.2–12.8 s
 [CAM] wide, 40 mm, low, at the height of the grass, close in front of the nearest open gate and a little to its right, looking through it and along the foot of the wall; locked off. Above the wall the sky is the dark lid of @Image 3, with a pale strip at the horizon on the right.
 [BLOCK] The nearest gate is open and fills the left half of the frame: a tall arch in the black stone, running out of the top of the frame, and through it pale sky and the green valley, the brightest thing in the frame. To its right the black wall as @Image 3 runs away to the right edge, the next gate along shut with black stone, the gates beyond it small, in a row. On the ground in the open gate and out toward us the long grass lies combed flat in a wide fan, pressed to the earth and shivering; on the right, outside the fan, the grass is upright and moves in the wind.
-[ACT] At the first frame a crow comes into the bright opening from its right side, half-way up the frame, wings beating, black and sharp against the pale sky in the gate, its wingspan a twelfth of the frame's width. At 9.0 s, in the middle of the opening, its wings snap shut against its body and it drops straight down as dead weight, wings shut the whole way, still black against the light. By 9.5 s it has hit the flattened grass in the gateway and lies still. For the last two seconds only the grass moves, shivering round it.
+[ACT] At the first frame a crow comes into the bright opening from its right side, half-way up the frame, wings beating, black and sharp against the pale sky in the gate, its wingspan a twelfth of the frame's width. At 10.2 s, in the middle of the opening, its wings snap shut against its body and it drops straight down as dead weight, wings shut the whole way, still black against the light. By 10.7 s it has hit the flattened grass in the gateway and lies still. For the last two seconds only the grass moves, shivering round it.
 [DIALOGUE] / V.O. none
 [SFX] grass hissing; wingbeats that stop; one soft thud.
 [STATE OUT] The bird still on the flattened grass in the open gate.
 
 ### SHOT 5
-[TIME] 11.4–14.0 s
+[TIME] 12.8–16.0 s
 [CAM] wide, 35 mm, from the air, just above the top of the black wall, forty metres above the valley floor, looking down the length of the valley; locked off. Grey cloud fills the top third of the frame.
 [BLOCK] Along the bottom edge of the frame, close, dark and soft, a flat ledge of black stone: the top of the wall. Beyond and below it, Sarn Vale as @Image 4: green terraces, orchards, grey stone farms, field walls, a pale road. Smoke rises from twenty chimneys up the valley. Mist in the far hills.
 [ACT] The smoke rises and leans a little in the wind. Sheep move slowly on a terrace. A cart goes along the road, small.
@@ -73,7 +73,7 @@ None. Shot 1 opens on a hard cut.
 [STATE OUT] The valley under cloud, its smoke rising.
 
 ## PERFORMANCE ARC
-SERATH: composed, in cloud → the shade of what she has lived on falls across her → she lifts her chin and looks up at it.
+SERATH: composed, in cloud → the shade of what she has lived on falls across her → she lifts her chin and looks up at it → she looks down.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
 Her kingdom is a ceiling over someone else's country. Its weight cannot be seen; it shows only in what it does: grass pressed flat, a bird that falls. The valley's smoke is the people who live beyond the wall.
