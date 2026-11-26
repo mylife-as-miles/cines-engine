@@ -42,3 +42,5 @@ Every file made by `tools/sfx_make.py` for the opening (movement I). What each o
 - Not used: fal, Lyria, ElevenLabs or any other paid service. Freesound itself (the proxy refused the host) and the
   opus-sound-layer library (its GitHub repository could not be cloned) were not reachable from the build machine on
   25 November 2026, so the only recordings are the three above, taken from this repository.
+
+- `audio/sfx/wind_vale.flac`: ground wind for Anvil Vale. Original, synthesized by `tools/sfx_make.py` (`synth_wind_altitude`, seed 31, resonances 170 to 700 Hz), 26 November 2026. No samples, no service.

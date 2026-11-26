@@ -92,6 +92,16 @@ def fades(x, fin=0, fout=0):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--name', default='I_bell_v6')
+    ap.add_argument('--vale-wav', default=QWAV, help="the vale's sound (default: the model's own track, conformed)")
+    ap.add_argument('--vale-gain', type=float, default=VALE_GAIN_DB)
+    ap.add_argument('--dust-duck', type=float, default=DUST_DUCK_DB)
+    o = ap.parse_args()
+    global DST
+    DST = P('out/edits', o.name + '.mp4')
+    vale_wav = o.vale_wav if os.path.isabs(o.vale_wav) else P(o.vale_wav)
     # ------------------------------------------------------------------ picture
     spec = importlib.util.spec_from_file_location('grade_bell', P('tools/grade_bell.py'))
     gb = importlib.util.module_from_spec(spec); spec.loader.exec_module(gb)
@@ -132,7 +142,7 @@ def main():
     D, C, B, E, A = (wav(os.path.join(STEMS, k + '.wav')) for k in ('dialogue_production', 'choir', 'bell', 'effects', 'beds'))
     gm = 10 ** (MASTER_GAIN_DB / 20)
     D, C, B, E, A = D * gm, C * gm, B * gm, E * gm, A * gm
-    Qa = wav(QWAV) * 10 ** (VALE_GAIN_DB / 20)
+    Qa = wav(vale_wav) * 10 ** (o.vale_gain / 20)
     c1, c2 = s(C1), s(C2)
     la, lb = s(QA), s(NQ - QA)
     N = s(total)
@@ -165,7 +175,7 @@ def main():
 
     # 5. the vale, shots 3-5: the wind dies on the dust shot
     vb = Qa[la:la + lb].copy()
-    k = s(Q_S5 - QA); r = sec(1.2); low = 10 ** (DUST_DUCK_DB / 20)
+    k = s(Q_S5 - QA); r = sec(1.2); low = 10 ** (o.dust_duck / 20)
     vb[k:k + r] *= env(r, 1, low); vb[k + r:] *= low
     add(out, fades(Qa[la - sec(0.35):la], fin=sec(0.35)), tB - sec(0.35))     # the vale's air arrives under the end of the seal
     add(out, fades(vb, fin=sec(0.005), fout=sec(0.3)), tB)
@@ -183,13 +193,13 @@ def main():
                     '-c:a', 'aac', '-b:a', '256k', '-t', f'{total / FPS:.4f}', '-movflags', '+faststart', DST], check=True)
     os.remove(DST.replace('.mp4', '_silent.mp4'))
 
-    rec = {'name': 'I_bell_v6', 'fps': FPS, 'size': [W, H], 'frames': total, 'duration': round(total / FPS, 4),
+    rec = {'name': o.name, 'fps': FPS, 'size': [W, H], 'frames': total, 'duration': round(total / FPS, 4),
            'made_from': ['out/review/I_bell_v5.mp4 (cut v5, release C, Orison White)', 'out/edits/Q03A_t2_fixed.mp4'],
            'picture': edl,
-           'sound': {'vale_gain_db': VALE_GAIN_DB, 'dust_shot_duck_db': DUST_DUCK_DB, 'sample_peak_dbfs': round(20 * np.log10(max(peak, 1e-9)), 2),
+           'sound': {'vale_track': os.path.relpath(vale_wav, HERE), 'vale_gain_db': o.vale_gain, 'dust_shot_duck_db': o.dust_duck, 'sample_peak_dbfs': round(20 * np.log10(max(peak, 1e-9)), 2),
                      'joins': ['the answer runs on over the first second of the vale', 'the choir fades out before the water',
                                'the choir returns under the end of each vale passage']}}
-    json.dump(rec, open(P('edit/I_bell_v6.edl.json'), 'w'), indent=1)
+    json.dump(rec, open(P('edit', o.name + '.edl.json'), 'w'), indent=1)
     print(f'{DST}: {total} frames, {total / FPS:.2f} s, sample peak {rec["sound"]["sample_peak_dbfs"]} dBFS')
     for e in edl:
         print(f"  {e['start']:7.3f}  {e['duration']:6.3f} s  {e['label']}")

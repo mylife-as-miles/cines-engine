@@ -1,0 +1,77 @@
+{
+ "name": "I_bell_v7",
+ "fps": 24,
+ "size": [
+  992,
+  432
+ ],
+ "frames": 1277,
+ "duration": 53.2083,
+ "made_from": [
+  "out/review/I_bell_v5.mp4 (cut v5, release C, Orison White)",
+  "out/edits/Q03A_t2_fixed.mp4"
+ ],
+ "picture": [
+  {
+   "label": "B01-B02 over black; the rite",
+   "source": "I_bell_v5",
+   "src_in_frame": 0,
+   "src_out_frame": 424,
+   "start_frame": 0,
+   "frames": 424,
+   "start": 0.0,
+   "duration": 17.6667
+  },
+  {
+   "label": "B03 built to bear",
+   "source": "Q03A_t2_fixed",
+   "src_in_frame": 0,
+   "src_out_frame": 183,
+   "start_frame": 424,
+   "frames": 183,
+   "start": 17.6667,
+   "duration": 7.625
+  },
+  {
+   "label": "B04 unread",
+   "source": "I_bell_v5",
+   "src_in_frame": 424,
+   "src_out_frame": 539,
+   "start_frame": 607,
+   "frames": 115,
+   "start": 25.2917,
+   "duration": 4.7917
+  },
+  {
+   "label": "B05 the water",
+   "source": "Q03A_t2_fixed",
+   "src_in_frame": 183,
+   "src_out_frame": 406,
+   "start_frame": 722,
+   "frames": 223,
+   "start": 30.0833,
+   "duration": 9.2917
+  },
+  {
+   "label": "B06-B07 the bell; the still cup",
+   "source": "I_bell_v5",
+   "src_in_frame": 539,
+   "src_out_frame": 871,
+   "start_frame": 945,
+   "frames": 332,
+   "start": 39.375,
+   "duration": 13.8333
+  }
+ ],
+ "sound": {
+  "vale_track": "out/edits/Q03A_t2_vale_mix.wav",
+  "vale_gain_db": 0.0,
+  "dust_shot_duck_db": 0.0,
+  "sample_peak_dbfs": -2.09,
+  "joins": [
+   "the answer runs on over the first second of the vale",
+   "the choir fades out before the water",
+   "the choir returns under the end of each vale passage"
+  ]
+ }
+}
