@@ -261,6 +261,58 @@ def shoes(holder, rgb=(0.03, 0.03, 0.032), height=0.085):
     return ob
 
 
+CLOTHES = __import__("os").path.join(__import__("os").path.dirname(__import__("os").path.abspath(__file__)), "assets", "makehuman", "clothes")
+
+
+def dress(holder, items, tint=None, flat=()):
+    """Dress a figure in MakeHuman clothes (CC0 system pack, made for this body: they fit and follow the rig by design).
+    `items` are folder names in assets/makehuman/clothes, e.g. ["female_elegantsuit01", "shoes01"]. `tint` optionally
+    multiplies each garment's texture by a colour (a dict per item, or one colour for all); items in `flat` drop the
+    texture and take the colour plainly (no prints or logos)."""
+    import os
+    _setup()
+    body = bpy.data.objects[holder["body"]]
+    out = []
+    for it in items:
+        ob = HS.add_mhclo_asset(os.path.join(CLOTHES, it, f"{it}.mhclo"), body, asset_type="Clothes")
+        ob.name = f"{holder.name}_{it}"
+        col = tint.get(it) if isinstance(tint, dict) else tint
+        if col is not None:
+            for slot in ob.material_slots:
+                m = slot.material
+                if not (m and m.use_nodes):
+                    continue
+                m = m.copy()
+                slot.material = m
+                nt = m.node_tree
+                b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+                if b is None:
+                    continue
+                src = b.inputs["Base Color"].links[0].from_socket if b.inputs["Base Color"].links else None
+                mix = nt.nodes.new("ShaderNodeMix")
+                mix.data_type, mix.blend_type = "RGBA", "MULTIPLY"
+                mix.inputs["Factor"].default_value = 1.0
+                mix.inputs["B"].default_value = (*col, 1)
+                if src is not None and it in flat:
+                    mix.inputs["A"].default_value = (1, 1, 1, 1)
+                elif src is not None:
+                    gray = nt.nodes.new("ShaderNodeRGBToBW")         # keep the weave and wear, drop the print colours
+                    nt.links.new(src, gray.inputs["Color"])
+                    nt.links.new(gray.outputs["Val"], mix.inputs["A"])
+                else:
+                    mix.inputs["A"].default_value = (1, 1, 1, 1)
+                nt.links.new(mix.outputs["Result"], b.inputs["Base Color"])
+        out.append(ob)
+    # MPFB's masks that hide the body under clothes must come before the smoothing, or skin shows at hems
+    subs = [i for i, m in enumerate(body.modifiers) if m.type == "SUBSURF"]
+    if subs:
+        for i, m in list(enumerate(body.modifiers)):
+            if m.type == "MASK" and m.name.startswith("Delete.") and i > subs[0]:
+                body.modifiers.move(i, subs[0])
+                subs = [j for j, mm in enumerate(body.modifiers) if mm.type == "SUBSURF"]
+    return out
+
+
 def blouse_v(holder, rgb=(0.42, 0.41, 0.39), depth=0.26, width=0.13):
     """Inside an open collar, show a blouse: the body's own neck-to-chest front, coloured as fabric. Only what the
     garment leaves open is seen. Call it before fitting the garment that opens over it."""

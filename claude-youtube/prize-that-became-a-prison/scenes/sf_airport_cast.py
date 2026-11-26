@@ -1,8 +1,8 @@
 """Style frame: the airport question with the real cast (Fluorescent Noir).
 
-Dawn as a MakeHuman statue with sculpted hair, dressed in the overcoat, dark trousers and shoes; two officers in the
-uniform jacket (recoloured navy, insignia gone with the texture), dark trousers, peaked caps and shoes. Every
-character is built and fitted at the origin facing -Y, then moved to its mark.
+Dawn as a MakeHuman statue with sculpted hair, in MakeHuman's own CC0 blouse and skirt (made for this body, so it fits
+and follows the rig); two officers in MakeHuman's suit recoloured navy, with peaked caps. Every character is built at
+the origin facing -Y, then moved to its mark.
 
     <bpy python> scenes/sf_airport_cast.py -- out.png [--samples 32] [--res 1280x720] [--cam high|low]
 """
@@ -37,22 +37,14 @@ def place(holder, loc, facing_deg):
 
 def dawn():
     h = cast.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=DARK, part="lower", top_at="waist", sleeves=False,
-                           snug=0.008)
-    cast.blouse_v(h)
-    fit.garment(h, os.path.join(O, "female_overcoat.glb"), recolour=(0.16, 0.115, 0.075), over=trousers, snug=0.012)
-    cast.shoes(h)
+    cast.dress(h, ["female_elegantsuit01", "shoes05"], tint={"female_elegantsuit01": (0.62, 0.56, 0.5), "shoes05": (0.12, 0.11, 0.1)})
     return h
 
 
 def officer(name, height_cm, age):
     h = cast.person(name, gender=1.0, height_cm=height_cm, age=age, hair="short")
-    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=NAVY, part="lower", top_at="waist", sleeves=False,
-                           snug=0.008)
-    fit.garment(h, os.path.join(O, "uniform_jacket_raf.glb"), recolour=NAVY, keep="all", decimate_to=36000, trim_neck=True, ease=1.1,
-                over=trousers, snug=None)  # a stiff museum scan: conforming crumples it, so it is only sized and bound
+    cast.dress(h, ["male_elegantsuit01", "shoes06"], tint={"male_elegantsuit01": (0.2, 0.26, 0.4), "shoes06": (0.15, 0.15, 0.16)})
     cast.hat(h, os.path.join(O, "peaked_cap_1.fbx"), rgb=(0.02, 0.025, 0.04))
-    cast.shoes(h)
     return h
 
 
@@ -66,9 +58,8 @@ print("OFFICER A", round(time.time() - t0, 1), "s")
 b = officer("OfficerB", 176, 0.5)
 print("OFFICER B", round(time.time() - t0, 1), "s")
 rigged.pose_figure(d, {"head": (22, 0), "chest": (5, 0), "l_arm": (4, 4, 14), "r_arm": (4, 4, 12)})
-# the scanned uniform's sleeves bind close to the torso: officers keep their arms near the fitted pose
-rigged.pose_figure(a, {"r_arm": (16, 4, 22), "l_arm": (2, 2, 6), "head": (16, 0), "chest": (4, 0)})
-rigged.pose_figure(b, {"head": (6, -20), "l_arm": (2, 2, 6), "r_arm": (2, 2, 6)})
+rigged.pose_figure(a, {"r_arm": (55, 14, 8), "l_arm": (4, 4, 10), "head": (16, 0), "chest": (4, 0)})
+rigged.pose_figure(b, {"head": (6, -20), "l_arm": (6, 6, 14), "r_arm": (6, 6, 14)})
 place(d, (0.15, -0.82, 0), 186)
 place(a, (-0.25, 0.85, 0), -12)
 place(b, (0.95, 1.12, 0), 22)
