@@ -99,23 +99,26 @@ Resent with the author's go under new keys (`-v2`), same prompts and settings, t
 
 Learned: Tripo does single objects well and multi-part arrangements badly (the check-in desk came back as loose parts). Batch 3 has several composite prompts (the visiting booth, the judges' bench with three chairs, the witness table with microphones), which should be split into single objects or built in Blender. Simple turned or boxy shapes such as the queue post are quicker and cleaner in Blender.
 
-## Batch 3: home, detention, court and hearing (11 assets, 330 credits)
+## Batch 3, revised: home, detention, court and hearing (10 assets, 310 credits)
 
-| # | Asset | Used in | Credits |
-| --- | --- | --- | --- |
-| 17 | Round kitchen table | Ch 02 | 30 |
-| 18 | Wooden dining chair (the empty chair) | Ch 02, 10 | 30 |
-| 19 | Dining table | Ch 10 | 30 |
-| 20 | Detention cell door | Ch 06, 08 | 30 |
-| 21 | Visitor's chair | Ch 06: the empty visitation chair | 30 |
-| 22 | Prison visiting booth | Ch 08 | 30 |
-| 23 | Steel bunk bed | Ch 08 and the Void Stage cell | 30 |
-| 24 | Courtroom judges' bench | Ch 07 | 30 |
-| 25 | Defendant's dock | Ch 07 | 30 |
-| 26 | Courtroom gallery benches | Ch 07 | 30 |
-| 27 | Hearing-room witness table | Ch 09 | 30 |
+Revised 26 November 2026 after batch 2 showed that Tripo handles single objects well and arrangements badly. Every prompt is now one object; the arrangements are built in Blender around them (see the last sections). Ten at most, so the batch fits the plan's limit on simultaneous tasks.
 
-**All three batches: 27 assets, 850 reference credits** (plus `delight`, if Tripo charges for it).
+| # | Asset | Used in | Credits | Change |
+| --- | --- | --- | --- | --- |
+| 17 | Round kitchen table | Ch 02 | 30 | Unchanged |
+| 18 ★ | Wooden dining chair (the empty chair) | Ch 02, 10: the film's quiet ending | 40 | Now a hero asset: 4K, 40k faces |
+| 19 | Dining table | Ch 10 | 30 | Unchanged |
+| 20 | Detention cell door | Ch 06, 08 | 30 | Unchanged |
+| 21 | Visitor's chair | Ch 06: the empty visitation chair; also the dock and booth seats | 30 | Unchanged |
+| 22 | Visiting-room telephone | Ch 08: one each side of the glass | 30 | Replaces the whole booth; counter and glass built in Blender |
+| 23 | Steel bunk bed | Ch 08 and the Void Stage cell | 30 | Unchanged |
+| 24 | High-backed leather chair | Ch 07: three behind the judges' bench; Ch 09 | 30 | Replaces the bench; the bench is built in Blender |
+| 25 | One courtroom gallery bench | Ch 07, duplicated into rows | 30 | Replaces "two rows" |
+| 26 | Gooseneck desk microphone | Ch 09, and the judges' bench | 30 | Replaces the witness table; table and cloth built in Blender |
+
+The defendant's dock moves to Blender entirely (panels and a rail, with the visitor's chair inside).
+
+**All batches as revised: 26 assets, 830 reference credits** (plus `delight`, if Tripo charges for it). Spent so far: 520 on batches 1 and 2.
 
 The leather market (Ch 04) reuses the three handbags and the extra bag, recoloured in Blender, hung on a stall frame built in Blender.
 
@@ -138,21 +141,23 @@ The leather market (Ch 04) reuses the three handbags and the extra bag, recolour
 15. **file-folders** — A stack of worn manila case file folders, about ten folders, slightly misaligned, a few loose sheets of paper sticking out of the edges, plain with no writing, realistic.
 16. **reception-desk** — A hotel reception desk, about 2.4 m wide, a gently curved front panel in dark walnut wood, a pale stone counter top, a lower working surface behind it with a computer monitor, realistic contemporary hotel lobby furniture.
 17. **kitchen-table** — A small round kitchen table, about 90 cm across, worn honey oak wood, a single pedestal base with four feet, realistic home furniture.
-18. **dining-chair** — A traditional wooden dining chair, dark walnut, a spindle back with a curved top rail, a padded seat in faded dark fabric, turned legs, slightly worn, realistic home furniture.
+18. **dining-chair** ★ — A traditional wooden dining chair, dark walnut, a spindle back with a curved top rail, a padded seat in faded dark fabric, turned legs, slightly worn, realistic home furniture.
 19. **dining-table** — A rectangular wooden dining table for six, about 1.8 m long, dark walnut, four turned legs, a lightly worn top, realistic home furniture.
 20. **cell-door** — A heavy grey-painted steel detention cell door in its steel frame, a small rectangular observation window with bars, a closed food hatch at waist height, large hinges, a lock plate, chipped paint, realistic.
 21. **visitor-chair** — A plain institutional visitor's chair, grey moulded plastic seat and back on a dark steel tube frame, realistic.
-22. **visiting-booth** — A prison visiting booth: a narrow counter divided by a thick glass partition in a steel frame, a black wall-mounted telephone handset on each side of the glass, a fixed round steel stool in front, painted pale grey steel, realistic.
+22. **visiting-phone** — A wall-mounted prison visiting telephone: a sturdy black handset resting on a small stainless steel wall box with a hook, connected by a short armoured steel cord, no keypad, no text, realistic.
 23. **bunk-bed** — A two-tier steel bunk bed, grey-painted steel frame bolted to the floor, thin dark mattresses, a folded grey blanket on the lower bunk, a short ladder at one end, realistic.
-24. **judges-bench** — A raised courtroom judges' bench, about 3.5 m wide, a panelled front in pale wood, three high-backed dark leather chairs behind it, no emblem, no text, realistic.
-25. **dock** — A courtroom defendant's dock, a waist-high rectangular enclosure of pale wood panels with a wooden railing on top and a small gate, a single plain chair inside, realistic.
-26. **gallery-benches** — Two rows of wooden courtroom gallery benches, pale wood, straight backs, realistic.
-27. **witness-table** — A long hearing-room witness table, about 2.4 m long, covered with a plain dark blue cloth skirt to the floor, two black gooseneck microphones on small bases, two water glasses, a blank nameplate holder, realistic.
+24. **judge-chair** — A high-backed office chair upholstered in dark leather, a tall padded back, padded arms, a five-star swivel base on castors, realistic courtroom furniture.
+25. **gallery-bench** — A single long wooden courtroom gallery bench, about 2 m long, pale wood, a straight slatted back and a plain seat, sturdy legs, realistic.
+26. **microphone** — A black gooseneck conference microphone, about 45 cm tall, on a small round desk base with a push button, a slim flexible neck and a small foam-covered head, no text, realistic.
+
+Replaced and not generated: the visiting booth, the judges' bench, the defendant's dock, the gallery benches in rows and the witness table (prompts in this file's history).
 
 ## Built in Blender, not generated (free)
 
 - **Architecture:** the inspection room, terminal, corridors, courtroom, visiting room, cell, hearing room, dining room, kitchen, walls, floors, ceilings, fluorescent fittings, window blinds and glass partitions. Straight edges and exact sizes matter here, and Blender does them cleanly.
 - **Flat surfaces:** the steel inspection bench, security trays, the evidence table top and the market-stall frame.
+- **Arrangements Tripo gets wrong:** the check-in counter with its scale and belt, the queue post with its belt, the visiting-booth counter and glass, the raised judges' bench, the defendant's dock, the witness table with its cloth, and water glasses. The generated single objects (phones, chairs, microphones) are placed on them.
 - **Paper props that carry our own typography:** the luggage tag, passport, plane tickets, the receipt, the recreated email, photographs, documents, the sealed envelope and the calendar pages. Their faces are our motion-graphics renders, so the dates and text are exact, which Tripo cannot print.
 - **The hidden seam and the lining cross-section:** motion graphics, as the script asks.
 
