@@ -73,6 +73,25 @@ Learned:
 | 15 | Stack of case files | Evidence Table, Ch 09 | 30 |
 | 16 | Hotel reception desk | Ch 01 | 30 |
 
+### Batch 2 results (26 November 2026)
+
+Approved by the author ("Proceed"). Ten generated once each with the prompts and settings below unchanged (320 reference credits). The last two submissions (case files, reception desk) were refused by Tripo with `entitlement_rejected` at the reserve stage while the first ten were running; the account had 2,740 credits on the Pro plan, so the likely cause is a limit on simultaneous tasks. Both originals stay at "admitting", unconfirmed; they have not been resubmitted.
+
+| # | Asset | Task ID | Model ID | Verdict |
+| --- | --- | --- | --- | --- |
+| 3 | extra-bag-open | 01a217dc-02aa-7a71-807d-d14d8b7f69e7 | 01a217dd-d649-76a2-99be-e728e676dffb | Good: zip open, lining visible, near-black, matches the closed bag |
+| 5 | handbag-satchel | 01a217dc-0517-7f14-806f-de26ed88aaa9 | 01a217de-1cbf-785f-b190-ff4bcf0d5315 | Excellent: black leather, gold clasp and rings, strap |
+| 6 | handbag-shoulder | 01a217dc-09d0-7cfd-8cbc-560b1db5f90d | 01a217dd-db51-7941-9179-171aaabf99b7 | Good shape; glossy raspberry rather than burgundy: darken and add roughness in Blender |
+| 8 | checkin-desk | 01a217dc-1565-79fd-940b-4447bb01ec2b | 01a217dd-3bfc-79d4-b44f-db0e38ac58c4 | **Miss**: separate pieces (black box, belt, scale plate, post), no counter |
+| 9 | luggage-trolley | 01a217dc-1fb4-7b4f-8d54-b1964709e8c1 | 01a217dd-dcc1-7c86-8a31-9b4a35dbcae5 | Excellent |
+| 10 | gate-seating | 01a217dc-29da-72cd-8667-116addbd6ba6 | 01a217dd-d028-7346-8ae8-ea7b4c5b9198 | Good |
+| 11 | stanchion | 01a217dc-339d-7b2b-8e0a-9f4fc5022b2c | 01a217dd-1081-782b-86f6-659f71579843 | **Miss**: a post with a box head, no belt |
+| 12 | peaked-cap | 01a217dc-3dcf-7d87-9318-347a8a6ca614 | 01a217dd-f9e0-7c27-951f-82ed793a3df0 | Good shape (crown, band, visor, chin strap, no badge); bright blue: grade to navy |
+| 13 | desk-lamp | 01a217dc-47ea-70b7-ad89-fb306e7b5f8c | 01a217dd-cef9-7bc2-b2b4-754ad353addc | Good |
+| 14 | laptop | 01a217dc-51e9-75c9-983e-d89ff20dbf54 | 01a217de-0ae9-7497-a685-649c5c5ee860 | Good; plain lid; smudged palm rest |
+
+Learned: Tripo does single objects well and multi-part arrangements badly (the check-in desk came back as loose parts). Batch 3 has several composite prompts (the visiting booth, the judges' bench with three chairs, the witness table with microphones), which should be split into single objects or built in Blender. Simple turned or boxy shapes such as the queue post are quicker and cleaner in Blender.
+
 ## Batch 3: home, detention, court and hearing (11 assets, 330 credits)
 
 | # | Asset | Used in | Credits |
