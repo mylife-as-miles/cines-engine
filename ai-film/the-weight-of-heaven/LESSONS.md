@@ -188,6 +188,14 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 96 | **A pause asked for in words is taken at length.** "He lets a moment pass" before a four-word line gave 2.9 s of silence and took two seconds from the shots after it. Give a pause its length, or leave it to the edit. | Q05 t1, shot 3. | Every beat before a line. |
 | 97 | **Two voices of one sex come back as one voice.** A low alto of fifty-five and a tired mezzo of sixty-four returned within a semitone of each other, and two listening passes heard one woman. A paragraph of words does not cast a voice (lesson 80); when two speakers of one sex share a scene, expect to separate them in sound afterwards or to make one of them elsewhere. | Q05 t1, Serath and the Chancellor. | The voice bible; every scene with two women or two men speaking. |
 
+## From the cloud test (making a still cloud move by editing)
+
+| # | Lesson | Where it came from | Applies to |
+|---|---|---|---|
+| 98 | **"It does not move" is a measurement to make over the whole frame, not three patches.** I reported the cloud as frozen (0 px in three patches) and built a drift for all of it. Tracked properly, the low mist was alive in the take (+20 px right in the centre, +36 on the left, and 15-27 px LEFTWARD in the right opening); only the sky and the top of the cloud bank were frozen. The first version pushed the right opening against its own movement and cancelled it. Map where the take is alive (the spread of each pixel through time) and add movement only where it is not, in the direction of the take's own movement beside it. | `tools/cloud_drift.py`, Q04 take 1 frames 478-576. | Every repair of a "dead" background. |
+| 99 | **A matte that is not on a real edge needs a wide soft edge, and a moving figure needs her matte again in every frame.** A matte that held wherever Serath had been for most of the shot left a pale patch of still cloud with a hard outline where her sleeve had been. The matte now follows her frame by frame, and the change comes in over ten pixels beside her and beside the hand-drawn stonework. | The same; seen only at 4x. | Every composite behind a figure. |
+| 100 | **Add the change, not the layer, and only its shapes.** Laying the moved plate over the frame replaces the take's fine pattern with a cleaner one; adding (moved - still) keeps it. But the plate carries the take's compression blocks, and moving them put a second, sliding copy of the pattern in the flat sky. Move a slightly blurred plate, so the shapes travel and the fine pattern stays as still as it is everywhere else. | The same; found by stretching the sky's contrast ten times. | Warps of a still plate. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
