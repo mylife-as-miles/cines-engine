@@ -1,0 +1,109 @@
+{
+ "name": "I_bell_v8",
+ "fps": 24,
+ "size": [
+  992,
+  432
+ ],
+ "frames": 1539,
+ "duration": 64.125,
+ "made_from": [
+  "out/review/I_bell_v5.mp4",
+  "out/edits/Q03A_t2_fixed.mp4",
+  "out/edits/Q03B_t1_vfx.mp4",
+  "out/edits/I_bell_v7.wav (sound up to the stroke)"
+ ],
+ "picture": [
+  {
+   "label": "B01-B02 over black; the rite",
+   "source": "I_bell_v5",
+   "src_frames": [
+    0,
+    424
+   ],
+   "start_frame": 0,
+   "frames": 424,
+   "start": 0.0,
+   "duration": 17.6667
+  },
+  {
+   "label": "B03 built to bear",
+   "source": "Q03A_t2_fixed",
+   "src_frames": [
+    0,
+    183
+   ],
+   "start_frame": 424,
+   "frames": 183,
+   "start": 17.6667,
+   "duration": 7.625
+  },
+  {
+   "label": "B04 unread",
+   "source": "I_bell_v5",
+   "src_frames": [
+    424,
+    539
+   ],
+   "start_frame": 607,
+   "frames": 115,
+   "start": 25.2917,
+   "duration": 4.7917
+  },
+  {
+   "label": "B05 the water",
+   "source": "Q03A_t2_fixed",
+   "src_frames": [
+    183,
+    406
+   ],
+   "start_frame": 722,
+   "frames": 223,
+   "start": 30.0833,
+   "duration": 9.2917
+  },
+  {
+   "label": "B06 the bell",
+   "source": "I_bell_v5",
+   "src_frames": [
+    539,
+    703
+   ],
+   "start_frame": 945,
+   "frames": 164,
+   "start": 39.375,
+   "duration": 6.8333
+  },
+  {
+   "label": "B07a the mountain lets go",
+   "source": "Q03B_t1_vfx",
+   "src_frames": [
+    0,
+    271
+   ],
+   "start_frame": 1109,
+   "frames": 262,
+   "start": 46.2083,
+   "duration": 10.9167
+  },
+  {
+   "label": "B07b the still cup",
+   "source": "I_bell_v5",
+   "src_frames": [
+    703,
+    871
+   ],
+   "start_frame": 1371,
+   "frames": 168,
+   "start": 57.125,
+   "duration": 7.0
+  }
+ ],
+ "sound": {
+  "sample_peak_dbfs": -2.09,
+  "valley_cut_in_s": 46.208,
+  "cup_s": 57.125,
+  "bell_over_valley_db": -13,
+  "bell_at_cup_db": -14
+ }
+}
