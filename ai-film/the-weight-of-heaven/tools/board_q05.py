@@ -78,7 +78,7 @@ def main():
     arrow(d, (640, 200), (860, 200), w=3); note(d, (600, 150), 'to the Council, past the camera')
 
     c3 = img(hier); d = ImageDraw.Draw(c3)
-    note(d, (36, 34), 'he does not turn to her')
+    note(d, (36, 34), 'he answers facing forward')
     note(d, (36, 380), '"And four million here."')
 
     c4 = img(ser); d = ImageDraw.Draw(c4)
@@ -103,17 +103,17 @@ def main():
     cells = [
         (c1, 'SHOT 1 · 0–2 s · Serath at her arch · the same frame Q04 ended on',
          'Opens exactly on Q04\'s last frame (sent as a reference). No words. She turns her shoulders round from the cloud to face the room. The edit can run this straight on from Q04, or cut past it.'),
-        (c2, 'SHOT 2 · 2–5.5 s · Serath · 75 mm, at her eye height, a slow drift',
+        (c2, 'SHOT 2 · 2–5.6 s · Serath · 75 mm, at her eye height, a slow drift',
          'Close, for the first time: the arch and the cloud bright behind her, her face a little under them. Even and factual, the first time she weighs anything: "Forty thousand people live in Sarn Vale."'),
-        (c3, 'SHOT 3 · 5.5–8.5 s · the Hierophant · the same close-up as in Q04',
-         'His eyes stay on the Engineer. He answers her without turning: "And four million here."'),
-        (c4, 'SHOT 4 · 8.5–12 s · Serath, the same close shot · she listens',
+        (c3, 'SHOT 3 · 5.6–8.8 s · the Hierophant · the same close-up as in Q04',
+         'He faces forward, his head at rest, and answers her from there: "And four million here."'),
+        (c4, 'SHOT 4 · 8.8–12.4 s · Serath, the same close shot · she listens',
          'The rest of his line falls on her, as the valley\'s name did: from off-screen, gently, "Heaven has done your arithmetic for you." Her eyes drop a little and come back up. She says nothing.'),
-        (c5, 'SHOT 5 · 12–17.5 s · the Chancellor · the same close-up as in Q04',
+        (c5, 'SHOT 5 · 12.4–18.4 s · the Chancellor · the same close-up as in Q04',
          'She is still looking at the cup. Plain, a slight tremor in the middle of it: "I have grandchildren on the lower terraces."'),
         (c6, 'SHOT 5 · then the order',
          'Her eyes come up from the cup and her head turns a little toward Serath, behind her. Quiet and final: "Break it." The shot ends on the word.'),
-        (c7, 'SHOT 6 · 17.5–22 s · Serath, the same close shot',
+        (c7, 'SHOT 6 · 18.4–23 s · Serath, the same close shot',
          'She does not answer at once. Then, measured, a bargain stated and not pleaded: "Give me until the evening bell." She holds, waiting. Q06 opens here, on the Hierophant\'s answer.'),
     ]
     sheet(cells, P('design/boards/Q05_board.jpg'))

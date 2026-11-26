@@ -1,16 +1,16 @@
 # AUTEUR VIDEO PROMPT
 ## THE WEIGHT OF HEAVEN — Q05 · ORISON, THE COUNCIL CHAMBER · THE ORDER
 References: @Image 1 — environment: the council chamber, the place and its light · @Image 2 — first frame of shot 1: Serath at her arch, the last frame of the sequence before · @Image 3 — character sheet: SERATH · @Image 4 — character sheet: the HIEROPHANT · @Image 5 — character sheet: the CHANCELLOR · @Image 6 — the Hierophant's close-up as it already stands in this scene: its framing, light and background · @Image 7 — the Chancellor's close-up as it already stands in this scene: its framing, light and background
-Reference mode · 22 s · 6 shots · 2.35:1 · photoreal live action · spoken English: three speakers, each line said once · no music
+Reference mode · 23 s · 6 shots · 2.35:1 · photoreal live action · spoken English: three speakers, each line said once · no music
 
 ## SCENE INTENT
-This follows the sequence before directly. The Council of Orison has just heard that holding the city's height means drowning a valley. Serath, the Grand Admiral, standing apart at her arch, names what is in the valley. The Hierophant answers her with a larger number and a kindness. The Chancellor, who cannot stop looking at a trembling cup of wine, speaks the order anyway. Serath asks for time. Nobody raises a voice, and the Council never turns round to look at her.
+This follows the sequence before directly. The Council of Orison has just heard what holding the city's height will cost: a valley. Serath, the Grand Admiral, standing apart at her arch, names who is in that valley. The Hierophant answers her with a larger number and a kindness. The Chancellor, her eyes cast down, speaks the order anyway. Serath asks for time. Nobody raises a voice. The Hierophant answers facing forward; only the Chancellor turns her head.
 
 ## GLOBAL LOCKS
-Character identity — SERATH exactly as @Image 3: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. The HIEROPHANT exactly as @Image 4 and as he appears in @Image 6: seventy-four, a short white beard, a tall white cap, white robes. The CHANCELLOR exactly as @Image 5 and as she appears in @Image 7: a woman of sixty-four, long grey hair in one braid, a plain white coat. From the sheets take face, hair and clothes only. Each face, costume, place, voice and line stays with its one person.
+Character identity — SERATH exactly as @Image 3: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. The HIEROPHANT exactly as @Image 4: seventy-four, a short white beard, a tall white cap, white robes. The CHANCELLOR exactly as @Image 5: a woman of sixty-four, long grey hair in one braid, a plain white coat. From the sheets take face, hair and clothes only. From @Image 6 and @Image 7 take framing, light and background only; eyes, head and mouth are as each shot says. Each face, costume, place, voice and line stays with its one person.
 Wardrobe override — none: everyone exactly as their sheet.
-Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor. Outside, pale arcades and towers stand in grey-white cloud that lies level with the floor. Each keeps one place throughout. Serath stands apart at the far-left arch, at the balustrade, as in @Image 2. The Hierophant stands at the middle of the table's far side, his back to the centre arch, facing into the room; Serath is behind him, over his right shoulder. The Chancellor stands at the table's far side beside him, a gold cup of wine on the table in front of her; Serath is behind her, over her right shoulder. An old engineer stands in the middle of the floor facing them; he is not seen in this sequence.
-Props and temporal state — The gold cup stands on the table in front of the Chancellor, below the frame of her close-up; the wine in it trembles. Serath's gloved hands are empty.
+Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor. Outside, pale arcades and towers stand in grey-white cloud that lies level with the floor. Each keeps one place throughout. Serath stands apart at the far-left arch, at the balustrade, as in @Image 2. The Hierophant stands at the middle of the table's far side, in front of the centre arch, facing into the room. The Chancellor stands at the table's far side beside him, facing into the room. Serath is across the room from them both, off to their right.
+Props and temporal state — Nothing is held or handled. Serath's gloved hands are empty at her sides.
 
 ## MOVIE COLOR
 White stone in cloud, cool and grey: pale grey marble, grey-white cloud, white cloth. The gold of Serath's collar is the only colour. Every shot is exposed for the cloud in the arches: the room sits just under it, each face is lit softly from the side of the arches and falls off on the other side, and a face is never the brightest thing in the frame. Whites keep their detail. No cast shadows.
@@ -34,7 +34,7 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 0.0–2.0 s
 [CAM] exactly the framing of @Image 2: medium-wide, 40 mm, from inside the room looking out through the far-left arch; the camera holds still.
 [BLOCK] Exactly @Image 2: Serath at the balustrade on the right of the frame, from the knees up, her head turned back over her left shoulder toward the room.
-[ACT] Her shoulders follow her head: she turns to her left, away from the cloud, and comes to rest facing the room, her back to the balustrade, her gloved hands at her sides. Her lips are at rest.
+[ACT] From the first frame her shoulders follow her head: she turns round to her left, away from the cloud, where she stands; by 1.5 s she faces us, the balustrade behind her, her gloved hands at her sides, her eyes open and just to the right of the camera. Her lips are at rest.
 [DIALOGUE] / V.O. none
 [SFX] air; the cloth of her coat as she turns.
 [STATE OUT] Serath facing the room, still.
@@ -43,7 +43,7 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 2.0–5.6 s
 [CAM] medium close-up, 75 mm, at her eye height, from inside the room looking toward the far-left arch, shallow focus; the camera drifts a hand's width to the right. Behind her, out of focus, the open arch: bright cloud, a pale arcade and a tower; a marble column soft at the left edge of the frame.
 [BLOCK] Serath from the chest up, a little left of centre, facing the room, the gold collar at her throat.
-[ACT] Her eyes are open and go past the right side of the camera, to the Hierophant's back. Her face is still. She breathes in once and says it evenly, as a fact, to his back. After the last word her mouth closes and her eyes stay where they are.
+[ACT] Her eyes are open and go past the right side of the camera, to the Hierophant, off-screen across the room. She breathes in once and says it evenly, as a fact. After the last word her mouth closes and her eyes stay where they are.
 [DIALOGUE] / V.O. SERATH (after her one breath in; 2.7 to 5.1 s): "Forty thousand people live in Sarn Vale." — even and factual; each word given its weight.
 [SFX] her voice, low and close; air.
 [STATE OUT] Her eyes on the Hierophant, her mouth closed.
@@ -52,7 +52,7 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 5.6–8.8 s
 [CAM] exactly the close-up of @Image 6: 75 mm, at his eye height, frontal and centred, from the collar up, his tall white cap running out of the top of the frame, shallow focus; a slow push in of a hand's width. The centre arch and bright cloud are soft behind him, a thin column on either side.
 [BLOCK] The Hierophant alone in the frame.
-[ACT] He does not turn round. His eyes are open and stay on the engineer in front of him, just left of the lens. His face is calm. He lets a moment pass, then answers her over his shoulder without moving his head, slowly, each word set down. After it his mouth closes.
+[ACT] He faces us, his head level and at rest. His eyes are open and rest just left of the lens. His face is calm. He lets a moment pass, breathes in once, then speaks, slowly, each word set down, his eyes where they are. After it his mouth closes and only the air is heard to the cut.
 [DIALOGUE] / V.O. THE HIEROPHANT (after a still moment; 6.4 to 8.3 s): "And four million here." — unhurried, falling at the end.
 [SFX] his voice, deep and close; air.
 [STATE OUT] His eyes forward, his mouth closed.
@@ -61,36 +61,36 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 8.8–12.4 s
 [CAM] the same medium close-up as shot 2, the same framing and background; the camera drifts very slowly toward her.
 [BLOCK] Serath from the chest up, a little left of centre, facing the room.
-[ACT] She listens. Her lips are at rest and stay at rest: the voice is his, from off-screen, behind the camera. While he speaks her eyes stay on his back; on his last word they drop a little, to the floor of the room, and after a moment come back up. She is still.
+[ACT] Her mouth is closed from the first frame to the last. She listens: the voice is the Hierophant's, a man's, from off-screen to the right, where she is looking. While he speaks her eyes stay on him; on his last word they drop a little, toward the floor, and after a moment come back up.
 [DIALOGUE] / V.O. THE HIEROPHANT again, off-screen, the same voice (half a second after the cut; 9.3 to 11.8 s): "Heaven has done your arithmetic for you." — gently, almost warmly, as a kindness; slowly.
 [SFX] his voice from across the room; air.
 [STATE OUT] Her eyes back on him, her mouth closed.
 
 ### SHOT 5
-[TIME] 12.4–17.6 s
+[TIME] 12.4–18.4 s
 [CAM] exactly the close-up of @Image 7: 85 mm, at her eye height, shallow focus; the camera drifts a hand's width to the left. Behind her, out of focus, thin columns and bright cloud.
 [BLOCK] The Chancellor's face, large in the frame, as in @Image 7.
-[ACT] Her eyes are open and look down at the cup below the frame. She breathes in and says the first sentence to the cup, plainly; in the middle of it her voice shakes once and steadies. Her mouth closes. Then her eyes come up from the cup, her head turns a little toward the left of the frame, so that she faces us, and her eyes go past the left side of the camera, toward Serath behind her. She says the last two words to her, quietly. Her mouth closes.
-[DIALOGUE] / V.O. THE CHANCELLOR (after her breath in; 13.0 to 15.6 s): "I have grandchildren on the lower terraces." — plain; one tremor in the middle. Then, after her eyes have come up and her head has turned (16.4 to 17.2 s): "Break it." — quiet and final.
+[ACT] Her eyes are open and look down, below the bottom edge of the frame. She breathes in and says the first sentence with her eyes down, plainly; in the middle of it her voice shakes once and steadies. Her mouth closes. Then her eyes come up, her head turns toward the left of the frame so that she faces us, and her eyes go past the left side of the camera, to Serath, off-screen. She says the last two words to her, quietly. Her mouth closes.
+[DIALOGUE] / V.O. THE CHANCELLOR (after her breath in; 13.0 to 15.8 s): "I have grandchildren on the lower terraces." — plain; one tremor in the middle. Then, after her eyes have come up and her head has turned (17.0 to 17.9 s): "Break it." — quiet and final.
 [SFX] her voice, tired and close; air.
 [STATE OUT] Her face toward us, her eyes past the left of the camera, her mouth closed.
 
 ### SHOT 6
-[TIME] 17.6–22.0 s
+[TIME] 18.4–23.0 s
 [CAM] the same medium close-up as shot 2, the same framing and background; the camera holds still.
 [BLOCK] Serath from the chest up, a little left of centre, facing the room.
-[ACT] Her eyes are open, past the right side of the camera, on the Council's backs. She does not answer at once: for a full second nothing in her face moves. Then she breathes in and says it, measured, a bargain stated and not pleaded. Her mouth closes. She stays as she is, waiting, to the end.
-[DIALOGUE] / V.O. SERATH (after the still second and her breath in; 19.0 to 21.0 s): "Give me until the evening bell." — measured and level; each word given its weight.
+[ACT] Her eyes are open, past the right side of the camera, on the Council, off-screen. She does not answer at once: for a full second she only looks at them, her mouth closed, the cloud drifting behind her. Then she breathes in and says it, measured, a bargain stated and not pleaded. Her mouth closes. She stays as she is, waiting, to the end.
+[DIALOGUE] / V.O. SERATH (after the still second and her breath in; 19.8 to 21.8 s): "Give me until the evening bell." — measured and level; each word given its weight.
 [SFX] her voice, low and close; air.
 [STATE OUT] Serath facing the room, her eyes on the Council, her mouth closed, waiting.
 
 ## PERFORMANCE ARC
-SERATH: turns from the cloud to the room → states a fact to a man's back → is answered and takes it without a word → waits a full second → asks for time, level.
-THE HIEROPHANT: untroubled; he does not turn round to her; he is kind.
-THE CHANCELLOR: cannot leave the cup → says why she cannot call it clean → looks at Serath only to speak the order.
+SERATH: turns from the cloud to the room → states a fact → is answered and takes it without a word → waits a full second → asks for time, level.
+THE HIEROPHANT: untroubled; he faces forward throughout; he is kind.
+THE CHANCELLOR: keeps her eyes down → says what she stands to lose → raises them to Serath only to speak the order.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
-The Council decides with its back to the one who must carry the decision out. The only person who looks at Serath is the one who orders her.
+The one who decides most easily never looks at Serath. The only person who looks at her is the one who orders her.
 
 ## PHYSICS LOCKS
 Normal speed and real weight throughout. Cloth hangs and stirs a little in the air. The cloud outside drifts slowly. Heads turn at a living pace, never snapping.
@@ -106,4 +106,4 @@ Each quoted line is spoken once, word for word, by the named speaker, in the ord
 1. The spoken lines, word for word, from the right speakers, unhurried  2. Character identity from the sheets  3. Shot 1 on @Image 2  4. Six shots in order, each with its own framing and length  5. The close-ups of @Image 6 and @Image 7 matched; Serath's close shot the same three times  6. Sound: a quiet room, voices and air, no music
 
 ## FINAL STATE
-The order has been given by someone who had to look away from a cup to give it, and the one it was given to has asked for one afternoon.
+Serath stands at her arch facing the room, her eyes past the right side of the camera, her mouth closed, waiting for her answer.
