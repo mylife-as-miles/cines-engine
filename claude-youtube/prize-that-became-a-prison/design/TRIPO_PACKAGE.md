@@ -90,6 +90,13 @@ Approved by the author ("Proceed"). Ten generated once each with the prompts and
 | 13 | desk-lamp | 01a217dc-47ea-70b7-ad89-fb306e7b5f8c | 01a217dd-cef9-7bc2-b2b4-754ad353addc | Good |
 | 14 | laptop | 01a217dc-51e9-75c9-983e-d89ff20dbf54 | 01a217de-0ae9-7497-a685-649c5c5ee860 | Good; plain lid; smudged palm rest |
 
+Resent with the author's go under new keys (`-v2`), same prompts and settings, two at a time (60 reference credits). The `-v1` originals still showed "admitting", with no model, after the resend.
+
+| # | Asset | Task ID | Model ID | Verdict |
+| --- | --- | --- | --- | --- |
+| 15 | file-folders | 01a217e8-9ee4-727c-9a7f-fcb18f7d2cd0 | 01a217ea-ca2e-7851-996c-26c581a890da | Excellent: worn manila folders, loose sheets, no writing |
+| 16 | reception-desk | 01a217e8-a3b8-7292-8b3d-d2ea48ead7f1 | 01a217ea-7250-7e92-a9be-63d47aa7a004 | Usable in the background: walnut front, stone top, monitor and keyboard, but chunky (size it by height, 1.1 m) |
+
 Learned: Tripo does single objects well and multi-part arrangements badly (the check-in desk came back as loose parts). Batch 3 has several composite prompts (the visiting booth, the judges' bench with three chairs, the witness table with microphones), which should be split into single objects or built in Blender. Simple turned or boxy shapes such as the queue post are quicker and cleaner in Blender.
 
 ## Batch 3: home, detention, court and hearing (11 assets, 330 credits)
