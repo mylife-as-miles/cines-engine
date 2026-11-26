@@ -11,7 +11,7 @@ Run with earshot's Python (it has numpy, scipy and Pillow):
 Writes
   refs/frames/Q04_open_cup.jpg     shot 1's first frame: the same cup, the same framing as the still cup, now on the
                                    council table with the Chancellor standing behind it (sent as a reference)
-  design/boards/Q04_board.jpg      the storyboard, eight frames
+  design/boards/Q04_board.jpg      the storyboard, eight frames (six shots, 24 s)
 """
 import io, math, os, subprocess
 import numpy as np
@@ -159,30 +159,61 @@ def still_cup():
 
 
 EDGE = 244                             # the marble's far edge in the still-cup frame (row)
+_d = np.hypot(*np.mgrid[-3:4, -3:4]); DISK = _d <= 3.2
 
 
 def cup_matte(a):
-    """The cup where it stands above the marble's far edge: gold is the only saturated thing in the frame, and the wine
-    lies inside the gold rim."""
+    """The cup where it stands above the marble's far edge, cut so that none of the wedding's background comes with it.
+
+    The core is what is certainly cup: strongly gold pixels, and the wine they enclose. The pale highlights along the
+    rim's lip are not strongly gold, so the core is grown by up to three pixels, only into bright warm pixels, and
+    never past the core's own convex hull (a bowl seen from above is convex). Then it is drawn in by one pixel."""
+    from scipy.spatial import ConvexHull
     luma = a @ np.array([0.299, 0.587, 0.114], np.float32)
     sat = (a.max(2) - a.min(2)) / np.maximum(a.max(2), 1e-3)
-    m = (sat > 0.16) & (a[..., 0] > a[..., 2] + 0.06)
-    box = np.zeros_like(m); box[20:EDGE + 6, 330:665] = True
-    m = ndimage.binary_opening(m & box, iterations=1)
-    lab, n = ndimage.label(m)
-    size = ndimage.sum(m, lab, np.arange(1, n + 1))
-    m = lab == (int(np.argmax(size)) + 1)
-    m = ndimage.binary_fill_holes(ndimage.binary_closing(m, iterations=5))
-    # a bowl seen from above is convex: fill each row from its left edge to its right, with the edges smoothed
+    box = np.zeros(luma.shape, bool); box[20:EDGE + 8, 330:665] = True
+    core = (sat > 0.22) & (a[..., 0] > a[..., 2] + 0.09) & box
+    core = ndimage.binary_opening(core, iterations=1)
+    lab, n = ndimage.label(core)
+    size = ndimage.sum(core, lab, np.arange(1, n + 1))
+    core = lab == (int(np.argmax(size)) + 1)
+    core = ndimage.binary_fill_holes(ndimage.binary_closing(core, iterations=2))
+    ys, xs = np.where(core)
+    pts = np.column_stack([xs, ys]).astype(np.float64)
+    hull = pts[ConvexHull(pts).vertices]
+    k = 4
+    im = Image.new('L', (W * k, H * k), 0)
+    ImageDraw.Draw(im).polygon([(float(x) * k + k / 2, float(y) * k + k / 2) for x, y in hull], fill=255)
+    hullm = np.asarray(im.resize((W, H), Image.LANCZOS)).astype(np.float32) / 255 > 0.5
+    warm = (luma > 0.55) & (sat > 0.07) & (a[..., 0] >= a[..., 2]) & hullm & box
+    m = core.copy()
+    for _ in range(3):
+        m |= ndimage.binary_dilation(m) & warm
+    m = ndimage.binary_fill_holes(m)
+    # the rim is an ellipse: fit one to the outline from the top of the rim down to its widest row, and use it there
     rows = np.where(m.any(1))[0]
-    lo = np.array([np.where(m[r])[0].min() for r in rows], np.float32); hi = np.array([np.where(m[r])[0].max() for r in rows], np.float32)
-    # the rim's pale highlights fall under the gold threshold on some rows: take the outer envelope, then smooth it
-    lo = ndimage.gaussian_filter1d(ndimage.minimum_filter1d(ndimage.median_filter(lo, 5, mode='nearest'), 21, mode='nearest'), 5, mode='nearest')
-    hi = ndimage.gaussian_filter1d(ndimage.maximum_filter1d(ndimage.median_filter(hi, 5, mode='nearest'), 21, mode='nearest'), 5, mode='nearest')
-    out = np.zeros_like(m)
-    for r, x0, x1 in zip(rows, lo, hi):
-        out[r, int(x0):int(x1) + 1] = True
-    return ndimage.binary_erosion(out, iterations=1)
+    lo = np.array([np.where(m[r])[0].min() for r in rows]); hi = np.array([np.where(m[r])[0].max() for r in rows])
+    wide = rows[int(np.argmax(ndimage.uniform_filter1d((hi - lo).astype(np.float32), 5)))]
+    sel = rows <= wide
+    px = np.concatenate([lo[sel], hi[sel]]).astype(np.float64); py = np.concatenate([rows[sel], rows[sel]]).astype(np.float64)
+    cx0, cy0, sc = px.mean(), py.mean(), 100.0
+    for _ in range(3):                                                             # fit, drop the worst points, fit again
+        u, v = (px - cx0) / sc, (py - cy0) / sc
+        M = np.column_stack([u * u, u * v, v * v, u, v])
+        coef = np.linalg.lstsq(M, np.ones(len(u)), rcond=None)[0]
+        res = np.abs(M @ coef - 1)
+        keep = res <= np.quantile(res, 0.85)
+        px, py = px[keep], py[keep]
+    yy, xx = np.mgrid[0:H, 0:W]
+    u, v = (xx - cx0) / sc, (yy - cy0) / sc
+    ell = (coef[0] * u * u + coef[1] * u * v + coef[2] * v * v + coef[3] * u + coef[4] * v) <= 1.0
+    top = yy <= wide
+    cols = np.where(ell.any(0))[0]                                                # below its widest row a bowl is never wider than its rim
+    inside = (xx >= cols.min() + 1) & (xx <= cols.max() - 1)
+    m = (ell & top) | (m & ~top & inside)
+    m = ndimage.binary_closing(ndimage.binary_opening(m, structure=DISK), structure=DISK)
+    m = ndimage.gaussian_filter(m.astype(np.float32), 2.0) > 0.5                   # round off what is left of any step
+    return ndimage.binary_erosion(m, iterations=1)
 
 
 def open_cup(scale=2):
@@ -267,7 +298,7 @@ def master():
 def hierophant_medium():
     a = chamber(700, 262, 1100, soft=6)
     a = mist(a, W * 0.5, H * 0.86, W, H * 0.16, seed=9, amount=0.34)
-    a = over(a, cut('hierophant', 2), cx=W * 0.5, foot=H + 150, height=H * 1.42)
+    a = over(a, cut('hierophant', 2), cx=W * 0.5, foot=H + 395, height=H * 2.05)   # from the collar up; the cap runs out of the top
     return a
 
 
@@ -286,7 +317,7 @@ def serath_arch():
     a = chamber(150, 150, 760, soft=1.2)
     a = mist(a, W * 0.55, H * 0.93, W * 1.1, H * 0.2, seed=5, amount=0.6)
     a = mist(a, W * 0.75, H * 0.70, W * 0.5, H * 0.12, seed=6, amount=0.35)
-    a = over(a, cut('serath', 1), cx=W * 0.30, foot=H + 150, height=H * 1.22)
+    a = over(a, cut('serath', 1), cx=W * 0.70, foot=H + 150, height=H * 1.22)        # on the right third: she will turn to her left, into the frame
     return a
 
 
@@ -342,7 +373,7 @@ def main():
 
     c2 = img(rings(cup1)); d = ImageDraw.Draw(c2)
     note(d, (36, 34), 'now the wine trembles: ring inside ring'); arrow(d, (330, 70), (420, 130), col=PAPER, w=3)
-    note(d, (640, 300), 'bells outside that no one has rung')
+    note(d, (600, 300), 'the gold foot buzzing on the marble')
 
     c3 = img(chancellor_close(still)); d = ImageDraw.Draw(c3)
     note(d, (36, 34), 'she cannot stop watching it'); arrow(d, (560, 190), (380, 330), w=3)
@@ -350,7 +381,7 @@ def main():
 
     m, fx, fy = master()
     c4 = img(m); d = ImageDraw.Draw(c4)
-    note(d, (24, 150), 'Serath, apart, at her arch', 15); arrow(d, (150, 176), (fx(410) - 6, fy(500)), col=PAPER, w=2)
+    note(d, (24, 150), 'Serath, apart, facing out', 15); arrow(d, (150, 176), (fx(410) - 6, fy(500)), col=PAPER, w=2)
     note(d, (250, 386), 'the Chancellor, beside the cup', 15); arrow(d, (400, 384), (fx(762), fy(600)), col=PAPER, w=2)
     note(d, (420, 150), 'the Hierophant, centred', 15); arrow(d, (500, 176), (fx(872), fy(500)), col=PAPER, w=2)
     note(d, (600, 386), 'the Engineer has the floor, his back to us', 15); arrow(d, (640, 384), (fx(872) + 30, fy(660)), col=PAPER, w=2)
@@ -369,30 +400,30 @@ def main():
     c7 = img(e); d = ImageDraw.Draw(c7)
     note(d, (36, 34), 'he stops. He would rather not say it')
     arrow(d, (640, 150), (900, 150), w=4); note(d, (600, 100), 'his eyes go to Serath, across the room')
-    note(d, (600, 380), 'then, quietly, the name of the valley')
+    note(d, (640, 380), 'the name is not said here')
 
     c8 = img(serath_arch()); d = ImageDraw.Draw(c8)
-    note(d, (430, 60), 'cloud rising through the lower terraces like a tide')
-    arrow(d, (330, 96), (430, 110), w=4); note(d, (36, 34), 'she hears it: her head turns to the room')
-    note(d, (430, 380), 'Q05 opens on this frame, on her line')
+    note(d, (36, 34), 'his voice, off-screen, quietly: "Sarn Vale."')
+    arrow(d, (640, 96), (540, 110), w=4); note(d, (300, 130), 'then her head turns to the room')
+    note(d, (36, 380), 'Q05 opens on this frame, on her line')
 
     cells = [
-        (c1, 'SHOT 1 · 0–3.5 s · the cup · 85 mm, from above, almost still',
+        (c1, 'SHOT 1 · 0–2.6 s · the cup · 85 mm, from above, almost still',
          'Opens exactly on this frame (sent as a reference): the cup that stood still at the wedding, the same size and angle, now on the council table. "THREE DAYS LATER." goes over it in the edit.'),
         (c2, 'SHOT 1 · the wine is trembling',
-         'The only change from the wedding: fine rings cross the wine, ring inside ring, as they crossed the water in the daughter\'s bowl. Far outside, bells ring out of time with each other.'),
-        (c3, 'SHOT 2 · 3.5–6 s · the Chancellor · 85 mm, eye level, a slow drift',
-         'Her eyes are on the cup and she does not blink. Thin columns and cloud behind her, out of focus. At the end a throat is cleared across the room and her eyes lift.'),
-        (c4, 'SHOT 3 · 6–11.5 s · the chamber · 28 mm, slightly high, a slow glide forward',
-         'The whole room, as its reference. The Engineer, dusty to the knee, stands alone on the white floor with his back to us and speaks: "Six hundred feet since dawn. The Unrisen hold the Weir at Sarn." Cloud is coming in over the balustrade.'),
-        (c5, 'SHOT 4 · 11.5–14 s · the Hierophant · 65 mm, frontal, a slow push in',
-         'Centred between two columns, the cloud bright behind him, his face a little darker than the sky. He does not have to think about it: "Then let it be broken."'),
-        (c6, 'SHOT 5 · 14–19.8 s · the Engineer · 85 mm, frontal, eye level',
-         'The reverse: his face for the first time, alone, the plain inner wall far behind him. Exact about the mechanism: "Break it, and it pours. All of it, at once, onto the lowest ground."'),
-        (c7, 'SHOT 5 · the longest pause, then the name',
-         'He stops and swallows. His eyes leave the Hierophant and go to Serath\'s back across the room, then drop to the floor. Then, quietly: "Sarn Vale." A hold on his face after it.'),
-        (c8, 'SHOT 6 · 19.8–22 s · Serath at her arch · 40 mm, from behind her shoulder',
-         'No words. She has been looking down at the cloud climbing the terraces. Her head turns from it toward the room, in profile. The generation ends here, and Q05 opens on this frame with "Forty thousand people live in Sarn Vale."'),
+         'The only change from the wedding: fine ripples cross the wine, ring inside ring, as they crossed the water in the daughter\'s bowl. The bells that no one has rung are laid in the mix, not asked of the model.'),
+        (c3, 'SHOT 2 · 2.6–5 s · the Chancellor · 85 mm, eye level, a slow drift',
+         'Her eyes are on the cup. Thin columns and cloud behind her, out of focus. At the end a throat is cleared across the room and her eyes lift.'),
+        (c4, 'SHOT 3 · 5–10.7 s · the chamber · 28 mm, slightly high, a slow glide forward',
+         'The whole room, as its reference. The Engineer, dusty to the knee, stands alone on the white floor with his back to us: "Six hundred feet since dawn. The Unrisen hold the Weir at Sarn." After the number the Chancellor\'s head bows back to the cup.'),
+        (c5, 'SHOT 4 · 10.7–13.5 s · the Hierophant · 75 mm close-up, frontal, a slow push in',
+         'From the collar up, his tall cap running out of the top of the frame, the cloud bright behind him. He does not have to think about it: "Then let it be broken."'),
+        (c6, 'SHOT 5 · 13.5–20 s · the Engineer · 85 mm close-up, frontal',
+         'The reverse: his face for the first time, alone, light from one side, the plain inner wall far behind him. Exact about the mechanism: "Break it, and it pours. All of it, at once, onto the lowest ground."'),
+        (c7, 'SHOT 5 · he stops, and looks at her',
+         'His mouth closes and a breath goes out. His eyes leave the Hierophant and go across the room to Serath, and stay on her. We cut on the look, before the name.'),
+        (c8, 'SHOT 6 · 20–24 s · Serath at her arch · 40 mm, the camera still',
+         'Her back to us, the cloud level with the floor. From behind us, quietly, the Engineer: "Sarn Vale." A moment later her head turns toward the room until she is in profile. Q05 opens on this frame with "Forty thousand people live in Sarn Vale."'),
     ]
     sheet(cells, P('design/boards/Q04_board.jpg'))
 

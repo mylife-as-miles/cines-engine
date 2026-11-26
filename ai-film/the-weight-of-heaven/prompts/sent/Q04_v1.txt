@@ -1,110 +1,110 @@
 # AUTEUR VIDEO PROMPT
 ## THE WEIGHT OF HEAVEN — Q04 · ORISON, THE COUNCIL CHAMBER · THREE DAYS LATER
-References: @Image 1 — environment: the council chamber, the place and its light · @Image 2 — first frame of shot 1: the gold cup on the council table · @Image 3 — character sheet: the CHANCELLOR · @Image 4 — character sheet: the ENGINEER · @Image 5 — character sheet: the HIEROPHANT · @Image 6 — character sheet: SERATH · @Image 7 — character sheet: CASSIEL
-Reference mode · 22 s · 6 shots · 2.35:1 · photoreal live action
+References: @Image 1 — environment: the council chamber, the place and its light · @Image 2 — first frame of shot 1: the gold cup on the council table · @Image 3 — character sheet: the CHANCELLOR · @Image 4 — character sheet: the ENGINEER · @Image 5 — character sheet: the HIEROPHANT · @Image 6 — character sheet: SERATH
+Reference mode · 24 s · 6 shots · 2.35:1 · photoreal live action · spoken English: two speakers, three lines, each said once · no music
 
 ## SCENE INTENT
-Orison, a white kingdom that floats in the cloud, has been losing height for three days. Cloud that used to lie far below now stands level with the floor of its council chamber, and a cup of wine on the council table will not stop trembling. An old engineer tells the Council how far the city has come down and what holding its height would cost: a valley. Nobody in the room is troubled except the man who has to say it, and the admiral at the arch, who hears the valley's name.
+Orison, a white city that stands in the cloud, has been losing height for three days. Cloud that used to lie far below now stands level with the floor of its council chamber, and a cup of wine on the council table will not stop trembling. An old engineer tells the Council how far the city has come down and what holding its height would cost: a valley. Only two people are troubled: the man who has to say it, and the admiral at the arch, who hears the valley's name.
 
 ## GLOBAL LOCKS
-Character identity — The CHANCELLOR exactly as @Image 3: a woman of sixty-four, tired and decent, long grey hair in one braid, a plain white coat, white gloves. The ENGINEER exactly as @Image 4: a man of seventy-two, bald, white hair at the sides, a rope-belted robe grey with dust from the knee down, bare hands; his is the only dirt in the room. The HIEROPHANT exactly as @Image 5: seventy-four, a short white beard, a tall white cap, white robes. SERATH exactly as @Image 6: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. CASSIEL exactly as @Image 7: a man in his sixties, grey hair combed back, the same long white coat with no collar, white gloves.
+Character identity — The CHANCELLOR exactly as @Image 3: a woman of sixty-four, long grey hair in one braid, a plain white coat, white gloves. The ENGINEER exactly as @Image 4: a man of seventy-two, bald, white hair at the sides, a rope-belted robe grey with dust from the knee down, bare hands. The HIEROPHANT exactly as @Image 5: seventy-four, a short white beard, a tall white cap, white robes. SERATH exactly as @Image 6: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. CASSIEL, seen only far off: a tall man in his sixties, grey hair combed back, a long white coat like Serath's without the collar. From the sheets take face, hair and clothes only. Each face, costume, place, voice and line stays with its one person.
 Wardrobe override — none: everyone exactly as their sheet.
-Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble under a shallow dome; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor; stone benches along the wall; one tall white door standing open in the wall to the right of the arches. Outside, terraces and bell towers of the same stone stand in grey-white cloud. Five people are in the room and each keeps one place from the first frame to the last. The Hierophant stands at the middle of the table's far side, his back to the centre arch, facing the room. The Chancellor stands at the table's far side to the left of him, where the cup is. The Engineer stands alone on the open floor on the near side of the table, three metres from it, facing the Hierophant. Serath stands apart at an arch on the far left, at the balustrade, her back to the room. Cassiel stands beside the open door on the right, his hands behind his back.
-Props and temporal state — The cup exactly as in @Image 2: plain gold, full of dark red wine, standing on the table in front of the Chancellor. Three days ago it stood perfectly still. Now the wine in it trembles all the time, in fine rings. Low cloud lies level with the floor outside and creeps in over the balustrade and a little way across the marble near the arches.
+Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor; one tall white door standing open in the wall to the right of the arches. Outside, terraces and bell towers stand in grey-white cloud. Five people are in the room and each keeps one place throughout. The Hierophant stands at the middle of the table's far side, his back to the centre arch, facing the room. The Chancellor stands at the table's far side to the left of him, where the cup is. The Engineer stands alone on the open floor on the near side of the table, three metres from it, facing the Hierophant. Serath stands apart at the far-left arch, at the balustrade, facing out. Cassiel stands beside the open door on the right, his hands behind his back.
+Props and temporal state — The cup exactly as in @Image 2: plain gold, full of dark red wine, standing on the table in front of the Chancellor. The wine in it trembles all the time, in fine concentric ripples. Low cloud lies level with the floor outside and creeps in over the balustrade.
 
 ## MOVIE COLOR
-White stone in cloud, a little cooler and greyer than a wedding day: pale grey marble, grey-white cloud, white cloth. The gold of the cup and of Serath's collar and the dark red of the wine are the only colour. Every shot is exposed for the cloud in the arches: the room sits just under it, each face is lit softly from the side of the arches and falls off on the other side, and a face is never the brightest thing in the frame. Whites keep their detail. No cast shadows.
-Influences, each with its purpose — Denis Villeneuve: Dune and Arrival, small people held in a large symmetrical room; a man who speaks with his back to us; frontal faces, centred, in shallow focus; the quiet before a hard word. James Cameron: every cause seen before it is explained, and each person's place in the room shown before they speak.
-Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Deep focus on the wide shots, shallow focus on the cup and on faces. The camera floats: every shot drifts slowly and smoothly, as if weightless, and never shakes.
+White stone in cloud, cool and grey: pale grey marble, grey-white cloud, white cloth. The gold of the cup and of Serath's collar and the dark red of the wine are the only colour. Every shot is exposed for the cloud in the arches: the room sits just under it, each face is lit softly from the side of the arches and falls off on the other side, and a face is never the brightest thing in the frame. Whites keep their detail. No cast shadows.
+Influences, each with its purpose — Denis Villeneuve, Dune and Arrival: symmetry, stillness, a held wide, shallow focus up close, silence before speech. James Cameron: every cause seen before it is explained, and each person's place shown before they speak.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Deep focus on the wide shots, shallow focus on the cup and on faces. Every shot moves slowly and smoothly on a steady camera.
 
 ## VOICE DNA (immutable)
-THE ENGINEER OF ORISON: The high speech, older and technical, a little out of practice at court. A man of seventy-two with a thin, reedy tenor. He is hesitant: he starts sentences and stops, clears his throat, and is exact with numbers and vague with consequences. He is apologetic and would rather not say it.
+THE ENGINEER: The high speech of Orison, older and technical: English, a soft Received Pronunciation. A man of seventy-two with a thin, reedy tenor, dry and quiet. He speaks slowly, one short sentence to a breath, exact with numbers, and apologetic.
 THE HIEROPHANT: The high speech at its purest: a liturgical Received Pronunciation, old-fashioned and round. A man of seventy-four with a rich, resonant bass-baritone, deep and full in the breath, a voice used to filling vast rooms without effort. Every sentence has a liturgical cadence and comes to rest on a falling end, like a pronouncement. He is perfectly steady and has never been in doubt.
 No one else speaks.
 
 ## AUDIO DESIGN
-A quiet stone room open to the sky: soft moving air and nothing else under the voices. In shots 1 and 2 only, far outside, three or four bells in different towers clank faintly, out of time with each other; they thin away before anyone speaks. Very close in shot 1: the fine dry buzz of the cup's gold foot shivering on the marble. Voices are close and clear, with a short airy tail. No music.
+A quiet stone room open to the sky: soft moving air under everything. Very close in shot 1: the fine dry buzz of the cup's gold foot on the marble. Voices are close and clear, with a short airy tail. Between the lines only air, breath and cloth are heard.
 
 ## FIRST-FRAME ANCHOR
 Shot 1 opens exactly on @Image 2, the same framing.
 
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
-[TIME] 0.0–3.5 s
-[CAM] insert, 85 mm, looking steeply down at the cup, shallow focus; the camera eases toward it by a hand's width and no more.
-[BLOCK] Exactly @Image 2: the gold cup in the middle of the frame on the white marble table; behind the table's far edge, soft, the Chancellor's white coat and a gloved hand at her side; beyond her the foot of the arches, a pale blur.
-[ACT] The wine in the cup is trembling: fine rings run across its surface, ring inside ring, without stopping. A point of light on the gold foot shivers. Nothing else moves.
+[TIME] 0.0–2.6 s
+[CAM] insert, 85 mm, looking steeply down at the cup, shallow focus; the camera eases toward it by a hand's width.
+[BLOCK] Exactly @Image 2: the gold cup in the middle of the frame on the white marble table; behind the table's far edge, soft, the Chancellor's white coat; beyond her the foot of the arches, a pale blur.
+[ACT] From the first frame the wine is already trembling: fine concentric ripples start at the gold rim and run inward to the centre, one inside another, without stopping; the pale sheen of the sky on the wine shows them. The cup itself stands still.
 [DIALOGUE] / V.O. none
-[SFX] far bells, out of time with each other; the dry buzz of gold on marble.
+[SFX] the dry buzz of gold on marble; air.
 [STATE OUT] The wine still trembling.
 
 ### SHOT 2
-[TIME] 3.5–6.0 s
+[TIME] 2.6–5.0 s
 [CAM] close-up, 85 mm, at her eye height, shallow focus; the camera drifts a hand's width to the left. The gold rim of the cup is a soft blur along the bottom edge of the frame; behind her, out of focus, two thin columns and bright cloud.
 [BLOCK] The Chancellor's face, three-quarters to the camera, a little right of centre.
-[ACT] Her eyes are open and look down at the cup, and they stay on it; she does not blink. At 5.3 s an old man clears his throat off-screen, across the room: her eyes lift from the cup toward the sound, past the right side of the camera. Her lips stay closed.
+[ACT] Her eyes are open and look down at the cup, and stay on it; her lips are at rest. In the last half second a throat is cleared off-screen, across the room: her eyes lift from the cup toward the sound, past the right side of the camera.
 [DIALOGUE] / V.O. none
-[SFX] the bells, fainter; a throat cleared, off-screen.
+[SFX] air; a throat cleared, off-screen.
 [STATE OUT] Her eyes on the Engineer, off-screen.
 
 ### SHOT 3
-[TIME] 6.0–11.5 s
+[TIME] 5.0–10.7 s
 [CAM] wide, 28 mm, a little above head height, centred on the middle arch, symmetrical, deep focus: the room as @Image 1 shows it, from the same side. The camera glides straight forward two metres toward the table, slowly.
-[BLOCK] All five as placed in the locks, small in the big room: the Engineer nearest us in the centre with his back to the camera; the table and the cup beyond him; behind the table the Hierophant in the centre and the Chancellor beside the cup, both facing us; Serath far left at her arch; Cassiel far right by the door.
-[ACT] Low cloud slides in over the balustrade behind them. The Engineer stands with his arms at his sides, his head a little bowed, and speaks to the Hierophant; his shoulders lift with the breath before each sentence. The others are still and their lips stay closed: the Hierophant's eyes are on him, the Chancellor's eyes go back down to the cup, Serath does not turn.
-[DIALOGUE] / V.O. ENGINEER (his back to us, from 6.8 s): "Six hundred feet since dawn. The Unrisen hold the Weir at Sarn." — a number given like an apology; one breath for each sentence.
-[SFX] his thin voice in the big room; moving air.
+[BLOCK] All five as placed in the locks, small in the big room: the Engineer nearest us in the centre with his back to the camera; the table and the cup beyond him; behind the table the Hierophant in the centre and the Chancellor beside the cup, both facing us; Serath far left at her arch, facing out, her back to the room; Cassiel far right by the door.
+[ACT] Low cloud slides in over the balustrade behind them. The Engineer stands with his arms at his sides, his head a little bowed, and speaks to the Hierophant; his shoulders lift with the breath before each sentence. The Hierophant watches him, lips at rest, breathing. After the number the Chancellor's head bows back toward the cup, her lips at rest. Serath stays facing out.
+[DIALOGUE] / V.O. THE ENGINEER (his back to us; after the wide has held a second, on his first lifted breath): "Six hundred feet since dawn. The Unrisen hold the Weir at Sarn." (about 4.5 s) — a number given like an apology.
+[SFX] his thin voice in the big room; air.
 [STATE OUT] Everyone in place; the cloud a little further in.
 
 ### SHOT 4
-[TIME] 11.5–14.0 s
-[CAM] medium close-up, 65 mm, at his eye height, frontal and centred, symmetrical, shallow focus; a slow push in of a hand's width. The centre arch and bright cloud are soft behind him, a thin column on either side.
-[BLOCK] The Hierophant alone in the frame, from the chest up, his tall white cap inside the top of the frame.
-[ACT] His eyes are open and rest on the Engineer, just beside the lens. His face is calm, almost kind. He breathes in once and answers without weighing it. After the last word his mouth closes and his eyes stay where they are.
-[DIALOGUE] / V.O. HIEROPHANT (from 12.0 s): "Then let it be broken." — simple, untroubled, falling at the end.
-[SFX] his voice, deep and close; moving air.
+[TIME] 10.7–13.5 s
+[CAM] close-up, 75 mm, at his eye height, frontal and centred, symmetrical, shallow focus; a slow push in of a hand's width. The centre arch and bright cloud are soft behind him, a thin column on either side.
+[BLOCK] The Hierophant alone in the frame, from the collar up; his tall white cap runs out of the top of the frame.
+[ACT] His eyes are open and rest on the Engineer, just left of the lens. His face is calm, almost kind. He breathes in once and answers without weighing it. After the last word his mouth closes and his eyes stay where they are.
+[DIALOGUE] / V.O. THE HIEROPHANT (after his one breath in): "Then let it be broken." (about 2 s) — simple, untroubled, falling at the end.
+[SFX] his voice, deep and close; air.
 [STATE OUT] His eyes on the Engineer, his mouth closed.
 
 ### SHOT 5
-[TIME] 14.0–19.8 s
-[CAM] close-up, 85 mm, at his eye height, frontal and centred, shallow focus: the reverse of shot 4, looking from the table back at him; the camera drifts very slowly toward him. Behind him, far off and out of focus, only the plain curved marble wall of the room.
+[TIME] 13.5–20.0 s
+[CAM] close-up, 85 mm, at his eye height, frontal and centred, shallow focus: the reverse of shot 4, looking from the table back at him; the camera drifts very slowly toward him. The pale light of the arches is on his face from the right of the frame and the left side of his face falls to grey. Behind him, far off and soft, the curved marble wall and a stone bench, a shade darker than his robe.
 [BLOCK] The Engineer alone in the frame, from the chest up, his hands below the frame.
-[ACT] His eyes are open, on the Hierophant, just beside the lens. He breathes in and explains it exactly, as a man explains a machine. Then he stops. His mouth closes; he swallows; his eyes leave the Hierophant and go across the room to the right of the camera, toward Serath, and rest there; then they drop to the floor. He says the last two words to the floor, quietly. His mouth closes and he does not look up.
-[DIALOGUE] / V.O. ENGINEER (from 14.4 s): "Break it, and it pours. All of it, at once, onto the lowest ground." — then the stop, the swallow and the look, about two seconds with no word — then: "Sarn Vale."
-[SFX] his voice, close; his breath; moving air.
-[STATE OUT] His eyes on the floor, his mouth closed.
+[ACT] His eyes are open, on the Hierophant, just right of the lens. He breathes in and explains it exactly and evenly. Then he stops, his mouth closed, and one breath goes out through his nose. His eyes go further to the right, across the room, toward Serath, and stay on her.
+[DIALOGUE] / V.O. THE ENGINEER (after one breath in): "Break it, and it pours. All of it, at once, onto the lowest ground." (about 5 s) — then about a second with no voice: his breath out, the air.
+[SFX] his voice, close; his breath; air.
+[STATE OUT] His eyes on Serath, off-screen to the right; his mouth closed.
 
 ### SHOT 6
-[TIME] 19.8–22.0 s
-[CAM] medium-wide, 40 mm, from behind her right shoulder, a little above her head, looking out through her arch, deep focus; the camera drifts slowly to the right.
-[BLOCK] Serath on the left third of the frame, from the knees up, her back to us, her gloved hands at her sides; a thin column at each side of her arch; beyond and below her the white terraces and a bell tower standing in cloud that has climbed to the level of the floor.
-[ACT] She has been looking down at the cloud. Her head turns slowly from it toward the room until her face is in profile, her eyes open and on the Engineer, off-screen to the right. Her lips are closed. She is still.
-[DIALOGUE] / V.O. none
-[SFX] moving air; no voice.
-[STATE OUT] Serath in profile at her arch, the gold collar at her throat, her lips closed.
+[TIME] 20.0–24.0 s
+[CAM] medium-wide, 40 mm, a little above head height, from three metres inside the room, looking out through the far-left arch, deep focus; the camera holds still.
+[BLOCK] Serath stands at the balustrade on the right third of the frame, from the knees up, her back to us, her gloved hands at her sides; a marble column at each side of the arch; beyond her the white terraces and a bell tower stand in cloud that lies level with the floor.
+[ACT] She is looking down at the cloud. From off-screen, behind us, the Engineer's voice names the valley, quietly. A moment after it her head makes a quarter-turn to her left, toward the room, until her face is in profile, facing the left of the frame, her eyes open and on the Engineer, off-screen to the left. Her lips are closed. She holds, still, to the end.
+[DIALOGUE] / V.O. THE ENGINEER again, off-screen, the same voice, quieter, once (a second after the cut): "Sarn Vale." (about 1 s)
+[SFX] air; his voice from across the room; cloth as she turns.
+[STATE OUT] Serath in profile at her arch, facing left, the gold collar at her throat, her lips closed.
 
 ## PERFORMANCE ARC
-THE ENGINEER: a number given as an apology → the mechanism, exactly → he stops → he cannot look at anyone while he names the valley.
+THE ENGINEER: a number given as an apology → the mechanism, exactly → he stops and looks at the one person it will fall to → he names the valley only when we can no longer see him.
 THE HIEROPHANT: untroubled from first to last; he answers before the matter has any weight.
 THE CHANCELLOR: watches the cup, looks up once, goes back to the cup.
-SERATH: apart, her back to them, until the valley is named; then her head turns.
-CASSIEL: does not move.
+SERATH: apart, facing out, until the valley is named; then her head turns.
+CASSIEL: stands by the door, watching.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
-This is the same cup, seen the same way, as three days ago, when it was the one thing that did not move. Nobody in the room remarks on it.
+The cup is the sequence's first image and nobody in the room remarks on it. The valley's name is heard on the back of the person who will have to answer for it.
 
 ## PHYSICS LOCKS
-Normal speed and real weight throughout. The wine trembles as wine does in a cup on a table that is faintly shaking: small, quick, even rings; it never splashes or spills, and the cup stays where it stands. The cloud behaves as ground fog: it pours slowly over the balustrade and lies ankle-deep on the floor near the arches, and stays far from the table. Cloth hangs and stirs a little in the air.
+Normal speed and real weight throughout. The wine trembles as wine does on a table that is faintly shaking: small, quick, even ripples; it never splashes, and the cup stays where it stands. The cloud behaves as ground fog: it flows slowly over the balustrade and lies ankle-deep on the floor near the arches, far from the table. Cloth hangs and stirs a little in the air.
 
 ## AUDIO LOCKS
-Each quoted line is spoken once, word for word, by the named speaker, in the order written, and nothing else is said by anyone. Hesitation is breath and silence only. Lips move only on the quoted words, and match them in shots 4 and 5. No music or singing. No bell after shot 2.
+Each quoted line is spoken once, word for word, by the named speaker, in the order written, and nothing else is said by anyone. Lips move only on the quoted words, and match them in shots 4 and 5. Every other mouth stays at rest. No music or singing.
 
 ## CONTINUITY LOCKS
 [POSITIVE] the chamber, its table, the cup and the door exactly as @Image 1 · shot 1 exactly as @Image 2 · five people, each in one place throughout · the wine trembling whenever the cup is seen · white gloves on every hand but the Engineer's · light only from the cloud beyond the arches
-[NEGATIVE] sunbeams, blue sky or warm light · a sixth person · chairs, candles, lamps or flames · a hand touching the cup · wine spilling · text, captions or subtitles · camera shake
+[NEGATIVE] sunbeams, blue sky or warm light · a sixth person · chairs, candles, lamps or flames · a hand touching the cup · wine spilling · text, captions or subtitles · camera shake · a grey studio backdrop
 
 ## GENERATION PRIORITY ORDER
-1. The three spoken lines, word for word, from the right mouths  2. Character identity from the sheets  3. Shot 1 on @Image 2, the wine trembling  4. Six shots in order, each with its own framing and length  5. The chamber and its light as @Image 1, each person in their place  6. Sound: a quiet room, far bells at the start, no music
+1. The three spoken lines, word for word, from the right speakers  2. Character identity from the sheets  3. Shot 1 on @Image 2, the wine trembling  4. Six shots in order, each with its own framing and length  5. The chamber and its light as @Image 1, each person in their place  6. Sound: a quiet room, voices and air, no music
 
 ## FINAL STATE
-A valley has been named in a white room by a man who could not look up while he said it. One person has turned her head.
+A valley has been named in a white room, and the one person standing apart has turned her head.

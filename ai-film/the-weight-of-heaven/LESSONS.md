@@ -117,6 +117,21 @@ Movement I's sound rebuilt as one session on the film's clock, 26 November (`edi
 | 66 | **The local model makes textures better than voices.** Rock, mud, wind and wax passed; the ox, the crows and a bowl on stone did not, in context. Short animal calls and small impacts are where to expect retakes or recordings. | `audio/sfx/v9/manifest.json`. | Planning any local effects list. |
 | 67 | **Quiet needs a floor.** Fading the bed right out for the dust left stretches of digital silence, which a player hears as the sound switching off. Hold a bed low (here 17 dB down) instead of at zero. | The dust, 37.5–39.4 s. | Every designed silence. |
 
+## From building Q04's package (the first scene with speech)
+
+Three checks before the take, 26 November: an independent review, the reference repos, the Dune screenplays (`edit/reviews/Q04_v1_*.md`).
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 68 | **Check a cut-out along its whole edge, top included.** A matte filled row by row squares off the top of a round thing: a flat band of the old background sat across the cup's rim, and my check crop began just below it. Fit the shape the object really has (an ellipse for a rim), and compare with the source at four times size on every side. | `refs/frames/Q04_open_cup.jpg`, first version. | Every composite reference. |
+| 69 | **In a round room an arch faces outward.** Seen from inside through a side arch, the middle of the room is behind the camera on the side nearer the centre, not where a square room would put it. Work an eyeline out with positions and directions written down, never by feel. | Q04 shot 6, as first written. | Every reverse and every look across a room. |
+| 70 | **Time lines from the model's own speech.** In Q01 the model spoke 12 words in 4.2 s and 4 words in 1.5 s: 2.6 to 2.9 words a second. Measure an earlier take and budget from that, with a breath before each line and a hold after. | Q04's timing, 20 s on paper and 24 s when measured. | Every generation with speech. |
+| 71 | **Give the hard word to the listener.** In the Dune scripts a report or an order lands on the person who hears it. Here it also takes the two hardest words off a visible mouth, so they can be replaced in sound. | Q04 shots 5 and 6. | Staging any line that changes someone. |
+| 72 | **A voice paragraph describes a sound, not a habit.** "He starts sentences and stops, clears his throat" asks the model for words the script does not have. Accent, age, pitch, pace and manner go in the voice; hesitation goes in the picture. | The Engineer's Voice DNA. | The voice bible; every prompt with speech. |
+| 73 | **Words for ripples are not words for jewellery.** "Rings", "floats", "weightless", "a machine", "a wedding day" are each a thing the model can draw. Before sending, read the prompt for every noun and verb that names something not meant to be seen. | Q04's first draft. | Every prompt. |
+| 74 | **A cue is something seen, not a second.** A time stamp shares out the clip; it does not start a line. Start each line on a visible act ("after his one breath in"). | The repos' Seedance notes; Q04. | Every generation with speech. |
+| 75 | **Have a prompt reviewed cold before it is paid for.** One fresh reader, given the references and the lessons, found a fault in the first frame, a wrong eyeline and a shot a second too short, all free to fix. | `edit/reviews/Q04_v1_prompt_review.md`. | Every package. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
