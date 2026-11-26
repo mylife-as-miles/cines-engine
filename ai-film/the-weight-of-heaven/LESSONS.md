@@ -214,6 +214,7 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 107 | **A line over the take's first frame starts at once.** "Three quarters of a second after the first frame; 0.8 to 1.9 s" came back at 0.1 s. Harmless here, because the shot is joined to the take before; in a take that opens a scene, put the first line in the second shot or expect to add its head in the edit. | Q06 t1 shot 1. | First shots with speech. |
 | 108 | **A figure "beside the door" goes into the doorway.** Asked for on the right third in front of the swung-back leaf, Cassiel came back centred in the opening with a leaf either side, as in Q04's wide. The model prefers the symmetrical frame the reference suggests; if the off-centre one matters, draw it and attach it. | Q06 t1 shots 2 and 6. | New set-ups described in words only. |
 | 109 | **An invented name can come back mispronounced.** Two listening passes heard "Cassilin's" for "Cassiel's". A name the model has not met wants a spelling that can only be said one way, or a plan to repair it in sound; this one is off-screen, so it can be. | Q06 t1 shot 2. | Every line with an invented name (Marl, Karst, Sarn, Orison). |
+| 110 | **A shot that repeats an earlier one can simply go, and say what goes with it.** The seal came back as the first seal over again; the author cut it, and the scene is tighter. What the cut takes out of the story has to be said at the same time: here, what Cassiel was waiting for. | Q06 t1 shot 5, cut v16. | Every shot cut for a fault. |
 
 ## From *My Name Is Oren*, applied here
 
