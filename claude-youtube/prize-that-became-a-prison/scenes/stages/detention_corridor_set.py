@@ -685,14 +685,22 @@ def back_door():
     lw, lt, lh = VD_W - 0.006, 0.05, VD_H - 0.012
     box("bd_leaf", (lw, lt, lh), (BD_X, RY1 + 0.03, 0.008 + lh / 2), m["door"], 0.004)
     # its vision panel: the cold corridor on the far side, faint through wired glass
-    box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.12))
+    box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.012))
     bm = bmesh.new()
     for sx in (-1, 1):
         add_box(bm, (0.016, 0.01, 0.232), (BD_X - 0.2 + sx * 0.068, RY1 + 0.0, 1.55))
     for sz in (-1, 1):
         add_box(bm, (0.12, 0.01, 0.016), (BD_X - 0.2, RY1 + 0.0, 1.55 + sz * 0.108))
     bevelled(mesh_obj("bd_bead", bm, m["hardware"]), 0.003, 2)
-    box("bd_lock", (0.1, 0.012, 0.16), (BD_X - lw / 2 + 0.08, RY1 - 0.001, 1.05), m["frame"], 0.004)
+    # the lock: a steel plate, a rose and a lever with 2 mm bevels, so one edge picks a glint off the pendant
+    lx = BD_X - lw / 2 + 0.075
+    box("bd_lock", (0.08, 0.008, 0.2), (lx, RY1 - 0.003, 1.02), m["hardware"], 0.002)
+    r = sk.cyl("bd_rose", 0.026, 0.012, (lx, RY1 - 0.013, 1.05), m["hardware"], rot=(math.pi / 2, 0, 0), verts=40)
+    bevelled(r, 0.002, 2, 40)
+    sk.cyl("bd_spindle", 0.008, 0.04, (lx, RY1 - 0.035, 1.05), m["hardware"], rot=(math.pi / 2, 0, 0), verts=16)
+    lv = sk.cyl("bd_lever", 0.0095, 0.13, (lx + 0.062, RY1 - 0.052, 1.05), m["hardware"], rot=(0, math.pi / 2, 0), verts=24)
+    bevelled(lv, 0.002, 2, 40)
+    sk.cyl("bd_keyhole", 0.009, 0.004, (lx, RY1 - 0.008, 0.97), m["void"], rot=(math.pi / 2, 0, 0), verts=16)
     box("bd_kick", (lw - 0.06, 0.003, 0.25), (BD_X, RY1 + 0.004, 0.14), m["steel"], 0.001)
 
 
@@ -714,10 +722,10 @@ def table():
                     sk.cyl("table_bolt", 0.006, 0.008, (lx + bx * 0.031, ly + by * 0.031, 0.008), m["hardware"], verts=6)
 
 
-def chair(xy, facing_deg):
+def chair(xy, facing_deg, val=0.95):
     """The visitor chair, turned so its front looks along `facing_deg` (world, 0 = +X). Its front in the file is
     found from the backrest (the backrest's normal, from the back toward the seat)."""
-    h = props.load("visitor-chair", size=0.82, axis="z", loc=(0, 0, 0), sat=0.55, val=0.95, rough_add=0.12)
+    h = props.load("visitor-chair", size=0.82, axis="z", loc=(0, 0, 0), sat=0.55, val=val, rough_add=0.12)
     bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
     pts = []
@@ -749,20 +757,23 @@ def chair(xy, facing_deg):
 
 
 def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
-    """A sealed envelope lying back up: its body pillowed by the folded letter inside, the bottom flap and the
-    sealed top flap laid over it as thin sheets, so their edges draw the envelope's seams."""
+    """A sealed envelope lying back up: its body (0.4 mm card) pillowed by the folded letter inside, the bottom flap
+    and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw the envelope's seams and
+    cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the far left corner has
+    curled up about 9 mm over its last 4.5 cm from handling and damp."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
+    cq = 0.045                                           # the curl's reach in from the corner, along the diagonal
     def pill(x, y):
-        """Height of the envelope's back: pillowed by the folded letter, a gentle warp from handling and damp, and
-        its front right corner curled up off the table."""
-        h = 0.0026 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
-        h += 0.0007 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
-        h += 0.0007 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
-        dc = math.hypot(x - W / 2, y + D / 2)
-        h += 0.0032 * max(0.0, 1 - dc / 0.07) ** 2
+        """Height of the envelope's back: pillowed by the folded letter, a gentle warp, and its far left corner
+        curled up off the table (a fold line square to the diagonal, rising as the square of the distance)."""
+        h = 0.0024 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
+        h += 0.0006 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
+        h += 0.0006 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
+        q = ((x + W / 2) + (D / 2 - y)) * 0.70711
+        h += 0.009 * max(0.0, 1 - q / cq) ** 2
         return max(h, 0.0)
-    nu, nv = 30, 22
+    nu, nv = 46, 32
     bm = bmesh.new()
     vs = [[bm.verts.new((-W / 2 + W * i / nu, -D / 2 + D * j / nv, 0.0)) for j in range(nv + 1)] for i in range(nu + 1)]
     for i in range(nu):
@@ -783,17 +794,18 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
             bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=2, use_grid_fill=True)
         bmesh.ops.triangulate(bm, faces=bm.faces[:])
         for v in bm.verts:
-            v.co.z = pill(v.co.x, v.co.y) + 0.0004 + lift
+            v.co.z = pill(v.co.x, v.co.y) + 0.0004 + lift(v.co.x, v.co.y)
         ob = mesh_obj(name, bm, mat, smooth=True)
         s = ob.modifiers.new("card", "SOLIDIFY")
-        s.thickness, s.offset = 0.00025, -1.0
+        s.thickness, s.offset = 0.0003, -1.0
         ob.parent = root
         return ob
     e = 0.0015                                           # flaps stop just short of the body's edges
+    tip = (0.0, -D * 0.06)
     flap("envelope_bottom_flap", [(-W / 2 + e, -D / 2 + e), (W / 2 - e, -D / 2 + e), (W * 0.1, D * 0.1), (-W * 0.1, D * 0.1)],
-         0.00035, m["flap"])
-    flap("envelope_top_flap", [(-W / 2 + e, D / 2 - e), (-W * 0.035, -D * 0.06), (W * 0.035, -D * 0.06), (W / 2 - e, D / 2 - e)],
-         0.0007, m["flap"])
+         lambda x, y: 0.0003, m["flap"])
+    flap("envelope_top_flap", [(-W / 2 + e, D / 2 - e), (-W * 0.035, tip[1]), (W * 0.035, tip[1]), (W / 2 - e, D / 2 - e)],
+         lambda x, y: 0.0006 + 0.0009 * max(0.0, 1 - math.hypot(x - tip[0], y - tip[1]) / 0.035) ** 2, m["flap"])
     return root
 
 
@@ -883,8 +895,36 @@ def clock(xyz):
     sk.cyl("clock_pin", 0.006, 0.006, (x, y - 0.047, z), m["ink"], rot=(math.pi / 2, 0, 0), verts=16)
 
 
+def wall_vent(name, loc, w=0.42, h=0.26, axis="x"):
+    """A blank louvred supply vent flush on a wall: a bevelled frame and angled blades, dark behind."""
+    m = materials()
+    x, y, z = loc
+    s_ = -1                                           # the room is on the -Y side of the back wall
+    box(name + "_back", (w - 0.02, 0.006, h - 0.02), (x, y - 0.002, z), m["void"])
+    for sg in (-1, 1):
+        box(name + "_fv", (0.022, 0.016, h), (x + sg * (w / 2 - 0.011), y + s_ * 0.008, z), m["vent"], 0.003)
+        box(name + "_fh", (w, 0.016, 0.022), (x, y + s_ * 0.008, z + sg * (h / 2 - 0.011)), m["vent"], 0.003)
+    n = 7
+    for k in range(n):
+        zz = z - h / 2 + 0.03 + k * (h - 0.06) / (n - 1)
+        box(f"{name}_blade{k}", (w - 0.04, 0.028, 0.004), (x, y + s_ * 0.012, zz), m["vent"], 0.0012, rot=(math.radians(35), 0, 0))
+
+
+def clock_light(xyz):
+    """A small kicker 0.3 m below the clock, grazing up across its face, so it reads as a clock (ticks, hands),
+    not a dark disc."""
+    x, y, z = xyz
+    area("clock_kick", (x, y - 0.1, z - 0.3), (0.1, 0.1), 4.0, (0.95, 0.93, 0.9), spread=70,
+         rot=(math.pi - math.radians(14), 0, 0), glossy=False)
+
+
+CLOCK = (-1.2, RY1, 2.02)
+
+
 def room():
     table()
     pendant()
     back_door()
-    clock((-1.3, RY1, 2.06))
+    clock(CLOCK)
+    clock_light(CLOCK)
+    wall_vent("room_vent", (-0.45, RY1, 2.38))
