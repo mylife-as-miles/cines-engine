@@ -1,0 +1,34 @@
+@Video 1 is a coarse blockout reference. Use it only for the camera positions, the camera movement, the four cuts, where each subject stands and travels in the frame, how large each thing is against the others, and when each event happens. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set, and do not copy the stiff way its figures move: it is a rough guide to staging, not to motion.
+All movement is yours and must be real: living people and animals with weight, balance and effort; cloth, hair, water, rope and wet earth that obey real-world physics.
+The blue stooped figure in @Video 1 corresponds to the farmer.
+The small yellow figure in @Video 1 corresponds to his daughter.
+The red shallow dish in @Video 1 corresponds to the wooden bowl of water.
+The orange-brown animal shape with horns in @Video 1 corresponds to the ox in its yoke, and the thin line from its head to the wall corresponds to its rope.
+The small black shapes in the furrows correspond to crows.
+The long low grey band across the foreground corresponds to a drystone wall.
+The grey block with sloping wedges against it, on the right, corresponds to the low stone house and its buttresses.
+The grey flat-topped shape on the horizon corresponds to the mountain called the Anvil.
+The very dark ceiling across the top of the frame corresponds to the underside of Orison: a vast mass of dark rock that hangs over the whole valley.
+
+[Characters]
+The farmer corresponds to @Image 1. Use only his face, beard, hair and clothes. He is in his forties. His back is bent from a life of carrying: even standing he stoops, and he never straightens.
+The daughter corresponds to @Image 2. Use only her face, braid and clothes. She is six.
+Do not interchange their appearances, clothing, positions or actions. There is one farmer and one daughter.
+[Props and animals]
+The wooden bowl corresponds to @Image 3. It is full of clear water to a finger's width below the rim.
+The ox and its heavy wooden yoke correspond to @Image 4. A rope runs from its halter to an iron ring in the wall.
+[Scene]
+Anvil Vale references @Image 5. Use only the place: black ploughed earth in straight furrows, a low drystone wall, a low stone house braced with heavy buttresses, the flat-topped mountain on the horizon, and overhead the dark underside of Orison filling the top of the frame like a stone ceiling, with a slot of grey daylight between it and the horizon.
+
+Generate a wordless film scene in five consecutive shots, cut exactly where @Video 1 cuts. The camera is low and locked off in every shot.
+Shot 1 (0-3 seconds): The whole valley, wide. Beyond the wall the farmer, small, bends over a furrow, working it with a hoe; the ox stands tethered at the wall; the house is on the right; the Anvil is far off under the dark mass. He rises to his stoop and turns toward the house. His daughter, tiny, has come out of the door carrying the bowl of water in both hands and walks toward the wall. End state: the farmer walking to the wall; the daughter carrying the bowl toward him.
+Shot 2 (3-6.4 seconds): At the wall, from the child's eye level. The farmer takes the bowl from her in both hands, drinks, and sets it down on top of the wall in front of her. He turns away toward the field. She does not move: her eyes stay on the bowl. End state: the bowl on the wall; the daughter looking at it; the farmer's back to her.
+Shot 3 (6.4-8.6 seconds): Close on the bowl on the wall top, the daughter's face soft behind it at the same height, watching. The water in the bowl is trembling: fine rings, one inside another, keep spreading across its surface from the rim to the centre, though nothing has touched it. End state: the rings still running; she has not looked away.
+Shot 4 (8.6-10.6 seconds): Over the wall to the ox. It throws its head up and drags backward against its rope, which snaps taut to the iron ring; its hooves slide in the wet earth. Beyond it, a dozen crows burst up out of the furrows, beat their wings hard, rise barely a metre, and sink back to the ground as if the air were too heavy. End state: the ox straining at the taut rope; the crows down in the furrows again.
+Shot 5 (10.6-13 seconds): From behind the farmer's bent shoulder, he is dark in the right of the frame, his back to us, his head turned to the mountain. Across the face of the Anvil a thin pale line of dust opens, slowly, from left to right. Then nothing moves. End state: the line of dust across the mountain; the farmer still, watching it.
+
+From @Video 1 keep the camera positions, the locked-off camera, the four cuts, where everything stands, the sizes of things against each other, and the moment of each event. Perform the hoeing, the walk, the drinking, the ox's panic and the crows' flight with natural movement and real physics, not as the block shapes do it.
+
+The final video is photoreal live action, clean and sharp, shot on large-format digital (ARRI Alexa 65) with spherical lenses, deep focus except in shot 3. Grey daylight comes in low from the side under the dark mass, never from above; low contrast, slightly under-exposed; faces are lit from the side. The colours are muted: black earth, grey stone, grey-brown wool, the pale slot of sky; the pale wood of the bowl is the only warm thing. Everything here is heavy: nothing floats or drifts. Composed for a 2.35:1 frame: keep faces, hands and the bowl inside the middle band.
+
+Audio is production sound only, quiet and close, over a low continuous bed of wind across open ploughed ground: <a hoe biting into wet earth>, <an ox breathing, its wooden yoke creaking>, <a child's steps in mud>, <a man swallowing water>, <a wooden bowl set down on stone>, <a rope snapping taut and hooves scraping>, <crows' wings beating hard, a few harsh calls>. In the last shot the wind drops almost to silence. Nobody speaks.
