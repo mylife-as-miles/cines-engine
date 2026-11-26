@@ -20,9 +20,10 @@ The order is the studio's (references/color.md): correction and matching first, 
   (b) the look    grade/looks.json: near-neutrals are pulled toward white (cream is removed, skin is not), one tone
                   curve per look, a small split tint on the neutrals, a saturation for everything else.
   (c) accents     gold, seal red and wine: keyed by hue, saturation and value on the MATCHED picture (so the key
-                  does not move with the look) and, per shot, inside a soft rectangle; then pushed on the looked
-                  picture. Only shots that list an accent in shots.json get it: no shot with a face has an accent
-                  key that reaches the face.
+                  does not move with the look) and, per shot, inside a soft rectangle with cut-outs; then pushed on
+                  the looked picture. Only shots that list an accent in shots.json get it. Gold and seal red share
+                  their hue with skin, so in a shot with faces the rectangle, not the key, keeps the accent off
+                  them; --qa tests every key against every face it finds.
   (d) shaping     per shot, optional: "deepen" (let a dark thing go dark, inside a soft rectangle), "density" (hold
                   a pale sky down a little) and "haze" (a lighten-only veil over the top of a wide).
   (e) grain       once, here: monochrome with a little chroma, softened, weighted to the mid-tones, seeded by the
@@ -864,6 +865,7 @@ def qa(args):
     src_i, out_i = probe(args.inp), probe(args.qa)
     W, H, fps = src_i['width'], src_i['height'], src_i['fps']
     shots = load_json(args.shots)
+    akeys, amask = load_json(args.looks).get('accent_keys', {}), {}
     scores = None if args.no_snap else cut_scores(args.inp)
     keys, bounds = timeline(load_json(args.edl), fps, src_i['nb_frames'], scores)
     band = int(round(W / args.matte / 2) * 2) if args.matte else H
@@ -894,7 +896,8 @@ def qa(args):
         a0 = next((a for a, b, kk in order if a <= n < b), -1)
         if n % 2 == 0 or n in face_at:
             s, o = to_float(fa)[top:top + band], to_float(fb)[top:top + band]
-            e = seg.setdefault(a0, {'key': k, 'start': round(a0 / fps, 3), 'n': 0, 'clip': [0.0, 0.0], 'crush': [0.0, 0.0],
+            e = seg.setdefault(a0, {'key': k if a0 >= 0 else '(outside the edit list)', 'start': round((a0 if a0 >= 0 else n) / fps, 3),
+                                    'n': 0, 'clip': [0.0, 0.0], 'crush': [0.0, 0.0],
                                     'faces': [], 'small_faces': 0, '_pix': ([], [])})
             if n % 2 == 0:
                 for i, im in enumerate((s, o)):
@@ -907,6 +910,21 @@ def qa(args):
                 full = to_float(fa)
                 bgr = (full[..., ::-1] * 255 + 0.5).astype(np.uint8)
                 _, found = det.detect(np.ascontiguousarray(bgr))
+                # no accent may reach into a face: every detection, however weak, against every key of the shot
+                acc = [a for a in shots['shots'][k].get('accents', []) if a['key'] in akeys]
+                if acc and found is not None:
+                    matched = correct(full.reshape(-1, 3), shots['shots'][k].get('cdl'))
+                    for a in acc:
+                        kd = dict(akeys[a['key']], **a.get('key_override', {}))
+                        if (k, a['key']) not in amask:
+                            m, (y0, y1, x0, x1) = region_mask(a.get('region'), a.get('feather', 16), W, H, a.get('exclude'))
+                            amask[(k, a['key'])] = np.zeros((H, W), np.float32)
+                            amask[(k, a['key'])][y0:y1, x0:x1] = 1 if m is None else m
+                        q = soften(qualify(matched, kd).reshape(H, W), kd.get('soften', 0)) * amask[(k, a['key'])]
+                        for row in found:
+                            x, yy, w, h = (int(v) for v in row[:4])
+                            e['accent_px_in_faces'] = e.get('accent_px_in_faces', 0) + int((q[max(yy, 0):yy + h, max(x, 0):x + w] > 0.02).sum())
+                    e['accent_faces_checked'] = e.get('accent_faces_checked', 0) + len(found)
                 for row in (found if found is not None else []):
                     x, yy, w, h = (int(v) for v in row[:4])
                     x0, x1, y0, y1 = max(x + w // 4, 0), x + 3 * w // 4, max(yy + h // 4, 0), yy + 3 * h // 4
@@ -945,6 +963,8 @@ def qa(args):
             prob.append(f"clipping grew {e['clip'][0]:.2f} -> {e['clip'][1]:.2f}%")
         if e['crush'][1] > e['crush'][0] + 0.5:
             prob.append(f"crushing grew {e['crush'][0]:.2f} -> {e['crush'][1]:.2f}%")
+        if e.get('accent_px_in_faces', 0) > 0:
+            prob.append(f"an accent key reaches {e['accent_px_in_faces']} pixels inside faces")
         for f in e['faces']:
             if f['score'] < 0.8:
                 continue                                    # backs of heads, hands, blurred passers-by

@@ -778,24 +778,24 @@
     {
      "key": "gold",
      "region": [
-      500,
-      140,
-      680,
-      235
+      545,
+      168,
+      642,
+      204
      ],
-     "feather": 20,
-     "why": "Serath's collar only: the box stops above the coat and below her chin"
+     "feather": 6,
+     "why": "Serath's collar only (it stays within rows 171-199, columns 560-626 through the shot). The gold key's soft edge catches a few yellow-brown skin pixels on every face in this shot (hue 22-27 degrees against the collar's 26-37), so the rectangle starts below her chin (row 157) and no face is inside it"
     },
     {
      "key": "seal",
      "region": [
-      330,
-      340,
-      480,
-      425
+      362,
+      355,
+      430,
+      432
      ],
-     "feather": 12,
-     "why": "the wax on the warrant in the gloved hands"
+     "feather": 8,
+     "why": "the wax on the warrant in the gloved hands (it rises from row 424 to row 367 as the paper comes up, columns 376-415). The seal key covers every face in this shot, red-brown skin and red wax cannot be keyed apart, and a small face appears 65 pixels to the right of the wax (columns 479-504) late in the shot: the rectangle ends at column 430"
     }
    ],
    "measured": {

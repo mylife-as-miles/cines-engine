@@ -105,8 +105,8 @@ Q2B_ONSET = 9.185                                             # where its sound 
 # ends near 0 dB. The tool measures and trims each one, so the hierarchy holds whatever asset or impulse is swapped.
 L_STROKE = -9.6       # the stroke (the limiter then takes up to 2-3 dB off its first bloom)
 L_OPEN = -16.2        # the opening stroke: the same bell, about 6 dB smaller
-L_LINE = -17.4        # each of the Hierophant's lines (line 2 is matched to line 1)
-L_ANSWER = -17.4      # the crowd's answer
+L_LINE = -17.5        # each of the Hierophant's lines (line 2 is matched to line 1)
+L_ANSWER = -17.5      # the crowd's answer
 L_LAND = -18.4        # the landing (thud, beam and the take's own thud together)
 TARGET_I = -18.9      # review master, integrated
 MAX_TP = -1.5         # after AAC
@@ -655,7 +655,7 @@ def syn_bell_body(f_main=191.7, dur=22.0, seed=48):
 # Levels are dB against the ring (RMS of its first second).
 BELL = dict(
     ring_prime_hz=392.0,  # the earshot church bell is a G4 bell: prime 392 Hz (measured again at build time)
-    body_db=-7.0,         # bell_body (47.9 and 95.9 Hz): RMS of its first second
+    body_db=-8.0,         # bell_body (47.9 and 95.9 Hz): RMS of its first second
     take_db=-15.0,        # the take's own strike: RMS of its first 250 ms (louder, both witnesses hear a hit or a braam)
     clang_db=-7.0,        # the hammer's clang: the bell's own upper partials an octave up (RMS of its first 250 ms)
     clang_tau=0.15,       # ... dying with this time constant (s)
@@ -844,7 +844,7 @@ CHOIR_OFFSETS = {                             # where in each file the 13.9 s pa
     'choir_3_humming': 7.5}
 CHOIR_OFFSET = 4.0                            # any other file
 CHOIR_IN, CHOIR_OUT = 10.55, 24.25            # on the film's clock; nothing of the choir after 24.3
-CHOIR_OPEN = -23.5                            # its loudest 400 ms once it opens up (LUFS)
+CHOIR_OPEN = -23.0                            # its loudest 400 ms once it opens up (LUFS)
 CHOIR_UNDER = -3.0                            # under the words, against the open level (and an EQ dip at 1-4 kHz)
 CHOIR_ENV = [                                 # dB against the open level
     (CHOIR_IN, None), (11.9, -7.0), (13.5, -3.5), (14.25, CHOIR_UNDER),      # in softly on the Hierophant's face, before line 2
@@ -907,13 +907,12 @@ TOWER_RT60 = 1.6                              # the open tower: the hall's impul
 WIND_REF, CROWD_REF = -40.0, -47.0            # K-weighted RMS at 0 dB of their envelopes
 WIND_ENV = [                                  # dB against WIND_REF
     (0.0, None), (0.4, -15.0), (3.6, -15.0), (T_NAVE + 0.9, -8.0), (T_GALLERY, -8.0), (T_SERATH + 0.3, -5.0),
-    (T_SEAL, -5.0), (T_SEAL + 0.4, -7.5), (T_RAISE - 0.2, -7.0), (T_RAISE + 0.5, -3.0), (23.7, 3.0),   # rising on the tilt
-    (24.3, 0.0), (25.42, -1.0), (25.6, -4.0), (T_HAMMER, -1.5), (27.7, 3.0), (28.0, -1.0), (28.3, -5.0),  # the near-silence, the hush
+    (T_SEAL, -5.0), (T_SEAL + 0.4, -7.5), (T_RAISE - 0.2, -7.0), (T_RAISE + 0.5, -3.0), (23.7, 2.0),   # rising on the tilt
+    (24.3, 0.0), (25.42, -1.0), (25.6, -4.0), (T_HAMMER, -1.5), (27.7, 2.0), (28.0, -1.0), (28.3, -5.0),  # the near-silence, the hush
     (T_STROKE, -5.0), (T_CUP + 0.3, -10.0), (34.2, -12.0), (35.3, -16.0), (DUR, -18.0)]
 CROWD_ENV = [                                 # dB against CROWD_REF
     (T_NAVE, None), (T_NAVE + 0.9, 0.0), (T_GALLERY - 0.2, 0.0), (T_GALLERY + 0.3, 2.0), (T_SERATH, 2.0),
-    (T_SERATH + 0.5, -4.0), (T_SEAL, -4.0), (T_SEAL + 0.4, -8.0), (T_RAISE - 0.3, -8.0), (T_RAISE + 0.3, None),
-    (T_CUP - 0.2, None), (T_CUP + 0.5, -2.0), (34.19, -2.0), (T_BLACK, None), (DUR, None)]
+    (T_SERATH + 0.5, -4.0), (T_SEAL - 0.4, -5.0), (T_SEAL + 0.2, None), (DUR, None)]
 
 
 def bed(cue, env_pts, ref, seed):
@@ -930,6 +929,12 @@ def bed(cue, env_pts, ref, seed):
         for seg in keep[1:]:
             if len(seg) > 2 * k:
                 y = np.concatenate([y[:-k], y[-k:] * np.sqrt(1 - fa ** 2) + seg[:k] * fa, seg[k:]])
+        x = y
+    if cue.get('noloop'):                                        # one pass from `start`, never repeated
+        y = np.zeros((N + SR, 2))
+        i = int(cue.get('start', 0.0) * SR)
+        seg = fade(x, 0, 0.5)[:len(y) - i]
+        y[i:i + len(seg)] = seg
         x = y
     reps = int(np.ceil((N + SR) / len(x)))
     if reps > 1:                                                 # loop-safe beds wrap; others get a 0.6 s crossfade
@@ -954,7 +959,8 @@ def bed(cue, env_pts, ref, seed):
         gust = _slow(N, seed, r, d) * _slow(N, seed + 1, r * 3.1, d * 0.4)
         air = air / np.sqrt((air ** 2).mean()) * lin(w['air'])
         x = body * gust[:, None] + air * (gust ** 2.0)[:, None]  # the air moves more than the body does
-    x *= lin(ref - lvl(x, 'rms'))
+    act = np.abs(x).max(1) > 0
+    x *= lin(ref - lvl(x[act], 'rms'))
     return x * auto(env_pts)[:, None], label, standin
 
 
@@ -991,12 +997,12 @@ CUES = [
     dict(id='BELL-01', stem='bell', kind='bell', t=T_OPEN, lvl=L_OPEN, send=-11.0,
          sound='The stroke over black: the same bell, about 6 dB smaller and with less of its sub (so it reads as a bell, not a boom), heard down the nave',
          why='the script: "A bell. One stroke. It does not fade. It hangs." Its tail carries under the title and into the nave\'s fade-in, and yields to line 1'),
-    dict(id='BELL-02', stem='bell', kind='bell', t=T_STROKE, lvl=L_STROKE, send=-13.0,
+    dict(id='BELL-02', stem='bell', kind='bell', t=T_STROKE, lvl=L_STROKE, send=-13.0, ride=((30.5, 0.0), (34.8, 2.5)),
          sound='THE STROKE: a cast bell ring tuned to the take (prime 191.6 Hz, hum 95.8 Hz), bell_body under it (47.9 and 95.9 Hz), a clang of the same bell\'s upper partials on the contact, the take\'s own strike low under it, and that strike one and two octaves down for mass',
-         why='the biggest event in the film; rings through the cup to the end, natural decay, a fade only in the last second'),
+         why='the biggest event in the film; rings through the cup to the end on its own decay, ridden up 2.5 dB between 30.5 and 34.8 s so the note still reads as the picture goes black (the script: it hangs); a fade only in the last second'),
     # ---- effects (Foley and hard effects)
     dict(id='FX-01', stem='effects', t=12.55, src=[A('cloth_move', sync='peak'), SY(syn_cloth, 'filtered-noise sleeve', sync=0.6, dur=0.9, seed=41)],
-         lvl=-30.0, mode='pk', eq=[('hp', 200), ('lp', 5000)], send=-16.0, fi=0.02, fo=0.1,
+         lvl=-36.0, mode='pk', eq=[('hp', 200), ('lp', 3500, 2)], fi=0.02, fo=0.1,
          sound="Cloth: the Hierophant's sleeves as his arms rise (the swell ends as they are fully open, 12.55)", why='his one visible action; felt, not noticed'),
     dict(id='FX-02a', stem='effects', t=q2a(8.80), src=[TK('Q02A_t2', 8.70, 9.12, sync=8.80)],
          lvl=-28.0, mode='pk', eq=[('hp', 600), ('hs', 4000, 4.0)], pan=-0.35, fi=0.03, fo=0.1,
@@ -1005,35 +1011,35 @@ CUES = [
          lvl=-25.0, mode='pk', eq=[('hp', 250)], pan=-0.35, fi=0.01, fo=0.15,
          sound='Paper: one heavy sheet lifted and presented on gloved palms (17.73-18.3), settling at 18.5', why='cause for the warrant: the page is the story\'s object'),
     dict(id='FX-02c', stem='effects', t=19.40, src=[A('cloth_move', sync='peak'), SY(syn_cloth, 'filtered-noise sleeve', sync=0.5, dur=0.7, seed=43)],
-         lvl=-30.0, mode='pk', eq=[('hp', 200), ('lp', 6000)], pan=0.1, fi=0.02, fo=0.08,
+         lvl=-36.0, mode='pk', eq=[('hp', 200), ('lp', 3500, 2)], pan=0.1, fi=0.02, fo=0.08,
          sound="Cloth: Serath's sleeve as her hand goes out (18.6-19.5)", why='her only movement; her eyes never drop'),
     dict(id='FX-03a', stem='effects', t=T_PRESS, src=[A('wax_press', a=0.09, sync=0.10), SY(syn_press, 'soft thup and tack')],
-         lvl=-8.0, mode='peak', eq=[('hp', 90), ('lp', 6000, 2)], pan=0.2, fi=0.004, fo=0.07, maxlen=0.5,
-         sound='THE PRESS: the signet into warm wax, close and dry. The sound starts on the touch (frame 478, 19.912) and is fullest as the ring is fully down (20.05)', why="the story's cause; no hall on it (a close-up), the choir dips 8 dB round it"),
+         lvl=-11.0, mode='peak', eq=[('hp', 90), ('lp', 6000, 2)], pan=0.2, fi=0.004, fo=0.07, maxlen=0.5,
+         sound='The press, Foley support: a soft wet give under the take\'s own sound; it starts on the touch (frame 478, 19.912) and is fullest as the ring is fully down (20.05)', why="bright for a squelch (the foundry's note), so it sits 4 dB under the take's press; no hall on it (a close-up)"),
     dict(id='FX-03b', stem='effects', t=T_PRESS, src=[TK('Q02A_t2', PRESS_SRC_ONSET - 0.012, 12.46, sync=PRESS_SRC_ONSET)],
-         lvl=-10.0, mode='peak', eq=[('hp', 120), ('hs', 3500, 3.0)], pan=0.2, fi=0.004, fo=0.12,
-         sound="The take's own press sound, moved 150 ms earlier onto the touch", why='it was 7 frames late in v4 and inaudible; now on the frame, under the Foley'),
+         lvl=-8.5, mode='peak', eq=[('hp', 120), ('lp', 5000, 2)], pan=0.2, fi=0.004, fo=0.12,
+         sound="THE PRESS: the take's own press sound, moved 150 ms earlier onto the touch, close and dry", why="the story's cause: it was 7 frames late in v4 and inaudible; now on the frame and the main element, the choir dips 8 dB round it"),
     dict(id='FX-04a', stem='effects', t=T_LIFT, src=[A('ring_lift', sync='peak'), SY(syn_lift, 'tacky tick')],
-         lvl=-15.0, mode='peak', eq=[('hp', 300), ('lp', 7000, 2)], pan=0.2, fo=0.03,
+         lvl=-16.0, mode='peak', eq=[('hp', 300), ('lp', 7000, 2)], pan=0.2, fo=0.03,
          sound='THE LIFT: a short tacky peel, its tick on the frame the ring leaves the wax (21.492)', why='the seal is left on the page: the second half of the cause. Kept low: louder it reads as a click'),
     dict(id='FX-04b', stem='effects', t=T_LIFT, src=[TK('Q02A_t2', 13.36, 13.66, sync=LIFT_SRC_ONSET)],
-         lvl=-10.0, mode='peak', eq=[('hp', 250), ('hs', 3500, 3.0)], pan=0.2, fi=0.02, fo=0.08,
+         lvl=-10.0, mode='peak', eq=[('hp', 250), ('lp', 5000, 2)], pan=0.2, fi=0.02, fo=0.08,
          sound="The take's own lift sound, in sync", why='production body under the Foley tick'),
     dict(id='FX-05a', stem='effects', hall='tower', t=T_RAISE + 0.01, src=[A('paper_handling', a=0.0, b=0.62), SY(syn_paper, 'crackle grains, one flap', dur=0.6, seed=33, moves=((0.3, 0.5),))],
          lvl=-24.0, mode='pk', eq=[('hp', 250)], pan=0.3, send=-20.0, fi=0.005, fo=0.12,
          sound='Paper: the sealed warrant raised against the sky (22.47-23.0)', why='the cause is held up; the red seal carries the eye across the cut'),
     dict(id='FX-05b', stem='effects', t=22.84, src=[A('cloth_move', a=0.42, sync='peak'), SY(syn_cloth, 'filtered-noise sleeve', sync=0.3, dur=0.55, seed=45)],
-         lvl=-31.0, mode='pk', eq=[('hp', 200), ('lp', 6000)], pan=0.2, fi=0.04, fo=0.08,
+         lvl=-36.0, mode='pk', eq=[('hp', 200), ('lp', 3500, 2)], pan=0.2, fi=0.04, fo=0.08,
          sound="Cloth: the aide's sleeve as his arm goes up (22.46-22.9)", why='body under the paper'),
     dict(id='FX-06', stem='effects', hall='tower', t=23.72, src=[A('rope_creak', sync=0.0), TK('Q02B_t1', 7.76, 8.14)],
          lvl=-31.0, mode='pk', eq=[('hp', 120), ('lp', 2500)], speed=0.7, send=-18.0, fi=0.08, fo=0.25, maxlen=0.8,
          sound='Strain: timber and rigging holding the bell, slowed to 70%, as the tilt arrives on it (23.7-24.5)', why='tension before the release; it stops, and only wind is left'),
     dict(id='FX-07a', stem='effects', hall='tower', group='landing', t=T_LAND, src=[A('bell_landing'), SY(syn_thud, 'sub drop, low noise body, timber groan')],
-         lvl=-20.0, mode='m', eq=[('hp', 30, 2)], send=-17.0, fi=0.002, fo=0.3, maxlen=1.36,
+         lvl=-20.0, mode='m', eq=[('hp', 40, 2)], send=-22.0, fi=0.002, fo=0.3, maxlen=1.36,
          sound='THE LANDING: the bell\'s weight taken by the beam (25.50, on the shake): a deep thud and the beam settling', why='effect of the seal: the weight arrives. Clearly under the stroke. Its file\'s second knock (1.55 s in) would fall on the hammer shot with no cause, so the cue ends at 26.86'),
-    dict(id='FX-07b', stem='effects', hall='tower', group='landing', t=T_LAND, src=[TK('Q02_t1', 15.262, 16.62, sync=15.285)],
-         lvl=-27.0, mode='m', eq=[('hp', 30), ('lp', 6000)], send=-17.0, fi=0.012, fo=0.5,
-         sound="The earlier take's own heavy thud and chain rattle (Q02_t1 15.28 s), on the same frame", why='production weight and metal under the designed landing; out before the cut to the hammer'),
+    dict(id='FX-07b', stem='effects', hall='tower', group='landing', t=T_LAND, src=[TK('Q02_t1', 15.262, 16.20, sync=15.285)],
+         lvl=-30.0, mode='m', eq=[('hp', 40), ('lp', 3000)], send=-22.0, fi=0.012, fo=0.55,
+         sound="The earlier take's own heavy thud and chain rattle (Q02_t1 15.28 s), on the same frame", why='production weight under the designed landing, kept short, dull and low so the landing is a thud and not a first toll (one witness pass heard the longer version as a bell)'),
     dict(id='FX-08', stem='effects', hall='tower', t=T_LAND + 0.07, src=[A('chains_slack', a=0.15, sync=0.15), TK('Q02_t1', 14.24, 15.20)],
          lvl=-24.0, mode='pk', eq=[('hp', 250)], send=-18.0, fi=0.03, fo=0.3, maxlen=1.25,
          sound='Chains going slack: heavy links running out and clanking (25.57-26.8)', why='the four chains drop and swing on screen 25.5-26.2 and hang; out by the cut'),
@@ -1047,18 +1053,18 @@ CUES = [
          lvl=-21.0, mode='pk', eq=[('hp', 35)], pan=-0.3, fo=0.02,
          sound='The swing: a low heavy whoosh, its apex on the contact', why='a door-sized mass moving: anticipation, 0.42 s'),
     dict(id='FX-12', stem='effects', t=T_CUP + 0.05, src=[A('gloved_applause', sync=0.0), TK('Q02B_t1', 11.78, 15.93)],
-         lvl=-29.5, mode='rms', eq=[('hp', 250, 2), ('lp', 5000, 2)], send=-7.0, fi=0.9, fo=1.9, maxlen=5.0,
-         sound='Gloved applause, far and large, under the bell (29.3-34.3)', why='soft, muffled, never the last sound: it recedes from 32.4 and is gone before the picture is black; the bell goes on alone'),
+         lvl=-31.0, mode='rms', eq=[('hp', 250, 2)], send=-4.0, fi=1.0, fo=1.8, maxlen=3.9,
+         sound='Gloved applause, far and large, under the bell (29.4-33.3): full band (any low-pass made it read as hooves or rain), very low, mostly hall', why='soft, far, never the last sound: it recedes from 31.5 and is gone by 33.4, a second before the picture starts to fade; the bell goes on alone for three seconds'),
     dict(id='FX-12b', stem='effects', t=T_CUP + 1.75, src=[TK('Q02B_t1', 12.35, 15.93)], only_if_missing='gloved_applause',
          lvl=-34.0, mode='rms', eq=[('hp', 300, 4), ('lp', 2600, 2)], width=0.9, send=-7.0, fi=0.8, fo=1.9, maxlen=3.3,
          sound='Applause, second pass of the take (stand-in only, to cover the 5.5 s cup)', why='the take has 4.2 s of applause; overlapped, not looped'),
     # ---- beds
     dict(id='BED-01', stem='beds', kind='wind', t=0.0, src=[A('wind_altitude', sync=0.0), SY(syn_wind, 'wide shaped noise with a slow moan and 2-10 kHz air')],
-         wind=dict(dark=-6.0, low=0.7, whistle=((300, 1100, 0.5), (520, 1500, 0.3)), gust=(5.0, 0.3), air=-9.0), eq=[('hp', 70, 2)],
+         wind=dict(dark=-5.0, low=0.6, whistle=(), gust=(4.5, 0.3), air=-9.0), eq=[('hp', 70, 2)],
          sound='Wind: open high air through the arches, wide, with real air at 2-10 kHz', why='the world; rises on the tilt and under the hammer; alone in the near-silence before the landing'),
     dict(id='BED-02', stem='beds', kind='crowd', t=T_NAVE, src=[A('crowd_presence', sync=0.0), SY(syn_crowd, 'soft wide murmur with sparse cloth shifts')],
-         eq=[('hp', 70, 2)], excise=((4.1, 4.8), (6.2, 7.4), (8.0, 8.7), (14.3, 16.0)),
-         sound='Crowd presence: ten thousand standing still (the loop\'s knock and two coughs cut out, so nothing in it comes round twice)', why='the hall is full; under the nave, the Hierophant, the gallery, lower on the terrace, back under the cup'),
+         eq=[('hp', 70, 2)], excise=((1.6, 1.95), (4.2, 4.75), (6.25, 7.55)), start=T_NAVE, noloop=True,
+         sound='Crowd presence: ten thousand standing still. One pass of the file from the nave\'s first frame, not looped; its two knocks and its cough cut out', why='the hall is full: under the nave, the Hierophant and the gallery, fading on the terrace; kept low (one stretch of it reads as whispering); under the cup the applause is the crowd'),
 ]
 STEMS = ('dialogue_production', 'choir', 'bell', 'effects', 'beds')
 
@@ -1169,6 +1175,8 @@ def build(args):
             place(dry, y, c['t'] - sync)
             both = dry + reverb(dry * lin(c['send']), ir)
             both *= lin(c['lvl'] - momentary(both, c['t'] - 0.1, c['t'] + 1.5))      # the stroke with its hall, to its level
+            if c.get('ride'):                                    # the tail is ridden up a little so it still reads as it dies
+                both *= auto([(0, 0.0)] + list(c['ride']) + [(DUR, c['ride'][-1][1])])[:, None]
             stems['bell'] += both
             _, _, f_main, desc = build_bell()
             info['bell'] = desc
@@ -1179,7 +1187,7 @@ def build(args):
         elif kind in ('wind', 'crowd'):
             y, label, standin = bed(c, WIND_ENV if kind == 'wind' else CROWD_ENV, WIND_REF if kind == 'wind' else CROWD_REF, 300 if kind == 'wind' else 400)
             stems['beds'] += y
-            rows.append(dict(id=c['id'], stem='beds', t=c['t'], span=[c['t'], DUR if kind == 'wind' else T_BLACK], sound=c['sound'], source=label,
+            rows.append(dict(id=c['id'], stem='beds', t=c['t'], span=[c['t'], DUR if kind == 'wind' else T_SEAL + 0.2], sound=c['sound'], source=label,
                              eq=eq_text(c.get('eq')), send_db=None, why=c['why'], standin=standin))
         else:
             r = render_simple(c)
@@ -1222,8 +1230,8 @@ def build(args):
     g[k0:k1] = ramp(k1 - k0, False)
     g[k1:] = 0
     stems['choir'] *= g[:, None]
-    # applause is never the last sound: the effects stem (its hall return included) is out soon after the picture
-    k0, k1 = int(33.6 * SR), int(34.75 * SR)
+    # applause is never the last sound: the effects stem (its hall return included) is out before the picture fades
+    k0, k1 = int(32.6 * SR), int(33.45 * SR)
     g = np.ones(N)
     g[k0:k1] = ramp(k1 - k0, False)
     g[k1:] = 0
@@ -1356,6 +1364,14 @@ def measure(y, g, stems, dry, dec, info, mm, args):
                       'stroke_minus_landing_lu': round(mx['THE STROKE'] - mx['the landing'], 2),
                       'stroke_minus_opening_stroke_lu': round(mx['THE STROKE'] - mx['opening stroke'], 2),
                       'line2_minus_line1_lu': round(mx['line 2'] - mx['line 1'], 2)}
+    # the same hierarchy on a phone speaker: mono, nothing under 300 Hz
+    ph = signal.sosfilt(signal.butter(4, 300, 'highpass', fs=SR, output='sos'), y.mean(1))
+    ph = np.stack([ph, ph], 1)
+    pm = {k: round(momentary(ph, a, b), 2) for k, (a, b) in ev.items()}
+    M['phone_speaker_simulation'] = {'momentary_max_lufs': pm,
+                                     'stroke_minus_loudest_dialogue_lu': round(pm['THE STROKE'] - max(pm['line 1'], pm['line 2'], pm['the answer']), 2),
+                                     'stroke_minus_landing_lu': round(pm['THE STROKE'] - pm['the landing'], 2),
+                                     'stroke_minus_opening_stroke_lu': round(pm['THE STROKE'] - pm['opening stroke'], 2)}
     # low end: the first second of the stroke against the landing's
     le = {}
     for name, t in (('THE STROKE', T_STROKE), ('the landing', T_LAND), ('opening stroke', T_OPEN)):
@@ -1475,6 +1491,8 @@ def sheet(rows, M, info, stems):
     def cue_level(r):
         if not r.get('span'):
             return ''
+        if r['id'] == 'DX-01':
+            return f"held {abs(ROOM_DB):g} dB under line 1's gain between the lines"
         if r.get('dry_lvl') is not None:                         # a placed effect: its own level, before the hall
             return f"{r['dry_lvl'] + M['gain_db']:.1f} LUFS (loudest 100 ms); peak {r['dry_peak_db'] + M['gain_db']:.1f} dBFS"
         a, b = r['span']
@@ -1496,7 +1514,7 @@ def sheet(rows, M, info, stems):
            "### Measurements (this build)", "",
            "| Measure | Value |", "| --- | --- |",
            f"| Length | {M['master']['samples']} samples = {M['master']['seconds']} s = {FRAMES} frames at {FPS} fps; stereo, 48 kHz, 24-bit |",
-           f"| Integrated loudness (ffmpeg ebur128) | {M['master']['integrated_lufs']} LUFS (target {TARGET_I}) |",
+           f"| Integrated loudness (ffmpeg ebur128) | {M['master']['integrated_lufs']} LUFS (aim {TARGET_I}; asked: about -19 to -18) |",
            f"| Loudness range | {M['master']['lra_lu']} LU |",
            f"| True peak, master WAV | {M['master']['true_peak_dbtp']} dBTP; sample peak {M['master']['sample_peak_dbfs']} dBFS; clipped samples {M['master']['clipped_samples']} |",
            f"| True peak after AAC 256 k (decoded) | {M['after_aac']['true_peak_dbtp']} dBTP (limit {MAX_TP}); ffmpeg reads {M['after_aac'].get('ffmpeg_true_peak_dbtp', 'n/a')} |",
@@ -1509,6 +1527,7 @@ def sheet(rows, M, info, stems):
             f"| The stroke above the landing | {h['stroke_minus_landing_lu']} LU |",
             f"| The stroke above the opening stroke | {h['stroke_minus_opening_stroke_lu']} LU (asked: about 6) |",
             f"| Line 2 against line 1 | {h['line2_minus_line1_lu']:+} LU (was +3.5 dB) |",
+            f"| On a phone speaker (simulated: mono, nothing under 300 Hz) | the stroke is {M['phone_speaker_simulation']['stroke_minus_loudest_dialogue_lu']} LU above the loudest dialogue, {M['phone_speaker_simulation']['stroke_minus_landing_lu']} LU above the landing, {M['phone_speaker_simulation']['stroke_minus_opening_stroke_lu']} LU above the opening stroke |",
             f"| Low end, first second, 20-80 Hz | stroke {le['THE STROKE']['20-80 Hz dBFS']} dBFS; landing {le['the landing']['20-80 Hz dBFS']} dBFS; opening stroke {le['opening stroke']['20-80 Hz dBFS']} dBFS |",
             f"| Low end, first second, 20-150 Hz | stroke {le['THE STROKE']['20-150 Hz dBFS']} dBFS; landing {le['the landing']['20-150 Hz dBFS']} dBFS (stroke {M['stroke_low_minus_landing_low_db']:+} dB) |",
             f"| The stroke's strongest partials (0.3-2.3 s after) | {', '.join(str(v) for v in M['stroke_strongest_partials_hz'])} Hz; energy under 80 Hz {M['stroke_energy_under_80hz_db_of_total']} dB of the bell's total |",
@@ -1518,11 +1537,11 @@ def sheet(rows, M, info, stems):
             f"| Spectrum | {M['spectrum']['energy_above_2.6khz_percent']} % of the energy above 2.6 kHz ({M['spectrum']['energy_above_2.6khz_db_of_total']} dB of total); 95 % under {M['spectrum']['rolloff_95_percent_hz']} Hz, 99 % under {M['spectrum']['rolloff_99_percent_hz']} Hz; by section above 2.6 kHz: " + ', '.join(f"{k}: {v} dB" for k, v in M['spectrum']['energy_above_2.6khz_db_of_total_by_section'].items()) + " |"]
     for k, v in M['choir_vs_speech'].items():
         out.append(f"| Choir under {k}, 1-4 kHz | speech {v['speech_1_4k_dbfs']} dBFS, choir {v['choir_1_4k_dbfs']} dBFS: margin {v['margin_db']} dB (asked: at least 12); broadband {v['broadband_margin_lu']} LU |")
-    out += [f"| Choir levels (K-weighted RMS) | " + ', '.join(f"{k}: {v} LUFS" for k, v in M['choir_levels_lufs'].items()) + f"; after 24.3 s its peak is {M['choir_after_24.3_peak_dbfs']} dBFS |"]
+    out += [f"| Choir levels (K-weighted RMS) | " + ', '.join(f"{k}: {v} LUFS" for k, v in M['choir_levels_lufs'].items()) + f"; after 24.3 s: " + ('nothing (digital silence)' if M['choir_after_24.3_peak_dbfs'] < -150 else f"peak {M['choir_after_24.3_peak_dbfs']} dBFS") + " |"]
     for k, v in M['seal_vs_choir'].items():
         out.append(f"| The {k} against the choir, 1.5-8 kHz, 150 ms | effect {v['effect_1.5_8k_dbfs']} dBFS, choir {v['choir_1.5_8k_dbfs']} dBFS: {v['margin_db']:+} dB; 150 Hz-8 kHz against choir and beds: {v['margin_150_8k_vs_choir_and_beds_db']:+} dB |")
     out += [f"| Designed quiet (master RMS) | " + '; '.join(f"{k}: {v} dBFS" for k, v in M['quiet_rms_dbfs'].items()) + f"; quietest 400 ms of the film: {M['quietest_400ms']['rms_dbfs']} dBFS ending at {M['quietest_400ms']['ends_at_s']} s |",
-            f"| Stems | sum minus pre-limiter mix: {M['stems']['sum_minus_premix_peak_dbfs']} dBFS peak; stem peaks (dBFS): " + ', '.join(f"{k} {v}" for k, v in M['stems']['peak_dbfs'].items()) + f"; format {M['stems'].get('format', 'PCM_24')} |",
+            f"| Stems | the five files read back from disk and summed, minus the pre-limiter mix: {M['stems'].get('files_sum_minus_premix_peak_dbfs', 'n/a')} dBFS peak (24-bit rounding); stem peaks (dBFS): " + ', '.join(f"{k} {v}" for k, v in M['stems']['peak_dbfs'].items()) + f"; format {M['stems'].get('format', 'PCM_24')}; master gain held back {M.get('gain_capped_by_stem_peak_db', 0)} dB so no stem reaches full scale |",
             f"| Click candidates (1 ms bursts above 9 kHz, 30 dB over their surroundings) | {M['click_candidates_s'] or 'none'} |",
             f"| Mono fold-down (a phone speaker) | integrated {M['mono_fold_down']['integrated_lufs']} LUFS: {M['mono_fold_down']['loss_lu']} LU under the stereo master |"]
     fm = M['film_master_no_limiter']
@@ -1573,6 +1592,8 @@ def main():
     M['stems']['format'] = sub
     for s in STEMS:
         write_wav(os.path.join(stems_dir, s + '.wav'), scaled[s], sub)
+    back = sum(sf.read(os.path.join(stems_dir, s + '.wav'), dtype='float64')[0] for s in STEMS)      # the proof: files, not arrays
+    M['stems']['files_sum_minus_premix_peak_dbfs'] = round(float(db(np.abs(back - sum(scaled[s] for s in STEMS)).max())), 1)
     M['warnings'] = WARN
     M['info'] = info
     M['cues'] = rows
