@@ -223,6 +223,14 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 111 | **Open every environment reference at full size and list what is in it before attaching it.** Three of Q07's four places carried something the prompt never mentions: a water wheel and two people beside the wall, a village and a seven-arch viaduct under the underside, a lone man on the plain. What is in an attached image comes back (lesson 105). Crop the reference to what the shot needs; a sentence asking the model to ignore the rest does not work. | Q07, the independent review, 26 November. | Every reference. |
 | 112 | **A "Go" given before the package is final does not cover what changes afterwards.** The author said "Go" while the review was still running. The review changed the references and three framings; I started the take on the earlier word and the session's own safety check stopped it. It was right: an approval covers the package that was shown. Show the revised package and wait. | Q07, 26 November. | Every paid generation. |
 
+## From Q07 t1
+
+| # | Lesson | Where it came from | Applies to |
+|---|---|---|---|
+| 113 | **In a reel, the last shot pays for every overrun before it.** Asked 3.2, 3.6, 2.4, 3.6 and 3.2 s; returned 3.12, 4.67, 3.92, 3.79 and 0.54. A longer take did not protect the last shot. Put last the shot that is cheapest to make again alone or to stretch (a locked-off landscape, as it happened), keep the reel to four shots, or make it in two halves. | Q07 t1. | Every montage reel. |
+| 114 | **With no one to speak, the model read the sound notes aloud.** "No one speaks" in the voice section and "No speech and no voice of any kind" in the locks did not stop a narrator reciting the AUDIO DESIGN paragraph over the first eleven seconds. A montage's sound is rebuilt anyway, but listen to every silent take for a narrator, and write a silent take's sound as short lists of sounds, not as sentences that can be read out. | Q07 t1. | Every take without dialogue. |
+| 115 | **A reference cropped to what the shot needs comes back as the shot.** The underside cropped to rock, chains and pale band gave the aerial view of it at once; the wall cropped clear of its wheel and people gave a clean wall; nothing unasked appeared in any shot. The one whole reference, the plain, came back as itself, from its own low height, whatever the prompt said about being high above. | Q07 t1, after lesson 111. | Every reference. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
