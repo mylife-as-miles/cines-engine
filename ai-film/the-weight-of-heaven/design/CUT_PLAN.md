@@ -86,6 +86,8 @@ The score is built on one original theme: the cathedral's response, **"Let no ha
 
 At 6:40 there is room for 37 of the 45 lines, 12 of them trimmed. Spoken at an unhurried pace, that keeps the dialogue to about two-thirds of the council and the hall, leaving room for the pictures. Every trim cuts words; none rewrites them. The list in `audio/lines.json` keeps the full text; this table is the proposal.
 
+**Approved so far:** the five trims of scene 4, the council (L03, L05, L08, L09, L10): the author, 26 November, "Approve the trims". Recorded in `audio/lines.json` as `say_cut`. Every other trim and cut below is still a proposal.
+
 | Line | Block | Proposal |
 | --- | --- | --- |
 | L01 Hierophant, "Heaven chose us … What heaven has raised —" | A | Keep: the call before the hymn |

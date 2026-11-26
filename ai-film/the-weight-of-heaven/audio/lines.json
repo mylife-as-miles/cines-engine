@@ -42,8 +42,10 @@
    "direction": "A number given like an apology.",
    "carries_the_film": true,
    "room": "council",
-   "shot": null,
-   "takes": []
+   "shot": "Q04",
+   "takes": [],
+   "say_cut": "Six hundred feet since dawn. The Unrisen hold the Weir at Sarn.",
+   "cut_approved": "2026-11-26, the author: \"Approve the trims\""
   },
   {
    "id": "L04",
@@ -56,7 +58,7 @@
    "direction": "Simple, untroubled.",
    "carries_the_film": false,
    "room": "council",
-   "shot": null,
+   "shot": "Q04",
    "takes": []
   },
   {
@@ -72,8 +74,10 @@
    "direction": "Hesitant; stops and restarts at \"And --\"; exact on the mechanism; the longest pause before \"Sarn Vale\".",
    "carries_the_film": false,
    "room": "council",
-   "shot": null,
-   "takes": []
+   "shot": "Q04",
+   "takes": [],
+   "say_cut": "Break it, and it pours. All of it, at once, onto the lowest ground. ... Sarn Vale.",
+   "cut_approved": "2026-11-26, the author: \"Approve the trims\""
   },
   {
    "id": "L06",
@@ -117,7 +121,9 @@
    "carries_the_film": true,
    "room": "council",
    "shot": null,
-   "takes": []
+   "takes": [],
+   "say_cut": "I have grandchildren on the lower terraces. Break it.",
+   "cut_approved": "2026-11-26, the author: \"Approve the trims\""
   },
   {
    "id": "L09",
@@ -131,7 +137,9 @@
    "carries_the_film": false,
    "room": "council",
    "shot": null,
-   "takes": []
+   "takes": [],
+   "say_cut": "Give me until the evening bell.",
+   "cut_approved": "2026-11-26, the author: \"Approve the trims\""
   },
   {
    "id": "L10",
@@ -147,7 +155,9 @@
    "carries_the_film": true,
    "room": "council",
    "shot": null,
-   "takes": []
+   "takes": [],
+   "say_cut": "Until the bell. If it finds the Weir standing, the fleet is Vice Admiral Cassiel's. ... Remember who raised you.",
+   "cut_approved": "2026-11-26, the author: \"Approve the trims\""
   },
   {
    "id": "L11",
