@@ -2,16 +2,19 @@
 
 A holdroom on the departures level: rows of linked gate seats facing a tall curtain wall onto the apron a storey
 below, where an airliner (no livery) waits nose-in at the jet bridge under floodlight masts, a second one taxis far
-off and runway lights and the city sit on the horizon. Most of the ceiling fittings are dimmed for the night; one
-burns over the front row. The gate podium glows by the jet bridge door. Dawn sits alone at the aisle end of the
-front row with her charcoal suitcase standing beside her: the ordinary calm before everything.
+off and runway lights and the city sit on the horizon. The ceiling is off for the night but for one fitting directly
+over Dawn's seat (with a spot that throws the pool: the lit island), one over the podium queue and a few far ones.
+The gate podium's screens and the door sign glow and spill. Dawn sits alone at the aisle end of the front row with
+her charcoal suitcase standing beside her: the ordinary calm before everything.
 
     <bpy python> -I scenes/shoot.py -- departure_gate <cam> out.png [--nocast]
 
-The set is in departure_gate_set.py, its materials in departure_gate_mats.py. Dawn is seated through Rigify: her legs
-switch to FK, thighs and shins are aimed, and a small solve sets thigh and shin angles so her seat rests on the seat
-cushion and her soles on the carpet (printed as GATE seated ...). Before each render a hook on setkit.render sets the
-camera's clip distance (the sky and the horizon lie kilometres away) and any per-camera light trims.
+The set is in departure_gate_set.py, its materials in departure_gate_mats.py, the beam seating (built in Python) in
+departure_gate_seats.py. Dawn wears a flat-tinted blouse over dark trousers. She is seated through Rigify: her legs
+switch to FK, thighs turned in (knees about 0.18 m apart, feet parallel 0.12 m apart), and a small solve sets thigh and
+shin angles so her seat rests on the pan and her soles on the carpet; then she slides back until her seat meets the
+backrest (printed as GATE seated ...). Before each render a hook on setkit.render sets the camera's clip distance (the
+sky and the horizon lie kilometres away), clamps indirect light, and applies the per-camera light trims.
 """
 import math
 import os
