@@ -177,12 +177,14 @@ def main():
     info = {'clock_s': round(DUR, 4), 'pre_roll_s': PRE, 'picture': 'out/edits/Q04_t1_fixed.mp4'}
     stems = {'voices': voices(info), 'air': air(), 'bells': bells(), 'buzz': buzz()}
     mix = sum(stems.values())
-    mix *= env([(0, 0.0), (DUR - 0.45, 0.0), (DUR, None)])                         # the work-in-progress end: sound out with the picture
+    open_end = bool(os.environ.get('Q04_OPEN_END'))                                # Q05 follows: no fade at the end (cut v14 on)
+    if not open_end:
+        mix *= env([(0, 0.0), (DUR - 0.45, 0.0), (DUR, None)])                     # the work-in-progress end: sound out with the picture
     out, gr = mb.limiter(mix, -1.8)
     os.makedirs(P('out/edits/stems_q04'), exist_ok=True)
     for k, v in stems.items():
         sf.write(P('out/edits/stems_q04', k + '.wav'), v, SR, subtype='PCM_24')
-    path = P('out/edits/Q04_t1_fixed_mix.wav')
+    path = P('out/edits/Q04_t1_fixed_mix_open.wav' if open_end else 'out/edits/Q04_t1_fixed_mix.wav')
     sf.write(path, out, SR, subtype='PCM_24')
     info['integrated_lufs'] = round(float(mb.integrated(out)), 1); info['true_peak_dbtp'] = round(float(mb.true_peak(out)), 1)
     info['limiter_max_reduction_db'] = round(float(-mb.db(gr.min())), 2)
