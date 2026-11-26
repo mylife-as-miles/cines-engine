@@ -223,7 +223,7 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     col = _mix(nt, _maprange(nt, fleck, 0.28, 0.36, 0.35, 0.0), col, (0.008, 0.009, 0.012))
     # seams between tiles
     _, seam = _brick(nt, o, tile, tile, 0.003, (1, 1, 1), (1, 1, 1), (0, 0, 0))
-    col = _mix(nt, _math(nt, "MULTIPLY", seam, 0.55), col, (0.0, 0.0, 0.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", seam, 0.14), col, (0.0, 0.0, 0.0))   # tight seams: barely there
     # traffic: lanes along X in front of the rows and down the aisle, pile flattened (paler, glossier sheen)
     lanes = _maprange(nt, _noise(nt, o, 0.5, 3.0, 0.55, mapping=(0.25, 1.0, 1.0)), 0.45, 0.7, 0.0, 1.0)
     blot = _maprange(nt, _noise(nt, o, 1.6, 5.0, 0.6), 0.55, 0.75, 0.0, 1.0)
@@ -244,9 +244,11 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     b.inputs["Sheen Weight"].default_value = 0.55
     b.inputs["Sheen Roughness"].default_value = 0.45
     b.inputs["Sheen Tint"].default_value = (0.55, 0.6, 0.7, 1)
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", rib, 0.6), _math(nt, "MULTIPLY", _noise(nt, o, 900.0, 2.0, 0.6), 0.4))
-    h = _math(nt, "SUBTRACT", h, _math(nt, "MULTIPLY", seam, 1.5))
-    _bump(nt, b, h, 0.35, 0.0015)
+    # pile: loops plus a fibre noise (scale ~400), the seams only a slight dip
+    pile = _math(nt, "ADD", _noise(nt, o, 420.0, 3.0, 0.7), _math(nt, "MULTIPLY", _noise(nt, o, 1300.0, 2.0, 0.6), 0.5))
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", rib, 0.4), _math(nt, "MULTIPLY", pile, 0.6))
+    h = _math(nt, "SUBTRACT", h, _math(nt, "MULTIPLY", seam, 0.3))
+    _bump(nt, b, h, 0.3, 0.0015)
     return m
 
 
@@ -436,38 +438,94 @@ def perforated(name, steel=0.32, hole=0.01, pitch=0.008, radius=0.0025, border=0
     return m
 
 
-def fuselage(name, top=(0.3, 0.305, 0.31), belly=(0.17, 0.172, 0.176)):
-    """Aircraft paint, no livery: satin (roughness ~0.5, specular 0.3), panel lines by bump on the skin's UVs in metres
-    (1.6 m along, 0.9 m around, staggered), a darker belly by the surface normal."""
+def _rrect(nt, u, v, uc, vc, hu, hv, rad, width):
+    """A groove line along a rounded rectangle in (u, v) (centre, half sizes, corner radius): 1 on the line."""
+    qx = _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", u, uc)), hu - rad)
+    qy = _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", v, vc)), hv - rad)
+    ox, oy = _math(nt, "MAXIMUM", qx, 0.0), _math(nt, "MAXIMUM", qy, 0.0)
+    outside = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", ox, ox), _math(nt, "MULTIPLY", oy, oy)))
+    inside = _math(nt, "MINIMUM", _math(nt, "MAXIMUM", qx, qy), 0.0)
+    dist = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", _math(nt, "ADD", outside, inside), rad))
+    return _maprange(nt, dist, width * 0.5, width, 1.0, 0.0)
+
+
+# doors on the skin, in the skin's UVs (u around from the crown toward +X at radius 1.95, v aft of the tip):
+# (u centre, v centre, half u, half v): L1 / R1 forward, L2 / R2 aft, the forward and aft cargo doors (starboard)
+_RF = 1.95
+_U = 2 * 3.14159265 * _RF
+DOORS = [(_RF * 1.362, 6.9, 1.0, 0.5), (_U - _RF * 1.362, 6.9, 1.0, 0.5),
+         (_RF * 1.362, 29.0, 1.0, 0.45), (_U - _RF * 1.362, 29.0, 1.0, 0.45),
+         (_U - _RF * 2.25, 9.6, 0.62, 0.9), (_U - _RF * 2.25, 24.2, 0.62, 0.9),
+         (_U - _RF * 1.45, 15.1, 0.5, 0.26), (_U - _RF * 1.45, 16.1, 0.5, 0.26)]
+
+
+def fuselage(name, top=(0.55, 0.555, 0.56), belly=(0.37, 0.374, 0.38)):
+    """Aircraft paint, no livery: satin white-grey (base 0.55, roughness 0.35, a clear coat 0.3), a darker belly by
+    the surface normal; on the skin's UVs in metres: faint panel lines (1.6 m along, 0.9 m around, staggered, bump
+    0.05), the radome seam ring 1.6 m back from the tip (the radome a shade apart), and the door outlines as 8 mm
+    grooves."""
     m, nt, b = _new(name)
     uvn = _n(nt, "ShaderNodeUVMap")
     u, v, _ = _xyz(nt, uvn.outputs["UV"])
     pv = _n(nt, "ShaderNodeCombineXYZ")
     _link(nt, _math(nt, "ADD", v, 0.8), pv.inputs["X"])        # parts without UVs (0, 0) land mid-panel
     _link(nt, _math(nt, "ADD", u, 0.45), pv.inputs["Y"])
-    _, joint = _brick(nt, pv.outputs["Vector"], 1.6, 0.9, 0.004, (1, 1, 1), (1, 1, 1), (0, 0, 0), offset=0.5, smooth=0.0)
+    _, joint = _brick(nt, pv.outputs["Vector"], 1.6, 0.9, 0.003, (1, 1, 1), (1, 1, 1), (0, 0, 0), offset=0.5, smooth=0.0)
     nrm = _n(nt, "ShaderNodeNewGeometry").outputs["Normal"]
     _, _, nz = _xyz(nt, nrm)
-    bel = _maprange(nt, nz, 0.15, -0.55, 0.0, 1.0)
+    bel = _maprange(nt, nz, 0.25, -0.7, 0.0, 1.0)
     col = _mix(nt, bel, top, belly)
     o = _obj(nt)
-    col = _mix(nt, _maprange(nt, _noise(nt, o, 0.4, 4.0, 0.6), 0.3, 0.7, 0.0, 0.18), col, tuple(c * 0.8 for c in belly))
-    col = _mix(nt, _math(nt, "MULTIPLY", joint, 0.25), col, (0.05, 0.05, 0.05))
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 0.4, 4.0, 0.6), 0.3, 0.7, 0.0, 0.12), col, tuple(c * 0.82 for c in belly))
+    # the radome: a shade warmer and duller forward of its seam (v < 1.6), the seam itself a dark groove
+    rad = _maprange(nt, v, 1.58, 1.62, 1.0, 0.0)
+    col = _mix(nt, _math(nt, "MULTIPLY", rad, 0.5), col, (0.5, 0.495, 0.48))
+    seam = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", v, 1.6)), 0.004, 0.008, 1.0, 0.0)
+    grooves = seam
+    for (uc, vc, hu, hv) in DOORS:
+        grooves = _math(nt, "MAXIMUM", grooves, _rrect(nt, u, v, uc, vc, hu, hv, 0.14, 0.009))
+    lines = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", joint, 0.35), grooves)
+    col = _mix(nt, _math(nt, "MULTIPLY", lines, 0.55), col, (0.04, 0.04, 0.042))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Specular IOR Level"].default_value = 0.3
-    _link(nt, _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.45, 0.55), b.inputs["Roughness"])
-    _bump(nt, b, _math(nt, "MULTIPLY", joint, -1.0), 0.05, 0.002)
+    b.inputs["Specular IOR Level"].default_value = 0.4
+    b.inputs["Coat Weight"].default_value = 0.3
+    b.inputs["Coat Roughness"].default_value = 0.12
+    r = _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.31, 0.4)
+    _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", rad, 0.12)), b.inputs["Roughness"])
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", joint, -0.4), _math(nt, "MULTIPLY", grooves, -1.0)), 0.05, 0.003)
+    return m
+
+
+def acoustic(name, rgb=(0.3, 0.302, 0.3), tile=0.6):
+    """Mineral-fibre ceiling tiles on a 0.6 m grid: a 4 mm dark grooved reveal round each tile, a fissured face
+    (pinholes and worm fissures), each tile a shade apart."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    col, joint = _brick(nt, o, tile, tile, 0.007, rgb, tuple(c * 0.92 for c in rgb), (0.02, 0.021, 0.022), smooth=0.3)
+    vo = _n(nt, "ShaderNodeTexVoronoi")
+    vo.inputs["Scale"].default_value = 140.0
+    _link(nt, o, vo.inputs["Vector"])
+    pin = _maprange(nt, _out(vo, "Distance"), 0.0, 0.06, 1.0, 0.0)
+    fis = _maprange(nt, _noise(nt, o, 45.0, 6.0, 0.7), 0.62, 0.68, 0.0, 1.0)
+    pits = _math(nt, "MAXIMUM", pin, fis)
+    col = _mix(nt, _math(nt, "MULTIPLY", pits, 0.5), col, tuple(c * 0.45 for c in rgb))
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 0.8, 3.0, 0.6), 0.3, 0.7, 0.0, 0.3), col, tuple(c * 0.82 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.92
+    _bump(nt, b, _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", pits, -0.4), joint), 0.5, 0.004)
     return m
 
 
 def cockpit_glass(name):
-    """Flight-deck glazing: near-black glass, glossy (roughness 0.05), a faint cool instrument glow from inside."""
+    """Flight-deck glazing: near-black glass, glossy (roughness 0.08), the faintest instrument glow from inside."""
     m, nt, b = _new(name)
-    b.inputs["Base Color"].default_value = (0.004, 0.0045, 0.005, 1)
-    b.inputs["Roughness"].default_value = 0.05
-    b.inputs["Specular IOR Level"].default_value = 0.6
+    b.inputs["Base Color"].default_value = (0.003, 0.0035, 0.004, 1)
+    b.inputs["Roughness"].default_value = 0.08
+    b.inputs["Specular IOR Level"].default_value = 0.7
+    b.inputs["Coat Weight"].default_value = 0.5
+    b.inputs["Coat Roughness"].default_value = 0.04
     b.inputs["Emission Color"].default_value = (0.45, 0.58, 0.8, 1)
-    b.inputs["Emission Strength"].default_value = 0.2
+    b.inputs["Emission Strength"].default_value = 0.04
     return m
 
 
@@ -522,7 +580,7 @@ def line_paint(name, rgb):
     return m
 
 
-def sky(name, horizon=(0.14, 0.15, 0.18), zenith=(0.004, 0.0065, 0.014), haze=(0.24, 0.21, 0.18)):
+def sky(name, horizon=(0.15, 0.15, 0.17), zenith=(0.004, 0.0065, 0.014), haze=(0.42, 0.27, 0.13)):
     """The night sky as an emitting dome: near black overhead, a low band of city glow along the horizon."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -535,8 +593,8 @@ def sky(name, horizon=(0.14, 0.15, 0.18), zenith=(0.004, 0.0065, 0.014), haze=(0
     t = _maprange(nt, z, -0.01, 0.22, 0.0, 1.0)
     t = _math(nt, "POWER", t, 0.55)
     col = _mix(nt, t, horizon, zenith)
-    glowband = _maprange(nt, z, -0.005, 0.035, 1.0, 0.0)
-    col = _mix(nt, _math(nt, "MULTIPLY", glowband, 0.8), col, haze)
+    glowband = _maprange(nt, z, -0.005, 0.06, 1.0, 0.0)          # a low sodium glow over the city
+    col = _mix(nt, _math(nt, "MULTIPLY", _math(nt, "POWER", glowband, 1.6), 0.9), col, haze)
     cloud = _maprange(nt, _noise(nt, _obj(nt), 0.0012, 4.0, 0.6, mapping=(1.0, 1.0, 3.0)), 0.35, 0.7, 0.85, 1.25)
     _link(nt, col, em.inputs["Color"])
     _link(nt, cloud, em.inputs["Strength"])
@@ -585,11 +643,11 @@ def materials():
         return M
     M.update(
         # the soiled queue lane in front of the podium (carpet object space: world minus (-0.5, -1.45))
-        carpet=carpet("carpet tiles", base=(0.042, 0.048, 0.06), lanes_xy=[(4.6 + 0.5, 9.9 + 0.5, 2.2 + 1.45, 4.4 + 1.45)]),
+        carpet=carpet("carpet tiles", base=(0.088, 0.094, 0.108), lanes_xy=[(4.6 + 0.5, 9.9 + 0.5, 2.2 + 1.45, 4.4 + 1.45)]),
         stone=stone("terrazzo strip"),
         convector=grille("floor convector", (0.04, 0.042, 0.046), 0.014, "X"),
         diffuser=grille("slot diffuser", (0.06, 0.062, 0.066), 0.02, "X"),
-        ceiling=ceiling_pan("metal pan ceiling"),
+        ceiling=acoustic("acoustic ceiling tiles"),
         wall=wall_panels("wall cladding", (0.11, 0.115, 0.125)),
         wall_side=wall_panels("side wall cladding", (0.095, 0.1, 0.11), width=1.5, along="Y"),
         bulk=pbr("bulkhead plaster", (0.15, 0.155, 0.16), (0.6, 0.75), nscale=1.5, cvar=0.08),
@@ -610,12 +668,12 @@ def materials():
         door=pbr("door steel", (0.07, 0.074, 0.08), (0.35, 0.5), metal=0.4, nscale=3, cvar=0.08, grime=0.3),
         shutter=shutter("roller shutter"),
         bin=brushed("bin steel", (0.42, 0.43, 0.45), 0.32, "Z"),
-        glass=glass("window glass"),
+        glass=glass("window glass", refl=0.075),
         glass_door=glass("door glass", (0.6, 0.66, 0.7), 0.08),
         # emitters (no text anywhere)
         lens_on=lens("fixture lens", (0.84, 0.92, 1.0), 9.0),
         screen=glow("blank screen", (0.6, 0.76, 1.0), 2.2, 0.45),
-        screen_dim=glow("blank screen dim", (0.55, 0.7, 0.95), 0.55, 0.4),
+        screen_dim=glow("blank screen dim", (0.55, 0.7, 0.95), 0.16, 0.4),
         sign=glow("blank sign", (0.78, 0.86, 1.0), 1.6, 0.35),
         sign_dim=glow("blank sign dim", (0.62, 0.72, 0.9), 0.22, 0.3),
         sign_mid=glow("blank sign mid", (0.75, 0.84, 1.0), 0.9, 0.35),
@@ -640,15 +698,16 @@ def materials():
         red=line_paint("red line", (0.3, 0.03, 0.025)),
         facade=pbr("facade cladding", (0.05, 0.053, 0.058), (0.3, 0.5), metal=0.6, nscale=0.6, cvar=0.12),
         fuselage=fuselage("aircraft paint"),
-        fuselage_dark=pbr("aircraft belly", (0.12, 0.122, 0.125), (0.45, 0.55), nscale=0.3, cvar=0.1),
+        fuselage_dark=pbr("aircraft belly", (0.3, 0.302, 0.305), (0.38, 0.5), nscale=0.3, cvar=0.1),
         cockpit_glass=cockpit_glass("cockpit glass"),
-        cockpit_frame=pbr("cockpit frame", (0.025, 0.026, 0.028), (0.4, 0.5), nscale=4, cvar=0.1),
-        engine=pbr("nacelle", (0.22, 0.225, 0.23), (0.25, 0.4), metal=0.3, nscale=0.6, cvar=0.08, coat=0.4),
+        cockpit_frame=pbr("cockpit seal", (0.018, 0.019, 0.02), (0.45, 0.6), nscale=4, cvar=0.1),
+        engine=pbr("nacelle", (0.42, 0.425, 0.43), (0.3, 0.42), metal=0.2, nscale=0.6, cvar=0.08, coat=0.4),
+        chrome=pbr("chrome piston", (0.75, 0.76, 0.78), (0.12, 0.2), metal=1.0, nscale=6, cvar=0.04),
         intake=pbr("intake dark", (0.01, 0.01, 0.011), (0.3, 0.5), metal=0.6, nscale=3, cvar=0.2),
         tyre=pbr("tyre", (0.012, 0.012, 0.013), (0.6, 0.8), nscale=5, cvar=0.2),
         gear=pbr("gear strut", (0.3, 0.3, 0.31), (0.2, 0.35), metal=1.0, nscale=4, cvar=0.1),
-        bridge=ribbed("jet bridge cladding", (0.15, 0.155, 0.16), 0.30, "Y", metal=0.2),
-        bridge_plain=pbr("jet bridge plate", (0.11, 0.114, 0.12), (0.4, 0.55), metal=0.5, nscale=0.8, cvar=0.12),
+        bridge=pbr("jet bridge ribs", (0.1, 0.104, 0.11), (0.35, 0.5), metal=0.5, nscale=0.8, cvar=0.12),
+        bridge_plain=pbr("jet bridge plate", (0.075, 0.078, 0.084), (0.4, 0.55), metal=0.5, nscale=0.8, cvar=0.15, grime=0.3),
         bellows=pbr("bridge bellows", (0.02, 0.021, 0.022), (0.6, 0.8), nscale=2, cvar=0.2),
         bellows_rib=ribbed("bellows ribs", (0.022, 0.023, 0.025), 0.09, "X", metal=0.0),
         mast=pbr("galvanised mast", (0.18, 0.18, 0.185), (0.55, 0.68), metal=0.0, nscale=0.4, cvar=0.15),
@@ -657,7 +716,7 @@ def materials():
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 
-        bridge_win=glow("bridge window", (1.0, 0.8, 0.55), 0.9, 0.35, ("Y", "Z")),
+        bridge_win=glow("bridge glazing", (1.0, 0.8, 0.58), 0.8, 0.3, ("Y", "Z")),
         screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),
@@ -666,6 +725,7 @@ def materials():
         amber=glow("beacon amber", (1.0, 0.5, 0.08), 30.0),
         edge_white=glow("runway edge", (1.0, 0.92, 0.8), 80.0),
         edge_blue=glow("taxiway edge", (0.2, 0.4, 1.0), 70.0),
+        edge_blue_near=glow("taxiway edge near", (0.2, 0.42, 1.0), 40.0),
         centre_green=glow("taxiway centre", (0.2, 1.0, 0.45), 50.0),
         building_glow=glow("concourse glazing", (0.8, 0.85, 0.95), 0.9),
         tower_glow=glow("tower cab", (0.6, 0.85, 0.8), 1.6),

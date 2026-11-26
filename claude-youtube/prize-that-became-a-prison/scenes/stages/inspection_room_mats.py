@@ -164,6 +164,61 @@ def brushed_steel(name, rgb=(0.66, 0.67, 0.69), rough=0.33, smudge=0.1, aniso=0.
     return m
 
 
+def bench_steel(name, rgb=(0.30, 0.305, 0.31), metal=0.9, rough=(0.35, 0.5), aniso=0.6, contact=0.05, ghost=None):
+    """The bench top: brushed stainless read as lines, not clouds. A Noise stretched 60:1 across the sheet (so it runs
+    in long streaks along local X, the bench's length) drives the roughness between rough[0] and rough[1]; a finer
+    grain on top; anisotropy with the tangent along X; a darker base than polished steel so the troffer's reflection
+    from straight above stays below white.
+
+    ghost = (cx, cy, w, h, deg) in object space: a rounded rectangle (the tote's footprint) blurred over 3 cm, inside
+    which the sheet is cleaner and a touch shinier (roughness -0.08, colour +6 %), never darker. Switched by the
+    Value node named "ghost" (0 = off, 1 = on)."""
+    m, nt, b = _new(name)
+    b.inputs["Metallic"].default_value = metal
+    o = _obj(nt)
+    streak = _noise(nt, o, 1.0, 8.0, 0.62, mapping=(1.0, 60.0, 1.0))
+    grain = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(2.0, 700.0, 700.0))
+    r = _maprange(nt, streak, 0.3, 0.7, rough[0], rough[1])
+    r = _math(nt, "ADD", r, _maprange(nt, grain, 0.3, 0.7, -0.025, 0.025))
+    # a few faint, large wipe marks only (no clouds): long, low and rare
+    wipe = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(1.4, 5.0, 1.4))
+    wipe_m = _maprange(nt, wipe, 0.62, 0.7, 0.0, 1.0)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", wipe_m, 0.05))
+    col = _mix(nt, _math(nt, "MULTIPLY", _maprange(nt, streak, 0.3, 0.7, 0.0, 1.0), 0.5), rgb, tuple(c * 0.9 for c in rgb))
+    if ghost:
+        cx, cy, w, h, deg = ghost
+        import math as _m
+        cs, sn = _m.cos(_m.radians(deg)), _m.sin(_m.radians(deg))
+        sep = _n(nt, "ShaderNodeSeparateXYZ")
+        _link(nt, o, sep.inputs["Vector"])
+        dx = _math(nt, "SUBTRACT", sep.outputs["X"], cx)
+        dy = _math(nt, "SUBTRACT", sep.outputs["Y"], cy)
+        u = _math(nt, "ADD", _math(nt, "MULTIPLY", dx, cs), _math(nt, "MULTIPLY", dy, sn))      # into the tote's frame
+        v = _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", dy, cs), _math(nt, "MULTIPLY", dx, sn))
+        rad = 0.03
+        ax = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", u, 0.0), w / 2 - rad), 0.0)
+        ay = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", v, 0.0), h / 2 - rad), 0.0)
+        dist = _math(nt, "SUBTRACT", _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", ax, ax), _math(nt, "MULTIPLY", ay, ay)), 0.0), rad)
+        inside = _maprange(nt, dist, -0.03, 0.0, 1.0, 0.0)
+        sw = _n(nt, "ShaderNodeValue", name="ghost", label="ghost")
+        sw.outputs[0].default_value = 0.0
+        g = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", inside, inside), sw.outputs[0])
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", g, 0.08))
+        col = _mix(nt, g, col, tuple(min(1.0, c * 1.06) for c in rgb))
+    if contact:
+        ao = _ao(nt, contact)
+        col = _mix(nt, _maprange(nt, ao, 0.25, 1.0, 0.8, 0.0), col, tuple(c * 0.15 for c in rgb))
+        r = _math(nt, "ADD", r, _maprange(nt, ao, 0.25, 1.0, 0.2, 0.0))
+    _link(nt, _math(nt, "ADD", r, 0.0, clamp=True), b.inputs["Roughness"])
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Anisotropic"].default_value = aniso
+    vt = _n(nt, "ShaderNodeVectorTransform", vector_type="VECTOR", convert_from="OBJECT", convert_to="WORLD")
+    vt.inputs["Vector"].default_value = (1.0, 0.0, 0.0)
+    _link(nt, vt.outputs["Vector"], b.inputs["Tangent"])
+    _bump(nt, b, _math(nt, "ADD", streak, _math(nt, "MULTIPLY", grain, 0.5)), 0.02, 0.0002)
+    return m
+
+
 def satin_metal(name, rgb, rough=0.35):
     """Painted or plated hardware: a little roughness variation, no brushing."""
     m, nt, b = _new(name)
@@ -435,6 +490,9 @@ def glow(name, rgb, strength, pattern=None):
     em = _n(nt, "ShaderNodeEmission")
     em.inputs["Color"].default_value = (*rgb, 1)
     o = _obj(nt)
+    sv = _n(nt, "ShaderNodeValue", name="strength", label="strength")   # per camera, a stage may change it
+    sv.outputs[0].default_value = strength
+    strength = sv.outputs[0]
     s = strength
     if pattern == "tubes":
         # Blender's bands run at 20 * scale radians per unit: scale 1.571 gives a 0.2 m period, so with the phase
@@ -460,7 +518,7 @@ def glow(name, rgb, strength, pattern=None):
         s = _math(nt, "MULTIPLY", _maprange(nt, _out(br, "Fac"), 0.0, 1.0, 1.0, 0.08), strength)
         _link(nt, s, em.inputs["Strength"])
     else:
-        em.inputs["Strength"].default_value = strength
+        _link(nt, strength, em.inputs["Strength"])
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
     return m

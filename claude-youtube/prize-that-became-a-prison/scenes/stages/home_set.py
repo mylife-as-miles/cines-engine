@@ -805,7 +805,7 @@ def dining():
     lathe("d_medallion", [(0.0, 0.0), (0.2, 0.0), (0.205, -0.006), (0.19, -0.014), (0.16, -0.016), (0.13, -0.024), (0.08, -0.026),
                           (0.06, -0.034), (0.0, -0.036)], (px, py, h), M["plaster_med"], segs=64)
     cyl("d_canopy", 0.06, 0.045, (px, py, h - 0.036 - 0.0225), M["bronze_shade"], verts=32, bevel=0.006)
-    drop = 1.0
+    drop = 0.86                      # the shade hangs just above the street light's beam: no shadow on the end wall
     cyl("d_cord", 0.0035, drop, (px, py, h - 0.08 - drop / 2), M["enamel_black"], verts=12)
     zt = h - 0.08 - drop
     cyl("d_socket", 0.022, 0.07, (px, py, zt - 0.02), M["bronze_shade"], verts=24, bevel=0.003)
@@ -815,11 +815,10 @@ def dining():
     lathe("d_shadeIn", [(r - 0.0035, z - 0.0012) for r, z in outer], (px, py, zt), M["shade_inside"], segs=64)
     lathe("d_bulb", [(0.0, 0.0), (0.012, 0.0), (0.016, -0.02), (0.03, -0.05), (0.032, -0.075), (0.022, -0.1), (0.0, -0.106)],
           (px, py, zt - 0.05), M["bulb_off"], segs=32)
-    # rug under the table, a runner and a bowl on it
+    # rug under the table; a bowl left toward the foot, out of the light (the head of the table stays bare)
     box("d_rug", (2.6, 1.9, 0.008), (DT[0], DT[1], 0.004), M["rug"], bevel=0.003)
-    box("d_runner", (1.3, 0.34, 0.003), (DT[0] - 0.05, DT[1], D_TOP + 0.0015), M["runner"], bevel=0.001)
     lathe("d_bowl", [(0.0, 0.0), (0.05, 0.0), (0.06, 0.004), (0.1, 0.03), (0.135, 0.062), (0.14, 0.068), (0.136, 0.07),
-                     (0.13, 0.064), (0.095, 0.034), (0.055, 0.012), (0.0, 0.01)], (DT[0] - 0.08, DT[1] + 0.02, D_TOP + 0.003), M["bowl"], segs=64)
+                     (0.13, 0.064), (0.095, 0.034), (0.055, 0.012), (0.0, 0.01)], (DT[0] - 0.42, DT[1] - 0.04, D_TOP), M["bowl"], segs=64)
     # sideboard on the -Y wall, a lidded jar and a pair of candlesticks; a dark framed picture above
     sx, sy = 2.7, y0 + 0.24
     box("d_sb_body", (1.5, 0.44, 0.7), (sx, sy, 0.14 + 0.35), M["sideboard"], bevel=0.006)

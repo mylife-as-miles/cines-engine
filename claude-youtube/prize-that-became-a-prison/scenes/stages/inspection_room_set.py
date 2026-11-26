@@ -15,11 +15,13 @@ from mathutils.bvhtree import BVHTree
 import setkit as sk
 import inspection_room_mats as mt
 
-XW, Y0, Y1, H = 2.8, -2.2, 2.6, 2.8          # half width, front and back wall planes, ceiling height
+XW, Y0, Y1, H = 2.8, -2.2, 2.6, 2.55         # half width, front and back wall planes, ceiling height (a low, pressing
+                                              # lay-in ceiling: from the end of the bench the troffer is in frame)
 TOP = 0.86                                    # bench top
 DOOR_Y, DOOR_W, DOOR_H = 0.30, 0.915, 2.13    # door in the left wall
 M = {}
 CEILING = []                                  # objects a camera above the ceiling must not see
+GHOST = (0.0, -0.23, 0.35, 0.16, 162.0)       # where the tote stood (object space of the bench top): set before materials()
 
 
 def materials():
@@ -30,8 +32,8 @@ def materials():
         # strong brushing smears the troffer's reflection into a streak; contact darkening seats what stands on it.
         # The ghost patch is the cleaner rectangle where the tote stood (switched on for the Ch 11 return)
         steel=mt.brushed_steel("bench steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.2, aniso=0.8, contact=0.05),
-        steel_top=mt.brushed_steel("bench top steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.2, aniso=0.8,
-                                   contact=0.05, ghost=(0.0, -0.23, 0.3, 0.14)),
+        # the top: darker, rougher, brushed in long streaks; from straight above it must not read as a lightbox
+        steel_top=mt.bench_steel("bench top steel", ghost=GHOST),
         steel_dark=mt.satin_metal("dark steel", (0.32, 0.33, 0.34), 0.4),
         hardware=mt.satin_metal("hardware", (0.55, 0.56, 0.57), 0.3),
         wall=mt.block_wall("block wall", (0.17, 0.182, 0.185), (0.075, 0.088, 0.098), 1.07, H),
@@ -56,9 +58,17 @@ def materials():
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
         cork=mt.paint("board", (0.16, 0.14, 0.11), 0.85, 0.15),
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
-        tag=mt.paper("manila tag", (0.34, 0.24, 0.12), rough=0.85, fibre=0.05),
-        tag_ring=mt.paper("tag ring", (0.4, 0.3, 0.16), rough=0.8),
-        twine=mt.twine("twine", (0.2, 0.155, 0.1), 0.9),
+        tag=mt.paper("manila tag", (0.6, 0.48, 0.28), rough=0.9, fibre=0.06),
+        tag_ring=mt.paper("tag ring", (0.52, 0.4, 0.22), rough=0.85),
+        twine=mt.twine("twine", (0.5, 0.4, 0.27), 0.95),
+        curtain=mt.rubber("lead curtain", (0.035, 0.037, 0.04), 0.5),
+        belt=mt.rubber("belt rubber", (0.016, 0.016, 0.017), 0.9),
+        roller=mt.satin_metal("roller steel", (0.5, 0.51, 0.52), 0.28),
+        bezel=mt.plastic("monitor bezel", (0.02, 0.021, 0.023), 0.4),
+        board=mt.paint("clipboard", (0.2, 0.16, 0.11), 0.6, 0.03),
+        blank=mt.paper("blank sheet", (0.62, 0.62, 0.6), rough=0.9),
+        nitrile_box=mt.paint("glove box blue", (0.22, 0.27, 0.34), 0.7, 0.02),
+        ink=mt.paint("pictogram", (0.02, 0.025, 0.03), 0.5, 0.01),
     )
     return M
 
@@ -154,7 +164,7 @@ TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.04), "front": 
 DIFFUSER = (1.5, 0.6)
 
 
-def ceiling(main_energy=470.0):
+def ceiling(main_energy=360.0):
     m = materials()
     fixtures = {(round(c[0], 2), round(c[1], 2)) for c, _ in TROFFERS.values()}
     for x0, x1 in zip(XL, XL[1:]):
@@ -182,6 +192,50 @@ def ceiling(main_energy=470.0):
         troffer(name, cx, cy, k, main_energy)
     diffuser(*DIFFUSER)
     cctv((-2.42, 2.28))
+    ceiling_glow()
+
+
+def linked_light(name, loc, size, energy, colour, receivers, spread_deg=120, rot=(0, 0, 0)):
+    """An area light that lights only `receivers` (Cycles light linking): the bounce a lit room throws onto its
+    walls and ceiling, without a second key on the people and props. Seen by no camera and in no reflection."""
+    li = sk.area_light(name, loc, size, energy, colour, spread_deg=spread_deg, rot=rot)
+    li.visible_camera = False
+    li.visible_glossy = False
+    li.visible_volume_scatter = False
+    coll = bpy.data.collections.new(f"{name}_receivers")
+    for o in receivers:
+        if o is not None:
+            coll.objects.link(o)
+    try:
+        li.light_linking.receiver_collection = coll
+    except AttributeError:            # no light linking: keep it, but much weaker
+        li.data.energy *= 0.3
+        print(f"INSPECTION light linking unavailable for {name}", flush=True)
+    return li
+
+
+def ceiling_glow(energy=26.0):
+    """The tiles round the bench troffer catch the bright bench and floor below: a soft pool on the ceiling that
+    falls off away from the fitting, so the fitting sits in a lit ceiling rather than a black one."""
+    tiles = [o for o in CEILING if o.name.startswith("tile") or o.name == "tbar_grid"]
+    li = linked_light("ceiling_glow", (0.0, 0.0, H - 0.55), (1.6, 1.0), energy, (0.86, 0.92, 1.0), tiles,
+                      spread_deg=150, rot=(math.pi, 0, 0))
+    CEILING.append(li)
+    return li
+
+
+def wall_wash():
+    """Very low washes down the door wall and the back wall (the spill of the room's other, switched-off troffers'
+    neighbours and the corridor): enough for the block coursing to read at the bottom of the grade, on the walls
+    only."""
+    walls = [bpy.data.objects.get(n) for n in ("wall_left", "wall_back", "cove_l1", "cove_l2", "cove_b", "rail_l1",
+                                                  "rail_l2", "rail_b", "door_leaf", "door_jamb_l", "door_jamb_r", "door_head")]
+    cool = (0.74, 0.84, 1.0)   # about 7000 K
+    a = linked_light("wash_left", (-XW + 0.35, -0.35, H - 0.15), (0.3, 2.6), 22.0, cool, walls, spread_deg=100,
+                     rot=(0, math.radians(38), 0))         # aimed down and out at the wall (-X)
+    b = linked_light("wash_back", (-0.6, Y1 - 0.35, H - 0.15), (2.6, 0.3), 16.0, cool, walls, spread_deg=100,
+                     rot=(math.radians(38), 0, 0))
+    return a, b
 
 
 def troffer(name, cx, cy, k, main_energy):
@@ -202,7 +256,7 @@ def troffer(name, cx, cy, k, main_energy):
     fr = bevelled(mesh_obj(f"troffer_{name}_frame", bm, m["white"]), 0.003, 2)
     CEILING.append(fr)
     if k > 0:
-        lens_m = mt.glow(f"troffer_{name}_lens", (0.84, 0.93, 1.0), 9.0 * k, pattern="tubes")
+        lens_m = mt.glow(f"troffer_{name}_lens", (0.84, 0.93, 1.0), 6.0 * k, pattern="tubes")
     else:
         lens_m = m["lens_off"]
     lens = box(f"troffer_{name}_lens", (w - 2 * f, d - 2 * f, 0.004), (cx, cy, H + 0.004), lens_m)
@@ -274,7 +328,7 @@ def door():
     box("door_closer_arm", (0.022, 0.28, 0.012), (face + 0.07, DOOR_Y + 0.07, DOOR_H - 0.03), m["frame"], bevel=0.004, rot=(0, 0, 0.18))
     # corridor light: the vision panel and the gap under the door
     box("door_gap_glow", (0.002, DOOR_W - 0.02, 0.012), (x + 0.0012, DOOR_Y, 0.006), mt.glow("gap glow", (0.78, 0.86, 1.0), 6.0))
-    sk.area_light("door_glass_light", (face + 0.012, vy, vz), (vh, vw), 9.0, (0.78, 0.86, 1.0), spread_deg=110, rot=(0, -math.pi / 2, 0))
+    sk.area_light("door_glass_light", (face + 0.012, vy, vz), (vh, vw), 30.0, (0.78, 0.86, 1.0), spread_deg=150, rot=(0, -math.pi / 2, 0))
     sk.area_light("door_gap_light", (face + 0.01, DOOR_Y, 0.008), (0.012, DOOR_W - 0.04), 4.0, (0.78, 0.86, 1.0), spread_deg=150,
                   rot=(0, -math.pi / 2, 0))
     # light switch, its surface conduit up to the ceiling, and a blank sign plate
@@ -289,12 +343,12 @@ def door():
 
 # ---------------------------------------------------------------- the back wall: cable tray, conduit, gloves, trays
 
-def back_wall(jx=-1.32, gloves_xz=(1.38, 1.34), trays_xy=(1.02, Y1 - 0.3)):
+def back_wall(jx=-1.32, gloves_xz=(1.38, 1.34), trays_xy=(1.02, Y1 - 0.3), trays_n=6, outlet_x=1.95):
     """jx: where the conduit drops to the scanner's junction box (about 0.5 m left of the scanner's centre)."""
     m = materials()
     y = Y1
     bm = bmesh.new()                                    # wire-basket cable tray, 300 mm wide, along the back wall
-    zt, w, dpt = 2.46, 0.3, 0.07
+    zt, w, dpt = H - 0.34, 0.3, 0.07
     yc = y - 0.04 - w / 2
     x0, x1 = -XW + 0.01, XW - 0.01
     for yy in (yc - w / 2, yc + w / 2):
@@ -324,11 +378,12 @@ def back_wall(jx=-1.32, gloves_xz=(1.38, 1.34), trays_xy=(1.02, Y1 - 0.3)):
     box("junction_box", (0.12, 0.05, 0.12), (jx, y - 0.026, 1.78), m["steel_dark"], bevel=0.006)
     flex = sk.arc("flex_conduit", (jx, y - 0.03, 1.72), (jx + 0.08, y - 0.2, 1.452), -0.05, m["cable"], r=0.009)
     flex.data.bevel_resolution = 3
-    sk.cyl("conduit2", 0.0105, zt - 0.35, (1.95, y - 0.016, (zt + 0.35) / 2), m["steel_dark"], verts=16)
-    box("outlet_box", (0.075, 0.03, 0.12), (1.95, y - 0.015, 0.33), m["steel_dark"], bevel=0.004)
-    box("outlet_face", (0.07, 0.006, 0.11), (1.95, y - 0.032, 0.33), m["white"], bevel=0.002)
+    ox = outlet_x
+    sk.cyl("conduit2", 0.0105, zt - 0.35, (ox, y - 0.016, (zt + 0.35) / 2), m["steel_dark"], verts=16)
+    box("outlet_box", (0.075, 0.03, 0.12), (ox, y - 0.015, 0.33), m["steel_dark"], bevel=0.004)
+    box("outlet_face", (0.07, 0.006, 0.11), (ox, y - 0.032, 0.33), m["white"], bevel=0.002)
     gloves(gloves_xz)
-    tray_stack(trays_xy, 6)
+    tray_stack(trays_xy, trays_n)
 
 
 def gloves(xz):
@@ -432,10 +487,10 @@ def bounce(energy=18.0):
     return li
 
 
-def floor_line(cx=-0.95):
-    """A worn painted line on the floor in front of the scanner."""
+def floor_line(x=0.86, y0=0.3, y1=Y1 - 0.02):
+    """A worn painted keep-clear line on the floor beside the scanner and its exit conveyor."""
     m = materials()
-    box("floor_line", (2.6, 0.05, 0.001), (cx, 1.22, 0.0005), m["line"])
+    box("floor_line", (0.05, y1 - y0, 0.001), (x, (y0 + y1) / 2, 0.0005), m["line"])
 
 
 def notice_board():
@@ -468,23 +523,29 @@ def surface_bvh(holder):
     return BVHTree.FromPolygons(verts, polys)
 
 
-def luggage_tag(case, frame, hole=(-0.021, -0.006), angle_deg=24.0, strap=(-0.045, 0.551)):
-    """A blank manila tag lying on the suitcase's top, tied with a twine loop round the top carry handle.
+def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=(0.0125, 0.0105)):
+    """A blank manila tag tied to the suitcase's top carry handle with jute twine, hanging from it toward the front.
 
-    `frame` maps the suitcase's own metric space (as the probe measured it: footprint centred, floor at 0, front pocket
-    +X) to the world. The tag is draped onto the case by casting rays at it; its free end curls up a little."""
+    `frame` maps the suitcase's own metric space (footprint centred, floor at 0, front pocket +X; the carry handle's
+    grip runs along Y at x = -0.045, its section centred at z = 0.540, the lid at about 0.52) to the world.
+    The twine makes a lark's head: its loop comes up out of the eyelet, wraps the grip twice and goes back down through
+    the eyelet. The tag's eyelet end is held up against the grip by the knot; the card slopes down onto the lid toward
+    the front (about 20 degrees: the grip is only 2 cm above the lid), lies on it, and its free end overhangs the
+    rounded front edge, bending a little, with one side 3 mm higher so a single corner bears."""
     m = materials()
     tree = surface_bvh(case)
+    z0 = frame.translation.z
 
-    def drop(p):
+    def drop(p):                                     # the case's top under a point (case space), case-space height
         w = frame @ Vector((p[0], p[1], 0.8))
         hit = tree.ray_cast(w, Vector((0, 0, -1)))
-        return hit[0].z if hit[0] else frame.translation.z + 0.515
+        return (hit[0].z if hit[0] else z0 + 0.52) - z0
 
-    a = Vector((math.cos(math.radians(angle_deg)), math.sin(math.radians(angle_deg))))
-    pdir = Vector((-a.y, a.x))
     hv = Vector(hole)
+    a = Vector((1.0, 0.0))                           # the card runs from the eyelet toward the front
+    pdir = Vector((-a.y, a.x))
     L, Wd, clip, top_off = 0.096, 0.054, 0.0095, 0.0125
+    gx, gz = grip
     outline = [(-Wd / 2, -top_off + clip), (-Wd / 2 + clip, -top_off), (Wd / 2 - clip, -top_off), (Wd / 2, -top_off + clip),
                (Wd / 2, L), (-Wd / 2, L)]
     bm = bmesh.new()
@@ -499,20 +560,27 @@ def luggage_tag(case, frame, hole=(-0.021, -0.006), angle_deg=24.0, strap=(-0.04
     hvs = [bm.verts.new((hr * math.cos(2 * math.pi * i / 20), hr * math.sin(2 * math.pi * i / 20), 0)) for i in range(20)]
     edges += [bm.edges.new((hvs[i], hvs[(i + 1) % 20])) for i in range(20)]
     bmesh.ops.triangle_fill(bm, use_beauty=True, use_dissolve=False, edges=edges)
-    # interior points so the drape and the curl bend smoothly
     for _ in range(2):
         bmesh.ops.subdivide_edges(bm, edges=[e for e in bm.edges if not e.is_boundary], cuts=1, use_grid_fill=False)
         bmesh.ops.triangulate(bm, faces=bm.faces[:])
-    z0 = frame.translation.z
+    z_top = gz - 0.001                               # the eyelet end, propped at the grip's middle by the knot
+    slope = math.tan(math.radians(20.0))
+    edge_x = 0.072                                   # where the lid starts to round over at the front
 
-    def lift(t):            # mid-plane above the case: resting, the twine under the top edge, the free end curling up
-        return 0.0009 + 0.0045 * max(0.0, (t - 0.066) / (L - 0.066)) ** 2 + 0.0008 * max(0.0, min(1.0, (-t - 0.002) / 0.004))
+    def height(u, t):
+        p = hv + a * t + pdir * u
+        surf = drop(p) + 0.0006
+        prop = z_top - slope * (t + top_off)          # the stiff card leaning from the knot
+        z = max(surf, prop)
+        if p.x > edge_x:                              # overhang: card bends, it does not follow the curved edge
+            z = max(surf, drop(hv + a * (edge_x - hv.x) + pdir * u) + 0.0006 - 0.32 * (p.x - edge_x))
+        return z + 0.0015 * (u / (Wd / 2) + 1.0) * min(1.0, max(0.0, (t + top_off) / 0.05))   # one side bears
 
     for v in bm.verts:
         u, t = v.co.x, v.co.y
         p = hv + a * t + pdir * u
-        v.co = Vector((p.x, p.y, drop(p) - z0 + lift(t)))
-    for _ in range(3):                                   # paper is stiff: smooth the drape
+        v.co = Vector((p.x, p.y, height(u, t)))
+    for _ in range(3):                                # paper is stiff: smooth the drape, never into the case
         new = {}
         for v in bm.verts:
             nb = [e.other_vert(v).co.z for e in v.link_edges]
@@ -523,8 +591,8 @@ def luggage_tag(case, frame, hole=(-0.021, -0.006), angle_deg=24.0, strap=(-0.04
         v.co = frame @ v.co
     tag = mesh_obj("luggage_tag", bm, m["tag"], smooth=True)
     so = tag.modifiers.new("card", "SOLIDIFY")
-    so.thickness, so.offset = 0.00055, 0.0
-    # the paper reinforcing ring round the hole
+    so.thickness, so.offset = 0.0006, 0.0
+    # the paper reinforcing ring round the eyelet
     bm = bmesh.new()
     outer = [bm.verts.new((0.0072 * math.cos(2 * math.pi * i / 28), 0.0072 * math.sin(2 * math.pi * i / 28), 0)) for i in range(28)]
     inner = [bm.verts.new((hr * math.cos(2 * math.pi * i / 28), hr * math.sin(2 * math.pi * i / 28), 0)) for i in range(28)]
@@ -534,43 +602,95 @@ def luggage_tag(case, frame, hole=(-0.021, -0.006), angle_deg=24.0, strap=(-0.04
     for v in bm.verts:
         u, t = v.co.x, v.co.y
         p = hv + a * t + pdir * u
-        v.co = frame @ Vector((p.x, p.y, drop(p) - z0 + lift(t) + 0.000275 + 0.00013))
+        v.co = frame @ Vector((p.x, p.y, height(u, t) + 0.0003 + 0.00013))
     ring = mesh_obj("luggage_tag_ring", bm, m["tag_ring"], smooth=True)
     rs = ring.modifiers.new("card", "SOLIDIFY")
     rs.thickness, rs.offset = 0.00025, 0.0
-    # twine: up through the hole, over the carry handle, back under it and in under the tag's top edge
-    sx, sz = strap
-    sh = drop(hv) - z0                                   # the case's top under the hole
-    under = drop(Vector((sx + 0.026, hole[1] - 0.004))) - z0
-    loc = lambda p, z: frame @ Vector((p[0], p[1], z))
-    pts = [loc(hv - a * 0.0012, sh + 0.0009),
-           loc(hv - a * 0.0065 + pdir * 0.0015, sh + 0.0055),
-           loc((sx + 0.0165, hole[1] - 0.004), sz - 0.009),
-           loc((sx, hole[1] - 0.006), sz + 0.0016),
-           loc((sx - 0.0165, hole[1] - 0.005), sz - 0.009),
-           loc((sx - 0.003, hole[1] + 0.001), under + 0.006),
-           loc(hv - a * (top_off + 0.002) - pdir * 0.001, sh + 0.0008)]
+    # twine: a lark's head. Up out of the eyelet, back to the grip, two turns round it (moving along the grip), then
+    # down to the eyelet again, under the card and up through the hole to close the loop
+    zh = height(0.0, 0.0)
+    rx, rz = grip_r
+    pts = [Vector((hv.x, hv.y, zh + 0.0012)),
+           Vector((hv.x - 0.009, hv.y - 0.003, zh + 0.0045)),
+           Vector((gx + rx * 0.75, hv.y - 0.006, gz - rz * 0.85))]
+    turns, steps = 2, 12
+    for k in range(turns * steps + 1):
+        th = math.radians(-50.0 + 360.0 * k / steps)
+        y = hv.y - 0.006 + 0.012 * k / (turns * steps)
+        pts.append(Vector((gx + rx * math.cos(th), y, gz + rz * math.sin(th))))
+    pts += [Vector((hv.x - 0.009, hv.y + 0.004, zh + 0.003)),
+            Vector((hv.x - 0.0035, hv.y + 0.002, zh - 0.0018)),
+            Vector((hv.x, hv.y, zh - 0.0012))]
     cu = bpy.data.curves.new("twine", "CURVE")
-    cu.dimensions, cu.bevel_depth, cu.bevel_resolution, cu.resolution_u = "3D", 0.0009, 3, 10
+    cu.dimensions, cu.bevel_depth, cu.bevel_resolution, cu.resolution_u = "3D", 0.0012, 3, 6
     sp = cu.splines.new("BEZIER")
     sp.bezier_points.add(len(pts) - 1)
     for bp, co in zip(sp.bezier_points, pts):
-        bp.co = co
+        bp.co = frame @ co
         bp.handle_left_type = bp.handle_right_type = "AUTO"
     sp.use_cyclic_u = True
     tw = bpy.data.objects.new("luggage_tag_twine", cu)
     bpy.context.scene.collection.objects.link(tw)
     tw.data.materials.append(m["twine"])
-    # the twine's lay: about one ridge every 3 mm along the cord (its UV runs 0..1 once round the loop)
-    length = sum((pts[i] - pts[i - 1]).length for i in range(len(pts))) * 1.12
+    length = sum((pts[i] - pts[i - 1]).length for i in range(len(pts))) * 1.1
     m["twine"].node_tree.nodes["twist"].outputs[0].default_value = length / 0.003
-    centre = frame @ Vector((*(hv + a * L * 0.45), drop(hv + a * L * 0.45) - frame.translation.z + 0.001))
+    centre = frame @ Vector((*(hv + a * L * 0.45), height(0.0, L * 0.45) + 0.001))
     fx = bpy.data.objects.new("tag_focus", None)
     bpy.context.scene.collection.objects.link(fx)
     fx.location = centre
     hx = bpy.data.objects.new("tag_hole_focus", None)       # the eyelet, where the twine goes through
     bpy.context.scene.collection.objects.link(hx)
-    hx.location = frame @ Vector((hv.x, hv.y, sh + 0.0012))
+    hx.location = frame @ Vector((hv.x, hv.y, zh + 0.0012))
     for o in (tag, ring, tw, fx, hx):
         keep_parent(o, case)
     return tag
+
+
+# ---------------------------------------------------------------- set dressing: bench, door wall
+
+def dressing(top=TOP):
+    """Customs things that say where we are, all darker than the bags: a box of nitrile gloves and a clipboard with a
+    blank sheet at the bench's far end, a pedal bin by the door, a card reader with a blank dark face and a
+    pictogram-only plate (a suitcase) on the door wall. Returns the bench items (a stage hides them for the return)."""
+    m = materials()
+    items = []
+    gx_, gy_, gr = -0.87, -0.29, math.radians(-6)
+    g = box("bench_gloves", (0.24, 0.12, 0.09), (gx_, gy_, top + 0.045), m["nitrile_box"], bevel=0.003, rot=(0, 0, gr))
+    slot = sk.cyl("bench_gloves_slot", 0.028, 0.002, (gx_, gy_, top + 0.0905), m["dark"], verts=24, rot=(0, 0, gr))
+    slot.scale = (1.9, 0.6, 1.0)
+    tuft = sk.sphere("bench_gloves_tuft", 0.024, (gx_ + 0.004, gy_ + 0.002, top + 0.096), m["glove"], segs=16)
+    tuft.scale = (1.3, 0.6, 0.55)
+    items += [g, slot, tuft]
+    # the clipboard: built round its own origin, long side along local Y, clip at +Y; turned to lie along the bench
+    holder = bpy.data.objects.new("bench_clipboard", None)
+    bpy.context.scene.collection.objects.link(holder)
+    parts = [box("bench_clipboard_board", (0.23, 0.32, 0.004), (0, 0, 0.002), m["board"], bevel=0.0015),
+             box("bench_clipboard_sheet", (0.21, 0.28, 0.0006), (0, -0.012, 0.0045), m["blank"]),
+             box("bench_clipboard_clip", (0.09, 0.03, 0.012), (0, 0.142, 0.008), m["hardware"], bevel=0.003)]
+    for o in parts:
+        o.parent = holder
+    holder.location, holder.rotation_euler = (-0.55, -0.28, top), (0, 0, math.radians(92))
+    items += [holder] + parts
+    # the pedal bin by the door
+    bx, by = -XW + 0.24, -0.55
+    body = sk.cyl("bin_body", 0.135, 0.38, (bx, by, 0.215), m["steel"], verts=48)
+    bevelled(body, 0.004, 2, 60)
+    lid = sk.cyl("bin_lid", 0.138, 0.035, (bx, by, 0.42), m["steel"], verts=48, r2=0.12)
+    bevelled(lid, 0.004, 2, 50)
+    sk.cyl("bin_base", 0.128, 0.026, (bx, by, 0.013), m["rubber"], verts=48)
+    box("bin_pedal", (0.05, 0.09, 0.012), (bx + 0.15, by, 0.03), m["hardware"], bevel=0.003)
+    # card reader beside the door: grey body, dark blank face, one tiny green standby lamp
+    x = -XW
+    ry, rz = DOOR_Y - DOOR_W / 2 - 0.16, 1.42
+    box("reader_body", (0.03, 0.085, 0.13), (x + 0.015, ry, rz), m["sign"], bevel=0.006)
+    box("reader_face", (0.004, 0.06, 0.08), (x + 0.0305, ry, rz + 0.01), m["smoke"], bevel=0.002)
+    sk.sphere("reader_lamp", 0.0025, (x + 0.031, ry, rz - 0.045), mt.glow("reader lamp", (0.2, 1.0, 0.45), 6.0), segs=10)
+    # a pictogram on the existing sign plate (a suitcase: body, handle), no words
+    px, py, pz = x + 0.0048, -0.95, 1.535
+    box("picto_case", (0.0015, 0.13, 0.085), (px, py, pz), m["ink"], bevel=0.0007)
+    for dy in (-0.028, 0.028):
+        box("picto_handle_side", (0.0015, 0.008, 0.026), (px, py + dy, pz + 0.052), m["ink"])
+    box("picto_handle_top", (0.0015, 0.064, 0.008), (px, py, pz + 0.061), m["ink"])
+    for dy in (-0.04, 0.04):
+        box("picto_wheel", (0.0015, 0.014, 0.012), (px, py + dy, pz - 0.05), m["ink"])
+    return items

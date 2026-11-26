@@ -58,8 +58,8 @@ CAMERAS = {
                     exposure=-1.3),
     # Ch 10: from the foot of the table, high in the corner: the table running away to the head, the blinds glowing
     # on the left wall, their stripes across the table's end and the empty chair
-    "dining": dict(loc=(1.3, -1.82, 1.64), aim=(4.3, 0.42, 0.64), lens=27, focus="fx_dining", fstop=5.6, beat="ch10",
-                   exposure=-1.3),
+    "dining": dict(loc=(1.15, -1.95, 2.1), aim=(4.32, 0.12, 0.62), lens=28, focus="fx_dining", fstop=5.6, beat="ch10",
+                   exposure=-1.15),
     # Ch 10: the empty chair, square on from the table, low: the image before the cut to black
     "chair": dict(loc=(3.2, 0.0, 0.98), aim=(4.45, 0.02, 0.64), lens=50, focus="fx_chair", fstop=3.2, beat="ch10",
                   exposure=-1.25),
@@ -485,11 +485,11 @@ def lights():
     # a second, weaker street light through the side window: the blinds glow and a few stripes reach the floor
     d2 = Vector((0.3, -0.85, -0.42)).normalized()
     t2 = Vector((3.1, 0.9, 0.0))
-    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 7000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
+    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 10000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
     dw = st.D_WIN
     # the sky's faint glow through the slats: just enough to keep the room readable
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),
-            3.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
+            6.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
 
 
 # ---------------------------------------------------------------- per-camera hook

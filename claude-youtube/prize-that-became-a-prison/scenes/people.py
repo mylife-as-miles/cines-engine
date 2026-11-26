@@ -47,7 +47,7 @@ def dawn_prison():
     """Dawn in detention, court and prison (Ch 06-08): the casual suit in flat institutional grey, black flats."""
     h = cast.person("DawnPrison", gender=0.0, height_cm=168, age=0.5, weight=0.42, hair="bun")
     cast.dress(h, ["female_casualsuit01", "shoes04"],
-               tint={"female_casualsuit01": (0.13, 0.135, 0.14), "shoes04": BLACK_SHOE},
+               tint={"female_casualsuit01": (0.075, 0.078, 0.082), "shoes04": BLACK_SHOE},
                flat=("female_casualsuit01", "shoes04"))
     return h
 

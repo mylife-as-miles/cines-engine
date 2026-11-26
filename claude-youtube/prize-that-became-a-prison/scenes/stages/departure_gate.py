@@ -28,7 +28,8 @@ import bpy  # noqa: E402
 import bmesh  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
-import cast as castkit  # noqa: E402
+import cast as castkit  # noqa: E402,F401
+import people  # noqa: E402
 import props  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -47,6 +48,7 @@ SUITCASE = (SEAT[0] - 0.6, ROW_Y + 0.3, 96.0)   # in the aisle beside her, pocke
 FOCUS = {
     "fx_wide": (SEAT[0], ROW_Y + 0.2, 0.9),
     "fx_face": (SEAT[0] + 0.02, ROW_Y + 0.0, 1.16),
+    "fx_dawn": (SEAT[0], ROW_Y + 0.2, 0.8),          # between her face and her knees: both inside the focus
     "fx_window": (SEAT[0], ROW_Y + 0.0, 1.1),
 }
 
@@ -57,29 +59,33 @@ def _back_off(loc, aim, d):
 
 
 CAMERAS = {
-    # Ch 02 end: the gate from the back corner, high: rows of empty seats in the dark, Dawn small in the one pool of
-    # light at the front, the glass wall with the waiting aircraft and the jet bridge, the podium glowing by the door
-    "wide": dict(loc=(-6.6, -7.1, 3.15), aim=(1.2, 4.6, 0.55), lens=22, focus="fx_wide", fstop=8.0, beat="ch02",
+    # Ch 02 end: the gate from the back corner, high: rows of empty seats in the dark, Dawn in the one pool of light
+    # at the front, the glass wall with the waiting aircraft and the jet bridge, the podium glowing by the door
+    "wide": dict(loc=(-4.95, -4.65, 2.6), aim=(1.2, 4.6, -0.05), lens=30, focus="fx_wide", fstop=8.0, beat="ch02",
                  exposure=-1.1),
-    # Ch 03: controlled medium from the window side: Dawn under the one fitting, the suitcase, the empty rows behind
-    "seated": dict(loc=_back_off((1.35, 5.55, 0.95), (-0.95, 2.95, 0.58), 0.35), aim=(-0.95, 2.95, 0.58), lens=42,
-                   focus="fx_face", fstop=2.8, beat="ch03", exposure=-1.25),
+    # Ch 03: controlled medium from the window side: Dawn under the one fitting, the suitcase, the empty rows soft
+    # behind her (f/1.8)
+    "seated": dict(loc=_back_off((1.35, 5.55, 0.95), (-0.95, 2.95, 0.58), 0.35), aim=(-1.13, 3.12, 0.56), lens=45,
+                   focus="fx_dawn", fstop=1.8, beat="ch03", exposure=-1.25),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the floodlit aircraft
-    "window": dict(loc=(-2.05, -1.35, 1.3), aim=(-0.35, 6.0, 0.98), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
+    "window": dict(loc=(-2.05, -1.35, 1.3), aim=(-0.35, 6.0, 0.72), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
 # per-camera light trims (multipliers on named lights)
 KEY = "fx_{:+.1f}_{:+.1f}_light".format(*st.KEY_FX)
 POOL = "fx_{:+.1f}_{:+.1f}_pool".format(*st.KEY_FX)
 RIM = "dawn_rim"
+DIMS = ["fx_{:+.1f}_{:+.1f}_light".format(*xy) for xy, lv in st.FX_LEVEL.items() if lv == st.DIM]
 TRIMS = {
-    # the one fitting over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.4, RIM: 0.0, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 4.0 for xy in st.BACK_FX}},
-    # top light from the fitting over her seat is the key; the glass's spill would flatten her face
-    "seated": {"window_spill": 0.2, POOL: 0.22},
+    # the one downlight over her row makes the island; the glass's spill is cut to a trace so the rows fall off
+    "wide": {"window_spill": 0.4, RIM: 0.0, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 3.0 for xy in st.BACK_FX}},
+    # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
+    # fittings over the far rows a touch lower so the rows stay soft and dark behind her
+    "seated": {"window_spill": 0.2, POOL: 0.3, KEY: 0.6, **{n: 0.6 for n in DIMS}},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
     "window": {"window_spill": 0.15, KEY: 0.15, POOL: 0.06, RIM: 0.0},
 }
+FLAGS = {"seated": ["flag_near_seats"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
 
@@ -114,38 +120,40 @@ def _parts(ob):
 
 
 def dawn():
-    """Dawn as a traveller: the elegant suit's long-sleeved blouse (tinted flat: no pinstripe) over the casual suit's
-    trousers (flat dark), plain dark shoes; the stone shows only at the head, neck and hands. The suit's skirt is
-    deleted; the casual suit's T-shirt stays under the blouse, pulled in 4 mm and in the blouse's colour, so no gap
-    or poke-through shows at the waist."""
-    h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    top, trousers, shoes = (0.33, 0.318, 0.305), (0.045, 0.046, 0.05), (0.04, 0.04, 0.04)
-    items = ["female_elegantsuit01", "female_casualsuit01", "shoes01"]
-    castkit.dress(h, items, tint={"female_elegantsuit01": top, "female_casualsuit01": trousers, "shoes01": shoes},
-                  flat=tuple(items))
-    suit = bpy.data.objects[f"{h.name}_female_elegantsuit01"]
-    skirt = [p for p in _parts(suit) if p[2] < 1.0]
-    if skirt:
-        bm = bmesh.new()
-        bm.from_mesh(suit.data)
-        bm.verts.ensure_lookup_table()
-        bmesh.ops.delete(bm, geom=[bm.verts[i] for i in skirt[0][0]], context="VERTS")
-        bm.to_mesh(suit.data)
-        bm.free()
-    cas = bpy.data.objects[f"{h.name}_female_casualsuit01"]
-    shirt = [p for p in _parts(cas) if p[1] > 0.6]
-    if shirt:
-        idx = shirt[0][0]
-        cas.data.materials.append(suit.material_slots[0].material)
-        for poly in cas.data.polygons:
-            if poly.vertices[0] in idx:
-                poly.material_index = len(cas.data.materials) - 1
-        vg = cas.vertex_groups.new(name="tshirt")
-        vg.add(list(idx), 1.0, "REPLACE")
-        dp = cas.modifiers.new("tuck", "DISPLACE")
-        dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.0, -0.004, "tshirt"
-        cas.modifiers.move(cas.modifiers.find("tuck"), 1)        # after the armature, before the smoothing
-    print(f"GATE wardrobe: skirt parts {len(skirt)} deleted, T-shirt parts {len(shirt)} tucked", flush=True)
+    """Dawn in 2014 from the shared cast (people.dawn(): the blouse and skirt suit in flat dark umber, black flats),
+    so she matches the check-in hall the same day. Two stage-side touches, neither a change of wardrobe: the
+    jacket's front is relaxed (a gentle Laplacian smooth on its rest shape, chest only) so it hangs off the bust
+    instead of moulding it, and the bun sits a little lower and closer to the nape, so from behind the head reads as
+    a head, not a cap."""
+    h = people.dawn()
+    suit = bpy.data.objects.get(f"{h.name}_female_elegantsuit01")
+    n_drape = 0
+    if suit is not None:
+        me = suit.data
+        zs = [v.co.z for v in me.vertices]
+        top = max(zs)
+        ys = [v.co.y for v in me.vertices if top - 0.45 < v.co.z < top - 0.12]
+        ymid = (min(ys) + max(ys)) / 2 if ys else 0.0
+        vg = suit.vertex_groups.new(name="drape")
+        for v in me.vertices:
+            dz = v.co.z - (top - 0.3)                 # the bust line, about 0.3 m under the collar
+            if abs(dz) < 0.16 and v.co.y < ymid - 0.02:
+                vg.add([v.index], max(0.0, 1.0 - (abs(dz) / 0.16) ** 2), "REPLACE")
+                n_drape += 1
+        ls = suit.modifiers.new("drape", "LAPLACIANSMOOTH")
+        ls.vertex_group, ls.iterations, ls.lambda_factor, ls.lambda_border = "drape", 8, 0.7, 0.0
+        ls.use_volume_preserve, ls.use_normalized = True, True
+        suit.modifiers.move(suit.modifiers.find("drape"), 0)     # on the rest shape, before the armature
+    bun = bpy.data.objects.get(f"{h['body']}_bun")
+    if bun is not None:
+        me = bun.data
+        c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
+        for v in me.vertices:
+            d = v.co - c
+            v.co = c + Vector((d.x * 0.95, d.y * 0.78, d.z * 0.9)) + Vector((0.0, -0.008, -0.022))
+        me.update()
+    print(f"GATE wardrobe: people.dawn(), jacket front relaxed over {n_drape} vertices, bun "
+          f"{'lowered' if bun is not None else 'not found'}", flush=True)
     return h
 
 
@@ -230,7 +238,7 @@ def seat_height(x, y0):
     return zs[len(zs) // 2] if zs else prof
 
 
-UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 34}
+UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 52}
 
 
 def seat_figure(holder, seat_z):
@@ -363,6 +371,11 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
+    for cam, names in FLAGS.items():
+        for n in names:
+            ob = bpy.data.objects.get(n)
+            if ob is not None:
+                ob.hide_render = cam != name
     print(f"GATE camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}", flush=True)
 
 
@@ -400,6 +413,11 @@ def build(cast=True):
     rim = st.area(RIM, (SEAT[0] - 1.5, ROW_Y - 1.3, 2.2), (0.6, 0.6), 36.0, (0.62, 0.74, 1.0), spread=120)
     rim.rotation_euler = (Vector((SEAT[0], ROW_Y + 0.05, 1.05)) - rim.location).to_track_quat("-Z", "Y").to_euler()
     suitcase()
+    # a black flag beside the fitting over her row (seen by no camera, used by the seated one): the empty seats
+    # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
+    flag = st.box("flag_near_seats", (0.012, 1.3, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
+                  st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
+    flag.visible_camera = flag.visible_glossy = flag.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)

@@ -322,7 +322,7 @@ def aircraft(name, nose, heading=0.0, lit=0.6, seed=1, taxi=False, side=-1, nose
     xw = math.sqrt(R * R - zw * zw) + 0.006
     ang = math.atan2(zw, xw)
     y, i = 8.4, 0
-    while y < 28.4:
+    while y < 28.0:
         if not (14.6 < y < 15.6):  # over-wing exits: a plain panel
             r = rng.random()
             mat = m["cabin_lit"] if r < lit else (m["cabin_dim"] if r < lit + 0.12 else m["cabin_off"])
@@ -379,7 +379,7 @@ def _ribs(name, sec, length, w, h, m, pitch=0.3):
     rib.parent = sec
     ar = rib.modifiers.new("array", "ARRAY")
     ar.use_relative_offset, ar.use_constant_offset = False, True
-    ar.constant_offset_displacement = (0, pitch, 0)
+    ar.constant_offset_displace = (0, pitch, 0)
     ar.count = max(1, int((length - 0.4) / pitch))
     rib.modifiers.move(rib.modifiers.find("array"), 0)
     return rib
@@ -410,7 +410,7 @@ def jet_bridge(air):
     yaw = math.atan2(d.x, d.y)
     s_end = L - 1.1                                                 # the tunnel runs into the cab's back
     drop = sill                                                     # floor height at the cab (below the room's 0)
-    pitch = math.atan2(-drop, s_end - 1.8)
+    pitch = math.atan2(drop, s_end - 1.8)          # negative: the floor falls toward the cab
 
     def floor_z(s):
         return drop * max(0.0, (s - 1.8)) / (s_end - 1.8)
@@ -457,7 +457,7 @@ def jet_bridge(air):
     for k in range(nf):
         t = k / (nf - 1)
         x = x1 + (x0 - x1) * t
-        tilt = math.radians(-9.0) * t ** 1.5        # the last folds lean with the skin above the door
+        tilt = math.radians(-15.0) * t ** 1.5       # the last folds lean in with the skin above the door
         ww, hh = 2.45 - 0.12 * t, 2.55 - 0.1 * t
         st.box(f"jb_fold_{k}", (0.075, ww, hh), (x, cab_c.y, sill + 1.2 + 0.05 * t), dark, bevel=0.03, rot=(0, tilt, 0))
     st.box("jb_bellows_core", (x1 - x0 + 0.05, 2.25, 2.35), ((x0 + x1) / 2, cab_c.y, sill + 1.18), m["intake"])
@@ -494,7 +494,7 @@ def mast(i, x, y, target, h=20.0, energy=90000.0, size=82.0, blend=0.95, show=Tr
             for k in range(3):
                 lx = -1.0 + k * 1.0
                 lamp = st.box(f"mast_lamp_{i}_{row}_{k}", (0.62, 0.42, 0.18), (lx, 0.1, dz), m["sign_case"], bevel=0.02, parent=head)
-                lamp.rotation_euler = (math.radians(-tilt), 0, 0)
+                lamp.rotation_euler = (math.radians(tilt), 0, 0)   # lens faces down and toward the target
                 lens = st.box(f"mast_lens_{i}_{row}_{k}", (0.54, 0.34, 0.01), (0, 0, -0.092), m["flood"], parent=lamp)
                 lens.visible_shadow = False
         st.box(f"mast_yoke_{i}", (0.2, 0.2, 0.9), (0, -0.2, 0.0), m["mast"], bevel=0.01, parent=head)
