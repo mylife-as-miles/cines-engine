@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "skills": {
+    "tripo-studio-mcp": {
+      "source": "Tripo-Developer/Tripo-Studio-MCP",
+      "commit": "28c4c37916d5df8ab37a80c38cc7fd7f5de4f588",
+      "sourceType": "github",
+      "skillPath": "skills/tripo-studio-mcp/SKILL.md",
+      "computedHash": "539bb49769baf62cf1f16f8e98597311dab6da1673401f233d00161d12623770",
+      "installMode": "copy"
+    }
+  }
+}
