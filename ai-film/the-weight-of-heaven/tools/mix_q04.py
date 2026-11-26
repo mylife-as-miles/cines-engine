@@ -3,8 +3,8 @@
 
     /root/leonxlnx/earshot/.venv/bin/python tools/mix_q04.py   ->  out/edits/Q04_t1_fixed_mix.wav, stems in out/edits/stems_q04/
 
-The clock is the mended picture's. Its first 30 frames are the matched dissolve out of movement I's still cup: the
-bells and the cup's buzz come up through it (cut v11; in cut v10 a black card stood here).
+The clock is the mended picture's. Its first frame is the match cut out of movement I's still cup (cut v13): the
+room, the bells and the cup's buzz are there on that frame. (Cut v10 had a black card here; cuts v11 and v12 a dissolve.)
 
   voices   the video model's, from the take. Its low drone is taken out (whatever holds still at each frequency for two
            seconds: tools/mix_vale.py, lesson 50) and the track high-passed. Shot 1's sound is dropped whole (a swell and
@@ -139,7 +139,7 @@ def air():
     y = np.concatenate([w] * reps)[SR * 3:SR * 3 + N]
     y = sos(y, 'highpass', 150, 2)
     y = y * lin(-43.0 - mb.db(np.sqrt((mono(y) ** 2).mean()) + 1e-9))
-    return y * env([(0, -20.0), (1.8, 0.0), (DUR - 0.05, 0.0), (DUR, 0.0)])          # never digital silence: movement I ends at about -60 dBFS
+    return y * env([(0, 0.0), (DUR, 0.0)])                                        # there at once: the picture cuts in, so the room does too
 
 
 def bells():
@@ -151,10 +151,12 @@ def bells():
     x = st(mb.read_audio(P('audio/sfx/q04/bells_far.flac')))
     x = mb.varispeed(x, 0.84)
     x = sos(x, 'highpass', 140, 2)
-    y = Z(); place(y, fade(x, 0.05, 1.0), 0.3)
+    e = ndimage.maximum_filter1d(np.abs(mono(x)), SR // 100)
+    on = int(np.argmax(e > 0.25 * e.max())) / SR                                  # its first stroke
+    y = Z(); place(y, fade(x, 0.0, 1.0), 0.005 - on)                              # lands on the cut
     y = y * lin(-30.0 - mb.db(np.sqrt((mono(y)[int(0.8 * SR):int((PRE + 2.5) * SR)] ** 2).mean()) + 1e-9))
     first = PRE + SHOT['3']['out_start_s'] + 0.6                                 # his first word
-    return y * env([(0, -28.0), (0.9, 0.0), (PRE + 2.6, 0.0), (PRE + 4.4, -7.0), (first - 0.25, None), (DUR, None)])   # up through the dissolve, as movement I lets go
+    return y * env([(0, 0.0), (PRE + 2.6, 0.0), (PRE + 4.4, -7.0), (first - 0.25, None), (DUR, None)])
 
 
 def buzz():
@@ -167,7 +169,7 @@ def buzz():
     x = sos(x[:int((dur + 0.25) * SR)], 'highpass', 300, 2)
     s = x * lin(L_LINE - 17.0 - mb.lvl(x, 'm'))
     out = Z()
-    place(out, fade(s, 1.1, 0.3), PRE + 0.02)                                   # it comes up as the still cup becomes this one
+    place(out, fade(s, 0.005, 0.3), PRE)                                          # with the cut
     return out
 
 

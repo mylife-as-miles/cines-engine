@@ -173,6 +173,12 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 91 | **Do not regrade faces on the strength of a match made elsewhere.** A grade fitted on the cup's whites was put on every face unasked and darkened and greyed the shadows of skin. A transform is good where it was fitted; skin was not in the fit. | Cuts v10 and v11, shots 2 to 6. | Every colour match. |
 | 92 | **A slowed voice is another voice.** The Hierophant's line at 0.84 speed passed two listening models as natural, and the author asked for his voice back on first hearing. Offer a time-stretch as a sample to be heard, never as a fix already made (Oren lesson 39 said the same). And clean a deep voice lightly or not at all: the drone removal took 1.8 dB from the bottom of his. | Cuts v10 and v11, shot 4. | Every generated voice. |
 
+## From the author's verdict on cut v12
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 93 | **"Transition together" meant a cut.** Asked for the two cups to "transition together like Park Chan-wook", I made a matched dissolve; the author wanted a straight cut with the cup in the same place. A match cut is the plain reading and the faster one; a dissolve is a softening nobody asked for. When a direction can be read two ways, make the harder-edged one or ask. And cut the sound with the picture: a new sound landing on the cut (here the first far bell) is what makes it a cut. | Cut v11 against cut v13. | Every match transition. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
