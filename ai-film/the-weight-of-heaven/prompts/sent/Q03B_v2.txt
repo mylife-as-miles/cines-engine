@@ -1,0 +1,78 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q03B · ANVIL VALE · THE MOUNTAIN LETS GO
+References: @Image 1 — character sheet: the FARMER · @Image 2 — character sheet: his DAUGHTER · @Image 3 — environment: Anvil Vale, the place and its light · @Image 4 — first frame of shot 1: the Anvil, the farmer small before it · @Image 5 — first frame of shot 2: the daughter at the wall with the bowl · @Image 6 — prop: the wooden bowl
+Reference mode · 12 s · 3 shots · 2.35:1 · photoreal live action
+
+## SCENE INTENT
+The cost lands below. In the kingdom overhead a great bell has just been struck, and its weight has gone into the ground. In silence the face of the mountain lets go. The farmer has his daughter under his arm before the sound arrives, and the whole valley runs. Silence first, then weight, then fear.
+
+## GLOBAL LOCKS
+Character identity — The FARMER exactly as @Image 1: forties, weathered, short dark beard, his back bent by a life of carrying; he stoops even when he runs. His DAUGHTER exactly as @Image 2: six, small, one fair braid, grave grey eyes.
+Wardrobe override — none: patched grey-brown wool exactly as the sheets, damp, wet earth on his hands and boots.
+Location / environment continuity — Anvil Vale exactly as @Image 3, and lit exactly as @Image 3: black ploughed field; a low drystone wall; a low buttressed stone house with a mud path from its door; the flat-topped mountain, the Anvil, across the field; overhead the dark rock underside of a floating kingdom, a stone ceiling over the whole valley, with one pale band of cold daylight under it along the horizon. Overcast dusk, no sun, wet ground, cold wind, mist.
+Props and temporal state — This follows the previous sequence without a break: dust is already sifting from the Anvil's rim; the farmer stands in the field with his hoe; the bowl, exactly as @Image 6 and full of water, stands on the wall in front of his daughter.
+
+## MOVIE COLOR
+One colour for this whole world: cold blue-grey slate. Black wet earth, grey stone, grey-brown wool. The only bright thing is the pale band under the dark mass; the only warmth is skin and the wood of the bowl. Every shot is exposed for that band, everything else a stop under, blacks deep but never crushed. People are dark shapes against it, lit cold from one side. The dust is pale grey-brown and soft, and mist greys everything far off.
+Influences, each with its purpose — Denis Villeneuve: Arrival, a small human before a vast shape, and the silence before a sound; Dune, a wall of dust that swallows the horizon. James Cameron: every cause seen before its effect, weight that is physically true, and people running at the camera with the catastrophe behind them.
+Camera package — ARRI Alexa 65, large format, spherical primes, shallow focus on the medium shots, fine grain. Shots 1 and 2 are low and locked off. Shot 3 is handheld: the only handheld shot in the film.
+
+## VOICE DNA (immutable)
+No one speaks or cries out. No word of any kind is heard.
+
+## AUDIO DESIGN
+Shots 1 and 2 are almost silent: a low wind and nothing else. The falling rock makes no sound at all, because its sound has not reached them yet. In shot 3: boots in mud, his breath, water slapping in the bowl; then the sound arrives, a deep rolling roar that grows and does not stop. No music, no drone.
+
+## FIRST-FRAME ANCHOR
+Shot 1 opens exactly on @Image 4, the same framing. Shot 2 opens exactly on @Image 5, the same framing.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–4.5 s
+[CAM] wide, low, 85 mm, locked off; the sheer face of the Anvil fills the frame from edge to edge, blue-grey in mist; the dark mass closes the top of the frame, a band of pale sky between it and the mountain's rim; the black field is a low band along the bottom.
+[BLOCK] The farmer, small and dark, stands in the field left of centre with his back to us, the hoe in his hand. No one else is in the frame.
+[ACT] Dust sifts from the rim. A crack runs down the cliff from top to bottom. A slab of the face, a quarter of its width and its whole height, leans out, hangs for a moment, and drops, breaking as it falls. Pale dust blooms at the foot of the mountain and begins to roll out across the field. He takes one step back, turns, and runs toward us.
+[DIALOGUE] / V.O. none
+[SFX] wind only; the fall makes no sound.
+[STATE OUT] A pale scar on the cliff; dust rolling over the field; he is running toward the camera.
+
+### SHOT 2
+[TIME] 4.5–7.0 s
+[CAM] medium, in profile, at her eye height, 75 mm, locked off, shallow focus; the dark mass along the top of the frame, the field behind her dissolved to grey, the wet top of the wall along the bottom.
+[BLOCK] The daughter stands at the wall on the right of the frame, facing left, the bowl on the wall in front of her. The left half of the frame is empty.
+[ACT] Her eyes lift from the bowl to the mountain, off-frame left, and she does not blink. She takes the bowl off the wall in both hands and holds it against her chest. The farmer comes into the frame from the left at a run, bends without stopping, takes her round the waist under one arm, and carries her out of the frame to the right.
+[DIALOGUE] / V.O. none
+[SFX] wind; his boots in the mud, fast; her caught breath.
+[STATE OUT] The frame is empty: the wall, and a wet ring on the stone where the bowl stood.
+
+### SHOT 3
+[TIME] 7.0–12.0 s
+[CAM] medium, frontal, chest height, 28 mm, HANDHELD, the camera running backward ahead of him down the mud path, shaking with every stride; the dark mass closes the top of the frame; behind him the black field and, where the mountain stood, a wall of pale dust coming on.
+[BLOCK] The farmer runs straight at the camera, bent, his daughter carried level under his left arm with her face toward us, the bowl clutched to her chest. Far behind them a dozen valley people in the same grey wool run the same way from low stone houses, small and dark.
+[ACT] He runs. Water slops from the bowl. His eyes stay on the path ahead: he does not look back. Two seconds in, the sound reaches them: he flinches, ducks lower and runs harder, and the camera shakes more. Behind them the dust wall rises until it fills the sky under the mass.
+[DIALOGUE] / V.O. none
+[SFX] boots in mud; his breath; water slapping in the bowl; then the deep rolling roar, growing.
+[STATE OUT] He is still running at us; the dust has swallowed the mountain.
+
+## PERFORMANCE ARC
+THE FARMER: stillness → one step back → a dead run. He never straightens, and he never looks back.
+THE DAUGHTER: watching → the bowl held tight → carried. She does not scream; her eyes stay wide and open.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+The fall is seen before it is heard, as lightning comes before thunder: the people above never hear it at all. She saves the water. Above, a gold cup of wine does not move.
+
+## PHYSICS LOCKS
+Real weight, real time, normal speed: no slow motion. The slab falls as rock falls, slowly at first and then fast, and breaks. Dust billows and rolls along the ground, slower than the fall. A stooped man carrying a six-year-old runs heavily, boots sinking in mud. Water slops out of the bowl.
+
+## AUDIO LOCKS
+No speech, scream, music or drone. No sound from the mountain until the roar arrives in shot 3.
+
+## CONTINUITY LOCKS
+[POSITIVE] the Anvil, the field and the dark mass exactly as @Image 4 · the daughter, the wall and the bowl exactly as @Image 5 · she holds the bowl from shot 2 to the end · one source only, the low pale band, cold and from the side
+[NEGATIVE] sunlight, blue sky, green grass, flat even lighting · fire, sparks, lightning, glow or flash · slow motion · text or captions · camera movement in shots 1 and 2 · any second person in shot 1
+
+## GENERATION PRIORITY ORDER
+1. The light and colour of @Image 4 and @Image 5  2. The slab leaving the mountain: seen clearly, large in the frame, physically true  3. Character identity  4. Three shots in order, each with its own framing and length  5. Locked off, locked off, then handheld  6. Sound: silence, then the roar
+
+## FINAL STATE
+The weight has landed. A man is running with everything he has left under his arm, and behind him the mountain his valley is named for is gone.
