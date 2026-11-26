@@ -405,6 +405,75 @@ def paint(name, rgb, rough=0.5, bump=0.06, wear=0.2, edge_rgb=None):
     return m
 
 
+def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.15, 0.17, 0.19),
+               metal=(0.15, 0.15, 0.15)):
+    """Painted steel for the cell-door prop, replacing its generated texture (which read as trowelled plaster).
+    (loc, rot, scale) map the mesh's own coordinates to the door's local metres: x out of the face, y across the
+    leaf, z up from the floor. Satin-matt paint (roughness ~0.6) with large clean flat areas whose slight dents
+    (a 3 mm low-frequency bump) show under raking light; chips at edges and rivet heads (an edge mask from a bevel
+    normal, thresholded) showing dark bare metal (metallic, roughness 0.35); thin vertical drips and scuffs (noise
+    stretched 10:1 on Z) gathered in the lower 0.6 m, round the food hatch and under the window frame."""
+    m, nt, b = _new(name)
+    mp = _n(nt, "ShaderNodeMapping")
+    mp.inputs["Location"].default_value = loc
+    mp.inputs["Rotation"].default_value = rot
+    mp.inputs["Scale"].default_value = scale
+    _link(nt, _obj(nt), mp.inputs["Vector"])
+    p = mp.outputs["Vector"]
+    px, py, pz = _xyz(nt, p)
+    ay = _math(nt, "ABSOLUTE", py)
+    face = _vec(nt, py, pz, px)
+    # edge mask: where a bevelled normal turns away from the true one, the edge is sharp and convex or concave
+    bev = _n(nt, "ShaderNodeBevel", samples=8)
+    bev.inputs["Radius"].default_value = 0.006
+    geo = _n(nt, "ShaderNodeNewGeometry")
+    dt = _n(nt, "ShaderNodeVectorMath", operation="DOT_PRODUCT")
+    _link(nt, bev.outputs["Normal"], dt.inputs[0])
+    _link(nt, geo.outputs["Normal"], dt.inputs[1])
+    edge = _maprange(nt, _out(dt, "Value"), 0.985, 0.9, 0.0, 1.0)
+    pt = _maprange(nt, geo.outputs["Pointiness"], 0.55, 0.6, 0.0, 1.0)
+    edge = _math(nt, "MAXIMUM", edge, _math(nt, "MULTIPLY", pt, 0.7))
+    chipn = _noise(nt, face, 45.0, 4.0, 0.7)
+    chip = _maprange(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", edge, 0.5), chipn), 0.9, 0.98, 0.0, 1.0)
+    # where the drips and scuffs gather: low on the leaf, round the hatch, under and round the window frame
+    low = _maprange(nt, pz, 0.62, 0.15, 0.0, 1.0)
+    hatch = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.34, 0.24, 0.0, 1.0),
+                  _band(nt, pz, 0.6, 1.18, 0.06))
+    win = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.32, 0.22, 0.0, 1.0), _band(nt, pz, 0.95, 1.82, 0.08))
+    win = _math(nt, "MULTIPLY", win, _maprange(nt, pz, 0.95, 1.3, 0.4, 1.0))
+    zone = _math(nt, "MINIMUM", _math(nt, "ADD", _math(nt, "ADD", low, hatch), win), 1.0)
+    zone = _math(nt, "MULTIPLY", zone, _maprange(nt, _noise(nt, face, 3.0, 3.0, 0.6), 0.35, 0.6, 0.25, 1.0))
+    # thin vertical runs: a noise stretched 10:1 along Z, cut to thin lines, plus a wave of fine drip lines
+    stretch = _vec(nt, _math(nt, "MULTIPLY", py, 10.0), pz, _math(nt, "MULTIPLY", px, 10.0))
+    runs = _maprange(nt, _noise(nt, stretch, 9.0, 3.0, 0.6), 0.6, 0.66, 0.0, 1.0)
+    wv = _n(nt, "ShaderNodeTexWave", wave_type="BANDS", bands_direction="X")
+    wv.inputs["Scale"].default_value = 3.0
+    wv.inputs["Distortion"].default_value = 6.0
+    wv.inputs["Detail"].default_value = 3.0
+    _link(nt, stretch, wv.inputs["Vector"])
+    drips = _maprange(nt, _out(wv, "Fac"), 0.9, 0.97, 0.0, 1.0)
+    drips = _math(nt, "MULTIPLY", drips, _maprange(nt, _noise(nt, stretch, 2.0, 2.0, 0.5), 0.5, 0.62, 0.0, 1.0))
+    streak = _math(nt, "MULTIPLY", _math(nt, "MAXIMUM", runs, drips), zone)
+    # the paint: big clean fields with a faint roller tone, the streaks dark and dull
+    col = _mix(nt, _maprange(nt, _noise(nt, face, 1.6, 3.0, 0.5), 0.3, 0.7, 0.0, 0.18), paint,
+               tuple(c * 0.88 for c in paint))
+    col = _mix(nt, _math(nt, "MULTIPLY", zone, 0.25), col, tuple(c * 0.8 for c in paint))
+    col = _mix(nt, _math(nt, "MULTIPLY", streak, 0.7), col, (0.05, 0.045, 0.04))
+    col = _mix(nt, chip, col, metal)
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, chip, b.inputs["Metallic"])
+    r = _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, 0.56, 0.64)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", streak, 0.12))
+    r = _mix(nt, chip, _combine1(nt, r), (0.35, 0.35, 0.35))
+    _link(nt, _xyz(nt, r)[0], b.inputs["Roughness"])
+    # dents: a 3 mm low-frequency undulation of the panels; orange peel and the chips' step on top of it
+    dent = _bump(nt, b, _noise(nt, face, 2.2, 2.0, 0.5), 1.0, 0.003)
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", _noise(nt, face, 260.0, 2.0, 0.5), 0.15),
+              _math(nt, "MULTIPLY", chip, -1.0))
+    _bump(nt, b, h, 0.25, 0.0003, extra=dent.outputs["Normal"])
+    return m
+
+
 def plastic(name, rgb, rough=0.5, spec=0.5):
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -435,31 +504,53 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=()):
     m, nt, b = _new(name)
     o = _obj(nt)
     sp = _noise(nt, o, 520.0, 2.0, 0.5)
-    col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.45), rgb, tuple(c * 1.6 for c in rgb))
-    col = _mix(nt, _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.5, 0.75, 0.0, 0.35), col, tuple(c * 0.7 for c in rgb))
-    scr = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(5.0, 160.0, 5.0))
-    scr_m = _math(nt, "MULTIPLY", _maprange(nt, scr, 0.62, 0.66, 0.0, 1.0), _maprange(nt, _noise(nt, o, 4.0, 2.0, 0.5), 0.45, 0.62, 0.0, 1.0))
-    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.6), col, tuple(c * 2.2 for c in rgb))
-    ring_m = None
+    col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.3), rgb, tuple(c * 1.3 for c in rgb))
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.5, 0.75, 0.0, 0.3), col, tuple(c * 0.82 for c in rgb))
+    # wear lives in the ROUGHNESS only: fine micro-scratches running every which way (three stretched noises at
+    # unrelated angles, thresholded thin), gathered where arms and cups go
+    scr_m = None
+    for k, ang in enumerate((0.31, 1.24, 2.17, 2.79)):
+        rot = _n(nt, "ShaderNodeMapping")                # turn first, then stretch: each set runs its own way
+        rot.inputs["Rotation"].default_value = (0.0, 0.0, ang)
+        rot.inputs["Location"].default_value = (0.37 * k, 1.1 * k, 0.0)
+        _link(nt, o, rot.inputs["Vector"])
+        mp = _n(nt, "ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (28.0, 650.0, 28.0)
+        _link(nt, rot.outputs["Vector"], mp.inputs["Vector"])
+        nn = _n(nt, "ShaderNodeTexNoise")
+        nn.inputs["Scale"].default_value = 1.0 + 0.37 * k
+        nn.inputs["Detail"].default_value = 1.0
+        _link(nt, mp.outputs["Vector"], nn.inputs["Vector"])
+        s = _maprange(nt, nn.outputs["Fac"], 0.6, 0.64, 0.0, 1.0)
+        scr_m = s if scr_m is None else _math(nt, "MAXIMUM", scr_m, s)
+    scr_m = _math(nt, "MULTIPLY", scr_m, _maprange(nt, _noise(nt, o, 4.0, 2.0, 0.5), 0.42, 0.62, 0.0, 1.0))
+    ring_m = ring_in = None
     if rings:
         ox, oy, _ = _xyz(nt, o)
         for (rx, ry, rr) in rings:
             dx = _math(nt, "SUBTRACT", ox, rx)
             dy = _math(nt, "SUBTRACT", oy, ry)
             d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
-            ring = _math(nt, "MULTIPLY", _band(nt, d, rr - 0.0025, rr + 0.0015, 0.0015),
-                         _maprange(nt, _noise(nt, o, 40.0, 2.0, 0.5), 0.3, 0.6, 0.2, 1.0))
-            ring_m = ring if ring_m is None else _math(nt, "MAXIMUM", ring_m, ring)
-        col = _mix(nt, _math(nt, "MULTIPLY", ring_m, 0.5), col, tuple(c * 1.8 for c in rgb))
+            d = _math(nt, "ADD", d, _maprange(nt, _noise(nt, o, 60.0, 2.0, 0.5), 0.3, 0.7, -0.0015, 0.0015))
+            # a dried cup stain: faintly darker inside, a little darker again at its rim
+            inside = _maprange(nt, d, rr + 0.001, rr - 0.002, 0.0, 1.0)
+            edge = _band(nt, d, rr - 0.003, rr + 0.0005, 0.0012)
+            fade = _maprange(nt, _noise(nt, o, 25.0, 2.0, 0.5), 0.3, 0.6, 0.45, 1.0)
+            inside, edge = _math(nt, "MULTIPLY", inside, fade), _math(nt, "MULTIPLY", edge, fade)
+            ring_m = edge if ring_m is None else _math(nt, "MAXIMUM", ring_m, edge)
+            ring_in = inside if ring_in is None else _math(nt, "MAXIMUM", ring_in, inside)
+        col = _mix(nt, _math(nt, "MULTIPLY", ring_in, 0.5), col, tuple(c * 0.92 for c in rgb))
+        col = _mix(nt, ring_m, col, tuple(c * 0.86 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
     pol = _noise(nt, o, 1.8, 3.0, 0.5)
-    r = _maprange(nt, pol, 0.3, 0.7, rough - 0.16, rough + 0.1)
-    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.2), clamp=True)
-    if ring_m is not None:
-        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_m, 0.15), clamp=True)
+    r = _maprange(nt, pol, 0.3, 0.7, rough - 0.1, rough + 0.1)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.14), clamp=True)
+    if ring_in is not None:
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_in, 0.08), clamp=True)
+    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.7), 0.45)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.3
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -1.0), _math(nt, "MULTIPLY", sp, 0.2)), 0.08, 0.0003)
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.3), _math(nt, "MULTIPLY", sp, 0.2)), 0.05, 0.0003)
     return m
 
 
@@ -475,21 +566,28 @@ def enamel(name, rgb, rough=0.28):
     return m
 
 
-def paper(name, rgb=(0.6, 0.57, 0.5), rough=0.9, fibre=0.07):
-    """Envelope paper: matt, slightly warm, faint fibre and felt tooth, a little light through its thin body."""
+def paper(name, rgb=(0.80, 0.76, 0.68), rough=0.85, fibre=0.05, grime=0.0):
+    """Envelope paper: matt, warm cream, faint fibre (a fine noise bump at scale ~400) and felt tooth, a little
+    light through its thin body; `grime` greys its edges where it has been handled."""
     m, nt, b = _new(name)
     o = _obj(nt)
     fib = _noise(nt, o, 1.0, 4.0, 0.6, mapping=(90.0, 900.0, 90.0))
     blot = _noise(nt, o, 30.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, fib, 0.3, 0.7, 0.0, 0.1), rgb, tuple(c * 0.86 for c in rgb))
-    col = _mix(nt, _maprange(nt, blot, 0.6, 0.78, 0.0, 0.12), col, tuple(c * 0.8 for c in rgb))
+    col = _mix(nt, _maprange(nt, fib, 0.3, 0.7, 0.0, 0.08), rgb, tuple(c * 0.88 for c in rgb))
+    col = _mix(nt, _maprange(nt, blot, 0.6, 0.78, 0.0, 0.1), col, tuple(c * 0.84 for c in rgb))
+    if grime:
+        ox, oy, _ = _xyz(nt, o)
+        e = _math(nt, "MAXIMUM", _math(nt, "ABSOLUTE", _math(nt, "MULTIPLY", ox, 2.0 / 0.229)),
+                  _math(nt, "ABSOLUTE", _math(nt, "MULTIPLY", oy, 2.0 / 0.162)))
+        g = _math(nt, "MULTIPLY", _maprange(nt, e, 0.8, 1.0, 0.0, grime), _maprange(nt, _noise(nt, o, 18.0, 3.0, 0.6), 0.3, 0.7, 0.3, 1.0))
+        col = _mix(nt, g, col, tuple(c * 0.72 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = rough
     b.inputs["Specular IOR Level"].default_value = 0.3
     b.inputs["Subsurface Weight"].default_value = 0.06
     b.inputs["Subsurface Radius"].default_value = (0.002, 0.0015, 0.001)
-    tooth = _noise(nt, o, 600.0, 4.0, 0.65)
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.35), tooth), fibre, 0.00015)
+    tooth = _noise(nt, o, 400.0, 4.0, 0.65)
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.4), tooth), fibre, 0.0002)
     return m
 
 
@@ -514,10 +612,12 @@ def thin_glass(name, tint=(0.86, 0.9, 0.92), refl=0.05):
     tr = _n(nt, "ShaderNodeBsdfTransparent")
     tr.inputs["Color"].default_value = (*tint, 1)
     gl = _n(nt, "ShaderNodeBsdfGlossy")
-    gl.inputs["Roughness"].default_value = 0.03
+    # finger smudges and wiping marks: the reflection is sharp in clean patches and blurred (0.05-0.2) in smears
+    sm = _noise(nt, _obj(nt), 14.0, 5.0, 0.62)
+    _link(nt, _maprange(nt, sm, 0.35, 0.7, 0.05, 0.2), gl.inputs["Roughness"])
     lw = _n(nt, "ShaderNodeLayerWeight")
     lw.inputs["Blend"].default_value = 0.08
-    smudge = _maprange(nt, _noise(nt, _obj(nt), 25.0, 5.0, 0.6), 0.45, 0.75, 0.0, 0.05)
+    smudge = _maprange(nt, _noise(nt, _obj(nt), 25.0, 5.0, 0.6), 0.45, 0.75, 0.0, 0.07)
     fac = _math(nt, "ADD", _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.85), refl), smudge, clamp=True)
     mx = _n(nt, "ShaderNodeMixShader")
     _link(nt, fac, mx.inputs[0])
