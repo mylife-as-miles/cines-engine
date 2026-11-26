@@ -126,7 +126,11 @@ def _ao(nt, distance=0.35, inside=False):
 def _scratches(nt, o, angle, density, scale=(1.0, 260.0, 1.0)):
     """Thin wandering lines along a direction `angle` (radians about Z), only where a sparse mask lets them
     through: a 0..1 mask."""
-    line = _noise(nt, o, 1.0, 2.0, 0.4, mapping=scale, rot=(0.0, 0.0, angle))
+    # a Mapping node scales before it rotates, which would leave the lines along X: turn the coordinates first
+    turn = _n(nt, "ShaderNodeMapping")
+    turn.inputs["Rotation"].default_value = (0.0, 0.0, angle)
+    _link(nt, o, turn.inputs["Vector"])
+    line = _noise(nt, turn.outputs["Vector"], 1.0, 2.0, 0.4, mapping=scale)
     thin = _math(nt, "MULTIPLY", _maprange(nt, line, 0.493, 0.5, 0.0, 1.0), _maprange(nt, line, 0.507, 0.5, 0.0, 1.0))
     mask = _maprange(nt, _noise(nt, o, 6.0, 2.0, 0.5, offset=(angle * 3.0, 1.7, 0.0)), 0.5 + 0.12 * (1 - density), 0.62, 0.0, 1.0)
     return _math(nt, "MULTIPLY", thin, mask)
@@ -316,18 +320,11 @@ def photo(name, w, h, border, image_rgb=(0.16, 0.16, 0.16), paper_rgb=(0.74, 0.7
     prints = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(160.0, 220.0, 160.0))
     cluster = _maprange(nt, _noise(nt, o, 14.0, 2.0, 0.5), 0.55, 0.68, 0.0, 1.0)
     fp = _math(nt, "MULTIPLY", _maprange(nt, prints, 0.58, 0.66, 0.0, 1.0), cluster)
-    rough = _math(nt, "ADD", _mix(nt, inside, (0.3, 0.3, 0.3), (0.2, 0.2, 0.2)), 0.0)
-    r = _math(nt, "ADD", _n_sep_r(nt, rough), _math(nt, "MULTIPLY", fp, 0.22), clamp=True)
+    r = _math(nt, "ADD", _math(nt, "SUBTRACT", 0.3, _math(nt, "MULTIPLY", inside, 0.1)), _math(nt, "MULTIPLY", fp, 0.22), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.5
     _bump(nt, b, _noise(nt, o, 900.0, 2.0, 0.5), 0.03, 0.0001)
     return m
-
-
-def _n_sep_r(nt, colour_socket):
-    s = _n(nt, "ShaderNodeSeparateColor")
-    _link(nt, colour_socket, s.inputs["Color"])
-    return s.outputs[0]
 
 
 def manila(name, rgb=(0.5, 0.38, 0.21), rough=0.84):
@@ -357,7 +354,7 @@ def passport_cover(name, rgb=(0.012, 0.02, 0.05)):
     corners and edges where it has been carried."""
     m, nt, b = _new(name)
     o = _obj(nt)
-    vo = _n(nt, "ShaderNodeTexVoronoi", feature="SMOOTH_F1" if False else "F1")
+    vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
     vo.inputs["Scale"].default_value = 1500.0
     vo.inputs["Randomness"].default_value = 0.9
     _link(nt, o, vo.inputs["Vector"])

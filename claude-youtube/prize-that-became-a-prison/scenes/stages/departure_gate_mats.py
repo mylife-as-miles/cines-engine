@@ -192,9 +192,11 @@ def brushed(name, rgb=(0.6, 0.61, 0.63), rough=0.3, axis="X", smudge=0.12):
     return m
 
 
-def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5):
-    """Loop-pile carpet tiles laid quarter-turned (the rib runs along X on one tile, along Y on the next), each tile a
-    shade apart, a fleck in the yarn, tight seams, flattened and paler lanes where people walk, darker at contacts."""
+def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
+    """Loop-pile carpet tiles laid quarter-turned (the rib runs along X on one tile, along Y on the next, and the two
+    orientations sit 8 % apart in value, as pile direction does), each tile a shade apart, a fleck in the yarn, tight
+    seams, flattened and paler lanes where people walk, darker at contacts. `lanes_xy`: rectangles (x0, x1, y0, y1) in
+    object space of soiled, darker traffic lanes (the queue in front of the podium)."""
     m, nt, b = _new(name)
     o = _obj(nt)
     x, y, _ = _xyz(nt, o)
@@ -214,7 +216,8 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5):
     rib = _math(nt, "ADD", _math(nt, "MULTIPLY", rib_x, _math(nt, "SUBTRACT", 1.0, parity)), _math(nt, "MULTIPLY", rib_y, parity))
     rib = _maprange(nt, rib, -1.0, 1.0, 0.0, 1.0)
     fleck = _noise(nt, o, 260.0, 2.0, 0.6)
-    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.86 for c in base), tuple(c * 1.14 for c in base))
+    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.93 for c in base), tuple(c * 1.07 for c in base))
+    col = _mix(nt, parity, _mix(nt, 1.0, col, (0.92, 0.92, 0.92), blend="MULTIPLY"), _mix(nt, 1.0, col, (1.08, 1.08, 1.08), blend="MULTIPLY"))
     col = _mix(nt, _maprange(nt, rib, 0.0, 1.0, 0.18, 0.0), col, (0.0, 0.0, 0.0))
     col = _mix(nt, _maprange(nt, fleck, 0.6, 0.72, 0.0, 0.45), col, (0.085, 0.09, 0.1))
     col = _mix(nt, _maprange(nt, fleck, 0.28, 0.36, 0.35, 0.0), col, (0.008, 0.009, 0.012))
@@ -228,6 +231,12 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5):
     col = _mix(nt, _math(nt, "MULTIPLY", wear, 0.3), col, (0.07, 0.075, 0.085))
     stain = _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.66, 0.74, 0.0, 0.35)
     col = _mix(nt, stain, col, (0.012, 0.012, 0.012))
+    for (x0, x1, y0, y1) in lanes_xy:
+        r = _math(nt, "MULTIPLY", _maprange(nt, x, x0 - 0.35, x0 + 0.35, 0.0, 1.0), _maprange(nt, x, x1 - 0.35, x1 + 0.35, 1.0, 0.0))
+        r = _math(nt, "MULTIPLY", r, _math(nt, "MULTIPLY", _maprange(nt, y, y0 - 0.35, y0 + 0.35, 0.0, 1.0),
+                                           _maprange(nt, y, y1 - 0.35, y1 + 0.35, 1.0, 0.0)))
+        r = _math(nt, "MULTIPLY", r, _maprange(nt, _noise(nt, o, 1.4, 4.0, 0.6), 0.3, 0.7, 0.35, 0.6))
+        col = _mix(nt, r, col, tuple(c * 0.45 for c in base))
     col = _mix(nt, _maprange(nt, _ao(nt, 0.4), 0.3, 1.0, 0.7, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = 0.96
@@ -395,9 +404,93 @@ def lens(name, rgb, strength):
     return m
 
 
+def perforated(name, steel=0.32, hole=0.01, pitch=0.008, radius=0.0025, border=0.028):
+    """Perforated steel on the shell's UVs (metres): round holes on a staggered 8 mm grid, a plain border round each
+    field and across the bend. Holes drive colour and a gentle bump only (no real holes: no shimmer in the wide)."""
+    m, nt, b = _new(name)
+    uvn = _n(nt, "ShaderNodeUVMap")
+    u, v, _ = _xyz(nt, uvn.outputs["UV"])
+    us, vs = _math(nt, "DIVIDE", u, pitch), _math(nt, "DIVIDE", v, pitch)
+    row = _math(nt, "FLOOR", vs)
+    us = _math(nt, "ADD", us, _math(nt, "MULTIPLY", _math(nt, "FLOORED_MODULO", row, 2.0), 0.5))
+    fu = _math(nt, "SUBTRACT", _math(nt, "FRACT", us), 0.5)
+    fv = _math(nt, "SUBTRACT", _math(nt, "FRACT", vs), 0.5)
+    d = _math(nt, "MULTIPLY", _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", fu, fu), _math(nt, "MULTIPLY", fv, fv))), pitch)
+    hole_m = _maprange(nt, d, radius - 0.0004, radius + 0.0004, 1.0, 0.0)
+    # fields: inside the side borders, on the pan (v 0.09..0.44) and the back (v 0.60..0.91); plain lip, bend and top
+    side = _maprange(nt, _math(nt, "ABSOLUTE", u), 0.25 - border - 0.002, 0.25 - border, 1.0, 0.0)
+    pan = _math(nt, "MULTIPLY", _maprange(nt, v, 0.09, 0.094, 0.0, 1.0), _maprange(nt, v, 0.44, 0.444, 1.0, 0.0))
+    back = _math(nt, "MULTIPLY", _maprange(nt, v, 0.60, 0.604, 0.0, 1.0), _maprange(nt, v, 0.906, 0.91, 1.0, 0.0))
+    field = _math(nt, "MULTIPLY", side, _math(nt, "ADD", pan, back, clamp=True))
+    hole_m = _math(nt, "MULTIPLY", hole_m, field)
+    wear = _maprange(nt, _noise(nt, _obj(nt), 9.0, 4.0, 0.6), 0.3, 0.7, 0.92, 1.06)
+    st = _math(nt, "MULTIPLY", wear, steel)
+    cs = _n(nt, "ShaderNodeCombineXYZ")
+    for k, f in zip("XYZ", (1.0, 1.01, 1.04)):
+        _link(nt, _math(nt, "MULTIPLY", st, f), cs.inputs[k])
+    col = _mix(nt, hole_m, cs.outputs["Vector"], (hole, hole, hole))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Metallic"].default_value = 0.85
+    _link(nt, _maprange(nt, hole_m, 0.0, 1.0, 0.4, 0.8), b.inputs["Roughness"])
+    _bump(nt, b, _math(nt, "MULTIPLY", hole_m, -1.0), 0.08, 0.0015)
+    return m
+
+
+def fuselage(name, top=(0.3, 0.305, 0.31), belly=(0.17, 0.172, 0.176)):
+    """Aircraft paint, no livery: satin (roughness ~0.5, specular 0.3), panel lines by bump on the skin's UVs in metres
+    (1.6 m along, 0.9 m around, staggered), a darker belly by the surface normal."""
+    m, nt, b = _new(name)
+    uvn = _n(nt, "ShaderNodeUVMap")
+    u, v, _ = _xyz(nt, uvn.outputs["UV"])
+    pv = _n(nt, "ShaderNodeCombineXYZ")
+    _link(nt, _math(nt, "ADD", v, 0.8), pv.inputs["X"])        # parts without UVs (0, 0) land mid-panel
+    _link(nt, _math(nt, "ADD", u, 0.45), pv.inputs["Y"])
+    _, joint = _brick(nt, pv.outputs["Vector"], 1.6, 0.9, 0.004, (1, 1, 1), (1, 1, 1), (0, 0, 0), offset=0.5, smooth=0.0)
+    nrm = _n(nt, "ShaderNodeNewGeometry").outputs["Normal"]
+    _, _, nz = _xyz(nt, nrm)
+    bel = _maprange(nt, nz, 0.15, -0.55, 0.0, 1.0)
+    col = _mix(nt, bel, top, belly)
+    o = _obj(nt)
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 0.4, 4.0, 0.6), 0.3, 0.7, 0.0, 0.18), col, tuple(c * 0.8 for c in belly))
+    col = _mix(nt, _math(nt, "MULTIPLY", joint, 0.25), col, (0.05, 0.05, 0.05))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Specular IOR Level"].default_value = 0.3
+    _link(nt, _maprange(nt, _noise(nt, o, 1.2, 4.0, 0.6), 0.3, 0.7, 0.45, 0.55), b.inputs["Roughness"])
+    _bump(nt, b, _math(nt, "MULTIPLY", joint, -1.0), 0.05, 0.002)
+    return m
+
+
+def cockpit_glass(name):
+    """Flight-deck glazing: near-black glass, glossy (roughness 0.05), a faint cool instrument glow from inside."""
+    m, nt, b = _new(name)
+    b.inputs["Base Color"].default_value = (0.004, 0.0045, 0.005, 1)
+    b.inputs["Roughness"].default_value = 0.05
+    b.inputs["Specular IOR Level"].default_value = 0.6
+    b.inputs["Emission Color"].default_value = (0.45, 0.58, 0.8, 1)
+    b.inputs["Emission Strength"].default_value = 0.2
+    return m
+
+
+def ribbed(name, rgb=(0.13, 0.135, 0.14), pitch=0.30, axis="Y", metal=0.5):
+    """Corrugated cladding (jet bridge tunnel, bellows): ribs across local `axis` at `pitch`, as a bump."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    comp = dict(zip("XYZ", _xyz(nt, o)))[axis]
+    w = _math(nt, "SINE", _math(nt, "MULTIPLY", comp, 6.2832 / pitch))
+    rib = _maprange(nt, w, -1.0, 1.0, 0.0, 1.0)
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 0.9, 4.0, 0.6), 0.3, 0.7, 0.0, 0.5), rgb, tuple(c * 0.75 for c in rgb))
+    col = _mix(nt, _maprange(nt, rib, 0.0, 0.25, 0.35, 0.0), col, tuple(c * 0.5 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Metallic"].default_value = metal
+    _link(nt, _maprange(nt, _noise(nt, o, 3.0, 3.0, 0.6), 0.3, 0.7, 0.45, 0.65), b.inputs["Roughness"])
+    _bump(nt, b, rib, 0.1, 0.02)
+    return m
+
+
 # ---------------------------------------------------------------- exterior
 def concrete(name, base=(0.12, 0.121, 0.123), slab=5.0):
-    """Apron concrete: 5 m slabs with sealed joints, tyre and oil darkening, patchy roughness (wet-looking under lamps)."""
+    """Apron concrete: 5 m slabs with sealed joints, tyre and oil darkening, patchy roughness, and wet patches
+    (roughness 0.15 in a broad noise mask) that pick up the masts' reflections."""
     m, nt, b = _new(name)
     o = _obj(nt)
     col, joint = _brick(nt, o, slab, slab, 0.006, base, tuple(c * 0.9 for c in base), (0.012, 0.012, 0.012))
@@ -405,9 +498,16 @@ def concrete(name, base=(0.12, 0.121, 0.123), slab=5.0):
     oil = _maprange(nt, _noise(nt, o, 0.35, 5.0, 0.65), 0.6, 0.72, 0.0, 0.7)
     col = _mix(nt, oil, col, (0.015, 0.015, 0.016))
     col = _mix(nt, _maprange(nt, _noise(nt, o, 6.0, 3.0, 0.6), 0.3, 0.7, 0.0, 0.25), col, tuple(c * 1.3 for c in base))
+    wet = _maprange(nt, _noise(nt, o, 0.045, 3.0, 0.55), 0.56, 0.62, 0.0, 1.0)
+    col = _mix(nt, _math(nt, "MULTIPLY", wet, 0.45), col, tuple(c * 0.5 for c in base))
     _link(nt, col, b.inputs["Base Color"])
-    r = _maprange(nt, _noise(nt, o, 0.12, 4.0, 0.6), 0.3, 0.7, 0.35, 0.8)
-    _link(nt, _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", oil, 0.3), clamp=True), b.inputs["Roughness"])
+    r = _maprange(nt, _noise(nt, o, 0.12, 4.0, 0.6), 0.3, 0.7, 0.4, 0.8)
+    r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", oil, 0.3), clamp=True)
+    mx = _n(nt, "ShaderNodeMix", data_type="FLOAT")
+    _link(nt, wet, mx.inputs["Factor"])
+    _link(nt, r, mx.inputs["A"])
+    mx.inputs["B"].default_value = 0.15
+    _link(nt, mx.outputs["Result"], b.inputs["Roughness"])
     _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", joint, -1.0), _math(nt, "MULTIPLY", _noise(nt, o, 40.0, 3.0, 0.6), 0.2)), 0.3, 0.01)
     return m
 
@@ -484,7 +584,8 @@ def materials():
     if M:
         return M
     M.update(
-        carpet=carpet("carpet tiles"),
+        # the soiled queue lane in front of the podium (carpet object space: world minus (-0.5, -1.45))
+        carpet=carpet("carpet tiles", base=(0.042, 0.048, 0.06), lanes_xy=[(4.6 + 0.5, 9.9 + 0.5, 2.2 + 1.45, 4.4 + 1.45)]),
         stone=stone("terrazzo strip"),
         convector=grille("floor convector", (0.04, 0.042, 0.046), 0.014, "X"),
         diffuser=grille("slot diffuser", (0.06, 0.062, 0.066), 0.02, "X"),
@@ -492,7 +593,7 @@ def materials():
         wall=wall_panels("wall cladding", (0.11, 0.115, 0.125)),
         wall_side=wall_panels("side wall cladding", (0.095, 0.1, 0.11), width=1.5, along="Y"),
         bulk=pbr("bulkhead plaster", (0.15, 0.155, 0.16), (0.6, 0.75), nscale=1.5, cvar=0.08),
-        column=pbr("column paint", (0.3, 0.305, 0.31), (0.32, 0.48), nscale=2.0, cvar=0.06, bump=0.06, bscale=300, grime=0.3),
+        column=pbr("column paint", (0.3, 0.305, 0.31), (0.72, 0.85), nscale=2.0, cvar=0.06, bump=0.06, bscale=300, grime=0.3),
         steel=brushed("brushed steel", (0.6, 0.61, 0.63), 0.28, "Z"),
         steel_x=brushed("brushed steel x", (0.6, 0.61, 0.63), 0.26, "X"),
         alu=pbr("anodised mullion", (0.045, 0.047, 0.052), (0.28, 0.42), metal=0.85, nscale=3, stretch=(1, 1, 30), cvar=0.08),
@@ -503,7 +604,8 @@ def materials():
         plastic=pbr("dark plastic", (0.022, 0.023, 0.026), (0.38, 0.52), nscale=8, cvar=0.12),
         plastic_mid=pbr("grey plastic", (0.12, 0.124, 0.13), (0.4, 0.55), nscale=8, cvar=0.08),
         screen_off=pbr("screen glass off", (0.004, 0.005, 0.006), (0.05, 0.1), nscale=10, cvar=0.05),
-        housing=pbr("fixture housing", (0.08, 0.083, 0.088), (0.35, 0.5), metal=0.7, nscale=4, cvar=0.08),
+        housing=pbr("fixture housing", (0.2, 0.205, 0.21), (0.45, 0.6), metal=0.3, nscale=4, cvar=0.06),
+        sign_case=pbr("sign case", (0.06, 0.062, 0.066), (0.4, 0.55), metal=0.5, nscale=4, cvar=0.08),
         lens_off=pbr("lens off", (0.22, 0.225, 0.23), (0.35, 0.45), nscale=5, cvar=0.04),
         door=pbr("door steel", (0.07, 0.074, 0.08), (0.35, 0.5), metal=0.4, nscale=3, cvar=0.08, grime=0.3),
         shutter=shutter("roller shutter"),
@@ -522,25 +624,40 @@ def materials():
         concrete=concrete("apron concrete"),
         asphalt=pbr("runway asphalt", (0.025, 0.025, 0.026), (0.55, 0.8), nscale=0.05, cvar=0.25),
         grass=pbr("airfield grass", (0.012, 0.014, 0.012), (0.8, 0.95), nscale=0.02, cvar=0.3),
-        yellow=line_paint("yellow line", (0.42, 0.3, 0.04)),
+        yellow=line_paint("yellow line", (0.35, 0.28, 0.06)),
+        tape=pbr("floor tape", (0.25, 0.20, 0.06), (0.42, 0.55), nscale=6, cvar=0.12, grime=0.2),
+        cup=pbr("paper cup", (0.55, 0.52, 0.47), (0.72, 0.82), nscale=30, cvar=0.04),
+        cup_lid=pbr("cup lid", (0.03, 0.03, 0.032), (0.35, 0.45), nscale=30, cvar=0.05),
+        paper=pbr("newsprint", (0.46, 0.45, 0.42), (0.82, 0.92), nscale=20, cvar=0.08, bump=0.05, bscale=400),
+        # gate seating (built in departure_gate_seats.py)
+        perf=perforated("perforated steel"),
+        frame=pbr("seat frame", (0.035, 0.036, 0.04), (0.32, 0.45), metal=0.7, nscale=6, cvar=0.12, grime=0.2),
+        arm=pbr("polished aluminium", (0.6, 0.61, 0.63), (0.33, 0.4), metal=1.0, nscale=10, cvar=0.06),
+        pad=pbr("arm pad", (0.016, 0.016, 0.017), (0.5, 0.65), nscale=20, cvar=0.15),
+        glide=pbr("glide", (0.01, 0.01, 0.011), (0.6, 0.8), nscale=20, cvar=0.15),
         white=line_paint("white line", (0.42, 0.42, 0.42)),
         red=line_paint("red line", (0.3, 0.03, 0.025)),
         facade=pbr("facade cladding", (0.05, 0.053, 0.058), (0.3, 0.5), metal=0.6, nscale=0.6, cvar=0.12),
-        fuselage=pbr("aircraft paint", (0.24, 0.245, 0.25), (0.26, 0.4), nscale=0.3, cvar=0.06, coat=0.3),
-        fuselage_dark=pbr("aircraft belly", (0.1, 0.102, 0.105), (0.3, 0.45), nscale=0.3, cvar=0.1, coat=0.3),
+        fuselage=fuselage("aircraft paint"),
+        fuselage_dark=pbr("aircraft belly", (0.12, 0.122, 0.125), (0.45, 0.55), nscale=0.3, cvar=0.1),
+        cockpit_glass=cockpit_glass("cockpit glass"),
+        cockpit_frame=pbr("cockpit frame", (0.025, 0.026, 0.028), (0.4, 0.5), nscale=4, cvar=0.1),
         engine=pbr("nacelle", (0.22, 0.225, 0.23), (0.25, 0.4), metal=0.3, nscale=0.6, cvar=0.08, coat=0.4),
         intake=pbr("intake dark", (0.01, 0.01, 0.011), (0.3, 0.5), metal=0.6, nscale=3, cvar=0.2),
         tyre=pbr("tyre", (0.012, 0.012, 0.013), (0.6, 0.8), nscale=5, cvar=0.2),
         gear=pbr("gear strut", (0.3, 0.3, 0.31), (0.2, 0.35), metal=1.0, nscale=4, cvar=0.1),
-        bridge=pbr("jet bridge cladding", (0.13, 0.135, 0.14), (0.3, 0.45), metal=0.6, nscale=0.8, stretch=(1, 1, 8), cvar=0.12),
+        bridge=ribbed("jet bridge cladding", (0.13, 0.135, 0.14), 0.30, "Y", metal=0.5),
+        bridge_plain=pbr("jet bridge plate", (0.11, 0.114, 0.12), (0.4, 0.55), metal=0.5, nscale=0.8, cvar=0.12),
         bellows=pbr("bridge bellows", (0.02, 0.021, 0.022), (0.6, 0.8), nscale=2, cvar=0.2),
-        mast=pbr("galvanised mast", (0.2, 0.205, 0.21), (0.35, 0.55), metal=0.9, nscale=0.4, cvar=0.15),
+        bellows_rib=ribbed("bellows ribs", (0.022, 0.023, 0.025), 0.09, "X", metal=0.0),
+        mast=pbr("galvanised mast", (0.18, 0.18, 0.185), (0.55, 0.68), metal=0.0, nscale=0.4, cvar=0.15),
         vehicle=pbr("ground vehicle", (0.06, 0.062, 0.066), (0.35, 0.55), nscale=1.0, cvar=0.12, coat=0.2),
         cabin_lit=glow("cabin window", (1.0, 0.88, 0.72), 7.0),
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
-        cockpit=glow("cockpit glow", (0.5, 0.62, 0.85), 0.5),
-        bridge_win=glow("bridge window", (0.7, 0.8, 1.0), 0.45, 0.4, ("Y", "Z")),
+
+        bridge_win=glow("bridge window", (1.0, 0.84, 0.62), 1.5, 0.35, ("Y", "Z")),
+        screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),
         nav_green=glow("nav green", (0.1, 1.0, 0.35), 50.0),

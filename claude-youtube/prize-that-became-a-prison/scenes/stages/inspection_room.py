@@ -57,7 +57,7 @@ PROPS = {  # size, axis, grade
     "handbag-shoulder": (0.32, "long", dict(sat=0.55, val=0.5, rough_add=0.25)),
 }
 FINISH = {  # specular level and woven face (period m, bump strength) per prop
-    "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25)),
+    "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25), ceiling=(0.05, 0.052, 0.058)),
     "extra-bag-closed": dict(spec=0.22),
     "extra-bag-open": dict(spec=0.22),
     "handbag-tote": dict(spec=0.4),
@@ -95,7 +95,7 @@ CAMERAS = {
     # Ch 00: the tag on the suitcase's top, from Dawn's side; the zip pulls as bokeh at the bottom, the officer an
     # out-of-focus silhouette beyond (cheated into the gap between the trolley tubes for this angle)
     "tag": dict(loc=(0.487, -0.307, 1.612), aim=(0.455, 0.058, 1.352), lens=50, focus="tag_hole_focus", fstop=1.8,
-                beat="ch00", cheat={"OfficerA": (0.38, 0.58)}, raking=True, exposure=-3.2,
+                beat="ch00", cheat={"OfficerA": (0.38, 0.58)}, raking=True, exposure=-3.9,
                 pose={"OfficerA": {"head": (24, 0), "chest": (8, 0), "r_arm": (12, 6, 26), "l_arm": (10, 6, 24), "fingers": 40}}),
     # Ch 00: low at the end of the bench, Dawn and the questioning officer facing each other over the bags, the door's
     # vision panel glowing between them
@@ -256,7 +256,8 @@ def load_props():
                 for slot in o.material_slots:
                     if slot.material and slot.material.name not in seen:
                         seen.add(slot.material.name)
-                        st.mt.tune_prop(slot.material, spec=fin.get("spec"), weave=fin.get("weave"), to_metres=to_m)
+                        st.mt.tune_prop(slot.material, spec=fin.get("spec"), weave=fin.get("weave"), to_metres=to_m,
+                                       ceiling=fin.get("ceiling"))
         out[name] = h
     return out
 

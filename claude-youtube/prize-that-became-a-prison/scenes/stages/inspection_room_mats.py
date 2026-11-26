@@ -383,11 +383,12 @@ def twine(name, rgb=(0.26, 0.21, 0.14), rough=0.9):
     return m
 
 
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None):
     """Finish a generated prop's material in place. spec sets the dielectric specular level (generated textures come
     with a plastic sheen: on dark fabric under a troffer the sheen, not the colour, is what the eye reads, so dark
     bags go grey unless it is cut). weave = (period_m, strength) adds a plain-weave bump on top of the prop's own
-    normal map; `to_metres` converts the mesh's object space to metres."""
+    normal map; `to_metres` converts the mesh's object space to metres. ceiling = rgb caps the base colour per channel
+    (the case's pale moulded zip pulls go gunmetal; its dark fabric is below the cap and untouched)."""
     if not (mat and mat.use_nodes):
         return
     nt = mat.node_tree
@@ -396,6 +397,13 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
         return
     if spec is not None:
         b.inputs["Specular IOR Level"].default_value = spec
+    if ceiling and b.inputs["Base Color"].is_linked:
+        src = b.inputs["Base Color"].links[0].from_socket
+        dk = _n(nt, "ShaderNodeMix", data_type="RGBA", blend_type="DARKEN")
+        dk.inputs["Factor"].default_value = 1.0
+        dk.inputs["B"].default_value = (*ceiling, 1.0)
+        _link(nt, src, dk.inputs["A"])
+        _link(nt, _out(dk), b.inputs["Base Color"])
     if weave:
         period, strength = weave
         o = _obj(nt)
