@@ -433,8 +433,9 @@ def materials():
     M["steel_bare"] = pbr("bare steel", (0.4, 0.4, 0.41), rough=(0.35, 0.55), metal=1.0, nscale=8.0, cvar=0.15)
     M["roof_steel"] = pbr("roof steel", (0.05, 0.052, 0.055), rough=(0.5, 0.7), metal=0.4, nscale=1.0, cvar=0.2)
     M["crate"] = crate_plastic()
-    M["counter_top"] = laminate("counter top")
-    M["counter_front"] = pbr("counter front", (0.085, 0.085, 0.09), rough=(0.35, 0.55), nscale=3.0, cvar=0.12, grime=0.2)
+    M["counter_top"] = laminate("counter top", (0.11, 0.105, 0.098))
+    M["counter_front"] = pbr("counter front", (0.04, 0.038, 0.037), rough=(0.4, 0.6), nscale=3.0, cvar=0.25, grime=0.3,
+                             bump=0.03, bscale=150.0)
     M["ply"] = pbr("plywood shelf", (0.26, 0.2, 0.14), rough=(0.6, 0.8), nscale=2.0, stretch=(1, 12, 1), cvar=0.25)
     M["cable"] = pbr("cable rubber", (0.018, 0.018, 0.019), rough=(0.45, 0.6), nscale=40.0, cvar=0.3, spec=0.4)
     M["cable_grey"] = pbr("cable grey", (0.16, 0.16, 0.155), rough=(0.5, 0.65), nscale=40.0, cvar=0.2)
@@ -445,7 +446,7 @@ def materials():
     M["tube_warm"] = tube("bulb warm", 14.0, (1.0, 0.72, 0.42))
     M["diffuser_off"] = pbr("tube off", (0.36, 0.37, 0.38), rough=(0.25, 0.35), nscale=10.0, cvar=0.05)
     M["batten"] = pbr("batten body", (0.42, 0.43, 0.44), rough=(0.4, 0.55), nscale=12.0, cvar=0.12, grime=0.4)
-    M["sky"] = glow("skylight night", (0.32, 0.42, 0.6), 0.06)
+    M["sky"] = glow("skylight night", (0.32, 0.42, 0.6), 0.35)
     M["tape"] = pbr("tape roll", (0.5, 0.42, 0.3), rough=(0.3, 0.45), nscale=30.0, cvar=0.1)
     M["poly_bag"] = pbr("folded carrier bags", (0.02, 0.02, 0.022), rough=(0.25, 0.4), nscale=25.0, cvar=0.3, spec=0.5)
     return M

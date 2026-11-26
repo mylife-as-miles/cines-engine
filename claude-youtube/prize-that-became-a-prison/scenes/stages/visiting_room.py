@@ -11,9 +11,16 @@ them carries it. Every other booth is empty, its handsets on their hooks.
     <bpy python> -I scenes/shoot.py -- visiting_room <cam> out.png [--nocast]
 
 Cameras (each carries its beat): wide (the row from the back of the visitors' room, the one lit booth), glass (over
-Tim's shoulder through the glass to Dawn on the phone, his faint reflection in the glass between them), empty (an
-empty booth: the handset hanging on its hook; the cast hidden). A hook on setkit.render applies each camera's light
-trims, cast visibility and denoiser settings.
+Tim's shoulder through the glass to Dawn on the phone, his faint reflection in the glass between them: they sit a
+little toward their own phones so it falls beside her face, not on it), empty (an empty booth: the handset hanging
+on its hook, the other side's phone across the glass; the cast hidden). A hook on setkit.render applies each camera's
+light trims (TRIMS), cast visibility, exposure, the strength of the marks on the glass ("film") and the denoiser
+settings. VISIT_ONLY=glass,empty in the environment limits `--cam all` to those cameras (one build).
+
+Stage-side finishing of the shared cast (no change of wardrobe or colour): the garments made matt (their satin
+specular under the top light read as pale stone), the sculpted hair smoothed and a shade darker (at the cast's 0.2 the
+crown under the tubes rendered brighter than the face and Tim read bald), as inspection_room.py and checkin_hall.py
+do.
 
 The set is visiting_room_set.py, its materials visiting_room_mats.py. The people come from scenes/people.py; this
 stage seats, poses and places them: legs to FK and solved so the seat meets the seat and the soles the floor (after

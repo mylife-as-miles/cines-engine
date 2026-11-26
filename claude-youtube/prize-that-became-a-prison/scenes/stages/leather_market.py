@@ -44,29 +44,29 @@ BAG_TURN = 0.0
 
 # where the cast stands and what each faces, per beat ("buy": at the counter; "look": Dawn inside, at the wall)
 BLOCKING = {
-    "buy": {"Organiser": ((0.94, 5.02), (BX, BY)), "Stallholder": ((2.27, 4.97), (BX, BY - 0.15)),
+    "buy": {"Organiser": ((0.94, 5.10), (BX, 5.10)), "Stallholder": ((2.27, 5.11), (BX, 5.11)),
             "Dawn": ((0.10, 5.72), (BX - 0.1, BY))},
     "look": {"Dawn": ((2.05, 6.02), (3.6, 5.6))},
 }
 FLOOR = {"Stallholder": 0.006, "Dawn": 0.0, "Organiser": 0.0}
 LOOK_FLOOR = {"Dawn": 0.006}
 
-FOCUS = {"fx_wide": (0.9, 5.2, 1.35), "fx_bag": (BX, BY - 0.05, TOP + 0.3), "fx_dawn": (2.0, 6.0, 1.55)}
+FOCUS = {"fx_wide": (0.9, 5.2, 1.35), "fx_bag": (BX, BY - 0.08, TOP + 0.28), "fx_dawn": (2.0, 6.0, 1.55)}
 
 CAMERAS = {
     # Ch 04: down the lane from the dark end, from the left-hand row: shut stalls both sides, wet concrete, the one
     # burning stall front at mid distance on the right, the organiser at its counter and Dawn a step back, small
     "wide": dict(loc=(-0.78, -6.9, 1.72), aim=(0.2, 5.8, 1.5), lens=28, focus="fx_wide", fstop=8.0, beat="buy",
-                 exposure=-1.3),
+                 exposure=-1.0),
     # Ch 04: from the lane into the stall: Dawn looking up at the wall of handbags under the battens
-    "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.35), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
+    "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.2), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
                   show=("Dawn",), exposure=-1.5),
     # Ch 04: the controlled close-up from the alley: the black extra bag passing over the counter, the stallholder's
     # hand pushing it across, the organiser's hand taking it; the wall of bags soft beyond
-    "purchase": dict(loc=(1.58, 3.22, 1.33), aim=(1.62, 4.95, 1.12), lens=50, focus="fx_bag", fstop=2.8, beat="buy",
+    "purchase": dict(loc=(1.57, 3.55, 1.6), aim=(1.62, 4.93, 1.17), lens=50, focus="fx_bag", fstop=3.2, beat="buy",
                      exposure=-1.6),
 }
-TRIMS = {}
+TRIMS = {"wide": {"hero_lane": 1.35}, "purchase": {"hero_alley": 2.0}}
 
 _STATE = {"holders": {}, "cast": [], "cache": {}, "bag": None}
 
@@ -168,14 +168,10 @@ def ground(holder, floor=0.0):
 
 
 def eye_centre(holder):
+    """Between the eyes, from the head bone itself (4 cm up the bone, 7.5 cm out of the face). The statue-eye objects'
+    bone-parented matrices read stale from Python here (a gaze solved on them went to the ceiling), as the inspection
+    room found too."""
     bpy.context.view_layer.update()
-    pts = []
-    for i in (0, 1):
-        o = bpy.data.objects.get(f"{holder['body']}_eye{i}")
-        if o:
-            pts += [o.matrix_world @ v.co for v in o.data.vertices]
-    if pts:
-        return sum(pts, Vector()) / len(pts)
     rig = _rig(holder)
     m = rig.pose.bones["head"].matrix
     return rig.matrix_world @ (m.translation + m.to_3x3().col[1].normalized() * 0.04 + m.to_3x3().col[2].normalized() * 0.075)
@@ -278,7 +274,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
     for attempt in range(3):
         t_arm = arm_inv @ target
         best = None
-        grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-20, 31, 3) for e in range(0, 101, 3)]
+        grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-32, 34, 3) for e in range(0, 121, 3)]
         for step in (None, 0.5):
             if step:
                 f0, o0, e0 = best[1]
@@ -292,12 +288,15 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
         rigged.pose_figure(holder, pose)
         R = rig.matrix_world.to_3x3().normalized().inverted()
         y = (R @ Vector(fwd_dir)).normalized()
-        x = R @ Vector((0, 0, -1))
-        x = (x - y * x.dot(y)).normalized()
-        z = x.cross(y)
+        down = R @ Vector((0, 0, -1))
+        down = (down - y * down.dot(y)).normalized()
+        zp = down.cross(y)                     # the pitch axis, the same for either hand
         if pitch:
-            q = Matrix.Rotation(pitch, 3, z)
-            x, y = (q @ x).normalized(), (q @ y).normalized()
+            q = Matrix.Rotation(pitch, 3, zp)
+            down, y = (q @ down).normalized(), (q @ y).normalized()
+        # the .L hand's X axis is its palm side; Rigify mirrors .R, whose X then points out of the back of the hand
+        x = down if k == "L" else -down
+        z = x.cross(y)
         fa = pb[f"forearm_fk.{k}"]
         fm = fa.matrix.copy()
         fy = fm.to_3x3().col[1].normalized()
@@ -327,7 +326,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
         low = min(gap(p) for p in hv["palm"] + hv["fingers"])
         palm_low, finger_low = min(gap(p) for p in hv["palm"]), min(gap(p) for p in hv["fingers"])
         if attempt < 2:
-            pitch += 0.85 * math.atan2(palm_low - finger_low, 0.08)
+            pitch = max(-0.22, min(0.22, pitch + 0.85 * math.atan2(palm_low - finger_low, 0.08)))
             low = min(low, palm_low - 0.85 * (palm_low - finger_low) * 0.5)
             target = target + Vector((0, 0, 0.002 - low))
     gap = lambda p: p.z - surf(p.x, p.y)
@@ -374,15 +373,15 @@ def pose_buy():
     # near his end, pushing it across (fingers toward the customer); his right arm easy at his side
     sp = {"chest": (13, 0), "r_arm": (6, 7, 18), "fingers": 22}
     ge = aim_head_iter(s, sp, eye_centre(o) + Vector((0, 0, 0.0)))
-    wx, wy = BX + 0.25, BY - 0.15
-    hs = rest_hand(s, sp, "L", (wx, wy, bag_top(wx - 0.08, wy) + 0.05), bag_top, Vector((-1, 0.08, 0)).normalized(), curl=10.0)
+    wx, wy = BX + 0.35, BY - 0.04
+    hs = rest_hand(s, sp, "L", (wx, wy, bag_top(wx - 0.08, wy) + 0.05), bag_top, Vector((-1, 0.1, 0)).normalized(), curl=8.0)
     rep.append(f"stallholder head {ge[1]} err {ge[0]:.1f}; l_arm {tuple(round(v) for v in hs['arm'])} fit {hs['fit'] * 1000:.0f} mm "
                f"palm {hs['palm_low'] * 1000:.0f} fingers {hs['finger_low'] * 1000:.0f} mm")
     # the organiser: eyes on the stallholder, his right hand coming onto the bag's near end, fingers curling to take it
     op = {"chest": (7, 0), "l_arm": (5, 8, 16), "fingers": 26}
     go = aim_head_iter(o, op, eye_centre(s))
-    wx, wy = BX - 0.33, BY - 0.13
-    ho = rest_hand(o, op, "R", (wx, wy, bag_top(wx + 0.08, wy) + 0.05), bag_top, Vector((1, 0.05, 0)).normalized(), curl=24.0)
+    wx, wy = BX - 0.29, BY - 0.04
+    ho = rest_hand(o, op, "R", (wx, wy, bag_top(wx + 0.08, wy) + 0.05), bag_top, Vector((1, -0.08, 0)).normalized(), curl=11.0)
     rep.append(f"organiser head {go[1]} err {go[0]:.1f}; r_arm {tuple(round(v) for v in ho['arm'])} fit {ho['fit'] * 1000:.0f} mm "
                f"palm {ho['palm_low'] * 1000:.0f} fingers {ho['finger_low'] * 1000:.0f} mm")
     # Dawn: a step back in the lane, weight on one hip, hands loosely together in front, watching the bag change hands

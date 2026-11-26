@@ -59,7 +59,7 @@ CAMERAS = {
     "dock": dict(loc=(1.6, -1.05, 1.3), aim=(-0.15, 5.0, 1.92), lens=32, focus="fx_dawn", fstop=2.8, beat="ch07"),
     # Ch 07: from the well's left side at a standing eye height, the bench running away to the right: the cap's line on
     # the lower third, the three empty chairs whole above it, the recessed panel above the presiding one
-    "bench": dict(loc=(-2.3, 0.6, 1.7), aim=(-0.25, 6.0, 2.05), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
+    "bench": dict(loc=(-2.3, 0.6, 1.7), aim=(-0.45, 6.0, 2.05), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
                   exposure=-1.45),
 }
 
@@ -80,10 +80,10 @@ TRIMS = {
              "dock_pool": 0.6},
     # the well's panels behind the camera turned down: the fascia lit from the row above its face, bright under the
     # cap and falling away toward the floor; the chairs top-lit
-    # the row two metres before it at 0.8 lights the fascia at a moderate angle (bright under the cap, falling away
+    # the well's rows (3 and 5 m before it) light the fascia at a moderate angle (bright under the cap, falling away
     # toward the floor); the row straight over it down (its steep light put a shadow band under the cap and lit the
     # floor that bounced up onto the fascia's foot), the left well windows' beams halved for the same reason
-    "bench": {**_panels((-0.6,), 0.2), **_panels((1.4,), 0.8), **_panels((3.4,), 0.5), "dock_pool": 0.15,
+    "bench": {**_panels((-0.6,), 0.6), **_panels((1.4,), 0.8), **_panels((3.4,), 0.2), "dock_pool": 0.15,
               "win_l3_day": 0.5, "win_l4_day": 0.5},
 }
 

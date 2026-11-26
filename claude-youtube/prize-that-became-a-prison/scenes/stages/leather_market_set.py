@@ -56,6 +56,8 @@ STATE = {
     (1, 4.05): "hero", (1, 9.45): "dim", (1, 17.55): "warm", (1, -0.15): "half",
     (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
 }
+# lane battens left burning at night as security lights (watts), on stalls that are otherwise shut or dim
+SECURITY = {(-1, -5.55): 16.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
 
 
 # ---------------------------------------------------------------- geometry helpers
@@ -167,9 +169,10 @@ def lane():
     for i in range(int((y1 - y0) / 0.035)):
         y = y0 + 0.2 + i * 0.035
         bmesh.ops.create_cube(g, size=1.0, matrix=Matrix.Translation((0, y, -0.004)) @ Matrix.Diagonal((0.12, 0.012, 0.01, 1)))
-    mesh_obj("drain_grate", g, M["steel"], smooth=False)
-    box("drain_frame_l", (0.012, y1 - y0, 0.006), (-0.066, (y0 + y1) / 2, -0.001), M["steel_bare"])
-    box("drain_frame_r", (0.012, y1 - y0, 0.006), (0.066, (y0 + y1) / 2, -0.001), M["steel_bare"])
+    iron = mt.pbr("cast iron", (0.035, 0.034, 0.033), rough=(0.55, 0.8), metal=0.5, nscale=30.0, cvar=0.3, grime=0.4)
+    mesh_obj("drain_grate", g, iron, smooth=False)
+    box("drain_frame_l", (0.012, y1 - y0, 0.006), (-0.066, (y0 + y1) / 2, -0.004), iron)
+    box("drain_frame_r", (0.012, y1 - y0, 0.006), (0.066, (y0 + y1) / 2, -0.004), iron)
     box("drain_void", (0.15, y1 - y0, 0.004), (0, (y0 + y1) / 2, -0.03), sk.mat("drain black", (0.005, 0.005, 0.005), 0.9))
     # the market hall: dark side volumes beyond the stall backs, a far wall, a near wall behind the camera
     box("hall_far_wall", (18.0, 0.3, 7.0), (0, 27.6, 3.5), M["wall_dark"])
@@ -385,9 +388,13 @@ def stall(side, y0, y1, state, k):
         span_box(nm + "_shutter_bar", side * (LANE + 0.04), side * (LANE + 0.08), y0 + 0.05, y1 - 0.05, CEIL - 0.24, CEIL - 0.19,
                  M["steel_bare"], bevel=0.004)
     # the batten under the awning, over the lane
-    lane_state = {"hero": "on", "dim": "off", "warm": "off"}.get(state, "off")
-    batten(nm + "_lane", side * 0.88, (y0 + y1) / 2 - 0.6, (y0 + y1) / 2 + 0.6, 2.86, lane_state, energy=95.0,
+    sec = SECURITY.get((side, round(y0, 2)))
+    lane_state = "on" if hero else ("dim" if sec else "off")
+    batten(nm + "_lane", side * 0.88, (y0 + y1) / 2 - 0.6, (y0 + y1) / 2 + 0.6, 2.86, lane_state,
+           energy=95.0 if hero else (sec or 0.0),
            hang_to=AW_IN[0] - (LANE - 0.88) / (LANE - AW_OUT) * (AW_IN[0] - AW_IN[1]) - 0.01)
+    if hero:
+        LIGHTS["hero_lane"] = LIGHTS[nm + "_lane"]
     return nm
 
 
@@ -695,7 +702,12 @@ def hero_stall():
 def counter():
     c = COUNTER
     x0, x1, y0, y1, top = c["x0"], c["x1"], c["y0"], c["y1"], c["top"]
-    span_box("counter_body", x0 + 0.02, x1, y0 + 0.02, y1 - 0.02, 0.06, top - 0.035, M["counter_front"], bevel=0.006)
+    span_box("counter_body", x0 + 0.03, x1, y0 + 0.02, y1 - 0.02, 0.06, top - 0.035, M["counter_front"], bevel=0.006)
+    # the lane face in three laminate panels with dark seams between them, standing a few millimetres proud
+    pw = (y1 - y0 - 0.04 - 2 * 0.006) / 3
+    for i in range(3):
+        a = y0 + 0.02 + i * (pw + 0.006)
+        span_box(f"counter_panel{i}", x0 + 0.012, x0 + 0.03, a, a + pw, 0.075, top - 0.045, M["counter_front"], bevel=0.003)
     span_box("counter_kick", x0 + 0.06, x1 - 0.02, y0 + 0.06, y1 - 0.06, 0.0, 0.06, M["steel"])
     span_box("counter_top", x0 - 0.02, x1 + 0.02, y0 - 0.02, y1 + 0.02, top - 0.035, top, M["counter_top"], bevel=0.005)
     # a steel edge band along the lane face, scuffed by bags
@@ -731,9 +743,9 @@ def dim_stall(side, y0, y1, warm, seed):
         grid_panel(f"dim{seed}_grid{i}", o, u, n, L, 0.6, 2.72)
         hang_wall(f"dim{seed}_w{i}", o, u, n, L, [2.6, 2.15, 1.7, 1.25], seed=seed + i, tags=0.0)
     if warm:
-        bulb(f"dim{seed}_bulb", (side * (LANE + 1.1), (y0 + y1) / 2, 2.35), 9.0)
+        bulb(f"dim{seed}_bulb", (side * (LANE + 1.1), (y0 + y1) / 2, 2.35), 15.0)
     else:
-        batten(f"dim{seed}_ceil", side * (LANE + 1.2), y0 + 0.5, y1 - 0.5, CEIL - 0.06, "dim", energy=10.0, hang_to=CEIL)
+        batten(f"dim{seed}_ceil", side * (LANE + 1.2), y0 + 0.5, y1 - 0.5, CEIL - 0.06, "dim", energy=18.0, hang_to=CEIL)
 
 
 def dark_stall(side, y0, y1, seed):
