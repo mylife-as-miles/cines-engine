@@ -52,6 +52,10 @@ def relight(src, dst, horizon=0.46, stop=0.85):
     tint = np.array([0.90, 1.0, 1.10], dtype=np.float32)
     lin = lin * (1 + (tint - 1) * shadow * 0.9)
 
+    # 5b. One colour for the world below: a cold blue-grey cast over the whole frame
+    #     (the bible's under-light, #7F8A90), as in Villeneuve's overcast dusk exteriors.
+    lin = lin * np.array([0.93, 1.0, 1.07], dtype=np.float32)
+
     # 6. Blacks deep but not crushed.
     lin = np.clip(lin, 0, 1)
     out = lin ** (1 / 2.2)

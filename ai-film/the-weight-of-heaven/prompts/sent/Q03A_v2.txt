@@ -9,12 +9,12 @@ The world below, where everything carries. A bent farmer works his field under t
 ## GLOBAL LOCKS
 Character identity — The FARMER exactly as @Image 1: forties, weathered, short dark beard, his back bent by a life of carrying; he stoops even when standing and never straightens. His DAUGHTER exactly as @Image 2: six, small, one fair braid, grave grey eyes.
 Wardrobe override — none: patched grey-brown wool exactly as the sheets, damp, wet earth on his hands.
-Location / environment continuity — Anvil Vale exactly as @Image 5, and lit exactly as @Image 5: a low drystone wall across the foreground; black ploughed furrows beyond it to the horizon; on the right a low buttressed stone house, a mud path from its door to a gap in the wall; far off, left of centre, the flat-topped mountain, the Anvil; overhead the dark rock underside of the kingdom, a stone ceiling over the whole valley, and under it, along the horizon, one pale band of cold daylight. Overcast late afternoon, no sun, wet ground, slow mist.
+Location / environment continuity — Anvil Vale exactly as @Image 5, and lit exactly as @Image 5: a low drystone wall across the foreground; black ploughed furrows beyond it to the horizon; on the right a low buttressed stone house, a mud path from its door to a gap in the wall; far off, left of centre, the flat-topped mountain, the Anvil; overhead the dark rock underside of the kingdom, a stone ceiling over the whole valley, and under it, along the horizon, one pale band of cold daylight. Overcast dusk, no sun, wet ground, a cold wind, low mist creeping over the furrows.
 Props and temporal state — The bowl exactly as @Image 3, brimming with clear water. The ox exactly as @Image 4, yoked, roped to an iron ring in the wall. A long-handled hoe.
 
 ## MOVIE COLOR
-Slate and basalt, almost without colour: black wet earth, grey stone, grey-brown wool, grey-olive grass. The only bright thing in any frame is the pale band at the horizon; the only warmth is skin and the wood of the bowl. Every shot is exposed for that band, so everything else sits a stop under, blacks deep but never crushed. People and animals are dark shapes against it; its cold light comes low from one side, rims a brow, a beard, a wet stone, and leaves the far side of each face in shadow. Mist thins the distance into grey layers.
-Influences, each with its purpose — Denis Villeneuve with Roger Deakins, Prisoners and Sicario: overcast exteriors exposed for the sky, figures dark against it, faces half lit from the side, one small figure held in a great empty frame. Villeneuve's Arrival: a vast dark mass hanging over a quiet valley. James Cameron: every cause seen before its effect; weight that is physically true.
+One colour for this whole world: cold blue-grey slate. Black wet earth, grey stone, grey-brown wool, grass gone grey. The only bright thing in any frame is the pale band of daylight at the horizon, under the lid of the dark mass; the only warmth is skin and the wood of the bowl. Every shot is exposed for that band, so everything else sits a stop under: blacks deep, never crushed. People and animals are dark shapes against it; its cold light comes low from one side, rims a brow, a beard, a wet stone, and leaves the far side of each face in shadow. Mist does the rest: every plane further off is paler and softer than the one before it, and the mountain and the far reach of the mass overhead are half lost in it.
+Influences, each with its purpose — Denis Villeneuve. Arrival: a band of light at the horizon under a lid of dark; a vast shape half lost in fog; the back of a head soft in the foreground and the thing it faces looming beyond. Dune: one colour to a world; a colossal underside over tiny figures; two people in profile, dark against an empty overcast sky. Blade Runner 2049: a farm under a dead grey sky; fog that swallows the distance; a profile sharp against a pale blur. Prisoners and Sicario: overcast exteriors exposed for the sky. James Cameron: every cause seen before its effect; weight that is physically true.
 Camera package — ARRI Alexa 65, large format, spherical primes, wide open on every medium and close shot: shallow focus, soft backgrounds, gentle highlight roll-off, fine grain. The camera is low, at the height of a bent back, and locked off in every shot; the only movement is inside the frame.
 
 ## VOICE DNA (immutable)
@@ -26,17 +26,17 @@ Production sound only, close and dry, over a low steady wind on open ground. No 
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
 [TIME] 0.0–3.5 s
-[CAM] extreme wide, low horizon, knee level, 24 mm, locked off; the dark underside of the kingdom fills the top half of the frame, the wall a black wet band along the bottom.
-[BLOCK] The farmer, tiny and dark against the pale band, 25 m out in the field, left of centre, bent over a furrow. The ox far left at the wall; the house a dark block on the right; the Anvil grey in the mist. His daughter, smaller still, on the path from the house to the gap in the wall, the bowl in both hands.
-[ACT] He drags the hoe through the wet earth, once, twice. She walks slowly toward the wall, eyes down on the water so that none spills. Mist drifts.
+[CAM] extreme wide, symmetrical, low horizon, knee level, 24 mm, locked off; the dark underside of the kingdom fills the top half of the frame, its far reach greyed by mist; the pale band lies between it and the black earth; the wall is a black wet band along the bottom.
+[BLOCK] The farmer, tiny and dark against the pale band, 25 m out in the field, bent over a furrow. The ox far left at the wall; the house a dark block on the right; the Anvil a grey shape in the mist. His daughter, smaller still, on the path from the house to the gap in the wall, the bowl in both hands.
+[ACT] He drags the hoe through the wet earth, once, twice. She walks slowly toward the wall, eyes down on the water so that none spills. Mist creeps across the furrows.
 [DIALOGUE] / V.O. none
 [SFX] wind; the hoe biting wet earth, twice.
 [STATE OUT] He is still bent at his work; she has almost reached the wall.
 
 ### SHOT 2
 [TIME] 3.5–7.5 s
-[CAM] medium two-shot in profile, at her eye height, 75 mm, locked off, shallow focus, the field behind dissolved to grey; both dark against the pale band, cold light along his brow, his beard and the rim of the bowl; he fills the left two-thirds, she is small at the right edge; the wet top of the wall runs along the bottom of the frame.
-[BLOCK] At the wall, facing each other, half a metre apart: he on the left, stooped, the bowl already in both earth-dark hands; she on the right, her chin level with the top of the wall, looking up at him.
+[CAM] medium-wide two-shot in profile, at her eye height, 75 mm, locked off, shallow focus: the two of them sharp, the field behind dissolved to grey; both are dark against the pale band, their faces still readable in the cold light that comes from one side, along his brow, his beard and the rim of the bowl; he stands on the left, bent, she small on the right, empty pale sky between and above them; the top of the wall, dark and soft, runs along the bottom of the frame.
+[BLOCK] At the wall, facing each other, half a metre apart: he stooped, the bowl already in both earth-dark hands; she with her chin level with the top of the wall, looking up at him. Wind stirs her loose hair and the dead grass on the wall.
 [ACT] He drinks, two long swallows, his head tipping back only as far as his bent neck allows. He lowers the bowl, sets it on top of the wall between them, turns and walks out of frame to the left. Her eyes do not follow him: they go to the bowl and stay there.
 [DIALOGUE] / V.O. none
 [SFX] two swallows; a breath out; wood on wet stone; boots in mud, going away.
@@ -44,16 +44,16 @@ Production sound only, close and dry, over a low steady wind on open ground. No 
 
 ### SHOT 3
 [TIME] 7.5–10.5 s
-[CAM] extreme close-up, level with the rim of the bowl, 100 mm macro, locked off, very shallow focus on the surface of the water, which mirrors the pale sky and the dark mass over it; the bowl fills the lower two-thirds of the frame, her grey eyes soft and out of focus just above its far rim.
+[CAM] extreme close-up from just above the bowl, looking down into it at a shallow angle, 100 mm macro, locked off, very shallow focus on the surface of the water; the water is a dark mirror holding the pale band and the dark mass over it; the bowl fills the lower two-thirds of the frame; beyond its far rim, soft and out of focus, her grey eyes.
 [BLOCK] The bowl on the wet stone; her face 0.4 m behind it.
-[ACT] For half a second the water is perfectly still. Then, though nothing has touched the bowl, it shivers: fine rings rise at the rim and run to the centre, ring inside ring, again and again, breaking the reflected sky into trembling lines. Half a second later her eyes widen a little. She does not blink.
+[ACT] For half a second the water is perfectly still. Then, though nothing has touched the bowl, it shivers: fine rings rise at the rim and run to the centre, ring inside ring, again and again, breaking the mirrored sky into trembling lines. Half a second later her eyes widen a little. She does not blink.
 [DIALOGUE] / V.O. none
 [SFX] the wind, far off; nothing else.
 [STATE OUT] The rings are still running. She has not looked away.
 
 ### SHOT 4
 [TIME] 10.5–13.0 s
-[CAM] medium-wide, low angle, knee level, 40 mm, locked off; the ox almost a silhouette against the pale band, its breath smoking in the cold light; the ox fills the left half of the frame, open field and sky the right half.
+[CAM] medium-wide, low angle, knee level, 40 mm, locked off; the ox almost a silhouette against the pale band, its breath smoking in the cold light; the ox fills the left half of the frame, open field, mist and sky the right half.
 [BLOCK] The ox in the mud 3 m from the wall, its rope slack to the iron ring; six crows on the furrows beyond.
 [ACT] The ox throws its head up, the white of its eye showing, and hauls backward; the rope cracks taut and holds; its hooves gouge the mud. Beyond it the crows burst up, beat their wings hard, rise barely a metre and drop back to the earth.
 [DIALOGUE] / V.O. none
@@ -62,12 +62,12 @@ Production sound only, close and dry, over a low steady wind on open ground. No 
 
 ### SHOT 5
 [TIME] 13.0–16.0 s
-[CAM] over-the-shoulder long shot, shoulder level, 135 mm, locked off; his bent shoulder and the side of his head fill the right third, black and out of focus; the sheer dark face of the Anvil fills the rest, stacked close by the long lens, greyed by mist, its top lost under the dark mass.
+[CAM] over-the-shoulder long shot, shoulder level, 135 mm, locked off; the back of his head and his bent shoulder fill the right third, black and out of focus; beyond, the sheer face of the Anvil fills the frame, blue-grey in the mist, stacked close by the long lens, its top lost under the dark mass.
 [BLOCK] He stands in the field, his back to us, the hoe in his hand, facing the mountain.
-[ACT] He is already still, looking. High on the mountain's face a seam of pale dust breaks out and creeps along a ledge from left to right, thin and ragged, loose threads of it sifting down the rock. His head lifts a few degrees. Nothing else moves.
+[ACT] He is already still, looking. High on the mountain's face a seam of pale dust breaks out and creeps along a ledge from left to right, thin and ragged; the wind drags it sideways into a slow veil, threads of it sifting down the rock. His head lifts a few degrees. Nothing else moves.
 [DIALOGUE] / V.O. none
 [SFX] the wind dies; no sound from the mountain.
-[STATE OUT] A pale seam of dust across the dark mountain; the farmer motionless before it.
+[STATE OUT] A pale veil of dust across the dark mountain; the farmer motionless before it.
 
 ## PERFORMANCE ARC
 THE FARMER: labour → one swallow of rest → attention. Slow, sparing, tired; he never looks up at the mass overhead.
@@ -84,10 +84,10 @@ No speech, whisper, singing, music or drone: only the wind and the sounds of wha
 
 ## CONTINUITY LOCKS
 [POSITIVE] the farmer stooped in every shot · the bowl brimming, and on the wall from the end of shot 2 · wall, house, mountain and the mass overhead where @Image 5 has them · one source only, the low pale band, cold and from the side; figures darker than the sky behind them
-[NEGATIVE] sunlight, blue sky, bright green grass, flat even lighting, everything in focus · text, captions, extra people, camera movement, slow motion, glow or magic
+[NEGATIVE] sunlight, blue sky, green grass, flat even lighting, everything in focus · text, captions, extra people, camera movement, slow motion, glow or magic
 
 ## GENERATION PRIORITY ORDER
-1. The light: exposed for the pale band, dark figures, cold, a stop under  2. Character identity  3. Five shots in order, each with its own framing and length  4. Cause before effect: the water, the animals, the dust  5. The geography of the vale  6. Sound
+1. The light: exposed for the pale band, dark figures, cold, a stop under, mist  2. Character identity  3. Five shots in order, each with its own framing and length  4. Cause before effect: the water, the animals, the dust  5. The geography of the vale  6. Sound
 
 ## FINAL STATE
 The quiet has gone wrong and no one has said so. A child has read it in a bowl of water; a bent man has just understood what he is looking at.
