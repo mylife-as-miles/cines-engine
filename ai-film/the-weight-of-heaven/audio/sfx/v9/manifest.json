@@ -1,0 +1,5118 @@
+{
+ "film": "The Weight of Heaven, movement I: the replacement effects asked for by the review of cut v8 (edit/reviews/I_bell_v8_sound_effects.md, appendix C)",
+ "made_by": "tools/foundry_v9.py (which imports tools/sfx_make.py)",
+ "format": "FLAC, 48 kHz, stereo, 24-bit; sample peak -3 dBFS; one-shots keep 50 ms before the first onset; no reverb and no EQ unless `processed` says so",
+ "onsets": "All times are seconds from the start of the file. onsets_s: for a one-shot, its first sound (the first 1 ms within 40 dB of the peak), which the cut puts at 0.05 s; loud_onset_s is where it comes within 20 dB of its peak, the better mark for sync when the two differ, and loud_until_s where it has fallen 26 dB. For a file of several events, onsets_s are their loud onsets and `events` gives each with its peak, its end and how it is judged when cut out alone (from 30 ms before its onset to 30 ms before the next). peak_at_s is the loudest sample; loudest_400ms_at_s the stretch a mix is levelled by. Beds have no onsets.",
+ "earshot_rule": "pass = the description beats every alternative in earshot's forced choice (p_vs_alts) and is 'strong' (z >= 3 among earshot's vocabulary) or holds at least 60% of the choice and 2x the best alternative (sound.md section 4). A fail is evidence, not a veto: the ear decides.",
+ "cost": "nothing: Stable Audio 3.0 Small SFX on this machine's CPU and earshot's catalogue; no paid service",
+ "nobody_has_heard_these": "pass and fail are a listening model's reading, not an ear",
+ "passed": [
+  "wind_vale_field",
+  "wind_vale_farmland",
+  "wind_altitude_arches",
+  "rockfall_boom",
+  "rockfall_body_a",
+  "rockfall_body_b",
+  "rockfall_crack",
+  "ox_snort",
+  "bowl_on_stone",
+  "hoe_chop",
+  "run_boots_mud",
+  "run_breath",
+  "child_steps_mud",
+  "boots_away_mud",
+  "bowl_taken",
+  "grab_run_up",
+  "bowl_slop",
+  "wax_press_soft",
+  "wax_peel",
+  "bell_landing_big",
+  "chains_heavy",
+  "bowl_buzz_on_stone"
+ ],
+ "failed": [
+  "crows_burst",
+  "bell_ram_clang",
+  "applause_gloved_vast"
+ ],
+ "sounds": {
+  "wind_vale_field": {
+   "file": "audio/sfx/v9/wind_vale_field.flac",
+   "row": "R17",
+   "seconds": 29.5,
+   "onsets_s": [],
+   "peak_at_s": 17.734,
+   "loudest_400ms_at_s": [
+    17.433,
+    17.833
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.8, 82% of the choice)",
+   "note": "A catalogue wind, not Stable Audio: earshot's `wind/open` with its top rolled off above 3.5 kHz. True stereo, with gusts of its own: the level moves about 4 dB either way, the strongest gust is at 17.4-17.8 s, the calmest stretches are 0-4 s and 27-29.5 s. Realness 0.52 (uncertain; the old wind was 0.02-0.08). Every Stable Audio field take read as hiss or a waterfall while it was steady and passed only where a gust was in it; the best of those is wind_vale_farmland.",
+   "candidate": "es_open_s1_t3500",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "Cold steady wind blowing across a wide open ploughed field and low stone walls, a low soft moan with slow gusts, grass hissing faintly, outdoors, wide",
+   "recipe": [
+    "earshot `wind/open` (seed 1), 0.50-30.00 s of it, low-pass 3500 Hz (12 dB an octave, zero-phase), 250 ms fade-in"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "wind blowing across an open field",
+    "alternatives": [
+     "static white noise hiss",
+     "ocean waves on a beach",
+     "a waterfall",
+     "rain"
+    ],
+    "verdict": "plausible",
+    "z": 2.8,
+    "share_of_forced_choice": 0.815,
+    "alternatives_share": {
+     "static white noise hiss": 0.068,
+     "ocean waves on a beach": 0.113,
+     "a waterfall": 0.003,
+     "rain": 0.0
+    },
+    "pass": true,
+    "result": "clear margin (z +2.8, 82% of the choice)",
+    "sounds_most_like": [
+     "a gust of wind rushing past (z +3.7)",
+     "a stick swung fast through the air (z +3.0)",
+     "cloth whipping through the air (z +2.8)",
+     "a fast whoosh (z +2.8)"
+    ],
+    "audioset": [
+     "Eruption 0.50",
+     "Field recording 0.20",
+     "Fixed-wing aircraft, airplane 0.10",
+     "Aircraft 0.08",
+     "Vehicle 0.06"
+    ],
+    "realness": {
+     "p_real": 0.516,
+     "verdict": "uncertain",
+     "why": "2 of 8 windows lean synthesized (p_real < 0.5); mean CLAP head score +0.2"
+    },
+    "describe": "29.50 s busy, 5.3 onsets/s, loudness range 10 LU. Sounds most like: a gust of wind rushing past (z +3.6), a stick swung fast through the air (z +2.9), cloth whipping through the air (z +2.8) [clear reading]. Other readings: a train passing (everyday, z +2.3). AudioSet: Eruption 0.50, Field recording 0.20, Fixed-wing aircraft, airplane 0.10. peak -3.0 dBFS, -26.4 LUFS, brightness 1.3 kHz, bandwidth 12.9 kHz, side/mid -6 dB. Uniform: all 5 analysed 10 s windows read as a gust of wind rushing past."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -26.4,
+    "rms_dbfs": -29.2,
+    "centroid_hz": 582,
+    "lr_correlation": 0.596,
+    "energy_db_of_total": {
+     "under_80_hz": -16.0,
+     "80_250_hz": -7.4,
+     "250_2k_hz": -1.1,
+     "2k_8k_hz": -16.4,
+     "over_8k_hz": -40.2
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s917",
+     "what": "Stable Audio take, seed 917, 1.50-32.00 s of it",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (96% against 0%; z +2.4)",
+     "sounds_most_like": [
+      "a waterfall (z +2.9)",
+      "a vacuum cleaner (z +2.9)",
+      "bubbles underwater (z +2.7)"
+     ],
+     "p_real": 0.432
+    },
+    {
+     "candidate": "field_v1_12s",
+     "what": "Stable Audio take, seed 5171, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'ocean waves on a beach' (67% against 0%; z +2.7)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.1)",
+      "ocean waves (z +3.1)",
+      "a downlifter falling sweep (z +2.7)"
+     ],
+     "p_real": 0.469,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "field_v2_12s",
+     "what": "Stable Audio take, seed 5172, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (99% against 0%; z +2.6)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a vacuum cleaner (z +2.9)",
+      "a downlifter falling sweep (z +2.7)"
+     ],
+     "p_real": 0.263,
+     "reworded_prompt": [
+      "Wind gusting over open moorland, gusts rising and falling, a low whistling moan around dry-stone walls, grass swishing, field recording, wide"
+     ]
+    },
+    {
+     "candidate": "field_v4_12s",
+     "what": "Stable Audio take, seed 5174, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (93% against 0%; z +2.3)",
+     "sounds_most_like": [
+      "a spray can hissing (z +3.3)",
+      "a downlifter falling sweep (z +3.0)",
+      "an uplifter sweep (z +2.9)"
+     ],
+     "p_real": 0.419,
+     "reworded_prompt": [
+      "Gentle wind blowing through tall dry grass in an open field, soft rustling and swishing, calm, wide stereo field recording"
+     ]
+    },
+    {
+     "candidate": "field_v1",
+     "what": "Stable Audio take, seed 5171, 1.50-32.00 s of it",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (98% against 0%; z +2.5)",
+     "sounds_most_like": [
+      "a computer fan hum (z +2.5)",
+      "a spray can hissing (z +2.2)",
+      "a gust of wind rushing past (z +2.2)"
+     ],
+     "p_real": 0.6,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "field_v1_lp2k",
+     "what": "Stable Audio take, seed 5171, 1.50-32.00 s of it, low-pass 2000 Hz",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'ocean waves on a beach' (70% against 16%; z +2.7)",
+     "sounds_most_like": [
+      "being underwater (z +3.3)",
+      "a gust of wind rushing past (z +2.6)",
+      "wind blowing (z +2.2)"
+     ],
+     "p_real": 0.171,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "field_v1_lp1k",
+     "what": "Stable Audio take, seed 5171, 1.50-32.00 s of it, low-pass 1000 Hz",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'ocean waves on a beach' (46% against 35%; z +2.5)",
+     "sounds_most_like": [
+      "being underwater (z +3.1)",
+      "a gust of wind rushing past (z +2.6)",
+      "bubbles underwater (z +2.3)"
+     ],
+     "p_real": 0.112,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "es_open",
+     "what": "earshot `wind/open` (seed 0), 0.50-30.00 s of it",
+     "seconds": 29.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (60% against 11%; z +2.3)",
+     "sounds_most_like": [
+      "cloth whipping through the air (z +3.6)",
+      "a gust of wind rushing past (z +3.4)",
+      "a stick swung fast through the air (z +3.1)"
+     ],
+     "p_real": 0.632
+    },
+    {
+     "candidate": "es_open_lp4k",
+     "what": "earshot `wind/open` (seed 0), 0.50-30.00 s of it, low-pass 4000 Hz",
+     "seconds": 29.5,
+     "pass": true,
+     "result": "clear margin (z +2.5, 76% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.2)",
+      "a downlifter falling sweep (z +2.9)",
+      "a fast whoosh (z +2.7)"
+     ],
+     "p_real": 0.406
+    },
+    {
+     "candidate": "es_open_lp6k",
+     "what": "earshot `wind/open` (seed 0), 0.50-30.00 s of it, low-pass 6000 Hz",
+     "seconds": 29.5,
+     "pass": false,
+     "result": "ahead without a clear margin (49%, 'static white noise hiss' 28%; z +2.5)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.4)",
+      "a downlifter falling sweep (z +3.0)",
+      "a fast whoosh (z +3.0)"
+     ],
+     "p_real": 0.49
+    },
+    {
+     "candidate": "field_v1_steady",
+     "what": "Stable Audio take, seed 5171, 1.50-28.00 s of it, low-pass 1000 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 26.5,
+     "pass": false,
+     "result": "lost to 'ocean waves on a beach' (28% against 27%; z +2.7)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.0)",
+      "being underwater (z +2.6)",
+      "rain on a roof (z +2.2)"
+     ],
+     "p_real": 0.319,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "field_v1_steady_t1500",
+     "what": "Stable Audio take, seed 5171, 1.50-28.00 s of it, low-pass 1500 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 26.5,
+     "pass": false,
+     "result": "lost to 'a waterfall' (41% against 9%; z +2.7)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.1)",
+      "a waterfall (z +2.4)",
+      "a computer fan hum (z +2.4)"
+     ],
+     "p_real": 0.359,
+     "reworded_prompt": [
+      "Field recording of wind blowing across an open grassy plain, a steady breeze with gentle gusts, tall grass rustling, natural outdoor ambience, wide"
+     ]
+    },
+    {
+     "candidate": "es_open_t3500",
+     "what": "earshot `wind/open` (seed 0), 0.50-30.00 s of it, low-pass 3500 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": true,
+     "result": "clear margin (z +2.7, 80% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.6)",
+      "a stick swung fast through the air (z +3.0)",
+      "a fast whoosh (z +2.9)"
+     ],
+     "p_real": 0.434
+    },
+    {
+     "candidate": "es_open_s1_t3500",
+     "what": "earshot `wind/open` (seed 1), 0.50-30.00 s of it, low-pass 3500 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": true,
+     "result": "clear margin (z +2.8, 81% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.7)",
+      "a stick swung fast through the air (z +3.0)",
+      "cloth whipping through the air (z +2.8)"
+     ],
+     "p_real": 0.517
+    },
+    {
+     "candidate": "es_open_s2_t3500",
+     "what": "earshot `wind/open` (seed 2), 0.50-30.00 s of it, low-pass 3500 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": false,
+     "result": "ahead without a clear margin (58%, 'static white noise hiss' 22%; z +2.6)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.5)",
+      "a stick swung fast through the air (z +2.9)",
+      "a downlifter falling sweep (z +2.8)"
+     ],
+     "p_real": 0.498
+    },
+    {
+     "candidate": "es_open_t5000",
+     "what": "earshot `wind/open` (seed 0), 0.50-30.00 s of it, low-pass 5000 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": true,
+     "result": "clear margin (z +2.6, 62% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.6)",
+      "a stick swung fast through the air (z +3.1)",
+      "cloth whipping through the air (z +3.0)"
+     ],
+     "p_real": 0.496
+    },
+    {
+     "candidate": "es_open_s1_t5000",
+     "what": "earshot `wind/open` (seed 1), 0.50-30.00 s of it, low-pass 5000 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": true,
+     "result": "clear margin (z +2.7, 65% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.7)",
+      "a stick swung fast through the air (z +3.1)",
+      "cloth whipping through the air (z +3.0)"
+     ],
+     "p_real": 0.574
+    }
+   ],
+   "seeds_generated": [
+    917
+   ]
+  },
+  "wind_vale_farmland": {
+   "file": "audio/sfx/v9/wind_vale_farmland.flac",
+   "row": "R17 (alternative bed)",
+   "seconds": 30.5,
+   "onsets_s": [],
+   "peak_at_s": 12.047,
+   "loudest_400ms_at_s": [
+    11.737,
+    12.137
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.6, 72% of the choice)",
+   "note": "The lead's prompt, third seed, with everything above 700 Hz rolled off; without that it is hiss (93 %). Very dark: most of its energy is under 80 Hz, so a phone will play almost none of it. Realness 0.16 (likely synthesized). Swells of about 10 dB at 4-7 s, 11-13 s (the peak, 12.0 s) and 17-18 s; from 23 s on it is steady. Made stereo from itself: sum to mono for the plain take.",
+   "candidate": "s2927_t700",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Open farmland under a heavy overcast sky, light steady wind over wet grass and a dry-stone wall, wide, quiet",
+   "seed": 2927,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s2927_d32_40004129.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Open farmland under a heavy overcast sky, light steady wind over wet grass and a dry-stone wall, wide, quiet",
+   "recipe": [
+    "Stable Audio take, seed 2927, 1.50-32.00 s of it, low-pass 700 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+    "made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the bed as it was before this step (L/R correlation +0.46)"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -2.3 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "wind blowing across an open field",
+    "alternatives": [
+     "static white noise hiss",
+     "ocean waves on a beach",
+     "a waterfall",
+     "rain"
+    ],
+    "verdict": "plausible",
+    "z": 2.61,
+    "share_of_forced_choice": 0.719,
+    "alternatives_share": {
+     "static white noise hiss": 0.042,
+     "ocean waves on a beach": 0.208,
+     "a waterfall": 0.026,
+     "rain": 0.004
+    },
+    "pass": true,
+    "result": "clear margin (z +2.6, 72% of the choice)",
+    "sounds_most_like": [
+     "being underwater (z +2.6)",
+     "a gust of wind rushing past (z +2.6)",
+     "wind blowing (z +2.3)",
+     "a car driving past (z +2.0)"
+    ],
+    "audioset": [
+     "Field recording 0.47",
+     "Wind 0.29",
+     "Wind noise (microphone) 0.23",
+     "Vehicle 0.21",
+     "Eruption 0.18"
+    ],
+    "realness": {
+     "p_real": 0.164,
+     "verdict": "likely code-synthesized",
+     "why": "8 of 8 windows lean synthesized (p_real < 0.5); mean CLAP head score -1.3"
+    },
+    "describe": "30.50 s busy, 7.7 onsets/s, loudness range 8 LU. Sounds most like: being underwater (z +2.6), a gust of wind rushing past (z +2.5), wind blowing (z +2.2) [plausible reading]. Other readings: a car driving past (everyday, z +2.0). AudioSet: Field recording 0.47, Wind 0.29, Wind noise (microphone) 0.23. peak -3.0 dBFS, -28.3 LUFS, brightness 772 Hz, bandwidth 5.1 kHz, side/mid -4 dB. Windows that read differently: 0:00.00-0:10.00 a downlifter falling sweep (z +2.5; AudioSet Field recording 0.47); 0:20.50-0:30.50 being underwater (z +2.3; AudioSet Eruption 0.15)."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -28.3,
+    "rms_dbfs": -27.0,
+    "centroid_hz": 96,
+    "lr_correlation": 0.469,
+    "energy_db_of_total": {
+     "under_80_hz": -0.7,
+     "80_250_hz": -10.0,
+     "250_2k_hz": -12.5,
+     "2k_8k_hz": -29.7,
+     "over_8k_hz": -55.5
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s1927",
+     "what": "Stable Audio take, seed 1927, 1.50-32.00 s of it, 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (100% against 0%; z +1.8)",
+     "sounds_most_like": [
+      "a crackling fire (z +3.6)",
+      "a spray can hissing (z +2.9)",
+      "fireworks exploding (z +2.6)"
+     ],
+     "p_real": 0.507
+    },
+    {
+     "candidate": "s1927_lp4k",
+     "what": "Stable Audio take, seed 1927, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (40% against 19%; z +2.4)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.4)",
+      "footsteps on gravel (z +2.4)",
+      "a thunderstorm (z +2.2)"
+     ],
+     "p_real": 0.435
+    },
+    {
+     "candidate": "s927_lp4k",
+     "what": "Stable Audio take, seed 927, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (30% against 23%; z +2.6)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.5)",
+      "being underwater (z +2.5)",
+      "a thunderstorm (z +2.4)"
+     ],
+     "p_real": 0.22
+    },
+    {
+     "candidate": "s927_lp1k",
+     "what": "Stable Audio take, seed 927, 1.50-32.00 s of it, low-pass 1000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.8, 83% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "being underwater (z +2.6)",
+      "wind blowing (z +2.4)"
+     ],
+     "p_real": 0.099
+    },
+    {
+     "candidate": "s2927",
+     "what": "Stable Audio take, seed 2927, 1.50-32.00 s of it, 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static white noise hiss' (93% against 0%; z +2.0)",
+     "sounds_most_like": [
+      "a spray can hissing (z +3.2)",
+      "a waterfall (z +3.2)",
+      "heavy rain (z +2.5)"
+     ],
+     "p_real": 0.529
+    },
+    {
+     "candidate": "s2927_t1000",
+     "what": "Stable Audio take, seed 2927, 1.50-32.00 s of it, low-pass 1000 Hz (12 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.7, 60% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.8)",
+      "being underwater (z +2.6)",
+      "wind blowing (z +2.3)"
+     ],
+     "p_real": 0.173
+    },
+    {
+     "candidate": "s2927_t700",
+     "what": "Stable Audio take, seed 2927, 1.50-32.00 s of it, low-pass 700 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.46)",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.6, 72% of the choice)",
+     "sounds_most_like": [
+      "being underwater (z +2.6)",
+      "a gust of wind rushing past (z +2.6)",
+      "wind blowing (z +2.3)"
+     ],
+     "p_real": 0.164
+    },
+    {
+     "candidate": "s2927_lp1k",
+     "what": "Stable Audio take, seed 2927, 1.50-32.00 s of it, low-pass 1000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.46)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "ahead without a clear margin (62%, 'ocean waves on a beach' 33%; z +2.6)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.8)",
+      "being underwater (z +2.7)",
+      "wind blowing (z +2.3)"
+     ],
+     "p_real": 0.106
+    },
+    {
+     "candidate": "s2927_wide",
+     "what": "Stable Audio take, seed 2927, 1.50-32.00 s of it, low-pass 1000 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.46)",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.7, 60% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.8)",
+      "being underwater (z +2.6)",
+      "wind blowing (z +2.3)"
+     ],
+     "p_real": 0.171
+    }
+   ],
+   "seeds_generated": [
+    927,
+    1927,
+    2927
+   ]
+  },
+  "wind_altitude_arches": {
+   "file": "audio/sfx/v9/wind_altitude_arches.flac",
+   "row": "R18",
+   "seconds": 28.2,
+   "onsets_s": [],
+   "peak_at_s": 0.376,
+   "loudest_400ms_at_s": [
+    9.473,
+    9.873
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.6, 84% of the choice)",
+   "note": "Not the review's prompt (its take read as ocean waves, 97 %) but a reworded one, of which only a 12 s take reads as wind: this is 9.4 s of it repeated three times, so the same gusts come round every 9.4 s (level within 3.5 dB either way). Top rolled off above 2 kHz. The pass is by share (84 %); z is only +2.6 because the review's phrase, 'wind in an open high place', scores low for any wind. Realness 0.45 (uncertain). A moaning take that also passes (alt_a3_wide, 77 %) is in the table, but the tagger hears music and whale song in it.",
+   "candidate": "alt_w1_loop_t2000",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording",
+   "seed": 5184,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s5184_d12_354a9717.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "High thin wind moaning through tall open stone arches at great height, hollow and airy, steady with slow swells",
+   "recipe": [
+    "Stable Audio take, seed 5184, 1.00-11.90 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), made into a seamless 9.4 s loop (1.5 s equal-power cross-fade) and repeated to 28.2 s, 250 ms fade-in",
+    "made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the bed as it was before this step (L/R correlation +0.47)"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -0.6 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "wind in an open high place",
+    "alternatives": [
+     "ocean waves",
+     "static hiss",
+     "a waterfall",
+     "rain"
+    ],
+    "verdict": "plausible",
+    "z": 2.58,
+    "share_of_forced_choice": 0.842,
+    "alternatives_share": {
+     "ocean waves": 0.121,
+     "static hiss": 0.021,
+     "a waterfall": 0.011,
+     "rain": 0.004
+    },
+    "pass": true,
+    "result": "clear margin (z +2.6, 84% of the choice)",
+    "sounds_most_like": [
+     "a gust of wind rushing past (z +3.7)",
+     "wind blowing (z +2.9)",
+     "a soft air whoosh (z +2.2)",
+     "a downlifter falling sweep (z +2.1)"
+    ],
+    "audioset": [
+     "Siren 0.21",
+     "Vehicle 0.11",
+     "Field recording 0.07"
+    ],
+    "realness": {
+     "p_real": 0.447,
+     "verdict": "uncertain",
+     "why": "4 of 7 windows lean synthesized (p_real < 0.5); mean CLAP head score -0.1"
+    },
+    "describe": "28.20 s busy, 7.4 onsets/s, loudness range 2 LU. Sounds most like: a gust of wind rushing past (z +3.6), wind blowing (z +2.8), a soft air whoosh (z +2.2) [clear reading]. Other readings: a thunder clap (everyday, z +2.1), being underwater (water, z +1.9). AudioSet: Siren 0.21, Vehicle 0.11, Field recording 0.07. peak -3.0 dBFS, -19.2 LUFS, brightness 622 Hz, bandwidth 4.1 kHz, side/mid -4 dB. Uniform: all 5 analysed 10 s windows read as a gust of wind rushing past."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -19.2,
+    "rms_dbfs": -20.3,
+    "centroid_hz": 439,
+    "lr_correlation": 0.472,
+    "energy_db_of_total": {
+     "under_80_hz": -4.3,
+     "80_250_hz": -14.4,
+     "250_2k_hz": -2.3,
+     "2k_8k_hz": -36.6,
+     "over_8k_hz": -62.8
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s918",
+     "what": "Stable Audio take, seed 918, 1.50-32.00 s of it",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'ocean waves' (97% against 0%; z +1.7)",
+     "sounds_most_like": [
+      "ocean waves (z +3.7)",
+      "a downlifter falling sweep (z +3.5)",
+      "a gust of wind rushing past (z +3.1)"
+     ],
+     "p_real": 0.546
+    },
+    {
+     "candidate": "alt_a1_12s",
+     "what": "Stable Audio take, seed 5181, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'ocean waves' (70% against 1%; z +0.2)",
+     "sounds_most_like": [
+      "a sustained glass harp tone (z +3.2)",
+      "a singing bowl (z +2.9)",
+      "a cymbal roll (z +2.4)"
+     ],
+     "p_real": 0.563,
+     "reworded_prompt": [
+      "Wind howling softly through a high stone bell tower, a hollow whistling moan through open arches, airy, slow rise and fall"
+     ]
+    },
+    {
+     "candidate": "alt_a2_12s",
+     "what": "Stable Audio take, seed 5182, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'static hiss' (85% against 0%; z +1.6)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.4)",
+      "a downlifter falling sweep (z +3.0)",
+      "a vacuum cleaner (z +2.5)"
+     ],
+     "p_real": 0.691,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide"
+     ]
+    },
+    {
+     "candidate": "alt_a3_12s",
+     "what": "Stable Audio take, seed 5183, 1.00-12.00 s of it",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'ocean waves' (55% against 40%; z +1.4)",
+     "sounds_most_like": [
+      "a sustained glass harp tone (z +3.1)",
+      "a gust of wind rushing past (z +2.6)",
+      "a deep cinematic whoosh (z +2.5)"
+     ],
+     "p_real": 0.549,
+     "reworded_prompt": [
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "alt_a2",
+     "what": "Stable Audio take, seed 5182, 1.50-32.00 s of it, 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static hiss' (87% against 0%; z +1.4)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.1)",
+      "a crackling fire (z +3.0)",
+      "a downlifter falling sweep (z +2.8)"
+     ],
+     "p_real": 0.877,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide"
+     ]
+    },
+    {
+     "candidate": "alt_a2_lp4k",
+     "what": "Stable Audio take, seed 5182, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static hiss' (48% against 2%; z +1.8)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.7)",
+      "a downlifter falling sweep (z +2.6)",
+      "being underwater (z +2.5)"
+     ],
+     "p_real": 0.644,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide"
+     ]
+    },
+    {
+     "candidate": "alt_a3",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static hiss' (54% against 4%; z +1.8)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.5)",
+      "a downlifter falling sweep (z +2.4)",
+      "wind blowing (z +2.3)"
+     ],
+     "p_real": 0.366,
+     "reworded_prompt": [
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "alt_a3_lp4k",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.1, 72% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.0)",
+      "wind blowing (z +2.2)",
+      "a downlifter falling sweep (z +2.2)"
+     ],
+     "p_real": 0.286,
+     "reworded_prompt": [
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "alt_a3_lp2k",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 2000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.1, 72% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a downlifter falling sweep (z +2.4)",
+      "being underwater (z +2.2)"
+     ],
+     "p_real": 0.138,
+     "reworded_prompt": [
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "es_mountain_lp4k",
+     "what": "earshot `wind/mountain` (seed 0), 0.50-30.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in",
+     "seconds": 29.5,
+     "pass": false,
+     "result": "lost to 'ocean waves' (87% against 1%; z +1.8)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.2)",
+      "a downlifter falling sweep (z +2.6)",
+      "a stick swung fast through the air (z +2.5)"
+     ],
+     "p_real": 0.363
+    },
+    {
+     "candidate": "alt_a3_wide",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.2, 77% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.0)",
+      "wind blowing (z +2.3)",
+      "being underwater (z +2.2)"
+     ],
+     "p_real": 0.277,
+     "reworded_prompt": [
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "a3_a2_even",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; Stable Audio take, seed 5182, 1.50-32.00 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "ahead without a clear margin (51%, 'ocean waves' 30%; z +2.3)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.2)",
+      "wind blowing (z +2.4)",
+      "a downlifter falling sweep (z +2.3)"
+     ],
+     "p_real": 0.272,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide",
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "a3_a2_under",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; Stable Audio take, seed 5182, 1.50-32.00 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), 250 ms fade-in, -6 dB; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 30.5,
+     "pass": true,
+     "result": "clear margin (z +2.3, 60% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.1)",
+      "wind blowing (z +2.4)",
+      "a downlifter falling sweep (z +2.2)"
+     ],
+     "p_real": 0.272,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide",
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "a3_a2_over",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in, -6 dB; Stable Audio take, seed 5182, 1.50-32.00 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "ahead without a clear margin (43%, 'ocean waves' 27%; z +2.2)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.0)",
+      "a downlifter falling sweep (z +2.4)",
+      "wind blowing (z +2.2)"
+     ],
+     "p_real": 0.289,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide",
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "a3_a2_over_lp",
+     "what": "Stable Audio take, seed 5183, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in, -6 dB; Stable Audio take, seed 5182, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "ahead without a clear margin (57%, 'a waterfall' 22%; z +2.1)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a downlifter falling sweep (z +2.2)",
+      "wind blowing (z +2.0)"
+     ],
+     "p_real": 0.332,
+     "reworded_prompt": [
+      "Strong high-altitude wind on a mountain summit, cold thin air rushing and whistling past rock, steady, wide",
+      "Wind whistling and moaning through the gaps of a ruined stone tower high on a cliff, a hollow tonal howl with slow swells"
+     ]
+    },
+    {
+     "candidate": "alt_w1_12s",
+     "what": "Stable Audio take, seed 5184, 1.00-12.00 s of it, 250 ms fade-in",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'static hiss' (73% against 8%; z +2.2)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +4.0)",
+      "wind blowing (z +2.9)",
+      "a downlifter falling sweep (z +2.4)"
+     ],
+     "p_real": 0.67,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w2_12s",
+     "what": "Stable Audio take, seed 5185, 1.00-12.00 s of it, 250 ms fade-in",
+     "seconds": 11.0,
+     "pass": false,
+     "result": "lost to 'static hiss' (61% against 0%; z +1.4)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +3.0)",
+      "a gust of wind rushing past (z +3.0)",
+      "a train passing (z +2.7)"
+     ],
+     "p_real": 0.395,
+     "reworded_prompt": [
+      "Cold wind gusting through the open belfry of a tall stone tower, breathy rushing gusts sweeping past the arches, rising and falling, airy, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w1",
+     "what": "Stable Audio take, seed 5184, 1.50-32.00 s of it, 250 ms fade-in",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static hiss' (93% against 0%; z +1.5)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.5)",
+      "a downlifter falling sweep (z +2.9)",
+      "a spray can hissing (z +2.5)"
+     ],
+     "p_real": 0.7,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w1_lp4k",
+     "what": "Stable Audio take, seed 5184, 1.50-32.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.46)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'static hiss' (68% against 7%; z +1.9)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a downlifter falling sweep (z +2.8)",
+      "an airplane flying overhead (z +2.2)"
+     ],
+     "p_real": 0.403,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w1_t2000",
+     "what": "Stable Audio take, seed 5184, 1.50-32.00 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), 250 ms fade-in; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.46)",
+     "seconds": 30.5,
+     "pass": false,
+     "result": "lost to 'a waterfall' (32% against 25%; z +2.1)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a downlifter falling sweep (z +2.7)",
+      "wind blowing (z +2.1)"
+     ],
+     "p_real": 0.257,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w1_loop",
+     "what": "Stable Audio take, seed 5184, 1.00-29.20 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 250 ms fade-in, made into a seamless 9.4 s loop (1.5 s equal-power cross-fade) and repeated to 28.2 s; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 28.2,
+     "pass": true,
+     "result": "clear margin (z +2.3, 89% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.2)",
+      "wind blowing (z +2.5)",
+      "a downlifter falling sweep (z +2.3)"
+     ],
+     "p_real": 0.403,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    },
+    {
+     "candidate": "alt_w1_loop_t2000",
+     "what": "Stable Audio take, seed 5184, 1.00-29.20 s of it, low-pass 2000 Hz (12 dB an octave, zero-phase), 250 ms fade-in, made into a seamless 9.4 s loop (1.5 s equal-power cross-fade) and repeated to 28.2 s; made stereo: the side signal is the same stretch moved 13 s on (wrapped, with a 0.5 s cross-fade at the wrap) at 0.6 of the mid, L = mid + side, R = mid - side; the mono sum is the take itself (L/R correlation +0.47)",
+     "seconds": 28.2,
+     "pass": true,
+     "result": "clear margin (z +2.6, 84% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.7)",
+      "wind blowing (z +2.9)",
+      "a soft air whoosh (z +2.2)"
+     ],
+     "p_real": 0.448,
+     "reworded_prompt": [
+      "Howling wind blowing hard over a high mountain ridge, strong cold gusts rising and falling, wind whistling over rock, blizzard wind, field recording"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    918
+   ]
+  },
+  "rockfall_boom": {
+   "file": "audio/sfx/v9/rockfall_boom.flac",
+   "row": "R1a",
+   "seconds": 6.033,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.15,
+   "loud_until_s": 3.025,
+   "peak_at_s": 0.328,
+   "loudest_400ms_at_s": [
+    0.147,
+    0.547
+   ],
+   "pass": true,
+   "result": "strong (z +3.6, 94% of the choice)",
+   "note": "It builds: first sound 0.05 s, loud from 0.15 s, peak 0.33 s, 20 dB down by 2.9 s, gone by 5.2 s. True stereo (correlation 0.75). The tagger hears thunder (0.63) and earshot an explosion: nothing in it says stone, it needs the body after it. Two clipped samples in the raw take.",
+   "candidate": "s901_cut",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "One enormous distant rockfall boom heard across a wide valley, a deep heavy impact that rolls like thunder and dies slowly, outdoors, far away",
+   "seed": 901,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s901_d6_a0a4187b.f32.wav"
+   ],
+   "raw_clipped_samples": 2,
+   "prompt_asked_by_the_review": "One enormous distant rockfall boom heard across a wide valley, a deep heavy impact that rolls like thunder and dies slowly, outdoors, far away",
+   "recipe": [
+    "Stable Audio take, seed 901, -0.03-6.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a huge rockfall boom far away",
+    "alternatives": [
+     "a kick drum",
+     "a sub bass drop",
+     "a door slam",
+     "a close explosion"
+    ],
+    "verdict": "strong",
+    "z": 3.61,
+    "share_of_forced_choice": 0.945,
+    "alternatives_share": {
+     "a kick drum": 0.0,
+     "a sub bass drop": 0.0,
+     "a door slam": 0.003,
+     "a close explosion": 0.052
+    },
+    "pass": true,
+    "result": "strong (z +3.6, 94% of the choice)",
+    "sounds_most_like": [
+     "an explosion (z +3.4)",
+     "a thunder clap (z +3.0)",
+     "fireworks exploding (z +3.0)",
+     "a big drum hit (z +2.7)"
+    ],
+    "audioset": [
+     "Thunderstorm 0.64",
+     "Thunder 0.63",
+     "Rain 0.30",
+     "Rain on surface 0.05"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -21.1,
+    "rms_dbfs": -26.1,
+    "centroid_hz": 212,
+    "lr_correlation": 0.747,
+    "energy_db_of_total": {
+     "under_80_hz": -16.0,
+     "80_250_hz": -1.4,
+     "250_2k_hz": -6.0,
+     "2k_8k_hz": -33.6,
+     "over_8k_hz": -46.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s901",
+     "what": "Stable Audio take, seed 901, -0.03-6.00 s of it",
+     "seconds": 6.033,
+     "pass": true,
+     "result": "strong (z +3.7, 94% of the choice)",
+     "sounds_most_like": [
+      "an explosion (z +3.4)",
+      "a thunder clap (z +3.0)",
+      "fireworks exploding (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s901_cut",
+     "what": "Stable Audio take, seed 901, -0.03-6.00 s of it",
+     "seconds": 6.033,
+     "pass": true,
+     "result": "strong (z +3.6, 95% of the choice)",
+     "sounds_most_like": [
+      "an explosion (z +3.4)",
+      "a thunder clap (z +3.0)",
+      "fireworks exploding (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s1901_cut",
+     "what": "Stable Audio take, seed 1901, -0.05-6.00 s of it",
+     "seconds": 6.049,
+     "pass": true,
+     "result": "strong (z +4.1, 99% of the choice)",
+     "sounds_most_like": [
+      "fireworks exploding (z +3.3)",
+      "an explosion (z +3.1)",
+      "a cymbal roll (z +2.7)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    901,
+    1901
+   ]
+  },
+  "rockfall_body_a": {
+   "file": "audio/sfx/v9/rockfall_body_a.flac",
+   "row": "R1b",
+   "seconds": 8.968,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.172,
+   "loud_until_s": 6.605,
+   "peak_at_s": 3.072,
+   "loudest_400ms_at_s": [
+    4.223,
+    4.623
+   ],
+   "pass": true,
+   "result": "strong (z +4.3, 100% of the choice)",
+   "note": "The rise. Mono (two equal channels): pan it against body_b. It grows for 4 s, is loudest at 4.2-4.6 s, holds to 6.6 s and then drops away in 0.3 s. For a roar still rising at the picture cut, end the cut at 4.2-4.6 s of the file. Realness 0.88.",
+   "candidate": "roar",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A mountainside collapsing far away: thousands of tons of rock and boulders sliding, tumbling and grinding, a continuous heavy roar of stone with cracks and knocks inside it, outdoors, heard across a valley",
+   "seed": 911,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s911_d10_f165f3fa.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A mountainside collapsing far away: thousands of tons of rock and boulders sliding, tumbling and grinding, a continuous heavy roar of stone with cracks and knocks inside it, outdoors, heard across a valley",
+   "recipe": [
+    "Stable Audio take, seed 911, 1.03-10.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -2.5 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "the roar of a rockslide, an avalanche of rock",
+    "alternatives": [
+     "a jet engine",
+     "strong wind in a microphone",
+     "a train passing",
+     "thunder",
+     "ocean waves"
+    ],
+    "verdict": "strong",
+    "z": 4.29,
+    "share_of_forced_choice": 0.995,
+    "alternatives_share": {
+     "a jet engine": 0.0,
+     "strong wind in a microphone": 0.003,
+     "a train passing": 0.0,
+     "thunder": 0.002,
+     "ocean waves": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.3, 100% of the choice)",
+    "sounds_most_like": [
+     "a gust of wind rushing past (z +3.1)",
+     "cloth whipping through the air (z +3.0)",
+     "a small animal running through grass (z +2.6)",
+     "cloth rustling (z +2.5)"
+    ],
+    "audioset": [
+     "Train 0.21",
+     "Vehicle 0.17",
+     "Rail transport 0.10",
+     "Eruption 0.07",
+     "Railroad car, train wagon 0.07"
+    ],
+    "realness": {
+     "p_real": 0.881,
+     "verdict": "real or pro-produced",
+     "why": "0 of 3 windows lean synthesized (p_real < 0.5); mean CLAP head score +2.0"
+    },
+    "describe": "8.97 s busy, 5.5 onsets/s (attack 196 ms, decays in 3.6 s). Sounds most like: a gust of wind rushing past (z +3.1), cloth whipping through the air (z +3.0), a small animal running through grass (z +2.5) [clear reading]. Other readings: cloth rustling (foley, z +2.5), a body falling on the ground (impacts, z +2.1). AudioSet: Train 0.21, Vehicle 0.17, Rail transport 0.10. peak -3.0 dBFS, -21.6 LUFS, brightness 1.4 kHz, bandwidth 16.3 kHz, noise floor -64 dBFS, mono."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -21.6,
+    "rms_dbfs": -24.0,
+    "centroid_hz": 281,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -4.4,
+     "80_250_hz": -4.8,
+     "250_2k_hz": -5.3,
+     "2k_8k_hz": -23.7,
+     "over_8k_hz": -30.9
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s911",
+     "what": "Stable Audio take, seed 911, 1.50-10.00 s of it",
+     "seconds": 8.5,
+     "pass": true,
+     "result": "strong (z +4.1, 99% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.0)",
+      "cloth whipping through the air (z +2.6)",
+      "a small animal running through grass (z +2.5)"
+     ],
+     "p_real": 0.906
+    },
+    {
+     "candidate": "roar",
+     "what": "Stable Audio take, seed 911, 1.03-10.00 s of it",
+     "seconds": 8.968,
+     "pass": true,
+     "result": "strong (z +4.3, 99% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.2)",
+      "cloth whipping through the air (z +2.9)",
+      "a small animal running through grass (z +2.6)"
+     ],
+     "p_real": 0.852
+    }
+   ],
+   "seeds_generated": [
+    911
+   ]
+  },
+  "rockfall_body_b": {
+   "file": "audio/sfx/v9/rockfall_body_b.flac",
+   "row": "R1b",
+   "seconds": 9.252,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.182,
+   "loud_until_s": 5.595,
+   "peak_at_s": 1.927,
+   "loudest_400ms_at_s": [
+    2.239,
+    2.639
+   ],
+   "pass": true,
+   "result": "strong (z +4.0, 99% of the choice)",
+   "note": "The wall. Mono: pan it against body_a. Full from 0.2 s and level until 5.0 s, loudest at 2.2-2.6 s, gone by 5.6 s. The take's first 0.7 s (a separate thump) is cut off. Realness 0.88.",
+   "candidate": "roar",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A mountainside collapsing far away: thousands of tons of rock and boulders sliding, tumbling and grinding, a continuous heavy roar of stone with cracks and knocks inside it, outdoors, heard across a valley",
+   "seed": 912,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s912_d10_f165f3fa.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A mountainside collapsing far away: thousands of tons of rock and boulders sliding, tumbling and grinding, a continuous heavy roar of stone with cracks and knocks inside it, outdoors, heard across a valley",
+   "recipe": [
+    "Stable Audio take, seed 912, 0.75-10.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "the roar of a rockslide, an avalanche of rock",
+    "alternatives": [
+     "a jet engine",
+     "strong wind in a microphone",
+     "a train passing",
+     "thunder",
+     "ocean waves"
+    ],
+    "verdict": "strong",
+    "z": 4.04,
+    "share_of_forced_choice": 0.986,
+    "alternatives_share": {
+     "a jet engine": 0.001,
+     "strong wind in a microphone": 0.001,
+     "a train passing": 0.0,
+     "thunder": 0.012,
+     "ocean waves": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.0, 99% of the choice)",
+    "sounds_most_like": [
+     "a gust of wind rushing past (z +2.8)",
+     "a downlifter falling sweep (z +2.3)",
+     "a big drum hit (z +2.3)",
+     "a cymbal roll (z +2.3)"
+    ],
+    "audioset": [
+     "Sliding door 0.09",
+     "Eruption 0.05"
+    ],
+    "realness": {
+     "p_real": 0.882,
+     "verdict": "real or pro-produced",
+     "why": "0 of 3 windows lean synthesized (p_real < 0.5); mean CLAP head score +2.1"
+    },
+    "describe": "9.25 s busy, 4.7 onsets/s (attack 148 ms, decays in 4.7 s). Sounds most like: a gust of wind rushing past (z +2.8), a downlifter falling sweep (z +2.3), a big drum hit (z +2.3) [plausible reading]. AudioSet tagger unsure (Sliding door 0.09, Eruption 0.05). peak -3.0 dBFS, -18.2 LUFS, brightness 1.5 kHz, bandwidth 16.3 kHz, noise floor -63 dBFS, mono."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -18.2,
+    "rms_dbfs": -21.8,
+    "centroid_hz": 256,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -5.0,
+     "80_250_hz": -3.5,
+     "250_2k_hz": -6.3,
+     "2k_8k_hz": -23.3,
+     "over_8k_hz": -31.8
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s912",
+     "what": "Stable Audio take, seed 912, 1.50-10.00 s of it",
+     "seconds": 8.5,
+     "pass": true,
+     "result": "strong (z +4.6, 100% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "fireworks exploding (z +2.4)",
+      "a big braam (z +2.3)"
+     ],
+     "p_real": 0.892
+    },
+    {
+     "candidate": "roar",
+     "what": "Stable Audio take, seed 912, 0.75-10.00 s of it",
+     "seconds": 9.252,
+     "pass": true,
+     "result": "strong (z +4.2, 99% of the choice)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +2.9)",
+      "a fast whoosh (z +2.4)",
+      "a cymbal roll (z +2.4)"
+     ],
+     "p_real": 0.865
+    }
+   ],
+   "seeds_generated": [
+    912
+   ]
+  },
+  "rockfall_crack": {
+   "file": "audio/sfx/v9/rockfall_crack.flac",
+   "row": "extra (the lead's)",
+   "seconds": 3.0,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.049,
+   "loud_until_s": 2.385,
+   "peak_at_s": 0.052,
+   "loudest_400ms_at_s": [
+    0.048,
+    0.448
+   ],
+   "pass": true,
+   "result": "strong (z +3.1, 81% of the choice)",
+   "note": "Not Stable Audio: four generated takes read as a stick snapping, a whip or a squelch. This is the catalogue's rock break with its far explosion laid 12 dB under it as the roll across the valley. The crack is the first 0.25 s, the roll runs to 2.4 s. earshot's own word for it is an explosion; a gunshot gets 15 %. Dry: it has no echo of its own.",
+   "candidate": "es_break_far3",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "One sharp dry crack of rock splitting high on a cliff, far away, echoing across a wide valley",
+   "recipe": [
+    "earshot `break/rock` (seed 0), -0.05-0.99 s of it",
+    "earshot `explosion/far` (seed 0), 0.00-2.85 s of it, low-pass 1500 Hz (24 dB an octave, zero-phase), 50 ms fade-in, -12 dB, placed at 0.150 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.2 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a sharp crack of rock splitting far away, echoing across a valley",
+    "alternatives": [
+     "a gunshot",
+     "a stick snapping",
+     "a door slamming",
+     "a whip crack"
+    ],
+    "verdict": "strong",
+    "z": 3.11,
+    "share_of_forced_choice": 0.81,
+    "alternatives_share": {
+     "a gunshot": 0.153,
+     "a stick snapping": 0.006,
+     "a door slamming": 0.001,
+     "a whip crack": 0.029
+    },
+    "pass": true,
+    "result": "strong (z +3.1, 81% of the choice)",
+    "sounds_most_like": [
+     "an explosion (z +3.8)",
+     "a big drum hit (z +3.0)",
+     "a deep cinematic boom (z +2.9)",
+     "a heavy thud (z +2.9)"
+    ],
+    "audioset": [
+     "Bang 0.34",
+     "Sound effect 0.28",
+     "Explosion 0.17",
+     "Burst, pop 0.11",
+     "Crack 0.10"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -25.1,
+    "rms_dbfs": -24.6,
+    "centroid_hz": 165,
+    "lr_correlation": 0.605,
+    "energy_db_of_total": {
+     "under_80_hz": -2.3,
+     "80_250_hz": -4.7,
+     "250_2k_hz": -13.2,
+     "2k_8k_hz": -15.8,
+     "over_8k_hz": -29.2
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s931",
+     "what": "Stable Audio take, seed 931, -0.04-3.00 s of it",
+     "seconds": 3.042,
+     "pass": false,
+     "result": "ahead without a clear margin (36%, 'a stick snapping' 34%; z +2.4)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +3.2)",
+      "a cork pop (z +2.9)",
+      "a mouth pop (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "s931_first",
+     "what": "Stable Audio take, seed 931, -0.04-0.30 s of it",
+     "seconds": 0.342,
+     "pass": false,
+     "result": "lost to 'a whip crack' (98% against 1%; z +1.1)",
+     "sounds_most_like": [
+      "a mouth pop (z +4.0)",
+      "a cork pop (z +3.0)",
+      "a bubble pop (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "es_breakrock",
+     "what": "earshot `break/rock` (seed 0), -0.05-0.99 s of it",
+     "seconds": 1.037,
+     "pass": true,
+     "result": "clear margin (z +2.5, 65% of the choice)",
+     "sounds_most_like": [
+      "a snare hit (z +3.4)",
+      "a punchy impact hit (z +3.0)",
+      "an explosion (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_thundercrack",
+     "what": "earshot `thunder/crack` (seed 0), -0.03-2.97 s of it",
+     "seconds": 3.0,
+     "pass": true,
+     "result": "clear margin (z +1.9, 95% of the choice)",
+     "sounds_most_like": [
+      "a thunder clap (z +3.6)",
+      "an explosion (z +3.5)",
+      "a thunderstorm (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s1931",
+     "what": "Stable Audio take, seed 1931, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": false,
+     "result": "lost to 'a stick snapping' (94% against 3%; z +1.2)",
+     "sounds_most_like": [
+      "a match being struck (z +4.0)",
+      "a can opening (z +3.2)",
+      "a spray can hissing (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "crack_slab",
+     "what": "Stable Audio take, seed 5311, -0.04-3.00 s of it",
+     "seconds": 3.042,
+     "pass": false,
+     "result": "lost to 'a stick snapping' (88% against 6%; z +1.1)",
+     "sounds_most_like": [
+      "a match being struck (z +3.7)",
+      "an apple falling on grass (z +3.3)",
+      "digging in soil (z +2.8)"
+     ],
+     "reworded_prompt": [
+      "A huge slab of rock cracking and splitting off a cliff face far away, one sharp loud crack of stone with a rumbling echo rolling across a wide mountain valley"
+     ]
+    },
+    {
+     "candidate": "s2931",
+     "what": "Stable Audio take, seed 2931, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": false,
+     "result": "lost to 'a stick snapping' (98% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "lego bricks clicking (z +3.6)",
+      "dominoes falling (z +3.1)",
+      "a ratchet clicking (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "es_break_roll",
+     "what": "earshot `break/rock` (seed 0), -0.05-0.99 s of it; earshot `thunder/crack` (seed 0), 0.35-3.25 s of it, low-pass 1500 Hz (24 dB an octave, zero-phase), 80 ms fade-in, -10 dB, placed at 0.120 s",
+     "seconds": 3.02,
+     "pass": true,
+     "result": "strong (z +3.3, 53% of the choice)",
+     "sounds_most_like": [
+      "an explosion (z +4.1)",
+      "fireworks exploding (z +3.5)",
+      "a gunshot (z +3.3)"
+     ]
+    },
+    {
+     "candidate": "es_break_far",
+     "what": "earshot `break/rock` (seed 0), -0.05-0.99 s of it; earshot `explosion/far` (seed 0), 0.00-4.30 s of it, low-pass 1500 Hz (24 dB an octave, zero-phase), 50 ms fade-in, -12 dB, placed at 0.150 s",
+     "seconds": 4.455,
+     "pass": true,
+     "result": "clear margin (z +3.0, 68% of the choice)",
+     "sounds_most_like": [
+      "an explosion (z +3.5)",
+      "a deep cinematic boom (z +3.2)",
+      "a big drum hit (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "es_break_x08",
+     "what": "earshot `break/rock` (seed 0), -0.04-0.99 s of it, played at 0.8 speed",
+     "seconds": 1.283,
+     "pass": false,
+     "result": "ahead without a clear margin (59%, 'a gunshot' 37%; z +2.9)",
+     "sounds_most_like": [
+      "an explosion (z +3.6)",
+      "a snare hit (z +3.3)",
+      "fireworks exploding (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "es_break_boomtail",
+     "what": "earshot `break/rock` (seed 0), -0.05-0.99 s of it; Stable Audio take, seed 901, 0.60-3.00 s of it, low-pass 1500 Hz (24 dB an octave, zero-phase), 100 ms fade-in, -12 dB, placed at 0.120 s",
+     "seconds": 2.52,
+     "pass": false,
+     "result": "lost to 'a gunshot' (58% against 41%; z +3.0)",
+     "sounds_most_like": [
+      "an explosion (z +3.1)",
+      "a gunshot (z +3.1)",
+      "fireworks exploding (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "es_break_far3",
+     "what": "earshot `break/rock` (seed 0), -0.05-0.99 s of it; earshot `explosion/far` (seed 0), 0.00-2.85 s of it, low-pass 1500 Hz (24 dB an octave, zero-phase), 50 ms fade-in, -12 dB, placed at 0.150 s",
+     "seconds": 3.0,
+     "pass": true,
+     "result": "strong (z +3.1, 81% of the choice)",
+     "sounds_most_like": [
+      "an explosion (z +3.8)",
+      "a big drum hit (z +3.0)",
+      "a deep cinematic boom (z +2.9)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    931,
+    1931,
+    2931
+   ]
+  },
+  "ox_snort": {
+   "file": "audio/sfx/v9/ox_snort.flac",
+   "row": "R2",
+   "seconds": 0.75,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.252,
+   "loud_until_s": 0.665,
+   "peak_at_s": 0.486,
+   "loudest_400ms_at_s": [
+    0.258,
+    0.658
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.9, 69% of the choice)",
+   "note": "Third seed, the first of the take's two sounds (the second read as a lion, 93 %). One grunt: a faint breath from 0.05 s, the grunt itself from 0.25 s, peak 0.49 s, over by 0.67 s; sync on 0.25 s. Passes by share only (69 %; pig 19 %, lion 11 %), and earshot's own words for it are a rubber stretch and a record scratch: listen before trusting it. Every deeper or longer grunt lost to 'a lion growling'.",
+   "candidate": "s2902_first",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A big ox startled, snorting and giving one short deep grunt, breath blown hard through the nose, close, outdoors in an open field",
+   "seed": 2902,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s2902_d3_8536a2ab.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A big ox startled, snorting and giving one short deep grunt, breath blown hard through the nose, close, outdoors in an open field",
+   "recipe": [
+    "Stable Audio take, seed 2902, 0.05-0.80 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "an ox or a cow grunting, snorting",
+    "alternatives": [
+     "a lion growling",
+     "a man coughing",
+     "a dog barking",
+     "a pig oinking"
+    ],
+    "verdict": "plausible",
+    "z": 2.92,
+    "share_of_forced_choice": 0.694,
+    "alternatives_share": {
+     "a lion growling": 0.112,
+     "a man coughing": 0.0,
+     "a dog barking": 0.0,
+     "a pig oinking": 0.193
+    },
+    "pass": true,
+    "result": "clear margin (z +2.9, 69% of the choice)",
+    "sounds_most_like": [
+     "a rubber stretch (z +3.6)",
+     "a record scratch (z +3.2)",
+     "a phone vibration buzz (z +3.2)",
+     "a zipper (z +3.0)"
+    ],
+    "audioset": [
+     "Sound effect 0.10",
+     "Gasp 0.10",
+     "Snort 0.05"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -12.6,
+    "rms_dbfs": -15.7,
+    "centroid_hz": 246,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -10.5,
+     "80_250_hz": -0.6,
+     "250_2k_hz": -15.0,
+     "2k_8k_hz": -18.6,
+     "over_8k_hz": -41.8
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s902",
+     "what": "Stable Audio take, seed 902, 0.38-3.00 s of it",
+     "seconds": 2.623,
+     "pass": false,
+     "result": "lost to 'a lion growling' (98% against 2%; z +4.1)",
+     "sounds_most_like": [
+      "a horse neighing (z +2.5)",
+      "a record scratch (z +2.5)",
+      "digging in soil (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "s902_first",
+     "what": "Stable Audio take, seed 902, 0.25-0.80 s of it",
+     "seconds": 0.55,
+     "pass": false,
+     "result": "lost to 'a lion growling' (57% against 42%; z +4.3)",
+     "sounds_most_like": [
+      "a record scratch (z +3.0)",
+      "a cow mooing (z +2.8)",
+      "digging in soil (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "s902_second",
+     "what": "Stable Audio take, seed 902, 0.95-2.20 s of it",
+     "seconds": 1.25,
+     "pass": false,
+     "result": "lost to 'a lion growling' (100% against 0%; z +4.2)",
+     "sounds_most_like": [
+      "a cow mooing (z +3.0)",
+      "a record scratch (z +2.6)",
+      "a deep cinematic whoosh (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "es_moo",
+     "what": "earshot `cow/moo` (seed 0), 0.30-0.90 s of it, played at 0.8 speed",
+     "seconds": 0.75,
+     "pass": false,
+     "result": "ahead without a clear margin (47%, 'a pig oinking' 27%; z +2.6)",
+     "sounds_most_like": [
+      "a swoosh passing by (z +2.9)",
+      "a record scratch (z +2.7)",
+      "a fast whoosh (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "es_moo_1",
+     "what": "earshot `cow/moo` (seed 1), 0.72-1.32 s of it, played at 0.8 speed",
+     "seconds": 0.75,
+     "pass": false,
+     "result": "lost to 'a pig oinking' (65% against 34%; z +4.3)",
+     "sounds_most_like": [
+      "a rubber stretch (z +3.6)",
+      "an error buzz (z +2.9)",
+      "a cow mooing (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "s1902",
+     "what": "Stable Audio take, seed 1902, 0.08-3.00 s of it",
+     "seconds": 2.916,
+     "pass": false,
+     "result": "lost to 'a lion growling' (98% against 2%; z +4.5)",
+     "sounds_most_like": [
+      "a cow mooing (z +3.1)",
+      "a horse neighing (z +2.9)",
+      "digging in soil (z +2.7)"
+     ]
+    },
+    {
+     "candidate": "ox_moo",
+     "what": "Stable Audio take, seed 5021, -0.05-3.00 s of it",
+     "seconds": 3.049,
+     "pass": false,
+     "result": "lost to 'a lion growling' (95% against 4%; z +3.0)",
+     "sounds_most_like": [
+      "a phone vibration buzz (z +3.7)",
+      "a record scratch (z +3.6)",
+      "a printer printing (z +2.7)"
+     ],
+     "reworded_prompt": [
+      "A cow lowing once, one short low moo ending in a snort of breath through the nose, close, outdoors in an open field"
+     ]
+    },
+    {
+     "candidate": "ox_bellow",
+     "what": "Stable Audio take, seed 5022, -0.04-3.00 s of it",
+     "seconds": 3.041,
+     "pass": false,
+     "result": "lost to 'a lion growling' (88% against 12%; z +4.2)",
+     "sounds_most_like": [
+      "a cow mooing (z +5.1)",
+      "a horse neighing (z +3.0)",
+      "digging in soil (z +2.3)"
+     ],
+     "reworded_prompt": [
+      "A startled ox bellowing, one short deep moo and a loud snort, farm animal, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "ox_bellow_06",
+     "what": "Stable Audio take, seed 5022, -0.04-0.61 s of it",
+     "seconds": 0.65,
+     "pass": false,
+     "result": "lost to 'a lion growling' (71% against 25%; z +2.3)",
+     "sounds_most_like": [
+      "a deep cinematic whoosh (z +2.9)",
+      "a fast whoosh (z +2.9)",
+      "a record scratch (z +2.7)"
+     ],
+     "reworded_prompt": [
+      "A startled ox bellowing, one short deep moo and a loud snort, farm animal, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "ox_moo_06",
+     "what": "Stable Audio take, seed 5021, 0.86-1.51 s of it",
+     "seconds": 0.65,
+     "pass": true,
+     "result": "strong (z +3.8, 66% of the choice)",
+     "sounds_most_like": [
+      "a phone vibration buzz (z +3.2)",
+      "a record scratch (z +2.8)",
+      "a deep cinematic whoosh (z +2.6)"
+     ],
+     "reworded_prompt": [
+      "A cow lowing once, one short low moo ending in a snort of breath through the nose, close, outdoors in an open field"
+     ]
+    },
+    {
+     "candidate": "es_moo_full",
+     "what": "earshot `cow/moo` (seed 0), 0.29-2.75 s of it",
+     "seconds": 2.462,
+     "pass": true,
+     "result": "strong (z +4.4, 82% of the choice)",
+     "sounds_most_like": [
+      "a cow mooing (z +5.2)",
+      "a horse neighing (z +2.8)",
+      "a sustained glass harp tone (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "ox_moo_event",
+     "what": "Stable Audio take, seed 5021, 0.86-3.00 s of it",
+     "seconds": 2.142,
+     "pass": false,
+     "result": "lost to 'a lion growling' (96% against 3%; z +3.2)",
+     "sounds_most_like": [
+      "a phone vibration buzz (z +4.0)",
+      "a record scratch (z +3.7)",
+      "a cow mooing (z +2.7)"
+     ],
+     "reworded_prompt": [
+      "A cow lowing once, one short low moo ending in a snort of breath through the nose, close, outdoors in an open field"
+     ]
+    },
+    {
+     "candidate": "ox_moo_05",
+     "what": "Stable Audio take, seed 5021, 0.86-1.41 s of it",
+     "seconds": 0.55,
+     "pass": true,
+     "result": "clear margin (z +2.6, 73% of the choice)",
+     "sounds_most_like": [
+      "a record scratch (z +2.9)",
+      "a phone vibration buzz (z +2.7)",
+      "a deep cinematic whoosh (z +2.5)"
+     ],
+     "reworded_prompt": [
+      "A cow lowing once, one short low moo ending in a snort of breath through the nose, close, outdoors in an open field"
+     ]
+    },
+    {
+     "candidate": "ox_moo_08",
+     "what": "Stable Audio take, seed 5021, 0.86-1.66 s of it",
+     "seconds": 0.8,
+     "pass": false,
+     "result": "lost to 'a lion growling' (89% against 11%; z +3.9)",
+     "sounds_most_like": [
+      "a record scratch (z +3.5)",
+      "a phone vibration buzz (z +3.3)",
+      "a cow mooing (z +2.6)"
+     ],
+     "reworded_prompt": [
+      "A cow lowing once, one short low moo ending in a snort of breath through the nose, close, outdoors in an open field"
+     ]
+    },
+    {
+     "candidate": "es_moo_mid",
+     "what": "earshot `cow/moo` (seed 0), 0.80-1.45 s of it, 30 ms fade-in",
+     "seconds": 0.65,
+     "pass": false,
+     "result": "ahead without a clear margin (59%, 'a pig oinking' 40%; z +2.8)",
+     "sounds_most_like": [
+      "a cow mooing (z +2.8)",
+      "a snare roll (z +2.7)",
+      "a ukulele (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "es_moo_mid_x08",
+     "what": "earshot `cow/moo` (seed 0), 0.80-1.32 s of it, played at 0.8 speed, 30 ms fade-in",
+     "seconds": 0.65,
+     "pass": false,
+     "result": "lost to 'a pig oinking' (48% against 38%; z +1.9)",
+     "sounds_most_like": [
+      "a record scratch (z +2.9)",
+      "a phone vibration buzz (z +2.8)",
+      "a rubber stretch (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "s2902",
+     "what": "Stable Audio take, seed 2902, 0.10-3.00 s of it",
+     "seconds": 2.899,
+     "pass": true,
+     "result": "strong (z +3.4, 57% of the choice)",
+     "sounds_most_like": [
+      "a record scratch (z +3.4)",
+      "a rubber stretch (z +3.1)",
+      "a balloon squeak (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s2902_first",
+     "what": "Stable Audio take, seed 2902, 0.05-0.80 s of it",
+     "seconds": 0.75,
+     "pass": true,
+     "result": "clear margin (z +2.9, 70% of the choice)",
+     "sounds_most_like": [
+      "a rubber stretch (z +3.6)",
+      "a record scratch (z +3.3)",
+      "a phone vibration buzz (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "s2902_second",
+     "what": "Stable Audio take, seed 2902, 0.95-1.85 s of it",
+     "seconds": 0.897,
+     "pass": false,
+     "result": "lost to 'a lion growling' (93% against 7%; z +3.6)",
+     "sounds_most_like": [
+      "a record scratch (z +3.2)",
+      "a cow mooing (z +2.7)",
+      "a rubber stretch (z +2.6)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    902,
+    1902,
+    2902
+   ]
+  },
+  "crows_burst": {
+   "file": "audio/sfx/v9/crows_burst.flac",
+   "row": "R3",
+   "seconds": 3.047,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.109,
+   "loud_until_s": 2.235,
+   "peak_at_s": 0.992,
+   "loudest_400ms_at_s": [
+    0.63,
+    1.03
+   ],
+   "pass": false,
+   "result": "lost to 'cloth flapping' (72% against 28%; z +3.9)",
+   "note": "FAIL. earshot's first word for it is 'a bird flapping its wings' (z +3.9), but made to choose it says cloth flapping (72 %), as it did for all five generated takes and for the catalogue's wings alone. It is the reworded take with two catalogue wing-flaps under it. Loud from 0.11 s, busiest 0.6-1.0 s, thin by 1.8 s; the picture needs about 1 s.",
+   "candidate": "crows_flock_wings",
+   "source": "layered: a locally generated take and earshot catalogue designs",
+   "prompt": "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors",
+   "seed": 5031,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s5031_d3_20b37401.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Four crows bursting up off the ground together, heavy wings flapping hard, then settling again, outdoors, a few metres away",
+   "recipe": [
+    "Stable Audio take, seed 5031, -0.05-3.00 s of it",
+    "earshot `wings/flap` (seed 0), -0.03-1.97 s of it, played at 0.9 speed, -4 dB, placed at 0.050 s",
+    "earshot `wings/flap` (seed 1), -0.02-1.82 s of it, played at 1.1 speed, -5 dB, placed at 0.220 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.7 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "birds taking off, wings flapping",
+    "alternatives": [
+     "cloth flapping",
+     "a whoosh",
+     "applause",
+     "paper rustling"
+    ],
+    "verdict": "strong",
+    "z": 3.88,
+    "share_of_forced_choice": 0.283,
+    "alternatives_share": {
+     "cloth flapping": 0.716,
+     "a whoosh": 0.0,
+     "applause": 0.0,
+     "paper rustling": 0.0
+    },
+    "pass": false,
+    "result": "lost to 'cloth flapping' (72% against 28%; z +3.9)",
+    "sounds_most_like": [
+     "a bird flapping its wings (z +3.9)",
+     "cloth whipping through the air (z +3.8)",
+     "a stick swung fast through the air (z +3.5)",
+     "a record scratch (z +3.0)"
+    ],
+    "audioset": [
+     "Typewriter 0.41",
+     "Sound effect 0.08",
+     "Flap 0.06"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -21.2,
+    "rms_dbfs": -24.1,
+    "centroid_hz": 454,
+    "lr_correlation": 0.982,
+    "energy_db_of_total": {
+     "under_80_hz": -1.3,
+     "80_250_hz": -10.4,
+     "250_2k_hz": -10.8,
+     "2k_8k_hz": -11.0,
+     "over_8k_hz": -24.6
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s903",
+     "what": "Stable Audio take, seed 903, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (61% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.8)",
+      "a soft air whoosh (z +3.4)",
+      "a fast whoosh (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_wings4",
+     "what": "earshot `wings/flap` (seed 0), -0.03-1.97 s of it, played at 0.9 speed; earshot `wings/flap` (seed 1), -0.02-1.82 s of it, played at 1.1 speed, -1 dB, placed at 0.090 s; earshot `wings/flap` (seed 2), -0.03-1.98 s of it, -2 dB, placed at 0.200 s; earshot `wings/flap` (seed 3), -0.01-1.84 s of it, played at 0.95 speed, -3 dB, placed at 0.310 s",
+     "seconds": 2.256,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (60% against 2%; z +2.7)",
+     "sounds_most_like": [
+      "a record scratch (z +3.5)",
+      "dominoes falling (z +3.4)",
+      "paper rustling (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "es_wings1",
+     "what": "earshot `wings/flap` (seed 0), -0.03-1.97 s of it",
+     "seconds": 2.008,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (86% against 2%; z +2.4)",
+     "sounds_most_like": [
+      "a record scratch (z +3.4)",
+      "a rubber stretch (z +3.2)",
+      "an old typewriter (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s1903",
+     "what": "Stable Audio take, seed 1903, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": false,
+     "result": "lost to 'a whoosh' (68% against 0%; z +0.5)",
+     "sounds_most_like": [
+      "a gust of wind rushing past (z +3.6)",
+      "a soft air whoosh (z +3.3)",
+      "a spray can hissing (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "crows_flock",
+     "what": "Stable Audio take, seed 5031, -0.05-3.00 s of it",
+     "seconds": 3.047,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (86% against 12%; z +2.8)",
+     "sounds_most_like": [
+      "a small animal running through grass (z +2.9)",
+      "a bird flapping its wings (z +2.9)",
+      "cloth whipping through the air (z +2.7)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_wings",
+     "what": "Stable Audio take, seed 5032, 0.11-3.00 s of it",
+     "seconds": 2.891,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (100% against 0%; z +2.1)",
+     "sounds_most_like": [
+      "cloth whipping through the air (z +3.5)",
+      "a fast whoosh (z +3.1)",
+      "a stick swung fast through the air (z +2.9)"
+     ],
+     "reworded_prompt": [
+      "Large birds taking off, heavy wing beats flapping fast, feathers beating the air, bird wings fluttering, close"
+     ]
+    },
+    {
+     "candidate": "s2903",
+     "what": "Stable Audio take, seed 2903, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": false,
+     "result": "lost to 'a whoosh' (85% against 0%; z +1.0)",
+     "sounds_most_like": [
+      "a fast whoosh (z +3.4)",
+      "a soft air whoosh (z +3.3)",
+      "a gust of wind rushing past (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "crows_flock_a",
+     "what": "Stable Audio take, seed 5031, -0.05-1.30 s of it",
+     "seconds": 1.347,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (99% against 1%; z +2.3)",
+     "sounds_most_like": [
+      "a record scratch (z +3.1)",
+      "a small animal running through grass (z +2.9)",
+      "a bird flapping its wings (z +2.6)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_flock_b",
+     "what": "Stable Audio take, seed 5031, 0.50-1.80 s of it, 30 ms fade-in",
+     "seconds": 1.3,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (91% against 5%; z +1.7)",
+     "sounds_most_like": [
+      "a record scratch (z +2.6)",
+      "an apple falling on grass (z +2.6)",
+      "a small animal running through grass (z +2.5)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_flock_hp",
+     "what": "Stable Audio take, seed 5031, -0.05-3.00 s of it, high-pass 400 Hz",
+     "seconds": 3.047,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (56% against 15%; z +2.0)",
+     "sounds_most_like": [
+      "a spray can hissing (z +2.9)",
+      "a snare roll (z +2.8)",
+      "a record scratch (z +2.7)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_flock_wings",
+     "what": "Stable Audio take, seed 5031, -0.05-3.00 s of it; earshot `wings/flap` (seed 0), -0.03-1.97 s of it, played at 0.9 speed, -4 dB, placed at 0.050 s; earshot `wings/flap` (seed 1), -0.02-1.82 s of it, played at 1.1 speed, -5 dB, placed at 0.220 s",
+     "seconds": 3.047,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (71% against 29%; z +3.9)",
+     "sounds_most_like": [
+      "a bird flapping its wings (z +3.9)",
+      "cloth whipping through the air (z +3.7)",
+      "a stick swung fast through the air (z +3.5)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_flock_wings4",
+     "what": "Stable Audio take, seed 5031, -0.05-3.00 s of it, -2 dB; earshot `wings/flap` (seed 0), -0.03-1.97 s of it, played at 0.9 speed, -3 dB, placed at 0.030 s; earshot `wings/flap` (seed 1), -0.02-1.82 s of it, played at 1.1 speed, -4 dB, placed at 0.120 s; earshot `wings/flap` (seed 2), -0.03-1.98 s of it, -5 dB, placed at 0.230 s; earshot `wings/flap` (seed 3), -0.01-1.84 s of it, played at 0.95 speed, -6 dB, placed at 0.340 s",
+     "seconds": 3.047,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (86% against 12%; z +2.9)",
+     "sounds_most_like": [
+      "an old typewriter (z +3.2)",
+      "a stick swung fast through the air (z +3.2)",
+      "cloth whipping through the air (z +3.1)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    },
+    {
+     "candidate": "crows_flock_wings_2s",
+     "what": "Stable Audio take, seed 5031, -0.05-1.95 s of it; earshot `wings/flap` (seed 0), -0.03-1.97 s of it, played at 0.9 speed, -4 dB, placed at 0.050 s; earshot `wings/flap` (seed 1), -0.02-1.74 s of it, played at 1.1 speed, -5 dB, placed at 0.220 s",
+     "seconds": 2.275,
+     "pass": false,
+     "result": "lost to 'cloth flapping' (93% against 6%; z +3.3)",
+     "sounds_most_like": [
+      "cloth whipping through the air (z +3.5)",
+      "a bird flapping its wings (z +3.5)",
+      "a stick swung fast through the air (z +3.4)"
+     ],
+     "reworded_prompt": [
+      "A flock of pigeons and crows suddenly taking flight from the ground, a burst of loud flapping wings fluttering, close, outdoors"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    903,
+    1903,
+    2903
+   ]
+  },
+  "bowl_on_stone": {
+   "file": "audio/sfx/v9/bowl_on_stone.flac",
+   "row": "R4",
+   "seconds": 1.72,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.059,
+   "loud_until_s": 0.25,
+   "peak_at_s": 0.065,
+   "loudest_400ms_at_s": [
+    0.047,
+    0.447
+   ],
+   "pass": true,
+   "result": "strong (z +3.9, 78% of the choice)",
+   "note": "Second seed. One dull knock 0.2 s long at 0.05 s, nothing after 0.3 s. The first seed read as a box lid (95 %); this one still gives the lid 15 %. The review's catalogue fallback scored higher (z +4.7, 100 %) and is in the table as es_knock.",
+   "candidate": "s1904",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A heavy wooden bowl half full of water set down on a wet flat stone, one dull woody knock with a low thump, close, outdoors, quiet",
+   "seed": 1904,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s1904_d2_772c36b7.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A heavy wooden bowl half full of water set down on a wet flat stone, one dull woody knock with a low thump, close, outdoors, quiet",
+   "recipe": [
+    "Stable Audio take, seed 1904, 0.28-2.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a wooden bowl set down on stone",
+    "alternatives": [
+     "a box lid closing",
+     "a metal pan clanging",
+     "a door knock",
+     "a plastic object dropped"
+    ],
+    "verdict": "strong",
+    "z": 3.85,
+    "share_of_forced_choice": 0.781,
+    "alternatives_share": {
+     "a box lid closing": 0.153,
+     "a metal pan clanging": 0.0,
+     "a door knock": 0.0,
+     "a plastic object dropped": 0.065
+    },
+    "pass": true,
+    "result": "strong (z +3.9, 78% of the choice)",
+    "sounds_most_like": [
+     "digging in soil (z +3.3)",
+     "a cork pop (z +2.6)",
+     "a wooden block hit (z +2.6)",
+     "a box lid closing (z +2.6)"
+    ],
+    "audioset": [
+     "Chopping (food) 0.07",
+     "Sound effect 0.06"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -25.5,
+    "rms_dbfs": -29.7,
+    "centroid_hz": 837,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -19.9,
+     "80_250_hz": -4.7,
+     "250_2k_hz": -1.9,
+     "2k_8k_hz": -21.9,
+     "over_8k_hz": -35.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s904",
+     "what": "Stable Audio take, seed 904, 0.10-2.00 s of it",
+     "seconds": 1.905,
+     "pass": false,
+     "result": "lost to 'a box lid closing' (95% against 0%; z +2.2)",
+     "sounds_most_like": [
+      "a punchy impact hit (z +2.9)",
+      "a box lid closing (z +2.8)",
+      "an apple falling on grass (z +2.4)"
+     ]
+    },
+    {
+     "candidate": "es_knock",
+     "what": "earshot `knock/hollow` (seed 0), -0.03-0.29 s of it, played at 0.6 speed; earshot `dumbbell/place` (seed 0), -0.05-0.78 s of it, low-pass 300 Hz, -10 dB",
+     "seconds": 0.829,
+     "pass": true,
+     "result": "strong (z +4.7, 100% of the choice)",
+     "sounds_most_like": [
+      "a wooden block hit (z +3.4)",
+      "digging in soil (z +3.0)",
+      "a wooden knock (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "es_knock_only",
+     "what": "earshot `knock/hollow` (seed 0), -0.03-0.29 s of it, played at 0.6 speed",
+     "seconds": 0.53,
+     "pass": true,
+     "result": "strong (z +4.8, 100% of the choice)",
+     "sounds_most_like": [
+      "a wooden block hit (z +3.9)",
+      "a snare hit (z +2.6)",
+      "a wooden knock (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "es_hitwood",
+     "what": "earshot `hit/wood` (seed 0), -0.03-0.28 s of it, played at 0.6 speed; earshot `dumbbell/place` (seed 0), -0.05-0.78 s of it, low-pass 300 Hz, -10 dB",
+     "seconds": 0.829,
+     "pass": false,
+     "result": "lost to 'a box lid closing' (92% against 7%; z +2.7)",
+     "sounds_most_like": [
+      "a kick drum (z +3.3)",
+      "a punchy kick drum pattern (z +3.2)",
+      "a punchy impact hit (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "s1904",
+     "what": "Stable Audio take, seed 1904, 0.28-2.00 s of it",
+     "seconds": 1.72,
+     "pass": true,
+     "result": "strong (z +3.9, 79% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.3)",
+      "a cork pop (z +2.6)",
+      "a wooden block hit (z +2.6)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    904,
+    1904
+   ]
+  },
+  "hoe_chop": {
+   "file": "audio/sfx/v9/hoe_chop.flac",
+   "row": "R5",
+   "seconds": 2.937,
+   "onsets_s": [
+    0.05,
+    1.096,
+    2.203
+   ],
+   "peak_at_s": 0.056,
+   "loudest_400ms_at_s": [
+    0.045,
+    0.445
+   ],
+   "events": [
+    {
+     "onset_s": 0.05,
+     "peak_s": 0.055,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 0.065,
+     "judged_alone_s": [
+      0.02,
+      1.066
+     ],
+     "alone": "pass: clear margin (z +2.2, 72% of the choice)"
+    },
+    {
+     "onset_s": 1.096,
+     "peak_s": 1.1,
+     "peak_db_re_file_peak": -1.6,
+     "ends_s": 1.11,
+     "judged_alone_s": [
+      1.066,
+      2.173
+     ],
+     "alone": "pass: clear margin (z +1.9, 69% of the choice)"
+    },
+    {
+     "onset_s": 2.203,
+     "peak_s": 2.209,
+     "peak_db_re_file_peak": -5.4,
+     "ends_s": 2.22,
+     "judged_alone_s": [
+      2.173,
+      2.907
+     ],
+     "alone": "fail: lost to 'a camera shutter click' (58% against 12%; z +1.0)"
+    }
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.1, 97% of the choice)",
+   "note": "Three chops at 0.05, 1.096 and 2.203 s (peaks 0, -1.6, -5.4 dB) with soil and grit falling between them. Cut each chop with its tail, from its onset to the next: a bare 0.3 s chop reads as a stick snapping (78 %), the fault the review found. With their tails chops 1 and 2 pass alone and chop 3 does not (a camera shutter): use 1 and 2.",
+   "candidate": "s905_chops",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "An iron hoe chopping into wet heavy soil, one dull earthy chop with a little grit, slow steady work, heard from far across an open field",
+   "seed": 905,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s905_d4_5723a7bc.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "An iron hoe chopping into wet heavy soil, one dull earthy chop with a little grit, slow steady work, heard from far across an open field",
+   "recipe": [
+    "Stable Audio take, seed 905, 1.06-4.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -2.9 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a hoe chopping into soil, far away",
+    "alternatives": [
+     "a stick snapping",
+     "a camera shutter click",
+     "a sword being drawn",
+     "a metal latch"
+    ],
+    "verdict": "weak",
+    "z": 2.12,
+    "share_of_forced_choice": 0.967,
+    "alternatives_share": {
+     "a stick snapping": 0.026,
+     "a camera shutter click": 0.005,
+     "a sword being drawn": 0.001,
+     "a metal latch": 0.0
+    },
+    "pass": true,
+    "result": "clear margin (z +2.1, 97% of the choice)",
+    "sounds_most_like": [
+     "a wooden block hit (z +2.9)",
+     "a box lid closing (z +2.9)",
+     "a suction cup pop (z +2.8)",
+     "a punchy impact hit (z +2.7)"
+    ],
+    "audioset": [
+     "Chopping (food) 0.82",
+     "Chop 0.29"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -31.4,
+    "rms_dbfs": -33.3,
+    "centroid_hz": 858,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -8.8,
+     "80_250_hz": -12.5,
+     "250_2k_hz": -1.3,
+     "2k_8k_hz": -12.6,
+     "over_8k_hz": -20.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s905",
+     "what": "Stable Audio take, seed 905, -0.05-4.00 s of it",
+     "seconds": 4.05,
+     "pass": true,
+     "result": "clear margin (z +2.9, 99% of the choice)",
+     "sounds_most_like": [
+      "a knife chopping on a board (z +3.1)",
+      "a wooden block hit (z +3.0)",
+      "footsteps on wood (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s1905",
+     "what": "Stable Audio take, seed 1905, -0.04-4.00 s of it",
+     "seconds": 4.038,
+     "pass": true,
+     "result": "clear margin (z +2.4, 86% of the choice)",
+     "sounds_most_like": [
+      "a suction cup pop (z +3.0)",
+      "a wooden block hit (z +3.0)",
+      "a box lid closing (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s905_cut",
+     "what": "Stable Audio take, seed 905, 0.95-4.00 s of it",
+     "seconds": 3.045,
+     "pass": true,
+     "result": "clear margin (z +2.4, 98% of the choice)",
+     "sounds_most_like": [
+      "a wooden block hit (z +3.1)",
+      "a knife chopping on a board (z +2.9)",
+      "a punchy impact hit (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "s905_three",
+     "what": "Stable Audio take, seed 905, 0.95-1.25 s of it; Stable Audio take, seed 905, 2.00-2.30 s of it, placed at 0.600 s; Stable Audio take, seed 905, 2.98-3.28 s of it, placed at 1.200 s",
+     "seconds": 1.5,
+     "pass": false,
+     "result": "lost to 'a stick snapping' (78% against 13%; z +1.2)",
+     "sounds_most_like": [
+      "a punchy impact hit (z +2.4)",
+      "a box lid closing (z +2.3)",
+      "a wooden block hit (z +2.2)"
+     ]
+    },
+    {
+     "candidate": "s905_chops",
+     "what": "Stable Audio take, seed 905, 1.06-4.00 s of it",
+     "seconds": 2.937,
+     "pass": true,
+     "result": "clear margin (z +2.1, 97% of the choice)",
+     "sounds_most_like": [
+      "a wooden block hit (z +2.9)",
+      "a box lid closing (z +2.9)",
+      "a suction cup pop (z +2.8)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    905,
+    1905
+   ]
+  },
+  "run_boots_mud": {
+   "file": "audio/sfx/v9/run_boots_mud.flac",
+   "row": "R11",
+   "seconds": 7.865,
+   "onsets_s": [
+    0.05,
+    0.75,
+    1.45,
+    2.15,
+    2.85,
+    3.55,
+    4.25,
+    4.95,
+    5.65,
+    6.35,
+    7.05
+   ],
+   "peak_at_s": 4.302,
+   "loudest_400ms_at_s": [
+    4.136,
+    4.536
+   ],
+   "events": [
+    {
+     "onset_s": 0.05,
+     "peak_s": 0.102,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 0.65,
+     "judged_alone_s": [
+      0.02,
+      0.72
+     ],
+     "alone": "pass: clear margin (z +2.6, 99% of the choice)"
+    },
+    {
+     "onset_s": 0.75,
+     "peak_s": 0.756,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 1.35,
+     "judged_alone_s": [
+      0.72,
+      1.42
+     ],
+     "alone": "pass: clear margin (z +2.8, 100% of the choice)"
+    },
+    {
+     "onset_s": 1.45,
+     "peak_s": 1.56,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 2.05,
+     "judged_alone_s": [
+      1.42,
+      2.12
+     ],
+     "alone": "pass: strong (z +3.3, 100% of the choice)"
+    },
+    {
+     "onset_s": 2.15,
+     "peak_s": 2.197,
+     "peak_db_re_file_peak": -0.1,
+     "ends_s": 2.75,
+     "judged_alone_s": [
+      2.12,
+      2.82
+     ],
+     "alone": "pass: clear margin (z +2.2, 99% of the choice)"
+    },
+    {
+     "onset_s": 2.85,
+     "peak_s": 2.856,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 3.45,
+     "judged_alone_s": [
+      2.82,
+      3.52
+     ],
+     "alone": "pass: strong (z +3.1, 100% of the choice)"
+    },
+    {
+     "onset_s": 3.55,
+     "peak_s": 3.654,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 4.15,
+     "judged_alone_s": [
+      3.52,
+      4.22
+     ],
+     "alone": "pass: clear margin (z +2.9, 100% of the choice)"
+    },
+    {
+     "onset_s": 4.25,
+     "peak_s": 4.302,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 4.85,
+     "judged_alone_s": [
+      4.22,
+      4.92
+     ],
+     "alone": "pass: clear margin (z +2.1, 99% of the choice)"
+    },
+    {
+     "onset_s": 4.95,
+     "peak_s": 4.956,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 5.55,
+     "judged_alone_s": [
+      4.92,
+      5.62
+     ],
+     "alone": "pass: clear margin (z +2.5, 100% of the choice)"
+    },
+    {
+     "onset_s": 5.65,
+     "peak_s": 5.76,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 6.25,
+     "judged_alone_s": [
+      5.62,
+      6.32
+     ],
+     "alone": "pass: clear margin (z +2.5, 96% of the choice)"
+    },
+    {
+     "onset_s": 6.35,
+     "peak_s": 6.398,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 6.95,
+     "judged_alone_s": [
+      6.32,
+      7.02
+     ],
+     "alone": "pass: clear margin (z +2.4, 99% of the choice)"
+    },
+    {
+     "onset_s": 7.05,
+     "peak_s": 7.056,
+     "peak_db_re_file_peak": -0.0,
+     "ends_s": 7.65,
+     "judged_alone_s": [
+      7.02,
+      7.835
+     ],
+     "alone": "pass: clear margin (z +3.0, 100% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +4.1, 100% of the choice)",
+   "note": "Not Stable Audio: both generated takes passed as a whole (76 %, 96 %), but cut into single steps eight of ten read as a hard floor or hands clapping, and the mix places single steps. Eleven catalogue mud steps (the film has eleven boots), each from its own seed, 0.7 s apart so none runs into the next; all eleven pass alone. Each is about 0.6 s long, so at the picture's 0.31 s they will overlap. Bright (centroid 4.2 kHz).",
+   "candidate": "es_run",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "A heavy man sprinting across a wet ploughed field in leather boots, fast heavy squelching footsteps in mud, close",
+   "recipe": [
+    "earshot `step/mud` (seed 0), -0.04-0.67 s of it, played at 0.8832 speed",
+    "earshot `step/mud` (seed 1), -0.05-0.71 s of it, played at 0.9568 speed, placed at 0.700 s",
+    "earshot `step/mud` (seed 2), -0.04-0.77 s of it, played at 0.8832 speed, placed at 1.400 s",
+    "earshot `step/mud` (seed 3), -0.05-0.67 s of it, played at 0.9568 speed, placed at 2.100 s",
+    "earshot `step/mud` (seed 4), -0.04-0.71 s of it, played at 0.8832 speed, placed at 2.800 s",
+    "earshot `step/mud` (seed 5), -0.05-0.78 s of it, played at 0.9568 speed, placed at 3.500 s",
+    "earshot `step/mud` (seed 6), -0.04-0.68 s of it, played at 0.8832 speed, placed at 4.200 s",
+    "earshot `step/mud` (seed 7), -0.05-0.72 s of it, played at 0.9568 speed, placed at 4.900 s",
+    "earshot `step/mud` (seed 8), -0.04-0.77 s of it, played at 0.8832 speed, placed at 5.600 s",
+    "earshot `step/mud` (seed 9), -0.05-0.68 s of it, played at 0.9568 speed, placed at 6.300 s",
+    "earshot `step/mud` (seed 10), -0.04-0.72 s of it, played at 0.8832 speed, placed at 7.000 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -2.3 dBTP",
+   "earshot": {
+    "description": "a man running in wet mud",
+    "alternatives": [
+     "footsteps on a hard floor",
+     "sneakers squeaking on a gym floor",
+     "a horse galloping",
+     "hands clapping"
+    ],
+    "verdict": "strong",
+    "z": 4.11,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "footsteps on a hard floor": 0.0,
+     "sneakers squeaking on a gym floor": 0.0,
+     "a horse galloping": 0.0,
+     "hands clapping": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.1, 100% of the choice)",
+    "sounds_most_like": [
+     "a squishy wet squelch (z +5.7)",
+     "footsteps on gravel (z +3.5)",
+     "digging in soil (z +3.2)",
+     "walking through dry leaves (z +3.2)"
+    ],
+    "audioset": [
+     "Breaking 0.17",
+     "Sound effect 0.10",
+     "Crack 0.09",
+     "Scrape 0.08"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -2.3,
+    "lufs": -18.2,
+    "rms_dbfs": -24.4,
+    "centroid_hz": 4200,
+    "lr_correlation": 0.892,
+    "energy_db_of_total": {
+     "under_80_hz": -38.3,
+     "80_250_hz": -25.6,
+     "250_2k_hz": -5.6,
+     "2k_8k_hz": -2.1,
+     "over_8k_hz": -10.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s9111",
+     "what": "Stable Audio take, seed 9111, -0.05-6.00 s of it",
+     "seconds": 6.05,
+     "pass": true,
+     "result": "strong (z +3.0, 76% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "footsteps on gravel (z +3.3)",
+      "an apple falling on grass (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s10111",
+     "what": "Stable Audio take, seed 10111, -0.05-6.00 s of it",
+     "seconds": 6.05,
+     "pass": true,
+     "result": "clear margin (z +2.9, 96% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "footsteps on gravel (z +3.2)",
+      "an apple falling on grass (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s10111_cut",
+     "what": "Stable Audio take, seed 10111, 0.96-6.00 s of it",
+     "seconds": 5.04,
+     "pass": true,
+     "result": "clear margin (z +2.3, 84% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "an apple falling on grass (z +3.0)",
+      "footsteps on gravel (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "s9111_cut",
+     "what": "Stable Audio take, seed 9111, 0.45-6.00 s of it",
+     "seconds": 5.55,
+     "pass": true,
+     "result": "clear margin (z +2.8, 82% of the choice)",
+     "sounds_most_like": [
+      "footsteps on gravel (z +3.2)",
+      "digging in soil (z +3.0)",
+      "footsteps on grass (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_run",
+     "what": "earshot `step/mud` (seed 0), -0.04-0.67 s of it, played at 0.8832 speed; earshot `step/mud` (seed 1), -0.05-0.71 s of it, played at 0.9568 speed, placed at 0.700 s; earshot `step/mud` (seed 2), -0.04-0.77 s of it, played at 0.8832 speed, placed at 1.400 s; earshot `step/mud` (seed 3), -0.05-0.67 s of it, played at 0.9568 speed, placed at 2.100 s; earshot `step/mud` (seed 4), -0.04-0.71 s of it, played at 0.8832 speed, placed at 2.800 s; earshot `step/mud` (seed 5), -0.05-0.78 s of it, played at 0.9568 speed, placed at 3.500 s; earshot `step/mud` (seed 6), -0.04-0.68 s of it, played at 0.8832 speed, placed at 4.200 s; earshot `step/mud` (seed 7), -0.05-0.72 s of it, played at 0.9568 speed, placed at 4.900 s; earshot `step/mud` (seed 8), -0.04-0.77 s of it, played at 0.8832 speed, placed at 5.600 s; earshot `step/mud` (seed 9), -0.05-0.68 s of it, played at 0.9568 speed, placed at 6.300 s; earshot `step/mud` (seed 10), -0.04-0.72 s of it, played at 0.8832 speed, placed at 7.000 s",
+     "seconds": 7.865,
+     "pass": true,
+     "result": "strong (z +4.1, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +5.7)",
+      "footsteps on gravel (z +3.5)",
+      "digging in soil (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "es_run_fast",
+     "what": "earshot `step/mud` (seed 0), -0.05-0.67 s of it, played at 1.008 speed; earshot `step/mud` (seed 1), -0.06-0.71 s of it, played at 1.092 speed, placed at 0.700 s; earshot `step/mud` (seed 2), -0.05-0.77 s of it, played at 1.008 speed, placed at 1.400 s; earshot `step/mud` (seed 3), -0.06-0.67 s of it, played at 1.092 speed, placed at 2.100 s; earshot `step/mud` (seed 4), -0.05-0.71 s of it, played at 1.008 speed, placed at 2.800 s; earshot `step/mud` (seed 5), -0.06-0.78 s of it, played at 1.092 speed, placed at 3.500 s; earshot `step/mud` (seed 6), -0.05-0.68 s of it, played at 1.008 speed, placed at 4.200 s; earshot `step/mud` (seed 7), -0.06-0.72 s of it, played at 1.092 speed, placed at 4.900 s; earshot `step/mud` (seed 8), -0.05-0.77 s of it, played at 1.008 speed, placed at 5.600 s; earshot `step/mud` (seed 9), -0.06-0.68 s of it, played at 1.092 speed, placed at 6.300 s; earshot `step/mud` (seed 10), -0.05-0.72 s of it, played at 1.008 speed, placed at 7.000 s",
+     "seconds": 7.764,
+     "pass": true,
+     "result": "strong (z +3.5, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +5.7)",
+      "crisp hi-hats (z +3.4)",
+      "footsteps on gravel (z +3.3)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    9111,
+    10111
+   ]
+  },
+  "run_breath": {
+   "file": "audio/sfx/v9/run_breath.flac",
+   "row": "R11",
+   "seconds": 4.68,
+   "onsets_s": [
+    0.091
+   ],
+   "peak_at_s": 3.599,
+   "loudest_400ms_at_s": [
+    3.549,
+    3.949
+   ],
+   "events": [
+    {
+     "onset_s": 0.091,
+     "peak_s": 3.597,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 4.01,
+     "judged_alone_s": [
+      0.061,
+      1.591
+     ],
+     "alone": "pass: strong (z +7.8, 100% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +6.3, 100% of the choice)",
+   "note": "The strongest pass of the set (z +6.3). Four seconds of panting, about five breaths, loud from 0.09 s, loudest at 3.5-3.9 s, fading out by itself after 4.0 s. The raw take peaked at -32 dBFS and was raised 29 dB: listen for its noise floor.",
+   "candidate": "s9112",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A man panting hard while running, heavy fast breaths, close",
+   "seed": 9112,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s9112_d5_8cf6a258.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A man panting hard while running, heavy fast breaths, close",
+   "recipe": [
+    "Stable Audio take, seed 9112, 0.32-5.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.1 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a man panting hard while running, out of breath",
+    "alternatives": [
+     "a dog panting",
+     "wind blowing in a microphone",
+     "sawing wood",
+     "a man snoring"
+    ],
+    "verdict": "strong",
+    "z": 6.35,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "a dog panting": 0.0,
+     "wind blowing in a microphone": 0.0,
+     "sawing wood": 0.0,
+     "a man snoring": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +6.3, 100% of the choice)",
+    "sounds_most_like": [
+     "a person breathing (z +4.2)",
+     "a phone vibration buzz (z +2.7)",
+     "a cow mooing (z +2.6)",
+     "digging in soil (z +2.4)"
+    ],
+    "audioset": [
+     "Gasp 0.17",
+     "Snort 0.16",
+     "Breathing 0.08"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -20.3,
+    "rms_dbfs": -24.1,
+    "centroid_hz": 887,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -15.8,
+     "80_250_hz": -3.3,
+     "250_2k_hz": -4.0,
+     "2k_8k_hz": -10.1,
+     "over_8k_hz": -34.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s9112",
+     "what": "Stable Audio take, seed 9112, 0.32-5.00 s of it",
+     "seconds": 4.68,
+     "pass": true,
+     "result": "strong (z +6.3, 100% of the choice)",
+     "sounds_most_like": [
+      "a person breathing (z +4.2)",
+      "a phone vibration buzz (z +2.7)",
+      "a cow mooing (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "s10112",
+     "what": "Stable Audio take, seed 10112, 0.11-5.00 s of it",
+     "seconds": 4.887,
+     "pass": true,
+     "result": "strong (z +5.7, 98% of the choice)",
+     "sounds_most_like": [
+      "a person breathing (z +3.1)",
+      "a saw cutting wood (z +2.6)",
+      "a small animal running through grass (z +2.6)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    9112,
+    10112
+   ]
+  },
+  "child_steps_mud": {
+   "file": "audio/sfx/v9/child_steps_mud.flac",
+   "row": "R6",
+   "seconds": 3.077,
+   "onsets_s": [
+    0.05,
+    0.53,
+    1.01,
+    1.49,
+    1.97,
+    2.45
+   ],
+   "peak_at_s": 1.525,
+   "loudest_400ms_at_s": [
+    0.196,
+    0.596
+   ],
+   "events": [
+    {
+     "onset_s": 0.05,
+     "peak_s": 0.089,
+     "peak_db_re_file_peak": -1.2,
+     "ends_s": 0.53,
+     "judged_alone_s": [
+      0.02,
+      0.5
+     ],
+     "alone": "fail: lost to 'paper rustling' (62% against 38%; z +2.3)"
+    },
+    {
+     "onset_s": 0.53,
+     "peak_s": 0.534,
+     "peak_db_re_file_peak": -1.1,
+     "ends_s": 1.01,
+     "judged_alone_s": [
+      0.5,
+      0.98
+     ],
+     "alone": "pass: strong (z +4.0, 100% of the choice)"
+    },
+    {
+     "onset_s": 1.01,
+     "peak_s": 1.095,
+     "peak_db_re_file_peak": -1.2,
+     "ends_s": 1.49,
+     "judged_alone_s": [
+      0.98,
+      1.46
+     ],
+     "alone": "pass: strong (z +3.5, 99% of the choice)"
+    },
+    {
+     "onset_s": 1.49,
+     "peak_s": 1.525,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 1.97,
+     "judged_alone_s": [
+      1.46,
+      1.94
+     ],
+     "alone": "fail: lost to 'paper rustling' (66% against 34%; z +2.5)"
+    },
+    {
+     "onset_s": 1.97,
+     "peak_s": 1.975,
+     "peak_db_re_file_peak": -1.2,
+     "ends_s": 2.45,
+     "judged_alone_s": [
+      1.94,
+      2.42
+     ],
+     "alone": "pass: strong (z +3.1, 99% of the choice)"
+    },
+    {
+     "onset_s": 2.45,
+     "peak_s": 2.531,
+     "peak_db_re_file_peak": -1.2,
+     "ends_s": 3.05,
+     "judged_alone_s": [
+      2.42,
+      3.047
+     ],
+     "alone": "pass: clear margin (z +2.0, 82% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +4.7, 100% of the choice)",
+   "note": "Not Stable Audio: two takes read as paper rustling and the third passed only through its first second. Six catalogue mud steps 0.48 s apart at 1.2 speed, pitch alternating by 4 %, as the review's fallback asks. Bright (centroid 5.4 kHz): it needs the review's 4 kHz low-pass. Alone, steps 1 and 4 lean to paper rustling; 2, 3, 5 and 6 pass.",
+   "candidate": "es_steps",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "A small child walking slowly along a wet muddy path, light soft squelching footsteps, outdoors, a little way off",
+   "recipe": [
+    "earshot `step/mud` (seed 0), -0.06-0.67 s of it, played at 1.152 speed",
+    "earshot `step/mud` (seed 1), -0.06-0.71 s of it, played at 1.248 speed, placed at 0.480 s",
+    "earshot `step/mud` (seed 2), -0.06-0.77 s of it, played at 1.152 speed, placed at 0.960 s",
+    "earshot `step/mud` (seed 3), -0.06-0.67 s of it, played at 1.248 speed, placed at 1.440 s",
+    "earshot `step/mud` (seed 4), -0.06-0.71 s of it, played at 1.152 speed, placed at 1.920 s",
+    "earshot `step/mud` (seed 5), -0.06-0.78 s of it, played at 1.248 speed, placed at 2.400 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -4.2 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "light footsteps in wet mud",
+    "alternatives": [
+     "a clock ticking",
+     "footsteps on a hard floor",
+     "water dripping",
+     "paper rustling"
+    ],
+    "verdict": "strong",
+    "z": 4.67,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "a clock ticking": 0.0,
+     "footsteps on a hard floor": 0.0,
+     "water dripping": 0.0,
+     "paper rustling": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.7, 100% of the choice)",
+    "sounds_most_like": [
+     "a squishy wet squelch (z +6.0)",
+     "walking through dry leaves (z +3.5)",
+     "footsteps on gravel (z +3.4)",
+     "crisp hi-hats (z +3.0)"
+    ],
+    "audioset": [
+     "Crack 0.10",
+     "Breaking 0.09",
+     "Scrape 0.06"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -19.5,
+    "rms_dbfs": -25.6,
+    "centroid_hz": 5417,
+    "lr_correlation": 0.892,
+    "energy_db_of_total": {
+     "under_80_hz": -40.1,
+     "80_250_hz": -27.9,
+     "250_2k_hz": -7.9,
+     "2k_8k_hz": -2.2,
+     "over_8k_hz": -6.3
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s906",
+     "what": "Stable Audio take, seed 906, -0.05-6.00 s of it",
+     "seconds": 6.05,
+     "pass": false,
+     "result": "lost to 'paper rustling' (62% against 38%; z +3.5)",
+     "sounds_most_like": [
+      "walking through dry leaves (z +3.9)",
+      "footsteps on gravel (z +3.7)",
+      "digging in soil (z +3.6)"
+     ]
+    },
+    {
+     "candidate": "es_steps",
+     "what": "earshot `step/mud` (seed 0), -0.06-0.67 s of it, played at 1.152 speed; earshot `step/mud` (seed 1), -0.06-0.71 s of it, played at 1.248 speed, placed at 0.480 s; earshot `step/mud` (seed 2), -0.06-0.77 s of it, played at 1.152 speed, placed at 0.960 s; earshot `step/mud` (seed 3), -0.06-0.67 s of it, played at 1.248 speed, placed at 1.440 s; earshot `step/mud` (seed 4), -0.06-0.71 s of it, played at 1.152 speed, placed at 1.920 s; earshot `step/mud` (seed 5), -0.06-0.78 s of it, played at 1.248 speed, placed at 2.400 s",
+     "seconds": 3.077,
+     "pass": true,
+     "result": "strong (z +4.7, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +6.0)",
+      "walking through dry leaves (z +3.5)",
+      "footsteps on gravel (z +3.4)"
+     ]
+    },
+    {
+     "candidate": "s1906",
+     "what": "Stable Audio take, seed 1906, -0.05-6.00 s of it",
+     "seconds": 6.049,
+     "pass": false,
+     "result": "lost to 'paper rustling' (87% against 13%; z +3.0)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "footsteps on gravel (z +3.5)",
+      "walking through dry leaves (z +3.3)"
+     ]
+    },
+    {
+     "candidate": "s2906",
+     "what": "Stable Audio take, seed 2906, -0.05-6.00 s of it",
+     "seconds": 6.05,
+     "pass": true,
+     "result": "strong (z +3.8, 99% of the choice)",
+     "sounds_most_like": [
+      "footsteps on gravel (z +4.3)",
+      "digging in soil (z +3.9)",
+      "walking through dry leaves (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s2906_cut",
+     "what": "Stable Audio take, seed 2906, 1.70-6.00 s of it",
+     "seconds": 4.3,
+     "pass": false,
+     "result": "lost to 'paper rustling' (84% against 16%; z +2.9)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "footsteps on gravel (z +3.4)",
+      "walking through dry leaves (z +3.1)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    906,
+    1906,
+    2906
+   ]
+  },
+  "boots_away_mud": {
+   "file": "audio/sfx/v9/boots_away_mud.flac",
+   "row": "R8",
+   "seconds": 2.092,
+   "onsets_s": [
+    0.05,
+    0.6,
+    1.15
+   ],
+   "peak_at_s": 0.106,
+   "loudest_400ms_at_s": [
+    0.052,
+    0.452
+   ],
+   "events": [
+    {
+     "onset_s": 0.05,
+     "peak_s": 0.106,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 0.6,
+     "judged_alone_s": [
+      0.02,
+      0.57
+     ],
+     "alone": "pass: strong (z +3.0, 100% of the choice)"
+    },
+    {
+     "onset_s": 0.6,
+     "peak_s": 0.643,
+     "peak_db_re_file_peak": -1.8,
+     "ends_s": 1.15,
+     "judged_alone_s": [
+      0.57,
+      1.12
+     ],
+     "alone": "pass: strong (z +5.7, 100% of the choice)"
+    },
+    {
+     "onset_s": 1.15,
+     "peak_s": 1.27,
+     "peak_db_re_file_peak": -3.8,
+     "ends_s": 1.75,
+     "judged_alone_s": [
+      1.12,
+      2.062
+     ],
+     "alone": "pass: strong (z +5.2, 100% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +6.0, 100% of the choice)",
+   "note": "Not Stable Audio: the third seed passed as a whole (86 %), but five of its eight steps read as cloth rustling when cut out. Three catalogue mud steps at 0.85 speed, 0.55 s apart (the picture's own spacing), each 2 dB under the last; every one passes alone. It is the same catalogue step as the child's and the run's, at another speed.",
+   "candidate": "es_steps",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "A heavy man in leather boots walking away on wet muddy ground, three slow squelching steps, getting farther",
+   "recipe": [
+    "earshot `step/mud` (seed 0), -0.04-0.67 s of it, played at 0.816 speed",
+    "earshot `step/mud` (seed 1), -0.04-0.71 s of it, played at 0.884 speed, -2 dB, placed at 0.550 s",
+    "earshot `step/mud` (seed 2), -0.04-0.77 s of it, played at 0.816 speed, -4 dB, placed at 1.100 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -2.5 dBTP",
+   "earshot": {
+    "description": "heavy boots walking in wet mud",
+    "alternatives": [
+     "cloth rustling",
+     "a horse walking",
+     "a knock on wood"
+    ],
+    "verdict": "strong",
+    "z": 6.03,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "cloth rustling": 0.0,
+     "a horse walking": 0.0,
+     "a knock on wood": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +6.0, 100% of the choice)",
+    "sounds_most_like": [
+     "a squishy wet squelch (z +5.4)",
+     "footsteps on gravel (z +3.7)",
+     "walking through dry leaves (z +3.7)",
+     "digging in soil (z +3.0)"
+    ],
+    "audioset": [
+     "Crack 0.28",
+     "Breaking 0.22"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -2.5,
+    "lufs": -19.4,
+    "rms_dbfs": -25.5,
+    "centroid_hz": 4016,
+    "lr_correlation": 0.891,
+    "energy_db_of_total": {
+     "under_80_hz": -37.4,
+     "80_250_hz": -25.3,
+     "250_2k_hz": -4.6,
+     "2k_8k_hz": -2.4,
+     "over_8k_hz": -11.6
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s908",
+     "what": "Stable Audio take, seed 908, -0.05-4.00 s of it",
+     "seconds": 4.05,
+     "pass": false,
+     "result": "ahead without a clear margin (66%, 'cloth rustling' 34%; z +2.5)",
+     "sounds_most_like": [
+      "digging in soil (z +3.8)",
+      "a match being struck (z +3.4)",
+      "footsteps on gravel (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_steps",
+     "what": "earshot `step/mud` (seed 0), -0.04-0.67 s of it, played at 0.816 speed; earshot `step/mud` (seed 1), -0.04-0.71 s of it, played at 0.884 speed, -2 dB, placed at 0.550 s; earshot `step/mud` (seed 2), -0.04-0.77 s of it, played at 0.816 speed, -4 dB, placed at 1.100 s",
+     "seconds": 2.092,
+     "pass": true,
+     "result": "strong (z +6.0, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +5.4)",
+      "footsteps on gravel (z +3.7)",
+      "walking through dry leaves (z +3.7)"
+     ]
+    },
+    {
+     "candidate": "s1908",
+     "what": "Stable Audio take, seed 1908, 0.06-4.00 s of it",
+     "seconds": 3.941,
+     "pass": false,
+     "result": "ahead without a clear margin (53%, 'cloth rustling' 47%; z +2.2)",
+     "sounds_most_like": [
+      "a match being struck (z +3.4)",
+      "a spray can hissing (z +2.6)",
+      "digging in soil (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "s2908",
+     "what": "Stable Audio take, seed 2908, -0.04-4.00 s of it",
+     "seconds": 4.039,
+     "pass": true,
+     "result": "clear margin (z +2.8, 85% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.6)",
+      "a match being struck (z +3.2)",
+      "an apple falling on grass (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s2908_first3",
+     "what": "Stable Audio take, seed 2908, -0.04-1.65 s of it",
+     "seconds": 1.689,
+     "pass": true,
+     "result": "clear margin (z +2.5, 87% of the choice)",
+     "sounds_most_like": [
+      "an apple falling on grass (z +3.3)",
+      "digging in soil (z +3.2)",
+      "a match being struck (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s2908_late",
+     "what": "Stable Audio take, seed 2908, 0.80-3.40 s of it",
+     "seconds": 2.6,
+     "pass": true,
+     "result": "clear margin (z +2.7, 98% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.1)",
+      "a match being struck (z +3.1)",
+      "a squishy wet squelch (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s2908_steps",
+     "what": "Stable Audio take, seed 2908, 0.15-4.00 s of it",
+     "seconds": 3.847,
+     "pass": true,
+     "result": "clear margin (z +2.5, 72% of the choice)",
+     "sounds_most_like": [
+      "a match being struck (z +3.4)",
+      "digging in soil (z +3.2)",
+      "an apple falling on grass (z +2.9)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    908,
+    1908,
+    2908
+   ]
+  },
+  "bowl_taken": {
+   "file": "audio/sfx/v9/bowl_taken.flac",
+   "row": "R9",
+   "seconds": 2.009,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.123,
+   "loud_until_s": 0.91,
+   "peak_at_s": 0.162,
+   "loudest_400ms_at_s": [
+    0.156,
+    0.556
+   ],
+   "pass": true,
+   "result": "clear margin (z +1.6, 99% of the choice)",
+   "note": "A wet scrape 0.8 s long with the slop inside it: first sound 0.05 s, loud from 0.12 s, loudest 0.16-0.56 s. Passes by share (99 %) but weakly (z +1.6): earshot's own words for it are a match being struck and a wet squelch. Nothing in it is certainly wood; listen.",
+   "candidate": "s909",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Small hands lifting a wooden bowl of water off a wet stone, a soft woody scrape and a little slop of water, close, quiet",
+   "seed": 909,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s909_d2_b4aaa017.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Small hands lifting a wooden bowl of water off a wet stone, a soft woody scrape and a little slop of water, close, quiet",
+   "recipe": [
+    "Stable Audio take, seed 909, -0.01-2.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a wooden bowl lifted off stone, water slopping",
+    "alternatives": [
+     "a footstep",
+     "a door knock",
+     "a heavy thud"
+    ],
+    "verdict": "no match",
+    "z": 1.55,
+    "share_of_forced_choice": 0.994,
+    "alternatives_share": {
+     "a footstep": 0.006,
+     "a door knock": 0.0,
+     "a heavy thud": 0.001
+    },
+    "pass": true,
+    "result": "clear margin (z +1.6, 99% of the choice)",
+    "sounds_most_like": [
+     "a match being struck (z +3.5)",
+     "a squishy wet squelch (z +3.2)",
+     "a can opening (z +3.1)",
+     "lego bricks clicking (z +3.0)"
+    ],
+    "audioset": [
+     "Crunch 0.15"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -25.7,
+    "rms_dbfs": -33.0,
+    "centroid_hz": 3392,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -29.7,
+     "80_250_hz": -25.4,
+     "250_2k_hz": -3.9,
+     "2k_8k_hz": -2.7,
+     "over_8k_hz": -13.2
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s909",
+     "what": "Stable Audio take, seed 909, -0.01-2.00 s of it",
+     "seconds": 2.009,
+     "pass": true,
+     "result": "clear margin (z +1.6, 99% of the choice)",
+     "sounds_most_like": [
+      "a match being struck (z +3.5)",
+      "a squishy wet squelch (z +3.2)",
+      "a can opening (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "s1909",
+     "what": "Stable Audio take, seed 1909, -0.01-2.00 s of it",
+     "seconds": 2.007,
+     "pass": true,
+     "result": "clear margin (z +1.1, 94% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +4.3)",
+      "a can opening (z +3.2)",
+      "ice cubes in a glass (z +3.1)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    909,
+    1909
+   ]
+  },
+  "grab_run_up": {
+   "file": "audio/sfx/v9/grab_run_up.flac",
+   "row": "R10",
+   "seconds": 2.689,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.058,
+   "loud_until_s": 0.15,
+   "peak_at_s": 0.107,
+   "loudest_400ms_at_s": [
+    0.057,
+    0.457
+   ],
+   "pass": true,
+   "result": "clear margin (z +1.8, 93% of the choice)",
+   "note": "Four hits at 0.06, 0.37, 0.62 and 0.86 s (0, -4, -5, -10 dB): the first two are 0.31 s apart, the picture's boots 0.28 s. Passes by share (93 %) but weakly (z +1.8): earshot's own words are digging in soil and a scrape, and no grunt can be found in it.",
+   "candidate": "s910",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A heavy man running up through mud and snatching up a child, two hard squelching boot steps, thick wool cloth whipping, one grunt of effort, close",
+   "seed": 910,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s910_d3_55f44b0a.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A heavy man running up through mud and snatching up a child, two hard squelching boot steps, thick wool cloth whipping, one grunt of effort, close",
+   "recipe": [
+    "Stable Audio take, seed 910, 0.31-3.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.1 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a man running up in heavy boots and grabbing a child, cloth and breath",
+    "alternatives": [
+     "a door slamming",
+     "a horse galloping",
+     "furniture moved",
+     "a rubber squeak"
+    ],
+    "verdict": "no match",
+    "z": 1.75,
+    "share_of_forced_choice": 0.93,
+    "alternatives_share": {
+     "a door slamming": 0.0,
+     "a horse galloping": 0.008,
+     "furniture moved": 0.055,
+     "a rubber squeak": 0.008
+    },
+    "pass": true,
+    "result": "clear margin (z +1.8, 93% of the choice)",
+    "sounds_most_like": [
+     "digging in soil (z +3.0)",
+     "an apple falling on grass (z +2.9)",
+     "a match being struck (z +2.9)",
+     "a rubber stretch (z +2.6)"
+    ],
+    "audioset": [
+     "Scrape 0.28",
+     "Zipper (clothing) 0.26",
+     "Sound effect 0.06"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -24.1,
+    "rms_dbfs": -29.3,
+    "centroid_hz": 1100,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -7.3,
+     "80_250_hz": -8.5,
+     "250_2k_hz": -2.7,
+     "2k_8k_hz": -9.4,
+     "over_8k_hz": -17.2
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s910",
+     "what": "Stable Audio take, seed 910, 0.31-3.00 s of it",
+     "seconds": 2.689,
+     "pass": true,
+     "result": "clear margin (z +1.8, 93% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.0)",
+      "an apple falling on grass (z +2.9)",
+      "a match being struck (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s1910",
+     "what": "Stable Audio take, seed 1910, 0.32-3.00 s of it",
+     "seconds": 2.684,
+     "pass": true,
+     "result": "clear margin (z +2.0, 97% of the choice)",
+     "sounds_most_like": [
+      "a match being struck (z +3.2)",
+      "an apple falling on grass (z +3.0)",
+      "digging in soil (z +2.6)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    910,
+    1910
+   ]
+  },
+  "bowl_slop": {
+   "file": "audio/sfx/v9/bowl_slop.flac",
+   "row": "R11",
+   "seconds": 3.599,
+   "onsets_s": [
+    0.08,
+    1.407,
+    2.25
+   ],
+   "peak_at_s": 0.622,
+   "loudest_400ms_at_s": [
+    0.332,
+    0.732
+   ],
+   "events": [
+    {
+     "onset_s": 0.08,
+     "peak_s": 0.622,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 1.26,
+     "judged_alone_s": [
+      0.05,
+      1.377
+     ],
+     "alone": "pass: clear margin (z +2.3, 94% of the choice)"
+    },
+    {
+     "onset_s": 1.407,
+     "peak_s": 1.533,
+     "peak_db_re_file_peak": -4.2,
+     "ends_s": 1.595,
+     "judged_alone_s": [
+      1.377,
+      2.22
+     ],
+     "alone": "pass: strong (z +3.2, 90% of the choice)"
+    },
+    {
+     "onset_s": 2.25,
+     "peak_s": 2.332,
+     "peak_db_re_file_peak": -26.4,
+     "ends_s": 2.34,
+     "judged_alone_s": [
+      2.22,
+      3.569
+     ],
+     "alone": "pass: clear margin (z +1.2, 88% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.9, 100% of the choice)",
+   "note": "Two slops: a big one at 0.08-1.26 s (peak 0.62 s) and a small one at 1.41-1.60 s, then drips to 2.4 s. It reads as a wet squelch (z +5.6): thick, not splashy.",
+   "candidate": "s9113",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Water slopping in a wooden bowl carried at a run, small splashes",
+   "seed": 9113,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s9113_d4_b1491799.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Water slopping in a wooden bowl carried at a run, small splashes",
+   "recipe": [
+    "Stable Audio take, seed 9113, 0.40-4.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "water slopping in a wooden bowl, small splashes",
+    "alternatives": [
+     "rain falling",
+     "a tap running into a sink",
+     "someone swimming",
+     "ocean waves on a beach"
+    ],
+    "verdict": "plausible",
+    "z": 2.88,
+    "share_of_forced_choice": 0.995,
+    "alternatives_share": {
+     "rain falling": 0.001,
+     "a tap running into a sink": 0.002,
+     "someone swimming": 0.0,
+     "ocean waves on a beach": 0.003
+    },
+    "pass": true,
+    "result": "clear margin (z +2.9, 100% of the choice)",
+    "sounds_most_like": [
+     "a squishy wet squelch (z +5.6)",
+     "a can opening (z +3.2)",
+     "digging in soil (z +3.1)",
+     "a spray can hissing (z +2.9)"
+    ],
+    "audioset": [
+     "Slosh 0.09",
+     "Liquid 0.08",
+     "Water 0.07"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -24.1,
+    "rms_dbfs": -30.8,
+    "centroid_hz": 1422,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -32.7,
+     "80_250_hz": -14.7,
+     "250_2k_hz": -0.9,
+     "2k_8k_hz": -8.8,
+     "over_8k_hz": -15.6
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s9113",
+     "what": "Stable Audio take, seed 9113, 0.40-4.00 s of it",
+     "seconds": 3.599,
+     "pass": true,
+     "result": "clear margin (z +2.9, 99% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +5.6)",
+      "a can opening (z +3.2)",
+      "digging in soil (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s10113",
+     "what": "Stable Audio take, seed 10113, 0.36-4.00 s of it",
+     "seconds": 3.644,
+     "pass": true,
+     "result": "clear margin (z +2.4, 99% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +4.2)",
+      "a can opening (z +3.2)",
+      "digging in soil (z +3.0)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    9113,
+    10113
+   ]
+  },
+  "wax_press_soft": {
+   "file": "audio/sfx/v9/wax_press_soft.flac",
+   "row": "R12",
+   "seconds": 0.839,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.087,
+   "loud_until_s": 0.695,
+   "peak_at_s": 0.13,
+   "loudest_400ms_at_s": [
+    0.083,
+    0.483
+   ],
+   "pass": true,
+   "result": "strong (z +3.7, 100% of the choice)",
+   "note": "Not Stable Audio: all three takes read as a camera shutter click. This is the body of a catalogue mud step with its impact cut off, slowed to 0.8, low-passed at 4 kHz and faded in over 120 ms: one swell and no click. It starts at 0.05 s, is fullest at 0.13 s and over by 0.7 s.",
+   "candidate": "es_mud_swell_at",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "A metal ring pressed slowly into warm soft wax, one soft thick squelch, dull, very close, quiet",
+   "recipe": [
+    "earshot `step/mud` (seed 1), 0.08-0.71 s of it, played at 0.8 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 120 ms fade-in, placed at 0.050 s"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -2.9 dBTP",
+   "earshot": {
+    "description": "a soft wet squelch",
+    "alternatives": [
+     "a camera shutter click",
+     "a gun being cocked",
+     "a mouse click",
+     "a match being struck"
+    ],
+    "verdict": "strong",
+    "z": 3.69,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "a camera shutter click": 0.0,
+     "a gun being cocked": 0.0,
+     "a mouse click": 0.0,
+     "a match being struck": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +3.7, 100% of the choice)",
+    "sounds_most_like": [
+     "a squishy wet squelch (z +3.9)",
+     "digging in soil (z +2.7)",
+     "footsteps on gravel (z +2.6)",
+     "a zipper (z +2.5)"
+    ],
+    "audioset": [
+     "Explosion 0.18",
+     "Burst, pop 0.15",
+     "Breaking 0.09",
+     "Slosh 0.07"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -2.9,
+    "lufs": -19.9,
+    "rms_dbfs": -23.8,
+    "centroid_hz": 1380,
+    "lr_correlation": 0.877,
+    "energy_db_of_total": {
+     "under_80_hz": -26.8,
+     "80_250_hz": -17.0,
+     "250_2k_hz": -1.2,
+     "2k_8k_hz": -6.7,
+     "over_8k_hz": -48.1
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s9120",
+     "what": "Stable Audio take, seed 9120, 0.05-2.00 s of it",
+     "seconds": 1.953,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (98% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "a camera shutter click (z +2.9)",
+      "a record scratch (z +2.9)",
+      "a phone vibration buzz (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "s19120",
+     "what": "Stable Audio take, seed 19120, -0.01-2.00 s of it",
+     "seconds": 2.009,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (91% against 0%; z +0.9)",
+     "sounds_most_like": [
+      "a record scratch (z +3.0)",
+      "a match being struck (z +2.8)",
+      "a camera shutter click (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "es_mud_swell",
+     "what": "earshot `step/mud` (seed 0), 0.08-0.67 s of it, played at 0.8 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 120 ms fade-in",
+     "seconds": 0.739,
+     "pass": true,
+     "result": "strong (z +3.6, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +4.2)",
+      "a quick swipe (z +3.8)",
+      "a short swish (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_mud_swell_1",
+     "what": "earshot `step/mud` (seed 1), 0.08-0.71 s of it, played at 0.8 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 120 ms fade-in",
+     "seconds": 0.789,
+     "pass": true,
+     "result": "strong (z +4.3, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +4.5)",
+      "an object plunging into water (z +2.8)",
+      "footsteps on gravel (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "es_mud",
+     "what": "earshot `step/mud` (seed 0), -0.04-0.67 s of it, played at 0.8 speed, low-pass 4000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 0.889,
+     "pass": true,
+     "result": "strong (z +3.8, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +5.1)",
+      "footsteps on gravel (z +3.5)",
+      "a quick swipe (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s29120",
+     "what": "Stable Audio take, seed 29120, 0.04-2.00 s of it",
+     "seconds": 1.959,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (74% against 0%; z +0.7)",
+     "sounds_most_like": [
+      "a match being struck (z +2.7)",
+      "a record scratch (z +2.7)",
+      "a phone vibration buzz (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "es_mud_swell_at",
+     "what": "earshot `step/mud` (seed 1), 0.08-0.71 s of it, played at 0.8 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 120 ms fade-in, placed at 0.050 s",
+     "seconds": 0.839,
+     "pass": true,
+     "result": "strong (z +3.7, 100% of the choice)",
+     "sounds_most_like": [
+      "a squishy wet squelch (z +3.9)",
+      "digging in soil (z +2.7)",
+      "footsteps on gravel (z +2.6)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    9120,
+    19120,
+    29120
+   ]
+  },
+  "wax_peel": {
+   "file": "audio/sfx/v9/wax_peel.flac",
+   "row": "R13",
+   "seconds": 0.9,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.054,
+   "loud_until_s": 0.79,
+   "peak_at_s": 0.274,
+   "loudest_400ms_at_s": [
+    0.126,
+    0.526
+   ],
+   "pass": true,
+   "result": "clear margin (z +2.1, 95% of the choice)",
+   "note": "Not Stable Audio (three takes: a camera shutter click, 86-99 %). The catalogue's sticky-tape peel at half speed, low-passed at 4 kHz, 0.75 s long. It passes by share (95 %) but weakly (z +2.1), and earshot's own words for it are an error buzz and a digital glitch: the riskiest pass here. The review's free edit of the old tick may be safer.",
+   "candidate": "es_tape_x05",
+   "source": "earshot catalogue designs (computed locally, no model)",
+   "prompt_asked_by_the_review": "A metal ring peeled slowly off sticky warm wax, one short soft tacky pull, dull, very close, quiet",
+   "recipe": [
+    "earshot `tape/peel` (seed 0), -0.02-0.43 s of it, played at 0.5 speed, low-pass 4000 Hz (24 dB an octave, zero-phase)"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a small sticky peel",
+    "alternatives": [
+     "a camera shutter click",
+     "a keyboard key press",
+     "a finger snap"
+    ],
+    "verdict": "weak",
+    "z": 2.12,
+    "share_of_forced_choice": 0.953,
+    "alternatives_share": {
+     "a camera shutter click": 0.014,
+     "a keyboard key press": 0.029,
+     "a finger snap": 0.004
+    },
+    "pass": true,
+    "result": "clear margin (z +2.1, 95% of the choice)",
+    "sounds_most_like": [
+     "an error buzz (z +3.7)",
+     "a digital glitch (z +3.3)",
+     "a snare roll (z +3.1)",
+     "a record scratch (z +2.6)"
+    ],
+    "audioset": [
+     "Sound effect 0.29",
+     "Grunt 0.11"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -16.4,
+    "rms_dbfs": -20.4,
+    "centroid_hz": 918,
+    "lr_correlation": 0.968,
+    "energy_db_of_total": {
+     "under_80_hz": -33.4,
+     "80_250_hz": -12.3,
+     "250_2k_hz": -0.5,
+     "2k_8k_hz": -12.8,
+     "over_8k_hz": -87.2
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s913",
+     "what": "Stable Audio take, seed 913, -0.04-2.00 s of it",
+     "seconds": 2.045,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (99% against 1%; z +3.0)",
+     "sounds_most_like": [
+      "a camera shutter click (z +3.4)",
+      "a ratchet clicking (z +3.4)",
+      "scissors cutting (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "s1913",
+     "what": "Stable Audio take, seed 1913, -0.05-2.00 s of it",
+     "seconds": 2.05,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (99% against 1%; z +3.3)",
+     "sounds_most_like": [
+      "a camera shutter click (z +3.7)",
+      "a match being struck (z +3.0)",
+      "a pen click (z +2.7)"
+     ]
+    },
+    {
+     "candidate": "es_tape",
+     "what": "earshot `tape/peel` (seed 0), -0.03-1.02 s of it, played at 0.7 speed, low-pass 5000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 1.498,
+     "pass": true,
+     "result": "clear margin (z +1.9, 78% of the choice)",
+     "sounds_most_like": [
+      "a snare roll (z +3.2)",
+      "a record scratch (z +3.0)",
+      "an error buzz (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "es_tape_short",
+     "what": "earshot `tape/peel` (seed 0), -0.03-0.28 s of it, played at 0.7 speed, low-pass 5000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 0.45,
+     "pass": false,
+     "result": "lost to 'a keyboard key press' (36% against 34%; z +1.6)",
+     "sounds_most_like": [
+      "an error buzz (z +3.6)",
+      "a digital glitch (z +3.2)",
+      "a snare roll (z +2.5)"
+     ]
+    },
+    {
+     "candidate": "es_tape_flat",
+     "what": "earshot `tape/peel` (seed 0), -0.05-1.02 s of it",
+     "seconds": 1.064,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (69% against 31%; z +2.0)",
+     "sounds_most_like": [
+      "a record scratch (z +3.9)",
+      "a snare roll (z +3.7)",
+      "a rubber stretch (z +3.6)"
+     ]
+    },
+    {
+     "candidate": "es_tape_08",
+     "what": "earshot `tape/peel` (seed 0), -0.03-0.53 s of it, played at 0.7 speed, low-pass 5000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 0.8,
+     "pass": true,
+     "result": "clear margin (z +1.5, 61% of the choice)",
+     "sounds_most_like": [
+      "a snare roll (z +3.9)",
+      "an error buzz (z +3.2)",
+      "a digital glitch (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "es_tape_10",
+     "what": "earshot `tape/peel` (seed 0), -0.03-0.67 s of it, played at 0.7 speed, low-pass 5000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 1.0,
+     "pass": true,
+     "result": "clear margin (z +1.8, 92% of the choice)",
+     "sounds_most_like": [
+      "a snare roll (z +3.6)",
+      "a digital glitch (z +3.1)",
+      "an error buzz (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "es_tape_x05",
+     "what": "earshot `tape/peel` (seed 0), -0.02-0.43 s of it, played at 0.5 speed, low-pass 4000 Hz (24 dB an octave, zero-phase)",
+     "seconds": 0.9,
+     "pass": true,
+     "result": "clear margin (z +2.1, 95% of the choice)",
+     "sounds_most_like": [
+      "an error buzz (z +3.7)",
+      "a digital glitch (z +3.3)",
+      "a snare roll (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s2913",
+     "what": "Stable Audio take, seed 2913, -0.04-2.00 s of it",
+     "seconds": 2.045,
+     "pass": false,
+     "result": "lost to 'a camera shutter click' (86% against 14%; z +3.6)",
+     "sounds_most_like": [
+      "a camera shutter click (z +3.2)",
+      "an old typewriter (z +3.0)",
+      "scissors cutting (z +2.8)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    913,
+    1913,
+    2913
+   ]
+  },
+  "bell_landing_big": {
+   "file": "audio/sfx/v9/bell_landing_big.flac",
+   "row": "R14",
+   "seconds": 5.5,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.067,
+   "loud_until_s": 3.84,
+   "peak_at_s": 0.093,
+   "loudest_400ms_at_s": [
+    0.07,
+    0.47
+   ],
+   "pass": true,
+   "result": "strong (z +4.1, 98% of the choice)",
+   "note": "Played at 0.6 speed, as the review asks. Peak at 0.09 s, 20 dB down by 2.7 s, ringing to 3.8 s, gone by 5.0 s. Deep (centroid 139 Hz) and mono. No sub layer is in the file: the review's 30-45 Hz sub is left to the mix (sfx_make.synth_sub_thud). The tagger also hears a big drum (timpani 0.22).",
+   "candidate": "s914_x060",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "An enormous bronze bell weighing many tons dropping onto a massive oak beam in a stone tower, one colossal deep boom, the timber groaning under the load, stone dust falling, long low decay",
+   "seed": 914,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s914_d6_e385226b.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "An enormous bronze bell weighing many tons dropping onto a massive oak beam in a stone tower, one colossal deep boom, the timber groaning under the load, stone dust falling, long low decay",
+   "recipe": [
+    "Stable Audio take, seed 914, 0.09-3.39 s of it, played at 0.6 speed"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a colossal weight landing",
+    "alternatives": [
+     "a door closing with a latch",
+     "a wooden crate dropped",
+     "a drawer closing",
+     "coins dropping"
+    ],
+    "verdict": "strong",
+    "z": 4.13,
+    "share_of_forced_choice": 0.977,
+    "alternatives_share": {
+     "a door closing with a latch": 0.0,
+     "a wooden crate dropped": 0.023,
+     "a drawer closing": 0.0,
+     "coins dropping": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.1, 98% of the choice)",
+    "sounds_most_like": [
+     "a cinematic hit with a long tail (z +3.9)",
+     "a big drum hit (z +3.7)",
+     "a deep cinematic boom (z +3.7)",
+     "an explosion (z +2.5)"
+    ],
+    "audioset": [
+     "Music 0.28",
+     "Sound effect 0.24",
+     "Timpani 0.22",
+     "Explosion 0.10",
+     "Bang 0.07"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -20.4,
+    "rms_dbfs": -23.2,
+    "centroid_hz": 139,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -9.7,
+     "80_250_hz": -0.9,
+     "250_2k_hz": -11.1,
+     "2k_8k_hz": -35.8,
+     "over_8k_hz": -66.9
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s914",
+     "what": "Stable Audio take, seed 914, 0.07-6.00 s of it",
+     "seconds": 5.932,
+     "pass": true,
+     "result": "strong (z +3.7, 99% of the choice)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.3)",
+      "a big drum hit (z +3.1)",
+      "a deep cinematic boom (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s914_x060",
+     "what": "Stable Audio take, seed 914, 0.09-3.39 s of it, played at 0.6 speed",
+     "seconds": 5.5,
+     "pass": true,
+     "result": "strong (z +4.1, 98% of the choice)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.9)",
+      "a big drum hit (z +3.7)",
+      "a deep cinematic boom (z +3.7)"
+     ]
+    },
+    {
+     "candidate": "s914_x065",
+     "what": "Stable Audio take, seed 914, 0.09-3.66 s of it, played at 0.65 speed",
+     "seconds": 5.5,
+     "pass": true,
+     "result": "strong (z +3.8, 98% of the choice)",
+     "sounds_most_like": [
+      "a big drum hit (z +3.9)",
+      "a cinematic hit with a long tail (z +3.4)",
+      "a deep cinematic boom (z +3.2)"
+     ]
+    },
+    {
+     "candidate": "s914_x070",
+     "what": "Stable Audio take, seed 914, 0.08-3.93 s of it, played at 0.7 speed",
+     "seconds": 5.5,
+     "pass": true,
+     "result": "strong (z +3.9, 99% of the choice)",
+     "sounds_most_like": [
+      "a big drum hit (z +4.0)",
+      "a cinematic hit with a long tail (z +3.5)",
+      "a deep cinematic boom (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s1914",
+     "what": "Stable Audio take, seed 1914, 0.07-6.00 s of it",
+     "seconds": 5.925,
+     "pass": true,
+     "result": "strong (z +3.3, 98% of the choice)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.7)",
+      "a deep cinematic boom (z +3.1)",
+      "orchestral percussion (z +2.7)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    914,
+    1914
+   ]
+  },
+  "chains_heavy": {
+   "file": "audio/sfx/v9/chains_heavy.flac",
+   "row": "R15",
+   "seconds": 9.744,
+   "onsets_s": [
+    0.056,
+    0.631,
+    0.928,
+    1.206,
+    2.205,
+    2.738,
+    3.158,
+    3.682,
+    4.24,
+    5.133,
+    5.84,
+    6.117,
+    6.97
+   ],
+   "peak_at_s": 5.179,
+   "loudest_400ms_at_s": [
+    5.124,
+    5.524
+   ],
+   "events": [
+    {
+     "onset_s": 0.056,
+     "peak_s": 0.069,
+     "peak_db_re_file_peak": -18.6,
+     "ends_s": 0.125,
+     "judged_alone_s": [
+      0.026,
+      0.601
+     ],
+     "alone": "fail: lost to 'a door latch' (99% against 0%; z +0.3)"
+    },
+    {
+     "onset_s": 0.631,
+     "peak_s": 0.712,
+     "peak_db_re_file_peak": -26.1,
+     "ends_s": 0.715,
+     "judged_alone_s": [
+      0.601,
+      0.898
+     ],
+     "alone": "fail: lost to 'a door latch' (82% against 16%; z +1.5)"
+    },
+    {
+     "onset_s": 0.928,
+     "peak_s": 0.938,
+     "peak_db_re_file_peak": -19.0,
+     "ends_s": 0.94,
+     "judged_alone_s": [
+      0.898,
+      1.176
+     ],
+     "alone": "pass: clear margin (z +1.7, 94% of the choice)"
+    },
+    {
+     "onset_s": 1.206,
+     "peak_s": 1.41,
+     "peak_db_re_file_peak": -1.3,
+     "ends_s": 1.835,
+     "judged_alone_s": [
+      1.176,
+      2.175
+     ],
+     "alone": "pass: clear margin (z +2.6, 92% of the choice)"
+    },
+    {
+     "onset_s": 2.205,
+     "peak_s": 2.304,
+     "peak_db_re_file_peak": -17.4,
+     "ends_s": 2.47,
+     "judged_alone_s": [
+      2.175,
+      2.708
+     ],
+     "alone": "pass: strong (z +3.7, 87% of the choice)"
+    },
+    {
+     "onset_s": 2.738,
+     "peak_s": 2.766,
+     "peak_db_re_file_peak": -14.5,
+     "ends_s": 2.8,
+     "judged_alone_s": [
+      2.708,
+      3.128
+     ],
+     "alone": "pass: clear margin (z +1.3, 82% of the choice)"
+    },
+    {
+     "onset_s": 3.158,
+     "peak_s": 3.172,
+     "peak_db_re_file_peak": -16.7,
+     "ends_s": 3.325,
+     "judged_alone_s": [
+      3.128,
+      3.652
+     ],
+     "alone": "fail: lost to 'a door latch' (86% against 11%; z +0.7)"
+    },
+    {
+     "onset_s": 3.682,
+     "peak_s": 3.733,
+     "peak_db_re_file_peak": -9.9,
+     "ends_s": 4.175,
+     "judged_alone_s": [
+      3.652,
+      4.21
+     ],
+     "alone": "pass: strong (z +3.1, 95% of the choice)"
+    },
+    {
+     "onset_s": 4.24,
+     "peak_s": 4.451,
+     "peak_db_re_file_peak": -14.9,
+     "ends_s": 4.49,
+     "judged_alone_s": [
+      4.21,
+      5.103
+     ],
+     "alone": "pass: strong (z +4.8, 100% of the choice)"
+    },
+    {
+     "onset_s": 5.133,
+     "peak_s": 5.182,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 5.615,
+     "judged_alone_s": [
+      5.103,
+      5.81
+     ],
+     "alone": "pass: strong (z +4.1, 100% of the choice)"
+    },
+    {
+     "onset_s": 5.84,
+     "peak_s": 5.926,
+     "peak_db_re_file_peak": -25.4,
+     "ends_s": 5.93,
+     "judged_alone_s": [
+      5.81,
+      6.087
+     ],
+     "alone": "pass: strong (z +3.6, 97% of the choice)"
+    },
+    {
+     "onset_s": 6.117,
+     "peak_s": 6.198,
+     "peak_db_re_file_peak": -24.5,
+     "ends_s": 6.26,
+     "judged_alone_s": [
+      6.087,
+      6.94
+     ],
+     "alone": "pass: strong (z +3.4, 99% of the choice)"
+    },
+    {
+     "onset_s": 6.97,
+     "peak_s": 7.052,
+     "peak_db_re_file_peak": -26.5,
+     "ends_s": 7.055,
+     "judged_alone_s": [
+      6.94,
+      8.47
+     ],
+     "alone": "fail: lost to 'a door latch' (83% against 8%; z +1.5)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +3.4, 94% of the choice)",
+   "note": "Played at 0.5 speed: 9.7 s, true stereo (correlation 0.10). The big clanks are at 1.21 s, 3.68 s and 5.13 s (the peak). The first 0.9 s is small ticks that read as a door latch when heard alone: start the cut at 1.15 s. At its own speed the same take failed (door latch 54 %).",
+   "candidate": "s915_x050",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Four massive iron anchor chains going slack and swinging, huge heavy links clanking slowly against each other, deep heavy iron, in a stone tower",
+   "seed": 915,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s915_d5_37b7c83d.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Four massive iron anchor chains going slack and swinging, huge heavy links clanking slowly against each other, deep heavy iron, in a stone tower",
+   "recipe": [
+    "Stable Audio take, seed 915, 0.13-5.00 s of it, played at 0.5 speed"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "heavy iron chains going slack",
+    "alternatives": [
+     "coins dropping",
+     "keys jingling",
+     "a door latch",
+     "a small light chain"
+    ],
+    "verdict": "strong",
+    "z": 3.37,
+    "share_of_forced_choice": 0.937,
+    "alternatives_share": {
+     "coins dropping": 0.032,
+     "keys jingling": 0.0,
+     "a door latch": 0.001,
+     "a small light chain": 0.03
+    },
+    "pass": true,
+    "result": "strong (z +3.4, 94% of the choice)",
+    "sounds_most_like": [
+     "digging in soil (z +3.5)",
+     "dominoes falling (z +3.1)",
+     "a small object dropping on a table (z +3.0)",
+     "lego bricks clicking (z +2.8)"
+    ],
+    "audioset": [
+     "Wood 0.05",
+     "Dishes, pots, and pans 0.05"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -24.4,
+    "rms_dbfs": -32.9,
+    "centroid_hz": 1512,
+    "lr_correlation": 0.1,
+    "energy_db_of_total": {
+     "under_80_hz": -18.0,
+     "80_250_hz": -18.5,
+     "250_2k_hz": -2.1,
+     "2k_8k_hz": -4.5,
+     "over_8k_hz": -37.4
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s915",
+     "what": "Stable Audio take, seed 915, 0.10-5.00 s of it",
+     "seconds": 4.897,
+     "pass": false,
+     "result": "lost to 'a door latch' (54% against 9%; z +2.7)",
+     "sounds_most_like": [
+      "lego bricks clicking (z +2.9)",
+      "an old typewriter (z +2.8)",
+      "dominoes falling (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "s915_x050",
+     "what": "Stable Audio take, seed 915, 0.13-5.00 s of it, played at 0.5 speed",
+     "seconds": 9.744,
+     "pass": true,
+     "result": "strong (z +3.4, 94% of the choice)",
+     "sounds_most_like": [
+      "digging in soil (z +3.5)",
+      "dominoes falling (z +3.1)",
+      "a small object dropping on a table (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s915_x055",
+     "what": "Stable Audio take, seed 915, 0.13-5.00 s of it, played at 0.55 speed",
+     "seconds": 8.863,
+     "pass": true,
+     "result": "clear margin (z +2.9, 78% of the choice)",
+     "sounds_most_like": [
+      "a small object dropping on a table (z +3.2)",
+      "dominoes falling (z +3.2)",
+      "a plastic object falling on a table (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s915_x060",
+     "what": "Stable Audio take, seed 915, 0.12-5.00 s of it, played at 0.6 speed",
+     "seconds": 8.128,
+     "pass": true,
+     "result": "clear margin (z +3.0, 68% of the choice)",
+     "sounds_most_like": [
+      "a small object dropping on a table (z +3.1)",
+      "a plastic object falling on a table (z +3.0)",
+      "digging in soil (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s1915",
+     "what": "Stable Audio take, seed 1915, 0.05-5.00 s of it",
+     "seconds": 4.947,
+     "pass": false,
+     "result": "lost to 'a small light chain' (38% against 21%; z +2.8)",
+     "sounds_most_like": [
+      "digging in soil (z +3.3)",
+      "lego bricks clicking (z +3.2)",
+      "a small object dropping on a table (z +2.7)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    915,
+    1915
+   ]
+  },
+  "bell_ram_clang": {
+   "file": "audio/sfx/v9/bell_ram_clang.flac",
+   "row": "R16",
+   "seconds": 1.05,
+   "onsets_s": [
+    0.05
+   ],
+   "loud_onset_s": 0.052,
+   "loud_until_s": 0.925,
+   "peak_at_s": 0.145,
+   "loudest_400ms_at_s": [
+    0.083,
+    0.483
+   ],
+   "pass": false,
+   "result": "lost to 'a cinematic boom' (99% against 0%; z +1.4)",
+   "note": "FAIL on the review's check, which is written for the whole bell: a strike with no ring is 'a cinematic boom' (99 %). As the strike layer it was asked for, it reads 'a huge heavy metallic impact' at z +5.4, 100 % (the second check in the entry). The first second of the take. The take begins on the strike, so the attack has only a 2 ms fade-in; nine clipped samples in the raw take at the hit. Deep (centroid 137 Hz): weight, not brightness.",
+   "candidate": "s916_1s",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A huge timber and iron ram striking an enormous bronze bell once, a colossal deep metallic boom, heavy impact",
+   "seed": 916,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s916_d4_1b522b55.f32.wav"
+   ],
+   "raw_clipped_samples": 9,
+   "prompt_asked_by_the_review": "A huge timber and iron ram striking an enormous bronze bell once, a colossal deep metallic boom, heavy impact",
+   "recipe": [
+    "Stable Audio take, seed 916, -0.05-1.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "an enormous bronze bell struck once",
+    "alternatives": [
+     "a gong",
+     "a singing bowl",
+     "a doorbell",
+     "a cinematic boom"
+    ],
+    "verdict": "no match",
+    "z": 1.4,
+    "share_of_forced_choice": 0.003,
+    "alternatives_share": {
+     "a gong": 0.001,
+     "a singing bowl": 0.0,
+     "a doorbell": 0.001,
+     "a cinematic boom": 0.994
+    },
+    "pass": false,
+    "result": "lost to 'a cinematic boom' (99% against 0%; z +1.4)",
+    "sounds_most_like": [
+     "a cinematic hit with a long tail (z +3.5)",
+     "a deep cinematic boom (z +2.7)",
+     "a metallic clang (z +2.6)",
+     "an explosion (z +2.5)"
+    ],
+    "audioset": [
+     "Bang 0.31",
+     "Television 0.25",
+     "Music 0.21",
+     "Sound effect 0.19",
+     "Explosion 0.07"
+    ],
+    "probes": [
+     {
+      "description": "a huge heavy metallic impact, a deep clang of metal",
+      "alternatives": [
+       "a wooden knock",
+       "a kick drum",
+       "a door slamming",
+       "thunder rumbling"
+      ],
+      "pass": true,
+      "result": "strong (z +5.4, 100% of the choice)"
+     }
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -16.0,
+    "rms_dbfs": -16.4,
+    "centroid_hz": 137,
+    "lr_correlation": 1.0,
+    "energy_db_of_total": {
+     "under_80_hz": -1.6,
+     "80_250_hz": -6.9,
+     "250_2k_hz": -11.7,
+     "2k_8k_hz": -15.4,
+     "over_8k_hz": -25.4
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s916",
+     "what": "Stable Audio take, seed 916, -0.05-4.00 s of it",
+     "seconds": 4.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (100% against 0%; z +1.6)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.9)",
+      "a metallic clang (z +3.1)",
+      "a deep cinematic boom (z +3.0)"
+     ]
+    },
+    {
+     "candidate": "s916_1s",
+     "what": "Stable Audio take, seed 916, -0.05-1.00 s of it",
+     "seconds": 1.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (99% against 0%; z +1.4)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.5)",
+      "a deep cinematic boom (z +2.7)",
+      "a metallic clang (z +2.6)"
+     ]
+    },
+    {
+     "candidate": "s1916",
+     "what": "Stable Audio take, seed 1916, -0.05-4.00 s of it",
+     "seconds": 4.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (100% against 0%; z +1.8)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.8)",
+      "a deep cinematic boom (z +3.2)",
+      "an explosion (z +2.9)"
+     ]
+    },
+    {
+     "candidate": "s2916",
+     "what": "Stable Audio take, seed 2916, -0.05-4.00 s of it",
+     "seconds": 4.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (100% against 0%; z +1.4)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.8)",
+      "a deep cinematic boom (z +3.6)",
+      "an explosion (z +3.1)"
+     ]
+    },
+    {
+     "candidate": "s1916_1s",
+     "what": "Stable Audio take, seed 1916, -0.05-1.00 s of it",
+     "seconds": 1.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (99% against 0%; z +0.8)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.3)",
+      "a snare roll (z +2.7)",
+      "a punchy impact hit (z +2.4)"
+     ]
+    },
+    {
+     "candidate": "s2916_1s",
+     "what": "Stable Audio take, seed 2916, -0.05-1.00 s of it",
+     "seconds": 1.05,
+     "pass": false,
+     "result": "lost to 'a cinematic boom' (100% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "a cinematic hit with a long tail (z +3.7)",
+      "a deep cinematic boom (z +3.1)",
+      "a deep cinematic whoosh (z +3.1)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    916,
+    1916,
+    2916
+   ]
+  },
+  "applause_gloved_vast": {
+   "file": "audio/sfx/v9/applause_gloved_vast.flac",
+   "row": "R19",
+   "seconds": 8.5,
+   "onsets_s": [],
+   "peak_at_s": 1.499,
+   "loudest_400ms_at_s": [
+    0.434,
+    0.834
+   ],
+   "pass": false,
+   "result": "lost to 'sharp loud hand clapping' (99% against 0%; z +2.8)",
+   "note": "FAIL. It is applause (earshot's first word, z +3.7), but sharp close hand clapping (99 %), not a soft far crowd. Low-passing it, or stacking copies as the review suggests, turned every take into 'horses galloping'. The best of four takes: steady, true stereo (correlation 0.70), 8.5 s. It needs the mix's hall and level to be far; or keep the present file.",
+   "candidate": "s1919",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "Ten thousand people clapping softly in thick gloves in a vast stone cathedral, a dense dull padded patter, far away, very reverberant",
+   "seed": 1919,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s1919_d10_f7728c42.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "Ten thousand people clapping softly in thick gloves in a vast stone cathedral, a dense dull padded patter, far away, very reverberant",
+   "recipe": [
+    "Stable Audio take, seed 1919, 1.50-10.00 s of it, 250 ms fade-in"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -3.0 dBTP",
+   "earshot": {
+    "description": "a huge crowd applauding softly, far away",
+    "alternatives": [
+     "a small group clapping",
+     "sharp loud hand clapping",
+     "rain",
+     "horses galloping"
+    ],
+    "verdict": "plausible",
+    "z": 2.84,
+    "share_of_forced_choice": 0.004,
+    "alternatives_share": {
+     "a small group clapping": 0.007,
+     "sharp loud hand clapping": 0.987,
+     "rain": 0.0,
+     "horses galloping": 0.003
+    },
+    "pass": false,
+    "result": "lost to 'sharp loud hand clapping' (99% against 0%; z +2.8)",
+    "sounds_most_like": [
+     "applause (z +3.7)",
+     "a hand clap (z +3.4)",
+     "a record scratch (z +2.4)",
+     "a keyboard typing fast (z +2.4)"
+    ],
+    "audioset": [
+     "Clapping 0.25",
+     "Applause 0.10",
+     "Tap 0.07",
+     "Run 0.05"
+    ],
+    "realness": {
+     "p_real": 0.885,
+     "verdict": "real or pro-produced",
+     "why": "0 of 3 windows lean synthesized (p_real < 0.5); mean CLAP head score +1.8"
+    },
+    "describe": "8.50 s busy, 5.2 onsets/s (attack 253 ms, decays in 7.9 s). Sounds most like: applause (z +3.6), a hand clap (z +3.4), a record scratch (z +2.4) [clear reading]. Other readings: a keyboard typing fast (keyboard, z +2.3), a rubber stretch (foley, z +2.2). AudioSet: Clapping 0.25, Applause 0.10, Tap 0.07. peak -3.0 dBFS, -27.3 LUFS, brightness 2.3 kHz, bandwidth 20.5 kHz, noise floor -39 dBFS, side/mid -7 dB."
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -3.0,
+    "lufs": -27.3,
+    "rms_dbfs": -31.3,
+    "centroid_hz": 1345,
+    "lr_correlation": 0.697,
+    "energy_db_of_total": {
+     "under_80_hz": -13.2,
+     "80_250_hz": -15.2,
+     "250_2k_hz": -1.1,
+     "2k_8k_hz": -8.4,
+     "over_8k_hz": -23.6
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s919",
+     "what": "Stable Audio take, seed 919, 1.50-10.00 s of it",
+     "seconds": 8.5,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (94% against 0%; z +3.0)",
+     "sounds_most_like": [
+      "applause (z +3.6)",
+      "a hand clap (z +3.2)",
+      "a horse galloping (z +3.1)"
+     ],
+     "p_real": 0.917
+    },
+    {
+     "candidate": "s919_lp",
+     "what": "Stable Audio take, seed 919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (63% against 1%; z +2.5)",
+     "sounds_most_like": [
+      "a hand clap (z +3.1)",
+      "a horse galloping (z +3.0)",
+      "a wooden block hit (z +3.0)"
+     ],
+     "p_real": 0.566
+    },
+    {
+     "candidate": "s919_soft",
+     "what": "Stable Audio take, seed 919, 0.60-10.00 s of it, peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (70% against 0%; z +2.9)",
+     "sounds_most_like": [
+      "applause (z +3.6)",
+      "a horse galloping (z +3.4)",
+      "a hand clap (z +3.0)"
+     ],
+     "p_real": 0.885
+    },
+    {
+     "candidate": "s919_soft_lp",
+     "what": "Stable Audio take, seed 919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'horses galloping' (95% against 0%; z +2.1)",
+     "sounds_most_like": [
+      "a horse galloping (z +3.0)",
+      "a downlifter falling sweep (z +2.7)",
+      "a gust of wind rushing past (z +2.5)"
+     ],
+     "p_real": 0.408
+    },
+    {
+     "candidate": "s1919",
+     "what": "Stable Audio take, seed 1919, 1.50-10.00 s of it, 250 ms fade-in",
+     "seconds": 8.5,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (99% against 0%; z +2.8)",
+     "sounds_most_like": [
+      "applause (z +3.7)",
+      "a hand clap (z +3.4)",
+      "a record scratch (z +2.4)"
+     ],
+     "p_real": 0.885
+    },
+    {
+     "candidate": "s2919",
+     "what": "Stable Audio take, seed 2919, 1.50-10.00 s of it, 250 ms fade-in",
+     "seconds": 8.5,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (84% against 0%; z +2.8)",
+     "sounds_most_like": [
+      "applause (z +3.4)",
+      "a horse galloping (z +3.4)",
+      "a hand clap (z +3.2)"
+     ],
+     "p_real": 0.889
+    },
+    {
+     "candidate": "far",
+     "what": "Stable Audio take, seed 5191, 0.60-10.00 s of it, 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (99% against 0%; z +2.9)",
+     "sounds_most_like": [
+      "a hand clap (z +3.6)",
+      "applause (z +3.3)",
+      "a horse galloping (z +2.7)"
+     ],
+     "p_real": 0.822,
+     "reworded_prompt": [
+      "A huge distant crowd applauding softly, a dense dull roar of muffled applause heard from far away across a vast stone cathedral, soft, washed, low, very reverberant"
+     ]
+    },
+    {
+     "candidate": "far_lp",
+     "what": "Stable Audio take, seed 5191, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (88% against 0%; z +2.5)",
+     "sounds_most_like": [
+      "a hand clap (z +3.5)",
+      "a horse galloping (z +3.1)",
+      "a wooden block hit (z +2.5)"
+     ],
+     "p_real": 0.259,
+     "reworded_prompt": [
+      "A huge distant crowd applauding softly, a dense dull roar of muffled applause heard from far away across a vast stone cathedral, soft, washed, low, very reverberant"
+     ]
+    },
+    {
+     "candidate": "far_soft_lp",
+     "what": "Stable Audio take, seed 5191, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'horses galloping' (96% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +3.1)",
+      "a snare roll (z +2.6)",
+      "a gust of wind rushing past (z +2.2)"
+     ],
+     "p_real": 0.124,
+     "reworded_prompt": [
+      "A huge distant crowd applauding softly, a dense dull roar of muffled applause heard from far away across a vast stone cathedral, soft, washed, low, very reverberant"
+     ]
+    },
+    {
+     "candidate": "s2919_lp",
+     "what": "Stable Audio take, seed 2919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'sharp loud hand clapping' (59% against 0%; z +2.4)",
+     "sounds_most_like": [
+      "a hand clap (z +3.0)",
+      "a horse galloping (z +3.0)",
+      "a stick swung fast through the air (z +2.7)"
+     ],
+     "p_real": 0.473
+    },
+    {
+     "candidate": "s2919_soft_lp",
+     "what": "Stable Audio take, seed 2919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'horses galloping' (100% against 0%; z +1.6)",
+     "sounds_most_like": [
+      "a horse galloping (z +3.1)",
+      "a downlifter falling sweep (z +2.3)",
+      "a gust of wind rushing past (z +2.3)"
+     ],
+     "p_real": 0.419
+    },
+    {
+     "candidate": "s1919_soft_lp",
+     "what": "Stable Audio take, seed 1919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in",
+     "seconds": 9.4,
+     "pass": false,
+     "result": "lost to 'horses galloping' (100% against 0%; z +1.5)",
+     "sounds_most_like": [
+      "a horse galloping (z +2.5)",
+      "being underwater (z +2.3)",
+      "a snare roll (z +2.2)"
+     ],
+     "p_real": 0.495
+    },
+    {
+     "candidate": "s1919_x4",
+     "what": "Stable Audio take, seed 1919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.113 s",
+     "seconds": 9.762,
+     "pass": false,
+     "result": "lost to 'horses galloping' (99% against 0%; z +1.2)",
+     "sounds_most_like": [
+      "fireworks exploding (z +2.7)",
+      "a tape stop slowing down (z +2.4)",
+      "being underwater (z +2.3)"
+     ],
+     "p_real": 0.276
+    },
+    {
+     "candidate": "s1919_x8",
+     "what": "Stable Audio take, seed 1919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.985 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.045 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.955 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (99% against 0%; z +1.1)",
+     "sounds_most_like": [
+      "a helicopter flying overhead (z +2.6)",
+      "a downlifter falling sweep (z +2.5)",
+      "fireworks exploding (z +2.5)"
+     ],
+     "p_real": 0.263
+    },
+    {
+     "candidate": "s1919_x8_soft",
+     "what": "Stable Audio take, seed 1919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.985 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.045 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.955 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (72% against 2%; z +0.9)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +3.1)",
+      "a gust of wind rushing past (z +2.6)",
+      "a big braam (z +2.6)"
+     ],
+     "p_real": 0.285
+    },
+    {
+     "candidate": "s919_x8",
+     "what": "Stable Audio take, seed 919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.985 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.045 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.955 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (99% against 0%; z +0.8)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +2.9)",
+      "a helicopter flying overhead (z +2.6)",
+      "a big braam (z +2.6)"
+     ],
+     "p_real": 0.303
+    },
+    {
+     "candidate": "s919_x8_soft",
+     "what": "Stable Audio take, seed 919, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.985 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.045 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 0.955 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 919, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), peaks held to 1.2 times the 80 ms level (sfx_make.soften), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (55% against 3%; z +0.9)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +3.5)",
+      "a gust of wind rushing past (z +2.9)",
+      "a big braam (z +2.5)"
+     ],
+     "p_real": 0.177
+    },
+    {
+     "candidate": "far_x8",
+     "what": "Stable Audio take, seed 5191, 0.60-10.00 s of it, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 1.03 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 0.97 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 1.015 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 0.985 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 1.045 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 0.955 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 5191, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 2500 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (82% against 2%; z +1.3)",
+     "sounds_most_like": [
+      "a downlifter falling sweep (z +2.9)",
+      "a crackling fire (z +2.5)",
+      "being underwater (z +2.4)"
+     ],
+     "p_real": 0.116,
+     "reworded_prompt": [
+      "A huge distant crowd applauding softly, a dense dull roar of muffled applause heard from far away across a vast stone cathedral, soft, washed, low, very reverberant"
+     ]
+    },
+    {
+     "candidate": "s1919_x8_lp4k",
+     "what": "Stable Audio take, seed 1919, 0.60-10.00 s of it, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.03 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.037 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.97 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.071 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.015 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.113 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.985 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.160 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.045 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.211 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 0.955 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.263 s; Stable Audio take, seed 1919, 0.60-10.00 s of it, played at 1.0225 speed, low-pass 4000 Hz (24 dB an octave, zero-phase), 300 ms fade-in, placed at 0.331 s",
+     "seconds": 10.106,
+     "pass": false,
+     "result": "lost to 'horses galloping' (97% against 1%; z +1.4)",
+     "sounds_most_like": [
+      "a helicopter flying overhead (z +2.8)",
+      "a downlifter falling sweep (z +2.5)",
+      "fireworks exploding (z +2.4)"
+     ],
+     "p_real": 0.364
+    }
+   ],
+   "seeds_generated": [
+    919,
+    1919,
+    2919
+   ]
+  },
+  "bowl_buzz_on_stone": {
+   "file": "audio/sfx/v9/bowl_buzz_on_stone.flac",
+   "row": "extra (the lead's)",
+   "seconds": 2.88,
+   "onsets_s": [
+    0.11
+   ],
+   "peak_at_s": 1.234,
+   "loudest_400ms_at_s": [
+    0.875,
+    1.275
+   ],
+   "events": [
+    {
+     "onset_s": 0.11,
+     "peak_s": 0.938,
+     "peak_db_re_file_peak": 0.0,
+     "ends_s": 1.72,
+     "judged_alone_s": [
+      0.08,
+      1.61
+     ],
+     "alone": "pass: strong (z +3.6, 98% of the choice)"
+    }
+   ],
+   "pass": true,
+   "result": "strong (z +4.6, 100% of the choice)",
+   "note": "Second seed. 1.6 s of fine chatter, loud from 0.11 s, loudest at 0.88-1.28 s, gone by 1.7 s. A strong pass (z +4.6), but earshot's own words for it are ice cubes in a glass and dominoes: a rattle, not certainly wood. True stereo (0.84).",
+   "candidate": "s1932",
+   "source": "generated locally: Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+   "prompt": "A wooden bowl of water rattling faintly on a stone surface, a rapid tiny wooden chatter and ticking, very close, quiet",
+   "seed": 1932,
+   "steps": 8,
+   "guidance_scale": 1.0,
+   "raw_takes": [
+    "audio/gen/sa_sfx_s1932_d3_8e32ff9d.f32.wav"
+   ],
+   "prompt_asked_by_the_review": "A wooden bowl of water rattling faintly on a stone surface, a rapid tiny wooden chatter and ticking, very close, quiet",
+   "recipe": [
+    "Stable Audio take, seed 1932, 0.12-3.00 s of it"
+   ],
+   "processed": "mean and under-20 Hz removed, ends faded, gain -3.0 dB to a sample peak of -3 dBFS, true peak -2.9 dBTP",
+   "earshot": {
+    "description": "a wooden bowl rattling on a stone surface, a rapid tiny wooden chatter",
+    "alternatives": [
+     "a phone vibrating on a table",
+     "a clock ticking",
+     "a woodpecker pecking",
+     "a typewriter"
+    ],
+    "verdict": "strong",
+    "z": 4.59,
+    "share_of_forced_choice": 1.0,
+    "alternatives_share": {
+     "a phone vibrating on a table": 0.0,
+     "a clock ticking": 0.0,
+     "a woodpecker pecking": 0.0,
+     "a typewriter": 0.0
+    },
+    "pass": true,
+    "result": "strong (z +4.6, 100% of the choice)",
+    "sounds_most_like": [
+     "ice cubes in a glass (z +3.8)",
+     "a spray can hissing (z +3.4)",
+     "dominoes falling (z +3.4)",
+     "a squishy wet squelch (z +3.1)"
+    ],
+    "audioset": [
+     "Sound effect 0.08",
+     "Coin (dropping) 0.06"
+    ]
+   },
+   "measured": {
+    "peak_dbfs": -3.0,
+    "true_peak_dbtp": -2.9,
+    "lufs": -21.4,
+    "rms_dbfs": -28.3,
+    "centroid_hz": 2072,
+    "lr_correlation": 0.838,
+    "energy_db_of_total": {
+     "under_80_hz": -35.0,
+     "80_250_hz": -26.0,
+     "250_2k_hz": -1.1,
+     "2k_8k_hz": -8.0,
+     "over_8k_hz": -12.7
+    }
+   },
+   "tried": [
+    {
+     "candidate": "s932",
+     "what": "Stable Audio take, seed 932, -0.05-3.00 s of it",
+     "seconds": 3.05,
+     "pass": true,
+     "result": "strong (z +3.6, 100% of the choice)",
+     "sounds_most_like": [
+      "a can opening (z +3.3)",
+      "a rubber stretch (z +2.8)",
+      "a plastic object falling on a table (z +2.8)"
+     ]
+    },
+    {
+     "candidate": "s1932",
+     "what": "Stable Audio take, seed 1932, 0.12-3.00 s of it",
+     "seconds": 2.88,
+     "pass": true,
+     "result": "strong (z +4.6, 100% of the choice)",
+     "sounds_most_like": [
+      "ice cubes in a glass (z +3.8)",
+      "a spray can hissing (z +3.4)",
+      "dominoes falling (z +3.4)"
+     ]
+    }
+   ],
+   "seeds_generated": [
+    932,
+    1932
+   ]
+  }
+ }
+}

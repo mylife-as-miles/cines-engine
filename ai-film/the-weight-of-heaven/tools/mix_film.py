@@ -13,7 +13,7 @@ leftovers. Here nothing is taken from a finished mix. Every cue is rendered alon
   above   the cathedral's cues are cut v5's (tools/mix_bell.py renders each one; this tool moves it to the film's
           clock). The answer rings out over the vale and is thickened to a crowd. The seal is one event.
   choir   ONE unbroken pass of the take, tuned 50 cents down to the bell, placed once and never stopped; it ends by
-          itself before the bell's weight lands. Version A: heard near in the cathedral and far (8 dB down, dull,
+          itself before the bell's weight lands. Version A: heard near in the cathedral and far (12 dB down, dull,
           mono) in the valley. Version B: silent in the valley.
   bell    one note. The stroke is held at full across the cut for most of a second, then falls into the ground (the
           valley hears its weight, not its pitch); the same decaying note is still in the air at the cup.
@@ -21,7 +21,7 @@ leftovers. Here nothing is taken from a finished mix. Every cue is rendered alon
           own sound only the swallows, the breath and the father's grab are kept, cut from the raw takes. The ground is
           felt as events (the water, the fall, the arrival), never as a drone.
   master  levels set by the story (the stroke, the arrival, the landing, the lines, then everything else); about
-          -19.5 LUFS, true peak under -1.5 dBTP; every join checked in 5 ms steps.
+          -18.7 LUFS, true peak under -1.5 dBTP; every join checked in 5 ms steps.
 """
 import argparse, importlib.util, json, os, subprocess, sys
 import numpy as np
@@ -136,28 +136,30 @@ class Foundry:
         self.dir = P('audio/sfx/v9'); self.used, self.missing, self.failed = [], [], []
         try:
             m = json.load(open(os.path.join(self.dir, 'manifest.json')))
+            self.m = m.get('sounds', m)
         except Exception:
-            m = {}
-        if isinstance(m, dict) and 'sounds' in m:
-            m = m['sounds']
-        self.m = {e.get('id'): e for e in m} if isinstance(m, list) else m
+            self.m = {}
+
+    def entry(self, sid):
+        e = self.m.get(sid, {})
+        return e if isinstance(e, dict) else {}
+
+    def loud(self, sid):
+        """where the loud part of a one-shot starts in its file (s): the mark to sync on"""
+        e = self.entry(sid)
+        return float(e.get('loud_onset_s', (e.get('onsets_s') or [0.05])[0]))
 
     def get(self, sid, want_pass=False):
         path = os.path.join(self.dir, sid + '.flac')
         if not os.path.exists(path):
             self.missing.append(sid); return None, []
-        e = self.m.get(sid, {}) if isinstance(self.m, dict) else {}
-        ok = e.get('pass', e.get('passed', e.get('verdict')))
-        ok = ok if isinstance(ok, bool) else str(ok).lower().startswith('pass')
-        if not ok:
+        e = self.entry(sid)
+        if not e.get('pass', False):
             self.failed.append(sid)
             if want_pass:
                 return None, []
-        x = mb.read_audio(path)
-        on = e.get('onsets', e.get('onset', e.get('onsets_s', e.get('onset_s', 0.05))))
-        on = [float(v) for v in (on if isinstance(on, (list, tuple)) else [on])]
         self.used.append(sid)
-        return st(x), on
+        return st(mb.read_audio(path)), [float(v) for v in (e.get('onsets_s') or [0.05])]
 
 
 # ---------------------------------------------------------------------------------------------- above: cut v5's cues, on the film's clock
@@ -208,7 +210,8 @@ def above(F, stems, info):
     land_dry, land_send = Z(), Z()
     rows = []
     new_press = F.get('wax_press_soft', want_pass=True)
-    new_peel = F.get('wax_peel', want_pass=True)
+    new_peel = (None, [])                                                        # the foundry's peel passes its check but reads as a glitch unprompted: not used
+    new_chains = F.get('chains_heavy', want_pass=True)
     for c in mb.CUES:
         if c.get('kind') is not None or c['id'] in SKIP:
             continue
@@ -216,6 +219,8 @@ def above(F, stems, info):
             if new_press[0] is not None:
                 continue
             c = dict(c, lvl=c['lvl'] + 4.0)                                      # no new one: at least the press is an event
+        if c['id'] == 'FX-08' and new_chains[0] is not None:
+            continue                                                             # the foundry's heavier chains take its place
         if c['id'] == 'FX-04a':
             if new_peel[0] is not None:
                 continue
@@ -258,6 +263,13 @@ def above(F, stems, info):
     thump = (np.sin(2 * np.pi * 100 * t) * np.exp(-t / 0.022))[:, None] * np.ones((1, 2)) * lin(-24)
     place(stems['fx_above'], thump, T_PRESS + 0.14)
 
+    # ---- the chains going slack: heavy iron, slowed, from its first big clank
+    x, on = new_chains
+    if x is not None:
+        y = eq(x[int(1.15 * SR):int(4.6 * SR)], [('hp', 120, 2), ('lp', 5000, 2)])
+        y = to_m(fade(y, 0.004, 1.2), L_LINE - 9.0)
+        place(stems['fx_above'], y, film_t(25.57) - 0.06); place(tower, y * lin(-18.0), film_t(25.57) - 0.06)
+
     # ---- the landing: the cues' weight, the foundry's bigger one if it passed, to one level with the tower's return
     x, on = F.get('bell_landing_big', want_pass=True)
     if x is not None:
@@ -277,7 +289,7 @@ def above(F, stems, info):
         many = np.zeros((len(ap) + SR, 2))
         for ratio, ms, pos in ((1.0, 0, 0.0), (1.03, 37, -0.6), (0.97, 71, 0.6), (1.015, 113, -0.3), (0.985, 151, 0.3)):
             place(many, mb.pan(mb.varispeed(ap, ratio), pos), ms / 1000.0)
-        many = eq(many, [('lp', 2500, 2), ('hp', 200, 2)])
+        many = eq(many, [('hp', 200, 2)])                                         # full band: any low-pass turns gloved applause into hooves
         many = fade(many[:int(4.6 * SR)], 1.2, 2.2)
         many *= lin(-40.0 - mb.lvl(many, 'rms'))                                   # far under the note
         place(stems['fx_above'], many, TG + 1.5); place(hall['fx_above'], many * lin(-7), TG + 1.5)
@@ -294,6 +306,7 @@ def above(F, stems, info):
         for bedx in (wind, crowd):
             seg = bedx[int(round(a * SR)):min(int(round(b * SR)), len(bedx))].copy()
             place(stems['air_above'], fade(seg, 0.004 if a > 0 else 0.0, 0.04), f)   # a cut up is hard: the hall is simply there
+    stems['air_above'] *= auto([(0, 0.0), (T_STROKE - 0.4, 0.0), (T_STROKE - 0.1, -6.0), (TE + 0.1, -6.0), (TG - 0.1, -6.0), (TG, 0.0), (END, 0.0)])   # nothing stands beside the stroke
     return ir
 
 
@@ -317,14 +330,17 @@ def bell(stems, ir, info):
     full = d + rev(d * lin(-13.0), ir)
     full *= lin(L_STROKE - mb.momentary(full, T_STROKE - 0.1, T_STROKE + 1.5))
     hum = sosf(full, 'lowpass', 150, 4)                                          # what the ground gets: its weight (48 and 96 Hz), not its note
+    dim = sosf(full, 'lowpass', 900, 2)                                          # the note on its way down: its top gone
     air = sosf(full, 'highpass', 150, 2)                                         # what the hall keeps eleven seconds on: its note
-    # full across the cut, then it falls into the ground; gone from the valley before the daughter's shot; still in the air at the cup
-    a = auto([(0, 0.0), (46.9, 0.0), (48.6, None), (END, None)])
-    b = auto([(0, None), (46.8, None), (48.0, -4.0), (49.4, -4.0), (50.6, None), (END, None)])
+    # Full across the cut, for a second and more: a struck bell needs its first second to be a bell. Then it darkens into
+    # the ground as the mountain cracks; gone from the valley before the daughter's shot; still in the air at the cup.
+    a = auto([(0, 0.0), (47.3, 0.0), (48.5, None), (END, None)])
+    d = auto([(0, None), (47.2, None), (48.4, -2.0), (48.6, -2.0), (49.8, None), (END, None)])
+    b = auto([(0, None), (47.6, None), (48.9, -4.0), (49.6, -4.0), (50.8, None), (END, None)])
     c = auto([(0, None), (TG - 0.004, None), (TG + 0.004, 12.0), (END - 1.6, 15.0), (END - 0.05, None), (END, None)])   # eleven seconds old and still the loudest thing in the hall
-    stems['bell'] += full * a + air * c
+    stems['bell'] += full * a + dim * d + air * c
     stems['ground'] += hum * b
-    info['bell'] = 'one stroke, one tail: full to 46.9 s, into the ground by 48.6, the same note high-passed at the cup'
+    info['bell'] = 'one stroke, one tail: full to 47.3 s, darkening into the ground by 49.8, the same note high-passed at the cup'
 
 
 # ---------------------------------------------------------------------------------------------- the choir: one unbroken pass
@@ -352,7 +368,7 @@ def choir(stems, ir, far_on, info):
     under = eq(near, mb.CHOIR_UNDER_EQ)                                          # room for consonants while anyone speaks
     sp = auto([(0, None), (13.9, None), (14.3, 0.0), (18.8, 0.0), (19.3, None), (END, None)])
     near = near * (1 - sp) + under * sp
-    # FAR, from under the kingdom: 8 dB down, dull, mono; 4 dB more on the dust
+    # FAR, from under the kingdom: 12 dB down, low-passed at 700 Hz, mono; 4 dB more on the dust
     far = st(mono(sosf(d, 'lowpass', 700, 2))) * lin(-12.0) * auto([(0, 0.0), (36.4, 0.0), (37.0, -4.0), (END, -4.0)])
     w = np.zeros(N); x80 = int(0.04 * SR)                                        # where the picture is above: 80 ms crossfades on the cuts
     for a_, b_ in ((0, TA), (T2, TB), (T3, TE), (TG, END)):
@@ -385,15 +401,18 @@ def below(F, stems, info):
             seg = np.concatenate([seg, bedx[int(1.0 * SR):int(1.0 * SR) + int((b_ - a_) * SR) - len(seg)]])
         place(stems['air_below'], fade(seg, 0.04, 0.03), a_)
     stems['air_below'] *= auto([(0, 0.0), (TB, 0.0), (TB + 0.5, -3.0), (34.3, -3.0), (34.8, 0.0), (36.6, 0.0), (37.5, -17.0), (T3, -17.0),
-                                (TE, -17.0), (TE + 0.06, -1.0), (T_ARRIVE, 0.0), (END, 0.0)])      # the wind dies on the dust: near silence, never digital black
+                                (TE, None), (47.0, None), (48.6, -1.0), (T_ARRIVE, 0.0), (END, 0.0)])   # the wind dies on the dust (near silence, never digital black);
+    # at the mountain the bell owns the cut: the valley's air comes up only as the note sinks (under the stroke it made the bell read as a doorbell)
     info['valley_bed'] = src
 
-    def lay(sid, t, level, chain=None, pos=None, take=None, fo=0.08, onset_i=0, want_pass=False, gain_env=None, stem='foley_below'):
+    def lay(sid, t, level, chain=None, pos=None, take=None, fo=0.08, onset_i=0, want_pass=False, gain_env=None, stem='foley_below', sync=None, speed=None):
         x, on = F.get(sid, want_pass=want_pass)
         if x is None:
             notes.append(f'{sid}: not used ({"missing" if sid in F.missing else "did not pass"})')
             return False
-        o = on[min(onset_i, len(on) - 1)]
+        o = sync if sync is not None else on[min(onset_i, len(on) - 1)]
+        if speed:
+            x = mb.varispeed(x, speed); o = o / speed
         if take:
             a_ = max(o + take[0], 0.0); x = x[int(a_ * SR):int((o + take[1]) * SR)]; o = o - a_
         y = eq(mono(x) if pos is not None else x, chain) if chain else (mono(x) if pos is not None else x)
@@ -406,13 +425,14 @@ def below(F, stems, info):
         return True
 
     # ---- the vale: the hoe far off, her steps, the swallows and his breath (the model's, kept), the bowl, his boots going
-    for k, t in enumerate((18.46, 19.26, 20.20)):
-        lay('hoe_chop', t + 0.075, L_LINE - 17.0, [('hp', 150, 2), ('lp', 2500, 2)], pos=-0.35, take=(-0.03, 0.45), onset_i=k)
-    lay('child_steps_mud', 17.95, L_LINE - 19.0, [('lp', 4000, 2)], pos=0.45, take=(-0.03, 2.9), fo=0.3)
+    for t, k, sp in ((18.46, 0, None), (19.26, 1, None), (20.20, 0, 0.95)):       # the foundry's third chop fails alone: the first again, a little lower
+        lay('hoe_chop', t + 0.075, L_LINE - 17.0, [('hp', 150, 2), ('lp', 2500, 2)], pos=-0.35, take=(-0.03, 0.5), onset_i=k, speed=sp)
+    lay('child_steps_mud', 17.95, L_LINE - 27.0, [('lp', 1800, 2)], pos=0.45, take=(-0.03, 2.9), fo=0.3)   # low and dull: louder, steps and hoe together read as a blade being drawn
     qa = take_audio(P('out/edits/Q03A_t2_fixed.mp4'))
     sw = gate(sosf(qa[int(3.45 * SR):int(5.40 * SR)], 'highpass', 150, 2), -44.0)
     place(stems['foley_below'], to_m(fade(sw, 0.01, 0.1), L_LINE - 11.0), QA(3.45))
     lay('bowl_on_stone', 23.31, L_LINE - 10.0, [('hp', 60, 2)], pos=0.1, take=(-0.03, 0.9), fo=0.3)
+    lay('bowl_slop', 23.37, L_LINE - 17.0, [('hp', 250, 2)], pos=0.1, take=(-0.02, 0.55), fo=0.25)      # it is a bowl of water: the water says so
     lay('boots_away_mud', 24.0, L_LINE - 15.0, [('hp', 70, 2), ('lp', 5000, 2)], pos=-0.5, take=(-0.03, 1.5), fo=0.3,
         gain_env=[(0.0, 0.0), (1.6, -5.0)])
 
@@ -422,8 +442,16 @@ def below(F, stems, info):
     place(stems['ground'], sw, 32.25)
 
     # ---- the animals
-    lay('ox_snort', 35.15, L_LINE - 8.0, [('hp', 70, 2)], pos=-0.4, take=(-0.03, 0.9), fo=0.25)
-    lay('crows_burst', 35.46, L_LINE - 12.0, [('lp', 7000, 2), ('hp', 200, 2)], pos=0.5, take=(-0.03, 1.4), fo=0.4)
+    lay('ox_snort', 35.15, L_LINE - 8.0, [('hp', 70, 2)], pos=-0.4, take=(-0.22, 0.45), fo=0.15, sync=F.loud('ox_snort'))
+    lay('crows_burst', 35.46, L_LINE - 13.0, [('lp', 7000, 2), ('hp', 200, 2)], pos=0.5, take=(-0.05, 1.5), fo=0.5, sync=F.loud('crows_burst'))
+
+    for sid, t_, pos_, lv_ in (('crow_caw_2', 35.50, 0.55, L_LINE - 9.0), ('crow_caw_1', 35.86, 0.3, L_LINE - 11.0)):   # the calls say what the wings are
+        pth = P('audio/sfx/v9', sid + '.flac')
+        if os.path.exists(pth):
+            y = fade(eq(mono(mb.read_audio(pth)), [('hp', 300, 2), ('lp', 6000, 2)]), 0.002, 0.08)
+            place(stems['foley_below'], to_m(mb.pan(y, pos_), lv_), t_)
+        else:
+            notes.append(sid + ': missing')
 
     # ---- the mountain. Its fall has no sound of its own; the ground knows first
     sh = noise(1.6, 25, 45, 9) * swell(int(1.6 * SR), 0.25, 1.2) * lin(-22.0)
@@ -438,42 +466,55 @@ def below(F, stems, info):
     gr = gate(sosf(qb[int(t0 * SR):int((t0 + 0.95) * SR)], 'highpass', 100, 2), -40.0)
     place(stems['foley_below'], to_m(fade(gr, 0.01, 0.08), L_LINE - 6.0), 51.50)
 
-    # ---- the run: boots in mud, breath, the water she saved
+    # ---- the run: his boots on the frames where they land, his breath, the water she saved
     n_run = TG - T_RUN
-    for sid, lvl_, chain, pos, env in (('run_boots_mud', L_LINE - 8.0, [('hp', 60, 2)], 0.0, [(0.0, 0.0), (1.85, 0.0), (2.3, -4.0), (9.0, -4.0)]),
-                                       ('run_breath', L_LINE - 14.0, [('hp', 150, 2)], -0.1, [(0.0, 0.0), (9.0, 0.0)]),
-                                       ('bowl_slop', L_LINE - 18.0, [('hp', 200, 2)], 0.3, [(0.0, 0.0), (9.0, 0.0)])):
+    steps = (52.63, 52.95, 53.27, 53.61, 53.93, 54.25, 54.55, 54.87, 55.17, 55.48, 55.77, 56.11, 56.46, 56.78)
+    x, on = F.get('run_boots_mud')
+    if x is None:
+        notes.append('run_boots_mud: missing')
+    else:
+        for k, t in enumerate(steps):
+            o = on[k % len(on)]
+            y = mono(x[int((o - 0.02) * SR):int((o + 0.46) * SR)])
+            y = mb.varispeed(y, 1.04 if k % 2 else 0.97)
+            y = fade(eq(y, [('hp', 60, 2)]), 0.002, 0.12)
+            y = to_m(mb.pan(y, 0.12 if k % 2 else -0.12), L_LINE - (8.0 if t < T_ARRIVE else 12.0))
+            place(stems['foley_below'], y, t - 0.02)
+    for sid, lvl_, chain, pos in (('run_breath', L_LINE - 14.0, [('hp', 150, 2)], -0.1), ('bowl_slop', L_LINE - 19.0, [('hp', 200, 2)], 0.3)):
         x, on = F.get(sid)
         if x is None:
             notes.append(f'{sid}: missing'); continue
         y = eq(mono(x), chain)
-        while len(y) < int(n_run * SR):                                           # long enough for the shot
+        if sid == 'run_breath':
+            y = mono(gate(st(y), -46.0, 0.01, 0.15))                              # its floor was raised with it: shut between the breaths
+        while len(y) < int(n_run * SR):
             y = np.concatenate([y[:-int(0.05 * SR)], fade(y, 0.05, 0.0)])
         y = fade(y[:int(n_run * SR)], 0.02, 0.004)
-        y = to_m(mb.pan(y, pos), lvl_) * np.interp(np.arange(len(y)) / SR, [p[0] for p in env], [lin(p[1]) for p in env])[:, None]
-        place(stems['foley_below'], y, T_RUN)
+        place(stems['foley_below'], to_m(mb.pan(y, pos), lvl_), T_RUN)
 
     # ---- the arrival: a crack, the pressure, then rock, and it is cut dead on the cut to the cup
-    lay('rockfall_crack', T_ARRIVE - 0.07, L_LINE - 2.0, [('hp', 200, 2)], pos=-0.2, take=(-0.02, 1.2), fo=0.5, stem='rock')
+    lay('rockfall_crack', T_ARRIVE - 0.07, L_LINE - 6.0, [('hp', 200, 2)], pos=-0.2, take=(-0.02, 1.2), fo=0.5, stem='rock')
     pr = noise(0.5, 30, 150, 21) * (np.exp(-np.arange(int(0.5 * SR)) / SR / 0.16) * np.minimum(np.arange(int(0.5 * SR)) / (0.008 * SR), 1))[:, None]
     body = noise(0.5, 150, 600, 22) * (np.exp(-np.arange(int(0.5 * SR)) / SR / 0.11))[:, None]
     place(stems['rock'], pr * lin(-11.0) + body * lin(-20.0), T_ARRIVE)
     x, on = F.get('rockfall_boom')
     if x is not None:
-        y = eq(x[:int(3.2 * SR)], [('hp', 28, 2), ('lp', 2500, 2)])
-        place(stems['rock'], to_m(fade(y, 0.003, 1.2), L_ARRIVE), T_ARRIVE - on[0])
+        y = eq(x[:int(3.4 * SR)], [('hp', 28, 2), ('lp', 2500, 2)])
+        place(stems['rock'], to_m(fade(y, 0.003, 1.4), L_ARRIVE), T_ARRIVE - F.loud('rockfall_boom'))
     else:
         notes.append('rockfall_boom: missing')
-    n_body = TG - (T_ARRIVE + 0.15)
-    for sid, pos in (('rockfall_body_a', -0.7), ('rockfall_body_b', 0.7)):
+    n_body = TG - (T_ARRIVE + 0.12)
+    # two takes, left and right: the wall of it from the first moment, and the rise that peaks on the cut
+    for sid, pos, start, lvl_, up in (('rockfall_body_b', 0.65, 0.2, L_ROAR_END - 2.0, -3.0), ('rockfall_body_a', -0.65, max(4.4 - (n_body - 0.3), 0.2), L_ROAR_END, -9.0)):
         x, on = F.get(sid)
         if x is None:
             notes.append(f'{sid}: missing'); continue
         y = eq(mono(x), [('lp', 4000, 2), ('hp', 35, 2)])
-        a_ = int(max(on[0], 0.0) * SR); y = y[a_:a_ + int(n_body * SR)]
-        y = fade(y, 0.25, 0.004)
-        y = to_m(mb.pan(y, pos), L_ROAR_END - 3.0) * (lin(-7.0) + (1 - lin(-7.0)) * np.linspace(0, 1, len(y)) ** 1.3)[:, None]
-        place(stems['rock'], y, T_ARRIVE + 0.15)
+        y = y[int(start * SR):int(start * SR) + int(n_body * SR)]
+        y = fade(y, 0.06, 0.004)
+        y = to_m(mb.pan(y, pos), lvl_) * (lin(up) + (1 - lin(up)) * np.linspace(0, 1, len(y)) ** 1.3)[:, None]
+        place(stems['rock'], y, T_ARRIVE + 0.12)
+    stems['rock'] = mb.limiter(stems['rock'], -8.0)[0]                           # its own peaks held here, so the master's limiter only ever meets the bell
     # nothing from below survives the cut up: every valley layer ends on the frame
     for k in ('air_below', 'foley_below', 'rock'):
         for t_cut in (T2, T3, TG):

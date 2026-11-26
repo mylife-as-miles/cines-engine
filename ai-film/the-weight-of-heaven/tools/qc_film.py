@@ -26,14 +26,15 @@ EARSHOT = '/root/leonxlnx/earshot/.venv/bin/earshot'
 LISTEN = [  # (name, start, end, what it should be, what the audit's listeners took it for)
     ('the opening stroke', 0.4, 4.4, 'an enormous bronze bell struck once', ['a gong', 'a singing bowl', 'a doorbell', 'a cinematic boom']),
     ('the answer', 16.2, 19.0, 'thousands of people speaking in unison in a huge hall', ['a few people speaking together', 'one woman speaking', 'a synthetic robotic voice']),
+    # in the mix this window lies under the answer's tail, so a miss here is not the hoe's alone: test the valley's stems for that
     ('the hoe and her steps', 17.9, 20.8, 'someone hoeing soil far away and light footsteps in mud', ['a stick snapping', 'a sword being drawn', 'a camera shutter click', 'a metal latch']),
     ('the bowl on the wall', 23.2, 24.1, 'a wooden bowl set down on stone', ['a box lid closing', 'a metal pan clanging', 'a door knock', 'a plastic object dropped']),
     ('the seal', mf.T_PRESS - 0.1, mf.T_PRESS + 0.8, 'a soft wet squelch', ['a camera shutter click', 'a gun being cocked', 'a mouse click', 'a match being struck']),
     ('the valley, air only', 30.3, 32.0, 'wind blowing across an open field', ['static white noise hiss', 'ocean waves on a beach', 'a waterfall', 'rain']),
     ('the ox', 35.05, 35.9, 'an ox or a cow grunting, snorting', ['a lion growling', 'a man coughing', 'a dog barking', 'a pig oinking']),
-    ('the crows', 35.4, 36.8, 'birds taking off, wings flapping', ['cloth flapping', 'a whoosh', 'applause', 'paper rustling']),
+    ('the crows', 35.4, 36.8, 'crows taking off, wings flapping and cawing', ['cloth flapping', 'a whoosh', 'applause', 'paper rustling']),
     ('the landing', mf.T_LAND - 0.1, mf.T_LAND + 2.2, 'a colossal weight landing', ['a door closing with a latch', 'a wooden crate dropped', 'a drawer closing', 'coins dropping']),
-    ('THE STROKE', mf.T_STROKE - 0.2, mf.T_STROKE + 5.1, 'an enormous bronze bell struck once', ['a gong', 'a singing bowl', 'a doorbell', 'a cinematic boom']),
+    ('THE STROKE', mf.T_STROKE - 0.2, mf.T_STROKE + 2.8, 'an enormous bronze bell struck once', ['a gong', 'a singing bowl', 'a doorbell', 'a cinematic boom']),
     ('the run', mf.T_RUN + 0.2, mf.T_ARRIVE - 0.1, 'a man running in wet mud', ['footsteps on a hard floor', 'sneakers squeaking on a gym floor', 'a horse galloping', 'hands clapping']),
     ('the arrival and the roar', mf.T_ARRIVE - 0.1, mf.TG, 'the roar of a rockslide, an avalanche of rock', ['a jet engine', 'strong wind in a microphone', 'a train passing', 'ocean waves']),
     ('the cup', mf.TG + 0.1, mf.TG + 4.5, 'a large bell ringing on after being struck, in a cathedral', ['a synthesizer drone', 'an orchestral chord', 'tinnitus, a sine tone', 'applause']),

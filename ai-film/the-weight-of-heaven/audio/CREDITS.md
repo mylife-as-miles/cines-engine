@@ -44,3 +44,12 @@ Every file made by `tools/sfx_make.py` for the opening (movement I). What each o
   25 November 2026, so the only recordings are the three above, taken from this repository.
 
 - `audio/sfx/wind_vale.flac`: ground wind for Anvil Vale. Original, synthesized by `tools/sfx_make.py` (`synth_wind_altitude`, seed 31, resonances 170 to 700 Hz), 26 November 2026. No samples, no service.
+
+## Movement I, cut v9: the replacement effects (`audio/sfx/v9/`)
+
+Made on 26 November 2026 by `tools/foundry_v9.py`, to replace the video model's own effects and the synthesized winds (the list is appendix C of `edit/reviews/I_bell_v8_sound_effects.md`). All 25 files are original and were made on this machine: nothing was downloaded, nobody else's recording is in them, and nothing was paid for. Each file's prompt or recipe, seed, cut and earshot result is in `audio/sfx/v9/manifest.json`. Status: candidates, not yet heard by the author.
+
+- **Generated locally with Stable Audio 3.0 Small SFX** (Stability AI Community License, as described above; attribution: Stable Audio 3.0 Small, Stability AI): `rockfall_boom`, `rockfall_body_a`, `rockfall_body_b`, `ox_snort`, `bowl_on_stone`, `hoe_chop`, `bowl_taken`, `grab_run_up`, `run_breath`, `bowl_slop`, `bell_landing_big`, `chains_heavy`, `bell_ram_clang`, `wind_vale_farmland`, `wind_altitude_arches`, `applause_gloved_vast`, `bowl_buzz_on_stone`. Modified: cut, levelled; three slowed, three low-passed, two beds made stereo from themselves.
+- **earshot catalogue designs** (`earshot make`, MIT, as described above; computed locally, no audio file ships with it): `wind_vale_field` (`wind/open`), `rockfall_crack` (`break/rock` over `explosion/far`), `child_steps_mud`, `boots_away_mud`, `run_boots_mud` and `wax_press_soft` (all `step/mud`), `wax_peel` (`tape/peel`). Modified: cut, re-pitched, low-passed, layered.
+- **Both, layered**: `crows_burst` (a generated take with `wings/flap` under it).
+- Added by the lead for the mix: `crow_caw_1` and `crow_caw_2`, earshot catalogue design `crow/caw` (`earshot make`, seeds 3 and 8), computed locally.

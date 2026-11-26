@@ -103,6 +103,20 @@ Five reviewers, 26 November (`edit/reviews/I_bell_v8_sound_review.md`): average 
 | 59 | **A struck bell needs its first second.** Cut 0.42 s after the blow, the stroke stopped reading as a bell (the ear-model's match fell from 91 % to 57 %). Hold a struck sound across the cut, then let it fall. | Cut v8 at 46.2 s. | Every stroke, impact and voice carried over a cut. |
 | 60 | **Ask a panel before calling a mix done, and brief it with the layers.** Laying every layer out alone on the film's clock let each reviewer name the source of a fault, down to the line of the tool. | `tools/stems_v8.py`, the five reviews. | Every mix. |
 
+## From the sound rebuild of cut v9
+
+Movement I's sound rebuilt as one session on the film's clock, 26 November (`edit/I_bell_v9.md`, `tools/mix_film.py`).
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 61 | **A sound that passes alone can fail in company.** The hoe alone read as a hoe (91–97 %) and the child's steps as steps (100 %); together they read as "a sword drawn" (92 %). Test sounds in the combination they play in, and lower the lesser one until both survive. | The vale, 17.9–20.8 s. | Every layered Foley passage. |
+| 62 | **Test a sound on its own world's layers when another world's tail lies over it.** In the full mix the hoe's window sits under the answer's tail and failed; on the valley's layers it passed (95 %). A miss in the mix does not say which layer is at fault. | `tools/qc_film.py`, the hoe. | Every check made across a cut. |
+| 63 | **What enters beside a sound changes what it is.** The stroke read as a doorbell because the valley's air came in under it. Bringing that air in 0.8 s later and ducking the cathedral's air 6 dB gave the bell back (z 3.7). Keep the air clear round the film's biggest sound. | The stroke, 45.8–47.3 s. | Every climax. |
+| 64 | **Hold a layer at its own ceiling.** The arrival was taking 4.5 dB of the master limiter. Limiting the rock layer by itself left the master's limiter only the stroke. | `tools/mix_film.py`, the rock layer. | Every mix with more than one loud event. |
+| 65 | **When every item fails a check, suspect the check.** All 25 foundry sounds read as failed because the mixer looked for them one level too high in the manifest. | `tools/mix_film.py`, `Foundry`. | Every tool that reads another tool's records. |
+| 66 | **The local model makes textures better than voices.** Rock, mud, wind and wax passed; the ox, the crows and a bowl on stone did not, in context. Short animal calls and small impacts are where to expect retakes or recordings. | `audio/sfx/v9/manifest.json`. | Planning any local effects list. |
+| 67 | **Quiet needs a floor.** Fading the bed right out for the dust left stretches of digital silence, which a player hears as the sound switching off. Hold a bed low (here 17 dB down) instead of at zero. | The dust, 37.5–39.4 s. | Every designed silence. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
