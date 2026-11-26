@@ -90,6 +90,19 @@ The author rejected Q03A t1 (26 November): "I don't like how it looks it's not c
 | 53 | **A face running at the camera carries a disaster.** The run, handheld and frontal with the dust wall behind, came back the strongest shot below Orison at the first attempt: two readable faces, one clear action, the threat in the same frame. It is the shot with the fewest instructions per second. | Q03B t1, shot 3. | The valley, the landing. |
 | 54 | **A wrong event in a locked-off shot can be re-authored from its own pixels.** The take gave a block falling from above; the film needed the mountain's face letting go. The clean plate (the median of the frames before anything moves) supplies the mountain; a ragged matte cut from it becomes the slab; fissures, a slip and a scar are drawn in; and the take's own rubble and dust carry the ending, joined by a four-frame dissolve at the moment the two look alike. Keep everything the event must not touch (here the sky above the rim) on the clean plate for the whole shot. Check the composite for anything the tricks copy by accident: a detail swap carried the farmer across the frame as a ghost until its mask was kept to the cliff. | Q03B t1 shot 1, `tools/vfx_q03b_s1.py`. | Every locked-off shot whose event is wrong but whose elements are right. |
 
+## From the sound audit of cut v8
+
+Five reviewers, 26 November (`edit/reviews/I_bell_v8_sound_review.md`): average 3.7 out of 10. Four of its ten agreed problems were faults in my editing.
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 55 | **Never cut a new film out of an old mix.** Each combined cut sliced the last finished master and patched the seams, so the inserts inherited fades, rides and reverb tails written for another cut: a hall tail chopped at one join came back alone at the next, the choir became three stubs, the bell's note was seven seconds played twice. When the picture changes, rebuild the sound from its layers on the new clock. | Cuts v6 to v8, `tools/combine_bell_vale.py`, `tools/combine_film_v8.py`. | Every re-cut. |
+| 56 | **Check a join at the scale of a fault.** I reported "no gap, no click" from levels read in 100 ms steps; at 5 ms there was a 20 ms hole after the stroke, an 82 ms gap before the cup, a one-sample click and a notch inside a word. Fades laid end to end make holes: overlap them. | Cut v8 at 17.7, 39.4, 46.2 and 57.05 s. | Every edit point. |
+| 57 | **Music does not wait for the picture.** A cue that stops when the film leaves a place and resumes from the same bar says time stood still there. Lay music on the film's clock and change its perspective, or cut it on its own breaths; never pause it. | The choir in cuts v6 to v8. | Every intercut. |
+| 58 | **Removing a fault is not designing its absence.** Taking the model's drone out left the valley with no low end at all, a wind that reads as hiss and a tremor with no sound. Whatever is removed, decide what the world sounds like without it. | The vale, `tools/mix_vale.py`. | Every clean-up. |
+| 59 | **A struck bell needs its first second.** Cut 0.42 s after the blow, the stroke stopped reading as a bell (the ear-model's match fell from 91 % to 57 %). Hold a struck sound across the cut, then let it fall. | Cut v8 at 46.2 s. | Every stroke, impact and voice carried over a cut. |
+| 60 | **Ask a panel before calling a mix done, and brief it with the layers.** Laying every layer out alone on the film's clock let each reviewer name the source of a fault, down to the line of the tool. | `tools/stems_v8.py`, the five reviews. | Every mix. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |

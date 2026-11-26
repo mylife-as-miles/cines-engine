@@ -1,12 +1,10 @@
 # Sound audit of movement I, cut v8: the mix as a technical object
 
-Reviewer: re-recording mixer, quality control. 26 November. Review only: nothing changed, nothing spent on fal, nothing committed.
-
-Everything is **measured** on `out/edits/I_bell_v8.wav` and its layers unless marked as a **listener's report** (earshot, or Gemini given sound only) or my **inference**. Nobody has heard this track. The numbers behind each defect, and where each fix goes in the tools, are in the tables at the end.
+Re-recording mixer's quality control, 26 November. Review only: nothing changed, spent or committed. Everything is **measured** on `out/edits/I_bell_v8.wav` and its layers unless marked **listener** (earshot, or Gemini given sound only) or **inference**. Nobody has heard this track. The tables hold the numbers and where each fix goes.
 
 ## 1. Verdict
 
-Nothing is clipped and the true peak is −2.1 dBTP, but all six picture cuts are built with a construction error and five places leave a mark: a reverb tail with no source that switches on over Serath, a 22 ms hole in the bell's ring, a roar that stops 74 ms before its cut, a click in the choir and a notch in the answer. The track is mastered 8 LU under web level, the valley's events are out of scale with the cathedral's (an ox louder than the opening bell, a bowl as loud as ninety tons landing), and a fifth of the film falls under −40 LUFS on a phone. The bell's "long note" is the same seven seconds played twice, not one note decaying.
+Nothing is clipped, but all six picture cuts are built with a construction error and five places leave a mark: a reverb tail with no source that switches on over Serath, a 22 ms hole in the bell's ring, a roar that stops 74 ms before its cut, a click in the choir and a notch in the answer. The track is mastered 8 LU under web level, the valley's events are out of scale with the cathedral's (an ox louder than the opening bell, a bowl as loud as ninety tons landing), and a fifth of the film falls under −40 LUFS on a phone. The bell's "long note" is the same seven seconds played twice, not one note decaying.
 
 ## 2. Scores
 
@@ -21,54 +19,51 @@ Nothing is clipped and the true peak is −2.1 dBTP, but all six picture cuts ar
 
 ## 3. Defects, worst first
 
-**D1. 18.8 and 26.5 s: the answer's reverb is cut off, then returns alone over Serath.** Its layer goes from −23.5 dBFS to nothing in 50 ms at 18.80. At 26.49, 1.2 s into Serath's shot, it returns from silence to −24.8 dBFS in 20 ms, 6.6 dB over the choir; the mix jumps 9.3 dB in 70 ms. It matches v5's stem after the answer exactly: the hall's tail of "Let no hand bring down", without the words. Listeners: earshot, "a cinematic hit with a long tail" (z +3.9); Gemini named the cut-off at 18.8 in 2 of 3 runs. Fix: let the answer ring out under the vale; take the dialogue stem out of Serath's section.
+**D1. 18.8 and 26.5 s: the answer's reverb is cut off, then returns alone over Serath.** Its layer falls from −23.5 dBFS to nothing in 50 ms at 18.80. At 26.49 it returns from silence to −24.8 dBFS in 20 ms, 6.6 dB over the choir. It matches v5's stem after the answer exactly: the hall's tail of "Let no hand bring down", without the words. Listener: earshot, "a cinematic hit with a long tail" (z +3.9); Gemini named the cut-off at 18.8 in 2 of 3 runs. Fix: let the answer ring out under the vale; no dialogue stem under Serath.
 
-**D2. 46.2 s: a hole in the bell's ring, 0.42 s after the stroke.** −13.1 dBFS, exact zero, then −26.1: 30.7 dB deep, 22 ms more than 10 dB down. Two 40 ms fades end to end; the record's check in 100 ms steps could not see it. Fix: overlap them, or one bell stem with a 60–80 ms ramp.
+**D2. 46.2 s: a hole in the bell's ring, 0.42 s after the stroke.** −13.1 dBFS, exact zero, then −26.1: 22 ms more than 10 dB down. Two 40 ms fades end to end; the record's check in 100 ms steps could not see it. Fix: overlap them.
 
-**D3. 57.1 s: the roar stops 73.7 ms (1.8 frames) before the cut,** in four samples from −16.5 dBFS; the mix sits at −46.1 dBFS until the cup. The take's audio is shorter than its picture. Fix: pad it by reflecting its last 150 ms, or slide the roar four frames later.
+**D3. 57.1 s: the roar stops 73.7 ms (1.8 frames) before the cut,** within five samples, from −16.5 dBFS; the mix sits at −46.1 until the cup. The take's audio is shorter than its picture. Fix: pad it, or slide the roar four frames later.
 
-**D4. 39.4 s: a click in the choir on the cut up.** The lead-in is cut in one sample (a −24.3 dBFS step), 8.4 dB over its surroundings above 2 kHz. Same build, masked, at 25.3 and 30.1 s. Fix: run each lead-in 5 ms past the join with a 5 ms fade-out.
+**D4. 39.4 s: a click in the choir on the cut up.** The lead-in is cut in one sample (a −24.3 dBFS step), 8.4 dB over its surroundings above 2 kHz. Same build, masked, at 25.3 and 30.1 s. Fix: a 5 ms overlap.
 
 **D5. 17.7 s: a 10 ms notch mid-phrase in the answer,** 17.4 dB deep. Fix: overlap the two 5 ms fades.
 
-**D6. Hierarchy (table B).** Ox and crows −15.3 LUFS, over the opening stroke (−16.5) and the Hierophant (−17.8); the bowl (−18.7) level with the bell's landing (−18.4), its peak 1.6 dB under the stroke's. The vale's spike limiter sits before +7 dB of gain. Fix: limiter after the gain; bowl at −24 LUFS or lower, ox about −20.
+**D6. Hierarchy (table B).** Ox and crows −15.3 LUFS, over the opening stroke (−16.5) and the Hierophant (−17.8); the bowl (−18.7) level with the bell's landing (−18.4). The vale's spike limiter sits before +7 dB of gain. Fix: limiter after the gain; bowl at −24 LUFS or lower, ox about −20.
 
 **D7. Level: −22.3 LUFS, 8.3 LU under web level** (section 5).
 
-**D8. The bell's note is seven seconds played twice (table H).** Over the valley it ends on v5's end-of-film fade, gone at 53.2 s. At the cup it restarts 8.4 dB above where it left off, the 382 and 577 Hz partials back from −50 and −67 dBFS to −31 and −37. The prime's level is right; the colour is that of a note 0.4 s old. Fix: rebuild the stem with a 19 s tail and play it through once.
+**D8. The bell's note is seven seconds played twice (table H).** Over the valley it ends on v5's end-of-film fade, gone at 53.2 s. At the cup it restarts 8.4 dB above where it left off, the 382 and 577 Hz partials back from −50 and −67 dBFS to −31 and −37: the colour of a note 0.4 s old. Fix: rebuild the stem with a 19 s tail and play it through once.
 
 **D9. Small speakers (table I).** Through a phone band the arrival thud loses 54.8 dB as a layer and the last note 15.7 dB: the arrival has no hit and the film ends 2.5 s early. Fix: a thud with a body (recipe, table L); a saturated copy under the last note.
 
-**D10. Width follows the source (table G).** Choir and winds are fully decorrelated; the video model's sound is mono, so the mountain's roar is the narrowest sound in the film. The last 3.5 s lean right by 3.3–4.8 dB. Fix: widen the roar; centre the bell's hum and prime.
+**D10. Width follows the source (table G).** Choir and winds are fully decorrelated; the video model's sound is mono, so the mountain's roar is the narrowest sound in the film. Fix: widen the roar.
 
-**D11. Cleaning residue (table J).** The cleaned layers show the signature of musical noise. The wind covers it in the vale, not in the run at 53.2–54.3 s. Listeners: earshot weak (z +2.6); Gemini a "whine" or "whistle" at 54.5–55.5 in 3 of 3 runs. Fix: a gentler floor; mute the layer under the roar.
+**D11. Cleaning residue (table J).** The cleaned layers show the signature of musical noise; the wind covers it in the vale, not in the run at 53.2–54.3 s. Listener: earshot weak (z +2.6); Gemini a "whine" or "whistle" at 54.5–55.5 in 3 of 3 runs. Fix: a gentler floor.
 
-**D12. Housekeeping.** Last sample −48.1 dBFS after a tail at −100. Thud cut at 55.96 s while at −49.5 dBFS. Stems 0.31 dB under the master. Choir heard twice: 17.3–18.9 again at 24.9–26.5; 29.6–30.1 again at 38.9–39.4.
+**D12. Housekeeping.** Last sample −48.1 dBFS after a tail at −100. Thud cut at 55.96 s while at −49.5 dBFS. Stems 0.31 dB under the master.
 
 ## 4. Looks like a fault in the numbers, probably intended
 
-- The drops of 12.5 dB at 46.2 s and 10 dB at 57.1 s (not the hole and the early stop inside them).
+- The drops of 12.5 dB at 46.2 s and 10 dB at 57.1 s.
 - The valley's empty bottom: −53 dBFS under 120 Hz, against −29 to −43 above.
-- Stretches at −36 to −48 LUFS (water, dust, two hushes); a range of 11 LU.
-- The 20 LU jump at the ox, as a startle.
-- The video model's 16 kHz ceiling: the full-band layers hold only −73 to −96 dBFS above it, so nothing changes at the cuts.
-- The bell wandering between the ears; the thud as pure sub; the bell 14 dB over the "silent" fall.
+- Stretches at −36 to −48 LUFS (water, dust, two hushes); the 20 LU jump at the ox.
+- The video model's 16 kHz ceiling: no other layer holds anything audible above it, so nothing changes at the cuts.
+- The thud as pure sub; the bell 14 dB over the "silent" fall.
 
 ## 5. Delivery level
 
-Master to **−18 LUFS integrated, true peak −1.5 dBTP**; do not chase −14. A trial sum of the layers (everything up 6 dB except the stroke, which has 0.6 dB of room; bowl, ox and roar trimmed; quiet beds 3 dB more) gives −18.3 LUFS with a limiter taking 1.3 dB off the stroke and 2.2 off the roar. The cost: the stroke's lead over the Hierophant falls from 7.0 LU to 2.1; at −16.6 LUFS they are equal. To buy it back without crushing, re-voice the strike with a softer first 50 ms.
+Master to **−18 LUFS integrated, true peak −1.5 dBTP**; do not chase −14. A trial sum of the layers (everything up 6 dB but the stroke, which has 0.6 dB of room; table A) gives −18.3 LUFS with a limiter taking 2.2 dB at most. The cost: the stroke's lead over the Hierophant falls from 7.0 LU to 2.1; at −16.6 LUFS they are equal. To buy it back without crushing, re-voice the strike with a softer first 50 ms.
 
-Inference, assuming a phone at normal volume gives 70 dB SPL for −14 LUFS material: this track averages 59 dB, the water and the hushes 45, the last note 36, in a room of 35–45. A laptop loses 1.6 LU and keeps the quiet.
+Inference, assuming a phone at normal volume gives 70 dB SPL for −14 LUFS material: this track averages 59 dB, the water and the hushes 45, the last note 36, in a room of 35–45.
 
 ## 6. What works and must be kept
 
-- No clipping; the master limiter takes 1.7 dB at most, on the stroke only.
+- No clipping; the master limiter takes 1.7 dB at most.
 - The three spoken lines within 0.2 LU of each other.
 - The AAC track: no offset, true peak −2.07 dBTP.
-- Beds that never go digitally dead; a clean first 100 ms.
-- No pre-echo from the cleaning; no hum line left in the valley.
+- Beds that never go digitally dead; no pre-echo from the cleaning; no hum line left in the valley.
 - Mono-safe: nothing cancels.
-- The arrival's order: thud, then the roar rising over 0.37 s.
 
 ---
 
@@ -88,6 +83,15 @@ Whole film: −22.3 LUFS integrated, range 11.0 LU, true peak −2.1 dBTP, loude
 | 6 the mountain, the run, 46.2–57.1 | −23.0 | −15.0 / −33.7 | −19.4 / −28.0 | −2.9 | −4.2 | 6 % |
 | 7 the cup, 57.1–64.1 | −29.1 | −25.2 / −50.4 | −26.9 / −34.3 | −16.2 | −6.2 | 52 % |
 
+Trial sums of the existing layers, in scratch only, with a true-peak limiter at −1.5 dBTP (bowl held to −9 dBFS, ox 4 dB and roar 3 dB under the rest, quiet beds 2–3 dB over it):
+
+| Everything but the stroke | Stroke | Integrated (LUFS) | Range (LU) | Stroke / line 1, loudest 400 ms | Lead | Limiter, most |
+| --- | --- | --- | --- | --- | --- | --- |
+| as delivered | as delivered | −22.3 | 11.0 | −10.8 / −17.8 | 7.0 | 1.7 dB (stroke) |
+| +4.5 dB | +0.6 dB | −19.5 | 10.3 | −10.1 / −13.6 | 3.5 | 1.3 dB (stroke) |
+| +6 dB | +0.6 dB | −18.3 | 10.4 | −10.0 / −12.1 | 2.1 | 2.2 dB (roar), 1.3 (stroke) |
+| +8 dB | +0.6 dB | −16.6 | 10.6 | −10.0 / −10.2 | 0.2 | 3.5 dB (roar); 13 events touched, lines included |
+
 Film time with 400 ms loudness under −35 / −40 / −45 LUFS: full band 9.0 / 2.4 / 0.8 s; phone band (300 Hz–8 kHz mono) 21.9 / 12.6 / 4.8 s; phone with a 500 Hz corner 28.6 / 17.6 / 6.9 s; laptop (180 Hz high-pass, half width) 13.6 / 3.2 / 1.4 s.
 
 ### B. Hierarchy: the loudest 400 ms of each event (measured, LUFS)
@@ -106,6 +110,8 @@ Film time with 400 ms loudness under −35 / −40 / −45 LUFS: full band 9.0 /
 | The press, 27.5 | −22.2 | −24.6 |
 | The lift, 29.1 | −24.9 | −28.4 |
 
+Read every 10 ms full band and every 50 ms in the phone band; the standard reading every 100 ms gives the stroke −11.1. The whoosh is left out: its window takes in the stroke.
+
 ### C. The six picture cuts (measured on the mix)
 
 | Cut (s) | 50 ms before → after (dBFS) | Hole | Sample step | Reading |
@@ -115,7 +121,7 @@ Film time with 400 ms loudness under −35 / −40 / −45 LUFS: full band 9.0 /
 | 30.083 | −36.5 → −37.1 | 11.5 dB for 3 ms, in the wind | none | negligible |
 | 39.375 | −28.6 → −29.1 | 8.9 dB for 1 ms | choir 0.061 left / 0.029 right; highs +8.4 dB | click (D4) |
 | 46.208 | −16.5 → −29.0 | 30.7 dB; 22 ms over 10 dB; 8 ms over 20 dB; exact zero | none | dropout (D2), then the intended drop |
-| 57.125 | −48.4 → −27.5 | 74 ms at −46.1 between −13.2 and −27.0 | roar ends in 4 samples at 57.0513 | gap, sound early (D3) |
+| 57.125 | −48.4 → −27.5 | 74 ms at −46.1 between −13.2 and −27.0 | roar ends within 5 samples at 57.0513 | gap, sound early (D3) |
 
 File head: first sample zero, beds rise from −126 to −60 dBFS over 0.47 s, no step. File tail: −60 dBFS at 63.9 s, −100 at 64.11, then the last 12 samples rise to −49.6 (left) and −48.1 (right).
 
@@ -148,6 +154,8 @@ File head: first sample zero, beds rise from −126 to −60 dBFS over 0.47 s, n
 | 57.0513 | roar, production | source runs out | D3 |
 | 57.125–57.145 | the cup | 20 ms in | clean |
 | 63.1–64.1 | all | about 1 s out | spike on the last 12 samples (D12) |
+
+Choir material heard twice (waveform correlation): 17.3–18.9 s again at 24.9–26.5 (0.79–0.83); 29.6–30.1 again at 38.9–39.4 (0.88). The valley's last 0.35 s of wind before 25.3 is likewise replayed as the lead-in at 29.7–30.1.
 
 ### E. Spectrum by section (measured, octave bands, dB relative to the section's total)
 
@@ -207,7 +215,7 @@ The source takes are AAC-LC, 32 kHz, 130 kb/s. In 1 kHz bands the model's layers
 | rope creak / whoosh / paper | +0.98 to +1.00 | 9.5 to 12.4 | +5.8 / +4.3 / +5.0 (panned left) |
 | press, lift | +1.00 | 16.0 | −2.8 (panned right) |
 
-Lopsided for more than a second: 3.5–5.5 s, right by 3.4–6.5 dB (the opening bell's tail); 60.0–63.5 s, right by 3.1–4.8 dB. Nothing is hard-panned.
+In mono the seal loses 2.3 LU, the cup 2.1, the answer and the choir 2.9 dB, the winds 2.8 dB; the film as a whole 0.9 LU. Lowest correlation in any half second: −0.06. Lopsided for more than a second: 3.5–5.5 s, right by 3.4–6.5 dB (the opening bell's tail); 60.0–63.5 s, right by 3.1–4.8 dB. Nothing is hard-panned.
 
 ### H. The bell's long note (measured on the bell layer)
 
@@ -220,7 +228,7 @@ Lopsided for more than a second: 3.5–5.5 s, right by 3.4–6.5 dB (the opening
 | Cup, start, 57.18–57.58 | −27.1 | −36.7 | −31.0 | −36.6 | 321 |
 | Cup, 62.5–62.9 | −36.0 | −37.9 | −50.5 | −66.4 | 169 |
 
-Decay in the stem: 3.7 dB a second for the first 1.2 s, then 1.4 (the stretch v5 rides up by 4 dB), then 28.7 in its last second. By partial: the prime 0.4 dB a second, 382 Hz 3.2, 577 Hz 5.3. Bell against everything else: +18.3 dB at the stroke, +14.1 over the fall (46.3–49.6), −6.7 at the wall, −11.2 as the run begins, +21.2 in the cup's first second, +5.6 under the applause, +21.1 in black.
+The cup's copy of the note against the valley's: envelopes correlate 1.000, 0.75 dB apart. The prime at the cup (−36.7 dBFS) is about where one continuous note would have it (inference: −37, from its decay of 1.35 dB a second once v5's 4 dB ride is taken out); the 382 and 577 Hz partials are 20 and 40 dB stronger than that note would still carry. Decay in the stem: 3.7 dB a second for the first 1.2 s, then 1.4 (the stretch v5 rides up by 4 dB), then 28.7 in its last second. By partial: the prime 0.4 dB a second, 382 Hz 3.2, 577 Hz 5.3. Bell against everything else: +18.3 dB at the stroke, +14.1 over the fall (46.3–49.6), −6.7 at the wall, −11.2 as the run begins, +21.2 in the cup's first second, +5.6 under the applause, +21.1 in black.
 
 ### I. Through a phone (measured: 300 Hz–8 kHz, fourth order, mono; RMS, dBFS)
 
@@ -262,6 +270,11 @@ On a phone the bell over the fall has sunk to the wind's level by 49 s (both −
 | Roar limiter (ceiling −8) | never engages; raw peak −9.4 dBFS. The roar is not processed beyond gain |
 | Master limiter | up to 1.7 dB on THE STROKE, nothing elsewhere |
 | Clipping | none; 8 and 5 samples within 0.05 dB of the peak |
+| The bowl's peak | −3.7 dBFS in the mix, third highest in the film (stroke −2.1, roar −3.0) |
+| Residue against the wind, vale bed 20.4–21.2 s | 7.8 / 12.9 / 7.4 / 12.4 dB under the wind at 105–300 Hz / 0.3–1 / 1–3 / 3–8 kHz |
+| Cleaned layer against the wind, the run 53.2–54.3 s | 8.2 dB under at 0.3–1 kHz; 4.4 and 6.1 dB over at 1–3 and 3–8 kHz |
+| Level flutter of the vale bed in 20 ms frames, raw → cleaned | 1.6 / 2.0 / 3.5 dB → 4.9 / 5.7 / 8.3 dB (0.3–1 / 1–3 / 3–8 kHz) |
+| "Cleaned production" under the roar | correlates +0.57 to +0.69 with the raw roar; 10 dB under it in the mix at 56–57 s |
 | Layers when off | digital silence, or 1-bit chatter at −135 to −143 dBFS in the bell layer, 17.4–27.0 s |
 | Lowest 100 ms inside the film | −52.3 dBFS at 38.8 s; never digital zero for more than 2 samples |
 | DC | under −86 dBFS in every layer |
@@ -292,7 +305,7 @@ Gemini cannot resolve events of 20 ms; its silence on D2 and D4 is not evidence 
 | D8 | `tools/mix_bell.py`, then `combine_film_v8.py` | build the bell stem 19 s past the stroke (the series synth already runs 20 s); far bell = `B[c3:c3 + 10.92 s]` at −13 dB, low-passed; cup = `B[c3 + 10.92 s:]` at room level, no low-pass; one fade from 63.1 s |
 | D9, thud | `tools/mix_q03b.py` | the present 80-to-34 Hz sweep; plus a sine sweep 220 to 110 Hz, 10 ms attack, 0.18 s decay, 8 dB under it; plus noise band-passed 500 Hz–2.5 kHz, 4 ms attack, 60 ms decay, 14 dB under it; the sum through `tanh` with 6 dB of drive. Accept when the loss through 300 Hz–8 kHz mono is under 8 dB (now 54.8) |
 | D9, last note | `tools/combine_film_v8.py` | a copy of the cup's bell through `tanh` (drive 12 dB), high-passed at 300 Hz, mixed 12 dB under: the 191.6 Hz prime is then implied at 383 and 575 Hz on small speakers |
-| D10 | `tools/mix_q03b.py` | the mixer's own `widen()` on the roar above 200 Hz, amount about 0.5; in `syn_bell_series`, pan 0 for the 95.8 and 191.6 Hz partials |
+| D10 | `tools/mix_q03b.py` | `widen()` from `tools/mix_bell.py` on the roar above 200 Hz, amount about 0.5; in `syn_bell_series`, pan 0 for the 95.8 and 191.6 Hz partials |
 | D11 | `tools/mix_vale.py`, `remove_steady` | `floor` 0.06 to 0.25 (12 dB of cut at most, not 24), `over` 1.8 to 1.3; in `mix_q03b.py` take the production layer to −60 dB from 54.9 s |
 | D12 | `tools/combine_film_v8.py` | a 5 ms fade on the last samples (or an IIR low-pass in place of the circular FFT one); 50 ms fade on the thud's end; drop `MASTER_GAIN_DB` from the stems |
 
@@ -300,4 +313,4 @@ Gemini cannot resolve events of 20 ms; its silence on D2 and D4 is not evidence 
 
 Loudness by ITU-R BS.1770 (my own K-weighting, checked against ffmpeg's `ebur128`: −22.3 LUFS, 11.0 LU, −2.1 dBTP both ways). True peak at 4× oversampling. Joins read in 1, 2 and 4 ms windows and sample by sample. Layers sum to the mix with a residual of −54.1 dBFS, all of it the 0.31 dB stem offset and the limiter on the stroke. Cleaning and limiter figures by running the tools' own functions on the source takes in scratch. The trial re-level in section 5 is a sum of the existing layers in scratch, not a proposed mix.
 
-Not checked: anything by ear; a real phone or laptop speaker (the phone is a band-pass model, and the sound-pressure figures rest on one stated assumption); how loud the D2 hole and the D4 click are to a person; the AAC encode at any bit rate other than the 256 kb/s already in `out/review/I_bell_v8.mp4`.
+Gemini was asked 19 times in all (six excerpts of the mix, sound only, one question; table K); earshot five times (one `describe`, four `match`). Not checked: anything by ear; a real phone or laptop speaker (the phone is a band-pass model, and the sound-pressure figures rest on one stated assumption); how loud the D2 hole and the D4 click are to a person; the AAC encode at any bit rate other than the 256 kb/s already in `out/review/I_bell_v8.mp4`.
