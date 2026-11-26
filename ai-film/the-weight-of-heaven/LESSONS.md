@@ -132,6 +132,16 @@ Three checks before the take, 26 November: an independent review, the reference 
 | 74 | **A cue is something seen, not a second.** A time stamp shares out the clip; it does not start a line. Start each line on a visible act ("after his one breath in"). | The repos' Seedance notes; Q04. | Every generation with speech. |
 | 75 | **Have a prompt reviewed cold before it is paid for.** One fresh reader, given the references and the lessons, found a fault in the first frame, a wrong eyeline and a shot a second too short, all free to fix. | `edit/reviews/Q04_v1_prompt_review.md`. | Every package. |
 
+## From Q04 t1 (the first take with speech)
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 76 | **A checked package comes back as boarded.** Six shots, five cuts within a quarter of a second of the plan, three lines word for word from the right mouths, at 13,253 characters and six images. The review, the measured timing and cues tied to things seen were all free. | Q04 t1 against `design/boards/Q04_board.jpg`. | Every generation. |
+| 77 | **An off-screen line over a listener's back lands where it is put.** "A second after the cut", with the speaker named "again, the same voice", gave the name 0.6 s into the shot, in the same voice, before she turned. | Q04 t1, shot 6. | Reaction shots; any word that may need replacing. |
+| 78 | **"Trembling" gives almost nothing.** Asked for fine ripples "from the first frame", on a first frame that showed still wine, the model moved the surface so little that it can only be found by amplifying the picture. A small motion needs its size stated (how far the highlight moves, how many rings can be counted), or it is added in the edit. | Q04 t1, shot 1. | The water inserts; any subtle motion. |
+| 79 | **The model lays a drone under a scene whatever the prompt says** (lessons 8 and 50, a third time): here about 55 to 60 Hz, 25 dB under the voices. Plan its removal as a step of every mix, and ask the model for as little sound as possible under speech. | Q04 t1. | Every take with speech. |
+| 80 | **A voice paragraph does not set pitch.** Asked for a thin, reedy tenor of seventy-two and a bass-baritone, the model gave two voices within a semitone of each other (111 to 124 Hz and 114 Hz). Measure pitch on every take; what the words cannot fix is a pitch shift in the mix or a voice made elsewhere. | Q04 t1. | The voice bible; every take with speech. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
