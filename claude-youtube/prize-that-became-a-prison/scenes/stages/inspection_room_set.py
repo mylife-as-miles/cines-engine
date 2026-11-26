@@ -29,8 +29,8 @@ def materials():
         # darker, glossier stainless with handling marks: at 0.66 the top under the troffer was a white lightbox;
         # strong brushing smears the troffer's reflection into a streak; contact darkening seats what stands on it.
         # The ghost patch is the cleaner rectangle where the tote stood (switched on for the Ch 11 return)
-        steel=mt.brushed_steel("bench steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.25, aniso=0.8, contact=0.05),
-        steel_top=mt.brushed_steel("bench top steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.25, aniso=0.8,
+        steel=mt.brushed_steel("bench steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.2, aniso=0.8, contact=0.05),
+        steel_top=mt.brushed_steel("bench top steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.2, aniso=0.8,
                                    contact=0.05, ghost=(0.0, -0.23, 0.3, 0.14)),
         steel_dark=mt.satin_metal("dark steel", (0.32, 0.33, 0.34), 0.4),
         hardware=mt.satin_metal("hardware", (0.55, 0.56, 0.57), 0.3),
@@ -50,7 +50,7 @@ def materials():
         dark=mt.rubber("void", (0.004, 0.004, 0.004), 0.9),
         box=mt.paint("glove box card", (0.5, 0.53, 0.58), 0.75, 0.02),
         glove=mt.plastic("nitrile", (0.08, 0.14, 0.32), 0.45),
-        line=mt.paint("floor line paint", (0.42, 0.34, 0.08), 0.5, 0.02),
+        line=mt.paint("floor line paint", (0.3, 0.25, 0.07), 0.6, 0.02),
         cable=mt.rubber("cable", (0.012, 0.012, 0.013), 0.5),
         sign=mt.paint("sign plate", (0.46, 0.47, 0.47), 0.5, 0.01),
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
@@ -58,7 +58,7 @@ def materials():
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
         tag=mt.paper("manila tag", (0.34, 0.24, 0.12), rough=0.85, fibre=0.05),
         tag_ring=mt.paper("tag ring", (0.4, 0.3, 0.16), rough=0.8),
-        twine=mt.twine("twine", (0.26, 0.21, 0.14), 0.9),
+        twine=mt.twine("twine", (0.2, 0.155, 0.1), 0.9),
     )
     return M
 
@@ -150,7 +150,7 @@ def shell():
 
 XL = [-XW, -1.8, -0.6, 0.6, 1.8, XW]                       # grid lines across x (1.2 m tiles)
 YL = [Y0, -2.1, -1.5, -0.9, -0.3, 0.3, 0.9, 1.5, 2.1, Y1]  # and along y (0.6 m)
-TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.075), "front": ((-1.2, -1.2), 0.0)}
+TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.04), "front": ((-1.2, -1.2), 0.0)}
 DIFFUSER = (1.5, 0.6)
 
 

@@ -215,18 +215,18 @@ def block_wall(name, upper, lower, split_z, height, rough=0.8):
     joints as bump, grime rising from the floor and settling into corners (ambient occlusion)."""
     m, nt, b = _new(name)
     o = _obj(nt)
-    # block coursing first: 400 x 200 mm units, 6 mm tooled joints, joints about 15 % darker; per-block tone is
+    # block coursing first: 400 x 200 mm units, 9 mm tooled joints, joints a quarter darker; per-block tone is
     # kept small (painted block reads even), so the coursing, not blotches, carries the texture
     br = _n(nt, "ShaderNodeTexBrick", offset=0.5, offset_frequency=2, squash=1.0, squash_frequency=2)
     br.inputs["Scale"].default_value = 1.0
-    br.inputs["Mortar Size"].default_value = 0.006
+    br.inputs["Mortar Size"].default_value = 0.009
     br.inputs["Mortar Smooth"].default_value = 0.25
     br.inputs["Brick Width"].default_value = 0.40
     br.inputs["Row Height"].default_value = 0.20
     br.inputs["Bias"].default_value = 0.0
     br.inputs["Color1"].default_value = (1.0, 1.0, 1.0, 1)
     br.inputs["Color2"].default_value = (0.95, 0.95, 0.95, 1)
-    br.inputs["Mortar"].default_value = (0.85, 0.85, 0.85, 1)
+    br.inputs["Mortar"].default_value = (0.75, 0.75, 0.75, 1)
     _link(nt, o, br.inputs["Vector"])
     sep = _n(nt, "ShaderNodeSeparateXYZ")
     _link(nt, o, sep.inputs["Vector"])
@@ -377,7 +377,7 @@ def twine(name, rgb=(0.26, 0.21, 0.14), rough=0.9):
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = rough
     b.inputs["Specular IOR Level"].default_value = 0.25
-    b.inputs["Sheen Weight"].default_value = 0.5
+    b.inputs["Sheen Weight"].default_value = 0.25
     b.inputs["Sheen Roughness"].default_value = 0.6
     _bump(nt, b, h, 0.3, 0.0003)
     return m

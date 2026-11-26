@@ -52,12 +52,12 @@ PROPS = {  # size, axis, grade
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.55, rough_add=0.3)),
     # the tote's leather is a red-brown that grades to salmon: turned toward orange (hue +0.045) and lifted, it lands
     # near (0.32, 0.15, 0.06) linear, cognac, the one warm thing in the room
-    "handbag-tote": (0.35, "long", dict(sat=0.9, val=1.15, hue=0.545, rough_add=0.2)),
+    "handbag-tote": (0.35, "long", dict(sat=1.0, val=1.1, hue=0.545, rough_add=0.2)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.55, val=0.5, rough_add=0.25)),
 }
 FINISH = {  # specular level and woven face (period m, bump strength) per prop
-    "dawn-suitcase": dict(spec=0.2, weave=(0.0012, 0.15)),
+    "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25)),
     "extra-bag-closed": dict(spec=0.22),
     "extra-bag-open": dict(spec=0.22),
     "handbag-tote": dict(spec=0.4),
@@ -66,14 +66,22 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
 # The scanner stands to the right of the officers: its 1.4 m housing is at shoulder height, so anywhere behind them its
 # top edge cuts through their necks in the wide. Mirrored in Y so its control monitor stands on the room side; the
 # tunnel and belt open to +X (housing x -1.1..+0.2 from its origin, console to +0.5, belt to +1.1)
-SCANNER = (1.4, 1.99)
+SCANNER = (1.65, 1.99)
 
 DAWN = (0.15, -0.80)        # in front of the tote, clear of it in the wide
-OFFICER_A = (-0.20, 0.62)  # the one asking, close to the bench, his open hand over the bags
-OFFICER_B = (-0.15, 1.30)  # the scanner operator, a step back by the machine, hands behind his back; in the wide he
+OFFICER_A = (-0.30, 0.62)  # the one asking, close to the bench, his open hand over the bags
+OFFICER_B = (-0.10, 1.32)  # the scanner operator, a step back by the machine, hands behind his back; in the wide he
                            # stands in the gap between the asking officer and the scanner housing
 # where the cast stands for each beat when it differs from the above (Ch 05 is later: both officers at the bench)
 BLOCKING = {"ch05": {"OfficerA": (0.30, 0.62), "OfficerB": (-0.65, 0.66)}}
+# Poses (rigged.pose_figure keys; "behind": hands behind the back). Dawn still, weight on one hip, arms down with the
+# hands loosely closed, head a little bowed; the officer asking looks down at the bags, his open, cupped right hand
+# over them (it reads in the wide, left of the suitcase); the other waits by the machine, hands behind him
+POSES = {
+    "Dawn": {"head": (9, -3), "chest": (5, 4), "l_arm": (5, 7, 14), "r_arm": (3, 6, 9), "fingers": 40},
+    "OfficerA": {"head": (14, -4), "chest": (4, -3), "r_arm": (52, -6, 32), "l_arm": (6, 5, 14), "fingers": 42},
+    "OfficerB": {"head": (10, -4), "chest": (-2, 0), "fingers": 30, "behind": True},
+}
 
 FOCUS = {"fx_wide": (0.3, 0.1, 1.2), "fx_two": (0.1, 0.0, 1.35), "fx_overhead": (0.0, 0.0, 1.0), "fx_empty": (0.2, 0.08, 1.1)}
 CAMERAS = {
@@ -83,11 +91,12 @@ CAMERAS = {
     # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it. A little
     # bench's centre toward Dawn, so her head clears the bottom edge and the scanner's foot stays out of the top
     "overhead": dict(loc=(0.05, -0.15, 5.3), aim=(0.05, -0.146, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
-                     above_ceiling=True, exposure=-3.3),
+                     above_ceiling=True, exposure=-3.6),
     # Ch 00: the tag on the suitcase's top, from Dawn's side; the zip pulls as bokeh at the bottom, the officer an
     # out-of-focus silhouette beyond (cheated into the gap between the trolley tubes for this angle)
-    "tag": dict(loc=(0.487, -0.307, 1.612), aim=(0.455, 0.058, 1.334), lens=50, focus="tag_hole_focus", fstop=1.8,
-                beat="ch00", cheat={"OfficerA": (0.30, 0.78)}, raking=True),
+    "tag": dict(loc=(0.487, -0.307, 1.612), aim=(0.455, 0.058, 1.352), lens=50, focus="tag_hole_focus", fstop=1.8,
+                beat="ch00", cheat={"OfficerA": (0.38, 0.58)}, raking=True, exposure=-3.2,
+                pose={"OfficerA": {"head": (24, 0), "chest": (8, 0), "r_arm": (12, 6, 26), "l_arm": (10, 6, 24), "fingers": 40}}),
     # Ch 00: low at the end of the bench, Dawn and the questioning officer facing each other over the bags, the door's
     # vision panel glowing between them
     "two_shot": dict(loc=(2.5, -0.45, 1.0), aim=(0.13, -0.05, 1.24), lens=30, focus="fx_two", fstop=3.5, beat="ch00"),
@@ -122,6 +131,12 @@ def clasp(holder, upper=(10, 0), fore=(34, 44), hand=(32, 40)):
 def behind(holder):
     """Hands held behind the back: upper arms a little back and out, forearms in toward the spine behind the hips."""
     clasp(holder, upper=(-14, -10), fore=(-22, 52), hand=(-26, 66))
+
+
+def pose(holder, p):
+    rigged.pose_figure(holder, {k: v for k, v in p.items() if k != "behind"})
+    if p.get("behind"):
+        behind(holder)
 
 
 def cloth(holder, item, rough=0.75, bump=0.25):
@@ -202,7 +217,8 @@ def scanner():
     by a blank plate, the monitor glowing blank, and a tray waiting on the belt."""
     m = st.materials()
     X0, Y0 = SCANNER
-    h = props.load("xray-scanner", size=1.45, axis="z", loc=(X0, Y0, 0), turn_deg=0, sat=0.4, rough_add=0.08)
+    # a shade darker than the generated beige: it is the biggest pale shape behind the cast
+    h = props.load("xray-scanner", size=1.45, axis="z", loc=(X0, Y0, 0), turn_deg=0, sat=0.4, val=0.45, rough_add=0.08)
     h.scale.y *= -1
     bpy.context.view_layer.update()
     w = lambda x, y, z: Vector((X0 + x, Y0 - y, z))  # the probe's metric space -> world (mirrored)
@@ -280,6 +296,8 @@ def apply_camera(name):
         o.hide_render = not show_cast
     if _STATE.get("holders"):
         block(beat, cfg.get("cheat"))
+        for n, h in _STATE["holders"].items():
+            pose(h, cfg.get("pose", {}).get(n, POSES[n]))
     for o in st.CEILING:
         o.visible_camera = not cfg.get("above_ceiling", False)
     for n in WILD:  # a wild wall: out for a camera standing where the wall is, as on a set
@@ -333,7 +351,7 @@ def build(cast=True):
     st.ceiling()
     st.door()
     st.notice_board()
-    st.back_wall(jx=SCANNER[0] - 0.52, gloves_xz=(2.38, 1.34), trays_xy=(-1.9, st.Y1 - 0.3))
+    st.back_wall(jx=SCANNER[0] - 0.52, gloves_xz=(2.38, 1.34), trays_xy=(-2.55, 2.0))
     st.floor_line(cx=SCANNER[0] + 0.05)
     st.bench(TOP)
     scanner()
@@ -347,7 +365,7 @@ def build(cast=True):
     st.luggage_tag(case, frame, hole=(0.0, -0.04), angle_deg=90.0)
     st.bounce()
     rake_light()
-    sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.03), (0, (st.Y0 + st.Y1) / 2, st.H / 2 - 0.01), 0.003)
+    sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.03), (0, (st.Y0 + st.Y1) / 2, st.H / 2 - 0.01), 0.002)
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
@@ -360,14 +378,8 @@ def build(cast=True):
         # heavier, in a suit a shade lighter
         a = officer("OfficerA", 179, 0.38, weight=0.42, muscle=0.62, proportions=0.6)
         b = officer("OfficerB", 171, 0.7, weight=0.68, muscle=0.38, proportions=0.35, suit=(0.24, 0.28, 0.36))
-        # Dawn still, weight on one hip, hands loosely clasped in front, head a little bowed; the officer asking
-        # looks down at the bags, his open, cupped right hand over them (it reads in the wide, left of the suitcase);
-        # the other waits by the machine, hands behind him
-        rigged.pose_figure(d, {"head": (9, -3), "chest": (5, 4), "fingers": 16})
-        clasp(d)
-        rigged.pose_figure(a, {"head": (14, -4), "chest": (4, -3), "r_arm": (30, 14, 55), "l_arm": (6, 5, 14), "fingers": 42})
-        rigged.pose_figure(b, {"head": (10, -4), "chest": (-2, 0), "fingers": 30})
-        behind(b)
+        for h in (d, a, b):
+            pose(h, POSES[h.name])
         place(d, (*DAWN, 0), facing(DAWN, OFFICER_A))
         place(a, (*OFFICER_A, 0), facing(OFFICER_A, DAWN))
         place(b, (*OFFICER_B, 0), facing(OFFICER_B, DAWN))
@@ -385,7 +397,7 @@ def rake_light():
     tag's lifted end throws a shadow. Kept out of the haze."""
     hole = bpy.data.objects["tag_hole_focus"].matrix_world.translation
     d = Vector((0.397, 0.918, 0.51)).normalized()
-    li = sk.area_light("tag_rake", tuple(hole + d * 1.8), (0.3, 0.05), 600.0, (0.84, 0.92, 1.0), spread_deg=60)
+    li = sk.area_light("tag_rake", tuple(hole + d * 1.8), (0.3, 0.05), 400.0, (0.84, 0.92, 1.0), spread_deg=60)
     li.visible_camera = False
     li.visible_volume_scatter = False
     tt = li.constraints.new("TRACK_TO")
