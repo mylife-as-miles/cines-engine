@@ -52,3 +52,16 @@ The author's copies came from their Drive. They are not in the repo; the frame b
 | Symbolic final image | Our ending already has one: the two suitcases, "YES" becoming "WHEN?". |
 
 **Where we cannot copy them.** Both films lean hard on licensed news footage (anchors, protests, raids, press conferences); much of their fast cutting is archive. We have no cleared archive, and the script allows only cleared material. More of our picture has to come from reconstruction, documents and maps, so those need more shots and more camera movement to keep the change every 5–10 s that retention needs.
+
+## Production references the author named (26 November 2026)
+
+All MIT-licensed; read as shallow clones, used as method, never run blind. Paid generation in them (fal image-to-3D, GPT Image) is not used without the author's go.
+
+| Repo | What we take |
+| --- | --- |
+| [apekshik/anyscene](https://github.com/apekshik/anyscene) | Scene brief and dials, practical-light-first lighting, homogeneous haze (density about 0.01–0.02), ffmpeg grades, grounding and clearance checks, the critic's bar (no score below 6, mean 7 or more). |
+| [apekshik/anyshot](https://github.com/apekshik/anyshot) | Camera grammar and `camrig` (already vendored in the skill): shots.json, previews, clearance, finals. |
+| [apekshik/anymachine](https://github.com/apekshik/anymachine) | Props modelled part by part in Python: part list in the header, real geometry for the outline, detail under 8 mm baked, metres and −Y front, 1,500–4,000 triangles a prop, a second pass after review. |
+| [apekshik/anywreck](https://github.com/apekshik/anywreck) | Wear and dents on closed props (suitcase shells, steel benches): runs on this CPU through a bpy-first launcher, about a minute a prop; rust only as vertex attributes. |
+| [apekshik/anykit](https://github.com/apekshik/anykit) | Cohesion: one style paragraph and one invented maker for every prop, real-world scale, a lineup with a scale bar, one critic for the whole set. |
+| [Leonxlnx/cinetic](https://github.com/Leonxlnx/cinetic) | Motion numbers for type and maps: calm reveals (fade 28 f, rise 22 f at 60 fps), the erode-and-rise word change for YES → WHEN?, human typing at 30 characters a second, a marker wipe in 10 f, rolling year digits, routes drawn in 48–60 f; holds of max(52, 36 + 7 × words) frames. Its launch-film checks (no one-word lines, no questions) do not apply to this film. |

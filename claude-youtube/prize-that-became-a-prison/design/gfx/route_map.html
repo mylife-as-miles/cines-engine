@@ -1,0 +1,95 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>route map</title>
+<style>html,body{margin:0;background:#04060a}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// Route map for chapters 02-03: Chicago -> Hong Kong (9 days) -> mainland China (about 9 more) -> Australia (planned).
+// draw(t) is pure: t in 0..1 is the animation clock; the renderer injects window.LAND (land_pacific.json) first.
+const W = 1920, H = 1080, K = 8.7, XF = 0.85, LON_C = 170, LAT_C = 18;
+// Longitudes west of 30W are shifted +360 (the land file is already unwrapped the same way), so the Americas sit east of Asia.
+const U = lon => (lon < -30 ? lon + 360 : lon);
+const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) * K];
+const PU = (lat, lon) => P(lat, U(lon));
+// The script names no city in mainland China, so China is a region (a soft glow), never a pin.
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], china: [29.5, 112.0], sydney: [-33.87, 151.21] };
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const span = (t, a, b) => ease((t - a) / (b - a));
+
+function gc(a, b, n = 160) {           // great-circle points between two [lat, lon]
+  const r = Math.PI / 180, v = ([la, lo]) => [Math.cos(la * r) * Math.cos(lo * r), Math.cos(la * r) * Math.sin(lo * r), Math.sin(la * r)];
+  const p1 = v(a), p2 = v(b), om = Math.acos(p1.reduce((s, x, i) => s + x * p2[i], 0)), out = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+    const q = p1.map((x, k) => s1 * x + s2 * p2[k]);
+    out.push(PU(Math.asin(q[2]) / r, Math.atan2(q[1], q[0]) / r));
+  }
+  return out;
+}
+function bend(a, b, lift, n = 60) {    // a short, gently curved leg for nearby places
+  const [x1, y1] = P(...a), [x2, y2] = P(...b), mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - lift, out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; out.push([u * u * x1 + 2 * u * t * mx + t * t * x2, u * u * y1 + 2 * u * t * my + t * t * y2]); }
+  return out;
+}
+function path(ctx, pts, f) {           // the first fraction f of a polyline
+  const n = Math.max(1, Math.floor((pts.length - 1) * f));
+  ctx.beginPath(); ctx.moveTo(...pts[0]);
+  for (let i = 1; i <= n; i++) ctx.lineTo(...pts[i]);
+  return pts[n];
+}
+function label(ctx, text, x, y, size, alpha, align = "left", weight = 500, family = "Inter", spacing = 0.2) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = "#e9e4da"; ctx.textAlign = align; ctx.textBaseline = "middle";
+  ctx.font = `${weight} ${size}px "${family}"`; ctx.letterSpacing = `${(size * spacing).toFixed(1)}px`;
+  ctx.fillText(text, x, y); ctx.restore();
+}
+function dot(ctx, x, y, a, ring) {
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = "#f2e6cf"; ctx.shadowColor = "rgba(242,230,207,0.8)"; ctx.shadowBlur = 14;
+  ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
+  ctx.shadowBlur = 0; ctx.strokeStyle = `rgba(242,230,207,${0.35 * a})`; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(x, y, 10 + 10 * ring, 0, 7); ctx.stroke(); ctx.restore();
+}
+
+function draw(t) {
+  const ctx = document.getElementById("c").getContext("2d");
+  const g = ctx.createRadialGradient(W * 0.5, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.7);
+  g.addColorStop(0, "#0c121a"); g.addColorStop(1, "#030508");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // graticule
+  ctx.strokeStyle = "rgba(120,150,180,0.07)"; ctx.lineWidth = 1;
+  for (let lon = 90; lon <= 300; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let lat = -60; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  // land
+  ctx.fillStyle = "#101820"; ctx.strokeStyle = "rgba(150,175,200,0.22)"; ctx.lineWidth = 1;
+  for (const r of window.LAND.rings) {
+    ctx.beginPath();
+    for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+  const leg1 = gc(CITY.chicago, CITY.hongkong), leg3 = gc(CITY.china, CITY.sydney);
+  const f1 = span(t, 0.05, 0.42), f2 = span(t, 0.5, 0.62), f3 = span(t, 0.7, 0.95);
+  ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.strokeStyle = "#efe3cb"; ctx.lineWidth = 2.6; ctx.shadowColor = "rgba(239,227,203,0.7)"; ctx.shadowBlur = 12;
+  if (f1 > 0) { path(ctx, leg1, f1); ctx.stroke(); }
+  ctx.restore();
+  if (f3 > 0) {          // the leg that never happened: planned, dashed, colder
+    ctx.save(); ctx.setLineDash([9, 11]); ctx.lineCap = "round"; ctx.strokeStyle = "rgba(170,190,210,0.6)"; ctx.lineWidth = 2;
+    path(ctx, leg3, f3); ctx.stroke(); ctx.restore();
+  }
+  const [cx, cy] = PU(...CITY.chicago), [hx, hy] = PU(...CITY.hongkong), [sx, sy] = PU(...CITY.sydney), [mx, my] = PU(...CITY.china);
+  if (f2 > 0) {          // mainland China: a region that warms up, not a destination
+    ctx.save(); ctx.globalAlpha = f2; const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 120);
+    rg.addColorStop(0, "rgba(239,227,203,0.22)"); rg.addColorStop(1, "rgba(239,227,203,0)");
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(mx, my, 150, 110, -0.2, 0, 7); ctx.fill(); ctx.restore();
+  }
+  dot(ctx, cx, cy, span(t, 0.0, 0.05), span(t, 0, 0.1));
+  dot(ctx, hx, hy, span(t, 0.4, 0.44), span(t, 0.4, 0.5));
+  if (f3 > 0.98) { ctx.save(); ctx.globalAlpha = 0.55; ctx.strokeStyle = "#aabed2"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(sx, sy, 7, 0, 7); ctx.stroke(); ctx.restore(); }
+  label(ctx, "CHICAGO", cx + 18, cy + 26, 21, span(t, 0.0, 0.06));
+  label(ctx, "HONG KONG", hx - 20, hy + 28, 21, span(t, 0.4, 0.46), "right");
+  label(ctx, "9 DAYS", hx - 20, hy + 70, 44, span(t, 0.44, 0.5), "right", 600, "Inter Display", 0.06);
+  label(ctx, "MAINLAND CHINA", mx - 40, my - 60, 21, span(t, 0.55, 0.62), "right");
+  label(ctx, "ABOUT 9 MORE DAYS", mx - 40, my - 22, 30, span(t, 0.58, 0.65), "right", 600, "Inter Display", 0.06);
+  label(ctx, "AUSTRALIA", sx + 20, sy + 4, 21, 0.6 * span(t, 0.9, 0.96));
+  label(ctx, "2014", 96, 92, 26, 0.85 * span(t, 0, 0.05), "left", 500, "Inter", 0.3);
+}
+window.draw = draw;
+</script></body></html>
