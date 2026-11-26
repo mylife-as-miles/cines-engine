@@ -479,13 +479,14 @@ def cell(ox, oy):
     B("cell_slot_frame_top", (sx - sw / 2, y1 - 0.05, sz + sh - 0.025), (sx + sw / 2, y1 - 0.03, sz + sh),
       [M["bar steel"]], bevel=0.003)
     pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.2)
-    B("cell_slot_pane", (sx - sw / 2, y1 - 0.03, sz + 0.025), (sx + sw / 2, y1 - 0.02, sz + sh - 0.025), [pane],
-      bevel=0.0)
+    glass = B("cell_slot_pane", (sx - sw / 2, y1 - 0.03, sz + 0.025), (sx + sw / 2, y1 - 0.02, sz + sh - 0.025),
+              [pane], bevel=0.0)
+    glass.visible_shadow = False       # the night comes through it (an emitter is opaque to light: round 2 had no patch)
     # the night beyond the slot: a small hard source well behind it, its cone flattened to the slot, so a blade of
     # cool light crosses the haze and lays the slot, barred, on the floor in front of the bunk
     mid = o + Vector((sx, y1 - 0.02, sz + sh * 0.45))
     d = (o + Vector(WINDOW_PATCH) - mid).normalized()
-    li = spot("cell_window_light", tuple(mid - d * 3.0), tuple(mid), WINDOW_W, 15.0, 0.12, radius=0.012,
+    li = spot("cell_window_light", tuple(mid - d * 3.0), tuple(mid), WINDOW_W, 18.0, 0.12, radius=0.012,
               colour=(0.6, 0.72, 1.0))
     li.scale = (1.0, 0.42, 1.0)
     objs.append(li)

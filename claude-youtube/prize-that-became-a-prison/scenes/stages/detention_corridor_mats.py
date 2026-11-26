@@ -215,24 +215,36 @@ def _combine1(nt, v):
 
 
 def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), path_w=0.55, lines=0.0,
-                line_rgb=(0.34, 0.30, 0.17), joint=2.4, joint_off=0.0, drain=None, rough=0.24):
-    """Painted (epoxy) concrete floor in world space: satin paint that shows the fittings as soft reflections, worn
-    through to grey concrete along the walking line down the middle (|x| < path_w), heel marks, saw-cut joints
-    across every `joint` metres, optional worn painted guide lines at |x| = `lines`, and a damp, darker, glossier
-    patch with rust staining round the floor drain at `drain` = (x, y)."""
+                line_rgb=(0.34, 0.30, 0.17), joint=2.4, joint_off=0.0, drain=None, rough=0.6, wall_x=None,
+                damp_r=0.38):
+    """Painted (epoxy) concrete floor in world space: an eggshell paint (roughness about `rough`) worn through to
+    lighter, rougher grey concrete along the walking line down the middle (|x| < path_w), darker and glossier
+    paint along the 0.3 m by each wall (`wall_x` = the wall's |x|), where no one walks, with grime in the corner,
+    heel marks, saw-cut joints across every `joint` metres, optional worn painted guide lines at |x| = `lines`,
+    and ONE damp patch: a noise-edged blob of radius about `damp_r` round the floor drain at `drain` = (x, y),
+    darker by a quarter and glossy, with rust staining at the grate. The bump is broad and weak so the fittings
+    reflect as soft streaks, never as glitter."""
     m, nt, b = _new(name)
     p = _world(nt)
     wx, wy, wz = _xyz(nt, p)
     ax = _math(nt, "ABSOLUTE", wx)
     big = _noise(nt, p, 0.7, 4.0, 0.6)
-    edge = _math(nt, "ADD", ax, _maprange(nt, big, 0.3, 0.7, -0.25, 0.25))
-    path = _maprange(nt, edge, path_w - 0.15, path_w + 0.25, 1.0, 0.0)
-    path = _math(nt, "MULTIPLY", path, _maprange(nt, _noise(nt, p, 2.4, 5.0, 0.6), 0.3, 0.7, 0.55, 1.0))
+    edge = _math(nt, "ADD", ax, _maprange(nt, big, 0.3, 0.7, -0.12, 0.12))
+    path = _maprange(nt, edge, path_w - 0.2, path_w + 0.12, 1.0, 0.0)
+    path = _math(nt, "MULTIPLY", path, _maprange(nt, _noise(nt, p, 2.4, 5.0, 0.6), 0.3, 0.7, 0.6, 1.0))
     # paint worn through in a speckled, ragged way where the path is
     pit = _noise(nt, p, 26.0, 4.0, 0.65)
     worn = _maprange(nt, _math(nt, "ADD", pit, _math(nt, "MULTIPLY", path, 0.42)), 0.78, 0.86, 0.0, 1.0)
     col = _mix(nt, _maprange(nt, big, 0.3, 0.7, 0.0, 0.25), paint, tuple(c * 1.25 for c in paint))
-    col = _mix(nt, _math(nt, "MULTIPLY", path, 0.35), col, tuple(c * 1.35 for c in paint))
+    col = _mix(nt, _math(nt, "MULTIPLY", path, 0.5), col, tuple(c * 1.45 for c in paint))
+    side = None
+    if wall_x:
+        # the 0.3 m by each wall: untrodden, darker paint that keeps its gloss
+        side = _maprange(nt, ax, wall_x - 0.36, wall_x - 0.2, 0.0, 1.0)
+        col = _mix(nt, _math(nt, "MULTIPLY", side, 0.55), col, tuple(c * 0.62 for c in paint))
+        corner = _maprange(nt, ax, wall_x - 0.07, wall_x - 0.01, 0.0, 1.0)
+        corner = _math(nt, "MULTIPLY", corner, _maprange(nt, _noise(nt, p, 5.0, 4.0, 0.6), 0.3, 0.7, 0.55, 1.0))
+        col = _mix(nt, _math(nt, "MULTIPLY", corner, 0.8), col, (0.012, 0.011, 0.01))
     conc = _mix(nt, _maprange(nt, _noise(nt, p, 60.0, 3.0, 0.6), 0.3, 0.7, 0.0, 1.0), bare, tuple(c * 0.75 for c in bare))
     col = _mix(nt, worn, col, conc)
     if lines:
@@ -256,28 +268,39 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         dx = _math(nt, "SUBTRACT", wx, drain[0])
         dy = _math(nt, "SUBTRACT", wy, drain[1])
         r = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
-        r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 3.5, 4.0, 0.6), 0.3, 0.7, -0.12, 0.12))
-        wet = _maprange(nt, r, 0.16, 0.55, 1.0, 0.0)
-        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.12, 0.32, 0.8, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
+        # a noise-edged blob, lobed by a broad noise and frayed by a finer one, about 2 * damp_r across
+        r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 2.2, 3.0, 0.55), 0.3, 0.7, -0.14, 0.14))
+        r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 11.0, 3.0, 0.6), 0.3, 0.7, -0.035, 0.035))
+        wet = _maprange(nt, r, damp_r - 0.1, damp_r + 0.04, 1.0, 0.0)
+        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.12, 0.3, 0.8, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
         col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.6), col, (0.075, 0.045, 0.022))
-        col = _mix(nt, _math(nt, "MULTIPLY", wet, 0.45), col, tuple(c * 0.55 for c in paint))
+        col = _mix(nt, 1.0, col, _combine1(nt, _maprange(nt, wet, 0.0, 1.0, 1.0, 0.75)), "MULTIPLY")
+        # the tide line where it last dried: a faint darker rim just outside the damp
+        tide = _math(nt, "MULTIPLY", _band(nt, r, damp_r + 0.04, damp_r + 0.075, 0.012), 0.35)
+        col = _mix(nt, tide, col, tuple(c * 0.7 for c in paint))
     ao = _ao(nt, 0.45)
     col = _mix(nt, _maprange(nt, ao, 0.35, 1.0, 0.7, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
-    rr = _maprange(nt, _noise(nt, p, 1.6, 4.0, 0.55), 0.3, 0.7, rough - 0.07, rough + 0.12)
-    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", path, 0.12))
-    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", worn, 0.35))
-    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", heel_m, 0.2))
-    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", jm, 0.5))
+    rr = _maprange(nt, _noise(nt, p, 1.6, 4.0, 0.55), 0.3, 0.7, rough - 0.05, rough + 0.05)
+    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", path, 0.1))
+    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", worn, 0.15))
+    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", heel_m, 0.1))
+    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", jm, 0.3))
+    if side is not None:
+        rr = _math(nt, "SUBTRACT", rr, _math(nt, "MULTIPLY", side, 0.16))
     if ln is not None:
         rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", ln, 0.1))
-    if wet is not None:
-        rr = _math(nt, "SUBTRACT", rr, _math(nt, "MULTIPLY", wet, 0.2))
     rr = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", rr, 0.95), 0.05)
+    if wet is not None:
+        # inside the blob the floor is damp: roughness 0.12-0.2, whatever the paint does
+        damp_r_ = _maprange(nt, _noise(nt, p, 6.0, 3.0, 0.6), 0.3, 0.7, 0.12, 0.2)
+        rr = _mix(nt, wet, _combine1(nt, rr), _combine1(nt, damp_r_))
+        rr = _xyz(nt, rr)[0]
     _link(nt, rr, b.inputs["Roughness"])
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", jm, -1.0), _math(nt, "MULTIPLY", worn, -0.25))
-    h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", _noise(nt, p, 300.0, 2.0, 0.5), 0.06))
-    _bump(nt, b, h, 0.3, 0.002)
+    # broad, weak relief: the slab's undulation (0.3-0.5 m features) and the joints; no fine grit in the normal
+    und = _bump(nt, b, _noise(nt, p, 2.6, 2.0, 0.5), 1.0, 0.004)
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", jm, -1.0), _math(nt, "MULTIPLY", worn, -0.12))
+    _bump(nt, b, h, 0.25, 0.002, extra=und.outputs["Normal"])
     return m
 
 

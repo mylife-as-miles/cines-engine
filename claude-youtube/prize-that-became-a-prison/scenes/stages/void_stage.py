@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import bpy  # noqa: E402
-from mathutils import Matrix, Vector  # noqa: E402
+from mathutils import Vector  # noqa: E402
 
 import people  # noqa: E402
 import props  # noqa: E402
@@ -43,19 +43,19 @@ AT = {"dawn": (0.0, 0.0), "cell": (40.0, 0.0), "bags": (-40.0, 0.0)}
 # the spots: height above the island, offset of the lamp toward the camera (-y), pool radius on the floor, watts
 # (E = P / (4 pi d^2); the stone skin's crown and the cell's floor land near 1.0 and 0.5 after the exposure)
 SPOTS = {
-    "dawn": dict(h=7.5, fwd=0.8, pool=1.15, watts=11500.0, blend=0.18),
+    "dawn": dict(h=7.5, fwd=1.1, pool=1.2, watts=11500.0, blend=0.18),
     # the cell's lamp nearly over the middle, its edge soft: the floor burns, the walls fall off upward into the dark
     # and the wall tops take a gentle line of light instead of a hard cone edge
     "cell": dict(h=7.6, fwd=0.3, pool=2.6, watts=13500.0, blend=0.45),
     "bags": dict(h=5.8, fwd=0.55, pool=1.15, watts=6000.0, blend=0.18),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab
-HAZE = {"dawn": 0.009, "cell": 0.006, "bags": 0.009}
+HAZE = {"dawn": 0.012, "cell": 0.006, "bags": 0.011}
 
 DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
-# head bowed (round 1's 15 + 5 read as looking straight ahead from chest height), shoulders a little forward, arms
-# hanging loose with the hands just in front of the thighs, fingers curled
-POSE = {"head": (27, 3), "neck": (11, 0), "chest": (7, 0), "l_arm": (7, 7, 14), "r_arm": (9, 6, 19), "fingers": 40}
+# head slightly bowed (15 + 5 read as looking straight ahead from chest height; 27 + 11 as hanging), shoulders a
+# little forward, arms hanging loose with the hands just in front of the thighs, fingers curled
+POSE = {"head": (20, 3), "neck": (8, 0), "chest": (6, 0), "l_arm": (7, 7, 14), "r_arm": (9, 6, 19), "fingers": 40}
 
 # the bags (island-local x, y, turn): the case standing, its front pocket turned three-quarters to the lens; the
 # duffel on its side beside it, a little forward, angled
@@ -64,7 +64,6 @@ DUFFEL = (0.27, -0.12, 17.0)
 # the bunk along the cell's left wall, its head against the back wall; its depth trimmed to a cell bunk's 0.98 m
 BUNK_DEPTH = 0.82
 
-_ = AT  # (short names for the camera table)
 D, C, G = AT["dawn"], AT["cell"], AT["bags"]
 
 
@@ -265,7 +264,9 @@ def _spot_and_haze(name, aim_xy, aim_z=0.0, haze_box=None):
     reach = math.dist(lamp, (ax, ay, aim_z))
     size = 2 * math.degrees(math.atan(cfg["pool"] / reach))
     st.spot(f"spot_{name}", lamp, (ax, ay, aim_z), cfg["watts"], size, cfg["blend"])
-    lo, hi = haze_box or ((ax - 5.0, ay - 5.0, 0.0), (ax + 5.0, ay + 5.0, cfg["h"] + 1.5))
+    # the box starts under the floor: a bottom face lying on the floor (z = 0) blacked the floor out for any camera
+    # outside the box (round 2: the pool under Dawn rendered 0-7 / 255)
+    lo, hi = haze_box or ((ax - 5.0, ay - 5.0, -0.2), (ax + 5.0, ay + 5.0, cfg["h"] + 1.5))
     st.haze(f"haze_{name}", lo, hi, HAZE[name])
 
 
@@ -280,7 +281,7 @@ def build_cell_island():
     bunk()
     # the haze stops at the back wall's outer face, so the window source behind it lights only the slot's blade
     _spot_and_haze("cell", (cx, cy + 0.15), st.SLAB,
-                   haze_box=((cx - 3.4, cy - 4.2, 0.0), (cx + 3.4, cy + st.CY + st.T, SPOTS["cell"]["h"] + 1.5)))
+                   haze_box=((cx - 3.4, cy - 4.2, -0.2), (cx + 3.4, cy + st.CY + st.T, SPOTS["cell"]["h"] + 1.5)))
 
 
 def build_bags_island():
@@ -310,7 +311,7 @@ def apply_camera(name):
         cam.data.clip_start, cam.data.clip_end = 0.05, 300.0
         sx, sy = cfg.get("shift", (0.0, 0.0))
         cam.data.shift_x, cam.data.shift_y = sx, sy
-    sc.cycles.sample_clamp_indirect = 4.0
+    sc.cycles.sample_clamp_indirect = 3.0
     sc.cycles.blur_glossy = 0.5
     for k, v in (("denoising_prefilter", "ACCURATE"), ("denoising_quality", "HIGH"),
                  ("denoising_input_passes", "RGB_ALBEDO_NORMAL")):

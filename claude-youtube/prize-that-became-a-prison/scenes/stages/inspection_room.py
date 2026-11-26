@@ -27,6 +27,7 @@ import bpy  # noqa: E402
 import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
+import cast as castkit  # noqa: E402
 import people  # noqa: E402
 import props  # noqa: E402
 import rigged  # noqa: E402
@@ -180,10 +181,11 @@ def cloth(holder, item, rough=0.8, bump=0.25, tint=None):
             for ln in list(b.inputs[sock].links):
                 nt.links.remove(ln)
         b.inputs["Roughness"].default_value = rough
-        # no sheen: under a top light the microfibre sheen on these vertical faces is what made dark cloth read pale
-        # (navy at 70 % of the stone face, the taupe suit equal to it)
+        # matt wool: no sheen and almost no dielectric specular. Under the troffer (a small source of very high
+        # radiance, overhead) the grazing specular of rough cloth was as bright as the stone's diffuse, so navy and
+        # the dark taupe both read pale grey, like the stone (the "suit reads as skin" note)
         b.inputs["Sheen Weight"].default_value = 0.0
-        b.inputs["Specular IOR Level"].default_value = 0.3
+        b.inputs["Specular IOR Level"].default_value = 0.04
         tc = nt.nodes.new("ShaderNodeTexCoord")
         nz = nt.nodes.new("ShaderNodeTexNoise")
         nz.inputs["Scale"].default_value = 400.0
@@ -241,19 +243,29 @@ def dawn():
     the stone (at people.py's 0.36 it read as bare skin under the troffer), plain weave, real hem thickness; her
     bun drawn in to the nape so from behind it sits at the back of the head."""
     h = people.dawn()
-    suit = cloth(h, "female_elegantsuit01", rough=0.85, bump=0.3, tint=(0.13, 0.125, 0.118))
+    suit = cloth(h, "female_elegantsuit01", rough=0.92, bump=0.3, tint=(0.14, 0.135, 0.128))
     if suit is not None:
         hem_thickness(suit, 0.006)
     bun = bpy.data.objects.get(f"{h['body']}_bun")
     if bun is not None:
         bun.data.transform(Matrix.Translation((0.0, -0.025, -0.02)))
+    # the suit's jacket is cut open down the front: without a blouse, the stone chest and waist show in the V and
+    # from the end of the bench she reads undressed. The body's open front, neck to waist, becomes a plain blouse
+    # (cast.blouse_v), a matt warm grey between the jacket and the stone
+    n = castkit.blouse_v(h, rgb=(0.24, 0.23, 0.215), depth=0.42, width=0.14)
+    bl = bpy.data.materials.get(f"blouse_{h.name}")
+    if bl is not None:
+        bb = bl.node_tree.nodes["Principled BSDF"]
+        bb.inputs["Specular IOR Level"].default_value = 0.04
+        bb.inputs["Roughness"].default_value = 0.92
+    print(f"INSPECTION Dawn blouse: {n} body vertices", flush=True)
     hands_stone(h)
     return h
 
 
 def officer(name, variant):
     h = people.officer(name, variant)
-    cloth(h, "male_elegantsuit01", rough=0.8, bump=0.25)
+    cloth(h, "male_elegantsuit01", rough=0.92, bump=0.25)
     hands_stone(h)
     return h
 
