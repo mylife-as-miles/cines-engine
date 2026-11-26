@@ -45,11 +45,12 @@ D_TOP = 0.753
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
-HEAD_CHAIR = (4.38, 0.02, 180.0 + 6.0)   # the father's chair: set back from the head, turned a little; 0.3 m of
-                                         # air behind it so its striped shadow on the end wall stands off the chair
+HEAD_CHAIR = (4.3, 0.02, 180.0 + 8.0)    # the father's chair: set back from the head (front feet ~12 cm past the
+                                         # table's end), turned a little; 0.35 m of air behind it so its striped
+                                         # shadow on the end wall stands off the chair
 CHAIR_RAIL = 0.84
-RUG = (2.725, 0.0, 2.45, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
-                                         # wholly off it on the oak (its front feet ~12 cm past the rug's end)
+RUG = (2.715, 0.0, 2.43, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
+                                         # wholly off it on the oak (its front feet ~9 cm past the rug's end)
 K_OUT = 3.5                              # the neighbour's brick wall, this far out from the kitchen window
 
 
@@ -662,7 +663,8 @@ def kitchen_outside():
     box("k_extLintel", (ww + 0.12, 0.08, 0.09), (wx, yw - 0.01, wz + wh / 2 + 0.045), M["limestone"], bevel=0.006)
 
 
-WARM_WIN = (9.55, 2.5, 0.6, 0.9)        # the neighbour's lit window: centre x, centre z, width, height
+WARM_WIN = (9.0, 1.85, 0.55, 0.8)       # the neighbour's lit window: centre x, centre z, width, height (seen
+                                        # through the kitchen's lower sash, left of the faucet)
 
 
 def _segments(name, segs, r, m, verts=8):
@@ -1030,13 +1032,14 @@ def dining_table():
     return t
 
 
-# chairs round the dining table: (name, x, y, turn); the native chair faces +X. The four side chairs are pushed in
-# (seats under the top, each pair between the table's legs) and the foot chair too: only the father's chair at the
-# head is pulled out, so it stands apart
+# chairs round the dining table: (name, x, y, turn); the native chair faces +X. The far-side pair and the foot
+# chair are pushed in (seats under the top, the pair between the table's legs); on the near side one chair is pushed
+# in toward the foot and its partner stands against the wall in the corner by the foot, so nothing on the near side
+# stands between the wide camera and the head. Only the father's chair at the head is pulled out: it stands apart
 DINING_CHAIRS = [
     ("chair_foot", 1.92, -0.02, 0.0),
     ("chair_s1", 2.68, 0.5, -90.0), ("chair_s2", 3.32, 0.5, -90.0),
-    ("chair_n1", 2.68, -0.5, 90.0), ("chair_n2", 3.32, -0.5, 90.0),
+    ("chair_n1", 1.55, -2.0, 90.0), ("chair_n2", 2.62, -0.42, 90.0),
 ]
 
 

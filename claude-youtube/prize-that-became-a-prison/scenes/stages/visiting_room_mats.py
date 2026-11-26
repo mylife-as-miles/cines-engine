@@ -729,6 +729,10 @@ def security_glass(name, tint=(0.84, 0.875, 0.86), refl=0.035, smudge_zone=(0.95
     wipe = _maprange(nt, _noise(nt, face, 1.0, 3.0, 0.55, mapping=(1.6, 7.0, 1.0)), 0.6, 0.7, 0.0, 0.3)
     wipe = _math(nt, "MULTIPLY", wipe, _maprange(nt, _noise(nt, face, 0.8, 2.0, 0.5), 0.4, 0.6, 0.0, 1.0))
     film = _math(nt, "MAXIMUM", prints, wipe)
+    gain = _n(nt, "ShaderNodeValue")             # per-camera strength of the marks (set by the stage's hook)
+    gain.name = "film_gain"
+    gain.outputs[0].default_value = 1.0
+    film = _math(nt, "MINIMUM", _math(nt, "MULTIPLY", film, gain.outputs[0]), 1.0)
     # fine scratches: thin straight lines, sparse
     scr = None
     for k, ang in enumerate((0.4, 1.9, 2.6)):

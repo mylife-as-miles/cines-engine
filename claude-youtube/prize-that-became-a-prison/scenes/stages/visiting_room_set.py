@@ -46,7 +46,7 @@ FIT_Y = 0.42                              # fittings' centre |y| (over the count
 FIT_L = 0.64                              # fitting length (x)
 FIT_W = 210.0                             # a fitting's lamp (W) at level 1
 # fitting levels per booth, visitors' side and inmates' side: the occupied booth burns, a few others glow low
-LEVEL_V = [0.08, 0.0, 0.06, 1.0, 0.0, 0.06]
+LEVEL_V = [0.2, 0.0, 0.06, 1.0, 0.0, 0.06]
 LEVEL_I = [0.0, 0.07, 0.04, 1.0, 0.04, 0.0]
 COOL = (0.80, 0.90, 1.0)
 UPPER, LOWER = (0.40, 0.405, 0.385), (0.10, 0.118, 0.13)    # pale emulsion above, satin blue-grey dado

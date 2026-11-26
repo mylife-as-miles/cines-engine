@@ -62,15 +62,15 @@ CAMERAS = {
     # screen's glow on her face and forearms, the counter and the night window behind
     "kitchen": dict(loc=(KT[0] - 1.07, -1.3, 1.1), aim=(KT[0] + 0.05, 0.62, 1.04), lens=50, focus="fx_kitchen", fstop=1.6, beat="ch02",
                     exposure=-1.3, spp_final=96),
-    # Ch 10: from the foot of the table, in the near corner at standing-chest height: the table running away to the
+    # Ch 10: from the foot of the table, in the near corner at a standing eye line: the table running away to the
     # head, the chairs pushed in, the blinds glowing on the left wall, their stripes across the table's end and the
-    # one chair pulled out at the head, clear against the lit end wall
-    "dining": dict(loc=(1.35, -1.75, 1.38), aim=(4.45, 0.05, 0.5), lens=30, focus="fx_dining", fstop=5.6, beat="ch10",
+    # one chair pulled out at the head (on the right third), clear against the lit end wall
+    "dining": dict(loc=(1.45, -1.85, 1.62), aim=(4.2, 0.45, 0.42), lens=32, focus="fx_dining", fstop=5.6, beat="ch10",
                    exposure=-0.95, spp_final=128),
     # Ch 10: the empty chair, from the far side near the end wall, the wall seen edge-on: the street light's stripes
     # across the chair, its striped shadow clear of it on the end wall to the left, the table's head soft at the
     # right; the image before the cut to black
-    "chair": dict(loc=(4.25, 1.8, 1.08), aim=(4.6, -0.25, 0.5), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
+    "chair": dict(loc=(4.25, 2.05, 1.1), aim=(4.6, -0.25, 0.42), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
                   exposure=-1.2, spp_final=128),
 }
 TRIMS = {
@@ -277,10 +277,13 @@ def seat_height(x, y):
 
 # reading the email: leaning in a little over the table, neck and head bowed to the screen
 UPPER = {"chest": (16, 0), "neck": (6, 0), "head": (21, 3), "fingers": 12}
-# per-finger curl once she is seated (degrees on each finger's master control): the right index reaches for the
-# trackpad, the others curl under; the left hand rests loosely curled
-CURL = {"R": {"f_index": 6, "f_middle": 22, "f_ring": 26, "f_pinky": 30, "thumb": 14},
-        "L": {"f_index": 16, "f_middle": 20, "f_ring": 24, "f_pinky": 28, "thumb": 10}}
+# per-finger curl once she is seated: (knuckle bend on the finger's master control, flexion of each of the two
+# outer joints) in degrees. The master alone only tips a straight finger down at the knuckle (a mitten); the joints
+# curl it. The right index reaches ahead for the trackpad, the others curl under it, the thumb tucks in; the left
+# hand lies loosely curled on the palm rest
+CURL = {"R": {"f_index": (10, 7), "f_middle": (12, 15), "f_ring": (13, 17), "f_pinky": (14, 19), "thumb": (0, 16)},
+        "L": {"f_index": (12, 12), "f_middle": (13, 15), "f_ring": (14, 17), "f_pinky": (15, 19), "thumb": (0, 10)}}
+PITCH_MIN = -22.0          # the hand tips up at the wrist no further than this; past it the wrist rises instead
 
 
 def curl_fingers(holder):
@@ -288,14 +291,16 @@ def curl_fingers(holder):
     pb = rig.pose.bones
     done = []
     for k, fingers in CURL.items():
-        for f, deg in fingers.items():
-            n = f"{f}.01_master.{k}"
-            if n in pb:
-                pb[n].rotation_mode = "XYZ"
-                pb[n].rotation_euler.x = math.radians(deg)
-                done.append(n)
+        for f, (knuckle, joint) in fingers.items():
+            for n, deg in ((f"{f}.01_master.{k}", knuckle), (f"{f}.02.{k}", joint), (f"{f}.03.{k}", joint)):
+                if n in pb and deg:
+                    pb[n].rotation_mode = "XYZ"
+                    pb[n].rotation_euler.x = math.radians(deg)
+                    done.append(n)
     bpy.context.view_layer.update()
     print(f"HOME fingers curled: {len(done)} controls", flush=True)
+
+
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 
 
@@ -430,15 +435,21 @@ def arms_on_table(holder):
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
         pitch = 3.0 if side < 0 else 1.0
-        for it in range(8):
+        for it in range(10):
             e, w, tip = arm_to(holder, side, et, wt, hand_pitch=pitch)
             pts = [p for p in body_points(holder, only=body)
                    if (p - tip).length < 0.13 and p.y < w.y - 0.03 and (p.x - mid) * side > 0]
             low = min((p.z for p in pts), default=K_TOP + 0.05) - (K_TOP + 0.0175)
-            print(f"HOME hand {k} it {it}: pitch {pitch:+.1f} lowest finger {low * 1000:+.1f} mm over the laptop", flush=True)
+            print(f"HOME hand {k} it {it}: pitch {pitch:+.1f} wrist +{(wt[2] - K_TOP) * 1000:.0f} mm, lowest finger "
+                  f"{low * 1000:+.1f} mm over the laptop", flush=True)
             if 0.0015 < low < 0.007:
                 break
-            pitch += math.degrees((low - 0.004) / 0.09)
+            nxt = pitch + math.degrees((low - 0.004) / 0.09)
+            if nxt < PITCH_MIN:            # curled fingers: lift the wrist rather than cock the hand back
+                pitch = PITCH_MIN
+                wt = (wt[0], wt[1], wt[2] + max(0.0, 0.004 - low))
+            else:
+                pitch = nxt
         out[k] = (e, w, tip)
     return out
 

@@ -54,7 +54,7 @@ def spans():
 # stall states, by (side, y0): "hero", "dim", "warm", "dark" (open, unlit), "half" (shutter half up), else closed
 STATE = {
     (1, 4.05): "hero", (1, 9.45): "dim", (1, 17.55): "warm", (1, -0.15): "half",
-    (-1, 4.05): "dark", (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
+    (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
 }
 
 
@@ -663,13 +663,16 @@ def hero_stall():
               [2.55, 2.1, 1.65], seed=61, tags=0.5)
     grid_panel("hero_grid_out", Vector((2.5, y0 - 0.04, 0)), Vector((1, 0, 0)), Vector((0, -1, 0)), xb - 2.5 - 0.1, 1.2, 2.7)
     # the front rail over the counter: a steel pipe under the fascia with a row of bags facing the lane
-    ry0, ry1 = COUNTER["y0"] + 0.05, COUNTER["y1"]
+    ry0, ry1 = COUNTER["y0"] + 0.05, HERO[1] - 0.12
     RX, RZ = LANE - 0.1, 2.56
     sk.cyl("hero_rail", 0.012, ry1 - ry0 + 0.1, (RX, (ry0 + ry1) / 2, RZ), M["steel_bare"], rot=(math.pi / 2, 0, 0), verts=12)
     for yy in (ry0, ry1):   # hung from the awning brackets on two drop rods
         sk.cyl(f"hero_rail_drop{yy:.1f}", 0.007, 0.42, (RX, yy, RZ + 0.21), M["steel_bare"], verts=8)
     hang_wall("hero_front", Vector((RX + 0.15, ry0, 0)), Vector((0, 1, 0)), Vector((-1, 0, 0)), ry1 - ry0,
               [RZ + 0.008], seed=71, tags=0.6, hook=False)
+    # a column of bags on hooks on the far front post, facing down the lane
+    hang_wall("hero_post", Vector((1.04, y1 - 0.05, 0)), Vector((1, 0, 0)), Vector((0, -1, 0)), 0.4, [1.98, 1.52],
+              seed=81, tags=0.5)
     counter()
     # lights: two battens on the stall ceiling (over the counter and the stallholder; over the back wall), one under
     # the alley-side eave over the outside display

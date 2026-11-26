@@ -59,15 +59,20 @@ CAMERAS = {
     # Ch 08: an empty booth: the phone on its baffle, the handset hanging on its hook, the glass and the empty stool
     # beyond (the cast hidden)
     "empty": dict(loc=(st.BX[EMPTY] - 0.3, -1.35, 1.5), aim=(st.BX[EMPTY] + 0.08, 0.1, 1.1), lens=32,
-                  focus="fx_empty", fstop=2.2, beat="ch08", cast=False),
+                  focus="fx_empty", fstop=2.2, beat="ch08", cast=False, exposure=-1.75, film=2.6),
 }
 # per-camera light trims: multipliers by light-name prefix (fittings scale their lens glow with them)
 TRIMS = {
     # the empty booth: its inmates' side lit beyond the glass, its own fitting low, so the near phone is lit from the
     # glass side and the far one stands in the light (the occupied booth turned down: another moment)
-    "empty": {f"fitv{EMPTY}": 6.0, f"fiti{EMPTY}": 22.0, f"fitv{st.OCC}": 0.25, f"fiti{st.OCC}": 0.25},
+    "empty": {f"fitv{EMPTY}": 6.0, f"fiti{EMPTY}": 16.0, f"fitv{st.OCC}": 0.25, f"fiti{st.OCC}": 0.25},
+    # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
+    # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
+    "glass": {f"fitv{st.OCC}": 0.55, "bounce_Tim": 1.6},
 }
 _STATE = {"cast": [], "holders": {}, "base": {}, "lens_base": {}}
+if os.environ.get("VISIT_ONLY"):     # a convenience for re-shooting some cameras in one build: VISIT_ONLY=glass,empty
+    CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["VISIT_ONLY"].split(",")}
 
 
 # ---------------------------------------------------------------- small helpers
@@ -726,7 +731,7 @@ def haze(density=0.003):
 def glass_camera():
     """Over Tim's left shoulder: behind and to the left of his head, a little above it, aimed at Dawn's eyes."""
     hs = _STATE.get("holders")
-    if not hs:
+    if not hs or "glass" not in CAMERAS:
         return
     te, de = eye_centre(hs["Tim"]), eye_centre(hs["Dawn"])
     loc = te + Vector((-0.34, -1.08, 0.13))
@@ -753,7 +758,7 @@ def apply_camera(name):
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         b = _STATE["base"].setdefault(n, ob.data.energy)
-        k = next((v for p, v in trims.items() if n.startswith(p + "_")), 1.0)
+        k = next((v for p, v in trims.items() if n == p or n.startswith(p + "_")), 1.0)
         ob.data.energy = b * k
     for n, mat in st.PARTS.get("lens", {}).items():
         mr = next((x for x in mat.node_tree.nodes if x.type == "MAP_RANGE"), None)
@@ -762,6 +767,10 @@ def apply_camera(name):
         b = _STATE["lens_base"].setdefault(n, (mr.inputs["To Min"].default_value, mr.inputs["To Max"].default_value))
         k = trims.get(n, 1.0)
         mr.inputs["To Min"].default_value, mr.inputs["To Max"].default_value = b[0] * k, b[1] * k
+    for mat in [bpy.data.materials.get("security glass")]:
+        node = mat.node_tree.nodes.get("film_gain") if mat else None
+        if node is not None:
+            node.outputs[0].default_value = cfg.get("film", 1.0)
     cam = bpy.context.scene.camera
     if cam is not None:
         cam.data.clip_start, cam.data.clip_end = 0.03, 100.0
@@ -810,6 +819,7 @@ def build(cast=True):
         glass_camera()
     else:
         st.empty("fx_dawn", (BXO, 0.7, 1.2))
-        CAMERAS["glass"]["loc"] = (BXO - 0.36, -1.15, 1.32)
-        CAMERAS["glass"]["aim"] = (BXO + 0.07, 0.66, 1.12)
+        if "glass" in CAMERAS:
+            CAMERAS["glass"]["loc"] = (BXO - 0.36, -1.15, 1.32)
+            CAMERAS["glass"]["aim"] = (BXO + 0.07, 0.66, 1.12)
     install_hook()
