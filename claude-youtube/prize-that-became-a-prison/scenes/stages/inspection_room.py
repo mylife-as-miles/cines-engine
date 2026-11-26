@@ -63,7 +63,7 @@ CAMERAS = {
     "wide": dict(loc=(2.25, -1.95, 2.2), aim=(-0.3, 0.55, 0.9), lens=22, focus="fx_wide", fstop=5.6, beat="ch00"),
     # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it
     "overhead": dict(loc=(0.05, 0.12, 4.9), aim=(0.05, 0.124, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
-                     above_ceiling=True, exposure=-2.35),
+                     above_ceiling=True, exposure=-2.6),
     # Ch 00: the tag on the suitcase's top, from Dawn's side; the officer out of focus beyond
     "tag": dict(loc=(0.49, -0.339, 1.666), aim=(0.458, 0.026, 1.388), lens=50, focus="tag_focus", fstop=3.2, beat="ch00"),
     # Ch 00: low at the end of the bench, Dawn and the questioning officer facing each other over the bags, the door's
@@ -124,10 +124,11 @@ def officer(name, height_cm, age):
     castkit.dress(h, ["male_elegantsuit01", "shoes06"], tint={"male_elegantsuit01": (0.2, 0.26, 0.4), "shoes06": (0.15, 0.15, 0.16)})
     castkit.hat(h, os.path.join(props.PROPS, "peaked-cap.glb"), rgb=(0.03, 0.035, 0.055))  # Tripo cap: licence-clean
     cap = bpy.data.materials.get(f"hat_{name}")
-    if cap:  # wool crown: matt, or under the troffer it reads as a bald head from above
+    if cap:  # wool crown: matt and nearly without specular, or under the troffer it reads as a bald head from above
         b = cap.node_tree.nodes["Principled BSDF"]
-        b.inputs["Roughness"].default_value = 0.88
-        b.inputs["Sheen Weight"].default_value = 0.25
+        b.inputs["Roughness"].default_value = 0.9
+        b.inputs["Specular IOR Level"].default_value = 0.12
+        b.inputs["Sheen Weight"].default_value = 0.15
     return h
 
 
