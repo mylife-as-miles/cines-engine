@@ -248,8 +248,9 @@ def sheet(name, m, w, h, x, y, turn, thick=0.00022, step=0.005, shape=None, stif
     return place_flat(name, grid_bm(w, h, nx, ny), frame(x, y, turn), m, thick, shape=shape, stiff=stiff)
 
 
-def photo_print(name, m, w, h, x, y, turn, curl=0.0016, seed=1):
-    """A print curls toward its face along its long side."""
+def photo_print(name, m, w, h, x, y, turn, curl=0.0016, seed=1, stiff=60):
+    """A print curls toward its face along its long side. A print is stiff card: where it lies across another print's
+    edge it rides over it as a gentle ramp (many smoothing passes), not a crease."""
     rng = random.Random(seed)
     wv = waves(rng, 0.0002)
     long_x = w >= h
@@ -258,29 +259,109 @@ def photo_print(name, m, w, h, x, y, turn, curl=0.0016, seed=1):
         t = (2 * px / w) if long_x else (2 * py / h)
         return curl * t * t + wv(px, py)
     return place_flat(name, grid_bm(w, h, max(2, round(w / 0.004)), max(2, round(h / 0.004))), frame(x, y, turn), m,
-                      0.00032, shape=f, stiff=8)
+                      0.0003, shape=f, stiff=stiff)
 
 
-def boarding_pass(name, m, x, y, turn, seed=2, lift=0.0025):
-    """203 x 82 mm card with its stub at +x; the stub end lifts a little where it was torn along the perforation."""
+def boarding_pass(name, m, x, y, turn, seed=2, lift=0.0025, perf=0.0545):
+    """203 x 82 mm card with its stub at +x, beyond the perforation at local x = perf. The stub has been bent along
+    the perforation (half torn): it rises from that line like a hinge, lift at its far end, a little twisted."""
     w, h = 0.203, 0.082
-    sh = sheet_shape(w, h, seed, corners=(0.0, lift * 0.4, lift, 0.0), wave=0.0003, bow=0.0)
+    sh0 = sheet_shape(w, h, seed, corners=(0.0, 0.0, lift * 0.15, 0.0), wave=0.0006, bow=0.0)
+    span = w / 2 - perf
+
+    def sh(px, py):
+        z = sh0(px, py)
+        if px > perf:
+            t = (px - perf) / span
+            z += lift * (t ** 1.15) * (1.0 + 0.22 * py / (h / 2))
+        return z
     return place_flat(name, grid_bm(w, h, 52, 21), frame(x, y, turn), m, 0.00028, shape=sh, stiff=8)
 
 
-def receipt(name, m, x, y, turn, w=0.079, h=0.21, radius=0.26, seed=5):
-    """A till receipt: thermal strip, the top edge torn on the cutter's teeth, curling up at both ends."""
+def receipt(name, m, x, y, turn, w=0.08, L=0.24, roll=0.07, roll_deg=200.0, r0=0.024, cup=0.0028, seed=5):
+    """A till receipt that has spent days rolled up: an 80 x 240 mm thermal strip 0.06 mm thick lying on the table,
+    its last `roll` metres rolled back up over itself into a tightening curl (radius r0 easing in, about roll_deg of
+    turn), the other end lifting slightly, cupped across its width, and that end torn on the cutter's teeth (a 1 mm
+    zig-zag). Built along local y (the roll at +y); placed on whatever is under its flat part."""
     rng = random.Random(seed)
-    nx, ny = 64, 140
-
-    def edit(px, py, i, j):
-        if j == ny:                                   # the torn top edge: a saw-tooth from the cutter, uneven
-            py += (0.0007 if i % 2 else -0.0005) + rng.uniform(-0.0002, 0.0002)
-        if j == 0:
-            py += rng.uniform(-0.00015, 0.00015)
-        return px, py
-    return place_flat(name, grid_bm(w, h, nx, ny, edit), frame(x, y, turn), m, 0.00012,
-                      shape=receipt_shape(w, h, radius, seed=seed), stiff=3)
+    nx, ns = 80, 170
+    ds = L / ns
+    s_roll = L - roll
+    ramp = 0.015
+    k_end = 1.0 / 0.06                          # the flat end's memory curl
+    # the strip's centre line: curvature along its length, integrated both ways from where it lies on the table
+    theta_total = math.radians(roll_deg)
+    # curvature of the roll grows as it tightens; scale it so the whole roll turns theta_total
+    def kappa_raw(s):
+        if s < 0.025:                           # concave up, like the roll: the end lifts off the table
+            return k_end * (1.0 - s / 0.025) ** 1.5
+        if s < s_roll:
+            return 0.0
+        u = s - s_roll
+        k = (1.0 / r0) * (1.0 + 0.6 * u / roll)
+        return k * min(1.0, u / ramp) ** 1.5
+    tot = sum(kappa_raw(s_roll + (i + 0.5) * roll / 400) for i in range(400)) * roll / 400
+    kscale = theta_total / tot
+    kappa = lambda s: kappa_raw(s) * (kscale if s >= s_roll else 1.0)   # noqa: E731
+    s_flat = 0.025
+    yy = [0.0] * (ns + 1)
+    zz = [0.0] * (ns + 1)
+    th = [0.0] * (ns + 1)
+    i0 = round(s_flat / ds)
+    yy[i0] = i0 * ds - L / 2
+    for i in range(i0, ns):                      # forward into the roll
+        s = (i + 0.5) * ds
+        t_mid = th[i] + 0.5 * kappa(s) * ds
+        yy[i + 1] = yy[i] + math.cos(t_mid) * ds
+        zz[i + 1] = zz[i] + math.sin(t_mid) * ds
+        th[i + 1] = th[i] + kappa(s) * ds
+    for i in range(i0, 0, -1):                   # back toward the lifted flat end
+        s = (i - 0.5) * ds
+        t_mid = th[i] - 0.5 * kappa(s) * ds
+        yy[i - 1] = yy[i] - math.cos(t_mid) * ds
+        zz[i - 1] = zz[i] - math.sin(t_mid) * ds
+        th[i - 1] = th[i] - kappa(s) * ds
+    bm = bmesh.new()
+    rows = []
+    teeth = [(0.0005 if k % 2 else -0.0005) + rng.uniform(-0.00012, 0.00012) for k in range(nx + 1)]
+    for j in range(ns + 1):
+        row = []
+        ny_, nz_ = -math.sin(th[j]), math.cos(th[j])     # the strip's normal in the y-z plane
+        for i in range(nx + 1):
+            px = (i / nx - 0.5) * w
+            c = cup * (2 * px / w) ** 2 * (1.0 if j <= i0 else max(0.25, 1.0 - (j - i0) * ds / roll))
+            py, pz = yy[j] + ny_ * c, zz[j] + nz_ * c
+            if j == 0:                            # the torn end: the teeth stick out along the strip
+                py += teeth[i] * math.cos(th[0])
+                pz += teeth[i] * math.sin(th[0])
+            if i in (0, nx):
+                px += rng.uniform(-0.00008, 0.00008)
+            row.append(bm.verts.new((px, py, pz)))
+        rows.append(row)
+    for j in range(ns):
+        for i in range(nx):
+            bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))
+    mw = frame(x, y, turn)
+    tree = support_tree(_footprint(mw, [(-w / 2, -L / 2), (w / 2, L / 2)]))
+    base = max(drop(tree, mw @ Vector((px, py, 0.0))) for px in (-w / 2, 0.0, w / 2) for py in (-L / 4, 0.0, L / 4))
+    zmin = min(v.co.z for v in bm.verts)
+    for v in bm.verts:
+        v.co.z += base - TOP + 0.00006 - min(0.0, zmin)
+    me = bpy.data.meshes.new(name)
+    bm.normal_update()
+    bm.to_mesh(me)
+    bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    ob = link(bpy.data.objects.new(name, me))
+    ob.matrix_world = mw
+    ob.data.materials.append(m)
+    so = ob.modifiers.new("thickness", "SOLIDIFY")
+    so.thickness, so.offset, so.use_even_offset, so.use_quality_normals = 0.00006, 1.0, True, True
+    SUPPORT.append(ob)
+    print(f"PAPER {name}: roll height {max(zz) * 1000:.1f} mm, end turn {math.degrees(th[-1]):.0f} deg, flat end lift {zz[0] * 1000:.1f} mm",
+          flush=True)
+    return ob
 
 
 def manila_folder(name, m, x, y, turn, w=0.30, d=0.235, tab=(0.02, 0.12)):
@@ -346,10 +427,11 @@ def _rounded_rect(bm, w, h, r, z0, z1, segs=6):
     return fs
 
 
-def passport(name, m_cover, m_pages, x, y, turn, open_deg=1.5):
-    """A plain passport booklet, 125 x 88 mm, closed: two covers of grained board (rounded corners) wrapped round a
-    rounded spine at -x, the page block inset between them, the front cover springing open a couple of degrees at the
-    fore-edge. No crest, no lettering. z: the support height (found by dropping its corners if None)."""
+def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
+    """A plain passport booklet, 125 x 88 mm: two covers of grained board (rounded corners) wrapped round a rounded
+    spine at -x, the cream page block (3.5 mm) inset 1.5 mm between them, the front cover hinged at the spine and
+    sprung open open_deg so a wedge of the page block and the cover's cream lining shows toward the fore-edge. No
+    crest, no lettering. It settles on whatever is under it."""
     w, h, T = 0.125, 0.088, 0.0052
     cov, r = 0.00085, 0.0042
     mw = frame(x, y, turn)
@@ -363,14 +445,16 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=1.5):
     bm = bmesh.new()
     _rounded_rect(bm, w, h, r, 0.0, cov)
     parts.append(("back", bm, m_cover))
-    # page block, inset 1.2 mm at head, tail and fore-edge, flush at the spine
+    # page block, inset 1.5 mm at head, tail and fore-edge, flush at the spine
     bm = bmesh.new()
-    _rounded_rect(bm, w - 0.0016, h - 0.0024, r * 0.8, cov, T - cov)
-    bmesh.ops.translate(bm, verts=bm.verts[:], vec=(-0.0008 + 0.0, 0.0, 0.0))
+    _rounded_rect(bm, w - 0.0015, h - 0.003, r * 0.75, cov, T - cov)
+    bmesh.ops.translate(bm, verts=bm.verts[:], vec=(-0.00075, 0.0, 0.0))
     parts.append(("pages", bm, m_pages))
-    # front cover, hinged at the spine and lifted at the fore-edge
+    # front cover, hinged at the spine and lifted at the fore-edge; its underside is lined with cream endpaper
     bm = bmesh.new()
-    _rounded_rect(bm, w, h, r, T - cov, T)
+    fs = _rounded_rect(bm, w, h, r, T - cov, T)
+    if m_end is not None:
+        fs[1].material_index = 1
     hinge = Vector((-w / 2 + 0.002, 0.0, T - cov))
     rot = Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(-open_deg), 4, "Y") @ Matrix.Translation(-hinge)
     bmesh.ops.transform(bm, matrix=rot, verts=bm.verts[:])
@@ -396,6 +480,8 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=1.5):
         ob = link(bpy.data.objects.new(f"{name}_{tag}", me))
         ob.matrix_world = mw
         ob.data.materials.append(mat)
+        if tag == "front" and m_end is not None:
+            ob.data.materials.append(m_end)
         if tag == "spine":
             so = ob.modifiers.new("t", "SOLIDIFY")
             so.thickness, so.offset = cov, 1.0

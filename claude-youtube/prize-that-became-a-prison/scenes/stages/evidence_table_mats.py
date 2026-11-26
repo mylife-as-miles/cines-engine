@@ -212,6 +212,17 @@ def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019,
     if ring_m is not None:
         col = _mix(nt, _math(nt, "MULTIPLY", ring_m, 0.6), col, (0.012, 0.007, 0.004))
         rough_s = _math(nt, "SUBTRACT", rough_s, _math(nt, "MULTIPLY", ring_m, 0.16))
+    # fine streaks of use along the boards (things slid across the top): stretched noise, mostly in the roughness
+    streak = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(4.0, 400.0, 400.0), offset=(0.0, 0.3, 0.0))
+    rough_s = _math(nt, "ADD", rough_s, _maprange(nt, streak, 0.3, 0.7, -0.08, 0.08))
+    col = _mix(nt, _math(nt, "MULTIPLY", _maprange(nt, streak, 0.6, 0.72, 0.0, 1.0), 0.18), col, (0.11, 0.08, 0.055))
+    if front_y is not None:
+        # the band where forearms rest, 2-3 cm in from the front edge: finish rubbed off, darker with grime and rougher
+        band = _math(nt, "MULTIPLY", _maprange(nt, y, front_y + 0.005, front_y + 0.012, 0.0, 1.0),
+                     _maprange(nt, y, front_y + 0.03, front_y + 0.042, 1.0, 0.0))
+        band = _math(nt, "MULTIPLY", band, _maprange(nt, _noise(nt, o, 9.0, 3.0, 0.6, offset=(1.3, 0.0, 0.0)), 0.3, 0.6, 0.45, 1.0))
+        col = _mix(nt, _math(nt, "MULTIPLY", band, 0.55), col, (0.02, 0.013, 0.008))
+        rough_s = _math(nt, "ADD", rough_s, _math(nt, "MULTIPLY", band, 0.14))
     _link(nt, col, b.inputs["Base Color"])
     _link(nt, _math(nt, "ADD", rough_s, 0.0, clamp=True), b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.42
@@ -225,15 +236,34 @@ def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019,
 
 # ---------------------------------------------------------------- papers
 
-def paper(name, rgb=(0.68, 0.66, 0.6), rough=0.86, fibre=0.05, smudge=0.05, sss=0.06, edge_tone=None, size=None):
-    """Matt uncoated paper or card, slightly warm: felted fibre tooth (bump), faint mottling, a little translucency,
-    grey handling smudges. edge_tone = (w, h) darkens the last few millimetres round the edge of a w x h sheet (old,
-    handled paper)."""
+def _translucent(nt, b, fac, rgb):
+    """Thin paper lets light through: mix a Translucent BSDF (the paper's own tint) under the Principled one, so a
+    lamp-side curl or a lifted corner glows from behind."""
+    out = nt.nodes["Material Output"]
+    tl = _n(nt, "ShaderNodeBsdfTranslucent")
+    tl.inputs["Color"].default_value = (*rgb, 1)
+    if b.inputs["Normal"].is_linked:
+        _link(nt, b.inputs["Normal"].links[0].from_socket, tl.inputs["Normal"])
+    mx = _n(nt, "ShaderNodeMixShader")
+    mx.inputs["Fac"].default_value = fac
+    _link(nt, b.outputs[0], mx.inputs[1])
+    _link(nt, tl.outputs[0], mx.inputs[2])
+    _link(nt, mx.outputs[0], out.inputs["Surface"])
+    return mx
+
+
+def paper(name, rgb=(0.74, 0.71, 0.64), rough=0.86, fibre=0.05, smudge=0.05, sss=0.05, edge_tone=None, size=None,
+          translucency=0.08):
+    """Matt uncoated paper or card, slightly warm: felted fibre tooth and a finer fibre grain (bump), a slow +-3 %
+    tone drift across the sheet and faint mottling, light coming through (translucency), grey handling smudges.
+    edge_tone = (w, h) darkens the last few millimetres round the edge of a w x h sheet (old, handled paper)."""
     m, nt, b = _new(name)
     o = _obj(nt)
     mott = _noise(nt, o, 30.0, 4.0, 0.6)
     fib = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(220.0, 700.0, 220.0))
-    col = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.08), rgb, tuple(c * 0.86 for c in rgb))
+    drift = _noise(nt, o, 6.0, 2.0, 0.5, offset=(len(name) * 0.37, 0.0, 0.0))
+    col = _mix(nt, _maprange(nt, drift, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.03 for c in rgb), tuple(c * 0.97 for c in rgb))
+    col = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.08), col, tuple(c * 0.86 for c in rgb))
     col = _mix(nt, _maprange(nt, fib, 0.35, 0.75, 0.0, 0.06), col, tuple(c * 0.9 for c in rgb))
     if smudge:
         sm = _noise(nt, o, 9.0, 5.0, 0.65, offset=(3.1, 0.4, 0.0))
@@ -256,11 +286,16 @@ def paper(name, rgb=(0.68, 0.66, 0.6), rough=0.86, fibre=0.05, smudge=0.05, sss=
         b.inputs["Subsurface Radius"].default_value = (0.0015, 0.0012, 0.0009)
         b.inputs["Subsurface Scale"].default_value = 1.0
     tooth = _noise(nt, o, 1400.0, 3.0, 0.65)
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.5), tooth), fibre, 0.00015)
+    b1 = _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.5), tooth), fibre, 0.00015)
+    # the finer felted fibre grain on top (about 1 mm features), chained on the tooth
+    grain = _noise(nt, o, 900.0, 8.0, 0.6)
+    _bump(nt, b, grain, 0.03, 0.0002, normal=b1.outputs["Normal"])
+    if translucency:
+        _translucent(nt, b, translucency, tuple(min(1.0, c * 1.05) for c in rgb))
     return m
 
 
-def boarding_card(name, w, h, perf_x, rgb=(0.7, 0.69, 0.64)):
+def boarding_card(name, w, h, perf_x, rgb=(0.66, 0.66, 0.63), rough=0.75):
     """Boarding-pass card: matt, slightly smoother than letter paper, with the perforated tear line across it at
     perf_x (object space): a row of 1 mm holes every 2.5 mm, pressed in and shadowed."""
     m, nt, b = _new(name)
@@ -279,50 +314,62 @@ def boarding_card(name, w, h, perf_x, rgb=(0.7, 0.69, 0.64)):
     edge = _math(nt, "MINIMUM", _math(nt, "SUBTRACT", w / 2, _math(nt, "ABSOLUTE", x)), _math(nt, "SUBTRACT", h / 2, _math(nt, "ABSOLUTE", y)))
     col = _mix(nt, _maprange(nt, edge, 0.0, 0.004, 0.25, 0.0), col, (0.4, 0.37, 0.32))
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _math(nt, "ADD", 0.62, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05)), b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.35
+    _link(nt, _math(nt, "ADD", rough, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05), clamp=True), b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.3
     b.inputs["Subsurface Weight"].default_value = 0.04
     b.inputs["Subsurface Radius"].default_value = (0.0012, 0.001, 0.0008)
     tooth = _noise(nt, o, 1000.0, 2.0, 0.6)
     hgt = _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", tooth, 0.3), _math(nt, "ADD", _math(nt, "MULTIPLY", hole, 2.0), _math(nt, "MULTIPLY", groove, 0.6)))
-    _bump(nt, b, hgt, 0.25, 0.0002)
+    b1 = _bump(nt, b, hgt, 0.25, 0.0002)
+    _bump(nt, b, _noise(nt, o, 900.0, 8.0, 0.6), 0.03, 0.0002, normal=b1.outputs["Normal"])
+    _translucent(nt, b, 0.05, rgb)
     return m
 
 
-def thermal(name, rgb=(0.78, 0.77, 0.74)):
-    """Thermal till roll: a satin coated face, very even, faint greying where handled."""
+def thermal(name, rgb=(0.62, 0.625, 0.64)):
+    """Thermal till roll: a thin, slightly cool coated strip, satin-matt, faint greying where handled, and thin
+    enough that the lamp glows through a curl (translucency)."""
     m, nt, b = _new(name)
     o = _obj(nt)
     mott = _noise(nt, o, 25.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, mott, 0.4, 0.75, 0.0, 0.12), rgb, (0.5, 0.5, 0.49))
+    col = _mix(nt, _maprange(nt, mott, 0.4, 0.75, 0.0, 0.12), rgb, tuple(c * 0.7 for c in rgb))
+    drift = _noise(nt, o, 7.0, 2.0, 0.5)
+    col = _mix(nt, _maprange(nt, drift, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.03 for c in rgb), col)
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _math(nt, "ADD", 0.36, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.06)), b.inputs["Roughness"])
+    _link(nt, _math(nt, "ADD", 0.55, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05)), b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.4
-    b.inputs["Subsurface Weight"].default_value = 0.1
-    b.inputs["Subsurface Radius"].default_value = (0.002, 0.0017, 0.0013)
-    _bump(nt, b, _noise(nt, o, 600.0, 2.0, 0.5), 0.05, 0.0001)
+    b1 = _bump(nt, b, _noise(nt, o, 600.0, 2.0, 0.5), 0.05, 0.0001)
+    _bump(nt, b, _noise(nt, o, 1.0, 4.0, 0.6, mapping=(60.0, 900.0, 60.0)), 0.04, 0.0002, normal=b1.outputs["Normal"])
+    _translucent(nt, b, 0.15, rgb)
     return m
 
 
-def photo(name, w, h, border, image_rgb=(0.16, 0.16, 0.16), paper_rgb=(0.74, 0.74, 0.72)):
-    """A photographic print, w x h with a white border: a lustre face (finer, glossier than paper) whose image area
-    is left as an even neutral grey for the picture to be composited in later; a few fingerprints in the gloss."""
+def photo(name, w, h, border, image_rgb=(0.12, 0.12, 0.12), paper_rgb=(0.74, 0.735, 0.71), gradient=0.0):
+    """A glossy photographic print, w x h with a white border: a clear coat over the image (the lamp lays a soft sheen
+    across it) whose image area is left as an even blank tone for the picture to be composited in later (gradient
+    darkens it toward one end), the border a little less glossy, a few fingerprints in the gloss, and the thin
+    darker paper edge."""
     m, nt, b = _new(name)
     o = _obj(nt)
     x, y, _ = _xyz(nt, o)
     ix = _math(nt, "SUBTRACT", w / 2 - border, _math(nt, "ABSOLUTE", x))
     iy = _math(nt, "SUBTRACT", h / 2 - border, _math(nt, "ABSOLUTE", y))
     inside = _math(nt, "MULTIPLY", _maprange(nt, ix, -0.0002, 0.0002, 0.0, 1.0), _maprange(nt, iy, -0.0002, 0.0002, 0.0, 1.0))
-    col = _mix(nt, inside, paper_rgb, image_rgb)
+    img = image_rgb
+    if gradient:
+        img = _mix(nt, _maprange(nt, y, -h / 2, h / 2, 0.0, 1.0), tuple(c * (1 - gradient) for c in image_rgb), image_rgb)
+    col = _mix(nt, inside, paper_rgb, img)
     edge = _math(nt, "MINIMUM", _math(nt, "SUBTRACT", w / 2, _math(nt, "ABSOLUTE", x)), _math(nt, "SUBTRACT", h / 2, _math(nt, "ABSOLUTE", y)))
-    col = _mix(nt, _maprange(nt, edge, 0.0, 0.0025, 0.3, 0.0), col, (0.45, 0.44, 0.42))
+    col = _mix(nt, _maprange(nt, edge, 0.0, 0.0006, 0.45, 0.0), col, (0.45, 0.43, 0.4))
     _link(nt, col, b.inputs["Base Color"])
     prints = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(160.0, 220.0, 160.0))
     cluster = _maprange(nt, _noise(nt, o, 14.0, 2.0, 0.5), 0.55, 0.68, 0.0, 1.0)
     fp = _math(nt, "MULTIPLY", _maprange(nt, prints, 0.58, 0.66, 0.0, 1.0), cluster)
-    r = _math(nt, "ADD", _math(nt, "SUBTRACT", 0.3, _math(nt, "MULTIPLY", inside, 0.1)), _math(nt, "MULTIPLY", fp, 0.22), clamp=True)
+    r = _math(nt, "ADD", _math(nt, "ADD", 0.35, _math(nt, "MULTIPLY", inside, -0.05)), _math(nt, "MULTIPLY", fp, 0.2), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.5
+    _link(nt, _math(nt, "ADD", 0.45, _math(nt, "MULTIPLY", inside, 0.25)), b.inputs["Coat Weight"])
+    _link(nt, _math(nt, "ADD", 0.12, _math(nt, "MULTIPLY", fp, 0.18), clamp=True), b.inputs["Coat Roughness"])
     _bump(nt, b, _noise(nt, o, 900.0, 2.0, 0.5), 0.03, 0.0001)
     return m
 
@@ -349,45 +396,48 @@ def manila(name, rgb=(0.5, 0.38, 0.21), rough=0.84):
 
 # ---------------------------------------------------------------- the passport
 
-def passport_cover(name, rgb=(0.006, 0.013, 0.05)):
-    """Coated book cloth on board, dark navy: a pebbled leather grain, satin, rubbed paler and rougher on the
-    corners and edges where it has been carried."""
+def passport_cover(name, rgb=(0.025, 0.035, 0.07)):
+    """Grained leatherette on board, dark navy, one flat colour (no albedo noise, which read as stained cloth): the
+    pebble grain is all in the bump (Voronoi cells, about 0.7 mm), under a satin coat; only the very edges are a shade
+    rougher where it has been carried."""
     m, nt, b = _new(name)
     o = _obj(nt)
     vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
-    vo.inputs["Scale"].default_value = 950.0
-    vo.inputs["Randomness"].default_value = 0.9
+    vo.inputs["Scale"].default_value = 1500.0
+    vo.inputs["Randomness"].default_value = 0.85
     _link(nt, o, vo.inputs["Vector"])
     cell = _out(vo, "Distance")
-    fine = _noise(nt, o, 2500.0, 2.0, 0.5)
+    fine = _noise(nt, o, 4000.0, 2.0, 0.5)
     edge = _maprange(nt, _ao(nt, 0.0025, inside=True), 0.55, 1.0, 1.0, 0.0)
-    rub = _math(nt, "MULTIPLY", edge, _maprange(nt, _noise(nt, o, 300.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
-    col = _mix(nt, _maprange(nt, cell, 0.0, 0.5, 0.0, 0.12), rgb, tuple(c * 1.4 for c in rgb))
-    col = _mix(nt, _math(nt, "MULTIPLY", rub, 0.7), col, (0.06, 0.065, 0.08))
-    mott = _noise(nt, o, 60.0, 2.0, 0.5)
-    col = _mix(nt, _maprange(nt, mott, 0.55, 0.75, 0.0, 0.1), col, tuple(c * 0.85 for c in rgb))
-    _link(nt, col, b.inputs["Base Color"])
-    r = _math(nt, "ADD", 0.64, _maprange(nt, cell, 0.0, 0.5, -0.08, 0.1))
-    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", rub, 0.25), clamp=True)
+    b.inputs["Base Color"].default_value = (*rgb, 1)
+    r = _math(nt, "ADD", 0.5, _maprange(nt, cell, 0.0, 0.5, -0.05, 0.06))
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", edge, 0.15), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.22
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.25)), 0.55, 0.00018)
+    b.inputs["Specular IOR Level"].default_value = 0.3
+    b.inputs["Coat Weight"].default_value = 0.3
+    b.inputs["Coat Roughness"].default_value = 0.3
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.15)), 0.12, 0.0002)
     return m
 
 
-def page_block(name, rgb=(0.66, 0.63, 0.55)):
-    """The page edges of a closed booklet: fine lines of the leaves along local Z, a little uneven and soiled."""
+def endpaper(name, rgb=(0.7, 0.66, 0.58)):
+    """The inside of a booklet's cover and its first leaf: plain cream paper."""
+    return paper(name, rgb, 0.82, 0.04, 0.0, sss=0.0, translucency=0.0)
+
+
+def page_block(name, rgb=(0.7, 0.66, 0.58)):
+    """The page edges of a booklet: fine striations of the leaves along local Z, a little uneven and soiled."""
     m, nt, b = _new(name)
     o = _obj(nt)
     _, _, z = _xyz(nt, o)
     leaves = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(40.0, 40.0, 3800.0))
-    col = _mix(nt, _maprange(nt, leaves, 0.3, 0.7, 0.0, 0.35), rgb, tuple(c * 0.7 for c in rgb))
+    col = _mix(nt, _maprange(nt, leaves, 0.3, 0.7, 0.0, 0.3), rgb, tuple(c * 0.72 for c in rgb))
     soil = _noise(nt, o, 90.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, soil, 0.5, 0.75, 0.0, 0.25), col, (0.3, 0.27, 0.22))
+    col = _mix(nt, _maprange(nt, soil, 0.5, 0.75, 0.0, 0.2), col, (0.34, 0.3, 0.25))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = 0.85
     b.inputs["Specular IOR Level"].default_value = 0.3
-    _bump(nt, b, leaves, 0.3, 0.0001)
+    _bump(nt, b, leaves, 0.35, 0.0001)
     return m
 
 
@@ -483,6 +533,22 @@ def screen(name, rgb, strength, w, h):
     b.inputs["Emission Color"].default_value = (*rgb, 1)
     _link(nt, _math(nt, "MULTIPLY", _maprange(nt, d, 0.0, 1.0, 1.0, 0.82), strength), b.inputs["Emission Strength"])
     m.cycles.emission_sampling = "NONE"
+    return m
+
+
+def plaster(name, rgb=(0.05, 0.046, 0.042)):
+    """Old painted plaster for the room's walls: matt emulsion with a slow, uneven tone (patched, dirtier toward the
+    floor) and a fine trowelled tooth; it only ever shows as deep shadow."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    _, _, z = _xyz(nt, o)
+    slow = _noise(nt, o, 1.2, 4.0, 0.6)
+    col = _mix(nt, _maprange(nt, slow, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.15 for c in rgb), tuple(c * 0.8 for c in rgb))
+    col = _mix(nt, _maprange(nt, z, 0.0, 0.9, 0.5, 0.0), col, tuple(c * 0.6 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.9
+    b.inputs["Specular IOR Level"].default_value = 0.25
+    _bump(nt, b, _noise(nt, o, 40.0, 5.0, 0.65), 0.15, 0.002)
     return m
 
 

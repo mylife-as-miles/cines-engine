@@ -1,19 +1,23 @@
 """Stage: the detention corridor at night and the visitation room off it (Ch 06 "Three years without an answer").
 Fluorescent Noir. No people: absence carries it.
 
-A long corridor in a detention centre after lights-out: painted block walls with a satin dado and a dark stripe,
-caged fluorescent fittings down the soffit with every other one dead, a painted concrete floor worn grey down the
-middle with a floor drain and its damp stain, steel cell doors set into both walls in pressed-steel frames, a faint
-night light glowing in each cell behind its barred window. At the far end the visitation room's door stands ajar and
-warm light leaks out across the floor. Inside that room: a bare table under one hanging enamel light, a sealed
-envelope on it, the visitor chair empty, the closed steel door behind it, a clock with no numerals.
+A long corridor in a detention centre after lights-out: painted block walls with a satin dado, a dark stripe and a
+kick plate, caged fluorescent fittings down the soffit (the two nearest dead, so the corridor opens out of the dark,
+then a pool, a dead gap, a pool, a dying tube), an eggshell-painted concrete floor worn to concrete down the middle
+with one damp stain round the floor drain, steel cell doors with round bars set into both walls, a meal tray left on
+the open hatch flap of the near door, a recessed fire-hose cabinet, a CCTV dome. At the far end the visitation
+room's door stands ajar and amber light leaks out across the floor. Inside that room: a bare table in the pool of
+one hanging enamel light, a sealed envelope on it, the detainee's chair empty across it, the visitor's own chair at
+the near corner, the closed steel door behind, a clock with no numerals, a blank vent.
 
     <bpy python> -I scenes/shoot.py -- detention_corridor <cam> out.png
 
-Cameras: corridor (one-point down the corridor), door (controlled close-up on a cell door's barred window), chair
-(the empty chair and the sealed envelope under the one light), envelope (an insert of the envelope, the chair soft
-behind). Before each render a hook on setkit.render sets the camera's lens shift and near clip and the denoiser's
-settings. The set is in detention_corridor_set.py, its materials in detention_corridor_mats.py.
+Cameras: corridor (one-point down the corridor), door (controlled close-up on a cell door's barred window from the
+hinge side, under a raking key), chair (the whole lit island from the doorway: table, its shadow, the empty chair
+behind the envelope), envelope (an insert of the envelope, the chair soft behind). Before each render a hook on
+setkit.render sets the camera's lens shift and near clip, the per-camera light trims (TRIMS), the far chair's value
+(CHAIR_VAL), the visitation door's swing (LEAF_OPEN) and the denoiser's settings. The set is in
+detention_corridor_set.py, its materials in detention_corridor_mats.py.
 """
 import math
 import os
@@ -32,7 +36,7 @@ import detention_corridor_set as st  # noqa: E402
 EXPOSURE = -1.5
 
 CHAIR = (-0.12, 16.3, -90.0)                 # x, y, facing (deg; -90 = toward the door): the detainee's side, pulled out
-NEAR_CHAIR = (-0.36, 14.98, 90.0)            # the visitor's own chair on the near side, pushed in under the table
+NEAR_CHAIR = (-0.84, 15.02, 66.0)            # the visitor's own chair at the near left corner, tucked in toward the table
 ENVELOPE = (-0.07, 15.69, 13.0)              # x, y, turn (deg) on the table top
 
 FOCUS = {
@@ -44,31 +48,35 @@ FOCUS = {
 CAMERAS = {
     # Ch 06: one-point down the corridor at standing height, verticals true (level camera, lens shift)
     "corridor": dict(loc=(0.0, -2.6, 1.36), aim=(0.0, 13.0, 1.36), lens=28, focus="fx_corridor", fstop=8.0,
-                     shift=(0.0, 0.0)),
+                     shift=(0.0, 0.0), exposure=-1.0),
     # Ch 06: controlled close-up on a cell door's barred window from the hinge side, 40 deg off its axis, so the
     # reveal has depth, the round bars throw shadows on the glass and the raking key grazes the leaf; the empty
     # bunk's top rail rim-lit beyond the bars
-    "door": dict(loc=(0.22, 8.43, 1.56), aim=(st.XW + 0.06, 7.55, 1.47), lens=55, focus="fx_door", fstop=4.0),
+    "door": dict(loc=(0.14, 8.53, 1.56), aim=(st.XW, 7.56, 1.48), lens=40, focus="fx_door", fstop=5.6),
     # Ch 06: the visitation room from the doorway at a seated visitor's eye height (the end wall cut away): the
     # whole table in the pendant's pool, its legs and hard shadow on the floor, the empty chair behind the envelope,
     # the visitor's own chair pushed in at frame left, the shade's glowing rim in the upper third
-    "chair": dict(loc=(0.42, 12.62, 1.2), aim=(-0.08, 15.9, 0.98), lens=27, focus="fx_chair", fstop=5.6,
-                  shift=(0.0, 0.07), clip=0.62),
+    "chair": dict(loc=(0.30, 12.4, 1.16), aim=(-0.12, 15.9, 1.16), lens=25, focus="fx_chair", fstop=5.6,
+                  shift=(0.0, -0.1), clip=1.0),
     # Ch 06 (added): the insert: the sealed envelope in the pool of light from above the table's near edge, the
     # empty chair soft beyond it
-    "envelope": dict(loc=(0.25, 15.0, 1.12), aim=(-0.03, 15.82, 0.78), lens=40, focus="fx_envelope", fstop=2.8),
+    "envelope": dict(loc=(0.25, 15.0, 1.12), aim=(-0.03, 15.82, 0.78), lens=40, focus="fx_envelope", fstop=2.8,
+                     exposure=-1.7),
 }
 # per-camera light changes (absolute watts by light name)
 TRIMS = {
     # the corridor: the room through the gap washed warm, so it is the brightest, warmest thing at the vanishing
     # point
-    "corridor": {"room_warm": 260.0},
+    "corridor": {"room_warm": 600.0, "vd_spill": 0.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
     # down so it does not fill
-    "door": {"door_rake": 9.0, "fit4_down": 150.0, "fit4_up": 4.0},
+    "door": {"door_rake": 14.0, "fit4_down": 150.0, "fit4_up": 4.0},
 }
 # per-camera value of the far (empty) chair's shell: in the insert it would otherwise outshine the envelope
 CHAIR_VAL = {"envelope": 0.62}
+# per-camera swing of the visitation room's door leaf (deg): for the chair camera, which stands in the doorway with
+# the end wall cut away, the leaf is swung back flat out of its way (the corridor shot shows it ajar at 50)
+LEAF_OPEN = {"chair": 172.0}
 _STATE = {}
 
 
@@ -96,6 +104,9 @@ def apply_camera(name):
         ob.data.energy = trims.get(n, b)
     for node, v0 in _STATE.get("chair_val", []):
         node.inputs["Value"].default_value = v0 * CHAIR_VAL.get(name, 1.0)
+    leaf = st.PARTS.get("vd_leaf")
+    if leaf is not None:
+        leaf.rotation_euler = (0, 0, math.radians(LEAF_OPEN.get(name, st.VD_OPEN)))
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
@@ -127,7 +138,7 @@ def door_rake():
     a = math.radians(13.0)
     # it shines along -hinge (across the leaf), turned 13 deg into the wall
     rot = (-math.pi / 2, 0.0, hinge * sx * a) if hinge > 0 else (math.pi / 2, 0.0, hinge * sx * a)
-    st.area("door_rake", (sx * (st.XW - 0.15), y + hinge * 0.62, 1.45), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=70,
+    st.area("door_rake", (sx * (st.XW - 0.15), y + hinge * 0.85, 1.45), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=70,
             rot=rot)
 
 
@@ -136,6 +147,7 @@ def build(cast=True):
     st.M.clear()
     st.LIGHTS.clear()
     _STATE.clear()
+    st.PARTS.clear()
     st.materials()
     st.shell()
     st.cells()
@@ -148,7 +160,7 @@ def build(cast=True):
     _STATE["chair_val"] = [(n, n.inputs["Value"].default_value) for o in far.children_recursive if o.type == "MESH"
                            for s in o.material_slots if s.material for n in s.material.node_tree.nodes
                            if n.type == "HUE_SAT"]
-    st.chair(NEAR_CHAIR[:2], NEAR_CHAIR[2], val=0.55)
+    st.chair(NEAR_CHAIR[:2], NEAR_CHAIR[2], val=0.4)
     st.envelope(ENVELOPE[0], ENVELOPE[1], st.TOP, ENVELOPE[2])
     door_rake()
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.004)

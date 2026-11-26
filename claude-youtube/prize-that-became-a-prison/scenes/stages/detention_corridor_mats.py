@@ -294,7 +294,9 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
     if wet is not None:
         # inside the blob the floor is damp: roughness 0.12-0.2, whatever the paint does
         damp_r_ = _maprange(nt, _noise(nt, p, 6.0, 3.0, 0.6), 0.3, 0.7, 0.12, 0.2)
-        rr = _mix(nt, wet, _combine1(nt, rr), _combine1(nt, damp_r_))
+        wet_r = _maprange(nt, r, damp_r - 0.2, damp_r + 0.06, 1.0, 0.0)
+        wet_r = _math(nt, "MULTIPLY", wet_r, wet_r)
+        rr = _mix(nt, wet_r, _combine1(nt, rr), _combine1(nt, damp_r_))
         rr = _xyz(nt, rr)[0]
     _link(nt, rr, b.inputs["Roughness"])
     # broad, weak relief: the slab's undulation (0.3-0.5 m features) and the joints; no fine grit in the normal
@@ -405,7 +407,7 @@ def paint(name, rgb, rough=0.5, bump=0.06, wear=0.2, edge_rgb=None):
     return m
 
 
-def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.15, 0.17, 0.19),
+def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12, 0.135, 0.15),
                metal=(0.15, 0.15, 0.15)):
     """Painted steel for the cell-door prop, replacing its generated texture (which read as trowelled plaster).
     (loc, rot, scale) map the mesh's own coordinates to the door's local metres: x out of the face, y across the
@@ -462,7 +464,7 @@ def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.15,
     col = _mix(nt, chip, col, metal)
     _link(nt, col, b.inputs["Base Color"])
     _link(nt, chip, b.inputs["Metallic"])
-    r = _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, 0.56, 0.64)
+    r = _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, 0.47, 0.56)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", streak, 0.12))
     r = _mix(nt, chip, _combine1(nt, r), (0.35, 0.35, 0.35))
     _link(nt, _xyz(nt, r)[0], b.inputs["Roughness"])
@@ -547,9 +549,9 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=()):
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.14), clamp=True)
     if ring_in is not None:
         r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_in, 0.08), clamp=True)
-    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.7), 0.45)
+    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.8), 0.55)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.3
+    b.inputs["Specular IOR Level"].default_value = 0.22
     _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.3), _math(nt, "MULTIPLY", sp, 0.2)), 0.05, 0.0003)
     return m
 
