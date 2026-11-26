@@ -179,6 +179,15 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | --- | --- | --- | --- |
 | 93 | **"Transition together" meant a cut.** Asked for the two cups to "transition together like Park Chan-wook", I made a matched dissolve; the author wanted a straight cut with the cup in the same place. A match cut is the plain reading and the faster one; a dissolve is a softening nobody asked for. When a direction can be read two ways, make the harder-edged one or ask. And cut the sound with the picture: a new sound landing on the cut (here the first far bell) is what makes it a cut. | Cut v11 against cut v13. | Every match transition. |
 
+## From Q05 t1
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 94 | **A frame of an earlier take brings a set-up back.** Given Q04's frames of the Hierophant's and the Chancellor's close-ups "for framing, light and background only", with identity still asked of the sheets, the model returned both close-ups matching Q04's, and the faces did not drift. | Q05 t1, shots 3 and 5 against Q04. | Every return to a set-up in a held scene. |
+| 95 | **A listener's mouth stays shut when the prompt says whose voice it is and where it comes from.** "Her mouth is closed from the first frame to the last ... the voice is the Hierophant's, a man's, from off-screen to the right, where she is looking" held on a frontal face through seven words. | Q05 t1, shot 4. | Every line heard over a listener. |
+| 96 | **A pause asked for in words is taken at length.** "He lets a moment pass" before a four-word line gave 2.9 s of silence and took two seconds from the shots after it. Give a pause its length, or leave it to the edit. | Q05 t1, shot 3. | Every beat before a line. |
+| 97 | **Two voices of one sex come back as one voice.** A low alto of fifty-five and a tired mezzo of sixty-four returned within a semitone of each other, and two listening passes heard one woman. A paragraph of words does not cast a voice (lesson 80); when two speakers of one sex share a scene, expect to separate them in sound afterwards or to make one of them elsewhere. | Q05 t1, Serath and the Chancellor. | The voice bible; every scene with two women or two men speaking. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
