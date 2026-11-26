@@ -396,7 +396,7 @@ def lens(name, rgb, strength):
 
 
 # ---------------------------------------------------------------- exterior
-def concrete(name, base=(0.085, 0.086, 0.088), slab=5.0):
+def concrete(name, base=(0.12, 0.121, 0.123), slab=5.0):
     """Apron concrete: 5 m slabs with sealed joints, tyre and oil darkening, patchy roughness (wet-looking under lamps)."""
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -422,7 +422,7 @@ def line_paint(name, rgb):
     return m
 
 
-def sky(name, horizon=(0.075, 0.08, 0.095), zenith=(0.0035, 0.0055, 0.012), haze=(0.11, 0.1, 0.09)):
+def sky(name, horizon=(0.14, 0.15, 0.18), zenith=(0.004, 0.0065, 0.014), haze=(0.24, 0.21, 0.18)):
     """The night sky as an emitting dome: near black overhead, a low band of city glow along the horizon."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -526,7 +526,7 @@ def materials():
         white=line_paint("white line", (0.42, 0.42, 0.42)),
         red=line_paint("red line", (0.3, 0.03, 0.025)),
         facade=pbr("facade cladding", (0.05, 0.053, 0.058), (0.3, 0.5), metal=0.6, nscale=0.6, cvar=0.12),
-        fuselage=pbr("aircraft paint", (0.3, 0.305, 0.31), (0.22, 0.36), nscale=0.3, cvar=0.06, coat=0.5),
+        fuselage=pbr("aircraft paint", (0.24, 0.245, 0.25), (0.26, 0.4), nscale=0.3, cvar=0.06, coat=0.3),
         fuselage_dark=pbr("aircraft belly", (0.1, 0.102, 0.105), (0.3, 0.45), nscale=0.3, cvar=0.1, coat=0.3),
         engine=pbr("nacelle", (0.22, 0.225, 0.23), (0.25, 0.4), metal=0.3, nscale=0.6, cvar=0.08, coat=0.4),
         intake=pbr("intake dark", (0.01, 0.01, 0.011), (0.3, 0.5), metal=0.6, nscale=3, cvar=0.2),
@@ -540,8 +540,8 @@ def materials():
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
         cockpit=glow("cockpit glow", (0.5, 0.62, 0.85), 0.5),
-        bridge_win=glow("bridge window", (0.7, 0.8, 1.0), 1.4),
-        flood=glow("flood lamp", (1.0, 0.9, 0.78), 60.0),
+        bridge_win=glow("bridge window", (0.7, 0.8, 1.0), 0.45, 0.4, ("Y", "Z")),
+        flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),
         nav_green=glow("nav green", (0.1, 1.0, 0.35), 50.0),
         nav_white=glow("nav white", (1.0, 1.0, 1.0), 40.0),

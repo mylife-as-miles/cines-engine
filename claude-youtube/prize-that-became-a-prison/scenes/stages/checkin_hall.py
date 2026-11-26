@@ -22,11 +22,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
 sys.path.insert(0, os.path.join(HERE, ".."))
 import bpy  # noqa: E402
+from mathutils import Matrix, Vector  # noqa: E402
 
 import cast as castkit  # noqa: E402
 import props  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
+
+sys.path.insert(0, HERE)
+import checkin_hall_trolley  # noqa: E402
 
 # ---------------------------------------------------------------- layout (metres; counter front face at y = 0)
 PITCH = 3.0
@@ -40,15 +44,15 @@ WALL_Y = 2.55         # back wall front face
 HALL = dict(x0=-21.0, x1=8.0, y0=-14.0, H=5.5)
 BULK = (-0.25, 3.2, 3.72)  # bulkhead over the whole row: front face y, underside z, top z
 
-DAWN = (0.55, -0.39)
+DAWN = (0.5, -0.34)
 AGENT = (0.02, 0.98)
 
 EXPOSURE = -1.6
 CAMERAS = {
-    "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.5), lens=24, focus="focus_dawn", fstop=5.6),
+    "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6),
     "scale": dict(loc=(1.6, -1.2, 1.32), aim=(1.15, 0.4, 0.6), lens=32, focus="scale_display", fstop=4.0),
-    "profile": dict(loc=(5.2, -0.25, 1.45), aim=(0.3, 0.28, 1.0), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.2, 1.62, 1.5), aim=(0.39, -0.3, 1.55), lens=50, focus="focus_dawn", fstop=2.0),
+    "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
+    "shoulder": dict(loc=(0.4, 1.68, 1.58), aim=(0.29, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.0),
 }
 
 M = {}
@@ -117,8 +121,12 @@ def _fmix(nt, fac, a, b):
 
 
 def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), cvar=0.12, bump=0.0, bscale=90.0,
-        aniso=0.0, coat=0.0, ribs=None):
-    """A principled material with roughness and tone variation (no surface reads as one flat value)."""
+        aniso=0.0, coat=0.0, ribs=None, wear=None, smudge=None):
+    """A principled material with roughness and tone variation (no surface reads as one flat value).
+
+    wear=(kick_h, reveal_z): a scuffed kick zone from the floor to kick_h (darker, rougher, patchy) and a soft
+    darkening band either side of a reveal at reveal_z (world heights). smudge=r: patches of hand grease at
+    noise scale 3 that lift the roughness to r (counter tops)."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -133,10 +141,38 @@ def pbr(name, rgb, rough=(0.4, 0.55), metal=0.0, nscale=4.0, stretch=(1, 1, 1), 
     nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
     v = mp.outputs["Vector"]
     nz = _noise(nt, v, nscale)
-    nt.links.new(_range(nt, nz, 0.32, 0.68, rough[0], rough[1]), b.inputs["Roughness"])
+    rough_s = _range(nt, nz, 0.32, 0.68, rough[0], rough[1])
     dark = tuple(c * (1 - cvar) for c in rgb)
     lite = tuple(min(1.0, c * (1 + cvar)) for c in rgb)
-    nt.links.new(_mix(nt, _range(nt, _noise(nt, v, nscale * 0.37, 4.0), 0.3, 0.7, 0.0, 1.0), dark, lite), b.inputs["Base Color"])
+    col_s = _mix(nt, _range(nt, _noise(nt, v, nscale * 0.37, 4.0), 0.3, 0.7, 0.0, 1.0), dark, lite)
+    if wear or smudge:
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(geo.outputs["Position"], sep.inputs[0])
+        wz = sep.outputs["Z"]
+        patch = _range(nt, _noise(nt, geo.outputs["Position"], 3.0, 4.0, 0.55), 0.38, 0.62, 0.0, 1.0)
+    if wear:
+        kick_h, reveal_z = wear
+        band = _range(nt, wz, kick_h * 0.35, kick_h, 1.0, 0.0)              # 1 at the floor, 0 above the kick zone
+        mul = nt.nodes.new("ShaderNodeMath")
+        mul.operation = "MULTIPLY"
+        nt.links.new(band, mul.inputs[0])
+        nt.links.new(_range(nt, patch, 0.0, 1.0, 0.45, 1.0), mul.inputs[1])
+        scuff = mul.outputs[0]
+        col_s = _mix(nt, scuff, col_s, tuple(c * 0.85 for c in rgb))
+        rough_s = _fmix(nt, scuff, rough_s, min(1.0, rough[1] + 0.15))
+        dist = nt.nodes.new("ShaderNodeMath")                                # soft grime either side of the reveal
+        dist.operation = "ABSOLUTE"
+        sub = nt.nodes.new("ShaderNodeMath")
+        sub.operation = "SUBTRACT"
+        nt.links.new(wz, sub.inputs[0])
+        sub.inputs[1].default_value = reveal_z
+        nt.links.new(sub.outputs[0], dist.inputs[0])
+        col_s = _mix(nt, _range(nt, dist.outputs[0], 0.0, 0.06, 0.35, 0.0), col_s, tuple(c * 0.7 for c in rgb))
+    if smudge:
+        rough_s = _fmix(nt, _range(nt, patch, 0.55, 0.85, 0.0, 1.0), rough_s, smudge)
+    nt.links.new(rough_s, b.inputs["Roughness"])
+    nt.links.new(col_s, b.inputs["Base Color"])
     if bump or ribs:
         bp = nt.nodes.new("ShaderNodeBump")
         bp.inputs["Distance"].default_value = 0.001
@@ -259,6 +295,29 @@ def screen_mat(name, rgb, strength, falloff=0.35):
     return m
 
 
+def sky_mat(name, strength):
+    """Night outside the glazing: a glow that is brightest at the horizon (city and apron light, a little warm)
+    and falls to a dark blue above, so the mullions silhouette against a gradient, not a flat card."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sep.inputs[0])
+    h = _range(nt, sep.outputs["Z"], -0.5, 16.0, 0.0, 1.0)
+    pw = nt.nodes.new("ShaderNodeMath")
+    pw.operation = "POWER"
+    nt.links.new(h, pw.inputs[0])
+    pw.inputs[1].default_value = 0.6
+    em = nt.nodes.new("ShaderNodeEmission")
+    nt.links.new(_mix(nt, pw.outputs[0], (0.1, 0.092, 0.095), (0.03, 0.05, 0.1)), em.inputs["Color"])
+    nt.links.new(_range(nt, pw.outputs[0], 0.0, 1.0, strength, strength * 0.25), em.inputs["Strength"])
+    nt.links.new(em.outputs[0], nt.nodes["Material Output"].inputs[0])
+    m.cycles.emission_sampling = "NONE"
+    return m
+
+
 def glass_mat():
     m = bpy.data.materials.new("glazing")
     m.use_nodes = True
@@ -276,23 +335,28 @@ def materials():
     M.update(
         floor=floor_mat(),
         ceiling=ceiling_mat(),
-        laminate=pbr("laminate front", (0.15, 0.146, 0.14), (0.38, 0.5), nscale=6, cvar=0.06, bump=0.04, bscale=300),
-        laminate_dark=pbr("laminate dark", (0.04, 0.041, 0.044), (0.34, 0.48), nscale=6, cvar=0.12, bump=0.04, bscale=300),
-        top=pbr("dark solid surface", (0.022, 0.024, 0.027), (0.16, 0.34), nscale=5, cvar=0.15, coat=0.3),
+        laminate=pbr("laminate front", (0.15, 0.146, 0.14), (0.38, 0.5), nscale=6, cvar=0.06, bump=0.04, bscale=300,
+                     wear=(0.25, 0.7)),
+        laminate_dark=pbr("laminate dark", (0.04, 0.041, 0.044), (0.34, 0.48), nscale=6, cvar=0.12, bump=0.04, bscale=300,
+                          wear=(0.25, 0.7)),
+        top=pbr("dark solid surface", (0.022, 0.024, 0.027), (0.16, 0.3), nscale=5, cvar=0.15, coat=0.3, smudge=0.45),
         steel=pbr("brushed steel", (0.6, 0.61, 0.63), (0.22, 0.4), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08, aniso=0.5),
         steel_worn=pbr("scuffed steel", (0.45, 0.46, 0.48), (0.3, 0.62), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.25, aniso=0.3),
+        steel_dark=pbr("dull steel", (0.3, 0.305, 0.315), (0.38, 0.6), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.18, aniso=0.2),
         steel_v=pbr("brushed steel vertical", (0.6, 0.61, 0.63), (0.2, 0.34), metal=1.0, nscale=3, stretch=(30, 30, 1), cvar=0.06),
+        satin=pbr("satin steel", (0.55, 0.56, 0.58), (0.24, 0.32), metal=1.0, nscale=60, cvar=0.04),
         chrome=pbr("polished steel", (0.78, 0.79, 0.8), (0.07, 0.14), metal=1.0, nscale=6, cvar=0.03),
-        plate=pbr("weigh plate", (0.5, 0.51, 0.53), (0.2, 0.5), metal=1.0, nscale=9, stretch=(1, 14, 14), cvar=0.2, aniso=0.4,
-                  bump=0.05, bscale=180),
+        plate=pbr("weigh plate", (0.5, 0.51, 0.53), (0.25, 0.4), metal=1.0, nscale=9, stretch=(1, 120, 120), cvar=0.05, aniso=0.6,
+                  bump=0.008, bscale=180),
         rubber=pbr("belt rubber", (0.016, 0.016, 0.018), (0.62, 0.8), nscale=5, cvar=0.25, bump=0.35, bscale=55, ribs="X"),
         rubber_y=pbr("belt rubber y", (0.016, 0.016, 0.018), (0.62, 0.8), nscale=5, cvar=0.25, bump=0.35, bscale=55, ribs="Y"),
         plastic=pbr("dark plastic", (0.028, 0.03, 0.033), (0.38, 0.5), nscale=8, cvar=0.1),
         plastic_mid=pbr("grey plastic", (0.12, 0.125, 0.13), (0.42, 0.55), nscale=8, cvar=0.08),
         screen_off=pbr("screen off", (0.006, 0.007, 0.009), (0.06, 0.12), nscale=10, cvar=0.05),
-        wall=pbr("wall panel", (0.07, 0.076, 0.085), (0.5, 0.66), nscale=2.5, cvar=0.1, bump=0.03, bscale=200),
-        wall_dark=pbr("upper wall", (0.04, 0.043, 0.048), (0.6, 0.75), nscale=1.5, cvar=0.12),
-        bulk=pbr("bulkhead", (0.085, 0.09, 0.1), (0.5, 0.65), nscale=2.0, cvar=0.08),
+        wall=pbr("wall panel", (0.035, 0.038, 0.043), (0.5, 0.66), nscale=2.5, cvar=0.1, bump=0.03, bscale=200),
+        wall_dark=pbr("upper wall", (0.03, 0.032, 0.036), (0.6, 0.75), nscale=1.5, cvar=0.12),
+        bulk=pbr("bulkhead", (0.05, 0.053, 0.059), (0.5, 0.65), nscale=2.0, cvar=0.08),
+        beam=pbr("ceiling beam", (0.06, 0.063, 0.068), (0.35, 0.5), metal=0.6, nscale=2.0, cvar=0.1),
         column=pbr("column cladding", (0.2, 0.205, 0.21), (0.3, 0.45), metal=0.0, nscale=2.0, cvar=0.08, coat=0.2),
         fabric=pbr("queue belt", (0.02, 0.026, 0.045), (0.7, 0.85), nscale=30, cvar=0.15, bump=0.15, bscale=400),
         iron=pbr("cast base", (0.018, 0.019, 0.02), (0.35, 0.55), metal=0.3, nscale=10, cvar=0.2),
@@ -304,13 +368,21 @@ def materials():
         tube_dim=sk.emission("fluorescent dim", COOL, 1.6),
         sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 1.3, 0.45),
         sign_dim=screen_mat("sign dim", (0.6, 0.72, 0.9), 0.12, 0.3),
-        monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 2.6, 0.4),
-        display=screen_mat("scale display", (0.62, 1.0, 0.92), 14.0, 0.25),
+        monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 5.0, 0.4),
+        display=screen_mat("scale display", (0.5, 1.0, 0.86), 22.0, 0.25),
+        display_edge=sk.emission("display edge bleed", (0.5, 1.0, 0.86), 4.0),
+        bezel=pbr("display bezel", (0.03, 0.032, 0.035), (0.3, 0.42), nscale=8, cvar=0.08),
         display_off=pbr("display off", (0.008, 0.012, 0.012), (0.08, 0.14), nscale=10, cvar=0.05),
         curtain=pbr("curtain flaps", (0.02, 0.021, 0.022), (0.5, 0.7), nscale=6, cvar=0.2),
-        night=screen_mat("night", (0.05, 0.085, 0.16), 0.5, 0.6),
+        night=sky_mat("night", 1.5),
         apron=sk.emission("apron lamp", (1.0, 0.82, 0.6), 60.0),
         apron_w=sk.emission("apron lamp white", (0.85, 0.92, 1.0), 45.0),
+        sodium=sk.emission("sodium lamp", (1.0, 0.7, 0.45), 40.0),
+        sodium_dim=sk.emission("sodium lamp dim", (1.0, 0.7, 0.45), 14.0),
+        cool_dim=sk.emission("cool lamp dim", (0.85, 0.92, 1.0), 12.0),
+        grip=pbr("rubber grip", (0.02, 0.02, 0.022), (0.55, 0.7), nscale=40, cvar=0.15),
+        wire=pbr("trolley wire", (0.55, 0.56, 0.58), (0.18, 0.3), metal=1.0, nscale=20, cvar=0.08),
+        tyre=pbr("tyre", (0.015, 0.015, 0.016), (0.6, 0.75), nscale=30, cvar=0.1),
         grille=pbr("grille", (0.05, 0.053, 0.058), (0.4, 0.55), metal=0.6, nscale=4, cvar=0.1, bump=1.0, bscale=55, ribs="Z"),
         door=pbr("door laminate", (0.09, 0.095, 0.1), (0.4, 0.55), nscale=3, cvar=0.08),
         red=pbr("extinguisher", (0.22, 0.03, 0.025), (0.25, 0.4), nscale=6, cvar=0.1, coat=0.4),
@@ -359,15 +431,25 @@ def hall():
     glazing_front(y0, x0, x1)
     glazing(x0)
     back_dressing()
-    # columns in the passenger hall
-    for i, (px, py) in enumerate(((-7.5, -5.6), (-16.5, -5.6), (-7.5, -12.0))):
+    # clad columns in the passenger hall (one beside the queue, one behind Dawn in the reverse, two far off)
+    for i, (px, py) in enumerate(((-7.4, -3.3), (2.2, -6.6), (-16.5, -6.6), (-7.4, -12.0))):
         box(f"column{i}", (0.62, 0.62, H), (px, py, H / 2), m["column"], bevel=0.02)
         box(f"column{i}_base", (0.66, 0.66, 0.12), (px, py, 0.06), m["steel_worn"], bevel=0.004)
         for sx, sy in ((1, 1), (1, -1), (-1, 1), (-1, -1)):  # steel corner guards
-            box(f"column{i}_guard", (0.05, 0.05, 1.2), (px + sx * 0.3, py + sy * 0.3, 0.72), m["steel"], bevel=0.004)
-    # a steel litter bin by the near column
-    sk.cyl("bin", 0.2, 0.75, (-6.9, -5.1, 0.375), m["bin"], verts=40)
-    sk.cyl("bin_lid", 0.205, 0.04, (-6.9, -5.1, 0.77), m["plastic"], verts=40)
+            box(f"column{i}_guard", (0.05, 0.05, 1.2), (px + sx * 0.3, py + sy * 0.3, 0.72), m["satin"], bevel=0.004)
+    # an extinguisher on the near column's face toward the row, a steel litter bin beside it
+    ex, ey = -7.4 + 0.31, -3.3
+    box("col_ext_bracket", (0.012, 0.12, 0.08), (ex + 0.006, ey, 1.12), m["steel"], bevel=0.002)
+    sk.cyl("col_ext_bottle", 0.075, 0.48, (ex + 0.085, ey, 0.86), m["red"], verts=24)
+    sk.cyl("col_ext_neck", 0.03, 0.1, (ex + 0.085, ey, 1.15), m["iron"], verts=16)
+    sk.cyl("col_ext_hose", 0.012, 0.36, (ex + 0.15, ey + 0.03, 0.92), m["plastic"], verts=10, rot=(0, math.radians(8), 0))
+    sk.cyl("bin", 0.2, 0.75, (-6.9, -3.82, 0.375), m["bin"], verts=40)
+    sk.cyl("bin_lid", 0.205, 0.04, (-6.9, -3.82, 0.77), m["plastic"], verts=40)
+    sk.cyl("bin_mouth", 0.07, 0.005, (-6.9, -3.82, 0.792), m["screen_off"], verts=24)
+    # slim beams under the slat ceiling, across the hall every 1.2 m: the fittings' uplight gives them form
+    for k in range(int((x1 - x0) / 1.2)):
+        bx = x0 + 0.6 + 1.2 * k
+        box(f"beam{k}", (0.06, WALL_Y - y0 - 0.4, 0.22), (bx, (WALL_Y + y0) / 2, H - 0.11), m["beam"], bevel=0.004)
     # fluorescent fittings hung in rows over the passenger hall: some on, most off (night)
     on = {(0, 0), (3, 0), (1, 1), (4, 1), (-1, 1), (2, 2), (5, 2), (0, 3), (3, 3)}
     for j, fy in enumerate((-1.9, -5.0, -8.1, -11.2)):
@@ -376,6 +458,12 @@ def hall():
             fitting(f"fit{i}_{j}", fx, fy, 4.25, lit, strong=(j == 0 and i - 1 in (0,)))
     # blank directional sign hung over the hall
     hang_sign("hall_sign", (-4.2, -5.0, 3.55), (2.6, 0.08, 0.55), m["sign_dim"])
+    # moonlight: a cool soft source outside the glazed end wall, raking into the hall from the left (the glass
+    # does not block shadow rays, so this reaches the floor and rims the stanchions without caustic noise)
+    moon = light("moonlight", (x0 - 2.5, -3.0, 3.2), (3.0, 6.0), 260, rot=(0, math.radians(-74), 0), spread=150,
+                 colour=(0.5, 0.62, 0.85))
+    moon.visible_camera = False
+    moon.visible_transmission = False   # through the glass you see the night, not a white panel
 
 
 def back_dressing():
@@ -421,8 +509,10 @@ def fitting(name, x, y, z, lit, strong=False, length=2.4):
     box(name + "_diffuser", (length - 0.06, 0.15, 0.012), (x, y, z - 0.045), m["tube"] if lit else m["diffuser_off"], bevel=0.003)
     for dx in (-length * 0.4, length * 0.4):
         sk.cyl(name + "_wire", 0.0025, HALL["H"] - z, (x + dx, y, (HALL["H"] + z) / 2), m["steel"], verts=6)
-    if lit:
-        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 650 if strong else 75, spread=120)
+    if lit:  # a pool on the floor below, and a little uplight that shows the beams and slats above
+        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 650 if strong else 55, spread=100 if strong else 85)
+        up = light(name + "_up", (x, y, z + 0.05), (length - 0.1, 0.14), 14 if strong else 10, rot=(math.radians(180), 0, 0), spread=160)
+        up.visible_camera = False
 
 
 def hang_sign(name, loc, size, face_m):
@@ -445,7 +535,8 @@ def glazing(x):
         box(f"mullion{k}", (0.12, 0.08, H), (x, y, H / 2), m["mullion"], bevel=0.006)
     for zz in (2.4,):
         box("transom", (0.1, WALL_Y - y0, 0.07), (x, (WALL_Y + y0) / 2, zz), m["mullion"], bevel=0.005)
-    box("glass", (0.012, WALL_Y - y0, H - 0.8), (x - 0.03, (WALL_Y + y0) / 2, 0.3 + (H - 0.8) / 2), m["glass"])
+    gl = box("glass", (0.012, WALL_Y - y0, H - 0.8), (x - 0.03, (WALL_Y + y0) / 2, 0.3 + (H - 0.8) / 2), m["glass"])
+    gl.visible_shadow = False  # the moonlight outside reaches the hall by direct light, not caustics
     # outside: night sky glow and apron lamps far off
     box("night", (0.05, 80, 30), (x - 60, -6, 8), m["night"])
     box("apron_ground", (60, 80, 0.05), (x - 30, -6, -0.6), pbr("apron", (0.01, 0.011, 0.012), (0.3, 0.5)))
@@ -455,6 +546,12 @@ def glazing(x):
             if rnd.random() < 0.2:
                 continue
             sk.sphere(f"apron_lamp{row}_{k}", 0.12 if row < 2 else 0.05, (x - dx, -34 + step * k + rnd.uniform(-0.4, 0.4), z), mat_, segs=8)
+    # more apron life at varied distances and heights: mast heads, stand lights, taxiway edge lamps
+    for k in range(14):
+        dx = rnd.uniform(9, 55)
+        z = rnd.choice((rnd.uniform(0.3, 1.2), rnd.uniform(5, 14)))
+        mat_ = rnd.choice((m["sodium"], m["sodium_dim"], m["apron_w"], m["cool_dim"]))
+        sk.sphere(f"apron_more{k}", rnd.uniform(0.05, 0.2), (x - dx, rnd.uniform(-30, 14), z), mat_, segs=8)
 
 
 def glazing_front(y, xa, xb):
@@ -475,7 +572,18 @@ def glazing_front(y, xa, xb):
         for k in range(int(70 / step)):
             if rnd.random() < 0.25:
                 continue  # a few lamps out
+            if -8 < -38 + step * k < 8:
+                continue  # the reverse's window: lit by the scattered field below instead of an even row
             sk.sphere(f"street_lamp{row}_{k}", 0.09 if row < 2 else 0.05, (-38 + step * k + rnd.uniform(-0.5, 0.5), y - dy, z), mat_, segs=8)
+    # the forecourt behind Dawn in the reverse: lamps scattered in depth (15-60 m from the lens), sizes and
+    # brightnesses mixed, warm sodium and cool white, so the bokeh reads as a real night outside, not a pattern
+    rnd = random.Random(23)
+    mats = (m["sodium"], m["sodium_dim"], m["sodium"], m["apron_w"], m["cool_dim"])
+    for k in range(22):
+        d = rnd.uniform(1.5, 44.0)               # metres beyond the glazing (the lens is ~16 m from it)
+        spread = 0.8 * 0.36 * (15.7 + d)           # stay roughly inside the reverse's field of view
+        z = rnd.choice((rnd.uniform(0.4, 1.6), rnd.uniform(1.8, 4.5), rnd.uniform(5.0, 9.0)))
+        sk.sphere(f"fore_lamp{k}", rnd.uniform(0.05, 0.25), (0.6 + rnd.uniform(-spread, spread), y - d, z), mats[k % len(mats)], segs=10)
 
 
 # ---------------------------------------------------------------- the check-in row
@@ -491,7 +599,7 @@ def desk(x0, idx, open_):
     box(p + "reveal", (2 * hw - 0.02, 0.024, 0.016), (x0, 0.02, RV - 0.005), m["steel"], bevel=0.003)
     box(p + "kick", (2 * hw - 0.02, 0.02, 0.1), (x0, 0.045, 0.05), m["steel_worn"], bevel=0.002)
     for s in (-1, 1):  # stainless corner guards on the front corners, a kick plate along each side
-        box(p + "corner", (0.04, 0.04, LEDGE - 0.12), (x0 + s * (hw - 0.012), 0.012, 0.1 + (LEDGE - 0.12) / 2), m["steel"], bevel=0.005)
+        box(p + "corner", (0.04, 0.04, LEDGE - 0.12), (x0 + s * (hw - 0.012), 0.012, 0.1 + (LEDGE - 0.12) / 2), m["satin"], bevel=0.005)
         box(p + "side_kick", (0.012, 0.68, 0.1), (x0 + s * (hw + 0.002), 0.4, 0.05), m["steel_worn"], bevel=0.002)
     for s in (-1, 1):
         box(p + "side_lo", (0.03, 0.74, RV - 0.01), (x0 + s * (hw - 0.015), 0.39, (RV - 0.01) / 2), m["laminate_dark"], bevel=0.003)
@@ -503,7 +611,7 @@ def desk(x0, idx, open_):
     box(p + "work", (2 * hw - 0.06, 0.45, 0.03), (x0, 0.53, WORK - 0.015), m["top"], bevel=0.005)
     box(p + "back", (2 * hw - 0.06, 0.02, WORK - 0.2), (x0, 0.7, 0.16 + (WORK - 0.2) / 2), m["laminate"], bevel=0.002)
     # agent's monitor: stand, neck, a thin body tilted to the agent, blank glowing (or dark) screen
-    mx, kx = x0 - 0.1, x0 + 0.06
+    mx, kx = x0 - 0.3, x0 + 0.06      # monitor to the agent's right: out of the reverse, past his head
     box(p + "mon_base", (0.22, 0.17, 0.012), (mx, 0.43, WORK + 0.006), m["plastic"], bevel=0.004)
     box(p + "mon_neck", (0.05, 0.03, 0.26), (mx, 0.43, WORK + 0.14), m["plastic"], bevel=0.006)
     body = box(p + "mon_body", (0.52, 0.03, 0.33), (mx, 0.415, WORK + 0.36), m["plastic"], bevel=0.008, rot=(math.radians(8), 0, 0))
@@ -515,10 +623,12 @@ def desk(x0, idx, open_):
     box(p + "keys", (0.41, 0.12, 0.004), (kx, 0.58, WORK + 0.02), m["plastic_mid"], rot=(math.radians(-3), 0, 0))
     box(p + "tagprinter", (0.22, 0.27, 0.19), (x0 + 0.52, 0.47, WORK + 0.095), m["plastic_mid"], bevel=0.012)
     box(p + "tagslot", (0.14, 0.01, 0.012), (x0 + 0.52, 0.335, WORK + 0.14), m["plastic"])
-    box(p + "bpprinter", (0.26, 0.3, 0.14), (x0 - 0.5, 0.52, WORK + 0.07), m["plastic"], bevel=0.012)
+    box(p + "bpprinter", (0.24, 0.26, 0.14), (x0 - 0.54, 0.62, WORK + 0.07), m["plastic"], bevel=0.012)
     sk.cyl(p + "grommet", 0.03, 0.004, (x0 + 0.12, 0.66, WORK + 0.002), m["plastic"], verts=24)
     if open_:  # the screen's light on the agent; a soft spill on the work surface
-        light(p + "mon_light", (mx, 0.44, WORK + 0.36), (0.45, 0.28), 5.0, rot=(math.radians(98), 0, 0), spread=150, colour=(0.62, 0.78, 1.0))
+        ml = light(p + "mon_light", (mx, 0.44, WORK + 0.36), (0.45, 0.28), 25.0, rot=(math.radians(98), 0, 0), spread=150,
+                   colour=(0.62, 0.78, 1.0))
+        ml.visible_camera = False
 
 
 def scale(x0, idx, open_):
@@ -544,20 +654,31 @@ def scale(x0, idx, open_):
     sk.cyl(p + "post_collar", 0.03, 0.04, (px, py, 0.95), m["plastic"], verts=24)
     head = box(p + "disp_head", (0.3, 0.07, 0.14), (px, py - 0.005, 1.02), m["plastic"], bevel=0.012,
                rot=(math.radians(-14), 0, math.radians(-10)))
-    box(p + "disp_bezel", (0.262, 0.004, 0.104), (0, -0.036, 0.0), m["plastic_mid"], bevel=0.002).parent = head
+    box(p + "disp_bezel", (0.262, 0.004, 0.104), (0, -0.036, 0.0), m["bezel"], bevel=0.002).parent = head
+    if open_:  # backlight bleed: a hairline of light round the panel inside the bezel
+        for dz in (-0.0435, 0.0435):
+            box(p + "disp_bleed", (0.244, 0.0025, 0.0015), (0, -0.0383, dz), m["display_edge"]).parent = head
+        for dx in (-0.1215, 0.1215):
+            box(p + "disp_bleed", (0.0015, 0.0025, 0.088), (dx, -0.0383, 0.0), m["display_edge"]).parent = head
     disp = box(("scale_display" if idx == 0 else p + "display"), (0.24, 0.003, 0.084), (0, -0.0385, 0.0),
                m["display"] if open_ else m["display_off"])
     disp.parent = head
     if open_:
-        light(p + "disp_light", (0, -0.05, 0.0), (0.22, 0.08), 0.8, rot=(math.radians(-90), 0, 0), spread=160,
-              colour=(0.62, 1.0, 0.92)).parent = head
+        dl = light(p + "disp_light", (0, -0.05, 0.0), (0.22, 0.08), 8.0, rot=(math.radians(-90), 0, 0), spread=120,
+                   colour=(0.5, 1.0, 0.86))
+        dl.parent = head
+        dl.visible_camera = False
+        # the panel's glow falling back and down onto the post collar, the plate rim and the top of the bag
+        sp = light(p + "disp_spill", (px - 0.05, py + 0.02, 0.93), (0.2, 0.06), 2.5, spread=150, colour=(0.5, 1.0, 0.86))
+        sp.rotation_euler = (-Vector((-0.55, 0.45, -0.7))).to_track_quat("Z", "Y").to_euler()
+        sp.visible_camera = False
     # feed belt behind the scale into the collector belt
     fy0, fy1 = D + 0.02, BELT_Y[0]
     fl = fy1 - fy0
     box(p + "feed_frame", (W - 0.06, fl, PLATE - 0.04), (xs, fy0 + fl / 2, (PLATE - 0.04) / 2), m["steel_worn"], bevel=0.003)
     box(p + "feed_belt", (W - 0.14, fl + 0.02, 0.014), (xs, fy0 + fl / 2, PLATE - 0.035), m["rubber_y"], bevel=0.004)
     for s in (-1, 1):
-        box(p + "feed_guard", (0.03, fl, 0.16), (xs + s * (W / 2 - 0.045), fy0 + fl / 2, PLATE + 0.04), m["steel"], bevel=0.004)
+        box(p + "feed_guard", (0.03, fl, 0.16), (xs + s * (W / 2 - 0.045), fy0 + fl / 2, PLATE + 0.04), m["steel_dark"], bevel=0.004)
     for yy in (fy0 + 0.02, fy1 - 0.02):
         sk.cyl(p + "roller", 0.025, W - 0.14, (xs, yy, PLATE - 0.045), m["steel"], rot=(0, math.radians(90), 0), verts=20)
 
@@ -584,9 +705,14 @@ def position_lights(x0, idx, level):
     face = m["sign_on"] if level > 0.5 else m["sign_dim"]
     box(p + "sign_frame", (1.5, 0.06, 0.4), (lx, yf - 0.03, (BULK[1] + BULK[2]) / 2), m["housing"], bevel=0.006)
     box(p + "sign_face", (1.42, 0.004, 0.33), (lx, yf - 0.062, (BULK[1] + BULK[2]) / 2), face)
-    if level > 0:
-        light(p + "down_front", (lx, 0.2, zb - 0.02), (2.4, 0.12), 600 * level, spread=110)
-        light(p + "down_agent", (lx, 1.45, zb - 0.02), (2.4, 0.12), 240 * level, spread=110)
+    if level > 0:  # the front run is split: full over the passenger, only a dim pool over the scale (its display reads)
+        light(p + "down_front", (x0 + 0.175, 0.2, zb - 0.02), (1.55, 0.12), 580 * level, spread=60)
+        light(p + "down_scale", (x0 + 1.375, 0.2, zb - 0.02), (0.85, 0.12), 70 * level, spread=60)
+        light(p + "down_agent", (lx, 1.45, zb - 0.02), (2.4, 0.12), 70 * level, spread=60)
+        if level > 0.5:  # a flag over the agent (unseen, casts shadow only): he is lit by his monitor, not the downlights
+            fl = box(p + "agent_flag", (1.6, 0.8, 0.01), (x0 + 0.3, 0.95, 2.35), m["plastic"])
+            for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
+                setattr(fl, attr, False)
 
 
 def collector(x_left, x_right):
@@ -596,18 +722,35 @@ def collector(x_left, x_right):
     box("coll_frame", (L, y1 - y0, PLATE - 0.04), (cx, (y0 + y1) / 2, (PLATE - 0.04) / 2), m["steel_worn"], bevel=0.003)
     box("coll_belt", (L, y1 - y0 - 0.08, 0.014), (cx, (y0 + y1) / 2, PLATE - 0.035), m["rubber"], bevel=0.004)
     box("coll_lip", (L, 0.03, 0.05), (cx, y0 + 0.015, PLATE - 0.01), m["steel"], bevel=0.004)
-    box("coll_guard", (L, 0.03, 0.3), (cx, y1 - 0.015, PLATE + 0.1), m["steel"], bevel=0.004)
-    # end housing with rubber curtain flaps where the belt leaves through the back
-    ex = x_right + 0.35
-    box("coll_end", (0.7, 0.9, 1.0), (ex, (y0 + y1) / 2 + 0.1, 0.5), m["door"], bevel=0.006)
-    box("coll_end_top", (0.74, 0.94, 0.03), (ex, (y0 + y1) / 2 + 0.1, 1.015), m["top"], bevel=0.005)
-    box("coll_mouth", (0.02, y1 - y0 - 0.04, 0.5), (ex - 0.352, (y0 + y1) / 2, PLATE + 0.25), m["plastic"])
+    # the belt leaves through the back wall: a plough at the end turns the bags over a short roller bridge into a
+    # flapped portal (the one opening in the wall, facing the hall)
+    pw, pz0, pz1 = 0.95, PLATE - 0.06, 0.82
+    px0 = x_right - pw
+    box("coll_guard", (px0 - x_left, 0.03, 0.3), ((x_left + px0) / 2, y1 - 0.015, PLATE + 0.1), m["steel_dark"], bevel=0.004)
+    box("coll_endcap", (0.04, y1 - y0, 0.34), (x_right + 0.02, (y0 + y1) / 2, PLATE - 0.02), m["steel_dark"], bevel=0.004)
+    ang = math.atan2(y1 - y0 - 0.1, pw - 0.15)
+    pl = math.hypot(y1 - y0 - 0.1, pw - 0.15)
+    box("coll_plough", (pl, 0.02, 0.22), (px0 + 0.08 + (pw - 0.15) / 2, (y0 + y1) / 2, PLATE + 0.1), m["steel_worn"], bevel=0.004,
+        rot=(0, 0, ang))
+    box("coll_plough_foot", (pl, 0.04, 0.015), (px0 + 0.08 + (pw - 0.15) / 2, (y0 + y1) / 2, PLATE - 0.02), m["rubber"], rot=(0, 0, ang))
+    for k in range(4):  # roller bridge from the belt edge to the wall
+        sk.cyl(f"coll_bridge_roller{k}", 0.022, pw - 0.1, (px0 + pw / 2, y1 + 0.035 + 0.06 * k, PLATE - 0.045), m["steel"],
+               rot=(0, math.radians(90), 0), verts=16)
+    for sx in (px0 + 0.03, x_right - 0.03):
+        box("coll_bridge_side", (0.03, WALL_Y - y1, 0.12), (sx, (y1 + WALL_Y) / 2, PLATE - 0.07), m["steel_dark"], bevel=0.003)
+    # the portal: a black opening in the panels, a steel frame, rubber flaps hanging over it
+    pcx, pcz = px0 + pw / 2, (pz0 + pz1) / 2
+    box("portal_void", (pw, 0.004, pz1 - pz0), (pcx, WALL_Y - 0.002, pcz), m["screen_off"])
+    for dz in (pz1 + 0.025, pz0 - 0.025):
+        box("portal_frame", (pw + 0.1, 0.05, 0.05), (pcx, WALL_Y - 0.025, dz), m["satin"], bevel=0.005)
+    for dx in (px0 - 0.025, x_right + 0.025):
+        box("portal_frame", (0.05, 0.05, pz1 - pz0 + 0.1), (dx, WALL_Y - 0.025, pcz), m["satin"], bevel=0.005)
     rnd = random.Random(7)
-    k = 9
-    for i in range(k):  # rubber curtain strips over the belt mouth
-        yy = y0 + 0.04 + (y1 - y0 - 0.08) * (i + 0.5) / k
-        box(f"coll_flap{i}", (0.006, (y1 - y0 - 0.08) / k - 0.006, 0.48), (ex - 0.37, yy, PLATE + 0.25), m["curtain"],
-            rot=(math.radians(rnd.uniform(-2, 2)), math.radians(rnd.uniform(-4, 6)), 0))
+    k = 11
+    for i in range(k):  # rubber curtain strips over the mouth, a few pushed back by the last bag
+        xx = px0 + pw * (i + 0.5) / k
+        box(f"coll_flap{i}", (pw / k - 0.006, 0.006, pz1 - pz0 - 0.01), (xx, WALL_Y - 0.04, pcz), m["curtain"],
+            rot=(math.radians(rnd.uniform(-3, 9)), 0, math.radians(rnd.uniform(-3, 3))))
 
 
 def queue():
@@ -652,13 +795,11 @@ def checkin_row():
         open_ = i == 0
         desk(x0, i, open_)
         scale(x0, i, open_)
-        position_lights(x0, i, {0: 1.0, 3: 0.35}.get(i, 0.0))
+        position_lights(x0, i, {0: 1.0, 3: 0.12}.get(i, 0.0))
     left = POSITIONS[-1] - 0.9
     right = POSITIONS[0] + SX + 0.5
     collector(left, right)
     bulkhead(left - 0.3, right + 0.75)
-    # a soft hall bounce so the blacks keep shape (the lit floor and walls would give this)
-    light("hall_bounce", (-6.0, -6.0, HALL["H"] - 0.1), (24.0, 12.0), 20, spread=180)
 
 
 # ---------------------------------------------------------------- props and people
@@ -666,7 +807,7 @@ def bags():
     xs = POSITIONS[0] + SX
     props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5, val=0.35, rough_add=0.3)
     props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.6)
-    props.load("luggage-trolley", size=1.0, axis="long", loc=(-0.85, -1.2, 0), turn_deg=104, sat=0.5)
+    checkin_hall_trolley.trolley(materials(), (-0.85, -1.3, 0), 100)   # nose toward the counter, handle to the hall
 
 
 def focus(name, loc):
@@ -681,15 +822,199 @@ def place(holder, loc, facing_deg):
     bpy.context.view_layer.update()
 
 
+def _rig(holder):
+    return bpy.data.objects[holder["rig"]]
+
+
+def eye_centre(holder):
+    """World centre of a statue's two eyes (they follow the head bone)."""
+    bpy.context.view_layer.update()
+    pts = []
+    for i in (0, 1):
+        o = bpy.data.objects.get(f"{holder['body']}_eye{i}")
+        if o:
+            pts += [o.matrix_world @ v.co for v in o.data.vertices]
+    return sum(pts, Vector()) / len(pts)
+
+
+def face_dir(holder):
+    """The way the face points (the head bone's Z axis), in world space."""
+    rig = _rig(holder)
+    bpy.context.view_layer.update()
+    return ((rig.matrix_world @ rig.pose.bones["head"].matrix).to_3x3() @ Vector((0, 0, 1))).normalized()
+
+
+def aim_head(holder, pose, target, max_turn=60, kw_eye=None):
+    """Choose pose["head"] = (down, turn) so the face points at a world target (a gaze checked by numbers).
+    rigged turns the head about its own root by Rz(turn) Rx(down) in armature space, so the face direction is
+    Rz(th) Rx(dh) applied to the face axis as the rest of the pose leaves it: solve that in numbers, then pose once."""
+    rig = _rig(holder)
+    p0 = dict(pose, head=(0, 0))
+    rigged.pose_figure(holder, p0)
+    # the head's face axis as posed (Rigify's head need not follow the chest), armature space
+    base = rig.pose.bones["head"].matrix.to_3x3().col[2].normalized()
+    eye = kw_eye if kw_eye is not None else eye_centre(holder)
+    R = rig.matrix_world.to_3x3().normalized()
+    t = (R.inverted() @ (Vector(target) - eye)).normalized()
+    rot = lambda d_, t_: Matrix.Rotation(math.radians(t_), 3, "Z") @ Matrix.Rotation(math.radians(d_), 3, "X")
+    best = None
+    for dn in range(-30, 46):
+        for tn in range(-max_turn, max_turn + 1):
+            e = (rot(dn, tn) @ base).angle(t)
+            if best is None or e < best[0]:
+                best = (e, (dn, tn))
+    pose["head"] = best[1]
+    rigged.pose_figure(holder, pose)
+    return best[1]
+
+
+def aim_head_iter(holder, pose, target, passes=2, **kw):
+    """aim_head, then again from where the turned head has carried the eyes; returns (error deg, (down, turn))."""
+    eye = None
+    for _ in range(passes):
+        aim_head(holder, pose, target, kw_eye=eye, **kw)
+        eye = eye_centre(holder)
+    err = math.degrees(face_dir(holder).angle((Vector(target) - eye).normalized()))
+    return err, pose["head"]
+
+
+def _hand_verts(holder, side="L"):
+    """World positions of one hand's vertices (rig deformation, no subdivision), split palm / fingers / thumb."""
+    body = bpy.data.objects[holder["body"]]
+    subs = [m for m in body.modifiers if m.type in ("SUBSURF", "MASK") and m.show_viewport]   # keep vertex order 1:1
+    for m in subs:
+        m.show_viewport = False
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    me = ev.to_mesh()
+    names = {g.index: g.name for g in body.vertex_groups if g.name.startswith("DEF-")}   # deform groups only
+    out = {"palm": [], "fingers": [], "thumb": []}
+    for v, vo in zip(me.vertices, body.data.vertices):
+        gs = [e for e in vo.groups if e.group in names]
+        if not gs:
+            continue
+        g = max(gs, key=lambda e: e.weight)
+        n = names[g.group]
+        if not n.endswith("." + side) or g.weight < 0.3:
+            continue
+        key = ("thumb" if "thumb" in n else "fingers" if n.startswith("DEF-f_") else
+               "palm" if n.startswith(("DEF-hand", "DEF-palm")) else None)
+        if key:
+            out[key].append(ev.matrix_world @ v.co)
+    ev.to_mesh_clear()
+    for m in subs:
+        m.show_viewport = True
+    bpy.context.view_layer.update()
+    return out
+
+
+def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
+    """Lay one hand palm-down and flat on a surface at top_z, wrist near wrist_target (world), fingers along fwd_dir.
+    Solves the arm's (forward, out, elbow) on the rig's own bone lengths, pronates the forearm, flattens the hand,
+    then measures the hand's vertices and corrects the height so the palm touches (about 2 mm)."""
+    rig = _rig(holder)
+    k = side
+    key = "l_arm" if k == "L" else "r_arm"
+    sgn = 1 if k == "L" else -1
+    arm_inv = rig.matrix_world.inverted()
+    rigged.pose_figure(holder, pose)
+    pb = rig.pose.bones
+    sh = pb[f"upper_arm_fk.{k}"].head.copy()
+    L1, L2 = pb[f"upper_arm_fk.{k}"].length, pb[f"forearm_fk.{k}"].length
+    target = Vector(wrist_target)
+    pitch = 0.0
+    for attempt in range(3):
+        t_arm = arm_inv @ target
+        best = None
+        grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-20, 31, 3) for e in range(0, 101, 3)]
+        for step in (None, 0.5):
+            if step:
+                f0, o0, e0 = best[1]
+                grid = [(f0 + a * step, o0 + b * step, e0 + c * step) for a in range(-6, 7) for b in range(-6, 7) for c in range(-6, 7)]
+            for fwd, out, el in grid:
+                w = sh + L1 * rigged._dir(0, fwd, sgn, out) + L2 * rigged._dir(0, fwd + el, sgn, out * 0.6)
+                e = (w - t_arm).length
+                if best is None or e < best[0]:
+                    best = (e, (fwd, out, el))
+        pose[key] = best[1]
+        rigged.pose_figure(holder, pose)
+        # hand flat: its X axis (across the palm, palm side) straight down, its Y axis along fwd_dir
+        R = rig.matrix_world.to_3x3().normalized().inverted()
+        y = (R @ Vector(fwd_dir)).normalized()
+        x = R @ Vector((0, 0, -1))
+        x = (x - y * x.dot(y)).normalized()
+        z = x.cross(y)
+        if pitch:  # tip the fingers up (or down) about the hand's side axis so palm and fingers lie on one plane
+            q = Matrix.Rotation(pitch, 3, z)
+            x, y = (q @ x).normalized(), (q @ y).normalized()
+        fa = pb[f"forearm_fk.{k}"]
+        fm = fa.matrix.copy()
+        fy = fm.to_3x3().col[1].normalized()
+        fx = fm.to_3x3().col[0].normalized()
+        want = (x - fy * x.dot(fy)).normalized()
+        ang = fx.angle(want) * 0.7                               # most of the twist in the forearm, the rest at the wrist
+        if fx.cross(want).dot(fy) < 0:
+            ang = -ang
+        h0 = fm.translation.copy()
+        fa.matrix = Matrix.Translation(h0) @ Matrix.Rotation(ang, 4, fy) @ Matrix.Translation(-h0) @ fm
+        bpy.context.view_layer.update()
+        hb = pb[f"hand_fk.{k}"]
+        head = hb.matrix.translation.copy()
+        hm = Matrix((x, y, z)).transposed().to_4x4()
+        hm.translation = head
+        hb.matrix = hm
+        bpy.context.view_layer.update()
+        for f in ("f_index", "f_middle", "f_ring", "f_pinky"):
+            n = f"{f}.01_master.{k}"
+            if n in pb:
+                pb[n].rotation_mode = "XYZ"
+                pb[n].rotation_euler.x = math.radians(curl)
+        bpy.context.view_layer.update()
+        hv = _hand_verts(holder, k)
+        low = min(p.z for p in hv["palm"] + hv["fingers"])
+        palm_low, finger_low = min(p.z for p in hv["palm"]), min(p.z for p in hv["fingers"])
+        if attempt < 2:
+            pitch += 0.85 * math.atan2(palm_low - finger_low, 0.08)
+            low = min(low, palm_low - 0.85 * (palm_low - finger_low) * 0.5)   # the palm comes down as the fingers rise
+            target = target + Vector((0, 0, top_z + 0.002 - low))
+    return dict(arm=pose[key], fit=best[0], low=low, palm_low=min(p.z for p in hv["palm"]),
+                finger_low=min(p.z for p in hv["fingers"]), thumb=sum(hv["thumb"], Vector()) / max(1, len(hv["thumb"])),
+                palm=sum(hv["palm"], Vector()) / max(1, len(hv["palm"])))
+
+
 def dawn():
     h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    castkit.dress(h, ["female_elegantsuit01", "shoes05"], tint={"female_elegantsuit01": (0.62, 0.56, 0.5), "shoes05": (0.12, 0.11, 0.1)})
+    # plain dark leather shoes, texture dropped (the sneakers carried brand-like side stripes)
+    castkit.dress(h, ["female_elegantsuit01", "shoes04"], tint={"female_elegantsuit01": (0.62, 0.56, 0.5), "shoes04": (0.08, 0.075, 0.07)},
+                  flat=("shoes04",))
+    shoe = bpy.data.objects.get(f"{h.name}_shoes04")
+    if shoe:
+        shoe.data.materials.clear()
+        shoe.data.materials.append(shoe_mat())
     return h
+
+
+def shoe_mat():
+    """A court shoe: dark leather up to a top line about 6.5 cm off the floor, the leg's stone above it, so the
+    MakeHuman shoe's sock reads as her ankle, not a dark band."""
+    m = bpy.data.materials.new("dawn shoes")
+    m.use_nodes = True
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sep.inputs[0])
+    up = _range(nt, sep.outputs["Z"], 0.06, 0.068, 0.0, 1.0)
+    nt.links.new(_mix(nt, up, (0.08, 0.075, 0.07), castkit.STONE), b.inputs["Base Color"])
+    nt.links.new(_fmix(nt, up, 0.32, 0.6), b.inputs["Roughness"])
+    return m
 
 
 def agent():
     h = castkit.person("Agent", gender=1.0, height_cm=177, age=0.33, hair="short")
-    castkit.dress(h, ["male_elegantsuit01", "shoes06"], tint={"male_elegantsuit01": (0.2, 0.235, 0.26), "shoes06": (0.12, 0.12, 0.13)})
+    castkit.dress(h, ["male_elegantsuit01", "shoes04"], tint={"male_elegantsuit01": (0.2, 0.235, 0.26), "shoes04": (0.07, 0.07, 0.075)},
+                  flat=("shoes04",))
     return h
 
 
@@ -700,14 +1025,30 @@ def build(cast=True):
     bags()
     sk.haze((HALL["x1"] - HALL["x0"] - 0.2, WALL_Y - HALL["y0"] - 0.2, HALL["H"] - 0.1),
             ((HALL["x0"] + HALL["x1"]) / 2, (WALL_Y + HALL["y0"]) / 2, HALL["H"] / 2), 0.0035)
-    focus("focus_dawn", (DAWN[0], DAWN[1] + 0.06, 1.55))
+    focus("focus_dawn", (DAWN[0] - 0.03, DAWN[1] + 0.12, 1.5))   # her eyes
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
     d = dawn()
     a = agent()
-    # Dawn rests her left hand on the ledge and looks at the agent; the agent, hands at the keyboard, reads the scale
-    rigged.pose_figure(d, {"head": (6, 10), "chest": (3, 0), "l_arm": (46, 4, 44), "r_arm": (10, 6, 20)})
-    rigged.pose_figure(a, {"head": (16, 30), "chest": (6, 8), "l_arm": (22, 10, 55), "r_arm": (20, 8, 58)})
     place(d, (DAWN[0], DAWN[1], 0), 192)
     place(a, (AGENT[0], AGENT[1], 0), 10)
+    pose_cast(d, a)
+
+
+def pose_cast(d, a):
+    """The agent, hands at the keyboard, reads the scale display; Dawn looks at the agent with her left hand flat on
+    the ledge and her right arm hanging clear of the display post. Gazes and the hand contact are solved, not guessed."""
+    disp = bpy.data.objects["scale_display"]
+    bpy.context.view_layer.update()
+    ap = {"chest": (6, 8), "l_arm": (22, 10, 55), "r_arm": (20, 8, 58)}
+    ga = aim_head_iter(a, ap, disp.matrix_world.translation)
+    dp = {"chest": (3, 0), "r_arm": (4, 7, 10)}
+    gd = aim_head_iter(d, dp, eye_centre(a))
+    fwd = Vector((-0.208, 0.978, 0)) + 0.25 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.12, 0.01, LEDGE + 0.06), LEDGE + 0.035, fwd.normalized())
+    print(f"CAST agent head {ga[1]} gaze error {ga[0]:.1f} deg; Dawn head {gd[1]} gaze error {gd[0]:.1f} deg")
+    print(f"CAST Dawn l_arm {tuple(round(v, 1) for v in hand['arm'])} wrist fit {hand['fit'] * 1000:.0f} mm, hand low "
+          f"{(hand['low'] - LEDGE - 0.035) * 1000:.1f} mm above the ledge (palm {(hand['palm_low'] - LEDGE - 0.035) * 1000:.1f}, "
+          f"fingers {(hand['finger_low'] - LEDGE - 0.035) * 1000:.1f}); thumb {tuple(round(c, 3) for c in hand['thumb'])} "
+          f"palm {tuple(round(c, 3) for c in hand['palm'])}")

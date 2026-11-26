@@ -36,7 +36,7 @@ EXPOSURE = -1.5
 ROW_Y = st.ROWS[0]
 SEAT = (st.UNITS[2] + st.SEAT_X[0], ROW_Y)
 HIP_Y = 0.22                      # hip joint, unit-local y (the backrest's face is near 0.07 at cushion height)
-SUITCASE = (SEAT[0] - 0.62, ROW_Y + 0.36, 96.0)   # in the aisle beside her, pocket toward the glass
+SUITCASE = (SEAT[0] - 0.6, ROW_Y + 0.3, 96.0)   # in the aisle beside her, pocket toward the glass
 
 FOCUS = {
     "fx_wide": (SEAT[0], ROW_Y + 0.2, 0.9),
@@ -48,13 +48,16 @@ CAMERAS = {
     # with the waiting aircraft and the jet bridge, the podium glowing by the door
     "wide": dict(loc=(-6.6, -7.1, 3.15), aim=(1.2, 4.6, 0.55), lens=22, focus="fx_wide", fstop=8.0, beat="ch02"),
     # Ch 03: controlled medium from the window side: Dawn and the suitcase, the empty rows behind her soft
-    "seated": dict(loc=(0.95, 5.25, 1.12), aim=(-0.92, 2.95, 0.82), lens=55, focus="fx_face", fstop=2.8, beat="ch03"),
+    "seated": dict(loc=(1.35, 5.55, 0.95), aim=(-0.95, 2.95, 0.68), lens=42, focus="fx_face", fstop=2.8, beat="ch03"),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the apron lights
     "window": dict(loc=(-2.05, -1.35, 1.3), aim=(-0.35, 6.0, 0.98), lens=35, focus="fx_window", fstop=4.0, beat="ch03"),
 }
 # per-camera light trims (multipliers on named lights)
+KEY, BACKFILL = "fx_-0.6_+3.7_light", "fx_-0.6_+1.5_light"
 TRIMS = {
-    "window": {"window_spill": 0.35},
+    "seated": {KEY: 0.62},
+    # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
+    "window": {"window_spill": 0.15, KEY: 0.1, BACKFILL: 0.0},
 }
 
 _STATE = {"cast": [], "base": {}}
@@ -64,10 +67,36 @@ _STATE = {"cast": [], "base": {}}
 def dawn():
     h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
     castkit.dress(h, ["female_elegantsuit01", "shoes05"], tint={"female_elegantsuit01": (0.62, 0.56, 0.5), "shoes05": (0.12, 0.11, 0.1)})
+    skirt_under(h)
     return h
 
 
-def lap_hands(holder, upper=(16, -4), fore=(62, 34), hand=(70, 44)):
+def skirt_under(h, rgb=(0.07, 0.066, 0.062)):
+    """Seated, the skirt's front panel stretches between the raised thighs and the stone skin pokes through it. Paint
+    the skin the skirt covers in rest (from just above its hem to the hips) a matt skirt tone, so whatever shows
+    through reads as cloth. The bare legs below the hem stay stone."""
+    body = bpy.data.objects[h["body"]]
+    suit = bpy.data.objects.get(f"{h.name}_female_elegantsuit01")
+    if suit is None:
+        return 0
+    mw = suit.matrix_world
+    hem = min((mw @ v.co).z for v in suit.data.vertices)
+    m = castkit.stone(f"skirt_under_{h.name}", rgb, 0.82)
+    me = body.data
+    me.materials.append(m)
+    mi = len(me.materials) - 1
+    bw = body.matrix_world
+    n = 0
+    for p in me.polygons:
+        c = bw @ p.center
+        if hem + 0.015 < c.z < hem + 0.5 and abs(c.x) < 0.2:
+            p.material_index = mi
+            n += 1
+    print(f"GATE skirt hem at {hem:.3f} m: {n} skin faces under it painted as cloth", flush=True)
+    return n
+
+
+def lap_hands(holder, upper=(12, -6), fore=(64, 30), hand=(72, 40)):
     """Hands resting together in the lap: aim each arm segment (forward, inward degrees)."""
     rig = rigged.rig_of(holder)
     for side, k in ((1, "L"), (-1, "R")):
@@ -167,6 +196,25 @@ def seat_figure(holder, seat_z):
                 shin = math.degrees(math.acos(c))
             else:
                 thigh += math.degrees(-gap / 0.43)
+    # hands: swing the forearms (and hands with them) until the clasped hands rest on the thighs
+    fore = 64.0
+    pb = rig.pose.bones
+    for it in range(5):
+        rigged.pose_figure(holder, UPPER)
+        lap_hands(holder, fore=(fore, 30), hand=(fore + 8, 40))
+        sit_legs(holder, thigh, shin)
+        mw = rig.matrix_world
+        hc = sum((mw @ ((pb[f"hand_fk.{k}"].head + pb[f"hand_fk.{k}"].tail) / 2) for k in "LR"), Vector()) / 2
+        tops = []
+        for k in "LR":
+            a_, b_ = mw @ pb[f"thigh_fk.{k}"].head, mw @ pb[f"thigh_fk.{k}"].tail
+            t = max(0.0, min(1.0, (hc.y - a_.y) / (b_.y - a_.y))) if abs(b_.y - a_.y) > 1e-6 else 0.5
+            tops.append(a_.z + (b_.z - a_.z) * t + 0.085)
+        gap = (hc.z - 0.022) - max(tops)
+        print(f"GATE hands it {it}: forearm {fore:.1f} gap {gap * 1000:+.1f} mm", flush=True)
+        if abs(gap) < 0.006:
+            break
+        fore = max(35.0, min(95.0, fore + math.degrees(-gap / 0.26)))
     return dz, hip
 
 
@@ -227,7 +275,9 @@ def install_hook():
 # ---------------------------------------------------------------- build
 def build(cast=True):
     st.M.clear()
+    st.mt.M.clear()       # a fresh scene: never reuse materials cached from an earlier build
     st.LIGHTS.clear()
+    _STATE["base"].clear()
     st.materials()
     st.floor()
     st.ceiling()
@@ -240,7 +290,7 @@ def build(cast=True):
     st.dressing()
     st.exterior()
     # the apron's glow and the night sky through the glass: a soft cool spill onto the front rows
-    st.area("window_spill", ((st.XL + st.XR) / 2, st.WIN - 0.25, 1.9), (st.XR - st.XL - 1.0, 3.4), 90.0,
+    st.area("window_spill", ((st.XL + st.XR) / 2, st.WIN - 0.25, 1.9), (st.XR - st.XL - 1.0, 3.4), 60.0,
             (0.55, 0.68, 1.0), spread=110, rot=(-math.pi / 2, 0, 0))
     suitcase()
     seat_z = seat_height(SEAT[0], ROW_Y)
@@ -254,5 +304,5 @@ def build(cast=True):
         place_seated(d, SEAT, seat_z)
         _STATE["cast"] = [d] + list(d.children_recursive)
     sk.haze((st.XR - st.XL - 0.1, st.WIN - st.BACK - 0.1, st.H - 0.05), ((st.XL + st.XR) / 2, (st.WIN + st.BACK) / 2, st.H / 2),
-            0.0028)
+            0.0035)
     install_hook()

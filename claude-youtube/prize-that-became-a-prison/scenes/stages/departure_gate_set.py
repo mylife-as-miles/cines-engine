@@ -34,16 +34,16 @@ PODIUM = (6.55, 4.05, -6.0)             # x, y, turn (deg); its front faces the 
 DOOR = (7.2, 10.4)                      # solid door section in the curtain wall
 DOOR_X = 8.8
 AIR = (2.0, 15.0)                       # our aircraft: nose tip (x, y), axis +Y
-COLUMNS = [(-9.6, -4.7), (-1.8, -4.7), (5.4, -4.7), (-9.6, 5.3), (4.4, 5.3)]
+COLUMNS = [(-9.6, -1.0), (8.8, -1.6), (-9.6, 5.3), (4.4, 5.3)]
 
 COOL = (0.84, 0.92, 1.0)
 FX_X = [-0.6 + 2.4 * k for k in range(-4, 5)]
 FX_Y = [3.7, 1.5, -0.7, -2.9, -5.1, -7.1]
 FX_LEVEL = {  # night mode: most fittings dimmed or off; a pool over Dawn's row and one over the podium
-    (-0.6, 3.7): 1.0, (-0.6, 1.5): 0.32, (-3.0, 3.7): 0.28, (1.8, 3.7): 0.36, (6.6, 3.7): 0.8, (9.0, 3.7): 0.3,
+    (-0.6, 3.7): 2.3, (-0.6, 1.5): 0.3, (-3.0, 3.7): 0.2, (1.8, 3.7): 0.24, (6.6, 3.7): 0.8, (9.0, 3.7): 0.3,
     (4.2, 3.7): 0.18, (-7.8, -7.1): 0.4, (-10.2, -7.1): 0.3, (-5.4, -7.1): 0.3, (-3.0, -7.1): 0.2,
 }
-FX_ENERGY = 330.0
+FX_ENERGY = 480.0
 
 M = {}
 LIGHTS = {}
@@ -181,7 +181,7 @@ def ceiling():
         for x in FX_X:
             lv = FX_LEVEL.get((round(x, 1), round(y, 1)))
             if lv is None:
-                lv = 0.0 if rng.random() < 0.35 else 0.11
+                lv = 0.0 if rng.random() < 0.35 else 0.065
             fixture(x, y, lv)
     # sprinklers and smoke detectors on the pan grid, between the fittings
     chrome = m["steel"]
@@ -329,6 +329,13 @@ def podium():
 def seat_source():
     """Load the gate-seating prop once and keep it in a collection that is instanced, never rendered itself."""
     h = props.load("gate-seating", size=2.4, axis="long", loc=(0, 0, 0), sat=0.45, val=0.9, rough_add=0.08)
+    for o in h.children_recursive:
+        for sl in getattr(o, "material_slots", []):
+            mm = sl.material
+            if mm and mm.node_tree:
+                for n in mm.node_tree.nodes:
+                    if n.type == "NORMAL_MAP":
+                        n.inputs["Strength"].default_value = 0.12
     src = bpy.data.collections.new("gate_seating_src")
     for o in [h] + list(h.children_recursive):
         for c in list(o.users_collection):
@@ -485,7 +492,7 @@ def jet_bridge():
         sec = box(f"jb_tunnel_{k}", (w, s1 - s0, h), (c.x, c.y, zf + h / 2), cl, bevel=0.02, rot=(-slope, 0, -a))
         for j in range(3):  # small side windows, on both sides
             for side in (-1, 1):
-                wb = box(f"jb_win_{k}_{j}_{side}", (0.02, 0.55, 0.75), (side * (w / 2 + 0.006), -1.2 + j * 1.2, 0.15), m["bridge_win"])
+                wb = box(f"jb_win_{k}_{j}_{side}", (0.02, 0.32, 0.42), (side * (w / 2 + 0.006), -1.2 + j * 1.2, 0.25), m["bridge_win"])
                 wb.parent = sec
         box(f"jb_rib_{k}", (w + 0.06, 0.12, h + 0.06), (0, (s1 - s0) / 2 - 0.06, 0), m["facade"], parent=sec)
     # cab, its front toward the aircraft (-X), and the bellows canopy against the skin
@@ -518,7 +525,7 @@ def mast(i, x, y, h=26.0, tilt=18.0):
     for k in range(5):
         lb = box(f"mast_lamp_{i}_{k}", (0.5, 0.45, 0.04), (-1.32 + k * 0.66, 0.0, -0.19), m["flood"])
         lb.parent = head
-    spot(f"mast_light_{i}", (x, y, APRON + h - 0.1), 26000.0, (1.0, 0.87, 0.72), 130, 0.75,
+    spot(f"mast_light_{i}", (x, y, APRON + h - 0.1), 170000.0, (1.0, 0.87, 0.72), 130, 0.75,
          (math.radians(-8), 0, 0), radius=1.2).rotation_euler = (math.radians(6) * toward.y, -math.radians(6) * toward.x, 0)
 
 
