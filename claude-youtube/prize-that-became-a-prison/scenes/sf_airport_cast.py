@@ -37,17 +37,20 @@ def place(holder, loc, facing_deg):
 
 def dawn():
     h = cast.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=DARK, part="lower", top_at="waist", sleeves=False)
-    fit.garment(h, os.path.join(O, "female_overcoat.glb"), recolour=(0.16, 0.115, 0.075), over=trousers)
+    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=DARK, part="lower", top_at="waist", sleeves=False,
+                           snug=0.008)
     cast.blouse_v(h)
+    fit.garment(h, os.path.join(O, "female_overcoat.glb"), recolour=(0.16, 0.115, 0.075), over=trousers, snug=0.012)
     cast.shoes(h)
     return h
 
 
 def officer(name, height_cm, age):
     h = cast.person(name, gender=1.0, height_cm=height_cm, age=age, hair="short")
-    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=NAVY, part="lower", top_at="waist", sleeves=False)
-    fit.garment(h, os.path.join(O, "uniform_jacket_raf.glb"), recolour=NAVY, keep="all", decimate_to=36000, trim_neck=True, ease=1.12, over=trousers)
+    trousers = fit.garment(h, os.path.join(O, "scrubs_clothing.glb"), recolour=NAVY, part="lower", top_at="waist", sleeves=False,
+                           snug=0.008)
+    fit.garment(h, os.path.join(O, "uniform_jacket_raf.glb"), recolour=NAVY, keep="all", decimate_to=36000, trim_neck=True, ease=1.1,
+                over=trousers, snug=None)  # a stiff museum scan: conforming crumples it, so it is only sized and bound
     cast.hat(h, os.path.join(O, "peaked_cap_1.fbx"), rgb=(0.02, 0.025, 0.04))
     cast.shoes(h)
     return h

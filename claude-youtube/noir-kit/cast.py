@@ -262,8 +262,8 @@ def shoes(holder, rgb=(0.03, 0.03, 0.032), height=0.085):
 
 
 def blouse_v(holder, rgb=(0.42, 0.41, 0.39), depth=0.26, width=0.13):
-    """Inside an open collar, show a blouse: the body's own neck-to-chest front, coloured as fabric and kept visible
-    (removed from the hidden-skin group), so the V of a coat is clean instead of a ragged skin edge."""
+    """Inside an open collar, show a blouse: the body's own neck-to-chest front, coloured as fabric. Only what the
+    garment leaves open is seen. Call it before fitting the garment that opens over it."""
     body = bpy.data.objects[holder["body"]]
     me = body.data
     gi = body.vertex_groups["joint-neck"].index if "joint-neck" in body.vertex_groups else None
@@ -279,8 +279,8 @@ def blouse_v(holder, rgb=(0.42, 0.41, 0.39), depth=0.26, width=0.13):
         if neck.z - depth < c.z < neck.z - 0.015 and c.y < neck.y and abs(c.x - neck.x) < width:
             p.material_index = mi
             keep.update(p.vertices)
-    if "covered" in body.vertex_groups:
-        body.vertex_groups["covered"].remove(list(keep))
+    vg = body.vertex_groups.get("open_front") or body.vertex_groups.new(name="open_front")
+    vg.add(list(keep), 1.0, "REPLACE")  # garments fitted after this hide skin here only where it pokes through
     return len(keep)
 
 

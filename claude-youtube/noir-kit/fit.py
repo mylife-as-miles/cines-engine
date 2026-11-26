@@ -49,7 +49,8 @@ def _bake_transforms(objs):
 
 
 def garment(holder, path, units=1.0, collar_height=None, recolour=None, decimate_to=None, drop=("Icosphere",),
-            part=None, top_at=None, sleeves=True, over=(), keep="all", trim_neck=False, scale_to_body=True, ease=1.07):
+            part=None, top_at=None, sleeves=True, over=(), keep="all", trim_neck=False, scale_to_body=True, ease=1.07,
+            snug=0.012, conform_reach=(0.05, 0.13)):
     """Fit the garment at `path` onto the mannequin whose holder empty is `holder`. Returns the garment objects."""
     body = bpy.data.objects[holder["body"]]
     new = _import(path)
@@ -133,13 +134,15 @@ def garment(holder, path, units=1.0, collar_height=None, recolour=None, decimate
     arm = sum(rig.data.bones[b].length for b in ("upper_arm_fk.L", "forearm_fk.L")) * rig.matrix_world.to_scale()[0] * 1.08
     for side, key in (((1, "l_arm"), (-1, "r_arm")) if sleeves else ()):
         sh = rigged.shoulder_world(holder, side)
-        # sleeve points: outside the torso, below the shoulder, and within an arm's reach (so a coat's hem is not a cuff)
-        sx = [p for p in pts if side * (p.x - mid_x) > half * 0.8 and p.z < sh.z + 0.05 and (p - sh).length < arm]
-        if not sx:
+        # the sleeve: garment points outside the torso, below the shoulder, within a long arm's reach. A tube's points
+        # are centred on its axis, so the arm aims at their centroid, whatever the sleeve's length (and a coat's
+        # flared hem, lower and further, mostly falls outside the reach)
+        sx = [p for p in pts if side * (p.x - mid_x) > half * 1.05 and p.z < sh.z + 0.02 and (p - sh).length < arm * 1.3]
+        if len(sx) < 20:
             continue
-        far = max((p - sh).length for p in sx)
-        cuff = _mean([p for p in sx if (p - sh).length > far - 0.03])
-        d = (cuff - sh).normalized()
+        d = _axis(sx)                                   # the sleeve's own direction (its long axis)
+        if d.dot(_mean(sx) - sh) < 0:
+            d = -d
         out = math.degrees(math.atan2(abs(d.x), -d.z))
         fwd = math.degrees(math.atan2(-d.y, -d.z))
         pose[key] = (fwd, out, 4)
@@ -154,9 +157,13 @@ def garment(holder, path, units=1.0, collar_height=None, recolour=None, decimate
             pose["stance"] = sum(fx) / len(fx) - sum(gx) / len(gx)
     rigged.pose_figure(holder, pose)
 
+    # conform: pull the fabric that lies close to the body onto it at `snug` ease (loose parts hang free), then
     # bind each garment piece to an unmasked copy of the body (masking the visible body would break the binding)
     proxy = _proxy(body)
     bpy.context.view_layer.update()
+    meshes = _drop_strays(meshes, proxy)
+    if snug is not None:
+        conform(meshes, [proxy] + list(over), snug, *conform_reach)
     for o in meshes:
         if recolour is not None:
             for slot in o.material_slots:
@@ -172,7 +179,7 @@ def garment(holder, path, units=1.0, collar_height=None, recolour=None, decimate
                             slot.material.surface_render_method = "DITHERED"
         sd = o.modifiers.new("fit", "SURFACE_DEFORM")
         sd.target = proxy
-        sd.falloff = 4.0
+        sd.falloff = 2.0   # lower is smoother: a sleeve and the body panel it is sewn to move together
         with bpy.context.temp_override(object=o, active_object=o, selected_objects=[o]):
             bpy.ops.object.surfacedeform_bind(modifier=sd.name)
         bpy.context.view_layer.update()
@@ -189,8 +196,56 @@ def garment(holder, path, units=1.0, collar_height=None, recolour=None, decimate
     return meshes
 
 
-def hide_under(inner, outers, reach=0.05, inside=0.07):
-    """Mask the parts of an inner garment that an outer garment covers (same ray test as for skin)."""
+def conform(objs, targets, snug=0.012, near=0.05, far=0.13, smooth=8, radius=0.025):
+    """Settle a garment (all its pieces together) onto what lies beneath it, without simulation. Each vertex goes to
+    the nearest surface below (the body or an inner garment) plus `snug` along its normal: fully when it is inside or
+    within `near` metres of that, not at all beyond `far` (a coat's skirt, a cuff). The moves are smoothed between
+    points that are close in space, across seams and separate pieces, so panels, belt and buttons move together and
+    the garment's own folds survive."""
+    from mathutils.bvhtree import BVHTree
+    from mathutils.kdtree import KDTree
+    if not isinstance(objs, (list, tuple)):
+        objs = [objs]
+    if not isinstance(targets, (list, tuple)):
+        targets = [targets]
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    trees = [(BVHTree.FromObject(t, dg), t.matrix_world.inverted(), t.matrix_world) for t in targets]
+    verts = [(o, v) for o in objs for v in o.data.vertices]
+    pos = [o.matrix_world @ v.co for o, v in verts]
+    move = []
+    for p in pos:
+        best = None
+        for tree, tinv, tw in trees:            # the nearest surface beneath: body or an inner garment
+            hit = tree.find_nearest(tinv @ p)
+            if hit[0] is not None:
+                q = tw @ hit[0]
+                if best is None or (q - p).length < best[2]:
+                    best = (q, (tw.to_3x3() @ hit[1]).normalized(), (q - p).length)
+        if best is None:
+            move.append(Vector())
+            continue
+        q, n = best[0], best[1]
+        gap = (p - q).dot(n)                     # how far outside the surface this point is (negative: inside)
+        excess = gap - snug
+        w = 1.0 if excess < near else max(0.0, 1.0 - (excess - near) / (far - near))
+        move.append((q + n * snug - p) * w)
+    kd = KDTree(len(pos))
+    for i, p in enumerate(pos):
+        kd.insert(p, i)
+    kd.balance()
+    nb = [[j for (_, j, _) in kd.find_range(p, radius)] for p in pos]
+    for _ in range(smooth):                      # smooth the move, not the shape
+        move = [sum((move[j] for j in nb[i]), Vector()) / len(nb[i]) if nb[i] else move[i] for i in range(len(move))]
+    for (o, v), m in zip(verts, move):
+        v.co += o.matrix_world.inverted().to_3x3() @ m
+    for o in objs:
+        o.data.update()
+
+
+def hide_under(inner, outers, reach=0.05, inside=0.03):
+    """Mask the parts of an inner garment that poke out through an outer one. Conforming already layers the outer
+    garment over the inner, so hiding everything it covers would cut a visible edge just below the outer hem."""
     from mathutils.bvhtree import BVHTree
     bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
@@ -205,7 +260,7 @@ def hide_under(inner, outers, reach=0.05, inside=0.07):
         n = (nm @ v.normal).normalized()
         for t, mi in trees:
             d = (mi.to_3x3() @ n).normalized()
-            if t.ray_cast(mi @ p, d, reach)[0] is not None or t.ray_cast(mi @ p, -d, inside)[0] is not None:
+            if t.ray_cast(mi @ p, -d, inside)[0] is not None:   # only where the inner layer pokes out through the outer
                 hidden.append(v.index)
                 break
     e.to_mesh_clear()
@@ -262,13 +317,16 @@ def hide_covered_skin(body, proxy, garments, reach=0.05, inside=0.09):
     pw = proxy.matrix_world
     nm = pw.to_3x3().inverted().transposed()
     covered = set()
+    og = body.vertex_groups.get("open_front")
+    open_front = {v.index for v in body.data.vertices if og and any(g.group == og.index for g in v.groups)}
     for v in me.vertices:
         p = pw @ v.co
         n = (nm @ v.normal).normalized()
         for t, mi in trees:
             d = (mi.to_3x3() @ n).normalized()
-            if t.ray_cast(mi @ p, d, reach)[0] is not None or t.ray_cast(mi @ p, -d, inside)[0] is not None:
-                covered.add(v.index)       # under the garment, or poking out through it
+            under = v.index not in open_front and t.ray_cast(mi @ p, d, reach)[0] is not None
+            if under or t.ray_cast(mi @ p, -d, inside)[0] is not None:
+                covered.add(v.index)       # under the garment, or poking out through it (open fronts: only that)
                 break
     e.to_mesh_clear()
     for m in masks:
@@ -320,6 +378,39 @@ def _keep_parts(meshes, which):
             bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.index not in keep], context="FACES")
             bm.to_mesh(o.data)
         bm.free()
+
+
+def _drop_strays(meshes, proxy, far=0.25):
+    """Remove garment pieces that lie nowhere near the body (stray fragments that would float in the scene)."""
+    from mathutils.bvhtree import BVHTree
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    tree, tinv, tw = BVHTree.FromObject(proxy, dg), proxy.matrix_world.inverted(), proxy.matrix_world
+    keep = []
+    for o in meshes:
+        c = _mean([o.matrix_world @ v.co for v in o.data.vertices])
+        hit = tree.find_nearest(tinv @ c)
+        if hit[0] is not None and (tw @ hit[0] - c).length > far:
+            print(f"FIT: dropped stray piece {o.name}")
+            bpy.data.objects.remove(o, do_unlink=True)
+        else:
+            keep.append(o)
+    return keep
+
+
+def _axis(ps):
+    """The long axis of a cloud of points (principal component, by power iteration)."""
+    c = _mean(ps)
+    m = [[0.0] * 3 for _ in range(3)]
+    for p in ps:
+        q = p - c
+        for i in range(3):
+            for j in range(3):
+                m[i][j] += q[i] * q[j]
+    v = Vector((0.3, 0.2, -1.0)).normalized()
+    for _ in range(40):
+        v = Vector([sum(m[i][j] * v[j] for j in range(3)) for i in range(3)]).normalized()
+    return v
 
 
 def _half_width(ps, mid_x):

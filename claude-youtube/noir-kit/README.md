@@ -5,7 +5,7 @@ The investigative-noir documentaries share one character system and one set of p
 | File | What it is |
 | --- | --- |
 | `cast.py` | **The cast**: MakeHuman (MPFB 2, CC0) bodies with natural faces finished as matte statues, blank statue eyes, sculpted hair (bun or short), sculpted shoes, a blouse inside an open collar, hats sized to the head; Rigify rig. |
-| `fit.py` | Real garments onto a figure: size to the torso, collar or waistband to height, arms along the sleeves (trousers: feet in the cuffs), bind to an invisible triangulated copy of the body so the garment follows any pose, hide the skin it covers, and hide inner layers under outer ones. |
+| `fit.py` | Real garments onto a figure: size to the torso, collar or waistband to height, arms parallel to the sleeves' own axis (trousers: feet in the cuffs), **conform** (all pieces together, onto the body and any inner garment, at a set ease: inner garments tighter, e.g. trousers 0.8 cm, coat 1.2 cm; loose skirts hang free; skip it for stiff scans), drop stray pieces, bind to an invisible triangulated copy of the body so the garment follows any pose, hide the skin it covers, and hide inner layers only where they poke through. |
 | `rigged.py` | Posing for every figure (`pose_figure`), and the earlier figure from the author's Rigify "rigged human structure", sized through a parent empty, dressed by colouring zones of its own mesh (until real outfits are fitted), posed with readable angles through Rigify's FK controls. |
 | `mannequin.py` | The first, procedural mannequin (capsules and lofts, fused and smoothed). Kept as a fallback; `rigged.py` replaces it. |
 | `setkit.py` | Set parts: materials (tiles, wood, emission), boxes, cylinders, arcs, area lights, haze, camera, Cycles render settings. |
