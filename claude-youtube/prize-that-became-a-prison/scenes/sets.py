@@ -21,12 +21,18 @@ def materials():
     return M
 
 
-def bench_and_bags(steel, case_m, leather, rubber, tag_m, top=0.86, x=0.0, y=0.0):
+def bench(steel, top=0.86, x=0.0, y=0.0):
+    """The steel inspection bench alone (2.0 x 0.8 m, top at `top`)."""
     sk.box("bench_top", (2.0, 0.8, 0.04), (x, y, top - 0.02), steel, bevel=0.006)
     for dx in (-0.94, 0.94):
         for dy in (-0.34, 0.34):
             sk.box("bench_leg", (0.04, 0.04, top - 0.04), (x + dx, y + dy, (top - 0.04) / 2), steel)
     sk.box("bench_shelf", (1.92, 0.72, 0.02), (x, y, 0.18), steel)
+
+
+def bench_and_bags(steel, case_m, leather, rubber, tag_m, top=0.86, x=0.0, y=0.0):
+    """The bench with the two block-out bags (before the Tripo props)."""
+    bench(steel, top, x, y)
     case = sk.box("case", (0.72, 0.48, 0.27), (x + 0.18, y + 0.02, top + 0.135), case_m, bevel=0.035, rot=(0, 0, math.radians(-8)))
     for i, dx in enumerate((-0.2, 0.0, 0.2)):
         sk.box(f"case_ridge{i}", (0.03, 0.44, 0.012), (dx, 0, 0.137), case_m, bevel=0.005).parent = case

@@ -12,4 +12,6 @@ The files themselves stay out of git; this list records where each came from and
 | `outfits/peaked_cap_1.fbx` | Peaked cap, 4.5k triangles, real scale | Unknown (exported from Blender 4.0.2) | **Unknown: ask the author** | ? |
 | `makehuman/clothes/` | MakeHuman system clothes: 4 women's and 8 men's outfits, 6 shoes, 2 fedoras; each an `.mhclo` fitted to the MakeHuman body | files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip | CC0 | No |
 
+| `props/<name>.glb` | Props generated with Tripo (HD v3.1, PBR), decompressed with `tools/unpack_glb.mjs`; the list, prompts and task IDs are in `prize-that-became-a-prison/design/TRIPO_PACKAGE.md` | The author's own Tripo Studio account | The author's, under their Tripo plan's terms (check commercial use for the plan) | No |
+
 MakeHuman / MPFB 2 (github.com/makehumancommunity/mpfb2) is installed as a Blender extension, not stored here; its assets are CC0 (no credit needed).

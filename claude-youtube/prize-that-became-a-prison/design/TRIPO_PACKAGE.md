@@ -39,6 +39,23 @@ These four test soft luggage, leather in close-up and a big machine, under our r
 | 4 ★ | Handbag 1: tote | Ch 04, 05, Evidence Table | 40 |
 | 7 | X-ray baggage scanner | Ch 00, 05 | 30 |
 
+### Batch 1 results (26 November 2026)
+
+Approved by the author ("Proceed") and generated once each, with the settings and prompts below unchanged: 140 reference credits. Test frame: `scenes/sf_props_pilot.py` (renders in `out/props/`, not in git).
+
+| # | Asset | Task ID | Model ID | Size placed | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| 1 | dawn-suitcase | 01a21788-52fa-7f1a-a642-3f3931f3d7be | 01a2178a-5ffa-7138-867f-4a454a1358b0 | 66 cm tall | Convincing: zips, pockets, wheels, handles. 37k triangles, 4K maps |
+| 2 | extra-bag-closed | 01a217bb-672a-709b-9ac8-363ccb2da13e | 01a217bc-d987-7a4a-8ffb-9c6b41420a6e | 75 cm long | Good shape; came out grey and glossy, made near-black and matte in Blender |
+| 4 | handbag-tote | 01a217bb-69da-77ea-b55e-06c98d554f65 | 01a217bf-2bbf-79dd-ba13-7a6e2262220c | 35 cm wide | Strong shape and hardware, cognac leather. One face shows a shallow dent under the top light: placed with the other face to camera |
+| 7 | xray-scanner | 01a217bb-6c83-7ab3-a749-384e8c973fa5 | 01a217bc-ecc7-7e6d-9cf5-f512c0b9c780 | 1.45 m tall | Usable: tunnel, curtains, in-feed belt, operator screen, but only one detailed side (the others are blank panels). A small maker's plate on top to paint out before any close shot |
+
+Learned:
+- **Downloads:** files come from `tripo-data.rg1.data.tripo3d.com` (added to the environment's network allowlist), and are meshopt-compressed: decompress with `noir-kit/tools/unpack_glb.mjs` before Blender.
+- **Exposure:** the inspection-room bench light is about two stops too hot for props: diffuse colours under it wash out to pastel at the cast frame's exposure (-0.2). Props render at -2.0. The cast frame should be relit to match.
+- **Facing:** Tripo models face no fixed direction; the suitcase's front and the scanner's tunnel look along +X in their files.
+- **The film grade** (desaturated blue) turns the tote's cognac into a dusty pink-beige. Shift its hue toward yellow if it should still read tan after the grade.
+
 ## Batch 2: the rest of the airport and the evidence table (12 assets, 380 credits)
 
 | # | Asset | Used in | Credits |
