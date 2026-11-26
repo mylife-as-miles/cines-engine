@@ -52,7 +52,7 @@ def sheet(cells, path):
     rows = (len(cells) + 1) // 2
     S = Image.new('RGB', (pad * 2 + W * 2 + gap, hd + rows * (H + cap) + pad), INK)
     d = ImageDraw.Draw(S)
-    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q06  ·  THE COUNCIL: UNTIL THE BELL  ·  storyboard', fill=GOLD, font=f0)
+    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q06  ·  THE COUNCIL: UNTIL THE BELL  ·  storyboard  ·  22 s, six shots', fill=GOLD, font=f0)
     d.text((pad, 48), 'Frames 1, 3 and 4 are the film\'s own (Q05 take 1): the same set-ups come back. The door is new: sheets over the chamber '
                       'reference, staging sketches. Frame 5 is a stand-in from the film\'s first seal.', fill=PAPER, font=f2)
     for k, (im, title, text) in enumerate(cells):
@@ -92,22 +92,21 @@ def main():
     arrow(d, (330, 300), (470, 300), w=3)
 
     c3 = img(hier); d = ImageDraw.Draw(c3)
-    note(d, (36, 34), 'for the first time he turns his head to her')
+    note(d, (36, 34), 'slowly, for the first time, he turns his head to her')
     arrow(d, (430, 120), (300, 120), w=4)
     note(d, (36, 380), 'warmly:  "Remember who raised you."')
 
     c4 = img(last); d = ImageDraw.Draw(c4)
     note(d, (36, 34), 'she takes it as a blessing: one small bow of the head')
     arrow(d, (520, 250), (760, 250), w=4); note(d, (520, 280), 'then she goes, out of the frame')
-    note(d, (36, 380), 'no words. The empty arch for a beat')
+    note(d, (36, 380), 'no words. We cut on her movement')
 
     c5 = img(seal); d = ImageDraw.Draw(c5)
     note(d, (36, 34), 'STAND-IN (the film\'s first seal): the kind of insert, not this seal')
     note(d, (36, 380), 'the order is written; the Council\'s seal goes into red wax')
 
-    c6 = img(door(1160, 318, 1790, 330, serath=1385, serath_h=318)); d = ImageDraw.Draw(c6)
+    c6 = img(door(1160, 318, 1790, 330, serath=1600, serath_h=372)); d = ImageDraw.Draw(c6)
     note(d, (36, 34), 'the same view of the door, closer. She crosses to it')
-    arrow(d, (150, 250), (300, 250), w=4)
     note(d, (36, 380), 'now that it is sealed, he inclines his head to her')
 
     c7 = img(door(1160, 318, 1790, 330, serath=1668, serath_h=250)); d = ImageDraw.Draw(c7)
@@ -118,17 +117,17 @@ def main():
         (c1, 'SHOT 1 · 0–2.6 s · Serath, her close shot · the same frame Q05 ended on',
          'Opens exactly on Q05\'s last frame (sent as a reference). She is waiting. His answer comes from off-screen: "Until the bell." Her lips stay closed; her shoulders ease a little.'),
         (c2, 'SHOT 2 · 2.6–7.6 s · Cassiel at the door · 40 mm, a slow push in',
-         'New set-up. The man by the door, hands behind his back, perfectly still, while the Hierophant\'s voice names him: "If it finds the Weir standing, the fleet is Vice Admiral Cassiel\'s." Cassiel never speaks in the film.'),
+         'New set-up. One still figure on a third, framed by the door, the room empty where he faces, while the Hierophant\'s voice names him: "If it finds the Weir standing, the fleet is Vice Admiral Cassiel\'s." Cassiel never speaks in the film.'),
         (c3, 'SHOT 3 · 7.6–11.6 s · the Hierophant · the same close-up as in Q04 and Q05',
-         'His only words on screen, and the only time he looks at her. A still moment, his head turns a little toward her, and warmly, as to a child of his own: "Remember who raised you."'),
+         'His only words on screen, and the only time he looks at her. Frontal and centred, as Villeneuve holds the ones in authority; then one slow turn of the head to her, and warmly: "Remember who raised you."'),
         (c4, 'SHOT 4 · 11.6–14.4 s · Serath, the same close shot',
-         'She does not hear it as a warning. She bows her head once, as an officer does, turns and walks out of the frame toward the door. The arch and the cloud stand empty for a beat.'),
+         'She does not hear it as a warning. She bows her head once, as an officer does, turns and walks out of the frame toward the door. The cut to the seal comes on her movement.'),
         (c5, 'SHOT 5 · 14.4–16.6 s · insert: the seal',
          'Hands only, as when she sealed the lifting warrant at the wedding. A gloved hand presses the Council\'s seal into red wax at the foot of the written order and lifts it away. The order is real now.'),
-        (c6, 'SHOT 6 · 16.6–21 s · the door, the same view as shot 2, closer',
-         'Serath walks in from the left on her way out. Cassiel has waited for the seal: as she reaches him he inclines his head to her, perfectly courteous.'),
+        (c6, 'SHOT 6 · 16.6–22 s · the door, the same view as shot 2, closer',
+         'Serath is crossing to the door, her back to us. Cassiel has been watching the table, where the order was sealed; his eyes come to her and, as she reaches him, he inclines his head, perfectly courteous.'),
         (c7, 'SHOT 6 · she goes',
-         'She passes without a look and goes out through the open door into the light. He straightens, hands still behind his back, and faces the room. The last frame: Cassiel alone by the door.'),
+         'She passes without a look and walks away from us into the brightness of the doorway. He straightens, hands still behind his back, and faces the room. The last frame: Cassiel alone by the door.'),
     ]
     sheet(cells, P('design/boards/Q06_board.jpg'))
 

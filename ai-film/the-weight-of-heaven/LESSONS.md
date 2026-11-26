@@ -198,6 +198,13 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 101 | **A shot made of two takes gets one clock and two plates.** The arch shot is Q04's last shot dissolved into Q05's first. The added drift is one function of the shot's time, so the cloud bank is in the same place on both sides of the join; each half is worked from its own plate, because the takes differ by a few levels. And each half is measured separately: Q05 had frozen the cloud right of the column that Q04 had moving leftward, and had reversed the low mist. Movement that begins inside a shot starts from nothing at the join and comes in over most of a second. | Cut v15, `tools/combine_film_v15.py`. | Every repair that runs across a join. |
 | 102 | **Before promising "the other shots", measure their cameras.** I offered to apply the still-camera method to the other shots with still cloud. Tracked, every one of them (the wide, Serath's three close shots) has a slow push-in, and the method does not apply as it stands. Survey first, offer second. | The survey for cut v15. | Any offer to roll a fix out across a film. |
 
+## From building Q06's package
+
+| # | Lesson | Where it came from | Applies to |
+|---|---|---|---|
+| 103 | **The frames are studied before the board is drawn, for every package.** Q02 and Q03 were staged from Villeneuve's frames; Q04, Q05 and the first draft of Q06 were staged from this file's summary of them. The author asked ("Did you search stills ... for inspiration!?") and the answer was no. Done then, the study put Cassiel on a third with the door as his frame and empty room where he faces, and sent Serath out into the brightness of the doorway: neither was in the draft. A summary of a look is not a look. | Q06, 26 November. | Every package: look at the frames for the shot types in it first, and say in the package what was looked at. |
+| 104 | **StillsLab from this container:** its pages and its own image route (`/_next/image?url=...`) are reachable; its image host and its search data are not. Each gallery page lists its frames in film order, so sample a gallery, then look closely at the neighbourhoods that matter. Its terms allow reading for a person and forbid bulk copying: take what the shots need, keep the frames out of the repository. | The same. | Reference study. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |

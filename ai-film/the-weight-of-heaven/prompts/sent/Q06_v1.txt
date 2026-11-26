@@ -1,7 +1,7 @@
 # AUTEUR VIDEO PROMPT
 ## THE WEIGHT OF HEAVEN — Q06 · ORISON, THE COUNCIL CHAMBER · THE SEAL
 References: @Image 1 — environment: the council chamber, the place and its light · @Image 2 — first frame of shot 1: Serath in her close shot, the last frame of the sequence before · @Image 3 — character sheet: SERATH · @Image 4 — character sheet: the HIEROPHANT · @Image 5 — character sheet: CASSIEL · @Image 6 — the Hierophant's close-up as it already stands in this scene: its framing, light and background
-Reference mode · 21 s · 6 shots · 2.35:1 · photoreal live action · spoken English: one speaker, each line said once · no music
+Reference mode · 22 s · 6 shots · 2.35:1 · photoreal live action · spoken English: one speaker, each line said once · no music
 
 ## SCENE INTENT
 This follows the sequence before directly. Serath has asked the Council of Orison for time. The Hierophant grants it, and in the same breath gives her command, should she fail, to her second, Cassiel: a man who waits by the door and is silent. His words are heard over the two people they dispose of, first her, then him. Only then is the Hierophant seen: he looks at her for the first time and says one warm thing. She takes it as a blessing, bows her head and goes. The order is sealed. Cassiel, who has waited for that, inclines his head to her as she passes. Every voice stays low.
@@ -9,12 +9,12 @@ This follows the sequence before directly. Serath has asked the Council of Oriso
 ## GLOBAL LOCKS
 Character identity — SERATH exactly as @Image 3: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. The HIEROPHANT exactly as @Image 4: seventy-four, a short white beard, a tall white cap, white robes. CASSIEL exactly as @Image 5: a man in his sixties, tall and spare, silver hair combed back from a high forehead, a narrow composed face, a long white coat buttoned to the throat, white gloves, white boots. From the sheets take face, hair and clothes only. From @Image 6 take framing, light and background only; eyes, head and mouth are as each shot says. Each face, costume, place, voice and line stays with its one person.
 Wardrobe override — none: everyone exactly as their sheet.
-Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor. In the right-hand wall, past the last arch, a tall white panelled double door, one leaf open, pale daylight beyond it. Outside, pale arcades and towers stand in grey-white cloud that lies level with the floor. Each keeps one place: Serath apart at the far-left arch, at the balustrade, as in @Image 2. The Hierophant at the middle of the table's far side, in front of the centre arch, facing into the room. Cassiel beside the open door, on its left as we look at it, facing into the room, his hands clasped behind his back. Serath is across the room from the Hierophant, off to his right, and the door is across the room from her.
-Props and temporal state — On the table lies one written order: a single sheet of heavy pale paper with lines of handwriting, and at its foot a small pool of soft red sealing wax. The Council's seal is a short seal of dark bronze with a round face. It is pressed once, in shot 5, by a clerk's hand in a white glove and a plain white sleeve. Serath's and Cassiel's gloved hands are empty.
+Location / environment continuity — The council chamber exactly as @Image 1, and lit exactly as @Image 1: a round room of pale marble; a ring of tall arches on thin columns, open to the sky, a low balustrade between them; one long white marble table in the middle of the floor. In the right-hand wall, past the last arch and one bay of plain wall, a tall white panelled double door: its left leaf swung wide open, back against the wall, its right leaf shut, the open half bright with pale daylight. That wall is pale grey-white marble, as pale as the columns and the floor. Outside, pale arcades and towers stand in grey-white cloud that lies level with the floor. Where each stands: Serath apart at the far-left arch, at the balustrade, as in @Image 2, up to shot 4, where she leaves it; in shot 6 she crosses to the door. The Hierophant at the middle of the table's far side, in front of the centre arch, facing into the room. Cassiel in front of the swung-back leaf of the door, just left of its bright open half as we look at it, facing into the room, his hands clasped behind his back. Serath is across the room from the Hierophant, off to his right, and the door is across the room from her.
+Props and temporal state — On the table lies one written order: a single sheet of heavy pale paper with lines of handwriting, and at its foot a small pool of soft red sealing wax. The Council's seal is a short seal of dark bronze with a round face. It is pressed once, in shot 5, by a clerk's gloved hand. Serath's and Cassiel's gloved hands are empty.
 
 ## MOVIE COLOR
 White stone in cloud, cool and grey: pale grey marble, grey-white cloud, white cloth. The gold of Serath's collar and the red of the sealing wax are the only colours. Every shot is exposed for the cloud in the arches: the room sits just under it, each face is lit softly from the side of the arches and falls off on the other side, and a face is never the brightest thing in the frame. Whites keep their detail. No cast shadows.
-Influences, each with its purpose — Denis Villeneuve, Dune and Arrival: symmetry, stillness, shallow focus up close, one still figure held in a large frame, a hard thing heard on the face of the one it is said of. James Cameron: every look answered by what it looks at; cause, then effect, each readable alone: the seal, then the bow.
+Influences, each with its purpose — Denis Villeneuve, Dune and Blade Runner 2049: symmetry and stillness; the one in authority frontal and centred, every movement slow; one still figure on a third, framed by a doorway, the room empty where he faces; a hard thing heard on the face of the one it is said of; a figure walking away from us into a bright opening. James Cameron: every look answered by what it looks at; cause, then effect, each readable alone: the seal, then the bow.
 Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shallow focus on faces. Every shot moves slowly and smoothly on a steady camera.
 
 ## VOICE DNA (immutable)
@@ -22,7 +22,7 @@ THE HIEROPHANT: The high speech at its purest: a liturgical Received Pronunciati
 No one else speaks. Serath and Cassiel are silent in every shot.
 
 ## AUDIO DESIGN
-A quiet stone room open to the sky: soft moving air under everything. His voice is close and clear in shot 3, and comes from across the room in shots 1 and 2, with a short airy tail. Between the lines only air, breath, cloth and, at the end, her steps on the marble are heard.
+A quiet stone room open to the sky: soft moving air under everything. His voice is close and clear in every shot, with a short airy tail. Between the lines only air, breath, cloth and, at the end, her steps on the marble are heard.
 
 ## FIRST-FRAME ANCHOR
 Shot 1 opens exactly on @Image 2, the same framing.
@@ -32,16 +32,16 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 0.0–2.6 s
 [CAM] exactly the framing of @Image 2: medium close-up, 75 mm, at her eye height, from inside the room looking toward the far-left arch, shallow focus; the camera holds still. Behind her, out of focus: bright cloud; a marble column soft on the right of the frame.
 [BLOCK] Exactly @Image 2: Serath from the chest up, a little left of centre, facing the room, the gold collar at her throat.
-[ACT] Her mouth is closed from the first frame to the last. Her eyes are open and stay where @Image 2 has them, on the Council, off-screen. She waits; then she listens: the voice is the Hierophant's, from off-screen, across the room. On his last word her shoulders ease a little and one breath goes out through her nose.
-[DIALOGUE] / V.O. THE HIEROPHANT, off-screen (after a still moment; 0.8 to 1.9 s): "Until the bell." — a pronouncement, level, falling at the end; unhurried.
+[ACT] Her mouth is closed from the first frame to the last. Her eyes are open and stay where @Image 2 has them, on the Council, off-screen. She waits; then she listens: the voice is the Hierophant's, a man's, from off-screen to the right, where she is looking. On his last word her shoulders ease a little and one breath goes out through her nose.
+[DIALOGUE] / V.O. THE HIEROPHANT, off-screen (three quarters of a second after the first frame; 0.8 to 1.9 s): "Until the bell." — a pronouncement, level, falling at the end; unhurried.
 [SFX] his voice from across the room; air.
 [STATE OUT] Serath as she was, her eyes on the Council, her mouth closed.
 
 ### SHOT 2
 [TIME] 2.6–7.6 s
-[CAM] medium-wide, 40 mm, at chest height, from inside the room looking at the right-hand wall; the camera moves slowly and steadily toward Cassiel, one pace in the whole shot. The tall white door, one leaf open, pale daylight beyond it, on the right of the frame; the last arch and its cloud on the left of the frame; the pale marble floor between.
-[BLOCK] Cassiel, full figure, beside the open door on its left, a little right of centre in the frame, facing into the room, upright, his gloved hands clasped behind his back.
-[ACT] His mouth is closed from the first frame to the last. He stands as a sentry does, his weight even on both feet, his eyes open and resting on the Council, off-screen to the left. He breathes slowly; the hem of his coat stirs in the air from the door. The voice is the Hierophant's, from off-screen to the left, across the room. Cassiel listens without a sign; as his own name is spoken his eyes lower for a moment and lift again.
+[CAM] medium-wide, 40 mm, at chest height, from inside the room looking at the right-hand wall; the camera moves slowly and steadily toward Cassiel, one pace in the whole shot. On the left of the frame the last arch and its cloud; then a bay of plain wall, pale grey-white marble, as pale as the columns; then, on the right of the frame, the tall white door, its left leaf swung back against the wall, its open half bright with pale daylight. The light of the arches falls on Cassiel and on the wall from the left of the frame.
+[BLOCK] Cassiel alone in the frame, full figure, on the right third, in front of the swung-back leaf, just left of the bright open half of the door, the tall door rising beside him like a frame. He faces into the room, upright, his gloved hands clasped behind his back. The left two thirds of the frame are the pale floor, the plain wall and the last arch: empty room in the direction he faces.
+[ACT] His mouth is closed from the first frame to the last. He is upright and still, his weight even on both feet, his eyes open and resting on the Council, off-screen to the left. The hem of his coat stirs in the air from the door. He listens: the voice is the Hierophant's, an old man's, from off-screen to the left, where he is looking. On the voice's last word his eyes lower once, and they are up again, on the Council, by the cut.
 [DIALOGUE] / V.O. THE HIEROPHANT again, off-screen, the same voice (half a second after the cut; 3.2 to 7.0 s): "If it finds the Weir standing, the fleet is Vice Admiral Cassiel's." — a pronouncement, even and slow, each word set down, falling at the end.
 [SFX] his voice from across the room; air through the open door.
 [STATE OUT] Cassiel upright beside the door, his eyes on the Council, his mouth closed.
@@ -50,42 +50,42 @@ Shot 1 opens exactly on @Image 2, the same framing.
 [TIME] 7.6–11.6 s
 [CAM] exactly the close-up of @Image 6: 75 mm, at his eye height, frontal and centred, from the collar up, his tall white cap running out of the top of the frame, shallow focus; a slow push in of a hand's width. The centre arch and bright cloud are soft behind him, a thin column on either side.
 [BLOCK] The Hierophant alone in the frame.
-[ACT] He faces us, his head level, his eyes open and resting just left of the lens, his mouth closed. He lets a moment pass. Then, slowly, his head turns a little toward the left of the frame and his eyes go past the left side of the camera, to Serath, off-screen: the first time he has looked at her. His face warms, as a father's does at a grown child. He breathes in once and says it to her, slowly and kindly. After it his mouth closes, his eyes stay on her, and only the air is heard to the cut.
+[ACT] At the cut he faces us, his head level, his mouth closed, his eyes open and resting just left of the lens. Half a second after the cut his head begins to turn toward the left of the frame, slowly; by 9.0 s it has made an eighth of a turn, his face three-quarters to us, and his eyes are past the left side of the camera, on Serath, off-screen: the first time he has looked at her. His brow eases and his eyes soften: his face is warm. He breathes in once and says it to her, slowly and kindly. After it his mouth closes, his eyes stay on her, and only the air is heard to the cut.
 [DIALOGUE] / V.O. THE HIEROPHANT (after his head has turned and his one breath in; 9.2 to 10.8 s): "Remember who raised you." — warm, low, almost tender; slow, each word set down.
 [SFX] his voice, deep and close; air.
-[STATE OUT] His head turned a little to the left of the frame, his eyes on Serath, his mouth closed.
+[STATE OUT] His face three-quarters to us, turned toward the left of the frame, his eyes on Serath, his mouth closed.
 
 ### SHOT 4
 [TIME] 11.6–14.4 s
 [CAM] the same medium close-up as shot 1, the same framing and background; the camera holds still.
 [BLOCK] Serath from the chest up, a little left of centre, facing the room.
-[ACT] Her mouth is closed from the first frame to the last. Her eyes are on the Hierophant, off-screen. She bows her head once, slowly, an officer's assent, and lifts it again. Then she turns to her left, toward the right of the frame, and walks out past the right edge of the frame at a steady pace. For the last half second the frame holds what she leaves: the arch, the column and the drifting cloud.
+[ACT] Her mouth is closed from the first frame to the last. Her eyes are past the right side of the camera, on the Hierophant, off-screen. From the first half second she bows her head once, an officer's assent, and by 13.0 s has lifted it again. Then she turns to her left, toward the right of the frame, and walks out of the frame past its right edge at a steady pace.
 [DIALOGUE] / V.O. none
 [SFX] the cloth of her coat; two of her steps on the marble; air.
-[STATE OUT] The arch, the column and the cloud, with no one in the frame.
+[STATE OUT] Serath leaving the frame at its right edge.
 
 ### SHOT 5
 [TIME] 14.4–16.6 s
 [CAM] extreme close insert, 100 mm macro, low over the table top and near its surface, shallow focus; the camera holds still.
-[BLOCK] Hands and page only. On the white marble table the sheet of heavy pale paper lies flat, its lines of handwriting too soft to read. At the foot of the page, in sharp focus, the small pool of soft red sealing wax. The clerk's hand, in a white glove and a plain white sleeve, holds the bronze seal upright just above the wax.
-[ACT] The hand brings the seal straight down into the wax and presses; holds it there for a moment; then lifts it straight up and away out of the top of the frame. The wax keeps a clean round crest, glossy at its rim.
+[BLOCK] One gloved hand and the page only. On the white marble table the sheet of heavy pale paper lies flat, its lines of handwriting too soft to read. At the foot of the page, in sharp focus, a small round pool of soft red sealing wax, its surface smooth and plain. A hand in a white glove and a plain white sleeve holds the bronze seal upright a finger's width above the wax.
+[ACT] From the first frame the hand brings the seal straight down; by 14.9 s it is pressed into the wax; it stays pressed to 15.5 s; then the hand lifts it straight up, clean, and is out of the top of the frame by 16.0 s. All the wax stays on the page: where the seal was there is one round stamped impression with a high glossy rim.
 [DIALOGUE] / V.O. none
 [SFX] the soft press into warm wax; a small tick as the seal lifts; air.
-[STATE OUT] The sealed page on the table, the red seal sharp, no hand in the frame.
+[STATE OUT] The sealed page alone on the table, the red impression sharp.
 
 ### SHOT 6
-[TIME] 16.6–21.0 s
-[CAM] the same view as shot 2, closer: medium, 50 mm, at chest height, from inside the room looking at the right-hand wall; the camera holds still. The tall white door, one leaf open, pale daylight beyond it, on the right of the frame; the last arch and its cloud on the left.
-[BLOCK] Cassiel from the knees up, a little left of centre, beside the open door, facing into the room, his gloved hands clasped behind his back. The floor between him and the doorway is clear.
-[ACT] Cassiel's mouth is closed from the first frame to the last. From the first frame Serath walks in past the left side of the camera, her back to us, and crosses the floor away from us toward the open door at a steady pace, her gloved hands at her sides, her head level, her eyes on the doorway. She passes on the door side of him, to the right of him in the frame, an arm's length away. As she comes level with him, at 18.4 s, he inclines his head to her: one slow, shallow bow of the head, his eyes lowered, his back straight, his hands still behind him. She walks on, through the doorway into the daylight, and by 19.8 s is gone beyond it. He lifts his head and faces the room again, as before, and holds.
+[TIME] 16.6–22.0 s
+[CAM] the same view as shot 2, closer and a step to the right: medium, 50 mm, at chest height, from inside the room looking at the right-hand wall; the camera holds still. On the left of the frame the last arch and its cloud; then the bay of plain wall, pale grey-white marble, as pale as the columns; then, on the right of the frame, the tall white door, its left leaf swung back against the wall, its open half bright with pale daylight, the brightest thing in the frame. The light of the arches falls on Cassiel and on the wall from the left of the frame.
+[BLOCK] Cassiel from the knees up, a little left of centre, in front of the swung-back leaf, where shot 2 has him, facing into the room, his gloved hands clasped behind his back. The floor between him and the doorway is clear.
+[ACT] Cassiel's mouth is closed from the first frame to the last. At the first frame his eyes are on the table, off-screen to the left, where the order has just been sealed. At the first frame Serath is already in the frame, on its right half, three paces nearer to us than he is, seen from behind, walking away from us toward the open half of the door at a steady pace, her gloved hands at her sides, her head level. She stays to the right of him in the frame and passes him an arm's length off, on his door side. As she nears him his eyes come from the table to her; as she comes level with him, at 18.2 s, he inclines his head to her: one slow, shallow bow of the head, his eyes lowered, his back straight, his hands still behind him. She walks on; as she reaches the doorway she darkens against its daylight, a pale shape going into brightness, and by 19.8 s has passed out of sight beyond it. By 20.6 s he has lifted his head and faces the room again, as before, and he holds so to the end.
 [DIALOGUE] / V.O. none
 [SFX] her boots on the marble, even steps going away and out; the cloth of her coat; air through the open door.
 [STATE OUT] Cassiel alone beside the open door, upright, his hands behind his back, facing the room.
 
 ## PERFORMANCE ARC
-SERATH: waits → is answered and lets one breath go → takes his last words as a blessing and bows her head → goes, looking at no one.
-THE HIEROPHANT: pronounces, unseen → then looks at her for the first time, and is warm.
-CASSIEL: waits by the door → hears himself named without a sign → once the order is sealed, inclines his head to her → waits again.
+SERATH: waits → is answered and lets one breath go → takes his last words as a blessing and bows her head → goes, her face to the door.
+THE HIEROPHANT: pronounces, unseen → then turns his head to her, slowly, for the first time, and is warm.
+CASSIEL: waits by the door → hears himself named without a sign → watches the order sealed, and only then inclines his head to her → waits again.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
 The one warm thing said to her is the warning. The man who will replace her is courteous to her only once it is written and sealed.
