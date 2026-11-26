@@ -142,6 +142,16 @@ Three checks before the take, 26 November: an independent review, the reference 
 | 79 | **The model lays a drone under a scene whatever the prompt says** (lessons 8 and 50, a third time): here about 55 to 60 Hz, 25 dB under the voices. Plan its removal as a step of every mix, and ask the model for as little sound as possible under speech. | Q04 t1. | Every take with speech. |
 | 80 | **A voice paragraph does not set pitch.** Asked for a thin, reedy tenor of seventy-two and a bass-baritone, the model gave two voices within a semitone of each other (111 to 124 Hz and 114 Hz). Measure pitch on every take; what the words cannot fix is a pitch shift in the mix or a voice made elsewhere. | Q04 t1. | The voice bible; every take with speech. |
 
+## From mending Q04 t1 and cut v10
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 81 | **Separate a person from a background by warmth, not by brightness.** Keyed on darkness, the wall lift greyed the shadow side of the Engineer's face. Skin was the only warm thing in the shot (red over blue by 0.08 or more, even in shade); hair and robe join to it; a column runs to the top of the frame and a shoulder does not. | `tools/fix_q04_t1.py`, `figure_mask`. | Every background fix behind a person. |
+| 82 | **The film's grade can be learned from the film.** The still cup exists ungraded (the take) and graded (the cut), pixel for pixel: a transform fitted on that pair gives a new shot of the same object the same look, and its neutral part alone gives the rest of the scene the film's whites without touching skin. | Q04 in cut v10. | Every new take that must sit beside graded material. |
+| 83 | **For a sound with a name, generate it; do not synthesize it.** Far bells from a series of partials read as a synthesizer pad, and from a struck-bell design at four pitches as a music box; the cup's buzz from a train of ticks read as crickets, and the video model's own as hiss. Local Stable Audio gave both at the first or second take (bells z 3.8, the buzz 99.9 %). | `tools/mix_q04.py`. | Every effect with a real-world name. |
+| 84 | **A short window of a sound is another sound.** Two strokes of far bells in 2.3 s read as a doorbell; the same bells over ten seconds read as church bells. Judge a sound over the stretch the audience hears, and say which stretch was tested. | The bells under the black card. | Every ear-model check. |
+| 85 | **A listening model asked about a drone will find one.** After the low band measured empty (nothing under 120 Hz above −65 dBFS but the voices' own pitch), the second listener still reported a low drone under the scene: it was describing the wind bed. Ask what is heard, not whether a named thing is there, and settle it by measurement. | Cut v10's council. | Every listening pass. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |

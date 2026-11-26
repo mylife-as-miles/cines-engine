@@ -1,0 +1,151 @@
+{
+ "file": "out/review/film_v10.mp4",
+ "frames": 2214,
+ "seconds": 92.25,
+ "choir_version_of_movement_I": "A",
+ "picture": [
+  {
+   "label": "I. The bell (cut v8 picture, cut v9 sound)",
+   "source": "out/edits/I_bell_v8.mp4",
+   "start_frame": 0,
+   "frames": 1539
+  },
+  {
+   "label": "black; super \"THREE DAYS LATER\" (in 0.45-1.0 s, out 2.3-2.85 s)",
+   "source": "made here",
+   "start_frame": 1539,
+   "frames": 77
+  },
+  {
+   "label": "II. The council, Q04 shot 1 the cup",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1616,
+   "frames": 84,
+   "take_seconds": [
+    0.0,
+    2.625
+   ],
+   "speed": 0.75
+  },
+  {
+   "label": "II. The council, Q04 shot 2 the Chancellor",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1700,
+   "frames": 53,
+   "take_seconds": [
+    2.625,
+    4.8333
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 3 the chamber",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1753,
+   "frames": 139,
+   "take_seconds": [
+    4.8333,
+    10.625
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 4 the Hierophant",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1892,
+   "frames": 75,
+   "take_seconds": [
+    10.625,
+    13.25
+   ],
+   "speed": 0.84
+  },
+  {
+   "label": "II. The council, Q04 shot 5 the Engineer",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1967,
+   "frames": 148,
+   "take_seconds": [
+    13.75,
+    19.9167
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 6 Serath",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 2115,
+   "frames": 99,
+   "take_seconds": [
+    19.9167,
+    24.0417
+   ],
+   "speed": 1.0
+  }
+ ],
+ "movement_I_last_frame_mean_level_0_255": 0.0,
+ "join_at_s": 64.125,
+ "join_levels_dbfs_5ms_steps_from_minus_100ms": [
+  -64.3,
+  -62.5,
+  -59.1,
+  -60.9,
+  -66.0,
+  -63.3,
+  -65.2,
+  -61.5,
+  -60.3,
+  -64.8,
+  -65.9,
+  -59.6,
+  -60.7,
+  -57.9,
+  -60.0,
+  -66.9,
+  -68.7,
+  -74.5,
+  -84.4,
+  -104.5,
+  -61.9,
+  -64.5,
+  -64.5,
+  -60.1,
+  -60.4,
+  -63.6,
+  -63.8,
+  -63.6,
+  -63.0,
+  -64.6,
+  -63.6,
+  -64.0,
+  -62.4,
+  -65.7,
+  -62.1,
+  -63.8,
+  -63.6,
+  -61.6,
+  -60.8,
+  -60.8,
+  -59.3,
+  -62.6,
+  -62.2,
+  -62.2,
+  -58.1,
+  -59.6,
+  -64.2,
+  -60.5,
+  -64.6,
+  -62.4,
+  -61.1,
+  -62.5,
+  -60.3,
+  -66.5,
+  -62.5,
+  -62.3,
+  -66.3,
+  -62.2,
+  -60.1,
+  -62.7
+ ],
+ "largest_sample_step_at_join": 0.00044
+}

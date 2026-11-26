@@ -53,3 +53,11 @@ Made on 26 November 2026 by `tools/foundry_v9.py`, to replace the video model's 
 - **earshot catalogue designs** (`earshot make`, MIT, as described above; computed locally, no audio file ships with it): `wind_vale_field` (`wind/open`), `rockfall_crack` (`break/rock` over `explosion/far`), `child_steps_mud`, `boots_away_mud`, `run_boots_mud` and `wax_press_soft` (all `step/mud`), `wax_peel` (`tape/peel`). Modified: cut, re-pitched, low-passed, layered.
 - **Both, layered**: `crows_burst` (a generated take with `wings/flap` under it).
 - Added by the lead for the mix: `crow_caw_1` and `crow_caw_2`, earshot catalogue design `crow/caw` (`earshot make`, seeds 3 and 8), computed locally.
+
+## The council, Q04 (`audio/sfx/q04/`)
+
+Made on 26 November 2026 for cut v10 by `tools/mix_q04.py`. Both files are original and were made on this machine: nothing was downloaded and nothing was paid for.
+
+- **Generated locally with Stable Audio 3.0 Small SFX** (Stability AI Community License, as described above; attribution: Stable Audio 3.0 Small, Stability AI): `bells_far` ("several church bells ringing far away in the distance, irregular, out of time with each other, outdoors, wind", seed 37, 10 s; played at 0.84 speed in the mix) and `cup_buzz` ("a small metal cup rattling and vibrating on a marble table, a fine continuous metallic buzz, close up", seed 5, 4 s).
+- The council's air is `audio/sfx/wind_altitude.flac`, credited above. Its voices are the video model's own (Seedance 2.5, take Q04 t1).
+
