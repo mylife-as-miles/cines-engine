@@ -74,7 +74,7 @@ POOL = "fx_{:+.1f}_{:+.1f}_pool".format(*st.KEY_FX)
 RIM = "dawn_rim"
 TRIMS = {
     # the one fitting over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.4, RIM: 0.0},
+    "wide": {"window_spill": 0.4, RIM: 0.0, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 4.0 for xy in st.BACK_FX}},
     # top light from the fitting over her seat is the key; the glass's spill would flatten her face
     "seated": {"window_spill": 0.2, POOL: 0.22},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
@@ -119,7 +119,7 @@ def dawn():
     deleted; the casual suit's T-shirt stays under the blouse, pulled in 4 mm and in the blouse's colour, so no gap
     or poke-through shows at the waist."""
     h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    top, trousers, shoes = (0.33, 0.318, 0.305), (0.065, 0.066, 0.072), (0.04, 0.04, 0.04)
+    top, trousers, shoes = (0.33, 0.318, 0.305), (0.045, 0.046, 0.05), (0.04, 0.04, 0.04)
     items = ["female_elegantsuit01", "female_casualsuit01", "shoes01"]
     castkit.dress(h, items, tint={"female_elegantsuit01": top, "female_casualsuit01": trousers, "shoes01": shoes},
                   flat=tuple(items))
@@ -145,47 +145,8 @@ def dawn():
         dp = cas.modifiers.new("tuck", "DISPLACE")
         dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.0, -0.004, "tshirt"
         cas.modifiers.move(cas.modifiers.find("tuck"), 1)        # after the armature, before the smoothing
-    n = hide_under_trousers(h, cas, shirt[0][0] if shirt else set())
-    print(f"GATE wardrobe: skirt parts {len(skirt)} deleted, T-shirt parts {len(shirt)} tucked, "
-          f"{n} leg skin vertices masked under the trousers", flush=True)
+    print(f"GATE wardrobe: skirt parts {len(skirt)} deleted, T-shirt parts {len(shirt)} tucked", flush=True)
     return h
-
-
-def hide_under_trousers(h, cas, shirt_idx, reach=0.03):
-    """MPFB's delete group for the casual suit leaves the shins, which poke through the trousers once she sits. Mask
-    every leg vertex of the shaped body within `reach` of the trousers (rest pose, before any rigging moves them)."""
-    from mathutils.bvhtree import BVHTree
-    body = bpy.data.objects[h["body"]]
-    mods = [(m, m.show_viewport) for m in body.modifiers]
-    for m, _ in mods:
-        m.show_viewport = False
-    bpy.context.view_layer.update()
-    dg = bpy.context.evaluated_depsgraph_get()
-    ev = body.evaluated_get(dg)
-    em = ev.to_mesh()
-    bw = body.matrix_world
-    shaped = [bw @ v.co for v in em.vertices]
-    ev.to_mesh_clear()
-    for m, vis in mods:
-        m.show_viewport = vis
-    cw = cas.matrix_world
-    verts = [cw @ v.co for v in cas.data.vertices]
-    polys = [tuple(p.vertices) for p in cas.data.polygons if p.vertices[0] not in shirt_idx]
-    bvh = BVHTree.FromPolygons(verts, polys)
-    hide = []
-    for i, p in enumerate(shaped):
-        if 0.1 < p.z < 0.8 and abs(p.x) < 0.2:
-            hit = bvh.find_nearest(p, reach)
-            if hit[0] is not None:
-                hide.append(i)
-    vg = body.vertex_groups.new(name="under_trousers")
-    vg.add(hide, 1.0, "REPLACE")
-    mk = body.modifiers.new("Delete.under_trousers", "MASK")
-    mk.vertex_group, mk.invert_vertex_group = "under_trousers", True
-    sub = [i for i, m in enumerate(body.modifiers) if m.type == "SUBSURF"]
-    if sub:
-        body.modifiers.move(len(body.modifiers) - 1, sub[0])
-    return len(hide)
 
 
 def lap_hands(holder, upper=(12, -6), fore=(64, 30), hand=(72, 40)):

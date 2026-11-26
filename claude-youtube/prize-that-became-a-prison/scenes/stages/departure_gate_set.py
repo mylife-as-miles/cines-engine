@@ -46,11 +46,12 @@ COLUMNS = [(-9.6, -1.0), (8.8, -1.6), (-9.6, 5.3), (4.4, 5.3)]
 
 COOL = (0.84, 0.92, 1.0)
 FX_X = [-0.6 + 2.4 * k for k in range(-4, 5)]
-FX_Y = [2.9, 0.85, -1.2, -3.3, -5.4, -7.2]
-FX_LEVEL = {  # night mode: one fitting burns over Dawn's seat (the lit island), one over the podium queue, three far
-    (-0.6, 2.9): 1.0, (6.6, 2.9): 0.55, (6.6, -1.2): 0.2, (-7.8, -7.2): 0.4, (-3.0, -7.2): 0.4, (4.2, -7.2): 0.4,
+FX_Y = [3.1, 0.85, -1.2, -3.3, -5.4, -7.2]
+BACK_FX = [(-7.8, -7.2), (-3.0, -7.2), (4.2, -7.2)]     # far fittings behind the wide camera, out of its frame
+FX_LEVEL = {  # night mode: one fitting burns just in front of Dawn's face (the lit island), one over the podium queue,
+    (-0.6, 3.1): 1.0, (6.6, 3.1): 0.55, (6.6, -1.2): 0.2, **{xy: 0.4 for xy in BACK_FX},   # a few far ones dimmed
 }
-KEY_FX = (-0.6, 2.9)
+KEY_FX = (-0.6, 3.1)
 FX_ENERGY = 420.0
 
 M = {}
@@ -694,7 +695,7 @@ def jet_bridge():
     box("jb_beam", (2.4, 0.4, 0.4), (b.x, b.y, APRON + 0.8), m["mast"], rot=(0, 0, -a))
     # service lamps under the cab, lighting the door area and the apron below
     for k, dy in enumerate((-0.8, 0.8)):
-        spot(f"jb_lamp_{k}", (cab.x + 0.7, cab.y + dy, sill - 0.2), 320.0, (1.0, 0.9, 0.76), 70, 0.9, (0, 0, 0), radius=0.08)
+        spot(f"jb_lamp_{k}", (cab.x + 0.7, cab.y + dy, sill - 0.2), 200.0, (1.0, 0.9, 0.76), 60, 0.9, (0, 0, 0), radius=0.08)
         box(f"jb_lamp_body_{k}", (0.22, 0.16, 0.07), (cab.x + 0.7, cab.y + dy, sill - 0.12), m["mast"], bevel=0.01)
         box(f"jb_lamp_lens_{k}", (0.18, 0.12, 0.004), (cab.x + 0.7, cab.y + dy, sill - 0.157), m["flood"])
     sphere("jb_amber", 0.07, (cab.x + 1.0, cab.y - 1.0, cz + 1.56), m["amber"], segs=12)
@@ -868,7 +869,7 @@ def exterior():
     box("airfield", (9000, 9000, 0.1), (0, 0, APRON - 0.12), m["grass"])
     markings()
     # masts throw pools: on our aircraft's nose and port side, its tail, the next stand, the far apron
-    for i, (x, y, t, e) in enumerate(((-24, 24, (0.5, 17.0), 170000.0), (28, 30, (9.0, 24.0), 150000.0),
+    for i, (x, y, t, e) in enumerate(((-24, 24, (0.5, 17.0), 170000.0), (28, 30, (14.0, 30.0), 150000.0),
                                       (-4, 64, (-2.0, 42.0), 150000.0), (46, 76, (40.0, 52.0), 120000.0),
                                       (-60, 58, (-40.0, 30.0), 150000.0), (90, 44, (70.0, 30.0), 120000.0))):
         mast(i, x, y, t, energy=e)

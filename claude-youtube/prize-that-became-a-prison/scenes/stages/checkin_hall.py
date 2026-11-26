@@ -50,12 +50,14 @@ AGENT = (0.02, 0.98)
 
 EXPOSURE = -1.6
 CAMERAS = {
-    "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6),
+    "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6,
+                 exposure=-1.4),   # a touch up: the far hall and the glazed end must not crush to black
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
-    "scale": dict(loc=(1.62, -1.55, 1.28), aim=(1.55, 0.45, 0.66), lens=35, focus="focus_duffel", fstop=2.8,
+    "scale": dict(loc=(1.6, -1.38, 1.24), aim=(1.5, 0.45, 0.64), lens=35, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.58), aim=(0.25, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.4),
+    "shoulder": dict(loc=(0.3, 1.68, 1.58), aim=(0.25, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.4,
+                     exposure=-1.9),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 48.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
 POST = (SX + 0.57, 0.95)  # scale display post (relative to the desk centre): at the scale's back corner, clear of
@@ -738,7 +740,7 @@ def desk(x0, idx, open_):
     sk.cyl(p + "grommet", 0.03, 0.004, (x0 + 0.42, 0.68, WORK + 0.002), m["plastic"], verts=24)
     if open_:
         # Dawn's passport, closed, on the ledge between her hand and the agent (a plain cover, nothing printed)
-        box(p + "passport", (0.128, 0.09, 0.008), (x0 + 0.12, 0.17, LEDGE + 0.035 + 0.004), m["passport"], bevel=0.002,
+        box(p + "passport", (0.128, 0.09, 0.008), (x0 + 0.17, 0.1, LEDGE + 0.035 + 0.004), m["passport"], bevel=0.002,
             rot=(0, 0, math.radians(14)))
         # the screen's light on the agent's face and chest, aimed by numbers
         n = R @ (Matrix.Rotation(tilt, 3, "X") @ Vector((0, 1, 0)))

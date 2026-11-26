@@ -196,9 +196,11 @@ def lamp():
     the reflector's axis (the cone) and a small sphere at the bulb for the spill round the rim and the glow inside
     the shade. Built at the origin; lamp parts move with it to each beat's mark."""
     m = materials()
-    # val 2.4: the generated gunmetal is near black, so in this light the lamp vanished into the dark table; a worn
-    # mid-grey enamel reads by the faint bounce from above and by the pool it reflects
-    h = props.load("desk-lamp", size=0.55, axis="z", loc=(0, 0, 0), turn_deg=0, sat=0.4, val=2.4, rough_add=0.06)
+    # Known issue (26 Nov): the generated material is mostly bare metal (its glTF metallic channel averages 0.63,
+    # most texels 1.0), so the shade's top and the arm mirror the black room and read as a black shape from above and
+    # behind. The fix still to try is to treat it as painted enamel: a MINIMUM (about 0.15) on Metallic instead of the
+    # MAXIMUM below, with the roughness kept satin. Lightening `val` alone changes nothing (tried at 2.4).
+    h = props.load("desk-lamp", size=0.55, axis="z", loc=(0, 0, 0), turn_deg=0, sat=0.45, val=0.85, rough_add=0.06)
     bpy.context.view_layer.update()
     n_in = 0
     for o in [c for c in h.children_recursive if c.type == "MESH"]:
@@ -214,8 +216,7 @@ def lamp():
                 p.material_index = idx
                 n_in += 1
     print(f"EVIDENCE lamp reflector faces {n_in}", flush=True)
-    # the lamp's painted metal: generated roughness is near matt, so in the dark its arm and base vanish; real enamel
-    # on steel is satin and reads by the bright pool it reflects
+    # satin finish: the generated roughness is near matt; halved, the arm and the shade's rim pick up the pool
     for mat in {s.material for o in h.children_recursive if o.type == "MESH" for s in o.material_slots if s.material}:
         if mat is m["enamel"]:
             continue
@@ -223,7 +224,7 @@ def lamp():
         bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
         if bsdf is None:
             continue
-        for sock, op, k in (("Roughness", "MULTIPLY", 0.55), ("Metallic", "MAXIMUM", 0.3)):
+        for sock, op, k in (("Roughness", "MULTIPLY", 0.55), ("Metallic", "MAXIMUM", 0.45)):
             inp = bsdf.inputs[sock]
             mm = nt.nodes.new("ShaderNodeMath")
             mm.operation = op
