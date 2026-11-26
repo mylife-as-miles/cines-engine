@@ -216,6 +216,13 @@ The author (26 November): "Pls restore back Hierophant voice", and of the Engine
 | 109 | **An invented name can come back mispronounced.** Two listening passes heard "Cassilin's" for "Cassiel's". A name the model has not met wants a spelling that can only be said one way, or a plan to repair it in sound; this one is off-screen, so it can be. | Q06 t1 shot 2. | Every line with an invented name (Marl, Karst, Sarn, Orison). |
 | 110 | **A shot that repeats an earlier one can simply go, and say what goes with it.** The seal came back as the first seal over again; the author cut it, and the scene is tighter. What the cut takes out of the story has to be said at the same time: here, what Cassiel was waiting for. | Q06 t1 shot 5, cut v16. | Every shot cut for a fault. |
 
+## From building Q07's package
+
+| # | Lesson | Where it came from | Applies to |
+|---|---|---|---|
+| 111 | **Open every environment reference at full size and list what is in it before attaching it.** Three of Q07's four places carried something the prompt never mentions: a water wheel and two people beside the wall, a village and a seven-arch viaduct under the underside, a lone man on the plain. What is in an attached image comes back (lesson 105). Crop the reference to what the shot needs; a sentence asking the model to ignore the rest does not work. | Q07, the independent review, 26 November. | Every reference. |
+| 112 | **A "Go" given before the package is final does not cover what changes afterwards.** The author said "Go" while the review was still running. The review changed the references and three framings; I started the take on the earlier word and the session's own safety check stopped it. It was right: an approval covers the package that was shown. Show the revised package and wait. | Q07, 26 November. | Every paid generation. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |

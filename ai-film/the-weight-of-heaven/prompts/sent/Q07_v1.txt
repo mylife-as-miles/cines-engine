@@ -1,21 +1,21 @@
 # AUTEUR VIDEO PROMPT
 ## THE WEIGHT OF HEAVEN — Q07 · BENEATH ORISON · THE UNDERSIDE
-References: @Image 1 — environment: beneath Orison, the underside of the kingdom and the light under it · @Image 2 — environment: the basalt plain · @Image 3 — environment: the great wall of nine gates · @Image 4 — environment: Sarn Vale, the valley beyond the wall · @Image 5 — the naval cutter · @Image 6 — character sheet: SERATH
+References: @Image 1 — environment: the underside of the kingdom and the pale band of day under it · @Image 2 — environment: the basalt plain · @Image 3 — environment: the black wall and its gates · @Image 4 — environment: Sarn Vale, the valley beyond the wall · @Image 5 — the naval cutter · @Image 6 — character sheet: SERATH
 Reference mode · 14 s · 5 shots · 2.35:1 · photoreal live action · no speech · no music
 
 ## SCENE INTENT
-Serath has lived her whole life on top of Orison, a kingdom of white marble that floats in the cloud. Now she comes down beneath it for the first time, in a small white naval cutter. Five separate views, cut hard, one clear thing in each: the cutter falls out of the cloud under the kingdom's underside; her face as she sees it; the black plain below; the ancient wall that carries the kingdom's weight, and what that weight does to a bird; the green valley beyond the wall, full of people. From below the kingdom is not beautiful. It is only enormous.
+Serath has lived her whole life on top of Orison, the kingdom that floats above the cloud. Now she comes down beneath it for the first time, in a small white naval cutter. Five separate views, cut hard, one clear thing in each: the cutter comes down out of the cloud under the kingdom's underside; her face as she sees it; the black plain below; the ancient black wall at the plain's edge, and a bird that falls in front of its open gate; the green valley beyond the wall, its chimneys smoking. From below the kingdom is only enormous.
 
 ## GLOBAL LOCKS
-Character identity — SERATH exactly as @Image 6: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. From the sheet take face, hair and clothes only.
+Character identity — SERATH exactly as @Image 6: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. From the sheet take face, hair and clothes only. Serath is seen in shot 2 and nowhere else.
 Wardrobe override — none: exactly as her sheet.
-Location / environment continuity — One country, seen from the air and from the ground. Over everything hangs the underside of Orison exactly as @Image 1: a ceiling of raw black rock from one horizon to the other, roots hanging from it, iron chains as thick as towers hanging plumb from it, its upper edges lost in grey cloud. Under it lies the basalt plain exactly as @Image 2: black six-sided columns, broken and stepped, in ranks to the horizon. At the far edge of the plain, across the head of a green valley, the great wall exactly as @Image 3: one straight wall of fused black stone a mile long, smooth, without a seam or a tool-mark, with nine tall arched gates in a row; the two gates at one end are shut with black stone and seven are open, with dry ground and green valley seen through them. Beyond the wall, Sarn Vale exactly as @Image 4: green terraces, orchards, grey stone farms and walls, a road, the smoke of many hearths. @Image 1 to @Image 4 were drawn from the ground: shots 1, 3 and 5 see the same places from the air, at the height each shot gives.
-Props and temporal state — The cutter exactly as @Image 5: a small white wooden boat that flies, clinker-built, ten metres long, with a little white pilothouse with pointed windows and a short spire, and two dark wooden runners under its keel. It hangs in the air level and quiet, keel down, and sinks at a steady pace.
+Location / environment continuity — One country, seen from the air and from the ground. Over the whole basalt plain hangs the underside of Orison exactly as @Image 1: a ceiling of raw black rock, roots hanging from it, iron chains hanging plumb from it, each link longer than the cutter, its edges lost in grey cloud. Under it lies the basalt plain exactly as @Image 2: black six-sided columns, broken and stepped, in rows to the horizon. Along the far edge of the plain stands the black wall exactly as @Image 3: one straight wall of fused black stone a mile long and thirty metres high, smooth, with nine tall arched gates in a row, most of them open, the others shut with black stone; the plain is on the near side of it, and through each open gate the green valley is seen. Beyond the wall and lower than the plain, under grey cloud, Sarn Vale exactly as @Image 4: green terraces, orchards, grey stone farms and field walls, a road, the smoke of many hearths.
+Props and temporal state — The cutter exactly as @Image 5: a small white wooden boat that flies, clinker-built, ten metres long, with a little white pilothouse with pointed windows and a short spire, a brass rail round its deck, and two dark runners under its keel. There is one cutter, alone in the sky. It hangs in the air level and quiet, keel down, and comes straight down at a slow steady pace.
 
 ## MOVIE COLOR
 One colour for this whole country: cold blue-grey slate. Black rock, black basalt, grey cloud. The only bright thing is the pale band of day between the black ceiling and the black plain; the underside sits two stops under that band, its rock and chains still readable. The green of the valley is muted and wet under cloud. The white cutter and the gold at Serath's throat are the only clean things. Every shot is exposed for the band of day; blacks deep but never crushed; mist greys everything far off.
-Influences, each with its purpose — Denis Villeneuve: Arrival, a small craft under the edge of a vast dark shape that enters from the top of the frame, mist between them; Dune, a face in profile at a cockpit window with the glass bright beside it, and small things on a vast plain. James Cameron: a look answered by what it looks at, she looks up and then down; size shown by a small known thing beside it; a cause and its effect in one frame, the open gate and the bird.
-Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shots 1, 3 and 5 are from the air on a steady camera that moves slowly. Shot 2 is inside the cutter, close, shallow focus. Shot 4 is low and locked off.
+Influences, each with its purpose — Denis Villeneuve: Arrival, a small white boat under a vast dark ceiling, mist between them; Dune, a face in profile at a window, the glass beside it. James Cameron: a look answered by what it looks at; size shown by a small known thing beside it; a cause and its effect in one frame, the open gate and the bird.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shots 1 and 5 are from the air and locked off. Shot 3 is from the moving cutter. Shot 2 is inside the cutter, close, shallow focus. Shot 4 is low and locked off.
 
 ## VOICE DNA (immutable)
 No one speaks.
@@ -28,68 +28,68 @@ None. Shot 1 opens on a hard cut.
 
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
-[TIME] 0.0–2.8 s
-[CAM] extreme wide, 24 mm, from the air, three hundred metres above the plain and level with the cutter, a kilometre away from it; the camera sinks slowly with it.
-[BLOCK] The top two thirds of the frame are the underside of Orison as @Image 1: black rock, roots and chains, running out of the top and both sides of the frame, grey cloud wrapped round its upper edge. The bottom third is the pale band of day and, under it, a thin strip of the black plain. The cutter is tiny, a white fleck, right of centre, just under a shelf of cloud.
-[ACT] The cutter drops out of the cloud, a thread of vapour trailing from it, and sinks steadily through the clear band. Beside it a chain as thick as a tower hangs down and dwarfs it. Cloud drifts across the rock.
+[TIME] 0.0–3.0 s
+[CAM] extreme wide, 24 mm, from the air, level with the cutter and far from it; locked off. The only ground is the plain far below.
+[BLOCK] The top two thirds of the frame are the underside of Orison as @Image 1: black rock, roots and chains, running out of the top and both sides of the frame. The bottom third is the pale band of day, with a thin strip of the black plain, greyed by mist, along the very bottom. Right of centre a bank of grey cloud hangs below the rock into the top of the pale band. Beside it one chain hangs from the rock down through the band, each of its links longer than the cutter. The cutter is small, one twenty-fifth of the frame wide, but plainly a white boat with a spire; at the first frame only its keel and runners show under the cloud.
+[ACT] The cutter comes straight down out of the bottom of the cloud, level, a thin trail of vapour pulling off its spire. By 1.2 s all of it is clear, white against the pale band, clear air under its keel. By the last frame it is twice its own length lower, level with one link of the chain. Cloud drifts slowly across the rock. Nothing else moves.
 [DIALOGUE] / V.O. none
 [SFX] wind; the low hum of the mass.
-[STATE OUT] The cutter a white fleck in the band of day, sinking.
+[STATE OUT] The cutter small and white in the band of day, still coming down.
 
 ### SHOT 2
-[TIME] 2.8–5.6 s
+[TIME] 3.0–6.0 s
 [CAM] close-up, 75 mm, inside the cutter's small pilothouse, at her eye height, shallow focus; the camera holds still.
-[BLOCK] Serath in profile, facing the left of the frame, from the collar up, close to a pointed window whose glass fills the left half of the frame; the white-painted wood of the pilothouse behind her on the right.
-[ACT] Her mouth is closed from the first frame to the last. At the first frame grey cloud streams past the glass and her face is lit soft and white. By 3.6 s the cloud tears away from the glass, and the light on her face falls to a cold blue-grey: the shade of the mass above. Her eyes go up to it and rest there; one breath goes in through her nose. At 5.0 s her eyes come down, to the ground far below.
+[BLOCK] Serath alone in the frame, in profile, facing the left of the frame, from the collar up, her head on the right third, her hands below the frame. The left half of the frame is one tall pointed window, close beyond her face, soft. Behind her head, on the right, the white-painted boards of the pilothouse wall, soft. The only light comes through the window, onto her brow, nose, mouth and the gold at her throat.
+[ACT] Her mouth is closed from the first frame to the last. At the first frame the whole window is bright grey-white cloud streaming past, its light bright and soft on her face; her eyes are level, on the glass. By 3.8 s the cloud tears away: the upper two thirds of the window go dark, the black rock of the underside, far off and soft, and a strip of pale day is left along the bottom of the glass. The light on her face falls by half and turns cold blue-grey; her eye and the line of her nose and mouth stay readable. By 4.4 s her chin has lifted a little and her eyes have gone up to the dark in the top of the window. They rest there to the cut, and one breath goes in through her nose.
 [DIALOGUE] / V.O. none
 [SFX] wind on the glass; the wood creaks.
-[STATE OUT] Serath in profile, in the cold shade, her eyes down, her mouth closed.
+[STATE OUT] Serath in profile in the cold shade, her chin a little lifted, her eyes up, her mouth closed.
 
 ### SHOT 3
-[TIME] 5.6–8.4 s
-[CAM] high wide, 35 mm, from the cutter, three hundred metres above the plain, looking steeply down and ahead; the camera glides slowly forward.
-[BLOCK] The basalt plain as @Image 2, seen from above, fills the frame up to a thin strip of pale horizon at the top: black six-sided columns in broken ranks and steps, lanes and squares between them, like the stumps of a city, to the horizon. In the bottom left corner of the frame, soft, the cutter's wooden rail and a corner of its white deck.
-[ACT] The plain slides slowly beneath. Thin mist drifts between the tallest columns. Far off across the plain the black wall lies along the horizon.
+[TIME] 6.0–8.0 s
+[CAM] high wide, 35 mm, from the cutter, in the air high above the plain, looking down and ahead toward the wall; the camera glides steadily forward.
+[BLOCK] The basalt plain as @Image 2, seen from high above, fills the frame from the bottom edge almost to the top: the tops of black six-sided columns packed edge to edge, in broken rows and steps, taller stacks standing up out of them, thin mist between the tallest; the nearest stacks are far below and small. Across the top of the frame, under a thin strip of pale sky, the black wall lies straight along the far edge of the plain, small with distance, its nine arched gates a row of small openings, the open ones bright with green. In the bottom left corner, close and soft, the cutter's brass rail and a corner of its white deck.
+[ACT] The plain slides steadily down the frame and under the rail; each stack of columns travels a fifth of the frame's height in the shot. Mist drifts between the tallest stacks.
 [DIALOGUE] / V.O. none
 [SFX] wind; the wood creaks.
-[STATE OUT] The plain from above, the rail in the corner.
+[STATE OUT] The plain from above, the wall along its far edge, the rail in the corner.
 
 ### SHOT 4
-[TIME] 8.4–11.2 s
-[CAM] wide, 40 mm, low, at the height of the grass, twenty metres in front of the great wall, looking along its foot; locked off.
-[BLOCK] The wall as @Image 3 fills the left two thirds of the frame and runs away to the right: seamless black stone, its arched gates in a row. The nearest gate is open, a tall arch with green valley light through it. On the ground in front of that open gate the long grass lies combed flat in a wide fan, pressed to the earth and shivering; outside the fan the grass is upright and moves in the wind.
-[ACT] A crow flies in from the right at the height of the gate's shoulder, its wings beating. As it crosses in front of the open gate its wings stop and it falls straight down, vertically, as fast as a dropped stone, and strikes the flattened grass. It lies where it fell. The grass shivers round it.
+[TIME] 8.0–11.4 s
+[CAM] wide, 40 mm, low, at the height of the grass, close in front of the nearest open gate and a little to its right, looking through it and along the foot of the wall; locked off. Above the wall the sky is the dark lid of @Image 3, with a pale strip at the horizon on the right.
+[BLOCK] The nearest gate is open and fills the left half of the frame: a tall arch in the black stone, running out of the top of the frame, and through it pale sky and the green valley, the brightest thing in the frame. To its right the black wall as @Image 3 runs away to the right edge, the next gate along shut with black stone, the gates beyond it small, in a row. On the ground in the open gate and out toward us the long grass lies combed flat in a wide fan, pressed to the earth and shivering; on the right, outside the fan, the grass is upright and moves in the wind.
+[ACT] At the first frame a crow comes into the bright opening from its right side, half-way up the frame, wings beating, black and sharp against the pale sky in the gate, its wingspan a twelfth of the frame's width. At 9.0 s, in the middle of the opening, its wings snap shut against its body and it drops straight down as dead weight, wings shut the whole way, still black against the light. By 9.5 s it has hit the flattened grass in the gateway and lies still. For the last two seconds only the grass moves, shivering round it.
 [DIALOGUE] / V.O. none
 [SFX] grass hissing; wingbeats that stop; one soft thud.
-[STATE OUT] The bird on the flattened grass in front of the open gate.
+[STATE OUT] The bird still on the flattened grass in the open gate.
 
 ### SHOT 5
-[TIME] 11.2–14.0 s
-[CAM] wide, 35 mm, from the air, just above the top of the great wall, two hundred metres up, looking down the valley; the camera sinks slowly.
-[BLOCK] Along the bottom edge of the frame, close and dark, the flat black top of the wall. Beyond and below it, Sarn Vale as @Image 4: green terraces, orchards, grey stone farms, field walls, a pale road. Smoke rises from twenty chimneys up the valley. Grey cloud above; mist in the far hills.
+[TIME] 11.4–14.0 s
+[CAM] wide, 35 mm, from the air, just above the top of the black wall, forty metres above the valley floor, looking down the length of the valley; locked off. Grey cloud fills the top third of the frame.
+[BLOCK] Along the bottom edge of the frame, close, dark and soft, a flat ledge of black stone: the top of the wall. Beyond and below it, Sarn Vale as @Image 4: green terraces, orchards, grey stone farms, field walls, a pale road. Smoke rises from twenty chimneys up the valley. Mist in the far hills.
 [ACT] The smoke rises and leans a little in the wind. Sheep move slowly on a terrace. A cart goes along the road, small.
 [DIALOGUE] / V.O. none
 [SFX] wind; far below, a dog, once.
 [STATE OUT] The valley under cloud, its smoke rising.
 
 ## PERFORMANCE ARC
-SERATH: composed, in cloud → the shade of what she has lived on falls across her → she looks up at it → she looks down.
+SERATH: composed, in cloud → the shade of what she has lived on falls across her → she lifts her chin and looks up at it.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
-Her kingdom is a ceiling over someone else's country. Its weight cannot be seen; it shows only in what it does: grass pressed flat, a bird that falls. The valley's smoke is the people who live under it.
+Her kingdom is a ceiling over someone else's country. Its weight cannot be seen; it shows only in what it does: grass pressed flat, a bird that falls. The valley's smoke is the people who live beyond the wall.
 
 ## PHYSICS LOCKS
-Normal speed and real weight throughout. The mass hangs perfectly still; its chains hang plumb. The cutter sinks level, at a steady pace. Cloud and mist drift slowly. The bird falls straight down at the speed of a dropped stone. Smoke rises and leans gently.
+Normal speed and real weight throughout. The mass hangs perfectly still; its chains hang plumb. The cutter comes down level, at a slow steady pace. Cloud and mist drift slowly. The bird falls straight down as dead weight, in free fall. Smoke rises and leans gently.
 
 ## AUDIO LOCKS
 No speech and no voice of any kind. No music or singing. Wind, wood, grass, the bird, the valley.
 
 ## CONTINUITY LOCKS
-[POSITIVE] the underside exactly as @Image 1 · the plain exactly as @Image 2 · the wall exactly as @Image 3 · the valley exactly as @Image 4 · the cutter exactly as @Image 5 · Serath exactly as @Image 6 · one source of light, the pale band of day, cold and from the side · the underside two stops under the band · dry ground at the foot of the wall
-[NEGATIVE] sunlight, blue sky or warm light · flames, engines, sails or wings on the cutter · text or captions · slow motion · camera shake
+[POSITIVE] the underside exactly as @Image 1 · the plain exactly as @Image 2 · the black wall exactly as @Image 3 · the valley exactly as @Image 4 · the cutter exactly as @Image 5 · Serath exactly as @Image 6 · one source of light, the pale band of day, cold and from the side · the underside two stops under the band · dry ground at the foot of the wall
+[NEGATIVE] sunlight, blue sky or warm light · flames, engines, sails or wings on the cutter · a grey studio backdrop · text or captions · slow motion · camera shake
 
 ## GENERATION PRIORITY ORDER
-1. Five separate shots in order, hard cuts, each its own place, framing and length  2. Size: the cutter tiny under the mass; the plain and the wall vast  3. The places exactly as their references, seen from the heights given  4. Serath's identity from her sheet  5. The bird's fall: sudden and vertical  6. Sound: wind and natural sound only
+1. Five separate shots in order, hard cuts, each its own place, framing and length  2. Size: the cutter small under the mass; the plain and the wall vast  3. The places exactly as their references  4. Serath's identity from her sheet  5. The bird's fall: sudden, vertical, black against the bright gate  6. Sound: wind and natural sound only
 
 ## FINAL STATE
 The green valley under grey cloud, the smoke of its hearths rising.

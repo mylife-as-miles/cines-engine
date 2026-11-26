@@ -20,7 +20,7 @@ img, arr, note, arrow, GOLD, INK, PAPER, BOLD, REG = b4.img, b4.arr, b4.note, b4
 
 
 def env(name, box):
-    """A crop of an environment reference, as fractions of its width and height (x0, y0, x1, y1), at the frame's shape."""
+    """A crop of a reference, as fractions of its width and height (x0, y0, x1, y1), at the frame's shape."""
     im = Image.open(P('refs', name)).convert('RGB'); w, h = im.size
     return arr(im.crop((int(box[0] * w), int(box[1] * h), int(box[2] * w), int(box[3] * h))).resize((W, H), Image.LANCZOS))
 
@@ -45,7 +45,7 @@ def sheet(cells, path):
     S = Image.new('RGB', (pad * 2 + W * 2 + gap, hd + rows * (H + cap) + pad), INK)
     d = ImageDraw.Draw(S)
     d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q07  ·  BENEATH ORISON: THE UNDERSIDE  ·  storyboard  ·  montage, 14 s, five shots', fill=GOLD, font=f0)
-    d.text((pad, 48), 'Staging sketches from the approved references, which were drawn from the ground: shots 1, 3 and 5 are from the air. '
+    d.text((pad, 48), 'Staging sketches from the approved references as they are sent (cropped to what each shot needs). Shots 1, 3 and 5 are from the air. '
                       'Five separate views, hard cuts, to be cut to the song in the edit.', fill=PAPER, font=f2)
     for k, (im, title, text) in enumerate(cells):
         x = pad + (k % 2) * (W + gap); y = hd + (k // 2) * (H + cap)
@@ -65,13 +65,14 @@ def sheet(cells, path):
 def main():
     boat = cutter()
     # 1. the cutter drops out of the cloud under the mass
-    a = env('ENV_E04_beneath-orison.jpg', (0.0, 0.0, 1.0, 0.72))
-    a[:int(H * 0.86)] = a[:int(H * 0.86)] * 0.78                                   # the mass two stops under the band, roughly
-    a = b4.mist(a, W * 0.62, H * 0.30, W * 0.9, H * 0.16, seed=4, amount=0.55, tone=(0.74, 0.76, 0.79))
-    a = b4.over(a, boat, cx=W * 0.63, foot=H * 0.585, height=20)
+    a = env('crops/Q07_underside.jpg', (0.0, 0.0, 1.0, 1.0))                       # the reference as it is sent: the underside and the band only
+    a[:int(H * 0.80)] = a[:int(H * 0.80)] * 0.80                                   # the mass two stops under the band, roughly
+    a[int(H * 0.95):] = a[int(H * 0.95):] * 0.35                                   # a thin strip of the plain
+    a = b4.mist(a, W * 0.63, H * 0.66, W * 0.22, H * 0.12, seed=4, amount=0.8, tone=(0.74, 0.76, 0.79))
+    a = b4.over(a, boat, cx=W * 0.63, foot=H * 0.80, height=19)
     c1 = img(a); d = ImageDraw.Draw(c1)
     note(d, (36, 34), 'the underside fills the sky; the cutter is a white fleck in the band of day')
-    arrow(d, (625, 190), (625, 240), w=3); note(d, (650, 196), 'it drops out of the cloud')
+    arrow(d, (625, 270), (625, 318), w=3); note(d, (650, 280), 'it comes down out of the cloud')
     note(d, (36, 380), 'raw rock, roots, chains thick as towers')
     # 2. her face at the window
     g = np.zeros((H, W, 3), np.float32) + np.array([0.80, 0.82, 0.85], np.float32)
@@ -81,7 +82,7 @@ def main():
     c2 = img(g); d = ImageDraw.Draw(c2)
     d.line([(int(W * 0.30), 0), (int(W * 0.30), H)], fill=(60, 62, 66), width=7); d.line([(0, int(H * 0.50)), (int(W * 0.30), int(H * 0.50))], fill=(60, 62, 66), width=5)
     note(d, (36, 34), 'inside the cutter: cloud on the glass, then it tears away')
-    arrow(d, (560, 150), (470, 70), w=4); note(d, (250, 100), 'her eyes go up to it')
+    arrow(d, (560, 150), (470, 70), w=4); note(d, (250, 100), 'her chin lifts; her eyes go up to it')
     note(d, (36, 380), 'the shade of the kingdom falls on her face. No words')
     # 3. the plain from the cutter's height
     a = env('ENV_E05_basalt-plain.jpg', (0.10, 0.52, 0.90, 1.0)); a = a * 0.9
@@ -92,34 +93,35 @@ def main():
     note(d, (36, 64), '"like a city no one finished"')
     note(d, (330, 380), 'from the cutter, three hundred metres up; its rail in the corner')
     # 4. the wall and the bird
-    a = env('ENV_E06_the-weir.jpg', (0.30, 0.22, 0.86, 0.80))
+    a = env('crops/Q07_wall.jpg', (0.005, 0.385, 0.265, 0.535))                     # close on the first open gate, from the reference as it is sent
     c4 = img(a); d = ImageDraw.Draw(c4)
-    bx, by = 470, 150
+    bx, by = 250, 120
     d.line([(bx - 14, by - 6), (bx, by), (bx + 14, by - 6)], fill=(10, 10, 12), width=4)
-    for yy in range(by + 12, 330, 16):
+    for yy in range(by + 12, 300, 16):
         d.line([(bx, yy), (bx, yy + 8)], fill=GOLD, width=3)
-    arrow(d, (bx, 318), (bx, 344), w=3)
+    arrow(d, (bx, 288), (bx, 316), w=3)
     note(d, (36, 34), 'the wall that takes the weight of Orison. Nothing visible pours through')
-    note(d, (540, 150), 'a bird crosses in front of an open gate...')
-    note(d, (540, 300), '...and drops like a stone')
+    note(d, (36, 64), '(sketch: the gate would run out of the top of the frame)')
+    note(d, (300, 110), 'a crow, black against the light in the open gate...')
+    note(d, (300, 250), '...its wings shut and it drops like a stone')
     note(d, (36, 380), 'the grass in front of the gate lies combed flat')
     # 5. the vale beyond
-    a = env('ENV_E07_sarn-vale.jpg', (0.0, 0.04, 0.80, 0.86))
+    a = env('crops/Q07_vale.jpg', (0.0, 0.14, 1.0, 0.74))                           # the reference as it is sent: the valley only
     a[int(H * 0.90):] = a[int(H * 0.90):] * 0.15                                    # the wall's top, a black edge under us
     c5 = img(a); d = ImageDraw.Draw(c5)
     note(d, (36, 34), 'beyond the wall: Sarn Vale. Terraces, orchards, the smoke of many hearths')
     note(d, (36, 380), 'from above the wall\'s top. The first green in the film')
 
     cells = [
-        (c1, 'SHOT 1 · 0–2.8 s · from the air, extreme wide · the cutter under the kingdom',
-         'The underside of Orison fills the top two thirds of the frame and runs out of it. The white cutter, tiny, drops out of the cloud into the pale band of day beside a chain as thick as a tower.'),
-        (c2, 'SHOT 2 · 2.8–5.6 s · inside the cutter · Serath, close, in profile at the window',
-         'Cloud streams past the glass and tears away. The light on her face falls to the cold shade of the thing above. Her eyes go up to it, hold, then go down. She has never seen it from below.'),
-        (c3, 'SHOT 3 · 5.6–8.4 s · from the cutter, looking down · the basalt plain',
-         'What she sees below: black six-sided columns in ranks and steps to the horizon, mist between them. The cutter\'s rail is soft in the corner of the frame, so the height can be felt.'),
-        (c4, 'SHOT 4 · 8.4–11.2 s · on the ground, low and locked off · the wall and the bird',
-         'A mile of seamless black stone, nine gates. In front of an open gate the grass lies pressed flat. A crow flies across it; its wings stop and it falls straight down. The weight is invisible; this is how it shows.'),
-        (c5, 'SHOT 5 · 11.2–14 s · from the air, above the wall · Sarn Vale',
+        (c1, 'SHOT 1 · 0–3 s · from the air, extreme wide, locked off · the cutter under the kingdom',
+         'The underside of Orison fills the top two thirds of the frame and runs out of it. The white cutter, small, comes straight down out of a bank of cloud into the pale band of day, beside a chain whose every link is longer than it is.'),
+        (c2, 'SHOT 2 · 3–6 s · inside the cutter · Serath, close, in profile at the window',
+         'Cloud streams past the glass and tears away: the top of the window goes dark with rock. The light on her face falls to its cold shade. Her chin lifts and her eyes go up to it, and stay. She has never seen it from below.'),
+        (c3, 'SHOT 3 · 6–8 s · from the cutter, looking down and ahead · the basalt plain',
+         'Below: the tops of black six-sided columns in rows and steps, mist between them, and far off the black wall along the plain\'s edge. The cutter\'s brass rail is soft in the corner, so the height can be felt.'),
+        (c4, 'SHOT 4 · 8–11.4 s · on the ground, low and locked off, close to an open gate · the bird',
+         'The open gate fills the left half of the frame, the wall running away to the right. The grass in the gateway lies pressed flat. A crow crosses the bright opening; its wings shut and it falls straight down. The weight is invisible; this is how it shows.'),
+        (c5, 'SHOT 5 · 11.4–14 s · from just above the wall\'s top, locked off · Sarn Vale',
          'Beyond the wall, the valley she has been ordered to drown: green terraces, orchards, farms, smoke rising from many chimneys. Nothing happens in it. It is held.'),
     ]
     sheet(cells, P('design/boards/Q07_board.jpg'))
