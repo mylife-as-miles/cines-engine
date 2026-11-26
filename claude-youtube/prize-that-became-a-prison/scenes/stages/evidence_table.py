@@ -51,7 +51,7 @@ LAMP_LEVEL = {"ch02": 0.5, "ch04": 2.2}   # Ch 02 is night at the laptop: the la
 # the reflector's cone per beat (full angle, blend): a pool with a soft edge, not a flood. Ch 04 opens it a little so
 # the cone still reaches the tote at the far end of the row (the lamp cannot come nearer without entering the frame)
 SPOT = {"spread": (75.0, 0.55), "ch02": (75.0, 0.55), "ch04": (90.0, 0.55)}
-BOUNCE = {"spread": 1.6, "ch02": 2.4, "ch04": 2.4}   # the lamp's light back off the ceiling (see room_bounce)
+BOUNCE = {"spread": 2.0, "ch02": 2.4, "ch04": 2.4}   # the lamp's light back off the ceiling (see room_bounce)
 
 # what each beat hides (groups are filled at build); groups in CAMERA_ONLY are hidden unless a camera shows them
 HIDE = {
@@ -80,22 +80,26 @@ CAMERAS = {
     # the whole spread from straight above (long lens, high: a flat, graphic plan): the lamp reaching in from the
     # left, its pool across the open folder, the edges of the spread falling into the dark
     "overhead": dict(loc=(0.03, 0.02, TOP + 3.6), aim=(0.03, 0.024, TOP), lens=85, focus="fx_overhead", fstop=11.0,
-                     beat="spread"),
+                     beat="spread", exposure=-1.3),
     # low across the table toward the lamp: the top sheet's lifted corner sharp in the foreground, the spread going
-    # soft, the whole lamp beyond (base, arm and glowing head) with its cone in the air
+    # soft, the whole lamp beyond (base, arm and glowing head) with its cone in the air. The lamp is turned 20 degrees
+    # off the lens for this set-up (a cheat between cuts), so its head reads in three-quarter view, the shade's outside
+    # and the reflector both, and the cone crosses the frame instead of pointing down the lens
     "push": dict(loc=(0.62, -0.40, TOP + 0.10), aim=(-0.375, 0.271, TOP + 0.12), lens=28, focus="fx_push", fstop=2.2,
-                 beat="spread", hide=("receipt", "letter"), exposure=-1.15),
+                 beat="spread", hide=("receipt", "letter", "envelope"), exposure=-1.15, lamp=(-0.55, 0.16, -135.0)),
     # Ch 02: the laptop open at the back of the table, its blank screen glowing, the passport and the boarding passes
     # in front of it under the lamp turned down; dark wood in the foreground
     "laptop": dict(loc=(-0.31, -0.53, TOP + 0.19), aim=(0.22, 0.22, TOP + 0.075), lens=32, focus="fx_laptop", fstop=4.0,
-                   beat="ch02", hide=("envelope", "highlighter")),
+                   beat="ch02", hide=("envelope", "highlighter"), exposure=-1.3),
     # Ch 04: the three handbags in the lamp's light, the receipt curling in front of them
     "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_purses", fstop=4.0,
-                   beat="ch04", hide=("envelope",), exposure=-1.35),
-    # controlled close-up: the passport lying across the two boarding passes on the folder, its cover sprung open;
-    # a graduated net off the lamp lets the passes fall a little under it
+                   beat="ch04", hide=("envelope",), exposure=-1.0),
+    # controlled close-up: the passport lying across the two boarding passes on the folder, its cover sprung open.
+    # For this insert the lamp is cheated to the passport's front left: the cover's sheen then reflects away from the
+    # lens (from behind, it greyed the whole navy cover), the cream page edge facing the camera catches the light, and
+    # the passes behind fall under it, helped by a graduated net off the lamp
     "passport": dict(loc=(-0.135, -0.41, TOP + 0.49), aim=(-0.28, -0.03, TOP), lens=70, focus="fx_passport", fstop=2.8,
-                     beat="spread", show=("net_passport",)),
+                     beat="spread", show=("net_passport",), hide=("envelope",), lamp=(-0.61, -0.32, -55.0)),
 }
 
 M = {}
@@ -278,9 +282,11 @@ def lamp():
     parts.append(glow)
     # a small warm rim from behind and above the head that only the lamp itself sees (light linking): the shade's
     # outer edge and the arm get a thin highlight against the dark, and from above the shade reads as a shape
-    rim_at = Vector((0.0, BULB.y - 0.32, BULB.z + 0.24))
-    rim = sk.area_light("lamp_rim", tuple(rim_at), (0.15, 0.15), 1.5, (1.0, 0.86, 0.7), spread_deg=120)
-    aim = (BULB + Vector((0.0, -0.06, 0.0))) - rim_at
+    # (0.3 m square, well above and a little behind: from overhead it lays a sheen across the shade's back, from the
+    # low push it rims the shade's top edge and the arm)
+    rim_at = Vector((0.0, BULB.y - 0.2, BULB.z + 0.3))
+    rim = sk.area_light("lamp_rim", tuple(rim_at), (0.3, 0.3), 2.2, (1.0, 0.86, 0.7), spread_deg=120)
+    aim = (BULB + Vector((0.0, -0.04, 0.02))) - rim_at
     rim.matrix_world = Matrix.Translation(rim_at) @ aim.to_track_quat("-Z", "Y").to_matrix().to_4x4()
     rim.visible_camera = False
     rim.visible_volume_scatter = False
@@ -334,10 +340,11 @@ def cone_haze(density=0.035, size=(0.6, 0.62, 0.44)):
     return ob
 
 
-def set_lamp(beat):
-    fr = lamp_frame(beat)
+def set_lamp(beat, mark=None):
+    """Put the lamp on its mark for the beat (or on `mark`, a camera's own (x, y, turn)) at the beat's level."""
+    x, y, t = mark or LAMP.get(beat, LAMP["spread"])
+    fr = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
     h = _STATE["lamp"]
-    x, y, t = LAMP.get(beat, LAMP["spread"])
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
     k = LAMP_LEVEL.get(beat, 1.0)
@@ -433,7 +440,7 @@ def laptop():
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
     # the screen's spill: an area light the size of the panel, 2 cm in front of it, so a cool pool about 30 cm deep
     # falls on the table and the mug's side
-    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 1.3, COOL, spread_deg=150)
+    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 2.6, COOL, spread_deg=150)
     li.matrix_world = Matrix.Translation(centre + nrm * 0.02) @ (rot @ Matrix.Rotation(math.pi, 3, "X")).to_4x4()
     li.visible_camera = False
     li.visible_glossy = False
@@ -567,7 +574,8 @@ def spread():
     group("photos", pp.photo_print("photo_3", m["photo_3"], 0.152, 0.102, 0.205, 0.205, -5.0, curl=0.0022, seed=8))
     group("envelope", pp.envelope("envelope", m["cream"], -0.43, -0.285, 7.0))
     # the till receipt on bare wood at the pool's right edge, its rolled end at the far side
-    group("receipt", pp.receipt("receipt", m["thermal"], 0.585, 0.02, -10.0, seed=5))
+    # (lying across the light, its roll at the far end: the lamp from the left throws the tube's shadow onto the wood)
+    group("receipt", pp.receipt("receipt", m["thermal"], 0.6, -0.035, -100.0, seed=5))
     group("highlighter", pp.highlighter("highlighter", m["hl_body"], m["hl_cap"], 0.075, -0.262, -9.0))
     group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.06, 0.255, 35.0))
 
@@ -598,12 +606,12 @@ def overlap_report():
 
 # ---------------------------------------------------------------- beats and cameras
 
-def set_beat(beat, extra=(), show=()):
+def set_beat(beat, extra=(), show=(), lamp_mark=None):
     hidden = set(HIDE.get(beat, ())) | set(extra) | (set(CAMERA_ONLY) - set(show))
     for gname, obs in G.items():
         for o in obs:
             o.hide_render = gname in hidden
-    set_lamp(beat)
+    set_lamp(beat, lamp_mark)
 
 
 def which_camera():
@@ -619,7 +627,7 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "spread")
-    set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()))
+    set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
@@ -674,12 +682,13 @@ def room():
     return ob
 
 
-def passport_net(lamp_beat="spread", t0=0.0, t1=0.065, level=0.45, h=0.2):
+def passport_net(t0=-0.01, t1=0.045, level=0.6, h=0.2):
     """A graduated net in the lamp's beam for the passport close-up (as a gaffer would rig one): a plane 20 cm over
     the table that only shadow rays see, clear on the passport's side and cutting up to `level` of the light beyond
-    it, the ramp landing between table y = t0 and t1, so the boarding passes fall about 0.7 stop under the passport
-    while the passport keeps the full pool."""
-    set_lamp(lamp_beat)
+    it, the ramp landing between table y = t0 and t1, so the boarding passes fall under the passport's lit edge
+    while the passport keeps the full pool. Placed for the passport camera's own lamp mark."""
+    cfg = CAMERAS["passport"]
+    set_lamp(cfg["beat"], cfg.get("lamp"))
     bulb = bpy.data.objects["lamp_glow"].matrix_world.translation
     bz = bulb.z - TOP
     k = h / bz

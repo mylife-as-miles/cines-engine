@@ -32,12 +32,16 @@ import courtroom_set as st  # noqa: E402
 
 EXPOSURE = -1.6
 
-DAWN = (0.40, st.DOCK[1] + 0.08)      # her feet: in the dock a step back from the ledge, a little right of its middle
-                                      # (on the centre line her head hid the presiding chair but for two slivers in the
-                                      # wide), facing the bench (+Y)
-HAND_X = 0.17                          # hands on the ledge, about shoulder width apart
+DAWN = (0.40, st.LEDGE[0] - 0.21)     # her feet: in the dock close up to the front ledge (her front 6-8 cm from its
+                                      # inner face), a little right of its middle (on the centre line her head hid the
+                                      # presiding chair in the wide), facing the bench (+Y)
+HAND_X = 0.22                          # wrists about 22 cm either side of her centre: elbows bent, clear of the waist
+HAND_Y = 0.05                          # how far onto the ledge (from its inner edge) the wrists sit
 HAND_PITCH = 0.3                       # the hand a little extended at the wrist, so the palm heel and the fingers both rest
-POSE = {"head": (17, -2), "neck": (5, 0), "chest": (5, 0), "fingers": 8}
+POSE = {"head": (32, -4), "neck": (16, 0), "chest": (10, 0), "fingers": 15}
+SHOULDER_ROLL = 5.0                    # shoulders rolled forward (degrees): the weight of the bowed head
+GARMENT = (0.05, 0.052, 0.056)         # the prison clothes re-surfaced as matt cotton (see dress_prison)
+HAZE = 0.004                           # enough for the windows' beams and the dock's downlight to draw faint shafts
 
 FOCUS = {
     "fx_dock": (0.0, st.DOCK[1], 1.25),
@@ -49,22 +53,33 @@ CAMERAS = {
     # Ch 07: the room from the back of the gallery, still and near symmetrical (a step left of the centre line, so her
     # head clears the presiding chair): empty benches, the bar's gates open on the aisle, Dawn small and alone in the
     # dock in the one pool of light, the empty bench and the blank panel beyond
-    "wide": dict(loc=(-0.3, -7.85, 1.62), aim=(-0.05, 3.0, 1.32), lens=28, focus="fx_dock", fstop=8.0, beat="ch07"),
+    # (tilted ~1.5 deg down so the bright ceiling panels keep off the top edge)
+    "wide": dict(loc=(-0.3, -7.85, 1.62), aim=(-0.05, 3.0, 0.8), lens=28, focus="fx_dock", fstop=8.0, beat="ch07"),
     # Ch 07: Dawn in the dock from behind three-quarter, her hands on the ledge, the bench and its empty chairs beyond
     "dock": dict(loc=(1.6, -1.05, 1.3), aim=(-0.15, 5.0, 1.92), lens=32, focus="fx_dawn", fstop=2.8, beat="ch07"),
-    # Ch 07: low in the well from the left, looking up at the bench as it runs away to the right: the cap's edge, the
-    # three empty chairs in a row, the blank panel above the presiding one
-    "bench": dict(loc=(-2.4, 2.3, 0.9), aim=(-0.6, 6.0, 1.86), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
+    # Ch 07: from the well's left side at a standing eye height, the bench running away to the right: the cap's line on
+    # the lower third, the three empty chairs whole above it, the recessed panel above the presiding one
+    "bench": dict(loc=(-2.3, 0.6, 1.7), aim=(0.25, 6.0, 2.05), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
                   exposure=-1.45),
 }
-# per-camera light trims (multipliers on named lights)
+
+
+def _panels(rows, level, keep=None):
+    keep = keep or {}
+    return {f"panel_{x:+.1f}_{y:+.1f}_light": keep.get((x, y), level) for x in st.PANEL_X for y in rows}
+
+
+# per-camera light trims (multipliers on named lights; a panel's diffuser dims with its light)
 TRIMS = {
-    "wide": {},
+    # the lit island: the well's panels low but for the centre pair over the dock, the bench rows down; the dock's own
+    # downlight makes the pool
+    "wide": {**_panels((-0.6, 1.4), 0.2, {(0.0, -0.6): 0.35, (0.0, 1.4): 0.9}), **_panels((3.4, 5.4), 0.6)},
     # the panels behind her turned down: her back goes toward silhouette against the lit bench
-    "dock": {f"panel_{x:+.1f}_-0.6_light": 0.4 for x in st.PANEL_X},
+    "dock": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.5, {(0.0, 1.4): 1.0}), **_panels((3.4, 5.4), 0.8),
+             "dock_pool": 0.6},
     # the well's panels behind the camera turned down: the fascia lit from the row above its face, bright under the
     # cap and falling away toward the floor; the chairs top-lit
-    "bench": {f"panel_{x:+.1f}_{y:+.1f}_light": 0.4 for x in st.PANEL_X for y in (-0.6, 1.4)},
+    "bench": {**_panels((-0.6, 1.4), 0.3), "dock_pool": 0.15},
 }
 
 _STATE = {"cast": [], "base": {}}
@@ -147,7 +162,8 @@ def solve_arm(holder, k, side, wrist, twist):
     u = d_vec.normalized()
     left = (mw.to_3x3() @ Vector((1, 0, 0))).normalized()     # the character's left in the world
     back = (mw.to_3x3() @ Vector((0, 1, 0))).normalized()     # her back (she was built facing -Y)
-    pole = (left * side * 0.75 + back * 0.45 + Vector((0, 0, -0.35))).normalized()
+    # the pole: behind and below the shoulder, only a touch outward, so the elbows drop and point back, not out
+    pole = back * 0.25 + left * side * 0.05 + Vector((0, 0, -0.35))
     v = (pole - u * pole.dot(u)).normalized()
     ca = max(-1.0, min(1.0, (a * a + d * d - b * b) / (2 * a * d)))
     E = S + a * (u * ca + v * math.sqrt(1 - ca * ca))
@@ -179,7 +195,7 @@ def hands_on_ledge(holder):
     pb = rig.pose.bones
     mw = rig.matrix_world
     top = st.DOCK_TOP
-    y_w = st.LEDGE[0] + 0.035
+    y_w = st.LEDGE[0] + HAND_Y
     report = []
     for side, k in ((1, "L"), (-1, "R")):
         sx = (mw @ pb[f"upper_arm_fk.{k}"].head).x
@@ -201,19 +217,76 @@ def hands_on_ledge(holder):
         else:
             solve_arm(holder, k, side, wrist, twist)
             gap = hand_low(holder, k) - (top + 0.002)
+        S = mw @ pb[f"upper_arm_fk.{k}"].head
+        E = mw @ pb[f"forearm_fk.{k}"].head
         report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} wrist ({wrist.x:+.3f}, {wrist.y:.3f}, "
-                      f"{wrist.z:.3f}) underside gap {gap * 1000:+.1f} mm")
+                      f"{wrist.z:.3f}) underside gap {gap * 1000:+.1f} mm; elbow out of the shoulder "
+                      f"{(abs(E.x - DAWN[0]) - abs(S.x - DAWN[0])) * 100:+.1f} cm, behind it {(S.y - E.y) * 100:+.1f} cm, "
+                      f"below it {(S.z - E.z) * 100:.1f} cm")
     print("COURT hands " + "; ".join(report), flush=True)
 
 
+def dress_prison(h):
+    """people.dawn_prison() tints the casual suit flat dark grey (0.075) and MPFB's delete-group masks already hide the
+    body under it (checked: Delete.female_casualsuit01 sits before the smoothing). It rendered pale all the same: a
+    0.075 garment under the well's top light, through AgX, reads only ~0.6x the stone skin, and the shirt's satin
+    shoulders caught the panels. Here it is re-surfaced in place as matt cotton a shade darker, with a weave."""
+    out = []
+    for o in h.children_recursive:
+        if o.type == "MESH" and o.name.endswith("female_casualsuit01"):
+            for slot in o.material_slots:
+                if slot.material:
+                    slot.material = slot.material.copy()
+                    st.mt.refabric(slot.material, GARMENT)
+                    out.append(slot.material.name)
+    body = bpy.data.objects[h["body"]]
+    masks = [m.name for m in body.modifiers if m.type == "MASK" and m.show_render]
+    print(f"COURT prison clothes re-surfaced: {out}; body masks {masks}", flush=True)
+
+
+def roll_shoulders(h, deg):
+    """Roll both shoulders forward (the clavicle bones turned about the vertical so their tips come forward)."""
+    rig = rigged.rig_of(h)
+    for k, s in (("L", -1), ("R", 1)):
+        n = f"shoulder.{k}"
+        if n in rig.pose.bones:
+            rigged._turn(rig, n, 0, s * deg)
+
+
+def build_dawn(tries=3):
+    """people.dawn_prison(), retried: cast._statue_eyes once failed (ZeroDivisionError, no eye-helper points near their
+    median) in a shoot.py build that succeeded unchanged before and after; a failed attempt's objects are removed."""
+    for k in range(tries):
+        before = set(bpy.data.objects)
+        try:
+            return people.dawn_prison()
+        except ZeroDivisionError as e:
+            print(f"COURT dawn_prison failed ({e}); retrying ({k + 1}/{tries})", flush=True)
+            for o in [o for o in bpy.data.objects if o not in before]:
+                bpy.data.objects.remove(o, do_unlink=True)
+            bpy.context.view_layer.update()
+    raise RuntimeError("people.dawn_prison() kept failing")
+
+
 def dawn():
-    h = people.dawn_prison()
+    h = build_dawn()
+    dress_prison(h)
     rigged.pose_figure(h, POSE)
+    roll_shoulders(h, SHOULDER_ROLL)
     h.location = (DAWN[0], DAWN[1], 0.0)
     h.rotation_euler = (0, 0, math.radians(180.0))       # built facing -Y: turned to face the bench
     bpy.context.view_layer.update()
     dz = ground(h, st.DOCK_PLAT)
     print(f"COURT Dawn grounded on the dock floor by {dz * 1000:+.1f} mm", flush=True)
+    suit = next(o for o in h.children_recursive if o.name.endswith("female_casualsuit01"))
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = suit.evaluated_get(dg)
+    me = ev.to_mesh()
+    pts = [suit.matrix_world @ v.co for v in me.vertices]
+    ev.to_mesh_clear()
+    front = max((p.y for p in pts if st.DOCK_TOP - 0.3 < p.z < st.DOCK_TOP + 0.08 and abs(p.x - DAWN[0]) < 0.16),
+                default=0.0)
+    print(f"COURT Dawn's front {(st.LEDGE[0] - front) * 100:.1f} cm from the ledge's inner face", flush=True)
     hands_on_ledge(h)
     return h
 
@@ -246,8 +319,26 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
-    print(f"COURT camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}",
-          flush=True)
+    for n, m in st.LENS.items():                      # the diffuser's glow follows its light
+        for node in m.node_tree.nodes:
+            if node.type == "MAP_RANGE":
+                key = (m.name, node.name)
+                lo, hi = _STATE["base"].setdefault(key, (node.inputs["To Min"].default_value,
+                                                         node.inputs["To Max"].default_value))
+                node.inputs["To Min"].default_value = lo * trims.get(n, 1.0)
+                node.inputs["To Max"].default_value = hi * trims.get(n, 1.0)
+    _STATE["cam"] = name
+    print(f"COURT camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, "
+          f"{len(trims)} trims", flush=True)
+
+
+def _render_pre(scene, *_):
+    """setkit.render sets its own adaptive threshold (0.03) after the camera hook: tighten it here, at render start,
+    so the dark walls get their samples (less denoiser mottle)."""
+    scene.cycles.adaptive_threshold = 0.01
+    scene.cycles.sample_clamp_indirect = 8.0
+    print(f"COURT render: adaptive threshold {scene.cycles.adaptive_threshold}, clamp indirect "
+          f"{scene.cycles.sample_clamp_indirect}, {scene.cycles.samples} spp", flush=True)
 
 
 def install_hook():
@@ -258,6 +349,10 @@ def install_hook():
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
+    hs = bpy.app.handlers.render_pre
+    for f in [f for f in hs if getattr(f, "__name__", "") == "_render_pre"]:
+        hs.remove(f)
+    hs.append(_render_pre)
 
 
 # ---------------------------------------------------------------- build
@@ -265,6 +360,7 @@ def build(cast=True):
     st.M.clear()
     st.mt.M.clear()
     st.LIGHTS.clear()
+    st.LENS.clear()
     st.CEILING.clear()
     _STATE["base"].clear()
     st.materials()
@@ -278,7 +374,7 @@ def build(cast=True):
     st.dock_mic(mic, DAWN[0])
     st.bar()
     st.gallery()
-    st.dressing()
+    st.dressing(chair, mic)
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
@@ -287,5 +383,5 @@ def build(cast=True):
     if cast:
         d = dawn()
         _STATE["cast"] = [d] + list(d.children_recursive)
-    sk.haze((2 * st.XW - 0.05, st.Y1 - st.Y0 - 0.05, st.H - 0.05), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.002)
+    sk.haze((2 * st.XW - 0.05, st.Y1 - st.Y0 - 0.05, st.H - 0.05), (0, (st.Y0 + st.Y1) / 2, st.H / 2), HAZE)
     install_hook()

@@ -4,11 +4,12 @@ World layout (metres, Z up, floor z = 0). The room runs along Y: the judges' ben
 the middle of the well, the bar and the public gallery toward the near end (-Y), where the wide camera stands. Built in
 Python but for the judge chairs, gallery benches and microphones (generated props, instanced).
 
-    shell()      stone floor, painted plaster walls with a pale-wood wainscot, a perimeter bulkhead and a ceiling field
-                 of lay-in opal light panels (lit over the well and the bench only: the lit island), high frosted
-                 windows on both side walls (overcast daylight, brighter on the left)
-    back_wall()  dark smoked-oak boarding behind the bench, a taller central feature and the blank panel where an emblem
-                 would hang (no emblem, no text), a judges' door
+    shell()      stone floor (600 mm tiles), painted plaster walls with a pale-wood wainscot, a perimeter bulkhead and a
+                 ceiling field of lay-in opal light panels (lit over the well and the bench only), a recessed downlight
+                 over the dock (the one pool of light), high frosted windows on both side walls in lined reveals, each
+                 throwing a slanted beam across the room (brighter from the left)
+    back_wall()  dark smoked-oak boarding behind the bench, a taller central feature with a recessed field framed by a
+                 pale-ash bolection moulding where an emblem would hang (no emblem, no text), a judges' door
     dais()       the raised platform with its steps; bench() the pale-wood judges' bench (boarded fascia, cap, a centre
                  section that steps forward), chairs and microphones
     desks()      the two counsel desks facing each other across the well (empty chairs, microphones)
@@ -16,7 +17,10 @@ Python but for the judge chairs, gallery benches and microphones (generated prop
                  with a microphone, a small gate in the back with bronze hinges and a latch
     bar()        the balustrade between the well and the gallery, its pair of gates swung open on the aisle
     gallery()    rows of gallery benches either side of a centre aisle
-    dressing()   a side door (the defendant's entrance), ceiling cameras
+    dressing()   a side door (the defendant's entrance), ceiling cameras, acoustic panels and a cornice on the side walls,
+                 a vent grille, two speakers, the aisle runner; the clerk's desk at the foot of the bench (closed laptop,
+                 a blank monitor glowing faintly toward the clerk's empty chair), closed folders and water glasses on
+                 the counsel desks, one closed folder on the bench
 """
 import math
 
@@ -62,6 +66,8 @@ SIDE_DOOR_Y = -1.45
 
 COOL = (0.84, 0.91, 1.0)         # institutional fluorescent white
 DAY = (0.78, 0.87, 1.0)          # overcast daylight through frosted glass
+ASH = (0.46, 0.37, 0.26)         # pale ash before the grade (warm enough to stay wood after the cool grade)
+OAK = (0.058, 0.045, 0.035)      # smoked oak
 
 # ceiling light panels: columns (x), rows (y), and how bright each row burns (the lit island is the well and the bench)
 PANEL_X = (-3.0, -1.5, 0.0, 1.5, 3.0)
@@ -72,6 +78,7 @@ PANEL_W = 520.0
 
 M = {}
 LIGHTS = {}
+LENS = {}           # light name -> the opal diffuser material it shines through
 CEILING = []        # parts a camera above the room must see through
 
 
@@ -80,18 +87,27 @@ def materials():
     if M:
         return M
     M.update(
-        ash=mt.veneer("pale ash", (0.40, 0.30, 0.19), "Z", contrast=0.18),  # vertical boards
-        ash_h=mt.veneer("pale ash along", (0.40, 0.30, 0.19), "X"),         # rails, caps, desk tops (grain along X)
-        ash_y=mt.veneer("pale ash across", (0.40, 0.30, 0.19), "Y"),
-        oak=mt.veneer("smoked oak", (0.058, 0.045, 0.035), "Z", contrast=0.3, rough=(0.38, 0.52), coat=0.2),
-        oak_h=mt.veneer("smoked oak along", (0.058, 0.045, 0.035), "X", contrast=0.3, rough=(0.38, 0.52), coat=0.2),
+        ash=mt.veneer("pale ash", ASH, "Z", contrast=0.2),                 # vertical boards
+        ash_h=mt.veneer("pale ash along", ASH, "X", contrast=0.18),         # rails, caps, desk tops (grain along X)
+        ash_y=mt.veneer("pale ash across", ASH, "Y", contrast=0.18),
+        oak=mt.veneer("smoked oak", OAK, "Z", contrast=0.3, rough=(0.38, 0.52), coat=0.2, ring=0.006),
+        oak_h=mt.veneer("smoked oak along", OAK, "X", contrast=0.3, rough=(0.38, 0.52), coat=0.2, ring=0.006),
+        field=mt.veneer("smoked oak field", tuple(c * 1.15 for c in OAK), "Z", contrast=0.22, rough=(0.5, 0.62),
+                        coat=0.08, ring=0.007),
         backing=mt.satin("reveal black", (0.012, 0.011, 0.01), rough=(0.6, 0.75)),
         plinth=mt.satin("plinth", (0.02, 0.019, 0.018), rough=(0.45, 0.6), grime=0.3),
         wall=mt.plaster("wall plaster", (0.19, 0.195, 0.2)),
+        jamb=mt.plaster("jamb plaster", (0.3, 0.305, 0.31), grime=0.1, bump=0.03),
         ceil=mt.plaster("ceiling plaster", (0.3, 0.305, 0.31), grime=0.15, bump=0.03),
-        floor=mt.stone_floor("stone floor", (0.07, 0.071, 0.073), 0.8,
+        floor=mt.stone_floor("stone floor", (0.1, 0.101, 0.104), 0.6,
                              walk=((-0.7, 0.7, Y0, BAR_Y), (-0.9, 0.9, BAR_Y, DOCK[1]))),
         carpet=mt.carpet("dais carpet"),
+        runner=mt.carpet("aisle runner", (0.045, 0.046, 0.05)),
+        felt=mt.felt("acoustic felt", (0.07, 0.072, 0.076)),
+        grille=mt.satin("grille", (0.2, 0.205, 0.21), rough=(0.4, 0.55), metal=0.3),
+        speaker=mt.satin("speaker", (0.05, 0.05, 0.052), rough=(0.5, 0.65)),
+        laptop=mt.satin("laptop shell", (0.09, 0.092, 0.095), rough=(0.32, 0.45), metal=0.7),
+        tumbler=mt.glass("tumbler glass", (0.86, 0.9, 0.92)),
         bronze=mt.dark_metal("bronze"),
         frame=mt.satin("window frame", (0.035, 0.037, 0.04), rough=(0.3, 0.45), metal=0.6),
         sill=mt.blank_panel("stone sill", (0.16, 0.16, 0.158)),
@@ -218,31 +234,47 @@ def shell():
     wainscot()
 
 
+WIN_BEAM = {"l": 420.0, "r": 150.0}     # the slanted daylight from each side's windows (left brighter)
+
+
 def window(name, s, y):
-    """A high window in the side wall (s = -1 left, +1 right): frosted glass set back near the outer face, a slim
-    dark frame with a mullion and a transom, a stone sill, and its daylight thrown down into the room."""
+    """A high window in the side wall (s = -1 left, +1 right): frosted glass set back near the outer face at the end of
+    a 0.24 m reveal lined in paler plaster (the jambs catch the light off the glass), a slim dark frame with a mullion
+    and a transom, a stone sill. Its light: a soft glow off the glass that lights the reveal, and a slanted beam
+    (spread 32 deg) thrown down across the room, which lays a soft patch on the floor or the far wainscot and draws a
+    faint shaft in the haze. The gallery's windows throw less, so the gallery stays dark."""
     m = materials()
     z0, z1 = WIN_Z
     xg = s * (XW + T - 0.06)
     left = s < 0
-    strength = 2.2 if left else 1.3
-    glass = mt.frosted(f"{name}_glass", DAY, strength)
+    gallery = y < BAR_Y
+    glass = mt.frosted(f"{name}_glass", DAY, 1.15 if left else 0.8)
     g = box(f"{name}_glass", (0.01, WIN_W, z1 - z0), (xg, y, (z0 + z1) / 2), glass)
     g.visible_shadow = False
-    f = 0.05
-    for k, (sy, sz, cy, cz) in enumerate(((f, z1 - z0, y - WIN_W / 2 + f / 2, (z0 + z1) / 2),
-                                          (f, z1 - z0, y + WIN_W / 2 - f / 2, (z0 + z1) / 2),
-                                          (WIN_W, f, y, z0 + f / 2), (WIN_W, f, y, z1 - f / 2),
+    # the reveal's lining: two jambs and a head
+    xa, xb = sorted((s * XW, s * (XW + T - 0.065)))
+    for k, yy in enumerate((y - WIN_W / 2 + 0.005, y + WIN_W / 2 - 0.005)):
+        span(f"{name}_jamb{k}", xa, xb, yy - 0.005, yy + 0.005, z0, z1, m["jamb"])
+    span(f"{name}_head", xa, xb, y - WIN_W / 2, y + WIN_W / 2, z1 - 0.01, z1, m["jamb"])
+    f = 0.045
+    for k, (sy, sz, cy, cz) in enumerate(((f, z1 - z0, y - WIN_W / 2 + 0.01 + f / 2, (z0 + z1) / 2),
+                                          (f, z1 - z0, y + WIN_W / 2 - 0.01 - f / 2, (z0 + z1) / 2),
+                                          (WIN_W - 0.02, f, y, z0 + f / 2), (WIN_W - 0.02, f, y, z1 - 0.01 - f / 2),
                                           (0.04, z1 - z0, y, (z0 + z1) / 2),              # mullion
-                                          (WIN_W, 0.04, y, z0 + (z1 - z0) * 0.68))):      # transom
-        box(f"{name}_frame{k}", (0.06, sy, sz), (xg - s * 0.03, cy, cz), m["frame"], bevel=0.006)
+                                          (WIN_W - 0.02, 0.04, y, z0 + (z1 - z0) * 0.68))):      # transom
+        box(f"{name}_frame{k}", (0.05, sy, sz), (xg - s * 0.028, cy, cz), m["frame"], bevel=0.004, segs=2)
     sill = box(f"{name}_sill", (T + 0.05, WIN_W + 0.08, 0.05), (s * (XW + T / 2 - 0.025), y, z0 - 0.02), m["sill"],
                bevel=0.01)
-    # the daylight: aimed in and down from the glass
+    # the glow off the glass (lights the reveal and the wall about it)
+    src = (s * (XW + T - 0.1), y, (z0 + z1) / 2)
+    area(f"{name}_glow", src, (WIN_W - 0.12, z1 - z0 - 0.12), 9.0 if left else 6.0, DAY, spread=180,
+         rot=aim_rot(src, (-s * 10.0, y, (z0 + z1) / 2)))
+    # the slanted beam: the well's windows lay their patch on the floor across the room, the gallery's on the far
+    # wainscot (lifting the wall, not the benches)
     src = (s * (XW + 0.02), y, (z0 + z1) / 2)
-    tgt = (s * (XW - 3.0), y, 0.6)
-    area(f"{name}_day", src, (WIN_W - 0.1, z1 - z0 - 0.1), 70.0 if left else 28.0, DAY, spread=130,
-         rot=aim_rot(src, tgt))
+    tgt = (-s * (XW - 0.2), y + 0.9, 0.7) if gallery else (-s * 2.3, y + 0.9, 0.0)
+    area(f"{name}_day", src, (WIN_W - 0.1, z1 - z0 - 0.1), WIN_BEAM["l" if left else "r"] * (0.45 if gallery else 1.0),
+         DAY, spread=32, rot=aim_rot(src, tgt))
     return sill
 
 
@@ -264,6 +296,7 @@ def ceiling():
     src = (0, Y1 - BULK_W + 0.18, BULK - 0.03)
     area("washer", src, (5.8, 0.05), 260.0, COOL, spread=100,
          rot=aim_rot(src, (0, Y1 + 0.6, BULK - 2.5)))
+    downlight("dock_pool", DOCK[0], DOCK[1], 2600.0, size_deg=36, blend=0.5)
 
 
 def light_panel(x, y, level):
@@ -277,8 +310,20 @@ def light_panel(x, y, level):
     lens = mt.opal(f"opal_{x:+.1f}_{y:+.1f}", COOL, 7.5 * level) if level > 0 else m["opal_off"]
     parts.append(box(f"panel_{x:+.1f}_{y:+.1f}", (w, l, 0.01), (x, y, H - 0.012), lens))
     if level > 0:
-        area(f"panel_{x:+.1f}_{y:+.1f}_light", (x, y, H - 0.03), (w - 0.04, l - 0.04), PANEL_W * level, COOL, spread=75)
+        n = f"panel_{x:+.1f}_{y:+.1f}_light"
+        area(n, (x, y, H - 0.03), (w - 0.04, l - 0.04), PANEL_W * level, COOL, spread=75)
+        LENS[n] = lens            # a camera's light trim dims the diffuser with its light
     return parts
+
+
+def downlight(name, x, y, energy, size_deg=32, blend=0.6):
+    """A recessed round downlight in the ceiling (a satin trim ring and a glowing lens) and its spot straight down:
+    the one pool of light on the dock."""
+    m = materials()
+    ring = sk.cyl(f"{name}_trim", 0.11, 0.02, (x, y, H - 0.01), m["trim"], verts=48)
+    lens = sk.cyl(f"{name}_lens", 0.085, 0.01, (x, y, H - 0.016), mt.glow(f"{name} lens", COOL, 30.0), verts=48)
+    CEILING.extend([ring, lens])
+    return spot(name, (x, y, H - 0.04), (x, y, 0.0), energy, COOL, size_deg, blend, radius=0.08)
 
 
 def wainscot():
@@ -313,22 +358,62 @@ def back_wall():
     boards("bw_bm", door_x[1] + 0.12, -2.3, yb - 0.003, 0.0, 3.3, m["oak"], width=0.6, thick=0.03)
     boards("bw_br", 2.3, XW - 0.02, yb - 0.003, 0.0, 3.3, m["oak"], width=0.6, thick=0.03)
     span("bw_lintel", door_x[0] - 0.12, door_x[1] + 0.12, yb - 0.033, yb, 2.45, 3.3, m["oak"], bevel=0.003)
-    span("bw_cap", -XW, XW, yb - 0.06, yb, 3.3, 3.35, m["oak_h"], bevel=0.008)
+    for k, (x0, x1) in enumerate(((-XW, -2.3), (2.3, XW))):      # (not through the centre feature: it would show in
+        span(f"bw_cap{k}", x0, x1, yb - 0.06, yb, 3.3, 3.35, m["oak_h"], bevel=0.008)   # the niche)
     # the centre feature
     span("feat_back", -2.3, 2.3, yb - 0.04, yb, 0.0, 4.85, m["backing"])
     boards("feat_b", -2.1, 2.1, yb - 0.075, 0.0, 4.72, m["oak"], width=0.52, thick=0.035)
     for k, (x0, x1, z0, z1) in enumerate(((-2.3, -2.1, 0.0, 4.85), (2.1, 2.3, 0.0, 4.85), (-2.3, 2.3, 4.72, 4.85))):
         span(f"feat_border{k}", x0, x1, yb - 0.1, yb, z0, z1, m["ash"] if k < 2 else m["ash_h"], bevel=0.008)
-    # the blank panel: a plain matt slab in a slim satin frame, softly washed from above
-    cz, s = 3.62, 1.3
-    span("blank_panel", -s / 2, s / 2, yb - 0.14, yb - 0.075, cz - s / 2, cz + s / 2, m["blank"], bevel=0.006)
-    for k, (x0, x1, z0, z1) in enumerate(((-s / 2 - 0.035, -s / 2, cz - s / 2 - 0.035, cz + s / 2 + 0.035),
-                                          (s / 2, s / 2 + 0.035, cz - s / 2 - 0.035, cz + s / 2 + 0.035),
-                                          (-s / 2, s / 2, cz - s / 2 - 0.035, cz - s / 2),
-                                          (-s / 2, s / 2, cz + s / 2, cz + s / 2 + 0.035))):
-        span(f"blank_frame{k}", x0, x1, yb - 0.155, yb - 0.075, z0, z1, m["bronze"], bevel=0.005)
-    spot("blank_wash", (0, Y1 - 1.6, BULK - 0.12), (0, yb - 0.1, cz + 0.1), 85.0, COOL, 34, 0.8, radius=0.15)
+    # where an emblem would hang: a recessed field in the boarding (the boards cut through to the backing), its back a
+    # quiet smoked-oak field a shade lighter than the boarding, framed by a raised bolection moulding in the same oak (a
+    # pale-ash one read as an empty picture frame); a wide, soft wash from above grazes the moulding, so the panel is
+    # drawn by light on its profile, not by a contrasting outline (no light of its own on a rectangle)
+    cz, s = 3.62, 1.2
+    yf = yb - 0.075                                   # the boards' show face
+    cutter = span("niche_cut", -s / 2, s / 2, yf - 0.02, yb - 0.038, cz - s / 2, cz + s / 2, m["backing"])
+    cutter.hide_render = cutter.hide_viewport = True
+    for o in [o for o in bpy.data.objects if o.name.startswith("feat_b") and o.name[6:].isdigit()]:
+        lo = min((o.matrix_world @ Vector(c)).x for c in o.bound_box)
+        hi = max((o.matrix_world @ Vector(c)).x for c in o.bound_box)
+        if hi > -s / 2 and lo < s / 2:
+            bo = o.modifiers.new("niche", "BOOLEAN")
+            bo.operation, bo.solver, bo.object = "DIFFERENCE", "EXACT", cutter
+    span("niche_field", -s / 2 - 0.01, s / 2 + 0.01, yb - 0.046, yb - 0.039, cz - s / 2 - 0.01, cz + s / 2 + 0.01,
+         m["field"], bevel=0.002)
+    ring_frame("niche_moulding", 0.0, cz, s - 0.02, s - 0.02, 0.085, yf - 0.032, yf + 0.006, m["oak_h"], bevel=0.01,
+               segs=4)
+    spot("blank_wash", (0, Y1 - 1.7, BULK - 0.12), (0, yb - 0.1, cz + 0.2), 40.0, COOL, 50, 0.9, radius=0.2)
     judges_door(door_x)
+
+
+def ring_frame(name, cx, cz, iw, ih, width, y0, y1, m, bevel=0.01, segs=4):
+    """A rectangular frame in the XZ plane (one mesh, so its corners read as mitres under the bevel): inner opening
+    iw x ih centred on (cx, cz), `width` wide, from y0 (its face) to y1."""
+    bm = bmesh.new()
+    ow, oh = iw + 2 * width, ih + 2 * width
+    rings = []
+    for (w, h) in ((ow, oh), (iw, ih)):
+        rings.append([(cx - w / 2, cz - h / 2), (cx + w / 2, cz - h / 2), (cx + w / 2, cz + h / 2), (cx - w / 2, cz + h / 2)])
+    front = [[bm.verts.new((x, y0, z)) for x, z in r] for r in rings]
+    back = [[bm.verts.new((x, y1, z)) for x, z in r] for r in rings]
+    o, i = front
+    ob, ib = back
+    for k in range(4):
+        n = (k + 1) % 4
+        bm.faces.new((o[k], o[n], i[n], i[k]))          # the face toward the room (-Y)
+        bm.faces.new((ob[k], ib[k], ib[n], ob[n]))      # the back
+        bm.faces.new((o[k], ob[k], ob[n], o[n]))        # the outer edge
+        bm.faces.new((i[k], i[n], ib[n], ib[k]))        # the inner edge (the reveal into the niche)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    ob_ = mesh_obj(name, bm, m)
+    bv = ob_.modifiers.new("bevel", "BEVEL")
+    bv.width, bv.segments, bv.limit_method = bevel, segs, "ANGLE"
+    bv.angle_limit = math.radians(40)
+    bv.harden_normals = True
+    for p in ob_.data.polygons:
+        p.use_smooth = True
+    return ob_
 
 
 def door_leaf(name, cx, cy, w, h, facing, m_leaf, m_frame):
@@ -386,20 +471,28 @@ def bench():
     m = materials()
     segs = [(-BENCH_X, -CENTRE_X, BENCH_Y), (-CENTRE_X, CENTRE_X, BENCH_Y - CENTRE_OUT), (CENTRE_X, BENCH_X, BENCH_Y)]
     top = CAP_Z - 0.06
+    stile = 0.045
     for i, (x0, x1, yf) in enumerate(segs):
         span(f"bench_back{i}", x0, x1, yf + 0.035, yf + 0.06, 0.0, top, m["backing"])
         span(f"bench_plinth{i}", x0, x1, yf + 0.035, yf + 0.08, 0.0, 0.1, m["plinth"])
-        boards(f"bench_b{i}_", x0, x1, yf, 0.1, top, m["ash"], width=0.55, thick=0.035, bevel=0.0035)
-        ox0 = x0 - (0.025 if i == 0 else 0.0)
-        ox1 = x1 + (0.025 if i == 2 else 0.0)
-        span(f"bench_cap{i}", ox0, ox1, yf - 0.025, yf + 0.34, top, CAP_Z, m["ash_h"], bevel=0.01)
+        # the centre's boards stop at its corner stiles; the wings' first boards butt against the stiles' returns
+        b0 = x0 + stile if i == 1 else (x0 if i == 0 else x0 - 0.004)
+        b1 = x1 - stile if i == 1 else (x1 + 0.004 if i == 0 else x1)
+        boards(f"bench_b{i}_", b0, b1, yf, 0.1, top, m["ash"], width=0.55, thick=0.035, bevel=0.0035)
+        ox0 = x0 - 0.025 if i in (0, 1) else x0
+        ox1 = x1 + 0.025 if i in (1, 2) else x1
+        # the centre cap a hair thicker, so where it runs round the corner over the wing cap their tops do not fight
+        span(f"bench_cap{i}", ox0, ox1, yf - 0.025, yf + 0.34, top, CAP_Z + (0.004 if i == 1 else 0.0), m["ash_h"],
+             bevel=0.01)
         # a slim bronze shadow line under the cap's nose
         span(f"bench_line{i}", x0, x1, yf - 0.004, yf + 0.01, top - 0.018, top - 0.006, m["bronze"], bevel=0.002)
-    # the centre section's side returns (it stands forward of the wings)
+    # the centre section's corner stiles: their fronts flush with its boards, their sides the returns back to the
+    # wings (so the step reads as a lit return, not a gap)
     for s in (-1, 1):
-        xa, xb = sorted((s * CENTRE_X, s * (CENTRE_X - 0.035)))
-        span(f"bench_ret{s:+d}", xa, xb, BENCH_Y - CENTRE_OUT, BENCH_Y, 0.1, top, m["ash"], bevel=0.003)
-        span(f"bench_retplinth{s:+d}", xa, xb, BENCH_Y - CENTRE_OUT + 0.035, BENCH_Y, 0.0, 0.1, m["plinth"])
+        xa, xb = sorted((s * CENTRE_X, s * (CENTRE_X - stile)))
+        span(f"bench_ret{s:+d}", xa, xb, BENCH_Y - CENTRE_OUT, BENCH_Y + 0.03, 0.1, top, m["ash"], bevel=0.006)
+        span(f"bench_retplinth{s:+d}", xa + 0.01 * (s < 0), xb - 0.01 * (s > 0), BENCH_Y - CENTRE_OUT + 0.035,
+             BENCH_Y + 0.03, 0.0, 0.1, m["plinth"])
         # end returns of the wings
         xa, xb = sorted((s * BENCH_X, s * (BENCH_X - 0.035)))
         span(f"bench_end{s:+d}", xa, xb, BENCH_Y, BENCH_Y + 0.9, 0.1, top, m["ash"], bevel=0.003)
@@ -521,7 +614,7 @@ def dock():
 
 def dock_mic(mic_src, x):
     """The dock's microphone on the front ledge in front of the defendant, its head turned back toward her."""
-    h = instance(mic_src, "dock_mic", (x, LEDGE[0] + 0.005, DOCK_TOP), 180.0 + 4.0)
+    h = instance(mic_src, "dock_mic", (x, LEDGE[0] + 0.1, DOCK_TOP), 180.0 + 4.0)   # clear of her, mid-ledge
     h.scale = tuple(v * 0.78 for v in h.scale)    # a short neck: its head at her chest, not beside her face
     return h
 
@@ -591,9 +684,117 @@ def cctv(name, xyz):
     return b
 
 
-def dressing():
+CLERK = (1.25, 3.1)         # the clerk's desk at the foot of the bench (right of centre), facing the room
+CLERK_Z = 0.76
+
+
+def dressing(chair_src=None, mic_src=None):
     m = materials()
     door_leaf("side_door", XW - 0.005, SIDE_DOOR_Y, 1.0, 2.3, "-x", m["ash"], m["ash"])
     cctv("cctv_l", (-XW + BULK_W - 0.3, Y1 - BULK_W + 0.3, BULK))
     cctv("cctv_r", (XW - BULK_W + 0.3, Y1 - BULK_W + 0.3, BULK))
     cctv("cctv_g", (XW - BULK_W + 0.3, Y0 + BULK_W - 0.3, BULK))
+    walls_dressing()
+    span("aisle_runner", -0.3, 0.3, Y0 + 0.45, BAR_Y - 0.15, 0.0, 0.008, m["runner"], bevel=0.003)
+    folder = props.load("file-folders", size=0.34, axis="long", loc=(-4.5, 0.72, 0.78), turn_deg=88.0, sat=0.5,
+                        val=0.75, rough_add=0.12)
+    clerk_desk(chair_src, folder)
+    # counsel desks: closed folders before the chairs (clear of the microphones) and a glass of water at each; the
+    # bench: one closed folder before the presiding chair
+    for k, (x, y, z, t) in enumerate(((-4.48, 1.92, 0.78, 95.0), (4.5, 0.78, 0.78, -86.0),
+                                      (-0.32, BENCH_Y + 0.62, DESK_Z, 2.0))):
+        instance(folder, f"folder{k + 1}", (x, y, z), t)
+    for k, (x, y) in enumerate(((-4.14, 1.48), (4.15, 1.98))):
+        tumbler(f"tumbler{k}", (x, y, 0.78))
+
+
+def tumbler(name, loc):
+    """A plain glass tumbler, a third full of water."""
+    m = materials()
+    x, y, z = loc
+    sk.cyl(f"{name}_glass", 0.034, 0.105, (x, y, z + 0.0525), m["tumbler"], verts=40)
+    sk.cyl(f"{name}_water", 0.0315, 0.04, (x, y, z + 0.024), m["tumbler"], verts=40)
+
+
+def clerk_desk(chair_src, folder):
+    """The clerk's desk on the floor at the foot of the bench, facing the room: a boarded ash front over a dark plinth,
+    ends, a bevelled top; a closed laptop, a blank monitor turned toward the clerk's empty chair (its face a faint
+    cool glow, a darker bezel, a weak light in front of it that spills on the chair and the bench fascia), a folder."""
+    m = materials()
+    cx, cy = CLERK
+    w, d, z = 1.6, 0.7, CLERK_Z
+    y0, y1 = cy - d / 2, cy + d / 2
+    boards("clerk_b", cx - w / 2 + 0.03, cx + w / 2 - 0.03, y0 + 0.02, 0.1, z - 0.035, m["ash"], width=0.55, thick=0.03)
+    span("clerk_back", cx - w / 2 + 0.03, cx + w / 2 - 0.03, y0 + 0.05, y0 + 0.07, 0.0, z - 0.035, m["backing"])
+    span("clerk_plinth", cx - w / 2 + 0.03, cx + w / 2 - 0.03, y0 + 0.05, y0 + 0.09, 0.0, 0.1, m["plinth"])
+    for s in (-1, 1):
+        xa, xb = sorted((cx + s * w / 2, cx + s * (w / 2 - 0.03)))
+        span(f"clerk_end{s:+d}", xa, xb, y0 + 0.02, y1 - 0.02, 0.0, z - 0.035, m["ash"], bevel=0.004)
+    span("clerk_top", cx - w / 2 - 0.01, cx + w / 2 + 0.01, y0, y1, z - 0.035, z, m["ash_h"], bevel=0.008)
+    # the closed laptop
+    lx, ly = cx - 0.4, cy + 0.05
+    box("laptop_base", (0.33, 0.23, 0.011), (lx, ly, z + 0.0055), m["laptop"], bevel=0.004, rot=(0, 0, math.radians(-6)))
+    box("laptop_lid", (0.328, 0.226, 0.006), (lx, ly, z + 0.0145), m["laptop"], bevel=0.0025,
+        rot=(0, 0, math.radians(-6)))
+    # the monitor, turned toward the clerk (+Y), a little angled
+    mx, my, t = cx + 0.25, cy + 0.1, math.radians(180 + 20)
+    sw, sh, neck = 0.48, 0.29, 0.09     # a low stand: its top stays under the bench cap from every camera
+    root = bpy.data.objects.new("monitor", None)
+    bpy.context.scene.collection.objects.link(root)
+    parts = [box("monitor_base", (0.22, 0.17, 0.012), (0, 0, 0.006), m["bezel"], bevel=0.004),
+             box("monitor_neck", (0.05, 0.025, neck + 0.02), (0, 0.03, (neck + 0.02) / 2), m["bezel"], bevel=0.006),
+             box("monitor_shell", (sw + 0.024, 0.035, sh + 0.024), (0, 0.0, neck + sh / 2), m["speaker"], bevel=0.006),
+             box("monitor_face", (sw, 0.004, sh), (0, -0.018, neck + sh / 2), mt.glow("monitor glow", COOL, 0.4))]
+    for o in parts:
+        o.parent = root
+    root.location, root.rotation_euler = (mx, my, z), (0, 0, t)
+    bpy.context.view_layer.update()
+    face = bpy.data.objects["monitor_face"].matrix_world
+    nrm = (face.to_3x3() @ Vector((0, -1, 0))).normalized()
+    c = face.translation + nrm * 0.03
+    area("monitor_light", tuple(c), (sw, sh), 5.0, COOL, spread=140, rot=aim_rot(c, c + nrm))
+    instance(folder, "folder_clerk", (cx + 0.02, cy + 0.02, z), -4.0)
+    if chair_src is not None:
+        ch = instance(chair_src, "clerk_chair", (cx - 0.1, cy + 0.72, 0.0), -90 - 6.0)
+        ch.scale = tuple(v * 0.88 for v in ch.scale)
+
+
+def walls_dressing():
+    """The upper side walls: fabric-wrapped acoustic panels with shadow reveals between the wainscot and the windows,
+    a slim ash cornice under the bulkhead; a wall vent grille high on the left; two small speaker boxes high on the
+    bench wall."""
+    m = materials()
+    z0, z1 = 1.32, 2.78
+    for s, side in ((-1, "l"), (1, "r")):
+        runs = [(Y0 + 0.35, SIDE_DOOR_Y - 0.75), (SIDE_DOOR_Y + 0.75, Y1 - 0.35)] if s > 0 else [(Y0 + 0.35, Y1 - 0.35)]
+        k = 0
+        for a0, a1 in runs:
+            n = max(1, round((a1 - a0) / 1.25))
+            pw = (a1 - a0) / n
+            for i in range(n):
+                ya = a0 + pw * i + 0.009
+                yb = a0 + pw * (i + 1) - 0.009
+                xa, xb = sorted((s * XW, s * (XW - 0.045)))
+                span(f"acoustic_{side}{k}", xa, xb, ya, yb, z0, z1, m["felt"], bevel=0.012, segs=3)
+                k += 1
+        # the cornice under the bulkhead
+        xa, xb = sorted((s * XW, s * (XW - 0.05)))
+        span(f"cornice_{side}", xa, xb, Y0, Y1, BULK - 0.12, BULK, m["ash_y"], bevel=0.008)
+        xa, xb = sorted((s * XW, s * (XW - 0.02)))
+        span(f"cornice_{side}_bead", xa, xb, Y0, Y1, BULK - 0.15, BULK - 0.12, m["backing"])
+    # the vent grille: a frame and louvres
+    gx, gy, gz, gw, gh = -XW + 0.012, 4.0, 4.35, 0.7, 0.32
+    for k, (y0, y1, z0_, z1_) in enumerate(((gy - gw / 2, gy + gw / 2, gz + gh / 2 - 0.03, gz + gh / 2),
+                                           (gy - gw / 2, gy + gw / 2, gz - gh / 2, gz - gh / 2 + 0.03),
+                                           (gy - gw / 2, gy - gw / 2 + 0.03, gz - gh / 2, gz + gh / 2),
+                                           (gy + gw / 2 - 0.03, gy + gw / 2, gz - gh / 2, gz + gh / 2))):
+        span(f"vent_frame{k}", gx - 0.012, gx + 0.012, y0, y1, z0_, z1_, m["grille"], bevel=0.004)
+    span("vent_back", gx - 0.012, gx - 0.006, gy - gw / 2, gy + gw / 2, gz - gh / 2, gz + gh / 2, m["backing"])
+    for i in range(7):
+        z = gz - gh / 2 + 0.05 + i * (gh - 0.1) / 6
+        box(f"vent_louvre{i}", (0.004, gw - 0.06, 0.03), (gx, gy, z), m["grille"], rot=(math.radians(-35), 0, 0))
+    # speakers high on the bench wall, tipped down toward the well
+    for s in (-1, 1):
+        box(f"speaker{s:+d}", (0.24, 0.17, 0.36), (s * 3.9, Y1 - 0.12, 4.45), m["speaker"], bevel=0.012,
+            rot=(math.radians(14), 0, math.radians(-s * 12)))
+        box(f"speaker{s:+d}_bracket", (0.04, 0.06, 0.04), (s * 3.9, Y1 - 0.02, 4.45), m["bronze"], bevel=0.004)

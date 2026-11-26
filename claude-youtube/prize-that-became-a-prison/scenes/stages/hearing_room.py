@@ -40,44 +40,48 @@ EXPOSURE = -1.5
 
 EDGE = st.TABLE[1] - st.TD / 2         # the table's near edge (Tim's side)
 TORSO_GAP = 0.06                      # his jacket front this far from the table edge
-TIM_UPPER = {"head": (-22, 3), "neck": (2, 0), "chest": (12, 0), "fingers": 30}
+TIM_UPPER = {"head": (-13, 3), "neck": (2, 0), "chest": (12, 0), "fingers": 40}
 ELBOW_FWD = 0.12          # the elbow hangs this far ahead of the shoulder (the upper arm nearly plumb)
 
 # the two still figures in the public rows: (row index, side, seat index, factory, pose)
 EXTRAS = [
-    (2, -1, 2, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 40}),
-    (4, 1, 3, "old", {"head": (4, -5), "neck": (2, 0), "chest": (-9, 0), "fingers": 45}),
+    (0, -1, 2, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 40}),
+    (1, 1, 3, "old", {"head": (4, -5), "neck": (2, 0), "chest": (-9, 0), "fingers": 45}),
 ]
 
 FOCUS = {
     "fx_wide": (st.TIM_X, -0.2, 1.1),
     "fx_tim": (st.TIM_X + 0.03, -0.42, 1.22),
-    "fx_dais": (0.0, 5.0, 1.7),
+    "fx_dais": (0.8, 5.1, 1.6),
     "fx_hands": (st.TIM_X, -0.2, st.TOP),
 }
 
 CAMERAS = {
     # Ch 09: from behind the public seats, high enough to look over the rows: Tim small at the witness table in the
     # one pool of light, facing the high curved dais and its empty chairs, the drape beyond
-    "wide": dict(loc=(2.3, -9.05, 2.05), aim=(-0.35, 2.4, 1.15), lens=30, focus="fx_wide", fstop=8.0, beat="ch09"),
+    "wide": dict(loc=(2.3, -9.05, 2.05), aim=(-0.35, 2.4, 1.5), lens=30, focus="fx_wide", fstop=8.0, beat="ch09"),
     # Ch 09: controlled medium from the dais side, a little above his eyeline: Tim at the microphones, hands folded on
     # the papers, the empty rows going dark behind him
-    "witness": dict(loc=(st.TIM_X + 1.05, 2.15, 1.5), aim=(st.TIM_X - 0.05, -0.5, 1.02), lens=58, focus="fx_tim",
+    "witness": dict(loc=(st.TIM_X + 1.25, 1.95, 1.44), aim=(st.TIM_X - 0.1, -0.5, 1.04), lens=54, focus="fx_tim",
                     fstop=2.8, beat="ch09"),
-    # Ch 09: from the witness table, low, up at the dais: the tiers' curve, the empty high chairs and their
-    # microphones against the drape
-    "dais": dict(loc=(st.TIM_X + 0.35, 0.05, 0.98), aim=(0.6, 5.6, 2.05), lens=26, focus="fx_dais", fstop=5.6,
+    # Ch 09: from the left end of the witness table, low, up at the dais: off the arcs' centre, so the tiers curve
+    # away to the right, the empty high chairs and their microphones receding against the drape
+    "dais": dict(loc=(-1.05, 0.15, 1.02), aim=(1.4, 5.4, 2.05), lens=24, focus="fx_dais", fstop=5.6,
                  beat="ch09"),
     # Ch 09 (added): overhead on the table: his folded hands on the blank papers, the microphones, the glass, the felt
     "hands": dict(loc=(st.TIM_X + 0.12, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
                   fstop=4.0, beat="ch09"),
 }
 # per-camera light trims (multipliers on named lights)
+# The broadcast soft lights' narrow spread concentrates their power (a 30 deg spread is roughly 15x a bare panel), and
+# the table downlight lands on the tops of his shoulders, hands and papers: the close cameras take both down so the
+# stone face sits near 0.65 and the charcoal suit well under it (at full level the suit read as mid grey beside a
+# near-white face: AgX compresses the highlights)
 TRIMS = {
     "wide": {},
-    "witness": {},
+    "witness": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
     "dais": {},
-    "hands": {},
+    "hands": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
 }
 
 if os.environ.get("HEARING_CAMS"):     # preview rounds: render a subset of the cameras with `--cam all`
@@ -475,26 +479,27 @@ def lights():
     cans over the public rows; the washer on the drape, the sconces and the doors are built with their fittings."""
     xs, ys = st.coffer_centres()
     # the island: two cans in the coffer over the table, both aimed at Tim's place
-    st.downlight("dl_table", st.TIM_X + 0.25, 0.0, 1500.0, target=(st.TIM_X + 0.05, -0.15, st.TOP), size_deg=36,
+    st.downlight("dl_table", st.TIM_X + 0.25, 0.0, 450.0, target=(st.TIM_X + 0.05, -0.15, st.TOP), size_deg=30,
                  blend=0.75, radius=0.06)
     st.downlight("dl_table2", st.TIM_X + 0.95, 0.45, 0.0)
     # broadcast key and fill, from the dais side, on the bar at y 1.2
     face = Vector((st.TIM_X, -0.5, 1.25))
-    st.tv_light("tv_key", (st.TIM_X + 2.3, 1.2, 4.55), face, 420.0)
-    st.tv_light("tv_fill", (st.TIM_X - 2.6, 1.2, 4.55), face, 110.0)
+    st.tv_light("tv_key", (st.TIM_X + 2.3, 1.2, 4.55), face, 75.0, spread=30)
+    st.tv_light("tv_fill", (st.TIM_X - 2.6, 1.2, 4.55), face, 12.0, spread=30)
     # on the bar behind him: aimed past him at the dais (they rim his shoulders and light the lower tier)
-    st.tv_light("tv_back_l", (-2.2, -3.6, 4.6), (-0.8, 4.6, 1.3), 520.0, size=(0.6, 0.45), spread=50)
-    st.tv_light("tv_back_r", (2.4, -3.6, 4.6), (0.9, 4.8, 1.3), 520.0, size=(0.6, 0.45), spread=50)
+    st.tv_light("tv_back_l", (-2.2, -3.6, 4.6), (-0.8, 4.6, 1.3), 80.0, size=(0.6, 0.45), spread=40)
+    st.tv_light("tv_back_r", (2.4, -3.6, 4.6), (0.9, 4.8, 1.3), 80.0, size=(0.6, 0.45), spread=40)
     # the tiers: cans over the lower tier's chairs and the upper tier's
     for x in (-2.4, 0.0, 2.4):
-        st.downlight(f"dl_t0_{x:+.1f}", x, 4.8, 420.0, size_deg=70, blend=0.6)
+        st.downlight(f"dl_t0_{x:+.1f}", x, 4.8, 520.0, target=(x * 1.1, 5.0, 0.5), size_deg=46, blend=0.7)
     for x in (-4.8, -2.4, 0.0, 2.4, 4.8):
-        st.downlight(f"dl_t1_{x:+.1f}", x, ys[-1], 320.0 if abs(x) < 3 else 180.0, size_deg=70, blend=0.6)
+        st.downlight(f"dl_t1_{x:+.1f}", x, ys[-1], 460.0 if abs(x) < 3 else 260.0, target=(x * 0.95, 6.6, 0.9),
+                     size_deg=46, blend=0.7)
     # the public rows: a few cans on, low
-    for (x, y, e) in ((-2.4, -4.8, 110.0), (2.4, -7.2, 90.0), (0.0, -2.4, 70.0)):
-        st.downlight(f"dl_pub_{x:+.1f}_{y:+.1f}", x, y, e, size_deg=80, blend=0.7)
+    for (x, y, e) in ((-2.4, -4.8, 90.0), (2.4, -4.8, 60.0), (2.4, -7.2, 70.0), (0.0, -2.4, 0.0)):
+        st.downlight(f"dl_pub_{x:+.1f}_{y:+.1f}", x, y, e, size_deg=85, blend=0.9)
     # the rest of the cans dark
-    lit = {(0.0, 4.8), (-2.4, 4.8), (2.4, 4.8), (-2.4, -4.8), (2.4, -7.2), (0.0, -2.4), (0.0, 0.0)} | \
+    lit = {(0.0, 4.8), (-2.4, 4.8), (2.4, 4.8), (-2.4, -4.8), (2.4, -4.8), (2.4, -7.2), (0.0, -2.4), (0.0, 0.0)} | \
           {(x, ys[-1]) for x in (-4.8, -2.4, 0.0, 2.4, 4.8)}
     for x in xs:
         for y in ys:

@@ -38,7 +38,7 @@ import setkit as sk  # noqa: E402
 import visiting_room_set as st  # noqa: E402
 
 EXPOSURE = -1.6
-BOUNCE_W = 5.0                              # the counters' bounce into the two faces (W)
+BOUNCE_W = 7.0                              # the counters' bounce into the two faces (W)
 WORLD = 0.015
 
 BXO = st.BX[st.OCC]                         # the occupied booth's centre x
@@ -52,17 +52,20 @@ FOCUS = {"fx_wide": (BXO, -0.3, 1.05),
 CAMERAS = {
     # Ch 08: from the back of the visitors' room, a little high: the row of booths along the glass, the one lit
     # booth with Tim at the counter and Dawn beyond the glass, the empty booths falling off into the dark either side
-    "wide": dict(loc=(1.45, -3.3, 1.85), aim=(-0.35, 0.35, 1.2), lens=20, focus="fx_wide", fstop=5.6, beat="ch08"),
+    "wide": dict(loc=(1.45, -3.3, 1.85), aim=(-0.35, 0.35, 1.2), lens=20, focus="fx_wide", fstop=5.6, beat="ch08",
+                 exposure=-1.85),
     # Ch 08: over Tim's left shoulder, through the glass to Dawn with the handset at her ear (set by glass_camera())
-    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=50, focus="fx_dawn", fstop=2.8, beat="ch08"),
+    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=58, focus="fx_dawn", fstop=2.8, beat="ch08"),
     # Ch 08: an empty booth: the phone on its baffle, the handset hanging on its hook, the glass and the empty stool
     # beyond (the cast hidden)
-    "empty": dict(loc=(st.BX[EMPTY] - 0.32, -1.12, 1.22), aim=(st.BX[EMPTY] + 0.23, -0.17, 1.12), lens=40,
-                  focus="fx_empty", fstop=2.8, beat="ch08", cast=False),
+    "empty": dict(loc=(st.BX[EMPTY] - 0.3, -1.35, 1.5), aim=(st.BX[EMPTY] + 0.08, 0.1, 1.1), lens=32,
+                  focus="fx_empty", fstop=2.2, beat="ch08", cast=False),
 }
 # per-camera light trims: multipliers by light-name prefix (fittings scale their lens glow with them)
 TRIMS = {
-    "empty": {f"fitv{EMPTY}": 4.0, f"fiti{EMPTY}": 3.0, f"fitv{st.OCC}": 0.35, f"fiti{st.OCC}": 0.35},
+    # the empty booth: its inmates' side lit beyond the glass, its own fitting low, so the near phone is lit from the
+    # glass side and the far one stands in the light (the occupied booth turned down: another moment)
+    "empty": {f"fitv{EMPTY}": 6.0, f"fiti{EMPTY}": 22.0, f"fitv{st.OCC}": 0.25, f"fiti{st.OCC}": 0.25},
 }
 _STATE = {"cast": [], "holders": {}, "base": {}, "lens_base": {}}
 
@@ -504,6 +507,67 @@ def phone_hand(holder, pose, side, frame):
     return (round(E.z, 3), round(flex, 1)), miss
 
 
+# ---------------------------------------------------------------- finishing the shared cast for this light
+def matt_cloth(holder, item, rough=0.92, bump=0.25):
+    """A garment finished as matt cloth in its people.py colour (after inspection_room.py's cloth()): its normal map
+    (whose fine stripes shimmer) dropped for a woven-noise bump, no sheen and almost no specular. Under the booth's
+    top light the grazing specular of the satin garments was as bright as the stone's diffuse, so the dark suit and
+    the prison top both read as pale stone."""
+    ob = bpy.data.objects.get(f"{holder.name}_{item}")
+    if ob is None:
+        print(f"VISIT no garment {holder.name}_{item}", flush=True)
+        return None
+    for slot in ob.material_slots:
+        m = slot.material
+        if not (m and m.use_nodes):
+            continue
+        nt = m.node_tree
+        b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if b is None:
+            continue
+        for sock in ("Roughness", "Normal"):
+            for ln in list(b.inputs[sock].links):
+                nt.links.remove(ln)
+        b.inputs["Roughness"].default_value = rough
+        b.inputs["Sheen Weight"].default_value = 0.0
+        b.inputs["Specular IOR Level"].default_value = 0.04
+        if "Coat Weight" in b.inputs:
+            b.inputs["Coat Weight"].default_value = 0.0
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        nz = nt.nodes.new("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 400.0
+        nz.inputs["Detail"].default_value = 2.0
+        nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+        bp = nt.nodes.new("ShaderNodeBump")
+        bp.inputs["Strength"].default_value = bump
+        bp.inputs["Distance"].default_value = 0.0004
+        nt.links.new(nz.outputs["Fac"], bp.inputs["Height"])
+        nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
+    return ob
+
+
+def sculpt_hair(name):
+    """The shared cast's carved-strand bump reads as a ribbed knit beanie close up (checkin_hall.py's fix): a
+    smooth sculpted stone with a broad combed undulation, and a matt finish so the top light does not turn the
+    darker hair as pale as the face."""
+    m = bpy.data.materials.get(f"hair_{name}")
+    if not m:
+        return
+    for n in m.node_tree.nodes:
+        if n.type == "BUMP":
+            n.inputs["Strength"].default_value = 0.05
+        elif n.type == "TEX_WAVE":
+            n.inputs["Scale"].default_value = 22.0
+            n.inputs["Distortion"].default_value = 4.0
+            n.inputs["Detail"].default_value = 1.5
+        elif n.type == "BSDF_PRINCIPLED":
+            n.inputs["Roughness"].default_value = 0.8
+            n.inputs["Specular IOR Level"].default_value = 0.2
+            # a shade darker than the cast's 0.2: under the booth's top light the crown faces the tubes and the face
+            # does not, so at 0.2 the hair rendered brighter than the face and Tim read bald
+            n.inputs["Base Color"].default_value = (0.1, 0.1, 0.105, 1.0)
+
+
 # ---------------------------------------------------------------- the cast
 def build_cast():
     m = st.materials()
@@ -512,6 +576,10 @@ def build_cast():
     # toward the phone on the booth's +X baffle), his left hand flat on the counter
     t = people.man("Tim", age=0.58, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
     d = people.dawn_prison()
+    matt_cloth(t, "male_elegantsuit01")
+    matt_cloth(d, "female_casualsuit01")
+    for n in ("Tim", "DawnPrison"):
+        sculpt_hair(n)
     holders["Tim"], holders["Dawn"] = t, d
     sc = _STATE["tim_seat_c"]
     # Dawn sits a little to her right of the stool's centre and Tim a little to his right, so seen through the glass
@@ -661,8 +729,8 @@ def glass_camera():
     if not hs:
         return
     te, de = eye_centre(hs["Tim"]), eye_centre(hs["Dawn"])
-    loc = te + Vector((-0.30, -0.85, 0.12))
-    aim = de + Vector((0.12, 0.0, -0.07))
+    loc = te + Vector((-0.34, -1.08, 0.13))
+    aim = de + Vector((0.16, 0.0, -0.08))
     CAMERAS["glass"]["loc"] = tuple(round(v, 4) for v in loc)
     CAMERAS["glass"]["aim"] = tuple(round(v, 4) for v in aim)
 

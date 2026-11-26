@@ -38,8 +38,8 @@ T = 0.3                  # wall thickness
 DC = -1.2
 SPAN = math.radians(38.0)
 TIERS = (   # fascia face radius, platform z, desk z, cap z, facets
-    dict(R=5.2, zp=0.30, zd=1.04, zc=1.25, n=8),
-    dict(R=6.95, zp=0.80, zd=1.54, zc=1.76, n=10),
+    dict(R=5.2, zp=0.30, zd=1.0, zc=1.1, n=8),
+    dict(R=6.95, zp=0.95, zd=1.66, zc=1.78, n=10),
 )
 BACK_R = 6.95 + 1.85     # back edge of the upper platform
 DESK_D = 0.8             # desk back edge, behind the fascia face
@@ -70,7 +70,7 @@ LIGHTS = {}
 def materials():
     if M:
         return M
-    walnut = (0.075, 0.05, 0.034)
+    walnut = (0.052, 0.034, 0.022)
     M.update(
         walnut=mt.veneer("walnut", walnut, "Z", contrast=0.3, rough=(0.3, 0.44), coat=0.3),
         walnut_h=mt.veneer("walnut along", walnut, "X", contrast=0.3, rough=(0.3, 0.44), coat=0.3),
@@ -91,7 +91,7 @@ def materials():
         brushed=mt.satin("brushed steel", (0.42, 0.43, 0.44), rough=(0.28, 0.4), metal=1.0),
         black_plastic=mt.satin("black plastic", (0.018, 0.018, 0.019), rough=(0.35, 0.5)),
         white=mt.satin("white plastic", (0.42, 0.42, 0.41), rough=(0.4, 0.5)),
-        card=mt.blank_panel("blank card", (0.34, 0.33, 0.31)),
+        card=mt.blank_panel("blank card", (0.22, 0.215, 0.2)),
         paper=mt.paper("paper", (0.56, 0.55, 0.51)),
         folder=mt.satin("folder board", (0.035, 0.04, 0.05), rough=(0.6, 0.75)),
         glass=mt.glass("tumbler glass"),
@@ -404,9 +404,9 @@ def drape():
     span("pelmet", x0 - 0.15, x1 + 0.15, yb - 0.24, Y1, z1 - 0.02, z1 + 0.34, m["walnut_h"], bevel=0.012)
     span("pelmet_lip", x0 - 0.17, x1 + 0.17, yb - 0.26, yb - 0.2, z1 + 0.26, z1 + 0.36, m["walnut_h"], bevel=0.01)
     # the washer: a slot in the ceiling in front of the pelmet, its light grazing down the folds
-    slot = box("washer_slot", (9.6, 0.05, 0.012), (0, yb - 0.55, H - 0.004), mt.glow("washer lens", COOL, 3.0))
+    slot = box("washer_slot", (9.6, 0.05, 0.012), (0, yb - 0.55, H - 0.004), mt.glow("washer lens", COOL, 1.2))
     src = (0.0, yb - 0.55, H - 0.03)
-    area("washer", src, (9.4, 0.05), 900.0, COOL, spread=60, rot=aim_rot(src, (0.0, yb + 0.25, 1.2)))
+    area("washer", src, (9.4, 0.05), 380.0, COOL, spread=60, rot=aim_rot(src, (0.0, yb + 0.25, 1.2)))
     return ob
 
 
@@ -480,7 +480,7 @@ def dais_props(places):
         cpos = c + (Vector((0, DC, 0)) - c).normalized() * (-pull)      # some pushed back a little
         t = facing_deg(cpos.x, cpos.y, TABLE[0], TABLE[1]) + jitter
         if chair is None:
-            chair = props.load("judge-chair", size=1.25, axis="z", loc=(cpos.x, cpos.y, p["zp"]), turn_deg=t,
+            chair = props.load("judge-chair", size=1.32, axis="z", loc=(cpos.x, cpos.y, p["zp"]), turn_deg=t,
                                sat=0.45, val=0.8, rough_add=0.1)
         else:
             instance(chair, f"dais_chair{k}", (cpos.x, cpos.y, p["zp"]), t)
@@ -644,11 +644,11 @@ def table_dressing(mic_src):
     microphones (one at his place, one at the empty place), two water glasses, a closed folder."""
     cx, cy = TABLE
     papers(TIM_X + 0.01, cy - 0.13)
-    folder(TIM_X - 0.48, cy - 0.1, 7.0)
+    folder(TIM_X - 0.64, cy - 0.02, 7.0)
     nameplate(TIM_X, cy + TD / 2 - 0.07)
     nameplate(EMPTY_X, cy + TD / 2 - 0.07)
     timer_box(cx + 0.2, cy + 0.2, 0.0)
-    tumbler("glass_tim", TIM_X + 0.36, cy - 0.06, 0.55)
+    tumbler("glass_tim", TIM_X + 0.43, cy + 0.06, 0.55)
     tumbler("glass_empty", EMPTY_X + 0.2, cy + 0.02, 0.85)
     # microphones (head toward +Y in the file: turned to point back at the witness)
     m1 = instance(mic_src, "wt_mic_tim", (TIM_X - 0.17, cy + 0.03, TOP), 180.0 + 14.0, scale=0.95)
@@ -772,7 +772,7 @@ def sconce(name, x, y, z, s):
     sh = sk.cyl(f"{name}_shade", 0.07, 0.2, (xf - s * 0.09, y, z), shade_m, verts=32)
     for k, zz in enumerate((z - 0.1, z + 0.1)):
         sk.cyl(f"{name}_ring{k}", 0.074, 0.012, (xf - s * 0.09, y, zz), m["bronze"], verts=32)
-    point(f"{name}_light", (xf - s * 0.1, y, z - 0.02), 9.0, WARMISH, radius=0.06)
+    point(f"{name}_light", (xf - s * 0.1, y, z - 0.02), 16.0, WARMISH, radius=0.06)
     return sh
 
 

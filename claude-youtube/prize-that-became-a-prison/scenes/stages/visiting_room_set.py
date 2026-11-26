@@ -46,11 +46,11 @@ FIT_Y = 0.42                              # fittings' centre |y| (over the count
 FIT_L = 0.64                              # fitting length (x)
 FIT_W = 210.0                             # a fitting's lamp (W) at level 1
 # fitting levels per booth, visitors' side and inmates' side: the occupied booth burns, a few others glow low
-LEVEL_V = [0.28, 0.0, 0.1, 1.0, 0.0, 0.22]
-LEVEL_I = [0.0, 0.22, 0.0, 1.0, 0.1, 0.0]
+LEVEL_V = [0.08, 0.0, 0.06, 1.0, 0.0, 0.06]
+LEVEL_I = [0.0, 0.07, 0.04, 1.0, 0.04, 0.0]
 COOL = (0.80, 0.90, 1.0)
 UPPER, LOWER = (0.40, 0.405, 0.385), (0.10, 0.118, 0.13)    # pale emulsion above, satin blue-grey dado
-STEEL_PAINT = (0.16, 0.175, 0.185)        # booth steel: baffles, frames
+STEEL_PAINT = (0.075, 0.085, 0.095)       # booth steel: baffles (a dark blue-grey, so the row is not pale slabs)
 VD = dict(y=-2.35, w=0.95, h=2.1)         # visitors' door in the left wall (x = -XW)
 ID = dict(x=-2.15, w=0.95, h=2.1)         # inmates' door in the back wall (y = Y1)
 CLOCK = (1.75, Y1, 2.12)
@@ -72,7 +72,7 @@ def materials():
                                path_w=-1.0, joint=3.0, joint_off=0.4, rough=0.55),
         soffit=mt.soffit("vr soffit", (0.3, 0.302, 0.295)),
         steel=mt.paint("booth steel", STEEL_PAINT, 0.42, 0.05, 0.3, edge_rgb=(0.3, 0.3, 0.3)),
-        frame=mt.paint("frame steel", (0.085, 0.095, 0.105), 0.38, 0.04, 0.25, edge_rgb=(0.22, 0.22, 0.22)),
+        frame=mt.paint("frame steel", (0.05, 0.056, 0.062), 0.38, 0.04, 0.25, edge_rgb=(0.22, 0.22, 0.22)),
         kick=mt.paint("kick paint", (0.03, 0.033, 0.036), 0.35, 0.04, 0.35, edge_rgb=(0.12, 0.12, 0.12)),
         counter=mt.solid_surface("counter top", (0.07, 0.072, 0.073), 0.55),
         glass=mt.security_glass("security glass"),
@@ -556,7 +556,7 @@ def fitting(name, x, y, level):
         add_rod(bm, (x - L / 2 + 0.04, y + y0, z0), (x + L / 2 - 0.04, y + y0, z0), 0.0024, 6)
     mesh_obj(f"{name}_cage", bm, m["wire"], smooth=True)
     if level > 0:
-        area(f"{name}_down", (x, y, H - 0.105), (L - 0.1, 0.07), FIT_W * level, COOL, spread=120)
+        area(f"{name}_down", (x, y, H - 0.105), (L - 0.1, 0.07), FIT_W * level, COOL, spread=100)
         area(f"{name}_up", (x, y, H - 0.11), (L, 0.3), 6.0 * level, COOL, spread=180, rot=(math.pi, 0, 0), glossy=False)
 
 

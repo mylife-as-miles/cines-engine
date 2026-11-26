@@ -410,13 +410,15 @@ def passport_cover(name, rgb=(0.025, 0.035, 0.07)):
     fine = _noise(nt, o, 4000.0, 2.0, 0.5)
     edge = _maprange(nt, _ao(nt, 0.0025, inside=True), 0.55, 1.0, 1.0, 0.0)
     b.inputs["Base Color"].default_value = (*rgb, 1)
-    r = _math(nt, "ADD", 0.5, _maprange(nt, cell, 0.0, 0.5, -0.05, 0.06))
+    # (a first pass at coat 0.3 / roughness 0.3 mirrored the lamp across the whole cover as a flat grey sheen that hid
+    # the navy and the grain: the sheen is kept softer, and the grain bump strong enough to break it up)
+    r = _math(nt, "ADD", 0.6, _maprange(nt, cell, 0.0, 0.5, -0.06, 0.08))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", edge, 0.15), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.3
-    b.inputs["Coat Weight"].default_value = 0.3
-    b.inputs["Coat Roughness"].default_value = 0.3
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.15)), 0.12, 0.0002)
+    b.inputs["Specular IOR Level"].default_value = 0.25
+    b.inputs["Coat Weight"].default_value = 0.2
+    b.inputs["Coat Roughness"].default_value = 0.45
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.15)), 0.35, 0.0002)
     return m
 
 

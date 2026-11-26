@@ -42,7 +42,7 @@ reads as reconstruction without any label.
 - **People: use `scenes/people.py`** (`dawn()`, `dawn_prison()`, `officer(name, variant)`, `staff(name, variant)`,
   `man(name, ...)`), so Dawn and the officers look the same in every scene (continuity) and the wardrobe rules hold
   (flat-tinted garments with no shimmering pinstripe, plain black shoes, no sneakers, the licence-clean cap, officers
-  that differ). Do not dress the main people yourself; pose and place them. Underneath it is `noir-kit/cast.py`
+  that differ, fabric that reads dark next to the stone skin). Do not dress the main people yourself; pose and place them. If you must dress someone with `cast.dress`, multiply garment tints by `people.FABRIC_VALUE` (0.4) and call `people.fabric(holder)` afterwards: a garment at 0.09 next to the 0.5 stone skin shows as mid grey on screen, and Blender's default specular adds a grey sheen even to black cloth under big soft lights (measured 26 Nov 2026). Underneath it is `noir-kit/cast.py`
   (details below) and `rigged.py` for posing.
 - Cast internals: `noir-kit/cast.py` (`person(name, gender, height_cm, age, hair="bun"|"short")`, `dress(holder, items, tint=)`,
   `hat(holder, path, rgb=)`) and `noir-kit/rigged.py` (`pose_figure(holder, {"head": (down, turn), "chest": ...,
