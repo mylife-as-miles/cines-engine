@@ -182,21 +182,21 @@ def veneer(name, base=(0.40, 0.30, 0.19), axis="Z", contrast=0.24, rough=(0.3, 0
     for k, s in zip("XYZ", (17.3, 9.1, 23.7)):
         _link(nt, _math(nt, "MULTIPLY", r, s), off.inputs[k])
     v = _vadd(nt, _obj(nt), off.outputs["Vector"])
-    along = {"X": (0.7, 34.0, 34.0), "Y": (34.0, 0.7, 34.0), "Z": (34.0, 34.0, 0.7)}[axis]
+    along = {"X": (1.2, 110.0, 110.0), "Y": (110.0, 1.2, 110.0), "Z": (110.0, 110.0, 1.2)}[axis]
     fine = _noise(nt, v, 1.0, 6.0, 0.62, mapping=along)                  # the fine grain streaks
     along2 = {"X": (0.25, 6.0, 6.0), "Y": (6.0, 0.25, 6.0), "Z": (6.0, 6.0, 0.25)}[axis]
     broad = _noise(nt, v, 1.0, 3.0, 0.55, mapping=along2)                # broad growth bands
     wave = _n(nt, "ShaderNodeTexWave", wave_type="BANDS", bands_direction={"X": "Y", "Y": "X", "Z": "X"}[axis])
-    wave.inputs["Scale"].default_value = 2.2
-    wave.inputs["Distortion"].default_value = 6.0
-    wave.inputs["Detail"].default_value = 3.0
-    wave.inputs["Detail Scale"].default_value = 1.2
+    wave.inputs["Scale"].default_value = 9.0          # straight rift-sawn grain lines ~35 mm apart, gently wavering
+    wave.inputs["Distortion"].default_value = 0.9
+    wave.inputs["Detail"].default_value = 2.0
+    wave.inputs["Detail Scale"].default_value = 0.6
     _link(nt, v, wave.inputs["Vector"])
     fig = _out(wave, "Color")
     figf = _n(nt, "ShaderNodeRGBToBW")
     _link(nt, fig, figf.inputs["Color"])
-    g = _math(nt, "ADD", _math(nt, "MULTIPLY", fine, 0.55), _math(nt, "MULTIPLY", broad, 0.25))
-    g = _math(nt, "ADD", g, _math(nt, "MULTIPLY", figf.outputs[0], 0.2))
+    g = _math(nt, "ADD", _math(nt, "MULTIPLY", fine, 0.5), _math(nt, "MULTIPLY", broad, 0.35))
+    g = _math(nt, "ADD", g, _math(nt, "MULTIPLY", figf.outputs[0], 0.15))
     k = _maprange(nt, g, 0.32, 0.68, 0.0, 1.0)
     dark = tuple(c * (1 - contrast) for c in base)
     lite = tuple(min(1.0, c * (1 + contrast * 0.45)) for c in base)
@@ -216,7 +216,7 @@ def veneer(name, base=(0.40, 0.30, 0.19), axis="Z", contrast=0.24, rough=(0.3, 0
     b.inputs["Coat Weight"].default_value = coat
     b.inputs["Coat Roughness"].default_value = 0.22
     b.inputs["Specular IOR Level"].default_value = 0.42
-    pores = _noise(nt, v, 1.0, 2.0, 0.5, mapping=tuple(s * 9.0 for s in along))
+    pores = _noise(nt, v, 1.0, 2.0, 0.5, mapping=tuple(s * 3.0 for s in along))
     _bump(nt, b, _math(nt, "ADD", pores, _math(nt, "MULTIPLY", fine, 0.6)), 0.05, 0.0005)
     return m
 

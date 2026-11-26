@@ -1,12 +1,14 @@
 """The family home in Chicago at night: the kitchen (Ch 02) and the dining room (Ch 10), built side by side as two
 closed rooms so their lights never mix. Metres, Z up, floor at z = 0.
 
-Kitchen  x -5.4 .. -0.6, y -2.4 .. 2.4, ceiling 2.6. A counter run with a sink and a range under a double-hung
+Kitchen  x 6.0 .. 10.8, y -2.4 .. 2.4, ceiling 2.6 (on the dining room's +X side: the dining room's street light
+         comes in from -X and must find open night there). A counter run with a sink and a range under a double-hung
          window on the +Y wall (the night outside), shaker cabinets, subway tile; the round pedestal kitchen table in
          the middle with Dawn's chair on its +Y side.
-Dining   x 0.6 .. 5.6, y -2.3 .. 2.3, ceiling 2.75. Wainscot, chair rail, crown; a pair of double-hung windows on the
-         +Y wall with 2 in venetian blinds and a cast-iron radiator under them; a street light outside throws the
-         blind's stripes across the head of the table and the empty chair. The dining table runs along X with six
+Dining   x 1.0 .. 5.0, y -2.3 .. 2.3, ceiling 2.75. Wainscot, chair rail, crown; a pair of double-hung windows on the
+         +Y wall with 2 in venetian blinds and a cast-iron radiator under them, and a third blinded window in the
+         foot-end (-X) wall: a street light outside it runs the blind's stripes down the table onto the empty chair
+         and throws the chair's striped shadow on the wall behind it. The dining table runs along X with six
          chairs: four along the sides and one at the foot pushed in, the father's at the head (+X) set back and a
          little turned. A pendant lamp (off) over the table, a sideboard on the -Y wall.
 
@@ -26,14 +28,14 @@ LIGHTS = {}
 M = mt.M
 
 # ---------------------------------------------------------------- room extents
-K = dict(x0=-5.4, x1=-0.6, y0=-2.4, y1=2.4, h=2.6)
-D = dict(x0=0.6, x1=5.6, y0=-2.3, y1=2.3, h=2.75)
+K = dict(x0=6.0, x1=10.8, y0=-2.4, y1=2.4, h=2.6)
+D = dict(x0=1.0, x1=5.0, y0=-2.3, y1=2.3, h=2.75)
 WALL_T = 0.14
 
 # kitchen
-KT = (-3.05, 0.0)                    # kitchen table centre (round pedestal, top at 0.76)
+KT = (K["x0"] + 2.35, 0.0)                    # kitchen table centre (round pedestal, top at 0.76)
 K_TOP = 0.76
-K_WIN = dict(cx=-3.0, w=0.92, z0=1.07, z1=2.13)
+K_WIN = dict(cx=K["x0"] + 2.4, w=0.92, z0=1.07, z1=2.13)
 COUNTER_TOP = 0.91
 COUNTER_D = 0.635
 
@@ -41,7 +43,9 @@ COUNTER_D = 0.635
 DT = (3.0, 0.0)                      # dining table centre, long axis X, 1.8 x 0.97, top at 0.753
 D_TOP = 0.753
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
-HEAD_CHAIR = (4.36, 0.03, 180.0 + 7.0)   # the father's chair: set back from the head, turned a little
+D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
+                                                     # (a cottage sash: short lower sash, tall upper one)
+HEAD_CHAIR = (4.42, 0.02, 180.0 + 6.0)   # the father's chair: set back from the head, turned a little
 CHAIR_RAIL = 0.84
 
 
@@ -231,7 +235,7 @@ def materials():
     # the screen: a blank cool white glow, a little brighter in the middle
     mt.glow("screen", (0.78, 0.86, 1.0), 4.0, falloff=0.25, axes=("X", "Y"))
     mt.night("k_night", low=(0.05, 0.062, 0.09), high=(0.008, 0.011, 0.02), z0=-2.0, z1=4.0,
-             warm_windows=[(-1.6, 1.2, 0.55, 0.75, 0.55), (2.4, 0.9, 0.4, 0.6, 0.35)])
+             warm_windows=[(-1.25, 1.2, 0.5, 0.7, 0.55), (1.6, 0.9, 0.36, 0.55, 0.35)])
     mt.night("d_night", low=(0.07, 0.085, 0.12), high=(0.01, 0.014, 0.025), z0=-2.0, z1=5.0)
 
 
@@ -313,6 +317,22 @@ def _floor_ceiling(p, R, floor_m, ceil_m):
 
 
 # ---------------------------------------------------------------- windows
+def on_wall(name, loc, rot_z, fn, *a, **kw):
+    """Build parts with `fn` as if on a +Y wall at the origin (room face at y = 0, x along the wall), then carry
+    them to `loc` turned `rot_z` about Z (90 deg puts them on a -X wall). Returns fn's result."""
+    before = set(bpy.data.objects)
+    out = fn(*a, **kw)
+    hold = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(hold)
+    for o in set(bpy.data.objects) - before:
+        if o.parent is None and o is not hold:
+            o.parent = hold
+    hold.location = loc
+    hold.rotation_euler = (0, 0, rot_z)
+    bpy.context.view_layer.update()
+    return out
+
+
 def _sash(p, x0, x1, z0, z1, y, depth=0.042, stile=0.052, bottom=0.075, top=0.052, muntins=False):
     """A wood sash: stiles, rails and a glass pane at depth y (y is the sash's room face)."""
     tm = M["trim"]
@@ -332,7 +352,7 @@ def _sash(p, x0, x1, z0, z1, y, depth=0.042, stile=0.052, bottom=0.075, top=0.05
             box(f"{p}_munV{s}", (mw, md, gz1 - gz0), (xx, yc - 0.002, (gz0 + gz1) / 2), tm, bevel=0.003)
 
 
-def window(p, cx, w, z0, z1, y_wall, mullion=0.0, inner_depth=0.053):
+def window(p, cx, w, z0, z1, y_wall, mullion=0.0, inner_depth=0.053, meet=None):
     """A double-hung window (or a mulled pair when `mullion` > 0) in a +Y wall whose room face is at y = y_wall:
     jamb liners, upper and lower sashes, a meeting rail lock, the interior casing with its head cap, the stool and
     the apron. Returns [(x0, x1)] of the glazed units."""
@@ -353,7 +373,7 @@ def window(p, cx, w, z0, z1, y_wall, mullion=0.0, inner_depth=0.053):
         box(f"{p}_mullCasing", (mullion + 0.02, 0.022, z1 - z0), (cx, y_wall - 0.011, (z0 + z1) / 2), tm, bevel=0.004)
     else:
         units = [(x0 + 0.02, x1 - 0.02)]
-    zm = (z0 + z1) / 2 + 0.03
+    zm = (z0 + z1) / 2 + 0.03 if meet is None else meet
     for i, (ux0, ux1) in enumerate(units):
         ys = y_wall + inner_depth + 0.012
         _sash(f"{p}_u{i}_lower", ux0, ux1, z0 + 0.02, zm + 0.02, ys)
@@ -475,12 +495,12 @@ def kitchen():
     y1 = R["y1"]
     units, _ = window("k_win", win["cx"], win["w"], win["z0"], win["z1"], y1)
     # outside: the night, a neighbour's lit window far off
-    bd = box("k_night", (12.0, 0.02, 7.0), (win["cx"], y1 + 5.0, 1.5), M["k_night"])
+    bd = box("k_night", (5.0, 0.02, 7.0), (win["cx"], y1 + 4.0, 1.5), M["k_night"])
     bd.visible_shadow = False
     # counter run along the +Y wall: base cabinets, range, sink, countertop, backsplash, uppers
-    cx0, cx1 = R["x0"], -1.45
+    cx0, cx1 = R["x0"], R["x1"] - 0.85
     yf = y1 - COUNTER_D + 0.025          # cabinet face
-    range_x = (-4.92, -4.16)
+    range_x = (R["x0"] + 0.48, R["x0"] + 1.24)
     sink_x = (win["cx"] - 0.38, win["cx"] + 0.38)
     box("k_toekick", (cx1 - cx0, 0.02, 0.1), ((cx0 + cx1) / 2, yf + 0.06, 0.05), M["enamel_black"])
     # carcass
@@ -579,7 +599,7 @@ def kitchen():
     for i, (a, b) in enumerate(((cx0, wx0 - 0.02), (wx1 + 0.02, cx1))):
         box(f"k_upperCrown{i}", (b - a + 0.03, ud + 0.03, 0.04), ((a + b) / 2, y1 - (ud + 0.03) / 2, up1 + 0.02), M["k_cab"], bevel=0.006)
     # light switch plate by the doorway side
-    box("k_switch", (0.075, 0.008, 0.115), (-1.2, y1 - 0.004, 1.2), M["trim"], bevel=0.003)
+    box("k_switch", (0.075, 0.008, 0.115), (R["x1"] - 0.6, y1 - 0.004, 1.2), M["trim"], bevel=0.003)
 
 
 def kitchen_table():
@@ -726,7 +746,9 @@ def dining():
     R = D
     win = D_WIN
     wa, wb = win["cx"] - win["w"] / 2, win["cx"] + win["w"] / 2
-    _walls("d", R, M["d_wall"], {"+y": [(wa, wb, win["z0"], win["z1"])]})
+    ew = D_END_WIN
+    ea, eb = ew["cy"] - ew["w"] / 2, ew["cy"] + ew["w"] / 2
+    _walls("d", R, M["d_wall"], {"+y": [(wa, wb, win["z0"], win["z1"])], "-x": [(ea, eb, ew["z0"], ew["z1"])]})
     _floor_ceiling("d", R, M["oak"], M["d_ceiling"])
     y1 = R["y1"]
     # wainscot: a flat panelled board to the chair rail with a stile every 0.6 m, then the rail, base and crown
@@ -736,6 +758,8 @@ def dining():
         spans = [(lo, hi)]
         if side == "+y":
             spans = [(lo, wa - 0.09), (wb + 0.09, hi)]
+        if side == "-x":
+            spans = [(lo, ea - 0.09), (eb + 0.09, hi)]
         for k, (a, b) in enumerate(spans):
             L = b - a
             if L < 0.05:
@@ -759,11 +783,20 @@ def dining():
             else:
                 box(f"d_wrail{side}{k}", (0.01, L, 0.07), (at + n[0] * 0.017, c, zt - 0.035), M["trim"], bevel=0.003)
     _mouldings("d", R, [("base", [(d + 0.012, z) if d > 0 else (d, z) for d, z in BASE]), ("rail", _rail(CHAIR_RAIL)),
-                        ("crown", _crown(R["h"]))], skip=[("+y", wa - 0.09, wb + 0.09)])
+                        ("crown", _crown(R["h"]))], skip=[("+y", wa - 0.09, wb + 0.09), ("-x", ea - 0.09, eb + 0.09)])
     units, zm = window("d_win", win["cx"], win["w"], win["z0"], win["z1"], y1, mullion=win["mullion"])
     for i, (ux0, ux1) in enumerate(units):
         blind(f"d_blind{i}", ux0, ux1, win["z0"] + 0.02, win["z1"] - 0.02, y1 + 0.002, tilt_deg=BLIND_TILT, cords_side=1 if i == 0 else -1)
     radiator("d", win["cx"], y1 - 0.055, sections=17)
+    # the foot-end window, built on a +Y wall at the origin and turned 90 deg onto the -X wall (its x runs along +Y
+    # there and its outside, +y, along -X)
+    def end_window():
+        units, _ = window("d_ewin", ew["cy"], ew["w"], ew["z0"], ew["z1"], 0.0, meet=ew["z0"] + 0.42)
+        for i, (ux0, ux1) in enumerate(units):
+            blind(f"d_eblind{i}", ux0, ux1, ew["z0"] + 0.02, ew["z1"] - 0.02, 0.002, tilt_deg=BLIND_TILT_END, cords_side=-1)
+        bd = box("d_enight", (10.0, 0.02, 8.0), (ew["cy"], 6.0, 2.0), M["d_night"])
+        bd.visible_shadow = False
+    on_wall("d_endwin", (R["x0"], 0.0, 0.0), math.pi / 2, end_window)
     bd = box("d_night", (14.0, 0.02, 9.0), (win["cx"], y1 + 6.0, 2.0), M["d_night"])
     bd.visible_shadow = False
     # ceiling medallion and the pendant (off) over the table
@@ -816,6 +849,7 @@ def dining():
 
 
 BLIND_TILT = 14.0
+BLIND_TILT_END = 8.0
 
 
 def dining_table():
@@ -827,7 +861,7 @@ def dining_table():
 
 # chairs round the dining table: (name, x, y, turn); the native chair faces +X
 DINING_CHAIRS = [
-    ("chair_foot", 1.86, 0.0, 0.0),
+    ("chair_foot", 1.88, -0.02, 0.0),
     ("chair_s1", 2.55, 0.7, -90.0), ("chair_s2", 3.42, 0.7, -90.0),
     ("chair_n1", 2.58, -0.7, 90.0), ("chair_n2", 3.45, -0.7, 90.0),
 ]

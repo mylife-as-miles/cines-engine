@@ -32,31 +32,39 @@ import courtroom_set as st  # noqa: E402
 
 EXPOSURE = -1.6
 
-DAWN = (0.0, st.DOCK[1] + 0.08)       # her feet, in the dock a step back from the front ledge, facing the bench (+Y)
-HAND_X = 0.185                         # hands on the ledge, about shoulder width apart
+DAWN = (0.40, st.DOCK[1] + 0.08)      # her feet: in the dock a step back from the ledge, a little right of its middle
+                                      # (on the centre line her head hid the presiding chair but for two slivers in the
+                                      # wide), facing the bench (+Y)
+HAND_X = 0.17                          # hands on the ledge, about shoulder width apart
 HAND_PITCH = 0.3                       # the hand a little extended at the wrist, so the palm heel and the fingers both rest
 POSE = {"head": (17, -2), "neck": (5, 0), "chest": (5, 0), "fingers": 8}
 
 FOCUS = {
     "fx_dock": (0.0, st.DOCK[1], 1.25),
-    "fx_dawn": (0.0, DAWN[1] + 0.05, 1.5),
+    "fx_dawn": (DAWN[0], DAWN[1] + 0.05, 1.5),
     "fx_bench": (0.0, st.BENCH_Y, 1.3),
 }
 
 CAMERAS = {
-    # Ch 07: the room from the back of the gallery, on the centre line, still: empty benches, the bar, Dawn small and
-    # alone in the dock in the one pool of light, the empty bench and the blank panel beyond
-    "wide": dict(loc=(0.0, -7.85, 1.62), aim=(0.0, 3.0, 1.32), lens=28, focus="fx_dock", fstop=8.0, beat="ch07"),
+    # Ch 07: the room from the back of the gallery, still and near symmetrical (a step left of the centre line, so her
+    # head clears the presiding chair): empty benches, the bar's gates open on the aisle, Dawn small and alone in the
+    # dock in the one pool of light, the empty bench and the blank panel beyond
+    "wide": dict(loc=(-0.3, -7.85, 1.62), aim=(-0.05, 3.0, 1.32), lens=28, focus="fx_dock", fstop=8.0, beat="ch07"),
     # Ch 07: Dawn in the dock from behind three-quarter, her hands on the ledge, the bench and its empty chairs beyond
-    "dock": dict(loc=(1.22, -1.05, 1.3), aim=(-0.75, 5.0, 1.92), lens=32, focus="fx_dawn", fstop=2.8, beat="ch07"),
-    # Ch 07: low in the well, looking up at the bench: the cap's edge, the three empty chairs, the blank panel above
-    "bench": dict(loc=(0.55, 1.5, 1.0), aim=(0.0, 5.6, 1.92), lens=26, focus="fx_bench", fstop=5.6, beat="ch07"),
+    "dock": dict(loc=(1.6, -1.05, 1.3), aim=(-0.15, 5.0, 1.92), lens=32, focus="fx_dawn", fstop=2.8, beat="ch07"),
+    # Ch 07: low in the well from the left, looking up at the bench as it runs away to the right: the cap's edge, the
+    # three empty chairs in a row, the blank panel above the presiding one
+    "bench": dict(loc=(-2.4, 2.3, 0.9), aim=(-0.6, 6.0, 1.86), lens=26, focus="fx_bench", fstop=5.6, beat="ch07",
+                  exposure=-1.45),
 }
 # per-camera light trims (multipliers on named lights)
 TRIMS = {
     "wide": {},
-    "dock": {},
-    "bench": {},
+    # the panels behind her turned down: her back goes toward silhouette against the lit bench
+    "dock": {f"panel_{x:+.1f}_-0.6_light": 0.4 for x in st.PANEL_X},
+    # the well's panels behind the camera turned down: the fascia lit from the row above its face, bright under the
+    # cap and falling away toward the floor; the chairs top-lit
+    "bench": {f"panel_{x:+.1f}_{y:+.1f}_light": 0.4 for x in st.PANEL_X for y in (-0.6, 1.4)},
 }
 
 _STATE = {"cast": [], "base": {}}
@@ -175,7 +183,7 @@ def hands_on_ledge(holder):
     report = []
     for side, k in ((1, "L"), (-1, "R")):
         sx = (mw @ pb[f"upper_arm_fk.{k}"].head).x
-        x = math.copysign(HAND_X, sx) if abs(sx) > 1e-3 else side * HAND_X
+        x = DAWN[0] + math.copysign(HAND_X, sx - DAWN[0])
         wrist = Vector((x, y_w, top + 0.045))
         best = None
         for twist in (side * 80.0, -side * 80.0, side * 40.0, -side * 40.0):
@@ -267,7 +275,7 @@ def build(cast=True):
     chair, mic = st.chairs_and_mics()
     st.desks(chair, mic)
     st.dock()
-    st.dock_mic(mic)
+    st.dock_mic(mic, DAWN[0])
     st.bar()
     st.gallery()
     st.dressing()
@@ -279,5 +287,5 @@ def build(cast=True):
     if cast:
         d = dawn()
         _STATE["cast"] = [d] + list(d.children_recursive)
-    sk.haze((2 * st.XW - 0.05, st.Y1 - st.Y0 - 0.05, st.H - 0.05), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.0035)
+    sk.haze((2 * st.XW - 0.05, st.Y1 - st.Y0 - 0.05, st.H - 0.05), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.002)
     install_hook()
