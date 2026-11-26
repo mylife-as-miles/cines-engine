@@ -31,6 +31,7 @@ import setkit as sk  # noqa: E402
 
 sys.path.insert(0, HERE)
 import checkin_hall_trolley  # noqa: E402
+import people  # noqa: E402
 
 # ---------------------------------------------------------------- layout (metres; counter front face at y = 0)
 PITCH = 3.0
@@ -50,11 +51,15 @@ AGENT = (0.02, 0.98)
 EXPOSURE = -1.6
 CAMERAS = {
     "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6),
-    "scale": dict(loc=(1.6, -1.2, 1.32), aim=(1.15, 0.4, 0.6), lens=32, focus="scale_display", fstop=4.0,
-                  exposure=-2.0),   # exposed for the display, the practical the beat is about
+    # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
+    "scale": dict(loc=(1.62, -1.55, 1.28), aim=(1.55, 0.45, 0.66), lens=35, focus="focus_duffel", fstop=2.8,
+                  exposure=-2.0),
     "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.4, 1.68, 1.58), aim=(0.29, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.0),
+    "shoulder": dict(loc=(0.3, 1.68, 1.58), aim=(0.25, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.4),
 }
+MON = (-0.2, 0.5, 48.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
+POST = (SX + 0.57, 0.95)  # scale display post (relative to the desk centre): at the scale's back corner, clear of
+                          # Dawn and of both bags in the profile, glowing beyond the bags in the scale shot
 
 M = {}
 COOL = (0.84, 0.92, 1.0)
@@ -319,6 +324,66 @@ def sky_mat(name, strength):
     return m
 
 
+def stainless_plate():
+    """The weigh plate: brushed stainless (grain along the belt, Y) with a fine diamond tread, no streaky tone noise."""
+    m = bpy.data.materials.new("weigh plate stainless")
+    m.use_nodes = True
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.6, 0.61, 0.63, 1)
+    b.inputs["Metallic"].default_value = 1.0
+    b.inputs["Anisotropic"].default_value = 0.5
+    tg = nt.nodes.new("ShaderNodeTangent")
+    tg.direction_type, tg.axis = "RADIAL", "X"           # on a horizontal plate: tangents along Y
+    nt.links.new(tg.outputs[0], b.inputs["Tangent"])
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    v = tc.outputs["Object"]
+    nt.links.new(_range(nt, _noise(nt, v, 7.0, 3.0), 0.3, 0.7, 0.29, 0.36), b.inputs["Roughness"])
+    # diamond tread: |sin k(x+y)| * |sin k(x-y)|, 6 mm pitch
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(v, sep.inputs[0])
+    prod = None
+    for op in ("ADD", "SUBTRACT"):
+        uv = nt.nodes.new("ShaderNodeMath")
+        uv.operation = op
+        nt.links.new(sep.outputs["X"], uv.inputs[0])
+        nt.links.new(sep.outputs["Y"], uv.inputs[1])
+        k = nt.nodes.new("ShaderNodeMath")
+        k.operation = "MULTIPLY"
+        nt.links.new(uv.outputs[0], k.inputs[0])
+        k.inputs[1].default_value = math.pi / 0.006
+        s = nt.nodes.new("ShaderNodeMath")
+        s.operation = "SINE"
+        nt.links.new(k.outputs[0], s.inputs[0])
+        a = nt.nodes.new("ShaderNodeMath")
+        a.operation = "ABSOLUTE"
+        nt.links.new(s.outputs[0], a.inputs[0])
+        if prod is None:
+            prod = a.outputs[0]
+        else:
+            mu = nt.nodes.new("ShaderNodeMath")
+            mu.operation = "MULTIPLY"
+            nt.links.new(prod, mu.inputs[0])
+            nt.links.new(a.outputs[0], mu.inputs[1])
+            prod = mu.outputs[0]
+    bp = nt.nodes.new("ShaderNodeBump")
+    bp.inputs["Strength"].default_value = 0.08
+    bp.inputs["Distance"].default_value = 0.0006
+    nt.links.new(prod, bp.inputs["Height"])
+    nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+def void_mat():
+    m = bpy.data.materials.new("void")
+    m.use_nodes = True
+    b = m.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.002, 0.002, 0.0025, 1)
+    b.inputs["Roughness"].default_value = 1.0
+    b.inputs["Specular IOR Level"].default_value = 0.0
+    return m
+
+
 def glass_mat():
     m = bpy.data.materials.new("glazing")
     m.use_nodes = True
@@ -336,10 +401,19 @@ def materials():
     M.update(
         floor=floor_mat(),
         ceiling=ceiling_mat(),
-        laminate=pbr("laminate front", (0.15, 0.146, 0.14), (0.38, 0.5), nscale=6, cvar=0.06, bump=0.04, bscale=300,
-                     wear=(0.25, 0.7)),
-        laminate_dark=pbr("laminate dark", (0.04, 0.041, 0.044), (0.34, 0.48), nscale=6, cvar=0.12, bump=0.04, bscale=300,
-                          wear=(0.25, 0.7)),
+        laminate=pbr("laminate front", (0.1, 0.097, 0.093), (0.35, 0.55), nscale=6, cvar=0.08, bump=0.04, bscale=300,
+                     wear=(0.25, 0.7), smudge=0.6),
+        laminate_side=pbr("laminate side", (0.052, 0.051, 0.05), (0.35, 0.55), nscale=6, cvar=0.08, bump=0.04, bscale=300,
+                          wear=(0.25, 0.7), smudge=0.6),
+        laminate_dark=pbr("laminate dark", (0.035, 0.036, 0.039), (0.35, 0.55), nscale=6, cvar=0.12, bump=0.04, bscale=300,
+                          wear=(0.3, 0.7)),
+        kick=pbr("kick plate", (0.012, 0.012, 0.013), (0.55, 0.75), nscale=12, cvar=0.2, wear=(0.1, 0.05)),
+        painted=pbr("painted steel", (0.03, 0.032, 0.035), (0.4, 0.55), nscale=5, cvar=0.12, coat=0.15, wear=(0.2, 0.25)),
+        stainless=stainless_plate(),
+        void=void_mat(),
+        pvc=pbr("pvc strip", (0.05, 0.055, 0.058), (0.3, 0.42), nscale=4, stretch=(1, 1, 0.2), cvar=0.15, coat=0.2),
+        passport=pbr("passport folder", (0.05, 0.03, 0.035), (0.5, 0.65), nscale=30, cvar=0.1, bump=0.1, bscale=500),
+        tray=pbr("grey tray", (0.11, 0.113, 0.118), (0.45, 0.6), nscale=9, cvar=0.1),
         top=pbr("dark solid surface", (0.022, 0.024, 0.027), (0.16, 0.3), nscale=5, cvar=0.15, coat=0.3, smudge=0.45),
         steel=pbr("brushed steel", (0.6, 0.61, 0.63), (0.22, 0.4), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08, aniso=0.5),
         steel_worn=pbr("scuffed steel", (0.45, 0.46, 0.48), (0.3, 0.62), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.25, aniso=0.3),
@@ -350,6 +424,7 @@ def materials():
         plate=pbr("weigh plate", (0.5, 0.51, 0.53), (0.25, 0.4), metal=1.0, nscale=9, stretch=(1, 120, 120), cvar=0.05, aniso=0.6,
                   bump=0.008, bscale=180),
         rubber=pbr("belt rubber", (0.016, 0.016, 0.018), (0.62, 0.8), nscale=5, cvar=0.25, bump=0.35, bscale=55, ribs="X"),
+        belt=pbr("flat belt", (0.014, 0.014, 0.016), (0.75, 0.85), nscale=5, cvar=0.2, bump=0.12, bscale=160, ribs="Y"),
         rubber_y=pbr("belt rubber y", (0.016, 0.016, 0.018), (0.62, 0.8), nscale=5, cvar=0.25, bump=0.35, bscale=55, ribs="Y"),
         plastic=pbr("dark plastic", (0.028, 0.03, 0.033), (0.38, 0.5), nscale=8, cvar=0.1),
         plastic_mid=pbr("grey plastic", (0.12, 0.125, 0.13), (0.42, 0.55), nscale=8, cvar=0.08),
@@ -367,12 +442,12 @@ def materials():
         mullion=pbr("mullion", (0.05, 0.053, 0.058), (0.3, 0.45), metal=0.8, nscale=3, cvar=0.08),
         tube=sk.emission("fluorescent", COOL, 9.0),
         tube_dim=sk.emission("fluorescent dim", COOL, 1.6),
-        sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 1.3, 0.45),
-        sign_dim=screen_mat("sign dim", (0.6, 0.72, 0.9), 0.12, 0.3),
+        sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 0.55, 0.45),     # halved: it must not outshine the desk
+        sign_dim=screen_mat("sign dim", (0.6, 0.72, 0.9), 0.08, 0.3),
         monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 5.0, 0.4),
-        display=screen_mat("scale display", (0.5, 1.0, 0.86), 14.0, 0.3),
-        display_edge=sk.emission("display edge bleed", (0.5, 1.0, 0.86), 4.0),
-        bezel=pbr("display bezel", (0.03, 0.032, 0.035), (0.3, 0.42), nscale=8, cvar=0.08),
+        display=screen_mat("scale display", (0.5, 1.0, 0.86), 21.0, 0.3),
+        display_edge=sk.emission("display edge bleed", (0.5, 1.0, 0.86), 6.0),
+        bezel=pbr("display bezel", (0.012, 0.012, 0.014), (0.22, 0.32), nscale=8, cvar=0.08),
         display_off=pbr("display off", (0.008, 0.012, 0.012), (0.08, 0.14), nscale=10, cvar=0.05),
         curtain=pbr("curtain flaps", (0.02, 0.021, 0.022), (0.5, 0.7), nscale=6, cvar=0.2),
         night=sky_mat("night", 1.5),
@@ -381,6 +456,10 @@ def materials():
         sodium=sk.emission("sodium lamp", (1.0, 0.7, 0.45), 40.0),
         sodium_dim=sk.emission("sodium lamp dim", (1.0, 0.7, 0.45), 14.0),
         cool_dim=sk.emission("cool lamp dim", (0.85, 0.92, 1.0), 12.0),
+        # the forecourt behind Dawn in the reverse: sodium and LED in mixed strengths (no bright identical orbs)
+        fore=[sk.emission(f"forecourt {k}", rgb, s) for k, (rgb, s) in enumerate((
+            ((0.9, 0.75, 0.55), 17.0), ((0.9, 0.75, 0.55), 10.0), ((0.9, 0.75, 0.55), 6.0), ((0.95, 0.7, 0.45), 3.5),
+            ((0.8, 0.88, 1.0), 13.0), ((0.8, 0.88, 1.0), 7.0), ((0.75, 0.85, 1.0), 4.0)))],
         grip=pbr("rubber grip", (0.02, 0.02, 0.022), (0.55, 0.7), nscale=40, cvar=0.15),
         wire=pbr("trolley wire", (0.55, 0.56, 0.58), (0.18, 0.3), metal=1.0, nscale=20, cvar=0.08),
         tyre=pbr("tyre", (0.015, 0.015, 0.016), (0.6, 0.75), nscale=30, cvar=0.1),
@@ -511,8 +590,9 @@ def fitting(name, x, y, z, lit, strong=False, length=2.4):
     for dx in (-length * 0.4, length * 0.4):
         sk.cyl(name + "_wire", 0.0025, HALL["H"] - z, (x + dx, y, (HALL["H"] + z) / 2), m["steel"], verts=6)
     if lit:  # a pool on the floor below, and a little uplight that shows the beams and slats above
-        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 450 if strong else 55, spread=100 if strong else 85)
-        up = light(name + "_up", (x, y, z + 0.05), (length - 0.1, 0.14), 35 if strong else 25, rot=(math.radians(180), 0, 0), spread=160)
+        # the one over the queue is narrowed and lowered (its shaft in the haze outshone the desk); the rest fade 30 %
+        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 240 if strong else 38, spread=72 if strong else 85)
+        up = light(name + "_up", (x, y, z + 0.05), (length - 0.1, 0.14), 28 if strong else 18, rot=(math.radians(180), 0, 0), spread=160)
         up.visible_camera = False
 
 
@@ -576,112 +656,197 @@ def glazing_front(y, xa, xb):
             if -8 < -38 + step * k < 8:
                 continue  # the reverse's window: lit by the scattered field below instead of an even row
             sk.sphere(f"street_lamp{row}_{k}", 0.09 if row < 2 else 0.05, (-38 + step * k + rnd.uniform(-0.5, 0.5), y - dy, z), mat_, segs=8)
-    # the forecourt behind Dawn in the reverse: lamps scattered in depth (15-60 m from the lens), sizes and
-    # brightnesses mixed, warm sodium and cool white, so the bokeh reads as a real night outside, not a pattern
+    # the forecourt behind Dawn in the reverse: lamps scattered in depth (16-55 m from the lens) at kerb and bollard
+    # heights, sizes, strengths and colours mixed (sodium and LED), none in the top band of the reverse (a disc cut by
+    # the frame edge reads as a floating orb)
     rnd = random.Random(23)
-    mats = (m["sodium"], m["sodium_dim"], m["sodium"], m["apron_w"], m["cool_dim"])
-    for k in range(22):
-        d = rnd.uniform(1.5, 44.0)               # metres beyond the glazing (the lens is ~16 m from it)
-        spread = 0.8 * 0.36 * (15.7 + d)           # stay roughly inside the reverse's field of view
-        z = rnd.choice((rnd.uniform(0.4, 1.6), rnd.uniform(1.8, 4.5), rnd.uniform(5.0, 9.0)))
-        sk.sphere(f"fore_lamp{k}", rnd.uniform(0.05, 0.25), (0.6 + rnd.uniform(-spread, spread), y - d, z), mats[k % len(mats)], segs=10)
+    cam = CAMERAS["shoulder"]
+    n = 0
+    for k in range(60):
+        if n >= 17:
+            break
+        d = rnd.uniform(1.5, 40.0)               # metres beyond the facade line
+        spread = 0.36 * (15.7 + d)
+        p = (0.33 + rnd.uniform(-spread, spread), y - d, rnd.uniform(-0.2, 3.0))
+        px = project(cam, p)
+        if px and -40 < px[0] < 1320 and px[1] < 75:
+            continue
+        sk.sphere(f"fore_lamp{k}", rnd.uniform(0.03, 0.15), p, m["fore"][rnd.randrange(len(m["fore"]))], segs=10)
+        n += 1
+
+
+def project(cam, p, W=1280, H=720):
+    """Pixel position of a world point in a camera dict (track-to, 36 mm sensor): (x, y from the top, depth)."""
+    loc, aim, lens = Vector(cam["loc"]), Vector(cam["aim"]), cam["lens"]
+    f = (aim - loc).normalized()
+    r = f.cross(Vector((0, 0, 1))).normalized()
+    u = r.cross(f)
+    d = Vector(p) - loc
+    z = d.dot(f)
+    if z <= 0:
+        return None
+    return (W / 2 + d.dot(r) / z * lens / 36 * W, H / 2 - d.dot(u) / z * lens / 36 * W, z)
 
 
 # ---------------------------------------------------------------- the check-in row
+B = 0.007   # every counter edge that catches light: a 7 mm bevel, 3 segments
+
+
 def desk(x0, idx, open_):
     m = materials()
     p = f"desk{idx}_"
     hw = 0.7
-    # two-tone laminate front (dark lower band, lighter upper band, a steel reveal between), a recessed kick plate
+    # two-tone laminate front (dark lower band, lighter upper band, a steel reveal between), a recessed dark kick plate
     RV = 0.7
     for s in (-1, 1):
-        box(p + "front_lo", (hw - 0.006, 0.03, RV - 0.11), (x0 + s * hw / 2, 0.015, 0.1 + (RV - 0.11) / 2), m["laminate_dark"], bevel=0.003)
-        box(p + "front_hi", (hw - 0.006, 0.03, LEDGE - RV - 0.01), (x0 + s * hw / 2, 0.015, RV + (LEDGE - RV) / 2), m["laminate"], bevel=0.003)
-    box(p + "reveal", (2 * hw - 0.02, 0.024, 0.016), (x0, 0.02, RV - 0.005), m["steel"], bevel=0.003)
-    box(p + "kick", (2 * hw - 0.02, 0.02, 0.1), (x0, 0.045, 0.05), m["steel_worn"], bevel=0.002)
-    for s in (-1, 1):  # stainless corner guards on the front corners, a kick plate along each side
-        box(p + "corner", (0.04, 0.04, LEDGE - 0.12), (x0 + s * (hw - 0.012), 0.012, 0.1 + (LEDGE - 0.12) / 2), m["satin"], bevel=0.005)
-        box(p + "side_kick", (0.012, 0.68, 0.1), (x0 + s * (hw + 0.002), 0.4, 0.05), m["steel_worn"], bevel=0.002)
-    for s in (-1, 1):
-        box(p + "side_lo", (0.03, 0.74, RV - 0.01), (x0 + s * (hw - 0.015), 0.39, (RV - 0.01) / 2), m["laminate_dark"], bevel=0.003)
-        box(p + "side_hi", (0.03, 0.74, LEDGE - RV - 0.03), (x0 + s * (hw - 0.015), 0.39, RV + (LEDGE - RV - 0.02) / 2), m["laminate"], bevel=0.003)
-        box(p + "side_reveal", (0.036, 0.72, 0.016), (x0 + s * (hw - 0.015), 0.39, RV - 0.005), m["steel"], bevel=0.003)
-    # dark transaction ledge (overhangs the front) and the lower work surface behind it
-    box(p + "ledge", (2 * hw + 0.04, 0.33, 0.035), (x0, 0.125, LEDGE + 0.0175), m["top"], bevel=0.006)
-    box(p + "upstand", (2 * hw - 0.06, 0.025, LEDGE - WORK), (x0, 0.3, WORK + (LEDGE - WORK) / 2), m["top"], bevel=0.002)
-    box(p + "work", (2 * hw - 0.06, 0.45, 0.03), (x0, 0.53, WORK - 0.015), m["top"], bevel=0.005)
-    box(p + "back", (2 * hw - 0.06, 0.02, WORK - 0.2), (x0, 0.7, 0.16 + (WORK - 0.2) / 2), m["laminate"], bevel=0.002)
-    # agent's monitor: stand, neck, a thin body tilted to the agent, blank glowing (or dark) screen
-    mx, kx = x0 - 0.3, x0 + 0.06      # monitor to the agent's right: out of the reverse, past his head
-    box(p + "mon_base", (0.22, 0.17, 0.012), (mx, 0.43, WORK + 0.006), m["plastic"], bevel=0.004)
-    box(p + "mon_neck", (0.05, 0.03, 0.26), (mx, 0.43, WORK + 0.14), m["plastic"], bevel=0.006)
-    body = box(p + "mon_body", (0.52, 0.03, 0.33), (mx, 0.415, WORK + 0.36), m["plastic"], bevel=0.008, rot=(math.radians(8), 0, 0))
-    scr = box(p + "mon_screen", (0.49, 0.002, 0.3), (0, 0.0155, 0.005), m["monitor"] if open_ else m["screen_off"])
-    child(scr, body)
-    box(p + "mon_badge", (0.06, 0.002, 0.012), (0, -0.0155, -0.14), m["plastic_mid"]).parent = body  # back badge: blank
-    # keyboard, a bag-tag printer and a boarding-pass printer, a cable grommet
-    box(p + "keyboard", (0.44, 0.15, 0.018), (kx, 0.58, WORK + 0.009), m["plastic"], bevel=0.004, rot=(math.radians(-3), 0, 0))
-    box(p + "keys", (0.41, 0.12, 0.004), (kx, 0.58, WORK + 0.02), m["plastic_mid"], rot=(math.radians(-3), 0, 0))
-    box(p + "tagprinter", (0.22, 0.27, 0.19), (x0 + 0.52, 0.47, WORK + 0.095), m["plastic_mid"], bevel=0.012)
-    box(p + "tagslot", (0.14, 0.01, 0.012), (x0 + 0.52, 0.335, WORK + 0.14), m["plastic"])
-    box(p + "bpprinter", (0.24, 0.26, 0.14), (x0 - 0.54, 0.62, WORK + 0.07), m["plastic"], bevel=0.012)
-    sk.cyl(p + "grommet", 0.03, 0.004, (x0 + 0.12, 0.66, WORK + 0.002), m["plastic"], verts=24)
-    if open_:  # the screen's light on the agent; a soft spill on the work surface
-        ml = light(p + "mon_light", (mx, 0.44, WORK + 0.36), (0.45, 0.28), 25.0, rot=(math.radians(98), 0, 0), spread=150,
-                   colour=(0.62, 0.78, 1.0))
+        box(p + "front_lo", (hw - 0.006, 0.03, RV - 0.11), (x0 + s * hw / 2, 0.015, 0.1 + (RV - 0.11) / 2), m["laminate_dark"], bevel=B)
+        box(p + "front_hi", (hw - 0.006, 0.03, LEDGE - RV - 0.01), (x0 + s * hw / 2, 0.015, RV + (LEDGE - RV) / 2), m["laminate"], bevel=B)
+    box(p + "reveal", (2 * hw - 0.02, 0.024, 0.016), (x0, 0.02, RV - 0.005), m["steel"], bevel=0.004)
+    box(p + "kick", (2 * hw - 0.04, 0.02, 0.1), (x0, 0.075, 0.05), m["kick"], bevel=0.003)      # recessed 6 cm
+    for s in (-1, 1):  # stainless corner guards on the front corners
+        box(p + "corner", (0.04, 0.04, LEDGE - 0.12), (x0 + s * (hw - 0.012), 0.012, 0.1 + (LEDGE - 0.12) / 2), m["satin"], bevel=B)
+    for s in (-1, 1):  # the ends: darker laminate (they face the lights side-on), a recessed kick along each
+        box(p + "side_lo", (0.03, 0.74, RV - 0.11), (x0 + s * (hw - 0.015), 0.39, 0.1 + (RV - 0.11) / 2), m["laminate_dark"], bevel=B)
+        box(p + "side_hi", (0.03, 0.74, LEDGE - RV - 0.03), (x0 + s * (hw - 0.015), 0.39, RV + (LEDGE - RV - 0.02) / 2), m["laminate_side"], bevel=B)
+        box(p + "side_reveal", (0.036, 0.72, 0.016), (x0 + s * (hw - 0.015), 0.39, RV - 0.005), m["steel"], bevel=0.004)
+        box(p + "side_kick", (0.02, 0.7, 0.1), (x0 + s * (hw - 0.035), 0.41, 0.05), m["kick"], bevel=0.003)
+    # dark transaction ledge (overhangs the front) with a 12 mm brushed-steel nosing, the lower work surface behind it
+    box(p + "ledge", (2 * hw + 0.04, 0.33, 0.035), (x0, 0.125, LEDGE + 0.0175), m["top"], bevel=0.008)
+    box(p + "nosing", (2 * hw + 0.044, 0.008, 0.013), (x0, -0.0415, LEDGE + 0.0285), m["steel"], bevel=0.003)
+    box(p + "upstand", (2 * hw - 0.06, 0.025, LEDGE - WORK), (x0, 0.3, WORK + (LEDGE - WORK) / 2), m["top"], bevel=0.005)
+    box(p + "work", (2 * hw - 0.06, 0.45, 0.03), (x0, 0.53, WORK - 0.015), m["top"], bevel=B)
+    box(p + "back", (2 * hw - 0.06, 0.02, WORK - 0.2), (x0, 0.7, 0.16 + (WORK - 0.2) / 2), m["laminate_side"], bevel=0.004)
+    # the agent's monitor: a 45 mm housing on a neck and foot, a dark bezel round a blank glowing screen. It stands in
+    # front of the agent's right hand, its face turned three-quarter to him (so the profile sees the face, not an edge)
+    mx, my, yaw = x0 + MON[0], MON[1], -math.radians(MON[2])
+    R = Matrix.Rotation(yaw, 3, "Z")
+    bk = R @ Vector((0, -0.075, 0))                       # the neck stands behind the screen
+    box(p + "mon_foot", (0.24, 0.18, 0.014), (mx + bk.x, my + bk.y, WORK + 0.007), m["plastic"], bevel=0.005, rot=(0, 0, yaw))
+    box(p + "mon_neck", (0.06, 0.035, 0.16), (mx + bk.x * 0.55, my + bk.y * 0.55, WORK + 0.09), m["plastic"], bevel=0.008, rot=(0, 0, yaw))
+    zc, tilt = WORK + 0.2, math.radians(18)               # low, tilted up to him: below the passenger's eyeline
+    body = box(p + "mon_body", (0.42, 0.045, 0.26), (mx, my, zc), m["plastic"], bevel=0.009, rot=(tilt, 0, yaw))
+    child(box(p + "mon_bezel", (0.4, 0.004, 0.24), (0, 0.0215, 0), m["bezel"], bevel=0.002), body)
+    child(box(p + "mon_screen", (0.375, 0.003, 0.205), (0, 0.0235, 0.006), m["monitor"] if open_ else m["screen_off"]), body)
+    child(box(p + "mon_vent", (0.28, 0.003, 0.02), (0, -0.0235, 0.09), m["plastic_mid"]), body)     # back vent strip: blank
+    # keyboard in front of the agent, a small dark bag-tag printer, the boarding-pass printer, a cable grommet
+    kx = x0 + 0.16
+    box(p + "keyboard", (0.4, 0.14, 0.018), (kx, 0.7, WORK + 0.009), m["plastic"], bevel=0.004, rot=(math.radians(-3), 0, 0))
+    box(p + "keys", (0.37, 0.11, 0.004), (kx, 0.7, WORK + 0.02), m["plastic_mid"], rot=(math.radians(-3), 0, 0))
+    box(p + "tagprinter", (0.16, 0.2, 0.13), (x0 + 0.52, 0.6, WORK + 0.065), m["plastic"], bevel=0.01)
+    box(p + "tagslot", (0.1, 0.006, 0.008), (x0 + 0.52, 0.498, WORK + 0.095), m["screen_off"])
+    box(p + "bpprinter", (0.24, 0.26, 0.14), (x0 - 0.58, 0.66, WORK + 0.07), m["plastic"], bevel=0.012)
+    sk.cyl(p + "grommet", 0.03, 0.004, (x0 + 0.42, 0.68, WORK + 0.002), m["plastic"], verts=24)
+    if open_:
+        # Dawn's passport, closed, on the ledge between her hand and the agent (a plain cover, nothing printed)
+        box(p + "passport", (0.128, 0.09, 0.008), (x0 + 0.12, 0.17, LEDGE + 0.035 + 0.004), m["passport"], bevel=0.002,
+            rot=(0, 0, math.radians(14)))
+        # the screen's light on the agent's face and chest, aimed by numbers
+        n = R @ (Matrix.Rotation(tilt, 3, "X") @ Vector((0, 1, 0)))
+        c = Vector((mx, my, zc)) + n * 0.15
+        ml = light(p + "mon_light", tuple(c), (0.35, 0.22), 4.5, spread=140, colour=(0.55, 0.72, 1.0))
+        tgt = Vector((x0 + AGENT[0] - 0.05, AGENT[1] - 0.12, 1.45))
+        ml.rotation_euler = (c - tgt).to_track_quat("Z", "Y").to_euler()
         ml.visible_camera = False
 
 
 def scale(x0, idx, open_):
-    """The baggage scale: framed steel weigh plate at 0.3 m, laminate skirt, display on a post, feed belt behind."""
+    """The baggage scale: a stainless weigh plate (diamond tread) in a raised, bevelled steel rim on a dark painted steel
+    body; the display on its own post beside it; a flat rubber belt behind it between steel rails, into the wall."""
     m = materials()
     p = f"scale{idx}_"
     xs = x0 + SX
     W, D = 0.9, 0.92
-    box(p + "plinth", (W - 0.04, D - 0.04, 0.05), (xs, D / 2 + 0.01, 0.025), m["steel_worn"], bevel=0.002)
-    box(p + "skirt", (W, D, PLATE - 0.07), (xs, D / 2, 0.05 + (PLATE - 0.07) / 2), m["laminate_dark"], bevel=0.004)
-    # steel rim around a slightly sunken weigh plate, rubber gap between them
-    t = 0.035
-    box(p + "rim_f", (W, t, 0.02), (xs, t / 2, PLATE - 0.008), m["steel"], bevel=0.004)
-    box(p + "rim_b", (W, t, 0.02), (xs, D - t / 2, PLATE - 0.008), m["steel"], bevel=0.004)
-    for s in (-1, 1):
-        box(p + "rim_s", (t, D, 0.02), (xs + s * (W - t) / 2, D / 2, PLATE - 0.008), m["steel"], bevel=0.004)
-    box(p + "gap", (W - 2 * t, D - 2 * t, 0.01), (xs, D / 2, PLATE - 0.016), m["rubber"])
-    box(p + "plate", (W - 2 * t - 0.012, D - 2 * t - 0.012, 0.012), (xs, D / 2, PLATE - 0.006), m["plate"], bevel=0.003)
-    # the display on its post at the front-right corner, facing the passenger
-    px, py = x0 + SX + 0.43, -0.075
-    box(p + "post_foot", (0.1, 0.08, 0.12), (px, -0.04, 0.2), m["steel"], bevel=0.004)
-    sk.cyl(p + "post", 0.022, 0.68, (px, py, 0.26 + 0.34), m["steel_v"], verts=24)
-    sk.cyl(p + "post_collar", 0.03, 0.04, (px, py, 0.95), m["plastic"], verts=24)
-    head = box(p + "disp_head", (0.3, 0.07, 0.14), (px, py - 0.005, 1.02), m["plastic"], bevel=0.012,
-               rot=(math.radians(-14), 0, math.radians(-10)))
-    box(p + "disp_bezel", (0.262, 0.004, 0.104), (0, -0.036, 0.0), m["bezel"], bevel=0.002).parent = head
+    box(p + "plinth", (W - 0.06, D - 0.06, 0.06), (xs, D / 2 + 0.01, 0.03), m["kick"], bevel=0.003)
+    box(p + "body", (W, D, PLATE - 0.07), (xs, D / 2, 0.05 + (PLATE - 0.07) / 2), m["painted"], bevel=0.006)
+    t, rh = 0.04, 0.03
+    rz = PLATE + 0.008 - rh / 2                       # the rim stands 8 mm proud of the plate
+    for nm, size, loc in (("rim_f", (W, t, rh), (xs, t / 2, rz)), ("rim_b", (W, t, rh), (xs, D - t / 2, rz)),
+                          ("rim_l", (t, D - 2 * t + 0.002, rh), (xs - (W - t) / 2, D / 2, rz)),
+                          ("rim_r", (t, D - 2 * t + 0.002, rh), (xs + (W - t) / 2, D / 2, rz))):
+        box(p + nm, size, loc, m["steel"], bevel=0.006)
+    box(p + "gap", (W - 2 * t, D - 2 * t, 0.012), (xs, D / 2, PLATE - 0.012), m["kick"])
+    box(p + "plate", (W - 2 * t - 0.014, D - 2 * t - 0.014, 0.012), (xs, D / 2, PLATE - 0.006), m["stainless"], bevel=0.003)
+    # the display on its own post beside the scale, facing the passenger, under a small hood
+    px, py = x0 + POST[0], POST[1]
+    box(p + "post_foot", (0.17, 0.17, 0.018), (px, py, 0.009), m["iron"], bevel=0.006)
+    sk.cyl(p + "post", 0.024, 0.86, (px, py, 0.018 + 0.43), m["steel_v"], verts=24)
+    sk.cyl(p + "post_collar", 0.032, 0.04, (px, py, 0.9), m["plastic"], verts=24)
+    head = box(p + "disp_head", (0.3, 0.075, 0.15), (px, py - 0.01, 0.995), m["plastic"], bevel=0.012,
+               rot=(math.radians(-14), 0, math.radians(-35)))
+    child(box(p + "disp_hood", (0.31, 0.05, 0.01), (0, -0.058, 0.07), m["plastic"], bevel=0.003), head)
+    child(box(p + "disp_bezel", (0.264, 0.004, 0.112), (0, -0.0385, 0.0), m["bezel"], bevel=0.002), head)
     if open_:  # backlight bleed: a hairline of light round the panel inside the bezel
-        for dz in (-0.0435, 0.0435):
-            box(p + "disp_bleed", (0.244, 0.0025, 0.0015), (0, -0.0383, dz), m["display_edge"]).parent = head
+        for dz in (-0.0465, 0.0465):
+            child(box(p + "disp_bleed", (0.244, 0.0025, 0.0015), (0, -0.0403, dz), m["display_edge"]), head)
         for dx in (-0.1215, 0.1215):
-            box(p + "disp_bleed", (0.0015, 0.0025, 0.088), (dx, -0.0383, 0.0), m["display_edge"]).parent = head
-    disp = box(("scale_display" if idx == 0 else p + "display"), (0.24, 0.003, 0.084), (0, -0.0385, 0.0),
-               m["display"] if open_ else m["display_off"])
-    disp.parent = head
+            child(box(p + "disp_bleed", (0.0015, 0.0025, 0.094), (dx, -0.0403, 0.0), m["display_edge"]), head)
+    child(box(("scale_display" if idx == 0 else p + "display"), (0.24, 0.003, 0.09), (0, -0.0405, 0.0),
+              m["display"] if open_ else m["display_off"]), head)
     if open_:
-        dl = light(p + "disp_light", (0, -0.05, 0.0), (0.22, 0.08), 8.0, rot=(math.radians(-90), 0, 0), spread=120,
+        dl = light(p + "disp_light", (0, -0.06, 0.0), (0.22, 0.08), 12.0, rot=(math.radians(-90), 0, 0), spread=120,
                    colour=(0.5, 1.0, 0.86))
         dl.parent = head
         dl.visible_camera = False
-        # the panel's glow falling back and down onto the post collar, the plate rim and the top of the bag
-        sp = light(p + "disp_spill", (px - 0.05, py + 0.02, 0.93), (0.2, 0.06), 4.0, spread=150, colour=(0.5, 1.0, 0.86))
-        sp.rotation_euler = (-Vector((-0.55, 0.45, -0.7))).to_track_quat("Z", "Y").to_euler()
+        bpy.context.view_layer.update()
+        # under the hood: the panel's glow falling down onto the post top, the suitcase's side and the duffel's back
+        c = head.matrix_world @ Vector((0, -0.045, -0.09))
+        uh = light(p + "disp_under", tuple(c), (0.18, 0.08), 3.0, spread=140, colour=(0.55, 0.95, 0.9))
+        uh.rotation_euler = (c - Vector((xs + 0.05, 0.4, 0.55))).to_track_quat("Z", "Y").to_euler()
+        uh.visible_camera = False
+        sp = light(p + "disp_spill", tuple(head.matrix_world @ Vector((0, -0.07, 0.03))), (0.2, 0.06), 6.0, spread=150,
+                   colour=(0.5, 1.0, 0.86))
+        sp.rotation_euler = Vector((0.5, 0.6, 0.6)).to_track_quat("Z", "Y").to_euler()   # down onto the plate and bags
         sp.visible_camera = False
-    # feed belt behind the scale into the collector belt
-    fy0, fy1 = D + 0.02, BELT_Y[0]
-    fl = fy1 - fy0
-    box(p + "feed_frame", (W - 0.06, fl, PLATE - 0.04), (xs, fy0 + fl / 2, (PLATE - 0.04) / 2), m["steel_worn"], bevel=0.003)
-    box(p + "feed_belt", (W - 0.14, fl + 0.02, 0.014), (xs, fy0 + fl / 2, PLATE - 0.035), m["rubber_y"], bevel=0.004)
+    belt(xs, W, D, idx)
+
+
+def belt(xs, W, D, idx):
+    """A flat black rubber belt between brushed-steel side rails (top 0.45 m) from the scale straight back into a dark
+    opening in the back wall, hung with a curtain of PVC strips."""
+    m = materials()
+    p = f"belt{idx}_"
+    fy0, fy1 = D + 0.012, WALL_Y
+    fl, cy = fy1 - fy0, (fy0 + fy1) / 2
+    bw = W - 0.12
+    box(p + "body", (W - 0.04, fl, PLATE - 0.08), (xs, cy, 0.05 + (PLATE - 0.08) / 2), m["painted"], bevel=0.006)
+    box(p + "plinth", (W - 0.1, fl, 0.05), (xs, cy, 0.025), m["kick"], bevel=0.003)
+    box(p + "bed", (bw + 0.02, fl, 0.012), (xs, cy, PLATE - 0.03), m["steel_dark"])
+    box(p + "belt", (bw, fl + 0.02, 0.014), (xs, cy, PLATE - 0.017), m["belt"], bevel=0.005)
+    sk.cyl(p + "nose", 0.02, bw, (xs, fy0 + 0.012, PLATE - 0.026), m["belt"], rot=(0, math.radians(90), 0), verts=24)
     for s in (-1, 1):
-        box(p + "feed_guard", (0.03, fl, 0.16), (xs + s * (W / 2 - 0.045), fy0 + fl / 2, PLATE + 0.04), m["steel_dark"], bevel=0.004)
-    for yy in (fy0 + 0.02, fy1 - 0.02):
-        sk.cyl(p + "roller", 0.025, W - 0.14, (xs, yy, PLATE - 0.045), m["steel"], rot=(0, math.radians(90), 0), verts=20)
+        box(p + "rail", (0.032, fl, 0.2), (xs + s * (W / 2 - 0.036), cy, 0.35), m["steel"], bevel=0.007)
+    # the mouth in the wall: black inside a satin steel frame, PVC strips over it
+    oz0, oz1, ow = PLATE - 0.03, 0.86, W - 0.02
+    box(p + "mouth", (ow, 0.012, oz1 - oz0), (xs, WALL_Y - 0.004, (oz0 + oz1) / 2), m["void"])
+    box(p + "head", (ow + 0.14, 0.09, 0.07), (xs, WALL_Y - 0.045, oz1 + 0.035), m["satin"], bevel=0.007)
+    for s in (-1, 1):
+        box(p + "jamb", (0.07, 0.09, oz1 - oz0 + 0.04), (xs + s * (ow / 2 + 0.035), WALL_Y - 0.045, (oz0 + oz1) / 2 + 0.02),
+            m["satin"], bevel=0.007)
+    rnd = random.Random(7 + idx)
+    k = 8
+    sw = ow / k
+    z0 = PLATE + 0.006
+    for i in range(k):
+        xx = xs - ow / 2 + sw * (i + 0.5)
+        box(f"{p}strip{i}", (sw + 0.012, 0.004, oz1 - z0), (xx, WALL_Y - 0.07 + 0.004 * (i % 2), (z0 + oz1) / 2), m["pvc"],
+            rot=(math.radians(rnd.uniform(-1.5, 3.5)), 0, math.radians(rnd.uniform(-1.5, 1.5))))
+
+
+def tray(loc, turn_deg):
+    """A plain grey plastic tray somebody left on a closed scale (no print)."""
+    m = materials()
+    root = bpy.data.objects.new("tray", None)
+    bpy.context.scene.collection.objects.link(root)
+    L, Wd, H, t = 0.58, 0.4, 0.1, 0.008
+    parts = [((L, Wd, t), (0, 0, t / 2)), ((L, t, H), (0, Wd / 2 - t / 2, H / 2)), ((L, t, H), (0, -Wd / 2 + t / 2, H / 2)),
+             ((t, Wd - 2 * t, H), (L / 2 - t / 2, 0, H / 2)), ((t, Wd - 2 * t, H), (-L / 2 + t / 2, 0, H / 2))]
+    for i, (size, lc) in enumerate(parts):
+        child(box(f"tray{i}", size, lc, m["tray"], bevel=0.003), root)
+    for s in (-1, 1):  # a rolled lip
+        child(box("tray_lip", (L + 0.012, 0.016, 0.01), (0, s * (Wd / 2 + 0.002), H - 0.004), m["tray"], bevel=0.004), root)
+    root.location = loc
+    root.rotation_euler = (0, 0, math.radians(turn_deg))
+    return root
 
 
 def bulkhead(x_left, x_right):
@@ -711,10 +876,15 @@ def position_lights(x0, idx, level):
     box(p + "sign_frame", (1.5, 0.06, 0.4), (lx, yf - 0.03, (BULK[1] + BULK[2]) / 2), m["housing"], bevel=0.006)
     box(p + "sign_face", (1.42, 0.004, 0.33), (lx, yf - 0.062, (BULK[1] + BULK[2]) / 2), face)
     if level > 0:  # the front run is split: full over the passenger, only a dim pool over the scale (its display reads)
-        light(p + "down_front", (x0 + 0.075, 0.2, zb - 0.02), (1.35, 0.12), 505 * level, spread=60)
-        light(p + "down_scale", (x0 + 1.375, 0.2, zb - 0.02), (0.85, 0.12), 30 * level, spread=60)
-        light(p + "down_agent", (lx, 1.45, zb - 0.02), (2.4, 0.12), 70 * level, spread=60)
-        if level > 0.5:  # a flag over the agent (unseen, casts shadow only): he is lit by his monitor, not the downlights
+        light(p + "down_front", (x0 + 0.075, 0.2, zb - 0.02), (1.35, 0.12), 330 * level, spread=60)
+        light(p + "down_scale", (x0 + 1.375, 0.2, zb - 0.02), (0.85, 0.12), 21 * level, spread=60)
+        light(p + "down_agent", (lx, 1.45, zb - 0.02), (2.4, 0.12), 42 * level, spread=60)   # cut 40 %: his screen lights him
+        if level > 0.5:
+            # the island's soft key: a broad source in the bulkhead over the open desk, on Dawn, the ledge and the
+            # counter front (unseen; the cutter below keeps it off the bags, which sit in the display's glow)
+            soft = light(p + "island", (x0 + 0.15, 0.05, zb - 0.03), (1.2, 0.6), 230, rot=(math.radians(-14), 0, 0), spread=75)
+            soft.visible_camera = False
+            # a flag over the agent (unseen, casts shadow only): he is lit by his monitor, not the downlights
             fl = box(p + "agent_flag", (1.6, 0.8, 0.01), (x0 + 0.3, 0.95, 2.35), m["plastic"])
             # and a cutter (a barn door, also unseen) at the desk's end, so the passenger run does not spill over
             # the scale: the bags sit in the dark under their own dim pool and the display's glow
@@ -724,59 +894,20 @@ def position_lights(x0, idx, level):
                     setattr(ob, attr, False)
 
 
-def collector(x_left, x_right):
-    m = materials()
-    y0, y1 = BELT_Y
-    cx, L = (x_left + x_right) / 2, x_right - x_left
-    box("coll_frame", (L, y1 - y0, PLATE - 0.04), (cx, (y0 + y1) / 2, (PLATE - 0.04) / 2), m["steel_worn"], bevel=0.003)
-    box("coll_belt", (L, y1 - y0 - 0.08, 0.014), (cx, (y0 + y1) / 2, PLATE - 0.035), m["rubber"], bevel=0.004)
-    box("coll_lip", (L, 0.03, 0.05), (cx, y0 + 0.015, PLATE - 0.01), m["steel"], bevel=0.004)
-    # the belt leaves through the back wall: a plough at the end turns the bags over a short roller bridge into a
-    # flapped portal (the one opening in the wall, facing the hall)
-    pw, pz0, pz1 = 0.95, PLATE - 0.06, 0.82
-    px0 = x_right - pw
-    box("coll_guard", (px0 - x_left, 0.03, 0.3), ((x_left + px0) / 2, y1 - 0.015, PLATE + 0.1), m["steel_dark"], bevel=0.004)
-    box("coll_endcap", (0.04, y1 - y0, 0.34), (x_right + 0.02, (y0 + y1) / 2, PLATE - 0.02), m["steel_dark"], bevel=0.004)
-    ang = math.atan2(y1 - y0 - 0.1, pw - 0.15)
-    pl = math.hypot(y1 - y0 - 0.1, pw - 0.15)
-    box("coll_plough", (pl, 0.02, 0.22), (px0 + 0.08 + (pw - 0.15) / 2, (y0 + y1) / 2, PLATE + 0.1), m["steel_worn"], bevel=0.004,
-        rot=(0, 0, ang))
-    box("coll_plough_foot", (pl, 0.04, 0.015), (px0 + 0.08 + (pw - 0.15) / 2, (y0 + y1) / 2, PLATE - 0.02), m["rubber"], rot=(0, 0, ang))
-    for k in range(4):  # roller bridge from the belt edge to the wall
-        sk.cyl(f"coll_bridge_roller{k}", 0.022, pw - 0.1, (px0 + pw / 2, y1 + 0.035 + 0.06 * k, PLATE - 0.045), m["steel"],
-               rot=(0, math.radians(90), 0), verts=16)
-    for sx in (px0 + 0.03, x_right - 0.03):
-        box("coll_bridge_side", (0.03, WALL_Y - y1, 0.12), (sx, (y1 + WALL_Y) / 2, PLATE - 0.07), m["steel_dark"], bevel=0.003)
-    # the portal: a black opening in the panels, a steel frame, rubber flaps hanging over it
-    pcx, pcz = px0 + pw / 2, (pz0 + pz1) / 2
-    box("portal_void", (pw, 0.004, pz1 - pz0), (pcx, WALL_Y - 0.002, pcz), m["screen_off"])
-    for dz in (pz1 + 0.025, pz0 - 0.025):
-        box("portal_frame", (pw + 0.1, 0.05, 0.05), (pcx, WALL_Y - 0.025, dz), m["satin"], bevel=0.005)
-    for dx in (px0 - 0.025, x_right + 0.025):
-        box("portal_frame", (0.05, 0.05, pz1 - pz0 + 0.1), (dx, WALL_Y - 0.025, pcz), m["satin"], bevel=0.005)
-    rnd = random.Random(7)
-    k = 11
-    for i in range(k):  # rubber curtain strips over the mouth, a few pushed back by the last bag
-        xx = px0 + pw * (i + 0.5) / k
-        box(f"coll_flap{i}", (pw / k - 0.006, 0.006, pz1 - pz0 - 0.01), (xx, WALL_Y - 0.04, pcz), m["curtain"],
-            rot=(math.radians(rnd.uniform(-3, 9)), 0, math.radians(rnd.uniform(-3, 3))))
-
-
 def queue():
-    """Retractable-belt queue posts in serpentine lanes in front of the open position."""
-    m = materials()
-    rows = [(-2.1, [-4.6, -2.6, -0.6, 1.4], True), (-3.3, [-2.6, -0.6, 1.4, 3.0], True), (-4.5, [-4.6, -2.6, -0.6, 1.4], True)]
-    posts = []
-    for j, (y, xs, _) in enumerate(rows):
+    """Retractable-belt queue posts: a two-row serpentine in front of the open position. Every post sits wholly inside
+    the wide or wholly outside it (none cut by the frame edge); the lane turns at the far left into the approach."""
+    rows = [(-2.1, [-4.6, -2.6, -0.6, 1.0]), (-3.3, [-4.6, -2.6, -0.3])]
+    for j, (y, xs) in enumerate(rows):
         for i, x in enumerate(xs):
-            posts.append(stanchion(f"q{j}_{i}", x, y))
+            stanchion(f"q{j}_{i}", x, y)
         for i in range(len(xs) - 1):
+            if j == 0 and i == 0:
+                continue   # the turn from the lane into the approach to the desk
             qbelt(f"q{j}_belt{i}", (xs[i], y), (xs[i + 1], y))
-    # the lane's entry side links rows 0-1 on the left and 1-2 on the right
-    qbelt("q_link0", (-4.6, -2.1), (-4.6, -4.5))
-    qbelt("q_link1", (3.0, -3.3), (3.0, -1.4))
-    stanchion("q_end", 3.0, -1.4)
-    return posts
+    qbelt("q_link0", (-4.6, -2.1), (-4.6, -3.3))
+    # where the next passenger waits: a dark rubber inlay in the floor (no words)
+    box("wait_line", (1.7, 0.05, 0.002), (0.5, -1.3, 0.0005), materials()["kick"])
 
 
 def stanchion(name, x, y):
@@ -804,19 +935,21 @@ def checkin_row():
         open_ = i == 0
         desk(x0, i, open_)
         scale(x0, i, open_)
-        position_lights(x0, i, {0: 1.0, 3: 0.12}.get(i, 0.0))
+        position_lights(x0, i, {0: 1.0, 3: 0.085}.get(i, 0.0))
     left = POSITIONS[-1] - 0.9
     right = POSITIONS[0] + SX + 0.5
-    collector(left, right)
     bulkhead(left - 0.3, right + 0.75)
+    tray((POSITIONS[1] + SX - 0.05, 0.42, PLATE), 9)   # a closed bag drop: a tray left on the scale
 
 
 # ---------------------------------------------------------------- props and people
 def bags():
     xs = POSITIONS[0] + SX
-    props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5, val=0.25, rough_add=0.3)
+    duffel = props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
+                        val=0.25, rough_add=0.3)
     props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.6)
-    checkin_hall_trolley.trolley(materials(), (-0.85, -1.3, 0), 100)   # nose toward the counter, handle to the hall
+    checkin_hall_trolley.trolley(materials(), (-0.85, -1.1, 0), 100)   # nose toward the counter, handle to the hall
+    focus("focus_duffel", (xs - 0.01, 0.25, PLATE + duffel["dims"][2] * 0.5))
 
 
 def focus(name, loc):
@@ -846,11 +979,26 @@ def eye_centre(holder):
     return sum(pts, Vector()) / len(pts)
 
 
+def face_local(holder):
+    """The face's forward line in the head bone's own frame, measured at rest, where the MakeHuman statue looks level
+    along -Y. The head bone's Z axis leans with the neck, so aiming that axis put Dawn's gaze on the agent's chest."""
+    if "face_local" not in holder:
+        rig = _rig(holder)
+        rigged.pose_figure(holder, {})
+        M = rig.pose.bones["head"].matrix.to_3x3().normalized()
+        fwd = rig.matrix_world.to_3x3().normalized().inverted() @ (holder.matrix_world.to_3x3().normalized() @ Vector((0, -1, 0)))
+        v = (M.inverted() @ fwd.normalized()).normalized()
+        holder["face_local"] = list(v)
+        print(f"CAST {holder.name}: face line vs head-bone Z axis {math.degrees(v.angle(Vector((0, 0, 1)))):.1f} deg")
+    return Vector(holder["face_local"])
+
+
 def face_dir(holder):
-    """The way the face points (the head bone's Z axis), in world space."""
+    """The way the face points (the calibrated face line), in world space."""
     rig = _rig(holder)
+    loc = face_local(holder)
     bpy.context.view_layer.update()
-    return ((rig.matrix_world @ rig.pose.bones["head"].matrix).to_3x3() @ Vector((0, 0, 1))).normalized()
+    return ((rig.matrix_world @ rig.pose.bones["head"].matrix).to_3x3().normalized() @ loc).normalized()
 
 
 def aim_head(holder, pose, target, max_turn=60, kw_eye=None):
@@ -858,10 +1006,11 @@ def aim_head(holder, pose, target, max_turn=60, kw_eye=None):
     rigged turns the head about its own root by Rz(turn) Rx(down) in armature space, so the face direction is
     Rz(th) Rx(dh) applied to the face axis as the rest of the pose leaves it: solve that in numbers, then pose once."""
     rig = _rig(holder)
+    loc = face_local(holder)
     p0 = dict(pose, head=(0, 0))
     rigged.pose_figure(holder, p0)
-    # the head's face axis as posed (Rigify's head need not follow the chest), armature space
-    base = rig.pose.bones["head"].matrix.to_3x3().col[2].normalized()
+    # the face line as the rest of the pose leaves it (Rigify's head need not follow the chest), armature space
+    base = (rig.pose.bones["head"].matrix.to_3x3().normalized() @ loc).normalized()
     eye = kw_eye if kw_eye is not None else eye_centre(holder)
     R = rig.matrix_world.to_3x3().normalized()
     t = (R.inverted() @ (Vector(target) - eye)).normalized()
@@ -992,39 +1141,58 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
                 palm=sum(hv["palm"], Vector()) / max(1, len(hv["palm"])))
 
 
-def dawn():
-    h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    # plain dark leather shoes, texture dropped (the sneakers carried brand-like side stripes)
-    castkit.dress(h, ["female_elegantsuit01", "shoes04"], tint={"female_elegantsuit01": (0.62, 0.56, 0.5), "shoes04": (0.08, 0.075, 0.07)},
-                  flat=("shoes04",))
-    shoe = bpy.data.objects.get(f"{h.name}_shoes04")
-    if shoe:
-        shoe.data.materials.clear()
-        shoe.data.materials.append(shoe_mat())
-    return h
+def sculpt_hair(name):
+    """The shared cast's carved-strand bump reads as a ribbed knit beanie in a close-up: soften it to a sculpted,
+    smooth stone (bump about 0.05, a broader combed undulation)."""
+    m = bpy.data.materials.get(f"hair_{name}")
+    if not m:
+        return
+    nt = m.node_tree
+    for n in nt.nodes:
+        if n.type == "BUMP":
+            n.inputs["Strength"].default_value = 0.05
+        elif n.type == "TEX_WAVE":
+            n.inputs["Scale"].default_value = 22.0
+            n.inputs["Distortion"].default_value = 4.0
+            n.inputs["Detail"].default_value = 1.5
+        elif n.type == "BSDF_PRINCIPLED":
+            n.inputs["Roughness"].default_value = 0.62
 
 
-def shoe_mat():
-    """A court shoe: dark leather up to a top line about 6.5 cm off the floor, the leg's stone above it, so the
-    MakeHuman shoe's sock reads as her ankle, not a dark band."""
-    m = bpy.data.materials.new("dawn shoes")
+def haze(density=0.0035):
+    """The hall's haze, only where it shapes the light: from the back wall to about 3 m in front of Dawn, its density
+    ramping in smoothly over 2 m (no visible edge), so the forecourt, the far glazing and the bokeh stay clean."""
+    m = bpy.data.materials.new("haze")
     m.use_nodes = True
     nt = m.node_tree
-    b = nt.nodes["Principled BSDF"]
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
     geo = nt.nodes.new("ShaderNodeNewGeometry")
     sep = nt.nodes.new("ShaderNodeSeparateXYZ")
     nt.links.new(geo.outputs["Position"], sep.inputs[0])
-    up = _range(nt, sep.outputs["Z"], 0.06, 0.068, 0.0, 1.0)
-    nt.links.new(_mix(nt, up, (0.08, 0.075, 0.07), castkit.STONE), b.inputs["Base Color"])
-    nt.links.new(_fmix(nt, up, 0.32, 0.6), b.inputs["Roughness"])
-    return m
+    mr = nt.nodes.new("ShaderNodeMapRange")
+    mr.interpolation_type = "SMOOTHSTEP"
+    mr.inputs["From Min"].default_value, mr.inputs["From Max"].default_value = -4.8, -2.6
+    mr.inputs["To Min"].default_value, mr.inputs["To Max"].default_value = 0.0, density
+    nt.links.new(sep.outputs["Y"], mr.inputs["Value"])
+    pv = nt.nodes.new("ShaderNodeVolumePrincipled")
+    pv.inputs["Color"].default_value = (0.8, 0.86, 0.92, 1)
+    nt.links.new(mr.outputs["Result"], pv.inputs["Density"])
+    nt.links.new(pv.outputs[0], nt.nodes["Material Output"].inputs["Volume"])
+    y0, y1 = -4.9, WALL_Y - 0.05
+    ob = box("haze", (HALL["x1"] - HALL["x0"] - 0.2, y1 - y0, HALL["H"] - 0.1),
+             ((HALL["x0"] + HALL["x1"]) / 2, (y0 + y1) / 2, HALL["H"] / 2), m)
+    ob.visible_shadow = False
+    return ob
 
 
-def agent():
-    h = castkit.person("Agent", gender=1.0, height_cm=177, age=0.33, hair="short")
-    castkit.dress(h, ["male_elegantsuit01", "shoes04"], tint={"male_elegantsuit01": (0.2, 0.235, 0.26), "shoes04": (0.07, 0.07, 0.075)},
-                  flat=("shoes04",))
-    return h
+def render_settings():
+    """Clean volume and glints: clamp indirect light (stray paths from the forecourt lamps through the haze were the
+    blotchy speckle in the reverse), a coarser volume step, the accurate denoiser prefilter on albedo and normal."""
+    c = bpy.context.scene.cycles
+    c.sample_clamp_indirect = 2.0
+    c.volume_step_rate = 2.0
+    c.denoising_prefilter = "ACCURATE"
+    c.denoising_input_passes = "RGB_ALBEDO_NORMAL"
 
 
 def build(cast=True):
@@ -1032,28 +1200,30 @@ def build(cast=True):
     checkin_row()
     queue()
     bags()
-    sk.haze((HALL["x1"] - HALL["x0"] - 0.2, WALL_Y - HALL["y0"] - 0.2, HALL["H"] - 0.1),
-            ((HALL["x0"] + HALL["x1"]) / 2, (WALL_Y + HALL["y0"]) / 2, HALL["H"] / 2), 0.0035)
+    haze()
+    render_settings()
     focus("focus_dawn", (DAWN[0] - 0.03, DAWN[1] + 0.12, 1.5))   # her eyes
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
-    d = dawn()
-    a = agent()
+    d = people.dawn()                  # the shared cast: flat taupe blouse and skirt, plain black flats
+    a = people.staff("Agent", 0)       # airline staff: plain dark suit, no insignia
+    for n in ("Dawn", "Agent"):
+        sculpt_hair(n)
     place(d, (DAWN[0], DAWN[1], 0), 192)
-    place(a, (AGENT[0], AGENT[1], 0), 10)
+    place(a, (AGENT[0], AGENT[1], 0), 6)
     pose_cast(d, a)
 
 
 def pose_cast(d, a):
-    """The agent, hands at the keyboard, reads the scale display; Dawn looks at the agent with her left hand flat on
-    the ledge and her right arm hanging clear of the display post. Gazes and the hand contact are solved, not guessed."""
-    disp = bpy.data.objects["scale_display"]
+    """The agent, hands at the keyboard, reads his screen (the weight comes up there); Dawn looks up at his face, her
+    left hand flat on the ledge, her right arm hanging. Gazes and the hand contact are solved, not guessed."""
+    scr = bpy.data.objects["desk0_mon_screen"]
     bpy.context.view_layer.update()
-    ap = {"chest": (6, 8), "l_arm": (22, 10, 55), "r_arm": (20, 8, 58)}
-    ga = aim_head_iter(a, ap, disp.matrix_world.translation)
-    dp = {"chest": (3, 0), "r_arm": (4, 7, 10)}
-    gd = aim_head_iter(d, dp, eye_centre(a))
+    ap = {"chest": (8, -6), "l_arm": (22, 10, 55), "r_arm": (24, 4, 50)}
+    ga = aim_head_iter(a, ap, scr.matrix_world.translation + Vector((0, 0, 0.14)))
+    dp = {"chest": (2, 0), "r_arm": (4, 7, 10)}
+    gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
     fwd = Vector((-0.208, 0.978, 0)) + 0.25 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
     hand = rest_hand(d, dp, "L", (DAWN[0] - 0.12, 0.01, LEDGE + 0.06), LEDGE + 0.035, fwd.normalized())
     print(f"CAST agent head {ga[1]} gaze error {ga[0]:.1f} deg; Dawn head {gd[1]} gaze error {gd[0]:.1f} deg")

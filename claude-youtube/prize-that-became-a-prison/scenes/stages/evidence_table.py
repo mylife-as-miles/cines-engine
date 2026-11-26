@@ -45,6 +45,7 @@ BULB = Vector((0.0, 0.072, 0.408))
 AXIS = Vector((0.0, 0.68, -0.73)).normalized()
 # lamp marks per beat: base (x, y) on the table and turn (degrees; the light falls along (-sin t, cos t))
 LAMP = {"spread": (-0.55, 0.16, -115.0), "ch02": (-0.55, 0.16, -115.0), "ch04": (-0.75, -0.42, -57.0)}
+LAMP_LEVEL = {"ch02": 0.5}          # Ch 02 is night at the laptop: the lamp turned down so the screen leads
 
 # what each beat hides (groups are filled at build)
 HIDE = {
@@ -66,19 +67,19 @@ BAG_GRADE = {  # from the inspection room: size, axis, grade, finish
 CAMERAS = {
     # the whole spread from straight above (long lens, high: a flat, graphic plan): the lamp reaching in from the
     # left, its pool across the open folder, the edges of the spread falling into the dark
-    "overhead": dict(loc=(-0.02, -0.03, TOP + 3.3), aim=(-0.02, -0.026, TOP), lens=85, focus="fx_overhead", fstop=11.0,
+    "overhead": dict(loc=(-0.05, -0.03, TOP + 3.3), aim=(-0.05, -0.026, TOP), lens=85, focus="fx_overhead", fstop=11.0,
                      beat="spread"),
     # low across the table toward the lamp: the opened letter sharp in the foreground, the spread going soft, the
     # lamp's glowing head beyond
-    "push": dict(loc=(0.66, -0.43, TOP + 0.065), aim=(-0.30, 0.20, TOP + 0.13), lens=35, focus="fx_push", fstop=2.0,
-                 beat="spread"),
+    "push": dict(loc=(0.62, -0.40, TOP + 0.07), aim=(-0.375, 0.271, TOP + 0.169), lens=32, focus="fx_push", fstop=2.2,
+                 beat="spread", hide=("receipt",), exposure=-1.15),
     # Ch 02: the laptop open at the back of the table, its blank screen glowing, the passport and the boarding passes
     # in front of it under the lamp
     "laptop": dict(loc=(-0.31, -0.53, TOP + 0.19), aim=(0.22, 0.22, TOP + 0.075), lens=32, focus="fx_laptop", fstop=2.8,
                    beat="ch02"),
     # Ch 04: the three handbags in the lamp's light, the receipt curling in front of them
     "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_purses", fstop=4.0,
-                   beat="ch04"),
+                   beat="ch04", hide=("envelope",), exposure=-1.35),
     # controlled close-up: the passport lying across the two boarding passes on the folder
     "passport": dict(loc=(-0.08, -0.41, TOP + 0.49), aim=(-0.225, -0.03, TOP), lens=70, focus="fx_passport", fstop=2.8,
                      beat="spread"),
@@ -121,7 +122,7 @@ def materials():
         glaze=mt.glaze("mug glaze", (0.035, 0.04, 0.045)),
         bisque=mt.matte("mug foot", (0.32, 0.29, 0.25), 0.85),
         coffee=mt.liquid("coffee"),
-        enamel=mt.plastic("lamp reflector enamel", (0.62, 0.6, 0.56), 0.32, 0.5, 0.05),
+        enamel=mt.plastic("lamp reflector enamel", (0.4, 0.39, 0.36), 0.36, 0.5, 0.05),
         bulb=mt.glow("lamp bulb", (1.0, 0.9, 0.76), 40.0),
     )
     return M
@@ -195,7 +196,9 @@ def lamp():
     the reflector's axis (the cone) and a small sphere at the bulb for the spill round the rim and the glow inside
     the shade. Built at the origin; lamp parts move with it to each beat's mark."""
     m = materials()
-    h = props.load("desk-lamp", size=0.55, axis="z", loc=(0, 0, 0), turn_deg=0, sat=0.45, val=0.85, rough_add=0.06)
+    # val 2.4: the generated gunmetal is near black, so in this light the lamp vanished into the dark table; a worn
+    # mid-grey enamel reads by the faint bounce from above and by the pool it reflects
+    h = props.load("desk-lamp", size=0.55, axis="z", loc=(0, 0, 0), turn_deg=0, sat=0.4, val=2.4, rough_add=0.06)
     bpy.context.view_layer.update()
     n_in = 0
     for o in [c for c in h.children_recursive if c.type == "MESH"]:
@@ -211,6 +214,25 @@ def lamp():
                 p.material_index = idx
                 n_in += 1
     print(f"EVIDENCE lamp reflector faces {n_in}", flush=True)
+    # the lamp's painted metal: generated roughness is near matt, so in the dark its arm and base vanish; real enamel
+    # on steel is satin and reads by the bright pool it reflects
+    for mat in {s.material for o in h.children_recursive if o.type == "MESH" for s in o.material_slots if s.material}:
+        if mat is m["enamel"]:
+            continue
+        nt = mat.node_tree
+        bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if bsdf is None:
+            continue
+        for sock, op, k in (("Roughness", "MULTIPLY", 0.55), ("Metallic", "MAXIMUM", 0.3)):
+            inp = bsdf.inputs[sock]
+            mm = nt.nodes.new("ShaderNodeMath")
+            mm.operation = op
+            mm.inputs[1].default_value = k
+            if inp.is_linked:
+                nt.links.new(inp.links[0].from_socket, mm.inputs[0])
+            else:
+                mm.inputs[0].default_value = inp.default_value
+            nt.links.new(mm.outputs[0], inp)
     parts = []
     bulb = sk.sphere("lamp_bulb", 0.019, tuple(BULB), m["bulb"], segs=24)
     bulb.visible_shadow = False
@@ -226,12 +248,14 @@ def lamp():
     spot.matrix_world = Matrix.Translation(BULB) @ AXIS.to_track_quat("-Z", "Y").to_matrix().to_4x4()
     parts.append(spot)
     pl = bpy.data.lights.new("lamp_glow", "POINT")
-    pl.energy, pl.color, pl.shadow_soft_size = 3.0, WARM, 0.012
+    pl.energy, pl.color, pl.shadow_soft_size = 0.7, WARM, 0.012
     glow = bpy.data.objects.new("lamp_glow", pl)
     bpy.context.scene.collection.objects.link(glow)
     glow.location = BULB - AXIS * 0.004
     parts.append(glow)
     bpy.context.view_layer.update()
+    for o in (spot, glow):
+        o["energy0"] = o.data.energy
     _STATE["lamp"] = h
     _STATE["lamp_parts"] = [(o, o.matrix_world.copy()) for o in parts]
     return h
@@ -243,8 +267,11 @@ def set_lamp(beat):
     x, y, t = LAMP.get(beat, LAMP["spread"])
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
+    k = LAMP_LEVEL.get(beat, 1.0)
     for o, local in _STATE["lamp_parts"]:
         o.matrix_world = fr @ local
+        if o.type == "LIGHT":
+            o.data.energy = o.get("energy0", o.data.energy) * k
     bpy.context.view_layer.update()
 
 
@@ -286,37 +313,46 @@ def laptop():
     a = mx - b * mz
     xs = lambda z: a + b * z                                      # noqa: E731
 
-    def on_lid(y, z):
-        r = tree.ray_cast(Vector((-0.4, y, z)), Vector((1, 0, 0)))
-        return r[0] is not None and abs(r[0].x - xs(z)) < 0.008
-    ymax = 0.0
-    while on_lid(ymax + 0.002, 0.13) and ymax < 0.3:
-        ymax += 0.002
-    ymin = 0.0
-    while on_lid(ymin - 0.002, 0.13) and ymin > -0.3:
-        ymin -= 0.002
-    ztop = 0.13
-    while on_lid((ymin + ymax) / 2, ztop + 0.002) and ztop < 0.4:
-        ztop += 0.002
     up = Vector((b, 0.0, 1.0)).normalized()
     nrm = Vector((-1.0, 0.0, b)).normalized()
     zbot = 0.03
-    # the panel: inset 11 mm at the sides and top, 20 mm at the bottom (bezel and hinge)
-    s_top = (ztop - zbot) / up.z
-    s0, s1 = 0.02, s_top - 0.011
-    w = (ymax - ymin) - 0.022
+    base = Vector((xs(zbot), 0.0, zbot))
+
+    def dev(y, sd):
+        """How far the lid's face stands proud of the fitted plane at (y, distance up the lid); None off the lid."""
+        r = tree.ray_cast(base + up * sd + Vector((0.0, y, 0.0)) + nrm * 0.05, -nrm, 0.1)
+        return None if r[0] is None else 0.05 - r[3]
+
+    def edge(y, sd, dy, dsd):
+        """Walk from (y, sd) until the raised bezel (or the lid's edge) is reached."""
+        while True:
+            d = dev(y + dy, sd + dsd)
+            if d is None or d > 0.0025 or abs(y) > 0.3 or sd > 0.4 or sd < -0.05:
+                return y, sd
+            y, sd = y + dy, sd + dsd
+    # the display is recessed inside a raised bezel: measure the recess and inset the glowing panel 3 mm in it
+    s_mid = 0.12
+    ymax, _ = edge(0.0, s_mid, 0.001, 0.0)
+    ymin, _ = edge(0.0, s_mid, -0.001, 0.0)
+    _, s_top = edge((ymin + ymax) / 2, s_mid, 0.0, 0.001)
+    _, s_bot = edge((ymin + ymax) / 2, s_mid, 0.0, -0.001)
+    ins = 0.003
+    s0, s1 = s_bot + ins, s_top - ins
+    w = (ymax - ymin) - 2 * ins
     hh = s1 - s0
-    base = Vector((xs(zbot), (ymin + ymax) / 2, zbot))
-    centre = base + up * ((s0 + s1) / 2) + nrm * 0.0009
+    base = base + Vector((0.0, (ymin + ymax) / 2, 0.0))
+    proud = max(d for d in (dev((ymin + ymax) / 2 - w / 2 + w * i / 12, s0 + hh * j / 8) for i in range(13) for j in range(9))
+                if d is not None)
+    centre = base + up * ((s0 + s1) / 2) + nrm * (max(proud, 0.0) + 0.0007)
     xaxis = up.cross(nrm).normalized()
     rot = Matrix((xaxis, up, nrm)).transposed()
-    print(f"EVIDENCE laptop lid {len(hits)} hits, slope {b:.3f}, y {ymin:.3f}..{ymax:.3f}, top {ztop:.3f}; panel {w:.3f} x {hh:.3f}",
-          flush=True)
+    print(f"EVIDENCE laptop lid {len(hits)} hits, slope {b:.3f}; recess y {ymin:.3f}..{ymax:.3f}, up {s_bot:.3f}..{s_top:.3f}; "
+          f"panel {w:.3f} x {hh:.3f}, {proud * 1000:.1f} mm proud", flush=True)
     bm = bmesh.new()
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
-    scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 2.4, w, hh), smooth=False)
+    scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 1.5, w, hh), smooth=False)
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
-    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.004), (w, hh), 0.75, COOL, spread_deg=150)
+    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.004), (w, hh), 0.6, COOL, spread_deg=150)
     li.matrix_world = Matrix.Translation(centre + nrm * 0.004) @ (rot @ Matrix.Rotation(math.pi, 3, "X")).to_4x4()
     li.visible_camera = False
     li.visible_glossy = False
@@ -330,6 +366,34 @@ def laptop():
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
     return [h] + list(h.children_recursive) + [scr, li]
+
+
+def retouch(holder, box, dx, feather=8):
+    """Paint a small patch of a generated prop's textures over with the same-sized patch dx pixels to its right
+    (colour, roughness and normal maps alike), feathered: used to take the tote's oval maker's plate off its front
+    (no badges or brands in the film)."""
+    import numpy as np
+    x0, y0, x1, y1 = box
+    done = set()
+    for o in [c for c in holder.children_recursive if c.type == "MESH"]:
+        for slot in o.material_slots:
+            for n in slot.material.node_tree.nodes if slot.material else ():
+                if n.type != "TEX_IMAGE" or not n.image or n.image.name in done:
+                    continue
+                img = n.image
+                done.add(img.name)
+                W, H = img.size
+                a = np.empty(W * H * img.channels, np.float32)
+                img.pixels.foreach_get(a)
+                a = a.reshape(H, W, img.channels)
+                src = a[y0:y1, x0 + dx:x1 + dx].copy()
+                ry = np.minimum(np.arange(y1 - y0), np.arange(y1 - y0)[::-1])
+                rx = np.minimum(np.arange(x1 - x0), np.arange(x1 - x0)[::-1])
+                wgt = np.clip(np.minimum.outer(ry, rx) / feather, 0.0, 1.0)[..., None]
+                a[y0:y1, x0:x1] = a[y0:y1, x0:x1] * (1.0 - wgt) + src * wgt
+                img.pixels.foreach_set(a.ravel())
+                img.update()
+                print(f"EVIDENCE retouched {img.name} ({n.label}) at {box}", flush=True)
 
 
 def bags():
@@ -346,6 +410,8 @@ def bags():
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m)
+        if name == "handbag-tote":
+            retouch(h, (455, 205, 535, 275), 90)
         out += [h] + list(h.children_recursive)
     return out
 
@@ -410,8 +476,8 @@ def overlap_report():
 
 # ---------------------------------------------------------------- beats and cameras
 
-def set_beat(beat):
-    hidden = set(HIDE.get(beat, ()))
+def set_beat(beat, extra=()):
+    hidden = set(HIDE.get(beat, ())) | set(extra)
     for gname, obs in G.items():
         for o in obs:
             o.hide_render = gname in hidden
@@ -431,7 +497,7 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "spread")
-    set_beat(beat)
+    set_beat(beat, cfg.get("hide", ()))
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
@@ -441,7 +507,7 @@ def apply_camera(name):
             setattr(sc.cycles, k, v)
         except (AttributeError, TypeError):
             pass
-    print(f"EVIDENCE camera {name or '?'}: beat {beat}, hidden {sorted(HIDE.get(beat, ()))}", flush=True)
+    print(f"EVIDENCE camera {name or '?'}: beat {beat}, hidden {sorted(set(HIDE.get(beat, ())) | set(cfg.get('hide', ())))}", flush=True)
 
 
 def install_hook():
@@ -452,6 +518,18 @@ def install_hook():
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
+
+
+def room_bounce(power=2.4):
+    """The lamp's own light coming back off a dark ceiling: a broad, very weak warm panel high over the table that
+    only diffuse rays see (no camera, no reflections), about 2 % of the pool. Without it nothing lights the top of
+    the lamp or the table beyond the pool and they vanish into a void; with it they are deep but readable shadow."""
+    li = sk.area_light("room_bounce", (0.0, 0.05, TOP + 1.6), (2.4, 1.6), power, (0.95, 0.87, 0.76), spread_deg=170)
+    li.visible_camera = False
+    li.visible_glossy = False
+    li.visible_transmission = False
+    li.visible_volume_scatter = False
+    return li
 
 
 def empty(name, loc):
@@ -474,15 +552,16 @@ def build(cast=True):
     # Ch 02: the passport picked up and put down again on the documents, nearer the laptop
     group("passport_c2", pp.passport("passport_c2", M["cover"], M["pages"], 0.022, -0.03, -24.0))
     # lamp-lit air: a faint haze over the table only, so the cone has a shape in the low shots
-    hz = sk.haze((2.6, 1.6, 1.0), (0.0, 0.0, TOP + 0.5), 0.0035, colour=(0.9, 0.88, 0.85))
+    hz = sk.haze((2.6, 1.6, 1.0), (0.0, 0.0, TOP + 0.5), 0.013, colour=(0.9, 0.88, 0.85))
     hz.visible_shadow = False
+    room_bounce()
     pport = bpy.data.objects["passport_front"]
     bpy.context.view_layer.update()
     pc = pport.matrix_world @ Vector((0.01, 0.0, 0.0052))
     empty("fx_passport", tuple(pc))
     empty("fx_overhead", (-0.07, 0.0, TOP + 0.01))
-    let = bpy.data.objects["letter"]
-    empty("fx_push", tuple(let.matrix_world @ Vector((0.03, -0.02, 0.002))))
+    sha = bpy.data.objects["sheet_a"]
+    empty("fx_push", tuple(sha.matrix_world @ Vector((0.03, -0.06, 0.003))))
     rc = bpy.data.objects["receipt_c4"]
     empty("fx_purses", tuple(rc.matrix_world @ Vector((0.0, 0.0, 0.004))))
     overlap_report()

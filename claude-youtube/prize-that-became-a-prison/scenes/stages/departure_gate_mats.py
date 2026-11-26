@@ -419,8 +419,8 @@ def perforated(name, steel=0.32, hole=0.01, pitch=0.008, radius=0.0025, border=0
     hole_m = _maprange(nt, d, radius - 0.0004, radius + 0.0004, 1.0, 0.0)
     # fields: inside the side borders, on the pan (v 0.09..0.44) and the back (v 0.60..0.91); plain lip, bend and top
     side = _maprange(nt, _math(nt, "ABSOLUTE", u), 0.25 - border - 0.002, 0.25 - border, 1.0, 0.0)
-    pan = _math(nt, "MULTIPLY", _maprange(nt, v, 0.09, 0.094, 0.0, 1.0), _maprange(nt, v, 0.44, 0.444, 1.0, 0.0))
-    back = _math(nt, "MULTIPLY", _maprange(nt, v, 0.60, 0.604, 0.0, 1.0), _maprange(nt, v, 0.906, 0.91, 1.0, 0.0))
+    pan = _math(nt, "MULTIPLY", _maprange(nt, v, 0.085, 0.089, 0.0, 1.0), _maprange(nt, v, 0.385, 0.389, 1.0, 0.0))
+    back = _math(nt, "MULTIPLY", _maprange(nt, v, 0.545, 0.549, 0.0, 1.0), _maprange(nt, v, 0.851, 0.855, 1.0, 0.0))
     field = _math(nt, "MULTIPLY", side, _math(nt, "ADD", pan, back, clamp=True))
     hole_m = _math(nt, "MULTIPLY", hole_m, field)
     wear = _maprange(nt, _noise(nt, _obj(nt), 9.0, 4.0, 0.6), 0.3, 0.7, 0.92, 1.06)
@@ -430,8 +430,8 @@ def perforated(name, steel=0.32, hole=0.01, pitch=0.008, radius=0.0025, border=0
         _link(nt, _math(nt, "MULTIPLY", st, f), cs.inputs[k])
     col = _mix(nt, hole_m, cs.outputs["Vector"], (hole, hole, hole))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Metallic"].default_value = 0.85
-    _link(nt, _maprange(nt, hole_m, 0.0, 1.0, 0.4, 0.8), b.inputs["Roughness"])
+    b.inputs["Metallic"].default_value = 0.55       # powder-coated silver, not bare chrome: it must read in the dark
+    _link(nt, _maprange(nt, hole_m, 0.0, 1.0, 0.44, 0.8), b.inputs["Roughness"])
     _bump(nt, b, _math(nt, "MULTIPLY", hole_m, -1.0), 0.08, 0.0015)
     return m
 
@@ -479,7 +479,7 @@ def ribbed(name, rgb=(0.13, 0.135, 0.14), pitch=0.30, axis="Y", metal=0.5):
     w = _math(nt, "SINE", _math(nt, "MULTIPLY", comp, 6.2832 / pitch))
     rib = _maprange(nt, w, -1.0, 1.0, 0.0, 1.0)
     col = _mix(nt, _maprange(nt, _noise(nt, o, 0.9, 4.0, 0.6), 0.3, 0.7, 0.0, 0.5), rgb, tuple(c * 0.75 for c in rgb))
-    col = _mix(nt, _maprange(nt, rib, 0.0, 0.25, 0.35, 0.0), col, tuple(c * 0.5 for c in rgb))
+    col = _mix(nt, _maprange(nt, rib, 0.0, 0.35, 0.6, 0.0), col, tuple(c * 0.35 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Metallic"].default_value = metal
     _link(nt, _maprange(nt, _noise(nt, o, 3.0, 3.0, 0.6), 0.3, 0.7, 0.45, 0.65), b.inputs["Roughness"])
@@ -618,6 +618,7 @@ def materials():
         screen_dim=glow("blank screen dim", (0.55, 0.7, 0.95), 0.55, 0.4),
         sign=glow("blank sign", (0.78, 0.86, 1.0), 1.6, 0.35),
         sign_dim=glow("blank sign dim", (0.62, 0.72, 0.9), 0.22, 0.3),
+        sign_mid=glow("blank sign mid", (0.75, 0.84, 1.0), 0.9, 0.35),
         ledge_led=glow("ledge strip", (0.75, 0.85, 1.0), 6.0),
         led_green=glow("indicator green", (0.4, 1.0, 0.6), 4.0),
         # exterior
@@ -646,7 +647,7 @@ def materials():
         intake=pbr("intake dark", (0.01, 0.01, 0.011), (0.3, 0.5), metal=0.6, nscale=3, cvar=0.2),
         tyre=pbr("tyre", (0.012, 0.012, 0.013), (0.6, 0.8), nscale=5, cvar=0.2),
         gear=pbr("gear strut", (0.3, 0.3, 0.31), (0.2, 0.35), metal=1.0, nscale=4, cvar=0.1),
-        bridge=ribbed("jet bridge cladding", (0.13, 0.135, 0.14), 0.30, "Y", metal=0.5),
+        bridge=ribbed("jet bridge cladding", (0.15, 0.155, 0.16), 0.30, "Y", metal=0.2),
         bridge_plain=pbr("jet bridge plate", (0.11, 0.114, 0.12), (0.4, 0.55), metal=0.5, nscale=0.8, cvar=0.12),
         bellows=pbr("bridge bellows", (0.02, 0.021, 0.022), (0.6, 0.8), nscale=2, cvar=0.2),
         bellows_rib=ribbed("bellows ribs", (0.022, 0.023, 0.025), 0.09, "X", metal=0.0),
@@ -656,7 +657,7 @@ def materials():
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 
-        bridge_win=glow("bridge window", (1.0, 0.84, 0.62), 1.5, 0.35, ("Y", "Z")),
+        bridge_win=glow("bridge window", (1.0, 0.8, 0.55), 0.9, 0.35, ("Y", "Z")),
         screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),

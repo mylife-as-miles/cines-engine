@@ -349,30 +349,29 @@ def manila(name, rgb=(0.5, 0.38, 0.21), rough=0.84):
 
 # ---------------------------------------------------------------- the passport
 
-def passport_cover(name, rgb=(0.012, 0.02, 0.05)):
+def passport_cover(name, rgb=(0.006, 0.013, 0.05)):
     """Coated book cloth on board, dark navy: a pebbled leather grain, satin, rubbed paler and rougher on the
     corners and edges where it has been carried."""
     m, nt, b = _new(name)
     o = _obj(nt)
     vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
-    vo.inputs["Scale"].default_value = 1500.0
+    vo.inputs["Scale"].default_value = 950.0
     vo.inputs["Randomness"].default_value = 0.9
     _link(nt, o, vo.inputs["Vector"])
     cell = _out(vo, "Distance")
     fine = _noise(nt, o, 2500.0, 2.0, 0.5)
     edge = _maprange(nt, _ao(nt, 0.0025, inside=True), 0.55, 1.0, 1.0, 0.0)
     rub = _math(nt, "MULTIPLY", edge, _maprange(nt, _noise(nt, o, 300.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
-    col = _mix(nt, _maprange(nt, cell, 0.0, 0.5, 0.0, 0.25), rgb, tuple(c * 1.5 for c in rgb))
+    col = _mix(nt, _maprange(nt, cell, 0.0, 0.5, 0.0, 0.12), rgb, tuple(c * 1.4 for c in rgb))
     col = _mix(nt, _math(nt, "MULTIPLY", rub, 0.7), col, (0.06, 0.065, 0.08))
-    mott = _noise(nt, o, 120.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, mott, 0.55, 0.75, 0.0, 0.3), col, tuple(c * 0.75 for c in rgb))
+    mott = _noise(nt, o, 60.0, 2.0, 0.5)
+    col = _mix(nt, _maprange(nt, mott, 0.55, 0.75, 0.0, 0.1), col, tuple(c * 0.85 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
-    r = _math(nt, "ADD", 0.48, _maprange(nt, cell, 0.0, 0.5, -0.06, 0.08))
+    r = _math(nt, "ADD", 0.64, _maprange(nt, cell, 0.0, 0.5, -0.08, 0.1))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", rub, 0.25), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.45
-    b.inputs["Sheen Weight"].default_value = 0.1
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.25)), 0.35, 0.00012)
+    b.inputs["Specular IOR Level"].default_value = 0.22
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.25)), 0.55, 0.00018)
     return m
 
 

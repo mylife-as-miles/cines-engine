@@ -48,7 +48,7 @@ COOL = (0.84, 0.92, 1.0)
 FX_X = [-0.6 + 2.4 * k for k in range(-4, 5)]
 FX_Y = [2.9, 0.85, -1.2, -3.3, -5.4, -7.2]
 FX_LEVEL = {  # night mode: one fitting burns over Dawn's seat (the lit island), one over the podium queue, three far
-    (-0.6, 2.9): 1.0, (6.6, 2.9): 0.55, (-7.8, -7.2): 0.15, (-3.0, -5.4): 0.15, (4.2, -7.2): 0.15,
+    (-0.6, 2.9): 1.0, (6.6, 2.9): 0.55, (6.6, -1.2): 0.2, (-7.8, -7.2): 0.4, (-3.0, -7.2): 0.4, (4.2, -7.2): 0.4,
 }
 KEY_FX = (-0.6, 2.9)
 FX_ENERGY = 420.0
@@ -177,7 +177,7 @@ def fixture(x, y, level):
         box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), M[key])
         area(n + "_light", (x, y, H - 0.02), (1.15, 0.11), FX_ENERGY * level, COOL, spread=100)
         if (round(x, 1), round(y, 1)) == KEY_FX:
-            spot(n + "_pool", (x, y, H - 0.03), 520.0, COOL, 50, 0.7, (0, 0, 0), radius=0.3)
+            spot(n + "_pool", (x, y, H - 0.03), 1400.0, COOL, 50, 0.7, (0, 0, 0), radius=0.3)
     else:
         box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), m["lens_off"])
 
@@ -390,16 +390,16 @@ def dressing():
     for i, (x, y) in enumerate(((4.15, 1.05), (-7.62, 2.6), (4.0, -2.3), (-7.6, -2.3), (5.2, 4.75))):
         bin_(f"bin_{i}", x, y)
     charge_post("charge_post", -7.62, 1.1, face=1)
-    charge_post("charge_post_b", -1.8, 0.45, face=-1)
+    charge_post("charge_post_b", 3.95, 0.45, face=1)
     # a floor-standing wayfinding sign by the queue: a blank backlit panel with a plain arrow (a pictogram, no text)
     sx, sy = 4.75, 2.35
     box("fsign_base", (0.5, 0.36, 0.025), (sx, sy, 0.0125), m["steel"], bevel=0.006)
     box("fsign_post", (0.06, 0.06, 1.2), (sx, sy, 0.62), m["steel"], bevel=0.006)
     box("fsign_case", (0.56, 0.06, 0.62), (sx, sy, 1.5), m["sign_case"], bevel=0.01)
-    box("fsign_face", (0.5, 0.004, 0.56), (sx, sy - 0.031, 1.5), m["sign_dim"])
+    box("fsign_face", (0.5, 0.004, 0.56), (sx, sy - 0.031, 1.5), m["sign_mid"])
     for k, (dx, dz, rot) in enumerate(((0.0, 0.0, 0.0), (0.07, 0.06, -0.7854), (0.07, -0.06, 0.7854))):
         L = 0.24 if k == 0 else 0.13
-        box(f"fsign_arrow_{k}", (L, 0.003, 0.03), (sx + dx - (0.04 if k == 0 else 0), sy - 0.0345, 1.5 + dz), m["sign"],
+        box(f"fsign_arrow_{k}", (L, 0.003, 0.03), (sx + dx - (0.04 if k == 0 else 0), sy - 0.0345, 1.5 + dz), m["plastic"],
             rot=(0, rot, 0))
     point("fsign_glow", (sx, sy - 0.25, 1.5), 1.5, (0.75, 0.85, 1.0), radius=0.2)
     # floor tape: a rope-less boarding lane from in front of the podium round to the door
@@ -409,7 +409,7 @@ def dressing():
         box(f"tape_{x0}_{y0}", (L + 0.05, 0.05, 0.0016), ((x0 + x1) / 2, (y0 + y1) / 2, 0.0008), t,
             rot=(0, 0, math.atan2(y1 - y0, x1 - x0)))
     # a forgotten paper cup on an arm pad, a folded blank newspaper on a seat
-    cx, cy, cz = seat_world(1, 0.2, (0.0, 0.03, 0.689))
+    cx, cy, cz = seat_world(1, 0.2, (0.0, 0.03, 0.649))
     cyl("cup", 0.041, 0.11, (cx, cy, cz + 0.055), m["cup"], verts=32, r2=0.03)
     cyl("cup_lid", 0.043, 0.012, (cx, cy, cz + 0.116), m["cup_lid"], verts=32)
     cyl("cup_sip", 0.006, 0.006, (cx + 0.025, cy, cz + 0.124), m["cup_lid"], verts=12)
@@ -672,7 +672,7 @@ def jet_bridge():
         sec = box(f"jb_tunnel_{k}", (w, s1 - s0, h), (c.x, c.y, zf + h / 2), cl, bevel=0.02, rot=(-slope, 0, -a))
         for j in range(3):  # small warm side windows, on both sides
             for side in (-1, 1):
-                wb = box(f"jb_win_{k}_{j}_{side}", (0.02, 0.22, 0.3), (side * (w / 2 + 0.006), -1.2 + j * 1.2, 0.3), m["bridge_win"])
+                wb = box(f"jb_win_{k}_{j}_{side}", (0.02, 0.16, 0.22), (side * (w / 2 + 0.006), -1.2 + j * 1.2, 0.3), m["bridge_win"])
                 wb.parent = sec
         box(f"jb_rib_{k}", (w + 0.06, 0.12, h + 0.06), (0, (s1 - s0) / 2 - 0.06, 0), m["facade"], parent=sec)
     # cab, its front toward the aircraft (-X)
@@ -694,9 +694,9 @@ def jet_bridge():
     box("jb_beam", (2.4, 0.4, 0.4), (b.x, b.y, APRON + 0.8), m["mast"], rot=(0, 0, -a))
     # service lamps under the cab, lighting the door area and the apron below
     for k, dy in enumerate((-0.8, 0.8)):
-        spot(f"jb_lamp_{k}", (cab.x - 0.3, cab.y + dy, sill - 0.2), 450.0, (1.0, 0.9, 0.76), 95, 0.5, (0, 0, 0), radius=0.08)
-        box(f"jb_lamp_body_{k}", (0.22, 0.16, 0.07), (cab.x - 0.3, cab.y + dy, sill - 0.12), m["mast"], bevel=0.01)
-        box(f"jb_lamp_lens_{k}", (0.18, 0.12, 0.004), (cab.x - 0.3, cab.y + dy, sill - 0.157), m["flood"])
+        spot(f"jb_lamp_{k}", (cab.x + 0.7, cab.y + dy, sill - 0.2), 320.0, (1.0, 0.9, 0.76), 70, 0.9, (0, 0, 0), radius=0.08)
+        box(f"jb_lamp_body_{k}", (0.22, 0.16, 0.07), (cab.x + 0.7, cab.y + dy, sill - 0.12), m["mast"], bevel=0.01)
+        box(f"jb_lamp_lens_{k}", (0.18, 0.12, 0.004), (cab.x + 0.7, cab.y + dy, sill - 0.157), m["flood"])
     sphere("jb_amber", 0.07, (cab.x + 1.0, cab.y - 1.0, cz + 1.56), m["amber"], segs=12)
 
 
@@ -713,7 +713,7 @@ def mast(i, x, y, target, h=26.0, size=36.0, energy=170000.0):
         lb = box(f"mast_lamp_{i}_{k}", (0.5, 0.45, 0.04), (-1.32 + k * 0.66, 0.0, -0.19), m["flood"])
         lb.parent = head
     d = Vector((tx - x, ty - y, -h))
-    li = spot(f"mast_light_{i}", (x, y, APRON + h - 0.15), energy, (1.0, 0.87, 0.72), size, 0.45, (0, 0, 0), radius=1.0)
+    li = spot(f"mast_light_{i}", (x, y, APRON + h - 0.15), energy, (1.0, 0.87, 0.72), size, 0.8, (0, 0, 0), radius=1.0)
     li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
 
 
@@ -868,7 +868,7 @@ def exterior():
     box("airfield", (9000, 9000, 0.1), (0, 0, APRON - 0.12), m["grass"])
     markings()
     # masts throw pools: on our aircraft's nose and port side, its tail, the next stand, the far apron
-    for i, (x, y, t, e) in enumerate(((-24, 24, (-3.0, 17.0), 170000.0), (28, 30, (9.0, 24.0), 150000.0),
+    for i, (x, y, t, e) in enumerate(((-24, 24, (0.5, 17.0), 170000.0), (28, 30, (9.0, 24.0), 150000.0),
                                       (-4, 64, (-2.0, 42.0), 150000.0), (46, 76, (40.0, 52.0), 120000.0),
                                       (-60, 58, (-40.0, 30.0), 150000.0), (90, 44, (70.0, 30.0), 120000.0))):
         mast(i, x, y, t, energy=e)

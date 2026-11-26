@@ -25,23 +25,23 @@ Y0, Y1 = -4.0, 13.0                       # near wall and end wall (corridor fac
 SPLIT = 1.2                               # dado line
 CELL_DOORS = (("L", 1.6), ("R", 3.6), ("L", 5.6), ("R", 7.6), ("L", 9.6), ("R", 11.6))
 CLOSE = ("R", 7.6)                        # the door of the close-up
-# (y, level): the nearest burns just above the corridor camera's frame; every other one is dead; the last
-# one, by the end wall, is a dying tube
-FITTINGS = ((-0.4, 1.0), (2.2, 1.0), (4.6, 0.0), (7.0, 1.0), (9.4, 0.0), (11.8, 0.35))
+# (y, level): the nearest (just above the corridor camera's frame) is dead, so the corridor opens out of the dark;
+# then on, dead, on, dead; the last one, by the end wall, is a dying tube
+FITTINGS = ((-0.4, 0.0), (2.2, 1.0), (4.6, 0.0), (7.0, 1.0), (9.4, 0.0), (11.8, 0.3))
 FIT_W = 300.0                             # a fitting's lamp (W) at level 1
 DRAIN = (0.3, 2.35)
 OPEN_W, OPEN_H = 1.075, 2.105             # wall opening for a cell-door block
 FRONT = 0.34                              # the prop's local x lying in the wall face
 CELL_D, CELL_W, CELL_H = 3.2, 2.4, 2.6
-RX, RY0, RY1 = 1.8, Y1 + T, 16.8          # visitation room: half width, front and back wall faces
-VD_X, VD_W, VD_H, VD_OPEN = 0.0, 0.92, 2.1, 42.0
+RX, RY0, RY1 = 1.8, Y1 + T, 17.4          # visitation room: half width, front and back wall faces
+VD_X, VD_W, VD_H, VD_OPEN = 0.0, 0.92, 2.1, 50.0
 BD_X = 0.78                               # the closed door in the visitation room's back wall
-TABLE, TOP = (0.0, 15.15), 0.74
-PEND_Z = 1.5                              # the pendant shade's rim
-PEND_W = 120.0
+TABLE, TOP = (0.0, 15.55), 0.74
+PEND_Z = 1.46                             # the pendant shade's rim (0.72 m over the table)
+PEND_W = 220.0
 COOL = (0.80, 0.91, 1.0)
 WARM = (1.0, 0.87, 0.7)
-UPPER, LOWER = (0.25, 0.245, 0.226), (0.06, 0.075, 0.088)
+UPPER, LOWER = (0.19, 0.187, 0.172), (0.055, 0.069, 0.081)
 
 M = {}
 LIGHTS = {}
@@ -55,9 +55,9 @@ def materials():
         wall_x=mt.block_wall("block wall x", UPPER, LOWER, SPLIT, "x"),
         cell_y=mt.block_wall("cell wall y", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "y", scuffs=0.5),
         cell_x=mt.block_wall("cell wall x", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "x", scuffs=0.5),
-        floor=mt.floor_paint("corridor floor", lines=0.86, drain=DRAIN, joint=2.4, joint_off=0.2),
+        floor=mt.floor_paint("corridor floor", drain=DRAIN, joint=2.4, joint_off=0.2),
         cell_floor=mt.floor_paint("cell floor", path_w=-1.0, joint=40.0, rough=0.4),
-        room_floor=mt.tile_floor("visit floor"),
+        room_floor=mt.tile_floor("visit floor", c1=(0.13, 0.132, 0.128), c2=(0.1, 0.104, 0.104)),
         soffit=mt.soffit("soffit"),
         frame=mt.paint("frame paint", (0.075, 0.088, 0.1), 0.42, 0.05, 0.25, edge_rgb=(0.16, 0.16, 0.16)),
         door=mt.paint("door paint", (0.09, 0.105, 0.12), 0.4, 0.05, 0.2, edge_rgb=(0.18, 0.18, 0.18)),
@@ -71,15 +71,18 @@ def materials():
         pipe=mt.paint("pipe paint", (0.19, 0.2, 0.2), 0.45, 0.03, 0.3),
         conduit=mt.satin_metal("conduit", (0.34, 0.35, 0.36), 0.42),
         opal=mt.opal("diffuser off"),
-        laminate=mt.laminate("table laminate"),
+        # dark, matt, worn: under the pendant it must stay a table top, not a grey lightbox, and the envelope reads
+        # against it
+        laminate=mt.laminate("table laminate", rgb=(0.048, 0.05, 0.049), rough=0.62,
+                             rings=((0.34, -0.13, 0.037), (0.385, -0.06, 0.036), (-0.36, 0.21, 0.04))),
         table_steel=mt.paint("table frame", (0.045, 0.05, 0.055), 0.45, 0.03, 0.2, edge_rgb=(0.2, 0.2, 0.2)),
-        paper=mt.paper("envelope paper", (0.6, 0.57, 0.5)),
-        flap=mt.paper("envelope flap", (0.58, 0.55, 0.48)),
+        paper=mt.paper("envelope paper", (0.42, 0.4, 0.35)),
+        flap=mt.paper("envelope flap", (0.405, 0.386, 0.337)),
         shade_out=mt.enamel("shade enamel", (0.045, 0.06, 0.056)),
         shade_in=mt.enamel("shade inside", (0.62, 0.62, 0.58), 0.4),
         bakelite=mt.plastic("bakelite", (0.015, 0.014, 0.013), 0.35),
         cord=mt.rubber("cord", (0.01, 0.01, 0.01), 0.45),
-        glass=mt.glass("window glass"),
+        glass=mt.thin_glass("window glass"),
         clock_face=mt.paint("clock face", (0.5, 0.5, 0.47), 0.65, 0.01, 0.1),
         clock_rim=mt.plastic("clock rim", (0.02, 0.02, 0.022), 0.35),
         ink=mt.rubber("clock hands", (0.01, 0.01, 0.012), 0.5),
@@ -259,12 +262,12 @@ def close_cell():
     x_far = sx * (XW + T + CELL_D)
     ny = y + 0.72
     box("night_body", (0.06, 0.24, 0.13), (x_far - sx * 0.03, ny, 1.95), m["white"], bevel=0.012)
-    box("night_lens", (0.012, 0.19, 0.085), (x_far - sx * 0.062, ny, 1.95), mt.glow("night lens", (0.62, 0.76, 1.0), 4.0))
+    box("night_lens", (0.012, 0.19, 0.085), (x_far - sx * 0.062, ny, 1.95), mt.glow("night lens", (0.62, 0.76, 1.0), 1.0))
     bm = bmesh.new()
     for dz in (-0.03, 0.0, 0.03):
         add_rod(bm, (x_far - sx * 0.075, ny - 0.1, 1.95 + dz), (x_far - sx * 0.075, ny + 0.1, 1.95 + dz), 0.003, 6)
     mesh_obj("night_cage", bm, m["wire"], smooth=True)
-    area("cell_close_night", (x_far - sx * 0.09, ny, 1.95), (0.19, 0.085), 7.0, (0.62, 0.76, 1.0), spread=170,
+    area("cell_close_night", (x_far - sx * 0.09, ny, 1.95), (0.19, 0.085), 14.0, (0.62, 0.76, 1.0), spread=170,
          rot=(0, -sx * math.pi / 2, 0))
     bunk = props.load("bunk-bed", size=1.95, axis="long", loc=(x_far - sx * 1.02, y + CELL_W / 2 - 0.47, 0.0),
                       turn_deg=0.0, sat=0.4, val=0.7, rough_add=0.15)
@@ -289,18 +292,24 @@ def door_proto():
         if c.x < -0.1 or (c.x < 0.05 and win(c)):
             kill.append(f)
     bmesh.ops.delete(bm, geom=kill, context="FACES")
-    moved = 0
+    moved = squashed = 0
     for v in bm.verts:
         p = mw @ v.co
         if p.x < 0.2 and win(p):
             p.x = 0.2
             v.co = inv @ p
             moved += 1
+        elif p.x > 0.33 and abs(p.y) < 0.26 and 0.66 < p.z < 1.12:
+            # the food hatch stood open as a 23 cm shelf (it read as a letterbox flap down the corridor): closed,
+            # it sits a few centimetres proud of the leaf
+            p.x = 0.33 + (p.x - 0.33) * 0.22
+            v.co = inv @ p
+            squashed += 1
     bm.to_mesh(ob.data)
     bm.free()
     for slot in ob.material_slots:
         mt.tune_prop(slot.material, spec=0.32, rough_floor=0.38)
-    print(f"CORRIDOR cell door: {len(kill)} faces cut, {moved} recess verts brought forward", flush=True)
+    print(f"CORRIDOR cell door: {len(kill)} faces cut, {moved} recess verts brought forward, {squashed} hatch verts closed", flush=True)
     return h, ob
 
 
@@ -377,11 +386,10 @@ def fitting(i, y, level):
     for s in (-1, 1):                             # foot tabs
         add_box(bm, (0.012, 1.2, 0.008), (s * r, y, cz + 0.002))
     mesh_obj(f"fit{i}_cage", bm, m["wire"], smooth=True)
-    if level > 0:
-        area(f"fit{i}_down", (0, y, H - 0.112), (0.08, 1.1), FIT_W * level, COOL, spread=160)
-        # the opal diffuser also throws light sideways and up onto the soffit round the fitting
-        area(f"fit{i}_up", (0, y, H - 0.118), (0.4, 1.4), FIT_W * 0.1 * level, COOL, spread=180, rot=(math.pi, 0, 0),
-             glossy=False)
+    area(f"fit{i}_down", (0, y, H - 0.112), (0.08, 1.1), FIT_W * level, COOL, spread=160)
+    # the opal diffuser also throws light sideways and up onto the soffit round the fitting
+    area(f"fit{i}_up", (0, y, H - 0.118), (0.4, 1.4), FIT_W * 0.06 * level, COOL, spread=180, rot=(math.pi, 0, 0),
+         glossy=False)
 
 
 def ceiling_services():
@@ -476,7 +484,10 @@ def vis_door():
         child(sk.cyl("vd_hinge", 0.009, 0.11, (0.0, lt / 2, z), m["hardware"], verts=16))
     # the leak: light from the room thrown through the gap (the room's own pendant is too high and shaded to reach
     # the door; this stands for the lit room beyond it)
-    area("vd_leak", (VD_X + 0.32, Y1 + T + 0.75, 1.1), (0.7, 1.9), 70.0, WARM, spread=70, rot=(-math.pi / 2, 0, 0))
+    area("vd_leak", (VD_X + 0.32, Y1 + T + 0.75, 1.1), (0.7, 1.9), 220.0, WARM, spread=70, rot=(-math.pi / 2, 0, 0))
+    # and the corridor's cool light falling in through the open door: a faint wash across the room
+    area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 22.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
+         glossy=False)
     return leaf
 
 
@@ -489,15 +500,15 @@ def back_door():
     box("bd_head", (VD_W + 0.1, T + 0.03, 0.05), (BD_X, yc, VD_H + 0.025), m["frame"], 0.005)
     lw, lt, lh = VD_W - 0.006, 0.05, VD_H - 0.012
     box("bd_leaf", (lw, lt, lh), (BD_X, RY1 + 0.03, 0.008 + lh / 2), m["door"], 0.004)
-    box("bd_glass", (0.12, 0.004, 0.2), (BD_X - 0.2, RY1 + 0.004, 1.55), m["glass"])
-    box("bd_glass_back", (0.12, 0.004, 0.2), (BD_X - 0.2, RY1 + 0.04, 1.55), m["void"])
+    # its vision panel: the cold corridor on the far side, faint through wired glass
+    box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.12))
     bm = bmesh.new()
     for sx in (-1, 1):
         add_box(bm, (0.016, 0.01, 0.232), (BD_X - 0.2 + sx * 0.068, RY1 + 0.0, 1.55))
     for sz in (-1, 1):
         add_box(bm, (0.12, 0.01, 0.016), (BD_X - 0.2, RY1 + 0.0, 1.55 + sz * 0.108))
     bevelled(mesh_obj("bd_bead", bm, m["hardware"]), 0.003, 2)
-    box("bd_lock", (0.1, 0.012, 0.16), (BD_X - lw / 2 + 0.08, RY1 - 0.001, 1.05), m["hardware"], 0.004)
+    box("bd_lock", (0.1, 0.012, 0.16), (BD_X - lw / 2 + 0.08, RY1 - 0.001, 1.05), m["frame"], 0.004)
     box("bd_kick", (lw - 0.06, 0.003, 0.25), (BD_X, RY1 + 0.004, 0.14), m["steel"], 0.001)
 
 
@@ -558,7 +569,15 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
     sealed top flap laid over it as thin sheets, so their edges draw the envelope's seams."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
-    pill = lambda x, y: 0.0026 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
+    def pill(x, y):
+        """Height of the envelope's back: pillowed by the folded letter, a gentle warp from handling and damp, and
+        its front right corner curled up off the table."""
+        h = 0.0026 * max(0.0, 1 - (2 * x / W) ** 4) * max(0.0, 1 - (2 * y / D) ** 4)
+        h += 0.0007 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
+        h += 0.0007 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
+        dc = math.hypot(x - W / 2, y + D / 2)
+        h += 0.0032 * max(0.0, 1 - dc / 0.07) ** 2
+        return max(h, 0.0)
     nu, nv = 30, 22
     bm = bmesh.new()
     vs = [[bm.verts.new((-W / 2 + W * i / nu, -D / 2 + D * j / nv, 0.0)) for j in range(nv + 1)] for i in range(nu + 1)]
@@ -621,7 +640,9 @@ def pendant():
     m = materials()
     x, y = TABLE
     z0 = PEND_Z
-    prof = [(0.028, 0.2), (0.034, 0.19), (0.05, 0.165), (0.085, 0.12), (0.13, 0.07), (0.17, 0.03), (0.195, 0.008), (0.2, 0.0)]
+    # a shallow industrial dome (RLM): steep neck, rounded shoulder, wide flared skirt
+    prof = [(0.028, 0.2), (0.036, 0.192), (0.06, 0.172), (0.1, 0.14), (0.14, 0.1), (0.168, 0.062), (0.186, 0.03),
+            (0.196, 0.01), (0.2, 0.0)]
     sh = lathe("pendant_shade", prof, [m["shade_out"], m["shade_in"]])
     so = sh.modifiers.new("enamel", "SOLIDIFY")
     so.thickness, so.offset, so.material_offset, so.material_offset_rim = 0.0016, -1.0, 1, 0
@@ -640,7 +661,8 @@ def pendant():
     rim.location = (x, y, z0)
     sk.cyl("pendant_cap", 0.032, 0.04, (x, y, z0 + 0.215), m["shade_out"], verts=32)
     sk.cyl("pendant_socket", 0.021, 0.055, (x, y, z0 + 0.165), m["bakelite"], verts=24)
-    sk.sphere("pendant_bulb", 0.033, (x, y, z0 + 0.1), mt.glow("bulb", WARM, 30.0), segs=32)
+    bulb = sk.sphere("pendant_bulb", 0.033, (x, y, z0 + 0.1), mt.glow("bulb", WARM, 30.0), segs=32)
+    bulb.visible_shadow = False                  # the lamp's light sits inside it
     sk.cyl("pendant_cord", 0.0035, H - z0 - 0.235, (x, y, (H + z0 + 0.235) / 2), m["cord"], verts=12)
     b = sk.cyl("pendant_rose", 0.05, 0.022, (x, y, H - 0.011), m["white"], verts=40)
     bevelled(b, 0.004, 2, 60)
@@ -674,4 +696,4 @@ def room():
     table()
     pendant()
     back_door()
-    clock((-1.05, RY1, 1.98))
+    clock((-1.3, RY1, 2.06))

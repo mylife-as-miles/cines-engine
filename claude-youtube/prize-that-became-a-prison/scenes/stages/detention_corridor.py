@@ -31,8 +31,8 @@ import detention_corridor_set as st  # noqa: E402
 
 EXPOSURE = -1.5
 
-CHAIR = (0.07, 15.86, -81.0)                 # x, y, facing (deg; -90 = toward the door), pulled out from the table
-ENVELOPE = (-0.07, 15.29, 13.0)              # x, y, turn (deg) on the table top
+CHAIR = (0.07, 16.26, -81.0)                 # x, y, facing (deg; -90 = toward the door), pulled out from the table
+ENVELOPE = (-0.07, 15.69, 13.0)              # x, y, turn (deg) on the table top
 
 FOCUS = {
     "fx_corridor": (0.0, 7.5, 1.2),
@@ -48,10 +48,18 @@ CAMERAS = {
     # faint beyond the bars
     "door": dict(loc=(-0.12, 7.13, 1.57), aim=(st.XW + st.FRONT - 0.29, 7.66, 1.49), lens=45, focus="fx_door",
                  fstop=2.8),
-    # Ch 06: the visitation room: the empty chair and the sealed envelope under the one hanging light
-    "chair": dict(loc=(0.95, 13.45, 1.55), aim=(-0.05, 15.4, 0.95), lens=30, focus="fx_chair", fstop=4.0,
-                  shift=(0.0, 0.08)),
+    # Ch 06: the visitation room from a visitor's eye height by the door: the empty chair across the table and
+    # the sealed envelope in the pool of the one hanging light, the shade's glowing rim above
+    "chair": dict(loc=(0.8, 13.45, 1.3), aim=(-0.05, 15.75, 1.05), lens=35, focus="fx_chair", fstop=4.0,
+                  shift=(0.0, 0.06)),
+    # Ch 06 (added): the insert: the sealed envelope in the pool of light from above the table's near edge, the
+    # empty chair soft beyond it
+    "envelope": dict(loc=(0.25, 15.0, 1.12), aim=(-0.03, 15.82, 0.78), lens=40, focus="fx_envelope", fstop=2.8),
 }
+# per-camera light changes (absolute watts by light name). The door close-up is lit from along the corridor: the
+# fitting just short of it is turned down and the next one, toward the far end, burns, so light rakes across the
+# leaf from the hinge side and the rivets and chipped paint get shape (the corridor shot shows the other state)
+TRIMS = {"door": {"fit3_down": 80.0, "fit3_up": 5.0, "fit4_down": 300.0, "fit4_up": 18.0}}
 
 _STATE = {}
 
@@ -73,6 +81,11 @@ def apply_camera(name):
         cam.data.clip_start, cam.data.clip_end = 0.02, 200.0
         sx, sy = cfg.get("shift", (0.0, 0.0))
         cam.data.shift_x, cam.data.shift_y = sx, sy
+    trims = TRIMS.get(name, {})
+    base = _STATE.setdefault("base", {})
+    for n, ob in st.LIGHTS.items():
+        b = base.setdefault(n, ob.data.energy)
+        ob.data.energy = trims.get(n, b)
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
@@ -81,7 +94,7 @@ def apply_camera(name):
             setattr(sc.cycles, k, v)
         except (AttributeError, TypeError):
             pass
-    print(f"CORRIDOR camera {name or '?'}: shift {cfg.get('shift', (0, 0))}", flush=True)
+    print(f"CORRIDOR camera {name or '?'}: shift {cfg.get('shift', (0, 0))}, trims {trims or 'none'}", flush=True)
 
 
 def install_hook():
@@ -98,6 +111,7 @@ def build(cast=True):
     """`cast` is ignored: this stage has no people."""
     st.M.clear()
     st.LIGHTS.clear()
+    _STATE.clear()
     st.materials()
     st.shell()
     st.cells()
@@ -109,7 +123,7 @@ def build(cast=True):
     st.chair(CHAIR[:2], CHAIR[2])
     st.envelope(ENVELOPE[0], ENVELOPE[1], st.TOP, ENVELOPE[2])
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.004)
-    room_haze = sk.haze((2 * st.RX - 0.02, st.RY1 - st.RY0 - 0.02, st.H - 0.02), (0, (st.RY0 + st.RY1) / 2, st.H / 2), 0.008)
+    room_haze = sk.haze((2 * st.RX - 0.02, st.RY1 - st.RY0 - 0.02, st.H - 0.02), (0, (st.RY0 + st.RY1) / 2, st.H / 2), 0.014)
     room_haze.name = "room_haze"
     for n, p in FOCUS.items():
         st.empty(n, p)

@@ -150,14 +150,14 @@ def block_wall(name, upper, lower, split_z=1.2, axis="y", stripe=(0.028, 0.034, 
     vec = _vec(nt, u, wz, depth)
     br = _n(nt, "ShaderNodeTexBrick", offset=0.5, offset_frequency=2, squash=1.0, squash_frequency=2)
     br.inputs["Scale"].default_value = 1.0
-    br.inputs["Mortar Size"].default_value = 0.0065
-    br.inputs["Mortar Smooth"].default_value = 0.3
+    br.inputs["Mortar Size"].default_value = 0.0085          # 10 mm tooled joints: a soft concave shadow line
+    br.inputs["Mortar Smooth"].default_value = 0.65
     br.inputs["Brick Width"].default_value = 0.40
     br.inputs["Row Height"].default_value = 0.20
     br.inputs["Bias"].default_value = 0.0
     br.inputs["Color1"].default_value = (1.0, 1.0, 1.0, 1)
-    br.inputs["Color2"].default_value = (0.955, 0.955, 0.955, 1)
-    br.inputs["Mortar"].default_value = (0.86, 0.86, 0.86, 1)
+    br.inputs["Color2"].default_value = (0.91, 0.91, 0.91, 1)
+    br.inputs["Mortar"].default_value = (0.8, 0.8, 0.8, 1)
     _link(nt, vec, br.inputs["Vector"])
     low = _math(nt, "LESS_THAN", wz, split_z - stripe_w / 2)
     strip = _band(nt, wz, split_z - stripe_w / 2, split_z + stripe_w / 2, 0.0015)
@@ -182,12 +182,20 @@ def block_wall(name, upper, lower, split_z=1.2, axis="y", stripe=(0.028, 0.034, 
     base = _mix(nt, chip_m, base, (0.14, 0.14, 0.135))
     g = _math(nt, "MULTIPLY", _maprange(nt, wz, 0.0, 0.35, 1.0, 0.0), _maprange(nt, _noise(nt, vec, 3.0, 4.0, 0.6), 0.3, 0.7, 0.6, 1.0))
     base = _mix(nt, _math(nt, "MULTIPLY", g, grime), base, (0.01, 0.01, 0.01))
+    # the block face under the paint: a coarse sandy texture with open pits, big enough to survive the denoiser
+    # at corridor distances (painted block, not glazed tile), and each block's face a little out of plane
+    stipple = _noise(nt, vec, 75.0, 4.0, 0.7)
+    pores = _maprange(nt, _noise(nt, vec, 160.0, 2.0, 0.6), 0.62, 0.74, 0.0, 1.0)
+    face = _noise(nt, vec, 6.0, 3.0, 0.6)
+    base = _mix(nt, _math(nt, "MULTIPLY", pores, 0.22), base, (0.0, 0.0, 0.0))
+    base = _mix(nt, _maprange(nt, stipple, 0.3, 0.7, 0.0, 0.12), base, tuple(c * 1.25 for c in upper))
     ao = _ao(nt, 0.4)
     base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.45, 0.0), base, (0.0, 0.0, 0.0))
     _link(nt, base, b.inputs["Base Color"])
-    stipple = _noise(nt, vec, 170.0, 3.0, 0.7)
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(br, "Fac"), -1.0), _math(nt, "MULTIPLY", stipple, 0.16))
-    _bump(nt, b, h, 0.42, 0.003)
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(br, "Fac"), -1.0), _math(nt, "MULTIPLY", stipple, 0.45))
+    h = _math(nt, "SUBTRACT", h, _math(nt, "MULTIPLY", pores, 0.45))
+    h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", face, 0.6))
+    _bump(nt, b, h, 0.55, 0.004)
     r_up = _math(nt, "ADD", _maprange(nt, stipple, 0.3, 0.7, -0.06, 0.06), rough_upper)
     r_lo = _math(nt, "ADD", _maprange(nt, patch, 0.3, 0.7, -0.08, 0.1), rough_lower)
     r = _math(nt, "ADD", r_up, _math(nt, "MULTIPLY", low, _math(nt, "SUBTRACT", r_lo, r_up)))
@@ -397,24 +405,38 @@ def rubber(name, rgb=(0.02, 0.02, 0.022), rough=0.72):
     return m
 
 
-def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52):
-    """A worn grey high-pressure laminate table top: fine speckle, a matt-ish finish (so the pendant does not turn
-    it into a white sheet), polished where arms rest, fine scratches, ring stains."""
+def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=()):
+    """A worn dark high-pressure laminate table top: fine speckle, a matt finish (so the pendant does not turn it
+    into a white sheet), patches polished by arms and sleeves, fine scratches along its length, and faint cup rings
+    at `rings` = ((x, y, r), ...) in object space (metres)."""
     m, nt, b = _new(name)
     o = _obj(nt)
     sp = _noise(nt, o, 520.0, 2.0, 0.5)
-    col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.35), rgb, tuple(c * 1.4 for c in rgb))
-    col = _mix(nt, _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.55, 0.75, 0.0, 0.25), col, tuple(c * 0.75 for c in rgb))
+    col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.45), rgb, tuple(c * 1.6 for c in rgb))
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.5, 0.75, 0.0, 0.35), col, tuple(c * 0.7 for c in rgb))
     scr = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(5.0, 160.0, 5.0))
-    scr_m = _math(nt, "MULTIPLY", _maprange(nt, scr, 0.62, 0.66, 0.0, 1.0), _maprange(nt, _noise(nt, o, 4.0, 2.0, 0.5), 0.5, 0.65, 0.0, 1.0))
-    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.5), col, tuple(c * 1.6 for c in rgb))
+    scr_m = _math(nt, "MULTIPLY", _maprange(nt, scr, 0.62, 0.66, 0.0, 1.0), _maprange(nt, _noise(nt, o, 4.0, 2.0, 0.5), 0.45, 0.62, 0.0, 1.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.6), col, tuple(c * 2.2 for c in rgb))
+    ring_m = None
+    if rings:
+        ox, oy, _ = _xyz(nt, o)
+        for (rx, ry, rr) in rings:
+            dx = _math(nt, "SUBTRACT", ox, rx)
+            dy = _math(nt, "SUBTRACT", oy, ry)
+            d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
+            ring = _math(nt, "MULTIPLY", _band(nt, d, rr - 0.0025, rr + 0.0015, 0.0015),
+                         _maprange(nt, _noise(nt, o, 40.0, 2.0, 0.5), 0.3, 0.6, 0.2, 1.0))
+            ring_m = ring if ring_m is None else _math(nt, "MAXIMUM", ring_m, ring)
+        col = _mix(nt, _math(nt, "MULTIPLY", ring_m, 0.5), col, tuple(c * 1.8 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
     pol = _noise(nt, o, 1.8, 3.0, 0.5)
-    r = _maprange(nt, pol, 0.3, 0.7, rough - 0.14, rough + 0.08)
+    r = _maprange(nt, pol, 0.3, 0.7, rough - 0.16, rough + 0.1)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.2), clamp=True)
+    if ring_m is not None:
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_m, 0.15), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.4
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -1.0), _math(nt, "MULTIPLY", sp, 0.2)), 0.06, 0.0003)
+    b.inputs["Specular IOR Level"].default_value = 0.3
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -1.0), _math(nt, "MULTIPLY", sp, 0.2)), 0.08, 0.0003)
     return m
 
 
@@ -457,6 +479,28 @@ def glass(name, tint=(0.9, 0.93, 0.94), rough=0.04):
     b.inputs["Base Color"].default_value = (*tint, 1)
     sm = _noise(nt, o, 40.0, 4.0, 0.6)
     _link(nt, _math(nt, "ADD", _maprange(nt, sm, 0.4, 0.75, 0.0, 0.18), rough, clamp=True), b.inputs["Roughness"])
+    return m
+
+
+def thin_glass(name, tint=(0.86, 0.9, 0.92), refl=0.05):
+    """Glazing seen straight through (no refraction, so no noise): transparent, reflecting by Fresnel, smears."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    tr = _n(nt, "ShaderNodeBsdfTransparent")
+    tr.inputs["Color"].default_value = (*tint, 1)
+    gl = _n(nt, "ShaderNodeBsdfGlossy")
+    gl.inputs["Roughness"].default_value = 0.03
+    lw = _n(nt, "ShaderNodeLayerWeight")
+    lw.inputs["Blend"].default_value = 0.08
+    smudge = _maprange(nt, _noise(nt, _obj(nt), 25.0, 5.0, 0.6), 0.45, 0.75, 0.0, 0.05)
+    fac = _math(nt, "ADD", _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.85), refl), smudge, clamp=True)
+    mx = _n(nt, "ShaderNodeMixShader")
+    _link(nt, fac, mx.inputs[0])
+    _link(nt, tr.outputs[0], mx.inputs[1])
+    _link(nt, gl.outputs[0], mx.inputs[2])
+    _link(nt, mx.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
     return m
 
 

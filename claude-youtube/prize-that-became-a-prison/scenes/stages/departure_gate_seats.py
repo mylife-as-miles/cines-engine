@@ -19,11 +19,11 @@ W_SEAT = 0.50            # shell width
 PITCH = 0.60             # seat centres
 SEAT_X = (-0.9, -0.3, 0.3, 0.9)
 ARM_X = (-1.205, -0.6, 0.0, 0.6, 1.205)
-BEAM_Z, BEAM_Y = 0.33, -0.03
+BEAM_Z, BEAM_Y = 0.29, -0.03
 
 # the shell's profile in (y, z), front lip to rolled top (sitter faces +Y)
-PROFILE = [(0.262, 0.392), (0.255, 0.432), (0.228, 0.452), (0.17, 0.456), (0.0, 0.448), (-0.15, 0.438), (-0.215, 0.452),
-           (-0.248, 0.5), (-0.27, 0.6), (-0.30, 0.72), (-0.33, 0.84), (-0.342, 0.872), (-0.362, 0.884)]
+PROFILE = [(0.207, 0.35), (0.201, 0.39), (0.178, 0.406), (0.12, 0.41), (0.0, 0.408), (-0.15, 0.403), (-0.215, 0.416),
+           (-0.248, 0.462), (-0.27, 0.56), (-0.30, 0.68), (-0.33, 0.80), (-0.342, 0.832), (-0.362, 0.844)]
 
 
 def _catmull(pts, n_per=8):
@@ -48,7 +48,7 @@ def seat_top(y):
     """Height of the pan's top surface at local y (the shell is thin: its profile is the top face)."""
     best = None
     for (y0, z0), (y1, z1) in zip(PROF, PROF[1:]):
-        if min(y0, y1) <= y <= max(y0, y1) and z0 < 0.5 and z1 < 0.5:
+        if min(y0, y1) <= y <= max(y0, y1) and z0 < 0.45 and z1 < 0.45:
             t = (y - y0) / (y1 - y0) if y1 != y0 else 0.0
             z = z0 + (z1 - z0) * t
             best = z if best is None else max(best, z)
@@ -193,19 +193,19 @@ def unit_collection(m, name="gate_seat_unit"):
     for i, sx in enumerate(SEAT_X):
         shell(f"shell_{i}", perf, coll, x0=sx)
         # spine: a flat bar under the pan and behind the back, carried on a bracket from the beam
-        _bar(f"bracket_{i}", (sx, BEAM_Y, BEAM_Z + 0.03), (sx, BEAM_Y, 0.425), 0.07, 0.12, frame, coll, bevel=0.005)
+        _bar(f"bracket_{i}", (sx, BEAM_Y, BEAM_Z + 0.03), (sx, BEAM_Y, 0.385), 0.07, 0.12, frame, coll, bevel=0.005)
         pts = []
         for k in range(1, len(PROF) - 1):
             (ya, za), (y, z), (yb, zb) = PROF[k - 1], PROF[k], PROF[k + 1]
-            if not (-0.34 <= y <= 0.12 and z < 0.83):
+            if not (-0.34 <= y <= 0.12 and z < 0.79):
                 continue
             t = Vector((yb - ya, zb - za)).normalized()
             pts.append((sx, y - t.y * 0.0165, z + t.x * 0.0165))   # (-t.z, t.y): under the pan, behind the back
         _tube(f"spine_{i}", pts, 0.011, frame, coll)
     # arms: polished aluminium loops from the beam up, forward, down at the front and back to the beam; black pads
     for j, ax in enumerate(ARM_X):
-        path = _arc_pts([(ax, BEAM_Y - 0.02, BEAM_Z + 0.02), (ax, -0.17, 0.655), (ax, 0.19, 0.655), (ax, 0.235, 0.47),
+        path = _arc_pts([(ax, BEAM_Y - 0.02, BEAM_Z + 0.02), (ax, -0.17, 0.615), (ax, 0.14, 0.615), (ax, 0.185, 0.43),
                          (ax, 0.03, BEAM_Z + 0.02)], rad=0.05)
         _tube(f"arm_{j}", path, 0.0135, arm, coll)
-        _box(f"arm_pad_{j}", (0.05, 0.27, 0.022), (ax, 0.01, 0.678), pad, coll, bevel=0.009)
+        _box(f"arm_pad_{j}", (0.05, 0.25, 0.022), (ax, -0.01, 0.638), pad, coll, bevel=0.009)
     return coll

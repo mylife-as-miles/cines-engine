@@ -346,7 +346,7 @@ def _rounded_rect(bm, w, h, r, z0, z1, segs=6):
     return fs
 
 
-def passport(name, m_cover, m_pages, x, y, turn, open_deg=0.9):
+def passport(name, m_cover, m_pages, x, y, turn, open_deg=1.5):
     """A plain passport booklet, 125 x 88 mm, closed: two covers of grained board (rounded corners) wrapped round a
     rounded spine at -x, the page block inset between them, the front cover springing open a couple of degrees at the
     fore-edge. No crest, no lettering. z: the support height (found by dropping its corners if None)."""

@@ -57,13 +57,13 @@ CAMERAS = {
     # Ch 02 end: the gate from the back corner, high: rows of empty seats in the dark, Dawn small in the one pool of
     # light at the front, the glass wall with the waiting aircraft and the jet bridge, the podium glowing by the door
     "wide": dict(loc=(-6.6, -7.1, 3.15), aim=(1.2, 4.6, 0.55), lens=22, focus="fx_wide", fstop=8.0, beat="ch02",
-                 exposure=-1.3),
+                 exposure=-1.1),
     # Ch 03: controlled medium from the window side: Dawn under the one fitting, the suitcase, the empty rows behind
     "seated": dict(loc=_back_off((1.35, 5.55, 0.95), (-0.95, 2.95, 0.58), 0.35), aim=(-0.95, 2.95, 0.58), lens=42,
-                   focus="fx_face", fstop=2.8, beat="ch03", exposure=-1.5),
+                   focus="fx_face", fstop=2.8, beat="ch03", exposure=-1.25),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the floodlit aircraft
     "window": dict(loc=(-2.05, -1.35, 1.3), aim=(-0.35, 6.0, 0.98), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
-                   exposure=-1.5),
+                   exposure=-1.15),
 }
 # per-camera light trims (multipliers on named lights)
 KEY = "fx_{:+.1f}_{:+.1f}_light".format(*st.KEY_FX)
@@ -71,11 +71,11 @@ POOL = "fx_{:+.1f}_{:+.1f}_pool".format(*st.KEY_FX)
 RIM = "dawn_rim"
 TRIMS = {
     # the one fitting over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.25, RIM: 0.0},
+    "wide": {"window_spill": 0.4, RIM: 0.0},
     # top light from the fitting over her seat is the key; the glass's spill would flatten her face
-    "seated": {"window_spill": 0.2, POOL: 0.5},
+    "seated": {"window_spill": 0.2, POOL: 0.22},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
-    "window": {"window_spill": 0.15, KEY: 0.12, POOL: 0.12, RIM: 0.0},
+    "window": {"window_spill": 0.15, KEY: 0.15, POOL: 0.06, RIM: 0.0},
 }
 
 _STATE = {"cast": [], "base": {}}
@@ -116,7 +116,7 @@ def dawn():
     deleted; the casual suit's T-shirt stays under the blouse, pulled in 4 mm and in the blouse's colour, so no gap
     or poke-through shows at the waist."""
     h = castkit.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
-    top, trousers, shoes = (0.36, 0.345, 0.33), (0.10, 0.10, 0.11), (0.05, 0.05, 0.05)
+    top, trousers, shoes = (0.33, 0.318, 0.305), (0.065, 0.066, 0.072), (0.04, 0.04, 0.04)
     items = ["female_elegantsuit01", "female_casualsuit01", "shoes01"]
     castkit.dress(h, items, tint={"female_elegantsuit01": top, "female_casualsuit01": trousers, "shoes01": shoes},
                   flat=tuple(items))
@@ -142,8 +142,47 @@ def dawn():
         dp = cas.modifiers.new("tuck", "DISPLACE")
         dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.0, -0.004, "tshirt"
         cas.modifiers.move(cas.modifiers.find("tuck"), 1)        # after the armature, before the smoothing
-    print(f"GATE wardrobe: skirt parts {len(skirt)} deleted, T-shirt parts {len(shirt)} tucked", flush=True)
+    n = hide_under_trousers(h, cas, shirt[0][0] if shirt else set())
+    print(f"GATE wardrobe: skirt parts {len(skirt)} deleted, T-shirt parts {len(shirt)} tucked, "
+          f"{n} leg skin vertices masked under the trousers", flush=True)
     return h
+
+
+def hide_under_trousers(h, cas, shirt_idx, reach=0.03):
+    """MPFB's delete group for the casual suit leaves the shins, which poke through the trousers once she sits. Mask
+    every leg vertex of the shaped body within `reach` of the trousers (rest pose, before any rigging moves them)."""
+    from mathutils.bvhtree import BVHTree
+    body = bpy.data.objects[h["body"]]
+    mods = [(m, m.show_viewport) for m in body.modifiers]
+    for m, _ in mods:
+        m.show_viewport = False
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    em = ev.to_mesh()
+    bw = body.matrix_world
+    shaped = [bw @ v.co for v in em.vertices]
+    ev.to_mesh_clear()
+    for m, vis in mods:
+        m.show_viewport = vis
+    cw = cas.matrix_world
+    verts = [cw @ v.co for v in cas.data.vertices]
+    polys = [tuple(p.vertices) for p in cas.data.polygons if p.vertices[0] not in shirt_idx]
+    bvh = BVHTree.FromPolygons(verts, polys)
+    hide = []
+    for i, p in enumerate(shaped):
+        if 0.1 < p.z < 0.8 and abs(p.x) < 0.2:
+            hit = bvh.find_nearest(p, reach)
+            if hit[0] is not None:
+                hide.append(i)
+    vg = body.vertex_groups.new(name="under_trousers")
+    vg.add(hide, 1.0, "REPLACE")
+    mk = body.modifiers.new("Delete.under_trousers", "MASK")
+    mk.vertex_group, mk.invert_vertex_group = "under_trousers", True
+    sub = [i for i, m in enumerate(body.modifiers) if m.type == "SUBSURF"]
+    if sub:
+        body.modifiers.move(len(body.modifiers) - 1, sub[0])
+    return len(hide)
 
 
 def lap_hands(holder, upper=(12, -6), fore=(64, 30), hand=(72, 40)):
@@ -227,7 +266,7 @@ def seat_height(x, y0):
     return zs[len(zs) // 2] if zs else prof
 
 
-UPPER = {"head": (7, -10), "neck": (2, 0), "chest": (-7, 0), "fingers": 34}
+UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 34}
 
 
 def seat_figure(holder, seat_z):
@@ -235,7 +274,7 @@ def seat_figure(holder, seat_z):
     and her soles on the floor. Returns the height the holder must sit at."""
     rig = rigged.rig_of(holder)
     body = bpy.data.objects[holder["body"]]
-    thigh, shin = 88.0, 4.0
+    thigh, shin = 82.0, 4.0
     dz = 0.0
     for it in range(8):
         rigged.pose_figure(holder, UPPER)
@@ -319,7 +358,7 @@ def place_seated(holder, seat_xy, seat_z):
     hip_w = sum((rig.matrix_world @ rig.pose.bones[f"thigh_fk.{k}"].head for k in "LR"), Vector()) / 2
     up = [p for p in skin if seat_z + 0.3 < p.z < seat_z + 0.43 and abs(p.x - sx) < 0.2 and p.y < hip_w.y]
     upper = min((p.y - (sy + back_y(p.z)) for p in up), default=9.9)
-    pan = [p for p in skin if p.z < seat_z + 0.1 and abs(p.x - sx) < 0.2 and -0.19 < p.y - sy < 0.23]
+    pan = [p for p in skin if seat_z - 0.05 < p.z < seat_z + 0.1 and abs(p.x - sx) < 0.2 and -0.19 < p.y - sy < 0.17]
     clear = min((p.z - seatkit.seat_top(p.y - sy) for p in pan), default=9.9)
     pts = body_points(holder)
     lo = min(p.z for p in pts)
