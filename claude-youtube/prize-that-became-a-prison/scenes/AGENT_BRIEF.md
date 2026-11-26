@@ -71,12 +71,36 @@ Not usable (Tripo misses): `checkin-desk`, `stanchion`. Build these in Python if
   so its exposure sits near -2.0 to -1.0, never by greying the props.
 - The film grade (applied by `shoot.py` to `*_graded.png`) desaturates and cools: judge colour on the graded frame.
 
+## Lessons from the first critiques (airport stages, 26 November 2026)
+
+The independent critic failed the first airport frames (means 4.6 and 5.1) for these reasons; get them right first time:
+
+- **Lit island, not fill.** A big bounce or fill light flattens everything to one mid grey. Light with practicals
+  (troffers, lamps, screens, light under doors) and let the rest fall off into deep but readable shadow; avoid areas
+  that the grade crushes to pure black when they carry the place (windows, the far wall).
+- **Prop values.** Check the raw frame: charcoal and black bags must read dark, the cognac tote warm (not salmon). Do
+  not fix values by greying textures; fix the light and the grade (`val`, `sat`, exposure).
+- **No clipping.** Flat glossy tops under a lamp (steel benches, tables) clip to a white lightbox from above: raise
+  roughness, angle the light, keep the top's brushed texture and edge thickness visible.
+- **Practicals must glow and spill.** A blank screen or display is an emissive surface that lights what is near it
+  (a weak area or point light in front of it), and its bezel stays darker than its face.
+- **People are not clones.** Vary height, build, age, hair and suit tint; give each a distinct pose with a visible
+  action; eyelines toward who they are speaking to; hands relaxed (curl the fingers), resting on things, not hovering
+  or splayed; feet grounded with contact shadow. `female_elegantsuit01`'s pinstripe knit shimmers in wide shots (tint
+  it flat or choose another outfit); `shoes05` reads as branded sneakers: choose plain shoes.
+- **Framing.** Do not cut feet or heads at the frame edge, do not run edges tangent through necks, do not cut a bright
+  light fitting at the frame edge, keep a clear subject, avoid big flat grey slabs in the foreground.
+- **Materials up close.** No streaky noise that reads as wood on steel; real paper is matt and slightly warm, twine is
+  fibrous, fabric shows weave; block walls are painted block (mortar lines), not mottled noise.
+
 ## Rendering (4 CPU cores shared by every agent)
 
 - Render **only** through `scenes/shoot.py` (it holds a machine-wide lock, so renders queue):
   `cd /home/user/cines-engine/claude-youtube/prize-that-became-a-prison && <bpy python> scenes/shoot.py -- <stage> <cam> out/stages/<stage>/<name>.png --res 960x540 --spp 24 [--nocast]`
   Use `--nocast` while working on the set (about 30 s faster). Look at the PNGs with the Read tool.
 - At most 12 renders per agent run. Never run two Blender processes at once; never kill processes you did not start.
+- Several agents share the lock, so a render can wait 10 minutes or more before it starts: give every shoot.py command
+  a Bash timeout of 1,800,000 ms (or run it in the background and wait for it), and never treat waiting as a failure.
 - Final frames for review: `--res 1280x720 --spp 64`, file names `final_<cam>.png`.
 
 ## Final report (short)

@@ -26,7 +26,12 @@ def materials():
     if M:
         return M
     M.update(
-        steel=mt.brushed_steel("bench steel"),
+        # darker, glossier stainless with handling marks: at 0.66 the top under the troffer was a white lightbox;
+        # strong brushing smears the troffer's reflection into a streak; contact darkening seats what stands on it.
+        # The ghost patch is the cleaner rectangle where the tote stood (switched on for the Ch 11 return)
+        steel=mt.brushed_steel("bench steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.25, aniso=0.8, contact=0.05),
+        steel_top=mt.brushed_steel("bench top steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.25, aniso=0.8,
+                                   contact=0.05, ghost=(0.0, -0.23, 0.3, 0.14)),
         steel_dark=mt.satin_metal("dark steel", (0.32, 0.33, 0.34), 0.4),
         hardware=mt.satin_metal("hardware", (0.55, 0.56, 0.57), 0.3),
         wall=mt.block_wall("block wall", (0.17, 0.182, 0.185), (0.075, 0.088, 0.098), 1.07, H),
@@ -51,9 +56,9 @@ def materials():
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
         cork=mt.paint("board", (0.16, 0.14, 0.11), 0.85, 0.15),
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
-        tag=mt.paper("manila tag", (0.58, 0.46, 0.28)),
-        tag_ring=mt.paper("tag ring", (0.64, 0.53, 0.34)),
-        twine=mt.twine("twine"),
+        tag=mt.paper("manila tag", (0.34, 0.24, 0.12), rough=0.85, fibre=0.05),
+        tag_ring=mt.paper("tag ring", (0.4, 0.3, 0.16), rough=0.8),
+        twine=mt.twine("twine", (0.26, 0.21, 0.14), 0.9),
     )
     return M
 
@@ -145,7 +150,7 @@ def shell():
 
 XL = [-XW, -1.8, -0.6, 0.6, 1.8, XW]                       # grid lines across x (1.2 m tiles)
 YL = [Y0, -2.1, -1.5, -0.9, -0.3, 0.3, 0.9, 1.5, 2.1, Y1]  # and along y (0.6 m)
-TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((-1.2, 1.8), 0.075), "front": ((-1.2, -1.2), 0.0)}
+TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.075), "front": ((-1.2, -1.2), 0.0)}
 DIFFUSER = (1.5, 0.6)
 
 
@@ -270,7 +275,7 @@ def door():
     # corridor light: the vision panel and the gap under the door
     box("door_gap_glow", (0.002, DOOR_W - 0.02, 0.012), (x + 0.0012, DOOR_Y, 0.006), mt.glow("gap glow", (0.78, 0.86, 1.0), 6.0))
     sk.area_light("door_glass_light", (face + 0.012, vy, vz), (vh, vw), 9.0, (0.78, 0.86, 1.0), spread_deg=110, rot=(0, -math.pi / 2, 0))
-    sk.area_light("door_gap_light", (face + 0.01, DOOR_Y, 0.008), (0.012, DOOR_W - 0.04), 2.2, (0.78, 0.86, 1.0), spread_deg=150,
+    sk.area_light("door_gap_light", (face + 0.01, DOOR_Y, 0.008), (0.012, DOOR_W - 0.04), 4.0, (0.78, 0.86, 1.0), spread_deg=150,
                   rot=(0, -math.pi / 2, 0))
     # light switch, its surface conduit up to the ceiling, and a blank sign plate
     sy = DOOR_Y - DOOR_W / 2 - 0.16
@@ -284,7 +289,8 @@ def door():
 
 # ---------------------------------------------------------------- the back wall: cable tray, conduit, gloves, trays
 
-def back_wall():
+def back_wall(jx=-1.32, gloves_xz=(1.38, 1.34), trays_xy=(1.02, Y1 - 0.3)):
+    """jx: where the conduit drops to the scanner's junction box (about 0.5 m left of the scanner's centre)."""
     m = materials()
     y = Y1
     bm = bmesh.new()                                    # wire-basket cable tray, 300 mm wide, along the back wall
@@ -314,7 +320,6 @@ def back_wall():
         add_rod(bm, (x0, yy, zt + r + 0.002), (x1, yy, zt + r + 0.002), r, 12)
     mesh_obj("tray_cables", bm, m["cable"], smooth=True)
     # conduit from the tray down to a junction box above the scanner, then flex into the scanner's back
-    jx = -1.32
     sk.cyl("conduit", 0.0105, zt - 1.84, (jx, y - 0.016, (zt + 1.84) / 2), m["steel_dark"], verts=16)
     box("junction_box", (0.12, 0.05, 0.12), (jx, y - 0.026, 1.78), m["steel_dark"], bevel=0.006)
     flex = sk.arc("flex_conduit", (jx, y - 0.03, 1.72), (jx + 0.08, y - 0.2, 1.452), -0.05, m["cable"], r=0.009)
@@ -322,8 +327,8 @@ def back_wall():
     sk.cyl("conduit2", 0.0105, zt - 0.35, (1.95, y - 0.016, (zt + 0.35) / 2), m["steel_dark"], verts=16)
     box("outlet_box", (0.075, 0.03, 0.12), (1.95, y - 0.015, 0.33), m["steel_dark"], bevel=0.004)
     box("outlet_face", (0.07, 0.006, 0.11), (1.95, y - 0.032, 0.33), m["white"], bevel=0.002)
-    gloves((1.38, 1.34))
-    tray_stack((1.02, Y1 - 0.3), 6)
+    gloves(gloves_xz)
+    tray_stack(trays_xy, 6)
 
 
 def gloves(xz):
@@ -388,11 +393,15 @@ def bench(top=TOP):
     an undershelf."""
     m = materials()
     s = m["steel"]
-    box("bench_top", (2.0, 0.8, 0.012), (0, 0, top - 0.006), s, bevel=0.004)
-    box("bench_edge_f", (2.0, 0.014, 0.045), (0, -0.393, top - 0.0225), s, bevel=0.005)
-    box("bench_edge_b", (2.0, 0.014, 0.045), (0, 0.393, top - 0.0225), s, bevel=0.005)
-    box("bench_edge_l", (0.014, 0.772, 0.045), (-0.993, 0, top - 0.0225), s, bevel=0.005)
-    box("bench_edge_r", (0.014, 0.772, 0.045), (0.993, 0, top - 0.0225), s, bevel=0.005)
+    box("bench_top", (2.0, 0.8, 0.012), (0, 0, top - 0.006), m["steel_top"], bevel=0.004)
+    # the turned-down edge: its top is rolled (a 4 mm radius over three segments), so it carries a clean specular
+    # line from the troffer round the top
+    for n, size, loc in (("bench_edge_f", (2.0, 0.014, 0.045), (0, -0.393, top - 0.0225)),
+                         ("bench_edge_b", (2.0, 0.014, 0.045), (0, 0.393, top - 0.0225)),
+                         ("bench_edge_l", (0.014, 0.772, 0.045), (-0.993, 0, top - 0.0225)),
+                         ("bench_edge_r", (0.014, 0.772, 0.045), (0.993, 0, top - 0.0225))):
+        e = box(n, size, loc, s)
+        bevelled(e, 0.004, 3, 30)
     box("bench_stiffener", (1.8, 0.06, 0.03), (0, 0, top - 0.027), s, bevel=0.003)
     for dx in (-0.93, 0.93):
         for dy in (-0.33, 0.33):
@@ -411,10 +420,22 @@ def bench(top=TOP):
         box(f"shelf_box{i}", (0.128, 0.245, 0.075), (dx, 0.12, 0.27 + 0.0375), m["box"], bevel=0.003)
 
 
-def floor_line():
+def bounce(energy=18.0):
+    """The light the bright bench top and the floor under the troffer throw back up at the ceiling and down again,
+    which six bounces at these sample counts under-deliver: one broad, very weak, cool panel just under the ceiling
+    over the front half of the room, seen by nothing but diffuse light (no camera, no reflections), so the near
+    floor lifts out of black without a second pool or a second highlight."""
+    li = sk.area_light("bounce_fill", (0.3, -0.85, H - 0.06), (3.6, 2.2), energy, (0.8, 0.87, 1.0), spread_deg=160)
+    li.visible_camera = False
+    li.visible_glossy = False
+    li.visible_transmission = False
+    return li
+
+
+def floor_line(cx=-0.95):
     """A worn painted line on the floor in front of the scanner."""
     m = materials()
-    box("floor_line", (2.6, 0.05, 0.001), (-0.95, 1.22, 0.0005), m["line"])
+    box("floor_line", (2.6, 0.05, 0.001), (cx, 1.22, 0.0005), m["line"])
 
 
 def notice_board():
@@ -540,10 +561,16 @@ def luggage_tag(case, frame, hole=(-0.021, -0.006), angle_deg=24.0, strap=(-0.04
     tw = bpy.data.objects.new("luggage_tag_twine", cu)
     bpy.context.scene.collection.objects.link(tw)
     tw.data.materials.append(m["twine"])
+    # the twine's lay: about one ridge every 3 mm along the cord (its UV runs 0..1 once round the loop)
+    length = sum((pts[i] - pts[i - 1]).length for i in range(len(pts))) * 1.12
+    m["twine"].node_tree.nodes["twist"].outputs[0].default_value = length / 0.003
     centre = frame @ Vector((*(hv + a * L * 0.45), drop(hv + a * L * 0.45) - frame.translation.z + 0.001))
     fx = bpy.data.objects.new("tag_focus", None)
     bpy.context.scene.collection.objects.link(fx)
     fx.location = centre
-    for o in (tag, ring, tw, fx):
+    hx = bpy.data.objects.new("tag_hole_focus", None)       # the eyelet, where the twine goes through
+    bpy.context.scene.collection.objects.link(hx)
+    hx.location = frame @ Vector((hv.x, hv.y, sh + 0.0012))
+    for o in (tag, ring, tw, fx, hx):
         keep_parent(o, case)
     return tag

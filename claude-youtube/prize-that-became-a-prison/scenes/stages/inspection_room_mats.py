@@ -52,6 +52,21 @@ def _math(nt, op, a, b, clamp=False):
     return n.outputs[0]
 
 
+def _math_vec_add(nt, vec, offset):
+    n = _n(nt, "ShaderNodeVectorMath", operation="ADD")
+    _link(nt, vec, n.inputs[0])
+    n.inputs[1].default_value = offset
+    return n.outputs[0]
+
+
+def _combine(nt, v):
+    """A grey colour from a scalar socket."""
+    n = _n(nt, "ShaderNodeCombineColor")
+    for k in ("Red", "Green", "Blue"):
+        _link(nt, v, n.inputs[k])
+    return n.outputs[0]
+
+
 def _mix(nt, fac, a, b, blend="MIX"):
     n = _n(nt, "ShaderNodeMix", data_type="RGBA", blend_type=blend)
     for sock, v in (("Factor", fac), ("A", a), ("B", b)):
@@ -98,9 +113,13 @@ def _ao(nt, distance=0.35):
     return n.outputs["AO"]
 
 
-def brushed_steel(name, rgb=(0.66, 0.67, 0.69), rough=0.33, smudge=0.1, aniso=0.5):
+def brushed_steel(name, rgb=(0.66, 0.67, 0.69), rough=0.33, smudge=0.1, aniso=0.5, contact=0.0, ghost=None):
     """Stainless sheet brushed along local X: fine grain only (coarse streaks read as wood grain at a distance),
-    with smudges and handling marks that dull the finish."""
+    with smudges, fingerprints and wipe arcs that dull the finish.
+
+    contact > 0 darkens the sheet where something stands on it (ambient occlusion over that distance), so bags sit
+    on the steel rather than float over it. ghost = (cx, cy, w, h) in object space adds a cleaner, glossier patch
+    (where a bag stood), switched by the node named "ghost" (0 = off, 1 = on)."""
     m, nt, b = _new(name)
     b.inputs["Metallic"].default_value = 1.0
     o = _obj(nt)
@@ -108,11 +127,35 @@ def brushed_steel(name, rgb=(0.66, 0.67, 0.69), rough=0.33, smudge=0.1, aniso=0.
     coarse = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(1.0, 25.0, 25.0))
     smear = _noise(nt, o, 3.2, 6.0, 0.62)
     smear_m = _maprange(nt, smear, 0.5, 0.74, 0.0, 1.0)
+    # handling marks: small oval prints in clusters, and long wipe arcs from a cloth dragged across the top
+    prints = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(38.0, 52.0, 38.0))
+    cluster = _maprange(nt, _noise(nt, o, 1.6, 2.0, 0.5), 0.52, 0.66, 0.0, 1.0)
+    prints_m = _math(nt, "MULTIPLY", _maprange(nt, prints, 0.6, 0.68, 0.0, 1.0), cluster)
+    wipe = _noise(nt, o, 1.0, 3.0, 0.55, mapping=(2.2, 9.0, 2.2))
+    wipe_m = _maprange(nt, wipe, 0.56, 0.62, 0.0, 0.7)
+    marks = _math(nt, "MAXIMUM", _math(nt, "MAXIMUM", smear_m, prints_m), wipe_m)
     r = _math(nt, "ADD", _maprange(nt, fine, 0.3, 0.7, -0.02, 0.02), _maprange(nt, coarse, 0.3, 0.7, -0.012, 0.012))
-    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", smear_m, smudge))
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", marks, smudge))
     r = _math(nt, "ADD", r, rough, clamp=True)
+    col = _mix(nt, marks, rgb, tuple(c * 0.9 for c in rgb))
+    if ghost:
+        cx, cy, w, h = ghost
+        sep = _n(nt, "ShaderNodeSeparateXYZ")
+        _link(nt, o, sep.inputs["Vector"])
+        dx = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", sep.outputs["X"], cx), 0.0)
+        dy = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", sep.outputs["Y"], cy), 0.0)
+        inside = _math(nt, "MULTIPLY", _maprange(nt, dx, w / 2 - 0.012, w / 2, 1.0, 0.0), _maprange(nt, dy, h / 2 - 0.012, h / 2, 1.0, 0.0))
+        sw = _n(nt, "ShaderNodeValue", name="ghost", label="ghost")
+        sw.outputs[0].default_value = 0.0
+        g = _math(nt, "MULTIPLY", inside, sw.outputs[0])
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", g, _math(nt, "ADD", _math(nt, "MULTIPLY", marks, smudge), 0.045)), clamp=True)
+        col = _mix(nt, g, col, rgb)
+    if contact:
+        ao = _ao(nt, contact)
+        col = _mix(nt, _maprange(nt, ao, 0.25, 1.0, 0.85, 0.0), col, tuple(c * 0.12 for c in rgb))
+        r = _math(nt, "ADD", r, _maprange(nt, ao, 0.25, 1.0, 0.25, 0.0), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
-    _link(nt, _mix(nt, smear_m, rgb, tuple(c * 0.94 for c in rgb)), b.inputs["Base Color"])
+    _link(nt, col, b.inputs["Base Color"])
     b.inputs["Anisotropic"].default_value = aniso
     vt = _n(nt, "ShaderNodeVectorTransform", vector_type="VECTOR", convert_from="OBJECT", convert_to="WORLD")
     vt.inputs["Vector"].default_value = (1.0, 0.0, 0.0)
@@ -172,16 +215,18 @@ def block_wall(name, upper, lower, split_z, height, rough=0.8):
     joints as bump, grime rising from the floor and settling into corners (ambient occlusion)."""
     m, nt, b = _new(name)
     o = _obj(nt)
+    # block coursing first: 400 x 200 mm units, 6 mm tooled joints, joints about 15 % darker; per-block tone is
+    # kept small (painted block reads even), so the coursing, not blotches, carries the texture
     br = _n(nt, "ShaderNodeTexBrick", offset=0.5, offset_frequency=2, squash=1.0, squash_frequency=2)
     br.inputs["Scale"].default_value = 1.0
-    br.inputs["Mortar Size"].default_value = 0.007
-    br.inputs["Mortar Smooth"].default_value = 0.35
+    br.inputs["Mortar Size"].default_value = 0.006
+    br.inputs["Mortar Smooth"].default_value = 0.25
     br.inputs["Brick Width"].default_value = 0.40
     br.inputs["Row Height"].default_value = 0.20
     br.inputs["Bias"].default_value = 0.0
     br.inputs["Color1"].default_value = (1.0, 1.0, 1.0, 1)
-    br.inputs["Color2"].default_value = (0.9, 0.9, 0.9, 1)
-    br.inputs["Mortar"].default_value = (0.82, 0.82, 0.82, 1)
+    br.inputs["Color2"].default_value = (0.95, 0.95, 0.95, 1)
+    br.inputs["Mortar"].default_value = (0.85, 0.85, 0.85, 1)
     _link(nt, o, br.inputs["Vector"])
     sep = _n(nt, "ShaderNodeSeparateXYZ")
     _link(nt, o, sep.inputs["Vector"])
@@ -189,14 +234,14 @@ def block_wall(name, upper, lower, split_z, height, rough=0.8):
     low = _math(nt, "LESS_THAN", z, split_z)
     base = _mix(nt, low, upper, lower)
     base = _mix(nt, 1.0, base, _out(br, "Color"), "MULTIPLY")
-    grime = _math(nt, "MULTIPLY", _maprange(nt, z, 0.0, 0.45, 1.0, 0.0), _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.3, 0.7, 0.5, 1.0))
-    base = _mix(nt, _math(nt, "MULTIPLY", grime, 0.45), base, (0.0, 0.0, 0.0))
+    grime = _math(nt, "MULTIPLY", _maprange(nt, z, 0.0, 0.4, 1.0, 0.0), _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.3, 0.7, 0.75, 1.0))
+    base = _mix(nt, _math(nt, "MULTIPLY", grime, 0.3), base, (0.0, 0.0, 0.0))
     ao = _ao(nt, 0.4)
-    base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.5, 0.0), base, (0.0, 0.0, 0.0))
+    base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.4, 0.0), base, (0.0, 0.0, 0.0))
     _link(nt, base, b.inputs["Base Color"])
     stipple = _noise(nt, o, 160.0, 3.0, 0.7)
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(br, "Fac"), -1.0), _math(nt, "MULTIPLY", stipple, 0.25))
-    _bump(nt, b, h, 0.35, 0.002)
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(br, "Fac"), -1.0), _math(nt, "MULTIPLY", stipple, 0.18))
+    _bump(nt, b, h, 0.4, 0.003)
     r = _math(nt, "ADD", _maprange(nt, stipple, 0.3, 0.7, -0.08, 0.06), rough)
     r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", low, 0.22), clamp=True)   # the lower band is a tougher, satin paint
     _link(nt, r, b.inputs["Roughness"])
@@ -219,6 +264,14 @@ def vinyl_floor(name, tile=0.305, c1=(0.105, 0.11, 0.11), c2=(0.075, 0.08, 0.082
     br.inputs["Mortar"].default_value = (0.02, 0.02, 0.02, 1)
     _link(nt, o, br.inputs["Vector"])
     col = _out(br, "Color")
+    # each tile its own tone (+-12 %): the tile's cell index hashed through white noise
+    cell = _n(nt, "ShaderNodeVectorMath", operation="SNAP")
+    cell.inputs[1].default_value = (tile, tile, 1.0)
+    _link(nt, o, cell.inputs[0])
+    wn = _n(nt, "ShaderNodeTexWhiteNoise", noise_dimensions="3D")
+    _link(nt, _math_vec_add(nt, cell.outputs[0], (0.37, 0.11, 0.0)), wn.inputs["Vector"])
+    jit = _maprange(nt, _out(wn, "Value"), 0.0, 1.0, 0.88, 1.12)
+    col = _mix(nt, 1.0, col, _combine(nt, jit), "MULTIPLY")
     chips = _noise(nt, o, 140.0, 2.0, 0.5)
     col = _mix(nt, _maprange(nt, chips, 0.55, 0.75, 0.0, 0.35), col, (0.2, 0.21, 0.21))
     col = _mix(nt, _maprange(nt, chips, 0.25, 0.4, 0.3, 0.0), col, (0.02, 0.02, 0.02))
@@ -233,12 +286,29 @@ def vinyl_floor(name, tile=0.305, c1=(0.105, 0.11, 0.11), c2=(0.075, 0.08, 0.082
     d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)), 0.0)
     path = _math(nt, "MULTIPLY", _maprange(nt, d, 0.4, 1.6, 1.0, 0.0), _maprange(nt, _noise(nt, o, 2.2, 5.0, 0.6), 0.35, 0.65, 0.4, 1.0))
     col = _mix(nt, _math(nt, "MULTIPLY", path, 0.35), col, (0.16, 0.165, 0.165))
+    # trolley-wheel and drag marks: a few long thin streaks across the room (along X), only where a broad mask lets
+    # them through, so there are two or three, not a pattern
+    streak = _noise(nt, o, 1.0, 2.0, 0.45, mapping=(0.35, 9.0, 1.0))
+    streak_m = _math(nt, "MULTIPLY", _maprange(nt, streak, 0.585, 0.6, 0.0, 1.0), _maprange(nt, streak, 0.615, 0.6, 0.0, 1.0))
+    streak_m = _math(nt, "MULTIPLY", streak_m, _maprange(nt, _noise(nt, o, 0.45, 1.0, 0.5), 0.55, 0.62, 0.0, 1.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", streak_m, 0.08), col, (0.0, 0.0, 0.0))
+    # grime where the mop does not reach: a dark band round the bench's footprint (2.0 x 0.8 m, centred at y = -0.2
+    # in the floor's object space)
+    bx = _math(nt, "ABSOLUTE", sep.outputs["X"], 0.0)
+    by = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", sep.outputs["Y"], -0.2), 0.0)
+    edge = _math(nt, "MINIMUM", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", bx, 1.0), 0.0), _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", by, 0.4), 0.0))
+    inside = _math(nt, "MULTIPLY", _math(nt, "LESS_THAN", bx, 1.06), _math(nt, "LESS_THAN", by, 0.46))
+    band = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", _maprange(nt, edge, 0.0, 0.07, 1.0, 0.0), inside),
+                 _maprange(nt, _noise(nt, o, 9.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", band, 0.4), col, (0.01, 0.01, 0.009))
     ao = _ao(nt, 0.5)
     col = _mix(nt, _maprange(nt, ao, 0.35, 1.0, 0.65, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
     wax = _noise(nt, o, 1.3, 4.0, 0.55)
     r = _maprange(nt, wax, 0.3, 0.7, 0.16, 0.36)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", path, 0.22))
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", streak_m, 0.15))
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", band, 0.2))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scuff_m, 0.25))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", _out(br, "Fac"), 0.4), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
@@ -265,8 +335,9 @@ def ceiling_tile(name, rgb=(0.5, 0.51, 0.5)):
     return m
 
 
-def paper(name, rgb=(0.6, 0.48, 0.3)):
-    """Manila card: matt, faint fibre streaks, slightly translucent at its thin edges."""
+def paper(name, rgb=(0.6, 0.48, 0.3), rough=0.88, fibre=0.0):
+    """Manila card: matt, faint fibre streaks, slightly translucent at its thin edges. fibre > 0 adds the card's
+    millimetre-scale felted tooth as a bump of that strength."""
     m, nt, b = _new(name)
     o = _obj(nt)
     fib = _noise(nt, o, 1.0, 4.0, 0.6, mapping=(90.0, 900.0, 90.0))
@@ -274,19 +345,76 @@ def paper(name, rgb=(0.6, 0.48, 0.3)):
     col = _mix(nt, _maprange(nt, fib, 0.3, 0.7, 0.0, 0.18), rgb, tuple(c * 0.82 for c in rgb))
     col = _mix(nt, _maprange(nt, blot, 0.6, 0.75, 0.0, 0.12), col, tuple(c * 0.7 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Roughness"].default_value = 0.88
+    b.inputs["Roughness"].default_value = rough
+    b.inputs["Specular IOR Level"].default_value = 0.3
     b.inputs["Subsurface Weight"].default_value = 0.08
     b.inputs["Subsurface Radius"].default_value = (0.002, 0.0015, 0.001)
-    _bump(nt, b, fib, 0.06, 0.0002)
+    h = fib
+    if fibre:
+        tooth = _noise(nt, o, 400.0, 4.0, 0.65)
+        h = _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.35), tooth)
+    _bump(nt, b, h, 0.06 if not fibre else fibre, 0.0002)
     return m
 
 
-def twine(name, rgb=(0.4, 0.38, 0.34)):
+def twine(name, rgb=(0.26, 0.21, 0.14), rough=0.9):
+    """Jute twine: three twisted plies (a helical ridge along the cord, from the curve's own UVs: U along the cord,
+    V round it), fibre fuzz, a little colour variation from ply to ply. The node "twist" holds the ridges per unit U;
+    set it from the cord's length so the lay is about 3 mm."""
     m, nt, b = _new(name)
-    b.inputs["Base Color"].default_value = (*rgb, 1)
-    b.inputs["Roughness"].default_value = 0.95
-    b.inputs["Sheen Weight"].default_value = 0.3
+    o = _obj(nt)
+    uv = _n(nt, "ShaderNodeTexCoord").outputs["UV"]
+    sep = _n(nt, "ShaderNodeSeparateXYZ")
+    _link(nt, uv, sep.inputs["Vector"])
+    tw = _n(nt, "ShaderNodeValue", name="twist", label="twist")
+    tw.outputs[0].default_value = 60.0
+    phase = _math(nt, "ADD", _math(nt, "MULTIPLY", sep.outputs["X"], tw.outputs[0]), _math(nt, "MULTIPLY", sep.outputs["Y"], 3.0))
+    ridge = _math(nt, "ABSOLUTE", _math(nt, "SINE", _math(nt, "MULTIPLY", phase, 3.14159), 0.0), 0.0)
+    fuzz = _noise(nt, o, 2600.0, 3.0, 0.7)
+    h = _math(nt, "ADD", ridge, _math(nt, "MULTIPLY", fuzz, 0.6))
+    col = _mix(nt, _maprange(nt, ridge, 0.0, 1.0, 0.55, 0.0), rgb, tuple(c * 0.6 for c in rgb))
+    col = _mix(nt, _maprange(nt, fuzz, 0.45, 0.75, 0.0, 0.5), col, tuple(min(1.0, c * 1.35) for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = rough
+    b.inputs["Specular IOR Level"].default_value = 0.25
+    b.inputs["Sheen Weight"].default_value = 0.5
+    b.inputs["Sheen Roughness"].default_value = 0.6
+    _bump(nt, b, h, 0.3, 0.0003)
     return m
+
+
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
+    """Finish a generated prop's material in place. spec sets the dielectric specular level (generated textures come
+    with a plastic sheen: on dark fabric under a troffer the sheen, not the colour, is what the eye reads, so dark
+    bags go grey unless it is cut). weave = (period_m, strength) adds a plain-weave bump on top of the prop's own
+    normal map; `to_metres` converts the mesh's object space to metres."""
+    if not (mat and mat.use_nodes):
+        return
+    nt = mat.node_tree
+    b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+    if b is None:
+        return
+    if spec is not None:
+        b.inputs["Specular IOR Level"].default_value = spec
+    if weave:
+        period, strength = weave
+        o = _obj(nt)
+        sep = _n(nt, "ShaderNodeSeparateXYZ")
+        _link(nt, o, sep.inputs["Vector"])
+        k = 2 * 3.14159265 * to_metres / period
+        waves = [_math(nt, "SINE", _math(nt, "MULTIPLY", sep.outputs[a], k), 0.0) for a in ("X", "Y", "Z")]
+        # warp and weft cross at right angles: the product of two waves gives the over-under basket of a plain weave
+        h = _math(nt, "ADD", _math(nt, "MULTIPLY", waves[0], waves[1]), _math(nt, "MULTIPLY", waves[1], waves[2]))
+        h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", waves[2], waves[0]))
+        h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", _noise(nt, o, 1.0, 2.0, 0.5, mapping=(k / 8,) * 3), 0.6))
+        bump = _n(nt, "ShaderNodeBump")
+        bump.inputs["Strength"].default_value = strength
+        bump.inputs["Distance"].default_value = period * 0.25
+        _link(nt, h, bump.inputs["Height"])
+        nrm = b.inputs["Normal"]
+        if nrm.is_linked:
+            _link(nt, nrm.links[0].from_socket, bump.inputs["Normal"])
+        _link(nt, bump.outputs["Normal"], nrm)
 
 
 def glow(name, rgb, strength, pattern=None):

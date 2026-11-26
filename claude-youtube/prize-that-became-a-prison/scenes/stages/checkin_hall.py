@@ -50,7 +50,8 @@ AGENT = (0.02, 0.98)
 EXPOSURE = -1.6
 CAMERAS = {
     "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6),
-    "scale": dict(loc=(1.6, -1.2, 1.32), aim=(1.15, 0.4, 0.6), lens=32, focus="scale_display", fstop=4.0),
+    "scale": dict(loc=(1.6, -1.2, 1.32), aim=(1.15, 0.4, 0.6), lens=32, focus="scale_display", fstop=4.0,
+                  exposure=-2.0),   # exposed for the display, the practical the beat is about
     "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
     "shoulder": dict(loc=(0.4, 1.68, 1.58), aim=(0.29, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.0),
 }
@@ -369,7 +370,7 @@ def materials():
         sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 1.3, 0.45),
         sign_dim=screen_mat("sign dim", (0.6, 0.72, 0.9), 0.12, 0.3),
         monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 5.0, 0.4),
-        display=screen_mat("scale display", (0.5, 1.0, 0.86), 22.0, 0.25),
+        display=screen_mat("scale display", (0.5, 1.0, 0.86), 14.0, 0.3),
         display_edge=sk.emission("display edge bleed", (0.5, 1.0, 0.86), 4.0),
         bezel=pbr("display bezel", (0.03, 0.032, 0.035), (0.3, 0.42), nscale=8, cvar=0.08),
         display_off=pbr("display off", (0.008, 0.012, 0.012), (0.08, 0.14), nscale=10, cvar=0.05),
@@ -510,8 +511,8 @@ def fitting(name, x, y, z, lit, strong=False, length=2.4):
     for dx in (-length * 0.4, length * 0.4):
         sk.cyl(name + "_wire", 0.0025, HALL["H"] - z, (x + dx, y, (HALL["H"] + z) / 2), m["steel"], verts=6)
     if lit:  # a pool on the floor below, and a little uplight that shows the beams and slats above
-        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 650 if strong else 55, spread=100 if strong else 85)
-        up = light(name + "_up", (x, y, z + 0.05), (length - 0.1, 0.14), 14 if strong else 10, rot=(math.radians(180), 0, 0), spread=160)
+        light(name + "_light", (x, y, z - 0.06), (length - 0.1, 0.14), 450 if strong else 55, spread=100 if strong else 85)
+        up = light(name + "_up", (x, y, z + 0.05), (length - 0.1, 0.14), 35 if strong else 25, rot=(math.radians(180), 0, 0), spread=160)
         up.visible_camera = False
 
 
@@ -669,7 +670,7 @@ def scale(x0, idx, open_):
         dl.parent = head
         dl.visible_camera = False
         # the panel's glow falling back and down onto the post collar, the plate rim and the top of the bag
-        sp = light(p + "disp_spill", (px - 0.05, py + 0.02, 0.93), (0.2, 0.06), 2.5, spread=150, colour=(0.5, 1.0, 0.86))
+        sp = light(p + "disp_spill", (px - 0.05, py + 0.02, 0.93), (0.2, 0.06), 4.0, spread=150, colour=(0.5, 1.0, 0.86))
         sp.rotation_euler = (-Vector((-0.55, 0.45, -0.7))).to_track_quat("Z", "Y").to_euler()
         sp.visible_camera = False
     # feed belt behind the scale into the collector belt
@@ -698,7 +699,11 @@ def position_lights(x0, idx, level):
     lx = x0 + 0.6
     tube = m["tube"] if level > 0.5 else (m["tube_dim"] if level > 0 else m["diffuser_off"])
     for ly in (0.2, 1.45):  # one over the counter front and the scale, one over the agent
-        box(p + "downlight", (2.5, 0.12, 0.01), (lx, ly, zb - 0.004), tube)
+        if ly < 1 and level > 0.5:  # the open position's front run: bright over the passenger, dim over the scale
+            box(p + "downlight", (1.35, 0.12, 0.01), (x0 + 0.075, ly, zb - 0.004), tube)
+            box(p + "downlight_scale", (1.1, 0.12, 0.01), (x0 + 1.31, ly, zb - 0.004), m["tube_dim"])
+        else:
+            box(p + "downlight", (2.5, 0.12, 0.01), (lx, ly, zb - 0.004), tube)
     box(p + "vent", (2.0, 0.06, 0.012), (lx, 2.1, zb - 0.005), m["plastic"])
     box(p + "vent_front", (2.0, 0.06, 0.012), (lx, 0.85, zb - 0.005), m["plastic"])
     # blank lightbox sign on the bulkhead face
@@ -706,13 +711,17 @@ def position_lights(x0, idx, level):
     box(p + "sign_frame", (1.5, 0.06, 0.4), (lx, yf - 0.03, (BULK[1] + BULK[2]) / 2), m["housing"], bevel=0.006)
     box(p + "sign_face", (1.42, 0.004, 0.33), (lx, yf - 0.062, (BULK[1] + BULK[2]) / 2), face)
     if level > 0:  # the front run is split: full over the passenger, only a dim pool over the scale (its display reads)
-        light(p + "down_front", (x0 + 0.175, 0.2, zb - 0.02), (1.55, 0.12), 580 * level, spread=60)
-        light(p + "down_scale", (x0 + 1.375, 0.2, zb - 0.02), (0.85, 0.12), 70 * level, spread=60)
+        light(p + "down_front", (x0 + 0.075, 0.2, zb - 0.02), (1.35, 0.12), 505 * level, spread=60)
+        light(p + "down_scale", (x0 + 1.375, 0.2, zb - 0.02), (0.85, 0.12), 30 * level, spread=60)
         light(p + "down_agent", (lx, 1.45, zb - 0.02), (2.4, 0.12), 70 * level, spread=60)
         if level > 0.5:  # a flag over the agent (unseen, casts shadow only): he is lit by his monitor, not the downlights
             fl = box(p + "agent_flag", (1.6, 0.8, 0.01), (x0 + 0.3, 0.95, 2.35), m["plastic"])
-            for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
-                setattr(fl, attr, False)
+            # and a cutter (a barn door, also unseen) at the desk's end, so the passenger run does not spill over
+            # the scale: the bags sit in the dark under their own dim pool and the display's glow
+            cut = box(p + "scale_cutter", (0.01, 1.5, 1.8), (x0 + 0.78, 0.15, 2.25), m["plastic"])
+            for ob in (fl, cut):
+                for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
+                    setattr(ob, attr, False)
 
 
 def collector(x_left, x_right):
@@ -805,7 +814,7 @@ def checkin_row():
 # ---------------------------------------------------------------- props and people
 def bags():
     xs = POSITIONS[0] + SX
-    props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5, val=0.35, rough_add=0.3)
+    props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5, val=0.25, rough_add=0.3)
     props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.6)
     checkin_hall_trolley.trolley(materials(), (-0.85, -1.3, 0), 100)   # nose toward the counter, handle to the hall
 
