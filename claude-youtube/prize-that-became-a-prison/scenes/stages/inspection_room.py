@@ -66,22 +66,23 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
 # The scanner stands to the right of the officers: its 1.4 m housing is at shoulder height, so anywhere behind them its
 # top edge cuts through their necks in the wide. Mirrored in Y so its control monitor stands on the room side; the
 # tunnel and belt open to +X (housing x -1.1..+0.2 from its origin, console to +0.5, belt to +1.1)
-SCANNER = (1.0, 1.99)
+SCANNER = (1.4, 1.99)
 
-DAWN = (0.32, -0.80)
+DAWN = (0.15, -0.80)        # in front of the tote, clear of it in the wide
 OFFICER_A = (-0.20, 0.62)  # the one asking, close to the bench, his open hand over the bags
-OFFICER_B = (-1.05, 1.15)  # the scanner operator, a step back by the belt, hands behind his back
+OFFICER_B = (-0.15, 1.30)  # the scanner operator, a step back by the machine, hands behind his back; in the wide he
+                           # stands in the gap between the asking officer and the scanner housing
 # where the cast stands for each beat when it differs from the above (Ch 05 is later: both officers at the bench)
-BLOCKING = {"ch05": {"OfficerA": (0.30, 0.66), "OfficerB": (-0.62, 0.80)}}
+BLOCKING = {"ch05": {"OfficerA": (0.30, 0.62), "OfficerB": (-0.65, 0.66)}}
 
 FOCUS = {"fx_wide": (0.3, 0.1, 1.2), "fx_two": (0.1, 0.0, 1.35), "fx_overhead": (0.0, 0.0, 1.0), "fx_empty": (0.2, 0.08, 1.1)}
 CAMERAS = {
     # Ch 00: the establishing view, high in the corner behind Dawn
-    "wide": dict(loc=(2.55, -2.3, 2.35), aim=(-0.3, 0.55, 0.75), lens=20, focus="fx_wide", fstop=5.6, beat="ch00",
+    "wide": dict(loc=(2.55, -2.3, 2.35), aim=(-0.3, 0.55, 0.75), lens=24, focus="fx_wide", fstop=5.6, beat="ch00",
                  wild=("wall_front", "cove_f", "rail_f")),
-    # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it. Off the
-    # troffer's axis in X, so the top shows the troffer's reflection as a brushed streak, not a white sheet
-    "overhead": dict(loc=(0.3, 0.03, 5.3), aim=(0.3, 0.034, 0.86), lens=32, focus="fx_overhead", fstop=8.0, beat="ch05",
+    # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it. A little
+    # bench's centre toward Dawn, so her head clears the bottom edge and the scanner's foot stays out of the top
+    "overhead": dict(loc=(0.05, -0.15, 5.3), aim=(0.05, -0.146, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
                      above_ceiling=True, exposure=-3.3),
     # Ch 00: the tag on the suitcase's top, from Dawn's side; the zip pulls as bokeh at the bottom, the officer an
     # out-of-focus silhouette beyond (cheated into the gap between the trolley tubes for this angle)
@@ -332,7 +333,7 @@ def build(cast=True):
     st.ceiling()
     st.door()
     st.notice_board()
-    st.back_wall(jx=SCANNER[0] - 0.52, gloves_xz=(2.35, 1.34), trays_xy=(2.45, st.Y1 - 0.3))
+    st.back_wall(jx=SCANNER[0] - 0.52, gloves_xz=(2.38, 1.34), trays_xy=(-1.9, st.Y1 - 0.3))
     st.floor_line(cx=SCANNER[0] + 0.05)
     st.bench(TOP)
     scanner()
@@ -360,10 +361,11 @@ def build(cast=True):
         a = officer("OfficerA", 179, 0.38, weight=0.42, muscle=0.62, proportions=0.6)
         b = officer("OfficerB", 171, 0.7, weight=0.68, muscle=0.38, proportions=0.35, suit=(0.24, 0.28, 0.36))
         # Dawn still, weight on one hip, hands loosely clasped in front, head a little bowed; the officer asking
-        # looks down at the bags with an open, cupped hand over them; the other waits by the belt, hands behind him
+        # looks down at the bags, his open, cupped right hand over them (it reads in the wide, left of the suitcase);
+        # the other waits by the machine, hands behind him
         rigged.pose_figure(d, {"head": (9, -3), "chest": (5, 4), "fingers": 16})
         clasp(d)
-        rigged.pose_figure(a, {"head": (16, 8), "chest": (4, 3), "l_arm": (45, 18, 35), "r_arm": (6, 5, 14), "fingers": 42})
+        rigged.pose_figure(a, {"head": (14, -4), "chest": (4, -3), "r_arm": (30, 14, 55), "l_arm": (6, 5, 14), "fingers": 42})
         rigged.pose_figure(b, {"head": (10, -4), "chest": (-2, 0), "fingers": 30})
         behind(b)
         place(d, (*DAWN, 0), facing(DAWN, OFFICER_A))
