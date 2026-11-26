@@ -57,8 +57,9 @@ PROPS = {  # size, axis, grade
     # The bags' own textures are already dark (surface albedo about 0.03 for both soft bags); what made them read light
     # was the generated plastic specular sheen, so it is cut (FINISH). The black duffel takes the prop table's grade.
     "dawn-suitcase": (0.66, "z", dict(sat=0.6, val=0.9, rough_add=0.15)),
-    "extra-bag-closed": (0.75, "long", dict(sat=0.5, val=0.35, rough_add=0.3)),
-    "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.35, rough_add=0.3)),
+    # (the prop table's val 0.35 still read mid grey on the lit top seen low across the bench: 0.25)
+    "extra-bag-closed": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
+    "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     # the tote's leather is a red-brown that grades to salmon: turned toward orange (hue +0.045) and lifted, it lands
     # near (0.32, 0.15, 0.06) linear, cognac, the one warm thing in the room
     "handbag-tote": (0.35, "long", dict(sat=1.0, val=1.1, hue=0.545, rough_add=0.2)),
@@ -67,8 +68,8 @@ PROPS = {  # size, axis, grade
 }
 FINISH = {  # specular level and woven face (period m, bump strength) per prop
     "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25), ceiling=(0.05, 0.052, 0.058)),
-    "extra-bag-closed": dict(spec=0.12),
-    "extra-bag-open": dict(spec=0.12),
+    "extra-bag-closed": dict(spec=0.06),
+    "extra-bag-open": dict(spec=0.06),
     "handbag-tote": dict(spec=0.4),
     "handbag-shoulder": dict(spec=0.35),
 }
@@ -109,7 +110,7 @@ POSES = {
 
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
-TAG_CAM_LOCAL = ((0.33, -0.09, 0.80), (0.03, -0.04, 0.53))
+TAG_CAM_LOCAL = ((0.33, -0.065, 0.79), (0.028, -0.016, 0.53))
 
 
 def _case_frame(c=CASE):
@@ -128,9 +129,9 @@ CAMERAS = {
     # Ch 05: straight down on the bench through the ceiling, the bags laid out, the three figures round it. The bench
     # reflects the troffer's lens here, not the (much brighter) light that stands in for it
     "overhead": dict(loc=(0.05, -0.15, 5.3), aim=(0.05, -0.146, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
-                     above_ceiling=True, exposure=-4.0, lens_glow=34.0),
+                     above_ceiling=True, exposure=-3.9, lens_glow=60.0),
     # Ch 00: the tag on the suitcase's handle, from Dawn's side; the officer by the scanner an out-of-focus mass beyond
-    "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-3.7),
+    "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-3.5),
     # Ch 00: from the end of the bench, a little low: Dawn and the questioning officer face each other over the bags,
     # the troffer burning above them, the door's vision panel glowing in the gap between their heads
     "two_shot": dict(loc=(2.75, 0.10, 1.25), aim=(-0.1, -0.20, 1.82), lens=24, focus="fx_two", fstop=4.0, beat="ch00"),
@@ -179,7 +180,10 @@ def cloth(holder, item, rough=0.8, bump=0.25, tint=None):
             for ln in list(b.inputs[sock].links):
                 nt.links.remove(ln)
         b.inputs["Roughness"].default_value = rough
-        b.inputs["Sheen Weight"].default_value = 0.25
+        # no sheen: under a top light the microfibre sheen on these vertical faces is what made dark cloth read pale
+        # (navy at 70 % of the stone face, the taupe suit equal to it)
+        b.inputs["Sheen Weight"].default_value = 0.0
+        b.inputs["Specular IOR Level"].default_value = 0.3
         tc = nt.nodes.new("ShaderNodeTexCoord")
         nz = nt.nodes.new("ShaderNodeTexNoise")
         nz.inputs["Scale"].default_value = 400.0
@@ -203,8 +207,8 @@ def hem_thickness(ob, t=0.006):
         ob.modifiers.move(len(ob.modifiers) - 1, sub)
 
 
-def hands_stone(holder, value=0.4):
-    """The hands a shade darker stone than the face (0.4 against 0.5): under a top light the backs of the hands face
+def hands_stone(holder, value=0.34):
+    """The hands a shade darker stone than the face (0.34 against 0.5): under a top light the backs of the hands face
     the troffer and the face does not, so equal albedo reads as white hands. A soft mask from the hand's deform
     weights, so there is no seam at the wrist."""
     body = bpy.data.objects[holder["body"]]
@@ -237,7 +241,7 @@ def dawn():
     the stone (at people.py's 0.36 it read as bare skin under the troffer), plain weave, real hem thickness; her
     bun drawn in to the nape so from behind it sits at the back of the head."""
     h = people.dawn()
-    suit = cloth(h, "female_elegantsuit01", rough=0.85, bump=0.3, tint=(0.165, 0.158, 0.15))
+    suit = cloth(h, "female_elegantsuit01", rough=0.85, bump=0.3, tint=(0.13, 0.125, 0.118))
     if suit is not None:
         hem_thickness(suit, 0.006)
     bun = bpy.data.objects.get(f"{h['body']}_bun")
@@ -585,9 +589,10 @@ def build(cast=True):
     x, y, z, t = CASE
     case.location, case.rotation_euler = (x, y, z), (0, 0, math.radians(t))
     bpy.context.view_layer.update()
-    st.luggage_tag(case, _case_frame())
+    st.luggage_tag(case, _case_frame(), hole=(-0.008, -0.005), grip=(-0.045, 0.542), grip_r=(0.0125, 0.0115))
     st.bounce()
     st.wall_wash()
+    st.room_fill([_STATE["scanner"]["holder"]] + [o for o in _STATE["scanner"]["parts"] if o.type == "MESH"])
     rake_light()
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.03), (0, (st.Y0 + st.Y1) / 2, st.H / 2 - 0.01), 0.002)
     for n, p in FOCUS.items():
@@ -621,7 +626,7 @@ def rake_light():
     a shadow on the lid. Kept out of the haze."""
     hole = bpy.data.objects["tag_hole_focus"].matrix_world.translation
     d = Vector((0.397, 0.918, 0.51)).normalized()
-    li = sk.area_light("tag_rake", tuple(hole + d * 1.8), (0.3, 0.05), 240.0, (0.84, 0.92, 1.0), spread_deg=60)
+    li = sk.area_light("tag_rake", tuple(hole + d * 1.8), (0.3, 0.05), 150.0, (0.84, 0.92, 1.0), spread_deg=60)
     li.visible_camera = False
     li.visible_volume_scatter = False
     tt = li.constraints.new("TRACK_TO")

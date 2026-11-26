@@ -421,7 +421,9 @@ SLAB = 0.12                 # the slab the cell stands on
 WH = 2.75                   # wall height above the slab
 TOPZ = SLAB + WH
 SLOT = (0.22, 0.72, SLAB + 1.93, 0.3)  # window slot: centre x, width, sill z, height (in the back wall)
-WINDOW_PATCH = (-0.05, -0.45, SLAB)    # where the slot's light lands (cell-local): the floor before the bunk's end
+WINDOW_PATCH = (0.08, 0.4, SLAB)       # where the slot's light lands (cell-local): the floor beside the bunk
+SPLAY = 0.24                           # the sill slopes this far down to the inner face, as thick walls' high windows do,
+                                       # so a steep light gets through the slot
 WINDOW_W = 9000.0                      # the window source (W): its patch about as bright again as the spot's floor
 
 
@@ -457,14 +459,20 @@ def cell(ox, oy):
     # back wall, built round the slot
     sx, sw, sz, sh = SLOT
     y0, y1 = CY, CY + T
-    B("cell_wall_b_low", (-CX, y0, SLAB), (CX, y1, sz), [P, S], _wall_faces(False))
+    zs = sz - SPLAY                    # the low wall stops a block course under the sill; the sill's wedge sits above
+    B("cell_wall_b_low", (-CX, y0, SLAB), (CX, y1, zs), [P, S], _wall_faces(False))
+    B("cell_wall_b_mid_l", (-CX, y0, zs), (sx - sw / 2, y1, sz), [P, S], _wall_faces(False), bevel=0.008)
+    B("cell_wall_b_mid_r", (sx + sw / 2, y0, zs), (CX, y1, sz), [P, S], _wall_faces(False), bevel=0.008)
+    sill = B("cell_wall_b_sill", (sx - sw / 2, y0, zs), (sx + sw / 2, y1, sz), [P, S], _wall_faces(False),
+             bevel=0.006)
+    sloped_top(sill, y0, SPLAY - 0.012)
     B("cell_wall_b_top", (-CX, y0, sz + sh), (CX, y1, TOPZ), [P, S], _wall_faces(False))
     B("cell_wall_b_l", (-CX, y0, sz), (sx - sw / 2, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008)
     B("cell_wall_b_r", (sx + sw / 2, y0, sz), (CX, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008)
     # the slot: four square bars set in the reveal, the frosted wired pane flush with the outer face
     for i in range(4):
         bx = sx - sw / 2 + sw * (i + 1) / 5
-        B(f"cell_slot_bar{i}", (bx - 0.011, y0 + 0.07, sz - 0.01), (bx + 0.011, y0 + 0.092, sz + sh + 0.01),
+        B(f"cell_slot_bar{i}", (bx - 0.011, y0 + 0.07, sz - SPLAY + 0.02), (bx + 0.011, y0 + 0.092, sz + sh + 0.01),
           [M["bar steel"]], bevel=0.003)
     B("cell_slot_frame_low", (sx - sw / 2, y1 - 0.05, sz), (sx + sw / 2, y1 - 0.03, sz + 0.025), [M["bar steel"]],
       bevel=0.003)
@@ -475,13 +483,26 @@ def cell(ox, oy):
       bevel=0.0)
     # the night beyond the slot: a small hard source well behind it, its cone flattened to the slot, so a blade of
     # cool light crosses the haze and lays the slot, barred, on the floor in front of the bunk
-    S = o + Vector((sx, (y0 + y1) / 2, sz + sh / 2))
-    d = (o + Vector(WINDOW_PATCH) - S).normalized()
-    li = spot("cell_window_light", tuple(S - d * 3.0), tuple(S), WINDOW_W, 15.0, 0.12, radius=0.012,
+    mid = o + Vector((sx, y1 - 0.02, sz + sh * 0.45))
+    d = (o + Vector(WINDOW_PATCH) - mid).normalized()
+    li = spot("cell_window_light", tuple(mid - d * 3.0), tuple(mid), WINDOW_W, 15.0, 0.12, radius=0.012,
               colour=(0.6, 0.72, 1.0))
     li.scale = (1.0, 0.42, 1.0)
     objs.append(li)
     return objs
+
+
+def sloped_top(ob, y_in, drop):
+    """Lower a block's top edge on its inner face by `drop`: a sill that slopes down into the cell, as a thick wall's
+    high window has, so a steep light gets through the slot. The sloped face keeps the section material."""
+    me = ob.data
+    zt = max(v.co.z for v in me.vertices)
+    for v in me.vertices:
+        if abs(v.co.z - zt) < 1e-5 and abs(v.co.y - y_in) < 1e-5:
+            v.co.z -= drop
+    me.update()
+    for p in me.polygons:
+        p.material_index = 1 if p.normal.z > 0.3 else 0
 
 
 def combo_unit(ox, oy, turn_deg=180.0):
@@ -515,9 +536,25 @@ def combo_unit(ox, oy, turn_deg=180.0):
         return ob
 
     part("combo_cabinet", (-0.30, -0.27, 0.0), (0.30, 0.0, 0.94), 0.018, inset=(0.06, 0.07))
-    part("combo_pedestal", (-0.17, -0.52, 0.0), (0.17, -0.25, 0.30), 0.03)
-    bowl = part("combo_bowl", (-0.21, -0.66, 0.30), (0.21, -0.24, 0.40), 0.035, inset=(0.03, 0.09))
-    bowl.modifiers["bevel"].width = 0.02
+    part("combo_pedestal", (-0.15, -0.56, 0.0), (0.15, -0.26, 0.31), 0.03)
+    # the bowl: an oval rim on the pedestal, its top sunk into a basin
+    me = bpy.data.meshes.new("combo_bowl")
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=28, radius1=1.0, radius2=1.0, depth=1.0,
+                          matrix=Matrix.Translation((0.0, -0.44, 0.355)) @ Matrix.Diagonal((0.2, 0.235, 0.1, 1.0)))
+    top = [f for f in bm.faces if f.normal.z > 0.5]
+    bmesh.ops.inset_region(bm, faces=top, thickness=0.035, depth=0.0)
+    bmesh.ops.inset_region(bm, faces=top, thickness=0.05, depth=-0.11)
+    bm.to_mesh(me)
+    bm.free()
+    bowl = _link(bpy.data.objects.new("combo_bowl", me))
+    me.materials.append(st)
+    bv = bowl.modifiers.new("bevel", "BEVEL")
+    bv.width, bv.segments, bv.limit_method = 0.012, 3, "ANGLE"
+    bowl.modifiers.new("smooth", "WEIGHTED_NORMAL")
+    for p in me.polygons:
+        p.use_smooth = True
+    parts.append(bowl)
     # the button: a short cylinder on the cabinet face
     me = bpy.data.meshes.new("combo_button")
     bm = bmesh.new()

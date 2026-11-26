@@ -483,7 +483,7 @@ def fuselage(name, top=(0.55, 0.555, 0.56), belly=(0.37, 0.374, 0.38)):
     seam = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", v, 1.6)), 0.004, 0.008, 1.0, 0.0)
     grooves = seam
     for (uc, vc, hu, hv) in DOORS:
-        grooves = _math(nt, "MAXIMUM", grooves, _rrect(nt, u, v, uc, vc, hu, hv, 0.14, 0.009))
+        grooves = _math(nt, "MAXIMUM", grooves, _rrect(nt, u, v, uc, vc, hu, hv, 0.14, 0.014))
     lines = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", joint, 0.35), grooves)
     col = _mix(nt, _math(nt, "MULTIPLY", lines, 0.55), col, (0.04, 0.04, 0.042))
     _link(nt, col, b.inputs["Base Color"])

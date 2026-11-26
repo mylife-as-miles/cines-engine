@@ -43,14 +43,19 @@ AT = {"dawn": (0.0, 0.0), "cell": (40.0, 0.0), "bags": (-40.0, 0.0)}
 # the spots: height above the island, offset of the lamp toward the camera (-y), pool radius on the floor, watts
 # (E = P / (4 pi d^2); the stone skin's crown and the cell's floor land near 1.0 and 0.5 after the exposure)
 SPOTS = {
-    "dawn": dict(h=7.5, fwd=0.8, pool=1.45, watts=9000.0, blend=0.16),
-    "cell": dict(h=7.6, fwd=0.9, pool=2.35, watts=12500.0, blend=0.12),
-    "bags": dict(h=5.8, fwd=0.55, pool=1.15, watts=5600.0, blend=0.16),
+    "dawn": dict(h=7.5, fwd=0.8, pool=1.15, watts=11500.0, blend=0.18),
+    # the cell's lamp nearly over the middle, its edge soft: the floor burns, the walls fall off upward into the dark
+    # and the wall tops take a gentle line of light instead of a hard cone edge
+    "cell": dict(h=7.6, fwd=0.3, pool=2.6, watts=13500.0, blend=0.45),
+    "bags": dict(h=5.8, fwd=0.55, pool=1.15, watts=6000.0, blend=0.18),
 }
-HAZE = {"dawn": 0.03, "cell": 0.02, "bags": 0.03}
+# faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab
+HAZE = {"dawn": 0.009, "cell": 0.006, "bags": 0.009}
 
-DAWN_TURN = 12.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
-POSE = {"head": (15, 2), "neck": (5, 0), "chest": (4, 0), "l_arm": (2, 9, 10), "r_arm": (4, 8, 15), "fingers": 34}
+DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
+# head bowed (round 1's 15 + 5 read as looking straight ahead from chest height), shoulders a little forward, arms
+# hanging loose with the hands just in front of the thighs, fingers curled
+POSE = {"head": (27, 3), "neck": (11, 0), "chest": (7, 0), "l_arm": (7, 7, 14), "r_arm": (9, 6, 19), "fingers": 40}
 
 # the bags (island-local x, y, turn): the case standing, its front pocket turned three-quarters to the lens; the
 # duffel on its side beside it, a little forward, angled
@@ -85,7 +90,7 @@ CAMERAS = {
                       fstop=5.6, beat="dawn"),
     # Ch 08: inside the cell from the open side at standing height: the bunk running into the back corner, the window
     # slot high in the back wall, its cold blade of light across the haze to the floor, the steel unit beyond
-    "cell_close": dict(loc=_p(C, 0.88, -1.62, 1.5), aim=_p(C, -0.4, 1.55, 1.24), lens=24, focus="fx_cell_close",
+    "cell_close": dict(loc=_p(C, 0.85, -1.85, 1.4), aim=_p(C, -0.3, 1.5, 0.9), lens=20, focus="fx_cell_close",
                        fstop=5.6, beat="cell"),
     # Ch 08: far back and a little above: the lit cell a small open box in the black, the beam standing over it
     "cell_far": dict(loc=_p(C, 5.0, -23.5, 6.2), aim=_p(C, 0.0, 0.2, 1.55), lens=50, focus="fx_cell_far", fstop=8.0,
@@ -94,6 +99,10 @@ CAMERAS = {
     "bags": dict(loc=_p(G, 0.15, -4.7, 0.92), aim=_p(G, 0.02, 0.0, 0.5), lens=50, focus="fx_bags", fstop=4.0,
                  beat="bags"),
 }
+
+# a preview run may render only some cameras: VOID_CAMS="dawn,cell_close" (shoot.py's `all` walks CAMERAS)
+if os.environ.get("VOID_CAMS"):
+    CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["VOID_CAMS"].split(",")}
 
 _STATE = {"groups": {}, "cast": []}
 

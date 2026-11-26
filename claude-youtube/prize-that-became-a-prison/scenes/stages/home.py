@@ -416,6 +416,23 @@ def arms_on_table(holder):
     return out
 
 
+def seat_eyes(holder, forward=0.002, grow=1.06):
+    """Seat the statue eyes a little forward and fuller in their sockets. Lit from below by the screen, the render's
+    finer subdivision opens a dark gap round the eyeball (one eye read as a black hole); 2 mm forward and 6 % larger
+    the stone eyeball fills the lids' opening."""
+    from mathutils import Matrix
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones["DEF-spine.006"]
+    hc = rig.matrix_world @ ((pb.head + pb.tail) / 2)
+    bpy.context.view_layer.update()
+    for o in [c for c in holder.children_recursive if c.type == "MESH" and "_eye" in c.name]:
+        mw = o.matrix_world.copy()
+        c = sum((mw @ v.co for v in o.data.vertices), Vector()) / len(o.data.vertices)
+        off = (c - hc).normalized() * forward
+        o.matrix_world = Matrix.Translation(c + off) @ Matrix.Scale(grow, 4) @ Matrix.Translation(-c) @ mw
+    bpy.context.view_layer.update()
+
+
 def face_point(holder):
     rig = rigged.rig_of(holder)
     pb = rig.pose.bones
@@ -566,6 +583,7 @@ def build(cast=True):
         d = dawn_home()
         place_dawn(d, seat_z)
         hands = arms_on_table(d)
+        seat_eyes(d)
         bpy.data.objects["fx_kitchen"].location = face_point(d)
         _STATE["cast"] = [d] + list(d.children_recursive)
         lo = min(p.z for p in body_points(d))

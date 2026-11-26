@@ -171,7 +171,7 @@ def bench_steel(name, rgb=(0.30, 0.305, 0.31), metal=0.9, rough=(0.35, 0.5), ani
     from straight above stays below white.
 
     ghost = (cx, cy, w, h, deg) in object space: a rounded rectangle (the tote's footprint) blurred over 3 cm, inside
-    which the sheet is cleaner and a touch shinier (roughness -0.08, colour +6 %), never darker. Switched by the
+    which the sheet is cleaner and a touch shinier (roughness -0.06, reflectance +25 %), never darker. Switched by the
     Value node named "ghost" (0 = off, 1 = on)."""
     m, nt, b = _new(name)
     b.inputs["Metallic"].default_value = metal
@@ -203,8 +203,8 @@ def bench_steel(name, rgb=(0.30, 0.305, 0.31), metal=0.9, rough=(0.35, 0.5), ani
         sw = _n(nt, "ShaderNodeValue", name="ghost", label="ghost")
         sw.outputs[0].default_value = 0.0
         g = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", inside, inside), sw.outputs[0])
-        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", g, 0.08))
-        col = _mix(nt, g, col, tuple(min(1.0, c * 1.06) for c in rgb))
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", g, 0.06))
+        col = _mix(nt, g, col, tuple(min(1.0, c * 1.25) for c in rgb))
     if contact:
         ao = _ao(nt, contact)
         col = _mix(nt, _maprange(nt, ao, 0.25, 1.0, 0.8, 0.0), col, tuple(c * 0.15 for c in rgb))

@@ -421,7 +421,7 @@ def build(cast=True):
     flag = st.box("flag_near_seats", (0.012, 1.3, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
     # and a second right beside the downlight, so its cone stops at the seat beside hers
-    flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.2, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
+    flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
     for f in (flag, flag2):
         f.visible_camera = f.visible_glossy = f.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)

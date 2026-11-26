@@ -58,9 +58,9 @@ def materials():
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
         cork=mt.paint("board", (0.16, 0.14, 0.11), 0.85, 0.15),
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
-        tag=mt.paper("manila tag", (0.6, 0.48, 0.28), rough=0.9, fibre=0.06),
-        tag_ring=mt.paper("tag ring", (0.52, 0.4, 0.22), rough=0.85),
-        twine=mt.twine("twine", (0.5, 0.4, 0.27), 0.95),
+        tag=mt.paper("manila tag", (0.5, 0.38, 0.2), rough=0.9, fibre=0.06),
+        tag_ring=mt.paper("tag ring", (0.45, 0.34, 0.18), rough=0.85),
+        twine=mt.twine("twine", (0.42, 0.32, 0.19), 0.95),
         curtain=mt.rubber("lead curtain", (0.035, 0.037, 0.04), 0.5),
         belt=mt.rubber("belt rubber", (0.016, 0.016, 0.017), 0.9),
         roller=mt.satin_metal("roller steel", (0.5, 0.51, 0.52), 0.28),
@@ -160,7 +160,7 @@ def shell():
 
 XL = [-XW, -1.8, -0.6, 0.6, 1.8, XW]                       # grid lines across x (1.2 m tiles)
 YL = [Y0, -2.1, -1.5, -0.9, -0.3, 0.3, 0.9, 1.5, 2.1, Y1]  # and along y (0.6 m)
-TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.04), "front": ((-1.2, -1.2), 0.0)}
+TROFFERS = {"bench": ((0.0, 0.0), 1.0), "scanner": ((1.2, 1.8), 0.12), "front": ((-1.2, -1.2), 0.0)}
 DIFFUSER = (1.5, 0.6)
 
 
@@ -231,11 +231,29 @@ def wall_wash():
     walls = [bpy.data.objects.get(n) for n in ("wall_left", "wall_back", "cove_l1", "cove_l2", "cove_b", "rail_l1",
                                                   "rail_l2", "rail_b", "door_leaf", "door_jamb_l", "door_jamb_r", "door_head")]
     cool = (0.74, 0.84, 1.0)   # about 7000 K
-    a = linked_light("wash_left", (-XW + 0.35, -0.35, H - 0.15), (0.3, 2.6), 22.0, cool, walls, spread_deg=100,
+    walls += [bpy.data.objects.get(n) for n in ("wall_right", "wall_front", "cove_r", "cove_f", "rail_r", "rail_f")]
+    a = linked_light("wash_left", (-XW + 0.35, -0.35, H - 0.15), (0.3, 2.6), 30.0, cool, walls, spread_deg=100,
                      rot=(0, math.radians(38), 0))         # aimed down and out at the wall (-X)
-    b = linked_light("wash_back", (-0.6, Y1 - 0.35, H - 0.15), (2.6, 0.3), 16.0, cool, walls, spread_deg=100,
+    b = linked_light("wash_back", (-0.6, Y1 - 0.35, H - 0.15), (2.6, 0.3), 26.0, cool, walls, spread_deg=100,
                      rot=(math.radians(38), 0, 0))
-    return a, b
+    c = linked_light("wash_right", (XW - 0.35, 0.2, H - 0.15), (0.3, 2.6), 24.0, cool, walls, spread_deg=100,
+                     rot=(0, math.radians(-38), 0))
+    d = linked_light("wash_front", (-0.3, Y0 + 0.35, H - 0.15), (2.6, 0.3), 20.0, cool, walls, spread_deg=100,
+                     rot=(math.radians(-38), 0, 0))
+    return a, b, c, d
+
+
+def room_fill(extra=(), energy=55.0):
+    """What the lit bench and floor throw round the rest of the room, on the room only (floor, walls, door, the
+    things standing against the walls): the dark edges of the frame sit above the grade's black with their texture,
+    while the people and the bags keep the single hard top light."""
+    names = ("floor", "wall_left", "wall_back", "wall_right", "wall_front", "door_leaf", "door_jamb_l", "door_jamb_r",
+             "door_head", "board", "board_frame", "bin_body", "bin_lid", "bin_base")
+    recv = [bpy.data.objects.get(n) for n in names]
+    recv += [o for o in bpy.data.objects if o.name.startswith(("cove_", "rail_", "stack_tray", "sheet", "reader_"))]
+    recv += list(extra)
+    return linked_light("room_fill", (0.0, (Y0 + Y1) / 2, H - 0.05), (2 * XW - 0.2, Y1 - Y0 - 0.2), energy,
+                        (0.8, 0.87, 1.0), recv, spread_deg=170)
 
 
 def troffer(name, cx, cy, k, main_energy):
@@ -574,7 +592,7 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
         z = max(surf, prop)
         if p.x > edge_x:                              # overhang: card bends, it does not follow the curved edge
             z = max(surf, drop(hv + a * (edge_x - hv.x) + pdir * u) + 0.0006 - 0.32 * (p.x - edge_x))
-        return z + 0.0015 * (u / (Wd / 2) + 1.0) * min(1.0, max(0.0, (t + top_off) / 0.05))   # one side bears
+        return z + 0.0012 * (u / (Wd / 2) + 1.0)          # one long edge a little higher: one corner bears
 
     for v in bm.verts:
         u, t = v.co.x, v.co.y
