@@ -1,0 +1,364 @@
+{
+ "rockfall_boom": {
+  "tried": {
+   "s901": {
+    "description": "a huge rockfall boom far away",
+    "alternatives": [
+     "a kick drum",
+     "a sub bass drop",
+     "a door slam",
+     "a close explosion"
+    ],
+    "pass": true,
+    "result": "strong (z +3.7, 94% of the choice)",
+    "verdict": "strong",
+    "z": 3.67,
+    "p_vs_alts": 0.935,
+    "alts": [
+     {
+      "query": "a kick drum",
+      "p": 0.0,
+      "z": 0.1
+     },
+     {
+      "query": "a sub bass drop",
+      "p": 0.0,
+      "z": 1.34
+     },
+     {
+      "query": "a door slam",
+      "p": 0.002,
+      "z": 2.07
+     },
+     {
+      "query": "a close explosion",
+      "p": 0.062,
+      "z": 3.32
+     }
+    ],
+    "sounds_like": [
+     "an explosion (z +3.4)",
+     "a thunder clap (z +3.0)",
+     "fireworks exploding (z +2.9)",
+     "a big drum hit (z +2.5)"
+    ],
+    "audioset": [
+     "Thunderstorm 0.64",
+     "Thunder 0.63",
+     "Rain 0.30",
+     "Rain on surface 0.05"
+    ],
+    "describe": "6.03 s 9 separate events (attack 107 ms, decays in 2.4 s). Sounds most like: an explosion (z +3.4), a thunder clap (z +2.9), fireworks exploding (z +2.8) [clear reading]. Other readings: dominoes falling (foley, z +2.4), a thunderstorm (ambience, z +2.3). AudioSet: Thunderstorm 0.64, Thunder 0.63, Rain 0.30. peak -3.0 dBFS, -21.1 LUFS, brightness 1.0 kHz, bandwidth 6.5 kHz, noise floor -90 dBFS, side/mid -8 dB.",
+    "seconds": 6.033,
+    "onsets_s": [
+     0.05
+    ],
+    "layers": [
+     "Stable Audio take, seed 901, -0.03-6.00 s of it"
+    ]
+   }
+  }
+ },
+ "rockfall_crack": {
+  "tried": {
+   "s931": {
+    "description": "a sharp crack of rock splitting far away, echoing across a valley",
+    "alternatives": [
+     "a gunshot",
+     "a stick snapping",
+     "a door slamming",
+     "a whip crack"
+    ],
+    "pass": false,
+    "result": "ahead without a clear margin (36%, 'a stick snapping' 34%; z +2.4)",
+    "verdict": "weak",
+    "z": 2.39,
+    "p_vs_alts": 0.355,
+    "alts": [
+     {
+      "query": "a gunshot",
+      "p": 0.0,
+      "z": 0.16
+     },
+     {
+      "query": "a stick snapping",
+      "p": 0.341,
+      "z": 1.83
+     },
+     {
+      "query": "a door slamming",
+      "p": 0.0,
+      "z": -0.74
+     },
+     {
+      "query": "a whip crack",
+      "p": 0.304,
+      "z": 1.7
+     }
+    ],
+    "sounds_like": [
+     "a squishy wet squelch (z +3.2)",
+     "a cork pop (z +2.9)",
+     "a mouth pop (z +2.8)",
+     "a can opening (z +2.6)"
+    ],
+    "audioset": [
+     "Tearing 0.29",
+     "Crunch 0.10",
+     "Crumpling, crinkling 0.07"
+    ],
+    "describe": "3.04 s busy, 5.6 onsets/s (attack 2 ms, decays in 11 ms). Sounds most like: a squishy wet squelch (z +3.1), a cork pop (z +2.9), a mouth pop (z +2.8) [clear reading]. Other readings: a match being struck (everyday, z +2.4). AudioSet: Tearing 0.29, Crunch 0.10, Crumpling, crinkling 0.07. peak -3.0 dBFS, -34.7 LUFS, brightness 6.6 kHz, bandwidth 20.5 kHz, noise floor -72 dBFS, mono.",
+    "seconds": 3.042,
+    "onsets_s": [
+     0.05
+    ],
+    "layers": [
+     "Stable Audio take, seed 931, -0.04-3.00 s of it"
+    ]
+   }
+  }
+ },
+ "ox_snort": {
+  "tried": {
+   "s902": {
+    "description": "an ox or a cow grunting, snorting",
+    "alternatives": [
+     "a lion growling",
+     "a man coughing",
+     "a dog barking",
+     "a pig oinking"
+    ],
+    "pass": false,
+    "result": "lost to 'a lion growling' (98% against 2%; z +4.1)",
+    "verdict": "strong",
+    "z": 4.07,
+    "p_vs_alts": 0.017,
+    "alts": [
+     {
+      "query": "a lion growling",
+      "p": 0.983,
+      "z": 4.96
+     },
+     {
+      "query": "a man coughing",
+      "p": 0.0,
+      "z": 0.33
+     },
+     {
+      "query": "a dog barking",
+      "p": 0.0,
+      "z": 0.83
+     },
+     {
+      "query": "a pig oinking",
+      "p": 0.0,
+      "z": 2.55
+     }
+    ],
+    "sounds_like": [
+     "a horse neighing (z +2.5)",
+     "a record scratch (z +2.5)",
+     "digging in soil (z +2.5)",
+     "a cow mooing (z +2.5)"
+    ],
+    "audioset": [
+     "Roar 0.17",
+     "Sound effect 0.10"
+    ],
+    "describe": "2.62 s busy, 3.8 onsets/s (attack 43 ms, decays in 462 ms). Sounds most like: a horse neighing (z +2.5), a record scratch (z +2.4), digging in soil (z +2.4) [plausible reading]. AudioSet tagger unsure (Roar 0.17, Sound effect 0.10). peak -3.0 dBFS, -17.7 LUFS, brightness 1.1 kHz, bandwidth 8.1 kHz, noise floor -86 dBFS, mono.",
+    "seconds": 2.623,
+    "onsets_s": [
+     0.05
+    ],
+    "layers": [
+     "Stable Audio take, seed 902, 0.38-3.00 s of it"
+    ]
+   }
+  }
+ },
+ "crows_burst": {
+  "tried": {
+   "s903": {
+    "description": "birds taking off, wings flapping",
+    "alternatives": [
+     "cloth flapping",
+     "a whoosh",
+     "applause",
+     "paper rustling"
+    ],
+    "pass": false,
+    "result": "lost to 'cloth flapping' (61% against 0%; z +1.1)",
+    "verdict": "no match",
+    "z": 1.12,
+    "p_vs_alts": 0.001,
+    "alts": [
+     {
+      "query": "cloth flapping",
+      "p": 0.61,
+      "z": 2.51
+     },
+     {
+      "query": "a whoosh",
+      "p": 0.369,
+      "z": 2.09
+     },
+     {
+      "query": "applause",
+      "p": 0.0,
+      "z": -0.99
+     },
+     {
+      "query": "paper rustling",
+      "p": 0.02,
+      "z": 1.55
+     }
+    ],
+    "sounds_like": [
+     "a gust of wind rushing past (z +3.8)",
+     "a soft air whoosh (z +3.4)",
+     "a fast whoosh (z +2.9)",
+     "cloth whipping through the air (z +2.9)"
+    ],
+    "audioset": [
+     "Snort 0.14",
+     "Breathing 0.10",
+     "Sound effect 0.10"
+    ],
+    "describe": "3.05 s busy, 2.0 onsets/s, tonal, pitch ~78 Hz (Eb2) (attack 157 ms, decays in 2.4 s). Sounds most like: a gust of wind rushing past (z +3.7), a soft air whoosh (z +3.4), a fast whoosh (z +2.8) [clear reading]. Other readings: a spray can hissing (everyday, z +2.8), a phone vibration buzz (ui, z +2.4). Character: airy. AudioSet tagger unsure (Snort 0.14, Breathing 0.10, Sound effect 0.10). peak -3.0 dBFS, -22.4 LUFS, brightness 2.3 kHz, bandwidth 12.9 kHz, noise floor -71 dBFS, mono.",
+    "seconds": 3.05,
+    "onsets_s": [
+     0.05
+    ],
+    "layers": [
+     "Stable Audio take, seed 903, -0.05-3.00 s of it"
+    ]
+   }
+  }
+ },
+ "bowl_on_stone": {
+  "tried": {
+   "s904": {
+    "description": "a wooden bowl set down on stone",
+    "alternatives": [
+     "a box lid closing",
+     "a metal pan clanging",
+     "a door knock",
+     "a plastic object dropped"
+    ],
+    "pass": false,
+    "result": "lost to 'a box lid closing' (95% against 0%; z +2.2)",
+    "verdict": "weak",
+    "z": 2.18,
+    "p_vs_alts": 0.001,
+    "alts": [
+     {
+      "query": "a box lid closing",
+      "p": 0.954,
+      "z": 2.8
+     },
+     {
+      "query": "a metal pan clanging",
+      "p": 0.0,
+      "z": -0.65
+     },
+     {
+      "query": "a door knock",
+      "p": 0.0,
+      "z": 0.9
+     },
+     {
+      "query": "a plastic object dropped",
+      "p": 0.045,
+      "z": 2.07
+     }
+    ],
+    "sounds_like": [
+     "a punchy impact hit (z +2.9)",
+     "a box lid closing (z +2.8)",
+     "an apple falling on grass (z +2.4)",
+     "a heavy thud (z +2.3)"
+    ],
+    "audioset": [
+     "Knock 0.24"
+    ],
+    "describe": "1.91 s short transient (attack 4 ms, decays in 128 ms). Sounds most like: a punchy impact hit (z +2.9), a box lid closing (z +2.8), an apple falling on grass (z +2.4) [plausible reading]. Other readings: a match being struck (everyday, z +2.0). AudioSet: Knock 0.24. peak -3.0 dBFS, -31.1 LUFS, brightness 2.8 kHz, bandwidth 20.5 kHz, noise floor -81 dBFS, mono.",
+    "seconds": 1.905,
+    "onsets_s": [
+     0.05
+    ],
+    "layers": [
+     "Stable Audio take, seed 904, 0.10-2.00 s of it"
+    ]
+   }
+  }
+ },
+ "wind_vale_field": {
+  "tried": {
+   "s917": {
+    "description": "wind blowing across an open field",
+    "alternatives": [
+     "static white noise hiss",
+     "ocean waves on a beach",
+     "a waterfall",
+     "rain"
+    ],
+    "pass": false,
+    "result": "lost to 'static white noise hiss' (96% against 0%; z +2.4)",
+    "verdict": "weak",
+    "z": 2.42,
+    "p_vs_alts": 0.0,
+    "alts": [
+     {
+      "query": "static white noise hiss",
+      "p": 0.965,
+      "z": 4.33
+     },
+     {
+      "query": "ocean waves on a beach",
+      "p": 0.002,
+      "z": 2.19
+     },
+     {
+      "query": "a waterfall",
+      "p": 0.033,
+      "z": 2.92
+     },
+     {
+      "query": "rain",
+      "p": 0.0,
+      "z": 0.69
+     }
+    ],
+    "sounds_like": [
+     "a waterfall (z +2.9)",
+     "a vacuum cleaner (z +2.9)",
+     "bubbles underwater (z +2.7)",
+     "a spray can hissing (z +2.5)"
+    ],
+    "audioset": [
+     "Waves, surf 0.53",
+     "Ocean 0.52",
+     "Wind noise (microphone) 0.41",
+     "Wind 0.41",
+     "Boat, Water vehicle 0.20"
+    ],
+    "describe": "30.50 s steady, few onsets, loudness range 4 LU. Sounds most like: a waterfall (z +2.9), a vacuum cleaner (z +2.9), bubbles underwater (z +2.7) [plausible reading]. Other readings: a gust of wind rushing past (transitions, z +2.5), a computer fan hum (ambience, z +2.2). AudioSet: Waves, surf 0.53, Ocean 0.52, Wind noise (microphone) 0.41. peak -3.0 dBFS, -18.6 LUFS, brightness 5.4 kHz, bandwidth 20.5 kHz, mono. Windows that read differently: 0:00.00-0:10.00 a waterfall (z +3.2; AudioSet Waves, surf 0.20); 0:15.00-0:25.00 a gust of wind rushing past (z +2.9; AudioSet Waves, surf 0.37).",
+    "realness": {
+     "p_real": 0.432,
+     "verdict": "uncertain",
+     "why": "4 of 8 windows lean synthesized (p_real < 0.5); mean CLAP head score -0.2",
+     "evidence": [
+      "evidence below is from the most synthesized-sounding window, 0:00.00-0:04.00 (p_real 0.08)",
+      "CLAP head (decides p_real): score -1.9 (toward synthesized); closest reference prompt 'filtered white noise' (synth side, cos 0.22; best on the other side 'a professional cinematic sound effect from a sound library', cos 0.00; prompt cosines are weak context, not the decision)"
+     ],
+     "summary": "wind_vale_field__s917.wav: uncertain (p_real 0.43, mean of 8 4 s windows; file thresholds lo 0.4 / hi 0.77, weak calibration): 4 of 8 windows lean synthesized (p_real < 0.5); mean CLAP head score -0.2. Leaning synthesized: 0:00.00-0:12.00, 0:26.50-0:30.50; 1 at or below the 4 s-window threshold 0.17 (code-synthesized): 0:00.00-0:04.00."
+    },
+    "seconds": 30.5,
+    "onsets_s": [],
+    "layers": [
+     "Stable Audio take, seed 917, 1.50-32.00 s of it"
+    ]
+   }
+  }
+ }
+}
