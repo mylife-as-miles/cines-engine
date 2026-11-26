@@ -1,2 +1,2 @@
-assets/*.blend
-assets/*.glb
+assets/**
+!assets/README.md

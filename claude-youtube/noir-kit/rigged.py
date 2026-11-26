@@ -140,7 +140,49 @@ def figure(name, height=1.75, outfit=None, pose=None, location=(0, 0, 0), facing
     holder.rotation_euler = (0, 0, math.radians(facing_deg))
     bpy.context.view_layer.update()
 
+    holder["rig"], holder["body"], holder["ks"] = rig.name, body.name, ks
+    pose_figure(holder, pose)
+
+    if o.cap:  # a peaked cap sits on the head bone
+        import bmesh
+        me = bpy.data.meshes.new(f"{name}_cap")
+        bm = bmesh.new()
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=32, radius1=0.104, radius2=0.118, depth=0.085,
+                              matrix=Matrix.Translation((0, 0.0, 0)) @ Matrix.Rotation(math.radians(-90), 4, "X") @ Matrix.Diagonal((1, 1.15, 1, 1)))
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=32, radius1=0.11, radius2=0.11, depth=0.008,
+                              matrix=Matrix.Translation((0, -0.03, -0.045)) @ Matrix.Rotation(math.radians(-90), 4, "X") @ Matrix.Diagonal((1, 1.45, 1, 1)))
+        bm.to_mesh(me)
+        bm.free()
+        cap = bpy.data.objects.new(f"{name}_cap", me)
+        coll.objects.link(cap)
+        cap.data.materials.append(_mat(f"{name}_capmat", o.cap_colour, 0.6))
+        cap.parent, cap.parent_type, cap.parent_bone = rig, "BONE", "head"
+        total = rig.scale[0] * ks
+        cap.scale = (height / 1.8 / total,) * 3          # the cap is modelled for a 1.8 m head, in metres
+        cap.location = (0, -0.045 / total, -0.008 / total)  # crown seated on the head, nudged forward
+    return holder
+
+
+def rig_of(holder):
+    return bpy.data.objects[holder["rig"]]
+
+
+def shoulder_world(holder, side):
+    """World position of the upper arm's root on one side (+1 = the character's left)."""
+    rig = rig_of(holder)
+    pb = rig.pose.bones["upper_arm_fk.L" if side > 0 else "upper_arm_fk.R"]
+    bpy.context.view_layer.update()
+    return rig.matrix_world @ pb.head
+
+
+def pose_figure(holder, pose=None):
+    """Put a figure in a pose. Always starts from rest, so calling it again replaces the pose rather than adding."""
+    pose = pose or {}
+    rig = rig_of(holder)
+    ks = holder["ks"]
     pb = rig.pose.bones
+    for b in pb:
+        b.matrix_basis = Matrix.Identity(4)
     for side, k in ((1, "L"), (-1, "R")):  # FK arms so they can be aimed
         if f"upper_arm_parent.{k}" in pb:
             pb[f"upper_arm_parent.{k}"]["IK_FK"] = 1.0
@@ -169,22 +211,3 @@ def figure(name, height=1.75, outfit=None, pose=None, location=(0, 0, 0), facing
                 pb[n].rotation_mode = "XYZ"
                 pb[n].rotation_euler.x = curl
     bpy.context.view_layer.update()
-
-    if o.cap:  # a peaked cap sits on the head bone
-        import bmesh
-        me = bpy.data.meshes.new(f"{name}_cap")
-        bm = bmesh.new()
-        bmesh.ops.create_cone(bm, cap_ends=True, segments=32, radius1=0.104, radius2=0.118, depth=0.085,
-                              matrix=Matrix.Translation((0, 0.0, 0)) @ Matrix.Rotation(math.radians(-90), 4, "X") @ Matrix.Diagonal((1, 1.15, 1, 1)))
-        bmesh.ops.create_cone(bm, cap_ends=True, segments=32, radius1=0.11, radius2=0.11, depth=0.008,
-                              matrix=Matrix.Translation((0, -0.03, -0.045)) @ Matrix.Rotation(math.radians(-90), 4, "X") @ Matrix.Diagonal((1, 1.45, 1, 1)))
-        bm.to_mesh(me)
-        bm.free()
-        cap = bpy.data.objects.new(f"{name}_cap", me)
-        coll.objects.link(cap)
-        cap.data.materials.append(_mat(f"{name}_capmat", o.cap_colour, 0.6))
-        cap.parent, cap.parent_type, cap.parent_bone = rig, "BONE", "head"
-        total = rig.scale[0] * ks
-        cap.scale = (height / 1.8 / total,) * 3          # the cap is modelled for a 1.8 m head, in metres
-        cap.location = (0, -0.045 / total, -0.008 / total)  # crown seated on the head, nudged forward
-    return holder
