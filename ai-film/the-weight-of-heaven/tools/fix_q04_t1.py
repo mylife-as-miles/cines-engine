@@ -11,6 +11,8 @@ What it does, shot by shot (the take's own cuts: frames 63, 116, 255, 330, 478):
   shot 1   slowed to three quarters speed (2.6 s -> 3.5 s; the frame is almost still), and the wine made to tremble:
            concentric ripples running inward from the rim, drawn inside the wine's own ellipse, tracked frame by frame.
            The take's ripples can only be found by amplifying the picture.
+           Then laid exactly over movement I's still cup (rim, foot, the bowl's edges and the marble's edge), so that
+           one cup can dissolve into the other with nothing moving but the room behind it and the wine.
   shot 4   the Hierophant's five words took under a second. From the cut to a quarter second after his last word, slowed
            to 0.84 speed (motion-interpolated); the hold after the line is dropped, so the shot ends on the word.
   shot 5   the wall behind the Engineer came back dark slate. Only the background (the dark region joined to the frame's
@@ -27,6 +29,7 @@ W, H, FPS = 992, 432, 24
 SRC = P('out/takes/Q04_t1.mp4')
 CUTS = [0, 63, 116, 255, 330, 478, 577]
 S1_SPEED, S4_SPEED, S4_END = 0.75, 0.84, 318          # shot 4 is used up to frame 318 (13.25 s): 0.25 s after his last word
+DISSOLVE = 30                                          # frames over which the still cup of movement I becomes this one
 LUMA = np.array([0.299, 0.587, 0.114], np.float32)
 
 
@@ -128,6 +131,39 @@ def ripples(frames):
     return np.stack(out), E
 
 
+def cup_marks(img):
+    """Where the cup stands in a frame: the top of its rim, the bottom of its foot, the bowl's left and right edges and
+    the marble's far edge. Gold is the only strongly coloured thing in either shot."""
+    sat = (img.max(2) - img.min(2)) / np.maximum(img.max(2), 1e-3)
+    gold = (sat > 0.30) & (img[..., 0] > img[..., 2] + 0.12)
+    ys = np.where(gold[:, 485:510].any(1))[0]
+    xs = np.where(gold[150:175].any(0))[0]
+    c = img.mean(2)[200:300, 120:200].mean(1)
+    return np.array([ys.min(), ys.max(), xs.min(), xs.max(), int(np.argmax(np.diff(c))) + 200], np.float64)
+
+
+def register(frames, E, hold):
+    """Shot 1 laid exactly over the still cup that ends movement I, for the matched dissolve between them (the author,
+    26 November: the two cups "should transition together"). The model re-framed the cup a little and drew its lip
+    thinner. Each of the first `hold` frames is moved and scaled, width and height separately (they differ by about
+    4 %), so that the bowl's edges, the rim's top, the foot and the marble's edge fall on the still cup's; after that
+    the last of those settings is kept, so the model's own slow push carries on from there with no jump."""
+    still = cup_marks(read(P('out/edits/I_bell_v8.mp4'), 1443, 1472).mean(0))
+    M = np.array([cup_marks(f) for f in frames[:hold + 1]])
+    tt = np.arange(len(M))
+    M = np.stack([np.polyval(np.polyfit(tt, M[:, k], 2), tt) for k in range(5)], 1)   # steady from frame to frame
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    out = []
+    for k, f in enumerate(frames):
+        m = M[min(k, hold)]
+        sx = (still[3] - still[2]) / (m[3] - m[2]); cxa, cxb = (still[2] + still[3]) / 2, (m[2] + m[3]) / 2
+        ay, by = np.polyfit([m[0], m[4], m[1]], [still[0], still[4], still[1]], 1)    # rim top, marble edge, foot: one line
+        src_x = (xx - cxa) / sx + cxb
+        src_y = (yy - by) / ay
+        out.append(np.stack([ndimage.map_coordinates(f[..., c], [src_y, src_x], order=1, mode='nearest') for c in range(3)], -1))
+    return np.stack(out), [round(float(v), 1) for v in still]
+
+
 # ------------------------------------------------------------------ shot 5: the wall
 def figure_mask(f):
     """The Engineer: his skin (the only warm thing in the shot), the hair round it, and the robe joined to it.
@@ -188,6 +224,7 @@ def main():
 
     s1 = whole(retime(CUTS[0], CUTS[1], S1_SPEED, 'blend'), M)
     s1, ell = ripples(s1)
+    s1, still_cup = register(s1, ell, DISSOLVE)
     put(s1, '1 the cup', (CUTS[0], CUTS[1], S1_SPEED))
     put(neutral(read(SRC, CUTS[1], CUTS[2]), curves), '2 the Chancellor', (CUTS[1], CUTS[2], 1.0))
     put(neutral(read(SRC, CUTS[2], CUTS[3]), curves), '3 the chamber', (CUTS[2], CUTS[3], 1.0))
@@ -197,6 +234,7 @@ def main():
     enc.stdin.close()
     if enc.wait(): sys.exit('encode failed')
     rec = {'source': 'out/takes/Q04_t1.mp4', 'fps': FPS, 'frames': n_out, 'seconds': round(n_out / FPS, 4), 'shots': shots,
+           'dissolve_frames': DISSOLVE, 'still_cup_marks_rim_foot_left_right_marble': still_cup,
            'grade_fit_rms': round(err, 4), 'wine_ellipse_first_last': [np.round(ell[0], 1).tolist(), np.round(ell[-1], 1).tolist()]}
     json.dump(rec, open(out.replace('.mp4', '.json'), 'w'), indent=1)
     print('wrote', os.path.relpath(out, HERE), n_out, 'frames,', rec['seconds'], 's')

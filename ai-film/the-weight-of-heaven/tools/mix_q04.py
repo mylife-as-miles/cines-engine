@@ -3,7 +3,8 @@
 
     /root/leonxlnx/earshot/.venv/bin/python tools/mix_q04.py   ->  out/edits/Q04_t1_fixed_mix.wav, stems in out/edits/stems_q04/
 
-The clock starts PRE seconds before the picture: the film holds black there, with the super, and the bells come in under it.
+The clock is the mended picture's. Its first 30 frames are the matched dissolve out of movement I's still cup: the
+bells and the cup's buzz come up through it (cut v11; in cut v10 a black card stood here).
 
   voices   the video model's, from the take. Its low drone is taken out (whatever holds still at each frequency for two
            seconds: tools/mix_vale.py, lesson 50) and the track high-passed. Shot 1's sound is dropped whole (a swell and
@@ -34,7 +35,7 @@ def load(name):
 mb, mv = load('mix_bell'), load('mix_vale')
 SR = mb.SR
 lin, st, mono, fade, pan = mb.lin, mb.st, mb.mono, mb.fade, mb.pan
-PRE = 77 / 24.0                             # 77 frames of black, with the super and the bells, before the cup
+PRE = 0.0                                   # the council's clock is its picture's: frame 0 is the first frame of the matched dissolve
 L_LINE = -15.0                              # where movement I's lines sit in cut v9's master (loudest 400 ms)
 CLOCK = json.load(open(P('out/edits/Q04_t1_fixed.json')))
 DUR = PRE + CLOCK['seconds']
@@ -141,7 +142,7 @@ def bells():
     y = Z(); place(y, fade(x, 0.05, 1.0), 0.3)
     y = y * lin(-30.0 - mb.db(np.sqrt((mono(y)[int(0.8 * SR):int((PRE + 2.5) * SR)] ** 2).mean()) + 1e-9))
     first = PRE + SHOT['3']['out_start_s'] + 0.6                                 # his first word
-    return y * env([(0, None), (0.35, None), (1.4, 0.0), (PRE + 2.6, 0.0), (PRE + 4.4, -7.0), (first - 0.25, None), (DUR, None)])
+    return y * env([(0, -28.0), (0.9, 0.0), (PRE + 2.6, 0.0), (PRE + 4.4, -7.0), (first - 0.25, None), (DUR, None)])   # up through the dissolve, as movement I lets go
 
 
 def buzz():
@@ -154,7 +155,7 @@ def buzz():
     x = sos(x[:int((dur + 0.25) * SR)], 'highpass', 300, 2)
     s = x * lin(L_LINE - 17.0 - mb.lvl(x, 'm'))
     out = Z()
-    place(out, fade(s, 0.03, 0.3), PRE + 0.02)
+    place(out, fade(s, 1.1, 0.3), PRE + 0.02)                                   # it comes up as the still cup becomes this one
     return out
 
 

@@ -152,6 +152,16 @@ Three checks before the take, 26 November: an independent review, the reference 
 | 84 | **A short window of a sound is another sound.** Two strokes of far bells in 2.3 s read as a doorbell; the same bells over ten seconds read as church bells. Judge a sound over the stretch the audience hears, and say which stretch was tested. | The bells under the black card. | Every ear-model check. |
 | 85 | **A listening model asked about a drone will find one.** After the low band measured empty (nothing under 120 Hz above −65 dBFS but the voices' own pitch), the second listener still reported a low drone under the scene: it was describing the wind bed. Ask what is heard, not whether a named thing is there, and settle it by measurement. | Cut v10's council. | Every listening pass. |
 
+## From the author's verdict on cut v10
+
+The author (26 November): the fade to black and the black card "reduce the pace of the film"; the two cups "should transition together", in Park Chan-wook's manner; the super belongs on the wide shot.
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 86 | **Join scenes through the image they share, not through black.** I had ended movement I on a fade and opened the council on a card: five seconds in which nothing happened, between two shots of the same cup that were built to match. When two scenes hold the same object in the same frame, that is the transition. | Cut v10 against cut v11. | Every scene change in this film; the water inserts above all (bowl, cup, cup, bowl). |
+| 87 | **A super goes on the picture that needs it.** Over black it stops the film; over the establishing wide it costs no time. Find the darkest plain part of the frame for it (here the dome) and give it a soft shade, rather than choosing black for legibility. | Cut v11, the wide shot. | Every super. |
+| 88 | **A first-frame reference is matched in look, not to the pixel.** The model re-framed the cup by 17 px and drew its lip thinner. For a matched dissolve, measure real marks in both shots (edges, rim, foot, a horizon) and register on those; matching one feature (the wine's ellipse) left a double rim. | `tools/fix_q04_t1.py`, `register`. | Every match cut or dissolve onto generated material. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
