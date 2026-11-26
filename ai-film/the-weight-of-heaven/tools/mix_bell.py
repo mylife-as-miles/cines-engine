@@ -997,9 +997,9 @@ CUES = [
     dict(id='BELL-01', stem='bell', kind='bell', t=T_OPEN, lvl=L_OPEN, send=-11.0,
          sound='The stroke over black: the same bell, about 6 dB smaller and with less of its sub (so it reads as a bell, not a boom), heard down the nave',
          why='the script: "A bell. One stroke. It does not fade. It hangs." Its tail carries under the title and into the nave\'s fade-in, and yields to line 1'),
-    dict(id='BELL-02', stem='bell', kind='bell', t=T_STROKE, lvl=L_STROKE, send=-13.0, ride=((30.5, 0.0), (34.8, 2.5)),
+    dict(id='BELL-02', stem='bell', kind='bell', t=T_STROKE, lvl=L_STROKE, send=-13.0, ride=((30.5, 0.0), (34.8, 4.0)),
          sound='THE STROKE: a cast bell ring tuned to the take (prime 191.6 Hz, hum 95.8 Hz), bell_body under it (47.9 and 95.9 Hz), a clang of the same bell\'s upper partials on the contact, the take\'s own strike low under it, and that strike one and two octaves down for mass',
-         why='the biggest event in the film; rings through the cup to the end on its own decay, ridden up 2.5 dB between 30.5 and 34.8 s so the note still reads as the picture goes black (the script: it hangs); a fade only in the last second'),
+         why='the biggest event in the film; rings through the cup to the end on its own decay, ridden up 4 dB between 30.5 and 34.8 s so the note still reads as the picture goes black (the script: it hangs); a fade only in the last second'),
     # ---- effects (Foley and hard effects)
     dict(id='FX-01', stem='effects', t=12.55, src=[A('cloth_move', sync='peak'), SY(syn_cloth, 'filtered-noise sleeve', sync=0.6, dur=0.9, seed=41)],
          lvl=-36.0, mode='pk', eq=[('hp', 200), ('lp', 3500, 2)], fi=0.02, fo=0.1,
@@ -1017,13 +1017,13 @@ CUES = [
          lvl=-11.0, mode='peak', eq=[('hp', 90), ('lp', 6000, 2)], pan=0.2, fi=0.004, fo=0.07, maxlen=0.5,
          sound='The press, Foley support: a soft wet give under the take\'s own sound; it starts on the touch (frame 478, 19.912) and is fullest as the ring is fully down (20.05)', why="bright for a squelch (the foundry's note), so it sits 4 dB under the take's press; no hall on it (a close-up)"),
     dict(id='FX-03b', stem='effects', t=T_PRESS, src=[TK('Q02A_t2', PRESS_SRC_ONSET - 0.012, 12.46, sync=PRESS_SRC_ONSET)],
-         lvl=-8.5, mode='peak', eq=[('hp', 120), ('lp', 5000, 2)], pan=0.2, fi=0.004, fo=0.12,
+         lvl=-7.0, mode='peak', eq=[('hp', 120), ('hs', 3500, 3.0)], pan=0.2, fi=0.004, fo=0.12,
          sound="THE PRESS: the take's own press sound, moved 150 ms earlier onto the touch, close and dry", why="the story's cause: it was 7 frames late in v4 and inaudible; now on the frame and the main element, the choir dips 8 dB round it"),
     dict(id='FX-04a', stem='effects', t=T_LIFT, src=[A('ring_lift', sync='peak'), SY(syn_lift, 'tacky tick')],
          lvl=-16.0, mode='peak', eq=[('hp', 300), ('lp', 7000, 2)], pan=0.2, fo=0.03,
          sound='THE LIFT: a short tacky peel, its tick on the frame the ring leaves the wax (21.492)', why='the seal is left on the page: the second half of the cause. Kept low: louder it reads as a click'),
     dict(id='FX-04b', stem='effects', t=T_LIFT, src=[TK('Q02A_t2', 13.36, 13.66, sync=LIFT_SRC_ONSET)],
-         lvl=-10.0, mode='peak', eq=[('hp', 250), ('lp', 5000, 2)], pan=0.2, fi=0.02, fo=0.08,
+         lvl=-8.5, mode='peak', eq=[('hp', 250), ('hs', 3500, 3.0)], pan=0.2, fi=0.02, fo=0.08,
          sound="The take's own lift sound, in sync", why='production body under the Foley tick'),
     dict(id='FX-05a', stem='effects', hall='tower', t=T_RAISE + 0.01, src=[A('paper_handling', a=0.0, b=0.62), SY(syn_paper, 'crackle grains, one flap', dur=0.6, seed=33, moves=((0.3, 0.5),))],
          lvl=-24.0, mode='pk', eq=[('hp', 250)], pan=0.3, send=-20.0, fi=0.005, fo=0.12,
@@ -1053,8 +1053,8 @@ CUES = [
          lvl=-21.0, mode='pk', eq=[('hp', 35)], pan=-0.3, fo=0.02,
          sound='The swing: a low heavy whoosh, its apex on the contact', why='a door-sized mass moving: anticipation, 0.42 s'),
     dict(id='FX-12', stem='effects', t=T_CUP + 0.05, src=[A('gloved_applause', sync=0.0), TK('Q02B_t1', 11.78, 15.93)],
-         lvl=-31.0, mode='rms', eq=[('hp', 250, 2)], send=-4.0, fi=1.0, fo=1.8, maxlen=3.9,
-         sound='Gloved applause, far and large, under the bell (29.4-33.3): full band (any low-pass made it read as hooves or rain), very low, mostly hall', why='soft, far, never the last sound: it recedes from 31.5 and is gone by 33.4, a second before the picture starts to fade; the bell goes on alone for three seconds'),
+         lvl=-30.0, mode='rms', eq=[('hp', 250, 2)], send=-9.0, fi=1.0, fo=2.2, maxlen=4.0,
+         sound='Gloved applause, far and large, under the bell (29.4-34.0): full band (any low-pass made it read as hooves or rain), very low, in the hall', why='soft, far, never the last sound: it recedes from 31.2 and is gone by 34.0, before the picture is black; the bell goes on alone for the last 2.3 s'),
     dict(id='FX-12b', stem='effects', t=T_CUP + 1.75, src=[TK('Q02B_t1', 12.35, 15.93)], only_if_missing='gloved_applause',
          lvl=-34.0, mode='rms', eq=[('hp', 300, 4), ('lp', 2600, 2)], width=0.9, send=-7.0, fi=0.8, fo=1.9, maxlen=3.3,
          sound='Applause, second pass of the take (stand-in only, to cover the 5.5 s cup)', why='the take has 4.2 s of applause; overlapped, not looped'),
@@ -1231,7 +1231,7 @@ def build(args):
     g[k1:] = 0
     stems['choir'] *= g[:, None]
     # applause is never the last sound: the effects stem (its hall return included) is out before the picture fades
-    k0, k1 = int(32.6 * SR), int(33.45 * SR)
+    k0, k1 = int(32.3 * SR), int(34.0 * SR)
     g = np.ones(N)
     g[k0:k1] = ramp(k1 - k0, False)
     g[k1:] = 0
