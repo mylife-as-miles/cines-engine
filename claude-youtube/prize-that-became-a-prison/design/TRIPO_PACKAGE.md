@@ -118,6 +118,25 @@ Revised 26 November 2026 after batch 2 showed that Tripo handles single objects 
 
 The defendant's dock moves to Blender entirely (panels and a rail, with the visitor's chair inside).
 
+### Batch 3 results (26 November 2026)
+
+Approved by the author ("Proceed"). All ten generated once each with the prompts and settings below (310 reference credits); all accepted at once. The kitchen table's first download was cut off and was fetched again (no new generation).
+
+| # | Asset | Task ID | Model ID | Real size placed | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| 17 | kitchen-table | 01a2180a-f8dc-7430-824d-cbf392994c8e | 01a2180c-3775-748e-b3e1-7884d2b977e8 | 76 cm tall, 89 cm across | Excellent |
+| 18 | dining-chair | 01a2180a-fbda-701b-b2de-8d41d792ef15 | 01a2180c-add3-7e16-b1f2-e625c9346624 | 95 cm tall | Excellent: spindle back, turned legs, worn fabric seat |
+| 19 | dining-table | 01a2180a-ff06-708a-a665-cee963049c99 | 01a2180c-6e50-713c-bb7d-4bc81f31ae12 | 1.8 x 0.97 x 0.75 m | Good, true dining proportions |
+| 20 | cell-door | 01a2180b-0187-7bfb-bdbe-3e3b2b49b387 | 01a2180c-acc1-7042-9947-8a553400f845 | 2.1 m tall | Front is right (barred window, hatch, hinges), but the door is a 1.1 m deep block: set it into a wall so only the front shows |
+| 21 | visitor-chair | 01a2180b-08c4-72cb-902a-e551b57ebbb0 | 01a2180c-7a4f-7c38-9b5d-1f537d279646 | 82 cm tall | Excellent |
+| 22 | visiting-phone | 01a2180b-12e5-7d4c-a184-021c194f1dc9 | 01a2180c-3c07-766a-bb48-4d94e5fb8235 | 30 cm tall | Good: steel box, black handset, armoured cord |
+| 23 | bunk-bed | 01a2180b-1d43-783b-9173-6aa850ea1eca | 01a2180c-d4f6-722b-998b-6f591c3e3b42 | 1.95 m long | Excellent |
+| 24 | judge-chair | 01a2180b-2700-7a11-a5fe-5fc431b839d5 | 01a2180c-8f1e-7678-b1ce-de4afc75d2cf | 1.25 m tall | Excellent |
+| 25 | gallery-bench | 01a2180b-30fb-7efc-a52d-45bcef981b9a | 01a2180c-4f2e-7009-b368-190e07de5539 | 2.0 m long | Good: pale wood, pew-like |
+| 26 | microphone | 01a2180b-3a74-78ce-ad66-4bd774a5ce2a | 01a2180b-faad-74b1-80d5-269529da8405 | 45 cm tall | Good |
+
+All three batches: 26 props generated for 830 reference credits. 22 good, 2 usable with care (the reception desk in the background, the cell door set into a wall), 2 misses replaced by Blender builds (check-in desk, queue post).
+
 **All batches as revised: 26 assets, 830 reference credits** (plus `delight`, if Tripo charges for it). Spent so far: 520 on batches 1 and 2.
 
 The leather market (Ch 04) reuses the three handbags and the extra bag, recoloured in Blender, hung on a stall frame built in Blender.
