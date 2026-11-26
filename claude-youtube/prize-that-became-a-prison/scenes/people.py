@@ -8,7 +8,7 @@
     t = people.man("Tim", age=0.55)       # other men (Tim, Gene, the trip's organisers): muted casual suit
 
 Each returns the cast holder empty, built at the origin facing -Y, for rigged.pose_figure and then placing.
-Rules from the critiques: no shimmering pinstripe (garments are tinted flat: the colour is plain, the weave's relief
+Rules from the critiques: garments well below the stone skin's value (0.5) so they read as clothes, no shimmering pinstripe (garments are tinted flat: the colour is plain, the weave's relief
 stays), no sneakers (plain black shoes), no logos, and no two people alike (variants differ in height, build, age and
 suit tone).
 """
@@ -34,10 +34,11 @@ STAFF = [(1.0, 176, 0.35, (0.09, 0.095, 0.11)), (0.0, 165, 0.42, (0.1, 0.1, 0.12
 
 
 def dawn():
-    """Dawn in 2014 (Ch 01-05, 11 memories): the blouse and skirt in a plain muted taupe, black flats."""
+    """Dawn in 2014 (Ch 01-05, 11 memories): the blouse and skirt in a plain dark umber, black flats. Garments must sit
+    well below the stone skin (0.5) in value, or the critic reads them as bare skin (taupe 0.33 failed)."""
     h = cast.person("Dawn", gender=0.0, height_cm=168, age=0.45, hair="bun")
     cast.dress(h, ["female_elegantsuit01", "shoes04"],
-               tint={"female_elegantsuit01": (0.36, 0.33, 0.3), "shoes04": BLACK_SHOE},
+               tint={"female_elegantsuit01": (0.075, 0.058, 0.048), "shoes04": BLACK_SHOE},
                flat=("female_elegantsuit01", "shoes04"))
     return h
 
@@ -46,7 +47,7 @@ def dawn_prison():
     """Dawn in detention, court and prison (Ch 06-08): the casual suit in flat institutional grey, black flats."""
     h = cast.person("DawnPrison", gender=0.0, height_cm=168, age=0.5, weight=0.42, hair="bun")
     cast.dress(h, ["female_casualsuit01", "shoes04"],
-               tint={"female_casualsuit01": (0.3, 0.31, 0.32), "shoes04": BLACK_SHOE},
+               tint={"female_casualsuit01": (0.13, 0.135, 0.14), "shoes04": BLACK_SHOE},
                flat=("female_casualsuit01", "shoes04"))
     return h
 
@@ -76,7 +77,7 @@ def staff(name, variant=0):
     return h
 
 
-def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", tone=(0.22, 0.21, 0.2), shoes="shoes01"):
+def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", tone=(0.12, 0.115, 0.11), shoes="shoes01"):
     """Any other man (Tim at the hearing in male_elegantsuit01 charcoal; Gene; the organisers in casual suits)."""
     h = cast.person(name, gender=1.0, height_cm=height_cm, age=age, weight=weight, hair="short")
     cast.dress(h, [suit, shoes], tint={suit: tone, shoes: (0.09, 0.07, 0.055)}, flat=(suit,))

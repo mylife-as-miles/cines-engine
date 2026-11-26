@@ -146,6 +146,7 @@ def _brick(nt, vec, w, h, mortar, c1, c2, cm, offset=0.5, smooth=0.2):
 
 
 def _remember(name, m):
+    m.use_fake_user = True      # MPFB purges orphan data while it builds a person: keep the cached materials alive
     M[name] = m
     return m
 
