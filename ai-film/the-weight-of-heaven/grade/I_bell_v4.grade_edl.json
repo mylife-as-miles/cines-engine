@@ -1,0 +1,57 @@
+{
+ "name": "I_bell_v4 (grade keys)",
+ "fps": 24,
+ "about": "The v4 cut's picture ranges with their grade keys, for testing tools/grade_bell.py; a new cut supplies its own.",
+ "picture": [
+  {
+   "start": 0,
+   "duration": 6.667,
+   "grade_key": "Q01:nave"
+  },
+  {
+   "start": 6.667,
+   "duration": 3.875,
+   "grade_key": "Q01:hierophant"
+  },
+  {
+   "start": 10.542,
+   "duration": 3.291,
+   "grade_key": "Q01:reverse"
+  },
+  {
+   "start": 13.833,
+   "duration": 2.5,
+   "grade_key": "Q01:gallery"
+  },
+  {
+   "start": 16.333,
+   "duration": 2.667,
+   "grade_key": "Q02A:unread"
+  },
+  {
+   "start": 19.0,
+   "duration": 3.375,
+   "grade_key": "Q02A:seal"
+  },
+  {
+   "start": 22.375,
+   "duration": 2.125,
+   "grade_key": "Q02B:below"
+  },
+  {
+   "start": 24.5,
+   "duration": 4.0,
+   "grade_key": "Q02:wide"
+  },
+  {
+   "start": 28.5,
+   "duration": 3.75,
+   "grade_key": "Q02B:hammer"
+  },
+  {
+   "start": 32.25,
+   "duration": 2.5,
+   "grade_key": "Q02:cup"
+  }
+ ]
+}

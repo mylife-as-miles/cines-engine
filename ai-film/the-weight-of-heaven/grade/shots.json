@@ -1,0 +1,1728 @@
+{
+ "about": "Per-shot correction for Movement I (the bell). One entry per grade_key. 'source' is where the shot comes from (cropped and rescaled where the film crops it). 'measured' and 'matched' are statistics of that source range before and after the correction (display code values of 255; 'acescct' is what the solve uses). 'cdl' is the correction: an ASC CDL (slope, offset, power, saturation) applied in ACEScct, pivoted on display black. 'trim' is the colourist's hand on the solve, with its reason. 'anchors' are like-for-like patches (ivory cloth or marble, sky, the dark thing) at one source frame, before and after. 'accents' lists the accent keys this shot may use, the soft rectangle they act in ('region', null = whole frame; 'exclude' = rectangles cut out of it) in the film's frame (992x432, after the film's crop), and why. 'shape' is optional tonal shaping (deepen, density, haze). 'faces' names the principals for the QA by horizontal position. 'measured', 'cdl', 'matched' and the anchors' numbers are rewritten by: python3 tools/grade_bell.py --measure; everything else is kept.",
+ "hero": "Q02A:unread",
+ "shots": {
+  "Q01:nave": {
+   "what": "the symmetrical nave wide, bell far away",
+   "source": {
+    "take": "out/takes/Q01_t1.mp4",
+    "in": 0.0,
+    "out": 6.67,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "floor",
+     "class": "ivory",
+     "t": 3.3,
+     "rect": [
+      440,
+      380,
+      540,
+      420
+     ],
+     "before": {
+      "rgb": [
+       174.4,
+       172.2,
+       170.6
+      ],
+      "luma": 172.6,
+      "R-B": 3.8
+     },
+     "matched": {
+      "rgb": [
+       170.5,
+       167.6,
+       166.5
+      ],
+      "luma": 168.2,
+      "R-B": 4.0
+     }
+    },
+    {
+     "name": "sky in the far arch",
+     "class": "sky",
+     "t": 3.3,
+     "rect": [
+      470,
+      240,
+      510,
+      290
+     ],
+     "before": {
+      "rgb": [
+       217.3,
+       219.2,
+       221.1
+      ],
+      "luma": 218.9,
+      "R-B": -3.8
+     },
+     "matched": {
+      "rgb": [
+       215.7,
+       216.8,
+       219.6
+      ],
+      "luma": 216.8,
+      "R-B": -3.9
+     }
+    },
+    {
+     "name": "the bell",
+     "class": "dark",
+     "t": 3.3,
+     "rect": [
+      478,
+      160,
+      500,
+      190
+     ],
+     "before": {
+      "rgb": [
+       91.5,
+       91.0,
+       88.7
+      ],
+      "luma": 90.9,
+      "R-B": 2.8
+     },
+     "matched": {
+      "rgb": [
+       86.9,
+       86.3,
+       84.2
+      ],
+      "luma": 86.3,
+      "R-B": 2.7
+     }
+    }
+   ],
+   "shape": [
+    {
+     "op": "haze",
+     "top": 0.5,
+     "amount": 0.1,
+     "why": "the vault dissolves into cloud light: depth"
+    },
+    {
+     "op": "deepen",
+     "region": null,
+     "amount": 0.5,
+     "below": 0.45,
+     "why": "the wide has no blacks (1st percentile 50 of 255): the dark hair of the crowd and the gaps between figures are let down; no face in this shot is larger than a few pixels"
+    },
+    {
+     "op": "deepen",
+     "region": [
+      440,
+      120,
+      540,
+      215
+     ],
+     "feather": 24,
+     "amount": 0.9,
+     "below": 0.75,
+     "why": "the bell as the dark anchor of the pale frame"
+    }
+   ],
+   "measured": {
+    "black_p1": 50.0,
+    "black_p0.1": 21.0,
+    "median": 152.9,
+    "white_p99": 240.1,
+    "neutral_R-B": 1.2,
+    "neutral_G-M": -0.2,
+    "highlight_R-B": 0.4,
+    "chroma_mean": 3.9,
+    "chroma_median": 3.7,
+    "clipped_pct": 0.035,
+    "crushed_pct": 0.001,
+    "acescct": {
+     "black": 0.2330237627029419,
+     "median": 0.4537956416606903,
+     "white": 0.5428934097290039,
+     "white_p99.9": 0.5474814176559448,
+     "cast": [
+      0.00033232997520826757,
+      -0.00011590168287511915,
+      -0.0002298071631230414
+     ],
+     "neutral_luma": 0.4875660240650177,
+     "chroma": 0.006801903713494539
+    },
+    "frames": 39
+   },
+   "cdl": {
+    "slope": [
+     1.02728,
+     1.02627,
+     1.02747
+    ],
+    "offset": [
+     0.02162,
+     0.0217,
+     0.02161
+    ],
+    "power": [
+     1.12,
+     1.12,
+     1.12
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 47.3,
+    "black_p0.1": 19.9,
+    "median": 148.0,
+    "white_p99": 239.2,
+    "neutral_R-B": 1.6,
+    "neutral_G-M": -0.6,
+    "highlight_R-B": 0.5,
+    "chroma_mean": 4.0,
+    "chroma_median": 3.8,
+    "clipped_pct": 0.035,
+    "crushed_pct": 0.001,
+    "acescct": {
+     "black": 0.22208265960216522,
+     "median": 0.44727689027786255,
+     "white": 0.5421276688575745,
+     "white_p99.9": 0.5468562245368958,
+     "cast": [
+      0.0006844584713689983,
+      -0.0002685400831978768,
+      -9.965329081751406e-05
+     ],
+     "neutral_luma": 0.48231232166290283,
+     "chroma": 0.007034010253846645
+    }
+   }
+  },
+  "Q01:hierophant": {
+   "what": "the Hierophant, frontal medium",
+   "source": {
+    "take": "out/takes/Q01_t1.mp4",
+    "in": 6.67,
+    "out": 10.54,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "his robe",
+     "class": "ivory",
+     "t": 8.6,
+     "rect": [
+      420,
+      290,
+      470,
+      350
+     ],
+     "before": {
+      "rgb": [
+       191.2,
+       185.5,
+       178.7
+      ],
+      "luma": 186.3,
+      "R-B": 12.6
+     },
+     "matched": {
+      "rgb": [
+       196.8,
+       191.4,
+       185.1
+      ],
+      "luma": 192.1,
+      "R-B": 11.7
+     }
+    },
+    {
+     "name": "the groom's hair",
+     "class": "dark",
+     "t": 8.6,
+     "rect": [
+      760,
+      220,
+      860,
+      300
+     ],
+     "before": {
+      "rgb": [
+       4.4,
+       7.2,
+       8.7
+      ],
+      "luma": 6.7,
+      "R-B": -4.2
+     },
+     "matched": {
+      "rgb": [
+       4.4,
+       7.2,
+       8.7
+      ],
+      "luma": 6.7,
+      "R-B": -4.3
+     }
+    }
+   ],
+   "faces": [
+    {
+     "name": "Hierophant",
+     "x": [
+      400,
+      600
+     ]
+    }
+   ],
+   "measured": {
+    "black_p1": 2.5,
+    "black_p0.1": 1.8,
+    "median": 146.1,
+    "white_p99": 225.9,
+    "neutral_R-B": 1.1,
+    "neutral_G-M": -0.6,
+    "highlight_R-B": 9.2,
+    "chroma_mean": 4.0,
+    "chroma_median": 3.7,
+    "clipped_pct": 0.0,
+    "crushed_pct": 2.088,
+    "acescct": {
+     "black": 0.07313383370637894,
+     "median": 0.44470447301864624,
+     "white": 0.530860960483551,
+     "white_p99.9": 0.5362336039543152,
+     "cast": [
+      0.0009629569249227643,
+      -0.00033754625474102795,
+      -0.0006439937860704958
+     ],
+     "neutral_luma": 0.37588438391685486,
+     "chroma": 0.006326605100184679
+    },
+    "frames": 22
+   },
+   "cdl": {
+    "slope": [
+     1.01383,
+     1.01445,
+     1.0165
+    ],
+    "offset": [
+     -0.00101,
+     -0.00105,
+     -0.0012
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 2.5,
+    "black_p0.1": 1.8,
+    "median": 150.1,
+    "white_p99": 233.4,
+    "neutral_R-B": 1.1,
+    "neutral_G-M": -0.7,
+    "highlight_R-B": 8.2,
+    "chroma_mean": 3.9,
+    "chroma_median": 3.5,
+    "clipped_pct": 0.0,
+    "crushed_pct": 2.176,
+    "acescct": {
+     "black": 0.07314012944698334,
+     "median": 0.4500560462474823,
+     "white": 0.5373144745826721,
+     "white_p99.9": 0.5421434044837952,
+     "cast": [
+      0.0008977788966149092,
+      -0.0003349701000843197,
+      -0.0003459768486209214
+     ],
+     "neutral_luma": 0.38376104831695557,
+     "chroma": 0.005812032613903284
+    }
+   }
+  },
+  "Q01:reverse": {
+   "what": "from behind him, the couple, tilt up to the bell",
+   "source": {
+    "take": "out/takes/Q01_t1.mp4",
+    "in": 10.54,
+    "out": 13.83,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "his hat",
+     "class": "ivory",
+     "t": 11.0,
+     "rect": [
+      440,
+      250,
+      500,
+      300
+     ],
+     "before": {
+      "rgb": [
+       130.7,
+       124.1,
+       115.0
+      ],
+      "luma": 124.9,
+      "R-B": 15.7
+     },
+     "matched": {
+      "rgb": [
+       128.0,
+       121.6,
+       112.9
+      ],
+      "luma": 122.4,
+      "R-B": 15.1
+     }
+    },
+    {
+     "name": "the bell",
+     "class": "dark",
+     "t": 13.5,
+     "rect": [
+      470,
+      170,
+      520,
+      230
+     ],
+     "before": {
+      "rgb": [
+       57.9,
+       56.3,
+       56.5
+      ],
+      "luma": 56.6,
+      "R-B": 1.3
+     },
+     "matched": {
+      "rgb": [
+       56.7,
+       55.2,
+       55.5
+      ],
+      "luma": 55.6,
+      "R-B": 1.2
+     }
+    }
+   ],
+   "measured": {
+    "black_p1": 32.6,
+    "black_p0.1": 16.6,
+    "median": 131.2,
+    "white_p99": 244.7,
+    "neutral_R-B": 1.2,
+    "neutral_G-M": -0.5,
+    "highlight_R-B": 3.4,
+    "chroma_mean": 3.2,
+    "chroma_median": 2.6,
+    "clipped_pct": 0.026,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.14872127771377563,
+     "median": 0.4234775900840759,
+     "white": 0.5466778874397278,
+     "white_p99.9": 0.5492619276046753,
+     "cast": [
+      0.000813556369394064,
+      -0.00030158451409079134,
+      -0.0003380783018656075
+     ],
+     "neutral_luma": 0.4441816806793213,
+     "chroma": 0.004858688451349735
+    },
+    "frames": 18
+   },
+   "cdl": {
+    "slope": [
+     1.00114,
+     1.0013,
+     1.00247
+    ],
+    "offset": [
+     0.00502,
+     0.00501,
+     0.00492
+    ],
+    "power": [
+     1.02653,
+     1.02653,
+     1.02653
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 32.2,
+    "black_p0.1": 16.3,
+    "median": 128.6,
+    "white_p99": 241.2,
+    "neutral_R-B": 1.1,
+    "neutral_G-M": -0.5,
+    "highlight_R-B": 2.7,
+    "chroma_mean": 3.1,
+    "chroma_median": 2.6,
+    "clipped_pct": 0.002,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.1464734524488449,
+     "median": 0.41951948404312134,
+     "white": 0.543777585029602,
+     "white_p99.9": 0.5463923215866089,
+     "cast": [
+      0.000791273545473814,
+      -0.00030572302057407796,
+      -0.00017548626055940986
+     ],
+     "neutral_luma": 0.4382128417491913,
+     "chroma": 0.0046085030771791935
+    }
+   }
+  },
+  "Q01:gallery": {
+   "what": "the gallery of guests",
+   "source": {
+    "take": "out/takes/Q01_t1.mp4",
+    "in": 13.83,
+    "out": 16.33,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "the balustrade",
+     "class": "ivory",
+     "t": 14.5,
+     "rect": [
+      620,
+      290,
+      780,
+      330
+     ],
+     "before": {
+      "rgb": [
+       159.4,
+       153.9,
+       145.5
+      ],
+      "luma": 154.5,
+      "R-B": 13.9
+     },
+     "matched": {
+      "rgb": [
+       158.6,
+       153.6,
+       145.8
+      ],
+      "luma": 154.1,
+      "R-B": 12.7
+     }
+    },
+    {
+     "name": "sky",
+     "class": "sky",
+     "t": 14.5,
+     "rect": [
+      600,
+      10,
+      700,
+      60
+     ],
+     "before": {
+      "rgb": [
+       178.3,
+       176.3,
+       175.7
+      ],
+      "luma": 176.7,
+      "R-B": 2.6
+     },
+     "matched": {
+      "rgb": [
+       177.3,
+       175.9,
+       176.2
+      ],
+      "luma": 176.2,
+      "R-B": 1.1
+     }
+    }
+   ],
+   "measured": {
+    "black_p1": 51.4,
+    "black_p0.1": 22.0,
+    "median": 150.2,
+    "white_p99": 240.0,
+    "neutral_R-B": 2.5,
+    "neutral_G-M": -0.7,
+    "highlight_R-B": 3.9,
+    "chroma_mean": 5.0,
+    "chroma_median": 5.2,
+    "clipped_pct": 0.008,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.2389969527721405,
+     "median": 0.45033180713653564,
+     "white": 0.5427937507629395,
+     "white_p99.9": 0.546493649482727,
+     "cast": [
+      0.00108104117680341,
+      -0.00036245310911908746,
+      -0.0009304322302341461
+     ],
+     "neutral_luma": 0.459174782037735,
+     "chroma": 0.008985025808215141
+    },
+    "frames": 14
+   },
+   "cdl": {
+    "slope": [
+     0.99813,
+     0.99888,
+     1.00096
+    ],
+    "offset": [
+     0.00014,
+     8e-05,
+     -7e-05
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 51.3,
+    "black_p0.1": 22.0,
+    "median": 149.9,
+    "white_p99": 239.2,
+    "neutral_R-B": 2.0,
+    "neutral_G-M": -0.8,
+    "highlight_R-B": 2.3,
+    "chroma_mean": 4.7,
+    "chroma_median": 4.7,
+    "clipped_pct": 0.003,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.23878660798072815,
+     "median": 0.44987255334854126,
+     "white": 0.5421307682991028,
+     "white_p99.9": 0.5457240343093872,
+     "cast": [
+      0.0010569149162620306,
+      -0.00037098268512636423,
+      -0.0007011828711256385
+     ],
+     "neutral_luma": 0.4565424621105194,
+     "chroma": 0.008245207369327545
+    }
+   },
+   "trim": {
+    "black": 0.0,
+    "why": "its 1st percentile is high (51) only because nothing dark is in frame; its faces already sit where the hero's do (0.24-0.37 against 0.26-0.36), so the mid-tones are not pulled down"
+   }
+  },
+  "Q02A:unread": {
+   "what": "the aide brings the warrant; Serath, gold collar, eyes up (the hero)",
+   "source": {
+    "take": "out/takes/Q02A_t2.mp4",
+    "in": 8.58,
+    "out": 11.42,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "Serath's coat",
+     "class": "ivory",
+     "t": 9.93,
+     "rect": [
+      560,
+      250,
+      640,
+      330
+     ],
+     "before": {
+      "rgb": [
+       168.3,
+       161.6,
+       155.6
+      ],
+      "luma": 162.6,
+      "R-B": 12.7
+     },
+     "matched": {
+      "rgb": [
+       168.3,
+       161.6,
+       155.6
+      ],
+      "luma": 162.6,
+      "R-B": 12.7
+     }
+    },
+    {
+     "name": "the aide's coat",
+     "class": "ivory",
+     "t": 9.93,
+     "rect": [
+      60,
+      220,
+      130,
+      300
+     ],
+     "before": {
+      "rgb": [
+       169.6,
+       164.1,
+       158.0
+      ],
+      "luma": 164.8,
+      "R-B": 11.6
+     },
+     "matched": {
+      "rgb": [
+       169.6,
+       164.1,
+       158.0
+      ],
+      "luma": 164.8,
+      "R-B": 11.6
+     }
+    },
+    {
+     "name": "sky",
+     "class": "sky",
+     "t": 9.93,
+     "rect": [
+      780,
+      150,
+      860,
+      200
+     ],
+     "before": {
+      "rgb": [
+       231.1,
+       232.2,
+       234.3
+      ],
+      "luma": 232.1,
+      "R-B": -3.1
+     },
+     "matched": {
+      "rgb": [
+       231.1,
+       232.2,
+       234.3
+      ],
+      "luma": 232.1,
+      "R-B": -3.1
+     }
+    },
+    {
+     "name": "Serath's hair",
+     "class": "dark",
+     "t": 9.93,
+     "rect": [
+      565,
+      62,
+      620,
+      78
+     ],
+     "before": {
+      "rgb": [
+       50.9,
+       44.3,
+       45.5
+      ],
+      "luma": 45.8,
+      "R-B": 5.5
+     },
+     "matched": {
+      "rgb": [
+       50.9,
+       44.3,
+       45.5
+      ],
+      "luma": 45.8,
+      "R-B": 5.5
+     }
+    }
+   ],
+   "faces": [
+    {
+     "name": "aide",
+     "x": [
+      60,
+      230
+     ]
+    },
+    {
+     "name": "Serath",
+     "x": [
+      520,
+      680
+     ]
+    }
+   ],
+   "accents": [
+    {
+     "key": "gold",
+     "region": [
+      500,
+      140,
+      680,
+      235
+     ],
+     "feather": 20,
+     "why": "Serath's collar only: the box stops above the coat and below her chin"
+    },
+    {
+     "key": "seal",
+     "region": [
+      330,
+      340,
+      480,
+      425
+     ],
+     "feather": 12,
+     "why": "the wax on the warrant in the gloved hands"
+    }
+   ],
+   "measured": {
+    "black_p1": 30.9,
+    "black_p0.1": 8.1,
+    "median": 151.3,
+    "white_p99": 238.8,
+    "neutral_R-B": 0.4,
+    "neutral_G-M": -1.0,
+    "highlight_R-B": -1.4,
+    "chroma_mean": 4.9,
+    "chroma_median": 4.4,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.001,
+    "acescct": {
+     "black": 0.14315344393253326,
+     "median": 0.45168811082839966,
+     "white": 0.5418444871902466,
+     "white_p99.9": 0.5457392930984497,
+     "cast": [
+      0.0007183958077803254,
+      -0.00031134660821408033,
+      0.0002674784045666456
+     ],
+     "neutral_luma": 0.4693109393119812,
+     "chroma": 0.007374562788754702
+    },
+    "frames": 16
+   },
+   "cdl": {
+    "slope": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 30.9,
+    "black_p0.1": 8.1,
+    "median": 151.3,
+    "white_p99": 238.8,
+    "neutral_R-B": 0.4,
+    "neutral_G-M": -1.0,
+    "highlight_R-B": -1.4,
+    "chroma_mean": 4.9,
+    "chroma_median": 4.4,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.001,
+    "acescct": {
+     "black": 0.14315344393253326,
+     "median": 0.45168811082839966,
+     "white": 0.5418444871902466,
+     "white_p99.9": 0.5457392930984497,
+     "cast": [
+      0.0007183855632320046,
+      -0.000311343465000391,
+      0.0002674914139788598
+     ],
+     "neutral_luma": 0.4693111479282379,
+     "chroma": 0.007374562788754702
+    }
+   }
+  },
+  "Q02A:seal": {
+   "what": "close: gloved hand, ring, red wax, paper",
+   "source": {
+    "take": "out/takes/Q02A_t2.mp4",
+    "in": 11.42,
+    "out": 15.04,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "the paper",
+     "class": "ivory",
+     "t": 14.5,
+     "rect": [
+      700,
+      290,
+      800,
+      330
+     ],
+     "before": {
+      "rgb": [
+       196.2,
+       190.7,
+       183.9
+      ],
+      "luma": 191.4,
+      "R-B": 12.3
+     },
+     "matched": {
+      "rgb": [
+       205.9,
+       202.1,
+       194.8
+      ],
+      "luma": 202.4,
+      "R-B": 11.1
+     }
+    },
+    {
+     "name": "the glove",
+     "class": "ivory",
+     "t": 14.5,
+     "rect": [
+      200,
+      60,
+      300,
+      120
+     ],
+     "before": {
+      "rgb": [
+       114.0,
+       108.9,
+       111.5
+      ],
+      "luma": 110.2,
+      "R-B": 2.5
+     },
+     "matched": {
+      "rgb": [
+       118.2,
+       113.7,
+       116.5
+      ],
+      "luma": 114.8,
+      "R-B": 1.7
+     }
+    }
+   ],
+   "accents": [
+    {
+     "key": "seal",
+     "region": null,
+     "why": "no skin in this shot (gloves): the whole frame"
+    }
+   ],
+   "measured": {
+    "black_p1": 28.9,
+    "black_p0.1": 12.9,
+    "median": 135.5,
+    "white_p99": 216.4,
+    "neutral_R-B": 1.4,
+    "neutral_G-M": -1.9,
+    "highlight_R-B": 9.9,
+    "chroma_mean": 4.4,
+    "chroma_median": 4.5,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.002,
+    "acescct": {
+     "black": 0.13977284729480743,
+     "median": 0.42982667684555054,
+     "white": 0.5224188566207886,
+     "white_p99.9": 0.5266048312187195,
+     "cast": [
+      0.0017454930348321795,
+      -0.0006778324604965746,
+      -0.000341383449267596
+     ],
+     "neutral_luma": 0.44148632884025574,
+     "chroma": 0.007530580274760723
+    },
+    "frames": 20
+   },
+   "cdl": {
+    "slope": [
+     1.02398,
+     1.02662,
+     1.02709
+    ],
+    "offset": [
+     -0.00175,
+     -0.00194,
+     -0.00197
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 29.2,
+    "black_p0.1": 13.1,
+    "median": 142.0,
+    "white_p99": 229.6,
+    "neutral_R-B": 1.2,
+    "neutral_G-M": -1.1,
+    "highlight_R-B": 8.4,
+    "chroma_mean": 4.3,
+    "chroma_median": 4.1,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.002,
+    "acescct": {
+     "black": 0.14147640764713287,
+     "median": 0.4390779137611389,
+     "white": 0.5340358018875122,
+     "white_p99.9": 0.538109302520752,
+     "cast": [
+      0.0011748706456273794,
+      -0.0004381612816359848,
+      -0.0004557532083708793
+     ],
+     "neutral_luma": 0.4528246521949768,
+     "chroma": 0.007224503438919783
+    }
+   }
+  },
+  "Q02B:below": {
+   "what": "the aide raises the sealed warrant against sky, tilt up, the bell from below",
+   "source": {
+    "take": "out/takes/Q02B_t1.mp4",
+    "in": 0.125,
+    "out": 4.0,
+    "crop": "754:328:0:104"
+   },
+   "anchors": [
+    {
+     "name": "the aide's coat",
+     "class": "ivory",
+     "t": 0.25,
+     "rect": [
+      500,
+      380,
+      580,
+      420
+     ],
+     "before": {
+      "rgb": [
+       145.8,
+       140.5,
+       132.0
+      ],
+      "luma": 141.0,
+      "R-B": 13.9
+     },
+     "matched": {
+      "rgb": [
+       148.9,
+       141.6,
+       132.2
+      ],
+      "luma": 142.4,
+      "R-B": 16.8
+     }
+    },
+    {
+     "name": "sky",
+     "class": "sky",
+     "t": 0.25,
+     "rect": [
+      760,
+      60,
+      900,
+      200
+     ],
+     "before": {
+      "rgb": [
+       216.7,
+       220.7,
+       224.9
+      ],
+      "luma": 220.1,
+      "R-B": -8.2
+     },
+     "matched": {
+      "rgb": [
+       222.6,
+       222.7,
+       225.5
+      ],
+      "luma": 222.9,
+      "R-B": -2.9
+     }
+    },
+    {
+     "name": "the aide's hair",
+     "class": "dark",
+     "t": 0.25,
+     "rect": [
+      510,
+      190,
+      560,
+      250
+     ],
+     "before": {
+      "rgb": [
+       9.3,
+       10.8,
+       13.6
+      ],
+      "luma": 10.7,
+      "R-B": -4.2
+     },
+     "matched": {
+      "rgb": [
+       9.4,
+       10.8,
+       13.6
+      ],
+      "luma": 10.7,
+      "R-B": -4.2
+     }
+    },
+    {
+     "name": "the bell",
+     "class": "dark",
+     "t": 2.05,
+     "rect": [
+      560,
+      160,
+      720,
+      260
+     ],
+     "before": {
+      "rgb": [
+       18.7,
+       17.9,
+       18.0
+      ],
+      "luma": 18.0,
+      "R-B": 0.6
+     },
+     "matched": {
+      "rgb": [
+       18.8,
+       17.9,
+       18.1
+      ],
+      "luma": 18.1,
+      "R-B": 0.7
+     }
+    }
+   ],
+   "accents": [
+    {
+     "key": "seal",
+     "region": [
+      470,
+      0,
+      992,
+      340
+     ],
+     "feather": 16,
+     "exclude": [
+      [
+       470,
+       150,
+       636,
+       432
+      ]
+     ],
+     "why": "the raised warrant's path. The aide's ear and neck are the same red-brown hue as the wax and cannot be keyed apart, so his head is cut out of the region"
+    }
+   ],
+   "measured": {
+    "black_p1": 11.6,
+    "black_p0.1": 8.2,
+    "median": 176.2,
+    "white_p99": 234.3,
+    "neutral_R-B": -0.0,
+    "neutral_G-M": -0.4,
+    "highlight_R-B": -4.4,
+    "chroma_mean": 3.1,
+    "chroma_median": 2.9,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.07919131219387054,
+     "median": 0.4818089008331299,
+     "white": 0.538062572479248,
+     "white_p99.9": 0.5409339666366577,
+     "cast": [
+      4.3854677642229944e-05,
+      -7.97912070993334e-05,
+      0.0007796032004989684
+     ],
+     "neutral_luma": 0.44483500719070435,
+     "chroma": 0.004908036906272173
+    },
+    "frames": 22
+   },
+   "cdl": {
+    "slope": [
+     1.00851,
+     1.00444,
+     1.00155
+    ],
+    "offset": [
+     -0.00062,
+     -0.00032,
+     -0.00011
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 11.6,
+    "black_p0.1": 8.3,
+    "median": 178.2,
+    "white_p99": 236.8,
+    "neutral_R-B": -0.1,
+    "neutral_G-M": -1.2,
+    "highlight_R-B": 1.0,
+    "chroma_mean": 3.2,
+    "chroma_median": 2.5,
+    "clipped_pct": 0.0,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.07922803610563278,
+     "median": 0.48401910066604614,
+     "white": 0.5402106642723083,
+     "white_p99.9": 0.5427262187004089,
+     "cast": [
+      0.0005583694437518716,
+      -0.0002797429624479264,
+      0.0006822065333835781
+     ],
+     "neutral_luma": 0.47503095865249634,
+     "chroma": 0.0045073553919792175
+    }
+   },
+   "trim": {
+    "wb": [
+     0.0011,
+     0.0,
+     -0.0011
+    ],
+    "why": "like for like, its sky is bluer than the hero's and the nave's (R-B -8.2 against -3.1 and -3.8) while its cloth is not: a small warm white balance; exposure is left alone, because its sky (220) and cloth (141) are no brighter than the hero's (232, 163): the shot only measures brighter because it is mostly sky"
+   },
+   "shape": [
+    {
+     "op": "density",
+     "amount": 0.08,
+     "above": 0.6,
+     "why": "the shot is mostly sky, so it cuts in brighter than the seal before it and the nave after it: a little density in the sky only; cloth and hair are left where the hero has them"
+    }
+   ]
+  },
+  "Q02:wide": {
+   "what": "the nave wide again, the bell drops, chains fall",
+   "source": {
+    "take": "out/takes/Q02_t1.mp4",
+    "in": 13.625,
+    "out": 17.625,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "floor",
+     "class": "ivory",
+     "t": 15.625,
+     "rect": [
+      440,
+      380,
+      540,
+      420
+     ],
+     "before": {
+      "rgb": [
+       173.1,
+       169.8,
+       168.0
+      ],
+      "luma": 170.3,
+      "R-B": 5.1
+     },
+     "matched": {
+      "rgb": [
+       168.7,
+       164.6,
+       163.1
+      ],
+      "luma": 165.4,
+      "R-B": 5.6
+     }
+    }
+   ],
+   "shape": [
+    {
+     "op": "haze",
+     "top": 0.5,
+     "amount": 0.1,
+     "why": "as the opening nave"
+    },
+    {
+     "op": "deepen",
+     "region": null,
+     "amount": 0.5,
+     "below": 0.45,
+     "why": "as the opening nave"
+    },
+    {
+     "op": "deepen",
+     "region": [
+      440,
+      130,
+      540,
+      350
+     ],
+     "feather": 24,
+     "amount": 0.9,
+     "below": 0.75,
+     "why": "the bell and its fall"
+    }
+   ],
+   "measured": {
+    "black_p1": 52.5,
+    "black_p0.1": 29.1,
+    "median": 153.0,
+    "white_p99": 241.3,
+    "neutral_R-B": 0.8,
+    "neutral_G-M": -0.3,
+    "highlight_R-B": -0.4,
+    "chroma_mean": 4.0,
+    "chroma_median": 3.8,
+    "clipped_pct": 0.011,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.24315740168094635,
+     "median": 0.45389771461486816,
+     "white": 0.5439056158065796,
+     "white_p99.9": 0.5466778874397278,
+     "cast": [
+      0.0002903107088059187,
+      -0.0001193542848341167,
+      2.6702256946009584e-05
+     ],
+     "neutral_luma": 0.4920791983604431,
+     "chroma": 0.006999789737164974
+    },
+    "frames": 23
+   },
+   "cdl": {
+    "slope": [
+     1.02596,
+     1.0249,
+     1.02564
+    ],
+    "offset": [
+     0.02172,
+     0.0218,
+     0.02174
+    ],
+    "power": [
+     1.12,
+     1.12,
+     1.12
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 49.6,
+    "black_p0.1": 27.8,
+    "median": 147.6,
+    "white_p99": 239.8,
+    "neutral_R-B": 0.9,
+    "neutral_G-M": -0.8,
+    "highlight_R-B": 0.1,
+    "chroma_mean": 4.1,
+    "chroma_median": 3.8,
+    "clipped_pct": 0.01,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.23179878294467926,
+     "median": 0.44684574007987976,
+     "white": 0.5426190495491028,
+     "white_p99.9": 0.5455586314201355,
+     "cast": [
+      0.0006232935120351613,
+      -0.0002627497015055269,
+      0.00014023213589098305
+     ],
+     "neutral_luma": 0.48698633909225464,
+     "chroma": 0.007337554823607206
+    }
+   }
+  },
+  "Q02B:hammer": {
+   "what": "dark bell and hammer against white",
+   "source": {
+    "take": "out/takes/Q02B_t1.mp4",
+    "in": 6.875,
+    "out": 10.625,
+    "crop": "768:334:224:58"
+   },
+   "anchors": [
+    {
+     "name": "the column",
+     "class": "ivory",
+     "t": 9.375,
+     "rect": [
+      100,
+      300,
+      160,
+      400
+     ],
+     "before": {
+      "rgb": [
+       130.8,
+       127.8,
+       124.9
+      ],
+      "luma": 128.2,
+      "R-B": 5.9
+     },
+     "matched": {
+      "rgb": [
+       133.1,
+       129.7,
+       126.7
+      ],
+      "luma": 130.2,
+      "R-B": 6.4
+     }
+    },
+    {
+     "name": "the bell",
+     "class": "dark",
+     "t": 9.375,
+     "rect": [
+      600,
+      250,
+      700,
+      330
+     ],
+     "before": {
+      "rgb": [
+       88.6,
+       85.4,
+       82.1
+      ],
+      "luma": 85.9,
+      "R-B": 6.5
+     },
+     "matched": {
+      "rgb": [
+       89.8,
+       86.4,
+       83.0
+      ],
+      "luma": 86.9,
+      "R-B": 6.8
+     }
+    },
+    {
+     "name": "the hammer head",
+     "class": "dark",
+     "t": 9.375,
+     "rect": [
+      300,
+      240,
+      440,
+      290
+     ],
+     "before": {
+      "rgb": [
+       38.1,
+       37.3,
+       36.9
+      ],
+      "luma": 37.4,
+      "R-B": 1.1
+     },
+     "matched": {
+      "rgb": [
+       38.3,
+       37.5,
+       37.1
+      ],
+      "luma": 37.6,
+      "R-B": 1.2
+     }
+    }
+   ],
+   "shape": [
+    {
+     "op": "deepen",
+     "region": null,
+     "amount": 0.7,
+     "below": 0.65,
+     "why": "the bronze as the darkest thing in the frame (no skin in this shot)"
+    }
+   ],
+   "measured": {
+    "black_p1": 27.5,
+    "black_p0.1": 15.1,
+    "median": 119.3,
+    "white_p99": 230.8,
+    "neutral_R-B": 0.6,
+    "neutral_G-M": -0.4,
+    "highlight_R-B": -2.6,
+    "chroma_mean": 2.9,
+    "chroma_median": 2.9,
+    "clipped_pct": 0.001,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.1236250177025795,
+     "median": 0.404752254486084,
+     "white": 0.5351082682609558,
+     "white_p99.9": 0.5392459034919739,
+     "cast": [
+      0.0004030897398479283,
+      -0.0001977726788027212,
+      0.00043950314284302294
+     ],
+     "neutral_luma": 0.44260814785957336,
+     "chroma": 0.00629575178027153
+    },
+    "frames": 21
+   },
+   "cdl": {
+    "slope": [
+     1.00934,
+     1.00853,
+     1.00842
+    ],
+    "offset": [
+     -0.00068,
+     -0.00062,
+     -0.00061
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 27.6,
+    "black_p0.1": 15.2,
+    "median": 121.1,
+    "white_p99": 235.4,
+    "neutral_R-B": 0.9,
+    "neutral_G-M": -0.6,
+    "highlight_R-B": -1.9,
+    "chroma_mean": 3.0,
+    "chroma_median": 3.1,
+    "clipped_pct": 0.002,
+    "crushed_pct": 0.0,
+    "acescct": {
+     "black": 0.12407129257917404,
+     "median": 0.40765678882598877,
+     "white": 0.5389578938484192,
+     "white_p99.9": 0.54268878698349,
+     "cast": [
+      0.0005437196814455092,
+      -0.0002526961616240442,
+      0.0004162178956903517
+     ],
+     "neutral_luma": 0.4470250606536865,
+     "chroma": 0.0065014841966331005
+    }
+   }
+  },
+  "Q02:cup": {
+   "what": "gold cup of dark red wine on white marble, gloved hands behind",
+   "source": {
+    "take": "out/takes/Q02_t1.mp4",
+    "in": 24.75,
+    "out": 26.0,
+    "crop": null
+   },
+   "anchors": [
+    {
+     "name": "the marble counter",
+     "class": "ivory",
+     "t": 25.375,
+     "rect": [
+      100,
+      290,
+      300,
+      400
+     ],
+     "before": {
+      "rgb": [
+       178.5,
+       178.3,
+       181.3
+      ],
+      "luma": 178.6,
+      "R-B": -2.8
+     },
+     "matched": {
+      "rgb": [
+       178.7,
+       178.3,
+       180.7
+      ],
+      "luma": 178.6,
+      "R-B": -2.0
+     }
+    },
+    {
+     "name": "the wine",
+     "class": "dark",
+     "t": 25.375,
+     "rect": [
+      410,
+      120,
+      590,
+      200
+     ],
+     "before": {
+      "rgb": [
+       21.2,
+       3.6,
+       6.6
+      ],
+      "luma": 7.5,
+      "R-B": 14.5
+     },
+     "matched": {
+      "rgb": [
+       21.2,
+       3.5,
+       6.6
+      ],
+      "luma": 7.5,
+      "R-B": 14.6
+     }
+    }
+   ],
+   "accents": [
+    {
+     "key": "gold",
+     "region": null,
+     "why": "no skin in this shot: the whole frame"
+    },
+    {
+     "key": "wine",
+     "region": null
+    }
+   ],
+   "measured": {
+    "black_p1": 6.8,
+    "black_p0.1": 5.9,
+    "median": 143.6,
+    "white_p99": 219.0,
+    "neutral_R-B": -0.9,
+    "neutral_G-M": -1.2,
+    "highlight_R-B": -0.7,
+    "chroma_mean": 5.4,
+    "chroma_median": 3.4,
+    "clipped_pct": 0.236,
+    "crushed_pct": 0.006,
+    "acescct": {
+     "black": 0.07716883718967438,
+     "median": 0.4414043128490448,
+     "white": 0.5249044299125671,
+     "white_p99.9": 0.5504353046417236,
+     "cast": [
+      0.0005246876971796155,
+      -0.0002922227722592652,
+      0.0010086422553285956
+     ],
+     "neutral_luma": 0.4717237055301666,
+     "chroma": 0.0061049144715070724
+    },
+    "frames": 6
+   },
+   "cdl": {
+    "slope": [
+     1.00034,
+     0.99997,
+     0.9987
+    ],
+    "offset": [
+     -2e-05,
+     0.0,
+     9e-05
+    ],
+    "power": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sat": 1.0
+   },
+   "matched": {
+    "black_p1": 6.8,
+    "black_p0.1": 5.8,
+    "median": 143.6,
+    "white_p99": 219.0,
+    "neutral_R-B": -0.6,
+    "neutral_G-M": -1.1,
+    "highlight_R-B": 0.2,
+    "chroma_mean": 5.4,
+    "chroma_median": 3.2,
+    "clipped_pct": 0.24,
+    "crushed_pct": 0.006,
+    "acescct": {
+     "black": 0.07716932147741318,
+     "median": 0.44140496850013733,
+     "white": 0.5249062776565552,
+     "white_p99.9": 0.5502238273620605,
+     "cast": [
+      0.0003616354370024055,
+      -0.00023531737679149956,
+      0.0011208913056179881
+     ],
+     "neutral_luma": 0.4767807722091675,
+     "chroma": 0.006084783468395472
+    }
+   }
+  },
+  "black": {
+   "what": "title card and black frames",
+   "passthrough": true
+  }
+ }
+}

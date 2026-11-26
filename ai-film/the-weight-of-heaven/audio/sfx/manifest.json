@@ -1,0 +1,1813 @@
+{
+ "film": "The Weight of Heaven",
+ "made_by": "tools/sfx_make.py (re-make any file: make NAME --force)",
+ "format": "FLAC, 24-bit, 48 kHz; stereo where the brief asked for it, otherwise mono",
+ "finish": "48 kHz (soxr VHQ); onset trimmed (3 ms before the first 1 ms frame within 40 dB of the peak, held in 3 of 10 frames), 2 ms de-click; peak -1 dBFS; raised-cosine fade-out; FLAC 24-bit. Where a bright transient's inter-sample peak would pass full scale, the gain is set by the true peak instead (ring_lift). Loop-safe beds are not faded. hall_impulse is unit-energy, not peak-normalised.",
+ "earshot_rule": "pass = the description beats every alternative in earshot's forced choice (p_vs_alts) and is 'strong' (z >= 3 among earshot's vocabulary) or holds at least 60% of the choice and 2x the best alternative (sound.md section 4). A fail is evidence, not a veto: the ear decides.",
+ "cost": "nothing paid: local CPU generation, CC0 recordings and numpy synthesis",
+ "sounds": [
+  {
+   "name": "bell_body",
+   "path": "audio/sfx/bell_body.flac",
+   "what": "The low body of the house-sized bell: one soft stroke, hum at 47.9 Hz and prime at 95.9 Hz (two and one octaves under the film stroke's 191.7 Hz main partial), ringing for 22 s. Layer it UNDER the film's own stroke, its first sample on the stroke frame.",
+   "duration_s": 22.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -14.6,
+    "rms_dbfs": -20.0,
+    "clipped_samples": 0,
+    "peak_at_s": 0.187,
+    "centroid_hz": 78,
+    "energy_db_of_total": {
+     "under_80_hz": -4.4,
+     "80_250_hz": -1.9,
+     "250_2k_hz": -44.6,
+     "2k_8k_hz": -97.6,
+     "over_8k_hz": -119.2
+    },
+    "lr_correlation": 0.982
+   },
+   "how": {
+    "method": "synthesised",
+    "function": "synth_bell_body(f_main=191.7, dur=22.0, seed=48)",
+    "detail": "three decaying partials, each a doublet that beats slowly (hum 47.93 Hz, T60 20 s, split 0.21 Hz; prime 95.85 Hz, T60 17 s, split 0.34 Hz; 191.7 Hz at -12 dB, T60 11 s), the two halves of each doublet panned slightly apart; a soft strike (a sine falling 150 to 60 Hz in 75 ms and a breath of noise under 380 Hz); 1.5 s fade-out; peak -1 dBFS"
+   },
+   "licence": "original synthesis (numpy, this script); no third-party material",
+   "loop_safe": false,
+   "caveat": "All of its energy is under 200 Hz: phone and laptop speakers will play almost none of it, so judge it on full-range speakers or headphones. The film stroke itself has partials at 83 and 110 Hz that sit 13-14 Hz either side of this body's 95.9 Hz prime and may beat against it: if the low end sounds rough, high-pass the film stroke at about 125 Hz and let this file own everything below. Alone it does not read as a bell (it is only a bell's bottom two partials): the test that matters is under the film stroke (earshot.under_film_stroke). It makes the bell read LARGE; it does not stop the film stroke reading as a gong, which comes from the stroke's own upper partials.",
+   "earshot": {
+    "description": "a huge deep bronze bell struck once, ringing for a long time",
+    "alternatives": [
+     "a gong struck once",
+     "a small hand bell",
+     "a low synthesizer drone",
+     "a distant explosion"
+    ],
+    "pass": false,
+    "result": "lost to 'a gong struck once' (77% against 1%; z +2.5)",
+    "verdict": "weak",
+    "z": 2.49,
+    "p_vs_alts": 0.01,
+    "alts": [
+     {
+      "query": "a gong struck once",
+      "p": 0.774,
+      "z": 3.44
+     },
+     {
+      "query": "a small hand bell",
+      "p": 0.0,
+      "z": 0.95
+     },
+     {
+      "query": "a low synthesizer drone",
+      "p": 0.215,
+      "z": 3.18
+     },
+     {
+      "query": "a distant explosion",
+      "p": 0.0,
+      "z": 1.36
+     }
+    ],
+    "sounds_like": [
+     "a deep sub bass (z +4.0)",
+     "a sub bass drop (z +3.9)",
+     "a deep cinematic boom (z +3.1)",
+     "a low rumble (z +2.9)"
+    ],
+    "audioset": [
+     "Sine wave 0.61",
+     "Chirp tone 0.49",
+     "Silence 0.20",
+     "Music 0.12",
+     "Singing bowl 0.10"
+    ],
+    "describe": "22.00 s steady, few onsets, loudness range 24 LU. Sounds most like: a sub bass drop (z +3.9), a deep cinematic boom (z +3.1), a low rumble (z +2.8) [clear reading]. Other readings: a singing bowl (chimes, z +2.4), a deep cinematic whoosh (transitions, z +2.3). Unvalidated hint: a deep sub bass (z +4.0). Character: deep. AudioSet: Sine wave 0.61, Chirp tone 0.49, Silence 0.20. peak -1.0 dBFS, -14.6 LUFS, brightness 75 Hz, bandwidth 201 Hz, side/mid -17 dB. Uniform: all 4 analysed 10 s windows read as a sub bass drop.",
+    "under_film_stroke": {
+     "film_stroke_alone": {
+      "size_choice": {
+       "a very large low-pitched bell": 0.47,
+       "a small high-pitched bell": 0.0,
+       "a medium tower bell": 0.53
+      },
+      "kind_choice": {
+       "an enormous deep bronze bell": 0.01,
+       "a gong struck once": 0.96,
+       "a small hand bell": 0.0,
+       "a church tower bell": 0.03,
+       "a low synthesizer drone": 0.0
+      }
+     },
+     "film_stroke_with_bell_body_at_equal_peak": {
+      "size_choice": {
+       "a very large low-pitched bell": 0.93,
+       "a small high-pitched bell": 0.0,
+       "a medium tower bell": 0.07
+      },
+      "kind_choice": {
+       "an enormous deep bronze bell": 0.0,
+       "a gong struck once": 0.99,
+       "a small hand bell": 0.0,
+       "a church tower bell": 0.0,
+       "a low synthesizer drone": 0.01
+      }
+     }
+    }
+   },
+   "candidates": [
+    "synthesised (chosen): alone it reads as a low synthesizer drone (96%); under the film stroke the size choice \"a very large low-pitched bell\" rises from 47% (stroke alone) to about 94%",
+    "Stable Audio SFX seed 101 (TAKES bell_body_gen), as generated: partials at 79, 160, 271 and 412 Hz, decay about 2.5 dB a second: no 48 or 96 Hz, and its 79 Hz beats 4 times a second against the film stroke's 83 Hz. Alone it reads as a bell more than the film stroke does (first 12 s: bell 77%, gong 21%; whole 20 s against another set of alternatives: gong 70%, bell 30%; the film stroke alone: gong 96%). Under the stroke: large 82%",
+    "the same take at 0.607 speed (hum on 48.0 Hz, then 97.2, 164.4, 249.8, 310.3 Hz): reads as a gong (99%), and its 164 Hz sits 7 Hz under the stroke's 172 Hz. Under the stroke: large 89%"
+   ]
+  },
+  {
+   "name": "hammer_whoosh",
+   "path": "audio/sfx/hammer_whoosh.flac",
+   "what": "The door-sized hammer swinging through the air: a low, heavy rush with no impact. Its loudest moment (the pass) is at about 0.42 s: start the file 0.42 s before the frame the hammer passes the lens or meets the bell.",
+   "duration_s": 0.7,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -14.7,
+    "rms_dbfs": -17.4,
+    "clipped_samples": 0,
+    "peak_at_s": 0.415,
+    "centroid_hz": 190,
+    "energy_db_of_total": {
+     "under_80_hz": -3.7,
+     "80_250_hz": -5.2,
+     "250_2k_hz": -5.7,
+     "2k_8k_hz": -28.9,
+     "over_8k_hz": -56.2
+    }
+   },
+   "how": {
+    "method": "synthesised",
+    "function": "synth_hammer_whoosh(dur=0.7, apex=0.43, seed=5)",
+    "detail": "noise through a low-pass that opens from 85 Hz to 445 Hz at the apex and closes after it, a pressure tone rising 40 to 66 Hz at -9 dB, a breath of 1-3 kHz air at -21 dB; level rises as t^2.4 to the apex and falls with a 70 ms time constant; mono"
+   },
+   "licence": "original synthesis (numpy, this script); no third-party material",
+   "loop_safe": false,
+   "caveat": null,
+   "earshot": {
+    "description": "a low heavy whoosh of air as a huge object swings past",
+    "alternatives": [
+     "a heavy impact thud",
+     "steady wind blowing",
+     "a distant explosion",
+     "a thin fast sword swish"
+    ],
+    "pass": true,
+    "result": "strong (z +3.9, 88% of the choice)",
+    "verdict": "strong",
+    "z": 3.92,
+    "p_vs_alts": 0.878,
+    "alts": [
+     {
+      "query": "a heavy impact thud",
+      "p": 0.0,
+      "z": 1.48
+     },
+     {
+      "query": "steady wind blowing",
+      "p": 0.0,
+      "z": 1.75
+     },
+     {
+      "query": "a distant explosion",
+      "p": 0.0,
+      "z": 0.26
+     },
+     {
+      "query": "a thin fast sword swish",
+      "p": 0.122,
+      "z": 3.0
+     }
+    ],
+    "sounds_like": [
+     "a fast whoosh (z +4.8)",
+     "a deep cinematic whoosh (z +3.6)",
+     "a swoosh passing by (z +3.5)",
+     "a short swish (z +3.3)"
+    ],
+    "audioset": [
+     "Whoosh, swoosh, swish 0.58",
+     "Sound effect 0.07"
+    ],
+    "describe": "0.70 s busy, 7.1 onsets/s (attack 223 ms, decays in 195 ms). Sounds most like: a fast whoosh (z +4.8), a deep cinematic whoosh (z +3.6), a swoosh passing by (z +3.4) [clear reading]. AudioSet: Whoosh, swoosh, swish 0.58, Sound effect 0.07. peak -1.0 dBFS, -14.7 LUFS, brightness 509 Hz, bandwidth 6.5 kHz, mono."
+   }
+  },
+  {
+   "name": "wind_altitude",
+   "path": "audio/sfx/wind_altitude.flac",
+   "what": "Open high-altitude air moving through tall stone arches: soft, steady (level within about 1.5 dB), wide, with real air at 2-10 kHz and a slowly wandering colour instead of gusts. A seamless 40 s loop (no fades: the last sample runs into the first).",
+   "duration_s": 40.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -12.1,
+    "rms_dbfs": -14.7,
+    "clipped_samples": 0,
+    "peak_at_s": 5.564,
+    "centroid_hz": 676,
+    "energy_db_of_total": {
+     "under_80_hz": -10.1,
+     "80_250_hz": -6.8,
+     "250_2k_hz": -1.9,
+     "2k_8k_hz": -13.8,
+     "over_8k_hz": -22.7
+    },
+    "lr_correlation": 0.107
+   },
+   "how": {
+    "method": "synthesised",
+    "function": "synth_wind_altitude(dur=40.0, seed=11, q=2.5, form_db=12.0)",
+    "detail": "noise built in the frequency domain, exactly periodic over 40 s; -4.8 dB an octave to 1.8 kHz, -3.6 dB an octave above it, high-pass 70 Hz, low-pass 11 kHz; two broad resonances (+12 and +9 dB) wandering 260-1100 Hz and 680-2900 Hz on a periodic 1/f path; level within 1.5 dB; left and right independent above 220 Hz; peak -1 dBFS; no fades"
+   },
+   "licence": "original synthesis (numpy, this script); no third-party material",
+   "loop_safe": true,
+   "loop_seam": {
+    "wrap_step": 0.02181,
+    "median_step": 0.02058,
+    "p99_step": 0.08034,
+    "rms_db_last_half_s": -15.0,
+    "rms_db_first_half_s": -15.2,
+    "seamless": true
+   },
+   "caveat": "Not proven by the ear model: as a description it is \"plausible\" (z about +2.9), but in the forced choice earshot calls it static noise or surf, and no candidate did better (see candidates). A steady soft wind is close to coloured noise by nature; a person must judge whether it reads as wind at bed level. It is peak-normalised, so it is loud as delivered: as a bed it belongs 25-35 dB down.",
+   "earshot": {
+    "description": "soft steady wind blowing through an open high place",
+    "alternatives": [
+     "howling wind with strong gusts",
+     "wind whistling through a gap",
+     "rain falling",
+     "static white noise hiss",
+     "ocean waves on a beach"
+    ],
+    "pass": false,
+    "result": "lost to 'static white noise hiss' (62% against 0%; z +2.9)",
+    "verdict": "plausible",
+    "z": 2.9,
+    "p_vs_alts": 0.003,
+    "alts": [
+     {
+      "query": "howling wind with strong gusts",
+      "p": 0.068,
+      "z": 3.84
+     },
+     {
+      "query": "wind whistling through a gap",
+      "p": 0.001,
+      "z": 2.63
+     },
+     {
+      "query": "rain falling",
+      "p": 0.0,
+      "z": 1.69
+     },
+     {
+      "query": "static white noise hiss",
+      "p": 0.62,
+      "z": 4.04
+     },
+     {
+      "query": "ocean waves on a beach",
+      "p": 0.309,
+      "z": 3.33
+     }
+    ],
+    "sounds_like": [
+     "a gust of wind rushing past (z +3.3)",
+     "ocean waves (z +3.3)",
+     "a waterfall (z +3.2)",
+     "a downlifter falling sweep (z +3.0)"
+    ],
+    "audioset": [
+     "Ocean 0.36",
+     "Waves, surf 0.34",
+     "Pink noise 0.24",
+     "Eruption 0.19",
+     "Wind 0.18"
+    ],
+    "describe": "40.00 s busy, 2.0 onsets/s, loudness range 1 LU. Sounds most like: a gust of wind rushing past (z +3.3), ocean waves (z +3.2), a waterfall (z +3.2) [clear reading]. Other readings: a vacuum cleaner (everyday, z +2.5). AudioSet: Ocean 0.36, Waves, surf 0.34, Pink noise 0.24. peak -1.0 dBFS, -12.1 LUFS, brightness 3.0 kHz, bandwidth 20.5 kHz, side/mid -1 dB. Windows that read differently: 0:00.00-0:10.00 ocean waves (z +3.5; AudioSet Pink noise 0.21); 0:10.00-0:20.00 a gust of wind rushing past (z +3.3; AudioSet Eruption 0.19)."
+   },
+   "candidates": [
+    "synthesis, four slowly drifting bands: fail, static white noise hiss 99% (z +1.9)",
+    "synthesis with level swells: fail, ocean waves on a beach 72-97% (z +2.3 to +2.4)",
+    "Stable Audio SFX seed 110 (TAKES wind_altitude), 47 s: fail, static white noise hiss 90% (z +2.8); AudioSet Vehicle, Aircraft; almost nothing above 2 kHz",
+    "earshot wind/open and wind/mountain as 40 s loops: fail, howling wind with strong gusts 86% (z +2.6, +1.9)",
+    "synthesis with wandering resonances (chosen): fail, static white noise hiss 62%, ocean waves 31% (z +2.9)",
+    "the chosen synthesis with earshot wind/open under it at -6 to -12 dB: fail, ocean waves 81-94%"
+   ]
+  },
+  {
+   "name": "hall_impulse",
+   "path": "audio/sfx/hall_impulse.flac",
+   "what": "A synthetic cathedral impulse response for a convolution reverb: wet only (no direct sound), 90 ms pre-delay built in, RT60 about 6.3-7.2 s through the middle, dark (pink above 500 Hz, and the top decays faster: 3.6 s at 4 kHz, 2 s at 8 kHz by design), left and right decorrelated.",
+   "duration_s": 9.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -19.6,
+    "true_peak_dbtp": -19.6,
+    "lufs": -46.4,
+    "rms_dbfs": -56.4,
+    "clipped_samples": 0,
+    "peak_at_s": 0.118,
+    "centroid_hz": 1162,
+    "energy_db_of_total": {
+     "under_80_hz": -14.3,
+     "80_250_hz": -9.1,
+     "250_2k_hz": -2.2,
+     "2k_8k_hz": -6.5,
+     "over_8k_hz": -17.5
+    },
+    "lr_correlation": -0.043
+   },
+   "how": {
+    "method": "synthesised",
+    "function": "synth_hall_impulse(length=9.0, predelay=0.090, seed=7)",
+    "detail": "independent Gaussian noise per channel in ten cos^2 octave bands, each with its own exponential decay (design RT60: 31.5 Hz 5.6 s, 63 Hz 6.6 s, 125 Hz 7.2 s, 250 Hz 7.2 s, 500 Hz 6.9 s, 1000 Hz 6.3 s, 2000 Hz 5.2 s, 4000 Hz 3.6 s, 8000 Hz 2.0 s, 16000 Hz 1.1 s); -3 dB an octave above 500 Hz and a gentle low-pass at 9 kHz; a 45 ms build-up; 14 low-passed early reflections over the first 180 ms at -9 dB of the tail; 0.4 s fade-out; unit energy per channel",
+    "normalisation": "unit energy (sum of squares = 1 per channel, mean of the two)"
+   },
+   "licence": "original synthesis (numpy, this script); no third-party material",
+   "loop_safe": false,
+   "caveat": "Normalised to UNIT ENERGY per channel, not to -1 dBFS (its sample peak is about -20 dBFS): a signal convolved with it comes back at roughly its own level, so set the wet gain in the mix (start around -12 to -18 dB under the dry voice). The file is 9 s long, so every convolved sound grows a 9 s tail: leave room at the end of the film. The earshot check is run on a test clap convolved with it (audio/gen/hall_impulse_clap_test.wav), not on the impulse itself.",
+   "analysis": {
+    "predelay_ms": 90.0,
+    "rt60_s_by_octave": {
+     "125 Hz": 7.17,
+     "250 Hz": 7.11,
+     "500 Hz": 6.78,
+     "1000 Hz": 6.23,
+     "2000 Hz": 5.33,
+     "4000 Hz": 4.08,
+     "8000 Hz": 2.87
+    },
+    "lr_correlation": -0.043,
+    "energy_per_channel": [
+     1.011,
+     0.989
+    ],
+    "sample_peak_dbfs": -19.6,
+    "gain_to_peak_minus_1_dbfs_db": 18.6,
+    "direct_sound": "none (wet only)"
+   },
+   "earshot": {
+    "description": "a single clap echoing in a huge cathedral with a very long reverberation",
+    "alternatives": [
+     "a clap in a small dry room",
+     "a gunshot outdoors",
+     "a burst of static noise"
+    ],
+    "pass": true,
+    "result": "strong (z +4.9, 100% of the choice)",
+    "verdict": "strong",
+    "z": 4.94,
+    "p_vs_alts": 1.0,
+    "alts": [
+     {
+      "query": "a clap in a small dry room",
+      "p": 0.0,
+      "z": 1.95
+     },
+     {
+      "query": "a gunshot outdoors",
+      "p": 0.0,
+      "z": 1.02
+     },
+     {
+      "query": "a burst of static noise",
+      "p": 0.0,
+      "z": 1.0
+     }
+    ],
+    "sounds_like": [
+     "a cinematic hit with a long tail (z +3.7)",
+     "a deep cinematic boom (z +2.7)",
+     "a metallic clang (z +2.5)",
+     "a big drum hit (z +2.4)"
+    ],
+    "audioset": [
+     "Whoosh, swoosh, swish 0.12"
+    ],
+    "describe": "9.01 s sustained (attack 0 ms, decays in 9 ms). Sounds most like: a cinematic hit with a long tail (z +3.6), a deep cinematic boom (z +2.7), a metallic clang (z +2.5) [clear reading]. Other readings: church bells (chimes, z +2.4), a sword being drawn (everyday, z +2.1). Character: reverberant sound in a large hall. AudioSet tagger unsure (Whoosh, swoosh, swish 0.12). peak -1.0 dBFS, -33.0 LUFS, brightness 2.1 kHz, bandwidth 12.9 kHz, noise floor -116 dBFS, side/mid -6 dB.",
+    "checked_file": "audio/gen/hall_impulse_clap_test.wav"
+   }
+  },
+  {
+   "name": "bell_landing",
+   "path": "audio/sfx/bell_landing.flac",
+   "what": "The house-sized bell settling onto its beam: a deep thud on the first frame, the beam taking the load and a second, smaller knock 0.7 s later, then a low tail. Start the file on the frame the chains go slack and the bell's weight arrives.",
+   "duration_s": 2.5,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -19.3,
+    "rms_dbfs": -20.4,
+    "clipped_samples": 0,
+    "peak_at_s": 0.242,
+    "centroid_hz": 243,
+    "energy_db_of_total": {
+     "under_80_hz": -2.6,
+     "80_250_hz": -6.6,
+     "250_2k_hz": -6.8,
+     "2k_8k_hz": -17.4,
+     "over_8k_hz": -43.8
+    }
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "A colossal bronze weight settling onto a stone and timber beam: one deep heavy thud, a groan of stone and timber under load, then grit and dust pattering down. Close, dry, huge low end.",
+    "seed": 1102,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 4.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s1102_d4_e6fdd7bf.f32.wav",
+    "raw_peak_dbfs": -4.39,
+    "raw_clipped_samples": 0,
+    "edit": "1.33-3.35 s of the take played at 0.7 speed (lower and slower: a heavier object), mono, 2.5 s; a synthesised sub thud (sine falling 80 to 36 Hz, 0.45 s decay) at -6 dB under the first impact; 0.25 s fade-out; gain -3.01 dB to peak -1 dBFS"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license; with an original synthesised sub layer",
+   "loop_safe": false,
+   "caveat": "The grit and dust \"pattering down after it\" is not really there: the take gives a thud, a settle and a second knock, and earshot's nearest descriptions are \"a wooden block hit\" and \"digging in soil\". If the picture shows dust falling, it needs its own quiet layer. The sub layer (36 Hz) is inaudible on small speakers by design. The review asked for the landing to sit 4 dB under the bell stroke.",
+   "earshot": {
+    "description": "a huge heavy weight landing on stone and timber with a deep thud, a groan and falling grit",
+    "alternatives": [
+     "a door slamming",
+     "an explosion",
+     "a drum hit",
+     "thunder rumbling"
+    ],
+    "pass": true,
+    "result": "strong (z +3.5, 93% of the choice)",
+    "verdict": "strong",
+    "z": 3.54,
+    "p_vs_alts": 0.93,
+    "alts": [
+     {
+      "query": "a door slamming",
+      "p": 0.0,
+      "z": 1.31
+     },
+     {
+      "query": "an explosion",
+      "p": 0.0,
+      "z": 1.05
+     },
+     {
+      "query": "a drum hit",
+      "p": 0.069,
+      "z": 2.18
+     },
+     {
+      "query": "thunder rumbling",
+      "p": 0.0,
+      "z": 0.23
+     }
+    ],
+    "sounds_like": [
+     "a wooden block hit (z +3.3)",
+     "a plastic object falling on a table (z +2.8)",
+     "a small object dropping on a table (z +2.6)",
+     "a wooden knock (z +2.5)"
+    ],
+    "audioset": [
+     "Thunk 0.31",
+     "Sound effect 0.18",
+     "Music 0.08",
+     "Whack, thwack 0.06",
+     "Slam 0.05"
+    ],
+    "describe": "2.50 s busy, 3.6 onsets/s (attack 238 ms, decays in 1206 ms). Sounds most like: a wooden block hit (z +3.3), a plastic object falling on a table (z +2.7), a small object dropping on a table (z +2.5) [clear reading]. Other readings: a wooden knock (impacts, z +2.5), digging in soil (nature, z +2.5). AudioSet: Thunk 0.31, Sound effect 0.18, Music 0.08. peak -1.0 dBFS, -19.3 LUFS, brightness 551 Hz, bandwidth 8.1 kHz, noise floor -59 dBFS, mono."
+   },
+   "candidates": [
+    "seed 102 as generated: pass (z +3.6), but the thud comes 2.3 s into the take, after other knocks",
+    "seed 1102 as generated, 1.33-3.83 s: pass (z +3.1), but the size choice says medium 86%, huge 12%",
+    "seed 1102 at 0.7 speed: pass (z +3.6), huge 69%; with the sub layer at -4 dB: pass but \"a drum hit\" takes 32%",
+    "seed 1102 at 0.7 speed with the slower sub at -6 dB (chosen)",
+    "seed 1102 at 0.55 speed: fail, a drum hit 89%"
+   ]
+  },
+  {
+   "name": "chains_slack",
+   "path": "audio/sfx/chains_slack.flac",
+   "what": "The barge's iron chains going slack and running: 2.5 s of heavy links clanking and rattling, busiest at about 1.6 s, with bright metal detail at 2-8 kHz. Stereo.",
+   "duration_s": 2.5,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -14.3,
+    "rms_dbfs": -20.8,
+    "clipped_samples": 0,
+    "peak_at_s": 1.653,
+    "centroid_hz": 5381,
+    "energy_db_of_total": {
+     "under_80_hz": -26.9,
+     "80_250_hz": -19.9,
+     "250_2k_hz": -8.8,
+     "2k_8k_hz": -0.8,
+     "over_8k_hz": -17.1
+    },
+    "lr_correlation": 0.195
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Massive iron anchor chains going slack and running out over stone, huge heavy links clanking and rattling against each other, deep heavy metal with bright ringing detail, echoing in a large stone hall.",
+    "seed": 1103,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 4.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s1103_d4_7a055648.f32.wav",
+    "raw_peak_dbfs": -3.92,
+    "raw_clipped_samples": 0,
+    "layers": [
+     "Stable Audio take (see prompt): 1.0-2.8 s at 0.7 speed",
+     "earshot catalogue design chain/rattle (seed 0, 'a metal chain rattled') at 0.45 speed, -3 dB"
+    ],
+    "edit": "the two layers summed, 2.5 s, 0.3 s fade-out; gain -0.95 dB to peak -1 dBFS"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license; layered with earshot catalogue design (earshot is MIT; its realistic designs are computed from public-domain recordings; no audio file ships)",
+   "loop_safe": false,
+   "caveat": "Two layers, both played slower than made so the links read heavy: untreated, the generated take read as coins dropping and earshot's chain as a small chain. The \"large space\" is only what the take carries: send it to the hall reverb in the mix.",
+   "earshot": {
+    "description": "heavy iron chains rattling and clanking",
+    "alternatives": [
+     "keys jingling",
+     "coins dropping",
+     "glass breaking",
+     "a metal gate closing"
+    ],
+    "pass": true,
+    "result": "strong (z +3.8, 91% of the choice)",
+    "verdict": "strong",
+    "z": 3.84,
+    "p_vs_alts": 0.911,
+    "alts": [
+     {
+      "query": "keys jingling",
+      "p": 0.015,
+      "z": 2.44
+     },
+     {
+      "query": "coins dropping",
+      "p": 0.018,
+      "z": 2.4
+     },
+     {
+      "query": "glass breaking",
+      "p": 0.002,
+      "z": 2.07
+     },
+     {
+      "query": "a metal gate closing",
+      "p": 0.054,
+      "z": 3.17
+     }
+    ],
+    "sounds_like": [
+     "a balloon squeak (z +3.4)",
+     "a creaking door (z +2.6)",
+     "dominoes falling (z +2.6)",
+     "a printer printing (z +2.5)"
+    ],
+    "audioset": [
+     "Chink, clink 0.11",
+     "Jingle bell 0.11",
+     "Cutlery, silverware 0.06"
+    ],
+    "describe": "2.50 s busy, 5.2 onsets/s (attack 291 ms, decays in 803 ms). Sounds most like: a balloon squeak (z +3.4), a creaking door (z +2.6), dominoes falling (z +2.5) [clear reading]. Other readings: a printer printing (everyday, z +2.5), an old typewriter (keyboard, z +2.4). AudioSet tagger unsure (Chink, clink 0.11, Jingle bell 0.11, Cutlery, silverware 0.06). peak -1.0 dBFS, -14.3 LUFS, brightness 5.4 kHz, bandwidth 16.3 kHz, noise floor -36 dBFS, side/mid -2 dB."
+   },
+   "candidates": [
+    "first wording (chains_slack_first), seed 103: fail, coins dropping 99%",
+    "second wording, seed 1103, as generated: fail, coins dropping 50% against chains 46% (z +4.0)",
+    "seed 1103 at 0.7 speed alone: fail, a metal gate closing 67%",
+    "earshot chain/rattle as made: fail, coins dropping 100%; at 0.6 speed: pass (z +4.5), all energy above 6 kHz",
+    "seed 1103 at 0.7 speed with earshot chain/rattle at 0.45 speed, -3 dB (chosen): size choice huge 97%"
+   ]
+  },
+  {
+   "name": "rope_creak",
+   "path": "audio/sfx/rope_creak.flac",
+   "what": "Thick rope and timber under strain as the hammer is hauled back: woody creaks and knocks with the dry stretch of rope fibre over them, 1.8 s, mono.",
+   "duration_s": 1.796,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -16.4,
+    "rms_dbfs": -19.6,
+    "clipped_samples": 0,
+    "peak_at_s": 0.239,
+    "centroid_hz": 571,
+    "energy_db_of_total": {
+     "under_80_hz": -19.1,
+     "80_250_hz": -10.9,
+     "250_2k_hz": -0.6,
+     "2k_8k_hz": -14.9,
+     "over_8k_hz": -30.0
+    }
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Thick hemp rope and heavy timber creaking under great strain as something massive is hauled, slow tense creaks, close.",
+    "seed": 104,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 4.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s104_d4_d3834817.f32.wav",
+    "raw_peak_dbfs": -13.96,
+    "raw_clipped_samples": 0,
+    "layers": [
+     "CC0 recording \"House_Creak_2.wav\" by SholeColtis (freesound.org/people/SholeColtis/sounds/683416/, committed at claude-film/one-too-many/audio/sfx/creak.flac) at 0.8 speed",
+     "Stable Audio take (see prompt): 0.45-1.95 s at 0.8 speed, -6 dB"
+    ],
+    "edit": "the two layers summed, mono, 1.8 s, 0.2 s fade-out; gain -1.00 dB to peak -1 dBFS"
+   },
+   "licence": "CC0 1.0 (public domain) (Freesound 683416) layered with a Stable Audio take (Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license)",
+   "loop_safe": false,
+   "caveat": null,
+   "earshot": {
+    "description": "thick rope and timber creaking under heavy strain",
+    "alternatives": [
+     "a door hinge squeaking",
+     "footsteps on a wooden floor",
+     "a violin",
+     "a squeaky chair"
+    ],
+    "pass": true,
+    "result": "strong (z +3.4, 100% of the choice)",
+    "verdict": "strong",
+    "z": 3.35,
+    "p_vs_alts": 0.998,
+    "alts": [
+     {
+      "query": "a door hinge squeaking",
+      "p": 0.0,
+      "z": 1.38
+     },
+     {
+      "query": "footsteps on a wooden floor",
+      "p": 0.001,
+      "z": 2.52
+     },
+     {
+      "query": "a violin",
+      "p": 0.0,
+      "z": -0.1
+     },
+     {
+      "query": "a squeaky chair",
+      "p": 0.0,
+      "z": 1.82
+     }
+    ],
+    "sounds_like": [
+     "a snare roll (z +3.2)",
+     "a body falling on the ground (z +3.1)",
+     "a balloon squeak (z +3.1)",
+     "a printer printing (z +2.9)"
+    ],
+    "audioset": [
+     "Scrape 0.12",
+     "Zipper (clothing) 0.12",
+     "Speech 0.05"
+    ],
+    "describe": "1.80 s busy, 6.1 onsets/s (attack 220 ms, decays in 1258 ms). Sounds most like: a body falling on the ground (z +3.1), a balloon squeak (z +3.1), a printer printing (z +2.8) [clear reading]. Other readings: a record scratch (transitions, z +2.5), a horse galloping (nature, z +2.2). Unvalidated hint: a snare roll (z +3.2). AudioSet tagger unsure (Scrape 0.12, Zipper (clothing) 0.12, Speech 0.05). peak -1.0 dBFS, -16.4 LUFS, brightness 1.4 kHz, bandwidth 16.3 kHz, noise floor -33 dBFS, mono."
+   },
+   "candidates": [
+    "Stable Audio seed 104, 0.45-2.25 s: pass by margin only (z +2.1)",
+    "CC0 House_Creak_2 alone: pass by margin (z +2.5); earshot hears knocks",
+    "earshot door/creak at 0.7 speed: fail, a door hinge squeaking 69%",
+    "CC0 creak at 0.8 speed with the Stable Audio take at 0.8 speed, -6 dB (chosen): size choice huge 94%"
+   ]
+  },
+  {
+   "name": "wax_press",
+   "path": "audio/sfx/wax_press.flac",
+   "what": "The signet pressed into warm wax on heavy paper, close and dry: a soft press with a small wet give, 1.0 s, mono. Its loudest moment is 0.2 s in: put that on the frame the ring meets the wax.",
+   "duration_s": 0.999,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -0.9,
+    "lufs": -15.7,
+    "rms_dbfs": -23.1,
+    "clipped_samples": 0,
+    "peak_at_s": 0.414,
+    "centroid_hz": 6131,
+    "energy_db_of_total": {
+     "under_80_hz": -22.6,
+     "80_250_hz": -27.2,
+     "250_2k_hz": -11.2,
+     "2k_8k_hz": -4.0,
+     "over_8k_hz": -2.9
+    }
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Close-up foley: a metal signet ring pressed firmly into soft warm sealing wax on thick paper, a small soft squelch and a faint creak of parchment, quiet, dry, intimate.",
+    "seed": 106,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 3.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s106_d3_ac3484bb.f32.wav",
+    "raw_peak_dbfs": -14.22,
+    "raw_clipped_samples": 0,
+    "edit": "0.10-1.10 s of the take, mono, 0.12 s fade-out; gain +15.87 dB to peak -1 dBFS"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "Bright for a squelch (most of its energy is above 2 kHz; earshot's nearest descriptions are \"a spray can hissing\" and \"a match being struck\"): asked squelch against hiss against paper it says squelch 47%, paper 38%, hiss 14%. If it reads as a hiss in the mix, roll it off above 5 kHz. The review found the cut's own seal sound late against the picture: place this one from the frame, not from the old sound.",
+   "earshot": {
+    "description": "a metal seal pressed into soft wax on paper, a small squelch",
+    "alternatives": [
+     "a rubber stamp hitting a desk",
+     "a footstep",
+     "a knock on wood",
+     "paper being crumpled"
+    ],
+    "pass": true,
+    "result": "strong (z +3.8, 100% of the choice)",
+    "verdict": "strong",
+    "z": 3.76,
+    "p_vs_alts": 0.995,
+    "alts": [
+     {
+      "query": "a rubber stamp hitting a desk",
+      "p": 0.0,
+      "z": -0.17
+     },
+     {
+      "query": "a footstep",
+      "p": 0.0,
+      "z": -0.16
+     },
+     {
+      "query": "a knock on wood",
+      "p": 0.0,
+      "z": -1.45
+     },
+     {
+      "query": "paper being crumpled",
+      "p": 0.005,
+      "z": 2.49
+     }
+    ],
+    "sounds_like": [
+     "a squishy wet squelch (z +3.3)",
+     "a match being struck (z +2.9)",
+     "a record scratch (z +2.8)",
+     "a spray can hissing (z +2.7)"
+    ],
+    "audioset": [
+     "Tearing 0.05"
+    ],
+    "describe": "1.00 s busy, 8.0 onsets/s (attack 243 ms, decays in 127 ms). Sounds most like: a squishy wet squelch (z +3.3), a match being struck (z +2.9), a record scratch (z +2.8) [clear reading]. Other readings: a camera shutter click (ui, z +2.6), a spacebar press (keyboard, z +2.4). AudioSet tagger unsure (Tearing 0.05). peak -1.0 dBFS, -15.7 LUFS, brightness 6.9 kHz, bandwidth 20.5 kHz, mono."
+   },
+   "candidates": [
+    "Stable Audio seed 106, 0.10-1.10 s (chosen)",
+    "the same at 0.8 and 0.7 speed: fail, paper being crumpled 58% and 69%"
+   ]
+  },
+  {
+   "name": "ring_lift",
+   "path": "audio/sfx/ring_lift.flac",
+   "what": "The signet lifting off the wax: a short tacky peel that builds for 0.25 s and lets go with a small tick, 0.4 s, mono. The tick is the loudest moment, about 0.2 s in.",
+   "duration_s": 0.4,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -2.7,
+    "true_peak_dbtp": -1.0,
+    "lufs": -20.9,
+    "rms_dbfs": -27.3,
+    "clipped_samples": 0,
+    "peak_at_s": 0.175,
+    "centroid_hz": 10335,
+    "energy_db_of_total": {
+     "under_80_hz": -32.4,
+     "80_250_hz": -33.0,
+     "250_2k_hz": -22.4,
+     "2k_8k_hz": -7.6,
+     "over_8k_hz": -0.9
+    }
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Close-up foley: a small sticky tacky peel as a metal ring lifts off soft warm wax, one tiny tick, quiet, dry.",
+    "seed": 107,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 2.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s107_d2_38fa2a77.f32.wav",
+    "raw_peak_dbfs": -11.31,
+    "raw_clipped_samples": 0,
+    "edit": "from the onset at 0.17 s of the take, 0.4 s, mono, 0.08 s fade-out; gain +8.11 dB: gain set by the true peak (-1 dBTP), not the sample peak"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "Very bright (centred near 10 kHz) and AudioSet tags it as a camera shutter: at more than a whisper it will read as a click. Keep it very low.",
+   "earshot": {
+    "description": "a small sticky peel and tick as something lifts off wax",
+    "alternatives": [
+     "a mouse click",
+     "a finger snap",
+     "a drop of water",
+     "a light switch"
+    ],
+    "pass": true,
+    "result": "strong (z +3.3, 100% of the choice)",
+    "verdict": "strong",
+    "z": 3.34,
+    "p_vs_alts": 1.0,
+    "alts": [
+     {
+      "query": "a mouse click",
+      "p": 0.0,
+      "z": 1.16
+     },
+     {
+      "query": "a finger snap",
+      "p": 0.0,
+      "z": 1.11
+     },
+     {
+      "query": "a drop of water",
+      "p": 0.0,
+      "z": -0.11
+     },
+     {
+      "query": "a light switch",
+      "p": 0.0,
+      "z": 0.04
+     }
+    ],
+    "sounds_like": [
+     "crisp hi-hats (z +3.1)",
+     "a match being struck (z +2.5)",
+     "an error buzz (z +2.4)",
+     "a digital glitch (z +2.4)"
+    ],
+    "audioset": [
+     "Single-lens reflex camera 0.55",
+     "Camera 0.07"
+    ],
+    "describe": "0.40 s short swell (attack 161 ms, decays in 16 ms). Sounds most like: a match being struck (z +2.4), an error buzz (z +2.4), a digital glitch (z +2.4) [weak reading]. Other readings: a soft key release click (keyboard, z +2.3), a stutter glitch transition (transitions, z +2.2). Unvalidated hint: crisp hi-hats (z +3.1). AudioSet: Single-lens reflex camera 0.55, Camera 0.07. peak -2.7 dBFS, -20.9 LUFS, brightness 10.3 kHz, bandwidth 20.5 kHz, mono."
+   },
+   "candidates": [
+    "Stable Audio seed 107, its first event (chosen); its second event (0.55-0.95 s) also passes (z +3.9)",
+    "synthesised crackle and tick (synth_ring_lift, kept in this script): fail, a finger snap 67%"
+   ]
+  },
+  {
+   "name": "paper_handling",
+   "path": "audio/sfx/paper_handling.flac",
+   "what": "One heavy sheet lifted and presented: a soft papery lift (0-0.7 s), then the sheet settling on the palms (from 0.8 s), 1.5 s, mono, close.",
+   "duration_s": 1.468,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -0.9,
+    "lufs": -15.8,
+    "rms_dbfs": -21.4,
+    "clipped_samples": 0,
+    "peak_at_s": 0.188,
+    "centroid_hz": 2390,
+    "energy_db_of_total": {
+     "under_80_hz": -16.6,
+     "80_250_hz": -13.9,
+     "250_2k_hz": -5.0,
+     "2k_8k_hz": -2.2,
+     "over_8k_hz": -16.9
+    }
+   },
+   "how": {
+    "method": "library",
+    "layers": [
+     "earshot catalogue design paper/page (seed 0, 'a page of a book being turned') at 0.7 speed",
+     "CC0 recording \"55_Coger_Foto.wav (Sliding Paper)\" by Atrius1 (freesound.org/people/Atrius1/sounds/470189/, committed at claude-film/one-too-many/audio/sfx/slide.flac) at 0.55 speed, from 0.80 s, -7 dB"
+    ],
+    "edit": "the two layers summed, mono, 1.5 s, 0.2 s fade-out; gain -1.00 dB to peak -1 dBFS"
+   },
+   "licence": "earshot catalogue design (earshot is MIT; its realistic designs are computed from public-domain recordings; no audio file ships); layered with CC0 1.0 (public domain) (Freesound 470189)",
+   "loop_safe": false,
+   "caveat": "Built from two library sounds played slower (a thicker sheet), because both Stable Audio takes and every single library sound read as paper being crumpled. It passes with a clear margin but only as \"plausible\" (z +2.5).",
+   "earshot": {
+    "description": "a heavy sheet of thick paper being lifted and handled",
+    "alternatives": [
+     "paper being torn",
+     "paper crumpled into a ball",
+     "cloth rustling",
+     "a book closing"
+    ],
+    "pass": true,
+    "result": "clear margin (z +2.3, 66% of the choice)",
+    "verdict": "weak",
+    "z": 2.28,
+    "p_vs_alts": 0.656,
+    "alts": [
+     {
+      "query": "paper being torn",
+      "p": 0.03,
+      "z": 1.95
+     },
+     {
+      "query": "paper crumpled into a ball",
+      "p": 0.28,
+      "z": 2.29
+     },
+     {
+      "query": "cloth rustling",
+      "p": 0.003,
+      "z": 0.89
+     },
+     {
+      "query": "a book closing",
+      "p": 0.032,
+      "z": 1.33
+     }
+    ],
+    "sounds_like": [
+     "digging in soil (z +3.1)",
+     "a record scratch (z +3.0)",
+     "a squishy wet squelch (z +2.9)",
+     "a snare hit (z +2.5)"
+    ],
+    "audioset": [
+     "Scrape 0.11",
+     "Sound effect 0.05"
+    ],
+    "describe": "1.47 s busy, 6.1 onsets/s (attack 154 ms, decays in 307 ms). Sounds most like: digging in soil (z +3.1), a record scratch (z +3.0), a squishy wet squelch (z +2.8) [clear reading]. Other readings: a snare hit (impacts, z +2.5), a match being struck (everyday, z +2.3). AudioSet tagger unsure (Scrape 0.11, Sound effect 0.05). peak -1.0 dBFS, -15.8 LUFS, brightness 3.5 kHz, bandwidth 16.3 kHz, noise floor -80 dBFS, mono."
+   },
+   "candidates": [
+    "Stable Audio seed 108: fail, paper crumpled into a ball 63% (z +3.1); other windows and slower speeds of it: fail (crumpled 44-100%)",
+    "Stable Audio seed 1108: fail, crumpled 95%",
+    "single library sounds: earshot paper/page (crumpled 90%), flick/paper (crumpled 75%), slide/paper (a book closing 72%), CC0 slide (paper being torn 45%), CC0 rustle (crumpled 96%): all fail",
+    "earshot paper/page at 0.7 speed, then CC0 slide at 0.55 speed (chosen)"
+   ]
+  },
+  {
+   "name": "cloth_move",
+   "path": "audio/sfx/cloth_move.flac",
+   "what": "A heavy wool sleeve moving as the arm reaches: one soft thick rustle that swells for 0.8 s and stops, 1.05 s, mono, close.",
+   "duration_s": 1.05,
+   "channels": 1,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -0.9,
+    "lufs": -19.8,
+    "rms_dbfs": -23.1,
+    "clipped_samples": 0,
+    "peak_at_s": 0.824,
+    "centroid_hz": 2538,
+    "energy_db_of_total": {
+     "under_80_hz": -10.8,
+     "80_250_hz": -7.8,
+     "250_2k_hz": -2.8,
+     "2k_8k_hz": -8.0,
+     "over_8k_hz": -12.0
+    }
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Close-up foley: a heavy wool sleeve moving as an arm reaches, soft thick fabric rustle, quiet, dry.",
+    "seed": 109,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 3.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s109_d3_78a3df2c.f32.wav",
+    "raw_peak_dbfs": -17.62,
+    "raw_clipped_samples": 0,
+    "edit": "0.40-1.45 s of the take, mono, 50 ms fade-in, 0.12 s fade-out; gain +16.63 dB to peak -1 dBFS"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": null,
+   "earshot": {
+    "description": "heavy wool clothing rustling as an arm moves",
+    "alternatives": [
+     "paper rustling",
+     "a zipper",
+     "wind blowing",
+     "footsteps"
+    ],
+    "pass": true,
+    "result": "strong (z +3.1, 100% of the choice)",
+    "verdict": "strong",
+    "z": 3.07,
+    "p_vs_alts": 1.0,
+    "alts": [
+     {
+      "query": "paper rustling",
+      "p": 0.0,
+      "z": 1.01
+     },
+     {
+      "query": "a zipper",
+      "p": 0.0,
+      "z": 0.67
+     },
+     {
+      "query": "wind blowing",
+      "p": 0.0,
+      "z": 0.04
+     },
+     {
+      "query": "footsteps",
+      "p": 0.0,
+      "z": 0.13
+     }
+    ],
+    "sounds_like": [
+     "a fast whoosh (z +3.0)",
+     "cloth whipping through the air (z +2.7)",
+     "a swoosh passing by (z +2.6)",
+     "a record scratch (z +2.6)"
+    ],
+    "audioset": [
+     "Zipper (clothing) 0.25"
+    ],
+    "describe": "1.05 s short swell (attack 284 ms, decays in 138 ms). Sounds most like: a fast whoosh (z +3.0), cloth whipping through the air (z +2.6), a swoosh passing by (z +2.6) [clear reading]. Other readings: a body falling on the ground (impacts, z +2.3), cloth rustling (foley, z +2.2). AudioSet: Zipper (clothing) 0.25. peak -1.0 dBFS, -19.8 LUFS, brightness 6.2 kHz, bandwidth 20.5 kHz, noise floor -38 dBFS, mono."
+   }
+  },
+  {
+   "name": "crowd_presence",
+   "path": "audio/sfx/crowd_presence.flac",
+   "what": "Thousands standing silent in the nave: a low reverberant room tone with cloth and small shifts of weight, and one distant double cough at 6.4 s. Nobody speaks. A seamless 20 s loop (no fades).",
+   "duration_s": 20.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -0.8,
+    "lufs": -28.4,
+    "rms_dbfs": -27.3,
+    "clipped_samples": 0,
+    "peak_at_s": 1.775,
+    "centroid_hz": 177,
+    "energy_db_of_total": {
+     "under_80_hz": -2.0,
+     "80_250_hz": -7.7,
+     "250_2k_hz": -7.4,
+     "2k_8k_hz": -17.8,
+     "over_8k_hz": -29.5
+    },
+    "lr_correlation": 0.882
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Room tone of thousands of people standing silently in a vast stone cathedral: soft cloth rustle, small shifts of weight, a distant soft cough, enormous reverberant space, quiet and still.",
+    "seed": 111,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 26.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s111_d26_75accf00.f32.wav",
+    "raw_peak_dbfs": -9.78,
+    "raw_clipped_samples": 0,
+    "layers": [
+     "Stable Audio take (see prompt): 2.5-22.5 s, with the second that follows it (22.5-23.5 s) cross-faded over its first second (equal power) to make the loop; the knock at 4.25 s turned down 16 dB",
+     "CC0 \"Strong Double Cough\" by qubodup (freesound.org/people/qubodup/sounds/743360/, committed at claude-film/one-too-many/audio/sfx/cough1.flac) at 6.4 s: low-passed at 2.2 kHz, mostly reverb from hall_impulse (first 5 s), 5 dB over the bed's RMS"
+    ],
+    "edit": "peak -1 dBFS; no fades (seamless loop)"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license; with one CC0 1.0 (public domain) cough (Freesound 743360)",
+   "loop_safe": true,
+   "loop_seam": {
+    "wrap_step": 0.00121,
+    "median_step": 0.00155,
+    "p99_step": 0.00939,
+    "rms_db_last_half_s": -32.0,
+    "rms_db_first_half_s": -29.6,
+    "seamless": true
+   },
+   "caveat": "Mostly low: most of its energy is under 250 Hz and there is little above 2 kHz, so on small speakers it is nearly inaudible; the wind bed carries the high air. \"Nobody speaks\" is not fully proven: asked directly (people speaking or murmuring, in 2 s windows) earshot says 1% or less everywhere, but AudioSet tags every 4 s of it \"Speech\" at 0.26-0.45, and 8-12 s reads as whispering (81%) against rustle, room tone, footsteps and a cough. There may be a faint whisper-like texture: a person must listen for it. If the bed is looped, the cough comes back every 20 s: over a 35 s film that is one repeat, so drop the second pass or offset the loop. One loud knock in the take (4.25 s) is turned down 16 dB. A second cough was tried and removed: far away in the hall it read to earshot as an animal (a horse, a cow, a rooster).",
+   "earshot": {
+    "description": "a large silent crowd standing in a huge reverberant hall, rustling and a distant cough",
+    "alternatives": [
+     "a crowd talking",
+     "a crowd cheering",
+     "an empty silent room",
+     "a restaurant with murmuring voices",
+     "applause"
+    ],
+    "pass": true,
+    "result": "strong (z +4.5, 100% of the choice)",
+    "verdict": "strong",
+    "z": 4.48,
+    "p_vs_alts": 1.0,
+    "alts": [
+     {
+      "query": "a crowd talking",
+      "p": 0.0,
+      "z": 2.04
+     },
+     {
+      "query": "a crowd cheering",
+      "p": 0.0,
+      "z": 1.15
+     },
+     {
+      "query": "an empty silent room",
+      "p": 0.0,
+      "z": 0.99
+     },
+     {
+      "query": "a restaurant with murmuring voices",
+      "p": 0.0,
+      "z": 2.62
+     },
+     {
+      "query": "applause",
+      "p": 0.0,
+      "z": 0.3
+     }
+    ],
+    "sounds_like": [
+     "an office ambience (z +3.1)",
+     "footsteps on wood (z +2.6)",
+     "cloth whipping through the air (z +2.4)",
+     "a stick swung fast through the air (z +2.3)"
+    ],
+    "audioset": [
+     "Speech 0.48",
+     "Shuffle 0.14",
+     "Animal 0.11",
+     "Tap 0.10",
+     "Squish 0.10"
+    ],
+    "describe": "20.00 s 15 separate events, tonal, pitch ~97 Hz (G2) (attack 194 ms, decays in 169 ms). Sounds most like: an office ambience (z +3.0), footsteps on wood (z +2.6), cloth whipping through the air (z +2.3) [clear reading]. Other readings: a body falling on the ground (impacts, z +1.9). AudioSet: Speech 0.48, Shuffle 0.14, Animal 0.11. peak -1.0 dBFS, -28.4 LUFS, brightness 2.4 kHz, bandwidth 20.5 kHz, noise floor -35 dBFS, side/mid -12 dB."
+   },
+   "candidates": [
+    "Stable Audio seed 111 (chosen): the raw take passes (z +3.7, 100%); speech 3% or less in every 2 s window",
+    "Stable Audio seed 1111 (32 s): pass (z +3.2, 97%), but sparser and 15 dB quieter, with door slams (4-8 s), the same Speech tags (0.2-0.5) and a stretch tagged Music 0.62 (24-28 s): not better",
+    "a second CC0 cough (\"Cough (3)\" by OwlStorm, Freesound 151217) at 14.9 s: removed; with the hall on it earshot described that window as a horse neighing or a cow mooing, and AudioSet tagged the bed Animal and Coo"
+   ]
+  },
+  {
+   "name": "gloved_applause",
+   "path": "audio/sfx/gloved_applause.flac",
+   "what": "Ten thousand gloved hands applauding far off in the nave: a wide, distant patter with the crack of each clap held down (peaks limited to 1.5 times the local level) and the hall around it, 8 s, stereo, fading in over 0.3 s and out over 1.2 s.",
+   "duration_s": 8.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -0.8,
+    "lufs": -16.9,
+    "rms_dbfs": -21.4,
+    "clipped_samples": 0,
+    "peak_at_s": 6.327,
+    "centroid_hz": 1329,
+    "energy_db_of_total": {
+     "under_80_hz": -33.9,
+     "80_250_hz": -18.6,
+     "250_2k_hz": -0.6,
+     "2k_8k_hz": -9.4,
+     "over_8k_hz": -26.7
+    },
+    "lr_correlation": 0.523
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small SFX (stable-audio-3-small-sfx-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "Distant muffled applause heard from far away in a vast stone cathedral: thousands of people softly patting gloved hands together, a dull soft padded rumble of applause, gentle and polite, very reverberant.",
+    "seed": 1112,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 10.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_sfx_s1112_d10_e8885a2c.f32.wav",
+    "raw_peak_dbfs": -7.15,
+    "raw_clipped_samples": 0,
+    "edit": "first 8 s of the take; high-pass 100 Hz; every clap's peak held to 1.5 times the local 80 ms level; hall_impulse (first 4 s) at -6 dB; 0.3 s fade-in, 1.2 s fade-out; gain +23.43 dB to peak -1 dBFS; no low-pass"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "FAILS the forced choice, and \"gloved\" could not be shown at all: earshot hears applause (z +3.7 to +4.0), but ordinary hand clapping. Every version muffled enough to stop reading as sharp clapping (any low-pass at 5 kHz or below) stopped reading as applause too: a second probe then heard horses galloping (88-100%). So this file keeps the full band and only pads the peaks; it is not low-passed. If the ear wants it duller, low-pass in the mix against the picture, where the hands explain the sound. It should be almost soundless in the film, and the review says the film must not end on it.",
+   "earshot": {
+    "description": "a large crowd applauding softly in gloves, muffled, in a big hall",
+    "alternatives": [
+     "sharp loud hand clapping",
+     "rain falling",
+     "a crowd cheering",
+     "footsteps of a crowd"
+    ],
+    "pass": false,
+    "result": "lost to 'sharp loud hand clapping' (96% against 4%; z +4.1)",
+    "verdict": "strong",
+    "z": 4.08,
+    "p_vs_alts": 0.042,
+    "alts": [
+     {
+      "query": "sharp loud hand clapping",
+      "p": 0.958,
+      "z": 4.69
+     },
+     {
+      "query": "rain falling",
+      "p": 0.0,
+      "z": 1.24
+     },
+     {
+      "query": "a crowd cheering",
+      "p": 0.0,
+      "z": 1.99
+     },
+     {
+      "query": "footsteps of a crowd",
+      "p": 0.0,
+      "z": 2.12
+     }
+    ],
+    "sounds_like": [
+     "applause (z +4.7)",
+     "a hand clap (z +3.3)",
+     "a horse galloping (z +3.1)",
+     "orchestral percussion (z +2.9)"
+    ],
+    "audioset": [
+     "Applause 0.28",
+     "Clapping 0.19",
+     "Ping 0.13"
+    ],
+    "describe": "8.00 s busy, 4.1 onsets/s (attack 284 ms, decays in 1460 ms). Sounds most like: applause (z +4.7), a hand clap (z +3.2), a horse galloping (z +3.0) [clear reading]. Other readings: a keyboard typing fast (keyboard, z +2.2), high heels walking (foley, z +2.1). AudioSet: Applause 0.28, Clapping 0.19, Ping 0.13. peak -1.0 dBFS, -16.9 LUFS, brightness 2.4 kHz, bandwidth 20.5 kHz, noise floor -34 dBFS, side/mid -5 dB."
+   },
+   "candidates": [
+    "first wording (gloved_applause_first), seed 112, as generated: fail, sharp loud hand clapping 74-91% (z +3.2); AudioSet Tap, Whip, Clapping 0.10",
+    "seed 112 low-passed at 900 Hz with hall: ahead without a clear margin (61% against 38%; z +2.4), but a second probe (applause against rain, an explosion, horses, static) hears horses galloping",
+    "synthesised padded thuds (400-2500 a second): fail, rain falling 87-97%",
+    "second wording, seed 1112, as generated: fail, sharp loud hand clapping 100% (z +3.7); AudioSet Clapping 0.48; second probe: applause 78%",
+    "seed 1112 with any low-pass (5 kHz, 3.5 kHz, 2.5 kHz, 1.5 kHz, 1.2 kHz), with or without softened peaks: still loses to sharp clapping (91-100%) except at 1.2 kHz with hall (42% against 40%, z +1.9), and the second probe hears horses galloping 88-100%",
+    "seed 1112, peaks held to 1.5 times the local level, hall -6 dB, no low-pass (chosen): the second probe keeps applause (77% softened only; 95% with hall only)"
+   ]
+  },
+  {
+   "name": "choir_1_mixed_sustained",
+   "path": "audio/choir/choir_1_mixed_sustained.flac",
+   "what": "Choir candidate 1: a large mixed choir on slow sustained wordless vowels in a vast stone space; the harmony moves about every four to six seconds (A minor to G to E minor colours, white notes only), no melody on top.",
+   "duration_s": 31.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -13.0,
+    "rms_dbfs": -16.1,
+    "clipped_samples": 0,
+    "peak_at_s": 1.658,
+    "centroid_hz": 741,
+    "energy_db_of_total": {
+     "under_80_hz": -36.2,
+     "80_250_hz": -18.8,
+     "250_2k_hz": -0.1,
+     "2k_8k_hz": -22.5,
+     "over_8k_hz": -44.6
+    },
+    "lr_correlation": 0.02
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small Music (stable-audio-3-small-music-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "A large mixed cathedral choir, sopranos, altos, tenors and basses, singing slow sustained wordless vowels a cappella: long held 'ah' chords that change every eight seconds, open fifths and suspended harmony in C minor, very slow, 40 BPM. Sacred, solemn, restrained, soft. Recorded far back in a vast stone cathedral with very long reverberation.",
+    "seed": 601,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 32.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_music_s601_d32_00e00366.f32.wav",
+    "raw_peak_dbfs": -3.78,
+    "raw_clipped_samples": 0,
+    "edit": "0 s to 31 s of the take; high-pass 30 Hz; 50 ms fade-in, 2 s fade-out; gain +2.79 dB to peak -1 dBFS; no other processing"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "Its energy is all between about 250 Hz and 1.3 kHz (almost nothing above 2 kHz), which is also where speech has its body: under the lines it needs to sit well down (the handbook's -12 dB under the voice) or be dipped at 300-800 Hz. The take thins at 24-26 s and ends by itself at about 30 s. It is tuned to A = 440; the bell's main partial (191.7 Hz) is a G that is 38 cents flat of that.",
+   "analysis": {
+    "tuning_cents_from_a440": 3,
+    "notes_it_leans_on": [
+     "E 1.00",
+     "G 0.99",
+     "B 0.96",
+     "A 0.89",
+     "D 0.79"
+    ],
+    "notes_per_4_s": [
+     "0-4 s: B A C",
+     "4-8 s: B A E",
+     "8-12 s: A E F",
+     "12-16 s: G D A",
+     "16-20 s: E A B",
+     "20-24 s: D G B",
+     "24-28 s: G D B"
+    ],
+    "strongest_partials": [
+     "438 Hz A4-9c (-1 dB)",
+     "588 Hz D5+2c (-1 dB)",
+     "659 Hz E5-2c (0 dB)",
+     "669 Hz E5+25c (-1 dB)",
+     "876 Hz A5-8c (-4 dB)",
+     "889 Hz A5+17c (-5 dB)",
+     "990 Hz B5+3c (-4 dB)",
+     "1177 Hz D6+4c (-3 dB)"
+    ],
+    "level_dbfs_per_2_s": [
+     -14,
+     -15,
+     -16,
+     -15,
+     -17,
+     -14,
+     -16,
+     -17,
+     -19,
+     -13,
+     -15,
+     -18,
+     -23,
+     -17,
+     -18
+    ],
+    "max_repeat_correlation_3p9s": 0.232
+   },
+   "earshot": {
+    "description": "a large choir singing slow sustained wordless vowels in a vast cathedral",
+    "alternatives": [
+     "a solo singer",
+     "an orchestra with strings",
+     "a church organ",
+     "a synthesizer pad",
+     "people speaking",
+     "music with drums"
+    ],
+    "pass": true,
+    "result": "strong (z +4.8, 100% of the choice)",
+    "verdict": "strong",
+    "z": 4.81,
+    "p_vs_alts": 0.999,
+    "alts": [
+     {
+      "query": "a solo singer",
+      "p": 0.0,
+      "z": 1.93
+     },
+     {
+      "query": "an orchestra with strings",
+      "p": 0.0,
+      "z": 1.03
+     },
+     {
+      "query": "a church organ",
+      "p": 0.0,
+      "z": 1.45
+     },
+     {
+      "query": "a synthesizer pad",
+      "p": 0.001,
+      "z": 2.49
+     },
+     {
+      "query": "people speaking",
+      "p": 0.0,
+      "z": -0.02
+     },
+     {
+      "query": "music with drums",
+      "p": 0.0,
+      "z": 0.65
+     }
+    ],
+    "sounds_like": [
+     "a choir (z +3.6)",
+     "singing vocals (z +3.1)",
+     "a warm analog synth pad (z +2.7)",
+     "dreamy and ethereal music (z +2.6)"
+    ],
+    "audioset": [
+     "Music 0.62",
+     "Chant 0.61",
+     "Choir 0.61",
+     "Mantra 0.43",
+     "Singing 0.18"
+    ],
+    "describe": "31.00 s busy, 2.3 onsets/s, loudness range 5 LU. Music (AudioSet Music 0.62). Unvalidated hints - genre: ambient synth pad music (z +2.5), uplifting orchestral film score (z +2.1); mood (wrong for ~1 in 5 tracks in a test): dreamy and ethereal music (z +2.6), triumphant and heroic music (z +2.3). Sounds most like: an uplifter sweep (z +2.3), a rising riser building tension (z +1.9), a toilet flushing (z +1.7) [weak reading]. Other readings: a crowd cheering (ambience, z +1.5), church bells (chimes, z +1.5). AudioSet: Music 0.62, Chant 0.61, Choir 0.61. peak -1.0 dBFS, -13.0 LUFS, brightness 1.2 kHz, bandwidth 12.9 kHz, side/mid -0 dB. Windows that read differently: 0:00.00-0:10.00 a rising riser building tension (z +2.1; AudioSet Chant 0.61); 0:21.00-0:31.00 an uplifter sweep (z +2.4; AudioSet Chant 0.56).",
+    "probes": [
+     {
+      "a choir singing one sustained wordless vowel": 0.95,
+      "a choir singing words and lyrics": 0.04
+     },
+     {
+      "voices only, a cappella": 1.0,
+      "voices with drums and percussion": 0.0,
+      "voices with an orchestra": 0.0,
+      "voices with an organ": 0.0
+     },
+     {
+      "men and women singing together": 0.82,
+      "men singing low": 0.03,
+      "women singing high": 0.14
+     }
+    ]
+   },
+   "candidates": [
+    "seed 601 (chosen): z +4.8, 100%; share read as a choir per 4 s window: 0.91 0.94 0.48 0.79 0.95 0.30 0.77 0.36",
+    "seed 602: z +4.3, 99%; per window 0.39 0.71 0.86 0.86 0.33 0.12 0.23 0.03; wordless less certain (51% against 49%)"
+   ]
+  },
+  {
+   "name": "choir_2_low_men_drone",
+   "path": "audio/choir/choir_2_low_men_drone.flac",
+   "what": "Choir candidate 2: low men's voices chanting one long dark wordless tone, close to a drone, level steady within about 4 dB for 29 s; a tight cluster of notes between 189 and 218 Hz with octaves above.",
+   "duration_s": 30.5,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -13.6,
+    "rms_dbfs": -16.0,
+    "clipped_samples": 0,
+    "peak_at_s": 1.561,
+    "centroid_hz": 405,
+    "energy_db_of_total": {
+     "under_80_hz": -35.6,
+     "80_250_hz": -3.7,
+     "250_2k_hz": -2.4,
+     "2k_8k_hz": -25.1,
+     "over_8k_hz": -54.1
+    },
+    "lr_correlation": 0.322
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small Music (stable-audio-3-small-music-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "A monastery choir of men's voices, basses and baritones, chanting one long sustained wordless 'oh' on a low note with a fifth above it, slow monastic chant, human voices, a cappella, dark and solemn, in a vast stone cathedral with very long reverberation.",
+    "seed": 601,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 32.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_music_s601_d32_ad986668.f32.wav",
+    "raw_peak_dbfs": -6.86,
+    "raw_clipped_samples": 0,
+    "edit": "0 s to 30.5 s of the take; high-pass 30 Hz; 50 ms fade-in, 2 s fade-out; gain +5.84 dB to peak -1 dBFS; no other processing"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "Made from the second wording of the prompt: the first wording (CHOIR, seeds 601 and 602) read to earshot as a synthesizer pad, and its seed 601 was clipped. As a whole it reads as a choir (Mantra, Chant), but in 4 s windows the first four seconds and 24-28 s read as a pad: if only part is used, 4-24 s is the safest. Its notes do not sit on the A = 440 grid (strongest partials 218 Hz, an A3 19 cents flat, and 189 Hz, an F sharp 39 cents sharp), and that 189 Hz is 2.5 Hz under the bell's main partial (191.7 Hz): the two beat if they overlap, so let the choir end before the stroke. Low men on \"oh\" can read as lowing cattle; earshot's forced choice says no (under 7% in every window), but a person should listen for it.",
+   "analysis": {
+    "tuning_cents_from_a440": -2,
+    "notes_it_leans_on": [
+     "F# 1.00",
+     "A 0.79",
+     "G 0.78",
+     "F 0.53",
+     "G# 0.52"
+    ],
+    "notes_per_4_s": [
+     "0-4 s: B A# F#",
+     "4-8 s: E F# F",
+     "8-12 s: A F G#",
+     "12-16 s: G A G#",
+     "16-20 s: A G# G",
+     "20-24 s: G F# G#",
+     "24-28 s: F# C# G"
+    ],
+    "strongest_partials": [
+     "189 Hz F#3+39c (-8 dB)",
+     "218 Hz A3-19c (0 dB)",
+     "349 Hz F4+1c (-10 dB)",
+     "385 Hz G4-30c (-6 dB)",
+     "430 Hz A4-38c (-4 dB)",
+     "439 Hz A4-3c (-8 dB)",
+     "640 Hz D#5+49c (-11 dB)",
+     "657 Hz E5-5c (-11 dB)"
+    ],
+    "level_dbfs_per_2_s": [
+     -13,
+     -14,
+     -17,
+     -17,
+     -14,
+     -16,
+     -16,
+     -17,
+     -18,
+     -14,
+     -18,
+     -18,
+     -18,
+     -18,
+     -20
+    ],
+    "max_repeat_correlation_3p9s": 0.304
+   },
+   "earshot": {
+    "description": "a large choir singing slow sustained wordless vowels in a vast cathedral",
+    "alternatives": [
+     "a solo singer",
+     "an orchestra with strings",
+     "a church organ",
+     "a synthesizer pad",
+     "people speaking",
+     "music with drums"
+    ],
+    "pass": true,
+    "result": "strong (z +4.9, 100% of the choice)",
+    "verdict": "strong",
+    "z": 4.86,
+    "p_vs_alts": 1.0,
+    "alts": [
+     {
+      "query": "a solo singer",
+      "p": 0.0,
+      "z": 1.97
+     },
+     {
+      "query": "an orchestra with strings",
+      "p": 0.0,
+      "z": 1.51
+     },
+     {
+      "query": "a church organ",
+      "p": 0.0,
+      "z": 1.58
+     },
+     {
+      "query": "a synthesizer pad",
+      "p": 0.0,
+      "z": 2.22
+     },
+     {
+      "query": "people speaking",
+      "p": 0.0,
+      "z": -0.15
+     },
+     {
+      "query": "music with drums",
+      "p": 0.0,
+      "z": 0.51
+     }
+    ],
+    "sounds_like": [
+     "a choir (z +3.4)",
+     "brass section (z +3.3)",
+     "singing vocals (z +3.0)",
+     "a warm analog synth pad (z +3.0)"
+    ],
+    "audioset": [
+     "Mantra 0.72",
+     "Chant 0.65",
+     "Music 0.46",
+     "Vocal music 0.08",
+     "Choir 0.07"
+    ],
+    "describe": "30.50 s busy, 7.9 onsets/s, loudness range 4 LU. Sounds most like: a cow mooing (z +2.4), a rising riser building tension (z +2.0), an uplifter sweep (z +1.8) [weak reading]. Other readings: a sustained glass harp tone (chimes, z +1.4), a big braam (impacts, z +1.4). Unvalidated hint: a choir (z +3.4). AudioSet: Mantra 0.72, Chant 0.65, Music 0.46. peak -1.0 dBFS, -13.6 LUFS, brightness 813 Hz, bandwidth 6.5 kHz, side/mid -3 dB. Uniform: all 6 analysed 10 s windows read as a cow mooing.",
+    "probes": [
+     {
+      "a choir singing one sustained wordless vowel": 0.99,
+      "a choir singing words and lyrics": 0.01
+     },
+     {
+      "voices only, a cappella": 1.0,
+      "voices with drums and percussion": 0.0,
+      "voices with an orchestra": 0.0,
+      "voices with an organ": 0.0
+     },
+     {
+      "men and women singing together": 0.49,
+      "men singing low": 0.27,
+      "women singing high": 0.23
+     }
+    ]
+   },
+   "candidates": [
+    "first wording (CHOIR), seed 601: fail, a synthesizer pad 94%; AudioSet Gong 0.69; 422 clipped samples at 1.1-2.1 s",
+    "first wording, seed 602: fail, a synthesizer pad 93%; AudioSet Ambient music 0.73; a harmonic drone on 64 Hz (C2 -38 cents) whose third harmonic (191.0 Hz) falls on the bell's main partial",
+    "second wording (CHOIR_B), seed 601 (chosen): z +4.8, 100%; per window 0.12 0.72 0.37 0.92 0.64 0.71 0.10 0.68",
+    "second wording, seed 602: z +4.8, 100%; per window 0.83 0.86 0.79 0.94 0.81 0.96 0.50 0.04; reads as voices more steadily, but it is sung in phrases with gaps about every 5 s (level falls to -36 dBFS), so it is less of a drone; a fair swap if candidate 2 sounds synthetic"
+   ]
+  },
+  {
+   "name": "choir_3_humming",
+   "path": "audio/choir/choir_3_humming.flac",
+   "what": "Choir candidate 3 (the foundry's own idea): a large mixed choir asked to hum with closed mouths, so that no vowel or consonant competes with the spoken lines; the sound swells and falls back about every eight seconds, like breathing. D-minor colours (G, A, B flat, C, D, F), middle register, nothing under 170 Hz.",
+   "duration_s": 30.0,
+   "channels": 2,
+   "sample_rate": 48000,
+   "bit_depth": 24,
+   "levels": {
+    "peak_dbfs": -1.0,
+    "true_peak_dbtp": -1.0,
+    "lufs": -15.4,
+    "rms_dbfs": -19.1,
+    "clipped_samples": 0,
+    "peak_at_s": 25.898,
+    "centroid_hz": 705,
+    "energy_db_of_total": {
+     "under_80_hz": -35.3,
+     "80_250_hz": -13.3,
+     "250_2k_hz": -0.2,
+     "2k_8k_hz": -21.0,
+     "over_8k_hz": -45.6
+    },
+    "lr_correlation": 0.11
+   },
+   "how": {
+    "method": "generated",
+    "model": "Stable Audio 3.0 Small Music (stable-audio-3-small-music-q8_0.gguf, audio.cpp on CPU)",
+    "prompt": "A very large choir of men and women humming softly with closed mouths, a cappella: one slow sustained hummed chord that swells and fades like breathing, pianissimo, solemn, sacred, human voices, in a vast stone cathedral with very long reverberation.",
+    "seed": 602,
+    "steps": 8,
+    "guidance_scale": 1.0,
+    "asked_duration_s": 32.0,
+    "threads": 2,
+    "raw": "audio/gen/sa_music_s602_d32_56959885.f32.wav",
+    "raw_peak_dbfs": -1.28,
+    "raw_clipped_samples": 0,
+    "edit": "0 s to 30 s of the take; high-pass 30 Hz; 50 ms fade-in, 2 s fade-out; gain +0.30 dB to peak -1 dBFS; no other processing"
+   },
+   "licence": "Stability AI Community License (free below USD 1M annual revenue); https://stability.ai/license",
+   "loop_safe": false,
+   "caveat": "Weakest of the three as a choir: the whole file reads as a choir, but in 4 s windows earshot hears a synthesizer pad more often than voices, and it hears an open vowel, not a hum, so the idea is only partly delivered. Its swells cover about 13 dB (quiet at 5-7 s, 11-12 s and 21-23 s, loud at 8-11 s, 16-19 s and 24-27 s): under dialogue the level will need riding, or the swells placed between the lines. Two other wordings were tried for this slot and are kept only as raw takes: a hollow choir (low pedal and a high halo: read as a glass harp or singing bowl, not voices) and one held open fifth (the model would not hold it; both takes end by 27 s and one is clipped).",
+   "analysis": {
+    "tuning_cents_from_a440": -11,
+    "notes_it_leans_on": [
+     "A 1.00",
+     "D 0.90",
+     "C 0.65",
+     "G 0.59",
+     "A# 0.57"
+    ],
+    "notes_per_4_s": [
+     "0-4 s: A G C",
+     "4-8 s: A G D",
+     "8-12 s: A# D A",
+     "12-16 s: F A# C",
+     "16-20 s: G C D",
+     "20-24 s: A C E",
+     "24-28 s: A D F"
+    ],
+    "strongest_partials": [
+     "390 Hz G4-7c (-6 dB)",
+     "463 Hz A#4-11c (-3 dB)",
+     "523 Hz C5+1c (-2 dB)",
+     "579 Hz D5-24c (-5 dB)",
+     "588 Hz D5+1c (0 dB)",
+     "700 Hz F5+5c (-6 dB)",
+     "774 Hz G5-21c (-3 dB)",
+     "787 Hz G5+6c (-4 dB)"
+    ],
+    "level_dbfs_per_2_s": [
+     -24,
+     -19,
+     -28,
+     -23,
+     -16,
+     -19,
+     -25,
+     -24,
+     -16,
+     -18,
+     -23,
+     -21,
+     -15,
+     -15,
+     -32
+    ],
+    "max_repeat_correlation_3p9s": 0.165
+   },
+   "earshot": {
+    "description": "a large choir singing slow sustained wordless vowels in a vast cathedral",
+    "alternatives": [
+     "a solo singer",
+     "an orchestra with strings",
+     "a church organ",
+     "a synthesizer pad",
+     "people speaking",
+     "music with drums"
+    ],
+    "pass": true,
+    "result": "strong (z +4.5, 100% of the choice)",
+    "verdict": "strong",
+    "z": 4.53,
+    "p_vs_alts": 0.997,
+    "alts": [
+     {
+      "query": "a solo singer",
+      "p": 0.0,
+      "z": 1.86
+     },
+     {
+      "query": "an orchestra with strings",
+      "p": 0.0,
+      "z": 1.13
+     },
+     {
+      "query": "a church organ",
+      "p": 0.0,
+      "z": 1.41
+     },
+     {
+      "query": "a synthesizer pad",
+      "p": 0.003,
+      "z": 2.63
+     },
+     {
+      "query": "people speaking",
+      "p": 0.0,
+      "z": -0.15
+     },
+     {
+      "query": "music with drums",
+      "p": 0.0,
+      "z": 0.5
+     }
+    ],
+    "sounds_like": [
+     "a choir (z +3.4)",
+     "singing vocals (z +2.9)",
+     "dreamy and ethereal music (z +2.9)",
+     "a warm analog synth pad (z +2.9)"
+    ],
+    "audioset": [
+     "Music 0.78",
+     "Chant 0.47",
+     "Choir 0.35",
+     "Mantra 0.33",
+     "New-age music 0.16"
+    ],
+    "describe": "30.00 s busy, 5.2 onsets/s, loudness range 10 LU. Music (AudioSet Music 0.78). Unvalidated hints - genre: ambient synth pad music (z +2.7), uplifting orchestral film score (z +2.3); mood (wrong for ~1 in 5 tracks in a test): dreamy and ethereal music (z +2.8), triumphant and heroic music (z +2.3). Sounds most like: an uplifter sweep (z +2.3), a rising riser building tension (z +2.1), a toilet flushing (z +1.5) [weak reading]. Other readings: church bells (chimes, z +1.3), a crowd cheering (ambience, z +1.2). AudioSet: Music 0.78, Chant 0.47, Choir 0.35. peak -1.0 dBFS, -15.4 LUFS, brightness 1.2 kHz, bandwidth 12.9 kHz, side/mid -1 dB. Uniform: all 5 analysed 10 s windows read as an uplifter sweep.",
+    "probes": [
+     {
+      "a choir singing one sustained wordless vowel": 0.96,
+      "a choir singing words and lyrics": 0.04
+     },
+     {
+      "voices only, a cappella": 1.0,
+      "voices with drums and percussion": 0.0,
+      "voices with an orchestra": 0.0,
+      "voices with an organ": 0.0
+     },
+     {
+      "men and women singing together": 0.8,
+      "men singing low": 0.03,
+      "women singing high": 0.17
+     }
+    ]
+   },
+   "candidates": [
+    "hollow wording (CHOIR choir_3_hollow_halo), seeds 601 and 602: fail, a synthesizer pad 99% and 96%; nearest descriptions a glass harp tone, a singing bowl",
+    "humming wording, seed 601: z +3.8, 89%; the take ends at 26 s",
+    "humming wording, seed 602 (chosen): z +4.4, 100%; per window 0.10 0.06 0.10 0.42 0.34 0.42 0.10 0.23",
+    "held open fifth (CHOIR_B choir_3_held_fifth), seed 601: z +3.9, 97%; the chord moves anyway; ends at 26 s",
+    "held open fifth, seed 602: z +4.0, 97%; 4 clipped samples at 16.65 s; ends at 28 s"
+   ]
+  }
+ ]
+}

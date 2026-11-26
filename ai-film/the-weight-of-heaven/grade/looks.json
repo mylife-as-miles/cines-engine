@@ -1,0 +1,412 @@
+{
+ "about": "The looks for Movement I. A look is applied after the per-shot correction (grade/shots.json). Controls: 'curve' is display code value in -> out, a monotone cubic through the points (every look keeps 0 at 0, so picture black matches the matte and the title card, and holds 0.18-0.35, where dark skin sits); 'hue_keep' blends the per-channel curve (0) with a curve on the largest channel (1), which holds hue; 'neutral' pulls near-neutral pixels toward white: 'keep' is how much of their chroma survives, 'below'/'above' the saturation (max-min)/(max+0.08) where that is fully on / fully off, so skin and accents are not touched; 'saturation' is for everything that is not near-neutral; 'tint' is added to the neutrals by tonal zone ('reach' is the share that also reaches skin); 'accents' are the pushes on the three keyed accents (sat, hue_deg toward yellow, gain; lift_gamma/lift_below lift the wine); 'haze' and 'deepen_gain' scale the per-shot shaping; 'grain' is added once. 'accent_keys' are the keys themselves (hue range in degrees, the saturation and value ramps, 'soften' = blur passes on the key), measured on the matched picture. 'board' lists the look board's moments (seconds in the v4 cut).",
+ "accent_keys": {
+  "gold": {
+   "hue": [
+    27,
+    56
+   ],
+   "hue_soft": 6,
+   "sat": [
+    0.2,
+    0.32
+   ],
+   "val": [
+    0.12,
+    0.24
+   ],
+   "soften": 1
+  },
+  "seal": {
+   "hue": [
+    340,
+    9
+   ],
+   "hue_soft": 6,
+   "sat": [
+    0.26,
+    0.4
+   ],
+   "val": [
+    0.1,
+    0.2
+   ],
+   "soften": 1
+  },
+  "wine": {
+   "hue": [
+    325,
+    16
+   ],
+   "hue_soft": 10,
+   "sat": [
+    0.22,
+    0.42
+   ],
+   "val": [
+    0.0,
+    0.012
+   ],
+   "val_max": [
+    0.45,
+    0.6
+   ],
+   "soften": 3
+  }
+ },
+ "board": {
+  "moments": [
+   {
+    "t": 3.3,
+    "name": "The nave",
+    "slug": "nave"
+   },
+   {
+    "t": 17.6,
+    "name": "Serath, unread",
+    "slug": "serath"
+   },
+   {
+    "t": 22.0,
+    "name": "The seal",
+    "slug": "seal"
+   },
+   {
+    "t": 31.0,
+    "name": "The bell and hammer",
+    "slug": "hammer"
+   },
+   {
+    "t": 33.5,
+    "name": "The cup",
+    "slug": "cup"
+   }
+  ]
+ },
+ "looks": {
+  "orison": {
+   "title": "Orison White",
+   "board_note": "The script's world: clean neutral whites and open light, but with a tonal ladder (sky above marble above cloth above skin above bronze) and the three accents at full strength.",
+   "curve": [
+    [
+     0,
+     0
+    ],
+    [
+     0.02,
+     0.019
+    ],
+    [
+     0.07,
+     0.052
+    ],
+    [
+     0.12,
+     0.112
+    ],
+    [
+     0.18,
+     0.178
+    ],
+    [
+     0.35,
+     0.345
+    ],
+    [
+     0.47,
+     0.45
+    ],
+    [
+     0.58,
+     0.585
+    ],
+    [
+     0.7,
+     0.73
+    ],
+    [
+     0.85,
+     0.88
+    ],
+    [
+     0.94,
+     0.95
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "neutral": {
+    "keep": 0.22,
+    "below": 0.07,
+    "above": 0.2
+   },
+   "saturation": 1.0,
+   "tint": {
+    "shadows": [
+     -0.004,
+     0.0,
+     0.006
+    ],
+    "mids": [
+     0,
+     0,
+     0
+    ],
+    "highlights": [
+     0,
+     0,
+     0
+    ],
+    "reach": 0.2
+   },
+   "accents": {
+    "gold": {
+     "sat": 1.5,
+     "hue_deg": 10,
+     "gain": 1.1
+    },
+    "seal": {
+     "sat": 2.6,
+     "hue_deg": -2,
+     "gain": 1.1
+    },
+    "wine": {
+     "sat": 1.15,
+     "lift_gamma": 0.48,
+     "lift_below": 0.45
+    }
+   },
+   "haze": {
+    "colour": [
+     0.93,
+     0.94,
+     0.96
+    ],
+    "gain": 1.0
+   },
+   "deepen_gain": 1.0,
+   "grain": {
+    "amount": 0.013,
+    "size": 1.1,
+    "chroma": 0.1,
+    "mid": 0.75,
+    "seed": 800
+   },
+   "hue_keep": 0.5
+  },
+  "belliron": {
+   "title": "Bell Iron",
+   "board_note": "Austere, after Villeneuve: cool slate neutrals, dense greys under a held-back white, the deepest blacks, skin and accents restrained but dense. The bell owns the frame.",
+   "curve": [
+    [
+     0,
+     0
+    ],
+    [
+     0.02,
+     0.018
+    ],
+    [
+     0.07,
+     0.042
+    ],
+    [
+     0.13,
+     0.112
+    ],
+    [
+     0.18,
+     0.172
+    ],
+    [
+     0.24,
+     0.228
+    ],
+    [
+     0.35,
+     0.325
+    ],
+    [
+     0.47,
+     0.42
+    ],
+    [
+     0.6,
+     0.545
+    ],
+    [
+     0.75,
+     0.7
+    ],
+    [
+     0.88,
+     0.84
+    ],
+    [
+     1,
+     0.955
+    ]
+   ],
+   "neutral": {
+    "keep": 0.25,
+    "below": 0.07,
+    "above": 0.2
+   },
+   "saturation": 1.0,
+   "tint": {
+    "shadows": [
+     -0.014,
+     0.002,
+     0.016
+    ],
+    "mids": [
+     -0.009,
+     0.001,
+     0.011
+    ],
+    "highlights": [
+     -0.005,
+     0.0,
+     0.007
+    ],
+    "reach": 0.2
+   },
+   "accents": {
+    "gold": {
+     "sat": 1.3,
+     "hue_deg": 7,
+     "gain": 1.05
+    },
+    "seal": {
+     "sat": 2.4,
+     "hue_deg": -3,
+     "gain": 1.12
+    },
+    "wine": {
+     "sat": 1.1,
+     "lift_gamma": 0.42,
+     "lift_below": 0.45
+    }
+   },
+   "haze": {
+    "colour": [
+     0.86,
+     0.89,
+     0.93
+    ],
+    "gain": 1.4
+   },
+   "deepen_gain": 1.3,
+   "grain": {
+    "amount": 0.018,
+    "size": 1.3,
+    "chroma": 0.1,
+    "mid": 0.75,
+    "seed": 800
+   },
+   "hue_keep": 0.5
+  },
+  "vellum": {
+   "title": "Illuminated Vellum",
+   "board_note": "Storybook epic: a soft filmic curve, ivory light over cooler shade, richer skin, and the accents as a manuscript's gold leaf and vermilion.",
+   "curve": [
+    [
+     0,
+     0
+    ],
+    [
+     0.02,
+     0.02
+    ],
+    [
+     0.08,
+     0.07
+    ],
+    [
+     0.18,
+     0.176
+    ],
+    [
+     0.25,
+     0.245
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.75,
+     0.77
+    ],
+    [
+     0.9,
+     0.905
+    ],
+    [
+     1,
+     0.975
+    ]
+   ],
+   "neutral": {
+    "keep": 0.55,
+    "below": 0.07,
+    "above": 0.2
+   },
+   "saturation": 1.1,
+   "tint": {
+    "shadows": [
+     -0.005,
+     0.0,
+     0.007
+    ],
+    "mids": [
+     0.004,
+     0.001,
+     -0.006
+    ],
+    "highlights": [
+     0.011,
+     0.003,
+     -0.015
+    ],
+    "reach": 0.3
+   },
+   "accents": {
+    "gold": {
+     "sat": 1.55,
+     "hue_deg": 11,
+     "gain": 1.12
+    },
+    "seal": {
+     "sat": 2.8,
+     "hue_deg": 0,
+     "gain": 1.12
+    },
+    "wine": {
+     "sat": 1.2,
+     "lift_gamma": 0.46,
+     "lift_below": 0.45
+    }
+   },
+   "haze": {
+    "colour": [
+     0.95,
+     0.94,
+     0.92
+    ],
+    "gain": 0.8
+   },
+   "deepen_gain": 0.8,
+   "grain": {
+    "amount": 0.016,
+    "size": 1.5,
+    "chroma": 0.14,
+    "mid": 0.75,
+    "seed": 800
+   },
+   "hue_keep": 0.5
+  }
+ }
+}
