@@ -26,7 +26,7 @@ How. The camera is still in this shot, so the frozen cloud can be handled as its
            it billows instead of sliding. The flow is zero at the middle of the shot, so no pixel travels far.
   veils    thin mist that is new, not taken from the plate: soft lighter and darker shapes that cross at the speed of
            the take's own low mist and change as they go, laid lightly over the frozen cloud and the far stonework.
-  matte    Serath is found again in every frame (she turns her head), so the cloud reaches her edge and stops there.
+  matte    Serath is found again in every frame (she turns), and the change comes in over ten pixels beside her.
   grain    only the CHANGE in the cloud's shapes is added to the take's frame, so the take's own fine pattern stays on it
            and stays still, as it is everywhere else in the picture.
 """
@@ -58,23 +58,34 @@ def write(frames, path, audio=None, ss=None, t=None):
     p.stdin.close(); p.wait()
 
 
+def ease(x):
+    x = np.clip(x, 0, 1)
+    return x * x * (3 - 2 * x)
+
+
 def poly(points):
     im = Image.new('L', (W, H), 0); ImageDraw.Draw(im).polygon(points, fill=255)
     return np.asarray(im) > 0
 
 
 def masks():
-    """Marked by hand on gridded enlargements of the plate: the opening between the two columns, down to the rail (it
-    slopes), and the far stonework that stands in the cloud there. (An automatic edge detector was tried first for the
-    stonework and took the cloud bank's own billows for stone.) The opening right of the right column and the cloud
-    under the arcade on the left are alive in the take and are not touched."""
+    """Marked by hand on gridded enlargements of the plate. Two openings, each with the way its cloud goes:
+      centre  between the two columns, down to the rail (it slopes), less the far stonework that stands in the cloud.
+              (An automatic edge detector was tried first for the stonework and took the cloud's own billows for stone.)
+      right   right of the right column, above a far balustrade. In Q04's take this cloud is alive and goes LEFT at
+              7 px a second; it is only moved where a take has frozen it (the second half of the shot, from Q05).
+    The cloud under the arcade on the left is alive in both takes and is not touched.
+    Returns {name: (opening, stone, drift in px a second at the nearest, an extra 0-1 weight)}."""
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    opening = (xx >= 364) & (xx < 747) & (yy < 405.5 - 0.055 * (xx - 364) - 3)
+    centre = (xx >= 364) & (xx < 747) & (yy < 405.5 - 0.055 * (xx - 364) - 3)
     stone = poly([(417, 94), (457, 94), (457, 226), (417, 226)])                     # the tower
     stone |= poly([(360, 158), (421, 158), (421, 216), (360, 216)])                  # the bridge beside it
     stone |= poly([(360, 248), (388, 248), (424, 250), (432, 256), (470, 274), (540, 272), (556, 270), (584, 282), (606, 300),
                    (606, 350), (540, 352), (520, 330), (470, 322), (410, 330), (360, 332)])   # the stair and the wall under it
-    return opening, stone & opening
+    right = (xx >= 910) & (yy < 357)
+    low = ease((357 - yy) / 30.0)                                                    # its lower edge is no real edge: the movement dies away toward it
+    return {'centre': (centre, stone & centre, (5.5, -1.6), np.ones((H, W), np.float32)),
+            'right': (right, np.zeros((H, W), bool), (-8.0, -0.4), low.astype(np.float32))}
 
 
 def frozen_map(frames, fig, opening):
@@ -145,11 +156,6 @@ def find_figure(frames, clean):
     return np.stack(out)
 
 
-def ease(x):
-    x = np.clip(x, 0, 1)
-    return x * x * (3 - 2 * x)
-
-
 def field(seed, scale, t, speed, shift=(0.0, 0.0), aspect=1.0):
     """A smooth field that changes slowly and can travel: planes of noise, interpolated in time, sampled with a shift."""
     rng = np.random.default_rng(seed)
@@ -163,16 +169,21 @@ def field(seed, scale, t, speed, shift=(0.0, 0.0), aspect=1.0):
     return g / 0.6
 
 
-DRIFT = (5.5, -1.6)      # px a second at the nearest: to the right and rising, as the take's own low mist goes (+20, -8 px in 4.1 s)
 BILLOW = (6.0, 2.2)      # px: a large slow push and a small quicker one
 VEIL = 0.016             # a veil's lift at its thickest, as a share of full white (about 6 levels of 255)
 
 
-def main():
-    a, b = SHOT['frames']
-    frames = read(P(SHOT['take']), a, b)
-    n = len(frames)
-    opening, stone = masks()
+def move_cloud(frames, t_abs, tc, ramp=None, debug=None):
+    """Give the frozen cloud of the arch shot its movement.
+      frames  (n, H, W, 3) floats, in the shot's framing, camera still
+      t_abs   seconds on the shot's clock for each frame: the billows and veils change with it
+      tc      {opening: seconds from the moment its cloud is where the take has it, for each frame}; an opening left out
+              is not touched
+      ramp    {opening: 0-1 for each frame}: billow and veils come in with it (for an opening whose movement starts
+              inside a shot, so that nothing jumps); 1 if left out."""
+    n = len(frames); ramp = ramp or {}
+    M = {k: v for k, v in masks().items() if k in tc}
+    opening = np.any([m[0] for m in M.values()], 0); stone = np.any([m[1] for m in M.values()], 0)
     # Serath: first against cloud carried in under a rough outline of her, then the plate is taken again from the frames
     # in which each pixel is not her
     rough = poly([(606, 8), (706, 8), (712, 100), (748, 124), (748, 400), (578, 400), (584, 300), (594, 124), (612, 100)])
@@ -187,6 +198,7 @@ def main():
     clean = fill(plate, ndimage.binary_erosion(known, iterations=2))
     clean[known] = plate[known]
     free, act = frozen_map(frames, fig, opening)
+    free = free * np.sum([m[0] * m[3] for m in M.values()], 0)
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     near = np.clip((yy - 40) / 330.0, 0, 1)                                        # 0 far (the top of the sky), 1 near (the cloud at the rail)
     speed = (0.35 + 0.65 * near) * free
@@ -202,12 +214,19 @@ def main():
     shapes = ndimage.gaussian_filter(clean, (1.1, 1.1, 0))
     out = []
     for k in range(n):
-        t = k / FPS; tc = t - (n - 1) / FPS / 2                                    # tc: zero at the middle of the shot
-        dx = DRIFT[0] * speed * tc + free * (BILLOW[0] * field(11, 96, t, 0.26) + BILLOW[1] * field(13, 40, t, 0.40))
-        dy = DRIFT[1] * speed * tc + free * 0.6 * (BILLOW[0] * field(12, 96, t, 0.26) + BILLOW[1] * field(14, 40, t, 0.40))
+        t = float(t_abs[k])
+        bx = BILLOW[0] * field(11, 96, t, 0.26) + BILLOW[1] * field(13, 40, t, 0.40)
+        by = 0.6 * (BILLOW[0] * field(12, 96, t, 0.26) + BILLOW[1] * field(14, 40, t, 0.40))
+        dx = np.zeros((H, W), np.float32); dy = np.zeros((H, W), np.float32); v = np.zeros((H, W), np.float32)
+        for name, (m, _, drift, _) in M.items():
+            r = float(ramp[name][k]) if name in ramp else 1.0
+            dx += m * (drift[0] * speed * float(tc[name][k]) + r * free * bx)
+            dy += m * (drift[1] * speed * float(tc[name][k]) + r * free * by)
+            s = abs(drift[0]) / 5.5                                                # veils cross at the speed of the cloud they lie on
+            vr = 0.6 * field(31, 70, t, 0.30, shift=(drift[0] * t, drift[1] * t), aspect=2.6) + 0.4 * field(32, 34, t, 0.45, shift=(drift[0] * 1.3 * t, drift[1] * 1.3 * t), aspect=2.2)
+            v += m * r * np.clip(vr, -1.5, 1.5)
+        v = v * free * (0.45 + 0.55 * near)
         moving = np.stack([ndimage.map_coordinates(shapes[..., c], [yy - dy, xx - dx], order=3, mode='reflect') for c in range(3)], -1)
-        v = 0.6 * field(31, 70, t, 0.30, shift=(DRIFT[0] * t, DRIFT[1] * t), aspect=2.6) + 0.4 * field(32, 34, t, 0.45, shift=(DRIFT[0] * 1.3 * t, DRIFT[1] * 1.3 * t), aspect=2.2)
-        v = np.clip(v, -1.5, 1.5) * free * (0.45 + 0.55 * near)
         her = ease(ndimage.distance_transform_edt(~fig[k]) / 10.0).astype(np.float32)   # nothing at her edge, everything ten pixels out
         m_open = (open_soft * her)[..., None]
         m_cloud = (np.minimum(open_soft, cloud_soft) * her)[..., None]
@@ -216,17 +235,24 @@ def main():
         g = g + VEIL * v[..., None] * m_open * (1 - 0.5 * stone_soft[..., None])   # veils: lighter and darker drifts of thin mist
         g = g + (mist - g) * (0.10 * np.clip(v, 0, 1.5)[..., None] * m_open * stone_soft[..., None])   # and they take a little of the far stonework with them
         out.append(np.clip(g, 0, 1))
+    if debug:
+        show = np.concatenate([plate, np.stack([opening, stone, fig[n - 1]], -1).astype(np.float32), np.repeat(free[..., None], 3, 2), clean], 0)
+        Image.fromarray((show * 255).astype(np.uint8)).save(debug + '_masks.jpg', quality=90)
+        np.save(debug + '_fig.npy', fig)
+    return np.stack(out), {'moved_share_of_frame': round(float(((free > 0.5) & ~stone & ~fig[0]).mean()), 4)}
+
+
+def main():
+    """The test the author saw: Q04 take 1's part of the shot alone, the centre opening only, on its own clock."""
+    a, b = SHOT['frames']
+    frames = read(P(SHOT['take']), a, b)
+    n = len(frames)
+    t = np.arange(n) / FPS
+    out, info = move_cloud(frames, t, {'centre': t - (n - 1) / FPS / 2}, debug=os.environ.get('CLOUD_DEBUG'))
     os.makedirs(P('out/review'), exist_ok=True)
     write(frames, P('out/review/cloud_test_before.mp4'), P(SHOT['take']), a / FPS, n / FPS)
     write(out, P('out/review/cloud_test_after.mp4'), P(SHOT['take']), a / FPS, n / FPS)
-    dbg = os.environ.get('CLOUD_DEBUG')
-    if dbg:
-        show = np.concatenate([plate, np.stack([opening, stone, fig[n - 1]], -1).astype(np.float32), np.repeat(free[..., None], 3, 2), clean], 0)
-        Image.fromarray((show * 255).astype(np.uint8)).save(os.path.join(dbg, 'masks.jpg'), quality=90)
-        np.save(os.path.join(dbg, 'after.npy'), (np.stack(out) * 255 + 0.5).astype(np.uint8))
-        np.save(os.path.join(dbg, 'fig.npy'), fig)
-    moved = (free > 0.5) & ~stone & ~fig[0]
-    print('wrote the two test clips;', n, 'frames; cloud given movement:', round(float(moved.mean()) * 100, 1), '% of the frame')
+    print('wrote the two test clips;', n, 'frames; cloud given movement:', round(info['moved_share_of_frame'] * 100, 1), '% of the frame')
 
 
 if __name__ == '__main__':

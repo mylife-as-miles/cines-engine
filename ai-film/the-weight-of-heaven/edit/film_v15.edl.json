@@ -1,0 +1,39 @@
+{
+ "file": "out/review/film_v15.mp4",
+ "frames": 2520,
+ "seconds": 105.0,
+ "picture": "cut v14 except the arch shot",
+ "sound": "out/edits/film_v14.wav, unchanged",
+ "arch_shot_starts_at_frame": 1930,
+ "arch_shot_starts_at_s": 80.417,
+ "arch_shot_frames": 136,
+ "q05_starts_at_frame": 2014,
+ "cloud": {
+  "q04_half_frames": 87,
+  "q05_half_frames": 52,
+  "clock_zero_s": 2.812,
+  "q04_half": {
+   "moved_share_of_frame": 0.1613
+  },
+  "q05_half": {
+   "moved_share_of_frame": 0.249
+  }
+ },
+ "cloud_settings": {
+  "drift_px_per_s_at_nearest": {
+   "centre": [
+    5.5,
+    -1.6
+   ],
+   "right": [
+    -8.0,
+    -0.4
+   ]
+  },
+  "billow_px": [
+   6.0,
+   2.2
+  ],
+  "veil": 0.016
+ }
+}
