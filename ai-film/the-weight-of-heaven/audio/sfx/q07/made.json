@@ -1,0 +1,37 @@
+{
+ "wings": {
+  "prompt": "a crow flapping its wings as it flies past, close, wingbeats, outdoors",
+  "seconds": 3.0,
+  "seed": 3,
+  "model": "Stable Audio 3.0 Small SFX, local",
+  "peak_dbfs": -13.8
+ },
+ "thud": {
+  "prompt": "a small soft thud, something light dropping onto grass, dull impact",
+  "seconds": 2.0,
+  "seed": 5,
+  "model": "Stable Audio 3.0 Small SFX, local",
+  "peak_dbfs": -14.0
+ },
+ "grass": {
+  "prompt": "wind hissing through long dry grass, close, steady",
+  "seconds": 5.0,
+  "seed": 7,
+  "model": "Stable Audio 3.0 Small SFX, local",
+  "peak_dbfs": -22.5
+ },
+ "valley": {
+  "prompt": "quiet valley ambience, sheep bleating far away, light wind, a dog barks once in the distance",
+  "seconds": 6.0,
+  "seed": 9,
+  "model": "Stable Audio 3.0 Small SFX, local",
+  "peak_dbfs": -26.4
+ },
+ "timber": {
+  "prompt": "the timbers of an old wooden boat creaking slowly, quiet, close",
+  "seconds": 5.0,
+  "seed": 11,
+  "model": "Stable Audio 3.0 Small SFX, local",
+  "peak_dbfs": -14.5
+ }
+}

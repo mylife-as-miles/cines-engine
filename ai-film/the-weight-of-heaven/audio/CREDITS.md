@@ -61,3 +61,13 @@ Made on 26 November 2026 for cut v10 by `tools/mix_q04.py`. Both files are origi
 - **Generated locally with Stable Audio 3.0 Small SFX** (Stability AI Community License, as described above; attribution: Stable Audio 3.0 Small, Stability AI): `bells_far` ("several church bells ringing far away in the distance, irregular, out of time with each other, outdoors, wind", seed 37, 10 s; played at 0.84 speed in the mix) and `cup_buzz` ("a small metal cup rattling and vibrating on a marble table, a fine continuous metallic buzz, close up", seed 5, 4 s).
 - The council's air is `audio/sfx/wind_altitude.flac`, credited above. Its voices are the video model's own (Seedance 2.5, take Q04 t1).
 
+## Q07 (beneath Orison), made locally, 26 November
+
+Stable Audio 3.0 Small SFX on this machine (Stability AI Community License), through `tools/sfx_make.py`; what the ear-model took each for is in brackets.
+
+- `audio/sfx/q07/timber.flac`: "the timbers of an old wooden boat creaking slowly, quiet, close", seed 11, 5 s ("a wood creak").
+- `audio/sfx/q07/grass.flac`: "wind hissing through long dry grass, close, steady", seed 7, 5 s ("a gust of wind rushing past").
+- `audio/sfx/q07/wings_c.flac`: "pigeon wings flapping fast, bird flying away, close", seed 4, 3 s ("a bird flapping its wings"; two other takes were not kept).
+- `audio/sfx/q07/thud.flac`: "a small soft thud, something light dropping onto grass, dull impact", seed 5, 2 s ("an apple falling on grass").
+- The wind and the hum in `tools/mix_q07.py` are this production's own (`audio/sfx/wind_altitude.flac`, `audio/sfx/wind_vale.flac`, numpy noise).
+
