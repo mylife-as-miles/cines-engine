@@ -9,8 +9,9 @@ gate seats (the gate-seating prop, instanced).
     exterior()  (apron, markings, masts, jet bridge, aircraft, vehicles, distant lights, city, sky)
 
 The gate seats are built in departure_gate_seats.py (the gate-seating prop's perforated panels rendered as lumpy
-snakeskin); the airliners are lathed: an ogive nose with droop, the body and the upswept tail cone in one skin with UVs
-in metres for the panel lines.
+snakeskin); the airliners (a lofted skin with a drooped nose, six-pane flight deck, nose gear, hung engines), the jet
+bridge (rotunda, telescoping ribbed tunnels, cab and bellows, drive bogie) and the flood masts in
+departure_gate_aircraft.py.
 """
 import math
 import random
@@ -180,7 +181,8 @@ def fixture(x, y, level):
     if level > 0:
         key = f"lens_{level:.2f}"
         if key not in M:
-            M[key] = mt.lens(f"fixture lens {level:.2f}", COOL, 2.0 + 13.0 * level)
+            # the night-setting fittings glow faintly (their reflections in the glass stay a ghost)
+            M[key] = mt.lens(f"fixture lens {level:.2f}", COOL, 1.3 if level == DIM else 2.0 + 13.0 * level)
         box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), M[key])
         area(n + "_light", (x, y, H - 0.02), (1.15, 0.11), FX_ENERGY * level, COOL, spread=100)
         if (round(x, 1), round(y, 1)) == KEY_FX:
@@ -661,10 +663,12 @@ def exterior():
     # the turnaround behind the engine, the next stands and the far apron
     import departure_gate_aircraft as ac
     for i, (x, y, t, h, e, show) in enumerate((
-            (-19.0, 31.0, (1.0, 18.0), 20.0, 80000.0, True), (22.0, 58.0, (5.0, 26.0), 18.0, 70000.0, True),
+            (-19.0, 31.0, (1.5, 20.0), 20.0, 80000.0, True), (22.0, 58.0, (5.0, 26.0), 16.0, 60000.0, True),
             (-8.0, 66.0, (-6.0, 42.0), 20.0, 80000.0, True), (46.0, 76.0, (40.0, 52.0), 20.0, 100000.0, True),
             (-58.0, 56.0, (-38.0, 32.0), 20.0, 100000.0, True), (90.0, 44.0, (70.0, 30.0), 20.0, 90000.0, True))):
-        ac.mast(i, x, y, t, h=h, energy=e, show=show)
+        # the key mast's cone is 72 deg, aimed past the nose, so only its soft edge spills through the glass onto the
+        # floor and the front row (a rim, not a second pool)
+        ac.mast(i, x, y, t, h=h, energy=e, show=show, size=72.0 if i == 0 else 82.0)
     ac.jet_bridge(AIR)
     ac.aircraft("aircraft", AIR, 0.0, lit=0.55, seed=3)
     ac.aircraft("aircraft_far", (-60.0, 160.0), 90.0, lit=0.75, seed=11, taxi=True)

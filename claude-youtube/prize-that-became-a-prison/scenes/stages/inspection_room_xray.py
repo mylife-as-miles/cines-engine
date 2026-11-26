@@ -3,8 +3,8 @@
 The generated housing (`xray-scanner`, 1.45 m) keeps its tunnel face; its own belt and console, which came out lumpy,
 are cut away and rebuilt in Python: a black void inside the tunnel, a lead curtain of nine dark strips hanging in
 the mouth, an exit conveyor (a rubber belt section off the tunnel, then seven steel rollers, side frames and guide
-rails on square legs), two nested grey trays waiting on the rollers, and an operator's monitor on a pole whose blank
-face glows and spills on the belt. Everything is built in the prop's own space (tunnel opening toward +X, floor at 0,
+rails on square legs), two nested grey trays waiting on the rollers, and an operator's monitor on a bracket from the
+housing's flank, whose blank face glows and spills toward the operator's place. Everything is built in the prop's own space (tunnel opening toward +X, floor at 0,
 footprint centred; probed: face plane x = 0.16, opening y -0.425..0.225 and z 0.60..1.24, tunnel floor 0.58) and then
 placed with the prop's transform, so the machine can be turned to face the cameras.
 """
@@ -97,23 +97,25 @@ def build(sx, sy, turn_deg=-90.0):
     t0 = put(st.tray("conv_tray0", (0.885, CY, BELT_Z + 0.001), 0.0))
     t1 = put(st.tray("conv_tray1", (0.889, CY + 0.004, BELT_Z + 0.031), 0.6))
     out["trays"] = (t0, t1)
-    # the operator's monitor on a pole clamped to the conveyor's side, turned toward the room
-    px, py = 0.30, CY - half - 0.05
-    put(sk.cyl("mon_pole", 0.017, 1.15 - (BELT_Z - 0.06), (px, py, (1.15 + BELT_Z - 0.06) / 2), m["steel_dark"], verts=24))
-    bx("mon_clamp", (0.06, 0.07, 0.05), (px, py + 0.03, BELT_Z - 0.04), m["steel_dark"], bevel=0.006)
-    face_deg = math.degrees(math.atan2(-0.3, 0.95))
+    # the operator's monitor on a bracket from the housing's room-side flank, set back from the tunnel face (so the
+    # end-of-bench two-shot does not cut a glowing screen at its edge), turned to the operator and the room
+    side_y = -0.56                                   # the housing's flank facing the bench (prop -Y)
+    mx, mz = -0.44, 1.28
+    face_deg = math.degrees(math.atan2(-0.35, 0.94))
     yaw = math.radians(face_deg)
     fwd = Vector((math.cos(yaw), math.sin(yaw), 0.0))
-    c = Vector((px + 0.06, py - 0.05, 1.25))
-    bx("mon_arm", (0.10, 0.03, 0.03), tuple(Vector((px, py, 1.15)) + Vector((0.03, -0.02, 0.0))), m["steel_dark"], bevel=0.006,
-       rot=(0, 0, yaw))
+    c = Vector((mx, side_y - 0.22, mz))
+    bx("mon_wallplate", (0.12, 0.012, 0.16), (mx, side_y - 0.006, mz - 0.06), m["steel_dark"], bevel=0.003)
+    bx("mon_arm", (0.035, 0.17, 0.03), (mx, side_y - 0.095, mz - 0.07), m["steel_dark"], bevel=0.008)
+    put(sk.cyl("mon_pivot", 0.02, 0.06, (mx - 0.005, side_y - 0.18, mz - 0.05), m["steel_dark"], verts=24))
+    bx("mon_vesa", (0.03, 0.1, 0.1), tuple(c - fwd * 0.035), m["steel_dark"], bevel=0.005, rot=(0, 0, yaw))
     bx("mon_body", (0.045, 0.40, 0.27), tuple(c), m["bezel"], bevel=0.007, rot=(0, math.radians(-6), yaw))
     scr_m = mt.glow("scanner monitor", (0.62, 0.78, 0.95), 3.0)
     scr = bx("mon_screen", (0.002, 0.36, 0.228), tuple(c + fwd * 0.0235 + Vector((0, 0, 0.0025))), scr_m,
              rot=(0, math.radians(-6), yaw))
     out["screen"] = scr
     li = sk.area_light("mon_spill", tuple(c + fwd * 0.07), (0.3, 0.2), 5.0, (0.62, 0.78, 0.95), spread_deg=120,
-                       rot=(0, math.radians(-75), yaw))         # -Z along the facing, 15 degrees down onto the belt
+                       rot=(0, math.radians(-75), yaw))         # -Z along the facing, 15 degrees down
     li.visible_camera = False
     put(li)
     out["spill"] = li

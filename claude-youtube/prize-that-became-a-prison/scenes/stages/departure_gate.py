@@ -10,7 +10,9 @@ her charcoal suitcase standing beside her: the ordinary calm before everything.
     <bpy python> -I scenes/shoot.py -- departure_gate <cam> out.png [--nocast]
 
 The set is in departure_gate_set.py, its materials in departure_gate_mats.py, the beam seating (built in Python) in
-departure_gate_seats.py. Dawn wears a flat-tinted blouse over dark trousers. She is seated through Rigify: her legs
+departure_gate_seats.py, the airliners, the jet bridge and the flood masts in departure_gate_aircraft.py. Dawn is the
+shared cast's people.dawn() (the dark umber blouse and skirt suit, black flats), as at the check-in hall the same
+day; only her jacket front is relaxed and her bun set lower here. She is seated through Rigify: her legs
 switch to FK, thighs turned in (knees about 0.18 m apart, feet parallel 0.12 m apart), and a small solve sets thigh and
 shin angles so her seat rests on the pan and her soles on the carpet; then she slides back until her seat meets the
 backrest (printed as GATE seated ...). Before each render a hook on setkit.render sets the camera's clip distance (the
@@ -68,7 +70,7 @@ CAMERAS = {
     "seated": dict(loc=_back_off((1.35, 5.55, 0.95), (-0.95, 2.95, 0.58), 0.35), aim=(-1.13, 3.12, 0.56), lens=45,
                    focus="fx_dawn", fstop=1.8, beat="ch03", exposure=-1.25),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the floodlit aircraft
-    "window": dict(loc=(-2.05, -1.35, 1.3), aim=(-0.35, 6.0, 0.72), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
+    "window": dict(loc=(-2.05, -1.35, 1.5), aim=(-0.35, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
 # per-camera light trims (multipliers on named lights)
@@ -78,14 +80,15 @@ RIM = "dawn_rim"
 DIMS = ["fx_{:+.1f}_{:+.1f}_light".format(*xy) for xy, lv in st.FX_LEVEL.items() if lv == st.DIM]
 TRIMS = {
     # the one downlight over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.4, RIM: 0.0, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 3.0 for xy in st.BACK_FX}},
+    "wide": {"window_spill": 0.3, RIM: 0.0, POOL: 1.5, **{n: 0.6 for n in DIMS},
+             **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 1.3 for xy in st.BACK_FX}},
     # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
     # fittings over the far rows a touch lower so the rows stay soft and dark behind her
-    "seated": {"window_spill": 0.2, POOL: 0.3, KEY: 0.6, **{n: 0.6 for n in DIMS}},
+    "seated": {"window_spill": 0.2, POOL: 0.3, KEY: 0.3, **{n: 0.6 for n in DIMS}},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
     "window": {"window_spill": 0.15, KEY: 0.15, POOL: 0.06, RIM: 0.0},
 }
-FLAGS = {"seated": ["flag_near_seats"]}   # black flags (camera-invisible) used by one camera only
+FLAGS = {"seated": ["flag_near_seats", "flag_pool"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
 
@@ -417,7 +420,10 @@ def build(cast=True):
     # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
     flag = st.box("flag_near_seats", (0.012, 1.3, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
-    flag.visible_camera = flag.visible_glossy = flag.visible_transmission = False
+    # and a second right beside the downlight, so its cone stops at the seat beside hers
+    flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.2, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
+    for f in (flag, flag2):
+        f.visible_camera = f.visible_glossy = f.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)

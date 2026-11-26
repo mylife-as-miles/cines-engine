@@ -6,8 +6,14 @@ Two rooms, side by side and closed (home_set.py):
            seated reading the email, forearms on the table, a finger on the trackpad, head bowed to the glow; a mug,
            the mail, a pen and a phone. Behind her the counter, the sink and a double-hung window onto the night.
   dining   Ch 10. The dining table with chairs round it, the one at the head empty, set back and turned a little; a
-           street light outside throws the venetian blinds' stripes across the head of the table, the empty chair
-           and the floor; the pendant over the table is off. Everything still.
+           street light outside the foot-end window runs the venetian blind's stripes down the table onto the empty
+           chair and throws its striped shadow on the wall behind it; the blinds of the side windows glow; the
+           pendant over the table is off. Everything still.
+
+Light: the kitchen has the laptop screen (an emissive face plus an area light the size of the screen just in
+front of it), the night through the window and a low under-cabinet night light; the dining room two far street
+lights (small spots, so the slats cut clean stripes) and the sky's glow at the side windows. Area lights are
+hidden from camera rays, so the windows show the night backdrop itself.
 
     <bpy python> -I scenes/shoot.py -- home <cam> out.png [--nocast]
 
@@ -58,11 +64,13 @@ CAMERAS = {
                     exposure=-1.3),
     # Ch 10: from the foot of the table, high in the corner: the table running away to the head, the blinds glowing
     # on the left wall, their stripes across the table's end and the empty chair
-    "dining": dict(loc=(1.15, -1.95, 2.1), aim=(4.32, 0.12, 0.62), lens=28, focus="fx_dining", fstop=5.6, beat="ch10",
+    "dining": dict(loc=(1.3, -1.65, 1.65), aim=(4.45, 0.1, 0.62), lens=26, focus="fx_dining", fstop=5.6, beat="ch10",
                    exposure=-1.15),
-    # Ch 10: the empty chair, square on from the table, low: the image before the cut to black
-    "chair": dict(loc=(3.2, 0.0, 0.98), aim=(4.45, 0.02, 0.64), lens=50, focus="fx_chair", fstop=3.2, beat="ch10",
-                  exposure=-1.25),
+    # Ch 10: the empty chair, from beside the head of the table: the street light comes over the camera's shoulder,
+    # its stripes across the chair's back, the chair's striped shadow on the wall beside it; the image before the
+    # cut to black
+    "chair": dict(loc=(3.65, 1.95, 1.18), aim=(4.55, 0.0, 0.52), lens=30, focus="fx_chair", fstop=4.0, beat="ch10",
+                  exposure=-1.2),
 }
 TRIMS = {
     "kitchen": {},
@@ -461,6 +469,7 @@ def screen_light(scr):
         ang = -ang
     from mathutils import Quaternion
     li.rotation_euler = (Quaternion(n, ang) @ q).to_euler()
+    li.visible_camera = False
     st.LIGHTS["screen_spill"] = li
     return li
 
@@ -474,8 +483,8 @@ def lights():
             12.0, (0.55, 0.66, 0.95), spread=120, aim=(win["cx"] + 0.3, 0.2, 0.5))
     # a night light left on under the right-hand wall cabinets: a low warm strip on the tile and the counter
     ux0, ux1 = win["cx"] + win["w"] / 2 + 0.11, st.K["x1"] - 0.85
-    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.427), mt.glow("uc_lens", (1.0, 0.86, 0.68), 9.0))
-    li = st.area("k_undercab", ((ux0 + ux1) / 2, y1 - 0.25, 1.418), (ux1 - ux0 - 0.1, 0.04), 2.2, (1.0, 0.86, 0.68), spread=150)
+    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 9.0))
+    li = st.area("k_undercab", ((ux0 + ux1) / 2, y1 - 0.25, 1.648), (ux1 - ux0 - 0.1, 0.04), 3.2, (1.0, 0.86, 0.68), spread=150)
     li.rotation_euler = (0, 0, 0)          # facing straight down
     # Ch 10: the street light through the foot-end window, far and small so the slats cut clean stripes: it runs
     # down the table onto the empty chair and throws the chair's striped shadow on the wall behind it
@@ -490,6 +499,10 @@ def lights():
     # the sky's faint glow through the slats: just enough to keep the room readable
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),
             6.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
+    # the area lights only light: through the glass the camera sees the night itself
+    for li in st.LIGHTS.values():
+        if li.type == "LIGHT" and li.data.type == "AREA":
+            li.visible_camera = False
 
 
 # ---------------------------------------------------------------- per-camera hook

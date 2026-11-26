@@ -48,7 +48,7 @@ DUFFEL = (-0.56, 0.18, TOP, 4.0)
 LAYOUT = {
     "ch00": {"dawn-suitcase": CASE, "extra-bag-closed": DUFFEL, "handbag-tote": TOTE00},
     "ch05": {"dawn-suitcase": (1.30, -0.22, 0.0, -82.0), "extra-bag-open": (-0.53, 0.02, TOP, 0.0),
-             "handbag-tote": (0.08, -0.06, TOP, 92.0), "handbag-satchel": (0.40, -0.07, TOP, 84.0),
+             "handbag-tote": (0.06, 0.08, TOP, 92.0), "handbag-satchel": (0.40, -0.07, TOP, 84.0),
              "handbag-shoulder": (0.70, -0.05, TOP, 97.0)},
     "ch11": {"dawn-suitcase": CASE, "extra-bag-closed": DUFFEL},
 }
@@ -76,15 +76,15 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
 # right of the bench. Housing x 1.04..1.98, y 1.25..2.52; conveyor x 1.19..1.81 running to y 0.21.
 SCANNER = (1.60, 1.41, -90.0)
 
-DAWN = (-0.05, -0.80)       # straight across the bench from the officer asking
+DAWN = (0.10, -0.80)        # across the bench from the officer asking, clear of her case in the two-shot
 OFFICER_A = (-0.30, 0.62)   # the one asking, close to the bench
-OFFICER_B = (0.35, 1.05)    # the scanner operator, a step back between the bench and his machine
+OFFICER_B = (0.15, 1.10)    # the scanner operator, a step back between the bench and his machine
 # where the cast stands for each beat when it differs from the above (Ch 05 is later: both officers at the bench, the
 # one asking leaning in to lift the tote)
-BLOCKING = {"ch05": {"OfficerA": (0.14, 0.535), "OfficerB": (-0.65, 0.66)}}
+BLOCKING = {"ch05": {"OfficerA": (0.23, 0.535), "OfficerB": (-0.65, 0.66)}}
 # what each figure faces (a name or a point) per beat
 FACE = {"ch00": {"Dawn": "OfficerA", "OfficerA": "Dawn", "OfficerB": "Dawn"},
-        "ch05": {"Dawn": (0.08, -0.06), "OfficerA": (0.10, -0.06), "OfficerB": (0.08, -0.06)}}
+        "ch05": {"Dawn": (0.06, 0.08), "OfficerA": (0.23, -0.06), "OfficerB": (0.06, 0.08)}}
 # Poses (rigged.pose_figure keys) plus: "look" (a name, a prop or a point: the head is solved onto it), "reach_r" (a
 # target the right palm is solved onto), "palm" ("up" / "down": the forearm is rolled so the palm faces that way),
 # "behind_l" (the left hand behind the back), "behind" (both).
@@ -109,7 +109,7 @@ POSES = {
 
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
-TAG_CAM_LOCAL = ((0.33, -0.09, 0.80), (0.035, -0.04, 0.522))
+TAG_CAM_LOCAL = ((0.33, -0.09, 0.80), (0.03, -0.04, 0.53))
 
 
 def _case_frame(c=CASE):
@@ -133,7 +133,7 @@ CAMERAS = {
     "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-3.7),
     # Ch 00: from the end of the bench, a little low: Dawn and the questioning officer face each other over the bags,
     # the troffer burning above them, the door's vision panel glowing in the gap between their heads
-    "two_shot": dict(loc=(2.75, 0.25, 1.25), aim=(-0.1, -0.12, 1.82), lens=24, focus="fx_two", fstop=4.0, beat="ch00"),
+    "two_shot": dict(loc=(2.75, 0.10, 1.25), aim=(-0.1, -0.20, 1.82), lens=24, focus="fx_two", fstop=4.0, beat="ch00"),
     # Ch 11: the two bags alone on the bench in the empty room, the cleaner steel where the tote stood near the centre
     "empty": dict(loc=(2.5, -2.5, 1.5), aim=(0.25, 0.1, 0.92), lens=24, focus="fx_empty", fstop=4.5, beat="ch11", cast=False,
                   wild=("wall_front", "cove_f", "rail_f")),
@@ -278,7 +278,7 @@ def _arm_dirs(fwd, out, side):
     return np.stack([side * np.cos(f) * np.sin(o), -np.sin(f), -np.cos(f) * np.cos(o)], axis=-1)
 
 
-def solve_arm(holder, side, target, prefer=(45.0, 10.0, 40.0)):
+def solve_arm(holder, side, target, prefer=(45.0, 10.0, 40.0), fwd=(-20, 100), elbow=(0, 130)):
     """(forward, out, elbow) for pose_figure that puts the palm's centre on `target` (world), for the trunk as it is
     posed now. Analytic forward kinematics of rigged.pose_figure's arm (upper arm, forearm at out * 0.6, hand at
     elbow + 4 and out * 0.4), searched on a grid, with a light pull toward a natural `prefer`."""
@@ -288,7 +288,8 @@ def solve_arm(holder, side, target, prefer=(45.0, 10.0, 40.0)):
     S = np.array(pb[f"upper_arm_fk.{k}"].head)
     L1, L2, L3 = (pb[f"{b}.{k}"].length for b in ("upper_arm_fk", "forearm_fk", "hand_fk"))
     T = np.array(rig.matrix_world.inverted() @ Vector(target))
-    F, O, E = np.meshgrid(np.arange(-20, 101, 2.0), np.arange(-30, 51, 2.0), np.arange(0, 131, 2.0), indexing="ij")
+    F, O, E = np.meshgrid(np.arange(fwd[0], fwd[1] + 1, 2.0), np.arange(-30, 51, 2.0), np.arange(elbow[0], elbow[1] + 1, 2.0),
+                          indexing="ij")
     palm = S + L1 * _arm_dirs(F, O, side) + L2 * _arm_dirs(F + E, O * 0.6, side) + 0.5 * L3 * _arm_dirs(F + E + 4, O * 0.4, side)
     err = np.linalg.norm(palm - T, axis=-1)
     cost = err + 0.0004 * (np.abs(F - prefer[0]) + np.abs(O - prefer[1]) + 0.5 * np.abs(E - prefer[2]))
@@ -378,9 +379,9 @@ def _bbox(holder):
 
 
 def _reach_point(kind):
-    if kind == "duffel_hover":       # palm 5 cm over the extra bag's top, on the officers' side of its middle
+    if kind == "duffel_hover":       # palm 5 cm over the extra bag's top, over its middle, toward the near end
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
-        return Vector(((lo.x + hi.x) / 2 + 0.12, hi.y - 0.11, hi.z + 0.055))
+        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.03, hi.z + 0.05))
     if kind == "tote_handle":        # palm just over the tote's handles, fingers to close round them
         lo, hi = _bbox(_STATE["props"]["handbag-tote"])
         return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2 + 0.01, hi.z + 0.035))
@@ -395,7 +396,7 @@ def solve_pose(holder, spec, holders):
     if spec.get("reach_r"):
         apply_pose(holder, p)                        # the trunk first: the shoulder moves with the chest
         tgt = _reach_point(spec["reach_r"])
-        arm, err = solve_arm(holder, -1, tgt)
+        arm, err = solve_arm(holder, -1, tgt, fwd=(5, 100), elbow=(10, 85))   # a natural reach: no waiter's arm
         p["r_arm"] = arm
         report.append(f"r_arm {arm} palm error {err * 1000:.0f} mm")
         if spec.get("palm"):
@@ -405,7 +406,7 @@ def solve_pose(holder, spec, holders):
             if n is not None:
                 c = a.cross(n)
                 phi = math.degrees(math.atan2(c.dot(want), n.dot(want) - a.dot(n) * a.dot(want)))
-                p["roll_r"] = max(-110.0, min(110.0, phi))
+                p["roll_r"] = max(-120.0, min(120.0, phi))
                 report.append(f"palm {spec['palm']}: roll {p['roll_r']:.0f}")
     if spec.get("look"):
         d, t = p.get("head", (0.0, 0.0))

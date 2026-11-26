@@ -234,9 +234,9 @@ def materials():
     mt.pbr("dark_void", (0.005, 0.005, 0.006), rough=(0.6, 0.8))
     # the screen: a blank cool white glow, a little brighter in the middle
     mt.glow("screen", (0.78, 0.86, 1.0), 4.0, falloff=0.25, axes=("X", "Y"))
-    mt.night("k_night", low=(0.05, 0.062, 0.09), high=(0.008, 0.011, 0.02), z0=-2.0, z1=4.0,
+    mt.night("k_night", low=(0.05, 0.062, 0.09), high=(0.008, 0.011, 0.02), z0=-2.0, z1=4.0, strength=2.6,
              warm_windows=[(-1.25, 1.2, 0.5, 0.7, 0.55), (1.6, 0.9, 0.36, 0.55, 0.35)])
-    mt.night("d_night", low=(0.07, 0.085, 0.12), high=(0.01, 0.014, 0.025), z0=-2.0, z1=5.0)
+    mt.night("d_night", low=(0.07, 0.085, 0.12), high=(0.01, 0.014, 0.025), z0=-2.0, z1=5.0, strength=1.6)
 
 
 # ---------------------------------------------------------------- rooms
@@ -580,7 +580,7 @@ def kitchen():
          0.008, M["enamel_black"])
     tube("k_kettleSpout", [(kx + 0.08, ky - 0.04, 0.918 + 0.06), (kx + 0.12, ky - 0.08, 0.918 + 0.12), (kx + 0.15, ky - 0.1, 0.918 + 0.16)], 0.011, M["chrome"])
     # backsplash between the counter and the uppers, broken by the window
-    up0, up1 = 1.43, 2.2
+    up0, up1 = 1.66, 2.2              # wall cabinets hung high over a tall tiled splash: their underside clears her head
     wx0, wx1 = win["cx"] - win["w"] / 2 - 0.09, win["cx"] + win["w"] / 2 + 0.09
     for i, (a, b, z0, z1) in enumerate(((cx0, wx0, COUNTER_TOP, up0), (wx1, cx1, COUNTER_TOP, up0),
                                         (wx0, wx1, COUNTER_TOP, win["z0"] - 0.11))):
@@ -858,11 +858,12 @@ def dining_table():
     return t
 
 
-# chairs round the dining table: (name, x, y, turn); the native chair faces +X
+# chairs round the dining table: (name, x, y, turn); the native chair faces +X. The side chairs sit toward the foot,
+# so the head of the table and its chair stand apart
 DINING_CHAIRS = [
     ("chair_foot", 1.88, -0.02, 0.0),
-    ("chair_s1", 2.55, 0.7, -90.0), ("chair_s2", 3.42, 0.7, -90.0),
-    ("chair_n1", 2.58, -0.7, 90.0), ("chair_n2", 3.45, -0.7, 90.0),
+    ("chair_s1", 2.33, 0.7, -90.0), ("chair_s2", 3.06, 0.7, -90.0),
+    ("chair_n1", 2.36, -0.7, 90.0), ("chair_n2", 3.04, -0.7, 90.0),
 ]
 
 

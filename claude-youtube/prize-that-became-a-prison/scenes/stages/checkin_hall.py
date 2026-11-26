@@ -45,7 +45,7 @@ WALL_Y = 2.55         # back wall front face
 HALL = dict(x0=-21.0, x1=8.0, y0=-14.0, H=5.5)
 BULK = (-0.25, 3.2, 3.72)  # bulkhead over the whole row: front face y, underside z, top z
 
-DAWN = (0.5, -0.34)
+DAWN = (0.5, -0.22)   # a step from the counter, so her hand reaches the ledge with the elbow bent and clear of her side
 AGENT = (0.02, 0.98)
 
 EXPOSURE = -1.6
@@ -56,7 +56,7 @@ CAMERAS = {
     "scale": dict(loc=(1.6, -1.38, 1.24), aim=(1.5, 0.45, 0.64), lens=35, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.58), aim=(0.25, -0.3, 1.36), lens=50, focus="focus_dawn", fstop=2.4,
+    "shoulder": dict(loc=(0.3, 1.68, 1.58), aim=(0.25, -0.3, 1.27), lens=50, focus="focus_dawn", fstop=2.4,
                      exposure=-1.9),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 48.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -1227,7 +1227,8 @@ def pose_cast(d, a):
     dp = {"chest": (2, 0), "r_arm": (4, 7, 10)}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
     fwd = Vector((-0.208, 0.978, 0)) + 0.25 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.12, 0.01, LEDGE + 0.06), LEDGE + 0.035, fwd.normalized())
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.19, 0.07, LEDGE + 0.06), LEDGE + 0.035, fwd.normalized(), curl=16.0)
+    # (the author, 26 Nov 2026: "The hand is wrong": the wrist 12 cm from her centre folded the forearm into her waist)
     print(f"CAST agent head {ga[1]} gaze error {ga[0]:.1f} deg; Dawn head {gd[1]} gaze error {gd[0]:.1f} deg")
     print(f"CAST Dawn l_arm {tuple(round(v, 1) for v in hand['arm'])} wrist fit {hand['fit'] * 1000:.0f} mm, hand low "
           f"{(hand['low'] - LEDGE - 0.035) * 1000:.1f} mm above the ledge (palm {(hand['palm_low'] - LEDGE - 0.035) * 1000:.1f}, "

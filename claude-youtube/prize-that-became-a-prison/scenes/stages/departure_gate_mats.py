@@ -716,7 +716,7 @@ def materials():
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 1.2),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 
-        bridge_win=glow("bridge glazing", (1.0, 0.8, 0.58), 0.8, 0.3, ("Y", "Z")),
+        bridge_win=glow("bridge glazing", (1.0, 0.8, 0.58), 0.32, 0.3, ("Y", "Z")),
         screen_front=glow("blank screen front", (0.82, 0.9, 1.0), 2.6, 0.35),
         flood=glow("flood lamp", (1.0, 0.9, 0.78), 160.0),
         nav_red=glow("nav red", (1.0, 0.08, 0.05), 60.0),

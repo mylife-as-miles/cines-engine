@@ -91,7 +91,11 @@ The independent critic failed the first airport frames (means 4.6 and 5.1) for t
   (a weak area or point light in front of it), and its bezel stays darker than its face.
 - **People are not clones.** Vary height, build, age, hair and suit tint; give each a distinct pose with a visible
   action; eyelines toward who they are speaking to; hands relaxed (curl the fingers), resting on things, not hovering
-  or splayed; feet grounded with contact shadow. `female_elegantsuit01`'s pinstripe knit shimmers in wide shots (tint
+  or splayed; feet grounded with contact shadow. A hand resting on a counter or table (the author flagged one as
+  wrong): stand the person close (body 5-10 cm from the edge), put the wrist well out from the body (about 20 cm to
+  the side of the body's centre and onto the surface) so the elbow is bent and clear of the waist, curl the fingers
+  12-20 degrees, and check it from every camera that sees the hand, including from the front, where a forearm
+  folded back against the body reads as coming out of the waist. `female_elegantsuit01`'s pinstripe knit shimmers in wide shots (tint
   it flat or choose another outfit); `shoes05` reads as branded sneakers: choose plain shoes.
 - **Framing.** Do not cut feet or heads at the frame edge, do not run edges tangent through necks, do not cut a bright
   light fitting at the frame edge, keep a clear subject, avoid big flat grey slabs in the foreground.
