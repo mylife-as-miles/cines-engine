@@ -1,0 +1,137 @@
+{
+ "file": "out/review/film_v12.mp4",
+ "frames": 2029,
+ "seconds": 84.5417,
+ "choir_version_of_movement_I": "A",
+ "picture": [
+  {
+   "label": "I. The bell, to three seconds into the still cup",
+   "source": "out/edits/I_bell_v8.mp4",
+   "start_frame": 0,
+   "frames": 1443
+  },
+  {
+   "label": "matched dissolve: the still cup becomes the trembling cup",
+   "start_frame": 1443,
+   "frames": 30
+  },
+  {
+   "label": "II. The council, Q04 shot 1 the cup",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1443,
+   "frames": 84,
+   "start_s": 60.125,
+   "take_seconds": [
+    0.0,
+    2.625
+   ],
+   "speed": 0.75
+  },
+  {
+   "label": "II. The council, Q04 shot 2 the Chancellor",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1527,
+   "frames": 53,
+   "start_s": 63.625,
+   "take_seconds": [
+    2.625,
+    4.8333
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 3 the chamber",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1580,
+   "frames": 139,
+   "start_s": 65.833,
+   "take_seconds": [
+    4.8333,
+    10.625
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 4 the Hierophant",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1719,
+   "frames": 63,
+   "start_s": 71.625,
+   "take_seconds": [
+    10.625,
+    13.25
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 5 the Engineer",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1782,
+   "frames": 148,
+   "start_s": 74.25,
+   "take_seconds": [
+    13.75,
+    19.9167
+   ],
+   "speed": 1.0
+  },
+  {
+   "label": "II. The council, Q04 shot 6 Serath",
+   "source": "out/edits/Q04_t1_fixed.mp4",
+   "start_frame": 1930,
+   "frames": 99,
+   "start_s": 80.417,
+   "take_seconds": [
+    19.9167,
+    24.0417
+   ],
+   "speed": 1.0
+  }
+ ],
+ "super": {
+  "text": "THREE DAYS LATER",
+  "over": "Q04 shot 3, the wide",
+  "in_s": 66.167,
+  "out_s": 69.25
+ },
+ "dissolve_s": [
+  60.125,
+  61.375
+ ],
+ "sound_join": {
+  "movement_I_let_go_s": [
+   60.275,
+   61.875
+  ],
+  "true_peak_dbtp_around_it": -15.0,
+  "lowest_5ms_dbfs_from_200ms_before_to_2.2s_after": -41.0,
+  "highest": -23.9,
+  "samples_of_digital_silence": 4,
+  "level_every_100ms_dbfs": [
+   -28.4,
+   -34.8,
+   -27.1,
+   -33.0,
+   -28.9,
+   -32.0,
+   -29.4,
+   -31.1,
+   -30.1,
+   -30.3,
+   -29.8,
+   -29.7,
+   -29.5,
+   -31.6,
+   -33.1,
+   -33.3,
+   -36.0,
+   -38.1,
+   -36.5,
+   -25.7,
+   -25.2,
+   -25.9,
+   -28.0,
+   -29.0
+  ]
+ }
+}

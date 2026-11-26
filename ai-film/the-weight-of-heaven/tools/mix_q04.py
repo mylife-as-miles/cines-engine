@@ -8,7 +8,7 @@ bells and the cup's buzz come up through it (cut v11; in cut v10 a black card st
 
   voices   the video model's, from the take. Its low drone is taken out (whatever holds still at each frequency for two
            seconds: tools/mix_vale.py, lesson 50) and the track high-passed. Shot 1's sound is dropped whole (a swell and
-           the model's own buzz). The Hierophant's line is stretched with his picture (0.84 speed, pitch kept). Only
+           the model's own buzz). The Hierophant's words are left as the take has them (no stretch, no cleaning). Only
            the lines, the cleared throat and the breaths beside them are used; between them the room is made here.
   air      the cathedral's wind at altitude, the same bed as movement I's Orison, quiet.
   bells    "bells are ringing that no one has rung": far tower bells, out of time with each other, generated locally
@@ -91,6 +91,9 @@ SPEECH = [  # (name, shot, take seconds a-b, target LUFS or None to keep its lev
 ]
 
 
+RAW_WORDS = [(11.96, 13.12)]                 # take seconds: "Then let it be broken."
+
+
 def voices(info):
     x = take_audio()
     clean = sos(mv.remove_steady(x, window_s=2.0, pct=25, over=1.5, floor=0.10), 'highpass', 70, 2)
@@ -98,6 +101,15 @@ def voices(info):
     info['drone'] = {'before_dbfs': [round(float(mb.db(np.sqrt((mono(x)[int(a * SR):int(b * SR)] ** 2).mean()) + 1e-9)), 1) for a, b in quiet],
                      'after_dbfs': [round(float(mb.db(np.sqrt((mono(clean)[int(a * SR):int(b * SR)] ** 2).mean()) + 1e-9)), 1) for a, b in quiet],
                      'measured_in_take_s': quiet}
+    # The Hierophant's words are the take's own sound, not the cleaned track (the author, 26 November: "restore back
+    # Hierophant voice"): cuts v10 and v11 had slowed him to 0.84 speed and passed him through the drone removal, which
+    # takes some of a deep voice with it. Only what lies under his pitch is filtered off; the gaps beside his words
+    # stay cleaned.
+    raw = sos(x, 'highpass', 60, 4)
+    for wa, wb in RAW_WORDS:
+        i, j, r = int(wa * SR), int(wb * SR), int(0.04 * SR)
+        w = np.ones(j - i, np.float32); w[:r] = np.linspace(0, 1, r); w[-r:] = np.linspace(1, 0, r)
+        clean[i:j] = clean[i:j] * (1 - w[:, None]) + raw[i:j] * w[:, None]
     out = Z()
     info['lines'] = {}
     for name, shot, a, b, target in SPEECH:

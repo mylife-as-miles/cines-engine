@@ -5,18 +5,17 @@
                                                                                out/edits/Q04_t1_fixed.json (the new clock, for the sound)
 
 What it does, shot by shot (the take's own cuts: frames 63, 116, 255, 330, 478):
-  colour   the film's grade, taken from the film itself: the still cup that ends movement I exists ungraded (take Q02 t1)
-           and graded (cut v8), pixel for pixel. Shot 1, the same cup, gets the whole fitted transform, so the two cups
-           match; the other shots get only its neutral part (white balance and tone), so skin is left alone.
-  shot 1   slowed to three quarters speed (2.6 s -> 3.5 s; the frame is almost still), and the wine made to tremble:
-           concentric ripples running inward from the rim, drawn inside the wine's own ellipse, tracked frame by frame.
-           The take's ripples can only be found by amplifying the picture.
-           Then laid exactly over movement I's still cup (rim, foot, the bowl's edges and the marble's edge), so that
-           one cup can dissolve into the other with nothing moving but the room behind it and the wine.
-  shot 4   the Hierophant's five words took under a second. From the cut to a quarter second after his last word, slowed
-           to 0.84 speed (motion-interpolated); the hold after the line is dropped, so the shot ends on the word.
-  shot 5   the wall behind the Engineer came back dark slate. Only the background (the dark region joined to the frame's
-           edges) is lifted to a pale grey, a shade under his robe; the face is not touched.
+  shot 1   the film's grade, taken from the film itself: the still cup that ends movement I exists ungraded (take Q02
+           t1) and graded (cut v8), pixel for pixel, and shot 1 is the same cup. Slowed to three quarters speed (2.6 s ->
+           3.5 s; the frame is almost still), and the wine made to tremble: concentric ripples running inward from the
+           rim, drawn inside the wine's own ellipse, tracked frame by frame (the take's ripples can only be found by
+           amplifying the picture). Then laid exactly over movement I's still cup (rim, foot, the bowl's edges and the
+           marble's edge), so that one cup can dissolve into the other with nothing moving but the room and the wine.
+  shot 4   the Hierophant, as generated, at his own speed, up to a quarter second after his last word. (Cuts v10 and
+           v11 slowed him to 0.84; the author asked for his voice back.)
+  shot 5   the wall behind the Engineer came back dark slate. It is raised to a mid grey with no mask edge (lift_wall).
+  shots 2, 3, 6 and every face: the take's own colour, untouched. (Cuts v10 and v11 put the neutral part of shot 1's
+           grade on them; it pushed the shadows of skin down and toward grey, which nobody asked for.)
 """
 import json, os, subprocess, sys
 import numpy as np
@@ -28,7 +27,7 @@ P = lambda *a: os.path.join(HERE, *a)
 W, H, FPS = 992, 432, 24
 SRC = P('out/takes/Q04_t1.mp4')
 CUTS = [0, 63, 116, 255, 330, 478, 577]
-S1_SPEED, S4_SPEED, S4_END = 0.75, 0.84, 318          # shot 4 is used up to frame 318 (13.25 s): 0.25 s after his last word
+S1_SPEED, S4_END = 0.75, 318                         # shot 4 is used up to frame 318 (13.25 s): 0.25 s after his last word
 DISSOLVE = 30                                          # frames over which the still cup of movement I becomes this one
 LUMA = np.array([0.299, 0.587, 0.114], np.float32)
 
@@ -189,18 +188,31 @@ def figure_mask(f):
 
 
 def lift_wall(frames):
-    """Everything that is not the man is raised from dark slate to the room's pale grey, keeping its own shading."""
-    masks = np.stack([figure_mask(f).astype(np.float32) for f in frames])
-    masks = ndimage.uniform_filter1d(masks, 5, axis=0, mode='nearest')            # steady from frame to frame
+    """The dark slate wall behind the Engineer raised to a mid grey, a shade under his robe, without cutting him out.
+
+    The first version masked the man and lifted everything else: it thinned and greyed his white hair, left an outline
+    round his head and read as a cut-out (the author, 26 November: "what did you do to the engineer"). This one has
+    no edge. Every pixel is raised by an amount that depends only on itself: the darker it is the more it rises, and
+    nothing at or above his hair's brightness rises at all; the curve never crosses itself, so hair stays lighter than
+    the wall behind it and no rim can form. Warm pixels (his skin, lit or in shade) are not raised. The mask is used
+    only well inside the figure, to keep his pupils and the dark of his mouth as they are."""
+    masks = np.stack([ndimage.binary_erosion(figure_mask(f), iterations=12).astype(np.float32) for f in frames])
+    masks = ndimage.uniform_filter1d(masks, 5, axis=0, mode='nearest')
     out = []
     for f, m in zip(frames, masks):
-        m = ndimage.minimum_filter(m, 5)                                          # drawn in two pixels: no dark rim of old wall round his hair
-        fig = np.clip(ndimage.gaussian_filter(m, 1.6) * 1.6 - 0.3, 0, 1)[..., None]
+        inside = ndimage.gaussian_filter(m, 6.0)[..., None]
         luma = (f @ LUMA)[..., None]
-        up = 0.40 + (luma - 0.14) * 0.667                                         # wall 0.14 -> 0.40, the pale columns 0.44 -> 0.60
-        w = np.clip((0.62 - luma) / 0.16, 0, 1)                                   # nothing already bright is raised (a shoulder against a column)
-        lifted = np.clip(f + (up - luma) * w, 0, 1)                               # the same lift on each channel: its cool cast stays
-        out.append(f * fig + lifted * (1 - fig))
+        rb = (f[..., 0] - f[..., 2])[..., None]
+        cool = np.clip((0.045 - rb) / 0.045, 0, 1); cool = cool * cool * (3 - 2 * cool)
+        lift = 0.30 * np.clip(1 - luma / 0.60, 0, 1) * cool                        # 0.15 -> 0.375, 0.44 -> 0.52, 0.60 and above unchanged
+        # where skin meets wall, the edge pixels are a mixture of the two: warm, so not raised, yet dark with the old
+        # wall. They take a share of the wall's rise beside them, by how far they sit below the skin next to them.
+        l2 = luma[..., 0]
+        hi = ndimage.maximum_filter(l2, 7); lo = ndimage.minimum_filter(l2, 7)
+        share = np.clip((hi - l2) / np.maximum(hi - lo, 0.04), 0, 1)
+        beside = ndimage.maximum_filter(lift[..., 0], 5)
+        edge = (beside * share * (1 - cool[..., 0]))[..., None]
+        out.append(np.clip(f + (lift + edge) * (1 - inside), 0, 1))
     return np.stack(out)
 
 
@@ -226,11 +238,11 @@ def main():
     s1, ell = ripples(s1)
     s1, still_cup = register(s1, ell, DISSOLVE)
     put(s1, '1 the cup', (CUTS[0], CUTS[1], S1_SPEED))
-    put(neutral(read(SRC, CUTS[1], CUTS[2]), curves), '2 the Chancellor', (CUTS[1], CUTS[2], 1.0))
-    put(neutral(read(SRC, CUTS[2], CUTS[3]), curves), '3 the chamber', (CUTS[2], CUTS[3], 1.0))
-    put(neutral(retime(CUTS[3], S4_END, S4_SPEED, 'mci'), curves), '4 the Hierophant', (CUTS[3], S4_END, S4_SPEED))
-    put(lift_wall(neutral(read(SRC, CUTS[4], CUTS[5]), curves)), '5 the Engineer', (CUTS[4], CUTS[5], 1.0))
-    put(neutral(read(SRC, CUTS[5], CUTS[6]), curves), '6 Serath', (CUTS[5], CUTS[6], 1.0))
+    put(read(SRC, CUTS[1], CUTS[2]), '2 the Chancellor', (CUTS[1], CUTS[2], 1.0))
+    put(read(SRC, CUTS[2], CUTS[3]), '3 the chamber', (CUTS[2], CUTS[3], 1.0))
+    put(read(SRC, CUTS[3], S4_END), '4 the Hierophant', (CUTS[3], S4_END, 1.0))
+    put(lift_wall(read(SRC, CUTS[4], CUTS[5])), '5 the Engineer', (CUTS[4], CUTS[5], 1.0))
+    put(read(SRC, CUTS[5], CUTS[6]), '6 Serath', (CUTS[5], CUTS[6], 1.0))
     enc.stdin.close()
     if enc.wait(): sys.exit('encode failed')
     rec = {'source': 'out/takes/Q04_t1.mp4', 'fps': FPS, 'frames': n_out, 'seconds': round(n_out / FPS, 4), 'shots': shots,

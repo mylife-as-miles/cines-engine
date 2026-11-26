@@ -162,6 +162,17 @@ The author (26 November): the fade to black and the black card "reduce the pace 
 | 87 | **A super goes on the picture that needs it.** Over black it stops the film; over the establishing wide it costs no time. Find the darkest plain part of the frame for it (here the dome) and give it a soft shade, rather than choosing black for legibility. | Cut v11, the wide shot. | Every super. |
 | 88 | **A first-frame reference is matched in look, not to the pixel.** The model re-framed the cup by 17 px and drew its lip thinner. For a matched dissolve, measure real marks in both shots (edges, rim, foot, a horizon) and register on those; matching one feature (the wine's ellipse) left a double rim. | `tools/fix_q04_t1.py`, `register`. | Every match cut or dissolve onto generated material. |
 
+## From the author's verdict on cut v11
+
+The author (26 November): "Pls restore back Hierophant voice", and of the Engineer after my wall fix, "what did you do".
+
+| # | Lesson | Seen in | Applies to |
+| --- | --- | --- | --- |
+| 89 | **Check a fix against the take at full size, side by side, before it ships.** I passed the Engineer's wall lift from a half-size strip. At full size beside the take it had thinned and greyed his hair, ringed his head and made him a cut-out. The author saw it at once. | Cuts v10 and v11, shot 5. | Every picture fix, above all on a face. |
+| 90 | **Change a background without cutting the person out.** A mask has an edge, and hair has none. A rise that depends only on each pixel's own darkness, never crosses itself, and stops below the brightness of the hair cannot make a rim; skin is kept by its warmth, and the mixed pixels where skin meets wall take a share of the wall's rise. | `tools/fix_q04_t1.py`, `lift_wall`. | Every background change behind a person. |
+| 91 | **Do not regrade faces on the strength of a match made elsewhere.** A grade fitted on the cup's whites was put on every face unasked and darkened and greyed the shadows of skin. A transform is good where it was fitted; skin was not in the fit. | Cuts v10 and v11, shots 2 to 6. | Every colour match. |
+| 92 | **A slowed voice is another voice.** The Hierophant's line at 0.84 speed passed two listening models as natural, and the author asked for his voice back on first hearing. Offer a time-stretch as a sample to be heard, never as a fix already made (Oren lesson 39 said the same). And clean a deep voice lightly or not at all: the drone removal took 1.8 dB from the bottom of his. | Cuts v10 and v11, shot 4. | Every generated voice. |
+
 ## From *My Name Is Oren*, applied here
 
 | Oren # | Lesson, short | How it is applied |
