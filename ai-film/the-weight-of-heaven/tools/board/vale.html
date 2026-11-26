@@ -1,0 +1,273 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Blocking board: Anvil Vale</title>
+<style>html,body{margin:0;background:#111}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head><body>
+<script type="module">
+// A plain blocking set for The Weight of Heaven: Anvil Vale (ENV_E03), for Q03A and Q03B.
+// Interface as board.html: window.setState, window.setTime, window.renderShot, window.ready; ?clean=1 colour-codes.
+// World: metres, y up. A drystone wall runs along x at z = 0. The FIELD is beyond it (-z); the camera side is +z.
+// The house is on the right (+x). The Anvil (a mesa) is far away to the north (-z), a little left. Overhead, from behind the
+// camera to just past the Anvil, hangs the dark underside of Orison. Light comes low from the left, never from above.
+//
+// One clock poses everything: state {seq: 'A'|'B', t0: seconds, tt: seconds into the shot} -> T = t0 + tt.
+import * as THREE from 'three';
+
+const W = 1280, H = 720;
+const CLEAN = new URLSearchParams(location.search).has('clean');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const SKY = 0xc9cdd0;
+scene.background = new THREE.Color(SKY);
+scene.fog = new THREE.Fog(SKY, 260, 2700);
+scene.add(new THREE.HemisphereLight(0xdfe3e6, 0x55524c, 1.25));
+const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(-80, 22, 30); scene.add(key);   // low, from the left
+
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.95, ...o });
+const flat = c => new THREE.MeshBasicMaterial({ color: c, fog: true });
+const box = (w, h, d, m, x, y, z, parent = scene) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); parent.add(b); return b; };
+const cyl = (r1, r2, h, m, x, y, z, parent = scene, seg = 16) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, seg), m); c.position.set(x, y, z); parent.add(c); return c; };
+const cap = (r, len, m, parent, x, y, z) => { const c = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 12), m); c.position.set(x, y, z); parent.add(c); return c; };
+const sm = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const mix = (a, b, k) => a + (b - a) * k;
+const mix3 = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+
+// the colour code of the clean export (mapped in the prompt)
+const C = {
+  farmer: CLEAN ? 0x2f6fd0 : 0x6b665c, girl: CLEAN ? 0xf2c230 : 0x8a8478, ox: CLEAN ? 0xb5651d : 0x6a5f55, bowl: CLEAN ? 0xd8262b : 0xb07a48,
+  people: 0xb9b7b0, stone: 0x77756f, earth: 0x2c2a27, anvil: 0x70747a, face: 0x9a9da1, mass: 0x1d1e20, crow: 0x0b0b0c, dust: 0xd3d0c8,
+};
+
+// ---- the ground and the ploughed field (furrows run away from the wall)
+{ const g = new THREE.Mesh(new THREE.PlaneGeometry(9000, 9000), mat(C.earth)); g.rotation.x = -Math.PI / 2; scene.add(g); }
+{ const n = 90, ridges = new THREE.InstancedMesh(new THREE.BoxGeometry(0.42, 0.16, 260), mat(0x3a3733), n), m4 = new THREE.Matrix4();
+  for (let i = 0; i < n; i++) { m4.makeTranslation(-74 + i * 0.9, 0.08, -132); ridges.setMatrixAt(i, m4); } scene.add(ridges); }
+
+// ---- the drystone wall along x at z = 0: 1.0 m high, 0.6 m thick, a gateway at x 3.6..5.6; an iron ring on its field side
+const stone = mat(C.stone);
+box(123.6, 1.0, 0.6, stone, -58.2, 0.5, 0); box(3.4, 1.0, 0.6, stone, 7.3, 0.5, 0);
+box(0.7, 1.15, 0.7, stone, 3.6, 0.575, 0); box(0.7, 1.15, 0.7, stone, 5.6, 0.575, 0);                       // gate piers
+const RING = new THREE.Vector3(-2.9, 0.72, -0.34);
+{ const r = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.02, 8, 16), mat(0x1c1c1e)); r.position.copy(RING); scene.add(r); }
+
+// ---- houses: a low stone block, a shallow dark roof, heavy sloping buttresses
+function buttress(parent, x, z, ry) {
+  const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(1.7, 0); s.lineTo(0, 2.6); s.closePath();
+  const b = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 0.9, bevelEnabled: false }), stone);
+  b.position.set(x, 0, z); b.rotation.y = ry; parent.add(b);
+}
+function house(x, z, w = 12, d = 8) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); scene.add(g);
+  box(w, 3.0, d, stone, 0, 1.5, 0, g);
+  const roof = new THREE.Shape(); roof.moveTo(-w / 2 - 0.3, 0); roof.lineTo(w / 2 + 0.3, 0); roof.lineTo(0, 1.5); roof.closePath();
+  const r = new THREE.Mesh(new THREE.ExtrudeGeometry(roof, { depth: d + 0.6, bevelEnabled: false }), mat(0x34353a)); r.position.set(0, 3.0, -d / 2 - 0.3); g.add(r);
+  for (const zz of [-d / 2 + 1.2, d / 2 - 2.1]) buttress(g, -w / 2, zz + 0.9, Math.PI);                 // against the wall that faces the field path
+  for (const xx of [-w / 2 + 2.4, w / 2 - 3.2]) buttress(g, xx, d / 2, -Math.PI / 2);                     // against the wall that faces the camera
+  box(0.08, 1.9, 1.0, mat(0x1b1b1c), -w / 2 - 0.02, 0.95, 0, g);                                          // the door
+  return g;
+}
+house(13.0, -9.0);
+for (const [x, z] of [[46, -64], [-52, -96], [78, -150], [-18, -170]]) house(x, z, 10, 7);
+
+// ---- the Anvil: a mesa far to the north, its sheer face toward us; the face is five slabs that can shear away
+const AX = -330, AZ = -1400, AW = 480, AH = 180;
+{ const s = new THREE.Shape(); s.moveTo(-AW / 2 - 60, 0); s.lineTo(AW / 2 + 60, 0); s.lineTo(AW / 2 - 6, AH); s.lineTo(-AW / 2 + 6, AH); s.closePath();
+  const m = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 260, bevelEnabled: false }), mat(C.anvil)); m.position.set(AX, 0, AZ - 260); scene.add(m);
+  for (const [x, z, w, h] of [[-720, -1700, 900, 70], [520, -1900, 1100, 55]]) {                             // low far hills, so the Anvil is the mountain
+    const hs = new THREE.Shape(); hs.moveTo(-w / 2, 0); hs.lineTo(w / 2, 0); hs.lineTo(w / 4, h); hs.lineTo(-w / 3, h * 0.8); hs.closePath();
+    const hm = new THREE.Mesh(new THREE.ExtrudeGeometry(hs, { depth: 200, bevelEnabled: false }), mat(0x7d8186)); hm.position.set(x, 0, z); scene.add(hm);
+  } }
+const slabs = [];
+for (let i = 0; i < 5; i++) {
+  const w = (AW - 30) / 5, s = box(w - 1.5, AH * 0.86, 22, mat(C.face), AX - (AW - 30) / 2 + w * (i + 0.5), AH * 0.50, AZ + 11);
+  slabs.push({ m: s, x0: s.position.x, delay: [0.12, 0.0, 0.2, 0.06, 0.26][i], lean: [0.5, -0.3, 0.7, -0.5, 0.4][i] });
+}
+const dustLine = box(1, 2.2, 3, flat(C.dust), AX, AH * 0.64, AZ + 23.5);
+const DUSTN = 26, dust = [];
+for (let i = 0; i < DUSTN; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 10), flat(C.dust)); d.visible = false; scene.add(d); dust.push({ m: d, u: (i * 0.618) % 1, v: (i * 0.377) % 1 }); }
+
+// ---- the mass: the dark underside of Orison, a ceiling over the whole valley, ending just beyond the Anvil
+{ const mass = box(9000, 80, 2900, flat(C.mass), 0, 355, -530);
+  for (let i = 0; i < 46; i++) {                                                                            // hanging rock, so it reads as land, not cloud
+    const r = 30 + ((i * 53) % 70), t = new THREE.Mesh(new THREE.ConeGeometry(r, 26 + ((i * 31) % 50), 5), flat(0x242528));
+    t.rotation.x = Math.PI; t.position.set(-1900 + ((i * 397) % 3800), 315 - 8, -1950 + ((i * 211) % 2300)); scene.add(t);
+  } }
+
+// ---- people: legs, a torso that can stoop from the hip, a head, two arms from the shoulders. Built facing +z.
+function person(o) {
+  const s = (o.height ?? 1.75) / 1.75, g = new THREE.Group(), body = mat(o.col), skin = mat(o.skin ?? 0x9a7a62);
+  for (const sx of [-1, 1]) cap(0.085 * s, 0.72 * s, body, g, 0.11 * s * sx, 0.45 * s, 0);
+  const hip = new THREE.Group(); hip.position.y = 0.9 * s; g.add(hip);
+  const tor = new THREE.Group(); hip.add(tor);
+  box(0.42 * s, 0.62 * s, 0.25 * s, body, 0, 0.31 * s, 0, tor);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.11 * s, 18, 14), skin); head.scale.set(0.92, 1.1, 1); head.position.set(0, 0.76 * s, 0.02 * s); tor.add(head);
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.116 * s, 18, 10, 0, Math.PI * 2, 0, Math.PI * 0.45), mat(o.hair ?? 0x2a2420)); hair.scale.set(0.95, 1.1, 1.04); hair.position.copy(head.position); tor.add(hair);
+  const arms = {};
+  for (const [side, sx] of [['r', -1], ['l', 1]]) {
+    const a = new THREE.Group(); a.position.set(0.26 * s * sx, 0.57 * s, 0); tor.add(a);
+    cap(0.055 * s, 0.5 * s, body, a, 0, -0.3 * s, 0);
+    const h = new THREE.Mesh(new THREE.SphereGeometry(0.055 * s, 10, 8), skin); h.position.set(0, -0.62 * s, 0); a.add(h);
+    arms[side] = a;
+  }
+  g.userData = { s, tor, arms, hip };
+  scene.add(g);
+  return g;
+}
+// pose: where, facing (radians about y; 0 faces +z, the camera side), stoop (radians forward), arm swings (radians forward; with the stoop taken out)
+function pose(p, x, z, face, stoop, aR = 0, aL = 0, y = 0) {
+  p.position.set(x, y, z); p.rotation.set(0, face, 0);
+  p.userData.tor.rotation.x = stoop;
+  p.userData.arms.r.rotation.set(-stoop - aR, 0, 0); p.userData.arms.l.rotation.set(-stoop - aL, 0, 0);
+}
+const hand = (p, side) => { p.updateMatrixWorld(true); return new THREE.Vector3(0, -0.62 * p.userData.s, 0).applyMatrix4(p.userData.arms[side].matrixWorld); };
+const STOOP = 0.5;                                                                                           // he never straightens
+const farmer = person({ col: C.farmer, height: 1.78, skin: 0x8c6a55, hair: 0x2a241f });
+const girl = person({ col: C.girl, height: 1.12, skin: 0xb48e78, hair: 0x9a6a44 });
+const hoe = new THREE.Group(); cyl(0.022, 0.022, 1.5, mat(0x5a4632), 0, -0.2, 0.55, hoe).rotation.x = 1.15; box(0.2, 0.05, 0.12, mat(0x26272a), 0, -0.52, 1.22, hoe); farmer.userData.arms.r.add(hoe);
+const crowd = [];
+for (let i = 0; i < 10; i++) crowd.push(person({ col: C.people, height: 1.6 + ((i * 7) % 4) * 0.05, skin: 0x8c6a55 }));
+
+// ---- the bowl: a wide shallow dish; its water; rings that travel from the rim to the centre
+const bowl = new THREE.Group(); scene.add(bowl);
+cyl(0.17, 0.11, 0.085, mat(C.bowl), 0, 0.0425, 0, bowl, 28);
+cyl(0.155, 0.155, 0.004, mat(0x9fb0b6, { roughness: 0.15 }), 0, 0.083, 0, bowl, 28);
+const rings = [0, 1, 2].map(() => { const r = new THREE.Mesh(new THREE.TorusGeometry(1, 0.035, 6, 40), flat(0xf4f6f6)); r.rotation.x = Math.PI / 2; r.position.y = 0.087; bowl.add(r); return r; });
+const ON_WALL = [2.55, 1.0, 0.0];
+
+// ---- the ox in its yoke; a rope from its halter to the ring in the wall
+const ox = new THREE.Group(); scene.add(ox);
+{ const hide = mat(C.ox);
+  box(2.1, 0.95, 0.8, hide, 0, 1.05, 0, ox);
+  for (const [x, z] of [[-0.8, -0.28], [-0.8, 0.28], [0.8, -0.28], [0.8, 0.28]]) box(0.18, 0.62, 0.18, hide, x, 0.31, z, ox);
+  const neck = new THREE.Group(); neck.position.set(1.05, 1.2, 0); ox.add(neck);
+  box(0.62, 0.48, 0.46, hide, 0.36, -0.05, 0, neck);
+  for (const sz of [-1, 1]) { const h = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.42, 8), mat(0xd9d2bf)); h.position.set(0.3, 0.3, 0.2 * sz); h.rotation.x = 0.7 * sz; neck.add(h); }
+  box(0.2, 0.2, 1.25, mat(0x4a3a2a), 0.92, 1.58, 0, ox);                                                    // the yoke beam across the neck
+  ox.userData = { neck };
+}
+const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 1, 6), mat(0xcfc6b2)); scene.add(rope);
+function setRope(slack) {
+  ox.updateMatrixWorld(true);
+  const a = new THREE.Vector3(0.66, -0.1, 0).applyMatrix4(ox.userData.neck.matrixWorld), b = RING;
+  rope.position.copy(a).lerp(b, 0.5); rope.position.y -= 0.35 * slack;
+  rope.scale.set(1, a.distanceTo(b), 1); rope.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+}
+
+// ---- crows in the furrows: they lift, beat hard, rise barely a metre, and sink back
+const crows = [];
+for (let i = 0; i < 12; i++) {
+  const c = new THREE.Group(), m = flat(C.crow); box(0.36, 0.12, 0.16, m, 0, 0, 0, c);
+  const wl = box(0.14, 0.02, 0.42, m, 0, 0.04, 0.26, c), wr = box(0.14, 0.02, 0.42, m, 0, 0.04, -0.26, c);
+  c.scale.setScalar(1.7); c.userData = { wl, wr, x: -13 + ((i * 37) % 110) / 10, z: -5.0 - ((i * 53) % 95) / 10, ph: i * 1.7, lag: ((i * 29) % 10) / 40 };
+  scene.add(c); crows.push(c);
+}
+
+// =====================================================================================================================
+// the clock
+// =====================================================================================================================
+let TIME = 0, STATE = {};
+function apply() {
+  const st = STATE, T = (st.t0 ?? 0) + (st.tt ?? 0), B = st.seq === 'B';
+  // defaults
+  let fx = -2.6, fz = -13.0, fface = Math.PI / 2, fstoop = STOOP, aR = 0, aL = 0, fy = 0;
+  let gx = 6.6, gz = -6.2, gface = -2.3, gaR = 0.75, gaL = 0.75, gy = 0, gtilt = 0;
+  let bowlAt = null, ripple = 0, oxPull = 0, crowT = 0, line = 0, slide = 0, cloud = 0, run = 0, carried = false, hoeOn = false;
+  if (!B) {
+    if (T < 3.0) {                                    // 1 the vale: two strokes of the hoe, he rises to his stoop and turns; she comes from the door
+      const stroke = T < 1.6 ? Math.sin((T % 0.8) / 0.8 * Math.PI) : 0;
+      hoeOn = true; fstoop = mix(0.95 - 0.2 * stroke, STOOP, sm(seg(T, 1.6, 2.2))); aR = mix(0.5 + 0.5 * stroke, 0.05, sm(seg(T, 1.6, 2.2))); aL = aR;
+      fface = mix(Math.PI / 2, 0.55, sm(seg(T, 2.1, 2.7))); const w = sm(seg(T, 2.4, 3.0)); fx += 0.5 * w; fz += 0.7 * w;
+      const k = T / 3.0; gx = mix(6.8, 5.9, k); gz = mix(-6.5, -3.0, k);   // seen through the gateway
+    } else if (T < 6.417) {                           // 2 at the wall: he takes the bowl, drinks, sets it on the wall, turns away; she keeps looking at it
+      const t = T - 3.0;
+      fx = 2.0; fz = -0.92; fface = 0; gx = 3.0; gz = -0.8; gface = 0;
+      const turn = sm(seg(t, 2.6, 3.3)); fface = mix(0, -2.5, turn); fx -= 0.7 * turn; fz -= 0.5 * sm(seg(t, 2.9, 3.4));
+      aR = aL = t < 0.3 ? mix(0.2, 0.95, sm(t / 0.3)) : t < 0.6 ? 0.95 : t < 1.8 ? mix(0.95, 1.3, sm(seg(t, 0.6, 0.9))) : t < 2.3 ? mix(1.3, 0.8, sm(seg(t, 1.8, 2.3))) : mix(0.8, 0.0, sm(seg(t, 2.3, 2.7)));
+      fstoop = t > 0.6 && t < 1.8 ? mix(STOOP, 0.32, sm(seg(t, 0.6, 0.9))) : mix(0.32, STOOP, sm(seg(t, 1.8, 2.2)));
+      gaR = gaL = mix(1.5, 0.1, sm(seg(t, 0.45, 1.0)));
+    } else if (T < 8.583) {                           // 3 the water: ring inside ring; she watches
+      fx = 0.9; fz = -2.2; fface = -2.5; gx = 3.0; gz = -0.8; gface = 0; gaR = gaL = 0.1; ripple = 1; bowlAt = ON_WALL;
+    } else if (T < 10.583) {                          // 4 the animals: the ox drags back against its rope; the crows cannot climb
+      const t = T - 8.583;
+      fx = -0.2; fz = -4.6; fface = -2.7; gx = 3.0; gz = -0.8; gface = 0; gaR = gaL = 0.1; ripple = 1; bowlAt = ON_WALL;
+      oxPull = t < 0.2 ? 0 : t < 0.65 ? sm(seg(t, 0.2, 0.65)) : 1 - 0.07 * Math.sin((t - 0.65) * 9);
+      crowT = seg(t, 0.5, 1.95);
+    } else {                                          // 5 the dust line: from behind his bent shoulder
+      const t = T - 10.583;
+      fx = -0.55; fz = -5.2; fface = Math.PI + 0.2; gx = 3.0; gz = -0.8; gface = 0; gaR = gaL = 0.1; ripple = 1; bowlAt = ON_WALL; oxPull = 1;
+      line = sm(seg(t, 0.4, 1.8));
+    }
+    // the bowl in shots 1 and 2
+    if (T < 3.0) bowlAt = 'girl';
+    else if (T < 6.417) {
+      const t = T - 3.0; bowlAt = t < 0.45 ? 'girl' : t < 1.8 ? 'farmer' : t < 2.3 ? ['farmer', ON_WALL, sm(seg(t, 1.8, 2.3))] : ON_WALL;
+    }
+  } else {
+    line = 1; oxPull = 1; ripple = 1;
+    if (T < 3.25) {                                   // 6 the face lets go; she snatches the bowl; he scoops her up and starts to turn
+      fx = 2.4; fz = -1.0; fface = Math.PI + 0.2; gx = 4.15; gz = -0.2; gface = Math.PI + 0.2; gaR = gaL = 0.75; bowlAt = 'girl';   // she has the bowl
+      slide = seg(T, 0.4, 3.0); cloud = 0.42 * seg(T, 0.9, 3.25);
+      const grab = sm(seg(T, 2.0, 2.3)); gaR = gaL = mix(0.75, 1.15, grab);                                  // she hugs it to her chest
+      const scoop = sm(seg(T, 2.4, 2.9));
+      if (scoop > 0) { fx = mix(2.4, 3.75, scoop); fz = mix(-1.0, -0.45, scoop); fstoop = mix(STOOP, 0.9, Math.sin(scoop * Math.PI)); aR = 0.9 * scoop; carried = scoop > 0.6; }
+      fface = mix(fface, 0.4, sm(seg(T, 2.75, 3.25)));
+    } else {                                          // 7 the valley runs: toward us through the gateway, the child under his arm
+      const t = T - 3.25;
+      carried = true; slide = 1; cloud = mix(0.5, 1.0, t / 3.75); run = t / 3.75;
+      fx = 4.6; fz = mix(-2.0, 12.8, t / 3.75); fface = 0; fstoop = 0.62; aL = 0.7 * Math.sin(t * 9.5); aR = 0.5; fy = 0.05 * Math.abs(Math.sin(t * 9.5));
+    }
+  }
+  pose(farmer, fx, fz, fface, fstoop, aR, aL, fy);
+  hoe.visible = hoeOn;
+  if (carried) {                                      // the child under his right arm, level, head forward
+    farmer.updateMatrixWorld(true);
+    const p = new THREE.Vector3(-0.42, 0.92, -0.25).applyMatrix4(farmer.matrixWorld);
+    pose(girl, p.x, p.z, farmer.rotation.y, 0, 0.5, 0.5, p.y); girl.rotation.set(1.45, farmer.rotation.y, 0, 'YXZ');
+  } else { pose(girl, gx, gz, gface, 0, gaR, gaL, gy); }
+  // the bowl
+  const where = w => { if (w === 'girl') { const a = hand(girl, 'r'), b = hand(girl, 'l'); return [(a.x + b.x) / 2, (a.y + b.y) / 2 - 0.03, (a.z + b.z) / 2]; }
+    if (w === 'farmer') { const a = hand(farmer, 'r'), b = hand(farmer, 'l'); return [(a.x + b.x) / 2, (a.y + b.y) / 2 - 0.02, (a.z + b.z) / 2]; } return w; };
+  const bp = Array.isArray(bowlAt) && bowlAt.length === 3 && typeof bowlAt[2] === 'number' && (typeof bowlAt[0] !== 'number')
+    ? mix3(where(bowlAt[0]), where(bowlAt[1]), bowlAt[2]) : where(bowlAt ?? 'girl');
+  bowl.position.set(...bp);
+  rings.forEach((r, i) => { const u = ((TIME * 0.9 + i / 3) % 1); r.visible = ripple > 0; r.scale.setScalar(0.15 * (1 - u) + 0.012); });
+  // the ox: at rest beside the wall, rope slack; pulling, it backs away from the ring until the rope is taut, head thrown up
+  const loose = B && run > 0;
+  if (loose) { ox.position.set(mix(-3, 0.5, run), 0, mix(-9, 6.5, run)); ox.rotation.y = -Math.PI / 2; ox.userData.neck.rotation.z = 0.1; rope.visible = false; }
+  else { ox.position.set(-4.5 - 0.8 * oxPull, 0, -2.3 - 1.5 * oxPull); ox.rotation.y = -0.3 + 0.2 * oxPull; ox.rotation.z = 0; ox.userData.neck.rotation.z = 0.05 + 0.3 * oxPull; rope.visible = true; setRope(1 - oxPull); }
+  // the crows
+  for (const c of crows) { const d = c.userData, u = seg(crowT, d.lag, d.lag + 0.72), up = Math.sin(u * Math.PI);
+    c.position.set(d.x + 0.5 * u, 0.2 + 1.05 * up * (0.75 + 0.25 * Math.sin(d.ph)), d.z - 0.3 * u);
+    const f = up > 0.02 ? 1.0 * Math.sin(TIME * 34 + d.ph) : 0.0; d.wl.rotation.x = -0.25 - f; d.wr.rotation.x = 0.25 + f; }
+  // the Anvil: the dust line, the face shearing away in slabs, the dust rolling out along the valley floor
+  dustLine.visible = line > 0.001 && slide < 0.25; dustLine.scale.x = Math.max(1, (AW - 40) * line); dustLine.position.x = AX - (AW - 40) / 2 + (AW - 40) * line / 2;
+  for (const s of slabs) { const k = Math.pow(seg(slide, s.delay, s.delay + 0.7), 1.8); s.m.position.set(s.x0, AH * 0.50 - AH * 0.74 * k, AZ + 11 + 46 * k); s.m.rotation.set(0.5 * k, 0, 0.16 * s.lean * k); }
+  dust.forEach((d, i) => { d.m.visible = cloud > 0.01; if (!d.m.visible) return;
+    const reach = 1250 * Math.pow(cloud, 1.5), r = (22 + 60 * d.v) * (0.3 + 1.6 * cloud);
+    d.m.position.set(AX - 330 + 660 * d.u + 220 * (d.v - 0.5) * cloud, r * 0.55, AZ + 30 + reach * (0.55 + 0.45 * d.v)); d.m.scale.set(r, r * 0.6, r); });
+  // the valley's people: in the last shot they run from their houses toward us
+  crowd.forEach((p, i) => { const sx = [22, -30, 38, -44, 15, 52, -12, 30, -24, 44][i], sz = [-30, -44, -58, -70, -40, -84, -52, -22, -30, -64][i];
+    if (run > 0) { const tx = 4.6 + (i % 5 - 2) * 2.6, tz = -6 - (i % 4) * 5; const k = Math.min(1, run * (0.75 + 0.05 * i));
+      pose(p, mix(sx, tx, k), mix(sz, tz, k), 0.15 * Math.sign(-sx), 0.45, 0.8 * Math.sin(TIME * 9 + i), -0.8 * Math.sin(TIME * 9 + i), 0.04 * Math.abs(Math.sin(TIME * 9 + i))); p.visible = true; }
+    else { p.visible = false; } });
+}
+window.setTime = (t = 0) => { TIME = t; apply(); };
+window.setState = (st = {}) => { STATE = st; apply(); };
+
+// ---- cameras: hfov from focal length on a Super 35 width (23.76 mm), drawn 16:9 (as board.html)
+function cameraFor(c) {
+  const hfov = 2 * Math.atan(23.76 / 2 / c.f);
+  const vfov = 2 * Math.atan(Math.tan(hfov / 2) / (W / H)) * 180 / Math.PI;
+  const cam = new THREE.PerspectiveCamera(vfov, W / H, 0.05, 9000);
+  cam.position.set(...c.pos); cam.lookAt(new THREE.Vector3(...c.target));
+  return cam;
+}
+window.renderShot = (c) => { renderer.render(scene, cameraFor(c)); return renderer.domElement.toDataURL('image/png'); };
+window.setState({}); window.setTime(0);
+window.ready = true;
+</script></body></html>

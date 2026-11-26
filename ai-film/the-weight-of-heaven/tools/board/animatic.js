@@ -11,6 +11,7 @@ const { chromium } = require('playwright');
 
 const [, , shotsFile, outFile, leadIn, leadSecs] = process.argv;
 const spec = JSON.parse(fs.readFileSync(shotsFile, 'utf8'));
+const BOARD = path.basename(spec.board || 'board.html');   // the set file, beside this script: "board" in the shot JSON, default board.html
 const FPS = 24, root = __dirname;
 const CLEAN = !!process.env.CLEAN;   // a block-out export: no labels, no matte, principals colour-coded (crop to 21:9 afterwards)
 const frameDir = fs.mkdtempSync(path.join(os.tmpdir(), 'animatic-'));
@@ -27,7 +28,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
   const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   page.on('pageerror', e => console.error('page error:', e.message));
-  await page.goto(`http://127.0.0.1:${server.address().port}/board.html${CLEAN || process.env.COLOR ? '?clean=1' : ''}`);
+  await page.goto(`http://127.0.0.1:${server.address().port}/${BOARD}${CLEAN || process.env.COLOR ? '?clean=1' : ''}`);
   await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 });
   let n = 0;
   let t0 = 0;
@@ -78,7 +79,7 @@ const dur = s => { const m = s.time.match(/([\d.]+)\D+([\d.]+)/); return +m[2] -
         }
         let cam = JSON.parse(JSON.stringify(s.cam));
         if (s.move && s.move.to) {
-          const k = ease(Math.min(1, Math.max(0, (u - (s.move.start ?? 0)) / ((s.move.end ?? 1) - (s.move.start ?? 0)))));
+          const k0 = Math.min(1, Math.max(0, (u - (s.move.start ?? 0)) / ((s.move.end ?? 1) - (s.move.start ?? 0)))), k = s.move.linear ? k0 : ease(k0);   // "linear": a constant-speed move (a run)
           cam.pos = lerp(s.cam.pos, s.move.to.pos, k); cam.target = lerp(s.cam.target, s.move.to.target, k);
         }
         if (s.handheld) {                       // slow, breathing drift: a few sines, no jitter

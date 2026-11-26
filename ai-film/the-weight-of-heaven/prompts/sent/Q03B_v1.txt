@@ -1,13 +1,13 @@
 @Video 1 is a coarse blockout reference. Use it only for the camera positions, the camera movement, the one cut, where each subject stands and travels in the frame, how large each thing is against the others, and when each event happens. Do not use its blockout appearance, flat colours, mannequin bodies, materials or empty set, and do not copy the stiff way its figures move: it is a rough guide to staging, not to motion.
 All movement is yours and must be real: living people and animals with weight, balance and effort; rock, dust, cloth, hair and water that obey real-world physics.
 The blue stooped figure in @Video 1 corresponds to the farmer.
-The small yellow figure in @Video 1 corresponds to his daughter.
+The small yellow figure in @Video 1 corresponds to his daughter; in the second shot she is the small yellow shape carried level at the blue figure's hip.
 The red shallow dish in @Video 1 corresponds to the wooden bowl of water.
 The orange-brown animal shape with horns corresponds to the ox.
 The pale grey figures correspond to other people of the valley.
-The long low grey band corresponds to a drystone wall with a gateway in it.
+The long low grey band corresponds to a drystone wall, and the two taller grey blocks in it correspond to the stone piers of its gateway.
 The grey blocks with sloping wedges against them correspond to low stone houses and their buttresses.
-The grey flat-topped shape on the horizon corresponds to the mountain called the Anvil; the paler slab that slides from it corresponds to the face of the mountain breaking away; the pale rolling shapes at its foot correspond to dust.
+The pale flat-topped shape on the horizon corresponds to the mountain called the Anvil; the panels that slide down its front correspond to the face of the mountain breaking away; the pale rounded shapes at its foot, which grow and roll toward us, correspond to dust.
 The very dark ceiling across the top of the frame corresponds to the underside of Orison: a vast mass of dark rock that hangs over the whole valley.
 
 [Characters]
@@ -22,7 +22,7 @@ The ox corresponds to @Image 5.
 Anvil Vale references @Image 6. Use only the place: black ploughed earth, a low drystone wall, low stone houses braced with buttresses, the flat-topped mountain, and overhead the dark underside of Orison filling the top of the frame, with a slot of grey daylight between it and the horizon.
 
 Generate a wordless film scene in two consecutive shots, cut exactly where @Video 1 cuts.
-Shot 1 (0-3.25 seconds): A long-lens wide, low and locked off, past the farmer and his daughter, who stand small at the wall with their backs to us, the bowl on the wall beside her. The Anvil fills the frame beyond them. The whole face of the mountain shears away as one slab: it drops, slowly because it is so far away, breaks apart as it falls, and a wall of dust blooms at its foot and begins to roll out across the fields toward us. There is no sound from it yet. The daughter snatches the bowl to her chest. The farmer scoops her up under one arm and starts to turn toward us. End state: the mountain's face gone, the dust rolling; the farmer turning with the child under his arm.
+Shot 1 (0-3.25 seconds): A long-lens wide, low and locked off, past the farmer and his daughter, small, with their backs to us: she stands in the gateway holding the bowl of water in both hands, he stands at the wall beside her. The Anvil fills the frame beyond them. The whole face of the mountain shears away as one slab: it drops, slowly because it is so far away, breaks apart as it falls, and a wall of dust blooms at its foot and begins to roll out across the fields toward us. There is no sound from it yet. The daughter hugs the bowl to her chest. The farmer scoops her up under one arm and starts to turn toward us. End state: the mountain's face gone, the dust rolling; the farmer turning with the child under his arm.
 Shot 2 (3.25-7 seconds): Handheld, at chest height, running backward in front of him. The farmer runs straight toward us through the gateway with his daughter under one arm; she hugs the bowl to her chest, water slopping from it. Behind him other people of the valley run the same way from their houses, and the ox runs loose. Far behind them the wall of dust rolls over the fields under the dark mass. He does not look back. End state: the farmer still running toward us, the child under his arm, the dust nearer.
 
 From @Video 1 keep the camera positions, the locked-off first shot, the handheld run of the second, the one cut, where everything stands, the size of the mountain in the frame, and the moment of each event. Perform the fall of the rock, the dust, the lifting of the child and the running with natural movement and real physics, not as the block shapes do it.

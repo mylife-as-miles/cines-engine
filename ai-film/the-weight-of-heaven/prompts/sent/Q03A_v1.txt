@@ -2,12 +2,13 @@
 All movement is yours and must be real: living people and animals with weight, balance and effort; cloth, hair, water, rope and wet earth that obey real-world physics.
 The blue stooped figure in @Video 1 corresponds to the farmer.
 The small yellow figure in @Video 1 corresponds to his daughter.
-The red shallow dish in @Video 1 corresponds to the wooden bowl of water.
+The red shallow dish in @Video 1 corresponds to the wooden bowl of water, and the thin white rings on it correspond to ripples on the water.
+The thin stick in the blue figure's hands in the first shot corresponds to a hoe.
 The orange-brown animal shape with horns in @Video 1 corresponds to the ox in its yoke, and the thin line from its head to the wall corresponds to its rope.
 The small black shapes in the furrows correspond to crows.
-The long low grey band across the foreground corresponds to a drystone wall.
-The grey block with sloping wedges against it, on the right, corresponds to the low stone house and its buttresses.
-The grey flat-topped shape on the horizon corresponds to the mountain called the Anvil.
+The long low grey band across the foreground corresponds to a drystone wall, and the two taller grey blocks in it on the right correspond to the stone piers of its gateway.
+The grey block with sloping wedges against it, on the right, corresponds to the low stone house and its buttresses. The small grey blocks far off in the field correspond to other low stone houses.
+The pale flat-topped shape on the horizon corresponds to the mountain called the Anvil, and the thin white line that appears across it in the last shot corresponds to a line of dust.
 The very dark ceiling across the top of the frame corresponds to the underside of Orison: a vast mass of dark rock that hangs over the whole valley.
 
 [Characters]
@@ -21,7 +22,7 @@ The ox and its heavy wooden yoke correspond to @Image 4. A rope runs from its ha
 Anvil Vale references @Image 5. Use only the place: black ploughed earth in straight furrows, a low drystone wall, a low stone house braced with heavy buttresses, the flat-topped mountain on the horizon, and overhead the dark underside of Orison filling the top of the frame like a stone ceiling, with a slot of grey daylight between it and the horizon.
 
 Generate a wordless film scene in five consecutive shots, cut exactly where @Video 1 cuts. The camera is low and locked off in every shot.
-Shot 1 (0-3 seconds): The whole valley, wide. Beyond the wall the farmer, small, bends over a furrow, working it with a hoe; the ox stands tethered at the wall; the house is on the right; the Anvil is far off under the dark mass. He rises to his stoop and turns toward the house. His daughter, tiny, has come out of the door carrying the bowl of water in both hands and walks toward the wall. End state: the farmer walking to the wall; the daughter carrying the bowl toward him.
+Shot 1 (0-3 seconds): The whole valley, wide. Beyond the wall the farmer, small, bends over a furrow, working it with a hoe; the ox stands tethered at the wall; the house is on the right; the Anvil is far off under the dark mass. He rises to his stoop and turns toward the house. His daughter, tiny, seen through the gateway on the right, has come out of the house carrying the bowl of water in both hands and walks toward the wall. End state: the farmer walking to the wall; the daughter carrying the bowl toward him.
 Shot 2 (3-6.4 seconds): At the wall, from the child's eye level. The farmer takes the bowl from her in both hands, drinks, and sets it down on top of the wall in front of her. He turns away toward the field. She does not move: her eyes stay on the bowl. End state: the bowl on the wall; the daughter looking at it; the farmer's back to her.
 Shot 3 (6.4-8.6 seconds): Close on the bowl on the wall top, the daughter's face soft behind it at the same height, watching. The water in the bowl is trembling: fine rings, one inside another, keep spreading across its surface from the rim to the centre, though nothing has touched it. End state: the rings still running; she has not looked away.
 Shot 4 (8.6-10.6 seconds): Over the wall to the ox. It throws its head up and drags backward against its rope, which snaps taut to the iron ring; its hooves slide in the wet earth. Beyond it, a dozen crows burst up out of the furrows, beat their wings hard, rise barely a metre, and sink back to the ground as if the air were too heavy. End state: the ox straining at the taut rope; the crows down in the furrows again.

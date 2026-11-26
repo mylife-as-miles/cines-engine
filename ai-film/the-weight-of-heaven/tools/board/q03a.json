@@ -1,0 +1,162 @@
+{
+ "title": "Q03A · BUILT TO BEAR · THE WATER",
+ "board": "vale.html",
+ "bpm": 84,
+ "shots": [
+  {
+   "n": 1,
+   "time": "0.000–3.000 s",
+   "state": {
+    "seq": "A",
+    "t0": 0
+   },
+   "clock": "tt",
+   "boardState": {
+    "seq": "A",
+    "t0": 0,
+    "tt": 1.0
+   },
+   "cam": {
+    "pos": [
+     1.5,
+     1.3,
+     7.0
+    ],
+    "target": [
+     1.5,
+     11.8,
+     -93
+    ],
+    "f": 18
+   },
+   "camText": "The vale · 18 mm · low, locked off, from the near side of the wall",
+   "line": "The whole valley in one frame: the farmer, small, bent over a furrow with his hoe; the ox tethered at the wall; the buttressed house on the right; the Anvil far off; the dark underside of Orison filling the top of the frame. At 1.6 s he rises to his stoop and turns; his daughter, tiny, comes from the door with the bowl.",
+   "note": "Villeneuve: a held wide, a small human anchor, a dark mass over the land. Cameron: the geography of everything that follows, taught once: wall, field, house, mountain.",
+   "lines": []
+  },
+  {
+   "n": 2,
+   "time": "3.000–6.417 s",
+   "state": {
+    "seq": "A",
+    "t0": 3.0
+   },
+   "clock": "tt",
+   "boardState": {
+    "seq": "A",
+    "t0": 3.0,
+    "tt": 1.2
+   },
+   "cam": {
+    "pos": [
+     2.6,
+     1.05,
+     3.4
+    ],
+    "target": [
+     2.3,
+     1.08,
+     -0.85
+    ],
+    "f": 35
+   },
+   "camText": "At the wall · 35 mm · the child's eye level, locked off, across the top of the wall",
+   "line": "He takes the bowl from her and drinks (0.6–1.8 s), sets it on the wall in front of her (2.3 s) and turns away to the field (2.6 s). She does not move: her eyes, just above the wall, stay on the bowl.",
+   "note": "Both faces in one frame, his while he drinks, hers frontal. Built to bear: even drinking, his back does not straighten.",
+   "lines": []
+  },
+  {
+   "n": 3,
+   "time": "6.417–8.583 s",
+   "state": {
+    "seq": "A",
+    "t0": 6.417
+   },
+   "clock": "tt",
+   "boardState": {
+    "seq": "A",
+    "t0": 6.417,
+    "tt": 0.9
+   },
+   "cam": {
+    "pos": [
+     0.2,
+     1.8,
+     4.2
+    ],
+    "target": [
+     2.55,
+     1.1,
+     0.0
+    ],
+    "f": 85
+   },
+   "camText": "The water · 85 mm · close, slightly high and frontal, locked off, shallow focus",
+   "line": "The bowl on the wall; her face, soft, just behind it at the same height, watching. The water trembles: ring inside ring, though nothing has touched it.",
+   "note": "The water thread, below: the same size and angle as the gold cup above (the cup with the blurred hands behind it; here, the bowl with her blurred face). Cameron: the child sees it first.",
+   "lines": []
+  },
+  {
+   "n": 4,
+   "time": "8.583–10.583 s",
+   "state": {
+    "seq": "A",
+    "t0": 8.583
+   },
+   "clock": "tt",
+   "boardState": {
+    "seq": "A",
+    "t0": 8.583,
+    "tt": 1.1
+   },
+   "cam": {
+    "pos": [
+     -0.6,
+     1.15,
+     2.6
+    ],
+    "target": [
+     -5.6,
+     0.95,
+     -6
+    ],
+    "f": 35
+   },
+   "camText": "The animals · 35 mm · low, locked off, over the wall to the left",
+   "line": "The ox throws its head up and drags back against its rope, which snaps taut to the ring in the wall (0.2–0.65 s). Beyond it the crows burst out of the furrows, beat hard, rise barely a metre, and sink back (0.5–1.95 s).",
+   "note": "The causes come first: the animals know. A physical rule shown, not said: here nothing can climb.",
+   "lines": []
+  },
+  {
+   "n": 5,
+   "time": "10.583–13.000 s",
+   "state": {
+    "seq": "A",
+    "t0": 10.583
+   },
+   "clock": "tt",
+   "boardState": {
+    "seq": "A",
+    "t0": 10.583,
+    "tt": 1.9
+   },
+   "cam": {
+    "pos": [
+     0.0,
+     1.4,
+     -1.25
+    ],
+    "target": [
+     -330,
+     88,
+     -1400
+    ],
+    "f": 70
+   },
+   "camText": "The dust line · 70 mm · from behind his bent shoulder, locked off",
+   "line": "He is dark in the right of the frame, back to us, looking. Across the face of the Anvil a thin pale line of dust opens from left to right (0.4–1.8 s). Then nothing moves. No sound yet.",
+   "note": "Villeneuve: a foreground figure, the subject beyond, and silence. The mountain is large in the frame, so the line is seen.",
+   "lines": []
+  }
+ ]
+}
