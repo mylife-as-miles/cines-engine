@@ -196,7 +196,7 @@ def pose_figure(holder, pose=None):
         _aim(rig, f"upper_arm_fk.{k}", _dir(0, fwd, side, out))
         _aim(rig, f"forearm_fk.{k}", _dir(0, fwd + elbow, side, out * 0.6))
         _aim(rig, f"hand_fk.{k}", _dir(0, fwd + elbow + 4, side, out * 0.4))
-    stance = pose.get("stance", 0.07)  # metres each foot moves in from the source's wide A-pose stance
+    stance = pose.get("stance", holder.get("stance", 0.07))  # metres each foot moves in from the rest stance
     for side, k in ((1, "L"), (-1, "R")):
         n = f"foot_ik.{k}"
         if n in pb and stance:
