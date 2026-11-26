@@ -416,26 +416,134 @@ def linen(name, rgb=(0.36, 0.35, 0.32), rough=0.85):
     return _remember(name, m)
 
 
-def rug(name, field=(0.09, 0.085, 0.09), border=(0.05, 0.05, 0.06), size=(2.4, 1.7), band=0.16):
-    """A low-pile wool rug: plain field, a darker border band, a dense pile (fine bump), fibre sheen."""
+def rug(name, field=(0.085, 0.072, 0.064), tones=((0.048, 0.042, 0.042), (0.12, 0.1, 0.082)), size=(2.4, 1.7),
+        band=(0.035, 0.115)):
+    """A low-pile wool rug, matt (no specular): a plain warm-grey field with a slow mottle, a woven two-tone border
+    band `band` (from, to) metres in from the edge (an 8 cm band of small alternating blocks, as a flat-weave border
+    reads), a thin dark outer binding, a dense pile (fine bump at ~1 mm) and fibre sheen."""
     m, nt, b = _new(name)
     o = _obj(nt)
     x, y, _ = _xyz(nt, o)
     ex = _math(nt, "SUBTRACT", size[0] / 2, _math(nt, "ABSOLUTE", x))
     ey = _math(nt, "SUBTRACT", size[1] / 2, _math(nt, "ABSOLUTE", y))
     e = _math(nt, "MINIMUM", ex, ey)
-    bd = _math(nt, "MULTIPLY", _maprange(nt, e, band - 0.004, band, 1.0, 0.0), _maprange(nt, e, 0.03, 0.034, 0.0, 1.0))
-    pile = _noise(nt, o, 700.0, 2.0, 0.6)
-    mott = _noise(nt, o, 3.0, 4.0, 0.6)
-    col = _mix(nt, bd, field, border)
-    col = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.25), col, tuple(c * 0.75 for c in field))
-    col = _mix(nt, _maprange(nt, pile, 0.3, 0.7, 0.0, 0.3), col, tuple(c * 1.25 for c in field))
+    b0, b1 = band
+    inband = _math(nt, "MULTIPLY", _maprange(nt, e, b1, b1 - 0.003, 0.0, 1.0), _maprange(nt, e, b0, b0 + 0.003, 0.0, 1.0))
+    binding = _maprange(nt, e, 0.012, 0.009, 0.0, 1.0)
+    # the woven pattern: 2.2 cm blocks alternating along the band, two rows across it
+    along = _math(nt, "ADD", x, y)
+    blk = _math(nt, "FRACT", _math(nt, "DIVIDE", along, 0.044))
+    row = _math(nt, "FRACT", _math(nt, "DIVIDE", _math(nt, "SUBTRACT", e, b0), (b1 - b0)))
+    chk = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", _math(nt, "GREATER_THAN", blk, 0.5), _math(nt, "GREATER_THAN", row, 0.5)))
+    weave = _mix(nt, chk, tones[0], tones[1])
+    pile = _noise(nt, o, 900.0, 2.0, 0.6)
+    mott = _noise(nt, o, 2.5, 4.0, 0.6)
+    col = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 1.0), tuple(c * 0.86 for c in field), tuple(c * 1.1 for c in field))
+    col = _mix(nt, inband, col, weave)
+    col = _mix(nt, binding, col, (0.03, 0.028, 0.03))
+    col = _mix(nt, _maprange(nt, pile, 0.3, 0.7, 0.0, 0.35), col, tuple(c * 1.3 for c in field))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Roughness"].default_value = 0.95
-    b.inputs["Sheen Weight"].default_value = 0.6
-    b.inputs["Sheen Roughness"].default_value = 0.45
-    b.inputs["Specular IOR Level"].default_value = 0.25
-    _bump(nt, b, pile, 0.4, 0.0015)
+    b.inputs["Roughness"].default_value = 0.92
+    b.inputs["Sheen Weight"].default_value = 0.45
+    b.inputs["Sheen Roughness"].default_value = 0.5
+    b.inputs["Specular IOR Level"].default_value = 0.0
+    _bump(nt, b, pile, 0.3, 0.001)
+    return _remember(name, m)
+
+
+def brick(name, rgb=(0.05, 0.047, 0.045), mortar=(0.03, 0.03, 0.029)):
+    """Old painted common brick (the neighbour's wall seen across the gangway at night): running bond, each brick
+    its own tone under the paint, sunken mortar, worn paint and grime streaks down from the sills."""
+    m, nt, b = _new(name)
+    o = _pos(nt)            # world space: the wall is built in pieces round a window and the courses must line up
+    x, y, z = _xyz(nt, o)
+    v = _n(nt, "ShaderNodeCombineXYZ")
+    _link(nt, x, v.inputs["X"])
+    _link(nt, z, v.inputs["Y"])
+    col, fac = _brick(nt, v.outputs[0], 0.215, 0.073, 0.01, rgb, tuple(c * 0.78 for c in rgb), mortar, smooth=0.3)
+    streak = _noise(nt, o, 1.0, 4.0, 0.6, mapping=(9.0, 1.0, 0.6))
+    col = _mix(nt, _maprange(nt, streak, 0.45, 0.7, 0.0, 0.5), col, tuple(c * 0.55 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, _maprange(nt, fac, 0.0, 1.0, 0.95, 0.7), b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.3
+    pit = _noise(nt, o, 120.0, 3.0, 0.65)
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", fac, 1.0), _math(nt, "MULTIPLY", pit, 0.15))
+    _bump(nt, b, h, 0.6, 0.006)
+    return _remember(name, m)
+
+
+def satin_wood(holder, centre, facing, rgb=(0.07, 0.035, 0.02), rough=(0.45, 0.55), wear=0.15, seat_z=(0.4, 0.53)):
+    """Replace a generated chair's baked texture (blotchy in close-up: a speckled-stone seat, smeared rails) with a
+    satin-finished hardwood: grain along the seat's front-to-back axis on up-facing faces and along Z on the legs and
+    spindles, low contrast, open pores, a dark grime in the joints, roughness 0.45-0.55, a light bump, and the seat's
+    front edge worn lighter (`wear`) where legs rub. `centre` (x, y) and `facing` (unit x, y) place the wear band."""
+    cx, cy = centre
+    fx, fy = facing
+    seen = set()
+    for ob in holder.children_recursive:
+        if ob.type != "MESH":
+            continue
+        for slot in ob.material_slots:
+            m = slot.material
+            if not m or m.name in seen or not m.use_nodes:
+                continue
+            seen.add(m.name)
+            nt = m.node_tree
+            b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+            if b is None:
+                continue
+            for sock in ("Base Color", "Roughness", "Normal", "Metallic"):
+                for ln in list(b.inputs[sock].links):
+                    nt.links.remove(ln)
+            b.inputs["Metallic"].default_value = 0.0
+            b.inputs["Specular IOR Level"].default_value = 0.3
+            b.inputs["Coat Weight"].default_value = 0.0
+            p = _pos(nt)
+            geo = _n(nt, "ShaderNodeNewGeometry")
+            _, _, nz = _xyz(nt, geo.outputs["Normal"])
+            up = _maprange(nt, _math(nt, "ABSOLUTE", nz), 0.6, 0.8, 0.0, 1.0)
+            g_seat = _noise(nt, p, 1.0, 5.0, 0.6, mapping=(2.0, 55.0, 55.0))
+            g_leg = _noise(nt, p, 1.0, 5.0, 0.6, mapping=(55.0, 55.0, 2.0))
+            grain = _math(nt, "ADD", _math(nt, "MULTIPLY", g_seat, up), _math(nt, "MULTIPLY", g_leg, _math(nt, "SUBTRACT", 1.0, up)))
+            pores = _noise(nt, p, 1.0, 2.0, 0.6, mapping=(30.0, 600.0, 600.0))
+            dark, lite = tuple(c * 0.78 for c in rgb), tuple(c * 1.14 for c in rgb)
+            col = _mix(nt, _maprange(nt, grain, 0.35, 0.65, 0.0, 1.0), lite, dark)
+            col = _mix(nt, _maprange(nt, pores, 0.62, 0.72, 0.0, 0.35), col, tuple(c * 0.6 for c in rgb))
+            # the worn front edge of the seat: lighter where the legs rub, on the up faces at seat height only
+            px, py, pz = _xyz(nt, p)
+            s = _math(nt, "ADD", _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", px, cx), fx), _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", py, cy), fy))
+            band = _maprange(nt, s, 0.17, 0.27, 0.0, 1.0)
+            inz = _math(nt, "MULTIPLY", _maprange(nt, pz, seat_z[0] - 0.01, seat_z[0], 0.0, 1.0), _maprange(nt, pz, seat_z[1], seat_z[1] + 0.01, 1.0, 0.0))
+            worn = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", band, inz), up)
+            col = _mix(nt, worn, col, tuple(min(1.0, c * (1.0 + wear)) for c in rgb))
+            col = _mix(nt, _maprange(nt, _ao(nt, 0.04), 0.35, 1.0, 0.55, 0.0), col, tuple(c * 0.35 for c in rgb))
+            _link(nt, col, b.inputs["Base Color"])
+            r = _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.3, 0.7, rough[0], rough[1])
+            _link(nt, _math(nt, "ADD", r, _math(nt, "MULTIPLY", worn, 0.08)), b.inputs["Roughness"])
+            _bump(nt, b, _math(nt, "ADD", grain, _math(nt, "MULTIPLY", pores, 0.4)), 0.1, 0.0005)
+    return holder
+
+
+def contact(name, radius, alpha=0.25, rgb=(0.004, 0.003, 0.003)):
+    """A soft contact-shadow decal: a dark disc whose opacity falls off from `alpha` at its centre to nothing at its
+    rim (on a plane object in metres)."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    o = _obj(nt)
+    x, y, _ = _xyz(nt, o)
+    r = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", x, x), _math(nt, "MULTIPLY", y, y)))
+    t = _maprange(nt, r, 0.0, radius, 1.0, 0.0)
+    a = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", t, t), alpha)
+    df = _n(nt, "ShaderNodeBsdfDiffuse")
+    df.inputs["Color"].default_value = (*rgb, 1)
+    tr = _n(nt, "ShaderNodeBsdfTransparent")
+    mx = _n(nt, "ShaderNodeMixShader")
+    _link(nt, a, mx.inputs[0])
+    _link(nt, tr.outputs[0], mx.inputs[1])
+    _link(nt, df.outputs[0], mx.inputs[2])
+    _link(nt, mx.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
     return _remember(name, m)
 
 
@@ -545,7 +653,7 @@ def liquid(name, rgb=(0.03, 0.015, 0.008)):
 
 
 # ---------------------------------------------------------------- generated props
-def tune_prop(holder, spec=0.35, top_wood=None, rough_floor=None):
+def tune_prop(holder, spec=0.35, top_wood=None, rough_floor=None, seam=0.6, tone=(0.85, 1.12), late_k=0.6):
     """Finish a generated prop's materials in place: dielectric specular cut to `spec` (generated textures come with
     a plastic sheen), roughness floored at `rough_floor`, and with `top_wood` = (light, dark, scale) the upward-facing
     faces replaced by a clean flat-sawn grain running along world X (the generated texture is a patchwork of grain
@@ -596,13 +704,13 @@ def tune_prop(holder, spec=0.35, top_wood=None, rough_floor=None):
                 rings = _math(nt, "FRACT", _math(nt, "MULTIPLY", _math(nt, "ADD", py, _math(nt, "MULTIPLY", warp, 0.06)), scale))
                 late = _math(nt, "MULTIPLY", _maprange(nt, rings, 0.5, 0.85, 0.0, 1.0), _maprange(nt, rings, 1.0, 0.9, 0.0, 1.0))
                 pores = _noise(nt, gw.outputs[0], 1.0, 2.0, 0.6, mapping=(16.0, 800.0, 800.0))
-                g = _math(nt, "ADD", _math(nt, "MULTIPLY", late, 0.6), _maprange(nt, pores, 0.6, 0.7, 0.0, 0.3), clamp=True)
+                g = _math(nt, "ADD", _math(nt, "MULTIPLY", late, late_k), _maprange(nt, pores, 0.6, 0.7, 0.0, 0.3), clamp=True)
                 col = _mix(nt, g, light, dark)
-                tone = _maprange(nt, rnd, 0.0, 1.0, 0.85, 1.12)
-                col = _mix(nt, 1.0, col, _combine(nt, tone), "MULTIPLY")
-                seam = _math(nt, "FRACT", _math(nt, "DIVIDE", py, 0.14))
-                sm = _math(nt, "MAXIMUM", _maprange(nt, seam, 0.0, 0.004, 1.0, 0.0), _maprange(nt, seam, 0.996, 1.0, 0.0, 1.0))
-                col = _mix(nt, _math(nt, "MULTIPLY", sm, 0.6), col, tuple(c * 0.4 for c in dark))
+                tn = _maprange(nt, rnd, 0.0, 1.0, tone[0], tone[1])
+                col = _mix(nt, 1.0, col, _combine(nt, tn), "MULTIPLY")
+                sf = _math(nt, "FRACT", _math(nt, "DIVIDE", py, 0.14))
+                sm = _math(nt, "MAXIMUM", _maprange(nt, sf, 0.0, 0.004, 1.0, 0.0), _maprange(nt, sf, 0.996, 1.0, 0.0, 1.0))
+                col = _mix(nt, _math(nt, "MULTIPLY", sm, seam), col, tuple(c * 0.4 for c in dark))
                 if src is not None:
                     col = _mix(nt, up, src, col)
                 _link(nt, col, base)

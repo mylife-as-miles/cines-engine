@@ -53,30 +53,37 @@ SINK = 0.02                                          # how far she sinks into th
 # focus targets (empties); the kitchen one is moved onto Dawn's face once she is posed
 FOCUS = {
     "fx_kitchen": (KT[0] + 0.02, KT[1] + 0.62, 1.17),
-    "fx_dining": (4.3, 0.05, 0.72),
-    "fx_chair": (4.5, 0.02, 0.74),
+    "fx_dining": (st.HEAD_CHAIR[0] - 0.1, 0.03, 0.72),
+    "fx_chair": (st.HEAD_CHAIR[0] + 0.05, st.HEAD_CHAIR[1], 0.72),     # the head chair's seat back
 }
 
 CAMERAS = {
     # Ch 02: across the table from her right, a little below her eyes: the lid's back soft in the foreground, the
     # screen's glow on her face and forearms, the counter and the night window behind
-    "kitchen": dict(loc=(KT[0] - 1.07, -1.3, 1.1), aim=(KT[0] + 0.05, 0.62, 1.04), lens=50, focus="fx_kitchen", fstop=2.4, beat="ch02",
-                    exposure=-1.3),
-    # Ch 10: from the foot of the table, high in the corner: the table running away to the head, the blinds glowing
-    # on the left wall, their stripes across the table's end and the empty chair
-    "dining": dict(loc=(1.3, -1.65, 1.65), aim=(4.45, 0.1, 0.62), lens=26, focus="fx_dining", fstop=5.6, beat="ch10",
-                   exposure=-1.15),
-    # Ch 10: the empty chair, from beside the head of the table: the street light comes over the camera's shoulder,
-    # its stripes across the chair's back, the chair's striped shadow on the wall beside it; the image before the
-    # cut to black
-    "chair": dict(loc=(3.65, 1.95, 1.18), aim=(4.55, 0.0, 0.52), lens=30, focus="fx_chair", fstop=4.0, beat="ch10",
-                  exposure=-1.2),
+    "kitchen": dict(loc=(KT[0] - 1.07, -1.3, 1.1), aim=(KT[0] + 0.05, 0.62, 1.04), lens=50, focus="fx_kitchen", fstop=1.6, beat="ch02",
+                    exposure=-1.3, spp_final=96),
+    # Ch 10: from the foot of the table, in the near corner at standing-chest height: the table running away to the
+    # head, the chairs pushed in, the blinds glowing on the left wall, their stripes across the table's end and the
+    # one chair pulled out at the head, clear against the lit end wall
+    "dining": dict(loc=(1.35, -1.75, 1.38), aim=(4.45, 0.05, 0.5), lens=30, focus="fx_dining", fstop=5.6, beat="ch10",
+                   exposure=-0.95, spp_final=128),
+    # Ch 10: the empty chair, from the far side near the end wall, the wall seen edge-on: the street light's stripes
+    # across the chair, its striped shadow clear of it on the end wall to the left, the table's head soft at the
+    # right; the image before the cut to black
+    "chair": dict(loc=(4.25, 1.8, 1.08), aim=(4.6, -0.25, 0.5), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
+                  exposure=-1.2, spp_final=128),
 }
 TRIMS = {
     "kitchen": {},
     "dining": {},
-    "chair": {},
+    "chair": {"d_sky": 0.6, "street_side": 0.75},
 }
+# the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
+# the chair close-up, where the shafts lay a striped veil between the lens and the chair
+HAZE = {"kitchen": None, "dining": 0.012, "chair": 0.0}
+ONLY = [c for c in os.environ.get("HOME_ONLY", "").split(",") if c in CAMERAS]
+if ONLY:                       # a working shortcut: HOME_ONLY=dining,chair renders just those with `--cam all`
+    CAMERAS = {k: v for k, v in CAMERAS.items() if k in ONLY}
 _STATE = {"cast": [], "base": {}}
 
 SHIRT = (0.075, 0.08, 0.095)       # a muted dark slate T-shirt: the stone face and arms read against it
@@ -269,7 +276,26 @@ def seat_height(x, y):
 
 
 # reading the email: leaning in a little over the table, neck and head bowed to the screen
-UPPER = {"chest": (16, 0), "neck": (6, 0), "head": (11, 3), "fingers": 12}
+UPPER = {"chest": (16, 0), "neck": (6, 0), "head": (21, 3), "fingers": 12}
+# per-finger curl once she is seated (degrees on each finger's master control): the right index reaches for the
+# trackpad, the others curl under; the left hand rests loosely curled
+CURL = {"R": {"f_index": 6, "f_middle": 22, "f_ring": 26, "f_pinky": 30, "thumb": 14},
+        "L": {"f_index": 16, "f_middle": 20, "f_ring": 24, "f_pinky": 28, "thumb": 10}}
+
+
+def curl_fingers(holder):
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    done = []
+    for k, fingers in CURL.items():
+        for f, deg in fingers.items():
+            n = f"{f}.01_master.{k}"
+            if n in pb:
+                pb[n].rotation_mode = "XYZ"
+                pb[n].rotation_euler.x = math.radians(deg)
+                done.append(n)
+    bpy.context.view_layer.update()
+    print(f"HOME fingers curled: {len(done)} controls", flush=True)
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 
 
@@ -400,6 +426,7 @@ def arms_on_table(holder):
     # the hands rest on the laptop (top at K_TOP + 0.0175): tip each hand up until its lowest finger just clears it
     body = bpy.data.objects[holder["body"]]
     mid = (out["L"][1].x + out["R"][1].x) / 2
+    curl_fingers(holder)
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
         pitch = 3.0 if side < 0 else 1.0
@@ -445,6 +472,9 @@ def face_point(holder):
 
 
 # ---------------------------------------------------------------- dressing the kitchen table
+MUG = (-0.27, 0.07)                # the mug's offset from the laptop
+ENV = (0.045, -0.0085, -30.0)      # the mug's place on the mail (along, across its long side) and the mail's turn: its
+                                   # long side parallel to the frame's bottom edge
 def table_things(hands):
     """The laptop under her hands, then the mug, the mail, a pen and the phone round it."""
     tx, ty = KT
@@ -463,9 +493,17 @@ def table_things(hands):
     else:
         lx, ly = tx - 0.04, ty + 0.2
     lap, scr = st.laptop((lx, ly, K_TOP), 180.0 + 3.0)
-    st.mug((lx - 0.27, ly + 0.07, K_TOP), turn_deg=215.0)
-    st.envelopes((lx - 0.3, ly - 0.16, K_TOP), turn_deg=72.0)
-    st.pen((lx - 0.28, ly - 0.12, K_TOP + 0.005), turn_deg=60.0)
+    # the mail, its long side along the frame's bottom edge, wholly in frame on the left of the table (its far end
+    # a couple of centimetres over the rim), the mug set down on it and a pen lying on it beside the mug
+    a = math.radians(ENV[2])
+    ux, uy = math.cos(a), math.sin(a)                 # the mail's long axis
+    vx, vy = -uy, ux
+    mx, my = lx + MUG[0], ly + MUG[1]
+    ex, ey = mx - ux * ENV[0] - vx * ENV[1], my - uy * ENV[0] - vy * ENV[1]
+    top = st.envelopes((ex, ey, K_TOP), turn_deg=ENV[2])
+    st.mug((mx, my, K_TOP + top), turn_deg=215.0)
+    px, py = ex + ux * -0.035 + vx * 0.041, ey + uy * -0.035 + vy * 0.041
+    st.pen((px, py, K_TOP + top), turn_deg=ENV[2] + 2.0)
     st.phone((lx + 0.25, ly + 0.02, K_TOP), turn_deg=-14.0)
     return lap, scr
 
@@ -500,7 +538,7 @@ def lights():
             12.0, (0.55, 0.66, 0.95), spread=120, aim=(win["cx"] + 0.3, 0.2, 0.5))
     # a night light left on under the right-hand wall cabinets: a low warm strip on the tile and the counter
     ux0, ux1 = win["cx"] + win["w"] / 2 + 0.11, st.K["x1"] - 0.85
-    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 9.0))
+    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 3.0))
     li = st.area("k_undercab", ((ux0 + ux1) / 2, y1 - 0.25, 1.648), (ux1 - ux0 - 0.1, 0.04), 3.2, (1.0, 0.86, 0.68), spread=150)
     li.rotation_euler = (0, 0, 0)          # facing straight down
     # Ch 10: the street light through the foot-end window, far and small so the slats cut clean stripes: it runs
@@ -511,11 +549,15 @@ def lights():
     # a second, weaker street light through the side window: the blinds glow and a few stripes reach the floor
     d2 = Vector((0.3, -0.85, -0.42)).normalized()
     t2 = Vector((3.1, 0.9, 0.0))
-    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 10000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
+    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 15000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
     dw = st.D_WIN
     # the sky's faint glow through the slats: just enough to keep the room readable
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),
-            6.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
+            16.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
+    # outside the kitchen window: a faint cool lamp over the neighbour's back door rakes their painted brick
+    yw = st.K["y1"] + st.K_OUT
+    st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.45, 3.3), (st.WARM_WIN[0] + 0.1, yw - 0.02, 0.5), 30.0, (0.62, 0.72, 1.0),
+            size_deg=95.0, blend=0.9, radius=0.06)
     # the area lights only light: through the glass the camera sees the night itself
     for li in st.LIGHTS.values():
         if li.type == "LIGHT" and li.data.type == "AREA":
@@ -545,15 +587,59 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
-    print(f"HOME camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}", flush=True)
+    hz = bpy.data.objects.get("d_haze")
+    dens = HAZE.get(name)
+    if hz is not None and dens is not None:
+        hz.hide_render = dens <= 0.0
+        pv = next(n for n in hz.active_material.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
+        pv.inputs["Density"].default_value = max(dens, 0.0)
+    print(f"HOME camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}, "
+          f"dining haze {dens}", flush=True)
+
+
+def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=None):
+    """setkit.render with this stage's sampling: a final (1280 wide or more) of a dark frame takes the camera's
+    `spp_final` and a tighter adaptive threshold, and the denoiser is fed albedo and normals (prefilter accurate),
+    so the big dark gradients (the window, the walls) do not blotch."""
+    import time
+    sc = bpy.context.scene
+    w = bpy.data.worlds.new("world")
+    sc.world = w
+    w.use_nodes = True
+    w.node_tree.nodes["Background"].inputs[1].default_value = world
+    final = res[0] >= 1280
+    c = CAMERAS.get(name, {})
+    spp = max(samples, c.get("spp_final", samples)) if final else samples
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = spp
+    sc.cycles.use_adaptive_sampling = True
+    sc.cycles.adaptive_threshold = 0.012 if final else 0.03
+    sc.cycles.use_denoising = True
+    sc.cycles.denoiser = "OPENIMAGEDENOISE"
+    sc.cycles.denoising_input_passes = "RGB_ALBEDO_NORMAL"
+    sc.cycles.denoising_prefilter = "ACCURATE"
+    sc.cycles.max_bounces = 6
+    sc.cycles.volume_bounces = 0
+    sc.render.resolution_x, sc.render.resolution_y = res
+    sc.view_settings.view_transform = "AgX"
+    looks = [l.identifier for l in bpy.types.ColorManagedViewSettings.bl_rna.properties["look"].enum_items]
+    sc.view_settings.look = "AgX - Base Contrast" if "AgX - Base Contrast" in looks else "None"
+    sc.view_settings.exposure = exposure
+    sc.render.image_settings.file_format = "PNG"
+    sc.render.filepath = out
+    t0 = time.time()
+    bpy.ops.render.render(write_still=True)
+    print(f"RENDER {res[0]}x{res[1]} {spp} samples (asked {samples}): {time.time() - t0:.1f} s")
 
 
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
-    def render(*args, **kw):
-        apply_camera(which_camera())
-        return orig(*args, **kw)
+    def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0):
+        name = which_camera()
+        apply_camera(name)
+        return _render(out, samples, res, exposure, world, name)
     render._orig = orig
     sk.render = render
 

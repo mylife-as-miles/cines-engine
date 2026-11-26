@@ -45,8 +45,12 @@ D_TOP = 0.753
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
-HEAD_CHAIR = (4.42, 0.02, 180.0 + 6.0)   # the father's chair: set back from the head, turned a little
+HEAD_CHAIR = (4.38, 0.02, 180.0 + 6.0)   # the father's chair: set back from the head, turned a little; 0.3 m of
+                                         # air behind it so its striped shadow on the end wall stands off the chair
 CHAIR_RAIL = 0.84
+RUG = (2.725, 0.0, 2.45, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
+                                         # wholly off it on the oak (its front feet ~12 cm past the rug's end)
+K_OUT = 3.5                              # the neighbour's brick wall, this far out from the kitchen window
 
 
 # ---------------------------------------------------------------- primitives
@@ -217,11 +221,26 @@ def materials():
     mt.ceramic("bowl", (0.4, 0.39, 0.36), rough=0.3, speck=0.6)
     mt.ceramic("jar", (0.12, 0.14, 0.13), rough=0.22)
     mt.liquid("coffee")
-    mt.paper("envelope", (0.6, 0.58, 0.53))
-    mt.paper("envelope_kraft", (0.42, 0.33, 0.21))
+    mt.paper("envelope", (0.37, 0.345, 0.3))               # matt, warm, value ~0.35: it no longer flares under the screen
+    mt.paper("envelope_kraft", (0.3, 0.225, 0.14))
     mt.linen("runner", (0.33, 0.32, 0.29))
     mt.linen("towel", (0.3, 0.33, 0.36))
-    mt.rug("rug", size=(2.6, 1.9))
+    mt.rug("rug", size=RUG[2:])
+    mt.brick("brick")
+    mt.pbr("ext_frame", (0.02, 0.02, 0.022), rough=(0.5, 0.65), nscale=10.0)
+    mt.pbr("limestone", (0.12, 0.115, 0.105), rough=(0.75, 0.9), nscale=12.0, cvar=0.3, bump=0.3, bscale=60.0)
+    mt.glow("shade_glow", (1.0, 0.66, 0.36), 0.42)
+    mt.glow("shade_gap", (1.0, 0.7, 0.42), 0.95)
+    mt.plastic("wire", (0.46, 0.46, 0.44), rough=0.35, spec=0.5)
+    mt.plastic("tray", (0.035, 0.036, 0.04), rough=0.45, spec=0.4)
+    mt.ceramic("plate", (0.5, 0.495, 0.47), rough=0.14)
+    mt.pbr("apple", (0.2, 0.045, 0.035), rough=(0.3, 0.42), nscale=60.0, cvar=0.3, coat=0.2)
+    mt.pbr("pear", (0.26, 0.24, 0.08), rough=(0.45, 0.6), nscale=50.0, cvar=0.35, bump=0.15, bscale=400.0)
+    mt.pbr("stem", (0.04, 0.03, 0.02), rough=(0.6, 0.7))
+    mt.paper("towel_paper", (0.6, 0.59, 0.55), rough=0.95)
+    mt.pbr("fruit_bowl", (0.05, 0.03, 0.018), rough=(0.3, 0.4), stretch=(1.0, 12.0, 12.0), nscale=3.0, cvar=0.25, coat=0.3)
+    mt.contact("contact", 1.0, alpha=0.3)
+    mt.contact("contact_body", 1.0, alpha=0.2)
     mt.aluminium("alu")
     mt.plastic("key", (0.018, 0.018, 0.02), rough=0.55, spec=0.4)
     mt.pbr("bezel", (0.004, 0.004, 0.005), rough=(0.08, 0.14), nscale=10.0, spec=0.5)
@@ -494,9 +513,7 @@ def kitchen():
     _mouldings("k", R, [("base", BASE), ("crown", _crown(R["h"]))])
     y1 = R["y1"]
     units, _ = window("k_win", win["cx"], win["w"], win["z0"], win["z1"], y1)
-    # outside: the night, a neighbour's lit window far off
-    bd = box("k_night", (5.0, 0.02, 7.0), (win["cx"], y1 + 4.0, 1.5), M["k_night"])
-    bd.visible_shadow = False
+    kitchen_outside()
     # counter run along the +Y wall: base cabinets, range, sink, countertop, backsplash, uppers
     cx0, cx1 = R["x0"], R["x1"] - 0.85
     yf = y1 - COUNTER_D + 0.025          # cabinet face
@@ -551,8 +568,9 @@ def kitchen():
     for s, dx in (("L", -0.11), ("R", 0.11)):
         cyl(f"k_tap{s}", 0.018, 0.05, (fx + dx, fy, COUNTER_TOP + 0.025), M["chrome"], verts=24, bevel=0.004)
         box(f"k_tapLever{s}", (0.012, 0.06, 0.01), (fx + dx, fy - 0.03, COUNTER_TOP + 0.055), M["chrome"], bevel=0.004)
-    # a tea towel over the oven door handle is too busy: a folded towel on the counter edge instead
+    # a folded towel on the counter edge, and a dish rack with two plates drying beside the sink
     box("k_towel", (0.22, 0.13, 0.022), (sink_x[1] + 0.2, yfront + 0.1, COUNTER_TOP + 0.011), M["towel"], bevel=0.008)
+    dish_rack((sink_x[1] + RACK_DX, y1 - 0.26, COUNTER_TOP), turn_deg=-4.0)
     # range: white enamel body, black glass oven door, a back guard, four burner grates and a kettle
     rx0, rx1 = range_x
     rxc = (rx0 + rx1) / 2
@@ -562,6 +580,7 @@ def kitchen():
     cyl("k_ovenHandle", 0.011, rx1 - rx0 - 0.12, (rxc, yfront - 0.05, 0.66), M["chrome"], rot=(0, math.pi / 2, 0), verts=16)
     for s, dx in (("L", -(rx1 - rx0) / 2 + 0.08), ("R", (rx1 - rx0) / 2 - 0.08)):
         box(f"k_ovenHandleArm{s}", (0.016, 0.045, 0.016), (rxc + dx, yfront - 0.03, 0.66), M["chrome"], bevel=0.005)
+    hung_towel((rxc + 0.12, yfront - 0.05, 0.66))
     box("k_backguard", (rx1 - rx0, 0.05, 0.12), (rxc, y1 - 0.03, 0.95), M["range_white"], bevel=0.008)
     for i, dx in enumerate((-0.17, 0.17)):
         for j, dy in enumerate((-0.15, 0.1)):
@@ -600,6 +619,157 @@ def kitchen():
         box(f"k_upperCrown{i}", (b - a + 0.03, ud + 0.03, 0.04), ((a + b) / 2, y1 - (ud + 0.03) / 2, up1 + 0.02), M["k_cab"], bevel=0.006)
     # light switch plate by the doorway side
     box("k_switch", (0.075, 0.008, 0.115), (R["x1"] - 0.6, y1 - 0.004, 1.2), M["trim"], bevel=0.003)
+    # the rest of the counter: a paper-towel stand at the end of the run, a bowl of fruit, a utensil crock by the range
+    paper_towel((cx1 - PT_DX, y1 - 0.16, COUNTER_TOP))
+    fruit_bowl((cx1 - BOWL_DX, y1 - 0.3, COUNTER_TOP))
+    lathe("k_crock", [(0.0, 0.0), (0.055, 0.0), (0.06, 0.01), (0.062, 0.15), (0.066, 0.16), (0.06, 0.162), (0.056, 0.155),
+                      (0.054, 0.02), (0.0, 0.018)], (range_x[1] + 0.16, y1 - 0.14, COUNTER_TOP), M["jar"], segs=40)
+    for i, (dx, dy, tilt, ln) in enumerate(((0.01, 0.0, 8, 0.3), (-0.015, 0.01, -10, 0.34), (0.0, -0.015, 4, 0.27))):
+        a = math.radians(tilt)
+        cyl(f"k_utensil{i}", 0.007, ln, (range_x[1] + 0.16 + dx + math.sin(a) * ln / 2, y1 - 0.14 + dy, COUNTER_TOP + 0.03 + ln / 2),
+            M["frame_wood"], rot=(0, a, 0), verts=10)
+
+
+RACK_DX = 0.27     # dish rack centre, right of the sink
+PT_DX = 0.14       # paper towel stand, in from the end of the counter run
+BOWL_DX = 0.48     # fruit bowl, in from the end of the counter run
+
+
+def kitchen_outside():
+    """Across the gangway, K_OUT out from the window: the neighbour's painted brick wall, built round one window
+    whose drawn shade glows dim and warm (the lower sash a little brighter under its hem), a dark frame, a
+    limestone sill. A faint cool light over a back door rakes the brick (home.lights)."""
+    y1 = K["y1"]
+    yw = y1 + K_OUT
+    wx, wz, ww, wh = WARM_WIN
+    x0, x1, zb, zt = K["x0"] - 1.0, K["x1"] + 1.0, -1.0, 9.0
+    t = 0.35
+    yc = yw + t / 2
+    for nm, (a, b, c, d) in (("L", (x0, wx - ww / 2, zb, zt)), ("R", (wx + ww / 2, x1, zb, zt)),
+                             ("B", (wx - ww / 2, wx + ww / 2, zb, wz - wh / 2)), ("T", (wx - ww / 2, wx + ww / 2, wz + wh / 2, zt))):
+        box(f"k_brick{nm}", (b - a, t, d - c), ((a + b) / 2, yc, (c + d) / 2), M["brick"])
+    yr = yw + 0.11                      # the window sits back in its reveal
+    fw = 0.045
+    for nm, s, l in (("L", (fw, 0.05, wh), (wx - ww / 2 + fw / 2, yr, wz)), ("R", (fw, 0.05, wh), (wx + ww / 2 - fw / 2, yr, wz)),
+                     ("T", (ww, 0.05, fw), (wx, yr, wz + wh / 2 - fw / 2)), ("B", (ww, 0.05, 0.06), (wx, yr, wz - wh / 2 + 0.03)),
+                     ("M", (ww - 2 * fw, 0.04, 0.035), (wx, yr - 0.01, wz - 0.02))):
+        box(f"k_extFrame{nm}", s, l, M["ext_frame"], bevel=0.004)
+    hem = wz - wh / 2 + 0.06 + 0.17      # the shade drawn to here; the lit gap below it
+    box("k_extShade", (ww - 2 * fw, 0.01, wz + wh / 2 - fw - hem), (wx, yr + 0.03, (hem + wz + wh / 2 - fw) / 2), M["shade_glow"])
+    box("k_extGap", (ww - 2 * fw, 0.01, hem - (wz - wh / 2 + 0.06)), (wx, yr + 0.05, (hem + wz - wh / 2 + 0.06) / 2), M["shade_gap"])
+    box("k_extHem", (ww - 2 * fw + 0.01, 0.02, 0.018), (wx, yr + 0.02, hem), M["ext_frame"], bevel=0.003)
+    box("k_extSill", (ww + 0.12, 0.16, 0.06), (wx, yw - 0.02, wz - wh / 2 - 0.03), M["limestone"], bevel=0.008)
+    box("k_extLintel", (ww + 0.12, 0.08, 0.09), (wx, yw - 0.01, wz + wh / 2 + 0.045), M["limestone"], bevel=0.006)
+
+
+WARM_WIN = (9.55, 2.5, 0.6, 0.9)        # the neighbour's lit window: centre x, centre z, width, height
+
+
+def _segments(name, segs, r, m, verts=8):
+    """One mesh of round rods, one per segment ((x, y, z), (x, y, z)): wirework."""
+    bm = bmesh.new()
+    for a, b in segs:
+        a, b = Vector(a), Vector(b)
+        d = b - a
+        q = Vector((0, 0, 1)).rotation_difference(d.normalized())
+        mat = Matrix.Translation((a + b) / 2) @ q.to_matrix().to_4x4()
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=verts, radius1=r, radius2=r, depth=d.length, matrix=mat)
+    ob = _link(name, bm, m)
+    for p in ob.data.polygons:
+        p.use_smooth = True
+    return ob
+
+
+def dish_rack(loc, turn_deg=0.0):
+    """A coated-wire dish rack on a dark drip tray: a rim rail, rows of tines, two plates standing in it."""
+    x, y, z = loc
+    hold = bpy.data.objects.new("k_rack", None)
+    bpy.context.scene.collection.objects.link(hold)
+    parts = []
+    L, W = 0.42, 0.3
+    parts.append(box("k_rackTray", (L + 0.03, W + 0.03, 0.016), (0, 0, 0.008), M["tray"], bevel=0.006))
+    segs = []
+    z0, z1 = 0.035, 0.12
+    for zz in (z0, z1):
+        c = [(-L / 2, -W / 2, zz), (L / 2, -W / 2, zz), (L / 2, W / 2, zz), (-L / 2, W / 2, zz)]
+        segs += [(c[i], c[(i + 1) % 4]) for i in range(4)]
+    for cx_, cy_ in ((-L / 2, -W / 2), (L / 2, -W / 2), (L / 2, W / 2), (-L / 2, W / 2)):
+        segs.append(((cx_, cy_, 0.016), (cx_, cy_, z1)))
+    for i in range(9):                 # floor wires along the length
+        yy = -W / 2 + (i + 0.5) * W / 9
+        segs.append(((-L / 2, yy, z0), (L / 2, yy, z0)))
+    for i in range(12):                # plate tines: two rows across the rack
+        xx = -L / 2 + 0.04 + i * (L - 0.08) / 11
+        for yy in (-0.06, 0.06):
+            segs.append(((xx, yy, z0), (xx, yy, z0 + 0.09)))
+    parts.append(_segments("k_rackWire", segs, 0.0022, M["wire"]))
+    prof = [(0.0, 0.0), (0.06, 0.0), (0.065, 0.004), (0.09, 0.008), (0.125, 0.018), (0.13, 0.021), (0.127, 0.023),
+            (0.088, 0.012), (0.06, 0.005), (0.0, 0.004)]
+    for i, (px, tilt) in enumerate(((-0.05, 12.0), (0.0, 10.0))):
+        p = lathe(f"k_plate{i}", prof, (0, 0, 0), M["plate"], segs=48)
+        p.rotation_euler = (0, math.radians(90.0 - tilt), 0)
+        p.location = (px, 0.0, z0 + 0.13)
+        parts.append(p)
+    bpy.context.view_layer.update()
+    for o in parts:
+        mw = o.matrix_world.copy()
+        o.parent = hold
+        o.matrix_world = mw
+    hold.location = (x, y, z)
+    hold.rotation_euler = (0, 0, math.radians(turn_deg))
+    return hold
+
+
+def paper_towel(loc):
+    x, y, z = loc
+    cyl("k_ptBase", 0.075, 0.012, (x, y, z + 0.006), M["chrome"], verts=40, bevel=0.004)
+    cyl("k_ptRod", 0.006, 0.33, (x, y, z + 0.012 + 0.165), M["chrome"], verts=12)
+    lathe("k_ptRoll", [(0.022, 0.0), (0.064, 0.0), (0.066, 0.004), (0.066, 0.276), (0.064, 0.28), (0.022, 0.28)],
+          (x, y, z + 0.016), M["towel_paper"], segs=48)
+    cyl("k_ptKnob", 0.011, 0.016, (x, y, z + 0.012 + 0.33 + 0.008), M["chrome"], verts=16, bevel=0.003)
+    # the torn edge of the last sheet hanging a little loose
+    box("k_ptSheet", (0.11, 0.0015, 0.12), (x + 0.02, y - 0.067, z + 0.016 + 0.08), M["towel_paper"], rot=(0.06, 0, 0.12))
+
+
+def fruit_bowl(loc):
+    x, y, z = loc
+    lathe("k_fbowl", [(0.0, 0.0), (0.05, 0.0), (0.055, 0.004), (0.1, 0.03), (0.13, 0.065), (0.134, 0.072), (0.129, 0.073),
+                      (0.095, 0.036), (0.052, 0.012), (0.0, 0.01)], (x, y, z), M["fruit_bowl"], segs=56)
+    apple = [(0.0, -0.003), (0.02, 0.0), (0.035, 0.012), (0.04, 0.032), (0.036, 0.052), (0.02, 0.063), (0.008, 0.06), (0.0, 0.056)]
+    pear = [(0.0, 0.0), (0.02, 0.002), (0.034, 0.016), (0.036, 0.032), (0.026, 0.055), (0.017, 0.075), (0.012, 0.092), (0.0, 0.098)]
+    for i, (dx, dy, kind, rx, ry) in enumerate(((-0.04, 0.02, "apple", 0.0, 0.0), (0.035, 0.03, "apple", 0.2, -0.15),
+                                                 (0.0, -0.045, "pear", 0.35, 0.5), (0.05, -0.03, "apple", -0.3, 0.2))):
+        zz = z + 0.025 + (0.02 if i == 3 else 0.0)
+        f = lathe(f"k_fruit{i}", apple if kind == "apple" else pear, (x + dx, y + dy, zz), M[kind], segs=32, subsurf=1)
+        f.rotation_euler = (rx, ry, 0)
+        top = 0.06 if kind == "apple" else 0.096
+        cyl(f"k_fruitStem{i}", 0.0018, 0.018, (x + dx + math.sin(ry) * top, y + dy - math.sin(rx) * top, zz + top * math.cos(rx) * math.cos(ry) + 0.006),
+            M["stem"], rot=(rx, ry, 0), verts=6)
+
+
+def hung_towel(handle):
+    """A dish towel folded over the oven door's handle: a sheet bent round the bar, the front hanging longer."""
+    hx, hy, hz = handle
+    r = 0.016
+    prof = [(hy + 0.035, hz - 0.17), (hy + 0.03, hz - 0.08), (hy + 0.018, hz - 0.01), (hy, hz + r), (hy - 0.018, hz - 0.005),
+            (hy - 0.024, hz - 0.08), (hy - 0.022, hz - 0.2), (hy - 0.02, hz - 0.29)]
+    bm = bmesh.new()
+    w = 0.2
+    rows = []
+    for k in range(11):
+        xx = hx - w / 2 + k * w / 10
+        sag = 0.004 * math.sin(k / 10 * math.pi)
+        rows.append([bm.verts.new((xx, yy + sag, zz - (0.012 * math.sin(k / 10 * math.pi) if zz < hz - 0.1 else 0.0)))
+                     for yy, zz in prof])
+    for k in range(10):
+        for i in range(len(prof) - 1):
+            bm.faces.new((rows[k][i], rows[k][i + 1], rows[k + 1][i + 1], rows[k + 1][i]))
+    ob = _link("k_ovenTowel", bm, M["towel"])
+    ob.modifiers.new("solid", "SOLIDIFY").thickness = 0.004
+    ob.modifiers.new("sub", "SUBSURF").levels = 2
+    for p in ob.data.polygons:
+        p.use_smooth = True
+    return ob
 
 
 def kitchen_table():
@@ -717,14 +887,12 @@ def mug(loc, turn_deg=0.0):
 
 
 def envelopes(loc, turn_deg):
+    """Two envelopes, a white one on a kraft one, a few degrees apart. Returns the stack's height."""
     x, y, z = loc
-    objs = []
-    for i, (w, d, dt, dx, dy, m) in enumerate(((0.235, 0.105, 4.0, 0.0, 0.0, "envelope"), (0.22, 0.11, -3.0, 0.01, 0.006, "envelope_kraft"),
-                                                 (0.24, 0.105, 9.0, -0.006, -0.004, "envelope"))):
-        o = box(f"mail{i}", (w, d, 0.0016), (x + dx, y + dy, z + 0.0008 + i * 0.0017), M[m], bevel=0.0005,
-                rot=(0, 0, math.radians(turn_deg + dt)))
-        objs.append(o)
-    return objs
+    for i, (w, d, dt, dx, dy, m) in enumerate(((0.22, 0.1, -3.0, 0.006, 0.004, "envelope_kraft"), (0.22, 0.1, 2.0, 0.0, 0.0, "envelope"))):
+        box(f"mail{i}", (w, d, 0.0016), (x + dx, y + dy, z + 0.0008 + i * 0.0017), M[m], bevel=0.0005,
+            rot=(0, 0, math.radians(turn_deg + dt)))
+    return 0.0033
 
 
 def pen(loc, turn_deg):
@@ -805,7 +973,8 @@ def dining():
     lathe("d_medallion", [(0.0, 0.0), (0.2, 0.0), (0.205, -0.006), (0.19, -0.014), (0.16, -0.016), (0.13, -0.024), (0.08, -0.026),
                           (0.06, -0.034), (0.0, -0.036)], (px, py, h), M["plaster_med"], segs=64)
     cyl("d_canopy", 0.06, 0.045, (px, py, h - 0.036 - 0.0225), M["bronze_shade"], verts=32, bevel=0.006)
-    drop = 0.86                      # the shade hangs just above the street light's beam: no shadow on the end wall
+    drop = 0.7                       # the shade hangs clear above the street light's beam (bottom at 1.77 m): no
+                                     # shadow bites the stripe patch on the end wall
     cyl("d_cord", 0.0035, drop, (px, py, h - 0.08 - drop / 2), M["enamel_black"], verts=12)
     zt = h - 0.08 - drop
     cyl("d_socket", 0.022, 0.07, (px, py, zt - 0.02), M["bronze_shade"], verts=24, bevel=0.003)
@@ -816,7 +985,8 @@ def dining():
     lathe("d_bulb", [(0.0, 0.0), (0.012, 0.0), (0.016, -0.02), (0.03, -0.05), (0.032, -0.075), (0.022, -0.1), (0.0, -0.106)],
           (px, py, zt - 0.05), M["bulb_off"], segs=32)
     # rug under the table; a bowl left toward the foot, out of the light (the head of the table stays bare)
-    box("d_rug", (2.6, 1.9, 0.008), (DT[0], DT[1], 0.004), M["rug"], bevel=0.003)
+    rg = box("d_rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004)
+    rg.modifiers["bevel"].segments = 2
     lathe("d_bowl", [(0.0, 0.0), (0.05, 0.0), (0.06, 0.004), (0.1, 0.03), (0.135, 0.062), (0.14, 0.068), (0.136, 0.07),
                      (0.13, 0.064), (0.095, 0.034), (0.055, 0.012), (0.0, 0.01)], (DT[0] - 0.42, DT[1] - 0.04, D_TOP), M["bowl"], segs=64)
     # sideboard on the -Y wall, a lidded jar and a pair of candlesticks; a dark framed picture above
@@ -853,24 +1023,85 @@ BLIND_TILT_END = 8.0
 
 def dining_table():
     t = props.load("dining-table", size=1.8, axis="long", loc=(DT[0], DT[1], 0.0), turn_deg=0.0, sat=0.6, val=0.62)
-    mt.tune_prop(t, spec=0.32, rough_floor=0.38,
-                 top_wood=((0.11, 0.05, 0.028), (0.045, 0.02, 0.011), 70.0))
+    # the planks kept faint (half the seam and tone contrast, finer figure) so the blind's stripes, not a plank grid,
+    # rule the top
+    mt.tune_prop(t, spec=0.32, rough_floor=0.38, top_wood=((0.09, 0.045, 0.025), (0.06, 0.03, 0.017), 110.0),
+                 seam=0.3, tone=(0.93, 1.06), late_k=0.45)
     return t
 
 
-# chairs round the dining table: (name, x, y, turn); the native chair faces +X. The side chairs sit toward the foot,
-# so the head of the table and its chair stand apart
+# chairs round the dining table: (name, x, y, turn); the native chair faces +X. The four side chairs are pushed in
+# (seats under the top, each pair between the table's legs) and the foot chair too: only the father's chair at the
+# head is pulled out, so it stands apart
 DINING_CHAIRS = [
-    ("chair_foot", 1.88, -0.02, 0.0),
-    ("chair_s1", 2.33, 0.7, -90.0), ("chair_s2", 3.06, 0.7, -90.0),
-    ("chair_n1", 2.36, -0.7, 90.0), ("chair_n2", 3.04, -0.7, 90.0),
+    ("chair_foot", 1.92, -0.02, 0.0),
+    ("chair_s1", 2.68, 0.5, -90.0), ("chair_s2", 3.32, 0.5, -90.0),
+    ("chair_n1", 2.68, -0.5, 90.0), ("chair_n2", 3.32, -0.5, 90.0),
 ]
+
+
+def chair_feet(holder):
+    """World (x, y) of a chair's feet: the mesh's vertices within 2 cm of the floor, clustered."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    pts = []
+    for o in holder.children_recursive:
+        if o.type != "MESH":
+            continue
+        ev = o.evaluated_get(dg)
+        me = ev.to_mesh()
+        mw = o.matrix_world
+        pts += [(mw @ v.co) for v in me.vertices if (mw @ v.co).z < 0.02]
+        ev.to_mesh_clear()
+    cl = []
+    for p in pts:
+        for c in cl:
+            if (c[0] - p).length < 0.08:
+                c[1].append(p)
+                break
+        else:
+            cl.append([p.copy(), [p]])
+    return [sum(c[1], Vector()) / len(c[1]) for c in cl if len(c[1]) > 5]
+
+
+def contact_shadows(holder, foot_r=0.07, body=(0.34, 0.3)):
+    """Soft dark decals on the floor under a chair: one small one round each foot and a broad faint one under the
+    seat, so the feet read as standing on the boards (the street light alone leaves them floating)."""
+    feet = chair_feet(holder)
+    bpy.context.view_layer.update()
+    c = sum(feet, Vector()) / max(1, len(feet))
+    out = []
+    for i, f in enumerate(feet + [c]):
+        me = bpy.data.meshes.new(f"{holder.name}_ao{i}")
+        bm = bmesh.new()
+        bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=1.0)     # -1..1: the decal's radius is 1 unscaled
+        bm.to_mesh(me)
+        bm.free()
+        ob = bpy.data.objects.new(me.name, me)
+        bpy.context.scene.collection.objects.link(ob)
+        body_decal = i == len(feet)
+        ob.data.materials.append(M["contact_body"] if body_decal else M["contact"])
+        ob.location = (f.x, f.y, 0.0007 + 0.0002 * i)
+        ob.scale = (body[0], body[1], 1.0) if body_decal else (foot_r, foot_r, 1.0)
+        ob.rotation_euler = (0, 0, holder.rotation_euler.z)
+        ob.visible_shadow = False
+        ob.visible_glossy = False
+        out.append(ob)
+    print(f"HOME contact shadows under {holder.name}: {len(feet)} feet at "
+          f"{[tuple(round(v, 3) for v in f.xy) for f in feet]}", flush=True)
+    return out
 
 
 def dining_chairs():
     out = []
     for (n, x, y, t) in DINING_CHAIRS:
-        out.append(dining_chair(n, x, y, t))
+        c = dining_chair(n, x, y, t)
+        a = math.radians(t)
+        mt.satin_wood(c, (x, y), (math.cos(a), math.sin(a)))
+        out.append(c)
     hx, hy, ht = HEAD_CHAIR
-    out.append(dining_chair("chair_head", hx, hy, ht))
+    c = dining_chair("chair_head", hx, hy, ht)
+    a = math.radians(ht)
+    mt.satin_wood(c, (hx, hy), (math.cos(a), math.sin(a)))
+    contact_shadows(c)
+    out.append(c)
     return out

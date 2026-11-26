@@ -743,7 +743,7 @@ def clerk_desk(chair_src, folder):
     bpy.context.scene.collection.objects.link(root)
     parts = [box("monitor_base", (0.22, 0.17, 0.012), (0, 0, 0.006), m["bezel"], bevel=0.004),
              box("monitor_neck", (0.05, 0.025, neck + 0.02), (0, 0.03, (neck + 0.02) / 2), m["bezel"], bevel=0.006),
-             box("monitor_shell", (sw + 0.024, 0.035, sh + 0.024), (0, 0.0, neck + sh / 2), m["speaker"], bevel=0.006),
+             box("monitor_shell", (sw + 0.024, 0.035, sh + 0.024), (0, 0.0, neck + sh / 2), m["bezel"], bevel=0.006),
              box("monitor_face", (sw, 0.004, sh), (0, -0.018, neck + sh / 2), mt.glow("monitor glow", COOL, 0.4))]
     for o in parts:
         o.parent = root
