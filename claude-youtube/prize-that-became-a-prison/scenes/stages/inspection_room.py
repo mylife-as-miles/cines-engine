@@ -259,12 +259,14 @@ def officer(name, variant):
 
 
 def ground(holder):
-    """Stand a figure on the floor: lift or lower it so its lowest point (the soles) sits at z = 0."""
+    """Stand a figure on the floor: lift or lower it so its lowest point (the soles) sits at z = 0. Measured on the
+    shoes and the body only, after two depsgraph passes (a single pass sometimes read a stale garment)."""
+    bpy.context.view_layer.update()
     bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
     lo = 1e9
     for o in [holder] + list(holder.children_recursive):
-        if o.type != "MESH":
+        if o.type != "MESH" or not (o.name == holder["body"] or "shoes" in o.name):
             continue
         ev = o.evaluated_get(dg)
         me = ev.to_mesh()
@@ -302,13 +304,14 @@ def solve_arm(holder, side, target, prefer=(45.0, 10.0, 40.0), fwd=(-20, 100), e
 
 
 def eye_centre(holder):
-    body = holder["body"]
-    pts = []
-    for i in (0, 1):
-        e = bpy.data.objects.get(f"{body}_eye{i}")
-        if e is not None:
-            pts.append(e.matrix_world @ (sum((Vector(c) for c in e.bound_box), Vector()) / 8))
-    return sum(pts, Vector()) / len(pts)
+    """Between the eyes (world), from the head bone itself: 4 cm up the bone and 7.5 cm out of the face. (Reading the
+    statue-eye objects instead proved unreliable here: their bone-parented matrices were sometimes stale when read
+    from Python, which sent gazes to the ceiling.)"""
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones["head"]
+    m = pb.matrix
+    p = m.translation + m.to_3x3().col[1].normalized() * 0.04 + m.to_3x3().col[2].normalized() * 0.075
+    return rig.matrix_world @ p
 
 
 def head_forward(holder):
