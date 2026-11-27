@@ -86,13 +86,21 @@ function search(ctx, t) {
   // typed like a person: 3-4 frames a letter with a fixed jitter, 6-10 frames after each space; the caret is solid
   // while typing and blinks 0.5 s on, 0.5 s off once the query is done
   const q = 'prize contest organizers', start = 0.5, fps = 24, times = [];
-  let tt0 = start; for (let i = 0; i < q.length; i++) { tt0 += (3 + ((i * 7) % 3 === 0 ? 1 : 0) + (q[i - 1] === ' ' ? 5 : 0)) / fps; times.push(tt0); }
+  let tt0 = start; for (let i = 0; i < q.length; i++) { tt0 += (2 + ((i * 7) % 3 === 0 ? 1 : 0) + (q[i - 1] === ' ' ? 4 : 0)) / fps; times.push(tt0); }
   let shown = 0; while (shown < q.length && t >= times[shown]) shown++;
   const s = q.slice(0, shown);
   txt(ctx, s, 160, 162, 28, C.ink);
   ctx.font = '400 28px "Inter"'; const cx = 160 + ctx.measureText(s).width + 2;
   const doneT = times[q.length - 1], blink = t < doneT + 0.1 || Math.floor((t - doneT) / 0.5) % 2 === 1;
   if (blink) { ctx.fillStyle = C.ink; ctx.fillRect(cx, 136, 2, 34); }
+  // suggestions under the field while it is typed (generic, out of focus in the composite), gone when results arrive
+  const sugA = sm((t - start - 0.4) / 0.25) * (1 - sm((t - doneT - 0.4) / 0.3));
+  if (sugA > 0 && shown > 3) {
+    ctx.save(); ctx.globalAlpha = sugA; rr(ctx, 120, 196, 1000, 4 * 54 + 16, 18, '#ffffff');
+    ['prize contest organizers reviews', 'prize contest winners list', 'prize contest travel package', 'prize contest how to claim']
+      .forEach((sg, i) => { ctx.fillStyle = '#9aa0a8'; ctx.beginPath(); ctx.arc(160, 232 + i * 54, 7, 0, 7); ctx.fill(); txt(ctx, sg, 186, 241 + i * 54, 26, C.soft); });
+    ctx.restore();
+  }
   // results arrive a moment after the query: greeked, every one
   const done = doneT + 0.6, a = sm((t - done) / 0.4), r = rand(23);
   if (a > 0) {                     // generic results, no site names; out of focus in the composite

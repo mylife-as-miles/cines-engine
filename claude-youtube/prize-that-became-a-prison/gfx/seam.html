@@ -52,16 +52,16 @@ function cutaway(ctx, t) {
   ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H);
   const vg = ctx.createRadialGradient(W * 0.5, H * 0.5, 120, W * 0.5, H * 0.5, W * 0.62);
   vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-  const X0 = 330, X1 = 1560, Y = 440, D = [170, -136], LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];
+  const X0 = 330, X1 = 1560, Y = 520, D = [170, -136], LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];
   const sA = [X0 + 18, Y + 10], sB = [X1 - 14, Y + 10];               // the cut face's stitch row, end to end
   const tA = [1262, 380], tB = [1735, 380];                            // where the tote's seam was on the cut
   const k0 = (tB[0] - tA[0]) / (sB[0] - sA[0]), e = sm(t / 1.2);       // start scale, eased to 1
   const k = k0 + (1 - k0) * e, ox = (tA[0] - k0 * sA[0]) * (1 - e), oy = (tA[1] - k0 * sA[1]) * (1 - e);
   const drift = 1 + 0.02 * sm(t / 5);
-  const open = sm((t - 1.4) / 0.9) * (1 - sm((t - 3.4) / 0.45));
+  const open = sm((t - 1.3) / 0.8) * (1 - sm((t - 3.6) / 0.45));     // opens, holds 1.5 s, closes
   ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2);
   ctx.translate(ox, oy); ctx.scale(k, k);
-  const ang = 0.085 * open;
+  const ang = 0.12 * open;
   const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
     return [hinge[0] + dx * c - dy * s2, hinge[1] + dx * s2 + dy * c]; };
   const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
@@ -71,10 +71,15 @@ function cutaway(ctx, t) {
       ctx.fillStyle = r() < 0.5 ? 'rgba(255,240,220,0.035)' : 'rgba(0,0,0,0.08)'; ctx.fillRect(x, y, 2 + r() * 3, 1 + r() * 2); }
     ctx.restore(); poly(pts); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.4 / k; ctx.stroke();
   };
+  const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); return '#' + [16, 8, 0].map(b => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join(''); };
+  // a soft contact shadow under the whole section
+  { ctx.save(); const g = ctx.createRadialGradient((X0 + X1) / 2 + 60, Y + LEA + LIN + 40, 40, (X0 + X1) / 2 + 60, Y + LEA + LIN + 40, (X1 - X0) * 0.6);
+    g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.scale(1, 0.18);
+    ctx.fillRect(X0 - 200, (Y + LEA + LIN - 80) / 0.18, X1 - X0 + 520, 600); ctx.restore(); }
   const slab = (pts, face, top, seed) => {
     const T = [pts[0], pts[1], [pts[1][0] + D[0], pts[1][1] + D[1]], [pts[0][0] + D[0], pts[0][1] + D[1]]];
     const S = [pts[1], pts[2], [pts[2][0] + D[0], pts[2][1] + D[1]], [pts[1][0] + D[0], pts[1][1] + D[1]]];
-    leather(T, top, seed); leather(S, face, seed + 1); leather(pts, face, seed + 2);
+    leather(T, top, seed); leather(S, shade(face, 0.72), seed + 1); leather(pts, face, seed + 2);
   };
   const lin = [[X0, Y + LEA], [X1, Y + LEA], [X1, Y + LEA + LIN], [X0, Y + LEA + LIN]].map(([x, y]) => x < hinge[0] ? [x, y] : rot(x, y));
   slab(lin, '#22272e', '#2b3038', 11);
@@ -85,7 +90,7 @@ function cutaway(ctx, t) {
     const q = [mid(l0, l3, 0.25), mid(l1, l2, 0.25), mid(l1, l2, 0.7), mid(l0, l3, 0.7)];
     ctx.save(); ctx.globalAlpha = a2; poly(q); ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.2 / k; ctx.stroke(); ctx.restore();
   }
-  slab([[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]], '#3b342d', '#4a4239', 21);
+  slab([[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]], '#3b342d', '#5a5046', 21);
   // the seam, in the film's red: a dashed running stitch along the cut face and along the receding top edge (one line
   // along the projected edge), stitch holes at each end, and stitches through both layers at the hinge
   ctx.save(); ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.2 / Math.max(k, 0.6); ctx.setLineDash([11, 11]);
@@ -98,11 +103,15 @@ function cutaway(ctx, t) {
   grain(ctx, t);
 }
 window.draw = (mode, t) => {
-  const ctx = document.getElementById('c').getContext('2d'); ctx.clearRect(0, 0, W, H);
+  const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+  if (mode !== 'cutaway') {                       // plate and trace pushed together (2 % a second toward the seam), so they stay registered
+    const z = 1 + 0.02 * t, fx = 1500, fy = 380; ctx.setTransform(z, 0, 0, z, fx * (1 - z), fy * (1 - z));
+  }
   if (bgImg && mode !== 'cutaway') ctx.drawImage(bgImg, 0, 0, W, H);
   if (mode === 'flash') trace(ctx, pts(), sm(t / 0.6));
   else if (mode === 'trace') trace(ctx, pts(), sm(t / 1.8));
   else if (mode === 'cutaway') cutaway(ctx, t);
+  if (mode !== 'cutaway' && bgImg) { ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t); }
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
 fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });

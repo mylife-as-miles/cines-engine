@@ -24,12 +24,12 @@
     "I am currently busy helping my father through cancer treatment but I am"
   ],
   "zoom": [
-    4.5,
-    4.95
+    3.85,
+    4.1
   ],
   "end_offset": [
-    0,
-    6
+    55,
+    -10
   ],
   "roll_deg": -9,
   "focus_band": {
