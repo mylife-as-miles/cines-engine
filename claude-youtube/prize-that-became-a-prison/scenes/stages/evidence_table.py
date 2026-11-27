@@ -419,7 +419,7 @@ def laptop():
     """The laptop prop open at the back of the table, its screen switched on to a blank page: a glowing panel inset
     in the lid's bezel and a weak area light in front of it, so the glow falls on what is near."""
     m = materials()
-    h = props.load("laptop", size=0.36, axis="long", loc=(0, 0, 0), turn_deg=0, sat=0.45, val=0.8, rough_add=0.12)
+    h = props.load("laptop", size=0.36, axis="long", loc=(0, 0, 0), turn_deg=0, sat=0.45, val=0.8, rough_add=0.45)
     # find the lid's inner face (it looks along -X in the file) by rays from the keyboard side
     tree = world_bvh(h)
     hits = []
@@ -479,6 +479,15 @@ def laptop():
     gasket.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.14
     liner = sk.box("LCD inner bezel", (w + 0.011, hh + 0.010, 0.0003), (0, 0, 0), gasket)
     liner.matrix_world = Matrix.Translation(centre - nrm * 0.00032) @ rot.to_4x4()
+    # The generated chin bows out beyond the inner gasket. Fit a blank strip
+    # in front of its highest point without moving the active display.
+    chin_y = s0 - 0.012
+    chin_height = 0.020
+    chin_depths = [dev(w * (i / 80 - 0.5), chin_y + chin_height * (j / 6 - 0.5))
+                   for i in range(81) for j in range(7)]
+    chin_proud = max(d for d in chin_depths if d is not None)
+    chin = sk.box("plain laptop lid chin", (w + 0.011, chin_height, 0.0004), (0, 0, 0), gasket, bevel=0.00015)
+    chin.matrix_world = Matrix.Translation(base + up * chin_y + nrm * (chin_proud + 0.0005)) @ rot.to_4x4()
     group("screen spill", liner)
     # the screen's spill: an area light the size of the panel, 2 cm in front of it, so a cool pool about 30 cm deep
     # falls on the table and the mug's side
@@ -492,8 +501,12 @@ def laptop():
     fx.matrix_world = Matrix.Translation(centre)
     # The generated key deck has pale shapes on the keycaps. Fit an unlettered
     # insert over the measured deck (23 mm above the slab) for the screen close-up.
-    deck = sk.box("laptop key well", (0.132, 0.325, 0.0034), (-0.009, 0, 0.0236),
-                  mt.plastic("keyboard surround", (0.019, 0.021, 0.023), 0.65, spec=0.24), bevel=0.0015)
+    surround = mt.plastic("keyboard surround", (0.019, 0.021, 0.023), 0.65, spec=0.24)
+    deck = sk.box("laptop key well", (0.132, 0.325, 0.004), (-0.009, 0, 0.025), surround, bevel=0.0015)
+    deck_back = 0.057
+    lid_foot = xs(zbot) - 0.002
+    hinge = sk.box("laptop hinge cover", (lid_foot - deck_back, 0.325, 0.004),
+                   ((lid_foot + deck_back) / 2, 0, 0.0252), surround, bevel=0.0015)
     bm = bmesh.new()
     rows = ((1,) * 14, (1.4,) + (1,) * 12 + (1.4,), (1.65,) + (1,) * 11 + (1.95,),
             (2,) + (1,) * 10 + (2.5,), (1.4, 1.3, 1.3, 5.9, 1.3, 1.3, 1.4))
@@ -502,17 +515,17 @@ def laptop():
         y0 = -0.154
         for unit in units:
             span = unit * pitch
-            add_box(bm, (0.017, span - 0.0023, 0.0023), (0.035 - row * 0.022, y0 + span / 2, 0.026))
+            add_box(bm, (0.017, span - 0.0023, 0.0023), (0.035 - row * 0.022, y0 + span / 2, 0.0285))
             y0 += span
     keys = bevelled(mesh_obj("laptop blank keys", bm, mt.plastic("blank laptop caps", (0.023, 0.025, 0.027), 0.77, spec=0.18, scuff=0.05)),
                     0.0008, 2)
     x, y, t = LAPTOP
     place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
-    for o in (scr, li, fx, deck, keys, liner):
+    for o in (scr, li, fx, deck, keys, liner, hinge, chin):
         o.matrix_world = place @ o.matrix_world
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
-    return [h] + list(h.children_recursive) + [scr, li, deck, keys]
+    return [h] + list(h.children_recursive) + [scr, li, deck, keys, hinge, chin]
 
 
 def tote_topstitch(holder):
