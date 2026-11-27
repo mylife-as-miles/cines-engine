@@ -49,7 +49,7 @@ AXIS = Vector((0.0, 0.68, -0.73)).normalized()
 # Ch 04: the lamp as near the bags as it can stand without its head entering the purses frame (checked by projecting
 # the lamp's mesh), turned toward the tote so the row falls off evenly from the burgundy bag to the cognac one
 LAMP = {"spread": (-0.48, 0.12, -111.0), "ch02": (-0.55, 0.16, -83.0), "ch04": (-0.84, -0.38, -70.0)}
-LAMP_LEVEL = {"ch02": 0.25, "ch04": 2.2}   # Ch 02 is night at the laptop: the lamp turned down so the screen leads
+LAMP_LEVEL = {"ch02": 0.25, "ch04": 2.2, "plate": 1.48}   # Ch 02 is night at the laptop: the lamp turned down so the screen leads
 # the reflector's cone per beat (full angle, blend): a pool with a soft edge, not a flood. Ch 04 opens it a little so
 # the cone still reaches the tote at the far end of the row (the lamp cannot come nearer without entering the frame)
 SPOT = {"spread": (72.0, 0.70), "ch02": (75.0, 0.55), "ch04": (90.0, 0.55)}
@@ -63,8 +63,8 @@ HIDE = {
 }
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
-HIDE["document"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials", "open booklet", "booklet on wood")
+HIDE["document"] = HIDE["plate"] = DOCUMENT_PROPS
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "page marker", "screen spill", "entry stationery", "art materials", "open booklet", "booklet on wood")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -104,18 +104,20 @@ CAMERAS = {
     # the passes behind fall under it, helped by a graduated net off the lamp
     "passport": dict(loc=(-0.102, -0.41, TOP + 0.27), aim=(-0.252, -0.056, TOP + 0.010), lens=64, focus="fx_passport", fstop=4.8,
                      beat="spread", show=("net_passport", "cover light"), hide=("envelope",), lamp=(-0.81, -0.36, -64.0)),
-    "page": dict(loc=(0.0, -0.45, TOP + 0.752), aim=(0.0, -0.012, TOP), lens=50,
-                 focus="fx_page", fstop=5.6, beat="document", show=("page sheet", "document tools"),
-                 lamp=(-0.40, 0.20, -123.0), exposure=-1.55, final_res=(2560, 1440)),
-    "pair": dict(loc=(0.02, -0.508, TOP + 0.82), aim=(0.0, -0.008, TOP), lens=54,
-                 focus="fx_page", fstop=6.3, beat="document", show=("pair sheets", "document tools"),
-                 lamp=(-0.40, 0.20, -122.0), exposure=-1.4, final_res=(2560, 1440)),
+    "page": dict(loc=(0.05, -0.47, TOP + 0.785), aim=(0.05, -0.012, TOP), lens=50,
+                 focus="fx_page", fstop=5.6, beat="plate", show=("page sheet", "document tools", "page marker"),
+                 lamp=(-0.35, 0.20, -123.0), exposure=-1.55, final_res=(2560, 1440)),
+    "pair": dict(loc=(0.07, -0.508, TOP + 0.82), aim=(0.05, -0.008, TOP), lens=54,
+                 focus="fx_page", fstop=6.3, beat="plate", show=("pair sheets", "document tools"),
+                 lamp=(-0.35, 0.20, -122.0), exposure=-1.4, final_res=(2560, 1440)),
     "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.110), lens=50,
                    focus="fx_screen", fstop=2.2, beat="ch02", show=("screen spill",), hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
-                   exposure=-1.6),
+                   exposure=-1.6, final_res=(2560, 1440)),
 
 }
 
+CAMERAS["page_foot"] = dict(CAMERAS["page"], loc=(0.03, -0.306, TOP + 0.346), aim=(0.03, -0.105, TOP),
+                           focus="fx_page_foot", fstop=8.0, show=("page sheet",))
 CAMERAS["laptop_before"] = dict(CAMERAS["laptop"],
                                hide=CAMERAS["laptop"]["hide"] + ("passes_c2", "passport_c2"),
                                show=CAMERAS["laptop"]["show"] + ("booklet on wood",))
@@ -158,6 +160,9 @@ def materials():
         floor=mt.matte("floor", (0.018, 0.017, 0.016), 0.7),
         wall=mt.plaster("wall plaster"),
         paper=mt.paper("paper", (0.74, 0.71, 0.64), 0.86, 0.05, 0.04, translucency=0.24, edge_tone=(0.21, 0.297)),
+        plate_paper=mt.paper("plate paper", (0.80, 0.74, 0.60), 0.88, fibre=0.02, smudge=0.0, translucency=0.10),
+        plate_wood=mt.worn_wood("document plate wood", TW / 4, -TW / 2, rough=0.63,
+                                rings=((0.585, -0.33, 0.041), (-0.42, 0.43, 0.04)), front_y=-TW / 2, scratches=0.5),
         paper2=mt.paper("paper 2", (0.71, 0.69, 0.63), 0.86, 0.05, 0.06, edge_tone=(0.21, 0.297)),
         letter=mt.paper("letter paper", (0.73, 0.7, 0.62), 0.85, 0.05, 0.05, edge_tone=(0.21, 0.297)),
         cream=mt.paper("envelope paper", (0.68, 0.62, 0.5), 0.82, 0.06, 0.05),
@@ -346,7 +351,7 @@ def lamp():
     bpy.context.view_layer.update()
     parts.extend((arm, cone_haze(density=0.055)))
     bpy.context.view_layer.update()
-    for o in (spot, glow, rim):
+    for o in (spot, glow, rim, arm):
         o["energy0"] = o.data.energy
     _STATE["lamp"] = h
     _STATE["lamp_parts"] = [(o, o.matrix_world.copy()) for o in parts]
@@ -466,6 +471,11 @@ def laptop():
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
     scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 3.2, w, hh), smooth=False)
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
+    # A narrow matte bezel covers the uneven strip between the generated lid and the flat LCD.
+    liner = sk.box("LCD inner bezel", (w + 0.007, hh + 0.007, 0.0003), (0, 0, 0),
+                   mt.matte("LCD bezel", (0.012, 0.014, 0.016), 0.72))
+    liner.matrix_world = Matrix.Translation(centre - nrm * 0.00032) @ rot.to_4x4()
+    group("screen spill", liner)
     # the screen's spill: an area light the size of the panel, 2 cm in front of it, so a cool pool about 30 cm deep
     # falls on the table and the mug's side
     li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 22.0, COOL, spread_deg=150)
@@ -494,7 +504,7 @@ def laptop():
                     0.0008, 2)
     x, y, t = LAPTOP
     place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
-    for o in (scr, li, fx, deck, keys):
+    for o in (scr, li, fx, deck, keys, liner):
         o.matrix_world = place @ o.matrix_world
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
@@ -590,17 +600,22 @@ def document_plates():
     m = materials()
     keep = list(pp.SUPPORT)
     wood = [o for o in keep if o.name == "table_top"]
-    for group_name, name, x, y, turn in (("page sheet", "document_single", 0, 0, -40),
-                                          ("pair sheets", "document_left", -0.114, 0.004, 1.8),
-                                          ("pair sheets", "document_right", 0.115, -0.005, -1.5)):
+    for group_name, name, x, y, turn in (("page sheet", "document_single", 0.05, 0, -18),
+                                          ("pair sheets", "document_left", -0.064, 0.004, 1.8),
+                                          ("pair sheets", "document_right", 0.165, -0.005, -1.5)):
         # A flat A4 spans the narrow board joints instead of conforming to their bevels.
         pp.SUPPORT.clear()
-        group(group_name, pp.sheet(name, m["paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0))
+        sheet = pp.sheet(name, m["plate_paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0)
+        for face in sheet.data.polygons:
+            face.use_smooth = False
+        group(group_name, sheet)
     pp.SUPPORT[:] = wood
-    group("document tools", pp.pen("document_pen", m["pen"], m["chrome"], m["chrome"], -0.222, -0.062, 86))
-    group("document tools", pp.highlighter("document_highlighter", m["hl_body"], m["hl_cap"], 0.258, 0.045, 74))
+    group("document tools", pp.pen("document_pen", m["pen"], m["chrome"], m["chrome"], -0.21, 0.02, 80))
+    marker = mt.plastic("yellow document marker", (0.80, 0.60, 0.035), 0.48)
+    group("page marker", pp.highlighter("document_highlighter", marker, m["hl_cap"], 0.19, -0.015, 72))
     pp.SUPPORT[:] = keep
-    empty("fx_page", (0, -0.055, TOP + 0.0003))
+    empty("fx_page", (0.05, -0.055, TOP + 0.0003))
+    empty("fx_page_foot", (0.03, -0.105, TOP + 0.0003))
 
 
 def entry_stationery():
@@ -659,7 +674,8 @@ def entry_stationery():
 
 def frame_metadata(name, scene, resolution):
     """Export paper corners, clockwise in document reading order, in top-left-origin frame pixels."""
-    names = {"page": ("document_single",), "pair": ("document_left", "document_right")}
+    names = {"page": ("document_single",), "page_foot": ("document_single",),
+             "pair": ("document_left", "document_right"), "screen": ("laptop_screen",)}
     if name not in names:
         return None
     pages = []
@@ -668,11 +684,16 @@ def frame_metadata(name, scene, resolution):
     for sheet_name in names[name]:
         sheet = bpy.data.objects[sheet_name].evaluated_get(dg)
         corners = {}
-        for label, x, y in (("top_left", -0.105, 0.1485), ("top_right", 0.105, 0.1485),
-                            ("bottom_right", 0.105, -0.1485), ("bottom_left", -0.105, -0.1485)):
+        xmax = max(v.co.x for v in sheet.data.vertices)
+        ymax = max(v.co.y for v in sheet.data.vertices)
+        for label, x, y in (("top_left", -xmax, ymax), ("top_right", xmax, ymax),
+                            ("bottom_right", xmax, -ymax), ("bottom_left", -xmax, -ymax)):
             vertex = min(sheet.data.vertices, key=lambda v: ((v.co.x - x)**2 + (v.co.y - y)**2, -v.co.z))
             p = world_to_camera_view(scene, scene.camera, sheet.matrix_world @ vertex.co)
             corners[label] = [round(p.x * width, 3), round((1 - p.y) * height, 3)]
+        if name == "screen":
+            return {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge",
+                    "screen": sheet_name, "corners": corners}
         pages.append({"sheet": sheet_name, "corners": corners})
     return {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge", "pages": pages}
 
@@ -695,7 +716,7 @@ def spread():
     # the passport across the passes' plain ends, clear of pass_2's bent stub
     group("passport", pp.passport("passport", m["cover"], m["pages"], -0.252, -0.06, -123.0, open_deg=4.0, m_end=m["endpaper"], m_slip=m["card"]))
     group("letter", pp.sheet("letter", m["letter"], 0.21, 0.297, 0.31, -0.205, -14.0, shape="trifold"))
-    group("letter", pp.pen("pen", m["pen"], m["chrome"], m["chrome"], 0.25, -0.29, 31.0))
+    group("letter", pp.pen("pen", m["pen"], m["chrome"], m["chrome"], 0.19, -0.32, -72.0))
     group("photos", pp.photo_print("photo_1", m["photo_1"], 0.152, 0.102, 0.265, 0.095, 12.0, seed=2))
     group("photos", pp.photo_print("photo_2", m["photo_2"], 0.127, 0.178, 0.372, 0.045, -8.0, curl=0.003, seed=5))
     group("photos", pp.photo_print("photo_3", m["photo_3"], 0.152, 0.102, 0.205, 0.205, -5.0, curl=0.0022, seed=8))
@@ -759,6 +780,18 @@ def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "spread")
     set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
+    plate = beat == "plate"
+    for ob in _STATE["lamp"].children_recursive:
+        if ob.type == "MESH":
+            ob.visible_camera = not plate
+    for obj_name in ("lamp_spot", "lamp_glow", "lamp_bulb"):
+        ob = bpy.data.objects[obj_name]
+        ob.visible_glossy = not plate
+        if ob.type == "LIGHT":
+            ob.data.specular_factor = 0.0 if plate else 1.0
+        else:
+            ob.visible_camera = not plate
+    bpy.data.objects["table_top"].data.materials[0] = M["plate_wood" if plate else "wood"]
     sc = bpy.context.scene
     air = bpy.data.objects["table air"].data.materials[0]
     volume = next(n for n in air.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")

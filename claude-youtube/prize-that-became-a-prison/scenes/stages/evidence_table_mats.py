@@ -141,7 +141,7 @@ def _scratches(nt, o, angle, density, scale=(1.0, 260.0, 1.0)):
 # ---------------------------------------------------------------- wood
 
 def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019, 0.011), rough=0.46, rings=(),
-              front_y=None):
+              front_y=None, scratches=1.0):
     """A dark, much-used table top of flat-sawn boards along X (board i covers y0 + i*plank_w .. +plank_w in object
     space): growth rings round a pith below each board (the cathedral figure), pores, each board its own tone and
     figure, a worn finish where arms rest along the front edge, scratches in two directions, dents, sanded-pale
@@ -190,6 +190,7 @@ def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019,
     s2 = _scratches(nt, o, -0.9, 0.45, scale=(1.0, 320.0, 1.0))
     s3 = _scratches(nt, o, 1.45, 0.25, scale=(2.0, 180.0, 1.0))
     scr = _math(nt, "MAXIMUM", _math(nt, "MAXIMUM", s1, s2), s3)
+    scr = _math(nt, "MULTIPLY", scr, scratches)
     col = _mix(nt, _math(nt, "MULTIPLY", scr, 0.55), col, (0.15, 0.11, 0.075))
     # pale sanded arrises (convex edges) and grime in the joints (concave)
     edge = _maprange(nt, _ao(nt, 0.004, inside=True), 0.6, 1.0, 1.0, 0.0)
