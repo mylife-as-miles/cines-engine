@@ -25,6 +25,7 @@ import props  # noqa: E402
 
 CAP = os.path.join(props.PROPS, "peaked-cap.glb")  # generated with Tripo on the author's account: licence-clean
 BLACK_SHOE = (0.045, 0.043, 0.042)
+PRISON_UNIFORM = "male_casualsuit03"  # loose collared shirt with full sleeves and straight trousers
 
 # Fabric (measured 26 Nov 2026): next to the stone skin (0.5), a garment at 0.09 shows as mid grey on screen (18 % of
 # white is mid grey), and Blender's default specular (0.5) under the films' big soft lights adds a grey sheen even to
@@ -105,12 +106,38 @@ def dawn():
     return h
 
 
-def dawn_prison():
-    """Dawn in detention, court and prison (Ch 06-08): the casual suit in flat institutional grey, black flats."""
+def dawn_prison(*, uniform=False):
+    """Dawn in detention, court and prison (Ch 06–08). Set uniform=True for the long-sleeved outfit.
+
+    The default keeps the short-sleeved garment used by earlier shots. For stage-local mesh work,
+    the long-sleeved garment's object name is holder.name + "_" + PRISON_UNIFORM.
+    """
     h = cast.person("DawnPrison", gender=0.0, height_cm=168, age=0.5, weight=0.42, hair="bun")
-    _dress(h, ["female_casualsuit01", "shoes04"],
-           tint={"female_casualsuit01": (0.075, 0.078, 0.082), "shoes04": BLACK_SHOE},
-           flat=("female_casualsuit01", "shoes04"))
+    garment = PRISON_UNIFORM if uniform else "female_casualsuit01"
+    outfit = _dress(h, [garment, "shoes04"], tint={garment: (0.075, 0.078, 0.082), "shoes04": BLACK_SHOE},
+                    flat=(garment, "shoes04"))
+    if uniform:
+        # The stock work shirt has pinstripes and jeans hardware in its atlas. Keep the modelled
+        # collar, cuffs, placket and hems, with plain cloth on the entire fitted garment.
+        suit = outfit[0]
+        # The female morph narrows the stock trouser ankles to 9 cm. Put ease back into
+        # the pattern below the knee so the cuffs fall over the shoes and follow the rig.
+        offsets = []
+        for v in suit.data.vertices:
+            ease = 0.023 * max(0.0, min(1.0, (0.68 - v.co.z) / 0.44))
+            normal = v.normal.copy()
+            normal.z = 0.0
+            offsets.append(normal.normalized() * ease)
+        for v, offset in zip(suit.data.vertices, offsets):
+            v.co += offset
+        suit.data.update()
+        for slot in suit.material_slots:
+            bsdf = next(n for n in slot.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+            for link in list(bsdf.inputs["Normal"].links):
+                slot.material.node_tree.links.remove(link)
+            bsdf.inputs["Specular IOR Level"].default_value = 0.13
+            bsdf.inputs["Roughness"].default_value = 0.91
+        _plain_flats(h)
     return h
 
 
