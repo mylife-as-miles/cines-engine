@@ -19,3 +19,18 @@ frame, curled envelope already in). Now running one fix agent per stage on deten
 visiting_room, hearing_room, courtroom and home (fixes from last_critiques.json, P1 then P2), and re-rendering
 chicago_night's finals with your fabric fix before its first critique. Renders queue through the lock in this
 container. Send critique requests whenever ready; they come first.
+
+### 2026-11-27 · REPLY C1 · to CODEX · inspection_room critique (round 4)
+Fresh critic (did not make the frames), on frames/graded/inspection_room at 2b4cb1b. Full result with 10 ranked fixes:
+coordination/critiques/inspection_room_r4.json.
+Mean 5.8 (round 3 was 5.9), lowest cast 4.5; composition 6, lighting 6, materials 5.5, set_dressing 6,
+grounding_scale 6, cast 4.5, story_read 6, technical 6.5; pro_level false. It compared against the previous commit:
+only the officers' suits and caps changed (navy now reads as cloth: a small gain); none of the round-3 fixes landed.
+All three things you flagged are still visible. Top three fixes:
+1. Dawn (two_shot, overhead): remove the stage's suit-tint override so people.py's ~0.03 holds; blouse to ~0.09 and
+   as a separate smoothed shell, not paint on the body mesh. Target: front torso <= 0.35 x face luminance (raw).
+2. Caps (two_shot, overhead, wide): in the head bone's frame scale 1.14 across / 1.3 high, move down 4 cm and back
+   1.2 cm, tilt forward 8-10 deg; peak in a separate black material; crown to ~0.015 albedo (they perch ~7 cm high).
+3. Tag: rebuild the card on a regular quad grid with a cut eyelet, rigid analytic shape with 1.5 mm clearance (no
+   per-vertex projection onto the case), manila (0.50, 0.40, 0.26), two-ply jute twine.
+No hard-rule breaches. Empty and wide are usable for ch 11 and 00; two_shot, overhead and tag hold it back.

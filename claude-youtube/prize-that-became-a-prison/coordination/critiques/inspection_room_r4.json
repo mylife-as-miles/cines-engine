@@ -1,0 +1,79 @@
+{
+ "stage": "inspection_room",
+ "round": 4,
+ "commit": "2b4cb1b",
+ "scores": {
+  "composition": 6,
+  "lighting": 6,
+  "materials": 5.5,
+  "set_dressing": 6,
+  "grounding_scale": 6,
+  "cast": 4.5,
+  "story_read": 6,
+  "technical": 6.5
+ },
+ "pro_level": false,
+ "verdict": "Not pro level, and barely changed from round 3. A pixel diff against the round-3 finals shows that only the officers' suits and caps changed (mean difference 1.1-2.2/255, all of it on the two officers); the officers now read as navy cloth against stone faces, but none of the nine round-3 fixes landed, and the three problems the author names are still there: in the two_shot Dawn's front still reads as a bare stone torso with a modelled bust, both caps perch high on the crown like small flat discs (pale plates from overhead, with Officer A's bald skull showing behind his), and the tag still puckers like cloth and has gouges. Empty and wide remain usable Ch 11 and Ch 00 images; two_shot, overhead and tag are what keep the stage below a fern film.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "two_shot (also overhead)",
+   "problem": "Dawn reads as undressed from the front. In the raw two_shot her face is 161-169/255, her front torso 106-110 and her sleeve 67-72, all the same neutral hue as the stone, with the sculpted bust and no garment edge. This frame did not change at all since round 3. The cause is in inspection_room.dawn(). cloth() re-tints the suit to (0.14, 0.135, 0.128), about 4.5 times people.py's fabric value (0.075 x 0.4 = 0.03). castkit.blouse_v paints the open front of the body mesh at 0.24, half the stone value, and the paint keeps the body's anatomy. From the end of the bench, almost all you see of her is that painted body. From overhead, her shoulders (raw 102) are barely darker than her head (124).",
+   "fix": "In inspection_room.dawn(), drop the tint override: call cloth(h, 'female_elegantsuit01', rough=0.92, bump=0.3) with tint=None so that people.py's umber at about 0.03 holds. If you keep an override, use no more than (0.034, 0.028, 0.024). Print each slot's resolved Base Color to confirm it lands. Set blouse_v rgb to about (0.09, 0.085, 0.08). Do not paint the blouse onto the body. Make it a separate shell: duplicate the blouse_v faces into a new object, add Solidify 2 mm outward and a Laplacian Smooth (lambda 1.0, 15-20 repeats, preserve volume) so the bust becomes a soft fabric drape, then add an Armature modifier on the same rig and give the neckline a hem_thickness(0.004) edge. Test in a 960x540 two_shot: the front torso should be no more than about 0.35x the face (55/255 or less against about 160) and the sleeve 40/255 or less. From overhead, the shoulders should read clearly darker than the hair."
+  },
+  {
+   "priority": 1,
+   "camera": "two_shot, overhead, wide",
+   "problem": "The caps sit high and read as small flat discs balanced on the crown. In the two_shot, Officer A's band sits about 7 cm above the brow with about 4 cm of sculpted hair visible below it. Officer B's cap is a flat navy saucer on top of his head that merges with the dark wall. From overhead, both crowns are pale blue-grey plates (Officer A graded 96-131/255, lighter than his shoulders), and Officer A's cap sits forward of his skull, so a bald white dome (graded 141-157) shows behind it. cast.hat sizes the cap to 1.06 x the bare head width, which ignores the hair, and seats the cap's lowest vertex (probably the peak's tip) 3 cm above the brow, so the band ends up higher still.",
+   "fix": "In inspection_room.officer(), after people.officer(), take each object whose material is hat_<name> and change its mesh in the head bone's (DEF-spine.006) frame. Scale it 1.14 in X/Y about the band centre so the band clears the sculpted hair, and 1.3 in Z so the crown has height. Move it down 0.04 m and back 0.012 m. Pitch it forward 8-10 deg so the peak drops over the brow. Check from the two_shot that the band's lower edge sits 1.5-2.5 cm above the brow ridge, covers the hair at the temples, and leaves the top of the ear just clear. Check from overhead that the crown oval covers the whole skull with no pale dome showing. Give the peak its own material: assign the faces whose centre lies in front of the band (local -Y beyond 0.8x the band radius) and below the crown top a black of (0.01, 0.01, 0.012), roughness 0.3. Lower the crown albedo to about (0.015, 0.018, 0.03) so that from overhead it grades to 60/255 or less."
+  },
+  {
+   "priority": 2,
+   "camera": "tag",
+   "problem": "The tag still looks like soft fabric, not card. It has radial puckers round the eyelet, a dark crease slash right of the eyelet, a soft fold across the middle and dark gouges at the lower left (raw, around x 630-720, y 510-560), and its lower edge is lumpy. Two causes are in luggage_tag(). First, height() follows per-vertex ray hits on the case surface (drop()), so the case's wrinkles, zip seam and handle base press into the card; where the case rises above the 0.6 mm offset it pokes through, which makes the gouges. Second, the outline and hole are triangle_fill'ed, then subdivided and triangulated, which leaves long thin triangles that fan out from the eyelet; with smooth shading their normals read as radial puckers. The colour also fails: the raw cream (208, 201, 186) grades to neutral grey-white (191, 194, 191), and the twine is a smooth grey tube (raw 137, 134, 127).",
+   "fix": "Rebuild the card on a regular quad grid, about 18 x 32 over 54 x 96 mm. Cut the eyelet by deleting the faces inside r = 2.7 mm and bridging the edge to a ring of 20 verts, not with triangle_fill. Add a Weighted Normal modifier (keep sharp). Replace the per-vertex drop() with a rigid profile: a plane from the knot at 20 deg, one cylindrical bend of radius 15-20 mm onto a flat plane at max(drop()) taken over the whole footprint + 1.5 mm, then the overhang bend at radius about 30 mm. Remove the max-average smoothing loop. Add one dog-eared free corner (a 4 mm triangle folded 30 deg). Card material: manila albedo (0.50, 0.40, 0.26), roughness 0.9, fibre bump (noise scale 2000, strength 0.04). Aim for raw around (175, 145, 100), so it grades buff, not white. Twine: two 0.45 mm bevel curves twisted round the path at a 3 mm pitch, jute (0.42, 0.34, 0.22), roughness 0.9."
+  },
+  {
+   "priority": 2,
+   "camera": "overhead",
+   "problem": "The discovery beat is still weak, unchanged since round 3. Officer A's right hand is a white splayed mitt on the tote, graded 194-206/255 and the brightest thing in frame. Extra-bag-open reads as closed. Dawn's hands are white claws at her sides. 23% of the graded frame is at 3/255 or below, and the floor 1.5 m from the bench grades to 2-6.",
+   "fix": "For this camera, call hands_stone(value=0.22) on all three figures, or light-link the troffer area light to exclude the hands and add a 0.5x copy for them. Curl Officer A's fingers 25-30 deg so they rest on the tote's handle, not flat on its body. Turn extra-bag-open so its zip mouth faces the lens, open the zip 8-10 cm (scale the opening verts apart) and give the inside a lining at 0.10 so it reads as a dark slot with a lit lip. Lift the floor with a 6-10 W, 2 m square area light linked to the floor only, or cut this camera's vignette by about 40%, so the tile 1.5 m out sits at about 10-18/255 graded."
+  },
+  {
+   "priority": 3,
+   "camera": "two_shot",
+   "problem": "The framing is unchanged since round 3. The ceiling takes about 47% of the frame (the ceiling/back-wall line is at y 338 of 720), and the bottom edge cuts Dawn through her hands. Officer A's splayed fingertips touch the bottom-right corner of the bright vision panel (about x 735, y 530), a tangency. Officer B's behind-the-back hand pokes out white and splayed at x 1180-1200.",
+   "fix": "Lower the aim from z 1.82 to about 1.60, keeping loc (or raise loc z to 1.40 and aim at 1.62), so the ceiling takes 30% of the frame or less and the troffer stays whole in frame. Move the duffel_hover reach target 8 cm toward the bench and 5 cm down, or slide the camera 0.10 m in +Y, so the palm sits on the plain door at least 15 px below the panel. Curl Officer A's fingers 20-25 deg with the thumb slightly out. For Officer B, set fingers to 55 and tuck the 'behind' wrists 5 cm closer to the spine."
+  },
+  {
+   "priority": 3,
+   "camera": "wide, empty",
+   "problem": "The X-ray scanner is unchanged since round 3. It is a plain grey box, its curtain is five flat panels, its monitor is a white card with no bezel and no spill (the second-brightest object in the wide), and its right side sinks into black. Three pale wall boxes at the right (with dark sockets) pull the eye.",
+   "fix": "Bevel the housing edges at 2 cm and add 2 mm access-panel seams and a kick plate. Replace the curtain with 9-10 lead-rubber strips, 4 mm thick (0.02, roughness 0.6), with 3 mm gaps and +/-3 deg random X rotation. Give the monitor a 3 cm bezel (0.03) round a recessed face emitting cool grey at strength 0.8-1.2, with an 8-12 W area light 15 cm in front aimed at the scanner top. Add a 10-15 W area light or a small green status lamp at the exit end so the right side holds at about 8-12% value. Darken the three wall boxes to the wall's value or delete them."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "Officer A's 'palm-up' gesture still reads palm-down and splayed, as if he is pressing on the duffel. Officer B's shoe under the bench reads pale statue grey (raw 92-99/255), not black.",
+   "fix": "Roll Officer A's right forearm a further 40-60 deg so the palm faces up, curl the fingers 20-25 deg and raise the hand to about 8 cm above the duffel. Force both officers' shoe material Base Color to (0.015, 0.015, 0.017), roughness 0.35, unlinking any texture input. The raw value shows people.py's BLACK_SHOE tint is not landing on shoes03."
+  },
+  {
+   "priority": 4,
+   "camera": "wide, two_shot, overhead",
+   "problem": "The cognac tote still grades to khaki or beige (graded 163/158/141; raw 184/160/117) and reads yellow next to the white hand overhead.",
+   "fix": "In the tote's load args, shift the hue about -0.02 toward red-brown, lower val by about 20% and raise sat by about 0.15. Target a graded tan-brown of about (120, 85, 55). Add an AO-driven 0.7x darkening on the handles and seams to suggest edge paint."
+  },
+  {
+   "priority": 5,
+   "camera": "tag",
+   "problem": "In the close-up the case top reads mid-light grey (raw 129-145), while the case front is near black in every other camera (raw 6-10).",
+   "fix": "Drop the tag camera's exposure from -3.5 to about -4.1, or cut tag_rake from 150 W to about 95 W, so the ballistic nylon reads charcoal and the manila tag is the only light object."
+  },
+  {
+   "priority": 5,
+   "camera": "overhead",
+   "problem": "Seen straight down, the bench top still shows horizontal ripple streaks round the tote, which read as wood grain or water on steel.",
+   "fix": "Halve the contrast of the brushed-steel streaks (narrow the ColorRamp or set anisotropy to about 0.3) and add a faint large-scale wipe/smudge roughness variation (noise scale 3-5, roughness 0.35-0.5)."
+  }
+ ]
+}
