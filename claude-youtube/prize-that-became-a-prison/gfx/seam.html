@@ -89,5 +89,5 @@ window.draw = (mode, t) => {
   else if (mode === 'cutaway') cutaway(ctx, t);
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
-fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : 'shots/purses_seam_proto.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
+fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
 </script></body></html>

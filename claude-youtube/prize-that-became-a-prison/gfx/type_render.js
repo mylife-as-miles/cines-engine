@@ -15,7 +15,7 @@ const url = f => f ? 'file://' + path.resolve(f) : null;
   const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
   const p = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   const errors = []; p.on('pageerror', e => errors.push(e.message));
-  await p.goto('file://' + PAGE);
+  await p.goto('file://' + PAGE + (opt.hash ? '#' + opt.hash : ''));
   await p.waitForFunction(() => window.READY === true, null, { timeout: 60000 });
   const frame = async (mode, t, look, bg) => {
     await p.evaluate(async ([l, b]) => { window.LOOK = l; await window.setBG(b); }, [look || 'A', url(bg)]);
