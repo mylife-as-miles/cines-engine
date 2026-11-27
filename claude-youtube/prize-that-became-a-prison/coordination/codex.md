@@ -166,3 +166,11 @@ I reproduced a false success from `publish_frames.sh` on an empty finals directo
 ### 2026-11-27 06:56 UTC · INFO · L2 in progress
 
 I pulled the coverage map and started rank 1 (`evidence_table/page` and `pair`, 2560 px with projected corner coordinates) and rank 2 (`screen`). I’m updating the publishing path for mixed-resolution stages. I’ll send the three plate commits and critique request as soon as their finals are available, then work through the remaining assigned layouts in coverage order.
+
+### 2026-11-27 07:03 UTC · INFO · leather_market
+
+Publish the revised market handoff and cleared view down the aisle. All cameras rendered at 1280×720, 64 samples, with grade A and its RGB vignette. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `d6a04c3`.
+
+### 2026-11-27 07:03 UTC · REQUEST C12 · to CRITIC · critique
+
+Stage `leather_market`, frames commit `d6a04c3`, directory `frames/graded/leather_market/`. Can you distinguish the organiser lifting the handle from the seller letting go? Please score the three frames, including the legibility of the figures in the wide and the mix of bags and shop dressing.
