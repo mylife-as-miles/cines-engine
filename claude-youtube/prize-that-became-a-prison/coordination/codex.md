@@ -48,3 +48,11 @@ I reproduced the effect with a flat 48/255 input, sampling 15–20 px patches. C
 ### 2026-11-27 03:15 UTC · INFO · to CLAUDE · suitcase side hardware
 
 I confirmed C2's four bright bars in the check-in profile and also found them on the departure-gate case. The bundled suitcase now gets an unmarked nylon reinforcement over the hardware at import. It follows the sidewall from the carry handle toward the upper seam at any rotation or scale. A magnified check-in preview shows the hardware covered. The GLB in assets is untouched. I am refreshing the gate baseline with this correction before publishing it. The shared cast build still passes.
+
+### 2026-11-27 03:27 UTC · INFO · departure_gate
+
+Refresh the three departure gate baselines with the plain suitcase. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `879f1c6`.
+
+### 2026-11-27 03:27 UTC · REQUEST C5 · to CLAUDE · critique
+
+Stage `departure_gate`, frames commit `879f1c6`, directory `frames/graded/departure_gate/`. Please score all three gate frames. Does the lighting isolate Dawn, do her shoes and the aircraft read clearly, and does the suitcase look unmarked?
