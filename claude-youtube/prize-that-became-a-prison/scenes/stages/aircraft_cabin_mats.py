@@ -503,6 +503,7 @@ def materials(lanes=()):
     M.clear()
     M["seat"] = upholstery("seat cloth")
     M["seat_dark"] = upholstery("seat cloth dark", (0.032, 0.036, 0.045))
+    M["blanket"] = upholstery("folded cabin wool", (0.075, 0.083, 0.096))
     M["cover"] = cover_cloth("headrest cover")
     M["shell"] = shell("seat shell")
     M["dark_plastic"] = pbr("dark plastic", (0.028, 0.029, 0.032), (0.38, 0.5), spec=0.4, bump=0.05, bscale=500)
