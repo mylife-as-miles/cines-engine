@@ -592,7 +592,11 @@ def kraft(name="kraft paper"):
     b.inputs["Roughness"].default_value = 0.88
     b.inputs["Specular IOR Level"].default_value = 0.25
     crumple = _math(nt, "ADD", _noise(nt, o, 18.0, 3.0, 0.6), _math(nt, "MULTIPLY", _noise(nt, o, 700.0, 2.0, 0.5), 0.15))
-    _bump(nt, b, crumple, 0.12, 0.002)
+    folds = _n(nt, "ShaderNodeTexVoronoi", feature="DISTANCE_TO_EDGE")
+    folds.inputs["Scale"].default_value = 6.0
+    _link(nt, o, folds.inputs["Vector"])
+    crease = _maprange(nt, folds.outputs["Distance"], 0.0, 0.035, 0.35, 0.0)
+    _bump(nt, b, _math(nt, "SUBTRACT", crumple, crease), 0.3, 0.002)
     return m
 
 

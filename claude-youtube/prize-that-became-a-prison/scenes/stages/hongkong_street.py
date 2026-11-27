@@ -353,7 +353,7 @@ def solve_head(holder, pose, target, passes=4, lim=(-30.0, 40.0, 60.0)):
     return pose["head"], (round(dy, 1), round(dp, 1))
 
 
-CURL_GRIP = {"f_index": (62, 70), "f_middle": (66, 74), "f_ring": (68, 74), "f_pinky": (70, 72), "thumb": (18, 26)}
+CURL_GRIP = {"f_index": (75, 85), "f_middle": (80, 88), "f_ring": (80, 85), "f_pinky": (78, 80), "thumb": (35, 40)}
 CURL_EASY = {"f_index": (18, 24), "f_middle": (22, 28), "f_ring": (24, 30), "f_pinky": (26, 32), "thumb": (6, 12)}
 
 
@@ -457,21 +457,28 @@ def stance(holder, hip_side=0.022, hip_down=0.004, foot_fwd=0.07, foot_out=10.0,
 
 
 def grip_point(holder, side):
-    """Where the curled fingers close round a bag's handles: just past the knuckles, toward the palm."""
+    """Seat the gathered cords against the inside of the posed index and middle fingers."""
+    body = bpy.data.objects[holder["body"]]
+    evaluated = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    groups = {body.vertex_groups[f"DEF-f_{finger}.01.{side}"].index for finger in ("index", "middle")}
+    knuckles = [evaluated.matrix_world @ v.co for v in evaluated.data.vertices
+                if any(g.group in groups and g.weight > 0.5 for g in v.groups)]
+    centre = sum(knuckles, Vector()) / len(knuckles)
     rig = rigged.rig_of(holder)
-    k = side
-    pb = rig.pose.bones
-    mw = rig.matrix_world
-    hb = pb[f"hand_fk.{k}"]
-    a = (mw.to_3x3() @ (hb.tail - hb.head)).normalized()
-    tail = mw @ hb.tail
-    fb = pb.get(f"f_middle.01_master.{k}")
-    n = Vector((0, 0, 0))
-    if fb is not None:
-        f = (mw.to_3x3() @ (fb.tail - fb.head)).normalized()
-        n = f - a * f.dot(a)
-        n = n.normalized() if n.length > 1e-4 else Vector((0, 0, 0))
-    return tail + a * 0.012 + n * 0.012
+    bones = rig.pose.bones
+    hand = bones[f"DEF-hand.{side}"]
+    across = bones[f"DEF-f_index.01.{side}"].head - bones[f"DEF-f_pinky.01.{side}"].head
+    inward = (rig.matrix_world.to_3x3() @ (hand.tail - hand.head).cross(across)).normalized()
+    fingers = rig.matrix_world @ bones[f"DEF-f_middle.03.{side}"].tail - centre
+    if inward.dot(fingers) < 0:
+        inward.negate()
+    contact = centre + 0.015 * inward
+    skin = min(knuckles, key=lambda p: (p - contact).length_squared)
+    # Both paper handles have cord radii above 3 mm. Let the cord graze the
+    # skin even when the fingers curl a little differently between strides.
+    apex = skin + (contact - skin).normalized() * 0.002
+    print(f"HK {side} handle centre to finger skin {1000 * (apex - skin).length:.1f} mm", flush=True)
+    return apex
 
 
 # ---------------------------------------------------------------- the shopping bags
@@ -524,30 +531,39 @@ def bag_mesh(name, w, g, h, drop, body_m, handle_m, rope_r=0.0045, tissue_m=None
     for s in (-1, 1):
         A = Vector((s * (gx - 0.004), -0.055, z1 - 0.022))
         B = Vector((s * (gx - 0.004), 0.055, z1 - 0.022))
-        apex = Vector((s * 0.006, 0.0, 0.0))
+        # Both curves pass through the holder origin at t=1/2. A control
+        # point at the grip itself would leave the actual cord below the hand.
+        control = -(A + B) * 0.5
         pts = []
-        for i in range(13):
-            t = i / 12
-            # a quadratic through A, apex, B, pinched toward the apex (the hand gathers both handles)
-            p = (1 - t) ** 2 * A + 2 * (1 - t) * t * (apex + Vector((s * gx * 0.25, 0, -drop * 0.15))) + t * t * B
-            q = p.lerp(apex, 0.55 * math.sin(math.pi * t) ** 2)
-            pts.append(q)
+        for i in range(25):
+            t = i / 24
+            pts.append((1 - t) ** 2 * A + 2 * (1 - t) * t * control + t ** 2 * B)
         st.tube(hm, pts, rope_r, segs=6)
         for P in (A, B):
             hm.box((P.x - 0.004, P.y - 0.007, P.z - 0.007), (P.x + 0.004, P.y + 0.007, P.z + 0.007), 0)
     parts.append(hm.finish())
     if tissue_m is not None:
-        # tissue paper standing in the mouth: crumpled points above the rim
+        # Three sheets tucked into the bag, with folded, uneven free edges.
         tb = bmesh.new()
         r = random.Random(11)
-        for i in range(5):
-            x = r.uniform(-gx * 0.5, gx * 0.5)
-            y = r.uniform(-wy * 0.6, wy * 0.6)
-            hgt = r.uniform(0.04, 0.08)
-            bmesh.ops.create_cone(tb, cap_ends=False, segments=5, radius1=r.uniform(0.04, 0.06), radius2=0.005, depth=hgt,
-                                  matrix=Matrix.Translation((x, y, z1 + hgt / 2 - 0.02)) @ Matrix.Rotation(r.uniform(-0.3, 0.3), 4, "X"))
-        for v in tb.verts:
-            v.co += Vector((r.uniform(-0.006, 0.006), r.uniform(-0.006, 0.006), r.uniform(-0.006, 0.006)))
+        for sheet, centre_y in enumerate((-0.058, 0.0, 0.058)):
+            phase = r.uniform(0, math.tau)
+            rows = []
+            for j in range(6):
+                v = j / 5
+                row = []
+                for i in range(9):
+                    u = i / 8
+                    fold = math.sin(2.5 * math.pi * u + phase + 1.2 * v)
+                    x = (sheet - 1) * 0.012 + (0.009 + 0.018 * v) * fold
+                    y = centre_y + (u - 0.5) * (0.065 + 0.042 * v)
+                    edge = 0.032 + 0.026 * math.sin(math.pi * u + phase) + 0.016 * abs(fold)
+                    z = z1 - 0.055 + v * (0.055 + edge)
+                    row.append(tb.verts.new((x + r.uniform(-0.002, 0.002), y, z + r.uniform(-0.004, 0.004))))
+                if rows:
+                    for i in range(len(row) - 1):
+                        tb.faces.new((rows[-1][i], rows[-1][i + 1], row[i + 1], row[i]))
+                rows.append(row)
         tme = bpy.data.meshes.new(name + "_tissue")
         tb.to_mesh(tme)
         tb.free()
@@ -609,10 +625,13 @@ def act(name, h, action, beat):
         walking = action == "walk_bags"
         look = ((h.location.x + 0.6, h.location.y + 8.0, 1.5) if walking else (8.0, 18.5, 1.24) if beat == "window"
                 else (8.0, 18.9, 1.28))
-        out = 10.0
+        # In the shop three-quarter the far carrier must clear her skirt in
+        # projection as well as in space. Let that arm trail behind the hip.
+        left_swing = -24.0 if beat == "window" else (-3.0 if walking else 2.0)
+        out = 14.0 if beat == "window" else 10.0
         for attempt in range(8):
             pose = {"chest": (3.0, 3.0) if walking else (6.0, 0.0), "neck": (2.0, 0.0),
-                    "l_arm": (-3.0 if walking else 2.0, out, 8.0), "r_arm": (4.0 if walking else 1.0, out + 1.0, 6.0), "fingers": 0}
+                    "l_arm": (left_swing, out, 8.0), "r_arm": (4.0 if walking else 1.0, out + 1.0, 6.0), "fingers": 0}
             hd, err = solve_head(h, pose, look, lim=(-25.0, 45.0, 40.0))
             if walking:
                 kb, f = legs_walk(h, "L", tf=17.0, tb=11.0)
@@ -635,7 +654,7 @@ def act(name, h, action, beat):
         ground(h)
     elif action.startswith("walk"):
         lead = {"walk_up": "R", "walk_talk": "L", "walk_talk_w": "R", "walk_away": "R"}[action]
-        if beat == "company" and name == "Dawn":
+        if beat == "company" and name in ("Dawn", "T1"):
             lead = "L"
         sw = 14.0
         la, ra = ((-sw * 0.7, 6.0, 10.0), (sw, 7.0, 22.0)) if lead == "L" else ((sw, 6.0, 22.0), (-sw * 0.7, 7.0, 10.0))
