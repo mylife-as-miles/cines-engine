@@ -1,0 +1,30 @@
+{
+ "file": "out/review/film_v22.mp4",
+ "frames": 4499,
+ "seconds": 187.4583,
+ "cut_v21_frames": 4213,
+ "q10_take": "out/takes/Q10_t1.mp4",
+ "q10_starts_at_s": 175.542,
+ "q10_kept_frames_of_take": [
+  [
+   121,
+   238
+  ],
+  [
+   384,
+   481
+  ],
+  [
+   484,
+   556
+  ]
+ ],
+ "q10_shots_start_at_s": [
+  175.542,
+  180.417,
+  184.458
+ ],
+ "q10_frames": 286,
+ "left_out": "every stretch of the take with speech in it: all three spoken phrases are a sentence that was not written",
+ "peak_dbfs": -1.89
+}
