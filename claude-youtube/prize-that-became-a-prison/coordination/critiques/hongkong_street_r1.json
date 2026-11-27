@@ -1,0 +1,92 @@
+{
+  "stage": "hongkong_street",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 5,
+    "lighting": 4,
+    "materials": 4,
+    "set_dressing": 4,
+    "grounding_scale": 6,
+    "cast": 5,
+    "story_read": 5,
+    "technical": 5
+  },
+  "pro_level": false,
+  "verdict": "Not at the fern bar yet. The skeleton is good: a real tram-street canyon with ledges, AC boxes, railings and overhead wires, wet road streaks, a sound one-point wide and a window close-up that has a strong idea (the prize bags with Dawn's image between them). Three things let it down.\n\nFirst, the signs, which carry the location. They read as pale paper cards with dark rims stuck in the air, not as lit boxes. In the graded wide the pink sign drops from saturation 0.39 raw to 0.16 graded, the green and blue signs sit at 0.15 to 0.23 at value 0.55 to 0.70, and they throw no light onto the facades around them. At the vanishing point they pile up into a confetti of interlocking L-shapes. One white panel with dark stepped blocks over it (wide, about x 750-830, y 315-370) reads like a pixel glyph, which breaks the no-letter-like rule.\n\nSecond, the light is a grey overcast dusk, not night with a lit island. Graded median luminance is 0.166 in the wide. The sky strip (value 0.18) is brighter than the upper canyon facades (0.12), so the buildings turn into silhouettes against a pale slot. Dawn's stretch is no brighter than anywhere else. The shop interiors are one repeated 5.2 m box of blank-box shelving that reads as a row of libraries.\n\nThird, the glass shots have CG tells. Dawn's reflection is a solid statue head at 1.7 times the felt's value. In the 'dawn' frame her reflection reads as a second person standing in the shop behind the satchel. Bright rectangles in the glass are the opposite shops' spill area lights showing in glossy rays. In the 'dawn' frame the pavement joints glint as thin white, red and cyan hairlines.\n\nThe window frame is the strongest of the three, at about 6/10. The wide and dawn frames are about 4.5/10.",
+  "answers": "Your notes, one by one:\n\n1. \"Signs go pastel under the grade\": yes, and the main cause is upstream of the grade. Lightbox strength (rng 3.6-7.2, 'neon' 20-32 x 0.12) at EXPOSURE -1.5 drives the faces into AgX's path to white: in the raw wide the green sign is already only s0.22 v0.71 and the blue s0.29 v0.75. On top of that, _attr_emitter mixes the base colour 0.55 toward the sign colour, so the diffuse lift adds grey. SIGN_COL also holds several near-whites (warm 1/.84/.62, cream, cool, yellow). Grade A's saturation of 0.55 then halves what is left (pink: s0.39 raw, s0.16 graded). Fix it in the light, not the grade (see fixes 1 and 2).\n\n2. \"Upper canyon is silhouettes\": yes, and it is inverted. The sky emission (sky() colour 0.075-0.12 x cloud 0.75-1.2) measures v0.18 graded against v0.12 for the facades in front of it, so towers read as cut-outs against a pale slot. Few upper windows are lit, and nothing lights the facades from the signs. Darken the sky and light the walls (fix 3).\n\n3. \"Generic shop interiors\": yes. Every unit is the same box with five-tier side shelving, a back shelf, a gondola and coloured blank boxes. From the wide they read as identical bookshops or libraries, symmetric on both sides, with no counter life, no hanging stock and no difference between cool and warm shops beyond colour temperature. Their spill also fails to make a pool on the pavement: right pavement v0.21 against road v0.18.\n\n4. \"Dawn's reflection stronger than faint\": confirmed. In 'window' the reflected face measures 0.22 against the felt at 0.13. It is sharp, opaque and centre-frame, and reads as a ghost or double exposure, not a glint. The cause is bq_glow (60 W at face height, aimed at her face) plus glass_refl 0.1. In 'dawn' the same glass puts a dark full-figure reflection of her behind the satchel (x 1040-1100), which reads as a shop assistant.\n\n5. \"Window predates the last sign change\": yes, so it needs a re-render. Note too that the bright horizontal bars across its top (raw v0.74, the brightest thing in frame after the tote) are not signs. They are the opposite side's spill_/fill_/canopy_ area lights, seen by glossy rays in the glass. hide_glossy hides the interiors' meshes but not the lights.\n\nWhat each camera's beat needs that it lacks:\n\n- **wide** (\"nine days of sightseeing and shopping, Dawn small among walkers\"):\n  - Night, not dusk.\n  - A lit island around Dawn's stretch, so she sits in the one warm pool on the right pavement while the rest falls off.\n  - Saturated signs that glow and spill onto the walls.\n  - Life that says tourist street rather than deserted rain: more walkers, groups at shop fronts, one distant tram or bus body under the wires.\n  - Dawn readable as a shopper: her bags catch light. Right now she is a 0.15-value silhouette, the same as the walkers.\n- **dawn** (three-quarter back at the lit window):\n  - A window that reads as a boutique, not an empty bank counter: the riser and shelf are big flat dark slabs, and the shoulder bag is hidden.\n  - Warm window light rim-lighting her front edge.\n  - No ghost reflection.\n  - The street beyond as coloured sign bokeh. At f1.8 the left half is currently a grey smear with blocky smeared reflections.\n- **window** (controlled close-up through the glass):\n  - A faint, soft reflection of Dawn.\n  - A cognac tote: it is currently khaki/olive, raw h35 s0.79 going to graded h39 s0.40.\n  - No hot light bars.\n  - Coloured sign bokeh in the reflection.\n  - A few glass cues: a bronze mullion edge in frame, a smudge.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "wide",
+      "problem": "Signs read as pastel paper cards with dark rims: they lose their hue under AgX plus the grade, have no glow, and light nothing.",
+      "fix": "In hongkong_street_set.signs(): cut lightbox strength to rng.uniform(1.0, 2.2) for kind 'box' and set 'neon' panel strength to strength*0.06. Replace SIGN_COL's near-whites with deep hues, for example warm (1.0,0.45,0.12), cool (0.15,0.45,1.0), cream to amber, yellow (1.0,0.62,0.05), and drop 'cream' and 'cool' weights in SIGN_W to 0.5. In mats._attr_emitter, set base_rgb to (0.01,0.01,0.01) and the mix factor from 0.55 to 0.15, so the diffuse no longer greys the face. Raise hotspot to 0.6 so each face has a bright core and a darker edge. Shrink the dark rim (rim=0.06 to 0.03) and give the frame material roughness 0.6, so the rims stop drawing black outlines. Check that raw sign faces sit at value 0.45-0.65 with saturation at least 0.6, and graded saturation at least 0.3."
+    },
+    {
+      "priority": 1,
+      "camera": "wide",
+      "problem": "One sign cluster reads letter-like: a white panel with dark stepped blocks in front (about x 750-830, y 315-370), plus interlocking L-shapes in the far stack.",
+      "fix": "In signs(), reject any sign whose projected rectangle from the 'wide' camera overlaps another sign's by more than 15 % while being more than 1.5 m nearer or farther along Y. Test with bpy_extras.object_utils.world_to_camera_view on the 4 face corners and skip the draw (keeping rng order with a dummy draw). Also forbid 'dead' (dark) signs directly in front of lit ones on the same side within 6 m of Y. Re-check the 'wide' frame at 2x zoom for any stepped or notched silhouette."
+    },
+    {
+      "priority": 1,
+      "camera": "window",
+      "problem": "Dawn's reflection is opaque and sharp (face 0.22 against felt 0.13). Bright bars across the top are the opposite shops' area lights seen in glossy.",
+      "fix": "In CAMERAS['window'], set glass_refl=0.025 and add TRIMS['window'] = {'bq_glow': 0.25}. In mats.shop_glass, raise the smudge roughness range to 0.02-0.09, so the reflection softens. In apply_camera, for every light whose name starts with spill_, fill_, canopy_ or bounce_, set li.visible_glossy = False for 'window' and 'dawn' (restore for 'wide' so the road keeps its streaks). Target: the reflected face at no more than 1.25 times the felt behind it, with no element above graded 0.35 except the bags' highlights."
+    },
+    {
+      "priority": 1,
+      "camera": "wide",
+      "problem": "Reads as grey overcast dusk, not night: graded median 0.166, no lit island, sky brighter than the buildings.",
+      "fix": "Set EXPOSURE and the wide's exposure to -1.9. In mats.sky(), halve the colours to (0.035,0.045,0.065)->(0.07,0.06,0.06) and the cloud range to 0.6-0.9, so the sky lands near graded v0.08. In build(), keep spill 1.25 for the right side 8<yc<32 but drop all other buildings' 'spill' to 0.7 and bounce k to 0.3, so Dawn's stretch is the brightest pavement. Target a graded median of about 0.10-0.12, and the right pavement around Dawn about 1.8 times the far pavement."
+    },
+    {
+      "priority": 2,
+      "camera": "wide",
+      "problem": "The upper canyon is a silhouette with sparse lit windows; the signs do not light the walls.",
+      "fix": "In window(), raise the lit probability from 0.5 to 0.65 for z > 12 and favour WIN_COL warm 0.55. In sign_box(), for each lit sign add a small area light (0.6 x height) 0.25 m in front of each face, aimed along +-A, colour = sign colour, energy = 8 x face area x strength, with visible_camera, visible_glossy and visible_diffuse... set only visible_camera=False. That puts coloured pools on the balconies and AC boxes nearby. Cap at about 60 lights by skipping signs above z=20 or Y>90."
+    },
+    {
+      "priority": 2,
+      "camera": "dawn",
+      "problem": "Dawn's reflection in the glass reads as a second person standing in the shop behind the satchel; the boutique reads as an empty counter.",
+      "fix": "For the 'dawn' camera, set glass_refl=0.02. In apply_camera, set visible_glossy=False on Dawn's holder children only for 'dawn' (keep it for 'window'). In boutique(), cut the stall riser to 0.45 m and give the floating shelf a bronze edge lip. Make sure handbag-shoulder on the plinth is visible: move the plinth to y 16.9-17.9 or rotate the camera aim 1.5 degrees left. Add a second shelf at z 1.6 with one more blank small item (a folded scarf box in coated_card)."
+    },
+    {
+      "priority": 2,
+      "camera": "window",
+      "problem": "The tote reads khaki/olive, not cognac, after the cool grade (graded h39 s0.40).",
+      "fix": "In boutique() spec['handbag-tote'], change hue 0.545 to 0.49 and val 1.05 to 0.85, and keep sat 1.0, so the raw sits near h24-28 s0.7. Warm the three bq_spot colours to (1.0,0.74,0.5). Check that the graded tote is h28-33 with s at least 0.38."
+    },
+    {
+      "priority": 2,
+      "camera": "dawn",
+      "problem": "The pavement joints glint as thin bright white, red and cyan hairlines (a groove bump catching lights at grazing angle).",
+      "fix": "In mats.pavers(), change the bump height term from joint*1.5 to joint*0.4 and the _bump strength from 0.2 to 0.08. Set the joint roughness target to 0.9 (r = _fmix(joint*1.0, r, 0.9)) and the joint colour to 0.012. Check the 'dawn' raw frame shows no joint pixel brighter than the slab on either side."
+    },
+    {
+      "priority": 3,
+      "camera": "wide",
+      "problem": "Shop interiors are one repeated box of blank-box shelving, so the street reads as a row of libraries.",
+      "fix": "In shop(), branch by a new per-unit type: (a) clothes: rails() always, no back_shelf; (b) pharmacy/grocery: low gondolas with a counter at the front and a bright cool ceiling grid; (c) eatery: 3-4 small tables (cyl tops 0.6 m) and stools, warm pendant points, a steamy haze box 0.03; (d) electronics: glass counters (shelf_glass) and blank emissive screens at strength 0.8; (e) closed: roller fully down. Never put the same type next to itself. Keep half of the units at depth 3.5 m so the far walls vary. Put one standing shop-keeper statue (people.staff) in 2 lit shops near Dawn."
+    },
+    {
+      "priority": 3,
+      "camera": "wide",
+      "problem": "The street feels deserted, not a tourist street, and Dawn does not stand out among the walkers.",
+      "fix": "Add 4-6 more figures in BLOCK['walk'] (pairs at fronts at y 24-40, one looking up at signs on the left), keeping KEEP clear around Dawn. Place Dawn in the strongest right-hand spill pool (y about 16-18) so her bags catch warm light. Add a simple tram body (a 2-deck box 12 x 2.5 x 4.5 m in dark green paint, blank sides, lit window band at strength 1.2) at y about 120 on the tracks, under the wires, as a far silhouette."
+    },
+    {
+      "priority": 3,
+      "camera": "dawn",
+      "problem": "The street beyond is a grey smear; the wet road shows blocky smeared sign reflections; the bright LED strip reads as a laser line.",
+      "fix": "Lower the dawn fstop to 2.8, so the far signs resolve as coloured bokeh shapes rather than smears. In mats.asphalt(), add a roughness noise of 0.04-0.12 in the wet areas, so reflections streak vertically instead of mirroring rectangles. In boutique(), set the LED strip (G['tube'] box under the shelf) to strength 0.3 of the panel_warm material and set bq_led energy to 15, so it glows rather than clips as a hairline."
+    },
+    {
+      "priority": 4,
+      "camera": "window",
+      "problem": "The frame predates the sign changes, and the reflection shows no street colour.",
+      "fix": "Re-render 'window' after fixes 1, 3 and 7, keeping signboards visible in glossy (remove 'signboards' from hide_glossy) so a few out-of-focus coloured sign shapes sit faintly in the reflection's upper corners. Add a bronze mullion (the d1 frame at y 19.95) just inside the right frame edge as a glass cue."
+    }
+  ]
+}

@@ -100,3 +100,55 @@ before I post it; replies here within the hour. Per Claude's HANDBACK, the three
 hotel_room, train) come to you through the pipeline for two: each gets its first critique now and then an
 `INFO · HANDOVER` entry here; do not start on them before that entry. My own four are next in line: baggage_belt and
 aircraft_cabin are built and waiting for their critique, prison_exterior and tim_desk are being built.
+
+### 2026-11-27 09:20 UTC · REPLY C14 · void_stage
+Critique `coordination/critiques/void_stage_r3.json` (independent, checked against the published frames at `4c5ff43`;
+your newer chair, seated cell and close-up previews are not in it): **mean 5.75, lowest 4** (cast), not pro level.
+The two empty shots are close to the bar (`cell_far` is the shrinking cell; `bags` is a worthy last image); the two
+shots of Dawn are not. Your questions: hands no; cuffs no; trousers partly; floor light improved, not there; beam
+taper yes in `dawn`, `dawn_high`, `cell_far` (but it peaks at 27–31 graded over 2–3, so it may band on YouTube).
+1. P1 `dawn`, `dawn_high`: fanned fingers on the right hand, three hot dots (graded 129 on a hand of median 22) on the
+   left, and both hands darker than the cloth. Close the fingers (`articulate_hand` from K4, or a wider converge
+   cap in void_stage_fit), drop the hand mask's specular to 0.08 and roughness 0.85, lift the hands' value.
+2. P1: the cuffs flare into pale bells (23 px against a 13 px forearm). Clamp the last 8 cm of each sleeve to the
+   forearm radius + 10 mm, the last 1.5 cm to + 6 mm, like a buttoned band.
+3. P1 `dawn`: trousers read as stiff tubes on short legs with a hard hem 4–5 cm off the floor; keep the one grey
+   (continuity) and make the shirt hem read by form (hem_lift 0.03), raise the inseam, let the hem break on the shoe.
+4. P2 `dawn`: from the front the bun is hidden and she reads as a man in a cap. DAWN_TURN 32, head (28, -6), a thin
+   rim on the bun.
+
+### 2026-11-27 09:20 UTC · REPLY C16 · inspection_room handbags
+Critique `coordination/critiques/inspection_room_r6.json` (checked): **mean 5.94, lowest 5** (cast), not pro level.
+The match is right: same order and marks as `evidence_table/purses`, and all three bags read whole and closed. But
+the other five frames are still the round-5 renders (only regraded); e13e009's fixes are not in them yet.
+1. P1 `handbags`: the top edge cuts Dawn at the neck, a headless torso behind the shoulder bag. Cheat her out of this
+   camera (`"Dawn": (1.75, -1.10)` in its cheat) or hide her for it.
+2. P1 `handbags` (and `overhead`): Officer A's hand is a pale claw hovering 12–16 px over the tote's handles,
+   brighter than the bags. Make it a real grip on the handle apex, or take it out.
+3. P2 `handbags`: the near bench top is the brightest large area (graded 125), product light, not a lit island; a
+   shadow-only flag over the near bench for this camera.
+4. P2 `handbags`: the tote's maker's stamp shows (+19 graded); remove it in this stage's module (details in the file).
+
+### 2026-11-27 09:20 UTC · INFO · HANDOVER · hongkong_street
+Stage `hongkong_street` is yours from this entry. Built by Claude (code `2688493`); brief in
+`scenes/agent_loop/stages.json` ("hongkong_street"); finals published in `frames/graded/hongkong_street/` (wide, dawn,
+window). First critique: `coordination/critiques/hongkong_street_r1.json`, **mean 4.75, lowest 4** (lighting,
+materials, set dressing). Top: the signs read as pale paper cards with dark rims and light nothing (deep hues, glow,
+spill); one cluster in `wide` (about x 750–830, y 315–370) reads letter-like and must go (overlap rejection in
+signs()); `wide` reads as grey dusk, not night with a lit island; Dawn's reflection in `window` is opaque and sharp.
+
+### 2026-11-27 09:20 UTC · INFO · HANDOVER · hotel_room
+Stage `hotel_room` is yours from this entry. Built by Claude (code `c4b1c0d`); brief in stages.json ("hotel_room");
+finals in `frames/graded/hotel_room/` (window, overhead, pack). First critique:
+`coordination/critiques/hotel_room_r1.json`, **mean 5.25, lowest 4** (cast). Top: `pack` is 53 % mud with her
+out-of-focus shoulder in the left quarter and plaster-mitten hands (move the camera past her shoulder, into the
+duffel's mouth); `overhead` is flat product light (trim ceiling_bounce, reframe to include the headboard and lamp);
+`window` has her as a small centred silhouette darker than the sky (reframe, a cool rim from the glass side).
+
+### 2026-11-27 09:20 UTC · INFO · HANDOVER · train
+Stage `train` is yours from this entry. Built by Claude (code `e727ce7`); brief in stages.json ("train"); finals in
+`frames/graded/train/` (aisle, seat, rack). First critique: `coordination/critiques/train_r1.json`, **mean 5.0,
+lowest 4** (lighting, cast). Top: the reflection in `seat` reads as a bald stranger (three-quarter so the bun breaks
+the silhouette); `aisle` has no lit island, the dim strips render nearly as bright as the full one (rewrite the
+emission curve and LEVELS as a real night setting); the pale seat covers upstage every figure (darker, smaller
+antimacassars); the attendant stands lit in the vanishing point.

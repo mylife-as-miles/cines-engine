@@ -1,0 +1,80 @@
+{
+  "stage": "hotel_room",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 5,
+    "lighting": 5,
+    "materials": 5,
+    "set_dressing": 5,
+    "grounding_scale": 6,
+    "cast": 4,
+    "story_read": 6,
+    "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "A solid start, but not at fern level yet. Mean 5.25. All three beats read at a glance: Dawn at a night window, the bags laid out on a bed, a burgundy bag going into a black duffel. The lamp is a convincing warm practical: the shade glows, there is a scalloped up-cone on the channel-tufted headboard, and the warm/cold split works. There is no clipping (max graded 194) and nothing letter-like anywhere. Every frame still has an amateur tell:\n(1) pack: more than half the frame is dark mud. 53% of graded pixels are below L20, and the left 300 px is an out-of-focus shoulder and sleeve averaging L19. The hand on the strap touches the top edge, and both hands read as white plaster mittens.\n(2) overhead: lit like a product shot. The duvet sits at L108-136 across the bed with no falloff toward the lamp, because ceiling_bounce (22 W) is untrimmed for this camera. Pillows are cut to 10 px slivers at the top edge. The runner is a flat grey slab across the bottom third. The tissue reads as plaster and as a sheet of paper. The hobo is already buried in the duffel, so 'placing' reads as rummaging.\n(3) window: Dawn is a small, centred silhouette with no edge. Her head (L25) is darker than the sky behind it (L33), and her suit (L9) sinks into the city's dark lower mass (L21). Her stone calves (L38) are the brightest part of her, so the eye lands on her legs. The eye actually goes to the lamp (L124) and the pink sign. The right drape band is dead black (67% of that 160 px column below 8/255). 19.9% of the whole graded frame is below 8, against about 8.6% for the grade in DECISIONS, so the room itself is underlit. The near city rooftops are unlit black funnel shapes (building_mat gives roof faces no emission), and no street glow shows, so the city looks like box towers in fog rather than a dense Kowloon district.\nMaterials are uneven. The headboard, carpet and bags are fine. The duvet is a rigid rounded foam slab with no drape, no creases and no compression under the bags. The tissue is opaque, faceted and as bright as the duvet, and the sheer's hem has a regular sawtooth.",
+  "answers": "Builder's known issues, one by one:\n\n1) Pack relies on two hidden bounce lights. Motivated bounces are allowed, but these two make the hobo flat and front-lit. The bag (graded L36, rgb 47/32/33) has no rim from the lamp behind it, so it does not separate from the duffel (L21). The bigger problem is that ceiling_bounce (22 W, warm, 0.9 m square, at the ceiling over the bed) is not trimmed for overhead (TRIMS[\"overhead\"] only zeroes duvet_bounce). That is why the overhead bed has no falloff at all. Keep at most one weak, motivated bounce per shot, and let the lamp do the shaping.\n\n2) Her dark out-of-focus shoulder on the left of pack: confirmed, and it is the worst problem on the stage. The left 300 px averages L19 graded, and 53% of the frame is below L20. The camera at (-0.05,-1.40,1.08) aiming at (-1.08,-0.47,0.90) looks straight through her right shoulder at PACK_SPOT (-1.10,-1.09). The right upper arm also crosses the top-left as a featureless brown tube, and the gripping hand is cut by the top edge.\n\n3) The bed foot is a large grey area in window: confirmed. The duvet plus runner foot fill most of the bottom-left quadrant at L27-29. It reads as a foam block: the duvet has no overhang or drape, and the runner is a flat slab. Together with the black duffel (L7) cut by the left edge, the whole lower-left third is dead.\n\n4) The tissue stack reads as a sheet of paper: confirmed, and it is worse than that. tissue_stack is five 1.2 mm boxes, matte and opaque, at L97, the same as the duvet. In an investigative film a flat pale rectangle on the bed reads as a document or ticket, a story signal we don't want. The crumpled sheets (crumple res (36,26), solidify 0.8 mm, opaque) read as plaster or paper towel. The tissue_bag_mouth pieces in pack read as small white plastic clips.\n\n5) Overhead crops the pillows: confirmed, about 10 px slivers along the top edge. At 62 mm from 4.4 m the frame covers X -1.53..-0.09, and the pillow fronts sit at about -1.50.\n\nWhat each camera's beat still needs:\n\n- window (Ch 03, 'Dawn at the window, the room dim'): Dawn must be where the eye lands, with an edge against the city. She needs to be larger and off-centre, not a 3%-of-frame silhouette in the middle. The city needs to read as dense Hong Kong at night: glowing street canyons below and lit rooftops, not black funnels. The room should be dim, but readable at its edges rather than crushed.\n\n- overhead (Ch 04, 'her hands placing a bag'): a lit island, with the warm lamp pool falling off toward the foot and Dawn's side. The hobo should be visibly in the act of going in: held at the mouth, strap in hand, bag half out. The tissue should read as tissue. Something should say 'after the shopping' (plain carrier bags).\n\n- pack (Ch 04 close-up): the hand and the bag are the subject. The bag should be rim-lit by the lamp beyond. The hand should sit fully in frame and read as a hand. Any foreground body should be at most a soft wedge, not half the frame.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "pack",
+      "problem": "Her out-of-focus right shoulder and upper arm fill the left quarter. 53% of the frame is below L20 graded, the gripping hand touches the top edge, and the hands read as white mittens.",
+      "fix": "In hotel_room.py CAMERAS['pack'], move the camera so its line of sight clears her right shoulder by at least 15 cm and looks down into the duffel's mouth. Try loc (0.15,-1.15,1.35), aim (-1.06,-0.58,0.86), lens 55, fstop 2.8, focus fx_pack. Check that the gripping hand has at least 8% headroom; use shift_y if needed. Verify with numpy on the graded frame: at most 30% of pixels below L20, and no dark foreground mass wider than 12% of frame width. If any body stays in frame, give it an edge: let the lamp rim the sleeve rather than leaving a flat L19 blob."
+    },
+    {
+      "priority": 1,
+      "camera": "overhead",
+      "problem": "Flat product-shot light: the duvet sits at L108-136 everywhere with no falloff from the lamp, because ceiling_bounce at 22 W is untrimmed here. Pillows are cut to slivers at the top edge.",
+      "fix": "Set TRIMS['overhead'] = {'duvet_bounce': 0.0, 'ceiling_bounce': 0.15}, so the lamp_light (110 W point) and lamp_spill disc make the pool. Reframe to include the headboard and the window-side nightstand with the lamp: aim (-1.08,-0.42,0.6), lens about 46. That puts the headboard cap (x -2.05) on the top edge and the bed foot just past the bottom, and brings night_w and the lamp into the top-right corner as the visible source. Check the shade's open top: the lamp_bulb emission must not clip from above; add a diffuser disc in the shade top if it does. Target the duvet at about L120 near the lamp, falling to about L60 at the foot and on Dawn's side."
+    },
+    {
+      "priority": 2,
+      "camera": "window",
+      "problem": "Dawn is a small, centred silhouette with no edge. Her head (L25) is darker than the sky behind it (L33) and her suit (L9) merges with the city's dark lower mass (L21). The bed foot is a dead grey block, the right drape band is crushed black (67% below 8), and 19.9% of the frame is below 8/255.",
+      "fix": "Reframe: lens 32-35, camera about loc (0.95,-1.7,1.55), aim (-0.45,1.6,1.2). Put Dawn on the right third with her head against the lit upper towers or sky, keep the lamp island at left, and crop out most of the bed foot. Add a narrow cool rim for her: an area light 0.3x1.2 m just inside the glass at about (0.35,1.75,1.3) aimed back at her head and shoulder, hidden from camera and glossy, about 6-10 W, colour (0.55,0.66,1.0). Or move WIN_SPOT so a bright cluster of windows sits behind her head. Lift the right drapes from dead black by giving ledge_bounce a wider spread toward x 1.5, or add a faint cool spill on that drape, so the band reads as fabric (L10-15, not <8)."
+    },
+    {
+      "priority": 2,
+      "camera": "window",
+      "problem": "The near city rooftops render as black funnel and hourglass shapes, and no street glow shows. The city reads as fogged boxes, not a dense Kowloon grid.",
+      "fix": "In hotel_room_city.building_mat, roofs get no emission because `side = 1 - (az > 0.5)`. Add a roof term for az > 0.5: a dim base (0.42,0.48,0.6)*0.004*K; a brighter parapet edge (lx/ly within 0.6 m of the footprint edge) at about 0.02*K; and sparse roof-plant and water-tank lights from the cell noise. Raise the street strip emission in streets() from 0.08*c to about 0.3*c. Add a warm up-wash on the lower 15 m of facades along the avenue so the canyons glow between the towers. Check a crop of the window's lower half: rooftops should read as lit planes with edges, and street lines should be visible between blocks."
+    },
+    {
+      "priority": 3,
+      "camera": "overhead",
+      "problem": "Tissue reads as a sheet of paper (tissue_stack) and as plaster or paper towel (crumple). In pack, the bag-mouth tissue reads as white plastic clips. All of it sits at the duvet's value, so it vanishes or reads as the wrong thing.",
+      "fix": "Replace tissue_stack with one or two loosely folded sheets: a crumple() with flatten 0.15 and few folds (8-10, angle 15), each lying with a soft rolled edge, not five boxes. Raise crumple res to (90,64) and cut solidify thickness to 0.0003. Give the tissue material translucency: mix a Translucent BSDF at about 0.35 and use roughness 0.6. Tint it a faint ivory (0.62,0.6,0.55) a touch below the duvet's value so it separates. Remove tissue_bag_mouth or make it a larger, softer sheet that clearly spills out of the mouth."
+    },
+    {
+      "priority": 3,
+      "camera": "overhead",
+      "problem": "The hobo is already buried in the duffel, so 'placing a bag' reads as rummaging. Her hands are the brightest skin in the shot (L100), brighter than her hair.",
+      "fix": "For the pack beat, raise grip_z by 0.10-0.12 (lip_z - 0.05 becomes lip_z + 0.06) so the bag's base is just at the mouth, with the strap visible in her fist and half the bag still out; recheck the pack camera after. Drop hands_stone value from 0.36 to about 0.28. With ceiling_bounce reduced (fix 2) the hands will no longer catch top light at L100."
+    },
+    {
+      "priority": 4,
+      "camera": "window",
+      "problem": "The duvet is a rigid rounded foam slab: no overhang, no creases, no compression under the bags. The runner is a flat grey slab, prominent in window and overhead.",
+      "fix": "In hotel_room_set.bed(), make the duvet overhang the base by 0.25 m on the sides and foot, with a soft drape (raise cuts or add a subdivision modifier, then displace the side verts with a vertical-fold noise of about 8 mm). Increase the broad displacement to about 20 mm. Add local sags: lower duvet verts within each bag's footprint by 15-25 mm with a smoothstep falloff, plus a few radial creases around the suitcase. Give the runner a visible weave or herringbone at higher bump and a slightly lighter value (about 0.10), so it is not a flat L27-36 slab."
+    },
+    {
+      "priority": 4,
+      "camera": "window",
+      "problem": "The sheer's bottom hem is a regular sawtooth, and the drawn sheer has perfectly even pleats.",
+      "fix": "In pleated(), add a 4 cm hem band (an extra row with double thickness, or a separate thin box) and break the pleat amplitude and phase with low-frequency noise (amplitude +/-35%, phase +/-0.3 rad per pleat), so the bottom edge is a soft wave, not teeth."
+    },
+    {
+      "priority": 5,
+      "camera": "overhead",
+      "problem": "Set dressing is thin for 'after the shopping': only the bed contents and a phone are visible. The open case holds a few flat foam blocks.",
+      "fix": "Add two or three plain paper carrier bags with rope handles, blank with no print or logo, on the floor by the bed or on a luggage rack at the foot: box bags about 0.32x0.12x0.38 with a folded top. Give the suitcase contents real folded garments: slab() with sag 0.01, varied muted tints and a fold seam, and one rolled item. Make the satchel and tote cast visible contact shadows into the sagged duvet."
+    },
+    {
+      "priority": 5,
+      "camera": "window",
+      "problem": "The night window shows no room reflection, which is a strong realism cue that is missing.",
+      "fix": "Raise thin_glass refl so the lamp and the lit sheer reflect faintly in the right pane (lamp reflection about L40-60). Keep the reflection below the city's brightness so the view stays clear."
+    }
+  ]
+}

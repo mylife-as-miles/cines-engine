@@ -1,0 +1,80 @@
+{
+  "stage": "train",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 5,
+    "lighting": 4,
+    "materials": 5,
+    "set_dressing": 5,
+    "grounding_scale": 6,
+    "cast": 4,
+    "story_read": 5,
+    "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet, though the carriage is a sound piece of modelling. The 2+2 seats with piping, the round-bar racks, the deep window reveals with curtains, the cove ceiling and the one-point perspective all read as a real long-distance carriage, and nothing clips (graded max 228/202/171). The light does not tell the story. In aisle, the \"night setting\" is a uniformly lit carriage. Dawn's head (graded mean 108) is darker than the linen seat-back covers in the row in front of her (124), only a little brighter than the other travellers (81-93) and not far above the aisle floor (67-77). The eye goes to the pale seat covers and to the attendant standing in the vanishing point. The windows show reflected seats and a ghost passenger rather than night and passing lights, so aisle gives no sense of motion. Seat has the strongest image: a sculpted profile, good lead room and soft warm streaks. But the \"reflection\" is a large, blurred, frontal bald face that reads as a stranger sitting outside the train, not as Dawn. The real Dawn's hair cap also shows terraced contour rings under raking light. Rack is a plain product shot of two dark bags against a wall of the same value (duffel 34.8, suitcase 38.4, wall 31.2), with 40% of the frame an empty flat slab. Two dark cove-seam arcs read as hanging cables, and nothing ties the bags to her or to a moving train. Scores are means of the three frames; seat would score about 6, aisle and rack about 4-5.",
+  "answers": "BUILDER'S KNOWN ISSUES, ONE BY ONE\n\n1) \"The reflection in seat hides her bun and reads as a bald stranger, not Dawn.\" Confirmed, and it is the worst flaw in the stage. The mirror view in set_cameras() puts her face frontal in the glass with the bun straight behind the head, so the bun is hidden by her own skull. At fstop 2.8, focused on fx_dawn, the reflection's optical distance is about twice hers, so it is heavily blurred. Blurred, the stone hair cap and the stone face merge into one value (reflection face mean 59, max 80), so the hairline disappears and it reads as a bald, slightly grimacing man. It is also big, about 0.6x her real head, and sits in the left-centre of the frame, so it reads as a second person rather than a ghost on the glass. The value (59 against her real face at 169) is about right for \"faint\". The problem is form and focus, not brightness.\n\n2) \"Dawn small in aisle with the floor nearly as bright as her.\" Confirmed, and it is worse than the floor. Graded values: Dawn's head 108; linen seat-back covers in the row in front of her 124, beside her 109, far rows 114; aisle floor 67-77; other travellers' heads 81-93; the attendant in the vanishing point is the most central figure. The reading lamp (READING_LAMP 55) puts no visible pool on her. She is about 40 px tall, at the window, seen from behind, and nothing in light or value singles her out.\n\n3) \"The dim strips barely differ from the full ones.\" Confirmed by measurement on the graded aisle frame. Peak values: bay 1 (level 0.45) 192; bay 2, her bay (1.0), 227; bay 3 L (0.15) 181; bay 4 flicker (0.35) 210; the far bays 199-214. The opal shader's emission, 0.3 + 12\u00b7lv^1.5, puts every lit tube into the tone curve's shoulder, so a 3-12x difference in emission comes out as a 15% difference on screen. The area lights follow the same levels, so the carriage is evenly lit, not on a night setting. The flicker on bay 4 cannot be seen.\n\n4) \"Rack predates a softened panel-joint line.\" Yes. The cove_seam tubes show as two thin dark arcs on the flat upper wall (around x 850-910 and x 1140, top of the frame) that read as a cable or wire. Re-rendering with the softer joint is necessary but not enough: the bags do not separate from the wall, and the frame has no link to Dawn.\n\nWHAT EACH CAMERA'S BEAT NEEDS AND LACKS\n\n- aisle (Ch 03, \"about nine more days\", the trip getting longer): this should be the one lit island in a carriage gone dark for the night, with Dawn's head and the bags above her as the only bright things a third of the way down, and the black windows carrying passing streaks so the train is moving. It lacks the island (everything is mid grey), it lacks motion (the windows show interior reflections and a ghost passenger, no streaks), and the attendant at the vanishing point pulls focus. The pale linen covers are the brightest large surfaces in the frame.\n- seat (her face faint in the black glass, lights streaking past): the profile and streaks work. It lacks a reflection that is recognisably her (bun silhouette, three-quarter face) and that is faint and glassy rather than a solid blurred head. Her hair also needs to read as sculpted hair, not terraced rings.\n- rack (controlled close-up on the two bags above her, carriage soft beyond): it lacks value separation (bags at the wall's value), a motivated light that models the bags (top or edge light from her bay's strip, the reading lamp's glow below), and any link to Dawn or to a moving train below. The upper wall is a dead flat slab.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "seat",
+      "problem": "The reflection reads as a bald stranger: frontal, bun hidden behind the skull, blurred at f/2.8, and large in the left-centre of the frame.",
+      "fix": "Show her in three-quarter so the bun breaks the silhouette in the glass. Move LOOK forward and lower, e.g. LOOK = Vector((-7.5, SEAT_Y - 4.5, 0.9)), so the head turns less square to the glass. Move the camera toward the aisle and forward, e.g. SEAT_CAM_OFFSET = (0.85, -0.95, 0.06), then recompute aim in set_cameras(). Check that the mirror image (2*GLASS_X - eyes.x) shows the bun's side (render a --nocast-free test and look). Set focus between her and the mirror point: fx_dawn at eyes.lerp(mirror, 0.3), fstop 4.0, so both are readable and the reflection is soft but formed. Drop GLASS_REFL['seat'] from 0.11 to 0.07 and keep the reflection under about 40% of her face value. Put a thin rim on the bun from the reading lamp (a 0.05 m area light at 2 W just above and behind her head, aimed at the bun) so its silhouette survives in the glass. Optional: a second variant, 'seat_refl', with focus on fx_refl, Dawn soft in the foreground, for a rack-focus cut."
+    },
+    {
+      "priority": 1,
+      "camera": "aisle",
+      "problem": "No lit island: dim strips render nearly as bright as the full one (192/181 vs 227), so the carriage is evenly mid grey. Dawn (108) is darker than the seat covers in front of her (124).",
+      "fix": "In train_set.strips(), change the opal emission from 0.3 + 12.0*level**1.5 to 14.0*level**2.2 (no base), so 0.15 gives about 0.2 and 0.45 about 2.4. Rewrite LEVELS as a real night setting: (2,'L') 1.0, (2,'R') 0.35, (1,*) and (3,*) 0.0, (4,'L') ('flicker', 0.12), (5,'R') 0.08, (7,*) 0.18 so the door end has a faint silhouette; everything else 0. Raise READING_LAMP from 55 to about 160 and narrow the spot cone from 72 to about 40 degrees, aimed at her head and shoulder (aim z about 1.15), so her head reads about 160-180 graded while the rows around her fall to about 60-80. Re-measure the graded frame: Dawn's head at least 1.6x any seat cover and at least 2x the floor."
+    },
+    {
+      "priority": 1,
+      "camera": "aisle",
+      "problem": "The pale seat-back covers are the brightest large planes in the frame and upstage every figure.",
+      "fix": "In train_mats.materials(), drop M['linen'] rgb from (0.5, 0.5, 0.48) to about (0.24, 0.24, 0.23). In seat_unit(), shrink the linen cover to a headrest antimacassar about 0.22 m tall with a fold over the top edge instead of covering the whole upper pad, so the seat backs read as dark moquette (0.05) with a small pale tab. Check that the covers in rows 3-5 graded are under 80 in aisle."
+    },
+    {
+      "priority": 2,
+      "camera": "aisle",
+      "problem": "The attendant stands dead centre in the vanishing point, lit, and is the strongest focal point. The near-left window shows a reflected ghost passenger in an empty bay.",
+      "fix": "Either drop attendant() from this camera (hide its objects in apply_camera('aisle')) or move ATTENDANT to (0.06, 15.9), into the dark vestibule, and let the far strips (bay 7 at 0.18) leave her a dark silhouette against the door glass. For the windows, in apply_camera('aisle') set visible_glossy = False on traveller and attendant objects (they still render directly), or lower the glass Fresnel gain for this camera from 0.85 to 0.5, so the near windows read black with streaks rather than as a second carriage."
+    },
+    {
+      "priority": 2,
+      "camera": "aisle",
+      "problem": "Nothing says the train is moving: no streaks visible through the windows.",
+      "fix": "Add 4-6 hero streaks with st.streak_obj() placed through the left windows of bays 1-3 and the right windows of bays 1-2 as projected from the aisle camera (the same ray method as the seat camera's HERO_STREAKS, but with the aisle camera's loc). Use warm sodium (1.0, 0.56, 0.24) at strength 3-5 and lengths of 6-12 m at 8-30 m beyond the glass, so each window shows one soft horizontal smear. Keep them off Dawn's head in frame."
+    },
+    {
+      "priority": 2,
+      "camera": "rack",
+      "problem": "Bags sit at the wall's value (duffel 34.8, suitcase 38.4, wall 31.2); flat modelling and no separation.",
+      "fix": "Add a narrow top-edge light from her bay's strip: an area light 0.06 x 1.2 m at (-0.75, SEAT_Y + 0.3, 2.42), aimed down and out at the bags' aisle-side top edges, energy about 25 W COOL, so the duffel's top, the strap and the suitcase's corner get a clean edge highlight. Darken the upper lining behind the rack for this camera only (a LIFT or material trim: M['lining'] base colour x0.6 in apply_camera('rack')), or put the wall in the strip's shadow with a light-blocker plane at the cove. Target graded: bag tops about 90-110, wall under 25, bag bodies 30-40."
+    },
+    {
+      "priority": 2,
+      "camera": "rack",
+      "problem": "A dead flat wall fills about 40% of the frame; the cove-seam arcs read as cables; nothing ties the bags to Dawn or to a moving train.",
+      "fix": "Reframe lower and tighter: lens 65, loc about (-0.35, SEAT_Y - 1.6, 2.15), aim at the duffel's aisle-side front about 0.1 m below its mid-height, so the rack's front rail and the reading lamp's glowing lens sit in the lower third. Below them, show out of focus the top of Dawn's bun at the window and one passing streak in the dark glass. Hide the cove_seam_* objects for this camera (or re-render with the softened joint) so the upper wall is clean. Check the reading lamp lens actually glows in frame, as the camera comment claims."
+    },
+    {
+      "priority": 3,
+      "camera": "seat",
+      "problem": "Dawn's hair cap shows terraced contour rings under the raking light (reads as a stepped stone swim cap); the bun looks like a separate ball.",
+      "fix": "Without touching people.py: in train.dawn(), add a Smooth or Corrective Smooth modifier (factor 0.6, 6-8 repeats) to the hair object (bpy.data.objects.get(f\"{h['body']}_hair\") or whichever cast names it) and a Subdivision Surface modifier at level 1 on the bun. Rotate the face_fill so it lights her face from the front-left (window side, low), not across the hair, so the rings are not raked. Report the ring artefact as a helper issue for the shared cast."
+    },
+    {
+      "priority": 3,
+      "camera": "aisle",
+      "problem": "Dawn is about 40 px tall, seen only from behind, and the bottom row of seat backs is a broad flat band across the foreground.",
+      "fix": "Lens 30 -> 38 and camera loc y forward about 0.8 m (keeps her a third of the way along but nearly doubles her size), tilt up about 2 degrees so the nearest seat-back tops are cropped below the frame rather than forming a slab. Shift loc x to +0.25 so the left seat row opens and a sliver of her cheek and the reflection in her window show past her head."
+    },
+    {
+      "priority": 3,
+      "camera": "rack",
+      "problem": "The rack is lit and floating: the bags show no contact shadow on the bars, and nothing shows weight or travel.",
+      "fix": "Sag the duffel a little where it bridges the bars (a simple-deform bend of 3-4 degrees, or a lattice under its base) and add a faint ambient-occlusion darkening on the bars under each bag (a dark decal plane 2 mm under the bags, or raise the area light's spread so the bars under the bags fall into their shadow). Swing the duffel's loose strap so it hangs over the rail's front edge, which reads as gravity and motion."
+    }
+  ]
+}
