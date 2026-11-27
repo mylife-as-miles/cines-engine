@@ -253,7 +253,7 @@ def block_paint():
     uv = _vec(nt, u, z, 0.0)
     br = _brick(nt, uv, 0.40, 0.20, 0.009)
     low = _math(nt, "LESS_THAN", z, 1.32)
-    base = _mix(nt, low, (0.40, 0.41, 0.39), (0.135, 0.15, 0.14))
+    base = _mix(nt, low, (0.26, 0.27, 0.255), (0.11, 0.122, 0.114))
     base = _mix(nt, 1.0, base, _out(br, "Color"), "MULTIPLY")
     w = _vec(nt, u, z, _math(nt, "MULTIPLY", ax, 7.0))
     blotch = _noise(nt, w, 2.6, 5.0, 0.62)
@@ -524,7 +524,7 @@ def area(name, loc, aim, size, energy, colour, spread_deg=180.0):
     return ob
 
 
-def haze_material(name, density, colour=(0.86, 0.89, 0.93), drift=0.0):
+def haze_material(name, density, colour=(0.86, 0.89, 0.93), drift=0.0, aniso=0.0):
     """Stage haze. `drift` > 0 lets the density wander (0.6-1.4 x) in slow soft clouds, as real haze hangs, so a
     beam reads as light falling through air rather than an even grey solid."""
     m = bpy.data.materials.new(name)
@@ -533,6 +533,7 @@ def haze_material(name, density, colour=(0.86, 0.89, 0.93), drift=0.0):
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     pv = nt.nodes.new("ShaderNodeVolumePrincipled")
     pv.inputs["Color"].default_value = (*colour, 1)
+    pv.inputs["Anisotropy"].default_value = aniso
     if drift:
         o = _obj(nt)
         n = _noise(nt, o, drift, 3.0, 0.55, stretch=(1.0, 1.0, 0.45))
@@ -549,7 +550,7 @@ def haze(name, lo, hi, density, colour=(0.86, 0.89, 0.93), drift=0.0):
     return ob
 
 
-def haze_cone(name, lamp, aim, r_floor, r_top, density, drift=0.7, floor_z=-0.25):
+def haze_cone(name, lamp, aim, r_floor, r_top, density, drift=0.7, floor_z=-0.25, aniso=0.0):
     """Haze only around a spot's cone: a frustum from below the floor (a face lying on the floor would black it out)
     up to just under the lamp, `r_floor` wide at the floor, so the dark behind the subject stays black."""
     lamp, aim = Vector(lamp), Vector(aim)
@@ -566,12 +567,12 @@ def haze_cone(name, lamp, aim, r_floor, r_top, density, drift=0.7, floor_z=-0.25
     bm.to_mesh(me)
     bm.free()
     ob = _link(bpy.data.objects.new(name, me))
-    me.materials.append(haze_material(name, density, drift=drift))
+    me.materials.append(haze_material(name, density, drift=drift, aniso=aniso))
     ob.visible_shadow = False
     return ob
 
 
-def haze_box_along(name, a, b, width, depth, density, drift=0.9):
+def haze_box_along(name, a, b, width, depth, density, drift=0.9, aniso=0.0):
     """A haze slab along a light path from a to b (a shaft through a window), width across, depth in the plane."""
     a, b = Vector(a), Vector(b)
     d = b - a
@@ -582,7 +583,7 @@ def haze_box_along(name, a, b, width, depth, density, drift=0.9):
     bm.to_mesh(me)
     bm.free()
     ob = _link(bpy.data.objects.new(name, me))
-    me.materials.append(haze_material(name, density, drift=drift))
+    me.materials.append(haze_material(name, density, drift=drift, aniso=aniso))
     ob.visible_shadow = False
     return ob
 

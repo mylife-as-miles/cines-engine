@@ -216,27 +216,31 @@ def _combine1(nt, v):
 
 def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), path_w=0.55, lines=0.0,
                 line_rgb=(0.34, 0.30, 0.17), joint=2.4, joint_off=0.0, drain=None, rough=0.6, wall_x=None,
-                damp_r=0.38):
+                damp_r=0.38, path_lift=1.45):
     """Painted (epoxy) concrete floor in world space: an eggshell paint (roughness about `rough`) worn through to
     lighter, rougher grey concrete along the walking line down the middle (|x| < path_w), darker and glossier
     paint along the 0.3 m by each wall (`wall_x` = the wall's |x|), where no one walks, with grime in the corner,
     heel marks, saw-cut joints across every `joint` metres, optional worn painted guide lines at |x| = `lines`,
-    and ONE damp patch: a noise-edged blob of radius about `damp_r` round the floor drain at `drain` = (x, y),
-    darker by a quarter and glossy, with rust staining at the grate. The bump is broad and weak so the fittings
-    reflect as soft streaks, never as glitter."""
+    and ONE damp patch: a soft noise-edged patch of radius about `damp_r` round the floor drain at `drain` = (x, y),
+    a fifth darker and satin (roughness 0.25), with faint rust staining at the grate. The wear runs in long scuffed
+    streaks along the walking direction (the noises behind it are stretched 5:1 along Y). The bump is broad and weak
+    so the fittings reflect as soft streaks, never as glitter."""
     m, nt, b = _new(name)
     p = _world(nt)
     wx, wy, wz = _xyz(nt, p)
     ax = _math(nt, "ABSOLUTE", wx)
-    big = _noise(nt, p, 0.7, 4.0, 0.6)
+    # feet and trolleys wear along the corridor: the wear noises see Y squeezed to a fifth, so their features run
+    # five times longer down the corridor than across it
+    ps = _vec(nt, wx, _math(nt, "MULTIPLY", wy, 0.2), wz)
+    big = _noise(nt, ps, 0.7, 4.0, 0.6)
     edge = _math(nt, "ADD", ax, _maprange(nt, big, 0.3, 0.7, -0.12, 0.12))
     path = _maprange(nt, edge, path_w - 0.2, path_w + 0.12, 1.0, 0.0)
-    path = _math(nt, "MULTIPLY", path, _maprange(nt, _noise(nt, p, 2.4, 5.0, 0.6), 0.3, 0.7, 0.6, 1.0))
-    # paint worn through in a speckled, ragged way where the path is
-    pit = _noise(nt, p, 26.0, 4.0, 0.65)
+    path = _math(nt, "MULTIPLY", path, _maprange(nt, _noise(nt, ps, 2.4, 5.0, 0.6), 0.3, 0.7, 0.6, 1.0))
+    # paint worn through in thin scuffed streaks where the path is
+    pit = _noise(nt, ps, 45.0, 4.0, 0.65)
     worn = _maprange(nt, _math(nt, "ADD", pit, _math(nt, "MULTIPLY", path, 0.42)), 0.78, 0.86, 0.0, 1.0)
     col = _mix(nt, _maprange(nt, big, 0.3, 0.7, 0.0, 0.25), paint, tuple(c * 1.25 for c in paint))
-    col = _mix(nt, _math(nt, "MULTIPLY", path, 0.5), col, tuple(c * 1.45 for c in paint))
+    col = _mix(nt, _math(nt, "MULTIPLY", path, 0.5), col, tuple(c * path_lift for c in paint))
     side = None
     if wall_x:
         # the 0.3 m by each wall: untrodden, darker paint that keeps its gloss
@@ -245,7 +249,7 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         corner = _maprange(nt, ax, wall_x - 0.07, wall_x - 0.01, 0.0, 1.0)
         corner = _math(nt, "MULTIPLY", corner, _maprange(nt, _noise(nt, p, 5.0, 4.0, 0.6), 0.3, 0.7, 0.55, 1.0))
         col = _mix(nt, _math(nt, "MULTIPLY", corner, 0.8), col, (0.012, 0.011, 0.01))
-    conc = _mix(nt, _maprange(nt, _noise(nt, p, 60.0, 3.0, 0.6), 0.3, 0.7, 0.0, 1.0), bare, tuple(c * 0.75 for c in bare))
+    conc = _mix(nt, _maprange(nt, _noise(nt, ps, 60.0, 3.0, 0.6), 0.3, 0.7, 0.0, 1.0), bare, tuple(c * 0.75 for c in bare))
     col = _mix(nt, worn, col, conc)
     if lines:
         ln = _band(nt, ax, lines - 0.025, lines + 0.025, 0.002)
@@ -269,15 +273,18 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         dy = _math(nt, "SUBTRACT", wy, drain[1])
         r = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
         # a noise-edged blob, lobed by a broad noise and frayed by a finer one, about 2 * damp_r across
-        r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 2.2, 3.0, 0.55), 0.3, 0.7, -0.14, 0.14))
+        r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 2.2, 3.0, 0.55), 0.3, 0.7, -0.1, 0.1))
         r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, p, 11.0, 3.0, 0.6), 0.3, 0.7, -0.035, 0.035))
-        wet = _maprange(nt, r, damp_r - 0.1, damp_r + 0.04, 1.0, 0.0)
-        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.12, 0.3, 0.8, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
-        col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.6), col, (0.075, 0.045, 0.022))
-        col = _mix(nt, 1.0, col, _combine1(nt, _maprange(nt, wet, 0.0, 1.0, 1.0, 0.75)), "MULTIPLY")
+        # a soft edge (0.18 m wide ramp), never a hard blob
+        wet = _maprange(nt, r, damp_r - 0.14, damp_r + 0.04, 1.0, 0.0)
+        wet = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", wet, wet), _math(nt, "SUBTRACT", 3.0, _math(nt, "MULTIPLY", wet, 2.0)))
+        wet = _math(nt, "MULTIPLY", wet, _maprange(nt, _noise(nt, p, 7.0, 3.0, 0.6), 0.3, 0.7, 0.75, 1.0))
+        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.12, 0.24, 0.5, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
+        col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.5), col, (0.085, 0.06, 0.04))
+        col = _mix(nt, 1.0, col, _combine1(nt, _maprange(nt, wet, 0.0, 1.0, 1.0, 0.8)), "MULTIPLY")
         # the tide line where it last dried: a faint darker rim just outside the damp
-        tide = _math(nt, "MULTIPLY", _band(nt, r, damp_r + 0.04, damp_r + 0.075, 0.012), 0.35)
-        col = _mix(nt, tide, col, tuple(c * 0.7 for c in paint))
+        tide = _math(nt, "MULTIPLY", _band(nt, r, damp_r + 0.04, damp_r + 0.075, 0.015), 0.22)
+        col = _mix(nt, tide, col, tuple(c * 0.8 for c in paint))
     ao = _ao(nt, 0.45)
     col = _mix(nt, _maprange(nt, ao, 0.35, 1.0, 0.7, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
@@ -292,10 +299,10 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", ln, 0.1))
     rr = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", rr, 0.95), 0.05)
     if wet is not None:
-        # inside the blob the floor is damp: roughness 0.12-0.2, whatever the paint does
-        damp_r_ = _maprange(nt, _noise(nt, p, 6.0, 3.0, 0.6), 0.3, 0.7, 0.12, 0.2)
-        wet_r = _maprange(nt, r, damp_r - 0.2, damp_r + 0.06, 1.0, 0.0)
-        wet_r = _math(nt, "MULTIPLY", wet_r, wet_r)
+        # inside the patch the floor is damp: satin (roughness about 0.25), so it blurs the dark soffit it mirrors
+        # instead of turning into a black hole
+        damp_r_ = _maprange(nt, _noise(nt, p, 6.0, 3.0, 0.6), 0.3, 0.7, 0.22, 0.3)
+        wet_r = _math(nt, "MULTIPLY", wet, 0.9)
         rr = _mix(nt, wet_r, _combine1(nt, rr), _combine1(nt, damp_r_))
         rr = _xyz(nt, rr)[0]
     _link(nt, rr, b.inputs["Roughness"])
@@ -408,7 +415,7 @@ def paint(name, rgb, rough=0.5, bump=0.06, wear=0.2, edge_rgb=None):
 
 
 def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12, 0.135, 0.15),
-               metal=(0.15, 0.15, 0.15)):
+               metal=(0.26, 0.26, 0.27), polish=None):
     """Painted steel for the cell-door prop, replacing its generated texture (which read as trowelled plaster).
     (loc, rot, scale) map the mesh's own coordinates to the door's local metres: x out of the face, y across the
     leaf, z up from the floor. Satin-matt paint (roughness ~0.6) with large clean flat areas whose slight dents
@@ -436,7 +443,8 @@ def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12,
     pt = _maprange(nt, geo.outputs["Pointiness"], 0.55, 0.6, 0.0, 1.0)
     edge = _math(nt, "MAXIMUM", edge, _math(nt, "MULTIPLY", pt, 0.7))
     chipn = _noise(nt, face, 45.0, 4.0, 0.7)
-    chip = _maprange(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", edge, 0.5), chipn), 0.9, 0.98, 0.0, 1.0)
+    # rare chips, and only on real edges (dense chips on small parts read as dark spatter)
+    chip = _maprange(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", edge, 0.45), chipn), 0.99, 1.05, 0.0, 1.0)
     # where the drips and scuffs gather: low on the leaf, round the hatch, under and round the window frame
     low = _maprange(nt, pz, 0.62, 0.15, 0.0, 1.0)
     hatch = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.34, 0.24, 0.0, 1.0),
@@ -461,11 +469,28 @@ def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12,
                tuple(c * 0.88 for c in paint))
     col = _mix(nt, _math(nt, "MULTIPLY", zone, 0.25), col, tuple(c * 0.8 for c in paint))
     col = _mix(nt, _math(nt, "MULTIPLY", streak, 0.7), col, (0.05, 0.045, 0.04))
+    pol = None
+    if polish:
+        # polished wear: hands and faces against the window frame, keys round the upper lock: the paint rubbed thin,
+        # lighter and glossier, in a band `polish` = ((half y, half z) of the frame's outside, (y, z) of the lock)
+        (fy, fz), (ly, lz) = polish
+        dy_ = _math(nt, "SUBTRACT", ay, fy)
+        dz_ = _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", pz, 1.5)), fz)
+        d = _math(nt, "MAXIMUM", dy_, dz_)
+        ring = _math(nt, "MULTIPLY", _maprange(nt, d, -0.004, 0.004, 0.0, 1.0), _maprange(nt, d, 0.075, 0.01, 0.0, 1.0))
+        dl = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", py, ly), _math(nt, "SUBTRACT", py, ly)),
+                                     _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", pz, lz), _math(nt, "SUBTRACT", pz, lz))))
+        lock = _maprange(nt, dl, 0.11, 0.03, 0.0, 1.0)
+        pol = _math(nt, "MAXIMUM", ring, lock)
+        pol = _math(nt, "MULTIPLY", pol, _maprange(nt, _noise(nt, face, 9.0, 3.0, 0.6), 0.35, 0.65, 0.25, 1.0))
+        col = _mix(nt, _math(nt, "MULTIPLY", pol, 0.6), col, tuple(min(1.0, c * 1.35 + 0.02) for c in paint))
     col = _mix(nt, chip, col, metal)
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, chip, b.inputs["Metallic"])
+    _link(nt, _math(nt, "ADD", chip, _math(nt, "MULTIPLY", pol, 0.2)) if pol is not None else chip, b.inputs["Metallic"])
     r = _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, 0.47, 0.56)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", streak, 0.12))
+    if pol is not None:
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", pol, 0.22))
     r = _mix(nt, chip, _combine1(nt, r), (0.35, 0.35, 0.35))
     _link(nt, _xyz(nt, r)[0], b.inputs["Roughness"])
     # dents: a 3 mm low-frequency undulation of the panels; orange peel and the chips' step on top of it
@@ -499,15 +524,19 @@ def rubber(name, rgb=(0.02, 0.02, 0.022), rough=0.72):
     return m
 
 
-def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=()):
+def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=(), half=None):
     """A worn dark high-pressure laminate table top: fine speckle, a matt finish (so the pendant does not turn it
-    into a white sheet), patches polished by arms and sleeves, fine scratches along its length, and faint cup rings
-    at `rings` = ((x, y, r), ...) in object space (metres)."""
+    into a white sheet), patches polished by arms and sleeves (roughness 0.45-0.7), fine scratches running every
+    which way (a touch lighter, where the surface is cut), dried cup rings at `rings` = ((x, y, r), ...) in object
+    space (metres), and, with `half` = the top's half sizes (x, y), chips along its edges showing the pale core."""
     m, nt, b = _new(name)
     o = _obj(nt)
     sp = _noise(nt, o, 520.0, 2.0, 0.5)
     col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.3), rgb, tuple(c * 1.3 for c in rgb))
     col = _mix(nt, _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.5, 0.75, 0.0, 0.3), col, tuple(c * 0.82 for c in rgb))
+    # sleeve-polished patches: broad, faintly lighter (the matt texture rubbed off)
+    pol = _noise(nt, o, 1.8, 3.0, 0.5)
+    col = _mix(nt, _maprange(nt, pol, 0.55, 0.75, 0.0, 0.35), col, tuple(c * 1.25 for c in rgb))
     # wear lives in the ROUGHNESS only: fine micro-scratches running every which way (three stretched noises at
     # unrelated angles, thresholded thin), gathered where arms and cups go
     scr_m = None
@@ -541,18 +570,56 @@ def laminate(name, rgb=(0.12, 0.124, 0.12), rough=0.52, rings=()):
             inside, edge = _math(nt, "MULTIPLY", inside, fade), _math(nt, "MULTIPLY", edge, fade)
             ring_m = edge if ring_m is None else _math(nt, "MAXIMUM", ring_m, edge)
             ring_in = inside if ring_in is None else _math(nt, "MAXIMUM", ring_in, inside)
-        col = _mix(nt, _math(nt, "MULTIPLY", ring_in, 0.5), col, tuple(c * 0.92 for c in rgb))
-        col = _mix(nt, ring_m, col, tuple(c * 0.86 for c in rgb))
+        # a dried coffee ring: the inside faintly warm and dark, the rim where it dried darker again
+        col = _mix(nt, _math(nt, "MULTIPLY", ring_in, 0.55), col, (0.03, 0.026, 0.022))
+        col = _mix(nt, ring_m, col, (0.02, 0.017, 0.014))
+    # the scratches cut through the print layer: a touch lighter
+    col = _mix(nt, _math(nt, "MULTIPLY", scr_m, 0.55), col, tuple(c * 1.9 for c in rgb))
+    chip = None
+    if half:
+        ox, oy, oz = _xyz(nt, o)
+        dx = _math(nt, "SUBTRACT", half[0], _math(nt, "ABSOLUTE", ox))
+        dy = _math(nt, "SUBTRACT", half[1], _math(nt, "ABSOLUTE", oy))
+        de = _math(nt, "MINIMUM", dx, dy)                     # distance in from the nearest edge
+        near = _maprange(nt, de, 0.012, 0.0, 0.0, 1.0)
+        chip = _maprange(nt, _math(nt, "ADD", _noise(nt, o, 38.0, 3.0, 0.65), _math(nt, "MULTIPLY", near, 0.35)),
+                         0.86, 0.9, 0.0, 1.0)
+        chip = _math(nt, "MULTIPLY", chip, near)
+        col = _mix(nt, chip, col, (0.12, 0.105, 0.085))         # the pale particle-board core
+        # the edge band, darker and duller from hands and knees
+        col = _mix(nt, _math(nt, "MULTIPLY", near, 0.35), col, tuple(c * 0.75 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
-    pol = _noise(nt, o, 1.8, 3.0, 0.5)
-    r = _maprange(nt, pol, 0.3, 0.7, rough - 0.1, rough + 0.1)
+    r = _maprange(nt, pol, 0.3, 0.75, rough + 0.1, rough - 0.12)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr_m, 0.14), clamp=True)
     if ring_in is not None:
-        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_in, 0.08), clamp=True)
-    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.8), 0.55)
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", ring_in, 0.1), clamp=True)
+    if chip is not None:
+        r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", chip, 0.3), clamp=True)
+    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.72), 0.45)
     _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.22
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.3), _math(nt, "MULTIPLY", sp, 0.2)), 0.05, 0.0003)
+    b.inputs["Specular IOR Level"].default_value = 0.25
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", scr_m, -0.3), _math(nt, "MULTIPLY", sp, 0.2))
+    if chip is not None:
+        h = _math(nt, "SUBTRACT", h, chip)
+    _bump(nt, b, h, 0.05, 0.0003)
+    return m
+
+
+def wool(name, rgb=(0.15, 0.15, 0.145)):
+    """A grey wool blanket: matt, a fine twill weave (stretched noise at two angles), pilled fuzz, a little sheen."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    w1 = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(700.0, 90.0, 90.0))
+    w2 = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(90.0, 700.0, 90.0))
+    weave = _math(nt, "MULTIPLY", _math(nt, "ADD", w1, w2), 0.5)
+    pill = _noise(nt, o, 60.0, 3.0, 0.65)
+    col = _mix(nt, _maprange(nt, weave, 0.35, 0.65, 0.0, 0.3), rgb, tuple(c * 0.75 for c in rgb))
+    col = _mix(nt, _maprange(nt, pill, 0.6, 0.75, 0.0, 0.25), col, tuple(c * 1.2 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.92
+    b.inputs["Sheen Weight"].default_value = 0.35
+    b.inputs["Specular IOR Level"].default_value = 0.2
+    _bump(nt, b, _math(nt, "ADD", weave, _math(nt, "MULTIPLY", pill, 0.5)), 0.25, 0.0012)
     return m
 
 
@@ -589,7 +656,11 @@ def paper(name, rgb=(0.80, 0.76, 0.68), rough=0.85, fibre=0.05, grime=0.0):
     b.inputs["Subsurface Weight"].default_value = 0.06
     b.inputs["Subsurface Radius"].default_value = (0.002, 0.0015, 0.001)
     tooth = _noise(nt, o, 400.0, 4.0, 0.65)
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.4), tooth), fibre, 0.0002)
+    fine = _noise(nt, o, 800.0, 3.0, 0.6)                   # the fine fibre the reviewer could not see
+    col2 = _mix(nt, _maprange(nt, fine, 0.3, 0.7, 0.0, 0.06), col, tuple(c * 0.9 for c in rgb))
+    _link(nt, col2, b.inputs["Base Color"])
+    h = _math(nt, "ADD", _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.4), tooth), fine)
+    _bump(nt, b, h, fibre, 0.0002)
     return m
 
 

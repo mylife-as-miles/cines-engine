@@ -49,17 +49,21 @@ AT = {"dawn": (0.0, 0.0), "cell": (40.0, 0.0), "bags": (-40.0, 0.0)}
 # (E = P / (4 pi d^2); the stone skin's crown and the cell's floor land near 1.0 and 0.5 after the exposure). Each has
 # a soft inner cone from the same point (st.hotspot) so the pool is about a third brighter at its centre than its edge.
 SPOTS = {
-    # high (9.5 m) and narrow, so the cone visibly tapers over her head instead of standing behind her like a curtain
-    "dawn": dict(h=9.5, fwd=1.4, pool=1.2, watts=18500.0, blend=0.28),
+    # high (9.5 m) and narrow, so the cone visibly tapers over her head instead of standing behind her like a curtain;
+    # a little behind her (fwd < 0): the front of the suit falls dark (in front light the tight cut modelled bust and
+    # thighs like skin), the shoulders, crown and legs take a rim off the black, and the bowed face stays in shadow
+    # (in front light the nose tip alone caught the lamp: a white speck in a black face)
+    "dawn": dict(h=9.5, fwd=-0.5, pool=1.2, watts=18500.0, blend=0.28),
     # the cell's lamp over the middle, its cone an ellipse that lands just inside the walls: the floor and the wall
     # bases lit, the walls falling off upward into the dark, no spill on the stage outside
-    "cell": dict(h=7.6, fwd=0.0, pool=(1.42, 1.98), watts=13500.0, blend=0.25),
-    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7500.0, blend=0.28),
+    "cell": dict(h=7.6, fwd=0.0, pool=(1.5, 2.05), watts=13500.0, blend=0.25),
+    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=9600.0, blend=0.28),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab. The dawn
 # and bags haze fills only a frustum round the cone, drifting a little in density
 HAZE = {"dawn": 0.010, "cell": 0.006, "bags": 0.010}
-SHAFT_HAZE = 0.02    # a denser slab along the window's light, so a faint shaft joins window and patch
+SHAFT_HAZE = 0.08    # a denser slab along the window's light, so a faint shaft joins window and patch
+                     # (0.02 did not show against the top spot's haze at this source's distance)
 
 DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
 # only the head bowed (18); the chest and neck nearly upright so the spine stays vertical from above (round 2 read as
@@ -68,7 +72,7 @@ DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg
 POSE = {"head": (18, 3), "neck": (4, 0), "chest": (2.5, 0), "l_arm": (5, 7, 9), "r_arm": (6, 6, 8), "fingers": 16}
 # legs straight (FK): her weight on the right leg, its knee locked; the left (free) knee soft, its foot a little out
 LEGS = {"R": dict(thigh=(0.0, 1.5), shin=(0.0, 1.5)), "L": dict(thigh=(3.0, 3.5), shin=(-1.5, 3.5))}
-SUIT_RGB = (0.034, 0.035, 0.038)   # flat charcoal prison greys (people.dawn_prison's tint, read on screen as cloth)
+SUIT_RGB = (0.028, 0.029, 0.031)   # flat charcoal prison greys (people.dawn_prison's tint, read on screen as cloth)
 
 # the bags (island-local x, y, turn): the case standing, its front pocket turned three-quarters to the lens; the
 # duffel on its side beside it, a little forward, angled; a hand's width of lit floor between them from the lens
@@ -196,6 +200,34 @@ def prison_suit(holder, rgb=SUIT_RGB):
         b.inputs["Specular IOR Level"].default_value = 0.14
         b.inputs["Sheen Weight"].default_value = 0.0
         b.inputs["Coat Weight"].default_value = 0.0
+        # cloth, not skin, where the top light lands: the jeans' own folds, pockets and seams (MakeHuman's normal map,
+        # at 0.7: it is flat on the shirt), then soft horizontal creases over both (a distorted band wave), then the
+        # fine weave. A smooth tight garment top-lit on the shoulders read as bare skin from above (preview 2)
+        nm = next((n for n in nt.nodes if n.type == "NORMAL_MAP"), None)
+        prev = None
+        if nm is not None and nm.inputs["Color"].is_linked:
+            nm.inputs["Strength"].default_value = 0.7
+            prev = nm.outputs["Normal"]
+        wv = nt.nodes.new("ShaderNodeTexWave")
+        wv.wave_type, wv.bands_direction = "BANDS", "Z"
+        wv.inputs["Scale"].default_value = 6.0
+        wv.inputs["Distortion"].default_value = 7.0
+        wv.inputs["Detail"].default_value = 3.0
+        wv.inputs["Detail Roughness"].default_value = 0.6
+        nt.links.new(tc.outputs["Object"], wv.inputs["Vector"])
+        # the band wave varies only with height, so it is flat on the shoulder tops: add soft creases in every
+        # direction (a distorted noise), where the top light lands hardest
+        cr = nt.nodes.new("ShaderNodeTexNoise")
+        cr.inputs["Scale"].default_value = 11.0
+        cr.inputs["Detail"].default_value = 3.0
+        cr.inputs["Distortion"].default_value = 1.2
+        nt.links.new(tc.outputs["Object"], cr.inputs["Vector"])
+        fold = nt.nodes.new("ShaderNodeBump")
+        fold.inputs["Strength"].default_value = 0.35
+        fold.inputs["Distance"].default_value = 0.004
+        nt.links.new(st._math(nt, "ADD", wv.outputs["Fac"], cr.outputs["Fac"]), fold.inputs["Height"])
+        if prev is not None:
+            nt.links.new(prev, fold.inputs["Normal"])
         nz = nt.nodes.new("ShaderNodeTexNoise")
         nz.inputs["Scale"].default_value = 420.0
         nz.inputs["Detail"].default_value = 2.0
@@ -204,6 +236,7 @@ def prison_suit(holder, rgb=SUIT_RGB):
         bp.inputs["Strength"].default_value = 0.25
         bp.inputs["Distance"].default_value = 0.0004
         nt.links.new(nz.outputs["Fac"], bp.inputs["Height"])
+        nt.links.new(fold.outputs["Normal"], bp.inputs["Normal"])
         nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
     return ob
 
@@ -215,7 +248,7 @@ def _move_after_armature(ob, mod):
         ob.modifiers.move(cur, idx + 1)
 
 
-def suit_fit(holder, push=0.004, tuck=0.008):
+def suit_fit(holder, push=0.005, tuck=0.008):
     """Keep the stone body under the suit everywhere, from every camera, after posing. The suit follows the same rig
     as the body (checked); it is pushed out along its normals by `push` before its smoothing, and every body vertex the
     suit covers (an outward ray meets the suit within 4 cm, or the suit lies just under the skin) goes into a group
@@ -475,7 +508,8 @@ def build_cell_island():
             drift=0.9)
     mid, d = st.window_ray(cx, cy)
     t = (mid.z - st.SLAB) / -d.z
-    shaft = st.haze_box_along("haze_cell_shaft", mid + d * 0.1, mid + d * (t + 0.25), 0.95, 0.42, SHAFT_HAZE)
+    shaft = st.haze_box_along("haze_cell_shaft", mid + d * 0.1, mid + d * (t + 0.25), 0.95, 0.42, SHAFT_HAZE,
+                               aniso=0.35)
     st.link_lights([main, hot], exclude=[shaft], tag="cellspot")
 
 

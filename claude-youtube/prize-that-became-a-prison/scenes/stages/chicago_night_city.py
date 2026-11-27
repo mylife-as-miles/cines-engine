@@ -22,9 +22,9 @@ import numpy as np
 
 GROUND = -60.0
 FOG_D = 2300.0
-HORIZON = (0.17, 0.19, 0.235)       # the haze lit by the city, at the horizon (emission, linear)
-BUILDING_FOG = (0.075, 0.088, 0.115)     # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
-SKY_TOP = (0.006, 0.008, 0.016)
+HORIZON = (0.25, 0.27, 0.32)       # the haze lit by the city, at the horizon (emission, linear)
+BUILDING_FOG = (0.085, 0.1, 0.13)     # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
+SKY_TOP = (0.012, 0.016, 0.03)
 DOWNTOWN = (-470.0, 1650.0)           # the tower cluster's centre: about 17 degrees left of straight out
 UPTOWN = (700.0, 1700.0, 560.0, 0.62)  # a second, lower cluster to the right (x, y, radius, height factor)
 _RNG = random.Random(11)
@@ -293,7 +293,7 @@ def sky_mat():
     cr.interpolation = "EASE"
     cr.elements[0].position, cr.elements[0].color = 0.0, (*HORIZON, 1)
     cr.elements[1].position, cr.elements[1].color = 1.0, (*SKY_TOP, 1)
-    for pos, col in ((0.025, (0.12, 0.135, 0.17)), (0.07, (0.065, 0.077, 0.105)), (0.18, (0.03, 0.037, 0.055)), (0.45, (0.012, 0.016, 0.028))):
+    for pos, col in ((0.025, (0.2, 0.22, 0.27)), (0.07, (0.125, 0.142, 0.185)), (0.18, (0.062, 0.074, 0.105)), (0.45, (0.026, 0.032, 0.052))):
         el = cr.elements.new(pos)
         el.color = (*col, 1)
     nt.links.new(nb.math("MAXIMUM", e, 0.0), ramp.inputs["Fac"])
@@ -354,6 +354,17 @@ def _tower_height(x, y):
     return (r1, 1.0) if r1 <= r2 else (r2, uk)
 
 
+# Two narrow wedges of sky kept clear of towers (headings from the window, degrees from straight out): where Dawn's
+# head stands against the horizon glow from the wide camera (-27) and from the window camera (+15), so her
+# silhouette reads against light rather than a dark tower. (A gap between the clusters, as the river leaves.)
+CLEAR = ((-31.0, -22.5), (10.5, 19.5))
+
+
+def clear_sky(x, y, margin=0.0):
+    a = math.degrees(math.atan2(x, y))
+    return any(lo - margin <= a <= hi + margin for lo, hi in CLEAR)
+
+
 def plan(seed=11):
     """Return building boxes (lo, hi, data) for low-rise blocks, mid-rises and towers."""
     rng = random.Random(seed)
@@ -395,13 +406,15 @@ def plan(seed=11):
                         h = rng.lognormvariate(math.log(13), 0.4)
                     if rng.random() < 0.012 and py < 3500:
                         h = rng.uniform(55, 120)        # a scattered mid-rise
-                    h = max(6.0, min(h, 140.0))
+                    h = max(6.0, min(h, 40.0 if clear_sky(px, py) else 140.0))
                     kind = 1.0 if (r < 900 and rng.random() < 0.7) or rng.random() < 0.15 else 0.0
                     litf = rng.uniform(0.06, 0.22) if kind else rng.uniform(0.12, 0.34)
                     add(x + 1.5, y0, x1 - 1.5, y1, h, kind, litf)
                 x = x1
             if r < 900 and rng.random() < 0.5 * (1 - r / 1000) + 0.06:
-                towers.append((cx + rng.uniform(-30, 30), cy + rng.uniform(-8, 8), r, hk))
+                tx, ty = cx + rng.uniform(-30, 30), cy + rng.uniform(-8, 8)
+                if not clear_sky(tx, ty, 2.0):
+                    towers.append((tx, ty, r, hk))
     # the towers of the cluster: taller toward the centre, some with setbacks
     for (tx, ty, r, hk) in towers:
         h = (rng.uniform(120, 230) * (1.25 - 0.55 * r / 900) + rng.uniform(-20, 40)) * hk
@@ -458,7 +471,7 @@ def streets(seed=5):
             y += 30 if arterial else 38
         strips_lo.append((x - (9 if arterial else 6), y0, GROUND + 0.1))
         strips_hi.append((x + (9 if arterial else 6), 6800, GROUND + 0.2))
-        strips_c.append(tuple(v * (0.10 if arterial else 0.05) for v in c))
+        strips_c.append(tuple(v * (0.18 if arterial else 0.09) for v in c))
     for j, y in enumerate(YS):
         if y > 6500:
             break
@@ -472,7 +485,7 @@ def streets(seed=5):
             x += 32 if arterial else 40
         strips_lo.append((x0, y - (8 if arterial else 5), GROUND + 0.1))
         strips_hi.append((x1, y + (8 if arterial else 5), GROUND + 0.2))
-        strips_c.append(tuple(v * (0.08 if arterial else 0.035) for v in c))
+        strips_c.append(tuple(v * (0.14 if arterial else 0.06) for v in c))
     # the diagonal avenue: denser, brighter
     a, (dx0, dy0) = DIAG
     ux, uy = math.sin(a), math.cos(a)

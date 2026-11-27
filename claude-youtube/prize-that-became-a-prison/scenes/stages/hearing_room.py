@@ -40,13 +40,20 @@ EXPOSURE = -1.5
 
 EDGE = st.TABLE[1] - st.TD / 2         # the table's near edge (Tim's side)
 TORSO_GAP = 0.06                      # his jacket front this far from the table edge
-TIM_UPPER = {"head": (-13, 3), "neck": (2, 0), "chest": (12, 0), "fingers": 40}
+# Tim: MakeHuman's age macro is 0.5 = 25 years, 1.0 = 90 (linear between), so 55 years is 0.73 (at 0.55 he read as a
+# man of about 30). Head: chin up toward the dais and turned toward the camera side, so the eyeline passes a little
+# above and beside the witness lens; fingers curled 18 degrees (40 curled them into claws), thumbs 10.
+TIM_AGE, TIM_WEIGHT = 0.73, 0.6
+TIM_UPPER = {"head": (-18, -16), "neck": (2, 0), "chest": (12, 0), "fingers": 18}
+THUMB_CURL = 10.0
 ELBOW_FWD = 0.12          # the elbow hangs this far ahead of the shoulder (the upper arm nearly plumb)
+SHIRT = (0.55, 0.57, 0.6)       # read values (x people.FABRIC_VALUE): a pale shirt so the collar's V separates
+TIE = (0.06, 0.062, 0.085)      # a dark navy tie, flat (the texture's striped tie would shimmer)
 
 # the two still figures in the public rows: (row index, side, seat index, factory, pose)
 EXTRAS = [
-    (0, -1, 2, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 40}),
-    (1, 1, 3, "old", {"head": (4, -5), "neck": (2, 0), "chest": (-9, 0), "fingers": 45}),
+    (0, -1, 2, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 20}),
+    (1, 1, 3, "old", {"head": (4, -5), "neck": (2, 0), "chest": (-9, 0), "fingers": 22}),
 ]
 
 FOCUS = {
@@ -66,12 +73,21 @@ CAMERAS = {
                     fstop=2.8, beat="ch09"),
     # Ch 09: from the left end of the witness table, low, up at the dais: off the arcs' centre, so the tiers curve
     # away to the right, the empty high chairs and their microphones receding against the drape
-    "dais": dict(loc=(-1.05, 0.15, 1.02), aim=(1.4, 5.4, 2.05), lens=24, focus="fx_dais", fstop=5.6,
+    # (low, near the floor beside the table's left end: the lower fascia sweeps away in an arc from the left
+    # foreground to the tier's right end, the upper tier and the drape above)
+    "dais": dict(loc=(-1.65, 0.15, 0.62), aim=(1.0, 5.4, 2.3), lens=28, focus="fx_dais", fstop=5.6,
                  beat="ch09"),
     # Ch 09 (added): overhead on the table: his folded hands on the blank papers, the microphones, the glass, the felt
+    # (a stop under the stage: the table downlight lands square on the papers and his sleeves from above)
     "hands": dict(loc=(st.TIM_X + 0.12, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
-                  fstop=4.0, beat="ch09"),
+                  fstop=4.0, beat="ch09", exposure=EXPOSURE - 1.0),
 }
+# the table's things (overrides of hearing_room_set.TABLE_POS)
+TABLE_POS = {}
+# the shadow floor per camera (scene-linear lift after the exposure; about 0.003 lifts pure black to ~6/255 raw)
+LIFT = {"wide": 0.0032, "witness": 0.0018, "dais": 0.0024, "hands": 0.0014}
+# objects a camera does not see (by name or name prefix)
+HIDE = {}
 # per-camera light trims (multipliers on named lights)
 # The broadcast soft lights' narrow spread concentrates their power (a 30 deg spread is roughly 15x a bare panel), and
 # the table downlight lands on the tops of his shoulders, hands and papers: the close cameras take both down so the
@@ -326,54 +342,292 @@ def solve_arm_elbow(holder, k, side, elbow, wrist, twist, hand_dir):
     return S, Ea, mw @ pb[f"hand_fk.{k}"].head
 
 
+TIP_GROUPS = ("DEF-f_index.03", "DEF-f_middle.03", "DEF-f_ring.03", "DEF-f_pinky.03")
+PALM_GROUPS = ("DEF-palm", "DEF-hand")
+# where the palms go (world, relative to Tim's place): the right palm just right of his centre line on the papers, the
+# left palm laid over the right hand's back, a touch toward its knuckles
+R_PALM = (st.TIM_X + 0.025, EDGE + 0.255)
+L_OVER = Vector((0.0, 0.012, 0.0))
+L_CLEAR = 0.0025          # the left hand rests this far above the right hand's surface (no interpenetration)
+
+
+def hand_bvh(holder, k):
+    """A BVH of the body's hand surface on side `k` (masks off, so the base mesh's indices hold; the evaluated
+    subdivided mesh lists the base vertices first)."""
+    from mathutils.bvhtree import BVHTree
+    body = bpy.data.objects[holder["body"]]
+    gids = {g.index for g in body.vertex_groups if g.name.endswith(f".{k}") and g.name.startswith(HAND_GROUPS)}
+    sel = {v.index for v in body.data.vertices if any(ge.group in gids and ge.weight > 0.3 for ge in v.groups)}
+    masks = [md for md in body.modifiers if md.type == "MASK"]
+    for md in masks:
+        md.show_viewport = False
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    me = ev.to_mesh()
+    mw = body.matrix_world
+    n = len(me.vertices)
+    idx = {i: j for j, i in enumerate(sorted(i for i in sel if i < n))}
+    verts = [mw @ me.vertices[i].co for i in sorted(idx)]
+    polys = [[idx[i] for i in p.vertices] for p in body.data.polygons if all(i in idx for i in p.vertices)]
+    ev.to_mesh_clear()
+    for md in masks:
+        md.show_viewport = True
+    bpy.context.view_layer.update()
+    return BVHTree.FromPolygons(verts, polys)
+
+
+def clearance(pts, bvh, floor_z):
+    """The smallest height of `pts` over what is under them: the surface in `bvh` (cast from above, so a point inside
+    the other hand counts negative) or the floor (the papers)."""
+    worst = 9.9
+    for p in pts:
+        hit = bvh.ray_cast(p + Vector((0, 0, 0.25)), Vector((0, 0, -1)), 0.5)
+        sup = floor_z if hit[0] is None else max(floor_z, hit[0].z)
+        worst = min(worst, p.z - sup)
+    return worst
+
+
+def _centroid(pts):
+    return sum(pts, Vector()) / len(pts) if pts else Vector()
+
+
 def hands_folded(holder):
-    """Forearms over the table edge, the hands angled in and laid one over the other on the papers. Elbow first:
-    each upper arm hangs nearly plumb from the shoulder toward a point at forearm height; the forearm runs from
-    there to a wrist target on the table; the forearm twist that turns the palm down is chosen; then the wrist is
-    lowered until the hand's underside rests (the right on the papers, the left on the right's fingers)."""
+    """Forearms over the table edge, the hands angled in, folded: the right hand laid flat on the papers, the left
+    laid over the right hand's back. Elbow first: each upper arm hangs nearly plumb from the shoulder toward a point
+    at forearm height; the forearm runs from there to a wrist target on the table; the forearm twist that turns the
+    palm down is chosen. The right hand's pitch is chosen so its heel and its curled fingertips both rest, and its
+    wrist lowered until it rests on the papers; the left hand is slid until its palm sits over the right hand's back
+    and lowered until it clears the right hand's surface (a BVH of it) by L_CLEAR. Both wrists' targets are corrected
+    until the palms land where they are meant to (the forearm falls short of a far target)."""
     rig = rigged.rig_of(holder)
     mw = rig.matrix_world
     left = (mw.to_3x3() @ Vector((1, 0, 0))).normalized()
     fwd = -(mw.to_3x3() @ Vector((0, 1, 0))).normalized()
-    report = []
-    rest_on = {"R": st.TOP + 0.003, "L": st.TOP + 0.024}
     pb = rig.pose.bones
+    for k in "LR":           # the thumbs relaxed too (the finger curl is set by pose_figure)
+        n = f"thumb.01_master.{k}"
+        if n in pb:
+            pb[n].rotation_mode = "XYZ"
+            pb[n].rotation_euler.x = math.radians(THUMB_CURL)
+    bpy.context.view_layer.update()
+    report = []
+    paper = st.PAPER_TOP
+    solved = {}
+    bvh_r = None
     for side, k in ((-1, "R"), (1, "L")):
         inward = -left * side
         S = mw @ pb[f"upper_arm_fk.{k}"].head
         elbow = Vector((S.x, S.y + ELBOW_FWD, st.TOP + 0.04)) + left * side * 0.065
-        wrist = Vector((st.TIM_X, 0, 0)) + left * side * (0.095 if k == "R" else 0.085)
-        wrist.y = EDGE + (0.22 if k == "R" else 0.235)
-        wrist.z = rest_on[k] + 0.03
-        hd = (fwd * 0.55 + inward * 0.82 + Vector((0, 0, HAND_PITCH))).normalized()
+        wrist = Vector((st.TIM_X, 0, 0)) + left * side * (0.07 if k == "R" else 0.06)
+        wrist.y = EDGE + (0.22 if k == "R" else 0.232)
+        wrist.z = paper + (0.03 if k == "R" else 0.06)
+
+        def hdir(p):
+            return (fwd * 0.55 + inward * 0.82 + Vector((0, 0, p))).normalized()
         best = None
         for twist in (side * 80.0, -side * 80.0, side * 40.0, -side * 40.0, 0.0):
-            solve_arm_elbow(holder, k, side, elbow, wrist, twist, hd)
+            solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(HAND_PITCH))
             pdn = _palm_down(rig, k)
             if best is None or pdn > best[0]:
                 best = (pdn, twist)
         twist = best[1]
-        gap = 0.0
-        for it in range(6):
-            S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hd)
-            pts = group_points(holder, HAND_GROUPS, f".{k}")
-            low = min(p.z for p in pts) if pts else rest_on[k]
-            gap = low - rest_on[k]
-            if abs(gap) < 0.002:
+
+        def rest_r(pitch):
+            """Right hand: lower the wrist until the hand's lowest point is on the papers."""
+            for _ in range(6):
+                solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
+                pts = group_points(holder, HAND_GROUPS, f".{k}")
+                gap = min(p.z for p in pts) - (paper + 0.0008)
+                if abs(gap) < 0.0015:
+                    break
+                wrist.z -= gap
+            tips = min(p.z for p in group_points(holder, TIP_GROUPS, f".{k}")) - paper
+            heel = min(p.z for p in group_points(holder, PALM_GROUPS, f".{k}")) - paper
+            return tips, heel
+
+        def rest_l(pitch):
+            """Left hand: lower (or lift) the wrist until it clears the right hand and the papers by L_CLEAR."""
+            c = 0.0
+            for _ in range(7):
+                solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
+                c = clearance(group_points(holder, HAND_GROUPS, f".{k}"), bvh_r, paper)
+                if abs(c - L_CLEAR) < 0.0012:
+                    break
+                wrist.z -= c - L_CLEAR
+            return c
+
+        pitch = HAND_PITCH
+        for it in range(4):              # slide the wrist (and the elbow with it) until the palm lands on its mark
+            if k == "R":
+                if it == 0:      # the pitch at which the heel and the fingertips both rest
+                    scores = []
+                    for p_ in (-0.2, -0.1, 0.0, 0.1, 0.2, 0.3):
+                        tips, heel = rest_r(p_)
+                        scores.append((tips + heel + 0.5 * abs(tips - heel), p_, tips, heel))
+                    _, pitch, tips, heel = min(scores)
+                    print("HEARING hands R pitch scores " + ", ".join(f"{p_:+.1f}: tips {t * 1000:+.0f} heel "
+                                                                      f"{h * 1000:+.0f}" for _, p_, t, h in scores),
+                          flush=True)
+                rest_r(pitch)
+                goal = Vector((R_PALM[0], R_PALM[1], 0))
+            else:
+                rest_l(pitch)
+                goal = solved["R_palm"] + L_OVER
+            pc = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
+            err = Vector((goal.x - pc.x, goal.y - pc.y, 0))
+            if err.length < 0.004:
                 break
-            wrist.z -= gap
+            wrist += err
+            elbow += err * 0.8
+        if k == "R":
+            tips, heel = rest_r(pitch)
+            solved["R_palm"] = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
+            bvh_r = hand_bvh(holder, "R")
+            extra = f"pitch {pitch:+.2f} fingertips {tips * 1000:+.1f} mm heel {heel * 1000:+.1f} mm over the papers"
+        else:
+            c = rest_l(pitch)
+            pc = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
+            # the BVH check: no vertex of the left hand inside the right
+            pts = group_points(holder, HAND_GROUPS, f".{k}")
+            inside = sum(1 for p in pts if clearance([p], bvh_r, paper) < 0.0)
+            extra = (f"clearance over the right hand {c * 1000:+.1f} mm, vertices inside it {inside}, palm offset from "
+                     f"the right palm ({(pc.x - solved['R_palm'].x) * 1000:+.0f}, "
+                     f"{(pc.y - solved['R_palm'].y) * 1000:+.0f}) mm")
+        S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
+        if k == "L":         # the final pose may have nudged it: the last word is the clearance
+            c = clearance(group_points(holder, HAND_GROUPS, f".{k}"), bvh_r, paper)
+            if c < L_CLEAR * 0.5:
+                wrist.z += L_CLEAR - c
+                S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
         fore = group_points(holder, ("DEF-forearm",), f".{k}")
         flo = min((p.z for p in fore if p.y > EDGE + 0.01), default=9.9)
-        report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} shoulder ({S.x:+.3f}, {S.y:+.3f}, {S.z:.3f}) "
-                      f"elbow ({E.x:+.3f}, {E.y:+.3f}, {E.z:.3f}) wrist ({W.x:+.3f}, {W.y:+.3f}, {W.z:.3f}) "
-                      f"hand gap {gap * 1000:+.1f} mm, forearm low over the table {(flo - st.TOP) * 1000:+.0f} mm")
+        report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} elbow ({E.x:+.3f}, {E.y:+.3f}, {E.z:.3f}) "
+                      f"wrist ({W.x:+.3f}, {W.y:+.3f}, {W.z:.3f}) {extra}, forearm low over the table "
+                      f"{(flo - st.TOP) * 1000:+.0f} mm")
     print("HEARING hands " + "; ".join(report), flush=True)
+
+
+def suit_tones(holder, item, jacket, shirt, tie):
+    """people.man tints the elegant suit flat in one tone, so shirt, tie and jacket read as one black shirt. Split it
+    with masks made from the garment's own texture (the shirt is its bright grey regions: collar, V and cuffs; the
+    tie its navy region, grown to swallow its stripes) and tint the three flat: a pale shirt so the collar's V
+    separates from the jacket, a dark tie. Tones are read values, multiplied by people.FABRIC_VALUE."""
+    import numpy as np
+    ob = bpy.data.objects.get(f"{holder.name}_{item}")
+    if ob is None:
+        print(f"HEARING suit_tones: no {holder.name}_{item}", flush=True)
+        return
+    fv = people.FABRIC_VALUE
+    for slot in ob.material_slots:
+        mat = slot.material
+        if not (mat and mat.use_nodes):
+            continue
+        nt = mat.node_tree
+        tex = next((n for n in nt.nodes if n.type == "TEX_IMAGE" and n.image), None)
+        bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if tex is None or bsdf is None:
+            continue
+        img = tex.image
+        w, hgt = img.size
+        px = np.empty(w * hgt * 4, np.float32)
+        img.pixels.foreach_get(px)
+        px = px.reshape(hgt, w, 4)[..., :3]
+        v, mn = px.max(-1), px.min(-1)
+        navy = (px[..., 2] - px[..., 0] > 0.06) & (v > 0.12)
+        tie = np.zeros_like(navy)
+        ys, xs = np.nonzero(navy)
+        if len(xs) > 50:
+            y0, y1 = int(np.percentile(ys, 0.5)) - 10, int(np.percentile(ys, 99.5)) + 10
+            x0, x1 = int(np.percentile(xs, 0.5)) - 10, int(np.percentile(xs, 99.5)) + 10
+            sub = navy[y0:y1, x0:x1]
+            grown = sub.copy()
+            for dy in range(-7, 8):                  # close the stripes: grow 7 px, shrink 4
+                for dx in range(-7, 8):
+                    if dx * dx + dy * dy <= 49:
+                        grown |= np.roll(np.roll(sub, dy, 0), dx, 1)
+            shrunk = grown.copy()
+            for dy in range(-4, 5):
+                for dx in range(-4, 5):
+                    if dx * dx + dy * dy <= 16:
+                        shrunk &= np.roll(np.roll(grown, dy, 0), dx, 1)
+            tie[y0:y1, x0:x1] = shrunk
+        shirt_m = (v > 0.42) & ((v - mn) < 0.15) & ~tie
+        out = np.zeros((hgt, w, 4), np.float32)
+        out[..., 0] = shirt_m
+        out[..., 1] = tie
+        out[..., 3] = 1.0
+        mimg = bpy.data.images.new(f"{holder.name}_suitmask", w, hgt, alpha=False)
+        mimg.pixels.foreach_set(out.ravel())
+        mimg.colorspace_settings.name = "Non-Color"
+        mt_ = nt.nodes.new("ShaderNodeTexImage")
+        mt_.image = mimg
+        if tex.inputs["Vector"].links:
+            nt.links.new(tex.inputs["Vector"].links[0].from_socket, mt_.inputs["Vector"])
+        sep = nt.nodes.new("ShaderNodeSeparateColor")
+        nt.links.new(mt_.outputs["Color"], sep.inputs["Color"])
+        mix1 = nt.nodes.new("ShaderNodeMix")
+        mix1.data_type = "RGBA"
+        nt.links.new(sep.outputs["Red"], mix1.inputs["Factor"])
+        mix1.inputs["A"].default_value = (*[c * fv for c in jacket], 1)
+        mix1.inputs["B"].default_value = (*[c * fv for c in shirt], 1)
+        mix2 = nt.nodes.new("ShaderNodeMix")
+        mix2.data_type = "RGBA"
+        nt.links.new(sep.outputs["Green"], mix2.inputs["Factor"])
+        nt.links.new(mix1.outputs["Result"], mix2.inputs["A"])
+        mix2.inputs["B"].default_value = (*[c * fv for c in tie], 1)
+        nt.links.new(mix2.outputs["Result"], bsdf.inputs["Base Color"])
+        print(f"HEARING suit_tones: {mat.name} shirt {shirt_m.mean() * 100:.2f}% tie {tie.mean() * 100:.2f}% of the "
+              f"texture", flush=True)
+
+
+def soften_hair(holder):
+    """The sculpted short hair read as a ribbed swim cap: a regular groove bump over a perfectly even shell. Break
+    the shell with a slow clumpy displacement (inside the volume group, so the hairline stays tapered) and make the
+    carving irregular and shallow (a strongly distorted wave plus a fine noise)."""
+    hair = bpy.data.objects.get(f"{holder['body']}_hair")
+    if hair is not None:
+        tx = bpy.data.textures.new(f"{holder.name}_hair_clumps", "CLOUDS")
+        tx.noise_scale, tx.noise_depth = 0.018, 2
+        dp = hair.modifiers.new("clumps", "DISPLACE")
+        dp.texture, dp.texture_coords = tx, "LOCAL"
+        dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.5, 0.004, "volume"
+        i, j = hair.modifiers.find("clumps"), hair.modifiers.find("volume") + 1
+        if 0 < j < i:
+            hair.modifiers.move(i, j)
+    m = bpy.data.materials.get(f"hair_{holder.name}")
+    if m is None:
+        return
+    nt = m.node_tree
+    for n in nt.nodes:
+        if n.type == "TEX_WAVE":
+            n.inputs["Scale"].default_value = 95.0
+            n.inputs["Distortion"].default_value = 7.0
+            n.inputs["Detail"].default_value = 4.0
+            n.inputs["Detail Roughness"].default_value = 0.7
+        if n.type == "BUMP":
+            n.inputs["Strength"].default_value = 0.12
+    b = nt.nodes.get("Principled BSDF")
+    bump = next((n for n in nt.nodes if n.type == "BUMP"), None)
+    if b is not None and bump is not None:
+        nz = nt.nodes.new("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 260.0
+        nz.inputs["Detail"].default_value = 4.0
+        b2 = nt.nodes.new("ShaderNodeBump")
+        b2.inputs["Strength"].default_value = 0.2
+        b2.inputs["Distance"].default_value = 0.002
+        nt.links.new(nz.outputs["Fac"], b2.inputs["Height"])
+        nt.links.new(bump.outputs["Normal"], b2.inputs["Normal"])
+        nt.links.new(b2.outputs["Normal"], b.inputs["Normal"])
+        b.inputs["Roughness"].default_value = 0.78
 
 
 def tim():
     """Tim at the witness table: seated, then turned to face the dais, slid so his jacket front sits TORSO_GAP from
     the table edge; his chair set behind him; his arms laid on the table."""
-    h = people.man("Tim", age=0.55, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
+    h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
+    suit_tones(h, "male_elegantsuit01", (0.09, 0.09, 0.1), SHIRT, TIE)
+    soften_hair(h)
     seat_figure(h, st.SEAT_Z, TIM_UPPER, 0.11, 0.11, tag="Tim")
     h.rotation_euler = (0, 0, math.radians(180.0))
     bpy.context.view_layer.update()
@@ -458,53 +712,149 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
-    print(f"HEARING camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}",
-          flush=True)
+    # the shadow floor: a small black lift in scene linear (applied before the view transform and the exposure), so
+    # the deepest shadows sit a few levels above zero instead of being crushed by the film grade
+    lift = LIFT.get(name, 0.0) / (2.0 ** CAMERAS.get(name, {}).get("exposure", EXPOSURE))
+    vs = sc.view_settings
+    vs.use_curve_mapping = lift > 0
+    if lift > 0:
+        vs.curve_mapping.black_level = (-lift, -lift, -lift)
+        vs.curve_mapping.update()
+    for cam_, names in HIDE.items():
+        for n in names:
+            for ob in [o for o in bpy.data.objects if o.name == n or o.name.startswith(n + "_")]:
+                ob.hide_render = cam_ == name
+    print(f"HEARING camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}, "
+          f"black lift {lift:.4f}", flush=True)
+
+
+def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0):
+    """setkit.render, but with the light-path depth the water glass needs: setkit fixes max_bounces at 6, and a ray
+    through a tumbler and its water (six refractions before it reaches anything lit) ended there, so the glass
+    rendered as an opaque black cup. Everything else as setkit does it."""
+    import time
+    sc = bpy.context.scene
+    w = bpy.data.worlds.new("world")
+    sc.world = w
+    w.use_nodes = True
+    w.node_tree.nodes["Background"].inputs[1].default_value = world
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = samples
+    sc.cycles.use_adaptive_sampling = True
+    sc.cycles.adaptive_threshold = 0.03
+    sc.cycles.use_denoising = True
+    sc.cycles.max_bounces = 12
+    sc.cycles.diffuse_bounces = 4
+    sc.cycles.glossy_bounces = 4
+    sc.cycles.transmission_bounces = 12
+    sc.cycles.volume_bounces = 0
+    sc.render.resolution_x, sc.render.resolution_y = res
+    sc.view_settings.view_transform = "AgX"
+    looks = [lk.identifier for lk in bpy.types.ColorManagedViewSettings.bl_rna.properties["look"].enum_items]
+    sc.view_settings.look = "AgX - Base Contrast" if "AgX - Base Contrast" in looks else "None"
+    sc.view_settings.exposure = exposure
+    sc.render.image_settings.file_format = "PNG"
+    sc.render.filepath = out
+    t0 = time.time()
+    bpy.ops.render.render(write_still=True)
+    print(f"RENDER {res[0]}x{res[1]} {samples} samples: {time.time() - t0:.1f} s")
 
 
 def install_hook():
-    orig = getattr(sk.render, "_orig", sk.render)
-
     def render(*args, **kw):
         apply_camera(which_camera())
-        return orig(*args, **kw)
-    render._orig = orig
+        return _render(*args, **kw)
+    render._orig = getattr(sk.render, "_orig", sk.render)
     sk.render = render
 
 
 # ---------------------------------------------------------------- lights
+def extra_seat(row, s, c):
+    return s * st.SEATS_X[c], st.ROWS[row]
+
+
+def under_cap_strips(energy=(0.55, 0.45)):
+    """A warm line of light hidden under each tier's cap nose, grazing down the fascia: the panels' bevels catch it
+    and the fascia falls off from the cap to the floor rail (the cans over the tiers sit behind the fascia and the
+    broadcast lights are too far away to give a vertical panel any falloff)."""
+    for k, t in enumerate(st.TIERS):
+        R, zc, n = t["R"], t["zc"], t["n"]
+        angs = st.angles(n)
+        for i, (a0, a1) in enumerate(zip(angs, angs[1:])):
+            mid, u, nrm, L = st.facet(R, a0, a1)
+            p = mid + nrm * 0.03
+            loc = (p.x, p.y, zc - 0.072)
+            tgt = mid + nrm * 0.16
+            st.area(f"cap_strip{k}_{i}", loc, (L - 0.12, 0.012), energy[k], WARM_STRIP, spread=100,
+                    rot=st.aim_rot(loc, (tgt.x, tgt.y, 0.0)))
+
+
+WARM_STRIP = (1.0, 0.9, 0.78)
+
+
 def lights():
     """Practicals first: the downlight over the table (the island), the broadcast soft lights (key and fill on the
-    bar in front of the witness, two on the bar behind him toward the dais), the cans over the tiers, a few dim
-    cans over the public rows; the washer on the drape, the sconces and the doors are built with their fittings."""
+    bar in front of the witness, two on the bar behind him toward the dais), the cans over the tiers, the light
+    hidden under the tiers' caps, a can on each still figure in the public rows and a few dim cans over the rows,
+    one over the press table; the washer on the drape, the sconces and the doors are built with their fittings."""
     xs, ys = st.coffer_centres()
     # the island: two cans in the coffer over the table, both aimed at Tim's place
     st.downlight("dl_table", st.TIM_X + 0.25, 0.0, 450.0, target=(st.TIM_X + 0.05, -0.15, st.TOP), size_deg=30,
                  blend=0.75, radius=0.06)
     st.downlight("dl_table2", st.TIM_X + 0.95, 0.45, 0.0)
-    # broadcast key and fill, from the dais side, on the bar at y 1.2
+    # broadcast key and fill, from the dais side, on the bar at y 1.2 (hung 0.5 m below it on their pipes)
     face = Vector((st.TIM_X, -0.5, 1.25))
-    st.tv_light("tv_key", (st.TIM_X + 2.3, 1.2, 4.55), face, 75.0, spread=30)
-    st.tv_light("tv_fill", (st.TIM_X - 2.6, 1.2, 4.55), face, 12.0, spread=30)
-    # on the bar behind him: aimed past him at the dais (they rim his shoulders and light the lower tier)
-    st.tv_light("tv_back_l", (-2.2, -3.6, 4.6), (-0.8, 4.6, 1.3), 80.0, size=(0.6, 0.45), spread=40)
-    st.tv_light("tv_back_r", (2.4, -3.6, 4.6), (0.9, 4.8, 1.3), 80.0, size=(0.6, 0.45), spread=40)
-    # the tiers: cans over the lower tier's chairs and the upper tier's
+    st.tv_light("tv_key", (st.TIM_X + 2.3, 1.2, 4.2), face, 66.0, spread=30)
+    st.tv_light("tv_fill", (st.TIM_X - 2.6, 1.2, 4.2), face, 10.5, spread=30)
+    # on the bar behind him: aimed past him at the dais chairs (they rim his shoulders and light the tiers)
+    st.tv_light("tv_back_l", (-2.2, -3.6, 4.25), (-0.8, 4.6, 1.8), 55.0, size=(0.6, 0.45), spread=36)
+    st.tv_light("tv_back_r", (2.4, -3.6, 4.25), (0.9, 4.8, 1.8), 55.0, size=(0.6, 0.45), spread=36)
+    # the tiers: narrower cans over the lower tier's desks and the upper tier's chairs
+    r0 = st.TIERS[0]["R"] + 0.5
     for x in (-2.4, 0.0, 2.4):
-        st.downlight(f"dl_t0_{x:+.1f}", x, 4.8, 520.0, target=(x * 1.1, 5.0, 0.5), size_deg=46, blend=0.7)
+        a = math.asin(x / r0)
+        p = st.P(r0, a)
+        st.downlight(f"dl_t0_{x:+.1f}", x, 4.8, 520.0, target=(p.x, p.y, st.TIERS[0]["zd"]), size_deg=32, blend=0.5)
     for x in (-4.8, -2.4, 0.0, 2.4, 4.8):
         st.downlight(f"dl_t1_{x:+.1f}", x, ys[-1], 460.0 if abs(x) < 3 else 260.0, target=(x * 0.95, 6.6, 0.9),
                      size_deg=46, blend=0.7)
+    under_cap_strips()
+    # the still figures: each in a faint cone from the can in front of it (toward the dais), aimed at its head
+    lit = set()
+    for (row, s, c, kind, upper) in EXTRAS:
+        x, y = extra_seat(row, s, c)
+        cx = min(xs, key=lambda v: abs(v - x))
+        cy = min((v for v in ys if v > y), default=ys[-1])
+        st.downlight(f"dl_fig_{cx:+.1f}_{cy:+.1f}", cx, cy, FIG_LIGHT, target=(x, y - 0.12, 1.05), size_deg=40,
+                     blend=0.8, radius=0.1)
+        lit.add((round(cx, 1), round(cy, 1)))
     # the public rows: a few cans on, low
-    for (x, y, e) in ((-2.4, -4.8, 90.0), (2.4, -4.8, 60.0), (2.4, -7.2, 70.0), (0.0, -2.4, 0.0)):
-        st.downlight(f"dl_pub_{x:+.1f}_{y:+.1f}", x, y, e, size_deg=85, blend=0.9)
+    for (x, y, e) in PUB_CANS:
+        if (round(x, 1), round(y, 1)) in lit:
+            continue
+        st.downlight(f"dl_pub_{x:+.1f}_{y:+.1f}", x, y, e, size_deg=60 if e > 100 else 85, blend=0.85)
+        lit.add((round(x, 1), round(y, 1)))
+    # the press table at the side of the well
+    px, py = PRESS[0], PRESS[1]
+    cx = min(xs, key=lambda v: abs(v - px))
+    cy = min(ys, key=lambda v: abs(v - py))
+    st.downlight(f"dl_press_{cx:+.1f}_{cy:+.1f}", cx, cy, 110.0, target=(px, py, 0.74), size_deg=50, blend=0.8)
+    lit.add((round(cx, 1), round(cy, 1)))
     # the rest of the cans dark
-    lit = {(0.0, 4.8), (-2.4, 4.8), (2.4, 4.8), (-2.4, -4.8), (2.4, -4.8), (2.4, -7.2), (0.0, -2.4), (0.0, 0.0)} | \
-          {(x, ys[-1]) for x in (-4.8, -2.4, 0.0, 2.4, 4.8)}
+    lit |= {(0.0, 4.8), (-2.4, 4.8), (2.4, 4.8), (0.0, 0.0), (round(st.TIM_X + 0.95, 1), 0.5)} | \
+           {(round(x, 1), round(ys[-1], 1)) for x in (-4.8, -2.4, 0.0, 2.4, 4.8)}
     for x in xs:
         for y in ys:
-            if (round(x, 1), round(y, 1)) not in {(round(a, 1), round(b, 1)) for a, b in lit}:
+            if (round(x, 1), round(y, 1)) not in lit:
                 st.downlight(f"dl_off_{x:+.1f}_{y:+.1f}", x, y, 0.0)
+
+
+FIG_LIGHT = 160.0
+PUB_CANS = ((-2.4, -4.8, 160.0), (2.4, -4.8, 160.0), (2.4, -7.2, 70.0), (-2.4, -7.2, 55.0))
+PRESS = (-4.6, 1.3, -90.0)          # the press table: centre x, y, turn (its users face the witness table)
+CLERK = (1.6, 2.6)                  # the clerk's desk, under the lower tier, right of centre
+TRIPOD = (-3.7, -0.9, -75.0)        # a press camera on its tripod at the front of the public, aimed at the witness
 
 
 # ---------------------------------------------------------------- build
@@ -519,10 +869,18 @@ def build(cast=True):
     places = st.dais()
     chair_src, mic_src = st.dais_props(places)
     st.witness_table()
-    st.table_dressing(mic_src)
+    st.table_dressing(mic_src, TABLE_POS)
     coll = st.public_chair_collection()
     st.public_seats(coll)
     st.dressing()
+    # secondary dressing, kept dim: the press table at the side of the well, the clerk's desk under the lower tier,
+    # a press camera on its tripod at the front of the public
+    st.staff_table("press", PRESS[0], PRESS[1], PRESS[2], length=1.8, folders=3, chairs=2)
+    a = math.degrees(math.atan2(CLERK[0], CLERK[1] - st.DC))
+    st.staff_table("clerk", CLERK[0], CLERK[1], 180.0 - a, length=1.4, folders=1, chairs=0)
+    behind = Vector(CLERK) + Vector((math.sin(math.radians(a)), math.cos(math.radians(a)))) * 0.72
+    st.witness_chair("clerk_chair", behind.x, behind.y, turn=180.0 - a + 4.0)
+    st.tripod_camera("presscam", TRIPOD[0], TRIPOD[1], TRIPOD[2])
     lights()
     # the empty place's chair, pushed in under the table edge
     st.witness_chair("empty_chair", st.EMPTY_X, EDGE - 0.36, turn=3.0)

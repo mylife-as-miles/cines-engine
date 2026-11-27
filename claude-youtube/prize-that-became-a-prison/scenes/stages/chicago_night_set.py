@@ -35,8 +35,8 @@ CONSOLE = (-1.45, -0.05, 0.78)                  # y0, y1, top
 LAMP = (-2.79, -0.36)                           # lamp base centre on the console
 LAMP_BULB_Z = 1.30
 CASE = (-2.42, 1.12, -62.0)                     # suitcase footprint centre and turn (deg)
-ENTRY_CAN = (-2.38, 1.0)                        # the entry downlight in the ceiling, by the door
-ENTRY_POWER = 240.0
+ENTRY_CAN = (-2.2, 0.8)                         # the entry downlight in the ceiling, by the door, just in front of the case
+ENTRY_POWER = 380.0
 M = {}
 
 
@@ -413,7 +413,7 @@ def room():
     cyl("can_lens", 0.034, 0.004, (ENTRY_CAN[0], ENTRY_CAN[1], H - 0.012), sk.emission("can_lens", (1.0, 0.82, 0.62), 14.0), verts=32)
     li = bpy.data.lights.new("entry_light", "SPOT")
     li.energy, li.color, li.shadow_soft_size = ENTRY_POWER, (1.0, 0.72, 0.48), 0.03
-    li.spot_size, li.spot_blend = math.radians(64), 0.55
+    li.spot_size, li.spot_blend = math.radians(46), 0.6
     lo = _link(bpy.data.objects.new("entry_light", li))
     lo.location = (ENTRY_CAN[0], ENTRY_CAN[1], H - 0.02)
     window()
@@ -628,28 +628,39 @@ def coffee_table():
                           (cx + 0.3 + dx, cy - 0.05 + dy, 0.6 + h)], 0.0025, stem, res=2)
 
 
+def strut(name, a, b, r1, r2, m, verts=20):
+    """A tapered round leg from a to b (radius r1 at a)."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    ob = cyl(name, r1, d.length, tuple((a + b) / 2), m, verts=verts, r2=r2)
+    ob.rotation_mode = "QUATERNION"
+    ob.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(d.normalized())
+    return ob
+
+
 def lounge_chair():
+    """A mid-century lounge chair by the window: walnut side frames (tapered legs, a flat arm rail), a deep seat
+    cushion and a raked back cushion in a warm wool."""
     m = M
     cx, cy, turn = 1.95, 1.05, math.radians(205)
     R = Matrix.Rotation(turn, 4, "Z")
+    O = Vector((cx, cy, 0))
+    P = lambda x, y, z: tuple(O + R @ Vector((x, y, z)))
     parts = []
 
-    def part(name, size, local, mm, bev, tilt=0.0):
-        p = Vector((cx, cy, 0)) + R @ Vector(local)
-        ob = box(name, size, tuple(p), mm, bevel=bev, rot=(tilt, 0, turn))
+    def part(name, size, local, mm, bev, tilt=0.0, seg=4):
+        ob = box(name, size, P(*local), mm, bevel=bev, rot=(tilt, 0, turn), seg=seg)
         parts.append(ob)
         return ob
 
-    part("chair_frame", (0.72, 0.74, 0.08), (0, 0, 0.32), m["walnut"], 0.01)
-    part("chair_seat", (0.62, 0.66, 0.13), (0, 0.02, 0.425), m["uphol"], 0.045)
-    part("chair_back", (0.62, 0.14, 0.5), (0, -0.33, 0.7), m["uphol"], 0.05, tilt=math.radians(-14))
     for s in (-1, 1):
-        part(f"chair_arm{s}", (0.06, 0.62, 0.035), (s * 0.35, 0.02, 0.6), m["walnut"], 0.012)
-        part(f"chair_armpost{s}", (0.04, 0.04, 0.25), (s * 0.35, 0.25, 0.46), m["walnut"], 0.01)
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            p = Vector((cx, cy, 0)) + R @ Vector((sx * 0.3, sy * 0.3, 0.14))
-            cyl(f"chair_leg{sx}{sy}", 0.02, 0.28, tuple(p), m["walnut"], r2=0.013, verts=20)
+        parts.append(strut(f"chair_leg_f{s}", P(s * 0.34, 0.31, 0.0), P(s * 0.34, 0.27, 0.6), 0.014, 0.022, m["walnut"]))
+        parts.append(strut(f"chair_leg_b{s}", P(s * 0.34, -0.31, 0.0), P(s * 0.34, -0.37, 0.62), 0.014, 0.022, m["walnut"]))
+        part(f"chair_arm{s}", (0.06, 0.74, 0.028), (s * 0.34, -0.04, 0.62), m["walnut"], 0.012)
+    part("chair_rail_f", (0.64, 0.04, 0.06), (0, 0.29, 0.33), m["walnut"], 0.008)
+    part("chair_rail_b", (0.64, 0.04, 0.06), (0, -0.31, 0.33), m["walnut"], 0.008)
+    part("chair_seat", (0.62, 0.64, 0.14), (0, 0.0, 0.43), m["uphol"], 0.055, seg=5)
+    part("chair_back", (0.6, 0.15, 0.54), (0, -0.33, 0.74), m["uphol"], 0.06, tilt=math.radians(-16), seg=5)
     # the side table beside it, a small lamp-less tray table
     tx, ty = 2.25, 1.62
     cyl("side_top", 0.22, 0.025, (tx, ty, 0.52), m["walnut"], verts=64, bev=0.006)

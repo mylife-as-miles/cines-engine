@@ -23,13 +23,19 @@ import detention_corridor_mats as mt
 XW, H, T = 1.25, 2.7, 0.2                 # corridor half width, ceiling, wall thickness
 Y0, Y1 = -4.0, 13.0                       # near wall and end wall (corridor faces)
 SPLIT = 1.2                               # dado line
-CELL_DOORS = (("L", 1.6), ("R", 3.6), ("L", 5.6), ("R", 7.6), ("L", 9.6), ("R", 11.6))
+# the alternating rhythm runs on past the camera: the last door (R -0.4) stands half out of the corridor shot's right
+# edge, its lit window throwing a cool patch across the near left wall
+CELL_DOORS = (("L", 1.6), ("R", 3.6), ("L", 5.6), ("R", 7.6), ("L", 9.6), ("R", 11.6), ("R", -0.4))
 CLOSE = ("R", 7.6)                        # the door of the close-up
+# the near doors whose cells keep a night light on: each window spills a soft cool patch across the corridor onto
+# the opposite wall at dado height, so the foreground walls read (coursing, dado) without any fill
+WIN_LIT = {0: 30.0, 1: 26.0, 6: 34.0}     # door index -> W of the light inside its window
 # (y, level): the two nearest are dead, so the corridor opens out of the dark; then a pool at 4.6, a dead fitting
-# at 7.0 (a dark gap between the pools), a pool at 9.4, and by the end wall a dying tube
-FITTINGS = ((-0.4, 0.0), (2.2, 0.0), (4.6, 1.0), (7.0, 0.0), (9.4, 1.0), (11.8, 0.2))
+# at 7.0 (a dark gap between the pools), a pool at 9.4, and by the end wall a dying tube, low enough not to wash
+# the visitation door under it
+FITTINGS = ((-0.4, 0.0), (2.2, 0.0), (4.6, 1.0), (7.0, 0.0), (9.4, 1.0), (11.8, 0.07))
 FIT_W = 300.0                             # a fitting's lamp (W) at level 1
-FIT_SPREAD = 118.0                        # its down light's spread: pools end on the walls instead of merging
+FIT_SPREAD = 90.0                         # its down light's spread: each pool a separate ellipse with edges
 FIT_UP = 8.0                              # its up light (W at level 1): the soffit between pools stays dark
 DRAIN = (0.3, 2.35)
 HOSE_Y, HOSE_Z = 5.0, 1.2                 # the recessed fire-hose cabinet in the right wall (centre)
@@ -37,20 +43,25 @@ HOSE_W, HOSE_H, HOSE_D = 0.7, 0.8, 0.18
 OPEN_W, OPEN_H = 1.075, 2.105             # wall opening for a cell-door block
 FRONT = 0.34                              # the prop's local x lying in the wall face
 LEAF = 0.301                              # the prop's leaf face (set back 4 cm in its frame)
+WIN_IY, WIN_IZ, WIN_FW = 0.19, 0.22, 0.05  # the vision panel's opening (half sizes) and its flat frame's width
+DOOR_PAINT = (0.135, 0.165, 0.19)         # blue-grey: a step off the warm grey wall in hue and value
 CELL_D, CELL_W, CELL_H = 3.2, 2.4, 2.6
 RX, RY0, RY1 = 1.8, Y1 + T, 17.4          # visitation room: half width, front and back wall faces
 VD_X, VD_W, VD_H, VD_OPEN = 0.0, 0.92, 2.1, 50.0
 BD_X = 0.78                               # the closed door in the visitation room's back wall
 TABLE, TOP = (0.0, 15.55), 0.74
 PEND_Z = 1.46                             # the pendant shade's rim (0.72 m over the table)
-PEND_W = 180.0                            # the lamp's wide cone (W): table, floor round it, the table's shadow
+PEND_W = 90.0                             # the lamp's wide cone (W): floor round the table, the table's shadow
 POOL_W = 300.0                            # its hot centre (W): the pool on the table round the envelope
+POOL_CONE = 40.0                          # the hot centre's cone (deg): the table top is the island, not the floor
 GLOW_W = 18.0                             # the bare bulb lighting the inside of the shade
 COOL = (0.80, 0.91, 1.0)
 WARM = (1.0, 0.87, 0.7)
 LEAK = (1.0, 0.70, 0.42)                  # the room's light leaking out (pushed warm: the grade halves saturation)
 AMBER = (1.0, 0.40, 0.08)                 # the leak and the room seen through the gap: AgX and the grade both
                                           # wash warm light toward neutral, so the source is pushed hard
+AMBER_DEEP = (1.0, 0.30, 0.05)            # the room washed warm and the wedge on the floor out of the door: the
+                                          # grade halves saturation and lifts blue, so it is pushed harder still
 UPPER, LOWER = (0.19, 0.187, 0.172), (0.055, 0.069, 0.081)
 
 M = {}
@@ -66,8 +77,8 @@ def materials():
         wall_x=mt.block_wall("block wall x", UPPER, LOWER, SPLIT, "x"),
         cell_y=mt.block_wall("cell wall y", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "y", scuffs=0.5),
         cell_x=mt.block_wall("cell wall x", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "x", scuffs=0.5),
-        floor=mt.floor_paint("corridor floor", paint=(0.052, 0.058, 0.06), bare=(0.11, 0.107, 0.1), drain=DRAIN,
-                             joint=2.4, joint_off=0.2, path_w=0.45, wall_x=XW, rough=0.6, damp_r=0.38),
+        floor=mt.floor_paint("corridor floor", paint=(0.052, 0.058, 0.06), bare=(0.085, 0.082, 0.077), drain=DRAIN,
+                             joint=2.4, joint_off=0.2, path_w=0.45, wall_x=XW, rough=0.6, damp_r=0.3, path_lift=1.2),
         cell_floor=mt.floor_paint("cell floor", path_w=-1.0, joint=40.0, rough=0.5),
         room_floor=mt.tile_floor("visit floor", c1=(0.15, 0.15, 0.145), c2=(0.12, 0.122, 0.12)),
         soffit=mt.soffit("soffit"),
@@ -82,7 +93,12 @@ def materials():
         # the skirting / kick plate: darker satin paint that keeps the knocks of trolleys and boots
         base=mt.paint("skirting", (0.022, 0.025, 0.028), 0.32, 0.04, 0.35, edge_rgb=(0.09, 0.09, 0.09)),
         bars=mt.paint("bar paint", (0.1, 0.112, 0.125), 0.4, 0.03, 0.25, edge_rgb=(0.2, 0.2, 0.2)),
-        tray=mt.plastic("tray plastic", (0.2, 0.19, 0.165), 0.5, 0.4),
+        tray=mt.plastic("tray plastic", (0.32, 0.30, 0.27), 0.5, 0.4),
+        # the hinges: the door's own paint, rubbed at the knuckle, no chips (the generated chips read as spatter)
+        hinge=mt.paint("hinge paint", (0.12, 0.145, 0.165), 0.42, 0.04, 0.3),
+        # a vinyl-covered cell mattress (a satin sheen that picks up a rim) and a grey wool blanket
+        vinyl=mt.plastic("mattress vinyl", (0.075, 0.085, 0.095), 0.38, 0.45),
+        blanket=mt.wool("blanket wool", (0.15, 0.15, 0.145)),
         cup=mt.plastic("cup plastic", (0.3, 0.3, 0.28), 0.35, 0.5),
         reel=mt.paint("hose reel", (0.16, 0.045, 0.035), 0.45, 0.04, 0.3),
         hose=mt.rubber("hose", (0.09, 0.07, 0.055), 0.6),
@@ -94,11 +110,14 @@ def materials():
         opal=mt.opal("diffuser off"),
         # dark, matt, worn: under the pendant it must stay a table top, not a grey lightbox, and the envelope reads
         # against it
-        laminate=mt.laminate("table laminate", rgb=(0.036, 0.038, 0.037), rough=0.68,
-                             rings=((0.34, -0.13, 0.037), (0.385, -0.06, 0.036), (-0.36, 0.21, 0.04))),
+        laminate=mt.laminate("table laminate", rgb=(0.036, 0.038, 0.037), rough=0.58,
+                             rings=((0.34, -0.13, 0.037), (0.385, -0.06, 0.036), (-0.36, 0.21, 0.04),
+                                    (0.17, -0.06, 0.038)),
+                             half=(0.55, 0.35)),
         table_steel=mt.paint("table frame", (0.045, 0.05, 0.055), 0.45, 0.03, 0.2, edge_rgb=(0.2, 0.2, 0.2)),
-        paper=mt.paper("envelope paper", (0.80, 0.76, 0.68), grime=0.35),
-        flap=mt.paper("envelope flap", (0.78, 0.74, 0.66)),
+        # matt, warm, fibrous: under the pendant it reads as paper, not a cold white card
+        paper=mt.paper("envelope paper", (0.68, 0.64, 0.56), rough=0.85, fibre=0.02, grime=0.35),
+        flap=mt.paper("envelope flap", (0.665, 0.625, 0.548), rough=0.85, fibre=0.02),
         shade_out=mt.enamel("shade enamel", (0.045, 0.06, 0.056)),
         shade_in=mt.enamel("shade inside", (0.62, 0.62, 0.58), 0.4),
         bakelite=mt.plastic("bakelite", (0.015, 0.014, 0.013), 0.35),
@@ -316,13 +335,26 @@ def close_cell():
     for dz in (-0.03, 0.0, 0.03):
         add_rod(bm, (nx - 0.1, ny - sy * 0.045, nz + dz), (nx + 0.1, ny - sy * 0.045, nz + dz), 0.003, 6)
     mesh_obj("night_cage", bm, m["wire"], smooth=True)
-    # out from the wall and tipped 45 deg down over the bunk
-    area("cell_close_night", (nx, ny - sy * 0.06, nz - 0.02), (0.19, 0.085), 60.0, (0.62, 0.76, 1.0), spread=120,
-         rot=(sy * math.radians(-45), 0, 0))
+    # out from the wall, tipped 45 deg down over the bunk and turned 30 deg toward the door, so it also rims the
+    # bars from inside (all four the same) and the mattress's near edge
+    d = Vector((-sx * math.sin(math.radians(30)), -sy * math.cos(math.radians(30)), 0.0)).normalized()
+    d = Vector((d.x * 0.707, d.y * 0.707, -0.707))
+    li = area("cell_close_night", (nx, ny - sy * 0.06, nz - 0.02), (0.19, 0.085), 140.0, (0.62, 0.76, 1.0), spread=120)
+    li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     bw = 0.8                                          # the prop is 1.07 m wide: a cell bunk is about 0.8
-    bunk = props.load("bunk-bed", size=1.95, axis="long", loc=(x_in + sx * (0.08 + 0.975), wall_y - sy * (bw / 2 + 0.01), 0.0),
+    bx, by = x_in + sx * (0.08 + 0.975), wall_y - sy * (bw / 2 + 0.01)
+    bunk = props.load("bunk-bed", size=1.95, axis="long", loc=(bx, by, 0.0),
                       turn_deg=180.0 if sy < 0 else 0.0, sat=0.4, val=0.7, rough_add=0.15)
     bunk.scale = (bunk.scale.x, bunk.scale.y * bw / 1.07, bunk.scale.z)
+    # the upper bunk made to read through the window: a crisp vinyl mattress 0.1 m thick over the prop's (its top
+    # 6 cm above the tie bar's line of sight, so the two do not merge), and a grey blanket folded square at its
+    # foot, the end the window sees
+    ml, mw_ = 1.86, bw - 0.1
+    mat_ = box("close_mattress", (ml, mw_, 0.1), (bx, by, 1.47), m["vinyl"], bevel=0.022)
+    fx = bx - sx * (ml / 2 - 0.3)                     # the foot end, toward the door
+    box("close_blanket", (0.42, mw_ - 0.12, 0.05), (fx, by - sy * 0.03, 1.545), m["blanket"], bevel=0.018)
+    box("close_blanket_top", (0.40, mw_ - 0.16, 0.034), (fx + sx * 0.008, by - sy * 0.035, 1.585), m["blanket"],
+        bevel=0.014, rot=(0, 0, math.radians(2.5)))
     return bunk
 
 
@@ -356,19 +388,26 @@ def door_proto():
             kill.append(f)
             nbar += 1
     bmesh.ops.delete(bm, geom=kill, context="FACES")
-    moved = squashed = flat = 0
+    moved = squashed = flat = hinged = 0
+    hinge_z = lambda z: 0.17 < z < 0.46 or 0.83 < z < 1.16 or 1.58 < z < 1.82
     for v in bm.verts:
         p = mw @ v.co
         if p.x < 0.2 and win(p):
             p.x = 0.2
             v.co = inv @ p
             moved += 1
-        elif p.x > LEAF + 0.003 and abs(p.y) < 0.33 and 1.12 < p.z < 1.88:
+        elif p.x > LEAF + 0.0008 and abs(p.y) < 0.33 and 1.12 < p.z < 1.88:
             # the window surround (lumpy generated geometry that read as melted under the raking light) pressed
-            # flat into the leaf: a crisp riveted frame is built over it in window_frame()
-            p.x = LEAF + 0.003
+            # flat into the leaf: a flat welded frame is built over it in window_frame()
+            p.x = LEAF + 0.0008
             v.co = inv @ p
             flat += 1
+        elif p.x > LEAF + 0.002 and -0.54 < p.y < -0.33 and hinge_z(p.z):
+            # the prop's hinges (an oversized hex bolt, read as a ship's fitting) pressed flat, the leaf part into
+            # the leaf and the frame part into the frame: barrel hinges are built over them in hinges()
+            p.x = LEAF + 0.0008 if p.y > -0.447 else 0.286
+            v.co = inv @ p
+            hinged += 1
         elif p.x > 0.33 and abs(p.y) < 0.26 and 0.66 < p.z < 1.12:
             # the food hatch stood open as a 23 cm shelf (it read as a letterbox flap down the corridor): closed,
             # it sits a few centimetres proud of the leaf
@@ -379,12 +418,16 @@ def door_proto():
     bm.free()
     # its generated texture read as trowelled plaster: painted steel built here instead, in the door's own metres
     loc, rq, sc = mw.decompose()
-    steel = mt.door_steel("cell door steel", tuple(loc), tuple(rq.to_euler()), tuple(sc))
-    M["frame_steel"] = mt.door_steel("window frame steel")
+    # blue-grey door paint, a step bluer and lighter than the block wall, rubbed glossy round the window frame and
+    # the upper lock
+    steel = mt.door_steel("cell door steel", tuple(loc), tuple(rq.to_euler()), tuple(sc), paint=DOOR_PAINT,
+                          polish=((WIN_IY + WIN_FW, WIN_IZ + WIN_FW), (0.41, 1.72)))
+    M["frame_steel"] = mt.door_steel("window frame steel", paint=DOOR_PAINT)
     for slot in ob.material_slots:
         slot.material = steel
     print(f"CORRIDOR cell door: {len(kill)} faces cut ({nbar} of the prop's bars), {moved} recess verts brought forward, "
-          f"{squashed} hatch verts closed, {flat} surround verts flat; mesh-to-door {tuple(round(v, 3) for v in sc)}", flush=True)
+          f"{squashed} hatch verts closed, {flat} surround verts flat, {hinged} hinge verts flat; "
+          f"mesh-to-door {tuple(round(v, 3) for v in sc)}", flush=True)
     return h, ob
 
 
@@ -422,19 +465,26 @@ def open_hatch(i, xf, turn):
         L("hatch_jamb", (0.012, 0.022, zt - zb + 0.044), (f0 + 0.006, sg * (hw + 0.011), (zb + zt) / 2), m["frame"], 0.003)
     L("hatch_head", (0.012, 2 * hw + 0.044, 0.022), (f0 + 0.006, 0.0, zt + 0.011), m["frame"], 0.003)
     L("hatch_sill", (0.012, 2 * hw + 0.044, 0.022), (f0 + 0.006, 0.0, zb - 0.011), m["frame"], 0.003)
-    fd = 0.17                                         # the flap, down: a shelf
-    L("hatch_flap", (fd, 2 * hw + 0.02, 0.01), (f0 + 0.012 + fd / 2, 0.0, zb - 0.005), m["frame"], 0.003)
+    # the flap, down: a shelf on two stays, sagging 6 deg at its outer edge (so the tray on it tips toward the
+    # corridor and its compartments show)
+    fd, sag = 0.21, math.radians(6.0)
+    hx, hz = f0 + 0.012, zb                           # the flap's hinge line (door-local x, z)
+    Rf = Matrix.Rotation(turn, 3, "Z") @ Matrix.Rotation(sag, 3, "Y")
+    fe = Rf.to_euler()
+    on_flap = lambda s, y, h=0.0: (hx + s * math.cos(sag) + h * math.sin(sag), y, hz - s * math.sin(sag) + h * math.cos(sag))
+    box(f"cd{i}_hatch_flap", (fd, 2 * hw + 0.02, 0.01), xf(on_flap(fd / 2, 0.0, -0.005)), m["frame"], bevel=0.003, rot=fe)
     bm = bmesh.new()
     for sg in (-1, 1):
-        a = xf((f0 + 0.012 + fd - 0.01, sg * (hw + 0.004), zb))
+        a = xf(on_flap(fd - 0.01, sg * (hw + 0.004)))
         b = xf((f0 + 0.012, sg * (hw + 0.004), zt + 0.005))
         add_rod(bm, a, b, 0.0035, 8)
     mesh_obj(f"cd{i}_hatch_stays", bm, m["hardware"], smooth=True)
-    # the tray: 0.34 x 0.25 m, 25 mm deep, three compartments; half on the flap, half back in the slot
+    # the tray: 0.34 x 0.25 m, 25 mm deep, three compartments; pushed out onto the flap and left turned 18 deg
+    # (its back corner still in the slot), the compartments toward the corridor
     tw, td, th, wt = 0.34, 0.25, 0.024, 0.004
-    tx = f0 + 0.012 + fd + 0.015 - td / 2             # its centre, out from the leaf
-    tz = zb + 0.0005
-    root = empty(f"cd{i}_tray", xf((tx, 0.0, tz)), turn + math.radians(4))
+    root = empty(f"cd{i}_tray", xf(on_flap(fd / 2 + 0.012, 0.012, 0.0005)))
+    root.rotation_euler = (Matrix.Rotation(turn, 3, "Z") @ Matrix.Rotation(sag, 3, "Y")
+                           @ Matrix.Rotation(math.radians(18.0), 3, "Z")).to_euler()
     bm = bmesh.new()
     add_box(bm, (td, tw, wt), Vector((0, 0, wt / 2)))
     for sg in (-1, 1):
@@ -444,27 +494,44 @@ def open_hatch(i, xf, turn):
     add_box(bm, (td / 2 + 0.03, wt, th * 0.85), Vector(((td / 2 - 0.03) / 2, 0.045, th * 0.425)))   # short one
     tray = bevelled(mesh_obj(f"cd{i}_tray_body", bm, m["tray"]), 0.0012, 2, 40)
     tray.parent = root
-    # a thin-walled plastic cup, open at the top, standing in the big compartment
+    # a thin-walled plastic cup, open at the top, standing in the far front compartment
     cup = lathe(f"cd{i}_tray_cup", [(0.001, 0.0), (0.026, 0.0), (0.028, 0.004), (0.034, 0.088), (0.0345, 0.09)], m["cup"], 32)
     so = cup.modifiers.new("wall", "SOLIDIFY")
     so.thickness, so.offset = 0.0012, -1.0
     cup.parent = root
-    cup.location = (0.055, -0.075, wt)
-    # the cell's faint light coming out through the slot over the tray
-    area(f"cd{i}_hatch_glow", xf((f0 + 0.008, 0.0, (zb + zt) / 2 + 0.01)), (0.3, 0.1), 1.6, (0.62, 0.76, 1.0),
+    cup.location = (0.06, 0.105, wt)
+    # a covered bowl in the near front compartment: a moulded bowl and its domed lid with a knob, untouched
+    bowl = lathe(f"cd{i}_tray_bowl", [(0.001, 0.0), (0.034, 0.0), (0.046, 0.012), (0.053, 0.03), (0.054, 0.032)], m["cup"], 40)
+    bowl.parent = root
+    bowl.location = (0.055, -0.075, wt)
+    lid = lathe(f"cd{i}_tray_lid", [(0.057, 0.0), (0.057, 0.006), (0.05, 0.018), (0.034, 0.028), (0.012, 0.032),
+                                    (0.011, 0.04), (0.001, 0.041)], m["tray"], 40)
+    lid.parent = root
+    lid.location = (0.055, -0.075, wt + 0.03)
+    # a plastic spoon lying in the long back compartment
+    bm = bmesh.new()
+    add_box(bm, (0.012, 0.11, 0.003), Vector((0.0, 0.0, 0.0)))
+    bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=8, radius=1.0,
+                              matrix=Matrix.Translation((0.0, 0.07, 0.002)) @ Matrix.Diagonal((0.018, 0.026, 0.005, 1)))
+    sp = bevelled(mesh_obj(f"cd{i}_tray_spoon", bm, m["cup"]), 0.001, 1, 40)
+    sp.parent = root
+    sp.location = (-0.078, -0.02, wt + 0.004)
+    sp.rotation_euler = (0.06, 0.0, math.radians(-9))
+    # the cell's faint light coming out through the slot over the tray: it rims the tray, the lid and the cup
+    area(f"cd{i}_hatch_glow", xf((f0 + 0.008, 0.0, (zb + zt) / 2 + 0.01)), (0.3, 0.1), 16.0, (0.62, 0.76, 1.0),
          spread=130, rot=(0, -math.pi / 2, turn))
 
 
 def window_frame(i, xf, turn):
-    """A crisp pressed-steel frame round the cell door's window, over the prop's flattened surround: a rounded
-    rectangular ring 22 mm proud of the leaf with bevelled edges, 24 domed rivets on it, and steel liners lining
-    the reveal (they hide the cut-through geometry behind the glass). Built in door-local metres, so the door's
-    steel material maps onto it directly."""
-    oy, oz, ro = 0.27, 0.31, 0.07                     # outer half sizes, corner radius
-    iy, iz, ri = 0.19, 0.22, 0.018                    # inner (the opening's) half sizes, corner radius
-    x0, x1 = LEAF - 0.002, LEAF + 0.022
+    """A flat welded steel frame round the cell door's vision panel, over the prop's flattened surround: 50 x 10 mm
+    flat bar, square inside, a 12 mm radius outside, bevelled edges, a weld bead where it meets the leaf, eight small
+    countersunk bolt heads, and steel liners lining the reveal (they hide the cut-through geometry behind the
+    glass). Built in door-local metres, so the door's steel material maps onto it directly."""
+    iy, iz, ri = WIN_IY, WIN_IZ, 0.004                # inner (the opening's) half sizes, corner radius
+    oy, oz, ro = iy + WIN_FW, iz + WIN_FW, 0.012      # outer half sizes, corner radius
+    x0, x1 = LEAF - 0.002, LEAF + 0.010
     zc = 1.5
-    def outline(hy, hz, r, k=8):
+    def outline(hy, hz, r, k=6):
         pts = []
         for cy, cz, a0 in ((hy - r, hz - r, 0.0), (-(hy - r), hz - r, 90.0), (-(hy - r), -(hz - r), 180.0), (hy - r, -(hz - r), 270.0)):
             for j in range(k + 1):
@@ -485,14 +552,12 @@ def window_frame(i, xf, turn):
         bm.faces.new((vo0[j], vo0[k], vo1[k], vo1[j]))       # outer edge
         bm.faces.new((vi0[k], vi0[j], vi1[j], vi1[k]))       # inner edge
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
-    # rivets: flattened domes on the ring's mid line
+    # eight countersunk bolt heads: low 5 mm domes on the bar's mid line, two per side
     my, mz = (oy + iy) / 2, (oz + iz) / 2
-    spots = [(y, mz) for y in (-0.16, -0.08, 0.0, 0.08, 0.16)] + [(y, -mz) for y in (-0.16, -0.08, 0.0, 0.08, 0.16)]
-    spots += [(my, z) for z in (-0.18, -0.09, 0.0, 0.09, 0.18)] + [(-my, z) for z in (-0.18, -0.09, 0.0, 0.09, 0.18)]
-    spots += [(sy * (my - 0.012), sz * (mz - 0.012)) for sy in (-1, 1) for sz in (-1, 1)]
+    spots = [(sy * 0.11, sz * mz) for sy in (-1, 1) for sz in (-1, 1)] + [(sy * my, sz * 0.13) for sy in (-1, 1) for sz in (-1, 1)]
     for y, z in spots:
         bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=8, radius=1.0,
-                                  matrix=Matrix.Translation((x1 - 0.001, y, zc + z)) @ Matrix.Diagonal((0.008, 0.0125, 0.0125, 1)))
+                                  matrix=Matrix.Translation((x1 - 0.0005, y, zc + z)) @ Matrix.Diagonal((0.0025, 0.0065, 0.0065, 1)))
     me = bpy.data.meshes.new(f"cd{i}_win_frame")
     bm.to_mesh(me)
     bm.free()
@@ -502,10 +567,25 @@ def window_frame(i, xf, turn):
     ob.location = xf((0, 0, 0))
     ob.rotation_euler = (0, 0, turn)
     bv = ob.modifiers.new("bevel", "BEVEL")
-    bv.width, bv.segments, bv.limit_method, bv.angle_limit = 0.0035, 2, "ANGLE", math.radians(50)
+    bv.width, bv.segments, bv.limit_method, bv.angle_limit = 0.0018, 2, "ANGLE", math.radians(50)
     ob.modifiers.new("wn", "WEIGHTED_NORMAL")
     for p in me.polygons:
         p.use_smooth = True
+    # the weld bead round the outside, where the bar meets the leaf: a slightly lumpy 4 mm fillet
+    cu = bpy.data.curves.new(f"cd{i}_weld", "CURVE")
+    cu.dimensions, cu.bevel_depth, cu.bevel_resolution = "3D", 0.0022, 2
+    sp = cu.splines.new("POLY")
+    wpts = outline(oy + 0.0008, oz + 0.0008, ro + 0.0008, 6)
+    sp.points.add(len(wpts) - 1)
+    for k, (y, z) in enumerate(wpts):
+        sp.points[k].co = (LEAF + 0.0012, y, z, 1)
+        sp.points[k].radius = 0.85 + 0.3 * (0.5 + 0.5 * math.sin(k * 2.7))
+    sp.use_cyclic_u = True
+    weld = bpy.data.objects.new(f"cd{i}_weld", cu)
+    bpy.context.scene.collection.objects.link(weld)
+    weld.data.materials.append(M["frame_steel"])
+    weld.location = xf((0, 0, 0))
+    weld.rotation_euler = (0, 0, turn)
     # reveal liners from the glass to the leaf face
     L = lambda nm, size, p: box(f"cd{i}_{nm}", size, xf(p), M["frame_steel"], bevel=0.0015, rot=(0, 0, turn))
     d, xm = LEAF + 0.004 - 0.19, (LEAF + 0.004 + 0.19) / 2
@@ -517,11 +597,33 @@ def window_frame(i, xf, turn):
 
 def cell_bars(i, xf, turn):
     """Round cell bars in the window recess: four 18 mm bars at 75 mm centres, 2 cm in front of the glass, and
-    one flat tie across them at mid height."""
+    one continuous flat tie at mid height that they pass through: 40 mm tall and 24 mm deep, so it stands proud of
+    the bars front and back and reads as one strap from reveal to reveal, not as blocks between the bars."""
     m = materials()
     for k, yy in enumerate((-0.1125, -0.0375, 0.0375, 0.1125)):
         sk.cyl(f"cd{i}_bar{k}", 0.009, 0.46, xf((0.262, yy, 1.5)), m["bars"], verts=20)
-    box(f"cd{i}_bar_tie", (0.008, 0.372, 0.04), xf((0.262, 0.0, 1.5)), m["bars"], bevel=0.001, rot=(0, 0, turn))
+    box(f"cd{i}_bar_tie", (0.024, 2 * WIN_IY - 0.012, 0.04), xf((0.262, 0.0, 1.5)), m["bars"], bevel=0.0015,
+        rot=(0, 0, turn))
+
+
+def hinges(i, xf, turn):
+    """Three barrel hinges on the hinge side (door-local -y), over the prop's flattened ones: a 25 mm knuckle
+    120 mm long in two parts over the gap between leaf and frame, a flush 4 mm leaf on the door with four
+    countersunk screws, and its twin on the frame."""
+    m = materials()
+    L = lambda n, size, p, bev: box(f"cd{i}_{n}", size, xf(p), m["hinge"], bevel=bev, rot=(0, 0, turn))
+    for k, zc in enumerate((0.31, 1.0, 1.69)):
+        for h_, dz in ((0, -0.0305), (1, 0.0305)):
+            kn = sk.cyl(f"cd{i}_knuckle{k}{h_}", 0.0125, 0.059, xf((LEAF + 0.0105, -0.447, zc + dz)), m["hinge"],
+                        rot=(0, 0, turn), verts=28)
+            bevelled(kn, 0.0025, 2, 40)
+        L(f"hinge_leaf{k}", (0.004, 0.072, 0.118), (LEAF + 0.002, -0.403, zc), 0.0012)
+        L(f"hinge_frame{k}", (0.004, 0.062, 0.118), (0.288, -0.49, zc), 0.0012)
+        for sy in (-1, 1):
+            for sz in (-1, 1):
+                s = sk.cyl(f"cd{i}_hscrew{k}", 0.0045, 0.0014, xf((LEAF + 0.0045, -0.403 + sy * 0.019, zc + sz * 0.036)),
+                           m["hinge"], rot=(0, math.pi / 2, turn), verts=16)
+                bevelled(s, 0.0009, 2, 40)
 
 
 def cell_doors():
@@ -535,8 +637,15 @@ def cell_doors():
         xf, turn = door_xf(side, y)
         cell_bars(i, xf, turn)
         window_frame(i, xf, turn)
+        hinges(i, xf, turn)
         if i == HATCH_OPEN:
             open_hatch(i, xf, turn)
+        if i in WIN_LIT:
+            # the cell's night light seen through the vision panel: a small panel just inside the glass aimed out
+            # across the corridor and 9 deg down, so it lays a soft cool patch on the opposite wall at dado height
+            d = Matrix.Rotation(turn, 3, "Z") @ Vector((math.cos(math.radians(9)), 0.0, -math.sin(math.radians(9))))
+            li = area(f"cd{i}_win_night", xf((0.17, 0.0, 1.5)), (0.2, 0.1), WIN_LIT[i], (0.66, 0.79, 1.0), spread=110)
+            li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
         h.location = xf((0, 0, 0))
         h.rotation_euler = (0, 0, turn)
         holders.append(h)
@@ -689,18 +798,25 @@ def drain():
     o, i_ = 0.25, 0.2
     bm = bmesh.new()
     w = (o - i_) / 2
+    # the frame sits 2 mm down in the screed (its top 3 mm above the floor), a 3 mm dark joint round it
     for s in (-1, 1):
-        add_box(bm, (o, w, 0.006), (x, y + s * (o - w) / 2, 0.002))
-        add_box(bm, (w, i_, 0.006), (x + s * (o - w) / 2, y, 0.002))
+        add_box(bm, (o, w, 0.006), (x, y + s * (o - w) / 2, 0.0))
+        add_box(bm, (w, i_, 0.006), (x + s * (o - w) / 2, y, 0.0))
     bevelled(mesh_obj("drain_frame", bm, m["iron"]), 0.002, 2)
+    bm = bmesh.new()
+    g = 0.003
+    for s in (-1, 1):
+        add_box(bm, (o + 2 * g, g, 0.001), (x, y + s * (o + g) / 2, 0.00015))
+        add_box(bm, (g, o, 0.001), (x + s * (o + g) / 2, y, 0.00015))
+    mesh_obj("drain_joint", bm, m["void"])
     bm = bmesh.new()
     n = 9
     for k in range(n):                             # slots across the grate
         xx = x - i_ / 2 + (k + 0.5) * i_ / n
-        add_box(bm, (0.011, i_, 0.005), (xx, y, 0.0015))
-    add_box(bm, (i_, 0.012, 0.005), (x, y, 0.0015))
+        add_box(bm, (0.011, i_, 0.005), (xx, y, -0.0005))
+    add_box(bm, (i_, 0.012, 0.005), (x, y, -0.0005))
     bevelled(mesh_obj("drain_grate", bm, m["iron"]), 0.0015, 1)
-    box("drain_void", (i_, i_, 0.001), (x, y, 0.0003), m["void"])
+    box("drain_void", (i_, i_, 0.001), (x, y, -0.0025), m["void"])
 
 
 # ---------------------------------------------------------------- the visitation room's door (ajar)

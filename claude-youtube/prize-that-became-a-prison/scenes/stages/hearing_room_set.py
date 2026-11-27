@@ -60,7 +60,8 @@ PUB_SEAT_Z = 0.455
 PUB_BACK_Y = -0.23       # the public chair's backrest front face (local y; the chair faces +Y, its back at -Y)
 
 COOL = (0.82, 0.9, 1.0)          # broadcast / institutional white, cool
-WARMISH = (0.95, 0.93, 0.88)     # the sconces, a hair warmer (the grade cools everything)
+WARMISH = (1.0, 0.92, 0.82)      # the sconces, warm-neutral (the grade cools everything)
+BAR_Z = 5.04                     # the broadcast lights' ceiling bars, fixed under the beams at y 1.2 and -3.6
 
 M = {}
 LIGHTS = {}
@@ -70,20 +71,23 @@ LIGHTS = {}
 def materials():
     if M:
         return M
-    walnut = (0.052, 0.034, 0.022)
+    # dark lacquered walnut: a strong figure and a clear coat, so the panels read as wood with a grazing highlight on
+    # the bevels (at 0.052 with a 0.3 figure the grade turned them into flat grey board)
+    walnut = (0.035, 0.02, 0.011)
+    wv = dict(contrast=0.55, rough=(0.3, 0.44), coat=0.5, coat_rough=0.15)
     M.update(
-        walnut=mt.veneer("walnut", walnut, "Z", contrast=0.3, rough=(0.3, 0.44), coat=0.3),
-        walnut_h=mt.veneer("walnut along", walnut, "X", contrast=0.3, rough=(0.3, 0.44), coat=0.3),
-        walnut_y=mt.veneer("walnut across", walnut, "Y", contrast=0.3, rough=(0.3, 0.44), coat=0.3),
+        walnut=mt.veneer("walnut", walnut, "Z", **wv),
+        walnut_h=mt.veneer("walnut along", walnut, "X", **wv),
+        walnut_y=mt.veneer("walnut across", walnut, "Y", **wv),
         backing=mt.satin("reveal black", (0.012, 0.011, 0.01), rough=(0.6, 0.75)),
         plinth=mt.satin("plinth", (0.016, 0.015, 0.015), rough=(0.45, 0.6), grime=0.3),
-        wall=mt.plaster("wall plaster", (0.15, 0.158, 0.17)),
+        wall=mt.plaster("wall plaster", (0.18, 0.186, 0.198)),
         ceil=mt.plaster("ceiling plaster", (0.26, 0.265, 0.27), grime=0.2, bump=0.03),
         carpet=mt.carpet("room carpet", (0.026, 0.03, 0.044),
                          walk=((-0.7, 0.7, Y0, -1.6), (-2.2, 2.2, -1.6, 2.6))),
         dais_carpet=mt.carpet("dais carpet", (0.022, 0.024, 0.032), lattice=0.12),
         velour=mt.velour("drape velour", (0.028, 0.036, 0.068)),
-        felt=mt.felt("table felt", (0.016, 0.026, 0.068)),
+        felt=mt.felt("table felt", (0.02, 0.026, 0.045)),
         leather=mt.leather("chair leather", (0.028, 0.026, 0.026)),
         fabric=mt.upholstery("public fabric", (0.048, 0.054, 0.072)),
         tube=mt.satin("black tube", (0.02, 0.02, 0.022), rough=(0.3, 0.42), metal=0.85),
@@ -92,8 +96,10 @@ def materials():
         black_plastic=mt.satin("black plastic", (0.018, 0.018, 0.019), rough=(0.35, 0.5)),
         white=mt.satin("white plastic", (0.42, 0.42, 0.41), rough=(0.4, 0.5)),
         card=mt.blank_panel("blank card", (0.22, 0.215, 0.2)),
-        paper=mt.paper("paper", (0.56, 0.55, 0.51)),
+        paper=mt.paper("paper", (0.78, 0.76, 0.7)),
         folder=mt.satin("folder board", (0.035, 0.04, 0.05), rough=(0.6, 0.75)),
+        folder2=mt.satin("folder board dark", (0.022, 0.022, 0.024), rough=(0.55, 0.7)),
+        barn=mt.satin("barn door", (0.05, 0.052, 0.056), rough=(0.4, 0.55), metal=0.6),
         glass=mt.glass("tumbler glass"),
         water=mt.water("water"),
         clock_face=mt.blank_panel("clock face", (0.36, 0.36, 0.35)),
@@ -391,13 +397,15 @@ def drape():
             x = x0 + (x1 - x0) * i / nx
             ph = 2 * math.pi * x / lam
             wob = 0.35 * math.sin(x * 1.7 + 0.6) * t       # pleats wander a little toward the hem
-            y = yb - amp * (math.sin(ph + wob) * 0.85 + 0.15 * math.sin(2 * ph + 1.3))
+            y = yb - amp * (math.sin(ph + wob) * 0.92 + 0.08 * math.sin(2 * ph + 1.3))
             row.append(bm.verts.new((x, y, z)))
         rows.append(row)
     for j in range(nz):
         for i in range(nx):
             bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))
     ob = mesh_obj("drape", bm, m["velour"], smooth=True)
+    sub = ob.modifiers.new("smooth", "SUBSURF")      # rounder pleat crests (no single-pixel sheen lines)
+    sub.levels, sub.render_levels = 1, 1
     sol = ob.modifiers.new("thick", "SOLIDIFY")
     sol.thickness, sol.offset = 0.006, 1.0
     # the pelmet, and a dark recess above it
@@ -406,7 +414,7 @@ def drape():
     # the washer: a slot in the ceiling in front of the pelmet, its light grazing down the folds
     slot = box("washer_slot", (9.6, 0.05, 0.012), (0, yb - 0.55, H - 0.004), mt.glow("washer lens", COOL, 1.2))
     src = (0.0, yb - 0.55, H - 0.03)
-    area("washer", src, (9.4, 0.05), 380.0, COOL, spread=60, rot=aim_rot(src, (0.0, yb + 0.25, 1.2)))
+    area("washer", src, (9.4, 0.05), 380.0, COOL, spread=80, rot=aim_rot(src, (0.0, yb + 0.25, 1.2)))
     return ob
 
 
@@ -489,8 +497,9 @@ def dais_props(places):
         if mic is None:
             mic = props.load("microphone", size=0.42, axis="z", loc=(mp.x, mp.y, p["zd"]), turn_deg=tm, sat=0.45,
                              rough_add=0.1)
-        else:
-            instance(mic, f"dais_mic{k}", (mp.x, mp.y, p["zd"]), tm)
+        else:      # not all alike: a little taller or shorter, turned a little differently
+            instance(mic, f"dais_mic{k}", (mp.x, mp.y, p["zd"]), tm + ((k * 7) % 5 - 2) * 5.0,
+                     scale=1.0 + ((k * 5) % 3 - 1) * 0.07)
         k += 1
     return chair, mic
 
@@ -538,7 +547,7 @@ def witness_table():
     y0, y1 = cy - TD / 2, cy + TD / 2
     # the board under the cloth, and the cloth over it (a rounded slab)
     span("wt_board", x0 + 0.01, x1 - 0.01, y0 + 0.01, y1 - 0.01, TOP - 0.04, TOP - 0.006, m["plinth"])
-    top = span("wt_cloth_top", x0, x1, y0, y1, TOP - 0.03, TOP, m["felt"], bevel=0.012, segs=4)
+    top = span("wt_cloth_top", x0, x1, y0, y1, TOP - 0.03, TOP, m["felt"], bevel=0.018, segs=6)   # rolled edge
     # the skirt: front (toward the dais) and both ends
     skirt_panel("wt_skirt_front", x0 + 0.004, x1 - 0.004, y1 + 0.004, 0.012, TOP - 0.012, 1, m["felt"])
     skirt_panel("wt_skirt_l", y0 + 0.02, y1, x0 - 0.004, 0.012, TOP - 0.012, -2, m["felt"])
@@ -590,14 +599,19 @@ def lathe(name, prof, loc, m, segs=48):
     return ob
 
 
-def nameplate(x, y):
-    """A blank nameplate in a dark walnut holder, its blank face toward the dais."""
+def nameplate(name, x, y, turn=0.0):
+    """A blank nameplate: a dark walnut plate with bevelled edges (no lettering) leaning back in a walnut holder, its
+    face toward the dais. (A pale card here read as a flat grey slab in the witness close-up.)"""
     m = materials()
-    w = 0.3
-    box("np_base", (w + 0.02, 0.06, 0.018), (x, y, TOP + 0.009), m["walnut_h"], bevel=0.004)
-    card = box("np_card", (w, 0.006, 0.075), (x, y + 0.004, TOP + 0.018 + 0.036), m["card"], bevel=0.0015,
-               rot=(math.radians(12), 0, 0))
-    box("np_slot", (w + 0.01, 0.016, 0.012), (x, y - 0.002, TOP + 0.024), m["walnut_h"], bevel=0.003)
+    root = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(root)
+    w = 0.28
+    box(f"{name}_base", (w + 0.02, 0.06, 0.016), (0, 0, 0.008), m["walnut_h"], bevel=0.004, parent=root)
+    card = box(f"{name}_plate", (w, 0.009, 0.07), (0, 0.004, 0.016 + 0.034), m["walnut_h"], bevel=0.003,
+               rot=(math.radians(12), 0, 0), parent=root)
+    box(f"{name}_slot", (w + 0.01, 0.016, 0.012), (0, -0.002, 0.022), m["walnut_h"], bevel=0.003, parent=root)
+    root.location = (x, y, TOP)
+    root.rotation_euler = (0, 0, math.radians(turn))
     return card
 
 
@@ -621,15 +635,44 @@ def timer_box(x, y, turn=0.0):
     return root
 
 
-def papers(x, y, n=4):
-    """A few blank sheets, squared roughly, each a touch apart in angle, with one turned over at the corner."""
+PAPER_TOP = TOP + 0.0016      # the top sheet's surface over its middle
+
+
+def sheet(name, x, y, z, turn_deg, curl=0.0018, corner=0.0, w=0.216, l=0.279):
+    """One sheet of paper, 0.1 mm thick: a fine grid whose long ends lift a little (`curl` m at the ends, a sheet
+    that has been carried and handled), one corner lifting `corner` m more."""
     m = materials()
+    nx, ny = 10, 13
+    bm = bmesh.new()
+    vs = []
+    for j in range(ny + 1):
+        row = []
+        v = j / ny * 2 - 1                      # -1 .. 1 along the length
+        for i in range(nx + 1):
+            u = i / nx * 2 - 1
+            dz = curl * v * v + corner * max(0.0, (u + v) / 2 - 0.55) ** 2 / 0.2
+            row.append(bm.verts.new((u * w / 2, v * l / 2, dz)))
+        vs.append(row)
+    for j in range(ny):
+        for i in range(nx):
+            bm.faces.new((vs[j][i], vs[j][i + 1], vs[j + 1][i + 1], vs[j + 1][i]))
+    ob = mesh_obj(name, bm, m["paper"], smooth=True)
+    sol = ob.modifiers.new("thick", "SOLIDIFY")
+    sol.thickness, sol.offset = 0.0001, 1.0
+    ob.location = (x, y, z)
+    ob.rotation_euler = (0, 0, math.radians(turn_deg))
+    return ob
+
+
+def papers(x, y, n=4, turn=0.0):
+    """A few blank sheets stacked a little out of square (2-6 mm offsets, 1-3 degree turns), each with a slight
+    curl, the top one lifting at a corner: a stack you can count, not one weightless plane."""
     out = []
+    spec = ((0.0, 0.0, -2.0, 0.0), (0.005, -0.004, 1.5, 0.0), (-0.003, 0.006, -0.8, 0.0), (0.006, 0.002, 2.6, 0.004))
     for k in range(n):
-        a = math.radians((-3.0, 2.0, -1.0, 4.5)[k % 4])
-        dx, dy = (0.0, 0.008, -0.006, 0.014)[k % 4], (0.0, -0.006, 0.004, 0.01)[k % 4]
-        out.append(box(f"paper{k}", (0.216, 0.279, 0.0004), (x + dx, y + dy, TOP + 0.0003 + 0.0005 * k), m["paper"],
-                       rot=(0, 0, a)))
+        dx, dy, a, corner = spec[k % 4]
+        out.append(sheet(f"paper{k}", x + dx, y + dy, TOP + 0.0002 + 0.00035 * k, turn + a,
+                         curl=0.0012 + 0.0003 * k, corner=corner))
     return out
 
 
@@ -639,20 +682,36 @@ def folder(x, y, turn):
                rot=(0, 0, math.radians(turn)))
 
 
-def table_dressing(mic_src):
-    """On the table: Tim's papers (his hands go on them), the blank nameplate at the front edge, the timer, the two
+TABLE_POS = dict(       # where the table's things stand (the stage module may replace entries before building)
+    papers=(TIM_X + 0.01, TABLE[1] - 0.13, 0.0),
+    folder=(TIM_X - 0.64, TABLE[1] - 0.02, 7.0),
+    np_tim=(TIM_X, TABLE[1] + TD / 2 - 0.07, 0.0),
+    np_empty=(EMPTY_X, TABLE[1] + TD / 2 - 0.07, 0.0),
+    timer=(TABLE[0] + 0.2, TABLE[1] + 0.2, 0.0),
+    glass_tim=(TIM_X + 0.43, TABLE[1] + 0.06, 0.6),
+    glass_empty=(EMPTY_X + 0.2, TABLE[1] + 0.02, 0.85),
+    mic_tim=(TIM_X - 0.17, TABLE[1] + 0.03, 194.0, 0.95),
+    mic_empty=(EMPTY_X - 0.1, TABLE[1] + 0.17, 186.0, 0.95),
+)
+
+
+def table_dressing(mic_src, pos=None):
+    """On the table: Tim's papers (his hands go on them), the blank nameplates at the front edge, the timer, the two
     microphones (one at his place, one at the empty place), two water glasses, a closed folder."""
-    cx, cy = TABLE
-    papers(TIM_X + 0.01, cy - 0.13)
-    folder(TIM_X - 0.64, cy - 0.02, 7.0)
-    nameplate(TIM_X, cy + TD / 2 - 0.07)
-    nameplate(EMPTY_X, cy + TD / 2 - 0.07)
-    timer_box(cx + 0.2, cy + 0.2, 0.0)
-    tumbler("glass_tim", TIM_X + 0.43, cy + 0.06, 0.55)
-    tumbler("glass_empty", EMPTY_X + 0.2, cy + 0.02, 0.85)
+    p = dict(TABLE_POS)
+    p.update(pos or {})
+    papers(p["papers"][0], p["papers"][1], turn=p["papers"][2])
+    folder(*p["folder"])
+    nameplate("np_tim", *p["np_tim"])
+    nameplate("np_empty", *p["np_empty"])
+    timer_box(*p["timer"])
+    tumbler("glass_tim", *p["glass_tim"])
+    tumbler("glass_empty", *p["glass_empty"])
     # microphones (head toward +Y in the file: turned to point back at the witness)
-    m1 = instance(mic_src, "wt_mic_tim", (TIM_X - 0.17, cy + 0.03, TOP), 180.0 + 14.0, scale=0.95)
-    m2 = instance(mic_src, "wt_mic_empty", (EMPTY_X - 0.1, cy + 0.17, TOP), 180.0 + 6.0, scale=0.95)
+    x, y, t, s = p["mic_tim"]
+    m1 = instance(mic_src, "wt_mic_tim", (x, y, TOP), t, scale=s)
+    x, y, t, s = p["mic_empty"]
+    m2 = instance(mic_src, "wt_mic_empty", (x, y, TOP), t, scale=s)
     return m1, m2
 
 
@@ -756,23 +815,34 @@ def doors():
         px = s * 0.12
         span(f"door_push{s:+d}", px - 0.05, px + 0.05, yf + 0.058, yf + 0.064, 0.95, 1.35, m["bronze"], bevel=0.002)
     span("door_gap_glow", -w / 2, w / 2, yf + 0.014, yf + 0.05, 0.0, 0.012, mt.glow("under door", (0.75, 0.82, 0.95), 3.0))
-    area("corridor_spill", (0.0, yf + 0.09, 1.6), (1.2, 1.0), 14.0, (0.75, 0.82, 0.95), spread=120,
+    area("corridor_spill", (0.0, yf + 0.09, 1.6), (1.2, 1.0), 30.0, (0.75, 0.82, 0.95), spread=120,
          rot=aim_rot((0, yf + 0.09, 1.6), (0, yf + 3, 1.0)))
-    area("under_door", (0.0, yf + 0.09, 0.02), (1.8, 0.02), 6.0, (0.75, 0.82, 0.95), spread=160,
+    # the line of light under the doors grazes the centre aisle's carpet toward the well
+    area("under_door", (0.0, yf + 0.09, 0.02), (1.8, 0.02), 26.0, (0.75, 0.82, 0.95), spread=160,
          rot=aim_rot((0, yf + 0.09, 0.02), (0, yf + 2, 0.0)))
 
 
+SCONCE_Z = 3.15          # on the plaster above the wainscot cap (2.66), over a pilaster
+SCONCE_W = dict(up=38.0, down=24.0, glow=4.0)
+
+
 def sconce(name, x, y, z, s):
-    """A wall sconce on a pilaster: a bronze back plate and arm, an opal half-cylinder shade glowing, a point light
-    under it washing the walnut."""
+    """A wall sconce on the plaster over a pilaster: a bronze back plate, an opal half-cylinder shade glowing between
+    two bronze bands; an up-light and a down-light close to the wall throw the scallops on the plaster above and the
+    wainscot below, a weak point glow lights the plate and the cap."""
     m = materials()
-    xf = s * (XW - 0.07)
-    span(f"{name}_plate", xf - s * 0.012, xf, y - 0.05, y + 0.05, z - 0.11, z + 0.11, m["bronze"], bevel=0.003)
-    shade_m = M.setdefault("sconce_shade", mt.glow("sconce shade", WARMISH, 2.2, falloff=0.35, axes=("Y", "Z")))
-    sh = sk.cyl(f"{name}_shade", 0.07, 0.2, (xf - s * 0.09, y, z), shade_m, verts=32)
-    for k, zz in enumerate((z - 0.1, z + 0.1)):
-        sk.cyl(f"{name}_ring{k}", 0.074, 0.012, (xf - s * 0.09, y, zz), m["bronze"], verts=32)
-    point(f"{name}_light", (xf - s * 0.1, y, z - 0.02), 16.0, WARMISH, radius=0.06)
+    xf = s * XW
+    span(f"{name}_plate", xf - s * 0.014, xf, y - 0.07, y + 0.07, z - 0.2, z + 0.2, m["bronze"], bevel=0.004)
+    shade_m = M.setdefault("sconce_shade", mt.glow("sconce shade", WARMISH, 2.0, falloff=0.45, axes=("Y", "Z")))
+    cx = xf - s * 0.03                       # the shade's axis: half of it sunk into the plate (a half-cylinder)
+    sh = sk.cyl(f"{name}_shade", 0.075, 0.3, (cx, y, z), shade_m, verts=40)
+    for k, zz in enumerate((z - 0.15, z + 0.15)):
+        sk.cyl(f"{name}_ring{k}", 0.08, 0.018, (cx, y, zz), m["bronze"], verts=40)
+    up = (xf - s * 0.07, y, z + 0.17)
+    dn = (xf - s * 0.07, y, z - 0.17)
+    spot(f"{name}_up", up, (xf - s * 0.02, y, z + 2.0), SCONCE_W["up"], WARMISH, 110.0, 0.45, radius=0.03)
+    spot(f"{name}_down", dn, (xf - s * 0.03, y, z - 2.0), SCONCE_W["down"], WARMISH, 100.0, 0.5, radius=0.03)
+    point(f"{name}_glow", (xf - s * 0.16, y, z), SCONCE_W["glow"], WARMISH, radius=0.08)
     return sh
 
 
@@ -795,8 +865,11 @@ def clock(x, y, z, s):
     sk.cyl("clock_hub", 0.008, 0.008, (xf - s * 0.064, y, z), m["black_plastic"], rot=rot, verts=16)
 
 
-def tv_light(name, loc, target, energy, size=(0.5, 0.4), spread=45):
-    """A broadcast soft light hung from a ceiling bar: a dark housing with a grid face, aimed; its light."""
+def tv_light(name, loc, target, energy, size=(0.5, 0.4), spread=45, face_strength=4.0, doors=38.0):
+    """A broadcast soft light hung from a ceiling bar, built as a fixture: a black bevelled housing 0.12 m deep with
+    a bezel, an egg-crate face, four barn doors opened `doors` degrees off the beam, a yoke pivoting on the housing's
+    sides, a pipe drop to the bar. The face glows (`face_strength`, so it reads near 200 graded, not clipped); the
+    barn doors' satin insides catch its light, so off-axis the lens sees housing and an edge glow, not a white tile."""
     m = materials()
     loc, target = Vector(loc), Vector(target)
     rot = aim_rot(loc, target)
@@ -804,28 +877,144 @@ def tv_light(name, loc, target, energy, size=(0.5, 0.4), spread=45):
     bpy.context.scene.collection.objects.link(root)
     root.location, root.rotation_euler = loc, rot
     w, h = size
-    box(f"{name}_housing", (w + 0.06, h + 0.06, 0.2), (0, 0, 0.1), m["housing"], bevel=0.012, parent=root)
-    face = M.setdefault("tv_face", mt.glow("broadcast face", COOL, 6.0, falloff=0.25, axes=("X", "Y")))
-    fo = box(f"{name}_face", (w, h, 0.004), (0, 0, -0.002), face, parent=root)
+    hw, hh, dep = w + 0.1, h + 0.1, 0.12
+    box(f"{name}_housing", (hw, hh, dep), (0, 0, dep / 2), m["housing"], bevel=0.014, parent=root)
+    box(f"{name}_back", (hw - 0.08, hh - 0.08, 0.05), (0, 0, dep + 0.02), m["housing"], bevel=0.01, parent=root)
+    for k, (sx, sy, px, py) in enumerate(((hw, 0.04, 0, hh / 2 - 0.02), (hw, 0.04, 0, -hh / 2 + 0.02),
+                                          (0.04, hh, hw / 2 - 0.02, 0), (0.04, hh, -hw / 2 + 0.02, 0))):
+        box(f"{name}_bezel{k}", (sx, sy, 0.03), (px, py, -0.01), m["housing"], bevel=0.006, parent=root)
+    face = M.get("tv_face")
+    if face is None:
+        face = M["tv_face"] = mt.glow("broadcast face", COOL, face_strength, falloff=0.3, axes=("X", "Y"))
+        face.cycles.emission_sampling = "FRONT"
+    fo = box(f"{name}_face", (w, h, 0.004), (0, 0, 0.004), face, parent=root)
     fo.visible_shadow = False
     for i in range(1, 5):
-        box(f"{name}_grid_v{i}", (0.004, h, 0.03), (-w / 2 + w * i / 5, 0, -0.016), m["housing"], parent=root)
-        box(f"{name}_grid_h{i}", (w, 0.004, 0.03), (0, -h / 2 + h * i / 5, -0.016), m["housing"], parent=root)
-    # the yoke and the drop to the ceiling bar
-    drop = H - 0.32 - loc.z
-    sk.cyl(f"{name}_drop", 0.016, max(0.05, drop), (loc.x, loc.y, loc.z + 0.15 + drop / 2), m["tube"], verts=12)
+        box(f"{name}_grid_v{i}", (0.004, h, 0.03), (-w / 2 + w * i / 5, 0, -0.012), m["housing"], parent=root)
+        box(f"{name}_grid_h{i}", (w, 0.004, 0.03), (0, -h / 2 + h * i / 5, -0.012), m["housing"], parent=root)
+    # barn doors: flaps hinged on the bezel, opened `doors` degrees out from the beam axis (-Z)
+    a = math.radians(doors)
+    for k, (axis, sgn, length) in enumerate((("Y", 1, 0.2), ("Y", -1, 0.2), ("X", 1, 0.16), ("X", -1, 0.16))):
+        if axis == "Y":
+            hinge = Vector((0, sgn * hh / 2, -0.025))
+            d = Vector((0, sgn * math.sin(a), -math.cos(a)))
+            size_ = (hw - 0.02, length, 0.006)
+            r = (math.atan2(d.z, d.y), 0, 0)
+        else:
+            hinge = Vector((sgn * hw / 2, 0, -0.025))
+            d = Vector((sgn * math.sin(a), 0, -math.cos(a)))
+            size_ = (length, hh - 0.02, 0.006)
+            r = (0, -math.atan2(d.z, d.x), 0)
+        c = hinge + d * (length / 2)
+        box(f"{name}_door{k}", size_, tuple(c), m["barn"], bevel=0.002, parent=root)
+    # the yoke: pivots on the housing's sides (the local X axis is level), arms straight up to a cross bar, a pipe
+    # drop to the ceiling bar
+    bpy.context.view_layer.update()
+    mw = root.matrix_world
+    xw = (mw.to_3x3() @ Vector((1, 0, 0))).normalized()
+    centre = mw @ Vector((0, 0, dep / 2))
+    arm = 0.36
+    for s_ in (-1, 1):
+        p = centre + xw * s_ * (hw / 2 + 0.035)
+        sk.cyl(f"{name}_pivot{s_:+d}", 0.03, 0.03, tuple(p - xw * s_ * 0.012), m["housing"],
+               rot=(0, math.pi / 2, math.atan2(xw.y, xw.x)), verts=20)
+        box(f"{name}_arm{s_:+d}", (0.035, 0.012, arm), tuple(p + Vector((0, 0, arm / 2))), m["housing"], bevel=0.004,
+            rot=(0, 0, math.atan2(xw.y, xw.x)))
+    top = centre + Vector((0, 0, arm))
+    box(f"{name}_cross", (hw + 0.07 + 0.035, 0.035, 0.03), tuple(top), m["housing"], bevel=0.005,
+        rot=(0, 0, math.atan2(xw.y, xw.x)))
+    drop = BAR_Z - top.z
+    sk.cyl(f"{name}_drop", 0.019, max(0.05, drop), (top.x, top.y, top.z + drop / 2), m["tube"], verts=16)
+    sk.cyl(f"{name}_clamp", 0.04, 0.07, (top.x, top.y, BAR_Z), m["housing"], rot=(0, math.pi / 2, 0), verts=16)
     li = area(f"{name}_light", tuple(loc + (target - loc).normalized() * 0.036), size, energy, COOL, spread=spread,
               rot=rot)
     return li
+
+
+SCONCE_Y = (-6.7, -1.9, 2.9, 7.7)
 
 
 def dressing():
     m = materials()
     doors()
     for s in (-1, 1):
-        for k, y in enumerate((-6.7, -1.9, 2.9)):
-            sconce(f"sconce{s:+d}{k}", s * XW, y + 0.0, 2.2, s)
+        for k, y in enumerate(SCONCE_Y):
+            sconce(f"sconce{s:+d}{k}", s * XW, y + 0.0, SCONCE_Z, s)
     clock(0, 3.9, 3.4, -1)
-    # the ceiling bars carrying the broadcast lights (steel tube between the beams)
+    # the ceiling bars carrying the broadcast lights: a 48 mm black pipe on short hangers under the beams at y 1.2
+    # and -3.6
     for y in (1.2, -3.6):
-        sk.cyl(f"tv_bar{y:+.1f}", 0.025, 2 * XW - 1.0, (0, y, H - 0.42), m["tube"], rot=(0, math.pi / 2, 0), verts=16)
+        sk.cyl(f"tv_bar{y:+.1f}", 0.024, 2 * XW - 1.0, (0, y, BAR_Z), m["housing"], rot=(0, math.pi / 2, 0), verts=20)
+        for x in (-5.5, -2.5, 0.0, 2.5, 5.5):
+            sk.cyl(f"tv_hanger{y:+.1f}_{x:+.1f}", 0.008, H - 0.32 - BAR_Z, (x, y, (H - 0.32 + BAR_Z) / 2), m["tube"],
+                   verts=10)
+
+
+# ---------------------------------------------------------------- secondary dressing (dim, about 10-20 graded)
+def side_chair(name, x, y, turn):
+    """A plain dark staff chair: the witness chair's build (leather on walnut), turned to face `turn` degrees."""
+    return witness_chair(name, x, y, turn=turn)
+
+
+def staff_table(name, x, y, turn, length=1.8, depth=0.6, h=0.74, folders=2, chairs=2):
+    """A plain walnut table with a dark modesty panel on its front, closed blank folders on it and dark chairs
+    behind it. Local frame: the table runs along X, its users sit at -Y (behind) facing +Y."""
+    m = materials()
+    root = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(root)
+    box(f"{name}_top", (length, depth, 0.035), (0, 0, h - 0.0175), m["walnut_h"], bevel=0.008, parent=root)
+    box(f"{name}_modesty", (length - 0.08, 0.02, h - 0.2), (0, depth / 2 - 0.04, (h - 0.035) / 2 + 0.08),
+        m["walnut"], bevel=0.004, parent=root)
+    for sx in (-1, 1):
+        box(f"{name}_end{sx:+d}", (0.04, depth - 0.04, h - 0.035), (sx * (length / 2 - 0.04), 0, (h - 0.035) / 2),
+            m["walnut"], bevel=0.005, parent=root)
+    for k in range(folders):
+        fx = -length / 4 + k * length / 2 + ((k * 7) % 3 - 1) * 0.06
+        f = box(f"{name}_folder{k}", (0.235, 0.31, 0.014 + 0.006 * k), (fx, -0.02, h + 0.007 + 0.003 * k),
+                m["folder2"], bevel=0.003, rot=(0, 0, math.radians(-90 + (k * 11) % 9 - 4)), parent=root)
+    root.location = (x, y, 0.0)
+    root.rotation_euler = (0, 0, math.radians(turn))
+    bpy.context.view_layer.update()
+    out = [root]
+    for k in range(chairs):
+        cx = -length / 4 + k * length / 2
+        p = root.matrix_world @ Vector((cx, -depth / 2 - 0.42, 0))
+        out.append(witness_chair(f"{name}_chair{k}", p.x, p.y, turn=turn + ((k * 5) % 3 - 1) * 6.0))
+    return out
+
+
+def tripod_camera(name, x, y, turn, z_head=1.42):
+    """A broadcast camera on a tripod, no markings: three splayed legs and a spreader, a fluid head, a plain box
+    body, a lens hood and a small viewfinder; dark satin throughout. Looks along +Y turned by `turn` degrees."""
+    m = materials()
+    root = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(root)
+    spread = 0.42
+    for k in range(3):
+        a = math.radians(90 + 120 * k)
+        foot = Vector((math.cos(a) * spread, math.sin(a) * spread, 0.0))
+        top = Vector((math.cos(a) * 0.05, math.sin(a) * 0.05, z_head - 0.1))
+        d = top - foot
+        mid = (top + foot) / 2
+        leg = sk.cyl(f"{name}_leg{k}", 0.013, d.length, tuple(mid), m["tube"], verts=12)
+        leg.rotation_mode = "QUATERNION"
+        leg.rotation_quaternion = d.to_track_quat("Z", "Y")
+        leg.parent = root
+        sk.cyl(f"{name}_foot{k}", 0.02, 0.02, tuple(foot + Vector((0, 0, 0.01))), m["black_plastic"],
+               verts=12).parent = root
+        sp = sk.cyl(f"{name}_spread{k}", 0.006, spread * 0.55, tuple(foot * 0.45 + Vector((0, 0, 0.22))), m["tube"],
+                    rot=(0, math.pi / 2, a), verts=8)
+        sp.parent = root
+    box(f"{name}_head", (0.12, 0.14, 0.09), (0, 0, z_head - 0.05), m["black_plastic"], bevel=0.008, parent=root)
+    box(f"{name}_body", (0.15, 0.36, 0.2), (0, 0.02, z_head + 0.1), m["housing"], bevel=0.012, parent=root)
+    lens = sk.cyl(f"{name}_lens", 0.055, 0.2, (0, 0.3, z_head + 0.1), m["black_plastic"], rot=(math.pi / 2, 0, 0),
+                  verts=28)
+    lens.parent = root
+    hood = sk.cyl(f"{name}_hood", 0.075, 0.08, (0, 0.43, z_head + 0.1), m["housing"], rot=(math.pi / 2, 0, 0),
+                  verts=28, r2=0.065)
+    hood.parent = root
+    box(f"{name}_vf", (0.06, 0.1, 0.07), (-0.1, -0.06, z_head + 0.2), m["housing"], bevel=0.008, parent=root)
+    box(f"{name}_handle", (0.02, 0.4, 0.02), (0.05, -0.32, z_head - 0.06), m["tube"], bevel=0.004, parent=root)
+    root.location = (x, y, 0.0)
+    root.rotation_euler = (0, 0, math.radians(turn))
+    return root

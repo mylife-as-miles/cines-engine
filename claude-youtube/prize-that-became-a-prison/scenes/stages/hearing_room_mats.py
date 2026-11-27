@@ -174,7 +174,7 @@ def _brick(nt, vec, w, h, mortar, c1, c2, cm, offset=0.0, smooth=0.2):
 
 # ---------------------------------------------------------------- surfaces
 def veneer(name, base=(0.40, 0.30, 0.19), axis="Z", contrast=0.24, rough=(0.3, 0.44), coat=0.35, tone_var=0.07,
-           grime=0.25):
+           grime=0.25, coat_rough=0.22):
     """Lacquered wood veneer. Straight grain runs along local `axis` (fine streaks plus a soft wavy figure across the
     leaf), pores as a faint bump, a satin lacquer coat, each object a shade apart and its grain offset, darker where
     hands and dust reach into the corners (AO)."""
@@ -216,7 +216,7 @@ def veneer(name, base=(0.40, 0.30, 0.19), axis="Z", contrast=0.24, rough=(0.3, 0
     rr = _math(nt, "ADD", rr, _maprange(nt, fine, 0.3, 0.7, -0.03, 0.03))
     _link(nt, rr, b.inputs["Roughness"])
     b.inputs["Coat Weight"].default_value = coat
-    b.inputs["Coat Roughness"].default_value = 0.22
+    b.inputs["Coat Roughness"].default_value = coat_rough
     b.inputs["Specular IOR Level"].default_value = 0.42
     pores = _noise(nt, v, 1.0, 2.0, 0.5, mapping=tuple(s * 3.0 for s in along))
     _bump(nt, b, _math(nt, "ADD", pores, _math(nt, "MULTIPLY", fine, 0.6)), 0.05, 0.0005)
@@ -338,23 +338,29 @@ def carpet(name, base=(0.03, 0.034, 0.046), lattice=0.09, walk=()):
     return m
 
 
-def felt(name, rgb=(0.018, 0.026, 0.06), nap=0.25):
-    """Dense wool felt (the witness table's cloth): matt, a fine fuzzy nap that catches light at grazing angles,
-    faint clouding in the dye, darker where it folds into the shadow (AO)."""
+def felt(name, rgb=(0.02, 0.026, 0.045), nap=0.4):
+    """Dense wool felt (the witness table's cloth): matt, a fine fuzzy nap (cellular fibre clumps plus fine noise)
+    whose pale sheen catches light at grazing angles, faint clouding in the dye, darker where it folds into the
+    shadow (AO). Kept low in saturation so the grade does not leave a flat saturated blue sheet."""
     m, nt, b = _new(name)
     o = _obj(nt)
     fuzz = _noise(nt, o, 900.0, 3.0, 0.7)
+    vor = _n(nt, "ShaderNodeTexVoronoi")
+    vor.inputs["Scale"].default_value = 800.0
+    _link(nt, o, vor.inputs["Vector"])
+    clump = _out(vor, "Distance")
     cloud = _noise(nt, o, 3.5, 4.0, 0.6)
-    col = _mix(nt, _maprange(nt, cloud, 0.3, 0.7, 0.0, 1.0), tuple(c * 0.86 for c in rgb), tuple(min(1, c * 1.12) for c in rgb))
+    col = _mix(nt, _maprange(nt, cloud, 0.3, 0.7, 0.0, 1.0), tuple(c * 0.84 for c in rgb), tuple(min(1, c * 1.14) for c in rgb))
     col = _mix(nt, _maprange(nt, fuzz, 0.4, 0.8, 0.0, 0.35), col, tuple(min(1, c * 1.5) for c in rgb))
+    col = _mix(nt, _maprange(nt, clump, 0.0, 0.6, 0.25, 0.0), col, tuple(c * 0.7 for c in rgb))
     col = _mix(nt, _maprange(nt, _ao(nt, 0.08), 0.3, 1.0, 0.5, 0.0), col, tuple(c * 0.4 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _maprange(nt, cloud, 0.3, 0.7, 0.86, 0.96), b.inputs["Roughness"])
+    _link(nt, _maprange(nt, cloud, 0.3, 0.7, 0.88, 0.97), b.inputs["Roughness"])
     b.inputs["Sheen Weight"].default_value = nap
-    b.inputs["Sheen Roughness"].default_value = 0.5
-    b.inputs["Sheen Tint"].default_value = (0.6, 0.65, 0.8, 1.0)
-    b.inputs["Specular IOR Level"].default_value = 0.15
-    _bump(nt, b, fuzz, 0.12, 0.0004)
+    b.inputs["Sheen Roughness"].default_value = 0.45
+    b.inputs["Sheen Tint"].default_value = (0.72, 0.78, 0.9, 1.0)
+    b.inputs["Specular IOR Level"].default_value = 0.12
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", clump, 0.6), fuzz), 0.08, 0.0004)
     return m
 
 
@@ -367,11 +373,12 @@ def velour(name, rgb=(0.03, 0.036, 0.06)):
     col = _mix(nt, _maprange(nt, crush, 0.3, 0.7, 0.0, 1.0), tuple(c * 0.8 for c in rgb), tuple(min(1, c * 1.18) for c in rgb))
     col = _mix(nt, _maprange(nt, _ao(nt, 0.12), 0.3, 1.0, 0.6, 0.0), col, tuple(c * 0.35 for c in rgb))
     _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Roughness"].default_value = 0.9
-    b.inputs["Sheen Weight"].default_value = 1.0
-    b.inputs["Sheen Roughness"].default_value = 0.3
+    b.inputs["Roughness"].default_value = 0.92
+    # a broad, soft sheen (a tight one drew single-pixel bright lines on the pleat crests under the washer)
+    b.inputs["Sheen Weight"].default_value = 0.8
+    b.inputs["Sheen Roughness"].default_value = 0.55
     b.inputs["Sheen Tint"].default_value = (0.7, 0.75, 0.95, 1.0)
-    b.inputs["Specular IOR Level"].default_value = 0.1
+    b.inputs["Specular IOR Level"].default_value = 0.08
     _bump(nt, b, _noise(nt, o, 600.0, 2.0, 0.6), 0.1, 0.0004)
     return m
 
@@ -422,7 +429,7 @@ def leather(name, rgb=(0.03, 0.028, 0.028), rough=(0.42, 0.6)):
     return m
 
 
-def paper(name, rgb=(0.6, 0.585, 0.54), rough=0.86, fibre=0.05):
+def paper(name, rgb=(0.78, 0.76, 0.7), rough=0.85, fibre=0.05):
     """Matt uncoated paper, slightly warm: felted fibre tooth (bump), faint mottling, a little translucency."""
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -439,7 +446,7 @@ def paper(name, rgb=(0.6, 0.585, 0.54), rough=0.86, fibre=0.05):
     b.inputs["Subsurface Radius"].default_value = (0.0015, 0.0012, 0.0009)
     b.inputs["Subsurface Scale"].default_value = 1.0
     tooth = _noise(nt, o, 1400.0, 3.0, 0.65)
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.5), tooth), fibre, 0.00015)
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", fib, 0.5), tooth), fibre, 0.0003)
     return m
 
 

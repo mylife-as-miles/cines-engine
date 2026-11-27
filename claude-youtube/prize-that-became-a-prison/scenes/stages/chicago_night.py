@@ -52,11 +52,14 @@ FOCUS = {
 CAMERAS = {
     # Ch 01: the whole room from its far corner at a standing eye line: the warm lamp island and the door with the
     # suitcase on the left, the glass wall and the night city across, Dawn small at the window on the right third
-    "wide": dict(loc=(2.7, -2.42, 1.6), aim=(-1.15, 1.75, 1.0), lens=24, focus="fx_dawn", fstop=5.6, beat="ch01"),
+    "wide": dict(loc=(2.7, -2.42, 1.6), aim=(-1.15, 1.75, 1.0), lens=24, focus="fx_dawn", fstop=5.6, beat="ch01",
+                 exposure=-1.0),
     # Ch 01: behind her, a little to her left and below her eyes: her figure dark against the lit skyline
-    "window": dict(loc=(0.05, 0.22, 1.27), aim=(0.15, 2.45, 1.3), lens=28, focus="fx_head", fstop=2.8, beat="ch01"),
+    "window": dict(loc=(0.05, 0.22, 1.45), aim=(0.15, 2.45, 1.33), lens=28, focus="fx_head", fstop=2.8, beat="ch01",
+                   exposure=-0.9),
     # Ch 01: low and close: the packed case by the door, the city soft in the glass beyond
-    "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.95, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01"),
+    "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.95, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01",
+                     exposure=-1.1),
 }
 TRIMS = {"wide": {}, "window": {}, "suitcase": {}}
 _STATE = {"cast": [], "dawn": None}
