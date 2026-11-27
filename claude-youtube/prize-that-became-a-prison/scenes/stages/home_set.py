@@ -51,7 +51,7 @@ HEAD_CHAIR = (4.1, -0.03, 180.0 + 8.0)   # the father's chair: set back from the
                                          # shadow on the end wall stands well off the chair, in the wide too. 5 cm
                                          # toward -Y from round 2: in the wide its right stile and top rail now
                                          # overlap the lit patch's left edge
-HEAD_SHOT = dict(loc=(3.98, 2.18, 1.22), aim=(4.35, -0.25, 0.70), lens=29, fstop=2.8)
+HEAD_SHOT = dict(loc=(3.98, 2.18, 1.22), aim=(4.35, -0.25, 0.615), lens=29, fstop=2.8)
 CHAIR_RAIL = 0.84
 RUG = (2.495, 0.0, 2.39, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
                                          # wholly off it on the oak (its front feet ~12 cm past the rug's end)

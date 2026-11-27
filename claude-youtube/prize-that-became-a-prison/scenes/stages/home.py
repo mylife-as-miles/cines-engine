@@ -791,7 +791,8 @@ def apply_camera(name):
     family_layout(layout)
     trims = dict(TRIMS.get(framing, {}), family_pendant=0.0)
     if layout == "family":
-        trims.update(family_pendant=1.0, street=0.10, street_hero=0.12, street_side=0.12)
+        trims.update(family_pendant=1.0, d_sky=0.20, d_sky_end=0.30,
+                     street=0.10, street_hero=0.12, street_side=0.12)
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
@@ -874,8 +875,8 @@ def build(cast=True):
     _STATE.update(with_cast=cast, family={}, side_y=sy, tim_chair=(sx, sy + 0.21, turn),
                   cushions={"gene": seat_height(*st.HEAD_CHAIR[:2]), "tim": seat_height(sx, sy)})
     lights()
-    st.M["bulb_warm"] = mt.glow("d_bulb_warm", (1.0, 0.75, 0.47), 4.0)
-    st.area("family_pendant", (*st.DT, st.D["h"] - 1.0), (0.33, 0.33), 85.0, (1.0, 0.72, 0.45),
+    st.M["bulb_warm"] = mt.glow("d_bulb_warm", (1.0, 0.54, 0.24), 3.0)
+    st.area("family_pendant", (*st.DT, st.D["h"] - 1.0), (0.33, 0.33), 72.0, (1.0, 0.41, 0.12),
             spread=150, aim=(*st.DT, st.D_TOP))
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
