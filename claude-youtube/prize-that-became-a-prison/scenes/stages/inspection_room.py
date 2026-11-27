@@ -851,7 +851,6 @@ def apply_camera(name):
                 ob.hide_render = True
     key = bpy.data.objects["troffer_bench_light"]
     key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
-    bpy.data.objects["match case fluorescent"].hide_render = not match
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -944,26 +943,16 @@ def build(cast=True):
     case.location, case.rotation_euler = (x, y, z), (0, 0, math.radians(t))
     bpy.context.view_layer.update()
     st.luggage_tag(case, _case_frame(), hole=(-0.008, -0.005), grip=(-0.045, 0.542), grip_r=(0.0125, 0.0115))
-    # Split the practical's contribution for the frontal cut only. The same
-    # ceiling fitting still lights the duffel, steel and wall at its usual power.
+    # Flag the ceiling fitting off the suitcase for this cut. The room bounce
+    # still lights its front, while the duffel and steel keep the full practical.
     shell = props.meshes(case)
     outside = bpy.data.collections.new("bench light excluding the case")
-    only_case = bpy.data.collections.new("case fluorescent receivers")
     for ob in shell:
         if not ob.name.startswith("luggage_tag"):
             outside.objects.link(ob)
-            only_case.objects.link(ob)
     for link in outside.collection_objects:
         link.light_linking.link_state = "EXCLUDE"
     _STATE["outside_case"] = outside
-    key = bpy.data.objects["troffer_bench_light"]
-    trimmed = key.copy()
-    trimmed.data = key.data.copy()
-    trimmed.name = "match case fluorescent"
-    bpy.context.scene.collection.objects.link(trimmed)
-    trimmed.data.energy = 24.0
-    trimmed.light_linking.receiver_collection = only_case
-    trimmed.hide_render = True
     st.bounce()
     st.wall_wash()
     _STATE["match_omit"] = [bpy.data.objects[n] for n in

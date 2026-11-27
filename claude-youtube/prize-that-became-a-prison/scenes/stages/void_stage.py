@@ -703,7 +703,7 @@ def build_bags_island():
     rim.visible_glossy = True
     st.link_lights([rim], receivers=_meshes(pair[0]) + _meshes(pair[1]), tag="bags_rim")
     kick = st.area("case front return", (cx - 0.9, cy - 2.6, 0.7), (G[0] + CASE[0], G[1] + CASE[1], 0.33),
-                   (0.5, 0.5), 12.0, (0.88, 0.92, 1.0))
+                   (0.5, 0.5), 85.0, (0.88, 0.92, 1.0))
     st.link_lights([kick], receivers=_meshes(pair[0]), tag="case_front")
 
 
