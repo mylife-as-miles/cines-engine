@@ -118,6 +118,13 @@ CAMERAS = {
                  beat="bags"),
 }
 
+# check frames, never in the finals: VOID_DEBUG=1 adds tight looks at Dawn (suit, hands, face) from her two cameras
+if os.environ.get("VOID_DEBUG"):
+    CAMERAS["dbg_dawn"] = dict(loc=_p(D, 0.0, -7.6, 1.25), aim=_p(D, 0.0, 0.0, 1.2), lens=150, focus="fx_dawn",
+                               fstop=11.0, beat="dawn")
+    CAMERAS["dbg_dawn_high"] = dict(loc=_p(D, 3.6, -5.3, 6.15), aim=_p(D, 0.0, -0.05, 0.95), lens=120,
+                                    focus="fx_dawn_high", fstop=11.0, beat="dawn")
+
 # a preview run may render only some cameras: VOID_CAMS="dawn,cell_close" (shoot.py's `all` walks CAMERAS)
 if os.environ.get("VOID_CAMS"):
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["VOID_CAMS"].split(",")}
@@ -260,7 +267,7 @@ def _move_after_armature(ob, mod):
 def suit_fit(holder, push=0.005, tuck=0.008):
     """Keep the stone body under the suit everywhere, from every camera, after posing. The suit follows the same rig
     as the body (checked); it is pushed out along its normals by `push` before its smoothing, and every body vertex the
-    suit covers (an outward ray meets the suit within 4 cm, or the suit lies just under the skin) goes into a group
+    suit covers (an outward ray meets the suit's inside within 4 cm, or the suit lies just under the skin) goes into a group
     'under_suit', feathered over three edge rings from the uncovered skin so hems keep no step and no hole, and is
     pulled in by `tuck` (a Displace on the body, after its armature). A Displace rather than a Mask: a mask that
     removes skin at a hem opens a gap you can see into."""
@@ -316,7 +323,9 @@ def suit_fit(holder, push=0.005, tuck=0.008):
         p, n = pos[v.index]
         out = bvh.ray_cast(p + n * 0.0005, n, 0.04)
         inn = bvh.ray_cast(p - n * 0.0005, -n, 0.015)
-        if out[0] is not None or inn[0] is not None:
+        # an outward hit counts only on the suit's inside (its face turned away from the skin): an inner forearm's ray
+        # meets the shirt's outside where the arm hangs by the body, and tucking it dented the arm (69 such vertices)
+        if (out[0] is not None and out[1].dot(n) > 0.0) or inn[0] is not None:
             covered.add(v.index)
     # feather: edge steps from the nearest uncovered skin vertex
     nbr = {i: [] for i in skin}
@@ -341,10 +350,73 @@ def suit_fit(holder, push=0.005, tuck=0.008):
     tk = body.modifiers.new("tuck", "DISPLACE")
     tk.direction, tk.mid_level, tk.strength, tk.vertex_group = "NORMAL", 0.0, -tuck, "under_suit"
     _move_after_armature(body, tk)
+    creases(gar)
     print(f"VOID suit fit: {len(covered)} of {len(skin)} skin vertices tucked under the suit; suit pushed out "
           f"{push * 1000:.0f} mm; body stack {[m.name for m in body.modifiers]}; suit stack "
           f"{[m.name for m in gar.modifiers]}", flush=True)
     return len(covered)
+
+
+def creases(gar, strength=0.006, mid=0.25, scale=0.045, stretch=2.4):
+    """Real relief in the cloth, not only a bump: soft folds a few millimetres deep, longer across the body than up it
+    (horizontal wrinkles over the belly and the knees, as cotton and denim bunch), on the smoothed suit. Mostly outward
+    (mid 0.25: -1.5 to +4.5 mm), so the stand-off over the skin holds. Under the hard top light a smooth tight suit
+    read as painted skin; folds catch the light as cloth does."""
+    tex = bpy.data.textures.new(f"{gar.name}_creases", "CLOUDS")
+    tex.noise_scale, tex.noise_depth, tex.noise_type = scale, 2, "SOFT_NOISE"
+    space = bpy.data.objects.new(f"{gar.name}_crease_space", None)
+    bpy.context.scene.collection.objects.link(space)
+    space.scale = (stretch, stretch, 1.0)
+    for m in gar.modifiers:
+        if m.type == "SUBSURF":
+            m.levels, m.render_levels = 2, 2
+    dp = gar.modifiers.new("creases", "DISPLACE")
+    dp.texture, dp.texture_coords, dp.texture_coords_object = tex, "OBJECT", space
+    dp.direction, dp.mid_level, dp.strength = "NORMAL", mid, strength
+    return dp
+
+
+def light_suit(h, net=0.55, bounce_w=80.0):
+    """Light the suit and the hair as a cinematographer would with a net and a bounce, all invisible in frame. Round 1
+    read the top-lit shirt (shoulders and the top of the bust a mid grey, the bowed head's shadow a black strip down
+    the sternum, the rest black) as a pale bolero over a black leotard, skin showing through. Now the spot reaches the
+    suit and the sculpted hair through a net (`net` of its power: the same lamp, the same shadows), and a weak bounce
+    from the pool in front of her feet, linked to the suit alone, lifts its shaded front to a readable dark charcoal,
+    so the head's shadow reads as a shadow on one garment. The face and the hands keep the hard light as it falls."""
+    main, hot = st.LIGHTS.get("spot_dawn"), st.LIGHTS.get("spot_dawn_hot")
+    gar = bpy.data.objects.get(f"{h.name}_{GARMENT}")
+    if main is None or gar is None:
+        return []
+    hair = [o for o in h.children_recursive if o.type == "MESH" and (o.name.endswith("_hair") or o.name.endswith("_bun"))]
+    netted = [gar] + hair
+    st.link_lights([main, hot], exclude=netted, tag="dawn_net")
+    dup = []
+    for src in (main, hot):
+        ob = src.copy()
+        ob.data = src.data.copy()
+        ob.name = ob.data.name = src.name + "_net"
+        ob.data.energy = src.data.energy * net
+        bpy.context.scene.collection.objects.link(ob)
+        dup.append(ob)
+    st.link_lights(dup, receivers=netted, tag="dawn_netted")
+    # the netted lamp's shadows on the suit come from the suit alone (the bust still shades the belly): the bowed
+    # head's shadow, a sharp black strip from the collar to under the bust, read as a V-neck over a leotard (preview 2
+    # of this round, with the net and bounce but the head still shadowing)
+    body = bpy.data.objects[h["body"]]
+    eyes = [o for o in h.children_recursive if o.type == "MESH" and "_eye" in o.name]
+    blk = bpy.data.collections.new("dawn_net_block")
+    for o in [body] + hair + eyes:
+        blk.objects.link(o)
+    for co in blk.collection_objects:
+        co.light_linking.link_state = "EXCLUDE"
+    for ob in dup:
+        ob.light_linking.blocker_collection = blk
+    x, y = h.location.x, h.location.y
+    fill = st.area("bounce_dawn", (x, y - 1.8, 0.45), (x, y, 1.1), (1.6, 1.0), bounce_w, (0.9, 0.93, 1.0))
+    st.link_lights([fill], receivers=[gar], tag="dawn_bounce")
+    print(f"VOID suit light: spot net {net:.2f} on {[o.name for o in netted]}, bounce {bounce_w:.0f} W on the suit",
+          flush=True)
+    return dup + [fill]
 
 
 def stone_finish(holder, spec=0.3, rough=0.66):
@@ -583,6 +655,7 @@ def build(cast=True):
     _island("bags", build_bags_island)
     if cast:
         _island("dawn", lambda: _STATE["cast"].append(dawn()))
+        _island("dawn", lambda: light_suit(_STATE["cast"][0]))
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)

@@ -601,7 +601,8 @@ WINDOW_PATCH = (0.2, 0.3, SLAB)        # where the slot's light lands (cell-loca
 SPLAY = 0.24                           # the sill slopes this far down to the inner face, as thick walls' high windows do,
                                        # so a steep light gets through the slot
 WINDOW_DIST = 12.0                     # the night source: a small lamp this far behind the slot (near-parallel rays:
-WINDOW_W = 125000.0                    # the patch is the slot, barred, a fifth larger), W
+WINDOW_W = 175000.0                    # the patch is the slot, barred, a fifth larger), W; at 125 kW the patch was
+                                       # only 17 % over the top-lit floor and its bars barely read
 BARS = 5                               # round bars in the slot, 25 mm
 CAP = 0.0015                           # the wall-top caps (the graze light's receivers)
 
