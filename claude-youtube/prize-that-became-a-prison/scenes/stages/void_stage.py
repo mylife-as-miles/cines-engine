@@ -145,7 +145,7 @@ CAMERAS.update({
     "chair": dict(dining.HEAD_SHOT, loc=chair_point(dining.HEAD_SHOT["loc"]),
                   aim=chair_point(dining.HEAD_SHOT["aim"]), beat="chair", focus="fx_chair"),
     "cell_dawn": dict(loc=_p(C, 1.94, -4.16, 1.35), aim=_p(C, -0.23, 0.43, 0.95),
-                      lens=34, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
+                      lens=29, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
     "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, -0.13, 0.07, 1.41), lens=85,
                        fstop=3.2, focus="fx_bowed", beat="dawn"),
     "cell_floor": dict(loc=_p(C, 0.50, -1.50, 0.46), aim=_p(C, -0.08, 0.28, 0.18),
