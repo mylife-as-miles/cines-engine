@@ -170,13 +170,19 @@ def concrete_wet(name="lane concrete"):
     o = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]     # world space: the slab is in several pieces
     x, y, z = _xyz(nt, o)
     # puddle field: two octaves of noise, biased toward the lane centre (|x| small) where the drain runs
-    big = _noise(nt, o, 0.78, 2.0, 0.55, mapping=(1.0, 0.55, 1.0))
+    big = _noise(nt, o, 0.78, 1.0, 0.55, mapping=(1.0, 0.55, 1.0))
     small = _noise(nt, o, 1.6, 2.0, 0.5)
-    field = _math(nt, "ADD", _math(nt, "MULTIPLY", big, 0.8), _math(nt, "MULTIPLY", small, 0.25))
-    centre = _maprange(nt, _math(nt, "ABSOLUTE", x), 0.15, 1.1, 0.12, -0.06, smooth=True)
+    field = _math(nt, "ADD", _math(nt, "MULTIPLY", big, 0.8), _math(nt, "MULTIPLY", small, 0.06))
+    centre = _maprange(nt, _math(nt, "ABSOLUTE", x), 0.15, 1.1, 0.22, -0.12, smooth=True)
     field = _math(nt, "ADD", field, centre)
-    wet = _maprange(nt, field, 0.56, 0.61, 0.0, 1.0, smooth=True)          # standing water
-    damp = _maprange(nt, field, 0.43, 0.56, 0.0, 1.0, smooth=True)          # the darker damp rim around it
+    for px, py in ((0.30, 4.90), (-0.25, -4.1), (0.42, -1.5), (0.15, 10.8)):
+        dx = _math(nt, "SUBTRACT", x, px)
+        dy = _math(nt, "MULTIPLY", _math(nt, "SUBTRACT", y, py), 0.64)
+        r2 = _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy))
+        pool = _maprange(nt, r2, 0.03, 0.64, 0.28, 0.0, smooth=True)
+        field = _math(nt, "ADD", field, pool)
+    wet = _maprange(nt, field, 0.60, 0.62, 0.0, 1.0, smooth=True)          # standing water
+    damp = _maprange(nt, field, 0.52, 0.60, 0.0, 1.0, smooth=True)          # the darker damp rim around it
     # tone: aggregate mottling, darker grime toward the stall fronts, stains
     mott = _maprange(nt, _noise(nt, o, 7.0, 6.0, 0.62), 0.3, 0.7, 0.0, 1.0)
     base = _mix(nt, mott, (0.105, 0.104, 0.1), (0.15, 0.148, 0.142))
@@ -190,7 +196,7 @@ def concrete_wet(name="lane concrete"):
     jx = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", x), 0.6)), 0.002, 0.0035, 1.0, 0.0)
     joint = _math(nt, "MAXIMUM", jline, jx)
     base = _mix(nt, _math(nt, "MULTIPLY", joint, 0.85), base, (0.03, 0.03, 0.03))
-    col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.45), base, (0.055, 0.055, 0.056))
+    col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.60), base, (0.055, 0.055, 0.056))
     col = _mix(nt, wet, col, (0.03, 0.031, 0.034))
     _link(nt, col, b.inputs["Base Color"])
     dry_r = _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.3, 0.7, 0.55, 0.8)

@@ -57,7 +57,7 @@ STATE = {
     (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
 }
 # lane battens left burning at night as security lights (watts), on stalls that are otherwise shut or dim
-SECURITY = {(-1, -5.55): 42.0, (1, -2.85): 26.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
+SECURITY = {(-1, -5.55): 42.0, (1, -2.85): 35.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
 
 
 # ---------------------------------------------------------------- geometry helpers
@@ -362,14 +362,16 @@ def stall(side, y0, y1, state, k):
         xa = side * 2.45 if (hero and tag == "a") else xf
         span_box(f"{nm}_part_{tag}", xa, xb, yy - 0.04, yy + 0.04, 0.0, TOPZ, M["wall_dark"], bevel=0.004)
         # the steel post and shutter guides at the front of each partition
-        span_box(f"{nm}_post_{tag}", xf - 0.05, xf + 0.05, yy - 0.05, yy + 0.05, 0.0, TOPZ, M["steel"], bevel=0.006)
+        span_box(f"{nm}_post_{tag}", xa - 0.05, xa + 0.05, yy - 0.05, yy + 0.05, 0.0, TOPZ, M["steel"], bevel=0.006)
         if state != "hero" or tag == "b":
             gy = yy + (0.075 if tag == "a" else -0.075)
             for dx in (0.03, 0.09):
                 span_box(f"{nm}_guide_{tag}{dx}", xf + side * dx - 0.004, xf + side * dx + 0.004, gy - 0.025, gy + 0.025,
                          0.0, CEIL, M["steel_bare"])
-    if hero:   # the open corner's guide and post
-        span_box(f"{nm}_post_corner", xf - 0.05, xf + 0.05, y0 - 0.05, y0 + 0.05, 0.0, TOPZ, M["steel"], bevel=0.006)
+    if hero:
+        # Transfer the fascia load back to its partition post, leaving the exchange in view.
+        span_box(nm + "_return_angle", xf, 2.45, y0 - 0.03, y0 + 0.03,
+                 CEIL - 0.064, CEIL - 0.004, M["steel"], bevel=0.006)
     span_box(nm + "_back", xb - side * 0.05, xb + side * 0.05, y0, y1, 0.0, TOPZ, M["wall"] if state in ("hero", "dim", "warm") else M["wall_dark"])
     span_box(nm + "_ceiling", xf, xb, y0, y1, CEIL, CEIL + 0.02, M["ceiling"])
     span_box(nm + "_top", xf, xb, y0, y1, TOPZ - 0.02, TOPZ, M["roof_steel"])
@@ -477,6 +479,8 @@ class Palette:
             c = self.r.choices(range(len(LEATHER)), weights=(9, 7, 12, 8, 4, 15, 9, 6, 6, 5, 2, 2, 4, 1, 3))[0]
             if prev and (c == prev[1] or m == prev[0] and self.r.random() < 0.6):
                 continue
+            if m == "handbag-satchel" and any(v and v[0] == m for v in (prev, above)):
+                continue
             if above and c == above[1]:
                 continue
             break
@@ -505,8 +509,8 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
             w = d.x
             if s0 + w > length - 0.03:
                 break
-            c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-0.028, 0.028))
-            zh = z + rr.uniform(-0.043, 0.043)
+            c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-0.05, 0.05))
+            zh = z + rr.uniform(-0.06, 0.06)
             tip = c + n * 0.15 + Vector((0, 0, zh))
             if hook:
                 ho = bpy.data.objects.new(f"{name}_hook{ri}_{ci}", hme)
@@ -516,14 +520,14 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
             if model == "handbag-tote":
                 flip = math.pi        # the tote's clean face out (its dented face to the wall)
             tilt = math.radians(rr.uniform(-2.5, 7.0))
-            R = Matrix.Rotation(yaw + flip, 4, "Z")
+            R = Matrix.Rotation(yaw + flip + math.radians(rr.uniform(-10, 10)), 4, "Z")
             # turn about the wall-parallel axis so the bottom swings in toward the grid (hung, resting on the wall)
-            Rt = Matrix.Rotation(tilt, 4, Vector((0, 0, 1)).cross(n))
+            Rt = Matrix.Rotation(math.radians(rr.uniform(-5, 5)), 4, n) @ Matrix.Rotation(tilt, 4, Vector((0, 0, 1)).cross(n))
             off = (R @ apex.to_4d()).to_3d()          # apex is already scaled by sc
             M4 = Matrix.Translation(tip + Vector((0, 0, 0.004))) @ Rt @ Matrix.Translation(-off) @ R @ Matrix.Scale(sc, 4)
             ob = place_bag(f"{name}_bag{ri}_{ci}", model, M4, col)
             out.append(ob)
-            if hook and rr.random() < 0.32:
+            if hook and rr.random() < (0.45 if name == "hero_back" else 0.32):
                 stacked = Matrix.Translation(n * 0.043 + Vector((0, 0, -0.022))) @ M4
                 extra = place_bag(f"{name}_stack{ri}_{ci}", model, stacked, (col + rr.randrange(1, len(LEATHER))) % len(LEATHER))
                 out.append(extra)
@@ -689,7 +693,7 @@ def hero_stall():
     # lights: two battens on the stall ceiling (over the counter and the stallholder; over the back wall), one under
     # the alley-side eave over the outside display
     batten("hero_ceil_a", 2.05, y0 + 0.45, y1 - 0.45, CEIL - 0.06, "on", energy=55.0, hang_to=CEIL)
-    batten("hero_ceil_b", 3.05, y0 + 0.45, y1 - 0.45, CEIL - 0.06, "on", energy=48.0, hang_to=CEIL)
+    batten("hero_ceil_b", 2.6, y0 + 0.45, y1 - 0.45, CEIL - 0.06, "on", energy=48.0, hang_to=CEIL)
     batten("hero_alley", y0 - 0.32, 2.5, 3.5, 2.86, "on", along="X", energy=22.0, hang_to=TOPZ)
     span_box("hero_alley_eave", 2.45, xb, y0 - 0.5, y0, TOPZ - 0.04, TOPZ, M["galv_dark"])
     spill = sk.area_light("stall doorway bounce", (1.46, 5.0, 1.93), (1.25, 1.75), 82, (0.83, 0.91, 1.0), spread_deg=95)
@@ -721,6 +725,18 @@ def counter():
     span_box("counter_top", x0 - 0.02, x1 + 0.02, y0 - 0.02, y1 + 0.02, top - 0.035, top, M["counter_top"], bevel=0.005)
     # a steel edge band along the lane face, scuffed by bags
     span_box("counter_band", x0 - 0.024, x0 - 0.018, y0, y1, top - 0.05, top - 0.004, M["steel_bare"])
+    for i, (yy, model, colour) in enumerate(((y0 + 0.19, "handbag-shoulder", 2), (y1 - 0.20, "handbag-tote", 7))):
+        anchor = Vector((x0 - 0.062, yy, top - 0.082))
+        curve(f"counter hook {i}", [(x0, yy, top - 0.026), (x0 - 0.045, yy, top - 0.026),
+                                    (anchor.x + 0.012, yy, anchor.z - 0.006), anchor], 0.003, M["steel_bare"])
+        _, apex = bag_dims(model, 0.88)
+        swing = Matrix.Rotation(math.radians(-86 + i*8), 4, "Z")
+        mount = Matrix.Translation(anchor) @ swing @ Matrix.Translation(-apex) @ Matrix.Scale(0.88, 4)
+        place_bag(f"counter hung bag {i}", model, mount, colour)
+    graze = sk.area_light("counter face reflection", (0.87, 4.75, 0.25), (0.10, 1.1), 8,
+                          (0.84, 0.91, 1.0), spread_deg=110)
+    graze.rotation_euler = (Vector((x0, 4.85, 0.60)) - graze.location).to_track_quat("-Z", "Y").to_euler()
+    graze.visible_glossy = False
     # on top, away from the bag: a roll of tape, a stack of folded black carrier bags, a bundle of blank tags
     # (in the strip of counter between the bag and the close-up's lens)
     tx, ty = x0 + 0.55, y0 + 0.33
