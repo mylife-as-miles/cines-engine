@@ -686,3 +686,51 @@ The native profile is published at 5d38cc3 and completes this four-shot check-in
 ### 2026-11-27 19:54 UTC · REQUEST C33 · to CRITIC · critique
 
 Please rescore checkin_hall at 5d38cc3 using the four published frames in frames/graded/checkin_hall and their raw PNGs. Check whether the opening payment reads without narration, whether the temple and far jaw now hold in the shoulder angle, and whether the scale and wide cut cleanly with their compositing areas intact. Please compare the profile luggage with the other angles and judge whether the agent’s face leads the typing hands.
+
+### 2026-11-27 20:07 UTC · INFO · STATUS
+
+The table uses the latest independent score for each of the 19 stages.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | All four previews checked. The native window is verified, with face 25.2 over felt 13.9. Company stocking medians in preview are 52.6 and 56.7. Finish and check the other three finals before review. |
+| hotel_room | 5.50 (5) | Checked the braced pose and the two hand tones. The packing grip now reads at p95 72.6, and acceptance keeps its title box below 42 in the test. Check the five full previews. |
+| inspection_room | 5.50 (4.5) | The 2560 luggage match is published. The revised opening finals are queued. The clean and handling inserts have the same seam spans, with three digits of the officer’s hand in contact within 0.06 mm of the grip. |
+| evidence_table | 5.63 (5) | Check the two previews of the cleaned stitch, then render the 2560 master and macro with their track. The geometry check puts the revised centreline within 0.3 native pixels of the scaled prior path. |
+| train | 5.63 (5) | Checked the wider rack frame with the sole case inside the frame and Dawn in the lower left. The case touches two rails. Check all three cast previews and the reflected hair. |
+| aircraft_cabin | 5.69 (4.5) | Checked the wing framed clear of the oval reveal, and the reclining profile with her hands in her lap. Smoothed the near temple. Check the three full-cast previews. |
+| baggage_belt | 5.69 (5) | The curtain test keeps the wall readable and reduces the tag p95 from 105 to 75. Testing a separate sorter pool so Dawn’s pair reads among the other cases. |
+| tim_desk | 5.69 (5) | Check the pen tip against the page, the hands and the lighting of the correspondence in all three previews. |
+| void_stage | 5.75 (4) | The 2560 luggage match is published. The standing and close frames have clear areas for type in their previews. Complete the native standing plates and check the seated and empty cell coverage. |
+| leather_market | 5.88 (5) | Check the handover beneath the lifted strap, the stall and the cleared wide after the new cast previews. |
+| chicago_night | 6.00 (5) | Check the window profile, mug, white skyline lights and suitcase across the four previews. |
+| checkin_hall | 6.13 (5) | Scale 0e25de2, wide c8e9eef, payment a3db3b1 and profile 5d38cc3 are published. The scale pins and title bounds are with LEAD. Independent review C33 is open. |
+| courtroom | 6.13 (5) | Check Dawn’s hand contact and the judge’s light across the occupied and empty framings. |
+| departure_gate | 6.13 (5.5) | Check the called shot as Dawn turns to the tannoy and braces to rise. Compare it with the seated, wide and window previews. |
+| hearing_room | 6.13 (5) | The two opening previews are checked. Render wide and witness and inspect the hands, dais and microphone. |
+| visiting_room | 6.25 (5) | Check Tim’s build, Dawn’s shoulder and both eyelines through the glass. |
+| home | 6.69 (6) | The warm family and cold solo poses are fitted to the table. Check the lighting and continuity across the meals and the occupied and empty chair. |
+| prison_exterior | 6.75 (6) | The tower test shows a watcher behind the north glass. The lower gate-rain test retains the drizzle and the steel face. Check tower, gate and wall from the current source. |
+| detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
+
+L2 continues through the inspection, hearing, departure-gate and void opening plates.
+
+### 2026-11-27 20:23 UTC · INFO · L2 · hongkong_street
+
+All four Kowloon finals and the board are published at d9fa391. The shelf holds olive, stone and slate bags in the evidence lineup’s order. The reflected face has a graded median of 25.2 against 13.9 on the felt. Dawn holds both carriers in the street close shot. In company the two men have distinct strides and empty hands, and her stockings read 53.1 and 58.5. The wide’s title box (x 450–830, y 40–230 at 1280) has median 12.3, p99 28.4 and maximum 38.6. All four were rendered at 1280×720, 64 samples, with no luminance clipping. The bags-to-empty-hands cut remains an editorial continuity point from C28.
+
+### 2026-11-27 20:23 UTC · REQUEST C34 · to CRITIC · critique
+
+Please rescore hongkong_street using the four published finals and raw PNGs at d9fa391. Check the eye’s path to Dawn in the wide, the carrier grips and pavement in dawn, the reflected face and shelf colours in window, and whether company reads as walking together. Please flag any sign overlap that reads as a glyph and check the title slot against C30.
+
+### 2026-11-27 20:30 UTC · INFO · L2 · inspection room entrance
+
+The revised 1280×720 entrance plate is published at 57c026f in frames/graded/inspection_room/enter.jpg. The case face and duffel have graded medians of 30.3 and 10.7. The bench has no luggage tag, the escort’s palm is open toward the bags, and the steel falls away around the duffel. The reverse angles, Dawn’s answer and the aftermath from the same build are rendering now. I will report those as a checked group.
+
+### 2026-11-27 20:43 UTC · INFO · L2 · Dawn’s answer in the inspection room
+
+The revised 1280×720 dawn_close at b0ae946 is ready for the cold open. The fingers wrap the fixed carry handle and the trolley handle sits forward of the grip. The case face reads 37.4, within the range of the entrance and trusted match plate. I am clearing a hard shadow on OfficerA’s coat in the two reverse angles before I release those.
+
+### 2026-11-27 20:47 UTC · INFO · L2 · empty inspection room
+
+The 1280×720 chapter-five aftermath plate is published at a02c114. The duffel is open, the tote lies on its side, the satchel and burgundy shoulder bag sit separately, and the trolley case is beside the scanner. The entrance, Dawn’s answer and this aftermath are available for the edit while I finish the lighting on the two reverse plates.

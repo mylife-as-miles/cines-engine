@@ -50,6 +50,7 @@ PLINTH = 0.085
 RUG = (0.0, 1.2, 2.3, 1.6)                                   # centre x, y, size x, y
 WARM = (1.0, 0.40, 0.085)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
 COOL = (0.38, 0.60, 1.0)           # the laptop's blank page
+LAPTOP_EMISSION = 1.25
 NIGHT = (0.55, 0.68, 1.0)          # the street and the sky
 
 # the lamp prop at LAMP_SIZE (base near the origin, the shade looking along +Y and down). Measured by ray probes at
@@ -786,7 +787,7 @@ def laptop():
     print(f"TIMDESK laptop lid {n} hits, slope {b:.3f}; panel {w:.3f} x {hh:.3f}, {proud * 1000:.1f} mm proud", flush=True)
     bm = bmesh.new()
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
-    scr = _link("laptop_screen", bm, mt.screen("laptop screen", COOL, 1.25, w, hh))
+    scr = _link("laptop_screen", bm, mt.screen("laptop screen", COOL, LAPTOP_EMISSION, w, hh))
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
     li = area("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 3.5, COOL, spread=150)
     bpy.context.view_layer.update()
