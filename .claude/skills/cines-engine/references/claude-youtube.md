@@ -55,6 +55,7 @@ The director's cut stays untouched; the YouTube cut is a second edit list beside
 - One idea: a face or a single object with emotion, and 2–4 words. Keep text out of the bottom-right corner (the timestamp covers it) and usually out of the bottom; the author preferred the line at the top ("NOBODY ANSWERED." over the mirror).
 - Make three variants for YouTube's Test & Compare and let the platform pick; keep all of them in `thumbs/` with a note of which won.
 - The thumbnail and the title work as a pair: the title should not repeat the thumbnail's words.
+- Offer more than frame grabs: for *Long Distance* the author rejected *Autopilot*-style frame grabs and chose illustrated posters in *One Too Many*'s idiom (`claude-film/long-distance/src/THUMB_youtube2.html`).
 
 ## 7. Packaging
 

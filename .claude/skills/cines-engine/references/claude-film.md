@@ -1,10 +1,10 @@
 # Claude Film: animated shorts made in code
 
-The production method of *One Too Many* and *Autopilot*, written from their files so the next film can start where they ended. Read §7 first if you are starting a film; read §1–6 for how and why. Sound has its own shared reference (`sound.md`); this file keeps the film-specific parts.
+The production method of *One Too Many*, *Autopilot* and *Long Distance*, written from their files so the next film can start where they ended. Read §7 first if you are starting a film; read §1–6 for how and why. Sound has its own shared reference (`sound.md`); this file keeps the film-specific parts.
 
 Contents: 1 Phases and documents · 2 Engine · 3 Tools · 4 Sound in the films · 5 Subtitles, titles, thumbnails, cuts, player · 6 QA and lessons · 7 Start a new film · 8 Craft from outside
 
-How *One Too Many* (`claude-film/one-too-many/`, 14:54, 12 sequences, 249 dialogue lines) and *Autopilot* (`claude-film/autopilot/`, 11:27 director's cut + 10:26 YouTube cut, 12 sequences, 52 lines) were made entirely in code: HTML/Canvas 2D style frames, a deterministic JS film engine, Playwright frame capture piped to ffmpeg, generated or recorded sound, TTS voice-over, a Lyria score, an offline mix, a one-page web player, cuts and thumbnails. All paths are from the repo root (`/home/user/cines-engine`). Commands run from the film folder (`cd claude-film/<film>`). "(inferred)" marks things not stated in the files.
+How *One Too Many* (`claude-film/one-too-many/`, 14:54, 12 sequences, 249 dialogue lines) *Autopilot* (`claude-film/autopilot/`, 11:27 director's cut + 10:26 YouTube cut, 12 sequences, 52 lines) and *Long Distance* (`claude-film/long-distance/`, 8:37, 11 sequences, 27 lines; §6 has what it added) were made entirely in code: HTML/Canvas 2D style frames, a deterministic JS film engine, Playwright frame capture piped to ffmpeg, generated or recorded sound, TTS voice-over, a Lyria score, an offline mix, a one-page web player, cuts and thumbnails. All paths are from the repo root (`/home/user/cines-engine`). Commands run from the film folder (`cd claude-film/<film>`). "(inferred)" marks things not stated in the files.
 
 Sources read: both READMEs, `claude-film/one-too-many/KIT.md`, both `film/FILM.md`, `claude-film/autopilot/design/*.md`, both `audio/README.md` + `CREDITS.md`, every file in both `tools/`, both `film/engine.js` and `load.js`, `audio/*.json`, `cuts/youtube.json`, the git history (`git log --all`, commits "Autopilot: …", 5–7 Nov 2026), and the external tools installed under `/home/user/` (earshot, opus-sound-layer, Soundbox, audio.cpp).
 
@@ -332,6 +332,18 @@ OTM's chain was the same in separate steps: `node tools/stem.js out/bed_s.wav --
 - Never edit the shared `kit/otm.js` and `kit/figures.js`, because parallel agents use them at once. Put helpers in `kit/look_x.js` or your own file.
 - Raw generated audio and renders stay out of git; commit the chosen sounds as FLAC.
 
+**What *Long Distance* added** (`claude-film/long-distance/`, merged 27 November 2026):
+- *Grain and Gloss*: in a cut-paper world with grain, the one artificial thing (the phone, the AI girlfriend) is the only smooth surface, drawn after the grain; its voice is the real woman's TTS voice made dry, close and levelled flat with no room. The contrast carries the twist without a word of narration (`design/look_b.md`, `audio/README.md`).
+- A staging grammar beats a palette: his half and the empty half of every frame, the phone always in the empty half, one room seen from matching cameras by night and by day; the visit is the first time a person fills the empty half (`design/look_c.md`).
+- Cast by ear: five Gemini TTS voices per role auditioned as reels (`audio/audition/`), the author picked; one voice plays both the phone and the real woman, separated only by treatment.
+- Three independent director's reviews, scored on a fixed rubric, before the picture locked as cut 4 (`design/REVIEW_cut1-3.md`).
+- Silence is designed, not left: the room drops out as the screen goes dark, the app opens with no ring, the black and the title are digital silence; list them in `score_plan.json` `silences_to_keep` so no cue lands on them.
+- A score can be decided last: `build_mix.py` reads `audio/score_plan.json` as a hook (an empty list builds the film without music), so the author chose a sparse score after the picture and mix were locked and only the bed changed.
+- A sparse score from one take: generate several takes of one prompt (`takes`, never placed) and cut every cue from the chosen take (a cue's `take`, `from_s`), so the cues share instrument, key and room; give the last cue the take with a clean natural fade and land that fade on the cut to black.
+- Grain is expensive to encode: the paper grain pushed an uncapped CRF 18 1080p encode past 40 Mbps (about 2.8 GB for 8:37; the first render filled the disk at 45 %). `export.js --crf 20 --maxrate 5.5M` (bufsize twice that) gave 5.6 Mbps and 360 MB, with no blocking in the darkest frames, under the 400 MiB send limit.
+- Keep `out/export_tmp/` segments until the last encode: every later deliverable (review copy, master) is muxed or scaled from them, and deleting them costs a 30–40 minute re-render.
+- Thumbnails: the author preferred illustrated posters in *One Too Many*'s idiom to frame grabs in *Autopilot*'s (`src/THUMB_youtube2.html`, e and f).
+
 **Gotchas from the sessions that made the films** (not yet written in the films' own docs):
 - *Out of memory when rendering and mixing in parallel* (it happened on Autopilot). The machine has 15 GB RAM, 4 cores and no swap. `export.js --workers 3` runs 4 Chromium pages. `build_mix.py` holds several full-length float64 stereo arrays (687 s × 48 kHz × 2 × 8 B ≈ 0.53 GB each: world, score, bed, floor, ctrl, caches), then `mix.py` loads its own copies. Run export, mix and earshot or Stable Audio jobs one at a time, with Stable Audio and earshot at `--threads 2`. The "generated after the restart" note in commit 078f1b5 suggests a session restart mid-score.
 - *Send-size limits.* Files sent to the author in chat must be under 400 MiB (Autopilot's first 1080p encode was over and was re-encoded at a lower bitrate); artifact pages are limited to 16 MB per file, so keep the player page (about 2.5 MB) and MP3 (under 16 MB) small. Keep the high-bitrate master for upload. Use `scripts/contact_sheet.py` to look before sending.
@@ -359,7 +371,7 @@ OTM's chain was the same in separate steps: `node tools/stem.js out/bed_s.wav --
    9. `film/seq/QNN_*.js`, checked with `strip.js` until done. Name every sound.
 4. **Sound**:
    1. `audio/gen_plan.json` → `sfx_gen.py --check` → `audio/gen_variants.json` → `sfx_variants.py` → convert the chosen ones to `audio/kit/*.flac`.
-   2. `audio/score_plan.json` → `lyria.py` → `score_check.py` (regenerate off-mood takes).
+   2. `audio/score_plan.json` → `lyria.py` → `score_check.py` (regenerate off-mood takes). For a sparse score, several `takes` of one prompt and cues cut from the chosen one (*Long Distance*).
    3. `node tools/cuesheet.js out/cuesheet.json` → write `audio/sound_map.json` until build_mix reports no `MISSING:`.
    4. `uv run tools/build_mix.py --mix --mux` after `node tools/export.js out/<film>_picture.mp4 --workers 3 --no-audio` (run them one after the other, not at the same time).
    5. `qa.py`, earshot on key moments, then `audio/README.md`, `audio/CREDITS.md` and `LISTEN.md`.

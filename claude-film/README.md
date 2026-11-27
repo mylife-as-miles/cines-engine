@@ -6,5 +6,6 @@ Short films animated entirely in code: style frames and sets drawn on HTML canva
 | --- | --- |
 | [`one-too-many/`](one-too-many/README.md) | *One Too Many*, the first film, in the Negative Space look. Its engine, drawing kit (`KIT.md`) and sound tools are the base the later films build on. |
 | [`autopilot/`](autopilot/README.md) | *Autopilot* (11:27; YouTube cut 10:26), in the Through Glass look: a father, a phone by the kettle, the hottest day of the year. |
+| [`long-distance/`](long-distance/README.md) | *Long Distance* (8:37), in the Grain and Gloss look: a man, a flat furnished for two, and the girlfriend who lives in his phone. A sparse felt-piano score. |
 
-A new film starts as a new folder here; the studio skill (`.claude/skills/cines-engine/references/claude-film.md`) says what to copy from these two and what to write fresh.
+A new film starts as a new folder here; the studio skill (`.claude/skills/cines-engine/references/claude-film.md`) says what to copy from these films and what to write fresh.
