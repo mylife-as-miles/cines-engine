@@ -8,7 +8,7 @@ pull-down shade (most closed for the night) and the outer pane. Side and centre 
 latch recesses; passenger service units under them with reading lenses and gaspers; curved aisle ceilings lit by blue
 night coves, with the soft light the ceiling gives back; a lit slot washing each sidewall; LED dashes in a floor
 strip along the aisles; a front bulkhead with lit galley curtains in the two aisle openings. Outside: the night sky
-dome at altitude and the port wing with its winglet, red tip light (with a soft halo) and white strobe.
+dome at altitude and the port wing with its winglet, recessed white tip strobe.
 
 One three-seat block (moulded shells with rounded tops, tray tables, blank screens, a card and a magazine in each
 pocket, headrests under draped cloth covers, armrests, aisle end bays, legs, beams and floor tracks) is built once
@@ -753,9 +753,46 @@ def front_bulkhead():
 
 
 # ---------------------------------------------------------------- exterior
+def wing_details(sections, rings, recv):
+    """Panel joints on the upper skin and the three fairings under the flap tracks."""
+    skin_offset = Vector((0, 0, 0.0015))
+    strips = []
+    for k in (3, 5, 6, 8):
+        # Interpolate along the two adjacent loft sections so the joint follows the airfoil.
+        span = abs(sections[k + 1][0] - sections[k][0])
+        strip = []
+        for j in range(2, 8):
+            centre = Vector(rings[k][j])
+            near = centre.lerp(Vector(rings[k - 1][j]), 0.005 / span)
+            far = centre.lerp(Vector(rings[k + 1][j]), 0.005 / span)
+            strip.append((near + skin_offset, far + skin_offset))
+        strips.append(strip)
+    hinge = []
+    for k in range(2, len(sections)):
+        _, _, chord, _, _ = sections[k]
+        a, b = Vector(rings[k][5]), Vector(rings[k][6])
+        half = 0.007 / (0.20 * chord)
+        hinge.append((a.lerp(b, 0.5 - half) + skin_offset, a.lerp(b, 0.5 + half) + skin_offset))
+    strips.append(hinge)
+    for i, strip in enumerate(strips):
+        verts = [p for pair in strip for p in pair]
+        faces = [(j, j + 1, j + 3, j + 2) for j in range(0, len(verts) - 2, 2)]
+        joint = mesh_obj(f"wing skin joint {i}", verts, faces, M["wing_dark"], smooth=False)
+        recv.objects.link(joint)
+    for k in (3, 5, 7):
+        x, le, chord, thick, z = sections[k]
+        tail = le - chord
+        rings_fairing = []
+        for dy, radius in ((1.45, 0.025), (1.12, 0.16), (0.40, 0.22), (-0.35, 0.17), (-0.92, 0.015)):
+            ring = [(x + radius * math.cos(i * math.tau / 16), tail + dy,
+                     z - thick * 0.12 + 0.72 * radius * math.sin(i * math.tau / 16)) for i in range(16)]
+            rings_fairing.append(ring)
+        recv.objects.link(loft(f"flap track fairing {k}", rings_fairing, M["wing"], closed_end=True))
+
+
 def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     """The night outside: the sky dome, the port wing (root far forward, swept back to a raked tip near eye level), its
-    red navigation light and the white tail strobe beside it. Lights linked to `recv` (the exterior) only."""
+    white aft-facing anti-collision strobe. Lights linked to `recv` (the exterior) only."""
     sky = bpy.data.objects.new("sky", bpy.data.meshes.new("sky"))
     bm = bmesh.new()
     bmesh.ops.create_uvsphere(bm, u_segments=64, v_segments=32, radius=2500.0)
@@ -799,40 +836,28 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     wing = loft("wing", rings, M["wing"], closed_end=True)
     finish(wing, 0.0)
     recv.objects.link(wing)
-    # a raked tip cap and the nav light housing at the tip's leading edge
-    light_pos = Vector((x - 0.15, le - 0.45, z + 0.05))
-    cyl("navlight_housing", 0.09, 0.22, light_pos, M["wing_dark"], rot=(0, math.pi / 2, 0), verts=16)
-    nl = bpy.data.objects.new("navlight", bpy.data.meshes.new("navlight"))
-    bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=8, radius=0.07)
-    bm.to_mesh(nl.data)
-    bm.free()
-    _coll().objects.link(nl)
-    nl.location = light_pos + Vector((-0.12, 0, 0.0))
-    nl.data.materials.append(M["nav_red"])
-    nl.visible_shadow = False
-    st = bpy.data.objects.new("strobe", bpy.data.meshes.new("strobe"))
-    bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=6, radius=0.05)
-    bm.to_mesh(st.data)
-    bm.free()
-    _coll().objects.link(st)
-    st.location = Vector((x - 0.05, le - chord + 0.2, z + 0.06))
-    st.data.materials.append(M["nav_white"])
-    st.visible_shadow = False
+    wing_details(sections, rings, recv)
+    # The flight is seen from inside. The aft strobe is visible and the outboard
+    # position light is screened by the tip fairing. Red is reserved for the bag seam.
+    aim = Vector((0.52, -0.85, 0.18)).normalized()
+    mount = Vector((x + 0.09, le - chord + 0.12, z + 0.09))
+    rot = aim.to_track_quat("Z", "Y").to_euler()
+    housing = cyl("strobe housing", 0.034, 0.045, mount, M["wing_dark"], rot=rot)
+    recv.objects.link(housing)
+    st = cyl("strobe", 0.015, 0.003, mount + aim * 0.023, M["nav_white"], rot=rot)
     halo = bpy.data.objects.new("navlight_halo", bpy.data.meshes.new("navlight_halo"))
     bm = bmesh.new()
-    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.42)
+    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.16)
     bm.to_mesh(halo.data)
     bm.free()
     for p in halo.data.polygons:
         p.use_smooth = True
     _coll().objects.link(halo)
-    halo.location = nl.location
+    halo.location = st.location
     halo.data.materials.append(M["nav_halo"])
     halo.visible_shadow = False
-    red = point("nav_red_light", nl.location + Vector((-0.2, 0.2, 0.25)), 60.0, (1.0, 0.12, 0.06), 0.06)
-    red.light_linking.receiver_collection = recv
+    spill = point("strobe spill", st.location + aim * 0.04, 4.0, (0.92, 0.96, 1.0), 0.035)
+    spill.light_linking.receiver_collection = recv
     # the moon, out of shot above and ahead: a cool soft sun on the wing only
     li = bpy.data.lights.new("moon", "SUN")
     li.energy, li.color, li.angle = 0.17, (0.62, 0.72, 1.0), math.radians(4.0)
@@ -842,4 +867,4 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     mo.rotation_euler = Vector(moon_dir).to_track_quat("Z", "Y").to_euler()
     mo.light_linking.receiver_collection = recv
     LIGHTS["moon"] = mo
-    return wing, nl
+    return wing, st

@@ -6,7 +6,7 @@ blank-glowing seat-back screens, belts left crossed on the empty cushions; side 
 sidewall with oval windows, most shades pulled down for the night; the blue night coves on the aisle ceilings, a thin
 wash down the sidewalls and the path lights along the aisles; the galley curtains glowing at the far end. Every
 reading light is off but one: Dawn's, over the port window seat in row 5, the one pool in the dark. Outside her window
-the sky at altitude, a faint horizon far below, the port wing reaching out to its winglet and red tip light.
+the sky at altitude, a faint horizon far below, the port wing reaching out to its winglet and white tip strobe.
 
 Dawn is the shared cast's people.dawn() (as at the gate the same night), seated through Rigify with the gate's
 method (legs to FK, a small solve for thigh and shin so her seat sinks a little into the cushion and her soles rest on
@@ -97,8 +97,8 @@ CAMERAS = {
     # hands in her lap
     "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.11, 0.930), lens=35, focus="fx_face", fstop=2.8,
                    beat="ch03"),
-    # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red tip
-    # light under the horizon, and the dark below; her head soft in the foreground
+    # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its white tip
+    # strobe under the horizon, and the dark below; her head soft in the foreground
     "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 28.5, -10.0, 1.2), lens=50, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
@@ -577,7 +577,7 @@ def assign_groups():
     rules = (("pathled_", "path"), ("pathglow_", "path"), ("path_light_", "path"), ("wash_", "wash"), ("amb_", "amb"),
              ("cove_", "cove"), ("screenglow_", "screen"), ("screenspill_", "screen"), ("galley_", "galley"),
              ("bulk_sign_", "galley"), ("sky", "sky"), ("navlight", "moon"), ("strobe", "moon"),
-             ("nav_red_light", "moon"), ("moon", "moon"), ("lens_", "key"))
+             ("moon", "moon"), ("lens_", "key"))
     for ob in bpy.data.objects:
         if ob.lightgroup:
             continue

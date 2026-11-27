@@ -538,8 +538,7 @@ def materials(lanes=()):
     M["sky"] = sky("night sky")
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
-    M["nav_red"] = glow("nav light red", (1.0, 0.08, 0.05), 40.0)
-    M["nav_halo"] = halo("nav light halo", (1.0, 0.07, 0.04), 1.2)
-    M["nav_white"] = glow("nav light white", (1.0, 0.97, 0.92), 8.0)
+    M["nav_halo"] = halo("strobe halo", (0.91, 0.95, 1.0), 0.65)
+    M["nav_white"] = glow("strobe lens", (0.94, 0.97, 1.0), 12.0)
     M["black"] = pbr("black void", (0.005, 0.005, 0.006), (0.8, 0.9))
     return M
