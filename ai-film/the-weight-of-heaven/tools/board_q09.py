@@ -68,11 +68,11 @@ def main():
     # 1. the wide, dark
     a = part(DARK, (0.0, 0.0, 1.0, 1.0), (W, H))
     a = b4.over(a, dark(ser_back, 0.42), cx=330, foot=296, height=104, soft=0.4)
-    a = b4.over(a, dark(kar_front, 0.20), cx=754, foot=262, height=66, soft=0.5)
+    a = b4.over(a, dark(kar_back, 0.20), cx=754, foot=262, height=66, soft=0.5)
     c1 = img(a); d = ImageDraw.Draw(c1)
     note(d, (36, 22), 'dark: the only light is the door behind us and the gap in the shutters')
     arrow(d, (330, 150), (330, 186), w=3); note(d, (236, 122), 'Serath at the wall, reading')
-    arrow(d, (700, 150), (744, 190), w=3); note(d, (590, 122), 'Karst waits in front of the shutters')
+    arrow(d, (700, 150), (744, 190), w=3); note(d, (590, 122), 'Karst at the shutters, his back to us')
     # (version 1's shot 2: her profile facing right; kept for shot 4's set-up only)
     wall = b4.blur(part(DARK, (0.27, 0.10, 0.47, 0.50), (W, H)), 2.5) * 1.5
     glow = np.zeros((H, W), np.float32); glow[120:330, 0:150] = 1; glow = ndimage.gaussian_filter(glow, 70)
@@ -122,9 +122,9 @@ def main():
         (cj, 'THE JOIN · the scene before ends here',
          'Serath in profile in the yard, in daylight, as Karst\'s second sentence ends. A straight cut.'),
         (cm, 'SHOT 1 · 0–6.2 s · her profile at the slab, dark',
-         'The match: her head where it was, facing the same way, in the dark hall, lit only by the yard door behind us. She reads aloud: "The seven cities, raised by the hands of all, and borne by the nations of the high ground,"'),
+         'The match: her head where it was, upright, facing the same way, in the dark hall; nothing bright in the frame. A still moment, then she reads aloud: "The seven cities, raised by the hands of all, and borne by the nations of the high ground,"'),
         (c1, 'SHOT 2 · 6.2–9.6 s · the hall, wide, dark',
-         'Serath in white, small, at the black slab; Karst a dark shape in front of the closed shutters. Her back to us, after one breath: "until the fire is stone." Nothing moves.'),
+         'Serath in white, small, at the black slab; Karst a dark shape at the closed shutters, his back to us, an arm out to each leaf. Her back to us: "until the fire is stone." Nothing moves.'),
         (c3, 'SHOT 3 · 9.6–15 s · Karst opens the shutters',
          'From behind him, the camera planted. He pulls the two heavy leaves toward himself, one step back, and lets them swing; daylight opens; the black plain, sharp, to the horizon. His back to us, as the leaves come to rest: "It was stone within forty years."'),
         (c4, 'SHOT 4 · 15–18.8 s · Serath, from the shutters\' side',
