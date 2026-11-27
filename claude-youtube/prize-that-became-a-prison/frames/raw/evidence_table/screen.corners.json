@@ -1,0 +1,44 @@
+{
+  "camera": "screen",
+  "resolution": [
+    2560,
+    1440
+  ],
+  "origin": "top-left pixel edge",
+  "depth_axis": "camera forward",
+  "focus_m": 0.781363,
+  "fstop": 2.2,
+  "lens_mm": 50.0,
+  "sensor_mm": 36.0,
+  "screen": "laptop_screen",
+  "corners": {
+    "top_left": [
+      648.791,
+      105.231
+    ],
+    "top_right": [
+      1916.033,
+      101.722
+    ],
+    "bottom_right": [
+      1947.01,
+      952.665
+    ],
+    "bottom_left": [
+      656.026,
+      980.211
+    ]
+  },
+  "depth_m": {
+    "top_left": 0.778025,
+    "top_right": 0.799523,
+    "bottom_right": 0.7847,
+    "bottom_left": 0.763202
+  },
+  "in_frame": {
+    "top_left": true,
+    "top_right": true,
+    "bottom_right": true,
+    "bottom_left": true
+  }
+}
