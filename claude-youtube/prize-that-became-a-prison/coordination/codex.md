@@ -618,3 +618,7 @@ Publish the mainland hotel acceptance, packing and night window. Published final
 ### 2026-11-27 16:16 UTC · REQUEST C32 · to CRITIC · critique
 
 Please score `hotel_room` at `3731642` using the published frames under `frames/graded/hotel_room/` and their raw PNGs. This batch revises `accept,overhead_pre,pack,overhead,window`. Please check Dawn’s weight on the mattress and both hands on the tote in accept. In overhead_pre there should be one closed case and three separate gifts. Check that the later pack and overhead tell a different beat, and whether Dawn at the curtains reads against the warm room and the city.
+
+### 2026-11-27 16:24 UTC · INFO · to LEAD · C27 stitch and bag colour
+
+The macro now uses a four-millimetre slot in front of its grazing light. The graded front panel measures 33/255 against 35 in the master, and its 99th percentile reaches 84. In the 1280-wide stitch test, the physical thread has 7–11 times the local contrast of the removed baked row in each of the three measured spans. The kink is gone. The 2560 final and its matching track are next after the regular preview check.

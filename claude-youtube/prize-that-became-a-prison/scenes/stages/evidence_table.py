@@ -553,6 +553,47 @@ def bags():
     return out
 
 
+def shadow_card(name, size, location, material):
+    card = sk.box(name, size, location, material)
+    for kind in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
+        setattr(card, "visible_" + kind, False)
+    return card
+
+
+def bag_lighting():
+    # The tight insert catches the lamp lengthwise along the rolled edge.
+    # Only the leather and its thread receive this reflection.
+    lip = Vector((0.233, -0.186, TOP + 0.247))
+    source = lip + Vector((-0.31, 0.155, 0.021))
+    graze = sk.area_light("tote lip graze", source, (0.07, 0.003), 0.55, WARM, spread_deg=37)
+    frame = Matrix.Translation(source) @ (lip - source).to_track_quat("-Z", "Y").to_matrix().to_4x4()
+    graze.matrix_world = frame
+    graze.visible_volume_scatter = False
+    leather = bpy.data.collections.new("Tote and thread")
+    for part in bpy.data.objects["handbag-tote"].children_recursive:
+        if part.type in ("MESH", "CURVE"):
+            leather.objects.link(part)
+    graze.light_linking.receiver_collection = leather
+    # A four-millimetre slot leaves the front leather at the master's value
+    # while the lip and the stitches catch the small warm source.
+    shutters = []
+    for side in (-1, 1):
+        card = shadow_card("lip light shutter", (0.18, 0.06, 0.001), (0, 0, 0), M["leg"])
+        card.matrix_world = frame @ Matrix.Translation((0, side * 0.032, -0.060))
+        shutters.append(card)
+    _STATE["lip shutters"] = shutters
+    # Under the front lip of the shade, six centimetres below the Ch 04 bulb.
+    # Its edge cuts the near boards while the light carries on to the bags.
+    net = bpy.data.materials.new("Neutral lamp net")
+    net.use_nodes = True
+    nt = net.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    trans = nt.nodes.new("ShaderNodeBsdfTransparent")
+    trans.inputs["Color"].default_value = (0.48, 0.48, 0.48, 1.0)
+    nt.links.new(trans.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    shadow_card("table lamp front cutter", (0.090, 0.17, 0.002), (-0.750, -0.320, TOP + 0.343), net)
+
+
 def folder_stack():
     # a little smaller and lower than the file's (a dozen folders, not two dozen), and brought in so the whole stack
     # sits inside the overhead frame with dark wood above it
@@ -846,6 +887,8 @@ def apply_camera(name):
     reveal = name in ("purses", "seam")
     bpy.data.objects["cone_haze"].hide_render = plate or reveal
     bpy.data.objects["tote lip graze"].hide_render = name != "seam"
+    for shutter in _STATE["lip shutters"]:
+        shutter.hide_render = name != "seam"
     bpy.data.objects["table lamp front cutter"].hide_render = name != "purses"
     for obj_name in ("lamp_spot", "lamp_glow", "lamp_bulb"):
         ob = bpy.data.objects[obj_name]
@@ -1023,31 +1066,7 @@ def build(cast=True):
     bpy.context.view_layer.update()
     empty("fx_screen", tuple(bpy.data.objects["laptop_screen"].matrix_world.translation))
     group("bags", bags())
-    # The tight insert catches the lamp lengthwise along the rolled edge.
-    # Only the leather and its thread receive this reflection.
-    lip = Vector((0.233, -0.186, TOP + 0.246))
-    source = lip + Vector((-0.32, 0.12, 0.09))
-    graze = sk.area_light("tote lip graze", source, (0.15, 0.05), 1.1, WARM)
-    graze.rotation_euler = (lip - source).to_track_quat("-Z", "Y").to_euler()
-    graze.visible_volume_scatter = False
-    leather = bpy.data.collections.new("Tote and thread")
-    for part in bpy.data.objects["handbag-tote"].children_recursive:
-        if part.type in ("MESH", "CURVE"):
-            leather.objects.link(part)
-    graze.light_linking.receiver_collection = leather
-    # Under the front lip of the shade, six centimetres below the Ch 04 bulb.
-    # Its edge cuts the near boards while the light carries on to the bags.
-    net = bpy.data.materials.new("Neutral lamp net")
-    net.use_nodes = True
-    nt = net.node_tree
-    nt.nodes.remove(nt.nodes["Principled BSDF"])
-    trans = nt.nodes.new("ShaderNodeBsdfTransparent")
-    trans.inputs["Color"].default_value = (0.48, 0.48, 0.48, 1.0)
-    nt.links.new(trans.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
-    cutter = sk.box("table lamp front cutter", (0.090, 0.17, 0.002),
-                    (-0.750, -0.320, TOP + 0.343), net)
-    for kind in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
-        setattr(cutter, "visible_" + kind, False)
+    bag_lighting()
     # Ch 04: the rolled receipt on the wood in front of the bags, its roll toward the lamp, seen nearly end on
     # Ch 04's receipt, and Ch 02 (night, the email): the documents are put away; the passport and the two boarding
     # passes lie on the bare wood in front of the laptop, in the turned-down lamp's pool and the screen's cool spill.
