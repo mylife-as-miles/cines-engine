@@ -42,6 +42,7 @@ DAWN_ROW, DAWN_SIDE = 4, "L"
 SEAT_X, SEAT_Y = st.seat_world(DAWN_SIDE, DAWN_ROW, "window")
 GLASS_X = -(st.XW + st.REVEAL)                  # the inner face of her window's glass
 LOOK = Vector((GLASS_X - 0.06, SEAT_Y - 2.8, 1.16))  # a passing light through the next bay, ahead of her
+AISLE_LOOK = Vector((GLASS_X - 1.2, SEAT_Y - 1.6, 1.12))
 CUSHION_SINK = 0.012                            # how far a sitter settles into the cushion
 
 # strip light levels per (bay, side): bay 2 is over Dawn; travellers sit under bays 3-6
@@ -75,8 +76,8 @@ CAMERAS = {
     "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_seat", fstop=4.0,
                  beat="ch03"),
     # Ch 03: a controlled close-up on the suitcase on the rack above her, the carriage soft beyond
-    # the near-aisle angle separates both silhouettes and leaves the lamp visible below their rail
-    "rack": dict(loc=(0.15, SEAT_Y - 1.05, 2.08), aim=(-1.428, SEAT_Y + 0.19, st.RACK_Z + 0.015), lens=40, focus="fx_bags", fstop=2.8,
+    # the racks recede beyond it, with the edge of Dawn’s reading pool below
+    "rack": dict(loc=(0.35, SEAT_Y - 1.40, 1.98), aim=(-0.95, SEAT_Y + 1.40, 1.82), lens=40, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
@@ -88,9 +89,10 @@ SEAT_CAM_OFFSET = (0.68, -0.30, 0.06)      # the seat camera from her eyes: towa
 if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
 TRIMS = {
-    "aisle": {"face_fill": 2.4, "reading_lamp": 1.1, "bun_rim": 0.0, "bag_edge": 0.0},
-    "seat": {"night_light": 0.0, "bag_edge": 0.0},
-    "rack": {"face_fill": 0.0, "bun_rim": 0.0},
+    "aisle": {"face_fill": 2.4, "reading_lamp": 1.1, "bun_rim": 0.0, "bag_edge": 0.5,
+              "hair_glass": 0.0, "strip_R2_light": 0.57},
+    "seat": {"night_light": 0.0, "bag_edge": 0.0, "reading_lamp": 0.8, "face_fill": 0.73},
+    "rack": {"face_fill": 0.0, "bun_rim": 0.0, "hair_glass": 0.0},
 }
 GLASS_REFL = {"aisle": 0.06, "seat": 0.07, "rack": 0.06}
 LIFT = {"aisle": 0.003, "seat": 0.002, "rack": 0.0025}
@@ -411,7 +413,7 @@ def place_dawn():
     hip = hip_world(h)
     print(f"TRAIN Dawn seated: hip ({hip.x:.3f}, {hip.y:.3f}, {hip.z:.3f}), slid back {g * 1000:+.0f} mm, lowest "
           f"{min(p.z for p in pts) * 1000:+.1f} mm, eyes {tuple(round(v, 3) for v in eye_centre(h))}", flush=True)
-    return h
+    return s
 
 
 # ---------------------------------------------------------------- travellers
@@ -489,11 +491,39 @@ def rack_case():
     """On the inbound train she has one suitcase. The duffel is bought later."""
     bed = st.RACK_Z + st.BAR_R
     case = props.load("dawn-suitcase", size=0.66, axis="z", sat=0.6)
+    meshes = [obj for obj in case.children_recursive if obj.type == "MESH"]
+    muted = {}
+    for obj in meshes:
+        local = obj.matrix_world
+        inverse = local.inverted()
+        for vertex in obj.data.vertices:
+            point = local @ vertex.co
+            if point.x < -0.067 and point.z > 0.52:
+                point.z = 0.52 + 0.12 * (point.z - 0.52)
+                vertex.co = inverse @ point
+        obj.data.update()
+        for slot in obj.material_slots:
+            material = slot.material
+            if material in muted or not material or not material.use_nodes:
+                continue
+            tree = material.node_tree
+            shader = tree.nodes.get("Principled BSDF")
+            if shader is None or not shader.inputs["Base Color"].is_linked:
+                continue
+            base = shader.inputs["Base Color"]
+            colour = base.links[0].from_socket
+            # Tone down the pale zipper hardware in the wide; leave the close angle on the original finish.
+            grey = tree.nodes.new("ShaderNodeRGBToBW")
+            tree.links.new(colour, grey.inputs["Color"])
+            tone = st.mt._maprange(tree, grey.outputs[0], 0.18, 1.0, 0.05, 0.09)
+            amount = tree.nodes.new("ShaderNodeValue")
+            tree.links.new(st.mt._mix(tree, amount.outputs[0], colour, tone), base)
+            muted[material] = amount.outputs[0]
+    _STATE["bag_mute"] = list(muted.values())
     # The side panel rests across two bars. Its two wheels drop into the gaps.
     case.rotation_euler = tuple(math.radians(a) for a in (91.55, 0.94, -3.0))
     case.location = (-st.XW + 0.2161, SEAT_Y + 0.5143, bed + 0.20)
     bpy.context.view_layer.update()
-    meshes = [obj for obj in case.children_recursive if obj.type == "MESH"]
     pts = [o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
     rails = [o.data.splines[0].points[0].co.x for o in bpy.data.objects if o.name.startswith("rack_bar_L")]
     # Lower until the shell meets a curved bar. A caster hanging between bars
@@ -556,12 +586,35 @@ def apply_camera(name):
     sc.cycles.transparent_max_bounces = 12
     for obj in _STATE["passengers"]:
         obj.visible_glossy = name != "aisle"
+    for obj in _STATE["attendant"]:
+        obj.hide_render = name == "aisle"
     for obj in _STATE["aisle_motion"]:
-        obj.hide_render = name != "aisle"
+        obj.hide_render = name != "aisle" and not (name == "rack" and obj.name == "aisle_motion_4")
+    _STATE["linen_tone"].default_value = 0.55 if name == "aisle" else 1.0
+    for amount in _STATE["bag_mute"]:
+        amount.default_value = float(name == "aisle")
+    sitter = _STATE["dawn_sitter"]
+    if sitter is not None and (name == "aisle") != _STATE["aisle_pose"]:
+        if name == "aisle":
+            aim_head(sitter, AISLE_LOOK, base_turn=(-10, -22))
+        else:
+            sitter.upper["chest"], sitter.upper["neck"], sitter.upper["head"] = _STATE["seat_pose"]
+        sitter.settle_hands()
+        _STATE["aisle_pose"] = name == "aisle"
     for obj in _STATE["cove_seams"]:
         obj.hide_render = name == "rack"
     lamp = st.LIGHTS["reading_lamp"]
-    target = bpy.data.objects["fx_dawn"].location + Vector((0, 0, -0.045)) if name == "aisle" else READING_TARGET
+    target = READING_TARGET.copy()
+    if name == "seat":
+        target.z = 1.02
+    elif name == "aisle":
+        target = eye_centre(sitter.h) if sitter is not None else bpy.data.objects["fx_dawn"].location.copy()
+        target.z -= 0.045
+        fill = st.LIGHTS["face_fill"]
+        fill.rotation_euler = (target - fill.location).to_track_quat("-Z", "Y").to_euler()
+    if name != "aisle":
+        fill = st.LIGHTS["face_fill"]
+        fill.rotation_euler = (bpy.data.objects["fx_dawn"].location - fill.location).to_track_quat("-Z", "Y").to_euler()
     lamp.rotation_euler = (target - lamp.location).to_track_quat("-Z", "Y").to_euler()
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
@@ -600,16 +653,15 @@ def _focus(name, p):
     return e
 
 
-def keep_clear(cdef, centre, rx=0.11, ry=0.2):
-    """Remove the random streaks whose path crosses her reflected face in the seat frame (an ellipse of rx by ry
-    frame units round where the reflection sits), so the passing lights frame it and never wipe it out."""
+def keep_clear(cdef, points):
+    """Remove random streaks whose paths cross the reflection or meet her near profile."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
     rx_, ry_ = sc.render.resolution_x, sc.render.resolution_y
     sc.render.resolution_x, sc.render.resolution_y = 1280, 720
     cam = sk.camera(cdef["loc"], cdef["aim"], lens=cdef["lens"])
     bpy.context.view_layer.update()
-    c = world_to_camera_view(sc, cam, centre)
+    ellipses = [(world_to_camera_view(sc, cam, point), rx, ry) for point, rx, ry in points]
     gone = []
     for o in [o for o in bpy.data.objects if o.name.startswith("streak_") and "hero" not in o.name]:
         me = o.data
@@ -617,7 +669,8 @@ def keep_clear(cdef, centre, rx=0.11, ry=0.2):
         b = o.matrix_world @ ((me.vertices[1].co + me.vertices[3].co) / 2)
         for k in range(41):
             v = world_to_camera_view(sc, cam, a.lerp(b, k / 40))
-            if v.z > 0 and ((v.x - c.x) / rx) ** 2 + ((v.y - c.y) / ry) ** 2 < 1.0:
+            if v.z > 0 and any(((v.x - c.x) / rx) ** 2 + ((v.y - c.y) / ry) ** 2 < 1
+                               for c, rx, ry in ellipses):
                 gone.append(o.name)
                 break
     for n in gone:
@@ -631,7 +684,7 @@ def keep_clear(cdef, centre, rx=0.11, ry=0.2):
     print(f"TRAIN streaks kept clear of the reflection: removed {gone}", flush=True)
 
 
-def set_cameras(eyes, bag_box):
+def set_cameras(eyes, bag_box, dawn_holder):
     """The seat and rack cameras from where Dawn's eyes and the bags actually are."""
     if eyes is not None:
         _focus("fx_dawn", eyes)
@@ -657,21 +710,37 @@ def set_cameras(eyes, bag_box):
         for i, (off, dist, ln, hg, rgb, k) in enumerate(HERO_STREAKS):
             p = ray(off, dist)
             st.streak_obj(f"streak_hero_{i}", p.x, p.y, p.z, ln, hg, rgb, k)
-        keep_clear(CAMERAS["seat"], on_glass)
+        clear = [(on_glass, 0.11, 0.2)]
+        if dawn_holder is not None:
+            body = bpy.data.objects[dawn_holder["body"]]
+            forward = head_forward(dawn_holder)
+            face = [p for p in body_points(dawn_holder, only=body) if (eyes - p).length < 0.16
+                    and eyes.z - 0.09 < p.z < eyes.z - 0.012]
+            if face:
+                nose = max(face, key=lambda p: forward.dot(p - eyes))
+                clear.append((nose, 0.04, 0.05))
+            source = eyes + Vector((-0.16, 0.02, 0.20))
+            light = st.area("hair_glass", source, (0.14, 0.14), 1.8, st.LAMP, spread=60,
+                            rot=(eyes + Vector((0, 0.10, 0.10)) - source).to_track_quat("-Z", "Y").to_euler())
+            receivers = bpy.data.collections.new("Dawn reflected portrait")
+            receivers.objects.link(body)
+            hair = bpy.data.objects.get(f"{body.name}_hair")
+            if hair is not None:
+                receivers.objects.link(hair)
+            light.light_linking.receiver_collection = receivers
+        keep_clear(CAMERAS["seat"], clear)
         print(f"TRAIN seat camera {CAMERAS['seat']['loc']} aim {CAMERAS['seat']['aim']}: reflection on the glass at "
               f"{tuple(round(v, 3) for v in on_glass)}", flush=True)
     if "aisle" in CAMERAS:
         origin = Vector(CAMERAS["aisle"]["loc"])
         for i, (side, bay, z, depth) in enumerate(((-1, 1, 1.25, 9), (1, 1, 1.38, 12),
-                                                    (-1, 2, 1.62, 17), (1, 2, 1.15, 10), (-1, 3, 1.30, 14))):
+                                                    (-1, 2, 1.25, 17), (1, 2, 1.15, 10), (-1, 3, 1.30, 14))):
             pane = Vector((side * abs(GLASS_X), st.WIN_Y[bay], z))
             centre = pane + (pane - origin) * (depth / abs(pane.x - origin.x))
-            st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 3.8)
-    if bag_box and "rack" in CAMERAS:
+            st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 7.0)
+    if bag_box:
         lo, hi = bag_box
         target = Vector((hi.x, (lo.y + hi.y) / 2, lo.z * 0.6 + hi.z * 0.4))
-        CAMERAS["rack"]["aim"] = tuple(target + Vector((0, -0.03, -0.04)))
-        CAMERAS["rack"]["lens"] = 53
         edge = Vector((-0.75, SEAT_Y + 0.3, 2.42))
         light = st.area("bag_edge", edge, (0.06, 1.2), 25, st.COOL, spread=68,
                         rot=(target - edge).to_track_quat("-Z", "Y").to_euler())
@@ -689,6 +758,13 @@ def build(cast=True):
     st.LIGHTS.clear()
     _STATE["base"].clear()
     st.materials()
+    linen = st.M["linen"].node_tree
+    base = linen.nodes["Principled BSDF"].inputs["Base Color"]
+    linen_tone = linen.nodes.new("ShaderNodeValue").outputs[0]
+    linen_tone.default_value = 1.0
+    colour = base.links[0].from_socket
+    linen.links.new(st.mt._mix(linen, 1.0, colour, linen_tone, blend="MULTIPLY"), base)
+    _STATE["linen_tone"] = linen_tone
     st.floor()
     st.ceiling()
     st.walls()
@@ -706,8 +782,15 @@ def build(cast=True):
     eyes = None
     _STATE["cast"] = []
     _STATE["passengers"] = []
+    _STATE["dawn_sitter"] = None
+    _STATE["attendant"] = []
+    _STATE["aisle_pose"] = False
+    d = None
     if cast:
-        d = place_dawn()
+        sitter = place_dawn()
+        d = sitter.h
+        _STATE["dawn_sitter"] = sitter
+        _STATE["seat_pose"] = tuple(sitter.upper[k] for k in ("chest", "neck", "head"))
         eyes = eye_centre(d)
         _STATE["dawn"] = d
         _STATE["cast"] = [d] + list(d.children_recursive)
@@ -716,9 +799,10 @@ def build(cast=True):
             t = traveller(name, kind, side, row, which, upper)
             _STATE["cast"] += [t] + list(t.children_recursive)
         a = attendant()
-        _STATE["cast"] += [a] + list(a.children_recursive)
+        _STATE["attendant"] = [a] + list(a.children_recursive)
+        _STATE["cast"] += _STATE["attendant"]
         _STATE["passengers"] = [o for o in _STATE["cast"][dawn_count:] if o.type == "MESH"]
-    set_cameras(eyes if eyes is not None else Vector((SEAT_X - 0.062, SEAT_Y + 0.126, 1.26)), bag_box)   # (as solved)
+    set_cameras(eyes if eyes is not None else Vector((SEAT_X - 0.062, SEAT_Y + 0.126, 1.26)), bag_box, d)   # (as solved)
     _STATE["aisle_motion"] = [o for o in bpy.data.objects if o.name.startswith("aisle_motion_")]
     _STATE["cove_seams"] = [o for o in bpy.data.objects if o.name.startswith("cove_seam_")]
     install_hook()
