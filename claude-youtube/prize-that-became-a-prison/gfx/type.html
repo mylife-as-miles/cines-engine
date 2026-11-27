@@ -178,7 +178,7 @@ const MOMENTS = {
     reveal(ctx, 'CHINA', 0.074 * W, 0.80 * H + L.sup.size * 1.25 + 34, L.sup, t, 0.35); },
   yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
     if (t < 3.0) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 0.0);
-    else land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 3.0, { from: 2.2, punch: true }); },
+    else land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 3.0, { from: 1.85, punch: true }); },
   yes_when: (ctx, t) => { const L = look();
     if (t < 0.9) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', 0.5 * W, YES_Y, L.hero, t, 0.9); },
   death_2017: (ctx, t) => { const L = look();      // void dawn_high, left third; the reprieve is always on screen
@@ -204,8 +204,11 @@ const MOMENTS = {
     else roll(ctx, 2013 + k, 2014 + k, 0.5 * W, 0.22 * H, L.num, t - ticks[k - 1], 0.0, 0.38); },
   title: (ctx, t) => { const L = look();           // over void bags in the beam
     // lands whole on the score's peak (cut in slightly large, settles), then holds while the score decays
-    const st = Object.assign({}, L.big, { size: L.big.size * 1.25, track: L.big.track + 0.04 });
-    land(ctx, 'THE PRIZE THAT BECAME A PRISON', 0.5 * W, 0.2 * H, st, t, 0.0, { from: 1.12 }); },
+    // two centred lines, measured so the wider one stays inside 70 % of the frame width
+    const st = Object.assign({}, L.big, { size: L.big.size * 1.15, track: L.big.track + 0.02 });
+    const fit = Math.min(1, 0.7 * W / width(ctx, 'BECAME A PRISON', st)); st.size *= fit;
+    land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H, st, t, 0.0, { from: 1.12 });
+    land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
   date_gene: (ctx, t) => { const L = look();
     reveal(ctx, 'JANUARY 25, 2026', 0.07 * W, 0.86 * H, L.sup, t, 0.0); },
 };
