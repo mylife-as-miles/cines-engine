@@ -83,3 +83,30 @@ system rather than tweaked.
 Not changed, by design: WHEN? sits over the void bags because the film cuts from the inspection-room bags into the void
 on that line (a registered match cut); the statues' faces are the settled character design; "Baiyun" names the
 market.
+
+## Reel 6 (27 November 2026, a sixth reviewer, seeing nothing before)
+
+**7.2, fail** against 8.5. At the bar: the statement page (8.5). Close: 2014 / CHINA, YES, the date over the chair,
+WHEN? (8.0). Weakest: the two-line map (5.5), the search and the calendar (6.0). Reviewers keep disagreeing about the
+digit change (reel 4 asked for no slicing, so reel 5 went to a cross-fade; reel 6 calls the cross-fade a smear), so
+reel 7 takes the odometer every reference uses and feathers its edges, which answers both.
+
+| Fault (reel 6) | Done for reel 7 |
+| --- | --- |
+| The Qingdao line forked off the Australia line at sea | One origin point by Guangzhou for both disputed flights; the Qingdao line leaves north over the lit mainland (a domestic flight), bowing inland, and stops short of the city's ring; both lines end in the same open arrowhead (neither flight is resolved) |
+| "QINGDAO" with its dot read as "QINGDAO." | A ring, not a dot; the name above and left of it, never on its line |
+| MAINLAND CHINA floated in the Pacific | The section now moves twice: in on the mainland (2.5x) while it is named, the label inside the lit land where China is widest, then back and south as the Australia line draws; map labels are sized on screen, not on the map |
+| Digit changes cross-dissolved | An odometer: the old and new digit one row apart at full opacity, the row's own height, its top and bottom feathered; digits drawn at whole pixels and moved at sub-pixel offsets |
+| The year juddered on its slow descent | Drawn at a fixed baseline offscreen and placed with a sub-pixel offset |
+| "WITH A TWO- / YEAR REPRIEVE" broke a compound; 2017 came last | A justified pair, DEATH SENTENCE over TWO-YEAR REPRIEVE at one width (683 px), the date first |
+| One-frame jolts: the second YES's lock punch; the card's spacing at the change | No punch; reveal now places every word where the line's own setting puts it, so a change in place never moves a letter |
+| WHEN?'s W over the fading Y | The new word starts once the last old letter is below 10 % |
+| Elements under YouTube's top bar | The arc framed lower (apex about y 120); YES 18 px lower; the counter 82 % size, cap top about 114 px, clear of the cell |
+| The mail client's focus stepped line by line; grey bars for the sender | A continuous depth of field (the blur grows smoothly with distance, the same above and below); the sender is ordinary generic text the focus keeps soft |
+| The search page was 60 % empty; a fixed typing rhythm | Two pages like a real search: a home page with the field in the middle and suggestions under it, then on Enter a full results page (results, a side column, related searches) with a rack focus to the query; typing 2-6 frames a letter |
+| The cut-away looked like a slide-deck primitive | The tote's cognac leather with a fine pebble grain, a key-light sheen on the near edge, darker sides, a twill lining, edges at 15 %; still schematic, nothing inside |
+| The scale display read as a printed card; the limit was a 2 px tick | A backlit panel with a faint LCD grid; the limit has notches above and below, and the excess past it is hatched (no colour) |
+
+Not changed: the calendar and the counter keep different layouts (different plates and moments: the calendar sits beside
+the bags, the counter over the cell). New in reel 7: the cold open's flash-forward montage, the chapter titles (chapter
+1 shown), the chapter 4 split frame, the chapter 7 statement (Tim's line about his father).
