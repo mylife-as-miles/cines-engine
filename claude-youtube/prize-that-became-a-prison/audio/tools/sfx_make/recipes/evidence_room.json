@@ -1,0 +1,2 @@
+{"name":"evidence_room","says":"the near-silent room tone of a quiet small room, dry and still","kind":"ambience","dur":25,"space":"dry",
+ "layers":[{"sound":"room_tone/quiet","dur":25,"highpass":120,"gain":0}]}

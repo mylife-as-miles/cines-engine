@@ -1,0 +1,13 @@
+{"name":"hearing_room","says":"a large quiet hearing room, people sitting still: air handling, faint clothing rustles, a page turned, a soft creak","kind":"ambience","dur":25,"space":"hall",
+ "layers":[
+  {"sound":"room_tone/quiet","dur":25,"gain":0,"seed":4},
+  {"sound":"space_hum/ship","dur":25,"lowpass":160,"gain":-16},
+  {"sound":"cloth/rustle","at":2.5,"lowpass":4000,"pan":-0.4,"gain":-14},
+  {"sound":"cloth/rustle","at":7.2,"lowpass":3500,"pan":0.5,"gain":-17,"seed":1},
+  {"sound":"cloth/rustle","at":11.6,"lowpass":4000,"pan":0.1,"gain":-15,"seed":2},
+  {"sound":"cloth/rustle","at":17.1,"lowpass":3000,"pan":-0.6,"gain":-18,"seed":3},
+  {"sound":"cloth/rustle","at":21.4,"lowpass":4000,"pan":0.3,"gain":-16,"seed":4},
+  {"sound":"paper/page","at":5.4,"lowpass":5000,"pan":0.3,"gain":-19},
+  {"sound":"paper/page","at":19.0,"lowpass":4500,"pan":-0.2,"gain":-20,"seed":1},
+  {"sound":"door/creak","pitch":-6,"lowpass":1500,"at":13.0,"gain":-22}
+ ]}

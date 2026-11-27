@@ -6,3 +6,6 @@ claude-film/autopilot/audio/gen/var/
 claude-film/autopilot/audio/gen/variants.log
 claude-film/autopilot/out/
 __pycache__/
+
+# chosen sounds are committed as FLAC (sound.md); the WAVs are working copies
+claude-youtube/prize-that-became-a-prison/audio/sfx/*.wav

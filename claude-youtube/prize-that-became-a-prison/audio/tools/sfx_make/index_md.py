@@ -37,7 +37,8 @@ def main(root, proj):
     L = ['# Sound effects and beds: index', '',
          'Every sound in `audio/sfx/`, made free and locally on 27 November 2026 for *The Prize That Became a Prison*:',
          'what it is, how it was made, what earshot heard, how it measures, and its licence. Where each is placed: `../cues.json`',
-         '(and `../SOUND_PLAN.md`). The full record of every take heard, with prompts, seeds and recipes, is `provenance.json`.',
+         '(and `../SOUND_PLAN.md`). The full record of every take heard, with prompts, seeds and recipes, is `provenance.json`;',
+         'the tools and recipes that made them are in `../tools/sfx_make/` (raw takes are not kept in the project).',
          '',
          '**How they were made.** Two to three takes of each sound from up to three free sources: Stable Audio 3.0 Small SFX',
          '(Q8_0 GGUF, through audio.cpp on CPU, 8 steps, CFG 1.0), earshot (catalogue designs learned from public-domain',
@@ -48,7 +49,7 @@ def main(root, proj):
          '',
          '**How they were checked.** earshot 1.0 `match` of each take against the sound\'s description and three or four',
          'realistic alternatives (z against about 320 vocabulary descriptions: 3 or more strong, 2.5-3 plausible, 2-2.5 weak),',
-         'the AudioSet tagger\'s labels (any speech in a bed set the take aside), and `rank` across the takes. Pass rule',
+         'the AudioSet tagger\'s labels (any speech in a bed (0.20 or more) set the take aside), and `rank` across the takes. Pass rule',
          '(sound.md 4): the description beats every alternative in the forced choice with z >= 3, or holds 60 % of the choice',
          'and twice the best alternative. The pick is the passing take with the highest z; where none passes, the highest z.',
          'A fail is evidence, not a veto: several alternatives here are near-synonyms (a clock and a metronome, a phone line',
@@ -83,7 +84,7 @@ def main(root, proj):
             st = status(p)
             note = notes.get(sid)
             what = spec['what'] + (f' *{note}*' if note else '')
-            L.append(f"| `{sid}.wav` | {what} | {made} | {ver} | {e['speech_p']:.2f} | {meas} | {lic_short(p['licence'])} | {st} |")
+            L.append(f"| `{sid}.flac` | {what} | {made} | {ver} | {e['speech_p']:.2f} | {meas} | {lic_short(p['licence'])} | {st} |")
         L.append('')
     n_done = sum(1 for p in prov.values() if status(p) == 'done')
     n_ear = sum(1 for p in prov.values() if status(p) != 'done')

@@ -1,16 +1,478 @@
 {
+ "amb_terminal_hall": {
+  "file": "audio/sfx/amb_terminal_hall.flac",
+  "kind": "bed",
+  "what": "Airport terminal room tone: the check-in hall and the departure gate. Large hard hall, air handling, far wheels and steps, no voices. Checked as 'a large empty hall with distant footsteps': to CLAP an airport ambience means announcements and crowds, which this film keeps out.",
+  "take": "es_recipe1.wav",
+  "made_by": "earshot make --recipe recipes/terminal_hall.json --seed 1",
+  "recipe": {
+   "name": "terminal_hall",
+   "says": "a large quiet airport terminal hall: air handling, a far suitcase rolling, far footsteps",
+   "kind": "ambience",
+   "dur": 25,
+   "space": "hall",
+   "layers": [
+    {
+     "sound": "room_tone/quiet",
+     "dur": 25,
+     "gain": 0
+    },
+    {
+     "sound": "space_hum/ship",
+     "dur": 25,
+     "lowpass": 220,
+     "gain": -12
+    },
+    {
+     "sound": "office_chair/roll",
+     "pitch": -3,
+     "lowpass": 2200,
+     "at": 3.0,
+     "gain": -11
+    },
+    {
+     "sound": "office_chair/roll",
+     "pitch": -4,
+     "lowpass": 1800,
+     "at": 15.5,
+     "gain": -14,
+     "seed": 2
+    },
+    {
+     "sound": "step/heels",
+     "events": {
+      "count": 9,
+      "gap": 0.52
+     },
+     "lowpass": 2400,
+     "at": 8.0,
+     "gain": -17
+    }
+   ]
+  },
+  "finish": {
+   "loop_s": 22.721,
+   "crossfade_s": 2.0,
+   "lufs_before": -23.1
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "the quiet ambience of a large empty hall with distant footsteps",
+   "alts": [
+    "a busy restaurant with people talking",
+    "an empty office with a fan",
+    "a train passing",
+    "rain on a roof"
+   ],
+   "z": 2.62,
+   "verdict": "plausible",
+   "p_vs_alts": 0.169,
+   "alt_p": [
+    {
+     "query": "a busy restaurant with people talking",
+     "p": 0.0
+    },
+    {
+     "query": "an empty office with a fan",
+     "p": 0.826
+    },
+    {
+     "query": "a train passing",
+     "p": 0.001
+    },
+    {
+     "query": "rain on a roof",
+     "p": 0.004
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Spray 0.15",
+    "Vehicle 0.10",
+    "Snort 0.08",
+    "Air conditioning 0.08"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a vacuum cleaner (z +3.0)",
+    "a computer fan hum (z +2.6)",
+    "an office ambience (z +2.4)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 5,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 2.59,
+    "verdict": "plausible",
+    "p_vs_alts": 0.252,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_recipe1.wav": {
+    "z": 2.62,
+    "verdict": "plausible",
+    "p_vs_alts": 0.169,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_1101.wav": {
+    "z": 2.91,
+    "verdict": "plausible",
+    "p_vs_alts": 0.959,
+    "pass": true,
+    "speech_p": 0.31
+   },
+   "sa_1151.wav": {
+    "z": 3.11,
+    "verdict": "strong",
+    "p_vs_alts": 0.973,
+    "pass": true,
+    "speech_p": 0.47
+   },
+   "sa_2101.wav": {
+    "z": 2.49,
+    "verdict": "weak",
+    "p_vs_alts": 0.958,
+    "pass": true,
+    "speech_p": 0.36
+   }
+  },
+  "measure": {
+   "duration": 22.721,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.8,
+   "true_peak_dbtp": -13.1,
+   "peak_dbfs": -13.3,
+   "lra_lu": 0.4,
+   "noise_floor_dbfs": -30.0,
+   "brightness_hz": 5266
+  },
+  "used_at": [
+   "00.01 0-20 s",
+   "01.08 178-184 s",
+   "03.05 278-286 s",
+   "04.01 305-312 s"
+  ]
+ },
+ "amb_checkin_belt": {
+  "file": "audio/sfx/amb_checkin_belt.flac",
+  "kind": "bed",
+  "what": "The check-in desk's weighing belt: a small conveyor motor running, close.",
+  "take": "sa_1201.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "a small electric conveyor belt motor running steadily at an airport check-in desk, a low electric hum with a soft mechanical whir and a rubber belt sliding, close",
+  "seed": 1201,
+  "duration_s": 25,
+  "gen_seconds": 208.3,
+  "finish": {
+   "loop_s": 23.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -32.7
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "a small conveyor belt motor humming",
+   "alts": [
+    "a refrigerator humming",
+    "a car engine idling",
+    "an electric fan",
+    "a vacuum cleaner"
+   ],
+   "z": 3.32,
+   "verdict": "strong",
+   "p_vs_alts": 0.191,
+   "alt_p": [
+    {
+     "query": "a refrigerator humming",
+     "p": 0.067
+    },
+    {
+     "query": "a car engine idling",
+     "p": 0.0
+    },
+    {
+     "query": "an electric fan",
+     "p": 0.003
+    },
+    {
+     "query": "a vacuum cleaner",
+     "p": 0.74
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Microwave oven 0.47",
+    "Vehicle 0.23",
+    "Power windows, electric windows 0.23",
+    "Car 0.15"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a printer printing (z +4.6)",
+    "a microwave beep (z +3.4)",
+    "a vacuum cleaner (z +3.4)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 2,
+  "all_takes": {
+   "sa_1201.wav": {
+    "z": 3.32,
+    "verdict": "strong",
+    "p_vs_alts": 0.191,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_2201.wav": {
+    "z": 3.31,
+    "verdict": "strong",
+    "p_vs_alts": 0.006,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -25.1,
+   "short_term_max_lufs": -23.2,
+   "true_peak_dbtp": -3.0,
+   "peak_dbfs": -3.0,
+   "lra_lu": 8.1,
+   "noise_floor_dbfs": -38.3,
+   "brightness_hz": 2253
+  },
+  "used_at": [
+   "00.01 0-9 s",
+   "03.05 278-286 s"
+  ]
+ },
+ "amb_baggage_belt": {
+  "file": "audio/sfx/amb_baggage_belt.flac",
+  "kind": "bed",
+  "what": "The baggage belt behind the curtain: rollers clattering in a big hall.",
+  "take": "sa_1301_tamed.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0; events over the median + 8 dB tamed (tools/tame.py)",
+  "prompt": "an airport baggage handling conveyor belt running, metal rollers rattling and clacking steadily, suitcases bumping, a large echoing hall",
+  "seed": 1301,
+  "duration_s": 25,
+  "gen_seconds": 132.4,
+  "finish": {},
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "an airport baggage conveyor belt running, rollers rattling",
+   "alts": [
+    "a train passing",
+    "a factory machine",
+    "rain on a tin roof",
+    "a washing machine"
+   ],
+   "z": 4.26,
+   "verdict": "strong",
+   "p_vs_alts": 0.934,
+   "alt_p": [
+    {
+     "query": "a train passing",
+     "p": 0.002
+    },
+    {
+     "query": "a factory machine",
+     "p": 0.044
+    },
+    {
+     "query": "rain on a tin roof",
+     "p": 0.0
+    },
+    {
+     "query": "a washing machine",
+     "p": 0.021
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Music 0.39",
+    "Hammer 0.32",
+    "Drum 0.31",
+    "Percussion 0.28"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a train passing (z +2.3)",
+    "a printer printing (z +2.2)",
+    "a kettle whistling (z +1.9)"
+   ]
+  },
+  "pick_reason": "the passing take with its clacks over the median + 8 dB tamed by a slow gain rider (at most 7 dB): still strong (z +4.26, 93 %)",
+  "takes_heard": 3,
+  "all_takes": {
+   "sa_1301.wav": {
+    "z": 4.27,
+    "verdict": "strong",
+    "p_vs_alts": 0.949,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_1301_tamed.wav": {
+    "z": 4.26,
+    "verdict": "strong",
+    "p_vs_alts": 0.934,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_2301.wav": {
+    "z": 5.39,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.34
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.0,
+   "short_term_max_lufs": -20.8,
+   "true_peak_dbtp": -7.9,
+   "peak_dbfs": -7.9,
+   "lra_lu": 5.5,
+   "noise_floor_dbfs": -29.8,
+   "brightness_hz": 1251
+  },
+  "used_at": [
+   "03.06 286-305 s"
+  ]
+ },
+ "amb_inspection_room": {
+  "file": "audio/sfx/amb_inspection_room.flac",
+  "kind": "bed",
+  "what": "The inspection room: a small closed room, ventilation, faint fluorescent buzz.",
+  "take": "sa_1401_steady.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0; two door-like thumps patched with crossfaded steady tone from the same take (tools/patch_steady.py)",
+  "prompt": "the quiet room tone of a small closed windowless room, a ventilation duct hissing softly, fluorescent lights buzzing faintly, still and close",
+  "seed": 1401,
+  "duration_s": 25,
+  "gen_seconds": 109.7,
+  "finish": {
+   "loop_s": 23.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -55.8,
+   "patched_events_s": [
+    [
+     1.0,
+     4.5
+    ],
+    [
+     22.5,
+     24.0
+    ]
+   ],
+   "patched_from_s": [
+    8.0,
+    14.0
+   ]
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "the quiet room tone of a small closed room with a ventilation hum",
+   "alts": [
+    "a busy office with people",
+    "wind outside",
+    "a large hall",
+    "a refrigerator humming"
+   ],
+   "z": 2.62,
+   "verdict": "plausible",
+   "p_vs_alts": 0.238,
+   "alt_p": [
+    {
+     "query": "a busy office with people",
+     "p": 0.002
+    },
+    {
+     "query": "wind outside",
+     "p": 0.0
+    },
+    {
+     "query": "a large hall",
+     "p": 0.001
+    },
+    {
+     "query": "a refrigerator humming",
+     "p": 0.76
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Rumble 0.69",
+    "Hum 0.48",
+    "Mains hum 0.23",
+    "Vehicle 0.19"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "an electrical hum (z +3.6)",
+    "a computer fan hum (z +2.4)",
+    "a phone vibration buzz (z +2.2)"
+   ]
+  },
+  "pick_reason": "judgement: the passing take sa_1401 (z +3.36) holds two door-like thumps (1.0-4.5 s and 22.5-24 s, up to 21 dB over its median) that would repeat under the voice on every loop; they were patched with crossfaded copies of the same take's steady tone (8 s and 14 s). The steady loop rates plausible (z +2.62; tagger: rumble 0.69, hum 0.48, mains hum 0.23), the thumps had been carrying its small-room score",
+  "takes_heard": 3,
+  "all_takes": {
+   "sa_1401.wav": {
+    "z": 3.36,
+    "verdict": "strong",
+    "p_vs_alts": 0.96,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_1401_steady.wav": {
+    "z": 2.62,
+    "verdict": "plausible",
+    "p_vs_alts": 0.238,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_2401.wav": {
+    "z": 2.88,
+    "verdict": "plausible",
+    "p_vs_alts": 0.947,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.1,
+   "true_peak_dbtp": -5.1,
+   "peak_dbfs": -5.1,
+   "lra_lu": 1.6,
+   "noise_floor_dbfs": -21.9,
+   "brightness_hz": 2666
+  },
+  "used_at": [
+   "00.05 20-47 s",
+   "00.12 64-65 s",
+   "04.02 312-331 s",
+   "04.05 333-352 s",
+   "09.09 752-756 s"
+  ]
+ },
  "amb_fluorescent_hum": {
-  "file": "audio/sfx/amb_fluorescent_hum.wav",
+  "file": "audio/sfx/amb_fluorescent_hum.flac",
   "kind": "bed",
   "what": "Fluorescent tubes on 50 Hz mains (China): the ballast hum at 100 Hz and its harmonics, a light buzz. Detention corridor; under the inspection room.",
-  "take": "synth_2.wav",
-  "made_by": "numpy synthesis, tools/synth.py (first pass), take 2",
+  "take": "sa_1501.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "fluorescent tube lights humming and buzzing in an empty concrete corridor, a steady electrical mains hum",
+  "seed": 1501,
+  "duration_s": 25,
+  "gen_seconds": 167.2,
   "finish": {
-   "loop_s": 26.0,
+   "loop_s": 23.0,
    "crossfade_s": 2.0,
-   "lufs_before": -10.1
+   "lufs_before": -35.8
   },
-  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
   "earshot": {
    "check": "fluorescent lights humming and buzzing",
    "alts": [
@@ -19,17 +481,17 @@
     "a mosquito buzzing",
     "an engine idling"
    ],
-   "z": 3.18,
+   "z": 4.04,
    "verdict": "strong",
-   "p_vs_alts": 0.054,
+   "p_vs_alts": 0.31,
    "alt_p": [
     {
      "query": "a refrigerator humming",
-     "p": 0.0
+     "p": 0.647
     },
     {
      "query": "an electric guitar amplifier hum",
-     "p": 0.946
+     "p": 0.041
     },
     {
      "query": "a mosquito buzzing",
@@ -37,26 +499,33 @@
     },
     {
      "query": "an engine idling",
-     "p": 0.0
+     "p": 0.001
     }
    ],
    "pass": false,
    "audioset": [
-    "Music 0.88",
-    "Musical instrument 0.47",
-    "Sine wave 0.42",
-    "Effects unit 0.21"
+    "Boat, Water vehicle 0.30",
+    "Vehicle 0.29",
+    "Microwave oven 0.16",
+    "Aircraft 0.14"
    ],
    "speech_p": 0.0,
    "closest": [
-    "an error buzz (z +3.8)",
-    "a phone vibration buzz (z +3.4)",
-    "an electrical hum (z +3.0)"
+    "a microwave beep (z +3.8)",
+    "a computer fan hum (z +3.4)",
+    "an electrical hum (z +3.2)"
    ]
   },
   "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 3,
+  "takes_heard": 4,
   "all_takes": {
+   "sa_1501.wav": {
+    "z": 4.04,
+    "verdict": "strong",
+    "p_vs_alts": 0.31,
+    "pass": false,
+    "speech_p": 0.0
+   },
    "synth_0.wav": {
     "z": 2.92,
     "verdict": "plausible",
@@ -80,13 +549,14 @@
    }
   },
   "measure": {
-   "duration": 26.0,
+   "duration": 23.0,
    "lufs": -24.0,
-   "true_peak_dbtp": -14.9,
-   "peak_dbfs": -14.9,
-   "lra_lu": 2.9,
-   "noise_floor_dbfs": -27.7,
-   "brightness_hz": 239
+   "short_term_max_lufs": -23.4,
+   "true_peak_dbtp": -8.5,
+   "peak_dbfs": -8.5,
+   "lra_lu": 0.9,
+   "noise_floor_dbfs": -26.7,
+   "brightness_hz": 1333
   },
   "used_at": [
    "00.05 20-47 s",
@@ -98,7 +568,7 @@
   ]
  },
  "amb_void_air": {
-  "file": "audio/sfx/amb_void_air.wav",
+  "file": "audio/sfx/amb_void_air.flac",
   "kind": "bed",
   "what": "The Void Stage's own air: a vast dark space, almost silent, very low movement. Never digitally dead.",
   "take": "synth_0.wav",
@@ -180,6 +650,7 @@
   "measure": {
    "duration": 26.0,
    "lufs": -24.0,
+   "short_term_max_lufs": -21.3,
    "true_peak_dbtp": -8.3,
    "peak_dbfs": -8.3,
    "lra_lu": 5.9,
@@ -199,7 +670,7 @@
   ]
  },
  "sd_void_drone": {
-  "file": "audio/sfx/sd_void_drone.wav",
+  "file": "audio/sfx/sd_void_drone.flac",
   "kind": "bed",
   "what": "THE DRONE (score motif carried by sound design): low D with its fifth A, slow beating, dark air. 0:56 to 'were not', and back at the end under YES -> WHEN?. Tuned to A = 440 (D2 73.42 Hz).",
   "take": "synth_2.wav",
@@ -281,6 +752,7 @@
   "measure": {
    "duration": 26.0,
    "lufs": -24.0,
+   "short_term_max_lufs": -23.1,
    "true_peak_dbtp": -14.8,
    "peak_dbfs": -14.8,
    "lra_lu": 1.4,
@@ -293,7 +765,7 @@
   ]
  },
  "amb_rain_concrete": {
-  "file": "audio/sfx/amb_rain_concrete.wav",
+  "file": "audio/sfx/amb_rain_concrete.flac",
   "kind": "bed",
   "what": "Prison exterior: rain on concrete, water running off, gusts of wind.",
   "take": "es_street.wav",
@@ -367,6 +839,7 @@
   "measure": {
    "duration": 26.0,
    "lufs": -26.3,
+   "short_term_max_lufs": -25.6,
    "true_peak_dbtp": -3.0,
    "peak_dbfs": -3.3,
    "lra_lu": 1.5,
@@ -379,39 +852,211 @@
    "09.01 669-678 s"
   ]
  },
- "amb_chicago_night": {
-  "file": "audio/sfx/amb_chicago_night.wav",
+ "amb_hearing_room": {
+  "file": "audio/sfx/amb_hearing_room.flac",
   "kind": "bed",
-  "what": "Chicago at night through closed glass: distant traffic, muffled.",
+  "what": "The congressional hearing room, very quiet: a large room, air handling, faint rustle of clothing and paper, a chair creak. No voices.",
   "take": "es_recipe.wav",
-  "made_by": "earshot make --recipe recipes/chicago_glass.json",
+  "made_by": "earshot make --recipe recipes/hearing_room.json",
   "recipe": {
-   "name": "chicago_glass",
-   "says": "distant city traffic at night heard through a closed window",
+   "name": "hearing_room",
+   "says": "a large quiet hearing room, people sitting still: air handling, faint clothing rustles, a page turned, a soft creak",
    "kind": "ambience",
-   "dur": 28,
+   "dur": 25,
+   "space": "hall",
    "layers": [
     {
-     "sound": "city/distant",
-     "dur": 28,
-     "lowpass": 900,
-     "gain": 0
+     "sound": "room_tone/quiet",
+     "dur": 25,
+     "gain": 0,
+     "seed": 4
     },
     {
-     "source": "noise",
-     "color": "brown",
-     "dur": 28,
-     "lowpass": 120,
+     "sound": "space_hum/ship",
+     "dur": 25,
+     "lowpass": 160,
      "gain": -16
+    },
+    {
+     "sound": "cloth/rustle",
+     "at": 2.5,
+     "lowpass": 4000,
+     "pan": -0.4,
+     "gain": -14
+    },
+    {
+     "sound": "cloth/rustle",
+     "at": 7.2,
+     "lowpass": 3500,
+     "pan": 0.5,
+     "gain": -17,
+     "seed": 1
+    },
+    {
+     "sound": "cloth/rustle",
+     "at": 11.6,
+     "lowpass": 4000,
+     "pan": 0.1,
+     "gain": -15,
+     "seed": 2
+    },
+    {
+     "sound": "cloth/rustle",
+     "at": 17.1,
+     "lowpass": 3000,
+     "pan": -0.6,
+     "gain": -18,
+     "seed": 3
+    },
+    {
+     "sound": "cloth/rustle",
+     "at": 21.4,
+     "lowpass": 4000,
+     "pan": 0.3,
+     "gain": -16,
+     "seed": 4
+    },
+    {
+     "sound": "paper/page",
+     "at": 5.4,
+     "lowpass": 5000,
+     "pan": 0.3,
+     "gain": -19
+    },
+    {
+     "sound": "paper/page",
+     "at": 19.0,
+     "lowpass": 4500,
+     "pan": -0.2,
+     "gain": -20,
+     "seed": 1
+    },
+    {
+     "sound": "door/creak",
+     "pitch": -6,
+     "lowpass": 1500,
+     "at": 13.0,
+     "gain": -22
     }
    ]
   },
   "finish": {
-   "loop_s": 25.714,
+   "loop_s": 22.714,
    "crossfade_s": 2.0,
-   "lufs_before": -24.7
+   "lufs_before": -23.2
   },
   "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "the quiet room tone of a large hall with a few people sitting still, paper rustling",
+   "alts": [
+    "a busy restaurant with people talking",
+    "an empty church",
+    "rain",
+    "a crowd cheering"
+   ],
+   "z": 3.17,
+   "verdict": "strong",
+   "p_vs_alts": 0.993,
+   "alt_p": [
+    {
+     "query": "a busy restaurant with people talking",
+     "p": 0.0
+    },
+    {
+     "query": "an empty church",
+     "p": 0.006
+    },
+    {
+     "query": "rain",
+     "p": 0.001
+    },
+    {
+     "query": "a crowd cheering",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Spray 0.09",
+    "Air conditioning 0.09",
+    "Vehicle 0.09",
+    "Hiss 0.06"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "an office ambience (z +2.7)",
+    "a vacuum cleaner (z +2.6)",
+    "a computer fan hum (z +2.4)"
+   ]
+  },
+  "pick_reason": "judgement: the Stable Audio takes were mostly knocks over near-silence (events up to 27 dB over the median, tagged timpani and drum); tamed, the rest read as music (0.47). This earshot recipe (room tone in a hall, five faint clothing rustles, two pages, one low creak) passes strong (z +3.17, 99 %), stays within 2.2 dB, and has no speech or music tags",
+  "takes_heard": 5,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 3.17,
+    "verdict": "strong",
+    "p_vs_alts": 0.993,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_recipe1.wav": {
+    "z": 2.99,
+    "verdict": "plausible",
+    "p_vs_alts": 0.984,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_1701.wav": {
+    "z": 3.28,
+    "verdict": "strong",
+    "p_vs_alts": 0.998,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_1701_tamed.wav": {
+    "z": 2.77,
+    "verdict": "plausible",
+    "p_vs_alts": 0.999,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_2701.wav": {
+    "z": 3.17,
+    "verdict": "strong",
+    "p_vs_alts": 0.994,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 22.714,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.6,
+   "true_peak_dbtp": -12.6,
+   "peak_dbfs": -12.7,
+   "lra_lu": 0.8,
+   "noise_floor_dbfs": -30.1,
+   "brightness_hz": 5266
+  },
+  "used_at": [
+   "00.15 81-87 s",
+   "07.05 580-588 s",
+   "09.05 714-722 s",
+   "09.07 728-734 s"
+  ]
+ },
+ "amb_chicago_night": {
+  "file": "audio/sfx/amb_chicago_night.flac",
+  "kind": "bed",
+  "what": "Chicago at night through closed glass: distant traffic, muffled.",
+  "take": "sa_1801_tamed.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0; events over the median + 8 dB tamed (tools/tame.py)",
+  "prompt": "distant city traffic at night heard from inside an apartment through a closed window, a low muffled rumble of cars far below, calm",
+  "seed": 1801,
+  "duration_s": 25,
+  "gen_seconds": 188.8,
+  "finish": {},
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
   "earshot": {
    "check": "distant city traffic at night heard from indoors",
    "alts": [
@@ -420,9 +1065,9 @@
     "wind blowing",
     "a waterfall"
    ],
-   "z": 1.69,
-   "verdict": "no match",
-   "p_vs_alts": 0.002,
+   "z": 3.58,
+   "verdict": "strong",
+   "p_vs_alts": 0.941,
    "alt_p": [
     {
      "query": "ocean waves",
@@ -430,33 +1075,33 @@
     },
     {
      "query": "an airplane flying over",
-     "p": 0.993
+     "p": 0.036
     },
     {
      "query": "wind blowing",
-     "p": 0.001
+     "p": 0.019
     },
     {
      "query": "a waterfall",
-     "p": 0.001
+     "p": 0.0
     }
    ],
-   "pass": false,
+   "pass": true,
    "audioset": [
-    "Speech 0.43",
-    "Field recording 0.40",
-    "Vehicle 0.34",
-    "Bus 0.14"
+    "Field recording 0.80",
+    "Vehicle 0.52",
+    "Car 0.26",
+    "Aircraft 0.17"
    ],
-   "speech_p": 0.43,
+   "speech_p": 0.0,
    "closest": [
-    "an airplane flying overhead (z +2.7)",
-    "a helicopter flying overhead (z +2.4)",
-    "a big braam (z +2.4)"
+    "a gust of wind rushing past (z +2.9)",
+    "a car driving past (z +2.8)",
+    "a city street with traffic (z +2.6)"
    ]
   },
-  "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 1,
+  "pick_reason": "the passing take with one event at 0.75-1.25 s (10.5 dB over its median) tamed by a slow gain rider (at most 6.4 dB): still strong (z +3.58, 94 %)",
+  "takes_heard": 3,
   "all_takes": {
    "es_recipe.wav": {
     "z": 1.69,
@@ -464,23 +1109,38 @@
     "p_vs_alts": 0.002,
     "pass": false,
     "speech_p": 0.43
+   },
+   "sa_1801.wav": {
+    "z": 3.64,
+    "verdict": "strong",
+    "p_vs_alts": 0.952,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_1801_tamed.wav": {
+    "z": 3.58,
+    "verdict": "strong",
+    "p_vs_alts": 0.941,
+    "pass": true,
+    "speech_p": 0.0
    }
   },
   "measure": {
-   "duration": 25.714,
+   "duration": 23.0,
    "lufs": -24.0,
-   "true_peak_dbtp": -10.6,
-   "peak_dbfs": -10.6,
-   "lra_lu": 2.0,
-   "noise_floor_dbfs": -28.6,
-   "brightness_hz": 558
+   "short_term_max_lufs": -21.8,
+   "true_peak_dbtp": -10.3,
+   "peak_dbfs": -10.3,
+   "lra_lu": 4.4,
+   "noise_floor_dbfs": -28.7,
+   "brightness_hz": 1519
   },
   "used_at": [
    "01.01 102-112 s"
   ]
  },
  "amb_home_room": {
-  "file": "audio/sfx/amb_home_room.wav",
+  "file": "audio/sfx/amb_home_room.flac",
   "kind": "bed",
   "what": "The Hunts' home (dining room, kitchen; Tim's desk): a quiet house, still.",
   "take": "es_roomtone.wav",
@@ -535,7 +1195,7 @@
    ]
   },
   "pick_reason": "passes; highest z of the passing takes",
-  "takes_heard": 1,
+  "takes_heard": 2,
   "all_takes": {
    "es_roomtone.wav": {
     "z": 2.9,
@@ -543,11 +1203,19 @@
     "p_vs_alts": 0.678,
     "pass": true,
     "speech_p": 0.0
+   },
+   "sa_1901.wav": {
+    "z": 2.67,
+    "verdict": "plausible",
+    "p_vs_alts": 0.02,
+    "pass": false,
+    "speech_p": 0.0
    }
   },
   "measure": {
    "duration": 26.0,
    "lufs": -24.0,
+   "short_term_max_lufs": -23.5,
    "true_peak_dbtp": -10.1,
    "peak_dbfs": -10.2,
    "lra_lu": 0.8,
@@ -562,34 +1230,146 @@
    "09.06 722-728 s"
   ]
  },
+ "amb_aircraft_cabin": {
+  "file": "audio/sfx/amb_aircraft_cabin.flac",
+  "kind": "bed",
+  "what": "Aircraft cabin in flight: the engines' steady hum and air.",
+  "take": "sa_3001.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "inside a passenger airplane cabin in flight, a steady low jet engine roar and the hiss of cabin air, calm",
+  "seed": 3001,
+  "duration_s": 25,
+  "gen_seconds": 221.3,
+  "finish": {
+   "loop_s": 23.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -12.5
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "inside an airplane cabin in flight, engine hum",
+   "alts": [
+    "a car interior on a highway",
+    "a vacuum cleaner",
+    "a waterfall",
+    "wind blowing"
+   ],
+   "z": 5.29,
+   "verdict": "strong",
+   "p_vs_alts": 1.0,
+   "alt_p": [
+    {
+     "query": "a car interior on a highway",
+     "p": 0.0
+    },
+    {
+     "query": "a vacuum cleaner",
+     "p": 0.0
+    },
+    {
+     "query": "a waterfall",
+     "p": 0.0
+    },
+    {
+     "query": "wind blowing",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Aircraft 0.46",
+    "Fixed-wing aircraft, airplane 0.44",
+    "Vehicle 0.41",
+    "Field recording 0.17"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a low rumble (z +2.7)",
+    "an electrical hum (z +2.4)",
+    "a gust of wind rushing past (z +2.4)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 2,
+  "all_takes": {
+   "sa_2001.wav": {
+    "z": 4.64,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_3001.wav": {
+    "z": 5.29,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.6,
+   "true_peak_dbtp": -13.0,
+   "peak_dbfs": -13.0,
+   "lra_lu": 0.7,
+   "noise_floor_dbfs": -28.7,
+   "brightness_hz": 568
+  },
+  "used_at": [
+   "02.01 185-194 s"
+  ]
+ },
  "amb_hk_street": {
-  "file": "audio/sfx/amb_hk_street.wav",
+  "file": "audio/sfx/amb_hk_street.flac",
   "kind": "bed",
   "what": "Hong Kong street: traffic on a wet road, a tram rumbling past, rain dripping on awnings.",
-  "take": "es_recipe.wav",
-  "made_by": "earshot make --recipe recipes/hk_street.json",
+  "take": "es_rain1.wav",
+  "made_by": "earshot make --recipe recipes/hk_street_rain.json --seed 1",
   "recipe": {
-   "name": "hk_street",
-   "says": "a city street in light rain, rain dripping on awnings",
+   "name": "hk_street_rain",
+   "says": "a city street in light rain: rain dripping on awnings, cars hissing past on the wet road, a tram rumbling by",
    "kind": "ambience",
-   "dur": 28,
+   "dur": 25,
+   "space": "room",
    "layers": [
     {
-     "sound": "city/street",
-     "dur": 28,
+     "sound": "rain/umbrella",
+     "dur": 25,
      "gain": 0
     },
     {
-     "sound": "rain/umbrella",
-     "dur": 28,
-     "gain": -7
+     "sound": "rain/street",
+     "dur": 25,
+     "gain": -6
+    },
+    {
+     "sound": "pass/car",
+     "at": 2.0,
+     "gain": -8,
+     "lowpass": 5000
+    },
+    {
+     "sound": "train/pass",
+     "pitch": -3,
+     "lowpass": 1600,
+     "at": 9.0,
+     "gain": -9
+    },
+    {
+     "sound": "pass/car",
+     "at": 17.5,
+     "gain": -10,
+     "lowpass": 4000,
+     "seed": 3
     }
    ]
   },
   "finish": {
-   "loop_s": 25.707,
+   "loop_s": 22.741,
    "crossfade_s": 2.0,
-   "lufs_before": -24.3
+   "lufs_before": -29.4
   },
   "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
   "earshot": {
@@ -600,67 +1380,503 @@
     "frying food in a pan",
     "wind in trees"
    ],
-   "z": 2.24,
-   "verdict": "weak",
-   "p_vs_alts": 0.274,
+   "z": 3.24,
+   "verdict": "strong",
+   "p_vs_alts": 0.814,
    "alt_p": [
     {
      "query": "a waterfall",
-     "p": 0.026
+     "p": 0.058
     },
     {
      "query": "a crowd cheering",
-     "p": 0.491
+     "p": 0.0
     },
     {
      "query": "frying food in a pan",
-     "p": 0.209
+     "p": 0.127
     },
     {
      "query": "wind in trees",
-     "p": 0.0
+     "p": 0.001
     }
    ],
-   "pass": false,
+   "pass": true,
    "audioset": [
-    "Speech 0.40",
-    "Vehicle 0.22",
-    "Bus 0.22",
-    "Traffic noise, roadway noise 0.10"
+    "Rain 0.84",
+    "Rain on surface 0.77",
+    "Thunderstorm 0.54",
+    "Thunder 0.45"
    ],
-   "speech_p": 0.4,
+   "speech_p": 0.0,
    "closest": [
-    "a crowd talking (z +3.6)",
-    "a busy cafe (z +3.5)",
-    "people talking in the background (z +3.0)"
+    "heavy rain (z +3.8)",
+    "rain on a window (z +3.6)",
+    "rain on a roof (z +3.3)"
    ]
   },
-  "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 1,
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 6,
   "all_takes": {
+   "es_rain.wav": {
+    "z": 2.91,
+    "verdict": "plausible",
+    "p_vs_alts": 0.564,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_rain1.wav": {
+    "z": 3.24,
+    "verdict": "strong",
+    "p_vs_alts": 0.814,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_rain1_tamed.wav": {
+    "z": 3.23,
+    "verdict": "strong",
+    "p_vs_alts": 0.808,
+    "pass": true,
+    "speech_p": 0.0
+   },
    "es_recipe.wav": {
     "z": 2.24,
     "verdict": "weak",
     "p_vs_alts": 0.274,
     "pass": false,
     "speech_p": 0.4
+   },
+   "sa_2101.wav": {
+    "z": 2.58,
+    "verdict": "plausible",
+    "p_vs_alts": 0.383,
+    "pass": false,
+    "speech_p": 0.25
+   },
+   "sa_2151.wav": {
+    "z": 2.79,
+    "verdict": "plausible",
+    "p_vs_alts": 0.033,
+    "pass": false,
+    "speech_p": 0.25
    }
   },
   "measure": {
-   "duration": 25.707,
-   "lufs": -24.0,
-   "true_peak_dbtp": -9.5,
-   "peak_dbfs": -9.7,
-   "lra_lu": 1.4,
-   "noise_floor_dbfs": -29.0,
-   "brightness_hz": 2167
+   "duration": 22.741,
+   "lufs": -24.9,
+   "short_term_max_lufs": -22.7,
+   "true_peak_dbtp": -3.0,
+   "peak_dbfs": -3.2,
+   "lra_lu": 4.0,
+   "noise_floor_dbfs": -34.5,
+   "brightness_hz": 4498
   },
   "used_at": [
    "02.02 194-210 s"
   ]
  },
+ "amb_hotel_room": {
+  "file": "audio/sfx/amb_hotel_room.flac",
+  "kind": "bed",
+  "what": "Hotel room: air conditioner, the city far below through the window.",
+  "take": "sa_3201.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "a hotel room air conditioner running steadily, a soft fan whoosh, the distant city far below through a closed window, calm",
+  "seed": 3201,
+  "duration_s": 25,
+  "gen_seconds": 175.9,
+  "finish": {
+   "loop_s": 23.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -28.8
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "an air conditioner running in a quiet room",
+   "alts": [
+    "rain falling",
+    "an airplane cabin",
+    "a hair dryer",
+    "ocean waves"
+   ],
+   "z": 3.78,
+   "verdict": "strong",
+   "p_vs_alts": 0.266,
+   "alt_p": [
+    {
+     "query": "rain falling",
+     "p": 0.0
+    },
+    {
+     "query": "an airplane cabin",
+     "p": 0.729
+    },
+    {
+     "query": "a hair dryer",
+     "p": 0.005
+    },
+    {
+     "query": "ocean waves",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Vehicle 0.48",
+    "Rumble 0.22",
+    "Aircraft 0.20",
+    "Fixed-wing aircraft, airplane 0.12"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a computer fan hum (z +3.5)",
+    "an electrical hum (z +3.0)",
+    "a low rumble (z +2.5)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 2,
+  "all_takes": {
+   "sa_2201.wav": {
+    "z": 3.75,
+    "verdict": "strong",
+    "p_vs_alts": 0.429,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_3201.wav": {
+    "z": 3.78,
+    "verdict": "strong",
+    "p_vs_alts": 0.266,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.4,
+   "true_peak_dbtp": -11.7,
+   "peak_dbfs": -11.7,
+   "lra_lu": 0.7,
+   "noise_floor_dbfs": -27.3,
+   "brightness_hz": 1350
+  },
+  "used_at": [
+   "02.04 210-218 s",
+   "03.01 240-250 s",
+   "03.03 264-270 s"
+  ]
+ },
+ "amb_train": {
+  "file": "audio/sfx/amb_train.flac",
+  "kind": "bed",
+  "what": "Inside a moving train: wheels on rail joints, low rumble.",
+  "take": "sa_2301.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "inside a moving passenger train, the steady rhythmic clatter of wheels over rail joints and a low rumble, calm",
+  "seed": 2301,
+  "duration_s": 25,
+  "gen_seconds": 231.1,
+  "finish": {
+   "loop_s": 23.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -23.2
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "inside a moving train, wheels clattering on the rails",
+   "alts": [
+    "a washing machine",
+    "a helicopter",
+    "a car on a highway",
+    "a horse galloping"
+   ],
+   "z": 4.34,
+   "verdict": "strong",
+   "p_vs_alts": 0.984,
+   "alt_p": [
+    {
+     "query": "a washing machine",
+     "p": 0.01
+    },
+    {
+     "query": "a helicopter",
+     "p": 0.005
+    },
+    {
+     "query": "a car on a highway",
+     "p": 0.0
+    },
+    {
+     "query": "a horse galloping",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Train 0.74",
+    "Rail transport 0.52",
+    "Railroad car, train wagon 0.36",
+    "Vehicle 0.31"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a train passing (z +2.9)",
+    "a gust of wind rushing past (z +2.7)",
+    "a downlifter falling sweep (z +2.4)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 2,
+  "all_takes": {
+   "sa_2301.wav": {
+    "z": 4.34,
+    "verdict": "strong",
+    "p_vs_alts": 0.984,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_3301.wav": {
+    "z": 4.28,
+    "verdict": "strong",
+    "p_vs_alts": 0.99,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.0,
+   "short_term_max_lufs": -22.0,
+   "true_peak_dbtp": -4.9,
+   "peak_dbfs": -5.0,
+   "lra_lu": 6.0,
+   "noise_floor_dbfs": -32.3,
+   "brightness_hz": 683
+  },
+  "used_at": [
+   "02.05 218-230 s"
+  ]
+ },
+ "amb_market": {
+  "file": "audio/sfx/amb_market.flac",
+  "kind": "bed",
+  "what": "Baiyun Leather Market: an indoor market hall, footsteps, bags, trolleys, a shutter far off. Walla kept out (crowd read as chanting before).",
+  "take": "sa_3401_tamed.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0; events over the median + 8 dB tamed (tools/tame.py)",
+  "prompt": "a busy indoor wholesale market hall, many footsteps, plastic bags rustling, trolley wheels rolling, cardboard boxes, a metal roller shutter rattling in the distance, reverberant",
+  "seed": 3401,
+  "duration_s": 25,
+  "gen_seconds": 178.4,
+  "finish": {},
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "a busy indoor market hall",
+   "alts": [
+    "a crowd cheering",
+    "a train station",
+    "rain",
+    "a factory"
+   ],
+   "z": 2.12,
+   "verdict": "weak",
+   "p_vs_alts": 0.951,
+   "alt_p": [
+    {
+     "query": "a crowd cheering",
+     "p": 0.002
+    },
+    {
+     "query": "a train station",
+     "p": 0.037
+    },
+    {
+     "query": "rain",
+     "p": 0.001
+    },
+    {
+     "query": "a factory",
+     "p": 0.009
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Crushing 0.49",
+    "Typewriter 0.45",
+    "Bird 0.26",
+    "Inside, small room 0.13"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a printer printing (z +3.0)",
+    "a balloon squeak (z +2.9)",
+    "a knife chopping on a board (z +2.4)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "sa_2401.wav": {
+    "z": 2.49,
+    "verdict": "weak",
+    "p_vs_alts": 0.973,
+    "pass": true,
+    "speech_p": 0.3
+   },
+   "sa_3401.wav": {
+    "z": 2.04,
+    "verdict": "weak",
+    "p_vs_alts": 0.956,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_3401_tamed.wav": {
+    "z": 2.12,
+    "verdict": "weak",
+    "p_vs_alts": 0.951,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.0,
+   "lufs": -24.5,
+   "short_term_max_lufs": -21.9,
+   "true_peak_dbtp": -3.0,
+   "peak_dbfs": -3.2,
+   "lra_lu": 6.0,
+   "noise_floor_dbfs": -35.3,
+   "brightness_hz": 3492
+  },
+  "used_at": [
+   "03.02 250-264 s"
+  ]
+ },
+ "amb_courtroom": {
+  "file": "audio/sfx/amb_courtroom.flac",
+  "kind": "bed",
+  "what": "The courtroom: a large room's tone, air handling, a wooden bench creak. No gavel, no voices.",
+  "take": "es_recipe.wav",
+  "made_by": "earshot make --recipe recipes/courtroom.json",
+  "recipe": {
+   "name": "courtroom",
+   "says": "the quiet room tone of a large wood-panelled courtroom: air handling, a large still room",
+   "kind": "ambience",
+   "dur": 25,
+   "space": "hall",
+   "layers": [
+    {
+     "sound": "room_tone/quiet",
+     "dur": 25,
+     "gain": 0
+    },
+    {
+     "sound": "space_hum/ship",
+     "dur": 25,
+     "lowpass": 180,
+     "gain": -15
+    }
+   ]
+  },
+  "finish": {
+   "loop_s": 22.713,
+   "crossfade_s": 2.0,
+   "lufs_before": -23.5
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "the quiet room tone of a large empty hall",
+   "alts": [
+    "a busy restaurant with people talking",
+    "rain",
+    "wind blowing",
+    "an office"
+   ],
+   "z": 2.65,
+   "verdict": "plausible",
+   "p_vs_alts": 0.784,
+   "alt_p": [
+    {
+     "query": "a busy restaurant with people talking",
+     "p": 0.0
+    },
+    {
+     "query": "rain",
+     "p": 0.003
+    },
+    {
+     "query": "wind blowing",
+     "p": 0.004
+    },
+    {
+     "query": "an office",
+     "p": 0.21
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Spray 0.16",
+    "Vehicle 0.14",
+    "Hiss 0.10",
+    "Snort 0.09"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a vacuum cleaner (z +2.6)",
+    "an office ambience (z +2.4)",
+    "crickets at night (z +2.4)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 4,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 2.65,
+    "verdict": "plausible",
+    "p_vs_alts": 0.784,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_recipe1.wav": {
+    "z": 2.62,
+    "verdict": "plausible",
+    "p_vs_alts": 0.686,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_2501.wav": {
+    "z": 2.12,
+    "verdict": "weak",
+    "p_vs_alts": 0.91,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_3501.wav": {
+    "z": 2.18,
+    "verdict": "weak",
+    "p_vs_alts": 0.969,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 22.713,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.6,
+   "true_peak_dbtp": -10.5,
+   "peak_dbfs": -10.6,
+   "lra_lu": 0.6,
+   "noise_floor_dbfs": -30.0,
+   "brightness_hz": 5115
+  },
+  "used_at": [
+   "06.01 445-450 s",
+   "06.03 468-482 s"
+  ]
+ },
  "amb_phone_line": {
-  "file": "audio/sfx/amb_phone_line.wav",
+  "file": "audio/sfx/amb_phone_line.flac",
   "kind": "bed",
   "what": "The visiting room's handset line: telephone-band hiss, a faint 50 Hz hum, rare soft crackle.",
   "take": "synth_1.wav",
@@ -741,6 +1957,7 @@
   "measure": {
    "duration": 26.0,
    "lufs": -24.0,
+   "short_term_max_lufs": -23.8,
    "true_peak_dbtp": -17.7,
    "peak_dbfs": -17.7,
    "lra_lu": 0.2,
@@ -752,19 +1969,144 @@
    "09.02 678-698 s"
   ]
  },
+ "amb_evidence_room": {
+  "file": "audio/sfx/amb_evidence_room.flac",
+  "kind": "bed",
+  "what": "The Evidence Table's room: a dry, quiet, almost silent room tone under paper and documents.",
+  "take": "es_recipe2.wav",
+  "made_by": "earshot make --recipe recipes/evidence_room.json --seed 2",
+  "recipe": {
+   "name": "evidence_room",
+   "says": "the near-silent room tone of a quiet small room, dry and still",
+   "kind": "ambience",
+   "dur": 25,
+   "space": "dry",
+   "layers": [
+    {
+     "sound": "room_tone/quiet",
+     "dur": 25,
+     "highpass": 120,
+     "gain": 0
+    }
+   ]
+  },
+  "finish": {
+   "loop_s": 22.715,
+   "crossfade_s": 2.0,
+   "lufs_before": -23.4
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "a quiet room tone, almost silent",
+   "alts": [
+    "wind blowing",
+    "rain",
+    "a busy office",
+    "an airplane cabin"
+   ],
+   "z": 1.67,
+   "verdict": "no match",
+   "p_vs_alts": 0.03,
+   "alt_p": [
+    {
+     "query": "wind blowing",
+     "p": 0.002
+    },
+    {
+     "query": "rain",
+     "p": 0.023
+    },
+    {
+     "query": "a busy office",
+     "p": 0.027
+    },
+    {
+     "query": "an airplane cabin",
+     "p": 0.917
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Spray 0.25",
+    "Air conditioning 0.13",
+    "Snort 0.11",
+    "Printer 0.07"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a vacuum cleaner (z +2.8)",
+    "crickets at night (z +2.6)",
+    "an office ambience (z +2.5)"
+   ]
+  },
+  "pick_reason": "judgement, not the ear-model: no take matches \"almost silent\" (beds are stored at -24 LUFS, so a near-silent room is heard turned up); the Stable Audio takes are a car-like rumble (tagger Rumble 0.82, Vehicle 0.28), wrong for a still room; the earshot room tone reads as quiet air conditioning, which is what the room should be 36 dB under the voice",
+  "takes_heard": 4,
+  "all_takes": {
+   "es_recipe2.wav": {
+    "z": 1.67,
+    "verdict": "no match",
+    "p_vs_alts": 0.03,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_recipe3.wav": {
+    "z": 1.71,
+    "verdict": "no match",
+    "p_vs_alts": 0.023,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_2601.wav": {
+    "z": 2.12,
+    "verdict": "weak",
+    "p_vs_alts": 0.024,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_3601.wav": {
+    "z": 1.81,
+    "verdict": "no match",
+    "p_vs_alts": 0.004,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 22.715,
+   "lufs": -24.0,
+   "short_term_max_lufs": -23.5,
+   "true_peak_dbtp": -11.8,
+   "peak_dbfs": -11.8,
+   "lra_lu": 1.0,
+   "noise_floor_dbfs": -30.7,
+   "brightness_hz": 5831
+  },
+  "used_at": [
+   "00.10 47-56 s",
+   "01.02 112-124 s",
+   "01.05 148-178 s",
+   "03.04 270-278 s",
+   "06.05 482-495 s",
+   "07.06 588-596 s"
+  ]
+ },
  "sfx_clock_tick": {
-  "file": "audio/sfx/sfx_clock_tick.wav",
+  "file": "audio/sfx/sfx_clock_tick.flac",
   "kind": "bed",
   "what": "A wall clock ticking once a second (home, Ch 01 and 08; detention, Ch 05, stopping on 'worse'). Loop of whole seconds.",
-  "take": "es_ticktock.wav",
-  "made_by": "earshot make (catalogue design), es_ticktock",
+  "take": "sa_3601.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "a wall clock ticking steadily once a second in a quiet room, a soft wooden tick tock, close",
+  "seed": 3601,
+  "duration_s": 25,
+  "gen_seconds": 154.0,
   "finish": {
-   "loop_s": 23.952,
-   "tick_period_s": 0.499,
-   "ticks": 48,
-   "lufs_before": -24.4
+   "loop_s": 24.556,
+   "tick_period_s": 0.877,
+   "ticks": 28,
+   "lufs_before": -43.1
   },
-  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
   "earshot": {
    "check": "a clock ticking",
    "alts": [
@@ -773,13 +2115,13 @@
     "a dripping tap",
     "a typewriter"
    ],
-   "z": 2.47,
-   "verdict": "weak",
-   "p_vs_alts": 0.013,
+   "z": 3.4,
+   "verdict": "strong",
+   "p_vs_alts": 0.604,
    "alt_p": [
     {
      "query": "a metronome",
-     "p": 0.98
+     "p": 0.379
     },
     {
      "query": "footsteps",
@@ -787,28 +2129,28 @@
     },
     {
      "query": "a dripping tap",
-     "p": 0.007
+     "p": 0.016
     },
     {
      "query": "a typewriter",
-     "p": 0.0
+     "p": 0.001
     }
    ],
-   "pass": false,
+   "pass": true,
    "audioset": [
-    "Tick 0.19",
-    "Tick-tock 0.15",
-    "Music 0.09"
+    "Tick-tock 0.70",
+    "Tick 0.56",
+    "Clock 0.25"
    ],
    "speech_p": 0.0,
    "closest": [
-    "a wooden block hit (z +4.5)",
-    "digging in soil (z +3.5)",
-    "a knife chopping on a board (z +2.8)"
+    "a clock ticking (z +3.4)",
+    "a scroll wheel tick (z +3.0)",
+    "an alarm clock beeping (z +2.7)"
    ]
   },
-  "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 3,
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 4,
   "all_takes": {
    "es_recipe.wav": {
     "z": 2.13,
@@ -830,16 +2172,24 @@
     "p_vs_alts": 0.013,
     "pass": false,
     "speech_p": 0.0
+   },
+   "sa_3601.wav": {
+    "z": 3.4,
+    "verdict": "strong",
+    "p_vs_alts": 0.604,
+    "pass": true,
+    "speech_p": 0.0
    }
   },
   "measure": {
-   "duration": 23.952,
-   "lufs": -26.4,
+   "duration": 24.556,
+   "lufs": -26.7,
+   "short_term_max_lufs": -25.7,
    "true_peak_dbtp": -3.0,
-   "peak_dbfs": -3.4,
-   "lra_lu": 0.3,
-   "noise_floor_dbfs": -71.9,
-   "brightness_hz": 2076
+   "peak_dbfs": -3.0,
+   "lra_lu": 1.8,
+   "noise_floor_dbfs": -30.3,
+   "brightness_hz": 1713
   },
   "used_at": [
    "01.03 124-140 s",
@@ -848,7 +2198,7 @@
   ]
  },
  "sfx_scale_beep": {
-  "file": "audio/sfx/sfx_scale_beep.wav",
+  "file": "audio/sfx/sfx_scale_beep.flac",
   "kind": "shot",
   "what": "The check-in scale's beep as the display settles (0:00), and the same beep at 4:41.",
   "take": "synth_1.wav",
@@ -925,6 +2275,7 @@
   "measure": {
    "duration": 0.19,
    "lufs": null,
+   "short_term_max_lufs": null,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -937,15 +2288,19 @@
   ]
  },
  "sfx_booklet_slide": {
-  "file": "audio/sfx/sfx_booklet_slide.wav",
+  "file": "audio/sfx/sfx_booklet_slide.flac",
   "kind": "shot",
   "what": "Her passport booklet slid across the laminate counter.",
-  "take": "es_2.wav",
-  "made_by": "earshot make (catalogue design), es_2",
+  "take": "sa_3701.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "a small passport booklet slid across a smooth laminate counter top, a short soft paper and card scrape, close",
+  "seed": 3701,
+  "duration_s": 4,
+  "gen_seconds": 110.5,
   "finish": {
-   "trim_start_s": 0.001
+   "trim_start_s": 0.062
   },
-  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
   "earshot": {
    "check": "a small booklet sliding across a counter",
    "alts": [
@@ -954,42 +2309,42 @@
     "a cloth wiped across a table",
     "footsteps"
    ],
-   "z": 1.86,
-   "verdict": "no match",
-   "p_vs_alts": 0.077,
+   "z": 3.66,
+   "verdict": "strong",
+   "p_vs_alts": 0.985,
    "alt_p": [
     {
      "query": "a page turned",
-     "p": 0.918
+     "p": 0.007
     },
     {
      "query": "a zipper",
-     "p": 0.002
+     "p": 0.0
     },
     {
      "query": "a cloth wiped across a table",
-     "p": 0.003
+     "p": 0.008
     },
     {
      "query": "footsteps",
      "p": 0.0
     }
    ],
-   "pass": false,
+   "pass": true,
    "audioset": [
-    "Whip 0.20",
-    "Scrape 0.12",
-    "Whoosh, swoosh, swish 0.05"
+    "Shuffling cards 0.23",
+    "Tearing 0.12",
+    "Crackle 0.06"
    ],
    "speech_p": 0.0,
    "closest": [
-    "a quick swipe (z +3.7)",
-    "a fast whoosh (z +3.7)",
-    "a whip pan transition (z +3.1)"
+    "a rubber stretch (z +3.0)",
+    "a spray can hissing (z +3.0)",
+    "a match being struck (z +2.7)"
    ]
   },
-  "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 3,
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 4,
   "all_takes": {
    "es_1.wav": {
     "z": 1.66,
@@ -1011,23 +2366,31 @@
     "p_vs_alts": 0.082,
     "pass": false,
     "speech_p": 0.0
+   },
+   "sa_3701.wav": {
+    "z": 3.66,
+    "verdict": "strong",
+    "p_vs_alts": 0.985,
+    "pass": true,
+    "speech_p": 0.0
    }
   },
   "measure": {
-   "duration": 0.316,
-   "lufs": null,
-   "true_peak_dbtp": -1.3,
+   "duration": 3.139,
+   "lufs": -28.3,
+   "short_term_max_lufs": -28.9,
+   "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.3,
    "lra_lu": null,
-   "noise_floor_dbfs": -33.2,
-   "brightness_hz": 3644
+   "noise_floor_dbfs": -73.8,
+   "brightness_hz": 7655
   },
   "used_at": [
    "00.02 @ 4.6 s"
   ]
  },
  "sfx_tannoy_far": {
-  "file": "audio/sfx/sfx_tannoy_far.wav",
+  "file": "audio/sfx/sfx_tannoy_far.flac",
   "kind": "shot",
   "what": "A far public-address announcement: a generic two-note chime and a muffled announcement with no intelligible words (synthesised vowel texture, band-limited to 650 Hz, in a 3.2 s hall).",
   "take": "synth2_1.wav",
@@ -1128,6 +2491,7 @@
   "measure": {
    "duration": 10.165,
    "lufs": -12.9,
+   "short_term_max_lufs": -10.6,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": 5.8,
@@ -1139,7 +2503,7 @@
   ]
  },
  "sfx_tannoy_near": {
-  "file": "audio/sfx/sfx_tannoy_near.wav",
+  "file": "audio/sfx/sfx_tannoy_near.flac",
   "kind": "shot",
   "what": "The same announcement closer (0:15, and 'the tannoy, muffled' at 5:05); still no intelligible words.",
   "take": "synth3_1.wav",
@@ -1261,6 +2625,7 @@
   "measure": {
    "duration": 9.481,
    "lufs": -15.4,
+   "short_term_max_lufs": -14.6,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": 3.8,
@@ -1273,7 +2638,7 @@
   ]
  },
  "sfx_door_steel": {
-  "file": "audio/sfx/sfx_door_steel.wav",
+  "file": "audio/sfx/sfx_door_steel.flac",
   "kind": "shot",
   "what": "The inspection room's door: heavy, steel, closing (0:20 and 5:12).",
   "take": "es_shut.wav",
@@ -1351,11 +2716,12 @@
   },
   "measure": {
    "duration": 2.102,
-   "lufs": -23.6,
-   "true_peak_dbtp": -0.5,
-   "peak_dbfs": -1.0,
+   "lufs": -24.1,
+   "short_term_max_lufs": null,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.5,
    "lra_lu": null,
-   "noise_floor_dbfs": -66.6,
+   "noise_floor_dbfs": -67.1,
    "brightness_hz": 2679
   },
   "used_at": [
@@ -1364,7 +2730,7 @@
   ]
  },
  "sfx_zip": {
-  "file": "audio/sfx/sfx_zip.wav",
+  "file": "audio/sfx/sfx_zip.flac",
   "kind": "shot",
   "what": "A dry, close zip (0:47, the tote) and the zips of the packing (4:25).",
   "take": "es_jacket.wav",
@@ -1415,7 +2781,7 @@
    ]
   },
   "pick_reason": "no take passes: highest z; the ear decides",
-  "takes_heard": 4,
+  "takes_heard": 5,
   "all_takes": {
    "es_1.wav": {
     "z": 2.08,
@@ -1444,15 +2810,23 @@
     "p_vs_alts": 0.465,
     "pass": false,
     "speech_p": 0.0
+   },
+   "sa_3201.wav": {
+    "z": 2.47,
+    "verdict": "weak",
+    "p_vs_alts": 0.095,
+    "pass": false,
+    "speech_p": 0.0
    }
   },
   "measure": {
    "duration": 1.596,
-   "lufs": -13.0,
-   "true_peak_dbtp": -0.7,
-   "peak_dbfs": -1.0,
+   "lufs": -13.4,
+   "short_term_max_lufs": null,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.3,
    "lra_lu": null,
-   "noise_floor_dbfs": -58.3,
+   "noise_floor_dbfs": -58.6,
    "brightness_hz": 5429
   },
   "used_at": [
@@ -1462,11 +2836,11 @@
   ]
  },
  "sfx_impact_low": {
-  "file": "audio/sfx/sfx_impact_low.wav",
+  "file": "audio/sfx/sfx_impact_low.flac",
   "kind": "shot",
   "what": "One low impact: at DEATH SENTENCE / 2017 (1:10) and at 'death sentence' (7:30). Nothing at 'life'. Pitched to the film's root D.",
-  "take": "synth_1.wav",
-  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "take": "synthD_0.wav",
+  "made_by": "numpy synthesis, tools/synth.py (impact_low_D: falling A1 -> D1 (36.7 Hz)), take 0",
   "finish": {
    "trim_start_s": 0.0
   },
@@ -1479,13 +2853,13 @@
     "a door slammed",
     "a car crash"
    ],
-   "z": 3.25,
+   "z": 3.15,
    "verdict": "strong",
-   "p_vs_alts": 0.999,
+   "p_vs_alts": 0.993,
    "alt_p": [
     {
      "query": "a gunshot",
-     "p": 0.0
+     "p": 0.001
     },
     {
      "query": "thunder",
@@ -1493,7 +2867,7 @@
     },
     {
      "query": "a door slammed",
-     "p": 0.001
+     "p": 0.006
     },
     {
      "query": "a car crash",
@@ -1502,20 +2876,20 @@
    ],
    "pass": true,
    "audioset": [
-    "Music 0.23",
-    "Bang 0.11",
-    "Sound effect 0.10",
-    "Sonar 0.05"
+    "Music 0.18",
+    "Sound effect 0.14",
+    "Sonar 0.10",
+    "Bang 0.07"
    ],
    "speech_p": 0.0,
    "closest": [
-    "a deep cinematic boom (z +3.7)",
-    "a big drum hit (z +3.4)",
-    "a deep sub bass (z +3.4)"
+    "a deep cinematic boom (z +3.9)",
+    "a big drum hit (z +3.5)",
+    "a sub bass drop (z +3.3)"
    ]
   },
-  "pick_reason": "passes; highest z of the passing takes",
-  "takes_heard": 7,
+  "pick_reason": "passes (z +3.15, 99 %), within 0.1 z of the top take, and its sub falls a fifth from A1 to D1, so the impact sits in the score's key",
+  "takes_heard": 8,
   "all_takes": {
    "bank_impact_deep_D1.wav": {
     "z": 1.94,
@@ -1545,6 +2919,13 @@
     "pass": false,
     "speech_p": 0.0
    },
+   "synthD_0.wav": {
+    "z": 3.15,
+    "verdict": "strong",
+    "p_vs_alts": 0.993,
+    "pass": true,
+    "speech_p": 0.0
+   },
    "synth_0.wav": {
     "z": 3.12,
     "verdict": "strong",
@@ -1569,12 +2950,13 @@
   },
   "measure": {
    "duration": 5.0,
-   "lufs": -18.1,
+   "lufs": -16.8,
+   "short_term_max_lufs": -17.0,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
-   "noise_floor_dbfs": -39.5,
-   "brightness_hz": 35
+   "noise_floor_dbfs": -42.4,
+   "brightness_hz": 42
   },
   "used_at": [
    "00.13 @ 70.0 s",
@@ -1582,7 +2964,7 @@
   ]
  },
  "sfx_pencil_paper": {
-  "file": "audio/sfx/sfx_pencil_paper.wav",
+  "file": "audio/sfx/sfx_pencil_paper.flac",
   "kind": "shot",
   "what": "Pencils on paper: the sweepstakes entries (Ch 01).",
   "take": "es_1.wav",
@@ -1662,6 +3044,7 @@
   "measure": {
    "duration": 3.049,
    "lufs": -16.1,
+   "short_term_max_lufs": -16.4,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -1673,7 +3056,7 @@
   ]
  },
  "sfx_paper_handle": {
-  "file": "audio/sfx/sfx_paper_handle.wav",
+  "file": "audio/sfx/sfx_paper_handle.flac",
   "kind": "shot",
   "what": "Paper handled: the tickets (Ch 01), the envelope of emails (Ch 05), the ministry sheet (Ch 06), the testimony page (Ch 07).",
   "take": "es_page.wav",
@@ -1749,11 +3132,12 @@
   },
   "measure": {
    "duration": 0.511,
-   "lufs": -11.8,
-   "true_peak_dbtp": -0.6,
-   "peak_dbfs": -1.0,
+   "lufs": -12.3,
+   "short_term_max_lufs": null,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.4,
    "lra_lu": null,
-   "noise_floor_dbfs": -60.3,
+   "noise_floor_dbfs": -60.7,
    "brightness_hz": 4414
   },
   "used_at": [
@@ -1765,7 +3149,7 @@
   ]
  },
  "sfx_mail_chime": {
-  "file": "audio/sfx/sfx_mail_chime.wav",
+  "file": "audio/sfx/sfx_mail_chime.flac",
   "kind": "shot",
   "what": "One muted chime: a message arriving in an invented mail client on a laptop (Ch 01). Not any real product's sound.",
   "take": "synth_1.wav",
@@ -1857,6 +3241,7 @@
   "measure": {
    "duration": 1.2,
    "lufs": -11.5,
+   "short_term_max_lufs": null,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -1868,7 +3253,7 @@
   ]
  },
  "sfx_keys_typing": {
-  "file": "audio/sfx/sfx_keys_typing.wav",
+  "file": "audio/sfx/sfx_keys_typing.flac",
   "kind": "shot",
   "what": "Keys: Dawn's search on the laptop (Ch 01).",
   "take": "es_1.wav",
@@ -1948,6 +3333,7 @@
   "measure": {
    "duration": 2.953,
    "lufs": -23.3,
+   "short_term_max_lufs": null,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -1959,7 +3345,7 @@
   ]
  },
  "sfx_boarding_chime": {
-  "file": "audio/sfx/sfx_boarding_chime.wav",
+  "file": "audio/sfx/sfx_boarding_chime.flac",
   "kind": "shot",
   "what": "A boarding chime at the departure gate window (end of Ch 01), distant, generic three-note.",
   "take": "synth_1.wav",
@@ -2039,6 +3425,7 @@
   "measure": {
    "duration": 3.686,
    "lufs": -10.2,
+   "short_term_max_lufs": -12.7,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -2049,8 +3436,97 @@
    "01.08 @ 179.5 s"
   ]
  },
+ "sfx_shutter_roll": {
+  "file": "audio/sfx/sfx_shutter_roll.flac",
+  "kind": "shot",
+  "what": "A metal roller shutter at the market (Ch 03).",
+  "take": "sa_4301.wav",
+  "made_by": "Stable Audio 3.0 Small SFX (Q8_0 GGUF) through audio.cpp on CPU, 8 steps, CFG 1.0",
+  "prompt": "a metal roller shutter being pulled down at a market stall, rattling corrugated steel, short",
+  "seed": 4301,
+  "duration_s": 4,
+  "gen_seconds": 98.1,
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "Stable Audio 3.0 Small SFX: Stability AI Community License (free under USD 1M annual revenue); credit Stable Audio",
+  "earshot": {
+   "check": "a metal roller shutter rattling",
+   "alts": [
+    "a train passing",
+    "thunder",
+    "a garage door",
+    "a drum roll"
+   ],
+   "z": 3.17,
+   "verdict": "strong",
+   "p_vs_alts": 0.873,
+   "alt_p": [
+    {
+     "query": "a train passing",
+     "p": 0.0
+    },
+    {
+     "query": "thunder",
+     "p": 0.0
+    },
+    {
+     "query": "a garage door",
+     "p": 0.054
+    },
+    {
+     "query": "a drum roll",
+     "p": 0.073
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Typewriter 0.61",
+    "Cash register 0.10",
+    "Door 0.07",
+    "Coin (dropping) 0.05"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "an old typewriter (z +3.7)",
+    "a printer printing (z +3.0)",
+    "a tape stop slowing down (z +2.9)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 2,
+  "all_takes": {
+   "sa_3301.wav": {
+    "z": 2.15,
+    "verdict": "weak",
+    "p_vs_alts": 0.343,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "sa_4301.wav": {
+    "z": 3.17,
+    "verdict": "strong",
+    "p_vs_alts": 0.873,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 3.569,
+   "lufs": -22.7,
+   "short_term_max_lufs": -23.4,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -46.4,
+   "brightness_hz": 3847
+  },
+  "used_at": [
+   "03.02 @ 252.0 s"
+  ]
+ },
  "sfx_seam_click": {
-  "file": "audio/sfx/sfx_seam_click.wav",
+  "file": "audio/sfx/sfx_seam_click.flac",
   "kind": "shot",
   "what": "A small metallic click as the seam cut-away closes (Ch 03).",
   "take": "bank_tink.wav",
@@ -2148,10 +3624,11 @@
   "measure": {
    "duration": 0.069,
    "lufs": null,
-   "true_peak_dbtp": -0.4,
-   "peak_dbfs": -1.0,
+   "short_term_max_lufs": null,
+   "true_peak_dbtp": -1.1,
+   "peak_dbfs": -1.6,
    "lra_lu": null,
-   "noise_floor_dbfs": -49.9,
+   "noise_floor_dbfs": -50.6,
    "brightness_hz": 7771
   },
   "used_at": [
@@ -2159,7 +3636,7 @@
   ]
  },
  "sfx_door_far": {
-  "file": "audio/sfx/sfx_door_far.wav",
+  "file": "audio/sfx/sfx_door_far.flac",
   "kind": "shot",
   "what": "A door closes far down the corridor (end of Ch 04, 2014).",
   "take": "es_recipe.wav",
@@ -2251,6 +3728,7 @@
   "measure": {
    "duration": 2.273,
    "lufs": -19.9,
+   "short_term_max_lufs": null,
    "true_peak_dbtp": -1.0,
    "peak_dbfs": -1.0,
    "lra_lu": null,
@@ -2259,6 +3737,97 @@
   },
   "used_at": [
    "04.08 @ 376.5 s"
+  ]
+ },
+ "sfx_pen_paper": {
+  "file": "audio/sfx/sfx_pen_paper.flac",
+  "kind": "shot",
+  "what": "Pen on paper: Tim writing letters (Ch 07).",
+  "take": "es_pencil_1.wav",
+  "made_by": "earshot make (catalogue design), es_pencil_1",
+  "finish": {
+   "trim_start_s": 0.006
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a pen writing on paper",
+   "alts": [
+    "a pencil sharpener",
+    "scratching",
+    "brushing",
+    "typing"
+   ],
+   "z": 5.8,
+   "verdict": "strong",
+   "p_vs_alts": 0.999,
+   "alt_p": [
+    {
+     "query": "a pencil sharpener",
+     "p": 0.0
+    },
+    {
+     "query": "scratching",
+     "p": 0.001
+    },
+    {
+     "query": "brushing",
+     "p": 0.0
+    },
+    {
+     "query": "typing",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Writing 0.25",
+    "Scratch 0.16",
+    "Sound effect 0.06"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a record scratch (z +3.4)",
+    "scissors cutting (z +3.2)",
+    "a sustained glass harp tone (z +2.6)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_pencil_1.wav": {
+    "z": 5.8,
+    "verdict": "strong",
+    "p_vs_alts": 0.999,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_pencil_2.wav": {
+    "z": 4.77,
+    "verdict": "strong",
+    "p_vs_alts": 0.992,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "sa_3501.wav": {
+    "z": 1.73,
+    "verdict": "no match",
+    "p_vs_alts": 0.011,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 3.118,
+   "lufs": -17.6,
+   "short_term_max_lufs": -17.9,
+   "true_peak_dbtp": -1.1,
+   "peak_dbfs": -2.6,
+   "lra_lu": null,
+   "noise_floor_dbfs": -45.2,
+   "brightness_hz": 6348
+  },
+  "used_at": [
+   "07.04 @ 571.0 s"
   ]
  }
 }

@@ -85,6 +85,7 @@ def clock_loop(x):
     out = x[s:s + L].copy()
     dk = int(0.002 * SR)
     out[:dk] *= np.linspace(0, 1, dk)[:, None]
+    out[-dk:] *= np.linspace(1, 0, dk)[:, None]      # the seam falls in the quiet before a tick: no click
     return out, {'loop_s': round(L / SR, 3), 'tick_period_s': round(per, 4), 'ticks': k}
 
 

@@ -395,6 +395,20 @@ SOUNDS['sfx_tannoy_far_v2'] = (lambda k: tannoy2(k, 'far'), 3)
 SOUNDS['sfx_tannoy_near_v2'] = (lambda k: tannoy2(k, 'near'), 3)
 
 
+def impact_low_D(take):
+    """The impact used in the film: a sub that falls a fifth from A1 (55 Hz) and settles on D1 (36.7 Hz)."""
+    rng = rng0(1199 + take); dur = 5.0; t = t_axis(dur)
+    f = 36.708 + (55.0 - 36.708) * np.exp(-t * 6)
+    sub = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 0.7)
+    body = lowpass(rng.standard_normal(len(t)), 260, 4) * np.exp(-t * 9) * 0.6
+    click = highpass(lowpass(rng.standard_normal(len(t)), 2500, 2), 300) * np.exp(-t * 80) * 0.08
+    x = np.tanh(1.4 * (sub + body + click) * np.minimum(1, t / 0.004))
+    return norm(reverb(x, 4.0, wet=0.35, predelay=0.01, damp_hz=900, seed=52 + take)[:len(t)])
+
+
+SOUNDS['sfx_impact_low_D'] = (impact_low_D, 1)
+
+
 if __name__ == '__main__':
     out = sys.argv[1]
     names = sys.argv[2:] or list(SOUNDS)

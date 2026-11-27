@@ -111,7 +111,7 @@ for bid, snd, spans, lvl, fin, fout, note in BEDS:
     for k, (ra, rb, oi, oo) in enumerate(spans):
         t0 = round(ROW[ra]['t0'] + oi, 2)
         t1 = round(ROW[rb]['t1'] + oo, 2)
-        beds.append({'id': f'{bid}.{k}', 'sound': SFX + snd + '.wav', 'rows': [ra, rb], 'chapter': ROW[ra]['chapter'],
+        beds.append({'id': f'{bid}.{k}', 'sound': SFX + snd + '.flac', 'rows': [ra, rb], 'chapter': ROW[ra]['chapter'],
                      't0': t0, 't1': t1, 'offset_in_s': oi, 'offset_out_s': oo,
                      'level_re_voice_db': LEVEL_OVERRIDES.get((bid, k), lvl), 'fade_in_s': fin, 'fade_out_s': fout,
                      'loop': True, 'note': note if k == 0 else ''})
@@ -147,7 +147,7 @@ FX = [
 ]
 cues = []
 for cid, snd, row, off, align, lvl, weight, anchor, why in FX:
-    cues.append({'id': f'{row}-{cid}', 't': T(row, off), 'sound': SFX + snd + '.wav', 'weight': weight, 'align': align,
+    cues.append({'id': f'{row}-{cid}', 't': T(row, off), 'sound': SFX + snd + '.flac', 'weight': weight, 'align': align,
                  'chapter': ROW[row]['chapter'], 'row': row, 'offset_s': off, 'anchor': anchor,
                  'level_re_voice_db': lvl, 'why': why})
 cues.sort(key=lambda c: c['t'])
@@ -221,12 +221,12 @@ def md(sheet):
     L.append('| Time | Ch · row | Picture | Sound | Align | dB re voice | Weight | On |')
     L.append('| --- | --- | --- | --- | --- | --- | --- | --- |')
     for c in sheet['cues']:
-        L.append(f"| {mmss(c['t'])} | {c['chapter']} · {c['row']} | {ROW[c['row']]['picture']} | `{os.path.basename(c['sound'])[:-4]}` | {c['align']} | {c['level_re_voice_db']} | {c['weight']} | {c['anchor']} |")
+        L.append(f"| {mmss(c['t'])} | {c['chapter']} · {c['row']} | {ROW[c['row']]['picture']} | `{os.path.splitext(os.path.basename(c['sound']))[0]}` | {c['align']} | {c['level_re_voice_db']} | {c['weight']} | {c['anchor']} |")
     L.append('\n### Ambiences and beds\n')
     L.append('| From | To | Ch · rows | Bed | dB re voice | Fades | Note |')
     L.append('| --- | --- | --- | --- | --- | --- | --- |')
     for b in sorted(sheet['beds'], key=lambda b: b['t0']):
-        L.append(f"| {mmss(b['t0'])} | {mmss(b['t1'])} | {b['chapter']} · {b['rows'][0]}-{b['rows'][1]} | `{os.path.basename(b['sound'])[:-4]}` | {b['level_re_voice_db']} | {b['fade_in_s']} / {b['fade_out_s']} s | {b['note']} |")
+        L.append(f"| {mmss(b['t0'])} | {mmss(b['t1'])} | {b['chapter']} · {b['rows'][0]}-{b['rows'][1]} | `{os.path.splitext(os.path.basename(b['sound']))[0]}` | {b['level_re_voice_db']} | {b['fade_in_s']} / {b['fade_out_s']} s | {b['note']} |")
     L.append('\n### Silences and drops\n')
     L.append('| From | To | Ch · row | Out | Why |')
     L.append('| --- | --- | --- | --- | --- |')

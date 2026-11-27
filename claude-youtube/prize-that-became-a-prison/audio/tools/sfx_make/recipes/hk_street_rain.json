@@ -1,0 +1,8 @@
+{"name":"hk_street_rain","says":"a city street in light rain: rain dripping on awnings, cars hissing past on the wet road, a tram rumbling by","kind":"ambience","dur":25,"space":"room",
+ "layers":[
+  {"sound":"rain/umbrella","dur":25,"gain":0},
+  {"sound":"rain/street","dur":25,"gain":-6},
+  {"sound":"pass/car","at":2.0,"gain":-8,"lowpass":5000},
+  {"sound":"train/pass","pitch":-3,"lowpass":1600,"at":9.0,"gain":-9},
+  {"sound":"pass/car","at":17.5,"gain":-10,"lowpass":4000,"seed":3}
+ ]}

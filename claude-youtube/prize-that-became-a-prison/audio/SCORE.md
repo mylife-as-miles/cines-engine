@@ -32,7 +32,7 @@ effects, no drugs, no violence and no existing works.
 | M1 | **The pulse** | A low muted heartbeat on D at 76 bpm: felt-piano low D doubled by cello pizzicato, close and dry, with low strings, a dark pad and a quiet rubbing E-flat above. | The cold open (stops dead on "Yes."), into the title, back at the baggage belt to the discovery, and at half speed, distant, under the cell pull-back in Ch 07. |
 | M2 | **The prize** | Four felt-piano notes, **A C F E**. Over F major it is warm (Chicago, the win). Over D minor the same four notes turn cold: the same notes, two meanings, like YES. | Planted in SC01; answers the tick in SC02; turns minor in SC03; fragments in SC07-SC09b; its first note, A, alone, is the film's last note (SC09c). |
 | M3 | **The tick** | A soft, high, muted pizzicato tick at 84 bpm, like a clock or a train. It moves lower and darker through Ch 03 until it is the pulse at the belt: "a tick that becomes the gate". | SC02, SC03. |
-| M4 | **The drone** | Low D (73.4 Hz) with its fifth A, slow beating, dark air: the Void Stage. **Made locally as sound design** (`audio/sfx/sd_void_drone.wav`, free), so the very same sound can return at the end. | 0:56 to "were not." (cut dead with the score); 12:32 under YES -> WHEN?, giving way to the last note. |
+| M4 | **The drone** | Low D (73.4 Hz) with its fifth A, slow beating, dark air: the Void Stage. **Made locally as sound design** (`audio/sfx/sd_void_drone.flac`, free), so the very same sound can return at the end. | 0:56 to "were not." (cut dead with the score); 12:32 under YES -> WHEN?, giving way to the last note. |
 | M5 | **The held note** | One long, soft, low string note: D with an E-flat above (doubt), or A alone (the sentence thinning). | SC04b, SC06. |
 
 ## Key map

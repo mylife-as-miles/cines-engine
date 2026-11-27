@@ -172,7 +172,7 @@ plan = {
    'where': 'SC01 (planted), SC02 (answers the tick), SC03 (turns minor), SC07, SC08, SC09a-b (fragments), SC09c (one note).'},
   {'id': 'M3', 'name': 'THE TICK', 'description': 'A soft, high, muted pizzicato tick at 84 bpm, like a clock or a train; moves lower and darker until it becomes the pulse.',
    'where': 'SC02, SC03 -> M1 at SC03b.'},
-  {'id': 'M4', 'name': 'THE DRONE', 'description': 'Low D (73.4 Hz) with its fifth A, slow beating, dark air: the Void Stage. Sound design, made locally (audio/sfx/sd_void_drone.wav), not generated.',
+  {'id': 'M4', 'name': 'THE DRONE', 'description': 'Low D (73.4 Hz) with its fifth A, slow beating, dark air: the Void Stage. Sound design, made locally (audio/sfx/sd_void_drone.flac), not generated.',
    'where': '0:56 to "were not" (cut dead), 12:32 under YES -> WHEN? until the last note.'},
   {'id': 'M5', 'name': 'THE HELD NOTE', 'description': 'One long, soft, low string note: D with an E-flat above it (doubt), or A alone (the sentence thinning).',
    'where': 'SC04b, SC06.'},

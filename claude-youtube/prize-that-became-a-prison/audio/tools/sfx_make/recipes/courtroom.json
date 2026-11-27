@@ -1,0 +1,2 @@
+{"name":"courtroom","says":"the quiet room tone of a large wood-panelled courtroom: air handling, a large still room","kind":"ambience","dur":25,"space":"hall",
+ "layers":[{"sound":"room_tone/quiet","dur":25,"gain":0},{"sound":"space_hum/ship","dur":25,"lowpass":180,"gain":-15}]}

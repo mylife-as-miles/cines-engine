@@ -1,0 +1,8 @@
+{"name":"terminal_hall","says":"a large quiet airport terminal hall: air handling, a far suitcase rolling, far footsteps","kind":"ambience","dur":25,"space":"hall",
+ "layers":[
+  {"sound":"room_tone/quiet","dur":25,"gain":0},
+  {"sound":"space_hum/ship","dur":25,"lowpass":220,"gain":-12},
+  {"sound":"office_chair/roll","pitch":-3,"lowpass":2200,"at":3.0,"gain":-11},
+  {"sound":"office_chair/roll","pitch":-4,"lowpass":1800,"at":15.5,"gain":-14,"seed":2},
+  {"sound":"step/heels","events":{"count":9,"gap":0.52},"lowpass":2400,"at":8.0,"gain":-17}
+ ]}

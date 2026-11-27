@@ -3,8 +3,8 @@
  "sounds": {
   "amb_terminal_hall": {
    "kind": "bed",
-   "what": "Airport terminal room tone: the check-in hall and the departure gate. Large hard hall, air handling, far wheels and steps, no voices.",
-   "check": "the ambience of a large airport terminal hall",
+   "what": "Airport terminal room tone: the check-in hall and the departure gate. Large hard hall, air handling, far wheels and steps, no voices. Checked as 'a large empty hall with distant footsteps': to CLAP an airport ambience means announcements and crowds, which this film keeps out.",
+   "check": "the quiet ambience of a large empty hall with distant footsteps",
    "alts": [
     "a busy restaurant with people talking",
     "an empty office with a fan",
@@ -15,6 +15,10 @@
     [
      "the interior ambience of a large quiet airport terminal hall, low air conditioning rumble, distant suitcase wheels rolling and soft far footsteps on a hard polished floor, wide reverberant space",
      1101
+    ],
+    [
+     "an empty airport terminal hall late at night, deserted, a steady low air conditioning hum, one suitcase rolling far away across a polished floor, vast reverberant space",
+     1151
     ]
    ]
   },
@@ -117,12 +121,6 @@
     "frying food in a pan",
     "applause",
     "a waterfall"
-   ],
-   "sa": [
-    [
-     "steady rain falling on a concrete yard and pavement outdoors, water running in a gutter and dripping, gusts of cold wind, night",
-     1601
-    ]
    ]
   },
   "amb_hearing_room": {
@@ -207,6 +205,10 @@
     [
      "a busy city street in light rain, rain dripping on canvas awnings, cars passing on a wet road, a tram rumbling along its rails with a small bell",
      2101
+    ],
+    [
+     "a wet city street at night in light rain, rain dripping steadily from canvas awnings, cars hissing past on the wet road, a tram rumbling past on its rails",
+     2151
     ]
    ]
   },
@@ -382,12 +384,6 @@
     "a gunshot",
     "a wooden door closing",
     "a drum hit"
-   ],
-   "sa": [
-    [
-     "a heavy steel security door closing with a solid metallic latch, in a small hard room, close",
-     3101
-    ]
    ]
   },
   "sfx_zip": {
@@ -510,12 +506,6 @@
     "thunder",
     "a drum hit",
     "a car door"
-   ],
-   "sa": [
-    [
-     "a heavy door closing far away at the end of a long concrete corridor, echoing",
-     3401
-    ]
    ]
   },
   "sfx_pen_paper": {

@@ -55,7 +55,7 @@ Every sound in the film, on the script's clock. Written 27 November 2026 by the 
   and the score's pulse and four-note phrase (`SCORE.md`).
 - **No voices, and nothing intelligible.** No walla or crowd anywhere (crowd walla read as chanting in an earlier
   film; the market and the hearing room are footsteps, bags, rustle and air). The tannoy is a generic two-note chime and
-  a vowel texture built from a buzz and noise, band-limited to 650-900 Hz in a large hall: it reads as a far loudspeaker
+  a vowel texture built from a buzz and noise, band-limited to about 600-1100 Hz in a large hall: it reads as a far loudspeaker
   and cannot say a word. Every bed was checked for speech by the AudioSet tagger, and takes that showed it were set
   aside.
 - **Small truths.** The tubes in the inspection room and the detention corridor hum at 100 Hz, from China's 50 Hz
@@ -280,14 +280,14 @@ Do not run the mix, a picture render and an earshot or Stable Audio batch at onc
 earshot cannot judge these; a person should:
 
 - **The tannoy** (0:09, 0:15, 5:05): it must read as a far loudspeaker and say nothing. It is built from noise and a
-  buzz shaped into random vowels, band-limited to 650-1400 Hz in a hall; the tagger hears no speech in it (0.00).
+  buzz shaped into random vowels, band-limited to about 600-1100 Hz in a hall; the tagger hears no speech in it (0.00).
 - **The fluorescent hum and the phone line**: synthetic beds; the tagger heard music in the hum's harmonics.
 - **The total silence** at 10:48 (6.5 s with only the -60 LUFS air floor): it must feel deliberate, not like a dropout,
   on a laptop and on phone speakers.
 - **The clock's stops** on "worse" (7:18) and on the cut to the empty chair (10:48): between ticks, no fade.
 - **The drone** (73 Hz) on phone speakers: its upper partials carry it there; check it is still felt.
 - **The two impacts**: the same weight at 1:10 and 7:30, and nothing at "life".
-- Every bed for any voice-like murmur (none passed the speech check, but a person should listen once).
+- Every bed for any voice-like murmur (the tagger heard no speech in any bed that was kept, but a person should listen once).
 
 ## Licences (the full list per file is in `sfx/INDEX.md`)
 

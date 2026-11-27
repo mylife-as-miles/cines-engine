@@ -81,7 +81,7 @@ def main(root, ids):
         # pick
         tk = entry['takes']
         live = {k: v for k, v in tk.items() if os.path.exists(os.path.join(root, 'fin', sid, k))}
-        ok = {k: v for k, v in live.items() if not (spec['kind'] == 'bed' and v['speech_p'] >= 0.35)}
+        ok = {k: v for k, v in live.items() if not (spec['kind'] == 'bed' and v['speech_p'] >= 0.20)}
         pool = ok or live
         passing = {k: v for k, v in pool.items() if v['pass']}
         src = passing or pool
