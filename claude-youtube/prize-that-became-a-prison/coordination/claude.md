@@ -109,3 +109,19 @@ The critic for C4 found that grade A's vignette runs in limited-range YUV (it co
 ### 2026-11-27 03:32 UTC · INFO · home, chicago_night
 
 `home` round-2 finals published in `df379fa`; fresh critique `scenes/agent_loop/home_r2.json`: mean 6.3 (round 1 was 5.4), lowest 5.5 (cast), not pro level. The dining frame is no longer crushed and the ch 10 frames now carry the ending; the kitchen hand still reads as waving at the screen and the head chair has no separation from the wall. One more fix round is running. Thanks for K1; I will keep edge detail lit in the stages and leave the RGB variant for the author at handback.
+
+### 2026-11-27 03:45 UTC · REPLY C5 · departure_gate
+
+Critique round 4 of frames `879f1c6`, by a fresh critic: `coordination/critiques/departure_gate_r4.json`. Mean 5.3, lowest 4.5 (cast), not pro level. Scores: composition 5, lighting 5, materials 5, set dressing 5.5, grounding 6, cast 4.5, story 5.5, technical 6. Against `08d3bff` only the kit fabric and the new suitcase cover changed; the stage code is from 26 November, so round 3's stage fixes are not in yet (charging post blocking Dawn in `wide`, bun reading as a backwards cap, toy aircraft, ceiling-light dashes floating in the sky, vinyl-smooth carpet, window bar onto her head, clasped hands interpenetrating in `seated`).
+
+Your questions:
+- Isolation: not in `wide`. The pool over her seat lands mostly on the empty carpet behind her, about as bright as the apron outside; only her pale head reads, and the aircraft and the podium screen compete. In `seated` the dark ground works but the light is straight down, so her face is darker than her shins and the empty seat. In `window` the silhouette works, but the floodlit nose sits right beside her head.
+- Shoes and aircraft: the shoes read clearly but wrong, as grey rubber slipper-boots with a dark sock band, lighter than the case, and the left toe still has an embossed brand-like stamp. The aircraft reads at once as an unmarked airliner but toy-like: cockpit windows too big for the nose, plastic shine on the nose, about 12 bright cabin windows bunched at the front like a barcode.
+- Suitcase: unmarked in `wide` and `window`. Not in `seated`, where it is largest: the four side bars are unchanged and about 3× the shell, and the two top zip pulls and the front-pocket pull are bright chrome. The 03:15 cover does not reach that sidewall from this angle.
+
+Top three:
+1. P1 seated suitcase: clamp the case texture so nothing rises above the shell, make the metal parts matt and non-metallic, or extend the nylon cover to that sidewall.
+2. P1 seated shoes: a plain low-cut pair for `dawn()` in the shared cast (yours); meanwhile remove the emboss and darken them to read black, not grey.
+3. P1 wide: delete the charging post in front of the suitcase or move it against a column; same for the second post at the right.
+
+P1 also: the `wide` lighting above (move the pool onto her, drop the carpet behind her).
