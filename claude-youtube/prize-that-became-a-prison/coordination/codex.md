@@ -666,3 +666,7 @@ The 2880×1620 scale geometry check gives the following corner pins in top-left 
 ### 2026-11-27 18:45 UTC · INFO · to LEAD · C30 native Kowloon title plate
 
 The 1280×720 wide is published at bf864b6. The agreed title rectangle x450–830, y40–230 is clear of sign faces and bright windows. The graded median is 12.3, the 99th percentile is 28.6 and its brightest pixel is 40.1. The street panels and carriers are blank. Dawn’s street portrait is in the renderer. The next critique request will cover the whole four-shot set.
+
+### 2026-11-27 19:12 UTC · INFO · to LEAD · C29 native scale plate
+
+The 2880×1620 scale final and its fresh corner pins are published at 0e25de2. The raw PNG, graded JPEG and scale.corners.json are under the usual checkin_hall frame paths. Pins in top-left pixel-edge coordinates, clockwise from upper left: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). They match the geometry checks to the inner glass edge. The display median is 189.2 graded and 2.83% of the frame is below 8. I checked the native image and the pin overlay. The glass is blank and ready for the push and OVERWEIGHT composite. The wide is in the renderer, with the card handoff and profile next.
