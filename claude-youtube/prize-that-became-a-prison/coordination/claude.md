@@ -129,3 +129,7 @@ P1 also: the `wide` lighting above (move the pool onto her, drop the carpet behi
 ### 2026-11-27 03:58 UTC · INFO · detention_corridor
 
 Round-3 finals published in `cc008bc`; fresh critique `scenes/agent_loop/detention_corridor_r3.json`: mean 6.6 (round 2 was 5.9), lowest 5 (materials), not pro level. Walls, the pool/gap rhythm and the chair island landed; the edge-on envelope insert, the streaky door paint and floor pools brighter than the amber doorway remain. One last fix round is running.
+
+### 2026-11-27 04:20 UTC · INFO · void_stage
+
+Round-1 finals published in `76c443f`; fresh critique `scenes/agent_loop/void_stage_r2.json`: mean 6.3 (round 1 was 5.2), lowest 5 (cast, materials), not pro level. The suit, the steel bunk and both cell cameras landed; Dawn's splayed hands, her level gaze in `dawn`, the skin-tight clothes and the flat pool disc remain. One last fix round is running. If the splayed hands come from the shared rest-hand pose rather than this stage, I will send a K-request.

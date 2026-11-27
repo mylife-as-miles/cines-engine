@@ -533,79 +533,91 @@
   ]
  },
  "void_stage": {
-  "round": 1,
+  "round": 2,
   "scores": {
-   "composition": 6,
-   "lighting": 5,
-   "materials": 4,
+   "composition": 7,
+   "lighting": 6,
+   "materials": 5,
    "set_dressing": 6,
-   "grounding_scale": 6,
-   "cast": 3,
-   "story_read": 6,
-   "technical": 6
+   "grounding_scale": 7,
+   "cast": 5,
+   "story_read": 7,
+   "technical": 7
   },
   "pro_level": false,
-  "verdict": "Not pro level yet. The staging idea is right: the cell pull-back and the two bags alone in the pool are the right images for this film. The execution fails on the one thing a viewer sees first. Dawn's prison greys are broken. In dawn and dawn_high the stone body shows through female_casualsuit01 almost everywhere. Only a dark V at the neck, a dark band under the bust, a dark triangle at the crotch and the sleeve hems read as cloth, so she looks like a near-naked mannequin in a leotard, not a prisoner in flat charcoal. There is also a white speck at her mouth in both frames (teeth or tongue showing through) and a clawed hand at frame left. That alone takes cast to 3, and the Ch 07 beat ('the sentence') turns into something odd and slightly uncomfortable. The lighting is clean, with no clipping and true blacks. But the dawn and bags pools are lit evenly from centre to edge, with no hotspot and no texture, so the floor reads as a flat CG disc. In dawn the haze beam reads as a soft grey curtain with vertical edges, not light falling. cell_close is the best frame, but it is lit like an ordinary evenly lit room, not a box under one top spot. The Tripo bunk's steel rails look like crumpled tinfoil with chrome reflections. The floor's 'wear' is cloudy noise blotches. The barred patch on the floor has 4 panes and 3 thick bars, but the window it comes from has about 7 bars and a mesh. The 20 mm camera is tilted down, so the verticals lean. A big flat right wall fills about a fifth of the frame. In cell_far the box reads more as a lit doorway cut into a black wall than a small box floating in the void, because its outer walls merge with the black. Two pale crescents of spill sit on the void floor either side of it. bags is the strongest image and nearly there. The case and duffel overlap into one black mass, their lit tops are too faint to separate them, and the floor is featureless grey. Next to the reference Blender stills (the koi pond finale's material density, the cafe racer's crisp beveled metal), these frames are below the bar on materials and on the figure.",
+  "verdict": "Clearly better than round 1. The suit now covers the body, the bunk is painted steel, cell_close is level and its light falls off upward, cell_far reads at once as the small lit box in the black, and bags is a worthy last image with a gap between the two bags. It is still not pro level because the one human beat fails: Dawn's hands are still splayed claws held away from her thighs, in the dawn camera she looks level at the lens with a faint grin instead of bowing her head, and her prison greys read as a skin-tight T-shirt and leggings with no folds; around her the pool is still a flat disc under a column of haze that does not taper, and the cell is a clean clay render whose window shaft seems to land on the back wall instead of reaching its patch on the floor.",
   "fixes": [
    {
     "priority": 1,
     "camera": "dawn, dawn_high",
-    "problem": "The prison suit is effectively inside the body. The stone skin pokes through female_casualsuit01 over the shoulders, chest, belly and both full legs. Only the V-neck, the bust band, the crotch and the sleeve hems show dark cloth, so Dawn reads as a nude mannequin in a leotard.",
-    "fix": "In void_stage.dawn(), after people.dawn_prison() and after rigged.pose_figure(), confirm the garment object 'DawnPrison_female_casualsuit01' has the same Armature modifier and rig as the body and is evaluated after posing. Then hide the body under the garment. Use the MPFB delete/hide vertex group, or build one: for every body vertex within 0.02 m of the garment (BVHTree.find_nearest from the evaluated garment mesh), add it to a group 'under_suit' and add a MASK modifier (invert) on the body, keeping hands, neck, head and ankles. As a belt-and-braces step, add a Displace modifier on the garment (strength 0.004-0.006 m, direction NORMAL, mid_level 0) before Subdivision. Re-render and check that the trousers run to the ankles and the T-shirt covers the shoulders and belly, with no grey skin islands, from both dawn cameras."
+    "problem": "Round-1 hand fix did not land. Both hands are still open claws: the fingers are fanned apart and curled forward, the palms face forward and in, and the hands hang 5-8 cm off the trouser seam, as if she is about to grab something. POSE['fingers'] = 16 only curls the fingers. The spread comes from the MakeHuman rest pose and nothing closes it.",
+    "fix": "After rigged.pose_figure and straight_wrists, close and curl each finger bone on both sides directly. Curl (local X) proximal/middle/distal: index 10/15/10, middle 14/20/12, ring 17/24/15, pinky 20/27/17 degrees, so the curl grows from index to pinky. Adduct (local Z) toward the middle finger: index 4, ring 4, pinky 8 degrees, until the gaps between fingers are under 3 mm. Bring thumb.01 about 20 degrees toward the palm so it lies along the side of the index. Lower the arm 'out' value in POSE['l_arm'] and POSE['r_arm'] from 7/6 to 2-3, and pronate the forearms about 20 degrees so the palms face the outer thighs, 2-4 cm off the trouser side seam. Check both hands at 100 % with VOID_DEBUG=1 (dbg_dawn and dbg_dawn_high)."
+   },
+   {
+    "priority": 1,
+    "camera": "dawn",
+    "problem": "In the camera that carries Ch 07 the head does not read as bowed. From 1.2 m, a head down of 18 degrees on a 1.6 m figure is about level with the lens, so she looks straight at us. The lower lip catches light, which reads as a faint grin. The top-lit sculpted hair is the brightest thing in frame (raw about 0.78, brighter than the 0.46 pool), so it reads as a white swim cap over a black face. Defeat reads as calm or even pleasant.",
+    "fix": "POSE['head'] (18, 3) -> (28, 3) and POSE['neck'] (4, 0) -> (7, 0). Keep chest at 2.5 so dawn_high does not stoop again. The mouth then falls into the shadow of the brow and nose. If the MakeHuman base has an expression or mouth shape key, set it to neutral with the mouth closed. In light_suit, give the hair its own netted copy of the lamp at 0.35 instead of 0.55, or set the hair albedo to about 0.33, so the crown lands near 0.6 raw. The crown stays the brightest point on her without reading as a helmet."
    },
    {
     "priority": 1,
     "camera": "dawn, dawn_high",
-    "problem": "A bright white speck at the mouth in both frames (teeth, tongue or eye helper geometry showing through the stone face), and the frame-left hand bent at the wrist with clawed, splayed fingers.",
-    "fix": "Hide or delete Dawn's teeth, tongue and eyebrow helper meshes (or give them the stone material at roughness 0.9 and specular 0). Lower POSE['fingers'] from 40 to about 15-18. Set the l_arm and r_arm elbow to about 8-10 so the hands hang just in front of the outer thigh with the wrists straight. Recheck the hand silhouettes in the dawn frame at 100 %."
+    "problem": "The covering fix landed, but the outfit reads as athleisure, not prison issue. It is a fitted T-shirt and leggings that hug the bust, hips, thighs and calves, with no folds anywhere. The creases Displace (strength 0.006, cloud scale 0.045) is invisible at this distance, and the trousers taper to the ankle like tights.",
+    "fix": "Loosen the garment and give it drape, in this stage only. (a) Raise the 'standoff' Displace push from 0.005 to 0.012. Add a vertex group 'leg_fall' on the trousers, weight 0 at the knee to 1 at the hem, with a second Displace of 0.025 on it, so the legs fall straight from the knee instead of wrapping the calf. Raise the shirt hem 2 cm off the hips the same way, so it hangs untucked like a tunic. (b) Better: run a short cloth sim on the inflated garment. Pin a group of collar, shoulder seams and waistband. Make the body a Collision with 3 mm outer thickness. Quality 5, mass 0.15 kg, 30 frames, then apply. That gives real folds at the waist, the inner elbows, behind the knees and 2-3 rings stacked above the shoes. (c) If you keep the Displace route, raise creases to strength 0.014, noise_scale 0.08 and stretch 3.5, so 3-6 horizontal folds read at waist, knees and ankles. If people.dawn_prison() cannot give a looser two-piece, say so in the report so the cast owner can."
+   },
+   {
+    "priority": 2,
+    "camera": "dawn, dawn_high",
+    "problem": "Pale stone shows at the heel and toe of the frame-right shoe in both frames, so it looks like an open sandal or a foot through the shoe. There is also a small white speck at the frame-left temple, just under the hairline (the ear or a gap at the hair edge catching the top light).",
+    "fix": "In suit_fit, run the same covered test against the shoe meshes (Dawn's children whose names contain 'shoes'). Use it for the DEF-foot and DEF-toe vertices, which KEEP currently exempts, and tuck the covered ones 8 mm. A closed shoe can also take a Mask (invert) on those vertices, because no gap shows inside it. For the temple, extend the hair cap 5 mm down over the top of the ear, or put the ear vertices in the 'handmask'-style darker stone (0.35) at specular 0.15. Recheck in dbg_dawn."
+   },
+   {
+    "priority": 2,
+    "camera": "dawn, dawn_high",
+    "problem": "The beam still does not taper. In dawn the haze is a vertical column about 1.8 m wide, the same at frame top and at her shoulders (graded 13-21 across the same x range at y 100 and y 300). In dawn_high it is a grey slab whose sharp vertical edges run straight up. The round-1 advice to raise the lamp to 9-10 m was physically wrong: a higher lamp with the same pool makes the cone more parallel (half-angle atan(1.2/9.5) = 7 degrees), so the 3 m of beam in frame cannot taper.",
+    "fix": "SPOTS['dawn']: h 9.5 -> 5.2, watts 18500 -> about 5600 (inverse square, (5.2/9.5)^2), fwd -0.5 -> -0.3, pool 1.2 and blend 0.28 kept. The half-angle becomes about 13 degrees, so in dawn the lit beam narrows from 2.4 m at the floor to about 1.1 m at the frame top: a cone coming down out of the dark, not a curtain. In _spot_and_haze pass r_top 0.05 instead of 0.35 so the haze frustum follows the cone to its point. Confirm the lamp stays out of dawn_high's frame (it sits about 34 degrees off that camera's axis)."
+   },
+   {
+    "priority": 2,
+    "camera": "dawn, bags",
+    "problem": "The pool is still a flat disc. In dawn the raw floor runs 114 at the edge to about 130 at the centre, about 14 % in display values, and then cuts off over about 30 px. Inside the pool in the dawn frame only one board seam shows, so the floor reads as a CG disc. Bags is better (graded 92 -> 132) but still evenly flat on its front half.",
+    "fix": "For the dawn and bags spots, call st.hotspot(main, frac=0.5, gain=0.9) instead of (0.62, 0.35), so the centre is about 1.9x the edge in linear light. Widen the main spot blend from 0.28 to 0.34 so the edge rolls off over about 15 cm. On the hardboard, raise per-board value variation to plus or minus 5 %, and add very low-contrast scuffs and old tape marks (thin dark streaks, 0.9x value, roughness 0.75), so the lit centre shows a worked stage floor."
    },
    {
     "priority": 2,
     "camera": "cell_close",
-    "problem": "The Tripo bunk's steel rails and slats look like crumpled foil with mirror-chrome reflections, and the most foreground prop in the shot carries the wobble.",
-    "fix": "In the bunk() finish, give every bunk material Metallic 0, Base Color painted institutional grey-green or off-white at value about 0.25-0.35, Roughness 0.55-0.65, Specular IOR Level 0.3, plus a fine noise bump (scale 300, strength 0.1) for paint orange-peel. Painted steel hides the facet wobble that chrome exaggerates. Better still, build the frame in Python (box/cyl with 4 mm bevels: 40 mm square posts, 25 mm tube rails, flat slat deck) and keep only the Tripo mattress and bedding."
-   },
-   {
-    "priority": 2,
-    "camera": "cell_close",
-    "problem": "The barred light patch on the floor has 4 panes and 3 thick bars, but the window shows about 7 thin bars and a mesh. Its edges are razor sharp with no shaft through the haze, and the floor's 'wear' is mottled cloud noise.",
-    "fix": "Cast the patch from the real window geometry. Put a sun (or a 0.3 m area light) outside the back wall behind the slot, angle about 35-45 degrees down toward the camera, and use the slot's actual bar objects as the occluders. Remove any separate gobo or fake patch. Give the sun an angle of about 1.5 degrees for a slight penumbra and raise cell haze locally (a 1x1x3 m haze box along the path, density 0.02) so a faint shaft links window and patch. Replace the floor noise with painted-concrete wear: a large-scale Voronoi/Musgrave mask driving traffic paths (lighter, rougher strips from door to bunk to toilet), scuffs as thin dark streaks, and roughness 0.6 rising to 0.8 in worn areas. Keep the base value even."
-   },
-   {
-    "priority": 2,
-    "camera": "cell_close",
-    "problem": "The cell is lit like an ordinary evenly lit room (raw mean 98, walls uniformly mid grey) rather than a box under one hard top light in the void. The 20 mm camera is tilted down so the bunk posts and wall verticals lean, and the frame-right wall is a large flat grey slab.",
-    "fix": "Lower the cell spot's blend from 0.45 to about 0.25 and remove any secondary fill or bounce. Let the walls fall from about 0.6 at floor level to about 0.1 at the top course, and let the window and patch be the brightest things after the floor. Aim exposure so the raw mean lands near 60-70. Level the camera (aim z equal to camera z, 1.4) and frame down with shift_y of about -0.12 to -0.18 so verticals stay vertical. Move the camera about 0.3 m left (x 0.55) or yaw 5 degrees left so the right wall takes no more than about 12 % of frame width. Optionally add a bunk-side detail on that wall (a steel shelf with a folded blanket and a plastic cup) so it is not an empty slab."
+    "problem": "The window shaft and its patch do not connect. The shaft travels almost straight toward the lens, so it is foreshortened into a vertical curtain down the back wall. Its lower part sits over a floor that is nearly as bright as it is (raw floor about 170-180), so it vanishes, and the shaft seems to end at the base of the wall about 1.3 m behind the patch. The patch is weak: graded 172 against 144 for the floor around it, about 1.2:1, and the window glass (96) is darker than the floor.",
+    "fix": "Make the window the lead after the floor. (a) Darken the back half of the cell floor under the top spot. Move SPOTS['cell'] fwd 0.0 -> +0.35 (the pool's hot centre toward the open side) and cut watts 13500 -> 11000, so the floor between the back wall and the patch lands near 0.35 raw. (b) Raise WINDOW_W by 1.5x (to about 260000) so the patch is near 0.8 raw, a 2:1 patch-to-floor ratio, and the shaft then reads over the darker floor all the way down to the patch. (c) Rake the night source about 15 degrees about Z toward +X (move it sideways behind the slot rather than straight back), so the patch shifts about 0.35 m to frame left and the shaft runs on a visible diagonal instead of straight at the lens. Rebuild haze_box_along on the new ray. Keep SHAFT_HAZE at 0.08."
    },
    {
     "priority": 3,
-    "camera": "cell_far",
-    "problem": "Two pale crescents of spot spill lie on the void floor left and right of the box, and a lit strip sits in front of it. The box's outer walls merge with the black, so it reads as a lit doorway in a wall rather than a small box in the void.",
-    "fix": "Shrink the cell spot's pool so the cone lands inside the walls (pool about 1.9-2.0 m, or move the lamp to fwd 0.0). Or give the void floor outside a radius of about 2.2 m around the cell a near-black value (0.01) so stray spill dies. Give the box a readable silhouette: let the spot graze the top edges of all three walls (a 2-3 cm bright line along each wall top), and add a very faint back-haze or a 0.5 % rim from a weak light far behind the box so its outer corners separate from the black. Keep the beam as is. Move the camera to x about 2.5 so less of the right wall's black outer face covers the interior."
+    "camera": "cell_close, cell_far",
+    "problem": "The cell is a clean clay render. Every surface is one value and one roughness. There is no grime at the wall bases, no wear on the bunk paint, the desk and stool are crisp grey primitives, and the books are plain slabs with no page block. Under the upper deck the lower bunk is a black hole: the 0.04-0.066 vinyl mattress disappears. The lower blanket is the lightest cloth in frame and hangs like stiff paper, with a wavy cut edge.",
+    "fix": "Wall paint: darken 15-20 % within 15 cm of the floor (an AO or height mask), and add a faint water stain 30-40 cm down from the window splay. Bunk paint: edge wear from Pointiness or AO showing darker steel at the post feet, the ladder rung and the rail tops (value 0.6x, roughness 0.35, mask coverage about 8 %). Desk: chip its front edge and add a slightly lighter, smoother rub patch where forearms rest. Books: confirm the 'book pages' material is on an inset page block 3 mm inside the covers, with page lines (a wave texture at scale 400 across the thickness). Mattress vinyl: rgb (0.04, 0.05, 0.066) -> about (0.10, 0.11, 0.12), so the lower mattress's top edge and front lip read. Blanket: wool value 0.085 -> 0.06, and drop 0.2 -> 0.12, with 3-4 vertical folds (noise stretched 1:6 down the drop) and a straight hem instead of a wavy cut."
    },
    {
     "priority": 3,
     "camera": "bags",
-    "problem": "The case and duffel overlap into one black mass. Their lit tops and handles barely read, and the floor pool is a featureless grey disc.",
-    "fix": "Open a gap: CASE to about (-0.32, 0.10, -58) and DUFFEL to about (0.30, -0.18, 17), so about 8-12 cm of lit floor shows between their silhouettes from the camera. Move the bags spot fwd from 0.55 to about 0.2 and raise its watts about 25 %, so the tops, the telescoping handle and the duffel's straps and zips catch a clear highlight (raw value about 0.35-0.45 on the tops) while the sides stay dark. Drop the camera to z about 0.55 so the bags rise against the black above the pool edge, which makes them the image's monuments."
+    "problem": "The bags read as two dark lumps against a dark grey haze backdrop. Their tops are only 0.21-0.38 raw, their sides 0.03-0.12, and the haze behind them about 0.1, so the silhouettes barely separate. They sit in the back half of the pool, with a band of empty lit floor in front, and they fill only about a third of the frame height for the film's last image.",
+    "fix": "Move the bags spot's aim to the bags' centroid (G + (0.0, -0.04)) so they stand at the pool's centre and hotspot. Push in: camera y -4.7 -> -4.0, or lens 50 -> 60, so the case is about 42-45 % of frame height with the whole pool edge still in frame. Add an invisible back rim linked to the two bags only: an area light 0.6 x 0.6 m, about 40 W, at (G.x, G.y + 2.4, 1.5) aimed at the bags. The case's telescoping handle, its top edge, and the duffel's straps and top seam then catch a fine 0.45-0.55 line against the haze, while the faces stay dark."
    },
    {
     "priority": 3,
-    "camera": "dawn, dawn_high, bags",
-    "problem": "The pools are lit evenly to a perfect hard ellipse edge with no hotspot and no floor texture, so they read as a CG disc. In dawn the haze beam is a soft grey column with vertical edges, like a curtain behind her.",
-    "fix": "Give the spots a falloff: spot_blend 0.25-0.3 and, through the light's node tree or an IES-like radial ramp, about 30 % brighter at centre than at the edge. Give the floor hardboard real texture: seams every 1.22 m with 2 mm dark grooves, slight per-board value variation (plus or minus 4 %), scuffs and tape residue marks at very low contrast, roughness 0.55-0.75. For the dawn beam, raise the lamp to about 9-10 m and narrow it so the cone tapers visibly above her head, and keep haze at 0.010 but limit it to a cylinder about 1.6 m in radius around the cone so the background behind her stays black rather than lit grey."
-   },
-   {
-    "priority": 4,
-    "camera": "dawn_high",
-    "problem": "From high up the pose reads as stooping or about to sit: knees bent, hips back, shoulders hunched forward. The 'slightly bowed head' becomes a forward collapse of the whole figure.",
-    "fix": "Set chest forward to 2-3 (from 6) and neck to 4 (from 8), and keep head down at about 18. Make sure both legs are straight (no knee flex from the rig defaults), with the weight on one leg and that knee locked. Check from dawn_high that the spine stays vertical and only the head tilts."
+    "camera": "cell_close",
+    "problem": "Framing: the frame bottom cuts the stool's pedestal and base, and its pale top (graded 129) is a flat disc in the foreground that competes with the patch.",
+    "fix": "Tuck the stool under the desk (move it about 0.35 m toward the left wall and 0.15 m back), so it is fully in frame and half in the desk's shadow. Or move it out of shot. Darken its seat to the bunk paint value (about 0.27) with roughness 0.55."
    },
    {
     "priority": 4,
     "camera": "cell_close",
-    "problem": "Set dressing is generic. Nothing says twelve years have passed.",
-    "fix": "Add two or three restrained signs of long occupancy, all without text: a thin folded towel over the bunk rail, a plastic cup and a toothbrush on the basin unit's shelf, a small stack of plain-covered books or papers at the foot of the lower bunk, and a slightly sagging, creased blanket (a cloth-shaped or displaced plane, not a box). Keep them dark and low contrast so the window stays the lead."
+    "problem": "Ch 08 is 'what twelve years can take', but nothing in the cell marks time. The dressing (towel, books, folded bedding) is what a newly issued cell would hold.",
+    "fix": "Add two restrained signs of long occupancy, dark and low in contrast, with no text. One: a small bundle of plain envelopes tied with a band on the desk beside the books (letters from home, about 5 envelopes at 0.11 x 0.22 m, warm off-white at value 0.45 so the grade keeps them quiet). Two: a plastic cup and a toothbrush on the steel unit's ledge, the cup() helper at r 0.036. Optionally a few faint tally-like scratches low on the wall beside the lower bunk, as a bump only with no value change, so they never read as text or numbers."
+   },
+   {
+    "priority": 4,
+    "camera": "cell_far",
+    "problem": "Small leftovers. A faint sliver of spill (raw 17-44) lies on the void floor just under the slab's front edge. The beam's haze stops dead at the plane of the wall tops, so the cone reads as ending above the box instead of falling into it.",
+    "fix": "Pull the cell pool's front edge in 5 cm (ry 2.05 -> 2.0, or after the fwd change in the window fix, check that the spill line is gone). Extend the top spot's haze down into the box at a lower density (0.004) so the cone visibly continues past the wall tops onto the floor."
    }
   ]
  },
