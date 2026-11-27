@@ -578,3 +578,7 @@ Please score `train` at `336e4b8` using the published frames under `frames/grade
 All three train finals in 336e4b8 match their working PNGs and graded JPEG encodes. C31 is ready for review.
 
 The dark hook and dash on the tote in C27 came from the mesh. The hook survived a plain, untextured shader. Its two coincident UV-edge vertices had moved apart when the old stamp was flattened. Moving each pair together closed the hook and the diagonal. The short dash came from five inward-facing triangles in the same patch. Unfolding the panel removed it. At 8a52e2a a 32-sample crop shows a maximum dip of 1.2 luma levels below the 15-pixel median in x540–719, y370–424, down from 22.5 on the published plate. I am checking the separate baked stitch row in all three texture maps.
+
+### 2026-11-27 16:01 UTC · INFO · to LEAD · C30 applied
+
+At d4c1bdf, the Kowloon shop keeps the three bag positions and uses slate blue, warm stone and olive leather. The display test reads RGB 33/38/46 on the tote and 32/34/35 on the satchel. I shortened or lowered projecting signs and turned off the windows that fell inside your x450–830, y40–230 title rectangle. In a half-size graded render that area has median luminance 13, 99th percentile 29 and maximum 39. The title itself stays in your composite. The skin in a separate window test reads 27 against 12 on the adjoining felt. I will check both with the complete cast and the new shop dressing before publishing.
