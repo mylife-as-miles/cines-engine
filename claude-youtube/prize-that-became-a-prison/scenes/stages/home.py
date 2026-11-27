@@ -720,6 +720,8 @@ def family_member(name, chair, age, height, weight, tone):
     seat_z = _STATE["cushions"]["gene" if name.startswith("Gene") else "tim"]
     holder = people.man(name, age=age, height_cm=height, weight=weight, tone=tone)
     gene = name.startswith("Gene")
+    if name == "Tim2014":
+        people.tim_jaw(holder)
     upper = dict(SOLVE, torso=(8 if gene else 0, 0), chest=(10 if gene else 3, 0), head=(5 if gene else 0, -6 if gene else 18),
                  neck=(3, 0), fingers=4)
     dz, hip = seat_figure(holder, seat_z, upper)

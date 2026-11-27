@@ -308,24 +308,33 @@ def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", ton
     return h
 
 
-def _tim_jaw(holder):
-    """Broaden the lower jaw and neck of the witness without shifting his eyelids or hairline."""
+def tim_jaw(holder):
+    """Give Tim the same lower-face structure at each age, fitted to his morphed chin."""
     body = bpy.data.objects[holder["body"]]
     rig = bpy.data.objects[holder["rig"]]
-    head = body.matrix_world.inverted() @ rig.matrix_world @ rig.data.bones["DEF-spine.006"].head_local
-    groups = {g.index for g in body.vertex_groups if g.name in ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006")}
+    chin = body.matrix_world.inverted() @ rig.matrix_world @ rig.data.bones["DEF-chin"].head_local
+    groups = {g.index for g in body.vertex_groups
+              if g.name in ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006")
+              or g.name.startswith(("DEF-jaw", "DEF-chin", "DEF-cheek.B", "DEF-lip.B"))}
     if body.data.shape_keys is None:
         body.shape_key_add(name="Basis")
-    shape = body.shape_key_add(name="Mature neck and jaw", from_mix=False)
+    # The rig already fits his age and stature. The Basis skull can be more than
+    # 10 cm lower. Measure on the mixed rest shape, then store only our lateral
+    # displacement relative to Basis so those existing morphs are applied once.
+    shape = body.shape_key_add(name="Mature neck and jaw", from_mix=True)
     count = 0
-    for v in body.data.vertices:
-        if not any(g.group in groups and g.weight > 0.18 for g in v.groups):
+    for vertex, point, base in zip(body.data.vertices, shape.data, shape.relative_key.data):
+        x, _, z = point.co
+        point.co = base.co
+        dz = z - chin.z
+        neck = max(0.0, 1 - ((dz + 0.039) / 0.049) ** 2) ** 2
+        jaw = max(0.0, 1 - ((dz - 0.022) / 0.040) ** 2) ** 2
+        width = max(0.12 * neck, 0.08 * jaw)
+        if width == 0:
             continue
-        dz = v.co.z - head.z
-        neck = max(0.0, 1 - ((dz + 0.045) / 0.07) ** 2) ** 2
-        jaw = max(0.0, 1 - ((dz - 0.032) / 0.045) ** 2) ** 2
-        if neck or jaw:
-            shape.data[v.index].co.x += (v.co.x - head.x) * max(0.12 * neck, 0.08 * jaw)
+        weight = min(1.0, sum(g.weight for g in vertex.groups if g.group in groups))
+        point.co.x += (x - chin.x) * width * weight
+        if weight > 0:
             count += 1
     shape.value = 1.0
     print(f"CAST Tim jaw and neck profile: {count} vertices", flush=True)
@@ -408,6 +417,6 @@ def tim(*, shirt_tone=None, tie_tone=None):
     """Tim in the 2024–26 testimony and visit. Both sets use the same build, jaw and receding hairline."""
     holder = man("Tim", age=0.78, weight=0.7, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1),
                  shirt_tone=shirt_tone, tie_tone=tie_tone)
-    _tim_jaw(holder)
+    tim_jaw(holder)
     _tim_hairline(holder)
     return holder

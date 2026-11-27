@@ -269,6 +269,7 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
 
 def tim():
     h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, tone=JACKET)
+    people.tim_jaw(h)
     suit_tones(h)
     recede_hair(h)
     return h
