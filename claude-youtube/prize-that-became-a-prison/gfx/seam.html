@@ -16,15 +16,23 @@ const W = 1920, H = 1080, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const sm = x => { x = cl(x); return x * x * (3 - 2 * x); }, eo = x => 1 - Math.pow(1 - cl(x), 3);
 const RED = '200,52,44';                       // a deep red (OKLCH C about 0.18), not neon
 let bgImg = null;
-function pts() { const s = window.SEAM, k = W / s.space[0]; return s.seam.map(([x, y]) => [x * k, y * k]); }
+function pts() {                       // plate pixels -> output; hidden samples (behind the handle tabs) become null
+  const s = window.SEAM, k = W / s.space[0], occ = s.occluded || [];
+  return s.seam.map(([x, y], i) => occ[i] ? null : [x * k, y * k]);
+}
 function trace(ctx, p, f, a = 1) {
   if (f <= 0) return; const n = Math.max(1, Math.floor((p.length - 1) * f));
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   for (const [w, al] of [[9, 0.10], [5, 0.22], [2.4, 0.95]]) {          // a soft bloom under a fine line
-    ctx.strokeStyle = `rgba(${RED},${al * a})`; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(...p[0]);
-    for (let i = 1; i <= n; i++) ctx.lineTo(...p[i]); ctx.stroke();
+    ctx.strokeStyle = `rgba(${RED},${al * a})`; ctx.lineWidth = w; ctx.beginPath(); let pen = false;
+    for (let i = 0; i <= n; i++) {                                    // a new subpath after each hidden run
+      if (!p[i]) { pen = false; continue; }
+      pen ? ctx.lineTo(...p[i]) : ctx.moveTo(...p[i]); pen = true;
+    }
+    ctx.stroke();
   }
-  if (f < 1) { const h = p[n], g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 18);
+  let hn = n; while (hn > 0 && !p[hn]) hn--;
+  if (f < 1 && p[hn]) { const h = p[hn], g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 18);
     g.addColorStop(0, `rgba(255,120,100,${0.7 * a})`); g.addColorStop(1, `rgba(${RED},0)`);
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 18, 0, 7); ctx.fill(); }
   ctx.restore();
@@ -81,5 +89,5 @@ window.draw = (mode, t) => {
   else if (mode === 'cutaway') cutaway(ctx, t);
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
-fetch(window.SEAM_URL || 'shots/purses_seam_proto.json').then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
+fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : 'shots/purses_seam_proto.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
 </script></body></html>
