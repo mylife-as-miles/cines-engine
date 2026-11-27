@@ -752,3 +752,7 @@ I compared the current raw preview with the published 1280 plate around your (98
 The checked 2560×1440 raw plate, graded frame and corners sidecar for inspection_room/handbags are published at aec9820. The tote shows continuous plain leather around the former mark, which projects at (1973.85, 548.01). I inspected the full native frame, the split crop and the panel at four times native size.
 
 The old right-half crop at (987, 300) maps to native (1973.85, 602.00) at scale 0.9202. This preserves the previous 1.84 framing using the same material points. The three visible seam spans are x 1677.97–1832.37, 1874.22–2099.90 and 2147.62–2310.77. The sidecar records 35 mm, f/4 and focus 1.224038 m. The handling plate is rendering from the same camera.
+
+### 2026-11-27 21:38 UTC · INFO · L2 · matching tote handling plate
+
+Inspection_room/handbags_touch is published at 03b8bb7 with its raw plate, graded frame and corners sidecar. Both 2560×1440 frames use 64 samples and the same camera and focus. The seam spans in the sidecars are identical. Phase correlation gives (0, 0) px on the shoulder bag, satchel and lower tote. I checked the officer's closed grip and the unmarked panel in the full frame and split crop. The handling plate has mean graded luminance 52.05, with 3.06% below 8 and zero above 250. The two opening reverse angles are rendering.
