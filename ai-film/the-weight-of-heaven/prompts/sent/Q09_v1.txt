@@ -1,0 +1,98 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q09 · THE TREATY HOUSE, THE HALL · THE TREATY
+References: @Image 1 — environment: the hall of the Treaty House with its shutters closed, the place and its light for shots 1 and 2 · @Image 2 — environment: the same hall once the shutters are open, the place and its light for shots 3, 4 and 5 · @Image 3 — character sheet: SERATH · @Image 4 — character sheet: KARST
+Reference mode · 24 s · 5 shots · 2.35:1 · photoreal live action · spoken English: two speakers, each line said once · no music
+
+## SCENE INTENT
+On the ground, beneath a kingdom that floats in the sky, that kingdom's Grand Admiral, Serath, has been brought into an old dark hall by Karst, an engineer of her own people who went over to the people below nineteen years ago. One whole wall of the hall is the treaty between the sky and the ground, cut in black rock eight hundred years ago. She finds she can read it: it is in the language of her prayers. She reads its end aloud and does not yet see what it means. Karst opens the shutters on the plain outside and tells her. She answers with what she has always been taught; he answers that, and he is not unkind. Every voice stays low. She is learning something; he has known it for years.
+
+## GLOBAL LOCKS
+Character identity — SERATH exactly as @Image 3: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. KARST exactly as @Image 4: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat with paler patches where its insignia were cut away, ink on his fingers. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
+Wardrobe override — none: both exactly as their sheets.
+Location / environment continuity — @Image 1 and @Image 2 are one and the same room: a long hall of dark stone under heavy oak beams. The whole left wall, as @Image 1 looks at it, is a single face of black basalt: two blocks of small carved marks side by side, a band of large, shallow, worn curves under them, and along its foot one line of seven round carved crests followed by eleven square ones. In the far end wall is one tall opening, closed by two heavy plank shutters on iron strap hinges, which open inward. The floor is flagstones; rows of pale papers lie on it, each under a stone. In shots 1 and 2 the hall is lit exactly as @Image 1: the shutters are shut, a thin blade of daylight stands between the two leaves and lies under them, and the only other light is weak grey daylight from the doorway at the near end of the hall, behind the camera of shot 1; the far end is the darkest. From shot 3 on it is lit exactly as @Image 2: the shutters stand open, one soft shaft of pale overcast daylight comes in through the opening and down the hall, and outside lies a plain of black basalt in hexagonal columns, flat to the horizon under a pale overcast sky. Where each stands: Serath at the foot of the basalt wall, a third of the way down the hall, an arm's length from it, facing it, in every shot she is in. Karst at the far end, at the shutters.
+Props and temporal state — Nothing is carried. Serath's gloves stay on. The papers on the floor are not touched or looked at.
+
+## MOVIE COLOR
+Black rock, white cloth, grey daylight; the gold of Serath's collar is the only colour. Shots 1 and 2 are low key, about two stops under: exposed for her white coat in weak light, so that the coat is a dim grey, her face sits just above black, the basalt is near black with only the edges of its cut marks catching light, and the blade of daylight between the shutters is the one bright thing in the frame. From shot 3 the exposure is set for the daylight on a face: the sky in the opening burns pale, the hall around stays dark, the basalt takes almost no light and cloth and paper take it. A face is never the brightest thing in the frame. The daylight is cool and soft, an overcast sky, with no sunbeams.
+Influences, each with its purpose — Denis Villeneuve, Dune and Blade Runner 2049: one small pale figure before a vast dark wall; a profile edged with light against black; a figure as a dark shape in a bright doorway; a line timed to what is revealed; a hard thing heard on the face of the one it is said to. James Cameron: cause, then effect, each readable alone: the pull, the shutters part, the light arrives, the plain is seen; every look answered by what it looks at.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Shallow focus on faces. Every shot is on a steady camera and moves slowly or not at all.
+
+## VOICE DNA (immutable)
+SERATH: The high speech of Orison: a soft, unplaced Received Pronunciation, older and gentler than a modern one, with no regional mark. A woman of fifty-five with a low alto, warm but closed, a little grain at the bottom of the range. She speaks at a measured pace and always finishes her sentences; she never hurries and never raises her voice. Here, on the ground, her breath is a little heavier between phrases; her voice itself does not change.
+KARST: The grammar of the court spoken with the vowels of the ground: an educated Received Pronunciation flattened toward a northern English plainness by nineteen years below. A man of fifty-six with a dry, tired baritone, a slight rasp, low energy. He is unhurried. His sentences end flat and falling. He is never angry. When something matters most he gets quieter, not louder.
+No one else is in the hall.
+
+## AUDIO DESIGN
+A stone hall, close and dry, with no echo. In shots 1 and 2: stillness, her breath, a thread of wind at the gap of the shutters. In shot 3: old iron hinges, the weight of oak moving, then the open wind of the plain coming in, which stays under shots 4 and 5. Both voices are close and clear in every shot.
+
+## FIRST-FRAME ANCHOR
+Shot 1 opens on the view of @Image 1: the same camera position and the same light, with Serath and Karst in it as shot 1 says.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–4.4 s
+[CAM] the view of @Image 1: wide, 28 mm, at chest height, looking down the length of the hall; the camera holds still. The basalt wall runs down the left of the frame; the closed shutters are small at the far end, right of centre, the blade of daylight between them.
+[BLOCK] Serath, small in the frame, full figure, left of centre, stands at the foot of the basalt wall, facing it, her back three-quarters to us: the one pale thing in the hall. Her right hand in its white glove is raised to the carved marks at the height of her shoulder. Karst, smaller still, stands far down the hall just right of the closed shutters, a dim shape, facing her, his hands at his sides.
+[ACT] Nobody walks. Her gloved fingertips rest on the rock; her head moves a little to the right along the line she is reading. She reads it aloud, slowly, as one reads an old text for the first time. Her face is not seen. Karst is still and watches her.
+[DIALOGUE] / V.O. SERATH, her back to us (1.4 to 4.0 s): "The seven cities, raised by the hands of all," — low, slow, even: reading, not yet understanding.
+[SFX] her voice, close; her breath; a thread of wind at the shutters.
+[STATE OUT] Serath at the wall, her hand on it; Karst at the shutters; the hall dark.
+
+### SHOT 2
+[TIME] 4.4–10.0 s
+[CAM] close-up, 85 mm, at her eye height, from the far end of the hall looking back along the basalt wall, shallow focus; a very slow push in of a hand's width. The black wall with its cut marks fills the right half of the frame, close and raking away; behind her, far off and out of focus, the weak grey daylight of the doorway at the near end of the hall.
+[BLOCK] Serath in profile on the left half of the frame, head and shoulders, facing right, toward the wall, her face a hand's breadth from the rock, the gold collar at her throat. On the right half, her right hand in its white glove, the forefinger on the cut marks.
+[ACT] She is lit only from behind, by that far doorway: a thin edge of grey light along her brow, nose and lips; the rest of her face is in shadow, just above black. Her forefinger moves slowly to the right under one line of marks and her eyes follow it as she reads the line aloud. At the end of the first phrase the finger stops under the last marks. She breathes once. She reads the last five words more slowly, each one set down. Then her mouth closes, her finger stays on the rock, and she is still.
+[DIALOGUE] / V.O. SERATH (4.8 to 7.4 s): "and borne by the nations of the high ground," — the same low, even reading. Then (after her one breath; 7.9 to 9.6 s): "until the fire is stone." — slower; she hears it as she says it.
+[SFX] her voice, close; her breath; the glove's fingertip on rock.
+[STATE OUT] Serath in profile at the wall, her finger under the last marks, her mouth closed.
+
+### SHOT 3
+[TIME] 10.0–15.0 s
+[CAM] medium-wide, 40 mm, at chest height, from inside the hall looking straight at the shutters, centred and symmetrical; a slow push in of one pace in the whole shot. The frame ends above the floor.
+[BLOCK] Karst alone in the frame, from the knees up, in the centre, his back to us, at the closed shutters: a dark shape in front of the blade of daylight. His two hands are on the inner edges of the two leaves, one hand on each.
+[ACT] His back is to us from the first frame to the last. At 10.4 s he pulls: he draws both leaves inward, one in each hand, stepping back two paces with their weight. They are heavy and swing slowly. By 12.6 s they stand fully open at either side of the opening, as in @Image 2. As they part, the blade of daylight widens to the whole opening and pale daylight pours in past him and down the hall. Outside lies the plain: black basalt in hexagonal columns, flat to the horizon, under a pale overcast sky. He lets go of the leaves, lowers his arms and stands in the opening, a dark shape against the day, looking out at the plain. Then he says it, toward the plain, without turning.
+[DIALOGUE] / V.O. KARST, his back to us (12.9 to 14.8 s): "It was stone within forty years." — dry and level, a plain fact; flat and falling at the end.
+[SFX] iron hinges; heavy oak moving over flagstone; then wind from the plain; his voice, close.
+[STATE OUT] The shutters open; Karst a dark shape in the opening, his back to us, facing the plain.
+
+### SHOT 4
+[TIME] 15.0–18.8 s
+[CAM] the same close set-up as shot 2: 85 mm, at her eye height, from the far end of the hall looking back along the basalt wall, shallow focus; the camera holds still. Now the daylight of the open shutters, from behind the camera, lies soft on her and on the cut marks of the wall at the right of the frame.
+[BLOCK] Serath, head and shoulders, on the left half of the frame; the wall on the right half; her right hand has come down from the rock.
+[ACT] At the first frame she is still in profile, facing the wall, the new daylight on her cheek and collar. By 15.9 s she has turned her head to her right, toward the light: three-quarter face to us, her eyes going past the left side of the camera to the plain, off-screen. She looks at it; her eyes are wide open and steady. Then, without taking her eyes from it, she says it, quietly. Her mouth closes. Her eyes move a little, to Karst, off-screen in the same direction, and hold on him.
+[DIALOGUE] / V.O. SERATH (16.6 to 17.8 s): "We were chosen." — quiet, level, certain: a thing she has always known.
+[SFX] wind from the plain, low; her voice, close; her breath.
+[STATE OUT] Serath three-quarter face in the daylight, her eyes on Karst, her mouth closed.
+
+### SHOT 5
+[TIME] 18.8–24.0 s
+[CAM] medium close-up over Karst's left shoulder, 65 mm, at his eye height, from inside the hall looking out through the opening; shallow focus on him; the camera holds still. The plain and the pale sky fill the left and centre of the frame, out of focus; the edge of the open left-hand shutter is at the far left of the frame.
+[BLOCK] Karst on the right third of the frame, from the chest up, seen from behind his left shoulder, standing in the opening and looking out: the back of his head, his left ear and the line of his cheek, dark against the pale sky.
+[ACT] He looks out at the plain. He says the first line toward it, without turning; the line of his cheek and jaw moves as he speaks. He breathes out. Then he turns his head to his left, toward her, behind him: by 21.4 s his face is in profile against the pale sky, facing the left of the frame, his eyes on her, off-screen. He says the second line to her, more quietly. His mouth closes and he holds his eyes on her to the end.
+[DIALOGUE] / V.O. KARST (19.4 to 20.6 s): "You were sheltered." — flat, tired, not unkind. Then (after his breath out and the turn of his head; 21.6 to 23.2 s): "By then you had gardens." — quieter; flat and falling.
+[SFX] wind from the plain; his voice, close; his breath.
+[STATE OUT] Karst in profile against the pale sky, his eyes on her, his mouth closed.
+
+## PERFORMANCE ARC
+SERATH: reads an old text aloud as a scholar would → hears its last words as she says them → sees the plain → answers with what she was taught, and for the first time it does not sound like enough.
+KARST: waits while she reads → opens the shutters and states the fact to the plain → answers her without heat → gets quieter where it matters.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+Her own scripture says the lifting was meant to end. The proof is the ground outside the door. The dark room is what she was taught; the daylight is what is so.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. The shutters are heavy oak: they start slowly, swing slowly and stop with their own weight. Cloth hangs and stirs in the wind once the shutters are open. Dust turns in the daylight, a little. Heads turn at a living pace, never snapping. Hands and fingers move slowly and exactly.
+
+## AUDIO LOCKS
+Each quoted line is spoken once, word for word, by the one named, in the order written, and nothing else is said by anyone. Serath's mouth moves only during her own lines; Karst's only during his. Speech is unhurried in every line. No music or singing.
+
+## CONTINUITY LOCKS
+[POSITIVE] the hall exactly as @Image 1 in shots 1 and 2 and exactly as @Image 2 in shots 3, 4 and 5 · shots 2 and 4 one and the same framing of Serath · the shutters shut until 10.4 s and open from 12.6 s · white gloves on Serath's hands · the gold collar on Serath alone · only the two of them in the hall · light only from the doorway behind us and from the shutters
+[NEGATIVE] lamps, candles, torches or flames · warm light or sunbeams · other people · captions, subtitles or readable lettering · camera shake · anyone walking about · a grey studio backdrop
+
+## GENERATION PRIORITY ORDER
+1. The five spoken lines, word for word, each in its speaker's one voice, unhurried  2. Character identity from the sheets  3. Shots 1 and 2 dark as @Image 1; the shutters opened in shot 3; shots 3 to 5 lit as @Image 2  4. Five shots in order, each with its own framing and length  5. Serath's close framing the same in shots 2 and 4; Karst's back to us in shot 3  6. Sound: a dry stone hall, breath, hinges and oak, wind from the plain, no music
+
+## FINAL STATE
+The shutters stand open on the black plain. Karst, in the opening, has turned his head to her and holds his eyes on her. Serath stands at the wall in the daylight, off-screen, her eyes on him.
