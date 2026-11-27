@@ -183,6 +183,7 @@ def surface_bvh(holder):
 
 def tote_topstitch(holder):
     """The line of saddle stitching just under the front lip, interrupted by the handle tabs."""
+    _retouch_tote_textures(holder, _paint_over_tote_lip)
     surface = surface_bvh(holder)
     base = holder.matrix_world.translation
     rotation = holder.matrix_world.to_quaternion()
@@ -191,7 +192,7 @@ def tote_topstitch(holder):
     yarn.dimensions = "3D"
     yarn.bevel_depth = 0.00032
     yarn.bevel_resolution = 2
-    yarn.materials.append(sk.mat("tobacco saddle thread", (0.13, 0.066, 0.024), 0.84))
+    yarn.materials.append(sk.mat("waxed linen saddle thread", (0.42, 0.33, 0.22), 0.80))
     for i in range(69):
         centre = (i - 34) * 0.00435
         points = []
@@ -311,39 +312,73 @@ def _sample_tote_trace(controls, visible, resolution):
             "occluded_x_px": intervals}
 
 
-def _retouch_tote_textures(holder, box, dx, feather=8):
-    """Paint a small patch of a generated prop's textures over with the same-sized patch dx pixels to its right
-    (colour, roughness and normal maps alike), feathered: used to take the tote's oval maker's plate off its front
-    (no badges or brands in the film)."""
+def _retouch_tote_textures(holder, paint):
+    """Retouch the same UV region in the colour, roughness and normal maps in memory."""
     import numpy as np
-    x0, y0, x1, y1 = box
-    done = set()
-    for o in [c for c in holder.children_recursive if c.type == "MESH"]:
-        for slot in o.material_slots:
-            for n in slot.material.node_tree.nodes if slot.material else ():
-                if n.type != "TEX_IMAGE" or not n.image or n.image.name in done:
-                    continue
-                img = n.image
-                done.add(img.name)
-                W, H = img.size
-                a = np.empty(W * H * img.channels, np.float32)
-                img.pixels.foreach_get(a)
-                a = a.reshape(H, W, img.channels)
-                src = a[y0:y1, x0 + dx:x1 + dx].copy()
-                ry = np.minimum(np.arange(y1 - y0), np.arange(y1 - y0)[::-1])
-                rx = np.minimum(np.arange(x1 - x0), np.arange(x1 - x0)[::-1])
-                wgt = np.clip(np.minimum.outer(ry, rx) / feather, 0.0, 1.0)[..., None]
-                a[y0:y1, x0:x1] = a[y0:y1, x0:x1] * (1.0 - wgt) + src * wgt
-                img.pixels.foreach_set(a.ravel())
-                img.update()
-                print(f"PROP retouched {img.name} ({n.label}) at {box}", flush=True)
+    images = {node.image for part in meshes(holder) for slot in part.material_slots if slot.material
+              for node in slot.material.node_tree.nodes if node.type == "TEX_IMAGE" and node.image}
+    for image in images:
+        width, height = image.size
+        pixels = np.empty((height, width, image.channels), dtype=np.float32)
+        image.pixels.foreach_get(pixels.ravel())
+        paint(pixels)
+        image.pixels.foreach_set(pixels.ravel())
+        image.update()
+
+
+def _paint_over_tote_plate(pixels):
+    import numpy as np
+    # Same grain, uninterrupted by hardware, from 342 texels to the right.
+    x0, y0, x1, y1 = 446, 177, 566, 284
+    dy, dx = np.ogrid[:y1-y0, :x1-x0]
+    edge = np.minimum(np.minimum(dy, y1-y0-1-dy), np.minimum(dx, x1-x0-1-dx))
+    patch = pixels[y0:y1, x0:x1]
+    patch += np.clip(edge / 12, 0, 1)[..., None] * (pixels[y0:y1, x0+342:x1+342] - patch)
+
+
+# Visible stretches of the lip on the tote's 4096-square atlas. The handle tabs
+# and side stitching keep their original thread. Radii cover the baked normal as
+# well as the pigment, which extend different distances from the same stitch.
+_TOTE_LIP = (
+    (14, ((947, 1171), (1036, 1157), (1073, 1146), (1079, 1149), (1095, 1146),
+          (1103, 1140), (1143, 1132), (1155, 1131), (1168, 1126), (1198, 1118))),
+    (9, ((1623, 3559), (1637, 3549), (1645, 3538), (1666, 3470), (1687, 3411))),
+    (9, ((1722, 3348), (1749, 3301), (1770, 3272), (1785, 3234), (1795, 3219), (1800, 3195))),
+    (10, ((435, 311), (441, 307), (478, 305), (492, 300), (500, 300), (507, 297), (534, 299),
+          (564, 298), (583, 295), (626, 298), (660, 297), (668, 299), (692, 295))),
+    (8, ((3870, 3091), (3920, 3095))),
+    (8, ((3979, 3119), (4031, 3140))),
+    (9, ((1723, 3911), (1689, 3966), (1687, 3983), (1694, 3993))),
+    (8, ((3694, 204), (3702, 221))),
+    (15, ((3132, 2928), (3141, 2907), (3143, 2898), (3180, 2826), (3181, 2818), (3186, 2810))),
+)
+
+
+def _paint_over_tote_lip(pixels):
+    """Interpolate across the baked beads from clean leather on either side."""
+    import numpy as np
+    for radius, path in _TOTE_LIP:
+        points = np.array(path)
+        along_y = np.ptp(points[:, 1]) > np.ptp(points[:, 0])
+        across, along = (0, 1) if along_y else (1, 0)
+        tex = pixels.swapaxes(0, 1) if along_y else pixels
+        points = points[np.argsort(points[:, along])]
+        first, last = points[0, along], points[-1, along]
+        cols = np.arange(first - 4, last + 5)
+        mid = np.rint(np.interp(cols, points[:, along], points[:, across])).astype(int)
+        offset = np.arange(-radius + 1, radius)[:, None]
+        rows = mid + offset
+        lo, hi = tex[mid - radius, cols], tex[mid + radius, cols]
+        healed = lo + (hi - lo) * ((offset + radius) / (2 * radius))[..., None]
+        edge = np.clip(np.minimum(cols - first + 4, last + 4 - cols) / 4, 0, 1)
+        tex[rows, cols] += edge[None, :, None] * (healed - tex[rows, cols])
 
 
 def _plain_tote_panel(holder):
     import numpy as np
     # The macro reveals a small piece of hardware in the old donor swatch.
     # This part of the atlas is uninterrupted leather in all three maps.
-    _retouch_tote_textures(holder, (446, 177, 566, 284), 342, feather=12)
+    _retouch_tote_textures(holder, _paint_over_tote_plate)
     mesh = next(o.data for o in holder.children_recursive if o.type == "MESH")
     co = np.empty(len(mesh.vertices) * 3, np.float32)
     mesh.vertices.foreach_get("co", co)
