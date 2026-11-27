@@ -293,11 +293,19 @@ def pavers(name="pavers wet"):
     br.inputs["Bias"].default_value = 0.0
     _link(nt, o, br.inputs["Vector"])
     tone = br.outputs["Color"]                          # per-slab random grey (color1..color2)
-    joint = _math(nt, "SUBTRACT", 1.0, br.outputs["Factor"])
+    # Brick Factor is white on mortar. Keep sign reflections on the wet
+    # slab faces, with a softer reflection on the worn edges and grout.
+    joint = br.outputs["Factor"]
+    border = _n(nt, "ShaderNodeTexBrick", offset=0.0, squash=1.0)
+    for key in ("Scale", "Brick Width", "Row Height"):
+        border.inputs[key].default_value = br.inputs[key].default_value
+    border.inputs["Mortar Size"].default_value = 0.04
+    border.inputs["Mortar Smooth"].default_value = 0.6
+    _link(nt, o, border.inputs["Vector"])
     t = _maprange(nt, _n(nt, "ShaderNodeRGBToBW").outputs[0], 0.0, 1.0, 0.0, 1.0)
     bw = nt.nodes[-2]
     _link(nt, tone, bw.inputs["Color"])
-    base = _mix(nt, t, (0.085, 0.084, 0.082), (0.13, 0.126, 0.12))
+    base = _mix(nt, t, (0.048, 0.047, 0.045), (0.086, 0.083, 0.080))
     odd = _maprange(nt, t, 0.9, 0.93, 0.0, 1.0)
     base = _mix(nt, odd, base, (0.12, 0.1, 0.085))
     mott = _maprange(nt, _noise(nt, o, 9.0, 4.0, 0.6), 0.3, 0.7, 0.85, 1.1)
@@ -317,16 +325,16 @@ def pavers(name="pavers wet"):
     wet = _maprange(nt, w, 0.72, 0.8, 0.0, 1.0, smooth=True)
     damp = _maprange(nt, w, 0.4, 0.75, 0.0, 1.0, smooth=True)
     col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.4), base, (0.04, 0.04, 0.042))
+    col = _mix(nt, wet, col, (0.026, 0.026, 0.028))
     col = _mix(nt, joint, col, (0.012, 0.012, 0.012))
-    col = _mix(nt, wet, col, (0.03, 0.03, 0.032))
     _link(nt, col, b.inputs["Base Color"])
     r = _maprange(nt, _noise(nt, o, 4.0, 3.0, 0.6), 0.3, 0.7, 0.22, 0.4)
-    r = _fmix(nt, damp, r, 0.12)
-    r = _fmix(nt, wet, r, 0.03)
-    r = _fmix(nt, _math(nt, "MULTIPLY", joint, 1.0), r, 0.9)
+    r = _fmix(nt, damp, r, 0.25)
+    r = _fmix(nt, wet, r, 0.18)
+    r = _fmix(nt, border.outputs["Factor"], r, 0.60)
+    r = _fmix(nt, joint, r, 0.90)
     _link(nt, r, b.inputs["Roughness"])
-    h = _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", _noise(nt, o, 90.0, 3.0, 0.6), _math(nt, "SUBTRACT", 1.0, wet)),
-              _math(nt, "MULTIPLY", joint, 0.4))
+    h = _math(nt, "MULTIPLY", _noise(nt, o, 90.0, 3.0, 0.6), _math(nt, "SUBTRACT", 1.0, wet))
     _bump(nt, b, h, 0.08, 0.001)
     return m
 
@@ -549,7 +557,9 @@ def shop_glass(name="shop glass", refl=0.9, tint=(0.92, 0.96, 0.95)):
     _link(nt, gl.outputs[0], mix.inputs[2])
     # faint smudges: the reflection's roughness varies a little
     o = _obj(nt)
-    _link(nt, _maprange(nt, _noise(nt, o, 7.0, 3.0, 0.6), 0.55, 0.75, 0.02, 0.09), gl.inputs["Roughness"])
+    smudge = _maprange(nt, _noise(nt, o, 7.0, 3.0, 0.6), 0.55, 0.75, 0.02, 0.09)
+    smudge.node.name = "glass smudges"
+    _link(nt, smudge, gl.inputs["Roughness"])
     _emit_out(m, nt, mix.outputs[0])
     return m
 
@@ -612,6 +622,21 @@ def coated_card(name, rgb, rough=0.4):
     return m
 
 
+def display_leather(material, dark, light):
+    """Dye the shelf bag's leather, retaining the scanned grain and its metal fittings."""
+    nt = material.node_tree
+    bsdf = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    colour = bsdf.inputs["Base Color"]
+    source = colour.links[0].from_socket
+    luminance = _n(nt, "ShaderNodeRGBToBW")
+    _link(nt, source, luminance.inputs["Color"])
+    tone = _maprange(nt, luminance.outputs[0], 0.012, 0.30, 0.0, 1.0)
+    dyed = _mix(nt, tone, dark, light)
+    metal = bsdf.inputs["Metallic"]
+    metal_mask = metal.links[0].from_socket if metal.is_linked else metal.default_value
+    _link(nt, _mix(nt, metal_mask, dyed, source), colour)
+
+
 def tube(name, strength, rgb=(0.88, 0.95, 1.0)):
     """A burning fluorescent tube or LED strip: emission with faint phosphor banding."""
     m = emit(name, rgb, strength)
@@ -658,7 +683,7 @@ def materials():
     M["shelf_led"] = emit("boutique shelf diffuser", (1, 0.84, 0.63), 1.8)
     M["panel_warm"] = emit("ceiling panel warm", (1.0, 0.82, 0.6), 6.0)
     M["panel_cool"] = emit("ceiling panel cool", (0.82, 0.92, 1.0), 6.0)
-    M["lamp_head"] = emit("street lamp lens", (1.0, 0.88, 0.72), 30.0, sampling="NONE")
+    M["lamp_head"] = emit("street lamp lens", (1.0, 0.88, 0.72), 3.5, sampling="NONE")
     M["wood_dark"] = walnut()
     M["felt"] = pbr("display felt", (0.012, 0.011, 0.012), rough=(0.88, 0.96), nscale=6.0, cvar=0.15, bump=0.1, bscale=300, spec=0.2)
     M["plinth"] = pbr("display plinth", (0.12, 0.115, 0.11), rough=(0.18, 0.3), nscale=3.0, cvar=0.08)

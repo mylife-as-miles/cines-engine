@@ -233,8 +233,9 @@ GOODS = [(0.32, 0.08, 0.06), (0.38, 0.32, 0.12), (0.1, 0.18, 0.3), (0.42, 0.4, 0
 SIGN_COL = {"warm": (1.0, 0.45, 0.12), "cool": (0.15, 0.45, 1.0), "violet": (0.35, 0.10, 0.95), "amber": (1.0, 0.5, 0.12),
             "teal": (0.035, 0.75, 0.52), "green": (0.3, 0.85, 0.3), "magenta": (0.85, 0.065, 0.43),
             "blue": (0.25, 0.42, 1.0), "yellow": (1.0, 0.62, 0.05), "cream": (0.95, 0.51, 0.16)}
-SIGN_W = [("warm", 3), ("cool", 0.5), ("violet", 5), ("amber", 4), ("cream", 0.5), ("teal", 2.5), ("green", 2),
-          ("magenta", 2), ("blue", 2), ("yellow", 2)]
+SIGN_COL["warm white"] = (1.0, 0.80, 0.55)
+SIGN_W = [("warm white", 4), ("amber", 4), ("warm", 2), ("magenta", 2), ("teal", 1.5),
+          ("violet", 1), ("blue", 1), ("yellow", 1), ("green", 0.5), ("cool", 0.5)]
 WIN_COL = [((1.0, 0.7, 0.42), 0.55), ((0.78, 0.9, 1.0), 0.4), ((0.45, 0.58, 1.0), 0.15)]
 
 
@@ -379,6 +380,18 @@ def wall_openings(mb, fr, a0, a1, z0, z1, holes, depth, w=0.0, reveal=True):
             mb.face([fr.p(ha1, w, hz0), fr.p(ha1, w, hz1), fr.p(ha1, d, hz1), fr.p(ha1, d, hz0)], 0, n=-fr.A)
 
 
+def meets_wide_title(points):
+    """The editor's 380-by-190 title area, with a small margin around its edge."""
+    inv, origin = _BASE["wide_view"]
+    camera_points = [inv @ (point - origin) for point in points]
+    if any(point.z >= -0.1 for point in camera_points):
+        return False
+    focal, centre_y = _BASE["wide_projection"]
+    xs = [640 - focal * p.x / p.z for p in camera_points]
+    ys = [centre_y + focal * p.y / p.z for p in camera_points]
+    return min(xs) < 838 and max(xs) > 442 and min(ys) < 238 and max(ys) > 32
+
+
 def window(G, fr, a0, a1, z0, z1, w, lit=None, kind="slide"):
     """Glass and an anodised frame at w (the recess), a mullion and a transom; lit rooms glow per pane."""
     t = 0.045
@@ -388,7 +401,8 @@ def window(G, fr, a0, a1, z0, z1, w, lit=None, kind="slide"):
     if lit:
         col = pick(WIN_COL)
         s = rng.uniform(0.7, 2.2) * (0.5 if col[2] > 0.9 and col[0] < 0.5 else 1.0)
-    G["win"].face([fr.p(a0, w, z0), fr.p(a1, w, z0), fr.p(a1, w, z1), fr.p(a0, w, z1)], 0, n=fr.W, lit=s, wcol=col)
+    pane = [fr.p(a0, w, z0), fr.p(a1, w, z0), fr.p(a1, w, z1), fr.p(a0, w, z1)]
+    G["win"].face(pane, 0, n=fr.W, lit=0.0 if s and meets_wide_title(pane) else s, wcol=col)
     fb = G["frame"]
     fb.box((a0, w - 0.02, z0), (a1, w + 0.04, z0 + t), fr=fr)
     fb.box((a0, w - 0.02, z1 - t), (a1, w + 0.04, z1), fr=fr)
@@ -926,24 +940,54 @@ def signs(G, fr, side, W, H, b):
         del recent[:-3]
         col = SIGN_COL[cname]
         col2 = SIGN_COL[pick(SIGN_W)] if rng.random() < 0.72 else None
-        # lightboxes the brightest things in the street after the shop interiors: they light the facades round them
-        strength = b.get("sign_gain", 1.0) * (rng.uniform(1.0, 2.2) if kind == "box" else rng.uniform(20.0, 32.0))
-        if cname in ("warm", "cream", "cool", "yellow") and kind == "box":
-            strength *= 0.75
+        if kind == "box":
+            # Most shop signs are dimmer than the few fresh tubes near Dawn.
+            # Use one draw per sign to preserve the arrangement of the street.
+            u = rng.random()
+            if u < 0.6:
+                strength = 0.13 + 0.22 * u / 0.6
+            elif u < 0.9 or side < 0 or not 8 < yw < 30:
+                strength = 0.60 + 0.40 * min(1, (u - 0.6) / 0.3)
+            else:
+                strength = 1.40 + 0.60 * (u - 0.9) / 0.1
+            if side > 0 and 17 < yw < 22:
+                strength = max(strength, 1.8)
+            elif side > 0 and 25 < yw < 27:
+                strength = max(strength, 1.25)
+            if cname not in ("cream", "warm white"):
+                col = tuple(max(col) * (component / max(col)) ** 1.55 for component in col)
+        else:
+            strength = rng.uniform(20.0, 32.0)
+        strength *= b.get("sign_gain", 1.0)
         field = None
         if kind == "box" and col2 is not None:
             field = pick([((0.12, 0.12, 0.88, 0.88), 3), ((0.0, 0.5, 1.0, 1.0), 2), ((0.08, 0.06, 0.92, 0.4), 2)])
         wn = 0.3 + max(0.0, b["setback"])         # clear of an overhanging upper facade
-        if separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
+        def in_title(length, base, top):
+            return meets_wide_title([fr.p(a + da, w, z) for da in (-0.15, 0.15)
+                                     for w in (wn, wn + length) for z in (base, top)])
+
+        # First tuck the tip back toward the wall. At street depth the
+        # remaining signs can hang lower, still above the tram clearance.
+        original_zb = zb
+        if in_title(reach, zb, zt):
+            for shorter in (reach * 0.80, reach * 0.60, reach * 0.40):
+                if shorter >= 1.05 and not in_title(shorter, zb, zt):
+                    reach = shorter
+                    break
+            else:
+                lower = max(zmin, 8.25 if near_span and zt > 6.85 else zmin)
+                zb, zt = lower, lower + zt - zb
+        if not in_title(reach, zb, zt) and separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
             sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
             if kind != "dead" and 0 < yw < 90 and zt < 20 and _BASE["sign_lights"] < 60:
-                power = 8 * reach * (zt-zb) * strength * (0.06 if kind == "neon" else 1)
+                power = 14 * reach * (zt-zb) * strength * (0.06 if kind == "neon" else 1)
                 for direction in (-1, 1):
                     key = f"sign spill {_BASE['sign_lights']}"
                     area(key, fr.p(a + 0.27*direction, wn+reach/2, (zb+zt)/2),
                          (0.60, zt-zb), power, col, fr.A*direction, spread=140)
                     _BASE["sign_lights"] += 1
-        SIGNS.append((yw, yw, zb, zt_drawn, side * x_end))
+        SIGNS.append((yw, yw, min(zb, original_zb), zt_drawn, side * x_end))
     # a fascia sign over each shop (parallel to the wall), lit or dead
     if not b.get("boutique") and rng.random() < 0.8:
         S = G["sign"]
@@ -971,7 +1015,9 @@ def boutique(G, props):
     F.box((gx - 0.02, d0 - 0.05, PZ), (gx + 0.12, d1 + 0.05, 0.62), 1)
     # The butt joint between two display panes, visible at the right edge of
     # the close-up. Its bead is narrower than the metal shopfront stiles.
-    F.box((gx - 0.006, 18.118, 0.62), (gx + 0.009, 18.130, 3.30), 0)
+    bead = MB("boutique pane joint", [F.mats[0]])
+    bead.box((gx - 0.006, 18.118, 0.62), (gx + 0.009, 18.130, 3.30), 0)
+    bead.finish(bevel=0.002, seg=3)
     for y in (d0 - 0.06, d1, D0 - 0.06, D1):
         F.box((gx - 0.04, y, PZ), (gx + 0.06, y + 0.06, 3.62), 0)
     F.box((gx - 0.04, d0 - 0.06, 3.3), (gx + 0.06, D1 + 0.06, 3.38), 0)
@@ -994,8 +1040,10 @@ def boutique(G, props):
     Gl.face([(gx, d0, 3.38), (gx, D1, 3.38), (gx, D1, 3.56), (gx, d0, 3.56)], 0, n=(-1, 0, 0))
     # the display box: felt back and sides, ceiling, floor
     F.face([(bx, d0 - 0.06, 0.62), (bx, d1 + 0.06, 0.62), (bx, d1 + 0.06, 3.3), (bx, d0 - 0.06, 3.3)], 2, n=(-1, 0, 0))
+    returns = MB("display felt sides", [mt.M["felt"]])
     for y, n in ((d0 - 0.06, (0, 1, 0)), (d1 + 0.06, (0, -1, 0))):
-        F.face([(gx + 0.06, y, 0.62), (bx, y, 0.62), (bx, y, 3.3), (gx + 0.06, y, 3.3)], 2, n=n)
+        returns.face([(gx + 0.06, y, 0.62), (bx, y, 0.62), (bx, y, 3.3), (gx + 0.06, y, 3.3)], 0, n=n)
+    sides = returns.finish()
     F.face([(gx + 0.06, d0 - 0.06, 3.3), (bx, d0 - 0.06, 3.3), (bx, d1 + 0.06, 3.3), (gx + 0.06, d1 + 0.06, 3.3)], 2, n=(0, 0, -1))
     F.box((gx + 0.06, d0 - 0.06, 0.6), (bx, d1 + 0.06, 0.66), 4)
     # plinth and floating shelf
@@ -1006,7 +1054,9 @@ def boutique(G, props):
     # LED strip under the shelf's front edge
     G["tube"].box((7.62, 17.85, 1.065), (7.66, 19.75, 1.08), 2)
     F.box((8.02, 18.12, 1.59), (8.49, 18.70, 1.615), 4)
-    G["dress"].box((8.11, 18.28, 1.615), (8.39, 18.54, 1.69), 3)
+    # A shallow telescoping lid catches a line of the shelf light.
+    G["dress"].box((8.11, 18.28, 1.615), (8.39, 18.54, 1.677), 3)
+    G["dress"].box((8.106, 18.276, 1.678), (8.394, 18.544, 1.691), 3)
     F.box((gx-0.012, 19.92, 0.63), (gx+0.028, 19.95, 3.28), 0)
     # the warm interior through the door
     for (p, n) in (([(12.5, 19.9, PZ), (12.5, 22.3, PZ), (12.5, 22.3, 3.4), (12.5, 19.9, 3.4)], (-1, 0, 0)),):
@@ -1028,10 +1078,16 @@ def boutique(G, props):
     # interior
     # (a spot's watts spread over the whole sphere: 450 W puts about 9 W/m2 on a bag 2 m below, the window's
     # brightest thing)
-    spot("bq_spot_shoulder", (7.5, 17.28, 3.2), (7.97, 17.52, 1.05), 560.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
-    spot("bq_spot_satchel", (7.5, 18.25, 3.2), (8.0, 18.5, 1.25), 600.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
-    spot("bq_spot_tote", (7.5, 19.05, 3.2), (8.02, 19.3, 1.25), 600.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
-    area("bq_top", (8.0, 18.1, 3.25), (0.8, 3.4), 22.0, (1.0, 0.86, 0.7), (0, 0, -1), spread=100)
+    spot("bq_spot_shoulder", (7.5, 17.28, 3.2), (7.97, 17.52, 1.05), 150.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_satchel", (7.5, 18.25, 3.2), (8.0, 18.5, 1.25), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_tote", (7.5, 19.05, 3.2), (8.02, 19.3, 1.25), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    shelf_light = area("bq_top", (8.0, 18.1, 3.25), (0.8, 3.4), 22.0, (1.0, 0.86, 0.7), (0, 0, -1), spread=100)
+    # The shelf light is flagged off the felt returns. They pick up falloff
+    # from the three existing spots, keeping depth in the window close-up.
+    exclude = bpy.data.collections.new("Shelf light flags")
+    exclude.objects.link(sides)
+    exclude.collection_objects[0].light_linking.link_state = "EXCLUDE"
+    shelf_light.light_linking.receiver_collection = exclude
     area("bq_led", (7.64, 18.8, 1.06), (0.05, 1.9), 15.0, (1.0, 0.9, 0.78), (0, 0, -1), spread=150)
     # the display's glow on whoever stands at the glass (the light a lit window throws on a face): just inside the
     # glass at face height, turned out to the street; unseen by the camera and in reflections
@@ -1040,20 +1096,29 @@ def boutique(G, props):
     area("bq_spill", (7.4, 18.6, 3.15), (3.4, 0.4), 110.0, (1.0, 0.84, 0.64), (-0.75, 0, -0.66), spread=130)
     area("bq_door", (8.0, 21.0, 3.3), (1.4, 1.6), 140.0, (1.0, 0.8, 0.58), (-0.5, 0, -0.86), spread=140)
     area("bq_inside", (10.5, 21.1, 3.35), (2.5, 1.8), 120.0, (1.0, 0.8, 0.58), (0, 0, -1), spread=160)
-    # the bags on display
+    # The shop precedes the gifts. Reserve cognac, black and burgundy
+    # for the evidence table and keep these three pieces at the same marks.
+    dyes = {
+        "handbag-tote": ((0.034, 0.054, 0.085), (0.092, 0.141, 0.208)),     # slate blue
+        "handbag-satchel": ((0.066, 0.059, 0.046), (0.162, 0.150, 0.126)),  # warm stone
+        "handbag-shoulder": ((0.046, 0.060, 0.031), (0.130, 0.155, 0.081)), # olive
+    }
     out = {}
     spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=0.85, hue=0.515, rough_add=0.25)),
             "handbag-satchel": ((8.0, 18.5, 1.12), 0.30, -72.0, dict(sat=0.8, rough_add=0.12)),
             "handbag-shoulder": ((7.97, 17.52, 0.92), 0.32, -105.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
     for name, (loc, size, turn, grade) in spec.items():
         h = props.load(name, size=size, axis="long", loc=loc, turn_deg=turn, **grade)
+        dyed = set()
         for o in h.children_recursive:
             if o.type != "MESH":
                 continue
             for sl in o.material_slots:
                 bb = next((n for n in sl.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None) if sl.material else None
-                if bb is not None:
-                    bb.inputs["Specular IOR Level"].default_value = 0.35
+                if bb is not None and sl.material not in dyed:
+                    dyed.add(sl.material)
+                    mt.display_leather(sl.material, *dyes[name])
+                    bb.inputs["Specular IOR Level"].default_value = 0.22
                     if "Coat Weight" in bb.inputs:
                         bb.inputs["Coat Weight"].default_value = 0.0
         out[name] = h
@@ -1344,7 +1409,9 @@ def build(props, wide=None):
     wide = wide or {"loc": (1.4, 0, 1.5), "aim": (2.45, 60, 1.5)}
     origin = Vector(wide["loc"])
     inverse = (Vector(wide["aim"])-origin).to_track_quat("-Z", "Y").to_matrix().transposed()
-    _BASE.update(wide_view=(inverse, origin), sign_rectangles=[], sign_lights=0,
+    _BASE.update(wide_view=(inverse, origin),
+                 wide_projection=(1280 * wide.get("lens", 24) / 36, 360 + 1280 * wide.get("shift_y", 0.12)),
+                 sign_rectangles=[], sign_lights=0,
                  shop_index={1: 0, -1: 0}, shopkeepers={1: [], -1: []})
     G = {
         "fac": MB("facades", [M["facade"]], merge=True),
