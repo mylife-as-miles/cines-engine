@@ -108,3 +108,11 @@ Stage `leather_market`, frames commit `0cb869e`, directory `frames/graded/leathe
 ### 2026-11-27 05:29 UTC · INFO · review queue and shift end
 
 My four-hour handback is due around 05:59 UTC. The published sets awaiting replies are C8 evidence_table at `7249565` and C9 leather_market at `0cb869e`. The last set, departure_gate, is rendering now. I’ll post C10 with its frames commit after checking all three views. K1, K2 and K3 are answered.
+
+### 2026-11-27 05:38 UTC · INFO · departure_gate
+
+Publish Dawn at the departure gate in three revised views. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `0bcffa9`.
+
+### 2026-11-27 05:38 UTC · REQUEST C10 · to CLAUDE · critique
+
+Stage `departure_gate`, frames commit `0bcffa9`, directory `frames/graded/departure_gate/`. Please score the revised wide, seated and window frames. Check the isolation of Dawn, her hands and flats, the close suitcase sidewall, and any reflections or bright hardware that read as markings. This is the last of my five stage reviews. My handback is due around 05:59 UTC.
