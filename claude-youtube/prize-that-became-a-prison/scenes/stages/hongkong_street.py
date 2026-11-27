@@ -60,7 +60,7 @@ BLOCK = {
     },
     "company": {
         "Dawn": ((5.64, 16.4), (5.62, 32.0), "walk_away"),
-        "Organiser": ((6.25, 16.75), (6.24, 30.5), "walk_away"),
+        "Organiser": ((6.31, 17.22), (6.25, 30.5), "walk_away"),
         "T1": ((4.95, 15.70), (5.01, 31.0), "walk_away"),
     },
     "window": {
@@ -102,7 +102,7 @@ CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35
 TRIMS = {
     "dawn": {"boutique door spill": 0, "display shelf return": 12 / 28},
     "window": {"bq_glow": 0.55, "boutique door spill": 0},
-    "company": {"boutique door spill": 0.35},
+    "company": {"boutique door spill": 0.31},
 }
 WIDE_VIEW = CAMERAS["wide"]
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
@@ -198,9 +198,8 @@ def hands_stone(holder, value=0.36):
 
 
 def tights(holder, value=0.07):
-    """Dark sheer tights on the shins (from the shin weights, fading over the knee), so the legs below the skirt read
-    as dressed, not as bare stone with dark socks (the check-in critique)."""
-    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh.L.001", "DEF-thigh.R.001", "DEF-foot"))
+    """A continuous stocking colour from the thigh under the skirt to the foot."""
+    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh", "DEF-foot"))
     _mask_mix(holder, "legmask", (value, value * 0.97, value * 0.95))
 
 
