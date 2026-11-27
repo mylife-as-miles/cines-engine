@@ -66,10 +66,11 @@ CAMERAS = {
 TRIMS = {"wall": {"mast_spot_0": 0.7, "mast_spill_0": 0.7}, "gate": {}, "tower": {}}
 # The rain per camera. cover: how much of the frame the streaks may cover in all; gain: how much light a drop
 # returns (low: a streak is bright only near a lamp and fades down the cone); wpx: a streak's width in pixels;
-# length: metres. Across a beam (wall) and into one (gate) the rain is fine, faint and dense; under the tower,
-# where the drops are a few metres from the lens, it is sparser and brighter.
+# length: metres; clear: how transparent a streak is (0: opaque). Across a beam (wall) and into one (gate) the rain
+# is fine, faint and dense; under the tower, where the drops are a few metres from the lens, it is sparser and
+# brighter. The gate's streaks are 60 % clear, so they do not draw dark hairlines across the lit gate.
 RAIN = {"wall": dict(cover=0.035, seed=3, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1)),
-        "gate": dict(cover=0.035, seed=5, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1)),
+        "gate": dict(cover=0.035, seed=5, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1), clear=0.6),
         "tower": dict(cover=0.014, seed=8, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6))}
 FALL = (0.07, -0.035, -1.0)   # the rain's fall line: a light wind along the wall
 
@@ -105,8 +106,8 @@ def irradiance(P, skip=()):
     return E
 
 
-def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), e_min=3.0, d_min=4.5,
-              d_max=75.0, d_knee=11.0):
+def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), clear=0.0, e_min=3.0,
+              d_min=4.5, d_max=75.0, d_knee=11.0):
     """Streaks in this camera's view, only where light falls. Even per volume near the camera and thinning beyond
     `d_knee`; each as wide as about one pixel at its distance, so near and far rain read alike."""
     loc, f, r, u = camera_frame(cfg)
@@ -160,7 +161,7 @@ def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 
     me.from_pydata(V.astype(np.float32).tolist(), [], F.tolist())
     me.polygons.foreach_set("use_smooth", np.ones(len(F), bool))
     me.update()
-    me.materials.append(mt.rain(f"rain {name}", gain))
+    me.materials.append(mt.rain(f"rain {name}", gain, clear))
     ob = bpy.data.objects.new(name, me)
     bpy.context.scene.collection.objects.link(ob)
     ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False

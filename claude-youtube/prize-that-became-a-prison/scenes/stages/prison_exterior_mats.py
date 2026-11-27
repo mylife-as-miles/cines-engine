@@ -503,12 +503,15 @@ def sky(name="night sky", zenith=(0.034, 0.042, 0.06), horizon=(0.062, 0.074, 0.
     return m
 
 
-def rain(name="rain", gain=0.5):
-    """A falling drop drawn out by the shutter: it takes the light from any side (diffuse plus translucent)."""
+def rain(name="rain", gain=0.5, clear=0.0):
+    """A falling drop drawn out by the shutter: it takes the light from any side (diffuse plus translucent).
+    `clear`: how far the streak lets what is behind it through (the lit part is raised to match), so rain in front
+    of a brightly lit surface does not draw dark hairlines on it."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
     nt.nodes.remove(nt.nodes["Principled BSDF"])
+    gain = gain / max(0.05, 1.0 - clear)
     c = (0.82 * gain, 0.88 * gain, 0.95 * gain, 1.0)
     d = _n(nt, "ShaderNodeBsdfDiffuse")
     d.inputs["Color"].default_value = c
@@ -518,7 +521,15 @@ def rain(name="rain", gain=0.5):
     add.inputs[0].default_value = 0.5
     _link(nt, d.outputs[0], add.inputs[1])
     _link(nt, t.outputs[0], add.inputs[2])
-    _link(nt, add.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    out = add.outputs[0]
+    if clear > 0.0:
+        tr = _n(nt, "ShaderNodeBsdfTransparent")
+        mx = _n(nt, "ShaderNodeMixShader")
+        mx.inputs[0].default_value = clear
+        _link(nt, out, mx.inputs[1])
+        _link(nt, tr.outputs[0], mx.inputs[2])
+        out = mx.outputs[0]
+    _link(nt, out, nt.nodes["Material Output"].inputs["Surface"])
     return m
 
 
