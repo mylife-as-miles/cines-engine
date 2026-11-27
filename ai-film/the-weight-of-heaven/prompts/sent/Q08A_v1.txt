@@ -9,7 +9,7 @@ Three separate views, cut hard. In the yard of an old stone fort on the ground a
 ## GLOBAL LOCKS
 Character identity — SERATH exactly as @Image 4 and as she is in @Image 1 and @Image 2: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. Her AIDE exactly as he stands in @Image 1: a young officer in a white coat with a white satchel. The watchers are the dark figures of @Image 1, seen from behind. From @Image 4 take her face, hair and clothes only. Each face and costume stays with its one person.
 Wardrobe override — none: everyone exactly as in the images.
-Location / environment continuity — Shot 1 is exactly @Image 1: packed grey dust, the white cutter standing on its two iron skids with its gangway down, the tall dark outer wall behind it with its one gateway, the dark rock closing the top of the frame, and at the edges of the frame the dark backs of people watching. Shot 2 is exactly @Image 2: her face close, grey cloud behind her, the dark rock across the top of the frame. Shot 3 is exactly @Image 3: a green valley of walled fields under a grey sky, stone farmhouses with smoking chimneys, sheep on the nearer slope, and in the lower right corner the flat top of a black stone wall.
+Location / environment continuity — Shot 1 is exactly @Image 1: packed grey dust, the white cutter standing on its two iron skids with its wooden gangway down, the tall dark outer wall behind it closing the top of the frame, its one square gateway at the left, and at the left and right edges of the frame the dark backs of two people watching, one holding an upright spear. Shot 2 is exactly @Image 2: her face close, turned a little toward the left of the frame, and behind her, far out of focus, grey cloud, dark rock and the soft grey shapes of the yard. Shot 3 is exactly @Image 3: a green valley of walled fields under a grey sky, stone farmhouses with smoking chimneys, sheep on the nearer slope, and in the lower right corner the flat top of a black stone wall.
 Props and temporal state — The cutter stands still on the ground throughout. Serath's gloved hands are empty. The gold collar is heavy.
 
 ## MOVIE COLOR
@@ -29,17 +29,17 @@ Shot 1 opens exactly on @Image 1, the same framing.
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
 [TIME] 0.0–5.5 s
-[CAM] exactly the framing of @Image 1: low, 40 mm, from among the watchers; the dark rock closes the top of the frame; locked off.
-[BLOCK] Exactly @Image 1: the dark backs of the watchers at the left and right edges; the white cutter across the middle distance; Serath at the foot of the gangway, one boot on the ground, the other still on the gangway; the aide behind her, one step higher.
-[ACT] From the first frame she brings her other boot down onto the ground and takes her whole weight. At 1.0 s her knees buckle: she sinks half a head's height, her arms come out from her sides and her head is pulled forward. She catches herself without touching anything, and by 2.5 s she is standing upright again, her hands at her sides. At 2.5 s, behind her, the aide steps down off the gangway; his legs fold at once, and by 3.5 s he is down on his hands and knees in the dust, his head hanging. He stays there. She does not turn round. From 3.5 s to the end she stands still. The watchers do not move at any time. Dust drifts.
+[CAM] exactly the framing of @Image 1: low, 40 mm, from among the watchers; the dark wall closes the top of the frame; locked off.
+[BLOCK] Exactly @Image 1: the dark backs of the watchers at the left and right edges; the white cutter across the middle distance; Serath at the foot of the gangway, in mid-step, one boot on the ground; the aide behind her on the gangway, one hand on the cutter's rail.
+[ACT] From the first frame she finishes her step: both boots are on the ground and she takes her whole weight. At 1.0 s her knees buckle: she sinks half a head's height, her arms come out from her sides and her head is pulled forward. She catches herself without touching anything, and by 2.5 s she is standing upright again, her hands at her sides. At 2.5 s, behind her, the aide comes down the gangway and steps off it; his legs fold at once, and by 3.5 s he is down on his hands and knees in the dust, his head hanging. He stays there. She does not turn round. From 3.5 s to the end she stands still. The watchers do not move at any time. Dust drifts.
 [DIALOGUE] / V.O. none
 [SFX] boots on grit; cloth; hands and knees on dust; wind.
 [STATE OUT] Serath upright and still; the aide on his hands and knees behind her; the watchers as they were.
 
 ### SHOT 2
 [TIME] 5.5–9.0 s
-[CAM] exactly the framing of @Image 2: close-up, 85 mm, from the height of her collarbone, looking a little upward; the dark rock closes the top of the frame; locked off.
-[BLOCK] Exactly @Image 2: Serath from the collarbone up, the gold collar across the bottom of the frame, her head a little bowed, her eyes lowered.
+[CAM] exactly the framing of @Image 2: close-up, 85 mm, shallow focus; behind her only soft grey and dark, far out of focus; locked off.
+[BLOCK] Exactly @Image 2: Serath from the shoulders up, turned a little toward the left of the frame, the gold collar at her throat, her head bowed, her eyes lowered.
 [ACT] Her mouth is closed from the first frame to the last. Between 5.5 s and 7.0 s she lifts her chin level against the weight of the collar; the tendons of her neck stand; her eyes come up and rest ahead, past the left side of the camera. From 7.0 s to the end she holds exactly that: her head level, her eyes steady on someone off-screen. At 8.0 s she blinks once, slowly. She breathes out through her nose.
 [DIALOGUE] / V.O. none
 [SFX] her breath; cloth; wind.

@@ -9,7 +9,7 @@ The yard of an old stone fort on the ground, full of refugees grey with rock dus
 ## GLOBAL LOCKS
 Character identity — KARST exactly as @Image 3 and as he stands in @Image 2: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat with paler patches where its insignia were cut away, ink-black fingertips. MARL exactly as @Image 4 and as she stands in @Image 1: a woman of thirty-four, dusty hair in one braid, armour beaten from white hull-plate, rust-stained. The FARMER exactly as @Image 5 and as he stands in @Image 1: a bearded man in a grey wool jacket, a small wooden bowl hanging at his belt. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
 Wardrobe override — none: everyone exactly as in the images.
-Location / environment continuity — Shot 1 is exactly @Image 1: the yard, the two of them an arm's length apart with one upright spear between them, refugees grey with dust waiting out of focus behind, the fort's dark sloping wall behind everything. Shot 2 is exactly @Image 2: the arched door of the fort, its dark stone jambs at the edges of the frame, its inside black, Karst standing just inside its shadow.
+Location / environment continuity — Shot 1 is exactly @Image 1: the yard, the two of them an arm's length apart with one upright spear between them, refugees grey with dust standing in loose groups behind them, out of focus, sacks on the ground, the fort's dark sloping wall, an open gateway at the right and a strip of grey sky. Shot 2 is exactly @Image 2: the open door of the fort: dark stone jambs at the left and right edges of the frame, a dark wooden door leaf on each side, and between them only blackness, in which Karst stands, a little left of centre.
 Props and temporal state — One spear: a plain ash shaft with a dull iron head. The wooden bowl hangs at the farmer's belt on the hip nearer the camera. Karst's hands are empty and rest one over the other.
 
 ## MOVIE COLOR
@@ -30,18 +30,18 @@ Shot 1 opens exactly on @Image 1, the same framing.
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
 [TIME] 0.0–4.0 s
-[CAM] exactly the framing of @Image 1: a two-shot from the hips up, 50 mm, chest height; dark stone and grey people fill the frame behind them, no sky; locked off.
-[BLOCK] Exactly @Image 1: Marl on the left, the farmer on the right, the upright spear between them, his hand closing on its shaft below hers.
-[ACT] Both mouths are closed from the first frame to the last. From the first frame she pushes the spear into his hand and lets go of it; by 1.0 s he has its weight, and its butt comes down on the ground. Between 1.0 s and 2.0 s his free hand goes to the wooden bowl at his belt, closes over it and stays there. At 2.4 s both turn their heads toward the left of the frame and look at someone off-screen, who is walking past in front of them. Their eyes follow her a little way toward the right and stop short of the camera; neither looks into the lens. Their faces give nothing. Behind them the refugees shift their feet.
+[CAM] exactly the framing of @Image 1: a two-shot from the thighs up, 50 mm, chest height; grey people and dark stone behind them, a strip of grey sky at the top; locked off.
+[BLOCK] Exactly @Image 1: Marl on the left, in profile, facing right; the farmer on the right, in profile, facing her; the upright spear between them, her hand high on its shaft and his closing on it below hers; the wooden bowl hanging on its cord at his hip.
+[ACT] Both mouths are closed from the first frame to the last. From the first frame she pushes the spear into his hand and lets go of it; by 1.0 s he has its weight, and its butt comes down on the ground. Between 1.0 s and 2.0 s his free hand goes to the wooden bowl at his belt, closes over it and stays there. At 2.4 s both turn their faces toward us and look past the left side of the camera at someone off-screen, who is walking by behind it. Their eyes follow her a little way toward the right and stop short of the camera; neither looks into the lens. Their faces give nothing. Behind them the refugees shift their feet.
 [DIALOGUE] / V.O. none
 [SFX] the spear's butt on packed dust; cloth; low wind.
 [STATE OUT] The farmer holding the spear upright in one hand, his other hand on the bowl; both looking off to the left of the camera, mouths closed.
 
 ### SHOT 2
 [TIME] 4.0–12.0 s
-[CAM] exactly the framing of @Image 2: 65 mm, at his eye height, frontal, from the hips up; the black of the doorway fills the frame round him, no sky; locked off.
-[BLOCK] Exactly @Image 2: Karst alone in the doorway, in the middle of the frame, the black of the door all round him.
-[ACT] He stands as in @Image 2, his hands one over the other, his eyes just past the right side of the camera, on Serath, off-screen. From 4.0 s to 5.0 s he only looks at her, his mouth closed. At 5.0 s he breathes in, and says the first sentence plainly, as a fact, his head still. At 8.3 s he breathes out. Then he says the second sentence, more quietly, and it falls flat at its end. His mouth closes at 10.5 s. From 10.5 s to the last frame he stays exactly as he is, looking at her, his mouth closed.
+[CAM] exactly the framing of @Image 2: 65 mm, at his eye height, frontal, from the thighs up; the black of the doorway behind him, no sky; locked off.
+[BLOCK] Exactly @Image 2: Karst alone in the doorway, a little left of centre, the black of the door behind him, a door leaf and a stone jamb on either side.
+[ACT] He stands as in @Image 2, his hands one over the other. From the first frame his eyes rest just past the right side of the camera, on Serath, off-screen. From 4.0 s to 5.0 s he only looks at her, his mouth closed. At 5.0 s he breathes in, and says the first sentence plainly, as a fact, his head still. At 8.3 s he breathes out. Then he says the second sentence, more quietly, and it falls flat at its end. His mouth closes at 10.5 s. From 10.5 s to the last frame he stays exactly as he is, looking at her, his mouth closed.
 [DIALOGUE] / V.O. KARST (after the still second and his breath in; 5.3 to 8.2 s): "We did not attack your city, Admiral." — dry, level, unhurried; no anger. Then (after his breath out; 8.8 to 10.5 s): "We stopped carrying it." — quieter; flat and falling.
 [SFX] his voice, close and dry; his breath; low wind.
 [STATE OUT] Karst in the doorway, his eyes on her, his mouth closed.
