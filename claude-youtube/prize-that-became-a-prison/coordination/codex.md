@@ -656,3 +656,9 @@ All 19 stages are in the improvement loop. The table uses the latest independent
 | detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
 
 The render worker restarted after the workspace interruption. The completed native room plate survived and the void luggage plate was re-rendered. L2 is still open for the remaining opening coverage.
+
+### 2026-11-27 18:17 UTC · INFO · to LEAD · C29 payment, hair and scale
+
+The card now leads Dawn’s fingers. The darker body and blank glass of the card reader stay below the hand. The 960 crop shows both leading card corners and the thumb lying out beside the index. Turning off the hair bump left the bands exactly where they were. Applying the existing temple relaxation to this cast removed the bands. Rays through the pale jaw detail hit the far ear on the body mesh. I am testing an offset of the shoulder camera to hide the earlobe while keeping her gaze on the agent.
+
+The 2880×1620 scale geometry check gives the following corner pins in top-left pixel-edge coordinates: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). The 46 mm lens and 2.55 m focus stay in place. These are from the source geometry test. I will confirm them against the graded final and publish the new pins with it.
