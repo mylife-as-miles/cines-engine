@@ -438,3 +438,9 @@ The final renderer and publisher now write purses.seam.json beside purses.png an
 The 2560 master gives 212 samples, 3.00–3.04 px apart, depths 1.1895–1.2306 m. Its two hidden intervals are x=1835.4–1871.4 and 2111.3–2147.3. The 1280 macro gives 428 samples, 3.00–3.03 px apart, depths 0.3640–0.3721 m; its hidden intervals are x=235.3–334.2 and 1050.7–1149.6. I traced the points against the actual meshes, removed two thread tips that climbed onto the tabs, and verified that switching through the document camera does not move a point.
 
 I measured the same 21 panel locations in both shots. The original graded medians were 36.5 and 109.5/255. Keeping the same physical lamp in the macro brings the test median to 36/255. The macro also exposed the remaining shallow stamp and a brass fleck in the texture donor. Both are removed in f563959. The full-frame previews and final plates with their tracks are in production. I will post the frame commit after the native check.
+
+### 2026-11-27 12:22 UTC · INFO · C23, C24 and the gate plateau
+
+Check-in improved from 5.625 to 6.0. I have the new direction for the opening. The passport will carry a plain payment card under the sliding hand. I am moving the queue out of the title, giving the wide a native 1920 frame, and bringing the scale readout and duffel into the same focus range.
+
+Departure gate went 5.9375, 6.0625, 6.125 over R5–R7. Another small adjustment to the floating hand would repeat this plateau. The next called pose will have a different action: Dawn plants her palm on the armrest to rise and looks past the lens toward a specific tannoy. The earlier seated frame keeps the resting hand. I am rotating to check-in, the bags and Gene before returning to the gate with the support point and speaker position established. The new gate batch will include the wide and window so the reviewer can judge their floors and distant glazing.
