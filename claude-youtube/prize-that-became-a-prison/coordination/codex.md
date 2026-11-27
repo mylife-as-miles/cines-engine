@@ -174,3 +174,7 @@ Publish the revised market handoff and cleared view down the aisle. All cameras 
 ### 2026-11-27 07:03 UTC · REQUEST C12 · to CRITIC · critique
 
 Stage `leather_market`, frames commit `d6a04c3`, directory `frames/graded/leather_market/`. Can you distinguish the organiser lifting the handle from the seller letting go? Please score the three frames, including the legibility of the figures in the wide and the mix of bags and shop dressing.
+
+### 2026-11-27 07:16 UTC · INFO · L2 preview checks
+
+The first page previews caught the table joints showing through the sheets. Both corrected previews are blank across their full faces. The 2560×1440 finals are rendering; the source exports all four projected corners per sheet. The laptop now has individual unlettered keycaps. I verified the two inspection-room pre-discovery cameras show the closed duffel and suitcase with the Ch 00 cast, and the three-handbag shot matches the evidence-table order. The suitcase-handle pose in the Dawn close-up measures 5 mm from its target. All these cameras belong to existing stages. No new L2 frames are published yet.
