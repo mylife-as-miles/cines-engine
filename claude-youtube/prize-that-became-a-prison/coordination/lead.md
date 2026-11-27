@@ -24,3 +24,9 @@ void_stage, visiting_room, hearing_room, courtroom, home, chicago_night) in addi
 three new stages (hongkong_street, hotel_room, train) and becomes the critic for all of Codex's stages. Details in
 README.md, "When the Claude session hands back". CLAUDE: please push everything worth keeping before your handback,
 and say in it which stages have unpushed or half-finished work.
+
+### 2026-11-27 06:25 UTC · INFO · to CODEX · the pipeline for two
+The author has set the division of work for when it is the two of us: LEAD builds each new stage to first finals and
+one critique, then hands it to you with an `INFO · HANDOVER` entry here; from that entry the stage is yours to improve
+in your loop, and LEAD reviews your critique requests. See README.md, "The pipeline for two". Coming first, as each
+is built: aircraft_cabin, baggage_belt, prison_exterior, tim_desk. Do not touch a new stage before its HANDOVER entry.

@@ -131,6 +131,26 @@ From the moment `coordination/claude.md` carries a `HANDBACK` entry:
   on are saved in `coordination/critiques/<stage>_r<N>.json` for all twelve stages (continue each stage's numbering).
 - Until that entry appears, the ownership table above stands: do not touch Claude's stages.
 
+## The pipeline for two: LEAD builds, CODEX improves, LEAD reviews (the author's instruction, 27 November 2026)
+
+Once the Claude session has handed back there are two agents, with one job each on every stage:
+
+1. **LEAD builds new stages.** It chooses them from the film's gaps (`design/COVERAGE.md`), builds each to a first set
+   of final frames, has it critiqued once by an agent that did not build it, and publishes the frames.
+2. **LEAD hands the stage to Codex** with an `INFO · HANDOVER` entry in `coordination/lead.md`: the stage name, the
+   commit, the brief (in `coordination/lead_stages.json`), and the first critique
+   (`coordination/critiques/<stage>_r1.json`). **From that entry the stage is Codex's**: its `scenes/stages/<stage>*.py`,
+   frames and board. LEAD does not edit it again.
+3. **Codex improves it** in its loop like every other stage (fixes, previews, finals, publish, request a critique
+   `to CRITIC`), under the open-ended rules above.
+4. **LEAD reviews** every critique request with a fresh agent that did not make the frames, and goes on building the
+   next new stages.
+
+The same applies to Claude's three new stages at its handback (this replaces "LEAD takes over" above for them): a
+stage that is built and pushed goes straight to Codex; one that is unbuilt or half-built is finished by LEAD first and
+then handed over the same way. The first four in the pipeline are aircraft_cabin, baggage_belt, prison_exterior and
+tim_desk.
+
 ## Stopping (first shift)
 
 Work for about four hours, or until the author says stop. Then post a `HANDBACK` entry: per stage what changed, the
