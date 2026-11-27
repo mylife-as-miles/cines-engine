@@ -24,7 +24,7 @@ from mathutils.kdtree import KDTree
 import rigged
 
 # curl at the three joints of each finger (deg), growing from the index to the pinky, as a relaxed hand hangs
-CURL = {"f_index": (10, 15, 10), "f_middle": (14, 20, 12), "f_ring": (17, 24, 15), "f_pinky": (20, 27, 17)}
+CURL = {"f_index": (10, 10, 10), "f_middle": (14, 14, 12), "f_ring": (17, 16, 15), "f_pinky": (20, 18, 17)}
 FINGER_GAP = 0.0026     # m between the nearest vertices of neighbouring fingers once closed (skin gap ~1-2 mm)
 THUMB_GAP = 0.0035
 PRONATE_BACK = 10.0     # the palms face the thighs, turned this far toward the back (deg)
@@ -173,7 +173,7 @@ def _splay(pb, k, f, ref, n):
     return s, sgn
 
 
-def close_hands(holder, curl=CURL, converge=1.0, min_gap=0.0012, thumb_gap=THUMB_GAP):
+def close_hands(holder, curl=CURL, converge=3.5, min_gap=0.0012, thumb_gap=THUMB_GAP):
     """Curl the fingers (CURL), close each on its neighbour until the two lie `converge` degrees toward each other in
     the palm's plane (the knuckles' spacing then leaves a skin gap of a millimetre or two; a vertex-gap target is
     fooled by the fingers' staggered curl, and closed them over each other), never nearer than `min_gap` between
@@ -194,7 +194,7 @@ def close_hands(holder, curl=CURL, converge=1.0, min_gap=0.0012, thumb_gap=THUMB
             for f, ref in (("f_index", "f_middle"), ("f_ring", "f_middle"), ("f_pinky", "f_ring")):
                 A, B = _finger_verts(body, k, f), _finger_verts(body, k, ref)
                 s0, sgn = _splay(pb, k, f, ref, n)
-                deg = max(0.0, min(20.0, s0 + converge))
+                deg = max(0.0, min(30.0, s0 + converge))
                 ctrl = f"{f}.01.{k}"
                 base = pb[ctrl].matrix.copy()
                 g = 1.0
@@ -423,7 +423,7 @@ def _bake_pose(gar, subdiv=2):
     return new
 
 
-def loosen_suit(holder, garment, push=0.006, hem_lift=0.015, knee_taper=0.06, leg_r=0.07):
+def loosen_suit(holder, garment, push=0.006, hem_lift=0.030, knee_taper=0.06, leg_r=0.07):
     """Reshape the posed suit (see the module's note). `push` more stand-off everywhere (along the normals), the legs
     straight from the knee, the shirt hanging from the bust with its hem `hem_lift` off the hips."""
     gar = bpy.data.objects.get(f"{holder.name}_{garment}")
@@ -496,8 +496,8 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.015, knee_taper=0.06, le
             tgt = r + w * max(0.0, R - r)
             tgt += w * 0.0022 * (0.5 + 0.5 * math.sin(5 * th + 1.1 * math.sin(2 * th + 0.7)))
             hb = _smooth(0.66, 0.88, t)
-            tgt += hb * 0.0042 * (0.5 + 0.5 * math.cos(2 * math.pi * t * L / 0.045 + 0.8 * math.sin(th)))
-            off[i] = off[i] + rv / r * (tgt - r)
+            tgt += hb * 0.008 * (0.5 + 0.5 * math.cos(2 * math.pi * t * L / 0.045 + 0.8 * math.sin(th)))
+            off[i] = off[i] + rv / r * (tgt - r) + u * (0.022 * _smooth(0.85, 1.03, t))
         print(f"VOID suit: leg {k} falls straight from the knee at r {Rk * 1000:.0f} mm "
               f"({len(geo)} vertices)", flush=True)
 
@@ -583,6 +583,46 @@ def loosen_suit(holder, garment, push=0.006, hem_lift=0.015, knee_taper=0.06, le
             return 1.0
         return flip * (p - hit[0]).dot(hit[1])
 
+    cuff = me.color_attributes.new("uniform_cuff", "FLOAT_COLOR", "POINT")
+    for k in ("L", "R"):
+        wrist = pb[f"DEF-hand.{k}"].head
+        u = (wrist - pb[f"DEF-forearm.{k}.001"].head).normalized()
+        for i in sleeve:
+            q = Q(i) - wrist
+            along = q.dot(u)
+            if not -0.080 < along < 0.035:
+                continue
+            rv = q - u * along
+            if rv.length < 1e-6 or rv.length > 0.11:
+                continue
+            axis = wrist + u * along
+            hit = bvh.ray_cast(axis, rv.normalized(), 0.11)
+            if hit[0] is None:
+                continue
+            gap = 0.010 - 0.004 * _smooth(-0.035, -0.015, along)
+            excess = max(0.0, rv.length - (hit[0] - axis).length - gap)
+            off[i] -= rv.normalized() * excess * _smooth(-0.080, -0.045, along)
+            val = _smooth(-0.065, -0.028, along)
+            cuff.data[i].color = (val, val, val, 1)
+    for mat in me.materials:
+        if not mat or not mat.use_nodes:
+            continue
+        nt = mat.node_tree
+        b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if b is None:
+            continue
+        src = b.inputs["Base Color"]
+        tint = nt.nodes.new("ShaderNodeMixRGB")
+        tint.blend_type = "MULTIPLY"
+        tint.inputs[2].default_value = (0.75, 0.75, 0.75, 1.0)
+        if src.is_linked:
+            nt.links.new(src.links[0].from_socket, tint.inputs[1])
+        else:
+            tint.inputs[1].default_value = src.default_value
+        mask = nt.nodes.new("ShaderNodeAttribute")
+        mask.attribute_name = cuff.name
+        nt.links.new(mask.outputs["Fac"], tint.inputs[0])
+        nt.links.new(tint.outputs[0], src)
     margin, held, neg0 = 0.006, 0, 0
     for i in range(nv):
         if off[i].length < 1e-5:

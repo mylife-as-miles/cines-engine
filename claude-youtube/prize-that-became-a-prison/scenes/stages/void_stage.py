@@ -58,13 +58,13 @@ SPOTS = {
     # behind her as a curtain, round 2); watts by inverse square from 18.5 kW at 9.5 m, less the hotter centre. A
     # little behind her (fwd < 0): the front of the suit falls dark, shoulders, crown and legs take a rim off the
     # black, and the bowed face stays in shadow (in front light the nose tip alone caught the lamp)
-    "dawn": dict(h=5.2, fwd=-0.3, pool=1.2, watts=4600.0, blend=0.34, hot=(0.5, 0.9)),
+    "dawn": dict(h=5.2, fwd=-0.3, pool=1.2, watts=6400.0, blend=0.34, hot=(0.5, 0.9)),
     # the cell's lamp, its cone an ellipse that lands just inside the walls: the floor and the wall bases lit, the walls
     # falling off upward into the dark. Weaker than round 2 (13.5 kW) and its centre a little toward the open side, so
     # the window's shaft and barred patch lead after the floor (round 2: the patch 1.2:1 over a floor as bright as
     # the shaft). Pushed 0.35 forward with a short cone (preview 3) its edge crossed the close shot's floor as a
     # bright arc in front and the patch still sat in the bright half; now the edge lies at the slab's front and back
-    "cell": dict(h=7.6, fwd=0.15, pool=(1.5, 1.85), watts=9500.0, blend=0.25),
+    "cell": dict(h=7.6, fwd=0.15, pool=(1.5, 1.78), watts=9500.0, blend=0.50),
     "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7600.0, blend=0.34, hot=(0.5, 0.9)),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab. The dawn
@@ -73,13 +73,13 @@ HAZE = {"dawn": 0.010, "cell": 0.006, "bags": 0.010}
 SHAFT_HAZE = 0.08    # a denser slab along the window's light, so a faint shaft joins window and patch
                      # (0.02 did not show against the top spot's haze at this source's distance)
 
-DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
+DAWN_TURN = 32.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
 # the head bowed (28) on a slightly bent neck (7): from the 1.2 m lens an 18 deg bow on a 1.6 m figure read as a level
 # gaze with a faint grin (round 2), now the face falls into the shadow of the brow. The chest nearly upright so the
 # spine stays vertical from above (round 2 read as a stoop); arms hanging close (out 2.5), elbows soft, wrists
 # straight; the fingers are closed and curled by void_stage_fit.close_hands, not by pose_figure's knuckle-only curl
 # (the master bone alone left open claws), so "fingers" is 0 here
-POSE = {"head": (28, 3), "neck": (7, 0), "chest": (2.5, 0), "l_arm": (5, 2.5, 9), "r_arm": (6, 2.5, 8), "fingers": 0}
+POSE = {"head": (28, -6), "neck": (7, 0), "chest": (2.5, 0), "l_arm": (5, 2.5, 9), "r_arm": (6, 2.5, 8), "fingers": 0}
 # legs straight (FK): her weight on the right leg, its knee locked; the left (free) knee soft, its foot a little out
 LEGS = {"R": dict(thigh=(0.0, 1.5), shin=(0.0, 1.5)), "L": dict(thigh=(3.0, 3.5), shin=(-1.5, 3.5))}
 SUIT_RGB = (0.03, 0.031, 0.033)    # flat charcoal prison greys: the trousers
@@ -206,6 +206,13 @@ def hands_stone(holder, value=0.4):
     nt.links.new(at.outputs["Fac"], f_in)
     out = next(s for s in mix.outputs if s.name == "Result" and s.enabled)
     nt.links.new(out, src)
+    for socket, hand_value in (("Specular IOR Level", 0.08), ("Roughness", 0.85)):
+        src = b.inputs[socket]
+        trim = nt.nodes.new("ShaderNodeMapRange")
+        trim.inputs["To Min"].default_value = src.default_value
+        trim.inputs["To Max"].default_value = hand_value
+        nt.links.new(at.outputs["Fac"], trim.inputs["Value"])
+        nt.links.new(trim.outputs["Result"], src)
     return 1
 
 
@@ -276,7 +283,7 @@ def prison_suit(holder, rgb=SUIT_RGB):
             prev = nm.outputs["Normal"]
         wv = nt.nodes.new("ShaderNodeTexWave")
         wv.wave_type, wv.bands_direction = "BANDS", "Z"
-        wv.inputs["Scale"].default_value = 6.0
+        wv.inputs["Scale"].default_value = 3.5
         wv.inputs["Distortion"].default_value = 7.0
         wv.inputs["Detail"].default_value = 3.0
         wv.inputs["Detail Roughness"].default_value = 0.6
@@ -289,7 +296,7 @@ def prison_suit(holder, rgb=SUIT_RGB):
         cr.inputs["Distortion"].default_value = 1.2
         nt.links.new(tc.outputs["Object"], cr.inputs["Vector"])
         fold = nt.nodes.new("ShaderNodeBump")
-        fold.inputs["Strength"].default_value = 0.35
+        fold.inputs["Strength"].default_value = 0.12
         fold.inputs["Distance"].default_value = 0.004
         nt.links.new(st._math(nt, "ADD", wv.outputs["Fac"], cr.outputs["Fac"]), fold.inputs["Height"])
         if prev is not None:
@@ -407,7 +414,7 @@ def suit_fit(holder, push=0.005, tuck=0.008):
     return len(covered)
 
 
-def creases(gar, strength=0.010, mid=0.25, scale=0.07, stretch=3.2):
+def creases(gar, strength=0.014, mid=0.25, scale=0.07, stretch=1.5):
     """Real relief in the cloth, not only a bump: soft folds a few millimetres deep, longer across the body than up it
     (horizontal wrinkles over the belly and the knees, as cotton and denim bunch), on the smoothed suit. Mostly outward
     (mid 0.25: -1.5 to +4.5 mm), so the stand-off over the skin holds. Under the hard top light a smooth tight suit
@@ -427,7 +434,7 @@ def creases(gar, strength=0.010, mid=0.25, scale=0.07, stretch=3.2):
     return dp
 
 
-def light_suit(h, net=0.42, hair_net=0.28, body_net=0.75, bounce_w=80.0):
+def light_suit(h, net=0.30, hair_net=0.20, body_net=0.75, bounce_w=45.0):
     """Light the suit and the hair as a cinematographer would with a net and a bounce, all invisible in frame. Round 1
     read the top-lit shirt (shoulders and the top of the bust a mid grey, the bowed head's shadow a black strip down
     the sternum, the rest black) as a pale bolero over a black leotard, skin showing through. Now the spot reaches the
@@ -479,7 +486,14 @@ def light_suit(h, net=0.42, hair_net=0.28, body_net=0.75, bounce_w=80.0):
     st.link_lights([fill], receivers=[gar], tag="dawn_bounce")
     print(f"VOID suit light: spot net {net:.2f} on the suit, {hair_net:.2f} on {[o.name for o in hair]}, bounce "
           f"{bounce_w:.0f} W on the suit", flush=True)
-    return dup + hair_dup + body_dup + [fill]
+    hands = st.area("hand_return", (x, y - 1.4, 0.5), (x, y, 0.81), (0.60, 0.40), 26, (0.90, 0.94, 1.0),
+                    spread_deg=50)
+    st.link_lights([hands], receivers=[body], tag="hand_return")
+    bun = [o for o in hair if o.name.endswith("_bun")]
+    rim = copies(0.36, "_bun_edge") if bun else []
+    if rim:
+        st.link_lights(rim, receivers=bun, tag="bun_edge")
+    return dup + hair_dup + body_dup + rim + [fill, hands]
 
 
 def stone_finish(holder, spec=0.3, rough=0.66):
@@ -665,7 +679,15 @@ def build_cell_island():
     t = (mid.z - st.SLAB) / -d.z
     shaft = st.haze_box_along("haze_cell_shaft", mid + d * 0.1, mid + d * (t + 0.25), 0.95, 0.42, SHAFT_HAZE,
                                aniso=0.35)
-    st.link_lights([main, hot], exclude=[shaft], tag="cellspot")
+    low_shaft = st.haze_box_along("haze_cell_low_shaft", mid + d * (t - 0.60 / -d.z), mid + d * t,
+                                      0.89, 0.38, 0.14, aniso=0.35)
+    st.link_lights([main, hot], exclude=[shaft, low_shaft], tag="cellspot")
+    bedding = [bpy.data.objects[n] for n in ("mattress_low", "pillow_low", "blanket_low")]
+    pillow = bedding[1]
+    points = [pillow.matrix_world @ Vector(v) for v in pillow.bound_box]
+    centre = sum(points, Vector()) / len(points)
+    fill = st.area("lower_bunk_lip", (cx, cy - 1.55, 0.65), centre, (0.8, 0.4), 12, (0.80, 0.88, 1.0))
+    st.link_lights([fill], receivers=bedding, tag="lower_bunk_lip")
 
 
 def build_bags_island():
@@ -777,7 +799,7 @@ def build(cast=True):
     st.LIGHTS.clear()
     _STATE.update(groups={}, with_cast=cast, originally_hidden=set())
     _STATE["cast"] = []
-    st.materials(cell=C)
+    st.materials(cell=C, bags=G)
     st.floor()
     _island("dawn", build_dawn_island)
     _island("cell", build_cell_island)

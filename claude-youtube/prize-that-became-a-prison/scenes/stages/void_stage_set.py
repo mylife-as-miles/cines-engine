@@ -162,7 +162,7 @@ def _vmath(nt, op, a, b=None):
     return n.outputs["Value"] if op in ("DISTANCE", "LENGTH", "DOT_PRODUCT") else n.outputs["Vector"]
 
 
-def stage_floor(cell=None):
+def stage_floor(cell=None, bags=None):
     """A black-box stage floor: 1.22 x 2.44 m hardboard sheets painted matt black, each a few per cent off its
     neighbours, the butt joints a 2 mm dark groove; heel marks (thin dark streaks) and fine pale scratches along the
     traffic directions, ghosts of old spike tape (strips and crosses, a little glossier and greyer where the adhesive
@@ -182,13 +182,18 @@ def stage_floor(cell=None):
     patch = _maprange(nt, _noise(nt, o, 1.3, 2.0, 0.5), 0.5, 0.62, 0.0, 1.0)
     dk = _math(nt, "MAXIMUM", _ridge(nt, o, 2.6, (1.0, 7.0, 1.0), 0.955, 0.99),
                _ridge(nt, _vmath(nt, "ADD", o, (3.1, 1.7, 0.0)), 2.6, (7.0, 1.0, 1.0), 0.955, 0.99))
-    dk = _math(nt, "MULTIPLY", dk, patch)
+    wear = 1.0
+    if bags is not None:
+        pos = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
+        distance = _vmath(nt, "DISTANCE", pos, (*bags, 0.0))
+        wear = _maprange(nt, distance, 1.6, 2.15, 0.0, 1.0)
+    dk = _math(nt, "MULTIPLY", dk, _math(nt, "MULTIPLY", patch, wear))
     base = _mix(nt, _math(nt, "MULTIPLY", dk, 0.55), base, (0.04, 0.04, 0.042))
     # fine pale scratches (the paint scraped toward the board), sparse
     sp = _maprange(nt, _noise(nt, _vmath(nt, "ADD", o, (7.3, 2.2, 0.0)), 0.9, 2.0, 0.5), 0.52, 0.66, 0.0, 1.0)
     sc = _math(nt, "MAXIMUM", _ridge(nt, o, 11.0, (1.0, 18.0, 1.0), 0.975, 0.996, 2.0),
                _ridge(nt, _vmath(nt, "ADD", o, (1.9, 5.3, 0.0)), 11.0, (18.0, 1.0, 1.0), 0.975, 0.996, 2.0))
-    sc = _math(nt, "MULTIPLY", sc, sp)
+    sc = _math(nt, "MULTIPLY", sc, _math(nt, "MULTIPLY", sp, wear))
     base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.5), base, (0.16, 0.158, 0.155))
     # old spike tape: per Voronoi cell, maybe a strip (or a cross) 32 x 4.8 cm, ragged, partly peeled
     vor = _n(nt, "ShaderNodeTexVoronoi", feature="F1", distance="EUCLIDEAN")
@@ -210,6 +215,7 @@ def stage_floor(cell=None):
     tape = _math(nt, "MAXIMUM", strip(ax, ay), _math(nt, "MULTIPLY", strip(ay, ax), _math(nt, "GREATER_THAN", cb, 0.6)))
     tape = _math(nt, "MULTIPLY", tape, _math(nt, "LESS_THAN", cg, 0.35))
     tape = _math(nt, "MULTIPLY", tape, _maprange(nt, _noise(nt, o, 14.0, 3.0, 0.6), 0.35, 0.55, 0.0, 1.0))
+    tape = _math(nt, "MULTIPLY", tape, wear)
     base = _mix(nt, _math(nt, "MULTIPLY", tape, 0.7), base, (0.105, 0.104, 0.104))
     dust = _noise(nt, o, 2.2, 3.0, 0.5)
     base = _mix(nt, _maprange(nt, dust, 0.5, 0.78, 0.0, 0.14), base, (0.14, 0.137, 0.133))
@@ -218,7 +224,7 @@ def stage_floor(cell=None):
         p = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
         px, py, _ = _xyz(nt, p)
         dx = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", px, cell[0])), 1.6), 0.0)
-        dy = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", py, cell[1])), 2.2), 0.0)
+        dy = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", py, cell[1])), 1.86), 0.0)
         d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
         near = _math(nt, "LESS_THAN", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", px, cell[0])), 20.0)
         fade = _math(nt, "MULTIPLY", _maprange(nt, d, 0.15, 1.0, 0.0, 0.88), near)
@@ -402,9 +408,9 @@ def frosted_glow(name, rgb, strength, top_z=None, sill_z=None):
     return m
 
 
-def materials(cell=None):
+def materials(cell=None, bags=None):
     M.clear()
-    stage_floor(cell)
+    stage_floor(cell, bags)
     block_paint()
     section()
     cell_floor(cell or (0.0, 0.0))
@@ -688,7 +694,7 @@ def cell(ox, oy):
       bevel=0.003)
     B("cell_slot_frame_top", (sx - sw / 2, y1 - 0.05, sz + sh - 0.025), (sx + sw / 2, y1 - 0.03, sz + sh),
       [M["bar steel"]], bevel=0.003)
-    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.0, top_z=sz + sh, sill_z=sz)
+    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 5.5, top_z=sz + sh, sill_z=sz)
     glass = B("cell_slot_pane", (sx - sw / 2, y1 - 0.03, sz + 0.025), (sx + sw / 2, y1 - 0.02, sz + sh - 0.025),
               [pane], bevel=0.0)
     glass.visible_shadow = False       # the night comes through it (an emitter is opaque to light)
@@ -751,7 +757,7 @@ def combo_unit(ox, oy, turn_deg=180.0):
     # the bowl: an oval rim on the pedestal, its top sunk into a basin
     me = bpy.data.meshes.new("combo_bowl")
     bm = bmesh.new()
-    bmesh.ops.create_cone(bm, cap_ends=True, segments=28, radius1=1.0, radius2=1.0, depth=1.0,
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=48, radius1=0.70, radius2=1.0, depth=1.0,
                           matrix=Matrix.Translation((0.0, -0.44, 0.355)) @ Matrix.Diagonal((0.2, 0.235, 0.1, 1.0)))
     top = [f for f in bm.faces if f.normal.z > 0.5]
     bmesh.ops.inset_region(bm, faces=top, thickness=0.035, depth=0.0)
