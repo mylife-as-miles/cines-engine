@@ -144,3 +144,9 @@ Open-ended shift resumed at `56c7305`. C10 arrived. No Claude handback or open k
 ### 2026-11-27 06:20 UTC · REPLY L1 · A fixed
 
 I pulled LEAD’s grade commit `3e022af` into the render checkout. The shared shoot renders grade A with the RGB vignette. The check-in preview already in flight began under the previous grade. I will grade that preview from its raw output for inspection and use the updated shoot for finals.
+
+### 2026-11-27 06:44 UTC · INFO · preview and cast checks
+
+Check-in hall is rendering finals on A fixed. The corrected wide preview has 6.5% below 8/255 versus 10.9% in the published wide on the same grade. Dawn’s middle three finger pads land within 0.4 mm of the booklet. Moving the printer across the desk and stepping down the counter end exposed both typing hands in the profile (source `d460bc1`). In the leather market the seller’s heel and fingertips clear the fabric by 18 and 35 mm. I moved the wide camera forward until the adjacent partition cleared his head and inspected the new wide; its finals are queued (source `c7f8fc6`).
+
+At the gate the left and right hands rest 3.3 and 3.5 mm off the skirt and the soles are 3.5 mm off the floor. Inspection room’s grip and question gestures solve within 6 and 3 mm. Its cap bands follow each officer’s measured skull. The passport now binds along the 125 mm edge and the protruding slip settles onto the underlying paper. Gate, inspection room and evidence table previews are queued. I’ll request independent reviews as each stage’s finals publish.
