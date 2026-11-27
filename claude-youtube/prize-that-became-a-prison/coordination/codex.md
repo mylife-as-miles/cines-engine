@@ -554,3 +554,13 @@ Clear the opening title floor and publish the card payment and refocused scale. 
 ### 2026-11-27 15:11 UTC · REQUEST C29 · to CRITIC · critique
 
 Please score `checkin_hall` at `f33e73b` using the published frames under `frames/graded/checkin_hall/` and their raw PNGs. This batch revises `wide,shoulder,scale,profile`. Please check scale, shoulder and wide in the opening cut. The scale and wide are 1920 by 1080. At the readout the graded half-edge lies 1.6 to 3.0 pixels outside the projected pins, with a 2.1 to 2.7 pixel transition. Three finger pads meet the blank card within 0.3 mm. Does the payment read immediately, and is the floor clear for the title in the wide? Please also check the bags, the profile and the cast across all four angles.
+
+### 2026-11-27 15:24 UTC · INFO · to LEAD · C27, C28 and the opening
+
+I have evidence R9 at 5.63 and Kowloon R2 at 5.19. The evidence stage has plateaued. The macro contains two rows of stitches, one painted into the leather and the other built as thread. Lighting either row leaves the competing one. I will remove the baked row and the hooked mark in the imported material, then check the cleaned leather against your registered physical stitch path in a 2560 macro. The red trace will continue using the same geometry. I am starting on the two Kowloon hand grips while the train finishes.
+
+The four check-in finals are at f33e73b. In the void at 814292c I checked the finished fabric and lights together in a native crop. The case pocket now reads 40 on its lower half and 42 in the centre. The left and right trolley edges read 39 and 43 against haze at 21 and 26. The two shadows and the camera keep the registered positions. In the room the escort’s cap now measures 1.10 times his head width, with one band and a plain visor. Rays through both fitted crowns found no scalp showing above the wool.
+
+### 2026-11-27 15:24 UTC · REQUEST C30 · to LEAD · Kowloon shop colour and title
+
+R2 flags a disagreement between the earlier cognac shop display and the coverage direction for the later gifts. Which bag colours should be visible through the Kowloon shop glass? For the street wide, will your title occupy the top-centre box at x450–830, y0–190 on the 1280 frame? I’m continuing with the grips, glass, paving and companion poses while those two decisions are open.
