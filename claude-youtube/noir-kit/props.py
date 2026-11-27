@@ -56,9 +56,9 @@ def _grade(mat, sat, val, rough_add, hue=0.5):
 
 
 def _plain_suitcase_side(ob):
-    """Sew an unmarked nylon reinforcement from the side handle to the case's upper seam.
+    """Sew an unmarked nylon reinforcement from each side handle to the upper seam.
 
-    The generated case has four bright metal bars above that handle. The reinforcement follows
+    The generated case has four bright metal bars above each handle. Both reinforcements follow
     the sidewall in the source GLB's Z-up coordinates and covers the bars from every camera.
     """
     mesh = ob.data
@@ -69,29 +69,31 @@ def _plain_suitcase_side(ob):
     # Recess the metal beneath the stitching so the reinforcement lies flat.
     for vertex, point in zip(mesh.vertices, coords):
         x, y, z = point
-        if -0.082 < x < 0.019 and 0.076 < z < 0.184 and y > 0.271:
-            vertex.co = local @ Vector((x, 0.271, z))
+        if -0.082 < x < 0.019 and 0.076 < z < 0.184 and abs(y) > 0.271:
+            vertex.co = local @ Vector((x, math.copysign(0.271, y), z))
     mesh.update()
     verts, quads = [], []
-    # The lower tab overlaps the top handle anchor. At the top the webbing tapers into the seam.
-    for j in range(26):
-        t = j / 25
-        z = 0.032 + 0.326 * t
-        half = 0.054 - 0.018 * max(0.0, (t - 0.75) / 0.25)
-        left = tree.ray_cast((-0.10, 0.60, z), (0, -1, 0))[0]
-        right = tree.ray_cast((0.032, 0.60, z), (0, -1, 0))[0]
-        if left is None or right is None:
-            break
-        for i in range(7):
-            x = -0.031 + (i / 3 - 1) * half
-            u = (x - left.x) / (right.x - left.x)
-            y = (1 - u) * left.y + u * right.y
-            # The raised centre and rolled edges catch the light on the woven strip.
-            crown = 1 - ((i - 3) / 3) ** 4
-            verts.append(local @ Vector((x, y + 0.003 + 0.004 * crown, z)))
-            if i and j:
-                k = len(verts) - 1
-                quads.append((k - 8, k - 1, k, k - 7))
+    # Each side has its own curvature. Sample the shell just outside the bars and span the
+    # hardware, tapering the strip into the upper seam and overlapping its lower handle anchor.
+    for side in (-1, 1):
+        for j in range(26):
+            t = j / 25
+            z = 0.032 + 0.326 * t
+            half = 0.054 - 0.018 * max(0.0, (t - 0.75) / 0.25)
+            left = tree.ray_cast((-0.10, side * 0.60, z), (0, -side, 0))[0]
+            right = tree.ray_cast((0.032, side * 0.60, z), (0, -side, 0))[0]
+            if left is None or right is None:
+                break
+            for i in range(7):
+                x = -0.031 + (i / 3 - 1) * half
+                u = (x - left.x) / (right.x - left.x)
+                y = (1 - u) * left.y + u * right.y
+                crown = 1 - ((i - 3) / 3) ** 4
+                verts.append(local @ Vector((x, y + side * (0.003 + 0.004 * crown), z)))
+                if i and j:
+                    k = len(verts) - 1
+                    face = (k - 8, k - 1, k, k - 7)
+                    quads.append(face if side == 1 else face[::-1])
     panel = bpy.data.meshes.new("suitcase side webbing")
     panel.from_pydata(verts, [], quads)
     band = bpy.data.objects.new("suitcase handle reinforcement", panel)
