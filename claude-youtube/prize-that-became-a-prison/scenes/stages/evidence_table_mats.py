@@ -141,7 +141,7 @@ def _scratches(nt, o, angle, density, scale=(1.0, 260.0, 1.0)):
 # ---------------------------------------------------------------- wood
 
 def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019, 0.011), rough=0.46, rings=(),
-              front_y=None, scratches=1.0):
+              front_y=None, scratches=1.0, ring_contrast=0.55, pore_contrast=0.35):
     """A dark, much-used table top of flat-sawn boards along X (board i covers y0 + i*plank_w .. +plank_w in object
     space): growth rings round a pith below each board (the cathedral figure), pores, each board its own tone and
     figure, a worn finish where arms rest along the front edge, scratches in two directions, dents, sanded-pale
@@ -174,7 +174,7 @@ def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019,
     pores = _noise(nt, cx.outputs[0], 1.0, 2.0, 0.6, mapping=(18.0, 900.0, 900.0))
     pore_m = _maprange(nt, pores, 0.62, 0.72, 0.0, 1.0)
     tone = _maprange(nt, rnd, 0.0, 1.0, 0.8, 1.15)
-    col = _mix(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", late, 0.55), _math(nt, "MULTIPLY", pore_m, 0.35), clamp=True), light, dark)
+    col = _mix(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", late, ring_contrast), _math(nt, "MULTIPLY", pore_m, pore_contrast), clamp=True), light, dark)
     col = _mix(nt, 1.0, col, _combine(nt, tone), "MULTIPLY")
     blot = _noise(nt, o, 2.5, 4.0, 0.6)
     col = _mix(nt, _maprange(nt, blot, 0.35, 0.7, 0.25, 0.0), col, (0.012, 0.008, 0.005))

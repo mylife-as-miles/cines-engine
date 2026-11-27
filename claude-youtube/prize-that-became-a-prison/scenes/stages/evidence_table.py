@@ -66,7 +66,7 @@ HIDE = {
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
 HIDE["document"] = HIDE["plate"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "page marker", "screen spill", "entry stationery", "art materials", "open booklet", "booklet on wood")
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "page pen", "document tools", "page marker", "screen spill", "entry stationery", "art materials", "open booklet", "booklet on wood")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -107,7 +107,7 @@ CAMERAS = {
     "passport": dict(loc=(-0.102, -0.41, TOP + 0.27), aim=(-0.252, -0.056, TOP + 0.010), lens=64, focus="fx_passport", fstop=4.8,
                      beat="spread", show=("net_passport", "cover light"), hide=("envelope",), lamp=(-0.81, -0.36, -64.0)),
     "page": dict(loc=(0.05, -0.47, TOP + 0.785), aim=(0.05, -0.012, TOP), lens=50,
-                 focus="fx_page", fstop=5.6, beat="plate", show=("page sheet", "document tools", "page marker"),
+                 focus="fx_page", fstop=5.6, beat="plate", show=("page sheet", "page pen", "page marker"),
                  lamp=(-0.35, 0.20, -123.0), exposure=-1.18, final_res=(2560, 1440)),
     "pair": dict(loc=(0.07, -0.508, TOP + 0.82), aim=(0.05, -0.008, TOP), lens=54,
                  focus="fx_page", fstop=6.3, beat="plate", show=("pair sheets", "document tools"),
@@ -164,7 +164,7 @@ def materials():
         paper=mt.paper("paper", (0.74, 0.71, 0.64), 0.86, 0.05, 0.04, translucency=0.24, edge_tone=(0.21, 0.297)),
         plate_paper=mt.paper("plate paper", (0.91, 0.70, 0.43), 0.88, fibre=0.02, smudge=0.0, translucency=0.10),
         plate_wood=mt.worn_wood("document plate wood", TW / 4, -TW / 2, rough=0.63,
-                                rings=((0.585, -0.33, 0.041), (-0.42, 0.43, 0.04)), front_y=-TW / 2, scratches=0.5),
+                                rings=((0.585, -0.33, 0.041), (-0.42, 0.43, 0.04)), front_y=-TW / 2, scratches=0.15, ring_contrast=0.38, pore_contrast=0.62),
         paper2=mt.paper("paper 2", (0.71, 0.69, 0.63), 0.86, 0.05, 0.06, edge_tone=(0.21, 0.297)),
         letter=mt.paper("letter paper", (0.73, 0.7, 0.62), 0.85, 0.05, 0.05, edge_tone=(0.21, 0.297)),
         cream=mt.paper("envelope paper", (0.68, 0.62, 0.5), 0.82, 0.06, 0.05),
@@ -229,7 +229,7 @@ def table():
     pw = TW / 4
     for i in range(4):
         y = -TW / 2 + pw * (i + 0.5)
-        joint = (-0.48, 0.37, -0.17, 0.69)[i]
+        joint = (-0.48, 0.54, -0.60, 0.69)[i]
         for x0, x1 in ((-TL / 2, joint - gap / 2), (joint + gap / 2, TL / 2)):
             add_box(bm, (x1 - x0, pw - gap, TT), ((x0 + x1) / 2, y, 0.0))
     top = bevelled(mesh_obj("table_top", bm, m["wood"]), 0.0028, 3)
@@ -613,8 +613,27 @@ def document_plates():
         group(group_name, sheet)
     pp.SUPPORT[:] = wood
     group("document tools", pp.pen("document_pen", m["pen"], m["chrome"], m["chrome"], -0.21, 0.02, 80))
-    marker = mt.plastic("yellow document marker", (0.80, 0.60, 0.035), 0.48)
-    group("page marker", pp.highlighter("document_highlighter", marker, m["hl_cap"], 0.19, -0.015, 72))
+    group("page pen", pp.pen("working_pen", m["pen"], m["chrome"], m["chrome"], -0.17, -0.08, 30))
+    # A flat-ended pocket highlighter with a separate plug and a sprung cap clip.
+    marker = mt.plastic("fluorescent yellow marker", (0.82, 0.95, 0.009), 0.6, spec=0.28)
+    shader = marker.node_tree.nodes["Principled BSDF"]
+    shader.inputs["Emission Color"].default_value = (0.78, 0.94, 0.002, 1.0)
+    shader.inputs["Emission Strength"].default_value = 0.12
+    cap = mt.plastic("marker cap", (0.43, 0.55, 0.009), 0.56, spec=0.24)
+    parts = []
+    for label, size, loc, mat, bevel in (
+            ("barrel", (0.083, 0.0155, 0.0115), (-0.011, 0, 0.0060), marker, 0.0032),
+            ("tail plug", (0.002, 0.0147, 0.0107), (-0.0530, 0, 0.0060), cap, 0.0008),
+            ("cap", (0.031, 0.0168, 0.0120), (0.0455, 0, 0.0060), cap, 0.0030),
+            ("clip bridge", (0.0045, 0.0032, 0.0035), (0.056, 0, 0.0128), cap, 0.00075),
+            ("pocket clip", (0.029, 0.0032, 0.0017), (0.044, 0, 0.0141), cap, 0.00065)):
+        part = sk.box("document highlighter " + label, size, loc, mat, bevel=bevel)
+        parts.append(part)
+    root = empty("document highlighter", (0.22, -0.04, TOP))
+    root.rotation_euler.z = math.radians(115)
+    for part in parts:
+        part.parent = root
+    group("page marker", [root, *parts])
     pp.SUPPORT[:] = keep
     empty("fx_page", (0.05, -0.055, TOP + 0.0003))
     empty("fx_page_foot", (0.03, -0.105, TOP + 0.0003))
