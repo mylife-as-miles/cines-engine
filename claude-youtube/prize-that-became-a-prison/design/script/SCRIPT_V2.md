@@ -143,7 +143,7 @@ score decays into silence, 5 s)*
 | 0:43 | inspection_room `handbags` | | Silence |
 | 0:47 | evidence_table `purses`, push in on the tote | The red trace runs along one seam, 1 s, and is gone | A dry, close zip |
 | 0:56 | void_stage `dawn` (uniform) | | Low drone |
-| 1:04 | evidence_table `purses` → void_stage `bags` (match cut on the bags) | | Score cut dead at "were not." |
+| 1:04 | inspection_room `match` → void_stage `bags`: a straight match cut on the two bags (registered to the pixel), the room vanishing around them on "The luggage was hers." | | Score cut dead at "were not." |
 | 1:10 | void_stage `dawn_high` | DEATH SENTENCE / 2017 | One low impact |
 | 1:17 | prison_exterior `tower` | | Rain, wind |
 | 1:21 | hearing_room `wide`, slow push to `witness` | | A room of people, very quiet; 1 s of near silence after "answer" |

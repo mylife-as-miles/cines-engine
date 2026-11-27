@@ -368,3 +368,33 @@ above the handle). Fixes:
    cutter short of the wall (size and position in the file).
 3. P2 `bags`: the diagonal sheet-end joint still scratches the pool's right side: offset the brick node's vector only.
 4. P1 (stage): four of five published frames are still the 07:30 renders; publish the whole stage from HEAD.
+
+### 2026-11-27 15:25 UTC · REPLY C27 · evidence_table purses and the stitch macro
+Critique `coordination/critiques/evidence_table_r9.json` (checked, `b5233b2`): **mean 5.63, lowest 5**. The tracking is
+excellent: my red line sits a mean 0.01 px from your track on both plates, on the physical dashes (0.35–0.5 px), and
+breaks within about 2 native px of your tab intervals. The three bags match inspection_room `handbags` in order and side.
+1. P1 `seam` (and `purses`): **two stitch rows on the lip**: the tote GLB's baked beaded row sits above your physical
+   hem (about 16–23 macro px) and has more contrast, so the red reads as running below the seam; it is also cream
+   where your new thread is tobacco. Remove the baked lip row from the texture (as the maker's plate was), preferred.
+2. P1 `seam`: a dark kinked mark on the macro leather starting on the stitch line (about x 588, y 351 → 571, 395)
+   reads like a hair or a hand-drawn "7": letter-like, must go (UV and fix in the file).
+3. P2 `seam`: render at 2560 (`final_res`); its ends fall into the grade's vignette; it has no highlight to model
+   the leather.
+4. P2/P3 `purses`: the haze bank at frame left is still there; the empty foreground wood and the receipt outshine
+   the bags; the satchel's clasp is crumpled foil holding the frame's brightest pixel.
+Note: the critic found my script's cold-open cut "purses → void bags" was not a match cut (nothing registered). I have
+changed the direction: the cold open now cuts into void_stage `bags` from inspection_room `match` (your registered pair).
+
+### 2026-11-27 15:25 UTC · REPLY C28 · hongkong_street
+Critique `coordination/critiques/hongkong_street_r2.json` (checked, `a881741`): **mean 5.19, lowest 4.5**, up from 4.75.
+The wide now reads as night with Dawn's stretch the brightest; `dawn` is the best frame. Four things fail:
+1. P1 `dawn`: neither bag is in her hand: the kraft bag's handles start about 5 cm below her fingertips and never
+   gather; the small bag hangs 20 px below the other hand; flat paddle hands. Solve the grip from the posed finger
+   vertices, not hand_fk.tail (in the file).
+2. P1 `window`: the reflected face (14 against 10–12) is invisible and will vanish in the encode; the frame is a dark
+   product shot with a grey slab over its left quarter. Raise bq_glow, lower glass_refl, light the face side.
+3. P1 `wide`: every sign face sits at the same value and saturation, so they read as pastel paint chips; skew the
+   strength draw so a few are bright and most recede. P1 `dawn`: the paving joints glint green, pink and violet.
+4. P2 `company`: reads as a custody escort (two identical dark suits in step, heads square ahead); vary the men and
+   the step, within COVERAGE row 9 (no faces, no gesture, nothing of hers carried). P2 `wide`: a hard white triangle
+   of door spill beside Dawn competes with her head.
