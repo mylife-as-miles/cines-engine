@@ -535,7 +535,7 @@ def suit_tones(holder, item, jacket, shirt, tie):
         px = px.reshape(hgt, w, 4)[..., :3]
         v, mn = px.max(-1), px.min(-1)
         navy = (px[..., 2] - px[..., 0] > 0.06) & (v > 0.12)
-        tie = np.zeros_like(navy)
+        tie_m = np.zeros_like(navy)
         ys, xs = np.nonzero(navy)
         if len(xs) > 50:
             y0, y1 = int(np.percentile(ys, 0.5)) - 10, int(np.percentile(ys, 99.5)) + 10
@@ -551,11 +551,11 @@ def suit_tones(holder, item, jacket, shirt, tie):
                 for dx in range(-4, 5):
                     if dx * dx + dy * dy <= 16:
                         shrunk &= np.roll(np.roll(grown, dy, 0), dx, 1)
-            tie[y0:y1, x0:x1] = shrunk
-        shirt_m = (v > 0.42) & ((v - mn) < 0.15) & ~tie
+            tie_m[y0:y1, x0:x1] = shrunk
+        shirt_m = (v > 0.42) & ((v - mn) < 0.15) & ~tie_m
         out = np.zeros((hgt, w, 4), np.float32)
         out[..., 0] = shirt_m
-        out[..., 1] = tie
+        out[..., 1] = tie_m
         out[..., 3] = 1.0
         mimg = bpy.data.images.new(f"{holder.name}_suitmask", w, hgt, alpha=False)
         mimg.pixels.foreach_set(out.ravel())
@@ -566,18 +566,23 @@ def suit_tones(holder, item, jacket, shirt, tie):
             nt.links.new(tex.inputs["Vector"].links[0].from_socket, mt_.inputs["Vector"])
         sep = nt.nodes.new("ShaderNodeSeparateColor")
         nt.links.new(mt_.outputs["Color"], sep.inputs["Color"])
-        mix1 = nt.nodes.new("ShaderNodeMix")
-        mix1.data_type = "RGBA"
-        nt.links.new(sep.outputs["Red"], mix1.inputs["Factor"])
-        mix1.inputs["A"].default_value = (*[c * fv for c in jacket], 1)
-        mix1.inputs["B"].default_value = (*[c * fv for c in shirt], 1)
-        mix2 = nt.nodes.new("ShaderNodeMix")
-        mix2.data_type = "RGBA"
-        nt.links.new(sep.outputs["Green"], mix2.inputs["Factor"])
-        nt.links.new(mix1.outputs["Result"], mix2.inputs["A"])
-        mix2.inputs["B"].default_value = (*[c * fv for c in tie], 1)
-        nt.links.new(mix2.outputs["Result"], bsdf.inputs["Base Color"])
-        print(f"HEARING suit_tones: {mat.name} shirt {shirt_m.mean() * 100:.2f}% tie {tie.mean() * 100:.2f}% of the "
+        def rgba_mix(fac_socket, a, b):
+            mx = nt.nodes.new("ShaderNodeMix")
+            mx.data_type = "RGBA"
+            fs = [i for i in mx.inputs if i.name == "Factor" and i.type == "VALUE"][0]
+            sa = [i for i in mx.inputs if i.name == "A" and i.type == "RGBA"][0]
+            sb = [i for i in mx.inputs if i.name == "B" and i.type == "RGBA"][0]
+            nt.links.new(fac_socket, fs)
+            for sock, val in ((sa, a), (sb, b)):
+                if isinstance(val, tuple):
+                    sock.default_value = (*[c * fv for c in val], 1)
+                else:
+                    nt.links.new(val, sock)
+            return [o for o in mx.outputs if o.type == "RGBA"][0]
+        col = rgba_mix(sep.outputs["Red"], tuple(jacket), tuple(shirt))
+        col = rgba_mix(sep.outputs["Green"], col, tuple(tie))
+        nt.links.new(col, bsdf.inputs["Base Color"])
+        print(f"HEARING suit_tones: {mat.name} shirt {shirt_m.mean() * 100:.2f}% tie {tie_m.mean() * 100:.2f}% of the "
               f"texture", flush=True)
 
 

@@ -874,6 +874,25 @@ def vis_door():
     return leaf
 
 
+def near_door():
+    """The corridor's near end, behind the corridor camera: a steel door recessed in the end wall with a narrow
+    blank-glazed strip, the lit stair beyond it leaking a faint cool light along the floor and the near walls (so
+    the foreground walls are lit by something real, from behind, at a grazing angle that draws the mortar lines)."""
+    m = materials()
+    x0 = 0.45
+    box("nd_leaf", (VD_W - 0.006, 0.05, VD_H - 0.012), (x0, Y0 + 0.02, 0.008 + (VD_H - 0.012) / 2), m["door"], 0.004)
+    box("nd_glass", (0.16, 0.054, 1.5), (x0 + 0.22, Y0 + 0.02, 1.1), mt.glow("nd glass", COOL, 0.4))
+    for s in (-1, 1):
+        box("nd_jamb", (0.05, 0.03, VD_H + 0.05), (x0 + s * (VD_W / 2 + 0.025), Y0 + 0.015, (VD_H + 0.05) / 2), m["frame"], 0.005)
+    box("nd_head", (VD_W + 0.1, 0.03, 0.05), (x0, Y0 + 0.015, VD_H + 0.025), m["frame"], 0.005)
+    d = Vector((0.0, math.cos(math.radians(10)), -math.sin(math.radians(10))))
+    li = area("near_leak", (x0 + 0.22, Y0 + 0.08, 1.05), (0.3, 1.8), NEAR_LEAK_W, COOL, spread=120)
+    li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+
+
+NEAR_LEAK_W = 30.0
+
+
 def back_door():
     """The closed steel door in the visitation room's back wall: the one the detainee would come through."""
     m = materials()
