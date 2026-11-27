@@ -166,7 +166,7 @@ CAMERAS.update({
     "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.11, 1.14), lens=31,
                   focus="fx_match", fstop=4, beat="ch00", layout="ch11", pose="enter",
                   cheat={"Dawn": (-1.98, 0.22)}, facing={"Dawn": CASE[:2]}),
-    "across": dict(loc=(-1.64, -1.05, TOP + 0.30), aim=(0.42, 0.05, TOP + 0.18), lens=43,
+    "across": dict(loc=(-0.94, -1.28, TOP + 0.48), aim=(0.13, 0.045, TOP + 0.27), lens=37,
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
 FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.06, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
