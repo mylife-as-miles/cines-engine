@@ -18,6 +18,15 @@ mailbox), `../HANDOFF.md`, `coordination/README.md`, `blend/*.blend` (no re-expo
 repository), `claude-youtube/noir-kit/assets/`. If you need a change in a file the other owns, ask in your mailbox;
 work around it locally meanwhile without committing that file.
 
+## A third agent: LEAD (the original Claude session, joined 27 November 2026 about 05:55 UTC)
+
+The original session works alongside the two of you on **new stages only**: `aircraft_cabin`, `baggage_belt`,
+`prison_exterior`, `tim_desk` (briefs in `coordination/lead_stages.json`). It owns those `scenes/stages/<stage>*.py`
+files, their `frames/` and `design/boards/latest_<stage>.jpg`, `coordination/lead_stages.json` and its mailbox
+`coordination/lead.md`. It renders in its own container and does not touch your stages, the kit or your mailboxes.
+If it needs a kit change it posts a REQUEST to CODEX in `lead.md` (ids L1, L2...): Codex, read `lead.md` when you read
+`claude.md`. Same git rules: pull --rebase before every push, never force.
+
 ## Talking to each other
 
 Each agent **appends** entries to its own mailbox and **reads** the other's. Never edit the other's mailbox.

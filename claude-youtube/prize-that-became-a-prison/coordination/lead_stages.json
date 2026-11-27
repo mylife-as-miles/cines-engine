@@ -1,0 +1,22 @@
+[
+ {
+  "name": "aircraft_cabin",
+  "beats": "Ch 02 end / Ch 03: the night flight to Hong Kong, 2014. A generic wide-body economy cabin at night, built in Python: three-abreast seat blocks with headrests and tray tables, overhead bins, a curved cabin wall with oval windows onto the dark sky (a faint horizon line far below), aisle floor lights, most reading lights off and one on above Dawn. Dawn (people.dawn()) at a window seat, awake, looking out, hands in her lap; a few dim, still seated passengers (people.man / people.staff variants) and many empty seats. No airline livery, no logos; seat-back screens dark or glowing blank.",
+  "cameras": "aisle (down the aisle, rows receding, Dawn's reading light the one pool), window (Dawn in profile against the oval window), over (over her shoulder out of the window: the wing-tip light and the dark below)"
+ },
+ {
+  "name": "baggage_belt",
+  "beats": "Ch 04 to Ch 05: airside baggage handling at night, after the check-in. A long belt conveyor with steel side rails and rollers, built in Python, running from a rubber strip-curtain opening in a wall through a dim, tunnel-like hall; a sorter chute; yellow safety markings; a few anonymous bags (recoloured copies of extra-bag-closed and dawn-suitcase so none matches Dawn's) with blank tags; and Dawn's two bags (dawn-suitcase lying on its back, extra-bag-closed) riding the belt toward the dark. No people. Cold fluorescent or sodium work lights, deep shadows. Stills; camera motion comes later.",
+  "cameras": "curtain (the two bags coming through the strip curtain), belt (low along the belt, the bags receding into the dark), overhead (straight down on the belt, Dawn's bags among the others)"
+ },
+ {
+  "name": "prison_exterior",
+  "beats": "Ch 08 establishing: the outside of a large prison at night in the rain, with restraint. A high concrete perimeter wall with a coping, razor-wire coils on top (built in Python as helices), a watchtower with a dark window, floodlight masts throwing hard pools on the wet perimeter road and the wall, a closed steel vehicle gate, kerbs and puddles, rain streaks and mist in the light cones. The buildings beyond the wall only as dark blocks with a few lit barred windows. No flags, emblems, signs or text; no people, at most one distant still silhouette in the tower window.",
+  "cameras": "wall (low along the wall into the distance, the floodlight pools receding), gate (frontal on the closed vehicle gate under a floodlight in the rain), tower (low angle up at the watchtower and the wire against the night sky)"
+ },
+ {
+  "name": "tim_desk",
+  "beats": "Ch 09 'A family makes its case in public', the years of private appeals before he went public: Tim Hunt's desk at home in Chicago at night. A worn wooden desk under a window with half-closed blinds, the desk-lamp prop as the warm key light, the laptop prop open and glowing blank, stacks of letters and envelopes (built, blank), a phone face down, a pen, reading glasses, a framed family photograph seen from its back or with a blank face, a mug. Tim (people.man('Tim', age=0.58, ...) in a dark casual suit) seated, writing by hand or reading a letter, tired. Warmth and restraint: the second warm interior after Chicago at night.",
+  "cameras": "desk (medium on Tim at the desk in the lamp's pool), letters (straight down on the desk: letters, envelopes, the phone, the photo frame), window (wide from behind, Tim small at the desk against the window and the night)"
+ }
+]
