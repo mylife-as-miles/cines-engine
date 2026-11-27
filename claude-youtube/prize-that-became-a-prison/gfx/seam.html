@@ -45,6 +45,22 @@ function grain(ctx, t) {                 // per-frame grain (sigma about 1 luma)
   for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.4; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
   ctx.putImageData(img, 0, 0);
 }
+// Material patterns, made once: a pebble grain (soft cells of light and dark) and a fine twill for the lining
+let _peb = null, _twl = null;
+function PEBBLE() {
+  if (_peb) return _peb; const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d'), r = rng(31);
+  for (let i = 0; i < 1100; i++) { const x = r() * 160, y = r() * 160, rad = 0.8 + r() * 1.6, d = r() < 0.5;
+    const gr = g.createRadialGradient(x - rad * 0.3, y - rad * 0.3, 0, x, y, rad);
+    gr.addColorStop(0, d ? 'rgba(0,0,0,0.0)' : 'rgba(255,236,210,0.10)'); gr.addColorStop(1, d ? 'rgba(0,0,0,0.13)' : 'rgba(255,236,210,0)');
+    for (const [ox, oy] of [[0, 0], [160, 0], [-160, 0], [0, 160], [0, -160]]) { g.fillStyle = gr; g.save(); g.translate(ox, oy); g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); g.restore(); } }
+  return (_peb = c);
+}
+function TWILL() {
+  if (_twl) return _twl; const c = document.createElement('canvas'); c.width = c.height = 12; const g = c.getContext('2d');
+  g.strokeStyle = 'rgba(255,255,255,0.07)'; g.lineWidth = 1.2; for (let i = -12; i <= 24; i += 4) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 12, 12); g.stroke(); }
+  g.strokeStyle = 'rgba(0,0,0,0.18)'; g.lineWidth = 1; for (let i = -10; i <= 26; i += 4) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 12, 12); g.stroke(); }
+  return (_twl = c);
+}
 function cutaway(ctx, t, half) {
   // A section through the bag wall at the top seam, an extruded slab in an oblique view: the cut face shows the leather
   // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red seam
@@ -71,32 +87,40 @@ function cutaway(ctx, t, half) {
   const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
     return [hinge[0] + dx * c - dy * s2, hinge[1] + dx * s2 + dy * c]; };
   const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
-  const leather = (pts, base, seed) => {                               // a fine grain on the leather faces
-    poly(pts); ctx.fillStyle = base; ctx.fill(); ctx.save(); poly(pts); ctx.clip(); const r = rng(seed);
-    for (let i = 0; i < 900; i++) { const x = X0 - 40 + r() * (X1 - X0 + 260), y = Y - 160 + r() * 340;
-      ctx.fillStyle = r() < 0.5 ? 'rgba(255,240,220,0.035)' : 'rgba(0,0,0,0.08)'; ctx.fillRect(x, y, 2 + r() * 3, 1 + r() * 2); }
-    ctx.restore(); poly(pts); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.4 / k; ctx.stroke();
+  // The materials carry the tote's own: cognac leather with a pebble grain, lit by a key from the upper left (a sheen
+  // along the top face's near edge, the cut face darker), and a twill-woven lining. Edges are faint (15 %), not drawn.
+  const leather = (pts, base, seed, light = null, pat = PEBBLE()) => {
+    poly(pts); ctx.fillStyle = base; ctx.fill(); ctx.save(); poly(pts); ctx.clip();
+    if (light) { const g = ctx.createLinearGradient(...light[0], ...light[1]); light[2].forEach(([o, c]) => g.addColorStop(o, c)); ctx.fillStyle = g; ctx.fill(); }
+    ctx.globalAlpha = 0.35; ctx.fillStyle = ctx.createPattern(pat, 'repeat'); poly(pts); ctx.fill();
+    ctx.restore(); poly(pts); ctx.strokeStyle = 'rgba(214,208,198,0.15)'; ctx.lineWidth = 1.2 / k; ctx.stroke();
   };
   const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); return '#' + [16, 8, 0].map(b => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join(''); };
   // a soft contact shadow under the whole section
   { ctx.save(); const g = ctx.createRadialGradient((X0 + X1) / 2 + 60, Y + LEA + LIN + 40, 40, (X0 + X1) / 2 + 60, Y + LEA + LIN + 40, (X1 - X0) * 0.6);
     g.addColorStop(0, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.scale(1, 0.18);
     ctx.fillRect(X0 - 200, (Y + LEA + LIN - 80) / 0.18, X1 - X0 + 520, 600); ctx.restore(); }
-  const slab = (pts, face, top, seed) => {
+  const slab = (pts, face, top, seed, pat) => {
     const T = [pts[0], pts[1], [pts[1][0] + D[0], pts[1][1] + D[1]], [pts[0][0] + D[0], pts[0][1] + D[1]]];
     const S = [pts[1], pts[2], [pts[2][0] + D[0], pts[2][1] + D[1]], [pts[1][0] + D[0], pts[1][1] + D[1]]];
-    leather(T, top, seed); leather(S, shade(face, 0.72), seed + 1); leather(pts, face, seed + 2);
+    // the key from the upper left: a sheen along the top face's near edge, falling off into it and along it
+    const sheen = [[pts[0][0], pts[0][1]], [pts[0][0] + D[0] * 0.9, pts[0][1] + D[1] * 0.9],
+                   [[0, 'rgba(255,226,190,0.34)'], [0.12, 'rgba(255,226,190,0.12)'], [0.5, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.22)']]];
+    const along = [[pts[0][0], pts[0][1]], [pts[1][0], pts[1][1]], [[0, 'rgba(255,240,220,0.06)'], [1, 'rgba(0,0,0,0.22)']]];
+    const cut = [[pts[0][0], pts[0][1]], [pts[3][0], pts[3][1]], [[0, 'rgba(255,230,200,0.08)'], [1, 'rgba(0,0,0,0.25)']]];
+    leather(T, top, seed, sheen, pat); leather(T, 'rgba(0,0,0,0)', seed, along, pat);
+    leather(S, shade(face, 0.62), seed + 1, null, pat); leather(pts, face, seed + 2, cut, pat);
   };
   const lin = [[X0, Y + LEA], [X1, Y + LEA], [X1, Y + LEA + LIN], [X0, Y + LEA + LIN]].map(([x, y]) => x < hinge[0] ? [x, y] : rot(x, y));
-  slab(lin, '#22272e', '#2b3038', 11);
+  slab(lin, '#23262b', '#2c3036', 11, TWILL());
   if (open > 0.01) {                                                   // the space, and the flat layer sewn into it
     const a2 = cl(open * 1.6), p0 = [hinge[0] + 6, Y + LEA], p1 = [X1 - 30, Y + LEA], p2 = rot(X1 - 30, Y + LEA);
     const mid = (u, v, q) => [u[0] + (v[0] - u[0]) * q, u[1] + (v[1] - u[1]) * q];
     const l0 = mid(p0, p1, 0.08), l1 = mid(p0, p1, 0.92), l3 = mid(p0, p2, 0.08), l2 = mid(p0, p2, 0.92);
     const q = [mid(l0, l3, 0.25), mid(l1, l2, 0.25), mid(l1, l2, 0.7), mid(l0, l3, 0.7)];
-    ctx.save(); ctx.globalAlpha = a2; poly(q); ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.2 / k; ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.globalAlpha = a2; poly(q); ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.fillStyle = ctx.createPattern(TWILL(), 'repeat'); ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.2)'; ctx.lineWidth = 1.2 / k; ctx.stroke(); ctx.restore();
   }
-  slab([[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]], '#3b342d', '#5a5046', 21);
+  slab([[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]], '#4e3322', '#7a5235', 21, PEBBLE());   // the tote's cognac
   // the seam, in the film's red: a dashed running stitch along the cut face and along the receding top edge (one line
   // along the projected edge), stitch holes at each end, and stitches through both layers at the hinge
   ctx.save(); ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.2 / Math.max(k, 0.6); ctx.setLineDash([11, 11]);

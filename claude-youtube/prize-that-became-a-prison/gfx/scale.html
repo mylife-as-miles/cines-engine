@@ -17,15 +17,27 @@ const INK = '#1b1f25', FACE = '#eef0f2', GHOST = 'rgba(27,31,37,0.035)';
 function draw(mode, t) {
   const ctx = document.getElementById('c').getContext('2d');
   ctx.fillStyle = FACE; ctx.fillRect(0, 0, W, H);
+  // a backlit panel: brighter in the middle, falling off toward the bezel, and the faint grid of an LCD
+  const bl = ctx.createRadialGradient(W * 0.5, H * 0.46, 40, W * 0.5, H * 0.5, W * 0.62);
+  bl.addColorStop(0, 'rgba(255,255,255,0)'); bl.addColorStop(1, 'rgba(40,46,56,0.30)'); ctx.fillStyle = bl; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(27,31,37,0.035)'; for (let x = 0; x < W; x += 4) ctx.fillRect(x, 0, 1, H); for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
   // the unlit segments of an LCD show faintly, as on a real panel
   ctx.font = '500 150px "Oswald"'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
   if (t > 1.15) { ctx.fillStyle = GHOST; ctx.fillText('OVERWEIGHT', W / 2, 238); }   // unlit segments appear only once the bar is past the limit
   // the weight bar: settles over 1.4 s with a small hunt, the way a load cell does, ending past the limit tick
-  const limit = 0.82, fill = Math.min(0.9, ease(t / 1.4) * 0.9 + 0.012 * Math.sin(t * 9) * Math.exp(-2.2 * t));
+  const limit = 0.74, fill = Math.min(0.88, ease(t / 1.4) * 0.88 + 0.012 * Math.sin(t * 9) * Math.exp(-2.2 * t));
   const bx = 70, by = 286, bw = W - 140, bh = 34;
   ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.strokeRect(bx, by, bw, bh);
   ctx.fillStyle = INK; ctx.fillRect(bx + 6, by + 6, (bw - 12) * fill, bh - 12);
-  ctx.fillRect(bx + bw * limit - 2, by - 16, 5, bh + 32);                       // the limit tick
+  // the limit: a tick through the bar with a notch above and below it, so "past the limit" reads at phone size
+  const lx = bx + bw * limit; ctx.fillRect(lx - 2.5, by - 18, 5, bh + 36);
+  ctx.beginPath(); ctx.moveTo(lx - 13, by - 34); ctx.lineTo(lx + 13, by - 34); ctx.lineTo(lx, by - 18); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(lx - 13, by + bh + 34); ctx.lineTo(lx + 13, by + bh + 34); ctx.lineTo(lx, by + bh + 18); ctx.closePath(); ctx.fill();
+  // the part of the fill past the limit is hatched, so the excess is its own shape (no colour: red is the seam's)
+  const past = bx + 6 + (bw - 12) * fill - lx;
+  if (past > 0) { ctx.save(); ctx.beginPath(); ctx.rect(lx + 3, by + 6, past - 3, bh - 12); ctx.clip(); ctx.fillStyle = FACE;
+    for (let x = lx - 40; x < lx + past + 40; x += 11) { ctx.beginPath(); ctx.moveTo(x, by + bh); ctx.lineTo(x + 5, by + bh); ctx.lineTo(x + 5 + bh, by); ctx.lineTo(x + bh, by); ctx.closePath(); ctx.fill(); }
+    ctx.restore(); }
   // OVERWEIGHT once the bar is past the tick: two blinks, then steady
   const over = t - 1.25;
   if (over > 0) {

@@ -235,7 +235,8 @@ def main():
             alb_w = cv2.warpPerspective(alb, Ht, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
         alb_w = cv2.GaussianBlur(alb_w, (0, 0), shot.get("tex_blur_px", 0.55))   # the render's own softness (or defocus)
         out = lin_to_srgb(srgb_to_lin(base) * alb_w)
-        # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels)
+        # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
+        # continuous depth of field with "continuous": true)
         band = shot.get("focus_band")
         if band:
             Hinv = np.linalg.inv(Ht)
@@ -243,11 +244,26 @@ def main():
             pts = np.stack([xs.ravel(), ys.ravel()], -1)[None]
             py = cv2.perspectiveTransform(pts, Hinv)[0][:, 1].reshape(xs.shape)
             em = fl[0][0][3] - fl[0][0][1]
-            d = np.abs(py - fy) / em                           # distance from the focus line, in lines of text
+            fyt = fy
+            rk = shot.get("focus_rack")                        # a rack focus: the focal line moves at t (a page change)
+            if rk:
+                fyt = fy + (rk["v"] * page.h - fy) * ease_inout((t - rk["t"]) / rk.get("dur", 0.3))
+            d = np.abs(py - fyt) / em                          # distance from the focus line, in lines of text
             wgt = np.clip((d - band["sharp_lines"]) / band["ramp_lines"], 0, 1).astype(np.float32)
             wgt = cv2.resize(wgt, (W, H), interpolation=cv2.INTER_LINEAR)[..., None]
-            soft = cv2.GaussianBlur(out, (0, 0), band["blur_px"])
-            out = out * (1 - wgt) + soft * wgt
+            if band.get("continuous"):
+                # a lens's depth of field: the blur radius grows smoothly with distance from the focal line, the same
+                # above and below, up to `blur_px` (blended between five blur levels, so no line steps to the next)
+                lv = [out] + [cv2.GaussianBlur(out, (0, 0), band["blur_px"] * k / 4) for k in (1, 2, 3, 4)]
+                pos = wgt * 4; lo = np.clip(np.floor(pos), 0, 3).astype(np.int32); fr = pos - lo
+                acc = np.zeros_like(out)
+                for k in range(4):
+                    m = (lo == k).astype(np.float32)
+                    acc += m * (lv[k] * (1 - fr) + lv[k + 1] * fr)
+                out = acc
+            else:
+                soft = cv2.GaussianBlur(out, (0, 0), band["blur_px"])
+                out = out * (1 - wgt) + soft * wgt
         return (np.clip(out, 0, 1) * 255 + 0.5).astype(np.uint8)
 
     vf = [] if a.nograde else ["-vf", grade_filter()]

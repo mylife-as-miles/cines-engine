@@ -65,7 +65,7 @@ function email(ctx, t) {
   ctx.fillStyle = C.panel; ctx.fillRect(250, 65, W - 250, H - 65);
   txt(ctx, 'Congratulations — you have been selected', 300, 150, 34, C.ink, 700);
   ctx.fillStyle = '#9aa3b0'; ctx.beginPath(); ctx.arc(322, 214, 22, 0, 7); ctx.fill();     // sender avatar, blank
-  rr(ctx, 360, 198, 210, 16, 8, C.bar); rr(ctx, 360, 222, 300, 12, 6, C.bar2);
+  txt(ctx, 'Notifications', 360, 212, 21, C.ink, 600); txt(ctx, 'to me', 360, 240, 18, C.soft);   // generic, kept soft by the composite's focus
   ctx.strokeStyle = C.line; ctx.beginPath(); ctx.moveTo(300, 262.5); ctx.lineTo(W - 60, 262.5); ctx.stroke();
   txt(ctx, 'Dear winner,', 300, 330, 28, C.ink);
   txt(ctx, 'We are delighted to tell you that your entry has been selected.', 300, 392, 28, C.ink);
@@ -79,43 +79,70 @@ function email(ctx, t) {
   body.forEach((line, i) => txt(ctx, line, 300, 520 + i * 44, 26, i > 4 ? C.soft : C.ink));
   rr(ctx, 300, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', 365, 894, 22, '#ffffff', 600);
 }
+// The search, in two pages like a real one. The home page: the field in the middle of the screen, typed like a person
+// (2-6 frames a letter in an irregular rhythm, a pause after each space), the suggestion list dropping under it. On
+// Enter the results page replaces it: the field at the top, five results, a side column and a row of related searches,
+// so the screen is full. Every result is generic, every source line greeked, nothing is a real site; the composite's
+// focus keeps all but the query soft. The search times are exposed (window.SEARCH) for the shot's camera.
+const Q = 'prize contest organizers', QSTART = 0.45, QFPS = 24, QT = [];
+{ const R = [2, 3, 2, 2, 4, 2, 3, 2, 6, 2, 3, 2]; let t0 = QSTART;
+  for (let i = 0; i < Q.length; i++) { t0 += (R[i % R.length] + (Q[i - 1] === ' ' ? 4 : 0)) / QFPS; QT.push(t0); } }
+const QDONE = QT[QT.length - 1], QENTER = QDONE + 0.45;
+window.SEARCH = { done: QDONE, enter: QENTER };
+function field(ctx, x, y, w, t, typedTo) {
+  rr(ctx, x, y, w, 64, 32, '#f1f3f5'); ctx.strokeStyle = '#dde0e5'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(x, y, w, 64, 32); ctx.stroke();
+  let shown = 0; while (shown < Q.length && t >= QT[shown]) shown++; if (typedTo) shown = Q.length;
+  const s = Q.slice(0, shown); txt(ctx, s, x + 40, y + 42, 28, C.ink);
+  ctx.font = '400 28px "Inter"'; const cx = x + 40 + ctx.measureText(s).width + 2;
+  const blink = t < QDONE + 0.1 || Math.floor((t - QDONE) / 0.5) % 2 === 1;
+  if (blink && !typedTo) { ctx.fillStyle = C.ink; ctx.fillRect(cx, y + 16, 2, 34); }
+  return shown;
+}
 function search(ctx, t) {
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = C.side; ctx.fillRect(0, 0, W, 64);
-  rr(ctx, 120, 120, 1000, 64, 32, '#f1f3f5');
-  // typed like a person: 3-4 frames a letter with a fixed jitter, 6-10 frames after each space; the caret is solid
-  // while typing and blinks 0.5 s on, 0.5 s off once the query is done
-  const q = 'prize contest organizers', start = 0.5, fps = 24, times = [];
-  let tt0 = start; for (let i = 0; i < q.length; i++) { tt0 += (2 + ((i * 7) % 3 === 0 ? 1 : 0) + (q[i - 1] === ' ' ? 4 : 0)) / fps; times.push(tt0); }
-  let shown = 0; while (shown < q.length && t >= times[shown]) shown++;
-  const s = q.slice(0, shown);
-  txt(ctx, s, 160, 162, 28, C.ink);
-  ctx.font = '400 28px "Inter"'; const cx = 160 + ctx.measureText(s).width + 2;
-  const doneT = times[q.length - 1], blink = t < doneT + 0.1 || Math.floor((t - doneT) / 0.5) % 2 === 1;
-  if (blink) { ctx.fillStyle = C.ink; ctx.fillRect(cx, 136, 2, 34); }
-  // suggestions under the field while it is typed (generic, out of focus in the composite), gone when results arrive
-  const sugA = sm((t - start - 0.4) / 0.25) * (1 - sm((t - doneT - 0.4) / 0.3));
-  if (sugA > 0 && shown > 3) {
-    ctx.save(); ctx.globalAlpha = sugA; rr(ctx, 120, 196, 1000, 4 * 54 + 16, 18, '#ffffff');
-    ['prize contest organizers reviews', 'prize contest winners list', 'prize contest travel package', 'prize contest how to claim']
-      .forEach((sg, i) => { ctx.fillStyle = '#9aa0a8'; ctx.beginPath(); ctx.arc(160, 232 + i * 54, 7, 0, 7); ctx.fill(); txt(ctx, sg, 186, 241 + i * 54, 26, C.soft); });
-    ctx.restore();
-  }
-  // results arrive a moment after the query: greeked, every one
-  const done = doneT + 0.6, a = sm((t - done) / 0.4), r = rand(23);
-  if (a > 0) {                     // generic results, no site names; out of focus in the composite
+  rr(ctx, 360, 14, 640, 36, 18, '#ffffff');                             // the browser's address field, empty
+  if (t < QENTER) {
+    // the home page: a plain field in the middle, a row of generic shortcut tiles under it (greeked, no names)
+    const fx = 250, fy = 360, fw = 1000, shown = field(ctx, fx, fy, fw, t, false);
+    const sugA = sm((t - QSTART - 0.3) / 0.2);
+    if (sugA > 0 && shown > 3) {
+      ctx.save(); ctx.globalAlpha = sugA; rr(ctx, fx, fy + 76, fw, 4 * 54 + 16, 18, '#ffffff');
+      ctx.strokeStyle = '#e3e6ea'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(fx, fy + 76, fw, 4 * 54 + 16, 18); ctx.stroke();
+      ['prize contest organizers reviews', 'prize contest winners list', 'prize contest travel package', 'prize contest how to claim']
+        .forEach((sg, i) => { ctx.fillStyle = '#9aa0a8'; ctx.beginPath(); ctx.arc(fx + 40, fy + 112 + i * 54, 7, 0, 7); ctx.fill(); txt(ctx, sg, fx + 66, fy + 121 + i * 54, 26, C.soft); });
+      ctx.restore();
+    }
+    const tileA = 1 - sugA * (shown > 3 ? 1 : 0);
+    if (tileA > 0) { ctx.save(); ctx.globalAlpha = tileA;
+      for (let i = 0; i < 6; i++) { const x = 330 + i * 140; rr(ctx, x, fy + 130, 84, 84, 18, '#eef0f3'); rr(ctx, x + 12, fy + 236, 60, 10, 5, C.bar2); }
+      ctx.restore(); }
+  } else {
+    // the results page, arriving a moment after Enter: the field at the top, results down the left, a side column
+    const a = sm((t - QENTER) / 0.35), r = rand(23);
+    field(ctx, 120, 96, 1000, t, true);
+    ctx.strokeStyle = '#e3e6ea'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, 196.5); ctx.lineTo(W, 196.5); ctx.stroke();
+    for (let i = 0; i < 5; i++) rr(ctx, 120 + i * 120, 210, 90, 12, 6, i ? C.bar2 : '#9aa7bd');        // the result tabs, greeked
+    ctx.save(); ctx.globalAlpha = a;
     const RES = [['Prize draw winners: how to claim', 'What to expect after a winning notice, and how prizes are delivered to winners.'],
                  ['Travel contest official rules', 'Eligibility, prize descriptions, travel dates and conditions for winners.'],
                  ['Is this contest legitimate?', 'Readers discuss notices from contest organizers and what they checked.'],
                  ['Sweepstakes and prize notices', 'How to tell a genuine prize from a scam: questions to ask the organizers.'],
                  ['Winners announced this month', 'A list of recent prize draws, with travel packages and cash awards.']];
-    ctx.save(); ctx.globalAlpha = a;
     RES.forEach(([title, snip], i) => {
-      const y = 250 + i * 140 + (1 - a) * 12;
-      rr(ctx, 120, y, 200 + r() * 120, 12, 6, '#cfd8cf');            // a source line, greeked
-      txt(ctx, title, 120, y + 50, 28, '#2a4a86', 500);
-      txt(ctx, snip, 120, y + 88, 20, C.soft);
+      const y = 262 + i * 128 + (1 - a) * 12;
+      rr(ctx, 120, y, 200 + r() * 120, 12, 6, '#cfd8cf');                   // a source line, greeked
+      txt(ctx, title, 120, y + 48, 28, '#2a4a86', 500);
+      txt(ctx, snip, 120, y + 84, 20, C.soft); rr(ctx, 120, y + 98, 300 + r() * 260, 10, 5, C.bar2);
     });
+    // a side column: a generic panel of greeked blocks
+    rr(ctx, 1000, 262, 400, 560, 18, '#f6f7f9');
+    rr(ctx, 1030, 292, 340, 170, 12, '#e6e9ee');
+    for (let i = 0; i < 7; i++) rr(ctx, 1030, 490 + i * 42, 180 + r() * 150, 12, 6, i % 3 ? C.bar2 : C.bar);
+    // related searches, a row of chips at the foot
+    txt(ctx, 'Related searches', 120, 920, 22, C.soft, 600);
+    ['contest winner notice', 'claim a prize abroad', 'travel prize rules', 'prize organizers'].forEach((c, i) => {
+      rr(ctx, 120 + i * 220, 940, 200, 44, 22, '#eef0f3'); txt(ctx, c, 140 + i * 220, 969, 18, C.soft); });
     ctx.restore();
   }
 }

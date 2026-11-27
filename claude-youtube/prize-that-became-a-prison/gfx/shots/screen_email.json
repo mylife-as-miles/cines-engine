@@ -18,8 +18,9 @@
   "duration": 7.0,
   "length": 7.5,
   "focus_band": {
-    "sharp_lines": 1.0,
-    "ramp_lines": 1.6,
-    "blur_px": 4.5
+    "sharp_lines": 0.9,
+    "ramp_lines": 4.5,
+    "blur_px": 6.0,
+    "continuous": true
   }
 }

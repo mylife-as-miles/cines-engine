@@ -1,5 +1,5 @@
 {
-  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`); greeked results only.",
+  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`): a search home page, the query typed, then a full results page; generic results only.",
   "plate": "frames/raw/evidence_table/screen.png",
   "corners": "frames/raw/evidence_table/screen.corners.json",
   "texture": {
@@ -7,19 +7,25 @@
     "fps": 24
   },
   "focus_uv": [
-    0.42,
-    0.152
+    0.47,
+    0.4
   ],
   "em_px": 34,
   "zoom": [
-    2.1,
-    1.6
+    2.75,
+    1.55
   ],
-  "duration": 4.0,
-  "length": 4.0,
+  "duration": 5.5,
+  "length": 5.5,
   "focus_band": {
-    "sharp_lines": 1.4,
-    "ramp_lines": 2.5,
-    "blur_px": 4.0
+    "sharp_lines": 1.2,
+    "ramp_lines": 5.0,
+    "blur_px": 5.5,
+    "continuous": true
+  },
+  "focus_rack": {
+    "t": 3.98,
+    "v": 0.128,
+    "dur": 0.3
   }
 }
