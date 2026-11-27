@@ -576,6 +576,8 @@ def apply_camera(name):
                 o.data.energy = 0
             if n == "shoulder leather return" and name != "accept":
                 o.data.energy = 0
+            if n == "duffel zip return" and name != "overhead":
+                o.data.energy = 0
     print(f"HOTEL camera {name}: beat {cfg.get('beat')}, ceiling {'see-through' if cfg.get('above_ceiling') else 'solid'}",
           flush=True)
 
@@ -653,6 +655,14 @@ def build(cast=True):
     _STATE["packing_props"] = list(set(bpy.context.scene.objects) - room_objects)
     zip_key, zip_parts, pull = hp.half_closed_duffel(bag_h, bag)
     _STATE["duffel_zip"], _STATE["packed_zip"] = zip_key, zip_parts
+    zip_receivers = bpy.data.collections.new("Packed duffel and zip")
+    for part in [bag, *zip_parts]:
+        zip_receivers.objects.link(part)
+    pos = Vector((-1.64, -0.34, 1.40))
+    zip_return = sk.area_light("duffel zip return", pos, (0.34, 0.24), 9.0, (1.0, 0.75, 0.51), spread_deg=72,
+                               rot=(pull - pos).to_track_quat("-Z", "Y").to_euler())
+    zip_return.visible_camera = zip_return.visible_glossy = False
+    zip_return.light_linking.receiver_collection = zip_receivers
     before_early = set(bpy.context.scene.objects)
     closed_case, trio = premarket_props(duvet)
     early_tote, tote_mesh = trio[1]
