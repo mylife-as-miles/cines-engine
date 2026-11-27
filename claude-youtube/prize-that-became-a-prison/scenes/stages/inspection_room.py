@@ -1169,10 +1169,10 @@ def build(cast=True):
     _STATE["room_light_links"] = [(lamp, lamp.light_linking.receiver_collection) for lamp in
                                   (bpy.data.objects[n] for n in ("troffer_scanner_light", "bounce_fill",
                                                                  "door_glass_light", "door_gap_light"))]
-    # From the reverse, the duffel otherwise reflects the whole luminous ceiling.
+    # From the reverse, the duffel reflects the luminous ceiling. Keep the card out of the officer's key.
     card = sk.box("duffel negative fill", (1.12, 0.73, 0.012), (dx, dy, TOP + 0.37),
                   sk.mat("duffel black card", (0.001, 0.001, 0.001), 0.99))
-    card.visible_camera = card.visible_transmission = card.visible_volume_scatter = False
+    card.visible_camera = card.visible_shadow = card.visible_transmission = card.visible_volume_scatter = False
     card.hide_render = True
     _STATE["duffel_flag"] = card
     cheek = sk.box("Dawn camera-side flag", (0.25, 0.30, 0.012), (0.24, -0.37, 1.86),
