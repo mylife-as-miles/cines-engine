@@ -127,7 +127,7 @@ CAMERAS = {
     # pushed in (round 2 at 4.7 m: the bags a third of the frame, a band of empty lit floor in front): the case about
     # 40 % of the frame height, the whole pool edge still in frame
     "bags": dict(loc=_p(G, 0.12, -4.0, 0.55), aim=_p(G, 0.0, -0.02, 0.33), lens=50, focus="fx_bags", fstop=4.0,
-                 beat="bags"),
+                 beat="bags", shift=(0.0, 0.03), final_res=(2560, 1440)),
 }
 
 # The chair cut uses the same model, size, camera and focus plane as the family home.
@@ -702,6 +702,9 @@ def build_bags_island():
     rim = st.area("rim_bags", (cx, cy + 2.4, 1.5), (cx, cy, 0.35), (0.6, 0.6), 40.0, (0.88, 0.92, 1.0))
     rim.visible_glossy = True
     st.link_lights([rim], receivers=_meshes(pair[0]) + _meshes(pair[1]), tag="bags_rim")
+    kick = st.area("case front return", (cx - 0.9, cy - 2.6, 0.7), (G[0] + CASE[0], G[1] + CASE[1], 0.33),
+                   (0.5, 0.5), 12.0, (0.88, 0.92, 1.0))
+    st.link_lights([kick], receivers=_meshes(pair[0]), tag="case_front")
 
 
 def build_chair():
@@ -763,6 +766,9 @@ def apply_camera(name):
     for group, objs in _STATE["groups"].items():
         for ob in objs:
             ob.hide_render = group not in active or ob in _STATE["originally_hidden"]
+    front = bpy.data.objects.get("case front return")
+    if front is not None:
+        front.hide_render = name != "bags"
     for ob, x in _STATE["bag_roots"]:
         ob.location.x = x + (-3.3 - G[0] if beat == "divide" else 0.0)
     bpy.context.view_layer.update()

@@ -164,7 +164,8 @@ CAMERAS.update({
                        cheat={"Dawn": (0.53, -0.59), "OfficerA": (-0.78, 0.46)},
                        facing={"Dawn": (0.391, 0.400), "OfficerA": (0.16, -0.80)}),
     "match": dict(loc=(-0.12, 4.0, TOP + 0.55), aim=(0, 0.02, TOP + 0.33), lens=50,
-                  focus="fx_match", fstop=4, beat="ch11", layout="match", cast=False,
+                  focus="fx_match", fstop=4, beat="ch11", layout="match", cast=False, shift=(0.0, 0.03),
+                  final_res=(2560, 1440),
                   wild=("wall_back", "cove_b", "rail_b")),
     "empty_ch05": dict(CAMERAS["empty"], beat="ch05"),
     "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.043, 1.14), lens=31,
@@ -836,8 +837,21 @@ def apply_camera(name):
         if o:
             o.visible_camera = n not in cfg.get("wild", ())
     # On the frontal cut, flag the fluorescent spill off the wall above the two bags.
-    bpy.data.objects["match wall cutter"].hide_render = name != "match"
-    bpy.data.objects["wash_front"].hide_render = name == "match"
+    match = name == "match"
+    if bpy.context.scene.camera is not None:
+        camera = bpy.context.scene.camera.data
+        camera.shift_x, camera.shift_y = cfg.get("shift", (0.0, 0.0))
+    bpy.data.objects["match wall cutter"].hide_render = not match
+    for obj in _STATE["match_omit"]:
+        obj.hide_render = match
+    # set_beat already hides the entire suitcase in the three-handbag layout.
+    if match:
+        for ob in _STATE["props"]["dawn-suitcase"].children_recursive:
+            if ob.name.startswith("luggage_tag"):
+                ob.hide_render = True
+    key = bpy.data.objects["troffer_bench_light"]
+    key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
+    bpy.data.objects["match case fluorescent"].hide_render = not match
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -930,8 +944,31 @@ def build(cast=True):
     case.location, case.rotation_euler = (x, y, z), (0, 0, math.radians(t))
     bpy.context.view_layer.update()
     st.luggage_tag(case, _case_frame(), hole=(-0.008, -0.005), grip=(-0.045, 0.542), grip_r=(0.0125, 0.0115))
+    # Split the practical's contribution for the frontal cut only. The same
+    # ceiling fitting still lights the duffel, steel and wall at its usual power.
+    shell = props.meshes(case)
+    outside = bpy.data.collections.new("bench light excluding the case")
+    only_case = bpy.data.collections.new("case fluorescent receivers")
+    for ob in shell:
+        if not ob.name.startswith("luggage_tag"):
+            outside.objects.link(ob)
+            only_case.objects.link(ob)
+    for link in outside.collection_objects:
+        link.light_linking.link_state = "EXCLUDE"
+    _STATE["outside_case"] = outside
+    key = bpy.data.objects["troffer_bench_light"]
+    trimmed = key.copy()
+    trimmed.data = key.data.copy()
+    trimmed.name = "match case fluorescent"
+    bpy.context.scene.collection.objects.link(trimmed)
+    trimmed.data.energy = 24.0
+    trimmed.light_linking.receiver_collection = only_case
+    trimmed.hide_render = True
     st.bounce()
     st.wall_wash()
+    _STATE["match_omit"] = [bpy.data.objects[n] for n in
+                            ("wash_front", "mon_body", "mon_screen", "mon_vesa", "mon_arm",
+                             "mon_pivot", "mon_wallplate", "mon_spill", "shelf_tray")]
     cutter = sk.box("match wall cutter", (5.4, 1.72, 0.015), (0, -1.40, 2.30),
                     castkit.stone("black solid", (0.003, 0.003, 0.003), 0.98))
     cutter.visible_camera = cutter.visible_glossy = cutter.visible_transmission = False
