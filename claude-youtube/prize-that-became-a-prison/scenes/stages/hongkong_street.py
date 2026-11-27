@@ -99,7 +99,12 @@ CAMERAS = {
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
                           fstop=4.0, beat="company", shift_y=0.0, haze=0.0022, exposure=-1.65)
-TRIMS = {"wide": {}, "dawn": {}, "window": {"bq_glow": 0.25}}
+TRIMS = {
+    "dawn": {"boutique door spill": 0},
+    "window": {"bq_glow": 0.25, "boutique door spill": 0},
+    "company": {"boutique door spill": 0.62},
+}
+WIDE_VIEW = CAMERAS["wide"]
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
 if os.environ.get("HK_CAMS"):
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["HK_CAMS"].split(",")}
@@ -789,7 +794,13 @@ def install_hook():
 
 
 def build(cast=True):
-    st.build(props, wide=CAMERAS["wide"])
+    st.build(props, wide=WIDE_VIEW)
+    # A shop doorway just behind the walking group throws warm light across
+    # the nearer shoulder, carry handles and a short patch of wet sidewalk.
+    door = Vector((7.15, 15.00, 1.94))
+    lamp = st.area("boutique door spill", door, (0.66, 1.28), 142.0, (1.0, 0.59, 0.34),
+                   Vector((5.57, 16.34, 0.84)) - door, spread=68)
+    lamp.visible_glossy = False
     for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
         mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
         BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")
