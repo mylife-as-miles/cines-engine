@@ -794,7 +794,9 @@ def apply_camera(name, width=1280):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
-        if (ln == "display shelf return" and name != "dawn") or (ln == "boutique pavement spill" and name != "wide"):
+        view = {"display shelf return": "dawn", "boutique pavement spill": "wide",
+                "display end bounce": "window"}.get(ln)
+        if view is not None and name != view:
             li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
             li.visible_glossy = name not in ("window", "dawn")
@@ -868,6 +870,16 @@ def build(cast=True):
     receivers = bpy.data.collections.new("Boutique pavement")
     receivers.objects.link(bpy.data.objects["street_ground"])
     paving_light.light_linking.receiver_collection = receivers
+    # Low spill from the display's end return keeps the shadow detail in the
+    # insert. The receiver set excludes the bags and the reflected face.
+    source = Vector((7.50, 17.94, 1.66))
+    end = Vector((8.46, 18.05, 1.38))
+    bounce = st.area("display end bounce", source, (0.19, 0.65), 9.0, (1.0, 0.87, 0.72), end - source, spread=63)
+    bounce.visible_glossy = False
+    ends = bpy.data.collections.new("Boutique display edges")
+    for surface in ("boutique", "boutique pane joint", "display felt sides"):
+        ends.objects.link(bpy.data.objects[surface])
+    bounce.light_linking.receiver_collection = ends
     for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
         mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
         BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")
