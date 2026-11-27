@@ -76,7 +76,7 @@ OVER_CAM = (-2.10, 3.62, 1.36)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
-    "fx_over": _toward(OVER_CAM, 29.0, -5.0, 2.0),
+    "fx_over": _toward(OVER_CAM, 29.0, -5.0, 4.0),
 }
 
 CAMERAS = {
@@ -86,23 +86,26 @@ CAMERAS = {
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.10, 0.985), lens=30, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.05, 0.905), lens=28, focus="fx_face", fstop=2.8,
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red tip
     # light under the horizon, and the dark below; her head soft in the foreground
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 37.5, -12.5, 1.2), lens=37, focus="fx_over", fstop=16.0,
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 29.5, -12.6, 1.2), lens=42, focus="fx_over", fstop=11.0,
                  beat="ch03"),
 }
 TIP_DIR = (28.5, -5.2)                          # the wing tip from "over": degrees forward of abeam, above level
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {"haze": 1.0, "fill": 0.0},
-    "window": {"haze": 0.0, "fill": 1.0},
-    "over": {"haze": 0.0, "fill": 0.0},
+    "aisle": {"haze": 1.0, "fill": 0.0, "key": 1.95, "spill": 3.0, "wash": 1.2},
+    "window": {"haze": 0.0, "fill": 1.0, "spill": 0.8},
+    "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8},
 }
+# where her lamp points: at her lap and hands, its soft edge across her face; for the wide aisle shot it is turned a
+# little back, onto her head, shoulders and the top of her seat, so the pool reads from behind
+KEY_AIM = {None: ((0.02, 0.26, 0.66), 62.0), "aisle": ((0.0, 0.10, 0.95), 70.0)}
 READ = "reading_light"
 _STATE = {"base": {}}
-GROUPS = ("key", "spill", "fill", "win", "cove", "amb", "wash", "path", "screen", "galley", "sky", "moon")
+GROUPS = ("key", "spill", "fill", "win", "cove", "amb", "rear", "wash", "path", "screen", "galley", "sky", "moon")
 
 
 # ---------------------------------------------------------------- shades (0 open, 1 closed)
@@ -176,12 +179,13 @@ def ease_seated(suit, strength=0.013):
     loosen.vertex_group, loosen.strength, loosen.mid_level = ease.name, strength, 0.0
 
 
-def lap_hands(holder, forearms=(67.0, 64.0), spread=0.0):
-    """Rest the palms on the thighs, the left hand turned toward the right wrist (the gate's lap pose)."""
+def lap_hands(holder, forearms=(67.0, 64.0), spread=0.0, reach=12.0):
+    """Rest the palms on the thighs, the left hand turned toward the right wrist (the gate's lap pose). `reach`: how
+    far forward the upper arms hang (less brings the hands back up the lap, toward the body)."""
     rig = rigged.rig_of(holder)
     for side, k, angle in ((1, "L", forearms[0]), (-1, "R", forearms[1])):
         left = k == "L"
-        rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, 12, side, 6 + spread))
+        rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, reach, side, 6 + spread))
         rigged._aim(rig, f"forearm_fk.{k}", rigged._dir(0, angle, side, (-31 if left else -21) + spread))
         wrist = rig.pose.bones[f"hand_fk.{k}"]
         forward = rigged._dir(0, 81 if left else 87, side, -40 if left else -17).normalized()
@@ -286,7 +290,7 @@ def body_points(holder, only=None, unmasked=False):
     return pts
 
 
-def seat_figure(holder, seat_z, upper, lean=0.0, hands=True, fit_hands=True):
+def seat_figure(holder, seat_z, upper, lean=0.0, hands=True, fit_hands=True, reach=12.0):
     """Pose a figure seated (built at the origin facing -Y), the whole trunk leaning back `lean` degrees about the
     hips, and solve thigh/shin so that the seat sinks SINK into the cushion and the soles rest on the floor.
     Returns the height offset."""
@@ -303,7 +307,7 @@ def seat_figure(holder, seat_z, upper, lean=0.0, hands=True, fit_hands=True):
         if lean:
             rigged._turn(rig, "torso", -lean, 0.0)
         if hands:
-            lap_hands(holder, forearms) if forearms else lap_hands(holder)
+            lap_hands(holder, forearms, reach=reach) if forearms else lap_hands(holder, reach=reach)
         sit_legs(holder, thigh, shin, rest)
 
     for it in range(8):
@@ -357,10 +361,10 @@ def back_y(z):
     return -v * sr - w * cr
 
 
-def place_seated(holder, seat_xy, upper, lean=0.0, hands=True, fit_hands=True):
+def place_seated(holder, seat_xy, upper, lean=0.0, hands=True, fit_hands=True, reach=12.0):
     sx, sy = seat_xy
     seat_z = st.cushion_top(0.16)
-    dz = seat_figure(holder, seat_z, upper, lean, hands, fit_hands)
+    dz = seat_figure(holder, seat_z, upper, lean, hands, fit_hands, reach)
     holder.rotation_euler = (0, 0, math.radians(180))
     bpy.context.view_layer.update()
     rig = rigged.rig_of(holder)
@@ -418,6 +422,12 @@ def apply_camera(name):
     hz = bpy.data.objects.get("lamp haze")
     if hz is not None:
         hz.hide_render = trims.get("haze", 1.0) <= 0.0
+    key = st.LIGHTS.get(READ)
+    if key is not None:
+        (dx, dy, z), size = KEY_AIM.get(name, KEY_AIM[None])
+        aim = Vector((DAWN_SEAT[0] + dx, DAWN_SEAT[1] + dy, z))
+        key.rotation_euler = (aim - key.location).to_track_quat("-Z", "Y").to_euler()
+        key.data.spot_size = math.radians(size)
     print(f"CABIN camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}",
           flush=True)
 
@@ -427,23 +437,28 @@ def save_groups(name, out):
     folder = os.environ.get("CABIN_EXR")
     if not folder:
         return
-    tmp = None
+    sc = bpy.context.scene
+    ims = sc.render.image_settings
+    multi = hasattr(ims, "media_type")
     try:
         os.makedirs(folder, exist_ok=True)
-        tmp = bpy.data.scenes.new("exr settings")
-        ims = tmp.render.image_settings
-        if hasattr(ims, "media_type"):
+        if multi:
             ims.media_type = "MULTI_LAYER_IMAGE"
         ims.file_format = "OPEN_EXR_MULTILAYER"
         ims.color_depth, ims.exr_codec = "16", "ZIP"
         path = os.path.join(folder, os.path.basename(str(out)).replace(".png", "") + ".exr")
-        bpy.data.images["Render Result"].save_render(path, scene=tmp)
+        bpy.data.images["Render Result"].save_render(path, scene=sc)
         print(f"CABIN light groups saved: {path}", flush=True)
     except Exception as e:  # never lose a render to the extra file
         print(f"CABIN light groups not saved: {e!r}", flush=True)
     finally:
-        if tmp is not None:
-            bpy.data.scenes.remove(tmp)
+        try:
+            if multi:
+                ims.media_type = "IMAGE"
+            ims.file_format = "PNG"
+            ims.color_depth = "8"
+        except Exception as e:
+            print(f"CABIN image settings not restored: {e!r}", flush=True)
 
 
 def install_hook():
@@ -470,15 +485,15 @@ def lights():
     # Dawn's reading light: the lens in the PSU over her knees, a warm-white cone onto her lap and hands, its soft
     # edge across her face (the crown of her head stays out of it)
     lens = Vector((DAWN_SEAT[0], y_d + st.LENS_Y, PSU_Z[0] - 0.024))
-    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.33, 0.66), 42.0, (1.0, 0.84, 0.64), 72.0, 0.8, radius=0.018)
+    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.26, 0.66), 47.0, (1.0, 0.84, 0.64), 62.0, 0.8, radius=0.018)
     sp.data.use_soft_falloff = False
     group(sp, "key")
     # the lens scatters a little outside its beam: the wall, the headrests and the seat back in front
-    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.30, 0.62), 10.0, (1.0, 0.84, 0.64),
+    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.24, 0.62), 18.0, (1.0, 0.84, 0.64),
                  150.0, 0.8, radius=0.03)
     group(sl, "spill")
     # the window's cool glow on her face (sky and moon through the pane)
-    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 3.5, (0.6, 0.72, 1.0),
+    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 1.4, (0.6, 0.72, 1.0),
                  spread=100, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
     wf.visible_glossy = False
     wf.visible_camera = False
@@ -487,10 +502,15 @@ def lights():
     yc, length = (st.REAR_Y + st.FRONT_Y) / 2, st.FRONT_Y - st.REAR_Y - 0.4
     for side in (-1, 1):
         for x, z, rot, k in ((side * 1.52, 2.372, side * 2.10, 1), (side * 0.81, 2.432, -side * 2.02, -1)):
-            a = st.area(f"cove_light_{side}_{k}", (x, yc, z), (0.03, length), 30.0, (0.36, 0.5, 1.0), spread=150)
+            a = st.area(f"cove_light_{side}_{k}", (x, yc, z), (0.03, length), 18.0, (0.36, 0.5, 1.0), spread=150)
             a.rotation_euler = (0.0, rot, 0.0)
             a.visible_camera = False
             group(a, "cove")
+    # the aft galley's glow, behind the aisle camera: a dim cool light up the port aisle onto the nearest seat backs
+    rg = st.area("rear_glow", (st.AISLES[0], st.REAR_Y + 0.15, 1.25), (0.6, 1.7), 10.0, (0.75, 0.84, 1.0), spread=120,
+                 aim=(st.AISLES[0], 6.0, 0.95))
+    rg.visible_camera = False
+    group(rg, "rear")
 
 
 PSU_Z = {}
@@ -521,7 +541,7 @@ def build(cast=True):
     _STATE["base"].clear()
     ys = st.windows_y(DAWN_WINDOW_Y)
     plan, dk = shade_plan(ys)
-    st.shell(plan, ys)
+    st.shell(plan, ys, joint_phase=(dk + 1) % 3)
     occupied = {(DAWN_ROW, 0, 0)} | {(row, b, s) for _, _, row, b, s, _, _, _ in PAX}
     st.seats(lit_screens=LIT, skip=set())
     st.belts(skip=occupied)
@@ -545,7 +565,7 @@ def build(cast=True):
         bpy.context.scene.collection.objects.link(e)
         e.location = p
     # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
-    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.25, 1.05), 0.12,
+    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.25,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -561,7 +581,7 @@ def build(cast=True):
     if cast:
         d = dawn()
         upper = {"head": (7, 20), "neck": (4, 10), "chest": (-4, 5), "fingers": 17}
-        place_seated(d, DAWN_SEAT, upper, lean=11.0)
+        place_seated(d, DAWN_SEAT, upper, lean=11.0, reach=1.0)
         hp, fwd = head_points(d)
         print(f"CABIN Dawn head centre ({hp.x:.3f}, {hp.y:.3f}, {hp.z:.3f}) (planned {tuple(round(c, 3) for c in HEAD)}),"
               f" head bone up ({fwd.x:.2f}, {fwd.y:.2f}, {fwd.z:.2f})", flush=True)
@@ -571,7 +591,7 @@ def build(cast=True):
         for o in [d] + list(d.children_recursive):
             if o.type == "MESH":
                 dc.objects.link(o)
-        ff = st.area("face_fill", (-1.62, HEAD.y + 0.52, 1.32), (0.4, 0.4), 4.5, (1.0, 0.9, 0.8), spread=120,
+        ff = st.area("face_fill", (-1.62, HEAD.y + 0.52, 1.32), (0.4, 0.4), 1.4, (1.0, 0.9, 0.8), spread=120,
                      aim=(HEAD.x, HEAD.y + 0.05, HEAD.z - 0.06))
         ff.visible_camera = False
         ff.visible_glossy = False

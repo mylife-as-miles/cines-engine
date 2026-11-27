@@ -332,7 +332,7 @@ def cover_cloth(name, sx, coll, half=0.15):
     tex = bpy.data.textures.get("cover crumple") or bpy.data.textures.new("cover crumple", "CLOUDS")
     tex.noise_scale = 0.05
     dm = ob.modifiers.new("crumple", "DISPLACE")
-    dm.texture, dm.strength, dm.mid_level, dm.texture_coords = tex, 0.004, 0.35, "GLOBAL"
+    dm.texture, dm.strength, dm.mid_level, dm.texture_coords = tex, 0.006, 0.4, "GLOBAL"
     so = ob.modifiers.new("thick", "SOLIDIFY")
     so.thickness, so.offset = 0.0025, 1.0
     return ob
@@ -587,8 +587,9 @@ def inset(profile, d):
     return out
 
 
-def shell(shades, ys):
-    """Lining, dado, bins, aisle ceilings and coves, crown, floor, bulkheads. `shades`: {(side, index): fraction}."""
+def shell(shades, ys, joint_phase=0):
+    """Lining, dado, bins, aisle ceilings and coves, crown, floor, bulkheads. `shades`: {(side, index): fraction}.
+    The sidewall panels are three windows wide; `joint_phase` picks which gaps between windows carry their joints."""
     y0, y1 = REAR_Y, FRONT_Y
     for side in (-1, 1):
         d = sweep(f"dado_{side}", DADO, y0, y1, M["dado"], flip_x=side < 0)
@@ -602,6 +603,8 @@ def shell(shades, ys):
             window(side, y, shades.get((side, k), 1.0), f"win_{'p' if side < 0 else 's'}{k:02d}")
         # panel joints: a fine dark line down the lining between every pair of windows, and across the aisle ceiling
         for k, y in enumerate(ys[:-1]):
+            if (k - joint_phase) % 3:
+                continue
             sweep(f"wallseam_{side}_{k}", inset(SIDEWALL, 0.0012), y + WIN_PITCH / 2 - 0.002, y + WIN_PITCH / 2 + 0.002,
                   M["seam"], flip_x=side < 0)
         for k in range(int((y1 - y0) / (2 * WIN_PITCH))):
@@ -634,7 +637,7 @@ def shell(shades, ys):
         cv2 = box(f"cove_c_{side}", (0.03, y1 - y0 - 0.2, 0.012), (side * 0.80, (y0 + y1) / 2, 2.415), M["cove"])
         cv2.visible_camera = False
         # what the lit ceiling gives back to the cabin: a wide, soft, dim strip under each aisle vault
-        am = area(f"amb_light_{side}", (side * 1.15, (y0 + y1) / 2, 2.53), (0.3, y1 - y0 - 0.4), 25.0, (0.40, 0.54, 1.0),
+        am = area(f"amb_light_{side}", (side * 1.15, (y0 + y1) / 2, 2.53), (0.3, y1 - y0 - 0.4), 88.0, (0.40, 0.54, 1.0),
                   spread=170)
         am.visible_camera = False
     # centre bins
@@ -654,7 +657,7 @@ def shell(shades, ys):
     return ys
 
 
-LENS_Y = 0.48          # a reading lens sits this far ahead of its seat's reference point, over the sitter's knees
+LENS_Y = 0.38          # a reading lens sits this far ahead of its seat's reference point, over the sitter's lap
 
 
 def psu(row):
@@ -742,7 +745,7 @@ def front_bulkhead():
         box(f"galley_ceil_{ax}", (1.2, 1.0, 0.02), (ax, y + 0.5, 2.2), M["lining"])
         for k in (-1, 1):
             box(f"galley_side_{ax}_{k}", (0.02, 1.0, 2.2), (ax + k * 0.6, y + 0.5, 1.1), M["lining"])
-        area(f"galley_light_{ax}", (ax, y + 0.55, 2.1), (0.5, 0.5), 18.0, (0.85, 0.9, 1.0), spread=120,
+        area(f"galley_light_{ax}", (ax, y + 0.55, 2.1), (0.5, 0.5), 23.0, (0.85, 0.9, 1.0), spread=120,
              aim=(ax, y + 0.3, 0.0))
 
 
@@ -829,7 +832,7 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     red.light_linking.receiver_collection = recv
     # the moon, out of shot above and ahead: a cool soft sun on the wing only
     li = bpy.data.lights.new("moon", "SUN")
-    li.energy, li.color, li.angle = 0.15, (0.62, 0.72, 1.0), math.radians(4.0)
+    li.energy, li.color, li.angle = 0.17, (0.62, 0.72, 1.0), math.radians(4.0)
     mo = bpy.data.objects.new("moon", li)
     _coll().objects.link(mo)
     # low and ahead of the wing, so its upper skin carries a long soft sheen toward the cabin

@@ -179,9 +179,12 @@ def upholstery(name, rgb=(0.050, 0.056, 0.068), pitch=420.0):
     worn = _maprange(nt, _noise(nt, o, 3.0, 3.0, 0.6), 0.45, 0.7, 0.0, 1.0)
     col = _mix(nt, _math(nt, "MULTIPLY", worn, 0.35), col, tuple(c * 1.35 for c in rgb))
     col = _mix(nt, _maprange(nt, _ao(nt, 0.08), 0.2, 1.0, 0.55, 0.0), col, (0.0, 0.0, 0.0))
+    # channel stitching: fine tucked lines every 8.5 cm up the cushions (bands across Z, in the seat block's space)
+    tuck = _maprange(nt, _wave(nt, o, 3.7, "Z"), 0.972, 1.0, 0.0, 1.0)
+    col = _mix(nt, _math(nt, "MULTIPLY", tuck, 0.55), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
     _link(nt, _maprange(nt, worn, 0.0, 1.0, 0.92, 0.78), b.inputs["Roughness"])
-    _bump(nt, b, weave, 0.35, 0.0006)
+    _bump(nt, b, _math(nt, "SUBTRACT", weave, _math(nt, "MULTIPLY", tuck, 7.0)), 0.35, 0.0006)
     return m
 
 
@@ -424,7 +427,7 @@ def sky(name, dip=-0.059):
     deck = _mix(nt, _maprange(nt, rel, -0.002, -0.05, 1.0, 0.0), deck, (0.05, 0.056, 0.07))   # haze at the horizon
     col = _mix(nt, below, col, deck)
     _link(nt, col, em.inputs["Color"])
-    em.inputs["Strength"].default_value = 4.0
+    em.inputs["Strength"].default_value = 8.75
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
     return m
@@ -535,7 +538,7 @@ def materials(lanes=()):
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
     M["nav_red"] = glow("nav light red", (1.0, 0.08, 0.05), 40.0)
-    M["nav_halo"] = halo("nav light halo", (1.0, 0.07, 0.04), 0.5)
+    M["nav_halo"] = halo("nav light halo", (1.0, 0.07, 0.04), 1.2)
     M["nav_white"] = glow("nav light white", (1.0, 0.97, 0.92), 8.0)
     M["black"] = pbr("black void", (0.005, 0.005, 0.006), (0.8, 0.9))
     return M
