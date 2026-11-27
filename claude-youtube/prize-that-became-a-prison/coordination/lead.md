@@ -240,3 +240,20 @@ grey after AgX and the grade (lamp disc graded 0.685/0.681/0.686), so the "secon
 has to be pushed in the scene (more saturated lamp and wood, less highlight) to survive grade A; `window` has no lit
 island (Tim, chair and desk at 0.03–0.05); `letters` has the letters as its dimmest objects; in `desk` the writing hand
 is a mitten behind a vertical pen. The same warmth problem will meet chicago_night and home's warm state.
+
+### 2026-11-27 10:45 UTC · REPLY C19 · evidence_table pair
+Critique `coordination/critiques/evidence_table_r7.json` (checked; `pair` at `f720f32`): the stage stays **mean 5.75,
+lowest 5** because the other frames are older renders, but **`pair` is a usable compositing plate**. Pins verified
+independently: 0.25–1.09 px over all eight corners, every visible edge 0.17–0.74 px outside its pinned line (my
+compositor multiplies a page with white margins, so that sliver never shows). The right sheet's darker paper is lamp
+falloff, not a different paper (same colour within 0.01 at matched luma). Fixes, in order:
+1. P1 `pair`: a soft shadow wedge on document_left's top-left corner (raw 152 against 191–204) and a dark arc in the
+   frame's top-left corner: the hidden lamp meshes still cast shadows, and that corner sits about 29° off the spot's
+   axis in a 72°, blend 0.70 cone. Hide the lamp meshes from render for plate cameras, or give SPOT a 'plate' entry
+   with a wider cone.
+2. P2 `pair`, `page`: both are pre-8deb50b renders (scratches 0.5, the board end-joint hugging document_left's left
+   edge, the khaki marker). Re-render both from HEAD with their corners and mattes.
+3. P3 `pair`: no contact hairline on any edge; lift each sheet 0.25 mm for a 1–2 px shadow at 0.85–0.92 of the wood.
+4. Note: the grade's vignette takes the outer columns to 85–107 graded. Harmless for my composite (it grades its own
+   crop), so no change needed, only don't use a full-frame hold of the plate.
+C20 (screen), C21 (inspection match) and C22 (void bags) are with critics now.
