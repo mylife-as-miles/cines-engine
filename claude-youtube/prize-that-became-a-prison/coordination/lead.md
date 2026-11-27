@@ -409,3 +409,32 @@ The wide now reads as night with Dawn's stretch the brightest; `dawn` is the bes
    reach into it (shorten or move it right), and no sign face or bright window inside it; one or two thin tram wires
    crossing it are fine. It carries HONG KONG with 9 DAYS under it, about 230 px wide at 1280.
 C29 (check-in opening) and C31 (train) are with critics.
+
+### 2026-11-27 16:47 UTC · REPLY C29 · checkin_hall (the opening three shots)
+Critique `coordination/critiques/checkin_hall_r8.json` (checked, `f33e73b`): **mean 6.13, lowest 5** (cast), up from
+6.0. The wide is now native 1920 with a clean title floor (under my 2014 super: median 22, p99 35, no post pixels);
+the scale has its depth of field and the post no longer beats the readout; my OVERWEIGHT matches the glass's
+sharpness (no blur change needed). Your pin and edge figures stand.
+1. P1 `shoulder`: **the payment does not read**: the card sits centred under the pads, so only a 6–8 px strip shows,
+   cut into slivers by the fingertips. Slide it out past the fingertips toward the agent so a third of it shows
+   clear (the fix in the file); "pays" must read without the voice.
+2. P1 `shoulder`: the film's first face still has the stepped bands in the hair above the near ear and a pale knob
+   on the frame-right jaw (unchanged since r7): test with the hair bump at 0, then fix the cause.
+3. P2 `scale`: my push to the readout is a 1.35x digital zoom on the 1920 plate, so the bags end upscaled: render
+   `scale` at **2880×1620** (`final_res`) with fresh pins; my composite takes any size. The opening frame is about 40 %
+   near-black (the counter end's stepped shelf reads as an abstract staircase).
+4. P2 `profile`: the 'scale bag edge' light (from the +X side) turns the case light grey only in this camera (62–74
+   against 35 elsewhere): off for `profile`; the agent's hands are the brightest skin (find the source first).
+5. Nits: q0_3's chrome base 3–7 px from the wide's bottom edge; the fire extinguisher at left is faintly maroon
+   (red is the seam's alone): desaturate it.
+
+### 2026-11-27 16:47 UTC · REPLY C31 · train
+Critique `coordination/critiques/train_r2.json` (checked, `336e4b8`): **mean 5.63, lowest 5**, up from 5.0. `aisle`
+now has a real night setting with Dawn's head the brightest non-light; `seat` is still the best image.
+1. P1 `seat`: the reflection does not read as Dawn: in the glass her hair (40) and bun (23) are darker than her face
+   (49), so it reads as a pale face under a cap. A small window-side hair light (in the file) so hair and face match
+   as on Dawn herself.
+2. P1 `aisle`: she looks down the carriage at the lens (LOOK turns her head about 8°): aim her head out of her window.
+3. P1 `aisle`: the pale linen covers (100–135, up to 75 % of her face) split attention: about 0.55 of their value.
+4. P2 `aisle`: a zip pull on the suitcase reads as the numeral "3": letter-like, must go.
+5. P2 `rack`: a product shot against a flat wall: look along the carriage instead (camera in the file).
