@@ -278,7 +278,9 @@ def build_cast():
                                       tone=(0.1, 0.1, 0.11), shoes="shoes04")
     holders["ShopNear"] = people.staff("ShopNear", 0)
     holders["ShopFar"] = people.staff("ShopFar", 1)
+    _STATE["subdivisions"] = {}
     for n, h in holders.items():
+        _STATE["subdivisions"][n] = []
         if n != "Dawn":
             for o in h.children_recursive:
                 if o.type == "MESH" and o.name.startswith(n + "_") and "shoes" not in o.name and "_body" not in o.name:
@@ -292,6 +294,7 @@ def build_cast():
             for md in getattr(o, "modifiers", []):
                 if md.type == "SUBSURF":
                     md.show_viewport = False
+                    _STATE["subdivisions"][n].append((md, md.render_levels))
     _STATE["holders"] = holders
     return holders
 
@@ -725,15 +728,24 @@ def which_camera():
     return None
 
 
-def apply_camera(name):
+def apply_camera(name, width=1280):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "walk")
     H = _STATE["holders"]
     if H:
         pose_cast(beat)
         only = cfg.get("only")
+        eye = Vector(cfg.get("loc", (0, 0, 0)))
+        forward = (Vector(cfg.get("aim", (0, 1, 0))) - eye).normalized()
         for n, h in H.items():
             vis = n in BLOCK[beat] and (only is None or n in only)
+            # In the wide a whole walker is under 100 pixels high. Stacking two
+            # level-two subdivisions on each scalp can exhaust memory across a
+            # nine-person street. Keep full detail in portraits and reflections.
+            depth = (h.location - eye).dot(forward)
+            distant = depth > 0 and cfg.get("lens", 35) * width * 1.9 < 128 * 36 * depth
+            for modifier, original in _STATE["subdivisions"][n]:
+                modifier.render_levels = min(original, 1) if distant else original
             for o in [h] + list(h.children_recursive):
                 o.hide_render = not vis
         for bag in _STATE["bags"].values():
@@ -791,7 +803,8 @@ def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):
-        apply_camera(which_camera())
+        resolution = kw.get("res", args[2] if len(args) > 2 else (1920, 1080))
+        apply_camera(which_camera(), resolution[0])
         kw.setdefault("world", WORLD)
         return orig(*args, **kw)
     render._orig = orig
