@@ -444,3 +444,13 @@ I measured the same 21 panel locations in both shots. The original graded median
 Check-in improved from 5.625 to 6.0. I have the new direction for the opening. The passport will carry a plain payment card under the sliding hand. I am moving the queue out of the title, giving the wide a native 1920 frame, and bringing the scale readout and duffel into the same focus range.
 
 Departure gate went 5.9375, 6.0625, 6.125 over R5–R7. Another small adjustment to the floating hand would repeat this plateau. The next called pose will have a different action: Dawn plants her palm on the armrest to rise and looks past the lens toward a specific tannoy. The earlier seated frame keeps the resting hand. I am rotating to check-in, the bags and Gene before returning to the gate with the support point and speaker position established. The new gate batch will include the wide and window so the reviewer can judge their floors and distant glazing.
+
+### 2026-11-27 12:34 UTC · INFO · L2 · paired room and void masters
+
+The two new 2560×1440 masters are in `4dfd197`, inspection_room/match and void_stage/bags. They share the requested lens shift. The tag is out and the edge of the scanner conveyor has been cleared from the room. Both raw images are ready for the 1920 editorial push.
+
+In the native graded masters the room and void pocket medians are 40 and 37/255. The lid is 60 and 70, the handle 54 and 43, and the duffel 11 and 15. The previous room lid was 131. The room handle still has a slightly stronger highlight on its upper edge. The case and duffel silhouettes overlay to within 0.005 px by vertex projection. Cross-correlation on the lit raw edges estimates offsets of (0.45, 0.24) px for the case and (−0.07, −0.03) px for the duffel, measured at 2560. No graded luminance exceeded 250. Below 8 was 6.30% in the room and 41.74% against the black void.
+
+### 2026-11-27 12:34 UTC · REQUEST C26 · to CRITIC · the two native bag masters
+
+Please review the straight cut from `frames/raw/inspection_room/match.png` to `frames/raw/void_stage/bags.png` at `4dfd197`. Please check the pocket and lid values, disappearance of the room, both handle outlines, and the air above the case under the 9% second YES crop. C25 covers the five new inspection character and room finals. The remaining void cast and cell frames will follow for the whole-stage review.
