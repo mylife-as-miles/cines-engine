@@ -104,3 +104,17 @@ What heaven has raised…
 - **Demos:** one demo of the full song on two or three of these, from the same lyrics and brief. The author picks the voice and sound.
 - **The chosen song:** split into stems (vocals, choir, drums, bass, strings) so the cut can drop the lead under dialogue and end sections exactly on the picture.
 - **Rights:** use only a model whose terms allow commercial use of the output; record it in `audio/CREDITS.md`.
+
+## 27 November: the stand-in was the wrong kind of thing; the demo package
+
+After the author's "after the council scene this will be a music montage ... like how arcane do and song like arcane", I tried to stand the song in with the free local music model (Stable Audio 3.0 Small Music, instrumental only). The first take came back as plain guitar rock and I started three "heavier" variants. The author stopped it: "No is this arcan style of music!?" and "Why are you doing the opposite of wgat I ask you it's not even like dune". They are right. An Arcane montage runs on a real sung song with a voice up front; the weight under this film's song is Dune's (giant low drums, low brass, a wordless cry, a deep drone), not a rock band. None of the local takes is used, and the montage is not cut until there is a song (see "The picture is recut to the song" above).
+
+One voice sample was also made with Gemini's speech model (the verse spoken by a low woman's voice, 994 audio tokens, about a cent; the exact price is not known here), on my reading of the author's "Suprise me". It read its own direction aloud for twenty seconds, and it is not used.
+
+**The demo package, shown to the author for a Go (nothing is sent before it):**
+
+- Model: Mureka 9.5 Song Generation on fal, endpoint `mureka/v9.5/generate/song`. Price read on fal's own listing on 27 November: **$0.15 a song when lyrics are supplied**, one song per request. Its inputs (fal's public schema): `lyrics` (up to 5,000 characters), `prompt` (with lyrics, a style control of up to 1,024 characters), `gender` (female or male), `duration` (120 to 300 s). It returns the audio and, when available, the lyric sections with their times.
+- Request: `lyrics` = `prompts/song/SONG_demo1_lyrics.txt`, `prompt` = `prompts/song/SONG_demo1_style.txt`, `gender` = female, `duration` = 180. One take.
+- The style text is this file's brief, changed in three ways: it is called a sung, modern, dark pop anthem made for a montage rather than alternative rock; it asks for Dune's weight by description (tribal drums, low brass, a throat-like drone, a wordless woman's wail); and it forbids electric guitar. It names no artist, film or song.
+- The lyrics are this file's proposal with the stage directions taken out (the stops are made in the cut) and one addition: a two-bar tag after verse 2, "(Hold it up) we held it up", a crowd's chant that Karst's "We stopped carrying it." then answers.
+- Not known until it is heard: whether the model keeps 84 BPM and D minor, how the choir and the chant come out, and whether the lead is low and raw enough. If the voice or sound is wrong, the next demo changes the style text only.
