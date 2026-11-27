@@ -10,8 +10,17 @@ VENV=${VENV:-$HOME/bpyenv}
 
 echo "== 1. Blender 5.3 as a Python module (needs Python 3.13) -> $VENV"
 PY=$(command -v python3.13 || command -v python3)
-"$PY" -m venv "$VENV"
-"$VENV/bin/pip" install -q bpy==5.3.0
+if "$PY" -c 'import ensurepip' 2>/dev/null; then
+  "$PY" -m venv "$VENV"
+  "$VENV/bin/python" -m pip install -q bpy==5.3.0
+elif command -v uv >/dev/null; then
+  # Debian can supply the interpreter and venv without the ensurepip package.
+  "$PY" -m venv --without-pip "$VENV"
+  uv pip install --python "$VENV/bin/python" bpy==5.3.0
+else
+  echo "Install the Python 3.13 venv package or uv to install Blender." >&2
+  exit 1
+fi
 "$VENV/bin/python" -c "import bpy; print('bpy', bpy.app.version_string)"
 
 echo "== 2. MPFB 2 (MakeHuman for Blender, CC0) as a Blender extension"
