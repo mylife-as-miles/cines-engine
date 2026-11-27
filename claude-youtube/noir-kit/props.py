@@ -240,10 +240,36 @@ def _smooth_tote_plate(holder, centre, radius, iters=12, fac=0.6):
     print(f"PROP flattened {len(sel)} vertices of {o.name[:24]} round the maker's plate", flush=True)
 
 
+def _plain_tote_panel(holder):
+    import numpy as np
+    # Projected from the inspection insert into the 4096px UVs. Reconstruct the
+    # grained panel's curvature from a collar of intact leather around the relief.
+    _retouch_tote_textures(holder, (452, 184, 555, 278), 158, feather=12)
+    mesh = next(o.data for o in holder.children_recursive if o.type == "MESH")
+    co = np.empty(len(mesh.vertices) * 3, np.float32)
+    mesh.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    y, z = (co[:, 1] - 0.001) / 0.029, (co[:, 2] - 0.134) / 0.019
+    radius = np.hypot(y, z)
+    front = np.abs(co[:, 0] - 0.118) < 0.023
+    ring = front & (radius > 1.05) & (radius < 1.65)
+    fit = np.column_stack((np.ones(len(y)), y, z, y * y, z * z, y * z))
+    coeff = np.linalg.lstsq(fit[ring], co[ring, 0], rcond=None)[0]
+    select = front & (radius < 1.30)
+    weight = np.clip((1.30 - radius[select]) / 0.45, 0, 1)
+    co[select, 0] += weight * ((fit[select] @ coeff) - co[select, 0])
+    mesh.vertices.foreach_set("co", co.ravel())
+    mesh.update()
+    print(f"PROP tote panel: {select.sum()} vertices from {ring.sum()} surrounding samples", flush=True)
+
+
 def remove_tote_plate(holder):
     """Remove the recurring handbag's modelled oval plate and its baked relief in memory."""
-    _retouch_tote_textures(holder, (445, 195, 545, 285), 100)
+    if holder.get("plain_tote_panel"):
+        return
+    _plain_tote_panel(holder)
     _smooth_tote_plate(holder, Vector((0.119, -0.005, 0.1401)), 0.014)
+    holder["plain_tote_panel"] = True
 
 
 def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, rough_add=0.0, hue=0.5, path=None, *, case_topstitch=False):
@@ -293,4 +319,6 @@ def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, r
                 _grade(slot.material, sat, val, rough_add, hue)
     bpy.context.view_layer.update()
     holder["dims"] = [round(v * k, 3) for v in (hi - lo)]
+    if name == "handbag-tote" and os.path.abspath(path) == os.path.join(PROPS, "handbag-tote.glb"):
+        remove_tote_plate(holder)
     return holder

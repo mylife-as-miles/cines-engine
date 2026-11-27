@@ -526,8 +526,6 @@ def bags():
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m)
-        if name == "handbag-tote":
-            props.remove_tote_plate(h)
         out += [h] + list(h.children_recursive)
     return out
 

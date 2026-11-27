@@ -731,34 +731,10 @@ def open_zip(holder):
             pull.matrix_parent_inverse = world_to_holder
 
 
-def finish_tote_panel(holder):
-    # Projected from the inspection insert into the 4096px UVs. Reconstruct the
-    # grained panel's curvature from a collar of intact leather around the relief.
-    props._retouch_tote_textures(holder, (452, 184, 555, 278), 158, feather=12)
-    mesh = next(o.data for o in holder.children_recursive if o.type == "MESH")
-    co = np.empty(len(mesh.vertices) * 3, np.float32)
-    mesh.vertices.foreach_get("co", co)
-    co = co.reshape(-1, 3)
-    y, z = (co[:, 1] - 0.001) / 0.029, (co[:, 2] - 0.134) / 0.019
-    radius = np.hypot(y, z)
-    front = np.abs(co[:, 0] - 0.118) < 0.023
-    ring = front & (radius > 1.05) & (radius < 1.65)
-    fit = np.column_stack((np.ones(len(y)), y, z, y * y, z * z, y * z))
-    coeff = np.linalg.lstsq(fit[ring], co[ring, 0], rcond=None)[0]
-    select = front & (radius < 1.30)
-    weight = np.clip((1.30 - radius[select]) / 0.45, 0, 1)
-    co[select, 0] += weight * ((fit[select] @ coeff) - co[select, 0])
-    mesh.vertices.foreach_set("co", co.ravel())
-    mesh.update()
-    print(f"INSPECT tote panel: {select.sum()} vertices from {ring.sum()} surrounding samples", flush=True)
-
-
 def load_props():
     out = {}
     for name, (size, axis, grade) in PROPS.items():
         h = props.load(name, size=size, axis=axis, loc=(0, 0, -5), **grade)
-        if name == "handbag-tote":
-            finish_tote_panel(h)
         fin = FINISH.get(name)
         if fin:
             meshes = [o for o in h.children_recursive if o.type == "MESH"]
@@ -774,8 +750,6 @@ def load_props():
                         b = next((n for n in slot.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
                         if b is not None and "Coat Weight" in b.inputs:
                             b.inputs["Coat Weight"].default_value = 0.0
-        if name == "handbag-tote":
-            props.remove_tote_plate(h)
         if name == "extra-bag-open":
             open_zip(h)
         out[name] = h
