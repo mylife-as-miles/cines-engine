@@ -9,12 +9,15 @@ Plan (metres, floor z = 0, the window looks along +Y):
   console   a walnut console desk against the left wall (y -1.45..-0.05) with a ceramic table lamp and a linen
             drum shade at its window end (the room's one warm practical), a framed abstract print above it, a bowl
             and a closed sketchbook on the top.
-  suitcase  Dawn's soft case stands by the door, handle up, ready.
-  living    a wool rug, a low walnut coffee table, a lounge chair and a side table in the right corner by the window.
+  suitcase  Dawn's soft case stands in front of the door, handle up, a blank leather tag on the grip: ready.
+  living    an oatmeal wool rug, a low walnut coffee table, a rust lounge chair, a side table with a small second
+            lamp between the chair and the glass, a rubber plant in the right bay; a plain passport on the console.
 
 Light, practical first: the table lamp (a warm bulb inside the translucent shade: pools of light up the wall and on
-the desk), the corridor light under the door, and the city's cool glow through the glass (one large soft area light
-just inside the window, hidden from camera and reflections). Nothing else: the room falls off into dark.
+the desk), the small side lamp by the window, the entry downlight over the case, the corridor light under the door,
+and the city's cool glow through the glass (one soft area light just inside the window, hidden from camera and
+reflections). The lamps are pushed amber in-scene and the walls are a warm greige, because the film's fixed grade
+desaturates and cools: this is the one hopeful chapter, and it must still read warm after the grade.
 """
 import math
 
@@ -34,9 +37,13 @@ DOOR = (0.49, 1.41, 2.13)                       # y0, y1, height
 CONSOLE = (-1.45, -0.05, 0.78)                  # y0, y1, top
 LAMP = (-2.79, -0.36)                           # lamp base centre on the console
 LAMP_BULB_Z = 1.30
-CASE = (-2.42, 1.12, -62.0)                     # suitcase footprint centre and turn (deg)
+CASE = (-2.44, 0.99, -62.0)                     # suitcase footprint centre and turn (deg): in front of the door's slab
 ENTRY_CAN = (-2.2, 0.8)                         # the entry downlight in the ceiling, by the door, just in front of the case
 ENTRY_POWER = 380.0
+SIDE = (1.40, 1.70)                             # the side table by the window, with the second (small) table lamp
+SIDE_BULB_Z = 0.97
+LAMP_RGB = (1.0, 0.42, 0.13)                    # tungsten pushed warm in-scene: the fixed film grade strips warmth
+ENTRY_RGB = (1.0, 0.42, 0.13)
 M = {}
 
 
@@ -174,17 +181,39 @@ def oak_floor():
     mp.inputs["Rotation"].default_value = (0, 0, math.radians(90))     # planks run along Y
     nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
     br = nt.nodes.new("ShaderNodeTexBrick")
-    br.offset, br.offset_frequency, br.squash, br.squash_frequency = 0.37, 1, 1.0, 1
+    br.offset, br.offset_frequency, br.squash, br.squash_frequency = 0.0, 1, 1.0, 1
     br.inputs["Scale"].default_value = 1.0
     br.inputs["Brick Width"].default_value = 1.85
     br.inputs["Row Height"].default_value = 0.185
     br.inputs["Mortar Size"].default_value = 0.0022
     br.inputs["Mortar Smooth"].default_value = 0.2
     br.inputs["Bias"].default_value = 0.0
-    br.inputs["Color1"].default_value = (0.235, 0.145, 0.085, 1)
-    br.inputs["Color2"].default_value = (0.15, 0.088, 0.048, 1)
+    br.inputs["Color1"].default_value = (0.26, 0.16, 0.09, 1)
+    br.inputs["Color2"].default_value = (0.13, 0.075, 0.04, 1)
     br.inputs["Mortar"].default_value = (0.03, 0.018, 0.01, 1)
-    nt.links.new(mp.outputs[0], br.inputs["Vector"])
+    # a random offset per row (white noise of the floored row index), so the end joints never line up into tiles
+    sp = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(mp.outputs[0], sp.inputs[0])
+    row = nt.nodes.new("ShaderNodeMath")
+    row.operation = "FLOOR"
+    rdiv = nt.nodes.new("ShaderNodeMath")
+    rdiv.operation = "DIVIDE"
+    rdiv.inputs[1].default_value = 0.185
+    nt.links.new(sp.outputs["Y"], rdiv.inputs[0])
+    nt.links.new(rdiv.outputs[0], row.inputs[0])
+    wn = nt.nodes.new("ShaderNodeTexWhiteNoise")
+    wn.noise_dimensions = "1D"
+    nt.links.new(row.outputs[0], wn.inputs["W"])
+    sh = nt.nodes.new("ShaderNodeMath")
+    sh.operation = "MULTIPLY_ADD"
+    sh.inputs[1].default_value = 1.85
+    nt.links.new(wn.outputs["Value"], sh.inputs[0])
+    nt.links.new(sp.outputs["X"], sh.inputs[2])
+    cb = nt.nodes.new("ShaderNodeCombineXYZ")
+    nt.links.new(sh.outputs[0], cb.inputs[0])
+    nt.links.new(sp.outputs["Y"], cb.inputs[1])
+    nt.links.new(sp.outputs["Z"], cb.inputs[2])
+    nt.links.new(cb.outputs[0], br.inputs["Vector"])
     # grain: noise stretched along the plank
     mg = nt.nodes.new("ShaderNodeMapping")
     mg.inputs["Scale"].default_value = (1.2, 38.0, 1.0)
@@ -266,13 +295,19 @@ def thin_glass(name="window glass"):
     nt = m.node_tree
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     tr = nt.nodes.new("ShaderNodeBsdfTransparent")
-    tr.inputs["Color"].default_value = (0.9, 0.93, 0.94, 1)
+    tr.inputs["Color"].default_value = (0.84, 0.8, 0.74, 1)       # a faint bronze tint, as on many high-rise glazing
     gl = nt.nodes.new("ShaderNodeBsdfGlossy")
     gl.inputs["Roughness"].default_value = 0.015
     fr = nt.nodes.new("ShaderNodeFresnel")
     fr.inputs["IOR"].default_value = 1.52
+    # night-window reflections kept a faint ghost (x 0.2), so the room does not muddle the city
+    fm = nt.nodes.new("ShaderNodeMath")
+    fm.name = "reflection"          # set per camera in chicago_night.apply_camera
+    fm.operation = "MULTIPLY"
+    fm.inputs[1].default_value = 0.2
+    nt.links.new(fr.outputs[0], fm.inputs[0])
     mx = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(fr.outputs[0], mx.inputs[0])
+    nt.links.new(fm.outputs[0], mx.inputs[0])
     nt.links.new(tr.outputs[0], mx.inputs[1])
     nt.links.new(gl.outputs[0], mx.inputs[2])
     nt.links.new(mx.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
@@ -346,10 +381,10 @@ def materials():
     M.clear()
     M.update(
         floor=oak_floor(),
-        wall=paint("wall paint", (0.43, 0.41, 0.38)),
-        ceiling=paint("ceiling paint", (0.46, 0.455, 0.44), 0.92, 0.03),
-        trim=paint("trim enamel", (0.5, 0.49, 0.46), 0.42, 0.02),
-        door=paint("door enamel", (0.40, 0.39, 0.37), 0.4, 0.02),
+        wall=paint("wall paint", (0.54, 0.45, 0.35)),                 # warm greige: the bounce stays warm
+        ceiling=paint("ceiling paint", (0.51, 0.47, 0.42), 0.92, 0.03),
+        trim=paint("trim enamel", (0.57, 0.51, 0.43), 0.42, 0.02),
+        door=paint("door enamel", (0.48, 0.415, 0.33), 0.4, 0.02),
         bronze=sk.mat("bronze aluminium", (0.05, 0.044, 0.038), 0.36, 0.85),
         glass=thin_glass(),
         steel=sk.mat("brushed steel", (0.5, 0.5, 0.5), 0.3, 1.0),
@@ -358,9 +393,10 @@ def materials():
         glaze=sk.mat("charcoal glaze", (0.03, 0.035, 0.042), 0.18),
         stoneware=sk.mat("stoneware", (0.32, 0.29, 0.25), 0.55),
         shade=shade_linen(),
-        rug=fabric("wool rug", (0.06, 0.057, 0.053), 700.0, 0.45, 0.08),
-        rug_border=fabric("wool rug border", (0.028, 0.027, 0.026), 700.0, 0.45, 0.08),
-        uphol=fabric("upholstery", (0.16, 0.115, 0.07), 1100.0, 0.3, 0.3),
+        rug=fabric("wool rug", (0.20, 0.17, 0.13), 700.0, 0.6, 0.08),            # warm oatmeal wool
+        rug_border=fabric("wool rug border", (0.10, 0.08, 0.06), 700.0, 0.6, 0.08),
+        uphol=fabric("upholstery", (0.30, 0.12, 0.06), 1100.0, 0.3, 0.15),       # rust wool: a warm accent
+        leather=sk.mat("tag leather", (0.14, 0.065, 0.03), 0.55),
         leatherette=sk.mat("book cloth", (0.07, 0.08, 0.1), 0.7),
         paper=sk.mat("sketch paper", (0.62, 0.6, 0.55), 0.9),
         print=print_image(),
@@ -410,9 +446,9 @@ def room():
         cyl(f"can_trim{i}", 0.065, 0.006, (x, y, H - 0.003), m["trim"], verts=40, bev=0.002)
         cyl(f"can_baffle{i}", 0.05, 0.008, (x, y, H - 0.002), m["dark"], verts=32)
     # the entry light is on: a warm lens in its can, and a downlight pooling on the floor by the door
-    cyl("can_lens", 0.034, 0.004, (ENTRY_CAN[0], ENTRY_CAN[1], H - 0.012), sk.emission("can_lens", (1.0, 0.82, 0.62), 14.0), verts=32)
+    cyl("can_lens", 0.034, 0.004, (ENTRY_CAN[0], ENTRY_CAN[1], H - 0.012), sk.emission("can_lens", ENTRY_RGB, 14.0), verts=32)
     li = bpy.data.lights.new("entry_light", "SPOT")
-    li.energy, li.color, li.shadow_soft_size = ENTRY_POWER, (1.0, 0.72, 0.48), 0.03
+    li.energy, li.color, li.shadow_soft_size = ENTRY_POWER, ENTRY_RGB, 0.03
     li.spot_size, li.spot_blend = math.radians(46), 0.6
     lo = _link(bpy.data.objects.new("entry_light", li))
     lo.location = (ENTRY_CAN[0], ENTRY_CAN[1], H - 0.02)
@@ -450,10 +486,11 @@ def door():
     y0, y1, dh = DOOR
     yc = (y0 + y1) / 2
     # casing on the room side
+    # the legs butt under the head casing, which stands 3 mm proud of them (no coincident faces at the corners)
     cw, ct = 0.075, 0.018
-    box("casing_l", (ct, cw, dh + cw), (W0 + ct / 2, y0 - cw / 2, (dh + cw) / 2), m["trim"], bevel=0.004)
-    box("casing_r", (ct, cw, dh + cw), (W0 + ct / 2, y1 + cw / 2, (dh + cw) / 2), m["trim"], bevel=0.004)
-    box("casing_top", (ct, y1 - y0 + 2 * cw, cw), (W0 + ct / 2, yc, dh + cw / 2), m["trim"], bevel=0.004)
+    box("casing_l", (ct, cw, dh), (W0 + ct / 2, y0 - cw / 2, dh / 2), m["trim"], bevel=0.004)
+    box("casing_r", (ct, cw, dh), (W0 + ct / 2, y1 + cw / 2, dh / 2), m["trim"], bevel=0.004)
+    box("casing_top", (ct + 0.003, y1 - y0 + 2 * cw + 0.01, cw), (W0 + (ct + 0.003) / 2, yc, dh + cw / 2), m["trim"], bevel=0.004)
     # jamb lining the opening
     for n, s, l in (("jamb_l", (0.12, 0.02, dh), (W0 - 0.06, y0 + 0.01, dh / 2)), ("jamb_r", (0.12, 0.02, dh), (W0 - 0.06, y1 - 0.01, dh / 2)),
                     ("jamb_top", (0.12, y1 - y0, 0.02), (W0 - 0.06, yc, dh - 0.01))):
@@ -555,10 +592,10 @@ def lamp():
         for v in ob.data.skin_vertices[0].data:
             v.radius = (0.0022, 0.0022)
     # the bulb: a soft warm globe and the light itself
-    b = sk.sphere("lamp_bulb", 0.03, (x, y, LAMP_BULB_Z), sk.emission("bulb", (1.0, 0.8, 0.6), 30.0))
+    b = sk.sphere("lamp_bulb", 0.03, (x, y, LAMP_BULB_Z), sk.emission("bulb", (1.0, 0.55, 0.25), 30.0))
     b.visible_shadow = False
     li = bpy.data.lights.new("lamp_light", "POINT")
-    li.energy, li.color, li.shadow_soft_size = 38.0, (1.0, 0.62, 0.33), 0.035
+    li.energy, li.color, li.shadow_soft_size = 65.0, LAMP_RGB, 0.035
     lo = _link(bpy.data.objects.new("lamp_light", li))
     lo.location = (x, y, LAMP_BULB_Z)
     return lo
@@ -596,15 +633,27 @@ def suitcase(props):
             a = Vector((x, y, 0)) + R @ Vector((gx, yy, 0.50))
             b = Vector((x, y, 0)) + R @ Vector((gx, yy, 0.61 + lift))
             tube(f"case_handle_{s}", [tuple(a), tuple(b)], 0.0085, M["steel"], res=4)
+        # a blank leather luggage tag on a strap, hanging from the grip (continuity with the inspection-room tag)
+        gz0 = min(p.z for p in grip_pts) + lift
+        gyc = (gy0 + gy1) / 2 + 0.035
+        W = lambda lx, ly, lz: tuple(Vector((x, y, 0)) + R @ Vector((lx, ly, lz)))
+        rz = math.radians(t)
+        box("case_tag_strap", (0.003, 0.011, 0.07), W(gx + 0.013, gyc, gz0 - 0.028), M["leather"], bevel=0.001,
+            rot=(0, 0, rz))
+        box("case_tag", (0.005, 0.058, 0.09), W(gx + 0.016, gyc, gz0 - 0.063 - 0.045), M["leather"], bevel=0.0024,
+            rot=(math.radians(4), 0, rz))
+        cyl("case_tag_eyelet", 0.005, 0.006, W(gx + 0.019, gyc, gz0 - 0.074), M["brass"],
+            rot=(0, math.radians(90), rz), verts=16)
     print(f"SET suitcase handle: {moved} vertices lifted", flush=True)
     return h
 
 
 def rug():
+    """Oatmeal wool with a darker bound border; a visible 10 mm edge."""
     m = M
     cx, cy, w, d = 0.35, 0.45, 2.7, 1.9
-    box("rug_border", (w, d, 0.01), (cx, cy, 0.005), m["rug_border"], bevel=0.004)
-    box("rug_field", (w - 0.16, d - 0.16, 0.0104), (cx, cy, 0.0052), m["rug"], bevel=0.003)
+    box("rug_border", (w, d, 0.010), (cx, cy, 0.005), m["rug_border"], bevel=0.0035)
+    box("rug_field", (w - 0.16, d - 0.16, 0.0106), (cx, cy, 0.0053), m["rug"], bevel=0.002)
 
 
 def coffee_table():
@@ -617,15 +666,18 @@ def coffee_table():
             cyl(f"ctable_leg{sx}{sy}", 0.02, 0.33, (cx + sx * 0.47, cy + sy * 0.2, 0.165), m["walnut"],
                 rot=(-sy * math.radians(5), sx * math.radians(5), 0), r2=0.012, verts=20)
     # two closed books and a low stoneware vase with three dry stems
-    box("book_a", (0.26, 0.2, 0.03), (cx - 0.28, cy + 0.04, 0.415), m["leatherette"], bevel=0.003, rot=(0, 0, math.radians(-7)))
+    # (the vase and its tall dry stems at the table's far-left end: at the other end they stood right in front of
+    # the window camera's lens)
+    box("book_a", (0.26, 0.2, 0.03), (cx + 0.26, cy + 0.04, 0.415), m["leatherette"], bevel=0.003, rot=(0, 0, math.radians(-7)))
     bk = sk.mat("book cloth 2", (0.2, 0.16, 0.11), 0.75)
-    box("book_b", (0.22, 0.17, 0.024), (cx - 0.27, cy + 0.03, 0.442), bk, bevel=0.003, rot=(0, 0, math.radians(5)))
+    box("book_b", (0.22, 0.17, 0.024), (cx + 0.27, cy + 0.03, 0.442), bk, bevel=0.003, rot=(0, 0, math.radians(5)))
+    vx = cx - 0.32
     lathe("vase", [(0.0, 0.0), (0.05, 0.0), (0.07, 0.04), (0.068, 0.12), (0.03, 0.2), (0.022, 0.24), (0.026, 0.25),
-                   (0.018, 0.25), (0.0, 0.2)], (cx + 0.3, cy - 0.05, 0.4), m["stoneware"], segs=48)
+                   (0.018, 0.25), (0.0, 0.2)], (vx, cy - 0.05, 0.4), m["stoneware"], segs=48)
     stem = sk.mat("dry stem", (0.17, 0.13, 0.08), 0.8)
     for i, (dx, dy, h) in enumerate(((0.0, 0.0, 0.62), (0.05, 0.02, 0.5), (-0.04, -0.03, 0.55))):
-        tube(f"stem{i}", [(cx + 0.3, cy - 0.05, 0.6), (cx + 0.3 + dx * 0.6, cy - 0.05 + dy * 0.6, 0.6 + h * 0.6),
-                          (cx + 0.3 + dx, cy - 0.05 + dy, 0.6 + h)], 0.0025, stem, res=2)
+        tube(f"stem{i}", [(vx, cy - 0.05, 0.6), (vx + dx * 0.6, cy - 0.05 + dy * 0.6, 0.6 + h * 0.6),
+                          (vx + dx, cy - 0.05 + dy, 0.6 + h)], 0.0025, stem, res=2)
 
 
 def strut(name, a, b, r1, r2, m, verts=20):
@@ -642,7 +694,7 @@ def lounge_chair():
     """A mid-century lounge chair by the window: walnut side frames (tapered legs, a flat arm rail), a deep seat
     cushion and a raked back cushion in a warm wool."""
     m = M
-    cx, cy, turn = 1.95, 1.05, math.radians(205)
+    cx, cy, turn = 1.95, 1.05, math.radians(95)
     R = Matrix.Rotation(turn, 4, "Z")
     O = Vector((cx, cy, 0))
     P = lambda x, y, z: tuple(O + R @ Vector((x, y, z)))
@@ -661,15 +713,136 @@ def lounge_chair():
     part("chair_rail_b", (0.64, 0.04, 0.06), (0, -0.31, 0.33), m["walnut"], 0.008)
     part("chair_seat", (0.62, 0.64, 0.14), (0, 0.0, 0.43), m["uphol"], 0.055, seg=5)
     part("chair_back", (0.6, 0.15, 0.54), (0, -0.33, 0.74), m["uphol"], 0.06, tilt=math.radians(-16), seg=5)
-    # the side table beside it, a small lamp-less tray table
-    tx, ty = 2.25, 1.62
+    # the side table between the chair and the glass, with the room's second warm practical on it
+    tx, ty = SIDE
     cyl("side_top", 0.22, 0.025, (tx, ty, 0.52), m["walnut"], verts=64, bev=0.006)
     cyl("side_stem", 0.022, 0.5, (tx, ty, 0.26), m["walnut"], verts=24)
     cyl("side_foot", 0.17, 0.02, (tx, ty, 0.01), m["walnut"], verts=64, bev=0.005)
+    side_lamp()
     return parts
 
 
-def window_light(power=30.0):
+def side_lamp():
+    """A small ceramic table lamp on the side table: a matt cream-glazed gourd base, a brass socket and a 0.26 m
+    linen drum. Its warm pool models the chair, rims Dawn's right side, and frames the cool city between two warm
+    islands."""
+    m = M
+    x, y = SIDE
+    z0 = 0.5325
+    glaze = sk.mat("side lamp glaze", (0.46, 0.4, 0.32), 0.42)
+    lathe("side_lamp_base", [(0.0, 0.0), (0.045, 0.0), (0.05, 0.006), (0.07, 0.05), (0.078, 0.1), (0.07, 0.16),
+                             (0.045, 0.21), (0.024, 0.235), (0.016, 0.25), (0.0, 0.252)], (x, y, z0), glaze, segs=48)
+    cyl("side_lamp_neck", 0.008, 0.06, (x, y, z0 + 0.28), m["brass"], verts=16)
+    cyl("side_lamp_socket", 0.015, 0.04, (x, y, z0 + 0.32), m["brass"], verts=20, bev=0.0015)
+    zb, zt = z0 + 0.31, z0 + 0.5
+    sh = lathe("side_lamp_shade", [(0.135, zb - z0), (0.12, zt - z0)], (x, y, z0), m["shade"], segs=64, cap=False)
+    so = sh.modifiers.new("thick", "SOLIDIFY")
+    so.thickness, so.offset = 0.003, 0.0
+    for s in (-1, 1):
+        tube(f"side_lamp_harp{s}", [(x + s * 0.045, y, z0 + 0.31), (x + s * 0.045, y, z0 + 0.47), (x, y, z0 + 0.505)],
+             0.002, m["brass"])
+    cyl("side_lamp_finial", 0.009, 0.016, (x, y, z0 + 0.513), m["brass"], verts=16)
+    b = sk.sphere("side_lamp_bulb", 0.024, (x, y, SIDE_BULB_Z), sk.emission("side bulb", (1.0, 0.58, 0.28), 26.0))
+    b.visible_shadow = False
+    li = bpy.data.lights.new("side_lamp_light", "POINT")
+    li.energy, li.color, li.shadow_soft_size = 28.0, (1.0, 0.46, 0.16), 0.03
+    lo = _link(bpy.data.objects.new("side_lamp_light", li))
+    lo.location = (x, y, SIDE_BULB_Z)
+    return lo
+
+
+def _leaf(name, L, W, m):
+    """One broad leaf along +X from its stalk: a widest-near-the-tip outline, a shallow V fold along the midrib and
+    a gentle droop toward the tip."""
+    nu, nv = 9, 5
+    bm = bmesh.new()
+    rows = []
+    for i in range(nu + 1):
+        u = i / nu
+        w = W * 0.5 * (math.sin(math.pi * min(1.0, u * 1.08)) ** 0.75) * (0.75 + 0.4 * u) if u < 1 else 0.0
+        row = []
+        for j in range(nv + 1):
+            v = -1.0 + 2.0 * j / nv
+            row.append(bm.verts.new((u * L, v * w, abs(v) * w * 0.28 - 0.32 * L * u * u)))
+        rows.append(row)
+    for i in range(nu):
+        for j in range(nv):
+            bm.faces.new((rows[i][j], rows[i + 1][j], rows[i + 1][j + 1], rows[i][j + 1]))
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    ob = _link(bpy.data.objects.new(name, me))
+    ob.data.materials.append(m)
+    so = ob.modifiers.new("thick", "SOLIDIFY")
+    so.thickness, so.offset = 0.0015, 0.0
+    return ob
+
+
+def plant(x=1.76, y=2.2):
+    """A rubber plant in a terracotta pot in the right bay, behind the lounge chair: three woody stems, broad dark
+    leaves turned out and up, against the city. The one organic, living thing in the room."""
+    m = M
+    rng = np.random.default_rng(7)
+    pot = sk.mat("terracotta", (0.36, 0.17, 0.09), 0.85)
+    lathe("plant_pot", [(0.0, 0.0), (0.11, 0.0), (0.115, 0.01), (0.14, 0.3), (0.152, 0.305), (0.152, 0.33),
+                        (0.138, 0.33), (0.13, 0.31), (0.0, 0.29)], (x, y, 0.0), pot, segs=48)
+    cyl("plant_soil", 0.132, 0.01, (x, y, 0.305), sk.mat("soil", (0.03, 0.022, 0.016), 0.95), verts=40)
+    leafm = sk.mat("leaf", (0.06, 0.1, 0.04), 0.42)
+    nt, b = _nodes(leafm)
+    b.inputs["Specular IOR Level"].default_value = 0.4
+    b.inputs["Sheen Weight"].default_value = 0.1
+    stem_m = sk.mat("plant stem", (0.09, 0.07, 0.04), 0.7)
+    n = 0
+    for s, (dx, dy, top, lean) in enumerate(((0.0, 0.0, 1.02, 0.0), (0.04, -0.03, 0.82, 0.12), (-0.04, 0.03, 0.68, -0.14))):
+        az0 = rng.uniform(0, 2 * math.pi)
+        base = Vector((x + dx, y + dy, 0.3))
+        tip = base + Vector((lean * math.cos(az0), lean * math.sin(az0), top - 0.3))
+        tube(f"plant_stem{s}", [tuple(base), tuple(base.lerp(tip, 0.5) + Vector((0.01, 0.0, 0.0))), tuple(tip)],
+             0.007 - 0.0015 * s, stem_m, res=2)
+        k = 7 if s == 0 else 6
+        for i in range(k):
+            t = 0.35 + 0.65 * (i + 1) / k
+            p = base.lerp(tip, t)
+            az = az0 + i * 2.4 + rng.uniform(-0.3, 0.3)
+            # keep the leaves inside the room and clear of the glass and the column
+            ox, oy = math.cos(az), math.sin(az)
+            if p.y + oy * 0.3 > 2.36 or p.x + ox * 0.3 > 2.56 or p.x + ox * 0.3 < 1.52:
+                az += math.pi * 0.8
+                ox, oy = math.cos(az), math.sin(az)
+            if p.y + oy * 0.3 > 2.36 or p.x + ox * 0.3 < 1.52:
+                az = math.atan2(-0.6, 0.8) + rng.uniform(-0.4, 0.4)
+            L = rng.uniform(0.23, 0.3) * (0.8 + 0.2 * t)
+            lf = _leaf(f"plant_leaf{n}", L, L * 0.52, leafm)
+            lf.location = p + Vector((math.cos(az) * 0.03, math.sin(az) * 0.03, 0.0))
+            lf.rotation_euler = (0.0, math.radians(-rng.uniform(10, 28)), az)
+            n += 1
+    return n
+
+
+def passport():
+    """A plain dark-blue passport by the bowl on the console (no crest, no text): the trip is near."""
+    m = sk.mat("passport cover", (0.03, 0.045, 0.1), 0.7)
+    box("passport", (0.088, 0.125, 0.007), (W0 + 0.27, -1.2, CONSOLE[2] + 0.0035), m, bevel=0.0015,
+        rot=(0, 0, math.radians(-14)))
+
+
+def case_card(power=9.0):
+    """A soft warm card in front of the suitcase (no visible source): lifts the weave and zip pulls so the case
+    reads, while it stays the darkest object in the shot."""
+    x, y, _ = CASE
+    p = Vector((-1.7, 0.55, 0.75))
+    d = (Vector((x, y, 0.36)) - p).normalized()
+    li = sk.area_light("case_card", tuple(p), (0.4, 0.4), power, (1.0, 0.6, 0.32), spread_deg=90)
+    li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    li.visible_camera = False
+    li.visible_glossy = False
+    return li
+
+
+def window_light(power=6.0):
     """The city's cool glow through the glass: one large soft area light just inside the window, facing the room,
     hidden from the camera and from reflections (the glass and floor reflect the real city instead)."""
     li = sk.area_light("city_glow", ((W0 + XM[-1]) / 2, WIN_Y - 0.08, 1.35), (XM[-1] - W0, 2.4), power, (0.55, 0.68, 1.0),
@@ -697,6 +870,9 @@ def build(props):
     coffee_table()
     lounge_chair()
     case = suitcase(props)
+    plant()
+    passport()
     window_light()
     door_light()
+    case_card()
     return case

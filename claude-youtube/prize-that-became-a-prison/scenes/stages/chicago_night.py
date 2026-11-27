@@ -4,7 +4,9 @@ A high-floor apartment at night: a wall of glass onto a procedural night city (c
 towers with scattered lit windows, a downtown cluster, the grid of streets below as rivers of light, nothing
 recognisable), a walnut console desk with a warm table lamp (the film's warmest light), the entry door with the
 corridor's light under it, and Dawn's suitcase standing by the door, handle up, ready for the trip. Dawn
-(people.dawn()) stands at the glass with a mug in both hands, looking out at the city: calm, hopeful, ordinary.
+(people.dawn()) stands at the glass with a mug held in both hands at chest height, her weight on one leg, looking
+out at the downtown towers: calm, hopeful, ordinary. A second small lamp on the side table frames the cool city
+between two warm islands and rims her warm.
 
 The script asks not to invent an image of Dawn at work, so she is at home, and the "reception desk" of the
 visual notes becomes a console desk (the room's lit island).
@@ -12,8 +14,11 @@ visual notes becomes a console desk (the room's lit island).
 Cameras (beat ch01):
   wide      from the room's far corner: the lamp-lit console and the door with the suitcase on the left, the glass
             wall and the city across the frame, Dawn small at the window on the right third
-  window    behind Dawn and a little to her left: her figure dark against the skyline, a warm edge from the lamp
+  window    behind Dawn, a little to her left and low: her head and shoulders dark against the horizon glow, a warm
+            edge from the side lamp on her far side
   suitcase  a low, controlled close-up: the packed case by the door, the city soft in the glass beyond
+
+Every camera gets clip_end 20 km in apply_camera() (setkit's 1000 m default cut off the sky and the downtown).
 
     <bpy python> -I scenes/shoot.py -- chicago_night <cam> out.png [--nocast]
 """
@@ -26,7 +31,6 @@ sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import bpy  # noqa: E402
-import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
 import cast as castkit  # noqa: E402
@@ -37,11 +41,13 @@ import setkit as sk  # noqa: E402
 import chicago_night_city as city  # noqa: E402
 import chicago_night_set as st  # noqa: E402
 
-EXPOSURE = -1.5
+EXPOSURE = -0.5
 
-DAWN = (0.51, 1.93, 190.0)                 # where she stands (footprint) and her facing: out of the window (+Y)
-MUG = (0.11, 0.32, 1.05)                   # the mug in her right hand: her frame (x to her right, y forward, z up)
-LOOK = (-650.0, 1200.0, 70.0)              # the downtown cluster, a little left of it
+DAWN = (0.51, 1.93, 172.0)                 # where she stands (footprint) and her facing: out of the window (+Y)
+MUG = (0.06, 0.30, 1.22)                   # the mug in both hands at chest height: her frame (x right, y forward, z up)
+LOOK = (-470.0, 1650.0, 190.0)             # the downtown cluster, the eyes lifted a few degrees: looking out, hopeful
+# weight on her right leg: hips 2.5 cm over it and 6 mm down, the free (left) foot 6 cm forward and turned out
+STANCE = dict(hip_side=0.025, hip_down=0.004, hip_tilt=4.0, foot_fwd=0.06, foot_out=10.0)
 
 FOCUS = {
     "fx_dawn": (DAWN[0], DAWN[1], 1.2),
@@ -52,16 +58,25 @@ FOCUS = {
 CAMERAS = {
     # Ch 01: the whole room from its far corner at a standing eye line: the warm lamp island and the door with the
     # suitcase on the left, the glass wall and the night city across, Dawn small at the window on the right third
-    "wide": dict(loc=(2.7, -2.42, 1.6), aim=(-1.15, 1.75, 1.0), lens=24, focus="fx_dawn", fstop=5.6, beat="ch01",
-                 exposure=-1.0),
-    # Ch 01: behind her, a little to her left and below her eyes: her figure dark against the lit skyline
-    "window": dict(loc=(0.05, 0.22, 1.45), aim=(0.15, 2.45, 1.33), lens=28, focus="fx_head", fstop=2.8, beat="ch01",
-                   exposure=-0.9),
+    # (level camera, framed down with lens shift so the door casing and the mullions stay vertical)
+    "wide": dict(loc=(2.7, -2.42, 1.6), aim=(-1.15, 1.75, 1.6), lens=24, focus="fx_dawn", fstop=5.6, beat="ch01",
+                 exposure=0.5, shift_y=-0.085, glass_reflection=0.06),
+    # Ch 01: behind her, a little to her left, low: the horizon glow crosses her shoulder blades, her head and
+    # shoulders stand against the glow (the +10.5..+19.5 degree clear wedge of the skyline)
+    "window": dict(loc=(0.05, 0.22, 1.20), aim=(0.15, 2.45, 1.32), lens=28, focus="fx_head", fstop=2.8, beat="ch01",
+                   exposure=0.1),
     # Ch 01: low and close: the packed case by the door, the city soft in the glass beyond
-    "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.95, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01",
-                     exposure=-1.1),
+    "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.7, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01",
+                     exposure=-1.05),
 }
 TRIMS = {"wide": {}, "window": {}, "suitcase": {}}
+# objects (and lights) kept out of glossy rays per camera. In the window shot her own reflection would stand beside
+# her as a ghost head (the cast is hidden from glossy there) and the lamps and the entry can would float in the glass
+# as bright discs; in the suitcase shot the console lamp would stand among the towers. The wide keeps them: its floor
+# and walnut need the lamps' highlights, and the glass reflects at only 0.2 of its Fresnel.
+GLOSSY_CTRL = ("lamp_shade", "lamp_bulb", "lamp_light", "side_lamp_", "can_lens")
+NO_GLOSSY = {"window": ("lamp_shade", "lamp_bulb", "lamp_light", "side_lamp_", "can_lens"),
+             "suitcase": ("lamp_shade", "lamp_bulb", "lamp_light", "can_lens")}
 _STATE = {"cast": [], "dawn": None}
 
 
@@ -171,29 +186,6 @@ def ground(holder):
     return lo
 
 
-def _arm_dirs(fwd, out, side):
-    f, o = np.radians(fwd), np.radians(out)
-    return np.stack([side * np.cos(f) * np.sin(o), -np.sin(f), -np.cos(f) * np.cos(o)], axis=-1)
-
-
-def solve_arm(holder, side, target, prefer=(40.0, 8.0, 80.0), fwd=(-10, 100), elbow=(0, 140), out=(-12, 40)):
-    """(forward, out, elbow) for rigged.pose_figure that puts the palm's centre on `target` (world). From
-    inspection_room: analytic forward kinematics of pose_figure's arm, searched on a grid, pulled to `prefer`."""
-    rig = rigged.rig_of(holder)
-    k = "L" if side > 0 else "R"
-    pb = rig.pose.bones
-    S = np.array(pb[f"upper_arm_fk.{k}"].head)
-    L1, L2, L3 = (pb[f"{b}.{k}"].length for b in ("upper_arm_fk", "forearm_fk", "hand_fk"))
-    T = np.array(rig.matrix_world.inverted() @ Vector(target))
-    F, O, E = np.meshgrid(np.arange(fwd[0], fwd[1] + 1, 2.0), np.arange(out[0], out[1] + 1, 2.0), np.arange(elbow[0], elbow[1] + 1, 2.0),
-                          indexing="ij")
-    palm = S + L1 * _arm_dirs(F, O, side) + L2 * _arm_dirs(F + E, O * 0.6, side) + 0.5 * L3 * _arm_dirs(F + E + 4, O * 0.4, side)
-    err = np.linalg.norm(palm - T, axis=-1)
-    cost = err + 0.0004 * (np.abs(F - prefer[0]) + np.abs(O - prefer[1]) + 0.5 * np.abs(E - prefer[2]))
-    i = np.unravel_index(np.argmin(cost), cost.shape)
-    return (float(F[i]), float(O[i]), float(E[i])), float(err[i])
-
-
 def eye_centre(holder):
     rig = rigged.rig_of(holder)
     m = rig.pose.bones["head"].matrix
@@ -242,7 +234,76 @@ def _w(local):
 
 
 CURL = {"R": {"f_index": (26, 34), "f_middle": (30, 38), "f_ring": (32, 40), "f_pinky": (34, 42), "thumb": (6, 16)},
-        "L": {"f_index": (10, 12), "f_middle": (12, 15), "f_ring": (14, 17), "f_pinky": (15, 19), "thumb": (0, 8)}}
+        "L": {"f_index": (24, 32), "f_middle": (28, 36), "f_ring": (30, 38), "f_pinky": (32, 40), "thumb": (6, 14)}}
+
+
+def stance(holder):
+    """Weight on the right leg: the torso control moved over the standing leg and a touch down (the knees soften),
+    the free left foot a little forward and turned out. Armature space: the figure faces -Y, +X is her left."""
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    k = 1.0 / (rig.scale[0] * holder["ks"])
+    if "torso" in pb:
+        m = pb["torso"].matrix.copy()
+        pb["torso"].matrix = Matrix.Translation((-STANCE["hip_side"] * k, 0.0, -STANCE["hip_down"] * k)) @ m
+        bpy.context.view_layer.update()
+    if "hips" in pb:      # the pelvis tilts: the free (left) hip drops, so that knee softens and the standing leg stays long
+        m = pb["hips"].matrix.copy()
+        head = m.translation.copy()
+        pb["hips"].matrix = Matrix.Translation(head) @ Matrix.Rotation(math.radians(STANCE["hip_tilt"]), 4, "Y") @ \
+            Matrix.Translation(-head) @ m
+    n = "foot_ik.L"
+    if n in pb:
+        m = pb[n].matrix.copy()
+        head = m.translation.copy()
+        r = Matrix.Rotation(math.radians(STANCE["foot_out"]), 4, "Z")
+        pb[n].matrix = Matrix.Translation((0.0, -STANCE["foot_fwd"] * k, 0.0)) @ Matrix.Translation(head) @ r @ \
+            Matrix.Translation(-head) @ m
+    bpy.context.view_layer.update()
+
+
+def knee_angles(holder):
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    out = {}
+    for k in ("L", "R"):
+        a, b = pb.get(f"DEF-thigh.{k}"), pb.get(f"DEF-shin.{k}")
+        if a is None or b is None:
+            a, b = pb.get(f"thigh_ik.{k}"), pb.get(f"shin_ik.{k}")
+        if a is None or b is None:
+            continue
+        va, vb = (a.tail - a.head).normalized(), (b.tail - b.head).normalized()
+        out[k] = round(math.degrees(va.angle(vb)), 1)
+    return out
+
+
+def ik_arm(holder, side, palm, pole=(0.45, 0.3, -1.0)):
+    """Aim the FK arm so the palm's centre lands on `palm` (world): an analytic two-bone solve in armature space,
+    the elbow bent toward `pole` (out to her side, back and down), the wrist straight."""
+    rig = rigged.rig_of(holder)
+    k = "L" if side > 0 else "R"
+    pb = rig.pose.bones
+    T = rig.matrix_world.inverted() @ Vector(palm)
+    S = pb[f"upper_arm_fk.{k}"].head.copy()
+    L1, L2, L3 = (pb[f"{b}.{k}"].length for b in ("upper_arm_fk", "forearm_fk", "hand_fk"))
+    P = Vector((side * pole[0], pole[1], pole[2]))
+    fdir = (T - S).normalized()
+    for _ in range(6):
+        W = T - fdir * 0.5 * L3
+        d = W - S
+        dist = min(d.length, (L1 + L2) * 0.995)
+        u = d.normalized()
+        a = (L1 * L1 - L2 * L2 + dist * dist) / (2 * dist)
+        h = math.sqrt(max(0.0, L1 * L1 - a * a))
+        v = (P - u * P.dot(u)).normalized()
+        E = S + u * a + v * h
+        fdir = (W - E).normalized()
+    rigged._aim(rig, f"upper_arm_fk.{k}", E - S)
+    rigged._aim(rig, f"forearm_fk.{k}", W - E)
+    rigged._aim(rig, f"hand_fk.{k}", fdir)
+    hb = pb[f"hand_fk.{k}"]
+    got = rig.matrix_world @ (hb.head + (hb.tail - hb.head) * 0.5)
+    return (got - Vector(palm)).length
 
 
 def curl_fingers(holder):
@@ -258,20 +319,17 @@ def curl_fingers(holder):
 
 
 def pose_dawn(h):
-    """Standing at the glass, a mug in her right hand at her waist, the left arm loose at her side, her head turned
-    a little toward the towers and lifted a touch: calm, looking out."""
+    """Standing at the glass, the mug held in both hands at chest height, her weight on one leg, her head turned
+    toward the downtown towers and lifted a touch: calm, looking out, hopeful."""
     x, y, f = DAWN
     h.location = (x, y, 0.0)
     h.rotation_euler = (0, 0, math.radians(f))
     bpy.context.view_layer.update()
-    base = {"chest": (-2.0, -4.0), "neck": (0.0, 0.0), "fingers": 0, "l_arm": (5.0, 7.0, 16.0)}
-    rigged.pose_figure(h, base)
+    base = {"chest": (-2.0, -4.0), "neck": (0.0, 0.0), "fingers": 0}
     mug = _w(MUG)
     right = (_w((1, 0, 0)) - _w((0, 0, 0))).normalized()
     fwd = (_w((0, 1, 0)) - _w((0, 0, 0))).normalized()
-    tr = mug + right * 0.052 - fwd * 0.006
-    ra, er = solve_arm(h, -1, tr, prefer=(22.0, 6.0, 80.0), fwd=(5, 70), elbow=(40, 130))
-    pose = dict(base, r_arm=ra)
+    pose = dict(base)
     d, t = -3.0, 0.0
     tgt = Vector(LOOK)
     for _ in range(4):
@@ -286,19 +344,25 @@ def pose_dawn(h):
         d = max(-15.0, min(30.0, d + dp))
     pose["head"] = (round(d, 1), round(t, 1))
     rigged.pose_figure(h, pose)
-    # the right palm turned in to the mug (forearm roll), fingers round it; the left hand loosely curled
-    n, a = palm_normal(h, -1)
-    want = -right
-    phi = 0.0
-    if n is not None:
-        c = a.cross(n)
-        phi = math.degrees(math.atan2(c.dot(want), n.dot(want) - a.dot(n) * a.dot(want)))
-        _roll(h, "forearm_fk.R", max(-110.0, min(110.0, phi)))
+    stance(h)
+    # both palms on the mug's sides, a little behind its centre line (the fingers wrap forward round it)
+    er = ik_arm(h, -1, mug + right * 0.052 - fwd * 0.008)
+    el = ik_arm(h, 1, mug - right * 0.052 - fwd * 0.008)
+    # each palm turned in to the mug (forearm roll), the fingers curled round it
+    rolls = []
+    for side, bone, want in ((-1, "forearm_fk.R", -right), (1, "forearm_fk.L", right)):
+        n, a = palm_normal(h, side)
+        phi = 0.0
+        if n is not None:
+            c = a.cross(n)
+            phi = math.degrees(math.atan2(c.dot(want), n.dot(want) - a.dot(n) * a.dot(want)))
+            _roll(h, bone, max(-110.0, min(110.0, phi)))
+        rolls.append(round(phi))
     curl_fingers(h)
     lo = ground(h)
-    print(f"CHICAGO Dawn pose: r_arm {ra} ({er * 1000:.0f} mm), roll {phi:.0f}, head {pose['head']}, "
-          f"grounded by {lo * 1000:+.0f} mm", flush=True)
-    return mug
+    print(f"CHICAGO Dawn pose: palms off the mug R {er * 1000:.0f} mm L {el * 1000:.0f} mm, rolls {rolls}, "
+          f"head {pose['head']}, knees {knee_angles(h)}, grounded by {lo * 1000:+.0f} mm", flush=True)
+    return mug - Vector((0.0, 0.0, lo))
 
 
 def mug_prop(c):
@@ -327,12 +391,30 @@ def apply_camera(name):
             setattr(sc.cycles, k, v)
         except (AttributeError, TypeError):
             pass
+    # the camera must see the whole city: setkit.camera() leaves Blender's 1000 m clip_end, but the sky dome has a
+    # radius of 15 km and the downtown cluster stands 1.7 km out
+    cam = sc.camera
+    if cam is not None:
+        cam.data.clip_start, cam.data.clip_end = 0.05, 20000.0
+        cam.data.shift_y = CAMERAS.get(name, {}).get("shift_y", 0.0)
+    # the glass's reflection strength: in the wide even 0.2 of Fresnel showed the console lamp's spill on the wall
+    # as an orange smear among the towers
+    g = bpy.data.materials.get("window glass")
+    if g is not None and "reflection" in g.node_tree.nodes:
+        g.node_tree.nodes["reflection"].inputs[1].default_value = CAMERAS.get(name, {}).get("glass_reflection", 0.2)
+    for o in _STATE.get("cast", []):
+        o.visible_glossy = name != "window"
+    hide = NO_GLOSSY.get(name, ())
+    for o in bpy.data.objects:
+        if o.name.startswith(GLOSSY_CTRL):
+            o.visible_glossy = not o.name.startswith(hide)
     trims = TRIMS.get(name, {})
     for n, base in _STATE.get("base", {}).items():
         o = bpy.data.objects.get(n)
         if o is not None:
             o.data.energy = base * trims.get(n, 1.0)
-    print(f"CHICAGO camera {name}: trims {trims}", flush=True)
+    print(f"CHICAGO camera {name}: clip {cam.data.clip_end if cam else None}, shift_y "
+          f"{cam.data.shift_y if cam else None}, trims {trims}", flush=True)
 
 
 def which_camera():

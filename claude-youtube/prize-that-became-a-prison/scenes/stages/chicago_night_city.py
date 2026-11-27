@@ -22,9 +22,12 @@ import numpy as np
 
 GROUND = -60.0
 FOG_D = 2300.0
-HORIZON = (0.25, 0.27, 0.32)       # the haze lit by the city, at the horizon (emission, linear)
-BUILDING_FOG = (0.085, 0.1, 0.13)     # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
-SKY_TOP = (0.012, 0.016, 0.03)
+FOG_BUILDINGS = 1200.0             # buildings fade faster than lights, so near, mid and far layers separate
+# Sky levels set for the camera exposures (-0.4 to -0.6, AgX) now that the camera sees past 1 km (clip_end 20 km):
+# the horizon band lands near 70/255 raw, the sky behind Dawn's head about 30-45/255, the upper sky 12-20/255.
+HORIZON = (0.104, 0.1, 0.108)      # the haze lit by the city, at the horizon (emission, linear): a faint sodium lift
+BUILDING_FOG = (0.034, 0.038, 0.048)  # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
+SKY_TOP = (0.004, 0.005, 0.01)
 DOWNTOWN = (-470.0, 1650.0)           # the tower cluster's centre: about 17 degrees left of straight out
 UPTOWN = (700.0, 1700.0, 560.0, 0.62)  # a second, lower cluster to the right (x, y, radius, height factor)
 _RNG = random.Random(11)
@@ -255,19 +258,25 @@ def building_mat():
     c1 = cell.outputs["Value"]
     c2 = nb.sep(cell.outputs["Color"])
     fl = nb.white(nb.comb(nb.mul(seed, 0.37), cv, 3.0)).outputs["Value"]
-    lit = nb.math("MAXIMUM", nb.math("LESS_THAN", c1, litf), nb.math("LESS_THAN", fl, nb.mul(0.10, kind)))
+    lit_cell = nb.math("LESS_THAN", c1, litf)
+    lit_floor = nb.mul(nb.math("LESS_THAN", fl, nb.mul(0.10, kind)), nb.math("SUBTRACT", 1.0, lit_cell))
     bright = nb.add(0.25, nb.mul(0.75, c2[0]))
     warm, cool, tv = (1.0, 0.70, 0.42), (0.74, 0.86, 1.0), (0.42, 0.55, 1.0)
     col = nb.mixc(kind, warm, cool)
     col = nb.mixc(nb.math("LESS_THAN", c2[1], 0.08), col, tv)
     col = nb.mixc(nb.mul(c2[2], 0.35), col, (0.95, 0.92, 0.85))
-    win = nb.mul(nb.mul(mask, lit), bright)
-    emit = nb.scale(col, nb.mul(win, 3.6))
-    # floodlit crowns: the top 10 m of a few towers, a soft vertical gradient
+    emit = nb.scale(col, nb.mul(nb.mul(nb.mul(mask, lit_cell), bright), 3.6))
+    # whole lit office floors: softer and warm-neutral, so they read as a lit floor, not a hard white plank
+    emit = nb.vadd(emit, nb.scale((0.95, 0.85, 0.7), nb.mul(nb.mul(nb.mul(mask, lit_floor), bright), 1.5)))
+    # unlit glass still catches the sky: a faint cool cell, so towers read as structure and not cut-outs
+    unlit = nb.math("SUBTRACT", 1.0, nb.math("MAXIMUM", lit_cell, lit_floor))
+    emit = nb.vadd(emit, nb.scale((0.55, 0.62, 0.8), nb.mul(nb.mul(mask, unlit), nb.add(0.006, nb.mul(0.006, c2[0])))))
+    # floodlit crowns: the top 10 m of a few towers, a soft vertical gradient broken into vertical bays
     band = nb.math("GREATER_THAN", lz, nb.math("SUBTRACT", nb.mul(top, 1000.0), 10.0))
     fall = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", nb.math("SUBTRACT", nb.mul(top, 1000.0), lz), 12.0), clamp=True)
+    bays = nb.add(0.5, nb.mul(0.5, nb.math("GREATER_THAN", fu, 0.3)))
     ccol = nb.mixc(csel, (0.70, 0.80, 1.0), (1.0, 0.86, 0.66))
-    crown_e = nb.scale(ccol, nb.mul(nb.mul(nb.mul(band, crown), nb.mul(side, fall)), 1.4))
+    crown_e = nb.scale(ccol, nb.mul(nb.mul(nb.mul(band, crown), nb.mul(nb.mul(side, fall), bays)), 0.7))
     emit = nb.vadd(emit, crown_e)
     nt.links.new(emit, b.inputs["Emission Color"])
     b.inputs["Emission Strength"].default_value = 1.0
@@ -276,7 +285,7 @@ def building_mat():
     nt.links.new(fac, b.inputs["Base Color"])
     nt.links.new(nb.add(0.22, nb.mul(0.45, nb.math("SUBTRACT", 1.0, kind))), b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.45
-    _fog_out(nt, nb, b.outputs[0], 0.8, colour=BUILDING_FOG)
+    _fog_out(nt, nb, b.outputs[0], 0.8, fog_d=FOG_BUILDINGS, colour=BUILDING_FOG)
     return m
 
 
@@ -293,7 +302,9 @@ def sky_mat():
     cr.interpolation = "EASE"
     cr.elements[0].position, cr.elements[0].color = 0.0, (*HORIZON, 1)
     cr.elements[1].position, cr.elements[1].color = 1.0, (*SKY_TOP, 1)
-    for pos, col in ((0.025, (0.2, 0.22, 0.27)), (0.07, (0.125, 0.142, 0.185)), (0.18, (0.062, 0.074, 0.105)), (0.45, (0.026, 0.032, 0.052))):
+    # a glow that holds up to about 6 degrees (Dawn's shoulders from the window camera), then falls off cooler
+    for pos, col in ((0.035, (0.086, 0.084, 0.092)), (0.1, (0.052, 0.053, 0.062)), (0.25, (0.024, 0.026, 0.034)),
+                     (0.5, (0.011, 0.012, 0.018))):
         el = cr.elements.new(pos)
         el.color = (*col, 1)
     nt.links.new(nb.math("MAXIMUM", e, 0.0), ramp.inputs["Fac"])
@@ -445,6 +456,33 @@ def plan(seed=11):
 towers_tops = []
 
 
+def rooftops(lo, hi, data, crown, seed=23, reach=1600.0):
+    """Mechanical units and stair bulkheads (1-3 small boxes, 1.5-3.5 m tall) on the near low-rise roofs, so the
+    roofs seen from above are not bare slabs. Its own random stream: the city's layout is unchanged."""
+    rng = np.random.default_rng(seed)
+    h = hi[:, 2] - lo[:, 2]
+    c = (lo[:, :2] + hi[:, :2]) / 2
+    d = np.hypot(c[:, 0], c[:, 1])
+    w = np.minimum(hi[:, 0] - lo[:, 0], hi[:, 1] - lo[:, 1])
+    sel = np.where((h < 60) & (d < reach) & (w > 10) & (rng.random(len(h)) < 0.75))[0]
+    a_lo, a_hi = [], []
+    for i in sel:
+        for _ in range(rng.integers(1, 4)):
+            sx, sy = rng.uniform(2.0, 6.0, 2)
+            sz = rng.uniform(1.5, 3.5)
+            x0 = rng.uniform(lo[i, 0] + 1.5, hi[i, 0] - 1.5 - sx)
+            y0 = rng.uniform(lo[i, 1] + 1.5, hi[i, 1] - 1.5 - sy)
+            a_lo.append((x0, y0, hi[i, 2]))
+            a_hi.append((x0 + sx, y0 + sy, hi[i, 2] + sz))
+    if not a_lo:
+        return lo, hi, data, crown
+    n = len(a_lo)
+    zd = np.zeros((n, 3))
+    zd[:, 0] = rng.random(n)
+    return (np.vstack([lo, a_lo]), np.vstack([hi, a_hi]), np.vstack([data, zd]),
+            np.vstack([crown, np.zeros((n, 3))]))
+
+
 def streets(seed=5):
     """Street-light points (centre, radius, colour) and road-surface glow strips (lo, hi, colour)."""
     rng = random.Random(seed)
@@ -567,6 +605,7 @@ def build():
 
     # buildings
     lo, hi, data, crown = plan()
+    lo, hi, data, crown = rooftops(lo, hi, data, crown)
     v, f, lco = boxes(lo, hi)
     me = fast_mesh("city_buildings", v, f, 4)
     point_attr(me, "lco", lco)
