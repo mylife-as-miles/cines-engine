@@ -111,7 +111,7 @@ CAMERAS = {
                  lamp=(-0.35, 0.20, -123.0), exposure=-1.18, final_res=(2560, 1440)),
     "pair": dict(loc=(0.07, -0.508, TOP + 0.82), aim=(0.05, -0.008, TOP), lens=54,
                  focus="fx_page", fstop=6.3, beat="plate", show=("pair sheets", "document tools"),
-                 lamp=(-0.35, 0.20, -122.0), exposure=-1.22, final_res=(2560, 1440)),
+                 lamp=(-0.35, 0.20, -122.0), spot=(88.0, 0.60), exposure=-1.22, final_res=(2560, 1440)),
     "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.110), lens=50,
                    focus="fx_screen", fstop=2.2, beat="ch02", show=("screen spill",), hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
                    exposure=-1.6, final_res=(2560, 1440)),
@@ -356,6 +356,7 @@ def lamp():
     for o in (spot, glow, rim, arm):
         o["energy0"] = o.data.energy
     _STATE["lamp"] = h
+    _STATE["lamp_meshes"] = [ob for ob in h.children_recursive if ob.type == "MESH" and not ob.hide_render]
     _STATE["lamp_parts"] = [(o, o.matrix_world.copy()) for o in parts]
     return h
 
@@ -607,6 +608,8 @@ def document_plates():
         # A flat A4 spans the narrow board joints instead of conforming to their bevels.
         pp.SUPPORT.clear()
         sheet = pp.sheet(name, m["plate_paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0)
+        if group_name == "pair sheets":
+            sheet.location.z += 0.00025
         sheet.pass_index = 1
         for face in sheet.data.polygons:
             face.use_smooth = False
@@ -807,9 +810,13 @@ def apply_camera(name):
     bpy.data.objects["laptop_screen_light"].data.energy = 5.0 if name == "screen" else 22.0
     set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
     plate = beat == "plate"
-    for ob in _STATE["lamp"].children_recursive:
-        if ob.type == "MESH":
-            ob.visible_camera = not plate
+    for ob in _STATE["lamp_meshes"]:
+        ob.hide_render = plate
+    if "spot" in cfg:
+        degrees, blend = cfg["spot"]
+        spot = bpy.data.objects["lamp_spot"].data
+        spot.spot_size, spot.spot_blend = math.radians(degrees), blend
+    bpy.data.objects["cone_haze"].hide_render = plate
     for obj_name in ("lamp_spot", "lamp_glow", "lamp_bulb"):
         ob = bpy.data.objects[obj_name]
         ob.visible_glossy = not plate
@@ -821,7 +828,7 @@ def apply_camera(name):
     sc = bpy.context.scene
     air = bpy.data.objects["table air"].data.materials[0]
     volume = next(n for n in air.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
-    volume.inputs["Density"].default_value = 0.006 if name == "purses" else 0.013
+    volume.inputs["Density"].default_value = 0.0 if plate else (0.006 if name == "purses" else 0.013)
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
     sc.cycles.max_bounces = 8
