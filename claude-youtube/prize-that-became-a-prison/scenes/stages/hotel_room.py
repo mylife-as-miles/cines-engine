@@ -89,6 +89,8 @@ TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.
          "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74}, "pack": {"lamp_spill": 1.8, "duvet_bounce": 1.25, "ceiling_bounce": 0.72},
          "overhead_pre": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74},
          "accept": {"duvet_bounce": 1.2, "ceiling_bounce": 0.24}}
+DEFAULT_HAND_TONE = 0.28
+HAND_TONES = {"accept": 0.165, "pack": 0.10}
 _STATE = {"cast": [], "dawn": None, "poses": {}, "base": {}, "hobo": None, "sheers": {}}
 
 
@@ -134,11 +136,11 @@ def hem_thickness(ob, t=0.006):
         ob.modifiers.move(len(ob.modifiers) - 1, sub)
 
 
-def hands_stone(holder, value=0.28):
+def hands_stone(holder):
     body = bpy.data.objects[holder["body"]]
     gi = {g.index for g in body.vertex_groups if any(k in g.name for k in ("hand", "f_", "thumb", "palm"))}
     if not gi:
-        return 0
+        return None
     me = body.data
     attr = me.color_attributes.new("handmask", "FLOAT_COLOR", "POINT")
     for v in me.vertices:
@@ -152,10 +154,9 @@ def hands_stone(holder, value=0.28):
     mix = nt.nodes.new("ShaderNodeMix")
     mix.data_type = "RGBA"
     mix.inputs["A"].default_value = b.inputs["Base Color"].default_value
-    mix.inputs["B"].default_value = (value, value, value * 1.01, 1.0)
     nt.links.new(at.outputs["Fac"], mix.inputs["Factor"])
     nt.links.new(mix.outputs["Result"], b.inputs["Base Color"])
-    return 1
+    return mix.inputs["B"]
 
 
 def dawn():
@@ -172,7 +173,7 @@ def dawn():
     bun = bpy.data.objects.get(f"{h['body']}_bun")
     if bun is not None:
         bun.data.transform(Matrix.Translation((0.0, -0.025, -0.02)))
-    hands_stone(h)
+    _STATE["hand_tone"] = hands_stone(h)
     return h
 
 
@@ -565,6 +566,10 @@ def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     sc = bpy.context.scene
     set_beat(cfg.get("beat", "pack"))
+    hand_tone = _STATE.get("hand_tone")
+    if hand_tone is not None:
+        value = HAND_TONES.get(name, DEFAULT_HAND_TONE)
+        hand_tone.default_value = (value, value, value * 1.01, 1.0)
     sc.cycles.sample_clamp_indirect = 3.0
     sc.cycles.blur_glossy = 0.5
     sc.cycles.transparent_max_bounces = 24
@@ -721,7 +726,7 @@ def build(cast=True):
     hobo = hp.load_baked("handbag-shoulder")
     hobo_apex = hp.apex(hobo)
     hobo_h = hp.holder("hobo_held", (bx, by - 0.03, 1.0), HOBO_TURN, [hobo])
-    _STATE.update(cast=[], dawn=None, poses={}, hobo=hobo_h, sheers={})
+    _STATE.update(cast=[], dawn=None, hand_tone=None, poses={}, hobo=hobo_h, sheers={})
     mouth = bag_h.matrix_world @ Vector((-0.018, 0.002, 0.25))
     if cast:
         h = dawn()
