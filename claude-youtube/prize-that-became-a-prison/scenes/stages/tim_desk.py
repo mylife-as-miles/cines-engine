@@ -87,8 +87,8 @@ CAMERAS = {
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
     "letters": dict(loc=(-0.30, 0.009, TOP + 3.1), aim=(-0.30, 0.005, TOP), lens=100, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
-    # Ch 09 (and Ch 01 'Tim himself'): wide from behind, Tim small at the desk against the window and the night
-    "window": dict(loc=(0.70, 3.90, 1.95), aim=(-0.10, -0.25, 0.85), lens=32, focus="fx_tim", fstop=4.0,
+    # Ch 09 (and Ch 01 'Tim himself'): from behind the letter side, with the lit desktop clear of Tim's shoulder
+    "window": dict(loc=(-1.68, 1.62, 2.09), aim=(0.10, -0.25, 0.83), lens=22, focus="fx_tim", fstop=4.0,
                    beat="ch09", exposure=-0.6, final_res=(1920, 1080)),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
@@ -98,7 +98,7 @@ HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
 TRIMS = {"desk": {"night_glow": 2.5, "letter return": 0.0},
          "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
          "window": {"room_fill": 9.0, "night_glow": 3.0, "lamp_spill": 3.0,
-                    "laptop_screen_light": 1.5, "street": 1.6, "letter return": 0.0}}
+                    "laptop_screen_light": 1.02, "street": 1.6, "letter return": 0.62}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -933,6 +933,11 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+    panel = bpy.data.objects["laptop_screen"].active_material.node_tree.nodes
+    # Reduce the screen itself in the elevated view, where it would outweigh the pen and folded reply.
+    panel["Screen backlight power"].inputs[1].default_value = 0.49 if name == "window" else st.LAPTOP_EMISSION
+    screen_colour = (0.29, 0.51, 1.0) if name == "window" else st.COOL
+    panel["Principled BSDF"].inputs["Emission Color"].default_value = (*screen_colour, 1)
     hz = bpy.data.objects.get("room_haze")
     dens = HAZE.get(name, 0.004)
     if hz is not None:

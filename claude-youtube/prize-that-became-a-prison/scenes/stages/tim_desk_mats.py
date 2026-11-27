@@ -465,7 +465,9 @@ def screen(name, rgb, strength, w, h):
     b.inputs["Emission Color"].default_value = (*rgb, 1)
     edge = _maprange(nt, d, 0.0, 1.0, 1.0, 0.94)
     falloff = _maprange(nt, y, -h / 2, h / 2, 0.94, 1.02)
-    _link(nt, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", edge, falloff), strength), b.inputs["Emission Strength"])
+    backlight = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", edge, falloff), strength)
+    backlight.node.name = "Screen backlight power"
+    _link(nt, backlight, b.inputs["Emission Strength"])
     m.cycles.emission_sampling = "NONE"
     return m
 
