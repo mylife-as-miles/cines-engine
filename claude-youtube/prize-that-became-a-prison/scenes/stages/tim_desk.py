@@ -52,26 +52,28 @@ TIM_AGE, TIM_WEIGHT = 0.58, 0.6
 JACKET = (0.085, 0.09, 0.105)      # read values (people.py multiplies fabric by FABRIC_VALUE): a dark slate jacket
 SHIRT = (0.2, 0.2, 0.195)          # a mid-grey shirt under it, so the collar separates
 TROUSERS = (0.065, 0.066, 0.072)
-HIP_Y = 0.57                       # his hip joint, this far behind the desk's centre line (the edge is at 0.34)
+HIP_Y = 0.58                       # his hip joint, this far behind the desk's centre line (the edge is at 0.34)
 CHAIR = (0.0, HIP_Y - 0.03, -90.0)
 SINK = 0.012                       # how far he sinks into the (wooden) seat: the trousers' cloth only
 KNEE_HALF, ANKLE_HALF = 0.105, 0.1
 
 # leaning in on his forearms, head bowed over the page
-UPPER = {"torso": (10, 0), "chest": (16, 0), "neck": (12, 2), "head": (20, -6), "fingers": 10}
+UPPER = {"torso": (6, 0), "chest": (12, 0), "neck": (11, 2), "head": (19, -6), "fingers": 10}
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 # the arms (world, Tim facing -Y; his right is -X): each elbow just off the desk's edge beside him, the forearm
 # lying across the desk at ARM_IN degrees in from straight ahead, the right hand on the pad, the left at its edge
 ARM_IN = {"R": 50.0, "L": 50.0}
 ELBOW_Z = TOP + 0.05
 HAND_REST = {"R": TOP + st.PAD_H + 0.0005, "L": TOP + st.PAD_H + 0.0005}    # what each hand rests on
-PALM_TILT = {"R": 52.0, "L": 14.0}       # degrees the knuckle line dips to the little-finger side: the writing
+PALM_TILT = {"R": 40.0, "L": 12.0}       # degrees the knuckle line dips to the little-finger side: the writing
                                          # hand lies on its edge, the other nearly flat
-HAND_PITCH = {"R": 8.0, "L": 4.0}
-# finger joints (knuckle, middle, end, in degrees): the right hand closed round the pen, the left loosely flat
-CURLS = {"R": {"f_index": (34, 48, 26), "f_middle": (44, 58, 32), "f_ring": (58, 68, 36), "f_pinky": (64, 72, 38)},
-         "L": {"f_index": (9, 15, 9), "f_middle": (10, 17, 10), "f_ring": (12, 19, 11), "f_pinky": (14, 21, 12)}}
-THUMB_CURL = {"R": 22.0, "L": 10.0}
+PITCHES = {"R": (0, -4, -8, -12, -16, -20), "L": (8, 4, 0, -4, -8, -12, -16)}   # hand pitch candidates (degrees
+                                         # down from level): the one that rests the heel and the fingers both is kept
+# finger joints (knuckle, middle, end, in degrees, on top of the body's relaxed rest curl): the right hand's index
+# and middle fingers lie along the pen, the other two tuck under; the left hand loosely flat
+CURLS = {"R": {"f_index": (-2, 0, 0), "f_middle": (4, 8, 4), "f_ring": (2, 8, 4), "f_pinky": (4, 10, 6)},
+         "L": {"f_index": (-12, -12, -6), "f_middle": (-12, -12, -6), "f_ring": (-10, -10, -5), "f_pinky": (-8, -10, -5)}}
+THUMB_CURL = {"R": 15.0, "L": 8.0}
 FINGERS = ("f_index", "f_middle", "f_ring", "f_pinky")
 SPREAD = (2.0, 2.5, 4.5)            # degrees between neighbours: fingers together
 HAND_GROUPS = ("DEF-hand", "DEF-palm", "DEF-f_", "DEF-thumb")
@@ -81,12 +83,12 @@ FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01), "fx_p
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
-    "desk": dict(loc=(-1.3, -0.2, 1.1), aim=(0.1, 0.1, 1.02), lens=40, focus="fx_tim", fstop=2.8, beat="ch09"),
+    "desk": dict(loc=(-1.42, -0.24, 1.12), aim=(0.04, 0.16, 1.0), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
-    "letters": dict(loc=(-0.06, 0.012, TOP + 3.1), aim=(-0.06, 0.008, TOP), lens=85, focus="fx_letters", fstop=11.0, beat="ch09",
+    "letters": dict(loc=(-0.04, 0.009, TOP + 3.1), aim=(-0.04, 0.005, TOP), lens=85, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
     # Ch 09 (and Ch 01 'Tim himself'): wide from behind, Tim small at the desk against the window and the night
-    "window": dict(loc=(1.0, 4.05, 1.15), aim=(0.12, -0.37, 1.24), lens=28, focus="fx_tim", fstop=4.0, beat="ch09"),
+    "window": dict(loc=(1.0, 4.05, 1.25), aim=(-0.1, -0.37, 0.9), lens=28, focus="fx_tim", fstop=4.0, beat="ch09"),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
@@ -360,16 +362,22 @@ def seat_figure(holder, seat_z, upper=SOLVE):
 
 # ---------------------------------------------------------------- hands (from hearing_room.py and home.py)
 @contextmanager
-def fast_body(holder):
-    """While solving: the body's masks and subdivision off, so evaluation is quick and vertex indices hold."""
+def fast_body(holder, skin=True):
+    """While solving: the body's masks and subdivision off (quick, and vertex indices hold) and his clothes, hair
+    and eyes out of the evaluation; with skin=False the body too (bones only)."""
     body = bpy.data.objects[holder["body"]]
     mods = [md for md in body.modifiers if md.type in ("MASK", "SUBSURF") and md.show_viewport]
     for md in mods:
         md.show_viewport = False
+    others = [o for o in holder.children_recursive if o.type == "MESH" and (o is not body or not skin) and not o.hide_viewport]
+    for o in others:
+        o.hide_viewport = True
     bpy.context.view_layer.update()
     try:
         yield body
     finally:
+        for o in others:
+            o.hide_viewport = False
         for md in mods:
             md.show_viewport = True
         bpy.context.view_layer.update()
@@ -465,13 +473,13 @@ def pose_hand(rig, k, curls, thumb_curl, grip=False):
     upd()
     y_h, x_h, n_p, idx, itip = hand_frame(rig, k)
     depth = (itip - idx).dot(n_p)
-    if grip:      # the thumb's end 2.3 cm from the index fingertip, on the thumb side and a little toward the palm
-        target = itip + x_h * 0.021 + n_p * 0.006 - y_h * 0.006
-    else:         # laid alongside the index finger at about the depth of the finger pads
-        target = idx + y_h * 0.032 + x_h * 0.02 + n_p * (0.8 * depth)
+    ahead = (itip - idx).dot(y_h)
+    # the thumb laid alongside the index finger at about the depth of the finger pads (the hand that holds the pen
+    # gets its thumb from grip_pen)
+    target = idx + y_h * 0.032 + x_h * 0.02 + n_p * (0.8 * depth)
     th = pb.get(f"thumb.01_master.{k}")
     best = None
-    if th is not None:
+    if th is not None and not grip:
         th.rotation_mode = "XYZ"
         for nm in (f"thumb.02.{k}", f"thumb.03.{k}"):
             b = pb.get(nm)
@@ -495,7 +503,7 @@ def pose_hand(rig, k, curls, thumb_curl, grip=False):
                 if d < best[0]:
                     best = (d, x, z)
         try_(best[1], best[2])
-    print(f"TIMDESK hand {k}: index tip depth {depth * 1000:.0f} mm, thumb tip {(best[0] if best else 0) * 1000:.0f} mm off its mark "
+    print(f"TIMDESK hand {k}: index tip {ahead * 1000:.0f} mm ahead of its knuckle and {depth * 1000:.0f} mm to the palm side, thumb tip {(best[0] if best else 0) * 1000:.0f} mm off its mark "
           f"at ({best[1] if best else 0}, {best[2] if best else 0})", flush=True)
 
 
@@ -603,40 +611,145 @@ def arms_on_desk(holder):
             a = math.radians(ARM_IN[k])
             wrist = Vector((elbow.x - side * math.sin(a) * l2, elbow.y - math.cos(a) * l2, HAND_REST[k] + 0.03))
             a2 = a + math.radians(6.0)                      # the hand turns in a little more than the forearm
-            hd = Vector((-side * math.sin(a2), -math.cos(a2), -math.tan(math.radians(HAND_PITCH[k])))).normalized()
-            e = w = tip = None
-            for it in range(8):
-                e, w, tip = arm_to(holder, side, elbow, wrist, hd, PALM_TILT[k])
-                low = float(hand_points(body, k)[:, 2].min()) - HAND_REST[k]
-                if abs(low - 0.001) < 0.0012:
-                    break
-                wrist.z -= low - 0.001
+
+            def rest(pitch):
+                """Lower (or lift) the wrist until the hand's lowest point is on the pad; return the heel's gap."""
+                hd = Vector((-side * math.sin(a2), -math.cos(a2), -math.tan(math.radians(pitch)))).normalized()
+                e = w = tip = None
+                low = heel = 0.0
+                for _ in range(7):
+                    e, w, tip = arm_to(holder, side, elbow, wrist, hd, PALM_TILT[k])
+                    pts = hand_points(body, k)
+                    low = float(pts[:, 2].min()) - HAND_REST[k]
+                    near = pts[np.linalg.norm(pts - np.array(w), axis=1) < 0.045]
+                    heel = float(near[:, 2].min()) - HAND_REST[k] if len(near) else 0.05
+                    if abs(low - 0.001) < 0.0012:
+                        break
+                    wrist.z -= low - 0.001
+                return e, w, tip, low, heel
+            best = None
+            for pitch in PITCHES[k]:
+                r = rest(pitch)
+                score = abs(r[4] - 0.003)
+                if best is None or score < best[0]:
+                    best = (score, pitch)
+            e, w, tip, low, heel = rest(best[1])
             print(f"TIMDESK arm {k}: shoulder {tuple(round(v, 3) for v in s)}, elbow {tuple(round(v, 3) for v in e)}, wrist "
-                  f"{tuple(round(v, 3) for v in w)}, hand tip {tuple(round(v, 3) for v in tip)}, lowest point {low * 1000:+.1f} mm over the pad",
-                  flush=True)
+                  f"{tuple(round(v, 3) for v in w)}, hand tip {tuple(round(v, 3) for v in tip)}; hand pitch {best[1]} deg, lowest point "
+                  f"{low * 1000:+.1f} mm and heel {heel * 1000:+.1f} mm over the pad", flush=True)
             out[k] = (e, w, tip)
+    with fast_body(holder, skin=False):
+        out["pen"] = grip_pen(holder)
     return out
 
 
-def pen_in_hand(holder):
-    """Where the pen lies in his right hand: between the thumb's end and the index fingertip, leaning back into the
-    web of the thumb, its point on the paper. Returns (tip, axis) and prints the fit."""
+INDEX_UP = 0.026          # the index fingertip's bone end this far above the paper when it holds the pen
+
+
+def grip_pen(holder):
+    """The pen in his right hand (bones only, after the hand rests). The index fingertip is brought to INDEX_UP over
+    the paper; the barrel runs from the web of the thumb (over the index knuckle) down under that fingertip to the
+    paper, where its point is; then the middle finger is laid under the barrel and the thumb against its side, each
+    by a small search over its own joints that never lets a bone end into the barrel. Returns (point, axis)."""
     rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    upd = bpy.context.view_layer.update
     k = "R"
-    y_h, x_h, n_p, idx, itip = hand_frame(rig, k)
-    ttip = _wpos(rig, f"thumb.03.{k}", tail=True)
-    grip = (itip + ttip) / 2
-    web = idx + x_h * 0.014 - n_p * 0.004
-    axis = (web - grip).normalized()
-    if axis.z < 0.25:                         # never flatter than a pen is held
-        axis = (axis + Vector((0, 0, 0.25 - axis.z))).normalized()
     paper = HAND_REST[k]
-    s = (grip.z - paper) / axis.z
-    tip = grip - axis * s
-    print(f"TIMDESK pen: index tip to thumb tip {(itip - ttip).length * 1000:.0f} mm, grip {s * 1000:.0f} mm up the barrel from the point, "
-          f"axis {tuple(round(v, 2) for v in axis)} ({math.degrees(math.asin(axis.z)):.0f} deg off the paper), point at "
-          f"{tuple(round(v, 3) for v in tip)}", flush=True)
-    return tip, axis
+    reach = PEN_R + 0.007                              # pen radius plus the flesh over a fingertip's bone end
+    im = pb[f"f_index.01_master.{k}"]
+
+    def tip_z(deg):
+        im.rotation_euler.x = math.radians(deg)
+        upd()
+        return _wpos(rig, f"f_index.03.{k}", tail=True).z - paper
+    a0 = math.degrees(im.rotation_euler.x)
+    a1 = a0 + 6.0
+    z0, z1 = tip_z(a0), tip_z(a1)
+    for _ in range(6):                                 # secant on the knuckle's bend
+        if abs(z1 - INDEX_UP) < 0.0008 or abs(z1 - z0) < 1e-6:
+            break
+        a2 = max(-40.0, min(70.0, a1 + (INDEX_UP - z1) * (a1 - a0) / (z1 - z0)))
+        a0, z0, a1, z1 = a1, z1, a2, tip_z(a2)
+    y_h, x_h, n_p, idx, itip = hand_frame(rig, k)
+    web = idx + x_h * 0.013 - n_p * 0.016
+    fwd = Vector((y_h.x, y_h.y, 0.0)).normalized()
+    p0 = Vector((itip.x, itip.y, paper)) + fwd * 0.014
+    zax = Vector((0, 0, 1))
+    for _ in range(5):                                 # the barrel through the web and under the index fingertip
+        axis = (web - p0).normalized()
+        up = (zax - axis * axis.z).normalized()
+        q = itip - up * reach
+        if q.z > web.z - 0.01:
+            break
+        p0 = web + (q - web) * ((paper - web.z) / (q.z - web.z))
+    axis = (web - p0).normalized()
+    up = (zax - axis * axis.z).normalized()
+    side_t = axis.cross(up).normalized()
+    if side_t.dot(x_h) < 0:
+        side_t = -side_t
+    s_i = (itip - p0).dot(axis)
+
+    def off_axis(pt):
+        v = pt - p0
+        return (v - axis * v.dot(axis)).length
+    marks = {"f_middle": p0 + axis * max(0.012, s_i - 0.009) - side_t * (reach * 0.85) - up * 0.005,
+             "thumb": p0 + axis * (s_i + 0.004) + side_t * reach + up * 0.001}
+    fit = {}
+    m, j2, j3 = pb[f"f_middle.01_master.{k}"], pb[f"f_middle.02.{k}"], pb[f"f_middle.03.{k}"]
+    best = None
+
+    def try_m(kn, md):
+        m.rotation_euler.x = math.radians(kn)
+        j2.rotation_euler.x = math.radians(md)
+        j3.rotation_euler.x = math.radians(md * 0.5)
+        upd()
+        tp = _wpos(rig, f"f_middle.03.{k}", tail=True)
+        return (tp - marks["f_middle"]).length + 3.0 * max(0.0, reach - off_axis(tp)) + 3.0 * max(0.0, paper + 0.006 - tp.z)
+    for kn in range(-30, 61, 6):
+        for md in range(-20, 71, 7):
+            d = try_m(kn, md)
+            if best is None or d < best[0]:
+                best = (d, kn, md)
+    for kn in range(best[1] - 4, best[1] + 5, 2):
+        for md in range(best[2] - 4, best[2] + 5, 2):
+            d = try_m(kn, md)
+            if d < best[0]:
+                best = (d, kn, md)
+    try_m(best[1], best[2])
+    fit["f_middle"] = best
+    th = pb[f"thumb.01_master.{k}"]
+    th.rotation_mode = "XYZ"
+    best = None
+
+    def try_t(x, z, c):
+        th.rotation_euler = (math.radians(x), 0.0, math.radians(z))
+        for nm in (f"thumb.02.{k}", f"thumb.03.{k}"):
+            pb[nm].rotation_euler = (math.radians(c), 0.0, 0.0)
+        upd()
+        tp = _wpos(rig, f"thumb.03.{k}", tail=True)
+        return (tp - marks["thumb"]).length + 3.0 * max(0.0, reach - off_axis(tp))
+    for c in (0, 20):
+        for x in range(-70, 71, 10):
+            for z in range(-70, 71, 10):
+                d = try_t(x, z, c)
+                if best is None or d < best[0]:
+                    best = (d, x, z, c)
+    for x in range(best[1] - 8, best[1] + 9, 4):
+        for z in range(best[2] - 8, best[2] + 9, 4):
+            for c in (best[3] - 8, best[3], best[3] + 8):
+                d = try_t(x, z, c)
+                if d < best[0]:
+                    best = (d, x, z, c)
+    try_t(best[1], best[2], best[3])
+    fit["thumb"] = best
+    tips = {f: _wpos(rig, f"{f}.03.{k}", tail=True) for f in ("f_index", "f_middle", "f_ring", "thumb")}
+    print(f"TIMDESK pen: point at {tuple(round(v, 3) for v in p0)}, barrel {math.degrees(math.asin(axis.z)):.0f} deg off the paper along "
+          f"{tuple(round(v, 2) for v in axis)}, held {s_i * 1000:.0f} mm up from the point (index knuckle bend {a1:.0f} deg, tip "
+          f"{z1 * 1000:.0f} mm over the paper); off their marks: " +
+          ", ".join(f"{f} {fit[f][0] * 1000:.0f} mm (joints {fit[f][1:]})" for f in fit) + "; bone ends from the barrel's axis: " +
+          ", ".join(f"{f} {off_axis(pt) * 1000:.0f} mm" for f, pt in tips.items()) + f" (touching is {reach * 1000:.0f} mm)", flush=True)
+    return p0, axis
 
 
 def seat_eyes(holder, forward=0.003, grow=1.1):
@@ -694,10 +807,10 @@ def place_tim(holder, seat_z):
     bpy.context.view_layer.update()
     pts = body_points(holder)
     lo = min(p.z for p in pts)
-    belly = min(p.y for p in pts if TOP - 0.02 < p.z < TOP + 0.12 and abs(p.x) < 0.15)
-    knees = max(p.z for p in pts if p.y < 0.3 and abs(p.x) < 0.3 and p.z < TOP)
+    belly = min(p.y for p in pts if 0.62 < p.z < TOP - 0.035 and abs(p.x) < 0.2 and p.y > 0.3)
+    knees = max(p.z for p in pts if 0.24 < p.y < 0.3 and abs(p.x) < 0.3 and p.z < TOP - 0.03)
     print(f"TIMDESK seated Tim: hip at {tuple(round(v, 3) for v in target)}, lowest point {lo * 1000:+.1f} mm, his front {belly - st.DD / 2:+.3f} m "
-          f"from the desk's edge, knees up to {knees:.3f} (drawer rail at {TOP - st.TT - 0.07:.3f})", flush=True)
+          f"behind the desk's edge, thighs under the pencil drawer up to {knees:.3f} (its lower edge at {TOP - st.TT - 0.056:.3f})", flush=True)
 
 
 # ---------------------------------------------------------------- lights
@@ -705,7 +818,7 @@ def lights():
     R, W = st.R, st.WIN
     yg = R["y0"] - st.WALL_T
     # the night at the glass: a weak cool glow onto the slats' backs, the stool and the back of the desk
-    li = st.area("night_glow", (W["cx"], yg - 0.3, (W["z0"] + W["z1"]) / 2), (W["w"] - 0.1, W["z1"] - W["z0"] - 0.1), 26.0, st.NIGHT,
+    li = st.area("night_glow", (W["cx"], yg - 0.3, (W["z0"] + W["z1"]) / 2), (W["w"] - 0.1, W["z1"] - W["z0"] - 0.1), 12.0, st.NIGHT,
                  spread=150, aim=(W["cx"], 0.5, 1.0))
     li.visible_camera = False
     # a street light up the block, far and small so the slats cut clean stripes: it comes in across the room toward
@@ -723,7 +836,7 @@ def tim_lights(holder):
     """The page's light back up into his face: a warm panel lying on the pad that only Tim sees (the path-traced
     bounce off the paper is there too, but at a fifth of what a lit page gives a face bent over it)."""
     px, py, _ = st.PAD
-    li = st.area("tim_bounce", (px, py, TOP + st.PAD_H + 0.02), (0.22, 0.3), 2.6, st.WARM, spread=160)
+    li = st.area("tim_bounce", (px, py, TOP + st.PAD_H + 0.02), (0.22, 0.3), 1.5, st.WARM, spread=160)
     li.rotation_euler = (math.pi, 0, math.radians(st.PAD[2]))          # facing up
     li.visible_camera = False
     li.visible_glossy = False
@@ -898,9 +1011,8 @@ def build(cast=True):
         seat_z = seat_height(cx, cy - 0.05)
         holder = tim()
         place_tim(holder, seat_z)
-        arms_on_desk(holder)
+        tip, axis = arms_on_desk(holder)["pen"]
         seat_eyes(holder)
-        tip, axis = pen_in_hand(holder)
         pen = st.hand_pen(tip, axis)
         f = face_points(holder)
         bpy.data.objects["fx_tim"].location = f["eyes"]

@@ -47,23 +47,24 @@ DW, DD, TOP, TT = 1.40, 0.68, pp.TOP, 0.032                  # desk top: width (
 PED_IN, PED_OUT, PED_Y = 0.30, 0.685, 0.315                 # pedestals: |x| from PED_IN to PED_OUT, |y| to PED_Y
 PLINTH = 0.085
 RUG = (0.0, 1.2, 2.3, 1.6)                                   # centre x, y, size x, y
-WARM = (1.0, 0.82, 0.62)           # the lamp: a warm-white incandescent
+WARM = (1.0, 0.74, 0.47)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
 COOL = (0.78, 0.86, 1.0)           # the laptop's blank page
 NIGHT = (0.55, 0.68, 1.0)          # the street and the sky
 
 # the lamp prop at LAMP_SIZE (base near the origin, the shade looking along +Y and down). Measured by ray probes at
 # 0.55 m: the bulb's place in the shade, the reflector's axis 47 degrees below level; light leaves the shade between
 # 10 and 70 degrees below level and 38 degrees either side
-LAMP_SIZE = 0.60
+LAMP_SIZE = 0.55
 _K = LAMP_SIZE / 0.55
 BULB = Vector((0.0, 0.072 * _K, 0.408 * _K))
 AXIS = Vector((0.0, 0.68, -0.73)).normalized()
-LAMP = (0.14, -0.16, 29.4)         # prop origin on the desk and turn: the light falls along (-sin t, cos t), here
+LAMP = (0.24, -0.16, 36.6)         # prop origin on the desk and turn: the light falls along (-sin t, cos t), here
                                    # from the back of the desk, left of the pad, toward the pen and Tim
-SPOT_OUT = 0.03 * _K               # the bulb's glowing end, this far down the axis toward the shade's mouth: from
-                                   # there the shade's upper rim cuts the light at about the height of Tim's brow
-LAPTOP = (0.47, 0.10, -60.0)       # prop origin and turn: the screen faces (-cos t, -sin t)
-PAD = (-0.03, 0.09, 194.0)         # the writing pad: centre and turn (its head away from Tim, turned for a right hand)
+SPOT_OUT = 0.012 * _K              # the bulb's glowing end, this far down the axis toward the shade's mouth: from
+                                   # there (ray casts) the pad and his hands see all of it, his brow two thirds
+LAPTOP = (0.50, 0.10, -75.0)       # prop origin and turn: the screen faces (-cos t, -sin t): pushed aside, toward the room
+PAD = (-0.02, 0.165, 194.0)        # the writing pad: centre and turn (its head away from Tim, turned for a right hand,
+                                   # pulled up to the desk's edge: he is half way down the page)
 PAD_H = 0.0069                     # the pad's top surface above the desk (board, block and a sheet)
 
 
@@ -577,8 +578,8 @@ def room():
     bd.visible_diffuse = False
     # the right wall (-X): the radiator and a dark picture over it
     on_wall("right_wall", (x0, 0.82, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", 0.05, 1.5)))
-    # the left wall (+X): a bookcase beside the desk
-    on_wall("left_wall", (x1, 0.52, 0.0), -math.pi / 2, bookcase, "case")
+    # left of the window: a bookcase against the same wall, its books facing the room
+    on_wall("bookcase", (1.31, y0, 0.0), math.pi, bookcase, "case", w=0.8)
     rg = box("rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004, seg=2)
     # twelve years of paperwork: file boxes on the floor to the right of the desk, one open
     group("boxes", file_box("filebox_a", -1.22, -0.1, 4.0, seed=1))
@@ -631,10 +632,10 @@ def desk():
             z -= dh + 0.006
     # the kneehole: a pencil drawer under the top, a modesty panel at the back
     kw = 2 * PED_IN - 0.018
-    out.append(box("desk_pencil", (kw - 0.008, 0.019, 0.058), (0.0, PED_Y - 0.04, zc1 - 0.012 - 0.029), cw, bevel=0.0028))
+    out.append(box("desk_pencil", (kw - 0.008, 0.019, 0.044), (0.0, PED_Y - 0.04, zc1 - 0.012 - 0.022), cw, bevel=0.0028))
     k = lathe("desk_pencil_pull", [(0.0, 0.0), (0.011, 0.0), (0.0095, 0.004), (0.0065, 0.009), (0.0075, 0.014), (0.0135, 0.02),
                                    (0.0155, 0.026), (0.0135, 0.031), (0.007, 0.034), (0.0, 0.0345)],
-              (0.0, PED_Y - 0.0305, zc1 - 0.012 - 0.029), M["pull"], segs=24)
+              (0.0, PED_Y - 0.0305, zc1 - 0.012 - 0.022), M["pull"], segs=24)
     k.rotation_euler = (-math.pi / 2, 0, 0)
     out.append(k)
     out.append(box("desk_pencil_rail", (kw, 0.3, 0.014), (0.0, PED_Y - 0.19, zc1 - 0.007), cw))
@@ -643,7 +644,7 @@ def desk():
     return top
 
 
-def chair(x, y, turn=-90.0, size=0.93):
+def chair(x, y, turn=-90.0, size=0.91):
     """Tim's chair: the wooden dining-chair prop (its front along +X in the file), refinished as satin hardwood."""
     c = props.load("dining-chair", size=size, axis="z", loc=(x, y, 0.0), turn_deg=turn, sat=0.7, val=0.85)
     c.name = "tim_chair"
@@ -707,7 +708,7 @@ def lamp():
     parts.append(sp)
     parts.append(point("lamp_glow", tuple(BULB - AXIS * 0.004), 0.5, WARM, 0.012))
     # the spill behind and over the head (outside the shade, so the shade does not cut it)
-    back = point("lamp_spill", tuple(BULB + Vector((0.0, -0.11 * _K, 0.16 * _K))), 1.4, WARM, 0.04)
+    back = point("lamp_spill", tuple(BULB + Vector((0.0, -0.11 * _K, 0.16 * _K))), 2.5, WARM, 0.04)
     parts.append(back)
     # a thin warm rim that only the lamp itself sees: the shade's top edge and the arm read against the dark
     rim_at = Vector((0.0, BULB.y - 0.13, BULB.z + 0.2))
@@ -793,9 +794,9 @@ def laptop():
     print(f"TIMDESK laptop lid {n} hits, slope {b:.3f}; panel {w:.3f} x {hh:.3f}, {proud * 1000:.1f} mm proud", flush=True)
     bm = bmesh.new()
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
-    scr = _link("laptop_screen", bm, mt.screen("laptop screen", COOL, 1.7, w, hh))
+    scr = _link("laptop_screen", bm, mt.screen("laptop screen", COOL, 1.25, w, hh))
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
-    li = area("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 9.0, COOL, spread=150)
+    li = area("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 3.5, COOL, spread=150)
     bpy.context.view_layer.update()
     li.matrix_world = Matrix.Translation(centre + nrm * 0.02) @ (rot @ Matrix.Rotation(math.pi, 3, "X")).to_4x4()
     li.visible_camera = False
@@ -969,10 +970,21 @@ def desk_things(pad=PAD):
     """The hard things on the desk (after the papers, so they rest on them)."""
     m = M
     px, py, pt = pad
-    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], -0.265, 0.085, 110.0))
+    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.2, 0.03, 60.0))
     group("glasses", reading_glasses(px + 0.035, py - 0.105, pt - 180.0))
     group("phone", phone(-0.215, -0.1, 12.0))
-    group("frame", photo_frame(-0.2, -0.245, 162.5))
+    group("frame", photo_frame(0.45, -0.25, 219.3))
+    # the page's light back onto the photograph (only the frame sees it): a soft warm sheen on the glass and the wood
+    kick = area("frame_kicker", (0.12, 0.0, TOP + 0.05), (0.2, 0.14), 0.5, WARM, spread=120, aim=(0.45, -0.25, TOP + 0.1))
+    kick.visible_camera = False
+    recv = bpy.data.collections.new("frame_kicker_receivers")
+    for o in G["frame"]:
+        if o.type == "MESH":
+            recv.objects.link(o)
+    try:
+        kick.light_linking.receiver_collection = recv
+    except AttributeError:
+        kick.data.energy = 0.0
     # the pen lying on the pad (shown when Tim is not holding his)
     a = math.radians(pt)
     ox, oy = 0.03, 0.02
