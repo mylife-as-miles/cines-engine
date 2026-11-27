@@ -53,7 +53,7 @@ DAWN_ROW = 5
 DAWN_SEAT = (st.BLOCK_X[0] + st.SEAT_DX[0], st.row_y(DAWN_ROW))      # port window seat (x -2.47)
 HEAD = Vector((-2.478, 3.993, 1.257))                                # her head's centre once seated (printed at build)
 EYES = Vector((-2.502, 4.065, 1.228))
-DAWN_WINDOW_Y = st.row_y(DAWN_ROW) + 0.14                            # her window: beside and a little ahead of her face
+DAWN_WINDOW_Y = st.row_y(DAWN_ROW) + 0.30                            # her window: beside and a little ahead of her face
 SINK = 0.045                                                         # how far a sitter sinks into the cushion
 
 # passengers: (name, kind, row, block, seat, upper-body pose, lean back, build kwargs)
@@ -79,39 +79,40 @@ def _toward(loc, az_deg, el_deg, dist):
             loc[2] + dist * math.sin(e))
 
 
-AISLE_CAM = (-1.04, 1.70, 1.56)
-WINDOW_CAM = (-0.78, 4.42, 1.24)
-OVER_CAM = (-2.10, 3.62, 1.36)
+AISLE_CAM = (-1.04, 2.45, 1.52)
+WINDOW_CAM = (-0.80, 4.80, 1.22)
+OVER_CAM = (-1.95, 3.40, 1.34)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
-    "fx_over": _toward(OVER_CAM, 29.0, -5.0, 4.0),
+    "fx_over": _toward(OVER_CAM, 28.5, -9.5, 30.0),
 }
 
 CAMERAS = {
     # Ch 02 end / Ch 03: standing in the port aisle two rows behind her: rows of seat backs receding to the lit galley
     # curtains, the blue night coves and the path lights, and at the left Dawn's reading light, the one pool
-    "aisle": dict(loc=AISLE_CAM, aim=(AISLE_CAM[0] - 2.42, AISLE_CAM[1] + 9.70, 0.70), lens=24, focus="fx_aisle",
+    "aisle": dict(loc=AISLE_CAM, aim=(AISLE_CAM[0] - 2.42, AISLE_CAM[1] + 9.70, 0.70), lens=30, focus="fx_aisle",
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.05, 0.858), lens=29, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.11, 0.930), lens=35, focus="fx_face", fstop=2.8,
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red tip
     # light under the horizon, and the dark below; her head soft in the foreground
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 28.5, -12.8, 1.2), lens=40, focus="fx_over", fstop=11.0,
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 28.5, -10.0, 1.2), lens=50, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
-TIP_DIR = (28.5, -5.2)                          # the wing tip from "over": degrees forward of abeam, above level
+TIP_DIR = (28.5, -9.5)                          # the wing tip from "over": degrees forward of abeam, above level
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {"haze": 1.0, "fill": 0.0, "key": 1.95, "spill": 3.0, "wash": 1.2},
-    "window": {"haze": 0.0, "fill": 1.0, "spill": 0.8},
-    "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8},
+    "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.7, "wash": 1.05, "cove": 0.6, "galley": 0.45},
+    "window": {"haze": 0.0, "fill": 0.4, "spill": 0.3},
+    "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8, "key": 1.6},
 }
 # where her lamp points: at her lap and hands, its soft edge across her face; for the wide aisle shot it is turned a
 # little back, onto her head, shoulders and the top of her seat, so the pool reads from behind
-KEY_AIM = {None: ((0.02, 0.26, 0.66), 62.0), "aisle": ((0.0, 0.10, 0.95), 70.0)}
+KEY_AIM = {None: ((0.02, 0.26, 0.66), 48.0), "aisle": ((0.0, 0.08, 1.10), 60.0),
+           "over": ((0.0, 0.05, 1.05), 70.0)}
 READ = "reading_light"
 _STATE = {"base": {}}
 GROUPS = ("key", "spill", "fill", "win", "cove", "amb", "rear", "wash", "path", "screen", "galley", "sky", "moon")
@@ -161,15 +162,7 @@ def dawn():
         ls.vertex_group, ls.iterations, ls.lambda_factor, ls.lambda_border = "drape", 8, 0.7, 0.0
         ls.use_volume_preserve, ls.use_normalized = True, True
         suit.modifiers.move(suit.modifiers.find("drape"), 0)
-        ease_seated(suit)
-    bun = bpy.data.objects.get(f"{h['body']}_bun")
-    if bun is not None:
-        me = bun.data
-        c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
-        for v in me.vertices:
-            d = v.co - c
-            v.co = c + Vector((d.x * 0.72, d.y * 0.63, d.z * 0.68)) + Vector((0.0, -0.015, -0.041))
-        me.update()
+        ease_seated(suit, 0.021)
     return h
 
 
@@ -394,6 +387,56 @@ def place_seated(holder, seat_xy, upper, lean=0.0, hands=True, fit_hands=True, r
           f"{high * 1000:+.0f} mm (slid {(-0.006 - gap) * 1000:+.0f}), lowest point {lo * 1000:+.1f} mm", flush=True)
 
 
+def settle_dawn_lap(holder):
+    from hotel_room import ik_arm
+    rig = rigged.rig_of(holder)
+    body = bpy.data.objects[holder["body"]]
+    hip = sum((rig.matrix_world @ rig.pose.bones[f"thigh_fk.{k}"].head for k in "LR"), Vector()) / 2
+    cloth = lap_surface(holder)
+    def surface(x, y):
+        hit, _, _, _ = cloth.ray_cast(Vector((x, y, hip.z + 0.2)), Vector((0, 0, -1)), 0.5)
+        return hit.z if hit is not None else hip.z - 0.033
+    # The fastened belt follows the actual posed skirt at both edges of the
+    # webbing. The ends disappear into the gap between her hips and the seat.
+    verts = []
+    for station in range(13):
+        u = (station - 6) / 6
+        x = hip.x + u * 0.19
+        y = hip.y + 0.116 - 0.052 * u*u
+        for dy in (-0.024, 0.024):
+            z = surface(x, y + dy) + 0.005
+            verts.append((x, y + dy, z - 0.040 * abs(u)**6))
+    faces = [(i, i+1, i+3, i+2) for i in range(0, 24, 2)]
+    belt = st.mesh_obj("Dawn fastened lap belt", verts, faces, st.M["belt"])
+    belt.modifiers.new("webbing edge", "SOLIDIFY").thickness = 0.002
+    z = max(verts[12][2], verts[13][2]) + 0.005
+    st.box("Dawn lap buckle", (0.053, 0.049, 0.008), (hip.x, hip.y + 0.116, z), st.M["buckle"], bevel=0.003)
+    # Fingers angle inward, with the right wrist a little nearer her body.
+    # Fit the lowest finger pads to the cloth after curling the individual joints.
+    inv = rig.matrix_world.to_3x3().normalized().inverted()
+    for side, k in ((1, "L"), (-1, "R")):
+        x = hip.x - side * (0.034 if k == "L" else 0.042)
+        y = hip.y + (0.236 if k == "L" else 0.201)
+        target = Vector((x, y, surface(x, y) + 0.036))
+        desired = 0.002 if k == "L" else 0.004
+        for _ in range(5):
+            ik_arm(holder, side, target, pole=(0.42, 0.18, -1))
+            wrist = rig.pose.bones["hand_fk." + k]
+            forward = (inv @ Vector((side * 0.68, 0.72, -0.12))).normalized()
+            down = inv @ Vector((side * 0.17, 0.0, -1))
+            axis = (down - forward * down.dot(forward)).normalized() * side
+            basis = Matrix((axis, forward, axis.cross(forward))).transposed().to_4x4()
+            basis.translation = wrist.matrix.translation.copy()
+            wrist.matrix = basis
+            rigged.articulate_hand(holder, k, {"f_index": (12, 18, 12), "f_middle": (17, 21, 13),
+                                              "f_ring": (20, 25, 15), "f_pinky": (24, 29, 18), "thumb": (12, 16, 10)})
+            gap = finger_gap(body, cloth, k)
+            if gap is None or abs(gap - desired) < 0.0015:
+                break
+            target.z += max(-0.022, min(0.022, desired - gap))
+        print(f"CABIN fitted {k} palm target {tuple(round(v,3) for v in target)}, finger clearance {gap}", flush=True)
+
+
 def head_points(holder):
     """Head centre, and the body's foremost point at face height (the nose), in the world."""
     rig = rigged.rig_of(holder)
@@ -494,15 +537,15 @@ def lights():
     # Dawn's reading light: the lens in the PSU over her knees, a warm-white cone onto her lap and hands, its soft
     # edge across her face (the crown of her head stays out of it)
     lens = Vector((DAWN_SEAT[0], y_d + st.LENS_Y, PSU_Z[0] - 0.024))
-    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.26, 0.66), 47.0, (1.0, 0.84, 0.64), 62.0, 0.8, radius=0.018)
+    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.26, 0.66), 47.0, (1.0, 0.68, 0.38), 48.0, 0.50, radius=0.018)
     sp.data.use_soft_falloff = False
     group(sp, "key")
     # the lens scatters a little outside its beam: the wall, the headrests and the seat back in front
-    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.24, 0.62), 18.0, (1.0, 0.84, 0.64),
+    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.24, 0.62), 18.0, (1.0, 0.68, 0.38),
                  150.0, 0.8, radius=0.03)
     group(sl, "spill")
     # the window's cool glow on her face (sky and moon through the pane)
-    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 1.4, (0.6, 0.72, 1.0),
+    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 5.0, (0.55, 0.70, 1.0),
                  spread=100, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
     wf.visible_glossy = False
     wf.visible_camera = False
@@ -574,7 +617,7 @@ def build(cast=True):
         bpy.context.scene.collection.objects.link(e)
         e.location = p
     # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
-    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.25,
+    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.175,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -589,9 +632,12 @@ def build(cast=True):
           f"({tip.x:.1f}, {tip.y:.1f}, {tip.z:.1f}); lights {len(st.LIGHTS)}", flush=True)
     if cast:
         d = dawn()
-        upper = {"head": (7, 20), "neck": (4, 10), "chest": (-4, 5), "fingers": 17}
-        place_seated(d, DAWN_SEAT, upper, lean=11.0, reach=1.0)
+        upper = {"head": (10, 34), "neck": (5, 16), "chest": (-8, 8), "fingers": 38}
+        place_seated(d, DAWN_SEAT, upper, lean=11.0, fit_hands=False, reach=1.0)
+        settle_dawn_lap(d)
         hp, fwd = head_points(d)
+        bpy.data.objects["fx_aisle"].location = hp
+        bpy.data.objects["fx_face"].location = hp + Vector((-0.035, 0.050, -0.026))
         print(f"CABIN Dawn head centre ({hp.x:.3f}, {hp.y:.3f}, {hp.z:.3f}) (planned {tuple(round(c, 3) for c in HEAD)}),"
               f" head bone up ({fwd.x:.2f}, {fwd.y:.2f}, {fwd.z:.2f})", flush=True)
         # a low, soft fill on the side of her face the "window" camera sees (her lamp's light off the pale linings),
