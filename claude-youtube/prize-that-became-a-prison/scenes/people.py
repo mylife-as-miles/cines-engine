@@ -52,6 +52,13 @@ def fabric(holder):
 def _dress(h, items, tint, flat):
     tint = {k: (v if k.startswith("shoes") else tuple(c * FABRIC_VALUE for c in v)) for k, v in tint.items()}
     out = cast.dress(h, items, tint=tint, flat=flat)
+    if "shoes04" in items:
+        # The normal map on the stock upper includes an embossed toe stamp.
+        shoes = bpy.data.objects[h.name + "_shoes04"]
+        leather = cast.stone(h.name + " plain shoe leather", tint.get("shoes04", BLACK_SHOE), 0.55)
+        leather.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.2
+        for slot in shoes.material_slots:
+            slot.material = leather
     fabric(h)
     return out
 
@@ -106,6 +113,36 @@ def dawn():
     return h
 
 
+def _fit_uniform(holder, suit):
+    """Keep the cuff with the wrist and taper the trouser pattern around the knee."""
+    rig = bpy.data.objects[holder["rig"]]
+    rig_to_suit = suit.matrix_world.inverted() @ rig.matrix_world
+    for side in ("L", "R"):
+        digit_groups = {g.index: g for g in suit.vertex_groups
+                        if g.name.endswith("." + side) and g.name.startswith(("DEF-f_", "DEF-thumb", "DEF-palm"))}
+        forearm = suit.vertex_groups.get("DEF-forearm." + side + ".001") or suit.vertex_groups["DEF-forearm." + side]
+        for v in suit.data.vertices:
+            affected = [(digit_groups[g.group], g.weight) for g in v.groups if g.group in digit_groups]
+            if affected:
+                for group, weight in affected:
+                    group.remove([v.index])
+                forearm.add([v.index], sum(weight for _, weight in affected), "ADD")
+        bones = rig.data.bones
+        hip, knee, ankle = (rig_to_suit @ bones[f"DEF-{part}.{side}"].head_local for part in ("thigh", "shin", "foot"))
+        for v in suit.data.vertices:
+            z = v.co.z
+            if v.co.x * knee.x <= 0 or abs(z - knee.z) >= 0.19:
+                continue
+            other = hip if z > knee.z else ankle
+            centre = knee.lerp(other, (z - knee.z) / (other.z - knee.z))
+            radial = v.co - centre
+            radial.z = 0
+            amount = min(0.016, max(0.0, (radial.length - 0.060) * 0.55))
+            falloff = (1 - ((z - knee.z) / 0.19) ** 2) ** 2
+            v.co -= radial.normalized() * amount * falloff
+    suit.data.update()
+
+
 def dawn_prison(*, uniform=False):
     """Dawn in detention, court and prison (Ch 06–08). Set uniform=True for the long-sleeved outfit.
 
@@ -131,6 +168,7 @@ def dawn_prison(*, uniform=False):
         for v, offset in zip(suit.data.vertices, offsets):
             v.co += offset
         suit.data.update()
+        _fit_uniform(h, suit)
         for slot in suit.material_slots:
             bsdf = next(n for n in slot.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
             for link in list(bsdf.inputs["Normal"].links):

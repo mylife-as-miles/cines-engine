@@ -1,6 +1,6 @@
 """Render one camera of one stage. Only one render runs on this machine at a time (4 cores): others wait their turn.
 
-    <bpy python> -I scenes/shoot.py -- <stage> <cam> <out.png> [--res 960x540] [--spp 24] [--nocast] [--nograde]
+    <bpy python> -I scenes/shoot.py -- <stage> <cam> <out.png> [--res 960x540] [--spp 24] [--nocast] [--nograde] [--noise-threshold 0.03]
 
 A stage is `scenes/stages/<stage>.py` with:
 
@@ -64,7 +64,8 @@ for n in names:
         bpy.data.objects.remove(o)
     focus = c.get("focus")
     focus = focus if focus and focus in bpy.data.objects else None
-    camera = sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35), focus=focus, fstop=c.get("fstop", 4.0))
+    optics = {"clip_end": c["clip_end"]} if "clip_end" in c else {}
+    camera = sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35), focus=focus, fstop=c.get("fstop", 4.0), **optics)
     camera["stage_camera"] = n
     path = out if len(names) == 1 else out.replace(".png", f"_{n}.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -73,7 +74,9 @@ for n in names:
     render_res = res
     if final and c.get("final_res", res)[0] > res[0]:
         render_res = c["final_res"]
-    sk.render(path, spp, render_res, exposure=c.get("exposure", getattr(mod, "EXPOSURE", -2.0)))
+    threshold = opt("--noise-threshold", c.get("noise_threshold", getattr(mod, "NOISE_THRESHOLD", None)))
+    sampling = {} if threshold is None else {"noise_threshold": float(threshold)}
+    sk.render(path, spp, render_res, exposure=c.get("exposure", getattr(mod, "EXPOSURE", -2.0)), **sampling)
     if "--nograde" not in a:
         g = path.replace(".png", "_graded.png")
         subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", path, "-vf", GRADE, g], check=True)

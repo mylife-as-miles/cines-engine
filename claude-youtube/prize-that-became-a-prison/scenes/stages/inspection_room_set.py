@@ -10,7 +10,7 @@ import math
 import bpy  # noqa: F401  (first: bmesh and mathutils only exist once bpy is loaded)
 import bmesh
 from mathutils import Matrix, Vector
-from mathutils.bvhtree import BVHTree
+from props import surface_bvh
 
 import setkit as sk
 import inspection_room_mats as mt
@@ -522,23 +522,6 @@ def notice_board():
 
 
 # ---------------------------------------------------------------- the luggage tag
-
-def surface_bvh(holder):
-    """A BVH of a prop's meshes in world space, for draping things onto it."""
-    bpy.context.view_layer.update()
-    dg = bpy.context.evaluated_depsgraph_get()
-    verts, polys = [], []
-    for o in [holder, *holder.children_recursive]:
-        if o.type != "MESH":
-            continue
-        me = o.evaluated_get(dg).to_mesh()
-        mw = o.matrix_world
-        base = len(verts)
-        verts.extend(mw @ v.co for v in me.vertices)
-        polys.extend([base + i for i in p.vertices] for p in me.polygons)
-        o.evaluated_get(dg).to_mesh_clear()
-    return BVHTree.FromPolygons(verts, polys)
-
 
 def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=(0.0125, 0.0105)):
     """A blank manila tag tied to the suitcase's top carry handle with jute twine, hanging from it toward the front.

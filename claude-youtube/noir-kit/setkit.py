@@ -185,7 +185,7 @@ def haze(size, centre, density, colour=(0.8, 0.86, 0.92)):
     return ob
 
 
-def camera(loc, aim, lens=35, focus=None, fstop=4.0):
+def camera(loc, aim, lens=35, focus=None, fstop=4.0, clip_end=20000.0):
     sc = bpy.context.scene
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam"))
     _coll().objects.link(cam)
@@ -195,6 +195,7 @@ def camera(loc, aim, lens=35, focus=None, fstop=4.0):
     cam.location, target.location, cam.data.lens = loc, aim, lens
     tt = cam.constraints.new("TRACK_TO")
     tt.target, tt.track_axis, tt.up_axis = target, "TRACK_NEGATIVE_Z", "UP_Y"
+    cam.data.clip_end = clip_end
     cam.data.sensor_width = 36
     if focus:
         cam.data.dof.use_dof = True
@@ -203,7 +204,7 @@ def camera(loc, aim, lens=35, focus=None, fstop=4.0):
     return cam
 
 
-def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0):
+def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=0.03):
     sc = bpy.context.scene
     w = bpy.data.worlds.new("world")
     sc.world = w
@@ -213,7 +214,9 @@ def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0):
     sc.cycles.device = "CPU"
     sc.cycles.samples = samples
     sc.cycles.use_adaptive_sampling = True
-    sc.cycles.adaptive_threshold = 0.03
+    if not 0.0 <= noise_threshold <= 1.0:
+        raise ValueError("noise_threshold must be between 0 and 1")
+    sc.cycles.adaptive_threshold = noise_threshold
     sc.cycles.use_denoising = True
     sc.cycles.max_bounces = 6
     sc.cycles.volume_bounces = 0

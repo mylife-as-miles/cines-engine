@@ -27,7 +27,7 @@ import bpy  # noqa: E402
 import bmesh  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 from bpy_extras.object_utils import world_to_camera_view
-from mathutils.bvhtree import BVHTree  # noqa: E402
+from props import surface_bvh as world_bvh  # noqa: E402
 
 import props  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -406,22 +406,6 @@ def set_lamp(beat, mark=None):
 
 
 # ---------------------------------------------------------------- generated props
-
-def world_bvh(holder):
-    bpy.context.view_layer.update()
-    dg = bpy.context.evaluated_depsgraph_get()
-    V, P = [], []
-    for o in holder.children_recursive:
-        if o.type != "MESH":
-            continue
-        ev = o.evaluated_get(dg)
-        me = ev.to_mesh()
-        b = len(V)
-        V.extend(o.matrix_world @ v.co for v in me.vertices)
-        P.extend([b + i for i in p.vertices] for p in me.polygons)
-        ev.to_mesh_clear()
-    return BVHTree.FromPolygons(V, P)
-
 
 def laptop():
     """The laptop prop open at the back of the table, its screen switched on to a blank page: a glowing panel inset

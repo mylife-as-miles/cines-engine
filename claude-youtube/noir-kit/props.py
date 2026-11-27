@@ -160,6 +160,26 @@ def _plain_suitcase_side(ob, topstitch=False):
 
 
 
+def meshes(holder):
+    """All mesh parts of a prop, including a reinforcement parented under its shell."""
+    return [o for o in (holder, *holder.children_recursive) if o.type == "MESH"]
+
+
+def surface_bvh(holder):
+    """World-space ray surface of the complete evaluated prop."""
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    vertices, polygons = [], []
+    for part in meshes(holder):
+        ev = part.evaluated_get(dg)
+        mesh = ev.to_mesh()
+        base = len(vertices)
+        vertices.extend(ev.matrix_world @ v.co for v in mesh.vertices)
+        polygons.extend([base + i for i in face.vertices] for face in mesh.polygons)
+        ev.to_mesh_clear()
+    return BVHTree.FromPolygons(vertices, polygons)
+
+
 def _retouch_tote_textures(holder, box, dx, feather=8):
     """Paint a small patch of a generated prop's textures over with the same-sized patch dx pixels to its right
     (colour, roughness and normal maps alike), feathered: used to take the tote's oval maker's plate off its front

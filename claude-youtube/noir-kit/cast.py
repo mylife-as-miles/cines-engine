@@ -12,6 +12,7 @@ Needs MPFB 2 installed as a Blender extension (bl_ext.user_default.mpfb, from gi
 and the Rigify add-on.
 """
 import importlib
+from contextlib import contextmanager
 import math
 import sys
 
@@ -265,6 +266,20 @@ def shoes(holder, rgb=(0.03, 0.03, 0.032), height=0.085):
 CLOTHES = __import__("os").path.join(__import__("os").path.dirname(__import__("os").path.abspath(__file__)), "assets", "makehuman", "clothes")
 
 
+@contextmanager
+def _keep_pending_materials():
+    """Keep a set's not-yet-assigned materials across MPFB's orphan purge."""
+    pending = [m for m in bpy.data.materials if m.users == 0 and not m.use_fake_user and m.library is None]
+    for m in pending:
+        m.use_fake_user = True
+    try:
+        yield
+    finally:
+        for m in pending:
+            m.use_fake_user = False
+
+
+@_keep_pending_materials()
 def dress(holder, items, tint=None, flat=()):
     """Dress a figure in MakeHuman clothes (CC0 system pack, made for this body: they fit and follow the rig by design).
     `items` are folder names in assets/makehuman/clothes, e.g. ["female_elegantsuit01", "shoes01"]. `tint` optionally
@@ -382,6 +397,7 @@ def _to_bone(objs, rig, bone):
         o.matrix_world = mw
 
 
+@_keep_pending_materials()
 def person(name, gender=0.0, height_cm=170, age=0.5, weight=0.5, muscle=0.5, proportions=0.5, hair="short",
            location=(0, 0, 0), facing_deg=0.0, skin=STONE, hair_tone=HAIR):
     """Build a statue figure; returns its holder empty (keys rig, body, ks), ready for rigged.pose_figure."""

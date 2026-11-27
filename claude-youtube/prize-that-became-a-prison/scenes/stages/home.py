@@ -739,7 +739,7 @@ def apply_camera(name):
           f"dining haze {dens}", flush=True)
 
 
-def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=None):
+def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=None, noise_threshold=None):
     """setkit.render with this stage's sampling: a final (1280 wide or more) of a dark frame takes the camera's
     `spp_final` and a tighter adaptive threshold, and the denoiser is fed albedo and normals (prefilter accurate),
     so the big dark gradients (the window, the walls) do not blotch."""
@@ -756,7 +756,7 @@ def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=No
     sc.cycles.device = "CPU"
     sc.cycles.samples = spp
     sc.cycles.use_adaptive_sampling = True
-    sc.cycles.adaptive_threshold = 0.012 if final else 0.03
+    sc.cycles.adaptive_threshold = (0.012 if final else 0.03) if noise_threshold is None else noise_threshold
     sc.cycles.use_denoising = True
     sc.cycles.denoiser = "OPENIMAGEDENOISE"
     sc.cycles.denoising_input_passes = "RGB_ALBEDO_NORMAL"
@@ -778,10 +778,10 @@ def _render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, name=No
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
-    def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0):
+    def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=None):
         name = which_camera()
         apply_camera(name)
-        return _render(out, samples, res, exposure, world, name)
+        return _render(out, samples, res, exposure, world, name, noise_threshold)
     render._orig = orig
     sk.render = render
 
