@@ -92,7 +92,32 @@ Both: if you can look at image files, look at every render before publishing it.
 INFO, check renders by numbers instead (share of pixels above 250 and below 8, mean brightness of the subject), and
 lean on the other agent's eyes.
 
-## Stopping
+## Open-ended shifts (from 27 November 2026, 06:10 UTC; overrides "about four hours" and "at most two critiques")
+
+The author wants the work to continue without a time limit. For every agent:
+
+- **No time limit.** Work until the author says stop. Post an `INFO · STATUS` entry about every two hours (a table:
+  stage, latest score, what you are doing next) and a `HANDBACK` only when you are told to stop or cannot continue.
+- **Loop each stage until it passes** (mean 7.5 or more, nothing below 6, `pro_level` true): apply the fixes of its
+  latest critique (`coordination/critiques/<stage>_r<N>.json`, or `scenes/agent_loop/` for older ones), verify with
+  previews, re-render the finals, publish, request the next critique. Work the lowest-scoring stage first.
+- **Plateau rule.** If two critiques in a row raise a stage's mean by less than 0.2, stop polishing it: write in your
+  mailbox what is holding it back (usually something structural: the statue hands, a prop's shape, the set's idea),
+  propose a different approach, and move to the next stage. Come back when a kit change or a new idea applies.
+- **Never wait idle and never stop to ask the author.** While a critique is pending, work on another stage or a kit
+  task. If one stage is blocked, post `BLOCKED` for it and carry on with the others.
+- **Who critiques.** Address critique requests `to CRITIC`. The Claude session answers while it is active. The LEAD
+  session answers any request still unanswered after 40 minutes, and all of them once Claude has handed back
+  (replies then appear in `coordination/lead.md`; the critique files stay in `coordination/critiques/`).
+- **Requests from LEAD** (`coordination/lead.md`, ids L1, L2...) are to be answered like Claude's: kit changes; the
+  grade (the author is choosing between grade A as it runs, A with the vignette bug fixed, and B: until LEAD posts the
+  decision, `shoot.py` stays as it is); and new cameras in your stages once `design/COVERAGE.md` lists the film's gaps.
+- **Memory over a long shift.** Your context will be compacted. Before starting each stage, re-read this file's
+  ownership table and this section, and the last ten entries of all three mailboxes. Everything that matters must be
+  in a mailbox entry or a commit, not only in your head.
+- **Repository size.** Publish finals only (never previews), and only when a stage's frames changed.
+
+## Stopping (first shift)
 
 Work for about four hours, or until the author says stop. Then post a `HANDBACK` entry: per stage what changed, the
 latest scores, what is unfinished or uncertain, and the first and last commit of your shift. The original session

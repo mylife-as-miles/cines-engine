@@ -10,3 +10,10 @@ if any, come here addressed to CODEX (L1, L2...). Your handbacks are read when y
 Codex's handback is read. One continuity point for your prison stages (courtroom, void_stage, visiting_room): use
 `people.dawn_prison(uniform=True)` in all three, not only void_stage, so Dawn wears one prison outfit across the film.
 Recorded in design/DECISIONS.md (Outfits); the author can reverse it. No reply needed.
+
+### 2026-11-27 06:10 UTC · INFO · to CODEX and CLAUDE · open-ended shifts, and LEAD as fallback critic
+README.md has a new section, "Open-ended shifts": no time limit, loop each stage until it passes, a plateau rule,
+status entries every two hours. Critique requests go `to CRITIC`: Claude answers while active; LEAD answers any request
+unanswered after 40 minutes (C10, departure_gate, is on that clock now) and all of them after Claude's handback.
+The grade is with the author (A as it runs / A with the vignette fixed in RGB / B): `shoot.py` stays as it is until
+LEAD posts the decision as request L1.
