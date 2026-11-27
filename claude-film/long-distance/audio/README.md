@@ -51,19 +51,20 @@ Silent on purpose (`null` in the sound map, with the reason in `_silent_on_purpo
 
 ## What the checks show
 
-Final mix for the locked picture (cut 4, 517.5 s), `out/mix/long_distance_mix.wav` (48 kHz stereo, 24-bit) and the review copy `out/long_distance_mixed_720p.mp4`.
+Final mix with the score, on the locked picture (cut 4, 517.5 s): `out/mix/long_distance_mix.wav` (48 kHz stereo, 24-bit) and the master `out/long_distance_1080p.mp4` (the checks below are on the master; the earlier no-music mix measured the same within 0.1 dB).
 
 `tools/layer_qa.py` (opus-sound-layer's `qa.py`):
 
 | Check | Result |
 | --- | --- |
 | Offset, encoded audio against the mix | pass (0 samples) |
-| Loudness | pass: -18.17 LUFS against -18 (mix.py: -18.06; sample peaks held at -3.00 dBFS) |
-| True peak | pass: -2.71 dBTP on the encoded file |
-| Voice | pass: the bed sits 30.0 LU under the voices while they speak |
+| Loudness | pass: -18.29 LUFS against -18 (mix.py: -18.17; sample peaks held at -3.00 dBFS) |
+| True peak | pass: -2.75 dBTP on the encoded file |
+| Voice | pass: the bed, score included, sits 29.8 LU under the voices while they speak |
 | Silence | pass (planned: the held breath and the dropout in Q10, the black and the title) |
 | Sync | all 28 peak-aligned effects within their frame limit |
 | Music | flags the planned quiet: the dropout (416-417 s), the room 6 dB down and ducked under L023 (424.5 s), the silent title (503.5 s on) |
+| Score | M01 (3:19–3:44) at -30 to -32 LUFS short-term, about 8 LU over the room before it (-39.5) and 13 LU under L007; M02 at -25.7 LUFS as it enters, -34 under the push, -43 in its last 2 s, then digital silence from the cut to black (503.5 s). earshot hears both as "soft, sad solo piano music playing quietly in a room" (81% and 97%; "a quiet room with no music" under 1%). |
 | Audible / hero body | 32 effects pass, 86 fail the tool's 1.5 dB test (4 heroes its 3 dB): 58 of them are the phone's tiny taps, typing and scrolls; the rest are soft cloth, steps and doors in near-silent rooms. Two reasons, both noted for opus-sound-layer: mix.py solves each gain on the mono sound but pans it at constant power (centre = -3 dB a channel), so every centred effect lands 3 dB under its own target; and both tools floor a band at -60 dB, so in a near-silent room "audible" becomes an absolute threshold. The result is the film's quiet register; `LISTEN.md` asks a human whether the taps are heard. |
 
 earshot (`tools/listen.py` → `audio/reports/earshot_listen.json`):
