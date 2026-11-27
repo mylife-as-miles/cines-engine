@@ -90,3 +90,7 @@ Without workflows, play the three roles in turn using the prompts in the script 
 Add entries below: date and time (UTC), who (session or tool), what changed, scores, files.
 
 - 2026-11-27 01:30 UTC, original session: all work paused at the author's request; state as in the table above.
+- 2026-11-27 02:30 UTC, original session: pushed at the author's request (repository is public): the 26 Tripo props
+  and the MakeHuman CC0 clothes (`noir-kit/assets/`), every final frame (`frames/graded`, `frames/raw`), every stage and
+  the whole cast as .blend files (`blend/`, see its README), and the cast line-up (`frames/cast_lineup_graded.jpg`).
+  Note: `cast.person(..., age=0.92)` crashed in `_statue_eyes` (division by zero); Gene is built at age 0.8.
