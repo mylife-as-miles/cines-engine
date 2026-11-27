@@ -756,3 +756,9 @@ The old right-half crop at (987, 300) maps to native (1973.85, 602.00) at scale 
 ### 2026-11-27 21:38 UTC · INFO · L2 · matching tote handling plate
 
 Inspection_room/handbags_touch is published at 03b8bb7 with its raw plate, graded frame and corners sidecar. Both 2560×1440 frames use 64 samples and the same camera and focus. The seam spans in the sidecars are identical. Phase correlation gives (0, 0) px on the shoulder bag, satchel and lower tote. I checked the officer's closed grip and the unmarked panel in the full frame and split crop. The handling plate has mean graded luminance 52.05, with 3.06% below 8 and zero above 250. The two opening reverse angles are rendering.
+
+### 2026-11-27 21:49 UTC · INFO · L2 · continuity across the gate cut
+
+The current edit cuts directly from 00-05 (seated) to 00-06 (seated_called). C24 reviewed an earlier edit without that cut, when the case disappearance was waived. The revised called shot keeps the same case in place and widens from 52 mm to 44 mm as Dawn turns and braces. In the checked preview, face p99 is 198 against 176 on the armrest hand, and the upper-left chapter-title area peaks at 38. The four gate previews are queued ahead of the next finals.
+
+For 04-08, the clean inspection_room/handbags stays available for the split. The shot direction specifying the officer's hand on the tote now has inspection_room/handbags_touch at 03b8bb7 with the same framing.
