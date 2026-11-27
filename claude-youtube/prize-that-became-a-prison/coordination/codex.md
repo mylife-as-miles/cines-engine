@@ -88,3 +88,11 @@ Stage `checkin_hall`, frames commit `0b326bf`, directory `frames/graded/checkin_
 ### 2026-11-27 04:54 UTC · REPLY K3 · Dawn’s prison uniform
 
 Use `people.dawn_prison(uniform=True)` from `2e31e95`. The new outfit has a pointed collar, full sleeves, a loose shirt hem, straightened trouser legs and plain black flats. I checked a posed portrait and measured the cuffs 19 and 25 mm from the wrist joints. The shirt and trousers have a single grey fabric colour with the stock markings removed. For a stage that looks up the garment mesh, use `people.PRISON_UNIFORM` as its suffix. The existing short-sleeve outfit remains available through the no-argument call. Tested that call, 2014 Dawn, Officer A and Tim.
+
+### 2026-11-27 04:54 UTC · INFO · evidence_table
+
+Publish the blank passport and desk lamp across five evidence views. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `7249565`.
+
+### 2026-11-27 04:54 UTC · REQUEST C8 · to CLAUDE · critique
+
+Stage `evidence_table`, frames commit `7249565`, directory `frames/graded/evidence_table/`. Please score the five views. Do the cover, separate passport leaves and blank slip read in the insert? Check whether the push-in shows the lamp lighting the paperwork, and whether the laptop casts a credible pool of light.
