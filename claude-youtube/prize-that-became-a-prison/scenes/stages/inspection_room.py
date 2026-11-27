@@ -63,7 +63,7 @@ PROPS = {  # size, axis, grade
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     # the tote's leather is a red-brown that grades to salmon: turned toward orange (hue +0.045) and lifted, it lands
     # near (0.32, 0.15, 0.06) linear, cognac, the one warm thing in the room
-    "handbag-tote": (0.35, "long", dict(sat=1.0, val=1.1, hue=0.545, rough_add=0.2)),
+    "handbag-tote": (0.35, "long", dict(sat=1.12, val=0.78, hue=0.52, rough_add=0.2)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.55, val=0.5, rough_add=0.25)),
 }
@@ -96,14 +96,14 @@ POSES = {
         "Dawn": {"chest": (2, 2), "l_arm": (5, 7, 14), "r_arm": (3, 6, 9), "fingers": 40, "look": "OfficerA"},
         # the officer asking: eyes on her, his right hand open and palm up just over the extra bag ("this one?"),
         # his left hand behind his back
-        "OfficerA": {"chest": (4, 0), "fingers": 34, "look": "Dawn", "reach_r": "duffel_hover", "palm": "up",
+        "OfficerA": {"chest": (4, 0), "fingers": 24, "look": "Dawn", "reach_r": "duffel_hover", "palm": "up",
                      "behind_l": True},
-        "OfficerB": {"chest": (-2, 0), "fingers": 30, "look": "Dawn", "behind": True},
+        "OfficerB": {"chest": (-2, 0), "fingers": 52, "look": "Dawn", "behind": True},
     },
     "ch05": {
         "Dawn": {"chest": (6, 0), "l_arm": (5, 7, 14), "r_arm": (3, 6, 9), "fingers": 40, "look": "handbag-tote"},
         # leaning in, his right hand closing over the tote's handles
-        "OfficerA": {"chest": (16, 0), "fingers": 62, "look": "handbag-tote", "reach_r": "tote_handle", "palm": "down",
+        "OfficerA": {"chest": (16, 0), "fingers": 35, "look": "handbag-tote", "reach_r": "tote_handle", "palm": "down",
                      "behind_l": True},
         "OfficerB": {"chest": (6, 0), "fingers": 30, "look": "extra-bag-open", "behind": True},
     },
@@ -132,10 +132,10 @@ CAMERAS = {
     "overhead": dict(loc=(0.05, -0.15, 5.3), aim=(0.05, -0.146, 0.86), lens=35, focus="fx_overhead", fstop=8.0, beat="ch05",
                      above_ceiling=True, exposure=-3.9, lens_glow=60.0),
     # Ch 00: the tag on the suitcase's handle, from Dawn's side; the officer by the scanner an out-of-focus mass beyond
-    "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-3.5),
+    "tag": dict(loc=_TL, aim=_TA, lens=50, focus="tag_hole_focus", fstop=2.0, beat="ch00", raking=True, exposure=-3.95),
     # Ch 00: from the end of the bench, a little low: Dawn and the questioning officer face each other over the bags,
-    # the troffer burning above them, the door's vision panel glowing in the gap between their heads
-    "two_shot": dict(loc=(2.75, 0.10, 1.25), aim=(-0.1, -0.20, 1.82), lens=24, focus="fx_two", fstop=4.0, beat="ch00"),
+    # the door's vision panel behind them and the scanner officer set farther back
+    "two_shot": dict(loc=(2.60, 0.14, 1.41), aim=(-0.1, -0.12, 1.37), lens=31, focus="fx_two", fstop=4.0, beat="ch00", cheat={"OfficerB": (-0.02, 0.94)}),
     # Ch 11: the two bags alone on the bench in the empty room, the cleaner steel where the tote stood near the centre
     "empty": dict(loc=(2.5, -2.5, 1.5), aim=(0.25, 0.1, 0.92), lens=24, focus="fx_empty", fstop=4.5, beat="ch11", cast=False,
                   wild=("wall_front", "cove_f", "rail_f")),
@@ -158,9 +158,9 @@ def facing(p, t):
     return math.degrees(math.atan2(t[0] - p[0], -(t[1] - p[1])))
 
 
-def cloth(holder, item, rough=0.8, bump=0.25, tint=None):
+def cloth(holder, item, rough=0.8, bump=0.25):
     """A garment finished as plain cloth: its normal map (whose fine stripes shimmer at wide sizes) dropped for a
-    woven-noise bump; optionally a new flat tint on people.py's colour mix."""
+    woven-noise bump while retaining the shared wardrobe colour."""
     ob = bpy.data.objects.get(f"{holder.name}_{item}")
     if ob is None:
         print(f"INSPECTION no garment {holder.name}_{item}", flush=True)
@@ -173,10 +173,6 @@ def cloth(holder, item, rough=0.8, bump=0.25, tint=None):
         b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
         if b is None:
             continue
-        if tint is not None:
-            mix = next((n for n in nt.nodes if n.type == "MIX" and getattr(n, "data_type", "") == "RGBA"), None)
-            if mix is not None:
-                mix.inputs["B"].default_value = (*tint, 1.0)
         for sock in ("Roughness", "Normal"):
             for ln in list(b.inputs[sock].links):
                 nt.links.remove(ln)
@@ -238,35 +234,92 @@ def hands_stone(holder, value=0.34):
     return n
 
 
+def blouse(holder, suit):
+    """Cut a separate, gently draped blouse front from the rigged body's exposed neckline."""
+    mat = castkit.stone("inspection blouse", (0.070, 0.060, 0.048), 0.92)
+    mat.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.04
+    body = bpy.data.objects[holder["body"]]
+    castkit.blouse_v(holder, rgb=(0.070, 0.060, 0.048), depth=0.42, width=0.14)
+    bpy.context.view_layer.update()
+    ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    source = ev.to_mesh()
+    slot = source.materials.find("blouse_" + holder.name)
+    faces = [p.vertices[:] for p in source.polygons if p.material_index == slot]
+    indices = sorted({i for face in faces for i in face})
+    lookup = {old: new for new, old in enumerate(indices)}
+    mesh = bpy.data.meshes.new("blouse front")
+    mesh.from_pydata([source.vertices[i].co.copy() for i in indices], [],
+                     [[lookup[i] for i in face] for face in faces])
+    ev.to_mesh_clear()
+    panel = bpy.data.objects.new("Dawn_blouse_front", mesh)
+    bpy.context.scene.collection.objects.link(panel)
+    panel.matrix_world = body.matrix_world.copy()
+    mesh.materials.append(mat)
+    for face in mesh.polygons:
+        face.use_smooth = True
+    smooth = panel.modifiers.new("relax fabric", "LAPLACIANSMOOTH")
+    smooth.iterations, smooth.lambda_factor = 15, 0.65
+    smooth.use_volume_preserve = False
+    shell = panel.modifiers.new("fabric thickness", "SOLIDIFY")
+    shell.thickness, shell.offset = 0.002, 1.0
+    rig = bpy.data.objects[holder["rig"]]
+    castkit._to_bone([panel], rig, "DEF-spine.003")
+    # The buttons sit on the actual front face of the jacket before the cast takes its marks.
+    tree = st.surface_bvh(suit)
+    button_mat = castkit.stone("plain umber button", (0.013, 0.010, 0.009), 0.41)
+    buttons = []
+    for z in (1.035, 1.115):
+        hit, normal, _, _ = tree.ray_cast(Vector((0.006, -0.6, z)), Vector((0, 1, 0)))
+        if hit is not None:
+            button = sk.cyl("jacket_button", 0.006, 0.0025, hit + normal * 0.0015, button_mat,
+                            rot=normal.to_track_quat("Z", "Y").to_euler(), verts=24)
+            buttons.append(button)
+    castkit._to_bone(buttons, rig, "DEF-spine.002")
+
+
 def dawn():
-    """people.dawn(), finished for this room: her blouse-and-skirt suit in a darker flat taupe so it separates from
-    the stone (at people.py's 0.36 it read as bare skin under the troffer), plain weave, real hem thickness; her
-    bun drawn in to the nape so from behind it sits at the back of the head."""
     h = people.dawn()
-    suit = cloth(h, "female_elegantsuit01", rough=0.92, bump=0.3, tint=(0.14, 0.135, 0.128))
+    suit = cloth(h, "female_elegantsuit01", rough=0.92, bump=0.2)
     if suit is not None:
-        hem_thickness(suit, 0.006)
+        hem_thickness(suit, 0.008)
+        blouse(h, suit)
     bun = bpy.data.objects.get(f"{h['body']}_bun")
     if bun is not None:
         bun.data.transform(Matrix.Translation((0.0, -0.025, -0.02)))
-    # the suit's jacket is cut open down the front: without a blouse, the stone chest and waist show in the V and
-    # from the end of the bench she reads undressed. The body's open front, neck to waist, becomes a plain blouse
-    # (cast.blouse_v), a matt warm grey between the jacket and the stone
-    n = castkit.blouse_v(h, rgb=(0.24, 0.23, 0.215), depth=0.42, width=0.14)
-    bl = bpy.data.materials.get(f"blouse_{h.name}")
-    if bl is not None:
-        bb = bl.node_tree.nodes["Principled BSDF"]
-        bb.inputs["Specular IOR Level"].default_value = 0.04
-        bb.inputs["Roughness"].default_value = 0.92
-    print(f"INSPECTION Dawn blouse: {n} body vertices", flush=True)
-    hands_stone(h)
+    hands_stone(h, value=0.27)
     return h
 
 
 def officer(name, variant):
     h = people.officer(name, variant)
     cloth(h, "male_elegantsuit01", rough=0.92, bump=0.25)
-    hands_stone(h)
+    hands_stone(h, value=0.22)
+    crown = bpy.data.materials["hat_" + name]
+    b = crown.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.009, 0.013, 0.022, 1)
+    b.inputs["Specular IOR Level"].default_value = 0.08
+    peak = castkit.stone(name + "_cap_peak", (0.008, 0.009, 0.010), 0.35)
+    for ob in h.children_recursive:
+        if ob.type != "MESH" or ob.data.materials.find(crown.name) < 0:
+            continue
+        mesh = ob.data
+        low = Vector([min(v.co[i] for v in mesh.vertices) for i in range(3)])
+        high = Vector([max(v.co[i] for v in mesh.vertices) for i in range(3)])
+        centre = (low + high) / 2
+        # The source peak faces +X and hangs below the band. Put it over the brow (-Y),
+        # lifting its outer lip away from the eyes before seating the crown.
+        band_z = low.z + (high.z - low.z) * 0.39
+        mesh.materials.append(peak)
+        for face in mesh.polygons:
+            if face.center.z < band_z:
+                face.material_index = len(mesh.materials) - 1
+        for v in mesh.vertices:
+            x, y, z = v.co.x - centre.x, v.co.y - centre.y, v.co.z - band_z
+            if z < 0:
+                x -= 0.50 * z
+                z *= 0.33
+            v.co = (centre.x + 1.18 * y, centre.y - 1.54 * x + 0.009, band_z + z * 1.82 - 0.035)
+        mesh.update()
     return h
 
 
@@ -398,9 +451,9 @@ def _bbox(holder):
 
 
 def _reach_point(kind):
-    if kind == "duffel_hover":       # palm 5 cm over the extra bag's top, over its middle, toward the near end
+    if kind == "duffel_hover":       # palm 8 cm over the extra bag's top, over its middle, toward the near end
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
-        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.03, hi.z + 0.05))
+        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.045, hi.z + 0.08))
     if kind == "tote_handle":        # palm just over the tote's handles, fingers to close round them
         lo, hi = _bbox(_STATE["props"]["handbag-tote"])
         return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2 + 0.01, hi.z + 0.035))
@@ -425,7 +478,7 @@ def solve_pose(holder, spec, holders):
             if n is not None:
                 c = a.cross(n)
                 phi = math.degrees(math.atan2(c.dot(want), n.dot(want) - a.dot(n) * a.dot(want)))
-                p["roll_r"] = max(-120.0, min(120.0, phi))
+                p["roll_r"] = max(-162.0, min(162.0, phi))
                 report.append(f"palm {spec['palm']}: roll {p['roll_r']:.0f}")
     if spec.get("look"):
         d, t = p.get("head", (0.0, 0.0))
@@ -449,6 +502,29 @@ def solve_pose(holder, spec, holders):
 
 # ---------------------------------------------------------------- props and beats
 
+def open_zip(holder):
+    """Spread the two existing zip lips and let the inset nylon lining catch the overhead key."""
+    lining = castkit.stone("duffel lining", (0.055, 0.060, 0.065), 0.91)
+    for ob in holder.children_recursive:
+        if ob.type != "MESH":
+            continue
+        mesh = ob.data
+        world = Matrix.Translation(-holder.location) @ ob.matrix_world
+        local = world.inverted()
+        mesh.materials.append(lining)
+        for face in mesh.polygons:
+            x, y, z = world @ face.center
+            if (x / 0.15) ** 2 + ((y - 0.025) / 0.065) ** 2 < 1 and 0.12 < z < 0.28:
+                face.material_index = len(mesh.materials) - 1
+        for v in mesh.vertices:
+            x, y, z = world @ v.co
+            across = y - 0.022
+            weight = max(0, 1 - (x / 0.24) ** 4) * max(0, 1 - (across / 0.15) ** 2)
+            weight *= min(1, max(0, (z - 0.12) / 0.10))
+            v.co = local @ Vector((x, y + 0.033 * weight * math.tanh(across / 0.020), z))
+        mesh.update()
+
+
 def load_props():
     out = {}
     for name, (size, axis, grade) in PROPS.items():
@@ -468,6 +544,8 @@ def load_props():
                         b = next((n for n in slot.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
                         if b is not None and "Coat Weight" in b.inputs:
                             b.inputs["Coat Weight"].default_value = 0.0
+        if name == "extra-bag-open":
+            open_zip(h)
         out[name] = h
     return out
 
@@ -546,6 +624,7 @@ def apply_camera(name):
     li = bpy.data.objects.get("troffer_bench_light")
     if li:
         li.visible_glossy = "lens_glow" not in cfg
+    bpy.data.objects["floor_return"].hide_render = name != "overhead"
     rake = bpy.data.objects.get("tag_rake")
     if rake:
         rake.hide_render = not cfg.get("raking", False)
@@ -607,6 +686,7 @@ def build(cast=True):
     st.luggage_tag(case, _case_frame(), hole=(-0.008, -0.005), grip=(-0.045, 0.542), grip_r=(0.0125, 0.0115))
     st.bounce()
     st.wall_wash()
+    st.linked_light("floor_return", (0, -0.2, 2.30), (2.4, 2.2), 35, (0.80, 0.87, 1.0), [bpy.data.objects["floor"]])
     st.room_fill([_STATE["scanner"]["holder"]] + [o for o in _STATE["scanner"]["parts"] if o.type == "MESH"])
     rake_light()
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.03), (0, (st.Y0 + st.Y1) / 2, st.H / 2 - 0.01), 0.002)

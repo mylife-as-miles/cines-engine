@@ -33,7 +33,7 @@ def materials():
         # The ghost patch is the cleaner rectangle where the tote stood (switched on for the Ch 11 return)
         steel=mt.brushed_steel("bench steel", rgb=(0.48, 0.49, 0.5), rough=0.26, smudge=0.2, aniso=0.8, contact=0.05),
         # the top: darker, rougher, brushed in long streaks; from straight above it must not read as a lightbox
-        steel_top=mt.bench_steel("bench top steel", ghost=GHOST),
+        steel_top=mt.bench_steel("bench top steel", rough=(0.38, 0.46), aniso=0.34, ghost=GHOST),
         steel_dark=mt.satin_metal("dark steel", (0.32, 0.33, 0.34), 0.4),
         hardware=mt.satin_metal("hardware", (0.55, 0.56, 0.57), 0.3),
         wall=mt.block_wall("block wall", (0.17, 0.182, 0.185), (0.075, 0.088, 0.098), 1.07, H),
@@ -50,7 +50,7 @@ def materials():
         cover=mt.plastic("scanner blank plate", (0.5, 0.52, 0.53), 0.45),
         smoke=mt.plastic("smoked dome", (0.008, 0.008, 0.01), 0.06, 0.8),
         dark=mt.rubber("void", (0.004, 0.004, 0.004), 0.9),
-        box=mt.paint("glove box card", (0.5, 0.53, 0.58), 0.75, 0.02),
+        box=mt.paint("glove box card", (0.19, 0.20, 0.21), 0.75, 0.02),
         glove=mt.plastic("nitrile", (0.08, 0.14, 0.32), 0.45),
         line=mt.paint("floor line paint", (0.3, 0.25, 0.07), 0.6, 0.02),
         cable=mt.rubber("cable", (0.012, 0.012, 0.013), 0.5),
@@ -58,17 +58,16 @@ def materials():
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
         cork=mt.paint("board", (0.16, 0.14, 0.11), 0.85, 0.15),
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
-        tag=mt.paper("manila tag", (0.5, 0.38, 0.2), rough=0.9, fibre=0.06),
+        tag=mt.paper("manila tag", (0.43, 0.32, 0.16), rough=0.9, fibre=0.06),
         tag_ring=mt.paper("tag ring", (0.45, 0.34, 0.18), rough=0.85),
         twine=mt.twine("twine", (0.42, 0.32, 0.19), 0.95),
-        curtain=mt.rubber("lead curtain", (0.035, 0.037, 0.04), 0.5),
+        curtain=mt.rubber("lead curtain", (0.022, 0.024, 0.025), 0.6),
         belt=mt.rubber("belt rubber", (0.016, 0.016, 0.017), 0.9),
         roller=mt.satin_metal("roller steel", (0.5, 0.51, 0.52), 0.28),
         bezel=mt.plastic("monitor bezel", (0.02, 0.021, 0.023), 0.4),
         board=mt.paint("clipboard", (0.2, 0.16, 0.11), 0.6, 0.03),
         blank=mt.paper("blank sheet", (0.62, 0.62, 0.6), rough=0.9),
         nitrile_box=mt.paint("glove box blue", (0.22, 0.27, 0.34), 0.7, 0.02),
-        ink=mt.paint("pictogram", (0.02, 0.025, 0.03), 0.5, 0.01),
     )
     return M
 
@@ -529,7 +528,7 @@ def surface_bvh(holder):
     bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
     verts, polys = [], []
-    for o in holder.children_recursive:
+    for o in [holder, *holder.children_recursive]:
         if o.type != "MESH":
             continue
         me = o.evaluated_get(dg).to_mesh()
@@ -564,52 +563,51 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
     pdir = Vector((-a.y, a.x))
     L, Wd, clip, top_off = 0.096, 0.054, 0.0095, 0.0125
     gx, gz = grip
-    outline = [(-Wd / 2, -top_off + clip), (-Wd / 2 + clip, -top_off), (Wd / 2 - clip, -top_off), (Wd / 2, -top_off + clip),
-               (Wd / 2, L), (-Wd / 2, L)]
-    bm = bmesh.new()
-    vs = []
-    for (u0, v0), (u1, v1) in zip(outline, outline[1:] + outline[:1]):
-        n = max(1, int(math.hypot(u1 - u0, v1 - v0) / 0.003))
-        for k in range(n):
-            t = k / n
-            vs.append(bm.verts.new((u0 + (u1 - u0) * t, v0 + (v1 - v0) * t, 0)))
-    edges = [bm.edges.new((vs[i], vs[(i + 1) % len(vs)])) for i in range(len(vs))]
+    # Take one support height from the lid. Stiff stock bridges the zip and surface relief.
+    support = max(drop(hv + a * t + pdir * u) for t in (0.024, 0.036, 0.048, 0.060, 0.072)
+                  for u in (-0.024, -0.012, 0.0, 0.012, 0.024)) + 0.0015
     hr = 0.0027
-    hvs = [bm.verts.new((hr * math.cos(2 * math.pi * i / 20), hr * math.sin(2 * math.pi * i / 20), 0)) for i in range(20)]
-    edges += [bm.edges.new((hvs[i], hvs[(i + 1) % 20])) for i in range(20)]
-    bmesh.ops.triangle_fill(bm, use_beauty=True, use_dissolve=False, edges=edges)
-    for _ in range(2):
-        bmesh.ops.subdivide_edges(bm, edges=[e for e in bm.edges if not e.is_boundary], cuts=1, use_grid_fill=False)
-        bmesh.ops.triangulate(bm, faces=bm.faces[:])
-    z_top = gz - 0.001                               # the eyelet end, propped at the grip's middle by the knot
-    slope = math.tan(math.radians(20.0))
-    edge_x = 0.072                                   # where the lid starts to round over at the front
+    incline = math.tan(math.radians(19))
 
     def height(u, t):
-        p = hv + a * t + pdir * u
-        surf = drop(p) + 0.0006
-        prop = z_top - slope * (t + top_off)          # the stiff card leaning from the knot
-        z = max(surf, prop)
-        if p.x > edge_x:                              # overhang: card bends, it does not follow the curved edge
-            z = max(surf, drop(hv + a * (edge_x - hv.x) + pdir * u) + 0.0006 - 0.32 * (p.x - edge_x))
-        return z + 0.0012 * (u / (Wd / 2) + 1.0)          # one long edge a little higher: one corner bears
+        # Smooth the transition from the lifted eyelet to the single resting plane.
+        run = gz - 0.001 - incline * (t + top_off) - support
+        z = support + (run + math.sqrt(run * run + 0.0018 ** 2)) / 2
+        z -= 5.5 * max(0.0, t - 0.062) ** 2
+        return z + 0.30 * max(0.0, u + t - L - Wd / 2 + 0.011)
 
-    for v in bm.verts:
-        u, t = v.co.x, v.co.y
-        p = hv + a * t + pdir * u
-        v.co = Vector((p.x, p.y, height(u, t)))
-    for _ in range(3):                                # paper is stiff: smooth the drape, never into the case
-        new = {}
-        for v in bm.verts:
-            nb = [e.other_vert(v).co.z for e in v.link_edges]
-            new[v] = max(v.co.z, 0.5 * v.co.z + 0.5 * sum(nb) / len(nb))
-        for v, z in new.items():
-            v.co.z = z
-    for v in bm.verts:
-        v.co = frame @ v.co
+    def card_point(u, t):
+        xy = hv + a * t + pdir * u
+        return frame @ Vector((xy.x, xy.y, height(u, t)))
+
+    # A quad grid with a square opening bridged to a round eyelet. All the geometry around the
+    # eyelet lies on the same card surface, including the reinforcement on the front.
+    bm = bmesh.new()
+    grid = {}
+    for j in range(37):
+        t = (j - 4) * (L / 32 if j >= 4 else top_off / 4)
+        half_w = Wd / 2 - max(0.0, clip - (t + top_off))
+        for i in range(19):
+            if abs(i - 9) < 2 and abs(j - 4) < 2:
+                continue
+            grid[i, j] = bm.verts.new(card_point((i - 9) * half_w / 9, t))
+    for j in range(36):
+        for i in range(18):
+            if 7 <= i < 11 and 2 <= j < 6:
+                continue
+            bm.faces.new(tuple(grid[k] for k in ((i, j), (i, j + 1), (i + 1, j + 1), (i + 1, j))))
+    border = ([(i, 2) for i in range(7, 11)] + [(11, j) for j in range(2, 6)]
+              + [(i, 6) for i in range(11, 7, -1)] + [(7, j) for j in range(6, 2, -1)])
+    inner = []
+    for i, j in border:
+        angle = math.atan2(j - 4, i - 9)
+        inner.append(bm.verts.new(card_point(hr * math.cos(angle), hr * math.sin(angle))))
+    for k, ij in enumerate(border):
+        nxt = (k + 1) % len(border)
+        bm.faces.new((grid[ij], inner[k], inner[nxt], grid[border[nxt]]))
     tag = mesh_obj("luggage_tag", bm, m["tag"], smooth=True)
     so = tag.modifiers.new("card", "SOLIDIFY")
-    so.thickness, so.offset = 0.0006, 0.0
+    so.thickness, so.offset = 0.00035, 0.0
     # the paper reinforcing ring round the eyelet
     bm = bmesh.new()
     outer = [bm.verts.new((0.0072 * math.cos(2 * math.pi * i / 28), 0.0072 * math.sin(2 * math.pi * i / 28), 0)) for i in range(28)]
@@ -647,6 +645,29 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
         bp.co = frame @ co
         bp.handle_left_type = bp.handle_right_type = "AUTO"
     sp.use_cyclic_u = True
+    # Sample the tied centreline and wind two actual jute plies round it. The silhouette
+    # carries the twist even where the close-up resolves the surface bump as a single pixel.
+    from mathutils.geometry import interpolate_bezier
+    centreline = []
+    for b0, b1 in zip(sp.bezier_points, list(sp.bezier_points[1:]) + [sp.bezier_points[0]]):
+        steps = max(5, int((b1.co - b0.co).length / 0.00030))
+        centreline.extend(interpolate_bezier(b0.co, b0.handle_right, b1.handle_left, b1.co, steps + 1)[:-1])
+    cu.splines.remove(sp)
+    cu.bevel_depth = 0.00033
+    length = sum((p - centreline[i - 1]).length for i, p in enumerate(centreline))
+    turns = round(length / 0.0026)
+    for phase in (0, math.pi):
+        strand = cu.splines.new("POLY")
+        strand.points.add(len(centreline) - 1)
+        along = 0.0
+        for i, point in enumerate(centreline):
+            direction = (centreline[(i + 1) % len(centreline)] - centreline[i - 1]).normalized()
+            across = direction.cross(Vector((0, 1, 0))).normalized()
+            angle = 2 * math.pi * turns * along / length + phase
+            offset = across * math.cos(angle) + direction.cross(across) * math.sin(angle)
+            strand.points[i].co = (*(point + 0.00024 * offset), 1)
+            along += (centreline[(i + 1) % len(centreline)] - point).length
+        strand.use_cyclic_u = True
     tw = bpy.data.objects.new("luggage_tag_twine", cu)
     bpy.context.scene.collection.objects.link(tw)
     tw.data.materials.append(m["twine"])
@@ -669,7 +690,7 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
 def dressing(top=TOP):
     """Customs things that say where we are, all darker than the bags: a box of nitrile gloves and a clipboard with a
     blank sheet at the bench's far end, a pedal bin by the door, a card reader with a blank dark face and a
-    pictogram-only plate (a suitcase) on the door wall. Returns the bench items (a stage hides them for the return)."""
+    blank plate on the door wall. Returns the bench items (a stage hides them for the return)."""
     m = materials()
     items = []
     gx_, gy_, gr = -0.87, -0.29, math.radians(-6)
@@ -703,12 +724,4 @@ def dressing(top=TOP):
     box("reader_body", (0.03, 0.085, 0.13), (x + 0.015, ry, rz), m["sign"], bevel=0.006)
     box("reader_face", (0.004, 0.06, 0.08), (x + 0.0305, ry, rz + 0.01), m["smoke"], bevel=0.002)
     sk.sphere("reader_lamp", 0.0025, (x + 0.031, ry, rz - 0.045), mt.glow("reader lamp", (0.2, 1.0, 0.45), 6.0), segs=10)
-    # a pictogram on the existing sign plate (a suitcase: body, handle), no words
-    px, py, pz = x + 0.0048, -0.95, 1.535
-    box("picto_case", (0.0015, 0.13, 0.085), (px, py, pz), m["ink"], bevel=0.0007)
-    for dy in (-0.028, 0.028):
-        box("picto_handle_side", (0.0015, 0.008, 0.026), (px, py + dy, pz + 0.052), m["ink"])
-    box("picto_handle_top", (0.0015, 0.064, 0.008), (px, py, pz + 0.061), m["ink"])
-    for dy in (-0.04, 0.04):
-        box("picto_wheel", (0.0015, 0.014, 0.012), (px, py + dy, pz - 0.05), m["ink"])
     return items

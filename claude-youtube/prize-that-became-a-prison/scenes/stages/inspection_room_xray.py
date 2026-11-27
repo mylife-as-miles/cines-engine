@@ -65,15 +65,16 @@ def build(sx, sy, turn_deg=-90.0):
     bx("scanner_void", (0.004, mw_ + 0.01, z1 - z0 + 0.02), (0.09, my, (z0 + z1) / 2), m["dark"])
     bx("scanner_header", (0.022, mw_ + 0.01, 0.024), (0.142, my, z1 - 0.006), m["hardware"], bevel=0.004)
     bx("scanner_slot", (0.006, mw_ + 0.01, 0.17), (0.156, my, 0.49), m["bezel"], bevel=0.002)
-    # lead curtain: nine overlapping strips hanging from the header, each a little turned and swung
+    # lead curtain: nine individually spaced strips hanging from the header, each a little turned and swung
     rnd = random.Random(7)
-    n, sw = 9, 0.075
+    n = 9
+    sw = (mw_ - (n - 1) * 0.003) / n
     pitch = (mw_ - sw) / (n - 1)
     for i in range(n):
         yc = y0 + sw / 2 + i * pitch
         ln = z1 - 0.018 - (BELT_Z + 0.045)
-        bx(f"scanner_curtain{i}", (0.003, sw, ln), (0.134 - 0.002 * (i % 2), yc, z1 - 0.018 - ln / 2), m["curtain"],
-           bevel=0.001, rot=(0, math.radians(rnd.uniform(-1.5, 1.5)), math.radians(rnd.uniform(-3.0, 3.0))))
+        bx(f"scanner_curtain{i}", (0.004, sw, ln), (0.134 - 0.002 * (i % 2), yc, z1 - 0.018 - ln / 2), m["curtain"],
+           bevel=0.001, rot=(0, math.radians(rnd.uniform(-3, 3)), math.radians(rnd.uniform(-3.0, 3.0))))
     # the exit conveyor: belt off the tunnel, then rollers; side frames and guide rails; square legs, braces, feet
     x0, x1 = FACE + 0.005, 1.20
     half = WIDTH / 2
@@ -110,11 +111,11 @@ def build(sx, sy, turn_deg=-90.0):
     put(sk.cyl("mon_pivot", 0.02, 0.06, (mx - 0.005, side_y - 0.18, mz - 0.05), m["steel_dark"], verts=24))
     bx("mon_vesa", (0.03, 0.1, 0.1), tuple(c - fwd * 0.035), m["steel_dark"], bevel=0.005, rot=(0, 0, yaw))
     bx("mon_body", (0.045, 0.40, 0.27), tuple(c), m["bezel"], bevel=0.007, rot=(0, math.radians(-6), yaw))
-    scr_m = mt.glow("scanner monitor", (0.62, 0.78, 0.95), 3.0)
-    scr = bx("mon_screen", (0.002, 0.36, 0.228), tuple(c + fwd * 0.0235 + Vector((0, 0, 0.0025))), scr_m,
+    scr_m = mt.glow("scanner monitor", (0.62, 0.78, 0.95), 1.1)
+    scr = bx("mon_screen", (0.002, 0.34, 0.21), tuple(c + fwd * 0.0235 + Vector((0, 0, 0.0025))), scr_m,
              rot=(0, math.radians(-6), yaw))
     out["screen"] = scr
-    li = sk.area_light("mon_spill", tuple(c + fwd * 0.07), (0.3, 0.2), 5.0, (0.62, 0.78, 0.95), spread_deg=120,
+    li = sk.area_light("mon_spill", tuple(c + fwd * 0.13), (0.3, 0.2), 9.0, (0.62, 0.78, 0.95), spread_deg=120,
                        rot=(0, math.radians(-75), yaw))         # -Z along the facing, 15 degrees down
     li.visible_camera = False
     put(li)
