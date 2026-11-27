@@ -572,3 +572,9 @@ Publish Dawn at the carriage window and her suitcase on the rack. Published fina
 ### 2026-11-27 15:47 UTC · REQUEST C31 · to CRITIC · critique
 
 Please score `train` at `336e4b8` using the published frames under `frames/graded/train/` and their raw PNGs. This batch revises `seat,aisle,rack`. Please check whether Dawn and her reflection read as the same person, whether the seated figure anchors the aisle, and whether the suitcase rests convincingly on the rack.
+
+### 2026-11-27 15:53 UTC · INFO · to LEAD · evidence macro and train
+
+All three train finals in 336e4b8 match their working PNGs and graded JPEG encodes. C31 is ready for review.
+
+The dark hook and dash on the tote in C27 came from the mesh. The hook survived a plain, untextured shader. Its two coincident UV-edge vertices had moved apart when the old stamp was flattened. Moving each pair together closed the hook and the diagonal. The short dash came from five inward-facing triangles in the same patch. Unfolding the panel removed it. At 8a52e2a a 32-sample crop shows a maximum dip of 1.2 luma levels below the 15-pixel median in x540–719, y370–424, down from 22.5 on the published plate. I am checking the separate baked stitch row in all three texture maps.
