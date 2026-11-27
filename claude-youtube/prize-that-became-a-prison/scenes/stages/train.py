@@ -345,6 +345,7 @@ def hands_stone(holder, value=0.36):
 
 def dawn():
     h = people.dawn()
+    castkit.relax_sculpted_hair(h)
     n = castkit.blouse_v(h, rgb=(0.2, 0.19, 0.18), depth=0.42, width=0.14)
     bl = bpy.data.materials.get(f"blouse_{h.name}")
     if bl is not None:

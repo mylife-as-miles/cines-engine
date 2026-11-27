@@ -212,6 +212,30 @@ def _hair(h, frame, style, m):
     return parts
 
 
+def relax_sculpted_hair(holder):
+    """Soften the terraced temple of a shrink-wrapped hair shell in close-up."""
+    hair = bpy.data.objects.get(holder["body"] + "_hair")
+    if hair is None:
+        return
+    # Relax the coarse cage after it has followed the skull. Subdividing it
+    # before shrinkwrap keeps the terraces even after many smoothing passes.
+    for mod in hair.modifiers:
+        if mod.type == "SHRINKWRAP":
+            break
+        if mod.type == "SUBSURF":
+            mod.levels = mod.render_levels = 0
+    hair.modifiers["volume"].strength = min(hair.modifiers["volume"].strength, 0.007)
+    smooth = hair.modifiers.get("relax temple")
+    if smooth is None:
+        smooth = hair.modifiers.new("relax temple", "SMOOTH")
+        hair.modifiers.move(len(hair.modifiers) - 1, hair.modifiers.find("thickness"))
+    smooth.factor, smooth.iterations = 0.65, 36
+    bun = bpy.data.objects.get(holder["body"] + "_bun")
+    if bun is not None and bun.modifiers.get("round the bun") is None:
+        sub = bun.modifiers.new("round the bun", "SUBSURF")
+        sub.levels = sub.render_levels = 1
+
+
 def shoes(holder, rgb=(0.03, 0.03, 0.032), height=0.085):
     """Simple sculpted shoes: the body's own feet below the ankle, thickened outward, following the rig."""
     import bmesh
