@@ -364,7 +364,7 @@ def recolour(mat, median_lum, gamma=0.65, spec=0.4, rough_add=0.15):
     model hang side by side in different leathers. Each object carries lm_tint (rgb), lm_tf (0 = the texture's own
     colour through hue / saturation / value, 1 = the tint) and lm_hue, lm_sat, lm_val. The tint keeps the texture's
     own light and dark (its luminance about its median, softened by `gamma`), so seams, creases and panels survive.
-    Metal parts (the ORM map's metallic) keep their own colour: the clasps stay brass."""
+    The clasps keep their brass tint with a subdued satin finish."""
     nt = mat.node_tree
     b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
     if b is None or not b.inputs["Base Color"].is_linked:
@@ -383,15 +383,23 @@ def recolour(mat, median_lum, gamma=0.65, spec=0.4, rough_add=0.15):
     col = _mix(nt, _out(_attr(nt, "lm_tf"), "Fac"), hsv.outputs["Color"], tinted)
     met = b.inputs["Metallic"]
     if met.is_linked:
-        col = _mix(nt, _maprange(nt, met.links[0].from_socket, 0.3, 0.6, 0.0, 1.0), col, src)
+        original_metal = met.links[0].from_socket
+        col = _mix(nt, _maprange(nt, original_metal, 0.3, 0.6, 0.0, 1.0), col, src)
+        _link(nt, _math(nt, "MINIMUM", original_metal, 0.17), met)
+    else:
+        met.default_value = min(met.default_value, 0.17)
     _link(nt, col, b.inputs["Base Color"])
     b.inputs["Specular IOR Level"].default_value = spec
     if "Coat Weight" in b.inputs:
         b.inputs["Coat Weight"].default_value = 0.0
     rough = b.inputs["Roughness"]
-    if rough.is_linked and rough_add:
+    if rough.is_linked:
         s = rough.links[0].from_socket
-        _link(nt, _math(nt, "ADD", s, rough_add, clamp=True), rough)
+        if rough_add:
+            s = _math(nt, "ADD", s, rough_add, clamp=True)
+        _link(nt, _math(nt, "MAXIMUM", s, 0.66), rough)
+    else:
+        rough.default_value = max(rough.default_value, 0.66)
 
 
 def nylon(mat):

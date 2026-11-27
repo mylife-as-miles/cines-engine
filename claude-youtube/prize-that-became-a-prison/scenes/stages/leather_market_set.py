@@ -425,7 +425,7 @@ def load_bag_sources():
         k = h.scale[0]
         for s in ob.material_slots:
             if s.material:
-                mt.recolour(s.material, median, spec=0.38, rough_add=0.12)
+                mt.recolour(s.material, median, spec=0.14, rough_add=0.12)
         pts = [rel @ Vector(c) for c in ob.bound_box]
         lo = Vector([min(p[i] for p in pts) for i in range(3)])
         hi = Vector([max(p[i] for p in pts) for i in range(3)])

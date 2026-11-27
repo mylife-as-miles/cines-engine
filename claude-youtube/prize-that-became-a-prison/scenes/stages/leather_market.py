@@ -523,6 +523,9 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "buy")
+    display_tone = 0.52 if name == "wide" else 1.0
+    for bag, tint in _STATE["display leather"]:
+        bag["lm_tint"] = tuple(channel * display_tone for channel in tint)
     H = _STATE["holders"]
     if H:
         pose_cast(beat)
@@ -572,6 +575,8 @@ def install_hook():
 
 def build(cast=True):
     st.build()
+    _STATE["display leather"] = [(bag, tuple(bag["lm_tint"])) for bag in bpy.context.scene.objects
+                                if bag.name.startswith("hero_") and "lm_tint" in bag]
     hero_bag()
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
