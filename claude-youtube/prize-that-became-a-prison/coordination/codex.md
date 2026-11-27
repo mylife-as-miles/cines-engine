@@ -494,3 +494,39 @@ On the baggage belt I took the saturated red off the control beside the curtain.
 The street wide finished at 1280 with median luminance 26.7/255, sky 17.3 and upper facade 19.2. Near and far pavement read 69 and 39. On inspection at native size the teal sign had a stepped dark shape across its top. Camera rays hit the actual washing hung from the boutique’s middle upstairs window. I moved its poles to the next window on the same floor. The replacement crop shows the continuous blank sign, verified by rays through the former steps. Source b5d2721. For the three-quarter street shot I removed the second face behind the satchel at 9a66c18. For the window insert I kept the reflected face, at 14.4 against 11.4 on a second render of the same felt with Dawn removed. Source f7fa98a. The updated wide and insert will join the company walk and three-quarter shot for the stage review.
 
 The hotel's pre-market overhead was seeing the ceiling. It now looks through it and shows Dawn's hand, her closed case and the three gifts. The 640×360 graded check went from mean 4.5 to 49.9. That revealed the satchel meeting a pillow. I am checking its separation before sending the overhead to finals. The later packing shot and the earlier acceptance shot use their own lighting and props.
+
+### 2026-11-27 14:09 UTC · INFO · L2 · hongkong_street
+
+Publish the company walk and the revised Kowloon street and shop windows. Published final cameras `company,wide,window,dawn` in `a881741`. All four are 1280×720 at 64 samples. In the wide, the pavement near Dawn measures 68 against 39 farther along the same side. The sky is 17.3 and the adjoining facade is 19.2. Moving the laundry cleared the turquoise sign. In the insert the reflected face is 14.1 against 10.8–12.1 on the felt. The cognac tote is 29 degrees in hue and 0.53 saturation. Please check the colour and spacing of the blank signs, where the street light draws the eye, the three walkers with empty hands, and whether the face reads in the glass while the satchel stays clear in the three-quarter view.
+
+### 2026-11-27 14:09 UTC · REQUEST C28 · to CRITIC · critique
+
+Please score `hongkong_street` at `a881741` using the published frames under `frames/graded/hongkong_street/` and their raw PNGs. This batch revises `company,wide,window,dawn`. All four are 1280×720 at 64 samples. In the wide, the pavement near Dawn measures 68 against 39 farther along the same side. The sky is 17.3 and the adjoining facade is 19.2. Moving the laundry cleared the turquoise sign. In the insert the reflected face is 14.1 against 10.8–12.1 on the felt. The cognac tote is 29 degrees in hue and 0.53 saturation. Please check the colour and spacing of the blank signs, where the street light draws the eye, the three walkers with empty hands, and whether the face reads in the glass while the satchel stays clear in the three-quarter view.
+
+### 2026-11-27 14:09 UTC · INFO · STATUS
+
+The scores below are the latest independent scores. No stage has passed yet.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 4.75 (4) | All four native finals are at a881741. C28 is with CRITIC. The relocated washing cleared the blank sign in the wide. The window keeps Dawn’s faint reflection and the three-quarter shot removes the duplicate face. |
+| train | 5.00 (4) | Check the revised reading light, the bun in the reflected profile and the original case on both rack rails in the three full carriage previews. |
+| hotel_room | 5.25 (4) | The cleared overhead and pack framing are at bd1a499. The skirt still sits 57 mm above the mattress in accept. Fit Dawn’s weight to the duvet and check both grips on the tote. |
+| aircraft_cabin | 5.69 (4.5) | The window framing at b86266d clears both hands. Reduce the right foreground seat, which still takes 35% of the width. The right palm rests 1.8 mm above the left, with zero intersecting hand triangles. Review the wingtip and aisle in the same batch. |
+| baggage_belt | 5.69 (5) | The handles are down, the sorter is lit through the parted curtain, and the red control has been removed. Check the enclosure through the three working cameras. |
+| tim_desk | 5.69 (5) | Check the pen against the page and Tim’s jaw under the writing lamp. Compare the correspondence and window across all three angles. |
+| evidence_table | 5.75 (5) | CRITIC has the purse reveal and seam insert at b5233b2. LEAD has used the projected stitches in the graphic. Next up are the two-sheet and laptop replacements with their existing pins. |
+| void_stage | 5.75 (4) | The registered 2560 bag master is published. Check the turned standing figure, bowed close-up and divided pool, then the seated cell and floor for the pullback. |
+| leather_market | 5.88 (5) | Check the lifted leather and finger-pad contact in purchase and compare the stall and wide. |
+| checkin_hall | 6.00 (5) | R7 changes cover the title space, the scale focus and Dawn paying. The three finger pads meet the card within 0.3 mm. Check all four opening and profile previews before the next release. |
+| chicago_night | 6.00 (5) | Check the profile, mug, white skyline lights and suitcase at the window. |
+| inspection_room | 6.06 (5) | CRITIC has the five opening and room finals at b71cabd and the matched luggage plate at 4dfd197. Next is the officer’s hand beside the three intact bags. |
+| departure_gate | 6.13 (5.5) | After the plateau, Dawn turns beyond the lens toward the grille and braces her palm on the armrest to rise. Compare the called and resting shots with the wide and window. |
+| courtroom | 6.13 (5) | Check the bench light and Dawn’s hand across the occupied and empty angles. |
+| hearing_room | 6.13 (5) | Check Tim at the microphone and the dark public seating in witness, then the head against the dais in wide. |
+| visiting_room | 6.25 (5) | Check Tim’s matching build, Dawn’s shoulder and their eyelines through the glass in both directions. |
+| home | 6.69 (6) | All six hands in Gene’s two meal setups now meet the wood. Check those two meals and the occupied and empty chair against the void cut. |
+| prison_exterior | 6.75 (6) | Inspect rain through the tower and gate lamp, the lamp support and the wet road in all three views. |
+| detention_corridor | 7.00 (6) | Check the envelope and tabletop inserts, then the chair, shut door and corridor in sequence. |
+
+L2 remains active. C25, C26, C27 and C28 await independent replies.

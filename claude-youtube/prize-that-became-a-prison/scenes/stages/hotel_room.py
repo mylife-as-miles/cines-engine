@@ -78,17 +78,17 @@ CAMERAS = {
                      beat="pack", exposure=-1.0, above_ceiling=True),
     # Ch 04: close, from behind her right side, a little above the bag: the shoulder bag going into the open extra
     # bag's mouth, her arm and hand on its strap coming in from the left, the lamp warm beyond (f/2.8)
-    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.58, 0.96), lens=50, focus="fx_pack", fstop=2.8,
-                 beat="pack", exposure=-1.1),
+    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.47, 0.966), lens=50, focus="fx_pack", fstop=2.8,
+                 beat="pack", exposure=-0.56),
     "accept": dict(loc=(0.62, -2.02, 1.54), aim=(-1.0, -0.55, 1.056), lens=37,
                    focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
     "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=49,
-                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0),
+                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True),
 }
 TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.55},
-         "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15}, "pack": {"ceiling_bounce": 0.6},
+         "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15}, "pack": {"lamp_spill": 1.8, "duvet_bounce": 1.25, "ceiling_bounce": 0.72},
          "overhead_pre": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15},
-         "accept": {"duvet_bounce": 0.4, "ceiling_bounce": 0.24}}
+         "accept": {"duvet_bounce": 2.5, "ceiling_bounce": 0.24}}
 _STATE = {"cast": [], "dawn": None, "poses": {}, "base": {}, "hobo": None, "sheers": {}}
 
 
@@ -437,7 +437,7 @@ def premarket_props(duvet):
             mesh.data.update()
     hp.holder("closed_case_on_bed", (-0.98, -0.52, _on_duvet(duvet, -0.98, -0.52)), 0, [case])
     trio = []
-    for style, x, angle in (("satchel", -1.62, 170), ("tote", -1.03, 160), ("shoulder", -0.50, 183)):
+    for style, x, angle in (("satchel", -1.32, 152), ("tote", -0.94, 160), ("shoulder", -0.50, 183)):
         root, mesh = hp.bag_upright("handbag-" + style, (x, 0.12, _on_duvet(duvet, x, 0.12)), angle)
         trio.append((root, mesh))
     bpy.context.view_layer.update()
@@ -541,10 +541,21 @@ def apply_camera(name):
         cam.data.shift_y = cfg.get("shift_y", 0.0)
     for o in st.CEILING:
         o.visible_camera = not cfg.get("above_ceiling", False)
+    bounce = bpy.data.objects["duvet_bounce"]
+    if name == "accept" and _STATE["dawn"] is not None:
+        # At the edge of the bed, the pale duvet returns the bedside lamp
+        # into the hands holding the gift and the face looking down at it.
+        bounce.location = (-0.51, -1.30, 0.78)
+        aim = eye_centre(_STATE["dawn"]).lerp(bpy.data.objects["fx_accept"].location, 0.40)
+        bounce.rotation_euler = (aim - bounce.location).to_track_quat("-Z", "Y").to_euler()
+    else:
+        bounce.matrix_world = _STATE["duvet_bounce_rest"]
     for n, base in _STATE.get("base", {}).items():
         o = bpy.data.objects.get(n)
         if o is not None:
             o.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+            if n == "lamp_spill":
+                o.visible_glossy = name == "pack"
             if n == "window_rim" and name != "window":
                 o.data.energy = 0
     print(f"HOTEL camera {name}: beat {cfg.get('beat')}, ceiling {'see-through' if cfg.get('above_ceiling') else 'solid'}",
@@ -586,7 +597,7 @@ def build(cast=True):
     tote_h, tote = hp.tote_flat((tx, ty, _on_duvet(duvet, tx, ty) + 0.004), tturn, [duvet])
     sx, sy, sturn = SATCHEL
     sat_h, sat = hp.bag_upright("handbag-satchel", (sx, sy, _on_duvet(duvet, sx, sy) + 0.004), sturn)
-    # tissue: stuffing puffing from the tote's mouth, a sheet spilling from the extra bag's mouth, a folded stack
+    # tissue: stuffing puffing from the tote's mouth, a loose sheet on the runner and fresh tissue with a rolled edge
     hp.tissue_sheet("tissue_tote_stuff", (tx - 0.11, ty, st.BED["top"] + 0.03), math.radians(80), 0.5, 0.36, [duvet, tote],
                     seed=8, folds=40, angle=45, flatten=0.45, keep=0.8, scrunch=0.42)
     hp.tissue_sheet("tissue_loose", (-0.36, -0.52, st.BED["top"] + 0.02), math.radians(30), 0.4, 0.32,
@@ -596,7 +607,7 @@ def build(cast=True):
     hp.tissue_sheet("tissue_lid", (lc.x + 0.05, lc.y - 0.04, lc.z + 0.05), math.radians(-80), 0.34, 0.26, [lid], seed=17,
                     folds=34, angle=42, flatten=0.55, keep=0.65, scrunch=0.7)
     hp.tissue_sheet("tissue_fresh", (-0.31, -0.24, st.BED["top"] + 0.03), math.radians(8), 0.27, 0.19,
-                    [duvet, bpy.data.objects["runner"]], seed=15, folds=9, angle=16, flatten=0.16)
+                    [duvet, bpy.data.objects["runner"]], seed=15, folds=23, angle=33, flatten=0.60, keep=0.82, rolled_edge=True)
     _STATE["packing_props"] = list(set(bpy.context.scene.objects) - room_objects)
     before_early = set(bpy.context.scene.objects)
     closed_case, trio = premarket_props(duvet)
@@ -642,7 +653,7 @@ def build(cast=True):
         R = Matrix.Rotation(math.radians(HOBO_TURN), 3, "Z")
         hobo_h.location = strap - R @ hobo_apex
         bpy.context.view_layer.update()
-        bpy.data.objects["fx_pack"].location = (strap.x, strap.y, strap.z - hobo_apex.z * 0.75)
+        bpy.data.objects["fx_pack"].location = (strap.x, strap.y, strap.z - hobo_apex.z * 0.40)
         print(f"HOTEL shoulder bag: strap at {tuple(round(v, 3) for v in strap)}, base z {strap.z - hobo_apex.z:.3f}, "
               f"lip z {lip_z:.3f}", flush=True)
         premarket_poses(h, duvet, closed_case, early_tote, tote_mesh)
@@ -653,6 +664,8 @@ def build(cast=True):
     else:
         st.curtains(hand=None)
         hobo_h.location = (mouth.x, mouth.y, lip_z + 0.01)
+    bpy.context.view_layer.update()
+    _STATE["duvet_bounce_rest"] = bpy.data.objects["duvet_bounce"].matrix_world.copy()
     _STATE["base"] = {o.name: o.data.energy for o in bpy.data.objects if o.type == "LIGHT"}
     install_hook()
 
