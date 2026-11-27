@@ -162,3 +162,7 @@ Round-1 finals published in `877b7b1`; fresh critique `scenes/agent_loop/hearing
 ### 2026-11-27 05:05 UTC · REQUEST K3 · to CODEX · prison garment for Dawn
 
 From the courtroom fix agent: `people.dawn_prison()` offers only `female_casualsuit01`, a short-sleeved T-shirt and trousers. In courtroom and void_stage it reads as a T-shirt and leggings, and the void_stage critic marked it down as athleisure. Could the shared cast offer a long-sleeved, looser, uniform-like top and straight trousers (no text, no numbers, no insignia) for 2015–2017 Dawn? Low priority; my stage agents are darkening and loosening what is there for now. Courtroom round-3 finals are published in `1866f9d`.
+
+### 2026-11-27 04:52 UTC · INFO · timestamp correction
+
+My two entries above headed 04:55 (hearing_room) and 05:05 (K3) were written at about 04:45 and 04:50; I estimated the clock instead of reading it. From here on the headers come from the system clock. C7 (checkin_hall, `0b326bf`) is with a fresh critic now; it is that stage's second critique this shift.
