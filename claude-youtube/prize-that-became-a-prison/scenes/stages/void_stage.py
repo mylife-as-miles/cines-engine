@@ -33,6 +33,8 @@ sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
+import home_set as dining  # noqa: E402
+import home_mats as dining_mats  # noqa: E402
 import people  # noqa: E402
 import props  # noqa: E402
 import rigged  # noqa: E402
@@ -127,6 +129,33 @@ CAMERAS = {
     "bags": dict(loc=_p(G, 0.12, -4.0, 0.55), aim=_p(G, 0.0, -0.02, 0.33), lens=50, focus="fx_bags", fstop=4.0,
                  beat="bags"),
 }
+
+# The chair cut uses the same model, size, camera and focus plane as the family home.
+CHAIR = (20.0, 0.0)
+def chair_point(xyz):
+    x, y, z = xyz
+    return _p(CHAIR, x - dining.HEAD_CHAIR[0], y - dining.HEAD_CHAIR[1], z)
+
+
+FOCUS.update(fx_chair=chair_point((dining.HEAD_CHAIR[0] + 0.05, dining.HEAD_CHAIR[1], 0.72)),
+             fx_bunk=_p(C, -0.49, 0.41, 1.04), fx_patch=_p(C, *st.WINDOW_PATCH),
+             fx_bowed=_p(D, 0.0, -0.04, 1.49))
+CAMERAS.update({
+    "pool": dict(CAMERAS["dawn"], cast=False, final_res=(2560, 1440)),
+    "chair": dict(dining.HEAD_SHOT, loc=chair_point(dining.HEAD_SHOT["loc"]),
+                  aim=chair_point(dining.HEAD_SHOT["aim"]), beat="chair", focus="fx_chair"),
+    "cell_dawn": dict(loc=_p(C, 0.48, -4.67, 1.42), aim=_p(C, -0.25, 0.36, 0.98),
+                      lens=34, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
+    "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, 0.10, -0.09, 1.41), lens=85,
+                       fstop=3.2, focus="fx_bowed", beat="dawn"),
+    "cell_floor": dict(loc=_p(C, 0.50, -1.50, 0.46), aim=_p(C, -0.08, 0.28, 0.18),
+                       lens=37, fstop=5.0, focus="fx_patch", beat="cell"),
+    "divide": dict(loc=_p(D, -1.65, -8.8, 1.35), aim=_p(D, -1.65, 0, 0.76),
+                   lens=42, fstop=5.6, focus="fx_dawn", beat="divide"),
+})
+CAMERAS["cell_far"]["seated"] = True
+SPOTS["chair"] = dict(h=4.3, fwd=-0.32, pool=1.04, watts=3400, blend=0.44)
+HAZE["chair"] = 0.007
 
 # check frames, never in the finals: VOID_DEBUG=1 adds tight looks at Dawn (suit, hands, face) from her two cameras
 if os.environ.get("VOID_DEBUG"):
@@ -580,6 +609,7 @@ def _island(name, fn):
     before = set(bpy.data.objects)
     fn()
     new = [o for o in bpy.data.objects if o not in before]
+    _STATE["originally_hidden"].update(ob for ob in new if ob.hide_render)
     _STATE["groups"].setdefault(name, []).extend(new)
 
 
@@ -652,10 +682,39 @@ def build_bags_island():
     st.link_lights([rim], receivers=_meshes(pair[0]) + _meshes(pair[1]), tag="bags_rim")
 
 
+def build_chair():
+    x, y = CHAIR
+    turn = dining.HEAD_CHAIR[2]
+    h = dining.dining_chair("void_family_chair", x, y, turn)
+    bearing = math.radians(turn)
+    dining_mats.satin_wood(h, (x, y), (math.cos(bearing), math.sin(bearing)),
+                           rgb=tuple(dining.HEAD_WOOD * v for v in (0.07, 0.035, 0.02)))
+    _spot_and_haze("chair", CHAIR)
+
+
+def build_seated_dawn():
+    from visiting_room import seat_solve, seat_place
+    from hearing_room import lap_hands
+    h = people.dawn_prison(uniform=True)
+    prison_suit(h)
+    hands_stone(h)
+    stone_finish(h)
+    upper = {"chest": (8, 0), "neck": (6, 0), "head": (17, 3), "fingers": 10}
+    _, _, dz = seat_solve(h, upper, vc.LOW_DECK + 0.10, "bunk")
+    lap_hands(h)
+    for side in ("L", "R"):
+        rigged.articulate_hand(h, side, {"f_index": (9, 12, 7), "f_middle": (11, 14, 9),
+                                        "f_ring": (15, 17, 11, 5), "f_pinky": (17, 19, 12, 8)})
+    seat_place(h, 112.0, (C[0] - st.CX + 0.03 + vc.BUNK_W - 0.12, C[1] + 0.51), dz + st.SLAB)
+    bpy.context.view_layer.update()
+
+
 def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
         return None
+    if cam.get("stage_camera") in CAMERAS:
+        return cam["stage_camera"]
     for n, c in CAMERAS.items():
         if (cam.location - Vector(c["loc"])).length < 1e-3:
             return n
@@ -665,9 +724,21 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat")
-    for g, objs in _STATE["groups"].items():
-        for o in objs:
-            o.hide_render = beat is not None and g != beat
+    active = {beat}
+    if beat == "divide":
+        active = {"bags", "dawn"}
+    if cfg.get("seated") and _STATE["with_cast"]:
+        if "seated" not in _STATE["groups"]:
+            _island("seated", build_seated_dawn)
+        active.add("seated")
+    if "dawn" in active and cfg.get("cast", True):
+        active.add("standing")
+    for group, objs in _STATE["groups"].items():
+        for ob in objs:
+            ob.hide_render = group not in active or ob in _STATE["originally_hidden"]
+    for ob, x in _STATE["bag_roots"]:
+        ob.location.x = x + (-3.3 - G[0] if beat == "divide" else 0.0)
+    bpy.context.view_layer.update()
     sc = bpy.context.scene
     cam = sc.camera
     if cam is not None:
@@ -699,16 +770,19 @@ def install_hook():
 def build(cast=True):
     st.M.clear()
     st.LIGHTS.clear()
-    _STATE["groups"] = {}
+    _STATE.update(groups={}, with_cast=cast, originally_hidden=set())
     _STATE["cast"] = []
     st.materials(cell=C)
     st.floor()
     _island("dawn", build_dawn_island)
     _island("cell", build_cell_island)
     _island("bags", build_bags_island)
+    _island("chair", build_chair)
+    bag_objects = set(_STATE["groups"]["bags"])
+    _STATE["bag_roots"] = [(ob, ob.location.x) for ob in bag_objects if ob.parent not in bag_objects]
     if cast:
-        _island("dawn", lambda: _STATE["cast"].append(dawn()))
-        _island("dawn", lambda: light_suit(_STATE["cast"][0]))
+        _island("standing", lambda: _STATE["cast"].append(dawn()))
+        _island("standing", lambda: light_suit(_STATE["cast"][0]))
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
