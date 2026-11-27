@@ -322,9 +322,12 @@ def aircraft(name, nose, heading=0.0, lit=0.6, seed=1, taxi=False, side=-1, nose
     xw = math.sqrt(R * R - zw * zw) + 0.006
     ang = math.atan2(zw, xw)
     y, i = 8.4, 0
+    shade = 0.0
     while y < 29.0:
+        if i % 4 == 0:
+            shade = rng.random()
         if not (14.6 < y < 15.6):  # over-wing exits: a plain panel
-            r = rng.random()
+            r = shade
             mat = m["cabin_lit"] if r < lit else (m["cabin_dim"] if r < lit + 0.12 else m["cabin_off"])
             st.box(f"{name}_win_{i}", (0.03, 0.23, 0.32), (side * xw, y, ZC + zw), mat, bevel=0.008, rot=(0, -side * ang, 0), **P)
         y += 0.56
@@ -372,10 +375,10 @@ def door_world(air):
     return Vector((air[0] + x, air[1] + DOOR_Y, st.APRON + ZC + zc)), st.APRON + ZC + DOOR_FLOOR
 
 
-def _ribs(name, sec, length, w, h, m, pitch=0.3):
-    """Corrugation as geometry: 40 mm bevelled frames round the tunnel at `pitch`, arrayed along it."""
+def _ribs(name, sec, length, w, h, m, pitch=0.12):
+    """Corrugation as geometry: 18 mm bevelled frames round the tunnel at `pitch`, arrayed along it."""
     st = _st()
-    rib = st.box(name, (w + 0.07, 0.04, h + 0.07), (0, 0.2, h / 2), m, bevel=0.008)
+    rib = st.box(name, (w + 0.026, 0.018, h + 0.026), (0, 0.2, h / 2), m, bevel=0.008)
     rib.parent = sec
     ar = rib.modifiers.new("array", "ARRAY")
     ar.use_relative_offset, ar.use_constant_offset = False, True
@@ -421,7 +424,7 @@ def jet_bridge(air):
         sec.rotation_euler = (pitch, 0.0, -yaw)
         ln = s1 - s0
         st.box(f"jb_tunnel_{k}_shell", (w, ln, h), (0, ln / 2, h / 2), plain, bevel=0.025, parent=sec)
-        _ribs(f"jb_tunnel_{k}_ribs", sec, ln, w, h, cl)
+        _ribs(f"jb_tunnel_{k}_ribs", sec, ln, w, h, plain)
         for side in (-1, 1):   # one thin warm glazing strip, dim
             st.box(f"jb_glaze_{k}_{side}", (0.03, ln - 0.5, 0.5), (side * (w / 2 + 0.004), ln / 2, 1.3), m["bridge_win"], parent=sec)
             st.box(f"jb_glaze_frame_{k}_{side}", (0.035, ln - 0.42, 0.06), (side * (w / 2 + 0.006), ln / 2, 1.58), m["mast"], parent=sec)

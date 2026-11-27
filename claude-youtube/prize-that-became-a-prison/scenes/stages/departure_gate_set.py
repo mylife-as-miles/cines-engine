@@ -185,7 +185,8 @@ def fixture(x, y, level):
             M[key] = mt.lens(f"fixture lens {level:.2f}", COOL, 0.38 if level == DIM else 2.0 + 13.0 * level)
         lens = box(n + "_lens", (1.2, 0.125, 0.004), (x, y, H - 0.0135), M[key])
         lens.visible_glossy = (round(x, 1), round(y, 1)) == KEY_FX
-        area(n + "_light", (x, y, H - 0.02), (1.15, 0.11), FX_ENERGY * level, COOL, spread=100)
+        fixture_light = area(n + "_light", (x, y, H - 0.02), (1.15, 0.11), FX_ENERGY * level, COOL, spread=100)
+        fixture_light.visible_glossy = lens.visible_glossy
         if (round(x, 1), round(y, 1)) == KEY_FX:
             # the downlight that throws the pool: a 1.5-2 m disc on the carpet round her seat, soft-edged
             spot(n + "_pool", (x - 0.1, y + 0.05, H - 0.03), 1450.0, (1.0, 0.88, 0.72), 29, 0.44, (math.radians(-4), 0, 0), radius=0.080)
@@ -666,7 +667,7 @@ def exterior():
         # floor and the front row (a rim, not a second pool)
         ac.mast(i, x, y, t, h=h, energy=e * (0.55 if i < 2 else 0.85), show=show, size=72.0 if i == 0 else 82.0)
     ac.jet_bridge(AIR)
-    ac.aircraft("aircraft", AIR, 0.0, lit=0.55, seed=3)
+    ac.aircraft("aircraft", AIR, 0.0, lit=0.92, seed=3)
     ac.aircraft("aircraft_far", (-60.0, 160.0), 90.0, lit=0.75, seed=11, taxi=True)
     ac.aircraft("aircraft_next", (-36.0, 16.5), 0.0, lit=0.25, seed=5, side=1)
     vehicles()

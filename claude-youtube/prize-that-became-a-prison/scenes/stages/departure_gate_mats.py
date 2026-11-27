@@ -216,14 +216,16 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     rib = _math(nt, "ADD", _math(nt, "MULTIPLY", rib_x, _math(nt, "SUBTRACT", 1.0, parity)), _math(nt, "MULTIPLY", rib_y, parity))
     rib = _maprange(nt, rib, -1.0, 1.0, 0.0, 1.0)
     fleck = _noise(nt, o, 260.0, 2.0, 0.6)
-    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.97 for c in base), tuple(c * 1.03 for c in base))
-    col = _mix(nt, parity, _mix(nt, 1.0, col, (0.97, 0.97, 0.97), blend="MULTIPLY"), _mix(nt, 1.0, col, (1.03, 1.03, 1.03), blend="MULTIPLY"))
+    col = _mix(nt, _maprange(nt, tone, 0.0, 1.0, 0.0, 1.0), tuple(c * 0.94 for c in base), tuple(c * 1.06 for c in base))
+    col = _mix(nt, parity, _mix(nt, 1.0, col, (0.94, 0.94, 0.94), blend="MULTIPLY"), _mix(nt, 1.0, col, (1.06, 1.06, 1.06), blend="MULTIPLY"))
     col = _mix(nt, _maprange(nt, rib, 0.0, 1.0, 0.18, 0.0), col, (0.0, 0.0, 0.0))
     col = _mix(nt, _maprange(nt, fleck, 0.6, 0.72, 0.0, 0.45), col, (0.085, 0.09, 0.1))
     col = _mix(nt, _maprange(nt, fleck, 0.28, 0.36, 0.35, 0.0), col, (0.008, 0.009, 0.012))
+    body = _maprange(nt, _noise(nt, o, 72, 2, 0.55), 0.20, 0.80, 0.0, 0.10)
+    col = _mix(nt, body, col, (0.0, 0.0, 0.0))
     # seams between tiles
     _, seam = _brick(nt, o, tile, tile, 0.002, (1, 1, 1), (1, 1, 1), (0, 0, 0))
-    col = _mix(nt, _math(nt, "MULTIPLY", seam, 0.14), col, (0.0, 0.0, 0.0))   # tight seams: barely there
+    col = _mix(nt, _math(nt, "MULTIPLY", seam, 0.35), col, (0.0, 0.0, 0.0))   # tight seams: barely there
     # traffic: lanes along X in front of the rows and down the aisle, pile flattened (paler, glossier sheen)
     lanes = _maprange(nt, _noise(nt, o, 0.5, 3.0, 0.55, mapping=(0.25, 1.0, 1.0)), 0.45, 0.7, 0.0, 1.0)
     blot = _maprange(nt, _noise(nt, o, 1.6, 5.0, 0.6), 0.55, 0.75, 0.0, 1.0)
@@ -248,7 +250,7 @@ def carpet(name, base=(0.030, 0.036, 0.047), tile=0.5, lanes_xy=()):
     pile = _math(nt, "ADD", _noise(nt, o, 740.0, 3.0, 0.7), _math(nt, "MULTIPLY", _noise(nt, o, 1300.0, 2.0, 0.6), 0.5))
     h = _math(nt, "ADD", _math(nt, "MULTIPLY", rib, 0.4), _math(nt, "MULTIPLY", pile, 0.6))
     h = _math(nt, "SUBTRACT", h, _math(nt, "MULTIPLY", seam, 0.3))
-    _bump(nt, b, h, 0.15, 0.0012)
+    _bump(nt, b, h, 0.35, 0.003)
     return m
 
 
@@ -712,7 +714,7 @@ def materials():
         bellows_rib=ribbed("bellows ribs", (0.022, 0.023, 0.025), 0.09, "X", metal=0.0),
         mast=pbr("galvanised mast", (0.18, 0.18, 0.185), (0.55, 0.68), metal=0.0, nscale=0.4, cvar=0.15),
         vehicle=pbr("ground vehicle", (0.06, 0.062, 0.066), (0.35, 0.55), nscale=1.0, cvar=0.12, coat=0.2),
-        cabin_lit=glow("cabin window", (1.0, 0.88, 0.72), 1.25),
+        cabin_lit=glow("cabin window", (1.0, 0.88, 0.72), 0.55),
         cabin_dim=glow("cabin window dim", (0.9, 0.8, 0.7), 0.42),
         cabin_off=pbr("cabin window off", (0.01, 0.011, 0.013), (0.05, 0.1), nscale=10, cvar=0.05),
 

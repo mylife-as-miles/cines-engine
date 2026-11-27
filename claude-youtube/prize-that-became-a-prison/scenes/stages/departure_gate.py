@@ -63,10 +63,10 @@ CAMERAS = {
                  exposure=-1.1),
     # Ch 03: stay inside the curtain wall to keep apron reflections off Dawn: Dawn under the one fitting, the suitcase, the empty rows soft
     # behind her (f/1.8)
-    "seated": dict(loc=(2.16, 5.80, 1.10), aim=(-1.09, 3.09, 0.62), lens=52,
+    "seated": dict(loc=(2.16, 5.80, 1.10), aim=(-1.22, 3.09, 0.62), lens=52,
                    focus="fx_face", fstop=1.8, beat="ch03", exposure=-1.25),
     # Ch 03: from the aisle behind her, low: Dawn and the seat backs against the glass and the floodlit aircraft
-    "window": dict(loc=(-2.41, -1.35, 1.54), aim=(-0.35, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
+    "window": dict(loc=(-2.9, -1.35, 1.54), aim=(-0.75, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
 # per-camera light trims (multipliers on named lights)
@@ -76,16 +76,18 @@ RIM = "dawn_rim"
 DIMS = ["fx_{:+.1f}_{:+.1f}_light".format(*xy) for xy, lv in st.FX_LEVEL.items() if lv == st.DIM]
 TRIMS = {
     # the one downlight over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.14, RIM: 1.1, "face return": 0.0, KEY: 0.20, POOL: 1.25,
-             "mast_light_0": 0.66, "mast_light_1": 0.66, **{n: 0.14 for n in DIMS},
+    "wide": {"window_spill": 0.14, RIM: 1.6, "face return": 0.8, KEY: 0.20, POOL: 1.25,
+             "mast_light_0": 0.66, "mast_light_1": 0.66, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): (0.35 if xy[1] <= -1.2 else 0.14)
+              for xy, level in st.FX_LEVEL.items() if level == st.DIM},
              **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 0.18 for xy in st.BACK_FX}},
     # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
     # fittings over the far rows a touch lower so the rows stay soft and dark behind her
-    "seated": {"window_spill": 0.2, POOL: 0.3, KEY: 0.3, **{n: 0.6 for n in DIMS}},
+    "seated": {"window_spill": 0.2, POOL: 0.20, KEY: 0.22, **{n: 0.6 for n in DIMS}},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
-    "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90},
+    "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90,
+               "mast_light_0": 0.60, "mast_light_1": 0.60},
 }
-FLAGS = {"seated": ["flag_near_seats", "flag_pool"]}   # black flags (camera-invisible) used by one camera only
+FLAGS = {"seated": ["flag_near_seats", "flag_pool", "seated face key"], "wide": ["right wall washer"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
 
@@ -163,8 +165,36 @@ def dawn():
         c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
         for v in me.vertices:
             d = v.co - c
-            v.co = c + Vector((d.x * 0.72, d.y * 0.63, d.z * 0.68)) + Vector((0.0, -0.015, -0.041))
+            v.co = c + Vector((d.x * 0.95, d.y * 0.42, d.z * 0.60)) + Vector((0.0, -0.030, -0.055))
         me.update()
+        if me.materials:
+            hair = me.materials[0].copy()
+            me.materials[0] = hair
+            nt = hair.node_tree
+            shader = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+            wave = nt.nodes.new("ShaderNodeTexWave")
+            wave.wave_type, wave.bands_direction = "RINGS", "X"
+            wave.rings_direction = "X"
+            wave.inputs["Scale"].default_value = 16.0
+            wave.inputs["Distortion"].default_value = 1.2
+            bump = nt.nodes.new("ShaderNodeBump")
+            bump.inputs["Strength"].default_value = 0.16
+            bump.inputs["Distance"].default_value = 0.0006
+            nt.links.new(wave.outputs["Fac"], bump.inputs["Height"])
+            nt.links.new(bump.outputs["Normal"], shader.inputs["Normal"])
+    shoes = bpy.data.objects.get(f"{h.name}_shoes04")
+    if shoes is not None:
+        for v in shoes.data.vertices:
+            x, y, z = v.co
+            if z > 0.045:
+                v.co.z = 0.045 + (z - 0.045) * (0.40 if y > -0.01 else 0.64)
+            elif z < 0.012:
+                centreline = math.copysign(0.105, x)
+                v.co.x += (centreline - x) * 0.055
+        body = bpy.data.objects[h["body"]]
+        hidden = body.vertex_groups["Delete.shoes04"]
+        hidden.remove([v.index for v in body.data.vertices if v.co.z > 0.035 and v.co.y > -0.14
+                       and any(g.group == hidden.index for g in v.groups)])
     print(f"GATE wardrobe: people.dawn(), jacket front relaxed over {n_drape} vertices, bun "
           f"{'lowered' if bun is not None else 'not found'}", flush=True)
     return h
@@ -176,17 +206,27 @@ def lap_hands(holder, forearms=(67.0, 64.0)):
     for side, k, angle in ((1, "L", forearms[0]), (-1, "R", forearms[1])):
         left = k == "L"
         rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, 12, side, 6))
-        rigged._aim(rig, f"forearm_fk.{k}", rigged._dir(0, angle, side, -31 if left else -21))
+        rigged._aim(rig, f"forearm_fk.{k}", rigged._dir(0, angle, side, -25 if left else -21))
         wrist = rig.pose.bones[f"hand_fk.{k}"]
-        forward = rigged._dir(0, 81 if left else 87, side, -40 if left else -17).normalized()
+        forward = rigged._dir(0, 81 if left else 87, side, -58 if left else -17).normalized()
         # The two hand bones have mirrored local X axes. Roll the palm toward the skirt
         # after aiming the fingers so their edges never meet in a vertical pinch.
-        down = Vector((0.32 if left else -0.12, 0.0, -1.0))
+        down = Vector((0.80, 0.0, -0.60) if left else (-0.12, 0.0, -1.0))
         normal = (down - forward * down.dot(forward)).normalized()
         x = normal * side
         basis = Matrix((x, forward, x.cross(forward))).transposed().to_4x4()
         basis.translation = wrist.matrix.translation.copy()
         wrist.matrix = basis
+        for i, (finger, spread) in enumerate((("index", 5), ("middle", 0), ("ring", -4), ("pinky", -8))):
+            master = rig.pose.bones[f"f_{finger}.01_master.{k}"]
+            master.rotation_mode = "XYZ"
+            master.rotation_euler.x = math.radians(24 + i * 2)
+            master.rotation_euler.z = math.radians(side * spread)
+            master.scale.y = 0.89
+        thumb = rig.pose.bones[f"thumb.01_master.{k}"]
+        thumb.rotation_mode = "XYZ"
+        thumb.rotation_euler.x = math.radians(24)
+        thumb.rotation_euler.z = math.radians(-side * 14)
         bpy.context.view_layer.update()
 
 
@@ -291,7 +331,7 @@ def seat_height(x, y0):
     return zs[len(zs) // 2] if zs else prof
 
 
-UPPER = {"head": (11, -10), "neck": (3, 0), "chest": (-12, 0), "fingers": 17}
+UPPER = {"head": (14, -18), "neck": (3, 0), "chest": (-6, 5), "fingers": 30}
 
 
 def seat_figure(holder, seat_z):
@@ -333,16 +373,16 @@ def seat_figure(holder, seat_z):
     # Solve each wrist against the posed cloth. The two thighs sit at different
     # heights under the asymmetric palms, particularly after adding ease to the skirt.
     surface = lap_surface(holder)
-    forearms = [48.0, 43.0]
-    for it in range(5):
+    forearms = [38.0, 43.0]
+    for it in range(8):
         rigged.pose_figure(holder, UPPER)
         lap_hands(holder, forearms)
         sit_legs(holder, thigh, shin)
         gaps = [finger_gap(body, surface, side) for side in ("L", "R")]
         print(f"GATE hand clearance {it}: L {gaps[0] * 1000:.1f}, R {gaps[1] * 1000:.1f} mm", flush=True)
-        if max(abs(gap - 0.002) for gap in gaps) < 0.0025:
+        if max(abs(gap - 0.0035) for gap in gaps) < 0.0015:
             break
-        forearms = [max(30.0, min(95.0, angle + math.degrees((0.002 - gap) / 0.23)))
+        forearms = [max(30.0, min(95.0, angle + math.degrees((0.0035 - gap) / 0.23)))
                     for angle, gap in zip(forearms, gaps)]
     return dz, hip
 
@@ -397,7 +437,7 @@ def suitcase():
     holder = props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.5)
     treated = set()
     for ob in holder.children_recursive:
-        if ob.type != "MESH" or "reinforcement" in ob.name:
+        if ob.type != "MESH":
             continue
         for mat in ob.data.materials:
             if mat in treated:
@@ -412,11 +452,13 @@ def suitcase():
             bsdf.inputs["Roughness"].default_value = 0.75
             bsdf.inputs["Specular IOR Level"].default_value = 0.14
             colour = bsdf.inputs["Base Color"]
+            if "reinforcement" in ob.name and not colour.is_linked:
+                colour.default_value = (0.028, 0.027, 0.029, 1)
             if colour.is_linked:
                 source = colour.links[0].from_socket
                 limit = tree.nodes.new("ShaderNodeVectorMath")
                 limit.operation = "MINIMUM"
-                limit.inputs[1].default_value = (0.095, 0.095, 0.095)
+                limit.inputs[1].default_value = (0.050, 0.050, 0.050)
                 tree.links.new(source, limit.inputs[0])
                 tree.links.new(limit.outputs[0], colour)
     return holder
@@ -494,10 +536,18 @@ def build(cast=True):
     bounce.rotation_euler = (Vector((SEAT[0], ROW_Y, 1.22)) - bounce.location).to_track_quat("-Z", "Y").to_euler()
     bounce.visible_glossy = False
     bounce.data.specular_factor = 0.0
+    for name, location, size, energy, target, spread in (
+        ("seated face key", (SEAT[0] + 0.50, ROW_Y + 0.9, 1.35), (0.30, 0.30), 10, FOCUS["fx_face"], 40),
+        ("right wall washer", (st.XR - 0.32, -0.8, 3.0), (3.0, 0.24), 22, (st.XR, 0.15, 0.35), 150),
+    ):
+        li = st.area(name, location, size, energy, (0.76, 0.86, 1.0), spread=spread)
+        li.rotation_euler = (Vector(target) - li.location).to_track_quat("-Z", "Y").to_euler()
+        li.visible_glossy = False
+        li.data.specular_factor = 0.0
     suitcase()
     # a black flag beside the fitting over her row (seen by no camera, used by the seated one): the empty seats
     # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
-    flag = st.box("flag_near_seats", (0.012, 1.7, 1.1), (SEAT[0] + 0.85, ROW_Y + 0.15, st.H - 0.6),
+    flag = st.box("flag_near_seats", (0.012, 2.4, 1.1), (SEAT[0] + 1.15, ROW_Y + 0.15, st.H - 0.6),
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
     # and a second right beside the downlight, so its cone stops at the seat beside hers
     flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
