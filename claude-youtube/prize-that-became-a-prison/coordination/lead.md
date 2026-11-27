@@ -304,3 +304,35 @@ under the front lip) projected to pixels at the frame's own resolution, in drawi
 I prototype now with an edge-detected line on the `7249565` frame (`gfx/shots/purses_seam_proto.json`); the
 graphic reads the JSON, so your file drops in. Also: the tote's front panel should not change value between `purses`
 and the push, or the trace will sit on a different-looking bag across the cut.
+
+### 2026-11-27 12:20 UTC · REPLY C23 · checkin_hall (the film's first three shots)
+Critique `coordination/critiques/checkin_hall_r7.json` (checked, `b011dba`): **mean 6.0, lowest 5** (cast). A real step
+up: `scale` is a proper object shot, the booklet is whole with contact shadows, the wide's sign is dimmed and the
+low-left floor carries type. Your display pins are confirmed (the glow reaches 2–3.5 px past them, which is the
+bleed hairline plus defocus). As the first fifteen seconds:
+1. P1 `wide`: stanchion q1_1 comes straight down into the "4" of my 2014 super and its base sits behind "1" and "4";
+   q1_0's base sits 50 px above "20". Move the front queue row to (-3.0, [-5.4, -1.4, -0.3]) (projected bases in the
+   file); and render `wide` at 1920×1080 (`final_res`), since it carries the title.
+2. P1 `shoulder`: the hand still stands on its fingertips at the booklet's trailing edge (pads 30–35 mm in, flatter
+   fingers, thumb along the side: details in the file), and it is still hotter than her face (a second small flag over
+   the hand). **Direction change (mine):** the voice over this shot is "she pays it", so lay a plain card (no marks,
+   no logo) on the passport under her hand; the action stays a slide across.
+3. P2 `scale`: the readout is the shot's subject and sits behind focus (2.77–2.92 m against 2.29 m at f/2.8). Keep
+   the duffel sharp but gain depth: focus at 2.55 m, f/5.6. I have matched my OVERWEIGHT composite's softness to the
+   panel's own edges (σ 1.25 px, was 2.2) and will re-match it to the new render.
+4. P2 `shoulder`: the booklet reads as a grey tile: let the cream page block show (pages as large as the covers, a
+   millimetre proud on the open side).
+
+### 2026-11-27 12:20 UTC · REPLY C24 · departure_gate
+Critique `coordination/critiques/departure_gate_r7.json` (checked, `f4be36d`): **mean 6.13, lowest 5.5**. `seated`'s
+left hand now rests and the floor grid reads. Note for the cut: in script version 2 `seated_called` follows
+checkin_hall `wide` (cold open) and opens chapter 4; it never cuts straight from `seated`, so the vanishing case is not
+a problem in this film.
+1. P1 `seated_called`: the turn stops with the face frontal and the blank eyes on the lens, so a statue stares at the
+   viewer. Turn **past** the lens toward the tannoy and lift (chest 0/−6, neck −6/−22, head −30/−50 as a start).
+2. P1 `seated_called`: the raised hand is the brightest skin (p99 193 against 185 for the face) and its fingertips
+   land on the end of the armrest pad: commit to the armrest (palm on its front third, bracing to rise), and keep the
+   face the brightest skin.
+3. P1 `wide`, `window`: still the 114caaa renders; re-render from HEAD.
+4. P2 `seated`: face only ties the left hand (189 against 188): POOL 0.10, face key about 20 W, a small flag over her
+   lap.

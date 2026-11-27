@@ -1,9 +1,9 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><title>route map</title>
 <style>
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2");font-weight:500}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-300-normal.woff2) format("woff2");font-weight:300}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-lt-300-normal.woff2) format("woff2");font-weight:300}
 html,body{margin:0;background:#04060a}canvas{display:block}
 </style></head>
 <body><canvas id="c" width="1920" height="1080"></canvas>
@@ -20,7 +20,9 @@ const W = 1920, H = 1080, K = 8.7, XF = 0.85, LON_C = 170, LAT_C = 18;
 const U = lon => (lon < -30 ? lon + 360 : lon);
 const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) * K];
 const PU = (lat, lon) => P(lat, U(lon));
-const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], china: [29.5, 112.0], sydney: [-33.87, 151.21], qingdao: [36.07, 120.38] };
+// The mainland is a region (no city is named for the days of travel); the departure is an unnamed point by Guangzhou,
+// where the sourced Baiyun Leather Market is, and both disputed onward flights leave from it.
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], china: [27.0, 112.5], depart: [23.25, 113.3], sydney: [-33.87, 151.21], qingdao: [36.07, 120.38] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
 const INK = '#ece8e1';
@@ -48,10 +50,12 @@ function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.
   });
   ctx.restore();
 }
-function dot(ctx, x, y, a, ring) {
-  if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK;
-  ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
-  ctx.strokeStyle = `rgba(236,232,225,${0.4 * (1 - ring)})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 8 + 22 * ring, 0, 7); ctx.stroke(); ctx.restore();
+function dot(ctx, x, y, a, ring, hollow = false) {
+  if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK; ctx.strokeStyle = INK; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(x, y, hollow ? 7 : 5, 0, 7); hollow ? ctx.stroke() : ctx.fill();
+  ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, hollow ? 13 : 12, 0, 7); ctx.stroke();
+  if (ring > 0 && ring < 1) { ctx.strokeStyle = `rgba(236,232,225,${0.45 * (1 - ring)})`; ctx.beginPath(); ctx.arc(x, y, 12 + 26 * ring, 0, 7); ctx.stroke(); }
+  ctx.restore();
 }
 function base(ctx) {
   const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75);
@@ -59,16 +63,16 @@ function base(ctx) {
   ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1;
   for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
   for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); }
-  ctx.fillStyle = '#0f1720'; ctx.strokeStyle = 'rgba(150,175,200,0.2)';
+  ctx.fillStyle = '#1f2833'; ctx.strokeStyle = 'rgba(236,232,225,0.30)'; ctx.lineWidth = 1.5;
   for (const r of window.LAND.rings) { ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke(); }
 }
 function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre moving toward the route's goal
-  const p = 1 - Math.pow(1 - cl(t / dur), 3), z = z0 * Math.pow(z1 / z0, p);
+  const p = sm(t / dur), z = z0 * Math.pow(z1 / z0, p);
   const c = [from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p];
   ctx.setTransform(z, 0, 0, z, W / 2 - z * c[0], H / 2 - z * c[1]);
 }
-function solid(ctx, pts, f) {
-  if (f <= 0) return; ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
+function solid(ctx, pts, f, a = 1) {
+  if (f <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
   if (f < 1) {                                       // the travelling head: a small bright point with a soft halo
     const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 22); g.addColorStop(0, 'rgba(236,232,225,0.55)'); g.addColorStop(1, 'rgba(236,232,225,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 22, 0, 7); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(h[0], h[1], 3.5, 0, 7); ctx.fill();
@@ -76,36 +80,39 @@ function solid(ctx, pts, f) {
   ctx.restore();
 }
 function dashed(ctx, pts, f, a = 0.6) { if (f <= 0) return; ctx.save(); ctx.setLineDash([9, 11]); ctx.lineCap = 'round'; ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; path(ctx, pts, f); ctx.stroke(); ctx.restore(); }
-function region(ctx, a) { if (a <= 0) return; const [mx, my] = PU(...CITY.china); ctx.save(); ctx.globalAlpha = a;
-  const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 130); rg.addColorStop(0, 'rgba(236,232,225,0.20)'); rg.addColorStop(1, 'rgba(236,232,225,0)');
-  ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(mx, my, 160, 115, -0.2, 0, 7); ctx.fill(); ctx.restore(); }
+function region(ctx, a) {        // the days of travel: a soft warm fill over the mainland's south and centre, no line
+  if (a <= 0) return; const [mx, my] = PU(...CITY.china); ctx.save(); ctx.globalAlpha = a;
+  const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 150); rg.addColorStop(0, 'rgba(236,232,225,0.24)'); rg.addColorStop(0.6, 'rgba(236,232,225,0.10)'); rg.addColorStop(1, 'rgba(236,232,225,0)');
+  ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(mx, my, 175, 120, -0.15, 0, 7); ctx.fill(); ctx.restore(); }
 
-const leg1 = () => gc(CITY.chicago, CITY.hongkong), legM = () => bend(CITY.hongkong, CITY.china, 30);
-const legA = () => gc(CITY.china, CITY.sydney), legQ = () => bend(CITY.china, CITY.qingdao, 40);
+const leg1 = () => gc(CITY.chicago, CITY.hongkong);
+const legA = () => gc(CITY.depart, CITY.sydney), legQ = () => bend(CITY.depart, CITY.qingdao, -60);
 const MODES = {
   leg1(ctx, t) {
-    camera(ctx, t, [W / 2, H / 2], [W * 0.47, H * 0.5], 1.0, 1.04, 6);
+    camera(ctx, t, [W / 2, H * 0.47], [W * 0.47, H * 0.47], 1.0, 1.04, 6);
     base(ctx); const L = leg1(), [cx, cy] = PU(...CITY.chicago), [hx, hy] = PU(...CITY.hongkong);
-    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 22, cy + 30, 26, t, 0.2, 'right');
+    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 26, cy + 38, 30, t, 0.2, 'right');
     solid(ctx, L, span(t, 0.6, 3.0));
-    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', hx - 24, hy + 30, 26, t, 3.0, 'right');
-    label(ctx, '9 DAYS', hx - 24, hy + 92, 72, t, 3.6, 'right', 400, 0.06);
+    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', hx - 26, hy + 38, 30, t, 3.0, 'right');
+    label(ctx, '9 DAYS', hx - 26, hy + 104, 72, t, 3.6, 'right', 400, 0.06);
   },
   mainland(ctx, t) {
-    camera(ctx, t, [W * 0.47, H * 0.5], [W * 0.38, H * 0.56], 1.04, 1.12, 7);
-    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [mx, my] = PU(...CITY.china), [sx, sy] = PU(...CITY.sydney);
-    solid(ctx, leg1(), 1); dot(ctx, hx, hy, 1, 1);
-    solid(ctx, legM(), span(t, 0.3, 1.3)); region(ctx, span(t, 1.0, 2.0));
-    label(ctx, 'MAINLAND CHINA', mx - 40, my - 74, 26, t, 1.4, 'right');
-    label(ctx, 'ABOUT 9 MORE DAYS', mx - 40, my - 26, 48, t, 2.0, 'right', 400, 0.05);
-    dashed(ctx, legA(), span(t, 4.0, 6.0)); label(ctx, 'AUSTRALIA', sx + 22, sy + 4, 24, t, 6.0);
+    camera(ctx, t, [W * 0.47, H * 0.47], [W * 0.40, H * 0.56], 1.04, 1.12, 7);
+    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [mx, my] = PU(...CITY.china), [dx, dy] = PU(...CITY.depart), [sx, sy] = PU(...CITY.sydney);
+    solid(ctx, leg1(), 1, 1 - 0.55 * span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 3.3, 3.7), 1);
+    region(ctx, span(t, 0.4, 1.6));
+    label(ctx, 'MAINLAND CHINA', mx + 200, my - 60, 30, t, 1.2);
+    label(ctx, 'ABOUT 9 MORE DAYS', mx + 200, my - 6, 52, t, 1.8, 'left', 400, 0.05);
+    dot(ctx, dx, dy, span(t, 3.6, 3.9), span(t, 3.6, 4.6), true);
+    dashed(ctx, legA(), span(t, 4.2, 6.2)); dot(ctx, sx, sy, span(t, 6.1, 6.4), 1, true);
+    label(ctx, 'AUSTRALIA', sx + 30, sy - 18, 30, t, 6.2);
   },
   split(ctx, t) {
-    camera(ctx, t, [W * 0.38, H * 0.56], [W * 0.36, H * 0.52], 1.12, 1.18, 6);
-    base(ctx); const [mx, my] = PU(...CITY.china), [sx, sy] = PU(...CITY.sydney), [qx, qy] = PU(...CITY.qingdao);
-    solid(ctx, leg1(), 1); solid(ctx, legM(), 1); region(ctx, 1);
-    dashed(ctx, legA(), span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', sx + 22, sy + 4, 24, t, 2.4);
-    dashed(ctx, legQ(), span(t, 1.2, 2.4)); label(ctx, 'QINGDAO', qx + 18, qy - 8, 24, t, 2.4);
+    camera(ctx, t, [W * 0.40, H * 0.56], [W * 0.40, H * 0.57], 1.12, 1.16, 6);
+    base(ctx); const [dx, dy] = PU(...CITY.depart), [sx, sy] = PU(...CITY.sydney), [qx, qy] = PU(...CITY.qingdao), [hx, hy] = PU(...CITY.hongkong);
+    solid(ctx, leg1(), 1, 0.3); region(ctx, 0.7); dot(ctx, dx, dy, 1, 1, true);
+    dashed(ctx, legA(), span(t, 0.4, 2.4)); dot(ctx, sx, sy, span(t, 2.3, 2.6), 1, true); label(ctx, 'AUSTRALIA', sx + 30, sy - 18, 30, t, 2.4);
+    dashed(ctx, legQ(), span(t, 1.0, 2.4)); dot(ctx, qx, qy, span(t, 2.3, 2.6), 1, true); label(ctx, 'QINGDAO', qx + 28, qy - 14, 30, t, 2.4);
   },
 };
 window.draw = (mode, t) => { const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t); };
