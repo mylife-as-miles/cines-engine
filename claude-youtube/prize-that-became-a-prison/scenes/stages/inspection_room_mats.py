@@ -176,7 +176,7 @@ def bench_steel(name, rgb=(0.30, 0.305, 0.31), metal=0.9, rough=(0.35, 0.5), ani
     m, nt, b = _new(name)
     b.inputs["Metallic"].default_value = metal
     o = _obj(nt)
-    streak = _noise(nt, o, 1.0, 8.0, 0.62, mapping=(1.0, 60.0, 1.0))
+    streak = _noise(nt, o, 6.0, 8.0, 0.62, mapping=(1.0, 60.0, 1.0))
     grain = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(2.0, 700.0, 700.0))
     r = _maprange(nt, streak, 0.3, 0.7, rough[0], rough[1])
     r = _math(nt, "ADD", r, _maprange(nt, grain, 0.3, 0.7, -0.025, 0.025))
@@ -184,7 +184,7 @@ def bench_steel(name, rgb=(0.30, 0.305, 0.31), metal=0.9, rough=(0.35, 0.5), ani
     wipe = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(1.4, 5.0, 1.4))
     wipe_m = _maprange(nt, wipe, 0.62, 0.7, 0.0, 1.0)
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", wipe_m, 0.05))
-    col = _mix(nt, _math(nt, "MULTIPLY", _maprange(nt, streak, 0.3, 0.7, 0.0, 1.0), 0.5), rgb, tuple(c * 0.9 for c in rgb))
+    col = _mix(nt, _math(nt, "MULTIPLY", _maprange(nt, streak, 0.3, 0.7, 0.0, 1.0), 0.1), rgb, tuple(c * 0.9 for c in rgb))
     if ghost:
         cx, cy, w, h, deg = ghost
         import math as _m

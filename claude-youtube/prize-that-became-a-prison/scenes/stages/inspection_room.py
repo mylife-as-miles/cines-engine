@@ -84,6 +84,16 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
     "handbag-tote": dict(spec=0.22),
     "handbag-shoulder": dict(spec=0.35),
 }
+# The cold open cuts across both ends of the bench. Set the reflected ceiling
+# light on each bag independently so the same case and duffel hold through the cut.
+# Watts for the case lid, its shadow side, and the dark duffel's top band.
+BAG_RETURNS = {
+    "enter": (25, 0, 30),
+    "wide_pre": (40, 11, 0),
+    "two_shot_pre": (50, 32, 0),
+    "dawn_close": (90, 0, 30),
+}
+
 # The scanner: turned so its tunnel, curtain and exit conveyor face the room (-Y), its back to the back wall,
 # right of the bench. Housing x 1.04..1.98, y 1.25..2.52; conveyor x 1.19..1.81 running to y 0.21.
 SCANNER = (1.60, 1.41, -90.0)
@@ -877,7 +887,19 @@ def apply_camera(name):
     for ob in _STATE["case_tag"]:
         ob.hide_render = name != "tag"
     key = bpy.data.objects["troffer_bench_light"]
-    key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
+    _STATE["steel_return"].hide_render = name != "enter"
+    if name == "enter":
+        key.light_linking.receiver_collection = _STATE["outside_steel"]
+    elif name in BAG_RETURNS:
+        key.light_linking.receiver_collection = _STATE["outside_pair"]
+    else:
+        key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
+    for light, original in _STATE["room_light_links"]:
+        light.light_linking.receiver_collection = _STATE["outside_pair"] if name in BAG_RETURNS else original
+    _STATE["duffel_flag"].hide_render = name not in ("wide_pre", "two_shot_pre")
+    for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0))):
+        light.hide_render = watts == 0
+        light.data.energy = watts
     top = bpy.data.materials.get("bench top steel")
     if top and "ghost" in top.node_tree.nodes:  # the cleaner patch where the tote stood: only once it has gone
         top.node_tree.nodes["ghost"].outputs[0].default_value = 1.0 if beat == "ch11" else 0.0
@@ -981,6 +1003,39 @@ def build(cast=True):
     for link in outside.collection_objects:
         link.light_linking.link_state = "EXCLUDE"
     _STATE["outside_case"] = outside
+    case_meshes = list(outside.objects)
+    duffel_meshes = props.meshes(_STATE["props"]["extra-bag-closed"])
+    outside_pair = bpy.data.collections.new("bench light excluding both bags")
+    for ob in case_meshes + duffel_meshes:
+        outside_pair.objects.link(ob)
+    for link in outside_pair.collection_objects:
+        link.light_linking.link_state = "EXCLUDE"
+    _STATE["outside_pair"] = outside_pair
+    outside_steel = outside_pair.copy()
+    outside_steel.name = "bench light excluding bags and steel"
+    outside_steel.objects.link(bench)
+    for link in outside_steel.collection_objects:
+        link.light_linking.link_state = "EXCLUDE"
+    _STATE["outside_steel"] = outside_steel
+    source = bpy.data.objects["troffer_bench_light"]
+    steel_return = st.linked_light("bench practical on steel", source.location,
+                                   (source.data.size, source.data.size_y), source.data.energy * 0.20,
+                                   source.data.color, [bench], math.degrees(source.data.spread))
+    steel_return.visible_glossy = True
+    steel_return.hide_render = True
+    _STATE["steel_return"] = steel_return
+    _STATE["bag_returns"] = []
+    cx, cy = CASE[:2]
+    dx, dy = DUFFEL[:2]
+    for name, origin, aim, size, receivers in (
+        ("case lid return", (cx - 0.04, cy, TOP + 1.55), (cx, cy, TOP + 0.47), (0.55, 0.22), case_meshes),
+        ("case side return", (1.60, -1.10, 1.60), (cx, cy, TOP + 0.27), (0.40, 0.40), case_meshes),
+        ("duffel return", (dx - 0.35, dy - 0.40, TOP + 1.38), (dx, dy, TOP + 0.13), (0.92, 0.40), duffel_meshes),
+    ):
+        return_light = st.linked_light(name, origin, size, 0, (0.91, 0.94, 1.0), receivers, spread_deg=85,
+                                       rot=(Vector(aim) - Vector(origin)).to_track_quat("-Z", "Y").to_euler())
+        return_light.hide_render = True
+        _STATE["bag_returns"].append(return_light)
     # The void has a soft overhead edge on the lid and handle. A narrow return
     # above the room case carries that edge through the cut, off the front pocket.
     rim = st.linked_light("match case rim", (0.32, -0.14, TOP + 1.55), (0.55, 0.22), 100,
@@ -988,6 +1043,15 @@ def build(cast=True):
     rim.rotation_euler = (Vector((0.32, -0.10, TOP + 0.47)) - rim.location).to_track_quat('-Z', 'Y').to_euler()
     rim.hide_render = True
     st.bounce()
+    _STATE["room_light_links"] = [(lamp, lamp.light_linking.receiver_collection) for lamp in
+                                  (bpy.data.objects[n] for n in ("troffer_scanner_light", "bounce_fill",
+                                                                 "door_glass_light", "door_gap_light"))]
+    # From the reverse, the duffel otherwise reflects the whole luminous ceiling.
+    card = sk.box("duffel negative fill", (1.12, 0.73, 0.012), (dx, dy, TOP + 0.37),
+                  sk.mat("duffel black card", (0.001, 0.001, 0.001), 0.99))
+    card.visible_camera = card.visible_transmission = card.visible_volume_scatter = False
+    card.hide_render = True
+    _STATE["duffel_flag"] = card
     st.wall_wash()
     _STATE["match_omit"] = [bpy.data.objects[n] for n in
                             ("wash_front", "mon_body", "mon_screen", "mon_vesa", "mon_arm",
