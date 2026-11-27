@@ -225,6 +225,28 @@ const MOMENTS = {
     const fit = Math.min(1, 0.7 * W / width(ctx, 'BECAME A PRISON', st)); st.size *= fit;
     land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 8, st, t, 0.0, { from: 1.12 });
     land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
+  place: (ctx, t) => { const L = look();           // the other place and date supers, on 2014 / CHINA's pattern
+    // A line at the large super size (fitted to `fit` x W if given), an optional second line at the secondary size.
+    // pos=ll: low left like 2014 / CHINA (the chapter title keeps the top left); pos=tc: top centre (the Hong Kong wide's
+    // strip of night sky). shade=1 lays the soft shade under it on a lit plate.
+    // `pre` sets a secondary line above the large one (JULY over 2026), where one long line would reach the light.
+    // URL hash: a=CHICAGO[&b=...][&pre=...][&pos=ll|tc][&fit=0.245][&y=0.16][&shade=1][&t0=0]
+    const P = new URLSearchParams(location.hash.slice(1));
+    const a = P.get('a') || 'CHICAGO', b = P.get('b') || '', pre = P.get('pre') || '', pos = P.get('pos') || 'll', t0 = +(P.get('t0') || 0);
+    const big = Object.assign({}, L.sup2), fit = +(P.get('fit') || 0);
+    if (fit) big.size *= Math.min(1, fit * W / width(ctx, a, big));
+    const tc = pos === 'tc', x = tc ? 0.5 * W : 0.072 * W, y = tc ? +(P.get('y') || 0.16) * H : 0.80 * H;
+    const yb = y + L.sup.size * 1.25 + 34 * big.size / L.sup2.size, align = tc ? 'center' : 'left';
+    if (P.get('shade')) {
+      const wa = Math.max(width(ctx, a, big), b ? width(ctx, b, L.sup) : 0), gx = tc ? x : x + wa / 2, gy = (y + (b ? yb : y)) / 2 - big.size * 0.3;
+      ctx.save(); ctx.translate(gx, gy); ctx.scale(1.7, 1);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.42 * sm((t - t0) / 0.6)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
+      ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
+    }
+    reveal(ctx, a, x + (tc ? 0 : -2 * big.size / L.sup2.size), y, big, t, t0, align);
+    if (b) reveal(ctx, b, x, yb, L.sup, t, t0 + 0.35, align);
+    if (pre) reveal(ctx, pre, x, y - big.size * 0.98, L.sup, t, t0 + 0.2, align);
+  },
   chapter: (ctx, t) => { const L = look();         // each chapter's title, a small super over its establishing shot
     // The number at the secondary size, a hairline drawing out beside it, then the title in italic sentence case (the
     // chapters' own voice, apart from the evidential capitals). Top left, the place and date supers keep the lower
