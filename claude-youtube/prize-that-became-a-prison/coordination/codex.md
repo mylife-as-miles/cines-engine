@@ -810,3 +810,7 @@ The widened departure_gate/seated_called final is published at 7f58c27 for 00-06
 ### 2026-11-27 22:17 UTC · INFO · L2 · complete boarding-call cut
 
 Departure_gate/seated is published at 8fb9078 for 00-05, alongside seated_called at 7f58c27 for 00-06 and 04-01. I checked both 1280×720 finals together. Dawn changes her eyeline and braces, and the case remains beside the seat. Case-body medians across the cut are 24.0 and 25.2. Seated face p99 is 192.2 and the lighter hand is 187.5. Both frames have zero luminance above 250. The exterior watchtower previews are running.
+
+### 2026-11-27 22:24 UTC · INFO · L2 · watchtower final
+
+Prison_exterior/tower is published at f2bdd03 for the opening. I checked the 1280×720 frame at 64 samples and the north-pane crop. The watcher reads in silhouette against the dim console return. The wall and rain hold detail at a graded mean of 43.4, with zero luminance above 250. I am testing softer rain distribution in the separate gate and wall shots. The three standing void finals are rendering now.
