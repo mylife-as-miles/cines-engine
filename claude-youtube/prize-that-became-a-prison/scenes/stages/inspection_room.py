@@ -169,13 +169,20 @@ CAMERAS.update({
     "empty_ch05": dict(CAMERAS["empty"], beat="ch05"),
     "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.11, 1.14), lens=31,
                   focus="fx_match", fstop=4, beat="ch00", layout="ch11", pose="enter",
-                  cheat={"Dawn": (-1.98, 0.22)}, facing={"Dawn": CASE[:2]}),
+                  cheat={"Dawn": (-1.90, 0.17), "OfficerB": (-1.05, -0.63)},
+                  facing={"Dawn": CASE[:2], "OfficerB": (-1.38, 0.32)}),
     "across": dict(loc=(-0.94, -1.28, TOP + 0.48), aim=(0.13, 0.045, TOP + 0.27), lens=37,
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
 FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.38, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
               "fx_dawn_close": (0.53, -0.55, 1.54)})
-POSES["enter"] = dict(POSES["ch00"], Dawn=dict(POSES["ch00"]["Dawn"], look="dawn-suitcase"))
+POSES["enter"] = {
+    "Dawn": {"chest": (4, -3), "l_arm": (-7, 5, 13), "r_arm": (13, 5, 16), "fingers": 29,
+             "stride": 0.085, "look": "dawn-suitcase"},
+    "OfficerA": {"chest": (1, 0), "fingers": 38, "behind": True, "look": "Dawn"},
+    "OfficerB": {"chest": (3, -5), "l_arm": (-4, 7, 12), "fingers": 18, "look": "Dawn",
+                 "r_arm": (-10, 24, 102), "roll_r": 111, "stride": -0.055},
+}
 POSES["case handle"] = dict(POSES["ch00"],
                             Dawn=dict(POSES["ch00"]["Dawn"], reach_r="case_handle", palm="down", fingers=36),
                             OfficerA={"chest": (3, 0), "fingers": 32, "look": "Dawn", "behind": True})
@@ -562,6 +569,13 @@ def palm_normal(holder, side):
 def apply_pose(holder, p):
     """pose_figure plus this stage's extras (one or both hands behind the back, a forearm roll)."""
     rigged.pose_figure(holder, {k: v for k, v in p.items() if k in ("head", "neck", "chest", "l_arm", "r_arm", "fingers", "stance")})
+    if p.get("stride"):
+        rig = rigged.rig_of(holder)
+        step = p["stride"] / (rig.scale[0] * holder["ks"])
+        for foot, dy in (("L", -step), ("R", step)):
+            ik = rig.pose.bones[f"foot_ik.{foot}"]
+            ik.matrix = Matrix.Translation((0, dy, 0)) @ ik.matrix
+        bpy.context.view_layer.update()
     if p.get("behind"):
         _behind(holder, 1)
         _behind(holder, -1)
