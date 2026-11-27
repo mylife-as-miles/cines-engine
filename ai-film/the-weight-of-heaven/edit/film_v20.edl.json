@@ -1,0 +1,59 @@
+{
+ "file": "out/review/film_v20.mp4",
+ "frames": 3692,
+ "seconds": 153.8333,
+ "cut_v17_frames": 3360,
+ "council_ends_at_s": 124.875,
+ "song": "audio/song/SONG_demo1.mp3",
+ "song_comes_in_at_s": 118.9,
+ "song_time_there_s": 49.874,
+ "song_time_at_the_cut_s": 55.849,
+ "song_full_level_db": -3.0,
+ "song_level_db_below_full": [
+  [
+   118.9,
+   -30.0
+  ],
+  [
+   120.5,
+   -18.0
+  ],
+  [
+   122.0,
+   -14.0
+  ],
+  [
+   124.875,
+   -9.0
+  ],
+  [
+   133.875,
+   0.0
+  ]
+ ],
+ "song_at_full_level_from_s": 133.875,
+ "music_stops_at_s": 147.484,
+ "q07_own_sound_db": -6.0,
+ "arrival_starts_at_s": 140.0,
+ "arrival_shots_start_at_s": [
+  140.0,
+  140.708,
+  143.042,
+  144.792,
+  146.5,
+  147.333,
+  151.208,
+  152.042
+ ],
+ "karst_lines_at_s": [
+  [
+   147.9,
+   149.94
+  ],
+  [
+   152.34,
+   153.42
+  ]
+ ],
+ "peak_dbfs": -1.89
+}
