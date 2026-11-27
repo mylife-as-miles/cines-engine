@@ -1,0 +1,855 @@
+{
+ "checkin_hall": {
+  "round": 3,
+  "scores": {
+   "composition": 6,
+   "lighting": 5,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 6,
+   "cast": 4,
+   "story_read": 5,
+   "technical": 5
+  },
+  "pro_level": false,
+  "verdict": "Not at the fern bar yet. The wide is the best frame and comes close to the film's look. The haze shaft over the only lit desk, the dark closed row and the chrome posts leading in all read as the night check-in hall. The other three frames each have a fault that would look amateur on YouTube. SHOULDER is the weakest. It sits about one stop hotter than the rest of the stage (raw mean 75 against 35-49 for the other cameras). Because of that, Dawn's dark umber elegantsuit reads as a light grey open-collar shirt, which breaks continuity with the wide and the profile, where it reads dark. It also turns the dark counter top and the dark passport into flat light-grey slabs. Her face is hot on the forehead, has empty black eye sockets from top light, carries a teal-green cast on the jaw and neck in the raw, and shows a black seam line at the hairline. Her eyeline goes level rather than up to him. Her hand is splayed and stiff, the fingers are spread and straight, and a black band at the wrist reads as a bracelet. The bottom 20% of the frame is a featureless grey counter slab, which the brief bans by name. PROFILE stages well and the bags read dark. But the monitor face is turned to the camera and Dawn more than to the agent, so he seems to read the edge of a screen that faces her. His face gets no visible screen spill: it is the same value as his suit and has no cool lift. Dawn's lower legs read as bare stone with dark socks and chunky trainer-like shoes. The scale display post makes a dark vertical bar at the frame edge, and the foreground plinth is a dark slab cut by the bottom edge. SCALE hits its brief: the duffel is in focus, the display is the brightest thing in frame and Dawn is out of shot. But the right third is empty black floor, and the display face is a flat grey card that throws no light onto the post or the bags. The 'conveyor' behind is an empty trough with rails that reads as a cage, not as rubber belting. WIDE: the queue belts are thin taut rods, not about 5 cm webbing with a sag, and the front-left post stands unconnected. The trolley reads as a supermarket wire cart. The closed desks are identical grey boxes with no workstation detail. The right wall is a large featureless dark slab. A big glowing blank sign panel at top centre-right competes with Dawn's island. Across the stage the grade crushes 25-29% of pixels to 8/255 or below in the wide and scale frames. Materials are generic: the counter is a plain grey box with no laminate, edge banding or kick plate, and the ledge reads light instead of the brief's dark top. Compared with the craft in the reference films (koi-pond-keycap's dense, worn, bevelled materials), surface detail is thin everywhere except the bags and the stanchions.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "shoulder",
+    "problem": "Frame is about one stop hotter than the other cameras: Dawn's dark umber suit reads as a light grey shirt (a continuity break and the 'bare skin' risk people.py warns about), the forehead is near clipping, and the dark passport and counter top read light grey.",
+    "fix": "Bring the shoulder key down by about 1 EV: either set a per-camera exposure 0.8-1.0 lower than now, or cut the downlight/area light that keys Dawn by 50% and lower it so it grazes less. Check the raw: the jacket should average under about 55/255 and the forehead peak under about 215/255. Do not grey the suit tint."
+   },
+   {
+    "priority": 1,
+    "camera": "shoulder",
+    "problem": "Dawn's face: black eye sockets from pure top light, a teal-green cast on the jaw and neck (raw), a dark seam line between the sculpted hair cap and the forehead, and an eyeline that is level rather than up to the agent.",
+    "fix": "Add a weak, soft, cool fill from the agent's side at counter height: an area light about 0.4x0.25 m, 1.2 m in front of her face at z about 1.15, aimed at her eyes, 2-4 W, colour (0.75,0.82,1.0), so the sockets lift to readable mid-dark. Find and remove the green spill source (probably a coloured screen or emission near her chin): set its colour to neutral-cool (0.62,0.72,1.0) or drop its power. Close the hair seam: offset the hair mesh 1-2 mm outward, or shrinkwrap its lower edge onto the scalp. Pose with head down about -10 deg (chin up) and turn about 5-8 deg toward the agent's eye position, and raise the agent's eye height 5-8 cm (a platform behind the counter), so she visibly looks up."
+   },
+   {
+    "priority": 1,
+    "camera": "shoulder",
+    "problem": "Her hand on the ledge is splayed: the fingers are straight and spread wide, the thumb sticks out, and a black band at the wrist (sleeve cuff or lining) reads as a bracelet.",
+    "fix": "In rigged.pose_figure, curl every finger 15-20 deg at each joint, close the finger spread to 3-5 deg, and bring the thumb in along the index finger. Pull the sleeve end back 1-2 cm, or set the cuff inner face to the suit material so there is no dark band. Keep the wrist about 20 cm out from the body centre, as the brief says. Re-check the hand from the profile camera too."
+   },
+   {
+    "priority": 2,
+    "camera": "profile",
+    "problem": "The agent's monitor reads as turned toward Dawn and the camera, not toward him, and his face is not lit by it: it has the same value as his suit and no cool lift. The story beat (he reads the weight on his screen) does not land.",
+    "fix": "Raise MON's yaw from 48 to about 68-72 deg so the screen normal points at his eyes, accepting a more oblique view of the face from the profile camera. Add an area light the size of the screen (0.37x0.2 m) 2 cm in front of mon_screen, facing the same way, 4-8 W, colour (0.6,0.75,1.0), with spread about 60 deg. His cheek, nose and brow should come out clearly brighter and cooler than his suit in the graded frame. Keep his head down 15-20 deg."
+   },
+   {
+    "priority": 2,
+    "camera": "shoulder",
+    "problem": "The counter fills the bottom 20% of the frame as a flat light-grey slab with a white edge line. The passport is a light grey tile and does not read as a passport.",
+    "fix": "Make the counter top the brief's dark solid surface: base about 0.035-0.05, roughness 0.45-0.55, with a faint roughness-variation noise (scale about 40) and 3-5 fine scuffs. Tilt the camera up or raise aim z by about 3 cm so the counter fills 12% of the frame or less. Passport: keep the cover value about 0.05, raise roughness to 0.7, round the corners to 4 mm, add a slightly lighter page-block strip 1.5 mm inset on three edges, and turn it about 12 deg off-square to the counter edge."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "The queue belts are thin straight rods, not webbing, and the front-left post stands alone. The trolley reads as a supermarket wire cart.",
+    "fix": "Build each belt as a 50 mm x 2 mm black webbing strip (roughness 0.6, faint weave bump) between post heads, with 1-2 cm of sag at mid-span (a 3-segment curve). Run a belt from the front-left post into the lane, or delete that post. Replace or rebuild the trolley as a flat-deck airport baggage trolley: a low deck, a tall push-frame handle with a brake bar and two large rear wheels, no wire basket. Put one stray piece of luggage or nothing on it."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "Set dressing is thin and cloned: the closed desks are identical bare boxes, the right wall is a large featureless dark slab, and a large glowing blank sign panel at top centre-right competes with Dawn's lit island.",
+    "fix": "Vary the closed desks: put a dark monitor (screen_off, slight reflection) on each, a retractable belt hooked across two of them, and one chair pushed back. At Dawn's desk add a bag-tag printer (0.2x0.25x0.15 m) and a boarding-pass printer beside the monitor. Break the right wall: add a structural column 0.6 m wide at about two-thirds of the way along, or a closed service door with a 2 cm warm light leak at the floor. Cut the big overhead sign panel's emission by about 60%, or make it an unlit dark panel, so the brightest area in the frame is the counter island."
+   },
+   {
+    "priority": 3,
+    "camera": "scale",
+    "problem": "The right third is empty black floor. The display is a flat grey card that lights nothing. The conveyor behind reads as an empty railed cage.",
+    "fix": "Move the display post onto the counter side of the scale, 10-15 cm from the plinth edge, with its face toward the passenger, then reframe about 0.25 m to the right (or go from 50 to about 40 mm) so the display sits on the upper-right third above the duffel. Add an area light 0.12x0.07 m at the display face, 0.5-1 W, cool, so its post top and the near edge of the duffel catch a little light. Build a real conveyor: dark ribbed rubber belt (bump stripes every 6 mm across the belt, base 0.02, roughness 0.75), a steel side skirt and a black rubber flap curtain at the back opening."
+   },
+   {
+    "priority": 4,
+    "camera": "wide",
+    "problem": "The grade crushes 25-29% of pixels to 8/255 or below in the wide and scale frames. The ceiling, the far end of the row and the right wall go to pure black.",
+    "fix": "In the grade, lift the toe by about +4 to +6 on the 0-255 scale, or lower the black point. Alternatively add a very dim cool area light (0.5-1 W/m2) along the far end of the closed row so the dark desks and the left glazing keep detail at about 10-25/255 after grading."
+   },
+   {
+    "priority": 4,
+    "camera": "profile",
+    "problem": "Dawn's lower legs read as bare stone with dark socks and chunky, trainer-like soles, which looks wrong with a skirt suit. The display post makes a dark vertical bar near the right edge, and the plinth is a dark slab cut by the bottom of the frame.",
+    "fix": "Check shoes04 in the raw. If its sole is thick, use the plainest flat shoe from shoes01-06 and tint it BLACK_SHOE with roughness 0.5. Give the legs dark sheer tights by tinting the lower-leg skin to about 0.15, or lengthen the skirt, so no light/dark band appears at the ankle. Move the camera about 0.2 m toward -Y, or slide the display post 0.3 m, so the post leaves the frame edge or reads clearly as the display. Tilt the camera up about 2 deg so the plinth's front edge sits inside the frame, not tangent to the bottom edge."
+   },
+   {
+    "priority": 5,
+    "camera": "wide",
+    "problem": "The counter reads as a plain grey box with no laminate, edge banding or kick plate. It lacks the wear and bevel detail of the reference films.",
+    "fix": "Counter front: a fine laminate (low-contrast wood-grain or speckle noise at scale about 80, base about 0.12, roughness 0.4), a 2 mm edge band of slightly darker value on every panel edge, and a brushed steel kick plate 0.10 m tall at the base with a 3 mm bevel. Add a few darker scuff marks low on the passenger side and a slightly worn, rubbed-shiny edge on the ledge where passengers lean."
+   }
+  ]
+ },
+ "inspection_room": {
+  "round": 3,
+  "scores": {
+   "composition": 6,
+   "lighting": 6,
+   "materials": 5.5,
+   "set_dressing": 6,
+   "grounding_scale": 6.5,
+   "cast": 4.5,
+   "story_read": 6,
+   "technical": 6.5
+  },
+  "pro_level": false,
+  "verdict": "Round 3 is close, but it is not at a professional level yet. The best frames are empty and wide. Empty is a real Ch 11 image: a lit island on the steel, the light under the door, the whole scanner and conveyor in frame, and the bags at the right values. Wide is good establishing grammar. The cast still gives it away as amateur. In two_shot, Dawn's jacket and blouse render at the same value as her stone skin (raw crop), so from the front she reads as a nude mannequin with a modelled bust. That is the single worst problem in the set. The officers' caps read as pale stone pancakes. From overhead they are flat white discs like plates. In two_shot, Officer A's cap sits on the back of his crown. Overhead, Officer A's hand is a bright white mitt on the tote, 24% of the graded frame is crushed to pure black, and the 'open' extra bag reads closed, so the discovery beat is carried only by the handbags. The tag close-up has the right idea, but the card puckers radially round the eyelet like stretched cloth. It has dark gouge or mesh-tear marks at lower left, the grade turns it to near-white grey instead of manila, and the twine is a smooth tube. The charcoal case reads mid-grey here but black in the wide. The scanner is a plain grey box. Its monitor is a white card with no bezel and no spill, its curtain is flat panels, and in the wide its right half sinks into black. In two_shot the ceiling takes the top ~45% of the frame, and Officer A's open hand overlaps the bottom of the bright vision panel (a tangency). The officers' shoes are statue-grey, not black (wide, under the bench). Noise, fireflies and aliasing are clean. The tote grades to khaki or mustard, not cognac.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "two_shot (also wide, overhead)",
+    "problem": "Dawn's suit reads as bare stone skin from the front: in the raw two_shot the jacket and blouse are the same value as her face, with a modelled bust and no garment edge, so she reads as undressed. The tint in cloth() is evidently not landing on female_elegantsuit01, because the MIX lookup misses it or the garment's base colour is fed elsewhere.",
+    "fix": "In inspection_room.dawn(), after cloth(), force the colour. For every material slot on Dawn_female_elegantsuit01, unlink Principled 'Base Color' and set it to (0.085, 0.08, 0.075). Keep roughness at 0.92 and Specular IOR Level at 0.04. Darken the blouse_v rgb to (0.16, 0.155, 0.145). Then print each slot's resolved base colour, and check in a 960x540 two_shot test that the jacket's mean value is no more than 45% of her face's. Add real lapel edges (hem_thickness 0.008 on the front opening) and two 12 mm dark buttons, so the front reads as a jacket."
+   },
+   {
+    "priority": 1,
+    "camera": "overhead, two_shot, wide",
+    "problem": "The officers' caps read as pale stone. Seen from straight down they are flat light discs like dinner plates. In two_shot Officer A's cap sits back on the crown like a pancake, and Officer B's cap merges with the dark ceiling.",
+    "fix": "Give the peaked-cap material navy cloth: crown base (0.025, 0.032, 0.06), roughness 0.75, Specular IOR Level 0.1. Make the peak a separate material, black (0.01, 0.01, 0.012), roughness 0.3. Seat the cap: rotate it forward about 12-15 deg on its local X, lower it 1.5-2 cm and move it 1 cm forward, so the peak shades the brow and the band touches the forehead above the ears. From overhead the crown should then read as a dark navy oval with a visible black peak."
+   },
+   {
+    "priority": 2,
+    "camera": "overhead",
+    "problem": "The discovery beat is weak. The 'open' extra bag reads closed, Officer A's right hand is a glowing white mitt (the brightest thing on the bench), and 24% of the graded frame sits at 0-3/255, so the floor round the bench, Dawn's legs and the operator crush.",
+    "fix": "Swap in extra-bag-open with its zip mouth turned to the lens and the zip parted 8-10 cm (scale the opening's verts, or a lattice on the top panel). Put a slightly lighter lining (0.10 grey) visible inside, so the opening reads as a dark slot with a lit lip. For the hands from overhead, call hands_stone(value=0.22) for this beat, or light-link the troffer's area light to exclude a 'hands' collection and give them a 0.5x copy. Lift the overhead floor: cut the grade's vignette strength for this camera by about 40%, or add a 6-10 W area light, 2 m square, linked to the floor only, so the tile 1.5 m from the bench sits at roughly 6-10% value, not 0."
+   },
+   {
+    "priority": 2,
+    "camera": "tag",
+    "problem": "The tag looks like crumpled fabric, not card stock. It has radial puckers round the eyelet, a soft melted lower edge, and dark gouge/tear artefacts at lower left (raw, around x 630-720, y 510-560). The raw cream colour grades to near-white grey, and it is the brightest thing in the frame. The twine is a smooth white tube. The charcoal case reads mid-grey, which breaks continuity with the wide, where it is black.",
+    "fix": "Remove the eyelet pucker and displacement and rebuild the tag as a flat 0.35 mm solidified card. Give it one soft bend (Simple Deform BEND 10-15 deg about its short axis, two-thirds of the way down), one dog-eared corner and a fine paper-fibre bump (noise scale 2000, strength 0.05). Delete whatever produces the gouges: check for flipped normals or a displace texture hole. Manila albedo (0.50, 0.40, 0.26), roughness 0.9, so after the cool grade it stays buff, not white. Make the twine a 0.9 mm two-ply twist (curve bevel with an offset profile, or a wave-texture bump along the length) in warm jute (0.42, 0.34, 0.22), with sparse 0.3-1 mm fibre hairs. Drop the camera exposure from -3.5 to about -4.1, or dim the raking light about 35%, so the case reads charcoal."
+   },
+   {
+    "priority": 3,
+    "camera": "wide, empty, overhead",
+    "problem": "The X-ray scanner is an undetailed grey box. The monitor is a white card with no bezel and no light spill, the tunnel curtain is flat vertical panels, and in the wide the right half and side vanish into black. Three unexplained pale boxes on the right wall pull the eye.",
+    "fix": "Bevel the housing's edges at 2 cm. Add side access-panel seams (2 mm grooves) and a kick plate. Replace the curtain with 9-10 separate 4 mm lead-rubber strips (0.02 grey, roughness 0.6) with 3 mm gaps and slight random X rotation (+/-3 deg). Make the monitor a 3 cm dark bezel (0.03) around a recessed face emitting cool grey at strength 0.8-1.2, on a short arm, with an 8-12 W area light 15 cm in front aimed at the scanner top. Add a small operator console (a slanted keyboard plinth) on the near side. Add a weak 10-15 W area light or a green status lamp at the exit end, so the scanner's silhouette and right side hold at about 8-12% value. Darken the three right-wall boxes to the wall's value, or remove them."
+   },
+   {
+    "priority": 3,
+    "camera": "two_shot",
+    "problem": "Framing: the ceiling grid fills about 45% of the frame, so the people sit low and Dawn is cut at the thighs. Officer A's open palm overlaps the bottom of the bright vision panel (a tangency), and the operator's behind-back hand pokes out splayed and white at frame right.",
+    "fix": "Lower the aim from z 1.82 to about 1.62 (or lift the camera to z 1.35), keeping the whole troffer in frame, so the ceiling takes at most about 30%. Move the duffel_hover target 8-10 cm toward the bench and 5 cm down, or slide the camera 10 cm in Y, so the palm sits in clear wall below the panel with at least 3 cm of separation. For OfficerB in ch00 set fingers 55 and tuck the 'behind' wrists 5 cm closer to the spine, so no hand breaks his silhouette."
+   },
+   {
+    "priority": 4,
+    "camera": "wide",
+    "problem": "Officer A's 'palm-up' gesture reads palm-down and splayed, as if he is pressing on the duffel. The operator's shoes visible under the bench are statue-grey, not black.",
+    "fix": "Supinate the forearm a further 40-60 deg so the palm faces up, with fingers curled 20-25 deg and the thumb slightly out. Raise the hand to about 8 cm above the duffel's top surface and keep the elbow bent 25-35 deg away from the body. Set both officers' shoe material to black leather (0.015, 0.015, 0.017), roughness 0.35."
+   },
+   {
+    "priority": 4,
+    "camera": "wide, overhead, two_shot",
+    "problem": "The cognac tote grades to pale khaki or mustard, not cognac leather. In overhead it reads yellow beside a near-white hand.",
+    "fix": "Shift the tote's hue about -0.02 back toward red-brown and lower val about 15% (more saturation, +0.1). Check that the graded frame shows a mid-dark tan-brown (graded sRGB roughly 120/85/55), not beige. Add a slightly darker edge-paint line on the handles and seams (an AO-driven 0.7x darken)."
+   },
+   {
+    "priority": 5,
+    "camera": "overhead",
+    "problem": "Seen straight down, the bench top shows horizontal light streaks round the tote that read as wood grain on steel.",
+    "fix": "Cut the brushed-steel streak contrast on the bench top by about half (lower the wave/noise texture's ColorRamp spread or the anisotropy to about 0.3), and add a faint large-scale smudge/wipe roughness variation instead."
+   }
+  ]
+ },
+ "departure_gate": {
+  "round": 3,
+  "scores": {
+   "composition": 5.5,
+   "lighting": 5,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 6,
+   "cast": 4.5,
+   "story_read": 5.5,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "This is not at fern level yet (mean about 5.3). Seated is the strongest frame: the pose is readable, the suitcase reads charcoal, the perforated steel seats are believable and nothing clips. Window has the best idea, Dawn's back against the floodlit nose, and is close to working. Wide fails its brief. There is no single downlight pool. The floor is lit evenly to mid grey from the foreground rows to the glass, so the eye goes straight to the glossy airliner and the bright podium screen, not to Dawn. She is tiny, and an untextured grey post stands right in front of her and her suitcase. Problems that run through all three frames:\n- From behind, Dawn's sculpted bun reads as a backwards baseball cap (wide and window).\n- Her shoes are slipper-like clogs with an embossed brand-like stamp on each toe, which breaks the no-logos rule. With bare stone legs and dark ankle socks, the wardrobe reads odd.\n- The carpet tiles are a large, smooth vinyl checkerboard with no fibre.\n- The airliner is toy-like: oversized bubble cockpit windows, a short run of about 10 cabin windows, a plastic gloss, and no clear jet bridge-to-door connection.\n- The window glass carries scattered white dashes (reflected linear lights) that float in the sky like artefacts.\n- Seated does not deliver the f/1.8 the brief asks for: the background rows are nearly sharp, and the bottom third is an empty grey floor slab.\n- Graded frames crush 17-19% of pixels to black in wide and window, mostly on the window frame and the wall that should carry the place.\nTechnically the frames are clean: no fireflies, mild grain, some denoiser smear on the aircraft.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "wide",
+    "problem": "No lit island. The whole floor is evenly mid grey, Dawn is not the brightest thing near her, and the plane and podium screen pull the eye.",
+    "fix": "Bring the general ceiling and area lights over the seating to 10-15% of their current power, or switch off the rows nearer the camera. Light Dawn with one spot downlight about 3.2 m above her seat (point at her lap, spot_size about 40 deg, blend 0.35, radius 0.05, about 400-800 W, slightly warm 4000 K). Aim for a visible circle of about 1.5 m on the carpet, with the area around her at least 1.5 stops brighter than the empty rows. Keep 2-3 weak downlights deeper in the room at about 15% so the rows stay readable, not black. Cut the apron floodlight on the aircraft by about 1 stop so the glass is no longer the brightest area."
+   },
+   {
+    "priority": 1,
+    "camera": "wide",
+    "problem": "An untextured grey rectangular post (about image x 490-530, y 400-580) stands in front of Dawn and her suitcase and blocks the subject. A second plain slab post stands at right (about x 1150-1175).",
+    "fix": "Delete the post or move it at least 2 m away, out of the line between the camera and Dawn. If it is meant as a charging pillar, bevel it (0.01 m), give it a dark brushed-metal material and set it against a column, not in the aisle. Do the same for the right-hand slab or remove it."
+   },
+   {
+    "priority": 1,
+    "camera": "seated",
+    "problem": "Each shoe toe carries an embossed brand-like stamp, which breaks the no-logos rule. The clog and dark ankle-sock look, with bare grey stone legs, reads odd.",
+    "fix": "In people.dawn() usage (pose and place only, so do it in the stage module after the build), find the shoe object's material and disconnect or zero its normal/bump map (Normal Map strength 0). Or report the problem to the orchestrator so dawn() switches to plain shoes01/shoes02. If the wardrobe allows, give the legs a dark tights tint (value about 0.08) so legs and socks read as one garment."
+   },
+   {
+    "priority": 2,
+    "camera": "window",
+    "problem": "From behind and at 3/4 back, Dawn's bun reads as a backwards cap with a brim (also in wide).",
+    "fix": "Move the bun lower, to the nape (about 4-5 cm down), and scale it to about 0.7, or flatten it so no brim-like edge sticks out. Check it from the window and wide cameras. If the bun mesh is fixed in people.py, flag it for the orchestrator."
+   },
+   {
+    "priority": 2,
+    "camera": "wide, window",
+    "problem": "The airliner looks like a toy: bubble cockpit windows that are too large, about 10 cabin windows bunched at the front, a plastic sheen, no nose gear, and the jet bridge does not clearly reach the L1 door.",
+    "fix": "Base colour value about 0.35, roughness 0.45, coat 0. Make the cockpit glazing 4-6 flat slanted panes of about 0.55x0.45 m, set into the nose curve. Run cabin windows along the full fuselage at 0.53 m pitch (0.25x0.35 m, dim warm emission 0.3). Add the nose gear (strut plus two wheels on the ground, with a contact shadow). Extend the jet bridge cab to meet the fuselage just behind the cockpit on the port side, with a bellows box. Add 2-3 apron items: a tug, a belt loader at the forward hold and 3-4 cones."
+   },
+   {
+    "priority": 2,
+    "camera": "all",
+    "problem": "The carpet tiles read as a smooth vinyl checkerboard. Large tiles alternate tone, with no fibre and no seams.",
+    "fix": "Use 0.5 m tiles with alternating quarter-turn grain. Keep value variation between tiles to about ±3%. Make seams 2 mm and slightly darker. Add fibre with a Noise texture (scale about 600-900) into Bump at strength 0.12, plus a directional wave texture for pile direction. Roughness 0.95, specular about 0.2. Base value low (about 0.12-0.15) so the floor sits under Dawn, not at her value."
+   },
+   {
+    "priority": 3,
+    "camera": "seated",
+    "problem": "The f/1.8 isn't there: the second and third rows are nearly sharp. The bottom third is an empty grey floor slab.",
+    "fix": "Set the camera to 75-85 mm, DOF on, fstop 1.8, focus_object an empty at Dawn's chest. Lower the camera to about 1.05 m and push in, so the frame bottom lands about 25 cm below her shoes while keeping the feet whole. Let her downlight make a falloff pool on the floor around her feet and the suitcase so the floor is not flat."
+   },
+   {
+    "priority": 3,
+    "camera": "window, wide",
+    "problem": "White dashes scattered in the sky and across the upper glass read as artefacts, not reflections.",
+    "fix": "Either build a real ceiling grid with linear fixtures, so the reflections line up as a coherent perspective of the interior, or lower the glass's reflectivity (IOR about 1.15, or mix the glass with Transparent at about 0.85) and remove or hide the floating linear emitters the glass catches. Keep a faint reflection of Dawn's downlight and seat row in the glass for realism."
+   },
+   {
+    "priority": 3,
+    "camera": "window",
+    "problem": "The vertical mullion and the jet bridge edge near image x 770 run tangent to Dawn's head. The plane nose is the brightest value, right beside her, and her head merges with it.",
+    "fix": "Move the camera about 0.25 m left (or Dawn one seat right) so her head sits clear inside one glass pane, against the darker jet bridge. Add a narrow rim light (area light 0.3x0.3 m, about 30 W, above and behind her) so her shoulders and head edge separate. Drop the nose floodlight by about 0.7 stop."
+   },
+   {
+    "priority": 4,
+    "camera": "wide",
+    "problem": "The podium screen is a flat white patch with no spill or bezel contrast, and the podium reads as a thin table frame. The far wall and ceiling crush to black, so the room loses its shape.",
+    "fix": "Set the screen emission to about 1.5 with a cool tint. Add a 15-20 mm bezel at value 0.04, plus a weak area light (0.4x0.3 m, about 5 W) in front of the screen so it spills onto the desk top and the agent side. Close the podium front with a beveled panel (value 0.2, roughness 0.6). Add a dark ceiling plane at about 3.4 m with 4-6 recessed downlight cans (rim emission only). Give the back wall low grazing light (a wall-washer area light, about 20 W) so it holds at about 8-12% grey after the grade instead of 0."
+   },
+   {
+    "priority": 5,
+    "camera": "seated",
+    "problem": "A small white ladder-stripe patch on the suitcase side reads as a logo or label.",
+    "fix": "Find the material slot or UV region of that patch on dawn-suitcase and darken it to match the shell (about value 0.06), or turn the case about 15 deg so the patch faces away from the camera."
+   }
+  ]
+ },
+ "detention_corridor": {
+  "round": 2,
+  "scores": {
+   "composition": 6,
+   "lighting": 5,
+   "materials": 5,
+   "set_dressing": 6,
+   "grounding_scale": 6,
+   "cast": 6,
+   "story_read": 6,
+   "technical": 7
+  },
+  "pro_level": false,
+  "verdict": "Not pro level yet. All four frames are clean and the ideas are right: one-point night corridor, an empty chair in a lit island, an envelope insert. But only the chair frame would hold up next to fern's cuts or the Leonxlnx stills.\n\ncorridor: The left and right foreground walls are crushed. I measured 2-9/255 in the graded frame, and about 40% of the frame is near-black, so the block coursing and dado that carry the place are gone. The floor is the brightest large surface (about 140/255 down the middle). The pool / dead gap / pool rhythm barely shows: the gap is only about 18% darker than the pools (117 against 143). The worn-floor texture reads as blotchy camouflage, and the drain sits on a black blob that reads as a hole, not a damp patch. The visitation door at the vanishing point grades to pale beige, not amber, and the haze greys it out. The meal tray on the near hatch is unreadable: it is just a cup on a dark shelf.\n\ndoor: The riveted rounded-rectangle frame with 24 dome rivets reads as a ship's porthole, not a detention vision panel. The two left bars render flat black and the two right bars light grey, so they look like two different materials. The tie bar is four floating square blocks. The bunk beyond is an unreadable shelf shape. The hinge has an oversized hex bolt and dark speckle that looks like spatter. The frame's top edge is about 15 px from the top of the picture.\n\nchair: The best frame. The pendant pool, the hard rectangular shadow and the dead-centre empty chair carry the beat. But the table top is hardly brighter than the floor around its shadow, so the island is the floor, not the table. The clock has its own unmotivated fan-shaped hotspot. The table is a thin generic flat-pack top.\n\nenvelope: The envelope is cold near-white (raw p99 is 230) with no visible thickness. It has no contact shadow, the 9 mm curl does not show, and it looks pasted on. The flat, untextured grey table top fills about 60% of the frame: the big flat grey foreground slab the brief warns against.\n\nTechnical: no clipping and fine grain. The only artefacts are the clock hotspot and some milky haze at the far end.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "corridor",
+    "problem": "Foreground side walls crushed to 2-9/255 graded; about 40% of the frame is near-black, so the block, dado and doors in the foreground carry nothing.",
+    "fix": "Light them with a motivated practical, not fill. In close_cell()/cell_doors(), give the vision panels of the two nearest doors on each side (y below 3 m) a faint cell night light: an area of about 0.2 x 0.1 m, 25-40 W, COOL, placed inside the panel and aimed out across the corridor, so each spills a soft cool patch onto the opposite wall at dado height. Also put a recessed blank-glazed door at the near end wall Y0 behind camera with a 0.3 x 1.8 m, 15 W area leaking along the floor. Target: graded foreground walls at 18-30/255 with mortar lines visible, while the corridor still opens out of darkness."
+   },
+   {
+    "priority": 1,
+    "camera": "corridor",
+    "problem": "Floor is the brightest large surface (about 140/255) and the pool / dead gap / pool rhythm barely shows (gap 117 against pools 143).",
+    "fix": "In detention_corridor_set.py set FIT_SPREAD from 118 to about 90, and keep fit3 (y=7.0) at 0. In floor_paint, lower bare from (0.13,0.126,0.118) to about (0.085,0.082,0.077) and the path brightening from 1.45x to 1.2x. Raise FIT_W only if the pools then read too dim. Target: the floor in the dead gap at 7 m at or below 50% of the pool luminance at 4.6 m and 9.4 m, with each pool a visible ellipse with edges."
+   },
+   {
+    "priority": 2,
+    "camera": "corridor",
+    "problem": "The vanishing-point door grades to pale beige, not amber. Haze and the fitting directly above it (11.8 m, level 0.2) wash it out, so the frame's destination is weak.",
+    "fix": "Drop the dying tube fit5 to level 0.06-0.08, or move it to y=11.2 so it does not sit over the door. Add a spot 'vd_floor_wedge' inside the room aimed out through the gap, low (z=0.4), 40 deg cone, AMBER, about 150 W, so a warm wedge of light lies on the corridor floor out of the door for 1.5-2 m. Raise room_warm saturation (AMBER g toward 0.32). Lower the corridor haze density from 0.004 to 0.0025 so the end is not milky. Check that the graded doorway reads orange-amber (R about 1.4x B)."
+   },
+   {
+    "priority": 2,
+    "camera": "door",
+    "problem": "The panel reads as a ship's porthole: a rounded frame with 24 dome rivets. The bars are inconsistent (two black, two light), the tie bar is four floating blocks, and the bunk beyond is unreadable.",
+    "fix": "In window_frame(): drop to a flat welded steel frame about 50 mm wide with corner radius about 0.012 m, and either no rivets or 8 small countersunk bolt heads (5 mm dome). In cell_bars(): replace the per-bar square blocks with one continuous flat tie bar 40 x 8 mm through all four bars, bevel 1.5 mm. Light the left two bars: raise cell_close_night to 120-150 W and move it so it rims the bars from inside, or swing door_rake 8-10 deg so the inboard bars catch it. Make the bunk read: a mattress box 0.1 m thick with a folded grey blanket, rim-lit by cell_close_night, its edge level with the tie bar."
+   },
+   {
+    "priority": 2,
+    "camera": "envelope",
+    "problem": "The envelope is cold near-white with no contact shadow and an invisible curl, and looks pasted on. The flat untextured table top fills about 60% of the frame.",
+    "fix": "In envelope(): raise the curl to h += 0.02 * max(0, 1 - q/0.065)**2 (about 20 mm over 6.5 cm), and solidify the body to 0.8 mm so its edge shows. Set the paper albedo to a warm (0.68,0.64,0.56), roughness 0.85, with a fine fibre noise bump (scale 800, strength 0.02). Offset pendant_pool 0.15 m toward -x/+y so the curl and edges throw a visible shadow on the table. Give the table top material laminate wear: fine scratches, a dried cup ring, edge chips, roughness variation 0.45-0.7. Either drop the camera to z=0.95 and aim at the envelope so the table is under 40% of the frame and the empty chair larger, or let the pool fall off to under 35% of its centre value at the frame edges."
+   },
+   {
+    "priority": 3,
+    "camera": "chair",
+    "problem": "The table top is barely brighter than the floor round its shadow, so the lit island is the floor. The clock has an unmotivated fan-shaped hotspot. The table is a thin generic top.",
+    "fix": "Lower PEND_W from 180 to about 90 and narrow pendant_pool's cone from 56 to about 40 deg, keeping POOL_W 300, so the table top is at least 1.6x the surrounding floor. Set clock_kick to 0.6-1.0 W with spread 90, or delete it and let the clock read by pendant spill. In table(): make the top 35 mm thick with a steel apron, and add four floor flanges (0.1 m square, 6 mm, 4 bolts each) so it reads as bolted-down institutional furniture."
+   },
+   {
+    "priority": 3,
+    "camera": "corridor",
+    "problem": "Floor wear reads as camouflage blobs, and the drain's damp patch is a black hole.",
+    "fix": "In floor_paint, stretch the wear noise along the walking direction (multiply world Y by 0.2 before the pit and big noises) so it forms long scuffed streaks, and raise pit scale from 26 to 45. Make the damp patch only about 20% darker than the paint, roughness 0.25, radius 0.3, with a soft noise edge, not a near-black blob. Sink the drain frame 2 mm and add a 3 mm dark gap round it."
+   },
+   {
+    "priority": 3,
+    "camera": "door",
+    "problem": "The hinge has an oversized hex bolt and spatter-like chips. The door leaf is uniform flat grey and identical in value to the wall. The frame's top edge is crowded against the top of the picture.",
+    "fix": "Replace the hinge with a barrel knuckle about 25 mm in diameter and 120 mm long, with a flush leaf and 4 countersunk screws; remove the dark speckle decal. Give the door paint a slightly different hue and value from the wall (e.g. blue-grey 0.16,0.19,0.21 against wall 0.22), with polished wear round the panel edge and handle. Aim the camera about 4 cm lower, or use lens 36, so the frame's top has at least 40 px clear."
+   },
+   {
+    "priority": 4,
+    "camera": "corridor",
+    "problem": "The meal tray on the near open hatch is unreadable: the cup reads, the tray does not.",
+    "fix": "Raise the hatch slot light to about 15-20 W. Turn cd0_tray about 20 deg so its compartments face the camera, and lift the tray plastic to val about 0.35 (0.32,0.3,0.27) so it reads against the dark door. Add a spoon and a covered bowl for silhouette."
+   }
+  ]
+ },
+ "evidence_table": {
+  "round": 2,
+  "scores": {
+   "composition": 6,
+   "lighting": 5,
+   "materials": 5,
+   "set_dressing": 6,
+   "grounding_scale": 6,
+   "cast": 7,
+   "story_read": 6,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Round 2 is better than a first pass. The purses frame is close to usable and the overall noir mood is right. As a stage, though, it would still look like CG next to fern's documents. Five problems recur across the frames.\n\n(1) The desk lamp, which carries the whole lighting story, never reads as a lamp. In the overhead it is a huge black disc that the left frame edge cuts, sitting on a white disc. In the push, the shade is a glowing white bowl floating in black, with no visible arm or base. Its outside is lit white although the bulb faces down, which reads as a self-lit object rather than a rim-lit shade.\n\n(2) The \"pool\" is not a pool. In the overhead the brightest patch is a hard wedge on the case stack at top centre. The open folder, the letter at lower right and the envelope are all lit about equally, even though they sit 40-70 cm apart. That points to fill or a second source rather than one lamp with inverse-square falloff. Meanwhile 53% of the graded overhead is below 8/255, so the right third and the bottom-left are dead black rather than readable wood.\n\n(3) The paper props read as cards and slates, not paper. The sheets are uniform flat white with denoiser smudges (bottom of the right sheet) instead of cockle. The three \"glossy prints in three tones\" are all the same near-black with white borders: no gloss highlight, no tonal difference, and they read as empty picture frames. The receipt in the overhead is a flat grey rectangle. The mug is only a dark ring from above, and in the laptop shot it is a featureless black cylinder.\n\n(4) The passport is the weakest object in the set. Corner radius is about 8% of its width, the slab has a plastic matte look, and there is no spine, no cover board or turn-in and no visible spring. In the close-up it reads as a phone or tablet lying on a folder, which is exactly the hero beat. That frame is also mid-grey and murky (p1 = 2, no true dark). The \"graduated net\" just dims everything rather than shaping it.\n\n(5) Surfaces in the push: the foreground planks are big smooth grey slabs with almost no grain, bevel or wear. The prints on the right become thin white outlines floating in black, which reads like wireframe. The lifted corner is ambiguous: a dark wedge, not clearly a curled sheet in focus.\n\nThe laptop frame tells its beat (screen glow, passport across passes), but there is a problem with the screen. It is a flat 170/255 grey slab whose spill barely reaches the keys. The bezel is very thin, so it reads more like a lit card than an LCD in a dark room. The case stack is cut by the left edge, and the lamp named in the brief is not visible.\n\nPurses is the strongest frame: good values, warm tote, gold hardware, wood grain, a believable soft pool. Even so, the tote has graded to mustard/olive rather than cognac, and there is a stray arc mark on the table in front of the satchel. The receipt is too wide for a thermal roll; it looks like a half-curled A6 sheet.\n\nNoise is clean, with no fireflies and no clipping (max 197-246 graded), but denoiser smear shows on the large white sheets. No cast is required. The absence is staged acceptably, though nothing in the frames, such as a chair edge or a pushed-back cup, suggests someone just left the table.\n\nMean is about 5.9. It is not pro level yet. The top-priority fixes are the lamp silhouette and falloff, the passport model and the paper/print materials.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "overhead",
+    "problem": "The lamp reads as a giant black disc cut by the left frame edge, and the pool is a hard wedge on the case stack while distant props are lit equally (fill, not one practical).",
+    "fix": "Move the desk-lamp prop about 0.12-0.18 m toward the frame centre so base, arm and shade are all inside frame with at least 4% margin. Tilt the shade head about 25-35 degrees so the opening points at the open folder. Delete or zero any secondary fill/area light over the letter, pen and envelope. Drive the pool only with a spot (spot_size about 70-80 degrees, blend 0.6-0.8, shadow_soft_size 0.02-0.03) parented inside the shade, aimed at the folder centre, so the letter and envelope sit 1.5-2.5 stops darker than the folder. Add a very low bounce (an area light 0.6x0.6 under the table plane, or world strength around 0.002) so the dead-black right third rises to about 10-18/255 and the wood grain is readable rather than crushed."
+   },
+   {
+    "priority": 1,
+    "camera": "passport",
+    "problem": "The passport reads as a phone or tablet: rounded plastic slab, no spine, no board edge, no visible sprung cover. Flat, murky, mid-grey light.",
+    "fix": "Rebuild the passport in Python as three parts. Back board 125x88x0.9 mm. Page block 123x86x3.5 mm in cream (0.80, 0.76, 0.66), with a slight stack ripple from a Wave modifier (amp 0.15 mm), inset 1 mm from the fore edge. Front board 0.9 mm, hinged at the spine with a 3 mm round spine piece, rotated 4-6 degrees (2.5 does not read) so a visible wedge of page block shows. Corner radius 3-4 mm, not about 8 mm. Use a coated-cloth cover material: base (0.03, 0.05, 0.12), roughness 0.55, a fine noise bump (scale 800, strength 0.08) and a 0.4 mm bevel that picks up the key light. Relight with a single warm spot from front-left at about 30 degrees elevation, so the cover has a gradient falloff and the far half of the folder drops 2 stops. Let the frame's darkest 10% reach 3-6/255, not the current lifted greys. Focus on the near cover edge at f/2.0 so the passes behind go soft."
+   },
+   {
+    "priority": 2,
+    "camera": "push",
+    "problem": "The lamp is a floating, uniformly glowing white bowl with no arm or base. The lifted corner of sheet_a is an ambiguous dark wedge. The foreground is a smooth grey slab.",
+    "fix": "Make the shade exterior a dark enamel (base 0.05, roughness 0.35) so it shows only a rim highlight. Put the emission on a small bulb mesh inside, and add a weak rim light (area 0.1 m, about 3 W) behind and above the lamp to outline the arm and base against black. Add a thin haze volume (density 0.01-0.015) only inside a cone mesh under the shade so the beam reads. Re-curl sheet_a with a Simple Deform bend of 15-25 degrees over the last 6 cm of one corner, set the DOF focus object to that corner, and give the curl's underside a little light (a small warm point at 1 W under the lamp) so it reads as paper, not a black shape. Add a plank bevel (2 mm), a stronger grain bump (0.15) and some roughness variation (0.45-0.7 noise) to the foreground wood. Lower the camera 2-3 cm so the highlighter and a plank seam lead into the frame."
+   },
+   {
+    "priority": 2,
+    "camera": "overhead",
+    "problem": "The three prints all render as near-black slates in white outlines: no gloss, no three tones. The sheets are flat white with denoiser smudges, not cockled paper. The receipt and mug are unreadable from above.",
+    "fix": "Give the prints three distinct blank image tones (dark slate 0.08, mid warm grey 0.25, faded sepia 0.35), clearcoat 0.6, clearcoat roughness 0.08, so each catches a lamp specular streak. Add a 0.3 mm thickness and a 1-2 degree twist so the highlights differ. Give the paper sheets a cockle (Displace with a large-scale noise, scale 4, strength 0.6-1.2 mm, on a 40x56 subdivided grid), a fibre bump (scale 1500, strength 0.03) and a base of (0.80, 0.78, 0.72), not near-white. Render with more samples (128+) or turn the denoiser to OIDN with albedo/normal passes to stop the smudge. Turn the receipt so its curl rises toward the lamp, with a 30-40 mm roll diameter so it reads in plan. Give the mug a lighter interior (0.25) with a liquid disc at 0.02, and a rim highlight, so it reads as a mug and not a ring."
+   },
+   {
+    "priority": 3,
+    "camera": "laptop",
+    "problem": "The screen is a flat grey slab with a weak spill. The bezel is too thin to read as an LCD. The mug is a black can. The case stack is cut by the left edge. The turned-down lamp named in the brief is not visible.",
+    "fix": "Widen the bezel to 6-8 mm in near-black glossy (base 0.01, roughness 0.15). Give the screen a slight vertical gradient (top 10% brighter) and a cool tint (0.75, 0.82, 1.0) in emission, strength about 2, and add an area light the size of the screen, 3-5 cm in front of it, facing the keys at about 8-12 W so the keycaps and the passport's top edge pick up a cool rim. Frame or move the case stack about 6 cm right so its end sits inside frame with a margin. Show the lamp base and shade at the left, dimmed to about 15% with a warm bulb, so the 'turned down' beat reads. Give the mug a visible rim highlight and handle silhouette."
+   },
+   {
+    "priority": 3,
+    "camera": "purses",
+    "problem": "The tote grades toward mustard/olive, not cognac. The receipt is the proportions of an A6 sheet, not a thermal slip. A stray arc mark (the mug ring?) on the front plank looks like a glitch.",
+    "fix": "Shift the tote's hue toward red (hue -0.03, sat +0.1), or exempt warm leather from the grade's desaturation with a mask, so it reads cognac (around 0.45, 0.22, 0.10 in the raw frame). Rebuild the receipt at 80 mm wide by 220 mm long with a tighter 20-25 mm curl and a slight long-axis bow. Remove or fade the mug-ring decal in this setup (mix factor 0.3) or move it off the hero plank. Add a small specular kicker (spot, 3 W) to catch the satchel clasp and the top edge of the tote."
+   },
+   {
+    "priority": 4,
+    "camera": "all",
+    "problem": "No sense of a person having just been at the table, and the black void has no depth cue.",
+    "fix": "Add one absence cue per wide frame, for example a chair-back edge catching the lamp spill at the near table edge, or reading glasses folded by the letter. Place a barely-visible far wall at 2.5-3 m with a 0.5-1% lamp spill (values 4-8/255) so the room has depth without breaking the black-room look."
+   }
+  ]
+ },
+ "courtroom": {
+  "round": 2,
+  "scores": {
+   "composition": 6,
+   "lighting": 4,
+   "materials": 5,
+   "set_dressing": 6,
+   "grounding_scale": 7,
+   "cast": 6,
+   "story_read": 7,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "The story reads and the restraint is right. The wide is the strongest frame: a symmetrical aisle, empty benches and one small grey figure in the dock in front of three empty chairs. The wide would almost cut into a fern film as it is. The set still lets it down in several places. (1) The lighting is flat institutional fill, not a lit island. The dock frame's raw 1st percentile is 69 and the bench frame's is 51, so nothing in those frames goes properly dark. The well, the bench and the backdrop all get the same even light. The promised pool of light on Dawn does not exist: the dock is lit no differently from the clerk's desk or the side tables. (2) There is a clear modelling artefact in all three cameras. Where the backdrop frame's verticals meet its header, the top corners show pure black squares (wide at about x485/787, y65; dock at x455, y25; bench at x905, y38). (3) The Tripo gallery benches are rustic church pews. They have blurry, fibrous plank textures and turned feet, which clash with the crisp, modern pale-wood dock and bench. In the wide, their ends are cut by the bottom corners of the frame. (4) The bench camera spends about 70% of the frame on one flat grey wall panel and the bottom 28% on a flat pale fascia slab. The empty chairs are left in a thin band, and the centre-to-wing step reads as a seam, not a lit return. (5) In the dock frame, Dawn's top reads as a casual T-shirt rather than prison clothing. Her one visible hand lies flat on a post knob, not palms-on-the-ledge. The 'f/2.8' background is nearly sharp. The clerk's dead grey monitor slab is the second-strongest shape in the frame and competes with her. (6) There is a stray diamond-shaped object on the upper-left wall between the windows in the wide. The aisle runner stops mid-aisle. The left judge's place has no microphone in the bench view, and no bench microphones read in the wide. The materials are clean and believable at a distance, but they have no wear. The judge chairs show Tripo crumple blotches. Noise and grain are fine, nothing clips, and there are no fireflies. This is competent previs, not yet a finished frame.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "all",
+    "problem": "Pure black squares at both top corners of the backdrop frame, where the vertical pilasters meet the header. There is a gap, or open/flipped geometry, showing the void or a backface.",
+    "fix": "In the backdrop-frame builder, lengthen the header box by one pilaster width on each side (header x-extent = panel width + 2*pilaster_w) so it overlaps the pilaster tops by the full section. Alternatively, add a corner block box (pilaster_w x pilaster_d x header_h) with the same pale-wood material at each corner. Run bmesh.ops.recalc_face_normals on both and make sure neither box has a dark/emission default material. Check from the bench camera at 960x540 --nocast."
+   },
+   {
+    "priority": 1,
+    "camera": "wide, dock",
+    "problem": "There is no lit island: the well, the bench and the backdrop are evenly filled, and Dawn is not in the 'one pool of light'. The dock and bench frames have no deep shadow (raw p1 69 and 51).",
+    "fix": "Cut the general ceiling-panel/fill area lights by about 60% (or delete the largest fill). Add one area light directly over the dock: about 2.8 m up, 1.0x1.0 m, spread about 35 deg, roughly 120-200 W at exposure -1.5, so the dock and Dawn sit about 1.5 stops above the bench fascia. Light the backdrop with a narrow wall-grazer at the cap line (an area light 3 m x 0.1 m, aimed up, about 40 W) so the panel falls off toward the ceiling. Bring in the high windows as cool area lights (4000 K equivalent, about 30 W each), throwing soft shafts through haze density about 0.012 onto the side walls. Target raw p1 below 25 in the dock and bench frames, with the side walls and pews still readable."
+   },
+   {
+    "priority": 2,
+    "camera": "bench",
+    "problem": "About 70% of the frame is one flat grey panel and about 28% is a flat fascia slab. The chairs sit in a thin band, and the centre-to-wing return does not read.",
+    "fix": "Move the camera about 1.2 m further left and 0.4 m lower (eye height 1.45 m), aim it about 30-35 deg off the bench axis, and switch to a 50-65 mm lens so the three chairs fill the middle third. Keep the recessed panel's lower edge just inside the top quarter. Give the wing return its own light: a 0.1 x 0.6 m vertical area light, about 15 W, just off the return face, or angle the cap grazer so the return face is 1 stop brighter than the fascia front. Put a microphone at the left judge's place too, mic base on the desk top 0.25 m to the right of each chair."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "The gallery benches are rustic church pews with blurry, fibrous Tripo textures that clash with the modern pale wood. The near pew ends are cut at the bottom-left and bottom-right corners.",
+    "fix": "Build the gallery benches in Python from the same wood() material as the dock: 2.0 m long, 0.45 m seat on 3 slats of 0.12 x 0.03 m, a back of 2 slats up to 0.88 m, 30 mm-thick end panels with a 6 mm bevel and a plain plinth, with no turned feet. Make the near rows about 15% darker in value so they frame the aisle. Then tilt the wide camera up about 1.5 deg, or move the first row back 0.6 m, so no bench end is cut by the bottom corners."
+   },
+   {
+    "priority": 3,
+    "camera": "dock",
+    "problem": "The f/2.8 look is not there: the chairs and panel are nearly sharp. The clerk's monitor is a dead grey slab that competes with Dawn.",
+    "fix": "Set cam.data.dof.use_dof = True, focus_object = Dawn's head bone or empty (focus about 1.7 m), aperture_fstop 2.0, lens 50 mm, so the chairs at about 6 m blur by roughly 8-12 px at 1280. Turn the monitor about 160 deg so only its dark back shows, or remove it. If it stays facing camera, give the screen a faint emission (strength 0.3, cool grey) with a 15 mm bezel at value 0.05. Shift the clerk's desk about 0.3 m right and 0.2 m back so the papers are not a hot spot near the frame's centre of weight."
+   },
+   {
+    "priority": 3,
+    "camera": "dock, wide",
+    "problem": "Dawn's top reads as a casual T-shirt only slightly darker than the skin, not as prison clothing. In the wide, her shirt is mid-grey, not the 'dark-shirted figure'. Her visible hand lies flat on a post knob, not palms-on-the-ledge.",
+    "fix": "Keep dawn_prison() but drop the garment tint to about 0.05-0.06 linear before FABRIC_VALUE, so the shirt is at least 2 stops below the skin in the graded frame. Repose with rigged.pose_figure: chest down about 8 deg, head down about 22 deg, both arms forward about 35 deg with elbows about 25 deg, wrists about 20 cm out from the body's centre, palms on the flat ledge (not the corner post), fingers curled 15 deg. Stand her about 8 cm behind the ledge. Check that both hands show from the dock camera and that neither forearm reads as coming out of her waist."
+   },
+   {
+    "priority": 4,
+    "camera": "wide",
+    "problem": "There is a stray diamond-shaped object on the upper-left wall between the windows. The aisle runner ends abruptly halfway up the aisle.",
+    "fix": "Find and delete the rotated object at about wall height 4 m between the two left windows. If it is meant as a speaker, rebuild it as a flush 0.25 x 0.35 x 0.12 m box aligned to the wall. Extend the runner from the back wall to the bar gates (one continuous strip, 1.0 m wide), or delete it."
+   },
+   {
+    "priority": 4,
+    "camera": "all",
+    "problem": "The materials are clean CG. There is no wear on the fascias, dock base or floor. The Tripo judge chairs show crumple blotches. The floor is a flat dark grey.",
+    "fix": "Add a 0.1 m dark skirting board (value 0.04, roughness 0.6) along the bench fascia, the dock plinth and the clerk's desk. Add a noise-driven roughness variation (0.45-0.65) and a faint darker kick band in the lowest 0.15 m of the fascias and the dock. Load the judge-chair props with val about 0.4 and rough_add 0.25 to kill the crumple highlights. Give the floor tiles a 3 mm grout groove and a roughness range of 0.35-0.55 so the dock light makes a soft sheen pool on the floor around the dock."
+   }
+  ]
+ },
+ "home": {
+  "round": 1,
+  "scores": {
+   "composition": 5.5,
+   "lighting": 5.5,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 5.5,
+   "cast": 6.5,
+   "story_read": 5.5,
+   "technical": 5
+  },
+  "pro_level": false,
+  "verdict": "Not at the bar yet. The kitchen comes closest. Lighting from the practicals works: the screen glow models Dawn's face and forearms, the warm under-cabinet strip rakes the subway tile, and the gooseneck faucet stands out against a cool window. It reads as \"a woman alone with an email at night\". It is let down by a bare showroom counter, a flat mottled navy backdrop in place of a night exterior, a pale blob and an upright pen cut by the bottom frame edge, the hard (not soft) laptop lid, and the under-cabinet lens bar, which at about 180/255 is the brightest thing in frame and pulls the eye to the top edge.\n\nThe two Ch 10 frames carry the film's ending and both fail to make the empty chair read cleanly.\n\nDINING: 51% of pixels sit at 5/255 or below, so the whole foot end, the near chairs and the left side crush to black. The top 40% is dead wall. Three chair-like silhouettes stack on the hero: the head chair, its spindle shadow on the end wall and a near side chair (chair_n2) whose back covers the head chair's legs and seat. The hero is only about 110 px tall and does not \"stand apart\". Plank seams crossed by blind stripes turn the tabletop into a checkerboard. The pendant shade bites a curved notch out of the top of the stripe patch on the end wall. The sideboard is cut at the right frame edge.\n\nCHAIR: d_haze at 0.018 puts the street spot's volumetric slat shafts between the lens and the chair. The frame reads as a double exposure through glass. A straight vertical streak (a volumetric shadow edge) runs from the top of the frame to the bottom at x≈667, through the seat. The chair's top rail almost coincides with its own wall shadow, so it reads as two chairs. The rug is a flat, edge-sharp, blue-grey sheet with no pile or thickness, and reads as glass or concrete. The Tripo chair's baked texture holds up badly in close-up: the seat looks like speckled stone and the rails are blotchy. Floor contact of the legs cannot be read.\n\nThere is no clipping (maximum 151–180/255). Denoiser blotching shows in the dark window and on the walls at 64 spp.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "chair",
+    "problem": "Haze veil: the street spot's volumetric slat shafts sit between the camera and the chair, so the chair, the floor and the table read as if seen through a striped glass sheet. A straight vertical volumetric shadow line crosses the whole frame at x≈667, through the seat.",
+    "fix": "In apply_camera, set the d_haze volume density per camera: chair 0.0 to 0.004 (or set bpy.data.objects['d_haze'].hide_render = True for 'chair'); dining keep about 0.012. After that, if the vertical line remains, find the end-window part casting it (a blind cord or ladder string on d_endwin) and either move the cord to the far jamb or set that object's visible_shadow = False."
+   },
+   {
+    "priority": 1,
+    "camera": "dining",
+    "problem": "The hero chair does not stand apart: chair_n2's dark back overlaps the head chair's seat and legs, and the head chair's spindle shadow sits right beside it on the end wall. Three overlapping chair silhouettes, and the hero is only about 15% of the frame height.",
+    "fix": "Move chair_n2 from (3.04, -0.7) to about (2.72, -0.58), and push all four side chairs in to |y| = 0.58 so their seats tuck under the top. Lower and tighten the camera: loc (1.35, -1.75, 1.38), aim (4.45, 0.05, 0.55), lens 30. Check that a clear gap of at least 60 px of lit wall shows between the head chair's back and any other chair."
+   },
+   {
+    "priority": 1,
+    "camera": "chair",
+    "problem": "The chair's top rail almost coincides with its own spindle shadow on the end wall (upper left), so it reads as a doubled chair. The table head is not soft as briefed, and the leg contact is unreadable.",
+    "fix": "View the end wall more edge-on so the chair-to-wall depth becomes lateral separation: loc about (4.25, 1.8, 1.08), aim (4.6, -0.25, 0.5), lens 32, f/2.8 with focus on fx_chair. That puts the table head (x 3.9) soft at the right and the chair's shadow clearly to its left on the wall. Optionally pull HEAD_CHAIR x to 4.35 so the gap to the wall grows to about 0.65 m. Add a weak contact AO: either a 0.3 x 0.3 m dark decal under each foot (alpha 0.25), or raise world AO / keep the floor rougher so shadows read."
+   },
+   {
+    "priority": 2,
+    "camera": "dining",
+    "problem": "Crushed: about 51% of the frame is at or below 5/255. The foot of the table, the near chairs, the radiator and the left wall are pure black. The top 40% of the frame is empty black wall.",
+    "fix": "Raise d_sky from 6 to about 16 W and street_side from 10000 to about 15000, or set the dining exposure from -1.15 to about -0.85 (maximum 151/255 leaves headroom). Target: the near table end and the foot chair at about 15–25/255 in the graded frame, with the stripes no brighter than about 200. Tilt the camera down (aim z 0.62 to 0.5) so the black upper wall drops out. Either reframe or move the sideboard so it is not cut at the right frame edge."
+   },
+   {
+    "priority": 2,
+    "camera": "dining, chair",
+    "problem": "The pendant shade's shadow bites a curved notch out of the top of the blind-stripe patch on the end wall (dining around (870–1000, 240–260), chair around (590–670, 60–85)). It reads as an unexplained shape.",
+    "fix": "Raise the pendant drop in home_set.dining from 0.86 to about 0.7 m, or move the pendant 0.2 m toward the foot, so the shade clears the street spot's cone. Re-check that the stripe patch's top edge is the window head's straight shadow."
+   },
+   {
+    "priority": 2,
+    "camera": "chair, dining",
+    "problem": "The rug reads as a flat blue-grey slab of glass or concrete with a razor edge and no thickness. The head chair's front legs straddle its edge.",
+    "fix": "Make d_rug 0.012 thick with a 0.004 bevel. In mt.rug, drop the value to about 0.07–0.09, roughness 0.92, no specular, and add a pile bump (noise scale about 900, strength 0.3, distance 0.001) plus a two-tone woven border band 8 cm wide. Either shrink the rug to 2.3 x 1.7 so the head chair (x 4.42) sits fully off it on the oak, or grow it so the chair sits fully on it."
+   },
+   {
+    "priority": 2,
+    "camera": "chair",
+    "problem": "The baked Tripo texture on chair_head fails in close-up: the seat looks like speckled grey stone and the back rails are blotchy reddish smears.",
+    "fix": "For chair_head only, replace the base colour with a procedural satin wood (reuse oak_floor's grain or mt.pbr with stretch (1, 18, 18), rgb about (0.07, 0.035, 0.02), rough 0.45–0.55, bump 0.1). Give the seat a slightly worn, lighter patch at its front edge (value +15%). Remove the specular speckle (lower rough_add noise; spec 0.3)."
+   },
+   {
+    "priority": 3,
+    "camera": "dining, chair",
+    "problem": "The dining tabletop's plank seams crossed by the blind stripes read as a checkerboard or tile grid, not wood.",
+    "fix": "In dining_table's tune_prop top_wood, cut the seam and plank contrast by about half (narrow the light/dark range to about (0.09, 0.045, 0.025) / (0.06, 0.03, 0.017)) and raise the grain frequency from 70 to about 110, so the stripes dominate and the planks read as a subtle grain."
+   },
+   {
+    "priority": 3,
+    "camera": "kitchen",
+    "problem": "The set dressing is too sparse for a family home: the counters are bare, there is no fridge, no dish rack, no towel, and the window shows a flat mottled navy plane like a painted backdrop.",
+    "fix": "Add 4–6 restrained items to the counter run: a dish rack with two plates by the sink, a kettle on the range, a paper-towel holder, a fruit bowl, and a dish towel over the oven handle (simple cloth-sim or bent box). Behind the window glass, at y + 3.5 m, add a dark brick wall (painted brick 0.05 value) with one dim warm 0.6 x 0.9 m window and a faint cool alley light, in place of the flat noise."
+   },
+   {
+    "priority": 3,
+    "camera": "kitchen",
+    "problem": "The under-cabinet lens bar is the brightest element in frame (about 180/255 against about 150 on her face) and leads the eye to the top edge. The bottom edge carries an unreadable pale blob (the envelopes) and an upright black stick (the pen) cut by the frame.",
+    "fix": "Cut uc_lens emission from 9 to about 3 (keep the k_undercab area light at 3.2), or raise its y so the camera does not see the lens. Move the envelopes to about (lx - 0.36, ly + 0.08) so they sit wholly in frame beside the mug, with paper value about 0.35 and warm. Turn the pen to lie parallel to the frame's bottom edge, or remove it."
+   },
+   {
+    "priority": 3,
+    "camera": "kitchen",
+    "problem": "Small cast issues. Her right hand sits flat with straight, spread fingers like a mitten on the deck. The bow of her head is slight, so 'reading' depends on the light alone. The laptop lid in the right foreground is nearly sharp, not soft.",
+    "fix": "Curl the right hand's fingers 18–25 degrees, with the index alone resting at the trackpad and the thumb tucked. Add 8–12 degrees of head-down pitch via pose_figure head. Open the lens to f/1.8, or move the focus distance onto her eye so the lid (about 0.5 m nearer) goes clearly soft."
+   },
+   {
+    "priority": 4,
+    "camera": "all",
+    "problem": "Denoiser blotching in large dark gradients (the kitchen window, the right walls, the dining wall) at 64 spp; the grain over it does not hide the low-frequency blobs.",
+    "fix": "Render finals at --spp 128 for these dark frames (or set adaptive threshold 0.005), and keep sample_clamp_indirect at 3. If the time budget forbids that, denoise with albedo and normal passes (prefilter ACCURATE) before the grade adds grain."
+   }
+  ]
+ },
+ "void_stage": {
+  "round": 1,
+  "scores": {
+   "composition": 6,
+   "lighting": 5,
+   "materials": 4,
+   "set_dressing": 6,
+   "grounding_scale": 6,
+   "cast": 3,
+   "story_read": 6,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Not pro level yet. The staging idea is right: the cell pull-back and the two bags alone in the pool are the right images for this film. The execution fails on the one thing a viewer sees first. Dawn's prison greys are broken. In dawn and dawn_high the stone body shows through female_casualsuit01 almost everywhere. Only a dark V at the neck, a dark band under the bust, a dark triangle at the crotch and the sleeve hems read as cloth, so she looks like a near-naked mannequin in a leotard, not a prisoner in flat charcoal. There is also a white speck at her mouth in both frames (teeth or tongue showing through) and a clawed hand at frame left. That alone takes cast to 3, and the Ch 07 beat ('the sentence') turns into something odd and slightly uncomfortable. The lighting is clean, with no clipping and true blacks. But the dawn and bags pools are lit evenly from centre to edge, with no hotspot and no texture, so the floor reads as a flat CG disc. In dawn the haze beam reads as a soft grey curtain with vertical edges, not light falling. cell_close is the best frame, but it is lit like an ordinary evenly lit room, not a box under one top spot. The Tripo bunk's steel rails look like crumpled tinfoil with chrome reflections. The floor's 'wear' is cloudy noise blotches. The barred patch on the floor has 4 panes and 3 thick bars, but the window it comes from has about 7 bars and a mesh. The 20 mm camera is tilted down, so the verticals lean. A big flat right wall fills about a fifth of the frame. In cell_far the box reads more as a lit doorway cut into a black wall than a small box floating in the void, because its outer walls merge with the black. Two pale crescents of spill sit on the void floor either side of it. bags is the strongest image and nearly there. The case and duffel overlap into one black mass, their lit tops are too faint to separate them, and the floor is featureless grey. Next to the reference Blender stills (the koi pond finale's material density, the cafe racer's crisp beveled metal), these frames are below the bar on materials and on the figure.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "dawn, dawn_high",
+    "problem": "The prison suit is effectively inside the body. The stone skin pokes through female_casualsuit01 over the shoulders, chest, belly and both full legs. Only the V-neck, the bust band, the crotch and the sleeve hems show dark cloth, so Dawn reads as a nude mannequin in a leotard.",
+    "fix": "In void_stage.dawn(), after people.dawn_prison() and after rigged.pose_figure(), confirm the garment object 'DawnPrison_female_casualsuit01' has the same Armature modifier and rig as the body and is evaluated after posing. Then hide the body under the garment. Use the MPFB delete/hide vertex group, or build one: for every body vertex within 0.02 m of the garment (BVHTree.find_nearest from the evaluated garment mesh), add it to a group 'under_suit' and add a MASK modifier (invert) on the body, keeping hands, neck, head and ankles. As a belt-and-braces step, add a Displace modifier on the garment (strength 0.004-0.006 m, direction NORMAL, mid_level 0) before Subdivision. Re-render and check that the trousers run to the ankles and the T-shirt covers the shoulders and belly, with no grey skin islands, from both dawn cameras."
+   },
+   {
+    "priority": 1,
+    "camera": "dawn, dawn_high",
+    "problem": "A bright white speck at the mouth in both frames (teeth, tongue or eye helper geometry showing through the stone face), and the frame-left hand bent at the wrist with clawed, splayed fingers.",
+    "fix": "Hide or delete Dawn's teeth, tongue and eyebrow helper meshes (or give them the stone material at roughness 0.9 and specular 0). Lower POSE['fingers'] from 40 to about 15-18. Set the l_arm and r_arm elbow to about 8-10 so the hands hang just in front of the outer thigh with the wrists straight. Recheck the hand silhouettes in the dawn frame at 100 %."
+   },
+   {
+    "priority": 2,
+    "camera": "cell_close",
+    "problem": "The Tripo bunk's steel rails and slats look like crumpled foil with mirror-chrome reflections, and the most foreground prop in the shot carries the wobble.",
+    "fix": "In the bunk() finish, give every bunk material Metallic 0, Base Color painted institutional grey-green or off-white at value about 0.25-0.35, Roughness 0.55-0.65, Specular IOR Level 0.3, plus a fine noise bump (scale 300, strength 0.1) for paint orange-peel. Painted steel hides the facet wobble that chrome exaggerates. Better still, build the frame in Python (box/cyl with 4 mm bevels: 40 mm square posts, 25 mm tube rails, flat slat deck) and keep only the Tripo mattress and bedding."
+   },
+   {
+    "priority": 2,
+    "camera": "cell_close",
+    "problem": "The barred light patch on the floor has 4 panes and 3 thick bars, but the window shows about 7 thin bars and a mesh. Its edges are razor sharp with no shaft through the haze, and the floor's 'wear' is mottled cloud noise.",
+    "fix": "Cast the patch from the real window geometry. Put a sun (or a 0.3 m area light) outside the back wall behind the slot, angle about 35-45 degrees down toward the camera, and use the slot's actual bar objects as the occluders. Remove any separate gobo or fake patch. Give the sun an angle of about 1.5 degrees for a slight penumbra and raise cell haze locally (a 1x1x3 m haze box along the path, density 0.02) so a faint shaft links window and patch. Replace the floor noise with painted-concrete wear: a large-scale Voronoi/Musgrave mask driving traffic paths (lighter, rougher strips from door to bunk to toilet), scuffs as thin dark streaks, and roughness 0.6 rising to 0.8 in worn areas. Keep the base value even."
+   },
+   {
+    "priority": 2,
+    "camera": "cell_close",
+    "problem": "The cell is lit like an ordinary evenly lit room (raw mean 98, walls uniformly mid grey) rather than a box under one hard top light in the void. The 20 mm camera is tilted down so the bunk posts and wall verticals lean, and the frame-right wall is a large flat grey slab.",
+    "fix": "Lower the cell spot's blend from 0.45 to about 0.25 and remove any secondary fill or bounce. Let the walls fall from about 0.6 at floor level to about 0.1 at the top course, and let the window and patch be the brightest things after the floor. Aim exposure so the raw mean lands near 60-70. Level the camera (aim z equal to camera z, 1.4) and frame down with shift_y of about -0.12 to -0.18 so verticals stay vertical. Move the camera about 0.3 m left (x 0.55) or yaw 5 degrees left so the right wall takes no more than about 12 % of frame width. Optionally add a bunk-side detail on that wall (a steel shelf with a folded blanket and a plastic cup) so it is not an empty slab."
+   },
+   {
+    "priority": 3,
+    "camera": "cell_far",
+    "problem": "Two pale crescents of spot spill lie on the void floor left and right of the box, and a lit strip sits in front of it. The box's outer walls merge with the black, so it reads as a lit doorway in a wall rather than a small box in the void.",
+    "fix": "Shrink the cell spot's pool so the cone lands inside the walls (pool about 1.9-2.0 m, or move the lamp to fwd 0.0). Or give the void floor outside a radius of about 2.2 m around the cell a near-black value (0.01) so stray spill dies. Give the box a readable silhouette: let the spot graze the top edges of all three walls (a 2-3 cm bright line along each wall top), and add a very faint back-haze or a 0.5 % rim from a weak light far behind the box so its outer corners separate from the black. Keep the beam as is. Move the camera to x about 2.5 so less of the right wall's black outer face covers the interior."
+   },
+   {
+    "priority": 3,
+    "camera": "bags",
+    "problem": "The case and duffel overlap into one black mass. Their lit tops and handles barely read, and the floor pool is a featureless grey disc.",
+    "fix": "Open a gap: CASE to about (-0.32, 0.10, -58) and DUFFEL to about (0.30, -0.18, 17), so about 8-12 cm of lit floor shows between their silhouettes from the camera. Move the bags spot fwd from 0.55 to about 0.2 and raise its watts about 25 %, so the tops, the telescoping handle and the duffel's straps and zips catch a clear highlight (raw value about 0.35-0.45 on the tops) while the sides stay dark. Drop the camera to z about 0.55 so the bags rise against the black above the pool edge, which makes them the image's monuments."
+   },
+   {
+    "priority": 3,
+    "camera": "dawn, dawn_high, bags",
+    "problem": "The pools are lit evenly to a perfect hard ellipse edge with no hotspot and no floor texture, so they read as a CG disc. In dawn the haze beam is a soft grey column with vertical edges, like a curtain behind her.",
+    "fix": "Give the spots a falloff: spot_blend 0.25-0.3 and, through the light's node tree or an IES-like radial ramp, about 30 % brighter at centre than at the edge. Give the floor hardboard real texture: seams every 1.22 m with 2 mm dark grooves, slight per-board value variation (plus or minus 4 %), scuffs and tape residue marks at very low contrast, roughness 0.55-0.75. For the dawn beam, raise the lamp to about 9-10 m and narrow it so the cone tapers visibly above her head, and keep haze at 0.010 but limit it to a cylinder about 1.6 m in radius around the cone so the background behind her stays black rather than lit grey."
+   },
+   {
+    "priority": 4,
+    "camera": "dawn_high",
+    "problem": "From high up the pose reads as stooping or about to sit: knees bent, hips back, shoulders hunched forward. The 'slightly bowed head' becomes a forward collapse of the whole figure.",
+    "fix": "Set chest forward to 2-3 (from 6) and neck to 4 (from 8), and keep head down at about 18. Make sure both legs are straight (no knee flex from the rig defaults), with the weight on one leg and that knee locked. Check from dawn_high that the spine stays vertical and only the head tilts."
+   },
+   {
+    "priority": 4,
+    "camera": "cell_close",
+    "problem": "Set dressing is generic. Nothing says twelve years have passed.",
+    "fix": "Add two or three restrained signs of long occupancy, all without text: a thin folded towel over the bunk rail, a plastic cup and a toothbrush on the basin unit's shelf, a small stack of plain-covered books or papers at the foot of the lower bunk, and a slightly sagging, creased blanket (a cloth-shaped or displaced plane, not a box). Keep them dark and low contrast so the window stays the lead."
+   }
+  ]
+ },
+ "hearing_room": {
+  "round": 1,
+  "scores": {
+   "composition": 5.5,
+   "lighting": 4.5,
+   "materials": 4.5,
+   "set_dressing": 5,
+   "grounding_scale": 5.5,
+   "cast": 4,
+   "story_read": 6,
+   "technical": 5
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet. The wide works as a concept: one small figure in the only pool of light, facing two tiers of empty chairs. It is the strongest frame and it carries the beat. The dais frame is the second strongest: leather chairs and the pleated, grazed drape are the best materials in the set. The rest falls short of the reference films. (1) HANDS is unusable as delivered. Graded mean luminance is 73 against 13-26 for the other three frames. The 'charcoal' suit renders pale grey (sleeve about 110-125 graded, skin about 195, while the same suit in WITNESS is about 40), which breaks continuity. The two hands interpenetrate: the left hand's fingers pass through the right hand's fingers. The felt is a saturated flat blue plane. (2) WITNESS: the hands are not folded. Both lie splayed on the paper and the right one is a raised claw, the exact 'hovering/splayed' fault in the brief's lessons. Tim reads as an androgynous 25-year-old with a ribbed swim-cap hairpiece, not a man of 55. Shirt, tie and jacket share one value, so he looks like he wears a black shirt. The foreground holds a big flat grey nameplate slab cut by the bottom edge, and a black opaque 'water glass' (a shot glass on a cut-off black block) also cut by the bottom edge. The microphone stands about 0.5 m to his side instead of in front of his mouth. The background statue is a looming ghost head beside the mic head (the tangency makes it read as horror, not as public). (3) WIDE: 49% of pixels are at or below 3/255 after the grade. The left third and the whole foreground are dead black, the side walls and wainscot that would tell the room do not read, and the room is a void beyond the dais. The two broadcast lights are bare white grid tiles floating in the black, aimed at the lens, with no visible yoke or bar. An unexplained small bright square sits at left (x~145, y~297). The two 'still statues' are invisible at normal viewing. (4) DAIS: the walnut is warm-ish in the raw (about 52/47/43) but the grade turns it into flat grey cardboard with only faint grain. The lower fascia panels are lit as evenly as the chairs, so the bottom 35% of the frame is a flat grey slab with no falloff. The curve barely reads, and the right third is black. The 'low angle' sits roughly at seated eye height. Thin bright hairlines appear on the drape's pleat crests in WIDE and DAIS. Microphones are small and identical. The set is restrained and correctly free of text and emblems, but dressing is thin for a hearing room: there is no press table, no staff seats or side tables, and the timer box is barely visible. Paper is one weightless sheet. In short: the wide is about 6.5, dais about 5.5, witness about 4.5, hands about 3.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "hands",
+    "problem": "The frame is overexposed by about 1.5 stops against the stage (graded mean 73 against 13-26 for the others; paper about 200). The charcoal suit sleeve reads pale grey (about 115 graded) next to skin about 195, while the same suit reads about 40 in WITNESS. This breaks continuity.",
+    "fix": "Re-render with the TRIMS already written (tv_key_light 0.3, tv_fill_light 0.3, dl_table_spot 0.4) and add an extra -1.0 EV for this camera, either per camera in apply_camera via sc.view_settings.exposure = EXPOSURE - 1.0 or by trimming dl_table to 0.35. Target graded: paper peak 150-170, sleeve 30-45, felt 15-25 and nearly unsaturated, mean 25-35. Check that the sleeve is clearly darker than the hand. If it still lifts, set the jacket material's Specular IOR Level to 0.2 and Roughness to 0.85, which stops the soft overhead key from greying it."
+   },
+   {
+    "priority": 1,
+    "camera": "hands, witness",
+    "problem": "The hands are not folded. In HANDS the left hand's fingers interpenetrate the right hand's. In WITNESS both hands lie splayed with the fingers spread, and the right hand is lifted as a claw on its fingertips (the lesson the brief calls out explicitly).",
+    "fix": "In hands_folded(), lay the right hand flat on the papers (rest_on R = TOP + 0.003 is fine) and put the left hand over the right hand's BACK rather than its fingers: shift the L wrist target about 3 cm toward the R wrist and raise rest_on L to TOP + 0.035. Set the fingers curl to about 15-20 degrees (the current 'fingers': 40 curls them into claws) and give the thumbs 10 degrees. After solving, run a distance check of the L hand's vertices against the R hand's mesh (BVHTree.FromObject); if any vertex lies inside, raise wrist.z on L in 3 mm steps. Verify from both the witness and hands cameras."
+   },
+   {
+    "priority": 1,
+    "camera": "wide",
+    "problem": "49% of the graded frame is at or below 3/255. The left third and the public rows are dead black, the walnut wainscot, pilasters and side walls never read, so the room is a void. The two seated statues cannot be seen.",
+    "fix": "Light the room with its own practicals instead of fill. Turn on the existing wall sconces on both side walls at roughly 15-25 W point lights each, with a 0.15 m radius, warm-neutral (1.0, 0.92, 0.82), so each throws a scallop onto the plaster above the wainscot. Raise dl_pub_-2.4_-4.8 and dl_pub_2.4_-4.8 to about 160 W with size_deg 60, so the two statues each sit in a faint cone (target their heads at about 25-35 graded). Add an aisle-floor graze. Lift the grade's black point for this stage by about 0.02 so the shadow floor sits at 6-10/255 rather than 0. Target: under 20% of pixels at or below 3."
+   },
+   {
+    "priority": 2,
+    "camera": "witness",
+    "problem": "There is a flat grey nameplate slab in the foreground, cut by the bottom edge. The 'water glass' is an opaque black tumbler on a black block, also cut. Both are the 'big flat slab in the foreground' and 'cut at the frame edge' faults.",
+    "fix": "Move the nameplate holder 0.25 m toward Tim's right (+x in his frame) so it sits whole in the lower right third with 5% headroom from the bottom edge, or drop it from this camera. Give the plate the walnut_h material with a 3 mm bevel, at a value of about 0.05, not mid grey. For the tumbler: Principled with Transmission 1.0, IOR 1.5, Roughness 0.02, base white, plus an inner water volume at IOR 1.33 filled to 60%, standing on a felt coaster or directly on the cloth. Move it so the whole glass and its contact shadow are in frame, or move it out entirely. Raise the witness camera by 0.1 m or tilt it 2 degrees down so nothing is cut."
+   },
+   {
+    "priority": 2,
+    "camera": "witness, wide",
+    "problem": "Tim does not read as a 55-year-old father. The face is young and androgynous, the hair is a ribbed cap, and shirt, tie and jacket share one value (a black-shirt look). The mic sits beside him, not in front of his mouth, so he is not 'speaking into the microphone'.",
+    "fix": "Use people.man's age parameter at about 0.65-0.7 and weight about 0.6 for a heavier jaw and neck, and the short sculpted hair with a less regular groove pattern (or smooth it with Subdivision plus a noise bump at 0.002 m). Tint the shirt pale (0.55, 0.57, 0.6) × FABRIC_VALUE and keep the tie at 0.06, so the V of the collar separates from the jacket. Move the gooseneck mic to his front-left, base about 0.25 m from the table edge and 0.12 m off his centre line, with the head angled to about 0.3 m from his mouth. Head pose: chin up 5 degrees toward the dais, eyes aimed about 15 degrees above the lens."
+   },
+   {
+    "priority": 2,
+    "camera": "witness",
+    "problem": "The background statue's head floats just beside the mic head (a tangency). In the graded frame only its lit face survives, so it reads as a ghost looming over Tim's shoulder.",
+    "fix": "Move that Public figure one seat further from the witness camera's axis (about 1.2 m along x) so its head clears the mic by at least 80 px. Either light its whole body with the dl_pub can, so it reads as a seated person (torso about 15-20 graded), or drop it to complete darkness. Do not leave a lone half-lit face."
+   },
+   {
+    "priority": 3,
+    "camera": "dais, wide",
+    "problem": "The walnut fascia reads as flat grey MDF after the grade (raw about 52/47/43, graded about 40/44/45). In DAIS the lower panels get the same light as the chairs, leaving the bottom third a flat grey slab with no falloff.",
+    "fix": "In materials(), darken walnut to about (0.035, 0.02, 0.011), raise veneer contrast to 0.55 and use coat 0.5 with coat_roughness 0.15. This gives the panels a dark lacquer with a grazing highlight on the bevels instead of grey. Narrow the tier cans dl_t0_* to size_deg 32 with blend 0.5 and aim them at the desk tops (z about zd), so the fascia falls off from the cap down to the floor rail: cap about 60 graded, bottom rail 10-15. Optionally add a faint rim along the caps."
+   },
+   {
+    "priority": 3,
+    "camera": "dais",
+    "problem": "The 'low angle' is near seated eye height, the curve hardly reads, the right third is black, and the lower panels fill the frame.",
+    "fix": "Lower the camera to z 0.55-0.65, move it 0.6 m further left (x about -1.65) and aim at (1.0, 5.4, 2.3) with lens 28. The fascia then sweeps away in a visible arc from the left foreground and the upper tier and drape take the upper half. Lose the black right third by bringing the dais end and its endcap into frame, or let the curve exit right."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "The broadcast lights are bare white grid squares floating in the dark, facing the lens, with no fitting or bar visible. An unexplained small bright square sits at left (about x 145, y 297).",
+    "fix": "Build each tv_light as a fixture: a 0.6 × 0.45 m black housing about 0.12 m deep with barn doors, a yoke and a 0.5 m pipe drop to a visible black ceiling bar, all bevelled. Tilt it so its emissive face points at the witness table, not the camera, so the lens sees housing and edge glow rather than a lit white face. Keep the emissive face visibility to camera on but its strength at about 3-5 so it reads at about 200 graded, not 255. Identify the small square at left: either remove it, or make it a blank door-exit pictogram box with a visible frame and a spill light under it."
+   },
+   {
+    "priority": 4,
+    "camera": "hands, witness",
+    "problem": "Paper is one weightless sheet with no thickness. The felt is a flat CG plane with no weave and no fall at the edge. The table reads as a blue slab.",
+    "fix": "Stack 3-4 sheets of 0.1 mm thickness with 2-6 mm offsets and 1-3 degree rotations, each with a slight curl (Simple Deform bend 2-4 degrees). Make the paper warm off-white (0.78, 0.76, 0.7), roughness 0.85, with a faint fibre noise bump at 0.0003 m. For the felt: add a Sheen of 0.4 tinted pale blue, a Voronoi or noise bump at scale 800 and strength 0.08 for the nap, and drop its saturation about 30% (base about (0.02, 0.026, 0.045)) so the grade does not leave a saturated blue sheet. Round the cloth's top edge over with a visible 15-20 mm radius."
+   },
+   {
+    "priority": 4,
+    "camera": "wide, dais",
+    "problem": "Thin bright hairlines run on the drape's pleat crests, on the upper-left of the drape in WIDE and along the top of the drape in DAIS. The washer catches the sharp crests as specular lines.",
+    "fix": "Set the velour material's Specular IOR Level to about 0.15 and Roughness to 0.9 (or use sheen only). Add a Subdivision level and smooth the pleat crests, or widen the washer's spread so it grazes without catching every crest. Check at 1280 that no single-pixel vertical lines remain."
+   },
+   {
+    "priority": 5,
+    "camera": "wide",
+    "problem": "The set dressing is thin for a hearing room and only the dais tells the place.",
+    "fix": "Add a low press or staff table at the side of the well with two dark chairs and a closed laptop or blank folders, a clerk's desk below the lower tier centre, and a camera tripod silhouette at the back of the public rows (no brand). Keep all of them dim and secondary, about 10-20 graded."
+   }
+  ]
+ },
+ "visiting_room": {
+  "round": 1,
+  "scores": {
+   "composition": 6,
+   "lighting": 5,
+   "materials": 4,
+   "set_dressing": 4,
+   "grounding_scale": 6,
+   "cast": 5,
+   "story_read": 6,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet (mean 5.25). The glass shot is the strongest frame and comes closest: a good over-the-shoulder, Tim's ghost reflection between the two of them carries the chapter, and the armoured cord loops properly to the steel box. The wide has sound camera grammar: from the back and a little high, with the baffles leading in. But its brightest large area is not the cast. The spotlight-shaped scallops on the block wall above the glass average 173/255 in the raw frame, against 126 for Dawn's face. At least three fitting lenses burn near white (254, 244, 255), although the brief says only one booth's fittings burn. A fifth fitting is cut by the top edge of the frame. Hard elliptical scallops come from downlights, not caged linear fluorescents, so the light also reads as the wrong kind of fitting. 27% of the graded wide is pure black, which swallows the left wall and floor. The empty shot is the weakest. Both phones are the Tripo prop, and each one's cord hangs from the handset and ends in mid-air without reaching the box. The security glass, the subject of the whole chapter, does not read at all: no smudges, no reflection, no edge, so the pane looks like an open hatch. About 60% of the frame is flat grey slab and dark void, and the brightest pixel in the graded frame is 164, so nothing pops. Materials across the stage are untextured painted-CG grey: baffles and counters with no orange peel, no edge wear, no scuffs, no fixings, no grime. Dawn's \"prison grey\" reads as a black body-paint T-shirt with no collar, hem or weave. She does not read as older or worn. Her fingers rest on her temple over the handset instead of gripping it. Tim's required hand flat on the counter is visible in no frame, and from behind his head is a featureless bald egg. The inmates' side behind Dawn is an empty dark wall, so the far room says nothing about prison.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "empty",
+    "problem": "Both phones in the empty booth (and the phones on hooks in the other booths in the wide) are the Tripo visiting-phone prop. Its armoured cord hangs from the bottom of the handset and ends in mid-air, about 15 cm below the box, without going into it. In the frame where the phone is the subject, this is a clear prop error.",
+    "fix": "In visiting_room.py booths(), replace st.phone_prop on booth EMPTY (both sides) with the same build as the occupied booth: st.phone_box(name, x_face, y, facing), then st.handset() placed on the box's cradle hook (handset vertical, mouthpiece down, earpiece in the cradle), then st.cord(name, exit_point, handset_cord_world, b_dir=(0,0,-1), sag=0.12). The cord should leave the box's ferrule, drop 10-15 cm in a U and rise into the mouthpiece strain relief. Do the same for every phone visible in the wide (booths 1, 2, 4 and 5), or at least shorten the prop's dangling cord mesh by deleting the loose verts below the handset and adding a curve_tube from the handset bottom into the box underside."
+   },
+   {
+    "priority": 2,
+    "camera": "empty",
+    "problem": "The security glass is invisible. There are no prints, no reflection, no edge and no thickness, so the pane reads as an open hatch, and the frame loses the chapter's subject (the glass between them).",
+    "fix": "Make the glass catch light. (a) Add a grazing area light on the visitors' side at the top of the empty booth's pane: size (0.9, 0.04), about 3 cm in front of the glass, aimed down the pane at about 80 degrees from its normal, spread 40, 15-30 W, glossy on and camera off, so the palm and forehead marks in smudge_zone light up as milky film. (b) For this camera only, raise security_glass refl from 0.035 to about 0.07 and film_gain from 2.6 to 4-5. (c) Put one bright thing in the reflection path: lower the camera to z 1.3 and tilt it up 3-4 degrees so the lit visitors' fitting fitv2 (or a dim emissive strip on the back wall behind the camera at about 2.0 m) reflects as a soft streak in the upper third of the pane. (d) Show the pane's cut edge: inset a 1.5 mm glass_edge strip at the frame rebate on the visible left and bottom edges, so the 20 mm thickness reads as a green-grey line."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "The lit island is the wall, not the cast. The spotlight-shaped scallops on the block wall above the glass (raw mean 173) are brighter than Dawn's face (126). Three or four fitting lenses near clipping pull the eye to the ceiling, the brief asks that only one booth's fittings burn, and the fifth fitting (x 930-1030) is cut by the top edge of the frame.",
+    "fix": "In visiting_room_set.py, set LEVEL_V = [0, 0, 0, 1.0, 0, 0] and LEVEL_I = [0, 0.03, 0, 1.0, 0, 0] (or apply a 'wide' TRIMS entry that multiplies the other fitv/fiti by 0). Check that the lens glow (mt.glow and the To Min/To Max range) really scales with level: lenses at level 0.06-0.2 currently render at 244-254. Kill the scallops: widen fitv*_down spread from 100 to 150-160 and make it longer and thinner like a linear tube (size (L-0.05, 0.04)); move the fittings 0.25-0.35 m further from the partition (FIT_Y), or add a 6 cm deep enamel side lip on the partition side of the fitting body so the wall above the glass is cut off at the top. Aim for the wall above the occupied booth at about 0.6 times Dawn's face value. Then tilt the wide camera aim down about 0.08 m in z, or pan it, so the fifth fitting falls fully out of frame or fully into it."
+   },
+   {
+    "priority": 4,
+    "camera": "glass",
+    "problem": "Dawn's 'prison grey' reads as a black, seamless body-paint T-shirt next to bare stone arms, and nothing in her reads as twelve years inside. Her fingers rest on her temple above the handset, so the handset floats in front of the palm without being gripped, earpiece at the temple and mouthpiece at the jaw.",
+    "fix": "Lift the uniform's tint in the stage (multiply the garment by FABRIC_VALUE as per the brief) so it lands near 0.16-0.2 linear before grading: a clear mid-dark grey that still sits below the 0.5 stone. Add matt_cloth with bump 0.35 and a fine weave texture, so the fabric shows a weave and folds. If dawn_prison allows a long-sleeve top or a jacket with a collar, use it; a short-sleeve T-shirt reads as gym wear. For age and weariness, pose the chest about 6 degrees down and the shoulders slightly forward, with the head 4-5 degrees down. Re-solve phone_hand: lower the handset 3-4 cm so the earpiece covers the ear canal and the mouthpiece sits at the corner of the mouth; wrap the four fingers around the handle with _curl 55-70 degrees and the thumb on the inner face, so the hand holds the handset instead of touching the head."
+   },
+   {
+    "priority": 5,
+    "camera": "glass",
+    "problem": "Tim's required hand flat on the counter appears in no frame, and his head (the large foreground mass in the glass shot) is a smooth bald egg with no hair, ear detail or collar, which reads as a mannequin blank rather than a 58-year-old man.",
+    "fix": "Pose Tim's free (left) hand with rest_hand on the counter about 22-25 cm to the left of his body centre and 10-15 cm from the counter edge, fingers curled 14 degrees. Check that it shows in the wide (about x 700-740, y 470) and enters the lower right of the glass frame. Give Tim a sculpted short hair cap through sculpt_hair (receding, about 8 mm proud, value about 0.35 of the skin), and let the suit collar and shirt collar show at the bottom of his head in the glass shot, so the dark mass has a readable edge."
+   },
+   {
+    "priority": 6,
+    "camera": "all",
+    "problem": "Materials read as untextured CG grey. The painted-steel baffles, counters, sills and frames are uniform, with no orange peel, no edge wear, no fixings and no grime. The counter is a clean flat slab, unlike a real visiting booth after years of elbows and keys.",
+    "fix": "In visiting_room_mats.py, give the baffle and frame paint: an orange-peel bump (noise scale about 400, strength 0.04); edge wear driven by Pointiness or AO (bevel width about 3 mm) toward lighter bare steel at a mask of 0.1-0.15; a grime gradient over the bottom 25 cm (value times 0.8); and roughness varying 0.45-0.6. Add 6 mm pan-head screws along each baffle's frame flange every 0.3 m, and a 20 mm vertical seam where the baffle meets the counter. Give the counter top a laminate with fine scratches (wave or noise streaks along x), a worn darker patch 30x20 cm in front of each phone, a chipped bullnose edge and a steel nosing strip at the front, 2 mm proud."
+   },
+   {
+    "priority": 7,
+    "camera": "glass",
+    "problem": "Tim's reflection in the glass is blotchy and mottled (denoiser speckle in the low-light reflection), and the inmates' side behind Dawn is an empty dark wall with one horizontal band, so the shot has no depth and says nothing about the prison.",
+    "fix": "Render the glass camera at spp 128 or more, or reduce haze density on the inmates' side (the haze volume spans the whole room: split it, or set density 0 for this camera), so the reflection comes out clean. Raise bounce_Tim slightly and keep refl as it is, so the ghost is smooth rather than grainy. Dress the inmates' back wall about 2.5-3 m behind Dawn: a steel door with a small wired-glass vision panel glowing dim cool (glow_s about 2), a blank rules panel 0.6x0.8 m, and a CCTV dome high on the left. Keep everything soft at f/2.8 so it reads as an institution without competing with her face."
+   },
+   {
+    "priority": 8,
+    "camera": "empty",
+    "problem": "The composition is about 60% flat grey slab and dark void. The far phone sits in shadow, though the brief has it in the light of the far side. Max graded value is 164, so there is no highlight anywhere and nothing draws the eye to the subject phone.",
+    "fix": "Move the camera closer and lower: loc about (BX[EMPTY]-0.15, -1.0, 1.28), lens 40, aimed so the near phone fills the right third and the glass frame runs as a diagonal toward the left. Put a pool on the far phone: in TRIMS['empty'], add a narrow area light (0.3x0.1, 40-60 W, spread 70) over the inmates' counter 0.4 m above the far phone, so the far phone and the inmates' sill read at about 2x the visitors' side. Let fitv2 rake the near phone box from above (a small area light 0.2x0.05, 8-12 W, 0.4 m above it) so the steel box's top edge and the handset crown reach about 200/255 in the raw frame."
+   },
+   {
+    "priority": 9,
+    "camera": "wide",
+    "problem": "27% of the graded wide frame is at or below 5/255. The left wall's block coursing, the bin at the left edge and the bottom-left floor are crushed to black, although the brief asks that the walls carrying the place stay readable in shadow.",
+    "fix": "Give the left of the room a faint motivated source: turn fitback0 (at x -1.8) on at level 0.03-0.05 with its down spread 150, or raise vdoor_spill from 5 to 10 W, so the left wall's mortar lines sit around 12-18/255 after the grade. Alternatively, lift the shadow floor in the wide grade by about 0.01."
+   },
+   {
+    "priority": 10,
+    "camera": "wide",
+    "problem": "Set dressing is sparse for an institution: only six booths, chairs and phones. Nothing on the visitors' side tells you it is a prison visiting room beyond the booths themselves (no rules panel, no seating number plates, no floor markings), and the far right booth's glass shows only a dark smear.",
+    "fix": "Add restrained, text-free dressing. A blank laminated rules panel (0.5x0.7 m, matt off-white, 4 screws) on the block wall between booths 2 and 3, above the glass line at z 2.2. Yellow-grey floor tape lines (50 mm wide, matt, slightly worn) 0.3 m behind the chairs, marking a waiting line. A blank pictogram plate (no-phone symbol only, as a simple geometric icon, or leave it blank) above each phone box. A steel wall clock (no numerals, just tick marks) high on the left wall. Keep everything dark and out of the lit island."
+   }
+  ]
+ },
+ "leather_market": {
+  "round": 1,
+  "scores": {
+   "composition": 5,
+   "lighting": 5,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 6,
+   "cast": 4,
+   "story_read": 4,
+   "technical": 6
+  },
+  "pro_level": false,
+  "verdict": "Not at a fern bar yet. The stall frame is the only one that works: a believable wall of bags, a bare tube and Dawn as a small dark figure facing it. Even that frame has a product-catalogue grid of pastel bags and a big flat grey counter slab filling the lower right. The wide has good bones: a long shuttered lane, wet concrete and reflections, and the shutters are well modelled. But 53% of the graded frame sits below 5/255, with dead black bands at the left 18% and right 15%. The lit stall is not the brightest thing in the lane (the foreground batten at top right competes with it). Most important, the beat does not read: no bag is visible, there is no stallholder, and Dawn stands apart in the lane facing the camera with her hands splayed instead of watching the handover. The puddle edges are blotchy camouflage noise, not water. The purchase close-up is the weakest. Two pale stone hands lie mirror-symmetric on a lumpy black duffel that fills 60% of the frame, so nothing pushes and nothing takes. The camera is near level, not looking down. The foreground holds an unexplained flat dark slab (it reads as a tablet) and a 'tape roll' that reads as a candle or a cheese wheel. The lighting is flat overhead fill with no rake on the bag. The renders are technically clean: no clipping, low noise, no fireflies. Means: about 5. No legible text or brands seen.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "purchase",
+    "problem": "Hands are mirror images: same height, same flat pose, same value, both resting on the top. There is no push and no take, so the transaction does not read and looks staged.",
+    "fix": "In pose_buy, break the symmetry. Stallholder (L hand): put the heel of the palm against the bag's far END face, not the top. Wrist target about BX+0.40 at bag mid-height (bag_top-0.12), wrist dorsiflexed about 30 deg, fingers spread and curl 6, chest lean 18 deg toward the organiser, so the hand reads as pushing. Organiser (R hand): close it around the strap. Raise the strap loop 4-6 cm off the bag (edit the hero bag's strap verts or add a separate curve strap), set fingers to 70-80 curl and the thumb over the strap, and set the wrist 6-8 cm higher than the stallholder's. Darken the organiser's hand with hands_stone(value=0.28) so the two men differ. Check the palm contact from this camera (no gap under the palm)."
+   },
+   {
+    "priority": 1,
+    "camera": "purchase",
+    "problem": "The camera is near level and on the bag's axis. The bag fills about 60% of the frame as a black blob, and the brief's 'looking down onto the counter' is not delivered.",
+    "fix": "Move the camera to about loc=(1.0, 3.3, 2.15), aimed at the bag centre (BX, BY, TOP+0.08), lens 50, fstop 2.8. That is about a 40 deg down angle, offset 30-35 deg off the bag's long axis so the bag lies diagonally across the frame. Keep the bag at 35-45% of the frame width, with the counter edge running diagonally and the tags and tape readable in the lower third. Keep both men's sleeves entering from the frame edges."
+   },
+   {
+    "priority": 1,
+    "camera": "wide",
+    "problem": "The beat does not read: no bag is visible and no stallholder. Dawn stands apart, faces the camera and is the brightest object; the organiser just reaches into a stall.",
+    "fix": "Unhide the Stallholder in the wide and put him behind the counter, lit by hero_ceil_a. Turn the hero bag so its long axis faces the lane and is half off the counter edge in the organiser's grip, silhouetted against the bright bag wall. Rotate Dawn to face the stall (about 75 deg toward +X, a 3/4 back view to the camera), 1.0-1.2 m behind the organiser, and pose her hands loosely clasped in front (l_arm/r_arm forward 20-25, elbow 35). Lower her skin value in this camera (hands_stone and the face to about 0.38) so she does not out-shine the stall."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "The lit island is weak. The stall barely spills into the lane, the nearest lane batten (top right) is a competing hot spot, and 53% of the frame is crushed black, with dead bands at both sides.",
+    "fix": "TRIMS wide: raise hero_ceil_a/b to 3.0-3.5x and lower hero_lane from 1.7 to 0.9. Turn off, or set to 'dim' at about 15 W, the nearest lane batten at frame top right. Add a 1.4 x 2.2 m area light in the stall's open front facing -X into the lane, 70-90 W, colour (0.85, 0.93, 1.0), so a hard-edged pool of light lies on the wet floor and the puddles reflect the stall's interior. Make the left wall readable: a dim_stall or one warm bulb (6-10 W) behind a shutter raised 30 cm on the left at mid-depth, plus a slightly higher shutter specular (roughness 0.35), so the left 20% shows ribs rather than black. Check that no more than 25-30% of pixels fall below 5/255 after grading."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "The wet floor mask is blotchy, camouflage-like noise with hard edges, scattered everywhere; it does not read as puddles in low spots.",
+    "fix": "In the lane floor material, replace the wet mask with Noise scale 0.6-0.9 m, detail 2, through a ColorRamp smoothstep (0.48-0.55) multiplied by a gradient that favours the centre drain and the wall feet. Use three bands: puddle roughness 0.03 with a flat normal, a damp halo roughness 0.25 with albedo darkened 15% over 10-15 cm, and dry concrete roughness 0.65 with aggregate bump. Add a few tiny ripple bumps in the puddles."
+   },
+   {
+    "priority": 2,
+    "camera": "purchase",
+    "problem": "Foreground props fail. The black carrier-bag stack reads as a tablet or ledger slab. The tape is a solid cylinder with a disc on top (a candle or cheese wheel).",
+    "fix": "counter_tape: model a real annulus (outer r 0.048, inner r 0.036, height 0.048) with a cardboard core 3 mm thick (an inner tube, a true hole through to the counter) and packing-tape material: amber (0.55, 0.38, 0.16), transmission 0.3, roughness 0.15, with a 4 cm loose tail curling onto the counter. Replace the slab with 4-6 folded thin black poly bags: subdivided planes with crease displacement, offset 1-2 cm each, roughness 0.45, edges catching light. Move the blank-tag bundle closer to the camera and fan it with the string loose."
+   },
+   {
+    "priority": 2,
+    "camera": "stall",
+    "problem": "The wall of bags is a regular product grid: even rows and columns, every bag flat to the wall, too many pastels (cream, lilac, pale pink) under even light. It looks like a boutique catalogue, not a crammed market stall, and the four source models are noticeably cloned.",
+    "fix": "In hang_wall, jitter hook x by +/-0.05 m and row z by +/-0.06 m. Hang 2-3 bags on about 40% of hooks, each 4-6 cm forward of the last, with random yaw +/-10 deg and roll +/-5 deg so handles splay. Scale the copies 0.85-1.15 non-uniformly (x vs z) to break the clones. Re-draw the palette toward real leather: 60% blacks, browns, cognac and burgundy at val 0.2-0.45, 25% navy, olive and taupe, at most 15% light (cream, pale pink, grey). Add a few clear poly dust bags over some bags. Let the light fall off toward the floor and the left wall (move hero_ceil_b toward the counter or add a barn-door blocker) so the top rows glow and the lower rows go dim."
+   },
+   {
+    "priority": 3,
+    "camera": "stall",
+    "problem": "The counter fills the lower right quarter as a flat, featureless grey slab (a lesson already in the brief). The black extra bag stands end-on and reads as a backpack, not a duffel.",
+    "fix": "Either move the camera about 0.4 m left and to aim (3.4, 5.7, 1.3) so the counter takes at most 18% of the frame, or dress it: a brushed steel top with scratches and a dented bevelled front lip (bevel 6 mm), a laminate front with a scuffed lower edge, a rolled cable and a stack of carrier bags. Rotate the hero bag 30-40 deg on Z so its long side and both handles show in 3/4 view, and add a rim from hero_ceil_b so its silhouette separates from the wall."
+   },
+   {
+    "priority": 3,
+    "camera": "stall",
+    "problem": "Dawn's chin is not lifted, and from directly behind she reads as an exact back view, not a lost profile.",
+    "fix": "In pose_look, raise the aim target to about z 2.6 and add head pitch -18 to -22 deg (chin up) plus chest (-6, 0). Rotate her holder 12-15 deg so the camera sees her cheek and jaw line edge-on against the bright bags. Curl the fingers of the right hand that hangs by the shelf to 40 and move it 4 cm off her thigh."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "The lane reads as a storage-unit corridor, not a Chinese leather market: the cables, awnings and clutter are not visible.",
+    "fix": "Light the overhead: let lane battens graze the corrugated awnings (set their energy so the awning undersides read at about 0.05-0.1). String 3-5 sagging cable bundles (the catenary bundle helper, sag 0.25-0.4) across the lane at 2.6-3.2 m so they silhouette against the haze. Add stacked cardboard cartons and a folded hand trolley outside two shutters, a tarp-covered bale and a plastic stool. Hang 2-4 bags from an S-hook rail outside the hero stall's front post so the trade reads from afar. Keep all cartons blank."
+   },
+   {
+    "priority": 4,
+    "camera": "purchase",
+    "problem": "Flat overhead fill: the duffel's wrinkles are lit softly from above with no raking light or rim, and the counter is uniform grey.",
+    "fix": "Cut the overhead contribution: TRIMS purchase hero_ceil_a 0.6. Make hero_alley a narrower key (size 0.05 x 0.8, energy 30-40) at a 35-45 deg rake from the stallholder's side so the PVC folds get hard highlights and a shadow side. Add a 0.3 x 0.3 rim at 15 W behind the bag at counter height. Counter top: roughness 0.35-0.45 with brushed anisotropy and a slight scratch/grime map, plus a bevelled front edge."
+   },
+   {
+    "priority": 4,
+    "camera": "all",
+    "problem": "The hanging bags have a uniform satin CG sheen with no seams or edge piping; up close they read as soft plastic.",
+    "fix": "Per copy, randomise rough_add between 0.15 and 0.35 and add a fine leather-grain bump (Voronoi scale about 400, strength 0.05). Give the edges a slight darkening from an AO or pointiness mask (edge piping and wear), so neighbours differ in sheen as well as hue."
+   }
+  ]
+ }
+}

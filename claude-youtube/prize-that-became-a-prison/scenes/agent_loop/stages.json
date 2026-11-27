@@ -1,0 +1,62 @@
+[
+ {
+  "name": "inspection_room",
+  "beats": "Ch 00 'Are these your bags?': in a windowless airport inspection room under one fluorescent troffer, two officers question Dawn across a steel bench holding her charcoal suitcase and the black extra bag (the cognac tote on the bench); she answers yes. Ch 05 the discovery: the handbags (tote, satchel, shoulder bag) out on the bench. Ch 11 the return: the two bags alone on the bench in the empty room (render with --nocast). The X-ray scanner and its belt in the background.",
+  "cameras": "wide (high three-quarter establishing, cast), overhead (top-down on the bench and bags, Fern-style overhead composition), tag (controlled close-up of the suitcase handle and a blank paper luggage tag you build), two_shot (low, Dawn and the questioning officer across the bench), empty (Ch 11, no cast: the two bags alone)"
+ },
+ {
+  "name": "checkin_hall",
+  "beats": "Ch 04 'the gift inside the gift': an airport check-in hall at night. Dawn at a check-in counter (built in Python: counter with laminate front and dark top, agent's monitor glowing blank, a baggage scale platform with steel plate and a small blank glowing weight display on a post, rubber conveyor behind) placing her charcoal suitcase and the black extra bag on the scale (the excess-baggage moment). An airline agent statue behind the counter. Queue posts with retractable belts (built in Python) and a luggage trolley. Fluorescent ceiling, polished terminal floor, a few blank overhead sign panels.",
+  "cameras": "wide (establishing the counter row in the hall), scale (controlled close-up: the bags on the scale and the blank glowing display, where the motion graphics will later write OVERWEIGHT), profile (Dawn side-on at the counter with the agent), shoulder (over the agent's shoulder to Dawn)"
+ },
+ {
+  "name": "departure_gate",
+  "beats": "Ch 02 end and Ch 03: a departure gate at night before the trip. Rows of linked gate seats facing a tall window wall onto a dark apron with distant runway and stand lights, an aircraft with no airline livery, a gate podium desk (blank screen), carpet tiles, columns. Dawn seated alone with her charcoal suitcase beside her, the ordinary calm before everything.",
+  "cameras": "wide (the gate, rows of empty seats, Dawn small in frame, window wall), seated (controlled medium on Dawn and the suitcase), window (silhouette: Dawn and seats against the window wall and the apron lights)"
+ },
+ {
+  "name": "evidence_table",
+  "beats": "The Evidence Table, 30% of the film's running time: a dark, worn wooden table in a black room, lit only by the desk-lamp prop, the investigation laid out on it. Paper props built in Python with real thickness and curl, all faces BLANK (graphics are composited later): documents, photographs, boarding passes, a receipt, a sealed envelope, a plain dark-blue passport with no crest or text. The file-folders prop, the laptop prop (screen glowing blank, Ch 02 the email), the three handbags (Ch 04/05). Overhead compositions and slow-push angles. No cast.",
+  "cameras": "overhead (top-down on the whole spread under the lamp), push (low across the table toward the lamp, shallow focus on a document), laptop (Ch 02: the open laptop's blank glow with papers and the passport), purses (Ch 04: the three handbags and the receipt), passport (controlled close-up on the passport and boarding passes)"
+ },
+ {
+  "name": "detention_corridor",
+  "beats": "Ch 06 'Three years without an answer': a detention-centre corridor at night: painted block walls with a dado, caged fluorescent fittings (some off), a floor drain and worn painted floor, cell doors recessed into the wall, light leaking from a door at the far end. Off the corridor, a small visitation room: the visitor-chair prop empty at a bare table, a sealed envelope on the table under one hanging light. No people.",
+  "cameras": "corridor (one-point perspective down the corridor), door (controlled close-up on a cell door's barred window), chair (the empty visitation chair and the sealed envelope under one light), envelope (close-up on the envelope, the chair soft beyond)"
+ },
+ {
+  "name": "courtroom",
+  "beats": "Ch 07 'The sentence': a courtroom reconstructed with restraint, wide and still. A raised judges' bench in pale wood (built in Python; a blank wall panel where an emblem would hang: no emblem, no text), three judge-chair props behind it with microphone props, a defendant's dock (built: waist-high pale-wood panels with a rail and a small gate), gallery-bench props in rows, cool institutional light. Dawn stands alone in the dock in prison clothes (people.dawn_prison()). Judges' chairs left empty.",
+  "cameras": "wide (symmetrical and still, from the back of the gallery), dock (Dawn in the dock from behind three-quarter, the bench beyond), bench (low angle up at the judges' bench)"
+ },
+ {
+  "name": "home",
+  "beats": "Two rooms of the family home in Chicago, night. Ch 02 the kitchen: the kitchen-table prop with the laptop prop open, its blank screen the main light, Dawn seated reading the email, a mug, a dark window. Ch 10 the dining room: the dining-table prop with dining-chair props round it, ONE empty chair at the head (the film's quiet ending), venetian blinds striping cold street light across the table and the chair, a pendant lamp off.",
+  "cameras": "kitchen (Dawn at the laptop, the screen glow on her face), dining (the table and the empty chair through the blind stripes), chair (controlled close-up on the empty chair, the image before the cut to black)"
+ },
+ {
+  "name": "void_stage",
+  "beats": "The Void Stage, 20% of the film: an infinite black stage with one hard top spotlight and faint haze. Ch 07: Dawn alone standing in the pool of light in prison clothes, head slightly bowed. Ch 08: the cell as a lit box in the dark (bunk-bed prop, a narrow high window, walls and floor only where the light falls), close and then from far back so the box is small in the black. Ch 11: the two bags (dawn-suitcase and extra-bag-closed) alone in the spotlight, the film's final image.",
+  "cameras": "dawn (Dawn in the pool of light), dawn_high (from above), cell_close (inside the lit cell box), cell_far (far back, the box small in the black), bags (the two bags alone in the spotlight)"
+ },
+ {
+  "name": "visiting_room",
+  "beats": "Ch 08 'What twelve years can take': a prison visiting room, 2026. A row of narrow booths divided by a thick glass partition in painted steel frames, the visiting-phone prop each side, stools or the visitor-chair prop, caged fluorescent light. In one booth Dawn (people.dawn_prison(), older) on the inside with the handset to her ear, her brother Tim (people.man) on the visitor side with his handset. Restraint: the glass between them carries it. Other booths empty.",
+  "cameras": "wide (the row of booths, one occupied), glass (over Tim's shoulder through the glass to Dawn on the phone), empty (an empty booth, the handset on its hook)"
+ },
+ {
+  "name": "hearing_room",
+  "beats": "Ch 09 'A family makes its case in public': a congressional-style hearing room with restraint (no flags, seals, emblems or text). A raised curved dais with the judge-chair prop repeated and microphone props, mostly empty; the witness table (a long table with a dark blue cloth skirt, a blank nameplate holder, water glasses, microphones). Tim alone at the witness table speaking into the microphone. Public seats behind him. A lit island on the witness table.",
+  "cameras": "wide (from behind the public seats: Tim small facing the high dais), witness (controlled medium on Tim at the microphones), hands (his hands on the papers), dais (low angle up at the empty high chairs)"
+ },
+ {
+  "name": "leather_market",
+  "beats": "Ch 04 'The gift inside the gift': a covered leather-goods market in mainland China at night. A narrow lane of stalls under awnings and strip lights, walls of handbags (the handbag and extra-bag props, many recoloured copies), blank tags, crates, cables, a puddled floor. Dawn with one organiser (people.man) at a stall; the stallholder hands over the black extra bag. No legible signs or brands.",
+  "cameras": "wide (down the market lane, Dawn and the organiser small at the lit stall), stall (the wall of handbags with Dawn looking up at it), purchase (controlled close-up: the black extra bag passing from hand to hand)"
+ },
+ {
+  "name": "chicago_night",
+  "beats": "Ch 01 'A woman who loved to travel': Chicago at night, the life before. An apartment with a tall window onto a procedural night skyline (no recognisable real building), a console, a suitcase by the door. Dawn (people.dawn()) at the window, calm and hopeful. Warmer practical light inside than any other set, the city cool outside.",
+  "cameras": "wide (the room, Dawn small against the window and the lit city), window (Dawn in silhouette against the skyline), suitcase (controlled close-up: the packed suitcase by the door, the city soft beyond)"
+ }
+]

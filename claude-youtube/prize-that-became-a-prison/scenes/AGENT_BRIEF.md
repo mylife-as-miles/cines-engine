@@ -32,7 +32,7 @@ reads as reconstruction without any label.
 
 ## Conventions
 
-- Blender 5.3 as a Python module: `/tmp/claude-0/-home-user-cines-engine/73593c7c-6dfc-5879-82bf-97979958b8ab/scratchpad/bpyenv/bin/python -I`.
+- Blender 5.3 as a Python module: `~/bpyenv/bin/python -I` in a container set up with `scenes/setup_container.sh` (in the original session: `/tmp/claude-0/-home-user-cines-engine/73593c7c-6dfc-5879-82bf-97979958b8ab/scratchpad/bpyenv/bin/python -I`).
   Import `bpy` before `bmesh` / `mathutils`. Metres, Z up, floor at z = 0.
 - A stage module defines `CAMERAS`, optional `EXPOSURE`, and `build(cast=True)`; see `scenes/shoot.py` and the seed
   `scenes/stages/inspection_room.py`, which already works (props on the bench, Dawn and two officers).
