@@ -502,10 +502,12 @@ def laptop():
     # The generated key deck has pale shapes on the keycaps. Fit an unlettered
     # insert over the measured deck (23 mm above the slab) for the screen close-up.
     surround = mt.plastic("keyboard surround", (0.019, 0.021, 0.023), 0.65, spec=0.24)
-    deck = sk.box("laptop key well", (0.132, 0.325, 0.004), (-0.009, 0, 0.025), surround, bevel=0.0015)
+    deck = sk.box("laptop key well", (0.200, 0.310, 0.0068), (-0.043, 0, 0.0236), surround, bevel=0.0015)
+    pad_finish = mt.plastic("graphite trackpad", (0.016, 0.017, 0.019), 0.79, spec=0.15, scuff=0.02)
+    pad = sk.box("flush laptop trackpad", (0.053, 0.094, 0.0006), (-0.103, 0, 0.027), pad_finish, bevel=0.00025)
     deck_back = 0.057
     lid_foot = xs(zbot) - 0.002
-    hinge = sk.box("laptop hinge cover", (lid_foot - deck_back, 0.325, 0.004),
+    hinge = sk.box("laptop hinge cover", (lid_foot - deck_back, 0.310, 0.004),
                    ((lid_foot + deck_back) / 2, 0, 0.0252), surround, bevel=0.0015)
     bm = bmesh.new()
     rows = ((1,) * 14, (1.4,) + (1,) * 12 + (1.4,), (1.65,) + (1,) * 11 + (1.95,),
@@ -521,11 +523,13 @@ def laptop():
                     0.0008, 2)
     x, y, t = LAPTOP
     place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
-    for o in (scr, li, fx, deck, keys, liner, hinge, chin):
+    # Resolve the unparented boxes' local offsets before composing the table placement.
+    bpy.context.view_layer.update()
+    for o in (scr, li, fx, deck, pad, keys, liner, hinge, chin):
         o.matrix_world = place @ o.matrix_world
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
-    return [h] + list(h.children_recursive) + [scr, li, deck, keys, hinge, chin]
+    return [h] + list(h.children_recursive) + [scr, li, deck, pad, keys, hinge, chin]
 
 
 def tote_topstitch(holder):
