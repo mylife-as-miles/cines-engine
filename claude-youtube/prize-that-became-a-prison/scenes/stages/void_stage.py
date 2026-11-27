@@ -709,9 +709,25 @@ def build_bags_island():
     rim = st.area("rim_bags", (cx, cy + 2.4, 1.5), (cx, cy, 0.35), (0.6, 0.6), 40.0, (0.88, 0.92, 1.0))
     rim.visible_glossy = True
     st.link_lights([rim], receivers=_meshes(pair[0]) + _meshes(pair[1]), tag="bags_rim")
-    kick = st.area("case front return", (cx - 0.9, cy - 2.6, 0.7), (G[0] + CASE[0], G[1] + CASE[1], 0.33),
-                   (0.5, 0.5), 85.0, (0.88, 0.92, 1.0))
-    st.link_lights([kick], receivers=_meshes(pair[0]), tag="case_front")
+    hx, hy = G[0] + CASE[0], G[1] + CASE[1]
+    # Keep the narrow trolley posts legible when the room disappears behind them.
+    returns = []
+    # The case is turned in the pool. Each post reflects a different side of
+    # the set toward the lens, so place a small return along each reflection.
+    for label, offset, direction, watts in (
+        ("left", (-0.1095, 0.0342, 0.582), (-0.18, 0.12, 0), 0.09),
+        ("right", (0.0202, 0.1071, 0.584), (0.16, -0.10, 0), 1.25),
+    ):
+        post = Vector((hx + offset[0], hy + offset[1], offset[2]))
+        edge = st.area(f"handle rim {label}", post + Vector(direction), post, (0.05, 0.13),
+                       watts, (0.88, 0.92, 1.0), spread_deg=58)
+        edge.visible_glossy = True
+        returns.append(edge)
+    kick = st.area("case front return", (cx - 0.9, cy - 2.6, 0.7), (hx, hy, 0.20),
+                   (0.5, 0.5), 94.0, (0.88, 0.92, 1.0))
+    returns.append(kick)
+    st.link_lights(returns, receivers=_meshes(pair[0]), tag="case_returns")
+    _STATE["case_returns"] = returns
 
 
 def build_chair():
@@ -774,9 +790,8 @@ def apply_camera(name):
     for group, objs in _STATE["groups"].items():
         for ob in objs:
             ob.hide_render = group not in active or ob in _STATE["originally_hidden"]
-    front = bpy.data.objects.get("case front return")
-    if front is not None:
-        front.hide_render = name != "bags"
+    for light in _STATE["case_returns"]:
+        light.hide_render = name != "bags"
     for ob, x in _STATE["bag_roots"]:
         ob.location.x = x + (-3.3 - G[0] if beat == "divide" else 0.0)
     bpy.context.view_layer.update()

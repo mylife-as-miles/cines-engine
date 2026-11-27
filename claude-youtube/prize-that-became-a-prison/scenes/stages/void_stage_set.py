@@ -171,7 +171,8 @@ def stage_floor(cell=None, bags=None):
     falls to near black a short way out from the slab, so no stray spill reads there."""
     m, nt, b = _new("stage floor")
     o = _obj(nt)
-    br = _brick(nt, o, 2.44, 1.22, 0.0022, offset=0.5, c1=(1.04, 1.04, 1.04), c2=(0.955, 0.955, 0.96),
+    sheet_coordinates = _vmath(nt, "ADD", o, (-0.25, 0.0, 0.0))
+    br = _brick(nt, sheet_coordinates, 2.44, 1.22, 0.0022, offset=0.5, c1=(1.04, 1.04, 1.04), c2=(0.955, 0.955, 0.96),
                 cm=(0.3, 0.3, 0.3))
     br.inputs["Mortar Smooth"].default_value = 0.1
     seam = _out(br, "Fac")
