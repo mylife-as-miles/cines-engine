@@ -1,5 +1,7 @@
 # The film so far, cut v18: after the council, "Below" as a music montage on the song
 
+**The author's verdict, 27 November: "Ahhh this is bad... This isn't what I mean by montage... Pls search the web how arcane does their musical!?"** Cut v18 is not the film; cut v17 stands. What was wrong and what Arcane does instead: lesson 141 in `LESSONS.md`.
+
 The author, 27 November: "after the council scene this will be a music montage to speed things like how arcane do and song like arcane"; on the song demo: "The song... Now add it... And merge all to complie let me see how it turns out then I'll judge"; and "Remember it starts after the council meeting". Editing only; the one thing generated is the song (see below).
 
 `out/review/film_v18.mp4` · 158.25 s (2:38.2) · 992×432, 2.39:1 matte · −18.0 LUFS, range 15.1 LU, peak −1.9 dBFS · built by `tools/below_montage.py` then `tools/combine_film_v18.py` · edit list `edit/film_v18.edl.json`
