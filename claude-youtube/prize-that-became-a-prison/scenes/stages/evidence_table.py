@@ -18,6 +18,8 @@ evidence_table_mats.py.
 import math
 import os
 import sys
+import tempfile
+from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
@@ -605,6 +607,7 @@ def document_plates():
         # A flat A4 spans the narrow board joints instead of conforming to their bevels.
         pp.SUPPORT.clear()
         sheet = pp.sheet(name, m["plate_paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0)
+        sheet.pass_index = 1
         for face in sheet.data.polygons:
             face.use_smooth = False
         group(group_name, sheet)
@@ -680,9 +683,16 @@ def frame_metadata(name, scene, resolution):
     pages = []
     width, height = resolution
     dg = bpy.context.evaluated_depsgraph_get()
+    camera = scene.camera.evaluated_get(dg)
+    lens = camera.data
+    target = lens.dof.focus_object
+    focus = -(camera.matrix_world.inverted() @ target.matrix_world.translation).z if target else lens.dof.focus_distance
+    meta = {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge",
+            "depth_axis": "camera forward", "focus_m": round(focus, 6), "fstop": round(lens.dof.aperture_fstop, 3),
+            "lens_mm": round(lens.lens, 3), "sensor_mm": round(lens.sensor_width, 3)}
     for sheet_name in names[name]:
         sheet = bpy.data.objects[sheet_name].evaluated_get(dg)
-        corners = {}
+        corners, depths, inside = {}, {}, {}
         xmax = max(v.co.x for v in sheet.data.vertices)
         ymax = max(v.co.y for v in sheet.data.vertices)
         for label, x, y in (("top_left", -xmax, ymax), ("top_right", xmax, ymax),
@@ -690,11 +700,13 @@ def frame_metadata(name, scene, resolution):
             vertex = min(sheet.data.vertices, key=lambda v: ((v.co.x - x)**2 + (v.co.y - y)**2, -v.co.z))
             p = world_to_camera_view(scene, scene.camera, sheet.matrix_world @ vertex.co)
             corners[label] = [round(p.x * width, 3), round((1 - p.y) * height, 3)]
+            depths[label] = round(p.z, 6)  # distance along the optical axis, in metres
+            inside[label] = p.z > 0 and 0 <= p.x <= 1 and 0 <= p.y <= 1
+        tracking = {"corners": corners, "depth_m": depths, "in_frame": inside}
         if name == "screen":
-            return {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge",
-                    "screen": sheet_name, "corners": corners}
-        pages.append({"sheet": sheet_name, "corners": corners})
-    return {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge", "pages": pages}
+            return {**meta, "screen": sheet_name, **tracking}
+        pages.append({"sheet": sheet_name, **tracking})
+    return {**meta, "pages": pages}
 
 
 def spread():
@@ -808,11 +820,56 @@ def apply_camera(name):
     print(f"EVIDENCE camera {name or '?'}: beat {beat}, hidden {sorted(set(HIDE.get(beat, ())) | set(cfg.get('hide', ())))}", flush=True)
 
 
+def render_paper_mask(render, path, *args, **kwargs):
+    """Write an ungraded, antialiased paper silhouette alongside the ordinary colour render."""
+    scene = bpy.context.scene
+    scene.render.engine = "CYCLES"
+    layer = bpy.context.view_layer
+    previous_index = layer.use_pass_object_index
+    previous_tree = scene.compositing_node_group
+    tree = bpy.data.node_groups.new("Paper ID matte", "CompositorNodeTree")
+    try:
+        layer.use_pass_object_index = True
+        scene.compositing_node_group = tree
+        tree.interface.new_socket(name="Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+        inputs = tree.nodes.new("CompositorNodeRLayers")
+        inputs.scene = scene
+        composite = tree.nodes.new("NodeGroupOutput")
+        tree.links.new(inputs.outputs["Image"], composite.inputs["Image"])
+        mask = tree.nodes.new("CompositorNodeIDMask")
+        mask.inputs["Index"].default_value = 1
+        mask.inputs["Anti-Alias"].default_value = True
+        tree.links.new(inputs.outputs["Object Index"], mask.inputs["ID value"])
+        writer = tree.nodes.new("CompositorNodeOutputFile")
+        writer.format.media_type = "IMAGE"
+        writer.format.file_format = "PNG"
+        writer.format.color_mode = "BW"
+        writer.format.color_depth = "8"
+        writer.file_output_items.clear()
+        item = writer.file_output_items.new("FLOAT", "paper")
+        item.save_as_render = False
+        writer.save_as_render = False
+        tree.links.new(mask.outputs["Alpha"], writer.inputs[item.name])
+        with tempfile.TemporaryDirectory(dir=Path(path).parent) as directory:
+            writer.directory, writer.file_name = directory, "mask"
+            result = render(path, *args, **kwargs)
+            matte, = Path(directory).rglob("*.png")
+            os.replace(matte, Path(path).with_suffix(".mask.png"))
+            return result
+    finally:
+        scene.compositing_node_group = previous_tree
+        layer.use_pass_object_index = previous_index
+        bpy.data.node_groups.remove(tree)
+
+
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):
-        apply_camera(which_camera())
+        name = which_camera()
+        apply_camera(name)
+        if name in ("page", "page_foot", "pair") and os.path.basename(args[0]).startswith("final"):
+            return render_paper_mask(orig, *args, **kw)
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
