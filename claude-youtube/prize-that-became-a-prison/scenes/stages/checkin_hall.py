@@ -1381,10 +1381,13 @@ def build(cast=True):
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
-    # The passenger-side strip lights the keyboard more strongly than the
-    # agent's face in profile. Let the monitor carry his light in that shot.
-    passenger_strip = bpy.data.objects["pos0_down_front"]
-    strip_power = passenger_strip.data.energy
+    # In profile the strip competes with the agent's monitor and the
+    # readout spill turns the charcoal luggage pale under its dark back.
+    profile_trims = []
+    for name, factor in (("pos0_down_front", 0.0), ("pos0_down_scale", 0.45), ("scale0_disp_light", 0.40),
+                         ("scale0_disp_spill", 0.40), ("scale0_disp_under", 0.40)):
+        fixture = bpy.data.objects[name]
+        profile_trims.append((fixture, fixture.data.energy, factor))
     monitor = bpy.data.objects["desk0_mon_light"]
     monitor_aim = monitor.rotation_euler.copy()
     monitor_spread = monitor.data.spread
@@ -1415,7 +1418,8 @@ def build(cast=True):
         profile = name == "profile"
         edge.hide_render = profile
         fill.data.energy = 7.0 if profile else 2.5
-        passenger_strip.data.energy = 0.0 if profile else strip_power
+        for fixture, watts, factor in profile_trims:
+            fixture.data.energy = watts * factor if profile else watts
         monitor.rotation_euler = profile_aim if profile else monitor_aim
         monitor.data.spread = math.radians(60) if profile else monitor_spread
         # Pull the foreground shoulder into the reverse. The wide and the
@@ -1429,7 +1433,8 @@ def build(cast=True):
         finally:
             edge.hide_render = False
             fill.data.energy = 2.5
-            passenger_strip.data.energy = strip_power
+            for fixture, watts, _ in profile_trims:
+                fixture.data.energy = watts
             monitor.rotation_euler = monitor_aim
             monitor.data.spread = monitor_spread
             a.location = agent_mark
