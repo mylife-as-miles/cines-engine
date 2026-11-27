@@ -663,7 +663,8 @@ def wired_glow(name, rgb, strength):
     br.inputs["Brick Width"].default_value = 0.0254
     br.inputs["Row Height"].default_value = 0.0254
     _link(nt, _obj(nt), br.inputs["Vector"])
-    s = _math(nt, "MULTIPLY", _maprange(nt, _out(br, "Fac"), 0.0, 1.0, 1.0, 0.1), strength)
+    s = _maprange(nt, _out(br, "Fac"), 0.0, 1.0, strength, 0.1 * strength)
+    s.node.name = "lens_strength"
     _link(nt, s, em.inputs["Strength"])
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"

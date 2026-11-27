@@ -47,7 +47,7 @@ PHONE_Z = 1.05                            # bottom of the phone prop (its cord l
 FIT_Y = 0.42                              # fittings' centre |y| (over the counters, ahead of the sitters' faces)
 FIT_L = 0.64                              # fitting length (x)
 FIT_W = 210.0                             # a fitting's lamp (W) at level 1
-LIP = 0.095                               # the steel shield on a fitting's partition side: depth below the body (m)
+LIP = 0.17                               # the steel shield on a fitting's partition side: depth below the body (m)
 # fitting levels per booth, visitors' side and inmates' side. Only the occupied booth burns (round-1 critique: three
 # lenses near white in the wide, though the brief has one booth lit). Booth 2 is built lit at level 1 only so the
 # empty-booth camera can turn it on: the stage's hook trims it to 0 for every other camera.
@@ -641,6 +641,7 @@ def fitting(name, x, y, level):
     d = sk.cyl(f"{name}_diffuser", 0.048, L - 0.05, (x, y, H - 0.056), lens, rot=(0, math.pi / 2, 0), verts=40)
     d.scale = (0.82, 1.0, 1.0)
     d.visible_shadow = False
+    d.visible_diffuse = False
     bm = bmesh.new()
     cz, r = H - 0.052, 0.072
     arc = lambda a: (r * math.cos(a), cz - r * math.sin(a))
@@ -712,6 +713,7 @@ def door_leaf(name, centre, axis, sign, w, h, glow_rgb, glow_s, gz=1.5):
     bx(f"{name}_leaf", w - 0.006, 0.05, h - 0.012, 0.0, -sign * 0.04, 0.008 + (h - 0.012) / 2, m["door"])
     gw, gh = 0.12, 0.5
     g = bx(f"{name}_glass", gw, 0.054, gh, -w / 2 + 0.2, -sign * 0.04, gz, mt.wired_glow(f"{name} glass", glow_rgb, glow_s), 0.0)
+    PARTS.setdefault("lens", {})[name] = g.active_material
     for s in (-1, 1):
         bx(f"{name}_bead", 0.016, 0.01, gh + 0.032, -w / 2 + 0.2 + s * (gw / 2 + 0.008), -sign * 0.011, gz, m["hardware"], 0.003)
         bx(f"{name}_bead", gw, 0.01, 0.016, -w / 2 + 0.2, -sign * 0.011, gz + s * (gh / 2 + 0.008), m["hardware"], 0.003)

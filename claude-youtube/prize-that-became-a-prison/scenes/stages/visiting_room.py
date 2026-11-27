@@ -69,6 +69,8 @@ CAMERAS = {
     # no haze (it grained the reflection) and twice the samples, so his ghost in the glass comes out smooth
     "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=58, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
                   spp_k=2.0, refl=1.5),
+    "reverse": dict(loc=(BXO + 0.34, 1.67, 1.35), aim=(BXO, -0.75, 1.17), lens=53, focus="fx_tim",
+                    haze=False, beat="ch08", spp_k=2.0, refl=0.7),
     # Ch 08: an empty booth from a visitor's seat, a little behind it: the near phone with its handset on the hook
     # in the right third, the glass and its marks across the middle (the night light on the back wall reflecting in
     # it), the other side's phone in its own pool of light in the left third, the empty stool beyond (cast hidden)
@@ -83,8 +85,10 @@ TRIMS = {
     # the empty booth: its inmates' side in the light beyond the glass (about twice the visitors' side), its own
     # fitting low, so the near phone is lit from above and the glass side and the far one stands in a pool (the
     # occupied booth dark: another moment)
-    "empty": {f"fitv{EMPTY}": 0.15, f"fiti{EMPTY}": 1.0, f"fitv{st.OCC}": 0.0, f"fiti{st.OCC}": 0.0,
-              f"bounce": 0.0},
+    "empty": {f"fitv{EMPTY}": 0.15, f"fiti{EMPTY}": 0.35, f"fitv{st.OCC}": 0.0, f"fiti{st.OCC}": 0.0,
+              "bounce": 0.0, "idoor2": 0.3},
+    "reverse": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35,
+                f"fiti{st.OCC}": 0.6, "bounce_Tim": 1.4},
     # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
     # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
     "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.5,
@@ -273,37 +277,6 @@ def seat_place(holder, facing_deg, hip_xy, dz):
 
 
 # ---------------------------------------------------------------- arms and hands
-def _hand_verts(holder, side="L"):
-    """World positions of one hand's vertices (rig deformation, no subdivision), split palm / fingers / thumb."""
-    body = bpy.data.objects[holder["body"]]
-    subs = [m for m in body.modifiers if m.type in ("SUBSURF", "MASK") and m.show_viewport]
-    for m in subs:
-        m.show_viewport = False
-    bpy.context.view_layer.update()
-    dg = bpy.context.evaluated_depsgraph_get()
-    ev = body.evaluated_get(dg)
-    me = ev.to_mesh()
-    names = {g.index: g.name for g in body.vertex_groups if g.name.startswith("DEF-")}
-    out = {"palm": [], "fingers": [], "thumb": []}
-    for v, vo in zip(me.vertices, body.data.vertices):
-        gs = [e for e in vo.groups if e.group in names]
-        if not gs:
-            continue
-        g = max(gs, key=lambda e: e.weight)
-        n = names[g.group]
-        if not n.endswith("." + side) or g.weight < 0.3:
-            continue
-        key = ("thumb" if "thumb" in n else "fingers" if n.startswith("DEF-f_") else
-               "palm" if n.startswith(("DEF-hand", "DEF-palm")) else None)
-        if key:
-            out[key].append(ev.matrix_world @ v.co)
-    ev.to_mesh_clear()
-    for m in subs:
-        m.show_viewport = True
-    bpy.context.view_layer.update()
-    return out
-
-
 def _curl(holder, side, deg, thumb=None):
     rig = _rig(holder)
     pb = rig.pose.bones
@@ -385,7 +358,7 @@ def set_hand(holder, side, x_palm, y_fingers, twist=0.7):
 def palm_side(holder, side):
     """The direction (world) the palm faces, from the hand's measured vertices: from the knuckle line toward where
     the curled fingertips gather (fingers curl toward the palm)."""
-    hv = _hand_verts(holder, side)
+    hv = rigged.hand_surface(holder, side)
     rig = _rig(holder)
     hb = rig.pose.bones[f"hand_fk.{side}"]
     a = (rig.matrix_world.to_3x3() @ (hb.tail - hb.head)).normalized()
@@ -428,7 +401,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=16.0):
             x, y = (q @ x).normalized(), (q @ y).normalized()
         set_hand(holder, side, x, y)
         _curl(holder, side, curl)
-        hv = _hand_verts(holder, side)
+        hv = rigged.hand_surface(holder, side)
         palm_low, finger_low = min(p.z for p in hv["palm"]), min(p.z for p in hv["fingers"])
         low = min(palm_low, finger_low)
         if attempt < 5:
@@ -515,6 +488,12 @@ def grip_dir(frame):
     return (0.92 * X + 0.38 * Y).normalized()
 
 
+def receiver_grip(holder, side):
+    rigged.articulate_hand(holder, side, {"f_index": (45, 33, 22), "f_middle": (49, 38, 25),
+                                         "f_ring": (54, 39, 26, 4), "f_pinky": (57, 41, 25, 8),
+                                         "thumb": (12, 19, 14)})
+
+
 def phone_hand(holder, pose, side, frame):
     """Close one hand on the handset's handle: the palm on its outer side, the fingers running forward across it and
     curling round its front edge toward the cheek, the wrist behind it. Returns the arm and the fit."""
@@ -525,13 +504,13 @@ def phone_hand(holder, pose, side, frame):
     y_f = grip_dir(frame)                              # the handle runs diagonally across the palm
     # the hand bone's middle: behind the handle's outer face, a little below its centre (toward the mouthpiece) and
     # back from its front edge, so the knuckles sit just past that edge and the curled fingers close round it
-    mid = O + Z * 0.034 - Y * 0.015 - X * 0.006
+    mid = O + Z * 0.033 - Y * 0.041 - X * 0.006
     wrist = mid - y_f * (0.5 * L3)
     e, up, fwd, right = head_frame(holder)
     pole = Vector((0, 0, -1)) + right * (1 if side == "R" else -1) * 0.55 + fwd * 0.35
     E, flex, miss = two_bone(holder, side, wrist, pole)
     set_hand(holder, side, -Z, y_f, twist=0.6)
-    _curl(holder, side, 62, thumb=None)
+    receiver_grip(holder, side)
     holder[f"phone_wrist_{side}"] = list(wrist)
     holder[f"phone_pole_{side}"] = list(pole)
     return (round(E.z, 3), round(flex, 1)), miss
@@ -654,13 +633,11 @@ def build_cast():
     holders = {}
     # Tim: on the visitors' side, facing the glass (+Y), leaning in; the handset in his right hand (his right is +X,
     # toward the phone on the booth's +X baffle), his left hand flat on the counter
-    t = people.man("Tim", age=0.58, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
-    d = people.dawn_prison()
+    t = people.man("Tim", age=0.78, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
+    d = people.dawn_prison(uniform=True)
     matt_cloth(t, "male_elegantsuit01", folds=0.35)
-    # round-1 critique: the prison top read as black body paint. Lifted from the cast's 0.03 to a mid-dark grey
-    # (still well under the 0.5 stone; the critic's 0.16-0.2 would read as skin under the grade), its folds shaded,
-    # mottled as a much-washed garment, a stronger knit bump
-    matt_cloth(d, "female_casualsuit01", bump=0.38, rgb=(0.078, 0.08, 0.083), folds=0.45, fade=0.18)
+    # Keep the shared grey of the long-sleeved shirt and trousers under the visiting booth lights.
+    matt_cloth(d, people.PRISON_UNIFORM, bump=0.22, folds=0.35, fade=0.10)
     sculpt_hair("Tim", 0.06, 0.16)
     sculpt_hair("DawnPrison", 0.075, 0.1)
     holders["Tim"], holders["Dawn"] = t, d
@@ -683,7 +660,7 @@ def build_cast():
     poses = {}
     # gazes: each onto the other's eyes (through the glass); Dawn's a little low, on his mouth (her head a few
     # degrees down: tired, listening)
-    drop = {"Tim": 0.0, "Dawn": 0.07}
+    drop = {"Tim": 0.15, "Dawn": 0.07}
     for n, other in (("Tim", "Dawn"), ("Dawn", "Tim")):
         p = dict(upper[n])
         err, hd = aim_head(holders[n], p, eye_centre(holders[other]) - Vector((0, 0, drop[n])))
@@ -707,7 +684,7 @@ def build_cast():
     for n in ("Tim", "Dawn"):
         h = holders[n]
         rigged.pose_figure(h, poses[n])
-        frames[n] = handset_frame(h, +1, tilt=0.0)
+        frames[n] = handset_frame(h, +1, tilt=25.0 if n == "Dawn" else 10.0)
         arm, fit = phone_hand(h, poses[n], "R", frames[n])
         print(f"VISIT {n} phone arm: elbow z {arm[0]}, flex {arm[1]} deg, wrist short by {fit * 1000:.0f} mm", flush=True)
     for n, w, fwd in (("Tim", tw, Vector((0.28, 1.0, 0.0))), ("Dawn", dw, Vector((-0.28, -1.0, 0.0)))):
@@ -723,9 +700,9 @@ def build_cast():
         y_f = grip_dir(frames[n])
         two_bone(h, "R", Vector(h["phone_wrist_R"]), Vector(h["phone_pole_R"]))
         set_hand(h, "R", -Z, y_f, twist=0.6)
-        _curl(h, "R", 62)
+        receiver_grip(h, "R")
         sit_legs(h, *legs[n])
-        hv = _hand_verts(h, "R")
+        hv = rigged.hand_surface(h, "R")
         pc = sum(hv["palm"], Vector()) / len(hv["palm"])
         # the handset follows the hand where they disagree: its handle centred under the palm, keeping its angle
         handle = O + Z * 0.004
@@ -824,6 +801,10 @@ def empty_lights():
     st.area("emp_graze", (bx, -(st.GT / 2 + 0.05), gz), (st.P - st.MUL - 0.08, 0.035), 30.0, st.COOL, spread=40,
             rot=(math.radians(16), 0, 0))
     far = (bx - P2 + st.BAF_T / 2 + 0.14, st.PHONE_Y + 0.03, st.PHONE_Z + 0.62)
+    target = Vector((bx - P2 + st.BAF_T / 2 + 0.08, st.PHONE_Y, st.PHONE_Z + 0.16))
+    origin = target + Vector((0.12, 0.12, 0.35))
+    key = st.area("emp_farkey", tuple(origin), (0.12, 0.25), 19.0, st.COOL, spread=45)
+    key.rotation_euler = (target - origin).to_track_quat("-Z", "Y").to_euler()
     st.area("emp_pool", far, (0.3, 0.1), 45.0, st.COOL, spread=70, rot=(math.radians(-6), math.radians(14), 0),
             glossy=False)
     near = (bx + P2 - st.BAF_T / 2 - 0.16, -st.PHONE_Y + 0.02, st.PHONE_Z + 0.7)
@@ -841,6 +822,8 @@ def glass_camera():
     aim = de + Vector((0.16, 0.0, -0.08))
     CAMERAS["glass"]["loc"] = tuple(round(v, 4) for v in loc)
     CAMERAS["glass"]["aim"] = tuple(round(v, 4) for v in aim)
+    CAMERAS["reverse"]["loc"] = tuple(de + Vector((0.34, 0.94, 0.12)))
+    CAMERAS["reverse"]["aim"] = tuple(te + Vector((-0.08, 0, -0.075)))
 
 
 def which_camera():
@@ -939,6 +922,7 @@ def build(cast=True):
         glass_camera()
     else:
         st.empty("fx_dawn", (BXO, 0.7, 1.2))
+        st.empty("fx_tim", (BXO, -0.7, 1.2))
         if "glass" in CAMERAS:
             CAMERAS["glass"]["loc"] = (BXO - 0.36, -1.15, 1.32)
             CAMERAS["glass"]["aim"] = (BXO + 0.07, 0.66, 1.12)
