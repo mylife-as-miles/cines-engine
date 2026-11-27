@@ -12,7 +12,6 @@ the plastic sheen generated textures often have.
 import math
 import os
 
-import bmesh
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
 import setkit as sk
@@ -269,59 +268,56 @@ def _retouch_tote_textures(holder, box, dx, feather=8):
                 print(f"PROP retouched {img.name} ({n.label}) at {box}", flush=True)
 
 
-def _smooth_tote_plate(holder, centre, radius, iters=12, fac=0.6):
-    """Smooth away a small modelled relief on a generated prop (the tote's oval maker's plate, which is geometry, not
-    texture: 1-1.5 mm bumps on a 5 mm mesh): vertices within `radius` metres of `centre` (mesh-local) are relaxed
-    toward their neighbours along their normals only, so the surface flattens without the texture sliding."""
-    o = next(c for c in holder.children_recursive if c.type == "MESH")
-    bpy.context.view_layer.update()
-    k = o.matrix_world.to_scale().x
-    R = radius / k
-    bm = bmesh.new()
-    bm.from_mesh(o.data)
-    bm.normal_update()
-    sel = []
-    for v in bm.verts:
-        d = (v.co - centre).length
-        if d < R:
-            sel.append((v, min(1.0, max(0.0, (R - d) / (0.4 * R)))))
-    for _ in range(iters):
-        new = []
-        for v, w in sel:
-            nb = [e.other_vert(v) for e in v.link_edges]
-            if not nb:
-                continue
-            avg = sum((n.co for n in nb), Vector()) / len(nb)
-            new.append((v, v.co + v.normal * ((avg - v.co).dot(v.normal) * fac * w)))
-        for v, co in new:
-            v.co = co
-    bm.to_mesh(o.data)
-    bm.free()
-    o.data.update()
-    print(f"PROP flattened {len(sel)} vertices of {o.name[:24]} round the maker's plate", flush=True)
-
-
 def _plain_tote_panel(holder):
     import numpy as np
-    # Projected from the inspection insert into the 4096px UVs. Reconstruct the
-    # grained panel's curvature from a collar of intact leather around the relief.
-    _retouch_tote_textures(holder, (452, 184, 555, 278), 158, feather=12)
+    # The macro reveals a small piece of hardware in the old donor swatch.
+    # This part of the atlas is uninterrupted leather in all three maps.
+    _retouch_tote_textures(holder, (446, 177, 566, 284), 342, feather=12)
     mesh = next(o.data for o in holder.children_recursive if o.type == "MESH")
     co = np.empty(len(mesh.vertices) * 3, np.float32)
     mesh.vertices.foreach_get("co", co)
     co = co.reshape(-1, 3)
-    y, z = (co[:, 1] - 0.001) / 0.029, (co[:, 2] - 0.134) / 0.019
+    y, z = (co[:, 1] + 0.004) / 0.049, (co[:, 2] - 0.136) / 0.031
     radius = np.hypot(y, z)
-    front = np.abs(co[:, 0] - 0.118) < 0.023
-    ring = front & (radius > 1.05) & (radius < 1.65)
+    # The front panel slopes back toward the lip. Sample only this face of
+    # the bag when fitting the curvature of the leather around the old stamp.
+    front = np.abs(co[:, 0] - (0.114 - 0.50 * (co[:, 2] - 0.136))) < 0.017
+    verts = np.empty(len(mesh.loops), np.int32)
+    mesh.loops.foreach_get("vertex_index", verts)
+    uv = np.empty((len(verts), 2), np.float32)
+    mesh.uv_layers.active.uv.foreach_get("vector", uv.ravel())
+    u, v = (uv * 4096).T
+    outer = np.zeros(len(co), dtype=bool)
+    outer[verts[(u > 410) & (u < 630) & (v > 140) & (v < 350)]] = True
+    leather = front & outer
+    ring = leather & (radius > 1.0) & (radius < 1.62)
     fit = np.column_stack((np.ones(len(y)), y, z, y * y, z * z, y * z))
     coeff = np.linalg.lstsq(fit[ring], co[ring, 0], rcond=None)[0]
-    select = front & (radius < 1.30)
-    weight = np.clip((1.30 - radius[select]) / 0.45, 0, 1)
-    co[select, 0] += weight * ((fit[select] @ coeff) - co[select, 0])
+    blend = np.clip((1.37 - radius) / 0.43, 0, 1)
+    blend = blend * blend * (3.0 - 2.0 * blend)
+    weight = blend * leather
+    skin = fit @ coeff
+    co[:, 0] += weight * (skin - co[:, 0])
+    # Keep the lining inside. Collapsing both skins onto one fitted surface
+    # makes their triangles coincide in the macro.
+    inner = np.zeros(len(co), dtype=bool)
+    inner[verts[(u > 2350) & (u < 2630) & (v > 3800)]] = True
+    lining = front & inner
+    co[lining, 0] += blend[lining] * np.minimum(skin[lining] - 0.005 - co[lining, 0], 0)
     mesh.vertices.foreach_set("co", co.ravel())
     mesh.update()
-    print(f"PROP tote panel: {select.sum()} vertices from {ring.sum()} surrounding samples", flush=True)
+    # The GLB also carries a normal field baked from the raised stamp. Blend
+    # its corner normals into the fitted surface, preserving the rest of the bag.
+    if mesh.has_custom_normals:
+        normals = np.empty((len(mesh.loops), 3), np.float32)
+        mesh.corner_normals.foreach_get("vector", normals.ravel())
+        surface = np.column_stack((np.ones(len(y)), -(coeff[1] + 2 * coeff[3] * y + coeff[5] * z) / 0.049,
+                                   -(coeff[2] + 2 * coeff[4] * z + coeff[5] * y) / 0.031))
+        surface /= np.linalg.norm(surface, axis=1)[:, None]
+        normals += weight[verts, None] * (surface[verts] - normals)
+        normals /= np.maximum(np.linalg.norm(normals, axis=1)[:, None], 1e-9)
+        mesh.normals_split_custom_set(normals)
+    print(f"PROP tote panel: {np.count_nonzero(weight)} vertices from {ring.sum()} leather samples", flush=True)
 
 
 def remove_tote_plate(holder):
@@ -329,7 +325,6 @@ def remove_tote_plate(holder):
     if holder.get("plain_tote_panel"):
         return
     _plain_tote_panel(holder)
-    _smooth_tote_plate(holder, Vector((0.119, -0.005, 0.1401)), 0.014)
     holder["plain_tote_panel"] = True
 
 
