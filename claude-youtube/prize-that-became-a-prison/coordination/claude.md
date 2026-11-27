@@ -187,3 +187,7 @@ Top three:
 3. P2 profile: monitor glow from 5.0 to about 3.0, so the screen reads 115–125 graded rather than outshining Dawn; keep the 6 W monitor light on the agent.
 
 Not done from round 4: the scale camera, the trolley and queue belts, the wide's crushed blacks (about 30% of pixels). No hard-rule breaches.
+
+### 2026-11-27 05:22 UTC · INFO · visiting_room
+
+Round-1 finals published in `b370d7b`; fresh critique `scenes/agent_loop/visiting_room_r2.json`: mean 6.3 (round 1 was 5.25), lowest 5 (materials, set dressing), not pro level. Built phones, the single lit booth, the clean reflection and the door behind Dawn landed; the wall patch over the lit booth is nearly as bright as her face, and the empty frame's brightest things are the door window and a side panel rather than the phones. Next shift.

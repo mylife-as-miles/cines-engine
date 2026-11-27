@@ -711,79 +711,79 @@
   ]
  },
  "visiting_room": {
-  "round": 1,
+  "round": 2,
   "scores": {
-   "composition": 6,
-   "lighting": 5,
-   "materials": 4,
-   "set_dressing": 4,
-   "grounding_scale": 6,
-   "cast": 5,
-   "story_read": 6,
-   "technical": 6
+   "composition": 7,
+   "lighting": 6,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 7,
+   "cast": 6,
+   "story_read": 7,
+   "technical": 7
   },
   "pro_level": false,
-  "verdict": "Not at fern level yet (mean 5.25). The glass shot is the strongest frame and comes closest: a good over-the-shoulder, Tim's ghost reflection between the two of them carries the chapter, and the armoured cord loops properly to the steel box. The wide has sound camera grammar: from the back and a little high, with the baffles leading in. But its brightest large area is not the cast. The spotlight-shaped scallops on the block wall above the glass average 173/255 in the raw frame, against 126 for Dawn's face. At least three fitting lenses burn near white (254, 244, 255), although the brief says only one booth's fittings burn. A fifth fitting is cut by the top edge of the frame. Hard elliptical scallops come from downlights, not caged linear fluorescents, so the light also reads as the wrong kind of fitting. 27% of the graded wide is pure black, which swallows the left wall and floor. The empty shot is the weakest. Both phones are the Tripo prop, and each one's cord hangs from the handset and ends in mid-air without reaching the box. The security glass, the subject of the whole chapter, does not read at all: no smudges, no reflection, no edge, so the pane looks like an open hatch. About 60% of the frame is flat grey slab and dark void, and the brightest pixel in the graded frame is 164, so nothing pops. Materials across the stage are untextured painted-CG grey: baffles and counters with no orange peel, no edge wear, no scuffs, no fixings, no grime. Dawn's \"prison grey\" reads as a black body-paint T-shirt with no collar, hem or weave. She does not read as older or worn. Her fingers rest on her temple over the handset instead of gripping it. Tim's required hand flat on the counter is visible in no frame, and from behind his head is a featureless bald egg. The inmates' side behind Dawn is an empty dark wall, so the far room says nothing about prison.",
+  "verdict": "Clear progress from round 1 (mean 5.25 to 6.25). The glass shot now nearly reaches fern level: a smooth ghost of Tim sits beside Dawn's face, his hair reads, and a door with a glowing vision panel stands behind her. The empty booth's phones and its smudged, reflecting glass are now real objects. It is still not professional. In the wide, the pool on the block wall above the lit booth is almost as bright as Dawn's face (graded 119 against 138), and a flat pale baffle beside the cast competes with them. In the empty frame, the brightest things are a vision panel in the dead centre and a flat lit baffle, not the two phones. The people and the paint still read as CG shells: a skin-tight top with a sculpted bust, Tim as a black silhouette, and wear that cannot be seen at frame scale. Both wall notices are blank (a noise-tinted sheet, no text), but neither one shows in any frame.",
   "fixes": [
    {
     "priority": 1,
+    "camera": "wide",
+    "problem": "The lit island is still shared with the wall. The soft pool on the visitors' face of the partition above the occupied booth's glass (x 690-890, y 200-265) measures 131 in the raw frame against 149 for Dawn's face (0.88x; the round-1 target was 0.6x), and 119 against 138 in the graded frame. It is the largest bright area in the frame and pulls the eye above the cast. The 0.095 m LIP does not stop it. The fitv3_down source sits at z 2.65, above the lip's bottom edge at 2.605, so it only blocks rays more than about 54 degrees from vertical. The wall above the glass is reached by rays 0-30 degrees from vertical.",
+    "fix": "In visiting_room_set.py, deepen the partition-side lip on the visitors' lit fittings from LIP 0.095 to about 0.17 m. The lip's bottom then sits at about z 2.53 and cuts every ray steeper than about 29 degrees toward the partition, which covers the whole wall from the head rail (z 2.045) to the soffit. Alternatively, cut fitv*_down's spread from 120 to about 90 degrees while keeping TILT 24. Also set the lit diffuser objects' visible_diffuse = False, so the lens mesh's own emission does not wash the wall (it keeps glowing to the camera). Check the raw wide: the wall above the occupied glass should be at or below 90 (0.6x Dawn's face) while her face stays at 140-150 and Tim's shoulders keep their top light."
+   },
+   {
+    "priority": 1,
     "camera": "empty",
-    "problem": "Both phones in the empty booth (and the phones on hooks in the other booths in the wide) are the Tripo visiting-phone prop. Its armoured cord hangs from the bottom of the handset and ends in mid-air, about 15 cm below the box, without going into it. In the frame where the phone is the subject, this is a clear prop error.",
-    "fix": "In visiting_room.py booths(), replace st.phone_prop on booth EMPTY (both sides) with the same build as the occupied booth: st.phone_box(name, x_face, y, facing), then st.handset() placed on the box's cradle hook (handset vertical, mouthpiece down, earpiece in the cradle), then st.cord(name, exit_point, handset_cord_world, b_dir=(0,0,-1), sag=0.12). The cord should leave the box's ferrule, drop 10-15 cm in a U and rise into the mouthpiece strain relief. Do the same for every phone visible in the wide (booths 1, 2, 4 and 5), or at least shorten the prop's dangling cord mesh by deleting the loose verts below the handset and adding a curve_tube from the handset bottom into the box underside."
+    "problem": "The subject is not where the light is. The brightest element is idoor2's wired-glass vision panel in the dead centre of the glass (graded 106, a hard vertical bar). Next comes the inmates' x=0 baffle face, lit by fiti2 at level 1.0, a flat pale slab of 170x570 px (graded 81). The near phone box face is 38, darker than its own baffle at 48, and the far phone is 49 against 39 for the glass around it. The beat asks for the far phone 'in its own light', but there is no pool on it, and its box is jammed against the left glazing stop. The near box's top edge reaches only 145 in the raw frame (the round-1 target was about 200).",
+    "fix": "In TRIMS['empty']: fiti2 1.0 to 0.35, so the baffle slab drops to about 45-50 graded. Register idoor2's glass material in st.PARTS['lens'] (as fitting() does for lenses), so the hook can scale it, and trim it to 0.3 for this camera. Add an 'emp_farkey' area light of 0.12 x 0.25 m, 15-25 W, spread 45, glossy on, camera off, about 0.35 m above and 0.12 m in front of the far phone box (x = BX[2] - 0.5 + 0.08, y = +0.3, z about 1.6), aimed down at the handset, so the far phone reads about 2x its surroundings (raw about 120). Add an 'emp_nearkey' of 0.15 x 0.04 m, 6-10 W, 0.3 m above the near box and 5 cm out from the baffle, raking down at about 20 degrees, so the box's top edge and the handset crown reach about 200 in the raw frame. To free the far phone from the left rail, move the camera from x = BX[2] - 0.32 to about BX[2] - 0.22, aim x from BX[2] + 0.15 to about BX[2] + 0.10, and check that the far box clears the glazing stop by at least 40 px, with the near phone still wholly inside the right third."
    },
    {
     "priority": 2,
-    "camera": "empty",
-    "problem": "The security glass is invisible. There are no prints, no reflection, no edge and no thickness, so the pane reads as an open hatch, and the frame loses the chapter's subject (the glass between them).",
-    "fix": "Make the glass catch light. (a) Add a grazing area light on the visitors' side at the top of the empty booth's pane: size (0.9, 0.04), about 3 cm in front of the glass, aimed down the pane at about 80 degrees from its normal, spread 40, 15-30 W, glossy on and camera off, so the palm and forehead marks in smudge_zone light up as milky film. (b) For this camera only, raise security_glass refl from 0.035 to about 0.07 and film_gain from 2.6 to 4-5. (c) Put one bright thing in the reflection path: lower the camera to z 1.3 and tilt it up 3-4 degrees so the lit visitors' fitting fitv2 (or a dim emissive strip on the back wall behind the camera at about 2.0 m) reflects as a soft streak in the upper third of the pane. (d) Show the pane's cut edge: inset a 1.5 mm glass_edge strip at the frame rebate on the visible left and bottom edges, so the 20 mm thickness reads as a green-grey line."
+    "camera": "glass",
+    "problem": "Dawn's grip is still wrong. Her four fingers lie flat across her cheek above the handset instead of wrapping the handle. The handset hangs near vertical, so the mouthpiece sits at her neck and collarbone, about 10 cm below the corner of her mouth. It reads as a hand pressed to her face with a phone tucked behind it. In the frame's key close-up, this is the most visible pose error.",
+    "fix": "In build_cast(), call handset_frame(h, +1, tilt=...) for Dawn with tilt about 22-28 degrees (from 0.0), so the handle runs from the ear canal forward to the corner of the mouth. Re-solve phone_hand so the palm centres on the handle's midpoint, not on the earpiece: shift the wrist target about 3-4 cm down the handset's Y axis, and raise _curl(h, 'R', 62) to about 75 so the fingers close round the 3 cm handle with the thumb along its inner face. After posing, check that no finger vertex lies within 5 mm of the head mesh, apart from the heel of the hand against the jaw. Re-run the cord so it still leaves the mouthpiece strain relief. Do the same tilt for Tim, so his reflection holds the handset the same way."
+   },
+   {
+    "priority": 2,
+    "camera": "glass",
+    "problem": "Dawn's top reads as a skin-tight, mid-grey leotard. The bust is sculpted under it, with no drape, no folds at the armpit or waist and no weave at this distance. The sleeve and neck edges read as paint lines, not hems. A woman twelve years inside, in a washed prison tee, should look clothed, not body-painted. Nothing in her reads as older.",
+    "fix": "Stage-side, on DawnPrison's female_casualsuit01 garment object (no change of wardrobe): add a Smooth modifier (factor 1.0, repeat about 8) limited to a vertex group weighted over the bust and lower chest, so the front reads as cloth hanging from the bust line rather than following it. Add a Displace modifier with a Clouds texture (noise size about 0.06 m, strength 0.003-0.005 m, midlevel 0.5) for loose-knit irregularity. In matt_cloth, raise folds from 0.45 to about 0.7 so creases darken at the armpit, under the bust and at the bowed waist. Add a 1 cm band 15% darker at the sleeve hems and the neckband. For age, raise sculpt_hair('DawnPrison') from 0.075 to about 0.14 and mix toward about 0.22 at the temples and the parting with a streaked noise (grey coming in). Push chest from 17 to about 22 degrees and neck from 6 to 8, and re-aim the head so the gaze still lands on Tim's mouth."
    },
    {
     "priority": 3,
-    "camera": "wide",
-    "problem": "The lit island is the wall, not the cast. The spotlight-shaped scallops on the block wall above the glass (raw mean 173) are brighter than Dawn's face (126). Three or four fitting lenses near clipping pull the eye to the ceiling, the brief asks that only one booth's fittings burn, and the fifth fitting (x 930-1030) is cut by the top edge of the frame.",
-    "fix": "In visiting_room_set.py, set LEVEL_V = [0, 0, 0, 1.0, 0, 0] and LEVEL_I = [0, 0.03, 0, 1.0, 0, 0] (or apply a 'wide' TRIMS entry that multiplies the other fitv/fiti by 0). Check that the lens glow (mt.glow and the To Min/To Max range) really scales with level: lenses at level 0.06-0.2 currently render at 244-254. Kill the scallops: widen fitv*_down spread from 100 to 150-160 and make it longer and thinner like a linear tube (size (L-0.05, 0.04)); move the fittings 0.25-0.35 m further from the partition (FIT_Y), or add a 6 cm deep enamel side lip on the partition side of the fitting body so the wall above the glass is cut off at the top. Aim for the wall above the occupied booth at about 0.6 times Dawn's face value. Then tilt the wide camera aim down about 0.08 m in z, or pan it, so the fifth fitting falls fully out of frame or fully into it."
+    "camera": "glass",
+    "problem": "Tim is one black silhouette. In the wide, his hair (51), neck and jacket back (27) merge into a single dark mass with no collar line. In the glass shot, the foreground head is 19 graded and the collar at the bottom right is crushed to 10, although the raw frame has a jacket collar and a shirt collar there. The dark foreground mass has no readable edge apart from the ear rim.",
+    "fix": "Add a 'kick_Tim' area light of 0.25 x 0.25 m, 3-5 W, behind and above his right shoulder at about (BXO + 0.55, -1.45, 1.75), aimed at his nape: glossy on, camera off, volume off, and invisible in the glass (visible_glossy off on the glass, or place it so its reflection falls outside the pane). The target is a soft edge on the hair's crown line, the jacket's shoulder seam and the shirt collar at about 40-55 graded in both frames. Lift Tim's jacket in matt_cloth (rgb about 0.04 linear, charcoal) so the back separates from the counter shadow beneath it."
+   },
+   {
+    "priority": 3,
+    "camera": "empty",
+    "problem": "The glass marks now read, but they read as mottled noise clouds, not as hands and faces. The smudge field is two thresholded noise scales, so it gives irregular blotches: a cluster like floating leaves cut by the top edge of the frame (x 330-560, y 0-30), and a stippled, dithered patch beside the vision panel. Real visiting-booth glass shows palm prints with finger streaks, a forehead or cheek smear, and wipe arcs.",
+    "fix": "In security_glass(), add shaped prints per bay on top of the noise: a few world-space distance-field ellipses on the pane plane. Each is a palm about 9 x 11 cm with four or five finger streaks about 1.5 x 7 cm above it, at z 1.0-1.35 and offset left or right of the phone, plus a cheek or forehead smear about 12 x 6 cm at seated head height (z 1.15-1.3). Feather each one 1-2 cm and break it with fine noise (scale about 300) inside, so it reads as grease rather than a solid shape. Tighten the generic prints' map range from 0.6-0.74 to about 0.68-0.76, and multiply the band by 0 above z 1.6, so the blotches at the top of the frame go. Keep film_gain 3 for this camera."
    },
    {
     "priority": 4,
-    "camera": "glass",
-    "problem": "Dawn's 'prison grey' reads as a black, seamless body-paint T-shirt next to bare stone arms, and nothing in her reads as twelve years inside. Her fingers rest on her temple above the handset, so the handset floats in front of the palm without being gripped, earpiece at the temple and mouthpiece at the jaw.",
-    "fix": "Lift the uniform's tint in the stage (multiply the garment by FABRIC_VALUE as per the brief) so it lands near 0.16-0.2 linear before grading: a clear mid-dark grey that still sits below the 0.5 stone. Add matt_cloth with bump 0.35 and a fine weave texture, so the fabric shows a weave and folds. If dawn_prison allows a long-sleeve top or a jacket with a collar, use it; a short-sleeve T-shirt reads as gym wear. For age and weariness, pose the chest about 6 degrees down and the shoulders slightly forward, with the head 4-5 degrees down. Re-solve phone_hand: lower the handset 3-4 cm so the earpiece covers the ear canal and the mouthpiece sits at the corner of the mouth; wrap the four fingers around the handle with _curl 55-70 degrees and the thumb on the inner face, so the hand holds the handset instead of touching the head."
+    "camera": "wide",
+    "problem": "The new dressing does not reach the screen. Both notices are blank, which passes the hard rule, but neither shows in any frame. notice_v at (-3.3, -KW, 1.5) is hidden behind the first baffle in the wide; only its top 3-6 px peek above it, at about x 217-260, y 311-317. notice_i at (-1.45, Y1, 1.55) shows only as fragments through booth 2's upper glass, and it is out of shot in the glass and empty frames. The clock sits above the head rail and is hidden too. The CCTV dome and the bin are crushed to near black in the graded wide. Apart from the booths themselves, nothing in the frames says 'prison'.",
+    "fix": "Move notice_v onto the visitors' face of the partition above the glass, in the falloff left of the lit pool: notice_panel('notice_v', (-1.5, -KW, 2.4), (0.45, 0.3), -1), landscape because the band between head rail and soffit is only 0.7 m. It projects at about (437, 211) in the wide and is out of the glass and empty shots. Move notice_i to (1.75, Y1, 1.5), where it reads through booth 4's glass in the wide at about (1046, 353). In the glass shot it falls behind the inmates' baffle (check that it stays clear of Tim's reflection). Keep both sheets blank, matt, and at or below about 60 graded. Move the clock to x about 1.2 on the inmates' back wall at z 1.95, or onto the visitors' left wall, wherever a camera sees it."
+   },
+   {
+    "priority": 4,
+    "camera": "all",
+    "problem": "The round-1 paint and counter wear exists in visiting_room_mats.py but is invisible at frame scale. The baffles and nosings read as clean, smooth CG panels in every frame (see the empty frame's right baffle and the wide's pale baffle). The counters are flat dark slabs, with no elbow-polished patch catching the fitting.",
+    "fix": "In booth_paint(): raise edge from 0.13-0.16 to about 0.3, bare from (0.3, 0.305, 0.31) to about (0.4, 0.405, 0.41), and the orange-peel bump strength from 0.04 to about 0.08. Add a darker, glossier hand-grease patch (roughness minus 0.12, value x0.85) on the baffle nosings at z 0.9-1.3. In counter_top(), push the forearm-wear spots to roughness about 0.3 against 0.5, so the lit fitting's specular picks out a polished oval in front of Tim. Then check the empty frame's near baffle and the wide's x=0 baffle at 2x zoom for visible chips on the arrises."
    },
    {
     "priority": 5,
-    "camera": "glass",
-    "problem": "Tim's required hand flat on the counter appears in no frame, and his head (the large foreground mass in the glass shot) is a smooth bald egg with no hair, ear detail or collar, which reads as a mannequin blank rather than a 58-year-old man.",
-    "fix": "Pose Tim's free (left) hand with rest_hand on the counter about 22-25 cm to the left of his body centre and 10-15 cm from the counter edge, fingers curled 14 degrees. Check that it shows in the wide (about x 700-740, y 470) and enters the lower right of the glass frame. Give Tim a sculpted short hair cap through sculpt_hair (receding, about 8 mm proud, value about 0.35 of the skin), and let the suit collar and shirt collar show at the bottom of his head in the glass shot, so the dark mass has a readable edge."
+    "camera": "wide",
+    "problem": "The visitors' x=0 baffle's +X face beside the cast (x 600-690, y 325-720) is a flat pale slab at 98 graded. After the wall pool, it is the largest bright shape in the frame, and it sits right against Tim and Dawn.",
+    "fix": "Hang a camera-invisible flag (a black plane of about 0.3 x 0.4 m, visible_camera, visible_glossy and visible_diffuse off, shadows on) at the -X end of fitv3, 5 cm below the body. Alternatively, rotate fitv3_down about 8-10 degrees around Y toward +X. The top half of that baffle should fall to about 55-65 graded, with a gradient down its height, while Tim's shoulders and the counter in front of him keep their light."
    },
    {
     "priority": 6,
-    "camera": "all",
-    "problem": "Materials read as untextured CG grey. The painted-steel baffles, counters, sills and frames are uniform, with no orange peel, no edge wear, no fixings and no grime. The counter is a clean flat slab, unlike a real visiting booth after years of elbows and keys.",
-    "fix": "In visiting_room_mats.py, give the baffle and frame paint: an orange-peel bump (noise scale about 400, strength 0.04); edge wear driven by Pointiness or AO (bevel width about 3 mm) toward lighter bare steel at a mask of 0.1-0.15; a grime gradient over the bottom 25 cm (value times 0.8); and roughness varying 0.45-0.6. Add 6 mm pan-head screws along each baffle's frame flange every 0.3 m, and a 20 mm vertical seam where the baffle meets the counter. Give the counter top a laminate with fine scratches (wave or noise streaks along x), a worn darker patch 30x20 cm in front of each phone, a chipped bullnose edge and a steel nosing strip at the front, 2 mm proud."
-   },
-   {
-    "priority": 7,
     "camera": "glass",
-    "problem": "Tim's reflection in the glass is blotchy and mottled (denoiser speckle in the low-light reflection), and the inmates' side behind Dawn is an empty dark wall with one horizontal band, so the shot has no depth and says nothing about the prison.",
-    "fix": "Render the glass camera at spp 128 or more, or reduce haze density on the inmates' side (the haze volume spans the whole room: split it, or set density 0 for this camera), so the reflection comes out clean. Raise bounce_Tim slightly and keep refl as it is, so the ghost is smooth rather than grainy. Dress the inmates' back wall about 2.5-3 m behind Dawn: a steel door with a small wired-glass vision panel glowing dim cool (glow_s about 2), a blank rules panel 0.6x0.8 m, and a CCTV dome high on the left. Keep everything soft at f/2.8 so it reads as an institution without competing with her face."
-   },
-   {
-    "priority": 8,
-    "camera": "empty",
-    "problem": "The composition is about 60% flat grey slab and dark void. The far phone sits in shadow, though the brief has it in the light of the far side. Max graded value is 164, so there is no highlight anywhere and nothing draws the eye to the subject phone.",
-    "fix": "Move the camera closer and lower: loc about (BX[EMPTY]-0.15, -1.0, 1.28), lens 40, aimed so the near phone fills the right third and the glass frame runs as a diagonal toward the left. Put a pool on the far phone: in TRIMS['empty'], add a narrow area light (0.3x0.1, 40-60 W, spread 70) over the inmates' counter 0.4 m above the far phone, so the far phone and the inmates' sill read at about 2x the visitors' side. Let fitv2 rake the near phone box from above (a small area light 0.2x0.05, 8-12 W, 0.4 m above it) so the steel box's top edge and the handset crown reach about 200/255 in the raw frame."
-   },
-   {
-    "priority": 9,
-    "camera": "wide",
-    "problem": "27% of the graded wide frame is at or below 5/255. The left wall's block coursing, the bin at the left edge and the bottom-left floor are crushed to black, although the brief asks that the walls carrying the place stay readable in shadow.",
-    "fix": "Give the left of the room a faint motivated source: turn fitback0 (at x -1.8) on at level 0.03-0.05 with its down spread 150, or raise vdoor_spill from 5 to 10 W, so the left wall's mortar lines sit around 12-18/255 after the grade. Alternatively, lift the shadow floor in the wide grade by about 0.01."
-   },
-   {
-    "priority": 10,
-    "camera": "wide",
-    "problem": "Set dressing is sparse for an institution: only six booths, chairs and phones. Nothing on the visitors' side tells you it is a prison visiting room beyond the booths themselves (no rules panel, no seating number plates, no floor markings), and the far right booth's glass shows only a dark smear.",
-    "fix": "Add restrained, text-free dressing. A blank laminated rules panel (0.5x0.7 m, matt off-white, 4 screws) on the block wall between booths 2 and 3, above the glass line at z 2.2. Yellow-grey floor tape lines (50 mm wide, matt, slightly worn) 0.3 m behind the chairs, marking a waiting line. A blank pictogram plate (no-phone symbol only, as a simple geometric icon, or leave it blank) above each phone box. A steel wall clock (no numerals, just tick marks) high on the left wall. Keep everything dark and out of the lit island."
+    "problem": "Dawn's armoured cord crosses in front of her raised right elbow with no contact or shadow, so it floats a few centimetres off the arm in a frame where the cord is a strong leading line.",
+    "fix": "Lower the cord's sag from 0.16 to about 0.10, or route the curve's middle control point 3-4 cm toward the body, so it either rests on the forearm (and casts its shadow there) or clearly clears it by passing below the elbow."
    }
   ]
  },
