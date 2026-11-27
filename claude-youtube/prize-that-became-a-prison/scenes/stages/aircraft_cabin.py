@@ -1,23 +1,32 @@
 """Stage: the night flight to Hong Kong, 2014 (Ch 02 end / Ch 03). Fluorescent Noir.
 
 A generic wide-body economy cabin at night, built in Python (aircraft_cabin_set.py, materials in
-aircraft_cabin_mats.py): 3-3-3 rows of seats with headrests under cloth covers, tray tables and dark or blank-glowing
-seat-back screens, belts left crossed on the empty cushions; side and centre overhead bins;
-the curved sidewall with oval windows, most shades pulled down for the night; the blue night coves on the aisle
-ceilings, a thin wash down the sidewalls and the path lights along the aisles; the galley curtains glowing at the far
-end. Every reading light is off but one: Dawn's, over the port window seat in row 5, the one pool in the dark.
-Outside her window the sky at altitude, a faint horizon far below, the port wing reaching out to its red tip light.
+aircraft_cabin_mats.py): 3-3-3 rows of seats with headrests under draped cloth covers, tray tables and dark or
+blank-glowing seat-back screens, belts left crossed on the empty cushions; side and centre overhead bins; the curved
+sidewall with oval windows, most shades pulled down for the night; the blue night coves on the aisle ceilings, a thin
+wash down the sidewalls and the path lights along the aisles; the galley curtains glowing at the far end. Every
+reading light is off but one: Dawn's, over the port window seat in row 5, the one pool in the dark. Outside her window
+the sky at altitude, a faint horizon far below, the port wing reaching out to its winglet and red tip light.
 
 Dawn is the shared cast's people.dawn() (as at the gate the same night), seated through Rigify with the gate's
 method (legs to FK, a small solve for thigh and shin so her seat sinks a little into the cushion and her soles rest on
-the carpet, then slid back to the backrest), leaning back into the seat, hands resting in her lap, head turned to the
-window. A few still passengers (people.man / people.staff) sit asleep in the other blocks; most seats are empty.
+the carpet, then slid back to the backrest), her trunk leaning back a little into the seat, hands resting close in her
+lap, head turned to the window. Four still passengers (people.man / people.staff) sit asleep in the other blocks;
+every other seat is empty.
 
     <bpy python> -I scenes/shoot.py -- aircraft_cabin <cam> out.png [--nocast]
 
-A hook on setkit.render sets the camera clip (the sky dome is 2.5 km away), clamps indirect light and applies the
-per-camera trims before each render. With CABIN_EXR=<dir> in the environment it also saves the render's light groups
-(key, window, coves, wash, path, screens, galley, exterior) as a multilayer EXR there, for balancing the lights.
+Cameras: "aisle" (standing in the port aisle two rows behind her), "window" (across the aisle and the two empty seats
+of her row: her profile against her window, hands in her lap), "over" (behind her right shoulder, over her seat's
+top, out of the window to the wing-tip light).
+
+Light: only what the cabin has. Her reading lamp (a spot at the lit lens, plus the little the lens scatters), the
+window's cool glow, the night coves and what the lit ceiling gives back, the sidewall wash, the path lights, a few
+blank screens, the galleys' glow at both ends, the moon on the wing. One soft low fill, on her alone, stands in for
+her lamp's light coming back off the pale linings in the "window" shot. A hook on setkit.render sets the camera clip
+(the sky dome is 2.5 km away), clamps indirect light and applies the per-camera trims and the lamp's aim before each
+render (TRIMS, KEY_AIM). With CABIN_EXR=<dir> in the environment it also saves the render's light groups (GROUPS) as
+a multilayer EXR there, which is how the lights were balanced.
 """
 import math
 import os
@@ -71,7 +80,7 @@ def _toward(loc, az_deg, el_deg, dist):
 
 
 AISLE_CAM = (-1.04, 1.70, 1.56)
-WINDOW_CAM = (-1.10, 4.42, 1.24)
+WINDOW_CAM = (-0.78, 4.42, 1.24)
 OVER_CAM = (-2.10, 3.62, 1.36)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
@@ -86,11 +95,11 @@ CAMERAS = {
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.05, 0.905), lens=28, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.05, 0.858), lens=29, focus="fx_face", fstop=2.8,
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red tip
     # light under the horizon, and the dark below; her head soft in the foreground
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 29.5, -12.6, 1.2), lens=42, focus="fx_over", fstop=11.0,
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 28.5, -12.8, 1.2), lens=40, focus="fx_over", fstop=11.0,
                  beat="ch03"),
 }
 TIP_DIR = (28.5, -5.2)                          # the wing tip from "over": degrees forward of abeam, above level

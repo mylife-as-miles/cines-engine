@@ -167,7 +167,7 @@ def emit(name, rgb, strength, sampling="AUTO"):
 
 # ---------------------------------------------------------------- concrete
 def concrete(name, base=(0.25, 0.25, 0.245), top=6.0, lift=1.5, ties=True, streak=0.6, foot=0.9, rough=(0.6, 0.8),
-             boards=0.0):
+             boards=0.0, relief=0.4):
     """Cast concrete, world space. Lift lines every `lift` metres (0: none), tie holes on a 1.2 x lift/2 grid,
     dark rain streaks that start at `top` and thin out downward, a damp, slightly green foot `foot` metres high,
     `boards`: the height of board marks (0: smooth shutter)."""
@@ -176,13 +176,16 @@ def concrete(name, base=(0.25, 0.25, 0.245), top=6.0, lift=1.5, ties=True, strea
     x, y, z = _xyz(nt, o)
     hcoord = _math(nt, "ADD", x, y)                       # runs along any axis-aligned vertical face
     mott = _maprange(nt, _noise(nt, o, 0.35, 5.0, 0.6), 0.3, 0.7, 0.0, 1.0)
-    col = _mix(nt, mott, tuple(c * 0.74 for c in base), tuple(c * 1.12 for c in base))
-    blot = _maprange(nt, _noise(nt, o, 2.3, 4.0, 0.6), 0.3, 0.7, 0.9, 1.06)
+    col = _mix(nt, mott, tuple(c * 0.68 for c in base), tuple(c * 1.16 for c in base))
+    blot = _maprange(nt, _noise(nt, o, 2.3, 4.0, 0.6), 0.3, 0.7, 0.88, 1.07)
     col = _mulv(nt, col, blot)
+    # damp patches: metres across, darker and smoother where the rain has soaked in
+    patch = _maprange(nt, _noise(nt, o, 0.13, 4.0, 0.62, mapping=(1.0, 1.0, 0.55)), 0.5, 0.64, 0.0, 1.0, smooth=True)
+    col = _mix(nt, _math(nt, "MULTIPLY", patch, 0.5 * min(1.0, streak * 1.6)), col, tuple(c * 0.42 for c in base))
     # rain streaks: noise drawn out vertically, strongest under the coping
     sn = _noise(nt, o, 1.0, 4.0, 0.65, mapping=(7.0, 7.0, 0.10))
-    s = _maprange(nt, sn, 0.50, 0.72, 0.0, 1.0, smooth=True)
-    hm = _maprange(nt, z, top - 5.0, top, 0.12, 1.0, smooth=True)
+    s = _maprange(nt, sn, 0.45, 0.7, 0.0, 1.0, smooth=True)
+    hm = _maprange(nt, z, top - 5.5, top, 0.25, 1.0, smooth=True)
     sf = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", s, hm), streak, clamp=True)
     col = _mix(nt, sf, col, tuple(c * 0.36 for c in base))
     sn2 = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(11.0, 11.0, 0.16))
@@ -217,11 +220,12 @@ def concrete(name, base=(0.25, 0.25, 0.245), top=6.0, lift=1.5, ties=True, strea
         col = _mix(nt, _maprange(nt, tone.outputs["Value"], 0.0, 1.0, 0.0, 0.12), col, tuple(c * 0.6 for c in base))
     _link(nt, col, b.inputs["Base Color"])
     r = _maprange(nt, _noise(nt, o, 3.1, 4.0, 0.6), 0.3, 0.7, rough[0], rough[1])
-    r = _fmix(nt, sf, r, 0.32)
+    r = _fmix(nt, _math(nt, "MULTIPLY", patch, min(1.0, streak * 1.6)), r, 0.34)
+    r = _fmix(nt, sf, r, 0.3)
     r = _fmix(nt, damp, r, 0.36)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.45
-    _bump(nt, b, height, 0.4, 0.004)
+    _bump(nt, b, height, relief, 0.004)
     return m
 
 
@@ -244,16 +248,16 @@ def _height(nt, img, rect):
 def _ripples(nt, o, wet):
     """Rain rings on standing water: metres of height, a few rings round each drop."""
     vor = _n(nt, "ShaderNodeTexVoronoi")
-    vor.inputs["Scale"].default_value = 2.7
+    vor.inputs["Scale"].default_value = 1.7
     _link(nt, o, vor.inputs["Vector"])
     d = vor.outputs["Distance"]
     cr, _, _ = _xyz(nt, vor.outputs["Color"])
-    ring = _math(nt, "SINE", _math(nt, "ADD", _math(nt, "MULTIPLY", d, 74.0), _math(nt, "MULTIPLY", cr, 6.283)))
-    env = _maprange(nt, d, 0.02, 0.30, 1.0, 0.0, smooth=True)
-    act = _maprange(nt, cr, 0.42, 0.5, 0.0, 1.0)
+    ring = _math(nt, "SINE", _math(nt, "ADD", _math(nt, "MULTIPLY", d, 50.0), _math(nt, "MULTIPLY", cr, 6.283)))
+    env = _maprange(nt, d, 0.02, 0.42, 1.0, 0.0, smooth=True)
+    act = _maprange(nt, cr, 0.3, 0.4, 0.0, 1.0)
     r = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", ring, env), _math(nt, "MULTIPLY", act, wet))
-    swell = _math(nt, "SUBTRACT", _noise(nt, o, 5.0, 1.0, 0.5), 0.5)
-    return _math(nt, "ADD", _math(nt, "MULTIPLY", r, 0.0011), _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", swell, wet), 0.0012))
+    swell = _math(nt, "SUBTRACT", _noise(nt, o, 4.0, 2.0, 0.5), 0.5)
+    return _math(nt, "ADD", _math(nt, "MULTIPLY", r, 0.0017), _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", swell, wet), 0.002))
 
 
 def asphalt(name, img, rect, level=0.33, stop_x=None, stop_y=4.1):
@@ -295,9 +299,9 @@ def asphalt(name, img, rect, level=0.33, stop_x=None, stop_y=4.1):
     col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.4), base, (0.02, 0.02, 0.022))
     col = _mix(nt, wet, col, (0.012, 0.013, 0.015))
     _link(nt, col, b.inputs["Base Color"])
-    r = _maprange(nt, _noise(nt, o, 2.2, 4.0, 0.6), 0.3, 0.7, 0.24, 0.42)
-    r = _fmix(nt, crack, r, 0.16)
-    r = _fmix(nt, damp, r, 0.15)
+    r = _maprange(nt, _noise(nt, o, 2.2, 4.0, 0.6), 0.3, 0.7, 0.1, 0.26)
+    r = _fmix(nt, crack, r, 0.1)
+    r = _fmix(nt, damp, r, 0.07)
     r = _fmix(nt, wet, r, 0.012)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.55
@@ -375,7 +379,7 @@ def verge(name="verge"):
 
 
 # ---------------------------------------------------------------- steel
-def gate_steel(name="gate steel", paint=(0.13, 0.17, 0.22)):
+def gate_steel(name="gate steel", paint=(0.1, 0.132, 0.175)):
     """Painted steel plate: a blue-grey institutional paint, chalked and uneven, rain running down it in glossy
     tracks, rust bleeding from the seams and rising from the foot."""
     m, nt, b = _new(name)
@@ -383,18 +387,24 @@ def gate_steel(name="gate steel", paint=(0.13, 0.17, 0.22)):
     x, y, z = _xyz(nt, o)
     mott = _maprange(nt, _noise(nt, o, 1.4, 5.0, 0.6), 0.3, 0.7, 0.0, 1.0)
     col = _mix(nt, mott, tuple(c * 0.8 for c in paint), tuple(c * 1.14 for c in paint))
-    chalk = _maprange(nt, _noise(nt, o, 1.0, 3.0, 0.6, mapping=(9.0, 9.0, 0.5)), 0.55, 0.8, 0.0, 0.3)
-    col = _mix(nt, chalk, col, tuple(min(1.0, c * 1.7) for c in paint))
+    # panels repainted at different times: a tone per strip of plate
+    strip = _n(nt, "ShaderNodeTexWhiteNoise", noise_dimensions="1D")
+    _link(nt, _math(nt, "ADD", _math(nt, "FLOOR", _math(nt, "MULTIPLY", y, 1.3)), _math(nt, "MULTIPLY", _math(nt, "FLOOR", _math(nt, "DIVIDE", z, 1.22)), 17.0)), strip.inputs["W"])
+    col = _mulv(nt, col, _maprange(nt, strip.outputs["Value"], 0.0, 1.0, 0.8, 1.1))
+    chalk = _maprange(nt, _noise(nt, o, 1.0, 3.0, 0.6, mapping=(9.0, 9.0, 0.5)), 0.5, 0.78, 0.0, 0.38)
+    col = _mix(nt, chalk, col, tuple(min(1.0, c * 1.8) for c in paint))
+    grime = _maprange(nt, _noise(nt, o, 1.0, 4.0, 0.7, mapping=(21.0, 21.0, 0.22)), 0.47, 0.7, 0.0, 0.6, smooth=True)
+    col = _mix(nt, grime, col, tuple(c * 0.3 for c in paint))
     ao = _n(nt, "ShaderNodeAmbientOcclusion", samples=4)
     ao.inputs["Distance"].default_value = 0.07
     seam = _maprange(nt, ao.outputs["AO"], 0.35, 0.85, 1.0, 0.0, smooth=True)
     sn = _noise(nt, o, 1.0, 4.0, 0.7, mapping=(13.0, 13.0, 0.45))
     run = _maprange(nt, sn, 0.5, 0.72, 0.0, 1.0, smooth=True)
-    foot = _maprange(nt, _math(nt, "ADD", z, _math(nt, "MULTIPLY", sn, 0.5)), 0.25, 0.95, 1.0, 0.0, smooth=True)
+    foot = _maprange(nt, _math(nt, "ADD", z, _math(nt, "MULTIPLY", sn, 0.9)), 0.3, 1.5, 1.0, 0.0, smooth=True)
     spots = _maprange(nt, _noise(nt, o, 26.0, 4.0, 0.7), 0.6, 0.72, 0.0, 1.0)
     rust = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", seam, _math(nt, "ADD", 0.35, _math(nt, "MULTIPLY", run, 0.65))),
                  _math(nt, "MULTIPLY", foot, _math(nt, "ADD", 0.35, _math(nt, "MULTIPLY", spots, 0.65))))
-    rust = _math(nt, "MAXIMUM", rust, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", spots, run), 0.5), clamp=True)
+    rust = _math(nt, "MAXIMUM", rust, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", spots, run), 0.8), clamp=True)
     rcol = _mix(nt, _noise(nt, o, 40.0, 3.0, 0.6), (0.05, 0.022, 0.012), (0.11, 0.05, 0.022))
     col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.85), col, rcol)
     _link(nt, col, b.inputs["Base Color"])
@@ -493,7 +503,7 @@ def sky(name="night sky", zenith=(0.034, 0.042, 0.06), horizon=(0.062, 0.074, 0.
     return m
 
 
-def rain(name="rain", gain=1.5):
+def rain(name="rain", gain=0.5):
     """A falling drop drawn out by the shutter: it takes the light from any side (diffuse plus translucent)."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -539,14 +549,14 @@ def set_mist(m, density):
 # ---------------------------------------------------------------- the set's materials
 def materials(img, rect, stop_x):
     M.clear()
-    M["wall"] = concrete("wall concrete", base=(0.25, 0.25, 0.245), top=6.0, lift=1.5, ties=True, streak=0.65)
+    M["wall"] = concrete("wall concrete", base=(0.235, 0.235, 0.23), top=6.0, lift=1.5, ties=True, streak=0.9)
     M["cope"] = concrete("coping concrete", base=(0.29, 0.29, 0.28), top=6.2, lift=0.0, streak=0.25, foot=0.0,
                          rough=(0.38, 0.6))
     M["pier"] = concrete("pier concrete", base=(0.185, 0.185, 0.18), top=6.0, lift=1.5, ties=True, streak=0.7)
-    M["tower"] = concrete("tower concrete", base=(0.235, 0.235, 0.23), top=11.4, lift=2.4, ties=True, streak=0.75,
-                          boards=0.2)
+    M["tower"] = concrete("tower concrete", base=(0.225, 0.225, 0.22), top=11.4, lift=2.4, ties=True, streak=0.85,
+                          boards=0.2, relief=0.2)
     M["cabin"] = concrete("cabin concrete", base=(0.12, 0.124, 0.13), top=14.1, lift=0.0, streak=0.5, foot=0.0)
-    M["facade"] = concrete("block facade", base=(0.085, 0.088, 0.092), top=22.5, lift=3.1, ties=False, streak=0.8,
+    M["facade"] = concrete("block facade", base=(0.06, 0.062, 0.066), top=22.5, lift=3.1, ties=False, streak=0.8,
                            rough=(0.6, 0.85))
     M["trim"] = concrete("block trim", base=(0.15, 0.15, 0.148), top=22.5, lift=0.0, streak=0.4, foot=0.0)
     M["yard"] = concrete("yard concrete", base=(0.2, 0.2, 0.195), top=0.0, lift=0.0, streak=0.0, foot=0.0,
@@ -570,13 +580,14 @@ def materials(img, rect, stop_x):
     M["lens_cold"] = emit("lens cold", (0.8, 0.9, 1.0), 220.0, sampling="FRONT")
     M["lens_gate"] = emit("lens gate", (1.0, 0.95, 0.86), 220.0, sampling="FRONT")
     M["lens_dead"] = pbr("lens dead", (0.02, 0.022, 0.025), rough=(0.1, 0.2), nscale=3.0, spec=0.8)
-    M["lit_a"] = window_lit("window lit a", (1.0, 0.8, 0.5), 5.5)
-    M["lit_b"] = window_lit("window lit b", (1.0, 0.86, 0.62), 3.2, blind=0.45)
-    M["lit_c"] = window_lit("window lit c", (0.78, 0.95, 0.9), 2.6)
+    M["lit_a"] = window_lit("window lit a", (1.0, 0.8, 0.5), 3.0)
+    M["lit_b"] = window_lit("window lit b", (1.0, 0.86, 0.62), 2.0, blind=0.45)
+    M["lit_c"] = window_lit("window lit c", (0.78, 0.95, 0.9), 1.6)
     M["screen"] = emit("console glow", (0.6, 0.8, 1.0), 5.0, sampling="AUTO")
     M["button"] = emit("call button", (0.75, 0.9, 1.0), 9.0, sampling="NONE")
     M["sky"] = sky()
     M["rain"] = rain()
     M["mist"] = mist()
     M["black"] = pbr("void black", (0.004, 0.004, 0.004), rough=(0.9, 0.95))
+    M["far_lamp"] = emit("far lamp", (1.0, 0.72, 0.42), 26.0, sampling="NONE")
     return M

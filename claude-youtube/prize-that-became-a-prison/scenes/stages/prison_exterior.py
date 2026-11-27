@@ -21,8 +21,9 @@ Cameras (beat ch08; the first two are level, framed upward with lens shift so th
 
 Set: prison_exterior_set.py; materials: prison_exterior_mats.py. Before every render a hook on setkit.render sets
 the far clip (the sky dome is 1.1 km away), the lens shift, the mist density, that camera's rain and light trims.
-The rain is geometry: thin streaks placed only where a lamp's light falls, in the camera's own view, each about a
-pixel wide, so it reads as rain in the cones and nowhere else, as it does to the eye.
+The rain is geometry: short thin streaks placed only inside the floodlights' cones, in the camera's own view, each
+under a pixel wide and lit by the lamps like everything else, so it is brightest near a lamp and gone outside the
+cones, as rain is to the eye at night.
 """
 import math
 import os
@@ -48,11 +49,11 @@ CAMERAS = {
     # Ch 08: low over the wet road, level, 7 m from the wall and turned a little toward it: the wall's top and the
     # wire run from the upper right to the vanishing point, the nearest mast and its lamp stand upper left, the
     # tower rises from the wall on the right third, the gate's lamp and the far block sit in the mist beyond
-    "wall": dict(loc=(-7.0, -62.0, 0.45), aim=(-4.0, 38.0, 0.45), lens=30, shift_y=0.139, exposure=-1.5, mist=0.0035,
+    "wall": dict(loc=(-7.0, -62.0, 0.45), aim=(-4.0, 38.0, 0.45), lens=30, shift_y=0.139, exposure=-1.3, mist=0.0045,
                  beat="ch08", no_scatter=("mast_spot_0", "mast_spill_0")),
     # Ch 08: frontal and level on the approach road's centre line at a standing eye: the gate and its piers in the
     # middle, its floodlight above on the outreach arm, the cone and the rain between, the wet road below
-    "gate": dict(loc=(-24.0, 0.0, 1.45), aim=(0.0, 0.0, 1.45), lens=35, shift_y=0.116, exposure=-1.5, mist=0.005,
+    "gate": dict(loc=(-24.0, 0.0, 1.45), aim=(0.0, 0.0, 1.45), lens=35, shift_y=0.116, exposure=-1.25, mist=0.005,
                  beat="ch08"),
     # Ch 08: from the road, low, up at the tower: its outer face in the mast's light, the cabin dark against the
     # sky, the wire running along the wall top to it
@@ -60,9 +61,16 @@ CAMERAS = {
                   beat="ch08"),
 }
 # light trims per camera: group -> factor (groups: mast, spill, gate, yard, yardglow, tower)
-TRIMS = {"wall": {}, "gate": {}, "tower": {}}
-# how much of the frame the streaks may cover in all (each is about a pixel wide): restraint
-RAIN = {"wall": dict(cover=0.03, seed=3), "gate": dict(cover=0.03, seed=5), "tower": dict(cover=0.035, seed=8)}
+# (a key may also be the start of a lamp's name: the mast beside the wall camera is turned down for that frame, so
+# the pools further along the wall are the brighter ones)
+TRIMS = {"wall": {"mast_spot_0": 0.7, "mast_spill_0": 0.7}, "gate": {}, "tower": {}}
+# The rain per camera. cover: how much of the frame the streaks may cover in all; gain: how much light a drop
+# returns (low: a streak is bright only near a lamp and fades down the cone); wpx: a streak's width in pixels;
+# length: metres. Across a beam (wall) and into one (gate) the rain is fine, faint and dense; under the tower,
+# where the drops are a few metres from the lens, it is sparser and brighter.
+RAIN = {"wall": dict(cover=0.035, seed=3, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1)),
+        "gate": dict(cover=0.035, seed=5, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1)),
+        "tower": dict(cover=0.014, seed=8, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6))}
 FALL = (0.07, -0.035, -1.0)   # the rain's fall line: a light wind along the wall
 
 _STATE = {"rain": {}, "cast": []}
@@ -83,8 +91,8 @@ def irradiance(P, skip=()):
     """What the lamps put on points P (N x 3), ignoring shadows: enough to know where rain would show."""
     E = np.zeros(len(P))
     for L in st.LIGHTS:
-        if any(L["name"].startswith(k) for k in skip):
-            continue
+        if L["kind"] != "spot" or L["group"] == "yard" or any(L["name"].startswith(k) for k in skip):
+            continue                       # rain shows in the floodlights' cones, not in their spill
         v = P - np.array(L["loc"])
         d2 = np.maximum((v * v).sum(1), 0.25)
         e = L["power"] / (4 * math.pi * d2)
@@ -97,7 +105,8 @@ def irradiance(P, skip=()):
     return E
 
 
-def make_rain(name, cfg, cover, seed, e_min=3.0, d_min=4.5, d_max=70.0, d_knee=11.0):
+def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), e_min=3.0, d_min=4.5,
+              d_max=75.0, d_knee=11.0):
     """Streaks in this camera's view, only where light falls. Even per volume near the camera and thinning beyond
     `d_knee`; each as wide as about one pixel at its distance, so near and far rain read alike."""
     loc, f, r, u = camera_frame(cfg)
@@ -122,19 +131,20 @@ def make_rain(name, cfg, cover, seed, e_min=3.0, d_min=4.5, d_max=70.0, d_knee=1
     E = irradiance(P, cfg.get("no_scatter", ()))
     lit = E > e_min
     P, d, E = P[lit], d[lit], E[lit]
-    # draw them in a random order weighted toward the brighter air, and stop when they cover enough of the frame
-    w = np.minimum(1.0, E / 12.0) ** 0.5 + 0.15
+    # draw them in a random order and stop when they cover enough of the frame
+    w = np.ones(len(P))                                    # even through the cones: the lamps do the rest
     order = rs.choice(len(P), size=min(len(P), 60000), replace=False, p=w / w.sum())
     P, d = P[order], d[order]
-    length = rs.uniform(0.34, 0.74, len(P))
-    px = length * lens * RES_X / (36.0 * d) * 0.85
+    length = rs.uniform(length[0], length[1], len(P))       # a short shutter
+    wpx = rs.uniform(wpx[0], wpx[1], len(P))                # under a pixel wide: a streak, never a dash
+    px = length * lens * RES_X / (36.0 * d) * wpx
     n = int(np.searchsorted(np.cumsum(px), cover * RES_X * RES_X * 9 / 16)) + 1
     n = min(n, len(P))
-    P, d, length = P[:n], d[:n], length[:n]
+    P, d, length, wpx = P[:n], d[:n], length[:n], wpx[:n]
     fall = np.array(FALL, float)
     fall = fall[None, :] + rs.normal(0.0, 0.012, (n, 3))
     fall /= np.linalg.norm(fall, axis=1)[:, None]
-    width = np.maximum(0.0017, 0.85 * d * 36.0 / (lens * RES_X))
+    width = np.maximum(0.001, wpx * d * 36.0 / (lens * RES_X))
     a = np.cross(fall, f[None, :])
     a /= np.linalg.norm(a, axis=1)[:, None]
     b = np.cross(fall, a)
@@ -150,7 +160,7 @@ def make_rain(name, cfg, cover, seed, e_min=3.0, d_min=4.5, d_max=70.0, d_knee=1
     me.from_pydata(V.astype(np.float32).tolist(), [], F.tolist())
     me.polygons.foreach_set("use_smooth", np.ones(len(F), bool))
     me.update()
-    me.materials.append(mt.M["rain"])
+    me.materials.append(mt.rain(f"rain {name}", gain))
     ob = bpy.data.objects.new(name, me)
     bpy.context.scene.collection.objects.link(ob)
     ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False
@@ -201,9 +211,14 @@ def apply_camera(name):
     trims = TRIMS.get(name, {})
     quiet = cfg.get("no_scatter", ())
     for L in st.LIGHTS:
-        L["ob"].data.energy = L["power"] * trims.get(L["group"], 1.0)
-        # a lamp whose cone the camera stands in would veil the whole view: it lights surfaces, not the mist
-        L["ob"].visible_volume_scatter = not any(L["name"].startswith(k) for k in quiet)
+        k = trims.get(L["group"], 1.0)
+        for key, v in trims.items():
+            if L["name"].startswith(key):
+                k = v
+        L["ob"].data.energy = L["power"] * k
+        # a lamp whose cone the camera stands in would veil the whole view: it lights surfaces, not the mist.
+        # The spill lamps (points) stay out of the mist too: their halos only added noise round the lamp heads
+        L["ob"].visible_volume_scatter = L["group"] != "spill" and not any(L["name"].startswith(q) for q in quiet)
     sc.cycles.sample_clamp_indirect = 4.0
     sc.cycles.blur_glossy = 0.6
     sc.cycles.caustics_reflective = False
@@ -218,7 +233,16 @@ def apply_camera(name):
     print(f"PRISON camera {name}: shift {cfg.get('shift_y', 0.0)}, mist {cfg.get('mist', 0.006)}", flush=True)
 
 
+def _finer_sampling(scene, *_):
+    """Mist and rain want more of the 64 samples than setkit's adaptive threshold (0.03) lets them have."""
+    scene.cycles.adaptive_threshold = 0.012
+
+
 def install_hook():
+    hs = bpy.app.handlers.render_pre
+    for h in [h for h in hs if getattr(h, "__name__", "") == "_finer_sampling"]:
+        hs.remove(h)
+    hs.append(_finer_sampling)
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):

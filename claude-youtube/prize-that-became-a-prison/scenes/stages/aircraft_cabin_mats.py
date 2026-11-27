@@ -1,11 +1,12 @@
 """Materials for the night cabin (Cycles, Principled BSDF). Patterns work in object space, in metres, so a part keeps
 its pattern wherever it is put and no surface reads as one flat value (tone and roughness always vary).
 
-Interior: woven seat upholstery, cloth headrest covers, moulded seat-back shells (orange-peel satin plastic, scuffed
-low down by feet), the textured sidewall lining and bin doors, cabin carpet with a small woven motif and a worn aisle
-lane, aluminium seat tracks, painted seat legs, matt window shades, acrylic window panes. Emitters: blank seat-back
-screens, the reading-light lens, the blue night cove light, the aisle path lights. Exterior: the night sky at altitude
-(dark zenith, airglow at a horizon far below, a faintly moonlit cloud deck under it), wing paint, navigation lights.
+Interior: woven seat upholstery with channel stitching, cloth headrest covers, moulded seat-back shells (orange-peel
+satin plastic, scuffed low down by feet), the textured sidewall lining and bin doors, cabin carpet with a small woven
+motif and a worn aisle lane, aluminium seat tracks and belt buckles, belt webbing, blank card and magazine paper,
+painted seat legs, matt window shades, acrylic window panes. Emitters: blank seat-back screens, the reading-light lens,
+the blue night cove and wash light, the aisle path lights. Exterior: the night sky at altitude (dark zenith, airglow
+at a horizon far below, a faintly moonlit cloud deck under it), wing paint, navigation lights and their halo.
 The node helpers are adapted from the departure gate's (departure_gate_mats.py), copied so this stage stands alone.
 """
 import bpy  # noqa: F401  (first: bmesh and mathutils only exist once bpy is loaded)

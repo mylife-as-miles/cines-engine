@@ -2,14 +2,17 @@
 
 World: metres, Z up, cabin floor at z = 0, the aircraft's nose toward +Y, starboard +X, port -X. Rows of 3-3-3
 economy seats at a 0.79 m pitch (row i's seat reference, the foot of the backrest, at y = i * PITCH). The sidewall
-lining follows the fuselage curve from a dark dado at the floor to the side bins; oval window reveals cut through it
-at a 0.53 m pitch, each with a pull-down shade (most closed for the night) and a pane. Side and centre overhead bins
-in door segments with latch recesses; passenger service units under them with reading lights; curved aisle ceilings
-lit by blue night coves; aisle path-light strips on the floor; a front bulkhead with lit galley curtains in the two
-aisle openings. Outside: the night sky dome at altitude and the port wing with its red tip light.
+lining follows the fuselage curve from a dark dado at the floor to the side bins, in panels three windows wide with
+fine joints between them; oval window reveals cut through it at a 0.53 m pitch, each with an inner scratch pane, a
+pull-down shade (most closed for the night) and the outer pane. Side and centre overhead bins in door segments with
+latch recesses; passenger service units under them with reading lenses and gaspers; curved aisle ceilings lit by blue
+night coves, with the soft light the ceiling gives back; a lit slot washing each sidewall; LED dashes in a floor
+strip along the aisles; a front bulkhead with lit galley curtains in the two aisle openings. Outside: the night sky
+dome at altitude and the port wing with its winglet, red tip light (with a soft halo) and white strobe.
 
-One three-seat block (moulded shells with tray tables and blank screens, cloth headrest covers, armrests, aisle end
-bays, legs, beams and floor tracks) is built once into a collection and instanced per row and block.
+One three-seat block (moulded shells with rounded tops, tray tables, blank screens, a card and a magazine in each
+pocket, headrests under draped cloth covers, armrests, aisle end bays, legs, beams and floor tracks) is built once
+into a collection and instanced per row and block; so is the lap belt left crossed on each empty seat.
 """
 import math
 

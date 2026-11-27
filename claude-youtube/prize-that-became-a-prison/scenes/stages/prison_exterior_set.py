@@ -51,16 +51,16 @@ MAST_Y = (-56.0, -28.0, 28.0, 56.0, 84.0, 112.0, 140.0, 168.0, 196.0, 224.0)
 DEAD_HEAD = (84.0, 1)                          # one lamp out: (mast, which head)
 COIL_R, COIL_PITCH = 0.42, 0.30
 IMG_RECT = (-80.0, 2.0, -100.0, 240.0)
-STOP_X = -11.4
+STOP_X = -10.6
 COLD = (0.78, 0.9, 1.0)
 GATE_WHITE = (1.0, 0.95, 0.86)
-SODIUM = (1.0, 0.7, 0.4)
+SODIUM = (1.0, 0.76, 0.52)
 # hand-placed dips in the road where water stands: (x, y, radius x, radius y, depth)
 PUDDLES = [(-6.0, -55.0, 1.3, 3.0, 0.3), (-4.2, -49.5, 1.0, 3.2, 0.3), (-8.3, -52.0, 0.9, 2.6, 0.26),
            (-6.2, -44.5, 1.3, 3.2, 0.3), (-3.9, -37.0, 1.0, 3.6, 0.3), (-7.9, -31.0, 1.3, 4.5, 0.26),
            (-5.2, -22.0, 1.5, 4.0, 0.28), (-4.2, -6.0, 1.6, 4.5, 0.28), (-7.0, 9.0, 1.4, 5.0, 0.26),
            (-4.6, 24.0, 1.6, 5.0, 0.28), (-6.5, 44.0, 1.5, 6.0, 0.28), (-4.0, 70.0, 1.6, 7.0, 0.28),
-           (-13.7, -1.0, 2.0, 1.3, 0.3), (-12.3, 2.5, 1.4, 1.0, 0.28), (-19.5, 1.6, 2.6, 1.2, 0.28),
+           (-13.2, 0.2, 3.4, 2.6, 0.45), (-11.6, 2.9, 1.3, 0.9, 0.3), (-19.5, 1.6, 2.6, 1.2, 0.28),
            (-6.6, 1.0, 1.5, 2.8, 0.3), (-3.7, -1.6, 1.0, 2.0, 0.28), (-8.6, -2.6, 0.9, 1.8, 0.26),
            (-0.9, 1.4, 0.5, 1.1, 0.42), (-1.1, -2.2, 0.4, 0.8, 0.4)]
 
@@ -318,7 +318,7 @@ def ground():
 
 
 # ---------------------------------------------------------------- the razor wire
-def coil_section(name, length=PANEL, seed=0, wire_r=0.0055, seg=36, barbs=22):
+def coil_section(name, length=PANEL, seed=0, wire_r=0.008, seg=36, barbs=20):
     """6 m of concertina wire: two counter-wound helices (their crossing loops are what a concertina coil looks
     like from the side), a core wire with flat four-point barbs. Irregular, but its ends meet the next section."""
     rng = random.Random(seed)
@@ -368,7 +368,7 @@ def coil_section(name, length=PANEL, seed=0, wire_r=0.0055, seg=36, barbs=22):
             p = p + nr * wire_r * 1.1
             for sgn in (-1.0, 1.0):
                 b0 = len(verts)
-                for u, w in ((0.034, 0.022), (0.009, 0.006), (0.009, -0.006), (0.034, -0.022)):
+                for u, w in ((0.042, 0.028), (0.011, 0.008), (0.011, -0.008), (0.042, -0.028)):
                     verts.append(p + tg * (sgn * u) + ax * w)
                 faces.append((b0, b0 + 1, b0 + 2, b0 + 3))
     me = bpy.data.meshes.new(name)
@@ -584,7 +584,7 @@ def tower():
         aim = (-0.8, ty + s * 8.6, 0.5)
         tube(f"tower_flood_stem_{tag}", (pos[0], pos[1], DECK_Z), (pos[0], pos[1], pos[2] + 0.05), 0.022, M["dark"], verts=8)
         d = flood_head(f"tower_flood_{tag}", pos, aim, M["lens_cold"], size=0.72)
-        spot(f"tower_spot_{tag}", Vector(pos) + d * 0.09, aim, 7000.0, 64.0, 0.3, COLD, radius=0.07, group="tower")
+        spot(f"tower_spot_{tag}", Vector(pos) + d * 0.09, aim, 4500.0, 64.0, 0.3, COLD, radius=0.07, group="tower")
     sk.sphere("tower_dome_cam", 0.09, (tx - DECK + 0.3, ty + DECK - 0.3, DECK_Z - 0.1), M["pane"], segs=16)
     sk.cyl("tower_dome_cam_base", 0.1, 0.06, (tx - DECK + 0.3, ty + DECK - 0.3, DECK_Z - 0.03), M["dark"], verts=16)
     SOLIDS.append((tx - sh, tx + sh, ty - sh, ty + sh, 0.0, SHAFT_H))
@@ -605,12 +605,12 @@ def mast(ym, k):
     bx(f"mast_cap_{k}", x - 0.07, x + 0.11, ym - 0.07, ym + 0.07, MAST_TOP - 0.14, MAST_TOP + 0.03, M["galv"], bevel=0.008)
     for i, s in enumerate((-1, 1)):
         pos = (x + 0.3, ym + s * 0.42, MAST_TOP - 0.2)
-        aim = (-1.0, ym + s * 3.5, 0.8)
+        aim = (-1.0, ym + s * 2.4, 0.8)
         dead = DEAD_HEAD == (ym, i)
         tube(f"mast_stub_{k}_{i}", (x + 0.06, ym + s * 0.42, MAST_TOP - 0.06), (pos[0] - 0.05, pos[1], pos[2] + 0.06), 0.018, M["galv"], verts=8)
         d = flood_head(f"mast_head_{k}_{i}", pos, aim, M["lens_dead"] if dead else M["lens_cold"])
         if not dead:
-            spot(f"mast_spot_{k}_{i}", Vector(pos) + d * 0.11, aim, 17000.0, 70.0, 0.25, COLD, radius=0.09, group="mast")
+            spot(f"mast_spot_{k}_{i}", Vector(pos) + d * 0.11, aim, 17000.0, 74.0, 0.3, COLD, radius=0.09, group="mast")
     point(f"mast_spill_{k}", (x + 0.55, ym, MAST_TOP - 0.55), 1200.0, COLD, radius=0.12, group="spill")
 
 
@@ -630,7 +630,7 @@ def gate_lamp():
     tube("gate_lamp_stub", (pos[0], 0.0, 8.56), (pos[0], 0.0, pos[2] + 0.1), 0.02, M["galv"], verts=8)
     d = flood_head("gate_lamp", pos, aim, M["lens_gate"], size=1.1)
     spot("gate_spot", Vector(pos) + d * 0.12, aim, 14000.0, 80.0, 0.4, GATE_WHITE, radius=0.1, group="gate")
-    point("gate_spill", (pos[0] - 0.05, 0.0, pos[2] - 0.45), 1000.0, GATE_WHITE, radius=0.12, group="spill")
+    point("gate_spill", (pos[0] - 0.05, 0.0, pos[2] - 0.45), 2200.0, GATE_WHITE, radius=0.12, group="spill")
     # the same column lights the vehicle yard behind the gate
     pos2, aim2 = (px + 1.2, 0.0, 8.36), (9.5, 0.0, 0.0)
     d = flood_head("gate_lamp_in", pos2, aim2, M["lens_cold"])
@@ -640,7 +640,7 @@ def gate_lamp():
 def yard_lights():
     """Low sodium lights in the yards, hidden by the wall: they put a warm glow in the mist behind the wire."""
     for i, y in enumerate((-70.0, -42.0, -12.0, 15.0, 42.0, 70.0, 98.0, 126.0)):
-        point(f"yard_glow_{i}", (4.6, y, 5.2), 1600.0, SODIUM, radius=0.2, group="yardglow")
+        point(f"yard_glow_{i}", (4.6, y, 5.2), 800.0, SODIUM, radius=0.2, group="yardglow")
 
 
 # ---------------------------------------------------------------- the blocks beyond the wall
@@ -719,8 +719,8 @@ def dressing():
     for s in (-1, 1):
         for x in (-0.85, -1.4):
             y = s * (AP_END + 0.42)
-            sk.cyl(f"bollard_{k}", 0.085, 1.0, (x, y, KERB + 0.5), M["galv"], verts=18)
-            sk.sphere(f"bollard_cap_{k}", 0.085, (x, y, KERB + 1.0), M["galv"], segs=18).scale = (1, 1, 0.5)
+            sk.cyl(f"bollard_{k}", 0.085, 1.0, (x, y, KERB + 0.5), M["galv_dull"], verts=18)
+            sk.sphere(f"bollard_cap_{k}", 0.085, (x, y, KERB + 1.0), M["galv_dull"], segs=18).scale = (1, 1, 0.5)
             sk.cyl(f"bollard_foot_{k}", 0.12, 0.03, (x, y, KERB + 0.012), M["galv_dull"], verts=18)
             k += 1
     # the call post a driver stops at, on the left of the approach
@@ -773,6 +773,18 @@ def dressing():
         tube(f"fence_wire_b{i}", (fx, APPROACH + FILLET + 1.4, KERB + z), (fx, Y1 + 6.0, KERB + z), 0.0028, M["wire"], verts=6)
 
 
+def far_lights():
+    """A road far off across the fields: a few sodium lamps on the horizon, small and soft in the mist. They give
+    the dark side of the wall frame a distance; nothing here is lit by them."""
+    rng = random.Random(21)
+    for i, az in enumerate((-25.0, -21.5, -18.5, -16.2, -13.0, -10.8, -9.2, -6.6)):
+        r = 520.0 + 45.0 * i + rng.uniform(-30.0, 30.0)
+        a = math.radians(az)
+        p = (-7.0 + r * math.sin(a), -62.0 + r * math.cos(a), 7.5 + rng.uniform(-0.6, 0.8))
+        ob = sk.sphere(f"far_lamp_{i}", 0.42 + 0.0005 * r, p, M["far_lamp"], segs=8)
+        ob.visible_diffuse = ob.visible_glossy = ob.visible_shadow = ob.visible_volume_scatter = False
+
+
 def sky_and_mist():
     dome = sk.sphere("sky", 1100.0, (0.0, 0.0, 0.0), M["sky"], segs=48)
     dome.visible_shadow = False
@@ -801,11 +813,13 @@ def build():
     # block A shows in the gate frame (its near windows); block B stands in the mist at the far end of the wall
     na = block("block_a", 10.5, 24.5, 10.0, 40.0, 16.0,
                {("w", 0, 3): "a", ("w", 1, 4): "b", ("s", 1, 4): "c", ("w", 6, 3): "a", ("w", 2, 3): None, ("w", 0, 4): None,
+                ("w", 3, 3): None, ("w", 3, 4): None, ("s", 2, 3): None, ("s", 2, 4): None,
                 ("w", 1, 3): None, ("w", 2, 4): None, ("s", 0, 3): None, ("s", 0, 4): None, ("s", 1, 3): None},
                floors=5, seed=5)
     nb = block("block_b", 10.5, 24.5, 46.0, 140.0, 22.5,
                {("w", 4, 6): "a", ("w", 11, 5): "b", ("w", 14, 6): "a", ("w", 19, 5): "c", ("w", 23, 6): "a", ("w", 29, 5): "b"},
                floors=7, seed=9)
     dressing()
+    far_lights()
     sky_and_mist()
     print(f"PRISON set: {len(bpy.data.objects)} objects, {len(LIGHTS)} lamps, windows {na}+{nb}", flush=True)
