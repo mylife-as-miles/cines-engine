@@ -39,7 +39,7 @@ DAWN = (0.25, st.LEDGE[0] - 0.21)     # her feet: in the dock close up to the fr
                                       # finial), facing the bench (+Y)
 HAND_X = 0.24                          # wrists about 24 cm either side of her centre: elbows bent, clear of the waist
 HAND_Y = 0.05                          # how far onto the ledge (from its inner edge) the wrists sit
-HAND_PITCH = 0.3                       # the hand a little extended at the wrist, so the palm heel and the fingers both rest
+HAND_PITCH = -0.05                       # the hand a little extended at the wrist, so the palm heel and the fingers both rest
 POSE = {"head": (32, -4), "neck": (16, 0), "chest": (10, 0), "fingers": 15}
 SHOULDER_ROLL = 5.0                    # shoulders rolled forward (degrees): the weight of the bowed head
 GARMENT = (0.022, 0.023, 0.026)        # the prison clothes re-surfaced as matt cotton (see dress_prison): 0.055 before
@@ -69,7 +69,7 @@ CAMERAS = {
     # up: the fascia and its cap run away to the right, the lit return of the centre section in the middle, the three
     # empty chairs across the middle third, the lower edge of the recessed panel just inside the top quarter
     # (at eye height the cap lay on the horizon as one flat band: the camera must be well below it)
-    "bench": dict(loc=(-2.9, 1.9, 1.0), aim=(-0.45, 5.67, 1.9), lens=40, focus="fx_bench", fstop=5.6, beat="ch07",
+    "bench": dict(loc=(-1.9, 2.4, 1.15), aim=(0.0, 5.7, 1.65), lens=50, focus="fx_bench", fstop=5.6, beat="ch07",
                   exposure=-1.45),
 }
 
@@ -86,15 +86,15 @@ TRIMS = {
     # frame, the gallery falls off into shadow
     # (the light off the bench's left return is for the bench camera only: from here it made a hot spot)
     "wide": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.3, {(0.0, 1.4): 0.6}), **_panels((3.4, 5.4), 0.55),
-             "return-1": 0.0},
+             "return-1": 0.0, "bench_kick": 0.0, "dock_pool": 1.4, **{f"win_l{j}_day": 0.55 for j in (2, 3, 4)}},
     # the panels behind her low: her dark back stands against the lit bench, rimmed by the pool from above
     "dock": {**_panels((-0.6,), 0.3), **_panels((1.4,), 0.4, {(0.0, 1.4): 0.6}), **_panels((3.4, 5.4), 0.42),
-             "return-1": 0.0, "uplight": 0.75},
+             "return-1": 0.0, "bench_kick": 0.0, "uplight": 0.75},
     # the well's rows (3 and 5 m before it) light the fascia at a moderate angle (bright under the cap, falling away
     # toward the floor); the row straight over it down (its steep light put a shadow band under the cap); the boarding
     # lit from its foot by the uplight only, so it falls off toward the ceiling (the washer and the panel's wash low)
     "bench": {**_panels((-0.6,), 0.6), **_panels((1.4,), 0.9), **_panels((3.4,), 0.35), **_panels((5.4,), 0.35),
-              "dock_pool": 0.3, "washer": 0.4, "blank_wash": 0.6, "uplight": 2.0, "return-1": 2.5},
+              "dock_pool": 0.3, "washer": 0.4, "blank_wash": 0.6, "uplight": 2.0, "return-1": 0.9},
 }
 # per-camera haze (a multiplier on HAZE): from the dock camera the lens looks down the lit cone over the dock, which
 # veiled the frame
@@ -148,21 +148,15 @@ def _roll(rig, bone, deg):
 
 
 def _palm_down(rig, k):
-    """How far the palm faces down (-1..1): the curled middle finger's tip leans toward the palm side."""
+    """Downward component of the palm normal measured across its four knuckles."""
     pb = rig.pose.bones
-    mw = rig.matrix_world
-    tip_bone = next((n for n in (f"f_middle.03.{k}", f"ORG-f_middle.03.{k}", f"DEF-f_middle.03.{k}") if n in pb), None)
-    if tip_bone is None:
-        return 0.0
-    h0, h1 = mw @ pb[f"hand_fk.{k}"].head, mw @ pb[f"hand_fk.{k}"].tail
-    tip = mw @ pb[tip_bone].tail
-    ax = (h1 - h0).normalized()
-    off = tip - h1
-    off -= ax * off.dot(ax)
-    return -off.normalized().z if off.length > 1e-6 else 0.0
+    hand = pb[f"DEF-hand.{k}"]
+    across = pb[f"DEF-f_index.01.{k}"].head - pb[f"DEF-f_pinky.01.{k}"].head
+    normal = (hand.tail - hand.head).cross(across) * (1 if k == "L" else -1)
+    return -(rig.matrix_world.to_3x3() @ normal).normalized().z
 
 
-def solve_arm(holder, k, side, wrist, twist):
+def solve_arm(holder, k, side, wrist, twist, pitch=HAND_PITCH):
     """Two-bone IK on the FK arm: the elbow out, back and down; the forearm twisted by `twist` degrees; the hand
     pointing forward and a little down over the ledge."""
     rig = rigged.rig_of(holder)
@@ -190,20 +184,22 @@ def solve_arm(holder, k, side, wrist, twist):
     rigged._aim(rig, f"forearm_fk.{k}", inv @ (wrist - Ea))
     _roll(rig, f"forearm_fk.{k}", twist)
     fwd = -back
-    hd = fwd * 0.97 + Vector((0, 0, HAND_PITCH)) - left * side * 0.14
+    hd = fwd * 0.97 + Vector((0, 0, pitch)) - left * side * 0.14
     rigged._aim(rig, f"hand_fk.{k}", inv @ hd)
 
 
-def hand_low(holder, k):
-    """The underside of one hand: the lowest body point in a box round the hand bone (palm and fingers forward of
-    the wrist; the forearm behind it rises, so it never wins)."""
-    rig = rigged.rig_of(holder)
-    pb = rig.pose.bones
-    mw = rig.matrix_world
-    w0, w1 = mw @ pb[f"hand_fk.{k}"].head, mw @ pb[f"hand_fk.{k}"].tail
-    pts = [p for p in body_points(holder) if abs(p.x - (w0.x + w1.x) / 2) < 0.075 and w0.y - 0.03 < p.y < w1.y + 0.12
-           and st.DOCK_TOP - 0.15 < p.z < w0.z + 0.04]
-    return min((p.z for p in pts), default=st.DOCK_TOP + 0.02)
+def lift_thumb(rig, k, height):
+    """Abduct the thumb at its base until its pad clears the rail beside the resting palm."""
+    master = rig.pose.bones[f"thumb.01_master.{k}"]
+    tip = rig.pose.bones[f"DEF-thumb.03.{k}"].tail
+    arm_up = (rig.matrix_world.to_3x3().inverted() @ Vector((0, 0, 1))).normalized()
+    lever = tip - master.head
+    axis = lever.cross(arm_up)
+    if axis.length > 0.001:
+        angle = min(0.4, max(0.0, height / axis.length))
+        pivot = Matrix.Translation(master.head)
+        master.matrix = pivot @ Matrix.Rotation(angle, 4, axis.normalized()) @ pivot.inverted() @ master.matrix
+        bpy.context.view_layer.update()
 
 
 def hands_on_ledge(holder):
@@ -219,22 +215,31 @@ def hands_on_ledge(holder):
         sx = (mw @ pb[f"upper_arm_fk.{k}"].head).x
         x = DAWN[0] + math.copysign(HAND_X, sx - DAWN[0])
         wrist = Vector((x, y_w, top + 0.045))
+        rigged.articulate_hand(holder, k, {finger: (-16, -11, -7) for finger in
+                                         ("f_index", "f_middle", "f_ring", "f_pinky")})
         best = None
-        for twist in (side * 80.0, -side * 80.0, side * 40.0, -side * 40.0):
+        for twist in (side * angle for angle in (80, -80, 100, -100, 120, -120, 40, -40)):
             solve_arm(holder, k, side, wrist, twist)
             pd = _palm_down(rig, k)
             if best is None or pd > best[0]:
                 best = (pd, twist)
         twist = best[1]
-        for it in range(5):
-            solve_arm(holder, k, side, wrist, twist)
-            gap = hand_low(holder, k) - (top + 0.002)
-            if abs(gap) < 0.002:
+        pitch = HAND_PITCH
+        for _ in range(10):
+            solve_arm(holder, k, side, wrist, twist, pitch)
+            surface = rigged.hand_surface(holder, k)
+            palm = min(p.z for p in surface["palm"] if st.LEDGE[0] <= p.y <= st.LEDGE[1]) - top
+            thumb = min(p.z for p in surface["thumb"]) - top
+            pads = min(p.z for p in surface["fingers"]
+                       if st.LEDGE[0] <= p.y <= st.LEDGE[1]) - top
+            gap = min(palm, pads) - 0.0015
+            if thumb < palm - 0.001:
+                lift_thumb(rig, k, palm - thumb + 0.002)
+            elif abs(gap) < 0.0015 and abs(palm-pads) < 0.005:
                 break
-            wrist.z -= gap
-        else:
-            solve_arm(holder, k, side, wrist, twist)
-            gap = hand_low(holder, k) - (top + 0.002)
+            wrist.z -= max(-0.02, min(0.02, gap))
+            pitch = max(-0.32, min(0.36, pitch + (palm - pads) / 0.15))
+        print(f"COURT contact {k}: palm {palm*1000:+.1f} mm, finger pads {pads*1000:+.1f} mm, thumb {thumb*1000:+.1f} mm", flush=True)
         S = mw @ pb[f"upper_arm_fk.{k}"].head
         E = mw @ pb[f"forearm_fk.{k}"].head
         report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} wrist ({wrist.x:+.3f}, {wrist.y:.3f}, "
@@ -245,13 +250,10 @@ def hands_on_ledge(holder):
 
 
 def dress_prison(h):
-    """people.dawn_prison() tints the casual suit flat dark grey (0.075) and MPFB's delete-group masks already hide the
-    body under it (checked: Delete.female_casualsuit01 sits before the smoothing). It rendered pale all the same: a
-    0.075 garment under the well's top light, through AgX, reads only ~0.6x the stone skin, and the shirt's satin
-    shoulders caught the panels. Here it is re-surfaced in place as matt cotton a shade darker, with a weave."""
+    """Finish the shared long-sleeved shirt and trousers for the bright dock practical."""
     out = []
     for o in h.children_recursive:
-        if o.type == "MESH" and o.name.endswith("female_casualsuit01"):
+        if o.type == "MESH" and o.name.endswith(people.PRISON_UNIFORM):
             for slot in o.material_slots:
                 if slot.material:
                     slot.material = slot.material.copy()
@@ -277,7 +279,7 @@ def build_dawn(tries=3):
     for k in range(tries):
         before = set(bpy.data.objects)
         try:
-            return people.dawn_prison()
+            return people.dawn_prison(uniform=True)
         except ZeroDivisionError as e:
             print(f"COURT dawn_prison failed ({e}); retrying ({k + 1}/{tries})", flush=True)
             for o in [o for o in bpy.data.objects if o not in before]:
@@ -296,7 +298,7 @@ def dawn():
     bpy.context.view_layer.update()
     dz = ground(h, st.DOCK_PLAT)
     print(f"COURT Dawn grounded on the dock floor by {dz * 1000:+.1f} mm", flush=True)
-    suit = next(o for o in h.children_recursive if o.name.endswith("female_casualsuit01"))
+    suit = next(o for o in h.children_recursive if o.name.endswith(people.PRISON_UNIFORM))
     dg = bpy.context.evaluated_depsgraph_get()
     ev = suit.evaluated_get(dg)
     me = ev.to_mesh()

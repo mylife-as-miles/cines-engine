@@ -278,7 +278,7 @@ def window(name, s, y):
     # patches on the floor beside the dock, which lit the well as evenly as the panels did); in the haze the beams
     # draw soft shafts high over the room
     src = (s * (XW + 0.02), y, (z0 + z1) / 2)
-    tgt = (-s * (XW - 0.2), y + 0.9, 0.7 if gallery else 1.2)
+    tgt = (-s * (XW - 0.2), y + 0.9, 0.7 if gallery else 3.2)
     area(f"{name}_day", src, (WIN_W - 0.1, z1 - z0 - 0.1), WIN_BEAM["l" if left else "r"] * (0.45 if gallery else 1.0),
          DAY, spread=32, rot=aim_rot(src, tgt))
     return sill
@@ -305,7 +305,7 @@ def ceiling():
     # the one pool of light: narrow enough (26 deg) that it lands on the dock and a soft ring of floor round it; the
     # fitting a little behind her (gallery side), its beam tipped onto her, so the back of her head and her shoulders
     # take the light the cameras behind her see
-    li = downlight("dock_pool", DOCK[0], DOCK[1] - 0.25, POOL_W, size_deg=26, blend=0.55)
+    li = downlight("dock_pool", DOCK[0], DOCK[1] - 0.25, POOL_W, size_deg=34, blend=0.7)
     li.rotation_euler = aim_rot(li.location, (0.2, DOCK[1] + 0.25, 1.1))
     li.data.shadow_soft_size = 0.15
 
@@ -523,10 +523,13 @@ def bench():
     # reads as a lit return (a stop over the fascia's front), not a seam (the right one would sit in the clerk's chair)
     # (tucked into the corner in front of the wing, 6 cm off its face and aimed square at the return, so the wing's
     # face, edge-on to it, takes no hot spot)
+    kick = (0, CHAIR_Y + 0.9, 3.0)
+    area("bench_kick", kick, (3.6, 0.3), 40.0, COOL, spread=40,
+         rot=aim_rot(kick, (0, CHAIR_Y, 1.5)))
     for s in (-1,):
-        src = (s * (CENTRE_X + 0.4), BENCH_Y - 0.06, 0.68)
-        area(f"return{s:+d}", src, (0.04, 0.7), 4.0, COOL, spread=50,
-             rot=aim_rot(src, (s * CENTRE_X, BENCH_Y - 0.06, 0.68)))
+        src = (s * (CENTRE_X + 0.4), BENCH_Y - 0.16, 0.68)
+        area(f"return{s:+d}", src, (0.04, 0.7), 4.0, COOL, spread=20,
+             rot=aim_rot(src, (s * CENTRE_X, BENCH_Y - 0.16, 0.68)))
 
 
 def chairs_and_mics():
