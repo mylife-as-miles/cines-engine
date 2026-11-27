@@ -366,14 +366,34 @@ def _plain_tote_panel(holder):
     coeff = np.linalg.lstsq(fit[ring], co[ring, 0], rcond=None)[0]
     blend = np.clip((1.37 - radius) / 0.43, 0, 1)
     blend = blend * blend * (3.0 - 2.0 * blend)
-    weight = blend * leather
-    skin = fit @ coeff
+    # The GLB splits vertices at its UV islands. Move both copies of each
+    # leather edge together or the flattened panel opens a hairline crack.
+    unique, position = np.unique(co, axis=0, return_inverse=True)
+    outer_skin = np.isin(position, position[leather])
+    weight = blend * outer_skin
+    # Flattening the relief along X leaves five folds in the old plate's
+    # footprint. Relax its interior in the panel plane, fixing the perimeter.
+    triangles = verts.reshape(-1, 3)
+    faces = position[triangles[outer_skin[triangles].all(axis=1)]]
+    edges = np.unique(np.sort(np.concatenate((faces[:, :2], faces[:, 1:], faces[:, ::2])), axis=1), axis=0)
+    start, end = np.concatenate((edges, edges[:, ::-1])).T
+    degree = np.bincount(start, minlength=len(unique))
+    interior = np.unique(position[outer_skin & (radius < 0.96)])
+    interior = interior[degree[interior] >= 3]
+    for _ in range(3):
+        for axis in (1, 2):
+            coords = unique[:, axis]
+            total = np.bincount(start, weights=coords[end], minlength=len(unique))
+            coords[interior] += 0.7 * (total[interior] / degree[interior] - coords[interior])
+    co[outer_skin, 1:] = unique[position[outer_skin], 1:]
+    y, z = (co[:, 1] + 0.004) / 0.049, (co[:, 2] - 0.136) / 0.031
+    skin = coeff[0] + coeff[1] * y + coeff[2] * z + coeff[3] * y * y + coeff[4] * z * z + coeff[5] * y * z
     co[:, 0] += weight * (skin - co[:, 0])
     # Keep the lining inside. Collapsing both skins onto one fitted surface
     # makes their triangles coincide in the macro.
     inner = np.zeros(len(co), dtype=bool)
     inner[verts[(u > 2350) & (u < 2630) & (v > 3800)]] = True
-    lining = front & inner
+    lining = front & np.isin(position, position[inner]) & (weight == 0)
     co[lining, 0] += blend[lining] * np.minimum(skin[lining] - 0.005 - co[lining, 0], 0)
     mesh.vertices.foreach_set("co", co.ravel())
     mesh.update()
