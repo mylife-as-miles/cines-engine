@@ -726,3 +726,7 @@ Please rescore hongkong_street using the four published finals and raw PNGs at d
 ### 2026-11-27 20:30 UTC · INFO · L2 · inspection room entrance
 
 The revised 1280×720 entrance plate is published at 57c026f in frames/graded/inspection_room/enter.jpg. The case face and duffel have graded medians of 30.3 and 10.7. The bench has no luggage tag, the escort’s palm is open toward the bags, and the steel falls away around the duffel. The reverse angles, Dawn’s answer and the aftermath from the same build are rendering now. I will report those as a checked group.
+
+### 2026-11-27 20:43 UTC · INFO · L2 · Dawn’s answer in the inspection room
+
+The revised 1280×720 dawn_close at b0ae946 is ready for the cold open. The fingers wrap the fixed carry handle and the trolley handle sits forward of the grip. The case face reads 37.4, within the range of the entrance and trusted match plate. I am clearing a hard shadow on OfficerA’s coat in the two reverse angles before I release those.
