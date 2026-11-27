@@ -861,14 +861,15 @@ def ruled(name, w, h, rgb=(0.74, 0.72, 0.65), pitch=0.0087, head=0.032, margin=0
     return m
 
 
-def airmail(name, w, h, rgb=(0.66, 0.68, 0.7), band=0.0065, period=0.022):
+def airmail(name, w, h, rgb=(0.66, 0.68, 0.7), band=0.0065, period=0.022, uv=False):
     """A thin airmail envelope, w x h: pale blue-white lightweight paper with the slanted red and blue bars round
-    its edge (white between them). Blank: no address, no stamp, no mark."""
-    m = paper(name, rgb, 0.8, 0.04, 0.05, translucency=0.1)
+    its edge (white between them). Blank: no address, no stamp, no mark. With `uv` the border follows the mesh's UV
+    map (metres from each envelope's own centre: the slabs of a stack each carry theirs)."""
+    m = paper(name, rgb, 0.8, 0.04, 0.05, translucency=0.0 if uv else 0.1)
     nt = m.node_tree
     b = nt.nodes["Principled BSDF"]
     base = b.inputs["Base Color"].links[0].from_socket
-    o = _obj(nt)
+    o = _n(nt, "ShaderNodeTexCoord").outputs["UV"] if uv else _obj(nt)
     x, y, _ = _xyz(nt, o)
     e = _math(nt, "MINIMUM", _math(nt, "SUBTRACT", w / 2, _math(nt, "ABSOLUTE", x)), _math(nt, "SUBTRACT", h / 2, _math(nt, "ABSOLUTE", y)))
     inband = _maprange(nt, e, band, band - 0.0004, 0.0, 1.0)

@@ -460,6 +460,7 @@ def _slab_stack(name, mats, w, h, n, seed, thick=(0.0013, 0.002), slip=0.004, tw
     little; mats cycle per slab. Returns (object, height)."""
     rng = random.Random(seed)
     bm = bmesh.new()
+    uv = bm.loops.layers.uv.new("UVMap")
     z = z0
     spans = []
     for i in range(n):
@@ -469,8 +470,13 @@ def _slab_stack(name, mats, w, h, n, seed, thick=(0.0013, 0.002), slip=0.004, tw
         before = len(bm.faces)
         bmesh.ops.create_cube(bm, size=1.0, matrix=mat)
         bm.faces.ensure_lookup_table()
+        inv = mat.inverted()
+        sx, sy = mat.to_scale().x, mat.to_scale().y
         for f in bm.faces[before:]:
             f.material_index = i % len(mats)
+            for lp in f.loops:                     # each envelope's own coordinates (metres from its centre)
+                lc = inv @ lp.vert.co
+                lp[uv].uv = (lc.x * sx, lc.y * sy)
         z += t
         spans.append(z)
     me = bpy.data.meshes.new(name)
@@ -557,7 +563,6 @@ def writing_pad(name, m_sheet, m_block, m_board, m_tape, x, y, turn, w=0.216, h=
     shape = sheet_shape(w - 0.001, sh, seed, corners=(0.0, corner, 0.0, 0.0), wave=0.0005)
     top = place_flat(name + "_sheet", grid_bm(w - 0.001, sh, 44, 56), base @ Matrix.Translation((0, -0.012, 0)), m_sheet, 0.00018,
                      shape=shape, stiff=4)
-    top.matrix_world = Matrix.Translation((0, 0, z + 0.00005 - base.translation.z)) @ top.matrix_world
     parts.append(top)
     SUPPORT.append(parts[2])
     return parts, top

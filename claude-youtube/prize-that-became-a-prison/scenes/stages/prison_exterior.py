@@ -20,7 +20,9 @@ Cameras (beat ch08; the first two are level, framed upward with lens shift so th
     <bpy python> -I scenes/shoot.py -- prison_exterior <cam> out.png [--nocast]
 
 Set: prison_exterior_set.py; materials: prison_exterior_mats.py. Before every render a hook on setkit.render sets
-the far clip (the sky dome is 1.1 km away), the lens shift, the mist density, that camera's rain and light trims.
+the far clip (the sky dome is 1.1 km away), the lens shift, the mist density, that camera's rain and light trims,
+and keeps the spill lamps (and, for the wall frame, the mast the camera stands under) out of the mist. A render_pre
+handler lowers Cycles' adaptive threshold from setkit's 0.03 to 0.012: the mist and the rain need the samples.
 The rain is geometry: short thin streaks placed only inside the floodlights' cones, in the camera's own view, each
 under a pixel wide and lit by the lamps like everything else, so it is brightest near a lamp and gone outside the
 cones, as rain is to the eye at night.

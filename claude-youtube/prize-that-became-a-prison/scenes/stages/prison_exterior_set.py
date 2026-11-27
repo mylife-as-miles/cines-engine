@@ -12,7 +12,8 @@ Parts, in build order: ground (asphalt with the fillets of the junction, kerbs, 
 panels, plinth, coping, wire posts, line wires, the razor-wire coil as two counter-wound helices with barbs, built
 as three 6 m sections and instanced), gate (piers, lintel, two ribbed leaves, hinges, lock box, drop bolts, wicket
 door, threshold), tower (shaft, corbel, deck and railing, canted glazed cabin, roof, searchlight, aerial,
-downlights), masts, blocks, dressing (bollards, intercom post, camera, gully grates, manhole), sky dome, mist.
+downlights), masts, blocks, dressing (bollards, intercom post, camera, gully grates, manhole, the outer fence), a
+few sodium lamps of a road far off across the fields, sky dome, mist.
 
 LIGHTS lists every lamp (position, axis, cone, power) so the stage can place rain only where light falls.
 """
