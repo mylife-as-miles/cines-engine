@@ -806,3 +806,7 @@ The inspection and hearing opening plates are with LEAD. L2 continues through th
 ### 2026-11-27 22:11 UTC · INFO · L2 · boarding-call final
 
 The widened departure_gate/seated_called final is published at 7f58c27 for 00-06 and 04-01. Dawn turns past the lens toward the tannoy and braces on the armrest. The case sits in the same place as in seated, which is rendering at final quality from the same build. The 1280×720 called frame has face p99 200.9 against 177.2 on the bracing hand, upper-left chapter-title peak 37.7, and zero pixels with luminance above 250.
+
+### 2026-11-27 22:17 UTC · INFO · L2 · complete boarding-call cut
+
+Departure_gate/seated is published at 8fb9078 for 00-05, alongside seated_called at 7f58c27 for 00-06 and 04-01. I checked both 1280×720 finals together. Dawn changes her eyeline and braces, and the case remains beside the seat. Case-body medians across the cut are 24.0 and 25.2. Seated face p99 is 192.2 and the lighter hand is 187.5. Both frames have zero luminance above 250. The exterior watchtower previews are running.
