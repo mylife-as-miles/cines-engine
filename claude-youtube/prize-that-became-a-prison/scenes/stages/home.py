@@ -65,18 +65,18 @@ CAMERAS = {
     # Ch 10: from the foot of the table, in the near corner at a standing eye line: the table running away to the
     # head, the chairs pushed in, the blinds glowing on the left wall, their stripes across the table's end and the
     # one chair pulled out at the head (on the right third), clear against the lit end wall
-    "dining": dict(loc=(1.45, -1.85, 1.62), aim=(4.2, 0.45, 0.42), lens=32, focus="fx_dining", fstop=5.6, beat="ch10",
-                   exposure=-0.95, spp_final=128),
+    "dining": dict(loc=(1.45, -1.85, 1.62), aim=(4.0, 0.45, 0.42), lens=32, focus="fx_dining", fstop=5.6, beat="ch10",
+                   exposure=-0.85, spp_final=128),
     # Ch 10: the empty chair, from the far side near the end wall, the wall seen edge-on: the street light's stripes
     # across the chair, its striped shadow clear of it on the end wall to the left, the table's head soft at the
     # right; the image before the cut to black
-    "chair": dict(loc=(4.25, 2.05, 1.1), aim=(4.6, -0.25, 0.42), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
-                  exposure=-1.2, spp_final=128),
+    "chair": dict(loc=(4.05, 2.05, 1.1), aim=(4.4, -0.25, 0.42), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
+                  exposure=-0.95, spp_final=128),
 }
 TRIMS = {
     "kitchen": {},
     "dining": {},
-    "chair": {"d_sky": 0.6, "street_side": 0.75},
+    "chair": {"d_sky": 1.4},
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
@@ -281,9 +281,9 @@ UPPER = {"chest": (16, 0), "neck": (6, 0), "head": (21, 3), "fingers": 12}
 # outer joints) in degrees. The master alone only tips a straight finger down at the knuckle (a mitten); the joints
 # curl it. The right index reaches ahead for the trackpad, the others curl under it, the thumb tucks in; the left
 # hand lies loosely curled on the palm rest
-CURL = {"R": {"f_index": (10, 7), "f_middle": (12, 15), "f_ring": (13, 17), "f_pinky": (14, 19), "thumb": (0, 16)},
-        "L": {"f_index": (12, 12), "f_middle": (13, 15), "f_ring": (14, 17), "f_pinky": (15, 19), "thumb": (0, 10)}}
-PITCH_MIN = -22.0          # the hand tips up at the wrist no further than this; past it the wrist rises instead
+CURL = {"R": {"f_index": (8, 5), "f_middle": (11, 12), "f_ring": (12, 14), "f_pinky": (13, 16), "thumb": (0, 16)},
+        "L": {"f_index": (11, 10), "f_middle": (12, 12), "f_ring": (13, 14), "f_pinky": (14, 16), "thumb": (0, 10)}}
+PITCH_MIN = -28.0          # the hand tips up at the wrist no further than this; past it the wrist rises instead
 
 
 def curl_fingers(holder):
@@ -549,7 +549,7 @@ def lights():
             12.0, (0.55, 0.66, 0.95), spread=120, aim=(win["cx"] + 0.3, 0.2, 0.5))
     # a night light left on under the right-hand wall cabinets: a low warm strip on the tile and the counter
     ux0, ux1 = win["cx"] + win["w"] / 2 + 0.11, st.K["x1"] - 0.85
-    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 3.0))
+    st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 2.2))
     li = st.area("k_undercab", ((ux0 + ux1) / 2, y1 - 0.25, 1.648), (ux1 - ux0 - 0.1, 0.04), 3.2, (1.0, 0.86, 0.68), spread=150)
     li.rotation_euler = (0, 0, 0)          # facing straight down
     # Ch 10: the street light through the foot-end window, far and small so the slats cut clean stripes: it runs
@@ -557,17 +557,24 @@ def lights():
     d = Vector((0.9, -0.36, -0.27)).normalized()
     target = Vector((4.45, 0.0, 0.66))
     st.spot("street", tuple(target - d * 15.0), tuple(target), 26000.0, (0.74, 0.84, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
-    # a second, weaker street light through the side window: the blinds glow and a few stripes reach the floor
-    d2 = Vector((0.3, -0.85, -0.42)).normalized()
-    t2 = Vector((3.1, 0.9, 0.0))
+    # a second, weaker street light through the side window, steep: the blinds glow and its stripes fall on the floor
+    # and the far chairs between the window and the table, never on the table top (two crossing stripe sets read
+    # as a lattice there)
+    d2 = Vector((0.25, -0.6, -0.76)).normalized()
+    t2 = Vector((3.4, 0.9, 0.0))
     st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 15000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
     dw = st.D_WIN
     # the sky's faint glow through the slats: just enough to keep the room readable
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),
             16.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
+    # the night sky's glow through the foot-end blind: a weak fill so the foot of the table, the foot chair and the
+    # near chair read (dimly) in the wide instead of crushing to black
+    ew = st.D_END_WIN
+    st.area("d_sky_end", (st.D["x0"] + 0.08, ew["cy"], (ew["z0"] + ew["z1"]) / 2), (ew["z1"] - ew["z0"] - 0.1, ew["w"] - 0.1),
+            36.0, (0.5, 0.6, 0.85), spread=130, aim=(2.6, -0.7, 0.45))
     # outside the kitchen window: a faint cool lamp over the neighbour's back door rakes their painted brick
     yw = st.K["y1"] + st.K_OUT
-    st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.45, 3.3), (st.WARM_WIN[0] + 0.1, yw - 0.02, 0.5), 30.0, (0.62, 0.72, 1.0),
+    st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.45, 3.3), (st.WARM_WIN[0] + 0.1, yw - 0.02, 0.5), 350.0, (0.62, 0.72, 1.0),
             size_deg=95.0, blend=0.9, radius=0.06)
     # the area lights only light: through the glass the camera sees the night itself
     for li in st.LIGHTS.values():

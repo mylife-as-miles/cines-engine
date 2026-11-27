@@ -57,24 +57,26 @@ CAMERAS = {
     # Ch 04: down the lane from the dark end, from the left-hand row: shut stalls both sides, wet concrete, the one
     # burning stall front at mid distance on the right, the organiser at its counter and Dawn a step back, small
     "wide": dict(loc=(-0.78, -6.9, 1.72), aim=(0.2, 5.8, 1.5), lens=28, focus="fx_wide", fstop=8.0, beat="buy",
-                 exposure=-1.0),
+                 exposure=-0.9, haze=0.008),
     # Ch 04: from the lane into the stall: Dawn looking up at the wall of handbags under the battens
     "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.2), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
                   show=("Dawn",), exposure=-1.5),
     # Ch 04: the controlled close-up from the alley: the black extra bag passing over the counter, the stallholder's
     # hand pushing it across, the organiser's hand taking it; the wall of bags soft beyond
-    "purchase": dict(loc=(1.57, 3.55, 1.6), aim=(1.62, 4.93, 1.17), lens=50, focus="fx_bag", fstop=3.2, beat="buy",
+    "purchase": dict(loc=(1.57, 3.45, 1.72), aim=(1.62, 4.93, 0.98), lens=42, focus="fx_bag", fstop=3.5, beat="buy",
                      exposure=-1.6),
 }
-TRIMS = {"wide": {"hero_lane": 1.35}, "purchase": {"hero_alley": 2.0}}
+TRIMS = {"wide": {"hero_lane": 1.7, "hero_ceil_a": 1.3}, "purchase": {"hero_alley": 2.0}}
 
 _STATE = {"holders": {}, "cast": [], "cache": {}, "bag": None}
 
 
 # ---------------------------------------------------------------- the hero bag
 def hero_bag():
+    # nylon with a satin sheen: black, but its folds, straps and zip must read under the battens (at val 0.3 and a
+    # cut specular it was a featureless silhouette in the close-up)
     h = props.load("extra-bag-closed", size=0.75, axis="long", loc=(BX, BY, TOP), turn_deg=BAG_TURN,
-                   sat=0.5, val=0.3, rough_add=0.35)
+                   sat=0.5, val=0.42, rough_add=0.12)
     seen = set()
     for o in h.children_recursive:
         if o.type != "MESH":
@@ -82,7 +84,7 @@ def hero_bag():
         for s in o.material_slots:
             if s.material and s.material.name not in seen:
                 seen.add(s.material.name)
-                mt.tune_prop(s.material, spec=0.08)
+                mt.tune_prop(s.material, spec=0.32)
     _STATE["bag"] = h
     return h
 
@@ -378,7 +380,7 @@ def pose_buy():
     rep.append(f"stallholder head {ge[1]} err {ge[0]:.1f}; l_arm {tuple(round(v) for v in hs['arm'])} fit {hs['fit'] * 1000:.0f} mm "
                f"palm {hs['palm_low'] * 1000:.0f} fingers {hs['finger_low'] * 1000:.0f} mm")
     # the organiser: eyes on the stallholder, his right hand coming onto the bag's near end, fingers curling to take it
-    op = {"chest": (7, 0), "l_arm": (5, 8, 16), "fingers": 26}
+    op = {"chest": (7, 0), "l_arm": (1, 3, 6), "fingers": 26}
     go = aim_head_iter(o, op, eye_centre(s))
     wx, wy = BX - 0.29, BY - 0.04
     ho = rest_hand(o, op, "R", (wx, wy, bag_top(wx + 0.08, wy) + 0.05), bag_top, Vector((1, -0.08, 0)).normalized(), curl=11.0)
@@ -457,6 +459,10 @@ def apply_camera(name):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
+    hz = st.OBJ.get("haze")
+    if hz is not None:   # thicker air down the lane for the wide, where it gives the battens' light a shape
+        pv = next(n for n in hz.data.materials[0].node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
+        pv.inputs["Density"].default_value = cfg.get("haze", 0.004)
     sc = bpy.context.scene
     sc.cycles.sample_clamp_indirect = 2.5
     sc.cycles.blur_glossy = 0.5

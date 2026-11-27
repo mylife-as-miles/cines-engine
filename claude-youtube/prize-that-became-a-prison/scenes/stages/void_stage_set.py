@@ -147,33 +147,94 @@ def _brick(nt, vec, w, h, mortar, offset=0.5, c1=(1, 1, 1), c2=(0.95, 0.95, 0.95
 
 # ---------------------------------------------------------------- materials
 
-def stage_floor():
-    """A black-box stage floor: 1.22 x 2.44 m hardboard sheets painted matt black, each a shade off its neighbours,
-    the butt joints a fine dark groove, scuffed by years of feet and flight cases (lighter, rougher streaks), a film of
-    dust. Its albedo (about 0.09) sits above the bags' (0.03): the lit pool reads grey and the dark bags read on it."""
+def _ridge(nt, vec, scale, stretch, lo, hi, detail=3.0):
+    """Thin wandering lines: the crest of a stretched noise (1 - |2n - 1|), kept only near its top."""
+    n = _noise(nt, vec, scale, detail, 0.55, stretch=stretch)
+    r = _math(nt, "SUBTRACT", 1.0, _math(nt, "MULTIPLY", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", n, 0.5)), 2.0))
+    return _maprange(nt, r, lo, hi, 0.0, 1.0)
+
+
+def _vmath(nt, op, a, b=None):
+    n = _n(nt, "ShaderNodeVectorMath", operation=op)
+    _set(nt, n.inputs[0], a)
+    if b is not None:
+        _set(nt, n.inputs[1], b)
+    return n.outputs["Value"] if op in ("DISTANCE", "LENGTH", "DOT_PRODUCT") else n.outputs["Vector"]
+
+
+def stage_floor(cell=None):
+    """A black-box stage floor: 1.22 x 2.44 m hardboard sheets painted matt black, each a few per cent off its
+    neighbours, the butt joints a 2 mm dark groove; heel marks (thin dark streaks) and fine pale scratches along the
+    traffic directions, ghosts of old spike tape (strips and crosses, a little glossier and greyer where the adhesive
+    held dust), a film of dust; satin to matt (roughness 0.55-0.75). Its albedo (about 0.09) sits above the bags'
+    (0.03): the lit pool reads grey and the dark bags read on it. Around the cell (`cell` = its centre) the floor
+    falls to near black a short way out from the slab, so no stray spill reads there."""
     m, nt, b = _new("stage floor")
     o = _obj(nt)
-    br = _brick(nt, o, 2.44, 1.22, 0.004, offset=0.5, c1=(1.0, 1.0, 1.0), c2=(0.86, 0.86, 0.87), cm=(0.55, 0.55, 0.55))
+    br = _brick(nt, o, 2.44, 1.22, 0.0022, offset=0.5, c1=(1.04, 1.04, 1.04), c2=(0.955, 0.955, 0.96),
+                cm=(0.3, 0.3, 0.3))
+    br.inputs["Mortar Smooth"].default_value = 0.1
     seam = _out(br, "Fac")
-    base = _mix(nt, 1.0, (0.088, 0.088, 0.092), _out(br, "Color"), "MULTIPLY")
-    mott = _noise(nt, o, 0.9, 4.0, 0.6)
-    base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.35), base, (0.062, 0.062, 0.066))
-    scuff = _noise(nt, o, 6.0, 6.0, 0.65, stretch=(1.0, 9.0, 1.0))
-    sc = _maprange(nt, scuff, 0.58, 0.70, 0.0, 1.0)
-    scuff2 = _noise(nt, o, 9.0, 5.0, 0.6, stretch=(7.0, 1.0, 1.0))
-    sc2 = _maprange(nt, scuff2, 0.6, 0.72, 0.0, 1.0)
-    scuffs = _math(nt, "MAXIMUM", sc, _math(nt, "MULTIPLY", sc2, 0.7))
-    base = _mix(nt, _math(nt, "MULTIPLY", scuffs, 0.55), base, (0.135, 0.134, 0.132))
+    base = _mix(nt, 1.0, (0.086, 0.086, 0.09), _out(br, "Color"), "MULTIPLY")
+    mott = _noise(nt, o, 0.7, 4.0, 0.6)
+    base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.25), base, (0.072, 0.072, 0.076))
+    # heel and case-wheel marks: thin dark streaks along X and Y, only in patches
+    patch = _maprange(nt, _noise(nt, o, 1.3, 2.0, 0.5), 0.5, 0.62, 0.0, 1.0)
+    dk = _math(nt, "MAXIMUM", _ridge(nt, o, 2.6, (1.0, 7.0, 1.0), 0.955, 0.99),
+               _ridge(nt, _vmath(nt, "ADD", o, (3.1, 1.7, 0.0)), 2.6, (7.0, 1.0, 1.0), 0.955, 0.99))
+    dk = _math(nt, "MULTIPLY", dk, patch)
+    base = _mix(nt, _math(nt, "MULTIPLY", dk, 0.55), base, (0.04, 0.04, 0.042))
+    # fine pale scratches (the paint scraped toward the board), sparse
+    sp = _maprange(nt, _noise(nt, _vmath(nt, "ADD", o, (7.3, 2.2, 0.0)), 0.9, 2.0, 0.5), 0.52, 0.66, 0.0, 1.0)
+    sc = _math(nt, "MAXIMUM", _ridge(nt, o, 11.0, (1.0, 18.0, 1.0), 0.975, 0.996, 2.0),
+               _ridge(nt, _vmath(nt, "ADD", o, (1.9, 5.3, 0.0)), 11.0, (18.0, 1.0, 1.0), 0.975, 0.996, 2.0))
+    sc = _math(nt, "MULTIPLY", sc, sp)
+    base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.5), base, (0.16, 0.158, 0.155))
+    # old spike tape: per Voronoi cell, maybe a strip (or a cross) 32 x 4.8 cm, ragged, partly peeled
+    vor = _n(nt, "ShaderNodeTexVoronoi", feature="F1", distance="EUCLIDEAN")
+    vor.inputs["Scale"].default_value = 0.55
+    nt.links.new(o, vor.inputs["Vector"])
+    loc = _vmath(nt, "SUBTRACT", o, vor.outputs["Position"])
+    lx, ly, _ = _xyz(nt, loc)
+    cr, cg, cb = _xyz(nt, vor.outputs["Color"])
+    sw = _math(nt, "GREATER_THAN", cr, 0.5)
+    ax = _mix(nt, sw, lx, ly)
+    ay = _mix(nt, sw, ly, lx)
+    rag = _math(nt, "MULTIPLY", _noise(nt, o, 90.0, 2.0, 0.6), 0.008)
+    ax = _math(nt, "ABSOLUTE", _xyz(nt, ax)[0])
+    ay = _math(nt, "ABSOLUTE", _xyz(nt, ay)[0])
+
+    def strip(u, v):
+        return _math(nt, "MULTIPLY", _math(nt, "LESS_THAN", _math(nt, "ADD", u, rag), 0.16),
+                     _math(nt, "LESS_THAN", _math(nt, "ADD", v, rag), 0.024))
+    tape = _math(nt, "MAXIMUM", strip(ax, ay), _math(nt, "MULTIPLY", strip(ay, ax), _math(nt, "GREATER_THAN", cb, 0.6)))
+    tape = _math(nt, "MULTIPLY", tape, _math(nt, "LESS_THAN", cg, 0.35))
+    tape = _math(nt, "MULTIPLY", tape, _maprange(nt, _noise(nt, o, 14.0, 3.0, 0.6), 0.35, 0.55, 0.0, 1.0))
+    base = _mix(nt, _math(nt, "MULTIPLY", tape, 0.7), base, (0.105, 0.104, 0.104))
     dust = _noise(nt, o, 2.2, 3.0, 0.5)
-    base = _mix(nt, _maprange(nt, dust, 0.45, 0.75, 0.0, 0.18), base, (0.16, 0.155, 0.15))
+    base = _mix(nt, _maprange(nt, dust, 0.5, 0.78, 0.0, 0.14), base, (0.14, 0.137, 0.133))
+    if cell is not None:
+        # near black a little way out from the cell's slab (its outline about 2.9 x 3.9 m)
+        p = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
+        px, py, _ = _xyz(nt, p)
+        dx = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", px, cell[0])), 1.6), 0.0)
+        dy = _math(nt, "MAXIMUM", _math(nt, "SUBTRACT", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", py, cell[1])), 2.2), 0.0)
+        d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
+        near = _math(nt, "LESS_THAN", _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", px, cell[0])), 20.0)
+        fade = _math(nt, "MULTIPLY", _maprange(nt, d, 0.15, 1.0, 0.0, 0.88), near)
+        base = _mix(nt, fade, base, (0.01, 0.01, 0.011))
     nt.links.new(base, b.inputs["Base Color"])
-    rough = _math(nt, "ADD", _maprange(nt, mott, 0.3, 0.7, 0.42, 0.62), _math(nt, "MULTIPLY", scuffs, 0.22))
-    rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", seam, 0.2), clamp=True)
+    rough = _maprange(nt, mott, 0.3, 0.7, 0.58, 0.68)
+    rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", dk, -0.08))
+    rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", sc, 0.08))
+    rough = _mix(nt, tape, rough, 0.5)
+    rough = _math(nt, "ADD", _xyz(nt, rough)[0], _math(nt, "MULTIPLY", seam, 0.2), clamp=True)
     nt.links.new(rough, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.42
+    b.inputs["Specular IOR Level"].default_value = 0.4
     grain = _noise(nt, o, 260.0, 2.0, 0.6)
-    h = _math(nt, "ADD", _math(nt, "MULTIPLY", seam, -1.0), _math(nt, "MULTIPLY", grain, 0.12))
-    h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", scuffs, -0.05))
+    h = _math(nt, "ADD", _math(nt, "MULTIPLY", seam, -1.0), _math(nt, "MULTIPLY", grain, 0.1))
+    h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", sc, -0.12))
+    h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", tape, 0.05))
     _bump(nt, b, h, 0.35, 0.0015)
     M["floor"] = m
     return m
@@ -232,23 +293,50 @@ def section():
     return m
 
 
-def cell_floor():
-    """The cell's floor: grey painted concrete, the paint worn through to concrete along the path from the bunk to the
-    door side, darker dirt at the wall bases, a satin sheen that varies."""
+# the paths twelve years of feet have worn into the cell's floor paint (cell-local x, y): in from the open side, to the
+# bunk's open edge, along it, and across to the basin unit in the back corner
+TRAFFIC = [(0.25, -1.9), (0.2, -1.2), (0.05, -0.55), (-0.15, 0.05), (-0.2, 0.7), (-0.15, 1.25),
+           (0.15, 0.6), (0.45, 1.0), (0.7, 1.25)]
+
+
+def cell_floor(cell=(0.0, 0.0)):
+    """The cell's floor: grey painted concrete, even in value; along the traffic paths (door side to the bunk, bunk to
+    the basin) the paint is worn thin to a paler, rougher concrete in irregular strips, with thin dark scuffs from
+    shoes; dirt in the corners at the wall bases. Roughness 0.6, rising to 0.8 where worn."""
     m, nt, b = _new("cell floor paint")
     o = _obj(nt)
-    mott = _noise(nt, o, 1.6, 5.0, 0.6)
-    wear = _noise(nt, o, 3.5, 6.0, 0.65)
-    worn = _maprange(nt, wear, 0.52, 0.66, 0.0, 1.0)
-    base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 1.0), (0.205, 0.215, 0.205), (0.17, 0.18, 0.172))
-    base = _mix(nt, _math(nt, "MULTIPLY", worn, 0.75), base, (0.26, 0.25, 0.235))
+    p = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
+    q = _vmath(nt, "SUBTRACT", p, (cell[0], cell[1], 0.0))
+    qx, qy, _ = _xyz(nt, q)
+    flat = _vec(nt, qx, qy, 0.0)
+    path = None
+    for (x, y) in TRAFFIC:
+        d = _vmath(nt, "DISTANCE", flat, (x, y, 0.0))
+        w = _maprange(nt, d, 0.12, 0.5, 1.0, 0.0)
+        path = w if path is None else _math(nt, "MAXIMUM", path, w)
+    big = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
+    big.inputs["Scale"].default_value = 3.0
+    nt.links.new(o, big.inputs["Vector"])
+    rag = _maprange(nt, _noise(nt, o, 7.0, 6.0, 0.68), 0.3, 0.7, 0.0, 1.0)
+    edge = _maprange(nt, _out(big, "Distance"), 0.0, 0.45, 0.6, 1.0)
+    worn = _maprange(nt, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", path, rag), edge), 0.18, 0.5, 0.0, 1.0)
+    mott = _noise(nt, o, 0.8, 3.0, 0.5)
+    base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.3), (0.2, 0.208, 0.2), (0.188, 0.196, 0.19))
+    base = _mix(nt, _math(nt, "MULTIPLY", worn, 0.8), base, (0.25, 0.243, 0.228))
+    # shoe scuffs: thin dark streaks, mostly on the paths
+    sc = _math(nt, "MAXIMUM", _ridge(nt, o, 4.0, (1.0, 6.0, 1.0), 0.965, 0.995),
+               _ridge(nt, _vmath(nt, "ADD", o, (2.3, 0.7, 0.0)), 4.0, (6.0, 1.0, 1.0), 0.965, 0.995))
+    sc = _math(nt, "MULTIPLY", sc, _math(nt, "ADD", _math(nt, "MULTIPLY", path, 0.8), 0.15))
+    base = _mix(nt, _math(nt, "MULTIPLY", sc, 0.6), base, (0.09, 0.09, 0.088))
     ao = _ao(nt, 0.3)
-    base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.6, 0.0), base, (0.02, 0.02, 0.018))
+    base = _mix(nt, _maprange(nt, ao, 0.4, 1.0, 0.6, 0.0), base, (0.03, 0.03, 0.028))
     nt.links.new(base, b.inputs["Base Color"])
-    r = _math(nt, "ADD", _maprange(nt, mott, 0.3, 0.7, 0.36, 0.55), _math(nt, "MULTIPLY", worn, 0.3), clamp=True)
+    r = _math(nt, "ADD", _maprange(nt, mott, 0.3, 0.7, 0.57, 0.63), _math(nt, "MULTIPLY", worn, 0.2), clamp=True)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", sc, -0.1), clamp=True)
     nt.links.new(r, b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.4
     pits = _maprange(nt, _noise(nt, o, 180.0, 2.0, 0.5), 0.64, 0.72, 0.0, 1.0)
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", pits, -0.5), _math(nt, "MULTIPLY", worn, -0.2)), 0.3, 0.0012)
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", pits, -0.5), _math(nt, "MULTIPLY", worn, -0.25)), 0.3, 0.0012)
     M["cell_floor"] = m
     return m
 
@@ -291,9 +379,10 @@ def dark(name, rgb=(0.012, 0.012, 0.013), rough=0.6):
     return m
 
 
-def frosted_glow(name, rgb, strength):
-    """The window slot's pane from inside: frosted wired glass with the night beyond it, a faint cool glow, brighter
-    toward its middle, the wire mesh a darker grid."""
+def frosted_glow(name, rgb, strength, top_z=None, sill_z=None):
+    """The window slot's pane from inside: clear glass with the lit night beyond it, a cool glow a little brighter
+    toward the top (the sky over the yard wall), faint dirt on the glass. No wire mesh: the floor patch it throws
+    shows only the bars, and so does the pane."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -301,11 +390,11 @@ def frosted_glow(name, rgb, strength):
     em = _n(nt, "ShaderNodeEmission")
     em.inputs["Color"].default_value = (*rgb, 1)
     o = _obj(nt)
-    x, y, z = _xyz(nt, o)
-    grid = _brick(nt, _vec(nt, x, z, 0.0), 0.025, 0.025, 0.0016, offset=0.0, c1=(1, 1, 1), c2=(1, 1, 1),
-                  cm=(0.55, 0.55, 0.55))
-    haze = _maprange(nt, _noise(nt, o, 18.0, 3.0, 0.6), 0.3, 0.7, 0.85, 1.1)
-    s = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", _out(grid, "Color"), haze), strength)
+    dirt = _maprange(nt, _noise(nt, o, 22.0, 4.0, 0.62), 0.35, 0.75, 1.05, 0.82)
+    s = _math(nt, "MULTIPLY", dirt, strength)
+    if top_z is not None:
+        z = _xyz(nt, _n(nt, "ShaderNodeNewGeometry").outputs["Position"])[2]
+        s = _math(nt, "MULTIPLY", s, _maprange(nt, z, sill_z, top_z, 0.8, 1.15))
     nt.links.new(s, em.inputs["Strength"])
     nt.links.new(em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
@@ -313,12 +402,12 @@ def frosted_glow(name, rgb, strength):
     return m
 
 
-def materials():
+def materials(cell=None):
     M.clear()
-    stage_floor()
+    stage_floor(cell)
     block_paint()
     section()
-    cell_floor()
+    cell_floor(cell or (0.0, 0.0))
     steel("stainless")
     painted_steel("bar steel", (0.075, 0.078, 0.08), rough=0.4)
     dark("slot void")
@@ -370,8 +459,9 @@ def floor():
     return ob
 
 
-def spot(name, loc, aim, energy, size_deg, blend, radius=0.035, colour=(0.93, 0.96, 1.0)):
-    """The hard top spotlight: a small source (crisp shadows), a defined pool edge."""
+def spot(name, loc, aim, energy, size_deg, blend, radius=0.035, colour=(0.93, 0.96, 1.0), scale=None):
+    """The hard top spotlight: a small source (crisp shadows), a defined pool edge. `scale` (x, y) squashes the cone
+    into an ellipse (local x across, local y toward the lamp's up)."""
     li = bpy.data.lights.new(name, "SPOT")
     li.energy, li.color = energy, colour
     li.spot_size, li.spot_blend = math.radians(size_deg), blend
@@ -379,10 +469,45 @@ def spot(name, loc, aim, energy, size_deg, blend, radius=0.035, colour=(0.93, 0.
     ob = _link(bpy.data.objects.new(name, li))
     ob.location = loc
     d = Vector(aim) - Vector(loc)
-    ob.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    if abs(d.normalized().z) > 0.9999:
+        ob.rotation_euler = (0.0, 0.0, 0.0) if d.z < 0 else (math.pi, 0.0, 0.0)
+    else:
+        ob.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    if scale:
+        ob.scale = (scale[0], scale[1], 1.0)
     ob.visible_camera = False
     LIGHTS[name] = ob
     return ob
+
+
+def hotspot(base, frac=0.62, gain=0.35):
+    """A second, fully soft cone inside a spot, from the same point (one shadow): the pool about a third brighter at
+    its centre than at its edge, as a real fresnel or profile spot throws, instead of an even disc."""
+    li = base.data
+    h = bpy.data.lights.new(base.name + "_hot", "SPOT")
+    h.energy, h.color = li.energy * gain, li.color
+    h.spot_size = 2 * math.atan(math.tan(li.spot_size / 2) * frac)
+    h.spot_blend = 1.0
+    h.shadow_soft_size = li.shadow_soft_size
+    ob = _link(bpy.data.objects.new(h.name, h))
+    ob.matrix_world = base.matrix_world.copy()
+    ob.visible_camera = False
+    LIGHTS[h.name] = ob
+    return ob
+
+
+def link_lights(lights, receivers=None, exclude=None, tag="link"):
+    """Light linking: each light lights only `receivers`, or everything but `exclude`."""
+    coll = bpy.data.collections.new(f"{tag}_recv")
+    objs = receivers if receivers is not None else exclude
+    for o in objs:
+        coll.objects.link(o)
+    if exclude is not None:
+        for co in coll.collection_objects:
+            co.light_linking.link_state = "EXCLUDE"
+    for li in lights:
+        li.light_linking.receiver_collection = coll
+    return coll
 
 
 def area(name, loc, aim, size, energy, colour, spread_deg=180.0):
@@ -399,16 +524,65 @@ def area(name, loc, aim, size, energy, colour, spread_deg=180.0):
     return ob
 
 
-def haze(name, lo, hi, density, colour=(0.86, 0.89, 0.93)):
+def haze_material(name, density, colour=(0.86, 0.89, 0.93), drift=0.0):
+    """Stage haze. `drift` > 0 lets the density wander (0.6-1.4 x) in slow soft clouds, as real haze hangs, so a
+    beam reads as light falling through air rather than an even grey solid."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     pv = nt.nodes.new("ShaderNodeVolumePrincipled")
-    pv.inputs["Density"].default_value = density
     pv.inputs["Color"].default_value = (*colour, 1)
+    if drift:
+        o = _obj(nt)
+        n = _noise(nt, o, drift, 3.0, 0.55, stretch=(1.0, 1.0, 0.45))
+        nt.links.new(_math(nt, "MULTIPLY", _maprange(nt, n, 0.3, 0.7, 0.55, 1.45), density), pv.inputs["Density"])
+    else:
+        pv.inputs["Density"].default_value = density
     nt.links.new(pv.outputs[0], nt.nodes["Material Output"].inputs["Volume"])
-    ob = block(name, lo, hi, [m])
+    return m
+
+
+def haze(name, lo, hi, density, colour=(0.86, 0.89, 0.93), drift=0.0):
+    ob = block(name, lo, hi, [haze_material(name, density, colour, drift)])
+    ob.visible_shadow = False
+    return ob
+
+
+def haze_cone(name, lamp, aim, r_floor, r_top, density, drift=0.7, floor_z=-0.25):
+    """Haze only around a spot's cone: a frustum from below the floor (a face lying on the floor would black it out)
+    up to just under the lamp, `r_floor` wide at the floor, so the dark behind the subject stays black."""
+    lamp, aim = Vector(lamp), Vector(aim)
+    ax = (lamp - aim).normalized()
+    t0 = (floor_z - aim.z) / ax.z
+    bot = aim + ax * t0
+    top = lamp - ax * 0.3
+    L = (top - bot).length
+    rot = ax.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=48, radius1=r_floor, radius2=r_top, depth=L,
+                          matrix=Matrix.Translation((bot + top) / 2) @ rot)
+    bm.to_mesh(me)
+    bm.free()
+    ob = _link(bpy.data.objects.new(name, me))
+    me.materials.append(haze_material(name, density, drift=drift))
+    ob.visible_shadow = False
+    return ob
+
+
+def haze_box_along(name, a, b, width, depth, density, drift=0.9):
+    """A haze slab along a light path from a to b (a shaft through a window), width across, depth in the plane."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    rot = d.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((a + b) / 2) @ rot @ Matrix.Diagonal((width, depth, d.length, 1.0)))
+    bm.to_mesh(me)
+    bm.free()
+    ob = _link(bpy.data.objects.new(name, me))
+    me.materials.append(haze_material(name, density, drift=drift))
     ob.visible_shadow = False
     return ob
 
@@ -421,10 +595,14 @@ SLAB = 0.12                 # the slab the cell stands on
 WH = 2.75                   # wall height above the slab
 TOPZ = SLAB + WH
 SLOT = (0.22, 0.72, SLAB + 1.93, 0.3)  # window slot: centre x, width, sill z, height (in the back wall)
-WINDOW_PATCH = (0.08, 0.4, SLAB)       # where the slot's light lands (cell-local): the floor beside the bunk
+WINDOW_PATCH = (0.2, 0.3, SLAB)        # where the slot's light lands (cell-local): open floor right of the bunk, in
+                                       # the close shot's frame (a 35-45 deg fall would land it at the lens's feet)
 SPLAY = 0.24                           # the sill slopes this far down to the inner face, as thick walls' high windows do,
                                        # so a steep light gets through the slot
-WINDOW_W = 9000.0                      # the window source (W): its patch about as bright again as the spot's floor
+WINDOW_DIST = 12.0                     # the night source: a small lamp this far behind the slot (near-parallel rays:
+WINDOW_W = 125000.0                    # the patch is the slot, barred, a fifth larger), W
+BARS = 5                               # round bars in the slot, 25 mm
+CAP = 0.0015                           # the wall-top caps (the graze light's receivers)
 
 
 def _wall_faces(front_cut):
@@ -438,12 +616,23 @@ def _wall_faces(front_cut):
     return f
 
 
+def window_ray(ox, oy):
+    """The slot's middle (on the wall's inner face) and the unit direction of the night light through it."""
+    o = Vector((ox, oy, 0.0))
+    sx, sw, sz, sh = SLOT
+    mid = o + Vector((sx, CY + T * 0.5, sz + sh * 0.5))
+    d = (o + Vector(WINDOW_PATCH) - mid).normalized()
+    return mid, d
+
+
 def cell(ox, oy):
-    """The cell box at (ox, oy): slab, three walls (the back one pierced by the window slot), the slot's bars, frosted
-    pane and the night light behind it. Returns its objects."""
+    """The cell box at (ox, oy): slab, three walls (the back one pierced by the window slot), the slot's bars, the
+    pane and the night light behind it. Returns (objects, extras) where extras names the wall-top caps, the walls and
+    the window light for light linking."""
     objs = []
     P, S = M["block"], M["section"]
     o = Vector((ox, oy, 0.0))
+    walls = []
 
     def B(name, lo, hi, mats, fm=None, bevel=0.012):
         ob = block(name, tuple(o + Vector(lo)), tuple(o + Vector(hi)), mats, fm, bevel)
@@ -451,46 +640,62 @@ def cell(ox, oy):
         return ob
 
     # slab: the painted floor on top, raw concrete edges
-    B("cell_slab", (-CX - T, -CY - 0.06, 0.0), (CX + T, CY + T, SLAB), [M["cell_floor"], S],
-      lambda n: 0 if n.z > 0.5 else 1, bevel=0.01)
+    slab = B("cell_slab", (-CX - T, -CY - 0.06, 0.0), (CX + T, CY + T, SLAB), [M["cell_floor"], S],
+             lambda n: 0 if n.z > 0.5 else 1, bevel=0.01)
     # side walls: from the open front to the back wall's outer face
-    B("cell_wall_l", (-CX - T, -CY, SLAB), (-CX, CY + T, TOPZ), [P, S], _wall_faces(True))
-    B("cell_wall_r", (CX, -CY, SLAB), (CX + T, CY + T, TOPZ), [P, S], _wall_faces(True))
+    walls.append(B("cell_wall_l", (-CX - T, -CY, SLAB), (-CX, CY + T, TOPZ), [P, S], _wall_faces(True)))
+    walls.append(B("cell_wall_r", (CX, -CY, SLAB), (CX + T, CY + T, TOPZ), [P, S], _wall_faces(True)))
     # back wall, built round the slot
     sx, sw, sz, sh = SLOT
     y0, y1 = CY, CY + T
-    zs = sz - SPLAY                    # the low wall stops a block course under the sill; the sill's wedge sits above
-    B("cell_wall_b_low", (-CX, y0, SLAB), (CX, y1, zs), [P, S], _wall_faces(False))
-    B("cell_wall_b_mid_l", (-CX, y0, zs), (sx - sw / 2, y1, sz), [P, S], _wall_faces(False), bevel=0.008)
-    B("cell_wall_b_mid_r", (sx + sw / 2, y0, zs), (CX, y1, sz), [P, S], _wall_faces(False), bevel=0.008)
+    zs = sz - SPLAY                    # the low wall stops under the sill; the sill's wedge sits above
+    walls.append(B("cell_wall_b_low", (-CX, y0, SLAB), (CX, y1, zs), [P, S], _wall_faces(False)))
+    walls.append(B("cell_wall_b_mid_l", (-CX, y0, zs), (sx - sw / 2, y1, sz), [P, S], _wall_faces(False), bevel=0.008))
+    walls.append(B("cell_wall_b_mid_r", (sx + sw / 2, y0, zs), (CX, y1, sz), [P, S], _wall_faces(False), bevel=0.008))
     sill = B("cell_wall_b_sill", (sx - sw / 2, y0, zs), (sx + sw / 2, y1, sz), [P, S], _wall_faces(False),
              bevel=0.006)
     sloped_top(sill, y0, SPLAY - 0.012)
-    B("cell_wall_b_top", (-CX, y0, sz + sh), (CX, y1, TOPZ), [P, S], _wall_faces(False))
-    B("cell_wall_b_l", (-CX, y0, sz), (sx - sw / 2, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008)
-    B("cell_wall_b_r", (sx + sw / 2, y0, sz), (CX, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008)
-    # the slot: four square bars set in the reveal, the frosted wired pane flush with the outer face
-    for i in range(4):
-        bx = sx - sw / 2 + sw * (i + 1) / 5
-        B(f"cell_slot_bar{i}", (bx - 0.011, y0 + 0.07, sz - SPLAY + 0.02), (bx + 0.011, y0 + 0.092, sz + sh + 0.01),
-          [M["bar steel"]], bevel=0.003)
+    walls.append(sill)
+    walls.append(B("cell_wall_b_top", (-CX, y0, sz + sh), (CX, y1, TOPZ), [P, S], _wall_faces(False)))
+    walls.append(B("cell_wall_b_l", (-CX, y0, sz), (sx - sw / 2, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008))
+    walls.append(B("cell_wall_b_r", (sx + sw / 2, y0, sz), (CX, y1, sz + sh), [P, S], _wall_faces(False), bevel=0.008))
+    # wall-top caps: thin plates of the same raw section on the three tops, a separate object so only the graze
+    # light reaches them (from far off they draw the box's outline as a fine bright line)
+    caps = [B("cell_cap_l", (-CX - T, -CY, TOPZ), (-CX, CY + T, TOPZ + CAP), [S], bevel=0.001),
+            B("cell_cap_r", (CX, -CY, TOPZ), (CX + T, CY + T, TOPZ + CAP), [S], bevel=0.001),
+            B("cell_cap_b", (-CX, y0, TOPZ), (CX, y1, TOPZ + CAP), [S], bevel=0.001)]
+    # the slot: five round bars set in the reveal (25 mm, 12 cm apart), a steel frame, the pane at the outer face
+    for i in range(BARS):
+        bx = sx - sw / 2 + sw * (i + 1) / (BARS + 1)
+        me = bpy.data.meshes.new(f"cell_slot_bar{i}")
+        bm = bmesh.new()
+        zb0, zb1 = sz - SPLAY + 0.03, sz + sh + 0.012
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=0.0125, radius2=0.0125, depth=zb1 - zb0,
+                              matrix=Matrix.Translation(o + Vector((bx, y0 + 0.08, (zb0 + zb1) / 2))))
+        bm.to_mesh(me)
+        bm.free()
+        bar = _link(bpy.data.objects.new(me.name, me))
+        me.materials.append(M["bar steel"])
+        for p in me.polygons:
+            p.use_smooth = True
+        objs.append(bar)
     B("cell_slot_frame_low", (sx - sw / 2, y1 - 0.05, sz), (sx + sw / 2, y1 - 0.03, sz + 0.025), [M["bar steel"]],
       bevel=0.003)
     B("cell_slot_frame_top", (sx - sw / 2, y1 - 0.05, sz + sh - 0.025), (sx + sw / 2, y1 - 0.03, sz + sh),
       [M["bar steel"]], bevel=0.003)
-    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.2)
+    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.0, top_z=oy * 0 + sz + sh, sill_z=sz)
     glass = B("cell_slot_pane", (sx - sw / 2, y1 - 0.03, sz + 0.025), (sx + sw / 2, y1 - 0.02, sz + sh - 0.025),
               [pane], bevel=0.0)
-    glass.visible_shadow = False       # the night comes through it (an emitter is opaque to light: round 2 had no patch)
-    # the night beyond the slot: a small hard source well behind it, its cone flattened to the slot, so a blade of
-    # cool light crosses the haze and lays the slot, barred, on the floor in front of the bunk
-    mid = o + Vector((sx, y1 - 0.02, sz + sh * 0.45))
-    d = (o + Vector(WINDOW_PATCH) - mid).normalized()
-    li = spot("cell_window_light", tuple(mid - d * 3.0), tuple(mid), WINDOW_W, 18.0, 0.12, radius=0.012,
-              colour=(0.6, 0.72, 1.0))
-    li.scale = (1.0, 0.42, 1.0)
+    glass.visible_shadow = False       # the night comes through it (an emitter is opaque to light)
+    # the night beyond the slot: a small lamp well behind it on the line through the slot to the patch, its cone
+    # squashed to the slot, so the bars themselves lay the barred patch on the floor and cut a shaft through the haze
+    mid, d = window_ray(ox, oy)
+    half_w = sw / 2 + 0.06
+    size = 2 * math.degrees(math.atan(half_w / WINDOW_DIST))
+    li = spot("cell_window_light", tuple(mid - d * WINDOW_DIST), tuple(mid), WINDOW_W, size, 0.15, radius=0.05,
+              colour=(0.6, 0.72, 1.0), scale=(1.0, 0.42))
     objs.append(li)
-    return objs
+    return objs, dict(caps=caps, walls=walls, slab=slab, window=li)
 
 
 def sloped_top(ob, y_in, drop):

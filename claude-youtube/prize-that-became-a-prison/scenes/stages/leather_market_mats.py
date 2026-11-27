@@ -294,9 +294,11 @@ def laminate(name, rgb=(0.2, 0.19, 0.175)):
     speck = _maprange(nt, _noise(nt, o, 120.0, 2.0, 0.5), 0.6, 0.7, 0.0, 0.3)
     col = _mix(nt, speck, col, (0.06, 0.06, 0.06))
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _maprange(nt, wear, 0.0, 1.0, 0.55, 0.3), b.inputs["Roughness"])
+    _link(nt, _maprange(nt, wear, 0.0, 1.0, 0.62, 0.4), b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.4
-    _bump(nt, b, _noise(nt, o, 90.0, 3.0, 0.6), 0.06, 0.0006)
+    # fine scratches dragged along the counter's depth (local X) by goods pushed across it
+    scr = _maprange(nt, _noise(nt, o, 90.0, 2.0, 0.6, mapping=(0.08, 6.0, 1.0)), 0.62, 0.7, 0.0, 1.0)
+    _bump(nt, b, _math(nt, "ADD", _noise(nt, o, 90.0, 3.0, 0.6), _math(nt, "MULTIPLY", scr, -0.6)), 0.08, 0.0006)
     return m
 
 
@@ -433,7 +435,7 @@ def materials():
     M["steel_bare"] = pbr("bare steel", (0.4, 0.4, 0.41), rough=(0.35, 0.55), metal=1.0, nscale=8.0, cvar=0.15)
     M["roof_steel"] = pbr("roof steel", (0.05, 0.052, 0.055), rough=(0.5, 0.7), metal=0.4, nscale=1.0, cvar=0.2)
     M["crate"] = crate_plastic()
-    M["counter_top"] = laminate("counter top", (0.11, 0.105, 0.098))
+    M["counter_top"] = laminate("counter top", (0.062, 0.06, 0.057))
     M["counter_front"] = pbr("counter front", (0.04, 0.038, 0.037), rough=(0.4, 0.6), nscale=3.0, cvar=0.25, grime=0.3,
                              bump=0.03, bscale=150.0)
     M["ply"] = pbr("plywood shelf", (0.26, 0.2, 0.14), rough=(0.6, 0.8), nscale=2.0, stretch=(1, 12, 1), cvar=0.25)

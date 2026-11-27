@@ -57,7 +57,7 @@ STATE = {
     (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
 }
 # lane battens left burning at night as security lights (watts), on stalls that are otherwise shut or dim
-SECURITY = {(-1, -5.55): 16.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
+SECURITY = {(-1, -5.55): 10.0, (1, -2.85): 7.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
 
 
 # ---------------------------------------------------------------- geometry helpers
@@ -408,7 +408,7 @@ BAGS = {  # model: (size, axis, median luminance of its texture, base scale)
 # olive, bone, mustard, bottle green, dusty rose, slate
 LEATHER = [(0.30, 0.13, 0.05), (0.38, 0.24, 0.13), (0.09, 0.05, 0.03), (0.17, 0.035, 0.03), (0.2, 0.03, 0.05),
            (0.018, 0.018, 0.02), (0.06, 0.06, 0.065), (0.22, 0.19, 0.16), (0.03, 0.045, 0.09), (0.12, 0.12, 0.06),
-           (0.5, 0.46, 0.4), (0.36, 0.25, 0.07), (0.03, 0.08, 0.05), (0.36, 0.2, 0.19), (0.13, 0.15, 0.17)]
+           (0.4, 0.37, 0.32), (0.36, 0.25, 0.07), (0.03, 0.08, 0.05), (0.36, 0.2, 0.19), (0.13, 0.15, 0.17)]
 _SRC = {}
 
 
@@ -713,12 +713,18 @@ def counter():
     # a steel edge band along the lane face, scuffed by bags
     span_box("counter_band", x0 - 0.024, x0 - 0.018, y0, y1, top - 0.05, top - 0.004, M["steel_bare"])
     # on top, away from the bag: a roll of tape, a stack of folded black carrier bags, a bundle of blank tags
-    sk.cyl("counter_tape", 0.048, 0.048, (x0 + 0.2, y1 - 0.13, top + 0.024), M["tape"], verts=32)
-    sk.cyl("counter_tape_core", 0.036, 0.05, (x0 + 0.2, y1 - 0.13, top + 0.025), sk.mat("tape core", (0.3, 0.26, 0.2), 0.8), verts=24)
-    box("counter_carriers", (0.26, 0.19, 0.025), (x0 + 0.38, y0 + 0.16, top + 0.0125), M["poly_bag"], bevel=0.008, rot=(0, 0, 0.2))
+    # (in the strip of counter between the bag and the close-up's lens)
+    tx, ty = x0 + 0.55, y0 + 0.33
+    sk.cyl("counter_tape", 0.048, 0.048, (tx, ty, top + 0.024), M["tape"], verts=32)
+    sk.cyl("counter_tape_hole", 0.036, 0.05, (tx, ty, top + 0.025), sk.mat("tape core", (0.3, 0.26, 0.2), 0.8), verts=24)
+    box("counter_carriers", (0.24, 0.17, 0.022), (x0 + 0.15, y0 + 0.36, top + 0.011), M["poly_bag"], bevel=0.007, rot=(0, 0, 0.15))
     for i in range(5):
-        box(f"counter_tag{i}", (0.034, 0.052, 0.0006), (x0 + 0.5 + i * 0.006, y1 - 0.14 + i * 0.004, top + 0.0004 + i * 0.0007),
+        box(f"counter_tag{i}", (0.034, 0.052, 0.0006), (x0 + 0.33 + i * 0.006, y0 + 0.42 + i * 0.004, top + 0.0004 + i * 0.0007),
             M["tag"], rot=(0, 0, 0.3 + i * 0.25))
+    for i in range(3):   # their strings, loose on the laminate
+        curve(f"counter_tag_string{i}", [(x0 + 0.33 + i * 0.006, y0 + 0.44 + i * 0.004, top + 0.0012),
+                                         (x0 + 0.37 + i * 0.01, y0 + 0.47 - i * 0.01, top + 0.0012),
+                                         (x0 + 0.40 + i * 0.012, y0 + 0.45 - i * 0.012, top + 0.0012)], 0.0006, M["string"])
 
 
 def stool():
@@ -781,8 +787,8 @@ def roller_shutter_far(name, x):
 
 def dressing():
     """Crates at the stall fronts, cables along the awnings and across the lane, a coiled lead on a post."""
-    crate_stack("crates_a", -LANE + 0.24, -3.9, 90, 3, 21)
-    crate_stack("crates_b", -LANE + 0.26, -3.25, 84, 2, 22)
+    crate_stack("crates_a", -LANE + 0.24, -1.3, 90, 3, 21)
+    crate_stack("crates_b", -LANE + 0.26, -0.65, 84, 2, 22)
     crate_stack("crates_c", LANE - 0.24, 2.1, 90, 2, 23)
     crate_stack("crates_d", -LANE + 0.24, 8.1, 92, 1, 24)
     crate_stack("crates_e", LANE - 0.25, 13.6, 88, 3, 25)

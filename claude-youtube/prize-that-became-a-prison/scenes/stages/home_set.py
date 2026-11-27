@@ -40,17 +40,18 @@ COUNTER_TOP = 0.91
 COUNTER_D = 0.635
 
 # dining
-DT = (3.0, 0.0)                      # dining table centre, long axis X, 1.8 x 0.97, top at 0.753
+DT = (2.8, 0.0)                      # dining table centre, long axis X, 1.8 x 0.97, top at 0.753 (toward the foot:
+                                     # room at the head for the chair to stand well off the end wall)
 D_TOP = 0.753
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
-HEAD_CHAIR = (4.3, 0.02, 180.0 + 8.0)    # the father's chair: set back from the head (front feet ~12 cm past the
-                                         # table's end), turned a little; 0.35 m of air behind it so its striped
-                                         # shadow on the end wall stands off the chair
+HEAD_CHAIR = (4.1, 0.02, 180.0 + 8.0)    # the father's chair: set back from the head (front feet ~11 cm past the
+                                         # table's end), turned a little; ~0.6 m of air behind it so its striped
+                                         # shadow on the end wall stands well off the chair, in the wide too
 CHAIR_RAIL = 0.84
-RUG = (2.715, 0.0, 2.43, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
-                                         # wholly off it on the oak (its front feet ~9 cm past the rug's end)
+RUG = (2.495, 0.0, 2.39, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
+                                         # wholly off it on the oak (its front feet ~12 cm past the rug's end)
 K_OUT = 3.5                              # the neighbour's brick wall, this far out from the kitchen window
 
 
@@ -941,13 +942,16 @@ def dining():
             else:
                 box(f"d_wainscot{side}{k}", (0.012, L, zt), (at + n[0] * 0.006, c, zt / 2), M["trim"])
             m = max(1, round(L / 0.62))
+            # stiles stop under the top rail board: where the two overlapped, rays leaving the rail's face started
+            # inside the stile and read as shadowed (black squares at the top of every stile)
+            sh = zt - 0.07 - 0.18
             for j in range(m + 1):
                 s = a + j * L / m
                 s = min(max(s, a + 0.04), b - 0.04)
                 if side in ("+y", "-y"):
-                    box(f"d_stile{side}{k}{j}", (0.075, 0.01, zt - 0.18), (s, at + n[1] * 0.017, 0.18 + (zt - 0.18) / 2), M["trim"], bevel=0.003)
+                    box(f"d_stile{side}{k}{j}", (0.075, 0.01, sh), (s, at + n[1] * 0.017, 0.18 + sh / 2), M["trim"], bevel=0.003)
                 else:
-                    box(f"d_stile{side}{k}{j}", (0.01, 0.075, zt - 0.18), (at + n[0] * 0.017, s, 0.18 + (zt - 0.18) / 2), M["trim"], bevel=0.003)
+                    box(f"d_stile{side}{k}{j}", (0.01, 0.075, sh), (at + n[0] * 0.017, s, 0.18 + sh / 2), M["trim"], bevel=0.003)
             if side in ("+y", "-y"):
                 box(f"d_wrail{side}{k}", (L, 0.01, 0.07), (c, at + n[1] * 0.017, zt - 0.035), M["trim"], bevel=0.003)
             else:
@@ -1034,12 +1038,12 @@ def dining_table():
 
 # chairs round the dining table: (name, x, y, turn); the native chair faces +X. The far-side pair and the foot
 # chair are pushed in (seats under the top, the pair between the table's legs); on the near side one chair is pushed
-# in toward the foot and its partner stands against the wall in the corner by the foot, so nothing on the near side
+# in toward the foot and its partner stands against the far wall in the corner by the foot, so nothing on the near side
 # stands between the wide camera and the head. Only the father's chair at the head is pulled out: it stands apart
 DINING_CHAIRS = [
-    ("chair_foot", 1.92, -0.02, 0.0),
-    ("chair_s1", 2.68, 0.5, -90.0), ("chair_s2", 3.32, 0.5, -90.0),
-    ("chair_n1", 1.55, -2.0, 90.0), ("chair_n2", 2.62, -0.42, 90.0),
+    ("chair_foot", 1.72, -0.02, 0.0),
+    ("chair_s1", 2.48, 0.5, -90.0), ("chair_s2", 3.12, 0.5, -90.0),
+    ("chair_n1", 1.55, 1.93, -90.0), ("chair_n2", 2.42, -0.42, 90.0),
 ]
 
 
