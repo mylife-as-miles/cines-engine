@@ -438,6 +438,16 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None, m_sli
     samples = [(-w / 2 * 0.97 + w * 0.97 * i / 8, -h / 2 * 0.95 + h * 0.95 * j / 6) for i in range(9) for j in range(7)]
     z0, a, b = settle(mw, samples, 4.0)
     mw = frame(x, y, turn, z0 + 0.00005) @ tilt_matrix(a, b)
+    # The torn stub can lift between the coarse tilt samples. Check the finished
+    # bottom plane across the whole cover before seating it.
+    under = support_tree(_footprint(mw, samples, 0.012))
+    lift = 0.0
+    for i in range(25):
+        for j in range(33):
+            point = mw @ Vector((w * (i / 24 - 0.5), h * (j / 32 - 0.5), 0))
+            lift = max(lift, drop(under, point) - point.z + 0.00010)
+    mw.translation = mw.translation + Vector((0, 0, lift))
+    z0 += lift
     print(f"PAPER {name} settles at {(z0 - TOP) * 1000:.2f} mm, tilt {math.degrees(math.atan(a)):+.2f} / {math.degrees(math.atan(b)):+.2f} deg",
           flush=True)
     parts = []
