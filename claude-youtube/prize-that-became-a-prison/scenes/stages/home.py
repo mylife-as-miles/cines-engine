@@ -40,6 +40,7 @@ import bmesh  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
 import cast as castkit  # noqa: E402
+import people  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
 import home_mats as mt  # noqa: E402
@@ -76,12 +77,25 @@ CAMERAS = {
     "chair": dict(loc=(4.05, 2.05, 1.1), aim=(4.4, -0.25, 0.42), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
                   exposure=-0.95, spp_final=128),
 }
+# Same lens and blocking as the empty room, so the editor can cut to Gene's absence.
+for framing in ("dining", "chair"):
+    for layout, beat in (("family", "ch01"), ("gene", "ch10")):
+        CAMERAS[f"{framing}_{layout}"] = dict(CAMERAS[framing], beat=beat, layout=layout,
+                                               focus="fx_gene", framing=framing)
+CAMERAS.update({
+    "kitchen_over": dict(loc=(KT[0] - 0.39, 1.13, 1.41), aim=(KT[0] - 0.05, 0.13, 0.89),
+                         lens=55, focus="fx_screen", fstop=3.5, beat="ch02", exposure=-1.3),
+    "blinds": dict(loc=(3.28, -1.97, 1.34), aim=(3.3, 2.24, 1.18), lens=40,
+                   focus="fx_blinds", fstop=5.6, beat="ch10", exposure=-0.85),
+})
+FOCUS.update(fx_gene=(4.1, -0.03, 1.27), fx_screen=(KT[0], 0.15, 0.89),
+             fx_blinds=(3.3, 2.21, 1.53))
 TRIMS = {
     "kitchen": {},
-    "dining": {"d_sky": 0.6},                         # less side-window glow on the end wall beside the head chair
+    "dining": {"d_sky": 0.3, "street_hero": 1.5},                         # less side-window glow on the end wall beside the head chair
     # the close-up keeps round 1's foot-end glow (36 W); its floor stripes round the feet and the chair's own share
     # of the street light a little stronger than in the wide, where they would compete with the end-wall patch
-    "chair": {"d_sky": 1.4, "d_sky_end": 0.375, "street_side": 1.5, "street_hero": 1.4},
+    "chair": {"d_sky": 1.4, "d_sky_end": 0.375, "street_side": 1.5, "street_hero": 2.0},
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
@@ -338,7 +352,7 @@ def _feet(holder, point_deg):
         rigged._aim(rig, f"foot_fk.{k}", Matrix.Rotation(math.radians(point_deg), 3, "X") @ f)
 
 
-def seat_figure(holder, seat_z):
+def seat_figure(holder, seat_z, upper=SOLVE):
     """Pose her seated (built at the origin facing -Y): thighs near level, shins a little back, her seat sunk SINK
     into the cushion; if the soles still hang, the feet point (heels up, toes down) and only past 30 deg do the
     thighs fall. If they would sink, the shins swing forward. Returns (dz, hip) for placing."""
@@ -347,7 +361,7 @@ def seat_figure(holder, seat_z):
     thigh, shin, point = 82.0, -3.0, 0.0
     dz, hip = 0.0, None
     for it in range(10):
-        rigged.pose_figure(holder, SOLVE)        # arms held forward, out of the seat while it is measured
+        rigged.pose_figure(holder, upper)        # arms held forward, out of the seat while it is measured
         sit_legs(holder, thigh, shin)
         if point:
             _feet(holder, point)
@@ -702,10 +716,69 @@ def lights():
 
 
 # ---------------------------------------------------------------- per-camera hook
+def family_member(name, chair, age, height, weight, tone):
+    """Pose the diner facing -Y, then rotate the finished pose with the chair."""
+    x, y, turn = chair
+    seat_z = _STATE["cushions"]["gene" if name.startswith("Gene") else "tim"]
+    holder = people.man(name, age=age, height_cm=height, weight=weight, tone=tone)
+    gene = name.startswith("Gene")
+    upper = dict(SOLVE, torso=(8 if gene else 0, 0), chest=(10 if gene else 3, 0), head=(5 if gene else 0, -6 if gene else 18),
+                 neck=(3, 0), fingers=4)
+    dz, hip = seat_figure(holder, seat_z, upper)
+    holder.location.z += dz
+    bpy.context.view_layer.update()
+    rig = rigged.rig_of(holder)
+    for side, k in ((1, "L"), (-1, "R")):
+        shoulder = rig.matrix_world @ rig.pose.bones[f"upper_arm_fk.{k}"].head
+        bone = rig.pose.bones[f"upper_arm_fk.{k}"]
+        length = (rig.matrix_world @ bone.tail - shoulder).length
+        elbow_z = st.D_TOP + 0.037
+        elbow_y = shoulder.y - math.sqrt(max(0, length**2 - (shoulder.z - elbow_z)**2 - 0.015**2))
+        elbow = (shoulder.x + side * 0.015, elbow_y, elbow_z)
+        wrist = (hip.x + side * 0.105, elbow_y - 0.255, st.D_TOP + 0.028)
+        arm_to(holder, side, elbow, wrist, hand_pitch=3.0)
+        rigged.articulate_hand(holder, k, {"f_index": (5, 7, 6), "f_middle": (7, 9, 7),
+                                         "f_ring": (9, 11, 8, 4), "f_pinky": (11, 12, 9, 7)})
+    holder.rotation_euler.z = math.radians(turn + 90.0)
+    shift = holder.rotation_euler.to_matrix() @ Vector((hip.x, hip.y + (0.10 if gene else 0), 0.0))
+    holder.location.x, holder.location.y = x - shift.x, y - shift.y
+    bpy.context.view_layer.update()
+    return holder
+
+
+def family_layout(layout):
+    """Only build the people needed by the requested camera. Restore hidden members on repeat visits."""
+    warm = layout == "family"
+    actors = _STATE["family"]
+    if _STATE["with_cast"]:
+        wanted = ("Gene2014", "Tim2014") if warm else ("Gene2026",) if layout == "gene" else ()
+    else:
+        wanted = ()
+    for name in wanted:
+        if name not in actors:
+            if name == "Tim2014":
+                h = family_member(name, _STATE["tim_chair"], 0.49, 178, 0.52, (0.09, 0.115, 0.135))
+            else:
+                h = family_member(name, st.HEAD_CHAIR, 0.80 if warm else 0.95, 172, 0.37,
+                                  (0.14, 0.125, 0.10))
+            actors[name] = (h, [(o, o.hide_render) for o in h.children_recursive if o.type == "MESH"])
+    for name, (holder, members) in actors.items():
+        for ob, hidden in members:
+            ob.hide_render = hidden or name not in wanted
+        if name in wanted and name.startswith("Gene"):
+            bpy.data.objects["fx_gene"].location = face_point(holder)
+    bpy.data.objects["chair_s2"].location.y = _STATE["tim_chair"][1] if warm else _STATE["side_y"]
+    bulb = bpy.data.objects["d_bulb"]
+    bulb.data.materials[0] = st.M["bulb_warm"] if warm else st.M["bulb_off"]
+    bpy.context.view_layer.update()
+
+
 def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
         return None
+    if cam.get("stage_camera") in CAMERAS:
+        return cam["stage_camera"]
     for n, c in CAMERAS.items():
         if (cam.location - Vector(c["loc"])).length < 1e-3:
             return n
@@ -720,7 +793,13 @@ def apply_camera(name):
     sc.cycles.sample_clamp_indirect = 3.0
     sc.cycles.denoiser = "OPENIMAGEDENOISE"
     sc.cycles.volume_bounces = 0
-    trims = TRIMS.get(name, {})
+    spec = CAMERAS.get(name, {})
+    framing = spec.get("framing", name)
+    layout = spec.get("layout")
+    family_layout(layout)
+    trims = dict(TRIMS.get(framing, {}), family_pendant=0.0)
+    if layout == "family":
+        trims.update(family_pendant=1.0, street=0.10, street_hero=0.12, street_side=0.12)
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
@@ -730,7 +809,7 @@ def apply_camera(name):
         if ob is not None:
             ob.location, ob.rotation_euler = _street_xf(aim["d"], aim["target"])
     hz = bpy.data.objects.get("d_haze")
-    dens = HAZE.get(name)
+    dens = HAZE.get(framing, 0.0)
     if hz is not None and dens is not None:
         hz.hide_render = dens <= 0.0
         pv = next(n for n in hz.active_material.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
@@ -799,7 +878,13 @@ def build(cast=True):
     st.dining()
     st.dining_table()
     st.dining_chairs()
+    _, sx, sy, turn = next(c for c in st.DINING_CHAIRS if c[0] == "chair_s2")
+    _STATE.update(with_cast=cast, family={}, side_y=sy, tim_chair=(sx, sy + 0.21, turn),
+                  cushions={"gene": seat_height(*st.HEAD_CHAIR[:2]), "tim": seat_height(sx, sy)})
     lights()
+    st.M["bulb_warm"] = mt.glow("d_bulb_warm", (1.0, 0.75, 0.47), 4.0)
+    st.area("family_pendant", (*st.DT, st.D["h"] - 1.0), (0.33, 0.33), 85.0, (1.0, 0.72, 0.45),
+            spread=150, aim=(*st.DT, st.D_TOP))
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
@@ -818,6 +903,7 @@ def build(cast=True):
         print(f"HOME Dawn lowest point {lo * 1000:+.1f} mm", flush=True)
     lap, scr = table_things(hands)
     screen_light(scr)
+    bpy.data.objects["fx_screen"].location = scr.matrix_world.translation
     # haze: a trace in the kitchen, more in the dining room so the street light's stripes show in the air
     sk.haze((st.K["x1"] - st.K["x0"] - 0.1, st.K["y1"] - st.K["y0"] - 0.1, st.K["h"] - 0.05),
             ((st.K["x0"] + st.K["x1"]) / 2, (st.K["y0"] + st.K["y1"]) / 2, st.K["h"] / 2), 0.004).name = "k_haze"
