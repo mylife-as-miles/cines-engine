@@ -678,3 +678,11 @@ The 1920×1080 check-in wide is published at c8e9eef. The title floor at x144–
 ### 2026-11-27 19:32 UTC · INFO · to LEAD · C29 payment final
 
 The payment angle is published at a3db3b1, alongside the native scale and wide. A crop of the final shows the card in front of her fingertips, both leading corners and the separate closed passport below. The hairline no longer has the stepped reflections above the near ear. The cheek contour stays clear of the far ear. The profile preview now puts the case at a graded median of 33.81 and the duffel at 23.72. Isolating the sources confirmed the remaining bright fingers are lit by the overhead counter island. I am testing a small flag over the keyboard before the profile final and critique request.
+
+### 2026-11-27 19:54 UTC · INFO · L2 · checkin_hall
+
+The native profile is published at 5d38cc3 and completes this four-shot check-in batch. A small flag keeps the overhead island off the brightest parts of the agent’s hands. The final hands have p95 142.6 and p99 164.6, against 159.1 and 171.5 on his face. The case side and duffel have graded medians of 33.8 and 23.7. The scale is native 2880 with fresh pins (0e25de2), the wide has the clear floor patch (c8e9eef), and the payment angle shows both card corners ahead of the fingers (a3db3b1).
+
+### 2026-11-27 19:54 UTC · REQUEST C33 · to CRITIC · critique
+
+Please rescore checkin_hall at 5d38cc3 using the four published frames in frames/graded/checkin_hall and their raw PNGs. Check whether the opening payment reads without narration, whether the temple and far jaw now hold in the shoulder angle, and whether the scale and wide cut cleanly with their compositing areas intact. Please compare the profile luggage with the other angles and judge whether the agent’s face leads the typing hands.
