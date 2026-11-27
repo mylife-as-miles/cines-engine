@@ -6,8 +6,7 @@ aisle walked smooth, luggage racks of round aluminium bars over the window seats
 corners, a cove into a flat ceiling with two lines of strip lights. The carriage is on its night setting: only the
 fittings over Dawn's bay burn full, a few further down at a low level, one tube failing (dim and uneven), the rest off;
 a reading lamp burns over her seat (the lit island). The windows are black: the country goes by as soft streaks of
-light (sodium, cool white), no shape, no sign. Her charcoal suitcase (standing on its side, pocket to the aisle) and
-the black duffel lie on the rack above her. Dawn (people.dawn()) sits at the window, her head turned to the glass,
+light (sodium, cool white), no shape, no sign. Her one charcoal suitcase stands on its side on the rack, pocket to the aisle. Dawn (people.dawn()) sits at the window, her head turned to the glass,
 her hands together in her lap; her face shows faintly in the black glass. A few stone travellers further down: an
 older man dozing over his hands, a young man asleep with his head back, a man in a dark suit looking down the aisle,
 an attendant walking away toward the vestibule door at the far end. Quiet, onward.
@@ -67,14 +66,14 @@ ATTENDANT = (0.06, 15.9)          # standing in the aisle, walking away toward t
 CAMERAS = {
     # Ch 03: one-point down the carriage from the near end at a standing eye line: the rows, the racks, the strip
     # lights converging on the vestibule door; Dawn's head at the window a third of the way along, under the one
-    # burning bay and her reading lamp, the bags on the rack above her
+    # burning bay and her reading lamp, her only suitcase on the rack above her
     "aisle": dict(loc=(0.25, st.Y0 + 1.12, 1.6), aim=(0.0, st.Y1, 2.08), lens=38, focus="fx_dawn", fstop=5.6, beat="ch03",
                   exposure=-1.05),
     # Ch 03: from over the seat back in front of her: her head turned to the window in near profile, her face
     # frontal and faint in the black glass, the lights streaking past behind it
     "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_seat", fstop=4.0,
                  beat="ch03"),
-    # Ch 03: a controlled close-up on the duffel and the suitcase on the rack above her, the carriage soft beyond
+    # Ch 03: a controlled close-up on the suitcase on the rack above her, the carriage soft beyond
     # the near-aisle angle separates both silhouettes and leaves the lamp visible below their rail
     "rack": dict(loc=(0.15, SEAT_Y - 1.05, 2.08), aim=(-1.428, SEAT_Y + 0.19, st.RACK_Z + 0.015), lens=40, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
@@ -484,47 +483,34 @@ def attendant():
 
 
 # ---------------------------------------------------------------- props
-def bags():
-    """On the rack above her seat: the duffel lying along the rack nearer the aisle camera, the suitcase standing on
-    its side beyond it, its front pocket to the aisle, its carry handle toward the wall."""
+def rack_case():
+    """On the inbound train she has one suitcase. The duffel is bought later."""
     bed = st.RACK_Z + st.BAR_R
-    wall = -st.XW
-    duf = props.load("extra-bag-closed", size=0.75, axis="long", loc=(wall + 0.012 + 0.21, SEAT_Y - 0.15, bed), turn_deg=91.5,
-                     sat=0.5, val=0.35, rough_add=0.3)
     case = props.load("dawn-suitcase", size=0.66, axis="z", sat=0.6)
-    # stand it on its side: its height along the rack (-Y), its width up; pocket still to +X (the aisle)
-    case.rotation_euler = (math.radians(90.0), 0.0, math.radians(-3.0))
-    y_end = SEAT_Y + 0.92
-    case.location = (wall + 0.062 + 0.121, y_end, bed + 0.212)
+    case.rotation_euler = (math.radians(90), 0, math.radians(-3))
+    case.location = (-st.XW + 0.183, SEAT_Y + 0.52, bed + 0.212)
     bpy.context.view_layer.update()
-    _STATE["bag_meshes"] = [obj for root in (duf, case) for obj in root.children_recursive if obj.type == "MESH"]
-    out = {}
-    for n, h in (("duffel", duf), ("suitcase", case)):
-        pts = [o.matrix_world @ v.co for o in h.children_recursive if o.type == "MESH" for v in o.data.vertices]
-        lo = Vector([min(p[i] for p in pts) for i in range(3)])
-        hi = Vector([max(p[i] for p in pts) for i in range(3)])
-        h.location.z += bed - lo.z           # rest exactly on the bars
-        bpy.context.view_layer.update()
-        out[n] = (lo + Vector((0, 0, bed - lo.z)), hi + Vector((0, 0, bed - lo.z)))
-        print(f"TRAIN bag {n}: x {lo.x:+.3f}..{hi.x:+.3f} y {lo.y:.3f}..{hi.y:.3f} z {bed:.3f}..{hi.z + bed - lo.z:.3f}",
-              flush=True)
-    # The soft nylon bridges round bars. Set the bag down on their crowns;
-    # only unsupported stretches of the lowest cloth yield between them.
+    meshes = [obj for obj in case.children_recursive if obj.type == "MESH"]
+    pts = [o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
     rails = [o.data.splines[0].points[0].co.x for o in bpy.data.objects if o.name.startswith("rack_bar_L")]
-    for mesh in (o for o in duf.children_recursive if o.type == "MESH"):
-        world = mesh.matrix_world
-        inv = world.inverted()
-        pts = [world @ v.co for v in mesh.data.vertices]
-        support = min(p.z for p in pts if min(abs(p.x - rail) for rail in rails) < st.BAR_R)
-        for vert, point in zip(mesh.data.vertices, pts):
-            point.z += bed - support
-            distance = min(abs(point.x - rail) for rail in rails)
-            between = max(0.0, min(1.0, (distance - st.BAR_R) / 0.027))
-            underside = max(0.0, min(1.0, (bed + 0.055 - point.z) / 0.055))
-            point.z -= 0.006 * math.sin(math.pi * between / 2) ** 2 * underside
-            vert.co = inv @ point
-        mesh.data.update()
-    return out
+    # Lower until the shell meets a curved bar. A caster hanging between bars
+    # can be lower than the rail tops without carrying the case's weight.
+    contacts = []
+    for pt in pts:
+        offset = min(abs(pt.x - rail) for rail in rails)
+        if offset < st.BAR_R:
+            crown = st.RACK_Z + math.sqrt(st.BAR_R ** 2 - offset ** 2)
+            contacts.append(crown - pt.z)
+    dz = max(contacts)
+    case.location.z += dz
+    bpy.context.view_layer.update()
+    lo = Vector([min(p[i] for p in pts) for i in range(3)])
+    hi = Vector([max(p[i] for p in pts) for i in range(3)])
+    lo.z += dz
+    hi.z += dz
+    _STATE["bag_meshes"] = meshes
+    print(f"TRAIN only suitcase: rack contact {dz * 1000:+.1f} mm from initial mark", flush=True)
+    return lo, hi
 
 
 # ---------------------------------------------------------------- lights
@@ -676,11 +662,10 @@ def set_cameras(eyes, bag_box):
             centre = pane + (pane - origin) * (depth / abs(pane.x - origin.x))
             st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 3.8)
     if bag_box:
-        lo, hi = bag_box["duffel"]
-        lo2, hi2 = bag_box["suitcase"]
-        f1 = Vector((hi.x, (lo.y + hi.y) / 2, (lo.z + hi.z) / 2))
-        f2 = Vector((hi2.x, (lo2.y + hi2.y) / 2, (lo2.z + hi2.z) / 2))
-        target = f1.lerp(f2, 0.36)
+        lo, hi = bag_box
+        target = Vector((hi.x, (lo.y + hi.y) / 2, lo.z * 0.6 + hi.z * 0.4))
+        CAMERAS["rack"]["aim"] = tuple(target + Vector((0, -0.03, -0.04)))
+        CAMERAS["rack"]["lens"] = 53
         edge = Vector((-0.75, SEAT_Y + 0.3, 2.42))
         light = st.area("bag_edge", edge, (0.06, 1.2), 25, st.COOL, spread=68,
                         rot=(target - edge).to_track_quat("-Z", "Y").to_euler())
@@ -688,7 +673,7 @@ def set_cameras(eyes, bag_box):
         for obj in _STATE["bag_meshes"]:
             receivers.objects.link(obj)
         light.light_linking.receiver_collection = receivers
-        _focus("fx_bags", target)          # between the two fronts: both inside the focus at f/2.8
+        _focus("fx_bags", target)
 
 
 # ---------------------------------------------------------------- build
@@ -709,7 +694,7 @@ def build(cast=True):
     st.curtains()
     st.outside()
     lights()
-    bag_box = bags()
+    bag_box = rack_case()
     _focus("fx_dawn", (SEAT_X + 0.05, SEAT_Y + 0.2, 1.2))
     _focus("fx_bags", (-1.2, SEAT_Y, 2.0))
     eyes = None
