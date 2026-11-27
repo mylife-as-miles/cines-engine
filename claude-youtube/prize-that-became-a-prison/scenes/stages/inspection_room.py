@@ -106,7 +106,8 @@ POSES = {
         "Dawn": {"chest": (2, 2), "l_arm": (5, 7, 14), "r_arm": (3, 6, 9), "fingers": 40, "look": "OfficerA"},
         # the officer asking: eyes on her, his right hand open and palm up just over the extra bag ("this one?"),
         # his left hand behind his back
-        "OfficerA": {"chest": (4, 0), "fingers": 24, "look": "Dawn", "reach_r": "duffel_hover", "palm": "up",
+        "OfficerA": {"chest": (4, 0), "fingers": 42, "look": "Dawn", "reach_r": "duffel_hover", "palm": "up",
+                     "present_to_dawn": True,
                      "behind_l": True},
         "OfficerB": {"chest": (-2, 0), "fingers": 52, "look": "Dawn", "behind": True},
     },
@@ -599,6 +600,14 @@ def apply_pose(holder, p):
         bpy.context.view_layer.update()
     if p.get("roll_r"):
         _roll(holder, "forearm_fk.R", p["roll_r"])
+    if p.get("present_to_dawn"):
+        rig = rigged.rig_of(holder)
+        pointing = _STATE["holders"]["Dawn"].location - holder.location
+        pointing.z = 0
+        pointing.normalize()
+        rigged._aim(rig, "hand_fk.R", (rig.matrix_world.inverted().to_3x3() @ pointing).normalized())
+        palm, _ = palm_normal(holder, -1)
+        _roll(holder, "hand_fk.R", math.degrees(math.atan2(pointing.cross(palm).z, palm.z)))
 
 
 def _target(name, holders):
@@ -623,9 +632,9 @@ def _bbox(holder):
 def _reach_point(kind):
     if kind == "case_handle":
         return _case_frame() @ Vector((-0.045, 0.032, 0.566))
-    if kind == "duffel_hover":       # palm 8 cm over the extra bag's top, over its middle, toward the near end
+    if kind == "duffel_hover":       # the officer offers the bag to Dawn across the bench
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
-        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.045, hi.z + 0.08))
+        return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 - 0.10, hi.z + 0.05))
     if kind == "tote_handle":        # palm just over the tote's handles, fingers to close round them
         mesh = next(o for o in _STATE["props"]["handbag-tote"].children_recursive if o.type == "MESH")
         points = [mesh.matrix_world @ v.co for v in mesh.data.vertices]
