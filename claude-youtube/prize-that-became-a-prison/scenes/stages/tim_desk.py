@@ -64,7 +64,7 @@ SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 # lying across the desk at ARM_IN degrees in from straight ahead, the right hand on the pad, the left at its edge
 ARM_IN = {"R": 50.0, "L": 30.0}
 ELBOW_Z = TOP + 0.05
-HAND_REST = {"R": TOP + st.PAD_H + 0.0005, "L": TOP + st.PAD_H + 0.0005}    # what each hand rests on
+HAND_REST = {"R": TOP + st.PAD_H + 0.0005, "L": TOP + 0.0015}    # what each hand rests on
 PALM_TILT = {"R": 40.0, "L": 12.0}       # degrees the knuckle line dips to the little-finger side: the writing
                                          # hand lies on its edge, the other nearly flat
 PITCHES = {"R": (0, -4, -8, -12, -16, -20), "L": (8, 4, 0, -4, -8, -12, -16)}   # hand pitch candidates (degrees
@@ -83,7 +83,7 @@ FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01), "fx_p
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
-    "desk": dict(loc=(-1.42, -0.24, 1.12), aim=(0.0, 0.2, 1.0), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
+    "desk": dict(loc=(1.33, 0.08, 1.42), aim=(0.01, 0.21, 1.02), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
     "letters": dict(loc=(-0.30, 0.009, TOP + 3.1), aim=(-0.30, 0.005, TOP), lens=100, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
@@ -844,12 +844,14 @@ def lights():
     fill = st.area("room_fill", ((R["x0"] + R["x1"]) / 2, 2.2, R["h"] - 0.05), (3.0, 3.4), 2.4, (0.6, 0.72, 1.0), spread=170)
     fill.visible_camera = False
     fill.visible_glossy = False
-    wall = bpy.data.objects["room_wall+x"]
-    glow = st.area("lamp wall return", (R["x1"] - 0.60, 0.83, 1.49), (0.62, 0.60),
-                   5.2, st.WARM, spread=135, aim=(R["x1"], 1.03, 1.40))
+    wall = bpy.data.objects["room_wall-x"]
+    glow = st.area("lamp wall return", (R["x0"] + 0.60, 0.73, 1.49), (0.62, 0.60),
+                   5.2, st.WARM, spread=135, aim=(R["x0"], 0.50, 1.40))
     receivers = bpy.data.collections.new("desk wall and frame")
-    for ob in [wall, *bpy.data.objects["desk wall picture"].children]:
-        receivers.objects.link(ob)
+    receivers.objects.link(wall)
+    for ob in bpy.data.objects["right_wall"].children:
+        if ob.name.startswith("pic_"):
+            receivers.objects.link(ob)
     glow.light_linking.receiver_collection = receivers
     glow.visible_camera = glow.visible_glossy = False
     # Warm spill reaching the correspondence from the lamp side in the overhead insert.
