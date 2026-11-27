@@ -12,6 +12,7 @@ environment reference more than from the words (lesson 41), so the dark state is
   light     the pool of daylight on the floor is taken out (each area divided by its own local brightness), and one
             new light put in: grey daylight from the door to the yard, behind the camera on the left, falling off down
             the hall. The far end is the darkest. About two and a half stops under the reference at the treaty wall.
+  floor     a further stop down, so that a white coat is the palest thing in the room (the independent review, finding 8).
   kept      every stone, beam, carved mark, paper and stone on the floor, where the reference has it.
 """
 import os
@@ -48,6 +49,10 @@ def main():
     light *= 1 - 0.55 * ndimage.gaussian_filter(shut, 60)                   # the far wall round the shutters is the darkest thing
     out = refl * light[..., None] * np.array([0.94, 0.98, 1.06], np.float32)   # cool
     out[Y0:Y1, X0:X1] *= 0.8                                                # the leaves themselves, in shadow
+    from PIL import ImageDraw                                               # the floor a further stop down: its papers were as pale as a white coat would be in this light
+    fl = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(fl).polygon([(0, 1200), (480, 1170), (790, 1120), (1920, 884), (3000, 884), (3276, 1220), (3276, 1404), (0, 1404)], fill=255)
+    out *= (1 - 0.5 * ndimage.gaussian_filter(np.asarray(fl).astype(np.float32) / 255, 14))[..., None]
     # ---- daylight through the gaps: between the leaves, under them, a thread down each side
     gap = np.zeros((H, W), np.float32)
     cx = X0 + half
@@ -55,9 +60,9 @@ def main():
     wob = lambda n, s: ndimage.gaussian_filter1d(rng.normal(0, 1, n).astype(np.float32), s)       # a gap is never even: old wood
     n = Y1 - Y0; w1 = wob(n, 30); w1 = (w1 - w1.min()) / (w1.max() - w1.min()); x1 = wob(n, 60) * 6
     for k, y in enumerate(range(Y0 + 8, Y1)):                               # between the leaves: brightest, a little crooked
-        x = int(round(cx + x1[k])); gap[y, x - 1:x + 1 + int(w1[k] > 0.55)] = 0.55 + 0.45 * w1[k]
+        x = int(round(cx + x1[k])); gap[y, x - 4:x + 4 + int(2 * w1[k])] = 0.55 + 0.45 * w1[k]      # eight to ten pixels: three at the take's 992
     m = X1 - X0; w2 = wob(m, 25); w2 = (w2 - w2.min()) / (w2.max() - w2.min())
-    gap[Y1 - 3:Y1, X0 + 6:X1 - 6] = (0.35 + 0.65 * w2[6:m - 6])[None, :]    # under them
+    gap[Y1 - 6:Y1, X0 + 6:X1 - 6] = (0.35 + 0.65 * w2[6:m - 6])[None, :]    # under them
     w3 = wob(n, 18); w3 = np.clip((w3 - np.median(w3)) / (w3.max() - np.median(w3)), 0, 1)
     gap[Y0 + 8:Y1, X0 + 1:X0 + 2] = (0.5 * w3[8:])[:, None]; gap[Y0 + 8:Y1, X1 - 2:X1 - 1] = (0.5 * w3[::-1][8:])[:, None]   # threads at the hinges, broken
     glow = np.clip(gap + 0.8 * ndimage.gaussian_filter(gap, 4) + 0.5 * ndimage.gaussian_filter(gap, 18) + 0.25 * ndimage.gaussian_filter(gap, 60), 0, 1)

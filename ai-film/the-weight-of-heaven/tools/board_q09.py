@@ -40,7 +40,7 @@ def sheet(cells, path):
     pad, cap, gap, hd = 16, 128, 14, 86
     rows = (len(cells) + 1) // 2
     S = Image.new('RGB', (pad * 2 + W * 2 + gap, hd + rows * (H + cap) + pad), INK); d = ImageDraw.Draw(S)
-    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q09  ·  the hall of the treaty  ·  storyboard  ·  five shots, 24 s', fill=GOLD, font=f0)
+    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q09  ·  the hall of the treaty  ·  storyboard  ·  five shots, 25 s', fill=GOLD, font=f0)
     d.text((pad, 48), 'Dark until Karst opens the shutters. Sketches over the hall\'s own reference; they place people and light, the take makes the picture.', fill=PAPER, font=f2)
     for k, (im, title, text) in enumerate(cells):
         x = pad + (k % 2) * (W + gap); y = hd + (k // 2) * (H + cap)
@@ -65,11 +65,11 @@ def main():
     # 1. the wide, dark
     a = part(DARK, (0.0, 0.0, 1.0, 1.0), (W, H))
     a = b4.over(a, dark(ser_back, 0.42), cx=330, foot=296, height=104, soft=0.4)
-    a = b4.over(a, dark(kar_front, 0.20), cx=690, foot=262, height=66, soft=0.5)
+    a = b4.over(a, dark(kar_front, 0.20), cx=754, foot=262, height=66, soft=0.5)
     c1 = img(a); d = ImageDraw.Draw(c1)
     note(d, (36, 22), 'dark: the only light is the door behind us and the gap in the shutters')
     arrow(d, (330, 150), (330, 186), w=3); note(d, (236, 122), 'Serath at the wall, reading')
-    arrow(d, (640, 150), (682, 190), w=3); note(d, (560, 122), 'Karst waits at the shutters')
+    arrow(d, (700, 150), (744, 190), w=3); note(d, (590, 122), 'Karst waits in front of the shutters')
     # 2. her profile at the wall, dark
     wall = b4.blur(part(DARK, (0.27, 0.10, 0.47, 0.50), (W, H)), 2.5) * 1.5
     glow = np.zeros((H, W), np.float32); glow[120:330, 0:150] = 1; glow = ndimage.gaussian_filter(glow, 70)
@@ -87,7 +87,7 @@ def main():
     a = b4.over(a, dark(solid(kar_back, 0.50), 0.16), cx=W * 0.50, foot=H + 4, height=H * 0.80)
     c3 = img(a); d = ImageDraw.Draw(c3)
     arrow(d, (410, 250), (330, 250), w=4); arrow(d, (590, 250), (670, 250), w=4)
-    note(d, (36, 22), 'he hauls the two leaves inward; daylight opens from a blade to a door')
+    note(d, (36, 22), 'he pulls the two leaves in and lets them swing; a line of daylight becomes a door')
     note(d, (250, 392), 'the black plain; his back to us as he says it')
     # 4. Serath in the new light
     wall = b4.blur(part(DAY, (0.27, 0.10, 0.47, 0.50), (W, H)), 9) * 0.75
@@ -103,16 +103,16 @@ def main():
     note(d, (36, 22), 'over his left shoulder: the black plain')
     arrow(d, (690, 110), (610, 110), w=3); note(d, (230, 94), 'he turns his head toward her for the last line')
     cells = [
-        (c1, 'SHOT 1 · 0–4.4 s · the hall, wide, dark',
+        (c1, 'SHOT 1 · 0–3.8 s · the hall, wide, dark',
          'Serath in white, small, at the black wall of the treaty; Karst a dark shape at the closed shutters. She reads aloud, her back to us: "The seven cities, raised by the hands of all,"'),
-        (c2, 'SHOT 2 · 4.4–10 s · her profile at the wall',
+        (c2, 'SHOT 2 · 3.8–9.6 s · her profile at the wall',
          'Close. Her gloved finger follows the cut marks. "and borne by the nations of the high ground," — the finger stops — "until the fire is stone."'),
-        (c3, 'SHOT 3 · 10–15 s · Karst opens the shutters',
-         'From behind him. He hauls the two heavy leaves inward; daylight breaks in; the black plain to the horizon. His back to us: "It was stone within forty years."'),
+        (c3, 'SHOT 3 · 9.6–15 s · Karst opens the shutters',
+         'From behind him, the camera planted. He pulls the two heavy leaves toward himself, one step back, and lets them swing; daylight opens; the black plain, sharp, to the horizon. His back to us, as the leaves come to rest: "It was stone within forty years."'),
         (c4, 'SHOT 4 · 15–18.8 s · Serath, the same close view',
-         'Daylight reaches her face and the wall. She turns from the wall to the light and looks at the plain. Quietly: "We were chosen."'),
-        (c5, 'SHOT 5 · 18.8–24 s · Karst at the opening',
-         'Over his shoulder, the plain. Looking out: "You were sheltered." A breath. He turns his head toward her, a profile against the sky: "By then you had gardens." He holds.'),
+         'Daylight rakes along the wall and reaches her. She turns from the wall to the light, head then shoulders, and looks at the plain, past the camera. Quietly: "We were chosen."'),
+        (c5, 'SHOT 5 · 18.8–25 s · Karst at the opening',
+         'From a pace behind him, to his left; his head against the pale sky. Looking out: "You were sheltered." A breath. He turns his head toward her, a profile against the sky: "By then you had gardens." He holds.'),
     ]
     sheet(cells, P('design/boards/Q09_board.jpg'))
 
