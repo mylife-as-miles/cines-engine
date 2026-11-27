@@ -449,26 +449,28 @@ def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12,
     low = _maprange(nt, pz, 0.62, 0.15, 0.0, 1.0)
     hatch = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.34, 0.24, 0.0, 1.0),
                   _band(nt, pz, 0.6, 1.18, 0.06))
-    win = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.32, 0.22, 0.0, 1.0), _band(nt, pz, 0.95, 1.82, 0.08))
-    win = _math(nt, "MULTIPLY", win, _maprange(nt, pz, 0.95, 1.3, 0.4, 1.0))
+    # (round 4: only under the frame's bottom edge, so the field round the window and the frame itself stay clean)
+    win = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.32, 0.22, 0.0, 1.0), _band(nt, pz, 0.95, 1.18, 0.04))
+    win = _math(nt, "MULTIPLY", win, _maprange(nt, pz, 0.95, 1.18, 0.4, 1.0))
     zone = _math(nt, "MINIMUM", _math(nt, "ADD", _math(nt, "ADD", low, hatch), win), 1.0)
     zone = _math(nt, "MULTIPLY", zone, _maprange(nt, _noise(nt, face, 3.0, 3.0, 0.6), 0.35, 0.6, 0.25, 1.0))
     # thin vertical runs: a noise stretched 10:1 along Z, cut to thin lines, plus a wave of fine drip lines
     stretch = _vec(nt, _math(nt, "MULTIPLY", py, 10.0), pz, _math(nt, "MULTIPLY", px, 10.0))
-    runs = _maprange(nt, _noise(nt, stretch, 9.0, 3.0, 0.6), 0.6, 0.66, 0.0, 1.0)
+    # (round 4: cut far tighter, so only a few rare thin runs survive; wide ones read as wood grain on steel)
+    runs = _maprange(nt, _noise(nt, stretch, 9.0, 3.0, 0.6), 0.72, 0.75, 0.0, 1.0)
     wv = _n(nt, "ShaderNodeTexWave", wave_type="BANDS", bands_direction="X")
     wv.inputs["Scale"].default_value = 3.0
     wv.inputs["Distortion"].default_value = 6.0
     wv.inputs["Detail"].default_value = 3.0
     _link(nt, stretch, wv.inputs["Vector"])
-    drips = _maprange(nt, _out(wv, "Fac"), 0.9, 0.97, 0.0, 1.0)
+    drips = _maprange(nt, _out(wv, "Fac"), 0.96, 0.985, 0.0, 1.0)
     drips = _math(nt, "MULTIPLY", drips, _maprange(nt, _noise(nt, stretch, 2.0, 2.0, 0.5), 0.5, 0.62, 0.0, 1.0))
     streak = _math(nt, "MULTIPLY", _math(nt, "MAXIMUM", runs, drips), zone)
     # the paint: big clean fields with a faint roller tone, the streaks dark and dull
     col = _mix(nt, _maprange(nt, _noise(nt, face, 1.6, 3.0, 0.5), 0.3, 0.7, 0.0, 0.18), paint,
                tuple(c * 0.88 for c in paint))
     col = _mix(nt, _math(nt, "MULTIPLY", zone, 0.25), col, tuple(c * 0.8 for c in paint))
-    col = _mix(nt, _math(nt, "MULTIPLY", streak, 0.7), col, (0.05, 0.045, 0.04))
+    col = _mix(nt, _math(nt, "MULTIPLY", streak, 0.3), col, (0.05, 0.045, 0.04))
     pol = None
     if polish:
         # polished wear: hands and faces against the window frame, keys round the upper lock: the paint rubbed thin,
@@ -487,14 +489,18 @@ def door_steel(name, loc=(0, 0, 0), rot=(0, 0, 0), scale=(1, 1, 1), paint=(0.12,
     col = _mix(nt, chip, col, metal)
     _link(nt, col, b.inputs["Base Color"])
     _link(nt, _math(nt, "ADD", chip, _math(nt, "MULTIPLY", pol, 0.2)) if pol is not None else chip, b.inputs["Metallic"])
-    r = _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, 0.47, 0.56)
+    # a broad roughness variation (0.45-0.62 over ~0.8 m) so the raking light breaks unevenly across the leaf, and a
+    # small finer one on top
+    r = _maprange(nt, _noise(nt, face, 1.2, 3.0, 0.5), 0.3, 0.7, 0.45, 0.62)
+    r = _math(nt, "ADD", r, _maprange(nt, _noise(nt, face, 5.0, 3.0, 0.5), 0.3, 0.7, -0.02, 0.02))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", streak, 0.12))
     if pol is not None:
         r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", pol, 0.22))
     r = _mix(nt, chip, _combine1(nt, r), (0.35, 0.35, 0.35))
     _link(nt, _xyz(nt, r)[0], b.inputs["Roughness"])
-    # dents: a 3 mm low-frequency undulation of the panels; orange peel and the chips' step on top of it
-    dent = _bump(nt, b, _noise(nt, face, 2.2, 2.0, 0.5), 1.0, 0.003)
+    # dents: a 9 mm low-frequency undulation of the panels (3 mm did not read under the raking key, 7 mm only
+    # faintly); orange peel and the chips' step on top of it
+    dent = _bump(nt, b, _noise(nt, face, 1.6, 2.5, 0.5), 1.0, 0.009)
     h = _math(nt, "ADD", _math(nt, "MULTIPLY", _noise(nt, face, 260.0, 2.0, 0.5), 0.15),
               _math(nt, "MULTIPLY", chip, -1.0))
     _bump(nt, b, h, 0.25, 0.0003, extra=dent.outputs["Normal"])
@@ -676,7 +682,7 @@ def glass(name, tint=(0.9, 0.93, 0.94), rough=0.04):
     return m
 
 
-def thin_glass(name, tint=(0.86, 0.9, 0.92), refl=0.05):
+def thin_glass(name, tint=(0.86, 0.9, 0.92), refl=0.05, smear=0.07):
     """Glazing seen straight through (no refraction, so no noise): transparent, reflecting by Fresnel, smears."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -690,7 +696,7 @@ def thin_glass(name, tint=(0.86, 0.9, 0.92), refl=0.05):
     _link(nt, _maprange(nt, sm, 0.35, 0.7, 0.05, 0.2), gl.inputs["Roughness"])
     lw = _n(nt, "ShaderNodeLayerWeight")
     lw.inputs["Blend"].default_value = 0.08
-    smudge = _maprange(nt, _noise(nt, _obj(nt), 25.0, 5.0, 0.6), 0.45, 0.75, 0.0, 0.07)
+    smudge = _maprange(nt, _noise(nt, _obj(nt), 25.0, 5.0, 0.6), 0.45, 0.75, 0.0, smear)
     fac = _math(nt, "ADD", _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.85), refl), smudge, clamp=True)
     mx = _n(nt, "ShaderNodeMixShader")
     _link(nt, fac, mx.inputs[0])

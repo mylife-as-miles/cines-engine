@@ -15,7 +15,8 @@ the near corner, the closed steel door behind, a clock with no numerals, a blank
 Cameras: corridor (one-point down the corridor), door (controlled close-up on a cell door's barred window from the
 hinge side, under a raking key), chair (the whole lit island from the doorway: table, its shadow, the empty chair
 behind the envelope), envelope (an insert of the envelope, the chair soft behind). Before each render a hook on
-setkit.render sets the camera's lens shift and near clip, the per-camera light trims (TRIMS), the far chair's value
+setkit.render sets the camera's lens shift and near clip, the per-camera light trims (TRIMS), positions (MOVES) and
+rotations (ROTS), the far chair's value
 (CHAIR_VAL), the visitation door's swing (LEAF_OPEN) and the denoiser's settings. The set is in
 detention_corridor_set.py, its materials in detention_corridor_mats.py.
 """
@@ -48,7 +49,7 @@ FOCUS = {
 CAMERAS = {
     # Ch 06: one-point down the corridor at standing height, verticals true (level camera, lens shift)
     "corridor": dict(loc=(0.0, -2.6, 1.36), aim=(0.0, 13.0, 1.36), lens=28, focus="fx_corridor", fstop=8.0,
-                     shift=(0.0, 0.0), exposure=-1.0),
+                     shift=(0.0, 0.0), exposure=-1.1),
     # Ch 06: controlled close-up on a cell door's barred window from the hinge side, 40 deg off its axis, so the
     # reveal has depth, the round bars throw shadows on the glass and the raking key grazes the leaf; the empty
     # bunk's top rail rim-lit beyond the bars
@@ -58,27 +59,36 @@ CAMERAS = {
     # the visitor's own chair pushed in at frame left, the shade's glowing rim in the upper third
     "chair": dict(loc=(0.30, 12.4, 1.16), aim=(-0.12, 15.9, 1.16), lens=25, focus="fx_chair", fstop=5.6,
                   shift=(0.0, -0.1), clip=1.0, exposure=-1.1),
-    # Ch 06 (added): the insert, low over the table (17 cm above the top) on a longer lens from 1.6 m back, so the
-    # table is foreshortened to the lower 40% of the frame: the sealed envelope on the lower third with its curled
-    # corner and its shadow, the table falling off into the dark round it, the empty chair's back large and soft
-    # beyond
-    "envelope": dict(loc=(0.618, 14.06, 0.911), aim=(-0.06, 16.08, 0.80), lens=70, focus="fx_envelope",
+    # Ch 06 (added): the insert, about 20 deg above the table from 1.2 m (round 4: from 17 cm above the top the
+    # envelope was seen edge-on and read as a folded strip): the sealed envelope on the lower third, its flap's V,
+    # tip and seal clear, the corner lifting gently and its shadow, the table falling off into the dark round it,
+    # the empty chair's back soft beyond, its top well inside the frame (a 60 mm lens: at 70-75 the chair's top
+    # and the envelope on the lower third do not both fit from this height)
+    "envelope": dict(loc=(0.45, 14.5, 1.15), aim=(-0.08, 15.95, 0.70), lens=60, focus="fx_envelope",
                      fstop=2.8, exposure=-1.85),
 }
 # per-camera light changes (absolute watts by light name)
 TRIMS = {
     # the corridor: the room through the gap washed warm, so it is the brightest, warmest thing at the vanishing
-    # point, and its warm wedge on the corridor floor
-    "corridor": {"room_warm": 900.0, "vd_spill": 0.0, "vd_floor_wedge": 1100.0,
-                 # the pendant turned down: 15 m away nobody reads its level, and its near-white light greyed the amber
-                 "pendant_light": 30.0, "pendant_pool": 80.0, "pendant_glow": 5.0},
+    # point, and its warm wedge on the corridor floor (round 4: the room's wash raised from 900 W and the pools
+    # lowered, so the doorway outshines the floor pools, which were the frame's brightest thing)
+    "corridor": {"room_warm": 3400.0, "vd_spill": 0.0, "vd_floor_wedge": 1200.0,
+                 # the pendant's wide cone off and the rest turned down: 15 m away nobody reads its level, and its
+                 # near-white light greyed the amber
+                 "pendant_light": 0.0, "pendant_pool": 80.0, "pendant_glow": 5.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
-    # down so it does not fill
-    "door": {"door_rake": 11.0, "fit4_down": 150.0, "fit4_up": 4.0},
+    # down so it does not fill; a dim fill on the hinge strip (frame trim, knuckles, hinge leaves) at frame left,
+    # which the grade's vignette otherwise crushed to a black slab
+    "door": {"door_rake": 11.0, "fit4_down": 150.0, "fit4_up": 4.0, "door_hinge_fill": 7.0},
+    # the room from the doorway: the corridor's cool light through the open door behind the lens raised and turned
+    # toward the visitor's chair (ROTS), so its backrest and seat edge and the left wall read instead of black
+    "chair": {"vd_spill": 40.0},
 }
 # per-camera light positions: in the insert the pool's hot centre comes from the far left side of the bulb (still
 # inside the shade), so the curl and the envelope's edges throw their shadows toward the lens
 MOVES = {"envelope": {"pendant_pool": (-0.11, 15.68, st.PEND_Z + 0.03)}}
+# per-camera light rotations (Euler XYZ, rad): in the chair shot the corridor spill is turned 20 deg toward -X
+ROTS = {"chair": {"vd_spill": (math.pi / 2, 0.0, math.radians(20.0))}}
 # per-camera value of the far (empty) chair's shell: in the insert it would otherwise outshine the envelope
 CHAIR_VAL = {"envelope": 0.8}
 # per-camera swing of the visitation room's door leaf (deg): for the chair camera, which stands in the doorway with
@@ -106,13 +116,17 @@ def apply_camera(name):
         cam.data.shift_x, cam.data.shift_y = sx, sy
     trims = TRIMS.get(name, {})
     moves = MOVES.get(name, {})
+    rots = ROTS.get(name, {})
     base = _STATE.setdefault("base", {})
     base_loc = _STATE.setdefault("base_loc", {})
+    base_rot = _STATE.setdefault("base_rot", {})
     for n, ob in st.LIGHTS.items():
         b = base.setdefault(n, ob.data.energy)
         ob.data.energy = trims.get(n, b)
         bl = base_loc.setdefault(n, tuple(ob.location))
         ob.location = moves.get(n, bl)
+        br = base_rot.setdefault(n, tuple(ob.rotation_euler))
+        ob.rotation_euler = rots.get(n, br)
     for node, v0 in _STATE.get("chair_val", []):
         node.inputs["Value"].default_value = v0 * CHAIR_VAL.get(name, 1.0)
     leaf = st.PARTS.get("vd_leaf")
@@ -151,6 +165,14 @@ def door_rake():
     p = Vector((sx * (st.XW - 0.32), y + hinge * 0.62, 1.5))
     aim = Vector((sx * (st.XW + 0.05), y - hinge * 0.1, 1.45))
     li = st.area("door_rake", tuple(p), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=70)
+    li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
+    # the hinge strip's fill (energy 0 except for the door camera): the corridor's light bounced off the floor pool
+    # beyond the hinge side, a soft panel out in the corridor and further along it, aimed at the frame trim and the
+    # knuckles, so the strip at frame left reads (about 30-50/255 raw) instead of a black slab; kept out of
+    # reflections so it puts no hot spot on the leaf
+    p = Vector((sx * (st.XW - 0.75), y + hinge * 1.2, 1.75))
+    aim = Vector((sx * (st.XW + 0.03), y + hinge * 0.5, 1.45))
+    li = st.area("door_hinge_fill", tuple(p), (0.4, 0.4), 0.0, (0.75, 0.86, 1.0), spread=90, glossy=False)
     li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
 
 

@@ -31,10 +31,11 @@ CLOSE = ("R", 7.6)                        # the door of the close-up
 # the opposite wall at dado height, so the foreground walls read (coursing, dado) without any fill
 WIN_LIT = {0: 42.0, 1: 36.0, 6: 48.0}     # door index -> W of the light inside its window
 # (y, level): the two nearest are dead, so the corridor opens out of the dark; then a pool at 4.6, a dead fitting
-# at 7.0 (a dark gap between the pools), a pool at 9.4, and by the end wall a dying tube, low enough not to wash
-# the visitation door under it
-FITTINGS = ((-0.4, 0.0), (2.2, 0.0), (4.6, 1.0), (7.0, 0.0), (9.4, 1.0), (11.8, 0.07))
-FIT_W = 280.0                             # a fitting's lamp (W) at level 1
+# at 7.0 (a dark gap between the pools), a weaker pool at 9.4 (round 4: at full level it sat in front of the
+# visitation door and outshone it), and by the end wall a dying tube, low enough not to wash the door under it
+FITTINGS = ((-0.4, 0.0), (2.2, 0.0), (4.6, 1.0), (7.0, 0.0), (9.4, 0.4), (11.8, 0.07))
+FIT_W = 160.0                             # a fitting's lamp (W) at level 1 (round 4: 280 made the pools the frame's
+                                          # brightest thing, over the amber doorway)
 FIT_SPREAD = 80.0                         # its down light's spread: each pool a separate ellipse with edges
 FIT_UP = 5.0                              # its up light (W at level 1): the soffit between pools stays dark
 DRAIN = (0.3, 2.35)
@@ -62,6 +63,8 @@ AMBER = (1.0, 0.40, 0.08)                 # the leak and the room seen through t
                                           # wash warm light toward neutral, so the source is pushed hard
 AMBER_DEEP = (1.0, 0.24, 0.03)            # the room washed warm and the wedge on the floor out of the door: the
                                           # grade halves saturation and lifts blue, so it is pushed harder still
+AMBER_ROOM = (1.0, 0.18, 0.01)            # the room's wash seen through the gap: deeper still, as AgX's highlight
+                                          # desaturation grows with the level the doorway now needs
 UPPER, LOWER = (0.19, 0.187, 0.172), (0.055, 0.069, 0.081)
 
 M = {}
@@ -123,6 +126,7 @@ def materials():
         bakelite=mt.plastic("bakelite", (0.015, 0.014, 0.013), 0.35),
         cord=mt.rubber("cord", (0.01, 0.01, 0.01), 0.45),
         glass=mt.thin_glass("window glass"),
+        glass_close=mt.thin_glass("close window glass", refl=0.015, smear=0.025),
         clock_face=mt.paint("clock face", (0.5, 0.5, 0.47), 0.65, 0.01, 0.1),
         clock_rim=mt.plastic("clock rim", (0.02, 0.02, 0.022), 0.35),
         ink=mt.rubber("clock hands", (0.01, 0.01, 0.012), 0.5),
@@ -320,41 +324,55 @@ def cells():
 def close_cell():
     """The cell behind the close-up door. The door camera looks through the window from the hinge side, so it
     sees the cell's latch-side wall (toward -Y for a right-hand door): the empty bunk stands along that wall near
-    the door, and a caged night light high on the same wall, just above the window's view, throws its light down
-    over the bunk's top rail and mattress edge, so they read as a rim-lit silhouette against the lit wall."""
+    the door. A caged night light on the cell's far end wall at 1.9 m, aimed back toward the door, rims the
+    mattress's near edge and the folded blanket; a soft cool wash on the latch-side wall behind the bunk makes the
+    rail, mattress edge and blanket fold read as a silhouette against a lit wall (round 4: the old 140 W light high
+    on that wall lit the mattress top flat, a hard black-and-white pattern under the bars)."""
     m = materials()
     side, y = CLOSE
     sx = -1 if side == "L" else 1
     sy = -1                                           # the wall the window looks toward
     x_in = sx * (XW + T)
+    x_far = x_in + sx * CELL_D
     wall_y = y + sy * CELL_W / 2
-    nx, nz = x_in + sx * 1.45, 2.2
-    ny = wall_y - sy * 0.03
-    box("night_body", (0.24, 0.06, 0.13), (nx, ny, nz), m["white"], bevel=0.012)
-    box("night_lens", (0.19, 0.012, 0.085), (nx, ny - sy * 0.032, nz), mt.glow("night lens", (0.62, 0.76, 1.0), 1.0))
+    bw = 0.8                                          # the prop is 1.07 m wide: a cell bunk is about 0.8
+    bx, by = x_in + sx * (0.08 + 0.975), wall_y - sy * (bw / 2 + 0.01)
+    # the caged night light itself, on the latch-side wall high over the bunk's head, where the window sees it
+    # between the bars over the tie (a dark painted body, so the wash beside it does not make it a white block;
+    # its lens dim)
+    nx, ny, nz = x_in + sx * 1.7, wall_y - sy * 0.03, 1.80
+    box("night_body", (0.24, 0.06, 0.13), (nx, ny, nz), m["frame"], bevel=0.012)
+    box("night_lens", (0.19, 0.012, 0.085), (nx, ny - sy * 0.032, nz), mt.glow("night lens", (0.62, 0.76, 1.0), 0.6))
     bm = bmesh.new()
     for dz in (-0.03, 0.0, 0.03):
         add_rod(bm, (nx - 0.1, ny - sy * 0.045, nz + dz), (nx + 0.1, ny - sy * 0.045, nz + dz), 0.003, 6)
     mesh_obj("night_cage", bm, m["wire"], smooth=True)
-    # out from the wall, tipped 45 deg down over the bunk and turned 30 deg toward the door, so it also rims the
-    # bars from inside (all four the same) and the mattress's near edge
-    d = Vector((-sx * math.sin(math.radians(30)), -sy * math.cos(math.radians(30)), 0.0)).normalized()
-    d = Vector((d.x * 0.707, d.y * 0.707, -0.707))
-    li = area("cell_close_night", (nx, ny - sy * 0.06, nz - 0.02), (0.19, 0.085), 140.0, (0.62, 0.76, 1.0), spread=120)
-    li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
-    bw = 0.8                                          # the prop is 1.07 m wide: a cell bunk is about 0.8
-    bx, by = x_in + sx * (0.08 + 0.975), wall_y - sy * (bw / 2 + 0.01)
+    # its rim light, from the far end wall over the bunk's line, aimed back toward the door
+    p = Vector((x_far - sx * 0.1, by, 1.88))
+    aim = Vector((x_in + sx * 0.45, by - sy * 0.12, 1.3))       # the blanket and the mattress's near end
+    # (a broad panel, out of the window's view: its shadows of the bunk frame on the floor stay soft)
+    li = area("cell_close_night", tuple(p), (0.45, 0.25), 60.0, (0.62, 0.76, 1.0), spread=120)
+    li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
+    # the night light's own spill: a small panel just under its lens, aimed down along the latch-side wall, so it
+    # lays a soft scallop on the wall under the fixture and the bunk's rail and mattress line read as a silhouette
+    # against it (round 4: a broad wash from farther in made a detached U-shaped white patch beside the fixture)
+    p = Vector((nx, ny - sy * 0.16, nz - 0.1))
+    aim = Vector((nx + sx * 0.12, wall_y, 1.1))
+    li = area("cell_close_wall", tuple(p), (0.2, 0.08), 1.0, (0.66, 0.78, 1.0), spread=120, glossy=False)
+    li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
     bunk = props.load("bunk-bed", size=1.95, axis="long", loc=(bx, by, 0.0),
                       turn_deg=180.0 if sy < 0 else 0.0, sat=0.4, val=0.7, rough_add=0.15)
     bunk.scale = (bunk.scale.x, bunk.scale.y * bw / 1.07, bunk.scale.z)
-    # the upper bunk made to read through the window: a crisp vinyl mattress 0.1 m thick over the prop's (its top
-    # 6 cm above the tie bar's line of sight, so the two do not merge), and a grey blanket folded square at its
-    # foot, the end the window sees
+    # the upper bunk made to read through the window: a crisp vinyl mattress 0.1 m thick over the prop's, and a grey
+    # blanket folded square at its foot, the end the window sees. (Round 4 tried it 6 cm lower: the projection put
+    # its top edge and the blanket behind the tie bar and left only its unlit front face below it, so it stays here,
+    # its top line and the blanket just over the tie, against the washed wall.)
     ml, mw_ = 1.86, bw - 0.1
-    mat_ = box("close_mattress", (ml, mw_, 0.1), (bx, by, 1.47), m["vinyl"], bevel=0.022)
+    mz = 1.47
+    box("close_mattress", (ml, mw_, 0.1), (bx, by, mz), m["vinyl"], bevel=0.022)
     fx = bx - sx * (ml / 2 - 0.3)                     # the foot end, toward the door
-    box("close_blanket", (0.42, mw_ - 0.12, 0.05), (fx, by - sy * 0.03, 1.545), m["blanket"], bevel=0.018)
-    box("close_blanket_top", (0.40, mw_ - 0.16, 0.034), (fx + sx * 0.008, by - sy * 0.035, 1.585), m["blanket"],
+    box("close_blanket", (0.42, mw_ - 0.12, 0.05), (fx, by - sy * 0.03, mz + 0.075), m["blanket"], bevel=0.018)
+    box("close_blanket_top", (0.40, mw_ - 0.16, 0.034), (fx + sx * 0.008, by - sy * 0.035, mz + 0.115), m["blanket"],
         bevel=0.014, rot=(0, 0, math.radians(2.5)))
     return bunk
 
@@ -660,7 +678,8 @@ def cell_doors():
         L("head_liner", (d, OPEN_W, 0.008), (cx, 0.0, OPEN_H + 0.004), m["frame"], 0.002)
         L("head_trim", (0.014, OPEN_W + 0.122, 0.065), (FRONT + 0.007, 0.0, OPEN_H + 0.0285), m["frame"], 0.004)
         # glazing behind the bars, and a call plate on the latch side
-        L("glass", (0.006, 0.374, 0.434), (0.232, 0.0, 1.5), m["glass"])
+        # (the close-up door's glass reflects less: its ghost reflections filled the window's upper half)
+        L("glass", (0.006, 0.374, 0.434), (0.232, 0.0, 1.5), M["glass_close"] if (side, y) == CLOSE else m["glass"])
         L("call_plate", (0.008, 0.085, 0.135), (FRONT + 0.004, OPEN_W / 2 + 0.2, 1.38), m["hardware"], 0.003)
         L("call_grille", (0.003, 0.05, 0.035), (FRONT + 0.009, OPEN_W / 2 + 0.2, 1.41), m["void"], 0.001)
         b = sk.cyl(f"cd{i}_call_button", 0.011, 0.012, xf((FRONT + 0.012, OPEN_W / 2 + 0.2, 1.355)), m["steel"],
@@ -864,12 +883,13 @@ def vis_door():
          rot=(-math.radians(68), 0, 0), glossy=False)
     # for the corridor camera only (TRIMS): the room behind the gap washed warm from above, so through the gap it
     # is the brightest, warmest thing at the vanishing point
-    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_DEEP, spread=150, glossy=False)
+    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_ROOM, spread=150, glossy=False)
     # for the corridor camera only (TRIMS): the room's lamp light falling out through the gap at a downward angle:
     # a spot 0.5 m inside the room, tipped 30 deg down with a wide, fully blended 60 deg cone, so the door gap (the
     # jamb on one side, the leaf's shadow on the other) cuts it into a warm wedge on the corridor floor, narrow at
-    # the threshold, widening and fading over 2-3 m, with no spotlight edge
-    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, AMBER_DEEP, 60.0, 1.0, radius=0.08,
+    # the threshold, widening and fading over 2-3 m, with no spotlight edge (a 75 deg cone since round 4, so the
+    # wedge lies 2-3 m out of the door past the dying tube's footprint)
+    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, AMBER_DEEP, 75.0, 1.0, radius=0.08,
          rot=(-math.radians(60), 0, 0))
     # and the corridor's cool light falling in through the open door: a faint wash across the room
     area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 16.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
@@ -906,9 +926,11 @@ def back_door():
     lw, lt, lh = VD_W - 0.006, 0.05, VD_H - 0.012
     box("bd_leaf", (lw, lt, lh - 0.01), (BD_X, RY1 + 0.03, 0.018 + (lh - 0.01) / 2), m["door"], 0.004)
     # the corridor beyond lit: a cool sliver of light under the door (an 18 mm gap), fanning out across the floor
-    box("bd_under", (lw - 0.02, 0.01, 0.016), (BD_X, RY1 + 0.07, 0.008), mt.glow("bd under", COOL, 2.2))
-    d = Vector((0.0, -math.cos(math.radians(12)), -math.sin(math.radians(12))))
-    li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 3.5, COOL, spread=150)
+    # (round 4: the sliver dimmed, it read as an LED strip, and its light raised and tipped further down, so it fans
+    # 30-40 cm across the tiles with a soft falloff)
+    box("bd_under", (lw - 0.02, 0.01, 0.016), (BD_X, RY1 + 0.07, 0.008), mt.glow("bd under", COOL, 0.4))
+    d = Vector((0.0, -math.cos(math.radians(20)), -math.sin(math.radians(20))))
+    li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 6.0, COOL, spread=150)
     li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     # its vision panel: the cold corridor on the far side, faint through wired glass
     box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.012))
@@ -992,10 +1014,11 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
     """A sealed envelope lying back up: its body (0.8 mm: paper and the folded letter inside) pillowed in the
     middle, the bottom flap and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw
     the envelope's seams and cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the
-    far left corner has curled up about 20 mm over its last 6.5 cm from handling and damp."""
+    far left corner lifts gently, about 8 mm over its last 9 cm, from handling and damp (round 4: the 20 mm curl
+    rising to a point read as a paper boat)."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
-    cq = 0.065                                           # the curl's reach in from the corner, along the diagonal
+    cq = 0.09                                            # the curl's reach in from the corner, along the diagonal
     def pill(x, y):
         """Height of the envelope's back: pillowed by the folded letter, a gentle warp, and its far left corner
         curled up off the table (a fold line square to the diagonal, rising as the square of the distance)."""
@@ -1003,7 +1026,7 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
         h += 0.0006 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
         h += 0.0006 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
         q = ((x + W / 2) + (D / 2 - y)) * 0.70711
-        h += 0.020 * max(0.0, 1 - q / cq) ** 2
+        h += 0.008 * max(0.0, 1 - q / cq) ** 2
         return max(h, 0.0)
     nu, nv = 46, 32
     bm = bmesh.new()
