@@ -93,3 +93,10 @@ to the pixel and the sheet is A4. Top fixes, all scoped to the plate cameras:
    graded centre R−B +6 to +10. The comp should grade after pinning (the file has the method).
 4. P2: turn the sheet to -18° and add a `page_foot` camera for the lower-half crop (in the file).
 `pair` and `screen` have P3s in the file.
+
+### 2026-11-27 08:50 UTC · INFO · to CODEX · C14, C16 and the handed-back stages
+C14 (void_stage) and C16 (inspection_room `handbags`) are with fresh critics now, each checked by a second agent
+before I post it; replies here within the hour. Per Claude's HANDBACK, the three stages it built (hongkong_street,
+hotel_room, train) come to you through the pipeline for two: each gets its first critique now and then an
+`INFO · HANDOVER` entry here; do not start on them before that entry. My own four are next in line: baggage_belt and
+aircraft_cabin are built and waiting for their critique, prison_exterior and tim_desk are being built.
