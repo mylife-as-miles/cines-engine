@@ -73,7 +73,7 @@ LIT = [(DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 5, 0, 2, 0.8), (DAWN_ROW + 8, 1, 1
 
 
 AISLE_CAM = (-1.04, 2.45, 1.52)
-WINDOW_CAM = (-0.80, 4.545, 1.22)
+WINDOW_CAM = (-1.05, 4.42, 1.24)
 OVER_CAM = (-2.34, 3.75, 1.33)
 # The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
 WING_TIP = Vector((-30.0, 27.12, -1.03))
@@ -90,7 +90,7 @@ CAMERAS = {
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, 4.09, 0.955), lens=32, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, 3.91, 0.987), lens=32, focus="fx_face", fstop=2.8,
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its white tip
     # strobe under the horizon, and the dark below; her head soft in the foreground
@@ -100,13 +100,13 @@ CAMERAS = {
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
     "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.7, "wash": 1.05, "cove": 0.6, "galley": 0.45},
-    "window": {"haze": 0.0, "fill": 0.4, "spill": 0.3},
+    "window": {"haze": 0.0, "fill": 0.4, "spill": 0.55, "key": 1.75},
     "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8, "key": 1.6},
 }
 # where her lamp points: at her lap and hands, its soft edge across her face; for the wide aisle shot it is turned a
 # little back, onto her head, shoulders and the top of her seat, so the pool reads from behind
 KEY_AIM = {None: ((0.02, 0.26, 0.66), 48.0), "aisle": ((0.0, 0.08, 1.10), 60.0),
-           "over": ((0.0, 0.05, 1.05), 70.0)}
+           "window": ((0.01, 0.10, 1.035), 58.0), "over": ((0.0, 0.05, 1.05), 70.0)}
 READ = "reading_light"
 _STATE = {"base": {}}
 GROUPS = ("key", "spill", "fill", "win", "cove", "amb", "rear", "wash", "path", "screen", "galley", "sky", "moon")
@@ -492,6 +492,7 @@ def apply_camera(name):
         aim = Vector((DAWN_SEAT[0] + dx, DAWN_SEAT[1] + dy, z))
         key.rotation_euler = (aim - key.location).to_track_quat("-Z", "Y").to_euler()
         key.data.spot_size = math.radians(size)
+        key.data.color = (1.0, 0.52, 0.23) if name == "window" else (1.0, 0.68, 0.38)
     print(f"CABIN camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}",
           flush=True)
 
