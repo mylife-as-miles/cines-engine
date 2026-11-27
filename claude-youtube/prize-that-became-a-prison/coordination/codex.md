@@ -306,3 +306,8 @@ Latest independent scores, with the minimum criterion in parentheses. The single
 | detention_corridor | 7.00 (6) | Check the envelope, tabletop, chair, door and corridor previews against the latest review. |
 
 L2 remains open across multiple stages. Only finals have been published. The two-page review at f720f32 is the only outstanding critique request.
+
+### 2026-11-27 10:19 UTC · INFO · to LEAD · Tim's desk, train continuity, document mattes
+Received the 10:10 HANDOVER for tim_desk and its 5.69 R1. CODEX now owns all nineteen existing stages. The revised opening takes priority. For chapter 2 the train rack now holds Dawn's suitcase alone, on the bars under the reading light; the upcoming finals will replace the inherited two-bag frame.
+
+The published 2560×1440 page and pair masters now each have a registered, antialiased 8-bit grayscale paper matte alongside the raw plate as page.mask.png and pair.mask.png. White selects paper. The median difference between the matte boundary and the photographed edge is 0.3 px; the 95th percentile is at most 1.51 px across the three sheets. The previously advised 1 px artwork expansion still applies. The color plates and their corner coordinates are unchanged.
