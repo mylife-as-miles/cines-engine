@@ -80,7 +80,7 @@ CAMERAS = {
     # bag's mouth, her arm and hand on its strap coming in from the left, the lamp warm beyond (f/2.8)
     "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.47, 0.966), lens=50, focus="fx_pack", fstop=2.8,
                  beat="pack", exposure=-0.56),
-    "accept": dict(loc=(0.62, -2.02, 1.54), aim=(-1.0, -0.55, 1.056), lens=37,
+    "accept": dict(loc=(0.66, -2.27, 1.36), aim=(-1.0, -0.60, 0.94), lens=37,
                    focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
     "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=49,
                          focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True),
@@ -445,7 +445,7 @@ def premarket_props(duvet):
 
 
 def premarket_poses(h, duvet, case, tote, tote_mesh):
-    from home import seat_figure
+    from home import sit_legs, _feet
     place(h, PACK_SPOT)
     pose = {"chest": (13, 3), "neck": (4, 0), "fingers": 14, "l_arm": (4, 6, 11)}
     palm = Vector((-1.08, -0.68, hp.surface_z([case], -1.08, -0.68) + 0.024))
@@ -458,12 +458,23 @@ def premarket_poses(h, duvet, case, tote, tote_mesh):
                                      "f_ring": (10, 11, 7), "f_pinky": (13, 14, 9), "thumb": (9, 7, 5)})
     _STATE["poses"]["pre"] = snapshot(h)
     place(h, (0, 0, 0))
-    x, y = -1.00, -0.80
-    dz, hip = seat_figure(h, _on_duvet(duvet, x, y), upper={"chest": (5, 2), "head": (23, 2),
-                                                            "neck": (5, 0), "fingers": 16})
-    h.location = (x - hip.x, y - hip.y, dz)
-    tote.location = (x, y - 0.23, _on_duvet(duvet, x, y) + 0.125)
-    tote.rotation_euler.z = math.radians(178)
+    x, y = -1.00, -0.77
+    # Seat her into the compressed duvet with both soles planted beside the bed.
+    rigged.pose_figure(h, {"chest": (9, 2), "head": (23, 2), "neck": (5, 0), "fingers": 16})
+    sit_legs(h, 57, -3)
+    _feet(h, 16)
+    ground(h)
+    rig = rigged.rig_of(h)
+    hip = sum((rig.matrix_world @ rig.pose.bones[f"thigh_fk.{side}"].head for side in "LR"), Vector()) / 2
+    h.location.x += x - hip.x
+    h.location.y += y - hip.y
+    # The upright tote bears against the tops of her thighs. Its back edge
+    # follows their slope while the arch tilts towards her hands.
+    tote.location = (x, -1.055, 0.0)
+    tote.rotation_euler = (math.radians(-15), 0, math.radians(178))
+    bpy.context.view_layer.update()
+    base = min((tote_mesh.matrix_world @ vertex.co).z for vertex in tote_mesh.data.vertices)
+    tote.location.z += 0.645 - base
     bpy.context.view_layer.update()
     # Catch the two ascending sides of the same handle. The narrower left and right
     # grip stations sit below its apex, so her knuckles never meet in the middle.
@@ -499,6 +510,7 @@ def which_camera():
 
 def set_beat(beat):
     h = _STATE.get("dawn")
+    _STATE["seat_impression"].value = 1.0 if h is not None and beat == "accept" else 0.0
     if h is not None and beat in _STATE["poses"]:
         restore(h, _STATE["poses"][beat])
     hobo = _STATE.get("hobo")
@@ -583,6 +595,16 @@ def _on_duvet(duvet, x, y):
 def build(cast=True):
     st.CEILING.clear()
     duvet = st.build()
+    bpy.context.view_layer.update()
+    rest = duvet.shape_key_add(name="Basis")
+    seat = duvet.shape_key_add(name="Dawn at the bed edge")
+    for vertex, loaded in zip(rest.data, seat.data):
+        point = duvet.matrix_world @ vertex.co
+        # Taper the displacement down the hanging fabric, clear of the bed frame.
+        height = min(1.0, max(0.0, (point.z - 0.30) / 0.23))
+        radius2 = ((point.x + 1.0) / 0.29) ** 2 + ((point.y + 0.75) / 0.26) ** 2
+        loaded.co.z -= 0.046 * math.exp(-radius2) * height ** 2 * (3 - 2 * height)
+    _STATE["seat_impression"] = seat
     city.build()
     room_objects = set(bpy.context.scene.objects)
     shopping_carriers()
