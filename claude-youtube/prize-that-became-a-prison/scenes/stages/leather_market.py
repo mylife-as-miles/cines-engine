@@ -393,6 +393,11 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, *, curl, contact
             thumb.rotation_euler.x = math.radians(36 if curl > 45 else 10)
             thumb.rotation_euler.z = math.radians(-12 if curl > 45 else -20)
         bpy.context.view_layer.update()
+        if curl > 45:
+            # The buyer closes the middle joints around the padded sleeve;
+            # the thumb keeps its opposing contact on the near side.
+            rigged.articulate_hand(holder, k, {digit: (48, 62, 36) for digit in
+                                               ("f_index", "f_middle", "f_ring", "f_pinky")})
         hv = _hand_verts(holder, k)
         centre = sum(hv["palm"], Vector()) / len(hv["palm"])
         correction = contact - centre
@@ -458,7 +463,7 @@ def pose_buy():
     grip = _STATE["grip"]
     ho = rest_hand(o, op, "R", grip + Vector((-0.055, -0.02, 0.028)), grip.z,
                    Vector((0.9, 0.12, -0.28)).normalized(), curl=78,
-                   contact=grip + Vector((-0.013, -0.006, 0.016)), palm_normal=(0.05, 0.55, -0.82))
+                   contact=grip + Vector((-0.0045, -0.0023, 0.0147)), palm_normal=(0.05, 0.55, -0.82))
     rep.append(f"organiser head {go[1]} err {go[0]:.1f}; r_arm {tuple(round(v) for v in ho['arm'])} fit {ho['fit'] * 1000:.0f} mm "
                f"palm {ho['palm_low'] * 1000:.0f} fingers {ho['finger_low'] * 1000:.0f} mm")
     # Dawn: a step back in the lane, weight on one hip, hands loosely together in front, watching the bag change hands
