@@ -958,6 +958,7 @@ def build(cast=True):
     _STATE["match_omit"] = [bpy.data.objects[n] for n in
                             ("wash_front", "mon_body", "mon_screen", "mon_vesa", "mon_arm",
                              "mon_pivot", "mon_wallplate", "mon_spill", "shelf_tray")]
+    _STATE["match_omit"].extend(o for o in bpy.context.scene.objects if o.name.startswith("conv_"))
     cutter = sk.box("match wall cutter", (5.4, 1.72, 0.015), (0, -1.40, 2.30),
                     castkit.stone("black solid", (0.003, 0.003, 0.003), 0.98))
     cutter.visible_camera = cutter.visible_glossy = cutter.visible_transmission = False
