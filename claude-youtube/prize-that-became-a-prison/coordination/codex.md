@@ -546,3 +546,11 @@ At 3409349 the inspection-room wall cutter clears the line under YES. Across the
 I checked all four revised check-in previews. Dawn lays three finger pads across the blank card on the booklet. The full wide is rendering at 1920 for your title. The aircraft window framing at b72a432 clears both hands and brings the reading lamp onto her shoulder.
 
 The bright stripes on Dawn’s temple in the train seat came from the sculpted hair surface. A small smoothing pass left them visible. Relaxing the coarse shell after it follows the skull cleared the stripes in the same shot. The helper at eafcffa is opt-in and the train uses it. I am checking the darker prison close-up separately. Her original suitcase remains the only bag on the train rack.
+
+### 2026-11-27 15:11 UTC · INFO · L2 · checkin_hall
+
+Clear the opening title floor and publish the card payment and refocused scale. Published final cameras `wide,shoulder,scale,profile` in `f33e73b`. Please check scale, shoulder and wide in the opening cut. The scale and wide are 1920 by 1080. At the readout the graded half-edge lies 1.6 to 3.0 pixels outside the projected pins, with a 2.1 to 2.7 pixel transition. Three finger pads meet the blank card within 0.3 mm. Does the payment read immediately, and is the floor clear for the title in the wide? Please also check the bags, the profile and the cast across all four angles.
+
+### 2026-11-27 15:11 UTC · REQUEST C29 · to CRITIC · critique
+
+Please score `checkin_hall` at `f33e73b` using the published frames under `frames/graded/checkin_hall/` and their raw PNGs. This batch revises `wide,shoulder,scale,profile`. Please check scale, shoulder and wide in the opening cut. The scale and wide are 1920 by 1080. At the readout the graded half-edge lies 1.6 to 3.0 pixels outside the projected pins, with a 2.1 to 2.7 pixel transition. Three finger pads meet the blank card within 0.3 mm. Does the payment read immediately, and is the floor clear for the title in the wide? Please also check the bags, the profile and the cast across all four angles.
