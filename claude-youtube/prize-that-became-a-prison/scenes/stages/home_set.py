@@ -907,9 +907,7 @@ def laptop(loc, turn_deg, open_deg=112.0):
     scr.matrix_world = lid_frame @ Matrix.Translation((0, -0.0011, 0.004 + 0.011 + sh / 2 + 0.006)) @ Matrix.Rotation(math.radians(90), 4, "X")
     parts.append(scr)
     for o in parts:
-        mw = o.matrix_world.copy()
         o.parent = hold
-        o.matrix_world = mw
     hold.location = loc
     hold.rotation_euler = (0, 0, math.radians(turn_deg))
     bpy.context.view_layer.update()
@@ -1089,6 +1087,29 @@ def dining_table():
                 elif n.type == "BSDF_PRINCIPLED":
                     n.inputs["Coat Weight"].default_value = 0.25
                     n.inputs["Coat Roughness"].default_value = 0.25
+    # The bought top undulates under the blind stripes. Retain the legs and apron below
+    # the underside of a milled board with the same footprint and the same finish.
+    thickness = 0.038
+    for ob in props.meshes(t):
+        mw = ob.matrix_world
+        bm = bmesh.new()
+        bm.from_mesh(ob.data)
+        plane_co = mw.inverted() @ Vector((*DT, D_TOP - thickness))
+        plane_no = (mw.to_3x3().transposed() @ Vector((0, 0, 1))).normalized()
+        bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces),
+                               plane_co=plane_co, plane_no=plane_no, clear_outer=True, dist=0.00001)
+        bm.to_mesh(ob.data)
+        bm.free()
+    top = mt.pbr("dining board edge", (0.075, 0.038, 0.021), rough=(0.38, 0.46), nscale=5,
+                 stretch=(1, 14, 9), cvar=0.12, bump=0.12, coat=0.25, spec=0.32)
+    board = box("d_flat_tabletop", (1.8, 0.967, thickness), (*DT, D_TOP - thickness / 2), top, bevel=0.006)
+    bpy.context.view_layer.update()
+    board.parent = t
+    board.matrix_parent_inverse = t.matrix_world.inverted()
+    # Treat just the board with the stage's top wood recipe, leaving the prop's legs on their own shader.
+    mt.tune_prop(board, spec=0.32, rough_floor=0.38,
+                 top_wood=((0.09, 0.045, 0.025), (0.06, 0.03, 0.017), 110.0),
+                 seam=0.3, tone=(0.93, 1.06), late_k=0.45)
     # a flag under the top at the foot end, seen by nothing but shadow rays: the street light through the end
     # blind's lowest gaps ran under the table and fell as a lone, crisp, unstriped patch on the rug by the near
     # head-end leg (in the wide, and as a sliver under the table in the close-up)

@@ -659,7 +659,7 @@ def tune_prop(holder, spec=0.35, top_wood=None, rough_floor=None, seam=0.6, tone
     faces replaced by a clean flat-sawn grain running along world X (the generated texture is a patchwork of grain
     directions that reads as an artefact on a big flat top), sides and legs keep their own texture."""
     seen = set()
-    for o in holder.children_recursive:
+    for o in (holder, *holder.children_recursive):
         if o.type != "MESH":
             continue
         for slot in o.material_slots:
