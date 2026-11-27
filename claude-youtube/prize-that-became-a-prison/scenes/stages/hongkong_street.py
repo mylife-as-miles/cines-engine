@@ -199,7 +199,12 @@ def hands_stone(holder, value=0.36):
 
 def tights(holder, value=0.07):
     """A continuous stocking colour from the thigh under the skirt to the foot."""
-    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh", "DEF-foot"))
+    groups = ("DEF-shin", "DEF-thigh", "DEF-foot")
+    body = bpy.data.objects[holder["body"]]
+    # The rear knee shares weights with the hip. Treat those mixed thigh
+    # vertices as cloth, too, so the exposed surface has one stocking colour.
+    weights = {group.name: 1.9 for group in body.vertex_groups if group.name.startswith(groups)}
+    _body_mask(holder, "legmask", groups, weights)
     _mask_mix(holder, "legmask", (value, value * 0.97, value * 0.95))
 
 
