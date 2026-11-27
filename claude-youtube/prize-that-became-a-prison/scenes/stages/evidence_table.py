@@ -472,8 +472,9 @@ def laptop():
     scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 3.2, w, hh), smooth=False)
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
     # A narrow matte bezel covers the uneven strip between the generated lid and the flat LCD.
-    liner = sk.box("LCD inner bezel", (w + 0.007, hh + 0.007, 0.0003), (0, 0, 0),
-                   mt.matte("LCD bezel", (0.012, 0.014, 0.016), 0.72))
+    gasket = mt.matte("LCD bezel", (0.011, 0.012, 0.013), 0.83)
+    gasket.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.14
+    liner = sk.box("LCD inner bezel", (w + 0.011, hh + 0.010, 0.0003), (0, 0, 0), gasket)
     liner.matrix_world = Matrix.Translation(centre - nrm * 0.00032) @ rot.to_4x4()
     group("screen spill", liner)
     # the screen's spill: an area light the size of the panel, 2 cm in front of it, so a cool pool about 30 cm deep
@@ -489,7 +490,7 @@ def laptop():
     # The generated key deck has pale shapes on the keycaps. Fit an unlettered
     # insert over the measured deck (23 mm above the slab) for the screen close-up.
     deck = sk.box("laptop key well", (0.132, 0.325, 0.0034), (-0.009, 0, 0.0236),
-                  mt.plastic("keyboard surround", (0.026, 0.029, 0.032), 0.47), bevel=0.0015)
+                  mt.plastic("keyboard surround", (0.019, 0.021, 0.023), 0.65, spec=0.24), bevel=0.0015)
     bm = bmesh.new()
     rows = ((1,) * 14, (1.4,) + (1,) * 12 + (1.4,), (1.65,) + (1,) * 11 + (1.95,),
             (2,) + (1,) * 10 + (2.5,), (1.4, 1.3, 1.3, 5.9, 1.3, 1.3, 1.4))
@@ -500,7 +501,7 @@ def laptop():
             span = unit * pitch
             add_box(bm, (0.017, span - 0.0023, 0.0023), (0.035 - row * 0.022, y0 + span / 2, 0.026))
             y0 += span
-    keys = bevelled(mesh_obj("laptop blank keys", bm, mt.plastic("blank laptop caps", (0.035, 0.038, 0.040), 0.54)),
+    keys = bevelled(mesh_obj("laptop blank keys", bm, mt.plastic("blank laptop caps", (0.023, 0.025, 0.027), 0.77, spec=0.18, scuff=0.05)),
                     0.0008, 2)
     x, y, t = LAPTOP
     place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
@@ -777,6 +778,8 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "spread")
+    # The crop shows the matte key deck immediately beneath the luminous panel.
+    bpy.data.objects["laptop_screen_light"].data.energy = 5.0 if name == "screen" else 22.0
     set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
     plate = beat == "plate"
     for ob in _STATE["lamp"].children_recursive:
