@@ -1140,7 +1140,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     for attempt in range(12):
         t_arm = arm_inv @ target
         best = None
-        grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-20, 31, 3) for e in range(0, 101, 3)]
+        grid = [(f, o, e) for f in range(-30, 91, 3) for o in range(-32, 34, 3) for e in range(0, 121, 3)]
         for step in (None, 0.5):
             if step:
                 f0, o0, e0 = best[1]
@@ -1181,7 +1181,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         bpy.context.view_layer.update()
         for finger, spread in (("index", -3), ("middle", -1), ("ring", 1), ("pinky", 3), ("thumb", -18)):
             f = "thumb" if finger == "thumb" else "f_" + finger
-            bend = (12 if palm_drop < 0 else 25) if finger == "thumb" else bends[finger]
+            bend = bends.get(finger, 52 if side == "R" else 25)
             n = f"{f}.01_master.{k}"
             if n in pb:
                 pb[n].rotation_mode = "XYZ"
@@ -1203,7 +1203,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
             pitch += 0.42 * math.atan2(tilt_error, 0.085)
         for name in support:
             bends[name] = max(3.0, min(27.0, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
-        target.z += height_delta
+        target.z += height_delta * 0.75
     pad = sum((pads[name] for name in support), Vector()) / len(support)
     print("PAD", holder.name, side, {n: round(1000 * (pt.z - top_z), 1) for n, pt in pads.items()},
           "heel", round(1000 * (palm_low - top_z), 1), "thumb", round(1000 * (min(p.z for p in hv["thumb"]) - top_z), 1), flush=True)
@@ -1283,7 +1283,7 @@ def render_settings():
 def build(cast=True):
     hall()
     checkin_row()
-    box("agent floor platform", (0.80, 0.56, 0.032), (*AGENT, 0.016), materials()["rubber"], bevel=0.009)
+    box("agent floor platform", (0.80, 0.56, 0.041), (*AGENT, 0.0205), materials()["rubber"], bevel=0.009)
     queue()
     bags()
     haze()
@@ -1314,7 +1314,7 @@ def build(cast=True):
     for n in ("Dawn", "Agent"):
         sculpt_hair(n)
     place(d, (DAWN[0], DAWN[1], 0), 192)
-    place(a, (*AGENT, 0.032), 6)
+    place(a, (*AGENT, 0.041), 6)
     eye_mat = castkit.stone("counter statue eyes", (0.42, 0.42, 0.43), 0.80)
     eye_mat.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.10
     for i in (0, 1):

@@ -49,7 +49,7 @@ def trolley(M, loc, turn_deg):
     L, W, zd = 0.9, 0.55, 0.2          # deck length, width, height
     x0, x1, hw = -L / 2, L / 2, W / 2
     f = M["wire"]
-    # deck perimeter (25 mm tube) and the wire mesh: rods along the length at 40 mm pitch, three cross rods
+    # 25 mm tube wraps the perimeter of the pressed deck
     for name, a, b in (("deck_l", (x0, -hw, zd), (x1, -hw, zd)), ("deck_r", (x0, hw, zd), (x1, hw, zd)),
                        ("deck_back", (x0, -hw, zd), (x0, hw, zd))):
         rod(name, a, b, TUBE, f, root)
@@ -66,7 +66,7 @@ def trolley(M, loc, turn_deg):
     for s in (-1, 1):
         rod(f"rail{s}", (x0 + 0.06, s * (hw - 0.07), zd - 0.05), (x1 - 0.08, s * (hw - 0.07), zd - 0.05), TUBE * 0.9, f, root)
         rod(f"rail_post_b{s}", (x0 + 0.06, s * (hw - 0.07), zd - 0.05), (x0 + 0.06, s * (hw - 0.07), zd), TUBE * 0.8, f, root)
-    # rear frame: two uprights leaning back, the handle with its grip, a brake bar just under it, a back mesh
+    # rear frame: two uprights leaning back, the handle with its grip and a brake bar just under it
     top_x, top_z = x0 - 0.12, 1.0
     for s in (-1, 1):
         rod(f"upright{s}", (x0, s * (hw - 0.02), zd), (top_x, s * (hw - 0.02), top_z), TUBE, f, root)
