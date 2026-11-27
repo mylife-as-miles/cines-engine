@@ -87,10 +87,12 @@ CAMERAS = {
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
     ((0.0, -0.06, 0.17), 12.0, 9.0, 0.07, (1.0, 0.56, 0.24), 2.6),
-    ((0.0, 0.12, -0.21), 6.0, 5.0, 0.04, (0.78, 0.86, 1.0), 1.8),
+    ((0.0, -0.08, -0.25), 6.0, 3.2, 0.04, (0.78, 0.86, 1.0), 1.8),
     ((0.0, -0.4, 0.06), 34.0, 8.0, 0.16, (1.0, 0.78, 0.55), 1.6),
 ]
 SEAT_CAM_OFFSET = (0.73, -0.68, 0.12)      # the seat camera from her eyes: toward the aisle, in front, a little above
+if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
+    CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
 TRIMS = {"aisle": {"face_fill": 0.0}, "seat": {"night_light": 0.0}, "rack": {"face_fill": 0.0}}
 GLASS_REFL = {"aisle": 0.06, "seat": 0.11, "rack": 0.06}
 LIFT = {"aisle": 0.003, "seat": 0.002, "rack": 0.0025}
@@ -623,6 +625,7 @@ def set_cameras(eyes, bag_box):
     """The seat and rack cameras from where Dawn's eyes and the bags actually are."""
     if eyes is not None:
         _focus("fx_dawn", eyes)
+    if eyes is not None and "seat" in CAMERAS:
         mirror = Vector((2 * GLASS_X - eyes.x, eyes.y, eyes.z))
         cam = eyes + Vector(SEAT_CAM_OFFSET)
         t = (GLASS_X - cam.x) / (mirror.x - cam.x)
@@ -683,5 +686,5 @@ def build(cast=True):
             _STATE["cast"] += [t] + list(t.children_recursive)
         a = attendant()
         _STATE["cast"] += [a] + list(a.children_recursive)
-    set_cameras(eyes if eyes is not None else Vector((SEAT_X + 0.05, SEAT_Y + 0.18, 1.2)), bag_box)
+    set_cameras(eyes if eyes is not None else Vector((SEAT_X - 0.062, SEAT_Y + 0.126, 1.26)), bag_box)   # (as solved)
     install_hook()

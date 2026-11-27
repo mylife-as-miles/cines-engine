@@ -270,7 +270,7 @@ def lining(name, rgb=(0.3, 0.305, 0.31), rough=(0.5, 0.68), grime=0.4):
     return m
 
 
-def vinyl(name, base=(0.075, 0.078, 0.085), aisle=(-0.3, 0.3)):
+def vinyl(name, base=(0.062, 0.064, 0.071), aisle=(-0.3, 0.3)):
     """Speckled sheet vinyl: a dense two-tone chip fleck, slow clouding; the aisle (world x inside `aisle`) worn
     smoother and lighter down its middle, the worn band wandering a little; dark heel scuffs scattered along it;
     grime into the edges under the seats (AO)."""
@@ -295,7 +295,7 @@ def vinyl(name, base=(0.075, 0.078, 0.085), aisle=(-0.3, 0.3)):
     d = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", _math(nt, "SUBTRACT", x, cx), wander))
     walk = _maprange(nt, d, half * 0.25, half * 1.05, 1.0, 0.0)
     walk = _math(nt, "MULTIPLY", walk, _maprange(nt, _noise(nt, o, 1.6, 3.0, 0.6), 0.3, 0.7, 0.55, 1.0))
-    col = _mix(nt, _math(nt, "MULTIPLY", walk, 0.6), col, (base[0] * 1.25, base[1] * 1.24, base[2] * 1.2))
+    col = _mix(nt, _math(nt, "MULTIPLY", walk, 0.6), col, (base[0] * 1.18, base[1] * 1.17, base[2] * 1.14))
     # heel scuffs: short dark streaks along the walking direction
     sc = _noise(nt, o, 1.0, 5.0, 0.7, mapping=(22.0, 5.0, 22.0))
     scuff = _math(nt, "MULTIPLY", _maprange(nt, sc, 0.68, 0.76, 0.0, 0.5), walk)

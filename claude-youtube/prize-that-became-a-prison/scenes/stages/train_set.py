@@ -231,7 +231,7 @@ def ceiling():
         for j in range(len(WIN_Y) + 1):
             y = WIN_Y[0] - BAY / 2 + j * BAY
             pts = [(x * 0.998, y, z - 0.002) for (x, z) in prof]
-            tube(f"cove_seam_{s}_{j}", pts, 0.003, m["rubber"], res=2)
+            tube(f"cove_seam_{s}_{j}", pts, 0.002, m["lining_lo"], res=2)
 
 
 def window_bay(name, yc, s, m):
@@ -470,7 +470,7 @@ def strips(levels, energy=45.0):
             if level > 0:
                 key = f"opal_{level:.2f}_{'f' if flick else 's'}"
                 if key not in M:
-                    M[key] = mt.opal(f"opal {key}", COOL, 0.5 + 12.0 * level, flicker=0.75 if flick else 0.0)
+                    M[key] = mt.opal(f"opal {key}", COOL, 0.3 + 12.0 * level ** 1.5, flicker=0.75 if flick else 0.0)   # dim tubes read grey
                 # (the opal box is built along its own X and turned onto the strip, so the shader's generated X runs
                 # along the tube; the area lights are long in Y, along the strip)
                 box(n + "_opal", (1.84, 0.11, 0.008), (x, yc, H - 0.024), M[key], rot=(0, 0, math.pi / 2))
