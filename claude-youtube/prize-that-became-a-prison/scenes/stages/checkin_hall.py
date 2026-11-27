@@ -1381,12 +1381,10 @@ def build(cast=True):
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
-    # At the profile's lower eyeline the finger pads see the passenger-side
-    # ceiling fitting. Flag only its route to the keyboard, below both faces.
-    keyboard_flag = box("profile keyboard cutter", (0.78, 0.126, 0.004), (0.11, 0.70, 1.90), materials()["plastic"])
-    keyboard_flag.hide_render = True
-    for kind in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
-        setattr(keyboard_flag, "visible_" + kind, False)
+    # The passenger-side strip lights the keyboard more strongly than the
+    # agent's face in profile. Let the monitor carry his light in that shot.
+    passenger_strip = bpy.data.objects["pos0_down_front"]
+    strip_power = passenger_strip.data.energy
     monitor = bpy.data.objects["desk0_mon_light"]
     monitor_aim = monitor.rotation_euler.copy()
     monitor_spread = monitor.data.spread
@@ -1417,7 +1415,7 @@ def build(cast=True):
         profile = name == "profile"
         edge.hide_render = profile
         fill.data.energy = 7.0 if profile else 2.5
-        keyboard_flag.hide_render = not profile
+        passenger_strip.data.energy = 0.0 if profile else strip_power
         monitor.rotation_euler = profile_aim if profile else monitor_aim
         monitor.data.spread = math.radians(60) if profile else monitor_spread
         # Pull the foreground shoulder into the reverse. The wide and the
@@ -1431,7 +1429,7 @@ def build(cast=True):
         finally:
             edge.hide_render = False
             fill.data.energy = 2.5
-            keyboard_flag.hide_render = True
+            passenger_strip.data.energy = strip_power
             monitor.rotation_euler = monitor_aim
             monitor.data.spread = monitor_spread
             a.location = agent_mark
