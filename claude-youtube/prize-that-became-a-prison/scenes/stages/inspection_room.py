@@ -92,10 +92,10 @@ FINISH = {  # specular level and woven face (period m, bump strength) per prop
 # light on each bag independently so the same case and duffel hold through the cut.
 # Watts for the case lid, its shadow side, and the dark duffel's top band.
 BAG_RETURNS = {
-    "enter": (25, 0, 30),
-    "wide_pre": (40, 11, 0),
-    "two_shot_pre": (50, 32, 0),
-    "dawn_close": (90, 0, 30),
+    "enter": (25, 0, 30, 0),
+    "wide_pre": (40, 11, 0, 0),
+    "two_shot_pre": (50, 32, 0, 0),
+    "dawn_close": (90, 0, 30, 16),
 }
 
 # The scanner: turned so its tunnel, curtain and exit conveyor face the room (-Y), its back to the back wall,
@@ -1004,7 +1004,7 @@ def apply_camera(name):
         light.light_linking.receiver_collection = _STATE["outside_pair"] if name in BAG_RETURNS else original
     _STATE["cheek_flag"].hide_render = name != "dawn_close"
     _STATE["duffel_flag"].hide_render = name not in ("wide_pre", "two_shot_pre")
-    for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0))):
+    for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0, 0))):
         light.hide_render = watts == 0
         light.data.energy = watts
     top = bpy.data.materials.get("bench top steel")
@@ -1147,12 +1147,15 @@ def build(cast=True):
     _STATE["bag_returns"] = []
     cx, cy = CASE[:2]
     dx, dy = DUFFEL[:2]
-    for name, origin, aim, size, receivers in (
-        ("case lid return", (cx - 0.04, cy, TOP + 1.55), (cx, cy, TOP + 0.47), (0.55, 0.22), case_meshes),
-        ("case side return", (1.60, -1.10, 1.60), (cx, cy, TOP + 0.27), (0.40, 0.40), case_meshes),
-        ("duffel return", (dx - 0.35, dy - 0.40, TOP + 1.38), (dx, dy, TOP + 0.13), (0.92, 0.40), duffel_meshes),
+    close_face = _case_frame() @ Vector((0.11, -0.04, 0.24))
+    close_return = close_face.lerp(Vector(CAMERAS["dawn_close"]["loc"]), 0.41) + Vector((0, 0, -0.19))
+    for name, origin, aim, size, receivers, spread in (
+        ("case lid return", (cx - 0.04, cy, TOP + 1.55), (cx, cy, TOP + 0.47), (0.55, 0.22), case_meshes, 85),
+        ("case side return", (1.60, -1.10, 1.60), (cx, cy, TOP + 0.27), (0.40, 0.40), case_meshes, 85),
+        ("duffel return", (dx - 0.35, dy - 0.40, TOP + 1.38), (dx, dy, TOP + 0.13), (0.92, 0.40), duffel_meshes, 85),
+        ("close cloth return", close_return, close_face, (0.31, 0.39), case_meshes, 92),
     ):
-        return_light = st.linked_light(name, origin, size, 0, (0.91, 0.94, 1.0), receivers, spread_deg=85,
+        return_light = st.linked_light(name, origin, size, 0, (0.91, 0.94, 1.0), receivers, spread_deg=spread,
                                        rot=(Vector(aim) - Vector(origin)).to_track_quat("-Z", "Y").to_euler())
         return_light.hide_render = True
         _STATE["bag_returns"].append(return_light)

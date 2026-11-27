@@ -528,7 +528,7 @@ def tower():
     # the cabin: a solid spandrel, a band of dark glazing canted outward, a flat roof that oversails
     cb, ct = 1.9, 2.14                              # half-width at the sill and at the head of the glazing
     zs, zh = dz + 0.95, dz + 2.25
-    bx("cabin_spandrel", tx - cb, tx + cb, ty - cb, ty + cb, dz, zs, M["cabin"], bevel=0.025)
+    spandrel = bx("cabin_spandrel", tx - cb, tx + cb, ty - cb, ty + cb, dz, zs, M["cabin"], bevel=0.025)
     gv, gf = [], []
     for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
         gv.append((tx + sx * cb, ty + sy * cb, zs))
@@ -556,12 +556,23 @@ def tower():
         for (ax0, ax1, ay0, ay1), tag in (((-h, h, -h, -h), "s"), ((-h, h, h, h), "n"), ((-h, -h, -h, h), "w"), ((h, h, -h, h), "e")):
             bx(f"cabin_{nm}_{tag}", tx + ax0 - w / 2, tx + ax1 + w / 2, ty + ay0 - w / 2, ty + ay1 + w / 2, z - w / 2, z + w / 2, M["dark"], bevel=0.008)
     rz = zh + 0.045
-    bx("tower_roof", tx - 2.55, tx + 2.55, ty - 2.55, ty + 2.55, rz, rz + 0.22, M["cabin"], bevel=0.035)
+    roof = bx("tower_roof", tx - 2.55, tx + 2.55, ty - 2.55, ty + 2.55, rz, rz + 0.22, M["cabin"], bevel=0.035)
     bx("tower_roof_trim", tx - 2.6, tx + 2.6, ty - 2.6, ty + 2.6, rz + 0.17, rz + 0.25, M["dark"], bevel=0.01)
-    # inside: a console whose blank screen is the only light (it puts a faint cold tone on the ceiling)
+    # The blank console screen is the practical. Its return catches the
+    # underside of the roof behind the watcher's pane.
     bx("cabin_console", tx - 0.2, tx + 0.5, ty - 0.7, ty + 0.7, dz, dz + 0.85, M["dark"], bevel=0.02)
     point("console_return", (tx, ty, dz + 0.92), 0.5, COLD, radius=0.18, group="tower")
     mesh_obj("cabin_screen", [(tx - 0.1, ty - 0.3, dz + 0.856), (tx + 0.4, ty - 0.3, dz + 0.856), (tx + 0.4, ty + 0.3, dz + 0.856), (tx - 0.1, ty + 0.3, dz + 0.856)], [(0, 1, 2, 3)], M["screen"])
+    source = Vector((tx - 0.04, ty + 0.88, dz + 1.19))
+    ceiling = Vector((tx - 0.05, ty + 1.12, rz))
+    bounce = sk.area_light("console ceiling return", source, (0.36, 0.24), 12.0, (0.53, 0.67, 1.0), spread_deg=48,
+                           rot=(ceiling - source).to_track_quat("-Z", "Y").to_euler())
+    receivers = bpy.data.collections.new("Inside the watchtower")
+    receivers.objects.link(roof)
+    receivers.objects.link(spandrel)
+    bounce.light_linking.receiver_collection = receivers
+    bounce.visible_glossy = False
+    bounce.visible_volume_scatter = False
     # roof: a searchlight on its yoke (unlit), an aerial, a small vent
     top = rz + 0.25
     sx0 = tx - 1.85

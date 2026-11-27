@@ -52,8 +52,8 @@ DAWN = {
 }
 OTHERS = {   # copy of, scale (x, y, z) relative to the source, body tint (linear albedo)
     "navy_case": ("dawn_case", (1.12, 1.08, 1.1), (0.008, 0.011, 0.022)),
-    "oxblood_case": ("dawn_case", (0.86, 0.9, 0.86), (0.055, 0.013, 0.012)),
-    "tan_case": ("dawn_case", (1.04, 1.12, 1.04), (0.12, 0.08, 0.045)),
+    "slate_case": ("dawn_case", (0.86, 0.9, 0.86), (0.036, 0.051, 0.073)),
+    "warm_stone_case": ("dawn_case", (1.04, 1.12, 1.04), (0.101, 0.087, 0.076)),
     "olive_duffel": ("dawn_duffel", (0.84, 0.88, 0.86), (0.032, 0.034, 0.016)),
     "stone_duffel": ("dawn_duffel", (0.95, 1.0, 0.92), (0.15, 0.14, 0.12)),
 }
@@ -66,8 +66,8 @@ TAGS = {
     "dawn_case": ((-0.05, 0.3), 184, 0.3),
     "dawn_duffel": ((0.02, 0.0), 58, 0.18),
     "navy_case": ((-0.1, -0.3), 174, 0.3),
-    "oxblood_case": ((-0.05, 0.2), 190, 0.27),
-    "tan_case": ((-0.1, 0.0), 180, 0.28),
+    "slate_case": ((-0.05, 0.2), 190, 0.27),
+    "warm_stone_case": ((-0.1, 0.0), 180, 0.28),
     "olive_duffel": ((-0.1, 0.05), -66, 0.21),
     "stone_duffel": ((0.12, -0.05), 112, 0.22),
     "shell_case": ((-0.5, 0.2), 176, 0.24),
@@ -81,8 +81,8 @@ LAYOUT = {
     "curtain": {"dawn_case": (0.245, 0.16, 174.0), "dawn_duffel": (1.35, -0.24, -6.0)},
     # her two bags nearest, then a gap, then other people's bags ahead of them, away down the belt into the dark
     "belt": {"dawn_case": (3.0, 0.18, -3.0), "dawn_duffel": (4.35, -0.22, 5.0), "navy_case": (7.9, 0.1, 5.0),
-             "oxblood_case": (11.1, -0.15, 9.0), "olive_duffel": (14.4, 0.15, -4.0),
-             "tan_case": (17.7, -0.15, -6.0), "shell_case": (21.0, 0.14, -7.0), "stone_duffel": (24.4, -0.14, 84.0)},
+             "slate_case": (11.1, -0.15, 9.0), "olive_duffel": (14.4, 0.15, -4.0),
+             "warm_stone_case": (17.7, -0.15, -6.0), "shell_case": (21.0, 0.14, -7.0), "stone_duffel": (24.4, -0.14, 84.0)},
     # Straight down at the sorter: the ribbed spinner, her pair, then a navy case.
     "overhead": {"shell_case": (8.28, -0.08, 13.0), "dawn_case": (9.45, 0.18, -4.0),
                  "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (12.06, 0.12, 76.0)},

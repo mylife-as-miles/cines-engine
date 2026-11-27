@@ -57,9 +57,9 @@ CAMERAS = {
     "signs": dict(loc=(4.7, -3.65, 2.65), aim=(-2.1, -0.30, 3.39), lens=34, focus="focus_sign", fstop=4,
                   exposure=-1.6),
     "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_scale", fstop=5.6,
-                  exposure=-2.0, final_res=(1920, 1080)),
-    "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
+                  exposure=-2.0, final_res=(2880, 1620)),
+    "profile": dict(loc=(5.2, -0.50, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
+    "shoulder": dict(loc=(0.6752, 1.6734, 1.53), aim=(0.2146, -0.2529, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -472,7 +472,7 @@ def materials():
         tyre=pbr("tyre", (0.015, 0.015, 0.016), (0.6, 0.75), nscale=30, cvar=0.1),
         grille=pbr("grille", (0.05, 0.053, 0.058), (0.4, 0.55), metal=0.6, nscale=4, cvar=0.1, bump=1.0, bscale=55, ribs="Z"),
         door=pbr("door laminate", (0.09, 0.095, 0.1), (0.4, 0.55), nscale=3, cvar=0.08),
-        red=pbr("extinguisher", (0.22, 0.03, 0.025), (0.25, 0.4), nscale=6, cvar=0.1, coat=0.4),
+        red=pbr("extinguisher", (0.06, 0.06, 0.06), (0.25, 0.4), nscale=6, cvar=0.1, coat=0.4),
         bin=pbr("bin steel", (0.25, 0.255, 0.26), (0.3, 0.5), metal=1.0, nscale=6, stretch=(1, 1, 20), cvar=0.15, aniso=0.4),
     )
     return M
@@ -789,6 +789,17 @@ def desk(x0, idx, open_):
         laminate.thickness, laminate.offset = 0.00076, 1.0
         card.rotation_euler.z = yaw_pass + math.radians(7)
         card.data.materials.append(sk.mat("plain slate payment card", (0.10, 0.15, 0.17), 0.52))
+        terminal = box(p + "payment terminal", (0.075, 0.155, 0.035),
+                       (x0 + 0.18, 0.20, LEDGE + 0.0525), m["plastic"], bevel=0.006,
+                       rot=(0, 0, math.radians(-9)))
+        blank = screen_mat("terminal blank glass", (0.33, 0.45, 0.53), 1.2)
+        child(box(p + "terminal glass", (0.050, 0.038, 0.0012), (0, 0.033, 0.0178), blank,
+                  bevel=0.0018, rot=(math.radians(6), 0, 0)), terminal)
+        for row in range(4):
+            for column in (-1, 0, 1):
+                child(box(p + "plain terminal key", (0.010, 0.008, 0.002),
+                          (column * 0.014, -0.054 + row * 0.013, 0.0178), m["rubber"], bevel=0.001),
+                      terminal)
         # the screen's light on the agent's face and chest, aimed by numbers
         n = R @ (Matrix.Rotation(tilt, 3, "X") @ Vector((0, 1, 0)))
         c = Vector((mx, my, zc)) + n * 0.033
@@ -809,10 +820,11 @@ def scale(x0, idx, open_):
     box(p + "body", (W, D, PLATE - 0.07), (xs, D / 2, 0.05 + (PLATE - 0.07) / 2), m["painted"], bevel=0.006)
     t, rh = 0.04, 0.03
     rz = PLATE + 0.008 - rh / 2                       # the rim stands 8 mm proud of the plate
+    rim_finish = pbr(p + "satin steel rim", (0.32, 0.33, 0.34), (0.45, 0.55), metal=1.0, cvar=0.06)
     for nm, size, loc in (("rim_f", (W, t, rh), (xs, t / 2, rz)), ("rim_b", (W, t, rh), (xs, D - t / 2, rz)),
                           ("rim_l", (t, D - 2 * t + 0.002, rh), (xs - (W - t) / 2, D / 2, rz)),
                           ("rim_r", (t, D - 2 * t + 0.002, rh), (xs + (W - t) / 2, D / 2, rz))):
-        box(p + nm, size, loc, m["steel_y" if nm in ("rim_l", "rim_r") else "steel"], bevel=0.006)
+        box(p + nm, size, loc, m["steel_y"] if nm in ("rim_l", "rim_r") else rim_finish, bevel=0.006)
     box(p + "gap", (W - 2 * t, D - 2 * t, 0.012), (xs, D / 2, PLATE - 0.012), m["kick"])
     box(p + "plate", (W - 2 * t - 0.014, D - 2 * t - 0.014, 0.012), (xs, D / 2, PLATE - 0.006), m["stainless"], bevel=0.003)
     # the display on its own post beside the scale, facing the passenger, under a small hood
@@ -953,7 +965,7 @@ def position_lights(x0, idx, level):
 def queue():
     """Retractable-belt queue posts: a two-row serpentine in front of the open position. Every post sits wholly inside
     the wide or wholly outside it (none cut by the frame edge); the lane turns at the far left into the approach."""
-    rows = [(-2.1, [-5.4, -2.6, -0.6, 1.0]), (-3.0, [-5.4, -1.4, -0.3])]
+    rows = [(-2.1, [-6.2, -2.6, -0.6]), (-3.0, [-6.2, -1.4, -0.3])]
     for j, (y, xs) in enumerate(rows):
         for i, x in enumerate(xs):
             stanchion(f"q{j}_{i}", x, y)
@@ -961,7 +973,7 @@ def queue():
             if j == 0 and i == 0:
                 continue   # the turn from the lane into the approach to the desk
             qbelt(f"q{j}_belt{i}", (xs[i], y), (xs[i + 1], y))
-    qbelt("q_link0", (-5.4, -2.1), (-5.4, -3.0))
+    qbelt("q_link0", (rows[0][1][0], rows[0][0]), (rows[1][1][0], rows[1][0]))
     # where the next passenger waits: a dark rubber inlay in the floor (no words)
     box("wait_line", (1.7, 0.05, 0.002), (0.5, -1.3, 0.0005), materials()["kick"])
 
@@ -1020,7 +1032,25 @@ def bags():
     xs = POSITIONS[0] + SX
     props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
                         val=0.25, rough_add=0.3)
-    props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.35, val=0.5)
+    case = props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.35, val=0.5)
+    finishes = {slot.material for mesh in props.meshes(case) for slot in mesh.material_slots if slot.material}
+    for finish in finishes:
+        if not finish.use_nodes:
+            continue
+        nt = finish.node_tree
+        shader = nt.nodes.get("Principled BSDF")
+        if shader is None:
+            continue
+        metal, rough = shader.inputs["Metallic"], shader.inputs["Roughness"]
+        if not (metal.is_linked and rough.is_linked):
+            continue
+        mask = metal.links[0].from_socket
+        satin = nt.nodes.new("ShaderNodeMath")
+        satin.operation = "MAXIMUM"
+        nt.links.new(rough.links[0].from_socket, satin.inputs[0])
+        nt.links.new(_range(nt, mask, 0.0, 1.0, 0.0, 0.6), satin.inputs[1])
+        nt.links.new(satin.outputs[0], rough)
+        nt.links.new(_range(nt, mask, 0.0, 1.0, 0.0, 0.4), metal)
     checkin_hall_trolley.trolley(materials(), (-0.85, -1.1, 0), 100)   # nose toward the counter, handle to the hall
     camera = CAMERAS["scale"]
     lens = Vector(camera["loc"])
@@ -1184,7 +1214,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     lower, upper = (-22.0, 5.0) if passing else (3.0, 27.0)
     tolerance = 0.00025 if passing else 0.0015
     if passing:
-        bends["pinky"] = curl + 4
+        bends["pinky"] = curl
     for attempt in range(14 if passing else 12):
         wrist_error, pose[key] = rigged.fit_wrist(sh, arm_inv @ target, L1, L2, sgn, min_forward=-30)
         rigged.pose_figure(holder, pose)
@@ -1219,9 +1249,9 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
             # The thumb tracks the booklet edge, the three centre pads press its trailing half.
             # Counter the rig's natural resting curl. The pads lie lengthwise
             # on the card instead of balancing on the ends of the fingers.
-            spread = {"index": 0, "middle": 0, "ring": 0, "pinky": -3}
-            joints = {"f_" + f: (bend, -12, -5, spread[f]) for f, bend in bends.items()}
-            joints["thumb"] = (10, 25, 5, -5)
+            spread = {"index": 0, "middle": 0, "ring": 0, "pinky": 2}
+            joints = {"f_" + f: (bend, -6, -2, spread[f]) for f, bend in bends.items()}
+            joints["thumb"] = (5, 24, 5, 15)
             rigged.articulate_hand(holder, k, joints)
         else:
             for finger, spread in (("index", -3), ("middle", -1), ("ring", 1), ("pinky", 3), ("thumb", -18)):
@@ -1256,14 +1286,14 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         for _ in range(4):
             lowest = min(hv["thumb"], key=lambda pt: pt.z)
             lift = top_z + 0.001 - lowest.z
-            if lift < 0.0005:
+            if abs(lift) < 0.0005:
                 break
             bone_world = rig.matrix_world @ thumb.matrix
             arm = lowest - bone_world.translation
             axis = arm.cross(Vector((0, 0, 1)))
             if axis.length < 0.001:
                 break
-            angle = min(math.radians(25), lift / axis.length)
+            angle = max(-math.radians(25), min(math.radians(25), lift / axis.length))
             pivot = Matrix.Translation(bone_world.translation)
             change = pivot @ Matrix.Rotation(angle, 4, axis.normalized()) @ pivot.inverted()
             thumb.matrix = arm_inv @ change @ bone_world
@@ -1351,7 +1381,19 @@ def build(cast=True):
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
+    # In profile the strip competes with the agent's monitor and the
+    # readout spill turns the charcoal luggage pale under its dark back.
+    profile_trims = []
+    for name, factor in (("pos0_down_front", 0.0), ("pos0_down_scale", 0.45), ("scale0_disp_light", 0.40),
+                         ("scale0_disp_spill", 0.40), ("scale0_disp_under", 0.40)):
+        fixture = bpy.data.objects[name]
+        profile_trims.append((fixture, fixture.data.energy, factor))
+    monitor = bpy.data.objects["desk0_mon_light"]
+    monitor_aim = monitor.rotation_euler.copy()
+    monitor_spread = monitor.data.spread
+    profile_aim = (monitor.location - Vector((AGENT[0] - 0.05, AGENT[1] - 0.12, 1.62))).to_track_quat("Z", "Y").to_euler()
     d = people.dawn()                  # the shared cast: flat taupe blouse and skirt, plain black flats
+    castkit.relax_sculpted_hair(d)
     a = people.staff("Agent", 0)       # airline staff: plain dark suit, no insignia
     place(d, (DAWN[0], DAWN[1], 0), 192)
     place(a, (*AGENT, 0.041), 6)
@@ -1363,20 +1405,59 @@ def build(cast=True):
         eye.data.transform(Matrix.Translation(centre + Vector((0, 0.0012, 0))) @ Matrix.Scale(0.955, 4) @ Matrix.Translation(-centre))
         eye.data.materials[0] = eye_mat
     pose_cast(d, a)
+    # Cut the island's spill over the keyboard while the monitor still keys
+    # the agent's face. This net covers the light paths to the posed fingers.
+    net_material = bpy.data.materials.new("Neutral keyboard net")
+    net_material.use_nodes = True
+    nodes = net_material.node_tree.nodes
+    nodes.remove(nodes["Principled BSDF"])
+    filter_node = nodes.new("ShaderNodeBsdfTransparent")
+    filter_node.inputs["Color"].default_value = (0.5, 0.5, 0.5, 1.0)
+    net_material.node_tree.links.new(filter_node.outputs[0], nodes["Material Output"].inputs["Surface"])
+    net_mesh = bpy.data.meshes.new("Keyboard net")
+    net_mesh.from_pydata([(-0.087, 0.597, 1.093), (0.301, 0.597, 1.093),
+                         (0.301, 0.803, 1.093), (-0.087, 0.803, 1.093)], [], [(0, 1, 2, 3)])
+    net_mesh.materials.append(net_material)
+    keyboard_net = bpy.data.objects.new("Keyboard net", net_mesh)
+    bpy.context.scene.collection.objects.link(keyboard_net)
+    keyboard_net.hide_render = True
+    for ray in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
+        setattr(keyboard_net, "visible_" + ray, False)
     # The scale and overhead signs are inserts. Keep the cast's shadows and remove the slivers at frame edge.
     orig = getattr(sk.render, "_orig", sk.render)
     dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
     agent_meshes = [ob for ob in a.children_recursive if ob.type == "MESH" and ob.visible_camera]
+    agent_mark = a.location.copy()
 
     def render(*args, **kwargs):
         cam = bpy.context.scene.camera
         name = cam.get("stage_camera") if cam else None
         hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
+        profile = name == "profile"
+        edge.hide_render = profile
+        keyboard_net.hide_render = not profile
+        fill.data.energy = 7.0 if profile else 2.5
+        for fixture, watts, factor in profile_trims:
+            fixture.data.energy = watts * factor if profile else watts
+        monitor.rotation_euler = profile_aim if profile else monitor_aim
+        monitor.data.spread = math.radians(60) if profile else monitor_spread
+        # Pull the foreground shoulder into the reverse. The wide and the
+        # profile keep the physical contact with his keyboard.
+        if name == "shoulder":
+            a.location.x = agent_mark.x + 0.24
         try:
             for ob in hidden:
                 ob.visible_camera = False
             return orig(*args, **kwargs)
         finally:
+            edge.hide_render = False
+            keyboard_net.hide_render = True
+            fill.data.energy = 2.5
+            for fixture, watts, _ in profile_trims:
+                fixture.data.energy = watts
+            monitor.rotation_euler = monitor_aim
+            monitor.data.spread = monitor_spread
+            a.location = agent_mark
             for ob in hidden:
                 ob.visible_camera = True
     render._orig = orig
@@ -1416,7 +1497,10 @@ def pose_cast(d, a):
         if part == "pages":
             piece.location += piece.rotation_euler.to_matrix() @ Vector((0, 0.001, 0))
     card = bpy.data.objects["desk0_payment_card"]
-    centre = hand["pad"] + Vector((0, 0.005, 0)) - fwd * 0.008
+    # Set the long axis along the transfer. The pad line sits near the
+    # trailing end so both rounded front corners project clearly.
+    card.rotation_euler.z = math.atan2(fwd.y, fwd.x)
+    centre = hand["pad"] + fwd * 0.034
     card.location.x, card.location.y = centre.x, centre.y
     flag = bpy.data.objects["pos0_hand flag2"]
     flag.location.x, flag.location.y = hand["palm"].x, hand["palm"].y

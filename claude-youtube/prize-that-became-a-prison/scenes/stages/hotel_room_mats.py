@@ -216,7 +216,7 @@ def metal(name, rgb, rough=0.35, brushed=True):
     return m
 
 
-def tissue(name="tissue paper", rgb=(0.62, 0.60, 0.55)):
+def tissue(name="tissue paper", rgb=(0.48, 0.47, 0.43)):
     """Gift tissue: thin, matt and translucent (light shows through a single sheet), a faint fibre."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -228,7 +228,7 @@ def tissue(name="tissue paper", rgb=(0.62, 0.60, 0.55)):
     tl = _n(nt, "ShaderNodeBsdfTranslucent")
     tl.inputs["Color"].default_value = (rgb[0] * 0.8, rgb[1] * 0.8, rgb[2] * 0.75, 1)
     mx = nt.nodes.new("ShaderNodeMixShader")
-    mx.inputs[0].default_value = 0.35
+    mx.inputs[0].default_value = 0.53
     nt.links.new(b.outputs[0], mx.inputs[1])
     nt.links.new(tl.outputs[0], mx.inputs[2])
     nt.links.new(mx.outputs[0], nt.nodes["Material Output"].inputs["Surface"])

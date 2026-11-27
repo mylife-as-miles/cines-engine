@@ -60,7 +60,7 @@ BLOCK = {
     },
     "company": {
         "Dawn": ((5.64, 16.4), (5.62, 32.0), "walk_away"),
-        "Organiser": ((6.25, 16.75), (6.24, 30.5), "walk_away"),
+        "Organiser": ((6.31, 17.22), (6.25, 30.5), "walk_away"),
         "T1": ((4.95, 15.70), (5.01, 31.0), "walk_away"),
     },
     "window": {
@@ -71,8 +71,7 @@ BLOCK = {
         "M3": ((-6.55, 33.5), (-7.4, 33.9), "stand_look"),
         "M4": ((5.0, 41.0), (5.1, 60.0), "walk_away"),
     },
-    # the window close-up: Dawn a step back from the glass, square to it, so her reflection stands over the dark felt
-    # between the two bags on the shelf (only she is shown)
+    # Dawn stands back from the glass so her reflection falls across the felt above the bags.
     "reflect": {
         "Dawn": ((6.45, 18.80), (8.0, 19.40), "stand_bags"),
     },
@@ -93,7 +92,7 @@ CAMERAS = {
                  shift_y=0.0, haze=0.0025, exposure=-1.5, glass_refl=0.02),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
-    "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.83, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
+    "window": dict(loc=(6.75, 18.04, 1.41), aim=(8.05, 18.73, 1.32), lens=36, focus="fx_bags", fstop=8.0, beat="reflect",
                    shift_y=0.0, haze=0.0, exposure=-1.15, only=("Dawn",), glass_refl=0.017, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
@@ -102,7 +101,7 @@ CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35
 TRIMS = {
     "dawn": {"boutique door spill": 0, "display shelf return": 12 / 28},
     "window": {"bq_glow": 0.55, "boutique door spill": 0},
-    "company": {"boutique door spill": 0.35},
+    "company": {"boutique door spill": 0.26},
 }
 WIDE_VIEW = CAMERAS["wide"]
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
@@ -198,9 +197,13 @@ def hands_stone(holder, value=0.36):
 
 
 def tights(holder, value=0.07):
-    """Dark sheer tights on the shins (from the shin weights, fading over the knee), so the legs below the skirt read
-    as dressed, not as bare stone with dark socks (the check-in critique)."""
-    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh.L.001", "DEF-thigh.R.001", "DEF-foot"))
+    """A continuous stocking colour from the thigh under the skirt to the foot."""
+    groups = ("DEF-shin", "DEF-thigh", "DEF-foot")
+    body = bpy.data.objects[holder["body"]]
+    # The rear knee shares weights with the hip. Treat those mixed thigh
+    # vertices as cloth, too, so the exposed surface has one stocking colour.
+    weights = {group.name: 1.9 for group in body.vertex_groups if group.name.startswith(groups)}
+    _body_mask(holder, "legmask", groups, weights)
     _mask_mix(holder, "legmask", (value, value * 0.97, value * 0.95))
 
 
@@ -795,7 +798,10 @@ def apply_camera(name, width=1280):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
-        if (ln == "display shelf return" and name != "dawn") or (ln == "boutique pavement spill" and name != "wide"):
+        view = {"display shelf return": "dawn", "boutique pavement spill": "wide",
+                "display end bounce": "window", "display far bounce": "window",
+                "display lip bounce": "window", "left pavement return": "company"}.get(ln)
+        if view is not None and name != view:
             li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
             li.visible_glossy = name not in ("window", "dawn")
@@ -869,6 +875,22 @@ def build(cast=True):
     receivers = bpy.data.collections.new("Boutique pavement")
     receivers.objects.link(bpy.data.objects["street_ground"])
     paving_light.light_linking.receiver_collection = receivers
+    # A little spill reaches the shelf ends and front lip in the insert.
+    # The bags and Dawn's reflection stay under their own lights.
+    ends = bpy.data.collections.new("Boutique display edges")
+    for surface in ("boutique", "boutique pane joint", "display felt sides"):
+        ends.objects.link(bpy.data.objects[surface])
+    for name, source, target, size, energy, colour, spread in (
+        ("display end bounce", (7.50, 17.94, 1.66), (8.46, 18.05, 1.38),
+         (0.19, 0.65), 15.0, (1.0, 0.87, 0.72), 63),
+        ("display far bounce", (7.74, 19.40, 1.62), (8.50, 19.68, 1.43),
+         (0.16, 0.58), 4.3, (1.0, 0.88, 0.74), 68),
+        ("display lip bounce", (7.34, 18.88, 1.145), (7.63, 18.80, 1.035),
+         (0.75, 0.055), 2.1, (1.0, 0.88, 0.74), 68),
+    ):
+        bounce = st.area(name, source, size, energy, colour, Vector(target) - Vector(source), spread=spread)
+        bounce.visible_glossy = False
+        bounce.light_linking.receiver_collection = ends
     for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
         mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
         BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")
@@ -882,12 +904,19 @@ def build(cast=True):
         bags = make_bags()
         # A warm bounce off the left side of the window models her cheek
         # against the felt. Position it from the posed eyes for the insert.
-        face_key = st.area("reflected cheek", (0, 0, 0), (0.40, 0.26), 6.0,
+        face_key = st.area("reflected cheek", (0, 0, 0), (0.40, 0.26), 8.0,
                            (1.0, 0.85, 0.71), (-0.42, 0.48, -0.18), spread=60)
-        face_receivers = bpy.data.collections.new("Window bounce on Dawn")
-        face_receivers.objects.link(bpy.data.objects[_STATE["holders"]["Dawn"]["body"]])
-        face_key.light_linking.receiver_collection = face_receivers
+        dawn_skin = bpy.data.collections.new("Dawn's skin")
+        dawn_skin.objects.link(bpy.data.objects[_STATE["holders"]["Dawn"]["body"]])
+        face_key.light_linking.receiver_collection = dawn_skin
         face_key.visible_glossy = False
+        # A low pavement return keeps both stockings readable through the stride.
+        source = Vector((4.73, 15.99, 0.58))
+        target = Vector((5.54, 16.49, 0.53))
+        calf_return = st.area("left pavement return", source, (0.12, 0.34), 1.0,
+                             (0.76, 0.83, 0.91), target - source, spread=21)
+        calf_return.light_linking.receiver_collection = dawn_skin
+        calf_return.visible_glossy = False
         for holder in [*bags.values(), _STATE["holders"]["Dawn"]]:
             for obj in holder.children_recursive:
                 if obj.type in ("MESH", "CURVE"):

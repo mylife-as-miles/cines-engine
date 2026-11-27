@@ -622,3 +622,59 @@ Please score `hotel_room` at `3731642` using the published frames under `frames/
 ### 2026-11-27 16:24 UTC · INFO · to LEAD · C27 stitch and bag colour
 
 The macro now uses a four-millimetre slot in front of its grazing light. The graded front panel measures 33/255 against 35 in the master, and its 99th percentile reaches 84. In the 1280-wide stitch test, the physical thread has 7–11 times the local contrast of the removed baked row in each of the three measured spans. The kink is gone. The 2560 final and its matching track are next after the regular preview check.
+
+### 2026-11-27 18:07 UTC · INFO · to LEAD · C25 and C26 native luggage cut
+
+The revised room and void plates are published together at e524326: inspection_room/match and void_stage/bags, both 2560×1440 at 64 samples. Every projected case and duffel vertex agrees within 0.005 native pixels. The case face reads 40.9 in the room and 41.0 in the void. The trolley-post edges read 39 and 44 against haze at 23 and 28. The horizontal cutter mark under YES has gone. The next void critique request will include the rest of the stage.
+
+I have applied the C32 colour ruling to the baggage cases at 8068f53. The hotel gift trio keeps its colours. The next hotel batch drops the shopping carriers and gives the zipped duffel its own overhead beat. The revised scale source requests native 2880 as agreed in C29. Its existing published plate and pins are still a matched pair. I will report the new coordinates when the replacement is ready.
+
+### 2026-11-27 18:07 UTC · INFO · STATUS
+
+All 19 stages are in the improvement loop. The table uses the latest independent review for each stage.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Checking the full-cast window and walking angles, then the wide. The revised title area, palette and sign spacing are in d52b717 and d4c1bdf. |
+| hotel_room | 5.50 (5) | C32 raises the stage to 5.50. The pack test shows the burgundy bag going into the duffel. The overhead now has a separate half-closed zip and hand pose. Check all five previews. |
+| inspection_room | 5.50 (4.5) | Published the registered 2560 luggage plate. Check the case-face value in Dawn’s close-up, then finish the five opening finals and the intact handbag angles. |
+| evidence_table | 5.63 (5) | The physical stitch is the only visible row. The master and the slotted graze match at 35 and 33 on the front panel. Check the two regular previews and render the 2560 master and macro with the track. |
+| train | 5.63 (5) | C31 raises the stage to 5.63. Dawn turns toward the glass in the aisle. The lower shelf angle looks along the carriage and the case handle is stowed. Three previews are queued. |
+| aircraft_cabin | 5.69 (4.5) | Checked the aisle with Dawn at the left third and two visible screen faces. Testing a warm return above her seat. Full-cast previews are queued. |
+| baggage_belt | 5.69 (5) | Changed the other cases to slate and warm stone per LEAD. Preview the parted curtain, both checked bags and the overhead sorter landing. |
+| tim_desk | 5.69 (5) | Check the pen tip against the page, Tim’s jaw under the lamp and the correspondence as it appears in all three views. |
+| void_stage | 5.75 (4) | Published the 2560 bags final with both posts readable. Finish the seated cell, floor and chair work. The next critique request will cover the whole stage. |
+| leather_market | 5.88 (5) | Check where the organiser takes the loaded strap and the seller’s fingers release it. Compare purchase with the stall and the wide. |
+| chicago_night | 6.00 (5) | Check the window profile, mug, white skyline lights and suitcase across the four angles. |
+| checkin_hall | 6.13 (5) | C29 raises the stage to 6.13. Test the card beyond Dawn’s fingertips, isolate the hair bands and the light on the agent’s hands, and render the scale at 2880 with fresh corners. |
+| courtroom | 6.13 (5) | Inspect the bench lighting and contact at Dawn’s hand across the occupied and empty framings. |
+| departure_gate | 6.13 (5.5) | Check the called shot as Dawn turns toward the grille and braces to rise. Compare it with the resting version, wide and window. |
+| hearing_room | 6.13 (5) | Both opening previews checked. The wide’s curtain has median 41 graded. Tim’s microphone is 15.3 cm from his lips in witness. Render both finals and inspect hands and dais. |
+| visiting_room | 6.25 (5) | Check Tim’s build, Dawn’s shoulder and both eyelines through the glass in the two directions. |
+| home | 6.69 (6) | The seated-family and solo-Gene setups put all six hands on the table. Check lighting and continuity across the meals and the occupied and empty chair. |
+| prison_exterior | 6.75 (6) | Check the rain at the tower and gate lamp, the lamp support and the wet road. |
+| detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
+
+The render worker restarted after the workspace interruption. The completed native room plate survived and the void luggage plate was re-rendered. L2 is still open for the remaining opening coverage.
+
+### 2026-11-27 18:17 UTC · INFO · to LEAD · C29 payment, hair and scale
+
+The card now leads Dawn’s fingers. The darker body and blank glass of the card reader stay below the hand. The 960 crop shows both leading card corners and the thumb lying out beside the index. Turning off the hair bump left the bands exactly where they were. Applying the existing temple relaxation to this cast removed the bands. Rays through the pale jaw detail hit the far ear on the body mesh. I am testing an offset of the shoulder camera to hide the earlobe while keeping her gaze on the agent.
+
+The 2880×1620 scale geometry check gives the following corner pins in top-left pixel-edge coordinates: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). The 46 mm lens and 2.55 m focus stay in place. These are from the source geometry test. I will confirm them against the graded final and publish the new pins with it.
+
+### 2026-11-27 18:45 UTC · INFO · to LEAD · C30 native Kowloon title plate
+
+The 1280×720 wide is published at bf864b6. The agreed title rectangle x450–830, y40–230 is clear of sign faces and bright windows. The graded median is 12.3, the 99th percentile is 28.6 and its brightest pixel is 40.1. The street panels and carriers are blank. Dawn’s street portrait is in the renderer. The next critique request will cover the whole four-shot set.
+
+### 2026-11-27 19:12 UTC · INFO · to LEAD · C29 native scale plate
+
+The 2880×1620 scale final and its fresh corner pins are published at 0e25de2. The raw PNG, graded JPEG and scale.corners.json are under the usual checkin_hall frame paths. Pins in top-left pixel-edge coordinates, clockwise from upper left: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). They match the geometry checks to the inner glass edge. The display median is 189.2 graded and 2.83% of the frame is below 8. I checked the native image and the pin overlay. The glass is blank and ready for the push and OVERWEIGHT composite. The wide is in the renderer, with the card handoff and profile next.
+
+### 2026-11-27 19:18 UTC · INFO · to LEAD · C29 native check-in wide
+
+The 1920×1080 check-in wide is published at c8e9eef. The title floor at x144–350, y797–953 has graded median 21.8, p99 31.2 and max 36.6. The queue post is clear of the floor and frame edge. The extinguisher reads neutral. Both opening plates are available with the native scale pins from the previous entry. The full-cast profile and payment previews are now at the front of the queue.
+
+### 2026-11-27 19:32 UTC · INFO · to LEAD · C29 payment final
+
+The payment angle is published at a3db3b1, alongside the native scale and wide. A crop of the final shows the card in front of her fingertips, both leading corners and the separate closed passport below. The hairline no longer has the stepped reflections above the near ear. The cheek contour stays clear of the far ear. The profile preview now puts the case at a graded median of 33.81 and the duffel at 23.72. Isolating the sources confirmed the remaining bright fingers are lit by the overhead counter island. I am testing a small flag over the keyboard before the profile final and critique request.

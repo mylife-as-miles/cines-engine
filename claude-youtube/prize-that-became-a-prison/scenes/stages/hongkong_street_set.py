@@ -1035,8 +1035,8 @@ def boutique(G, props):
     # The butt joint between two display panes, visible at the right edge of
     # the close-up. Its bead is narrower than the metal shopfront stiles.
     bead = MB("boutique pane joint", [F.mats[0]])
-    bead.box((gx - 0.006, 18.118, 0.62), (gx + 0.009, 18.130, 3.30), 0)
-    bead.finish(bevel=0.002, seg=3)
+    bead.box((gx - 0.006, 18.057, 0.62), (gx + 0.009, 18.061, 3.30), 0)
+    bead.finish(bevel=0.0015, seg=3)
     for y in (d0 - 0.06, d1, D0 - 0.06, D1):
         F.box((gx - 0.04, y, PZ), (gx + 0.06, y + 0.06, 3.62), 0)
     F.box((gx - 0.04, d0 - 0.06, 3.3), (gx + 0.06, D1 + 0.06, 3.38), 0)
@@ -1097,9 +1097,9 @@ def boutique(G, props):
     # interior
     # (a spot's watts spread over the whole sphere: 450 W puts about 9 W/m2 on a bag 2 m below, the window's
     # brightest thing)
-    spot("bq_spot_shoulder", (7.5, 17.28, 3.2), (7.97, 17.52, 1.05), 150.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
-    spot("bq_spot_satchel", (7.5, 18.25, 3.2), (8.0, 18.5, 1.25), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
-    spot("bq_spot_tote", (7.5, 19.05, 3.2), (8.02, 19.3, 1.25), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_shoulder", (7.58, 19.09, 3.17), (8.22, 19.21, 1.26), 150.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_satchel", (7.58, 18.60, 3.17), (8.06, 18.72, 1.26), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
+    spot("bq_spot_tote", (7.58, 18.17, 3.17), (7.90, 18.29, 1.26), 145.0, (1.0, 0.90, 0.76), 18, 0.3, 0.02)
     shelf_light = area("bq_top", (8.0, 18.1, 3.25), (0.8, 3.4), 22.0, (1.0, 0.86, 0.7), (0, 0, -1), spread=100)
     # The shelf light is flagged off the felt returns. They pick up falloff
     # from the three existing spots, keeping depth in the window close-up.
@@ -1115,17 +1115,17 @@ def boutique(G, props):
     area("bq_spill", (7.4, 18.6, 3.15), (3.4, 0.4), 110.0, (1.0, 0.84, 0.64), (-0.75, 0, -0.66), spread=130)
     area("bq_door", (8.0, 21.0, 3.3), (1.4, 1.6), 140.0, (1.0, 0.8, 0.58), (-0.5, 0, -0.86), spread=140)
     area("bq_inside", (10.5, 21.1, 3.35), (2.5, 1.8), 120.0, (1.0, 0.8, 0.58), (0, 0, -1), spread=160)
-    # The shop precedes the gifts. Reserve cognac, black and burgundy
-    # for the evidence table and keep these three pieces at the same marks.
+    # Echo the evidence table's bag order. The shop precedes the gifts,
+    # so the display keeps its own slate, stone and olive finishes.
     dyes = {
         "handbag-tote": ((0.034, 0.054, 0.085), (0.092, 0.141, 0.208)),     # slate blue
         "handbag-satchel": ((0.066, 0.059, 0.046), (0.162, 0.150, 0.126)),  # warm stone
         "handbag-shoulder": ((0.046, 0.060, 0.031), (0.130, 0.155, 0.081)), # olive
     }
     out = {}
-    spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=0.85, hue=0.515, rough_add=0.25)),
-            "handbag-satchel": ((8.0, 18.5, 1.12), 0.30, -72.0, dict(sat=0.8, rough_add=0.12)),
-            "handbag-shoulder": ((7.97, 17.52, 0.92), 0.32, -105.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
+    spec = {"handbag-tote": ((7.90, 18.29, 1.12), 0.35, 55.0, dict(sat=1.0, val=0.85, hue=0.515, rough_add=0.25)),
+            "handbag-satchel": ((8.06, 18.72, 1.12), 0.30, 63.0, dict(sat=0.8, rough_add=0.12)),
+            "handbag-shoulder": ((8.22, 19.21, 1.12), 0.32, 72.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
     for name, (loc, size, turn, grade) in spec.items():
         h = props.load(name, size=size, axis="long", loc=loc, turn_deg=turn, **grade)
         dyed = set()
