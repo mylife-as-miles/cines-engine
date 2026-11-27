@@ -1405,6 +1405,24 @@ def build(cast=True):
         eye.data.transform(Matrix.Translation(centre + Vector((0, 0.0012, 0))) @ Matrix.Scale(0.955, 4) @ Matrix.Translation(-centre))
         eye.data.materials[0] = eye_mat
     pose_cast(d, a)
+    # Cut the island's spill over the keyboard while the monitor still keys
+    # the agent's face. This net covers the light paths to the posed fingers.
+    net_material = bpy.data.materials.new("Neutral keyboard net")
+    net_material.use_nodes = True
+    nodes = net_material.node_tree.nodes
+    nodes.remove(nodes["Principled BSDF"])
+    filter_node = nodes.new("ShaderNodeBsdfTransparent")
+    filter_node.inputs["Color"].default_value = (0.5, 0.5, 0.5, 1.0)
+    net_material.node_tree.links.new(filter_node.outputs[0], nodes["Material Output"].inputs["Surface"])
+    net_mesh = bpy.data.meshes.new("Keyboard net")
+    net_mesh.from_pydata([(-0.087, 0.597, 1.093), (0.301, 0.597, 1.093),
+                         (0.301, 0.803, 1.093), (-0.087, 0.803, 1.093)], [], [(0, 1, 2, 3)])
+    net_mesh.materials.append(net_material)
+    keyboard_net = bpy.data.objects.new("Keyboard net", net_mesh)
+    bpy.context.scene.collection.objects.link(keyboard_net)
+    keyboard_net.hide_render = True
+    for ray in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
+        setattr(keyboard_net, "visible_" + ray, False)
     # The scale and overhead signs are inserts. Keep the cast's shadows and remove the slivers at frame edge.
     orig = getattr(sk.render, "_orig", sk.render)
     dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
@@ -1417,6 +1435,7 @@ def build(cast=True):
         hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
         profile = name == "profile"
         edge.hide_render = profile
+        keyboard_net.hide_render = not profile
         fill.data.energy = 7.0 if profile else 2.5
         for fixture, watts, factor in profile_trims:
             fixture.data.energy = watts * factor if profile else watts
@@ -1432,6 +1451,7 @@ def build(cast=True):
             return orig(*args, **kwargs)
         finally:
             edge.hide_render = False
+            keyboard_net.hide_render = True
             fill.data.energy = 2.5
             for fixture, watts, _ in profile_trims:
                 fixture.data.energy = watts
