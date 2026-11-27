@@ -307,36 +307,24 @@ def seat_height(x, y):
 # reading the email: leaning in a little over the table, neck and head bowed to the screen
 UPPER = {"chest": (16, 0), "neck": (8, 0), "head": (17, 3), "fingers": 12}     # neck and head 8 deg further down than
                                                                                 # the first cut: she bows to the screen
-# per-finger curl once she is seated: (knuckle bend on the finger's master control, flexion of each of the two
-# outer joints) in degrees. The master alone only tips a straight finger down at the knuckle (a mitten); the joints
-# curl it. The right index reaches ahead for the trackpad, the others curl under it, the thumb tucks in; the left
-# hand lies loosely curled on the palm rest
-CURL = {"R": {"f_index": (8, 10), "f_middle": (12, 14), "f_ring": (13, 16), "f_pinky": (14, 18), "thumb": (0, 12)},
-        "L": {"f_index": (11, 10), "f_middle": (12, 12), "f_ring": (13, 14), "f_pinky": (14, 16), "thumb": (0, 10)}}
+# A relaxed Rigify hand already curls with zero control rotation. Extend the middle joints
+# slightly to lay the finger pads along the trackpad without raising the heel of the hand.
+CURL = {"R": {"f_index": (-8, -5), "f_middle": (-9, -7), "f_ring": (-11, -8),
+              "f_pinky": (-14, -9), "thumb": (-4, -4)},
+        "L": {"f_index": (-6, -4), "f_middle": (-8, -6), "f_ring": (-9, -7),
+              "f_pinky": (-12, -8), "thumb": (-3, -4)}}
 # each hand's wrist: x out from the chair's centre line, the wrist bone's height over the table top, and the hand's
 # starting tip down from the forearm. Round 2's right wrist sat 52 mm up and the clearance loop cocked the hand 28 deg
 # up off the deck with the fingers straight (it read as waving at the screen): now the right wrist rests low, just
 # off the laptop's front edge, the hand tipped down onto the trackpad with the fingers curled, and if the fingers
 # still touch the deck the wrist rises rather than the hand cocking back
-HANDS = {"R": dict(wx=-0.075, wz=0.0395, pitch=5.0), "L": dict(wx=0.12, wz=0.045, pitch=1.0)}
-PITCH_MIN = -10.0          # the hand tips up at the wrist no further than this (a resting hand's arch over its
-                           # curled fingers); past it the wrist rises instead
-PAD_AHEAD = 0.02           # the trackpad's centre this far past the hand bone's tip: the palm's heel on the front edge
+HANDS = {"R": dict(wx=-0.075, wz=0.028, pitch=12.0), "L": dict(wx=0.12, wz=0.045, pitch=1.0)}
 
 
 def curl_fingers(holder):
-    rig = rigged.rig_of(holder)
-    pb = rig.pose.bones
-    done = []
-    for k, fingers in CURL.items():
-        for f, (knuckle, joint) in fingers.items():
-            for n, deg in ((f"{f}.01_master.{k}", knuckle), (f"{f}.02.{k}", joint), (f"{f}.03.{k}", joint)):
-                if n in pb and deg:
-                    pb[n].rotation_mode = "XYZ"
-                    pb[n].rotation_euler.x = math.radians(deg)
-                    done.append(n)
-    bpy.context.view_layer.update()
-    print(f"HOME fingers curled: {len(done)} controls", flush=True)
+    for side, fingers in CURL.items():
+        rigged.articulate_hand(holder, side, {digit: (base, outer, outer)
+                                             for digit, (base, outer) in fingers.items()})
 
 
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
@@ -410,7 +398,7 @@ def _knuckle(rig, finger, k):
 PALM_TILT = 15.0           # a resting hand leans a little onto its little-finger side
 
 
-def palm_down(holder, side):
+def palm_down(holder, side, control="forearm_fk"):
     """Turn the forearm about its own axis (pronation) until the hand lies palm down: the line from the index
     knuckle to the little-finger knuckle runs out to her side, PALM_TILT degrees below level. Aimed by the shortest
     turn from the rest pose (arms hanging, palms in), a forearm laid along the table keeps its palm facing in, thumb
@@ -421,7 +409,7 @@ def palm_down(holder, side):
     pb = rig.pose.bones
     k = "L" if side > 0 else "R"
     mw = rig.matrix_world
-    fa = pb[f"forearm_fk.{k}"]
+    fa = pb[f"{control}.{k}"]
     a_i, a_p = _knuckle(rig, "f_index", k), _knuckle(rig, "f_pinky", k)
     if a_i is None or a_p is None:
         return 0.0
@@ -462,6 +450,7 @@ def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
     fd = (w - e).normalized()
     hd = (fd - Vector((0, 0, math.tan(math.radians(hand_pitch))))).normalized()
     rigged._aim(rig, f"hand_fk.{k}", inv @ hd)
+    palm_down(holder, side, control="hand_fk")
     bpy.context.view_layer.update()
     tip = mw @ pb[f"hand_fk.{k}"].tail
     return e, w, tip
@@ -514,32 +503,29 @@ def arms_on_table(holder):
         print(f"HOME arm {k}: shoulder {tuple(round(v, 3) for v in s)}, elbow {tuple(round(v, 3) for v in e)} "
               f"(table edge at y {edge:.3f}), wrist {tuple(round(v, 3) for v in w)}, tip {tuple(round(v, 3) for v in tip)}", flush=True)
         out[k] = (e, w, tip, (s.x + side * 0.02, ey, ez), (wx, wy, wz))
-    # the hands rest on the laptop (top at K_TOP + 0.0175): tip each hand until its lowest finger just clears it
-    body = bpy.data.objects[holder["body"]]
+    # Solve the heel and pads against the deck. Use only vertices driven by this hand:
+    # a distance query beside the deck also picked up vertices of the seated thigh.
     curl_fingers(holder)
-    # Start with the hand arched (tipped up PITCH_MIN over its curled fingers) and the wrist at its low target: if the
-    # fingers still meet the deck the wrist rises; if they float, the hand tips down onto it
+    deck = K_TOP + st.LAP_T + 0.002
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
-        pitch = PITCH_MIN
-        other = "L" if k == "R" else "R"
-        for it in range(12):
+        pitch = 1.0
+        for _ in range(8):
             e, w, tip = arm_to(holder, side, et, wt, hand_pitch=pitch)
-            # this hand's points only: nearer its own hand bone than the other's (round 2 split the hands at the
-            # midline between the wrists, and the converging left hand's fingers, over the line, held the right
-            # hand up)
-            ot = mw @ pb[f"hand_fk.{other}"].tail
-            pts = [p for p in body_points(holder, only=body)
-                   if (p - tip).length < 0.13 and p.y < w.y - 0.03 and (p - tip).length < (p - ot).length]
-            low = min((p.z for p in pts), default=K_TOP + 0.05) - (K_TOP + 0.0175)
-            print(f"HOME hand {k} it {it}: pitch {pitch:+.1f} wrist +{(wt[2] - K_TOP) * 1000:.0f} mm, lowest finger "
-                  f"{low * 1000:+.1f} mm over the laptop", flush=True)
-            if 0.0015 < low < 0.007:
+            surface = rigged.hand_surface(holder, k)
+            palm = min(p.z for p in surface["palm"])
+            pads = min(p.z for p in surface["fingers"] + surface["thumb"])
+            low = min(palm, pads)
+            # Lower the heel toward the deck while keeping the fingertips just above it.
+            print(f"HOME contact {k}: heel {(palm-deck)*1000:+.1f} mm, pads {(pads-deck)*1000:+.1f} mm", flush=True)
+            if abs(low - deck - 0.002) < 0.002 and abs(palm - pads) < 0.008:
                 break
-            if low < 0.0015 and pitch <= PITCH_MIN + 1e-6:
-                wt = (wt[0], wt[1], wt[2] + 0.004 - low)       # arched as far as it goes: lift the wrist
-            else:
-                pitch = max(PITCH_MIN, pitch + math.degrees((low - 0.004) / 0.15))
+            pitch = max(-16.0, min(16.0, pitch + math.degrees((pads - palm) / 0.15)))
+            wt = (wt[0], wt[1], wt[2] + max(-0.025, min(0.025, deck + 0.002 - low)))
+        if k == "R":
+            touching = [p for p in surface["fingers"] if p.z <= pads + 0.006]
+            out["trackpad"] = sum(touching, Vector()) / len(touching) if touching else tip
+            out["heel"] = max(p.y for p in surface["palm"] if p.z <= palm + 0.006)
         out[k] = (e, w, tip)
     return out
 
@@ -588,13 +574,11 @@ def table_things(hands):
     tx, ty = KT
     if hands:
         (er, wr, tr), (el, wl, tl) = hands["R"], hands["L"]
-        # the right hand lies over the trackpad, its heel on the front edge and the curled fingers on the pad: put the
-        # trackpad's centre PAD_AHEAD past the hand bone's tip. The laptop is turned 180 deg (its front edge toward
-        # +Y, toward her), so its trackpad sits at +0.055 in y
-        fd = (tr - wr).normalized()
-        pad = tr + fd * PAD_AHEAD
+        # Centre the pad on the lowest finger pads and keep the heel over the deck lip.
+        pad = hands["trackpad"]
         tp_off = st.LAP_D / 2 - 0.012 - 0.042
-        lx, ly = pad.x, pad.y - tp_off
+        lx = pad.x
+        ly = max(pad.y - tp_off, hands["heel"] + 0.004 - st.LAP_D / 2)
         front = ly + st.LAP_D / 2
         print(f"HOME laptop at ({lx:.3f}, {ly:.3f}), front edge y {front:.3f}; wrists y R {wr.y:.3f} L {wl.y:.3f}, "
               f"wrist heights over the top R {(wr.z - K_TOP) * 1000:.0f} L {(wl.z - K_TOP) * 1000:.0f} mm, "
@@ -693,7 +677,7 @@ def lights():
     # nothing showed it, and the close-up's lower half was murk
     d2 = Vector((0.12, -0.75, -0.6)).normalized()
     t2 = Vector((st.HEAD_CHAIR[0] - 0.05, st.HEAD_CHAIR[1] + 0.33, 0.0))
-    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 15000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
+    st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 15000.0, (0.7, 0.8, 1.0), size_deg=7.0, blend=0.3, radius=0.03)
     dw = st.D_WIN
     # the sky's faint glow through the slats: just enough to keep the room readable
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),

@@ -200,6 +200,37 @@ def shoulder_world(holder, side):
     return rig.matrix_world @ pb.head
 
 
+def hand_surface(holder, side):
+    """World positions of one hand's vertices (rig deformation, no subdivision), split palm / fingers / thumb."""
+    body = bpy.data.objects[holder["body"]]
+    subs = [m for m in body.modifiers if m.type in ("SUBSURF", "MASK") and m.show_viewport]
+    for m in subs:
+        m.show_viewport = False
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = body.evaluated_get(dg)
+    me = ev.to_mesh()
+    names = {g.index: g.name for g in body.vertex_groups if g.name.startswith("DEF-")}
+    out = {"palm": [], "fingers": [], "thumb": []}
+    for v, vo in zip(me.vertices, body.data.vertices):
+        gs = [e for e in vo.groups if e.group in names]
+        if not gs:
+            continue
+        g = max(gs, key=lambda e: e.weight)
+        n = names[g.group]
+        if not n.endswith("." + side) or g.weight < 0.3:
+            continue
+        key = ("thumb" if "thumb" in n else "fingers" if n.startswith("DEF-f_") else
+               "palm" if n.startswith(("DEF-hand", "DEF-palm")) else None)
+        if key:
+            out[key].append(ev.matrix_world @ v.co)
+    ev.to_mesh_clear()
+    for m in subs:
+        m.show_viewport = True
+    bpy.context.view_layer.update()
+    return out
+
+
 def articulate_hand(holder, side, joints):
     """Pose named digits on one side. Values are knuckle, middle and tip flexion in degrees,
     plus optional spread in the palm plane (positive toward the thumb)."""
