@@ -550,7 +550,7 @@ def bags():
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m, ceiling=fin.get("ceiling"))
         if name == "handbag-tote":
-            props.tote_topstitch(h)
+            props.tote_topstitch(h, soften_lip_normals=True)
         out += [h] + list(h.children_recursive)
     return out
 

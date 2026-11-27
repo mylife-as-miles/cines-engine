@@ -181,9 +181,10 @@ def surface_bvh(holder):
     return BVHTree.FromPolygons(vertices, polygons)
 
 
-def tote_topstitch(holder):
+def tote_topstitch(holder, *, soften_lip_normals=False):
     """The line of saddle stitching just under the front lip, interrupted by the handle tabs."""
-    _retouch_tote_textures(holder, _paint_over_tote_lip)
+    normal_paint = (lambda pixels: _paint_over_tote_lip(pixels, soften_normals=True)) if soften_lip_normals else None
+    _retouch_tote_textures(holder, _paint_over_tote_lip, normal_paint=normal_paint)
     surface = surface_bvh(holder)
     base = holder.matrix_world.translation
     rotation = holder.matrix_world.to_quaternion()
@@ -312,7 +313,7 @@ def _sample_tote_trace(controls, visible, resolution):
             "occluded_x_px": intervals}
 
 
-def _retouch_tote_textures(holder, paint):
+def _retouch_tote_textures(holder, paint, *, normal_paint=None):
     """Retouch the same UV region in the colour, roughness and normal maps in memory."""
     import numpy as np
     images = {node.image for part in meshes(holder) for slot in part.material_slots if slot.material
@@ -321,7 +322,10 @@ def _retouch_tote_textures(holder, paint):
         width, height = image.size
         pixels = np.empty((height, width, image.channels), dtype=np.float32)
         image.pixels.foreach_get(pixels.ravel())
-        paint(pixels)
+        if normal_paint is not None and image.name.startswith("NormalGL"):
+            normal_paint(pixels)
+        else:
+            paint(pixels)
         image.pixels.foreach_set(pixels.ravel())
         image.update()
 
@@ -354,10 +358,10 @@ _TOTE_LIP = (
 )
 
 
-def _paint_over_tote_lip(pixels):
+def _paint_over_tote_lip(pixels, *, soften_normals=False):
     """Interpolate across the baked beads from clean leather on either side."""
     import numpy as np
-    for radius, path in _TOTE_LIP:
+    for index, (radius, path) in enumerate(_TOTE_LIP):
         points = np.array(path)
         along_y = np.ptp(points[:, 1]) > np.ptp(points[:, 0])
         across, along = (0, 1) if along_y else (1, 0)
@@ -372,6 +376,16 @@ def _paint_over_tote_lip(pixels):
         healed = lo + (hi - lo) * ((offset + radius) / (2 * radius))[..., None]
         edge = np.clip(np.minimum(cols - first + 4, last + 4 - cols) / 4, 0, 1)
         tex[rows, cols] += edge[None, :, None] * (healed - tex[rows, cols])
+        if soften_normals and index in (1, 2, 5, 6):
+            # A grazing key reveals the old relief beyond the colour patch on these four islands.
+            cols = np.arange(first - 5, last + 6)
+            mid = np.rint(np.interp(cols, points[:, along], points[:, across])).astype(int)
+            offset = np.arange(-20, 21)[:, None]
+            rows = mid + offset
+            taper = np.clip(np.minimum(cols - first + 5, last + 5 - cols) / 5, 0, 1)
+            weight = 0.92 * np.clip((20 - np.abs(offset)) / 9, 0, 1) * taper
+            normals = tex[rows, cols, :3]
+            tex[rows, cols, :3] = normals + weight[..., None] * (np.array((0.5, 0.5, 1.0)) - normals)
 
 
 def _plain_tote_panel(holder):
