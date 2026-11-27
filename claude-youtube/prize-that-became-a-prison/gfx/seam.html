@@ -6,9 +6,11 @@
 // The film's only red: the seam (DECISIONS: red appears twice, both on the seam). Modes:
 //   flash    cold open: the trace runs along the tote's front-lip seam in 0.55 s and is gone with the cut at 1.0 s
 //   trace    chapter 3: the trace draws in full over 1.8 s and holds
-//   cutaway  chapter 3 (and the chapter 4 split): a schematic section of the bag wall; the leather and the lining part
+//   cutaway  chapter 3: a schematic section of the bag wall; the leather and the lining part
 //            to show a hidden space, outlined in red, and close again (the sound is a small metallic click). Schematic
 //            only: no packets, no substance, nothing drawn as an object; no words.
+//   cutaway_half  chapter 4's split frame: the same section fitted into the right half (x 962-1919, gfx/split.py), opening
+//            on a match from the right-hand tote's top seam, and held open (it does not close).
 // The seam path is read from a JSON in plate pixels (window.SEAM: {space:[w,h], seam:[[x,y],...]}): the prototype is
 // gfx/shots/purses_seam_proto.json, replaced by Codex's projected purses.seam.json (REQUEST L3).
 // Contract: window.draw(mode, t), window.READY; window.setBG(url) for previews over the plate.
@@ -43,23 +45,27 @@ function grain(ctx, t) {                 // per-frame grain (sigma about 1 luma)
   for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.4; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
   ctx.putImageData(img, 0, 0);
 }
-function cutaway(ctx, t) {
+function cutaway(ctx, t, half) {
   // A section through the bag wall at the top seam, an extruded slab in an oblique view: the cut face shows the leather
   // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red seam
   // sits where the tote's seam was (y 380, x 1262-1735 on the 1920 purses frame), then the view eases back to the
   // whole section (1.2 s). The lining swings down about its stitches to open a space, in which a flat, neutral, unlabelled
   // layer lies (schematic: something sewn in; no packets, no substance), then closes over 0.45 s.
   ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H);
-  const vg = ctx.createRadialGradient(W * 0.5, H * 0.5, 120, W * 0.5, H * 0.5, W * 0.62);
+  const CX = half ? 1441 : W * 0.5;                                     // the centre of the view: the frame, or the right half
+  const vg = ctx.createRadialGradient(CX, H * 0.5, 120 * (half ? 0.6 : 1), CX, H * 0.5, W * (half ? 0.36 : 0.62));
   vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   const X0 = 330, X1 = 1560, Y = 520, D = [170, -136], LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];
   const sA = [X0 + 18, Y + 10], sB = [X1 - 14, Y + 10];               // the cut face's stitch row, end to end
-  const tA = [1262, 380], tB = [1735, 380];                            // where the tote's seam was on the cut
-  const k0 = (tB[0] - tA[0]) / (sB[0] - sA[0]), e = sm(t / 1.2);       // start scale, eased to 1
-  const k = k0 + (1 - k0) * e, ox = (tA[0] - k0 * sA[0]) * (1 - e), oy = (tA[1] - k0 * sA[1]) * (1 - e);
+  // where the tote's seam was on the cut: the full purses frame, or the right half of the split (gfx/split.py)
+  const tA = half ? [1147, 424] : [1262, 380], tB = half ? [1673, 424] : [1735, 380];
+  // the resting view: the whole section (full frame), or the section fitted into the right half about its centre
+  const kf = half ? 0.585 : 1, of = half ? [1441 - 0.585 * 1030, 560 - 0.585 * 545] : [0, 0];
+  const k0 = (tB[0] - tA[0]) / (sB[0] - sA[0]), e = sm(t / 1.2);       // start scale, eased to the resting view
+  const k = k0 + (kf - k0) * e, ox = (tA[0] - k0 * sA[0]) * (1 - e) + of[0] * e, oy = (tA[1] - k0 * sA[1]) * (1 - e) + of[1] * e;
   const drift = 1 + 0.02 * sm(t / 5);
-  const open = sm((t - 1.3) / 0.8) * (1 - sm((t - 3.6) / 0.45));     // opens, holds 1.5 s, closes
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2);
+  const open = sm((t - 1.3) / 0.8) * (half ? 1 : 1 - sm((t - 3.6) / 0.45));   // opens, holds 1.5 s, closes (the split holds it open)
+  ctx.save(); ctx.translate(CX, H / 2); ctx.scale(drift, drift); ctx.translate(-CX, -H / 2);
   ctx.translate(ox, oy); ctx.scale(k, k);
   const ang = 0.12 * open;
   const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
@@ -104,14 +110,15 @@ function cutaway(ctx, t) {
 }
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
-  if (mode !== 'cutaway') {                       // plate and trace pushed together (2 % a second toward the seam), so they stay registered
+  if (!mode.startsWith('cutaway')) {               // plate and trace pushed together (2 % a second toward the seam), so they stay registered
     const z = 1 + 0.02 * t, fx = 1500, fy = 380; ctx.setTransform(z, 0, 0, z, fx * (1 - z), fy * (1 - z));
   }
-  if (bgImg && mode !== 'cutaway') ctx.drawImage(bgImg, 0, 0, W, H);
+  if (bgImg && !mode.startsWith('cutaway')) ctx.drawImage(bgImg, 0, 0, W, H);
   if (mode === 'flash') trace(ctx, pts(), sm(t / 0.6));
   else if (mode === 'trace') trace(ctx, pts(), sm(t / 1.8));
   else if (mode === 'cutaway') cutaway(ctx, t);
-  if (mode !== 'cutaway' && bgImg) { ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t); }
+  else if (mode === 'cutaway_half') cutaway(ctx, t, true);
+  if (!mode.startsWith('cutaway') && bgImg) { ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t); }
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });
 fetch(window.SEAM_URL || (location.hash ? location.hash.slice(1) : '../frames/raw/evidence_table/purses.seam.json')).then(r => r.json()).then(j => { window.SEAM = j; window.READY = true; });
