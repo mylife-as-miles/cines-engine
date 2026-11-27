@@ -228,10 +228,16 @@ def floor_tiles(name="stall tiles"):
     br.inputs["Color2"].default_value = (0.27, 0.26, 0.245, 1)
     br.inputs["Mortar"].default_value = (0.05, 0.048, 0.045, 1)
     _link(nt, o, br.inputs["Vector"])
-    dirt = _maprange(nt, _noise(nt, o, 2.2, 5.0, 0.6), 0.35, 0.7, 0.0, 0.6)
+    dirt = _maprange(nt, _noise(nt, o, 2.2, 5.0, 0.6), 0.35, 0.7, 0.0, 0.83)
     col = _mix(nt, dirt, _out(br, "Color"), (0.09, 0.085, 0.078))
     _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _maprange(nt, _noise(nt, o, 5.0, 4.0, 0.6), 0.3, 0.7, 0.16, 0.42), b.inputs["Roughness"])
+    pos = _out(nt.nodes.new("ShaderNodeNewGeometry"), "Position")
+    x = _xyz(nt, pos)[0]
+    path = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, 1.85)), 0.15, 0.7, 1.0, 0.0)
+    wear = _math(nt, "MULTIPLY", path, dirt)
+    _link(nt, _mix(nt, wear, col, (0.05, 0.046, 0.042)), b.inputs["Base Color"])
+    rough = _maprange(nt, _noise(nt, o, 5.0, 4.0, 0.6), 0.3, 0.7, 0.16, 0.42)
+    _link(nt, _math(nt, "ADD", rough, _math(nt, "MULTIPLY", wear, 0.12)), b.inputs["Roughness"])
     _bump(nt, b, _out(br, "Fac"), 0.3, 0.002)
     return m
 
@@ -388,6 +394,25 @@ def recolour(mat, median_lum, gamma=0.65, spec=0.4, rough_add=0.15):
         _link(nt, _math(nt, "ADD", s, rough_add, clamp=True), rough)
 
 
+def nylon(mat):
+    """Give the existing black cloth a fine weave while preserving the model's normal map."""
+    tune_prop(mat, spec=0.45)
+    nt = mat.node_tree
+    b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    for link in list(b.inputs["Roughness"].links):
+        nt.links.remove(link)
+    b.inputs["Roughness"].default_value = 0.38
+    tex = _obj(nt)
+    weave = _noise(nt, tex, 1000, 2, 0.55, mapping=(1, 3.0, 1))
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.03
+    bump.inputs["Distance"].default_value = 0.00035
+    if b.inputs["Normal"].links:
+        nt.links.new(b.inputs["Normal"].links[0].from_socket, bump.inputs["Normal"])
+    nt.links.new(weave, bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+
+
 def tune_prop(mat, spec=None, sat=None, val=None, rough_add=0.0, hue=0.5):
     """The hero duffel: hue / saturation / value after its texture, specular cut (generated textures come with a
     plastic sheen that greys black fabric), roughness lifted."""
@@ -447,7 +472,7 @@ def materials():
     M["ply"] = pbr("plywood shelf", (0.26, 0.2, 0.14), rough=(0.6, 0.8), nscale=2.0, stretch=(1, 12, 1), cvar=0.25)
     M["cable"] = pbr("cable rubber", (0.018, 0.018, 0.019), rough=(0.45, 0.6), nscale=40.0, cvar=0.3, spec=0.4)
     M["cable_grey"] = pbr("cable grey", (0.16, 0.16, 0.155), rough=(0.5, 0.65), nscale=40.0, cvar=0.2)
-    M["tag"] = paper("blank tag card")
+    M["tag"] = paper("blank tag card", (0.35, 0.34, 0.31))
     M["string"] = pbr("tag string", (0.32, 0.3, 0.27), rough=(0.85, 0.95), nscale=200.0, cvar=0.2, spec=0.2)
     M["tube_on"] = tube("tube on", 9.0)
     M["tube_dim"] = tube("tube dim", 2.5)
@@ -456,5 +481,11 @@ def materials():
     M["batten"] = pbr("batten body", (0.42, 0.43, 0.44), rough=(0.4, 0.55), nscale=12.0, cvar=0.12, grime=0.4)
     M["sky"] = glow("skylight night", (0.32, 0.42, 0.6), 0.35)
     M["tape"] = pbr("tape roll", (0.46, 0.27, 0.095), rough=(0.18, 0.27), nscale=30.0, cvar=0.1)
+    M["stock_kraft"] = pbr("corrugated kraft", (0.33, 0.23, 0.13), rough=(0.81, 0.89), bump=0.05, bscale=220)
+    M["packing"] = pbr("plain paper tape", (0.29, 0.21, 0.14), rough=(0.54, 0.68))
+    M["stock_wrap"] = pbr("clear stock sleeves", (0.80, 0.83, 0.85), rough=(0.21, 0.29), bump=0.15, bscale=40)
+    film = next(n for n in M["stock_wrap"].node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    film.inputs["Transmission Weight"].default_value = 0.65
+    film.inputs["IOR"].default_value = 1.46
     M["poly_bag"] = pbr("folded carrier bags", (0.02, 0.02, 0.022), rough=(0.25, 0.4), nscale=25.0, cvar=0.3, spec=0.5)
     return M

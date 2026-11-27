@@ -409,8 +409,8 @@ BAGS = {  # model: (size, axis, median luminance of its texture, base scale)
 # leathers (linear rgb, before the grade): cognac, tan, chocolate, oxblood, burgundy, black, charcoal, taupe, navy,
 # olive, bone, mustard, bottle green, dusty rose, slate
 LEATHER = [(0.30, 0.13, 0.05), (0.38, 0.24, 0.13), (0.09, 0.05, 0.03), (0.17, 0.035, 0.03), (0.2, 0.03, 0.05),
-           (0.018, 0.018, 0.02), (0.06, 0.06, 0.065), (0.22, 0.19, 0.16), (0.03, 0.045, 0.09), (0.12, 0.12, 0.06),
-           (0.4, 0.37, 0.32), (0.36, 0.25, 0.07), (0.03, 0.08, 0.05), (0.36, 0.2, 0.19), (0.13, 0.15, 0.17)]
+           (0.018, 0.018, 0.02), (0.06, 0.06, 0.065), (0.14, 0.12, 0.10), (0.018, 0.025, 0.055), (0.12, 0.12, 0.06),
+           (0.22, 0.20, 0.17), (0.36, 0.25, 0.07), (0.018, 0.045, 0.03), (0.20, 0.09, 0.08), (0.07, 0.08, 0.09)]
 _SRC = {}
 
 
@@ -476,8 +476,8 @@ class Palette:
         above = self.rows.get((row - 1, col)) or self.rows.get((row - 1, col + 1))
         for _ in range(50):
             m = self.r.choice(list(BAGS))
-            c = self.r.choices(range(len(LEATHER)), weights=(9, 7, 12, 8, 4, 15, 9, 6, 6, 5, 2, 2, 4, 1, 3))[0]
-            if prev and (c == prev[1] or m == prev[0] and self.r.random() < 0.6):
+            c = self.r.choices(range(len(LEATHER)), weights=(9, 7, 12, 8, 4, 15, 9, 6, 6, 5, 1, 2, 4, 1, 3))[0]
+            if prev and (c == prev[1] or m == prev[0]):
                 continue
             if m == "handbag-satchel" and any(v and v[0] == m for v in (prev, above)):
                 continue
@@ -511,7 +511,7 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
                 break
             c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-0.05, 0.05))
             zh = z + rr.uniform(-0.06, 0.06)
-            tip = c + n * 0.15 + Vector((0, 0, zh))
+            tip = c + n * (0.15 + 0.012 * (ci % 2)) + Vector((0, 0, zh))
             if hook:
                 ho = bpy.data.objects.new(f"{name}_hook{ri}_{ci}", hme)
                 bpy.context.scene.collection.objects.link(ho)
@@ -535,12 +535,12 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
                 t = bpy.data.objects.new(f"{name}_tag{ri}_{ci}", tme)
                 bpy.context.scene.collection.objects.link(t)
                 side = rr.choice((-1, 1)) * rr.uniform(0.015, 0.04)
-                t.matrix_world = (Matrix.Translation(tip + u * side + Vector((0, 0, 0.002)))
-                                  @ Matrix.Rotation(yaw + rr.uniform(-0.25, 0.25), 4, "Z"))
+                t.matrix_world = (Matrix.Translation(tip + u * side - n * rr.choice((0, 0.018)) + Vector((0, 0, 0.002)))
+                                  @ Matrix.Rotation(yaw + rr.uniform(-0.61, 0.61), 4, "Z") @ Matrix.Scale(rr.uniform(0.75, 1.25), 4))
                 st = bpy.data.objects.new(f"{name}_tagstring{ri}_{ci}", _TAG["string"])
                 bpy.context.scene.collection.objects.link(st)
                 st.matrix_world = t.matrix_world
-            s0 += w + rr.uniform(0.03, 0.07)
+            s0 += w * rr.uniform(0.81, 0.92)
             ci += 1
     return out
 
@@ -558,6 +558,18 @@ def shelf_bags(name, origin, u, n, length, z, seed, depth=0.36):
     pal = Palette(seed)
     rr = random.Random(seed + 3)
     s0, ci = 0.05, 0
+    if name == "hero_shelf_lo":
+        wrap = M["stock_wrap"]
+        for stack, turn in enumerate((-0.05, 0.06)):
+            for layer in range(2):
+                pt = Vector(origin) + u * (0.24 + 0.37 * stack) + n * (depth / 2 + 0.03)
+                pt.z = z + 0.041 + 0.08 * layer
+                angle = yaw_s + turn + 0.025 * layer
+                box(f"folded stock {stack} {layer}", (0.32, 0.24, 0.068), pt, M["poly_bag"],
+                    bevel=0.018, rot=(0, 0, angle))
+                box(f"clear sleeve {stack} {layer}", (0.335, 0.253, 0.079), pt, wrap,
+                    bevel=0.021, rot=(0, 0, angle))
+        s0 = 0.83
     while True:
         model, col = pal.pick(0, ci)
         sc = rr.uniform(0.95, 1.05)
@@ -656,6 +668,34 @@ def crate_stack(name, x, y, turn, n, seed):
 
 
 # ---------------------------------------------------------------- the hero stall
+def stock_cartons(name, x, y, *, open_top=False):
+    """Blank corrugated cartons with one open mouth where the stallholder unpacks stock."""
+    kraft = M["stock_kraft"]
+    base_z = 0.007
+    dims = ((0.50, 0.40, 0.34), (0.45, 0.35, 0.30), (0.40, 0.32, 0.28))
+    for i, (w, d, h) in enumerate(dims):
+        cx, cy = x + 0.012 * i, y - 0.01 * i
+        yaw = math.radians(12 if i == 2 else -4 * i)
+        label = f"{name} {i}"
+        if i == 2 and open_top:
+            transform = Matrix.Translation((cx, cy, base_z)) @ Matrix.Rotation(yaw, 4, "Z")
+            for side in (-1, 1):
+                for axis in ("long", "end"):
+                    dims_wall = (w, 0.004, h) if axis == "long" else (0.004, d, h)
+                    at = (0, side*d/2, h/2) if axis == "long" else (side*w/2, 0, h/2)
+                    wall = box(f"{label} {axis} {side}", dims_wall, (0, 0, 0), kraft, bevel=0.001)
+                    wall.matrix_world = transform @ Matrix.Translation(at)
+                angle = math.radians(30 if side > 0 else 67) * side
+                flap = box(f"{label} flap {side}", (w, d/2, 0.004), (0, 0, 0), kraft, bevel=0.001)
+                flap.matrix_world = (transform @ Matrix.Translation((0, side*d/2, h))
+                                     @ Matrix.Rotation(angle, 4, "X") @ Matrix.Translation((0, side*d/4, 0)))
+        else:
+            box(label, (w, d, h), (cx, cy, base_z+h/2), kraft, bevel=0.005, rot=(0, 0, yaw))
+            box(label+" closure", (w-0.005, 0.022, 0.001), (cx, cy, base_z+h+0.0005),
+                M["packing"], bevel=0.0004, rot=(0, 0, yaw))
+        base_z += h + 0.001
+
+
 def hero_stall():
     y0, y1 = HERO
     xb = LANE + DEPTH
@@ -669,7 +709,7 @@ def hero_stall():
     for i, (nm, o, u, n, L) in enumerate(walls):
         grid_panel(f"hero_grid_{nm}", o, u, n, L, 0.15 if nm != "back" else 0.9, 2.72)
         rows = rows_hi + ([1.30] if nm != "back" else [])
-        hang_wall(f"hero_{nm}", o, u, n, L, rows, seed=11 + i * 7, tags=0.7)
+        hang_wall(f"hero_{nm}", o, u, n, L, rows, seed=11 + i * 7, tags=0.4)
     # the back wall's lower part: two shelves of standing bags
     o, u, n = walls[0][1], walls[0][2], walls[0][3]
     shelf_bags("hero_shelf_hi", o, u, n, y1 - y0 - 0.12, 0.86, 41)
@@ -701,6 +741,16 @@ def hero_stall():
     spill.visible_camera = False
     LIGHTS["stall_spill"] = spill
     # the floor of the stall: two crates of stock by the back corner, a stool for the stallholder
+    stock_cartons("alley stock", 2.0, 3.80, open_top=True)
+    stock_cartons("shutter stock left", 1.84, 1.90)
+    stock_cartons("shutter stock right", 2.42, 1.87)
+    stock_light = sk.area_light("half shutter stock light", (2.2, 1.53, 1.25), (0.6, 0.4), 7,
+                                (0.72, 0.81, 1.0), spread_deg=100)
+    stock_light.rotation_euler = Vector((0.12, 0.38, -0.60)).to_track_quat("-Z", "Y").to_euler()
+    stock_light.visible_camera = stock_light.visible_glossy = False
+    curve("stock reach pole", [(2.27, y1 - 0.23, 0.016), (2.48, y1 - 0.09, 1.71),
+                              (2.51, y1 - 0.09, 1.78), (2.56, y1 - 0.09, 1.80),
+                              (2.58, y1 - 0.09, 1.74)], 0.009, M["steel_bare"])
     crate_stack("hero_crates", 2.75, y0 + 0.32, 0, 2, 5)
     stool()
     # cables: the ceiling battens' leads to a junction box on the front post, a lead down the post to the counter
@@ -725,7 +775,7 @@ def counter():
     span_box("counter_top", x0 - 0.02, x1 + 0.02, y0 - 0.02, y1 + 0.02, top - 0.035, top, M["counter_top"], bevel=0.005)
     # a steel edge band along the lane face, scuffed by bags
     span_box("counter_band", x0 - 0.024, x0 - 0.018, y0, y1, top - 0.05, top - 0.004, M["steel_bare"])
-    for i, (yy, model, colour) in enumerate(((y0 + 0.19, "handbag-shoulder", 2), (y1 - 0.20, "handbag-tote", 7))):
+    for i, (yy, model, colour) in enumerate(((y0 + 0.19, "handbag-shoulder", 2), (y1 - 0.20, "handbag-tote", 5))):
         anchor = Vector((x0 - 0.062, yy, top - 0.082))
         curve(f"counter hook {i}", [(x0, yy, top - 0.026), (x0 - 0.045, yy, top - 0.026),
                                     (anchor.x + 0.012, yy, anchor.z - 0.006), anchor], 0.003, M["steel_bare"])
@@ -756,7 +806,7 @@ def counter():
     for i in range(5):
         rot = 0.12 + 0.029 * i
         box(f"folded_carrier_{i}", (0.22 + 0.003 * i, 0.15, 0.0018),
-                      (x0 + 0.15 + i * 0.001, y0 + 0.34 + i * 0.002, top + i * 0.0022 + 0.001),
+                      (x0 + 0.15 + i * 0.001, y0 + 0.19 + i * 0.002, top + i * 0.0022 + 0.001),
                       M["poly_bag"], bevel=0.0008, rot=(0, 0, rot))
     for i in range(5):
         box(f"counter_tag{i}", (0.034, 0.052, 0.0006), (x0 + 0.33 + i * 0.006, y0 + 0.42 + i * 0.004, top + 0.0004 + i * 0.0007),
