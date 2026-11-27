@@ -46,9 +46,11 @@ D_TOP = 0.753
 D_WIN = dict(cx=3.3, w=1.66, z0=0.78, z1=2.24, mullion=0.1)
 D_END_WIN = dict(cy=1.25, w=1.2, z0=0.86, z1=2.24)   # in the foot-end (-X) wall: the street light's way in
                                                      # (a cottage sash: short lower sash, tall upper one)
-HEAD_CHAIR = (4.1, 0.02, 180.0 + 8.0)    # the father's chair: set back from the head (front feet ~11 cm past the
+HEAD_CHAIR = (4.1, -0.03, 180.0 + 8.0)   # the father's chair: set back from the head (front feet ~11 cm past the
                                          # table's end), turned a little; ~0.6 m of air behind it so its striped
-                                         # shadow on the end wall stands well off the chair, in the wide too
+                                         # shadow on the end wall stands well off the chair, in the wide too. 5 cm
+                                         # toward -Y from round 2: in the wide its right stile and top rail now
+                                         # overlap the lit patch's left edge
 CHAIR_RAIL = 0.84
 RUG = (2.495, 0.0, 2.39, 1.9)            # centre x, y, length, width: the side and foot chairs on it, the head chair
                                          # wholly off it on the oak (its front feet ~12 cm past the rug's end)
@@ -220,8 +222,12 @@ def materials():
     mt.pbr("shade_inside", (0.55, 0.54, 0.5), rough=(0.5, 0.6), nscale=10.0)
     mt.pbr("bulb_off", (0.6, 0.6, 0.58), rough=(0.25, 0.35), nscale=10.0, spec=0.6)
     mt.ceramic("mug", (0.15, 0.17, 0.19))                  # a slate glaze
-    mt.ceramic("bowl", (0.4, 0.39, 0.36), rough=0.3, speck=0.6)
+    # the dining bowl: a darker, matter stoneware (round 2's pale glaze rimmed at 150/255, a second subject beside
+    # the head chair); the candles take their own wax
+    mt.ceramic("bowl", (0.2, 0.195, 0.18), rough=0.5, speck=0.6)
+    mt.plastic("wax", (0.42, 0.41, 0.37), rough=0.6, spec=0.35)
     mt.ceramic("jar", (0.12, 0.14, 0.13), rough=0.22)
+    mt.enamel("fridge", (0.45, 0.45, 0.43), rough=0.35, grime=0.2)    # satin off-white enamel
     mt.liquid("coffee")
     mt.paper("envelope", (0.37, 0.345, 0.3))               # matt, warm, value ~0.35: it no longer flares under the screen
     mt.paper("envelope_kraft", (0.3, 0.225, 0.14))
@@ -576,7 +582,9 @@ def kitchen():
         box(f"k_tapLever{s}", (0.012, 0.06, 0.01), (fx + dx, fy - 0.03, COUNTER_TOP + 0.055), M["chrome"], bevel=0.004)
     # a folded towel on the counter edge, and a dish rack with two plates drying beside the sink
     box("k_towel", (0.22, 0.13, 0.022), (sink_x[1] + 0.2, yfront + 0.1, COUNTER_TOP + 0.011), M["towel"], bevel=0.008)
-    dish_rack((sink_x[1] + RACK_DX, y1 - 0.26, COUNTER_TOP), turn_deg=-4.0)
+    # the rack stands left of the sink, just out of the kitchen frame: on the right its plates rose behind Dawn's
+    # shoulder and touched its contour, a lump growing out of her
+    dish_rack((sink_x[0] - RACK_DX, y1 - 0.26, COUNTER_TOP), turn_deg=4.0)
     # range: white enamel body, black glass oven door, a back guard, four burner grates and a kettle
     rx0, rx1 = range_x
     rxc = (rx0 + rx1) / 2
@@ -623,8 +631,9 @@ def kitchen():
                    knob=((xb - 0.04) if k % 2 == 0 else (xa + 0.04), up0 + 0.06))
     for i, (a, b) in enumerate(((cx0, wx0 - 0.02), (wx1 + 0.02, cx1))):
         box(f"k_upperCrown{i}", (b - a + 0.03, ud + 0.03, 0.04), ((a + b) / 2, y1 - (ud + 0.03) / 2, up1 + 0.02), M["k_cab"], bevel=0.006)
-    # light switch plate by the doorway side
-    box("k_switch", (0.075, 0.008, 0.115), (R["x1"] - 0.6, y1 - 0.004, 1.2), M["trim"], bevel=0.003)
+    # light switch plate on the right-hand wall, past the fridge
+    box("k_switch", (0.008, 0.075, 0.115), (R["x1"] - 0.004, y1 - 1.05, 1.2), M["trim"], bevel=0.003)
+    fridge()
     # the rest of the counter: a paper-towel stand at the end of the run, a bowl of fruit, a utensil crock by the range
     paper_towel((cx1 - PT_DX, y1 - 0.16, COUNTER_TOP))
     fruit_bowl((cx1 - BOWL_DX, y1 - 0.3, COUNTER_TOP))
@@ -636,7 +645,7 @@ def kitchen():
             M["frame_wood"], rot=(0, a, 0), verts=10)
 
 
-RACK_DX = 0.27     # dish rack centre, right of the sink
+RACK_DX = 0.36     # dish rack centre, left of the sink
 PT_DX = 0.14       # paper towel stand, in from the end of the counter run
 BOWL_DX = 0.48     # fruit bowl, in from the end of the counter run
 
@@ -733,9 +742,35 @@ def paper_towel(loc):
     cyl("k_ptRod", 0.006, 0.33, (x, y, z + 0.012 + 0.165), M["chrome"], verts=12)
     lathe("k_ptRoll", [(0.022, 0.0), (0.064, 0.0), (0.066, 0.004), (0.066, 0.276), (0.064, 0.28), (0.022, 0.28)],
           (x, y, z + 0.016), M["towel_paper"], segs=48)
-    cyl("k_ptKnob", 0.011, 0.016, (x, y, z + 0.012 + 0.33 + 0.008), M["chrome"], verts=16, bevel=0.003)
+    # a dark bronze knob (a bright chrome one over the pale roll read as a lit pillar candle)
+    cyl("k_ptKnob", 0.011, 0.016, (x, y, z + 0.012 + 0.33 + 0.008), M["bronze_shade"], verts=16, bevel=0.003)
     # the torn edge of the last sheet hanging a little loose
     box("k_ptSheet", (0.11, 0.0015, 0.12), (x + 0.02, y - 0.067, z + 0.016 + 0.08), M["towel_paper"], rot=(0.06, 0, 0.12))
+
+
+FRIDGE = dict(x0=K["x1"] - 0.8, x1=K["x1"] - 0.05, d=0.7, h=1.75, split=1.2)
+
+
+def fridge():
+    """A top-freezer refrigerator in the slot at the end of the counter run (round 2's right third was a dead black
+    wall): satin off-white enamel, the freezer door over the fresh-food door with a shadow gap between them, vertical
+    bar handles on the counter side that catch the screen's cool spill, a dark toe grille. No badge, no display."""
+    x0, x1, h, zs = FRIDGE["x0"], FRIDGE["x1"], FRIDGE["h"], FRIDGE["split"]
+    y1 = K["y1"] - 0.02
+    yd = y1 - FRIDGE["d"]                 # the doors' front face
+    xc, w = (x0 + x1) / 2, x1 - x0
+    fm = M["fridge"]
+    box("k_fridge", (w, y1 - yd - 0.05, h - 0.01), (xc, (yd + 0.05 + y1) / 2, (h - 0.01) / 2), fm, bevel=0.02)
+    box("k_frzDoor", (w - 0.004, 0.05, h - zs - 0.006), (xc, yd + 0.025, (zs + h - 0.006) / 2), fm, bevel=0.018)
+    box("k_ffDoor", (w - 0.004, 0.05, zs - 0.006 - 0.1), (xc, yd + 0.025, (0.1 + zs - 0.006) / 2), fm, bevel=0.018)
+    box("k_fGap", (w - 0.03, 0.03, 0.01), (xc, yd + 0.035, zs - 0.003), M["enamel_black"])
+    box("k_fGrille", (w - 0.06, 0.02, 0.085), (xc, yd + 0.06, 0.05), M["grate"], bevel=0.004)
+    hx = x0 + 0.055
+    for nm, za, zb in (("frz", zs + 0.06, zs + 0.38), ("ff", zs - 0.46, zs - 0.07)):
+        cyl(f"k_fHandle_{nm}", 0.012, zb - za, (hx, yd - 0.04, (za + zb) / 2), M["steel_sink"], verts=20, bevel=0.003)
+        for k, zz in enumerate((za + 0.02, zb - 0.02)):
+            box(f"k_fStand_{nm}{k}", (0.018, 0.04, 0.022), (hx, yd - 0.02, zz), M["steel_sink"], bevel=0.005)
+    return (xc, yd, h)
 
 
 def fruit_bowl(loc):
@@ -999,7 +1034,7 @@ def dining():
     rg.modifiers["bevel"].segments = 2
     lathe("d_bowl", [(0.0, 0.0), (0.05, 0.0), (0.06, 0.004), (0.1, 0.03), (0.135, 0.062), (0.14, 0.068), (0.136, 0.07),
                      (0.13, 0.064), (0.095, 0.034), (0.055, 0.012), (0.0, 0.01)], (DT[0] - 0.42, DT[1] - 0.04, D_TOP), M["bowl"], segs=64)
-    # sideboard on the -Y wall, a lidded jar and a pair of candlesticks; a dark framed picture above
+    # sideboard on the -Y wall, an open vase and a pair of candlesticks; a dark framed picture above
     sx, sy = 2.7, y0 + 0.24
     box("d_sb_body", (1.5, 0.44, 0.7), (sx, sy, 0.14 + 0.35), M["sideboard"], bevel=0.006)
     box("d_sb_top", (1.56, 0.48, 0.03), (sx, sy + 0.01, 0.855), M["sideboard"], bevel=0.008)
@@ -1011,14 +1046,15 @@ def dining():
     for i, (a, b) in enumerate(((sx - 0.74, sx - 0.25), (sx - 0.245, sx + 0.245), (sx + 0.25, sx + 0.74))):
         shaker(f"d_sb_drw{i}", a, b, 0.66, 0.83, fy, M["sideboard"], rails=0.03, knob=((a + b) / 2, 0.745), knob_m=M["brass"], normal=1)
         shaker(f"d_sb_door{i}", a, b, 0.15, 0.655, fy, M["sideboard"], rails=0.06, knob=((a + b) / 2, 0.6), knob_m=M["brass"], normal=1)
-    lathe("d_jar", [(0.0, 0.0), (0.05, 0.0), (0.075, 0.04), (0.085, 0.12), (0.07, 0.2), (0.045, 0.23), (0.045, 0.245), (0.0, 0.245)],
-          (sx + 0.45, sy, 0.87), M["jar"], segs=48)
-    lathe("d_jarLid", [(0.0, 0.0), (0.052, 0.0), (0.052, 0.012), (0.02, 0.025), (0.016, 0.045), (0.0, 0.05)], (sx + 0.45, sy, 0.87 + 0.245),
-          M["jar"], segs=48)
+    # a low, wide-mouthed open vase, empty (round 2's lidded jar read as an urn in the chapter of Gene Hunt's death,
+    # which the film has no source for); its lip at 1.02 m, well under the close-up's top edge
+    lathe("d_vase", [(0.0, 0.0), (0.045, 0.0), (0.05, 0.006), (0.062, 0.04), (0.066, 0.075), (0.058, 0.11), (0.064, 0.135),
+                     (0.078, 0.15), (0.074, 0.152), (0.059, 0.138), (0.052, 0.112), (0.059, 0.075), (0.055, 0.04), (0.04, 0.012),
+                     (0.0, 0.01)], (sx + 0.45, sy, 0.87), M["jar"], segs=48)
     for i, dx in enumerate((-0.45, -0.25)):
         lathe(f"d_candle{i}", [(0.0, 0.0), (0.045, 0.0), (0.045, 0.01), (0.02, 0.025), (0.012, 0.06), (0.016, 0.1), (0.011, 0.2),
                                (0.02, 0.24), (0.02, 0.25), (0.0, 0.25)], (sx + dx, sy, 0.87), M["brass"], segs=32)
-        cyl(f"d_candleWax{i}", 0.011, 0.16, (sx + dx, sy, 0.87 + 0.25 + 0.08), M["bowl"], verts=16)
+        cyl(f"d_candleWax{i}", 0.011, 0.16, (sx + dx, sy, 0.87 + 0.25 + 0.08), M["wax"], verts=16)
     fx0, fz = sx, 1.62
     for nm, s, l in (("T", (0.92, 0.04, 0.05), (fx0, y0 + 0.02, fz + 0.335)), ("B", (0.92, 0.04, 0.05), (fx0, y0 + 0.02, fz - 0.335)),
                      ("L", (0.05, 0.04, 0.72), (fx0 - 0.435, y0 + 0.02, fz)), ("R", (0.05, 0.04, 0.72), (fx0 + 0.435, y0 + 0.02, fz))):
@@ -1037,6 +1073,21 @@ def dining_table():
     # rule the top
     mt.tune_prop(t, spec=0.32, rough_floor=0.38, top_wood=((0.09, 0.045, 0.025), (0.06, 0.03, 0.017), 110.0),
                  seam=0.3, tone=(0.93, 1.06), late_k=0.45)
+    # a family table, not barn timber: the prop's baked cracks and checks (its normal map) cut to a third, and a
+    # satin clear coat so the blind's stripes leave a soft gleam along the top
+    for o in t.children_recursive:
+        if o.type != "MESH":
+            continue
+        for slot in o.material_slots:
+            m = slot.material
+            if not (m and m.use_nodes):
+                continue
+            for n in m.node_tree.nodes:
+                if n.type == "NORMAL_MAP":
+                    n.inputs["Strength"].default_value = 0.35
+                elif n.type == "BSDF_PRINCIPLED":
+                    n.inputs["Coat Weight"].default_value = 0.25
+                    n.inputs["Coat Roughness"].default_value = 0.25
     # a flag under the top at the foot end, seen by nothing but shadow rays: the street light through the end
     # blind's lowest gaps ran under the table and fell as a lone, crisp, unstriped patch on the rug by the near
     # head-end leg (in the wide, and as a sliver under the table in the close-up)
@@ -1047,14 +1098,17 @@ def dining_table():
 
 
 # chairs round the dining table: (name, x, y, turn); the native chair faces +X. The far-side pair and the foot
-# chair are pushed in (seats under the top, the pair between the table's legs); on the near side one chair is pushed
-# in toward the foot and its partner stands against the far wall in the corner by the foot, so nothing on the near side
-# stands between the wide camera and the head. Only the father's chair at the head is pulled out: it stands apart
+# chair are pushed in (seats under the top, the pair between the table's legs); the near side's chair stands against
+# the far wall in the corner by the foot, so nothing on the near side stands between the wide camera and the head.
+# Only the father's chair at the head is pulled out: it stands apart
 DINING_CHAIRS = [
     ("chair_foot", 1.72, -0.02, 0.0),
     ("chair_s1", 2.48, 0.5, -90.0), ("chair_s2", 3.12, 0.5, -90.0),
-    ("chair_n1", 1.55, 1.93, -90.0), ("chair_n2", 2.42, -0.42, 90.0),
+    ("chair_n1", 1.55, 1.93, -90.0),
 ]
+# (round 2's near-side chair_n2, at (2.42, -0.42), is gone: its dark back was the biggest shape in the wide, cut by the
+# bottom edge, and its top rail cut the table top in two on the way to the head chair. Pushed in further toward the
+# foot it would have stood through the table's near leg at (2.09, -0.33), so the near side now stays clear)
 
 
 def chair_feet(holder):
@@ -1118,7 +1172,12 @@ def dining_chairs():
     hx, hy, ht = HEAD_CHAIR
     c = dining_chair("chair_head", hx, hy, ht)
     a = math.radians(ht)
-    mt.satin_wood(c, (hx, hy), (math.cos(a), math.sin(a)))
+    # the same walnut a shade lighter (the set's chairs are one wood, worn differently): the street light's stripes
+    # read across its seat and back
+    mt.satin_wood(c, (hx, hy), (math.cos(a), math.sin(a)), rgb=tuple(v * HEAD_WOOD for v in (0.07, 0.035, 0.02)))
     contact_shadows(c)
     out.append(c)
     return out
+
+
+HEAD_WOOD = 1.15

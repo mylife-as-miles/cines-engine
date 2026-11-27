@@ -4,15 +4,18 @@ Fluorescent Noir, at home: no fluorescent tube burns here; each room is lit by o
 Two rooms, side by side and closed (home_set.py):
   kitchen  Ch 02. The round kitchen table with a laptop open on it, its blank screen the only light in the room; Dawn
            seated reading the email, forearms on the table, a finger on the trackpad, head bowed to the glow; a mug,
-           the mail, a pen and a phone. Behind her the counter, the sink and a double-hung window onto the night.
+           the mail, a pen and a phone. Behind her the counter, the sink and a double-hung window onto the night,
+           and the fridge at the end of the run, its door edge and handles catching the screen's cool spill.
   dining   Ch 10. The dining table with chairs round it, the one at the head empty, set back and turned a little; a
            street light outside the foot-end window runs the venetian blind's stripes down the table onto the empty
            chair and throws its striped shadow on the wall behind it; the blinds of the side windows glow; the
            pendant over the table is off. Everything still.
 
 Light: the kitchen has the laptop screen (an emissive face plus an area light the size of the screen just in
-front of it), the night through the window and a low under-cabinet night light; the dining room two far street
-lights (small spots, so the slats cut clean stripes) and the sky's glow at the side windows. Area lights are
+front of it, and its spill toward the fridge), the night through the window and a low under-cabinet night light;
+the dining room two far street lights (small spots, so the slats cut clean stripes: the foot-end one down the table
+and onto the head chair's back, the side one on the boards round its feet), a twin of the foot-end one that lights
+only the head chair, and the sky's glow at the side windows. Area lights are
 hidden from camera rays, so the windows show the night backdrop itself.
 
     <bpy python> -I scenes/shoot.py -- home <cam> out.png [--nocast]
@@ -75,8 +78,10 @@ CAMERAS = {
 }
 TRIMS = {
     "kitchen": {},
-    "dining": {},
-    "chair": {"d_sky": 1.4, "d_sky_end": 0.375},    # the close-up keeps round 1's foot-end glow (36 W)
+    "dining": {"d_sky": 0.6},                         # less side-window glow on the end wall beside the head chair
+    # the close-up keeps round 1's foot-end glow (36 W); its floor stripes round the feet and the chair's own share
+    # of the street light a little stronger than in the wide, where they would compete with the end-wall patch
+    "chair": {"d_sky": 1.4, "d_sky_end": 0.375, "street_side": 1.5, "street_hero": 1.4},
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
@@ -146,6 +151,16 @@ def cloth(ob, rough=0.8, bump=0.22):
         bp.inputs["Distance"].default_value = 0.0004
         nt.links.new(nz.outputs["Fac"], bp.inputs["Height"])
         nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
+        # under the weave, soft broad folds so the cotton does not read as a moulded shell
+        fz = nt.nodes.new("ShaderNodeTexNoise")
+        fz.inputs["Scale"].default_value = 6.0
+        fz.inputs["Detail"].default_value = 2.0
+        nt.links.new(tc.outputs["Object"], fz.inputs["Vector"])
+        fb = nt.nodes.new("ShaderNodeBump")
+        fb.inputs["Strength"].default_value = 0.12
+        fb.inputs["Distance"].default_value = 0.004
+        nt.links.new(fz.outputs["Fac"], fb.inputs["Height"])
+        nt.links.new(fb.outputs["Normal"], bp.inputs["Normal"])
 
 
 def hide_under_trousers(h, cas, shirt_idx, reach=0.03):
@@ -282,9 +297,17 @@ UPPER = {"chest": (16, 0), "neck": (8, 0), "head": (17, 3), "fingers": 12}     #
 # outer joints) in degrees. The master alone only tips a straight finger down at the knuckle (a mitten); the joints
 # curl it. The right index reaches ahead for the trackpad, the others curl under it, the thumb tucks in; the left
 # hand lies loosely curled on the palm rest
-CURL = {"R": {"f_index": (8, 5), "f_middle": (11, 12), "f_ring": (12, 14), "f_pinky": (13, 16), "thumb": (0, 16)},
+CURL = {"R": {"f_index": (8, 10), "f_middle": (12, 14), "f_ring": (13, 16), "f_pinky": (14, 18), "thumb": (0, 12)},
         "L": {"f_index": (11, 10), "f_middle": (12, 12), "f_ring": (13, 14), "f_pinky": (14, 16), "thumb": (0, 10)}}
-PITCH_MIN = -28.0          # the hand tips up at the wrist no further than this; past it the wrist rises instead
+# each hand's wrist: x out from the chair's centre line, the wrist bone's height over the table top, and the hand's
+# starting tip down from the forearm. Round 2's right wrist sat 52 mm up and the clearance loop cocked the hand 28 deg
+# up off the deck with the fingers straight (it read as waving at the screen): now the right wrist rests low, just
+# off the laptop's front edge, the hand tipped down onto the trackpad with the fingers curled, and if the fingers
+# still touch the deck the wrist rises rather than the hand cocking back
+HANDS = {"R": dict(wx=-0.075, wz=0.0395, pitch=5.0), "L": dict(wx=0.12, wz=0.045, pitch=1.0)}
+PITCH_MIN = -10.0          # the hand tips up at the wrist no further than this (a resting hand's arch over its
+                           # curled fingers); past it the wrist rises instead
+PAD_AHEAD = 0.02           # the trackpad's centre this far past the hand bone's tip: the palm's heel on the front edge
 
 
 def curl_fingers(holder):
@@ -362,10 +385,54 @@ def chair_back_y(z, cy):
     return cy + k * (0.203 + (0.261 - 0.203) * (zz / k - 0.55) / 0.37)
 
 
+def _knuckle(rig, finger, k):
+    pb = rig.pose.bones
+    for n in (f"DEF-{finger}.01.{k}", f"ORG-{finger}.01.{k}", f"{finger}.01.{k}", f"{finger}.01_master.{k}"):
+        if n in pb:
+            return rig.matrix_world @ pb[n].head
+    return None
+
+
+PALM_TILT = 15.0           # a resting hand leans a little onto its little-finger side
+
+
+def palm_down(holder, side):
+    """Turn the forearm about its own axis (pronation) until the hand lies palm down: the line from the index
+    knuckle to the little-finger knuckle runs out to her side, PALM_TILT degrees below level. Aimed by the shortest
+    turn from the rest pose (arms hanging, palms in), a forearm laid along the table keeps its palm facing in, thumb
+    up: round 2's right hand stood on edge facing the screen, its fingertips stacked 76 mm from index to little
+    finger, which read as waving. Returns the turn in degrees."""
+    from mathutils import Matrix
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    k = "L" if side > 0 else "R"
+    mw = rig.matrix_world
+    fa = pb[f"forearm_fk.{k}"]
+    a_i, a_p = _knuckle(rig, "f_index", k), _knuckle(rig, "f_pinky", k)
+    if a_i is None or a_p is None:
+        return 0.0
+    axis = (mw.to_3x3() @ (fa.tail - fa.head)).normalized()
+    t = math.radians(PALM_TILT)
+    want = Vector((side * math.cos(t), 0.0, -math.sin(t)))
+    have = a_p - a_i
+    have -= axis * have.dot(axis)
+    want -= axis * want.dot(axis)
+    if have.length < 1e-6 or want.length < 1e-6:
+        return 0.0
+    have.normalize()
+    want.normalize()
+    ang = math.atan2(have.cross(want).dot(axis), have.dot(want))
+    ax_arm = (mw.to_3x3().inverted() @ axis).normalized()
+    head = fa.matrix.translation.copy()
+    fa.matrix = Matrix.Translation(head) @ Matrix.Rotation(ang, 4, ax_arm) @ Matrix.Translation(-head) @ fa.matrix
+    bpy.context.view_layer.update()
+    return math.degrees(ang)
+
+
 def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
     """Aim one arm: the upper arm at the elbow target (the elbow lands one upper-arm length from the shoulder along
-    that line), the forearm at the wrist target, the hand on along the forearm tipped down `hand_pitch` degrees.
-    Targets are world points; returns the world elbow, wrist and hand tip."""
+    that line), the forearm at the wrist target and turned palm down, the hand on along the forearm tipped down
+    `hand_pitch` degrees. Targets are world points; returns the world elbow, wrist and hand tip."""
     rig = rigged.rig_of(holder)
     pb = rig.pose.bones
     k = "L" if side > 0 else "R"
@@ -375,6 +442,8 @@ def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
     rigged._aim(rig, f"upper_arm_fk.{k}", inv @ (Vector(elbow_t) - s))
     e = mw @ pb[f"forearm_fk.{k}"].head
     rigged._aim(rig, f"forearm_fk.{k}", inv @ (Vector(wrist_t) - e))
+    for _ in range(2):
+        palm_down(holder, side)
     w = mw @ pb[f"hand_fk.{k}"].head
     fd = (w - e).normalized()
     hd = (fd - Vector((0, 0, math.tan(math.radians(hand_pitch))))).normalized()
@@ -422,35 +491,41 @@ def arms_on_table(holder):
         dy = math.sqrt(max(0.0, l1 * l1 - 0.02 ** 2 - dz * dz))
         ey = s.y - dy
         # the forearms lie along the top and converge: the right hand to the trackpad, the left to the palm rest
-        wx = cx + (0.085 if side > 0 else -0.075)
+        hp = HANDS[k]
+        wx = cx + hp["wx"]
         wy = ey - math.sqrt(max(0.0, l2 * l2 - (wx - s.x) ** 2)) * 0.98
-        e, w, tip = arm_to(holder, side, (s.x + side * 0.02, ey, ez), (wx, wy, K_TOP + 0.052), hand_pitch=3.0 if side < 0 else 1.0)
+        wz = K_TOP + hp["wz"]
+        e, w, tip = arm_to(holder, side, (s.x + side * 0.02, ey, ez), (wx, wy, wz), hand_pitch=hp["pitch"])
         edge = math.sqrt(max(0.0, r_top ** 2 - (e.x - tx) ** 2)) + ty
         print(f"HOME arm {k}: shoulder {tuple(round(v, 3) for v in s)}, elbow {tuple(round(v, 3) for v in e)} "
               f"(table edge at y {edge:.3f}), wrist {tuple(round(v, 3) for v in w)}, tip {tuple(round(v, 3) for v in tip)}", flush=True)
-        out[k] = (e, w, tip, (s.x + side * 0.02, ey, ez), (wx, wy, K_TOP + 0.052))
-    # the hands rest on the laptop (top at K_TOP + 0.0175): tip each hand up until its lowest finger just clears it
+        out[k] = (e, w, tip, (s.x + side * 0.02, ey, ez), (wx, wy, wz))
+    # the hands rest on the laptop (top at K_TOP + 0.0175): tip each hand until its lowest finger just clears it
     body = bpy.data.objects[holder["body"]]
-    mid = (out["L"][1].x + out["R"][1].x) / 2
     curl_fingers(holder)
+    # Start with the hand arched (tipped up PITCH_MIN over its curled fingers) and the wrist at its low target: if the
+    # fingers still meet the deck the wrist rises; if they float, the hand tips down onto it
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
-        pitch = 3.0 if side < 0 else 1.0
-        for it in range(10):
+        pitch = PITCH_MIN
+        other = "L" if k == "R" else "R"
+        for it in range(12):
             e, w, tip = arm_to(holder, side, et, wt, hand_pitch=pitch)
+            # this hand's points only: nearer its own hand bone than the other's (round 2 split the hands at the
+            # midline between the wrists, and the converging left hand's fingers, over the line, held the right
+            # hand up)
+            ot = mw @ pb[f"hand_fk.{other}"].tail
             pts = [p for p in body_points(holder, only=body)
-                   if (p - tip).length < 0.13 and p.y < w.y - 0.03 and (p.x - mid) * side > 0]
+                   if (p - tip).length < 0.13 and p.y < w.y - 0.03 and (p - tip).length < (p - ot).length]
             low = min((p.z for p in pts), default=K_TOP + 0.05) - (K_TOP + 0.0175)
             print(f"HOME hand {k} it {it}: pitch {pitch:+.1f} wrist +{(wt[2] - K_TOP) * 1000:.0f} mm, lowest finger "
                   f"{low * 1000:+.1f} mm over the laptop", flush=True)
             if 0.0015 < low < 0.007:
                 break
-            nxt = pitch + math.degrees((low - 0.004) / 0.09)
-            if nxt < PITCH_MIN:            # curled fingers: lift the wrist rather than cock the hand back
-                pitch = PITCH_MIN
-                wt = (wt[0], wt[1], wt[2] + max(0.0, 0.004 - low))
+            if low < 0.0015 and pitch <= PITCH_MIN + 1e-6:
+                wt = (wt[0], wt[1], wt[2] + 0.004 - low)       # arched as far as it goes: lift the wrist
             else:
-                pitch = nxt
+                pitch = max(PITCH_MIN, pitch + math.degrees((low - 0.004) / 0.15))
         out[k] = (e, w, tip)
     return out
 
@@ -499,10 +574,11 @@ def table_things(hands):
     tx, ty = KT
     if hands:
         (er, wr, tr), (el, wl, tl) = hands["R"], hands["L"]
-        # the right index finger's pad lands about 5 cm past the hand bone's tip: put the trackpad's centre there.
-        # The laptop is turned 180 deg (its front edge toward +Y, toward her), so its trackpad sits at +0.055 in y
+        # the right hand lies over the trackpad, its heel on the front edge and the curled fingers on the pad: put the
+        # trackpad's centre PAD_AHEAD past the hand bone's tip. The laptop is turned 180 deg (its front edge toward
+        # +Y, toward her), so its trackpad sits at +0.055 in y
         fd = (tr - wr).normalized()
-        pad = tr + fd * 0.045
+        pad = tr + fd * PAD_AHEAD
         tp_off = st.LAP_D / 2 - 0.012 - 0.042
         lx, ly = pad.x, pad.y - tp_off
         front = ly + st.LAP_D / 2
@@ -549,6 +625,24 @@ def screen_light(scr):
 
 
 # ---------------------------------------------------------------- lights
+STREET = dict(d=(0.9, -0.36, -0.27), target=(4.45, 0.0, 0.66), energy=26000.0)
+STREET_CAM = {}            # a camera's own aim for the street light (and its twin): {cam: dict(d=, target=)}
+HERO = 1.3                 # the head chair's twin of the street light, as a share of the street light's energy
+FRIDGE_SPILL = 1.0         # W (6 W lit the whole door to 59/255 graded, as bright as the tile behind her)
+
+
+def _street_xf(d, target):
+    d = Vector(d).normalized()
+    t = Vector(target)
+    loc = t - d * 15.0
+    return loc, (t - loc).to_track_quat("-Z", "Y").to_euler()
+
+
+def street_spot(name, d, target, energy):
+    loc, _ = _street_xf(d, target)
+    return st.spot(name, tuple(loc), tuple(Vector(target)), energy, (0.74, 0.84, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
+
+
 def lights():
     win = st.K_WIN
     y1 = st.K["y1"]
@@ -560,16 +654,31 @@ def lights():
     st.box("k_ucLens", (ux1 - ux0 - 0.1, 0.03, 0.006), ((ux0 + ux1) / 2, y1 - 0.27, 1.657), mt.glow("uc_lens", (1.0, 0.86, 0.68), 2.2))
     li = st.area("k_undercab", ((ux0 + ux1) / 2, y1 - 0.25, 1.648), (ux1 - ux0 - 0.1, 0.04), 3.2, (1.0, 0.86, 0.68), spread=150)
     li.rotation_euler = (0, 0, 0)          # facing straight down
+    # the screen's cool spill carrying to the fridge at the end of the counter run: a small soft source at the
+    # laptop's left, aimed at the fridge's door edge and handles (round 2's right third graded 4/255, a dead void)
+    fr = st.FRIDGE
+    ftarget = (fr["x0"] + 0.04, st.K["y1"] - 0.02 - fr["d"], 1.0)
+    st.area("k_spill_fridge", (KT[0] + 0.25, KT[1] + 0.05, K_TOP + 0.2), (0.25, 0.18), FRIDGE_SPILL, (0.72, 0.82, 1.0),
+            spread=34, aim=ftarget)
     # Ch 10: the street light through the foot-end window, far and small so the slats cut clean stripes: it runs
     # down the table onto the empty chair and throws the chair's striped shadow on the wall behind it
-    d = Vector((0.9, -0.36, -0.27)).normalized()
-    target = Vector((4.45, 0.0, 0.66))
-    st.spot("street", tuple(target - d * 15.0), tuple(target), 26000.0, (0.74, 0.84, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
-    # a second, weaker street light through the side window, steep: the blinds glow and its stripes fall on the floor
-    # and the far chairs between the window and the table, never on the table top (two crossing stripe sets read
-    # as a lattice there)
-    d2 = Vector((0.25, -0.6, -0.76)).normalized()
-    t2 = Vector((3.4, 0.9, 0.0))
+    street_spot("street", STREET["d"], STREET["target"], STREET["energy"])
+    # the head chair's own share of the same light: a twin of the street spot (same place, same blind, same
+    # shadows) that lights nothing but the empty chair, so its back and seat read as the brightest wood in the room
+    # (round 2: the chair's top rail graded 77 against a 76 wall)
+    hero = street_spot("street_hero", STREET["d"], STREET["target"], STREET["energy"] * HERO)
+    rx = bpy.data.collections.new("head_chair_light")
+    for o in bpy.data.objects["chair_head"].children_recursive:
+        if o.type == "MESH":
+            rx.objects.link(o)
+    hero.light_linking.receiver_collection = rx
+    # a second, weaker street light through the side window, steep and nearly square to that wall: the blinds glow
+    # and its stripes fall on the boards round the head chair's feet (the legs stand dark on lit stripes, in the
+    # close-up and in the wide), never on the table top (two crossing stripe sets read as a lattice there; no ray
+    # through this window can reach the top at this angle). Round 2 aimed it at the floor by the far chairs, where
+    # nothing showed it, and the close-up's lower half was murk
+    d2 = Vector((0.12, -0.75, -0.6)).normalized()
+    t2 = Vector((st.HEAD_CHAIR[0] - 0.05, st.HEAD_CHAIR[1] + 0.33, 0.0))
     st.spot("street_side", tuple(t2 - d2 * 15.0), tuple(t2), 15000.0, (0.7, 0.8, 1.0), size_deg=12.0, blend=0.3, radius=0.03)
     dw = st.D_WIN
     # the sky's faint glow through the slats: just enough to keep the room readable
@@ -615,6 +724,11 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * trims.get(n, 1.0)
+    aim = STREET_CAM.get(name, STREET)
+    for n in ("street", "street_hero"):
+        ob = st.LIGHTS.get(n)
+        if ob is not None:
+            ob.location, ob.rotation_euler = _street_xf(aim["d"], aim["target"])
     hz = bpy.data.objects.get("d_haze")
     dens = HAZE.get(name)
     if hz is not None and dens is not None:
