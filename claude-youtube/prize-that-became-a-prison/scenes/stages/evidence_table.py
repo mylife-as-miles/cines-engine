@@ -746,8 +746,35 @@ def entry_stationery():
     empty("fx_tickets", (0.184, -0.061, TOP + 0.002))
 
 
+def seam_paths(scene, resolution):
+    """Project the visible thread left to right, lifting the editorial trace at each handle tab."""
+    hem = bpy.data.objects["tote front hem"]
+    surfaces = [world_bvh(bpy.data.objects[name]) for name in BAGS]
+    eye = scene.camera.matrix_world.translation
+    width, height = resolution
+    paths = []
+    previous = None
+    for spline in reversed(hem.data.splines[:]):
+        for control in reversed(spline.points[:]):
+            point = hem.matrix_world @ Vector(control.co[:3])
+            ray = point - eye
+            # Ignore the leather carrying the stitch itself (its surface is within 0.2 mm).
+            if any(surface.ray_cast(eye, ray.normalized(), ray.length - 0.0007)[0] is not None
+                   for surface in surfaces):
+                previous = None
+                continue
+            if previous is None or (point - previous).length > 0.008:
+                paths.append([])
+            uv = world_to_camera_view(scene, scene.camera, point)
+            paths[-1].append([round(uv.x * width, 3), round((1 - uv.y) * height, 3)])
+            previous = point
+    return [path for path in paths if len(path) >= 2]
+
+
 def frame_metadata(name, scene, resolution):
-    """Export paper corners, clockwise in document reading order, in top-left-origin frame pixels."""
+    """Export compositor coordinates in top-left-origin frame pixels."""
+    if name in ("purses", "seam"):
+        return {**sk.plate_optics(name, scene, resolution), "seam_paths_px": seam_paths(scene, resolution)}
     names = {"page": ("document_single",), "page_foot": ("document_single",),
              "pair": ("document_left", "document_right"), "screen": ("laptop_screen",)}
     if name not in names:
