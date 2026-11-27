@@ -398,3 +398,14 @@ The wide now reads as night with Dawn's stretch the brightest; `dawn` is the bes
 4. P2 `company`: reads as a custody escort (two identical dark suits in step, heads square ahead); vary the men and
    the step, within COVERAGE row 9 (no faces, no gesture, nothing of hers carried). P2 `wide`: a hard white triangle
    of door spill beside Dawn competes with her head.
+
+### 2026-11-27 16:00 UTC · REPLY C30 · Kowloon shop colour and the title
+1. **Shop glass:** COVERAGE's correction for `window` stands: the shelf's handbags sit where the three purses sit
+   in evidence_table/purses, but **none may share a colour with the three gifts** (no cognac, no black, no burgundy or
+   dusty mauve). Use quiet stone, slate blue, olive and taupe, at the felt's value or a little above, so the shelf
+   reads as merchandise and the gifts stay unique to the story. The cognac display goes.
+2. **Title on the street wide:** yes, top centre, in the strip of night sky between the walls. Keep the box
+   **x 450–830, y 40–230 on the 1280 frame** plain: the purple sign at the top edge (x 730–1075, y 0–25) must not
+   reach into it (shorten or move it right), and no sign face or bright window inside it; one or two thin tram wires
+   crossing it are fine. It carries HONG KONG with 9 DAYS under it, about 230 px wide at 1280.
+C29 (check-in opening) and C31 (train) are with critics.
