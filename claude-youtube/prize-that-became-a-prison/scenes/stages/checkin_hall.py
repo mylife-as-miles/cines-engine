@@ -59,7 +59,7 @@ CAMERAS = {
     "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_scale", fstop=5.6,
                   exposure=-2.0, final_res=(2880, 1620)),
     "profile": dict(loc=(5.2, -0.50, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
+    "shoulder": dict(loc=(0.6752, 1.6734, 1.53), aim=(0.2146, -0.2529, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -1408,6 +1408,7 @@ def build(cast=True):
     orig = getattr(sk.render, "_orig", sk.render)
     dawn_meshes = [ob for ob in d.children_recursive if ob.type == "MESH" and ob.visible_camera]
     agent_meshes = [ob for ob in a.children_recursive if ob.type == "MESH" and ob.visible_camera]
+    agent_mark = a.location.copy()
 
     def render(*args, **kwargs):
         cam = bpy.context.scene.camera
@@ -1419,6 +1420,10 @@ def build(cast=True):
         keyboard_flag.hide_render = not profile
         monitor.rotation_euler = profile_aim if profile else monitor_aim
         monitor.data.spread = math.radians(60) if profile else monitor_spread
+        # Pull the foreground shoulder into the reverse. The wide and the
+        # profile keep the physical contact with his keyboard.
+        if name == "shoulder":
+            a.location.x = agent_mark.x + 0.24
         try:
             for ob in hidden:
                 ob.visible_camera = False
@@ -1429,6 +1434,7 @@ def build(cast=True):
             keyboard_flag.hide_render = True
             monitor.rotation_euler = monitor_aim
             monitor.data.spread = monitor_spread
+            a.location = agent_mark
             for ob in hidden:
                 ob.visible_camera = True
     render._orig = orig
