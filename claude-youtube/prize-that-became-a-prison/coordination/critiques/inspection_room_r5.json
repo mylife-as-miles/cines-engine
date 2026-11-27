@@ -1,0 +1,73 @@
+{
+ "stage": "inspection_room",
+ "round": 5,
+ "commit": "1e693ae",
+ "scores": {
+  "composition": 6.5,
+  "lighting": 6.5,
+  "materials": 6,
+  "set_dressing": 6,
+  "grounding_scale": 6,
+  "cast": 5.5,
+  "story_read": 6.5,
+  "technical": 6.5
+ },
+ "pro_level": false,
+ "verdict": "A real step up from round 4, but still not pro level. The two_shot is reframed, Dawn's top now reads as dark cloth against a pale face, the caps sit down at the brow, and the tag is a clean, blank card. Still failing: in profile both caps show the pale back of the skull under the crown, behind a band that does not go round the head. In the overhead, Officer A's white, splayed hand is still the brightest thing in frame and the open duffel only reads if you look for it. The scanner, Officer B's grey shoe and the palm gesture in the wide are unchanged from round 3.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "two_shot (also wide, overhead)",
+   "problem": "Both caps are seated at the front but not round the back. In the raw two_shot the band's lower edge sits on the brow and the peak shades the eyes, as intended. But the band climbs toward the back and stops short of the back of the head. Behind it the pale back of the skull and the sculpted hair show under the crown's rear overhang and meet its underside along a hard horizontal line. For Officer A this is at about x 916-946, y 248-260 (graded 60-100 against a band of 23). For Officer B it is at about x 1090-1128, y 229-242 (raw 54 against a band of 7). Either the skull passes through the rear of the band, or the cap has been pushed forward off the head. Two settings in officer() look responsible: the 1.54 front-back stretch, and the forward `brow` push of up to 0.042 m on the front half. The crowns also run about 1.45x the head's front-to-back length in profile (A 123 px against 83, B 143 against 98). The peaks are paper-thin horizontal blades. The two caps do not match: from overhead A's crown grades 71/255 and in the wide 80, a blue-grey plate, while B's grades 16-25.",
+   "fix": "In inspection_room.officer(), reduce the front-back stretch from 1.54 to about 1.32 and the side scale from 1.18 to about 1.12. Halve the brow push (0.042 to 0.02) and move the whole cap 0.015-0.02 m back, toward the nape, in the head bone's frame. Then fit the band to the head. Take the posed head vertices (body verts weighted over 0.5 to DEF-spine.006, plus the sculpted-hair mesh) and put them in the cap's local space. For each band vertex (crown material, from the band's lower edge up to 0.05 m above it), find the head radius in the same direction (within 10 degrees, same height band). Push the vertex outward in XY until it clears that radius by 5 mm. Taper the same push into the crown, so the crown still overhangs the band by at least 1.5 cm all round. If the rear of the band still rides high, rotate the cap about its front band edge 4-6 degrees so the back drops. Check in a 960x540 two_shot: an unbroken dark band runs from the brow to behind the ear and on to the back of the skull, with no pale skull between band and crown. The front lower edge should sit 1.5-2.5 cm above the brow ridge. Give the peak a Solidify of 3 mm and pitch it 25-30 degrees down from horizontal. Set the crown roughness to 0.8-0.85 with Coat 0, so A's crown grades 45/255 or less from overhead and the two caps match."
+  },
+  {
+   "priority": 2,
+   "camera": "overhead",
+   "problem": "The discovery beat is still led by the wrong thing. Officer A's right hand lies flat and splayed on the tote, fingers straight and thumb out at 45 degrees. It grades 187/255 (raw 193), the brightest thing in the frame, and brighter than Dawn's head (raw 131). The ch05 pose asks for fingers 35 and hands_stone(value=0.22), but neither shows on this hand. Dawn's left hand is a pale claw at 123/255. Pale fingers of Officer A's behind-the-back hand poke out at x 655-682, y 112-128. Of the graded frame, 23% is at 3/255 or below, and the floor 1.5 m from the bench is at 3-4.",
+   "fix": "Print the vertex count hands_stone() returns for each figure, and the resolved Base Color on the hand. If the mix's A input reads a default_value while the stone colour actually arrives through a link, take A from that link instead. For this camera set the hand value to 0.14. For the ch05 reach hand, curl the fingers 55-60 degrees, wrap them over the tote's handle with the thumb under it, and lift the wrist 2 cm, so the hand reads as a grip and not a print. Tuck the behind-back hand 4 cm in toward the spine. Lift the floor with a 6-10 W area light, 2 m square, linked to the floor only, or cut this camera's vignette by about 40%, so the tile 1.5 m out sits at 10-18/255 graded."
+  },
+  {
+   "priority": 2,
+   "camera": "overhead",
+   "problem": "The open duffel only reads if you look for it. The top of the main compartment is folded back to show a recessed interior about 45% of the bag's width. But that interior grades 53/255 against an outer body of 36, so the inside is lighter than the outside. With no zip teeth, no slack flaps and no depth, it reads as a mesh top pocket or a flat panel, not a gaping mouth the handbags were taken from.",
+   "fix": "In open_zip(), set the lining albedo to about 0.012 with roughness 0.9, darker than the 0.035 outer, so the mouth reads as a dark slot. Pull the two zip edges 10-12 cm apart along about 70% of the bag's length, and let the freed top flap fall outward over one side by 30-40 degrees. Run a 4 mm dark-metal zip tape (a 0.004 x 0.003 m strip with a bevel, albedo 0.02, roughness 0.4) along both lips, with the pull hanging at the open end. Keep the inside empty. Target from overhead: an interior of 15/255 or less with lips catching light at 60-80, a value step anyone sees at a glance."
+  },
+  {
+   "priority": 3,
+   "camera": "two_shot",
+   "problem": "Officer A's open palm now touches the bright vision panel. His fingertips, graded 146, meet its bottom edge, graded 161, at about x 714-735, y 381-386: a bright-on-bright tangency at the centre of the frame, worse than round 4's corner touch. His fingers are also straight and slightly splayed.",
+   "fix": "Move the reach target 7 cm down and 5 cm toward Dawn, or slide the camera 0.08 m in +Y, so the fingertips sit on the plain door at least 15 px below the panel (y 400 or lower) or fully clear of it at x 760 or more. Curl the fingers 20-25 degrees with the thumb slightly out."
+  },
+  {
+   "priority": 3,
+   "camera": "two_shot (also overhead)",
+   "problem": "Dawn's top now separates from her face. Face 155/255 graded (raw 184), chest 57 (raw 64), sleeve 40-45: the chest is about 0.37x the face, and there is a clean collar edge. From overhead her shoulders (42) are well below her head (121). But the top is one smooth umber shell with the sculpted bust still modelled. It has no lapel, no front edge and no drag folds, and the blouse V is within about 15/255 of the jacket. She reads as wearing a tight knit bodysuit, not a suit over a blouse. Her far hand, splayed in front of her hip (x 400-430, y 570-600), is a stiff, straight-fingered mannequin hand.",
+   "fix": "In blouse(), raise the Laplacian smooth on the front panel to 25 iterations at lambda 1.0 with use_volume_preserve on, and apply the same smoothing to the jacket's chest faces through a vertex group between the DEF-spine.002 and .003 heights. The bust then becomes one soft convex drape. Add lapels: a 4.5 cm strip along each side of the jacket's front opening, from the collar to the upper button, Solidify 3 mm, the jacket's umber x 1.3, roughness 0.9, so a V edge throws a line of shadow. Lift the blouse to about (0.10, 0.095, 0.09). In the raw that is about 90-100 against the face's 184, still no more than 0.55x the face, and it separates from the jacket without reading as skin. Curl the far hand's fingers 25-35 degrees."
+  },
+  {
+   "priority": 3,
+   "camera": "wide, empty",
+   "problem": "The X-ray scanner is unchanged from round 3 apart from a slightly darker monitor. It is still a grey box with a curtain of a few flat panels. The monitor is a pale card (graded 101-108) with no bezel and no spill. In both frames the right side of the scanner and the wall beyond grade to 0-1/255, a dead black slab covering about 15% of the frame.",
+   "fix": "Bevel the housing edges at 2 cm and add 2 mm access-panel seams and a kick plate. Make the curtain 9-10 lead-rubber strips, each 4 mm thick (albedo 0.02, roughness 0.6), with 3 mm gaps and +/-3 degrees of random X rotation. Give the monitor a 3 cm bezel (0.03) round a recessed face emitting cool grey at 0.8-1.2, with an 8-12 W area light 15 cm in front aimed at the scanner top. Add a small green status lamp and a 10-15 W area light at the exit end, so the scanner's right side holds at about 8-12/255 graded."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "Unchanged from round 4. Officer B's shoe under the bench is pale statue grey (raw 103, graded 100), not black, so people.py's BLACK_SHOE (0.045) is not landing. Officer A's open hand over the duffel still reads palm-down and splayed, like a claw hovering over the bag.",
+   "fix": "After people.officer(), find every object with '_shoes' in its name on both officers. Unlink any Base Color input and set it to (0.015, 0.015, 0.017), roughness 0.35. Print the value to confirm. For A's ch00 gesture, roll the right forearm a further 40-60 degrees so the palm faces up, curl the fingers 20-25 degrees and raise the hand to about 8 cm above the duffel."
+  },
+  {
+   "priority": 4,
+   "camera": "tag",
+   "problem": "The tag is now clean card. It is blank: no glyphs, numbers or barcode even when contrast-stretched, only two pin-prick specks of about 2 px right of the eyelet at roughly x 668, y 205. The puckers and gouges are gone. It still reads as cool white plastic, not manila: raw (204, 196, 179) grades to a neutral (185, 187, 183). The string is a thin white two-strand line, more wire than twine, and no knot shows, so 'tied' comes only from the loops round the grip. The case top is raw 118 here, against 7 in the wide and the two_shot, so the case jumps from black to mid grey at the cut.",
+   "fix": "Card: albedo (0.50, 0.40, 0.26), roughness 0.9, plus a fibre bump (noise scale 2000, strength 0.04), aiming for raw near (175, 145, 100) so it grades buff. Remove the two specks. Twine: two 0.45 mm bevelled curves twisted at a 3 mm pitch in jute (0.42, 0.34, 0.22), roughness 0.9. At the eyelet, tie a lark's-head: the loop passes through the hole and back over the card's top edge, so a knot sits on the card. Cut the tag camera's exposure from -3.95 to about -4.6, or tag_rake by 35-40%, so the nylon reads charcoal (raw 40-60) and the tag is the only light object."
+  },
+  {
+   "priority": 5,
+   "camera": "overhead, wide, two_shot",
+   "problem": "The tote is warmer than in round 4 but still not cognac. The raw overhead is a saturated mustard (139, 100, 33) that grades to khaki (109, 99, 79). The two_shot grades to beige-tan (154, 134, 111). The target is a red-brown of about (120, 85, 55) graded.",
+   "fix": "In the tote's load args, shift the hue a further -0.03 toward red, lower sat by 0.1 (the mustard comes from oversaturated yellow), and lower val by about 15%. Check against a raw target of about (150, 90, 50) in the overhead."
+  }
+ ]
+}
