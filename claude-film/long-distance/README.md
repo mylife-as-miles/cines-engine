@@ -4,8 +4,8 @@
 
 ## Watch
 
-- **Master:** `out/long_distance_1080p.mp4`: 1920×1080, 24 fps, H.264 CRF 18, AAC 320 kbps, 517.5 s, the final mix at -18 LUFS. Renders are not in git; it was sent to the author. Rebuild:
-  1. `node tools/export.js out/long_distance_1080p_picture.mp4 --workers 3 --crf 18 --no-audio --no-join`: the picture, frame by frame through `FILM.renderAt(t)` in headless Chromium, kept as three segments (`out/export_tmp/segs.txt`); about 40 minutes on four cores.
+- **Master:** `out/long_distance_1080p.mp4`: 1920×1080, 24 fps, H.264 CRF 20 capped at 5.5 Mbps, AAC 320 kbps, 517.5 s, the final mix at -18 LUFS. Renders are not in git; it was sent to the author. Rebuild:
+  1. `node tools/export.js out/long_distance_1080p_picture.mp4 --workers 3 --crf 20 --maxrate 5.5M --no-audio --no-join`: the picture, frame by frame through `FILM.renderAt(t)` in headless Chromium, kept as three segments (`out/export_tmp/segs.txt`); about 40 minutes on four cores.
   2. `uv run tools/build_mix.py --mix`: the soundtrack (`audio/README.md`), written as `out/mix/long_distance_mix.wav`.
   3. Mux: `ffmpeg -f concat -safe 0 -i out/export_tmp/segs.txt -i out/mix/long_distance_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -shortest -movflags +faststart out/long_distance_1080p.mp4`.
 - **Player:** open `film/index.html` (scrub any instant; the development soundtrack plays).

@@ -1,5 +1,5 @@
 // Export the film to MP4 with the engine's development soundtrack (the final mix is muxed over the picture: see audio/README.md).
-//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--crf 18] [--only Q01,Q02] [--no-audio] [--no-join]
+//   node tools/export.js [out.mp4] [--workers 3] [--from 0] [--to <seconds>] [--scale 1] [--crf 18] [--maxrate 5.5M] [--only Q01,Q02] [--no-audio] [--no-join]
 // Frames are rendered headless by FILM.renderAt(i/24) and piped as JPEG into ffmpeg (one encoder per worker, then concatenated).
 // Audio is rendered per sequence by OfflineAudioContext at 48 kHz, concatenated, and muxed.
 const { open } = require('./film');
@@ -9,13 +9,15 @@ const fs = require('fs'); const path = require('path');
 const argv = process.argv.slice(2); const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
 const OUT = argv[0] && !argv[0].startsWith('--') ? argv[0] : 'out/long_distance.mp4';
 const WORKERS = +opt('workers', 3), SCALE = +opt('scale', 1), ONLY = opt('only', null), CRF = opt('crf', null);
+// --maxrate 5.5M caps the CRF encode (bufsize 2x): the paper grain makes CRF alone huge (CRF 18 at 1080p ran past 40 Mbps)
+const MAXRATE = opt('maxrate', null), CAP = MAXRATE ? ['-maxrate', MAXRATE, '-bufsize', String(parseFloat(MAXRATE) * 2) + MAXRATE.replace(/[0-9.]/g, '')] : [];
 const TMP = path.resolve(path.dirname(OUT), 'export_tmp'); fs.mkdirSync(TMP, { recursive: true });
 
 async function renderRange(id, a, b, total) {
   const { browser, page, errs } = await open(ONLY);
   const w = Math.round(1920 * SCALE / 2) * 2, h = Math.round(1080 * SCALE / 2) * 2;
   const file = path.join(TMP, `seg_${String(id).padStart(2, '0')}.mp4`);
-  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', '24', '-i', '-', '-vf', `scale=${w}:${h}:flags=lanczos`, '-c:v', 'libx264', '-preset', 'medium', '-crf', CRF || (SCALE < 1 ? '22' : '18'), '-pix_fmt', 'yuv420p', '-r', '24', file]);
+  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', '24', '-i', '-', '-vf', `scale=${w}:${h}:flags=lanczos`, '-c:v', 'libx264', '-preset', 'medium', '-crf', CRF || (SCALE < 1 ? '22' : '18'), ...CAP, '-pix_fmt', 'yuv420p', '-r', '24', file]);
   ff.stderr.on('data', d => process.stderr.write(`[ffmpeg ${id}] ${d}`));
   const t0 = Date.now();
   for (let i = a; i < b; i++) {
