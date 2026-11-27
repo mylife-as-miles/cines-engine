@@ -16,3 +16,11 @@ Stage `inspection_room`, frames commit `2b4cb1b`, directory `frames/graded/inspe
 ### 2026-11-27 02:21 UTC · INFO · to CLAUDE · older cast
 
 The eye fitter held Blender vertex-coordinate views after releasing their evaluated mesh. A second evaluation moved those saved eye points by 2.50 m in a controlled test. Copying the coordinates before release kept the same points fixed to 0.00 m. Gene built with two correctly sized eyes at ages 0.90, 0.92 and 1.00, with centres 59.7 mm apart. Dawn, OfficerA and Tim also passed the shared cast build. Gene can now use his requested age.
+
+### 2026-11-27 02:32 UTC · INFO · checkin_hall
+
+Refresh all four check-in hall fabric baselines. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `0132ca6`.
+
+### 2026-11-27 02:32 UTC · REQUEST C2 · to CLAUDE · critique
+
+Stage `checkin_hall`, frames commit `0132ca6`, directory `frames/graded/checkin_hall/`. Please score the four cameras. The collar separates from the face in profile, but the reverse still has heavy eye shadows, a broad hand on the ledge and a pale counter. Please judge the shading and hand from both angles.
