@@ -1,0 +1,91 @@
+{
+ "stage": "chicago_night",
+ "round": 2,
+ "commit": "0e13946",
+ "scores": {
+  "composition": 6.5,
+  "lighting": 6,
+  "materials": 6,
+  "set_dressing": 6,
+  "grounding_scale": 5.5,
+  "cast": 5,
+  "story_read": 6.5,
+  "technical": 6.5
+ },
+ "pro_level": false,
+ "verdict": "Round 2 is a clear step up and both checks pass: the tag is blank, and no tower reads as a real Chicago landmark (flat-topped boxes with twin red corner lights, no antennas, spires, X-bracing or white cladding). The other round-1 fixes also landed: the 20 km clip brought back the sky and a deep skyline, the verticals and the casing corners are fixed, the two lamps frame the cool city, and the wide and suitcase frames are now the warmest graded frames in the film (lit R-B +17.9 and +17.5, medians 26.6 and 30.6). It is not fern level yet. In the close-up, which is nearly there, the tag hangs from a strap that stops about 7 cm below the grip, in mid-air. The case reads pale silver in the wide (graded 82) but charcoal in the close-up (45). And Dawn is still the least-read thing in the establishing shot: a flat black suit with no edge or fabric against black blocks, her mug hidden, next to a rust chair that the grade crushes to near black.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "suitcase",
+   "problem": "The blank tag hangs from nothing. Its 7 cm strap ends about 40 px (about 7 cm) below the grip bar, in the gap between the telescoping tubes, so in the hero close-up the tag floats in mid-air (it also shows in the wide). Cause: in chicago_night_set.suitcase(), gz0 = min(p.z for p in grip_pts) + lift takes the bottom of the whole lifted grip assembly (about 0.895 m), not the grip bar the hand holds.",
+   "fix": "Hang it from the bar. Set gz1 = max(p.z for p in grip_pts) + lift - 0.012 (the bar's centre line). Replace case_tag_strap with a loop that wraps the bar in the x-z plane at y = gyc: tube('case_tag_loop', [W(gx+0.012, gyc, gz1-0.07), W(gx+0.012, gyc, gz1+0.004), W(gx, gyc, gz1+0.016), W(gx-0.012, gyc, gz1+0.004), W(gx-0.012, gyc, gz1-0.03)], 0.0022, M['leather'], res=4). Then hang case_tag with its top edge at gz1-0.07 (centre at gz1-0.115) and the eyelet at gz1-0.078, turned 12-15 degrees about Z out of the case's plane so its edge catches the case card. Check at 4x in the suitcase frame that the loop visibly wraps the grip and the tag is still blank, and check the wide too."
+  },
+  {
+   "priority": 1,
+   "camera": "wide",
+   "problem": "Continuity, and the brief's rule that charcoal bags read dark. The same case reads pale silver-grey in the wide: its front is graded 82, which is 0.71 of the off-white door slab beside it (115). In the close-up the case is charcoal (45). TRIMS is empty, so case_card (9 W aimed at the case front) also burns in the wide, on top of entry_light (the 380 W spot right above the case). The wide's camera exposure (+0.5) is 1.55 stops over the suitcase camera's (-1.05), so that extra light shows.",
+   "fix": "Set TRIMS['wide'] = {'case_card': 0.0, 'entry_light': 0.6}. Targets on the graded wide: the case front at 40-55, the door slab at 95 or more, and the floor pool by the door still visible, with a glint on the zip pulls. If the case stays above 55, aim the entry spot about 0.3 m into the room (+X) so the case sits at the edge of its cone. Do not grey the prop."
+  },
+  {
+   "priority": 2,
+   "camera": "wide, window",
+   "problem": "Dawn's clothes never read as fabric. In the wide her jacket measures raw 5 (graded 8), the darkest thing in the room, and it merges with the black mid-rise blocks behind her torso, while her bare stone legs, the brightest part of her, pull the eye down. In the window shot her back is raw 3: a flat black cutout filling about 20% of the frame, with no seam, fold or edge. The warm far-side rim asked for in round 1 is not there.",
+   "fix": "Add a cool city edge from the glass side, motivated by the skyline: area light 'dawn_edge' 0.4 x 1.2 m, colour (0.62, 0.72, 1.0), 8 W, at about (0.95, 2.36, 1.30), aimed at (0.51, 1.93, 1.30), visible_camera and visible_glossy False. From both cameras it traces her right shoulder, arm and bun with a 2-3 px edge at raw 45-70. For a warm read of her back in the wide, add a hidden warm area light 0.3 x 0.3 m at the side lamp (1.30, 1.62, 1.05), aimed at her back (0.51, 1.93, 1.20), colour (1.0, 0.5, 0.2), about 6 W, trimmed to 0 in the window camera. Do not raise side_lamp_light: its shade already peaks at 249 raw. Targets: in the wide, jacket raw 12-20 where this light reaches, with folds and the back seam showing; in the window shot, back raw 6-10 plus the edge; legs no brighter than her head."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "Her one ordinary gesture cannot be seen. The mug sits behind her right hand and forearm (at 8x there is a dim hand at x 935, y 310 and no mug). Both cameras are behind her, so she reads as standing with her arms folded rather than holding a coffee and looking out.",
+   "fix": "Turn her a little toward the camera: DAWN facing 172 -> about 158. The head still turns to LOOK (about 38 degrees, inside the 40-degree clamp). Move MUG to (0.08, 0.34, 1.25) so it clears the right forearm, and lift the mug glaze from 0.42 to about (0.62, 0.58, 0.52) so it reads as a cream shape against the dark block behind. Check the wide at 4x: the mug's rim and side at least 12 px clear of the forearm, the handle pointing away from her. Re-check the window frame: her cheek line should still show."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "The rust lounge chair, round 1's fix for the black hole at the bottom right, is still a black hole after the grade: seat top graded 8 and back 0.6 (raw 21 and 11), about 8% of the frame, cut by the right and bottom edges. The seat and the back face away from the side lamp, so the rust never gets enough light to survive the grade.",
+   "fix": "In lounge_chair(), change cx, cy, turn from 1.95, 1.05, 95 deg to about 1.85, 1.12, 120 deg, so the seat and the inner face of the back open toward the side lamp and the camera (clear the side table by 5 cm or more). Change the upholstery from (0.30, 0.12, 0.06) to (0.42, 0.17, 0.08). Keep the top of the back inside the right edge. Targets on the graded frame: seat top 20-30 and back 12 or more, with the chair still the darkest warm mass in the frame."
+  },
+  {
+   "priority": 2,
+   "camera": "window",
+   "problem": "The glow behind her is weak and grey. The upper sky is raw 30 and the band under her shoulders only 39-41 (graded 29 against 43), so the frame is a flat murk. 63% of graded pixels are under 20, which will band on YouTube. There is no warm note anywhere except her head, because HORIZON is neutral (0.104, 0.10, 0.108).",
+   "fix": "In chicago_night_city.py, make the sky ramp brighter and warmer at the horizon: HORIZON -> (0.16, 0.135, 0.105) (a sodium lift), the 0.035 stop -> (0.125, 0.108, 0.095), the 0.1 stop -> (0.048, 0.047, 0.055) and the 0.25 stop -> (0.016, 0.018, 0.024). Raw targets: the band behind her shoulders at 55-65 and the sky above her head at 18-24, with a soft warm-to-cool gradient between them. Then check that the far building fog (FOG_D, BUILDING_FOG) still sits just under the new horizon so the far towers separate. Re-check the wide's sky."
+  },
+  {
+   "priority": 2,
+   "camera": "window, wide",
+   "problem": "The near city still reads as a game asset. (a) In the window shot the central avenue is a uniform flat grey slab (raw 40), with street lights on its right side only and a hard white streak at its far end (x 630-690, y 450-500), and it leads straight into her elbow. (b) Blank white rectangles on the low roofs are still the brightest flat shapes near her: window shot lower left (x 0-170, y 545-580), and in the wide beside her arm (x 780-950, y 345-360). (c) Lit windows are scattered as random blobs with no floor rhythm, so the towers read as speckled cut-outs.",
+   "fix": "(a) Cut city_road emission strength from 1.0 to about 0.35, with a noise variation of 0.6-1.0 along the road over a dark asphalt base. Put street lights on both kerbs every 30-40 m and add a few pairs of car lights (white coming in, red going out). Find the emitter that draws the white streak and remove or dim it. (b) Cut the rooftop slabs to about 0.3x strength and tint them (0.9, 0.82, 0.7), or delete those on roofs within 300 m of the camera. (c) Snap the window cells to a grid (1.5 m bays, 3.8 m floors) with dark 0.9 m spandrel bands so floors read as horizontal lines, 25-35% of cells lit, about 70% warm and 30% cool."
+  },
+  {
+   "priority": 3,
+   "camera": "suitcase",
+   "problem": "The corridor light under the door reads as a pale grey rod lying on the floor: the 12 mm gap shows door_gap_glow as a solid bar with a highlight on top (x 110-445, raw about 150), and there is almost no spill on the boards in front of it.",
+   "fix": "Make it a slit of light. Narrow the gap to 7 mm (door_leaf bottom at z 0.007, and set lz0 to match), and raise corridor_glow from 5 to about 9 so the line is thinner and brighter (raw 190-220). Raise under_door from 1.6 to about 4.5 W so a warm-neutral fan 15-25 cm deep shows on the boards in front of the door, at about +10 raw over the boards around it."
+  },
+  {
+   "priority": 3,
+   "camera": "suitcase, window",
+   "problem": "Faint warm vertical smears remain in the glass where nothing stands outside: in the suitcase frame at x 1000-1060, y 0-120 (through the tallest tower), and in the window shot at the far left edge (x 0-20, y 270-350). They are the lamp-lit wall reflected at the default 0.2 of Fresnel; only the wide sets glass_reflection 0.06.",
+   "fix": "Add glass_reflection=0.06 to the suitcase and window entries in CAMERAS. Re-check that the smears are gone and the city keeps its contrast."
+  },
+  {
+   "priority": 3,
+   "camera": "wide",
+   "problem": "Nothing in the wide says 'a woman who loved to travel' except the case. The passport, at (W0+0.27, -1.2), is a 4-px dark speck at the cut left end of the console, and the bowl and sketchbook read as catalogue dressing. There is no soft personal object anywhere.",
+   "fix": "Move the passport into the lamp pool, on the sketchbook at about (W0+0.24, -0.62), turned 20 degrees. Lift its cover to (0.05, 0.07, 0.16) so the blue survives the grade as a small cool note in the warm pool. Add one soft personal object in the pool: a folded camel scarf on the console beside it (0.30 x 0.20 m, 2-3 cm thick, rounded bevel 8 mm, colour (0.36, 0.28, 0.19) x people.FABRIC_VALUE, roughness 0.95, a woven-noise bump)."
+  },
+  {
+   "priority": 3,
+   "camera": "wide",
+   "problem": "The bottom third is still a dull band. The rug field is graded 22 with no visible pile, the coffee table about 15, and together with the dark chair the foreground carries nothing.",
+   "fix": "Give the rug a pile that reads at 3 m: field bump from 0.6 to about 1.0 at noise scale 250 (coarser), plus a soft lighter wear path 0.3 m wide between the table and the window (+10% value). Turn the book stack on the coffee table about 25 degrees so the book edges and the vase's shoulder catch the console lamp."
+  },
+  {
+   "priority": 3,
+   "camera": "suitcase",
+   "problem": "The generated case has a small round badge on the front, top right (x 625, y 352 in the suitcase frame), with a curved mark on it, and an embossed tab at the end of the pocket zip. Neither is legible at 720p, but on a push-in or a 4K master the disc reads as a maker's emblem.",
+   "fix": "Cover the disc with a plain button sitting flush on the shell over the badge: cyl radius 0.006, depth 0.002, charcoal steel (base about 0.12, roughness 0.5). Leave the zip tab as it is."
+  }
+ ]
+}
