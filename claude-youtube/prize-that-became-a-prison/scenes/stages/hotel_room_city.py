@@ -31,6 +31,8 @@ FOG_D = 2600.0
 FOG_BUILDINGS = 1500.0
 # levels for the stage exposure (-1.4 .. -1.6, AgX): about twice Chicago's (tuned at -0.5)
 K = 2.0
+# The same violet and cool-blue tubing seen from street level.
+VIOLET_SIGN, BLUE_SIGN = (0.35, 0.10, 0.95), (0.15, 0.45, 1.0)
 HORIZON = tuple(v * K for v in (0.062, 0.072, 0.092))     # the haze lit by the city: cool, a faint lift
 BUILDING_FOG = tuple(v * K for v in (0.026, 0.032, 0.044))
 SKY_TOP = tuple(v * K for v in (0.004, 0.0055, 0.01))
@@ -513,7 +515,7 @@ def signs(seed=13):
     """Projecting signboards along the avenue and a few cross streets; rooftop sign frames. (lo, hi, rot, colour,
     size) per sign."""
     rng = random.Random(seed)
-    pal = [(1.0, 0.12, 0.08), (1.0, 0.2, 0.55), (0.25, 0.85, 1.0), (1.0, 0.55, 0.12), (0.92, 0.94, 1.0),
+    pal = [VIOLET_SIGN, BLUE_SIGN, (0.25, 0.85, 1.0), (1.0, 0.55, 0.12), (0.92, 0.94, 1.0),
            (0.35, 1.0, 0.55), (0.75, 0.3, 1.0), (1.0, 0.85, 0.35)]
     lo, hi, rot, col, size = [], [], [], [], []
     x0, y0, a = AVENUE
@@ -559,7 +561,7 @@ def rooftop_signs(b_lo, b_hi, b_data, seed=21):
     rng = random.Random(seed)
     lo, hi, rot, col, size = [], [], [], [], []
     frame_lo, frame_hi = [], []
-    pal = [(0.92, 0.95, 1.0), (0.3, 0.85, 1.0), (1.0, 0.18, 0.12), (1.0, 0.6, 0.2), (0.4, 1.0, 0.7)]
+    pal = [(0.92, 0.95, 1.0), (0.3, 0.85, 1.0), VIOLET_SIGN, (1.0, 0.6, 0.2), (0.4, 1.0, 0.7)]
     idx = [i for i in range(len(b_lo)) if 200 < b_lo[i][1] < 1250 and b_hi[i][2] - b_lo[i][2] > 35 and
            b_data[i][1] < 0.6 and (b_hi[i][0] - b_lo[i][0]) > 12 and in_view(b_lo[i][0], b_lo[i][1])]
     rng.shuffle(idx)
@@ -589,7 +591,7 @@ def facade_signs(b_lo, b_hi, b_data, seed=31):
     """Blank vertical signboards fixed high on the fronts (the -Y faces, toward the hotel) of buildings in the
     window's view: the signage of a dense city read from above by shape and glow alone."""
     rng = random.Random(seed)
-    pal = [(1.0, 0.14, 0.1), (1.0, 0.25, 0.6), (0.3, 0.85, 1.0), (1.0, 0.58, 0.16), (0.9, 0.93, 1.0),
+    pal = [VIOLET_SIGN, BLUE_SIGN, (0.3, 0.85, 1.0), (1.0, 0.58, 0.16), (0.9, 0.93, 1.0),
            (0.4, 1.0, 0.6), (1.0, 0.85, 0.4)]
     lo, hi, rot, col, size = [], [], [], [], []
     for i in range(len(b_lo)):
@@ -672,7 +674,7 @@ def streets(seed=5):
 def traffic(seed=3):
     rng = random.Random(seed)
     lo, hi, col = [], [], []
-    red, white = (1.0, 0.06, 0.03), (1.0, 0.93, 0.8)
+    red, white = (0.16, 0.017, 0.009), (1.0, 0.93, 0.8)
     x0, y0, a = AVENUE
     d = np.array((math.sin(a), math.cos(a)))
     nrm = np.array((d[1], -d[0]))
