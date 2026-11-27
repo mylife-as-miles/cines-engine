@@ -120,7 +120,7 @@ CAMERAS = {
     "cell_close": dict(loc=_p(C, 1.0, -2.0, 1.45), aim=_p(C, -1.2, 1.6, 1.45), lens=20, focus="fx_cell_close",
                        fstop=5.6, beat="cell", shift=(0.0, -0.1)),
     # Ch 08: far back and a little above: the lit cell a small open box in the black, the beam standing over it
-    "cell_far": dict(loc=_p(C, 2.5, -23.5, 6.2), aim=_p(C, 0.0, 0.2, 1.55), lens=50, focus="fx_cell_far", fstop=8.0,
+    "cell_far": dict(loc=_p(C, 9.0, -23.5, 4.5), aim=_p(C, 0.0, 0.2, 1.55), lens=50, focus="fx_cell_far", fstop=8.0,
                      beat="cell"),
     # Ch 11: the end: the two bags alone in the spotlight on black, low, so they rise against the dark above the
     # pool's far edge; the beam behind them
