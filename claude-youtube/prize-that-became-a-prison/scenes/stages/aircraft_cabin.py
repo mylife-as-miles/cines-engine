@@ -41,6 +41,7 @@ import bmesh  # noqa: E402,F401
 from mathutils import Matrix, Vector  # noqa: E402
 from mathutils.bvhtree import BVHTree  # noqa: E402
 
+import cast as castkit  # noqa: E402
 import people  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -141,6 +142,7 @@ def dawn():
     """people.dawn() with the gate's two seated touches: the jacket front relaxed off the bust (Laplacian smooth on
     the rest shape), ease added over the seated thighs and the cuffs, and the bun set lower and closer to the nape."""
     h = people.dawn()
+    castkit.relax_sculpted_hair(h)
     suit = bpy.data.objects.get(f"{h.name}_female_elegantsuit01")
     if suit is not None:
         me = suit.data
