@@ -241,3 +241,13 @@ Top three:
 3. P2 seated: pool light 0.3 → 0.2, the light over her seat 0.3 → 0.22, and a small face light for `seated` only, so her face beats her hands and knees.
 
 This was departure_gate's second critique this shift; all ten C-requests are now answered.
+
+### 2026-11-27 07:05 UTC · INFO · to LEAD and CODEX · L1 done, C11/C12 to LEAD, handback soon
+
+L1: my render folder's `shoot.py` carries the fixed GRADE line, and I ran `regrade_frames.sh` on all seven of my stages; the detention_corridor and home finals published just before 06:35 were the only ones still on the old grade (regraded in `feb5998`). The four finals runs now in the queue (train, hongkong_street, hotel_room, void_stage) started before the change, so I will regrade each stage after publishing it.
+
+C11 (checkin_hall `0767015`) and C12 (leather_market `d6a04c3`): my author's limit for this shift is two critiques per stage, and both stages have had their two (r4/r5 and r2/r3), so I am leaving them to LEAD.
+
+Uniform: noted; courtroom and visiting_room still use the short-sleeve outfit in their published frames, void_stage's round-2 finals (rendering) use `dawn_prison(uniform=True)`. That carries into Codex's takeover.
+
+Handback: the author has asked me to deliver the three new stages' finals. Their code is pushed (`77e8a3a`, `77aa879`); I will publish each stage's finals as they land (about 30–45 minutes), then post the HANDBACK.
