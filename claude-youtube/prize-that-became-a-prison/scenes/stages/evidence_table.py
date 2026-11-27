@@ -70,7 +70,6 @@ LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos 
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
 # (x, y, turn: the roll at its left end, seen nearly end on)
 RECEIPT_C4 = (0.14, -0.33, 73.0)
-TOTE_MARK = (Vector((0.119, -0.005, 0.1401)), 0.014)   # the tote's modelled oval plate: mesh-local centre, radius (m)
 # the purses for Ch 04: a staggered row lit from the lamp on the left; the darkest (burgundy) nearest the lamp, the
 # cognac tote farthest. Turns put each bag's clean front toward the camera at the front left.
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
@@ -516,66 +515,6 @@ def laptop():
     return [h] + list(h.children_recursive) + [scr, li, deck, keys]
 
 
-def retouch(holder, box, dx, feather=8):
-    """Paint a small patch of a generated prop's textures over with the same-sized patch dx pixels to its right
-    (colour, roughness and normal maps alike), feathered: used to take the tote's oval maker's plate off its front
-    (no badges or brands in the film)."""
-    import numpy as np
-    x0, y0, x1, y1 = box
-    done = set()
-    for o in [c for c in holder.children_recursive if c.type == "MESH"]:
-        for slot in o.material_slots:
-            for n in slot.material.node_tree.nodes if slot.material else ():
-                if n.type != "TEX_IMAGE" or not n.image or n.image.name in done:
-                    continue
-                img = n.image
-                done.add(img.name)
-                W, H = img.size
-                a = np.empty(W * H * img.channels, np.float32)
-                img.pixels.foreach_get(a)
-                a = a.reshape(H, W, img.channels)
-                src = a[y0:y1, x0 + dx:x1 + dx].copy()
-                ry = np.minimum(np.arange(y1 - y0), np.arange(y1 - y0)[::-1])
-                rx = np.minimum(np.arange(x1 - x0), np.arange(x1 - x0)[::-1])
-                wgt = np.clip(np.minimum.outer(ry, rx) / feather, 0.0, 1.0)[..., None]
-                a[y0:y1, x0:x1] = a[y0:y1, x0:x1] * (1.0 - wgt) + src * wgt
-                img.pixels.foreach_set(a.ravel())
-                img.update()
-                print(f"EVIDENCE retouched {img.name} ({n.label}) at {box}", flush=True)
-
-
-def flatten_patch(holder, centre, radius, iters=12, fac=0.6):
-    """Smooth away a small modelled relief on a generated prop (the tote's oval maker's plate, which is geometry, not
-    texture: 1-1.5 mm bumps on a 5 mm mesh): vertices within `radius` metres of `centre` (mesh-local) are relaxed
-    toward their neighbours along their normals only, so the surface flattens without the texture sliding."""
-    o = next(c for c in holder.children_recursive if c.type == "MESH")
-    bpy.context.view_layer.update()
-    k = o.matrix_world.to_scale().x
-    R = radius / k
-    bm = bmesh.new()
-    bm.from_mesh(o.data)
-    bm.normal_update()
-    sel = []
-    for v in bm.verts:
-        d = (v.co - centre).length
-        if d < R:
-            sel.append((v, min(1.0, max(0.0, (R - d) / (0.4 * R)))))
-    for _ in range(iters):
-        new = []
-        for v, w in sel:
-            nb = [e.other_vert(v) for e in v.link_edges]
-            if not nb:
-                continue
-            avg = sum((n.co for n in nb), Vector()) / len(nb)
-            new.append((v, v.co + v.normal * ((avg - v.co).dot(v.normal) * fac * w)))
-        for v, co in new:
-            v.co = co
-    bm.to_mesh(o.data)
-    bm.free()
-    o.data.update()
-    print(f"EVIDENCE flattened {len(sel)} vertices of {o.name[:24]} round the maker's plate", flush=True)
-
-
 def bags():
     out = []
     for name, (x, y, t) in BAGS.items():
@@ -592,8 +531,7 @@ def bags():
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m)
         if name == "handbag-tote":
-            retouch(h, (445, 195, 545, 285), 100)
-            flatten_patch(h, *TOTE_MARK)
+            props.remove_tote_plate(h)
         out += [h] + list(h.children_recursive)
     return out
 

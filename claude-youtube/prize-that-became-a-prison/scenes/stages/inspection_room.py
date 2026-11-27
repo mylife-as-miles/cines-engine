@@ -732,6 +732,8 @@ def load_props():
                         b = next((n for n in slot.material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
                         if b is not None and "Coat Weight" in b.inputs:
                             b.inputs["Coat Weight"].default_value = 0.0
+        if name == "handbag-tote":
+            props.remove_tote_plate(h)
         if name == "extra-bag-open":
             open_zip(h)
         out[name] = h
