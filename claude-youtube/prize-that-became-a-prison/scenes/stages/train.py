@@ -77,7 +77,7 @@ CAMERAS = {
                  beat="ch03"),
     # Ch 03: a controlled close-up on the suitcase on the rack above her, the carriage soft beyond
     # The racks recede beyond it, with the top of Dawn’s head under the rail.
-    "rack": dict(loc=(0.35, SEAT_Y - 1.40, 1.98), aim=(-0.95, SEAT_Y + 1.40, 1.66), lens=40, focus="fx_bags", fstop=2.8,
+    "rack": dict(loc=(0.35, SEAT_Y - 1.40, 1.98), aim=(-1.20, SEAT_Y + 1.40, 1.605), lens=40, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
