@@ -125,7 +125,7 @@ const MODES = {
     base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ax, ay] = PU(...CITY.australia);
     solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
     region(ctx, span(t, 0.4, 1.6));
-    const [lx, ly] = PU(21.5, 127.5);      // open Philippine Sea beside the lit mainland, crossing no other land
+    const [lx, ly] = PU(23.5, 137.5);      // open Philippine Sea east of the dashed Australia line, crossing no land
     label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.2, 'left', 600);
     label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 72, DAYS, t, 1.8, 'left', 500, 0.04);
     const A = legA(), As = A.slice(0, Math.floor(A.length * 0.86)); dashed(ctx, As, span(t, 4.2, 5.8)); arrowEnd(ctx, As, span(t, 4.2, 5.8));
