@@ -50,15 +50,15 @@ AGENT = (0.02, 0.98)
 
 EXPOSURE = -1.6
 CAMERAS = {
-    "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6,
+    "wide": dict(loc=(4.4, -4.9, 2.10), aim=(-3.0, 1.0, 1.15), lens=27, focus="focus_dawn", fstop=5.6,
                  exposure=-1.4),   # a touch up: the far hall and the glazed end must not crush to black
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
     "signs": dict(loc=(4.7, -3.65, 2.65), aim=(-2.1, -0.30, 3.39), lens=34, focus="focus_sign", fstop=4,
                   exposure=-1.6),
-    "scale": dict(loc=(1.6, -1.90, 1.24), aim=(1.43, 0.46, 0.65), lens=42, focus="focus_duffel", fstop=2.8,
+    "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.355), lens=50, focus="focus_dawn", fstop=2.4,
+    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.295), lens=50, focus="focus_dawn", fstop=2.4,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -418,7 +418,7 @@ def materials():
         pvc=pbr("pvc strip", (0.05, 0.055, 0.058), (0.3, 0.42), nscale=4, stretch=(1, 1, 0.2), cvar=0.15, coat=0.2),
         passport=pbr("passport cover", (0.021, 0.015, 0.025), (0.67, 0.76), nscale=30, cvar=0.1, bump=0.1, bscale=500),
         tray=pbr("grey tray", (0.11, 0.113, 0.118), (0.45, 0.6), nscale=9, cvar=0.1),
-        top=pbr("dark solid surface", (0.028, 0.030, 0.034), (0.48, 0.59), nscale=40, cvar=0.09, coat=0.025, smudge=0.08),
+        top=pbr("dark solid surface", (0.028, 0.030, 0.034), (0.48, 0.59), nscale=40, cvar=0.09, coat=0.025, smudge=0.40),
         steel=pbr("brushed steel", (0.6, 0.61, 0.63), (0.22, 0.4), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08, aniso=0.5),
         steel_y=pbr("longitudinal brushed steel", (0.53, 0.54, 0.56), (0.34, 0.49), metal=1.0,
                     nscale=3, stretch=(30, 1, 30), cvar=0.05, aniso=0.35),
@@ -426,7 +426,7 @@ def materials():
         steel_dark=pbr("dull steel", (0.3, 0.305, 0.315), (0.55, 0.75), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.18, aniso=0.2),
         steel_v=pbr("brushed steel vertical", (0.6, 0.61, 0.63), (0.2, 0.34), metal=1.0, nscale=3, stretch=(30, 30, 1), cvar=0.06),
         satin=pbr("satin steel", (0.55, 0.56, 0.58), (0.24, 0.32), metal=1.0, nscale=60, cvar=0.04),
-        chrome=pbr("polished steel", (0.78, 0.79, 0.8), (0.07, 0.14), metal=1.0, nscale=6, cvar=0.03),
+        chrome=pbr("satin queue steel", (0.34, 0.35, 0.36), (0.35, 0.45), metal=1.0, nscale=6, cvar=0.03),
         plate=pbr("weigh plate", (0.5, 0.51, 0.53), (0.25, 0.4), metal=1.0, nscale=9, stretch=(1, 120, 120), cvar=0.05, aniso=0.6,
                   bump=0.008, bscale=180),
         rubber=pbr("belt rubber", (0.016, 0.016, 0.018), (0.62, 0.8), nscale=5, cvar=0.25, bump=0.35, bscale=55, ribs="X"),
@@ -448,9 +448,9 @@ def materials():
         mullion=pbr("mullion", (0.05, 0.053, 0.058), (0.3, 0.45), metal=0.8, nscale=3, cvar=0.08),
         tube=sk.emission("fluorescent", COOL, 5.0),
         tube_dim=sk.emission("fluorescent dim", COOL, 1.6),
-        sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 0.55, 0.45),     # halved: it must not outshine the desk
+        sign_on=screen_mat("sign lit", (0.72, 0.84, 1.0), 0.22, 0.45),
         sign_dim=screen_mat("sign dim", (0.6, 0.72, 0.9), 0.08, 0.3),
-        monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 3.0, 0.4),
+        monitor=screen_mat("monitor glow", (0.62, 0.78, 1.0), 1.8, 0.4),
         display=screen_mat("scale display", (0.63, 0.74, 1.0), 21.0, 0.3),
         display_edge=sk.emission("display edge bleed", (0.63, 0.74, 1.0), 6.0),
         bezel=pbr("display bezel", (0.012, 0.012, 0.014), (0.22, 0.32), nscale=8, cvar=0.08),
@@ -818,7 +818,7 @@ def scale(x0, idx, open_):
     child(box(("scale_display" if idx == 0 else p + "display"), (0.24, 0.003, 0.09), (0, -0.0405, 0.0),
               m["display"] if open_ else m["display_off"]), head)
     if open_:
-        dl = light(p + "disp_light", (0, -0.06, 0.0), (0.22, 0.08), 18.0, rot=(math.radians(-90), 0, 0), spread=120,
+        dl = light(p + "disp_light", (0, -0.06, 0.0), (0.22, 0.08), 38.0, rot=(math.radians(-90), 0, 0), spread=120,
                    colour=(0.63, 0.74, 1.0))
         dl.parent = head
         dl.visible_camera = False
@@ -929,7 +929,7 @@ def position_lights(x0, idx, level):
             # and a cutter (a barn door, also unseen) at the desk's end, so the passenger run does not spill over
             # the scale: the bags sit in the dark under their own dim pool and the display's glow
             cut = box(p + "scale_cutter", (0.01, 1.5, 1.8), (x0 + 0.78, 0.15, 2.25), m["plastic"])
-            dot = box(p + "hand flag", (0.28, 0.21, 0.005), (x0 + 0.30, 0.12, 1.95), m["plastic"])
+            dot = box(p + "hand flag", (0.28, 0.21, 0.005), (x0 + 0.30, 0.12, 1.55), m["plastic"])
             for ob in (fl, cut, dot):
                 for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
                     setattr(ob, attr, False)
@@ -1005,7 +1005,7 @@ def bags():
     xs = POSITIONS[0] + SX
     duffel = props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
                         val=0.25, rough_add=0.3)
-    props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.6)
+    props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.35, val=0.5)
     checkin_hall_trolley.trolley(materials(), (-0.85, -1.1, 0), 100)   # nose toward the counter, handle to the hall
     focus("focus_duffel", (xs - 0.01, 0.25, PLATE + duffel["dims"][2] * 0.5))
 
@@ -1128,7 +1128,7 @@ def _hand_verts(holder, side="L"):
     return out
 
 
-def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_drop=0.005):
+def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_drop=0.005, passing=False):
     """Lay one hand palm-down and flat on a surface at top_z, wrist near wrist_target (world), fingers along fwd_dir.
     Solves the arm's (forward, out, elbow) on the rig's own bone lengths, pronates the forearm, flattens the hand,
     then measures the hand's vertices and corrects the height so the palm touches (about 2 mm)."""
@@ -1174,16 +1174,22 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         hm.translation = head
         hb.matrix = hm
         bpy.context.view_layer.update()
-        for finger, spread in (("index", -3), ("middle", -1), ("ring", 1), ("pinky", 3), ("thumb", -18)):
-            f = "thumb" if finger == "thumb" else "f_" + finger
-            bend = bends.get(finger, 52 if side == "R" else 25)
-            n = f"{f}.01_master.{k}"
-            if n in pb:
-                pb[n].rotation_mode = "XYZ"
-                pb[n].rotation_euler.x = math.radians(bend)
-                pb[n].rotation_euler.z = math.radians(spread)
-                pb[n].scale.y = 0.91 if f != "thumb" else 0.96
-        bpy.context.view_layer.update()
+        if passing:
+            # The thumb tracks the booklet edge, the three centre pads press its trailing half.
+            joints = {"f_" + f: (bend, 4, 3) for f, bend in bends.items()}
+            joints["thumb"] = (20, 7, 8, -12)
+            rigged.articulate_hand(holder, k, joints)
+        else:
+            for finger, spread in (("index", -3), ("middle", -1), ("ring", 1), ("pinky", 3), ("thumb", -18)):
+                f = "thumb" if finger == "thumb" else "f_" + finger
+                bend = bends.get(finger, 52 if side == "R" else 25)
+                n = f"{f}.01_master.{k}"
+                if n in pb:
+                    pb[n].rotation_mode = "XYZ"
+                    pb[n].rotation_euler.x = math.radians(bend)
+                    pb[n].rotation_euler.z = math.radians(spread)
+                    pb[n].scale.y = 0.91 if f != "thumb" else 0.96
+            bpy.context.view_layer.update()
         hv = _hand_verts(holder, k)
         low = min(p.z for p in hv["palm"] + hv["fingers"])
         palm_low, finger_low = min(p.z for p in hv["palm"]), min(p.z for p in hv["fingers"])
@@ -1205,38 +1211,6 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     return dict(arm=pose[key], fit=wrist_error, pad=pad, low=low, palm_low=min(p.z for p in hv["palm"]),
                 finger_low=min(p.z for p in hv["fingers"]), thumb=sum(hv["thumb"], Vector()) / max(1, len(hv["thumb"])),
                 palm=sum(hv["palm"], Vector()) / max(1, len(hv["palm"])))
-
-
-def sculpt_hair(name):
-    """The shared cast's carved-strand bump reads as a ribbed knit beanie in a close-up: soften it to a sculpted,
-    smooth stone (bump about 0.05, a broader combed undulation)."""
-    hair = bpy.data.objects.get(f"{name}_body_hair")
-    if hair is not None:
-        smooth = hair.modifiers.new("soft scalp silhouette", "SUBSURF")
-        smooth.levels = smooth.render_levels = 1
-        hair.modifiers.move(len(hair.modifiers) - 1, 0)
-        hair.modifiers["hug"].offset = 0.0005
-        hair.modifiers["thickness"].thickness = 0.002
-    bun = bpy.data.objects.get(f"{name}_body_bun")
-    if bun is not None:
-        centre = sum((v.co for v in bun.data.vertices), Vector()) / len(bun.data.vertices)
-        for v in bun.data.vertices:
-            d = v.co - centre
-            v.co = centre + Vector((d.x, 0.78 * d.y - 0.013, 0.84 * d.z - 0.004))
-        bun.data.update()
-    m = bpy.data.materials.get(f"hair_{name}")
-    if not m:
-        return
-    nt = m.node_tree
-    for n in nt.nodes:
-        if n.type == "BUMP":
-            n.inputs["Strength"].default_value = 0.05
-        elif n.type == "TEX_WAVE":
-            n.inputs["Scale"].default_value = 22.0
-            n.inputs["Distortion"].default_value = 4.0
-            n.inputs["Detail"].default_value = 1.5
-        elif n.type == "BSDF_PRINCIPLED":
-            n.inputs["Roughness"].default_value = 0.62
 
 
 def haze(density=0.0035):
@@ -1307,8 +1281,6 @@ def build(cast=True):
         return
     d = people.dawn()                  # the shared cast: flat taupe blouse and skirt, plain black flats
     a = people.staff("Agent", 0)       # airline staff: plain dark suit, no insignia
-    for n in ("Dawn", "Agent"):
-        sculpt_hair(n)
     place(d, (DAWN[0], DAWN[1], 0), 192)
     place(a, (*AGENT, 0.041), 6)
     eye_mat = castkit.stone("counter statue eyes", (0.42, 0.42, 0.43), 0.80)
@@ -1339,16 +1311,18 @@ def pose_cast(d, a):
     for name, basis in left.items():
         agent_rig.pose.bones[name].matrix_basis = basis
     bpy.context.view_layer.update()
-    dp = {"chest": (2, 0), "r_arm": (4, 7, 10)}
+    dp = {"chest": (2, 0), "r_arm": (4, 7, 10),
+          "hands": {"R": {"f_index": (15, 12, 9), "f_middle": (16, 14, 10),
+                          "f_ring": (17, 15, 12, 3), "f_pinky": (18, 16, 13, 6), "thumb": (22, 8, 9, -12)}}}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
-    fwd = Vector((-0.208, 0.978, 0)) + 0.25 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.084, LEDGE + 0.08), LEDGE + 0.0414, fwd.normalized(), curl=12.0)
+    fwd = Vector((-0.208, 0.978, 0)) + 0.52 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.084, LEDGE + 0.08), LEDGE + 0.0414, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
     # Put the booklet under the solved finger pads. Leave the far edge and a corner
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
         piece = bpy.data.objects["desk0_passport_" + part]
         piece.location.x = hand["pad"].x - 0.005
-        piece.location.y = hand["pad"].y + 0.017
+        piece.location.y = hand["pad"].y + 0.030
     # (the author, 26 Nov 2026: "The hand is wrong": the wrist 12 cm from her centre folded the forearm into her waist)
     print(f"CAST agent head {ga[1]} gaze error {ga[0]:.1f} deg; Dawn head {gd[1]} gaze error {gd[0]:.1f} deg")
     print(f"CAST Dawn l_arm {tuple(round(v, 1) for v in hand['arm'])} wrist fit {hand['fit'] * 1000:.0f} mm, hand low "

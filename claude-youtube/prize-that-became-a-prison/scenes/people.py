@@ -19,6 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "noir-kit"))
 import bpy  # noqa: E402,F401
 import bmesh  # noqa: E402
+from mathutils import Vector  # noqa: E402
 
 import cast  # noqa: E402
 import props  # noqa: E402
@@ -49,7 +50,42 @@ def fabric(holder):
                     b.inputs["Roughness"].default_value = FABRIC_ROUGH
 
 
+def _sculpt_hair(holder):
+    """The shared cast's carved-strand bump reads as a ribbed knit beanie in a close-up: soften it to a sculpted,
+    smooth stone (bump about 0.05, a broader combed undulation)."""
+    hair = bpy.data.objects.get(holder["body"] + "_hair")
+    if hair is not None:
+        for face in hair.data.polygons:
+            face.use_smooth = True
+        smooth = hair.modifiers.new("soft scalp silhouette", "SUBSURF")
+        smooth.levels = smooth.render_levels = 2
+        hair.modifiers.move(len(hair.modifiers) - 1, 0)
+        hair.modifiers["hug"].offset = 0.0005
+        hair.modifiers["thickness"].thickness = 0.002
+    bun = bpy.data.objects.get(holder["body"] + "_bun")
+    if bun is not None:
+        centre = sum((v.co for v in bun.data.vertices), Vector()) / len(bun.data.vertices)
+        for v in bun.data.vertices:
+            d = v.co - centre
+            v.co = centre + Vector((d.x, 0.78 * d.y - 0.024, 0.84 * d.z - 0.004))
+        bun.data.update()
+    m = hair.active_material if hair is not None else None
+    if not m:
+        return
+    nt = m.node_tree
+    for n in nt.nodes:
+        if n.type == "BUMP":
+            n.inputs["Strength"].default_value = 0.05
+        elif n.type == "TEX_WAVE":
+            n.inputs["Scale"].default_value = 22.0
+            n.inputs["Distortion"].default_value = 4.0
+            n.inputs["Detail"].default_value = 1.5
+        elif n.type == "BSDF_PRINCIPLED":
+            n.inputs["Roughness"].default_value = 0.62
+
+
 def _dress(h, items, tint, flat):
+    _sculpt_hair(h)
     tint = {k: (v if k.startswith("shoes") else tuple(c * FABRIC_VALUE for c in v)) for k, v in tint.items()}
     out = cast.dress(h, items, tint=tint, flat=flat)
     if "shoes04" in items:
