@@ -964,6 +964,9 @@ def boutique(G, props):
     F = G["bq"]       # materials: 0 bronze frame, 1 stone riser, 2 felt, 3 plinth, 4 dark wood, 5 interior wall
     # stall riser and frames
     F.box((gx - 0.02, d0 - 0.05, PZ), (gx + 0.12, d1 + 0.05, 0.62), 1)
+    # The butt joint between two display panes, visible at the right edge of
+    # the close-up. Its bead is narrower than the metal shopfront stiles.
+    F.box((gx - 0.006, 18.118, 0.62), (gx + 0.009, 18.130, 3.30), 0)
     for y in (d0 - 0.06, d1, D0 - 0.06, D1):
         F.box((gx - 0.04, y, PZ), (gx + 0.06, y + 0.06, 3.62), 0)
     F.box((gx - 0.04, d0 - 0.06, 3.3), (gx + 0.06, D1 + 0.06, 3.38), 0)
@@ -1034,7 +1037,7 @@ def boutique(G, props):
     area("bq_inside", (10.5, 21.1, 3.35), (2.5, 1.8), 120.0, (1.0, 0.8, 0.58), (0, 0, -1), spread=160)
     # the bags on display
     out = {}
-    spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=0.85, hue=0.49, rough_add=0.2)),
+    spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=0.85, hue=0.515, rough_add=0.25)),
             "handbag-satchel": ((8.0, 18.5, 1.12), 0.30, -72.0, dict(sat=0.8, rough_add=0.12)),
             "handbag-shoulder": ((7.97, 17.52, 0.92), 0.32, -105.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
     for name, (loc, size, turn, grade) in spec.items():

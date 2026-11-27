@@ -94,14 +94,14 @@ CAMERAS = {
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.025,
+                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.016,
                    hide_glossy=("shop_interiors", "tubes")),
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
                           fstop=4.0, beat="company", shift_y=0.0, haze=0.0022, exposure=-1.65)
 TRIMS = {
     "dawn": {"boutique door spill": 0},
-    "window": {"bq_glow": 0.25, "boutique door spill": 0},
+    "window": {"bq_glow": 0.18, "boutique door spill": 0},
     "company": {"boutique door spill": 0.62},
 }
 WIDE_VIEW = CAMERAS["wide"]
@@ -748,6 +748,8 @@ def apply_camera(name):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
+        if ln == "display shelf return" and name != "dawn":
+            li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
             li.visible_glossy = name not in ("window", "dawn")
     hz = st.OBJ.get("haze")
@@ -758,7 +760,9 @@ def apply_camera(name):
         hz.hide_render = d <= 0.0
     gl = mt.M.get("shop_glass")
     if gl is not None and "refl" in gl.node_tree.nodes:
-        gl.node_tree.nodes["refl"].inputs["To Min"].default_value = cfg.get("glass_refl", 0.07)
+        fresnel = gl.node_tree.nodes["refl"]
+        fresnel.inputs["To Min"].default_value = cfg.get("glass_refl", 0.07)
+        fresnel.inputs["To Max"].default_value = 0.58 if name == "window" else 1.0
     for key in ("shop_interiors", "tubes", "signboards"):
         o = st.OBJ.get(key)
         if o is not None:
@@ -811,5 +815,18 @@ def build(cast=True):
     _STATE["holders"], _STATE["cast"], _STATE["cache"], _STATE["bags"] = {}, [], {}, {}
     if cast:
         build_cast()
-        make_bags()
+        bags = make_bags()
+        source = Vector((6.95, 16.58, 0.93))
+        light = st.area("display shelf return", source, (0.75, 0.45), 28, (1.0, 0.76, 0.55),
+                        Vector((6.55, 17.88, 0.65)) - source, spread=70)
+        receivers = bpy.data.collections.new("Display return on bags and suit")
+        for bag in bags.values():
+            for obj in bag.children_recursive:
+                if obj.type in ("MESH", "CURVE"):
+                    receivers.objects.link(obj)
+        for obj in _STATE["holders"]["Dawn"].children_recursive:
+            if obj.type == "MESH" and "suit" in obj.name.lower():
+                receivers.objects.link(obj)
+        light.light_linking.receiver_collection = receivers
+        light.visible_glossy = False
     install_hook()
