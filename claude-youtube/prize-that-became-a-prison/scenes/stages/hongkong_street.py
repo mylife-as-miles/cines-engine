@@ -86,15 +86,15 @@ CAMERAS = {
     # the vanishing point; Dawn small on the right-hand pavement among the walkers, bags in her hands, walking
     # toward the lit boutique
     "wide": dict(loc=(1.4, 0.0, 1.5), aim=(2.45, 60.0, 1.5), lens=24, focus="fx_dawn", fstop=5.6, beat="walk",
-                 shift_y=0.12, haze=0.0022, exposure=-1.9),
+                 shift_y=0.12, haze=0.0022, sky_gain=0.16, exposure=-1.9),
     # Ch 03: Dawn from behind, three-quarter from her right, stopped at the boutique's lit window, the bags at her
     # sides; the street soft beyond on the left, its signs and shops melting into the haze
     "dawn": dict(loc=(5.33, 13.47, 1.36), aim=(7.24, 23.29, 1.0), lens=35, focus="fx_dawn", fstop=2.8, beat="window",
-                 shift_y=0.0, haze=0.0025, exposure=-1.5),
+                 shift_y=0.0, haze=0.0025, exposure=-1.5, glass_refl=0.02),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.016,
+                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.002, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
@@ -278,7 +278,9 @@ def build_cast():
                                       tone=(0.1, 0.1, 0.11), shoes="shoes04")
     holders["ShopNear"] = people.staff("ShopNear", 0)
     holders["ShopFar"] = people.staff("ShopFar", 1)
+    _STATE["subdivisions"] = {}
     for n, h in holders.items():
+        _STATE["subdivisions"][n] = []
         if n != "Dawn":
             for o in h.children_recursive:
                 if o.type == "MESH" and o.name.startswith(n + "_") and "shoes" not in o.name and "_body" not in o.name:
@@ -292,6 +294,8 @@ def build_cast():
             for md in getattr(o, "modifiers", []):
                 if md.type == "SUBSURF":
                     md.show_viewport = False
+                    _STATE["subdivisions"][n].append((md, md.render_levels))
+    _STATE["dawn_glossy"] = [o for o in holders["Dawn"].children_recursive if o.type == "MESH" and o.visible_glossy]
     _STATE["holders"] = holders
     return holders
 
@@ -725,17 +729,30 @@ def which_camera():
     return None
 
 
-def apply_camera(name):
+def apply_camera(name, width=1280):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "walk")
     H = _STATE["holders"]
     if H:
         pose_cast(beat)
         only = cfg.get("only")
+        eye = Vector(cfg.get("loc", (0, 0, 0)))
+        forward = (Vector(cfg.get("aim", (0, 1, 0))) - eye).normalized()
         for n, h in H.items():
             vis = n in BLOCK[beat] and (only is None or n in only)
+            # In the wide a whole walker is under 100 pixels high. Stacking two
+            # level-two subdivisions on each scalp can exhaust memory across a
+            # nine-person street. Keep full detail in portraits and reflections.
+            depth = (h.location - eye).dot(forward)
+            distant = depth > 0 and cfg.get("lens", 35) * width * 1.9 < 128 * 36 * depth
+            for modifier, original in _STATE["subdivisions"][n]:
+                modifier.render_levels = min(original, 1) if distant else original
             for o in [h] + list(h.children_recursive):
                 o.hide_render = not vis
+        # In the three-quarter view her reflected head looks like a second
+        # person behind the satchel. Keep her reflection for the window insert.
+        for obj in _STATE["dawn_glossy"]:
+            obj.visible_glossy = name != "dawn"
         for bag in _STATE["bags"].values():
             for ob in [bag] + list(bag.children_recursive):
                 ob.hide_render = beat == "company"
@@ -748,10 +765,11 @@ def apply_camera(name):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
-        if ln == "display shelf return" and name != "dawn":
+        if (ln == "display shelf return" and name != "dawn") or (ln == "boutique pavement spill" and name != "wide"):
             li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
             li.visible_glossy = name not in ("window", "dawn")
+    mt.M["sky"].node_tree.nodes["sky exposure"].inputs[1].default_value = cfg.get("sky_gain", 1.0)
     hz = st.OBJ.get("haze")
     if hz is not None:
         pv = next(n for n in hz.data.materials[0].node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
@@ -762,7 +780,7 @@ def apply_camera(name):
     if gl is not None and "refl" in gl.node_tree.nodes:
         fresnel = gl.node_tree.nodes["refl"]
         fresnel.inputs["To Min"].default_value = cfg.get("glass_refl", 0.07)
-        fresnel.inputs["To Max"].default_value = 0.58 if name == "window" else 1.0
+        fresnel.inputs["To Max"].default_value = cfg.get("glass_grazing", 1.0)
     for key in ("shop_interiors", "tubes", "signboards"):
         o = st.OBJ.get(key)
         if o is not None:
@@ -790,7 +808,8 @@ def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):
-        apply_camera(which_camera())
+        resolution = kw.get("res", args[2] if len(args) > 2 else (1920, 1080))
+        apply_camera(which_camera(), resolution[0])
         kw.setdefault("world", WORLD)
         return orig(*args, **kw)
     render._orig = orig
@@ -805,6 +824,15 @@ def build(cast=True):
     lamp = st.area("boutique door spill", door, (0.66, 1.28), 142.0, (1.0, 0.59, 0.34),
                    Vector((5.57, 16.34, 0.84)) - door, spread=68)
     lamp.visible_glossy = False
+    # From across the road the lower shopfront throws a second, broader reflection
+    # at her feet. Its light stays on the paving so her coat retains its shape.
+    source = Vector((6.88, 15.55, 2.05))
+    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 800.0, (1.0, 0.70, 0.51),
+                           Vector((5.56, 16.70, st.PZ)) - source, spread=90)
+    paving_light.visible_glossy = False
+    receivers = bpy.data.collections.new("Boutique pavement")
+    receivers.objects.link(bpy.data.objects["street_ground"])
+    paving_light.light_linking.receiver_collection = receivers
     for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
         mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
         BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")

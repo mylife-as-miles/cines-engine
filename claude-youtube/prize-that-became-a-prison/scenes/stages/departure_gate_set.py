@@ -25,6 +25,7 @@ import departure_gate_mats as mt
 import departure_gate_seats as seatkit
 
 H = 3.9            # ceiling
+GATE_SPEAKER = (9.6, 5.94, H - 0.006)  # above the boarding doors
 WIN = 6.0          # room side of the curtain wall (mullion faces)
 GLASS_Y = 6.1
 BACK = -8.0
@@ -211,6 +212,7 @@ def ceiling():
             cyl(f"spr_head_{i}_{j}", 0.011, 0.035, (x, y, H - 0.02), chrome, verts=12)
             if (i + j) % 3 == 0:
                 cyl(f"smoke_{i}_{j}", 0.065, 0.03, (x + 1.2, y + 0.3, H - 0.015), m["plastic_mid"], verts=28)
+    cyl("boarding PA", 0.11, 0.012, GATE_SPEAKER, m["diffuser"], verts=32)
     for x in (-7.8, -1.8, 4.2):  # ceiling speakers
         cyl(f"spk_{x}", 0.11, 0.012, (x, 0.4, H - 0.006), m["diffuser"], verts=32)
 

@@ -505,7 +505,7 @@ def materials():
         yellow=pbr("safety yellow paint", (0.6, 0.41, 0.025), (0.35, 0.55), nscale=7, cvar=0.12, coat=0.15, world=True,
                    chips=((0.05, 0.05, 0.05), 0.5), grime=(0.0, 0.6, 0.45)),
         yellow_cable=pbr("pull cord sheath", (0.55, 0.38, 0.02), (0.4, 0.5), nscale=30, cvar=0.1, world=True),
-        red=pbr("signal red paint", (0.25, 0.022, 0.018), (0.3, 0.45), nscale=8, cvar=0.1, coat=0.3, world=True),
+        red=pbr("dark iron oxide paint", (0.105, 0.084, 0.069), (0.3, 0.45), nscale=8, cvar=0.1, coat=0.3, world=True),
         enclosure=pbr("enclosure grey", (0.16, 0.165, 0.17), (0.35, 0.5), nscale=5, cvar=0.08, coat=0.2, world=True,
                       grime=(0.4, 1.0, 0.3)),
         plastic=pbr("black plastic", (0.018, 0.018, 0.02), (0.38, 0.5), nscale=12, cvar=0.1),

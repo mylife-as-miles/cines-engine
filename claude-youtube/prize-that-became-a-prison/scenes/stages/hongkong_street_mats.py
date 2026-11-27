@@ -516,7 +516,11 @@ def sky(name="night sky"):
     col = _mix(nt, far, (0.035, 0.045, 0.065), (0.070, 0.060, 0.060))
     em = _n(nt, "ShaderNodeEmission")
     _link(nt, col, em.inputs["Color"])
-    _link(nt, cloud, em.inputs["Strength"])
+    trim = _n(nt, "ShaderNodeMath", operation="MULTIPLY")
+    trim.name = "sky exposure"
+    trim.inputs[1].default_value = 1.0
+    _link(nt, cloud, trim.inputs[0])
+    _link(nt, trim.outputs[0], em.inputs["Strength"])
     _emit_out(m, nt, em.outputs[0])
     m.cycles.emission_sampling = "NONE"
     return m

@@ -462,3 +462,35 @@ The revised check-in wide is native 1920 in source. At the title rectangle you s
 The dining plate exposed another contact problem. The old hand-bone targets looked level, but the actual fingers passed 47–60 mm through the wood. I measured the table at the six hands and fitted their visible skin. Each heel now lies 0.9–1.1 mm above the tabletop. The lowest points of each set of fingers are within 0.7 mm of it, across warm Gene, Tim and older Gene. Source 480b8de. The family, occupied chair and empty chair are queued together.
 
 On the void, the 32-degree standing turn completely hid the bun in the frontal silhouette. At 68 degrees it projects 6 px beyond the skull at 1280. The full preview also showed white hands at graded medians 201 and 181. I reworked the pool bounce and reduced the direct light on the body, preserving the stone shader. The new standing, high, close and divided-light views are queued at ac0fd1b.
+
+### 2026-11-27 12:51 UTC · INFO · L2 · evidence_table
+
+Publish the matched three-bag reveal and its tracked stitch insert. Published final cameras `purses,seam` in `b5233b2`. L3 delivered. The raw plates and their purses.seam.json and seam.seam.json tracks are in frames/raw/evidence_table/. The same 21 leather points give graded medians 36.25 and 34.89/255 in the 2560 master and 1280 macro. The tracks have 212 and 428 samples respectively, spaced about 3 native pixels. On the master the tabs cover x 1835.4–1871.4 and 2111.3–2147.3. On the insert they cover x 235.3–334.2 and 1050.7–1149.6. Both plates show only the physical stitching. Please check the three bags against the script, the light across the cut and the stitch path on both sides of the tabs. Is the macro clear enough to carry the trace?
+
+### 2026-11-27 12:51 UTC · REQUEST C27 · to CRITIC · critique
+
+Please score `evidence_table` at `b5233b2` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `purses,seam`. L3 delivered. The raw plates and their purses.seam.json and seam.seam.json tracks are in frames/raw/evidence_table/. The same 21 leather points give graded medians 36.25 and 34.89/255 in the 2560 master and 1280 macro. The tracks have 212 and 428 samples respectively, spaced about 3 native pixels. On the master the tabs cover x 1835.4–1871.4 and 2111.3–2147.3. On the insert they cover x 235.3–334.2 and 1050.7–1149.6. Both plates show only the physical stitching. Please check the three bags against the script, the light across the cut and the stitch path on both sides of the tabs. Is the macro clear enough to carry the trace?
+
+### 2026-11-27 12:55 UTC · INFO · to LEAD · Tim across the meal, letters, hearing and prison visit
+
+At ac2e330 Tim has the same jaw in the 2014 meal, the desk years and his later testimony and visit. The old shape used the rig's adult head position on the smaller, undeformed mesh. At the writing desk it moved the side of his skull by up to 9.2 mm and gave the chin no width at all. I measured the mixed rest shape instead and located the jaw from the actual chin. Across his three ages the side of the jaw gains 7.9% and the neck gains 11.8%. The skin at and above each ear stays in its original position. I also cast 23,580 rays around each dressed collar, with the ordinary render masks on. No ray that previously hit the shirt or jacket first now hits skin first. The next witness, visit, meal and desk previews will show the change under their own lighting.
+
+### 2026-11-27 13:15 UTC · INFO · to LEAD · gate light and Kowloon street proofs
+
+In the called gate shot Dawn now sights the physical grille above the boarding doors, 29.8 degrees beyond the lens. Her left palm heel clears the front of the armrest by 0.51 mm. In the first crop the thumb and index closed into a ring, and her hand peaked at 196/255. Opening the grip gives 5 px between the tips in the 960 preview. A flag over the armrest brings the brightest hand pixel to 182 while the face reaches 186 at p99. The earlier seated pose returns exactly when the camera changes back. Sources 2ff9a83 and bd81ccf.
+
+The Kowloon street preview now measures 68/255 on the pavement around Dawn and 37.5 farther along the same side, a 1.81 ratio. The old ratio was 1.05. The sky has come down from 30.5 to 17.3, below the neighbouring facade at 19.1. The three walkers in company have a finished native frame. The nine-person wide exceeded the machine's 16 GB limit when it followed company in the same process. I split the native renders by camera and scaled subdivision to the size of distant figures on screen. The close and reflected figures keep full detail. Sources 8112e89 and d17ea19. The complete group will go to CRITIC together.
+
+### 2026-11-27 13:27 UTC · INFO · to LEAD · check-in payment, train aisle and baggage controls
+
+In the check-in shoulder, Dawn now slides the blank card flat. The old hand covered 1.8% of it. The new pose covers 47.2% and leaves 73% of the passport cover clear of her hand. The index, middle and ring slope down 11.5°, 11.7° and 14.1° to the counter. Their pads sit within 0.3 mm of the card surface. I checked the graded crop at the shoulder camera’s normal size. Source d497ed0.
+
+On the train, the reading lamp above Dawn now aims 45 mm below her eyes for the aisle shot. Its window-side bounce brings her head from a median of 135 to 161/255 in the graded test. The nearest linen stays at 53, the far linen at 41 and the aisle at 19 in the same crop. I checked the lights switching from seat to aisle to rack and back, and in a standalone aisle build. The seat and rack keep their original lamp aim.
+
+On the baggage belt I took the saturated red off the control beside the curtain. The nine red pixels in the previous enclosure crop are gone in the new render. The control still reads against its yellow backing. Source 3b261a4.
+
+### 2026-11-27 13:45 UTC · INFO · to LEAD · Kowloon finals and the mainland hotel overhead
+
+The street wide finished at 1280 with median luminance 26.7/255, sky 17.3 and upper facade 19.2. Near and far pavement read 69 and 39. On inspection at native size the teal sign had a stepped dark shape across its top. Camera rays hit the actual washing hung from the boutique’s middle upstairs window. I moved its poles to the next window on the same floor. The replacement crop shows the continuous blank sign, verified by rays through the former steps. Source b5d2721. For the three-quarter street shot I removed the second face behind the satchel at 9a66c18. For the window insert I kept the reflected face, at 14.4 against 11.4 on a second render of the same felt with Dawn removed. Source f7fa98a. The updated wide and insert will join the company walk and three-quarter shot for the stage review.
+
+The hotel's pre-market overhead was seeing the ceiling. It now looks through it and shows Dawn's hand, her closed case and the three gifts. The 640×360 graded check went from mean 4.5 to 49.9. That revealed the satchel meeting a pillow. I am checking its separation before sending the overhead to finals. The later packing shot and the earlier acceptance shot use their own lighting and props.

@@ -84,16 +84,17 @@ TRIMS = {
              **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 0.18 for xy in st.BACK_FX}},
     # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
     # fittings over the far rows a touch lower so the rows stay soft and dark behind her
-    "seated": {"window_spill": 0.2, POOL: 0.15, KEY: 0.22, **{n: 0.6 for n in DIMS}, "fx_-10.2_-1.2_light": 3.0},
+    "seated": {"window_spill": 0.2, POOL: 0.10, KEY: 0.22, **{n: 0.6 for n in DIMS}, "fx_-10.2_-1.2_light": 3.0},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
     "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90,
                "mast_light_0": 0.35, "mast_light_1": 0.35},
 }
-FLAGS = {"seated": ["flag_near_seats", "flag_pool", "seated face key"], "wide": ["right wall washer", "wide shoulder edge"]}   # black flags (camera-invisible) used by one camera only
+FLAGS = {"seated": ["flag_near_seats", "flag_pool", "lap flag", "seated face key"], "wide": ["right wall washer", "wide shoulder edge"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
-LEFT_FINGERS = [f"f_{finger}.01_master.L" for finger in ("index", "middle", "ring", "pinky")]
-CALL_CONTROLS = ["chest", "neck", "head", "forearm_fk.L", "forearm_fk.R", "hand_fk.L", "thumb.01_master.L", *LEFT_FINGERS]
+CALL_CONTROLS = ["chest", "neck", "head", "upper_arm_fk.L", "forearm_fk.L", "forearm_fk.R", "hand_fk.L"]
+CALL_CONTROLS += [f"{digit}.{joint}.L" for digit in ("f_index", "f_middle", "f_ring", "f_pinky", "thumb")
+                  for joint in ("01_master", "02", "03")]
 
 
 # ---------------------------------------------------------------- people
@@ -525,6 +526,55 @@ def which_camera():
     return None
 
 
+def brace_for_call(holder):
+    """Turn toward the PA and take her weight on the front of the aisle armrest."""
+    rig = rigged.rig_of(holder)
+    bones = rig.pose.bones
+    world = rig.matrix_world
+    inv = world.to_3x3().inverted()
+    rigged._turn(rig, "chest", 0, -6)
+    rigged._turn(rig, "neck", -6, -22)
+    head = bones["head"]
+    look = Vector(st.GATE_SPEAKER) - (world @ head.head)
+    rotation = world.to_quaternion().inverted() @ look.to_track_quat("-Y", "Z") @ head.bone.matrix_local.to_quaternion()
+    pose = rotation.to_matrix().to_4x4()
+    pose.translation = head.matrix.translation
+    head.matrix = pose
+    bpy.context.view_layer.update()
+    rigged._turn(rig, "forearm_fk.R", 1.0, 0)
+
+    upper, lower, hand = (bones[name] for name in ("upper_arm_fk.L", "forearm_fk.L", "hand_fk.L"))
+    shoulder, elbow, wrist = (world @ bone.head for bone in (upper, lower, hand))
+    arm_length, forearm_length = (elbow - shoulder).length, (wrist - elbow).length
+    # The pad is 25 cm long, centred 1 cm behind the seat origin, with its
+    # upper surface at 0.649 m. Keep the elbow on its natural side of the reach.
+    pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
+    target = Vector((pad_x + 0.001, ROW_Y + 0.034, 0.677))
+    line = target - shoulder
+    distance = line.length
+    line.normalize()
+    along = (arm_length**2 - forearm_length**2 + distance**2) / (2 * distance)
+    bend = (elbow - shoulder) - line * (elbow - shoulder).dot(line)
+    offset = math.sqrt(max(0.0, arm_length**2 - along**2))
+    elbow_target = shoulder + line * along + bend.normalized() * offset
+    rigged._aim(rig, upper.name, inv @ (elbow_target - shoulder))
+    rigged._aim(rig, lower.name, inv @ (target - (world @ lower.head)))
+    rigged.articulate_hand(holder, "L", {"f_index": (26, 11, 6), "f_middle": (35, 16, 9),
+                                        "f_ring": (36, 18, 10, 2), "f_pinky": (38, 20, 11, 3),
+                                        "thumb": (-8, 0, 2, -22)})
+    forward = Vector((0.04, 1, -0.02)).normalized()
+    rigged._aim(rig, hand.name, inv @ forward)
+    # Roll the hand until its knuckles run across the pad and the thumb is inside.
+    across = world @ bones["DEF-f_pinky.01.L"].head - world @ bones["DEF-f_index.01.L"].head
+    across -= forward * across.dot(forward)
+    outward = Vector((-1, 0, 0))
+    outward -= forward * outward.dot(forward)
+    roll = math.atan2(forward.dot(across.cross(outward)), across.dot(outward))
+    pivot = Matrix.Translation(hand.matrix.translation)
+    hand.matrix = pivot @ Matrix.Rotation(roll, 4, (inv @ forward).normalized()) @ pivot.inverted() @ hand.matrix
+    bpy.context.view_layer.update()
+
+
 def apply_camera(name):
     cam = bpy.context.scene.camera
     if cam is not None:
@@ -541,17 +591,11 @@ def apply_camera(name):
             rig.pose.bones[bone].matrix_basis = rest.copy()
         bpy.context.view_layer.update()
         if called:
-            rigged._turn(rig, "chest", 0, -5)
-            rigged._turn(rig, "neck", 0, -18)
-            rigged._turn(rig, "head", -23, -43)
-            rigged._turn(rig, "forearm_fk.R", 0.55, 0)
-            rigged._turn(rig, "forearm_fk.L", -10, 0)
-            for bone in LEFT_FINGERS:
-                rig.pose.bones[bone].rotation_euler.x = math.radians(12)
-            bpy.context.view_layer.update()
+            brace_for_call(_STATE["cast"][0])
     for camera, unit in (("wide", "seats_r3_u1"), ("window", "seats_r1_u2")):
         bpy.data.objects[unit].hide_render = name == camera
-    bpy.data.objects["called face return"].hide_render = not called
+    for name_called in ("called face return", "called hand flag"):
+        bpy.data.objects[name_called].hide_render = not called
     _STATE["mast emission"].default_value = _STATE["mast power"] * (0.6 if name == "window" else 1)
     light_setup = "seated" if called else name
     trims = TRIMS.get(light_setup, {})
@@ -612,7 +656,7 @@ def build(cast=True):
     bounce.visible_glossy = False
     bounce.data.specular_factor = 0.0
     for name, location, size, energy, target, spread in (
-        ("seated face key", (SEAT[0] + 0.50, ROW_Y + 0.9, 1.35), (0.30, 0.30), 16, FOCUS["fx_face"], 25),
+        ("seated face key", (SEAT[0] + 0.50, ROW_Y + 0.9, 1.35), (0.30, 0.30), 20, FOCUS["fx_face"], 25),
         ("called face return", (SEAT[0] + 1.6, ROW_Y + 0.3, 1.5), (0.4, 0.4), 8, FOCUS["fx_face"], 45),
         ("wide shoulder edge", (SEAT[0] - 1.8, ROW_Y + 0.2, 1.6), (0.34, 0.48), 17,
          (SEAT[0], ROW_Y, 1.08), 45),
@@ -630,7 +674,14 @@ def build(cast=True):
                   st.M.setdefault("flag", sk.mat("flag black", (0.0, 0.0, 0.0), 1.0)))
     # and a second right beside the downlight, so its cone stops at the seat beside hers
     flag2 = st.box("flag_pool", (0.012, 0.9, 0.7), (SEAT[0] + 0.12, ROW_Y + 0.05, st.H - 0.38), st.M["flag"])
-    for f in (flag, flag2):
+    lap_flag = st.box("lap flag", (0.28, 0.20, 0.004), (SEAT[0] + 0.16, ROW_Y + 0.32, 1.18), st.M["flag"])
+    # When she braces, the hand has moved from her lap into the overhead key.
+    pad_x = st.UNITS[2] + st.seatkit.ARM_X[0]
+    brace_flag = st.box("called hand flag", (0.26, 0.24, 0.004),
+                        (pad_x + 0.053, ROW_Y + 0.159, 0.824), st.M["flag"])
+    for f in (lap_flag, brace_flag):
+        f.visible_diffuse = f.visible_volume_scatter = False
+    for f in (flag, flag2, lap_flag, brace_flag):
         f.visible_camera = f.visible_glossy = f.visible_transmission = False
     seat_z = seat_height(SEAT[0], ROW_Y)
     for n, p in FOCUS.items():

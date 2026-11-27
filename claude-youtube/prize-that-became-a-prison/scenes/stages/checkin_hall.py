@@ -1181,7 +1181,11 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     target = Vector(wrist_target)
     pitch = 0.0
     bends = {"index": curl - 2, "middle": curl - 1, "ring": curl + 2, "pinky": curl + 6}
-    for attempt in range(12):
+    lower, upper = (-22.0, 5.0) if passing else (3.0, 27.0)
+    tolerance = 0.00025 if passing else 0.0015
+    if passing:
+        bends["pinky"] = curl + 4
+    for attempt in range(14 if passing else 12):
         wrist_error, pose[key] = rigged.fit_wrist(sh, arm_inv @ target, L1, L2, sgn, min_forward=-30)
         rigged.pose_figure(holder, pose)
         # hand flat: its X axis (across the palm, palm side) straight down, its Y axis along fwd_dir
@@ -1213,8 +1217,10 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         bpy.context.view_layer.update()
         if passing:
             # The thumb tracks the booklet edge, the three centre pads press its trailing half.
-            spread = {"index": -3, "middle": 0, "ring": 2, "pinky": 4}
-            joints = {"f_" + f: (bend, 2, 2, spread[f]) for f, bend in bends.items()}
+            # Counter the rig's natural resting curl. The pads lie lengthwise
+            # on the card instead of balancing on the ends of the fingers.
+            spread = {"index": 0, "middle": 0, "ring": 0, "pinky": -3}
+            joints = {"f_" + f: (bend, -12, -5, spread[f]) for f, bend in bends.items()}
             joints["thumb"] = (10, 25, 5, -5)
             rigged.articulate_hand(holder, k, joints)
         else:
@@ -1236,12 +1242,12 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         finger_z = sum(pads[name].z for name in support) / len(support)
         height_delta = top_z - finger_z
         tilt_error = palm_low - finger_z + palm_drop
-        if attempt >= 7 and max(abs(top_z - pads[name].z) for name in support) < 0.0015:
+        if attempt >= 7 and max(abs(top_z - pads[name].z) for name in support) < tolerance:
             break
         if attempt < 8:
             pitch += 0.42 * math.atan2(tilt_error, 0.085)
         for name in support:
-            bends[name] = max(3.0, min(10.0 if passing else 27.0, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
+            bends[name] = max(lower, min(upper, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
         target.z += height_delta * 0.75
     if passing:
         # Rotate the thumb as a unit at its basal joint so it rests alongside the booklet.
@@ -1399,8 +1405,8 @@ def pose_cast(d, a):
           "hands": {"R": {"f_index": (15, 12, 9), "f_middle": (16, 14, 10),
                           "f_ring": (17, 15, 12, 3), "f_pinky": (18, 16, 13, 6), "thumb": (22, 8, 9, -12)}}}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
-    fwd = Vector((-0.208, 0.978, 0)) + 0.52 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.043, LEDGE + 0.08), LEDGE + 0.04216, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
+    fwd = (Vector((-0.208, 0.978, 0)) + 1.25 * Vector((0.978, 0.208, 0))).normalized()
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.184, 0.043, LEDGE + 0.08), LEDGE + 0.04216, fwd, curl=-8, passing=True, palm_drop=-0.002)
     # Put the booklet under the solved finger pads. Leave the far edge and a corner
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
@@ -1410,7 +1416,8 @@ def pose_cast(d, a):
         if part == "pages":
             piece.location += piece.rotation_euler.to_matrix() @ Vector((0, 0.001, 0))
     card = bpy.data.objects["desk0_payment_card"]
-    card.location.x, card.location.y = hand["pad"].x, hand["pad"].y + 0.005
+    centre = hand["pad"] + Vector((0, 0.005, 0)) - fwd * 0.008
+    card.location.x, card.location.y = centre.x, centre.y
     flag = bpy.data.objects["pos0_hand flag2"]
     flag.location.x, flag.location.y = hand["palm"].x, hand["palm"].y
     # (the author, 26 Nov 2026: "The hand is wrong": the wrist 12 cm from her centre folded the forearm into her waist)

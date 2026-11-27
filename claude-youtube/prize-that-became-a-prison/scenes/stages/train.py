@@ -51,6 +51,7 @@ LEVELS = {
     (7, "L"): 0.18, (7, "R"): 0.18,
 }
 STRIP_ENERGY = 90.0
+READING_TARGET = Vector((SEAT_X - 0.04, SEAT_Y + 0.02, 1.15))
 READING_LAMP = 160.0
 FACE_FILL = 3.0                                 # seat camera only: the lamp's light off the ledge and her lap
 
@@ -87,7 +88,7 @@ SEAT_CAM_OFFSET = (0.68, -0.30, 0.06)      # the seat camera from her eyes: towa
 if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
 TRIMS = {
-    "aisle": {"face_fill": 0.0, "bun_rim": 0.0, "bag_edge": 0.0},
+    "aisle": {"face_fill": 2.4, "reading_lamp": 1.1, "bun_rim": 0.0, "bag_edge": 0.0},
     "seat": {"night_light": 0.0, "bag_edge": 0.0},
     "rack": {"face_fill": 0.0, "bun_rim": 0.0},
 }
@@ -524,7 +525,7 @@ def lights():
         st.M["lamp_lens_on"] = st.mt.glow("reading lamp lens", st.LAMP, 40.0, falloff=0.5, axes=("X", "Y"))
         lens.data.materials.clear()
         lens.data.materials.append(st.M["lamp_lens_on"])
-    st.spot("reading_lamp", tuple(lp), (SEAT_X - 0.04, SEAT_Y + 0.02, 1.15), READING_LAMP, st.LAMP, 40.0, 0.6, radius=0.02)
+    st.spot("reading_lamp", tuple(lp), READING_TARGET, READING_LAMP, st.LAMP, 40.0, 0.6, radius=0.02)
 
 
 # ---------------------------------------------------------------- per-camera hook
@@ -558,6 +559,9 @@ def apply_camera(name):
         obj.hide_render = name != "aisle"
     for obj in _STATE["cove_seams"]:
         obj.hide_render = name == "rack"
+    lamp = st.LIGHTS["reading_lamp"]
+    target = bpy.data.objects["fx_dawn"].location + Vector((0, 0, -0.045)) if name == "aisle" else READING_TARGET
+    lamp.rotation_euler = (target - lamp.location).to_track_quat("-Z", "Y").to_euler()
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
@@ -630,6 +634,9 @@ def set_cameras(eyes, bag_box):
     """The seat and rack cameras from where Dawn's eyes and the bags actually are."""
     if eyes is not None:
         _focus("fx_dawn", eyes)
+        ff = Vector((GLASS_X + 0.1, eyes.y - 0.46, eyes.z - 0.075))
+        st.area("face_fill", tuple(ff), (0.22, 0.22), FACE_FILL, st.LAMP, spread=70,
+                rot=(eyes - ff).to_track_quat("-Z", "Y").to_euler())
     if eyes is not None and "seat" in CAMERAS:
         mirror = Vector((2 * GLASS_X - eyes.x, eyes.y, eyes.z))
         cam = eyes + Vector(SEAT_CAM_OFFSET)
@@ -650,9 +657,6 @@ def set_cameras(eyes, bag_box):
             p = ray(off, dist)
             st.streak_obj(f"streak_hero_{i}", p.x, p.y, p.z, ln, hg, rgb, k)
         keep_clear(CAMERAS["seat"], on_glass)
-        ff = Vector((GLASS_X + 0.1, eyes.y - 0.46, eyes.z - 0.075))
-        st.area("face_fill", tuple(ff), (0.22, 0.22), FACE_FILL, st.LAMP, spread=70,
-                rot=(eyes - ff).to_track_quat("-Z", "Y").to_euler())
         print(f"TRAIN seat camera {CAMERAS['seat']['loc']} aim {CAMERAS['seat']['aim']}: reflection on the glass at "
               f"{tuple(round(v, 3) for v in on_glass)}", flush=True)
     if "aisle" in CAMERAS:
@@ -662,7 +666,7 @@ def set_cameras(eyes, bag_box):
             pane = Vector((side * abs(GLASS_X), st.WIN_Y[bay], z))
             centre = pane + (pane - origin) * (depth / abs(pane.x - origin.x))
             st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 3.8)
-    if bag_box:
+    if bag_box and "rack" in CAMERAS:
         lo, hi = bag_box
         target = Vector((hi.x, (lo.y + hi.y) / 2, lo.z * 0.6 + hi.z * 0.4))
         CAMERAS["rack"]["aim"] = tuple(target + Vector((0, -0.03, -0.04)))
