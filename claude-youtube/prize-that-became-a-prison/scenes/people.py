@@ -139,8 +139,64 @@ def staff(name, variant=0):
     return h
 
 
-def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", tone=(0.12, 0.115, 0.11), shoes="shoes01"):
-    """Any other man (Tim at the hearing in male_elegantsuit01 charcoal; Gene; the organisers in casual suits)."""
+def _elegant_suit_tones(holder, jacket, shirt, tie):
+    """Use the CC0 suit atlas to separate the collar and cuffs from the striped tie and jacket."""
+    import numpy as np
+
+    suit = bpy.data.objects[f"{holder.name}_male_elegantsuit01"]
+    mat = suit.material_slots[0].material
+    tree = mat.node_tree
+    original = next(n for n in tree.nodes if n.type == "TEX_IMAGE" and n.image)
+    source = original.image
+    width, height = source.size
+    pixels = np.empty(width * height * 4, dtype=np.float32)
+    source.pixels.foreach_get(pixels)
+    rgb = pixels.reshape(height, width, 4)[..., :3]
+    value = rgb.max(axis=2)
+    shirt_mask = (value > 0.42) & (value - rgb.min(axis=2) < 0.15)
+
+    # In this atlas the knot and blades share a UV island between the collar points.
+    # Close gaps across the pale stripes so the tie retains its shape in a flat colour.
+    y = slice(int(0.80 * height), int(0.94 * height))
+    x = slice(int(0.35 * width), int(0.43 * width))
+    detail = rgb[y, x]
+    navy = (detail[..., 2] - detail[..., 0] > 0.06) & (value[y, x] > 0.12)
+    window = np.lib.stride_tricks.sliding_window_view
+    grow = max(1, round(7 * width / 2048))
+    trim = max(1, round(4 * width / 2048))
+    grown = window(np.pad(navy, grow), (2 * grow + 1,) * 2).any(axis=(-2, -1))
+    tie_mask = window(np.pad(grown, trim), (2 * trim + 1,) * 2).all(axis=(-2, -1))
+
+    # Replace the source pattern with three constant film colours while preserving its UVs
+    # and the fitted garment's existing shading. Pack the image for callers that save a scene.
+    out = np.empty((height, width, 4), dtype=np.float32)
+    out[..., 3] = 1
+    colour = out[..., :3]
+    colour[:] = np.asarray(jacket) * FABRIC_VALUE
+    colour[shirt_mask] = np.asarray(shirt) * FABRIC_VALUE
+    colour[y, x][tie_mask] = np.asarray(tie) * FABRIC_VALUE
+    atlas = bpy.data.images.new(f"{holder.name} plain suit tones", width, height, alpha=False)
+    atlas.colorspace_settings.name = "Non-Color"
+    atlas.pixels.foreach_set(out.ravel())
+    atlas.pack()
+    plain = tree.nodes.new("ShaderNodeTexImage")
+    plain.image = atlas
+    if original.inputs["Vector"].is_linked:
+        tree.links.new(original.inputs["Vector"].links[0].from_socket, plain.inputs["Vector"])
+    bsdf = next(n for n in tree.nodes if n.type == "BSDF_PRINCIPLED")
+    tree.links.new(plain.outputs["Color"], bsdf.inputs["Base Color"])
+
+
+def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", tone=(0.12, 0.115, 0.11), shoes="shoes01",
+        *, shirt_tone=None, tie_tone=None):
+    """Build a man in a casual or elegant suit. On male_elegantsuit01, shirt_tone and tie_tone
+    can override the jacket tone independently, in the same colour space as tone."""
+    split = shirt_tone is not None or tie_tone is not None
+    if split and suit != "male_elegantsuit01":
+        raise ValueError("shirt_tone and tie_tone require male_elegantsuit01")
     h = cast.person(name, gender=1.0, height_cm=height_cm, age=age, weight=weight, hair="short")
     _dress(h, [suit, shoes], tint={suit: tone, shoes: (0.09, 0.07, 0.055)}, flat=(suit,))
+    if split:
+        _elegant_suit_tones(h, tone, tone if shirt_tone is None else shirt_tone,
+                           tone if tie_tone is None else tie_tone)
     return h
