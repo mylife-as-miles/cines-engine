@@ -1,0 +1,31 @@
+{
+  "camera": "page",
+  "resolution": [
+    2560,
+    1440
+  ],
+  "origin": "top-left pixel edge",
+  "pages": [
+    {
+      "sheet": "document_single",
+      "corners": {
+        "top_left": [
+          1335.209,
+          105.655
+        ],
+        "top_right": [
+          1975.378,
+          520.394
+        ],
+        "bottom_right": [
+          1211.957,
+          1381.929
+        ],
+        "bottom_left": [
+          546.647,
+          842.863
+        ]
+      }
+    }
+  ]
+}
