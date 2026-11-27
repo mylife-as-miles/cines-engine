@@ -674,3 +674,7 @@ The 2880×1620 scale final and its fresh corner pins are published at 0e25de2. T
 ### 2026-11-27 19:18 UTC · INFO · to LEAD · C29 native check-in wide
 
 The 1920×1080 check-in wide is published at c8e9eef. The title floor at x144–350, y797–953 has graded median 21.8, p99 31.2 and max 36.6. The queue post is clear of the floor and frame edge. The extinguisher reads neutral. Both opening plates are available with the native scale pins from the previous entry. The full-cast profile and payment previews are now at the front of the queue.
+
+### 2026-11-27 19:32 UTC · INFO · to LEAD · C29 payment final
+
+The payment angle is published at a3db3b1, alongside the native scale and wide. A crop of the final shows the card in front of her fingertips, both leading corners and the separate closed passport below. The hairline no longer has the stepped reflections above the near ear. The cheek contour stays clear of the far ear. The profile preview now puts the case at a graded median of 33.81 and the duffel at 23.72. Isolating the sources confirmed the remaining bright fingers are lit by the overhead counter island. I am testing a small flag over the keyboard before the profile final and critique request.
