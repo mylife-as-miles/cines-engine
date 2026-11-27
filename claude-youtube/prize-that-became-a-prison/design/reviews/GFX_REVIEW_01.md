@@ -57,3 +57,29 @@ every time the audience sees it.
 | The counter was nearly static for 14 s | A real eased pull-back, 1.6x to 0.7x: the cell shrinks into the dark as the years pile up |
 | "REPRIEVE" orphaned on its own line | WITH A TWO-YEAR REPRIEVE on one line, as wide as the block allows |
 | The LIFE IN PRISON figure has a sculpted face and reads as another person | Not changed here: the matte-statue faces are the settled character design (DECISIONS, Character asset). The figure reading as a man comes from the hidden bun in the frontal pose, which Codex is fixing in void_stage (a 68-degree turn that shows the bun) |
+
+## Reels 4 and 5 (27 November 2026, a fourth and a fifth reviewer, each seeing nothing before)
+
+Reel 4: **7.5**, six pieces at the bar (YES twice, the mail client, the statement, LIFE IN PRISON, the cell count,
+WHEN?). Reel 5: **7.2** (a different reviewer; the scale display at the bar, the cards close). The scores have
+levelled around 7.2-7.5; the maps stayed the weakest (5-6.5) through every round, so for reel 6 they were rebuilt as one
+system rather than tweaked.
+
+| Fault (reels 4-5) | Done for reel 6 |
+| --- | --- |
+| Map labels crossing other countries (MAINLAND CHINA's leader over Korea and Kyushu, QINGDAO over the Sea of Japan, HONG KONG on Luzon) | No leader lines; place names on open water (Hong Kong and the mainland's days in the Philippine Sea east of Taiwan) or inside the lit land (QINGDAO right-aligned to its dot); one size, 48 px semibold, the day counts 68 px |
+| Dashed routes nearly invisible on a phone | The arc's weight: 4 px near-white dashes over a dark under-stroke, a soft glow and a moving head |
+| The Australia line ended on the coast near Darwin: an arrival she never made | It stops in the Timor Sea with an open chevron; Australia itself is lit like the mainland |
+| Maps and seam plates were dead stills | Fresh grain every frame on the maps and the seam shots; the map camera keeps a slow drift; plate and trace push together |
+| The statement crop left "went to the Baiyun" beside "airport security" | The push is framed so "Baiyun Leather" reads whole (the market the sources name, never the airport) |
+| Year rolls sliced the digits | A six-frame cross-fade with a 12 px slide, no mask |
+| The cut-away: off-centre, a short opening, flat | Centred, opens wider and holds 1.5 s, lighter top and darker sides, a contact shadow; still opens on the tote's seam (match cut). **Not done:** a packet drawn in the gap, which the reviewer asked for; the film's rule is schematic only, no packets |
+| The search never finished and the page was mostly blank | The query ends by about 3 s; suggestion rows drop under the field while it is typed |
+| YES landed like a stock slam, cut by the frame | It lands from its centre at about 115 %; the second is 12 % larger and lower |
+| Thin secondary type | One secondary size, 48 px semibold (cap height about 30 px); the reprieve breaks at its own hyphen (WITH A TWO- / YEAR REPRIEVE) |
+| "2017" popped off before the rest of the card | It leaves letter by letter with the card |
+| A stale texture in reel 4 (the search and the scale display) | The reel build re-renders every texture first; a page error now stops the render |
+
+Not changed, by design: WHEN? sits over the void bags because the film cuts from the inspection-room bags into the void
+on that line (a registered match cut); the statues' faces are the settled character design; "Baiyun" names the
+market.
