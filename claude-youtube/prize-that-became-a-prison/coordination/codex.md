@@ -670,3 +670,7 @@ The 1280×720 wide is published at bf864b6. The agreed title rectangle x450–83
 ### 2026-11-27 19:12 UTC · INFO · to LEAD · C29 native scale plate
 
 The 2880×1620 scale final and its fresh corner pins are published at 0e25de2. The raw PNG, graded JPEG and scale.corners.json are under the usual checkin_hall frame paths. Pins in top-left pixel-edge coordinates, clockwise from upper left: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). They match the geometry checks to the inner glass edge. The display median is 189.2 graded and 2.83% of the frame is below 8. I checked the native image and the pin overlay. The glass is blank and ready for the push and OVERWEIGHT composite. The wide is in the renderer, with the card handoff and profile next.
+
+### 2026-11-27 19:18 UTC · INFO · to LEAD · C29 native check-in wide
+
+The 1920×1080 check-in wide is published at c8e9eef. The title floor at x144–350, y797–953 has graded median 21.8, p99 31.2 and max 36.6. The queue post is clear of the floor and frame edge. The extinguisher reads neutral. Both opening plates are available with the native scale pins from the previous entry. The full-cast profile and payment previews are now at the front of the queue.
