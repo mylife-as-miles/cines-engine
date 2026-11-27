@@ -95,7 +95,8 @@ def main():
     b = np.zeros((N, 2), np.float32)
     fly = (306 - 281) / 24.0                                                       # the crow flies from the cut to frame 306, then falls
     place(b, read('q07/wings_c.flac')[:int((fly + 0.05) * SR)], S[3] + 0.02, -17.0, fin=0.01, fout=0.05)
-    place(b, read('q07/thud.flac')[:int(0.6 * SR)], S[3] + (331 - 281) / 24.0 - 0.01, -15.0, fin=0.002, fout=0.25)   # it reaches the grass 50 frames into the shot
+    if S[3] + (331 - 281) / 24.0 < S[4] - 0.05:                                    # only if the shot still holds its landing
+        place(b, read('q07/thud.flac')[:int(0.6 * SR)], S[3] + (331 - 281) / 24.0 - 0.01, -15.0, fin=0.002, fout=0.25)   # it reaches the grass 50 frames into the shot
     stems['bird'] = b
     mix = sum(stems.values())
     n = int(0.25 * SR); mix[-n:] *= np.linspace(1, 0, n)[:, None]
