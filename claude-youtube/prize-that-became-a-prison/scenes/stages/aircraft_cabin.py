@@ -72,20 +72,15 @@ LIT = [(DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 5, 0, 2, 0.8), (DAWN_ROW + 8, 1, 1
        (DAWN_ROW + 6, 2, 0, 0.6), (DAWN_ROW + 11, 2, 1, 0.6)]
 
 
-def _toward(loc, az_deg, el_deg, dist):
-    """A point `dist` from loc, az degrees forward (+Y) of straight out to port (-X), el degrees above level."""
-    a, e = math.radians(az_deg), math.radians(el_deg)
-    return (loc[0] - dist * math.cos(a) * math.cos(e), loc[1] + dist * math.sin(a) * math.cos(e),
-            loc[2] + dist * math.sin(e))
-
-
 AISLE_CAM = (-1.04, 2.45, 1.52)
 WINDOW_CAM = (-0.80, 4.80, 1.22)
-OVER_CAM = (-1.95, 3.40, 1.34)
+OVER_CAM = (-2.34, 3.75, 1.33)
+# The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
+WING_TIP = Vector((-30.0, 27.12, -1.03))
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
-    "fx_over": _toward(OVER_CAM, 28.5, -9.5, 30.0),
+    "fx_over": tuple(WING_TIP),
 }
 
 CAMERAS = {
@@ -99,10 +94,9 @@ CAMERAS = {
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its white tip
     # strobe under the horizon, and the dark below; her head soft in the foreground
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 28.5, -10.0, 1.2), lens=50, focus="fx_over", fstop=16.0,
+    "over": dict(loc=OVER_CAM, aim=(-3.0, DAWN_WINDOW_Y + 0.015, 1.27), lens=100, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
-TIP_DIR = (28.5, -9.5)                          # the wing tip from "over": degrees forward of abeam, above level
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
     "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.7, "wash": 1.05, "cove": 0.6, "galley": 0.45},
@@ -608,8 +602,8 @@ def build(cast=True):
     st.path_lights()
     st.front_bulkhead()
     recv = bpy.data.collections.new("exterior receivers")
-    tip_dir = (Vector(_toward(OVER_CAM, TIP_DIR[0], TIP_DIR[1], 1.0)) - Vector(OVER_CAM)).normalized()
-    tip = Vector(OVER_CAM) + tip_dir * ((27.0 + 3.0 + OVER_CAM[0]) / abs(tip_dir.x))
+    tip = WING_TIP
+    tip_dir = (tip - Vector(OVER_CAM)).normalized()
     st.exterior(tuple(tip), recv, moon_dir=(tip_dir.x, tip_dir.y, 0.42))
     lights()
     for n, p in FOCUS.items():

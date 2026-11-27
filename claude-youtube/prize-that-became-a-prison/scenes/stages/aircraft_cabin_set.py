@@ -807,7 +807,7 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     sky.visible_shadow = False
     # the wing: tapered, swept, with dihedral; sections from root to tip, an aerofoil-like section
     tx, ty, tz = tip
-    root_x, root_z = -3.0, tz - 2.9
+    root_x, root_z = -3.0, -2.0     # wing carry-through below the cabin floor
     span = abs(tx - root_x)
     sweep_le = span * math.tan(math.radians(31))
     root_le = ty + sweep_le
