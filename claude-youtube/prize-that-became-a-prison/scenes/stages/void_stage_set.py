@@ -663,7 +663,7 @@ def cell(ox, oy):
     walls.append(B("cell_wall_b_low", (-CX, y0, SLAB), (CX, y1, zs), [P, S], _wall_faces(False)))
     walls.append(B("cell_wall_b_mid_l", (-CX, y0, zs), (sx - sw / 2, y1, sz), [P, S], _wall_faces(False), bevel=0.008))
     walls.append(B("cell_wall_b_mid_r", (sx + sw / 2, y0, zs), (CX, y1, sz), [P, S], _wall_faces(False), bevel=0.008))
-    sill = B("cell_wall_b_sill", (sx - sw / 2, y0, zs), (sx + sw / 2, y1, sz), [P, S], _wall_faces(False),
+    sill = B("cell_wall_b_sill", (sx - sw / 2, y0, zs), (sx + sw / 2, y1, sz), [P],
              bevel=0.006)
     sloped_top(sill, y0, SPLAY - 0.012)
     walls.append(sill)

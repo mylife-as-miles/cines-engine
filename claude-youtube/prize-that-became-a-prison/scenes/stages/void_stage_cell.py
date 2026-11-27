@@ -136,6 +136,7 @@ def materials():
     # round 3: the vinyl a shade lighter so the lower mattress's top edge and lip read under the upper deck (at
     # 0.04-0.066 it vanished into a black hole); the lower blanket a shade darker (it was the lightest cloth)
     vinyl("mattress vinyl", rgb=(0.10, 0.11, 0.12))
+    plain("envelope paper", (0.45, 0.41, 0.34), rough=0.92, spec=0.16, bump=0.07, scale=680.0)
     wool("blanket wool", rgb=(0.06, 0.057, 0.053))
     wool("blanket wool folded", rgb=(0.07, 0.072, 0.075), sheen=0.1)
     cotton("pillow cotton", (0.2, 0.2, 0.195), rough=0.85, bump=0.1)
@@ -369,8 +370,9 @@ def blanket(name, x_wall, x_edge, y0, y1, z_top, drop, mat, sag=0.014, fold=0.24
         cr = sum(a * math.sin(f * (y * math.cos(k) + x * math.sin(k)) + p) for f, p, k, a in waves)
         z += cr * top * min(1.0, w * 6.0) * (0.4 if layer > rf else 1.0)
         if hang > 0:
-            x += 0.016 * hang * (0.5 + 0.5 * math.sin(y * 21.0 + 1.3)) + 0.01 * hang * hang
-            z += 0.012 * hang * math.sin(y * 11.0 + 0.4)
+            phase = math.tau * (3.5 * u + 0.06 * math.sin(5.4 * u))
+            x += 0.022 * hang * (0.5 + 0.5 * math.sin(phase)) + 0.008 * hang * hang
+            z += 0.002 * hang * math.sin(phase + 0.4)
         return (x, y, z)
 
     ob = _grid_mesh(name, nu, nv, fn, mat)
@@ -421,7 +423,7 @@ def book(name, cx, cy, z, w, l, t, turn_deg, cover):
         p.material_index = 0 if (abs(n.z) > 0.5 or n.x < -0.5) else 1
     ob.location = (cx, cy, z + t / 2)
     ob.rotation_euler = (0, 0, math.radians(turn_deg))
-    _bevel(ob, 0.0015, 2)
+    _bevel(ob, 0.003, 3)
     return ob
 
 
@@ -513,10 +515,19 @@ def furnish(ox, oy, unit_xy):
                                          (0.14, 0.205, 0.036, 15.0), (0.13, 0.2, 0.02, 3.0))):
         objs.append(book(f"book{i}", bx + 0.006 * i, by - 0.004 * i, z, w, l, t, turn, M[f"book cover {i}"]))
         z += t
-    # a few loose sheets beside them (blank: no writing anywhere in 3D)
-    px0 = ox - st.CX + 0.04
-    objs.append(box("desk_papers", (px0, by + 0.125, z0 + DESK[2]), (px0 + 0.21, by + 0.41, z0 + DESK[2] + 0.003),
-                    M["pillow cotton"], 0.0005, 1))
+    # A small bundle kept beside the books: several slightly shifted paper
+    # edges and one loop of cotton that presses across the stack.
+    px, py, base = ox - st.CX + 0.16, by + 0.257, z0 + DESK[2]
+    for i, dx in enumerate((0.001, -0.003, 0.002, -0.001, 0.0, 0.002)):
+        x = px + dx
+        z = base + i * 0.0017
+        objs.append(box(f"desk_envelope_{i}", (x - 0.055, py - 0.11, z), (x + 0.055, py + 0.11, z + 0.0017),
+                        M["envelope paper"], 0.0006, 2))
+    y = py - 0.018
+    cord = [(px - 0.058, y, base + 0.001), (px - 0.058, y, z + 0.0025),
+            (px + 0.058, y + 0.002, z + 0.0025), (px + 0.058, y + 0.002, base + 0.001)]
+    for i, (a, b) in enumerate(zip(cord, cord[1:])):
+        objs.append(tube(f"desk_envelope_twine_{i}", a, b, 0.0009, M["blanket wool folded"], segs=8, bevel=0))
     # the basin unit's top: a plastic cup with a toothbrush in it, on the rim's back corner
     ux, uy = unit_xy
     cx, cy, cz = ux - 0.30 + 0.042, uy - 0.04, z0 + 0.94
