@@ -68,11 +68,11 @@ PAX = [
      dict(variant=0)),
 ]
 # blank-glowing seat-back screens: (row, block, seat, strength) -- the screen faces the seat behind it
-LIT = [(DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 5, 0, 2, 0.8), (DAWN_ROW + 8, 1, 1, 0.9), (DAWN_ROW + 10, 0, 1, 0.7),
+LIT = [(DAWN_ROW, 0, 2, 0.75), (DAWN_ROW + 1, 0, 2, 0.65), (DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 10, 0, 1, 0.7),
        (DAWN_ROW + 6, 2, 0, 0.6), (DAWN_ROW + 11, 2, 1, 0.6)]
 
 
-AISLE_CAM = (-1.04, 2.45, 1.52)
+AISLE_CAM = (-1.20, 2.24, 1.80)
 WINDOW_CAM = (-1.05, 4.42, 1.24)
 OVER_CAM = (-2.34, 3.75, 1.33)
 # The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
@@ -86,7 +86,7 @@ FOCUS = {
 CAMERAS = {
     # Ch 02 end / Ch 03: standing in the port aisle two rows behind her: rows of seat backs receding to the lit galley
     # curtains, the blue night coves and the path lights, and at the left Dawn's reading light, the one pool
-    "aisle": dict(loc=AISLE_CAM, aim=(AISLE_CAM[0] - 2.42, AISLE_CAM[1] + 9.70, 0.70), lens=30, focus="fx_aisle",
+    "aisle": dict(loc=AISLE_CAM, aim=(-1.964, 4.24, 1.158), lens=30, focus="fx_aisle",
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
@@ -608,7 +608,7 @@ def build(cast=True):
     plan, dk = shade_plan(ys)
     st.shell(plan, ys, joint_phase=(dk + 1) % 3)
     occupied = {(DAWN_ROW, 0, 0)} | {(row, b, s) for _, _, row, b, s, _, _, _ in PAX}
-    st.seats(lit_screens=LIT, skip=set())
+    st.seats(lit_screens=LIT, occupied=occupied)
     st.belts(skip=occupied)
     for r in range(st.N_ROWS):
         st.psu(r)

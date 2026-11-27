@@ -77,8 +77,8 @@ RECEIPT_C4 = (0.14, -0.33, 73.0)
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
-    "handbag-tote": (0.35, "long", dict(sat=1.0, val=0.84, hue=0.50, rough_add=0.2), dict(spec=0.4)),
-    "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12), dict()),
+    "handbag-tote": (0.35, "long", dict(sat=1.7, val=0.65, hue=0.525, rough_add=0.32), dict(spec=0.08)),
+    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28), dict(spec=0.06)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),
 }
 
@@ -133,7 +133,8 @@ CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP
                         focus="fx_entries", fstop=4, beat="document", show=("art materials",),
                         lamp=(-0.42, 0.16, -120), exposure=-1.5)
 CAMERAS["seam"] = dict(loc=(0.012, -0.47, TOP + 0.34), aim=(0.22, -0.19, TOP + 0.248), lens=63,
-                      focus="fx_tote_edge", fstop=4.5, beat="ch04", exposure=-1.4, hide=("receipt_c4", "mug"))
+                      focus="fx_seam_mid", fstop=6.3, beat="ch04", exposure=-1.4,
+                      final_res=(2560, 1440), hide=("receipt_c4", "mug"))
 CAMERAS["visa"] = dict(loc=(0.105, -0.29, TOP + 0.30), aim=(-0.028, 0.002, TOP + 0.018), lens=69,
                       focus="fx_open_booklet", fstop=6.3, beat="document", show=("open booklet",),
                       lamp=(-0.44, -0.17, -74), exposure=-1.45)
@@ -552,6 +553,47 @@ def bags():
     return out
 
 
+def shadow_card(name, size, location, material):
+    card = sk.box(name, size, location, material)
+    for kind in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
+        setattr(card, "visible_" + kind, False)
+    return card
+
+
+def bag_lighting():
+    # The tight insert catches the lamp lengthwise along the rolled edge.
+    # Only the leather and its thread receive this reflection.
+    lip = Vector((0.233, -0.186, TOP + 0.247))
+    source = lip + Vector((-0.31, 0.155, 0.021))
+    graze = sk.area_light("tote lip graze", source, (0.07, 0.003), 0.55, WARM, spread_deg=37)
+    frame = Matrix.Translation(source) @ (lip - source).to_track_quat("-Z", "Y").to_matrix().to_4x4()
+    graze.matrix_world = frame
+    graze.visible_volume_scatter = False
+    leather = bpy.data.collections.new("Tote and thread")
+    for part in bpy.data.objects["handbag-tote"].children_recursive:
+        if part.type in ("MESH", "CURVE"):
+            leather.objects.link(part)
+    graze.light_linking.receiver_collection = leather
+    # A four-millimetre slot leaves the front leather at the master's value
+    # while the lip and the stitches catch the small warm source.
+    shutters = []
+    for side in (-1, 1):
+        card = shadow_card("lip light shutter", (0.18, 0.06, 0.001), (0, 0, 0), M["leg"])
+        card.matrix_world = frame @ Matrix.Translation((0, side * 0.032, -0.060))
+        shutters.append(card)
+    _STATE["lip shutters"] = shutters
+    # Under the front lip of the shade, six centimetres below the Ch 04 bulb.
+    # Its edge cuts the near boards while the light carries on to the bags.
+    net = bpy.data.materials.new("Neutral lamp net")
+    net.use_nodes = True
+    nt = net.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    trans = nt.nodes.new("ShaderNodeBsdfTransparent")
+    trans.inputs["Color"].default_value = (0.48, 0.48, 0.48, 1.0)
+    nt.links.new(trans.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    shadow_card("table lamp front cutter", (0.090, 0.17, 0.002), (-0.750, -0.320, TOP + 0.343), net)
+
+
 def folder_stack():
     # a little smaller and lower than the file's (a dozen folders, not two dozen), and brought in so the whole stack
     # sits inside the overhead frame with dark wood above it
@@ -708,6 +750,9 @@ def entry_stationery():
                                      open_deg=151, m_end=m["endpaper"]))
     # The front lip between the handles stays sharp during the editorial push.
     empty("fx_tote_edge", (0.219, -0.173, TOP + 0.2505))
+    macro = CAMERAS["seam"]
+    origin = Vector(macro["loc"])
+    empty("fx_seam_mid", origin + 0.368 * (Vector(macro["aim"]) - origin).normalized())
     empty("fx_open_booklet", (-0.022, 0.002, TOP + 0.008))
     pp.SUPPORT[:] = saved
     group("entry stationery", forms)
@@ -839,7 +884,12 @@ def apply_camera(name):
         degrees, blend = cfg["spot"]
         spot = bpy.data.objects["lamp_spot"].data
         spot.spot_size, spot.spot_blend = math.radians(degrees), blend
-    bpy.data.objects["cone_haze"].hide_render = plate
+    reveal = name in ("purses", "seam")
+    bpy.data.objects["cone_haze"].hide_render = plate or reveal
+    bpy.data.objects["tote lip graze"].hide_render = name != "seam"
+    for shutter in _STATE["lip shutters"]:
+        shutter.hide_render = name != "seam"
+    bpy.data.objects["table lamp front cutter"].hide_render = name != "purses"
     for obj_name in ("lamp_spot", "lamp_glow", "lamp_bulb"):
         ob = bpy.data.objects[obj_name]
         ob.visible_glossy = not plate
@@ -851,7 +901,7 @@ def apply_camera(name):
     sc = bpy.context.scene
     air = bpy.data.objects["table air"].data.materials[0]
     volume = next(n for n in air.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
-    volume.inputs["Density"].default_value = 0.0 if plate else (0.006 if name == "purses" else 0.013)
+    volume.inputs["Density"].default_value = 0.0 if plate else (0.003 if reveal else 0.013)
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
     sc.cycles.max_bounces = 8
@@ -1016,13 +1066,14 @@ def build(cast=True):
     bpy.context.view_layer.update()
     empty("fx_screen", tuple(bpy.data.objects["laptop_screen"].matrix_world.translation))
     group("bags", bags())
+    bag_lighting()
     # Ch 04: the rolled receipt on the wood in front of the bags, its roll toward the lamp, seen nearly end on
     # Ch 04's receipt, and Ch 02 (night, the email): the documents are put away; the passport and the two boarding
     # passes lie on the bare wood in front of the laptop, in the turned-down lamp's pool and the screen's cool spill.
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    group("receipt_c4", pp.receipt("receipt_c4", M["thermal"], *RECEIPT_C4, seed=12))
+    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.37, 0.375, 0.38)), *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.
     group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,

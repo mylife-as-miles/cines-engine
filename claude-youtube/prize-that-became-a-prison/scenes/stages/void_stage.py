@@ -502,6 +502,7 @@ def light_suit(h, net=0.30, hair_net=0.20, body_net=0.26, bounce_w=45.0):
     rim = copies(0.25, "_bun_edge") if bun else []
     if rim:
         st.link_lights(rim, receivers=bun, tag="bun_edge")
+    _STATE["hair_sources"] = [(ob, ob.data.shadow_soft_size) for ob in hair_dup + rim]
     # The pool puts a little light back into the underside of the low bun.
     # Leave the profile's face and the dark field at their existing values.
     scalp = st.area("hair floor return", _p(D, -0.394, -0.613, 1.242), _p(D, 0.086, -0.038, 1.572),
@@ -811,7 +812,12 @@ def apply_camera(name):
         active.add("standing")
         if _STATE["with_cast"]:
             active.add("portrait")
-            bpy.data.objects["portrait_floor_return"].data.energy = 3.5 if name == "dawn_close" else 1.6
+            close = name == "dawn_close"
+            bpy.data.objects["portrait_floor_return"].data.energy = 3.5 if close else 1.6
+            # In the tight profile a pin source draws a hard stripe across
+            # the bun. Diffuse its hair-only light for this camera.
+            for light, radius in _STATE["hair_sources"]:
+                light.data.shadow_soft_size = 0.70 if close else radius
     for group, objs in _STATE["groups"].items():
         for ob in objs:
             ob.hide_render = group not in active or ob in _STATE["originally_hidden"]

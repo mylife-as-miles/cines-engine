@@ -60,8 +60,8 @@ BLOCK = {
     },
     "company": {
         "Dawn": ((5.64, 16.4), (5.62, 32.0), "walk_away"),
-        "Organiser": ((6.39, 16.75), (6.38, 30.5), "walk_away"),
-        "T1": ((4.95, 16.13), (5.01, 31.0), "walk_away"),
+        "Organiser": ((6.25, 16.75), (6.24, 30.5), "walk_away"),
+        "T1": ((4.95, 15.70), (5.01, 31.0), "walk_away"),
     },
     "window": {
         "Dawn": ((6.55, 17.9), (8.0, 18.9), "stand_bags"),
@@ -74,7 +74,7 @@ BLOCK = {
     # the window close-up: Dawn a step back from the glass, square to it, so her reflection stands over the dark felt
     # between the two bags on the shelf (only she is shown)
     "reflect": {
-        "Dawn": ((6.45, 18.80), (8.0, 18.80), "stand_bags"),
+        "Dawn": ((6.45, 18.80), (8.0, 19.40), "stand_bags"),
     },
 }
 
@@ -93,16 +93,16 @@ CAMERAS = {
                  shift_y=0.0, haze=0.0025, exposure=-1.5, glass_refl=0.02),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
-    "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.002, glass_grazing=0.36,
+    "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.83, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
+                   shift_y=0.0, haze=0.0, exposure=-1.15, only=("Dawn",), glass_refl=0.017, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
                           fstop=4.0, beat="company", shift_y=0.0, haze=0.0022, exposure=-1.65)
 TRIMS = {
-    "dawn": {"boutique door spill": 0},
-    "window": {"bq_glow": 0.18, "boutique door spill": 0},
-    "company": {"boutique door spill": 0.62},
+    "dawn": {"boutique door spill": 0, "display shelf return": 12 / 28},
+    "window": {"bq_glow": 0.55, "boutique door spill": 0},
+    "company": {"boutique door spill": 0.35},
 }
 WIDE_VIEW = CAMERAS["wide"]
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
@@ -200,8 +200,7 @@ def hands_stone(holder, value=0.36):
 def tights(holder, value=0.07):
     """Dark sheer tights on the shins (from the shin weights, fading over the knee), so the legs below the skirt read
     as dressed, not as bare stone with dark socks (the check-in critique)."""
-    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh.L.001", "DEF-thigh.R.001", "DEF-foot"),
-               scale={"DEF-thigh.L.001": 0.85, "DEF-thigh.R.001": 0.85})
+    _body_mask(holder, "legmask", ("DEF-shin", "DEF-thigh.L.001", "DEF-thigh.R.001", "DEF-foot"))
     _mask_mix(holder, "legmask", (value, value * 0.97, value * 0.95))
 
 
@@ -266,7 +265,7 @@ def build_cast():
     holders = {"Dawn": dawn()}
     # the walkers: four men and a woman, each a different height, build, age, hair and outfit
     holders["T1"] = people.man("T1", height_cm=186, age=0.32, weight=0.5, suit="male_casualsuit05",
-                               tone=(0.1, 0.105, 0.125), shoes="shoes04")
+                               tone=(0.20, 0.18, 0.15), shoes="shoes04")
     holders["M2"] = people.man("M2", height_cm=175, age=0.56, weight=0.7, suit="male_casualsuit03",
                                tone=(0.14, 0.125, 0.105), shoes="shoes04")
     holders["W1"] = woman("W1", 160, 0.36, 0.42, (0.105, 0.12, 0.15))
@@ -624,7 +623,7 @@ def act(name, h, action, beat):
         bags = _STATE["bags"]
         walking = action == "walk_bags"
         look = ((h.location.x + 0.6, h.location.y + 8.0, 1.5) if walking else (8.0, 18.5, 1.24) if beat == "window"
-                else (8.0, 18.9, 1.28))
+                else (8.02, 19.40, 1.28))
         # In the shop three-quarter the far carrier must clear her skirt in
         # projection as well as in space. Let that arm trail behind the hip.
         left_swing = -24.0 if beat == "window" else (-3.0 if walking else 2.0)
@@ -669,8 +668,15 @@ def act(name, h, action, beat):
             look = e + fwd * 6.0 + Vector((1.2, 0, -0.3))
         else:
             look = e + fwd * 8.0 + Vector((0, 0, -0.4))
+        if beat == "company" and name in ("Organiser", "Dawn"):
+            # A small glance toward one another, still seen from behind.
+            turn = 12 if name == "Organiser" else -7
+            look = e + Matrix.Rotation(math.radians(turn), 3, "Z") @ fwd * 6
         hd, err = solve_head(h, pose, look)
-        kb, f = legs_walk(h, lead, tf=rng.uniform(17.0, 21.0), tb=rng.uniform(11.0, 14.0))
+        front, back = rng.uniform(17.0, 21.0), rng.uniform(11.0, 14.0)
+        if beat == "company" and name == "T1":
+            front, back = 13.0, 8.0
+        kb, f = legs_walk(h, lead, tf=front, tb=back)
         curl(h, "L", CURL_EASY)
         curl(h, "R", CURL_EASY)
         ground(h)
@@ -775,6 +781,11 @@ def apply_camera(name, width=1280):
         for bag in _STATE["bags"].values():
             for ob in [bag] + list(bag.children_recursive):
                 ob.hide_render = beat == "company"
+        face_key = st.LIGHTS.get("reflected cheek")
+        if face_key is not None:
+            face_key.hide_render = name != "window"
+            if name == "window":
+                face_key.location = eye_centre(H["Dawn"]) + Vector((0.42, -0.48, 0.18))
         e = bpy.data.objects.get("fx_dawn")
         if e is not None:
             e.location = eye_centre(H["Dawn"]) - Vector((0, 0, 0.25))
@@ -800,6 +811,9 @@ def apply_camera(name, width=1280):
         fresnel = gl.node_tree.nodes["refl"]
         fresnel.inputs["To Min"].default_value = cfg.get("glass_refl", 0.07)
         fresnel.inputs["To Max"].default_value = cfg.get("glass_grazing", 1.0)
+        smudge = gl.node_tree.nodes["glass smudges"]
+        smudge.inputs["To Min"].default_value = 0.025 if name == "window" else 0.02
+        smudge.inputs["To Max"].default_value = 0.06 if name == "window" else 0.09
     for key in ("shop_interiors", "tubes", "signboards"):
         o = st.OBJ.get(key)
         if o is not None:
@@ -843,10 +857,13 @@ def build(cast=True):
     lamp = st.area("boutique door spill", door, (0.66, 1.28), 142.0, (1.0, 0.59, 0.34),
                    Vector((5.57, 16.34, 0.84)) - door, spread=68)
     lamp.visible_glossy = False
+    doorway_receivers = bpy.data.collections.new("Doorway light on Dawn and pavement")
+    doorway_receivers.objects.link(bpy.data.objects["street_ground"])
+    lamp.light_linking.receiver_collection = doorway_receivers
     # From across the road the lower shopfront throws a second, broader reflection
     # at her feet. Its light stays on the paving so her coat retains its shape.
     source = Vector((6.88, 15.55, 2.05))
-    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 800.0, (1.0, 0.70, 0.51),
+    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 280.0, (1.0, 0.70, 0.51),
                            Vector((5.56, 16.70, st.PZ)) - source, spread=90)
     paving_light.visible_glossy = False
     receivers = bpy.data.collections.new("Boutique pavement")
@@ -863,6 +880,18 @@ def build(cast=True):
     if cast:
         build_cast()
         bags = make_bags()
+        # A warm bounce off the left side of the window models her cheek
+        # against the felt. Position it from the posed eyes for the insert.
+        face_key = st.area("reflected cheek", (0, 0, 0), (0.40, 0.26), 6.0,
+                           (1.0, 0.85, 0.71), (-0.42, 0.48, -0.18), spread=60)
+        face_receivers = bpy.data.collections.new("Window bounce on Dawn")
+        face_receivers.objects.link(bpy.data.objects[_STATE["holders"]["Dawn"]["body"]])
+        face_key.light_linking.receiver_collection = face_receivers
+        face_key.visible_glossy = False
+        for holder in [*bags.values(), _STATE["holders"]["Dawn"]]:
+            for obj in holder.children_recursive:
+                if obj.type in ("MESH", "CURVE"):
+                    doorway_receivers.objects.link(obj)
         source = Vector((6.95, 16.58, 0.93))
         light = st.area("display shelf return", source, (0.75, 0.45), 28, (1.0, 0.76, 0.55),
                         Vector((6.55, 17.88, 0.65)) - source, spread=70)

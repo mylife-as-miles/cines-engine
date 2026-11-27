@@ -349,6 +349,7 @@ def seat_parts(coll, sx, aisle_side=0):
     sub = c.modifiers.new("sub", "SUBSURF")
     sub.levels = sub.render_levels = 1
     c.modifiers.move(c.modifiers.find("sub"), 0)
+    fixed_parts = set(coll.objects)
     # the backrest cushion with a gentle lumbar roll, the headrest with side wings
     rslab(f"backcush_{sx:+.2f}", (sx - 0.208, sx + 0.208), (0.03, 0.50 + DV), (-0.072, 0.0), M["seat"], coll, 0.035, 0.03,
           0.028, 4)
@@ -382,6 +383,8 @@ def seat_parts(coll, sx, aisle_side=0):
              0.005, 2)
     back_box(f"card_{sx:+.2f}", (sx - 0.135, sx - 0.005), (-0.04, 0.097), (0.053, 0.0545), M["card"], coll, 0.0, 1)
     back_box(f"magazine_{sx:+.2f}", (sx - 0.06, sx + 0.14), (-0.04, 0.089), (0.057, 0.0615), M["magazine"], coll, 0.001, 1)
+    for part in set(coll.objects) - fixed_parts:
+        part["back station"] = sx
     # under the cushion: the pan, the life-vest pouch
     box(f"pan_{sx:+.2f}", (0.40, 0.42, 0.03), (sx, 0.22, 0.345), M["dark_plastic"], bevel=0.006, coll=coll)
     box(f"vest_{sx:+.2f}", (0.22, 0.12, 0.05), (sx, 0.36, 0.305), M["mid_plastic"], bevel=0.008, coll=coll)
@@ -484,13 +487,107 @@ def screen_pos(bx, sx, row):
     return p, nrm
 
 
-def seats(lit_screens=(), skip=()):
+def reclined_block(original, seat, angle, cover_offset):
+    """Share the base and the adjacent seats. Pivot the entire selected back at its hinge."""
+    variant = bpy.data.collections.new(f"seat block reclined {seat} {angle}")
+    sx = SEAT_DX[seat]
+    pivot = Matrix.Translation((0, 0, PIVOT_Z))
+    recline = pivot @ Matrix.Rotation(math.radians(angle), 4, "X") @ pivot.inverted()
+    for part in original.objects:
+        if part.get("back station") != sx:
+            variant.objects.link(part)
+            continue
+        cover = part.name.startswith("cover_")
+        if cover and cover_offset is None:
+            continue
+        moved = part.copy()
+        variant.objects.link(moved)
+        moved.matrix_basis = recline @ part.matrix_basis
+        if cover:
+            moved.location.x += cover_offset
+    return variant
+
+
+def tray_with_cup(original, seat):
+    """A folded-down tray at the sleeper's place, pivoted on the existing hinge."""
+    variant = bpy.data.collections.new("seat block with open tray")
+    sx = SEAT_DX[seat]
+    hinge = back_pt(sx, 0.10, 0.054)
+    pivot = Matrix.Translation(hinge)
+    down = pivot @ Matrix.Rotation(math.pi / 2 - RECLINE, 4, "X") @ pivot.inverted()
+    for part in original.objects:
+        if part.name == f"tray_{sx:+.2f}":
+            tray = part.copy()
+            variant.objects.link(tray)
+            tray.matrix_basis = down @ part.matrix_basis
+        else:
+            variant.objects.link(part)
+    # The outward face of the folded tray faces down. The inner face carries the cup.
+    base = down @ back_pt(sx + 0.064, 0.28, 0.046)
+    rings = ((0.025, 0), (0.036, 0.064), (0.037, 0.066), (0.0355, 0.067),
+             (0.034, 0.064), (0.024, 0.003))
+    verts, faces = [], []
+    for j, (radius, z) in enumerate(rings):
+        for i in range(40):
+            rad = math.tau * i / 40
+            verts.append((radius * math.cos(rad), radius * math.sin(rad), z))
+            if j:
+                k = (i + 1) % 40
+                faces.append(((j-1)*40+i, (j-1)*40+k, j*40+k, j*40+i))
+    faces.append(tuple(reversed(range(40))))
+    faces.append(tuple(range(5 * 40, 6 * 40)))
+    mesh_obj("plain paper cup", verts, faces, M["card"], coll=variant, loc=base)
+    return variant
+
+
+def folded_blankets():
+    """A single continuous piece of cloth folded three times, shared by the empty seats."""
+    linen = bpy.data.collections.new("folded cabin blanket")
+    profile = [(-0.130, 0.003), (-0.105, 0.004), (0.101, 0.006), (0.120, 0.008),
+               (0.124, 0.012), (0.120, 0.015), (0.098, 0.017), (-0.107, 0.015),
+               (-0.122, 0.019), (-0.125, 0.023), (-0.119, 0.027), (-0.100, 0.029),
+               (0.084, 0.030), (0.108, 0.028), (0.116, 0.025)]
+    verts, faces = [], []
+    for j in range(13):
+        v = j / 12
+        for i, (x, z) in enumerate(profile):
+            y = (v - 0.5) * 0.265 + 0.009 * math.sin(13 * x + 2 * v)
+            wave = math.sin(7 * v + 11 * x) * (0.002 + 0.001 * i / len(profile))
+            verts.append((x + 0.006 * math.sin(5 * v), y, z + wave))
+            if i and j:
+                b = len(verts) - 1
+                n = len(profile)
+                faces.append((b-n-1, b-n, b, b-1))
+    cloth = mesh_obj("folded wool", verts, faces, M["blanket"], coll=linen)
+    sub = cloth.modifiers.new("rounded folds", "SUBSURF")
+    sub.levels = sub.render_levels = 2
+    cloth.modifiers.new("wool thickness", "SOLIDIFY").thickness = 0.0025
+    for row, block, seat, turn in ((3, 1, 0, -8), (5, 2, 0, 8), (6, 0, 2, -12), (8, 1, 1, 15),
+                                   (10, 2, 1, -5), (12, 1, 0, 12), (15, 0, 1, -11)):
+        loc = (BLOCK_X[block] + SEAT_DX[seat], row_y(row) + 0.23, cushion_top(0.23) + 0.006)
+        fold = instance(f"folded blanket {row} {block}", linen, loc)
+        fold.rotation_euler.z = math.radians(turn)
+
+
+def seats(lit_screens=(), skip=(), occupied=()):
     coll = block_collection()
+    protected = set(occupied) | {(r, b, s) for r, b, s, _ in lit_screens}
+    # The row under the reading lamp and its sightlines are fixed. Elsewhere
+    # some passengers left the seat reclined or the cloth slightly displaced.
+    variants = [reclined_block(coll, 0, 6, -0.025), reclined_block(coll, 1, 8, None),
+                reclined_block(coll, 2, 5, 0.028)]
+    drinks = tray_with_cup(coll, 0)
+    folded_blankets()
     for r in range(N_ROWS):
         for b, bx in enumerate(BLOCK_X):
             if (r, b) in skip:
                 continue
-            instance(f"row{r:02d}_b{b}", coll, (bx, row_y(r), 0.0))
+            seat = (r // 2 + 2 * b) % 3
+            reclined = (r + 2 * b) % 3 == 1 and (r, b, seat) not in protected and not (b == 0 and 4 <= r <= 6)
+            block = variants[seat] if reclined else coll
+            if (r, b) == (8, 1):
+                block = drinks
+            instance(f"row{r:02d}_b{b}", block, (bx, row_y(r), 0.0))
     # floor tracks under the legs, the whole length
     for bx in BLOCK_X:
         for lx in (-0.40, 0.40):
