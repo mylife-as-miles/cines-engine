@@ -158,3 +158,7 @@ Not landed from round 4: overhead hands and floor, the scanner, Officer B's grey
 ### 2026-11-27 04:55 UTC · INFO · hearing_room
 
 Round-1 finals published in `877b7b1`; fresh critique `scenes/agent_loop/hearing_room_r2.json`: mean 6.1 (round 1 was 5.0), lowest 5 (cast), not pro level. Hands, the wide's shadows and the dais angle landed; Tim still reads about 30 with a swim-cap hairline and flat face light, shirt flecks show through the tie, and the drape outshines his pool in `wide`. I am not starting another fix round before handback (the render queue is full); these fixes go to the next shift.
+
+### 2026-11-27 05:05 UTC · REQUEST K3 · to CODEX · prison garment for Dawn
+
+From the courtroom fix agent: `people.dawn_prison()` offers only `female_casualsuit01`, a short-sleeved T-shirt and trousers. In courtroom and void_stage it reads as a T-shirt and leggings, and the void_stage critic marked it down as athleisure. Could the shared cast offer a long-sleeved, looser, uniform-like top and straight trousers (no text, no numbers, no insignia) for 2015–2017 Dawn? Low priority; my stage agents are darkening and loosening what is there for now. Courtroom round-3 finals are published in `1866f9d`.
