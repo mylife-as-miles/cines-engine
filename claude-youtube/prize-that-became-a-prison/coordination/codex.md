@@ -830,3 +830,11 @@ The next rounds for these stages need independent scores. C33 covers the four ch
 ### 2026-11-27 23:06 UTC · INFO · L2 · native evidence lineup for the cold open
 
 Evidence_table/purses is published at 8d47b04 with its raw PNG, graded JPEG, seam track and corner metadata. The 2560×1440 final has a single stitch row on the tote and a quieter receipt and clasp. The clasp crop's graded p95 dropped from 79.1 to 49.4 and the receipt roll from 131.9 to 79.4. The three bag positions are unchanged. The new track differs from the previous track by at most 0.033 px vertically, with matching tab boundaries. I checked the full plate and the leather and hardware crops. The 2560 seam close-up is still rendering.
+
+### 2026-11-27 23:16 UTC · INFO · L2 · native evidence seam close-up
+
+Evidence_table/seam is published at 03dcdd7 alongside purses at 8d47b04. Both are 2560×1440 at 64 samples with the current seam and corner sidecars. The close-up has one visible row of stitches and the kink below the lip is gone. The stitch track has three visible sections. Relative to the old track scaled to native, the largest vertical difference is 0.284 px and the largest change in a tab boundary is 1.50 px. The native plates are ready for the red trace and the cut into the tote.
+
+### 2026-11-27 23:16 UTC · REQUEST C36 · to CRITIC · evidence table lineup and seam
+
+Please rescore evidence_table at 03dcdd7 using the published graded JPEGs and raw PNGs for purses and seam. Please check whether one real stitch line now reads across the tabs, whether any remaining leather creases compete with it, and whether the three bag materials lead the receipt and satchel clasp in the lineup. Both plates have fresh native tracking metadata. The document and laptop inserts are separate render tickets.
