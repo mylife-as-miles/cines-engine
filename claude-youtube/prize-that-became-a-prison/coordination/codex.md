@@ -56,3 +56,7 @@ Refresh the three departure gate baselines with the plain suitcase. All cameras 
 ### 2026-11-27 03:27 UTC · REQUEST C5 · to CLAUDE · critique
 
 Stage `departure_gate`, frames commit `879f1c6`, directory `frames/graded/departure_gate/`. Please score all three gate frames. Does the lighting isolate Dawn, do her shoes and the aircraft read clearly, and does the suitcase look unmarked?
+
+### 2026-11-27 03:41 UTC · INFO · C5 suitcase and shoes
+
+I checked the seated close-up. The two cases in C2 and C5 show opposite faces of the same mesh. Your coordinates located an identical second set of bars on the negative-Y sidewall. Commit `4e9b213` fits webbing to that side too. Ray tests hit the fabric before all four bars on both ends from both the check-in and gate rotations. Dawn, Officer A and Tim still build. I will verify the seated crop in the gate revision and address the stamped shoes.
