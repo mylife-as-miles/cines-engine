@@ -73,7 +73,7 @@ LIT = [(DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 5, 0, 2, 0.8), (DAWN_ROW + 8, 1, 1
 
 
 AISLE_CAM = (-1.04, 2.45, 1.52)
-WINDOW_CAM = (-0.80, 4.80, 1.22)
+WINDOW_CAM = (-0.80, 4.545, 1.22)
 OVER_CAM = (-2.34, 3.75, 1.33)
 # The tip is fixed in aircraft coordinates; the camera sees it through the inner window reveal.
 WING_TIP = Vector((-30.0, 27.12, -1.03))
@@ -90,7 +90,7 @@ CAMERAS = {
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.11, 0.930), lens=35, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, 4.09, 0.955), lens=32, focus="fx_face", fstop=2.8,
                    beat="ch03"),
     # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its white tip
     # strobe under the horizon, and the dark below; her head soft in the foreground
@@ -196,18 +196,26 @@ def lap_hands(holder, forearms=(67.0, 64.0), spread=0.0, reach=12.0):
 
 def lap_surface(holder):
     suit = garment(holder)
-    evaluated = suit.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    groups = {g.index for g in suit.vertex_groups if g.name.startswith(("DEF-thigh", "DEF-pelvis"))}
+    return weighted_surface(suit, groups, 0.45)
+
+
+def weighted_surface(obj, groups, threshold):
+    evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
     mesh = evaluated.data
-    leg_groups = {g.index for g in suit.vertex_groups if g.name.startswith(("DEF-thigh", "DEF-pelvis"))}
-    legs = {v.index for v in mesh.vertices if sum(w.weight for w in v.groups if w.group in leg_groups) > 0.45}
-    faces = [tuple(p.vertices) for p in mesh.polygons if all(i in legs for i in p.vertices)]
+    selected = {v.index for v in mesh.vertices if sum(w.weight for w in v.groups if w.group in groups) > threshold}
+    faces = [tuple(p.vertices) for p in mesh.polygons if all(i in selected for i in p.vertices)]
     return BVHTree.FromPolygons([evaluated.matrix_world @ v.co for v in mesh.vertices], faces)
 
 
-def finger_gap(body, surface, side):
+def hand_groups(body, side, full_hand):
+    prefixes = ("DEF-f_", "DEF-thumb", "DEF-palm", "DEF-hand") if full_hand else ("DEF-f_", "DEF-thumb", "DEF-palm")
+    return {g.index for g in body.vertex_groups if g.name.startswith(prefixes) and g.name.endswith("." + side)}
+
+
+def finger_gap(body, surface, side, full_hand=False):
     evaluated = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
-    fingers = {g.index for g in body.vertex_groups if g.name.startswith(("DEF-f_", "DEF-thumb", "DEF-palm"))
-               and g.name.endswith("." + side)}
+    fingers = hand_groups(body, side, full_hand)
     gaps = []
     for v in evaluated.data.vertices:
         if sum(w.weight for w in v.groups if w.group in fingers) < 0.55:
@@ -219,7 +227,7 @@ def finger_gap(body, surface, side):
     if not gaps:
         return None
     gaps.sort()
-    return gaps[len(gaps) // 40]
+    return gaps[0] if full_hand else gaps[len(gaps) // 40]
 
 
 KNEE_HALF, ANKLE_HALF = 0.088, 0.062
@@ -406,28 +414,38 @@ def settle_dawn_lap(holder):
     z = max(verts[12][2], verts[13][2]) + 0.005
     st.box("Dawn lap buckle", (0.053, 0.049, 0.008), (hip.x, hip.y + 0.116, z), st.M["buckle"], bevel=0.003)
     # Fingers angle inward, with the right wrist a little nearer her body.
-    # Fit the lowest finger pads to the cloth after curling the individual joints.
+    # Her left hand rests on her clothed thigh. The back of that hand then
+    # supports the right, including the thumb on its way across the lap.
     inv = rig.matrix_world.to_3x3().normalized().inverted()
-    for side, k in ((1, "L"), (-1, "R")):
-        x = hip.x - side * (0.034 if k == "L" else 0.042)
-        y = hip.y + (0.236 if k == "L" else 0.201)
-        target = Vector((x, y, surface(x, y) + 0.036))
-        desired = 0.002 if k == "L" else 0.004
-        for _ in range(5):
+    marks = (
+        (1, "L", (-0.090, 0.168), (0.726, 0.679, 0.012), (0.169, -0.118, -0.993)),
+        (-1, "R", (0.059, 0.167), (-0.533, 0.835, -0.005), (-0.410, -0.080, -0.924)),
+    )
+    for side, k, offset, direction, normal in marks:
+        x, y = hip.x + offset[0], hip.y + offset[1]
+        target = Vector((x, y + 0.045, surface(x, y) + 0.036))
+        support = cloth if k == "L" else weighted_surface(body, hand_groups(body, "L", True), 0.55)
+        desired = 0.001
+        forward = (inv @ Vector(direction)).normalized()
+        down = inv @ Vector(normal)
+        axis = (down - forward * down.dot(forward)).normalized() * side
+        for _ in range(16):
             ik_arm(holder, side, target, pole=(0.42, 0.18, -1))
             wrist = rig.pose.bones["hand_fk." + k]
-            forward = (inv @ Vector((side * 0.68, 0.72, -0.12))).normalized()
-            down = inv @ Vector((side * 0.17, 0.0, -1))
-            axis = (down - forward * down.dot(forward)).normalized() * side
             basis = Matrix((axis, forward, axis.cross(forward))).transposed().to_4x4()
             basis.translation = wrist.matrix.translation.copy()
             wrist.matrix = basis
-            rigged.articulate_hand(holder, k, {"f_index": (12, 18, 12), "f_middle": (17, 21, 13),
-                                              "f_ring": (20, 25, 15), "f_pinky": (24, 29, 18), "thumb": (12, 16, 10)})
-            gap = finger_gap(body, cloth, k)
-            if gap is None or abs(gap - desired) < 0.0015:
+            rigged.articulate_hand(holder, k, {"f_index": (6, 8, 6), "f_middle": (8, 10, 8),
+                                              "f_ring": (11, 16, 9), "f_pinky": (14, 19, 11),
+                                              "thumb": (8, 8, 6) if k == "L" else (-22, -6, 4, -10)})
+            gap = finger_gap(body, support, k, full_hand=True)
+            if gap is None:
                 break
-            target.z += max(-0.022, min(0.022, desired - gap))
+            actual = rig.matrix_world @ rig.pose.bones["DEF-hand." + k].head
+            error = Vector((x - actual.x, y - actual.y, desired - gap))
+            if error.length < 0.0006:
+                break
+            target += error.normalized() * min(0.72 * error.length, 0.032)
         print(f"CABIN fitted {k} palm target {tuple(round(v,3) for v in target)}, finger clearance {gap}", flush=True)
 
 
