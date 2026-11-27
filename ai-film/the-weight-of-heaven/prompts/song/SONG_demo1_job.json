@@ -1,0 +1,31 @@
+{
+ "name": "SONG_demo1",
+ "model": "lyria-3.5",
+ "prompt_file": "prompts/song/SONG_demo1_gemini_prompt.txt",
+ "seconds_to_make": 27.0,
+ "listed_price_usd": 0.08,
+ "usage": {
+  "promptTokenCount": 520,
+  "candidatesTokenCount": 2939,
+  "totalTokenCount": 3459,
+  "promptTokensDetails": [
+   {
+    "modality": "TEXT",
+    "tokenCount": 520
+   }
+  ],
+  "serviceTier": "standard"
+ },
+ "model_version": "lyria-3.5",
+ "texts": [
+  "[[A0]]\n[5.7:] What heaven has raised,\n[11.3:] Let no hand bring down.\n[[B1]]\n[22.6:] Petals hang up there like they forgot the ground,\n[28.2:] Down here the water's shaking in the bowl.\n[33.9:] You pressed your stars in wax and didn't look;\n[39.5:] We felt it in our backs before the toll.\n[[C2]]\n[45.2:] Every bell you lift into the light,\n[50.8:] Somewhere a mountain \u2014\n[[D3]]\n[56.5:] We built it wide, we built it low,\n[62.1:] We learned to walk the way you lean;\n[67.8:] Eight hundred years we held the shade\n[73.4:] Of gardens we have never seen.\n[79.1:] (Hold it up) we held it up,\n[81.9:] (hold it up) we held it up.\n[[E4]]\n[90.3:] Open the doors (open the doors),\n[93.2:] Light every lamp (light every lamp),\n[96.0:] Count every road, count every bed,\n[98.8:] Raise up your hand \u2014\n[[F5]]\n[112.9:] Let no hand bring down\n[118.6:] What heaven raised so high,\n[124.2:] A thousand ships, a thousand guns,\n[129.9:] All waiting on one sign \u2014\n[135.5:] Let no hand \u2014\n[[F6]]\n[146.8:] Then let it come down,\n[152.5:] A hand's breadth at a time;\n[158.1:] Lay down the gold, lay down the guns,\n[163.8:] Let every anchor sound.\n[[G7]]\n[169.4:] Come down, come down,\n[172.2:] We would have you come down.\n[175.1:] Come down, come down \u2014"
+ ],
+ "audio": [
+  {
+   "file": "audio/song/SONG_demo1.mp3",
+   "mime": "audio/mpeg",
+   "bytes": 4398796
+  }
+ ],
+ "finish_reason": "STOP"
+}
