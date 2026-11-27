@@ -36,6 +36,7 @@ from mathutils import Vector  # noqa: E402
 import cast as castkit  # noqa: E402
 import home_set as dining  # noqa: E402
 import home_mats as dining_mats  # noqa: E402
+import inspection_room_mats as room_mats  # noqa: E402
 import people  # noqa: E402
 import props  # noqa: E402
 import rigged  # noqa: E402
@@ -608,13 +609,15 @@ def _meshes(h):
     return [o for o in h.children_recursive if o.type == "MESH"]
 
 
-def _finish(h, spec=None, ceiling=None):
+def _finish(h, spec=None, ceiling=None, weave=None):
     seen = set()
     for o in _meshes(h):
         for slot in o.material_slots:
             if slot.material and slot.material.name not in seen:
                 seen.add(slot.material.name)
                 st.tune_prop(slot.material, spec=spec, ceiling=ceiling)
+                if weave:
+                    room_mats.tune_prop(slot.material, weave=weave, to_metres=o.matrix_world.to_scale().x)
 
 
 def bags():
@@ -623,7 +626,7 @@ def bags():
     x, y, t = CASE
     case = props.load("dawn-suitcase", size=0.66, axis="z", loc=(gx + x, gy + y, 0.0), turn_deg=t, sat=0.6, val=0.9,
                       rough_add=0.15)
-    _finish(case, spec=0.2, ceiling=(0.05, 0.052, 0.058))
+    _finish(case, spec=0.2, ceiling=(0.05, 0.052, 0.058), weave=(0.002, 0.25))
     x, y, t = DUFFEL
     duf = props.load("extra-bag-closed", size=0.75, axis="long", loc=(gx + x, gy + y, 0.0), turn_deg=t, sat=0.5,
                      val=0.35, rough_add=0.3)
@@ -722,18 +725,33 @@ def build_bags_island():
     # The case is turned in the pool. Each post reflects a different side of
     # the set toward the lens, so place a small return along each reflection.
     for label, offset, direction, watts in (
-        ("left", (-0.1095, 0.0342, 0.582), (-0.18, 0.12, 0), 0.09),
-        ("right", (0.0202, 0.1071, 0.584), (0.16, -0.10, 0), 1.25),
+        ("left", (-0.1095, 0.0342, 0.582), (-0.18, 0.12, 0), 0.010),
+        ("right", (0.0202, 0.1071, 0.584), (0.16, -0.10, 0), 0.0195),
     ):
         post = Vector((hx + offset[0], hy + offset[1], offset[2]))
         edge = st.area(f"handle rim {label}", post + Vector(direction), post, (0.05, 0.13),
                        watts, (0.88, 0.92, 1.0), spread_deg=58)
         edge.visible_glossy = True
         returns.append(edge)
-    kick = st.area("case front return", (cx - 0.9, cy - 2.6, 0.7), (hx, hy, 0.20),
-                   (0.5, 0.5), 94.0, (0.88, 0.92, 1.0))
+    # Soften the overhead light on the pocket without changing the floor pool
+    # or the duffel. In the divided wide the original two cones light both bags.
+    case_meshes = _meshes(pair[0])
+    top = [bpy.data.objects[n] for n in ("spot_bags", "spot_bags_hot")]
+    _STATE["bag_top"] = top
+    _STATE["outside_case"] = st.link_lights(top, exclude=case_meshes, tag="unnetted_bags")
+    for lamp in top:
+        netted = lamp.copy()
+        netted.data = lamp.data.copy()
+        netted.name = lamp.name + "_case"
+        netted.data.energy *= 0.18
+        netted.visible_volume_scatter = False
+        bpy.context.scene.collection.objects.link(netted)
+        returns.append(netted)
+    kick = st.area("case front return", (hx - 0.06, hy - 1.37, 0.22), (hx + 0.03, hy - 0.01, 0.19),
+                   (1.05, 0.64), 42.0, (0.88, 0.92, 1.0))
+    kick.data.specular_factor = 0.0
     returns.append(kick)
-    st.link_lights(returns, receivers=_meshes(pair[0]), tag="case_returns")
+    st.link_lights(returns, receivers=case_meshes, tag="case_returns")
     _STATE["case_returns"] = returns
 
 
@@ -797,6 +815,8 @@ def apply_camera(name):
     for group, objs in _STATE["groups"].items():
         for ob in objs:
             ob.hide_render = group not in active or ob in _STATE["originally_hidden"]
+    for light in _STATE["bag_top"]:
+        light.light_linking.receiver_collection = _STATE["outside_case"] if name == "bags" else None
     for light in _STATE["case_returns"]:
         light.hide_render = name != "bags"
     for ob, x in _STATE["bag_roots"]:
