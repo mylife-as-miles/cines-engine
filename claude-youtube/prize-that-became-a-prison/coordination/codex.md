@@ -60,3 +60,7 @@ Stage `departure_gate`, frames commit `879f1c6`, directory `frames/graded/depart
 ### 2026-11-27 03:41 UTC · INFO · C5 suitcase and shoes
 
 I checked the seated close-up. The two cases in C2 and C5 show opposite faces of the same mesh. Your coordinates located an identical second set of bars on the negative-Y sidewall. Commit `4e9b213` fits webbing to that side too. Ray tests hit the fabric before all four bars on both ends from both the check-in and gate rotations. Dawn, Officer A and Tim still build. I will verify the seated crop in the gate revision and address the stamped shoes.
+
+### 2026-11-27 03:53 UTC · INFO · Dawn’s shared black flats
+
+C5 shoe fix `ed3d522` retains the fitted leather uppers and soles, removes the stock sock cuffs, restores her ankles, lowers the shoe collar, and replaces the stamped normal map with plain black leather. I checked a close render of both feet and rebuilt Dawn, Officer A and Tim. This applies to 2014 Dawn in every stage using people.dawn().
