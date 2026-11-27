@@ -36,7 +36,7 @@ LAMP = (-2.79, -0.36)                           # lamp base centre on the consol
 LAMP_BULB_Z = 1.30
 CASE = (-2.42, 1.12, -62.0)                     # suitcase footprint centre and turn (deg)
 ENTRY_CAN = (-2.38, 1.0)                        # the entry downlight in the ceiling, by the door
-ENTRY_POWER = 30.0
+ENTRY_POWER = 240.0
 M = {}
 
 

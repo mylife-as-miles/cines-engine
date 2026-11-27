@@ -306,12 +306,12 @@ def bunk(ox, oy):
     yc = yB - RAIL_W / 2
     for k in range(3):
         x = xL + POST + (k + 1) * (BUNK_W - 2 * POST) / 4
-        objs.append(tube(f"bunk_hbar_low{k}", (x, yc, zl), (x, yc, z0 + 0.80 - RAIL_H), P, 0.0095))
-        objs.append(tube(f"bunk_hbar_up{k}", (x, yc, zu), (x, yc, z0 + TOP - RAIL_H), P, 0.0095))
+        objs.append(tube(f"bunk_hbar_low{k}", (x, yc, zl), (x, yc, z0 + 0.80 - RAIL_H), 0.0095, P))
+        objs.append(tube(f"bunk_hbar_up{k}", (x, yc, zu), (x, yc, z0 + TOP - RAIL_H), 0.0095, P))
     # foot end: ladder rungs between the decks
     yc = yF + RAIL_W / 2
     for k, z in enumerate((z0 + 1.08,)):
-        objs.append(tube(f"bunk_rung{k}", (xL + POST, yc, z), (xR - POST, yc, z), P, 0.0125))
+        objs.append(tube(f"bunk_rung{k}", (xL + POST, yc, z), (xR - POST, yc, z), 0.0125, P))
     # the upper deck's guard rail along the open side, post to post
     objs.append(box("bunk_guard", (xR - RAIL_W, yF + POST, z0 + TOP - RAIL_H), (xR, yB - POST, z0 + TOP), P, 0.003))
     # a wall bracket: two flat plates bolting the head posts to the back wall
@@ -503,19 +503,60 @@ def furnish(ox, oy, unit_xy):
     # a towel hung over the upper guard rail, near the foot
     objs.append(towel_over_rail("towel", xR - RAIL_W / 2, yF + 0.30, yF + 0.62, z0 + TOP + 0.004, 0.026,
                                 M["towel terry"], hang_in=0.16, hang_out=0.34))
-    # a stack of plain books on the floor at the foot of the lower bunk, a little askew
-    bx, by = xR - 0.2, yF - 0.22
-    z = z0
+    # the wall desk and stool in front of the bunk's foot; on the desk a stack of plain books, a little askew
+    objs += desk(ox, oy)
+    bx, by = ox - st.CX + 0.2, oy + DESK[1] + 0.2
+    z = z0 + DESK[2]
     for i, (w, l, t, turn) in enumerate(((0.165, 0.235, 0.032, 8.0), (0.15, 0.225, 0.026, -4.0),
                                          (0.14, 0.205, 0.036, 15.0), (0.13, 0.2, 0.02, 3.0))):
         objs.append(book(f"book{i}", bx + 0.006 * i, by - 0.004 * i, z, w, l, t, turn, M[f"book cover {i}"]))
         z += t
+    # a few loose sheets beside them (blank: no writing anywhere in 3D)
+    px0 = ox - st.CX + 0.04
+    objs.append(box("desk_papers", (px0, by + 0.125, z0 + DESK[2]), (px0 + 0.21, by + 0.41, z0 + DESK[2] + 0.003),
+                    M["pillow cotton"], 0.0005, 1))
     # the basin unit's top: a plastic cup with a toothbrush in it, on the rim's back corner
     ux, uy = unit_xy
     cx, cy, cz = ux - 0.30 + 0.042, uy - 0.04, z0 + 0.94
     objs.append(cup("cup", cx, cy, cz, M["cup plastic"]))
     objs += toothbrush("toothbrush", (cx + 0.006, cy - 0.004, cz + 0.012), (cx + 0.03, cy - 0.022, cz + 0.19))
     return objs, k
+
+
+DESK = (0.42, -1.12, 0.74, 0.62)   # depth from the left wall, front-most y (cell-local), top height, width along y
+
+
+def desk(ox, oy):
+    """A cell desk bolted to the left wall: a folded steel top with a front lip on two gusset brackets, and a round
+    stool on a post bolted to the floor in front of it. Bunk paint."""
+    P = M["bunk"]
+    z0 = st.SLAB
+    dd, y0, zt, w = DESK
+    x0 = ox - st.CX
+    y0 = oy + y0
+    objs = [box("desk_top", (x0, y0, z0 + zt - 0.025), (x0 + dd, y0 + w, z0 + zt), P, 0.004),
+            box("desk_lip", (x0 + dd - 0.025, y0, z0 + zt - 0.07), (x0 + dd, y0 + w, z0 + zt - 0.02), P, 0.003)]
+    for k, yy in enumerate((y0 + 0.07, y0 + w - 0.07)):
+        me = bpy.data.meshes.new(f"desk_gusset{k}")
+        bm = bmesh.new()
+        pts = [(x0, yy - 0.004, z0 + zt - 0.025), (x0 + dd - 0.05, yy - 0.004, z0 + zt - 0.025), (x0, yy - 0.004, z0 + zt - 0.33)]
+        vs = [bm.verts.new(p) for p in pts] + [bm.verts.new((p[0], p[1] + 0.008, p[2])) for p in pts]
+        bm.faces.new((vs[0], vs[1], vs[2]))
+        bm.faces.new((vs[3], vs[5], vs[4]))
+        for a, b in ((0, 1), (1, 2), (2, 0)):
+            bm.faces.new((vs[a], vs[a + 3], vs[b + 3], vs[b]))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.to_mesh(me)
+        bm.free()
+        g = _link(bpy.data.objects.new(me.name, me))
+        me.materials.append(P)
+        _bevel(g, 0.0015, 2)
+        objs.append(g)
+    sx, sy = x0 + dd + 0.2, y0 + w * 0.45
+    objs.append(tube("stool_post", (sx, sy, z0), (sx, sy, z0 + 0.43), 0.03, P, bevel=0.002))
+    objs.append(tube("stool_flange", (sx, sy, z0), (sx, sy, z0 + 0.008), 0.09, P, segs=32, bevel=0.002))
+    objs.append(tube("stool_seat", (sx, sy, z0 + 0.43), (sx, sy, z0 + 0.455), 0.17, P, segs=40, bevel=0.004))
+    return objs
 
 
 def shelf(ox, oy, y_c, z, length=0.62, depth=0.22):

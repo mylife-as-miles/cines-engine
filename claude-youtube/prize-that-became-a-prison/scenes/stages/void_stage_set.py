@@ -227,8 +227,8 @@ def stage_floor(cell=None):
     rough = _maprange(nt, mott, 0.3, 0.7, 0.58, 0.68)
     rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", dk, -0.08))
     rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", sc, 0.08))
-    rough = _mix(nt, tape, rough, 0.5)
-    rough = _math(nt, "ADD", _xyz(nt, rough)[0], _math(nt, "MULTIPLY", seam, 0.2), clamp=True)
+    rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", tape, _math(nt, "SUBTRACT", 0.5, rough)))
+    rough = _math(nt, "ADD", rough, _math(nt, "MULTIPLY", seam, 0.2), clamp=True)
     nt.links.new(rough, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.4
     grain = _noise(nt, o, 260.0, 2.0, 0.6)
@@ -490,7 +490,7 @@ def hotspot(base, frac=0.62, gain=0.35):
     h.spot_blend = 1.0
     h.shadow_soft_size = li.shadow_soft_size
     ob = _link(bpy.data.objects.new(h.name, h))
-    ob.matrix_world = base.matrix_world.copy()
+    ob.location, ob.rotation_euler, ob.scale = base.location.copy(), base.rotation_euler.copy(), base.scale.copy()
     ob.visible_camera = False
     LIGHTS[h.name] = ob
     return ob
@@ -683,7 +683,7 @@ def cell(ox, oy):
       bevel=0.003)
     B("cell_slot_frame_top", (sx - sw / 2, y1 - 0.05, sz + sh - 0.025), (sx + sw / 2, y1 - 0.03, sz + sh),
       [M["bar steel"]], bevel=0.003)
-    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.0, top_z=oy * 0 + sz + sh, sill_z=sz)
+    pane = frosted_glow("slot pane", (0.62, 0.74, 1.0), 2.0, top_z=sz + sh, sill_z=sz)
     glass = B("cell_slot_pane", (sx - sw / 2, y1 - 0.03, sz + 0.025), (sx + sw / 2, y1 - 0.02, sz + sh - 0.025),
               [pane], bevel=0.0)
     glass.visible_shadow = False       # the night comes through it (an emitter is opaque to light)

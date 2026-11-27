@@ -468,7 +468,7 @@ def brick(name, rgb=(0.05, 0.047, 0.045), mortar=(0.03, 0.03, 0.029)):
     b.inputs["Specular IOR Level"].default_value = 0.3
     pit = _noise(nt, o, 120.0, 3.0, 0.65)
     h = _math(nt, "ADD", _math(nt, "MULTIPLY", fac, 1.0), _math(nt, "MULTIPLY", pit, 0.15))
-    _bump(nt, b, h, 0.6, 0.006)
+    _bump(nt, b, h, 0.35, 0.006)
     return _remember(name, m)
 
 

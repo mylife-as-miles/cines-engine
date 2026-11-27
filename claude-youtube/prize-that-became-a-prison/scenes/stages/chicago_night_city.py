@@ -20,13 +20,13 @@ import random
 import bpy  # noqa: F401  (first)
 import numpy as np
 
-GROUND = -54.0
+GROUND = -60.0
 FOG_D = 2300.0
-HORIZON = (0.115, 0.135, 0.175)       # the haze lit by the city, at the horizon (emission, linear)
-BUILDING_FOG = (0.05, 0.06, 0.08)      # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
+HORIZON = (0.17, 0.19, 0.235)       # the haze lit by the city, at the horizon (emission, linear)
+BUILDING_FOG = (0.075, 0.088, 0.115)     # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
 SKY_TOP = (0.006, 0.008, 0.016)
-DOWNTOWN = (-400.0, 1180.0)           # the tower cluster's centre: about 17 degrees left of straight out
-UPTOWN = (520.0, 1250.0, 620.0, 0.72)  # a second, lower cluster to the right (x, y, radius, height factor)
+DOWNTOWN = (-470.0, 1650.0)           # the tower cluster's centre: about 17 degrees left of straight out
+UPTOWN = (700.0, 1700.0, 560.0, 0.62)  # a second, lower cluster to the right (x, y, radius, height factor)
 _RNG = random.Random(11)
 
 
@@ -262,7 +262,7 @@ def building_mat():
     col = nb.mixc(nb.math("LESS_THAN", c2[1], 0.08), col, tv)
     col = nb.mixc(nb.mul(c2[2], 0.35), col, (0.95, 0.92, 0.85))
     win = nb.mul(nb.mul(mask, lit), bright)
-    emit = nb.scale(col, nb.mul(win, 2.6))
+    emit = nb.scale(col, nb.mul(win, 3.6))
     # floodlit crowns: the top 10 m of a few towers, a soft vertical gradient
     band = nb.math("GREATER_THAN", lz, nb.math("SUBTRACT", nb.mul(top, 1000.0), 10.0))
     fall = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", nb.math("SUBTRACT", nb.mul(top, 1000.0), lz), 12.0), clamp=True)
@@ -293,7 +293,7 @@ def sky_mat():
     cr.interpolation = "EASE"
     cr.elements[0].position, cr.elements[0].color = 0.0, (*HORIZON, 1)
     cr.elements[1].position, cr.elements[1].color = 1.0, (*SKY_TOP, 1)
-    for pos, col in ((0.03, (0.085, 0.10, 0.135)), (0.09, (0.045, 0.055, 0.078)), (0.2, (0.022, 0.028, 0.042)), (0.45, (0.01, 0.013, 0.024))):
+    for pos, col in ((0.025, (0.12, 0.135, 0.17)), (0.07, (0.065, 0.077, 0.105)), (0.18, (0.03, 0.037, 0.055)), (0.45, (0.012, 0.016, 0.028))):
         el = cr.elements.new(pos)
         el.color = (*col, 1)
     nt.links.new(nb.math("MAXIMUM", e, 0.0), ramp.inputs["Fac"])
@@ -400,12 +400,12 @@ def plan(seed=11):
                     litf = rng.uniform(0.06, 0.22) if kind else rng.uniform(0.12, 0.34)
                     add(x + 1.5, y0, x1 - 1.5, y1, h, kind, litf)
                 x = x1
-            if r < 900 and rng.random() < 0.55 * (1 - r / 1100) + 0.12:
+            if r < 900 and rng.random() < 0.5 * (1 - r / 1000) + 0.06:
                 towers.append((cx + rng.uniform(-30, 30), cy + rng.uniform(-8, 8), r, hk))
     # the towers of the cluster: taller toward the centre, some with setbacks
     for (tx, ty, r, hk) in towers:
         h = (rng.uniform(120, 230) * (1.25 - 0.55 * r / 900) + rng.uniform(-20, 40)) * hk
-        h = min(h * 1.12, 360)
+        h = min(h, 320)
         w, d = rng.uniform(34, 56), rng.uniform(30, 44)
         kind = 1.0 if rng.random() < 0.75 else 0.0
         litf = rng.uniform(0.08, 0.24) if kind else rng.uniform(0.18, 0.34)
@@ -423,8 +423,7 @@ def plan(seed=11):
         if hh > 200:
             towers_tops.append((tx, ty, GROUND + hh + 7, ww, dd2))
     # two neighbours close to the window, for scale
-    for (x, y, w, d, h, kind) in ((-640.0, 620.0, 42.0, 36.0, 150.0, 1.0), (245.0, 420.0, 38.0, 32.0, 108.0, 0.0),
-                                   (-70.0, 640.0, 30.0, 30.0, 92.0, 0.0)):
+    for (x, y, w, d, h, kind) in ((-700.0, 760.0, 42.0, 36.0, 128.0, 1.0), (300.0, 520.0, 36.0, 30.0, 96.0, 0.0)):
         add(x - w / 2, y - d / 2, x + w / 2, y + d / 2, h, kind, 0.22 if kind else 0.3)
         add(x - w * 0.3, y - d * 0.25, x + w * 0.3, y + d * 0.25, h + 6, 0.0, 0.0)
     return np.array(lo), np.array(hi), np.array(data), np.array(crown)
@@ -569,7 +568,7 @@ def build():
     me = fast_mesh("city_streetlights", v, f, 3)
     point_colour(me, "col", np.repeat(col, 6, axis=0))
     sl = _city_object(_link(bpy.data.objects.new("city_streetlights", me)))
-    sl.data.materials.append(emission_mat("city_streetlight", "col", strength=5.0, fog_max=0.88))
+    sl.data.materials.append(emission_mat("city_streetlight", "col", strength=7.0, fog_max=0.85))
 
     v, f, _ = boxes(s_lo, s_hi)
     me = fast_mesh("city_roads", v, f, 4)

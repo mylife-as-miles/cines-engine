@@ -276,7 +276,8 @@ def seat_height(x, y):
 
 
 # reading the email: leaning in a little over the table, neck and head bowed to the screen
-UPPER = {"chest": (16, 0), "neck": (6, 0), "head": (21, 3), "fingers": 12}
+UPPER = {"chest": (16, 0), "neck": (8, 0), "head": (17, 3), "fingers": 12}     # neck and head 8 deg further down than
+                                                                                # the first cut: she bows to the screen
 # per-finger curl once she is seated: (knuckle bend on the finger's master control, flexion of each of the two
 # outer joints) in degrees. The master alone only tips a straight finger down at the knuckle (a mitten); the joints
 # curl it. The right index reaches ahead for the trackpad, the others curl under it, the thumb tucks in; the left
@@ -454,20 +455,27 @@ def arms_on_table(holder):
     return out
 
 
-def seat_eyes(holder, forward=0.002, grow=1.06):
+def seat_eyes(holder, forward=0.003, grow=1.1):
     """Seat the statue eyes a little forward and fuller in their sockets. Lit from below by the screen, the render's
-    finer subdivision opens a dark gap round the eyeball (one eye read as a black hole); 2 mm forward and 6 % larger
-    the stone eyeball fills the lids' opening."""
-    from mathutils import Matrix
+    finer subdivision opens a dark gap round the eyeball (one eye read as a black hole); `forward` metres out from the
+    head's centre and `grow` larger, the stone eyeball fills the lids' opening. Done on the eye meshes' vertices,
+    not on the objects' matrices: the eyes hang from a head bone, and writing their world matrix left one eye
+    displaced and shrunk under some poses (measured 27 Nov 2026), which renders as an empty socket."""
     rig = rigged.rig_of(holder)
     pb = rig.pose.bones["DEF-spine.006"]
-    hc = rig.matrix_world @ ((pb.head + pb.tail) / 2)
     bpy.context.view_layer.update()
+    hc = rig.matrix_world @ ((pb.head + pb.tail) / 2)
     for o in [c for c in holder.children_recursive if c.type == "MESH" and "_eye" in c.name]:
+        if o.data.users > 1:
+            o.data = o.data.copy()
         mw = o.matrix_world.copy()
-        c = sum((mw @ v.co for v in o.data.vertices), Vector()) / len(o.data.vertices)
+        inv = mw.inverted()
+        ws = [mw @ v.co for v in o.data.vertices]
+        c = sum(ws, Vector()) / len(ws)
         off = (c - hc).normalized() * forward
-        o.matrix_world = Matrix.Translation(c + off) @ Matrix.Scale(grow, 4) @ Matrix.Translation(-c) @ mw
+        for v, w in zip(o.data.vertices, ws):
+            v.co = inv @ (c + off + (w - c) * grow)
+        o.data.update()
     bpy.context.view_layer.update()
 
 
@@ -574,8 +582,8 @@ def lights():
             36.0, (0.5, 0.6, 0.85), spread=130, aim=(2.6, -0.7, 0.45))
     # outside the kitchen window: a faint cool lamp over the neighbour's back door rakes their painted brick
     yw = st.K["y1"] + st.K_OUT
-    st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.45, 3.3), (st.WARM_WIN[0] + 0.1, yw - 0.02, 0.5), 350.0, (0.62, 0.72, 1.0),
-            size_deg=95.0, blend=0.9, radius=0.06)
+    st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.6, 3.4), (st.WARM_WIN[0] + 0.5, yw - 0.02, 1.4), 600.0, (0.62, 0.72, 1.0),
+            size_deg=110.0, blend=0.9, radius=0.08)
     # the area lights only light: through the glass the camera sees the night itself
     for li in st.LIGHTS.values():
         if li.type == "LIGHT" and li.data.type == "AREA":
