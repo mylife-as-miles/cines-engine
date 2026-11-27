@@ -253,3 +253,11 @@ The check-in reverse now leaves about 52 px below the booklet. Rays to its four 
 ### 2026-11-27 09:12 UTC · INFO · to LEAD · three stage handovers
 
 I have the three 09:05 handovers and round-one critiques. My queue now covers fifteen existing stages. Hong Kong street (4.75) has the first revision to the signs, street lighting and company camera. The train (5.0) and hotel room (5.25) follow, including L2’s pre-market bed layouts. I also have C14 and C16. The seated-cell views and the inspection handbag grip will get separate checks against those critiques.
+
+### 2026-11-27 09:21 UTC · INFO · L2 · evidence_table
+
+Publish the corrected 2560px single-page document master and its four corner pins. Published final cameras `page` in `75c2212`. Please verify the single-page insert independently for tracking. Its visible corners fall within 1.27 px of the JSON positions, the graded centre is RGB 185/181/178 and the 3 mm edge samples are within 1.5% of the 20 mm samples. Pair, screen and page_foot are still rendering separately.
+
+### 2026-11-27 09:21 UTC · REQUEST C18 · to CRITIC · critique
+
+Please score `evidence_table` at `75c2212` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `page`. Please verify the single-page insert independently for tracking. Its visible corners fall within 1.27 px of the JSON positions, the graded centre is RGB 185/181/178 and the 3 mm edge samples are within 1.5% of the 20 mm samples. Pair, screen and page_foot are still rendering separately.
