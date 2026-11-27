@@ -133,8 +133,7 @@ CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP
                         focus="fx_entries", fstop=4, beat="document", show=("art materials",),
                         lamp=(-0.42, 0.16, -120), exposure=-1.5)
 CAMERAS["seam"] = dict(loc=(0.012, -0.47, TOP + 0.34), aim=(0.22, -0.19, TOP + 0.248), lens=63,
-                      focus="fx_tote_edge", fstop=4.5, beat="ch04", exposure=-1.50, hide=("receipt_c4", "mug"),
-                      lamp=(-0.32, -0.43, -73))
+                      focus="fx_tote_edge", fstop=4.5, beat="ch04", exposure=-1.4, hide=("receipt_c4", "mug"))
 CAMERAS["visa"] = dict(loc=(0.105, -0.29, TOP + 0.30), aim=(-0.028, 0.002, TOP + 0.018), lens=69,
                       focus="fx_open_booklet", fstop=6.3, beat="document", show=("open booklet",),
                       lamp=(-0.44, -0.17, -74), exposure=-1.45)
@@ -719,8 +718,9 @@ def entry_stationery():
 def frame_metadata(name, scene, resolution):
     """Export compositor coordinates in top-left-origin frame pixels."""
     if name in ("purses", "seam"):
-        return {**sk.plate_optics(name, scene, resolution), "seam_paths_px": props.tote_seam_paths(
-            bpy.data.objects["tote front hem"], [bpy.data.objects[key] for key in BAGS], scene, resolution)}
+        tracks = props.project_tote_seam(bpy.data.objects["tote front hem"], [bpy.data.objects[key] for key in BAGS],
+                                         scene, resolution, sample_trace=True)
+        return {**sk.plate_optics(name, scene, resolution), **tracks}
     names = {"page": ("document_single",), "page_foot": ("document_single",),
              "pair": ("document_left", "document_right"), "screen": ("laptop_screen",)}
     if name not in names:

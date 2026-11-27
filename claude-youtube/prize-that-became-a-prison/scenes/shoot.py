@@ -84,8 +84,10 @@ for n in names:
     if final and hasattr(mod, "frame_metadata"):
         metadata = mod.frame_metadata(n, sc, render_res)
         if metadata is not None:
-            with open(os.path.splitext(path)[0] + ".corners.json", "w") as stream:
-                json.dump(metadata, stream, indent=2)
-                stream.write("\n")
+            sidecars = metadata.pop("sidecars", {})
+            for suffix, data in {"corners": metadata, **sidecars}.items():
+                with open(f"{os.path.splitext(path)[0]}.{suffix}.json", "w") as stream:
+                    json.dump(data, stream, indent=2)
+                    stream.write("\n")
     print("SHOOT wrote", path, flush=True)
 print(f"SHOOT total {time.time() - t0:.0f} s (waited {t1 - t0:.0f} s)", flush=True)

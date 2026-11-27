@@ -204,6 +204,14 @@ def tote_topstitch(holder):
                 break
             points.append(pos + normal * (0.00015 if offset == 0 else -0.00010))
         if len(points) == 3:
+            # At the sloping edge of a tab a single ray can hit the attachment
+            # almost a centimetre closer than the other two. End the stitch
+            # where it enters the leather instead of drawing over the hardware.
+            rear = min(point.dot(front) for point in points)
+            points = [point for point in points if point.dot(front) <= rear + 0.003]
+            if len(points) == 2:
+                points.insert(1, points[0].lerp(points[1], 0.5))
+        if len(points) == 3:
             stitch = yarn.splines.new("POLY")
             stitch.points.add(2)
             for point, pos, radius in zip(stitch.points, points, (0.5, 1.0, 0.5)):
@@ -216,28 +224,91 @@ def tote_topstitch(holder):
     return ob
 
 
-def tote_seam_paths(hem, blockers, scene, resolution):
-    """Project the visible thread left to right, lifting the editorial trace at each handle tab."""
+def project_tote_seam(hem, blockers, scene, resolution, *, sample_trace=False):
+    """Project the actual stitch crowns and endpoints in the graphic's left-to-right drawing order."""
     surfaces = [surface_bvh(obj) for obj in blockers]
     eye = scene.camera.matrix_world.translation
     width, height = resolution
-    paths = []
+
+    def visible(point):
+        ray = point - eye
+        # Ignore the leather carrying the stitch itself (within 0.2 mm).
+        return all(surface.ray_cast(eye, ray.normalized(), ray.length - 0.0007)[0] is None
+                   for surface in surfaces)
+
+    paths, controls = [], []
     previous = None
     for spline in reversed(hem.data.splines[:]):
         for control in reversed(spline.points[:]):
             point = hem.matrix_world @ Vector(control.co[:3])
-            ray = point - eye
-            # Ignore the leather carrying the stitch itself (its surface is within 0.2 mm).
-            if any(surface.ray_cast(eye, ray.normalized(), ray.length - 0.0007)[0] is not None
-                   for surface in surfaces):
+            uv = world_to_camera_view(scene, scene.camera, point)
+            pixel = (uv.x * width, (1 - uv.y) * height)
+            if not visible(point):
                 previous = None
                 continue
+            if sample_trace:
+                # A thread end can fold toward the lens under a tab. Interpolate
+                # the covered run between the last and first visible crowns.
+                controls.append((*pixel, uv.z, point))
             if previous is None or (point - previous).length > 0.008:
                 paths.append([])
-            uv = world_to_camera_view(scene, scene.camera, point)
-            paths[-1].append([round(uv.x * width, 3), round((1 - uv.y) * height, 3)])
+            paths[-1].append([round(p, 3) for p in pixel])
             previous = point
-    return [path for path in paths if len(path) >= 2]
+    metadata = {"seam_paths_px": [path for path in paths if len(path) >= 2]}
+    if sample_trace:
+        metadata["sidecars"] = {"seam": _sample_tote_trace(controls, visible, resolution)}
+    return metadata
+
+
+def tote_seam_paths(hem, blockers, scene, resolution):
+    """Visible parts of the stitch line, broken at each handle tab."""
+    return project_tote_seam(hem, blockers, scene, resolution)["seam_paths_px"]
+
+
+def _sample_tote_trace(controls, visible, resolution):
+    # Between thread crowns follow the surface chord; behind tabs interpolate the
+    # unseen hem. The two are distinguished by testing the camera ray at each sample.
+    from bisect import bisect_right
+
+    width, height = resolution
+    xs = [control[0] for control in controls]
+    if any(b <= a for a, b in zip(xs, xs[1:])):
+        raise ValueError("The tote hem must project left to right for this camera")
+    first = max(0.0, xs[0]) if xs else 0.0
+    last = min(float(width), xs[-1]) if xs else 0.0
+    seam, depths, flags = [], [], []
+    if first < last:
+        steps = math.ceil((last - first) / 3.0)
+        for i in range(steps + 1):
+            x = first + (last - first) * i / steps
+            j = min(max(bisect_right(xs, x) - 1, 0), len(controls) - 2)
+            x0, y0, z0, p0 = controls[j]
+            x1, y1, z1, p1 = controls[j + 1]
+            t = (x - x0) / (x1 - x0)
+            y = y0 + (y1 - y0) * t
+            if not 0 <= y <= height:
+                continue
+            # Perspective-correct interpolation preserves both camera depth and
+            # the world point on the projected chord when the tote is oblique.
+            depth = 1.0 / ((1.0 - t) / z0 + t / z1)
+            point = p0.lerp(p1, t * depth / z1)
+            seam.append([round(x, 3), round(y, 3)])
+            depths.append(round(depth, 6))
+            flags.append(not visible(point))
+    intervals = []
+    start = None
+    for i, hidden in enumerate(flags):
+        if hidden and start is None:
+            start = i
+        if start is not None and (not hidden or i == len(flags) - 1):
+            end = i if hidden else i - 1
+            left = (seam[max(0, start - 1)][0] + seam[start][0]) * 0.5
+            right = (seam[end][0] + seam[min(end + 1, len(seam) - 1)][0]) * 0.5
+            intervals.append([round(left, 3), round(right, 3)])
+            start = None
+    return {"space": list(resolution), "origin": "top-left pixel edge", "seam": seam,
+            "depth_m": depths, "depth_axis": "camera forward", "occluded": flags,
+            "occluded_x_px": intervals}
 
 
 def _retouch_tote_textures(holder, box, dx, feather=8):

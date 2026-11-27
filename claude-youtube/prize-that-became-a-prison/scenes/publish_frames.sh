@@ -55,9 +55,11 @@ publish_stage() (
     done
     ffmpeg -v error -xerror -i "$raw" -f null -
     cp -- "$raw" "$work/raw/$camera.png"
-    if [[ -f "$source_dir/final_$camera.corners.json" ]]; then
-      cp -- "$source_dir/final_$camera.corners.json" "$work/raw/$camera.corners.json"
-    fi
+    for track in corners seam; do
+      if [[ -f "$source_dir/final_$camera.$track.json" ]]; then
+        cp -- "$source_dir/final_$camera.$track.json" "$work/raw/$camera.$track.json"
+      fi
+    done
     matte="$source_dir/final_$camera.mask.png"
     if [[ -f "$matte" ]]; then
       mask_format=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,pix_fmt -of csv=p=0 "$matte")
@@ -101,7 +103,7 @@ publish_stage() (
     mv -- "$raw" "frames/raw/$stage/$filename"
     mv -- "$work/graded/${filename%.png}.jpg" "frames/graded/$stage/"
   done
-  for sidecar in "$work/raw"/*.corners.json "$work/masks"/*.mask.png; do
+  for sidecar in "$work/raw"/*.corners.json "$work/raw"/*.seam.json "$work/masks"/*.mask.png; do
     mv -- "$sidecar" "frames/raw/$stage/"
   done
   mv -- "$work/board.jpg" "design/boards/latest_$stage.jpg"
