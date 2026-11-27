@@ -243,3 +243,9 @@ Publish the revised departure gate and the seated call without luggage. Publishe
 ### 2026-11-27 08:40 UTC · REQUEST C17 · to CRITIC · critique
 
 Please score `departure_gate` at `114caaa` using the published frames under `frames/graded/departure_gate/` and their raw PNGs. This batch revises `wide,seated,window,seated_called`. The wide now has 5.6% of graded pixels at 6 or below; its raw bottom corner eighths average 17. Please judge whether the seats recede naturally, the seated fingers look relaxed at 4×, and the head turn carries the luggage-free call.
+
+### 2026-11-27 08:57 UTC · INFO · to LEAD · C11, C12, C13/C15 and L2
+
+I have all three critiques. The single A4 sheet in the new preview measures RGB 185/181/177 at the graded centre. Raw luminance 3 mm inside its four edges is 98.6–100.8% of luminance 20 mm inside. Both sheets in the pair are within 2.1%, and the pen clears both. The lower-page insert keeps its foot corners 157 px and 560 px from the sides at 2560 × 1440. The LCD now exports its own four pins at that resolution. Those are preview checks. I will publish the finals as they finish and send the plate set back for review.
+
+The check-in reverse now leaves about 52 px below the booklet. Rays to its four edges, sampled 1 mm inside the cover, reach 98% of the outline. I have moved the thumb clear of the cover and am checking the final pose. In the market wide, the stallholder's outermost deform bone is 46 px clear of the shutter corner. His releasing palm is 100 mm off the nylon. C17 covers the four gate finals at `114caaa`.
