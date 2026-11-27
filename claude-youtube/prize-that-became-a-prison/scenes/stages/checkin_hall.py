@@ -53,7 +53,7 @@ CAMERAS = {
     "wide": dict(loc=(4.4, -4.9, 2.4), aim=(-3.0, 1.0, 1.15), lens=24, focus="focus_dawn", fstop=5.6,
                  exposure=-1.4),   # a touch up: the far hall and the glazed end must not crush to black
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
-    "scale": dict(loc=(1.6, -1.38, 1.24), aim=(1.59, 0.46, 0.71), lens=40, focus="focus_duffel", fstop=2.8,
+    "scale": dict(loc=(1.6, -1.90, 1.24), aim=(1.43, 0.46, 0.65), lens=42, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
     "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
     "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.355), lens=50, focus="focus_dawn", fstop=2.4,
