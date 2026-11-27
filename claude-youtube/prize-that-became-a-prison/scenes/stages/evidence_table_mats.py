@@ -533,7 +533,7 @@ def screen(name, rgb, strength, w, h):
     v = _math(nt, "DIVIDE", _math(nt, "ABSOLUTE", y), h / 2)
     d = _math(nt, "MAXIMUM", _math(nt, "POWER", u, 4.0), _math(nt, "POWER", v, 4.0))
     b.inputs["Emission Color"].default_value = (*rgb, 1)
-    _link(nt, _math(nt, "MULTIPLY", _maprange(nt, d, 0.0, 1.0, 1.0, 0.82), strength), b.inputs["Emission Strength"])
+    _link(nt, _math(nt, "MULTIPLY", _maprange(nt, d, 0.0, 1.0, 1.0, 0.57), strength), b.inputs["Emission Strength"])
     m.cycles.emission_sampling = "NONE"
     return m
 

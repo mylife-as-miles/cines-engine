@@ -433,7 +433,7 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
     sprung open open_deg so a wedge of the page block and the cover's cream lining shows toward the fore-edge. No
     crest, no lettering. It settles on whatever is under it."""
     w, h, T = 0.125, 0.088, 0.0052
-    cov, r = 0.00085, 0.0042
+    cov, r = 0.00090, 0.0036
     mw = frame(x, y, turn)
     samples = [(-w / 2 * 0.97 + w * 0.97 * i / 8, -h / 2 * 0.95 + h * 0.95 * j / 6) for i in range(9) for j in range(7)]
     z0, a, b = settle(mw, samples, 4.0)
@@ -455,10 +455,36 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
     fs = _rounded_rect(bm, w, h, r, T - cov, T)
     if m_end is not None:
         fs[1].material_index = 1
+    # Press the hinge into the cover and bow the board between the binding and fore-edge.
+    # Crosscuts give the broad cover actual curvature under the moving highlight.
+    for abscissa in (-w / 2 + 0.004, -w / 2 + 0.007, -w / 2 + 0.010, -0.030, 0.0, 0.032, 0.055):
+        bmesh.ops.bisect_plane(bm, geom=[*bm.verts, *bm.edges, *bm.faces], dist=1e-7,
+                               plane_co=(abscissa, 0, 0), plane_no=(1, 0, 0))
+    for vert in bm.verts:
+        u = (vert.co.x + w / 2) / w
+        crease = math.exp(-((u * w - 0.007) / 0.0022) ** 2)
+        vert.co.z += 0.0017 * math.sin(math.pi * u) - 0.00055 * crease
     hinge = Vector((-w / 2 + 0.002, 0.0, T - cov))
     rot = Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(-open_deg), 4, "Y") @ Matrix.Translation(-hinge)
     bmesh.ops.transform(bm, matrix=rot, verts=bm.verts[:])
     parts.append(("front", bm, m_cover))
+    # A blank boarding slip protrudes at one corner under the sprung cover.
+    if open_deg >= 5 and m_end is not None:
+        # Two loose leaves spring away from the bound block. Their staggered edges and
+        # narrow shadows remain visible across the opening in the close-up.
+        for index, fraction in enumerate((0.30, 0.54)):
+            leaf = bmesh.new()
+            _rounded_rect(leaf, w - 0.0021 - index * 0.0004, h - 0.0028, r * 0.74,
+                          T - cov + 0.0002, T - cov + 0.00034)
+            leaf_rot = Matrix.Rotation(math.radians(-open_deg * fraction), 3, "Y")
+            for vert in leaf.verts:
+                vert.co = hinge + leaf_rot @ (vert.co - hinge)
+            parts.append((f"leaf_{index}", leaf, m_end))
+        slip = bmesh.new()
+        _rounded_rect(slip, 0.055, 0.033, 0.0012, T - cov, T - cov + 0.00024)
+        for vert in slip.verts:
+            vert.co += Vector((w / 2 - 0.017, -0.015, 0.00025))
+        parts.append(("slip", slip, m_end))
     # the spine: a half round of cover stock joining the boards
     bm = bmesh.new()
     seg = 10
@@ -489,7 +515,7 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
                 p.use_smooth = True
         else:
             bv = ob.modifiers.new("bevel", "BEVEL")
-            bv.width, bv.segments, bv.limit_method = (0.0003 if tag != "pages" else 0.00015), 2, "ANGLE"
+            bv.width, bv.segments, bv.limit_method = (0.00035 if tag != "pages" else 0.00015), 2, "ANGLE"
             ob.modifiers.new("wn", "WEIGHTED_NORMAL")
             for p in me.polygons:
                 p.use_smooth = True
