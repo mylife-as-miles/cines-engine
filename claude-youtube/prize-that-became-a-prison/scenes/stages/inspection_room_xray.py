@@ -61,6 +61,17 @@ def build(sx, sy, turn_deg=-90.0):
     my, mw_ = (y0 + y1) / 2, y1 - y0
     # the maker's plate above the tunnel: covered by a blank plate (no legible text)
     bx("scanner_blank_plate", (0.008, 0.30, 0.10), (0.186, -0.1, 1.335), m["cover"], bevel=0.003)
+    # A service hatch in the flank and the scuffed plinth catch the light from the exit.
+    bx("scanner service door", (0.53, 0.012, 0.48), (-0.32, -0.566, 0.90), m["cover"], bevel=0.009)
+    for x in (-0.56, -0.08):
+        bx("service hatch seam", (0.002, 0.004, 0.46), (x, -0.574, 0.90), m["dark"])
+    bx("scanner kick", (0.90, 0.018, 0.075), (-0.38, -0.568, 0.09), m["steel_dark"], bevel=0.004)
+    lamp = mt.glow("scanner ready lamp", (0.26, 0.46, 0.32), 0.74)
+    bx("scanner pilot", (0.013, 0.024, 0.012), (0.19, -0.33, 1.31), lamp, bevel=0.004)
+    end_fill = sk.area_light("scanner exit bounce", (0.67, -0.68, 1.2), (0.26, 0.22), 12.0, (0.75, 0.86, 1.0))
+    end_fill.rotation_euler = (Vector((0.05, -0.35, 0.72)) - end_fill.location).to_track_quat("-Z", "Y").to_euler()
+    end_fill.visible_glossy = False
+    put(end_fill)
     # the tunnel: a black void behind the curtain, a header bar, the slot under the belt closed
     bx("scanner_void", (0.004, mw_ + 0.01, z1 - z0 + 0.02), (0.09, my, (z0 + z1) / 2), m["dark"])
     bx("scanner_header", (0.022, mw_ + 0.01, 0.024), (0.142, my, z1 - 0.006), m["hardware"], bevel=0.004)

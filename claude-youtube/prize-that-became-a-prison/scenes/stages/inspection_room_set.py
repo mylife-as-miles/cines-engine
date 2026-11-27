@@ -58,9 +58,9 @@ def materials():
         sign_band=mt.paint("sign band", (0.04, 0.06, 0.1), 0.45, 0.01),
         cork=mt.paint("board", (0.16, 0.14, 0.11), 0.85, 0.15),
         sheet=mt.paper("notice paper", (0.55, 0.55, 0.53)),
-        tag=mt.paper("manila tag", (0.43, 0.32, 0.16), rough=0.9, fibre=0.06),
+        tag=mt.paper("manila tag", (0.50, 0.40, 0.26), rough=0.9, fibre=0.04),
         tag_ring=mt.paper("tag ring", (0.45, 0.34, 0.18), rough=0.85),
-        twine=mt.twine("twine", (0.42, 0.32, 0.19), 0.95),
+        twine=mt.twine("twine", (0.42, 0.34, 0.22), 0.90),
         curtain=mt.rubber("lead curtain", (0.022, 0.024, 0.025), 0.6),
         belt=mt.rubber("belt rubber", (0.016, 0.016, 0.017), 0.9),
         roller=mt.satin_metal("roller steel", (0.5, 0.51, 0.52), 0.28),
@@ -653,9 +653,9 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
         steps = max(5, int((b1.co - b0.co).length / 0.00030))
         centreline.extend(interpolate_bezier(b0.co, b0.handle_right, b1.handle_left, b1.co, steps + 1)[:-1])
     cu.splines.remove(sp)
-    cu.bevel_depth = 0.00033
+    cu.bevel_depth = 0.00045
     length = sum((p - centreline[i - 1]).length for i, p in enumerate(centreline))
-    turns = round(length / 0.0026)
+    turns = round(length / 0.003)
     for phase in (0, math.pi):
         strand = cu.splines.new("POLY")
         strand.points.add(len(centreline) - 1)
@@ -665,7 +665,7 @@ def luggage_tag(case, frame, hole=(-0.008, -0.04), grip=(-0.045, 0.540), grip_r=
             across = direction.cross(Vector((0, 1, 0))).normalized()
             angle = 2 * math.pi * turns * along / length + phase
             offset = across * math.cos(angle) + direction.cross(across) * math.sin(angle)
-            strand.points[i].co = (*(point + 0.00024 * offset), 1)
+            strand.points[i].co = (*(point + 0.00032 * offset), 1)
             along += (centreline[(i + 1) % len(centreline)] - point).length
         strand.use_cyclic_u = True
     tw = bpy.data.objects.new("luggage_tag_twine", cu)
