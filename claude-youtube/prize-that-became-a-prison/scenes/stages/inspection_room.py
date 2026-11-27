@@ -318,7 +318,11 @@ def officer(name, variant):
             if z < 0:
                 x -= 0.95 * z
                 z *= 0.075
-            v.co = (centre.x + 1.18 * y, centre.y - 1.54 * x + 0.009, band_z + z * 1.82 - 0.035)
+            # A peaked cap follows the forehead forward from the temples. The source band
+            # is almost circular and otherwise cuts through the front of the posed head.
+            brow = 0.042 * min(1.0, max(0.0, x / 0.060))
+            v.co = (centre.x + 1.18 * y, centre.y - 1.54 * x + 0.009 - brow,
+                    band_z + z * 1.82 - 0.035)
         mesh.update()
     return h
 
