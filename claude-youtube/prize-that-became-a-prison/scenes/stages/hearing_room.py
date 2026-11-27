@@ -14,21 +14,25 @@ readable in the dark.
 
     <bpy python> -I scenes/shoot.py -- hearing_room <cam> out.png [--nocast]
 
-The set is in hearing_room_set.py, its materials in hearing_room_mats.py. Tim is people.man('Tim', age=0.55,
-suit='male_elegantsuit01', tone=(0.09, 0.09, 0.1)) seated through Rigify (the seated solve is the departure gate's:
-legs to FK, thigh and shin solved so the seat rests on the cushion and the soles on the carpet); his arms are solved
-by two-bone IK onto the table (the courtroom's arm solve) with the forearm twist that turns each palm down and the
-wrist lowered until the hand rests on the papers. Printed as HEARING ...
+The set is in hearing_room_set.py, its materials in hearing_room_mats.py. Tim is people.man('Tim', age=TIM_AGE,
+weight=TIM_WEIGHT, suit='male_elegantsuit01', tone=(0.09, 0.09, 0.1)) with a pale shirt and dark tie split out of the
+suit's texture and a receding hairline, seated through Rigify (the seated solve is the departure gate's: legs to FK,
+thigh and shin solved so the seat rests on the cushion and the soles on the carpet); his arms are placed elbow first
+onto the table with the forearm twist that turns each palm down; the fingers are closed and curled joint by joint
+through Rigify's finger controls, the right hand laid on the papers, the left over its back (a BVH keeps them apart).
+Printed as HEARING ...
 """
 import math
 import os
 import sys
+from contextlib import contextmanager
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
 sys.path.insert(0, os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 import bpy  # noqa: E402
+import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
 import people  # noqa: E402
@@ -43,16 +47,19 @@ TORSO_GAP = 0.06                      # his jacket front this far from the table
 # Tim: MakeHuman's age macro is 0.5 = 25 years, 1.0 = 90 (linear between), so 55 years is 0.73 (at 0.55 he read as a
 # man of about 30). Head: chin up toward the dais and turned toward the camera side, so the eyeline passes a little
 # above and beside the witness lens; fingers curled 18 degrees (40 curled them into claws), thumbs 10.
-TIM_AGE, TIM_WEIGHT = 0.73, 0.6
+# At 0.73 / 0.6 the smooth stone still read as a man of 30 (a statue loses the skin's age): 0.78 (about 60 on the
+# macro) and a heavier 0.7 give the jaw, neck and middle of a man in his mid fifties, with the receding hairline.
+TIM_AGE, TIM_WEIGHT = 0.78, 0.7
 TIM_UPPER = {"head": (-18, -16), "neck": (2, 0), "chest": (12, 0), "fingers": 18}
 THUMB_CURL = 10.0
 ELBOW_FWD = 0.12          # the elbow hangs this far ahead of the shoulder (the upper arm nearly plumb)
-SHIRT = (0.55, 0.57, 0.6)       # read values (x people.FABRIC_VALUE): a pale shirt so the collar's V separates
+SHIRT = (0.78, 0.8, 0.84)       # read values (x people.FABRIC_VALUE): a pale shirt so the collar's V separates
 TIE = (0.06, 0.062, 0.085)      # a dark navy tie, flat (the texture's striped tie would shimmer)
 
-# the two still figures in the public rows: (row index, side, seat index, factory, pose)
+# the two still figures in the public rows: (row index, side, seat index, factory, pose). The young one sits a seat
+# further out than before: in the witness frame his lit head floated just over the microphone's head (a tangency)
 EXTRAS = [
-    (0, -1, 2, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 20}),
+    (0, -1, 3, "young", {"head": (8, 6), "neck": (2, 0), "chest": (-6, 0), "fingers": 20}),
     (1, 1, 3, "old", {"head": (4, -5), "neck": (2, 0), "chest": (-9, 0), "fingers": 22}),
 ]
 
@@ -66,7 +73,9 @@ FOCUS = {
 CAMERAS = {
     # Ch 09: from behind the public seats, high enough to look over the rows: Tim small at the witness table in the
     # one pool of light, facing the high curved dais and its empty chairs, the drape beyond
-    "wide": dict(loc=(2.3, -9.05, 2.05), aim=(-0.35, 2.4, 1.5), lens=30, focus="fx_wide", fstop=8.0, beat="ch09"),
+    # (a quarter stop over the stage: the grade's vignette takes the frame's edges, where the side walls are, to black)
+    "wide": dict(loc=(2.3, -9.05, 2.05), aim=(-0.35, 2.4, 1.5), lens=30, focus="fx_wide", fstop=8.0, beat="ch09",
+                 exposure=EXPOSURE + 0.25),
     # Ch 09: controlled medium from the dais side, a little above his eyeline: Tim at the microphones, hands folded on
     # the papers, the empty rows going dark behind him
     "witness": dict(loc=(st.TIM_X + 1.25, 1.95, 1.44), aim=(st.TIM_X - 0.1, -0.5, 1.04), lens=54, focus="fx_tim",
@@ -79,13 +88,34 @@ CAMERAS = {
                  beat="ch09"),
     # Ch 09 (added): overhead on the table: his folded hands on the blank papers, the microphones, the glass, the felt
     # (a stop under the stage: the table downlight lands square on the papers and his sleeves from above)
+    # (with the trims below and 0.45 under the stage: paper about 150 graded, the charcoal sleeve 30-45; a full stop
+    # under left the paper at 110 and the frame muddy)
     "hands": dict(loc=(st.TIM_X + 0.12, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
-                  fstop=4.0, beat="ch09", exposure=EXPOSURE - 1.0),
+                  fstop=4.0, beat="ch09", exposure=EXPOSURE - 0.45),
 }
-# the table's things (overrides of hearing_room_set.TABLE_POS)
-TABLE_POS = {}
+
+
+def mic_place(base, at, scale=1.0):
+    """The table microphone prop's (x, y, turn, scale) so its base disc stands at `base` and its head (0.118 m ahead of
+    the prop's origin, the base 0.066 behind it, along the file's +Y) points at `at` in plan."""
+    d = Vector((at[0] - base[0], at[1] - base[1])).normalized()
+    o = Vector(base) + d * 0.066 * scale
+    return (o.x, o.y, math.degrees(math.atan2(-d.x, d.y)), scale)
+
+
+# the table's things (overrides of hearing_room_set.TABLE_POS). His microphone at his front left, its base clear of his
+# left forearm, the gooseneck's head about 0.25 m before his mouth (he speaks into it; at 0.5 m to his side he did
+# not); his glass to his right, whole in the witness frame; the nameplate (facing the dais) moved to his left so the
+# witness frame does not cut it; the timer off to the empty place's side.
+TABLE_POS = {
+    "mic_tim": mic_place((st.TIM_X - 0.21, EDGE + 0.28), (st.TIM_X, EDGE - 0.06), 1.0),
+    "glass_tim": (st.TIM_X + 0.36, EDGE + 0.23, 0.6),
+    "np_tim": (st.TIM_X - 0.3, st.TABLE[1] + st.TD / 2 - 0.07, 0.0),
+    "timer": (st.TIM_X + 0.75, EDGE + 0.17, -8.0),
+    "mic_empty": (st.EMPTY_X + 0.12, st.TABLE[1] + 0.17, 186.0, 0.95),
+}
 # the shadow floor per camera (scene-linear lift after the exposure; about 0.003 lifts pure black to ~6/255 raw)
-LIFT = {"wide": 0.0032, "witness": 0.0018, "dais": 0.0024, "hands": 0.0014}
+LIFT = {"wide": 0.0045, "witness": 0.0018, "dais": 0.0024, "hands": 0.0014}
 # objects a camera does not see (by name or name prefix)
 HIDE = {}
 # per-camera light trims (multipliers on named lights)
@@ -95,7 +125,9 @@ HIDE = {}
 # near-white face: AgX compresses the highlights)
 TRIMS = {
     "wide": {},
-    "witness": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
+    # (the witness frame: the young figure behind him in darkness, not a lone half-lit face over his shoulder; the
+    # fill under the key and the table downlight a little up, so the overhead light models his brow and cheeks)
+    "witness": {"tv_key_light": 0.27, "tv_fill_light": 0.18, "dl_table_spot": 0.55, "dl_fig_-2.4_-2.4_spot": 0.15},
     "dais": {},
     "hands": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
 }
@@ -344,167 +376,300 @@ def solve_arm_elbow(holder, k, side, elbow, wrist, twist, hand_dir):
 
 TIP_GROUPS = ("DEF-f_index.03", "DEF-f_middle.03", "DEF-f_ring.03", "DEF-f_pinky.03")
 PALM_GROUPS = ("DEF-palm", "DEF-hand")
+FINGER_GROUPS = ("DEF-f_",)
 # where the palms go (world, relative to Tim's place): the right palm just right of his centre line on the papers, the
-# left palm laid over the right hand's back, a touch toward its knuckles
+# left palm laid over the right hand's back, L_BACK toward the right wrist (over the back of the hand, not the fingers:
+# over the knuckles its fingers fanned across the right hand's fingers)
 R_PALM = (st.TIM_X + 0.025, EDGE + 0.255)
-L_OVER = Vector((0.0, 0.012, 0.0))
+L_BACK = 0.022
 L_CLEAR = 0.0025          # the left hand rests this far above the right hand's surface (no interpenetration)
+# the hands' fingers: knuckle, middle and end joint curls (degrees) through Rigify's finger controls (the master's
+# rotation bends the knuckle only, the finger stays straight, which read as stiff spread claws); the right hand lies
+# flat on the papers with the fingertips just down, the left drapes its fingers over the right hand's thumb side
+FINGERS = ("f_index", "f_middle", "f_ring", "f_pinky")
+CURL = {"R": (9.0, 16.0, 9.0), "L": (24.0, 36.0, 18.0)}
+SPREAD = (2.0, 2.5, 4.5)  # degrees between neighbours (index-middle, ring-middle, pinky-ring): fingers together
 
 
-def hand_bvh(holder, k):
-    """A BVH of the body's hand surface on side `k` (masks off, so the base mesh's indices hold; the evaluated
-    subdivided mesh lists the base vertices first)."""
-    from mathutils.bvhtree import BVHTree
+@contextmanager
+def fast_body(holder):
+    """While solving: the body's masks and subdivision off, so evaluation is quick and the evaluated vertices are the
+    base mesh's (indices hold). The cage sits a hair outside the subdivided surface, so contacts stay conservative."""
     body = bpy.data.objects[holder["body"]]
-    gids = {g.index for g in body.vertex_groups if g.name.endswith(f".{k}") and g.name.startswith(HAND_GROUPS)}
-    sel = {v.index for v in body.data.vertices if any(ge.group in gids and ge.weight > 0.3 for ge in v.groups)}
-    masks = [md for md in body.modifiers if md.type == "MASK"]
-    for md in masks:
+    mods = [md for md in body.modifiers if md.type in ("MASK", "SUBSURF") and md.show_viewport]
+    for md in mods:
         md.show_viewport = False
     bpy.context.view_layer.update()
+    try:
+        yield body
+    finally:
+        for md in mods:
+            md.show_viewport = True
+        bpy.context.view_layer.update()
+
+
+_SEL = {}
+
+
+def _sel(body, prefixes, suffix):
+    key = (body.name, prefixes, suffix)
+    if key not in _SEL:
+        gids = {g.index for g in body.vertex_groups if g.name.endswith(suffix) and g.name.startswith(prefixes)}
+        _SEL[key] = np.array([v.index for v in body.data.vertices
+                              if any(ge.group in gids and ge.weight > 0.3 for ge in v.groups)], dtype=np.int64)
+    return _SEL[key]
+
+
+def _coords(body):
     dg = bpy.context.evaluated_depsgraph_get()
     ev = body.evaluated_get(dg)
     me = ev.to_mesh()
-    mw = body.matrix_world
-    n = len(me.vertices)
-    idx = {i: j for j, i in enumerate(sorted(i for i in sel if i < n))}
-    verts = [mw @ me.vertices[i].co for i in sorted(idx)]
-    polys = [[idx[i] for i in p.vertices] for p in body.data.polygons if all(i in idx for i in p.vertices)]
+    co = np.empty(len(me.vertices) * 3, np.float32)
+    me.vertices.foreach_get("co", co)
     ev.to_mesh_clear()
-    for md in masks:
-        md.show_viewport = True
-    bpy.context.view_layer.update()
+    mw = np.array(body.matrix_world)
+    return co.reshape(-1, 3) @ mw[:3, :3].T + mw[:3, 3]
+
+
+def hpts(body, prefixes, suffix, co=None):
+    """World points (numpy) of the body's vertices weighted to the groups (inside fast_body)."""
+    co = _coords(body) if co is None else co
+    s = _sel(body, prefixes, suffix)
+    return co[s[s < len(co)]]
+
+
+def hand_bvh(body, k):
+    """A BVH of the body's hand surface on side `k` (inside fast_body: the base mesh's polygons)."""
+    from mathutils.bvhtree import BVHTree
+    co = _coords(body)
+    sel = [int(i) for i in _sel(body, HAND_GROUPS, f".{k}") if i < len(co)]
+    idx = {i: j for j, i in enumerate(sel)}
+    verts = [Vector(co[i]) for i in sel]
+    polys = [[idx[i] for i in p.vertices] for p in body.data.polygons if all(i in idx for i in p.vertices)]
     return BVHTree.FromPolygons(verts, polys)
 
 
-def clearance(pts, bvh, floor_z):
-    """The smallest height of `pts` over what is under them: the surface in `bvh` (cast from above, so a point inside
-    the other hand counts negative) or the floor (the papers)."""
-    worst = 9.9
-    for p in pts:
-        hit = bvh.ray_cast(p + Vector((0, 0, 0.25)), Vector((0, 0, -1)), 0.5)
+def clearances(pts, bvh, floor_z):
+    """Each point's height over what is under it: the surface in `bvh` (cast from above, so a point inside the other
+    hand counts negative) or the floor (the papers)."""
+    out = np.empty(len(pts))
+    down = Vector((0, 0, -1))
+    for i, p in enumerate(pts):
+        v = Vector(p)
+        hit = bvh.ray_cast(v + Vector((0, 0, 0.25)), down, 0.5)
         sup = floor_z if hit[0] is None else max(floor_z, hit[0].z)
-        worst = min(worst, p.z - sup)
-    return worst
+        out[i] = v.z - sup
+    return out
 
 
-def _centroid(pts):
-    return sum(pts, Vector()) / len(pts) if pts else Vector()
+def _wdir(rig, name):
+    pb = rig.pose.bones[name]
+    mw = rig.matrix_world
+    return (mw @ pb.tail - mw @ pb.head).normalized()
+
+
+def _wpos(rig, name, tail=False):
+    pb = rig.pose.bones[name]
+    return rig.matrix_world @ (pb.tail if tail else pb.head)
+
+
+def _signed(a, b, n):
+    a_ = (a - n * a.dot(n)).normalized()
+    b_ = (b - n * b.dot(n)).normalized()
+    return math.degrees(math.atan2(a_.cross(b_).dot(n), a_.dot(b_)))
+
+
+def pose_hand(rig, k, curl):
+    """A relaxed hand: the fingers closed together (each master turned about its palm normal until the angle to its
+    neighbour is SPREAD), then curled at the knuckle (master), middle and end joints (the finger controls .02/.03);
+    the thumb laid alongside the index finger at about the depth of the finger pads (searched over the thumb
+    master's rotation), its joints eased. Returns the hand frame for the report."""
+    pb = rig.pose.bones
+    upd = bpy.context.view_layer.update
+    for f in FINGERS:
+        m = pb[f"{f}.01_master.{k}"]
+        m.rotation_mode = "XYZ"
+        m.rotation_euler = (0.0, 0.0, 0.0)
+        for s in ("01", "02", "03"):
+            b = pb.get(f"{f}.{s}.{k}")
+            if b is not None:
+                b.rotation_mode = "XYZ"
+                b.rotation_euler = (0.0, 0.0, 0.0)
+    upd()
+    mid_m = pb[f"f_middle.01_master.{k}"]
+    nrm = (rig.matrix_world.to_3x3() @ mid_m.matrix.to_3x3() @ Vector((0, 0, 1))).normalized()
+    spread = {}
+    for f, ref, gap in (("f_index", "f_middle", SPREAD[0]), ("f_ring", "f_middle", SPREAD[1]),
+                        ("f_pinky", "f_ring", SPREAD[2])):
+        m = pb[f"{f}.01_master.{k}"]
+        a0 = _signed(_wdir(rig, f"{ref}.01.{k}"), _wdir(rig, f"{f}.01.{k}"), nrm)
+        m.rotation_euler.z = math.radians(6.0)
+        upd()
+        a1 = _signed(_wdir(rig, f"{ref}.01.{k}"), _wdir(rig, f"{f}.01.{k}"), nrm)
+        slope = (a1 - a0) / 6.0
+        z = (math.copysign(gap, a0) - a0) / slope if abs(slope) > 0.2 else 0.0
+        z = max(-25.0, min(25.0, z))
+        m.rotation_euler.z = math.radians(z)
+        upd()
+        spread[f] = (a0, _signed(_wdir(rig, f"{ref}.01.{k}"), _wdir(rig, f"{f}.01.{k}"), nrm), z)
+    kn, md_, tp = curl
+    for f in FINGERS:
+        pb[f"{f}.01_master.{k}"].rotation_euler.x = math.radians(kn)
+        pb[f"{f}.02.{k}"].rotation_euler.x = math.radians(md_)
+        pb[f"{f}.03.{k}"].rotation_euler.x = math.radians(tp)
+    upd()
+    # the hand frame: along the hand, across toward the thumb, and the palm side (where the fingers curl)
+    H = _wpos(rig, f"hand_fk.{k}")
+    I, M, P = (_wpos(rig, f"f_{f}.01_master.{k}") for f in ("index", "middle", "pinky"))
+    y_h = (M - H).normalized()
+    x_h = (I - P)
+    x_h = (x_h - y_h * x_h.dot(y_h)).normalized()
+    n_p = y_h.cross(x_h).normalized()
+    tip = _wpos(rig, f"f_middle.03.{k}", tail=True)
+    if (tip - M).dot(n_p) < 0:
+        n_p = -n_p
+    itip = _wpos(rig, f"f_index.03.{k}", tail=True)
+    depth = (itip - I).dot(n_p)
+    # the thumb: its tip beside the index finger's middle joint, toward the thumb side, at 0.8 of the index fingertip's
+    # depth below the knuckles (so on a table it rests with the fingertips, not under them)
+    target = I + y_h * 0.032 + x_h * 0.02 + n_p * (0.8 * depth)
+    th = pb.get(f"thumb.01_master.{k}")
+    best = None
+    if th is not None:
+        th.rotation_mode = "XYZ"
+        for nm in (f"thumb.02.{k}", f"thumb.03.{k}"):
+            b = pb.get(nm)
+            if b is not None:
+                b.rotation_mode = "XYZ"
+                b.rotation_euler = (math.radians(THUMB_CURL), 0.0, 0.0)
+
+        def try_(x, z):
+            th.rotation_euler = (math.radians(x), 0.0, math.radians(z))
+            upd()
+            return (_wpos(rig, f"thumb.03.{k}", tail=True) - target).length
+        for x in range(-50, 51, 10):
+            for z in range(-50, 51, 10):
+                d = try_(x, z)
+                if best is None or d < best[0]:
+                    best = (d, x, z)
+        _, bx, bz = best
+        for x in range(bx - 8, bx + 9, 4):
+            for z in range(bz - 8, bz + 9, 4):
+                d = try_(x, z)
+                if d < best[0]:
+                    best = (d, x, z)
+        try_(best[1], best[2])
+    print(f"HEARING hand {k}: spread " + ", ".join(f"{f} {a:+.1f}->{b:+.1f} deg (z {z:+.1f})"
+                                                     for f, (a, b, z) in spread.items()) +
+          f", index tip depth {depth * 1000:.0f} mm, thumb tip off its mark "
+          f"{(best[0] if best else 0) * 1000:.0f} mm at ({best[1] if best else 0}, {best[2] if best else 0})", flush=True)
 
 
 def hands_folded(holder):
     """Forearms over the table edge, the hands angled in, folded: the right hand laid flat on the papers, the left
-    laid over the right hand's back. Elbow first: each upper arm hangs nearly plumb from the shoulder toward a point
-    at forearm height; the forearm runs from there to a wrist target on the table; the forearm twist that turns the
-    palm down is chosen. The right hand's pitch is chosen so its heel and its curled fingertips both rest, and its
-    wrist lowered until it rests on the papers; the left hand is slid until its palm sits over the right hand's back
-    and lowered until it clears the right hand's surface (a BVH of it) by L_CLEAR. Both wrists' targets are corrected
-    until the palms land where they are meant to (the forearm falls short of a far target)."""
+    laid over the right hand's back, its fingers draping over the right hand's thumb side. Elbow first: each upper
+    arm hangs nearly plumb from the shoulder toward a point at forearm height; the forearm runs from there to a wrist
+    target on the table; the forearm twist that turns the palm down is chosen. Each hand's pitch is chosen so its heel
+    and its curled fingertips both rest (the right on the papers, the left on the right hand's back), the right wrist
+    lowered until the hand rests on the papers, the left until it clears the right hand's surface (a BVH of it) and
+    the papers by L_CLEAR. Both wrists' targets are corrected until the palms land where they are meant to."""
     rig = rigged.rig_of(holder)
     mw = rig.matrix_world
     left = (mw.to_3x3() @ Vector((1, 0, 0))).normalized()
     fwd = -(mw.to_3x3() @ Vector((0, 1, 0))).normalized()
     pb = rig.pose.bones
-    for k in "LR":           # the thumbs relaxed too (the finger curl is set by pose_figure)
-        n = f"thumb.01_master.{k}"
-        if n in pb:
-            pb[n].rotation_mode = "XYZ"
-            pb[n].rotation_euler.x = math.radians(THUMB_CURL)
-    bpy.context.view_layer.update()
     report = []
     paper = st.PAPER_TOP
     solved = {}
-    bvh_r = None
-    for side, k in ((-1, "R"), (1, "L")):
-        inward = -left * side
-        S = mw @ pb[f"upper_arm_fk.{k}"].head
-        elbow = Vector((S.x, S.y + ELBOW_FWD, st.TOP + 0.04)) + left * side * 0.065
-        wrist = Vector((st.TIM_X, 0, 0)) + left * side * (0.07 if k == "R" else 0.06)
-        wrist.y = EDGE + (0.22 if k == "R" else 0.232)
-        wrist.z = paper + (0.03 if k == "R" else 0.06)
+    with fast_body(holder) as body:
+        for k in "RL":
+            pose_hand(rig, k, CURL[k])
+        bvh_r = None
+        for side, k in ((-1, "R"), (1, "L")):
+            inward = -left * side
+            S = mw @ pb[f"upper_arm_fk.{k}"].head
+            elbow = Vector((S.x, S.y + ELBOW_FWD, st.TOP + 0.04)) + left * side * 0.065
+            wrist = Vector((st.TIM_X, 0, 0)) + left * side * (0.07 if k == "R" else 0.04)
+            wrist.y = EDGE + (0.22 if k == "R" else 0.22)
+            wrist.z = paper + (0.03 if k == "R" else 0.06)
 
-        def hdir(p):
-            return (fwd * 0.55 + inward * 0.82 + Vector((0, 0, p))).normalized()
-        best = None
-        for twist in (side * 80.0, -side * 80.0, side * 40.0, -side * 40.0, 0.0):
-            solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(HAND_PITCH))
-            pdn = _palm_down(rig, k)
-            if best is None or pdn > best[0]:
-                best = (pdn, twist)
-        twist = best[1]
+            def hdir(p):
+                return (fwd * 0.55 + inward * 0.82 + Vector((0, 0, p))).normalized()
+            best = None
+            for twist in (side * 80.0, -side * 80.0, side * 40.0, -side * 40.0, 0.0):
+                solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(HAND_PITCH))
+                pdn = _palm_down(rig, k)
+                if best is None or pdn > best[0]:
+                    best = (pdn, twist)
+            twist = best[1]
 
-        def rest_r(pitch):
-            """Right hand: lower the wrist until the hand's lowest point is on the papers."""
-            for _ in range(6):
-                solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
-                pts = group_points(holder, HAND_GROUPS, f".{k}")
-                gap = min(p.z for p in pts) - (paper + 0.0008)
-                if abs(gap) < 0.0015:
-                    break
-                wrist.z -= gap
-            tips = min(p.z for p in group_points(holder, TIP_GROUPS, f".{k}")) - paper
-            heel = min(p.z for p in group_points(holder, PALM_GROUPS, f".{k}")) - paper
-            return tips, heel
+            def gaps():
+                """(lowest point, fingertips, heel) heights over their support, and the palm centroid."""
+                co = _coords(body)
+                allp = hpts(body, HAND_GROUPS, f".{k}", co)
+                tp = hpts(body, TIP_GROUPS, f".{k}", co)
+                hl = hpts(body, PALM_GROUPS, f".{k}", co)
+                pc = hpts(body, ("DEF-palm",), f".{k}", co).mean(0)
+                if k == "R":
+                    return (allp[:, 2].min() - paper, tp[:, 2].min() - paper, hl[:, 2].min() - paper, pc)
+                return (clearances(allp, bvh_r, paper).min(), clearances(tp, bvh_r, paper).min(),
+                        clearances(hl, bvh_r, paper).min(), pc)
 
-        def rest_l(pitch):
-            """Left hand: lower (or lift) the wrist until it clears the right hand and the papers by L_CLEAR."""
-            c = 0.0
-            for _ in range(7):
-                solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
-                c = clearance(group_points(holder, HAND_GROUPS, f".{k}"), bvh_r, paper)
-                if abs(c - L_CLEAR) < 0.0012:
-                    break
-                wrist.z -= c - L_CLEAR
-            return c
+            def rest(pitch):
+                """Lower (or lift) the wrist until the hand's lowest point is on its support."""
+                g = None
+                want = 0.0008 if k == "R" else L_CLEAR
+                for _ in range(7):
+                    solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
+                    g = gaps()
+                    if abs(g[0] - want) < 0.0012:
+                        break
+                    wrist.z -= g[0] - want
+                return g
 
-        pitch = HAND_PITCH
-        for it in range(4):              # slide the wrist (and the elbow with it) until the palm lands on its mark
-            if k == "R":
+            pitch = HAND_PITCH
+            for it in range(4):              # slide the wrist (and the elbow with it) until the palm lands on its mark
                 if it == 0:      # the pitch at which the heel and the fingertips both rest
                     scores = []
-                    for p_ in (-0.2, -0.1, 0.0, 0.1, 0.2, 0.3):
-                        tips, heel = rest_r(p_)
-                        scores.append((tips + heel + 0.5 * abs(tips - heel), p_, tips, heel))
+                    for p_ in (-0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4):
+                        g = rest(p_)
+                        scores.append((g[1] + g[2] + 0.5 * abs(g[1] - g[2]), p_, g[1], g[2]))
                     _, pitch, tips, heel = min(scores)
-                    print("HEARING hands R pitch scores " + ", ".join(f"{p_:+.1f}: tips {t * 1000:+.0f} heel "
-                                                                      f"{h * 1000:+.0f}" for _, p_, t, h in scores),
-                          flush=True)
-                rest_r(pitch)
-                goal = Vector((R_PALM[0], R_PALM[1], 0))
+                    print(f"HEARING hands {k} pitch scores " + ", ".join(
+                        f"{p_:+.1f}: tips {t * 1000:+.0f} heel {h * 1000:+.0f}" for _, p_, t, h in scores), flush=True)
+                g = rest(pitch)
+                if k == "R":
+                    goal = Vector((R_PALM[0], R_PALM[1], 0))
+                else:
+                    goal = solved["R_palm"] + solved["R_back"] * L_BACK
+                err = Vector((goal.x - g[3][0], goal.y - g[3][1], 0))
+                if err.length < 0.004:
+                    break
+                wrist += err
+                elbow += err * 0.8
+            g = rest(pitch)
+            if k == "R":
+                solved["R_palm"] = Vector(g[3])
+                hd = -_wdir(rig, "hand_fk.R")       # from the knuckles back toward the wrist, level
+                hd.z = 0.0
+                solved["R_back"] = hd.normalized()
+                bvh_r = hand_bvh(body, "R")
+                extra = f"pitch {pitch:+.2f} fingertips {g[1] * 1000:+.1f} mm heel {g[2] * 1000:+.1f} mm over the papers"
             else:
-                rest_l(pitch)
-                goal = solved["R_palm"] + L_OVER
-            pc = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
-            err = Vector((goal.x - pc.x, goal.y - pc.y, 0))
-            if err.length < 0.004:
-                break
-            wrist += err
-            elbow += err * 0.8
-        if k == "R":
-            tips, heel = rest_r(pitch)
-            solved["R_palm"] = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
-            bvh_r = hand_bvh(holder, "R")
-            extra = f"pitch {pitch:+.2f} fingertips {tips * 1000:+.1f} mm heel {heel * 1000:+.1f} mm over the papers"
-        else:
-            c = rest_l(pitch)
-            pc = _centroid(group_points(holder, ("DEF-palm",), f".{k}"))
-            # the BVH check: no vertex of the left hand inside the right
-            pts = group_points(holder, HAND_GROUPS, f".{k}")
-            inside = sum(1 for p in pts if clearance([p], bvh_r, paper) < 0.0)
-            extra = (f"clearance over the right hand {c * 1000:+.1f} mm, vertices inside it {inside}, palm offset from "
-                     f"the right palm ({(pc.x - solved['R_palm'].x) * 1000:+.0f}, "
-                     f"{(pc.y - solved['R_palm'].y) * 1000:+.0f}) mm")
-        S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
-        if k == "L":         # the final pose may have nudged it: the last word is the clearance
-            c = clearance(group_points(holder, HAND_GROUPS, f".{k}"), bvh_r, paper)
-            if c < L_CLEAR * 0.5:
-                wrist.z += L_CLEAR - c
-                S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
-        fore = group_points(holder, ("DEF-forearm",), f".{k}")
-        flo = min((p.z for p in fore if p.y > EDGE + 0.01), default=9.9)
-        report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} elbow ({E.x:+.3f}, {E.y:+.3f}, {E.z:.3f}) "
-                      f"wrist ({W.x:+.3f}, {W.y:+.3f}, {W.z:.3f}) {extra}, forearm low over the table "
-                      f"{(flo - st.TOP) * 1000:+.0f} mm")
+                pts = hpts(body, HAND_GROUPS, ".L")
+                inside = int((clearances(pts, bvh_r, paper) < 0.0).sum())
+                pc = g[3]
+                extra = (f"pitch {pitch:+.2f} clearance {g[0] * 1000:+.1f} mm, fingertips {g[1] * 1000:+.1f} mm, heel "
+                         f"{g[2] * 1000:+.1f} mm over their support, vertices inside the right hand {inside}, palm "
+                         f"offset from the right palm ({(pc[0] - solved['R_palm'].x) * 1000:+.0f}, "
+                         f"{(pc[1] - solved['R_palm'].y) * 1000:+.0f}) mm")
+            S, E, W = solve_arm_elbow(holder, k, side, elbow, wrist, twist, hdir(pitch))
+            fore = hpts(body, ("DEF-forearm",), f".{k}")
+            fore = fore[fore[:, 1] > EDGE + 0.01]
+            flo = fore[:, 2].min() if len(fore) else 9.9
+            report.append(f"{k}: twist {twist:+.0f} palm-down {best[0]:+.2f} elbow ({E.x:+.3f}, {E.y:+.3f}, "
+                          f"{E.z:.3f}) wrist ({W.x:+.3f}, {W.y:+.3f}, {W.z:.3f}) {extra}, forearm low over the table "
+                          f"{(flo - st.TOP) * 1000:+.0f} mm")
     print("HEARING hands " + "; ".join(report), flush=True)
 
 
@@ -557,9 +722,12 @@ def suit_tones(holder, item, jacket, shirt, tie):
         out[..., 0] = shirt_m
         out[..., 1] = tie_m
         out[..., 3] = 1.0
+        # (the colour space is set before the pixels and the image packed: setting it afterwards regenerated the blank
+        # generated image, so the mask rendered black and the shirt took the jacket's tone, the black-shirt look)
         mimg = bpy.data.images.new(f"{holder.name}_suitmask", w, hgt, alpha=False)
-        mimg.pixels.foreach_set(out.ravel())
         mimg.colorspace_settings.name = "Non-Color"
+        mimg.pixels.foreach_set(out.ravel())
+        mimg.pack()
         mt_ = nt.nodes.new("ShaderNodeTexImage")
         mt_.image = mimg
         if tex.inputs["Vector"].links:
@@ -627,11 +795,88 @@ def soften_hair(holder):
         b.inputs["Roughness"].default_value = 0.78
 
 
+def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (62, 0.0)), volume=0.0065):
+    """A man of 55: the sculpted short hair's front hairline raised, further at the temples than in the middle (a
+    receding M), and the hair thinner over the skull (a close crop, not a cap). The shell's faces under the new line
+    are cut, the new edge snapped onto it and eased, and the volume weights (which taper the shell to nothing at its
+    edge) recomputed from the new edge. Mesh coordinates are the body's rest space (the head faces -Y)."""
+    import bmesh
+    hair = bpy.data.objects.get(f"{holder['body']}_hair")
+    if hair is None:
+        return
+    bm = bmesh.new()
+    bm.from_mesh(hair.data)
+    zs = [v.co.z for v in bm.verts]
+    ztop = max(zs)
+    crown = [v.co for v in bm.verts if v.co.z > ztop - 0.06]
+    cx = sum(c.x for c in crown) / len(crown)
+    cy = sum(c.y for c in crown) / len(crown)
+
+    def ang(co):
+        return abs(math.degrees(math.atan2(co.x - cx, -(co.y - cy))))
+    edge = sorted((ang(v.co), v.co.z) for v in bm.verts if v.is_boundary)
+
+    def old_line(d):
+        best = min(edge, key=lambda e: abs(e[0] - d))
+        near = [z for a_, z in edge if abs(a_ - best[0]) < 3.0]
+        return sum(near) / len(near)
+
+    def extra(d):
+        for (d0, z0), (d1, z1) in zip(lift, lift[1:]):
+            if d <= d1:
+                t = (d - d0) / (d1 - d0)
+                t = t * t * (3 - 2 * t)
+                return z0 + (z1 - z0) * t
+        return 0.0
+    base = {d: old_line(d) for d in range(0, 64, 2)}
+
+    def line(d):
+        d0 = min(62, int(d) // 2 * 2)
+        return base[d0] + extra(d)
+    kill = [f for f in bm.faces if ang(f.calc_center_median()) < 62 and f.calc_center_median().z < line(ang(f.calc_center_median()))]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
+    loose = [v for v in bm.verts if not v.link_faces]
+    bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    edge_v = [v for v in bm.verts if v.is_boundary]
+    for v in edge_v:
+        d = ang(v.co)
+        if d < 62:
+            v.co.z = max(v.co.z, line(d))
+    ring = {e.other_vert(v) for v in edge_v for e in v.link_edges} - set(edge_v)
+    bmesh.ops.smooth_vert(bm, verts=list(ring), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+    bm.verts.index_update()
+    bm.verts.ensure_lookup_table()
+    dist = {v.index: 0 for v in bm.verts if v.is_boundary}
+    front, step = list(dist), 0
+    while front:
+        step += 1
+        nxt = []
+        for i in front:
+            for e in bm.verts[i].link_edges:
+                o = e.other_vert(bm.verts[i]).index
+                if o not in dist:
+                    dist[o] = step
+                    nxt.append(o)
+        front = nxt
+    bm.to_mesh(hair.data)
+    bm.free()
+    vg = hair.vertex_groups.get("volume")
+    if vg is not None:
+        for i, d in dist.items():
+            vg.add([i], min(1.0, (d / 10.0)) ** 0.7, "REPLACE")
+    md = hair.modifiers.get("volume")
+    if md is not None:
+        md.strength = volume
+    print(f"HEARING Tim's hairline raised: {len(kill)} faces cut, front edge now {line(0) - base[0] + base[0]:.3f} m "
+          f"(was {base[0]:.3f}), temples {line(32):.3f} (was {base[32]:.3f})", flush=True)
+
+
 def tim():
     """Tim at the witness table: seated, then turned to face the dais, slid so his jacket front sits TORSO_GAP from
     the table edge; his chair set behind him; his arms laid on the table."""
     h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
     suit_tones(h, "male_elegantsuit01", (0.09, 0.09, 0.1), SHIRT, TIE)
+    recede_hair(h)
     soften_hair(h)
     seat_figure(h, st.SEAT_Z, TIM_UPPER, 0.11, 0.11, tag="Tim")
     h.rotation_euler = (0, 0, math.radians(180.0))
@@ -856,7 +1101,9 @@ def lights():
 
 
 FIG_LIGHT = 160.0
-PUB_CANS = ((-2.4, -4.8, 160.0), (2.4, -4.8, 160.0), (2.4, -7.2, 70.0), (-2.4, -7.2, 55.0))
+# the cans over the public rows: the back rows (the wide's foreground) a little up, so the chair backs read as rows
+PUB_CANS = ((-2.4, -4.8, 160.0), (2.4, -4.8, 160.0), (2.4, -7.2, 120.0), (-2.4, -7.2, 120.0), (-2.4, -8.9, 80.0),
+            (2.4, -8.9, 45.0))
 PRESS = (-4.6, 1.3, -90.0)          # the press table: centre x, y, turn (its users face the witness table)
 CLERK = (1.6, 2.6)                  # the clerk's desk, under the lower tier, right of centre
 TRIPOD = (-3.7, -0.9, -75.0)        # a press camera on its tripod at the front of the public, aimed at the witness
@@ -875,6 +1122,11 @@ def build(cast=True):
     chair_src, mic_src = st.dais_props(places)
     st.witness_table()
     st.table_dressing(mic_src, TABLE_POS)
+    # the tumblers cast no shadow: Cycles blocks shadow rays at refractive glass (no caustics), so each stood on a black
+    # disc of its own shadow and read as an opaque black cup; without it the felt under the glass shows through
+    for ob in bpy.data.objects:
+        if ob.name.startswith("glass_"):
+            ob.visible_shadow = False
     coll = st.public_chair_collection()
     st.public_seats(coll)
     st.dressing()

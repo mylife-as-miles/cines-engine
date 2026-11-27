@@ -73,8 +73,10 @@ def materials():
         return M
     # dark lacquered walnut: a strong figure and a clear coat, so the panels read as wood with a grazing highlight on
     # the bevels (at 0.052 with a 0.3 figure the grade turned them into flat grey board)
-    walnut = (0.035, 0.02, 0.011)
-    wv = dict(contrast=0.55, rough=(0.3, 0.44), coat=0.5, coat_rough=0.15)
+    # (at 0.035 / 0.02 / 0.011 under a 0.5 coat the neutral coat reflections outweighed the diffuse and the film grade
+    # turned the fascia grey-blue: a little more red-brown and a lighter coat keep it reading as walnut)
+    walnut = (0.044, 0.021, 0.0095)
+    wv = dict(contrast=0.58, rough=(0.3, 0.44), coat=0.38, coat_rough=0.15)
     M.update(
         walnut=mt.veneer("walnut", walnut, "Z", **wv),
         walnut_h=mt.veneer("walnut along", walnut, "X", **wv),
@@ -823,7 +825,8 @@ def doors():
 
 
 SCONCE_Z = 3.15          # on the plaster above the wainscot cap (2.66), over a pilaster
-SCONCE_W = dict(up=38.0, down=24.0, glow=4.0)
+# (at 38/24 W the side walls and their wainscot stayed under the grade's black in the wide: the room read as a void)
+SCONCE_W = dict(up=90.0, down=110.0, glow=8.0)
 
 
 def sconce(name, x, y, z, s):
