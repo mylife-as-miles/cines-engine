@@ -331,7 +331,7 @@ def pillow(name, size, loc, rot, m):
     for v in bm.verts:
         x, y, z = v.co
         r = max(abs(x) / 0.5, abs(y) / 0.5)
-        v.co.z = z * (1.0 - 0.78 * r ** 2.6)
+        v.co.z = z * (1.0 - 0.83 * r ** 2.2)
         v.co.x *= 1.0 - 0.06 * (1 - abs(2 * y)) ** 2
     bmesh.ops.scale(bm, vec=size, verts=bm.verts)
     bm.to_mesh(me)
@@ -369,8 +369,8 @@ def bed():
         foot = min(1, max(0, (x - L / 2 + 0.10) / 0.10))
         height = max(0, min(1, (z + (dz1 - dz0) / 2) / (dz1 - dz0)))
         bow = 0.045 + 0.057 * math.sin(math.pi * height)
-        vert.co.y += math.copysign(side * (bow + 0.008 * math.sin(32 * x + 3 * height)), y)
-        vert.co.x += foot * (bow + 0.008 * math.sin(28 * y + 2 * height))
+        vert.co.y += math.copysign(side * (bow + 0.003 * math.sin(11 * x + 2.1 * height + 0.35 * math.sin(6 * x))), y)
+        vert.co.x += foot * (bow + 0.003 * math.sin(9 * y + 1.8 * height))
         vert.co.z -= max(side, foot) * 0.065
         if height >= 0.98:
             for px, py, dx, dy in ((-1.28, -0.12, 0.24, 0.10), (-1.25, 0.25, 0.21, 0.15),
@@ -423,7 +423,7 @@ def lamp():
     for s in (-1, 1):
         tube(f"lamp_harp{s}", [(x + s * 0.055, y, z0 + 0.37), (x + s * 0.055, y, z0 + 0.52), (x, y, z0 + 0.555)],
              0.0025, m["brass"])
-    cyl("lamp_finial", 0.011, 0.02, (x, y, z0 + 0.565), m["brass"], verts=20)
+    cyl("lamp_finial", 0.011, 0.02, (x, y, z0 + 0.547), m["brass"], verts=20)
     zb, zt = 0.27, 0.545
     sh = lathe("lamp_shade", [(0.19, zb), (0.155, zt)], (x, y, z0), m["shade"], segs=72, cap=False)
     so = sh.modifiers.new("thick", "SOLIDIFY")
@@ -431,6 +431,8 @@ def lamp():
     for r, zz in ((0.19, zb), (0.155, zt)):
         tube("lamp_ring", [(x + r * math.cos(2 * math.pi * i / 48), y + r * math.sin(2 * math.pi * i / 48), z0 + zz)
                            for i in range(48)], 0.002, m["brass"], res=2, closed=True)
+    diffuser = cyl("linen shade diffuser", 0.157, 0.0026, (x, y, z0 + 0.538), m["shade"], verts=72)
+    diffuser.visible_shadow = False
     bulb = sk.sphere("lamp_bulb", 0.03, (x, y, LAMP_BULB_Z), sk.emission("bulb", (1.0, 0.62, 0.32), 24.0))
     bulb.visible_shadow = False
     li = bpy.data.lights.new("lamp_light", "POINT")
@@ -460,8 +462,6 @@ def bedside_dressing():
         rot=(0, 0, math.radians(8)))
     box("phone_keys", (0.07, 0.09, 0.004), (x - 0.03, y - 0.01, z + 0.051), sk.mat("phone keys", (0.06, 0.06, 0.065), 0.5),
         bevel=0.001, rot=(0, 0, math.radians(8)))
-    box("notepad", (0.1, 0.15, 0.008), (x + 0.03, y + 0.17, z + 0.004), sk.mat("notepad paper", (0.55, 0.54, 0.5), 0.9),
-        bevel=0.001, rot=(0, 0, math.radians(-10)))
     # a bottle of water and a glass by the lamp (window side), plain, no label
     bx, by = -1.68, 1.12
     lathe("water_bottle", [(0.0, 0.0), (0.032, 0.0), (0.034, 0.008), (0.034, 0.17), (0.026, 0.2), (0.014, 0.215),

@@ -252,13 +252,19 @@ def building_mat():
     fu, fv = nb.math("FRACT", u), nb.math("FRACT", v)
     side = nb.math("SUBTRACT", 1.0, nb.gt(az, 0.5))
     # residential: a punched window in the middle of the bay; office: a near full-width band
-    m_u = nb.mul(nb.gt(fu, nb.add(0.1, nb.mul(0.16, res))), nb.lt(fu, nb.math("SUBTRACT", 0.9, nb.mul(0.16, res))))
-    m_v = nb.mul(nb.gt(fv, nb.add(0.3, nb.mul(0.04, res))), nb.lt(fv, nb.math("SUBTRACT", 0.88, nb.mul(0.08, res))))
-    mask = nb.mul(nb.mul(nb.mul(m_u, m_v), side), nb.gt(lz, 5.5))
     seed = nb.mul(rnd, 517.0)
     cell = nb.white(nb.comb(cu, cv, seed))
     c1 = cell.outputs["Value"]
     c2 = nb.sep(cell.outputs["Color"])
+    # Window width follows the apartment stack. Some rooms also have blinds
+    # lowered below the lintel, knocking holes in the grid of lit windows.
+    stack = nb.white(nb.comb(cu, 0.0, seed)).outputs["Value"]
+    jamb = nb.add(0.10, nb.mul(nb.add(0.09, nb.mul(stack, 0.13)), res))
+    m_u = nb.mul(nb.gt(fu, jamb), nb.lt(fu, nb.math("SUBTRACT", 1.0, jamb)))
+    blind = nb.mul(nb.mul(c2[1], 0.21), nb.lt(c2[2], 0.32))
+    head = nb.math("SUBTRACT", nb.math("SUBTRACT", 0.88, nb.mul(0.08, res)), blind)
+    m_v = nb.mul(nb.gt(fv, nb.add(0.30, nb.mul(0.04, res))), nb.lt(fv, head))
+    mask = nb.mul(nb.mul(nb.mul(m_u, m_v), side), nb.gt(lz, 5.5))
     lit = nb.lt(c1, litf)
     bright = nb.add(0.3, nb.mul(0.7, c2[0]))
     cool, warm, tv, green = (0.70, 0.86, 1.0), (1.0, 0.70, 0.42), (0.38, 0.52, 1.0), (0.72, 1.0, 0.82)
@@ -289,10 +295,10 @@ def building_mat():
     ey = nb.math("MINIMUM", ly, nb.math("SUBTRACT", depth, ly))
     lip = nb.lt(nb.math("MINIMUM", ex, ey), 0.6)
     roof = nb.gt(nz, 0.5)
-    roof_light = nb.mul(roof, nb.add(0.008 * K, nb.mul(lip, 0.030 * K)))
+    roof_light = nb.mul(roof, nb.add(0.018 * K, nb.mul(lip, 0.038 * K)))
     emit = nb.vadd(emit, nb.scale((0.42, 0.48, 0.60), roof_light))
-    street = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", lz, 15.0), clamp=True)
-    emit = nb.vadd(emit, nb.scale((1.0, 0.55, 0.30), nb.mul(nb.mul(street, side), 0.09 * K)))
+    street = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", lz, 27.0), clamp=True)
+    emit = nb.vadd(emit, nb.scale((1.0, 0.55, 0.30), nb.mul(nb.mul(street, side), 0.18 * K)))
     # LED strips on a few far towers: a narrow vertical strip at each corner and a band under the roof (blank)
     tz = nb.mul(top, 1000.0)
     band = nb.mul(nb.gt(lz, nb.math("SUBTRACT", tz, 6.0)), nb.lt(lz, nb.math("SUBTRACT", tz, 3.5)))
@@ -475,7 +481,8 @@ def plan(seed=7):
     # the two near towers that rise past the window and frame it
     for (x, y, w, d, h) in NEAR:
         add(x - w / 2, y - d / 2, x + w / 2, y + d / 2, GROUND, h, 0.0, 0.36)
-        add(x - w * 0.3, y - d * 0.25, x + w * 0.3, y + d * 0.25, GROUND + h, 5.0, 0.5, 0.0)
+        add(x - w * 0.24, y - d * 0.22, x - w * 0.06, y + d * 0.19, GROUND + h, 2.7, 0.5, 0.0)
+        add(x + w * 0.02, y + d * 0.05, x + w * 0.27, y + d * 0.19, GROUND + h, 1.3, 0.5, 0.0)
     # the far shore: an office skyline packed along the waterfront, taller toward the middle
     for gx in np.arange(-5200.0, 3400.0, 62.0):
         for gy in (2580.0, 2650.0, 2720.0, 2800.0, 2890.0, 2990.0, 3100.0, 3210.0):

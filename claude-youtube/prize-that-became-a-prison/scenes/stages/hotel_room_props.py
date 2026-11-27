@@ -300,9 +300,9 @@ def open_suitcase(loc, turn_deg, lid_side=-1):
     # thickness at the cut edges, inward
     for o in (tub, lid):
         so = o.modifiers.new("wall", "SOLIDIFY")
-        so.thickness, so.offset, so.use_even_offset = 0.005, -1.0, False
+        so.thickness, so.offset, so.use_even_offset = 0.017, -1.0, False
     parts = [tub, lid]
-    inset = 0.011
+    inset = 0.020
     rect_t = (rx0 + inset, rx1 - inset, ry0 + inset, ry1 - inset)
     parts.append(tray("case_tub_lining", rect_t, 0.03, rim_z - 0.003, 0.045, M["lining"]))
     # the zip round the tub's rim and round the lid's rim
@@ -313,7 +313,20 @@ def open_suitcase(loc, turn_deg, lid_side=-1):
         else:
             y0, y1 = ys
         pts = rounded_rect(rx0 + 0.004, rx1 - 0.004, y0 + 0.004, y1 - 0.004, 0.05)
-        parts.append(st.tube(nm, [(x, y, rz) for x, y in pts], 0.0045, M["zip"], res=2, closed=True))
+        tape_mesh = bpy.data.meshes.new(nm + " tape")
+        n = len(pts)
+        tape_verts = []
+        for i, (x, y) in enumerate(pts):
+            tangent = Vector(pts[(i + 1) % n]) - Vector(pts[i - 1])
+            normal = Vector((-tangent.y, tangent.x)).normalized()
+            tape_verts.extend(((x + width * normal.x, y + width * normal.y, rz) for width in (-0.007, 0.007)))
+        tape_faces = [(2*i, 2*((i+1) % n), 2*((i+1) % n)+1, 2*i+1) for i in range(n)]
+        tape_mesh.from_pydata(tape_verts, [], tape_faces)
+        tape_mesh.materials.append(M["lining_mesh"])
+        tape = _link(bpy.data.objects.new(nm + " tape", tape_mesh))
+        tape.modifiers.new("cloth edge", "SOLIDIFY").thickness = 0.0016
+        parts.append(tape)
+        parts.append(st.tube(nm, [(x, y, rz + 0.001) for x, y in pts], 0.0018, M["zip"], res=2, closed=True))
     # the lid: lining tray and the mesh divider panel with a zip along its edge
     ly0, ly1 = min(2 * yh - ry1, 2 * yh - ry0), max(2 * yh - ry1, 2 * yh - ry0)
     rect_l = (rx0 + inset, rx1 - inset, ly0 + inset, ly1 - inset)
@@ -422,6 +435,35 @@ def extra_bag(loc, turn_deg, duvet):
     print(f"PROPS extra bag: {int(lip.astype(bool).sum())} lip vertices eased, {int(strap.sum())} strap vertices laid",
           flush=True)
     return hd, ob
+
+
+def half_closed_duffel(root, body):
+    """Draw the two sides into a short zipped run and return its slider position."""
+    body.shape_key_add(name="Basis")
+    folded = body.shape_key_add(name="Half closed")
+    co = verts_np(body.data)
+    x, y, z = co.T
+    meeting_y, meeting_z = -0.006, 0.249
+    along = smoothstep(-0.040, 0.037, x) * (1 - smoothstep(0.17, 0.25, x))
+    far = smoothstep(-0.069, -0.045, y)
+    far *= smoothstep(0.17, 0.32, z) * (1 - smoothstep(-0.030, 0.018, y))
+    near = smoothstep(-0.017, 0.066, y) * smoothstep(0.050, 0.147, z) * (1 - smoothstep(0.119, 0.16, y))
+    influence = np.clip(along * (far + near), 0, 1)
+    co[:, 1] += (meeting_y - y) * influence
+    co[:, 2] += (meeting_z - z) * influence
+    folded.data.foreach_set("co", np.ascontiguousarray(co, dtype=np.float32).ravel())
+    # The slider sits on the boundary between the open mouth and the joined tape.
+    line = [(x, meeting_y + 0.003 * math.sin(x * 18), meeting_z + 0.003) for x in np.linspace(0.019, 0.175, 18)]
+    coil = st.tube("duffel joined coil", line, 0.0021, M["zip"], res=2)
+    slider = st.box("duffel zipper slider", (0.015, 0.013, 0.005), line[0], M["buckle"], bevel=0.0024)
+    pull = Vector(line[0]) + Vector((-0.016, 0.003, 0.010))
+    tab = st.box("duffel zip pull", (0.024, 0.008, 0.003), pull, M["buckle"], bevel=0.0014,
+                 rot=(0, math.radians(19), math.radians(-12)))
+    parts = [coil, slider, tab]
+    for part in parts:
+        part.parent = root
+    bpy.context.view_layer.update()
+    return folded, parts, root.matrix_world @ pull
 
 
 # ---------------------------------------------------------------- the handbags
