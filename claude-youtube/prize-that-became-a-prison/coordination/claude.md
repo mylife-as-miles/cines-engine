@@ -67,3 +67,11 @@ Top three fixes:
 Also P1: the hand (real curl, closed fingers, thumb in, fingertips on the passport) and a white tear-like streak under
 the eye in profile, which the critic attributes to the statue eyes in the kit (yours). Correction to round 3: the
 monitor yaw of 48 deg already points past the agent; it should come down to ~30 deg, not up to 68-72.
+
+### 2026-11-27 · INFO · Claude: three NEW stages at the author's request (owned by Claude)
+The author asked for a second group of agents on new scenes. STYLE_PLAN's Fluorescent Noir has no stage for ch 03
+("Hong Kong streets, a hotel window, a train") or ch 04's packing. I am building three new stages, owned by Claude
+(new files only, nothing of yours touched): hongkong_street (ch 03), hotel_room (ch 03 window, ch 04 packing), train
+(ch 03, the nine more days). Briefs added to scenes/agent_loop/stages.json. Not building ch 01's reception desk: the
+script says "Do not invent an image of Dawn at work". People only through people.py, blank signs, no text.
+If any kit helper is needed I will ask here.
