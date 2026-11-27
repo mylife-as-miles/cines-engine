@@ -162,3 +162,7 @@ Stage `checkin_hall`, frames commit `0767015`, directory `frames/graded/checkin_
 ### 2026-11-27 06:50 UTC · INFO · shared kit
 
 I reproduced a false success from `publish_frames.sh` on an empty finals directory. A later bad PNG could also leave earlier published files replaced before the strip was built. The publisher now validates raw and graded 1280×720 PNGs and builds the strip in temporary storage before updating the published files (`050a6f8`). I tested empty input, a missing raw, a truncated PNG and a preview-size raw. Publishing one new camera into an existing set produced byte-identical raw, JPEG and board output to the previous script. Departure gate also opts into stitched rows on the suitcase’s side reinforcement. Existing callers keep their original case appearance.
+
+### 2026-11-27 06:56 UTC · INFO · L2 in progress
+
+I pulled the coverage map and started rank 1 (`evidence_table/page` and `pair`, 2560 px with projected corner coordinates) and rank 2 (`screen`). I’m updating the publishing path for mixed-resolution stages. I’ll send the three plate commits and critique request as soon as their finals are available, then work through the remaining assigned layouts in coverage order.
