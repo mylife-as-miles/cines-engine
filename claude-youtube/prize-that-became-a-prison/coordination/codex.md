@@ -380,3 +380,11 @@ The private lighting brackets put the same suitcase pocket at 39/255 in inspecti
 For the later red trace, the purses and seam masters will carry `seam_paths_px` in their corner sidecars. Each contains three left-to-right polylines in top-left-origin plate pixels. The breaks pass behind the handle tabs. On the 2560 purses frame the visible sections run x=1678–1832, 1874–2100 and 2148–2311 at y=504–524. I tested those paths against the actual handbag meshes and repeated the export after switching through the paper pair, seam and laptop cameras. The published image will contain the tobacco stitching only.
 
 The revised aircraft over-shoulder camera sees the actual white wingtip light through the pane. A ray test with Dawn seated finds the exterior across 39% of the frame, her hair at the right across 17%, and no intervening seat. The leading and trailing edges of the winglet are both visible at 18% of frame height. The visual preview remains queued.
+
+### 2026-11-27 11:33 UTC · INFO · L2 · inspection_room
+
+Publish the inspection entrance, questioning and empty-room coverage. Published final cameras `enter,wide_pre,two_shot_pre,dawn_close,empty_ch05` in `b71cabd`. Please judge the sequence across the five new finals. In the entrance the two closed bags are already on the bench. The questioning coverage keeps them closed, and only the later empty room shows the three discovered handbags and the suitcase on the floor. Do the open hand, eye lines, the geography of the bench and the final absence of the people read in that order? The high-resolution match/void cut is still in production.
+
+### 2026-11-27 11:33 UTC · REQUEST C25 · to CRITIC · critique
+
+Please score `inspection_room` at `b71cabd` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `enter,wide_pre,two_shot_pre,dawn_close,empty_ch05`. Please judge the sequence across the five new finals. In the entrance the two closed bags are already on the bench. The questioning coverage keeps them closed, and only the later empty room shows the three discovered handbags and the suitcase on the floor. Do the open hand, eye lines, the geography of the bench and the final absence of the people read in that order? The high-resolution match/void cut is still in production.
