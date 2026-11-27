@@ -144,9 +144,9 @@ CAMERAS.update({
     "pool": dict(CAMERAS["dawn"], cast=False, final_res=(2560, 1440)),
     "chair": dict(dining.HEAD_SHOT, loc=chair_point(dining.HEAD_SHOT["loc"]),
                   aim=chair_point(dining.HEAD_SHOT["aim"]), beat="chair", focus="fx_chair"),
-    "cell_dawn": dict(loc=_p(C, 0.48, -4.67, 1.42), aim=_p(C, -0.25, 0.36, 0.98),
+    "cell_dawn": dict(loc=_p(C, 1.94, -4.16, 1.35), aim=_p(C, -0.23, 0.43, 0.95),
                       lens=34, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
-    "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, 0.10, -0.09, 1.41), lens=85,
+    "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, -0.13, 0.07, 1.41), lens=85,
                        fstop=3.2, focus="fx_bowed", beat="dawn"),
     "cell_floor": dict(loc=_p(C, 0.50, -1.50, 0.46), aim=_p(C, -0.08, 0.28, 0.18),
                        lens=37, fstop=5.0, focus="fx_patch", beat="cell"),
@@ -705,7 +705,10 @@ def build_seated_dawn():
     for side in ("L", "R"):
         rigged.articulate_hand(h, side, {"f_index": (9, 12, 7), "f_middle": (11, 14, 9),
                                         "f_ring": (15, 17, 11, 5), "f_pinky": (17, 19, 12, 8)})
-    seat_place(h, 112.0, (C[0] - st.CX + 0.03 + vc.BUNK_W - 0.12, C[1] + 0.51), dz + st.SLAB)
+    seat_place(h, 140.0, (C[0] - st.CX + 0.03 + vc.BUNK_W - 0.12, C[1] + 0.51), dz + st.SLAB)
+    fill = st.area("bunk_floor_return", _p(C, 0.58, -0.56, 0.61), _p(C, -0.52, 0.5, 1.03),
+                   (0.7, 0.5), 14.0, (0.76, 0.80, 0.88), spread_deg=85)
+    st.link_lights([fill], receivers=props.meshes(h), tag="bunk_floor_return")
     bpy.context.view_layer.update()
 
 
@@ -731,6 +734,8 @@ def apply_camera(name):
         if "seated" not in _STATE["groups"]:
             _island("seated", build_seated_dawn)
         active.add("seated")
+    if name == "dawn_close" and _STATE["with_cast"]:
+        active.add("portrait")
     if "dawn" in active and cfg.get("cast", True):
         active.add("standing")
     for group, objs in _STATE["groups"].items():
@@ -783,6 +788,12 @@ def build(cast=True):
     if cast:
         _island("standing", lambda: _STATE["cast"].append(dawn()))
         _island("standing", lambda: light_suit(_STATE["cast"][0]))
+        def face_return():
+            li = st.area("portrait_floor_return", _p(D, -0.5, -0.68, 1.04), _p(D, 0.0, -0.03, 1.52),
+                         (0.32, 0.40), 5.0, (0.78, 0.81, 0.9), spread_deg=65)
+            receiver = bpy.data.objects[_STATE["cast"][0]["body"]]
+            st.link_lights([li], receivers=[receiver], tag="portrait_floor_return")
+        _island("portrait", face_return)
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
