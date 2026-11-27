@@ -438,3 +438,39 @@ now has a real night setting with Dawn's head the brightest non-light; `seat` is
 3. P1 `aisle`: the pale linen covers (100–135, up to 75 % of her face) split attention: about 0.55 of their value.
 4. P2 `aisle`: a zip pull on the suitcase reads as the numeral "3": letter-like, must go.
 5. P2 `rack`: a product shot against a flat wall: look along the carriage instead (camera in the file).
+
+### 2026-11-27 17:55 UTC · REPLY C32 · hotel_room
+Critique `coordination/critiques/hotel_room_r2.json` (checked, `3731642`): **mean 5.5, lowest 5**, up from 5.25. Pack is
+no longer mud (22.6 % below L20, from 53 %), the overheads fall off from the lamp, and `accept` is a good establishing
+frame. Your questions: Dawn's weight on the mattress does **not** read yet (the seat key is too broad and shallow);
+both hands are on the tote, **yes**; `overhead_pre` has one closed case and three separate gifts, **yes**; `pack` and
+`overhead` are **the same instant** (both beat="pack"); at the curtains she reads against the city, but the room is
+not warm (wall about L36-43, saturation about 0.1).
+1. P1 `pack`: "into" does not read: the duffel's eased mouth faces Dawn, edge-on to the lens (BAG turn 180). Turn
+   BAG to about 210 so the mouth opens toward the camera, and let the burgundy bag go *into* it, not hang beside it.
+2. P1 `overhead`: **make it its own beat, "packed"** (my ruling): a new snapshot with the hobo packed away (at most
+   its strap at the mouth), the zip half closed, Dawn's right palm on the zip pull. It then earns a place in the cut.
+3. P1 `overhead`: the open case reads as a hard shell (thin black rim, flat inside) while `overhead_pre`'s is the
+   soft charcoal fabric case. In `open_suitcase`: a flat charcoal zip tape with a fine coil, walls solidified 15-20 mm.
+4. P2 `accept`: the seat key narrower and deeper (radii about 0.17 x 0.15 m, 0.06 m deep), a raised ring and 6-8
+   radial creases; `duvet_bounce` 2.5 → about 1.2, which also brings the screen-right hand (L160, as bright as her
+   face) down toward L110-120. Move the early shoulder bag to about (-0.70, 0.40), wholly on the duvet, its face
+   turned into the lamp so it reads burgundy (graded L30-40).
+5. P2 `overhead_pre`: the right palm on the case's top (not splayed on its side), fingers curled 15-25°; the left
+   hand onto the bed edge so it no longer reads as resting on her shoulder.
+6. P2 both overheads: the lit shade is cut at the top-right corner with the bare bulb showing: frame the lamp wholly
+   in (add `shift_x`) or wholly out, and stop the red clipping on the pillow's lamp end (3,800 px at 250+).
+7. P3 `window`: the near city still reads CG (black roof funnels, even square windows, no street glow); warm the room
+   wall so the warm/cold split is real.
+8. P4 pillows and tissue: rounder pillow sections, no regular scallop on the duvet edge; tissue that reads as tissue
+   (thinner, translucent, below the duvet's value); the blank notepad on the nightstand goes.
+
+**Gift colours (my ruling, for the whole film).** The three gifts keep their colours: they are the story's evidence,
+matched in evidence_table and inspection_room. Other bags move instead: in baggage_belt, `oxblood_case` becomes slate
+blue and `tan_case` warm stone (the C30 palette); here, the charcoal hotel bag and the kraft carriers are deleted. The
+black extra duffel stays (it is the story's extra bag, in four stages); keep the satchel apart from it by material and
+light: the satchel's polished leather and gold clasp catch the lamp, the duffel stays matte, never side by side at the
+same value.
+
+**Title area on `accept`:** plain enough (mean L22, max L42); keep it at or below L42. The headboard's top rail crosses
+the box at about y 128-155 (1920); I will set chapter 3's title clear of that edge on my side.
