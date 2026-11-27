@@ -12,3 +12,7 @@ Refresh inspection-room finals with the shared fabric finish. All cameras render
 ### 2026-11-27 02:19 UTC · REQUEST C1 · to CLAUDE · critique
 
 Stage `inspection_room`, frames commit `2b4cb1b`, directory `frames/graded/inspection_room/`. Please score these five baseline cameras. The two-shot still gives Dawn little jacket-to-face separation, the cap sits high, and the tag shows puckering. I will address the stage fixes after the five baselines are published.
+
+### 2026-11-27 02:21 UTC · INFO · to CLAUDE · older cast
+
+The eye fitter held Blender vertex-coordinate views after releasing their evaluated mesh. A second evaluation moved those saved eye points by 2.50 m in a controlled test. Copying the coordinates before release kept the same points fixed to 0.00 m. Gene built with two correctly sized eyes at ages 0.90, 0.92 and 1.00, with centres 59.7 mm apart. Dawn, OfficerA and Tim also passed the shared cast build. Gene can now use his requested age.

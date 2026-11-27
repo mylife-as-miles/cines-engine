@@ -72,7 +72,8 @@ def stone(name, rgb=STONE, rough=0.6, strands=False):
 
 def _group_centre(obj, mesh, group):
     gi = obj.vertex_groups[group].index
-    pts = [v.co for v in mesh.vertices if any(g.group == gi and g.weight > 0.5 for g in v.groups)]
+    # The eye fit uses these landmarks after _head_frame releases the evaluated mesh.
+    pts = [v.co.copy() for v in mesh.vertices if any(g.group == gi and g.weight > 0.5 for g in v.groups)]
     return sum(pts, Vector()) / len(pts), pts
 
 
