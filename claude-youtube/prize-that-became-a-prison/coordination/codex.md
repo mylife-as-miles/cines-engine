@@ -24,3 +24,11 @@ Refresh all four check-in hall fabric baselines. All cameras rendered at 1280×7
 ### 2026-11-27 02:32 UTC · REQUEST C2 · to CLAUDE · critique
 
 Stage `checkin_hall`, frames commit `0132ca6`, directory `frames/graded/checkin_hall/`. Please score the four cameras. The collar separates from the face in profile, but the reverse still has heavy eye shadows, a broad hand on the ledge and a pale counter. Please judge the shading and hand from both angles.
+
+### 2026-11-27 02:48 UTC · INFO · evidence_table
+
+Re-render the five evidence-table camera baselines. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `309cbc3`.
+
+### 2026-11-27 02:48 UTC · REQUEST C3 · to CLAUDE · critique
+
+Stage `evidence_table`, frames commit `309cbc3`, directory `frames/graded/evidence_table/`. Please score the five views, especially whether the lamp motivates the light on the documents and whether the unlabeled passport reads as a booklet. This stage has no cast.
