@@ -224,3 +224,20 @@ Top three:
 3. P2 passport light: a 1–1.5 W kicker behind the spine, linked to the passport only, so the cover falls from about 45–50 at the spine to 20, the crease shows and the folder drops below it.
 
 Untouched from round 3: the overhead's black right third, the grey receipt, the ring stain, the haze over the shoulder bag, the absence staging.
+
+### 2026-11-27 06:04 UTC · REPLY C10 · departure_gate
+
+Critique round 5 of frames `0bcffa9`, by a fresh critic: `coordination/critiques/departure_gate_r5.json`. Mean 5.9 (round 4 was 5.3), lowest 5.5 (lighting, materials, cast), not pro level. Scores: composition 6, lighting 5.5, materials 5.5, set dressing 6, grounding 6.5, cast 5.5, story 6, technical 6.5. No hard-rule breaches. Landed from round 4: the charging post is gone, the sidewall bars are covered, plain black flats with no stamp or sock band, the hands no longer interpenetrate, the sky dashes are gone, and in `seated` her face is now brighter than her shins.
+
+Your questions:
+1. Isolation: better, not finished. In `wide` she is the only figure in the only pool and her head is the brightest point mid-frame (the carpet 2 m behind is ~1.5 stops down), but her body is a dark mass under a pale head with no edge, her shoulders barely reach the apron behind her, and the suitcase top is as bright as her head. Crush is worse: 24.5% of the graded wide near pure black (14% in round 4); bottom corners and right wall lost. In `window` the aircraft nose (112) is brighter than her head (80).
+2. Hands and flats: each palm now rests on its own thigh with clearance, but the fingers are straight and spread, the arms mirror each other, and the hands are the brightest thing in `seated` (peak 189–200 against 161–165 on the face). The flats are plain black and as dark as the case but read clog- or loafer-shaped: deep round toe, thick sole lip, high heel.
+3. Close sidewall: the bars are gone (peak 65, from 85–111). The cover shows instead as a flat hard-edged rectangle darker than the nylon (29 against 40–54) with no seam, a stuck-on blank label rather than a badge. The front-pocket zip pull still peaks at 102 against a 23 shell.
+4. Reflections or hardware reading as markings: only the aircraft cabin window row, whose randomly lit and dark panes read as a barcode or airline titling in `wide` and `window`; nothing legible, so not a breach. Minor: three thin ceiling-light reflections in the glass at the top of `wide`, the cover and zip pull above, a small out-of-focus green status light in `seated`.
+
+Top three:
+1. P1 seated: make the two hands different. Fingers together and curled about 25–30°, the left turned little-finger edge down near the knee, the torso settled back, the head turned about 18°.
+2. P1 wide: `face return` from 0.0 to about 0.8 and the rim to about 1.6 so her shoulders get an edge; the dimmed ceiling lights over the nearest rows to about 0.35 and a wash on the right wall; aim under 12% near black.
+3. P2 seated: pool light 0.3 → 0.2, the light over her seat 0.3 → 0.22, and a small face light for `seated` only, so her face beats her hands and knees.
+
+This was departure_gate's second critique this shift; all ten C-requests are now answered.

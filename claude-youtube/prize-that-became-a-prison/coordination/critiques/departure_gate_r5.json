@@ -1,0 +1,91 @@
+{
+ "stage": "departure_gate",
+ "round": 5,
+ "commit": "0bcffa9",
+ "scores": {
+  "composition": 6,
+  "lighting": 5.5,
+  "materials": 5.5,
+  "set_dressing": 6,
+  "grounding_scale": 6.5,
+  "cast": 5.5,
+  "story_read": 6,
+  "technical": 6.5
+ },
+ "pro_level": false,
+ "verdict": "Not at fern level (mean 5.9, up from 5.3). Most round-4 must-fixes landed: the charging post is gone from the wide, the bright bars on the suitcase sidewall are covered, the shoes are plain black with no stamp, the hands no longer pass through each other, the ceiling-lens dashes are gone from the sky, and her face in seated is brighter than her shins. Still holding it back: in the wide a quarter of the frame crushes to black and Dawn has no edge on her silhouette; in seated she sits rigid and symmetric, with straight fanned fingers and hands brighter than her face; in window a mullion and a floodlight mast still stack on her head, and from behind the bun still reads as a smooth knob.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "seated",
+   "problem": "Her hands and pose. Round 4's clasp fix landed: each palm now rests on its own thigh with clearance, and nothing intersects. But the two arms are mirror images: torso bolt upright, both forearms at the same angle, both palms flat on the thighs, knees and feet together. It reads as a seated Egyptian statue, not a traveller at ease. The fingers are straight and fanned, with visible gaps between them, and the palms arch above the skirt. Her left hand (image x 505-575, y 335-390) is the worst: it reads as a tense, splayed spider hand. The brief asks for curled, relaxed fingers that rest on something, not hovering or splayed. This is the biggest thing between the cast and a 6.",
+   "fix": "In departure_gate.py, break the symmetry and relax the hands. (1) UPPER: head (11, -10) to about (14, -18), chest (-12, 0) to about (-6, 5), so she settles back and turns slightly; fingers 17 to about 30. (2) In lap_hands(), keep the right hand (image left) palm-down on the right thigh with the fingers together. Move the left hand toward the knee and turn it pinky-edge down: L forearm angle about 38 (now about 48 after the solve), the forward vector's side term -40 to about -60, and the L 'down' vector (0.32, 0, -1) to about (0.8, 0, -0.6), so the palm faces in and only the little-finger edge and fingertips touch the skirt. (3) Close the fan: rotate f_index.01, f_middle.01, f_ring.01 and f_pinky.01 about their local Z by about +5, 0, -4 and -8 deg (mirrored for R). Curl the three phalanges about 25, 20 and 15 deg. Bring thumb.01 about 20 deg toward the palm so the thumb lies along the index. (4) Re-run the hand-clearance solve (target 2-5 mm). Check at 4x on seated x 390-600, y 320-410, and check the right hand on the armrest in window (x 715-740, y 478-500)."
+  },
+  {
+   "priority": 1,
+   "camera": "wide",
+   "problem": "Isolation of Dawn, and the crushed frame. The isolation is better. She is the only figure, in the only pool. Her head is the brightest point in the middle band (graded p95 184). The carpet 2 m behind her (55) sits about 1.5 stops under the pool, and the charging post no longer blocks her. But she reads as a pale head floating on a black body. Her back is 34 and her shoulders only reach p95 96, against an apron directly behind her at 91 (p95 about 130), so there is no edge on her silhouette. The suitcase top (max 189) matches her head (max 191). Worse, 24.5% of the graded frame is at 6 or below (round 4: 14%). The bottom-left and bottom-right eighths are 92% and 97% crushed, and the right wall and door section are at 6, so the empty foreground rows, which carry the beat, disappear instead of falling off. The raw is already dark there (bottom corners 15 and 9); the grade's vignette finishes the job.",
+   "fix": "TRIMS['wide']: (1) Give her an edge from the glass side. 'face return' is the light in front of her (SEAT x+0.4, ROW_Y+1.0, 1.9) and is set to 0.0 for the wide; set it to about 0.8 so it rakes the tops of her shoulders and the side of her head toward the camera. Raise RIM from 1.1 to about 1.6. Target: shoulder p95 at least 140, head still the peak. (2) Lift the near rows: raise the DIM fittings over the rows nearer the camera (y at or below -1.2) from 0.14 to about 0.35, leaving those near the glass at 0.14. (3) Add a right-wall washer for the wide only: an area light 3.0 x 0.2 m, about 20 W, cool (0.7, 0.8, 1.0), at x about XR-0.3, z 3.0, aimed down, visible_glossy False. Targets: graded pixels at 6 or below under 12% (now 24.5%); raw bottom corners at least 25 (now 15 and 9); right wall graded at least 12 (now 6). (4) Optionally hang a camera-invisible flag 0.35 x 0.35 m, 0.45 m above the suitcase top, for the wide only, so the case top drops about half a stop under her head."
+  },
+  {
+   "priority": 2,
+   "camera": "seated",
+   "problem": "The face is now brighter than the shins (round-4 fix landed: face mean 115-139, shins 87). But the top light still makes the backs of her hands and her knees the brightest things in the frame. Graded p99: left hand 200, right hand 189, knees 181, against the face's 161-165. The 400 brightest pixels all sit on the back of her left hand and wrist (x 520-560, y 320-360), so the eye lands on her lap, not her face.",
+   "fix": "TRIMS['seated']: POOL 0.3 to about 0.2 and KEY 0.3 to about 0.22. Then add a face light for seated only, so the face lifts while the lap does not: an area light 0.3 x 0.3 m, about 10 W, cool (0.8, 0.88, 1.0), at about (SEAT x+0.5, ROW_Y+0.9, 1.35), spread 40, aimed at fx_face, visible_glossy False and specular_factor 0. Toggle it like FLAGS so it is off for the other cameras. Target: face p99 at least 10 levels above both hands, and the knees below the face."
+  },
+  {
+   "priority": 2,
+   "camera": "window",
+   "problem": "The round-4 camera move (to x -2.41) was too small. The mullion at world x 0.5 (image x 763-778) still runs down onto the left edge of her head (head x 773-818). A floodlight mast is also stacked on her: its head (x 780-815, y 35-55, the brightest thing in the frame at graded 198) and its pole (x 785-795, y 60-180) sit in line above her head. The forward fuselage (112) is brighter than her head (80).",
+   "fix": "By parallax, a camera x of -2.75 or less is needed to clear the 0.5 m mullion. Move the window camera from (-2.41, -1.35, 1.54) to about (-2.9, -1.35, 1.54) and the aim from (-0.35, 6.0, 0.86) to about (-0.75, 6.0, 0.86), so her head sits about 25-30 px clear of the mullion inside the next pane, and the mast moves off her head line with it. Add 'mast_light_0' and 'mast_light_1' trims of about 0.6 to TRIMS['window'], so the nose drops below her head. Check that the suitcase and her feet stay whole in frame."
+  },
+  {
+   "priority": 2,
+   "camera": "wide, window",
+   "problem": "The cabin-window row is the one thing on screen that reads as a marking. The forward cabin windows are lit, dim or off at random, one by one: wide x 70-175, y 150-200, and window x 362-430, y 285-330. With the frames between them, the uneven light-dark alternation reads at a glance as a barcode or as titling on the forward fuselage: a livery, which the beat rules out. Nothing is legible, so this is not a hard-rule breach.",
+   "fix": "In departure_gate_aircraft.aircraft(), for the gate aircraft: raise lit from 0.6 to about 0.92. Draw the random number once per group of 3-4 windows, not per window, so any unlit panes come in runs, like shades pulled down in one area. Lower cabin_lit emission so a lit pane is at most about 1.3x the fuselage around it (now 125-206 graded against about 110). Target: an even dotted line of windows, not a code."
+  },
+  {
+   "priority": 2,
+   "camera": "window, wide",
+   "problem": "From behind, the bun is still a smooth oval knob on a smooth, bald-looking dome (window x 790-815, y 335-358; the head is 80 graded). The scaling did not change the reading: it looks like a cap's back strap or a stuck-on egg, not gathered hair. In seated, the parallel ribs still read close to a knit cap.",
+   "fix": "In departure_gate.dawn(), change the bun transform from scale (0.72, 0.63, 0.68) with offset (0, -0.015, -0.041) to about scale (0.95, 0.42, 0.6) with offset (0, -0.03, -0.055). That makes it wider and flatter, pressed into the nape, standing at most 2 cm off the skull. Give the bun its own groove bump (a Wave texture, bands, scale about 40, bump strength 0.2), and orient the hair cap's groove texture so the grooves converge on the bun from behind, so the back of the head reads as combed hair. Check window at 4x: no ball silhouette, and no horizontal edge like a cap band."
+  },
+  {
+   "priority": 3,
+   "camera": "seated",
+   "problem": "The close suitcase sidewall. The bars are gone: the sidewall now peaks at 65 (93 only on the lit edge piping), where round 4 measured 85-111. What shows instead is the kit's cover: a flat, hard-edged rectangle (image x 672-695, y 405-478) with no seam or weave. It is darker (about 29) than the nylon around it (40-54). It reads as a blank stuck-on label or a luggage-tag window, not a badge, but it is clearly an applied patch. The cover is darker because suitcase() skips 'reinforcement' objects. The front-pocket zip pull (x 745-752, y 450-486) still peaks at 102 against a front shell of 23, a bright tick about 4x the case. The top pulls (101-122 on a top lit to 79) are acceptable.",
+   "fix": "In departure_gate.suitcase(), stop skipping objects with 'reinforcement' in the name. Give the cover the same treatment, and set its base colour to the shell's own value (sample it, about 0.025-0.03 linear) with Roughness 0.75 and the shell's bump. Add a 2 mm bevel, or a stitch line 4 mm inside its border (about 15% darker, 1.5 mm wide), so it reads as sewn-on nylon. Drop the clamp in the Vector Math MINIMUM from 0.095 to about 0.05, so the pulls fall to no more than 2x the shell. Target: nothing on the sidewall more than about 10 levels off the nylon except the lit piping. Zoom 3x on x 640-820, y 320-640 to confirm."
+  },
+  {
+   "priority": 3,
+   "camera": "seated",
+   "problem": "The flats. Round 4's P1 landed: plain black, no toe stamp, no sock band, and the value is now down with the case (shoe mean 26-41 graded, highlights to about 115). But the shape still reads as black clogs or slip-on loafers, not flats. The toe box is deep and round, the sole lip is thick (y 660-670), and the heel counter stands high behind the ankle (image x 485-620, y 610-680).",
+   "fix": "This is a kit change in people._plain_flats(); do it stage-side on f\"{h.name}_shoes04\" until the kit owner takes it. Compress the upper harder: the vertices above z 0.047 to 0.045 + (z - 0.045) * 0.45, where the factor is 0.70 now. Pull the heel counter down to no more than 45 mm: for vertices behind the ankle with z above 0.04, set z = 0.04 + (z - 0.04) * 0.4. Pull the sole-lip vertices (z under 0.012) 2-3 mm in toward the shoe's centreline. Lower the body's Delete.shoes04 threshold from 0.050 to about 0.035, so the top of the stone foot shows above a low vamp. Check at 4x."
+  },
+  {
+   "priority": 3,
+   "camera": "all",
+   "problem": "The carpet still reads as smooth vinyl at frame scale. The 9 mm ribs and the 740-scale pile noise in departure_gate_mats.carpet() sit below pixel size and are lost to the denoiser. In seated, the in-focus floor round her feet is a flat, even grey. In window it shows only the faintest rib.",
+   "fix": "In carpet(), add structure that survives at frame scale. Per-tile tone from plus or minus 3% to plus or minus 6%. Quarter-turn parity contrast from 8% to about 12%. Seam darkening from 0.14 to about 0.35. Add a mid-scale noise (scale 60-90, plus or minus 5% value). Bump from strength 0.15 / distance 0.0012 to about 0.35 / 0.003. Target: in seated, the 0.5 m tiles and their pile direction are visible on the floor round her shoes."
+  },
+  {
+   "priority": 3,
+   "camera": "window, wide",
+   "problem": "The jet-bridge side reads as a slatted fence or blind, not a corrugated steel tunnel: high-contrast dark ribs with light gaps between them (window x 715-1000, y 160-380; wide x 420-640, y 90-240). The wing in window is a flat, featureless light slab across x 0-430, y 330-360.",
+   "fix": "In departure_gate_aircraft._ribs(), change the pitch from 0.3 to about 0.12 and the frames from 40 mm to about 18 mm. Make the ribs the same material and value as the side panel, and close the side behind them with a solid panel at that value, so no light shows between the ribs. Give the wing a panel-line bump (seams every 1.5 m, 2 mm), plus a slight value gradient from root to tip."
+  },
+  {
+   "priority": 4,
+   "camera": "wide",
+   "problem": "Small strays. Three thin light bars at the top of the wide (x 682-860, y 41-49) are the reflections in the glass of the dimmed fittings' area lights: the lenses are hidden from glossy rays, but the fx_*_light area lights are not. They read as fittings, not markings. charge_post_b, against the column (x 835-852, y 235-300), is still a featureless pale slab. The high blank panel (x 975-1065, y 55-90, graded 96) still glows without spill.",
+   "fix": "In departure_gate_set.fixture(), set visible_glossy = False on each non-key n+'_light' area object. Give charge_post_b the dark brushed material (base about 0.06, roughness 0.45, anisotropic 0.5), or delete it. Halve the high panel's emission, or add a 0.6 x 0.2 m, 4 W area light just under it so it lights the wall."
+  },
+  {
+   "priority": 4,
+   "camera": "seated",
+   "problem": "The two empty seat pans at image left (x 0-410, y 470-600, graded 60) are a big light grey slab cut by the frame edge, only about 0.8 stop under her shins. The bottom-right quarter of the frame is empty, even floor.",
+   "fix": "Lengthen flag_near_seats from 1.7 to about 2.4 m along Y and move it 0.3 m toward +X, so the near pans drop to about 35 graded. Pan the seated aim about 0.15 m toward -X, so the suitcase sits a little further right and less empty floor shows at bottom right, keeping her feet and the wheels whole."
+  }
+ ]
+}
