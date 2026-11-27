@@ -91,7 +91,7 @@ Scene presentation by running time (DECISIONS: Fluorescent Noir 50 %, Evidence T
 | 02-09 | 3:41.00 | 1.92 s | `evidence_table` `passport`, push in 2.1 % |  | 02.04 “The email became a ticket. The ticket became a city. And the city beca…” | Paper |
 | 02-10 | 3:42.91 | 2.00 s | `hotel_room` `window`, push in 2.2 % |  | 02.04 “The email became a ticket. The ticket became a city. And the city beca…” | Air conditioner, the city far below |
 | 02-11 | 3:44.91 | 5.46 s | `hongkong_street` `company`, push in 6.0 % |  | 02.04 “The email became a ticket. The ticket became a city. And the city beca…” | Street |
-| 02-12 | 3:50.37 | 5.67 s | graphics `route_mainland` from 4.30 s (MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s) | in the piece | 02.05 “There was more to come. Australia, she was told. Another part of the p…” | The travel pad |
+| 02-12 | 3:50.37 | 5.67 s | graphics `route_mainland` from 4.50 s (MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s) | in the piece | 02.05 “There was more to come. Australia, she was told. Another part of the p…” | The travel pad |
 | 02-13 | 3:56.04 | 4.17 s | `train` `rack`, push in 4.6 % |  | 02.06 “For Dawn, the trip of her life was still going.” | Rails |
 | 02-14 | 4:00.20 | 5.54 s | `hongkong_street` `window`, push in 6.1 % |  | 02.07 “But before she left China, they had one more gift for her.” | The travel pad drops out on "one more gift" |
 
@@ -341,7 +341,7 @@ Each graphics shot's piece, with the exact command that renders it at the length
 - 02-02: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 5.242 <out>.mp4`, trimmed from 2.200 s for 73 frames (reel 7 file `out/gfx/r7/11_route_leg1.mp4`).
 - 02-05: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 4.167 <out>.mp4`, trimmed from 0.000 s for 100 frames (reel 7 file `out/gfx/r7/11_route_mainland.mp4`).
 - 02-08: `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out <out>.mp4`, trimmed from 4.000 s for 38 frames (reel 7 file `out/gfx/r7/09_email.mp4`).
-- 02-12: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 9.967 <out>.mp4`, trimmed from 4.300 s for 136 frames (reel 7 file `out/gfx/r7/11_route_mainland.mp4`).
+- 02-12: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 10.167 <out>.mp4`, trimmed from 4.500 s for 136 frames (reel 7 file `out/gfx/r7/11_route_mainland.mp4`).
 - 03-11: `<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out <out>.mp4`, trimmed from 0.000 s for 54 frames (reel 7 file `out/gfx/r7/01_scale.mp4`).
 - 03-13: `<gfx python> gfx/doc_composite.py --shot "design/edit/shots/s1_fee.json (with the marks and length above)" --out <out>.mp4`, trimmed from 0.000 s for 213 frames. Shot-specific: `{"marks": [{"phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit", "dur": 0.8, "t": 1.011}]}`.
 - 03-14: `node gfx/type_render.js seq trace 4.708 <out>.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg`, trimmed from 0.000 s for 113 frames (reel 7 file `out/gfx/r7/12_trace.mp4`).

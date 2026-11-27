@@ -1,0 +1,1 @@
+{"name":"clock_wall","says":"a wall clock ticking once a second in a quiet room","kind":"ambience","dur":24,"space":"room","layers":[{"sound":"clock/tick","events":{"count":24,"gap":1.0,"loose":0.0}}]}

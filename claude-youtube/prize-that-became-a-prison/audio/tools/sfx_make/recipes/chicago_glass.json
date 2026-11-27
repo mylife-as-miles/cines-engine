@@ -1,0 +1,1 @@
+{"name":"chicago_glass","says":"distant city traffic at night heard through a closed window","kind":"ambience","dur":28,"layers":[{"sound":"city/distant","dur":28,"lowpass":900,"gain":0},{"source":"noise","color":"brown","dur":28,"lowpass":120,"gain":-16}]}

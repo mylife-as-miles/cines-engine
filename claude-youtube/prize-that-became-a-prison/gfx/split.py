@@ -5,11 +5,12 @@ the seam's cut-away. No headings, no labels: the two lights say it (the warm evi
 
 Each half is 958 x 1080 with a 4 px dark gutter between them (x 958-961), never a black frame. Each plate is the raw
 Blender render, framed on its tote (a window centred on it, scaled so the tote is about two thirds of the height), and
-pushed in 3 % over the shot in log space, so neither half is a still. Both halves are graded together with the film's
-grade (scenes/shoot.py GRADE, grain fresh each frame). At --cut the right half cuts straight to gfx/seam.html
+pushed in 3 % over the shot in log space, so neither half is a still. The right half's cold plate first has its tote
+matched to the left's (match_tote: the cold light read it salmon pink beside the tan cognac). Both halves are then graded
+together with the film's grade (scenes/shoot.py GRADE, grain fresh each frame). At --cut the right half cuts straight to gfx/seam.html
 `cutaway_half`, whose red seam opens exactly where the right-hand tote's top seam was (a match cut inside the half),
 eases back to the whole section and holds it open. The cut-away is drawn after the grade, so its red stays the
-film's red.
+film's red. --still writes the frame as the film shows it: graded, and after --cut with the cut-away in the right half.
 """
 import argparse
 import os
@@ -31,8 +32,28 @@ W, H, HW, GUT = 1920, 1080, 958, 4
 # rendered at 2560). Its top seam at the cut, on the output: x 1147-1673, y 424 (gfx/seam.html cutaway_half's tA, tB).
 HALVES = [
     dict(plate="frames/raw/evidence_table/purses.png", cx=1933, cy=633, s=0.92, x0=0),
-    dict(plate="frames/raw/inspection_room/handbags.png", cx=987, cy=300, s=1.84, x0=HW + GUT),
+    dict(plate="frames/raw/inspection_room/handbags.png", cx=987, cy=300, s=1.84, x0=HW + GUT, match=True),
 ]
+
+# The right-hand tote, graded to read as the same bag as the left's before the film's grade: the tote alone (a soft key on
+# the leather's warm hues, so the cold room keeps its light) is turned 8 degrees toward orange (HSV hue: salmon toward
+# cognac; the other way reads pinker), its saturation cut 15 %, and its mid-tones brought down by a master gamma, fitted so
+# that its front panel's median lightness in the graded frame meets the left tote's (L* 19.6). Measured on the graded
+# frame at 2.19 s, front panels' median: left #402b1f; right #58403b before (dE 10.9), #3f2c25 after (dE 3.7). Refit
+# GAMMA if the plate is re-rendered.
+MATCH = dict(hue=8.0, sat=0.85, gamma=2.45)
+
+
+def match_tote(img, s, hue, sat, gamma):
+    rgb = img / 255.0
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)                          # float: hue in degrees
+    d = np.abs((hsv[..., 0] - 18 + 180) % 360 - 180)                    # how far from the leather's hue
+    key = np.clip(1 - (d - 30) / 25, 0, 1) * np.clip((hsv[..., 1] - 0.10) / 0.20, 0, 1)
+    key = cv2.GaussianBlur(key, (0, 0), 2.0 / s)[..., None]             # about 2 output px of softness
+    hsv[..., 0] = (hsv[..., 0] + hue) % 360
+    hsv[..., 1] *= sat
+    graded = np.clip(cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB), 1e-4, 1) ** gamma
+    return ((rgb + key * (graded - rgb)) * 255).astype(np.float32)
 
 
 def main():
@@ -47,8 +68,8 @@ def main():
     os.chdir(ROOT)
     plates = []
     for h in HALVES:
-        img = cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
-        plates.append(img.astype(np.float32))
+        img = cv2.cvtColor(cv2.imread(h["plate"], cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32)
+        plates.append(match_tote(img, h["s"], **MATCH) if h.get("match") else img)
 
     def frame(t):
         out = np.zeros((H, W, 3), np.float32)
@@ -59,8 +80,21 @@ def main():
             out[:, h["x0"]:h["x0"] + HW] = cv2.warpAffine(img, M, (HW, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
         return np.clip(out, 0, 255).astype(np.uint8)
 
-    if a.still:
-        cv2.imwrite(a.still[1], cv2.cvtColor(frame(float(a.still[0])), cv2.COLOR_RGB2BGR)); print("still", a.still[1]); return
+    env = dict(os.environ, NODE_PATH=subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip())
+    x1 = HW + GUT
+    if a.still:                          # the frame as the film shows it: graded, the cut-away in the right half after the cut
+        t = float(a.still[0])
+        g = subprocess.run(["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-i", "-",
+                            "-vf", grade_filter(), "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                           input=frame(t).tobytes(), capture_output=True, check=True).stdout
+        out = np.frombuffer(g, np.uint8).reshape(H, W, 3).copy()
+        if t >= a.cut:
+            png = os.path.join(tempfile.mkdtemp(prefix="split-"), "cut.png")
+            subprocess.run(["node", os.path.join(HERE, "type_render.js"), "still", "cutaway_half", f"{t - a.cut:.4f}", png,
+                            "--page", os.path.join(HERE, "seam.html")], check=True, env=env, capture_output=True)
+            out[:, x1:] = cv2.cvtColor(cv2.imread(png, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)[:, x1:]
+        out[:, HW:x1] = (0x0a, 0x0c, 0x0f)
+        cv2.imwrite(a.still[1], cv2.cvtColor(out, cv2.COLOR_RGB2BGR)); print("still", a.still[1]); return
 
     n = int(round(a.len * a.fps))
     tmp = tempfile.mkdtemp(prefix="split-")
@@ -71,10 +105,8 @@ def main():
     for i in range(n):
         ff.stdin.write(frame(i / a.fps).tobytes())
     ff.stdin.close(); ff.wait()
-    env = dict(os.environ, NODE_PATH=subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip())
     subprocess.run(["node", os.path.join(HERE, "type_render.js"), "seq", "cutaway_half", str(a.len - a.cut), cut,
                     "--page", os.path.join(HERE, "seam.html"), "--fps", str(a.fps)], check=True, env=env)
-    x1 = HW + GUT
     fc = (f"[1:v]crop={W - x1}:{H}:{x1}:0,setpts=PTS+{a.cut}/TB[c];"
           f"[0:v][c]overlay={x1}:0:enable='gte(t,{a.cut})':eof_action=pass,"
           f"drawbox=x={HW}:y=0:w={GUT}:h={H}:color=0x0a0c0f:t=fill,format=yuv420p[v]")

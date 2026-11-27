@@ -29,6 +29,8 @@ Every sound in the film, on the script's clock. Written 27 November 2026 by the 
   three chapters). **Every item carries its chapter, its direction row (`04.03` = chapter 4, third row of its DIRECTION
   table) and its offset from the row's start**, and a cue also names the word or action it sits on (`anchor`). When the
   edit exists, write each row's real start to a small JSON map and run `python3 audio/tools/retime.py ROWS.json`.
+  Before the edit, the narration's scratch read (`audio/vo/`, with each line's measured length in its `lines.json`, per
+  `audio/VOICE_PLAN.md`) is the best source for those row times.
 - One conflict in the script: the cold open's heading says 0:00-1:30, but its own rows put the title on the peak at
   1:37 and a 4 s decay after it. This plan follows the rows: chapter 1 starts at **1:42**, on the silence, and keeps
   its 3:05 end. The edit decides.

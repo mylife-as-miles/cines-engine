@@ -26,9 +26,9 @@ to match), and the EDL says so.
 
 Sources (see design/edit/EDL.md for each shot's):
   plate   a Blender plate (frames/raw/<stage>/<camera>.png) pushed at constant speed in log space and graded with the
-          film's grade (gfx/montage.py plate_shot: scenes/shoot.py GRADE, fresh grain, centre clamped so no edge is
-          pulled in), with story type from gfx/type.html laid over it (gfx/type_render.js, look B), each layer at its
-          own offset.
+          film's grade (gfx/montage.py plate_shot's move, re-done here frame by frame so the grade, the type and the
+          encode run in one pass: scenes/shoot.py GRADE, fresh grain, centre clamped so no edge is pulled in), with
+          story type from gfx/type.html laid over it (gfx/type_render.js, look B), each layer at its own offset.
   piece   a graphics piece trimmed from a rendered clip (out/gfx/r7, reel 7's exact commands), or re-rendered with the
           same tool and parameters at the length the shot needs.
 
@@ -64,8 +64,9 @@ CANVAS = Path("/home/user/cines-engine/.claude/skills/cines-engine/scripts/canva
 DEFAULT_PY = "/tmp/claude-0/-home-user-cines-engine/73593c7c-6dfc-5879-82bf-97979958b8ab/scratchpad/gfxenv/bin/python"
 PY = os.environ.get("PRIZE_GFX_PY") or (DEFAULT_PY if os.path.exists(DEFAULT_PY) else sys.executable)
 W, H, FPS = 1920, 1080, 24
-RENDER_VERSION = 3                 # bump to invalidate every cached shot
-ENC = ["-c:v", "libx264", "-crf", "16", "-preset", "medium", "-pix_fmt", "yuv420p",
+RENDER_VERSION = 4                 # bump to invalidate every cached shot
+# the cached shots are intermediates: high quality, fast to write; the join makes the one delivery encode
+ENC = ["-c:v", "libx264", "-crf", "14", "-preset", "veryfast", "-pix_fmt", "yuv420p",
        "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709"]
 
 
@@ -474,8 +475,10 @@ def write_srt(segs):
     def rows(text):
         if len(text) <= 42:
             return text
-        mid = len(text) // 2
-        sp = min((i for i, ch in enumerate(text) if ch == " "), key=lambda i: abs(i - mid))
+        mid = len(text) // 2                 # break near the middle, after a comma or a full stop if one is close
+        spaces = [i for i, ch in enumerate(text) if ch == " " and max(i, len(text) - i - 1) <= 46]
+        spaces = spaces or [i for i, ch in enumerate(text) if ch == " "]
+        sp = min(spaces, key=lambda i: abs(i - mid) - (12 if text[i - 1] in ",.:;?" else 0))
         return text[:sp] + "\n" + text[sp + 1:]
     FILM_DIR.mkdir(parents=True, exist_ok=True)
     with open(SRT, "w") as f:
@@ -526,9 +529,27 @@ def ensure_piece(src, work):
     return out
 
 
+def plate_frames(path, n, z0, z1, cx, cy):
+    """gfx/montage.py plate_shot's move, frame by frame (the same constant speed in log space, the same clamp so no
+    edge is ever pulled in, the same cubic resampling), warped in 8 bits so the grade, the type and the encode can run
+    in one ffmpeg pass instead of three."""
+    import cv2
+    import numpy as np
+    img = cv2.cvtColor(cv2.imread(str(ROOT / "frames/raw" / (path + ".png")), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+    ph, pw = img.shape[:2]
+    base = max(W / pw, H / ph)
+    for i in range(n):
+        z = z0 * (z1 / z0) ** (i / max(1, n - 1))
+        s = base * z
+        hx, hy = W / (2 * s), H / (2 * s)
+        x = min(max(cx * pw, hx), pw - hx); y = min(max(cy * ph, hy), ph - hy)
+        M = np.float32([[s, 0, W / 2 - s * x], [0, s, H / 2 - s * y]])
+        yield cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).tobytes()
+
+
 def render_shot(e):
     sys.path.insert(0, str(GFX))
-    from montage import plate_shot          # gfx/montage.py: constant-speed log push, the film's grade, centre clamped
+    from doc_composite import grade_filter  # scenes/shoot.py GRADE, its grain made temporal (as plate_shot uses it)
     SHOTS.mkdir(parents=True, exist_ok=True)
     out, side = SHOTS / f"{e['id']}.mp4", SHOTS / f"{e['id']}.json"
     h = shot_hash(e)
@@ -537,10 +558,8 @@ def render_shot(e):
     src, n = e["source"], e["frames"]
     try:
         if src["kind"] == "plate":
-            graded = work / "plate.mp4"
-            path = f"{src['stage']}/{src['camera']}"
-            plate_shot(path, n, src["zoom"][0], src["zoom"][1], src["centre"][0], src["centre"][1], str(graded))
-            ins, fc, last = ["-i", str(graded)], "", "[0:v]"
+            ins = ["-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-"]
+            fc, last = f"[0:v]{grade_filter()}[g];", "[g]"
             for i, ty in enumerate(src["type"]):
                 secs = n / FPS - ty["t0"] + ty["tin"] + 0.1
                 mov = work / f"type{i}.mov"
@@ -552,11 +571,14 @@ def render_shot(e):
                 fc += (f"[{i + 1}:v]format=rgba,trim=start={ty['tin']:.4f},setpts=PTS-STARTPTS,"
                        f"tpad=start_duration={ty['t0']:.4f}:color=0x00000000[t{i}];{last}[t{i}]overlay=eof_action=pass:format=auto[o{i}];")
                 last = f"[o{i}]"
-            if src["type"]:
-                fc += f"{last}format=yuv420p[v]"
-                run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n), "-r", str(FPS), *ENC, tmp])
-            else:
-                run(["ffmpeg", "-v", "error", "-y", "-i", graded, "-frames:v", str(n), "-r", str(FPS), *ENC, tmp])
+            fc += f"{last}format=yuv420p[v]"
+            ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", fc, "-map", "[v]", "-frames:v", str(n),
+                                   "-r", str(FPS), *ENC, str(tmp)], stdin=subprocess.PIPE, cwd=ROOT)
+            for fr in plate_frames(f"{src['stage']}/{src['camera']}", n, src["zoom"][0], src["zoom"][1], src["centre"][0], src["centre"][1]):
+                ff.stdin.write(fr)
+            ff.stdin.close()
+            if ff.wait():
+                raise RuntimeError(f"{e['id']}: ffmpeg failed on the plate")
         else:
             f = ensure_piece(src, work)
             a = int(round(src["in"] * FPS))

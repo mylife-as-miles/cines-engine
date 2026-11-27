@@ -1,0 +1,14 @@
+{
+ "sfx_tannoy_far": "No voice and no words: the 'announcement' is a buzz and noise shaped into random vowel resonances with speech-like rhythm (no language, no phonemes chosen), band-limited to 600-850 Hz in a 3 s hall, under a generic two-note chime 8 dB down. The tagger hears no speech in it.",
+ "sfx_tannoy_near": "The same construction, closer (band-limited to about 1.1 kHz), the chime 16 dB down. 'A doorbell' wins the forced choice: CLAP hears the tonal vowel texture as bell-like; a person should confirm it reads as a far loudspeaker.",
+ "amb_fluorescent_hum": "Hum at 100 Hz (China's 50 Hz mains) with harmonics and a light buzz.",
+ "amb_phone_line": "Telephone band (300-3400 Hz) hiss with a faint 50 Hz hum. 'Radio static' wins the forced choice: it is static, by design.",
+ "sfx_impact_low": "Designed sub impact, falling a fifth from A1 to D1 so it sits in the score's key; used twice (1:10, 7:30).",
+ "sd_void_drone": "Score motif M4 carried by sound design: D2 73.42 Hz and A2 110 Hz, A = 440.",
+ "sfx_mail_chime": "An invented two-note chime, muted (laptop speaker): no product's sound. 'A doorbell' wins the forced choice.",
+ "sfx_boarding_chime": "A generic chime (invented), far, in a hall: not any airport's jingle. 'A doorbell' wins the forced choice.",
+ "sfx_scale_beep": "Plant and payoff: the same file at 0:00 and 4:41.",
+ "sfx_clock_tick": "Cut to whole tick periods so the ticks stay evenly spaced across the loop's seam. The mix stops it between ticks on 'worse' (7:18) and on the cut to the empty chair (10:48).",
+ "amb_void_air": "Barely there: the Void Stage is never digitally dead.",
+ "amb_chicago_night": "The earshot city recordings carry speech (tagger 0.4), so they were set aside for every bed where a Stable Audio take exists."
+}

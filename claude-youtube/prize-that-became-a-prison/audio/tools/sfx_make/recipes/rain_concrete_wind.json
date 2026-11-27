@@ -1,0 +1,1 @@
+{"name":"rain_concrete_wind","says":"steady rain on concrete with a gusty wind","kind":"ambience","dur":28,"layers":[{"sound":"rain/street","dur":28,"gain":0},{"sound":"wind/open","dur":28,"gain":-11,"lowpass":1800}]}

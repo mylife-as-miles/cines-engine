@@ -1,0 +1,1 @@
+{"name":"door_far","says":"a heavy door closing far down a long concrete corridor","space":"hall","layers":[{"sound":"door/shut","lowpass":1400,"gain":0},{"sound":"door/slam","lowpass":900,"pitch":-3,"at":0.02,"gain":-8}]}
