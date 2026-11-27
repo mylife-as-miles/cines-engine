@@ -42,6 +42,16 @@ sc.cycles.samples = 64
 sc.view_settings.view_transform = "AgX"
 sc.view_settings.exposure = getattr(mod, "EXPOSURE", -2.0)
 sc.render.resolution_x, sc.render.resolution_y = 1280, 720
+import re  # noqa: E402
+
+merged = 0  # every props.load() re-imports its GLB, so repeated props carry identical copies of their 2K-4K textures
+for img in list(bpy.data.images):
+    base = re.sub(r"\.\d{3}$", "", img.name)
+    if base != img.name and base in bpy.data.images and tuple(bpy.data.images[base].size) == tuple(img.size):
+        img.user_remap(bpy.data.images[base])
+        bpy.data.images.remove(img)
+        merged += 1
+print("MERGED duplicate textures:", merged)
 os.makedirs(os.path.dirname(out), exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=out, compress=True, relative_remap=True)
 print("SAVED", out, round(os.path.getsize(out) / 1e6, 1), "MB")
