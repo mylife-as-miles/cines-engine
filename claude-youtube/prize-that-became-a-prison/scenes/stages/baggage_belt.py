@@ -51,7 +51,7 @@ DAWN = {
                         grade=dict(sat=0.5, val=0.35, rough_add=0.3), spec=0.1),
 }
 OTHERS = {   # copy of, scale (x, y, z) relative to the source, body tint (linear albedo)
-    "navy_case": ("dawn_case", (1.12, 1.08, 1.1), (0.008, 0.011, 0.022)),
+    "navy_case": ("dawn_case", (1.18, 1.08, 1.1), (0.010, 0.011, 0.017)),
     "slate_case": ("dawn_case", (0.86, 0.9, 0.86), (0.036, 0.051, 0.073)),
     "warm_stone_case": ("dawn_case", (1.04, 1.12, 1.04), (0.101, 0.087, 0.076)),
     "olive_duffel": ("dawn_duffel", (0.84, 0.88, 0.86), (0.032, 0.034, 0.016)),
@@ -84,8 +84,8 @@ LAYOUT = {
              "slate_case": (11.1, -0.15, 9.0), "olive_duffel": (14.4, 0.15, -4.0),
              "warm_stone_case": (17.7, -0.15, -6.0), "shell_case": (21.0, 0.14, -7.0), "stone_duffel": (24.4, -0.14, 84.0)},
     # Straight down at the sorter: the ribbed spinner, her pair, then a navy case.
-    "overhead": {"shell_case": (8.28, -0.08, 13.0), "dawn_case": (9.45, 0.18, -4.0),
-                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (12.06, 0.12, 76.0)},
+    "overhead": {"shell_case": (8.55, -0.08, 16.0), "dawn_case": (9.45, 0.18, -4.0),
+                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (11.81, 0.12, 76.0)},
 }
 CAM_FOCUS = {"curtain": "focus_curtain", "belt": "focus_belt", "overhead": "focus_over"}
 CAMERAS = {
@@ -232,12 +232,12 @@ def clone(holder, name, tint, scale):
 
 
 def shell_case(name):
-    """A hard-shell spinner case built here, lying on its back: two pale polycarbonate shells either side of a dark
+    """A hard-shell spinner case built here, lying on its back: two polycarbonate shells either side of a dark
     zip band, raised ribs on the lid, a side carry handle, the handle housing at one end, four spinner wheels at the
     other."""
     m = st.materials()
-    pc = st.pbr("polycarbonate shell", (0.30, 0.31, 0.32), (0.22, 0.42), metal=0.35, nscale=6, cvar=0.1, coat=0.4,
-                chips=((0.12, 0.12, 0.125), 0.25))
+    pc = st.pbr("polycarbonate shell", (0.080, 0.091, 0.105), (0.35, 0.51), metal=0.16, nscale=6, cvar=0.1,
+                coat=0.12, chips=((0.037, 0.042, 0.05), 0.25))
     holder = bpy.data.objects.new(name + "_bag", None)
     bpy.context.scene.collection.objects.link(holder)
     L, W, Hh = 0.70, 0.46, 0.27
@@ -446,6 +446,8 @@ def build_bags():
 
 def set_layout(cam):
     bpy.data.objects["right end return"].hide_render = cam != "curtain"
+    for light in _STATE["sorter_returns"]:
+        light.hide_render = cam != "overhead"
     for light, power, spread in _STATE["lights"].values():
         name = light.name
         if cam == "curtain":
@@ -453,12 +455,12 @@ def set_layout(cam):
                      "batten0_up": 0.16, "sbatten0_light": 0.0, "sbatten0_up": 0.0,
                      "bulk_panel_light": 0.48, "bag_edge": 0.0}.get(name, 1.0)
         elif cam == "overhead":
-            scale = 1.4 if name == "batten2_light" else 0.075
+            scale = 0.045 if name == "batten2_light" else 0.085
         else:
             scale = 1.0
         light.data.energy = power * scale
         if spread is not None:
-            light.data.spread = math.radians(66) if cam == "overhead" and name == "batten2_light" else spread
+            light.data.spread = spread
     lay = LAYOUT.get(cam, LAYOUT["belt"])
     for name, r in _STATE["roots"].items():
         on = name in lay
@@ -535,6 +537,36 @@ def install_hook():
     sk.render = render
 
 
+def sorter_returns(roots):
+    """Key Dawn's pair inside the sorter pool, with low returns for the separate cases and walkway."""
+    fixtures = (
+        ("sorter key", (10.22, 0.22, 2.71), (10.11, -0.10, 0.80), (1.16, 0.42), 136, 67,
+         ("dawn_case", "dawn_duffel"), ("belt",)),
+        ("ribbed case return", (8.48, 0.20, 2.53), (8.55, -0.08, 0.83), (0.95, 0.53), 4, 74,
+         (SHELL,), ()),
+        ("navy case return", (11.88, 0.41, 2.44), (11.81, 0.12, 0.83), (0.76, 0.44), 30, 74,
+         ("navy_case",), ()),
+        ("sorter duffel edge", (10.68, -0.54, 2.26), (10.72, -0.21, 0.84), (0.56, 0.24), 12, 61,
+         ("dawn_duffel",), ()),
+        ("walkway falloff", (10.02, -1.54, 2.47), (10.01, -1.72, 0.02), (3.60, 0.77), 13, 105,
+         (), ("floor",)),
+    )
+    lights = []
+    for name, source, aim, size, power, spread, bags, surfaces in fixtures:
+        turn = (Vector(aim) - Vector(source)).to_track_quat("-Z", "Y").to_euler()
+        light = st.light(name, source, size, power, (0.76, 0.85, 1.0), spread=spread, rot=turn)
+        light.visible_glossy = False
+        receivers = bpy.data.collections.new(name + " receivers")
+        objects = [bpy.data.objects[surface] for surface in surfaces]
+        for bag in bags:
+            objects.extend(_meshes(roots[bag]))
+        for obj in objects:
+            receivers.objects.link(obj)
+        light.light_linking.receiver_collection = receivers
+        lights.append(light)
+    return lights
+
+
 def build(cast=True):
     """No people in this stage: `cast` is ignored."""
     st.build()
@@ -553,7 +585,7 @@ def build(cast=True):
     fill.light_linking.receiver_collection = receivers
     _STATE["lights"] = {o.name: (o, o.data.energy, getattr(o.data, "spread", None))
                         for o in bpy.context.scene.objects if o.type == "LIGHT"}
-    build_bags()
+    _STATE["sorter_returns"] = sorter_returns(build_bags())
     for n in ("focus_curtain", "focus_belt", "focus_over"):
         st.focus(n, (0, 0, BZ))
     set_layout("belt")
