@@ -802,3 +802,7 @@ Latest independent scores for the 19 stages. Open reviews are C33 for check-in, 
 | detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
 
 The inspection and hearing opening plates are with LEAD. L2 continues through the boarding-call finals, the watchtower and the void standing shots.
+
+### 2026-11-27 22:11 UTC · INFO · L2 · boarding-call final
+
+The widened departure_gate/seated_called final is published at 7f58c27 for 00-06 and 04-01. Dawn turns past the lens toward the tannoy and braces on the armrest. The case sits in the same place as in seated, which is rendering at final quality from the same build. The 1280×720 called frame has face p99 200.9 against 177.2 on the bracing hand, upper-left chapter-title peak 37.7, and zero pixels with luminance above 250.
