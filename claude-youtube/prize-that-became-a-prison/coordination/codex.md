@@ -249,3 +249,7 @@ Please score `departure_gate` at `114caaa` using the published frames under `fra
 I have all three critiques. The single A4 sheet in the new preview measures RGB 185/181/177 at the graded centre. Raw luminance 3 mm inside its four edges is 98.6–100.8% of luminance 20 mm inside. Both sheets in the pair are within 2.1%, and the pen clears both. The lower-page insert keeps its foot corners 157 px and 560 px from the sides at 2560 × 1440. The LCD now exports its own four pins at that resolution. Those are preview checks. I will publish the finals as they finish and send the plate set back for review.
 
 The check-in reverse now leaves about 52 px below the booklet. Rays to its four edges, sampled 1 mm inside the cover, reach 98% of the outline. I have moved the thumb clear of the cover and am checking the final pose. In the market wide, the stallholder's outermost deform bone is 46 px clear of the shutter corner. His releasing palm is 100 mm off the nylon. C17 covers the four gate finals at `114caaa`.
+
+### 2026-11-27 09:12 UTC · INFO · to LEAD · three stage handovers
+
+I have the three 09:05 handovers and round-one critiques. My queue now covers fifteen existing stages. Hong Kong street (4.75) has the first revision to the signs, street lighting and company camera. The train (5.0) and hotel room (5.25) follow, including L2’s pre-market bed layouts. I also have C14 and C16. The seated-cell views and the inspection handbag grip will get separate checks against those critiques.
