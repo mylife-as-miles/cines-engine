@@ -447,8 +447,9 @@ def officer(name, variant):
     return h
 
 
-def fit_cap_band(holder, crown):
-    """Tailor a continuous wool band and its welt to each officer's brow, temples and nape."""
+def fit_cap_band(holder, cap):
+    """Sew the fitted band to the original crown's cut edge. Retain the plain visor."""
+    import bmesh
     body = bpy.data.objects[holder["body"]]
     frame = castkit._head_frame(body)
     centre = (frame["lo"] + frame["hi"]) / 2
@@ -472,27 +473,79 @@ def fit_cap_band(holder, crown):
             sections[i].append(math.hypot(dx, dy))
     radii = [max((r for j in (-1, 0, 1) for r in sections[(i + j) % segments]), default=0.082)
              for i in range(segments)]
-    vertices, faces = [], []
-    for row, (dz, ease) in enumerate(((0.0, 0.004), (0.003, 0.005), (0.029, 0.005), (0.038, 0.013))):
+    # Work in the same coordinates as the head measurements. Preserve the
+    # imported visor as a separate surface below the wool seam.
+    bm = bmesh.new()
+    bm.from_mesh(cap.data)
+    body_from_cap = to_local @ cap.matrix_world
+    bm.transform(body_from_cap)
+    for v in bm.verts:
+        v.co.x = centre.x + 0.90 * (v.co.x - centre.x)
+        v.co.y = centre.y + 0.90 * (v.co.y - centre.y)
+    peak_faces = [face for face in bm.faces if face.material_index == 1]
+    peak_verts = {v.index: v.co.copy() for face in peak_faces for v in face.verts}
+    peak_polys = [[v.index for v in face.verts] for face in peak_faces]
+    bmesh.ops.delete(bm, geom=peak_faces, context="FACES")
+    bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=0.00004)
+    # A plane through the band's top, falling 14 mm from forehead to nape.
+    plane = Vector((centre.x, centre.y, brow_z + 0.031))
+    normal = Vector((0, 0.007 / ((frame["hi"].y - frame["lo"].y) / 2), 1)).normalized()
+    # The bottom of the imported crown narrows inside the skull. Seat the
+    # broader part on the band, retaining the original raised top and peak.
+    def band_radius(angle):
+        t = (angle * segments / math.tau) % segments
+        i = int(t)
+        weights = [1 + math.cos(math.pi * (t - i - j) / 3) for j in range(-2, 4)]
+        return sum(radii[(i + j) % segments] * w for j, w in zip(range(-2, 4), weights)) / sum(weights) + 0.005
+
+    for v in bm.verts:
+        joint = plane.z - normal.y / normal.z * (v.co.y - centre.y)
+        v.co.z = joint + (v.co.z - joint - 0.052) * 1.55
+        dx, dy = v.co.x - centre.x, v.co.y - centre.y
+        r = math.hypot(dx, dy)
+        # The imported top dips below the scalp at the centre. Give the
+        # crown a shallow dome while leaving its sewn edge in place.
+        lift = max(0, 1 - (r / 0.105) ** 2)
+        v.co.z += 0.018 * lift * min(1, max(0, (v.co.z - joint) / 0.024))
+        if r > 0.035 and v.co.z < joint + 0.035:
+            t = max(0, min(1, (v.co.z - joint) / 0.035))
+            blend = t * t * (3 - 2 * t)
+            new_radius = (1 - blend) * band_radius(math.atan2(dy, dx)) + blend * r
+            v.co.x, v.co.y = centre.x + dx * new_radius / r, centre.y + dy * new_radius / r
+    bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces),
+                           dist=0.00001, plane_co=plane, plane_no=normal, clear_inner=True)
+    # A single wool band. Its top overlaps the tailored crown by one mm.
+    rows = []
+    for height, ease in ((0, -0.0015), (0.003, 0), (0.0318, -0.0005)):
+        row = []
         for i in range(segments):
             a = math.tau * i / segments
-            radius = sum(radii[(i + j) % segments] for j in (-1, 0, 1)) / 3 + ease
-            vertices.append((centre.x + radius * math.cos(a), centre.y + radius * math.sin(a),
-                             brow_z + dz - 0.014 * (1 + math.sin(a)) / 2))
-            if row:
-                i0 = row * segments + i
-                i1 = row * segments + (i + 1) % segments
-                faces.append((i0 - segments, i1 - segments, i1, i0))
-    mesh = bpy.data.meshes.new("fitted cap band")
-    mesh.from_pydata(vertices, [], faces)
-    mesh.materials.append(crown)
-    for face in mesh.polygons:
-        face.use_smooth = True
-    band = bpy.data.objects.new(holder.name + "_cap_band", mesh)
-    bpy.context.scene.collection.objects.link(band)
-    band.matrix_world = body.matrix_world.copy()
-    band.modifiers.new("band backing", "SOLIDIFY").thickness = 0.0025
-    castkit._to_bone([band], bpy.data.objects[holder["rig"]], "DEF-spine.006")
+            r = band_radius(a) + ease
+            dx, dy = r * math.cos(a), r * math.sin(a)
+            z = brow_z + height - normal.y / normal.z * dy
+            row.append(bm.verts.new((centre.x + dx, centre.y + dy, z)))
+        if rows:
+            prev = rows[-1]
+            for i in range(segments):
+                j = (i + 1) % segments
+                band = bm.faces.new((prev[i], prev[j], row[j], row[i]))
+                band.smooth = True
+        rows.append(row)
+    visor = {}
+    for idx, point in peak_verts.items():
+        reach = min(1, max(0, (centre.y - point.y - 0.040) / 0.085))
+        point.y -= 0.043 * reach
+        point.z -= 0.007 * reach * reach
+        visor[idx] = bm.verts.new(point)
+    for poly in peak_polys:
+        face = bm.faces.new([visor[i] for i in poly])
+        face.material_index = 1
+        face.smooth = True
+    bm.transform(body_from_cap.inverted())
+    bm.normal_update()
+    bm.to_mesh(cap.data)
+    bm.free()
+    cap.data.update()
 
 
 def ground(holder):
