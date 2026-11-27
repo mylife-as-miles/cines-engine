@@ -66,7 +66,7 @@ CAMERAS = {
     # head, the chairs pushed in, the blinds glowing on the left wall, their stripes across the table's end and the
     # one chair pulled out at the head (on the right third), clear against the lit end wall
     "dining": dict(loc=(1.45, -1.85, 1.62), aim=(4.0, 0.45, 0.42), lens=32, focus="fx_dining", fstop=5.6, beat="ch10",
-                   exposure=-0.85, spp_final=128),
+                   exposure=-0.75, spp_final=128),
     # Ch 10: the empty chair, from the far side near the end wall, the wall seen edge-on: the street light's stripes
     # across the chair, its striped shadow clear of it on the end wall to the left, the table's head soft at the
     # right; the image before the cut to black
@@ -76,7 +76,7 @@ CAMERAS = {
 TRIMS = {
     "kitchen": {},
     "dining": {},
-    "chair": {"d_sky": 1.4},
+    "chair": {"d_sky": 1.4, "d_sky_end": 0.375},    # the close-up keeps round 1's foot-end glow (36 W)
 }
 # the dining room's haze per camera: enough in the wide for the street light's shafts to show in the air; none in
 # the chair close-up, where the shafts lay a striped veil between the lens and the chair
@@ -576,10 +576,12 @@ def lights():
     st.area("d_sky", (dw["cx"], st.D["y1"] - 0.08, (dw["z0"] + dw["z1"]) / 2), (dw["w"] - 0.1, dw["z1"] - dw["z0"] - 0.1),
             16.0, (0.5, 0.6, 0.85), spread=140, aim=(dw["cx"] + 0.6, -1.0, 0.4))
     # the night sky's glow through the foot-end blind: a weak fill so the foot of the table, the foot chair and the
-    # near chair read (dimly) in the wide instead of crushing to black
+    # near chair read (dimly) in the wide instead of crushing to black. Raised from 36 W after round 1: the near end sits in
+    # the grade's vignette corner and still graded at ~7/255 (the critic asked 15-25); it falls off fast, so the head
+    # of the table and the lit end wall barely change
     ew = st.D_END_WIN
     st.area("d_sky_end", (st.D["x0"] + 0.08, ew["cy"], (ew["z0"] + ew["z1"]) / 2), (ew["z1"] - ew["z0"] - 0.1, ew["w"] - 0.1),
-            36.0, (0.5, 0.6, 0.85), spread=130, aim=(2.6, -0.7, 0.45))
+            96.0, (0.5, 0.6, 0.85), spread=130, aim=(2.4, -0.75, 0.45))
     # outside the kitchen window: a faint cool lamp over the neighbour's back door rakes their painted brick
     yw = st.K["y1"] + st.K_OUT
     st.spot("k_alley", (st.WARM_WIN[0] - 0.9, yw - 0.6, 3.4), (st.WARM_WIN[0] + 0.5, yw - 0.02, 1.4), 600.0, (0.62, 0.72, 1.0),

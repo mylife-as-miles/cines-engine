@@ -440,8 +440,12 @@ def blind(p, ux0, ux1, z0, z1, y, tilt_deg, cords_side=1):
     for pl in ob.data.polygons:
         pl.use_smooth = True
     ob.modifiers.new("wn", "WEIGHTED_NORMAL")
-    zb = top - n * pitch
-    box(f"{p}_bottom", (w, 0.052, 0.012), (cx, yc, zb), bp, bevel=0.003)
+    # the weighted bottom rail, a 3 cm bar hung just under the last slat (no open gap between them): the street
+    # light through that last gap passed under the dining table's foot apron and fell alone on the rug past the
+    # table's near side, a crisp bright two-pane patch with no stripes round it
+    rh = 0.03
+    zb = top - (n - 1) * pitch - 0.008 - rh / 2
+    box(f"{p}_bottom", (w, 0.052, rh), (cx, yc, zb), bp, bevel=0.004)
     # ladder tapes (front and back) and the lift cords, at two stations
     for k, xx in enumerate((ux0 + 0.13, ux1 - 0.13)):
         for s, dy in (("f", -sw / 2 * math.cos(tr) - 0.001), ("b", sw / 2 * math.cos(tr) + 0.001)):
@@ -1033,6 +1037,12 @@ def dining_table():
     # rule the top
     mt.tune_prop(t, spec=0.32, rough_floor=0.38, top_wood=((0.09, 0.045, 0.025), (0.06, 0.03, 0.017), 110.0),
                  seam=0.3, tone=(0.93, 1.06), late_k=0.45)
+    # a flag under the top at the foot end, seen by nothing but shadow rays: the street light through the end
+    # blind's lowest gaps ran under the table and fell as a lone, crisp, unstriped patch on the rug by the near
+    # head-end leg (in the wide, and as a sliver under the table in the close-up)
+    fl = box("d_flag", (0.01, 0.84, 0.55), (DT[0] - 0.8, DT[1], 0.42), M["dark_void"])
+    for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
+        setattr(fl, attr, False)
     return t
 
 
