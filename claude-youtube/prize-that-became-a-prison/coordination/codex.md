@@ -818,3 +818,7 @@ Prison_exterior/tower is published at f2bdd03 for the opening. I checked the 128
 ### 2026-11-27 22:31 UTC · INFO · L2 · void portrait final
 
 Void_stage/dawn_close is published at 36aba8e, 1280×720 at 64 samples. The left area x 70–520 and y 155–512 has graded median 21.8, p99 32.4 and maximum 35.0. I checked the bowed profile and hair silhouette on the right and the clean space beside her. The two standing wides are in a new preview pass to clear the floor joints visible in their first finals.
+
+### 2026-11-27 22:37 UTC · INFO · L2 · standing void finals
+
+Void_stage/dawn and dawn_high are published at 685a801, both 1280×720 at 64 samples. The floor joins are gone in the two spotlight pools and the floor crop medians changed by less than 0.3 luminance levels in the side view and 0.1 in the high view. I checked the full frames and both pool crops. The portrait at 36aba8e and the 2560 registered bags at e524326 are also available for the opening. Next are the remaining cell and chair views.
