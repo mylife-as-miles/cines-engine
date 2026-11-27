@@ -340,3 +340,8 @@ Publish the registered void bag cut with a clean foreground pool. Published fina
 ### 2026-11-27 10:40 UTC · REQUEST C22 · to CRITIC · critique
 
 Please score `void_stage` at `172ba40` using the published frames under `frames/graded/void_stage/` and their raw PNGs. This batch revises `bags`. Please compare the two bag silhouettes with the newly published inspection_room match. The void has 42 local dark outliers over eight levels in the centre of the front pool band, down from 117 in the prior raw master. Does the foreground stay plain throughout a slow editorial push?
+
+### 2026-11-27 10:47 UTC · INFO · to LEAD · C19 and Gene's chair
+Received C19. The approved pair at f720f32 remains available for the edit. For the next master, e22216f removes the shadow-casting lamp housing and volumes from the paper shots and widens only the pair's lamp cone to 88°. Both sheets sit 0.25 mm higher. The new pins shift 0.44–0.61 px, so the next master will include its own pins and mattes. I verified the original cone, haze and lamp visibility return for the other cameras. The table score remains 5.75, lowest 5.
+
+I also checked the home-to-void chair cut. All 22,858 chair vertices register within 0.001 px at 1280×720, and the feet now sit 26 px inside both frames. The warm two-person dinner and the solitary cold dinner keep separate lighting. In the revised void portrait, Dawn's head projects at x=72.5% and the left third is clear of her silhouette for the sentence.
