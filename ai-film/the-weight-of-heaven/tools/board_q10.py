@@ -20,7 +20,7 @@ img, arr, note, arrow, GOLD, INK, PAPER, BOLD, REG = b4.img, b4.arr, b4.note, b4
 part, key = b8.part, b8.key
 HALL = 'refs/relit/ENV_E09_treaty-house-hall_plain.jpg'
 FIRST = 'refs/frames/Q10_open_q09_last.jpg'
-LAMP, PAGE, STONES, SHARD = ('refs/crops/PROP_P09_karsts-lamp_hero.jpg', 'refs/crops/PROP_P04_lifting-warrant_hero.jpg',
+LAMP, PAGE, STONES, SHARD = ('refs/crops/PROP_P09_karsts-lamp_hero.jpg', 'refs/crops/PROP_P04_lifting-warrant_hero_soft.jpg',
                              'refs/crops/PROP_P14_warrant-stones_hero.jpg', 'refs/crops/PROP_P05_the-shard_hero.jpg')
 WARM = np.array([1.0, 0.80, 0.55], np.float32)
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
@@ -70,7 +70,7 @@ def main():
     c2 = img(a); d = ImageDraw.Draw(c2)
     note(d, (300, 22), 'paper takes the lamplight; the dark floor does not')
     arrow(d, (260, 150), (420, 150), w=4); note(d, (300, 166), 'the lamp travels along the row')
-    note(d, (36, 388), 'each sheet under a stone: a hearth brick, a roof slate, a doorstep; her red seal on every one')
+    note(d, (36, 388), 'a stone on every sheet: a roof slate, a hearthstone, a doorstep; her red seal on every one')
     # 3. Serath, lit from below
     bg = b4.blur(part(HALL, (0.60, 0.10, 0.90, 0.75), (W, H)), 14) * 0.45
     f = face.copy(); h = f.shape[0]
@@ -78,7 +78,7 @@ def main():
     f[..., :3] = np.clip(f[..., :3] * grad * WARM * 1.05, 0, 1)
     a = b4.over(bg, f, cx=420, foot=H + 150, height=H * 1.5)
     c3 = img(a); d = ImageDraw.Draw(c3)
-    note(d, (36, 22), 'she walks the row, looking down; the lamp lights her from below')
+    note(d, (36, 22), 'the camera is planted; she walks into her close-up, eyes down but seen')
     note(d, (640, 300), 'the open shutters, far behind')
     # 4. the shard on the last sheet
     pg = part(PAGE, (0.05, 0.25, 0.95, 0.98), (W, H))
@@ -92,30 +92,30 @@ def main():
     f = face.copy(); f[..., :3] = np.clip(f[..., :3] * grad * WARM * 1.05, 0, 1)
     a = b4.over(bg.copy(), f, cx=470, foot=H + 250, height=H * 1.85)
     c5 = img(a); d = ImageDraw.Draw(c5)
-    note(d, (36, 22), 'closer; her eyes on the shard; she knows the wax and the day')
+    note(d, (36, 22), 'from low, looking up at her downturned face; her eyes on the shard')
     cells = [
-        (c1, 'SHOT 1 · 0–5.4 s · Karst at the opening · opens on Q09\'s last frame',
+        (c1, 'SHOT 1 · 0–5.6 s · Karst at the opening · opens on Q09\'s last frame',
          'He looks at her and answers what she said: "You were sheltered." A breath. More quietly: "By then you had gardens." Then his eyes go down to the floor between them.'),
         (c2, 'SHOT 2 · 5.4–10 s · the lamp over the floor',
-         'Low, travelling with a brass lamp carried a hand above the floor: sheet after sheet of pale paper, each held down by a stone from a house, each with the same red seal. No one speaks.'),
+         'From knee height, looking down, travelling with the brass lamp in his ink-stained hand: sheet after sheet of pale paper, a stone from a house on every sheet (a roof slate, a hearthstone, a doorstep), the same red seal on every sheet. No one speaks.'),
         (c3, 'SHOT 3 · 10–16.6 s · Serath walks the row',
-         'Close on her, lit from below by the lamp. She walks slowly, reading the floor; she slows and stops. Karst, off-screen: "I drew where each one would fall." A breath. "You sealed them."'),
+         'She walks slowly toward a planted camera, lit from below by the lamp, her eyes on the floor. Karst, off-screen, the same voice: "I drew where each one would fall." She slows and stops. "You sealed them."'),
         (c4, 'SHOT 4 · 16.6–20 s · the last sheet',
-         'The lamp is set down beside the last sheet of the row. On it lies a grey shard of rock, dust still sifting from it onto the paper. The wax of its seal is new and bright.'),
-        (c5, 'SHOT 5 · 20–25 s · Serath, closer',
-         'Her eyes on the shard. She knows it. Quietly: "The marriage bell." Then she is still, and the shot holds on her.'),
+         'From a forearm\'s height. His hand sets the lamp down beside the last sheet of the row. On it lies a grey shard of rock; as the lamp touches the floor a thread of dust slips from it onto the paper. The wax of its seal is new and bright.'),
+        (c5, 'SHOT 5 · 20–25 s · Serath, from low',
+         'The camera at knee height, looking up at her face in the lamplight; her eyes on the shard at her feet. She knows it. Quietly, in her own voice: "The marriage bell." Then she is still, and the shot holds on her.'),
     ]
     sheet(cells, P('design/boards/Q10_board.jpg'))
 
     f1 = ImageFont.truetype(BOLD, 18); f2 = ImageFont.truetype(REG, 15)
-    refs = [(FIRST, '@Image 1 · first frame', 'The last frame of Q09 take 1: shot 1 opens on it'),
-            ('refs/relit/ENV_E09_treaty-house-hall_lamp.jpg', '@Image 2 · the hall, shutters open', 'The approved hall, relit here (free): daylight only at the opening'),
+    refs = [(FIRST, '@Image 1 · first frame', 'The last frame of Q09 take 1'),
+            ('refs/relit/ENV_E09_treaty-house-hall_lamp.jpg', '@Image 2 · the hall, shutters open', 'The approved hall, relit here (free)'),
             ('refs/CHAR_C01_serath.jpg', '@Image 3 · SERATH', 'Approved sheet'),
             ('refs/CHAR_C02_karst.jpg', '@Image 4 · KARST', 'Approved sheet'),
-            (LAMP, '@Image 5 · Karst\'s lamp', 'From the approved prop sheet, its main view'),
-            (PAGE, '@Image 6 · a lifting warrant', 'From the approved prop sheet, its main view'),
-            (STONES, '@Image 7 · the stones', 'A hearth brick, a roof slate, a doorstep: from the approved sheet'),
-            (SHARD, '@Image 8 · the shard', 'From the approved prop sheet, its main view')]
+            (LAMP, '@Image 5 · Karst\'s lamp', 'Approved sheet\'s main view'),
+            (PAGE, '@Image 6 · a lifting warrant', 'Approved sheet\'s main view, its writing softened'),
+            (STONES, '@Image 7 · the stones', 'A hearthstone, a slate, a doorstep (approved)'),
+            (SHARD, '@Image 8 · the shard', 'Approved sheet\'s main view')]
     w, h, pad, cap = 470, 260, 14, 52
     S = Image.new('RGB', (pad + 4 * (w + pad), pad + 2 * (h + cap) + pad), INK); d = ImageDraw.Draw(S)
     for k, (path, title, text) in enumerate(refs):
