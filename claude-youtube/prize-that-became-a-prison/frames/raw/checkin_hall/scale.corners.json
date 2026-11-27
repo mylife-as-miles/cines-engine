@@ -1,8 +1,8 @@
 {
   "camera": "scale",
   "resolution": [
-    1920,
-    1080
+    2880,
+    1620
   ],
   "origin": "top-left pixel edge",
   "depth_axis": "camera forward",
@@ -13,20 +13,20 @@
   "screen": "scale_display",
   "corners": {
     "top_left": [
-      1173.301,
-      175.479
+      1759.951,
+      263.218
     ],
     "top_right": [
-      1351.112,
-      171.039
+      2026.668,
+      256.558
     ],
     "bottom_right": [
-      1340.157,
-      248.681
+      2010.235,
+      373.021
     ],
     "bottom_left": [
-      1162.471,
-      249.2
+      1743.706,
+      373.799
     ]
   },
   "depth_m": {
