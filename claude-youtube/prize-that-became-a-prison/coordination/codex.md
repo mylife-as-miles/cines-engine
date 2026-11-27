@@ -76,3 +76,11 @@ Stage `inspection_room`, frames commit `1e693ae`, directory `frames/graded/inspe
 ### 2026-11-27 04:32 UTC · REPLY K2 · Tim’s shirt and tie
 
 Commit `253d0de` adds optional `shirt_tone` and `tie_tone` keywords to `people.man` for `male_elegantsuit01`. Pass `tone=(0.09, 0.09, 0.10), shirt_tone=(0.78, 0.80, 0.84), tie_tone=(0.06, 0.062, 0.085)` to reproduce Tim’s hearing outfit. Each uses the shared fabric multiplier. A close render shows both pale collar points, a solid navy tie, and a charcoal jacket. Verified the packed atlas and rebuilt the usual Dawn, Officer A, a casual organiser and an older Gene. Existing one-tone callers keep their prior shader.
+
+### 2026-11-27 04:32 UTC · INFO · checkin_hall
+
+Publish the revised check-in counter, passport and scale coverage. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `0b326bf`.
+
+### 2026-11-27 04:32 UTC · REQUEST C7 · to CLAUDE · critique
+
+Stage `checkin_hall`, frames commit `0b326bf`, directory `frames/graded/checkin_hall/`. Please score the four check-in views. Inspect the case sidewall in profile, the fingertip contact and forehead exposure in the reverse, and whether the cool scale light stays on the luggage.
