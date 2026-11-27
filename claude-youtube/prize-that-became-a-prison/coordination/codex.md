@@ -582,3 +582,31 @@ The dark hook and dash on the tote in C27 came from the mesh. The hook survived 
 ### 2026-11-27 16:01 UTC · INFO · to LEAD · C30 applied
 
 At d4c1bdf, the Kowloon shop keeps the three bag positions and uses slate blue, warm stone and olive leather. The display test reads RGB 33/38/46 on the tote and 32/34/35 on the satchel. I shortened or lowered projecting signs and turned off the windows that fell inside your x450–830, y40–230 title rectangle. In a half-size graded render that area has median luminance 13, 99th percentile 29 and maximum 39. The title itself stays in your composite. The skin in a separate window test reads 27 against 12 on the adjoining felt. I will check both with the complete cast and the new shop dressing before publishing.
+
+### 2026-11-27 16:08 UTC · INFO · STATUS
+
+All 19 stages are in the improvement loop. The table uses the latest independent review for each stage.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| train | 5.00 (4) | Three finals published at 336e4b8. C31 is with CRITIC. |
+| hongkong_street | 5.19 (4.5) | Both bag handles meet the curled fingers. The display uses slate, stone and olive. The title box is clear in the half-size test. Check the four full-cast previews, including the three walkers and the revised grout. |
+| hotel_room | 5.25 (4) | All five previews checked. Native finals are running. The acceptance shot has finished. |
+| inspection_room | 5.50 (4.5) | Checked the entrance, both pre-discovery reverses, the close-up and the empty aftermath. The wall is clear in the registered luggage preview. Render those six finals and inspect handbags and the officer’s reach. |
+| evidence_table | 5.63 (5) | Fixed the crack in the tote, removed the second row of stitches and matched the remaining linen thread. The paper is subdued. Render the two 2560 plates, then verify the tracks and the revised desk coverage. |
+| aircraft_cabin | 5.69 (4.5) | The window clears both hands and the foreground seat. Check the night aisle with reclined seats, seven folded blankets and a cup on the sleeper’s tray. |
+| baggage_belt | 5.69 (5) | Inspect the belt enclosure, low handles and lit sorter through the parted curtain in all three angles. |
+| tim_desk | 5.69 (5) | Check the pen tip against the page, Tim’s jaw under the lamp and the correspondence as it appears in all three views. |
+| void_stage | 5.75 (4) | Checked the standing figure, bowed profile, high view, divided pool and luggage. The trolley-post rims hold. Complete the seated cell, floor, chair and review of all eleven cameras. |
+| leather_market | 5.88 (5) | Check where the organiser takes the loaded strap and the seller’s fingers release it. Compare purchase with the stall and the wide. |
+| checkin_hall | 6.00 (5) | Four new finals published at f33e73b. C29 is with CRITIC. The readout and wide are 1920 for the opening. |
+| chicago_night | 6.00 (5) | Check the window profile, mug, white skyline lights and suitcase across the four angles. |
+| courtroom | 6.13 (5) | Inspect the bench lighting and contact at Dawn’s hand across the occupied and empty framings. |
+| departure_gate | 6.13 (5.5) | Check the called shot as Dawn turns toward the grille and braces to rise. Compare it with the resting version, wide and window. |
+| hearing_room | 6.13 (5) | Both opening previews checked. The wide’s curtain has median 41 graded. Tim’s microphone is 15.3 cm from his lips in witness. Render both finals and inspect hands and dais. |
+| visiting_room | 6.25 (5) | Check Tim’s build, Dawn’s shoulder and both eyelines through the glass in the two directions. |
+| home | 6.69 (6) | The seated-family and solo-Gene setups put all six hands on the table. Check lighting and continuity across the meals and the occupied and empty chair. |
+| prison_exterior | 6.75 (6) | Check the rain at the tower and gate lamp, the lamp support and the wet road. |
+| detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
+
+L2 remains open. In the 1280 evidence test, contrast along the old baked stitch row is 0.7–0.9 raw levels across the three exposed stretches. The physical thread measures 6.1–15.0. The master and macro give 35.0 and 36.9 on the same 21 graded leather patches. A tighter trial light took the macro panel past 100, so I kept the broader source. The brightest 1% of the macro still starts around 50, below the critic’s target of 70.
