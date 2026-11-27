@@ -716,7 +716,7 @@ def spread():
     # the passport across the passes' plain ends, clear of pass_2's bent stub
     group("passport", pp.passport("passport", m["cover"], m["pages"], -0.252, -0.06, -123.0, open_deg=4.0, m_end=m["endpaper"], m_slip=m["card"]))
     group("letter", pp.sheet("letter", m["letter"], 0.21, 0.297, 0.31, -0.205, -14.0, shape="trifold"))
-    group("letter", pp.pen("pen", m["pen"], m["chrome"], m["chrome"], 0.19, -0.32, -72.0))
+    group("letter", pp.pen("pen", m["pen"], m["chrome"], m["chrome"], 0.475, -0.265, 72.0))
     group("photos", pp.photo_print("photo_1", m["photo_1"], 0.152, 0.102, 0.265, 0.095, 12.0, seed=2))
     group("photos", pp.photo_print("photo_2", m["photo_2"], 0.127, 0.178, 0.372, 0.045, -8.0, curl=0.003, seed=5))
     group("photos", pp.photo_print("photo_3", m["photo_3"], 0.152, 0.102, 0.205, 0.205, -5.0, curl=0.0022, seed=8))
