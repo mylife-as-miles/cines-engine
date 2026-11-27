@@ -470,7 +470,7 @@ def strips(levels, energy=45.0):
             if level > 0:
                 key = f"opal_{level:.2f}_{'f' if flick else 's'}"
                 if key not in M:
-                    M[key] = mt.opal(f"opal {key}", COOL, 0.3 + 12.0 * level ** 1.5, flicker=0.75 if flick else 0.0)   # dim tubes read grey
+                    M[key] = mt.opal(f"opal {key}", COOL, 14.0 * level ** 2.2, flicker=0.75 if flick else 0.0)   # dim tubes read grey
                 # (the opal box is built along its own X and turned onto the strip, so the shader's generated X runs
                 # along the tube; the area lights are long in Y, along the strip)
                 box(n + "_opal", (1.84, 0.11, 0.008), (x, yc, H - 0.024), M[key], rot=(0, 0, math.pi / 2))
@@ -550,16 +550,16 @@ def seat_unit(name="seat_pair"):
         up.location.x += sx
         # the linen cover over the top of the seat back: a front flap, the top and a back flap
         lt = 0.006
-        cw = 0.36
+        cw = 0.28
         ftop = f2 + zv * (h2 / 2)
-        flap = 0.2
+        flap = 0.14
         c1 = f2 + zv * (h2 / 2 - flap / 2) - yv * (lt / 2 + 0.002)
         box(f"linen_front_{k}", (cw, lt, flap), tuple(c1 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025, rot=(-RECLINE, 0, 0), coll=coll)
         c2 = ftop + yv * (BACK_T / 2) + zv * (lt / 2 + 0.002)
         box(f"linen_top_{k}", (cw, BACK_T + 2 * lt + 0.01, lt), tuple(c2 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025,
             rot=(-RECLINE, 0, 0), coll=coll)
-        c3 = f2 + zv * (h2 / 2 - 0.06) + yv * (BACK_T + lt / 2 + 0.002)
-        box(f"linen_back_{k}", (cw, lt, 0.12), tuple(c3 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025, rot=(-RECLINE, 0, 0), coll=coll)
+        c3 = f2 + zv * (h2 / 2 - 0.04) + yv * (BACK_T + lt / 2 + 0.002)
+        box(f"linen_back_{k}", (cw, lt, 0.08), tuple(c3 + Vector((sx, 0, 0))), m["linen"], bevel=0.0025, rot=(-RECLINE, 0, 0), coll=coll)
         # the moulded shell behind the back: a pale plastic skin, a fold-down tray and its latch, a dark pocket
         sh_z0, sh_z1 = 0.3, BACK_TOP - 0.02
         zm = (sh_z0 + sh_z1) / 2

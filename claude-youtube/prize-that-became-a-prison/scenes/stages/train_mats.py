@@ -490,7 +490,7 @@ def materials():
     M.clear()
     M["moquette"] = upholstery("moquette", rgb=(0.05, 0.058, 0.082))
     M["moquette_dk"] = upholstery("moquette dark", rgb=(0.03, 0.035, 0.05), wear=0.2)
-    M["linen"] = linen("headrest linen", rgb=(0.5, 0.5, 0.48))
+    M["linen"] = linen("headrest linen", rgb=(0.24, 0.24, 0.23))
     M["shell"] = plastic("seat shell", (0.2, 0.2, 0.195), rough=(0.4, 0.55))
     M["arm"] = plastic("armrest", (0.035, 0.036, 0.04), rough=(0.5, 0.65), scuff=0.15, grime=0.2)
     M["frame"] = plastic("seat frame", (0.05, 0.052, 0.058), rough=(0.45, 0.6), scuff=0.2, peel=0.0)

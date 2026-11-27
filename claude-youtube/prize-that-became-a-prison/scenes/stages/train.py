@@ -42,22 +42,17 @@ EXPOSURE = -1.4
 DAWN_ROW, DAWN_SIDE = 4, "L"
 SEAT_X, SEAT_Y = st.seat_world(DAWN_SIDE, DAWN_ROW, "window")
 GLASS_X = -(st.XW + st.REVEAL)                  # the inner face of her window's glass
-LOOK = Vector((-7.5, SEAT_Y - 2.2, 0.75))       # where she looks: out, a little ahead (the way the train runs), down
+LOOK = Vector((-7.5, SEAT_Y - 4.5, 0.9))       # where she looks: out, a little ahead (the way the train runs), down
 CUSHION_SINK = 0.012                            # how far a sitter settles into the cushion
 
 # strip light levels per (bay, side): bay 2 is over Dawn; travellers sit under bays 3-6
 LEVELS = {
-    (0, "L"): 0.0, (0, "R"): 0.0,             # over the near rows, at the top of the aisle frame: off
-    (1, "L"): 0.45, (1, "R"): 0.35,
-    (2, "L"): 1.0, (2, "R"): 0.6,             # over Dawn: the one bay burning full
-    (3, "L"): 0.15, (3, "R"): 0.4,
-    (4, "L"): ("flicker", 0.35), (4, "R"): 0.22,
-    (5, "L"): 0.4, (5, "R"): 0.2,
-    (6, "L"): 0.15, (6, "R"): 0.45,
-    (7, "L"): 0.4, (7, "R"): 0.4,
+    (2, "L"): 1.0, (2, "R"): 0.35,
+    (4, "L"): ("flicker", 0.12), (5, "R"): 0.08,
+    (7, "L"): 0.18, (7, "R"): 0.18,
 }
 STRIP_ENERGY = 90.0
-READING_LAMP = 55.0
+READING_LAMP = 160.0
 FACE_FILL = 3.0                                 # seat camera only: the lamp's light off the ledge and her lap
 
 # the travellers: (name, kind, side, row, seat, upper pose)
@@ -66,23 +61,23 @@ TRAVELLERS = [
     ("Sleeper", "young", "L", 9, "window", {"head": (-14, -18), "neck": (-2, 0), "chest": (-12, -4), "fingers": 24}),
     ("Suit", "suit", "R", 11, "window", {"head": (12, -24), "neck": (2, -6), "chest": (-9, -4), "fingers": 28}),
 ]
-ATTENDANT = (0.06, 14.95)          # standing in the aisle, walking away toward the far door
+ATTENDANT = (0.06, 15.9)          # standing in the aisle, walking away toward the far door
 
 # cameras: defaults (the seat camera is reset from Dawn's eyes in build)
 CAMERAS = {
     # Ch 03: one-point down the carriage from the near end at a standing eye line: the rows, the racks, the strip
     # lights converging on the vestibule door; Dawn's head at the window a third of the way along, under the one
     # burning bay and her reading lamp, the bags on the rack above her
-    "aisle": dict(loc=(0.1, st.Y0 + 0.32, 1.6), aim=(0.0, st.Y1, 1.5), lens=30, focus="fx_dawn", fstop=5.6, beat="ch03",
+    "aisle": dict(loc=(0.25, st.Y0 + 1.12, 1.6), aim=(0.0, st.Y1, 2.08), lens=38, focus="fx_dawn", fstop=5.6, beat="ch03",
                   exposure=-1.05),
     # Ch 03: from over the seat back in front of her: her head turned to the window in near profile, her face
     # frontal and faint in the black glass, the lights streaking past behind it
-    "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_dawn", fstop=2.8,
+    "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_seat", fstop=4.0,
                  beat="ch03"),
     # Ch 03: a controlled close-up on the duffel and the suitcase on the rack above her, the carriage soft beyond
     # (high and from behind, 50 mm: the bags fill the frame; every strip light lies wholly above the frame's top, none
     # cut by it; her reading lamp's lens glows under the duffel)
-    "rack": dict(loc=(-0.1, SEAT_Y - 2.0, 2.36), aim=(-1.3818, SEAT_Y + 0.2123, 1.8883), lens=50, focus="fx_bags", fstop=2.8,
+    "rack": dict(loc=(-0.35, SEAT_Y - 1.6, 2.15), aim=(-1.3818, SEAT_Y + 0.2123, 1.8883), lens=65, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
@@ -90,11 +85,15 @@ HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z),
     ((0.0, -0.08, -0.25), 6.0, 3.2, 0.04, (0.78, 0.86, 1.0), 1.8),
     ((0.0, -0.4, 0.06), 34.0, 8.0, 0.16, (1.0, 0.78, 0.55), 1.6),
 ]
-SEAT_CAM_OFFSET = (0.73, -0.68, 0.12)      # the seat camera from her eyes: toward the aisle, in front, a little above
+SEAT_CAM_OFFSET = (0.85, -0.95, 0.06)      # the seat camera from her eyes: toward the aisle, in front, a little above
 if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
-TRIMS = {"aisle": {"face_fill": 0.0}, "seat": {"night_light": 0.0}, "rack": {"face_fill": 0.0}}
-GLASS_REFL = {"aisle": 0.06, "seat": 0.11, "rack": 0.06}
+TRIMS = {
+    "aisle": {"face_fill": 0.0, "bun_rim": 0.0, "bag_edge": 0.0},
+    "seat": {"night_light": 0.0, "bag_edge": 0.0},
+    "rack": {"face_fill": 0.0, "bun_rim": 0.0},
+}
+GLASS_REFL = {"aisle": 0.06, "seat": 0.07, "rack": 0.06}
 LIFT = {"aisle": 0.003, "seat": 0.002, "rack": 0.0025}
 
 _STATE = {"cast": [], "base": {}, "dawn": None}
@@ -502,6 +501,7 @@ def bags():
     y_end = SEAT_Y + 0.92
     case.location = (wall + 0.062 + 0.121, y_end, bed + 0.212)
     bpy.context.view_layer.update()
+    _STATE["bag_meshes"] = [obj for root in (duf, case) for obj in root.children_recursive if obj.type == "MESH"]
     out = {}
     for n, h in (("duffel", duf), ("suitcase", case)):
         pts = [o.matrix_world @ Vector(c) for o in h.children_recursive if o.type == "MESH" for c in o.bound_box]
@@ -525,7 +525,7 @@ def lights():
         st.M["lamp_lens_on"] = st.mt.glow("reading lamp lens", st.LAMP, 40.0, falloff=0.5, axes=("X", "Y"))
         lens.data.materials.clear()
         lens.data.materials.append(st.M["lamp_lens_on"])
-    st.spot("reading_lamp", tuple(lp), (SEAT_X - 0.04, SEAT_Y + 0.02, 1.0), READING_LAMP, st.LAMP, 72.0, 0.6, radius=0.02)
+    st.spot("reading_lamp", tuple(lp), (SEAT_X - 0.04, SEAT_Y + 0.02, 1.15), READING_LAMP, st.LAMP, 40.0, 0.6, radius=0.02)
 
 
 # ---------------------------------------------------------------- per-camera hook
@@ -553,6 +553,12 @@ def apply_camera(name):
         except (AttributeError, TypeError):
             pass
     sc.cycles.transparent_max_bounces = 12
+    for obj in _STATE["passengers"]:
+        obj.visible_glossy = name != "aisle"
+    for obj in _STATE["aisle_motion"]:
+        obj.hide_render = name != "aisle"
+    for obj in _STATE["cove_seams"]:
+        obj.hide_render = name == "rack"
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
@@ -632,7 +638,11 @@ def set_cameras(eyes, bag_box):
         on_glass = cam + (mirror - cam) * t
         aim = eyes.lerp(on_glass, 0.5) + Vector((0, 0, -0.02))
         CAMERAS["seat"].update(loc=tuple(round(v, 4) for v in cam), aim=tuple(round(v, 4) for v in aim))
-        _focus("fx_refl", on_glass)
+        _focus("fx_refl", mirror)
+        _focus("fx_seat", eyes.lerp(mirror, 0.30))
+        rim = eyes + Vector((0.08, 0.25, 0.19))
+        st.area("bun_rim", rim, (0.05, 0.05), 2.0, st.LAMP, spread=55,
+                rot=(eyes + Vector((0, 0.12, 0.06)) - rim).to_track_quat("-Z", "Y").to_euler())
         # three passing lights placed through the glass around her reflection: one above her head, one below at
         # her collar, one far and faint beyond; none across her face
         ray = lambda off, dist: cam + (on_glass + Vector(off) - cam) * ((GLASS_X - dist - cam.x) / (on_glass.x - cam.x))
@@ -640,17 +650,34 @@ def set_cameras(eyes, bag_box):
             p = ray(off, dist)
             st.streak_obj(f"streak_hero_{i}", p.x, p.y, p.z, ln, hg, rgb, k)
         keep_clear(CAMERAS["seat"], on_glass)
-        ff = Vector((GLASS_X + 0.1, eyes.y - 0.38, eyes.z + 0.06))
+        ff = Vector((GLASS_X + 0.1, eyes.y - 0.46, eyes.z - 0.075))
         st.area("face_fill", tuple(ff), (0.22, 0.22), FACE_FILL, st.LAMP, spread=70,
                 rot=(eyes - ff).to_track_quat("-Z", "Y").to_euler())
         print(f"TRAIN seat camera {CAMERAS['seat']['loc']} aim {CAMERAS['seat']['aim']}: reflection on the glass at "
               f"{tuple(round(v, 3) for v in on_glass)}", flush=True)
+    if "aisle" in CAMERAS:
+        origin = Vector(CAMERAS["aisle"]["loc"])
+        for i, (side, bay, z, depth) in enumerate(((-1, 1, 1.25, 9), (1, 1, 1.38, 12),
+                                                    (-1, 2, 1.62, 17), (1, 2, 1.15, 10), (-1, 3, 1.30, 14))):
+            pane = Vector((side * abs(GLASS_X), st.WIN_Y[bay], z))
+            centre = pane + (pane - origin) * (depth / abs(pane.x - origin.x))
+            st.streak_obj(f"aisle_motion_{i}", *centre, 7 + i, 0.07, (1.0, 0.56, 0.24), 3.8)
     if bag_box:
         lo, hi = bag_box["duffel"]
         lo2, hi2 = bag_box["suitcase"]
         f1 = Vector((hi.x, (lo.y + hi.y) / 2, (lo.z + hi.z) / 2))
         f2 = Vector((hi2.x, (lo2.y + hi2.y) / 2, (lo2.z + hi2.z) / 2))
-        _focus("fx_bags", f1.lerp(f2, 0.4))          # between the two fronts: both inside the focus at f/2.8
+        target = f1.lerp(f2, 0.36)
+        if "rack" in CAMERAS:
+            CAMERAS["rack"]["aim"] = tuple(target - Vector((0, 0, 0.10)))
+        edge = Vector((-0.75, SEAT_Y + 0.3, 2.42))
+        light = st.area("bag_edge", edge, (0.06, 1.2), 25, st.COOL, spread=68,
+                        rot=(target - edge).to_track_quat("-Z", "Y").to_euler())
+        receivers = bpy.data.collections.new("Train rack luggage")
+        for obj in _STATE["bag_meshes"]:
+            receivers.objects.link(obj)
+        light.light_linking.receiver_collection = receivers
+        _focus("fx_bags", target)          # between the two fronts: both inside the focus at f/2.8
 
 
 # ---------------------------------------------------------------- build
@@ -676,15 +703,20 @@ def build(cast=True):
     _focus("fx_bags", (-1.2, SEAT_Y, 2.0))
     eyes = None
     _STATE["cast"] = []
+    _STATE["passengers"] = []
     if cast:
         d = place_dawn()
         eyes = eye_centre(d)
         _STATE["dawn"] = d
         _STATE["cast"] = [d] + list(d.children_recursive)
+        dawn_count = len(_STATE["cast"])
         for (name, kind, side, row, which, upper) in TRAVELLERS:
             t = traveller(name, kind, side, row, which, upper)
             _STATE["cast"] += [t] + list(t.children_recursive)
         a = attendant()
         _STATE["cast"] += [a] + list(a.children_recursive)
+        _STATE["passengers"] = [o for o in _STATE["cast"][dawn_count:] if o.type == "MESH"]
     set_cameras(eyes if eyes is not None else Vector((SEAT_X - 0.062, SEAT_Y + 0.126, 1.26)), bag_box)   # (as solved)
+    _STATE["aisle_motion"] = [o for o in bpy.data.objects if o.name.startswith("aisle_motion_")]
+    _STATE["cove_seams"] = [o for o in bpy.data.objects if o.name.startswith("cove_seam_")]
     install_hook()
