@@ -1,6 +1,6 @@
 """An airport luggage trolley built in Python (the generated one was lumpy at f/2.8).
 
-25 mm steel tube frame, a 0.55 x 0.9 m wire deck of 4 mm rods at 40 mm pitch, a back mesh between the uprights,
+25 mm steel tube frame, a 0.55 x 0.9 m pressed steel deck, open push frame,
 two 200 mm rear wheels and two 100 mm swivel castors, a handle bar with a dark rubber grip and a brake bar.
 Built in a local frame (nose toward +X, z up) under one empty, then placed and turned. About 3k triangles.
 """
@@ -12,7 +12,6 @@ from mathutils import Vector
 import setkit as sk
 
 TUBE = 0.0125
-ROD = 0.002
 
 
 def _link(ob, parent):
@@ -58,12 +57,11 @@ def trolley(M, loc, turn_deg):
     for s in (-1, 1):
         rod(f"nose_up{s}", (x1, s * hw, zd), (x1 + 0.05, s * hw, zd + 0.09), TUBE, f, root)
     rod("nose_bar", (x1 + 0.05, -hw, zd + 0.09), (x1 + 0.05, hw, zd + 0.09), TUBE, f, root)
-    n = int(W / 0.04)
-    for i in range(1, n):
-        y = -hw + W * i / n
-        rod(f"deck_rod{i}", (x0, y, zd + 0.004), (x1 + 0.02, y, zd + 0.004), ROD, f, root, verts=6, caps=False)
-    for k, x in enumerate((x0 + 0.22, 0.0, x1 - 0.2)):
-        rod(f"deck_cross{k}", (x, -hw, zd - 0.002), (x, hw, zd - 0.002), ROD * 1.5, f, root, verts=6, caps=False)
+    _link(sk.box("pressed luggage deck", (L - 0.020, W - 0.018, 0.013), (0, 0, zd + 0.003),
+                 M["steel_dark"], bevel=0.003), root)
+    for y in (-0.16, 0.0, 0.16):
+        _link(sk.box("deck rubber runner", (L - 0.07, 0.028, 0.005), (0, y, zd + 0.012),
+                     M["grip"], bevel=0.002), root)
     # chassis under the deck: two rails from the rear axle to the castor plates
     for s in (-1, 1):
         rod(f"rail{s}", (x0 + 0.06, s * (hw - 0.07), zd - 0.05), (x1 - 0.08, s * (hw - 0.07), zd - 0.05), TUBE * 0.9, f, root)
@@ -80,15 +78,8 @@ def trolley(M, loc, turn_deg):
     for s in (-1, 1):
         rod(f"brake_arm{s}", (top_x + 0.02, s * (hw - 0.02), top_z - 0.05), (top_x + 0.1, s * (hw - 0.04), top_z - 0.09), 0.006, f, root)
     rod("brake_bar", (top_x + 0.1, -hw + 0.04, top_z - 0.09), (top_x + 0.1, hw - 0.04, top_z - 0.09), 0.009, M["plastic"], root)
-    for k, z in enumerate((0.42, 0.68, 0.9)):
-        t = (z - zd) / (top_z - zd)
-        x = x0 + (top_x - x0) * t
-        rod(f"back_cross{k}", (x, -hw + 0.02, z), (x, hw - 0.02, z), TUBE * 0.7, f, root)
-    m_ = int((W - 0.04) / 0.04)
-    for i in range(1, m_):
-        y = -hw + 0.02 + (W - 0.04) * i / m_
-        rod(f"back_rod{i}", (x0 + (top_x - x0) * (0.25 / 0.8), y, zd + 0.25), (x0 + (top_x - x0) * (0.7 / 0.8), y, zd + 0.7), ROD,
-            f, root, verts=6, caps=False)
+    rod("back luggage stop", (x0 - 0.022, -hw + 0.02, 0.35), (x0 - 0.022, hw - 0.02, 0.35),
+        TUBE, f, root)
     # wheels: 200 mm rear on an axle, 100 mm swivel castors at the nose
     for s in (-1, 1):
         wheel(f"rear{s}", (x0 + 0.06, s * (hw - 0.01), 0.1), 0.1, 0.045, M, root)
