@@ -1,0 +1,332 @@
+# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+
+## THE CROSSING: THE CUTTER OVER THE BASALT PLAIN, THE BLACK WALL AHEAD (shot plate)
+
+Create one photorealistic frame of a feature film: a small white flying boat crossing THE BASALT PLAIN beneath a floating kingdom, toward a black wall on the horizon.
+
+This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
+
+The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the same world a minute earlier, from the air beneath the kingdom. Use it for the world and its look: the black rock overhead, the chains, the pale band of daylight, the cold grey haze, the basalt plain with mist on it, the colour and the exposure. Do not copy its framing or where its chains hang.
+
+@Image 2 — the black wall, photographed from the ground beside it. Use it only for what the wall is: fused black stone without a seam, tall round-headed gates, the green valley through them. Do not copy its slanting view: in the new picture the wall is far away, square-on, straight along the horizon.
+
+@Image 3 — the naval cutter on a grey studio backdrop. Use it only for the cutter's design. Do not copy the backdrop or the viewpoint: draw this cutter once, in the air, seen from behind.
+
+---
+
+# LOCATION IDENTITY
+
+LOCATION:
+The plain beneath Orison: black basalt to the horizon, where no one lives, and at its far edge the black wall
+
+COUNTRY / REGION:
+The ground: the bearing-lands of the eleven nations, beneath the floating kingdom of Orison (an invented world, built from real northern volcanic and upland country: columnar basalt, slate, dry-stone, heavy soil). A lava plain from an eruption eight hundred years ago: "it was stone within forty years".
+
+SETTING:
+a vast, dead volcanic plain of columnar basalt
+
+TIME PERIOD:
+Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
+
+SOCIAL / ECONOMIC CHARACTER:
+No one lives here. Neutral ground between the eleven nations and the black wall.
+
+OVERALL FEEL:
+Black, stone, empty, old. A city no one finished.
+
+The location should feel like a place that existed before the camera arrived.
+
+It must not feel production-designed for symbolism.
+
+---
+
+# SPATIAL GEOGRAPHY
+
+Establish clear, believable geography, seen from the air, looking ahead.
+
+An aerial photograph taken from a second craft following the cutter. The camera is forty-five metres above the plain, level, pointed ahead and eight degrees down. The horizon is one third of the way down the frame.
+
+From the top of the frame to the bottom:
+
+- the top fifth: the black rock underside of the kingdom of @Image 1, overhead, running out of the top and both sides of the frame; it reaches away from us to its far rim, a ragged dark edge against the light
+- under the rim, right across the frame, a band of pale grey daylight one sixth of the frame tall: open cloud-sky, the brightest thing in the picture
+- a few iron chains hang plumb from the rock to the plain, all far away and pale with haze; the nearest, far off on the right, is as thick as a tower
+- on the horizon, one third of the way down: the black wall of @Image 2, two kilometres away, square-on, dead straight and level, from one eighth in from the left edge to one eighth in from the right, one twentieth of the frame tall. Nine tall round-headed gates pierce it, evenly spaced; through seven the valley beyond shows as pale green daylight; two are shut and black. A thin pale line of flattened grass at its foot; above its top, low hills, pale with distance
+- below the wall, the plain. Its far half is lost in pale mist, and out of the mist stand stacks of black basalt columns like the stumps of a city no one finished, small and pale far off, taller and blacker nearer, to the left and right of a broad lane of mist that leads to the wall
+- the bottom quarter: the near plain, sharp and black, forty-five metres below: flat six-sided column tops packed edge to edge, thin mist sliding over them
+
+The cutter:
+
+- one white cutter, exactly the design of @Image 3: a wooden boat that flies, ten metres long, an open deck aft with a tiller, a small cabin forward with pointed windows, a slate roof and a stubby white spire, two dark iron landing skids under its keel
+- it is in the air in the lower middle of the frame, a little left of centre, sixty metres ahead of the camera and thirty metres above the plain, with clear air and mist beneath it
+- it flies away from us toward the wall, seen from behind and above, slightly from its left: its stern, the open deck, the cabin and spire beyond; one eighth of the frame wide, level, keel down
+- one crewman stands at the tiller in the stern, his back to us: a small upright figure in a long white coat and a white cap
+- no sails, wings, balloon, engine, smoke or light. It touches nothing
+
+There is no other boat, no other person, no road and no building on the plain.
+
+---
+
+# ARCHITECTURE
+
+Preserve believable architecture appropriate to:
+
+- country
+- building age
+- social class
+- function
+- climate
+
+Specify:
+
+WALLS:
+The black wall on the horizon: fused black stone, seamless. On the plain, natural basalt columns, hexagonal, black, cracked, some standing tall, some broken off.
+
+CEILING:
+Open-air: the dark rock underside of the kingdom across the top of the frame; beyond its rim, a band of pale grey cloud-sky.
+
+FLOOR:
+Black basalt column-tops in a rough hexagonal pavement, with grey grit in the joints.
+
+WINDOWS:
+None.
+
+DOORS:
+The wall's nine gates: seven open to the valley, two shut.
+
+TRIM / MOULDING:
+None.
+
+FIXTURES:
+None.
+
+Architectural details should feel ordinary and regionally credible.
+
+---
+
+# MATERIALS + TEXTURE
+
+Use tactile, photorealistic materials.
+
+For this location:
+
+- black columnar basalt, matte, with fine cracks and grey weathering
+- grey grit and rock dust in the joints
+- white painted timber for the cutter; dull brass; dark iron
+- no vegetation on the plain
+
+Surfaces should contain subtle wear.
+
+Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+---
+
+# PRODUCTION DESIGN
+
+Include only story-relevant objects.
+
+PRIMARY OBJECTS:
+
+- the white cutter, in the air, with its crewman
+- the black wall along the horizon, with its nine gates
+- the basalt plain and its standing column stacks
+
+SECONDARY LIVED-IN DETAILS:
+
+- fallen column sections
+- drifts of grey grit
+
+Objects should feel casually accumulated over time.
+
+Avoid excessive dressing.
+
+Avoid obvious symbolic props unless specifically requested.
+
+The environment should remain visually usable for performance.
+
+---
+
+# COLOR IDENTITY
+
+LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
+
+Permanent THE WEIGHT OF HEAVEN palette:
+
+- marble #E9E6DE (never pure white)
+- cloud #AEB4B8
+- slate #4B5258
+- rock dust #8A857B
+- basalt #141517 (dark, never pure black; stone keeps its texture)
+
+Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
+
+For this environment specifically:
+
+DOMINANT:
+basalt #141517
+
+SECONDARY:
+slate #4B5258 overhead
+
+ACCENT:
+vale green #5D7A4A, pale with distance, only through the wall's open gates; the cutter's marble white #E9E6DE, the only white in the frame
+
+NEUTRALS:
+rock dust #8A857B in the grit; under-light grey #7F8A90 at the horizon
+
+The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
+
+Never neon.
+
+Never saturated.
+
+Never generic teal-and-orange cinema grading.
+
+---
+
+# LIGHTING DESIGN
+
+LIGHT ABOVE, HEAVY BELOW.
+A LOW BRIGHT BAND UNDER A BLACK ROOF. HAZE BETWEEN.
+
+Primary motivated source:
+
+one band of pale daylight under the rim of the rock, at and above the horizon; it is the brightest thing in the frame and everything is exposed for it
+
+Secondary motivated source:
+
+that same daylight scattered in haze and ground mist: the far plain is a pale grey veil, palest where the band meets it
+
+Maintain:
+
+- deep shadow with retained detail: the rock and the plain sit two stops under the band
+- strong separation of near and far by haze: near things black and sharp, far things pale, soft and low in contrast
+- gentle highlight roll-off in the band
+- believable exposure, as a large-format film camera exposed for the bright band
+
+No fill light. No light from above. No sun disc. No blue sky.
+
+The light comes from the band of day, low and from ahead. It rakes across the near column tops, so that each has one thin pale edge toward the light. The cutter is lit from ahead: its stern, toward us, is in soft shade, a cool pale grey-white with thin bright edges along its rail, roof and spire. It is still plainly the one white thing in a black and grey frame.
+
+---
+
+# CAMERA / OPTICAL LANGUAGE
+
+CAMERA:
+ARRI Alexa 65, large format, from the air, forty-five metres up, steady, level horizon
+
+ASPECT RATIO:
+21:9
+
+ANAMORPHIC CHARACTER:
+none: spherical
+
+LENS CHARACTER:
+35 mm, pointed ahead and eight degrees down: no wide-angle distortion; everything in focus, the far distance softened only by haze
+
+A frame from a feature film photographed with restraint: exposed for the highlights, low in contrast in the distance, one colour (cold blue-grey slate), fine grain. Not a matte painting, not concept art, not a game render.
+
+---
+
+# COMPOSITION
+
+One frame of a film, made to be held on screen: not a master reference.
+
+- three bands: the black rock across the top fifth; the pale band of day and the wall on the horizon, one third of the way down; the plain below, pale with mist far off and black near
+- one-point perspective: the lane of mist, the stacks on either side of it and the cutter's course all lead to the middle of the wall
+- the cutter small and white in the lower middle, the only clean thing, with a great deal of empty dark and grey round it
+- level and symmetrical; the wall is straight and horizontal
+
+Scale: the wall is a mile long; each gate would swallow the cutter many times over; the crewman is a small upright mark.
+
+---
+
+# ATMOSPHERE
+
+Heavy air. Depth is told in layers of haze: the nearest thing black and sharp, each thing behind it a step paler, the farthest almost lost. Ground mist lies on the plain in sheets and in the low lanes between the columns. Grey cloud hangs against the rock above. It is cold, still and vast. Nothing here was made to be looked at.
+
+---
+
+# REALISM LOCK
+
+Photorealistic.
+
+Physically believable.
+
+Architecturally coherent.
+
+Regionally credible.
+
+Lived-in.
+
+Understated.
+
+No fantasy architecture unless explicitly required.
+
+No impossible reflections.
+
+No floating props.
+
+No warped furniture.
+
+No excessive depth-of-field blur that hides the location.
+
+---
+
+# CONTINUITY LOCK
+
+The final environment must establish a stable reference for:
+
+- architecture
+- room dimensions
+- major furniture
+- doors
+- windows
+- practical lights
+- material palette
+- object positions
+- camera geography
+
+Future generations should be able to reproduce this exact location.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- generic AI interiors
+- luxury redesign
+- excessive décor
+- glossy architectural visualization
+- showroom cleanliness
+- extreme HDR
+- oversaturation
+- neon
+- cyberpunk lighting
+- random signage
+- impossible room proportions
+- duplicated furniture
+- floating objects
+- distorted architecture
+- fisheye
+- dramatic concept-art composition
+- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
+- lens flare, bloom, halation
+- readable text, English or Latin lettering, numbers, signage, words on banners
+- electric light, modern objects, plastic, concrete, steel girders, engines
+- fire, smoke from guns, explosions
+- fantasy-game styling, glowing runes, magic effects, crystals
+- teal-and-orange grading
+- open blue sky
+- grass or plants on the plain
+- lava or glowing cracks
+- smoke or steam vents
+
+Also never: a view from the ground; columns or chains close to the camera; the pattern of column tops sharp all the way to the horizon; the wall as a thin line with dots; a second boat; the cutter standing on the ground or on stilts; an empty cutter; sails, wings, balloons, propellers, engines, smoke or lights on the cutter; the grey studio backdrop of @Image 3; the kingdom as a small floating island.
