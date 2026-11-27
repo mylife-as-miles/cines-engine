@@ -56,7 +56,32 @@ surroundings. Not watched in playback by anyone but the author.
 - **Life** in shots 4 and 5: grass, smoke and sheep that move. The laid-in smoke is a texture, not smoke.
 - **Depth outside Serath's window**, and fine detail everywhere: these are 480p drafts.
 
-## A third critic on the fixed reel
+## A third critic on the fixed reel: still no, and four marks of my own
 
-A fresh critic, told nothing of the above, was asked the same question of `Q07_reel_v4.mp4`; the verdict is recorded in
-`prompts/Q07.md` under the takes.
+A fresh critic, told nothing of the above, was asked the same question of the fixed copy. **No.** Shots 1, 2 and 4
+close; shots 3 and 5 do not ("a tabletop miniature" with "a white toy dinghy, unlike shot 1's"; "flat postcard, nearly
+a still", the wall cottage-height there and piers in shot 4, no mass overhead). Grain matches in all five; colour and
+contrast do not: shots 1 and 3 cold grey, shot 2 warm with blacks at nothing, shots 4 and 5 green, "a different film".
+
+It also found marks that the fixes themselves had left, and one that was in the take:
+
+| Mark | Cause | What was done |
+|---|---|---|
+| Shot 4: the sky 20 levels brighter within 25 px of both pier edges, a halo | the sky was darkened through a soft-edged box that stopped short of the stone | the sky is now keyed by its brightness, so every piece of it is darkened right up to the piers: 172 to 178 of 255 across the gap |
+| Shot 3: blur at top and bottom reads as a miniature | the 3 px softening of the far ground the first critic asked for | 1.2 px; the fog does the work |
+| Shot 3: eight identical gate lights, constant for all 69 frames, "pasted" | the lights are the take's; the glow laid over them never changed | fog now travels in front of them, so each comes and goes on its own (one falls from 244 to 180 over the shot while its neighbours hold); less green |
+| Shot 3: a blurred smear under the cutter | the whole patch under the hull was refilled, cross-faded between two sources | only the thin things are filled: the two legs and the pole |
+| Shot 2: the bright edge of the window's jamb holds at 226 while the view falls to 98, "a mask edge" | in the take | the edge now falls with the view, to about 135 |
+| Shot 2: warm, with blacks at nothing | in the take | the wall by the window cooled to neutral (her face, hair and collar are untouched by it); its black point lifted to the others' (floors now 6 to 11 of 255 in all five) |
+| Shots 1, 4, 5: green against cold grey | in the takes | greens 40 to 45 % less saturated |
+| Shot 4: a pale fringe on the crow as it lands | in the take: the untouched frame has the same pale wing edge | left; the pier is now lifted without lifting the bird, and the push-in is resampled without ringing |
+
+Checked by the same measurements the critic used and by enlarged crops; not judged again by a critic.
+
+What it adds to the list for new footage: the cutter leaving the *rock*, larger, and not fading up out of cloud; a
+shadow *edge* crossing Serath's face (now the room dims evenly); the crow settled before the cut; the big chain in
+shot 1's foreground takes the eye from the cutter; the push-ins are flat zooms with no parallax.
+
+**Where this leaves the question.** Three critics, three "no". Editing has taken the reel from "four stills with
+overlays" to "three shots close, two not"; it cannot take it further. Shot 3 and the cutter are the first things to
+remake.

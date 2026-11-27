@@ -20,8 +20,13 @@ and Blade Runner 2049, both answered no (edit/reviews/Q07_reel_critics.md). Buil
           behind the bird's flight lifted so the black bird shows against it; haze on the far wall only, steady.
   shot 5  a pool of light on the farms, the left darker, the right edge lifted; smoke that rises laid over the plumes;
           the sky's seam feathered; the mist travels.
-  all     greens a quarter less saturated outdoors, one black point, one fine moving grain, and a slow 4 % push on the
-          three locked-off exteriors so that none is a dead still.
+  all     greens 40 to 45 % less saturated outdoors, black points matched, one fine moving grain, and a slow 4 % push
+          on the three locked-off exteriors so that none is a dead still.
+
+A third critic, on the first build of this copy, found marks the fixes had left; they are corrected here: the sky in
+shot 4 is keyed by brightness (a soft box left a halo at the piers), the far ground of shot 3 is hardly blurred (3 px
+read as a miniature), fog travels in front of the gate lights so they are not eight constant dots, only the legs and
+the pole under the cutter are filled, and the lit edge of Serath's window jamb falls with the view.
 """
 import importlib.util, json, os, subprocess
 import numpy as np
@@ -54,7 +59,7 @@ def zoom(img, z):
 
 
 def crop(img, x0, y0, x1, y1):
-    im = Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)).crop((x0, y0, x1, y1)).resize((W, H), Image.LANCZOS)
+    im = Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)).crop((x0, y0, x1, y1)).resize((W, H), Image.BICUBIC)
     return np.asarray(im).astype(np.float32) / 255
 
 
@@ -65,6 +70,10 @@ def paint_rows(img, x0, x1, y0, y1):
     w = np.linspace(0, 1, n, dtype=np.float32)[None, :, None]
     out[y0:y1, x0:x1] = ndimage.gaussian_filter(l * (1 - w) + r * w, (2, 0, 0))
     return out
+
+
+def smooth(a, b, x):
+    u = np.clip((x - a) / (b - a), 0, 1); return u * u * (3 - 2 * u)
 
 
 def less_green(img, by=0.25):
@@ -88,17 +97,26 @@ L4 = [Layer(25, 220, (8, 0), ramp(620, 992, xx) * (1 - ramp(305, 335)), (0.34, 0
 L5 = [Layer(33, 160, (12, 1), band(190, 70) * (1 - ramp(700, 900, xx)), (0.52, 0.55, 0.57), 0.30, gamma=2.0, **FAR),
       Layer(35, 240, (12, 0), 1 - ramp(40, 120), (0.24, 0.26, 0.30), 0.45, **FAR)]
 SMOKE = fq.tex(51, 26)
+GATEFOG = fq.tex(61, 34)
 
 
 def shot1(img, j, n):
     img = paint_rows(img, 634, 654, 135, 205)                        # the root above the cutter
     img = paint_rows(img, 668, 688, 198, 297)                        # the chain beside it
     img = lay(img, L1, j / FPS) * 0.92 * fq.VIG[..., None]
-    return zoom(less_green(img), 1 + 0.04 * j / (n - 1))
+    return zoom(less_green(img, 0.40), 1 + 0.04 * j / (n - 1))
 
 
-def shot2(img, j, n, k):
+def shot2(img, j, n, k, fall):
     img = np.minimum(img, 0.92 + 0.08 * min(1.0, j / 14.0))          # the white window held just under clipping at the start
+    if fall > 0.02:                                                  # the lit edge of the window's jamb falls with the light outside
+        l = luma(img); br = l > 0.68; br[:, :140] = False; br[:, 390:] = False
+        xr = np.where(br.any(1), W - 1 - np.argmax(br[:, ::-1], 1), -99)             # each row's rightmost bright pixel: the jamb's lit edge
+        xr = np.where(xr > 0, ndimage.median_filter(xr, 9, mode='nearest'), -99)[:, None]
+        strip = ((xx >= xr - 13) & (xx <= xr + 2) & (l > 0.58)).astype(np.float32)   # that edge only, 14 px in from it, not the view
+        img = img * (1 - 0.45 * float(smooth(0.25, 0.48, fall)) * ndimage.gaussian_filter(strip, 1.2)[..., None])
+    cool = (1 - ramp(520, 640, xx))[..., None]                       # the wall by the window, from warm cream to neutral; her face, hair and collar are right of it
+    img = img * (1 + cool * (np.array([0.96, 1.0, 1.06], np.float32) - 1))
     up = float(np.clip((k - 140) / 20.0, 0, 1))
     if up > 0:
         img = img * (1 + (stops(0.5) - 1) * up * ell(745, 205, 135, 160, 45)[..., None])   # her face, half a stop, once the shade has fallen
@@ -120,27 +138,32 @@ def shot3(img, j, n):
         ys, xs = np.where(hull); x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max(); hw, hh = x1 - x0 + 1, y1 - y0 + 1
         solid = ndimage.binary_dilation(ndimage.binary_opening(l > 0.34, iterations=2), iterations=2)   # the hull without anything thin
         under = np.zeros((H, W), bool); under[(y0 + y1) // 2:min(H, y1 + int(0.75 * hh)), max(0, x0 - 10):x1 + 11] = True
-        under &= ~solid                                                # the two dark legs, the pale pole and the ground round them
+        under &= ~solid
+        gm = float(np.median(l[under])) if under.any() else 0.23
+        pole = np.zeros((H, W), bool); cx = int(round((x0 + x1) / 2)); pole[y1 - 3:min(H, y1 + int(0.75 * hh)), cx - 4:cx + 5] = True   # the pale pole hangs under the middle of the hull
+        under = (ndimage.binary_dilation(under & ((l < gm - 0.07) | (l > gm + 0.10)), iterations=2) | pole) & ~solid   # the two dark legs and the pole, not the ground round them
         wr = float(np.clip((45 - j) / 20.0, 0, 1)); src = np.roll(img, -(hw + 26), axis=1) * wr + np.roll(img, hw + 26, axis=1) * (1 - wr)
-        a = ndimage.gaussian_filter(under.astype(np.float32), 1.4)[..., None]
+        a = ndimage.gaussian_filter(under.astype(np.float32), 1.1)[..., None]
         img = img * (1 - a) + src * a                                  # filled with flat basalt from beside it: from its right early (a stack stands to its left), from its left late (one comes up on its right)
         sh = ell((x0 + x1) / 2, y1 + 0.30 * hh, 0.55 * hw, 0.30 * hh, max(2, hw * 0.08)) * ~solid
         img = img * (1 - 0.34 * sh)[..., None]                         # a soft shadow under it
         img = img * (1 - (1 - 1 / stops(0.5)) * ndimage.gaussian_filter((hull | (solid & under_box(x0, x1, y0, y1))).astype(np.float32), 1.5)[..., None])   # the cutter half a stop down
     img = img * (1 - (1 - 1 / stops(0.7)) * ramp(250, 290))[..., None]                             # the near ground down
-    far = (1 - ramp(120, 230))[..., None]; img = img * (1 - far) + ndimage.gaussian_filter(img, (3, 3, 0)) * far   # the far ground softened
+    far = (1 - ramp(120, 230))[..., None]; img = img * (1 - far) + ndimage.gaussian_filter(img, (1.2, 1.2, 0)) * far   # the far ground a little softer (3 px read as a miniature)
     gates = box(425, 570, 48, 70, 5)
-    glow = ndimage.gaussian_filter(np.clip(luma(img) - 0.35, 0, 1) * gates, 6)[..., None] * 1.6
-    a = (0.80 * (1 - ramp(46, 270)) * ramp(30, 50) * (0.72 + 0.28 * L3[0].alpha(j / FPS)) * (1 - 0.6 * gates))[..., None]
-    img = img * (1 - a) + L3[0].colour * a + glow * np.array([0.80, 0.90, 0.82], np.float32)
+    veil = smooth(0.25, 0.70, np.roll(GATEFOG, int(round(22 * j / FPS)), 1)[H:2 * H, W:2 * W])     # fog passing in front of the gates: each light comes and goes on its own
+    glow = (ndimage.gaussian_filter(np.clip(luma(img) - 0.35, 0, 1) * gates, 5) * (0.35 + 0.95 * veil))[..., None] * 1.2
+    a = (0.80 * (1 - ramp(46, 270)) * ramp(30, 50) * (0.72 + 0.28 * L3[0].alpha(j / FPS)) * (1 - 0.6 * gates * veil))[..., None]
+    img = img * (1 - a) + L3[0].colour * a + glow * np.array([0.86, 0.88, 0.84], np.float32)
     return crop(img, 69, 0, 923, 372)
 
 
 def shot4(img, j, n):
-    img = img * (1 - (1 - 1 / stops(0.5)) * box(200, 310, 0, 190, 10))[..., None]                 # the sky in the gap
-    img = img + 0.08 * box(315, 410, 120, 335, 12)[..., None] * np.array([0.9, 1.0, 1.1], np.float32)   # the pier behind the bird
+    l = luma(img)
+    img = img * (1 - (1 - 1 / stops(0.5)) * smooth(0.56, 0.68, l) * (1 - ramp(215, 245)))[..., None]   # every piece of sky, right up to the stone (a soft box left a halo at the piers)
+    img = img + (0.08 * box(315, 410, 120, 335, 12) * smooth(0.05, 0.10, l))[..., None] * np.array([0.9, 1.0, 1.1], np.float32)   # the pier behind the bird, not the bird
     img = lay(img, L4, j / FPS) * 0.96
-    return zoom(less_green(crop(img, 90, 72, 917, 432)), 1 + 0.04 * j / (n - 1))
+    return zoom(less_green(crop(img, 90, 72, 917, 432), 0.45), 1 + 0.04 * j / (n - 1))
 
 
 def shot5(img, j, n):
@@ -156,7 +179,7 @@ def shot5(img, j, n):
     a = (0.55 * ndimage.gaussian_filter(plume, 2.0) * np.clip((tx - 0.35) / 0.4, 0, 1))[..., None]
     img = img * (1 - a) + np.array([0.66, 0.68, 0.70], np.float32) * a
     img = lay(img, L5, t)
-    return zoom(less_green(img), 1 + 0.04 * j / (n - 1))
+    return zoom(less_green(img, 0.45), 1 + 0.04 * j / (n - 1))
 
 
 def main():
@@ -166,11 +189,14 @@ def main():
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-an',
                             '-c:v', 'libx264', '-crf', '12', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', dst], stdin=subprocess.PIPE)
     fn = [shot1, None, shot3, shot4, shot5]; q = 0; keep = {}
+    win = np.array([luma(f[k][140:380, 180:310].astype(np.float32) / 255).mean() for k in range(*TRIM[1])]); win = ndimage.uniform_filter1d(win, 5)
+    fall = 1 - win / win.max()                                       # how far the light outside her window has fallen, frame by frame
+    FLOOR = [0.02, 0.05, 0.02, 0.02, 0.02]                          # shot 2's blacks sat at nothing; the others' sit on fog
     for s, (a, b) in enumerate(TRIM):
         for k in range(a, b):
             img = f[k].astype(np.float32) / 255; j, n = k - a, b - a
-            img = shot2(img, j, n, k) if s == 1 else fn[s](img, j, n)
-            img = 0.02 + 0.98 * np.clip(img, 0, 1)                                                    # one black point
+            img = shot2(img, j, n, k, float(fall[j])) if s == 1 else fn[s](img, j, n)
+            img = FLOOR[s] + (1 - FLOOR[s]) * np.clip(img, 0, 1)                                                    # one black point
             g = ndimage.gaussian_filter(np.random.default_rng(1000 + q).normal(0, 0.030, (H, W)).astype(np.float32), 0.6)
             img = img + (g * (0.55 + 0.45 * (1 - luma(img))))[..., None]                              # one fine grain, moving
             out = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
