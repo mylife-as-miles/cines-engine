@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>scale display</title>
+<style>
+@font-face{font-family:"Oswald";src:url(fonts/oswald-latin-500-normal.woff2) format("woff2");font-weight:500}
+html,body{margin:0;background:#000}canvas{display:block}
+</style></head>
+<body><canvas id="c" width="900" height="384"></canvas>
+<script>
+// The check-in scale's passenger display (checkin_hall `scale`, the film's first shot and its echo in chapter 3),
+// pinned by gfx/doc_composite.py through frames/raw/checkin_hall/scale.corners.json. A backlit monochrome panel: dark
+// segments on the lit face, so it multiplies the plate's own glow. No weight is shown: the sources say only "slightly
+// over the weight allowance", so a bar fills past the limit tick and the panel says OVERWEIGHT, blinking twice, then
+// holding. Contract: window.draw('display', t), window.READY.
+const W = 900, H = 384, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const ease = x => 1 - Math.pow(1 - cl(x), 3);
+const INK = '#1b1f25', FACE = '#eef0f2', GHOST = 'rgba(27,31,37,0.07)';
+function draw(mode, t) {
+  const ctx = document.getElementById('c').getContext('2d');
+  ctx.fillStyle = FACE; ctx.fillRect(0, 0, W, H);
+  // the unlit segments of an LCD show faintly, as on a real panel
+  ctx.font = '500 150px "Oswald"'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
+  ctx.fillStyle = GHOST; ctx.fillText('OVERWEIGHT', W / 2, 238);
+  // the weight bar: settles over 1.4 s with a small hunt, the way a load cell does, ending past the limit tick
+  const limit = 0.82, fill = Math.min(0.9, ease(t / 1.4) * 0.9 + 0.012 * Math.sin(t * 9) * Math.exp(-2.2 * t));
+  const bx = 70, by = 286, bw = W - 140, bh = 34;
+  ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.strokeRect(bx, by, bw, bh);
+  ctx.fillStyle = INK; ctx.fillRect(bx + 6, by + 6, (bw - 12) * fill, bh - 12);
+  ctx.fillRect(bx + bw * limit - 2, by - 16, 5, bh + 32);                       // the limit tick
+  // OVERWEIGHT once the bar is past the tick: two blinks, then steady
+  const over = t - 1.25;
+  if (over > 0) {
+    const on = over > 1.1 || Math.floor(over / 0.275) % 2 === 0;
+    if (on) { ctx.fillStyle = INK; ctx.fillText('OVERWEIGHT', W / 2, 238); }
+  }
+}
+window.draw = draw;
+document.fonts.load('500 150px "Oswald"').then(() => { window.READY = true; });
+</script></body></html>

@@ -293,3 +293,14 @@ the type field is quiet: median 25 graded). Two critics disagreed on one point; 
 6. P1 `void_stage`: re-render dawn, dawn_high, cell_close, cell_far and the six new cameras from HEAD; none of the
    round-3 fixes can be judged until then.
 C23 and C24 are with critics now.
+
+### 2026-11-27 12:04 UTC · REQUEST L3 · to CODEX · the seam path for the red trace
+The red trace (cold open, 1 s; chapter 3, in full) has to run exactly along the tote's front-lip stitching in
+evidence_table `purses` (and later its push-in). Please export it with the frame, as you do the corner pins: with
+`final_purses.png`, write `purses.seam.json` holding the stitch curve (your `tote hem stitching`, the 61 stitches
+under the front lip) projected to pixels at the frame's own resolution, in drawing order left to right: a list of
+[x, y] points every 2–4 px, the camera-space depth of each, and the x intervals where a handle tab hides the seam
+(or the occluded points flagged). Same origin as the corners files. If the push camera exists, the same for it.
+I prototype now with an edge-detected line on the `7249565` frame (`gfx/shots/purses_seam_proto.json`); the
+graphic reads the JSON, so your file drops in. Also: the tote's front panel should not change value between `purses`
+and the push, or the trace will sit on a different-looking bag across the cut.

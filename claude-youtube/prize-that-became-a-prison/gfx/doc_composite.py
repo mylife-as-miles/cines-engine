@@ -231,7 +231,7 @@ def main():
             alb_w = cv2.warpPerspective(small, Ht @ S, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
         else:
             alb_w = cv2.warpPerspective(alb, Ht, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
-        alb_w = cv2.GaussianBlur(alb_w, (0, 0), 0.55)          # the render's own softness
+        alb_w = cv2.GaussianBlur(alb_w, (0, 0), shot.get("tex_blur_px", 0.55))   # the render's own softness (or defocus)
         out = lin_to_srgb(srgb_to_lin(base) * alb_w)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels)
         band = shot.get("focus_band")
