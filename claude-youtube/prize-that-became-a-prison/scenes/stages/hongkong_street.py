@@ -101,7 +101,7 @@ CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35
 TRIMS = {
     "dawn": {"boutique door spill": 0, "display shelf return": 12 / 28},
     "window": {"bq_glow": 0.55, "boutique door spill": 0},
-    "company": {"boutique door spill": 0.31},
+    "company": {"boutique door spill": 0.26},
 }
 WIDE_VIEW = CAMERAS["wide"]
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
@@ -800,7 +800,7 @@ def apply_camera(name, width=1280):
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
         view = {"display shelf return": "dawn", "boutique pavement spill": "wide",
                 "display end bounce": "window", "display far bounce": "window",
-                "display lip bounce": "window"}.get(ln)
+                "display lip bounce": "window", "left pavement return": "company"}.get(ln)
         if view is not None and name != view:
             li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
@@ -906,10 +906,17 @@ def build(cast=True):
         # against the felt. Position it from the posed eyes for the insert.
         face_key = st.area("reflected cheek", (0, 0, 0), (0.40, 0.26), 8.0,
                            (1.0, 0.85, 0.71), (-0.42, 0.48, -0.18), spread=60)
-        face_receivers = bpy.data.collections.new("Window bounce on Dawn")
-        face_receivers.objects.link(bpy.data.objects[_STATE["holders"]["Dawn"]["body"]])
-        face_key.light_linking.receiver_collection = face_receivers
+        dawn_skin = bpy.data.collections.new("Dawn's skin")
+        dawn_skin.objects.link(bpy.data.objects[_STATE["holders"]["Dawn"]["body"]])
+        face_key.light_linking.receiver_collection = dawn_skin
         face_key.visible_glossy = False
+        # A low pavement return keeps both stockings readable through the stride.
+        source = Vector((4.73, 15.99, 0.58))
+        target = Vector((5.54, 16.49, 0.53))
+        calf_return = st.area("left pavement return", source, (0.12, 0.34), 1.0,
+                             (0.76, 0.83, 0.91), target - source, spread=21)
+        calf_return.light_linking.receiver_collection = dawn_skin
+        calf_return.visible_glossy = False
         for holder in [*bags.values(), _STATE["holders"]["Dawn"]]:
             for obj in holder.children_recursive:
                 if obj.type in ("MESH", "CURVE"):
