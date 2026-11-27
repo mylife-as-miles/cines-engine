@@ -519,7 +519,12 @@ def floors_slab(G, fr, W, H, sb, col, fk, b):
             if not hi_up and rng.random() < 0.28:
                 cage(G, fr, ha0 - 0.05, ha1 + 0.05, hz0 - 0.02, hz1 + 0.03, sb)
             if not hi_up and rng.random() < 0.22:
-                laundry(G, fr, (ha0 + ha1) / 2, sb + 0.05, hz1 + 0.08, length=rng.uniform(1.0, 1.7))
+                hook = (ha0 + ha1) / 2
+                # Use the next window above the boutique. From the tram tracks
+                # the washing at the middle window cuts steps into the teal sign.
+                if b["id"] == "R4" and f == 2 and abs(hook - W / 2) < 0.01:
+                    hook += bay
+                laundry(G, fr, hook, sb + 0.05, hz1 + 0.08, length=rng.uniform(1.0, 1.7))
     # drain pipes down two bay lines
     for i in (0, nb):
         aa = min(W - 0.12, max(0.12, i * bay))
