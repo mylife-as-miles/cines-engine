@@ -56,9 +56,9 @@ LAYOUT = {
 # The inspection counter is seen from its far side in the two intercut plates.
 # Rotate the reference bag marks and camera together around the bench centre.
 LAYOUT["three bags"] = {
-    "handbag-shoulder": (0.695, -0.195, TOP, 342.0),
-    "handbag-satchel": (0.38, -0.02, TOP, 333.0),
-    "handbag-tote": (0.065, 0.155, TOP, 325.0),
+    "handbag-shoulder": (0.695, -0.195, TOP - 0.001, 342.0),
+    "handbag-satchel": (0.38, -0.02, TOP - 0.001, 333.0),
+    "handbag-tote": (0.065, 0.155, TOP - 0.001, 325.0),
 }
 LAYOUT["ch05"].update(LAYOUT["three bags"])
 LAYOUT["match"] = {"dawn-suitcase": (0.32, -0.10, TOP, 122.0),
@@ -120,6 +120,7 @@ POSES = {
 }
 
 POSES["bag_insert"] = dict(POSES["ch05"], OfficerA={"chest": (5, 0), "behind": True, "look": "handbag-tote"})
+POSES["bag_touch"] = dict(POSES["ch05"], OfficerA={**POSES["ch05"]["OfficerA"], "index_grip": (55, 60, 40, 28)})
 
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
@@ -155,7 +156,8 @@ CAMERAS = {
 
 CAMERAS.update({
     "handbags": dict(loc=(0.94, 1.10, TOP + 0.48), aim=(0.37, -0.02, TOP + 0.13), lens=35,
-                     focus="fx_handbags", fstop=2.8, beat="ch05", layout="three bags", pose="bag_insert", exposure=-2.8,
+                     focus="fx_handbags", fstop=4.0, beat="ch05", layout="three bags", pose="bag_insert",
+                     insert_bench=True, exposure=-2.8, final_res=(2560, 1440),
                      cheat={"Dawn": (1.75, -1.10), "OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
     "two_shot_pre": dict(CAMERAS["two_shot"], layout="ch11"),
     "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
@@ -175,7 +177,11 @@ CAMERAS.update({
     "across": dict(loc=(-0.94, -1.28, TOP + 0.48), aim=(0.13, 0.045, TOP + 0.27), lens=37,
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
-FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.38, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
+# Ch 05 returns to the same front seam after the clean three-bag reveal.
+CAMERAS["handbags_touch"] = dict(CAMERAS["handbags"], pose="bag_touch",
+                                 cheat={**CAMERAS["handbags"]["cheat"], "OfficerA": (-0.32, 0.53)},
+                                 facing={"OfficerA": (0.18, 0.305)})
+FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.101, 0.173, TOP + 0.2505), "fx_match": (0, 0, TOP + 0.30),
               "fx_dawn_close": (0.53, -0.55, 1.54)})
 POSES["enter"] = {
     "Dawn": {"chest": (4, -3), "l_arm": (-7, 5, 13), "r_arm": (13, 5, 16), "fingers": 29,
@@ -584,7 +590,7 @@ def apply_pose(holder, p):
         _behind(holder, 1)
     if p.get("close_thumb"):
         rig = rigged.rig_of(holder)
-        rigged.articulate_hand(holder, "R", {"f_index": (44, 62, 39), "f_middle": (50, 67, 42),
+        rigged.articulate_hand(holder, "R", {"f_index": p.get("index_grip", (44, 62, 39)), "f_middle": (50, 67, 42),
                                              "f_ring": (54, 69, 44), "f_pinky": (58, 70, 46), "thumb": (26, 28, 21)})
         thumb = rig.pose.bones["thumb.01_master.R"]
         thumb.rotation_mode = "XYZ"
@@ -767,6 +773,8 @@ def load_props():
                             b.inputs["Coat Weight"].default_value = 0.0
         if name == "extra-bag-open":
             open_zip(h)
+        if name == "handbag-tote":
+            _STATE["tote_hem"] = props.tote_topstitch(h)
         out[name] = h
     return out
 
@@ -820,6 +828,17 @@ def pose_cast(beat, cfg):
 
 # ---------------------------------------------------------------- per camera
 
+def frame_metadata(name, scene, resolution):
+    if not CAMERAS[name].get("insert_bench"):
+        return None
+    blockers = [_STATE["props"][key] for key in LAYOUT["three bags"]]
+    officer = _STATE.get("holders", {}).get("OfficerA")
+    if name == "handbags_touch" and officer is not None:
+        blockers.append(officer)
+    return {**sk.plate_optics(name, scene, resolution),
+            "seam_paths_px": props.tote_seam_paths(_STATE["tote_hem"], blockers, scene, resolution)}
+
+
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "ch00")
@@ -863,9 +882,9 @@ def apply_camera(name):
     if li:
         li.visible_glossy = "lens_glow" not in cfg
     bpy.data.objects["floor_return"].hide_render = name != "overhead"
-    bpy.data.objects["handbags near bench flag"].hide_render = name != "handbags"
+    bpy.data.objects["handbags near bench flag"].hide_render = not cfg.get("insert_bench", False)
     bench = bpy.data.objects["bench_top"]
-    bench.data.materials[0] = _STATE["insert_bench_material" if name == "handbags" else "bench_material"]
+    bench.data.materials[0] = _STATE["insert_bench_material" if cfg.get("insert_bench") else "bench_material"]
     floor_return = bpy.data.objects.get("overhead floor return")
     if floor_return is not None:
         floor_return.hide_render = name != "overhead"
