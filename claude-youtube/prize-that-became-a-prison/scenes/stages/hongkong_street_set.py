@@ -42,6 +42,7 @@ LIGHTS = {}
 OBJ = {}
 SIGNS = []        # (y0, y1, z0, z1, x_end) of every projecting sign, for the cables
 LIT = []          # (frame, a mid, width, colour, spill energy) of every lit shop, for the street bounce
+RECENT = {}       # side -> the last sign colours used there
 # where the cast stands on the pavements (side, y): no spill-out display or standing sign within a metre or so
 KEEP = [(1, 14.0), (1, 17.9), (1, 27.5), (1, 29.5), (-1, 21.1), (-1, 26.1), (-1, 33.5), (1, 43.0), (1, 41.0)]
 rng = random.Random(1997)
@@ -706,7 +707,9 @@ def bounce(G):
     for i, (fr, am, W, col, e) in enumerate(LIT):
         d = (-fr.W * 0.42 + fr.Z * 0.91)
         c = tuple(0.6 * x + 0.4 * y for x, y in zip(col, (0.9, 0.92, 0.95)))
-        area(f"bounce_{i}", fr.p(am, 1.9, 4.7), (W * 1.1, 1.0), e * 0.55, c, d, spread=110)
+        y = fr.p(am, 0, 0).y
+        k = 0.3 if y < 15.0 else 0.55
+        area(f"bounce_{i}", fr.p(am, 1.9, 4.7), (W * 1.1, 1.0), e * k, c, d, spread=110)
 
 
 def shelving(G, fr, aa, sgn, w0, w1, kind):
@@ -784,7 +787,7 @@ def sign_box(G, fr, a, wn, wf, zb, zt, kind, col, strength, col2=None, field=Non
         S.box(lo, hi, 0, fr=fr)
     uv = {"suv": [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]}
     lit = kind in ("box", "neon")
-    panel = strength if kind == "box" else strength * 0.15
+    panel = strength if kind == "box" else strength * 0.12
     for s in (-1, 1):
         aa = a + s * (t - 0.02)
         P = [fr.p(aa, wn + rim, zb + rim), fr.p(aa, wf - rim, zb + rim), fr.p(aa, wf - rim, zt - rim), fr.p(aa, wn + rim, zt - rim)]
@@ -794,11 +797,8 @@ def sign_box(G, fr, a, wn, wf, zb, zt, kind, col, strength, col2=None, field=Non
             S.face(P, 1, n=fr.A * s, corner=uv, scol=col, sstr=panel)
         else:
             S.face(P, 2, n=fr.A * s)
-    if kind == "neon":
-        # the neon kind: the same filled panel with a luminous edge of its own hue, a tube laid on the rim, so even a
-        # partly hidden sign reads as a lit block, never as an open outline or a hook
-        for s in (-1, 1):
-            rect_tube(G, fr, a + s * (t + 0.004), wn + 0.03, wf - 0.03, zb + 0.03, zt - 0.03, col, strength * 0.8)
+    # (no edge tubes: a panel dimmer than its bright edge read as an open outline, a glyph; every sign is a plain
+    # filled panel, the "neon" kind only a dimmer one)
     # brackets back to the wall, a diagonal stay on long ones
     st = G["steel"]
     for zz in (zt - 0.12, zb + 0.12):
@@ -838,6 +838,14 @@ def signs(G, fr, side, W, H, b):
             x_end = XF - 0.3 - reach
         else:
             h = rng.uniform(1.0, 2.6)
+        # chunky signs only (a long thin bar reads as a stroke, and strokes stacked in perspective as characters):
+        # the same draws reshaped, so the rest of the street's random layout is unchanged
+        if tall:
+            h2 = 2.8 + (h - 3.0) * (2.4 / 4.5)
+            reach2 = 1.3 + (reach - 0.9) * (0.6 / 1.3) if reach < 1.5 else 1.9
+        else:
+            h2 = 1.4 + (h - 1.0) * (1.4 / 1.6)
+            reach2 = min(reach, 2.6 * h2)
         zmin = 4.8 if x_end > RW else (5.6 if x_end > TRACK + 1.0 else 8.4)
         zb = rng.uniform(zmin, min(H - h - 1.0, zmin + 9.0))
         if zb < zmin:
@@ -848,8 +856,22 @@ def signs(G, fr, side, W, H, b):
             continue
         if any(abs(yw - s[0]) < 0.45 and not (zt < s[2] - 0.2 or zb > s[3] + 0.2) for s in SIGNS):
             continue
+        zt_drawn = zt                    # recorded for the later checks, so the random sequence stays as it was
+        near_span = any(abs(yw - ys) < 0.6 for ys in SPANS)
+        if near_span and zb < 8.2 and zb + h2 > 6.85:
+            h2 = h if 6.85 - zb < 1.2 else 6.85 - zb
+        h, reach = h2, reach2
+        zt = min(zb + h, H - 0.6)
+        x_end = XF - 0.3 - reach
         kind = pick([("box", 6), ("neon", 3.5), ("dead", 1.2)])
         cname = pick(SIGN_W)
+        recent = RECENT.setdefault(side, [])
+        if cname in recent:             # no colour twice among the last three signs on this side (they stack and merge)
+            order = [c for c, _ in SIGN_W]
+            i = order.index(cname)
+            cname = next(order[(i + k) % len(order)] for k in range(1, len(order)) if order[(i + k) % len(order)] not in recent)
+        recent.append(cname)
+        del recent[:-3]
         col = SIGN_COL[cname]
         col2 = SIGN_COL[pick(SIGN_W)] if rng.random() < 0.72 else None
         # lightboxes the brightest things in the street after the shop interiors: they light the facades round them
@@ -861,7 +883,7 @@ def signs(G, fr, side, W, H, b):
             field = pick([((0.12, 0.12, 0.88, 0.88), 3), ((0.0, 0.5, 1.0, 1.0), 2), ((0.08, 0.06, 0.92, 0.4), 2)])
         wn = 0.3 + max(0.0, b["setback"])         # clear of an overhanging upper facade
         sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
-        SIGNS.append((yw, yw, zb, zt, side * x_end))
+        SIGNS.append((yw, yw, zb, zt_drawn, side * x_end))
     # a fascia sign over each shop (parallel to the wall), lit or dead
     if not b.get("boutique") and rng.random() < 0.8:
         S = G["sign"]
@@ -1234,6 +1256,7 @@ def build(props):
     mt.materials()
     SIGNS.clear()
     LIT.clear()
+    RECENT.clear()
     LIGHTS.clear()
     OBJ.clear()
     _BASE.clear()

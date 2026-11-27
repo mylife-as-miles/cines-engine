@@ -90,6 +90,9 @@ CAMERAS = {
                    hide_glossy=("shop_interiors", "tubes", "signboards")),
 }
 TRIMS = {"wide": {}, "dawn": {}, "window": {}}
+# a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
+if os.environ.get("HK_CAMS"):
+    CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["HK_CAMS"].split(",")}
 
 _STATE = {"holders": {}, "cast": [], "cache": {}, "bags": {}}
 rng = random.Random(3)
