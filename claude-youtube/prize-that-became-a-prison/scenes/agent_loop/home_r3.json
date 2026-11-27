@@ -1,0 +1,97 @@
+{
+ "stage": "home",
+ "round": 3,
+ "commit": "145b0ec",
+ "scores": {
+  "composition": 7,
+  "lighting": 7,
+  "materials": 6,
+  "set_dressing": 6.5,
+  "grounding_scale": 6,
+  "cast": 6,
+  "story_read": 7.5,
+  "technical": 7.5
+ },
+ "pro_level": false,
+ "verdict": "Most round-2 fixes landed: the fridge fills the kitchen's dead right third (graded 4 -> 19), chair_n2 is gone, the bowl is quieter, the head chair's top rail now catches the stripes against the patch edge, and the close-up has slat stripes on the boards round the chair's feet. All three frames carry their beats, and the dining wide is close to a fern frame. It is still not pro. Dawn's right hand now hovers with one straight index jabbing down at the laptop, and it holds the brightest pixels in the frame (161 against her face's 141). In the close-up the empty chair is dimmer than its own shadow (chair 34-50 against a 73-79 patch), and its striped legs blend into the floor stripes. The dining table still reads as a lumpy, melted plank top, even with the normal map cut, and the chair's separation and shadow clearance in the wide are below round 2's targets.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "kitchen",
+   "problem": "Round 2's waving hand is gone, but the new right hand hovers 3-4 cm over the table. A strip of wood shows between the palm and the deck, the index is held straight and points about 60 deg down onto the deck's far edge, and the other fingers curl back. It reads as a hovering hand pecking with one finger, which the brief names ('resting on things, not hovering'). The fingers are also the brightest thing in the frame (max 161 graded, face max 141), right beside her face. The cause: CURL['R']['f_index'] = (8, 10) is far straighter than the other fingers (12-14 / 14-18), and the hand is pitched down only 5 deg from a raised wrist.",
+   "fix": "Lay the hand down instead of pointing it. Set HANDS['R'] = dict(wx=-0.075, wz=0.028, pitch=12.0), CURL['R']['f_index'] = (12, 14) to match the middle finger, thumb (0, 14), PITCH_MIN = -4 and PAD_AHEAD = 0.035, so the heel rests on the deck's front edge and the curled pads touch the trackpad. A safer option from this angle: rest the right hand palm down on the table just left of the deck, fingers curled 15-20 deg and wrist 1.5-2 cm over the top, and give the trackpad to the left hand behind the lid. Check on the kitchen frame: no wood visible between the palm and the deck, no fingertip more than about 15 px below the knuckle line, and the hand's brightest pixel at or below the face's (about 140 graded). Turning the back of the hand away from the screen should bring it down naturally."
+  },
+  {
+   "priority": 2,
+   "camera": "chair",
+   "problem": "The close-up's subject is darker than its own shadow. The chair measures crest 50, stiles 46 and seat 34 graded, against the wall patch at 73-79 (stripes up to 135), so the eye goes to the shadow on the left wall and then searches for the chair. Seen in strict profile, its back reads as one thin slab, and the soft stripes on the turned stile read as beading. The legs carry the same stripes as the floor, so they camouflage instead of standing dark on lit boards: the front leg's foot near the bottom edge (y about 690) has no readable contact. Floor stripes round the feet are p90 34, under round 2's 45-60 target. HEAD_WOOD 1.15 was not enough.",
+   "fix": "Raise TRIMS['chair']['street_hero'] from 1.4 to about 2.0 and HEAD_WOOD from 1.15 to about 1.35. Targets: lit stripes on the crest rail and seat at least 110 and 90 graded, so the chair at least matches the patch. Raise TRIMS['chair']['street_side'] from 1.5 to about 2.2 so the floor stripes round the feet reach 45-60. Take the side light off the legs: either light-link street_side to exclude chair_head's meshes, or add its own shadow-only flag, so the legs stand as dark silhouettes (at most 20) on the lit boards. Optionally swing the camera about 15 deg round toward the chair's front, loc (3.8, 2.0, 1.1) with the aim kept near (4.35, -0.2, 0.45), so the spindles open a little and it reads as a chair someone sat in, not a slab. Keep the shadow clear at the left and the patch's top at least 25 px under the top edge."
+  },
+  {
+   "priority": 2,
+   "camera": "dining",
+   "problem": "The head chair now overlaps the patch edge, and its top rail catches the stripes (mean 96, max 140). But the unlit wainscot directly left of it is still 75 graded (target at most 55), and the dark parts of the spindles only reach about 56. The left half of the chair is a mid-grey ghost on a mid-grey wall, and the hero still separates less than its own shadow (40 against 121 inside the patch). The d_sky trim at 0.6 barely moved that wall.",
+   "fix": "Set TRIMS['dining'] = {'d_sky': 0.3, 'street_hero': 1.5}. If the near table end drops under about 15 graded, add 'd_sky_end': 1.2. If the wainscot left of the patch is still above about 60, darken that end wall's panel paint about 20% in home_mats, keeping the patch itself at 100-130. Graded targets: top rail and lit spindle stripes at least 115, unlit wainscot left of the chair at most 55-60, the stripe patch's peak still at least 120."
+  },
+  {
+   "priority": 2,
+   "camera": "dining, chair",
+   "problem": "Round 2's table fix landed in code (normal map strength 0.35, coat 0.25), but the top still reads as lumpy rough-sawn planks with soft, melted seams. Each board face undulates and catches broad grey shading in the wide (d_table region, x 0-720, y 350-720), and the stripes across it ripple. The waves are in the generated prop's mesh, not the normal map. It is the second-largest surface in the wide, it sits in both Ch 10 frames, and it is the main thing holding materials back.",
+   "fix": "In dining_table(), hide the prop's top faces, or the whole top object if it is separate (hide_render), and model a flat top in its place: a 1.8 x 0.9 x 0.038 m box at z D_TOP with a 0.006 m bevel, plus a 0.03 m apron, using the same top_wood shader (seam 0.3, late_k 0.45) and the 0.25 coat at coat roughness 0.25. Keep the prop's legs. If that is too much work, apply a Smooth modifier only to the top's upward-facing verts (vertex group from normals with z above 0.9, factor 1.0, about 10 repeats). Check that the blind stripes run straight across the top with a soft satin gleam."
+  },
+  {
+   "priority": 3,
+   "camera": "dining",
+   "problem": "Moving HEAD_CHAIR to y -0.03 put its stile on the patch edge but brought it next to its shadow. There is only about 25-30 px of lit wall between the right stile and the shadow at top-rail height (y 240), against round 2's target of at least 120. At seat height (y about 400) the shadow's legs touch the chair's rear-right leg, so the two tangle into one shape at the junction.",
+   "fix": "Add air between the chair and the end wall without moving it across the frame. Move the end wall (room x1) 0.15 m further out to +X if the set allows, or move HEAD_CHAIR x from 4.1 to about 4.02, keeping its front feet at least 2 cm past the table's end. Each 0.1 m of extra wall distance adds about 25 px of separation in this lens. Optionally turn it from 188 to about 184 deg so its rear-right leg tucks behind the seat. Targets: at least 45 px of lit wall between the stile and the shadow at the top rail, and no contact between the shadow and the chair at seat height."
+  },
+  {
+   "priority": 3,
+   "camera": "chair",
+   "problem": "The lid is gone, but the new d_vase is a dark baluster with a swelling body and a flared lip on the sideboard: still the outline of a funerary urn, in the chapter about Gene Hunt's death (top right, x 1070-1110, y 50-100).",
+   "fix": "Replace d_vase with a low, wide, straight-walled bowl (about 0.07 m tall, 0.24 m across, the same dark glaze), or remove it and keep only the candlesticks. Nothing on the sideboard should be a rounded, necked vessel."
+  },
+  {
+   "priority": 3,
+   "camera": "kitchen",
+   "problem": "The under-cabinet lens (k_ucLens) is a hard bright bar 340 px long, about 45 px under the top edge, as bright as her face (p90 120, max 131 graded, against the face at 141). It pulls the eye to the top of the frame. A real under-cabinet strip hides behind a front lip, and you see its glow on the tile rather than the diode.",
+   "fix": "Add a valance under the upper cabinet's front edge: a box 0.035 m tall in M['k_cab'] along ux0-ux1 at y1 - 0.29, its bottom at about z 1.645, so the seated camera cannot see the lens. Or cut the uc_lens emission from 2.2 to about 0.8. Keep the k_undercab area light, so the warm tile glow behind her stays. Target: nothing in the top 100 px above about 90 graded."
+  },
+  {
+   "priority": 3,
+   "camera": "kitchen",
+   "problem": "The paper-towel roll is still a pale vertical cylinder (mean 74, up to 114 graded) about 40 px off her cheek. With the knob now dark it reads as a pillar candle or a pale column growing beside her face, the second-brightest shape near the subject.",
+   "fix": "Slide k_pt* about 0.25-0.3 m along the counter, away from her head in frame (toward the fridge), so no pale shape sits within about 100 px of her face. Or swap it for the dark utensil crock. If it stays, darken towel_paper toward 0.45 and keep the loose sheet catching the light, so it reads as paper."
+  },
+  {
+   "priority": 4,
+   "camera": "kitchen",
+   "problem": "Fixing the right third moved the void to the left. The lower-left quadrant (below the counter, x 0-420, y 420-720) averages 2.1 graded, with 94% of it at or below 5, so the lower cabinets vanish (the raw shows doors and a knob). The grade crushes them.",
+   "fix": "Let the under-cabinet light and the window's night glow draw the cabinet fronts. Raise the cabinet doors' bevel to about 0.006, or give the counter's front edge a 2 cm bullnose that catches k_undercab. A weak cool area light, 0.4 x 0.3 m at 1-2 W, low by the window and aimed down at the sink apron, can do the same. Target: door rails and the knob at 8-15 graded, everything still under 25."
+  },
+  {
+   "priority": 4,
+   "camera": "dining",
+   "problem": "Where street_side's stripes pass the far chairs' spindles, they break into rows of short dashes on the floor under the table (x 350-520, y 640-720, and x 540-980, y 440-600). They read as a dotted LED pattern rather than slat light.",
+   "fix": "Narrow street_side's cone from size_deg 12 to about 7, centred on the head chair's feet, or add a shadow-only flag under the side window's lower half that blocks rays heading under the table. Keep its stripes round the head chair's feet for the close-up."
+  },
+  {
+   "priority": 4,
+   "camera": "dining, chair",
+   "problem": "Still open from round 2: inside the stripe patch, the wainscot stiles are single dark hairlines (dining x about 1025 and 1235). They cut straight through the chair's shadow, and the raking light shows no moulding relief.",
+   "fix": "Model the panel frames 9-12 mm proud of the field with a 4 mm bevel, so the street light draws a lit edge and a shadow edge along each stile and rail."
+  },
+  {
+   "priority": 4,
+   "camera": "kitchen",
+   "problem": "The T-shirt still reads as a smooth moulded shell. The new broad fold bump (strength 0.12, distance 0.004) does not show at this exposure.",
+   "fix": "Raise the fold bump to strength 0.25-0.3 at distance 0.006, masked toward the waist and armpits (a gradient on object z or the shirt's weight paint), so soft folds read where the arms come forward."
+  },
+  {
+   "priority": 4,
+   "camera": "dining",
+   "problem": "The beat's pendant lamp (off) appears in no frame. The bright blinds are cut by the top and left edges, and the leftmost chair is a fragment at the left edge.",
+   "fix": "Optional: lower the pendant 0.1-0.15 m, or tilt the dining camera up 2-3 deg, so the dark shade and cord hang into the top of the frame against the upper wall, left of the head chair: the unlit lamp states 'no one home'. If you tilt the camera, check that the head chair stays on the right third and that the floor under it is not cut."
+  }
+ ]
+}
