@@ -81,7 +81,7 @@ CAMERAS = {
     "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.47, 0.966), lens=50, focus="fx_pack", fstop=2.8,
                  beat="pack", exposure=-0.56),
     "accept": dict(loc=(0.66, -2.27, 1.36), aim=(-1.0, -0.60, 0.94), lens=37,
-                   focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
+                   focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.16),
     "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=46,
                          focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.045),
 }
