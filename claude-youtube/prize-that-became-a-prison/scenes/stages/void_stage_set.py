@@ -162,7 +162,7 @@ def _vmath(nt, op, a, b=None):
     return n.outputs["Value"] if op in ("DISTANCE", "LENGTH", "DOT_PRODUCT") else n.outputs["Vector"]
 
 
-def stage_floor(cell=None, bags=None):
+def stage_floor(cell=None, bags=None, dawn=None):
     """A black-box stage floor: 1.22 x 2.44 m hardboard sheets painted matt black, each a few per cent off its
     neighbours, the butt joints a 2 mm dark groove; heel marks (thin dark streaks) and fine pale scratches along the
     traffic directions, ghosts of old spike tape (strips and crosses, a little glossier and greyer where the adhesive
@@ -175,8 +175,17 @@ def stage_floor(cell=None, bags=None):
     br = _brick(nt, sheet_coordinates, 2.44, 1.22, 0.0022, offset=0.5, c1=(1.04, 1.04, 1.04), c2=(0.955, 0.955, 0.96),
                 cm=(0.3, 0.3, 0.3))
     br.inputs["Mortar Smooth"].default_value = 0.1
+    board = _out(br, "Color")
     seam = _out(br, "Fac")
-    base = _mix(nt, 1.0, (0.086, 0.086, 0.09), _out(br, "Color"), "MULTIPLY")
+    board_detail = 1.0
+    if dawn is not None:
+        # A continuous patch of painted floor under the standing spotlight.
+        pos = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]
+        distance = _vmath(nt, "DISTANCE", pos, (*dawn, 0.0))
+        board_detail = _maprange(nt, distance, 1.4, 1.8, 0.0, 1.0)
+        board = _mix(nt, board_detail, (1.0, 1.0, 1.0), board)
+        seam = _math(nt, "MULTIPLY", seam, board_detail)
+    base = _mix(nt, 1.0, (0.086, 0.086, 0.09), board, "MULTIPLY")
     mott = _noise(nt, o, 0.7, 4.0, 0.6)
     base = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.25), base, (0.072, 0.072, 0.076))
     # heel and case-wheel marks: thin dark streaks along X and Y, only in patches
@@ -216,7 +225,7 @@ def stage_floor(cell=None, bags=None):
     tape = _math(nt, "MAXIMUM", strip(ax, ay), _math(nt, "MULTIPLY", strip(ay, ax), _math(nt, "GREATER_THAN", cb, 0.6)))
     tape = _math(nt, "MULTIPLY", tape, _math(nt, "LESS_THAN", cg, 0.35))
     tape = _math(nt, "MULTIPLY", tape, _maprange(nt, _noise(nt, o, 14.0, 3.0, 0.6), 0.35, 0.55, 0.0, 1.0))
-    tape = _math(nt, "MULTIPLY", tape, wear)
+    tape = _math(nt, "MULTIPLY", tape, _math(nt, "MULTIPLY", wear, board_detail))
     base = _mix(nt, _math(nt, "MULTIPLY", tape, 0.7), base, (0.105, 0.104, 0.104))
     dust = _noise(nt, o, 2.2, 3.0, 0.5)
     base = _mix(nt, _maprange(nt, dust, 0.5, 0.78, 0.0, 0.14), base, (0.14, 0.137, 0.133))
@@ -409,9 +418,9 @@ def frosted_glow(name, rgb, strength, top_z=None, sill_z=None):
     return m
 
 
-def materials(cell=None, bags=None):
+def materials(cell=None, bags=None, dawn=None):
     M.clear()
-    stage_floor(cell, bags)
+    stage_floor(cell, bags, dawn)
     block_paint()
     section()
     cell_floor(cell or (0.0, 0.0))

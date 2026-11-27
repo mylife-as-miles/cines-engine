@@ -541,6 +541,18 @@ def rack_case():
     hi = Vector([max(p[i] for p in pts) for i in range(3)])
     lo.z += dz
     hi.z += dz
+
+    # The scanned pull curls into a numeral. A plain fabric keeper covers it
+    # on the case itself, so it stays in place across the wide and rack insert.
+    shell = max(meshes, key=lambda obj: len(obj.data.vertices))
+    normal = Vector((0.61, 0, 0.7924)).normalized()
+    rotation = Matrix.Rotation(math.asin(normal.x), 4, "Y")
+    mount = Vector((0.115, 0.001, 0.279)) + normal * 0.008
+    nylon = sk.mat("matte charcoal zipper keeper", (0.021, 0.023, 0.026), rough=0.89)
+    keeper = st.box("suitcase zipper keeper", (0.057, 0.108, 0.016), (0, 0, 0), nylon, bevel=0.007, segs=5)
+    keeper.parent = shell
+    keeper.matrix_basis = Matrix.Translation(mount) @ rotation
+    meshes.append(keeper)
     _STATE["bag_meshes"] = meshes
     print(f"TRAIN only suitcase: rack contact {dz * 1000:+.1f} mm from initial mark", flush=True)
     return lo, hi

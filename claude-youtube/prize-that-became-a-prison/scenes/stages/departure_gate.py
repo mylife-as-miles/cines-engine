@@ -69,7 +69,8 @@ CAMERAS = {
     "window": dict(loc=(-2.9, -1.35, 1.54), aim=(-0.75, 6.0, 0.86), lens=35, focus="fx_window", fstop=4.0, beat="ch03",
                    exposure=-1.15),
 }
-CAMERAS["seated_called"] = dict(CAMERAS["seated"], beat="ch05")
+# Widen for the turn to the tannoy, keeping the seat and suitcase in place across the cut.
+CAMERAS["seated_called"] = dict(CAMERAS["seated"], lens=44, beat="ch05")
 
 # per-camera light trims (multipliers on named lights)
 KEY = "fx_{:+.1f}_{:+.1f}_light".format(*st.KEY_FX)
@@ -583,8 +584,6 @@ def apply_camera(name):
     sc.cycles.sample_clamp_indirect = 4.0      # the haze and the dark pan ceiling threw white speckle
     sc.cycles.denoiser = "OPENIMAGEDENOISE"
     called = name == "seated_called"
-    for ob in _STATE["case parts"]:
-        ob.hide_render = called
     if _STATE["cast"]:
         rig = rigged.rig_of(_STATE["cast"][0])
         for bone, rest in _STATE["rest controls"].items():
@@ -666,8 +665,7 @@ def build(cast=True):
         li.rotation_euler = (Vector(target) - li.location).to_track_quat("-Z", "Y").to_euler()
         li.visible_camera = li.visible_glossy = li.visible_transmission = False
         li.data.specular_factor = 0.0
-    case = suitcase()
-    _STATE["case parts"] = [ob for ob in case.children_recursive if not ob.hide_render]
+    suitcase()
     # a black flag beside the fitting over her row (seen by no camera, used by the seated one): the empty seats
     # nearest the lens fall off into shadow instead of reading as a bright cut slab at the frame edge
     flag = st.box("flag_near_seats", (0.012, 2.4, 1.1), (SEAT[0] + 1.15, ROW_Y + 0.15, st.H - 0.6),

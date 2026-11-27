@@ -80,7 +80,7 @@ BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and sa
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
     "handbag-tote": (0.35, "long", dict(sat=1.7, val=0.65, hue=0.525, rough_add=0.32), dict(spec=0.08)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28),
-                       dict(spec=0.06, ceiling=(0.084, 0.072, 0.049))),
+                       dict(spec=0.035, ceiling=(0.038, 0.033, 0.024), metal_limit=0.10)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),
 }
 
@@ -548,7 +548,7 @@ def bags():
             for slot in o.material_slots:
                 if slot.material and slot.material.name not in seen:
                     seen.add(slot.material.name)
-                    mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m, ceiling=fin.get("ceiling"))
+                    mt.tune_prop(slot.material, to_metres=to_m, **fin)
         if name == "handbag-tote":
             props.tote_topstitch(h, soften_lip_normals=True)
         out += [h] + list(h.children_recursive)
@@ -1088,7 +1088,7 @@ def build(cast=True):
     # These rest on the table only (the spread's papers, hidden for these beats, leave the support while they drop)
     keep = list(pp.SUPPORT)
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
-    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.23, 0.235, 0.24)),
+    group("receipt_c4", pp.receipt("receipt_c4", mt.thermal("receipt under the evidence lamp", (0.16, 0.165, 0.17)),
                                    *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     # Before the tickets arrive, the same booklet rests flat on bare boards.

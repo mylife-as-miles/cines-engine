@@ -61,9 +61,8 @@ CAMERAS = {
     # Ch 04: from the lane into the stall: Dawn looking up at the wall of handbags under the battens
     "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.02), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
                   show=("Dawn",), exposure=-1.5),
-    # Ch 04: the controlled close-up from the alley: the black extra bag passing over the counter, the stallholder's
-    # hand pushing it across, the organiser's hand taking it; the wall of bags soft beyond
-    "purchase": dict(loc=(2.20, 3.70, 1.38), aim=(1.458, 4.942, 1.105), lens=50, focus="fx_bag", fstop=3.2, beat="buy",
+    # Ch 04: the organiser lifts the black duffel as the stallholder pulls his hand away.
+    "purchase": dict(loc=(2.20, 3.70, 1.38), aim=(1.508, 4.942, 1.145), lens=42, focus="fx_bag", fstop=3.2, beat="buy",
                      exposure=-1.6),
 }
 TRIMS = {
@@ -85,8 +84,6 @@ def hero_bag():
     for o in h.children_recursive:
         if o.type != "MESH":
             continue
-        smooth = o.modifiers.new("relax small nylon dents", "CORRECTIVE_SMOOTH")
-        smooth.factor, smooth.iterations, smooth.use_only_smooth = 0.6, 8, True
         for s in o.material_slots:
             if s.material and s.material.name not in seen:
                 seen.add(s.material.name)
@@ -97,6 +94,10 @@ def hero_bag():
     pivot = Vector((BX + 0.33, BY, TOP))
     h.matrix_world = (Matrix.Translation(pivot) @ Matrix.Rotation(math.radians(9.0), 4, "Y")
                       @ Matrix.Translation(-pivot) @ h.matrix_world)
+    bpy.context.view_layer.update()
+    lowest = min((obj.matrix_world @ vertex.co).z for obj in h.children_recursive if obj.type == "MESH"
+                 for vertex in obj.data.vertices)
+    h.location.z += TOP - lowest
     bpy.context.view_layer.update()
     gx, gy = BX - 0.155, BY - 0.012
     tabs = [Vector((gx, y, bag_top(gx, y))) for y in (gy - 0.082, gy + 0.082)]
@@ -522,6 +523,9 @@ def which_camera():
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "buy")
+    display_tone = 0.52 if name == "wide" else 1.0
+    for bag, tint in _STATE["display leather"]:
+        bag["lm_tint"] = tuple(channel * display_tone for channel in tint)
     H = _STATE["holders"]
     if H:
         pose_cast(beat)
@@ -571,6 +575,8 @@ def install_hook():
 
 def build(cast=True):
     st.build()
+    _STATE["display leather"] = [(bag, tuple(bag["lm_tint"])) for bag in bpy.context.scene.objects
+                                if bag.name.startswith("hero_") and "lm_tint" in bag]
     hero_bag()
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)

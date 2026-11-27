@@ -752,3 +752,81 @@ I compared the current raw preview with the published 1280 plate around your (98
 The checked 2560×1440 raw plate, graded frame and corners sidecar for inspection_room/handbags are published at aec9820. The tote shows continuous plain leather around the former mark, which projects at (1973.85, 548.01). I inspected the full native frame, the split crop and the panel at four times native size.
 
 The old right-half crop at (987, 300) maps to native (1973.85, 602.00) at scale 0.9202. This preserves the previous 1.84 framing using the same material points. The three visible seam spans are x 1677.97–1832.37, 1874.22–2099.90 and 2147.62–2310.77. The sidecar records 35 mm, f/4 and focus 1.224038 m. The handling plate is rendering from the same camera.
+
+### 2026-11-27 21:38 UTC · INFO · L2 · matching tote handling plate
+
+Inspection_room/handbags_touch is published at 03b8bb7 with its raw plate, graded frame and corners sidecar. Both 2560×1440 frames use 64 samples and the same camera and focus. The seam spans in the sidecars are identical. Phase correlation gives (0, 0) px on the shoulder bag, satchel and lower tote. I checked the officer's closed grip and the unmarked panel in the full frame and split crop. The handling plate has mean graded luminance 52.05, with 3.06% below 8 and zero above 250. The two opening reverse angles are rendering.
+
+### 2026-11-27 21:49 UTC · INFO · L2 · continuity across the gate cut
+
+The current edit cuts directly from 00-05 (seated) to 00-06 (seated_called). C24 reviewed an earlier edit without that cut, when the case disappearance was waived. The revised called shot keeps the same case in place and widens from 52 mm to 44 mm as Dawn turns and braces. In the checked preview, face p99 is 198 against 176 on the armrest hand, and the upper-left chapter-title area peaks at 38. The four gate previews are queued ahead of the next finals.
+
+For 04-08, the clean inspection_room/handbags stays available for the split. The shot direction specifying the officer's hand on the tote now has inspection_room/handbags_touch at 03b8bb7 with the same framing.
+
+### 2026-11-27 21:50 UTC · REQUEST C35 · to CRITIC · critique
+
+Stage inspection_room · revision 0821a94 · frames/graded/inspection_room/ and matching raw plates. Please review the cold-open continuity from C25 and the chapter-five tote and aftermath.
+
+The corrected wide_pre and two_shot_pre are both 1280×720 at 64 samples. In that order the case face medians are 37.2 and 37.2, and the duffel medians are 19.8 and 19.4. The entry measures 30.3 and 10.7. The clean 2560 match measures 42.0 and 12.0, and the case in Dawn's answer measures 37.4. The tag appears only in its dedicated insert in the source. The two reverses share the officer's low, open palm. Dawn closes her hand around the carry strap in dawn_close. I checked the coat lighting and the two plain peaked caps in both frames.
+
+Reference plates on this revision are enter at 57c026f, dawn_close at b0ae946, the registered match at e524326, and empty_ch05 at a02c114 with the open duffel and disturbed bench. The 2560 handbags and handbags_touch are at aec9820 and 03b8bb7 with identical seam spans and zero whole-pixel displacement on the three bags. Please check whether the officer's gesture reads as one question across the reverse cut, the bags stay recognizable, and the handling and aftermath read as different beats.
+
+### 2026-11-27 21:58 UTC · INFO · L2 · hearing witness final
+
+The revised hearing_room/witness is published at ff11cf8 alongside the wide at 29b85b5. The witness is 1280×720 at 64 samples. I checked the tie and shirt boundary at five times native size, the microphone against Tim's chin and the folded hands on the page. The pale specks on the tie are gone. The lit and shadow face medians are 144.6 and 97.0, and the two seating groups read at 21.4 and 12.2. The native shot has zero luminance above 250. Both opening plates are ready for the cut. Preparing the hands and dais coverage before the next stage critique.
+
+### 2026-11-27 22:05 UTC · INFO · STATUS
+
+Latest independent scores for the 19 stages. Open reviews are C33 for check-in, C34 for Kowloon and C35 for inspection.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals published at d9fa391. The window has three bags in the evidence order and the wide leaves the measured title area. C34 is open. |
+| hotel_room | 5.50 (5) | Preview checks distinguish the hobo going into the duffel from the overhead of the packed bag. The new window grade leaves the room warm and the nearest signs dimmer. Check all five current camera previews. |
+| inspection_room | 5.50 (4.5) | The 2560 handbag pair is published with identical stitch tracks. Both corrected reverses are published at 0821a94 with the case at the same brightness. C35 is open. |
+| evidence_table | 5.63 (5) | The private render shows one stitch row and quieter clasp and receipt. Check both current camera previews and the full 2560 plates with their seam tracks. |
+| train | 5.63 (5) | The reflected crown measures 44.8 against face 46.3. The aisle shows her looking through the glass, a less bright linen cover and a plain suitcase pull. Verify the three current camera previews. |
+| aircraft_cabin | 5.69 (4.5) | Check the wing clear of the oval reveal, Dawn's reclining profile and her lap in the full cast previews. |
+| baggage_belt | 5.69 (5) | The curtain test keeps the wall readable. The sorter test retains four fully visible cases, with both of Dawn's bags leading by luminance. Check all three camera previews. |
+| tim_desk | 5.69 (5) | Check the rooted pen, legible blank correspondence and the two pools of light in the camera previews. |
+| void_stage | 5.75 (4) | The native luggage match is published. Verify the current standing and close finals with space for type, then the seated and empty cell coverage. |
+| leather_market | 5.88 (5) | The purchase preview exposed a duffel mesh split and cropped release hand. Verify a continuous shell and keep both the buying grip and the releasing hand in the frame. |
+| chicago_night | 6.00 (5) | Check the window profile, plain mug, white skyline lights and suitcase in the four previews. |
+| checkin_hall | 6.13 (5) | The opening scale, wide, payment and profile finals are published. The pins and title bounds are with LEAD. C33 is open. |
+| courtroom | 6.13 (5) | Check Dawn's hand contact and the judge's light across the occupied and empty framings. |
+| departure_gate | 6.13 (5.5) | All four current previews checked. The case stays in place and the bracing hand stays below the face in brightness. The two seated finals are rendering, with wide and window queued. |
+| hearing_room | 6.13 (5) | Wide 29b85b5 and witness ff11cf8 are published. The curtain reads 42.1 and the witness tie is clean. Check the hands and dais coverage next. |
+| visiting_room | 6.25 (5) | Check Tim's build, Dawn's shoulder and both eyelines through the glass. |
+| home | 6.69 (6) | Check the warm family and cold solo meals and the occupied and empty chair across their new poses. |
+| prison_exterior | 6.75 (6) | Check the watcher behind the tower glass and the rain against the gate and wall. |
+| detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
+
+The inspection and hearing opening plates are with LEAD. L2 continues through the boarding-call finals, the watchtower and the void standing shots.
+
+### 2026-11-27 22:11 UTC · INFO · L2 · boarding-call final
+
+The widened departure_gate/seated_called final is published at 7f58c27 for 00-06 and 04-01. Dawn turns past the lens toward the tannoy and braces on the armrest. The case sits in the same place as in seated, which is rendering at final quality from the same build. The 1280×720 called frame has face p99 200.9 against 177.2 on the bracing hand, upper-left chapter-title peak 37.7, and zero pixels with luminance above 250.
+
+### 2026-11-27 22:17 UTC · INFO · L2 · complete boarding-call cut
+
+Departure_gate/seated is published at 8fb9078 for 00-05, alongside seated_called at 7f58c27 for 00-06 and 04-01. I checked both 1280×720 finals together. Dawn changes her eyeline and braces, and the case remains beside the seat. Case-body medians across the cut are 24.0 and 25.2. Seated face p99 is 192.2 and the lighter hand is 187.5. Both frames have zero luminance above 250. The exterior watchtower previews are running.
+
+### 2026-11-27 22:24 UTC · INFO · L2 · watchtower final
+
+Prison_exterior/tower is published at f2bdd03 for the opening. I checked the 1280×720 frame at 64 samples and the north-pane crop. The watcher reads in silhouette against the dim console return. The wall and rain hold detail at a graded mean of 43.4, with zero luminance above 250. I am testing softer rain distribution in the separate gate and wall shots. The three standing void finals are rendering now.
+
+### 2026-11-27 22:31 UTC · INFO · L2 · void portrait final
+
+Void_stage/dawn_close is published at 36aba8e, 1280×720 at 64 samples. The left area x 70–520 and y 155–512 has graded median 21.8, p99 32.4 and maximum 35.0. I checked the bowed profile and hair silhouette on the right and the clean space beside her. The two standing wides are in a new preview pass to clear the floor joints visible in their first finals.
+
+### 2026-11-27 22:37 UTC · INFO · L2 · standing void finals
+
+Void_stage/dawn and dawn_high are published at 685a801, both 1280×720 at 64 samples. The floor joins are gone in the two spotlight pools and the floor crop medians changed by less than 0.3 luminance levels in the side view and 0.1 in the high view. I checked the full frames and both pool crops. The portrait at 36aba8e and the 2560 registered bags at e524326 are also available for the opening. Next are the remaining cell and chair views.
+
+### 2026-11-27 23:04 UTC · BLOCKED · next critique rounds for check-in, Kowloon and inspection
+
+The next rounds for these stages need independent scores. C33 covers the four checkin_hall opening angles at 5d38cc3. C34 covers the four hongkong_street angles at d9fa391. C35 covers the two inspection_room reverses at 0821a94 and the matching handbag pair at aec9820 and 03b8bb7. All three reviews have been open over 40 minutes. I am continuing the evidence finals and the hotel, train and L2 family shots while the reviews are pending.
+
+### 2026-11-27 23:06 UTC · INFO · L2 · native evidence lineup for the cold open
+
+Evidence_table/purses is published at 8d47b04 with its raw PNG, graded JPEG, seam track and corner metadata. The 2560×1440 final has a single stitch row on the tote and a quieter receipt and clasp. The clasp crop's graded p95 dropped from 79.1 to 49.4 and the receipt roll from 131.9 to 79.4. The three bag positions are unchanged. The new track differs from the previous track by at most 0.033 px vertically, with matching tab boundaries. I checked the full plate and the leather and hardware crops. The 2560 seam close-up is still rendering.

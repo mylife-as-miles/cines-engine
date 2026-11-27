@@ -573,8 +573,8 @@ def matte(name, rgb, rough=0.8):
 
 # ---------------------------------------------------------------- generated props
 
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None):
-    """Finish a generated prop with dielectric specular, a plain-weave bump, or a cap on its base colour."""
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None, metal_limit=None):
+    """Control a prop's reflectance, weave and base colour."""
     if not (mat and mat.use_nodes):
         return
     nt = mat.node_tree
@@ -583,6 +583,12 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None):
         return
     if spec is not None:
         b.inputs["Specular IOR Level"].default_value = spec
+    if metal_limit is not None:
+        metallic = b.inputs["Metallic"]
+        if metallic.is_linked:
+            _link(nt, _math(nt, "MINIMUM", metallic.links[0].from_socket, metal_limit), metallic)
+        else:
+            metallic.default_value = min(metallic.default_value, metal_limit)
     base = b.inputs["Base Color"]
     if ceiling and base.is_linked:
         clamp = _n(nt, "ShaderNodeVectorMath", operation="MINIMUM")
