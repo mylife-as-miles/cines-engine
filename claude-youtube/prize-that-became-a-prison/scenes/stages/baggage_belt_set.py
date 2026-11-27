@@ -259,9 +259,9 @@ def floor_mat():
     return m
 
 
-def block_mat(name, axis, lower=(0.032, 0.040, 0.050), upper=(0.105, 0.11, 0.118), dado=1.25):
+def block_mat(name, axis, lower=(0.032, 0.040, 0.050), upper=(0.105, 0.11, 0.118), dado=1.25, fittings=()):
     """Painted concrete block (390 x 190 with mortar joints) in two tones: a dark blue-grey dado below `dado`,
-    a pale grey above, a painted line between, grime toward the floor. axis: "x" for a wall that runs along X."""
+    a pale grey above, with recessed mortar and a dirty kick zone. axis: "x" for a wall that runs along X."""
     m, nt, b = _new(name)
     p = _pos(nt)
     x, y, z = _xyz(nt, p)
@@ -272,39 +272,48 @@ def block_mat(name, axis, lower=(0.032, 0.040, 0.050), upper=(0.105, 0.11, 0.118
     br.inputs["Scale"].default_value = 1.0
     br.inputs["Brick Width"].default_value = 0.40
     br.inputs["Row Height"].default_value = 0.20
-    br.inputs["Mortar Size"].default_value = 0.009
-    br.inputs["Mortar Smooth"].default_value = 0.35
+    br.inputs["Mortar Size"].default_value = 0.0075
+    br.inputs["Mortar Smooth"].default_value = 0.75
     br.inputs["Color1"].default_value = (1, 1, 1, 1)
-    br.inputs["Color2"].default_value = (0.93, 0.93, 0.93, 1)
-    br.inputs["Mortar"].default_value = (0, 0, 0, 1)
+    br.inputs["Color2"].default_value = (0.88, 0.88, 0.88, 1)
+    br.inputs["Mortar"].default_value = (0.80, 0.80, 0.80, 1)
     nt.links.new(_comb(nt, u, z, 0.0), br.inputs["Vector"])
     fac = _out(br, "Fac")
     tone = _out(br, "Color")
-    hi = _range(nt, z, dado - 0.004, dado + 0.004, 0.0, 1.0)
+    hi = _range(nt, z, dado - 0.0025, dado + 0.0025, 0.0, 1.0, smooth=True)
     paint = _mix(nt, hi, lower, upper)
-    line = _range(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", z, dado + 0.04)), 0.035, 0.04, 1.0, 0.0)
-    paint = _mix(nt, line, paint, (0.035, 0.05, 0.08))
-    blk = _mix(nt, 0.5, paint, tone)
-    mixc = nt.nodes.new("ShaderNodeMix")
-    mixc.data_type = "RGBA"
-    mixc.blend_type = "MULTIPLY"
-    _in(mixc, "Factor", "VALUE").default_value = 0.6
-    nt.links.new(paint, _in(mixc, "A", "RGBA"))
-    nt.links.new(tone, _in(mixc, "B", "RGBA"))
-    col = _out(mixc, "Result", "RGBA")
-    col = _mix(nt, _math(nt, "SUBTRACT", 1.0, fac), col, (0.025, 0.027, 0.03))  # mortar holds dirt
+    # Individual blocks vary six percent about the paint value. The grout
+    # carries the same paint a little darker inside the recessed joint.
+    pigment = nt.nodes.new("ShaderNodeVectorMath")
+    pigment.operation = "SCALE"
+    nt.links.new(paint, pigment.inputs["Vector"])
+    nt.links.new(_math(nt, "ADD", tone, 0.06), pigment.inputs["Scale"])
+    col = pigment.outputs["Vector"]
     blotch = _range(nt, _noise(nt, _comb(nt, u, z, 0.0), 1.6, 6.0), 0.3, 0.7, 0.0, 1.0)
     col = _mix(nt, _math(nt, "MULTIPLY", blotch, 0.35), col, (0.04, 0.042, 0.046))
-    grime = _math(nt, "MULTIPLY", _range(nt, z, 0.0, 0.45, 1.0, 0.0),
+    grime = _math(nt, "MULTIPLY", _range(nt, z, 0.0, 0.30, 1.0, 0.0),
                   _range(nt, _noise(nt, _comb(nt, u, z, 0.0), 3.0, 5.0), 0.35, 0.65, 0.4, 1.0))
     col = _mix(nt, grime, col, (0.012, 0.013, 0.014))
-    streak = _range(nt, _noise(nt, _scale(nt, _comb(nt, u, z, 0.0), (14.0, 0.6, 1.0)), 2.0, 4.0), 0.62, 0.75, 0.0, 0.35)
-    col = _mix(nt, _math(nt, "MULTIPLY", streak, _range(nt, z, 1.3, 2.6, 1.0, 0.2)), col, (0.03, 0.03, 0.032))
+    if fittings:
+        # Moisture and handling grime collect below the control box and louvre,
+        # leaving the rest of the wall clear of repeated vertical marks.
+        spread = 0.0
+        for centre in fittings:
+            distance = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", u, centre))
+            weight = _range(nt, distance, 0.065, 0.22, 1.0, 0.0, smooth=True)
+            spread = _math(nt, "MAXIMUM", spread, weight)
+        streak = _range(nt, _noise(nt, _scale(nt, _comb(nt, u, z, 0.0), (14.0, 0.6, 1.0)), 2.0, 4.0),
+                        0.54, 0.71, 0.0, 0.34)
+        below = _math(nt, "MULTIPLY", _range(nt, z, 0.34, 0.96, 0.0, 1.0), _range(nt, z, 1.08, 1.25, 1.0, 0.0))
+        stain = _math(nt, "MULTIPLY", spread, _math(nt, "MULTIPLY", streak, below))
+        col = _mix(nt, stain, col, (0.018, 0.020, 0.021))
     nt.links.new(col, b.inputs["Base Color"])
-    nt.links.new(_range(nt, _noise(nt, p, 8.0, 4.0), 0.3, 0.7, 0.62, 0.82), b.inputs["Roughness"])
+    roughness = _fmix(nt, hi, 0.45, 0.70)
+    variation = _range(nt, _noise(nt, p, 8.0, 4.0), 0.3, 0.7, -0.045, 0.045)
+    nt.links.new(_math(nt, "ADD", roughness, variation), b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.35
-    h = _math(nt, "ADD", fac, _math(nt, "MULTIPLY", _noise(nt, _comb(nt, u, z, 0.0), 140.0, 3.0), 0.18))
-    _bump(nt, b, h, 0.45, 0.004)
+    pores = _math(nt, "MULTIPLY", _noise(nt, _comb(nt, u, z, 0.0), 300.0, 3.0), 0.05)
+    _bump(nt, b, _math(nt, "SUBTRACT", pores, fac), 0.85, 0.004)
     return m
 
 
@@ -480,7 +489,7 @@ def materials():
         floor=floor_mat(),
         wall_x=block_mat("block wall x", "x"),
         wall_y=block_mat("block wall y", "y"),
-        wall_end=block_mat("block wall end", "y", upper=(0.07, 0.074, 0.08)),
+        wall_end=block_mat("block wall end", "y", upper=(0.07, 0.074, 0.08), fittings=(-1.55, 1.03, 2.10)),
         wall_back=block_mat("block wall back room", "y", lower=(0.02, 0.022, 0.026), upper=(0.04, 0.042, 0.045)),
         concrete=concrete_mat("concrete soffit"),
         beam=concrete_mat("concrete beam", (0.07, 0.072, 0.076)),
