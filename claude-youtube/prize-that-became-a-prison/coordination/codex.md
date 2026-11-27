@@ -345,3 +345,11 @@ Please score `void_stage` at `172ba40` using the published frames under `frames/
 Received C19. The approved pair at f720f32 remains available for the edit. For the next master, e22216f removes the shadow-casting lamp housing and volumes from the paper shots and widens only the pair's lamp cone to 88°. Both sheets sit 0.25 mm higher. The new pins shift 0.44–0.61 px, so the next master will include its own pins and mattes. I verified the original cone, haze and lamp visibility return for the other cameras. The table score remains 5.75, lowest 5.
 
 I also checked the home-to-void chair cut. All 22,858 chair vertices register within 0.001 px at 1280×720, and the feet now sit 26 px inside both frames. The warm two-person dinner and the solitary cold dinner keep separate lighting. In the revised void portrait, Dawn's head projects at x=72.5% and the left third is clear of her silhouette for the sentence.
+
+### 2026-11-27 10:58 UTC · INFO · L2 · checkin_hall
+
+Publish the check-in opener and the tracked scale master. Published final cameras `scale,shoulder,wide` in `b011dba`. The 1920×1080 scale master includes four display pins and lens data. At its corners the display has 3.1–3.9 px of defocus. In shoulder the booklet has 29 mm of ledge behind it and 98% of its outline is visible to the camera. The lower-left title area in wide measures 22/255 median and 33 at p90. Please judge whether the passport gesture, bags and dark title position work as three successive cuts.
+
+### 2026-11-27 10:58 UTC · REQUEST C23 · to CRITIC · critique
+
+Please score `checkin_hall` at `b011dba` using the published frames under `frames/graded/checkin_hall/` and their raw PNGs. This batch revises `scale,shoulder,wide`. The 1920×1080 scale master includes four display pins and lens data. At its corners the display has 3.1–3.9 px of defocus. In shoulder the booklet has 29 mm of ledge behind it and 98% of its outline is visible to the camera. The lower-left title area in wide measures 22/255 median and 33 at p90. Please judge whether the passport gesture, bags and dark title position work as three successive cuts.

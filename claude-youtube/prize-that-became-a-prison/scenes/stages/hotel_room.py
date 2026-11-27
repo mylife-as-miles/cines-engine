@@ -505,11 +505,11 @@ def set_beat(beat):
             o.hide_render = beat != "pack"
     premarket = beat in ("pre", "accept")
     for o in _STATE["packing_props"]:
-        o.hide_render = premarket
+        o.hide_render = beat != "pack"
     for o in _STATE["early_props"]:
         o.hide_render = not premarket
     for o in _STATE["closed_case"]:
-        o.hide_render = beat != "pre"
+        o.hide_render = beat not in ("window", "pre")
     tote = _STATE["early_tote"]
     tote.matrix_world = _STATE["accept_tote" if beat == "accept" else "row_tote"]
     held = _STATE["sheers"].get("held")
@@ -600,7 +600,8 @@ def build(cast=True):
     closed_case, trio = premarket_props(duvet)
     early_tote, tote_mesh = trio[1]
     _STATE["early_props"] = list(set(bpy.context.scene.objects) - before_early)
-    _STATE["closed_case"] = [closed_case] + list(closed_case.children_recursive)
+    case_root = closed_case.parent
+    _STATE["closed_case"] = [case_root] + list(case_root.children_recursive)
     _STATE["early_tote"] = early_tote
     _STATE["row_tote"] = early_tote.matrix_world.copy()
     _STATE["accept_tote"] = early_tote.matrix_world.copy()

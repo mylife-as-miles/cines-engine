@@ -563,7 +563,6 @@ def room():
     bd.visible_diffuse = False
     # the right wall (-X): the radiator and a dark picture over it
     on_wall("right_wall", (x0, 0.7, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", -0.2, 1.5)))
-    on_wall("desk wall picture", (x1, 1.38, 0.0), -math.pi / 2, picture, "family_frame", 0.0, 1.48, 0.44, 0.32)
     # left of the window: a bookcase against the same wall, its books facing the room
     on_wall("bookcase", (1.31, y0, 0.0), math.pi, bookcase, "case", w=0.8)
     rg = box("rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004, seg=2)
@@ -925,7 +924,14 @@ def hand_pen(tip, axis):
     root = bpy.data.objects.new("hand_pen_root", None)
     bpy.context.scene.collection.objects.link(root)
     axis = Vector(axis).normalized()
-    root.matrix_world = Matrix.Translation(Vector(tip) + axis * (L / 2 + 0.0008)) @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    # The top sheet bows above the nominal pad height. Intersect the actual
+    # surface along the shaft so the nib touches and the grip stays aligned.
+    sheet = bpy.data.objects["pad_sheet"].evaluated_get(bpy.context.evaluated_depsgraph_get())
+    inverse = sheet.matrix_world.inverted()
+    hit, point, _, _ = sheet.ray_cast(inverse @ (Vector(tip) + axis * 0.025),
+                                      (inverse.to_3x3() @ -axis).normalized())
+    contact = sheet.matrix_world @ point if hit else Vector(tip)
+    root.matrix_world = Matrix.Translation(contact + axis * (L / 2)) @ axis.to_track_quat("Z", "Y").to_matrix().to_4x4()
     for o in (body, ring, clip):
         o.parent = root
     bpy.context.view_layer.update()
@@ -983,7 +989,7 @@ def desk_things(pad=PAD):
     """The hard things on the desk (after the papers, so they rest on them)."""
     m = M
     px, py, pt = pad
-    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.2, 0.03, 60.0))
+    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.24, -0.015, 105.0))
     group("glasses", reading_glasses(px + 0.035, py - 0.105, pt - 180.0))
     group("phone", phone(-0.245, -0.03, 12.0))
     group("frame", photo_frame(-0.12, -0.19, 121.0))

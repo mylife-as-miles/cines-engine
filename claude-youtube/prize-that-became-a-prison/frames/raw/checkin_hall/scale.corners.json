@@ -1,0 +1,44 @@
+{
+  "camera": "scale",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "origin": "top-left pixel edge",
+  "depth_axis": "camera forward",
+  "focus_m": 2.289894,
+  "fstop": 2.8,
+  "lens_mm": 46.0,
+  "sensor_mm": 36.0,
+  "screen": "scale_display",
+  "corners": {
+    "top_left": [
+      1173.301,
+      175.479
+    ],
+    "top_right": [
+      1351.112,
+      171.039
+    ],
+    "bottom_right": [
+      1340.157,
+      248.681
+    ],
+    "bottom_left": [
+      1162.471,
+      249.2
+    ]
+  },
+  "depth_m": {
+    "top_left": 2.924203,
+    "top_right": 2.776475,
+    "bottom_right": 2.769435,
+    "bottom_left": 2.917163
+  },
+  "in_frame": {
+    "top_left": true,
+    "top_right": true,
+    "bottom_right": true,
+    "bottom_left": true
+  }
+}
