@@ -914,7 +914,9 @@ def lens_glow(name, rgb, strength, ends=0.5, half=0.3):
     em.inputs["Color"].default_value = (*rgb, 1)
     x, y, z = _xyz(nt, o)
     a = _math(nt, "ABSOLUTE", z)
-    _link(nt, _maprange(nt, a, half * 0.78, half, strength, strength * (1.0 - ends)), em.inputs["Strength"])
+    s = _maprange(nt, a, half * 0.78, half, strength, strength * (1.0 - ends))
+    s.node.name = "lens_strength"
+    _link(nt, s, em.inputs["Strength"])
     add = _n(nt, "ShaderNodeAddShader")
     _link(nt, b.outputs[0], add.inputs[0])
     _link(nt, em.outputs[0], add.inputs[1])

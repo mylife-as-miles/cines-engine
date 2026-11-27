@@ -8,8 +8,10 @@ full-height painted steel side baffle at each division, a visiting phone on the 
 (visitors: the +X baffle; inmates: the -X one), a visitor chair on the visitors' side and a fixed pedestal stool on
 the inmates' side. A short caged fluorescent fitting over each booth's counter on both sides; only some burn.
 
-Phones: the Tripo visiting-phone prop (steel box, handset on its hook, armoured cord: front +X in its file) in every
-booth but the occupied one, whose two phones are built here (same proportions) so their handsets can be in hand.
+Phones: every phone is built here (round-1 critique: the Tripo visiting-phone prop's cord hung from the handset and
+ended in mid-air). In the empty booths the handset hangs in its cradle (earpiece up on the hook, mouthpiece down) and
+the armoured cord drops from the box's ferrule in a U and rises into the mouthpiece's strain relief; in the occupied
+booth the cradle is empty and the handsets are in hand.
 """
 import math
 
@@ -51,15 +53,21 @@ LIP = 0.095                               # the steel shield on a fitting's part
 # empty-booth camera can turn it on: the stage's hook trims it to 0 for every other camera.
 LEVEL_V = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0]
 LEVEL_I = [0.0, 0.03, 1.0, 1.0, 0.0, 0.0]
-BACK_LEVEL = (0.05, 0.0)                  # the visitors' room's own ceiling fittings (left one faint: the left wall)
+TILT = 24.0                               # the visitors' down lights lean this far away from the partition (deg):
+                                          # the wall above the glass, which the wide looks at, stays out of the beam
+                                          # (round-1 critique: scallops brighter than Dawn's face)
+TILT_I, SPREAD_I = 6.0, 100.0             # the inmates' ones barely lean and stay narrow, so their back wall (behind
+                                          # Dawn in the glass shot, where Tim's reflection must read) stays dark
 COOL = (0.80, 0.90, 1.0)
 UPPER, LOWER = (0.40, 0.405, 0.385), (0.10, 0.118, 0.13)    # pale emulsion above, satin blue-grey dado
 STEEL_PAINT = (0.075, 0.085, 0.095)       # booth steel: baffles (a dark blue-grey, so the row is not pale slabs)
 VD = dict(y=-2.35, w=0.95, h=2.1)         # visitors' door in the left wall (x = -XW)
 ID = dict(x=-2.15, w=0.95, h=2.1)         # inmates' door in the back wall (y = Y1)
-ID2 = dict(x=1.2, w=0.95, h=2.1)          # a second inmates' door, behind the occupied booth (the glass shot's depth)
+ID2 = dict(x=0.15, w=0.95, h=2.1)         # a second inmates' door behind Dawn: its vision panel glows at the glass
+                                          # shot's upper left, clear of Tim's reflection, and behind the empty stool
 CLOCK = (2.25, Y1, 2.2)
-NIGHT = (-1.0, Y0, 2.45)                  # a bulkhead night light on the visitors' back wall (reflects in booth 2's pane)
+NIGHT = (-0.57, Y0, 2.0)                  # a bulkhead night light on the visitors' back wall: placed so it reflects in
+                                          # the upper third of booth 2's pane, seen from the empty-booth camera
 
 M = {}
 LIGHTS = {}
@@ -373,6 +381,38 @@ def baffles():
             sk.sphere(f"baffle_cap_{k}_{sy}", BAF_T / 2 + 0.004, (x, y_out, BAF_H - 0.006), m["frame"], segs=20)
             box(f"baffle_kick_{k}_{sy}", (BAF_T + 0.006, L - 0.02, 0.1), (x, cy - sy * 0.01, 0.05), m["kick"], bevel=0.002)
             box(f"baffle_cap_rail_{k}_{sy}", (BAF_T + 0.008, L, 0.014), (x, cy, BAF_H - 0.005), m["frame"], bevel=0.003)
+    fixings()
+
+
+def fixings():
+    """Round-1 critique (untextured CG steel): how the baffles are held. A steel fixing angle on each face where a
+    baffle meets the glazing frame, from the counter to the cap rail, pan-head screws through it every 0.3 m; a
+    20 mm cover strip where the baffle meets the counter's front edge (the joint between the counter and the panel)
+    with its own screws."""
+    m = materials()
+    x0 = BX[0] - P / 2
+    ang, scr = bmesh.new(), bmesh.new()
+    for k in range(N + 1):
+        x = x0 + k * P
+        for sy in (-1, 1):
+            for sx in (-1, 1):
+                if (k == 0 and sx < 0) or (k == N and sx > 0):
+                    continue                                  # the end baffles' outer faces meet the piers' block
+                xf = x + sx * (BAF_T / 2 + 0.0015)
+                # the fixing angle: its leg on the baffle face, 30 mm wide, against the frame
+                yy = sy * (FD + 0.017)
+                add_box(ang, (0.003, 0.03, BAF_H - TOP - 0.03), (xf, yy, (TOP + BAF_H - 0.02) / 2))
+                z = TOP + 0.12
+                while z < BAF_H - 0.08:
+                    add_rod(scr, (xf, yy, z), (xf + sx * 0.0035, yy, z), 0.003, 10)
+                    z += 0.3
+                # the cover strip over the counter-to-panel joint
+                ys = sy * (CD - 0.01)
+                add_box(ang, (0.0025, 0.02, BAF_H - TOP - 0.04), (xf, ys, (TOP + BAF_H - 0.03) / 2))
+                for z in (TOP + 0.08, (TOP + BAF_H) / 2, BAF_H - 0.1):
+                    add_rod(scr, (xf, ys, z), (xf + sx * 0.003, ys, z), 0.0026, 10)
+    bevelled(mesh_obj("baffle_angles", ang, m["frame"]), 0.0008, 1)
+    mesh_obj("baffle_screws", scr, m["screw"], smooth=True)
 
 
 def stool(i):
@@ -431,17 +471,30 @@ def chair(xy, facing_deg, val=0.9, name="vchair"):
     return h
 
 
-def phone_prop(name, x_face, y, facing):
-    """The visiting-phone prop hung on a baffle face at x = x_face, its front looking along +X (facing = +1) or -X
-    (facing = -1). The file's front is +X and its back plane is 0.049 m behind the footprint centre."""
-    turn = 0.0 if facing > 0 else 180.0
-    h = props.load("visiting-phone", size=0.30, axis="z", loc=(x_face + facing * 0.049, y, PHONE_Z), turn_deg=turn,
-                   sat=0.55, val=0.85, rough_add=0.08)
-    h.name = name
-    for o in h.children_recursive:
-        for slot in getattr(o, "material_slots", []):
-            mt.tune_prop(slot.material, spec=0.4)
-    return h
+def hung_phone(name, x_face, y, facing, swing=0.02):
+    """A complete phone on a baffle face at x = x_face, its front along +X * facing: the box (phone_box), the handset
+    hanging in the cradle (long axis vertical, earpiece up with its cup resting on the hook's lip and hiding the
+    hook plate, cups toward the box, mouthpiece down), and the armoured cord from the box's ferrule, down in a U
+    (about 12 cm) and up into the mouthpiece's strain relief. `swing` pushes the bottom of the U a little along Y so
+    the loop is not a flat drawing. Returns the objects."""
+    exit_ = phone_box(name, x_face, y, facing)
+    z1 = PHONE_Z + 0.30
+    fx = x_face + facing * 0.04                     # the box's front face
+    hs = handset(f"{name}_handset")
+    X, Y, Z = Vector((0, facing, 0)), Vector((0, 0, 1)), Vector((facing, 0, 0))
+    mw = Matrix((X, Y, Z)).transposed().to_4x4()
+    # cups' faces 1.5 mm in front of the hook plate; the earpiece cup (r 0.03) sitting on the lip's top
+    mw.translation = Vector((fx + facing * (0.0135 + 0.0262), y + 0.02, z1 - 0.106 + 0.03 - 0.072))
+    hs.matrix_world = mw
+    bpy.context.view_layer.update()
+    b = hs.matrix_world @ Vector(hs["cord_local"])
+    a = Vector(exit_)
+    lo = min(a.z, b.z) - 0.12
+    mid = a.lerp(b, 0.45)
+    mid.z, mid.y = lo, mid.y + swing
+    pts = [a, a + Vector((0, 0, -0.06)), mid, b + Vector((0, swing * 0.4, -0.06)), b]
+    c = along_mesh(curve_tube(f"{name}_cord", [tuple(p) for p in pts], 0.0058, materials()["armour"], res=3))
+    return [hs] + list(hs.children_recursive) + [c]
 
 
 def phone_box(name, x_face, y, facing):
@@ -572,10 +625,17 @@ def fitting(name, x, y, level):
     (glowing when lit, its ends darker), a wire guard of hoops and runners, a down light and a faint up light."""
     m = materials()
     L = FIT_L
+    sy = 1 if y > 0 else -1
     box(f"{name}_body", (L, 0.15, 0.05), (x, y, H - 0.025), m["fit_white"], bevel=0.008)
     for s in (-1, 1):
         box(f"{name}_cap", (0.022, 0.13, 0.075), (x + s * (L / 2 - 0.02), y, H - 0.06), m["fit_white"], bevel=0.006)
-    lens = mt.glow(f"{name}_lens", COOL, 8.0 * level, ends=0.5, axis="Z", half=L / 2 - 0.03) if level > 0 else m["opal"]
+    # the steel shield on the partition side (round-1 critique: the down lights threw hard scallops on the block wall
+    # over the glass, brighter than Dawn's face): it hides the lens from the wall and cuts the light's upper rays
+    lip = box(f"{name}_lip", (L - 0.01, 0.006, LIP), (x, y - sy * 0.072, H - 0.05 - LIP / 2), m["fit_white"], bevel=0.002)
+    PARTS.setdefault("lips", []).append(lip)
+    # a lit lens is an emitter added to the unlit opal, so a fitting trimmed to 0 for a camera reads as an unlit
+    # diffuser, not a black hole; its strength node is scaled per camera by the stage's hook
+    lens = mt.lens_glow(f"{name}_lens", COOL, 8.0 * level, ends=0.5, half=L / 2 - 0.03) if level > 0 else m["opal"]
     if level > 0:
         PARTS.setdefault("lens", {})[name] = lens
     d = sk.cyl(f"{name}_diffuser", 0.048, L - 0.05, (x, y, H - 0.056), lens, rot=(0, math.pi / 2, 0), verts=40)
@@ -595,7 +655,10 @@ def fitting(name, x, y, level):
         add_rod(bm, (x - L / 2 + 0.04, y + y0, z0), (x + L / 2 - 0.04, y + y0, z0), 0.0024, 6)
     mesh_obj(f"{name}_cage", bm, m["wire"], smooth=True)
     if level > 0:
-        area(f"{name}_down", (x, y, H - 0.105), (L - 0.1, 0.07), FIT_W * level, COOL, spread=100)
+        # a long thin source like the tube itself, leaning away from the partition toward the sitter's face
+        tilt, spread = (TILT, 120.0) if sy < 0 else (TILT_I, SPREAD_I)
+        area(f"{name}_down", (x, y + sy * 0.01, H - 0.1), (L - 0.06, 0.04), FIT_W * level, COOL, spread=spread,
+             rot=(math.radians(sy * tilt), 0, 0))
         area(f"{name}_up", (x, y, H - 0.11), (L, 0.3), 6.0 * level, COOL, spread=180, rot=(math.pi, 0, 0), glossy=False)
 
 
@@ -614,8 +677,10 @@ def ceiling():
             add_rod(bm, (bx + 0.2, y, H - 0.012), (bx + 0.2, sy * (FIT_Y + 0.075), H - 0.012), 0.009, 10)
         bevelled(mesh_obj(f"conduit_hw_{sy}", bm, m["conduit"]), 0.003, 1)
     # the visitors' room's own fittings further back (off), and two CCTV domes
-    for k, x in enumerate((-1.8, 1.2)):
-        fitting(f"fitback{k}", x, -2.3, 0.0)
+    # the left one burns faintly (round-1 critique: the wide's left wall and floor crushed to black); out of frame
+    for k, (x, lv) in enumerate(((-1.8, 0.22), (1.2, 0.0))):
+        fitting(f"fitback{k}", x, -2.3, lv)
+    LIGHTS["fitback0_down"].rotation_euler = (math.radians(20), math.radians(30), 0)    # toward the left wall
     cctv("cctv_v", (-2.9, -1.4))
     cctv("cctv_i", (2.9, 1.9))
 
@@ -629,7 +694,7 @@ def cctv(name, xy):
 
 
 # ---------------------------------------------------------------- doors, clock, vent
-def door_leaf(name, centre, axis, sign, w, h, glow_rgb, glow_s):
+def door_leaf(name, centre, axis, sign, w, h, glow_rgb, glow_s, gz=1.5):
     """A painted steel door in an opening (wall face plane at `centre`'s axis coordinate), a pressed-steel frame, a
     wired-glass vision panel with the corridor's light behind it, a kick plate, a lever and a lock plate. `sign`:
     the side the room is on (-1 or +1) along the wall's normal."""
@@ -645,7 +710,7 @@ def door_leaf(name, centre, axis, sign, w, h, glow_rgb, glow_s):
         bx(f"{name}_jamb", 0.05, ft, h + 0.05, s * (w / 2 + 0.025), -sign * T / 2, (h + 0.05) / 2, m["frame"])
     bx(f"{name}_head", w + 0.1, ft, 0.05, 0.0, -sign * T / 2, h + 0.025, m["frame"])
     bx(f"{name}_leaf", w - 0.006, 0.05, h - 0.012, 0.0, -sign * 0.04, 0.008 + (h - 0.012) / 2, m["door"])
-    gw, gh, gz = 0.12, 0.5, 1.5
+    gw, gh = 0.12, 0.5
     g = bx(f"{name}_glass", gw, 0.054, gh, -w / 2 + 0.2, -sign * 0.04, gz, mt.wired_glow(f"{name} glass", glow_rgb, glow_s), 0.0)
     for s in (-1, 1):
         bx(f"{name}_bead", 0.016, 0.01, gh + 0.032, -w / 2 + 0.2 + s * (gw / 2 + 0.008), -sign * 0.011, gz, m["hardware"], 0.003)
@@ -713,12 +778,65 @@ def dressing():
     area("idoor_under", (ID["x"], Y1 - 0.04, 0.012), (ID["w"] - 0.1, 0.02), 2.5, COOL, spread=150,
          rot=(-math.pi / 2, 0, 0))
     # the vision panels throw a little cool light into each room
-    area("vdoor_spill", (-XW + 0.08, VD["y"] + VD["w"] / 2 - 0.2, 1.5), (0.5, 0.12), 5.0, COOL, spread=110,
+    # (round-1 critique: the left wall and floor of the wide crushed to black: the visitors' door's panel throws more)
+    area("vdoor_spill", (-XW + 0.08, VD["y"] + VD["w"] / 2 - 0.2, 1.5), (0.5, 0.12), 11.0, COOL, spread=130,
          rot=(0, -math.pi / 2, 0), glossy=False)
     area("idoor_spill", (ID["x"] - ID["w"] / 2 + 0.2, Y1 - 0.08, 1.5), (0.12, 0.5), 4.0, COOL, spread=110,
+         rot=(-math.pi / 2, 0, 0), glossy=False)
+    # round-1 critique (the inmates' side behind Dawn an empty dark wall): a second steel door behind the occupied
+    # booth, its wired-glass vision panel glowing dim and cool, a little light under it
+    door_leaf("idoor2", (ID2["x"], Y1), "x", -1, ID2["w"], ID2["h"], (0.75, 0.86, 1.0), 1.0, gz=1.4)
+    area("idoor2_under", (ID2["x"], Y1 - 0.04, 0.012), (ID2["w"] - 0.1, 0.02), 2.0, COOL, spread=150,
+         rot=(-math.pi / 2, 0, 0))
+    area("idoor2_spill", (ID2["x"] - ID2["w"] / 2 + 0.2, Y1 - 0.08, 1.5), (0.12, 0.5), 3.0, COOL, spread=110,
          rot=(-math.pi / 2, 0, 0), glossy=False)
     clock(CLOCK)
     wall_vent("vent_i", (0.9, Y1, 2.35), normal=-1)
     wall_vent("vent_v", (-0.4, Y0, 2.35), normal=1)
+    # blank laminated notices (no text): the inmates' rules panel on their back wall (out of the glass shot, where it
+    # would sit behind Tim's reflection), the visitors' one on the left pier
+    notice_panel("notice_i", (-1.45, Y1, 1.55), (0.6, 0.8), -1)
+    notice_panel("notice_v", (-3.3, -KW, 1.5), (0.45, 0.62), -1)
+    # a worn waiting line taped on the visitors' floor behind the chairs
+    t = box("floor_tape", (2 * XW - 0.6, 0.05, 0.0012), (0, -CHAIR_Y - 0.62, 0.0006), m["tape"])
+    t.visible_shadow = False
+    # a bulkhead night light high on the visitors' back wall: dim, it is the bright thing the empty booth's pane
+    # reflects (round-1 critique: the glass did not read)
+    bulkhead("night", NIGHT)
     # a moulded bin by the visitors' door
     sk.cyl("bin", 0.17, 0.5, (-XW + 0.3, VD["y"] + 0.85, 0.25), mt.plastic("bin plastic", (0.05, 0.055, 0.06), 0.45), verts=40)
+
+
+def notice_panel(name, loc, size, normal):
+    """A blank laminated notice on a wall whose room side is along `normal` * Y: a thin matt off-white sheet with
+    four screws at its corners and a hairline shadow gap."""
+    m = materials()
+    x, y, z = loc
+    w, h = size
+    box(f"{name}_sheet", (w, 0.003, h), (x, y + normal * 0.002, z), m["notice"], bevel=0.0008)
+    bm = bmesh.new()
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            p = (x + sx * (w / 2 - 0.025), y + normal * 0.0035, z + sz * (h / 2 - 0.025))
+            add_rod(bm, p, (p[0], p[1] + normal * 0.002, p[2]), 0.004, 10)
+    mesh_obj(f"{name}_screws", bm, m["screw"], smooth=True)
+
+
+def bulkhead(name, loc):
+    """A small oval bulkhead night light on the visitors' back wall (room on +Y): a dark cast body, a dim opal lens
+    behind a three-bar guard, a weak light."""
+    m = materials()
+    x, y, z = loc
+    b = sk.cyl(f"{name}_body", 0.11, 0.05, (x, y + 0.025, z), m["kick"], rot=(math.pi / 2, 0, 0), verts=40)
+    b.scale = (1.0, 0.62, 1.0)
+    bevelled(b, 0.008, 2, 40)
+    lens = sk.cyl(f"{name}_lens", 0.085, 0.012, (x, y + 0.052, z), mt.lens_glow(f"{name} lens", (0.85, 0.92, 1.0), 6.0, ends=0.0, half=1.0),
+                  rot=(math.pi / 2, 0, 0), verts=40)
+    lens.scale = (1.0, 0.6, 1.0)
+    PARTS.setdefault("lens", {})[name] = lens.data.materials[0]
+    g = bmesh.new()
+    for zz in (-0.025, 0.0, 0.025):
+        add_rod(g, (x - 0.09, y + 0.062, z + zz), (x + 0.09, y + 0.062, z + zz), 0.003, 6)
+    mesh_obj(f"{name}_guard", g, m["wire"], smooth=True)
+    area(f"{name}_glow", (x, y + 0.09, z), (0.16, 0.08), 2.5, (0.85, 0.92, 1.0), spread=160, rot=(math.pi / 2, 0, 0),
+         glossy=False)

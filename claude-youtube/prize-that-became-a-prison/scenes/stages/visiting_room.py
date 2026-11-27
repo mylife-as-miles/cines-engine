@@ -14,11 +14,13 @@ Cameras (each carries its beat): wide (the row from the back of the visitors' ro
 Tim's shoulder through the glass to Dawn on the phone, his faint reflection in the glass between them: they sit a
 little toward their own phones so it falls beside her face, not on it), empty (an empty booth: the handset hanging
 on its hook, the other side's phone across the glass; the cast hidden). A hook on setkit.render applies each camera's
-light trims (TRIMS), cast visibility, exposure, the strength of the marks on the glass ("film") and the denoiser
-settings. VISIT_ONLY=glass,empty in the environment limits `--cam all` to those cameras (one build).
+light trims (TRIMS), cast visibility, exposure, the glass's marks, reflectance and milky film ("film", "refl",
+"film_diffuse"), the haze ("haze"), a sample multiplier ("spp_k") and the denoiser settings. VISIT_ONLY=glass,empty
+in the environment limits `--cam all` to those cameras (one build).
 
-Stage-side finishing of the shared cast (no change of wardrobe or colour): the garments made matt (their satin
-specular under the top light read as pale stone), the sculpted hair smoothed and a shade darker (at the cast's 0.2 the
+Stage-side finishing of the shared cast (no change of wardrobe): the garments made matt (their satin specular under
+the top light read as pale stone), with shaded folds; the prison top lifted from near black to a washed mid-dark grey
+(round-1 critique: it read as body paint); the sculpted hair darker with deeper combed strands (at the cast's 0.2 the
 crown under the tubes rendered brighter than the face and Tim read bald), as inspection_room.py and checkin_hall.py
 do.
 
@@ -55,27 +57,38 @@ EMPTY = 2                                   # the booth of the empty-booth camer
 TIM_DX, DAWN_DX = 0.08, -0.12               # each sits toward their own phone (Tim's right, Dawn's right)
 
 FOCUS = {"fx_wide": (BXO, -0.3, 1.05),
-         "fx_empty": (st.BX[EMPTY] + 0.5 - st.BAF_T / 2 - 0.08, -st.PHONE_Y - 0.02, st.PHONE_Z + 0.19)}
+         "fx_empty": (st.BX[EMPTY] + 0.5 - st.BAF_T / 2 - 0.06, -st.PHONE_Y + 0.02, st.PHONE_Z + 0.2)}
 CAMERAS = {
     # Ch 08: from the back of the visitors' room, a little high: the row of booths along the glass, the one lit
-    # booth with Tim at the counter and Dawn beyond the glass, the empty booths falling off into the dark either side
-    "wide": dict(loc=(1.45, -3.3, 1.85), aim=(-0.35, 0.35, 1.2), lens=20, focus="fx_wide", fstop=5.6, beat="ch08",
+    # booth with Tim at the counter and Dawn beyond the glass, the empty booths falling off into the dark either side.
+    # Aimed so the lit fitting and the next one sit wholly inside the top of the frame and the last one wholly out
+    # (round-1 critique: a fitting cut by the top edge)
+    "wide": dict(loc=(1.38, -3.3, 1.9), aim=(-0.42, 0.35, 1.55), lens=20, focus="fx_wide", fstop=5.6, beat="ch08",
                  exposure=-1.85),
-    # Ch 08: over Tim's left shoulder, through the glass to Dawn with the handset at her ear (set by glass_camera())
-    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=58, focus="fx_dawn", fstop=2.8, beat="ch08"),
-    # Ch 08: an empty booth: the phone on its baffle, the handset hanging on its hook, the glass and the empty stool
-    # beyond (the cast hidden)
-    "empty": dict(loc=(st.BX[EMPTY] - 0.3, -1.35, 1.5), aim=(st.BX[EMPTY] + 0.08, 0.1, 1.1), lens=32,
-                  focus="fx_empty", fstop=2.2, beat="ch08", cast=False, exposure=-1.75, film=2.6),
+    # Ch 08: over Tim's left shoulder, through the glass to Dawn with the handset at her ear (set by glass_camera());
+    # no haze (it grained the reflection) and twice the samples, so his ghost in the glass comes out smooth
+    "glass": dict(loc=(0, 0, 0), aim=(0, 0, 1), lens=58, focus="fx_dawn", fstop=2.8, beat="ch08", haze=False,
+                  spp_k=2.0, refl=1.5),
+    # Ch 08: an empty booth from a visitor's seat, a little behind it: the near phone with its handset on the hook
+    # in the right third, the glass and its marks across the middle (the night light on the back wall reflecting in
+    # it), the other side's phone in its own pool of light in the left third, the empty stool beyond (cast hidden)
+    "empty": dict(loc=(st.BX[EMPTY] - 0.32, -1.6, 1.24), aim=(st.BX[EMPTY] + 0.15, 0.5, 1.17), lens=38,
+                  focus="fx_empty", fstop=2.8, beat="ch08", cast=False, exposure=-1.6, film=3.0, refl=3.0,
+                  film_diffuse=6.0),
 }
-# per-camera light trims: multipliers by light-name prefix (fittings scale their lens glow with them)
+# per-camera light trims: multipliers by light-name prefix (fittings scale their lens glow with them). Booth 2's
+# fittings and the "emp_" lights exist for the empty-booth camera only.
 TRIMS = {
-    # the empty booth: its inmates' side lit beyond the glass, its own fitting low, so the near phone is lit from the
-    # glass side and the far one stands in the light (the occupied booth turned down: another moment)
-    "empty": {f"fitv{EMPTY}": 6.0, f"fiti{EMPTY}": 16.0, f"fitv{st.OCC}": 0.25, f"fiti{st.OCC}": 0.25},
+    "wide": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35},
+    # the empty booth: its inmates' side in the light beyond the glass (about twice the visitors' side), its own
+    # fitting low, so the near phone is lit from above and the glass side and the far one stands in a pool (the
+    # occupied booth dark: another moment)
+    "empty": {f"fitv{EMPTY}": 0.15, f"fiti{EMPTY}": 1.0, f"fitv{st.OCC}": 0.0, f"fiti{st.OCC}": 0.0,
+              f"bounce": 0.0},
     # over Tim's shoulder: his own fitting turned down so the back of his head in the foreground falls darker than
     # Dawn's face, the counter's bounce into his face raised so his reflection in the glass still reads
-    "glass": {f"fitv{st.OCC}": 0.55, "bounce_Tim": 1.6},
+    "glass": {f"fitv{EMPTY}": 0.0, f"fiti{EMPTY}": 0.0, "emp": 0.0, "night": 0.35, f"fitv{st.OCC}": 0.5,
+              "bounce_Tim": 2.4},
 }
 _STATE = {"cast": [], "holders": {}, "base": {}, "lens_base": {}}
 if os.environ.get("VISIT_ONLY"):     # a convenience for re-shooting some cameras in one build: VISIT_ONLY=glass,empty
@@ -452,7 +465,9 @@ def handset_frame(holder, side, tilt=0.0):
     face)."""
     e, up, fwd, right = head_frame(holder)
     lat = right * side
-    ear = ear_point(holder, side) + lat * 0.004
+    # the ear point found on the mesh is the helix's outermost skin, above the canal: the earpiece goes 2.5 cm lower
+    # (round-1 critique: the earpiece sat at the temple, the mouthpiece at the jaw)
+    ear = ear_point(holder, side) + lat * 0.004 - up * 0.025
     mouth = e - up * 0.10 + fwd * 0.005 + lat * 0.05
     Y = (ear - mouth).normalized()
     Z = (lat - Y * lat.dot(Y)).normalized()
@@ -493,10 +508,11 @@ def two_bone(holder, side, wrist, pole):
 
 
 def grip_dir(frame):
-    """The fingers' direction on the handset: between straight across its handle (X, forward) and along it toward
-    the earpiece (Y), so the handle lies diagonally across the palm, the wrist below it near the jaw."""
+    """The fingers' direction on the handset: mostly straight across its handle (X, forward-up), a little along it
+    toward the earpiece (Y), so the fingers wrap the handle's front edge and the wrist sits behind and below it near
+    the jaw. (Round-1 critique: at 0.6 X + 0.8 Y the fingers ran up past the earpiece and rested on the temple.)"""
     O, X, Y, Z = frame
-    return (0.6 * X + 0.8 * Y).normalized()
+    return (0.92 * X + 0.38 * Y).normalized()
 
 
 def phone_hand(holder, pose, side, frame):
@@ -507,7 +523,9 @@ def phone_hand(holder, pose, side, frame):
     rig = _rig(holder)
     L3 = rig.pose.bones[f"hand_fk.{side}"].length * rig.matrix_world.to_scale().x
     y_f = grip_dir(frame)                              # the handle runs diagonally across the palm
-    mid = O + Z * 0.034 - y_f * 0.012                   # the hand bone's middle: behind the handle's outer face
+    # the hand bone's middle: behind the handle's outer face, a little below its centre (toward the mouthpiece) and
+    # back from its front edge, so the knuckles sit just past that edge and the curled fingers close round it
+    mid = O + Z * 0.034 - Y * 0.015 - X * 0.006
     wrist = mid - y_f * (0.5 * L3)
     e, up, fwd, right = head_frame(holder)
     pole = Vector((0, 0, -1)) + right * (1 if side == "R" else -1) * 0.55 + fwd * 0.35
@@ -520,11 +538,15 @@ def phone_hand(holder, pose, side, frame):
 
 
 # ---------------------------------------------------------------- finishing the shared cast for this light
-def matt_cloth(holder, item, rough=0.92, bump=0.25):
+def matt_cloth(holder, item, rough=0.92, bump=0.25, rgb=None, folds=0.0, fade=0.0):
     """A garment finished as matt cloth in its people.py colour (after inspection_room.py's cloth()): its normal map
     (whose fine stripes shimmer) dropped for a woven-noise bump, no sheen and almost no specular. Under the booth's
     top light the grazing specular of the satin garments was as bright as the stone's diffuse, so the dark suit and
-    the prison top both read as pale stone."""
+    the prison top both read as pale stone.
+
+    `rgb` replaces the garment's flat tint (already the colour it should read, after FABRIC_VALUE); `folds` darkens
+    the creases (ambient occlusion over a few centimetres) so the cloth shows its folds; `fade` mottles it as a
+    much-washed garment (broad patches up to that fraction lighter)."""
     ob = bpy.data.objects.get(f"{holder.name}_{item}")
     if ob is None:
         print(f"VISIT no garment {holder.name}_{item}", flush=True)
@@ -555,29 +577,75 @@ def matt_cloth(holder, item, rough=0.92, bump=0.25):
         bp.inputs["Distance"].default_value = 0.0004
         nt.links.new(nz.outputs["Fac"], bp.inputs["Height"])
         nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
+        if rgb is None and not folds and not fade:
+            continue
+        src = b.inputs["Base Color"].links[0].from_socket if b.inputs["Base Color"].links else None
+        if rgb is not None and src is not None and src.node.type == "MIX":
+            sock = [i for i in src.node.inputs if i.name == "B" and i.type == "RGBA"][0]
+            sock.default_value = (*rgb, 1.0)
+        col = src
+        if col is None:
+            continue
+        if fade:
+            fz = nt.nodes.new("ShaderNodeTexNoise")
+            fz.inputs["Scale"].default_value = 7.0
+            fz.inputs["Detail"].default_value = 3.0
+            nt.links.new(tc.outputs["Object"], fz.inputs["Vector"])
+            fr = nt.nodes.new("ShaderNodeMapRange")
+            fr.inputs["From Min"].default_value, fr.inputs["From Max"].default_value = 0.4, 0.75
+            fr.inputs["To Min"].default_value, fr.inputs["To Max"].default_value = 1.0, 1.0 + fade
+            nt.links.new(fz.outputs["Fac"], fr.inputs["Value"])
+            mx = nt.nodes.new("ShaderNodeMix")
+            mx.data_type, mx.blend_type = "RGBA", "MULTIPLY"
+            mx.inputs["Factor"].default_value = 1.0
+            nt.links.new(col, [i for i in mx.inputs if i.name == "A" and i.type == "RGBA"][0])
+            cc = nt.nodes.new("ShaderNodeCombineColor")
+            for k in ("Red", "Green", "Blue"):
+                nt.links.new(fr.outputs["Result"], cc.inputs[k])
+            nt.links.new(cc.outputs[0], [i for i in mx.inputs if i.name == "B" and i.type == "RGBA"][0])
+            col = [o for o in mx.outputs if o.type == "RGBA"][0]
+        if folds:
+            ao = nt.nodes.new("ShaderNodeAmbientOcclusion")
+            ao.samples = 6
+            ao.inputs["Distance"].default_value = 0.05
+            ar = nt.nodes.new("ShaderNodeMapRange")
+            ar.inputs["From Min"].default_value, ar.inputs["From Max"].default_value = 0.35, 1.0
+            ar.inputs["To Min"].default_value, ar.inputs["To Max"].default_value = 1.0 - folds, 1.0
+            nt.links.new(ao.outputs["AO"], ar.inputs["Value"])
+            mx = nt.nodes.new("ShaderNodeMix")
+            mx.data_type, mx.blend_type = "RGBA", "MULTIPLY"
+            mx.inputs["Factor"].default_value = 1.0
+            nt.links.new(col, [i for i in mx.inputs if i.name == "A" and i.type == "RGBA"][0])
+            cc = nt.nodes.new("ShaderNodeCombineColor")
+            for k in ("Red", "Green", "Blue"):
+                nt.links.new(ar.outputs["Result"], cc.inputs[k])
+            nt.links.new(cc.outputs[0], [i for i in mx.inputs if i.name == "B" and i.type == "RGBA"][0])
+            col = [o for o in mx.outputs if o.type == "RGBA"][0]
+        nt.links.new(col, b.inputs["Base Color"])
     return ob
 
 
-def sculpt_hair(name):
+def sculpt_hair(name, value=0.07, strands=0.12):
     """The shared cast's carved-strand bump reads as a ribbed knit beanie close up (checkin_hall.py's fix): a
-    smooth sculpted stone with a broad combed undulation, and a matt finish so the top light does not turn the
-    darker hair as pale as the face."""
+    sculpted stone with a combed undulation, and a matt finish so the top light does not turn the darker hair as
+    pale as the face. Round-1 critique: from behind, Tim's crown under the booth's fitting rendered as pale as skin
+    (a bald egg): darker still, and the combed strands carved deeper so the crown has relief."""
     m = bpy.data.materials.get(f"hair_{name}")
     if not m:
         return
     for n in m.node_tree.nodes:
         if n.type == "BUMP":
-            n.inputs["Strength"].default_value = 0.05
+            n.inputs["Strength"].default_value = strands
         elif n.type == "TEX_WAVE":
             n.inputs["Scale"].default_value = 22.0
             n.inputs["Distortion"].default_value = 4.0
             n.inputs["Detail"].default_value = 1.5
         elif n.type == "BSDF_PRINCIPLED":
-            n.inputs["Roughness"].default_value = 0.8
-            n.inputs["Specular IOR Level"].default_value = 0.2
+            n.inputs["Roughness"].default_value = 0.88
+            n.inputs["Specular IOR Level"].default_value = 0.12
             # a shade darker than the cast's 0.2: under the booth's top light the crown faces the tubes and the face
             # does not, so at 0.2 the hair rendered brighter than the face and Tim read bald
-            n.inputs["Base Color"].default_value = (0.1, 0.1, 0.105, 1.0)
+            n.inputs["Base Color"].default_value = (value, value, value * 1.05, 1.0)
 
 
 # ---------------------------------------------------------------- the cast
@@ -588,18 +656,22 @@ def build_cast():
     # toward the phone on the booth's +X baffle), his left hand flat on the counter
     t = people.man("Tim", age=0.58, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
     d = people.dawn_prison()
-    matt_cloth(t, "male_elegantsuit01")
-    matt_cloth(d, "female_casualsuit01")
-    for n in ("Tim", "DawnPrison"):
-        sculpt_hair(n)
+    matt_cloth(t, "male_elegantsuit01", folds=0.35)
+    # round-1 critique: the prison top read as black body paint. Lifted from the cast's 0.03 to a mid-dark grey
+    # (still well under the 0.5 stone; the critic's 0.16-0.2 would read as skin under the grade), its folds shaded,
+    # mottled as a much-washed garment, a stronger knit bump
+    matt_cloth(d, "female_casualsuit01", bump=0.38, rgb=(0.078, 0.08, 0.083), folds=0.45, fade=0.18)
+    sculpt_hair("Tim", 0.06, 0.16)
+    sculpt_hair("DawnPrison", 0.075, 0.1)
     holders["Tim"], holders["Dawn"] = t, d
     sc = _STATE["tim_seat_c"]
     # Dawn sits a little to her right of the stool's centre and Tim a little to his right, so seen through the glass
     # from over his shoulder his faint reflection falls beside her face, not on it
     seats = {"Tim": (st.CHAIR_SEAT_Z, 180.0, (sc[0] + TIM_DX, sc[1] - 0.03)),
              "Dawn": (st.STOOL_Z, 0.0, (DAWN_SEAT[0] + DAWN_DX, DAWN_SEAT[1] + 0.01))}
+    # Dawn sits more bowed than in round 1 (chest and neck further down): twelve years inside, weary, not upright
     upper = {"Tim": {"chest": (15, 0), "neck": (4, 0), "fingers": 22},
-             "Dawn": {"chest": (11, 0), "neck": (2, 0), "fingers": 22}}
+             "Dawn": {"chest": (17, 0), "neck": (6, 0), "fingers": 22}}
     legs = {}
     for n, h in holders.items():
         seat_z, face, hip_xy = seats[n]
@@ -609,20 +681,25 @@ def build_cast():
     for n, h in holders.items():
         _STATE["cast"] += [h] + list(h.children_recursive)
     poses = {}
-    # gazes: each onto the other's eyes (through the glass)
+    # gazes: each onto the other's eyes (through the glass); Dawn's a little low, on his mouth (her head a few
+    # degrees down: tired, listening)
+    drop = {"Tim": 0.0, "Dawn": 0.07}
     for n, other in (("Tim", "Dawn"), ("Dawn", "Tim")):
         p = dict(upper[n])
-        err, hd = aim_head(holders[n], p, eye_centre(holders[other]))
+        err, hd = aim_head(holders[n], p, eye_centre(holders[other]) - Vector((0, 0, drop[n])))
         poses[n] = p
         print(f"VISIT {n} head {hd}, gaze error {err:.1f} deg", flush=True)
     for n, other in (("Dawn", "Tim"), ("Tim", "Dawn")):     # again, now the other's head has turned
-        err, hd = aim_head(holders[n], poses[n], eye_centre(holders[other]))
+        err, hd = aim_head(holders[n], poses[n], eye_centre(holders[other]) - Vector((0, 0, drop[n])))
         print(f"VISIT {n} head {hd}, gaze error {err:.1f} deg (second pass)", flush=True)
     # the counter hands: Tim's left, Dawn's left; wrist about 20 cm to the side of the body's centre
     rests = {}
     for n, h in holders.items():
         calibrate_palm(h, poses[n], "L")
         calibrate_palm(h, poses[n], "R")
+    # (round-1 critique: Tim's counter hand shows in no frame. Measured by ray casts: from the wide's camera, high
+    # behind his right shoulder, his back hides the counter in front of him for any wrist less than ~45 cm left of
+    # his centre, and the glass shot frames above the counter; so the hand stays where a resting hand goes)
     tw = (BXO + TIM_DX - 0.19, -0.27, st.TOP + 0.06)
     dw = (BXO + DAWN_DX + 0.19, 0.35, st.TOP + 0.06)
     # the phone hands: the handset on the right ear (Tim's right is +X, Dawn's -X), the hand closed on it
@@ -696,15 +773,17 @@ def build_cast():
 
 # ---------------------------------------------------------------- set build
 def booths():
-    """Chairs and stools, the phones (props in the empty booths, built ones in the occupied booth)."""
+    """Chairs and stools, the phones: built ones everywhere (round-1 critique: the Tripo prop's cord ended in
+    mid-air), the handsets hung in their cradles in the empty booths and in hand in the occupied one."""
     for i, bx in enumerate(st.BX):
         st.stool(i)
         if i != st.OCC:
             jit = [6.0, -4.0, 9.0, 0.0, -7.0, 3.0][i]
             dy = [0.05, -0.02, 0.12, 0.0, 0.0, 0.08][i]
             st.chair((bx + [0.03, -0.04, 0.0, 0.0, 0.05, -0.02][i], -st.CHAIR_Y - dy), 90.0 + jit, name=f"vchair{i}")
-            st.phone_prop(f"phone_v{i}", bx + P2 - st.BAF_T / 2, -st.PHONE_Y, -1)
-            st.phone_prop(f"phone_i{i}", bx - P2 + st.BAF_T / 2, st.PHONE_Y, +1)
+            sw = [0.02, -0.015, 0.025, 0.0, 0.018, -0.02][i]
+            st.hung_phone(f"phone_v{i}", bx + P2 - st.BAF_T / 2, -st.PHONE_Y, -1, swing=sw)
+            st.hung_phone(f"phone_i{i}", bx - P2 + st.BAF_T / 2, st.PHONE_Y, +1, swing=-sw)
     ch = st.chair(TIM_SEAT, 90.0, name="vchair_tim")
     # the chair stands so its seat (not its footprint) is centred in the booth, and the seat's top under Tim is
     # found by ray casts onto it
@@ -732,6 +811,23 @@ P2 = st.P / 2
 
 def haze(density=0.003):
     sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), density)
+
+
+def empty_lights():
+    """Lights for the empty-booth camera only (trimmed to 0 for the others; round-1 critique: the glass did not
+    read, the far phone stood in shadow and nothing in the frame reached a highlight). A raking strip at the head of
+    the pane on the visitors' side, 3 cm off the glass and leaning into it, that lights the prints and wipe marks
+    as a milky film and lays a line of light along the sill; a pool over the far phone on the inmates' counter; a
+    small raking source over the near phone so its box's top edge and the handset's crown catch the light."""
+    bx = st.BX[EMPTY]
+    gz = st.HEAD[0] - 0.035
+    st.area("emp_graze", (bx, -(st.GT / 2 + 0.05), gz), (st.P - st.MUL - 0.08, 0.035), 30.0, st.COOL, spread=40,
+            rot=(math.radians(16), 0, 0))
+    far = (bx - P2 + st.BAF_T / 2 + 0.14, st.PHONE_Y + 0.03, st.PHONE_Z + 0.62)
+    st.area("emp_pool", far, (0.3, 0.1), 45.0, st.COOL, spread=70, rot=(math.radians(-6), math.radians(14), 0),
+            glossy=False)
+    near = (bx + P2 - st.BAF_T / 2 - 0.16, -st.PHONE_Y + 0.02, st.PHONE_Z + 0.7)
+    st.area("emp_rake", near, (0.06, 0.2), 9.0, st.COOL, spread=50, rot=(0, math.radians(-18), 0))
 
 
 # ---------------------------------------------------------------- per camera
@@ -768,16 +864,21 @@ def apply_camera(name):
         k = next((v for p, v in trims.items() if n == p or n.startswith(p + "_")), 1.0)
         ob.data.energy = b * k
     for n, mat in st.PARTS.get("lens", {}).items():
-        mr = next((x for x in mat.node_tree.nodes if x.type == "MAP_RANGE"), None)
+        mr = mat.node_tree.nodes.get("lens_strength")
         if mr is None:
             continue
         b = _STATE["lens_base"].setdefault(n, (mr.inputs["To Min"].default_value, mr.inputs["To Max"].default_value))
         k = trims.get(n, 1.0)
         mr.inputs["To Min"].default_value, mr.inputs["To Max"].default_value = b[0] * k, b[1] * k
-    for mat in [bpy.data.materials.get("security glass")]:
-        node = mat.node_tree.nodes.get("film_gain") if mat else None
+    # the security glass: strength of its marks, its clean reflectance and the marks' milky diffuse, per camera
+    mat = bpy.data.materials.get("security glass")
+    for node_name, key in (("film_gain", "film"), ("refl_gain", "refl"), ("film_diffuse", "film_diffuse")):
+        node = mat.node_tree.nodes.get(node_name) if mat else None
         if node is not None:
-            node.outputs[0].default_value = cfg.get("film", 1.0)
+            node.outputs[0].default_value = cfg.get(key, 1.0)
+    hz = bpy.data.objects.get("haze")
+    if hz is not None:
+        hz.hide_render = not cfg.get("haze", True)
     cam = bpy.context.scene.camera
     if cam is not None:
         cam.data.clip_start, cam.data.clip_end = 0.03, 100.0
@@ -799,8 +900,19 @@ def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):
-        apply_camera(which_camera())
+        name = which_camera()
+        apply_camera(name)
         kw.setdefault("world", WORLD)
+        k = CAMERAS.get(name, {}).get("spp_k", 1.0)
+        args = list(args)
+        sc = bpy.context.scene
+        sc.cycles.adaptive_min_samples = 0
+        if k != 1.0 and len(args) > 1:
+            args[1] = int(round(args[1] * k))         # more samples for this camera (shoot.py passes one spp)
+            # setkit.render fixes the adaptive threshold at 0.03; a high floor of samples keeps the faint reflection
+            # from stopping early
+            sc.cycles.adaptive_min_samples = int(args[1] * 0.75)
+            print(f"VISIT camera {name}: {args[1]} samples (at least {sc.cycles.adaptive_min_samples})", flush=True)
         return orig(*args, **kw)
     render._orig = orig
     sk.render = render
@@ -818,6 +930,7 @@ def build(cast=True):
     st.ceiling()
     st.dressing()
     booths()
+    empty_lights()
     haze()
     for n, p in FOCUS.items():
         st.empty(n, p)
