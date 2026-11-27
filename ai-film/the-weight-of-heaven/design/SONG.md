@@ -118,3 +118,13 @@ One voice sample was also made with Gemini's speech model (the verse spoken by a
 - The style text is this file's brief, changed in three ways: it is called a sung, modern, dark pop anthem made for a montage rather than alternative rock; it asks for Dune's weight by description (tribal drums, low brass, a throat-like drone, a wordless woman's wail); and it forbids electric guitar. It names no artist, film or song.
 - The lyrics are this file's proposal with the stage directions taken out (the stops are made in the cut) and one addition: a two-bar tag after verse 2, "(Hold it up) we held it up", a crowd's chant that Karst's "We stopped carrying it." then answers.
 - Not known until it is heard: whether the model keeps 84 BPM and D minor, how the choir and the chant come out, and whether the lead is low and raw enough. If the voice or sound is wrong, the next demo changes the style text only.
+
+## 27 November, later: demo 1, made with Gemini; its second verse is in cut v18
+
+The author, on the package above: "Use gemini for this nah". So the same style text and lyrics went to Gemini's music model instead of Mureka: Lyria 3.5 (`models/lyria-3.5`, `generateContent`), one request, `tools/gemini_song.py`, the text sent in `prompts/song/SONG_demo1_gemini_prompt.txt`, the record in `prompts/song/SONG_demo1_job.json`. A first request with an audio-format option was refused by the service before anything was made; the second made the song in 27 s.
+
+- **Price:** Lyria 3.5 is listed at $0.08 a song by several resellers and guides; Google's own price page could not be opened from this session, so this is the listed price, not a bill.
+- **What came back:** `audio/song/SONG_demo1.mp3`, 3:03, MP3 at 192 kb/s, −12.0 LUFS, about 85 BPM. Every line of the lyrics was sung, in order, and the answer carried each line's time. Verse 2 starts on a drum drop at 55.87 s; "Hold it up" at 79.1 and 81.9 s; a heavy hit every 5.65 s.
+- **By a listening model (not a person):** dark cinematic pop with tribal and trailer percussion, sub bass, low brass and strings; no electric guitar; a female lead, intimate in the verses and belting in the choruses, with pitch correction audible on held notes; a low crowd on "Hold it up"; choir answers in the bridge. It rated the fit for an Arcane-style montage high and the weight against a Dune-like score lower, and called the build formulaic.
+- **Not checked:** the terms for commercial use of Lyria's output, and whether the file carries a watermark. To be read before any release.
+- **In the film:** verse 2 only, in cut v18 (`edit/film_v18.md`). The author has not yet judged the song or the cut.

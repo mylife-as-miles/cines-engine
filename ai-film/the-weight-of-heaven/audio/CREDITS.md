@@ -39,7 +39,7 @@ Every file made by `tools/sfx_make.py` for the opening (movement I). What each o
   public-domain recordings; no audio file ships with it.
 - The choir candidates are wordless and generated: no text and no existing work was given to the model. Whether any
   of them resembles an existing piece can only be judged by ear; earshot cannot name works.
-- Not used: fal, Lyria, ElevenLabs or any other paid service. Freesound itself (the proxy refused the host) and the
+- Not used for these effects and choirs: fal, Lyria, ElevenLabs or any other paid service. (The song is separate: `audio/song/`, made with Lyria 3.5 through the Gemini API, see `design/SONG.md`.) Freesound itself (the proxy refused the host) and the
   opus-sound-layer library (its GitHub repository could not be cloned) were not reachable from the build machine on
   25 November 2026, so the only recordings are the three above, taken from this repository.
 
