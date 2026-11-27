@@ -743,6 +743,8 @@ def family_member(name, chair, age, height, weight, tone):
     shift = holder.rotation_euler.to_matrix() @ Vector((hip.x, hip.y + (0.10 if gene else 0), 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
     bpy.context.view_layer.update()
+    if name == "Gene2014":
+        rigged._turn(rig, "head", -13.0, -25.0)  # meet Tim's gaze in the warm dinner
     return holder
 
 
