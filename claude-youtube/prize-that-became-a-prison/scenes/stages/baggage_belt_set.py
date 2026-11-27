@@ -232,12 +232,12 @@ def floor_mat():
     br.inputs["Color2"].default_value = (1, 1, 1, 1)
     br.inputs["Mortar"].default_value = (0, 0, 0, 1)
     nt.links.new(_comb(nt, _xyz(nt, p)[0], _math(nt, "ADD", _xyz(nt, p)[1], 1.75), 0.0), br.inputs["Vector"])
-    joint = _math(nt, "SUBTRACT", 1.0, _out(br, "Fac"))   # 1 in the joint
+    joint = br.outputs["Factor"]
     epoxy = (0.062, 0.068, 0.072)
     conc = (0.082, 0.085, 0.086)
-    base = _mix(nt, _range(nt, _noise(nt, p, 1.2, 5.0), 0.3, 0.7, 0.0, 1.0), tuple(c * 0.88 for c in epoxy),
-                tuple(c * 1.1 for c in epoxy))
-    worn = _range(nt, _noise(nt, _scale(nt, p, (0.4, 1.6, 1.0)), 1.1, 6.0, 0.62), 0.58, 0.66, 0.0, 1.0)
+    base = _mix(nt, _range(nt, _noise(nt, p, 1.2, 5.0), 0.3, 0.7, 0.0, 1.0), tuple(c * 0.965 for c in epoxy),
+                tuple(c * 1.03 for c in epoxy))
+    worn = _range(nt, _noise(nt, _scale(nt, p, (0.4, 1.6, 1.0)), 1.1, 6.0, 0.62), 0.58, 0.66, 0.0, 0.30)
     x, y, z = _xyz(nt, p)
     lane = _range(nt, _math(nt, "ABSOLUTE", _math(nt, "ADD", y, 1.85)), 0.25, 0.75, 1.0, 0.0, smooth=True)
     worn = _math(nt, "MAXIMUM", worn, _math(nt, "MULTIPLY", lane,
@@ -278,7 +278,7 @@ def block_mat(name, axis, lower=(0.032, 0.040, 0.050), upper=(0.105, 0.11, 0.118
     br.inputs["Color2"].default_value = (0.88, 0.88, 0.88, 1)
     br.inputs["Mortar"].default_value = (0.80, 0.80, 0.80, 1)
     nt.links.new(_comb(nt, u, z, 0.0), br.inputs["Vector"])
-    fac = _out(br, "Fac")
+    fac = br.outputs["Factor"]
     tone = _out(br, "Color")
     hi = _range(nt, z, dado - 0.0025, dado + 0.0025, 0.0, 1.0, smooth=True)
     paint = _mix(nt, hi, lower, upper)
@@ -515,7 +515,7 @@ def materials():
         steel=pbr("brushed steel", (0.58, 0.59, 0.6), (0.24, 0.38), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08,
                   aniso=0.4, world=True),
         # the slide is brushed down its slope (along Y), worn duller where the bags run
-        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.52, 0.62), metal=1.0, nscale=3, stretch=(24, 1, 1),
+        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.52, 0.62), metal=1.0, nscale=2, stretch=(36, 0.20, 1),
                       cvar=0.035, aniso=0.0),
         dark_steel=pbr("dark steel", (0.2, 0.205, 0.21), (0.35, 0.55), metal=1.0, nscale=7, cvar=0.2, world=True),
         motor=pbr("motor paint", (0.045, 0.06, 0.075), (0.3, 0.45), nscale=8, cvar=0.15, coat=0.3, world=True,
