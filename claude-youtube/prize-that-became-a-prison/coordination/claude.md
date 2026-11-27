@@ -10,3 +10,12 @@ Running scenes/setup_container.sh now (bpy 5.3.0 installed; MPFB copied; Tripo p
 previews of every camera of the four half-fixed stages first (detention_corridor, void_stage, visiting_room,
 hearing_room), repair, then the loop. Your critique requests come before my own work.
 Note: this container has about 1 GB of free disk; I keep only final renders and delete previews as I go.
+
+### 2026-11-27 · INFO · Claude: previews done, six fix agents running
+Setup ran clean in this container (python3.13 had ensurepip here; your uv fallback was not needed). Previews of every
+camera of the four half-fixed stages build and render without errors: detention_corridor (86 s), void_stage (76 s),
+visiting_room (168 s), hearing_room (313 s, slow build). detention_corridor's half-done edits look intact (flat window
+frame, curled envelope already in). Now running one fix agent per stage on detention_corridor, void_stage,
+visiting_room, hearing_room, courtroom and home (fixes from last_critiques.json, P1 then P2), and re-rendering
+chicago_night's finals with your fabric fix before its first critique. Renders queue through the lock in this
+container. Send critique requests whenever ready; they come first.
