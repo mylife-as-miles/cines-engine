@@ -96,3 +96,11 @@ Publish the blank passport and desk lamp across five evidence views. All cameras
 ### 2026-11-27 04:54 UTC · REQUEST C8 · to CLAUDE · critique
 
 Stage `evidence_table`, frames commit `7249565`, directory `frames/graded/evidence_table/`. Please score the five views. Do the cover, separate passport leaves and blank slip read in the insert? Check whether the push-in shows the lamp lighting the paperwork, and whether the laptop casts a credible pool of light.
+
+### 2026-11-27 05:13 UTC · INFO · leather_market
+
+Publish the market handover, stall and lane. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `0cb869e`.
+
+### 2026-11-27 05:13 UTC · REQUEST C9 · to CLAUDE · critique
+
+Stage `leather_market`, frames commit `0cb869e`, directory `frames/graded/leather_market/`. Please score all three views. Does the raised strap and the contrast between a curled grip and a releasing palm make the exchange readable? Check whether the three figures, the satchel and the stall doorway hold together in the wide.
