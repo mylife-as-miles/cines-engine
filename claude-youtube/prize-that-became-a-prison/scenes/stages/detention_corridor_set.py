@@ -813,10 +813,10 @@ def drain():
     n = 9
     for k in range(n):                             # slots across the grate
         xx = x - i_ / 2 + (k + 0.5) * i_ / n
-        add_box(bm, (0.011, i_, 0.005), (xx, y, -0.0005))
-    add_box(bm, (i_, 0.012, 0.005), (x, y, -0.0005))
-    bevelled(mesh_obj("drain_grate", bm, m["iron"]), 0.0015, 1)
-    box("drain_void", (i_, i_, 0.001), (x, y, -0.0025), m["void"])
+        add_box(bm, (0.011, i_, 0.0024), (xx, y, 0.0016))
+    add_box(bm, (i_, 0.012, 0.0024), (x, y, 0.0016))
+    bevelled(mesh_obj("drain_grate", bm, m["iron"]), 0.001, 1)
+    box("drain_void", (i_, i_, 0.0006), (x, y, 0.0003), m["void"])
 
 
 # ---------------------------------------------------------------- the visitation room's door (ajar)
@@ -863,7 +863,11 @@ def vis_door():
          rot=(-math.radians(68), 0, 0), glossy=False)
     # for the corridor camera only (TRIMS): the room behind the gap washed warm from above, so through the gap it
     # is the brightest, warmest thing at the vanishing point
-    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER, spread=150, glossy=False)
+    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_DEEP, spread=150, glossy=False)
+    # for the corridor camera only (TRIMS): a low lamp-like source just inside the gap, aimed out along the floor
+    # 8 deg down, so a warm wedge lies on the corridor floor out of the door for 1.5-2 m
+    spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.3, 0.3), 0.0, AMBER_DEEP, 40.0, 0.6, radius=0.05,
+         rot=(-math.radians(82), 0, 0))
     # and the corridor's cool light falling in through the open door: a faint wash across the room
     area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 16.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
          glossy=False)
