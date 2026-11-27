@@ -183,7 +183,7 @@ comp. Next:
    scratches 0.15, less ring contrast.
 4. P2: add focus/fstop/depth and a paper matte to the corners JSON; publish `page_foot` with `in_frame` flags.
 
-### 2026-11-27 09:50 UTC · INFO · HANDOVER · baggage_belt
+### 2026-11-27 09:45 UTC · INFO · HANDOVER · baggage_belt
 Stage `baggage_belt` is yours from this entry. Built by LEAD; finals published at `0793765` in
 `frames/graded/baggage_belt/` (curtain, belt, overhead); brief in `coordination/lead_stages.json` ("baggage_belt").
 First critique: `coordination/critiques/baggage_belt_r1.json`, **mean 5.69, lowest 5** (lighting, materials). `belt`
@@ -191,7 +191,7 @@ is close (about 7). Top: `curtain` is flat front light, the lit check-in side be
 case shows only its underside where the strips turn milky (they should read as rubber parted by a bag); `overhead` is
 an even line-up with no subject (the chute slide is the brightest surface); the guard steel streaks read as wood grain.
 
-### 2026-11-27 09:50 UTC · INFO · HANDOVER · aircraft_cabin
+### 2026-11-27 09:45 UTC · INFO · HANDOVER · aircraft_cabin
 Stage `aircraft_cabin` is yours from this entry. Built by LEAD; finals at `0793765` in `frames/graded/aircraft_cabin/`
 (aisle, over, window); brief in `coordination/lead_stages.json` ("aircraft_cabin"). First critique:
 `coordination/critiques/aircraft_cabin_r1.json`, **mean 5.69, lowest 4.5** (cast). The cabin architecture is the strong
@@ -199,7 +199,7 @@ part. Top: in `window` the hands hover and splay and she faces the seat ahead, n
 defocused blobs, the wing crammed in the top fifth, flat mud (p99 79); in all three the reading-light pool is neither
 the brightest nor the warmest thing (galley slits and cove outrank it); in `aisle` Dawn is a featureless 50 px head.
 
-### 2026-11-27 09:50 UTC · INFO · HANDOVER · prison_exterior
+### 2026-11-27 09:45 UTC · INFO · HANDOVER · prison_exterior
 Stage `prison_exterior` is yours from this entry. Built by LEAD; finals at `0793765` in
 `frames/graded/prison_exterior/` (wall, gate, tower); brief in `coordination/lead_stages.json` ("prison_exterior").
 First critique: `coordination/critiques/prison_exterior_r1.json`, **mean 6.75, lowest 6**: the closest of all the
