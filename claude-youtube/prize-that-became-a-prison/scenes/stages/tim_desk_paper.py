@@ -1,8 +1,8 @@
 """Paper and small things on Tim's desk, built in Python: sheets with real thickness, curl and folds, dropped onto
-whatever lies under them; sealed envelopes; a ruled writing pad; a banded bundle and loose stacks of envelopes; an
-open manila folder; a pen, a paper clip and a mug. Every face is blank.
+whatever lies under them; sealed envelopes; a ruled writing pad; a banded bundle and loose stacks of envelopes; a
+pen and a mug. Every face is blank.
 
-The sheet, envelope, folder, pen, clip and mug builders are copied from the evidence table's module
+The sheet, envelope, pen and mug builders are copied from the evidence table's module
 (evidence_table_paper.py) so this stage stands alone; the pad, the bundle and the address-side envelope are new.
 
 A flat item is a grid in its own XY plane (object space = position on the sheet, so materials can key on it). It
@@ -237,42 +237,6 @@ def sheet(name, m, w, h, x, y, turn, thick=0.00022, step=0.005, shape=None, stif
     return place_flat(name, grid_bm(w, h, nx, ny), frame(x, y, turn), m, thick, shape=shape, stiff=stiff)
 
 
-def photo_print(name, m, w, h, x, y, turn, curl=0.0016, seed=1, stiff=60):
-    """A print curls toward its face along its long side. A print is stiff card: where it lies across another print's
-    edge it rides over it as a gentle ramp (many smoothing passes), not a crease."""
-    rng = random.Random(seed)
-    wv = waves(rng, 0.0002)
-    long_x = w >= h
-
-    def f(px, py):
-        t = (2 * px / w) if long_x else (2 * py / h)
-        return curl * t * t + wv(px, py)
-    return place_flat(name, grid_bm(w, h, max(2, round(w / 0.004)), max(2, round(h / 0.004))), frame(x, y, turn), m,
-                      0.0003, shape=f, stiff=stiff)
-
-
-def manila_folder(name, m, x, y, turn, w=0.30, d=0.235, tab=(0.02, 0.12)):
-    """An open top-tab folder: two panels either side of the fold (local x along the fold, panels at +-y), the
-    scored fold standing a little proud, the back panel's cut tab beyond its far edge."""
-    rng = random.Random(11)
-    wv = waves(rng, 0.0005, 0.2)
-
-    def f(px, py):
-        z = 0.0032 * math.exp(-(py / 0.011) ** 2) + 0.0012 * math.exp(-((abs(py) - 0.009) / 0.003) ** 2)
-        z += 0.0025 * (abs(py) / d) ** 2.5 + wv(px, py)
-        return z
-    mw = frame(x, y, turn)
-    body = place_flat(name, grid_bm(w, 2 * d, 60, 120), mw, m, 0.00038, shape=f, stiff=4)
-    t0, t1 = tab
-    tx0, tx1 = -w / 2 + t0, -w / 2 + t1
-    pts = [(tx0, d - 0.0008), (tx1, d - 0.0008), (tx1 - 0.006, d + 0.0125), (tx0 + 0.006, d + 0.0125)]
-    SUPPORT.remove(body)
-    tabob = place_flat(name + "_tab", outline_bm(pts, 0.003), mw, m, 0.00038, shape=lambda px, py: f(px, d) - 0.00005, stiff=0,
-                       normalize=False)
-    SUPPORT.insert(len(SUPPORT) - 1, body)
-    return body, tabob
-
-
 def envelope(name, m, x, y, turn, w=0.229, h=0.162, puff=0.0028):
     """A sealed C5 envelope lying flap up: the body puffed by what is inside, the bottom and side flaps' seams, the
     sealed top flap a layer above."""
@@ -295,23 +259,6 @@ def envelope(name, m, x, y, turn, w=0.229, h=0.162, puff=0.0028):
 
 def _area(pts):
     return 0.5 * sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1]))
-
-
-def _rounded_rect(bm, w, h, r, z0, z1, segs=6):
-    """A prism with rounded corners from z0 to z1, centred on the origin, into bm. Returns its faces."""
-    pts = []
-    for cx, cy, a0 in ((w / 2 - r, h / 2 - r, 0), (-w / 2 + r, h / 2 - r, 90), (-w / 2 + r, -h / 2 + r, 180), (w / 2 - r, -h / 2 + r, 270)):
-        for k in range(segs + 1):
-            a = math.radians(a0 + 90 * k / segs)
-            pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
-    bot = [bm.verts.new((x, y, z0)) for x, y in pts]
-    top = [bm.verts.new((x, y, z1)) for x, y in pts]
-    fs = [bm.faces.new(top), bm.faces.new(bot[::-1])]
-    n = len(pts)
-    for i in range(n):
-        j = (i + 1) % n
-        fs.append(bm.faces.new((bot[i], bot[j], top[j], top[i])))
-    return fs
 
 
 # ---------------------------------------------------------------- small hard props
@@ -384,27 +331,6 @@ def pen(name, m_body, m_tip, m_clip, x, y, turn):
     for o in (body, ring, tip, clip):
         o.parent = root
     return [root, body, ring, tip, clip]
-
-
-def paper_clip(name, m, x, y, turn, z=None):
-    """A 33 mm gem clip lying flat (a wire curve)."""
-    r = 0.00042
-    pts2 = [(0.0, 0.0), (0.024, 0.0), (0.028, 0.0035), (0.024, 0.0068), (-0.004, 0.0068), (-0.0075, 0.0034),
-            (-0.004, 0.0009), (0.019, 0.0009), (0.0215, 0.0034), (0.019, 0.0058), (0.0035, 0.0058)]
-    mw = frame(x, y, turn)
-    if z is None:
-        tree = support_tree(_footprint(mw, [(-0.01, -0.002), (0.03, 0.008)]))
-        z = max(drop(tree, mw @ Vector((px, py, 0))) for px, py in pts2[:6]) + r
-    cu = bpy.data.curves.new(name, "CURVE")
-    cu.dimensions, cu.bevel_depth, cu.bevel_resolution, cu.resolution_u = "3D", r, 3, 6
-    sp = cu.splines.new("POLY")
-    sp.points.add(len(pts2) - 1)
-    for p, (px, py) in zip(sp.points, pts2):
-        p.co = (px, py, 0.0, 1.0)
-    ob = link(bpy.data.objects.new(name, cu))
-    ob.data.materials.append(m)
-    ob.matrix_world = frame(x, y, turn, z)
-    return ob
 
 
 def mug(name, m_glaze, m_foot, m_coffee, x, y, turn):

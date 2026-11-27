@@ -10,11 +10,12 @@ y = R["y0"]), so his left is +X and the room runs back to +Y behind him.
                 drawers with turned pulls on a recessed plinth, a pencil drawer over the kneehole, a modesty panel
   on the desk   the desk-lamp prop (enamelled, with a bulb, a spot down its reflector and the spill round it), the
                 laptop prop open with a blank glowing panel set in its bezel, a ruled writing pad, loose sheets, a
-                banded bundle and loose piles of airmail and plain envelopes, two window envelopes and an unfolded
-                letter, a phone lying face down, reading glasses, a mug, a framed photograph on its easel
+                banded bundle and a loose pile of airmail and plain envelopes, two window envelopes and an unfolded
+                letter, a phone lying face down, reading glasses, a mug, a framed photograph on its easel (its back
+                to the window)
   the room      strip oak floor, a wool rug, painted plaster, base and crown, a cast-iron radiator and a dark
-                framed picture on the right wall, a bookcase of books and binders on the left wall, file boxes on
-                the floor beside the desk (twelve years of paperwork)
+                framed picture on the right wall, a bookcase of books and binders left of the window, file boxes
+                on the floor beside the desk (twelve years of paperwork)
 
 Primitives, the window and the blind are adapted from the family home's set (home_set.py); the lamp and the laptop
 finishing from the evidence table (evidence_table.py); copied so this stage stands alone.
@@ -138,22 +139,6 @@ def lathe(name, profile, loc, m, segs=48, smooth_angle=40.0):
     ob = _link(name, bm, m)
     ob.location = loc
     return _finish(ob, smooth_angle)
-
-
-def tube(name, pts, r, m, res=6, closed=False):
-    cu = bpy.data.curves.new(name, "CURVE")
-    cu.dimensions, cu.bevel_depth, cu.bevel_resolution = "3D", r, res
-    cu.use_fill_caps = True
-    sp = cu.splines.new("BEZIER")
-    sp.bezier_points.add(len(pts) - 1)
-    for p, co in zip(sp.bezier_points, pts):
-        p.co = co
-        p.handle_left_type = p.handle_right_type = "AUTO"
-    sp.use_cyclic_u = closed
-    ob = bpy.data.objects.new(name, cu)
-    bpy.context.scene.collection.objects.link(ob)
-    ob.data.materials.append(m)
-    return ob
 
 
 def run(name, a, b, n, profile, m):
@@ -740,11 +725,6 @@ def lamp_bulb():
     """World position of the lamp's light (the bulb's glowing end)."""
     bpy.context.view_layer.update()
     return bpy.data.objects["lamp_spot"].matrix_world.translation.copy()
-
-
-def lamp_axis():
-    t = math.radians(LAMP[2])
-    return (Matrix.Rotation(t, 3, "Z") @ AXIS).normalized()
 
 
 # ---------------------------------------------------------------- the laptop (from evidence_table.py)

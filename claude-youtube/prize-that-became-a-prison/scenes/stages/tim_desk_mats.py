@@ -1,6 +1,6 @@
 """Materials for Tim's desk at night (Cycles, Principled BSDF). The paper, wood and small-prop materials and the node
-helpers are copied from the evidence table's module (evidence_table_mats.py) so the two tables of the film share one
-paper and one wood; the room's surfaces (painted plaster, enamel trim, strip oak, a wool rug, blind slats, window
+helpers are copied from the evidence table's module (evidence_table_mats.py; only what this stage uses) so the two
+tables of the film share one paper and one wood; the room's surfaces (painted plaster, enamel trim, strip oak, a wool rug, blind slats, window
 glass, the night outside, cast iron) are adapted from the family home's (home_mats.py). New here: a ruled legal pad,
 airmail envelopes with a chevron border, window envelopes, corrugated card for the file boxes, book cloth, and a
 satin hardwood that replaces the generated chair's baked texture.
@@ -300,55 +300,6 @@ def paper(name, rgb=(0.74, 0.71, 0.64), rough=0.86, fibre=0.05, smudge=0.05, sss
     return m
 
 
-def boarding_card(name, w, h, perf_x, rgb=(0.66, 0.66, 0.63), rough=0.75):
-    """Boarding-pass card: matt, slightly smoother than letter paper, with the perforated tear line across it at
-    perf_x (object space): a row of 1 mm holes every 2.5 mm, pressed in and shadowed."""
-    m, nt, b = _new(name)
-    o = _obj(nt)
-    x, y, _ = _xyz(nt, o)
-    mott = _noise(nt, o, 40.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, mott, 0.3, 0.7, 0.0, 0.07), rgb, tuple(c * 0.85 for c in rgb))
-    near = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, perf_x)), 0.00035, 0.0006, 1.0, 0.0)
-    ph = _math(nt, "FRACT", _math(nt, "DIVIDE", y, 0.0025))
-    hole = _math(nt, "MULTIPLY", near, _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", ph, 0.5)), 0.18, 0.26, 1.0, 0.0))
-    col = _mix(nt, _math(nt, "MULTIPLY", hole, 0.8), col, (0.05, 0.05, 0.05))
-    groove = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, perf_x)), 0.0, 0.0011, 1.0, 0.0)
-    # the stub side is a slightly different stock (whiter), a blank band only
-    stub = _maprange(nt, x, perf_x, perf_x + 0.0004, 0.0, 1.0)
-    col = _mix(nt, _math(nt, "MULTIPLY", stub, 0.5), col, tuple(min(1.0, c * 1.06) for c in rgb))
-    edge = _math(nt, "MINIMUM", _math(nt, "SUBTRACT", w / 2, _math(nt, "ABSOLUTE", x)), _math(nt, "SUBTRACT", h / 2, _math(nt, "ABSOLUTE", y)))
-    col = _mix(nt, _maprange(nt, edge, 0.0, 0.004, 0.25, 0.0), col, (0.4, 0.37, 0.32))
-    _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _math(nt, "ADD", rough, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05), clamp=True), b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.3
-    b.inputs["Subsurface Weight"].default_value = 0.04
-    b.inputs["Subsurface Radius"].default_value = (0.0012, 0.001, 0.0008)
-    tooth = _noise(nt, o, 1000.0, 2.0, 0.6)
-    hgt = _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", tooth, 0.3), _math(nt, "ADD", _math(nt, "MULTIPLY", hole, 2.0), _math(nt, "MULTIPLY", groove, 0.6)))
-    b1 = _bump(nt, b, hgt, 0.25, 0.0002)
-    _bump(nt, b, _noise(nt, o, 900.0, 8.0, 0.6), 0.03, 0.0002, normal=b1.outputs["Normal"])
-    _translucent(nt, b, 0.05, rgb)
-    return m
-
-
-def thermal(name, rgb=(0.62, 0.625, 0.64)):
-    """Thermal till roll: a thin, slightly cool coated strip, satin-matt, faint greying where handled, and thin
-    enough that the lamp glows through a curl (translucency)."""
-    m, nt, b = _new(name)
-    o = _obj(nt)
-    mott = _noise(nt, o, 25.0, 3.0, 0.6)
-    col = _mix(nt, _maprange(nt, mott, 0.4, 0.75, 0.0, 0.12), rgb, tuple(c * 0.7 for c in rgb))
-    drift = _noise(nt, o, 7.0, 2.0, 0.5)
-    col = _mix(nt, _maprange(nt, drift, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.03 for c in rgb), col)
-    _link(nt, col, b.inputs["Base Color"])
-    _link(nt, _math(nt, "ADD", 0.55, _maprange(nt, mott, 0.3, 0.7, -0.05, 0.05)), b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.4
-    b1 = _bump(nt, b, _noise(nt, o, 600.0, 2.0, 0.5), 0.05, 0.0001)
-    _bump(nt, b, _noise(nt, o, 1.0, 4.0, 0.6, mapping=(60.0, 900.0, 60.0)), 0.04, 0.0002, normal=b1.outputs["Normal"])
-    _translucent(nt, b, 0.15, rgb)
-    return m
-
-
 def photo(name, w, h, border, image_rgb=(0.12, 0.12, 0.12), paper_rgb=(0.51, 0.50, 0.48), gradient=0.0):
     """A glossy photographic print, w x h with a white border: a clear coat over the image (the lamp lays a soft sheen
     across it) whose image area is left as an even blank tone for the picture to be composited in later (gradient
@@ -400,37 +351,6 @@ def manila(name, rgb=(0.5, 0.38, 0.21), rough=0.84):
 
 
 # ---------------------------------------------------------------- the passport
-
-def passport_cover(name, rgb=(0.025, 0.035, 0.07)):
-    """Grained leatherette on board, dark navy, one flat colour (no albedo noise, which read as stained cloth): the
-    pebble grain is all in the bump (Voronoi cells, about 0.7 mm), under a satin coat; only the very edges are a shade
-    rougher where it has been carried."""
-    m, nt, b = _new(name)
-    o = _obj(nt)
-    vo = _n(nt, "ShaderNodeTexVoronoi", feature="F1")
-    vo.inputs["Scale"].default_value = 1500.0
-    vo.inputs["Randomness"].default_value = 0.85
-    _link(nt, o, vo.inputs["Vector"])
-    cell = _out(vo, "Distance")
-    fine = _noise(nt, o, 4000.0, 2.0, 0.5)
-    edge = _maprange(nt, _ao(nt, 0.0025, inside=True), 0.55, 1.0, 1.0, 0.0)
-    b.inputs["Base Color"].default_value = (*rgb, 1)
-    # (a first pass at coat 0.3 / roughness 0.3 mirrored the lamp across the whole cover as a flat grey sheen that hid
-    # the navy and the grain: the sheen is kept softer, and the grain bump strong enough to break it up)
-    r = _math(nt, "ADD", 0.7, _maprange(nt, cell, 0.0, 0.5, -0.06, 0.08))
-    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", edge, 0.15), clamp=True)
-    _link(nt, r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.25
-    b.inputs["Coat Weight"].default_value = 0.08
-    b.inputs["Coat Roughness"].default_value = 0.45
-    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.15)), 0.35, 0.0002)
-    return m
-
-
-def endpaper(name, rgb=(0.7, 0.66, 0.58)):
-    """The inside of a booklet's cover and its first leaf: plain cream paper."""
-    return paper(name, rgb, 0.82, 0.04, 0.0, sss=0.0, translucency=0.0)
-
 
 def page_block(name, rgb=(0.7, 0.66, 0.58)):
     """The page edges of a booklet: fine striations of the leaves along local Z, a little uneven and soiled."""
@@ -548,22 +468,6 @@ def screen(name, rgb, strength, w, h):
     return m
 
 
-def plaster(name, rgb=(0.05, 0.046, 0.042)):
-    """Old painted plaster for the room's walls: matt emulsion with a slow, uneven tone (patched, dirtier toward the
-    floor) and a fine trowelled tooth; it only ever shows as deep shadow."""
-    m, nt, b = _new(name)
-    o = _obj(nt)
-    _, _, z = _xyz(nt, o)
-    slow = _noise(nt, o, 1.2, 4.0, 0.6)
-    col = _mix(nt, _maprange(nt, slow, 0.3, 0.7, 0.0, 1.0), tuple(c * 1.15 for c in rgb), tuple(c * 0.8 for c in rgb))
-    col = _mix(nt, _maprange(nt, z, 0.0, 0.9, 0.5, 0.0), col, tuple(c * 0.6 for c in rgb))
-    _link(nt, col, b.inputs["Base Color"])
-    b.inputs["Roughness"].default_value = 0.9
-    b.inputs["Specular IOR Level"].default_value = 0.25
-    _bump(nt, b, _noise(nt, o, 40.0, 5.0, 0.65), 0.15, 0.002)
-    return m
-
-
 def matte(name, rgb, rough=0.8):
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -574,36 +478,6 @@ def matte(name, rgb, rough=0.8):
 
 
 # ---------------------------------------------------------------- generated props
-
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
-    """Finish a generated prop's material in place (copied from inspection_room_mats): spec sets the dielectric
-    specular level; weave = (period_m, strength) adds a plain-weave bump on the prop's own normal map."""
-    if not (mat and mat.use_nodes):
-        return
-    nt = mat.node_tree
-    b = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
-    if b is None:
-        return
-    if spec is not None:
-        b.inputs["Specular IOR Level"].default_value = spec
-    if weave:
-        period, strength = weave
-        o = _obj(nt)
-        sep = _n(nt, "ShaderNodeSeparateXYZ")
-        _link(nt, o, sep.inputs["Vector"])
-        k = 2 * 3.14159265 * to_metres / period
-        waves = [_math(nt, "SINE", _math(nt, "MULTIPLY", sep.outputs[a], k), 0.0) for a in ("X", "Y", "Z")]
-        h = _math(nt, "ADD", _math(nt, "MULTIPLY", waves[0], waves[1]), _math(nt, "MULTIPLY", waves[1], waves[2]))
-        h = _math(nt, "ADD", h, _math(nt, "MULTIPLY", waves[2], waves[0]))
-        bump = _n(nt, "ShaderNodeBump")
-        bump.inputs["Strength"].default_value = strength
-        bump.inputs["Distance"].default_value = period * 0.25
-        _link(nt, h, bump.inputs["Height"])
-        nrm = b.inputs["Normal"]
-        if nrm.is_linked:
-            _link(nt, nrm.links[0].from_socket, bump.inputs["Normal"])
-        _link(nt, bump.outputs["Normal"], nrm)
-
 
 # ---------------------------------------------------------------- the room (adapted from home_mats.py)
 

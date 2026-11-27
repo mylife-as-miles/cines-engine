@@ -1,0 +1,91 @@
+{
+  "stage": "tim_desk",
+  "request": "first critique before handover",
+  "critic": "LEAD (independent critic)",
+  "scores": {
+    "composition": 5.5,
+    "lighting": 5,
+    "materials": 6,
+    "set_dressing": 5.5,
+    "grounding_scale": 6.5,
+    "cast": 5,
+    "story_read": 5.5,
+    "technical": 6.5
+  },
+  "pro_level": false,
+  "verdict": "Not at fern level yet (mean 5.7). The set is carefully built (trifold paper, ruled pad, airmail envelopes, radiator, bookcase, blinds, solved contact shadows) but the three graded frames do not deliver the stage's one job: a WARM lit island.\n\nMeasured on the graded frames: the lamp disc is 0.685/0.681/0.686, the lit face 0.495/0.484/0.485, the pad 0.64/0.62/0.615. That is neutral grey. WARM=(1.0,0.69,0.4) does not survive AgX highlight desaturation plus the shared grade (hue s=0.55, blue-lifted curves); only the wood keeps a trace (R/B 1.3). The \"second warm interior\" reads as a cold monochrome room.\n\nHalf of each frame is also void: desk cam 50% of pixels under 0.05 (the wall behind Tim is 0.04, his hair and back merge into it); window cam Tim/chair/desk 0.03-0.05, bookcase 0.03, floor 0.045. A gamma lift shows a well dressed room that no viewer will see.\n\ndesk: best of the three. Good key shape on the face, good contact shadows, nice DOF. But: the lamp interior is a flat white disc with a ragged notch in the reflector (raw clips at 1.0); the pen is a stick poking up behind the knuckles with flat mitten fingers, so it reads as \"hands resting\", not writing; only one hand is visible; posture is upright and stiff, not tired; face reads 30 not late 50s; the hairline is a jagged stepped edge like a swim cap; the bottom-centre blank sheet is a bright slab cut by the frame edge; the right 20% is murky sill and blinds; the family photo is a grey slab in the lamp's shadow.\n\nletters: weakest. The named subject (the letters) is the dimmest thing in frame (reply sheet 0.32 vs blank loose sheets 0.61). The black lamp shade is the largest shape and sits half over the mug. Every sheet is blank and flat, so it reads as blank stationery, not years of correspondence. The blind stripes are faint smudges. The ring stains are hairline compass circles that read as wire. The photo frame reads as an empty tray. Black bands top and bottom with unexplained grey bars (sill/bottom rail); laptop and far envelope cut by the edges.\n\nwindow: right idea (small man, big dark room) but there is no island: the camera is too low to see the lit desk top and his body blocks the pool, so the frame is three small white shapes (screen, lamp disc, neck) in blue-grey. A white street-lamp dot sits tangent to the lamp arm; the left wall is a flat slab over 15% of the frame; fine slats will shimmer in motion.\n\nTechnical is mostly clean (no fireflies, grain fine): the reflector notch, denoise blotches on mug and jacket, and slat aliasing risk are the issues.\n\nNote for the orchestrator (outside the stage author's files): the shared grade in scenes/shoot.py neutralises any warm practical. If the film wants warm interiors (Chicago at night, this desk), a per-stage warm grade variant would be more reliable than each stage over-saturating its lamps. Nothing in this review came from memory.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "all",
+      "problem": "The warm key is neutral grey after the grade (graded lamp disc 0.685/0.681/0.686, face 0.495/0.484/0.485, pad R/B 1.04). AgX desaturates the hot paper and face toward white, then the grade removes the rest. The stage's defining warmth is absent.",
+      "fix": "In tim_desk_set.py set WARM from (1.0, 0.69, 0.4) to about (1.0, 0.50, 0.18) and the bulb glow (1.0, 0.86, 0.66) to (1.0, 0.62, 0.30). Stop exposing the pool so hot: drop lamp_spot from 60 W to about 38-42 W (or EXPOSURE -1.5 to -1.9 with the other lights trimmed up to match) so lit paper sits at 0.50-0.58 in the raw frame, not 0.75, where AgX still holds chroma. Tint the paper stock warmer (paper rgb 0.74/0.71/0.64 to about 0.72/0.64/0.50). Push the laptop screen cooler (emission about 0.55/0.75/1.0) for warm-cool contrast. Acceptance, measured on the GRADED png: lit pad and lit face R/B >= 1.2, lit wood R/B >= 1.6, laptop B/R >= 1.3. If that cannot be reached in-stage, report it so the orchestrator can give warm stages their own grade."
+    },
+    {
+      "priority": 1,
+      "camera": "window",
+      "problem": "No lit island and the room is crushed: Tim/chair/desk 0.03-0.05, bookcase 0.03, floor 0.045 graded. The camera at z=1.25 sees the desk top edge-on and his torso hides the lamp pool, so the wide is three small white shapes in a blue-grey void.",
+      "fix": "Raise and shift the camera so the lit desk top is visible past his shoulder: loc about (0.7, 3.9, 1.95), aim (-0.1, -0.25, 0.85), lens 32 (this also drops the flat left-wall slab). The lamp pool with pad and letters should read as a warm ellipse of at least 150 px. Give the pool a visible spill for this camera: TRIMS['window'] add 'lamp_spill': 3.0 so the sill, window trim and the wall under the window pick up a warm gradient, and raise room_fill trim from 5.0 to about 9 and night_glow x3. Targets on the graded frame: floor and rug 0.08-0.10, bookcase books 0.07-0.10, chair back and his shoulders 0.07-0.09 with a warm rim on his left shoulder and sleeve from the lamp, nothing that carries the room under 0.05."
+    },
+    {
+      "priority": 1,
+      "camera": "letters",
+      "problem": "The camera named for the letters has them as the dimmest objects (reply sheet 0.32 graded vs blank loose sheets 0.61); the black lamp shade is the biggest shape and overlaps the mug; no clear subject.",
+      "fix": "Re-centre on the letters: camera loc x from -0.04 to about -0.30 (screen right is -X), lens 85 to 105, so the pad sits in the left third and the letters fill the right two thirds; laptop and lamp base leave frame, only the rim of the shade enters at top-left. Light them: for this camera add TRIMS['letters'] 'lamp_spill': 2.5 or widen the lamp_spot blend so the unfolded reply reaches 0.50-0.55 graded, and raise 'street' x3 so the blind stripes are crisp cool bars (stripe contrast at least 1.6:1) across the warm paper. Move the mug 8 cm clear of the shade's outline. Lower the camera or crop so the black bands and the grey sill bars at top and bottom are out of frame."
+    },
+    {
+      "priority": 1,
+      "camera": "desk",
+      "problem": "Writing does not read: the pen is a near-vertical stick behind the knuckles, the fingers lie flat and fused like a mitten, the pen point is hidden, the left hand is not visible, and the posture is upright and stiff rather than tired.",
+      "fix": "In grip_pen lean the barrel to 50-55 degrees off the paper, tilted back over the web of the thumb toward his right shoulder, with at least 6 cm of barrel visible above the knuckles and 1-1.5 cm of the point visible down to the paper from the desk camera. Curl the index finger on the barrel (about 35/45/25 instead of -2/0/0), middle finger under it, ring and little finger tucked 40-50. Bring the left hand into the shot: either flat on the pad's far top corner at least 14 cm from the right hand, or better for 'tired', left elbow on the desk and the left hand supporting his brow or temple (check for clipping from the desk and window cameras). Deepen the bow: UPPER chest 12 to 18, neck 11 to 14, head 19 to 28, and aim the head so the face normal points at the pen point, not at the mug."
+    },
+    {
+      "priority": 2,
+      "camera": "desk",
+      "problem": "Behind Tim is a flat black void (wall 0.04 graded over about 45% of the frame); his dark hair and back merge into it. The right 20% is murky sill and blinds.",
+      "fix": "Give the +X wall behind him a soft warm falloff from the lamp: an area light about 0.6 x 0.6 m, 4-6 W, WARM, light-linked to that wall only, centred at head height behind him, so the wall reads 0.10-0.14 graded behind his head falling to 0.04 at the frame edge. Add one out-of-focus piece of dressing on that wall inside the glow (a low filing cabinet with a box on it, or a blank framed picture). For this camera trim night_glow x3 so the slats at right read as cool lines with the lit windows across the street as warm bokeh between them."
+    },
+    {
+      "priority": 2,
+      "camera": "desk",
+      "problem": "The lamp interior is a flat clipped white disc (raw max 1.0) with a ragged notch in the reflector at its upper left; no bulb or gradient is visible, and it competes with the face.",
+      "fix": "Replace the reflector's inner surface with a clean lathed cone (the generated mesh has a tear), painted warm cream at albedo about 0.35. Lower lamp_glow from 0.5 to about 0.2 so the interior sits at 0.70-0.78 display with a visible gradient, and let only the bulb (radius about 19 mm, its end visible past the rim) reach the top of the range. Rotate the head 10-15 degrees further down toward the pad so less of the open mouth faces this camera."
+    },
+    {
+      "priority": 2,
+      "camera": "letters",
+      "problem": "Blank flat rectangles do not read as years of letters; the stack is sparse (about 10 envelopes), the banded bundle reads as one envelope with a line, and the 'unfolded reply' shows no folds.",
+      "fix": "Add volume: an open shoebox or letter tray about 0.30 x 0.18 x 0.12 m with 40-50 envelopes standing on edge (reads as hundreds from above) at the top right in place of the half-shadowed single envelope; two banded bundles with slip raised from 0.004 to about 0.012 so 8-10 stepped edges show. Make paper read as mail without text: trifold_shape up angles from (8, 5) to about (14, 10) so the creases catch the raking stripes; blank stamp rectangles and soft postmark rings on envelopes; the glassine window visible on the window envelopes; a torn-open flap on two envelopes; a paper clip or staple. If the no-text rule permits, add greeked body lines on the reply (broken soft strokes 0.6 mm thick at 4.2 mm pitch, illegible at any zoom) and a blank letterhead block; otherwise leave them out."
+    },
+    {
+      "priority": 2,
+      "camera": "desk",
+      "problem": "Foreground: a bright blank sheet (0.39 graded) forms a flat slab cut by the bottom edge and pulls the eye off Tim; the airmail envelopes lose their red and blue in the grade and read as serrated tissue.",
+      "fix": "Remove or slide that sheet out of frame and put a banded airmail bundle there in soft focus, kept under 0.25 graded (out of the spot's cone or shadowed by the photo frame). Raise airmail chevron saturation and value (red about 0.55/0.06/0.05, blue 0.06/0.12/0.5) so they still read as red and blue after the grade's 0.55 saturation."
+    },
+    {
+      "priority": 2,
+      "camera": "desk",
+      "problem": "Tim reads as a 30-year-old: smooth face, and the dark hair cap has a jagged stepped hairline at the temple.",
+      "fix": "In recede_hair smooth the boundary (more samples along the line, 2-3 Laplacian smooth passes on the edge loop, or a 6-8 mm feathered displacement falloff) so the temple line is a clean curve. Lighten the hair to a grey stone (about 0.30-0.35 value) so it reads as greying and separates from the wall. Consider putting the reading glasses on his face for this camera (they age him and add profile detail), leaving them on the pad only in the letters camera."
+    },
+    {
+      "priority": 3,
+      "camera": "letters",
+      "problem": "Desk surface details: the ring stains are perfect hairline circles that read as wire loops; the plank seams are wide black lines that read as deck boards; no wear where he works; the photo frame reads as an empty tray; the lamp base is a bright cream disc.",
+      "fix": "worn_wood rings: make each a broken arc of 200-300 degrees, band 3-4 mm wide, 8-15% darker with noise-modulated opacity, soft edge. Seams: hairline, 0.5 mm, about 30% darker rather than black gaps. Add a lighter worn patch and fine scratches where the forearms and pad sit, and edge wear on the front bevel. Photo frame: stand it more upright (lean 14 to about 8 degrees) so from above it is a sliver, and for the desk camera turn it 20-25 degrees so its edge and a strip of the blank photo face catch the lamp. Darken the lamp base to match the enamel head (value about 0.2) or cut the spill onto it."
+    },
+    {
+      "priority": 3,
+      "camera": "window",
+      "problem": "A white street-lamp dot sits tangent to the desk lamp's arm in the left pane; the lit windows across the street are flat cards; fine slats (about 3 px pitch) will shimmer in a moving shot.",
+      "fix": "Move the street-lamp globe at least 0.6 m screen-left or remove it. Give the across-street windows a mullion cross and a curtain gradient, at two warm values and one dark. For the slat aliasing render this camera at 1920 wide or more and downscale, or open the slat pitch slightly, and check a 2 s push-in for moire before the final."
+    },
+    {
+      "priority": 3,
+      "camera": "desk",
+      "problem": "Small material tells: the mug reads as blotchy grey putty (denoise blotches on the glaze), the jacket sleeve and cuff look inflated with no shirt cuff, and the photo frame back is a plain light-grey slab.",
+      "fix": "Mug: an off-white or cream glaze with roughness about 0.25 and a darker lip line, lit so a soft warm highlight runs down the lamp side; raise samples or tighten the adaptive threshold for the final to clear the blotches on mug and jacket. Add a 1 cm strip of shirt cuff at the right wrist. Photo frame back: darker kraft or black backing board (value about 0.12) with turn-buttons and a paper edge, so it stops reading as a pale plastic panel."
+    }
+  ]
+}

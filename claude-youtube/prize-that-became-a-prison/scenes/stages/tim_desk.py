@@ -2,12 +2,12 @@
 also Ch 01 'Tim remembers' and Ch 11 'The family's letters').
 
 A worn oak desk under a window whose blinds are half closed. The desk lamp is the one warm light in the room: its
-pool lies on the writing pad and on Tim's hands, its upper edge cut by the shade about the height of his brow. The
-laptop stands open and pushed aside at his left, its page blank and cool. To his right the letters: two official
-replies in window envelopes with one unfolded, a banded bundle of airmail envelopes, a loose pile of them, the phone
-lying face down, a mug, a framed photograph turned toward him (the camera sees its back). Through the slats, the
-night and the lit windows across the street; a street light throws the slats' stripes over the letters at the back
-of the desk, the radiator and the file boxes by the wall.
+pool lies on the writing pad, on Tim's hands and up his face (the shade's rim takes a third of it off his brow). The
+laptop stands open and pushed aside at his left, its page blank and cool, a mug beside it. To his right the letters:
+two official replies in window envelopes with one unfolded, a banded bundle of airmail envelopes, a loose pile of
+them, the phone lying face down, and at the back a framed photograph turned toward him (the camera sees its back).
+Through the slats, the night and the lit windows across the street; a street light throws the slats' stripes over
+the letters at the back of the desk, the radiator wall and the file boxes.
 
 Tim (scenes/people.py: people.man('Tim', age=0.58) in the dark casual suit, the shirt and trousers given their own
 tones) sits facing the window (-Y), leaning in on his forearms, writing by hand, his head bowed over the page.
@@ -21,7 +21,7 @@ Cameras:
 The set is in tim_desk_set.py, its materials in tim_desk_mats.py, the paper in tim_desk_paper.py. Seating and the
 forearms on the desk follow the family home's stage (home.py), the hand solving the hearing room's (hearing_room.py);
 copied here so this stage stands alone. Before each render a hook on setkit.render applies the camera's own state
-(who is in the chair, which pen shows, the haze, light trims).
+(who is in the chair, which pen shows, the haze, light trims; the wide carries its own exposure).
 
     <bpy python> -I scenes/shoot.py -- tim_desk <cam> out.png [--nocast]
 """
