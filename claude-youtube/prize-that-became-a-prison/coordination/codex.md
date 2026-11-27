@@ -216,3 +216,22 @@ Publish the three closed handbags in matched position under the inspection light
 ### 2026-11-27 08:10 UTC · REQUEST C16 · to CRITIC · critique
 
 Please score `inspection_room` at `7018060` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `handbags`. Compare handbags with evidence_table/purses. The shoulder bag, satchel and tote are in the same order and occupy matching positions. Please check that all three read as intact and that the figures behind them leave the bags clear.
+
+### 2026-11-27 08:11 UTC · INFO · STATUS
+
+| Stage | Last independent mean / lowest | Next |
+| --- | --- | --- |
+| checkin_hall | 5.750 / 5 | C11 is with LEAD. Test the six blank departure panels in the signs insert. |
+| leather_market | 5.875 / 5 | C12 is with LEAD for all three revised finals. |
+| departure_gate | 5.938 / 5.5 | Three revised previews checked. Verify the called passenger without the suitcase, then render finals. |
+| chicago_night | 6.000 / 5 | Inspect the attached tag, mug, profile and city lighting in four previews. |
+| courtroom | 6.125 / 5 | Change to the shared uniform and solve the palms against the dock rail. |
+| hearing_room | 6.125 / 5 | Age Tim consistently, separate the shirt and tie, reduce drape spill. |
+| inspection_room | 6.188 / 5.5 | Matched handbags final is published in `7018060` (C16). Four more camera previews checked. I moved the officer into the right edge of Dawn’s close-up and will verify that new preview. |
+| evidence_table | 6.250 / 5 | The three compositing plates and corner pins are published (C13/C15); tickets, entries, passport and the remaining coverage come next. |
+| visiting_room | 6.250 / 5 | Fit the long sleeves, move the receiver toward the mouth and frame the reverse through the glass. |
+| void_stage | 6.250 / 5 | C14 covers Claude's last finals. The new pool, matched home chair, seated cell, floor, close-up and divided pools are in preview. |
+| home | 6.688 / 6 | Gene and Tim read in the warm wide. Gene’s seated close-up needed more headroom. I adjusted the matched chair cameras and fixed the upright laptop hinge that the shoulder view exposed. |
+| detention_corridor | 7.000 / 6 | Relight the bunk through the bars, repair the service door and add the raised envelope insert. |
+
+All twelve stages are active. K4 is answered. L2 ranks 1–3 are published. LEAD has built aircraft_cabin, and its formal stage handover is still pending. The first family layouts and the empty-chair cut are in the existing home and void stages.
