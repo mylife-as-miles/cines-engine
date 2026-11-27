@@ -52,11 +52,11 @@ AGENT = (0.02, 0.98)
 EXPOSURE = -1.6
 CAMERAS = {
     "wide": dict(loc=(4.4, -4.9, 2.10), aim=(-3.0, 1.0, 1.15), lens=27, focus="focus_dawn", fstop=5.6,
-                 exposure=-1.4),   # a touch up: the far hall and the glazed end must not crush to black
+                 exposure=-1.4, final_res=(1920, 1080)),   # a touch up: the far hall and the glazed end must not crush to black
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
     "signs": dict(loc=(4.7, -3.65, 2.65), aim=(-2.1, -0.30, 3.39), lens=34, focus="focus_sign", fstop=4,
                   exposure=-1.6),
-    "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_duffel", fstop=2.8,
+    "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_scale", fstop=5.6,
                   exposure=-2.0, final_res=(1920, 1080)),
     "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
     "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
@@ -425,7 +425,7 @@ def materials():
                     nscale=3, stretch=(30, 1, 30), cvar=0.05, aniso=0.35),
         steel_worn=pbr("scuffed steel", (0.45, 0.46, 0.48), (0.3, 0.62), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.25, aniso=0.3),
         steel_dark=pbr("dull steel", (0.3, 0.305, 0.315), (0.55, 0.75), metal=1.0, nscale=7, stretch=(1, 6, 6), cvar=0.18, aniso=0.2),
-        steel_v=pbr("brushed steel vertical", (0.6, 0.61, 0.63), (0.2, 0.34), metal=1.0, nscale=3, stretch=(30, 30, 1), cvar=0.06),
+        steel_v=pbr("brushed steel vertical", (0.6, 0.61, 0.63), (0.45, 0.55), metal=1.0, nscale=3, stretch=(30, 30, 1), cvar=0.06),
         satin=pbr("satin steel", (0.55, 0.56, 0.58), (0.24, 0.32), metal=1.0, nscale=60, cvar=0.04),
         chrome=pbr("satin queue steel", (0.34, 0.35, 0.36), (0.35, 0.45), metal=1.0, nscale=6, cvar=0.03),
         plate=pbr("weigh plate", (0.5, 0.51, 0.53), (0.25, 0.4), metal=1.0, nscale=9, stretch=(1, 120, 120), cvar=0.05, aniso=0.6,
@@ -771,11 +771,24 @@ def desk(x0, idx, open_):
         z = LEDGE + 0.035
         for part, width, depth, thick, material in (
                 ("back", 0.128, 0.090, 0.0014, m["passport"]),
-                ("pages", 0.125, 0.087, 0.0036, page),
+                ("pages", 0.128, 0.090, 0.0036, page),
                 ("front", 0.128, 0.090, 0.0014, m["passport"])):
             box(p + "passport_" + part, (width, depth, thick), (*centre, z + thick / 2),
                 material, bevel=0.0011, rot=(0, 0, yaw_pass))
             z += thick
+        # A blank payment card lies on the passport, with standard rounded
+        # corners cut before its thin edge is given thickness.
+        bpy.ops.mesh.primitive_plane_add(size=1, location=(*centre, z))
+        card = bpy.context.object
+        card.name = p + "payment_card"
+        card.scale = (0.0856, 0.054, 1)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        corners = card.modifiers.new("rounded corners", "BEVEL")
+        corners.affect, corners.width, corners.segments = "VERTICES", 0.00318, 6
+        laminate = card.modifiers.new("laminate", "SOLIDIFY")
+        laminate.thickness, laminate.offset = 0.00076, 1.0
+        card.rotation_euler.z = yaw_pass + math.radians(7)
+        card.data.materials.append(sk.mat("plain slate payment card", (0.10, 0.15, 0.17), 0.52))
         # the screen's light on the agent's face and chest, aimed by numbers
         n = R @ (Matrix.Rotation(tilt, 3, "X") @ Vector((0, 1, 0)))
         c = Vector((mx, my, zc)) + n * 0.033
@@ -931,7 +944,8 @@ def position_lights(x0, idx, level):
             # the scale: the bags sit in the dark under their own dim pool and the display's glow
             cut = box(p + "scale_cutter", (0.01, 1.5, 1.8), (x0 + 0.78, 0.15, 2.25), m["plastic"])
             dot = box(p + "hand flag", (0.28, 0.21, 0.005), (x0 + 0.30, 0.12, 1.55), m["plastic"])
-            for ob in (fl, cut, dot):
+            pad_flag = box(p + "hand flag2", (0.14, 0.10, 0.004), (x0 + 0.30, 0.12, LEDGE + 0.385), m["plastic"])
+            for ob in (fl, cut, dot, pad_flag):
                 for attr in ("visible_camera", "visible_diffuse", "visible_glossy", "visible_transmission", "visible_volume_scatter"):
                     setattr(ob, attr, False)
 
@@ -939,7 +953,7 @@ def position_lights(x0, idx, level):
 def queue():
     """Retractable-belt queue posts: a two-row serpentine in front of the open position. Every post sits wholly inside
     the wide or wholly outside it (none cut by the frame edge); the lane turns at the far left into the approach."""
-    rows = [(-2.1, [-4.6, -2.6, -0.6, 1.0]), (-3.3, [-4.6, -2.6, -0.3])]
+    rows = [(-2.1, [-5.4, -2.6, -0.6, 1.0]), (-3.0, [-5.4, -1.4, -0.3])]
     for j, (y, xs) in enumerate(rows):
         for i, x in enumerate(xs):
             stanchion(f"q{j}_{i}", x, y)
@@ -947,7 +961,7 @@ def queue():
             if j == 0 and i == 0:
                 continue   # the turn from the lane into the approach to the desk
             qbelt(f"q{j}_belt{i}", (xs[i], y), (xs[i + 1], y))
-    qbelt("q_link0", (-4.6, -2.1), (-4.6, -3.3))
+    qbelt("q_link0", (-5.4, -2.1), (-5.4, -3.0))
     # where the next passenger waits: a dark rubber inlay in the floor (no words)
     box("wait_line", (1.7, 0.05, 0.002), (0.5, -1.3, 0.0005), materials()["kick"])
 
@@ -1004,11 +1018,13 @@ def checkin_row():
 # ---------------------------------------------------------------- props and people
 def bags():
     xs = POSITIONS[0] + SX
-    duffel = props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
+    props.load("extra-bag-closed", size=0.75, axis="long", loc=(xs - 0.01, 0.25, PLATE), turn_deg=3, sat=0.5,
                         val=0.25, rough_add=0.3)
     props.load("dawn-suitcase", size=0.66, axis="z", loc=(xs + 0.07, 0.69, PLATE), turn_deg=-84, sat=0.35, val=0.5)
     checkin_hall_trolley.trolley(materials(), (-0.85, -1.1, 0), 100)   # nose toward the counter, handle to the hall
-    focus("focus_duffel", (xs - 0.01, 0.25, PLATE + duffel["dims"][2] * 0.5))
+    camera = CAMERAS["scale"]
+    lens = Vector(camera["loc"])
+    focus("focus_scale", lens + 2.55 * (Vector(camera["aim"]) - lens).normalized())
 
 
 def focus(name, loc):
@@ -1197,8 +1213,9 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         bpy.context.view_layer.update()
         if passing:
             # The thumb tracks the booklet edge, the three centre pads press its trailing half.
-            joints = {"f_" + f: (bend, 4, 3) for f, bend in bends.items()}
-            joints["thumb"] = (20, 7, 8, -12)
+            spread = {"index": -3, "middle": 0, "ring": 2, "pinky": 4}
+            joints = {"f_" + f: (bend, 2, 2, spread[f]) for f, bend in bends.items()}
+            joints["thumb"] = (10, 25, 5, -5)
             rigged.articulate_hand(holder, k, joints)
         else:
             for finger, spread in (("index", -3), ("middle", -1), ("ring", 1), ("pinky", 3), ("thumb", -18)):
@@ -1224,7 +1241,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
         if attempt < 8:
             pitch += 0.42 * math.atan2(tilt_error, 0.085)
         for name in support:
-            bends[name] = max(3.0, min(27.0, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
+            bends[name] = max(3.0, min(10.0 if passing else 27.0, bends[name] + math.degrees((pads[name].z - finger_z) / 0.14)))
         target.z += height_delta * 0.75
     if passing:
         # Rotate the thumb as a unit at its basal joint so it rests alongside the booklet.
@@ -1300,8 +1317,16 @@ def build(cast=True):
     render_settings()
     pool = bpy.data.collections.new("scale display receivers")
     receivers = [ob for ob in bpy.context.scene.objects if ob.name.startswith("scale0_")]
+    luggage = bpy.data.collections.new("scale bag edge receivers")
     for root in ("dawn-suitcase", "extra-bag-closed"):
-        receivers.extend(bpy.data.objects[root].children_recursive)
+        for ob in props.meshes(bpy.data.objects[root]):
+            luggage.objects.link(ob)
+            receivers.append(ob)
+    edge = light("scale bag edge", (SX + 0.99, 0.42, PLATE + 0.10), (0.4, 0.3), 9,
+                 spread=90, colour=(0.78, 0.86, 1.0))
+    edge.rotation_euler = (Vector((SX, 0.50, PLATE + 0.22)) - edge.location).to_track_quat("-Z", "Y").to_euler()
+    edge.light_linking.receiver_collection = luggage
+    edge.visible_camera = False
     for ob in receivers:
         if ob.type == "MESH":
             pool.objects.link(ob)
@@ -1375,13 +1400,19 @@ def pose_cast(d, a):
                           "f_ring": (17, 15, 12, 3), "f_pinky": (18, 16, 13, 6), "thumb": (22, 8, 9, -12)}}}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
     fwd = Vector((-0.208, 0.978, 0)) + 0.52 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.043, LEDGE + 0.08), LEDGE + 0.0414, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.043, LEDGE + 0.08), LEDGE + 0.04216, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
     # Put the booklet under the solved finger pads. Leave the far edge and a corner
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
         piece = bpy.data.objects["desk0_passport_" + part]
         piece.location.x = hand["pad"].x - 0.005
-        piece.location.y = hand["pad"].y + 0.030
+        piece.location.y = hand["pad"].y + 0.012
+        if part == "pages":
+            piece.location += piece.rotation_euler.to_matrix() @ Vector((0, 0.001, 0))
+    card = bpy.data.objects["desk0_payment_card"]
+    card.location.x, card.location.y = hand["pad"].x, hand["pad"].y + 0.005
+    flag = bpy.data.objects["pos0_hand flag2"]
+    flag.location.x, flag.location.y = hand["palm"].x, hand["palm"].y
     # (the author, 26 Nov 2026: "The hand is wrong": the wrist 12 cm from her centre folded the forearm into her waist)
     print(f"CAST agent head {ga[1]} gaze error {ga[0]:.1f} deg; Dawn head {gd[1]} gaze error {gd[0]:.1f} deg")
     print(f"CAST Dawn l_arm {tuple(round(v, 1) for v in hand['arm'])} wrist fit {hand['fit'] * 1000:.0f} mm, hand low "
