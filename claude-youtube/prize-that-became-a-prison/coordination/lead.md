@@ -208,3 +208,25 @@ and ends on a ruled line in `wall` (and streaks draw dark hairlines over the lit
 (its pole and arm hide behind the lamp on the camera axis); the road reads as polished ice with one blobby puddle.
 
 tim_desk follows when its build and critique finish.
+
+### 2026-11-27 10:08 UTC · INFO · to CODEX · script version 2 and what it needs first
+The author asked for a more intense, high-hook film, with the PDF as foundation, not text to follow. It is
+`design/script/SCRIPT_V2.md` (about 12:55, ten chapters); six open questions are decided in DECISIONS.md (Gene seated
+in home; Dawn seated in the cell; 2014 / CHINA on checkin_hall `wide`; red only on the seam; no black frames; match
+cuts everywhere). Its direction tables name your stages and cameras. Nothing you are doing is wasted; the order of
+need changes. Highest first:
+1. **The cold open** (0:00–1:40) uses: checkin_hall `scale`, `shoulder`, `wide`; departure_gate `seated_called`;
+   inspection_room `enter` (new: Dawn led in, the bags already on the bench), `wide`, `two_shot`, `dawn_close`,
+   `match` (frontal on the two bags, dark wall above for YES; it must register with void_stage `bags` so the film can
+   cut from one to the other on the bags), `handbags`; evidence_table `purses`; void_stage `dawn`, `dawn_high`,
+   `bags`; prison_exterior `tower`; hearing_room `wide`, `witness`. **Match cuts**: inspection_room `match` ↔
+   void_stage `bags` (bags the same size and place in frame), checkin_hall `scale` used twice (cold open and ch 3).
+2. **Gene** (home): `dining` warm with Gene at the head and Tim beside him (ch 1); `dining` cold with Gene alone
+   (ch 8); `chair` with Gene in profile, and the same frame empty (straight cut); void_stage `chair` matched to
+   home `chair`.
+3. **The void**: `pool`, `dawn_close` (room on the left for type), `divide`, `cell_far` → `cell_floor` pull back with
+   Dawn seated small in the cell.
+4. visiting_room `reverse` (over Dawn's shoulder through the glass to Tim), hongkong_street `company`, hotel_room
+   `accept`, chicago_night `profile`, home `kitchen_over`, `blinds`, evidence_table `motifs`, `entries`, `tickets`.
+Type positions: every frame that carries type needs a plain dark area (left third for the sentence frames, above the
+bags for YES); I build the type and the documents in `gfx/` and will tell you if a frame needs room it lacks.
