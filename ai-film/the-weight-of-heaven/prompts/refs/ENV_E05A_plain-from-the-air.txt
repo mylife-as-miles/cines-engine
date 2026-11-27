@@ -12,11 +12,9 @@ The environment must feel physically real, inhabited, spatially coherent, and su
 
 # REFERENCE IMAGES
 
-@Image 1 — the approved basalt plain, drawn from the ground. Use it for: the black six-sided basalt columns, their stacks and steps.
-@Image 2 — the approved wall. Use it for: the wall: seamless fused black stone, tall round-arched gates, green valley seen through the open ones.
-@Image 3 — the approved view beneath Orison. Use it for: the underside of the kingdom and its hanging chains.
+@Image 1 — a close view of the approved basalt, photographed from the ground. Use it for one thing only: what the basalt is, black six-sided columns packed edge to edge, some standing taller in stacks.
 
-Take from each reference only what it is listed for. Do not copy its framing, its camera position or its ground-level view.
+Do not copy its camera position, its height, its framing or its ground-level view. The new picture is taken from high in the air, looking down.
 
 ---
 
@@ -48,17 +46,18 @@ It must not feel production-designed for symbolism.
 
 # SPATIAL GEOGRAPHY
 
-Establish clear, believable geography, seen from the air.
+Establish clear, believable geography, seen from high in the air, looking down.
+
+This is an aerial photograph. The camera is one hundred and fifty metres above the ground and points forty degrees downward. No part of the ground is near the camera: the nearest columns, at the bottom edge of the frame, are two hundred metres away.
 
 Include:
 
-- the lower three quarters of the frame: the basalt plain of @Image 1 seen from three hundred metres up, looking forward and down: tens of thousands of black six-sided column tops packed edge to edge like a honeycomb, a pattern that runs unbroken to the far edge of the plain
-- taller stacks of columns stand up out of the pattern here and there, small from this height, like the stumps of towers, each ringed with pale mist
-- rivers of pale mist lie in the lower lanes between the columns and catch the light
-- along the far edge of the plain, a thin straight black line from one side of the frame to the other: the wall of @Image 2, a mile long and thirty metres high, tiny with distance, nine small round arches in it, most of them glowing green and pale with the valley beyond
-- above the wall, a narrow band of pale daylight
-- the top eighth of the frame: the black underside of the kingdom as in @Image 3, a ceiling running out of the frame, two or three chains hanging from it into the haze, far off
-- camera position: in the air, three hundred metres above the plain, level, looking forward toward the wall and thirty degrees down
+- the plain of @Image 1 seen from above, filling the frame from the bottom edge up to one eighth from the top: the flat tops of tens of thousands of black six-sided columns packed edge to edge, a honeycomb; in the lower half of the frame each six-sided top can be made out, small; toward the top they shrink into a fine dark texture
+- taller stacks of columns here and there, seen from above so that we look down onto their tops: small, like the stumps of towers, each ringed with pale mist
+- rivers of pale mist lying in the lower lanes of the pattern, drawing long pale lines toward the far edge
+- one eighth from the top of the frame, a thin straight black line from the left edge to the right edge: a wall of fused black stone a mile long, tiny with distance, nine small round arches in it, most of them glowing pale green with the valley beyond
+- above the wall, a narrow strip of pale daylight
+- the top edge of the frame: a straight strip of darkness across the full width, the black underside of the kingdom overhead, running out of the top of the frame and out of both sides, with no end, no outline and no shape of its own; a few chains hang from it, far off and pale with haze
 
 There is no foreground object, no boat, no person, no road and no building on the plain: only the columns, the mist and the wall.
 
@@ -218,7 +217,7 @@ ANAMORPHIC CHARACTER:
 none: spherical
 
 LENS CHARACTER:
-50 mm, from the air: no wide-angle distortion, the horizon straight; everything in focus from a hundred metres to the wall, the far distance softened only by haze
+35 mm, from high in the air, pointed forty degrees down: no wide-angle distortion; everything in focus, the far distance softened only by haze
 
 A frame from a feature film photographed with restraint: exposed for the highlights, low in contrast in the distance, one colour (cold blue-grey slate), fine grain. Not a matte painting, not concept art, not a game render.
 
@@ -228,10 +227,10 @@ A frame from a feature film photographed with restraint: exposed for the highlig
 
 One frame of a film, made to be held on screen: not a master reference.
 
-- seen from the air, never from the ground: no column is closer to the camera than three hundred metres
-- the plain is a pattern that fills the frame; the wall is one thin line across it; the band of light and the black ceiling close the top
+- a high aerial view, steep: the ground is tilted up toward us like a map; the pattern of column tops fills seven eighths of the frame
+- the wall is one thin line near the top; the strip of light and the strip of darkness above it are thin too
 - the picture is mostly dark, with pale mist drawing lines through it toward the wall
-- level and still; the far edge of the plain is straight and horizontal
+- level; the wall is straight and horizontal
 
 Scale: the wall is a mile long and looks no thicker than a pencil line; a ten-metre boat flying over the plain would be a fleck. Do not draw the boat.
 
@@ -318,3 +317,5 @@ Avoid:
 - grass or plants on the plain
 - lava or glowing cracks
 - smoke or steam vents
+
+Also never: a view from the ground or from a low rise; columns close to the camera; a horizon in the middle of the frame; open sky filling the top of the frame; a floating island; the ends, edges or outline of the kingdom overhead.

@@ -1,0 +1,68 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q07 PICKUP · BENEATH ORISON · TWO VIEWS FROM THE AIR
+References: @Image 1 — first frame of shot 1: beneath the kingdom, from the air · @Image 2 — first frame of shot 2: the basalt plain from high in the air · @Image 3 — the naval cutter
+Reference mode · 8 s · 2 shots · 2.35:1 · photoreal live action · no speech · no music
+
+## SCENE INTENT
+A small white naval cutter comes down beneath Orison, the kingdom that floats above the cloud, for the first time. Two separate views from the air, cut hard. In the first the cutter comes down out of the cloud under the kingdom's black underside, tiny in a band of daylight. In the second it is seen from high above, a white fleck crossing a vast black plain toward a far wall. Both are held, slow and enormous.
+
+## GLOBAL LOCKS
+Character identity — no one is seen.
+Wardrobe override — none.
+Location / environment continuity — Shot 1 is exactly @Image 1: the black rock underside of the kingdom across the top of the frame, three iron chains hanging plumb from it, a bright band of daylight with shafts of light through haze, the black basalt plain below with mist on it. Shot 2 is exactly @Image 2: the basalt plain seen from high in the air, its six-sided column tops filling the frame like a honeycomb, mist lying in pale streaks, a thin black wall with nine small glowing arches near the top of the frame, and the black underside of the kingdom as a dark strip along the top edge. Everything in each image stays exactly where it is.
+Props and temporal state — The cutter exactly as @Image 3: a small white wooden boat that flies, clinker-built, ten metres long, with a little white pilothouse with pointed windows and a short spire, a brass rail round its deck, and two dark runners under its keel. There is one cutter. It flies level and quiet, keel down.
+
+## MOVIE COLOR
+The colour, light and haze of @Image 1 and @Image 2, unchanged: cold blue-grey slate, black rock and black basalt, a pale band of day, mist greying everything far off. The white cutter is the only clean thing in either frame. Exposed for the band of day; blacks deep but never crushed.
+Influences, each with its purpose — Denis Villeneuve: Arrival and Dune, a very small craft held in a very large, simple, hazy frame. James Cameron: size shown by a small known thing beside a huge one.
+Camera package — ARRI Alexa 65, large format, fine grain. Shot 1 is locked off. Shot 2 glides slowly and steadily forward, high in the air.
+
+## VOICE DNA (immutable)
+No one speaks.
+
+## AUDIO DESIGN
+Wind. Low hum.
+
+## FIRST-FRAME ANCHOR
+Shot 1 opens exactly on @Image 1, the same framing.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–4.0 s
+[CAM] exactly the framing of @Image 1; locked off.
+[BLOCK] Exactly @Image 1. On the right of centre, under the rock, hangs the dark grey cloud of @Image 1. The cutter is small, one thirtieth of the frame wide, a white boat with a spire; at the first frame it is just under that cloud, in clear air, well away from every chain.
+[ACT] The cutter comes straight down, level, at a slow steady pace, a thin trail of vapour pulling off its spire. It passes down through the bright band of day, white against the grey haze and the far hills, with clear air all round it. By the last frame it is three times its own length lower. The cloud drifts slowly. The shafts of light shift a little. Mist moves on the plain. The chains hang still.
+[DIALOGUE] / V.O. none
+[SFX] wind; low hum.
+[STATE OUT] The cutter small and white under the black rock, still coming down.
+
+### SHOT 2
+[TIME] 4.0–8.0 s
+[CAM] exactly the framing of @Image 2 at the first frame, high in the air, pointed down; the camera glides slowly and steadily forward toward the wall.
+[BLOCK] Exactly @Image 2. The cutter is small, one thirtieth of the frame wide, seen from above and behind, a white boat over the black column tops, a little below the centre of the frame, its bow toward the wall.
+[ACT] The cutter flies steadily away from us toward the wall, low over the column tops, white against the black basalt. Its small pale shape passes over one stack of columns and across a streak of mist. The plain slides slowly down the frame. The mist drifts.
+[DIALOGUE] / V.O. none
+[SFX] wind; low hum.
+[STATE OUT] The cutter a white fleck over the plain, nearer the wall.
+
+## PERFORMANCE ARC
+None: no one is seen.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+The kingdom is a ceiling over someone else's country, and the boat that comes from it is very small.
+
+## PHYSICS LOCKS
+Normal speed and real weight. The rock and the chains are perfectly still. The cutter moves slowly and level. Cloud and mist drift slowly.
+
+## AUDIO LOCKS
+No speech and no voice of any kind. No narration. No music or singing.
+
+## CONTINUITY LOCKS
+[POSITIVE] shot 1 exactly as @Image 1 · shot 2 exactly as @Image 2 · the cutter exactly as @Image 3, one cutter, small · the light and haze of the two images
+[NEGATIVE] sunlight, blue sky or warm light · flames, engines, sails or wings on the cutter · a second boat · text or captions · slow motion · camera shake
+
+## GENERATION PRIORITY ORDER
+1. Two separate shots, a hard cut between them, four seconds each  2. Each shot exactly its image: framing, light, haze  3. The cutter small, white, slow, clear of the chains  4. Sound: wind only, no voice
+
+## FINAL STATE
+The cutter a white fleck over the black plain, flying toward the far wall.
