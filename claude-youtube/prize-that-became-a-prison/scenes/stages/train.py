@@ -487,8 +487,9 @@ def rack_case():
     """On the inbound train she has one suitcase. The duffel is bought later."""
     bed = st.RACK_Z + st.BAR_R
     case = props.load("dawn-suitcase", size=0.66, axis="z", sat=0.6)
-    case.rotation_euler = (math.radians(90), 0, math.radians(-3))
-    case.location = (-st.XW + 0.183, SEAT_Y + 0.52, bed + 0.212)
+    # The side panel rests across two bars. Its two wheels drop into the gaps.
+    case.rotation_euler = tuple(math.radians(a) for a in (91.55, 0.94, -3.0))
+    case.location = (-st.XW + 0.2161, SEAT_Y + 0.5143, bed + 0.20)
     bpy.context.view_layer.update()
     meshes = [obj for obj in case.children_recursive if obj.type == "MESH"]
     pts = [o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
