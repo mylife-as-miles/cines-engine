@@ -63,7 +63,7 @@ HIDE = {
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
 HIDE["document"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools")
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -110,11 +110,22 @@ CAMERAS = {
     "pair": dict(loc=(0.02, -0.508, TOP + 0.82), aim=(0.0, -0.008, TOP), lens=54,
                  focus="fx_page", fstop=6.3, beat="document", show=("pair sheets", "document tools"),
                  lamp=(-0.40, 0.20, -122.0), exposure=-1.4, final_res=(2560, 1440)),
-    "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.121), lens=50,
-                   focus="fx_screen", fstop=3.5, beat="ch02", hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
+    "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.110), lens=50,
+                   focus="fx_screen", fstop=2.2, beat="ch02", show=("screen spill",), hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
                    exposure=-1.6),
 
 }
+
+CAMERAS["laptop_before"] = dict(CAMERAS["laptop"], hide=CAMERAS["laptop"].get("hide", ()) + ("passes_c2",))
+CAMERAS["tickets"] = dict(loc=(0.026, -0.405, TOP + 0.310), aim=(0.177, 0.017, TOP), lens=50,
+                         focus="fx_tickets", fstop=6.3, beat="tickets", exposure=-1.6,
+                         hide=("laptop", "envelope", "highlighter", "stack", "mug"), lamp=(-0.41, -0.28, -68))
+CAMERAS["entries"] = dict(loc=(-0.085, -0.65, TOP + 0.48), aim=(-0.025, 0.032, TOP + 0.022), lens=42,
+                         focus="fx_entries", fstop=4.8, beat="entries", exposure=-1.60,
+                         show=("entry stationery",), lamp=(-0.45, 0.18, -117))
+HIDE["tickets"] = HIDE["ch02"]
+HIDE["entries"] = tuple(g for g in DOCUMENT_PROPS if g != "mug")
+
 
 M = {}
 G = {}                 # group name -> objects
@@ -470,13 +481,29 @@ def laptop():
     fx = bpy.data.objects.new("fx_laptop", None)
     bpy.context.scene.collection.objects.link(fx)
     fx.matrix_world = Matrix.Translation(centre)
+    # The generated key deck has pale shapes on the keycaps. Fit an unlettered
+    # insert over the measured deck (23 mm above the slab) for the screen close-up.
+    deck = sk.box("laptop key well", (0.132, 0.325, 0.0034), (-0.009, 0, 0.0236),
+                  mt.plastic("keyboard surround", (0.026, 0.029, 0.032), 0.47), bevel=0.0015)
+    bm = bmesh.new()
+    rows = ((1,) * 14, (1.4,) + (1,) * 12 + (1.4,), (1.65,) + (1,) * 11 + (1.95,),
+            (2,) + (1,) * 10 + (2.5,), (1.4, 1.3, 1.3, 5.9, 1.3, 1.3, 1.4))
+    for row, units in enumerate(rows):
+        pitch = 0.308 / sum(units)
+        y0 = -0.154
+        for unit in units:
+            span = unit * pitch
+            add_box(bm, (0.017, span - 0.0023, 0.0023), (0.035 - row * 0.022, y0 + span / 2, 0.026))
+            y0 += span
+    keys = bevelled(mesh_obj("laptop blank keys", bm, mt.plastic("blank laptop caps", (0.035, 0.038, 0.040), 0.54)),
+                    0.0008, 2)
     x, y, t = LAPTOP
     place = Matrix.Translation((x, y, TOP)) @ Matrix.Rotation(math.radians(t), 4, "Z")
-    for o in (scr, li, fx):
+    for o in (scr, li, fx, deck, keys):
         o.matrix_world = place @ o.matrix_world
     h.location = (x, y, TOP)
     h.rotation_euler = (0, 0, math.radians(t))
-    return [h] + list(h.children_recursive) + [scr, li]
+    return [h] + list(h.children_recursive) + [scr, li, deck, keys]
 
 
 def retouch(holder, box, dx, feather=8):
@@ -632,13 +659,57 @@ def document_plates():
     for group_name, name, x, y, turn in (("page sheet", "document_single", 0, 0, -40),
                                           ("pair sheets", "document_left", -0.114, 0.004, 1.8),
                                           ("pair sheets", "document_right", 0.115, -0.005, -1.5)):
-        pp.SUPPORT[:] = wood
+        # A flat A4 spans the narrow board joints instead of conforming to their bevels.
+        pp.SUPPORT.clear()
         group(group_name, pp.sheet(name, m["paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0))
     pp.SUPPORT[:] = wood
     group("document tools", pp.pen("document_pen", m["pen"], m["chrome"], m["chrome"], -0.222, -0.062, 86))
     group("document tools", pp.highlighter("document_highlighter", m["hl_body"], m["hl_cap"], 0.258, 0.045, 74))
     pp.SUPPORT[:] = keep
     empty("fx_page", (0, -0.055, TOP + 0.0003))
+
+
+def entry_stationery():
+    """Three partly overlapping, unlettered entry cards, two envelopes and the second cup."""
+    m = materials()
+    saved = list(pp.SUPPORT)
+    wood = [o for o in saved if o.name == "table_top"]
+    forms = []
+    rule = mt.matte("entry card rules", (0.27, 0.25, 0.22), 0.90)
+    for i, (x, y, angle) in enumerate(((-0.084, 0.035, 21), (-0.032, 0.010, 7), (0.018, -0.020, -7))):
+        # Stiff cardstock bridges the boards and rests on the previous card.
+        pp.SUPPORT.clear()
+        name = f"entry card {i + 1}"
+        card = pp.sheet(name, m["cream"], 0.152, 0.104, x, y, angle, thick=0.00034, step=0.025, stiff=0)
+        card.location.z += i * 0.00038
+        forms.append(card)
+        bm = bmesh.new()
+        # Printed rules and the four sides of each empty box share one coplanar ink mesh.
+        def line(cx, cy, width, height):
+            vs = [bm.verts.new((cx + dx * width, cy + dy * height, 0.00042))
+                  for dx, dy in ((-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5))]
+            bm.faces.new(vs)
+        for yy, length in ((0.029, 0.113), (0.016, 0.122), (0.003, 0.091)):
+            line(-0.061 + length / 2, yy, length, 0.00040)
+        for cx in (-0.056, -0.023):
+            cy, half, ink = -0.026, 0.0033, 0.00042
+            for sign in (-1, 1):
+                line(cx, cy + sign * half, 2 * half + ink, ink)
+                line(cx + sign * half, cy, ink, 2 * half - ink)
+        lines = mesh_obj(name + " ruling", bm, rule, smooth=False)
+        lines.parent = card
+        forms.append(lines)
+    pp.SUPPORT[:] = wood
+    forms.extend(pp.envelope("entry cream envelope", m["cream"], -0.215, 0.085, 17, w=0.17, h=0.115))
+    forms.extend(pp.envelope("entry kraft envelope", m["manila"], -0.224, 0.103, 24, w=0.16, h=0.106))
+    pp.SUPPORT[:] = wood
+    forms.extend(pp.pen("entry pen", m["pen"], m["chrome"], m["chrome"], 0.112, -0.112, 35))
+    forms.extend(pp.mug("second mug", mt.glaze("second mug glaze", (0.27, 0.22, 0.16)), m["bisque"], m["coffee"],
+                        0.22, 0.10, 28))
+    pp.SUPPORT[:] = saved
+    group("entry stationery", forms)
+    empty("fx_entries", (0.018, -0.020, TOP + 0.001))
+    empty("fx_tickets", (0.184, -0.061, TOP + 0.002))
 
 
 def frame_metadata(name, scene, resolution):
@@ -731,6 +802,8 @@ def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
         return None
+    if cam.get("stage_camera") in CAMERAS:
+        return cam["stage_camera"]
     for n, c in CAMERAS.items():
         if (cam.location - Vector(c["loc"])).length < 1e-3:
             return n
@@ -859,6 +932,7 @@ def build(cast=True):
     lamp()
     spread()
     document_plates()
+    entry_stationery()
     group("laptop", laptop())
     bpy.context.view_layer.update()
     empty("fx_screen", tuple(bpy.data.objects["laptop_screen"].matrix_world.translation))
@@ -888,6 +962,14 @@ def build(cast=True):
         if ob.type == "MESH" and M["wood"].name in ob.data.materials:
             recv.objects.link(ob)
     edge.light_linking.receiver_collection = recv
+    # The direct screen spill mostly falls on the key deck. Its diffuse return on
+    # the boards is just visible around the near corners of the keyboard.
+    return_light = sk.area_light("screen on the desktop", (0.35, 0.24, TOP + 0.23), (0.30, 0.17), 9.0, COOL)
+    return_light.rotation_euler = (Vector((0.22, 0.07, TOP)) - return_light.location).to_track_quat("-Z", "Y").to_euler()
+    return_light.light_linking.receiver_collection = recv
+    return_light.visible_glossy = False
+    return_light.visible_volume_scatter = False
+    group("screen spill", [return_light])
     edge.visible_glossy = False
     edge.visible_volume_scatter = False
     room()

@@ -9,7 +9,8 @@ A stage is `scenes/stages/<stage>.py` with:
     def build(cast=True): ...     # builds the whole set, props and (if cast) the people into the reset scene
 
 Writes out.png (raw) and, unless --nograde, out_graded.png (the film's grade: desaturated, blue shadows, vignette,
-grain). Prints the wait, build and render times. `--cam all` renders every camera in turn (one build).
+grain). Pass a comma-separated camera list or all to render a batch in one build. A final_<camera>.png
+uses the camera's final_res if larger and includes corner-pin metadata when the stage provides it.
 """
 import fcntl
 import importlib
@@ -63,8 +64,9 @@ for n in names:
         bpy.data.objects.remove(o)
     focus = c.get("focus")
     focus = focus if focus and focus in bpy.data.objects else None
-    sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35), focus=focus, fstop=c.get("fstop", 4.0))
-    path = out if cam_name != "all" and len(names) == 1 else out.replace(".png", f"_{n}.png")
+    camera = sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35), focus=focus, fstop=c.get("fstop", 4.0))
+    camera["stage_camera"] = n
+    path = out if len(names) == 1 else out.replace(".png", f"_{n}.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     stem = os.path.splitext(os.path.basename(path))[0]
     final = stem == "final" or stem.startswith("final_")

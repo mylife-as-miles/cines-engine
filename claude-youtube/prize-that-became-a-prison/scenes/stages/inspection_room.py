@@ -53,6 +53,15 @@ LAYOUT = {
              "handbag-shoulder": (0.70, -0.05, TOP, 97.0)},
     "ch11": {"dawn-suitcase": CASE, "extra-bag-closed": DUFFEL},
 }
+# The inspection counter is seen from its far side in the two intercut plates.
+# Rotate the reference bag marks and camera together around the bench centre.
+LAYOUT["three bags"] = {
+    "handbag-shoulder": (0.375, -0.195, TOP, 342.0),
+    "handbag-satchel": (0.06, -0.02, TOP, 333.0),
+    "handbag-tote": (-0.255, 0.155, TOP, 325.0),
+}
+LAYOUT["match"] = {"dawn-suitcase": (0.32, -0.10, TOP, 122.0),
+                   "extra-bag-closed": (-0.30, 0.18, TOP, 197.0)}
 st.GHOST = (TOTE00[0], TOTE00[1], 0.35, 0.16, TOTE00[3])   # the cleaner patch where the tote stood (Ch 11)
 PROPS = {  # size, axis, grade
     # The bags' own textures are already dark (surface albedo about 0.03 for both soft bags); what made them read light
@@ -141,7 +150,27 @@ CAMERAS = {
                   wild=("wall_front", "cove_f", "rail_f")),
 }
 
-WILD = ("wall_front", "cove_f", "rail_f")
+CAMERAS.update({
+    "handbags": dict(loc=(0.62, 1.10, TOP + 0.48), aim=(0.05, -0.02, TOP + 0.13), lens=35,
+                     focus="fx_handbags", fstop=2.8, beat="ch05", layout="three bags", exposure=-2.8,
+                     cheat={"OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
+    "two_shot_pre": dict(CAMERAS["two_shot"], layout="ch11"),
+    "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
+    "dawn_close": dict(loc=(-0.77, 0.66, 1.57), aim=(0.24, -0.42, 1.44), lens=43,
+                       focus="fx_dawn_close", fstop=2.8, beat="ch00", layout="ch11", pose="case handle",
+                       cheat={"Dawn": (0.53, -0.59), "OfficerA": (-0.49, 0.58)}, facing={"Dawn": (0.391, 0.400)}),
+    "match": dict(loc=(-0.12, 4.0, TOP + 0.55), aim=(0, 0.02, TOP + 0.33), lens=50,
+                  focus="fx_match", fstop=4, beat="ch11", layout="match", cast=False,
+                  wild=("wall_back", "cove_b", "rail_b")),
+    "empty_ch05": dict(CAMERAS["empty"], beat="ch05"),
+})
+FOCUS.update({"fx_handbags": (0.06, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
+              "fx_dawn_close": (0.53, -0.55, 1.54)})
+POSES["case handle"] = dict(POSES["ch00"],
+                            Dawn=dict(POSES["ch00"]["Dawn"], reach_r="case_handle", palm="down", fingers=36),
+                            OfficerA={"chest": (3, 0), "fingers": 32, "look": "Dawn", "behind": True})
+
+WILD = ("wall_front", "cove_f", "rail_f", "wall_back", "cove_b", "rail_b")
 _STATE = {"props": {}, "cast": [], "holders": {}, "dressing": [], "pose_cache": {}}
 
 
@@ -559,6 +588,8 @@ def _bbox(holder):
 
 
 def _reach_point(kind):
+    if kind == "case_handle":
+        return _case_frame() @ Vector((-0.045, 0.032, 0.566))
     if kind == "duffel_hover":       # palm 8 cm over the extra bag's top, over its middle, toward the near end
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
         return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.045, hi.z + 0.08))
@@ -716,12 +747,12 @@ def set_beat(beat):
     bpy.context.view_layer.update()
 
 
-def block(beat, cheat=None):
+def block(beat, cheat=None, face_marks=None):
     """Stand the cast where this beat (and this camera's cheat, if any) puts them, each turned to what it faces."""
     spots = {"Dawn": DAWN, "OfficerA": OFFICER_A, "OfficerB": OFFICER_B}
     spots.update(BLOCKING.get(beat, {}))
     spots.update(cheat or {})
-    faces = FACE.get(beat, FACE["ch00"])
+    faces = {**FACE.get(beat, FACE["ch00"]), **(face_marks or {})}
     for n, h in _STATE["holders"].items():
         x, y = spots[n]
         h.location.x, h.location.y = x, y
@@ -732,9 +763,11 @@ def block(beat, cheat=None):
 
 
 def pose_cast(beat, cfg):
-    key = (beat, tuple(sorted((cfg.get("cheat") or {}).items())))
+    pose = cfg.get("pose", beat)
+    key = (pose, cfg.get("layout", beat), tuple(sorted((cfg.get("cheat") or {}).items())),
+           tuple(sorted((cfg.get("facing") or {}).items())))
     cache = _STATE["pose_cache"]
-    specs = POSES.get(beat, POSES["ch00"])
+    specs = POSES.get(pose, POSES["ch00"])
     holders = _STATE["holders"]
     order = ["OfficerA", "OfficerB", "Dawn"]          # Dawn last: she looks at the officer's eyes as posed
     if key in cache:
@@ -751,12 +784,12 @@ def pose_cast(beat, cfg):
 def apply_camera(name):
     cfg = CAMERAS.get(name, {})
     beat = cfg.get("beat", "ch00")
-    set_beat(beat)
+    set_beat(cfg.get("layout", beat))
     show_cast = cfg.get("cast", True)
     for o in _STATE["cast"]:
         o.hide_render = not show_cast
     if _STATE.get("holders") and show_cast:
-        block(beat, cfg.get("cheat"))
+        block(beat, cfg.get("cheat"), cfg.get("facing"))
         pose_cast(beat, cfg)
     for o in st.CEILING:   # (the lights among them stay unseen by every camera: the lens is what the eye sees)
         o.visible_camera = o.type != "LIGHT" and not cfg.get("above_ceiling", False)
@@ -800,6 +833,8 @@ def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
         return None
+    if cam.get("stage_camera") in CAMERAS:
+        return cam["stage_camera"]
     for n, c in CAMERAS.items():
         if (cam.location - Vector(c["loc"])).length < 1e-3:
             return n
