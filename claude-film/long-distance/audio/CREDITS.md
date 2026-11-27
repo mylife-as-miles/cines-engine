@@ -1,6 +1,6 @@
 # Sound credits
 
-There is no music in the film.
+Music: one take of Lyria 3.5 (Google Gemini API, model `lyria-3.5`), `audio/score/T2.mp3`, cut into the two cues M01 and M02; SynthID-watermarked. Prompt and model text in `audio/score/T2.json`. Takes T1 and T3 were generated and not used.
 
 ## Voices
 

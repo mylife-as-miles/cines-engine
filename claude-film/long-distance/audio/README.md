@@ -1,6 +1,6 @@
 # Sound
 
-*Long Distance* has no music. Its soundtrack is two voices, a few quiet effects and the rooms, and it is built from the film's own cue sheet: every sequence names its beds and cues in `sound(S)`, the voiced lines carry their takes, and nothing is placed by hand. A re-timed picture rebuilds the mix.
+*Long Distance* has a sparse score: one felt-piano motif, heard twice (see "The score" below). The rest of its soundtrack is two voices, a few quiet effects and the rooms, and it is built from the film's own cue sheet: every sequence names its beds and cues in `sound(S)`, the voiced lines carry their takes, and nothing is placed by hand. A re-timed picture rebuilds the mix.
 
 ## The idea: grain and gloss
 
@@ -9,6 +9,17 @@ The phone speaks in the real woman's voice, but dry, close and too clean, with n
 - **Gloss: everything the phone makes** is synthesised in code, clean and dry, and no room is ever put on it: its voice, send, receive, the taps and typing on the glass, the scrolls, lock, wake, and the vibration's tone (on the mirror, on the desk, through the bedroom wall). Every one of the phone's lines is levelled to exactly the same loudness (-16 LUFS before the master): perfectly even.
 - **Grain: everything real** is a recording-like sound with texture, placed in its own room: each sequence has a space (bedroom, bathroom, office, the concrete stairwell, the bus, the flat), and every real effect is convolved with that space before the mix. Her voice when she is really there gets the flat's room (RT 0.45 s), a touch of distance and her own dynamics; his gets the same room, drier; in bed at night he is close, in a short soft room that is barely there.
 - **Silence is an instrument.** The room goes quiet as he holds his breath (Q10, 9 dB down over 3 s) and drops out entirely when she lets the screen go dark (about 1.4 s of nothing), then comes back 6 dB under where it was. The app opens in Q11 with no sound at all: nothing dials, nothing rings. After the last "I love you too." the world is ducked to room tone, and the black and the title are digital silence.
+
+## The score
+
+The author chose a sparse score (27 November 2026). One felt-piano motif, heard twice, both cues cut from a single Lyria 3.5 take so they share instrument, key and room (`audio/score_plan.json`):
+
+| Cue | Where | What |
+| --- | --- | --- |
+| M01 | Q06, 3:17.5–3:45.5 | He stops chewing and looks at the waterfall photo: the motif enters under the room (take T2 from 1.0 s, -17 dB house level, 2.5 s in), carries L007 (ducked under it), the lock/wake rhyme and the push to the strip, and fades into the hard cut. The first music in the film. |
+| M02 | Q11, 7:57–8:23.5 | After the last "I love you too." he lies down with the phone beside his face: the same piano returns, the take's sparse held last 26.5 s (-15 dB), and its own fade to silence ends exactly at the cut to black. |
+
+Silences kept: the screen going dark (Q10), the app opening with no ring (Q11), the black and the title (digital silence). Three takes of one prompt were generated (`takes` in the plan; `python3 tools/lyria.py`) and checked with `tools/score_check.py` (earshot plus librosa: `audio/score/check.json`): all three solo piano, sad and melancholic, no vocal, drum or choir tag; T2 was chosen for its two halves (a melodic first half, a sparse held second half) and the only clean natural fade of the three. It is retuned by 9 cents to A = 440.
 
 ## What each sound is and where it came from
 
@@ -30,7 +41,7 @@ Silent on purpose (`null` in the sound map, with the reason in `_silent_on_purpo
 1. `node tools/cuesheet.js out/cuesheet.json`: every bed, cue, silence and duck on the global clock.
 2. `python3 tools/sfx_gen.py --jobs 2 --check`, `python3 tools/sfx_variants.py audio/gen_variants.json`, `uv run tools/kit_make.py`: the real sounds. `uv run tools/synth_sfx.py`: the phone's. `<earshot venv>/bin/python tools/vocal_fx.py`: the laugh and the murmur.
 3. `uv run tools/build_mix.py --mix [--mux]`:
-   - **the world** (`out/mix/bed.flac`): the beds looped to their spans with their fades and relative levels (`audio/sound_map.json`, levelled against the voices), an air floor at -60 LUFS, the knocks at their designed level, the world's envelopes, silences and ducks; then the score if `audio/score_plan.json` ever lists cues (**the hook**: it is empty; a score added there is placed under the voices, and the title's silence can carry its last note);
+   - **the world** (`out/mix/bed.flac`): the beds looped to their spans with their fades and relative levels (`audio/sound_map.json`, levelled against the voices), an air floor at -60 LUFS, the knocks at their designed level, the world's envelopes, silences and ducks; then the score from `audio/score_plan.json` (each cue a window of its take, retuned, normalised to -23 LUFS and set to its level, with its fades), placed under the voices; the world's silences do not silence it, so every cue ends before the black;
    - **the voices** (`out/mix/voice/`): each take through its treatment (`voices` in the sound map), then levelled as heard (`levels.json`);
    - **the effects** (`audio/cues.json`): each real sound with its sequence's room, each gloss sound dry, for opus-sound-layer's `mix.py`, which places each sound's peak (or start) on its cue, solves its level against the bed in its own band, ducks the bed 9 dB under the voices and masters to -18 LUFS with a -2 dBTP limiter. `tools/layer_mix.py` runs that `mix.py` unchanged on disk with two changes made as it loads: the bed keeps the level it was built to (mix.py would lift any "music" to -23 LUFS, which for room tone means 18 dB louder, 7 LU under the voices), and the master and stems are 24-bit FLAC (the disk could not hold WAV and float stems). mix.py's shared room is off: the gloss must stay dry, and the real sounds carry their own rooms.
    - the master's sample peaks are then held at -3 dBFS (the AAC encode overshoots the synthesised taps' transients);
