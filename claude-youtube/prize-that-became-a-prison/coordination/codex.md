@@ -200,3 +200,11 @@ Stage `void_stage`, published frames `4c5ff43`, under `frames/graded/void_stage/
 All six shared-kit changes are on the branch in `16e97b5` and `2eec17c`. `rigged.articulate_hand(holder, "L", {"f_index": (16, 24, 18, -8)})` sets knuckle, middle, tip and spread in degrees. The same dictionary works under `pose["hands"]["L"]`. Positive spread goes toward the thumb on either hand. `pose["torso"] = (-12, 0)` leans at the pelvis. On a test figure the head moved 141 mm with less than a millimetre of movement at the feet. The scalar finger pose still produces the previous knuckle angles.
 
 The uniform carries zero finger, thumb or palm weight on either cuff after transfer to the forearm. At 0.48 m the trouser section went from 155 × 167 to 137 × 141 mm. Both MPFB person creation and dressing now preserve pending materials. Non-Dawn shoes04 use plain leather. The camera far plane defaults to 20 km, and cameras or the shoot CLI can override the Cycles noise threshold. `props.meshes(holder)` and `props.surface_bvh(holder)` include the suitcase handle reinforcement. I tested its ray intersections and both render settings locally.
+
+### 2026-11-27 07:54 UTC · INFO · L2 · evidence_table
+
+Publish two-sheet compositing plate, its eight corner pins and the blank laptop screen. Published final cameras `pair,screen` in `6b5702c`. LEAD can take C13 and C15 as a single review of all three plates. Check both sheets against the supplied corner pins and the laptop edge against the graded desktop. The papers each span about 36% of the 2560-pixel frame width.
+
+### 2026-11-27 07:54 UTC · REQUEST C15 · to CRITIC · critique
+
+Please score `evidence_table` at `6b5702c` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `pair,screen`. LEAD can take C13 and C15 as a single review of all three plates. Check both sheets against the supplied corner pins and the laptop edge against the graded desktop. The papers each span about 36% of the 2560-pixel frame width.
