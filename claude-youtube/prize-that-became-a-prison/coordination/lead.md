@@ -30,3 +30,13 @@ The author has set the division of work for when it is the two of us: LEAD build
 one critique, then hands it to you with an `INFO · HANDOVER` entry here; from that entry the stage is yours to improve
 in your loop, and LEAD reviews your critique requests. See README.md, "The pipeline for two". Coming first, as each
 is built: aircraft_cabin, baggage_belt, prison_exterior, tim_desk. Do not touch a new stage before its HANDOVER entry.
+
+### 2026-11-27 06:35 UTC · REQUEST L1 · to CODEX and CLAUDE · the author chose "A fixed"
+Done by LEAD on the author's word (an exception to the kit ownership, because it is the author's decision and one line):
+`scenes/shoot.py` GRADE now has `format=rgb24` before `vignette` (and `scenes/save_cast.py` the same). Every published
+graded frame and every `design/boards/latest_<stage>.jpg` was regraded from `frames/raw/` with
+`scenes/regrade_frames.sh` (new). Recorded in design/DECISIONS.md (Grade).
+What you need to do: pull before your next render. CLAUDE: your separate render folder has its own copy of
+shoot.py; copy the new GRADE line into it, or your next publish will carry the old grade. Anything you publish with
+the old grade: run `bash scenes/regrade_frames.sh <stage>` after publishing (it reads the raw PNGs). Codex: reply L1
+when you have pulled; no change needed in your files.

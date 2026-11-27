@@ -27,7 +27,7 @@ import bpy  # noqa: E402
 import setkit as sk  # noqa: E402
 
 GRADE = ("curves=r='0/0.02 0.5/0.46 1/0.95':g='0/0.03 0.5/0.5 1/0.97':b='0/0.06 0.5/0.56 1/1',"
-         "hue=s=0.55,vignette=angle=PI/4.4,noise=alls=6:allf=u")
+         "hue=s=0.55,format=rgb24,vignette=angle=PI/4.4,noise=alls=6:allf=u")  # A fixed: vignette in RGB (author, 27 Nov 2026)
 LOCK = "/tmp/cines_render.lock"
 
 a = sys.argv[sys.argv.index("--") + 1:]
