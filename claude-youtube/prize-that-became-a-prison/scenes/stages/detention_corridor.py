@@ -53,7 +53,7 @@ CAMERAS = {
     # Ch 06: controlled close-up on a cell door's barred window from the hinge side, 40 deg off its axis, so the
     # reveal has depth, the round bars throw shadows on the glass and the raking key grazes the leaf; the empty
     # bunk's top rail rim-lit beyond the bars
-    "door": dict(loc=(0.14, 8.53, 1.56), aim=(st.XW, 7.56, 1.47), lens=38, focus="fx_door", fstop=5.6),
+    "door": dict(loc=(0.14, 8.53, 1.53), aim=(st.XW, 7.56, 1.51), lens=38, focus="fx_door", fstop=5.6),
     # Ch 06: the visitation room from the doorway at a seated visitor's eye height (the end wall cut away): the
     # whole table in the pendant's pool, its legs and hard shadow on the floor, the empty chair behind the envelope,
     # the visitor's own chair pushed in at frame left, the shade's glowing rim in the upper third
@@ -72,14 +72,14 @@ TRIMS = {
     # the corridor: the room through the gap washed warm, so it is the brightest, warmest thing at the vanishing
     # point, and its warm wedge on the corridor floor (round 4: the room's wash raised from 900 W and the pools
     # lowered, so the doorway outshines the floor pools, which were the frame's brightest thing)
-    "corridor": {"room_warm": 3400.0, "vd_spill": 0.0, "vd_floor_wedge": 1200.0,
+    "corridor": {"room_warm": 3400.0, "vd_spill": 0.0, "vd_floor_wedge": 1800.0,
                  # the pendant's wide cone off and the rest turned down: 15 m away nobody reads its level, and its
                  # near-white light greyed the amber
                  "pendant_light": 0.0, "pendant_pool": 80.0, "pendant_glow": 5.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
     # down so it does not fill; a dim fill on the hinge strip (frame trim, knuckles, hinge leaves) at frame left,
     # which the grade's vignette otherwise crushed to a black slab
-    "door": {"door_rake": 11.0, "fit4_down": 150.0, "fit4_up": 4.0, "door_hinge_fill": 7.0},
+    "door": {"door_rake": 8.0, "fit4_down": 150.0, "fit4_up": 4.0, "door_hinge_fill": 7.0},
     # the room from the doorway: the corridor's cool light through the open door behind the lens raised and turned
     # toward the visitor's chair (ROTS), so its backrest and seat edge and the left wall read instead of black
     "chair": {"vd_spill": 40.0},
@@ -94,6 +94,13 @@ CHAIR_VAL = {"envelope": 0.8}
 # per-camera swing of the visitation room's door leaf (deg): for the chair camera, which stands in the doorway with
 # the end wall cut away, the leaf is swung back flat out of its way (the corridor shot shows it ajar at 50)
 LEAF_OPEN = {"chair": 172.0}
+CAMERAS["envelope_high"] = dict(CAMERAS["envelope"], loc=(0.23, 14.73, st.TOP + 0.61),
+                                aim=(*ENVELOPE[:2], st.TOP + 0.01), lens=57, fstop=4.0)
+CAMERAS["table_top"] = dict(loc=(0.08, 15.48, 2.55), aim=(0.015, 15.54, st.TOP), lens=31,
+                            focus="fx_envelope", clip=1.22, fstop=5.6, exposure=-1.6)
+MOVES["envelope_high"] = MOVES["envelope"]
+CHAIR_VAL["envelope_high"] = CHAIR_VAL["envelope"]
+
 _STATE = {}
 
 
@@ -162,9 +169,9 @@ def door_rake():
     hinge = 1 if side == "R" else -1                 # world +Y for a right-hand door (the prop's hinges sit at -y)
     # 0.32 m out from the wall and 0.62 m along it, about 60 deg off the leaf's normal at the window: still raking
     # across the leaf, but far enough out that the hinge-side reveal does not shadow the two inboard bars
-    p = Vector((sx * (st.XW - 0.32), y + hinge * 0.62, 1.5))
+    p = Vector((sx * (st.XW - 0.15), y + hinge * 0.62, 1.5))
     aim = Vector((sx * (st.XW + 0.05), y - hinge * 0.1, 1.45))
-    li = st.area("door_rake", tuple(p), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=70)
+    li = st.area("door_rake", tuple(p), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=45)
     li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
     # the hinge strip's fill (energy 0 except for the door camera): the corridor's light bounced off the floor pool
     # beyond the hinge side, a soft panel out in the corridor and further along it, aimed at the frame trim and the

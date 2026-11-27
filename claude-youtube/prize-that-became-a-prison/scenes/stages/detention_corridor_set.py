@@ -81,7 +81,7 @@ def materials():
         cell_y=mt.block_wall("cell wall y", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "y", scuffs=0.5),
         cell_x=mt.block_wall("cell wall x", (0.16, 0.16, 0.15), (0.07, 0.08, 0.085), 1.0, "x", scuffs=0.5),
         floor=mt.floor_paint("corridor floor", paint=(0.052, 0.058, 0.06), bare=(0.085, 0.082, 0.077), drain=DRAIN,
-                             joint=2.4, joint_off=0.2, path_w=0.45, wall_x=XW, rough=0.6, damp_r=0.3, path_lift=1.2),
+                             joint=2.4, joint_off=0.8, path_w=0.45, wall_x=XW, rough=0.6, damp_r=0.3, path_lift=1.3),
         cell_floor=mt.floor_paint("cell floor", path_w=-1.0, joint=40.0, rough=0.5),
         room_floor=mt.tile_floor("visit floor", c1=(0.15, 0.15, 0.145), c2=(0.12, 0.122, 0.12)),
         soffit=mt.soffit("soffit"),
@@ -340,7 +340,7 @@ def close_cell():
     # the caged night light itself, on the latch-side wall high over the bunk's head, where the window sees it
     # between the bars over the tie (a dark painted body, so the wash beside it does not make it a white block;
     # its lens dim)
-    nx, ny, nz = x_in + sx * 1.7, wall_y - sy * 0.03, 1.80
+    nx, ny, nz = x_in + sx * 1.7, wall_y - sy * 0.03, 2.25
     box("night_body", (0.24, 0.06, 0.13), (nx, ny, nz), m["frame"], bevel=0.012)
     box("night_lens", (0.19, 0.012, 0.085), (nx, ny - sy * 0.032, nz), mt.glow("night lens", (0.62, 0.76, 1.0), 0.6))
     bm = bmesh.new()
@@ -351,14 +351,14 @@ def close_cell():
     p = Vector((x_far - sx * 0.1, by, 1.88))
     aim = Vector((x_in + sx * 0.45, by - sy * 0.12, 1.3))       # the blanket and the mattress's near end
     # (a broad panel, out of the window's view: its shadows of the bunk frame on the floor stay soft)
-    li = area("cell_close_night", tuple(p), (0.45, 0.25), 60.0, (0.62, 0.76, 1.0), spread=120)
+    li = area("cell_close_night", tuple(p), (0.45, 0.25), 25.0, (0.62, 0.76, 1.0), spread=60)
     li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
     # the night light's own spill: a small panel just under its lens, aimed down along the latch-side wall, so it
     # lays a soft scallop on the wall under the fixture and the bunk's rail and mattress line read as a silhouette
     # against it (round 4: a broad wash from farther in made a detached U-shaped white patch beside the fixture)
     p = Vector((nx, ny - sy * 0.16, nz - 0.1))
-    aim = Vector((nx + sx * 0.12, wall_y, 1.1))
-    li = area("cell_close_wall", tuple(p), (0.2, 0.08), 1.0, (0.66, 0.78, 1.0), spread=120, glossy=False)
+    aim = Vector((nx + sx * 0.12, wall_y, 1.5))
+    li = area("cell_close_wall", tuple(p), (0.2, 0.08), 5.0, (0.66, 0.78, 1.0), spread=120, glossy=False)
     li.rotation_euler = (aim - p).to_track_quat("-Z", "Y").to_euler()
     bunk = props.load("bunk-bed", size=1.95, axis="long", loc=(bx, by, 0.0),
                       turn_deg=180.0 if sy < 0 else 0.0, sat=0.4, val=0.7, rough_add=0.15)
@@ -411,7 +411,14 @@ def door_proto():
     hinge_z = lambda z: 0.17 < z < 0.46 or 0.83 < z < 1.16 or 1.58 < z < 1.82
     for v in bm.verts:
         p = mw @ v.co
-        if p.x < 0.2 and win(p):
+        if p.x > LEAF + 0.002 and 0.33 < p.y < 0.55 and 1.5 < p.z < 1.90:
+            p.x = LEAF + 0.0008
+            v.co = inv @ p
+        elif abs(p.x - LEAF) < 0.02 and abs(p.y) < 0.45 and 0.6 < p.z < 1.95 and not win(p):
+            p.x = LEAF + (0.0008 if abs(p.y) < 0.33 and 1.12 < p.z < 1.88 else 0.0)
+            v.co = inv @ p
+            flat += 1
+        elif p.x < 0.2 and win(p):
             p.x = 0.2
             v.co = inv @ p
             moved += 1
@@ -430,7 +437,7 @@ def door_proto():
         elif p.x > 0.33 and abs(p.y) < 0.26 and 0.66 < p.z < 1.12:
             # the food hatch stood open as a 23 cm shelf (it read as a letterbox flap down the corridor): closed,
             # it sits a few centimetres proud of the leaf
-            p.x = 0.33 + (p.x - 0.33) * 0.22
+            p.x = LEAF + 0.0008
             v.co = inv @ p
             squashed += 1
     bm.to_mesh(ob.data)
@@ -471,7 +478,7 @@ def door_xf(side, y):
 HATCH_OPEN = 0                                    # the door (index) whose food hatch stands open, a tray on its flap
 
 
-def open_hatch(i, xf, turn):
+def food_hatch(i, xf, turn, opened):
     """The near door's food hatch open: a dark slot with the cell's faint light behind it, a pressed-steel surround,
     the flap down as a shelf on two stays, and a moulded plastic meal tray pushed half out onto it, a cup in it.
     Door-local coordinates (x out of the leaf, whose face is at FRONT)."""
@@ -479,11 +486,21 @@ def open_hatch(i, xf, turn):
     L = lambda n, size, p, mm, bev=0.0: box(f"cd{i}_{n}", size, xf(p), mm, bevel=bev, rot=(0, 0, turn))
     f0 = LEAF + 0.004                                 # the flattened hatch plate
     zb, zt, hw = 0.86, 1.01, 0.18                     # slot bottom, top, half width
-    L("slot", (0.004, 2 * hw, zt - zb), (f0 + 0.001, 0.0, (zb + zt) / 2), mt.glow("hatch slot", (0.55, 0.68, 0.9), 0.05))
+    if opened:
+        L("slot", (0.004, 2 * hw, zt - zb), (f0 + 0.001, 0.0, (zb + zt) / 2), mt.glow("hatch slot", (0.55, 0.68, 0.9), 0.05))
     for sg in (-1, 1):
         L("hatch_jamb", (0.012, 0.022, zt - zb + 0.044), (f0 + 0.006, sg * (hw + 0.011), (zb + zt) / 2), m["frame"], 0.003)
     L("hatch_head", (0.012, 2 * hw + 0.044, 0.022), (f0 + 0.006, 0.0, zt + 0.011), m["frame"], 0.003)
     L("hatch_sill", (0.012, 2 * hw + 0.044, 0.022), (f0 + 0.006, 0.0, zb - 0.011), m["frame"], 0.003)
+    if not opened:
+        L("closed_flap", (0.012, 0.40, 0.16), (f0 + 0.015, 0.0, (zb + zt) / 2), m["frame_steel"], 0.003)
+        hardware = bmesh.new()
+        for yy in (-0.14, 0.14):
+            add_rod(hardware, xf((f0 + 0.022, yy - 0.024, zb)), xf((f0 + 0.022, yy + 0.024, zb)), 0.009, 16)
+        mesh_obj(f"cd{i}_flap_knuckles", hardware, m["hinge"], smooth=True)
+        L("slide", (0.010, 0.060, 0.014), (f0 + 0.029, 0.10, zt - 0.025), m["hardware"], 0.002)
+        L("bolt_knob", (0.008, 0.009, 0.008), (f0 + 0.036, 0.117, zt - 0.022), m["hardware"], 0.002)
+        return
     # the flap, down: a shelf on two stays, sagging 6 deg at its outer edge (so the tray on it tips toward the
     # corridor and its compartments show)
     fd, sag = 0.21, math.radians(6.0)
@@ -657,8 +674,11 @@ def cell_doors():
         cell_bars(i, xf, turn)
         window_frame(i, xf, turn)
         hinges(i, xf, turn)
-        if i == HATCH_OPEN:
-            open_hatch(i, xf, turn)
+        box(f"cd{i}_deadlock", (0.03, 0.05, 0.16), xf((LEAF + 0.015, 0.41, 1.72)),
+                      m["frame_steel"], bevel=0.003, rot=(0, 0, turn))
+        sk.cyl(f"cd{i}_lock_face", 0.011, 0.002, xf((LEAF + 0.031, 0.41, 1.72)), m["hardware"],
+               rot=(0, math.pi / 2, turn), verts=24)
+        food_hatch(i, xf, turn, opened=i == HATCH_OPEN)
         if i in WIN_LIT:
             # the cell's night light seen through the vision panel: a small panel just inside the glass aimed out
             # across the corridor and 9 deg down, so it lays a soft cool patch on the opposite wall at dado height
@@ -883,14 +903,14 @@ def vis_door():
          rot=(-math.radians(68), 0, 0), glossy=False)
     # for the corridor camera only (TRIMS): the room behind the gap washed warm from above, so through the gap it
     # is the brightest, warmest thing at the vanishing point
-    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_ROOM, spread=150, glossy=False)
+    area("room_warm", (0.55, 15.0, H - 0.05), (1.4, 1.6), 0.0, AMBER_ROOM, spread=110, glossy=False)
     # for the corridor camera only (TRIMS): the room's lamp light falling out through the gap at a downward angle:
     # a spot 0.5 m inside the room, tipped 30 deg down with a wide, fully blended 60 deg cone, so the door gap (the
     # jamb on one side, the leaf's shadow on the other) cuts it into a warm wedge on the corridor floor, narrow at
     # the threshold, widening and fading over 2-3 m, with no spotlight edge (a 75 deg cone since round 4, so the
     # wedge lies 2-3 m out of the door past the dying tube's footprint)
     spot("vd_floor_wedge", (VD_X + 0.3, Y1 + T + 0.5, 1.15), 0.0, AMBER_DEEP, 75.0, 1.0, radius=0.08,
-         rot=(-math.radians(60), 0, 0))
+         rot=(-math.radians(70), 0, 0))
     # and the corridor's cool light falling in through the open door: a faint wash across the room
     area("vd_spill", (VD_X + 0.25, Y1 + T + 0.05, 1.15), (0.4, 2.0), 16.0, COOL, spread=100, rot=(math.pi / 2, 0, 0),
          glossy=False)
@@ -928,9 +948,10 @@ def back_door():
     # the corridor beyond lit: a cool sliver of light under the door (an 18 mm gap), fanning out across the floor
     # (round 4: the sliver dimmed, it read as an LED strip, and its light raised and tipped further down, so it fans
     # 30-40 cm across the tiles with a soft falloff)
-    box("bd_under", (lw - 0.02, 0.01, 0.016), (BD_X, RY1 + 0.07, 0.008), mt.glow("bd under", COOL, 0.4))
+    box("bd_under", (lw - 0.02, 0.01, 0.008), (BD_X, RY1 + 0.07, 0.004), mt.glow("bd under", COOL, 0.12))
     d = Vector((0.0, -math.cos(math.radians(20)), -math.sin(math.radians(20))))
     li = area("bd_under_light", (BD_X, RY1 + 0.01, 0.011), (lw - 0.04, 0.012), 6.0, COOL, spread=150)
+    li.visible_camera = li.visible_glossy = False
     li.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     # its vision panel: the cold corridor on the far side, faint through wired glass
     box("bd_glass", (0.12, 0.054, 0.2), (BD_X - 0.2, RY1 + 0.03, 1.55), mt.wired_glow("bd glass", COOL, 0.012))
@@ -1014,7 +1035,7 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
     """A sealed envelope lying back up: its body (0.8 mm: paper and the folded letter inside) pillowed in the
     middle, the bottom flap and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw
     the envelope's seams and cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the
-    far left corner lifts gently, about 8 mm over its last 9 cm, from handling and damp (round 4: the 20 mm curl
+    far left corner lifts gently, about 3 mm over its last 9 cm, from handling and damp (round 4: the 20 mm curl
     rising to a point read as a paper boat)."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
@@ -1026,7 +1047,7 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
         h += 0.0006 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
         h += 0.0006 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
         q = ((x + W / 2) + (D / 2 - y)) * 0.70711
-        h += 0.008 * max(0.0, 1 - q / cq) ** 2
+        h += 0.003 * max(0.0, 1 - q / cq) ** 2
         return max(h, 0.0)
     nu, nv = 46, 32
     bm = bmesh.new()

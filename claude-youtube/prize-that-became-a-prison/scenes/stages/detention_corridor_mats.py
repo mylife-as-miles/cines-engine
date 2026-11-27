@@ -258,7 +258,7 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         col = _mix(nt, ln, col, line_rgb)
     else:
         ln = None
-    heel = _noise(nt, p, 1.0, 3.0, 0.6, mapping=(9.0, 3.0, 9.0))
+    heel = _noise(nt, p, 1.0, 3.0, 0.6, mapping=(12.0, 1.5, 9.0))
     heel_m = _math(nt, "MULTIPLY", _maprange(nt, heel, 0.68, 0.74, 0.0, 1.0), _maprange(nt, _noise(nt, p, 1.3, 2.0, 0.5), 0.5, 0.62, 0.0, 1.0))
     col = _mix(nt, _math(nt, "MULTIPLY", heel_m, 0.65), col, (0.008, 0.008, 0.008))
     # saw-cut joints across the corridor
@@ -279,8 +279,8 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
         wet = _maprange(nt, r, damp_r - 0.14, damp_r + 0.04, 1.0, 0.0)
         wet = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", wet, wet), _math(nt, "SUBTRACT", 3.0, _math(nt, "MULTIPLY", wet, 2.0)))
         wet = _math(nt, "MULTIPLY", wet, _maprange(nt, _noise(nt, p, 7.0, 3.0, 0.6), 0.3, 0.7, 0.75, 1.0))
-        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.12, 0.24, 0.5, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
-        col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.5), col, (0.085, 0.06, 0.04))
+        rust = _math(nt, "MULTIPLY", _maprange(nt, r, 0.10, 0.14, 0.5, 0.0), _maprange(nt, _noise(nt, p, 14.0, 3.0, 0.6), 0.35, 0.65, 0.3, 1.0))
+        col = _mix(nt, _math(nt, "MULTIPLY", rust, 0.25), col, (0.085, 0.06, 0.04))
         col = _mix(nt, 1.0, col, _combine1(nt, _maprange(nt, wet, 0.0, 1.0, 1.0, 0.8)), "MULTIPLY")
         # the tide line where it last dried: a faint darker rim just outside the damp
         tide = _math(nt, "MULTIPLY", _band(nt, r, damp_r + 0.04, damp_r + 0.075, 0.015), 0.22)
@@ -288,10 +288,10 @@ def floor_paint(name, paint=(0.062, 0.07, 0.072), bare=(0.13, 0.126, 0.118), pat
     ao = _ao(nt, 0.45)
     col = _mix(nt, _maprange(nt, ao, 0.35, 1.0, 0.7, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
-    rr = _maprange(nt, _noise(nt, p, 1.6, 4.0, 0.55), 0.3, 0.7, rough - 0.05, rough + 0.05)
+    rr = _maprange(nt, _noise(nt, p, 1.6, 4.0, 0.55), 0.3, 0.7, rough - 0.19, rough + 0.10)
     rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", path, 0.1))
     rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", worn, 0.15))
-    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", heel_m, 0.1))
+    rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", heel_m, 0.15))
     rr = _math(nt, "ADD", rr, _math(nt, "MULTIPLY", jm, 0.3))
     if side is not None:
         rr = _math(nt, "SUBTRACT", rr, _math(nt, "MULTIPLY", side, 0.16))
