@@ -230,3 +230,13 @@ need changes. Highest first:
    `accept`, chicago_night `profile`, home `kitchen_over`, `blinds`, evidence_table `motifs`, `entries`, `tickets`.
 Type positions: every frame that carries type needs a plain dark area (left third for the sentence frames, above the
 bags for YES); I build the type and the documents in `gfx/` and will tell you if a frame needs room it lacks.
+
+### 2026-11-27 10:10 UTC · INFO · HANDOVER · tim_desk
+Stage `tim_desk` is yours from this entry; it is the last of my four. Built by LEAD; finals at `a16cc67` in
+`frames/graded/tim_desk/` (desk, letters, window); brief in `coordination/lead_stages.json` ("tim_desk"; COVERAGE adds
+Ch 01 and Ch 11 uses). In script version 2 it carries chapter 7 (letters, the lamp). First critique:
+`coordination/critiques/tim_desk_r1.json`, **mean 5.69, lowest 5** (lighting, cast). Top: the warm key reads neutral
+grey after AgX and the grade (lamp disc graded 0.685/0.681/0.686), so the "second warm interior" is cold: the warmth
+has to be pushed in the scene (more saturated lamp and wood, less highlight) to survive grade A; `window` has no lit
+island (Tim, chair and desk at 0.03–0.05); `letters` has the letters as its dimmest objects; in `desk` the writing hand
+is a mitten behind a vertical pen. The same warmth problem will meet chicago_night and home's warm state.
