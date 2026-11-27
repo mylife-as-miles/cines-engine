@@ -70,10 +70,14 @@ function email(ctx, t) {
   txt(ctx, 'Dear winner,', 300, 330, 28, C.ink);
   txt(ctx, 'We are delighted to tell you that your entry has been selected.', 300, 392, 28, C.ink);
   prizeLine(ctx, t, 300, 448);
-  // the rest of the letter: greeked lines, so no invented wording is legible
-  const r = rand(5);
-  for (let i = 0; i < 7; i++) rr(ctx, 300, 500 + i * 40, i === 6 ? 380 : 760 + r() * 260, 14, 7, C.bar2);
-  rr(ctx, 300, 820, 220, 52, 26, C.accent);                                                  // a reply button, no word
+  // the rest of the letter: plain, generic wording that the composite's focus band keeps out of focus, so it reads as
+  // a letter, never as a quotation (nothing here is from the real email)
+  const body = ['Our team will be in touch shortly to arrange the details of your prize.',
+                'Please reply to this message to confirm your entry and your contact details.',
+                'All arrangements will be made for you, at no cost to you.',
+                'We look forward to hearing from you.', '', 'With warm regards,', 'The prize team'];
+  body.forEach((line, i) => txt(ctx, line, 300, 520 + i * 44, 26, i > 4 ? C.soft : C.ink));
+  rr(ctx, 300, 860, 200, 52, 26, C.accent); txt(ctx, 'Reply', 365, 894, 22, '#ffffff', 600);
 }
 function search(ctx, t) {
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
@@ -90,14 +94,19 @@ function search(ctx, t) {
   if (blink) { ctx.fillStyle = C.ink; ctx.fillRect(cx, 136, 2, 34); }
   // results arrive a moment after the query: greeked, every one
   const done = start + q.length / cps + 0.6, a = sm((t - done) / 0.4), r = rand(23);
-  if (a > 0) {
+  if (a > 0) {                     // generic results, no site names; out of focus in the composite
+    const RES = [['Prize draw winners: how to claim', 'What to expect after a winning notice, and how prizes are delivered to winners.'],
+                 ['Travel contest official rules', 'Eligibility, prize descriptions, travel dates and conditions for winners.'],
+                 ['Is this contest legitimate?', 'Readers discuss notices from contest organizers and what they checked.'],
+                 ['Sweepstakes and prize notices', 'How to tell a genuine prize from a scam: questions to ask the organizers.'],
+                 ['Winners announced this month', 'A list of recent prize draws, with travel packages and cash awards.']];
     ctx.save(); ctx.globalAlpha = a;
-    for (let i = 0; i < 5; i++) {
+    RES.forEach(([title, snip], i) => {
       const y = 250 + i * 140 + (1 - a) * 12;
-      rr(ctx, 120, y, 260 + r() * 200, 14, 7, '#c6d3c6');           // a source line
-      rr(ctx, 120, y + 30, 420 + r() * 300, 22, 11, '#b9c6dc');     // a title
-      rr(ctx, 120, y + 70, 820 + r() * 200, 12, 6, C.bar2); rr(ctx, 120, y + 94, 560 + r() * 300, 12, 6, C.bar2);
-    }
+      rr(ctx, 120, y, 200 + r() * 120, 12, 6, '#cfd8cf');            // a source line, greeked
+      txt(ctx, title, 120, y + 50, 28, '#2a4a86', 500);
+      txt(ctx, snip, 120, y + 88, 20, C.soft);
+    });
     ctx.restore();
   }
 }

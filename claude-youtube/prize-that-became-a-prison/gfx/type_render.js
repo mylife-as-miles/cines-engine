@@ -32,6 +32,10 @@ const url = f => f ? 'file://' + path.resolve(f) : null;
       { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let i = 0; i < n; i++) { const b = await frame(mode, i / fps, opt.look, opt.bg); if (!ff.stdin.write(b)) await new Promise(r => ff.stdin.once('drain', r)); }
     ff.stdin.end(); await new Promise(r => ff.on('close', r)); console.log(mode, n, 'frames ->', out);
+  } else if (cmd === 'cam') {          // the plate move of a moment, per frame, for gfx/plate_type.py
+    const [mode, secs, out] = rest, fps = +(opt.fps || 24), n = Math.round(+secs * fps);
+    const cams = await p.evaluate(([m, n, fps]) => Array.from({ length: n }, (_, i) => window.plateCam ? window.plateCam(m, i / fps) : null), [mode, n, fps]);
+    fs.writeFileSync(out, JSON.stringify(cams)); console.log('cam', n, '->', out);
   } else if (cmd === 'board') {
     const [out] = rest, tmp = fs.mkdtempSync('/tmp/typeboard-');
     const moments = [['place_2014', 3, 'frames/graded/checkin_hall/wide.jpg'], ['yes', 6, 'frames/graded/void_stage/bags.jpg'],

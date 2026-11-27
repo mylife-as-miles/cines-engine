@@ -11,6 +11,7 @@ The film's type and documents, built in code; every frame is a function of t. Le
 | `route.html` | The route map in seconds: `leg1` (Chicago → Hong Kong, 9 DAYS), `mainland` (the solid leg in, ABOUT 9 MORE DAYS, the dashed line toward Australia), `split` (dashed Australia and Qingdao, neither resolved). The mainland is a region, never a pin. |
 | `scale.html` + `shots/scale_overweight.json` | The check-in scale's passenger display: a bar fills past the limit tick, then OVERWEIGHT blinks twice and holds (no weight shown: the sources say only "slightly over"); pinned on checkin_hall `scale` with its defocus (`tex_blur_px`). |
 | `seam.html` | The film's only red. `flash` (cold open, 1 s) and `trace` (ch 3) run along the tote's seam from a JSON path (prototype `shots/purses_seam_proto.json`, to be replaced by Codex's projected `purses.seam.json`, REQUEST L3); `cutaway` is a schematic section of the bag wall whose lining swings open on its stitches to an empty, red-outlined space and snaps shut. No packets, no words. Render with `type_render.js --page gfx/seam.html`. |
-| `fonts/` | OFL fonts (see its README). |
+| `plate_type.py` | Story type over a living plate: the raw Blender plate pushed in slowly (log space, 2-8 %), graded with the film's grade (grain fresh each frame), the moment's own plate move from `window.plateCam` (the second YES's cut and closing light), then the type on top. Every type-over-plate shot goes through it, so none is a frozen still. |
+| `fonts/` | OFL fonts (see its README). Cormorant's figures are frozen to lining tabular (`cormorant-lt-*`, made with opentype-feature-freezer from the fontsource files), so years roll without shifting and numerals sit on the line with capitals. |
 
 Outputs go to `out/gfx/` (ignored).

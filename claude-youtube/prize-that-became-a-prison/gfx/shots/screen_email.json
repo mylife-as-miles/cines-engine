@@ -2,10 +2,24 @@
   "about": "Chapter 1: the prize email on the laptop (evidence_table `screen`); the prize line cycles through the three accounts' versions.",
   "plate": "frames/raw/evidence_table/screen.png",
   "corners": "frames/raw/evidence_table/screen.corners.json",
-  "texture": {"video": "out/gfx/screen/email.mp4", "fps": 24},
-  "focus_uv": [0.36, 0.45],
+  "texture": {
+    "video": "out/gfx/screen/email.mp4",
+    "fps": 24
+  },
+  "focus_uv": [
+    0.36,
+    0.45
+  ],
   "em_px": 34,
-  "zoom": [1.16, 1.26],
+  "zoom": [
+    1.16,
+    1.26
+  ],
   "duration": 7.0,
-  "length": 7.5
+  "length": 7.5,
+  "focus_band": {
+    "sharp_lines": 1.0,
+    "ramp_lines": 1.6,
+    "blur_px": 4.5
+  }
 }

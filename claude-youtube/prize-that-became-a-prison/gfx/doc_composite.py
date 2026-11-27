@@ -34,7 +34,8 @@ W, H = 1920, 1080
 def grade_filter():
     src = open(os.path.join(ROOT, "scenes", "shoot.py")).read()
     m = re.search(r'GRADE = \((.*?)\)\s*#', src, re.S)
-    return "".join(re.findall(r'"([^"]*)"', m.group(1)))
+    g = "".join(re.findall(r'"([^"]*)"', m.group(1)))
+    return g.replace("allf=u", "allf=t+u")       # the grade's grain, made temporal for moving shots (fresh each frame)
 
 
 def srgb_to_lin(x):
@@ -135,9 +136,10 @@ def marker_mask(page, lines, progress, seed=7):
             continue
         x0 = min(b[0] for b in line); x1 = max(b[2] for b in line)
         y0 = min(b[1] for b in line); y1 = max(b[3] for b in line)
-        em = y1 - y0
+        em = y1 - y0                           # the word box: ascent to descent
         x0 -= 0.25 * em; x1 += 0.25 * em
-        y0 -= 0.12 * em; y1 += 0.10 * em
+        base, xh = y0 + 0.77 * em, 0.42 * em   # baseline and x-height, estimated from the box
+        y0, y1 = base - 1.12 * xh, base + 0.20 * xh   # a band about 1.3 x-heights tall, sitting on the line
         xe = x0 + (x1 - x0) * p
         xs = np.arange(int(x0), int(xe) + 1)
         if len(xs) < 2:
