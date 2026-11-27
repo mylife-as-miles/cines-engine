@@ -850,9 +850,9 @@ def ruled(name, w, h, rgb=(0.74, 0.72, 0.65), pitch=0.0087, head=0.032, margin=0
     x, y, _ = _xyz(nt, o)
     top = h / 2 - head
     ph = _math(nt, "FRACT", _math(nt, "DIVIDE", _math(nt, "SUBTRACT", top, y), pitch))
-    line = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", ph, 0.5)), 0.0, 0.035, 1.0, 0.0)
+    line = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", ph, 0.5)), 0.015, 0.05, 1.0, 0.0)
     line = _math(nt, "MULTIPLY", line, _maprange(nt, y, top + 0.5 * pitch, top + 0.5 * pitch - 0.0005, 0.0, 1.0))
-    col = _mix(nt, _math(nt, "MULTIPLY", line, 0.5), base, rule_rgb)
+    col = _mix(nt, _math(nt, "MULTIPLY", line, 0.7), base, rule_rgb)
     mx = _math(nt, "SUBTRACT", x, -w / 2 + margin)
     m1 = _maprange(nt, _math(nt, "ABSOLUTE", mx), 0.0, 0.00028, 1.0, 0.0)
     m2 = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", mx, 0.0016)), 0.0, 0.00028, 1.0, 0.0)

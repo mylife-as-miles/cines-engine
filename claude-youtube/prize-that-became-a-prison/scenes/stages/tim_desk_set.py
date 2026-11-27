@@ -47,7 +47,7 @@ DW, DD, TOP, TT = 1.40, 0.68, pp.TOP, 0.032                  # desk top: width (
 PED_IN, PED_OUT, PED_Y = 0.30, 0.685, 0.315                 # pedestals: |x| from PED_IN to PED_OUT, |y| to PED_Y
 PLINTH = 0.085
 RUG = (0.0, 1.2, 2.3, 1.6)                                   # centre x, y, size x, y
-WARM = (1.0, 0.74, 0.47)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
+WARM = (1.0, 0.69, 0.4)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
 COOL = (0.78, 0.86, 1.0)           # the laptop's blank page
 NIGHT = (0.55, 0.68, 1.0)          # the street and the sky
 
@@ -271,7 +271,7 @@ def materials():
         phone_edge=mt.satin_metal("phone band", (0.12, 0.12, 0.125), 0.35),
         lens=mt.plastic("phone lens", (0.004, 0.004, 0.005), 0.08, 0.6, 0.0),
         frame=mt.worn_wood("picture frame wood", 0.02, -0.01, light=(0.05, 0.03, 0.017), dark=(0.018, 0.011, 0.006), rough=0.4),
-        hardboard=mt.manila("frame back", (0.1, 0.07, 0.045), 0.8),
+        hardboard=mt.manila("frame back", (0.22, 0.17, 0.12), 0.8),
         photo=mt.photo("framed photograph", 0.127, 0.178, 0.0, image_rgb=(0.085, 0.08, 0.075), gradient=0.3),
         iron=mt.cast_iron("radiator paint"),
         brass=mt.satin_metal("valve brass", (0.3, 0.21, 0.09), 0.35),
@@ -577,7 +577,7 @@ def room():
     bd.visible_shadow = False
     bd.visible_diffuse = False
     # the right wall (-X): the radiator and a dark picture over it
-    on_wall("right_wall", (x0, 0.82, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", 0.05, 1.5)))
+    on_wall("right_wall", (x0, 0.7, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", -0.2, 1.5)))
     # left of the window: a bookcase against the same wall, its books facing the room
     on_wall("bookcase", (1.31, y0, 0.0), math.pi, bookcase, "case", w=0.8)
     rg = box("rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004, seg=2)
@@ -708,7 +708,10 @@ def lamp():
     parts.append(sp)
     parts.append(point("lamp_glow", tuple(BULB - AXIS * 0.004), 0.5, WARM, 0.012))
     # the spill behind and over the head (outside the shade, so the shade does not cut it)
-    back = point("lamp_spill", tuple(BULB + Vector((0.0, -0.11 * _K, 0.16 * _K))), 2.5, WARM, 0.04)
+    # (aimed up and back: it washes the blinds, the wall and the bookcase behind the lamp, and the lamp's own base
+    # stays in its head's shadow)
+    spill_at = BULB + Vector((0.0, -0.11 * _K, 0.16 * _K))
+    back = spot("lamp_spill", tuple(spill_at), tuple(spill_at + Vector((0.0, -0.5, 0.85))), 7.0, WARM, 150.0, 0.7, 0.04)
     parts.append(back)
     # a thin warm rim that only the lamp itself sees: the shade's top edge and the arm read against the dark
     rim_at = Vector((0.0, BULB.y - 0.13, BULB.z + 0.2))
@@ -972,10 +975,11 @@ def desk_things(pad=PAD):
     px, py, pt = pad
     group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.2, 0.03, 60.0))
     group("glasses", reading_glasses(px + 0.035, py - 0.105, pt - 180.0))
-    group("phone", phone(-0.215, -0.1, 12.0))
-    group("frame", photo_frame(0.45, -0.25, 219.3))
-    # the page's light back onto the photograph (only the frame sees it): a soft warm sheen on the glass and the wood
-    kick = area("frame_kicker", (0.12, 0.0, TOP + 0.05), (0.2, 0.14), 0.5, WARM, spread=120, aim=(0.45, -0.25, TOP + 0.1))
+    group("phone", phone(-0.235, -0.07, 12.0))
+    group("frame", photo_frame(-0.12, -0.255, 143.1))
+    # the photograph stands with its back to the window, under the stool's shadow: the night's light on that back
+    # (only the frame sees it), so the hardboard, the strut and the turn buttons read from the desk camera
+    kick = area("frame_kicker", (-0.5, -0.33, TOP + 0.42), (0.2, 0.14), 3.0, NIGHT, spread=120, aim=(-0.12, -0.255, TOP + 0.1))
     kick.visible_camera = False
     recv = bpy.data.collections.new("frame_kicker_receivers")
     for o in G["frame"]:

@@ -83,16 +83,18 @@ FOCUS = {"fx_tim": (0.0, 0.3, 1.2), "fx_letters": (-0.1, 0.0, TOP + 0.01), "fx_p
 
 CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
-    "desk": dict(loc=(-1.42, -0.24, 1.12), aim=(0.04, 0.16, 1.0), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
+    "desk": dict(loc=(-1.42, -0.24, 1.12), aim=(0.0, 0.2, 1.0), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
     "letters": dict(loc=(-0.04, 0.009, TOP + 3.1), aim=(-0.04, 0.005, TOP), lens=85, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
     # Ch 09 (and Ch 01 'Tim himself'): wide from behind, Tim small at the desk against the window and the night
-    "window": dict(loc=(1.0, 4.05, 1.25), aim=(-0.1, -0.37, 0.9), lens=28, focus="fx_tim", fstop=4.0, beat="ch09"),
+    "window": dict(loc=(1.0, 4.05, 1.25), aim=(-0.1, -0.37, 0.9), lens=28, focus="fx_tim", fstop=4.0, beat="ch09", exposure=-0.6),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
-TRIMS = {"desk": {}, "letters": {"tim_bounce": 0.0}, "window": {}}
+# the wide is exposed most of a stop over the others (the room has to read round the island): there the room's
+# own dark, the screen's spill behind the desk and the street light's stripes are each brought up to show
+TRIMS = {"desk": {}, "letters": {"tim_bounce": 0.0}, "window": {"room_fill": 7.0, "laptop_screen_light": 2.5, "street": 1.6}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -969,21 +971,34 @@ def report_frame(holder):
     marks = {"lamp head": st.lamp_bulb() + Vector((0, 0, 0.1)), "lamp base": Vector((st.LAMP[0], st.LAMP[1], TOP)),
              "laptop": Vector((st.LAPTOP[0], st.LAPTOP[1], TOP + 0.12)), "pad": Vector((st.PAD[0], st.PAD[1], TOP)),
              "window top": Vector((0, st.R["y0"], st.WIN["z1"] + 0.15)), "ceiling line": Vector((0, st.R["y0"], st.R["h"])),
-             "chair foot L": Vector((0.24, CHAIR[1] + 0.26, 0.0)), "chair foot R": Vector((-0.24, CHAIR[1] + 0.26, 0.0))}
+             "chair foot L": Vector((0.24, CHAIR[1] + 0.26, 0.0)), "chair foot R": Vector((-0.24, CHAIR[1] + 0.26, 0.0)),
+             "phone": Vector((-0.235, -0.07, TOP + 0.02)), "radiator end": Vector((st.R["x0"] + 0.1, 1.15, 0.7)),
+             "picture end": Vector((st.R["x0"], 0.86, 1.5)), "bookcase": Vector((1.31, st.R["y0"] + 0.3, 1.2)),
+             "boxes": Vector((-1.22, -0.1, 0.55))}
+    fr = bpy.data.objects.get("photo_frame")
+    if fr is not None:
+        bpy.context.view_layer.update()
+        for tag, loc in (("frame top L", (-0.075, 0.01, 0.2)), ("frame top R", (0.075, 0.01, 0.2)), ("frame foot", (0.0, 0.0, 0.01))):
+            marks[tag] = fr.matrix_world @ Vector(loc)
     if holder is not None:
         f = face_points(holder)
         rig = rigged.rig_of(holder)
         pb = rig.pose.bones["DEF-spine.006"]
         marks.update({"head top": rig.matrix_world @ pb.tail + f["up"] * 0.02, "nose": f["nose"], "chin": f["chin"],
-                      "r hand": _wpos(rig, "hand_fk.R", tail=True), "l hand": _wpos(rig, "hand_fk.L", tail=True)})
+                      "r hand": _wpos(rig, "hand_fk.R", tail=True) + Vector((0, 0, 0.03)), "l hand": _wpos(rig, "hand_fk.L", tail=True) + Vector((0, 0, 0.03)),
+                      "pen cap": bpy.data.objects["hand_pen_root"].matrix_world @ Vector((0, 0, 0.06))})
     for name, c in CAMERAS.items():
         cam = sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35))
         sc.render.resolution_x, sc.render.resolution_y = 1280, 720
         bpy.context.view_layer.update()
         row = []
+        dg = bpy.context.evaluated_depsgraph_get()
+        origin = Vector(c["loc"])
         for mk, p in marks.items():
             v = world_to_camera_view(sc, cam, Vector(p))
-            row.append(f"{mk} ({v.x:.2f}, {v.y:.2f}, {v.z:.2f} m)")
+            d = Vector(p) - origin
+            hit, loc, _, _, ob, _ = sc.ray_cast(dg, origin, d.normalized(), distance=d.length - 0.04)
+            row.append(f"{mk} ({v.x:.2f}, {v.y:.2f}, {v.z:.2f} m{', behind ' + ob.name if hit and ob is not None else ''})")
         print(f"TIMDESK frame {name}: " + "; ".join(row), flush=True)
         for o in [o for o in bpy.data.objects if o.type == "CAMERA" or o.name.startswith("aim")]:
             bpy.data.objects.remove(o)
