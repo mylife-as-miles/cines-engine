@@ -75,9 +75,8 @@ CAMERAS = {
     "seat": dict(loc=(-0.35, SEAT_Y - 0.5, 1.32), aim=(-1.38, SEAT_Y + 0.05, 1.18), lens=35, focus="fx_seat", fstop=4.0,
                  beat="ch03"),
     # Ch 03: a controlled close-up on the duffel and the suitcase on the rack above her, the carriage soft beyond
-    # (high and from behind, 50 mm: the bags fill the frame; every strip light lies wholly above the frame's top, none
-    # cut by it; her reading lamp's lens glows under the duffel)
-    "rack": dict(loc=(-0.35, SEAT_Y - 1.6, 2.15), aim=(-1.3818, SEAT_Y + 0.2123, 1.8883), lens=65, focus="fx_bags", fstop=2.8,
+    # the near-aisle angle separates both silhouettes and leaves the lamp visible below their rail
+    "rack": dict(loc=(0.15, SEAT_Y - 1.05, 2.08), aim=(-1.428, SEAT_Y + 0.19, st.RACK_Z + 0.015), lens=40, focus="fx_bags", fstop=2.8,
                  beat="ch03", exposure=-1.2),
 }
 HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z), distance beyond the glass, length, height, rgb, k)
@@ -504,7 +503,7 @@ def bags():
     _STATE["bag_meshes"] = [obj for root in (duf, case) for obj in root.children_recursive if obj.type == "MESH"]
     out = {}
     for n, h in (("duffel", duf), ("suitcase", case)):
-        pts = [o.matrix_world @ Vector(c) for o in h.children_recursive if o.type == "MESH" for c in o.bound_box]
+        pts = [o.matrix_world @ v.co for o in h.children_recursive if o.type == "MESH" for v in o.data.vertices]
         lo = Vector([min(p[i] for p in pts) for i in range(3)])
         hi = Vector([max(p[i] for p in pts) for i in range(3)])
         h.location.z += bed - lo.z           # rest exactly on the bars
@@ -512,6 +511,22 @@ def bags():
         out[n] = (lo + Vector((0, 0, bed - lo.z)), hi + Vector((0, 0, bed - lo.z)))
         print(f"TRAIN bag {n}: x {lo.x:+.3f}..{hi.x:+.3f} y {lo.y:.3f}..{hi.y:.3f} z {bed:.3f}..{hi.z + bed - lo.z:.3f}",
               flush=True)
+    # The soft nylon bridges round bars. Set the bag down on their crowns;
+    # only unsupported stretches of the lowest cloth yield between them.
+    rails = [o.data.splines[0].points[0].co.x for o in bpy.data.objects if o.name.startswith("rack_bar_L")]
+    for mesh in (o for o in duf.children_recursive if o.type == "MESH"):
+        world = mesh.matrix_world
+        inv = world.inverted()
+        pts = [world @ v.co for v in mesh.data.vertices]
+        support = min(p.z for p in pts if min(abs(p.x - rail) for rail in rails) < st.BAR_R)
+        for vert, point in zip(mesh.data.vertices, pts):
+            point.z += bed - support
+            distance = min(abs(point.x - rail) for rail in rails)
+            between = max(0.0, min(1.0, (distance - st.BAR_R) / 0.027))
+            underside = max(0.0, min(1.0, (bed + 0.055 - point.z) / 0.055))
+            point.z -= 0.006 * math.sin(math.pi * between / 2) ** 2 * underside
+            vert.co = inv @ point
+        mesh.data.update()
     return out
 
 
@@ -668,8 +683,6 @@ def set_cameras(eyes, bag_box):
         f1 = Vector((hi.x, (lo.y + hi.y) / 2, (lo.z + hi.z) / 2))
         f2 = Vector((hi2.x, (lo2.y + hi2.y) / 2, (lo2.z + hi2.z) / 2))
         target = f1.lerp(f2, 0.36)
-        if "rack" in CAMERAS:
-            CAMERAS["rack"]["aim"] = tuple(target - Vector((0, 0, 0.10)))
         edge = Vector((-0.75, SEAT_Y + 0.3, 2.42))
         light = st.area("bag_edge", edge, (0.06, 1.2), 25, st.COOL, spread=68,
                         rot=(target - edge).to_track_quat("-Z", "Y").to_euler())
