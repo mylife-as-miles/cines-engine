@@ -231,9 +231,16 @@ def pleated(name, B, E, m, z0, z1, n_pleat, amp, nu=None, nv=40, thick=0.002, ga
     nu = nu or n_pleat * 8
     bm = bmesh.new()
     rows = []
-    for j in range(nv + 1):
-        v = j / nv
-        z = z0 + (z1 - z0) * v
+    voile = m is M["sheer"]
+    heights = {z0 + (z1 - z0) * j / nv for j in range(nv + 1)}
+    hem_top = z0 + 0.040
+    if voile:
+        heights.add(hem_top)
+    if gather is not None:
+        heights.add(gather[0])
+    heights = sorted(heights)
+    for z in heights:
+        v = (z - z0) / (z1 - z0)
         b, e = Vector(B(z)), Vector(E(z))
         d = (e - b)
         nrm = Vector((-d.y, d.x)).normalized() if d.length > 1e-6 else Vector((0, 1))
@@ -248,15 +255,24 @@ def pleated(name, B, E, m, z0, z1, n_pleat, amp, nu=None, nv=40, thick=0.002, ga
             a *= 0.85 + 0.15 * math.sin(7.0 * v + 3 * u)                       # pleats wander a little
             phase = 2 * math.pi * u * n_pleat
             a *= 1 + 0.30 * math.sin(phase * 0.28 + 0.5 * v)
-            off = a * math.sin(phase + 0.26 * math.sin(phase * 0.35 + v))
+            wander = 0.26 * math.sin(phase * 0.35 + v)
+            if gather is not None:
+                # The held selvedge must pass through the grip as the other folds wander.
+                wander *= min(1.0, (1 - u) * n_pleat)
+            off = a * math.sin(phase + wander)
             if z - z0 < 0.04:
                 off *= 0.81
             q = p + nrm * off
-            row.append(bm.verts.new((q.x, q.y, z)))
+            rise = 0.0
+            if voile:
+                rise = 0.004 * (1 - math.cos(phase * 0.43 + 0.7)) * max(0.0, 1 - (z - z0) / 0.18) ** 2
+            row.append(bm.verts.new((q.x, q.y, z + rise)))
         rows.append(row)
-    for j in range(nv):
+    for j in range(len(rows) - 1):
         for i in range(nu):
-            bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))
+            face = bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))
+            if voile and heights[j] < hem_top:
+                face.material_index = 1
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
     bm.free()
@@ -264,6 +280,8 @@ def pleated(name, B, E, m, z0, z1, n_pleat, amp, nu=None, nv=40, thick=0.002, ga
         p.use_smooth = True
     ob = _link(bpy.data.objects.new(name, me))
     ob.data.materials.append(m)
+    if voile:
+        ob.data.materials.append(M["sheer_hem"])
     so = ob.modifiers.new("thick", "SOLIDIFY")
     so.thickness, so.offset = thick, 0.0
     return ob

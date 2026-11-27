@@ -260,7 +260,7 @@ def shade_linen(name="lamp shade", rgb=(1.0, 0.84, 0.62)):
     return m
 
 
-def sheer(name="sheer voile", rgb=(0.62, 0.63, 0.64)):
+def sheer(name="sheer voile", rgb=(0.62, 0.63, 0.64), doubled=False):
     """Voile: mostly transparent, a little diffuse and translucent, so the city glows through it."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -278,6 +278,9 @@ def sheer(name="sheer voile", rgb=(0.62, 0.63, 0.64)):
     # the weave: a little more opaque where threads cross; seen edge-on (folds) the voile is denser
     lw = _n(nt, "ShaderNodeLayerWeight", Blend=0.5)
     fac = _math(nt, "ADD", 0.34, _math(nt, "MULTIPLY", lw.outputs["Facing"], 0.45), clamp=True)
+    if doubled:
+        # Transmission through the turned hem is the product of its two layers.
+        fac = _math(nt, "MULTIPLY", fac, _math(nt, "SUBTRACT", 2.0, fac))
     mx = nt.nodes.new("ShaderNodeMixShader")
     nt.links.new(fac, mx.inputs[0])
     nt.links.new(tr.outputs[0], mx.inputs[1])
@@ -389,6 +392,7 @@ def materials():
         brass=metal("satin brass", (0.42, 0.32, 0.17), 0.32),
         glass=thin_glass(),
         sheer=sheer(),
+        sheer_hem=sheer("double voile hem", doubled=True),
         drape=woven("blackout drape", (0.05, 0.055, 0.065), 450.0, 0.4, 0.9, 0.2),
         shade=shade_linen(),
         ceramic=sk.mat("lamp ceramic", (0.08, 0.09, 0.1), 0.25),

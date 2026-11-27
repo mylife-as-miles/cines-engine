@@ -624,10 +624,13 @@ def build(cast=True):
         _STATE["cast"] = [h] + list(h.children_recursive)
         # the window beat: pose, then hang the held sheer through her left hand
         _STATE["poses"]["window"] = pose_window(h)
-        hold = palm_centre(h, 1)
-        n, a = palm_normal(h, 1)
-        through = hold + (n * 0.018 if n is not None else Vector()) + a * 0.02
-        _STATE["sheers"]["held"] = st.curtains(hand=tuple(through))
+        # The thumb and index pads are 2.6 mm apart in this pinch. Anchor the
+        # folded voile between their posed distal bones.
+        rig = rigged.rig_of(h)
+        thumb = rig.pose.bones["DEF-thumb.03.L"].matrix @ Vector((0.0041, 0.0093, 0.0091))
+        index = rig.pose.bones["DEF-f_index.03.L"].matrix @ Vector((0.0075, 0.0088, 0.0048))
+        pinch = rig.matrix_world @ ((thumb + index) * 0.5)
+        _STATE["sheers"]["held"] = st.curtains(hand=tuple(pinch))
         bpy.data.objects["fx_window"].location = eye_centre(h)
         # the packing beat: the strap's apex under her closed fingers, the bag's base just entering the mouth
         grip_z = lip_z - 0.015 + hobo_apex.z + 0.024
