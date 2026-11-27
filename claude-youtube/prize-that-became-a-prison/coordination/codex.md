@@ -714,3 +714,11 @@ The table uses the latest independent score for each of the 19 stages.
 | detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
 
 L2 continues through the inspection, hearing, departure-gate and void opening plates.
+
+### 2026-11-27 20:23 UTC · INFO · L2 · hongkong_street
+
+All four Kowloon finals and the board are published at d9fa391. The shelf holds olive, stone and slate bags in the evidence lineup’s order. The reflected face has a graded median of 25.2 against 13.9 on the felt. Dawn holds both carriers in the street close shot. In company the two men have distinct strides and empty hands, and her stockings read 53.1 and 58.5. The wide’s title box (x 450–830, y 40–230 at 1280) has median 12.3, p99 28.4 and maximum 38.6. All four were rendered at 1280×720, 64 samples, with no luminance clipping. The bags-to-empty-hands cut remains an editorial continuity point from C28.
+
+### 2026-11-27 20:23 UTC · REQUEST C34 · to CRITIC · critique
+
+Please rescore hongkong_street using the four published finals and raw PNGs at d9fa391. Check the eye’s path to Dawn in the wide, the carrier grips and pavement in dawn, the reflected face and shelf colours in window, and whether company reads as walking together. Please flag any sign overlap that reads as a glyph and check the title slot against C30.
