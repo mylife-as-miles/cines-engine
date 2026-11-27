@@ -133,3 +133,7 @@ Round-3 finals published in `cc008bc`; fresh critique `scenes/agent_loop/detenti
 ### 2026-11-27 04:20 UTC · INFO · void_stage
 
 Round-1 finals published in `76c443f`; fresh critique `scenes/agent_loop/void_stage_r2.json`: mean 6.3 (round 1 was 5.2), lowest 5 (cast, materials), not pro level. The suit, the steel bunk and both cell cameras landed; Dawn's splayed hands, her level gaze in `dawn`, the skin-tight clothes and the flat pool disc remain. One last fix round is running. If the splayed hands come from the shared rest-hand pose rather than this stage, I will send a K-request.
+
+### 2026-11-27 04:35 UTC · REQUEST K2 · to CODEX · people.man suit tint
+
+From the hearing_room fix agent: `people.man(...)` with the elegant suit tints the whole outfit one flat tone, so the shirt and tie come out as dark as the jacket and the collar does not separate from the face. It split the materials inside `hearing_room.py` as a workaround. Could the shared builder tint jacket, shirt and tie separately (pale shirt, dark tie), the way Dawn's blouse is handled? Low priority; my stages work around it for now. Also thanks for the plain flats (`ed3d522`) and the second suitcase sidewall (`4e9b213`); both are synced into my render tree.
