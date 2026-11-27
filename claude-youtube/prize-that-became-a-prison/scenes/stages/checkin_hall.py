@@ -55,7 +55,7 @@ CAMERAS = {
     # the bags on the scale: panned clear of Dawn, focused on the duffel (the extra bag), the display the brightest thing
     "scale": dict(loc=(1.6, -1.90, 1.24), aim=(1.43, 0.46, 0.65), lens=42, focus="focus_duffel", fstop=2.8,
                   exposure=-2.0),
-    "profile": dict(loc=(5.2, -0.5, 1.38), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
+    "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
     "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.355), lens=50, focus="focus_dawn", fstop=2.4,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
@@ -716,7 +716,12 @@ def desk(x0, idx, open_):
         box(p + "corner", (0.04, 0.04, LEDGE - 0.12), (x0 + s * (hw - 0.012), 0.012, 0.1 + (LEDGE - 0.12) / 2), m["satin"], bevel=B)
     for s in (-1, 1):  # the ends: darker laminate (they face the lights side-on), a recessed kick along each
         box(p + "side_lo", (0.03, 0.74, RV - 0.11), (x0 + s * (hw - 0.015), 0.39, 0.1 + (RV - 0.11) / 2), m["laminate_dark"], bevel=B)
-        box(p + "side_hi", (0.03, 0.74, LEDGE - RV - 0.03), (x0 + s * (hw - 0.015), 0.39, RV + (LEDGE - RV - 0.02) / 2), m["laminate_side"], bevel=B)
+        # The end panel steps down to the worktop behind the passenger ledge.
+        for name, y0, y1, top in (("ledge end", 0.02, 0.294, LEDGE - 0.006),
+                                  ("desk end", 0.294, 0.76, WORK - 0.004)):
+            bottom = RV + 0.005
+            box(p + name, (0.03, y1 - y0, top - bottom),
+                (x0 + s * (hw - 0.015), (y0 + y1) / 2, (top + bottom) / 2), m["laminate_side"], bevel=B)
         box(p + "side_reveal", (0.036, 0.72, 0.016), (x0 + s * (hw - 0.015), 0.39, RV - 0.005), m["steel"], bevel=0.004)
         box(p + "side_kick", (0.02, 0.7, 0.1), (x0 + s * (hw - 0.035), 0.41, 0.05), m["kick"], bevel=0.003)
     # dark transaction ledge (overhangs the front) with a 6 mm dull-steel nosing, the lower work surface behind it
@@ -739,7 +744,7 @@ def desk(x0, idx, open_):
     child(box(p + "mon_vent", (0.28, 0.003, 0.02), (0, -0.0235, 0.09), m["plastic_mid"]), body)     # back vent strip: blank
     # keyboard in front of the agent, a small dark bag-tag printer, the boarding-pass printer, a cable grommet
     kx = x0 + 0.14
-    ky = 0.604
+    ky = 0.680
     box(p + "keyboard", (0.4, 0.14, 0.018), (kx, ky, WORK + 0.009), m["plastic"], bevel=0.004, rot=(math.radians(-3), 0, 0))
     if open_:
         for row in range(4):
@@ -751,8 +756,8 @@ def desk(x0, idx, open_):
                     m["plastic_mid"], bevel=0.0018, rot=(math.radians(-3), 0, 0))
     else:
         box(p + "keys", (0.37, 0.11, 0.004), (kx, ky, WORK + 0.02), m["plastic_mid"], rot=(math.radians(-3), 0, 0))
-    box(p + "tagprinter", (0.16, 0.2, 0.13), (x0 + 0.52, 0.6, WORK + 0.065), m["plastic"], bevel=0.01)
-    box(p + "tagslot", (0.1, 0.006, 0.008), (x0 + 0.52, 0.498, WORK + 0.095), m["screen_off"])
+    box(p + "tagprinter", (0.16, 0.2, 0.13), (x0 - 0.55, 0.405, WORK + 0.065), m["plastic"], bevel=0.01)
+    box(p + "tagslot", (0.1, 0.006, 0.008), (x0 - 0.55, 0.303, WORK + 0.095), m["screen_off"])
     box(p + "bpprinter", (0.24, 0.26, 0.14), (x0 - 0.58, 0.66, WORK + 0.07), m["plastic"], bevel=0.012)
     sk.cyl(p + "grommet", 0.03, 0.004, (x0 + 0.42, 0.68, WORK + 0.002), m["plastic"], verts=24)
     if open_:
