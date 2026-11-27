@@ -45,10 +45,25 @@ seconds after "He never saw Dawn come home."
 | Section | Median shot | Voice | Score |
 | --- | --- | --- | --- |
 | Cold open 0:00–1:30 | 1.6–2.4 s | Fast, close, present tense; pauses only where marked | Pulse building, cut dead at "The luggage was hers." |
-| Ch 1–2 (Chicago to the mainland) | 3–4 s | Warmer, a little quicker | Low, light travel pad; a tick that becomes the gate |
+| Ch 1–2 (Chicago to the mainland) | 3–5 s (8–15 cuts a minute) | Warmer, a little quicker | Low, light travel pad; a tick that becomes the gate |
 | Ch 3–4 (the gift, the room) | 2–3 s | Back to present tense in the room | The pulse returns; hard stop at the discovery |
 | Ch 5–6 (detention, sentence) | 4–6 s | Slower | Room tone, a clock; one low impact at the sentence |
 | Ch 7–9 (the wait, the father, the question) | 6–12 s, long holds | Slowest, most space | Spare piano; silence at the two strongest lines; one warm note at the end |
+
+Rules from the second study of the two reference films (27 November 2026, `design/REFERENCES.md`, "Hook craft"),
+kept here because they set the edit:
+- **A sound drop before every reveal**: 0.5–3 s at −30 LUFS or quieter before each turn (the fee, YES, the linings,
+  the sentence, "Deceived", Gene's death, "It was hers"), at least once every 90 s.
+- **Title on the peak of a 10 s flash-forward montage** at 0.5–0.8 s a shot, then the score decays into silence.
+- **Chapters end on a flash-forward or a named threat** of 15 words or fewer, then 1.5–2 s of silence; the next
+  chapter's title is a small super over its establishing shot, never a card.
+- **Cut 8–15 times a minute after 3:00**; no hold over 12 s except the planned silences.
+- **Plants paid on screen**: the fee and the scale, YES, the emails (sent in chapter 1, handed to investigators in
+  chapter 5), the bags' position in frame (cold open, chapter 4, the end), Gene's chair (full in chapter 1, empty in
+  chapter 8), the unanswered question (cold open, chapter 9).
+- **Voice**: 150–165 words a minute in exposition, 120–135 in the last three chapters; about a fifth of the lines six
+  words or fewer. **Mix**: −14 LUFS integrated with a loudness range of 7 LU or more (the references are flat at 4.8–6).
+- **No invented thoughts, no speculation, no moral at the end** (the references' weakest moments).
 
 Picture rules that make it more cinematic than the references:
 - **Every scene change is a match cut** through something both sides share: the scale display, the bags, the chair,
@@ -110,7 +125,8 @@ Three years later, a court sentences her to death, with a two-year reprieve. Tod
 And twelve years after that airport, her brother appears before American lawmakers with a question that no one in
 the room can answer.
 
-*(title, 6 s, no voice)*
+*(no voice: a 10 s montage of what is coming, the score building to its peak; the title lands on the peak and the
+score decays into silence, 5 s)*
 
 **DIRECTION**
 
@@ -130,8 +146,9 @@ the room can answer.
 | 1:04 | evidence_table `purses` → void_stage `bags` (match cut on the bags) | | Score cut dead at "were not." |
 | 1:10 | void_stage `dawn_high` | DEATH SENTENCE / 2017 | One low impact |
 | 1:17 | prison_exterior `tower` | | Rain, wind |
-| 1:21 | hearing_room `wide`, slow push to `witness` | | A room of people, very quiet |
-| 1:29 | void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON | Title cue, 6 s, then a sharp cut to chapter 1 |
+| 1:21 | hearing_room `wide`, slow push to `witness` | | A room of people, very quiet; 1 s of near silence after "answer" |
+| 1:27 | The montage, 0.5–0.8 s a shot, of what is coming: leather_market `purchase`, the red seam, baggage_belt `curtain`, courtroom `dock`, detention_corridor `door`, visiting_room `glass`, prison_exterior `gate`, home `chair` empty, void_stage `cell_far`, hearing_room `witness` | | The score builds to the film's first peak |
+| 1:37 | void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON, landing on the peak | The score decays to silence over 4 s; cut on the silence to chapter 1 |
 
 ---
 
@@ -169,8 +186,11 @@ The tickets.
 
 Real tickets to Hong Kong, paid for by someone else.
 
-That is what makes this story so hard to shake. The first part of the promise was true. Whatever went wrong, her
-family believes, was hidden inside everything that came after.
+That is what makes this story so hard to shake. The first part of the promise was true.
+
+Her family believes the deception was hidden in everything that came after.
+
+*(silence, 1.5 s)*
 
 **DIRECTION**
 
@@ -207,6 +227,8 @@ There was more to come. Australia, she was told. Another part of the prize.
 For Dawn, the trip of her life was still going.
 
 But before she left China, they had one more gift for her.
+
+*(silence, 1 s)*
 
 **DIRECTION**
 
@@ -296,6 +318,8 @@ China.
 
 The trip ended in that room. The case was only beginning.
 
+*(silence, 1.5 s)*
+
 **DIRECTION**
 
 | Picture | Type and graphics | Sound |
@@ -319,7 +343,7 @@ For Dawn, the airport wasn't the end of a bad trip. It was the first day of a de
 years before any verdict.
 
 Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the
-emails she had received from the organizers.
+emails she had received from the organizers. The same emails that had started it all.
 
 It wasn't enough.
 
@@ -333,6 +357,8 @@ of her own story.
 For three years, her family waited for a trial to correct what they believed was a terrible mistake.
 
 The verdict was worse than anything they had feared.
+
+*(silence, 1.5 s)*
 
 **DIRECTION**
 
@@ -356,22 +382,21 @@ A death sentence, with a two-year reprieve.
 The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was
 later reduced to life in prison.
 
-Her family insists she was what investigators call a blind mule: someone who carries drugs for traffickers without
-knowing it.
-
-And this is the part that is hardest to accept. According to her family, and to reporting on the court's reasoning,
-the judge recognised that Dawn had been deceived, and concluded that she should have known anyway.
-
-Deceived, and guilty.
-
-Her family rejects that conclusion completely.
-
-China sees the case differently. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another
+China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another
 imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health
 were being protected.
 
-To the Chinese authorities, this is a serious drug conviction. To Dawn's family, it is a scam victim's life,
-destroyed by the very deception that put her in that airport.
+Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs
+for traffickers without knowing it.
+
+And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning,
+the judge recognised that Dawn had been deceived, and concluded that she should have known anyway.
+
+Deceived.
+
+And guilty anyway.
+
+*(silence, 2 s)*
 
 **DIRECTION**
 
@@ -383,6 +408,7 @@ destroyed by the very deception that put her in that airport.
 | courtroom `bench` | | |
 | evidence_table `pair`: the ministry's words on the left sheet, word for word from Reuters | Only words Reuters quotes verbatim; otherwise the sheet stays blank | Paper |
 | void_stage `divide` (*new*): the bags in one pool, Dawn in the other | | The score thins to one held note |
+| void_stage `dawn_close`, locked, on "Deceived. And guilty anyway." | | Silence, 2 s, then cut |
 
 ---
 
@@ -409,6 +435,8 @@ Every letter, every hearing, every request was a door that might open.
 None of them brought her home.
 
 And the man who had waited longest was running out of time.
+
+*(silence, 1.5 s)*
 
 **DIRECTION**
 

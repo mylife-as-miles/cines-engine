@@ -66,3 +66,29 @@ All MIT-licensed; read as shallow clones, used as method, never run blind. Paid 
 | [apekshik/anykit](https://github.com/apekshik/anykit) | Cohesion: one style paragraph and one invented maker for every prop, real-world scale, a lineup with a scale bar, one critic for the whole set. |
 | [Leonxlnx/cube-to-cafe-racer](https://github.com/Leonxlnx/cube-to-cafe-racer), [koi-pond-keycap](https://github.com/Leonxlnx/koi-pond-keycap), [mechanical-moon](https://github.com/Leonxlnx/mechanical-moon), [ink-dragon](https://github.com/Leonxlnx/ink-dragon) (the author, 26 November 2026) | Four 45 s films built entirely in Python in Blender (5.2 Cycles on CPU; the moon in EEVEE), made with Claude Code. The method we take: a shared brief for part agents (`cube-to-cafe-racer/src/AGENT_BRIEF.md`: shared dimensions and materials, each agent writes only its own module, one Blender process each, a capped number of previews, self-critique against references, a short report); real bevels on every edge that catches light; dedicated lighting and look modules; every frame a pure function of time; locked shots rendered as one clean plate plus the moving region, every second frame rendered and the rest interpolated, CPU shots at 1600x900 upscaled; post in Python (grade, grain, push-ins, camera float, impact shake); sound placed from the same timeline. Our version: `scenes/AGENT_BRIEF.md` and `scenes/shoot.py`. |
 | [Leonxlnx/cinetic](https://github.com/Leonxlnx/cinetic) | Motion numbers for type and maps: calm reveals (fade 28 f, rise 22 f at 60 fps), the erode-and-rise word change for YES → WHEN?, human typing at 30 characters a second, a marker wipe in 10 f, rolling year digits, routes drawn in 48–60 f; holds of max(52, 36 + 7 × words) frames. Its launch-film checks (no one-word lines, no questions) do not apply to this film. |
+
+## Hook craft: a second study of the two films (27 November 2026)
+
+For script version 2. Measured from the cut lists, the word timings and ebur128 loudness in 10 s blocks; the full
+tables are in the session's working notes, the conclusions here.
+
+- **The first 120 s.** CIA: present tense, a date, a named man and one wrong note ("a weird phone call"); the key
+  identity held back until 0:29 ("the head of the CIA"); the music cut to silence before the payoff line; a second
+  twist after 2.7 s without voice (1:03); "And this is their story" with the bass pulled out, a 10.8 s burst of 26
+  cuts, the title on the musical peak (1:55), then a decay to −45 LUFS and 8 s without the narrator. Dark Web: no cut
+  for 16.8 s, a safety line ("He feels safe in Thailand"), a 3.4 s drop to −31 LUFS, the hit on "a loud bang"; the
+  twist at 0:39.8; the title at 0:56 followed by a 7.5 s montage of later scenes; then its weakest moment, 16 s of
+  source credits.
+- **Open loops.** Each film plants 7–9 and pays them minutes later on screen (the decrypting computer: planted at 9:50,
+  paid at 20:26). Chapters end on a flash-forward or a named threat, then 2–10 s without narration.
+- **Intensity.** A third of all cuts fall in the first 3 minutes; afterwards the average shot is 6.8 s (CIA) and 8.8 s
+  (Dark Web). The narration slows at the emotional beats (126–138 words a minute). The mixes are flat: CIA −15.6 LUFS
+  with a 6.0 LU range, Dark Web −10.5 LUFS with 4.8 LU. Silences come after a twist, before a chapter, or after an
+  arrest or a death; almost never inside exposition.
+- **Writing.** Present tense for the story, past for background; median sentence 11 words, about 17 % of sentences
+  five words or fewer; one number every 20–30 s. Strongest lines: "He feels safe in Thailand." "A mistake with serious
+  consequences." "Ultimately, it won't be enough." "The investigators have his name, but where is he?"
+- **Where they sag.** The hero absent for 11 minutes (CIA), background with no character in it (Dark Web, 2 minutes
+  of market history), credits at the hottest moment, repeated epithets, invented feelings for a real person, a moral
+  and a guess as the ending.
+- **What we take** is written into `design/script/SCRIPT_V2.md` ("Rules from the second study").
