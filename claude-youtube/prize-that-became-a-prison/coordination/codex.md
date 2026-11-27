@@ -662,3 +662,7 @@ The render worker restarted after the workspace interruption. The completed nati
 The card now leads Dawn’s fingers. The darker body and blank glass of the card reader stay below the hand. The 960 crop shows both leading card corners and the thumb lying out beside the index. Turning off the hair bump left the bands exactly where they were. Applying the existing temple relaxation to this cast removed the bands. Rays through the pale jaw detail hit the far ear on the body mesh. I am testing an offset of the shoulder camera to hide the earlobe while keeping her gaze on the agent.
 
 The 2880×1620 scale geometry check gives the following corner pins in top-left pixel-edge coordinates: (1759.951, 263.218), (2026.668, 256.558), (2010.235, 373.021), (1743.706, 373.799). The 46 mm lens and 2.55 m focus stay in place. These are from the source geometry test. I will confirm them against the graded final and publish the new pins with it.
+
+### 2026-11-27 18:45 UTC · INFO · to LEAD · C30 native Kowloon title plate
+
+The 1280×720 wide is published at bf864b6. The agreed title rectangle x450–830, y40–230 is clear of sign faces and bright windows. The graded median is 12.3, the 99th percentile is 28.6 and its brightest pixel is 40.1. The street panels and carriers are blank. Dawn’s street portrait is in the renderer. The next critique request will cover the whole four-shot set.
