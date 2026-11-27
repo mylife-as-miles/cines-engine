@@ -379,67 +379,67 @@
   ]
  },
  "courtroom": {
-  "round": 2,
+  "round": 3,
   "scores": {
    "composition": 6,
-   "lighting": 4,
-   "materials": 5,
-   "set_dressing": 6,
-   "grounding_scale": 7,
-   "cast": 6,
+   "lighting": 5,
+   "materials": 6,
+   "set_dressing": 7,
+   "grounding_scale": 6,
+   "cast": 5,
    "story_read": 7,
-   "technical": 6
+   "technical": 7
   },
   "pro_level": false,
-  "verdict": "The story reads and the restraint is right. The wide is the strongest frame: a symmetrical aisle, empty benches and one small grey figure in the dock in front of three empty chairs. The wide would almost cut into a fern film as it is. The set still lets it down in several places. (1) The lighting is flat institutional fill, not a lit island. The dock frame's raw 1st percentile is 69 and the bench frame's is 51, so nothing in those frames goes properly dark. The well, the bench and the backdrop all get the same even light. The promised pool of light on Dawn does not exist: the dock is lit no differently from the clerk's desk or the side tables. (2) There is a clear modelling artefact in all three cameras. Where the backdrop frame's verticals meet its header, the top corners show pure black squares (wide at about x485/787, y65; dock at x455, y25; bench at x905, y38). (3) The Tripo gallery benches are rustic church pews. They have blurry, fibrous plank textures and turned feet, which clash with the crisp, modern pale-wood dock and bench. In the wide, their ends are cut by the bottom corners of the frame. (4) The bench camera spends about 70% of the frame on one flat grey wall panel and the bottom 28% on a flat pale fascia slab. The empty chairs are left in a thin band, and the centre-to-wing step reads as a seam, not a lit return. (5) In the dock frame, Dawn's top reads as a casual T-shirt rather than prison clothing. Her one visible hand lies flat on a post knob, not palms-on-the-ledge. The 'f/2.8' background is nearly sharp. The clerk's dead grey monitor slab is the second-strongest shape in the frame and competes with her. (6) There is a stray diamond-shaped object on the upper-left wall between the windows in the wide. The aisle runner stops mid-aisle. The left judge's place has no microphone in the bench view, and no bench microphones read in the wide. The materials are clean and believable at a distance, but they have no wear. The judge chairs show Tripo crumple blotches. Noise and grain are fine, nothing clips, and there are no fireflies. This is competent previs, not yet a finished frame.",
+  "verdict": "Most round-2 fixes landed. The black corner squares are gone, the Python benches match the dock, the dock frame has real f/1.8 depth and a true pool on Dawn (graded ledge 177 and head 135, against fascia 65), and the bench camera was reframed. The stage still is not fern level. In the dock close-up, Dawn's right hand floats cupped over the ledge, its shadow detached and fingertips turned up, and her top still reads as a skin-tight casual T-shirt. In the wide, the left windows' beams make the right counsel desk nearly as bright as the dock (graded 107 vs 126), so the 'one pool' comes from the grade's vignette, not the light, and the near benches crush to pure black. In the bench frame, the brightest shapes are the lit return post (149) and an unexplained hot patch on the fascia (121), not the empty chairs (64).",
   "fixes": [
    {
     "priority": 1,
-    "camera": "all",
-    "problem": "Pure black squares at both top corners of the backdrop frame, where the vertical pilasters meet the header. There is a gap, or open/flipped geometry, showing the void or a backface.",
-    "fix": "In the backdrop-frame builder, lengthen the header box by one pilaster width on each side (header x-extent = panel width + 2*pilaster_w) so it overlaps the pilaster tops by the full section. Alternatively, add a corner block box (pilaster_w x pilaster_d x header_h) with the same pale-wood material at each corner. Run bmesh.ops.recalc_face_normals on both and make sure neither box has a dark/emission default material. Check from the bench camera at 960x540 --nocast."
+    "camera": "dock",
+    "problem": "Dawn's right hand (frame right) does not rest on the ledge. It sits cupped, on its outer edge, with the fingertips flicked up. Its contact shadow lies on the ledge top below the hand, with lit wood between them, so it reads as hovering or gesturing. The left hand is a pale lump hidden behind the forearm. The brief names this exact fault (hands resting on things, not hovering). The COURT log's 2 mm 'underside gap' is measured at the lowest point of the hand, which is the heel or pinky edge, not the palm.",
+    "fix": "In courtroom.py, set HAND_PITCH from 0.3 to about -0.05 so the hand lies level along the ledge instead of extending up at the wrist. In hands_on_ledge, after choosing the twist, check the palm normal. Take the vector from the hand_fk head to the middle-finger base, crossed with the index-to-pinky knuckle vector. Require it within 20 deg of world -Z. If not, try twists of +-100 and +-120 deg. Then lower the wrist until the palm centre (the mean of body points within 3 cm of the hand bone's midpoint), not the lowest point, is 0-2 mm above DOCK_TOP. Curl the fingers 12-15 deg toward the palm so the fingertips touch the wood. Try HAND_X 0.20 so both hands show past her torso. Render dock at 960x540 and zoom x 600-720, y 520-600: the shadow must meet the fingers with no lit gap."
    },
    {
     "priority": 1,
-    "camera": "wide, dock",
-    "problem": "There is no lit island: the well, the bench and the backdrop are evenly filled, and Dawn is not in the 'one pool of light'. The dock and bench frames have no deep shadow (raw p1 69 and 51).",
-    "fix": "Cut the general ceiling-panel/fill area lights by about 60% (or delete the largest fill). Add one area light directly over the dock: about 2.8 m up, 1.0x1.0 m, spread about 35 deg, roughly 120-200 W at exposure -1.5, so the dock and Dawn sit about 1.5 stops above the bench fascia. Light the backdrop with a narrow wall-grazer at the cap line (an area light 3 m x 0.1 m, aimed up, about 40 W) so the panel falls off toward the ceiling. Bring in the high windows as cool area lights (4000 K equivalent, about 30 W each), throwing soft shafts through haze density about 0.012 onto the side walls. Target raw p1 below 25 in the dock and bench frames, with the side walls and pews still readable."
+    "camera": "wide",
+    "problem": "The 'one pool of light' does not read. The left windows' beams (win_l*_day, 200 W, aimed at z 1.2 on the far wall) land on the right counsel desk and wainscot. That area grades 105-107, against the dock ledge at 126 and the bench fascia at 89, so it is the largest bright area in the frame. The floor round the dock is no brighter than the fascia (raw -0.03 stop), so there is no ring of light on the floor. The raw frame is evenly lit, and the grade's vignette does the isolating: 4.9% of the graded frame (the near benches in both bottom corners) sits at 0-2.",
+    "fix": "In window(), aim the well-side windows' beams at the upper wall: tgt z from 1.2 to about 3.2, so the soft patches land above the acoustic panels and off the counsel desks. In TRIMS['wide'], add win_l{j}_day: 0.55 for j = 2, 3, 4. Raise dock_pool in the wide to about 1.4x. Widen it from size_deg 26 to 34 with blend 0.7, so a soft ring of floor about 1.2 m round the dock plinth sits about 1 stop above the aisle floor 2 m nearer the camera. Drop the bench rows from _panels((3.4, 5.4), 0.55) to 0.35. Give the near benches a thin top line: panel row y = -4.6, columns x = +-1.5 only, at level 0.08-0.1, or one 4 x 0.2 m area light at z 4.6 over y = -5.5 aimed down at about 15 W. Their back rails should then grade 12-25 instead of 0. Targets: the dock ledge at least +1.5 stops over the counsel desk fronts and the fascia in the raw frame, and Dawn's head the brightest thing past the bar."
    },
    {
     "priority": 2,
     "camera": "bench",
-    "problem": "About 70% of the frame is one flat grey panel and about 28% is a flat fascia slab. The chairs sit in a thin band, and the centre-to-wing return does not read.",
-    "fix": "Move the camera about 1.2 m further left and 0.4 m lower (eye height 1.45 m), aim it about 30-35 deg off the bench axis, and switch to a 50-65 mm lens so the three chairs fill the middle third. Keep the recessed panel's lower edge just inside the top quarter. Give the wing return its own light: a 0.1 x 0.6 m vertical area light, about 15 W, just off the return face, or angle the cap grazer so the return face is 1 stop brighter than the fascia front. Put a microphone at the left judge's place too, mic base on the desk top 0.25 m to the right of each chair."
+    "problem": "The lighting pulls the eye to the wrong place. The brightest shapes are the centre section's left return post (graded 149) and a soft hot patch on the wing boards at its foot (121, against 75-90 around it), and nothing in frame motivates the patch. Both are much brighter than the subject: the three empty chairs (64) are murky dark masses with no form on their leather. The patch comes from return-1: it sits only 6 cm off the wing face with a 50 deg spread, so its rays graze the wing boards, and it is trimmed to 2.5x.",
+    "fix": "In bench(), move return-1 to y = BENCH_Y - 0.16 and cut its spread from 50 to 20 deg. In TRIMS['bench'], set 'return-1' from 2.5 to about 0.9, so the return reads about 0.7 stop above the fascia front and leaves no patch on the wing. Add a bench-camera-only top-back kick on the chairs: an area light 3.6 x 0.3 m at (0, CHAIR_Y + 0.9, 3.0) aimed at (0, CHAIR_Y, 1.5), spread 40 deg, about 40 W. The chair-back top rolls, the arm pads and the mic heads should catch a rim 1-1.5 stops above the leather body. Keep the uplight on the boarding so the chairs stay dark shapes against a lit wall, but with edges."
    },
    {
     "priority": 2,
-    "camera": "wide",
-    "problem": "The gallery benches are rustic church pews with blurry, fibrous Tripo textures that clash with the modern pale wood. The near pew ends are cut at the bottom-left and bottom-right corners.",
-    "fix": "Build the gallery benches in Python from the same wood() material as the dock: 2.0 m long, 0.45 m seat on 3 slats of 0.12 x 0.03 m, a back of 2 slats up to 0.88 m, 30 mm-thick end panels with a 6 mm bevel and a plain plinth, with no turned feet. Make the near rows about 15% darker in value so they frame the aisle. Then tilt the wide camera up about 1.5 deg, or move the first row back 0.6 m, so no bench end is cut by the bottom corners."
+    "camera": "bench",
+    "problem": "The chairs fill only about 23% of the frame height. Flat slabs take the rest: the boarded wall about 50% and the fascia about 30%. The bright right pilaster cuts the right chair off from the other two, and with the return post below it gives two offset bright verticals through the middle of the frame. A pale pilaster sliver also runs up the left frame edge (x 0-50).",
+    "fix": "Push in and come up slightly: loc about (-1.9, 2.4, 1.15), aim (0.0, 5.7, 1.65), lens 50 mm, about 30 deg off the bench axis. About 0.5 m of the presiding chair's back then shows above the cap, and the chairs fill about a third of the frame height. Keep the cap's front edge in the lower third and the blank panel's lower edge in the top 15%. Check the right backdrop pilaster: if it still falls between the presiding chair and the right chair, swing the aim about 0.3 m right so it sits behind the right chair's back. Keep the left pilaster either fully out of frame or at least 60 px in from the edge."
+   },
+   {
+    "priority": 2,
+    "camera": "dock, wide",
+    "problem": "The prison clothing still reads as a skin-tight casual T-shirt: short sleeves, scoop neck, painted-on smoothness with no fold at the waist or under the arms. It is dark enough now, but it does not say 'prisoner'. In the wide, her bowed head barely reads from behind, so she looks upright.",
+    "fix": "Swap to the prison garment from people.dawn_prison() once K3 lands: a loose long-sleeved tunic and trousers with a turn-down collar, flat dark grey-blue, with no numbers, patches or insignia (hard rule). Until then, in dress_prison, raise the weave bump (about 400 cycles/m, strength 0.15) and add sheen about 0.3, so the cloth reads as cotton under the downlight. To make the bow read from behind, raise POSE chest from 10 to about 16 and SHOULDER_ROLL from 5 to about 10. Her neck should show its full arc, and the crown of her head should face the dock camera."
    },
    {
     "priority": 3,
     "camera": "dock",
-    "problem": "The f/2.8 look is not there: the chairs and panel are nearly sharp. The clerk's monitor is a dead grey slab that competes with Dawn.",
-    "fix": "Set cam.data.dof.use_dof = True, focus_object = Dawn's head bone or empty (focus about 1.7 m), aperture_fstop 2.0, lens 50 mm, so the chairs at about 6 m blur by roughly 8-12 px at 1280. Turn the monitor about 160 deg so only its dark back shows, or remove it. If it stays facing camera, give the screen a faint emission (strength 0.3, cool grey) with a 15 mm bezel at value 0.05. Shift the clerk's desk about 0.3 m right and 0.2 m back so the papers are not a hot spot near the frame's centre of weight."
+    "problem": "The clerk's desk takes the lower-right quarter: a pale top grading 85, a folder stack and the clerk's empty chair. That chair is bigger in frame than the judges' chairs and reads as a fourth empty chair, which dilutes the three. The clerk's chair also sits beside the right judge's chair in the wide. The shot is near straight-behind (about 14 deg off), not the three-quarter the beat asks for. The empty emblem frame is cut in half by the top edge.",
+    "fix": "In dressing(), remove the clerk's chair, or turn it 90 deg and push it fully under the desk. Alternatively, move CLERK from (1.55, 3.05) to about (2.4, 3.05) so the desk leaves the dock frame's right edge. For a true three-quarter, move the dock camera to about loc (1.9, -2.2, 1.5) with aim re-solved so her head stays in the gap between the left and presiding chairs (check the aim x near -0.5). Then lower the aim z by about 0.1, so the blank frame either clears the top edge entirely or shows its full lower rail."
    },
    {
     "priority": 3,
-    "camera": "dock, wide",
-    "problem": "Dawn's top reads as a casual T-shirt only slightly darker than the skin, not as prison clothing. In the wide, her shirt is mid-grey, not the 'dark-shirted figure'. Her visible hand lies flat on a post knob, not palms-on-the-ledge.",
-    "fix": "Keep dawn_prison() but drop the garment tint to about 0.05-0.06 linear before FABRIC_VALUE, so the shirt is at least 2 stops below the skin in the graded frame. Repose with rigged.pose_figure: chest down about 8 deg, head down about 22 deg, both arms forward about 35 deg with elbows about 25 deg, wrists about 20 cm out from the body's centre, palms on the flat ledge (not the corner post), fingers curled 15 deg. Stand her about 8 cm behind the ledge. Check that both hands show from the dock camera and that neither forearm reads as coming out of her waist."
+    "camera": "all",
+    "problem": "Every pale-ash surface is factory-new and uniform. All the boards share one tone, nothing shows handling, and the veneer's fine vertical grain reads as regular corrugation on the bench fascia at 1280 (bench frame x 250-750, y 560-720).",
+    "fix": "In courtroom_mats veneer, vary each board by about +-6% in value and +-0.05 in roughness (Object Info > Random, or a per-object seed), so the boards read as separate pieces. Lower the grain contrast from 0.2 to about 0.12 and the grain frequency by about 40% on the 'ash' (Z) variant. Add a handling band on the dock ledge's inner 10 cm and on the bench back rails: value x0.85, roughness 0.32 (worn satin) through a gradient mask. Add faint scuff marks on the dock platform and on the aisle floor near the bar gates, with roughness varying 0.45-0.6."
    },
    {
     "priority": 4,
     "camera": "wide",
-    "problem": "There is a stray diamond-shaped object on the upper-left wall between the windows. The aisle runner ends abruptly halfway up the aisle.",
-    "fix": "Find and delete the rotated object at about wall height 4 m between the two left windows. If it is meant as a speaker, rebuild it as a flush 0.25 x 0.35 x 0.12 m box aligned to the wall. Extend the runner from the back wall to the bar gates (one continuous strip, 1.0 m wide), or delete it."
-   },
-   {
-    "priority": 4,
-    "camera": "all",
-    "problem": "The materials are clean CG. There is no wear on the fascias, dock base or floor. The Tripo judge chairs show crumple blotches. The floor is a flat dark grey.",
-    "fix": "Add a 0.1 m dark skirting board (value 0.04, roughness 0.6) along the bench fascia, the dock plinth and the clerk's desk. Add a noise-driven roughness variation (0.45-0.65) and a faint darker kick band in the lowest 0.15 m of the fascias and the dock. Load the judge-chair props with val about 0.4 and rough_add 0.25 to kill the crumple highlights. Give the floor tiles a 3 mm grout groove and a roughness range of 0.35-0.55 so the dock light makes a soft sheen pool on the floor around the dock."
+    "problem": "The front edge is still untidy. The sloped tops of the nearest row's aisle-end panels are cut by the bottom edge (about x 330-380 and 1145-1240, y > 670). The washer slot's bright line sits only about 22 px under the top edge. The near gallery windows at top-left and top-right are cut by the top edge.",
+    "fix": "Move ROWS[2] from -5.9 to about -6.4. By my estimate with this camera, its aisle-end tops then fall below the bottom edge. Alternatively, delete that row's two aisle-side benches. Verify in a 960x540 --nocast test that no bench end shows below y 650. With the slivers gone, raise the aim z from 0.8 to about 0.9 (about 0.5 deg up), so the washer slot gets about 40 px of headroom. If the top-left and top-right windows still touch the top edge, set the gallery windows' glass strength to about 0.6 so they stop pulling the eye to the corners."
    }
   ]
  },

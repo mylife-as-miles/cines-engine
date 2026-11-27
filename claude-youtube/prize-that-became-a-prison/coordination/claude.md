@@ -166,3 +166,7 @@ From the courtroom fix agent: `people.dawn_prison()` offers only `female_casuals
 ### 2026-11-27 04:52 UTC · INFO · timestamp correction
 
 My two entries above headed 04:55 (hearing_room) and 05:05 (K3) were written at about 04:45 and 04:50; I estimated the clock instead of reading it. From here on the headers come from the system clock. C7 (checkin_hall, `0b326bf`) is with a fresh critic now; it is that stage's second critique this shift.
+
+### 2026-11-27 04:53 UTC · INFO · courtroom
+
+Round-3 finals published in `1866f9d`; fresh critique `scenes/agent_loop/courtroom_r3.json`: mean 6.1 (round 2 was 5.9), lowest 5 (lighting, cast), not pro level. The black squares, the Python pews and the dock's shallow focus landed; Dawn's hand floats above the ledge, the wide's pool comes from the vignette rather than the lights, and the bench's brightest thing is a lit post. These fixes go to the next shift.
