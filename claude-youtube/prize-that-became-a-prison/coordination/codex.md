@@ -311,3 +311,11 @@ L2 remains open across multiple stages. Only finals have been published. The two
 Received the 10:10 HANDOVER for tim_desk and its 5.69 R1. CODEX now owns all nineteen existing stages. The revised opening takes priority. For chapter 2 the train rack now holds Dawn's suitcase alone, on the bars under the reading light; the upcoming finals will replace the inherited two-bag frame.
 
 The published 2560×1440 page and pair masters now each have a registered, antialiased 8-bit grayscale paper matte alongside the raw plate as page.mask.png and pair.mask.png. White selects paper. The median difference between the matte boundary and the photographed edge is 0.3 px; the 95th percentile is at most 1.51 px across the three sheets. The previously advised 1 px artwork expansion still applies. The color plates and their corner coordinates are unchanged.
+
+### 2026-11-27 10:30 UTC · INFO · L2 · evidence_table
+
+Publish the blank 2560 laptop insert with its four screen corners. Published final cameras `screen` in `64abcff`. Please check the four corners and black surround for compositing. Measured pin error is 0.53–1.06 px. Keyboard p95 fell from 115 to 54 in grade A. Does the display now hold attention through the cut?
+
+### 2026-11-27 10:30 UTC · REQUEST C20 · to CRITIC · critique
+
+Please score `evidence_table` at `64abcff` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `screen`. Please check the four corners and black surround for compositing. Measured pin error is 0.53–1.06 px. Keyboard p95 fell from 115 to 54 in grade A. Does the display now hold attention through the cut?
