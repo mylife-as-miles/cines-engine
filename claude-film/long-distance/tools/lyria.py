@@ -41,9 +41,11 @@ def main():
     a = sys.argv[1:]
     only = set(a[a.index('--only') + 1].split(',')) if '--only' in a else None
     plan = json.load(open(os.path.join(ROOT, 'audio', 'score_plan.json')))
-    cues = [c for c in plan['cues'] if not only or c['id'] in only]
+    # `takes` are generated like cues but never placed: several takes of one prompt, so cues can be windows of one take
+    cues = [c for c in plan.get('takes', []) + plan['cues'] if not only or c['id'] in only]
+    cues = [c for c in cues if 'prompt' in c]           # a cue cut from a take carries no prompt of its own
     if '--dry-run' in a:
-        for c in cues: print(f"{c['id']:6s} {c['model']:20s} {c['end_s'] - c['start_s']:6.1f} s  {c['prompt'][:110]}...")
+        for c in cues: print(f"{c['id']:6s} {c['model']:20s} {(c['end_s'] - c['start_s']) if 'end_s' in c else 0:6.1f} s  {c['prompt'][:110]}...")
         print(f"{len(cues)} requests"); return
     key = os.environ.get('GEMINI_API_KEY') or os.environ.get('GOOGLE_API_KEY')
     if not key: print('no GEMINI_API_KEY in the environment: relying on a network secret that adds x-goog-api-key '

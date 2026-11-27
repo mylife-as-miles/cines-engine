@@ -321,7 +321,7 @@ def main():
     # ---------------- the score (the hook: audio/score_plan.json; Long Distance has none yet) ----------------
     score = np.zeros((N, 2)); placed = []
     for c in plan.get('cues', []):
-        f = resolve('score/' + c['id'])
+        f = resolve('score/' + c.get('take', c['id']))      # a cue may be a window of a shared take (score_plan "takes")
         if not os.path.exists(f): missing.add('score ' + c['id']); continue
         cents = c.get('tune_cents', 0.0) or 0.0
         x = load(f, 2, f'asetrate={SR}*{2 ** (-cents / 1200):.6f},aresample={SR}') if cents else load(f, 2)
