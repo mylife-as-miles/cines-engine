@@ -56,10 +56,11 @@ LAYOUT = {
 # The inspection counter is seen from its far side in the two intercut plates.
 # Rotate the reference bag marks and camera together around the bench centre.
 LAYOUT["three bags"] = {
-    "handbag-shoulder": (0.375, -0.195, TOP, 342.0),
-    "handbag-satchel": (0.06, -0.02, TOP, 333.0),
-    "handbag-tote": (-0.255, 0.155, TOP, 325.0),
+    "handbag-shoulder": (0.695, -0.195, TOP, 342.0),
+    "handbag-satchel": (0.38, -0.02, TOP, 333.0),
+    "handbag-tote": (0.065, 0.155, TOP, 325.0),
 }
+LAYOUT["ch05"].update(LAYOUT["three bags"])
 LAYOUT["match"] = {"dawn-suitcase": (0.32, -0.10, TOP, 122.0),
                    "extra-bag-closed": (-0.30, 0.18, TOP, 197.0)}
 st.GHOST = (TOTE00[0], TOTE00[1], 0.35, 0.16, TOTE00[3])   # the cleaner patch where the tote stood (Ch 11)
@@ -72,15 +73,15 @@ PROPS = {  # size, axis, grade
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     # the tote's leather is a red-brown that grades to salmon: turned toward orange (hue +0.045) and lifted, it lands
     # near (0.32, 0.15, 0.06) linear, cognac, the one warm thing in the room
-    "handbag-tote": (0.35, "long", dict(sat=1.02, val=0.67, hue=0.49, rough_add=0.2)),
-    "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12)),
-    "handbag-shoulder": (0.32, "long", dict(sat=0.55, val=0.5, rough_add=0.25)),
+    "handbag-tote": (0.35, "long", dict(sat=1.0, val=0.84, hue=0.50, rough_add=0.32)),
+    "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.28)),
+    "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25)),
 }
 FINISH = {  # specular level and woven face (period m, bump strength) per prop
     "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25), ceiling=(0.05, 0.052, 0.058)),
     "extra-bag-closed": dict(spec=0.06),
     "extra-bag-open": dict(spec=0.06),
-    "handbag-tote": dict(spec=0.4),
+    "handbag-tote": dict(spec=0.22),
     "handbag-shoulder": dict(spec=0.35),
 }
 # The scanner: turned so its tunnel, curtain and exit conveyor face the room (-Y), its back to the back wall,
@@ -118,6 +119,8 @@ POSES = {
     },
 }
 
+POSES["bag_insert"] = dict(POSES["ch05"], OfficerA={"chest": (5, 0), "behind": True, "look": "handbag-tote"})
+
 # The tag close-up is defined in the suitcase's own frame (so it follows the case): from the front, about 42 degrees
 # down onto the handle, the tag hanging from the grip toward the lens; the front zip and its pulls below the frame.
 TAG_CAM_LOCAL = ((0.33, -0.065, 0.79), (0.028, -0.016, 0.53))
@@ -151,9 +154,9 @@ CAMERAS = {
 }
 
 CAMERAS.update({
-    "handbags": dict(loc=(0.62, 1.10, TOP + 0.48), aim=(0.05, -0.02, TOP + 0.13), lens=35,
-                     focus="fx_handbags", fstop=2.8, beat="ch05", layout="three bags", exposure=-2.8,
-                     cheat={"OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
+    "handbags": dict(loc=(0.94, 1.10, TOP + 0.48), aim=(0.37, -0.02, TOP + 0.13), lens=35,
+                     focus="fx_handbags", fstop=2.8, beat="ch05", layout="three bags", pose="bag_insert", exposure=-2.8,
+                     cheat={"Dawn": (1.75, -1.10), "OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
     "two_shot_pre": dict(CAMERAS["two_shot"], layout="ch11"),
     "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
     "dawn_close": dict(loc=(-0.77, 0.66, 1.57), aim=(0.24, -0.42, 1.44), lens=43,
@@ -170,7 +173,7 @@ CAMERAS.update({
     "across": dict(loc=(-0.94, -1.28, TOP + 0.48), aim=(0.13, 0.045, TOP + 0.27), lens=37,
                    focus="fx_across", fstop=4, beat="ch05", exposure=-2.75),
 })
-FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.06, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
+FOCUS.update({"fx_across": (0.23, 0, TOP + 0.21), "fx_handbags": (0.38, -0.02, TOP + 0.13), "fx_match": (0, 0, TOP + 0.30),
               "fx_dawn_close": (0.53, -0.55, 1.54)})
 POSES["enter"] = dict(POSES["ch00"], Dawn=dict(POSES["ch00"]["Dawn"], look="dawn-suitcase"))
 POSES["case handle"] = dict(POSES["ch00"],
@@ -373,7 +376,7 @@ def dawn():
 def officer(name, variant):
     h = people.officer(name, variant)
     cloth(h, "male_elegantsuit01", rough=0.92, bump=0.25)
-    hands_stone(h, value=0.14)
+    hands_stone(h, value=0.09)
     for shoe in (o for o in h.children_recursive if o.type == "MESH" and "_shoes" in o.name):
         for mat in shoe.data.materials:
             bsdf = mat.node_tree.nodes.get("Principled BSDF")
@@ -566,6 +569,8 @@ def apply_pose(holder, p):
         _behind(holder, 1)
     if p.get("close_thumb"):
         rig = rigged.rig_of(holder)
+        rigged.articulate_hand(holder, "R", {"f_index": (44, 62, 39), "f_middle": (50, 67, 42),
+                                             "f_ring": (54, 69, 44), "f_pinky": (58, 70, 46), "thumb": (26, 28, 21)})
         thumb = rig.pose.bones["thumb.01_master.R"]
         thumb.rotation_mode = "XYZ"
         thumb.rotation_euler.x = math.radians(40)
@@ -601,8 +606,13 @@ def _reach_point(kind):
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
         return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 + 0.045, hi.z + 0.08))
     if kind == "tote_handle":        # palm just over the tote's handles, fingers to close round them
-        lo, hi = _bbox(_STATE["props"]["handbag-tote"])
-        return Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2 + 0.01, hi.z + 0.052))
+        mesh = next(o for o in _STATE["props"]["handbag-tote"].children_recursive if o.type == "MESH")
+        points = [mesh.matrix_world @ v.co for v in mesh.data.vertices]
+        high = max(p.z for p in points)
+        crowns = [p for p in points if p.z > high - 0.006]
+        near = max(p.y for p in crowns)
+        rail = [p for p in crowns if p.y > near - 0.018]
+        return sum(rail, Vector()) / len(rail) + Vector((0.0, 0.005, 0.019))
     return Vector(kind)
 
 
@@ -721,10 +731,34 @@ def open_zip(holder):
             pull.matrix_parent_inverse = world_to_holder
 
 
+def finish_tote_panel(holder):
+    # Projected from the inspection insert into the 4096px UVs. Reconstruct the
+    # grained panel's curvature from a collar of intact leather around the relief.
+    props._retouch_tote_textures(holder, (452, 184, 555, 278), 158, feather=12)
+    mesh = next(o.data for o in holder.children_recursive if o.type == "MESH")
+    co = np.empty(len(mesh.vertices) * 3, np.float32)
+    mesh.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    y, z = (co[:, 1] - 0.001) / 0.029, (co[:, 2] - 0.134) / 0.019
+    radius = np.hypot(y, z)
+    front = np.abs(co[:, 0] - 0.118) < 0.023
+    ring = front & (radius > 1.05) & (radius < 1.65)
+    fit = np.column_stack((np.ones(len(y)), y, z, y * y, z * z, y * z))
+    coeff = np.linalg.lstsq(fit[ring], co[ring, 0], rcond=None)[0]
+    select = front & (radius < 1.30)
+    weight = np.clip((1.30 - radius[select]) / 0.45, 0, 1)
+    co[select, 0] += weight * ((fit[select] @ coeff) - co[select, 0])
+    mesh.vertices.foreach_set("co", co.ravel())
+    mesh.update()
+    print(f"INSPECT tote panel: {select.sum()} vertices from {ring.sum()} surrounding samples", flush=True)
+
+
 def load_props():
     out = {}
     for name, (size, axis, grade) in PROPS.items():
         h = props.load(name, size=size, axis=axis, loc=(0, 0, -5), **grade)
+        if name == "handbag-tote":
+            finish_tote_panel(h)
         fin = FINISH.get(name)
         if fin:
             meshes = [o for o in h.children_recursive if o.type == "MESH"]
@@ -825,6 +859,9 @@ def apply_camera(name):
     if li:
         li.visible_glossy = "lens_glow" not in cfg
     bpy.data.objects["floor_return"].hide_render = name != "overhead"
+    bpy.data.objects["handbags near bench flag"].hide_render = name != "handbags"
+    bench = bpy.data.objects["bench_top"]
+    bench.data.materials[0] = _STATE["insert_bench_material" if name == "handbags" else "bench_material"]
     floor_return = bpy.data.objects.get("overhead floor return")
     if floor_return is not None:
         floor_return.hide_render = name != "overhead"
@@ -887,6 +924,14 @@ def build(cast=True):
     floor_only.objects.link(bpy.data.objects["floor"])
     floor_return.light_linking.receiver_collection = floor_only
     floor_return.visible_glossy = False
+    bench = bpy.data.objects["bench_top"]
+    _STATE["bench_material"] = bench.data.materials[0]
+    _STATE["insert_bench_material"] = st.mt.bench_steel("bench insert steel", rough=(0.40, 0.44), aniso=0.15)
+    flag = sk.box("handbags near bench flag", (1.48, 0.38, 0.01), (0.42, 0.50, TOP + 1.05),
+                  bpy.data.materials.new("black flag"))
+    flag.visible_camera = flag.visible_glossy = flag.visible_transmission = False
+    flag.visible_diffuse = False
+    flag.hide_render = True
     _STATE["props"] = load_props()
     # the tag is built on the suitcase where it stands in Ch 00 and then travels with it
     case = _STATE["props"]["dawn-suitcase"]
