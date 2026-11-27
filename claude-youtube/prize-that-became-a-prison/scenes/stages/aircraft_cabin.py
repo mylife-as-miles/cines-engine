@@ -72,11 +72,11 @@ def _toward(loc, az_deg, el_deg, dist):
 
 AISLE_CAM = (-1.04, 1.70, 1.56)
 WINDOW_CAM = (-1.10, 4.42, 1.24)
-OVER_CAM = (-2.14, 3.40, 1.37)
+OVER_CAM = (-2.14, 3.40, 1.40)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
-    "fx_over": _toward(OVER_CAM, 38.0, -5.0, 3.0),
+    "fx_over": _toward(OVER_CAM, 38.0, -5.0, 2.2),
 }
 
 CAMERAS = {
@@ -86,15 +86,14 @@ CAMERAS = {
                   fstop=4.0, beat="ch02-03"),
     # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
     # hands in her lap
-    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.04, 0.985), lens=30, focus="fx_face", fstop=2.8,
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.10, 0.985), lens=30, focus="fx_face", fstop=2.8,
                    beat="ch03"),
-    # Ch 03: over her right shoulder, out of the window: the wing reaching to its red tip light, the horizon and the
-    # dark below
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 46.0, -7.0, 1.2), lens=40, focus="fx_over", fstop=8.0,
+    # Ch 03: from behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red
+    # tip light just under the horizon, and the dark below; the back of her head soft at the frame's edge
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 43.0, -6.5, 1.2), lens=50, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
-TIP_THROUGH = _toward(OVER_CAM, 37.0, -6.0, 1.077 / math.cos(math.radians(6.0)))   # where on her window's pane the
-#                                                  wing-tip light shows from "over": 37 deg forward, 6 deg below level
+TIP_DIR = (37.0, -5.5)                          # the wing tip from "over": degrees forward of abeam, above level
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
     "aisle": {"haze": 1.0},
@@ -103,7 +102,7 @@ TRIMS = {
 }
 READ = "reading_light"
 _STATE = {"base": {}}
-GROUPS = ("key", "spill", "win", "cove", "wash", "path", "screen", "galley", "ext")
+GROUPS = ("key", "spill", "win", "cove", "wash", "path", "screen", "galley", "sky", "moon")
 
 
 # ---------------------------------------------------------------- shades (0 open, 1 closed)
@@ -501,8 +500,8 @@ def assign_groups():
             vl.lightgroups.add(name=g)
     rules = (("pathled_", "path"), ("pathglow_", "path"), ("path_light_", "path"), ("wash_", "wash"),
              ("cove_", "cove"), ("screenglow_", "screen"), ("screenspill_", "screen"), ("galley_", "galley"),
-             ("bulk_sign_", "galley"), ("sky", "ext"), ("navlight", "ext"), ("strobe", "ext"), ("nav_red_light", "ext"),
-             ("moon", "ext"), ("lens_", "key"))
+             ("bulk_sign_", "galley"), ("sky", "sky"), ("navlight", "moon"), ("strobe", "moon"),
+             ("nav_red_light", "moon"), ("moon", "moon"), ("lens_", "key"))
     for ob in bpy.data.objects:
         if ob.lightgroup:
             continue
@@ -533,8 +532,8 @@ def build(cast=True):
     st.path_lights()
     st.front_bulkhead()
     recv = bpy.data.collections.new("exterior receivers")
-    tip_dir = (Vector(TIP_THROUGH) - Vector(OVER_CAM)).normalized()
-    tip = Vector(OVER_CAM) + tip_dir * (27.0 / abs(tip_dir.x))
+    tip_dir = (Vector(_toward(OVER_CAM, TIP_DIR[0], TIP_DIR[1], 1.0)) - Vector(OVER_CAM)).normalized()
+    tip = Vector(OVER_CAM) + tip_dir * ((27.0 + 3.0 + OVER_CAM[0]) / abs(tip_dir.x))
     st.exterior(tuple(tip), recv, moon_dir=(tip_dir.x, tip_dir.y, 0.42))
     lights()
     for n, p in FOCUS.items():
