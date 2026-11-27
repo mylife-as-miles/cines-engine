@@ -257,7 +257,7 @@ def _ripples(nt, o, wet):
     act = _maprange(nt, cr, 0.3, 0.4, 0.0, 1.0)
     r = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", ring, env), _math(nt, "MULTIPLY", act, wet))
     swell = _math(nt, "SUBTRACT", _noise(nt, o, 4.0, 2.0, 0.5), 0.5)
-    return _math(nt, "ADD", _math(nt, "MULTIPLY", r, 0.0017), _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", swell, wet), 0.002))
+    return _math(nt, "ADD", _math(nt, "MULTIPLY", r, 0.004), _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", swell, wet), 0.002))
 
 
 def asphalt(name, img, rect, level=0.33, stop_x=None, stop_y=4.1):
@@ -272,9 +272,17 @@ def asphalt(name, img, rect, level=0.33, stop_x=None, stop_y=4.1):
     wet = _maprange(nt, h, level - 0.012, level + 0.012, 1.0, 0.0, smooth=True)
     damp = _maprange(nt, h, level, level + 0.2, 1.0, 0.0, smooth=True)
     mott = _maprange(nt, _noise(nt, o, 1.7, 5.0, 0.6), 0.3, 0.7, 0.0, 1.0)
-    base = _mix(nt, mott, (0.030, 0.030, 0.032), (0.054, 0.053, 0.052))
+    base = _mix(nt, mott, (0.02, 0.021, 0.022), (0.08, 0.077, 0.073))
     speck = _maprange(nt, _noise(nt, o, 300.0, 2.0, 0.5), 0.62, 0.75, 0.0, 1.0)
     base = _mix(nt, _math(nt, "MULTIPLY", speck, 0.5), base, (0.12, 0.12, 0.12))
+    lane = _math(nt, "MINIMUM", _math(nt, "ABSOLUTE", _math(nt, "ADD", x, 5.2)),
+                 _math(nt, "ABSOLUTE", _math(nt, "ADD", x, 7.0)))
+    tracks = _maprange(nt, lane, 0.12, 0.29, 1.0, 0.0, smooth=True)
+    base = _mix(nt, tracks, base, _scaled(nt, base, 0.63))
+    joint = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "ADD", x, 5.98)), 0.014, 0.024, 1.0, 0.0)
+    patch_x = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "ADD", x, 7.1)), 0.57, 0.62, 1.0, 0.0)
+    patch_y = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "ADD", y, 53.8)), 1.32, 1.39, 1.0, 0.0)
+    base = _mix(nt, _math(nt, "MAXIMUM", joint, _math(nt, "MULTIPLY", patch_x, patch_y)), base, (0.024, 0.024, 0.026))
     # tar-sealed cracks: the edges of big warped cells
     warp = _n(nt, "ShaderNodeMapping")
     _link(nt, o, warp.inputs["Vector"])
@@ -293,20 +301,22 @@ def asphalt(name, img, rect, level=0.33, stop_x=None, stop_y=4.1):
     if stop_x is not None:
         mx = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, stop_x)), 0.19, 0.21, 1.0, 0.0)
         my = _maprange(nt, _math(nt, "ABSOLUTE", y), stop_y, stop_y + 0.03, 1.0, 0.0)
-        wear = _maprange(nt, _noise(nt, o, 11.0, 4.0, 0.7), 0.38, 0.58, 0.0, 0.85)
+        wear = _maprange(nt, _noise(nt, o, 11.0, 4.0, 0.7), 0.42, 0.64, 0.0, 0.61)
         paint = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", mx, my), wear)
         base = _mix(nt, paint, base, (0.36, 0.36, 0.34))
     col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.4), base, (0.02, 0.02, 0.022))
     col = _mix(nt, wet, col, (0.012, 0.013, 0.015))
     _link(nt, col, b.inputs["Base Color"])
-    r = _maprange(nt, _noise(nt, o, 2.2, 4.0, 0.6), 0.3, 0.7, 0.1, 0.26)
+    r = _maprange(nt, _noise(nt, o, 2.2, 4.0, 0.6), 0.3, 0.7, 0.32, 0.48)
     r = _fmix(nt, crack, r, 0.1)
-    r = _fmix(nt, damp, r, 0.07)
+    r = _fmix(nt, damp, r, 0.30)
+    r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", tracks, 0.08))
     r = _fmix(nt, wet, r, 0.012)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.55
     agg = _math(nt, "ADD", _math(nt, "MULTIPLY", _noise(nt, o, 150.0, 3.0, 0.6), 0.7), _math(nt, "MULTIPLY", _noise(nt, o, 19.0, 2.0, 0.5), 0.6))
-    hh = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", agg, _math(nt, "SUBTRACT", 1.0, wet)), 0.0022)
+    agg = _math(nt, "ADD", agg, _math(nt, "MULTIPLY", _noise(nt, o, 400, 2), 0.3))
+    hh = _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", agg, _math(nt, "SUBTRACT", 1.0, wet)), 0.0055)
     hh = _math(nt, "ADD", hh, _ripples(nt, o, wet))
     _bump(nt, b, hh, 1.0, 1.0)
     return m
@@ -391,9 +401,9 @@ def gate_steel(name="gate steel", paint=(0.1, 0.132, 0.175)):
     strip = _n(nt, "ShaderNodeTexWhiteNoise", noise_dimensions="1D")
     _link(nt, _math(nt, "ADD", _math(nt, "FLOOR", _math(nt, "MULTIPLY", y, 1.3)), _math(nt, "MULTIPLY", _math(nt, "FLOOR", _math(nt, "DIVIDE", z, 1.22)), 17.0)), strip.inputs["W"])
     col = _mulv(nt, col, _maprange(nt, strip.outputs["Value"], 0.0, 1.0, 0.8, 1.1))
-    chalk = _maprange(nt, _noise(nt, o, 1.0, 3.0, 0.6, mapping=(9.0, 9.0, 0.5)), 0.5, 0.78, 0.0, 0.38)
+    chalk = _maprange(nt, _noise(nt, o, 1.0, 3.0, 0.6, mapping=(9.0, 9.0, 0.5)), 0.5, 0.78, 0.0, 0.19)
     col = _mix(nt, chalk, col, tuple(min(1.0, c * 1.8) for c in paint))
-    grime = _maprange(nt, _noise(nt, o, 1.0, 4.0, 0.7, mapping=(21.0, 21.0, 0.22)), 0.47, 0.7, 0.0, 0.6, smooth=True)
+    grime = _maprange(nt, _noise(nt, o, 1.0, 4.0, 0.7, mapping=(21.0, 21.0, 0.22)), 0.47, 0.7, 0.0, 0.31, smooth=True)
     col = _mix(nt, grime, col, tuple(c * 0.3 for c in paint))
     ao = _n(nt, "ShaderNodeAmbientOcclusion", samples=4)
     ao.inputs["Distance"].default_value = 0.07
@@ -469,7 +479,10 @@ def window_lit(name, rgb, strength, blind=0.0):
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     tc = _n(nt, "ShaderNodeTexCoord")
     _, _, oz = _xyz(nt, tc.outputs["Object"])
-    g = _maprange(nt, oz, -0.6, 0.6, 0.55, 1.0)
+    g = _maprange(nt, oz, -0.6, 0.6, 0.35, 1.0)
+    tube_distance = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", oz, 0.395))
+    tube = _maprange(nt, tube_distance, 0.008, 0.04, 0.36, 0.0)
+    g = _math(nt, "ADD", g, tube)
     if blind:
         g = _math(nt, "MULTIPLY", g, _maprange(nt, oz, 0.6 - blind * 1.2 - 0.02, 0.6 - blind * 1.2 + 0.02, 1.0, 0.42))
     em = _n(nt, "ShaderNodeEmission")
@@ -503,33 +516,23 @@ def sky(name="night sky", zenith=(0.034, 0.042, 0.06), horizon=(0.062, 0.074, 0.
     return m
 
 
-def rain(name="rain", gain=0.5, clear=0.0):
-    """A falling drop drawn out by the shutter: it takes the light from any side (diffuse plus translucent).
-    `clear`: how far the streak lets what is behind it through (the lit part is raised to match), so rain in front
-    of a brightly lit surface does not draw dark hairlines on it."""
+def rain(name="rain"):
+    """Camera-visible backscatter added to the transmitted background."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
     nt.nodes.remove(nt.nodes["Principled BSDF"])
-    gain = gain / max(0.05, 1.0 - clear)
-    c = (0.82 * gain, 0.88 * gain, 0.95 * gain, 1.0)
-    d = _n(nt, "ShaderNodeBsdfDiffuse")
-    d.inputs["Color"].default_value = c
-    t = _n(nt, "ShaderNodeBsdfTranslucent")
-    t.inputs["Color"].default_value = c
-    add = _n(nt, "ShaderNodeMixShader")
-    add.inputs[0].default_value = 0.5
-    _link(nt, d.outputs[0], add.inputs[1])
-    _link(nt, t.outputs[0], add.inputs[2])
-    out = add.outputs[0]
-    if clear > 0.0:
-        tr = _n(nt, "ShaderNodeBsdfTransparent")
-        mx = _n(nt, "ShaderNodeMixShader")
-        mx.inputs[0].default_value = clear
-        _link(nt, out, mx.inputs[1])
-        _link(nt, tr.outputs[0], mx.inputs[2])
-        out = mx.outputs[0]
-    _link(nt, out, nt.nodes["Material Output"].inputs["Surface"])
+    tr = _n(nt, "ShaderNodeBsdfTransparent")
+    em = _n(nt, "ShaderNodeEmission")
+    em.inputs["Color"].default_value = (0.82, 0.88, 0.96, 1.0)
+    energy = _n(nt, "ShaderNodeAttribute")
+    energy.attribute_name = "drop radiance"
+    _link(nt, energy.outputs["Fac"], em.inputs["Strength"])
+    add = _n(nt, "ShaderNodeAddShader")
+    _link(nt, tr.outputs[0], add.inputs[0])
+    _link(nt, em.outputs[0], add.inputs[1])
+    _link(nt, add.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    m.cycles.emission_sampling = "NONE"
     return m
 
 
@@ -581,7 +584,7 @@ def materials(img, rect, stop_x):
     M["gate"] = gate_steel()
     M["galv"] = galvanised()
     M["galv_dull"] = galvanised("galvanised dull", value=0.3, rough=(0.5, 0.7))
-    M["wire"] = pbr("razor wire", (0.6, 0.62, 0.65), rough=(0.3, 0.42), metal=1.0, nscale=30.0, cvar=0.12)
+    M["wire"] = pbr("razor wire", (0.29, 0.30, 0.31), rough=(0.48, 0.58), metal=1.0, nscale=30.0, cvar=0.12)
     M["dark"] = dark_steel()
     M["iron"] = pbr("cast iron", (0.03, 0.029, 0.028), rough=(0.4, 0.6), metal=0.6, nscale=30.0, cvar=0.25, bump=0.5,
                     bscale=260.0)
@@ -591,14 +594,14 @@ def materials(img, rect, stop_x):
     M["lens_cold"] = emit("lens cold", (0.8, 0.9, 1.0), 220.0, sampling="FRONT")
     M["lens_gate"] = emit("lens gate", (1.0, 0.95, 0.86), 220.0, sampling="FRONT")
     M["lens_dead"] = pbr("lens dead", (0.02, 0.022, 0.025), rough=(0.1, 0.2), nscale=3.0, spec=0.8)
-    M["lit_a"] = window_lit("window lit a", (1.0, 0.8, 0.5), 3.0)
-    M["lit_b"] = window_lit("window lit b", (1.0, 0.86, 0.62), 2.0, blind=0.45)
-    M["lit_c"] = window_lit("window lit c", (0.78, 0.95, 0.9), 1.6)
+    M["lit_a"] = window_lit("window lit a", (1.0, 0.8, 0.5), 1.8)
+    M["lit_b"] = window_lit("window lit b", (1.0, 0.86, 0.62), 1.2, blind=0.5)
+    M["lit_c"] = window_lit("window lit c", (0.65, 0.84, 1.0), 0.96)
     M["screen"] = emit("console glow", (0.6, 0.8, 1.0), 5.0, sampling="AUTO")
     M["button"] = emit("call button", (0.75, 0.9, 1.0), 9.0, sampling="NONE")
     M["sky"] = sky()
     M["rain"] = rain()
     M["mist"] = mist()
     M["black"] = pbr("void black", (0.004, 0.004, 0.004), rough=(0.9, 0.95))
-    M["far_lamp"] = emit("far lamp", (1.0, 0.72, 0.42), 26.0, sampling="NONE")
+    M["far_lamp"] = emit("far lamp", (1.0, 0.51, 0.19), 22.0, sampling="NONE")
     return M

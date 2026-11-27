@@ -50,18 +50,20 @@ DECK, DECK_Z = 2.8, 11.4                       # half-width of the deck, its und
 MAST_X, MAST_TOP = -11.0, 9.05
 MAST_Y = (-56.0, -28.0, 28.0, 56.0, 84.0, 112.0, 140.0, 168.0, 196.0, 224.0)
 DEAD_HEAD = (84.0, 1)                          # one lamp out: (mast, which head)
-COIL_R, COIL_PITCH = 0.42, 0.30
+COIL_R, COIL_PITCH = 0.40, 0.28
 IMG_RECT = (-80.0, 2.0, -100.0, 240.0)
 STOP_X = -10.6
 COLD = (0.78, 0.9, 1.0)
 GATE_WHITE = (1.0, 0.95, 0.86)
 SODIUM = (1.0, 0.76, 0.52)
 # hand-placed dips in the road where water stands: (x, y, radius x, radius y, depth)
-PUDDLES = [(-6.0, -55.0, 1.3, 3.0, 0.3), (-4.2, -49.5, 1.0, 3.2, 0.3), (-8.3, -52.0, 0.9, 2.6, 0.26),
+PUDDLES = [(-7.6, -60.6, 0.8, 1.3, 0.34), (-5.1, -59.1, 0.52, 0.98, 0.28),
+           (-6.8, -57.4, 0.66, 1.35, 0.29), (-8.1, -55.8, 0.47, 0.76, 0.33),
+           (-4.4, -53.5, 0.71, 1.18, 0.29), (-6.0, -55.0, 1.3, 3.0, 0.3), (-4.2, -49.5, 1.0, 3.2, 0.3), (-8.3, -52.0, 0.9, 2.6, 0.26),
            (-6.2, -44.5, 1.3, 3.2, 0.3), (-3.9, -37.0, 1.0, 3.6, 0.3), (-7.9, -31.0, 1.3, 4.5, 0.26),
            (-5.2, -22.0, 1.5, 4.0, 0.28), (-4.2, -6.0, 1.6, 4.5, 0.28), (-7.0, 9.0, 1.4, 5.0, 0.26),
            (-4.6, 24.0, 1.6, 5.0, 0.28), (-6.5, 44.0, 1.5, 6.0, 0.28), (-4.0, 70.0, 1.6, 7.0, 0.28),
-           (-13.2, 0.2, 3.4, 2.6, 0.45), (-11.6, 2.9, 1.3, 0.9, 0.3), (-19.5, 1.6, 2.6, 1.2, 0.28),
+           (-14.3, 0.1, 4.3, 1.85, 0.44), (-16.7, -0.75, 1.8, 1.1, 0.39), (-11.6, 2.9, 1.3, 0.9, 0.3), (-19.5, 1.6, 2.6, 1.2, 0.28),
            (-6.6, 1.0, 1.5, 2.8, 0.3), (-3.7, -1.6, 1.0, 2.0, 0.28), (-8.6, -2.6, 0.9, 1.8, 0.26),
            (-0.9, 1.4, 0.5, 1.1, 0.42), (-1.1, -2.2, 0.4, 0.8, 0.4)]
 
@@ -249,8 +251,10 @@ def height_image():
     h -= appr * (XX < ROAD_A - FILLET) * 0.26 * np.exp(-(APPROACH - np.abs(YY)) / 0.45)
     for yr in (-2.9, -1.2, 1.2, 2.9):
         h -= appr * 0.06 * np.exp(-((YY - yr) / 0.28) ** 2)
+    rim_x = (octave(1.7) - 0.5) * 1.6
+    rim_y = (octave(2.3) - 0.5) * 1.35
     for px, py, rx, ry, dep in PUDDLES:
-        h -= dep * np.exp(-(((XX - px) / rx) ** 2 + ((YY - py) / ry) ** 2))
+        h -= dep * np.exp(-(((XX + rim_x - px) / rx) ** 2 + ((YY + rim_y - py) / ry) ** 2))
     img = bpy.data.images.new("prison_ground_height", W, H, alpha=False, float_buffer=True, is_data=True)
     px = np.empty((H, W, 4), np.float32)
     px[..., 0] = px[..., 1] = px[..., 2] = h
@@ -319,7 +323,7 @@ def ground():
 
 
 # ---------------------------------------------------------------- the razor wire
-def coil_section(name, length=PANEL, seed=0, wire_r=0.008, seg=36, barbs=20):
+def coil_section(name, length=PANEL, seed=0, wire_r=0.010, seg=36, barbs=9):
     """6 m of concertina wire: two counter-wound helices (their crossing loops are what a concertina coil looks
     like from the side), a core wire with flat four-point barbs. Irregular, but its ends meet the next section."""
     rng = random.Random(seed)
@@ -369,7 +373,7 @@ def coil_section(name, length=PANEL, seed=0, wire_r=0.008, seg=36, barbs=20):
             p = p + nr * wire_r * 1.1
             for sgn in (-1.0, 1.0):
                 b0 = len(verts)
-                for u, w in ((0.042, 0.028), (0.011, 0.008), (0.011, -0.008), (0.042, -0.028)):
+                for u, w in ((0.025, 0.011), (0.009, 0.004), (0.009, -0.004), (0.025, -0.011)):
                     verts.append(p + tg * (sgn * u) + ax * w)
                 faces.append((b0, b0 + 1, b0 + 2, b0 + 3))
     me = bpy.data.meshes.new(name)
@@ -450,7 +454,7 @@ def gate():
         bm_obj(f"gate_frame_{tag}", fr, M["gate"], bevel=0.008)
         bm_obj(f"gate_ribs_{tag}", ribs, M["gate"], bevel=0.009)
         for zz in rails[1:4]:
-            bolts += [(fx0, ya + 0.2 + 0.26 * i, zz) for i in range(int((yb - ya - 0.3) / 0.26))]
+            bolts += [(fx0, ya + 0.2 + 0.15 * i, zz) for i in range(int((yb - ya - 0.3) / 0.15))]
         for yy in (ya + 0.05, yb - 0.05):
             bolts += [(fx0, yy, z0 + 0.2 + 0.3 * i) for i in range(int((z1 - z0 - 0.3) / 0.3))]
         # hinges on the pier side: barrel, strap on the leaf, plate on the pier's reveal
@@ -556,6 +560,7 @@ def tower():
     bx("tower_roof_trim", tx - 2.6, tx + 2.6, ty - 2.6, ty + 2.6, rz + 0.17, rz + 0.25, M["dark"], bevel=0.01)
     # inside: a console whose blank screen is the only light (it puts a faint cold tone on the ceiling)
     bx("cabin_console", tx - 0.2, tx + 0.5, ty - 0.7, ty + 0.7, dz, dz + 0.85, M["dark"], bevel=0.02)
+    point("console_return", (tx, ty, dz + 0.92), 0.5, COLD, radius=0.18, group="tower")
     mesh_obj("cabin_screen", [(tx - 0.1, ty - 0.3, dz + 0.856), (tx + 0.4, ty - 0.3, dz + 0.856), (tx + 0.4, ty + 0.3, dz + 0.856), (tx - 0.1, ty + 0.3, dz + 0.856)], [(0, 1, 2, 3)], M["screen"])
     # roof: a searchlight on its yoke (unlit), an aerial, a small vent
     top = rz + 0.25
@@ -620,20 +625,25 @@ def gate_lamp():
     wire. The lamp hangs 3.6 m in front of the wall and looks almost straight down: the gate takes an arch of
     light that fades toward its top corners, the lintel and the wire above stay dim, and from the approach road
     the lens shows as a bright bar under the housing."""
-    px, top = 1.2, 9.6
-    sk.cyl("gate_mast_pole", 0.125, top, (px, 0.0, top / 2), M["galv"], verts=16, r2=0.075)
-    beam("gate_mast_arm", (px + 1.3, 0.0, 8.5), (-3.78, 0.0, 8.6), 0.07, 0.1, M["galv"], bevel=0.008)
-    tube("gate_mast_stay", (px, 0.0, top - 0.05), (-2.3, 0.0, 8.63), 0.012, M["galv"], verts=8)
-    tube("gate_mast_stay_in", (px, 0.0, top - 0.05), (px + 1.1, 0.0, 8.55), 0.012, M["galv"], verts=8)
-    bx("gate_mast_cap", px - 0.09, px + 0.09, -0.09, 0.09, top - 0.06, top + 0.05, M["galv"], bevel=0.01)
-    bx("gate_mast_collar", px - 0.11, px + 0.11, -0.11, 0.11, 8.42, 8.66, M["galv"], bevel=0.01)
+    px, py, top = 1.2, 3.2, 9.6
+    sk.cyl("gate_mast_pole", 0.125, top, (px, py, top / 2), M["galv"], verts=16, r2=0.075)
+    SOLIDS.append((px - 0.13, px + 0.13, py - 0.13, py + 0.13, 0, top))
+    # One continuous sloping arm crosses the column at its collar and carries both lamps.
+    out = Vector((-3.78, 0, 8.60))
+    collar = Vector((px, py, 8.52))
+    inner = collar + (collar - out) * 0.26
+    beam("gate_mast_arm", inner, out, 0.07, 0.1, M["galv"], bevel=0.008)
+    tube("gate_mast_stay", (px, py, top - 0.05), out.lerp(collar, 0.23), 0.014, M["galv"], verts=8)
+    tube("gate_mast_stay_in", (px, py, top - 0.05), inner, 0.014, M["galv"], verts=8)
+    bx("gate_mast_cap", px - 0.09, px + 0.09, py - 0.09, py + 0.09, top - 0.06, top + 0.05, M["galv"], bevel=0.01)
+    bx("gate_mast_collar", px - 0.11, px + 0.11, py - 0.11, py + 0.11, 8.42, 8.66, M["galv"], bevel=0.01)
     pos, aim = (-3.6, 0.0, 8.4), (-1.9, 0.0, 0.6)
     tube("gate_lamp_stub", (pos[0], 0.0, 8.56), (pos[0], 0.0, pos[2] + 0.1), 0.02, M["galv"], verts=8)
     d = flood_head("gate_lamp", pos, aim, M["lens_gate"], size=1.1)
-    spot("gate_spot", Vector(pos) + d * 0.12, aim, 14000.0, 80.0, 0.4, GATE_WHITE, radius=0.1, group="gate")
-    point("gate_spill", (pos[0] - 0.05, 0.0, pos[2] - 0.45), 2200.0, GATE_WHITE, radius=0.12, group="spill")
+    spot("gate_spot", Vector(pos) + d * 0.12, aim, 14000.0, 80.0, 0.55, GATE_WHITE, radius=0.1, group="gate")
+    point("gate_spill", (pos[0] - 0.05, 0.0, pos[2] - 0.45), 900.0, GATE_WHITE, radius=0.12, group="spill")
     # the same column lights the vehicle yard behind the gate
-    pos2, aim2 = (px + 1.2, 0.0, 8.36), (9.5, 0.0, 0.0)
+    pos2, aim2 = (inner.x, inner.y, inner.z - 0.11), (9.5, 2.6, 0.0)
     d = flood_head("gate_lamp_in", pos2, aim2, M["lens_cold"])
     spot("yard_spot", Vector(pos2) + d * 0.12, aim2, 9000.0, 80.0, 0.3, COLD, radius=0.1, group="yard")
 
@@ -641,7 +651,7 @@ def gate_lamp():
 def yard_lights():
     """Low sodium lights in the yards, hidden by the wall: they put a warm glow in the mist behind the wire."""
     for i, y in enumerate((-70.0, -42.0, -12.0, 15.0, 42.0, 70.0, 98.0, 126.0)):
-        point(f"yard_glow_{i}", (4.6, y, 5.2), 800.0, SODIUM, radius=0.2, group="yardglow")
+        point(f"yard_glow_{i}", (4.6, y, 5.2), 1200.0 if y == 15.0 else 800.0, SODIUM, radius=0.2, group="yardglow")
 
 
 # ---------------------------------------------------------------- the blocks beyond the wall
@@ -708,6 +718,13 @@ def block(name, x0, x1, y0, y1, H, lit, faces=("w", "s"), floors=7, seed=5):
                     ob.location, ob.rotation_euler = (c, y0, z), (0, 0, math.pi / 2)
                 else:
                     ob.location, ob.rotation_euler = (c, y1, z), (0, 0, -math.pi / 2)
+                if v in lits:
+                    normal = ob.rotation_euler.to_matrix() @ Vector((-1, 0, 0))
+                    colour = (0.70, 0.86, 1.0) if v == "c" else (1.0, 0.78, 0.50)
+                    light = sk.area_light(ob.name + "_spill", ob.location + normal * 0.13,
+                                          (0.78, 1.0), 3.0, colour, spread_deg=130)
+                    light.rotation_euler = normal.to_track_quat("-Z", "Y").to_euler()
+                    light.visible_glossy = False
                 count += 1
     SOLIDS.append((x0, x1, y0, y1, 0.0, H + 3.0))
     return count
@@ -725,7 +742,8 @@ def dressing():
             sk.cyl(f"bollard_foot_{k}", 0.12, 0.03, (x, y, KERB + 0.012), M["galv_dull"], verts=18)
             k += 1
     # the call post a driver stops at, on the left of the approach
-    ix, iy = STOP_X - 0.6, APPROACH + 0.5
+    ix, iy = STOP_X - 0.6, APPROACH - 0.94
+    bx("call_island", ix - 0.23, ix + 0.23, iy - 0.20, iy + 0.20, 0, KERB, M["kerb_y"], bevel=0.035)
     bx("call_post", ix - 0.05, ix + 0.05, iy - 0.05, iy + 0.05, KERB - 0.02, 1.12, M["galv"], bevel=0.006)
     bx("call_post_foot", ix - 0.11, ix + 0.11, iy - 0.11, iy + 0.11, KERB - 0.02, KERB + 0.012, M["galv_dull"], bevel=0.004)
     bx("call_box", ix - 0.11, ix + 0.11, iy - 0.075, iy + 0.065, 1.08, 1.42, M["dark"], bevel=0.012)
@@ -733,9 +751,11 @@ def dressing():
     bx("call_grille", ix - 0.07, ix + 0.07, iy - 0.079, iy - 0.074, 1.25, 1.36, M["iron"])
     sk.cyl("call_button", 0.017, 0.006, (ix, iy - 0.078, 1.17), M["button"], rot=(math.pi / 2, 0, 0), verts=16)
     bl = bpy.data.lights.new("call_glow", "POINT")
-    bl.energy, bl.color, bl.shadow_soft_size = 0.5, (0.75, 0.9, 1.0), 0.02
+    bl.energy, bl.color, bl.shadow_soft_size = 3.0, (0.75, 0.9, 1.0), 0.035
     lo = _link(bpy.data.objects.new("call_glow", bl))
     lo.location = (ix, iy - 0.13, 1.17)
+    spot("call_down", (ix, iy - 0.15, 1.416), (ix, iy - 0.31, 0.11), 1.0,
+         70, 0.6, COLD, radius=0.025, group="gate")
     # a camera on the -y pier, looking down the approach
     cy = -(GATE_W / 2 + PIER_W / 2)
     bx("cctv_plate", -0.32, -0.3, cy - 0.08, cy + 0.08, 5.22, 5.42, M["dark"], bevel=0.003)
@@ -778,12 +798,22 @@ def far_lights():
     """A road far off across the fields: a few sodium lamps on the horizon, small and soft in the mist. They give
     the dark side of the wall frame a distance; nothing here is lit by them."""
     rng = random.Random(21)
-    for i, az in enumerate((-25.0, -21.5, -18.5, -16.2, -13.0, -10.8, -9.2, -6.6)):
+    for i, az in enumerate((-24.0, -22.5, -21.8, -12.0, -9.5)):
         r = 520.0 + 45.0 * i + rng.uniform(-30.0, 30.0)
         a = math.radians(az)
-        p = (-7.0 + r * math.sin(a), -62.0 + r * math.cos(a), 7.5 + rng.uniform(-0.6, 0.8))
-        ob = sk.sphere(f"far_lamp_{i}", 0.42 + 0.0005 * r, p, M["far_lamp"], segs=8)
-        ob.visible_diffuse = ob.visible_glossy = ob.visible_shadow = ob.visible_volume_scatter = False
+        p = (-7.0 + r * math.sin(a), -62.0 + r * math.cos(a), rng.uniform(11, 16))
+        ob = sk.sphere(f"far_lamp_{i}", rng.uniform(0.5, 1.3), p, M["far_lamp"], segs=8)
+        lamp = M["far_lamp"].copy()
+        ob.data.materials[0] = lamp
+        em = next(n for n in lamp.node_tree.nodes if n.type == "EMISSION")
+        em.inputs["Strength"].default_value *= rng.uniform(0.4, 1)
+        ob.visible_diffuse = ob.visible_glossy = ob.visible_shadow = False
+    # The distant unlit embankment interrupts the line of lamps at the horizon.
+    terrain = []
+    for i in range(45):
+        x = -400 + i * 10
+        terrain.extend([(x, 355, -1), (x, 355, 6.2 + 1.3 * math.sin(i * 0.62) + rng.uniform(-0.55, 0.65))])
+    mesh_obj("far_embankment", terrain, [(i, i+1, i+3, i+2) for i in range(0, len(terrain)-2, 2)], M["verge"])
 
 
 def sky_and_mist():
@@ -813,7 +843,7 @@ def build():
     yard_lights()
     # block A shows in the gate frame (its near windows); block B stands in the mist at the far end of the wall
     na = block("block_a", 10.5, 24.5, 10.0, 40.0, 16.0,
-               {("w", 0, 3): "a", ("w", 1, 4): "b", ("s", 1, 4): "c", ("w", 6, 3): "a", ("w", 2, 3): None, ("w", 0, 4): None,
+               {("w", 0, 3): "a", ("w", 1, 4): "b", ("s", 1, 4): None, ("w", 6, 3): "a", ("w", 2, 3): None, ("w", 0, 4): None,
                 ("w", 3, 3): None, ("w", 3, 4): None, ("s", 2, 3): None, ("s", 2, 4): None,
                 ("w", 1, 3): None, ("w", 2, 4): None, ("s", 0, 3): None, ("s", 0, 4): None, ("s", 1, 3): None},
                floors=5, seed=5)
