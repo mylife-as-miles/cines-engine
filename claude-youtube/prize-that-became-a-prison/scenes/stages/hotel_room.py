@@ -83,7 +83,7 @@ CAMERAS = {
     "accept": dict(loc=(0.66, -2.27, 1.36), aim=(-1.0, -0.60, 0.94), lens=37,
                    focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
     "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=46,
-                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.019),
+                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0, above_ceiling=True, shift_x=0.060, shift_y=0.045),
 }
 TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.55, "wall_return": 1.0},
          "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15, "lamp_light": 0.74}, "pack": {"lamp_spill": 1.8, "duvet_bounce": 1.25, "ceiling_bounce": 0.72},
@@ -441,21 +441,44 @@ def premarket_props(duvet):
 
 def premarket_poses(h, duvet, case, tote, tote_mesh):
     from home import sit_legs, _feet
-    place(h, PACK_SPOT)
-    pose = {"chest": (13, 3), "neck": (4, 0), "fingers": 14, "l_arm": (4, 6, 11)}
+    place(h, (PACK_SPOT[0], -1.055, PACK_SPOT[2]))
+    pose = {"chest": (30, 3), "neck": (4, 0), "fingers": 14, "l_arm": (4, 6, 11)}
     palm = Vector((-1.08, -0.59, hp.surface_z([case], -1.08, -0.59) + 0.024))
     look_at(h, pose, palm, d=20)
     stance(h)
+    rig = rigged.rig_of(h)
+    # Bend both knees against the planted foot targets so the lower hand
+    # can bear weight on the duvet while the other hand holds the lid.
+    for side in "LR":
+        rig.pose.bones[f"thigh_parent.{side}"]["IK_FK"] = 0.0
+    bpy.context.view_layer.update()
+    torso = rig.pose.bones["torso"]
+    unit = 1 / (rig.scale[0] * h["ks"])
+    torso.matrix = Matrix.Translation((0, -0.105 * unit, -0.238 * unit)) @ torso.matrix
+    bpy.context.view_layer.update()
     ground(h)
     ik_arm(h, -1, palm)
     turn_palm(h, -1, (0, 0, -1))
     rigged.articulate_hand(h, "R", {"f_index": (15, 16, 6), "f_middle": (18, 18, 7),
                                      "f_ring": (20, 22, 8), "f_pinky": (24, 24, 10), "thumb": (9, 7, 5)})
-    x, y = -0.80, -0.915
+    x, y = -1.37, -0.80
     left_target = Vector((x, y, _on_duvet(duvet, x, y) + 0.022))
-    ik_arm(h, 1, left_target, pole=(0.6, 0.22, -1))
-    turn_palm(h, 1, (0, 0, -1))
-    curl(h, 1, 17, 23, 9)
+    reach = left_target.copy()
+    hand = rig.pose.bones["hand_fk.L"]
+    frame = rig.matrix_world.to_3x3().normalized().inverted()
+    forward = (frame @ Vector((0.12, 1, 0))).normalized()
+    down = (frame @ Vector((0, 0, -1))).normalized()
+    flat = Matrix((down, forward, down.cross(forward))).transposed().to_4x4()
+    # Changing the wrist angle also moves the palm centre. Refit the reach
+    # after turning the pads against the fabric.
+    for _ in range(5):
+        ik_arm(h, 1, reach, pole=(0.74, 1.05, -0.32))
+        flat.translation = hand.matrix.translation
+        hand.matrix = flat
+        bpy.context.view_layer.update()
+        reach += left_target - palm_centre(h, 1)
+    rigged.articulate_hand(h, "L", {"f_index": (4, 6, 3), "f_middle": (6, 8, 4),
+                                     "f_ring": (8, 12, 4), "f_pinky": (12, 13, 5), "thumb": (8, 7, 5)})
     _STATE["poses"]["pre"] = snapshot(h)
     place(h, (0, 0, 0))
     x, y = -1.00, -0.77
