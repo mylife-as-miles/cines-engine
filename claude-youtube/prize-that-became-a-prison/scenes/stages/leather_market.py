@@ -349,21 +349,8 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, *, curl, contact
     target = Vector(wrist_target)
     surf = top_z if callable(top_z) else (lambda x, y, z0=top_z: z0)
     hv = None
-    best = None
     for _ in range(4):
-        t_arm = arm_inv @ target
-        best = None
-        grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-32, 34, 3) for e in range(0, 121, 3)]
-        for step in (None, 0.5):
-            if step:
-                f0, o0, e0 = best[1]
-                grid = [(f0 + a * step, o0 + b * step, e0 + c * step) for a in range(-6, 7) for b in range(-6, 7) for c in range(-6, 7)]
-            for fwd, out, el in grid:
-                w = sh + L1 * rigged._dir(0, fwd, sgn, out) + L2 * rigged._dir(0, fwd + el, sgn, out * 0.6)
-                e = (w - t_arm).length
-                if best is None or e < best[0]:
-                    best = (e, (fwd, out, el))
-        pose[key] = best[1]
+        wrist_error, pose[key] = rigged.fit_wrist(sh, arm_inv @ target, L1, L2, sgn, min_forward=0)
         rigged.pose_figure(holder, pose)
         R = rig.matrix_world.to_3x3().normalized().inverted()
         y = (R @ Vector(fwd_dir)).normalized()
@@ -413,7 +400,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, *, curl, contact
             correction.z = 0.018 - palm_low
         target += correction
     gap = lambda p: p.z - surf(p.x, p.y)
-    return dict(arm=pose[key], fit=best[0], palm_low=min(gap(p) for p in hv["palm"]),
+    return dict(arm=pose[key], fit=wrist_error, palm_low=min(gap(p) for p in hv["palm"]),
                 finger_low=min(gap(p) for p in hv["fingers"]),
                 palm=sum(hv["palm"], Vector()) / max(1, len(hv["palm"])))
 

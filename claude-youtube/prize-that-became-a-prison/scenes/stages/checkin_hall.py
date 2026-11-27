@@ -1143,19 +1143,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     pitch = 0.0
     bends = {"index": curl - 2, "middle": curl - 1, "ring": curl + 2, "pinky": curl + 6}
     for attempt in range(12):
-        t_arm = arm_inv @ target
-        best = None
-        grid = [(f, o, e) for f in range(-30, 91, 3) for o in range(-32, 34, 3) for e in range(0, 121, 3)]
-        for step in (None, 0.5):
-            if step:
-                f0, o0, e0 = best[1]
-                grid = [(f0 + a * step, o0 + b * step, e0 + c * step) for a in range(-6, 7) for b in range(-6, 7) for c in range(-6, 7)]
-            for fwd, out, el in grid:
-                w = sh + L1 * rigged._dir(0, fwd, sgn, out) + L2 * rigged._dir(0, fwd + el, sgn, out * 0.6)
-                e = (w - t_arm).length
-                if best is None or e < best[0]:
-                    best = (e, (fwd, out, el))
-        pose[key] = best[1]
+        wrist_error, pose[key] = rigged.fit_wrist(sh, arm_inv @ target, L1, L2, sgn, min_forward=-30)
         rigged.pose_figure(holder, pose)
         # hand flat: its X axis (across the palm, palm side) straight down, its Y axis along fwd_dir
         R = rig.matrix_world.to_3x3().normalized().inverted()
@@ -1212,7 +1200,7 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=12.0, palm_
     pad = sum((pads[name] for name in support), Vector()) / len(support)
     print("PAD", holder.name, side, {n: round(1000 * (pt.z - top_z), 1) for n, pt in pads.items()},
           "heel", round(1000 * (palm_low - top_z), 1), "thumb", round(1000 * (min(p.z for p in hv["thumb"]) - top_z), 1), flush=True)
-    return dict(arm=pose[key], fit=best[0], pad=pad, low=low, palm_low=min(p.z for p in hv["palm"]),
+    return dict(arm=pose[key], fit=wrist_error, pad=pad, low=low, palm_low=min(p.z for p in hv["palm"]),
                 finger_low=min(p.z for p in hv["fingers"]), thumb=sum(hv["thumb"], Vector()) / max(1, len(hv["thumb"])),
                 palm=sum(hv["palm"], Vector()) / max(1, len(hv["palm"])))
 

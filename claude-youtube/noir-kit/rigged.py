@@ -16,6 +16,8 @@ import math
 import os
 from dataclasses import dataclass
 
+import numpy as np
+
 import bpy  # first: bmesh and mathutils only exist once bpy is loaded
 from mathutils import Matrix, Vector
 
@@ -114,6 +116,28 @@ def _dir(down_from_vertical_deg, forward_deg, side, out_deg):
     d = Matrix.Rotation(-f, 3, "X") @ d            # forward is -Y
     d = Matrix.Rotation(-side * o, 3, "Y") @ d      # out to the character's side (.L is +X)
     return d
+
+
+def fit_wrist(shoulder, target, upper_length, forearm_length, side, min_forward=0):
+    """Fit the FK arm to a wrist target in armature space. Return error in metres and the three pose angles."""
+    dx, dy, dz = Vector(target) - Vector(shoulder)
+
+    def nearest(forward, outward, elbow):
+        # Each component follows _dir: the forearm bends farther forward and turns
+        # outward by 60% of the upper arm angle, exactly as pose_figure does.
+        f, o, e = np.ix_(np.radians(forward), np.radians(outward), np.radians(elbow))
+        along1 = upper_length * np.cos(f)
+        along2 = forearm_length * np.cos(f + e)
+        x = side * (along1 * np.sin(o) + along2 * np.sin(0.6 * o))
+        y = -upper_length * np.sin(f) - forearm_length * np.sin(f + e)
+        z = -along1 * np.cos(o) - along2 * np.cos(0.6 * o)
+        squared = (x - dx) ** 2 + (y - dy) ** 2 + (z - dz) ** 2
+        i, j, k = np.unravel_index(squared.argmin(), squared.shape)
+        return math.sqrt(squared[i, j, k]), (float(forward[i]), float(outward[j]), float(elbow[k]))
+
+    _, coarse = nearest(np.arange(min_forward, 91, 3), np.arange(-32, 34, 3), np.arange(0, 121, 3))
+    half_degrees = np.arange(-3.0, 3.01, 0.5)
+    return nearest(*(angle + half_degrees for angle in coarse))
 
 
 def figure(name, height=1.75, outfit=None, pose=None, location=(0, 0, 0), facing_deg=0.0, collection=None):
