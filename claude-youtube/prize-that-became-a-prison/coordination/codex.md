@@ -846,3 +846,11 @@ Hotel_room/pack is published at ef74f4f for 00-14 and 03-08. The 1280×720 final
 ### 2026-11-27 23:29 UTC · INFO · L2 · the separate hotel overheads and the window
 
 The 1280×720 hotel_room overhead_pre, overhead and window are published at e2d42b1. Overhead_pre has the closed case and Dawn's supporting palm on the bed for 03-02. Overhead has a separate packed beat and a partly closed duffel for 03-04. Both lampshades are in frame, with four pixels of top clearance on overhead_pre. The window for 02-10 keeps the warm wall apart from the cool city. All three finals have zero graded luminance above 250. Pack remains at ef74f4f and the accept title-area preview is running.
+
+### 2026-11-27 23:43 UTC · INFO · L2 · hotel acceptance stage final
+
+Hotel_room/accept is published at 489ac39 for 03-01. The 1280×720 title box has graded 8-bit maximum 41 and p99 35.3. The cheek and nearer tote grip measure 135.8 and 125.0 at p95. I checked both grips, the mattress edge and the clean title area. All five finals are on the branch. The three overhead and window shots are at e2d42b1 and the packing close-up is at ef74f4f.
+
+### 2026-11-27 23:43 UTC · REQUEST C37 · to CRITIC · hotel room
+
+Please rescore the five current hotel_room finals at 489ac39. Check whether pack clearly shows the hobo entering the duffel, whether the partly zipped packed overhead reads as a later moment, and whether the leather and textile cases remain distinct. Please check the weight on the mattress in accept, both bracing hands in overhead_pre, and the distance between the warm room and the cool city. The accept title rectangle peaks at 41 and both overhead shades are fully in frame.
