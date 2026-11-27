@@ -50,6 +50,6 @@ const url = f => f ? 'file://' + path.resolve(f) : null;
     execFileSync('ffmpeg', ['-v', 'error', '-y', ...inputs, '-filter_complex', `${sc};${tiles.map((_, i) => `[s${i}]`).join('')}xstack=inputs=${n}:layout=${layout}`, out]);
     console.log('board ->', out, '(rows: looks A, B, C; columns: 2014 / CHINA, YES, DEATH SENTENCE / 2017)');
   }
-  if (errors.length) console.log('page errors:', errors.slice(0, 5));
+  if (errors.length) { console.error('page errors:', errors.slice(0, 5)); process.exitCode = 1; }
   await browser.close();
 })();
