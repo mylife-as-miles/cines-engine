@@ -1,0 +1,52 @@
+{
+  "camera": "pair",
+  "resolution": [
+    2560,
+    1440
+  ],
+  "origin": "top-left pixel edge",
+  "pages": [
+    {
+      "sheet": "document_left",
+      "corners": {
+        "top_left": [
+          483.429,
+          199.865
+        ],
+        "top_right": [
+          1253.706,
+          205.035
+        ],
+        "bottom_right": [
+          1238.184,
+          1207.995
+        ],
+        "bottom_left": [
+          334.347,
+          1200.876
+        ]
+      }
+    },
+    {
+      "sheet": "document_right",
+      "corners": {
+        "top_left": [
+          1354.098,
+          235.769
+        ],
+        "top_right": [
+          2133.456,
+          276.428
+        ],
+        "bottom_right": [
+          2197.583,
+          1303.933
+        ],
+        "bottom_left": [
+          1281.908,
+          1247.803
+        ]
+      }
+    }
+  ]
+}
