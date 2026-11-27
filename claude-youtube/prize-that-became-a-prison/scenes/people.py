@@ -60,6 +60,9 @@ def _sculpt_hair(holder):
         smooth = hair.modifiers.new("soft scalp silhouette", "SUBSURF")
         smooth.levels = smooth.render_levels = 2
         hair.modifiers.move(len(hair.modifiers) - 1, 0)
+        # Pose and contact solves evaluate the viewport mesh repeatedly. The
+        # outer smooth pass needs its finest subdivision only at render time.
+        hair.modifiers["smooth"].levels = 1
         hair.modifiers["hug"].offset = 0.0005
         hair.modifiers["thickness"].thickness = 0.002
     bun = bpy.data.objects.get(holder["body"] + "_bun")
