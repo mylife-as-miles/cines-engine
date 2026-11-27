@@ -475,8 +475,23 @@ def apex(ob):
 
 # ---------------------------------------------------------------- tissue
 
-def tissue_sheet(name, loc, rot, w, h, surfaces, seed, folds=26, angle=34, flatten=0.5, keep=0.6, scrunch=1.0):
+def tissue_sheet(name, loc, rot, w, h, surfaces, seed, folds=26, angle=34, flatten=0.5, keep=0.6, scrunch=1.0,
+                 rolled_edge=False):
     ob = crumple(name, w, h, M["tissue"], seed=seed, folds=folds, angle=angle, flatten=flatten, scrunch=scrunch)
+    if rolled_edge:
+        # The loose edge of a sheet of gift tissue turns back on itself.
+        # Preserve its length around the bend and beyond the rolled lip.
+        for v in ob.data.vertices:
+            radius = 0.014 + 0.004 * math.cos(27.0 * v.co.x)
+            fold_y = 0.039 + 0.16 * v.co.x + 0.012 * math.sin(36.0 * v.co.x + 0.7)
+            distance = v.co.y - fold_y
+            if distance <= 0:
+                continue
+            arc = min(distance / radius, 2.65)
+            tail = distance - radius * arc
+            v.co.y = fold_y + radius * math.sin(arc) + tail * math.cos(arc)
+            v.co.z += radius * (1.0 - math.cos(arc)) + tail * math.sin(arc)
+        ob.data.update()
     ob.location, ob.rotation_euler = loc, (0, 0, rot)
     if surfaces:
         drape_on(ob, surfaces, keep=keep)
