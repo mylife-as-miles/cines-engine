@@ -93,7 +93,7 @@ CAMERAS = {
                  shift_y=0.0, haze=0.0025, exposure=-1.5, glass_refl=0.02),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
-    "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.83, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
+    "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.83, 1.39), lens=40, focus="fx_bags", fstop=8.0, beat="reflect",
                    shift_y=0.0, haze=0.0, exposure=-1.15, only=("Dawn",), glass_refl=0.017, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
