@@ -194,8 +194,10 @@ def build_cast():
         h = people.officer("TowerOfficer", 2)
         rigged.pose_figure(h, {"head": (6, 0), "l_arm": (3, 6, 8), "r_arm": (3, 6, 8)})
         tx, ty = st.TOWER
-        h.location = (tx - 1.25, ty + 0.35, st.OBJ["cabin_floor"])
-        h.rotation_euler = (0.0, 0.0, -math.pi / 2)
+        # This mark clears the deck from the low camera and puts the
+        # watcher behind the north pane and its dim ceiling return.
+        h.location = (tx - 0.48, ty + 1.68, st.OBJ["cabin_floor"])
+        h.rotation_euler.z = math.radians(197.0)
         _STATE["cast"].append(h)
         print("PRISON cast: the tower officer", flush=True)
     except Exception as e:  # the set stands without him
