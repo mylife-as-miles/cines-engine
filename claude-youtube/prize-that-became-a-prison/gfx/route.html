@@ -20,12 +20,14 @@ const W = 1920, H = 1080, K = 8.7, XF = 0.85, LON_C = 170, LAT_C = 18;
 const U = lon => (lon < -30 ? lon + 360 : lon);
 const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) * K];
 const PU = (lat, lon) => P(lat, U(lon));
-// The mainland is a region (no city is named for the days of travel); the departure is an unnamed point by Guangzhou,
-// where the sourced Baiyun Leather Market is, and both disputed onward flights leave from it.
-const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], depart: [23.6, 112.9], ausCoast: [-12.6, 131.0], australia: [-25.57, 134.36], qingdao: [36.07, 120.38], interior: [33.0, 101.0] };
+// The mainland is a region (no city is named for the days of travel). The sources name no departure airport ("the
+// airport in China, on her way to Australia"), so the two disputed onward flights leave one unmarked point inside the
+// lit mainland's south (27 N, 111 E): no dot, no ring, no name. The Australia line stops where it always has, in the sea
+// north of Timor (ausStop).
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], depart: [27.0, 111.0], departA: [26.3, 110.6], departQ: [28.1, 112.3], ausStop: [-7.343, 128.410], australia: [-25.57, 134.36], qingdao: [36.07, 120.38], interior: [33.0, 101.0] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
-const INK = '#ece8e1';
+const INK = '#ece8e1', LAND_C = '#1f2833', LIT = 0.12;   // land, and the white a lit region lays over it
 function gc(a, b, n = 200) {
   const r = Math.PI / 180, v = ([la, lo]) => [Math.cos(la * r) * Math.cos(lo * r), Math.cos(la * r) * Math.sin(lo * r), Math.sin(la * r)];
   const p1 = v(a), p2 = v(b), om = Math.acos(p1.reduce((s, x, i) => s + x * p2[i], 0)), out = [];
@@ -33,46 +35,81 @@ function gc(a, b, n = 200) {
     const q = p1.map((x, k) => s1 * x + s2 * p2[k]); out.push(PU(Math.asin(q[2]) / r, Math.atan2(q[1], q[0]) / r)); }
   return out;
 }
-function bend(a, b, lift, n = 80) {
-  const [x1, y1] = PU(...a), [x2, y2] = PU(...b), mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - lift, out = [];
+function bow(a, b, k, n = 90) {        // one gentle arc: a quadratic whose middle sits k of the chord right of travel (k < 0: left)
+  const [x1, y1] = PU(...a), [x2, y2] = PU(...b), mx = (x1 + x2) / 2 - 2 * k * (y2 - y1), my = (y1 + y2) / 2 + 2 * k * (x2 - x1), out = [];
   for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; out.push([u * u * x1 + 2 * u * t * mx + t * t * x2, u * u * y1 + 2 * u * t * my + t * t * y2]); }
   return out;
 }
 function path(ctx, pts, f) { const n = Math.max(1, Math.floor((pts.length - 1) * f)); ctx.beginPath(); ctx.moveTo(...pts[0]); for (let i = 1; i <= n; i++) ctx.lineTo(...pts[i]); return pts[n]; }
-let ZOOM = 1;                              // the camera's current zoom: labels are sized in screen pixels, not on the map
-function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2, leader = null, out = 0) {
-  size /= ZOOM; const leave = out ? 1 - sm((t - out) / 0.35) : 1; if (leave <= 0) return;
-  // a calm word-by-word reveal; a soft dark halo keeps the thin serif legible over coastlines; a leader line (if given,
-  // [x, y] of the place) draws first so the label always points at what it names
-  const words = text.split(' '); ctx.save(); ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
-  ctx.font = `${w} ${size}px "Cormorant"`; ctx.letterSpacing = `${(size * track).toFixed(1)}px`;
+// ZOOM is the camera's current zoom: labels, outlines and the Qingdao marker are sized in screen pixels, not on the map.
+// Each frame is drawn twice: GROUND (the map's fills alone: sea, land, lit regions) to a hidden canvas, then the full
+// map. Labels are queued and drawn last; under each, the ground is painted back through the letters' shape widened by
+// HALO px, so no coastline, border, graticule or route ever crosses a letter.
+let ZOOM = 1, GROUND = false, LABELS = [];
+const HALO = 7;
+function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2, out = 0) {
+  if (GROUND) return; size /= ZOOM; const leave = out ? 1 - sm((t - out) / 0.35) : 1; if (leave <= 0) return;
+  // a calm word-by-word reveal: each word fades in and rises a third of its size into place
+  const font = `${w} ${size}px "Cormorant"`, spacing = `${(size * track).toFixed(1)}px`, runs = [];
+  ctx.save(); ctx.font = font; ctx.letterSpacing = spacing;
   const total = ctx.measureText(text).width - size * track; let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
-  if (leader && t > t0) { const f = sm((t - t0) / 0.4); ctx.save(); ctx.strokeStyle = 'rgba(236,232,225,0.45)'; ctx.lineWidth = 1;
-    const ex = align === 'right' ? x + 10 : x - 10; ctx.beginPath(); ctx.moveTo(leader[0], leader[1]);
-    ctx.lineTo(leader[0] + (ex - leader[0]) * f, leader[1] + (y - leader[1]) * f); ctx.stroke(); ctx.restore(); }
-  ctx.shadowColor = 'rgba(3,5,9,0.85)'; ctx.shadowBlur = size * 0.35;
-  words.forEach((wd, i) => {
+  text.split(' ').forEach((wd, i) => {
     const p = t - (t0 + i * 0.19), a = cl(p / 0.47), r = 1 - sm(p / 0.37);
-    if (p > 0) { ctx.globalAlpha = a * leave; ctx.fillText(wd, cx, y + r * size * 0.33); }
+    if (p > 0) runs.push([wd, cx, y + r * size * 0.33, a * leave]);
     cx += ctx.measureText(wd + ' ').width;
   });
-  ctx.restore();
+  ctx.restore(); if (runs.length) LABELS.push({ T: ctx.getTransform(), zoom: ZOOM, font, spacing, size, runs });
+}
+const MASK = document.createElement('canvas'), GND = document.createElement('canvas');
+MASK.width = GND.width = W; MASK.height = GND.height = H;
+function drawLabels(ctx) {
+  const m = MASK.getContext('2d');
+  for (const L of LABELS) {
+    m.setTransform(1, 0, 0, 1, 0, 0); m.globalCompositeOperation = 'source-over'; m.globalAlpha = 1; m.clearRect(0, 0, W, H);
+    m.setTransform(L.T); m.font = L.font; m.letterSpacing = L.spacing; m.textBaseline = 'middle';
+    m.lineJoin = 'round'; m.lineWidth = HALO / L.zoom; m.strokeStyle = m.fillStyle = '#000';
+    for (const [wd, x, y, a] of L.runs) { m.globalAlpha = a; m.strokeText(wd, x, y); m.fillText(wd, x, y); }
+    m.setTransform(1, 0, 0, 1, 0, 0); m.globalAlpha = 1; m.globalCompositeOperation = 'source-in'; m.drawImage(GND, 0, 0);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(MASK, 0, 0);
+    // then the letters, with the soft dark halo that keeps the thin serif legible
+    ctx.setTransform(L.T); ctx.font = L.font; ctx.letterSpacing = L.spacing; ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
+    ctx.shadowColor = 'rgba(3,5,9,0.85)'; ctx.shadowBlur = L.size * 0.35;
+    for (const [wd, x, y, a] of L.runs) { ctx.globalAlpha = a; ctx.fillText(wd, x, y); }
+    ctx.restore();
+  }
 }
 function dot(ctx, x, y, a, ring, hollow = false) {
-  if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK; ctx.strokeStyle = INK; ctx.lineWidth = 2;
+  if (GROUND || a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK; ctx.strokeStyle = INK; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.arc(x, y, hollow ? 7 : 5, 0, 7); hollow ? ctx.stroke() : ctx.fill();
   ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, hollow ? 13 : 12, 0, 7); ctx.stroke();
   if (ring > 0 && ring < 1) { ctx.strokeStyle = `rgba(236,232,225,${0.45 * (1 - ring)})`; ctx.beginPath(); ctx.arc(x, y, 12 + 26 * ring, 0, 7); ctx.stroke(); }
   ctx.restore();
 }
+const QM = { disc: 15.5, outer: 14, inner: 8, dot: 3 };   // the Qingdao marker, in screen px
+function marker(ctx, x, y, a, lit) {   // a named city on the lit land: a ring with a 6 px solid centre, on a disc of the lit land's own colour
+  if (GROUND || a <= 0) return; const s = 1 / ZOOM; ctx.save(); ctx.globalAlpha = a;
+  ctx.beginPath(); ctx.arc(x, y, QM.disc * s, 0, 7); ctx.fillStyle = LAND_C; ctx.fill(); ctx.fillStyle = `rgba(236,232,225,${LIT * lit})`; ctx.fill();
+  ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5 * s; ctx.beginPath(); ctx.arc(x, y, QM.outer * s, 0, 7); ctx.stroke();
+  ctx.strokeStyle = INK; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(x, y, QM.inner * s, 0, 7); ctx.stroke();
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(x, y, QM.dot * s, 0, 7); ctx.fill(); ctx.restore();
+}
+// Land and regions are built once as paths in map units (Natural Earth 1:50m, see tools/prep_land.py) and stroked at a
+// constant width on screen with round joins, so the coast never thickens or grows spikes as the camera pushes in.
+let LANDP = null; const REGP = {};
+function buildPaths() {
+  const add = (p, r, close) => { for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? p.lineTo(x, y) : p.moveTo(x, y); } if (close) p.closePath(); };
+  LANDP = new Path2D(); for (const r of window.LAND.rings) add(LANDP, r, true);
+  for (const k in window.REG) { const fill = new Path2D(), edge = new Path2D(); add(fill, window.REG[k].ring, true);
+    for (const b of window.REG[k].border || []) add(edge, b, false); REGP[k] = { fill, edge }; }
+}
 function base(ctx) {
   const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75);
   g.addColorStop(0, '#0d131b'); g.addColorStop(1, '#03050a'); ctx.fillStyle = g; ctx.fillRect(-W, -H, 3 * W, 3 * H);
-  ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1;
-  for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
-  for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); }
-  ctx.fillStyle = '#1f2833'; ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1;
-  for (const r of window.LAND.rings) { ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  if (!GROUND) { ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1 / ZOOM;
+    for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
+    for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); } }
+  ctx.fillStyle = LAND_C; ctx.fill(LANDP); if (GROUND) return;
+  ctx.save(); ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1.1 / ZOOM; ctx.lineJoin = 'round'; ctx.stroke(LANDP); ctx.restore();
 }
 function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre moving toward the route's goal
   const p = sm(t / dur), z = z0 * Math.pow(z1 / z0, p) * (1 + 0.006 * t);
@@ -86,43 +123,49 @@ function camKeys(ctx, t, keys) {                      // a camera through keyfra
   ZOOM = z; ctx.setTransform(z, 0, 0, z, W / 2 - z * cx, H / 2 - z * cy);
 }
 function solid(ctx, pts, f, a = 1) {
-  if (f <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
+  if (GROUND || f <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
   if (f < 1) {                                       // the travelling head: a small bright point with a soft halo
     const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 22); g.addColorStop(0, 'rgba(236,232,225,0.55)'); g.addColorStop(1, 'rgba(236,232,225,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 22, 0, 7); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(h[0], h[1], 3.5, 0, 7); ctx.fill();
   }
   ctx.restore();
 }
-function dashed(ctx, pts, f, a = 1) {   // the arc's weight: 4 px, near white, a dark under-stroke and a soft glow
-  if (f <= 0) return; ctx.save(); ctx.lineCap = 'round';
-  ctx.setLineDash([12, 8]); ctx.strokeStyle = 'rgba(3,5,9,0.7)'; ctx.lineWidth = 7; path(ctx, pts, f); ctx.stroke();
-  ctx.shadowColor = 'rgba(236,232,225,0.3)'; ctx.shadowBlur = 8; ctx.strokeStyle = `rgba(236,232,225,${0.95 * a})`; ctx.lineWidth = 4;
+function dashed(ctx, pts, f, a = 1, fade = 0) {   // the arc's weight: 4 px on screen, near white, a dark under-stroke and a soft glow
+  // `fade`: the first part of the line (a fraction of it) rises from nothing, so a line can leave a region with no
+  // marked start. Widths are screen pixels (divided by ZOOM); the dashes stay on the map, so they never crawl in a zoom.
+  if (GROUND || f <= 0) return; ctx.save(); ctx.lineCap = 'round';
+  const fill = (rgb, al) => { if (!fade) return `rgba(${rgb},${al})`; const k = Math.max(1, Math.floor((pts.length - 1) * fade));
+    const g = ctx.createLinearGradient(...pts[0], ...pts[k]); g.addColorStop(0, `rgba(${rgb},0)`); g.addColorStop(1, `rgba(${rgb},${al})`); return g; };
+  ctx.setLineDash([12, 8]); ctx.strokeStyle = fill('3,5,9', 0.7); ctx.lineWidth = 7 / ZOOM; path(ctx, pts, f); ctx.stroke();
+  ctx.shadowColor = 'rgba(236,232,225,0.3)'; ctx.shadowBlur = 8; ctx.strokeStyle = fill('236,232,225', 0.95 * a); ctx.lineWidth = 4 / ZOOM;
   const h = path(ctx, pts, f); ctx.stroke(); ctx.setLineDash([]);
   if (f < 1) { const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 20); g.addColorStop(0, 'rgba(236,232,225,0.6)'); g.addColorStop(1, 'rgba(236,232,225,0)');
-    ctx.shadowBlur = 0; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 20, 0, 7); ctx.fill(); }
+    // the head's glow grows in as the line leaves, so it never sits on the (unmarked) start point as a marker
+    ctx.shadowBlur = 0; ctx.globalAlpha = sm(f / 0.06); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 20, 0, 7); ctx.fill(); }
   ctx.restore();
 }
 function region(ctx, a, key = 'CHN') { // a country's own outline, lit (mainland China for the days of travel; Australia)
-  if (a <= 0) return; const r = window.REG[key].ring; ctx.save(); ctx.globalAlpha = a;
-  ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath();
-  ctx.fillStyle = 'rgba(236,232,225,0.12)'; ctx.fill(); ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); }
+  // the fill is clipped to the land, so it ends exactly on the coastline; only the land frontier is stroked (the coast is
+  // already drawn once, by base()). Australia's ring is all coast, so it has no stroke of its own.
+  if (a <= 0) return; const R = REGP[key]; ctx.save(); ctx.globalAlpha = a;
+  ctx.save(); ctx.clip(LANDP); ctx.fillStyle = `rgba(236,232,225,${LIT})`; ctx.fill(R.fill); ctx.restore();
+  if (!GROUND) { ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.4 / ZOOM; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke(R.edge); }
+  ctx.restore(); }
 function arrowEnd(ctx, pts, f, a = 0.75) {   // a small open arrowhead where a dashed line stops (no ring, no city)
-  if (f < 0.98) return; const n = pts.length - 1, [x1, y1] = pts[n], [x0, y0] = pts[n - 3], ang = Math.atan2(y1 - y0, x1 - x0);
-  ctx.save(); ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.beginPath();
-  ctx.moveTo(x1 - 14 * Math.cos(ang - 0.45), y1 - 14 * Math.sin(ang - 0.45)); ctx.lineTo(x1, y1);
-  ctx.lineTo(x1 - 14 * Math.cos(ang + 0.45), y1 - 14 * Math.sin(ang + 0.45)); ctx.stroke(); ctx.restore(); }
+  if (GROUND || f < 0.98) return; const n = pts.length - 1, [x1, y1] = pts[n], [x0, y0] = pts[n - 3], ang = Math.atan2(y1 - y0, x1 - x0);
+  const r = 14 / ZOOM; ctx.save(); ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2 / ZOOM; ctx.lineCap = 'round'; ctx.beginPath();
+  ctx.moveTo(x1 - r * Math.cos(ang - 0.45), y1 - r * Math.sin(ang - 0.45)); ctx.lineTo(x1, y1);
+  ctx.lineTo(x1 - r * Math.cos(ang + 0.45), y1 - r * Math.sin(ang + 0.45)); ctx.stroke(); ctx.restore(); }
 
 const leg1 = () => gc(CITY.chicago, CITY.hongkong);
-// Both disputed onward flights leave one origin point by Guangzhou. The Qingdao line leaves north over the lit mainland
-// (a domestic flight) and stops short of the city's ring; the Australia line leaves south and stops in the Timor Sea.
-// Neither arrives: both end in the same open arrowhead.
-function cubic(a, b, c, d, n = 90) { const out = []; for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t;
-  out.push([0, 1].map(k => u * u * u * a[k] + 3 * u * u * t * b[k] + 3 * u * t * t * c[k] + t * t * t * d[k])); } return out; }
-const legA = () => gc(CITY.depart, CITY.ausCoast);
-const legQ = () => { const o = PU(...CITY.depart), q = PU(...CITY.qingdao), L = cubic(o, [o[0] - 12, o[1] - 105], [q[0] - 95, q[1] + 55], q);
-  let k = L.length - 1; while (k > 0 && Math.hypot(L[k][0] - q[0], L[k][1] - q[1]) < 22) k--; return L.slice(0, k + 1); };
-function origin(ctx, a) { if (a <= 0) return; const [x, y] = PU(...CITY.depart); ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK;
-  ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill(); ctx.restore(); }   // the unnamed origin: a plain point, no ring, no name
+// Both disputed onward flights leave from inside the lit mainland, each from its own unmarked point a little apart
+// (the sources name no departure airport), and each line's first tenth rises out of the land, so neither start reads as
+// a pin and the two never meet as one bent line or fork at sea. Each is one gentle arc bowing east. The Australia line
+// runs south and stops in the sea north of Timor; the Qingdao line (a domestic flight) stays over the lit land and stops
+// just short of the city's marker. Neither arrives: both end in the same open arrowhead, with the same dashes.
+const legA = () => bow(CITY.departA, CITY.ausStop, -0.06, 200);
+const legQ = () => { const L = bow(CITY.departQ, CITY.qingdao, 0.16), q = L[L.length - 1], gap = (QM.disc + 6) / ZOOM;
+  let k = L.length - 1; while (k > 0 && Math.hypot(L[k][0] - q[0], L[k][1] - q[1]) < gap) k--; return L.slice(0, k + 1); };
 // One label system: place names at 48 px semibold (cap height about 30 px), the day counts at 68 px; labels sit on open
 // water or inside the lit land, never across another country, with no leader lines; every named point has a dot.
 const NAME = 48, DAYS = 68;
@@ -145,22 +188,20 @@ const MODES = {
     solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
     region(ctx, span(t, 0.4, 1.6));
     const [lx, ly] = PU(38.2, 99.5);         // inside the lit mainland where it is widest (about 37 N), no leader; it leaves before the camera pulls back
-    label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 600, 0.2, null, 4.2);
-    label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 500, 0.0, null, 4.25);
-    origin(ctx, span(t, 4.4, 4.7));
-    const A = legA(), As = A.slice(0, Math.floor(A.length * 0.86)); dashed(ctx, As, span(t, 4.6, 6.2)); arrowEnd(ctx, As, span(t, 4.6, 6.2));
+    label(ctx, 'MAINLAND CHINA', lx, ly, NAME, t, 1.7, 'center', 600, 0.2, 4.2);
+    label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 74 / ZOOM, DAYS, t, 2.2, 'center', 500, 0.0, 4.25);
+    const A = legA(); dashed(ctx, A, span(t, 4.6, 6.2), 1, 0.1); arrowEnd(ctx, A, span(t, 4.6, 6.2));   // rises out of the lit land, unmarked
     region(ctx, 0.8 * span(t, 6.0, 6.7), 'AUS'); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 6.5, 'center', 600);
   },
   split(ctx, t) {
     camera(ctx, t, [W * 0.40, H * 0.56], [W * 0.40, H * 0.57], 1.12, 1.16, 6);
     base(ctx); const [ax, ay] = PU(...CITY.australia), [qx, qy] = PU(...CITY.qingdao);
     region(ctx, 0.7); region(ctx, 0.55, 'AUS');
-    const A = legA(), Q = legQ(), As = A.slice(0, Math.floor(A.length * 0.86));   // the Australia line stops in the sea
-    origin(ctx, 1);
-    dashed(ctx, As, span(t, 0.4, 2.4)); arrowEnd(ctx, As, span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'center', 600);
-    dashed(ctx, Q, span(t, 1.0, 2.4)); arrowEnd(ctx, Q, span(t, 1.0, 2.4));
-    dot(ctx, qx, qy, sm((t - 2.3) / 0.3), 1, true);                    // Qingdao, named in the sources: a ring the line stops short of
-    label(ctx, 'QINGDAO', qx - 14, qy - 40, NAME, t, 2.4, 'right', 600);   // above and left of the ring, on the lit mainland, never in line with it
+    const A = legA(), Q = legQ();                                        // two unmarked starts; the Australia line stops in the sea
+    dashed(ctx, A, span(t, 0.4, 2.4), 1, 0.1); arrowEnd(ctx, A, span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', ax, ay, NAME, t, 2.4, 'center', 600);
+    dashed(ctx, Q, span(t, 1.0, 2.4), 1, 0.16); arrowEnd(ctx, Q, span(t, 1.0, 2.4));
+    marker(ctx, qx, qy, sm((t - 2.3) / 0.3), 0.7);                       // Qingdao, named in the sources: the line stops short of it
+    label(ctx, 'QINGDAO', qx - 14, qy - 40, NAME, t, 2.4, 'right', 600);   // above and left of the marker, on the lit mainland, never in line with it
   },
 };
 function grain(ctx, t) {                  // fresh grain each frame (sigma about 1.2 luma), so a map is never a dead still
@@ -169,7 +210,12 @@ function grain(ctx, t) {                  // fresh grain each frame (sigma about
   for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.9; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
   ctx.putImageData(img, 0, 0);
 }
-window.draw = (mode, t) => { const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t); ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t); };
-fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/regions.json'); }).then(r => r.json()).then(d => { window.REG = d.regions; return document.fonts.load('500 26px "Cormorant"'); })
+window.draw = (mode, t) => {
+  const ctx = document.getElementById('c').getContext('2d'), g = GND.getContext('2d');
+  GROUND = true; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); MODES[mode](g, t);
+  GROUND = false; LABELS = []; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t);
+  drawLabels(ctx); ctx.setTransform(1, 0, 0, 1, 0, 0); grain(ctx, t);
+};
+fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/regions.json'); }).then(r => r.json()).then(d => { window.REG = d.regions; buildPaths(); return document.fonts.load('500 26px "Cormorant"'); })
   .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
 </script></body></html>
