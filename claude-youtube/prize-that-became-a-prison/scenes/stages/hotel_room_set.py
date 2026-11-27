@@ -147,41 +147,6 @@ def soft_box(name, size, loc, m, bevel, cuts=(10, 10, 4), rot=(0, 0, 0), disp=No
     return ob
 
 
-def contact_shadow(name, size, loc, strength=0.5, rot=0.0):
-    """A soft dark falloff disc on the floor or bedding under an object (ambient-occlusion stand-in, matt)."""
-    m = bpy.data.materials.new(name + "_m")
-    m.use_nodes = True
-    nt = m.node_tree
-    nt.nodes.remove(nt.nodes["Principled BSDF"])
-    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
-    df = nt.nodes.new("ShaderNodeBsdfDiffuse")
-    df.inputs["Color"].default_value = (0.0, 0.0, 0.0, 1)
-    tc = nt.nodes.new("ShaderNodeTexCoord")
-    gr = nt.nodes.new("ShaderNodeTexGradient")
-    gr.gradient_type = "QUADRATIC_SPHERE"
-    nt.links.new(tc.outputs["Object"], gr.inputs["Vector"])
-    mr = nt.nodes.new("ShaderNodeMapRange")
-    mr.inputs["To Max"].default_value = strength
-    nt.links.new(gr.outputs["Fac"], mr.inputs["Value"])
-    mx = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(mr.outputs["Result"], mx.inputs[0])
-    nt.links.new(tr.outputs[0], mx.inputs[1])
-    nt.links.new(df.outputs[0], mx.inputs[2])
-    nt.links.new(mx.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
-    m.blend_method = "BLEND" if hasattr(m, "blend_method") else None
-    me = bpy.data.meshes.new(name)
-    bm = bmesh.new()
-    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5)
-    bm.to_mesh(me)
-    bm.free()
-    ob = _link(bpy.data.objects.new(name, me))
-    ob.location, ob.scale, ob.rotation_euler = loc, (size[0] * 2, size[1] * 2, 1), (0, 0, rot)
-    ob.data.materials.append(m)
-    ob.visible_shadow = False
-    ob.visible_glossy = False
-    return ob
-
-
 # ---------------------------------------------------------------- the room shell
 
 def shell():
