@@ -1,5 +1,5 @@
 {
-  "about": "Cold open 0:00 and chapter 3: the check-in scale's display (checkin_hall `scale`). A bar fills past the limit tick, then OVERWEIGHT; no weight is shown. The display sits 2.77-2.92 m away with focus at 2.29 m, f/2.8: 3-4 px of defocus, matched by tex_blur_px.",
+  "about": "Cold open 0:00 and chapter 3: the check-in scale's display (checkin_hall `scale`). A bar fills past the limit tick, then OVERWEIGHT; no weight is shown. The display sits 2.77-2.92 m away with focus at 2.29 m, f/2.8: 3-4 px of defocus, matched by tex_blur_px; as the push lands on the display, the focus racks onto it (tex_blur_rack), so OVERWEIGHT is crisp when it holds.",
   "plate": "frames/raw/checkin_hall/scale.png",
   "corners": "frames/raw/checkin_hall/scale.corners.json",
   "texture": {
@@ -25,5 +25,10 @@
   ],
   "tex_blur_px": 1.25,
   "duration": 5.0,
-  "length": 5.0
+  "length": 5.0,
+  "tex_blur_rack": [
+    1.6,
+    3.0,
+    0.45
+  ]
 }

@@ -84,7 +84,7 @@ function email(ctx, t) {
 // Enter the results page replaces it: the field at the top, five results, a side column and a row of related searches,
 // so the screen is full. Every result is generic, every source line greeked, nothing is a real site; the composite's
 // focus keeps all but the query soft. The search times are exposed (window.SEARCH) for the shot's camera.
-const Q = 'prize contest organizers', QSTART = 0.45, QFPS = 24, QT = [];
+const Q = 'prize contest organizers', QSTART = 0.0, QFPS = 24, QT = [];   // the first letter is on screen by frame 3
 { const R = [2, 3, 2, 2, 4, 2, 3, 2, 6, 2, 3, 2]; let t0 = QSTART;
   for (let i = 0; i < Q.length; i++) { t0 += (R[i % R.length] + (Q[i - 1] === ' ' ? 4 : 0)) / QFPS; QT.push(t0); } }
 const QDONE = QT[QT.length - 1], QENTER = QDONE + 0.45;

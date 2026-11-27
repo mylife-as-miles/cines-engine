@@ -156,10 +156,10 @@ const STRIP = document.createElement('canvas'), SLOT = document.createElement('c
 function roll(ctx, a, b, x, y, st, t, t0) {
   // An odometer. Each changing digit rolls up inside its own slot over 7 frames, eased in and out: the old digit and
   // the new one are one slot apart at full opacity, so they never sit on top of each other. The slot is the row's own
-  // height (cap height plus a hair), and its top and bottom 38 % of a cap are feathered, so a moving digit fades as it
-  // crosses the row's edge instead of being sliced or standing out above the row (at rest it is drawn whole). The two digits are drawn at whole pixels into a strip that is then moved at sub-pixel offsets, so the roll
+  // height (cap height plus a hair), its edges feathered over 12 % of a cap, and the strip carries a vertical motion
+  // blur that peaks mid-roll, so the change reads as one quick roll (5 frames), not two stacked halves. The two digits are drawn at whole pixels into a strip that is then moved at sub-pixel offsets, so the roll
   // never steps. Unchanged digits never move (tabular figures).
-  const L = look(), p = cl((t - t0) / (7 / 24)), r = p * p * (3 - 2 * p), sa = String(a), sb = String(b);
+  const L = look(), p = cl((t - t0) / (5 / 24)), r = p * p * (3 - 2 * p), sa = String(a), sb = String(b);
   font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
   const at = (s, i) => ctx.measureText(s.slice(0, i)).width, x0 = x - width(ctx, sb, st) / 2;
   font(ctx, st); const cap = Math.ceil(ctx.measureText('0').actualBoundingBoxAscent), lead = Math.ceil(0.08 * cap), h = cap + 2 * lead, pad = Math.ceil(0.12 * st.size);
@@ -171,9 +171,10 @@ function roll(ctx, a, b, x, y, st, t, t0) {
     STRIP.width = w; STRIP.height = 2 * h; const g = STRIP.getContext('2d'); font(g, st); g.fillStyle = L.ink; g.textBaseline = 'alphabetic';
     g.fillText(sa[i], pad, cap + lead); g.fillText(sb[i], pad, cap + lead + h);
     SLOT.width = w; SLOT.height = h; const m = SLOT.getContext('2d');
-    m.drawImage(STRIP, 0, -h * r);
+    const v = Math.sin(Math.PI * r) * 0.035 * h;                    // a vertical motion blur, strongest mid-roll
+    m.globalAlpha = 1 / 3; for (const o of [-v, 0, v]) m.drawImage(STRIP, 0, -h * r + o); m.globalAlpha = 1;
     m.globalCompositeOperation = 'destination-in';
-    const gr = m.createLinearGradient(0, 0, 0, h); const f = 0.38 * cap / h;
+    const gr = m.createLinearGradient(0, 0, 0, h); const f = 0.12 * cap / h;
     gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(f, 'rgba(0,0,0,1)'); gr.addColorStop(1 - f, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
     m.fillStyle = gr; m.fillRect(0, 0, w, h);
     ctx.globalAlpha = 1; ctx.drawImage(SLOT, cx - pad, y - cap - lead);
@@ -189,15 +190,18 @@ function sentenceCard(ctx, t, life) {
   // A justified pair: DEATH SENTENCE fitted to the width of TWO-YEAR REPRIEVE at the secondary size (the compound kept
   // whole), the block from x 134 to about 817, clear of a figure centre or right; the date small above, first to arrive.
   // With `life`, the date and the reprieve leave letter by letter while DEATH SENTENCE changes in place.
-  const L = look(), x = 0.07 * W, q = Object.assign({}, L.sup), maxW = width(ctx, 'TWO-YEAR REPRIEVE', q);
+  // the card's secondary line is 1.12x the film's secondary size (cap about 36 px), for phone legibility; the plate under
+  // it is pushed to 1.2x against its left edge (PLATE.death_2017 / sentence_life), which carries the figure about 160 px
+  // right of the block's end
+  const L = look(), x = 0.07 * W, q = Object.assign({}, L.sup, { size: L.sup.size * 1.12 }), maxW = width(ctx, 'TWO-YEAR REPRIEVE', q);
   const big = Object.assign({}, L.big); big.size *= Math.min(1.15, maxW / width(ctx, 'DEATH SENTENCE', big));
   const y1 = 0.42 * H, y2 = y1 + big.size * 0.95, yd = y1 - big.size * 1.05;
   if (!life || t < 3.45) {
-    reveal(ctx, '2017', x, yd, L.sup, t, 0.0);
+    reveal(ctx, '2017', x, yd, q, t, 0.0);
     reveal(ctx, 'DEATH SENTENCE', x, y1, big, t, 0.3);
     reveal(ctx, 'TWO-YEAR REPRIEVE', x, y2, q, t, 0.8);
   } else {
-    changeLine(ctx, '2017', '', x, yd, L.sup, t, 3.45);
+    changeLine(ctx, '2017', '', x, yd, q, t, 3.45);
     changeLine(ctx, 'DEATH SENTENCE', 'LIFE IN PRISON', x, y1, big, t, 3.45);
     changeLine(ctx, 'TWO-YEAR REPRIEVE', '', x, y2, q, t, 3.45);
   }
@@ -214,7 +218,7 @@ const MOMENTS = {
     reveal(ctx, 'CHINA', 0.074 * W, 0.80 * H + L.sup.size * 1.25 + 34, L.sup, t, 0.35); },
   yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
     if (t < 3.0) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 0.0);
-    else land(ctx, 'YES', 0.5 * W, YES_Y + 12, L.hero, t, 3.0, { from: 1.2, scale: 1.12 }); },   // the second: larger, lower, on a tighter frame
+    else land(ctx, 'YES', 0.5 * W, YES_Y + 12, L.hero, t, 3.0, { from: 1.14, scale: 1.12 }); },   // the second: larger, lower, on a tighter frame
   yes_when: (ctx, t) => { const L = look();
     if (t < 0.9) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', 0.5 * W, YES_Y, L.hero, t, 0.9); },
   death_2017: (ctx, t) => sentenceCard(ctx, t, false),   // cold open
@@ -243,8 +247,12 @@ const MOMENTS = {
     // two centred lines, measured so the wider one stays inside 70 % of the frame width
     const st = Object.assign({}, L.big, { size: L.big.size * 1.15, track: L.big.track + 0.02 });
     const fit = Math.min(1, 0.7 * W / width(ctx, 'BECAME A PRISON', st)); st.size *= fit;
+    // the two lines land 0.3 s apart, then the block drifts 1.5 % larger through the hold, so it never sits dead
+    const d = 1 + 0.015 * sm((t - 0.6) / 4.4), cy = 0.17 * H - 8 + st.size * 0.5;
+    ctx.save(); ctx.translate(0.5 * W, cy); ctx.scale(d, d); ctx.translate(-0.5 * W, -cy);
     land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 8, st, t, 0.0, { from: 1.12 });
-    land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
+    land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.3, { from: 1.12 });
+    ctx.restore(); },
   place: (ctx, t) => { const L = look();           // the other place and date supers, on 2014 / CHINA's pattern
     // A line at the large super size (fitted to `fit` x W if given), an optional second line at the secondary size.
     // pos=ll: low left like 2014 / CHINA (the chapter title keeps the top left); pos=tc: top centre (the Hong Kong wide's
@@ -276,7 +284,7 @@ const MOMENTS = {
     const P = new URLSearchParams(location.hash.slice(1));
     const n = P.get('n') || '01', title = P.get('title') || 'The winner', right = P.get('side') === 'r', out = +(P.get('out') || 0);
     const num = L.sup, ti = { fam: L.sup.fam, w: 400, size: 100, track: 0.004, italic: true };
-    const x0 = 0.072 * W, yN = 0.14 * H, yT = yN + 112, wN = width(ctx, n, num), wT = width(ctx, title, ti);
+    const x0 = 0.072 * W, yN = 140, yT = yN + 90, wN = width(ctx, n, num), wT = width(ctx, title, ti);   // number cap top 108-110, title baseline 230
     const xr = W - x0, xN = right ? xr - wN : x0, xT = right ? xr - wT : x0;
     const leaving = out && t >= out, lu = leaving ? (t - out) : 0, env = sm(t / 0.6) * (1 - sm((lu - 0.25) / 0.4));
     // a soft shade under the block, so the type reads on a lit wall as well as a dark one; never a box
@@ -288,8 +296,8 @@ const MOMENTS = {
     font(ctx, num); const capN = ctx.measureText('0').actualBoundingBoxAscent;
     const draw = E.out(cl((t - 0.15) / 0.6)) * (1 - E.inOut(cl(lu / 0.3))), len = 96 * draw, gap = 24;
     if (len > 0.5) { ctx.save(); ctx.fillStyle = L.dim; ctx.fillRect(right ? xN - gap - len : xN + wN + gap, yN - capN / 2 - 1, len, 2); ctx.restore(); }
-    if (!leaving) { reveal(ctx, n, xN, yN, num, t, 0.0, 'left', L.dim); reveal(ctx, title, xT, yT, ti, t, 0.3); }
-    else { changeLine(ctx, title, '', xT, yT, ti, t, out); changeLine(ctx, n, '', xN, yN, num, t, out + 0.12, L.dim); }
+    if (!leaving) { reveal(ctx, n, xN, yN, num, t, 0.0, 'left', 'rgba(236,232,225,0.82)'); reveal(ctx, title, xT, yT, ti, t, 0.3); }
+    else { changeLine(ctx, title, '', xT, yT, ti, t, out); changeLine(ctx, n, '', xN, yN, num, t, out + 0.12, 'rgba(236,232,225,0.82)'); }
   },
   date_gene: (ctx, t) => { const L = look();
     const g = ctx.createRadialGradient(0.19 * W, 0.85 * H, 0, 0.19 * W, 0.85 * H, 350); g.addColorStop(0, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
@@ -302,7 +310,11 @@ const MOMENTS = {
 // spotlight narrowing. The second YES is a straight cut to a tighter frame with the light closing in on the bags.
 const PLATE = {
   yes: t => t < 3.0 ? { z: 1.0, cx: 0.5, cy: 0.5, spot: null }
-                    : { z: 1.09, cx: 0.5, cy: 0.47, spot: { r: 0.52 - 0.17 * E.out(cl((t - 3.0) / 0.9)), dark: 0.62 } },
+                    : { z: 1.09, cx: 0.5, cy: 0.445, spot: { r: 0.52 - 0.17 * E.out(cl((t - 3.0) / 0.9)), dark: 0.62 } },
+  // the sentence card's plates: in to 1.2x and held against their left edge (the clamp), so the figure sits right of
+  // the card with room
+  death_2017: t => ({ z: 1.2, cx: 0.4, cy: 0.5, spot: null }),
+  sentence_life: t => ({ z: 1.2, cx: 0.4, cy: 0.5, spot: null }),
 };
 window.plateCam = (mode, t) => (PLATE[mode] ? PLATE[mode](t) : { z: 1, cx: 0.5, cy: 0.5, spot: null });
 let bgImg = null;

@@ -123,7 +123,7 @@ class Texture:
         return self.img
 
 
-def marker_mask(page, lines, progress, seed=7):
+def marker_mask(page, lines, progress, seed=7, pad=(0.25, 0.25)):
     """Coverage 0..1 of a marker stroke over `lines`, written left to right, line after line; progress 0..1 overall."""
     m = np.zeros((page.h, page.w), np.float32)
     if progress <= 0:
@@ -137,7 +137,7 @@ def marker_mask(page, lines, progress, seed=7):
         x0 = min(b[0] for b in line); x1 = max(b[2] for b in line)
         y0 = min(b[1] for b in line); y1 = max(b[3] for b in line)
         em = y1 - y0                           # the word box: ascent to descent
-        x0 -= 0.25 * em; x1 += 0.25 * em
+        x0 -= pad[0] * em; x1 += (pad[1] if i == n - 1 else 0.25) * em   # the last line's end pad is per mark (a quote, a stop)
         base, xh = y0 + 0.77 * em, 0.42 * em   # baseline and x-height, estimated from the box
         y0, y1 = base - 1.12 * xh, base + 0.20 * xh   # a band about 1.3 x-heights tall, sitting on the line
         xe = x0 + (x1 - x0) * p
@@ -182,7 +182,7 @@ def main():
             y0 = int(min(b[1] for b in line) - 6); y1 = int(max(b[3] for b in line) + 6)
             band = ink[y0:y1]
             ink[y0:y1] = cv2.GaussianBlur(band, (0, 0), 14) * 0.85
-    marks = [(page.find(mk["phrase"]), mk["t"], mk.get("dur", 0.5)) for mk in shot.get("marks", [])]
+    marks = [(page.find(mk["phrase"]), mk["t"], mk.get("dur", 0.5), tuple(mk.get("pad_em", (0.25, 0.25)))) for mk in shot.get("marks", [])]
     yellow = np.float32(shot.get("marker_rgb", [0.97, 0.86, 0.30]))   # display-referred reflectance, linearised below
     yellow_lin = srgb_to_lin(yellow)
 
@@ -218,10 +218,10 @@ def main():
             alb = srgb_to_lin(tex.get(t)).astype(np.float32)
         else:                                 # page albedo for this frame (marker under the ink)
             mk = np.zeros((page.h, page.w), np.float32)
-            for lines, t0, d in marks:
+            for lines, t0, d, pad in marks:
                 prog = (t - t0) / (d * len(lines))
                 if prog > 0:
-                    mk = np.maximum(mk, marker_mask(page, lines, min(prog, 1.0)))
+                    mk = np.maximum(mk, marker_mask(page, lines, min(prog, 1.0), pad=pad))
             ink_lin = 1.0 - 0.93 * ink              # ink reflectance about 0.07
             alb = np.stack([ink_lin * (1 - mk + mk * yellow_lin[i]) for i in range(3)], -1)
         # pre-scale the page texture near the output scale so the warp does not alias
@@ -233,7 +233,11 @@ def main():
             alb_w = cv2.warpPerspective(small, Ht @ S, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
         else:
             alb_w = cv2.warpPerspective(alb, Ht, (W, H), flags=cv2.INTER_LINEAR, borderValue=(1, 1, 1))
-        alb_w = cv2.GaussianBlur(alb_w, (0, 0), shot.get("tex_blur_px", 0.55))   # the render's own softness (or defocus)
+        tb = shot.get("tex_blur_px", 0.55)                    # the render's own softness (or defocus)
+        tr = shot.get("tex_blur_rack")                         # a rack focus onto the texture: [t0, t1, blur at t1]
+        if tr:
+            tb = tb + (tr[2] - tb) * ease_inout((t - tr[0]) / (tr[1] - tr[0]))
+        alb_w = cv2.GaussianBlur(alb_w, (0, 0), tb)
         out = lin_to_srgb(srgb_to_lin(base) * alb_w)
         # focus band: sharp on the focus lines, softer with distance up or down the page (two fixed blur levels, or a
         # continuous depth of field with "continuous": true)

@@ -9,12 +9,20 @@
     {
       "phrase": "the luggage belonged to her, to which she responded “yes”.",
       "t": 1.0,
-      "dur": 0.55
+      "dur": 0.55,
+      "pad_em": [
+        0.25,
+        0.05
+      ]
     },
     {
       "phrase": "multiple times and each time she said “yes”",
       "t": 3.4,
-      "dur": 0.55
+      "dur": 0.55,
+      "pad_em": [
+        0.25,
+        0.55
+      ]
     }
   ],
   "focus": "the luggage belonged to her, to which she responded “yes”.",
