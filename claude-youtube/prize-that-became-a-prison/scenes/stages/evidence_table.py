@@ -98,8 +98,8 @@ CAMERAS = {
     "laptop": dict(loc=(-0.31, -0.53, TOP + 0.19), aim=(0.26, 0.22, TOP + 0.075), lens=32, focus="fx_laptop", fstop=4.0,
                    beat="ch02", show=("chair",), hide=("envelope", "highlighter"), exposure=-1.3),
     # Ch 04: the three handbags in the lamp's light, the receipt curling in front of them
-    "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_purses", fstop=4.0,
-                   beat="ch04", hide=("envelope",), exposure=-1.0),
+    "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_tote_edge", fstop=4.0,
+                   beat="ch04", hide=("envelope",), exposure=-1.0, final_res=(2560, 1440)),
     # controlled close-up: the passport lying across the two boarding passes on the folder, its cover sprung open.
     # For this insert the lamp is cheated to the passport's front left: the cover's sheen then reflects away from the
     # lens (from behind, it greyed the whole navy cover), the cream page edge facing the camera catches the light, and
@@ -688,7 +688,8 @@ def entry_stationery():
     pp.SUPPORT[:] = wood
     group("open booklet", pp.passport("travel booklet open", m["cover"], m["pages"], 0, 0, -13,
                                      open_deg=151, m_end=m["endpaper"]))
-    empty("fx_tote_edge", (0.22, -0.19, TOP + 0.248))
+    # The front lip between the handles stays sharp during the editorial push.
+    empty("fx_tote_edge", (0.219, -0.173, TOP + 0.2505))
     empty("fx_open_booklet", (-0.022, 0.002, TOP + 0.008))
     pp.SUPPORT[:] = saved
     group("entry stationery", forms)
@@ -1058,8 +1059,6 @@ def build(cast=True):
     corner = sha.matrix_world @ on_sheet.co
     sha.evaluated_get(dg).to_mesh_clear()
     empty("fx_push", tuple(corner))
-    rc = bpy.data.objects["receipt_c4"]
-    empty("fx_purses", tuple(rc.matrix_world @ Vector((0.0, 0.0, 0.004))))
     overlap_report()
     set_beat("spread")
     install_hook()
