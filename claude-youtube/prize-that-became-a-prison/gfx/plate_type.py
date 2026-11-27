@@ -1,7 +1,7 @@
 """Story type over a living plate: the raw Blender plate pushed in slowly, graded with the film's grade (its grain fresh
 every frame), then the type laid on top, clean. So no type shot is a frozen still.
 
-    <gfx python> gfx/plate_type.py <mode> <seconds> <raw plate.png> <out.mp4> [--look B] [--push 1.0 1.04] [--fps 24]
+    <gfx python> gfx/plate_type.py <mode> <seconds> <raw plate.png> <out.mp4> [--look B] [--push 1.0 1.04] [--fps 24] [--hash n=01&title=The+winner]
 
 The type comes from gfx/type.html (`node gfx/type_render.js seq <mode> ... .mov`, alpha); the plate's own move for the
 moment (the second YES's cut and closing light) from window.plateCam, multiplied by the push. The push runs in log
@@ -29,14 +29,16 @@ def main():
     ap.add_argument("mode"); ap.add_argument("seconds", type=float); ap.add_argument("plate"); ap.add_argument("out")
     ap.add_argument("--look", default="B"); ap.add_argument("--push", nargs=2, type=float, default=[1.0, 1.04])
     ap.add_argument("--fps", type=float, default=24)
+    ap.add_argument("--hash", default="", help="URL hash for moments that take parameters, e.g. n=01&title=The+winner&out=4.2")
     a = ap.parse_args()
+    hx = ["--hash", a.hash] if a.hash else []
     n = int(round(a.seconds * a.fps))
     tmp = tempfile.mkdtemp(prefix="platetype-")
     env = dict(os.environ, NODE_PATH=subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip())
     tr = os.path.join(HERE, "type_render.js")
     layer, camf = os.path.join(tmp, "type.mov"), os.path.join(tmp, "cam.json")
-    subprocess.run(["node", tr, "seq", a.mode, str(a.seconds), layer, "--look", a.look, "--fps", str(a.fps)], check=True, env=env)
-    subprocess.run(["node", tr, "cam", a.mode, str(a.seconds), camf, "--fps", str(a.fps)], check=True, env=env)
+    subprocess.run(["node", tr, "seq", a.mode, str(a.seconds), layer, "--look", a.look, "--fps", str(a.fps)] + hx, check=True, env=env)
+    subprocess.run(["node", tr, "cam", a.mode, str(a.seconds), camf, "--fps", str(a.fps)] + hx, check=True, env=env)
     cams = json.load(open(camf))
     plate = cv2.cvtColor(cv2.imread(a.plate, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
     ph, pw = plate.shape[:2]

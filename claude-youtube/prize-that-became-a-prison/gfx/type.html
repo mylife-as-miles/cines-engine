@@ -135,9 +135,9 @@ function erode(ctx, a, b, x, y, st, t, t0) {
 }
 // A left-aligned line that changes in place: the old line's letters leave right to left (one every 1.2 f, each over
 // 5 f), then the new line's letters rise left to right (one every 1.5 f, each over 20 f), out of a slot at the baseline.
-function changeLine(ctx, a, b, x, y, st, t, t0) {
+function changeLine(ctx, a, b, x, y, st, t, t0, ink) {
   const L = look(), tf = (t - t0) * 60; font(ctx, st);
-  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
+  ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink || L.ink;
   const at = (s, i) => ctx.measureText(s.slice(0, i)).width;          // kerned position of glyph i, as fillText(s) sets it
   if (a) for (let i = 0; i < a.length; i++) {
     const q = cl((tf - (a.length - 1 - i) * 1.2) / 5), op = 1 - q;
@@ -225,6 +225,30 @@ const MOMENTS = {
     const fit = Math.min(1, 0.7 * W / width(ctx, 'BECAME A PRISON', st)); st.size *= fit;
     land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 8, st, t, 0.0, { from: 1.12 });
     land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
+  chapter: (ctx, t) => { const L = look();         // each chapter's title, a small super over its establishing shot
+    // The number at the secondary size, a hairline drawing out beside it, then the title in italic sentence case (the
+    // chapters' own voice, apart from the evidential capitals). Top left, the place and date supers keep the lower
+    // left, so the two can share a wide. `side=r` mirrors it where the plate's top left is busy. With `out`, the
+    // letters leave right to left and the hairline retracts, so the shot carries on clean.
+    // URL hash: n=01&title=The+winner[&side=r][&out=4.2]
+    const P = new URLSearchParams(location.hash.slice(1));
+    const n = P.get('n') || '01', title = P.get('title') || 'The winner', right = P.get('side') === 'r', out = +(P.get('out') || 0);
+    const num = L.sup, ti = { fam: L.sup.fam, w: 400, size: 100, track: 0.004, italic: true };
+    const x0 = 0.072 * W, yN = 0.14 * H, yT = yN + 112, wN = width(ctx, n, num), wT = width(ctx, title, ti);
+    const xr = W - x0, xN = right ? xr - wN : x0, xT = right ? xr - wT : x0;
+    const leaving = out && t >= out, lu = leaving ? (t - out) : 0, env = sm(t / 0.6) * (1 - sm((lu - 0.25) / 0.4));
+    // a soft shade under the block, so the type reads on a lit wall as well as a dark one; never a box
+    const gx = right ? xr - 0.5 * Math.max(wT, 260) : x0 + 0.5 * Math.max(wT, 260), gy = yN + 40;
+    ctx.save(); ctx.translate(gx, gy); ctx.scale(1.7, 1);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 330); g.addColorStop(0, `rgba(3,5,8,${0.42 * env})`); g.addColorStop(1, 'rgba(3,5,8,0)');
+    ctx.fillStyle = g; ctx.fillRect(-400, -400, 800, 800); ctx.restore();
+    // the hairline beside the number: draws out from the number, retracts as the title leaves
+    font(ctx, num); const capN = ctx.measureText('0').actualBoundingBoxAscent;
+    const draw = E.out(cl((t - 0.15) / 0.6)) * (1 - E.inOut(cl(lu / 0.3))), len = 96 * draw, gap = 24;
+    if (len > 0.5) { ctx.save(); ctx.fillStyle = L.dim; ctx.fillRect(right ? xN - gap - len : xN + wN + gap, yN - capN / 2 - 1, len, 2); ctx.restore(); }
+    if (!leaving) { reveal(ctx, n, xN, yN, num, t, 0.0, 'left', L.dim); reveal(ctx, title, xT, yT, ti, t, 0.3); }
+    else { changeLine(ctx, title, '', xT, yT, ti, t, out); changeLine(ctx, n, '', xN, yN, num, t, out + 0.12, L.dim); }
+  },
   date_gene: (ctx, t) => { const L = look();
     const g = ctx.createRadialGradient(0.19 * W, 0.85 * H, 0, 0.19 * W, 0.85 * H, 350); g.addColorStop(0, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
