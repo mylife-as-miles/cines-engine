@@ -40,12 +40,12 @@ WORLD = 0.012     # a breath of ambient so the far shutters sit just above the g
 
 BX, BY = st.BAG_ON_COUNTER
 TOP = st.COUNTER["top"]
-BAG_TURN = 0.0
+BAG_TURN = 14.0
 
 # where the cast stands and what each faces, per beat ("buy": at the counter; "look": Dawn inside, at the wall)
 BLOCKING = {
-    "buy": {"Organiser": ((0.94, 5.10), (BX, 5.10)), "Stallholder": ((2.27, 5.11), (BX, 5.11)),
-            "Dawn": ((0.10, 5.72), (BX - 0.1, BY))},
+    "buy": {"Organiser": ((0.94, 5.10), (BX, 5.10)), "Stallholder": ((2.29, 5.18), (BX, 5.18)),
+            "Dawn": ((0.25, 4.38), (BX - 0.1, BY))},
     "look": {"Dawn": ((2.05, 6.02), (3.6, 5.6))},
 }
 FLOOR = {"Stallholder": 0.006, "Dawn": 0.0, "Organiser": 0.0}
@@ -56,17 +56,21 @@ FOCUS = {"fx_wide": (0.9, 5.2, 1.35), "fx_bag": (BX, BY - 0.08, TOP + 0.28), "fx
 CAMERAS = {
     # Ch 04: down the lane from the dark end, from the left-hand row: shut stalls both sides, wet concrete, the one
     # burning stall front at mid distance on the right, the organiser at its counter and Dawn a step back, small
-    "wide": dict(loc=(-0.78, -6.9, 1.72), aim=(0.2, 5.8, 1.5), lens=28, focus="fx_wide", fstop=8.0, beat="buy",
-                 exposure=-0.9, haze=0.008),
+    "wide": dict(loc=(-1.06, -2.80, 1.54), aim=(0.64, 5.35, 1.32), lens=28, focus="fx_wide", fstop=8.0, beat="buy",
+                 exposure=-0.55, haze=0.006),
     # Ch 04: from the lane into the stall: Dawn looking up at the wall of handbags under the battens
     "stall": dict(loc=(-0.92, 4.95, 0.9), aim=(3.6, 5.5, 1.2), lens=24, focus="fx_dawn", fstop=4.0, beat="look",
                   show=("Dawn",), exposure=-1.5),
     # Ch 04: the controlled close-up from the alley: the black extra bag passing over the counter, the stallholder's
     # hand pushing it across, the organiser's hand taking it; the wall of bags soft beyond
-    "purchase": dict(loc=(1.57, 3.45, 1.72), aim=(1.62, 4.93, 0.98), lens=42, focus="fx_bag", fstop=3.5, beat="buy",
+    "purchase": dict(loc=(2.12, 3.53, 1.92), aim=(1.50, 4.96, 1.105), lens=48, focus="fx_bag", fstop=3.2, beat="buy",
                      exposure=-1.6),
 }
-TRIMS = {"wide": {"hero_lane": 1.7, "hero_ceil_a": 1.3}, "purchase": {"hero_alley": 2.0}}
+TRIMS = {
+    "wide": {"hero_lane": 0.9, "hero_ceil_a": 3.1, "hero_ceil_b": 2.7},
+    "stall": {"counter_bag_rim": 0.0},
+    "purchase": {"hero_alley": 2.1, "stall_spill": 0.38, "counter_bag_rim": 0.18},
+}
 
 _STATE = {"holders": {}, "cast": [], "cache": {}, "bag": None}
 
@@ -86,6 +90,40 @@ def hero_bag():
                 seen.add(s.material.name)
                 mt.tune_prop(s.material, spec=0.32)
     _STATE["bag"] = h
+    # Raise the near carry loop as the organiser takes its weight. A flat ribbon gives the
+    # fingers a strap to wrap round and casts an open loop shadow across the nylon.
+    pts = []
+    faces = []
+    gx = BX - 0.155
+    for i in range(25):
+        t = i / 24
+        y = BY - 0.11 + 0.20 * t
+        z = bag_top(gx, y) + 0.088 * math.sin(math.pi * t)
+        pts.extend([(gx - 0.012, y, z), (gx + 0.012, y, z)])
+        if i:
+            k = i * 2
+            faces.append((k - 2, k - 1, k + 1, k))
+    me = bpy.data.meshes.new("raised webbing")
+    me.from_pydata(pts, [], faces)
+    loop = bpy.data.objects.new("duffel carry strap", me)
+    bpy.context.scene.collection.objects.link(loop)
+    me.materials.append(sk.mat("duffel handle webbing", (0.025, 0.026, 0.029), 0.82))
+    for poly in me.polygons:
+        poly.use_smooth = True
+    solid = loop.modifiers.new("webbing thickness", "SOLIDIFY")
+    solid.thickness = 0.003
+    # Keep the dark strap and bag edge visible against the shop in the long shot.
+    rim = sk.area_light("counter bag rim", (BX + 0.39, BY + 0.25, TOP + 0.56),
+                        (0.31, 0.25), 17, (0.81, 0.90, 1.0), spread_deg=80)
+    rim.rotation_euler = (Vector((BX, BY, TOP + 0.21)) - rim.location).to_track_quat("-Z", "Y").to_euler()
+    receivers = bpy.data.collections.new("counter bag and strap")
+    for ob in [loop, *h.children_recursive]:
+        if ob.type == "MESH":
+            receivers.objects.link(ob)
+    rim.light_linking.receiver_collection = receivers
+    st.LIGHTS["counter_bag_rim"] = rim
+    grip_y = BY - 0.01
+    _STATE["grip"] = Vector((gx, grip_y, bag_top(gx, grip_y) + 0.088))
     return h
 
 
@@ -255,10 +293,8 @@ def _hand_verts(holder, side="L"):
     return out
 
 
-def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
-    """Lay one hand palm-down on a surface at top_z (a number, or a function of (x, y) for a curved top), wrist near
-    wrist_target, fingers along fwd_dir: solve the arm on the rig's bone lengths, pronate the forearm, set the hand,
-    then measure the hand's vertices and correct the height so the palm touches (about 2 mm). From check-in."""
+def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, *, curl, contact, palm_normal):
+    """Solve a hand on the curved fabric or around the raised strap using posed mesh contacts."""
     rig = _rig(holder)
     k = side
     key = "l_arm" if k == "L" else "r_arm"
@@ -270,10 +306,9 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
     L1, L2 = pb[f"upper_arm_fk.{k}"].length, pb[f"forearm_fk.{k}"].length
     target = Vector(wrist_target)
     surf = top_z if callable(top_z) else (lambda x, y, z0=top_z: z0)
-    pitch = 0.0
     hv = None
     best = None
-    for attempt in range(3):
+    for _ in range(4):
         t_arm = arm_inv @ target
         best = None
         grid = [(f, o, e) for f in range(0, 91, 3) for o in range(-32, 34, 3) for e in range(0, 121, 3)]
@@ -290,12 +325,8 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
         rigged.pose_figure(holder, pose)
         R = rig.matrix_world.to_3x3().normalized().inverted()
         y = (R @ Vector(fwd_dir)).normalized()
-        down = R @ Vector((0, 0, -1))
+        down = R @ Vector(palm_normal)
         down = (down - y * down.dot(y)).normalized()
-        zp = down.cross(y)                     # the pitch axis, the same for either hand
-        if pitch:
-            q = Matrix.Rotation(pitch, 3, zp)
-            down, y = (q @ down).normalized(), (q @ y).normalized()
         # the .L hand's X axis is its palm side; Rigify mirrors .R, whose X then points out of the back of the hand
         x = down if k == "L" else -down
         z = x.cross(y)
@@ -321,16 +352,22 @@ def rest_hand(holder, pose, side, wrist_target, top_z, fwd_dir, curl=4.0):
             if n in pb:
                 pb[n].rotation_mode = "XYZ"
                 pb[n].rotation_euler.x = math.radians(curl)
+                if curl > 45:
+                    pb[n].scale.y = 0.72
+        if curl > 45 and f"thumb.01_master.{k}" in pb:
+            thumb = pb[f"thumb.01_master.{k}"]
+            thumb.rotation_mode = "XYZ"
+            thumb.rotation_euler.x = math.radians(29)
+            thumb.rotation_euler.z = math.radians(-12)
         bpy.context.view_layer.update()
         hv = _hand_verts(holder, k)
-        # clearance of every palm and finger vertex over the surface under it
-        gap = lambda p: p.z - surf(p.x, p.y)
-        low = min(gap(p) for p in hv["palm"] + hv["fingers"])
-        palm_low, finger_low = min(gap(p) for p in hv["palm"]), min(gap(p) for p in hv["fingers"])
-        if attempt < 2:
-            pitch = max(-0.22, min(0.22, pitch + 0.85 * math.atan2(palm_low - finger_low, 0.08)))
-            low = min(low, palm_low - 0.85 * (palm_low - finger_low) * 0.5)
-            target = target + Vector((0, 0, 0.002 - low))
+        centre = sum(hv["palm"], Vector()) / len(hv["palm"])
+        correction = contact - centre
+        if callable(top_z):
+            # The stallholder bears on the heel of the palm while the fingers lift clear.
+            palm_low = min(p.z - top_z(p.x, p.y) for p in hv["palm"])
+            correction.z = 0.002 - palm_low
+        target += correction
     gap = lambda p: p.z - surf(p.x, p.y)
     return dict(arm=pose[key], fit=best[0], palm_low=min(gap(p) for p in hv["palm"]),
                 finger_low=min(gap(p) for p in hv["fingers"]),
@@ -345,7 +382,7 @@ def build_cast():
                    tone=(0.125, 0.118, 0.1), shoes="shoes04")
     holders = {"Dawn": d, "Organiser": o, "Stallholder": s}
     for n, h in holders.items():
-        hands_stone(h)
+        hands_stone(h, value={"Organiser": 0.27, "Stallholder": 0.39}.get(n, 0.33))
         (pos, tgt) = BLOCKING["buy"][n]
         place(h, (pos[0], pos[1], 0.0), facing(pos, tgt))
         rigged.pose_figure(h, {"fingers": 30})
@@ -373,21 +410,26 @@ def pose_buy():
     rep = []
     # the stallholder: leaning a little over his counter, eyes on the organiser, his left hand flat on the bag's top
     # near his end, pushing it across (fingers toward the customer); his right arm easy at his side
-    sp = {"chest": (13, 0), "r_arm": (6, 7, 18), "fingers": 22}
+    sp = {"chest": (18, 2), "r_arm": (9, 6, 14), "fingers": 22}
     ge = aim_head_iter(s, sp, eye_centre(o) + Vector((0, 0, 0.0)))
-    wx, wy = BX + 0.35, BY - 0.04
-    hs = rest_hand(s, sp, "L", (wx, wy, bag_top(wx - 0.08, wy) + 0.05), bag_top, Vector((-1, 0.1, 0)).normalized(), curl=8.0)
+    wx, wy = BX + 0.31, BY + 0.05
+    push = Vector((wx, wy, bag_top(wx, wy) + 0.004))
+    hs = rest_hand(s, sp, "L", push + Vector((0.045, 0, 0.055)), bag_top,
+                   Vector((-0.94, 0.06, 0.35)).normalized(), curl=6,
+                   contact=push, palm_normal=(-0.38, 0, -0.92))
     rep.append(f"stallholder head {ge[1]} err {ge[0]:.1f}; l_arm {tuple(round(v) for v in hs['arm'])} fit {hs['fit'] * 1000:.0f} mm "
                f"palm {hs['palm_low'] * 1000:.0f} fingers {hs['finger_low'] * 1000:.0f} mm")
     # the organiser: eyes on the stallholder, his right hand coming onto the bag's near end, fingers curling to take it
     op = {"chest": (7, 0), "l_arm": (1, 3, 6), "fingers": 26}
     go = aim_head_iter(o, op, eye_centre(s))
-    wx, wy = BX - 0.29, BY - 0.04
-    ho = rest_hand(o, op, "R", (wx, wy, bag_top(wx + 0.08, wy) + 0.05), bag_top, Vector((1, -0.08, 0)).normalized(), curl=11.0)
+    grip = _STATE["grip"]
+    ho = rest_hand(o, op, "R", grip + Vector((-0.055, -0.02, 0.028)), grip.z,
+                   Vector((0.9, 0.12, -0.28)).normalized(), curl=66,
+                   contact=grip + Vector((0.0, -0.006, 0.018)), palm_normal=(0.05, 0.55, -0.82))
     rep.append(f"organiser head {go[1]} err {go[0]:.1f}; r_arm {tuple(round(v) for v in ho['arm'])} fit {ho['fit'] * 1000:.0f} mm "
                f"palm {ho['palm_low'] * 1000:.0f} fingers {ho['finger_low'] * 1000:.0f} mm")
     # Dawn: a step back in the lane, weight on one hip, hands loosely together in front, watching the bag change hands
-    dp = {"chest": (3, 2), "l_arm": (5, 7, 14), "r_arm": (3, 6, 10), "fingers": 38}
+    dp = {"chest": (3, 2), "l_arm": (19, -12, 48), "r_arm": (16, -11, 53), "fingers": 46}
     gd = aim_head_iter(d, dp, Vector((BX - 0.1, BY, TOP + 0.3)))
     rep.append(f"Dawn head {gd[1]} err {gd[0]:.1f}")
     print("MARKET pose buy: " + "; ".join(rep), flush=True)

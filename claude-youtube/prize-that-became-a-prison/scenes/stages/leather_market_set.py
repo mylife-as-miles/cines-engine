@@ -37,7 +37,7 @@ ALLEY = (2.55, 4.05)
 PITCH = 2.7
 HERO = (4.05, 6.75)
 COUNTER = dict(x0=1.30, x1=1.95, y0=4.15, y1=5.35, top=0.905)
-BAG_ON_COUNTER = (1.625, 4.95)          # the extra bag's footprint centre on the counter
+BAG_ON_COUNTER = (1.505, 4.95)          # the extra bag's footprint centre on the counter
 
 M = {}
 LIGHTS = {}
@@ -57,7 +57,7 @@ STATE = {
     (-1, 12.15): "dim", (-1, 20.25): "warm", (-1, -2.85): "half",
 }
 # lane battens left burning at night as security lights (watts), on stalls that are otherwise shut or dim
-SECURITY = {(-1, -5.55): 10.0, (1, -2.85): 7.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
+SECURITY = {(-1, -5.55): 42.0, (1, -2.85): 26.0, (1, 12.15): 9.0, (-1, 17.55): 8.0, (1, 9.45): 10.0, (-1, 12.15): 10.0}
 
 
 # ---------------------------------------------------------------- geometry helpers
@@ -474,7 +474,7 @@ class Palette:
         above = self.rows.get((row - 1, col)) or self.rows.get((row - 1, col + 1))
         for _ in range(50):
             m = self.r.choice(list(BAGS))
-            c = self.r.randrange(len(LEATHER))
+            c = self.r.choices(range(len(LEATHER)), weights=(9, 7, 12, 8, 4, 15, 9, 6, 6, 5, 2, 2, 4, 1, 3))[0]
             if prev and (c == prev[1] or m == prev[0] and self.r.random() < 0.6):
                 continue
             if above and c == above[1]:
@@ -500,21 +500,22 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
         ci = 0
         while True:
             model, col = pal.pick(ri, ci)
-            sc = rr.uniform(0.92, 1.08)
+            sc = rr.uniform(0.85, 1.14)
             d, apex = bag_dims(model, sc)
             w = d.x
             if s0 + w > length - 0.03:
                 break
-            c = Vector(origin) + u * (s0 + w / 2)
-            tip = c + n * 0.15 + Vector((0, 0, z))
+            c = Vector(origin) + u * (s0 + w / 2 + rr.uniform(-0.028, 0.028))
+            zh = z + rr.uniform(-0.043, 0.043)
+            tip = c + n * 0.15 + Vector((0, 0, zh))
             if hook:
                 ho = bpy.data.objects.new(f"{name}_hook{ri}_{ci}", hme)
                 bpy.context.scene.collection.objects.link(ho)
-                ho.matrix_world = Matrix.Translation(c + n * 0.025 + Vector((0, 0, z))) @ Matrix.Rotation(hyaw, 4, "Z")
+                ho.matrix_world = Matrix.Translation(c + n * 0.025 + Vector((0, 0, zh))) @ Matrix.Rotation(hyaw, 4, "Z")
             flip = math.pi if (model != "handbag-tote" and rr.random() < 0.4) else 0.0
             if model == "handbag-tote":
                 flip = math.pi        # the tote's clean face out (its dented face to the wall)
-            tilt = math.radians(rr.uniform(2, 4.5))
+            tilt = math.radians(rr.uniform(-2.5, 7.0))
             R = Matrix.Rotation(yaw + flip, 4, "Z")
             # turn about the wall-parallel axis so the bottom swings in toward the grid (hung, resting on the wall)
             Rt = Matrix.Rotation(tilt, 4, Vector((0, 0, 1)).cross(n))
@@ -522,6 +523,10 @@ def hang_wall(name, origin, u, n, length, rows, seed, tags=0.0, hook=True):
             M4 = Matrix.Translation(tip + Vector((0, 0, 0.004))) @ Rt @ Matrix.Translation(-off) @ R @ Matrix.Scale(sc, 4)
             ob = place_bag(f"{name}_bag{ri}_{ci}", model, M4, col)
             out.append(ob)
+            if hook and rr.random() < 0.32:
+                stacked = Matrix.Translation(n * 0.043 + Vector((0, 0, -0.022))) @ M4
+                extra = place_bag(f"{name}_stack{ri}_{ci}", model, stacked, (col + rr.randrange(1, len(LEATHER))) % len(LEATHER))
+                out.append(extra)
             if tme is not None and rr.random() < tags:
                 t = bpy.data.objects.new(f"{name}_tag{ri}_{ci}", tme)
                 bpy.context.scene.collection.objects.link(t)
@@ -687,6 +692,10 @@ def hero_stall():
     batten("hero_ceil_b", 3.05, y0 + 0.45, y1 - 0.45, CEIL - 0.06, "on", energy=48.0, hang_to=CEIL)
     batten("hero_alley", y0 - 0.32, 2.5, 3.5, 2.86, "on", along="X", energy=22.0, hang_to=TOPZ)
     span_box("hero_alley_eave", 2.45, xb, y0 - 0.5, y0, TOPZ - 0.04, TOPZ, M["galv_dark"])
+    spill = sk.area_light("stall doorway bounce", (1.46, 5.0, 1.93), (1.25, 1.75), 82, (0.83, 0.91, 1.0), spread_deg=95)
+    spill.rotation_euler = Vector((-1.75, -0.22, -1.68)).to_track_quat("-Z", "Y").to_euler()
+    spill.visible_camera = False
+    LIGHTS["stall_spill"] = spill
     # the floor of the stall: two crates of stock by the back corner, a stool for the stallholder
     crate_stack("hero_crates", 2.75, y0 + 0.32, 0, 2, 5)
     stool()
@@ -715,9 +724,24 @@ def counter():
     # on top, away from the bag: a roll of tape, a stack of folded black carrier bags, a bundle of blank tags
     # (in the strip of counter between the bag and the close-up's lens)
     tx, ty = x0 + 0.55, y0 + 0.33
-    sk.cyl("counter_tape", 0.048, 0.048, (tx, ty, top + 0.024), M["tape"], verts=32)
-    sk.cyl("counter_tape_hole", 0.036, 0.05, (tx, ty, top + 0.025), sk.mat("tape core", (0.3, 0.26, 0.2), 0.8), verts=24)
-    box("counter_carriers", (0.24, 0.17, 0.022), (x0 + 0.15, y0 + 0.36, top + 0.011), M["poly_bag"], bevel=0.007, rot=(0, 0, 0.15))
+    # Four concentric rims form a hollow roll. The outer and inner walls share their top and base.
+    bm = bmesh.new()
+    rims = []
+    for radius, z in ((0.048, top), (0.048, top + 0.048), (0.035, top + 0.048), (0.035, top)):
+        rims.append([bm.verts.new((tx + radius * math.cos(i * math.tau / 64),
+                                  ty + radius * math.sin(i * math.tau / 64), z)) for i in range(64)])
+    for k in range(4):
+        for i in range(64):
+            j = (i + 1) % 64
+            face = bm.faces.new((rims[k][i], rims[k][j], rims[(k + 1) % 4][j], rims[(k + 1) % 4][i]))
+            face.material_index = int(k == 2)
+    roll = mesh_obj("counter_tape", bm, M["tape"], smooth=False)
+    roll.data.materials.append(sk.mat("kraft tape core", (0.33, 0.23, 0.13), 0.87))
+    for i in range(5):
+        rot = 0.12 + 0.029 * i
+        box(f"folded_carrier_{i}", (0.22 + 0.003 * i, 0.15, 0.0018),
+                      (x0 + 0.15 + i * 0.001, y0 + 0.34 + i * 0.002, top + i * 0.0022 + 0.001),
+                      M["poly_bag"], bevel=0.0008, rot=(0, 0, rot))
     for i in range(5):
         box(f"counter_tag{i}", (0.034, 0.052, 0.0006), (x0 + 0.33 + i * 0.006, y0 + 0.42 + i * 0.004, top + 0.0004 + i * 0.0007),
             M["tag"], rot=(0, 0, 0.3 + i * 0.25))

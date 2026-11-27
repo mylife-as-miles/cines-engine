@@ -170,13 +170,13 @@ def concrete_wet(name="lane concrete"):
     o = _n(nt, "ShaderNodeNewGeometry").outputs["Position"]     # world space: the slab is in several pieces
     x, y, z = _xyz(nt, o)
     # puddle field: two octaves of noise, biased toward the lane centre (|x| small) where the drain runs
-    big = _noise(nt, o, 0.42, 3.0, 0.55, mapping=(1.0, 0.55, 1.0))
+    big = _noise(nt, o, 0.78, 2.0, 0.55, mapping=(1.0, 0.55, 1.0))
     small = _noise(nt, o, 1.6, 2.0, 0.5)
     field = _math(nt, "ADD", _math(nt, "MULTIPLY", big, 0.8), _math(nt, "MULTIPLY", small, 0.25))
     centre = _maprange(nt, _math(nt, "ABSOLUTE", x), 0.15, 1.1, 0.12, -0.06, smooth=True)
     field = _math(nt, "ADD", field, centre)
-    wet = _maprange(nt, field, 0.58, 0.64, 0.0, 1.0, smooth=True)          # standing water
-    damp = _maprange(nt, field, 0.48, 0.6, 0.0, 1.0, smooth=True)          # the darker damp rim around it
+    wet = _maprange(nt, field, 0.56, 0.61, 0.0, 1.0, smooth=True)          # standing water
+    damp = _maprange(nt, field, 0.43, 0.56, 0.0, 1.0, smooth=True)          # the darker damp rim around it
     # tone: aggregate mottling, darker grime toward the stall fronts, stains
     mott = _maprange(nt, _noise(nt, o, 7.0, 6.0, 0.62), 0.3, 0.7, 0.0, 1.0)
     base = _mix(nt, mott, (0.105, 0.104, 0.1), (0.15, 0.148, 0.142))
@@ -194,7 +194,7 @@ def concrete_wet(name="lane concrete"):
     col = _mix(nt, wet, col, (0.03, 0.031, 0.034))
     _link(nt, col, b.inputs["Base Color"])
     dry_r = _maprange(nt, _noise(nt, o, 3.0, 4.0, 0.6), 0.3, 0.7, 0.55, 0.8)
-    r = _fmix(nt, damp, dry_r, 0.3)
+    r = _fmix(nt, damp, dry_r, 0.25)
     r = _fmix(nt, wet, r, 0.035)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.5
@@ -449,6 +449,6 @@ def materials():
     M["diffuser_off"] = pbr("tube off", (0.36, 0.37, 0.38), rough=(0.25, 0.35), nscale=10.0, cvar=0.05)
     M["batten"] = pbr("batten body", (0.42, 0.43, 0.44), rough=(0.4, 0.55), nscale=12.0, cvar=0.12, grime=0.4)
     M["sky"] = glow("skylight night", (0.32, 0.42, 0.6), 0.35)
-    M["tape"] = pbr("tape roll", (0.5, 0.42, 0.3), rough=(0.3, 0.45), nscale=30.0, cvar=0.1)
+    M["tape"] = pbr("tape roll", (0.46, 0.27, 0.095), rough=(0.18, 0.27), nscale=30.0, cvar=0.1)
     M["poly_bag"] = pbr("folded carrier bags", (0.02, 0.02, 0.022), rough=(0.25, 0.4), nscale=25.0, cvar=0.3, spec=0.5)
     return M
