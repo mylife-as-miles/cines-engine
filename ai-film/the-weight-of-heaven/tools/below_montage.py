@@ -2,8 +2,9 @@
 """"Below" as a music montage, cut to the song's second verse. Editing only; nothing generated.
 
     /root/leonxlnx/earshot/.venv/bin/python tools/below_montage.py
-        ->  out/edits/Below_montage_v1.mp4 (picture, the film's matte and encode settings), out/edits/Below_montage_v1.wav,
-            out/edits/Below_montage_v1.json, out/review/Below_montage_v1.mp4 (picture and sound together)
+        ->  out/edits/Below_montage_v2.mp4 (picture, the film's matte and encode settings), out/edits/Below_montage_v2.wav,
+            out/edits/Below_montage_v2.json, out/review/Below_montage_v2.mp4 (picture and sound together)
+    BELOW_OLD_SCENES=1 ...  ->  the same as _v1, with five one-beat images from before the council (in cut v18)
 
 The author, 27 November: "after the council scene this will be a music montage to speed things like how arcane do and
 song like arcane"; on the song (audio/song/SONG_demo1.mp3, made with Gemini's music model): "The song... Now add it...
@@ -11,8 +12,10 @@ And merge all to complie let me see how it turns out then I'll judge".
 
 The song's second verse runs from its drum drop at 55.87 s to the hit at 84.11 s: 40 beats at 85 BPM (0.7059 s a beat),
 with a heavy hit every eight beats and lighter ones on beats 3, 4 and 7 after each. Every cut is on a beat; the picture
-changes on the hits. The descent (Q07) and the yard (both rounds of Q08) are cut together with five one-beat images
-from earlier in the film: what the farmer lost, and the heaven the ground has never seen. On the last hit the music
+changes on the hits. The descent (Q07) and the yard (both rounds of Q08) are cut together. The first version also
+held five one-beat images from before the council; the author, 27 November: "Remember it starts after the council
+meeting" and "Why are you adding the old scenes here...", so this one holds only what happens after the council (the
+beat list below is the first version's between beats 12 and 28; the code has both). On the last hit the music
 stops; over wind, Karst's two sentences are heard off-screen on Serath's face.
 
   beats  picture                                                              sung
@@ -55,6 +58,8 @@ LEAD = 0.020                        # the drop lands this long after the first f
 SONG0 = DROP - LEAD                 # song time at montage time 0
 SONG_GAIN_DB = -3.0
 fb = lambda k: int(round(k * BEAT * FPS))
+OLD = os.environ.get('BELOW_OLD_SCENES') == '1'      # v1 held five one-beat images from before the council; the author: "Why are you adding the old scenes here..."
+VER = 'v1' if OLD else 'v2'
 
 
 def frames(path, sel=None):
@@ -101,13 +106,7 @@ def main():
     FACE_F, FACE_M, KARST = (500, 105, 2.0), (245, 120, 2.5), (480, 105)
 
     # (first beat, last beat, frames or a function of the length)
-    plan = [
-        (0, 3, lambda n: fit(Q7[0:69], n)),                                   # the underside; the cutter comes down
-        (3, 4, lambda n: Q7[69:69 + n]),                                      # Serath at the window
-        (4, 7, lambda n: fit(Q7[169:238], n)),                                # the crossing
-        (7, 8, lambda n: Q7[250:286:2][:n]),                                  # the crow drops
-        (8, 11, lambda n: Q7[86:86 + n]),                                     # the shade falls on her
-        (11, 12, lambda n: A2[4:4 + 2 * n:2]),                                # the cutter over the wall
+    middle_v1 = [
         (12, 14, lambda n: Q7[286:286 + 2 * n:2]),                            # Sarn Vale
         (14, 15, lambda n: g(A2[70:70 + n], R2)),                             # she comes down
         (15, 16, lambda n: g(A2[110:110 + n], R2, (560, 235, 1.35))),         # white among dark backs
@@ -121,11 +120,34 @@ def main():
         (25, 26, lambda n: film(1400, n)),                                    # the gold cup
         (26, 27, lambda n: g(A1[132:132 + n], R1, (560, 330, 1.9))),          # the gold collar
         (27, 28, lambda n: g(A2[122:122 + n], R2, (540, 215, 1.6))),          # Serath among the dark backs
+    ]
+    middle_v2 = [
+        (12, 15, lambda n: fit(Q7[286:363], n)),                              # Sarn Vale
+        (15, 16, lambda n: g(A2[70:70 + n], R2)),                             # she comes down
+        (16, 19, lambda n: g(B1[0:n], R1)),                                   # the spear
+        (19, 20, lambda n: g(B1[36:36 + n], R1, (600, 365, 2.2))),            # his hand on the bowl
+        (20, 22, lambda n: g(B1[62:62 + n], R1, FACE_F)),                     # his face
+        (22, 23, lambda n: g(B1[70:70 + n], R1, FACE_M)),                     # Marl
+        (23, 24, lambda n: [push(f, 330, 130, 1.5) for f in Q7[30:30 + n]]),  # the shade they held
+        (24, 25, lambda n: g(A2[110:110 + n], R2)),                           # Serath, white among dark backs
+        (25, 26, lambda n: g(A2[118:118 + n], R2, (540, 215, 1.6))),          # nearer
+        (26, 27, lambda n: g(A1[132:132 + n], R1, (560, 330, 1.9))),          # the gold collar
+        (27, 28, lambda n: g(A2[186:186 + n], R2)),                           # her head bowed under it
+    ]
+    plan = [
+        (0, 3, lambda n: fit(Q7[0:69], n)),                                   # the underside; the cutter comes down
+        (3, 4, lambda n: Q7[69:69 + n]),                                      # Serath at the window
+        (4, 7, lambda n: fit(Q7[169:238], n)),                                # the crossing
+        (7, 8, lambda n: Q7[250:286:2][:n]),                                  # the crow drops
+        (8, 11, lambda n: Q7[86:86 + n]),                                     # the shade falls on her
+        (11, 12, lambda n: A2[4:4 + 2 * n:2]),                                # the cutter over the wall
+    ]
+    plan += (middle_v1 if OLD else middle_v2) + [
         (28, 31, lambda n: g(B1[100 - n:100], R1)),                           # they watch her pass
         (31, 32, lambda n: g(B2[89:89 + n], KA, KARST + (1.4,))),             # Karst at the door
         (32, 33, lambda n: g(B2[92:92 + n], KA, (440, 105, 2.1))),             # nearer, on the hit; the door's stone kept at the frame's left
-        (33, 34, lambda n: g(B1[70:70 + n], R1, FACE_M)),                     # Marl
-        (34, 35, lambda n: [push(f, 330, 130, 1.5) for f in Q7[10:10 + n]]),  # what they held up
+        (33, 34, lambda n: g(B1[100 - n:100], R1, FACE_M)),                   # Marl
+        (34, 35, lambda n: [push(f, 330, 130, 1.5) for f in Q7[8:8 + n]]),    # what they held up
         (35, 36, lambda n: g(A1[134:134 + n], R1)),                           # her bowed head
         (36, 37, lambda n: g(B1[80:80 + n], R1, FACE_F)),                     # the farmer
         (37, 38, lambda n: [push(f, 560, 170, 1.8) for f in Q7[190:190 + n]]),   # the Weir
@@ -145,7 +167,7 @@ def main():
     n = starts[-1] + len(shots[-1])
 
     band = int(round(W / 2.39 / 2) * 2); top = (H - band) // 2
-    pic = P('out/edits/Below_montage_v1.mp4')
+    pic = P('out/edits/Below_montage_' + VER + '.mp4')
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-an',
                             '-c:v', 'libx264', '-crf', '15', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-color_primaries', 'bt709',
                             '-color_trc', 'bt709', '-video_track_timescale', '12288', pic], stdin=subprocess.PIPE)
@@ -195,15 +217,15 @@ def main():
     t2 = voice(9.80, 10.88, starts[-1] / FPS + 0.38)                         # "We stopped carrying it." on her profile
     f = int(0.35 * SR); mix[-f:] *= np.linspace(1, 0, f)[:, None]
     peak = float(np.abs(mix).max())
-    wav = P('out/edits/Below_montage_v1.wav'); sf.write(wav, mix, SR, subtype='PCM_24')
-    out = P('out/review/Below_montage_v1.mp4')
+    wav = P('out/edits/Below_montage_' + VER + '.wav'); sf.write(wav, mix, SR, subtype='PCM_24')
+    out = P('out/review/Below_montage_' + VER + '.mp4')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', pic, '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k',
                     '-movflags', '+faststart', out], check=True)
-    rec = {'file': 'out/edits/Below_montage_v1.mp4', 'frames': n, 'seconds': round(n / FPS, 3), 'song': 'audio/song/SONG_demo1.mp3',
+    rec = {'file': 'out/edits/Below_montage_' + VER + '.mp4', 'frames': n, 'seconds': round(n / FPS, 3), 'song': 'audio/song/SONG_demo1.mp3',
            'song_time_at_start_s': round(SONG0, 3), 'beat_s': BEAT, 'song_gain_db': SONG_GAIN_DB, 'music_stops_at_frame': stop_f, 'music_stops_at_s': round(hit, 3),
            'shots_start_frames': [int(s) for s in starts], 'shots_beats': [[a, b] for a, b, _ in plan], 'voice_1_s': t1, 'voice_2_s': t2,
            'peak_dbfs': round(20 * np.log10(peak), 2)}
-    json.dump(rec, open(P('out/edits/Below_montage_v1.json'), 'w'), indent=1); print(rec)
+    json.dump(rec, open(P('out/edits/Below_montage_' + VER + '.json'), 'w'), indent=1); print(rec)
 
 
 if __name__ == '__main__':
