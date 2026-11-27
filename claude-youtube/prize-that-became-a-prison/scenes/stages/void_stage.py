@@ -66,7 +66,7 @@ SPOTS = {
     # the window's shaft and barred patch lead after the floor (round 2: the patch 1.2:1 over a floor as bright as
     # the shaft). Pushed 0.35 forward with a short cone (preview 3) its edge crossed the close shot's floor as a
     # bright arc in front and the patch still sat in the bright half; now the edge lies at the slab's front and back
-    "cell": dict(h=7.6, fwd=0.15, pool=(1.5, 1.78), watts=9500.0, blend=0.50),
+    "cell": dict(h=7.6, fwd=0.15, pool=(1.76, 1.78), watts=7695.0, blend=0.73),
     "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7600.0, blend=0.34, hot=(0.5, 0.9)),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab. The dawn
@@ -680,7 +680,7 @@ def build_cell_island():
     size = 2 * math.degrees(math.atan(ry / reach))
     main = st.spot("spot_cell", lamp, (cx, cy - cfg["fwd"], st.SLAB), cfg["watts"], size, cfg["blend"],
                    scale=(rx / ry, 1.0))
-    hot = st.hotspot(main)
+    hot = st.hotspot(main, gain=0.252)
     # the same lamp grazes the three wall tops (a fine bright line drawing the box from far off): a second cone from
     # the same point, linked to the thin caps only, so it lights nothing else
     graze = st.spot("spot_cell_graze", lamp, (cx, cy, st.TOPZ), 6000.0, 64.0, 0.08)

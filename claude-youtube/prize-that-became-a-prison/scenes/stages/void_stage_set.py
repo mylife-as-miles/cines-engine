@@ -608,11 +608,8 @@ WINDOW_PATCH = (-0.02, 0.3, SLAB)      # where the slot's light lands (cell-loca
 SPLAY = 0.24                           # the sill slopes this far down to the inner face, as thick walls' high windows do,
                                        # so a steep light gets through the slot
 WINDOW_DIST = 12.0                     # the night source: a small lamp this far behind the slot (near-parallel rays:
-WINDOW_W = 330000.0                    # the patch is the slot, barred, a fifth larger), W; at 125 kW the patch was
-                                       # only 17 % over the top-lit floor and its bars barely read; at 175 kW the
-                                       # patch was 1.2:1 over the floor and the shaft vanished (round 2): now about
-                                       # 2:1, the patch 0.22 m left of the slot so the night comes in raked about
-                                       # 8 deg and the shaft runs on a visible diagonal instead of straight at the lens
+WINDOW_W = 273900.0                    # source power with the enlarged emitter behind the barred slot
+WINDOW_RADIUS = 0.145                 # retains the shadows of each bar with a soft penumbra on the floor
 BARS = 5                               # round bars in the slot, 25 mm
 CAP = 0.0015                           # the wall-top caps (the graze light's receivers)
 
@@ -704,7 +701,7 @@ def cell(ox, oy):
     mid, d = window_ray(ox, oy)
     half_w = sw / 2 + 0.06
     size = 2 * math.degrees(math.atan(half_w / WINDOW_DIST))
-    li = spot("cell_window_light", tuple(mid - d * WINDOW_DIST), tuple(mid), WINDOW_W, size, 0.15, radius=0.05,
+    li = spot("cell_window_light", tuple(mid - d * WINDOW_DIST), tuple(mid), WINDOW_W, size, 0.15, radius=WINDOW_RADIUS,
               colour=(0.6, 0.72, 1.0), scale=(1.0, 0.42))
     objs.append(li)
     return objs, dict(caps=caps, walls=walls, slab=slab, window=li)
