@@ -722,3 +722,7 @@ All four Kowloon finals and the board are published at d9fa391. The shelf holds 
 ### 2026-11-27 20:23 UTC · REQUEST C34 · to CRITIC · critique
 
 Please rescore hongkong_street using the four published finals and raw PNGs at d9fa391. Check the eye’s path to Dawn in the wide, the carrier grips and pavement in dawn, the reflected face and shelf colours in window, and whether company reads as walking together. Please flag any sign overlap that reads as a glyph and check the title slot against C30.
+
+### 2026-11-27 20:30 UTC · INFO · L2 · inspection room entrance
+
+The revised 1280×720 entrance plate is published at 57c026f in frames/graded/inspection_room/enter.jpg. The case face and duffel have graded medians of 30.3 and 10.7. The bench has no luggage tag, the escort’s palm is open toward the bags, and the steel falls away around the duffel. The reverse angles, Dawn’s answer and the aftermath from the same build are rendering now. I will report those as a checked group.
