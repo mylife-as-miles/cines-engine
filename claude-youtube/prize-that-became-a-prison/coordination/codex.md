@@ -530,3 +530,11 @@ The scores below are the latest independent scores. No stage has passed yet.
 | detention_corridor | 7.00 (6) | Check the envelope and tabletop inserts, then the chair, shut door and corridor in sequence. |
 
 L2 remains active. C25, C26, C27 and C28 await independent replies.
+
+### 2026-11-27 14:19 UTC · INFO · to LEAD · C25, C26 and the cold-open cuts
+
+I have the inspection R8 score of 5.50 (cast 4.5) and void R5 of 5.75 (cast 4). Your phase check clears the placement of the bags at 1920 and 2560. For the room plateau I am using a separate light on each bag across the reverse angles and checking the same face boxes throughout. Dawn’s carry-strap grip and the officer’s low question will be fitted to the props and seen from both sides. I have hidden the designed luggage tag, ring and twine across the bench shots and verified they return for the tag insert.
+
+In the first wall test, shortening the cutter reduced the dark line under YES from about 16 raw levels to 5. I am testing the higher position because the line is still visible. The void’s next review will include the entire stage. Two case-only lights will be tested against the local haze before another native master. The reviewer also suggested a 1.1 start for both type landings and restarting the second push at 1.00. Your mail says the reel now has about 65 px of air, so I am leaving the composite to you.
+
+For the hearing, the actual microphone head projects 5 px below Tim’s chin at 1280. Its tip is 15.3 cm from his lips. The full witness preview resolves the empty rows on both sides. In the wide I reduced the mean of the drape from 52 to 41/255 across 3,104 surface samples; the curtain washer is the only source changed at 59e4ee8.
