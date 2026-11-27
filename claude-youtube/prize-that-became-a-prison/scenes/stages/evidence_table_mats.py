@@ -5,6 +5,8 @@ Every material works in object space (metres), so a part keeps its pattern where
 flat in their own XY plane, so x and y in object space are positions on the sheet. The node helpers are copied from
 inspection_room_mats.py so this stage stands alone.
 """
+import math
+
 import bpy  # noqa: F401  (first: bmesh and mathutils only exist once bpy is loaded)
 
 
@@ -344,7 +346,7 @@ def thermal(name, rgb=(0.62, 0.625, 0.64)):
     return m
 
 
-def photo(name, w, h, border, image_rgb=(0.12, 0.12, 0.12), paper_rgb=(0.74, 0.735, 0.71), gradient=0.0):
+def photo(name, w, h, border, image_rgb=(0.12, 0.12, 0.12), paper_rgb=(0.51, 0.50, 0.48), gradient=0.0):
     """A glossy photographic print, w x h with a white border: a clear coat over the image (the lamp lays a soft sheen
     across it) whose image area is left as an even blank tone for the picture to be composited in later (gradient
     darkens it toward one end), the border a little less glossy, a few fingerprints in the gloss, and the thin
@@ -412,11 +414,11 @@ def passport_cover(name, rgb=(0.025, 0.035, 0.07)):
     b.inputs["Base Color"].default_value = (*rgb, 1)
     # (a first pass at coat 0.3 / roughness 0.3 mirrored the lamp across the whole cover as a flat grey sheen that hid
     # the navy and the grain: the sheen is kept softer, and the grain bump strong enough to break it up)
-    r = _math(nt, "ADD", 0.6, _maprange(nt, cell, 0.0, 0.5, -0.06, 0.08))
+    r = _math(nt, "ADD", 0.7, _maprange(nt, cell, 0.0, 0.5, -0.06, 0.08))
     r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", edge, 0.15), clamp=True)
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.25
-    b.inputs["Coat Weight"].default_value = 0.2
+    b.inputs["Coat Weight"].default_value = 0.08
     b.inputs["Coat Roughness"].default_value = 0.45
     _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", cell, 1.0), _math(nt, "MULTIPLY", fine, 0.15)), 0.35, 0.0002)
     return m
@@ -432,8 +434,11 @@ def page_block(name, rgb=(0.7, 0.66, 0.58)):
     m, nt, b = _new(name)
     o = _obj(nt)
     _, _, z = _xyz(nt, o)
-    leaves = _noise(nt, o, 1.0, 2.0, 0.5, mapping=(40.0, 40.0, 3800.0))
-    col = _mix(nt, _maprange(nt, leaves, 0.3, 0.7, 0.0, 0.3), rgb, tuple(c * 0.72 for c in rgb))
+    phase = _math(nt, "MULTIPLY", z, math.tau * 2500.0)
+    phase = _math(nt, "ADD", phase, _noise(nt, o, 68.0, 2.0, 0.5))
+    leaves = _math(nt, "SINE", phase)
+    col = _mix(nt, _maprange(nt, leaves, -1.0, 1.0, 0.0, 1.0),
+               tuple(c * 0.62 for c in rgb), tuple(c * 0.82 for c in rgb))
     soil = _noise(nt, o, 90.0, 3.0, 0.6)
     col = _mix(nt, _maprange(nt, soil, 0.5, 0.75, 0.0, 0.2), col, (0.34, 0.3, 0.25))
     _link(nt, col, b.inputs["Base Color"])
@@ -533,7 +538,9 @@ def screen(name, rgb, strength, w, h):
     v = _math(nt, "DIVIDE", _math(nt, "ABSOLUTE", y), h / 2)
     d = _math(nt, "MAXIMUM", _math(nt, "POWER", u, 4.0), _math(nt, "POWER", v, 4.0))
     b.inputs["Emission Color"].default_value = (*rgb, 1)
-    _link(nt, _math(nt, "MULTIPLY", _maprange(nt, d, 0.0, 1.0, 1.0, 0.57), strength), b.inputs["Emission Strength"])
+    edge = _maprange(nt, d, 0.0, 1.0, 1.0, 0.94)
+    falloff = _maprange(nt, y, -h / 2, h / 2, 0.94, 1.02)
+    _link(nt, _math(nt, "MULTIPLY", _math(nt, "MULTIPLY", edge, falloff), strength), b.inputs["Emission Strength"])
     m.cycles.emission_sampling = "NONE"
     return m
 

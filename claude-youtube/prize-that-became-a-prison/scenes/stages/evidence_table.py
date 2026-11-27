@@ -46,12 +46,12 @@ AXIS = Vector((0.0, 0.68, -0.73)).normalized()
 # lamp marks per beat: base (x, y) on the table and turn (degrees; the light falls along (-sin t, cos t))
 # Ch 04: the lamp as near the bags as it can stand without its head entering the purses frame (checked by projecting
 # the lamp's mesh), turned toward the tote so the row falls off evenly from the burgundy bag to the cognac one
-LAMP = {"spread": (-0.48, 0.12, -111.0), "ch02": (-0.55, 0.16, -115.0), "ch04": (-0.84, -0.38, -70.0)}
-LAMP_LEVEL = {"ch02": 0.5, "ch04": 2.2}   # Ch 02 is night at the laptop: the lamp turned down so the screen leads
+LAMP = {"spread": (-0.48, 0.12, -111.0), "ch02": (-0.55, 0.16, -83.0), "ch04": (-0.84, -0.38, -70.0)}
+LAMP_LEVEL = {"ch02": 0.25, "ch04": 2.2}   # Ch 02 is night at the laptop: the lamp turned down so the screen leads
 # the reflector's cone per beat (full angle, blend): a pool with a soft edge, not a flood. Ch 04 opens it a little so
 # the cone still reaches the tote at the far end of the row (the lamp cannot come nearer without entering the frame)
 SPOT = {"spread": (72.0, 0.70), "ch02": (75.0, 0.55), "ch04": (90.0, 0.55)}
-BOUNCE = {"spread": 2.0, "ch02": 2.4, "ch04": 2.4}   # the lamp's light back off the ceiling (see room_bounce)
+BOUNCE = {"spread": 3.6, "ch02": 1.0, "ch04": 2.4}   # the lamp's light back off the ceiling (see room_bounce)
 
 # what each beat hides (groups are filled at build); groups in CAMERA_ONLY are hidden unless a camera shows them
 HIDE = {
@@ -59,7 +59,7 @@ HIDE = {
     "ch02": ("bags", "receipt_c4", "photos", "receipt", "passport", "folder", "letter"),
     "ch04": ("laptop", "folder", "highlighter", "passport", "passport_c2", "passes_c2", "letter", "photos", "receipt", "stack"),
 }
-CAMERA_ONLY = ("net_passport",)
+CAMERA_ONLY = ("net_passport", "cover light", "chair")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -71,7 +71,7 @@ TOTE_MARK = (Vector((0.119, -0.005, 0.1401)), 0.014)   # the tote's modelled ova
 BAGS = {"handbag-shoulder": (-0.375, 0.195, 162.0), "handbag-satchel": (-0.06, 0.02, 153.0), "handbag-tote": (0.255, -0.155, 145.0)}
 BAG_GRADE = {  # from the inspection room: size, axis, grade, finish. Hue and saturation are pushed so the tote still
     # reads cognac (and the shoulder bag burgundy) after the film grade cools and desaturates them
-    "handbag-tote": (0.35, "long", dict(sat=1.15, val=0.84, hue=0.508, rough_add=0.2), dict(spec=0.4)),
+    "handbag-tote": (0.35, "long", dict(sat=1.0, val=0.84, hue=0.50, rough_add=0.2), dict(spec=0.4)),
     "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.12), dict()),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25), dict(spec=0.35)),
 }
@@ -89,8 +89,8 @@ CAMERAS = {
                  beat="spread", hide=("receipt", "letter", "envelope", "highlighter"), exposure=-0.85, lamp=(-0.475, 0.315, -141.0)),
     # Ch 02: the laptop open at the back of the table, its blank screen glowing, the passport and the boarding passes
     # in front of it under the lamp turned down; dark wood in the foreground
-    "laptop": dict(loc=(-0.31, -0.53, TOP + 0.19), aim=(0.22, 0.22, TOP + 0.075), lens=32, focus="fx_laptop", fstop=4.0,
-                   beat="ch02", hide=("envelope", "highlighter"), exposure=-1.3),
+    "laptop": dict(loc=(-0.31, -0.53, TOP + 0.19), aim=(0.26, 0.22, TOP + 0.075), lens=32, focus="fx_laptop", fstop=4.0,
+                   beat="ch02", show=("chair",), hide=("envelope", "highlighter"), exposure=-1.3),
     # Ch 04: the three handbags in the lamp's light, the receipt curling in front of them
     "purses": dict(loc=(-0.62, -1.10, TOP + 0.48), aim=(-0.05, 0.02, TOP + 0.13), lens=35, focus="fx_purses", fstop=4.0,
                    beat="ch04", hide=("envelope",), exposure=-1.0),
@@ -99,7 +99,7 @@ CAMERAS = {
     # lens (from behind, it greyed the whole navy cover), the cream page edge facing the camera catches the light, and
     # the passes behind fall under it, helped by a graduated net off the lamp
     "passport": dict(loc=(-0.102, -0.41, TOP + 0.27), aim=(-0.252, -0.056, TOP + 0.010), lens=64, focus="fx_passport", fstop=4.8,
-                     beat="spread", show=("net_passport",), hide=("envelope",), lamp=(-0.81, -0.36, -64.0)),
+                     beat="spread", show=("net_passport", "cover light"), hide=("envelope",), lamp=(-0.81, -0.36, -64.0)),
 }
 
 M = {}
@@ -116,12 +116,12 @@ def materials():
     if M:
         return M
     M.update(
-        wood=mt.worn_wood("table wood", TW / 4, -TW / 2, rings=((-0.22, -0.235, 0.039), (0.585, -0.33, 0.041), (-0.42, 0.43, 0.04)),
+        wood=mt.worn_wood("table wood", TW / 4, -TW / 2, rings=((0.585, -0.33, 0.041), (-0.42, 0.43, 0.04)),
                           front_y=-TW / 2),
         leg=mt.worn_wood("table leg wood", 0.08, -0.04, rough=0.5),
         floor=mt.matte("floor", (0.018, 0.017, 0.016), 0.7),
         wall=mt.plaster("wall plaster"),
-        paper=mt.paper("paper", (0.74, 0.71, 0.64), 0.86, 0.05, 0.04, edge_tone=(0.21, 0.297)),
+        paper=mt.paper("paper", (0.74, 0.71, 0.64), 0.86, 0.05, 0.04, translucency=0.24, edge_tone=(0.21, 0.297)),
         paper2=mt.paper("paper 2", (0.71, 0.69, 0.63), 0.86, 0.05, 0.06, edge_tone=(0.21, 0.297)),
         letter=mt.paper("letter paper", (0.73, 0.7, 0.62), 0.85, 0.05, 0.05, edge_tone=(0.21, 0.297)),
         cream=mt.paper("envelope paper", (0.68, 0.62, 0.5), 0.82, 0.06, 0.05),
@@ -130,8 +130,8 @@ def materials():
         thermal=mt.thermal("thermal paper"),
         # three blank prints of different tones (the pictures are composited later): a mid print darkening toward one
         # end, a near-black one, a cooler one
-        photo_1=mt.photo("print 6x4 mid", 0.152, 0.102, 0.003, image_rgb=(0.31, 0.28, 0.22), gradient=0.35),
-        photo_2=mt.photo("print 5x7 dark", 0.127, 0.178, 0.003, image_rgb=(0.08, 0.085, 0.09)),
+        photo_1=mt.photo("print 6x4 mid", 0.152, 0.102, 0.003, image_rgb=(0.36, 0.32, 0.26), gradient=0.35),
+        photo_2=mt.photo("print 5x7 dark", 0.127, 0.178, 0.003, image_rgb=(0.13, 0.135, 0.14)),
         photo_3=mt.photo("print 6x4 cool", 0.152, 0.102, 0.003, image_rgb=(0.21, 0.22, 0.24)),
         cover=mt.passport_cover("passport cover", (0.010, 0.016, 0.045)),
         pages=mt.page_block("passport pages"),
@@ -186,7 +186,9 @@ def table():
     pw = TW / 4
     for i in range(4):
         y = -TW / 2 + pw * (i + 0.5)
-        add_box(bm, (TL, pw - gap, TT), (0.0, y, 0.0))
+        joint = (-0.48, 0.37, -0.17, 0.69)[i]
+        for x0, x1 in ((-TL / 2, joint - gap / 2), (joint + gap / 2, TL / 2)):
+            add_box(bm, (x1 - x0, pw - gap, TT), ((x0 + x1) / 2, y, 0.0))
     top = bevelled(mesh_obj("table_top", bm, m["wood"]), 0.0028, 3)
     top.location = (0.0, 0.0, TOP - TT / 2)
     bm = bmesh.new()
@@ -442,11 +444,11 @@ def laptop():
           f"panel {w:.3f} x {hh:.3f}, {proud * 1000:.1f} mm proud", flush=True)
     bm = bmesh.new()
     bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5, matrix=Matrix.Diagonal((w, hh, 1, 1)))
-    scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 1.5, w, hh), smooth=False)
+    scr = mesh_obj("laptop_screen", bm, mt.screen("laptop screen", COOL, 3.2, w, hh), smooth=False)
     scr.matrix_world = Matrix.Translation(centre) @ rot.to_4x4()
     # the screen's spill: an area light the size of the panel, 2 cm in front of it, so a cool pool about 30 cm deep
     # falls on the table and the mug's side
-    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 4.0, COOL, spread_deg=125)
+    li = sk.area_light("laptop_screen_light", tuple(centre + nrm * 0.02), (w, hh), 22.0, COOL, spread_deg=150)
     li.matrix_world = Matrix.Translation(centre + nrm * 0.02) @ (rot @ Matrix.Rotation(math.pi, 3, "X")).to_4x4()
     li.visible_camera = False
     li.visible_glossy = False
@@ -556,6 +558,58 @@ def folder_stack():
 
 # ---------------------------------------------------------------- the spread
 
+def reading_glasses():
+    """A folded wire pair beside the letter, resting on its temples and nose pads."""
+    centre = (0.477, -0.240)
+    transform = pp.frame(*centre, -18)
+    z, _, _ = pp.settle(transform, [(-0.056, -0.016), (0.056, -0.016), (0, 0.016)])
+    transform = pp.frame(*centre, -18, z)
+    rim = mt.satin_metal("spectacle wire", (0.16, 0.13, 0.09), 0.42)
+    acetate = mt.plastic("glasses temple tips", (0.040, 0.025, 0.019), 0.52, 0.22)
+    parts = []
+
+    def wire(name, pts, radius, mat=rim, closed=False):
+        cu = bpy.data.curves.new(name, "CURVE")
+        cu.dimensions, cu.bevel_depth, cu.bevel_resolution = "3D", radius, 3
+        spline = cu.splines.new("POLY")
+        spline.points.add(len(pts) - 1)
+        for pt, xyz in zip(spline.points, pts):
+            pt.co = (*xyz, 1)
+        spline.use_cyclic_u = closed
+        ob = pp.link(bpy.data.objects.new(name, cu))
+        cu.materials.append(mat)
+        ob.matrix_world = transform
+        parts.append(ob)
+
+    for side in (-1, 1):
+        contour = []
+        for j in range(56):
+            a = math.tau * j / 56
+            x = side * 0.030 + 0.0245 * math.cos(a)
+            y = 0.0175 * math.sin(a)
+            contour.append((x, y, 0.0065 + 0.10 * y))
+        wire("lens rim", contour, 0.00085, closed=True)
+        wire("folded spectacle temple", [(side * 0.055, 0.007, 0.007),
+                                        (side * 0.055, 0.014, 0.0024), (-side * 0.031, 0.013, 0.0024)], 0.0009)
+        wire("spectacle temple tip", [(-side*0.030, 0.013, 0.0024), (-side*0.046, 0.009, 0.002),
+                                     (-side*0.051, 0.004, 0.0018)], 0.00145, acetate)
+    wire("spectacle bridge", [(-0.007, 0.006, 0.007), (-0.003, 0.011, 0.009),
+                              (0.003, 0.011, 0.009), (0.007, 0.006, 0.007)], 0.00095)
+    return parts
+
+
+def pulled_chair():
+    """A plain oak chair pulled back from the far side, just visible beyond the laptop work surface."""
+    parts = []
+    wood = materials()["leg"]
+    for x in (-0.43, -0.065):
+        parts.append(sk.box("chair rear post", (0.030, 0.031, 0.85), (x, 0.76, 0.425), wood, bevel=0.004))
+        parts.append(sk.box("chair front leg", (0.028, 0.028, 0.43), (x, 0.39, 0.215), wood, bevel=0.004))
+    parts.append(sk.box("chair seat", (0.40, 0.42, 0.032), (-0.248, 0.58, 0.445), wood, bevel=0.009))
+    parts.append(sk.box("chair top rail", (0.40, 0.030, 0.080), (-0.248, 0.76, 0.813), wood, bevel=0.009))
+    return parts
+
+
 def spread():
     """Lay the evidence out bottom to top: each paper drops onto what is already there."""
     m = materials()
@@ -567,12 +621,12 @@ def spread():
     group("folder", pp.sheet("sheet_b", m["paper2"], 0.21, 0.297, 0.036, 0.01, -4.0,
                              shape=pp.sheet_shape(0.21, 0.297, 7, corners=(0.0, 0.0, 0.015, 0.0), wave=0.0012)))
     group("folder", pp.sheet("sheet_a", m["paper"], 0.21, 0.297, 0.010, -0.014, 2.5,
-                             shape=pp.sheet_shape(0.21, 0.297, 3, corners=(0.0, 0.030, 0.0, 0.0), wave=0.0011)))
+                             shape=pp.sheet_shape(0.21, 0.297, 3, corners=(0.0, 0.014, 0.0, 0.0), wave=0.0011)))
     group("folder", pp.paper_clip("clip_a", m["clip"], -0.093, 0.118, 96.0))
     group("folder", pp.boarding_pass("pass_1", m["card"], -0.212, 0.078, 3.0, seed=4, lift=0.003))
     group("folder", pp.boarding_pass("pass_2", m["card"], -0.226, 0.024, -8.0, seed=9, lift=0.009))
     # the passport across the passes' plain ends, clear of pass_2's bent stub
-    group("passport", pp.passport("passport", m["cover"], m["pages"], -0.252, -0.06, -38.0, open_deg=5.3, m_end=m["endpaper"]))
+    group("passport", pp.passport("passport", m["cover"], m["pages"], -0.252, -0.06, -123.0, open_deg=4.0, m_end=m["endpaper"], m_slip=m["card"]))
     group("letter", pp.sheet("letter", m["letter"], 0.21, 0.297, 0.31, -0.205, -14.0, shape="trifold"))
     group("letter", pp.pen("pen", m["pen"], m["chrome"], m["chrome"], 0.25, -0.29, 31.0))
     group("photos", pp.photo_print("photo_1", m["photo_1"], 0.152, 0.102, 0.265, 0.095, 12.0, seed=2))
@@ -581,9 +635,11 @@ def spread():
     group("envelope", pp.envelope("envelope", m["cream"], -0.43, -0.285, 7.0))
     # the till receipt on bare wood at the pool's right edge, its rolled end at the far side
     # (lying across the light, its roll at the far end: the lamp from the left throws the tube's shadow onto the wood)
-    group("receipt", pp.receipt("receipt", m["thermal"], 0.6, -0.035, -100.0, seed=5))
+    group("receipt", pp.receipt("receipt", m["thermal"], 0.52, -0.035, -100.0, seed=5))
     group("highlighter", pp.highlighter("highlighter", m["hl_body"], m["hl_cap"], 0.075, -0.262, -9.0))
-    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.06, 0.255, 35.0))
+    group("letter", reading_glasses())
+    group("chair", pulled_chair())
+    group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.06, 0.255, 178.0))
 
 
 def overlap_report():
@@ -635,6 +691,9 @@ def apply_camera(name):
     beat = cfg.get("beat", "spread")
     set_beat(beat, cfg.get("hide", ()), cfg.get("show", ()), cfg.get("lamp"))
     sc = bpy.context.scene
+    air = bpy.data.objects["table air"].data.materials[0]
+    volume = next(n for n in air.node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
+    volume.inputs["Density"].default_value = 0.006 if name == "purses" else 0.013
     sc.cycles.sample_clamp_indirect = 6.0
     sc.cycles.blur_glossy = 0.5
     sc.cycles.max_bounces = 8
@@ -765,6 +824,7 @@ def build(cast=True):
     # lamp-lit air: a faint haze over the table only, so the cone has a shape in the low shots (denser under the
     # shade: cone_haze, built with the lamp)
     hz = sk.haze((2.6, 1.6, 1.0), (0.0, 0.0, TOP + 0.5), 0.013, colour=(0.9, 0.88, 0.85))
+    hz.name = "table air"
     hz.visible_shadow = False
     room_bounce()
     # Low spill on the boards opens the wood grain outside the cone without flattening the documents.
@@ -780,7 +840,16 @@ def build(cast=True):
     group("net_passport", passport_net())
     pport = bpy.data.objects["passport_front"]
     bpy.context.view_layer.update()
-    pc = pport.matrix_world @ Vector((0.055, -0.029, 0.014))
+    pc = pport.matrix_world @ Vector((0.042, 0.040, 0.010))
+    loc = pport.matrix_world @ Vector((-0.20, 0.16, 0.12))
+    kicker = sk.area_light("passport reflected light", loc, (0.10, 0.05), 1.25, WARM, spread_deg=120)
+    kicker.rotation_euler = (pport.matrix_world.translation - loc).to_track_quat("-Z", "Y").to_euler()
+    receivers = bpy.data.collections.new("passport cloth covers")
+    for n in ("passport_front", "passport_back"):
+        receivers.objects.link(bpy.data.objects[n])
+    kicker.light_linking.receiver_collection = receivers
+    kicker.visible_volume_scatter = False
+    group("cover light", [kicker])
     empty("fx_passport", tuple(pc))
     empty("fx_overhead", (-0.07, 0.0, TOP + 0.01))
     # the push focuses on sheet_a's lifted corner (+x -y, nearest the camera), a little in from its tip, so the sharp
@@ -789,7 +858,8 @@ def build(cast=True):
     dg = bpy.context.evaluated_depsgraph_get()
     me = sha.evaluated_get(dg).to_mesh()
     tip = max(me.vertices, key=lambda v: v.co.x - v.co.y)
-    corner = sha.matrix_world @ (tip.co + Vector((-0.012, 0.012, 0.0)))
+    on_sheet = min(me.vertices, key=lambda v: (v.co - tip.co - Vector((-0.040, 0.035, 0.0))).length)
+    corner = sha.matrix_world @ on_sheet.co
     sha.evaluated_get(dg).to_mesh_clear()
     empty("fx_push", tuple(corner))
     rc = bpy.data.objects["receipt_c4"]

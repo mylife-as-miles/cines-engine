@@ -427,12 +427,12 @@ def _rounded_rect(bm, w, h, r, z0, z1, segs=6):
     return fs
 
 
-def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
+def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None, m_slip=None):
     """A plain passport booklet, 125 x 88 mm: two covers of grained board (rounded corners) wrapped round a rounded
     spine at -x, the cream page block (3.5 mm) inset 1.5 mm between them, the front cover hinged at the spine and
     sprung open open_deg so a wedge of the page block and the cover's cream lining shows toward the fore-edge. No
     crest, no lettering. It settles on whatever is under it."""
-    w, h, T = 0.125, 0.088, 0.0052
+    w, h, T = 0.088, 0.125, 0.0052
     cov, r = 0.00090, 0.0036
     mw = frame(x, y, turn)
     samples = [(-w / 2 * 0.97 + w * 0.97 * i / 8, -h / 2 * 0.95 + h * 0.95 * j / 6) for i in range(9) for j in range(7)]
@@ -457,7 +457,7 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
         fs[1].material_index = 1
     # Press the hinge into the cover and bow the board between the binding and fore-edge.
     # Crosscuts give the broad cover actual curvature under the moving highlight.
-    for abscissa in (-w / 2 + 0.004, -w / 2 + 0.007, -w / 2 + 0.010, -0.030, 0.0, 0.032, 0.055):
+    for abscissa in (-w / 2 + 0.004, -w / 2 + 0.007, -w / 2 + 0.010, -0.018, 0.0, 0.022, 0.036):
         bmesh.ops.bisect_plane(bm, geom=[*bm.verts, *bm.edges, *bm.faces], dist=1e-7,
                                plane_co=(abscissa, 0, 0), plane_no=(1, 0, 0))
     for vert in bm.verts:
@@ -469,22 +469,34 @@ def passport(name, m_cover, m_pages, x, y, turn, open_deg=2.5, m_end=None):
     bmesh.ops.transform(bm, matrix=rot, verts=bm.verts[:])
     parts.append(("front", bm, m_cover))
     # A blank boarding slip protrudes at one corner under the sprung cover.
-    if open_deg >= 5 and m_end is not None:
-        # Two loose leaves spring away from the bound block. Their staggered edges and
+    if m_slip is not None and m_end is not None:
+        # Five thin leaves spring away from the bound block. Their staggered edges and
         # narrow shadows remain visible across the opening in the close-up.
-        for index, fraction in enumerate((0.30, 0.54)):
+        for index, fraction in enumerate((0.12, 0.25, 0.40, 0.55, 0.70)):
             leaf = bmesh.new()
-            _rounded_rect(leaf, w - 0.0021 - index * 0.0004, h - 0.0028, r * 0.74,
-                          T - cov + 0.0002, T - cov + 0.00034)
+            _rounded_rect(leaf, w - 0.0021 - index * 0.0003, h - 0.0028, r * 0.74,
+                          T - cov + 0.00010, T - cov + 0.00020)
             leaf_rot = Matrix.Rotation(math.radians(-open_deg * fraction), 3, "Y")
             for vert in leaf.verts:
                 vert.co = hinge + leaf_rot @ (vert.co - hinge)
             parts.append((f"leaf_{index}", leaf, m_end))
         slip = bmesh.new()
-        _rounded_rect(slip, 0.055, 0.033, 0.0012, T - cov, T - cov + 0.00024)
+        _rounded_rect(slip, 0.075, 0.042, 0.0004, T - cov, T - cov + 0.00015)
+        insert_x = w / 2 - 0.0105
+        for xcut in (0.0105, 0.017, 0.024, 0.031):
+            bmesh.ops.bisect_plane(slip, geom=[*slip.verts, *slip.edges, *slip.faces], dist=1e-8,
+                                   plane_co=(xcut, 0, 0), plane_no=(1, 0, 0))
+        table = support_tree((x - 0.13, y - 0.13, x + 0.13, y + 0.13))
+        inv = mw.inverted()
         for vert in slip.verts:
-            vert.co += Vector((w / 2 - 0.017, -0.015, 0.00025))
-        parts.append(("slip", slip, m_end))
+            vert.co += Vector((insert_x, -0.015, 0.00020))
+            free = max(0.0, min(1.0, (vert.co.x - w / 2) / 0.027))
+            if free:
+                pt = mw @ vert.co
+                contact = drop(table, pt)
+                landing = (inv @ Vector((pt.x, pt.y, contact + 0.0002))).z
+                vert.co.z += (landing - (T - cov)) * free ** 1.35
+        parts.append(("slip", slip, m_slip))
     # the spine: a half round of cover stock joining the boards
     bm = bmesh.new()
     seg = 10
