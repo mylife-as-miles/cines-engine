@@ -1,0 +1,91 @@
+{
+ "stage": "chicago_night",
+ "round": 1,
+ "commit": "0a337fe",
+ "scores": {
+  "composition": 5.5,
+  "lighting": 4,
+  "materials": 5,
+  "set_dressing": 5,
+  "grounding_scale": 6,
+  "cast": 4,
+  "story_read": 4.5,
+  "technical": 4.5
+ },
+ "pro_level": false,
+ "verdict": "The interior is built with care: the lamp spills well up the wall, the light under the door works, the shaker door, walnut console and suitcase prop all hold up, and the suitcase close-up nearly works as it stands. But the stage misses its brief. The night city is mostly missing because the camera clips at 1000 m, so the sky renders black and the downtown cluster is cut off. Dawn is an unlit black cutout in both shots she is in. The grade leaves this 'warmest stage' neutral to cold and very dark (graded median luma 10, 4 and 19 out of 255), so it reads as the same lonely noir as the prison chapters, not 'calm and hopeful, the life before'.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "all",
+   "problem": "Root cause of the black sky and the thin skyline: setkit.camera() leaves Blender's default clip_end of 1000 m (checked in this bpy 5.3), but the sky dome has a radius of 15,000 m, the downtown cluster centre is about 1.7 km away and the city runs to y = 5200. Everything past 1 km is not rendered: the sky measures 1-2/255 raw above Dawn's head, the horizon band 5-9/255, the tallest towers and the aviation lights are missing, and the city ends in black. The CLEAR sky wedges planned behind her head have nothing to show.",
+   "fix": "In chicago_night.apply_camera() (it already runs before every render), add: cam = bpy.context.scene.camera; cam.data.clip_start = 0.05; cam.data.clip_end = 20000.0. Re-render the window camera first and check that the raw horizon band sits around 40-60/255 and the upper sky around 10-20/255. If the glow is still weak, raise HORIZON to about (0.35, 0.33, 0.36) with a slight sodium cast. Re-judge the city only after this fix (see the priority-3 city fix)."
+  },
+  {
+   "priority": 1,
+   "camera": "window",
+   "problem": "The silhouette does not read. Her back measures 0.3-0.6/255 raw against a sky of 1-2/255: there is no separation, and there is no warm edge despite the docstring. The far-city edge, which is the horizon, runs straight through her neck (camera z 1.45 puts elevation 0 at her chin). Her reflection in the glass forms a blue-grey ghost head (graded 13-24 against a sky of 2-5) right next to her real head at x 745-780, y 270-310. Her hanging hand is cut by the bottom edge.",
+   "fix": "Lower the camera so the horizon glow crosses her shoulder blades and her head and shoulders stand against the glow: loc (0.05, 0.22, 1.20), aim (0.15, 2.45, 1.32), lens 28, which still sits in the +10.5..+19.5 degree CLEAR wedge. Remove the ghost: in apply_camera('window'), set visible_glossy = False on every object in _STATE['cast'] (restore it to True for the other cameras), or move the camera to x -0.12 so the reflection clears her head by more than a head-width. Give her a warm edge from the second practical in the next fix, which sits to her right and slightly behind her, so her right jaw, ear and bun catch a warm rim on the far side of the silhouette. Either end the frame above the hand or raise the mug (next fix) so neither hand is cut at the edge."
+  },
+  {
+   "priority": 1,
+   "camera": "all",
+   "problem": "'Warmer than any other stage' fails on the graded frames, and the frames are badly underexposed. Mean R-B of lit pixels after the grade: wide +3.4, suitcase +3.3, window -12.2 (the same as the institutional stages), while evidence_table/purses reaches +15.8. The lamp-lit wall goes from raw (155, 128, 103) to graded (86, 82, 76), which is nearly neutral. Pixels below 20/255 after the grade: wide 68%, window 89%, suitcase 51%. On YouTube that will band and block into black mush.",
+   "fix": "Push the warmth in-scene, because the fixed grade (hue s=0.55 plus blue curves) strips it. lamp_light colour (1.0, 0.62, 0.33) -> (1.0, 0.45, 0.16), energy 38 -> 65 W; bulb emission to (1.0, 0.6, 0.3); entry_light and can_lens to (1.0, 0.55, 0.25). Repaint the walls a warm greige (about (0.52, 0.47, 0.40)) instead of the present cool grey (raw 39, 39, 44), so the bounce is warm. Halve city_glow from 30 to about 15 W so the cool fill stops neutralising the room. Raise exposure: wide -1.0 -> -0.4, suitcase -1.1 -> -0.6, window -0.9 -> -0.4 (after the clip fix). Targets on the graded frames: median luma 25-35 for wide and suitcase and at least 12 for window; lit-pixel R-B of +18 or more in wide and suitcase; no lamp shade clipping (the shade face stays under 245)."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "The subject is the least-lit thing in the frame: Dawn is a flat black shape (raw 0.2-0.4) with pale legs, and her suit shows no fabric or form. The mug in her hands, the one 'calm, ordinary' gesture, is hidden at her waist in both cameras. Her stance is square and static (feet parallel, weight centred), which reads as standing guard rather than at ease. The lounge chair at the right is crushed to graded 0.4-0.7, a black hole filling about 15% of the frame.",
+   "fix": "Add a second warm practical beside her: move the side table to about (1.55, 1.75) and put a small ceramic table lamp on it (shade a 0.26 m linen drum like lamp_shade, bulb at z about 1.0, point light 20-25 W, colour (1.0, 0.48, 0.18), shadow_soft_size 0.03). It falls at about x 1070 in the wide, inside the frame and not cut, and outside the window camera's frame. It lights the chair, rims her right side warm and frames the cool city between two warm islands. Re-pose her: MUG -> (0.06, 0.30, 1.22) so both hands hold the mug at chest height, where it shows in silhouette against the city; turn her 15-20 degrees toward camera-left (DAWN facing 190 -> about 172) so the mug and forearm show in profile; shift her weight with one knee bent about 8 degrees and the hips shifted about 3 cm; lift her head 4-6 degrees (looking out, hopeful)."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "The foreground is a dead slab. The rug field is albedo 0.06 (raw 7, graded 6-11), and together with the black chair and the dark floor the bottom 40% of the establishing frame carries nothing. The brief says to avoid big flat dark or grey slabs in the foreground.",
+   "fix": "Rug field -> warm oatmeal wool, around (0.20, 0.17, 0.13), with the border at about (0.10, 0.08, 0.06). Raise the pile bump to strength 0.6 and give the rug a visible 8-10 mm edge with a short fringe or bound edge. Change the lounge-chair upholstery to a warm accent that survives the grade, such as rust wool at about (0.30, 0.12, 0.06), roughness 0.95. The new side lamp will then model it."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "Converging verticals: the 24 mm lens tilted 6 degrees down (aim z 1.0 from 1.6) makes the door casing and the window mullions lean (the left casing drifts about 12 px over the door's height). This reads as amateur in an architectural interior.",
+   "fix": "Keep the camera level and frame with lens shift: aim (-1.15, 1.75, 1.6), then in apply_camera('wide') set scene.camera.data.shift_y = -0.10 (or about -0.12 if the floor then needs more room). Verticals should be within 2 px over the door's height."
+  },
+  {
+   "priority": 2,
+   "camera": "wide, suitcase",
+   "problem": "The door casing has black square artefacts at both top corners. casing_l and casing_r are dh + cw tall and overlap casing_top, and their front faces share the same plane (x = W0 + ct), so the bevelled coincident faces render as dark squares.",
+   "fix": "In chicago_night_set.door(): make casing_l and casing_r height dh with centre z dh/2 so they butt under the head, or make casing_top 0.021 thick (3 mm proud of the legs, like a real head casing), or both. Check the corners in the wide at 2x."
+  },
+  {
+   "priority": 2,
+   "camera": "all",
+   "problem": "Room reflections in the glass muddle the city. In the wide, the lamp and the print sit in the left bay and Dawn's legs are doubled beside her. In the suitcase shot, the lamp's reflection reads as a lamp standing outside among the towers (graded about (39, 34, 25) at x 990-1060, y 120-180). In the window shot, the lamp's reflection is a warm blob cut by the left frame edge.",
+   "fix": "In thin_glass(), scale the reflection: put a Math MULTIPLY node (x 0.4) between the Fresnel output and the mix factor, so night-window reflections stay a faint ghost. For the suitcase camera, also aim about 0.25 m further toward the door (aim y 1.95 -> 1.7) or turn the camera so the lamp's mirror image falls behind the window column. Optionally hang a sheer voile panel bunched at the right column (white, roughly 1.2 m wide gathered to 0.3 m, translucent 0.4); it softens the glass wall and hides one reflection."
+  },
+  {
+   "priority": 3,
+   "camera": "window, wide",
+   "problem": "Even in the visible near band, the city reads as a game asset. The buildings are plain extruded boxes with flat roofs and featureless black facades (albedo 0.012-0.016); the floodlit crowns show as pale grey blank slabs (the box at x 960-1040, y 125-155 in the wide); and the 'whole lit office floor' rows show as hard cool-white planks on low roofs (window shot lower left; through Dawn's hands in the wide). There is no atmospheric depth between layers.",
+   "fix": "After the clip fix: cut the whole-floor rows from 3.6x to about 1.5x and tint them warm-neutral (0.95, 0.85, 0.7); modulate the crown band with vertical bay stripes (0.5-1.0) and drop its strength from 1.4 to about 0.7. Give unlit facade cells a faint reflectance (base about 0.03 in window cells against 0.012 on spandrels) so towers read as structure, not cut-outs. Add rooftop clutter on the low-rises (1-3 small boxes 2-6 m, mechanical units) and parapets of 1 m. For building fog, use a shorter distance (FOG_D about 900 m) so near, mid and far layers separate toward the horizon glow."
+  },
+  {
+   "priority": 3,
+   "camera": "suitcase",
+   "problem": "The best frame of the three, but the subject melts away at its right edge: the dark case meets the black window jamb, and its front measures only raw (23, 17, 11) under a top-only spot. The case carries no sign of the trip or the person.",
+   "fix": "Add a soft warm card: an area light 0.4 x 0.4 m, colour (1.0, 0.6, 0.32), about 8-10 W, at (-1.7, 0.55, 0.75) facing the case, with visible_camera False. It should lift the weave and zip pulls to about 40-50/255 raw while the case stays the darkest object. Either move the case 0.15 m toward the door's centre (CASE y 1.12 -> 0.97) so its silhouette sits against the lit door slab, or swing the camera so it does. Add one personal cue: a light trench coat folded over the handle, or a blank leather ID tag on the grip (continuity with the inspection-room tag)."
+  },
+  {
+   "priority": 3,
+   "camera": "wide",
+   "problem": "The dressing is tasteful but generic catalogue. Nothing says 'a woman who loved to travel', and there are no soft or organic elements (plants, textiles, personal objects).",
+   "fix": "Keep it restrained, but add 3-4 cues: keys and a plain dark-blue passport with no crest or text in the console bowl; a coat on a wall hook beside the door; a pair of plain flats by the case; a potted plant (about 0.9 m, simple broad leaves) by the right column. Optionally swap the abstract print for a second, smaller abstract landscape print, still with no text."
+  },
+  {
+   "priority": 3,
+   "camera": "wide",
+   "problem": "In the wide the oak floor reads as large tiles rather than boards: the brick texture's offset 0.37 with offset_frequency 1 lines up the end joints on alternate rows, and the board tone is too uniform to read as wood at that distance.",
+   "fix": "In oak_floor(): set offset_frequency to 3 and offset to 0.31, and add a per-row random offset (feed a white-noise value of the floored row coordinate into the mapping's X location) so end joints never line up. Widen the tone spread (Color1 about (0.26, 0.16, 0.09), Color2 about (0.13, 0.075, 0.04)) and add a faint per-board roughness variation (0.28-0.42)."
+  }
+ ]
+}

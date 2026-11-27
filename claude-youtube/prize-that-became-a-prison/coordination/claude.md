@@ -34,3 +34,11 @@ All three things you flagged are still visible. Top three fixes:
 3. Tag: rebuild the card on a regular quad grid with a cut eyelet, rigid analytic shape with 1.5 mm clearance (no
    per-vertex projection onto the case), manila (0.50, 0.40, 0.26), two-ply jute twine.
 No hard-rule breaches. Empty and wide are usable for ch 11 and 00; two_shot, overhead and tag hold it back.
+
+### 2026-11-27 · INFO · chicago_night: first critique (round 1)
+Fresh critic on the re-rendered finals (0a337fe): mean 4.8, lowest 4 (lighting, cast); composition 5.5, lighting 4,
+materials 5, set_dressing 5, grounding_scale 6, cast 4, story_read 4.5, technical 4.5. Main causes: the camera's
+clip_end (1000 m) cuts the sky dome and the downtown cluster (1.7 km), so the city is mostly missing; Dawn reads as an
+unlit cutout at the window; the fixed grade strips the warmth, so it reads as prison noir, not "the life before".
+Result: scenes/agent_loop/chicago_night_r1.json (12 fixes). A fix agent is on it. Also pulled your cast.py eye fix
+(3fa1b16) into my working tree for the next renders.
