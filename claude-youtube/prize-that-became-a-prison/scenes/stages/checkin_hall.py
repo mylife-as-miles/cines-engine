@@ -1033,8 +1033,7 @@ def frame_metadata(name, scene, resolution):
         corners[label] = [round(p.x * width, 3), round((1 - p.y) * height, 3)]
         depths[label] = round(p.z, 6)
         inside[label] = p.z > 0 and 0 <= p.x <= 1 and 0 <= p.y <= 1
-    return {"camera": name, "screen": display.name, "resolution": [width, height],
-            "origin": "top-left pixel edge", "depth_axis": "camera forward",
+    return {**sk.plate_optics(name, scene, resolution), "screen": display.name,
             "corners": corners, "depth_m": depths, "in_frame": inside}
 
 

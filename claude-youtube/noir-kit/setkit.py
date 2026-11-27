@@ -204,6 +204,17 @@ def camera(loc, aim, lens=35, focus=None, fstop=4.0, clip_end=20000.0):
     return cam
 
 
+def plate_optics(name, scene, resolution):
+    """Camera and focus-plane measurements for top-left-origin compositor tracks."""
+    camera = scene.camera.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    lens = camera.data
+    target = lens.dof.focus_object
+    focus = -(camera.matrix_world.inverted() @ target.matrix_world.translation).z if target else lens.dof.focus_distance
+    return {"camera": name, "resolution": list(resolution), "origin": "top-left pixel edge",
+            "depth_axis": "camera forward", "focus_m": round(focus, 6), "fstop": round(lens.dof.aperture_fstop, 3),
+            "lens_mm": round(lens.lens, 3), "sensor_mm": round(lens.sensor_width, 3)}
+
+
 def render(out, samples=64, res=(1920, 1080), exposure=-0.2, world=0.0, noise_threshold=0.03):
     sc = bpy.context.scene
     w = bpy.data.worlds.new("world")

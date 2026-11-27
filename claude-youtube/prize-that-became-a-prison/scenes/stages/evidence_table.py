@@ -702,13 +702,7 @@ def frame_metadata(name, scene, resolution):
     pages = []
     width, height = resolution
     dg = bpy.context.evaluated_depsgraph_get()
-    camera = scene.camera.evaluated_get(dg)
-    lens = camera.data
-    target = lens.dof.focus_object
-    focus = -(camera.matrix_world.inverted() @ target.matrix_world.translation).z if target else lens.dof.focus_distance
-    meta = {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge",
-            "depth_axis": "camera forward", "focus_m": round(focus, 6), "fstop": round(lens.dof.aperture_fstop, 3),
-            "lens_mm": round(lens.lens, 3), "sensor_mm": round(lens.sensor_width, 3)}
+    meta = sk.plate_optics(name, scene, resolution)
     for sheet_name in names[name]:
         sheet = bpy.data.objects[sheet_name].evaluated_get(dg)
         corners, depths, inside = {}, {}, {}
