@@ -22,7 +22,7 @@ const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) *
 const PU = (lat, lon) => P(lat, U(lon));
 // The mainland is a region (no city is named for the days of travel); the departure is an unnamed point by Guangzhou,
 // where the sourced Baiyun Leather Market is, and both disputed onward flights leave from it.
-const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], china: [27.0, 112.5], depart: [23.25, 113.3], sydney: [-33.87, 151.21], qingdao: [36.07, 120.38] };
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], depart: [23.6, 112.9], australia: [-25.57, 134.36], qingdao: [36.07, 120.38], interior: [33.0, 101.0] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
 const INK = '#ece8e1';
@@ -80,13 +80,18 @@ function solid(ctx, pts, f, a = 1) {
   ctx.restore();
 }
 function dashed(ctx, pts, f, a = 0.6) { if (f <= 0) return; ctx.save(); ctx.setLineDash([9, 11]); ctx.lineCap = 'round'; ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; path(ctx, pts, f); ctx.stroke(); ctx.restore(); }
-function region(ctx, a) {        // the days of travel: a soft warm fill over the mainland's south and centre, no line
-  if (a <= 0) return; const [mx, my] = PU(...CITY.china); ctx.save(); ctx.globalAlpha = a;
-  const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 150); rg.addColorStop(0, 'rgba(236,232,225,0.24)'); rg.addColorStop(0.6, 'rgba(236,232,225,0.10)'); rg.addColorStop(1, 'rgba(236,232,225,0)');
-  ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(mx, my, 175, 120, -0.15, 0, 7); ctx.fill(); ctx.restore(); }
+function region(ctx, a) {        // the days of travel: mainland China's own outline, lit; nothing outside it
+  if (a <= 0) return; const r = window.REG.CHN.ring; ctx.save(); ctx.globalAlpha = a;
+  ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath();
+  ctx.fillStyle = 'rgba(236,232,225,0.12)'; ctx.fill(); ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); }
+function arrowEnd(ctx, pts, f, a = 0.75) {   // a small open arrowhead where a dashed line stops (no ring, no city)
+  if (f < 0.98) return; const n = pts.length - 1, [x1, y1] = pts[n], [x0, y0] = pts[n - 3], ang = Math.atan2(y1 - y0, x1 - x0);
+  ctx.save(); ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.beginPath();
+  ctx.moveTo(x1 - 14 * Math.cos(ang - 0.45), y1 - 14 * Math.sin(ang - 0.45)); ctx.lineTo(x1, y1);
+  ctx.lineTo(x1 - 14 * Math.cos(ang + 0.45), y1 - 14 * Math.sin(ang + 0.45)); ctx.stroke(); ctx.restore(); }
 
 const leg1 = () => gc(CITY.chicago, CITY.hongkong);
-const legA = () => gc(CITY.depart, CITY.sydney), legQ = () => bend(CITY.depart, CITY.qingdao, -60);
+const legA = () => gc(CITY.depart, CITY.australia), legQ = () => bend(CITY.depart, CITY.qingdao, -70);
 const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.47], [W * 0.47, H * 0.47], 1.0, 1.04, 6);
@@ -98,24 +103,24 @@ const MODES = {
   },
   mainland(ctx, t) {
     camera(ctx, t, [W * 0.47, H * 0.47], [W * 0.40, H * 0.56], 1.04, 1.12, 7);
-    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [mx, my] = PU(...CITY.china), [dx, dy] = PU(...CITY.depart), [sx, sy] = PU(...CITY.sydney);
-    solid(ctx, leg1(), 1, 1 - 0.55 * span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 3.3, 3.7), 1);
+    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ix, iy] = PU(...CITY.interior), [ax, ay] = PU(...CITY.australia);
+    solid(ctx, leg1(), 1, 1 - 0.95 * span(t, 0.2, 1.6)); dot(ctx, hx, hy, 1 - 0.95 * span(t, 0.2, 1.6), 1);
     region(ctx, span(t, 0.4, 1.6));
-    label(ctx, 'MAINLAND CHINA', mx + 200, my - 60, 30, t, 1.2);
-    label(ctx, 'ABOUT 9 MORE DAYS', mx + 200, my - 6, 52, t, 1.8, 'left', 400, 0.05);
-    dot(ctx, dx, dy, span(t, 3.6, 3.9), span(t, 3.6, 4.6), true);
-    dashed(ctx, legA(), span(t, 4.2, 6.2)); dot(ctx, sx, sy, span(t, 6.1, 6.4), 1, true);
-    label(ctx, 'AUSTRALIA', sx + 30, sy - 18, 30, t, 6.2);
+    label(ctx, 'MAINLAND CHINA', ix, iy - 26, 26, t, 1.2, 'center');                // on the land, over the interior
+    label(ctx, 'ABOUT 9 MORE DAYS', ix, iy + 24, 42, t, 1.8, 'center', 400, 0.04);
+    const A = legA(); dashed(ctx, A, span(t, 4.2, 6.2)); arrowEnd(ctx, A, span(t, 4.2, 6.2));
+    label(ctx, 'AUSTRALIA', ax, ay + 44, 30, t, 6.2, 'center');
   },
   split(ctx, t) {
     camera(ctx, t, [W * 0.40, H * 0.56], [W * 0.40, H * 0.57], 1.12, 1.16, 6);
-    base(ctx); const [dx, dy] = PU(...CITY.depart), [sx, sy] = PU(...CITY.sydney), [qx, qy] = PU(...CITY.qingdao), [hx, hy] = PU(...CITY.hongkong);
-    solid(ctx, leg1(), 1, 0.3); region(ctx, 0.7); dot(ctx, dx, dy, 1, 1, true);
-    dashed(ctx, legA(), span(t, 0.4, 2.4)); dot(ctx, sx, sy, span(t, 2.3, 2.6), 1, true); label(ctx, 'AUSTRALIA', sx + 30, sy - 18, 30, t, 2.4);
-    dashed(ctx, legQ(), span(t, 1.0, 2.4)); dot(ctx, qx, qy, span(t, 2.3, 2.6), 1, true); label(ctx, 'QINGDAO', qx + 28, qy - 14, 30, t, 2.4);
+    base(ctx); const [ax, ay] = PU(...CITY.australia), [qx, qy] = PU(...CITY.qingdao), [hx, hy] = PU(...CITY.hongkong);
+    solid(ctx, leg1(), 1, 0.05); dot(ctx, hx, hy, 0.05, 1); region(ctx, 0.7);
+    const A = legA(), Q = legQ();
+    dashed(ctx, A, span(t, 0.4, 2.4)); arrowEnd(ctx, A, span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', ax, ay + 44, 30, t, 2.4, 'center');
+    dashed(ctx, Q, span(t, 1.0, 2.4)); dot(ctx, qx, qy, span(t, 2.3, 2.6), 1, true); label(ctx, 'QINGDAO', qx + 28, qy - 14, 30, t, 2.4);
   },
 };
 window.draw = (mode, t) => { const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t); };
-fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return document.fonts.load('500 26px "Cormorant"'); })
+fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return fetch('../design/gfx/regions.json'); }).then(r => r.json()).then(d => { window.REG = d.regions; return document.fonts.load('500 26px "Cormorant"'); })
   .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
 </script></body></html>

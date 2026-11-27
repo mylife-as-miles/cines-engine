@@ -83,17 +83,18 @@ function search(ctx, t) {
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = C.side; ctx.fillRect(0, 0, W, 64);
   rr(ctx, 120, 120, 1000, 64, 32, '#f1f3f5');
-  // typed at about 30 characters a second, a beat at the space, a steady cursor while typing, blinking after
-  const q = 'prize contest organizers', start = 0.5, cps = 30;
-  let shown = 0, tt = t - start;
-  if (tt > 0) shown = Math.min(q.length, Math.floor(tt * cps - (tt > 0.25 ? 3 : 0) - (tt > 0.5 ? 3 : 0)));
-  const s = q.slice(0, Math.max(0, shown));
+  // typed like a person: 3-4 frames a letter with a fixed jitter, 6-10 frames after each space; the caret is solid
+  // while typing and blinks 0.5 s on, 0.5 s off once the query is done
+  const q = 'prize contest organizers', start = 0.5, fps = 24, times = [];
+  let tt0 = start; for (let i = 0; i < q.length; i++) { tt0 += (3 + ((i * 7) % 3 === 0 ? 1 : 0) + (q[i - 1] === ' ' ? 5 : 0)) / fps; times.push(tt0); }
+  let shown = 0; while (shown < q.length && t >= times[shown]) shown++;
+  const s = q.slice(0, shown);
   txt(ctx, s, 160, 162, 28, C.ink);
   ctx.font = '400 28px "Inter"'; const cx = 160 + ctx.measureText(s).width + 2;
-  const typing = shown < q.length, blink = typing || Math.floor((t - start - q.length / cps) * 1.0) % 2 === 0;
+  const doneT = times[q.length - 1], blink = t < doneT + 0.1 || Math.floor((t - doneT) / 0.5) % 2 === 1;
   if (blink) { ctx.fillStyle = C.ink; ctx.fillRect(cx, 136, 2, 34); }
   // results arrive a moment after the query: greeked, every one
-  const done = start + q.length / cps + 0.6, a = sm((t - done) / 0.4), r = rand(23);
+  const done = doneT + 0.6, a = sm((t - done) / 0.4), r = rand(23);
   if (a > 0) {                     // generic results, no site names; out of focus in the composite
     const RES = [['Prize draw winners: how to claim', 'What to expect after a winning notice, and how prizes are delivered to winners.'],
                  ['Travel contest official rules', 'Eligibility, prize descriptions, travel dates and conditions for winners.'],

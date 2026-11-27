@@ -36,3 +36,24 @@ every time the audience sees it.
 | The marker spilled onto the line above | The band sits on the line, about 1.3 x-heights tall; the push ends tighter (x-height about 40 px) |
 | The map's moves started at full speed; the arc's apex near the top edge | Eased camera; content lowered |
 | Two frames of double exposure in the word changes | The old word finishes before the new one starts |
+
+## Fresh review of reel 3 (27 November 2026, a third reviewer who had seen nothing before)
+
+**7.0 / 10, fail** (up from 6.4); the document passes at 8.5. What was done for reel 4:
+
+| Fault | Done |
+| --- | --- |
+| The mainland glow lit Taiwan under MAINLAND CHINA (a statement the sources do not make) | The region is now mainland China's own outline (Natural Earth admin 0, public domain; Taiwan, Hong Kong and Macau are separate features), lit at +12 % with a 1.5 px edge (`design/gfx/regions.json`) |
+| The label sat in the Pacific | Over the mainland's interior, on the land |
+| Both dashed lines left the ring labelled Hong Kong | The Hong Kong ring and the Chicago arc fade to 5 %; the lines leave from inside the mainland, with no pin |
+| The Australia line ended on Sydney, a city no source names | An open arrowhead at the continent's centroid, no ring; QINGDAO (named in the sources) keeps its ring |
+| The search typing glitched backwards and the caret never blinked | A fixed human rhythm (3-4 frames a letter, a pause after spaces), never backwards; the caret blinks once the query is done; the shot opens at 2.1x on the field and pulls back as results arrive |
+| Digit rolls showed outside the cell | Each digit masked to its own cell (cap line - 2 px to baseline + 2 px), fading at the edges, 5 frames |
+| The second YES's cap top was 24-27 px from the top, the handle tangent to the Y | YES at a cap top of about 99 px on the native, lens-shifted plates; the tighter crop is centred higher |
+| The cut-away read as a bare diagram, red outlining a laser-like gap, empty | Stitches along the whole edge and through both layers, red only on the stitches; a flat neutral unlabelled layer in the opened space (no packets, no substance); a larger slab |
+| "2017" vanished in one frame | It leaves letter by letter like every other change |
+| The calendar's years started 49 px from the edge | Its left edge stays 120 px or more in |
+| The prize line was about 21 px caps; the OVERWEIGHT ghost spoiled the reveal | The email push ends at 1.75x on the prize line; the scale shot pushes 1.35x onto the display, the unlit legend at 3.5 % |
+| The counter was nearly static for 14 s | A real eased pull-back, 1.6x to 0.7x: the cell shrinks into the dark as the years pile up |
+| "REPRIEVE" orphaned on its own line | WITH A TWO-YEAR REPRIEVE on one line, as wide as the block allows |
+| The LIFE IN PRISON figure has a sculpted face and reads as another person | Not changed here: the matte-statue faces are the settled character design (DECISIONS, Character asset). The figure reading as a man comes from the hidden bun in the frontal pose, which Codex is fixing in void_stage (a 68-degree turn that shows the bun) |

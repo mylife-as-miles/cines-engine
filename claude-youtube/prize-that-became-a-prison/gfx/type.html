@@ -149,14 +149,17 @@ function changeLine(ctx, a, b, x, y, st, t, t0) {
 // Rolling year digits (lining tabular figures, so nothing shifts sideways): from a to b one step, each changing digit
 // rolls up inside a one-line mask over `dur` seconds, eased in and out.
 function roll(ctx, a, b, x, y, st, t, t0, dur) {
+  // each changing digit slides up inside its own cell (cap line - 2 px to baseline + 2 px), fading toward the cell's
+  // edges, over about 5 frames eased in and out; unchanged digits never move (tabular figures)
   const L = look(), p = cl((t - t0) / dur), r = p * p * (3 - 2 * p), sa = String(a), sb = String(b);
   font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
-  const at = (s, i) => ctx.measureText(s.slice(0, i)).width, x0 = x - at(sb, sb.length) / 2, pitch = st.size * 1.1;
+  const at = (s, i) => ctx.measureText(s.slice(0, i)).width, x0 = x - at(sb, sb.length) / 2;
+  const cap = ctx.measureText('0').actualBoundingBoxAscent, pitch = cap + 6;
   for (let i = 0; i < sb.length; i++) {
     const cx = x0 + at(sb, i), dw = at(sb, i + 1) - at(sb, i);
-    ctx.save(); ctx.beginPath(); ctx.rect(cx - 6, y - st.size * 0.82, dw + 12, st.size * 0.98); ctx.clip();
+    ctx.save(); ctx.beginPath(); ctx.rect(cx - 6, y - cap - 2, dw + 12, cap + 4); ctx.clip();
     if (sa[i] === sb[i] || p >= 1) ctx.fillText(sb[i], cx, y);
-    else { ctx.fillText(sa[i], cx, y - r * pitch); ctx.fillText(sb[i], cx, y + (1 - r) * pitch); }
+    else { ctx.globalAlpha = 1 - r; ctx.fillText(sa[i], cx, y - r * pitch); ctx.globalAlpha = r; ctx.fillText(sb[i], cx, y + (1 - r) * pitch); }
     ctx.restore();
   }
   ctx.restore();
@@ -167,55 +170,52 @@ function roll(ctx, a, b, x, y, st, t, t0, dur) {
 // standing centre or right. With `life`, the date fades first, then both lines change in place to LIFE IN PRISON (the
 // sentence was reduced to life later, so no date stands over it).
 function sentenceCard(ctx, t, life) {
-  // DEATH SENTENCE fitted to the left block (x 0.08-0.44 W, clear of a figure centre or right); the reprieve at 62 %
-  // of it on two lines, so it is never the small print; the date small above, last to arrive.
+  // DEATH SENTENCE fitted to the left block (x 0.08-0.44 W, clear of a figure centre or right); the reprieve on one line
+  // under it, as wide as the block allows; the date small above, last to arrive. With `life` the date leaves letter
+  // by letter first, then both lines change in place to LIFE IN PRISON.
   const L = look(), x = 0.08 * W, maxW = 0.44 * W - x;
   const big = Object.assign({}, L.big); big.size *= Math.min(1.15, maxW / width(ctx, 'DEATH SENTENCE', big));
-  const q = Object.assign({}, L.big, { size: big.size * 0.62 });
-  const y1 = 0.42 * H, y2 = y1 + big.size * 0.98, y3 = y2 + q.size * 1.12, yd = y1 - big.size * 1.05;
-  const dateA = life ? 1 - cl((t - 3.2) / 0.3) : 1;
-  if (dateA > 0) { ctx.save(); ctx.globalAlpha = dateA; reveal(ctx, '2017', x, yd, L.sup, t, 1.0); ctx.restore(); }
-  if (!life || t < 3.5) {
-    reveal(ctx, 'DEATH SENTENCE', x, y1, big, t, 0.0);
-    reveal(ctx, 'WITH A TWO-YEAR', x, y2, q, t, 0.5); reveal(ctx, 'REPRIEVE', x, y3, q, t, 0.75);
-  } else {
-    changeLine(ctx, 'DEATH SENTENCE', 'LIFE IN PRISON', x, y1, big, t, 3.5);
-    changeLine(ctx, 'WITH A TWO-YEAR', '', x, y2, q, t, 3.5); changeLine(ctx, 'REPRIEVE', '', x, y3, q, t, 3.5);
-  }
+  const q = Object.assign({}, L.big, { track: 0.12 }); q.size = Math.min(big.size * 0.62, q.size * maxW / width(ctx, 'WITH A TWO-YEAR REPRIEVE', q));
+  const y1 = 0.42 * H, y2 = y1 + big.size * 0.98, yd = y1 - big.size * 1.05;
+  if (!life || t < 3.2) reveal(ctx, '2017', x, yd, L.sup, t, 1.0);
+  else changeLine(ctx, '2017', '', x, yd, L.sup, t, 3.2);
+  if (!life || t < 3.45) { reveal(ctx, 'DEATH SENTENCE', x, y1, big, t, 0.0); reveal(ctx, 'WITH A TWO-YEAR REPRIEVE', x, y2, q, t, 0.5); }
+  else { changeLine(ctx, 'DEATH SENTENCE', 'LIFE IN PRISON', x, y1, big, t, 3.45); changeLine(ctx, 'WITH A TWO-YEAR REPRIEVE', '', x, y2, q, t, 3.45); }
 }
 // ---- the film's type moments ----
 // Each mode draws one moment; t is seconds from the moment's cue. Positions are fractions of the frame and sit on the
 // plate's darkest plain area (checked on the stills).
-const YES_Y = 0.262 * H;   // baseline: clear of the suitcase handle in void bags and inspection match
+const YES_Y = 0.29 * H;    // YES's baseline: cap top about 99 px (title-safe), about 65 px above the case handle on the native 2560 bag plates (lens-shifted)
+const CAL_X = 120 + 250;   // the calendar's centre: its left edge stays 120 px or more from the frame edge
 const MOMENTS = {
   place_2014: (ctx, t) => { const L = look();      // checkin_hall wide, low left
     reveal(ctx, '2014', 0.072 * W, 0.80 * H, L.sup2, t, 0.0);
     reveal(ctx, 'CHINA', 0.074 * W, 0.80 * H + L.sup.size * 1.25 + 34, L.sup, t, 0.35); },
   yes: (ctx, t) => { const L = look();             // above the two bags (void bags / inspection match), twice
     if (t < 3.0) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 0.0);
-    else land(ctx, 'YES', 0.5 * W, YES_Y - 40, L.hero, t, 3.0, { from: 1.45, punch: true }); },
+    else land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, t, 3.0, { from: 1.45, punch: true }); },
   yes_when: (ctx, t) => { const L = look();
     if (t < 0.9) land(ctx, 'YES', 0.5 * W, YES_Y, L.hero, 10, 0); else erode(ctx, 'YES', 'WHEN?', 0.5 * W, YES_Y, L.hero, t, 0.9); },
   death_2017: (ctx, t) => sentenceCard(ctx, t, false),   // cold open
   sentence_life: (ctx, t) => sentenceCard(ctx, t, true),  // chapter 6: the same card, then life
   calendar: (ctx, t) => { const L = look();        // ch 5, beside the empty pool: 2014, 2015, 2016, 2017, each held
     const hold = 1.7, k = Math.min(3, Math.floor(t / hold)), u = t - k * hold;
-    if (k === 0) land(ctx, '2014', 0.15 * W, 0.56 * H, L.num, t, 0.0, { from: 1.3 });
-    else roll(ctx, 2013 + k, 2014 + k, 0.15 * W, 0.56 * H, L.num, u, 0.0, 0.3); },
+    if (k === 0) land(ctx, '2014', CAL_X, 0.56 * H, L.num, t, 0.0, { from: 1.3 });
+    else roll(ctx, 2013 + k, 2014 + k, CAL_X, 0.56 * H, L.num, u, 0.0, 0.21); },
   counter: (ctx, t) => { const L = look();         // void cell, camera locked: twelve years, each one a beat
     // 2014 holds 1.2 s; then one year at a time, the gaps growing from 0.55 s to 1.0 s, so the years feel heavier as
     // they pile up; 2026 lands at about 10 s and holds (the moment runs 14 s or more)
     const ticks = [1.2]; for (let k = 1; k < 12; k++) ticks.push(ticks[k - 1] + 0.55 + 0.45 * (k - 1) / 10);
     let k = 0; while (k < 12 && t >= ticks[k]) k++;
     if (k === 0) land(ctx, '2014', 0.5 * W, 0.22 * H, L.num, t, 0.0, { from: 1.25 });
-    else roll(ctx, 2013 + k, 2014 + k, 0.5 * W, 0.22 * H, L.num, t - ticks[k - 1], 0.0, 0.3); },
+    else roll(ctx, 2013 + k, 2014 + k, 0.5 * W, 0.22 * H, L.num, t - ticks[k - 1], 0.0, 0.21); },
   title: (ctx, t) => { const L = look();           // over void bags in the beam
     // lands whole on the score's peak (cut in slightly large, settles), then holds while the score decays
     // two centred lines, measured so the wider one stays inside 70 % of the frame width
     const st = Object.assign({}, L.big, { size: L.big.size * 1.15, track: L.big.track + 0.02 });
     const fit = Math.min(1, 0.7 * W / width(ctx, 'BECAME A PRISON', st)); st.size *= fit;
-    land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 30, st, t, 0.0, { from: 1.12 });
-    land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 30 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
+    land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 8, st, t, 0.0, { from: 1.12 });
+    land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
   date_gene: (ctx, t) => { const L = look();
     reveal(ctx, 'JANUARY 25, 2026', 0.07 * W, 0.86 * H, L.sup, t, 0.0); },
 };
@@ -225,7 +225,7 @@ const MOMENTS = {
 // spotlight narrowing. The second YES is a straight cut to a tighter frame with the light closing in on the bags.
 const PLATE = {
   yes: t => t < 3.0 ? { z: 1.0, cx: 0.5, cy: 0.5, spot: null }
-                    : { z: 1.09, cx: 0.5, cy: 0.56, spot: { r: 0.52 - 0.17 * E.out(cl((t - 3.0) / 0.9)), dark: 0.62 } },
+                    : { z: 1.09, cx: 0.5, cy: 0.47, spot: { r: 0.52 - 0.17 * E.out(cl((t - 3.0) / 0.9)), dark: 0.62 } },
 };
 window.plateCam = (mode, t) => (PLATE[mode] ? PLATE[mode](t) : { z: 1, cx: 0.5, cy: 0.5, spot: null });
 let bgImg = null;

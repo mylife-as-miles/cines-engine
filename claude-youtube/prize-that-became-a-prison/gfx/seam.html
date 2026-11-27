@@ -47,8 +47,8 @@ function cutaway(ctx, t) {
   const open = sm((t - 0.9) / 0.9) * (1 - Math.pow(cl((t - 3.1) / 0.22), 2));   // parts, holds, snaps shut
   const reveal = eo(t / 0.7), drift = 1 + 0.02 * eo(t / 5);                        // a slow push across the shot
   ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2); ctx.globalAlpha = reveal;
-  const X0 = 420, X1 = 1500, Y = 470, D = [150, -120];                              // D: the receding depth vector
-  const LEA = 64, LIN = 26, hinge = [X0 + 120, Y + LEA];                            // leather and lining thickness
+  const X0 = 330, X1 = 1560, Y = 440, D = [170, -136];                              // D: the receding depth vector
+  const LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];                            // leather and lining thickness
   const ang = 0.085 * open;                                                         // the lining's swing, radians
   const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
     return [hinge[0] + dx * c - dy * s2, hinge[1] + dx * s2 + dy * c]; };
@@ -65,20 +65,31 @@ function cutaway(ctx, t) {
   // the lining (drawn first, it sits behind the leather's cut face when closed)
   const lin = [[X0, Y + LEA], [X1, Y + LEA], [X1, Y + LEA + LIN], [X0, Y + LEA + LIN]].map(([x, y]) => x < hinge[0] ? [x, y] : rot(x, y));
   slab(lin, '#22272e', '#2b3038', 'rgba(214,208,198,0.45)'); hatch(lin, 'rgba(214,208,198,0.06)');
-  // the hidden space: between the leather's underside and the swung lining, outlined in red, never filled
+  // the hidden space: between the leather and the swung lining, a flat neutral layer that was sewn in (schematic only:
+  // no packets, no substance, no label); its outline is grey, because red marks only the seam
   if (open > 0.01) {
-    const a2 = cl(open * 1.6); ctx.save(); ctx.strokeStyle = `rgba(${RED},${0.95 * a2})`; ctx.lineWidth = 2.6;
-    ctx.shadowColor = `rgba(${RED},${0.6 * a2})`; ctx.shadowBlur = 10;
-    const p0 = [hinge[0], Y + LEA], p1 = [X1 - 30, Y + LEA], p2 = rot(X1 - 30, Y + LEA);
-    ctx.beginPath(); ctx.moveTo(...p0); ctx.lineTo(...p1); ctx.lineTo(...p2); ctx.closePath(); ctx.stroke(); ctx.restore();
+    const a2 = cl(open * 1.6), p0 = [hinge[0] + 6, Y + LEA], p1 = [X1 - 30, Y + LEA], p2 = rot(X1 - 30, Y + LEA);
+    const mid = (u, v, k) => [u[0] + (v[0] - u[0]) * k, u[1] + (v[1] - u[1]) * k];
+    const l0 = mid(p0, p1, 0.08), l1 = mid(p0, p1, 0.92), l3 = mid(p0, p2, 0.08), l2 = mid(p0, p2, 0.92);
+    const q0 = mid(l0, l3, 0.25), q1 = mid(l1, l2, 0.25), q2 = mid(l1, l2, 0.7), q3 = mid(l0, l3, 0.7);
+    ctx.save(); ctx.globalAlpha = a2; ctx.beginPath(); [q0, q1, q2, q3].forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath();
+    ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.2; ctx.stroke(); ctx.restore();
   }
   // the leather
   const lea = [[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]];
   slab(lea, '#3b342d', '#4a4239', 'rgba(214,208,198,0.55)'); hatch(lea, 'rgba(214,208,198,0.08)');
-  // the seam: thread through both layers at the hinge, in the film's red (this is the seam the red always marks)
-  ctx.save(); ctx.strokeStyle = `rgba(${RED},0.9)`; ctx.lineWidth = 2.2;
-  for (let i = 0; i < 4; i++) { const x = X0 + 30 + i * 26; ctx.beginPath(); ctx.moveTo(x, Y - 6); ctx.lineTo(x, Y + LEA + LIN + 6); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x + D[0] * 0.6, Y + D[1] * 0.6 - 4); ctx.lineTo(x + D[0] * 0.6 + 12, Y + D[1] * 0.6 - 4); ctx.stroke(); }
+  // the seam: a running stitch along the whole top edge and through both layers at the hinge, in the film's red,
+  // each stitch kept on its face
+  ctx.save(); ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.2; ctx.lineCap = 'butt';
+  for (let x = X0 + 18; x < X1 - 14; x += 22) {                     // along the cut face, just under the top edge
+    ctx.beginPath(); ctx.moveTo(x, Y + 10); ctx.lineTo(x + 11, Y + 10); ctx.stroke();
+  }
+  for (let k = 0.12; k < 0.9; k += 0.12) {                          // along the receding top face
+    const x = X0 + 30 + D[0] * k, y = Y + D[1] * k; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 11, y); ctx.stroke();
+  }
+  for (let i = 0; i < 4; i++) {                                      // through both layers at the hinge, inside the faces
+    const x = X0 + 30 + i * 26; ctx.beginPath(); ctx.moveTo(x, Y + 3); ctx.lineTo(x, Y + LEA + LIN - 3); ctx.stroke();
+  }
   ctx.restore(); ctx.restore();
 }
 window.draw = (mode, t) => {

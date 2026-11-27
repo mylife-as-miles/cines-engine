@@ -13,7 +13,7 @@ html,body{margin:0;background:#000}canvas{display:block}
 // holding. Contract: window.draw('display', t), window.READY.
 const W = 900, H = 384, cl = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const ease = x => 1 - Math.pow(1 - cl(x), 3);
-const INK = '#1b1f25', FACE = '#eef0f2', GHOST = 'rgba(27,31,37,0.07)';
+const INK = '#1b1f25', FACE = '#eef0f2', GHOST = 'rgba(27,31,37,0.035)';
 function draw(mode, t) {
   const ctx = document.getElementById('c').getContext('2d');
   ctx.fillStyle = FACE; ctx.fillRect(0, 0, W, H);

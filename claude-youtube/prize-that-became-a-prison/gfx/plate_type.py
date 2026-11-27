@@ -40,6 +40,7 @@ def main():
     cams = json.load(open(camf))
     plate = cv2.cvtColor(cv2.imread(a.plate, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
     ph, pw = plate.shape[:2]
+    edge = tuple(float(v) for v in np.median(np.concatenate([plate[:4].reshape(-1, 3), plate[-4:].reshape(-1, 3), plate[:, :4].reshape(-1, 3), plate[:, -4:].reshape(-1, 3)]), 0))
     graded = os.path.join(tmp, "plate.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(a.fps),
                            "-i", "-", "-vf", grade_filter(), "-c:v", "libx264", "-crf", "12", "-pix_fmt", "yuv420p", graded], stdin=subprocess.PIPE)
@@ -50,9 +51,12 @@ def main():
         c = cams[i] or {"z": 1, "cx": 0.5, "cy": 0.5, "spot": None}
         k = max(W / pw, H / ph) * c["z"] * push
         dw, dh = pw * k, ph * k
-        bx = min(0.0, max(W - dw, W * 0.5 - dw * c["cx"])); by = min(0.0, max(H - dh, H * 0.5 - dh * c["cy"]))
+        # cover the frame when the plate is larger; when a pull-back makes it smaller (the counter), centre it in the
+        # void, filled with the plate's own edge colour
+        bx = min(0.0, max(W - dw, W * 0.5 - dw * c["cx"])) if dw >= W else W * 0.5 - dw * c["cx"]
+        by = min(0.0, max(H - dh, H * 0.5 - dh * c["cy"])) if dh >= H else H * 0.5 - dh * c["cy"]
         A = np.float32([[k, 0, bx], [0, k, by]])
-        img = cv2.warpAffine(plate, A, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+        img = cv2.warpAffine(plate, A, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue=edge)
         if c.get("spot"):            # the light closing in, in the plate (before the grade), as in type.html's preview
             r1, r0 = W * c["spot"]["r"], W * c["spot"]["r"] * 0.55
             d = np.sqrt((xx - W / 2) ** 2 + (yy - H * 0.58) ** 2)
