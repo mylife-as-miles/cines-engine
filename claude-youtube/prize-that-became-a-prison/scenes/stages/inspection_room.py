@@ -1003,7 +1003,10 @@ def apply_camera(name):
     for light, original in _STATE["room_light_links"]:
         light.light_linking.receiver_collection = _STATE["outside_pair"] if name in BAG_RETURNS else original
     _STATE["cheek_flag"].hide_render = name != "dawn_close"
-    _STATE["duffel_flag"].hide_render = name not in ("wide_pre", "two_shot_pre")
+    reverse = name in ("wide_pre", "two_shot_pre")
+    _STATE["duffel_flag"].hide_render = not reverse
+    for socket, base, matte_value in _STATE["reverse_duffel_inputs"]:
+        socket.default_value = matte_value if reverse else base
     for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0, 0))):
         light.hide_render = watts == 0
         light.data.energy = watts
@@ -1125,6 +1128,18 @@ def build(cast=True):
     _STATE["outside_case"] = outside
     case_meshes = list(outside.objects)
     duffel_meshes = props.meshes(_STATE["props"]["extra-bag-closed"])
+    # Preserve the black textile value with the reflection card clear of the officer's key.
+    fabric_inputs = []
+    for material in {obj.active_material for obj in duffel_meshes if obj.active_material}:
+        if not material.use_nodes:
+            continue
+        for node in material.node_tree.nodes:
+            if node.type == "HUE_SAT":
+                fabric_inputs.append((node.inputs["Value"], 0.10))
+            elif node.type == "BSDF_PRINCIPLED":
+                fabric_inputs.append((node.inputs["Specular IOR Level"], 0.0))
+    _STATE["reverse_duffel_inputs"] = [(socket, socket.default_value, matte_value)
+                                       for socket, matte_value in fabric_inputs]
     outside_pair = bpy.data.collections.new("bench light excluding both bags")
     for ob in case_meshes + duffel_meshes:
         outside_pair.objects.link(ob)
