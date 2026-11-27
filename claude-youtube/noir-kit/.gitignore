@@ -1,2 +1,6 @@
 assets/**
 !assets/README.md
+!assets/props/
+!assets/props/*.glb
+!assets/makehuman/
+!assets/makehuman/**
