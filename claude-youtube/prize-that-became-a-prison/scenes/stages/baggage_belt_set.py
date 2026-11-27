@@ -3,11 +3,13 @@
 A long, low, tunnel-like hall of painted block walls under a concrete slab with downstand beams. One belt conveyor runs
 its whole length along X: it comes out of the check-in side through a rubber strip curtain in the end wall (x = 0) and
 disappears into a second, dark curtain in the far wall (x = 28). Galvanised side guards with rolled tops, a black rubber
-belt worn smooth down its middle, painted frame and legs, return rollers under it, the drive at the curtain end. A sorter
-chute leaves the belt at x = 10 on the +Y side (a yellow diverter paddle on the far guard, a stainless slide onto a
-gravity-roller landing). Fluorescent battens hang over the walkway side (-Y); the last ones are dimmer and the very
-last is dead, so the light falls away down the hall. Practicals: the battens, caged bulkhead lamps, one sodium flood,
-the control panel's lamps and blank screen, the light behind the curtain, the far door's vision panel.
+belt (matt, scuffed, dusty at its edges), a powered-roller transfer where the in-feed belt hands over to the hall belt,
+painted frame and legs, return rollers under it, the drive at the curtain end. A sorter chute leaves the belt at x = 10
+on the +Y side (a yellow diverter paddle on the far guard, a stainless slide onto a gravity-roller landing). Fluorescent
+battens hang over the walkway side (-Y); the last ones are dimmer and the very last is dead, so the light falls away
+down the hall; a sparse, weaker service row hangs over the far side. Practicals: the battens, caged bulkhead lamps,
+one sodium flood, the control panel's lamps and blank screen, the lit room behind the curtain (seen as slivers
+between the strips), the far door's vision panel.
 
 No legible text anywhere: panels and screens are blank, signs are bare pictogram shapes.
 """

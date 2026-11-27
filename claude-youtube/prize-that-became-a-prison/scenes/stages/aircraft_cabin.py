@@ -72,11 +72,11 @@ def _toward(loc, az_deg, el_deg, dist):
 
 AISLE_CAM = (-1.04, 1.70, 1.56)
 WINDOW_CAM = (-1.10, 4.42, 1.24)
-OVER_CAM = (-2.14, 3.40, 1.40)
+OVER_CAM = (-2.10, 3.62, 1.36)
 FOCUS = {
     "fx_aisle": tuple(HEAD),
     "fx_face": tuple(EYES),
-    "fx_over": _toward(OVER_CAM, 38.0, -5.0, 2.2),
+    "fx_over": _toward(OVER_CAM, 29.0, -5.0, 2.0),
 }
 
 CAMERAS = {
@@ -88,21 +88,21 @@ CAMERAS = {
     # hands in her lap
     "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.10, 0.985), lens=30, focus="fx_face", fstop=2.8,
                    beat="ch03"),
-    # Ch 03: from behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red
-    # tip light just under the horizon, and the dark below; the back of her head soft at the frame's edge
-    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 43.0, -6.5, 1.2), lens=50, focus="fx_over", fstop=16.0,
+    # Ch 03: behind her right shoulder, over the top of her seat, out of the window: the wing reaching to its red tip
+    # light under the horizon, and the dark below; her head soft in the foreground
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 37.5, -12.5, 1.2), lens=37, focus="fx_over", fstop=16.0,
                  beat="ch03"),
 }
-TIP_DIR = (37.0, -5.5)                          # the wing tip from "over": degrees forward of abeam, above level
+TIP_DIR = (28.5, -5.2)                          # the wing tip from "over": degrees forward of abeam, above level
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {"haze": 1.0},
-    "window": {"haze": 0.0},
-    "over": {"haze": 0.0},
+    "aisle": {"haze": 1.0, "fill": 0.0},
+    "window": {"haze": 0.0, "fill": 1.0},
+    "over": {"haze": 0.0, "fill": 0.0},
 }
 READ = "reading_light"
 _STATE = {"base": {}}
-GROUPS = ("key", "spill", "win", "cove", "wash", "path", "screen", "galley", "sky", "moon")
+GROUPS = ("key", "spill", "fill", "win", "cove", "amb", "wash", "path", "screen", "galley", "sky", "moon")
 
 
 # ---------------------------------------------------------------- shades (0 open, 1 closed)
@@ -352,7 +352,7 @@ def back_y(z):
     """The backrest's front (block-local y) at height z: cushion, lumbar roll, headrest cover."""
     sr, cr = math.sin(st.RECLINE), math.cos(st.RECLINE)
     v = (z - st.PIVOT_Z) / cr
-    w = -0.09 if 0.10 < v < 0.24 else -0.093 if v > 0.5 + st.DV else -0.072
+    w = -0.09 if 0.10 < v < 0.24 else -0.092 if v > 0.5 + st.DV else -0.072
     v = (z - st.PIVOT_Z + w * sr) / cr
     return -v * sr - w * cr
 
@@ -427,20 +427,23 @@ def save_groups(name, out):
     folder = os.environ.get("CABIN_EXR")
     if not folder:
         return
+    tmp = None
     try:
         os.makedirs(folder, exist_ok=True)
-        sc = bpy.context.scene
-        ims = sc.render.image_settings
-        keep = (ims.file_format, ims.color_depth, ims.color_mode)
+        tmp = bpy.data.scenes.new("exr settings")
+        ims = tmp.render.image_settings
+        if hasattr(ims, "media_type"):
+            ims.media_type = "MULTI_LAYER_IMAGE"
         ims.file_format = "OPEN_EXR_MULTILAYER"
         ims.color_depth, ims.exr_codec = "16", "ZIP"
         path = os.path.join(folder, os.path.basename(str(out)).replace(".png", "") + ".exr")
-        bpy.data.images["Render Result"].save_render(path, scene=sc)
-        ims.file_format = keep[0]
-        ims.color_depth, ims.color_mode = keep[1], keep[2]
+        bpy.data.images["Render Result"].save_render(path, scene=tmp)
         print(f"CABIN light groups saved: {path}", flush=True)
     except Exception as e:  # never lose a render to the extra file
         print(f"CABIN light groups not saved: {e!r}", flush=True)
+    finally:
+        if tmp is not None:
+            bpy.data.scenes.remove(tmp)
 
 
 def install_hook():
@@ -464,17 +467,18 @@ def group(ob, g):
 
 def lights():
     y_d = st.row_y(DAWN_ROW)
-    # Dawn's reading light: the lens in the PSU over her seat, a warm-white cone onto her lap, hands and face
-    lens = Vector((DAWN_SEAT[0], y_d + 0.30, PSU_Z[0] - 0.024))
-    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.10, 0.90), 28.0, (1.0, 0.87, 0.70), 56.0, 0.45, radius=0.018)
+    # Dawn's reading light: the lens in the PSU over her knees, a warm-white cone onto her lap and hands, its soft
+    # edge across her face (the crown of her head stays out of it)
+    lens = Vector((DAWN_SEAT[0], y_d + st.LENS_Y, PSU_Z[0] - 0.024))
+    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.33, 0.66), 42.0, (1.0, 0.84, 0.64), 72.0, 0.8, radius=0.018)
     sp.data.use_soft_falloff = False
     group(sp, "key")
     # the lens scatters a little outside its beam: the wall, the headrests and the seat back in front
-    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.22, 0.62), 8.0, (1.0, 0.87, 0.70),
+    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.30, 0.62), 10.0, (1.0, 0.84, 0.64),
                  150.0, 0.8, radius=0.03)
     group(sl, "spill")
     # the window's cool glow on her face (sky and moon through the pane)
-    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 0.9, (0.6, 0.72, 1.0),
+    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 3.5, (0.6, 0.72, 1.0),
                  spread=100, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
     wf.visible_glossy = False
     wf.visible_camera = False
@@ -483,7 +487,7 @@ def lights():
     yc, length = (st.REAR_Y + st.FRONT_Y) / 2, st.FRONT_Y - st.REAR_Y - 0.4
     for side in (-1, 1):
         for x, z, rot, k in ((side * 1.52, 2.372, side * 2.10, 1), (side * 0.81, 2.432, -side * 2.02, -1)):
-            a = st.area(f"cove_light_{side}_{k}", (x, yc, z), (0.03, length), 9.0, (0.36, 0.5, 1.0), spread=150)
+            a = st.area(f"cove_light_{side}_{k}", (x, yc, z), (0.03, length), 30.0, (0.36, 0.5, 1.0), spread=150)
             a.rotation_euler = (0.0, rot, 0.0)
             a.visible_camera = False
             group(a, "cove")
@@ -498,7 +502,7 @@ def assign_groups():
     for g in GROUPS:
         if g not in [x.name for x in vl.lightgroups]:
             vl.lightgroups.add(name=g)
-    rules = (("pathled_", "path"), ("pathglow_", "path"), ("path_light_", "path"), ("wash_", "wash"),
+    rules = (("pathled_", "path"), ("pathglow_", "path"), ("path_light_", "path"), ("wash_", "wash"), ("amb_", "amb"),
              ("cove_", "cove"), ("screenglow_", "screen"), ("screenspill_", "screen"), ("galley_", "galley"),
              ("bulk_sign_", "galley"), ("sky", "sky"), ("navlight", "moon"), ("strobe", "moon"),
              ("nav_red_light", "moon"), ("moon", "moon"), ("lens_", "key"))
@@ -541,7 +545,7 @@ def build(cast=True):
         bpy.context.scene.collection.objects.link(e)
         e.location = p
     # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
-    hz = sk.haze((0.9, 1.3, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.15, 1.05), 0.06,
+    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.25, 1.05), 0.12,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -561,6 +565,18 @@ def build(cast=True):
         hp, fwd = head_points(d)
         print(f"CABIN Dawn head centre ({hp.x:.3f}, {hp.y:.3f}, {hp.z:.3f}) (planned {tuple(round(c, 3) for c in HEAD)}),"
               f" head bone up ({fwd.x:.2f}, {fwd.y:.2f}, {fwd.z:.2f})", flush=True)
+        # a low, soft fill on the side of her face the "window" camera sees (her lamp's light off the pale linings),
+        # on her alone
+        dc = bpy.data.collections.new("dawn only")
+        for o in [d] + list(d.children_recursive):
+            if o.type == "MESH":
+                dc.objects.link(o)
+        ff = st.area("face_fill", (-1.62, HEAD.y + 0.52, 1.32), (0.4, 0.4), 4.5, (1.0, 0.9, 0.8), spread=120,
+                     aim=(HEAD.x, HEAD.y + 0.05, HEAD.z - 0.06))
+        ff.visible_camera = False
+        ff.visible_glossy = False
+        ff.light_linking.receiver_collection = dc
+        group(ff, "fill")
         if os.environ.get("CABIN_PAX", "1") != "0":
             for name, kind, row, b, s, up, lean, kw in PAX:
                 h = people.man(name, **kw) if kind == "man" else people.staff(name, **kw)

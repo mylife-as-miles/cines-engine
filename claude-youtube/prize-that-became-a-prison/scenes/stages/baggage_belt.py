@@ -8,11 +8,13 @@ here), every bag with a blank paper airline tag. No people. Stills; camera motio
 
     <bpy python> -I scenes/shoot.py -- baggage_belt <cam> out.png [--nocast]
 
-Cameras: curtain (her two bags coming through the strip curtain), belt (low along the belt, her bags leading the
-others away into the dark), overhead (straight down on the belt at the sorter, her bags among the others).
-Each camera carries its own layout of the bags on the belt; before each render the stage puts the bags there and
-lays the curtain strips over whatever is pushing through them (shoot.py calls setkit.render once per camera, which
-this module wraps). Set and materials: baggage_belt_set.py.
+Cameras: curtain (from over the belt, looking back at the end wall: her case pushing out through the strip curtain,
+her extra bag ahead of it on the transfer rollers), belt (low on the belt's centre line, one-point down the tunnel:
+her two bags nearest, the others ahead of them, into the dark), overhead (straight down on the belt at the sorter,
+her bags among the others).
+Each camera carries its own layout of the bags on the belt; before each render the stage puts the bags there, lays
+the curtain strips over whatever is pushing through them and moves the belt's lacing seam along with the bags
+(shoot.py calls setkit.render once per camera, which this module wraps). Set and materials: baggage_belt_set.py.
 """
 import math
 import os

@@ -246,7 +246,7 @@ def lining(name, rgb=(0.40, 0.402, 0.395), seams=0.0):
     return m
 
 
-def carpet(name, base=(0.035, 0.040, 0.052), lane_x=()):
+def carpet(name, base=(0.065, 0.074, 0.095), lane_x=()):
     """Cabin carpet: a dense cut pile with a small woven diamond motif (two tones close in value), each roll a touch
     apart, flattened and soiled along the aisles (`lane_x`: centres of the aisle lanes)."""
     m, nt, b = _new(name)
@@ -273,7 +273,7 @@ def carpet(name, base=(0.035, 0.040, 0.052), lane_x=()):
         lane = w if lane is None else _math(nt, "MAXIMUM", lane, w)
     if lane is not None:
         dirt = _math(nt, "MULTIPLY", lane, _maprange(nt, _noise(nt, o, 2.2, 5.0, 0.62), 0.35, 0.7, 0.4, 0.9))
-        col = _mix(nt, dirt, col, (0.055, 0.054, 0.056))
+        col = _mix(nt, dirt, col, (0.085, 0.084, 0.088))
         _link(nt, _maprange(nt, dirt, 0.0, 1.0, 0.95, 0.82), b.inputs["Roughness"])
     else:
         b.inputs["Roughness"].default_value = 0.95
@@ -424,13 +424,13 @@ def sky(name, dip=-0.059):
     deck = _mix(nt, _maprange(nt, rel, -0.002, -0.05, 1.0, 0.0), deck, (0.05, 0.056, 0.07))   # haze at the horizon
     col = _mix(nt, below, col, deck)
     _link(nt, col, em.inputs["Color"])
-    em.inputs["Strength"].default_value = 1.0
+    em.inputs["Strength"].default_value = 4.0
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])
     m.cycles.emission_sampling = "NONE"
     return m
 
 
-def wing_paint(name, rgb=(0.34, 0.35, 0.36)):
+def wing_paint(name, rgb=(0.26, 0.27, 0.28)):
     """Wing upper skin, no livery: satin grey-white paint, darker walkway and panel tones, streaks of grime aft."""
     m, nt, b = _new(name)
     o = _obj(nt)
@@ -474,6 +474,27 @@ def paper(name, rgb=(0.46, 0.45, 0.42), rough=0.82, coat=0.0):
     return m
 
 
+def halo(name, rgb, strength):
+    """A soft glow round a small light: a transparent shell that emits where it faces the eye (no hard edge)."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.remove(nt.nodes["Principled BSDF"])
+    lw = _n(nt, "ShaderNodeLayerWeight")
+    lw.inputs["Blend"].default_value = 0.5
+    f = _math(nt, "POWER", _math(nt, "SUBTRACT", 1.0, _out(lw, "Facing")), 5.0)
+    em = _n(nt, "ShaderNodeEmission")
+    em.inputs["Color"].default_value = (*rgb, 1)
+    _link(nt, _math(nt, "MULTIPLY", f, strength), em.inputs["Strength"])
+    tr = _n(nt, "ShaderNodeBsdfTransparent")
+    add = _n(nt, "ShaderNodeAddShader")
+    _link(nt, tr.outputs[0], add.inputs[0])
+    _link(nt, em.outputs[0], add.inputs[1])
+    _link(nt, add.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    m.cycles.emission_sampling = "NONE"
+    return m
+
+
 def materials(lanes=()):
     M.clear()
     M["seat"] = upholstery("seat cloth")
@@ -485,6 +506,7 @@ def materials(lanes=()):
     M["lining"] = lining("sidewall lining")
     M["bin"] = lining("bin doors", (0.42, 0.42, 0.412))
     M["ceiling"] = lining("ceiling panels", (0.38, 0.385, 0.39))
+    M["seam"] = pbr("panel joint", (0.06, 0.062, 0.066), (0.5, 0.62), spec=0.3)
     M["dado"] = pbr("dado panel", (0.10, 0.104, 0.11), (0.45, 0.6), spec=0.35, bump=0.05, bscale=400, grime=0.4)
     M["carpet"] = carpet("cabin carpet", lane_x=lanes)
     M["track"] = aluminium("seat track")
@@ -513,6 +535,7 @@ def materials(lanes=()):
     M["wing"] = wing_paint("wing paint")
     M["wing_dark"] = pbr("wing edges", (0.16, 0.165, 0.17), (0.35, 0.5), spec=0.5)
     M["nav_red"] = glow("nav light red", (1.0, 0.08, 0.05), 40.0)
-    M["nav_white"] = glow("nav light white", (1.0, 0.97, 0.92), 25.0)
+    M["nav_halo"] = halo("nav light halo", (1.0, 0.07, 0.04), 0.5)
+    M["nav_white"] = glow("nav light white", (1.0, 0.97, 0.92), 8.0)
     M["black"] = pbr("black void", (0.005, 0.005, 0.006), (0.8, 0.9))
     return M

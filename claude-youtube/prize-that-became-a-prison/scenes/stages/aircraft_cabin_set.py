@@ -305,6 +305,39 @@ def rslab(name, xs, vs, ws, m, coll, rt=0.06, rb=0.02, bevel=0.012, segs=3, arc=
     return finish(ob, bevel, segs, angle=50)
 
 
+def cover_cloth(name, sx, coll, half=0.15):
+    """The headrest cover: a strip of cloth draped over the seat's top (rounded where it turns over the front and the
+    back edge), 19 cm down the front and 9 cm down the back, with a little thickness and a slight crumple."""
+    top, front, back, r = BACK_TOP + 0.0045, -0.0885, 0.0515, 0.027
+    prof = [(front, 0.60 + (top - r - 0.60) * k / 6) for k in range(6)]
+    prof += [(front + r - r * math.cos(math.pi / 2 * k / 6), top - r + r * math.sin(math.pi / 2 * k / 6)) for k in range(7)]
+    prof += [(front + r + (back - front - 2 * r) * k / 3, top) for k in (1, 2)]
+    prof += [(back - r + r * math.sin(math.pi / 2 * k / 6), top - r + r * math.cos(math.pi / 2 * k / 6)) for k in range(7)]
+    prof += [(back, top - r - (top - r - 0.70) * k / 3) for k in (1, 2, 3)]
+    nx = 14
+    verts, faces = [], []
+    for i in range(nx + 1):
+        x = sx - half + 2 * half * i / nx
+        edge = abs(2 * i / nx - 1) ** 6                       # the hems hang a touch lower at the corners
+        for j, (w, v) in enumerate(prof):
+            dv = -0.006 * edge if j == 0 else 0.0
+            verts.append(back_pt(x, v + dv, w))
+    n = len(prof)
+    for i in range(nx):
+        for j in range(n - 1):
+            faces.append((i * n + j, i * n + j + 1, (i + 1) * n + j + 1, (i + 1) * n + j))     # normals outward
+    ob = mesh_obj(name, verts, faces, M["cover"], coll=coll)
+    sub = ob.modifiers.new("sub", "SUBSURF")
+    sub.levels = sub.render_levels = 1
+    tex = bpy.data.textures.get("cover crumple") or bpy.data.textures.new("cover crumple", "CLOUDS")
+    tex.noise_scale = 0.05
+    dm = ob.modifiers.new("crumple", "DISPLACE")
+    dm.texture, dm.strength, dm.mid_level, dm.texture_coords = tex, 0.004, 0.35, "GLOBAL"
+    so = ob.modifiers.new("thick", "SOLIDIFY")
+    so.thickness, so.offset = 0.0025, 1.0
+    return ob
+
+
 def seat_parts(coll, sx, aisle_side=0):
     """One seat at block-local x = sx."""
     # seat cushion: the profile across x, then rounded
@@ -323,13 +356,8 @@ def seat_parts(coll, sx, aisle_side=0):
         w = back_box(f"wing_{sx:+.2f}_{k}", (sx + k * 0.19 - 0.03, sx + k * 0.19 + 0.03), (0.52 + DV, 0.70 + DV),
                      (-0.10, -0.01), M["seat_dark"], coll, 0.022, 3)
         w.rotation_euler.z = k * 0.25
-    # the headrest cover: a cloth laid over the top, hanging down the front and a little down the back
-    rslab(f"cover_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.545 + DV, 0.735 + DV), (-0.093, -0.086), M["cover"], coll,
-          0.008, 0.008, 0.003, 2)
-    back_box(f"covertop_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.722 + DV, 0.739 + DV), (-0.093, 0.054), M["cover"], coll,
-             0.006, 3)
-    rslab(f"coverback_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.635 + DV, 0.735 + DV), (0.047, 0.054), M["cover"], coll,
-          0.008, 0.008, 0.003, 2)
+    # the headrest cover: one cloth laid over the top, hanging down the front and a little down the back
+    cover_cloth(f"cover_{sx:+.2f}", sx, coll)
     # the moulded shell behind: a deep tray with its rim forward round the cushions
     rslab(f"shell_{sx:+.2f}", (sx - 0.232, sx + 0.232), (-0.10, BACK_TOP), (0.0, 0.048), M["shell"], coll, 0.075, 0.03,
           0.016, 4)
@@ -547,6 +575,18 @@ def window(side, y, shade, name, glass=True):
     return rv
 
 
+def inset(profile, d):
+    """A profile [(x, z)] moved d toward the cabin's inside (to the left of its direction of travel)."""
+    out = []
+    n = len(profile)
+    for i, (x, z) in enumerate(profile):
+        (xa, za), (xb, zb) = profile[max(0, i - 1)], profile[min(n - 1, i + 1)]
+        dx, dz = xb - xa, zb - za
+        k = math.hypot(dx, dz) or 1.0
+        out.append((x - dz / k * d, z + dx / k * d))
+    return out
+
+
 def shell(shades, ys):
     """Lining, dado, bins, aisle ceilings and coves, crown, floor, bulkheads. `shades`: {(side, index): fraction}."""
     y0, y1 = REAR_Y, FRONT_Y
@@ -560,6 +600,13 @@ def shell(shades, ys):
         wall.modifiers.new("wn", "WEIGHTED_NORMAL")
         for k, y in enumerate(ys):
             window(side, y, shades.get((side, k), 1.0), f"win_{'p' if side < 0 else 's'}{k:02d}")
+        # panel joints: a fine dark line down the lining between every pair of windows, and across the aisle ceiling
+        for k, y in enumerate(ys[:-1]):
+            sweep(f"wallseam_{side}_{k}", inset(SIDEWALL, 0.0012), y + WIN_PITCH / 2 - 0.002, y + WIN_PITCH / 2 + 0.002,
+                  M["seam"], flip_x=side < 0)
+        for k in range(int((y1 - y0) / (2 * WIN_PITCH))):
+            yy = y0 + 0.4 + k * 2 * WIN_PITCH
+            sweep(f"ceilseam_{side}_{k}", inset(AISLE_CEIL, 0.0012), yy - 0.002, yy + 0.002, M["seam"], flip_x=side < 0)
         # return-air grille slots along the dado
         for k in range(int((y1 - y0) / 0.6)):
             yy = y0 + 0.3 + k * 0.6
@@ -578,14 +625,18 @@ def shell(shades, ys):
         finish(cl, 0.0)
         # the sidewall wash: a thin lit slot where the lining meets the bin, washing the wall and the reveals
         box(f"wash_slot_{side}", (0.012, y1 - y0 - 0.2, 0.006), (side * 2.712, (y0 + y1) / 2, 1.792), M["wash"])
-        wl = area(f"wash_light_{side}", (side * 2.70, (y0 + y1) / 2, 1.778), (0.03, y1 - y0 - 0.4), 5.0,
+        wl = area(f"wash_light_{side}", (side * 2.70, (y0 + y1) / 2, 1.778), (0.03, y1 - y0 - 0.4), 20.0,
                   (0.42, 0.56, 1.0), spread=140)
-        wl.rotation_euler = (0.0, side * 0.42, 0.0)          # down the wall, turned a little outboard
+        wl.rotation_euler = (0.0, -side * 0.30, 0.0)         # down the wall, turned a little outboard
         wl.visible_camera = False
         cv = box(f"cove_{side}", (0.03, y1 - y0 - 0.2, 0.012), (side * 1.53, (y0 + y1) / 2, 2.355), M["cove"])
         cv.visible_camera = False
         cv2 = box(f"cove_c_{side}", (0.03, y1 - y0 - 0.2, 0.012), (side * 0.80, (y0 + y1) / 2, 2.415), M["cove"])
         cv2.visible_camera = False
+        # what the lit ceiling gives back to the cabin: a wide, soft, dim strip under each aisle vault
+        am = area(f"amb_light_{side}", (side * 1.15, (y0 + y1) / 2, 2.53), (0.3, y1 - y0 - 0.4), 25.0, (0.40, 0.54, 1.0),
+                  spread=170)
+        am.visible_camera = False
     # centre bins
     seg = 2 * PITCH
     n = int(math.ceil((y1 - y0) / seg))
@@ -603,6 +654,9 @@ def shell(shades, ys):
     return ys
 
 
+LENS_Y = 0.48          # a reading lens sits this far ahead of its seat's reference point, over the sitter's knees
+
+
 def psu(row):
     """Passenger service units under the bins over each block: reading lenses, gaspers, a blank sign panel."""
     y = row_y(row) + 0.30
@@ -616,13 +670,14 @@ def psu(row):
         rot = (0.0, math.atan(slope), 0.0)
         box(f"psu_{row}_{b}", (0.80, 0.70, 0.03), (bx, y - 0.02, zc), M["bin"], bevel=0.006, rot=rot)
         zat = lambda x: zc - slope * (x - bx)          # noqa: E731
-        box(f"psu_sign_{row}_{b}", (0.10, 0.06, 0.006), (bx, y - 0.16, zat(bx) - 0.017), M["dark_plastic"], bevel=0.002,
+        box(f"psu_sign_{row}_{b}", (0.10, 0.06, 0.006), (bx, y - 0.20, zat(bx) - 0.017), M["dark_plastic"], bevel=0.002,
             rot=rot)
         for s, sx in enumerate(SEAT_DX):
             x = bx + sx
-            cyl(f"lens_{row}_{b}_{s}", 0.022, 0.006, (x, y, zat(x) - 0.017), M["lens_off"], verts=20, rot=rot)
-            cyl(f"lensring_{row}_{b}_{s}", 0.03, 0.004, (x, y, zat(x) - 0.016), M["mid_plastic"], verts=20, rot=rot)
-            cyl(f"gasper_{row}_{b}_{s}", 0.018, 0.022, (x + 0.09, y - 0.03, zat(x + 0.09) - 0.024), M["mid_plastic"],
+            yl = row_y(row) + LENS_Y
+            cyl(f"lens_{row}_{b}_{s}", 0.022, 0.006, (x, yl, zat(x) - 0.017), M["lens_off"], verts=20, rot=rot)
+            cyl(f"lensring_{row}_{b}_{s}", 0.03, 0.004, (x, yl, zat(x) - 0.016), M["mid_plastic"], verts=20, rot=rot)
+            cyl(f"gasper_{row}_{b}_{s}", 0.018, 0.022, (x + 0.09, y + 0.02, zat(x + 0.09) - 0.024), M["mid_plastic"],
                 verts=16, r2=0.012, rot=rot)
 
 
@@ -648,7 +703,7 @@ def path_lights():
                 d = box(f"pathled_{ax}_{k}_{i}", (0.011, 0.085, 0.004), (x, REAR_Y + 0.45 + i * PITCH / 2, 0.0075),
                         M["path"], bevel=0.0015)
                 d.visible_shadow = False
-            sl = area(f"path_light_{ax}_{k}", (x + k * 0.02, yc, 0.105), (0.02, L), 6.0, (0.62, 0.74, 1.0), spread=150)
+            sl = area(f"path_light_{ax}_{k}", (x + k * 0.02, yc, 0.105), (0.02, L), 24.0, (0.62, 0.74, 1.0), spread=150)
             sl.rotation_euler = (0.0, k * 0.75, 0.0)          # down and in toward the aisle's middle
             sl.visible_camera = False
 
@@ -759,11 +814,22 @@ def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     st.location = Vector((x - 0.05, le - chord + 0.2, z + 0.06))
     st.data.materials.append(M["nav_white"])
     st.visible_shadow = False
+    halo = bpy.data.objects.new("navlight_halo", bpy.data.meshes.new("navlight_halo"))
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.42)
+    bm.to_mesh(halo.data)
+    bm.free()
+    for p in halo.data.polygons:
+        p.use_smooth = True
+    _coll().objects.link(halo)
+    halo.location = nl.location
+    halo.data.materials.append(M["nav_halo"])
+    halo.visible_shadow = False
     red = point("nav_red_light", nl.location + Vector((-0.2, 0.2, 0.25)), 60.0, (1.0, 0.12, 0.06), 0.06)
     red.light_linking.receiver_collection = recv
     # the moon, out of shot above and ahead: a cool soft sun on the wing only
     li = bpy.data.lights.new("moon", "SUN")
-    li.energy, li.color, li.angle = 0.5, (0.62, 0.72, 1.0), math.radians(4.0)
+    li.energy, li.color, li.angle = 0.15, (0.62, 0.72, 1.0), math.radians(4.0)
     mo = bpy.data.objects.new("moon", li)
     _coll().objects.link(mo)
     # low and ahead of the wing, so its upper skin carries a long soft sheen toward the cabin
