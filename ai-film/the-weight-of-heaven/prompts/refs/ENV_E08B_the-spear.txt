@@ -1,0 +1,362 @@
+# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+
+## THE TREATY HOUSE — COURTYARD · THE SPEAR (shot plate)
+
+Create one photorealistic frame of a feature film: in the crowded yard of an old stone fort a woman in beaten armour puts a spear into the hand of a farmer who has never held one.
+
+This is a FILM PRODUCTION REFERENCE FRAME, not concept art, not an architectural visualization, not advertising photography.
+
+It must feel physically real and spatially coherent: one frame of a feature film, made to be the first frame of a shot.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the approved courtyard of the Treaty House. Use it for the place and its look: the packed grey dust, the sloping walls of dark basalt, the racks of spears, the flat grey light, the colour and the exposure. Do not copy its wide view: the new picture is close to two people.
+
+@Image 2 — the character sheet of MARL. Use it for her face, her dusty hair in one braid, and her armour beaten from white hull-plate, rust-stained, over grey work clothes.
+
+@Image 3 — the character sheet of THE FARMER. Use it for his face, his beard, his grey wool jacket and belt.
+
+@Image 4 — a line-up of refugees. Use it for the people who wait behind: their grey, dust-covered clothes and their bundles.
+
+@Image 5 — a child's small wooden bowl. Use it only for the bowl that hangs at the farmer's belt.
+
+Do not copy the grey backdrops of the sheets. Marl and the farmer each appear once.
+
+---
+
+# LOCATION IDENTITY
+
+LOCATION:
+The courtyard of the Treaty House, an old fort on the lip of the basalt plain, older than either flag
+
+COUNTRY / REGION:
+The ground: the bearing-lands of the eleven nations, beneath the floating kingdom of Orison (an invented world, built from real northern volcanic and upland country: columnar basalt, slate, dry-stone, heavy soil).
+
+SETTING:
+the dusty yard of a massive old stone fort, with a landing ground for a small airship
+
+TIME PERIOD:
+Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
+
+SOCIAL / ECONOMIC CHARACTER:
+Neutral ground for eight hundred years; now a refuge and a muster point.
+
+OVERALL FEEL:
+Old, heavy, dusty, crowded with waiting.
+
+The location should feel like a place that existed before the camera arrived.
+
+It must not feel production-designed for symbolism.
+
+---
+
+# SPATIAL GEOGRAPHY
+
+Establish clear, believable geography.
+
+The camera stands in the yard at chest height, two and a half metres from two people, level and still.
+
+- on the left of the frame: MARL of @Image 2, from the hips up, turned three-quarters toward the right: a woman in her thirties. With her right hand she holds a spear upright between the two of them: a plain ash shaft with a dull iron head; its head is above the top of the frame
+- on the right of the frame: THE FARMER of @Image 3, from the hips up, turned three-quarters toward the left, facing her. His right hand is closing round the spear's shaft just below hers. At his belt, on the hip nearer the camera, hangs the small wooden bowl of @Image 5, plain to see; his left hand hangs beside it
+- both look at the spear. Their mouths are closed. Neither smiles
+- behind them, out of focus: five or six refugees as in @Image 4, grey with rock dust, bundles on their backs, standing in a line and waiting; a rack of spears; and behind everything the fort's sloping wall of dark basalt
+
+Everyone and everything is grey with fine rock dust. Her armour's white plate is the palest thing in the frame.
+
+---
+
+# ARCHITECTURE
+
+Preserve believable architecture appropriate to:
+
+- country
+- building age
+- social class
+- function
+- climate
+
+Specify:
+
+WALLS:
+Massive basalt masonry, very old, worn smooth at the corners, leaning inward, buttressed.
+
+CEILING:
+Open-air: dark underside and cloud.
+
+FLOOR:
+Packed grey dust and grit over old flagstones.
+
+WINDOWS:
+A few narrow slits high in the walls.
+
+DOORS:
+One dark arched doorway in the main building, its heavy door open inward; a wide gate in the outer wall.
+
+TRIM / MOULDING:
+None; heavy stone lintels and plain arches.
+
+FIXTURES:
+Buttresses; iron rings set in the wall.
+
+Architectural details should feel ordinary and regionally credible.
+
+---
+
+# MATERIALS + TEXTURE
+
+Use tactile, photorealistic materials.
+
+For this location:
+
+- old dark basalt masonry, worn smooth
+- grey rock dust over everything
+- dark oak door with iron bands
+- iron rings
+
+Surfaces should contain subtle wear.
+
+Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+---
+
+# PRODUCTION DESIGN
+
+Include only story-relevant objects.
+
+PRIMARY OBJECTS:
+
+- Marl and the farmer, and the one spear between them
+- the small wooden bowl at his belt
+- the line of refugees behind, soft
+- the rack of spears
+
+SECONDARY LIVED-IN DETAILS:
+
+- racks or bundles of spears against a wall
+- piles of dusty bundles
+- iron rings in the wall
+
+Objects should feel casually accumulated over time.
+
+Avoid excessive dressing.
+
+Avoid obvious symbolic props unless specifically requested.
+
+The environment should remain visually usable for performance.
+
+---
+
+# COLOR IDENTITY
+
+LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
+
+Permanent THE WEIGHT OF HEAVEN palette:
+
+- marble #E9E6DE (never pure white)
+- cloud #AEB4B8
+- slate #4B5258
+- rock dust #8A857B
+- basalt #141517 (dark, never pure black; stone keeps its texture)
+
+Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
+
+For this environment specifically:
+
+DOMINANT:
+rock dust #8A857B
+
+SECONDARY:
+basalt #141517 in the masonry
+
+ACCENT:
+none
+
+NEUTRALS:
+under-light grey #7F8A90
+
+The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
+
+Never neon.
+
+Never saturated.
+
+Never generic teal-and-orange cinema grading.
+
+---
+
+# LIGHTING DESIGN
+
+LIGHT ABOVE, HEAVY BELOW.
+LOW LIGHT UNDER A DARK ROOF. FLAT AND SOFT.
+
+Primary motivated source:
+
+flat grey daylight through suspended rock dust
+
+Secondary motivated source:
+
+soft bounce from the dusty ground
+
+Maintain:
+
+- broad soft illumination
+- gentle highlight roll-off
+- retained shadow information
+- natural falloff
+- realistic practical-light behavior
+- believable exposure
+
+For this location:
+
+- the arched doorway is deep shadow
+- no sunlight, no cast shadows
+- the light is the flat grey day, coming low from the left: both faces are lit softly from that side and fall off on the other; no face is the brightest thing in the frame
+
+No beauty lighting.
+
+No hard artificial key unless story requires it.
+
+No exaggerated rim light.
+
+No glossy commercial lighting.
+
+No glow, no beams, no god rays, no visible light shafts, no shimmer.
+
+---
+
+# CAMERA / OPTICAL LANGUAGE
+
+CAMERA:
+ARRI Alexa 65, large format
+
+ASPECT RATIO:
+2.39:1 (compose for a 2.39:1 frame)
+
+LENS:
+spherical large-format primes, no anamorphic
+
+LENS CHARACTER:
+clean, modern, high-resolving rendering; low distortion; no flare; no bloom
+
+THIS FRAME:
+50 mm, chest height, locked off, level. Focus on the two faces and the spear; everything behind them is soft.
+
+Maintain:
+
+- dimensional space
+- natural microcontrast
+- smooth highlight roll-off, whites holding their detail
+- fine, even, film-like grain
+- natural textures
+
+The environment should look like a frame from THE WEIGHT OF HEAVEN, not a location catalogue.
+
+---
+
+# COMPOSITION
+
+One frame of a film, made to be held on screen: not a master reference.
+
+- a two-shot: she on the left, he on the right, the upright spear between them a little right of centre
+- his belt and the bowl are inside the frame, at its lower right
+- behind them only grey: soft grey people and dark stone; no sky
+- level and still
+
+Scale: they stand an arm's length apart; the refugees behind are four metres further off.
+
+---
+
+# ATMOSPHERE
+
+Atmosphere:
+
+Flat grey day. Fine rock dust hanging low in the air.
+
+Physical conditions:
+
+- rock dust in the air
+- overcast
+- still
+
+Atmosphere must emerge from physical conditions, not digital effects.
+
+---
+
+# REALISM LOCK
+
+Photorealistic.
+
+Physically believable.
+
+Architecturally coherent.
+
+Regionally credible.
+
+Lived-in.
+
+Understated.
+
+No fantasy architecture unless explicitly required.
+
+No impossible reflections.
+
+No floating props.
+
+No warped furniture.
+
+No excessive depth-of-field blur that hides the location.
+
+---
+
+# CONTINUITY LOCK
+
+The final environment must establish a stable reference for:
+
+- architecture
+- room dimensions
+- major furniture
+- doors
+- windows
+- practical lights
+- material palette
+- object positions
+- camera geography
+
+Future generations should be able to reproduce this exact location.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- generic AI interiors
+- luxury redesign
+- excessive décor
+- glossy architectural visualization
+- showroom cleanliness
+- extreme HDR
+- oversaturation
+- neon
+- cyberpunk lighting
+- random signage
+- impossible room proportions
+- duplicated furniture
+- floating objects
+- distorted architecture
+- fisheye
+- dramatic concept-art composition
+- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
+- lens flare, bloom, halation
+- readable text, English or Latin lettering, numbers, signage, words on banners
+- electric light, modern objects, plastic, concrete, steel girders, engines
+- fire, smoke from guns, explosions
+- fantasy-game styling, glowing runes, magic effects, crystals
+- teal-and-orange grading
+- a castle with turrets and flags
+- crenellations
+- banners or emblems
+
+Also never: anyone smiling; a sword, a shield, a helmet or a banner; the spear held as a weapon or pointed at anyone; a third person in focus; polished or shining armour; open sky; the grey studio backdrop of a sheet.

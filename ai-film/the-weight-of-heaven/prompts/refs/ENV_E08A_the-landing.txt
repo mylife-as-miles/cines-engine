@@ -1,0 +1,365 @@
+# THE WEIGHT OF HEAVEN — ENVIRONMENT REFERENCE PROMPT
+
+## THE TREATY HOUSE — COURTYARD · THE LANDING (shot plate)
+
+Create one photorealistic frame of a feature film: a white flying boat has set down in the yard of an old stone fort, and an admiral in white steps from it onto the ground, watched by the people of the ground.
+
+This is a FILM PRODUCTION REFERENCE FRAME, not concept art, not an architectural visualization, not advertising photography.
+
+It must feel physically real and spatially coherent: one frame of a feature film, made to be the first frame of a shot.
+
+---
+
+# REFERENCE IMAGES
+
+@Image 1 — the approved courtyard of the Treaty House. Use it for the place and its look: the packed grey dust of the yard, the thick walls of dark basalt, the flat grey light, the dark roof of rock and cloud overhead, the colour and the exposure. Do not copy its camera position: the new picture looks the other way, from the fort's door back across the yard to the landing ground and the yard's outer wall.
+
+@Image 2 — the naval cutter on a grey studio backdrop. Use it only for the cutter's design. Draw this cutter once, standing on the ground on its skids, seen from its side.
+
+@Image 3 — the character sheet of SERATH, the admiral. Use it for her face, her short black hair going grey, her long white coat, the heavy gold collar at her throat, her white gloves.
+
+@Image 4 — the character sheet of her AIDE. Use it for his face, his white coat, white gloves and white satchel.
+
+Do not copy the grey backdrops of the sheets. Each person appears once.
+
+---
+
+# LOCATION IDENTITY
+
+LOCATION:
+The courtyard of the Treaty House, an old fort on the lip of the basalt plain, older than either flag
+
+COUNTRY / REGION:
+The ground: the bearing-lands of the eleven nations, beneath the floating kingdom of Orison (an invented world, built from real northern volcanic and upland country: columnar basalt, slate, dry-stone, heavy soil).
+
+SETTING:
+the dusty yard of a massive old stone fort, with a landing ground for a small airship
+
+TIME PERIOD:
+Year 800 of the Ascension. Pre-industrial: stone, bronze, brass, glass, oak, iron, chain, cloth, paper and wax. No electricity, no electric light, no radio, no engines visible, no plastic, no concrete.
+
+SOCIAL / ECONOMIC CHARACTER:
+Neutral ground for eight hundred years; now a refuge and a muster point.
+
+OVERALL FEEL:
+Old, heavy, dusty, crowded with waiting.
+
+The location should feel like a place that existed before the camera arrived.
+
+It must not feel production-designed for symbolism.
+
+---
+
+# SPATIAL GEOGRAPHY
+
+Establish clear, believable geography.
+
+The camera stands in the yard among the people of the ground, one metre above the dust, level and still, looking from the fort's door back across the yard.
+
+From front to back:
+
+- in the foreground, at the left edge and at the right edge of the frame: the backs and shoulders of three people of the ground, standing still and watching, cut off by the frame's edges, dark, grey with rock dust, out of focus. One holds an upright spear. Between them the middle of the frame is open
+- in the middle of the yard, fifteen metres away and sharp: the white cutter of @Image 2, set down on its two iron skids on the packed dust, seen from its side, its bow to the left, ten metres long. A short wooden gangway is let down from its side to the ground
+- at the foot of the gangway, a little left of the centre of the frame: SERATH of @Image 3, her whole figure, one third of the frame tall. She has just stepped onto the ground: one boot on the dust, the other still on the gangway. She stands very upright, her gloved hands at her sides, facing the camera, her eyes ahead, her mouth closed
+- behind her on the gangway, one step higher: the AIDE of @Image 4, one hand on the cutter's rail
+- behind the cutter: the yard's thick outer wall of black basalt, shoulder high, with one plain open gateway
+- beyond the wall: the black basalt plain going off into pale haze, and low hills far away
+- across the top of the frame: the dark rock underside of the kingdom, running out of the frame, and under it a band of pale grey daylight
+
+No one else stands in the middle of the frame. Nothing is in the air but rock, cloud and dust.
+
+---
+
+# ARCHITECTURE
+
+Preserve believable architecture appropriate to:
+
+- country
+- building age
+- social class
+- function
+- climate
+
+Specify:
+
+WALLS:
+Massive basalt masonry, very old, worn smooth at the corners, leaning inward, buttressed.
+
+CEILING:
+Open-air: dark underside and cloud.
+
+FLOOR:
+Packed grey dust and grit over old flagstones.
+
+WINDOWS:
+A few narrow slits high in the walls.
+
+DOORS:
+One dark arched doorway in the main building, its heavy door open inward; a wide gate in the outer wall.
+
+TRIM / MOULDING:
+None; heavy stone lintels and plain arches.
+
+FIXTURES:
+Buttresses; iron rings set in the wall.
+
+Architectural details should feel ordinary and regionally credible.
+
+---
+
+# MATERIALS + TEXTURE
+
+Use tactile, photorealistic materials.
+
+For this location:
+
+- old dark basalt masonry, worn smooth
+- grey rock dust over everything
+- dark oak door with iron bands
+- iron rings
+
+Surfaces should contain subtle wear.
+
+Nothing should look freshly generated, pristine, glossy, or showroom-perfect unless story requires it.
+
+---
+
+# PRODUCTION DESIGN
+
+Include only story-relevant objects.
+
+PRIMARY OBJECTS:
+
+- the white cutter, on the ground, its gangway down
+- Serath at the foot of the gangway; the aide behind her
+- the dark backs of the watchers at the frame's edges
+- the yard's outer wall and its gateway
+
+SECONDARY LIVED-IN DETAILS:
+
+- racks or bundles of spears against a wall
+- piles of dusty bundles
+- iron rings in the wall
+
+Objects should feel casually accumulated over time.
+
+Avoid excessive dressing.
+
+Avoid obvious symbolic props unless specifically requested.
+
+The environment should remain visually usable for performance.
+
+---
+
+# COLOR IDENTITY
+
+LIGHT ABOVE, HEAVY BELOW — COOL, MUTED.
+
+Permanent THE WEIGHT OF HEAVEN palette:
+
+- marble #E9E6DE (never pure white)
+- cloud #AEB4B8
+- slate #4B5258
+- rock dust #8A857B
+- basalt #141517 (dark, never pure black; stone keeps its texture)
+
+Accents, each belonging to one thing only and appearing on nothing else: gold #C8A45A (her collar, the cup) · seal red #9E2A22 (her wax seal) · vale green #5D7A4A (Sarn Vale) · lamp amber #E0A050 (Karst's lamp, the hearths) · signal white (the signal lamps).
+
+For this environment specifically:
+
+DOMINANT:
+rock dust #8A857B
+
+SECONDARY:
+basalt #141517 in the masonry
+
+ACCENT:
+none
+
+NEUTRALS:
+under-light grey #7F8A90
+
+The palette should be FELT rather than displayed: cool, muted, whites holding their detail.
+
+Never neon.
+
+Never saturated.
+
+Never generic teal-and-orange cinema grading.
+
+---
+
+# LIGHTING DESIGN
+
+LIGHT ABOVE, HEAVY BELOW.
+LOW LIGHT UNDER A DARK ROOF. FLAT AND SOFT.
+
+Primary motivated source:
+
+flat grey daylight through suspended rock dust
+
+Secondary motivated source:
+
+soft bounce from the dusty ground
+
+Maintain:
+
+- broad soft illumination
+- gentle highlight roll-off
+- retained shadow information
+- natural falloff
+- realistic practical-light behavior
+- believable exposure
+
+For this location:
+
+- the arched doorway is deep shadow
+- no sunlight, no cast shadows
+- the light is the flat grey day, coming low from the left, the side of the open plain: faces are lit softly from that side and fall off on the other; the cutter's white hull is the brightest thing in the frame, and no face is
+
+No beauty lighting.
+
+No hard artificial key unless story requires it.
+
+No exaggerated rim light.
+
+No glossy commercial lighting.
+
+No glow, no beams, no god rays, no visible light shafts, no shimmer.
+
+---
+
+# CAMERA / OPTICAL LANGUAGE
+
+CAMERA:
+ARRI Alexa 65, large format
+
+ASPECT RATIO:
+2.39:1 (compose for a 2.39:1 frame)
+
+LENS:
+spherical large-format primes, no anamorphic
+
+LENS CHARACTER:
+clean, modern, high-resolving rendering; low distortion; no flare; no bloom
+
+THIS FRAME:
+40 mm, one metre above the ground, locked off, level. Focus on Serath and the cutter; the watchers' backs in the foreground are soft.
+
+Maintain:
+
+- dimensional space
+- natural microcontrast
+- smooth highlight roll-off, whites holding their detail
+- fine, even, film-like grain
+- natural textures
+
+The environment should look like a frame from THE WEIGHT OF HEAVEN, not a location catalogue.
+
+---
+
+# COMPOSITION
+
+One frame of a film, made to be held on screen: not a master reference.
+
+- we look past dark shoulders at three white things, small in a dark grey frame: the cutter, the admiral, the aide. They are the only clean things in it
+- she is the sharpest thing in the frame and stands a little left of centre; the cutter's hull runs across the frame behind her
+- a great deal of dark: the watchers, the wall, the rock overhead; the pale band of day lies behind the cutter, low
+- level and still; nothing dramatic about the angle
+
+Scale: the cutter is ten metres long; the yard is forty metres across; the kingdom overhead is the whole sky.
+
+---
+
+# ATMOSPHERE
+
+Atmosphere:
+
+Flat grey day. Fine rock dust hanging low in the air.
+
+Physical conditions:
+
+- rock dust in the air
+- overcast
+- still
+
+Atmosphere must emerge from physical conditions, not digital effects.
+
+---
+
+# REALISM LOCK
+
+Photorealistic.
+
+Physically believable.
+
+Architecturally coherent.
+
+Regionally credible.
+
+Lived-in.
+
+Understated.
+
+No fantasy architecture unless explicitly required.
+
+No impossible reflections.
+
+No floating props.
+
+No warped furniture.
+
+No excessive depth-of-field blur that hides the location.
+
+---
+
+# CONTINUITY LOCK
+
+The final environment must establish a stable reference for:
+
+- architecture
+- room dimensions
+- major furniture
+- doors
+- windows
+- practical lights
+- material palette
+- object positions
+- camera geography
+
+Future generations should be able to reproduce this exact location.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- generic AI interiors
+- luxury redesign
+- excessive décor
+- glossy architectural visualization
+- showroom cleanliness
+- extreme HDR
+- oversaturation
+- neon
+- cyberpunk lighting
+- random signage
+- impossible room proportions
+- duplicated furniture
+- floating objects
+- distorted architecture
+- fisheye
+- dramatic concept-art composition
+- glow, beams, god rays, visible light shafts, shimmer or haze bloom (weight is invisible)
+- lens flare, bloom, halation
+- readable text, English or Latin lettering, numbers, signage, words on banners
+- electric light, modern objects, plastic, concrete, steel girders, engines
+- fire, smoke from guns, explosions
+- fantasy-game styling, glowing runes, magic effects, crystals
+- teal-and-orange grading
+- a castle with turrets and flags
+- crenellations
+- banners or emblems
+
+Also never: the cutter in the air or tilted; sails, wings, balloons, propellers, engines, smoke or lights on the cutter; a crowd in the middle of the frame; anyone smiling, waving or bowing; soldiers in ranks; a carpet; the grey studio backdrop of a sheet; a second admiral; a view of the fort's door.
