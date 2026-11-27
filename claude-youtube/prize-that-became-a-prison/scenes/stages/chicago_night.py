@@ -68,7 +68,7 @@ CAMERAS = {
     # Ch 01: low and close: the packed case by the door, the city soft in the glass beyond
     "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.7, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01",
                      exposure=-1.05, glass_reflection=0.06),
-    "profile": dict(loc=(-0.65, 1.41, 1.45), aim=(0.53, 1.98, 1.39), lens=55, focus="fx_head",
+    "profile": dict(loc=(-1.21, 1.57, 1.44), aim=(0.52, 2.07, 1.37), lens=64, focus="fx_head",
                     fstop=2.0, beat="ch01", exposure=0.05, glass_reflection=0.04),
 }
 TRIMS = {"wide": {"case_card": 0.0, "entry_light": 0.6}, "window": {"lamp_bounce": 0.0},
@@ -320,7 +320,7 @@ def curl_fingers(holder):
                                              for digit, (knuckle, joint) in fingers.items()})
 
 
-def pose_dawn(h):
+def pose_dawn(h, mug_local=MUG):
     """Standing at the glass, the mug held in both hands at chest height, her weight on one leg, her head turned
     toward the downtown towers and lifted a touch: calm, looking out, hopeful."""
     x, y, f = DAWN
@@ -328,7 +328,7 @@ def pose_dawn(h):
     h.rotation_euler = (0, 0, math.radians(f))
     bpy.context.view_layer.update()
     base = {"chest": (-2.0, -4.0), "neck": (0.0, 0.0), "fingers": 0}
-    mug = _w(MUG)
+    mug = _w(mug_local)
     right = (_w((1, 0, 0)) - _w((0, 0, 0))).normalized()
     fwd = (_w((0, 1, 0)) - _w((0, 0, 0))).normalized()
     pose = dict(base)
@@ -409,7 +409,14 @@ def apply_camera(name):
     for o in bpy.data.objects:
         if o.name.startswith(GLOSSY_CTRL):
             o.visible_glossy = not o.name.startswith(hide)
-    trims = TRIMS.get(name, {})
+    profile = name == "profile"
+    if _STATE["dawn"] and profile != _STATE["profile_pose"]:
+        centre = pose_dawn(_STATE["dawn"], (-0.09, 0.34, 1.26) if profile else MUG)
+        for ob, base in _STATE["mug_parts"]:
+            ob.location = base + centre - _STATE["mug_centre"]
+        _STATE["profile_pose"] = profile
+        bpy.context.view_layer.update()
+    trims = dict(TRIMS.get(name, {}), profile_fill=1.0 if profile else 0.0)
     for n, base in _STATE.get("base", {}).items():
         o = bpy.data.objects.get(n)
         if o is not None:
@@ -446,11 +453,13 @@ def build(cast=True):
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
         e.location = p
-    _STATE["cast"] = []
+    _STATE.update(cast=[], dawn=None, profile_pose=False)
     if cast:
         h = dawn()
         mug = pose_dawn(h)
         mug_prop(mug)
+        _STATE["mug_centre"] = mug.copy()
+        _STATE["mug_parts"] = [(bpy.data.objects[n], bpy.data.objects[n].location.copy()) for n in ("mug", "mug_handle")]
         _STATE["dawn"] = h
         _STATE["cast"] = [h] + list(h.children_recursive)
         bpy.data.objects["fx_head"].location = eye_centre(h) + Vector((0, 0, 0.0))

@@ -885,6 +885,7 @@ def build(props):
     window_light()
     for name, origin, target, size, power, tint in (
         ("dawn_edge", (0.95, 2.36, 1.30), (0.51, 1.93, 1.3), (0.4, 1.2), 8.0, (0.62, 0.72, 1.0)),
+        ("profile_fill", (-0.2, 2.38, 1.70), (0.5, 1.98, 1.43), (0.48, 0.62), 5.5, (0.73, 0.78, 0.89)),
         ("lamp_bounce", (1.30, 1.62, 1.05), (0.51, 1.93, 1.2), (0.3, 0.3), 6.0, (1.0, 0.5, 0.2)),
     ):
         light = sk.area_light(name, origin, size, power, tint, spread_deg=90)
