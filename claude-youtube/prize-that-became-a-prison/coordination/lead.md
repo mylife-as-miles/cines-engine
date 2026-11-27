@@ -152,3 +152,33 @@ lowest 4** (lighting, cast). Top: the reflection in `seat` reads as a bald stran
 the silhouette); `aisle` has no lit island, the dim strips render nearly as bright as the full one (rewrite the
 emission curve and LEVELS as a real night setting); the pale seat covers upstage every figure (darker, smaller
 antimacassars); the attendant stands lit in the vanishing point.
+
+### 2026-11-27 09:44 UTC · REPLY C17 · departure_gate
+Critique `coordination/critiques/departure_gate_r6.json` (checked, frames `114caaa`): **mean 6.06, lowest 5.5**
+(materials, cast), up from 5.94; not pro level. Your measures hold (5.2 % at 6 or below by our decode; corners 17.2 /
+17.6). The wide now works as an establishing shot. Answers: seats recede, mostly yes (an armrest stub at bottom
+centre and two blocks cut by two edges; identical clean units); fingers at 4×: right hand yes, left hand no (it hooks
+over the thigh edge like a grip and is still the brightest skin, p99 187 vs face 178); the call: not yet (she looks up
+and away, nothing else moves). Top fixes:
+1. P1 `seated_called`: turn her up and to HER right, past the lens, toward the podium and spk_4.2, with a small
+   follow-through in the chest and the left hand lifting off the thigh (the order of `_turn` calls is in the file).
+2. P1 `seated`: left hand palm back onto the thigh: 'down' about (0.45, 0, -0.89); face 10 levels above both hands.
+3. P2 `window`, `wide`, `seated_called`: from behind the bun reads as a clip on a bald dome; rebuild it as a coil.
+4. P2 `seated`: the flats read as clogs; flatten the toe box, thin the sole, cut the vamp back.
+5. P2 `wide`, `window`: hide the stub's unit for the wide; the floor streak at the glass foot (peak 189 / 208) is as
+   bright as her head; flag it.
+
+### 2026-11-27 09:44 UTC · REPLY C18 · evidence_table page
+Critique `coordination/critiques/evidence_table_r6.json` (checked, `75c2212`): **mean 5.75, lowest 5**; the stage is
+scored as published (only `page` is new). **`page` is now a usable compositing plate**: all three r5 P1s are fixed and
+measured (edges 0.98–1.01 of the 20 mm luma, no glint, graded centre 184.8/181.1/178.0, R−B +8.4).
+Pins verified independently (half-maximum edge fits): 1.25 px top left, 0.69 top right, 0.44 bottom right, 0.42
+bottom left. Every visible edge sits 0.24–0.78 px outside the pinned quad, so dilate the pinned page by 1 px in the
+comp. Next:
+1. P1 `pair`: the published pair is the old build (dark right and foot edges); re-render it from HEAD with fresh pins
+   and the same checks.
+2. P2 `page`: the highlighter reads as a khaki glue stick; drop it from the plate or rebuild it (albedo about
+   0.95, 0.86, 0.02).
+3. P2 `page`: plate wood still procedural (one repeating grain band, scratches around the foot, laminate end-joint);
+   scratches 0.15, less ring contrast.
+4. P2: add focus/fstop/depth and a paper matte to the corners JSON; publish `page_foot` with `in_frame` flags.
