@@ -398,3 +398,35 @@ I checked the revised bag silhouette against the look-B font metrics and the pla
 For the cold open, inspection_room `handbags` is the clean three-bag reveal. For the later return and the split, `handbags_touch` uses the same camera with the officer reaching in from screen right. At the first mark his jacket hid the entire tote seam. At the revised mark all three seam tracks stay visible while he takes the handle. The nearest points on his five fingers are 1.19, 0.02, 0.01, 0.35 and 0.24 mm from the leather. The three bags now sit at the same depth into both tabletops. All 67,334 handbag vertices agree across inspection and evidence within 0.0004 px at 1920. Both inspection inserts use the evidence plate's 35 mm lens, f/4, lip focus and 2560 frame size. The camera and contact are in source; the revised renders are queued.
 
 On the laptop, the nominal hinge cover was actually under the imported shell. After fixing its placement the new raw preview's hinge p95 is 51, down from 131 on the published master. The palm rest is 48, down from 150. Neither region nor the key deck has a bright outlier more than 15 above its local median. The screen pins and optics match the accepted master exactly. I also ran the email shot's actual crop and grade at both endpoints using a plain neutral texture. The bottom 140 rows peak at p95 44 and 28 respectively. The native final will be checked again before release.
+
+### 2026-11-27 12:10 UTC · INFO · STATUS
+
+The scores are from the latest independent reviews. The number in parentheses is the lowest criterion. All nineteen stages have further work.
+
+| Stage | Mean (minimum) | Current work |
+| --- | --- | --- |
+| hongkong_street | 4.75 (4) | Reviewing the four street cameras with the violet signs, brighter doorway, shop reflections and three-person company walk. All four finals follow the preview check. |
+| train | 5.00 (4) | The original suitcase now rests on both rack rails. Check it in the full carriage and the bun in the window reflection. |
+| hotel_room | 5.25 (4) | The window uses the original suitcase and the same violet signs as the street. The drawn curtain now meets the posed thumb and forefinger. Check the window, acceptance and packing views. |
+| checkin_hall | 5.63 (5) | The wide, passport hand and tracked scale are published at b011dba. C23 is with CRITIC. Remaining checks cover the monitor in profile and the signs. |
+| aircraft_cabin | 5.69 (4.5) | The over-shoulder camera now sees the white wingtip light through the pane. Check it in rendered light along with the seat belt and hand contact. |
+| baggage_belt | 5.69 (5) | The case handles are down. The parted curtain and sorter pool are in source. The wall now has recessed mortar and two paint finishes measuring 0.45 and 0.70 roughness. Review all three angles. |
+| tim_desk | 5.69 (5) | Check the lamplit pen touching Tim’s page, the warmer wood and the lit window in the three-camera batch. |
+| evidence_table | 5.75 (5) | Page, pair and screen are usable for graphics. The laptop housing is rebuilt around the accepted pins. Its full-resolution replacement, the pair and the wider evidence spread are in production. The purse macro exposed a remaining relief and brass fleck on the tote. I am checking both before publishing. |
+| void_stage | 5.75 (4) | The private native bag master has a 37/255 pocket and a 70/255 lid. Check the cut against the revised room light. Dawn’s seated cell and the opening close-up are next. |
+| leather_market | 5.88 (5) | Check the lifted leather and finger pads against the counter in purchase, then compare the stall and wide. |
+| chicago_night | 6.00 (5) | Check the revised profile and white skyline lights in the full set before releasing the street and suitcase batch. |
+| inspection_room | 6.06 (5) | Five opening and post-discovery finals are at b71cabd for C25. The native match pocket measures 39/255. I added a separate rim to correct the lid jump. Clean handbags and the officer’s hand share the evidence camera and tracked seam. |
+| departure_gate | 6.06 (5.5) | The called and earlier seated beats are at f4be36d for C24. Check the floor reflections in the wide and window. |
+| courtroom | 6.13 (5) | Check the bench light, Dawn’s hand and the empty coverage together. |
+| hearing_room | 6.13 (5) | Wide and witness opening coverage are next for review. Check their eye lines, seating and practical-light contrast. |
+| visiting_room | 6.25 (5) | Check Dawn’s shoulder, the glass and Tim’s face across the reverse and wide. |
+| home | 6.69 (6) | Check the warm family meal, cold Gene meal, and Gene’s occupied and empty chair against the void chair framing. |
+| prison_exterior | 6.75 (6) | Check the opening tower through rain, gate-lamp support and wet road across all three cameras. |
+| detention_corridor | 7.00 (6) | Check the envelope and tabletop against the chair, shut door and corridor coverage. |
+
+L2 remains active. C23, C24 and C25 are with CRITIC. The document and laptop pins retain the coordinates used in the edit.
+
+### 2026-11-27 12:10 UTC · INFO · to LEAD · L3 in progress
+
+I have L3. The existing corner metadata already locates three visible runs. I will export the separate seam JSON in the graphic’s existing space/seam format for both purses and its macro, with per-sample camera-forward depth and the two hidden handle intervals. I will check the front leather at the same physical points in both graded frames before publishing.
