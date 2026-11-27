@@ -774,3 +774,31 @@ Reference plates on this revision are enter at 57c026f, dawn_close at b0ae946, t
 ### 2026-11-27 21:58 UTC · INFO · L2 · hearing witness final
 
 The revised hearing_room/witness is published at ff11cf8 alongside the wide at 29b85b5. The witness is 1280×720 at 64 samples. I checked the tie and shirt boundary at five times native size, the microphone against Tim's chin and the folded hands on the page. The pale specks on the tie are gone. The lit and shadow face medians are 144.6 and 97.0, and the two seating groups read at 21.4 and 12.2. The native shot has zero luminance above 250. Both opening plates are ready for the cut. Preparing the hands and dais coverage before the next stage critique.
+
+### 2026-11-27 22:05 UTC · INFO · STATUS
+
+Latest independent scores for the 19 stages. Open reviews are C33 for check-in, C34 for Kowloon and C35 for inspection.
+
+| Stage | Mean (lowest) | Next check or delivery |
+| --- | --- | --- |
+| hongkong_street | 5.19 (4.5) | Four finals published at d9fa391. The window has three bags in the evidence order and the wide leaves the measured title area. C34 is open. |
+| hotel_room | 5.50 (5) | Preview checks distinguish the hobo going into the duffel from the overhead of the packed bag. The new window grade leaves the room warm and the nearest signs dimmer. Check all five current camera previews. |
+| inspection_room | 5.50 (4.5) | The 2560 handbag pair is published with identical stitch tracks. Both corrected reverses are published at 0821a94 with the case at the same brightness. C35 is open. |
+| evidence_table | 5.63 (5) | The private render shows one stitch row and quieter clasp and receipt. Check both current camera previews and the full 2560 plates with their seam tracks. |
+| train | 5.63 (5) | The reflected crown measures 44.8 against face 46.3. The aisle shows her looking through the glass, a less bright linen cover and a plain suitcase pull. Verify the three current camera previews. |
+| aircraft_cabin | 5.69 (4.5) | Check the wing clear of the oval reveal, Dawn's reclining profile and her lap in the full cast previews. |
+| baggage_belt | 5.69 (5) | The curtain test keeps the wall readable. The sorter test retains four fully visible cases, with both of Dawn's bags leading by luminance. Check all three camera previews. |
+| tim_desk | 5.69 (5) | Check the rooted pen, legible blank correspondence and the two pools of light in the camera previews. |
+| void_stage | 5.75 (4) | The native luggage match is published. Verify the current standing and close finals with space for type, then the seated and empty cell coverage. |
+| leather_market | 5.88 (5) | The purchase preview exposed a duffel mesh split and cropped release hand. Verify a continuous shell and keep both the buying grip and the releasing hand in the frame. |
+| chicago_night | 6.00 (5) | Check the window profile, plain mug, white skyline lights and suitcase in the four previews. |
+| checkin_hall | 6.13 (5) | The opening scale, wide, payment and profile finals are published. The pins and title bounds are with LEAD. C33 is open. |
+| courtroom | 6.13 (5) | Check Dawn's hand contact and the judge's light across the occupied and empty framings. |
+| departure_gate | 6.13 (5.5) | All four current previews checked. The case stays in place and the bracing hand stays below the face in brightness. The two seated finals are rendering, with wide and window queued. |
+| hearing_room | 6.13 (5) | Wide 29b85b5 and witness ff11cf8 are published. The curtain reads 42.1 and the witness tie is clean. Check the hands and dais coverage next. |
+| visiting_room | 6.25 (5) | Check Tim's build, Dawn's shoulder and both eyelines through the glass. |
+| home | 6.69 (6) | Check the warm family and cold solo meals and the occupied and empty chair across their new poses. |
+| prison_exterior | 6.75 (6) | Check the watcher behind the tower glass and the rain against the gate and wall. |
+| detention_corridor | 7.00 (6) | Review the envelope, tabletop, chair and shut door across the corridor sequence. |
+
+The inspection and hearing opening plates are with LEAD. L2 continues through the boarding-call finals, the watchtower and the void standing shots.
