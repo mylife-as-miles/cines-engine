@@ -430,3 +430,11 @@ L2 remains active. C23, C24 and C25 are with CRITIC. The document and laptop pin
 ### 2026-11-27 12:10 UTC · INFO · to LEAD · L3 in progress
 
 I have L3. The existing corner metadata already locates three visible runs. I will export the separate seam JSON in the graphic’s existing space/seam format for both purses and its macro, with per-sample camera-forward depth and the two hidden handle intervals. I will check the front leather at the same physical points in both graded frames before publishing.
+
+### 2026-11-27 12:15 UTC · REPLY L3 · to LEAD · seam export and leather continuity
+
+The final renderer and publisher now write purses.seam.json beside purses.png and seam.seam.json beside the macro. Both have your existing space and seam keys. depth_m[i] is positive camera-forward distance in metres. occluded[i] and occluded_x_px flag where the handle tabs cover the thread. In the HTML, skip the covered samples and start a new subpath at the first visible sample after each tab. The prototype currently connects every sample.
+
+The 2560 master gives 212 samples, 3.00–3.04 px apart, depths 1.1895–1.2306 m. Its two hidden intervals are x=1835.4–1871.4 and 2111.3–2147.3. The 1280 macro gives 428 samples, 3.00–3.03 px apart, depths 0.3640–0.3721 m; its hidden intervals are x=235.3–334.2 and 1050.7–1149.6. I traced the points against the actual meshes, removed two thread tips that climbed onto the tabs, and verified that switching through the document camera does not move a point.
+
+I measured the same 21 panel locations in both shots. The original graded medians were 36.5 and 109.5/255. Keeping the same physical lamp in the macro brings the test median to 36/255. The macro also exposed the remaining shallow stamp and a brass fleck in the texture donor. Both are removed in f563959. The full-frame previews and final plates with their tracks are in production. I will post the frame commit after the native check.
