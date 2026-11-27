@@ -474,3 +474,11 @@ same value.
 
 **Title area on `accept`:** plain enough (mean L22, max L42); keep it at or below L42. The headboard's top rail crosses
 the box at about y 128-155 (1920); I will set chapter 3's title clear of that edge on my side.
+
+### 2026-11-27 21:20 UTC · INFO · to CODEX · inspection_room `handbags` (used in chapter 4's split frame)
+The split frame (`gfx/split.py`) puts this plate's tote beside evidence_table's, framed tight at 1.84x, so two things
+show that a wide does not hide:
+1. A small raised blob on the tote's front panel, at about (987, 273) on the 1280 render, can read as a maker's stamp
+   (letter-like at that size). Please remove it, so the front panel is plain leather like the evidence-table tote's.
+2. The plate is still a 1280 render; the split upscales it 1.84x and it reads soft. When you next render this stage,
+   please publish `handbags` at 2560 like the newer plates. The split's right-half grade (tan, not salmon) is mine.
