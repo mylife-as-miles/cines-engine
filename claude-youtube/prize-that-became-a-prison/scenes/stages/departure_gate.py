@@ -78,20 +78,22 @@ RIM = "dawn_rim"
 DIMS = ["fx_{:+.1f}_{:+.1f}_light".format(*xy) for xy, lv in st.FX_LEVEL.items() if lv == st.DIM]
 TRIMS = {
     # the one downlight over her row makes the island; the glass's spill is cut to a trace so the rows fall off
-    "wide": {"window_spill": 0.14, RIM: 1.6, "face return": 0.8, KEY: 0.20, POOL: 1.25,
+    "wide": {"window_spill": 0.14, RIM: 2.4, "face return": 0.8, KEY: 0.20, POOL: 1.25,
              "mast_light_0": 0.66, "mast_light_1": 0.66, **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): (0.35 if xy[1] <= -1.2 else 0.14)
               for xy, level in st.FX_LEVEL.items() if level == st.DIM},
              **{"fx_{:+.1f}_{:+.1f}_light".format(*xy): 0.18 for xy in st.BACK_FX}},
     # top light from the downlight over her seat is the key; the glass's spill would flatten her face; the night
     # fittings over the far rows a touch lower so the rows stay soft and dark behind her
-    "seated": {"window_spill": 0.2, POOL: 0.20, KEY: 0.22, **{n: 0.6 for n in DIMS}},
+    "seated": {"window_spill": 0.2, POOL: 0.15, KEY: 0.22, **{n: 0.6 for n in DIMS}, "fx_-10.2_-1.2_light": 3.0},
     # from behind her: the fitting over the row turned down so she and the seats go dark against the glass
     "window": {"window_spill": 0.13, KEY: 0.14, POOL: 0.06, RIM: 0.22, "face return": 0.90,
-               "mast_light_0": 0.60, "mast_light_1": 0.60},
+               "mast_light_0": 0.35, "mast_light_1": 0.35},
 }
-FLAGS = {"seated": ["flag_near_seats", "flag_pool", "seated face key"], "wide": ["right wall washer"]}   # black flags (camera-invisible) used by one camera only
+FLAGS = {"seated": ["flag_near_seats", "flag_pool", "seated face key"], "wide": ["right wall washer", "wide shoulder edge"]}   # black flags (camera-invisible) used by one camera only
 
 _STATE = {"cast": [], "base": {}}
+LEFT_FINGERS = [f"f_{finger}.01_master.L" for finger in ("index", "middle", "ring", "pinky")]
+CALL_CONTROLS = ["chest", "neck", "head", "forearm_fk.L", "forearm_fk.R", "hand_fk.L", "thumb.01_master.L", *LEFT_FINGERS]
 
 
 # ---------------------------------------------------------------- people
@@ -165,9 +167,31 @@ def dawn():
     if bun is not None:
         me = bun.data
         c = sum((v.co for v in me.vertices), Vector()) / len(me.vertices)
-        for v in me.vertices:
-            d = v.co - c
-            v.co = c + Vector((d.x * 0.95, d.y * 0.42, d.z * 0.60)) + Vector((0.0, -0.030, -0.055))
+        # A tucked coil on the nape. Its inner turn fills the centre; the outer turn
+        # flattens into the scalp and ends under the hair at the base of the head.
+        c += Vector((0, -0.014, -0.030))
+        tilt = Matrix.Rotation(math.radians(-23), 3, "X")
+        verts, faces = [], []
+        steps, section = 80, 14
+        for i in range(steps + 1):
+            t = i / steps
+            a = -1.2 + 1.56 * math.tau * t
+            radius = 0.004 + 0.030 * t
+            thickness = 0.0125 * (0.57 + 0.43 * math.sin(math.pi * t) ** 0.4)
+            centre = Vector((radius * math.cos(a), 0.008 - 0.017 * t, 0.84 * radius * math.sin(a)))
+            for j in range(section):
+                v = math.tau * j / section
+                ring = Vector((math.cos(a) * math.cos(v), 0.86 * math.sin(v), math.sin(a) * math.cos(v)))
+                verts.append(c + tilt @ (centre + thickness * ring))
+                if i:
+                    k = i * section + j
+                    n = i * section + (j + 1) % section
+                    faces.append((k - section, n - section, n, k))
+        faces.extend([tuple(reversed(range(section))), tuple(range(steps * section, (steps + 1) * section))])
+        me.clear_geometry()
+        me.from_pydata(verts, [], faces)
+        for face in me.polygons:
+            face.use_smooth = True
         me.update()
         if me.materials:
             hair = me.materials[0].copy()
@@ -176,26 +200,44 @@ def dawn():
             shader = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
             wave = nt.nodes.new("ShaderNodeTexWave")
             wave.wave_type = "RINGS"
-            wave.rings_direction = "X"
-            wave.inputs["Scale"].default_value = 16.0
+            wave.rings_direction = "Y"
+            tex = nt.nodes.new("ShaderNodeTexCoord")
+            coords = nt.nodes.new("ShaderNodeMapping")
+            coords.inputs["Location"].default_value = -(tilt.inverted() @ c)
+            coords.inputs["Rotation"].default_value.x = math.radians(23)
+            nt.links.new(tex.outputs["Object"], coords.inputs["Vector"])
+            nt.links.new(coords.outputs["Vector"], wave.inputs["Vector"])
+            wave.inputs["Scale"].default_value = 60.0
             wave.inputs["Distortion"].default_value = 1.2
             bump = nt.nodes.new("ShaderNodeBump")
-            bump.inputs["Strength"].default_value = 0.16
+            bump.inputs["Strength"].default_value = 0.25
             bump.inputs["Distance"].default_value = 0.0006
             nt.links.new(wave.outputs["Fac"], bump.inputs["Height"])
             nt.links.new(bump.outputs["Normal"], shader.inputs["Normal"])
     shoes = bpy.data.objects.get(f"{h.name}_shoes04")
     if shoes is not None:
-        for v in shoes.data.vertices:
+        mesh = bmesh.new()
+        mesh.from_mesh(shoes.data)
+        toe = min(v.co.y for v in mesh.verts)
+        # Curve the topline around the instep. Preserve the toe cap, sidewalls and heel counter.
+        cut = []
+        for face in mesh.faces:
+            centre = face.calc_center_median()
+            across = abs(abs(centre.x) - 0.105)
+            if toe + 0.063 + 0.60 * across < centre.y < -0.028 and centre.z > 0.034 + 0.3 * across:
+                cut.append(face)
+        bmesh.ops.delete(mesh, geom=cut, context="FACES")
+        for v in mesh.verts:
             x, y, z = v.co
-            if z > 0.045:
-                v.co.z = 0.045 + (z - 0.045) * (0.40 if y > -0.01 else 0.64)
+            if z > 0.030:
+                v.co.z = 0.030 + (z - 0.030) * (0.40 if y > -0.01 else 0.30)
             elif z < 0.012:
-                centreline = math.copysign(0.105, x)
-                v.co.x += (centreline - x) * 0.055
+                v.co.x += (math.copysign(0.105, x) - x) * 0.15
+        mesh.to_mesh(shoes.data)
+        mesh.free()
         body = bpy.data.objects[h["body"]]
         hidden = body.vertex_groups["Delete.shoes04"]
-        hidden.remove([v.index for v in body.data.vertices if v.co.z > 0.035 and v.co.y > -0.14
+        hidden.remove([v.index for v in body.data.vertices if v.co.z > 0.025 and v.co.y > toe + 0.055
                        and any(g.group == hidden.index for g in v.groups)])
     print(f"GATE wardrobe: people.dawn(), jacket front relaxed over {n_drape} vertices, bun "
           f"{'lowered' if bun is not None else 'not found'}", flush=True)
@@ -207,28 +249,29 @@ def lap_hands(holder, forearms=(67.0, 64.0)):
     rig = rigged.rig_of(holder)
     for side, k, angle in ((1, "L", forearms[0]), (-1, "R", forearms[1])):
         left = k == "L"
-        rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, 12, side, 6))
+        rigged._aim(rig, f"upper_arm_fk.{k}", rigged._dir(0, 6 if left else 12, side, 6))
         rigged._aim(rig, f"forearm_fk.{k}", rigged._dir(0, angle, side, -25 if left else -21))
         wrist = rig.pose.bones[f"hand_fk.{k}"]
         forward = rigged._dir(0, 81 if left else 87, side, -58 if left else -17).normalized()
         # The two hand bones have mirrored local X axes. Roll the palm toward the skirt
         # after aiming the fingers so their edges never meet in a vertical pinch.
-        down = Vector((0.80, 0.0, -0.60) if left else (-0.12, 0.0, -1.0))
+        down = Vector((0.45, 0.0, -0.89) if left else (-0.12, 0.0, -1.0))
         normal = (down - forward * down.dot(forward)).normalized()
         x = normal * side
         basis = Matrix((x, forward, x.cross(forward))).transposed().to_4x4()
         basis.translation = wrist.matrix.translation.copy()
         wrist.matrix = basis
-        for i, (finger, spread) in enumerate((("index", 5), ("middle", 0), ("ring", -4), ("pinky", -8))):
+        spread = (2, 0, -2, -4) if left else (5, 0, -4, -8)
+        for i, finger in enumerate(("index", "middle", "ring", "pinky")):
             master = rig.pose.bones[f"f_{finger}.01_master.{k}"]
             master.rotation_mode = "XYZ"
-            master.rotation_euler.x = math.radians(24 + i * 2)
-            master.rotation_euler.z = math.radians(side * spread)
+            master.rotation_euler.x = math.radians(16 + i * 3 if left else 24 + i * 2)
+            master.rotation_euler.z = math.radians(side * spread[i])
             master.scale.y = 0.89
         thumb = rig.pose.bones[f"thumb.01_master.{k}"]
         thumb.rotation_mode = "XYZ"
         thumb.rotation_euler.x = math.radians(24)
-        thumb.rotation_euler.z = math.radians(-side * 14)
+        thumb.rotation_euler.z = math.radians(-side * (6 if left else 14))
         bpy.context.view_layer.update()
 
 
@@ -291,8 +334,11 @@ def sit_legs(holder, thigh, shin):
         sh, stl = mw @ pb[f"shin_fk.{k}"].head, mw @ pb[f"shin_fk.{k}"].tail
         ls = (stl - sh).length
         out = math.degrees(math.asin(max(-0.3, min(0.3, (ANKLE_HALF - abs(sh.x - mid.x)) / ls))))
-        rigged._aim(rig, f"shin_fk.{k}", rigged._dir(0, shin, side, out))
-        rigged._aim(rig, f"foot_fk.{k}", rest[k])
+        rigged._aim(rig, f"shin_fk.{k}", rigged._dir(0, shin + (10 if k == "R" else 0), side, out))
+        foot = rest[k]
+        if k == "R":
+            foot = Matrix.Rotation(math.radians(4), 3, "X") @ foot
+        rigged._aim(rig, f"foot_fk.{k}", foot)
 
 
 def body_points(holder, only=None, unmasked=False):
@@ -491,10 +537,22 @@ def apply_camera(name):
         ob.hide_render = called
     if _STATE["cast"]:
         rig = rigged.rig_of(_STATE["cast"][0])
-        rig.pose.bones["head"].matrix_basis = _STATE["head rest"].copy()
+        for bone, rest in _STATE["rest controls"].items():
+            rig.pose.bones[bone].matrix_basis = rest.copy()
         bpy.context.view_layer.update()
         if called:
-            rigged._turn(rig, "head", -22, 9)
+            rigged._turn(rig, "chest", 0, -5)
+            rigged._turn(rig, "neck", 0, -18)
+            rigged._turn(rig, "head", -23, -43)
+            rigged._turn(rig, "forearm_fk.R", 0.55, 0)
+            rigged._turn(rig, "forearm_fk.L", -10, 0)
+            for bone in LEFT_FINGERS:
+                rig.pose.bones[bone].rotation_euler.x = math.radians(12)
+            bpy.context.view_layer.update()
+    for camera, unit in (("wide", "seats_r3_u1"), ("window", "seats_r1_u2")):
+        bpy.data.objects[unit].hide_render = name == camera
+    bpy.data.objects["called face return"].hide_render = not called
+    _STATE["mast emission"].default_value = _STATE["mast power"] * (0.6 if name == "window" else 1)
     light_setup = "seated" if called else name
     trims = TRIMS.get(light_setup, {})
     for n, ob in st.LIGHTS.items():
@@ -533,6 +591,9 @@ def build(cast=True):
     st.columns()
     st.podium()
     st.seats()
+    flood = next(n for n in st.M["flood"].node_tree.nodes if n.type == "EMISSION")
+    _STATE["mast emission"] = flood.inputs["Strength"]
+    _STATE["mast power"] = flood.inputs["Strength"].default_value
     st.dressing()
     st.exterior()
     # the apron's glow and the night sky through the glass: a soft cool spill onto the front rows
@@ -551,12 +612,15 @@ def build(cast=True):
     bounce.visible_glossy = False
     bounce.data.specular_factor = 0.0
     for name, location, size, energy, target, spread in (
-        ("seated face key", (SEAT[0] + 0.50, ROW_Y + 0.9, 1.35), (0.30, 0.30), 10, FOCUS["fx_face"], 40),
+        ("seated face key", (SEAT[0] + 0.50, ROW_Y + 0.9, 1.35), (0.30, 0.30), 16, FOCUS["fx_face"], 25),
+        ("called face return", (SEAT[0] + 1.6, ROW_Y + 0.3, 1.5), (0.4, 0.4), 8, FOCUS["fx_face"], 45),
+        ("wide shoulder edge", (SEAT[0] - 1.8, ROW_Y + 0.2, 1.6), (0.34, 0.48), 17,
+         (SEAT[0], ROW_Y, 1.08), 45),
         ("right wall washer", (st.XR - 0.32, -0.8, 3.0), (3.0, 0.24), 22, (st.XR, 0.15, 0.35), 150),
     ):
         li = st.area(name, location, size, energy, (0.76, 0.86, 1.0), spread=spread)
         li.rotation_euler = (Vector(target) - li.location).to_track_quat("-Z", "Y").to_euler()
-        li.visible_glossy = False
+        li.visible_camera = li.visible_glossy = li.visible_transmission = False
         li.data.specular_factor = 0.0
     case = suitcase()
     _STATE["case parts"] = [ob for ob in case.children_recursive if not ob.hide_render]
@@ -577,7 +641,8 @@ def build(cast=True):
     if cast:
         d = dawn()
         place_seated(d, SEAT, seat_z)
-        _STATE["head rest"] = rigged.rig_of(d).pose.bones["head"].matrix_basis.copy()
+        bones = rigged.rig_of(d).pose.bones
+        _STATE["rest controls"] = {name: bones[name].matrix_basis.copy() for name in CALL_CONTROLS}
         _STATE["cast"] = [d] + list(d.children_recursive)
     sk.haze((st.XR - st.XL - 0.1, st.WIN - st.BACK - 0.1, st.H - 0.05), ((st.XL + st.XR) / 2, (st.WIN + st.BACK) / 2, st.H / 2),
             0.003)
