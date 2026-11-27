@@ -61,6 +61,10 @@ LAYOUT["three bags"] = {
     "handbag-tote": (0.065, 0.155, TOP - 0.001, 325.0),
 }
 LAYOUT["ch05"].update(LAYOUT["three bags"])
+LAYOUT["aftermath"] = {**LAYOUT["ch05"], "extra-bag-open": (-0.53, 0.11, TOP, 60.0),
+                       "handbag-tote": (-0.02, -0.10, TOP, 163.0),
+                       "handbag-satchel": (0.39, -0.035, TOP, 293.0),
+                       "handbag-shoulder": (0.72, 0.13, TOP, 20.0)}
 LAYOUT["match"] = {"dawn-suitcase": (0.32, -0.10, TOP, 122.0),
                    "extra-bag-closed": (-0.30, 0.18, TOP, 197.0)}
 st.GHOST = (TOTE00[0], TOTE00[1], 0.35, 0.16, TOTE00[3])   # the cleaner patch where the tote stood (Ch 11)
@@ -71,17 +75,17 @@ PROPS = {  # size, axis, grade
     # (the prop table's val 0.35 still read mid grey on the lit top seen low across the bench: 0.25)
     "extra-bag-closed": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
     "extra-bag-open": (0.75, "long", dict(sat=0.5, val=0.25, rough_add=0.35)),
-    # the tote's leather is a red-brown that grades to salmon: turned toward orange (hue +0.045) and lifted, it lands
-    # near (0.32, 0.15, 0.06) linear, cognac, the one warm thing in the room
-    "handbag-tote": (0.35, "long", dict(sat=1.0, val=0.84, hue=0.50, rough_add=0.32)),
-    "handbag-satchel": (0.30, "long", dict(sat=0.8, rough_add=0.28)),
+    # A warm leather face and black pebbled satchel under the same cool troffer.
+    "handbag-tote": (0.35, "long", dict(sat=1.70, val=0.65, hue=0.525, rough_add=0.32)),
+    "handbag-satchel": (0.30, "long", dict(sat=0.8, val=0.25, rough_add=0.28)),
     "handbag-shoulder": (0.32, "long", dict(sat=0.8, val=0.55, rough_add=0.25)),
 }
 FINISH = {  # specular level and woven face (period m, bump strength) per prop
     "dawn-suitcase": dict(spec=0.2, weave=(0.002, 0.25), ceiling=(0.05, 0.052, 0.058)),
     "extra-bag-closed": dict(spec=0.06),
     "extra-bag-open": dict(spec=0.06),
-    "handbag-tote": dict(spec=0.22),
+    "handbag-tote": dict(spec=0.08),
+    "handbag-satchel": dict(spec=0.06),
     "handbag-shoulder": dict(spec=0.35),
 }
 # The cold open cuts across both ends of the bench. Set the reflected ceiling
@@ -172,15 +176,16 @@ CAMERAS.update({
                      cheat={"Dawn": (1.75, -1.10), "OfficerA": (-0.52, 0.55), "OfficerB": (-1.36, 0.69)}),
     "two_shot_pre": dict(CAMERAS["two_shot"], layout="ch11"),
     "wide_pre": dict(CAMERAS["wide"], layout="ch11"),
-    "dawn_close": dict(loc=(-0.77, 0.66, 1.57), aim=(0.24, -0.42, 1.44), lens=43,
+    "dawn_close": dict(loc=(-0.96, 1.18, 1.64), aim=(0.38, -0.38, 1.46), lens=61,
                        focus="fx_dawn_close", fstop=2.8, beat="ch00", layout="ch11", pose="case handle",
-                       cheat={"Dawn": (0.53, -0.59), "OfficerA": (-0.78, 0.46)},
+                       cheat={"Dawn": (0.46, -0.63), "OfficerA": (-0.645, 0.426)},
                        facing={"Dawn": (0.391, 0.400), "OfficerA": (0.16, -0.80)}),
     "match": dict(loc=(-0.12, 4.0, TOP + 0.55), aim=(0, 0.02, TOP + 0.33), lens=50,
                   focus="fx_match", fstop=4, beat="ch11", layout="match", cast=False, shift=(0.0, 0.03),
                   final_res=(2560, 1440),
                   wild=("wall_back", "cove_b", "rail_b")),
-    "empty_ch05": dict(CAMERAS["empty"], beat="ch05"),
+    "empty_ch05": dict(CAMERAS["empty"], loc=(2.30, -2.65, 2.10), aim=(0.17, 0.04, 0.88),
+                      lens=26, beat="ch05", layout="aftermath"),
     "enter": dict(loc=(-2.56, -0.24, 1.58), aim=(0.0, 0.043, 1.14), lens=31,
                   focus="fx_match", fstop=4, beat="ch00", layout="ch11", pose="enter",
                   cheat={"Dawn": (-1.90, 0.17), "OfficerB": (-1.05, -0.82)},
@@ -202,7 +207,7 @@ POSES["enter"] = {
                  "r_arm": (-10, 24, 88), "roll_r": 111, "stride": -0.055},
 }
 POSES["case handle"] = dict(POSES["ch00"],
-                            Dawn=dict(POSES["ch00"]["Dawn"], reach_r="case_handle", palm="down", fingers=36),
+                            Dawn=dict(POSES["ch00"]["Dawn"], carry_grip=True, close_thumb=True, fingers=36),
                             OfficerA={"chest": (3, 0), "fingers": 32, "look": "Dawn", "behind": True})
 
 WILD = ("wall_front", "cove_f", "rail_f", "wall_back", "cove_b", "rail_b")
@@ -387,6 +392,7 @@ def blouse(holder, suit):
 
 def dawn():
     h = people.dawn()
+    castkit.relax_sculpted_hair(h)
     suit = cloth(h, "female_elegantsuit01", rough=0.92, bump=0.2)
     if suit is not None:
         hem_thickness(suit, 0.008)
@@ -443,7 +449,7 @@ def officer(name, variant):
             v.co = (centre.x + 1.12 * y, centre.y - 1.32 * x + 0.025 - brow,
                     band_z + z * 1.82 - 0.035 - 0.075 * max(0, -x))
         mesh.update()
-    fit_cap_band(h, crown)
+        fit_cap_band(h, ob)
     return h
 
 
@@ -637,6 +643,31 @@ def palm_normal(holder, side):
     return hand.to_3x3().col[0].normalized() * side, forearm.to_3x3().col[1].normalized()
 
 
+def hold_carry_strap(holder):
+    """Reach over the case lid with the elbow clear of the shell and the palm turned down."""
+    rig = rigged.rig_of(holder)
+    bones = rig.pose.bones
+    arm_from_case = rig.matrix_world.inverted() @ _case_frame()
+    hand = (arm_from_case.to_3x3() @ Vector((-1, 0, -0.12))).normalized()
+    palm = arm_from_case @ Vector((-0.007, 0.010, 0.561))
+    wrist = palm - hand * bones["hand_fk.R"].length * 0.5
+    shoulder = bones["upper_arm_fk.R"].head.copy()
+    axis = (wrist - shoulder).normalized()
+    upper, fore = bones["upper_arm_fk.R"].length, bones["forearm_fk.R"].length
+    distance = min((wrist - shoulder).length, 0.999 * (upper + fore))
+    along = (upper ** 2 - fore ** 2 + distance ** 2) / (2 * distance)
+    pole = arm_from_case.to_3x3() @ Vector((0.2, -1.0, 0.0))
+    outward = (pole - axis * pole.dot(axis)).normalized()
+    elbow = shoulder + axis * along + outward * math.sqrt(max(0, upper ** 2 - along ** 2))
+    rigged._aim(rig, "upper_arm_fk.R", elbow - shoulder)
+    rigged._aim(rig, "forearm_fk.R", wrist - elbow)
+    rigged._aim(rig, "hand_fk.R", hand)
+    finger_axis = (rig.matrix_world.to_3x3() @ hand).normalized()
+    normal = palm_normal(holder, -1)[0]
+    down = Vector((0, 0, -1))
+    _roll(holder, "hand_fk.R", math.degrees(math.atan2(finger_axis.dot(normal.cross(down)), normal.dot(down))))
+
+
 def apply_pose(holder, p):
     """pose_figure plus this stage's extras (one or both hands behind the back, a forearm roll)."""
     rigged.pose_figure(holder, {k: v for k, v in p.items() if k in ("head", "neck", "chest", "l_arm", "r_arm", "fingers", "stance")})
@@ -663,6 +694,8 @@ def apply_pose(holder, p):
         bpy.context.view_layer.update()
     if p.get("roll_r"):
         _roll(holder, "forearm_fk.R", p["roll_r"])
+    if p.get("carry_grip"):
+        hold_carry_strap(holder)
     if p.get("present_to_dawn"):
         rig = rigged.rig_of(holder)
         pointing = _STATE["holders"]["Dawn"].location - holder.location
@@ -693,8 +726,6 @@ def _bbox(holder):
 
 
 def _reach_point(kind):
-    if kind == "case_handle":
-        return _case_frame() @ Vector((-0.045, 0.032, 0.566))
     if kind == "duffel_hover":       # the officer offers the bag to Dawn across the bench
         lo, hi = _bbox(_STATE["props"]["extra-bag-closed"])
         return Vector(((lo.x + hi.x) / 2 + 0.12, (lo.y + hi.y) / 2 - 0.10, hi.z + 0.05))
@@ -784,7 +815,17 @@ def open_zip(holder):
             spread = 0.058 * weight * math.tanh(across / 0.020)
             # The freed far lip folds down as it rolls over the edge of the opening.
             z -= max(0.0, spread) * 0.62
-            v.co = local @ Vector((x, y + spread, z))
+            # The near side of the emptied duffel slumps toward the bench.
+            # Keep the base and end gussets standing, and carry the zip with it.
+            lip = max(0, min(1, (0.05 - y) / 0.12))
+            height = max(0, min(1, (z - 0.085) / 0.24))
+            slack = max(0, 1 - (x / 0.34) ** 4)
+            z -= 0.112 * lip * height * height * (3 - 2 * height) * slack
+            y += spread - 0.018 * lip * height * slack
+            # The unsupported opening leans forward while the base stays flat.
+            lean = math.radians(15) * min(1, max(0, z / 0.11)) ** 2
+            v.co = local @ Vector((x, y * math.cos(lean) - z * math.sin(lean),
+                                   z * math.cos(lean) + y * math.sin(lean)))
         mesh.update()
 
     # Follow the deformed cloth with both tapes, using rays in the bag's initial
@@ -861,6 +902,16 @@ def set_beat(beat):
             h.rotation_euler = (0, 0, math.radians(t))
         for o in [h] + list(h.children_recursive):
             o.hide_render = not on
+    if beat == "aftermath":
+        tote = _STATE["props"]["handbag-tote"]
+        tote.rotation_euler.x = math.radians(90)
+        if _STATE.get("aftermath_tote_rise") is None:
+            bpy.context.view_layer.update()
+            low = min((ob.matrix_world @ v.co).z for ob in props.meshes(tote) for v in ob.data.vertices)
+            _STATE["aftermath_tote_rise"] = TOP - low - 0.0005
+        tote.location.z += _STATE["aftermath_tote_rise"]
+    for item, original, handled in _STATE["bench_marks"]:
+        item.matrix_world = handled if beat == "aftermath" else original
     for o in _STATE["dressing"]:     # both frontal returns leave only the original two bags on the bench
         o.hide_render = beat in ("ch11", "match")
     bpy.context.view_layer.update()
@@ -921,6 +972,8 @@ def apply_camera(name):
     if _STATE.get("holders") and show_cast:
         block(beat, cfg.get("cheat"), cfg.get("facing"))
         pose_cast(beat, cfg)
+        if name == "dawn_close":
+            bpy.data.objects["fx_dawn_close"].location = eye_centre(_STATE["holders"]["Dawn"])
     for o in st.CEILING:   # (the lights among them stay unseen by every camera: the lens is what the eye sees)
         o.visible_camera = o.type != "LIGHT" and not cfg.get("above_ceiling", False)
     for n in WILD:  # a wild wall: out for a camera standing where the wall is, as on a set
@@ -949,6 +1002,7 @@ def apply_camera(name):
         key.light_linking.receiver_collection = _STATE["outside_case"] if match else None
     for light, original in _STATE["room_light_links"]:
         light.light_linking.receiver_collection = _STATE["outside_pair"] if name in BAG_RETURNS else original
+    _STATE["cheek_flag"].hide_render = name != "dawn_close"
     _STATE["duffel_flag"].hide_render = name not in ("wide_pre", "two_shot_pre")
     for light, watts in zip(_STATE["bag_returns"], BAG_RETURNS.get(name, (0, 0, 0))):
         light.hide_render = watts == 0
@@ -1024,6 +1078,19 @@ def build(cast=True):
     st.floor_line(x=0.86, y0=0.3)
     st.bench(TOP)
     _STATE["dressing"] = st.dressing(TOP)
+    bpy.context.view_layer.update()
+    _STATE["aftermath_tote_rise"] = None
+    _STATE["bench_marks"] = []
+    for name, angle, offset, parts in (
+        ("bench_gloves", -24, (0.035, 0.055, 0), ("bench_gloves", "bench_gloves_slot", "bench_gloves_tuft")),
+        ("bench_clipboard", 16, (-0.09, 0.023, 0), ("bench_clipboard",)),
+    ):
+        centre = bpy.data.objects[name].matrix_world.translation
+        turn = Matrix.Translation(centre + Vector(offset)) @ Matrix.Rotation(math.radians(angle), 4, "Z")
+        for part in parts:
+            item = bpy.data.objects[part]
+            rest = item.matrix_world.copy()
+            _STATE["bench_marks"].append((item, rest, turn @ Matrix.Translation(-centre) @ rest))
     _STATE["scanner"] = xr.build(sx, sy, sturn)
     floor_return = sk.area_light("overhead floor return", (-0.7, -1.0, 2.6), (2.0, 2.0), 9.0, (0.75, 0.84, 1.0))
     floor_only = bpy.data.collections.new("overhead tile")
@@ -1105,6 +1172,11 @@ def build(cast=True):
     card.visible_camera = card.visible_transmission = card.visible_volume_scatter = False
     card.hide_render = True
     _STATE["duffel_flag"] = card
+    cheek = sk.box("Dawn camera-side flag", (0.25, 0.30, 0.012), (0.24, -0.37, 1.86),
+                   sk.mat("cheek negative fill", (0.001, 0.001, 0.001), 0.99))
+    cheek.visible_camera = cheek.visible_glossy = cheek.visible_transmission = cheek.visible_volume_scatter = False
+    cheek.hide_render = True
+    _STATE["cheek_flag"] = cheek
     st.wall_wash()
     _STATE["match_omit"] = [bpy.data.objects[n] for n in
                             ("wash_front", "mon_body", "mon_screen", "mon_vesa", "mon_arm",
