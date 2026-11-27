@@ -28,7 +28,8 @@ from scipy import signal, ndimage
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(HERE, *a)
 SR = 48000
-CLOCK = json.load(open(P('out/edits/Q07_t1_fixed.json')))
+CLOCK_FILE = os.environ.get('Q07_CLOCK', 'out/edits/Q07_t1_fixed.json')       # Q07_CLOCK=out/edits/Q07_reel_v2.json for the reel with the pickup's shots
+CLOCK = json.load(open(P(CLOCK_FILE)))
 S = CLOCK['shots_seconds'] + [CLOCK['seconds']]
 N = int(round(CLOCK['seconds'] * SR))
 lin = lambda d: 10 ** (d / 20.0)
@@ -94,15 +95,16 @@ def main():
     b = np.zeros((N, 2), np.float32)
     fly = (306 - 281) / 24.0                                                       # the crow flies from the cut to frame 306, then falls
     place(b, read('q07/wings_c.flac')[:int((fly + 0.05) * SR)], S[3] + 0.02, -17.0, fin=0.01, fout=0.05)
-    place(b, read('q07/thud.flac')[:int(0.6 * SR)], 331 / 24.0 - 0.01, -15.0, fin=0.002, fout=0.25)   # it reaches the grass at frame 331
+    place(b, read('q07/thud.flac')[:int(0.6 * SR)], S[3] + (331 - 281) / 24.0 - 0.01, -15.0, fin=0.002, fout=0.25)   # it reaches the grass 50 frames into the shot
     stems['bird'] = b
     mix = sum(stems.values())
     n = int(0.25 * SR); mix[-n:] *= np.linspace(1, 0, n)[:, None]
-    wav = P('out/edits/Q07_t1_fixed_mix.wav'); sf.write(wav, mix, SR, subtype='PCM_24')
-    out = P('out/review/Q07_t1_fixed.mp4')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', P('out/edits/Q07_t1_fixed.mp4'), '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac',
+    base = os.path.basename(CLOCK_FILE)[:-5]
+    wav = P('out/edits', base + '_mix.wav'); sf.write(wav, mix, SR, subtype='PCM_24')
+    out = P('out/review', base + '.mp4')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', P('out/edits', base + '.mp4'), '-i', wav, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac',
                     '-b:a', '256k', '-movflags', '+faststart', out], check=True)
-    info = {'file': 'out/review/Q07_t1_fixed.mp4', 'seconds': CLOCK['seconds'], 'peak_dbfs': round(float(db(np.abs(mix).max())), 1),
+    info = {'file': 'out/review/' + base + '.mp4', 'seconds': CLOCK['seconds'], 'peak_dbfs': round(float(db(np.abs(mix).max())), 1),
             'rms_dbfs_by_shot': [round(float(db(np.sqrt((mix[int(a * SR):int(b2 * SR)].mean(1) ** 2).mean()))), 1) for a, b2 in zip(S, S[1:])],
             'stems_rms_dbfs': {k: round(float(db(np.sqrt((v.mean(1) ** 2).mean()))), 1) for k, v in stems.items()}, 'creaks_found': len(creaks)}
     json.dump(info, open(wav.replace('.wav', '.json'), 'w'), indent=1); print(info)

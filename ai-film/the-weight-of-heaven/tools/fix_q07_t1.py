@@ -2,6 +2,10 @@
 """Q07 take 1 with its last shot made long enough to use. Editing only; nothing generated.
 
     /root/leonxlnx/earshot/.venv/bin/python tools/fix_q07_t1.py   ->  out/edits/Q07_t1_fixed.mp4 (silent), .json
+    Q07_PICKUP=1 ... tools/fix_q07_t1.py                          ->  out/edits/Q07_reel_v2.mp4 (silent), .json
+        the same, with shots 1 and 3 replaced by the two shots of the pickup (out/takes/Q07P_t1.mp4, cut at frame 88),
+        which were made from the two aerial shot plates after the author found the first take's shots 1 and 3 riding
+        on the floor and not cinematic (26-27 November)
 
 The take's five shots came back 3.12, 4.67, 3.92, 3.79 and 0.54 s: Sarn Vale, the last, is thirteen frames. The author
 (26 November) was offered a stretch by editing or a paid pickup; the stretch is made here.
@@ -83,16 +87,22 @@ def main():
         change += 0.012 * (field(31, 70, t + 0.0, 0.30) * m_sky)[..., None]
         out.append(np.clip(slow[i] + change, 0, 1))
     os.makedirs(P('out/edits'), exist_ok=True)
-    dst = P('out/edits/Q07_t1_fixed.mp4')
+    shot5 = np.stack([(f * 255 + 0.5).astype(np.uint8) for f in out])
+    if os.environ.get('Q07_PICKUP'):
+        pk = frames(['-i', P('out/takes/Q07P_t1.mp4')]); c = 88
+        parts = [pk[:c], take[SHOTS[1]:SHOTS[2]], pk[c:], take[SHOTS[3]:SHOTS[4]], shot5]
+        dst = P('out/edits/Q07_reel_v2.mp4')
+    else:
+        parts = [take[SHOTS[i]:SHOTS[i + 1]] for i in range(4)] + [shot5]
+        dst = P('out/edits/Q07_t1_fixed.mp4')
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-an',
                             '-c:v', 'libx264', '-crf', '12', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', dst], stdin=subprocess.PIPE)
-    enc.stdin.write(take[:a].tobytes())
-    for f in out:
-        enc.stdin.write((f * 255 + 0.5).astype(np.uint8).tobytes())
+    for part in parts:
+        enc.stdin.write(part.tobytes())
     enc.stdin.close(); enc.wait()
-    starts = SHOTS[:5]
-    info = {'file': 'out/edits/Q07_t1_fixed.mp4', 'frames': a + N5, 'seconds': round((a + N5) / FPS, 3), 'shots_start_frames': starts,
-            'shots_seconds': [round(x / FPS, 3) for x in starts], 'shot_lengths_s': [round((y - x) / FPS, 3) for x, y in zip(starts, starts[1:] + [a + N5])],
+    starts = [int(x) for x in np.cumsum([0] + [len(x) for x in parts[:-1]])]; total = sum(len(x) for x in parts)
+    info = {'file': os.path.relpath(dst, HERE), 'frames': total, 'seconds': round(total / FPS, 3), 'shots_start_frames': starts,
+            'shots_seconds': [round(x / FPS, 3) for x in starts], 'shot_lengths_s': [round(len(x) / FPS, 3) for x in parts],
             'shot5': {'take_frames': b - a, 'frames_now': N5, 'smoke_share_of_frame': round(float((m_smoke > 0.5).mean()), 4), 'sky_share_of_frame': round(float((m_sky > 0.5).mean()), 4)}}
     json.dump(info, open(dst.replace('.mp4', '.json'), 'w'), indent=1); print(info)
     dbg = os.environ.get('Q07_DEBUG')
