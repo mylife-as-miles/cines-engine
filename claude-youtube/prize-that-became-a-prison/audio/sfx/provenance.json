@@ -1,0 +1,2264 @@
+{
+ "amb_fluorescent_hum": {
+  "file": "audio/sfx/amb_fluorescent_hum.wav",
+  "kind": "bed",
+  "what": "Fluorescent tubes on 50 Hz mains (China): the ballast hum at 100 Hz and its harmonics, a light buzz. Detention corridor; under the inspection room.",
+  "take": "synth_2.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 2",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -10.1
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "fluorescent lights humming and buzzing",
+   "alts": [
+    "a refrigerator humming",
+    "an electric guitar amplifier hum",
+    "a mosquito buzzing",
+    "an engine idling"
+   ],
+   "z": 3.18,
+   "verdict": "strong",
+   "p_vs_alts": 0.054,
+   "alt_p": [
+    {
+     "query": "a refrigerator humming",
+     "p": 0.0
+    },
+    {
+     "query": "an electric guitar amplifier hum",
+     "p": 0.946
+    },
+    {
+     "query": "a mosquito buzzing",
+     "p": 0.0
+    },
+    {
+     "query": "an engine idling",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Music 0.88",
+    "Musical instrument 0.47",
+    "Sine wave 0.42",
+    "Effects unit 0.21"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "an error buzz (z +3.8)",
+    "a phone vibration buzz (z +3.4)",
+    "an electrical hum (z +3.0)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 2.92,
+    "verdict": "plausible",
+    "p_vs_alts": 0.016,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.84,
+    "verdict": "plausible",
+    "p_vs_alts": 0.117,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 3.18,
+    "verdict": "strong",
+    "p_vs_alts": 0.054,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -24.0,
+   "true_peak_dbtp": -14.9,
+   "peak_dbfs": -14.9,
+   "lra_lu": 2.9,
+   "noise_floor_dbfs": -27.7,
+   "brightness_hz": 239
+  },
+  "used_at": [
+   "00.05 20-47 s",
+   "00.12 64-65 s",
+   "04.02 312-331 s",
+   "04.05 333-352 s",
+   "04.08 368-402 s",
+   "05.04 430-445 s"
+  ]
+ },
+ "amb_void_air": {
+  "file": "audio/sfx/amb_void_air.wav",
+  "kind": "bed",
+  "what": "The Void Stage's own air: a vast dark space, almost silent, very low movement. Never digitally dead.",
+  "take": "synth_0.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 0",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -25.7
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a very quiet low rumble of an empty space",
+   "alts": [
+    "wind blowing",
+    "rain",
+    "an engine",
+    "ocean waves"
+   ],
+   "z": 2.85,
+   "verdict": "plausible",
+   "p_vs_alts": 0.958,
+   "alt_p": [
+    {
+     "query": "wind blowing",
+     "p": 0.008
+    },
+    {
+     "query": "rain",
+     "p": 0.0
+    },
+    {
+     "query": "an engine",
+     "p": 0.033
+    },
+    {
+     "query": "ocean waves",
+     "p": 0.002
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Eruption 0.24",
+    "White noise 0.13",
+    "Field recording 0.12",
+    "Rumble 0.07"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a low rumble (z +2.5)",
+    "a big drum hit (z +2.3)",
+    "a deep cinematic boom (z +2.3)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 2.85,
+    "verdict": "plausible",
+    "p_vs_alts": 0.958,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.76,
+    "verdict": "plausible",
+    "p_vs_alts": 0.934,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 2.85,
+    "verdict": "plausible",
+    "p_vs_alts": 0.951,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -24.0,
+   "true_peak_dbtp": -8.3,
+   "peak_dbfs": -8.3,
+   "lra_lu": 5.9,
+   "noise_floor_dbfs": -31.0,
+   "brightness_hz": 146
+  },
+  "used_at": [
+   "00.11 56-64 s",
+   "00.12 65-77 s",
+   "00.17 97-102 s",
+   "05.03 402-430 s",
+   "06.02 450-468 s",
+   "06.06 495-525 s",
+   "07.03 555-570 s",
+   "08.05 656-670 s",
+   "09.08 734-773 s"
+  ]
+ },
+ "sd_void_drone": {
+  "file": "audio/sfx/sd_void_drone.wav",
+  "kind": "bed",
+  "what": "THE DRONE (score motif carried by sound design): low D with its fifth A, slow beating, dark air. 0:56 to 'were not', and back at the end under YES -> WHEN?. Tuned to A = 440 (D2 73.42 Hz).",
+  "take": "synth_2.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 2",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -10.2
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a low dark sustained drone",
+   "alts": [
+    "an engine running",
+    "wind blowing",
+    "an organ chord",
+    "a refrigerator hum"
+   ],
+   "z": 3.53,
+   "verdict": "strong",
+   "p_vs_alts": 0.86,
+   "alt_p": [
+    {
+     "query": "an engine running",
+     "p": 0.0
+    },
+    {
+     "query": "wind blowing",
+     "p": 0.0
+    },
+    {
+     "query": "an organ chord",
+     "p": 0.139
+    },
+    {
+     "query": "a refrigerator hum",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Music 0.52",
+    "Synthesizer 0.18",
+    "Musical instrument 0.11",
+    "Ambient music 0.09"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a deep sub bass (z +3.7)",
+    "a sub bass drop (z +3.6)",
+    "a deep cinematic boom (z +3.1)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 3.49,
+    "verdict": "strong",
+    "p_vs_alts": 0.865,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 3.43,
+    "verdict": "strong",
+    "p_vs_alts": 0.7,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 3.53,
+    "verdict": "strong",
+    "p_vs_alts": 0.86,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -24.0,
+   "true_peak_dbtp": -14.8,
+   "peak_dbfs": -14.8,
+   "lra_lu": 1.4,
+   "noise_floor_dbfs": -30.2,
+   "brightness_hz": 103
+  },
+  "used_at": [
+   "00.11 56-65 s",
+   "09.09 752-766 s"
+  ]
+ },
+ "amb_rain_concrete": {
+  "file": "audio/sfx/amb_rain_concrete.wav",
+  "kind": "bed",
+  "what": "Prison exterior: rain on concrete, water running off, gusts of wind.",
+  "take": "es_street.wav",
+  "made_by": "earshot make (catalogue design), es_street",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -24.3
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "steady rain falling on concrete with wind",
+   "alts": [
+    "a shower running",
+    "frying food in a pan",
+    "applause",
+    "a waterfall"
+   ],
+   "z": 4.18,
+   "verdict": "strong",
+   "p_vs_alts": 0.999,
+   "alt_p": [
+    {
+     "query": "a shower running",
+     "p": 0.0
+    },
+    {
+     "query": "frying food in a pan",
+     "p": 0.0
+    },
+    {
+     "query": "applause",
+     "p": 0.0
+    },
+    {
+     "query": "a waterfall",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Rain on surface 0.85",
+    "Rain 0.67",
+    "Raindrop 0.49"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "rain on a window (z +3.6)",
+    "heavy rain (z +3.6)",
+    "rain on a roof (z +3.6)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 2,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 3.95,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_street.wav": {
+    "z": 4.18,
+    "verdict": "strong",
+    "p_vs_alts": 0.999,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -26.3,
+   "true_peak_dbtp": -3.0,
+   "peak_dbfs": -3.3,
+   "lra_lu": 1.5,
+   "noise_floor_dbfs": -35.6,
+   "brightness_hz": 5137
+  },
+  "used_at": [
+   "00.14 77-81 s",
+   "07.01 524-535 s",
+   "09.01 669-678 s"
+  ]
+ },
+ "amb_chicago_night": {
+  "file": "audio/sfx/amb_chicago_night.wav",
+  "kind": "bed",
+  "what": "Chicago at night through closed glass: distant traffic, muffled.",
+  "take": "es_recipe.wav",
+  "made_by": "earshot make --recipe recipes/chicago_glass.json",
+  "recipe": {
+   "name": "chicago_glass",
+   "says": "distant city traffic at night heard through a closed window",
+   "kind": "ambience",
+   "dur": 28,
+   "layers": [
+    {
+     "sound": "city/distant",
+     "dur": 28,
+     "lowpass": 900,
+     "gain": 0
+    },
+    {
+     "source": "noise",
+     "color": "brown",
+     "dur": 28,
+     "lowpass": 120,
+     "gain": -16
+    }
+   ]
+  },
+  "finish": {
+   "loop_s": 25.714,
+   "crossfade_s": 2.0,
+   "lufs_before": -24.7
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "distant city traffic at night heard from indoors",
+   "alts": [
+    "ocean waves",
+    "an airplane flying over",
+    "wind blowing",
+    "a waterfall"
+   ],
+   "z": 1.69,
+   "verdict": "no match",
+   "p_vs_alts": 0.002,
+   "alt_p": [
+    {
+     "query": "ocean waves",
+     "p": 0.003
+    },
+    {
+     "query": "an airplane flying over",
+     "p": 0.993
+    },
+    {
+     "query": "wind blowing",
+     "p": 0.001
+    },
+    {
+     "query": "a waterfall",
+     "p": 0.001
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Speech 0.43",
+    "Field recording 0.40",
+    "Vehicle 0.34",
+    "Bus 0.14"
+   ],
+   "speech_p": 0.43,
+   "closest": [
+    "an airplane flying overhead (z +2.7)",
+    "a helicopter flying overhead (z +2.4)",
+    "a big braam (z +2.4)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 1,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 1.69,
+    "verdict": "no match",
+    "p_vs_alts": 0.002,
+    "pass": false,
+    "speech_p": 0.43
+   }
+  },
+  "measure": {
+   "duration": 25.714,
+   "lufs": -24.0,
+   "true_peak_dbtp": -10.6,
+   "peak_dbfs": -10.6,
+   "lra_lu": 2.0,
+   "noise_floor_dbfs": -28.6,
+   "brightness_hz": 558
+  },
+  "used_at": [
+   "01.01 102-112 s"
+  ]
+ },
+ "amb_home_room": {
+  "file": "audio/sfx/amb_home_room.wav",
+  "kind": "bed",
+  "what": "The Hunts' home (dining room, kitchen; Tim's desk): a quiet house, still.",
+  "take": "es_roomtone.wav",
+  "made_by": "earshot make (catalogue design), es_roomtone",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -23.6
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "the quiet room tone of a house",
+   "alts": [
+    "a busy office",
+    "wind outside",
+    "an airplane cabin",
+    "rain"
+   ],
+   "z": 2.9,
+   "verdict": "plausible",
+   "p_vs_alts": 0.678,
+   "alt_p": [
+    {
+     "query": "a busy office",
+     "p": 0.007
+    },
+    {
+     "query": "wind outside",
+     "p": 0.001
+    },
+    {
+     "query": "an airplane cabin",
+     "p": 0.312
+    },
+    {
+     "query": "rain",
+     "p": 0.001
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Air conditioning 0.19",
+    "Spray 0.19",
+    "Vehicle 0.10",
+    "Snort 0.07"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a vacuum cleaner (z +2.7)",
+    "crickets at night (z +2.5)",
+    "an office ambience (z +2.5)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 1,
+  "all_takes": {
+   "es_roomtone.wav": {
+    "z": 2.9,
+    "verdict": "plausible",
+    "p_vs_alts": 0.678,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -24.0,
+   "true_peak_dbtp": -10.1,
+   "peak_dbfs": -10.2,
+   "lra_lu": 0.8,
+   "noise_floor_dbfs": -30.3,
+   "brightness_hz": 5309
+  },
+  "used_at": [
+   "01.03 124-148 s",
+   "07.04 570-580 s",
+   "07.07 596-608 s",
+   "08.01 610-648 s",
+   "09.06 722-728 s"
+  ]
+ },
+ "amb_hk_street": {
+  "file": "audio/sfx/amb_hk_street.wav",
+  "kind": "bed",
+  "what": "Hong Kong street: traffic on a wet road, a tram rumbling past, rain dripping on awnings.",
+  "take": "es_recipe.wav",
+  "made_by": "earshot make --recipe recipes/hk_street.json",
+  "recipe": {
+   "name": "hk_street",
+   "says": "a city street in light rain, rain dripping on awnings",
+   "kind": "ambience",
+   "dur": 28,
+   "layers": [
+    {
+     "sound": "city/street",
+     "dur": 28,
+     "gain": 0
+    },
+    {
+     "sound": "rain/umbrella",
+     "dur": 28,
+     "gain": -7
+    }
+   ]
+  },
+  "finish": {
+   "loop_s": 25.707,
+   "crossfade_s": 2.0,
+   "lufs_before": -24.3
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "a city street in the rain with traffic",
+   "alts": [
+    "a waterfall",
+    "a crowd cheering",
+    "frying food in a pan",
+    "wind in trees"
+   ],
+   "z": 2.24,
+   "verdict": "weak",
+   "p_vs_alts": 0.274,
+   "alt_p": [
+    {
+     "query": "a waterfall",
+     "p": 0.026
+    },
+    {
+     "query": "a crowd cheering",
+     "p": 0.491
+    },
+    {
+     "query": "frying food in a pan",
+     "p": 0.209
+    },
+    {
+     "query": "wind in trees",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Speech 0.40",
+    "Vehicle 0.22",
+    "Bus 0.22",
+    "Traffic noise, roadway noise 0.10"
+   ],
+   "speech_p": 0.4,
+   "closest": [
+    "a crowd talking (z +3.6)",
+    "a busy cafe (z +3.5)",
+    "people talking in the background (z +3.0)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 1,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 2.24,
+    "verdict": "weak",
+    "p_vs_alts": 0.274,
+    "pass": false,
+    "speech_p": 0.4
+   }
+  },
+  "measure": {
+   "duration": 25.707,
+   "lufs": -24.0,
+   "true_peak_dbtp": -9.5,
+   "peak_dbfs": -9.7,
+   "lra_lu": 1.4,
+   "noise_floor_dbfs": -29.0,
+   "brightness_hz": 2167
+  },
+  "used_at": [
+   "02.02 194-210 s"
+  ]
+ },
+ "amb_phone_line": {
+  "file": "audio/sfx/amb_phone_line.wav",
+  "kind": "bed",
+  "what": "The visiting room's handset line: telephone-band hiss, a faint 50 Hz hum, rare soft crackle.",
+  "take": "synth_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "finish": {
+   "loop_s": 26.0,
+   "crossfade_s": 2.0,
+   "lufs_before": -7.1
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "the hiss of a telephone line",
+   "alts": [
+    "radio static",
+    "rain falling",
+    "a fan running",
+    "frying food in a pan"
+   ],
+   "z": 1.99,
+   "verdict": "no match",
+   "p_vs_alts": 0.0,
+   "alt_p": [
+    {
+     "query": "radio static",
+     "p": 1.0
+    },
+    {
+     "query": "rain falling",
+     "p": 0.0
+    },
+    {
+     "query": "a fan running",
+     "p": 0.0
+    },
+    {
+     "query": "frying food in a pan",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "White noise 0.40",
+    "Pink noise 0.15",
+    "Static 0.10"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a vacuum cleaner (z +2.5)",
+    "a waterfall (z +2.4)",
+    "a computer fan hum (z +2.3)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 1.94,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 1.99,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 1.89,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 26.0,
+   "lufs": -24.0,
+   "true_peak_dbtp": -17.7,
+   "peak_dbfs": -17.7,
+   "lra_lu": 0.2,
+   "noise_floor_dbfs": -29.5,
+   "brightness_hz": 2341
+  },
+  "used_at": [
+   "07.02 535-555 s",
+   "09.02 678-698 s"
+  ]
+ },
+ "sfx_clock_tick": {
+  "file": "audio/sfx/sfx_clock_tick.wav",
+  "kind": "bed",
+  "what": "A wall clock ticking once a second (home, Ch 01 and 08; detention, Ch 05, stopping on 'worse'). Loop of whole seconds.",
+  "take": "es_ticktock.wav",
+  "made_by": "earshot make (catalogue design), es_ticktock",
+  "finish": {
+   "loop_s": 23.952,
+   "tick_period_s": 0.499,
+   "ticks": 48,
+   "lufs_before": -24.4
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a clock ticking",
+   "alts": [
+    "a metronome",
+    "footsteps",
+    "a dripping tap",
+    "a typewriter"
+   ],
+   "z": 2.47,
+   "verdict": "weak",
+   "p_vs_alts": 0.013,
+   "alt_p": [
+    {
+     "query": "a metronome",
+     "p": 0.98
+    },
+    {
+     "query": "footsteps",
+     "p": 0.0
+    },
+    {
+     "query": "a dripping tap",
+     "p": 0.007
+    },
+    {
+     "query": "a typewriter",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Tick 0.19",
+    "Tick-tock 0.15",
+    "Music 0.09"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a wooden block hit (z +4.5)",
+    "digging in soil (z +3.5)",
+    "a knife chopping on a board (z +2.8)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 2.13,
+    "verdict": "weak",
+    "p_vs_alts": 0.011,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_recipe2.wav": {
+    "z": 1.87,
+    "verdict": "no match",
+    "p_vs_alts": 0.006,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_ticktock.wav": {
+    "z": 2.47,
+    "verdict": "weak",
+    "p_vs_alts": 0.013,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 23.952,
+   "lufs": -26.4,
+   "true_peak_dbtp": -3.0,
+   "peak_dbfs": -3.4,
+   "lra_lu": 0.3,
+   "noise_floor_dbfs": -71.9,
+   "brightness_hz": 2076
+  },
+  "used_at": [
+   "01.03 124-140 s",
+   "05.03 402-438 s",
+   "08.01 610-648 s"
+  ]
+ },
+ "sfx_scale_beep": {
+  "file": "audio/sfx/sfx_scale_beep.wav",
+  "kind": "shot",
+  "what": "The check-in scale's beep as the display settles (0:00), and the same beep at 4:41.",
+  "take": "synth_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a short electronic beep",
+   "alts": [
+    "a bird chirping",
+    "a phone ringing",
+    "a bell ringing",
+    "a whistle"
+   ],
+   "z": 4.2,
+   "verdict": "strong",
+   "p_vs_alts": 1.0,
+   "alt_p": [
+    {
+     "query": "a bird chirping",
+     "p": 0.0
+    },
+    {
+     "query": "a phone ringing",
+     "p": 0.0
+    },
+    {
+     "query": "a bell ringing",
+     "p": 0.0
+    },
+    {
+     "query": "a whistle",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Beep, bleep 0.74"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "an error buzz (z +2.8)",
+    "a chat message pop (z +2.8)",
+    "a success chime (z +2.7)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 3.47,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 4.2,
+    "verdict": "strong",
+    "p_vs_alts": 1.0,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 1.98,
+    "verdict": "no match",
+    "p_vs_alts": 0.955,
+    "pass": true,
+    "speech_p": 0.06
+   }
+  },
+  "measure": {
+   "duration": 0.19,
+   "lufs": null,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -103.6,
+   "brightness_hz": 1980
+  },
+  "used_at": [
+   "00.01 @ 0.6 s",
+   "03.05 @ 280.8 s"
+  ]
+ },
+ "sfx_booklet_slide": {
+  "file": "audio/sfx/sfx_booklet_slide.wav",
+  "kind": "shot",
+  "what": "Her passport booklet slid across the laminate counter.",
+  "take": "es_2.wav",
+  "made_by": "earshot make (catalogue design), es_2",
+  "finish": {
+   "trim_start_s": 0.001
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a small booklet sliding across a counter",
+   "alts": [
+    "a page turned",
+    "a zipper",
+    "a cloth wiped across a table",
+    "footsteps"
+   ],
+   "z": 1.86,
+   "verdict": "no match",
+   "p_vs_alts": 0.077,
+   "alt_p": [
+    {
+     "query": "a page turned",
+     "p": 0.918
+    },
+    {
+     "query": "a zipper",
+     "p": 0.002
+    },
+    {
+     "query": "a cloth wiped across a table",
+     "p": 0.003
+    },
+    {
+     "query": "footsteps",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Whip 0.20",
+    "Scrape 0.12",
+    "Whoosh, swoosh, swish 0.05"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a quick swipe (z +3.7)",
+    "a fast whoosh (z +3.7)",
+    "a whip pan transition (z +3.1)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_1.wav": {
+    "z": 1.66,
+    "verdict": "no match",
+    "p_vs_alts": 0.087,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_2.wav": {
+    "z": 1.86,
+    "verdict": "no match",
+    "p_vs_alts": 0.077,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_3.wav": {
+    "z": 1.62,
+    "verdict": "no match",
+    "p_vs_alts": 0.082,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 0.316,
+   "lufs": null,
+   "true_peak_dbtp": -1.3,
+   "peak_dbfs": -1.3,
+   "lra_lu": null,
+   "noise_floor_dbfs": -33.2,
+   "brightness_hz": 3644
+  },
+  "used_at": [
+   "00.02 @ 4.6 s"
+  ]
+ },
+ "sfx_tannoy_far": {
+  "file": "audio/sfx/sfx_tannoy_far.wav",
+  "kind": "shot",
+  "what": "A far public-address announcement: a generic two-note chime and a muffled announcement with no intelligible words (synthesised vowel texture, band-limited to 650 Hz, in a 3.2 s hall).",
+  "take": "synth2_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (tannoy2 (second pass)), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a muffled public address announcement echoing in a large hall",
+   "alts": [
+    "a crowd murmuring",
+    "a radio playing music",
+    "thunder",
+    "a church bell"
+   ],
+   "z": 3.17,
+   "verdict": "strong",
+   "p_vs_alts": 0.993,
+   "alt_p": [
+    {
+     "query": "a crowd murmuring",
+     "p": 0.0
+    },
+    {
+     "query": "a radio playing music",
+     "p": 0.0
+    },
+    {
+     "query": "thunder",
+     "p": 0.003
+    },
+    {
+     "query": "a church bell",
+     "p": 0.004
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Music 0.89",
+    "Sonar 0.28",
+    "Theremin 0.18",
+    "Ambient music 0.14"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "ambient synth pad music (z +2.6)",
+    "a warm analog synth pad (z +2.3)",
+    "a baby crying (z +2.3)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 6,
+  "all_takes": {
+   "synth2_0.wav": {
+    "z": 2.84,
+    "verdict": "plausible",
+    "p_vs_alts": 0.97,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth2_1.wav": {
+    "z": 3.17,
+    "verdict": "strong",
+    "p_vs_alts": 0.993,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth2_2.wav": {
+    "z": 2.27,
+    "verdict": "weak",
+    "p_vs_alts": 0.842,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_0.wav": {
+    "z": 2.02,
+    "verdict": "weak",
+    "p_vs_alts": 0.86,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.71,
+    "verdict": "plausible",
+    "p_vs_alts": 0.479,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 1.33,
+    "verdict": "no match",
+    "p_vs_alts": 0.135,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 10.165,
+   "lufs": -12.9,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": 5.8,
+   "noise_floor_dbfs": -52.8,
+   "brightness_hz": 614
+  },
+  "used_at": [
+   "00.03 @ 10.2 s"
+  ]
+ },
+ "sfx_tannoy_near": {
+  "file": "audio/sfx/sfx_tannoy_near.wav",
+  "kind": "shot",
+  "what": "The same announcement closer (0:15, and 'the tannoy, muffled' at 5:05); still no intelligible words.",
+  "take": "synth3_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (tannoy2 with the chime at -16 dB), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a muffled public address announcement in an airport",
+   "alts": [
+    "a crowd murmuring",
+    "a radio playing music",
+    "thunder",
+    "a doorbell"
+   ],
+   "z": 3.59,
+   "verdict": "strong",
+   "p_vs_alts": 0.069,
+   "alt_p": [
+    {
+     "query": "a crowd murmuring",
+     "p": 0.0
+    },
+    {
+     "query": "a radio playing music",
+     "p": 0.0
+    },
+    {
+     "query": "thunder",
+     "p": 0.0
+    },
+    {
+     "query": "a doorbell",
+     "p": 0.93
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Music 0.80",
+    "Musical instrument 0.18",
+    "Echo 0.10",
+    "Theremin 0.10"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a police siren (z +2.9)",
+    "a doorbell (z +2.8)",
+    "a voice-over narration (z +2.8)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 9,
+  "all_takes": {
+   "synth2_0.wav": {
+    "z": 2.68,
+    "verdict": "plausible",
+    "p_vs_alts": 0.017,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth2_1.wav": {
+    "z": 3.57,
+    "verdict": "strong",
+    "p_vs_alts": 0.048,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth2_2.wav": {
+    "z": 2.8,
+    "verdict": "plausible",
+    "p_vs_alts": 0.005,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth3_0.wav": {
+    "z": 2.58,
+    "verdict": "plausible",
+    "p_vs_alts": 0.02,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth3_1.wav": {
+    "z": 3.59,
+    "verdict": "strong",
+    "p_vs_alts": 0.069,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth3_2.wav": {
+    "z": 2.57,
+    "verdict": "plausible",
+    "p_vs_alts": 0.009,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_0.wav": {
+    "z": 2.32,
+    "verdict": "weak",
+    "p_vs_alts": 0.011,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.7,
+    "verdict": "plausible",
+    "p_vs_alts": 0.012,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 1.18,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 9.481,
+   "lufs": -15.4,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": 3.8,
+   "noise_floor_dbfs": -49.5,
+   "brightness_hz": 763
+  },
+  "used_at": [
+   "00.04 @ 15.2 s",
+   "04.01 @ 305.8 s"
+  ]
+ },
+ "sfx_door_steel": {
+  "file": "audio/sfx/sfx_door_steel.wav",
+  "kind": "shot",
+  "what": "The inspection room's door: heavy, steel, closing (0:20 and 5:12).",
+  "take": "es_shut.wav",
+  "made_by": "earshot make (catalogue design), es_shut",
+  "finish": {
+   "trim_start_s": 0.014
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a heavy metal door closing",
+   "alts": [
+    "a car door slammed",
+    "a gunshot",
+    "a wooden door closing",
+    "a drum hit"
+   ],
+   "z": 5.58,
+   "verdict": "strong",
+   "p_vs_alts": 0.684,
+   "alt_p": [
+    {
+     "query": "a car door slammed",
+     "p": 0.0
+    },
+    {
+     "query": "a gunshot",
+     "p": 0.0
+    },
+    {
+     "query": "a wooden door closing",
+     "p": 0.315
+    },
+    {
+     "query": "a drum hit",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Door 0.80",
+    "Slam 0.45",
+    "Sliding door 0.27"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a door slam (z +4.2)",
+    "a drawer closing (z +3.9)",
+    "a box lid closing (z +3.5)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_impactslam.wav": {
+    "z": 2.25,
+    "verdict": "weak",
+    "p_vs_alts": 0.037,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_shut.wav": {
+    "z": 5.58,
+    "verdict": "strong",
+    "p_vs_alts": 0.684,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_slam.wav": {
+    "z": 4.68,
+    "verdict": "strong",
+    "p_vs_alts": 0.964,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 2.102,
+   "lufs": -23.6,
+   "true_peak_dbtp": -0.5,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -66.6,
+   "brightness_hz": 2679
+  },
+  "used_at": [
+   "00.05 @ 20.5 s",
+   "04.02 @ 312.8 s"
+  ]
+ },
+ "sfx_zip": {
+  "file": "audio/sfx/sfx_zip.wav",
+  "kind": "shot",
+  "what": "A dry, close zip (0:47, the tote) and the zips of the packing (4:25).",
+  "take": "es_jacket.wav",
+  "made_by": "earshot make (catalogue design), es_jacket",
+  "finish": {
+   "trim_start_s": 0.015
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a zipper being pulled",
+   "alts": [
+    "a cloth tearing",
+    "a whoosh",
+    "a ratchet",
+    "a page turned"
+   ],
+   "z": 2.95,
+   "verdict": "plausible",
+   "p_vs_alts": 0.465,
+   "alt_p": [
+    {
+     "query": "a cloth tearing",
+     "p": 0.523
+    },
+    {
+     "query": "a whoosh",
+     "p": 0.0
+    },
+    {
+     "query": "a ratchet",
+     "p": 0.012
+    },
+    {
+     "query": "a page turned",
+     "p": 0.0
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Zipper (clothing) 0.81",
+    "Whoosh, swoosh, swish 0.08"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a rubber stretch (z +3.9)",
+    "a zipper (z +3.6)",
+    "a balloon squeak (z +3.0)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 4,
+  "all_takes": {
+   "es_1.wav": {
+    "z": 2.08,
+    "verdict": "weak",
+    "p_vs_alts": 0.066,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_2.wav": {
+    "z": 1.79,
+    "verdict": "no match",
+    "p_vs_alts": 0.179,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_3.wav": {
+    "z": 1.81,
+    "verdict": "no match",
+    "p_vs_alts": 0.148,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_jacket.wav": {
+    "z": 2.95,
+    "verdict": "plausible",
+    "p_vs_alts": 0.465,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 1.596,
+   "lufs": -13.0,
+   "true_peak_dbtp": -0.7,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -58.3,
+   "brightness_hz": 5429
+  },
+  "used_at": [
+   "00.10 @ 48.0 s",
+   "03.03 @ 265.0 s",
+   "03.03 @ 268.0 s"
+  ]
+ },
+ "sfx_impact_low": {
+  "file": "audio/sfx/sfx_impact_low.wav",
+  "kind": "shot",
+  "what": "One low impact: at DEATH SENTENCE / 2017 (1:10) and at 'death sentence' (7:30). Nothing at 'life'. Pitched to the film's root D.",
+  "take": "synth_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a deep low boom",
+   "alts": [
+    "a gunshot",
+    "thunder",
+    "a door slammed",
+    "a car crash"
+   ],
+   "z": 3.25,
+   "verdict": "strong",
+   "p_vs_alts": 0.999,
+   "alt_p": [
+    {
+     "query": "a gunshot",
+     "p": 0.0
+    },
+    {
+     "query": "thunder",
+     "p": 0.0
+    },
+    {
+     "query": "a door slammed",
+     "p": 0.001
+    },
+    {
+     "query": "a car crash",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Music 0.23",
+    "Bang 0.11",
+    "Sound effect 0.10",
+    "Sonar 0.05"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a deep cinematic boom (z +3.7)",
+    "a big drum hit (z +3.4)",
+    "a deep sub bass (z +3.4)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 7,
+  "all_takes": {
+   "bank_impact_deep_D1.wav": {
+    "z": 1.94,
+    "verdict": "no match",
+    "p_vs_alts": 0.04,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "bank_pro_deep_D1.wav": {
+    "z": 1.41,
+    "verdict": "no match",
+    "p_vs_alts": 0.346,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_boomdeep.wav": {
+    "z": 0.96,
+    "verdict": "no match",
+    "p_vs_alts": 0.157,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_boomwide.wav": {
+    "z": 0.9,
+    "verdict": "no match",
+    "p_vs_alts": 0.256,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_0.wav": {
+    "z": 3.12,
+    "verdict": "strong",
+    "p_vs_alts": 0.996,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 3.25,
+    "verdict": "strong",
+    "p_vs_alts": 0.999,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 3.09,
+    "verdict": "strong",
+    "p_vs_alts": 0.998,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 5.0,
+   "lufs": -18.1,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -39.5,
+   "brightness_hz": 35
+  },
+  "used_at": [
+   "00.13 @ 70.0 s",
+   "06.02 @ 450.0 s"
+  ]
+ },
+ "sfx_pencil_paper": {
+  "file": "audio/sfx/sfx_pencil_paper.wav",
+  "kind": "shot",
+  "what": "Pencils on paper: the sweepstakes entries (Ch 01).",
+  "take": "es_1.wav",
+  "made_by": "earshot make (catalogue design), es_1",
+  "finish": {
+   "trim_start_s": 0.001
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "a pencil writing on paper",
+   "alts": [
+    "brushing",
+    "scratching",
+    "sandpaper",
+    "a pen clicking"
+   ],
+   "z": 5.85,
+   "verdict": "strong",
+   "p_vs_alts": 0.984,
+   "alt_p": [
+    {
+     "query": "brushing",
+     "p": 0.0
+    },
+    {
+     "query": "scratching",
+     "p": 0.002
+    },
+    {
+     "query": "sandpaper",
+     "p": 0.014
+    },
+    {
+     "query": "a pen clicking",
+     "p": 0.0
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Writing 0.26",
+    "Pant 0.09",
+    "Scratch 0.09",
+    "Snort 0.06"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a record scratch (z +3.7)",
+    "scissors cutting (z +3.1)",
+    "a sustained glass harp tone (z +2.5)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_1.wav": {
+    "z": 5.85,
+    "verdict": "strong",
+    "p_vs_alts": 0.984,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_2.wav": {
+    "z": 5.27,
+    "verdict": "strong",
+    "p_vs_alts": 0.965,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_3.wav": {
+    "z": 5.4,
+    "verdict": "strong",
+    "p_vs_alts": 0.968,
+    "pass": true,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 3.049,
+   "lufs": -16.1,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -43.1,
+   "brightness_hz": 6358
+  },
+  "used_at": [
+   "01.02 @ 113.5 s"
+  ]
+ },
+ "sfx_paper_handle": {
+  "file": "audio/sfx/sfx_paper_handle.wav",
+  "kind": "shot",
+  "what": "Paper handled: the tickets (Ch 01), the envelope of emails (Ch 05), the ministry sheet (Ch 06), the testimony page (Ch 07).",
+  "take": "es_page.wav",
+  "made_by": "earshot make (catalogue design), es_page",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "paper being handled",
+   "alts": [
+    "a cloth rustling",
+    "a plastic bag",
+    "a whoosh",
+    "a zipper"
+   ],
+   "z": 2.22,
+   "verdict": "weak",
+   "p_vs_alts": 0.754,
+   "alt_p": [
+    {
+     "query": "a cloth rustling",
+     "p": 0.023
+    },
+    {
+     "query": "a plastic bag",
+     "p": 0.218
+    },
+    {
+     "query": "a whoosh",
+     "p": 0.0
+    },
+    {
+     "query": "a zipper",
+     "p": 0.004
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Scrape 0.10"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a record scratch (z +3.4)",
+    "a snare roll (z +3.1)",
+    "a snare hit (z +2.9)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_flick.wav": {
+    "z": 1.7,
+    "verdict": "no match",
+    "p_vs_alts": 0.727,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_page.wav": {
+    "z": 2.22,
+    "verdict": "weak",
+    "p_vs_alts": 0.754,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_slide.wav": {
+    "z": 0.13,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 0.511,
+   "lufs": -11.8,
+   "true_peak_dbtp": -0.6,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -60.3,
+   "brightness_hz": 4414
+  },
+  "used_at": [
+   "01.02 @ 119.0 s",
+   "01.07 @ 172.0 s",
+   "05.02 @ 396.0 s",
+   "06.05 @ 483.0 s",
+   "07.06 @ 589.0 s"
+  ]
+ },
+ "sfx_mail_chime": {
+  "file": "audio/sfx/sfx_mail_chime.wav",
+  "kind": "shot",
+  "what": "One muted chime: a message arriving in an invented mail client on a laptop (Ch 01). Not any real product's sound.",
+  "take": "synth_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "a soft notification chime",
+   "alts": [
+    "a doorbell",
+    "a phone ringing",
+    "a church bell",
+    "a microwave beep"
+   ],
+   "z": 2.41,
+   "verdict": "weak",
+   "p_vs_alts": 0.321,
+   "alt_p": [
+    {
+     "query": "a doorbell",
+     "p": 0.671
+    },
+    {
+     "query": "a phone ringing",
+     "p": 0.005
+    },
+    {
+     "query": "a church bell",
+     "p": 0.001
+    },
+    {
+     "query": "a microwave beep",
+     "p": 0.001
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Ding 0.57",
+    "Clang 0.10"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a success chime (z +4.4)",
+    "a magic sparkle chime (z +3.0)",
+    "a notification ding (z +2.9)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 5,
+  "all_takes": {
+   "bank_m2.wav": {
+    "z": 1.05,
+    "verdict": "no match",
+    "p_vs_alts": 0.003,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "bank_m4.wav": {
+    "z": 0.47,
+    "verdict": "no match",
+    "p_vs_alts": 0.008,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_0.wav": {
+    "z": 2.28,
+    "verdict": "weak",
+    "p_vs_alts": 0.083,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.41,
+    "verdict": "weak",
+    "p_vs_alts": 0.321,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 1.78,
+    "verdict": "no match",
+    "p_vs_alts": 0.026,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 1.2,
+   "lufs": -11.5,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -69.0,
+   "brightness_hz": 1276
+  },
+  "used_at": [
+   "01.04 @ 143.5 s"
+  ]
+ },
+ "sfx_keys_typing": {
+  "file": "audio/sfx/sfx_keys_typing.wav",
+  "kind": "shot",
+  "what": "Keys: Dawn's search on the laptop (Ch 01).",
+  "take": "es_1.wav",
+  "made_by": "earshot make (catalogue design), es_1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "earshot render: free to use, commercial too, no credit (a new take of a public-domain recording)",
+  "earshot": {
+   "check": "typing on a laptop keyboard",
+   "alts": [
+    "rain on a window",
+    "a clock ticking",
+    "footsteps",
+    "fingers drumming"
+   ],
+   "z": 2.66,
+   "verdict": "plausible",
+   "p_vs_alts": 0.385,
+   "alt_p": [
+    {
+     "query": "rain on a window",
+     "p": 0.001
+    },
+    {
+     "query": "a clock ticking",
+     "p": 0.001
+    },
+    {
+     "query": "footsteps",
+     "p": 0.0
+    },
+    {
+     "query": "fingers drumming",
+     "p": 0.613
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Computer keyboard 0.38",
+    "Sound effect 0.21",
+    "Typing 0.13",
+    "Knock 0.08"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a horse galloping (z +3.2)",
+    "a rubber stretch (z +2.8)",
+    "a keyboard typing fast (z +2.3)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "es_1.wav": {
+    "z": 2.66,
+    "verdict": "plausible",
+    "p_vs_alts": 0.385,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_2.wav": {
+    "z": 2.22,
+    "verdict": "weak",
+    "p_vs_alts": 0.244,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_3.wav": {
+    "z": 1.84,
+    "verdict": "no match",
+    "p_vs_alts": 0.191,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 2.953,
+   "lufs": -23.3,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -72.1,
+   "brightness_hz": 3408
+  },
+  "used_at": [
+   "01.06 @ 162.8 s"
+  ]
+ },
+ "sfx_boarding_chime": {
+  "file": "audio/sfx/sfx_boarding_chime.wav",
+  "kind": "shot",
+  "what": "A boarding chime at the departure gate window (end of Ch 01), distant, generic three-note.",
+  "take": "synth_1.wav",
+  "made_by": "numpy synthesis, tools/synth.py (first pass), take 1",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "synthesised for this film (numpy, tools/synth.py): no third-party material",
+  "earshot": {
+   "check": "an airport announcement chime",
+   "alts": [
+    "a doorbell",
+    "a church bell",
+    "a music box",
+    "a phone ringing"
+   ],
+   "z": 2.19,
+   "verdict": "weak",
+   "p_vs_alts": 0.0,
+   "alt_p": [
+    {
+     "query": "a doorbell",
+     "p": 0.988
+    },
+    {
+     "query": "a church bell",
+     "p": 0.0
+    },
+    {
+     "query": "a music box",
+     "p": 0.007
+    },
+    {
+     "query": "a phone ringing",
+     "p": 0.004
+    }
+   ],
+   "pass": false,
+   "audioset": [
+    "Ding 0.14",
+    "Ding-dong 0.13",
+    "Sound effect 0.12",
+    "Music 0.12"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a success chime (z +4.1)",
+    "a doorbell (z +3.3)",
+    "a magic sparkle chime (z +2.7)"
+   ]
+  },
+  "pick_reason": "no take passes: highest z; the ear decides",
+  "takes_heard": 3,
+  "all_takes": {
+   "synth_0.wav": {
+    "z": 2.01,
+    "verdict": "weak",
+    "p_vs_alts": 0.007,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_1.wav": {
+    "z": 2.19,
+    "verdict": "weak",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "synth_2.wav": {
+    "z": 2.06,
+    "verdict": "weak",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 3.686,
+   "lufs": -10.2,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -69.4,
+   "brightness_hz": 1294
+  },
+  "used_at": [
+   "01.08 @ 179.5 s"
+  ]
+ },
+ "sfx_seam_click": {
+  "file": "audio/sfx/sfx_seam_click.wav",
+  "kind": "shot",
+  "what": "A small metallic click as the seam cut-away closes (Ch 03).",
+  "take": "bank_tink.wav",
+  "made_by": "earshot sfx render click/tink",
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "earshot sound bank: free to use, commercial too, no credit (made in code; fit/* sounds fitted from CC0 recordings)",
+  "earshot": {
+   "check": "a small metallic click",
+   "alts": [
+    "a coin dropped",
+    "a keyboard key",
+    "a camera shutter",
+    "a finger snap"
+   ],
+   "z": 2.71,
+   "verdict": "plausible",
+   "p_vs_alts": 0.811,
+   "alt_p": [
+    {
+     "query": "a coin dropped",
+     "p": 0.082
+    },
+    {
+     "query": "a keyboard key",
+     "p": 0.006
+    },
+    {
+     "query": "a camera shutter",
+     "p": 0.004
+    },
+    {
+     "query": "a finger snap",
+     "p": 0.096
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Sound effect 0.07"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a soft key release click (z +2.9)",
+    "lego bricks clicking (z +2.7)",
+    "a toggle switch click (z +2.6)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 6,
+  "all_takes": {
+   "bank_floss_lid.wav": {
+    "z": 1.44,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "bank_switch_flip.wav": {
+    "z": 2.75,
+    "verdict": "plausible",
+    "p_vs_alts": 0.38,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "bank_tink.wav": {
+    "z": 2.71,
+    "verdict": "plausible",
+    "p_vs_alts": 0.811,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_1.wav": {
+    "z": 1.87,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.0
+   },
+   "es_2.wav": {
+    "z": 1.61,
+    "verdict": "no match",
+    "p_vs_alts": 0.002,
+    "pass": false,
+    "speech_p": 0.05
+   },
+   "es_3.wav": {
+    "z": 1.94,
+    "verdict": "no match",
+    "p_vs_alts": 0.0,
+    "pass": false,
+    "speech_p": 0.08
+   }
+  },
+  "measure": {
+   "duration": 0.069,
+   "lufs": null,
+   "true_peak_dbtp": -0.4,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -49.9,
+   "brightness_hz": 7771
+  },
+  "used_at": [
+   "03.04 @ 276.5 s"
+  ]
+ },
+ "sfx_door_far": {
+  "file": "audio/sfx/sfx_door_far.wav",
+  "kind": "shot",
+  "what": "A door closes far down the corridor (end of Ch 04, 2014).",
+  "take": "es_recipe.wav",
+  "made_by": "earshot make --recipe recipes/door_far.json",
+  "recipe": {
+   "name": "door_far",
+   "says": "a heavy door closing far down a long concrete corridor",
+   "space": "hall",
+   "layers": [
+    {
+     "sound": "door/shut",
+     "lowpass": 1400,
+     "gain": 0
+    },
+    {
+     "sound": "door/slam",
+     "lowpass": 900,
+     "pitch": -3,
+     "at": 0.02,
+     "gain": -8
+    }
+   ]
+  },
+  "finish": {
+   "trim_start_s": 0.0
+  },
+  "licence": "earshot recipe of catalogue parts: free to use, commercial too, no credit (new takes of public-domain recordings)",
+  "earshot": {
+   "check": "a door closing far away in a corridor",
+   "alts": [
+    "a gunshot far away",
+    "thunder",
+    "a drum hit",
+    "a car door"
+   ],
+   "z": 2.9,
+   "verdict": "plausible",
+   "p_vs_alts": 0.648,
+   "alt_p": [
+    {
+     "query": "a gunshot far away",
+     "p": 0.001
+    },
+    {
+     "query": "thunder",
+     "p": 0.005
+    },
+    {
+     "query": "a drum hit",
+     "p": 0.047
+    },
+    {
+     "query": "a car door",
+     "p": 0.299
+    }
+   ],
+   "pass": true,
+   "audioset": [
+    "Door 0.59",
+    "Slam 0.51",
+    "Knock 0.14",
+    "Sliding door 0.10"
+   ],
+   "speech_p": 0.0,
+   "closest": [
+    "a door slam (z +3.6)",
+    "a gunshot (z +2.9)",
+    "a drawer closing (z +2.7)"
+   ]
+  },
+  "pick_reason": "passes; highest z of the passing takes",
+  "takes_heard": 2,
+  "all_takes": {
+   "es_recipe.wav": {
+    "z": 2.9,
+    "verdict": "plausible",
+    "p_vs_alts": 0.648,
+    "pass": true,
+    "speech_p": 0.0
+   },
+   "es_recipe1.wav": {
+    "z": 2.27,
+    "verdict": "weak",
+    "p_vs_alts": 0.395,
+    "pass": false,
+    "speech_p": 0.0
+   }
+  },
+  "measure": {
+   "duration": 2.273,
+   "lufs": -19.9,
+   "true_peak_dbtp": -1.0,
+   "peak_dbfs": -1.0,
+   "lra_lu": null,
+   "noise_floor_dbfs": -60.4,
+   "brightness_hz": 1056
+  },
+  "used_at": [
+   "04.08 @ 376.5 s"
+  ]
+ }
+}

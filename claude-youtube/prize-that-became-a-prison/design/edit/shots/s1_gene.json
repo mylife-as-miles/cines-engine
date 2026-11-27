@@ -1,0 +1,45 @@
+{
+ "about": "Chapter 1: Tim's 2024 statement (S1, page 2): his father an Army veteran and a Chicago police sergeant, then Tim himself a Chicago police officer, lit as the voice says them. The medical lines stay soft.",
+ "plate": "frames/raw/evidence_table/page.png",
+ "corners": "frames/raw/evidence_table/page.corners.json",
+ "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
+ "page": 2,
+ "dpi": 400,
+ "marks": [
+  {
+   "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
+   "t": 0.8,
+   "dur": 0.7
+  },
+  {
+   "phrase": "became a Chicago Police Officer and retired after 28 years.",
+   "t": 4.0,
+   "dur": 0.8
+  }
+ ],
+ "focus": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
+ "soft": [
+  "Since her incarceration she has developed physical ailments (uterine fibroids and possibly ovarian",
+  "cancer) according to the doctors who examined her in prison. She has received numerous blood",
+  "transfusions due to heavy bleeding and has been advised that she needs a hysterectomy, which",
+  "weight, her eyes are bulging. She has an abdominal bulge on her right side, and her complexion is",
+  "very pale. She told me that she still has to work in the prison despite her illness but that she can’t",
+  "lift heavy objects because her fibroids might rupture and she would start bleeding."
+ ],
+ "zoom": [
+  3.85,
+  4.1
+ ],
+ "end_offset": [
+  55,
+  -10
+ ],
+ "roll_deg": -9,
+ "focus_band": {
+  "sharp_lines": 1.8,
+  "ramp_lines": 3.5,
+  "blur_px": 3.6
+ },
+ "duration": 6.0,
+ "length": 7.0
+}

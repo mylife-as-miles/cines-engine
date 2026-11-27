@@ -1,0 +1,2434 @@
+{
+ "about": "The animatic's cut plan, the one file edited by hand: run `tools/assemble.py time` after any change. Voice segments are SCRIPT_V2.md's VOICE paragraphs verbatim; holds are its written silences and beats (and a few added ones, each noted). Shots start at anchors on the voice clock (see tools/assemble.py).",
+ "fps": 24,
+ "gap": 0.35,
+ "min_line": 0.6,
+ "changes": [
+  "Timing: each chapter's narration is timed from its word count at a rate inside the script's ranges (cold open 160, chapters 1-6 150-158, chapters 7-9 124-132 words a minute), at least 0.6 s a line, with a 0.35 s breath between lines; written silences and beats as given (a beat is 0.8 s). The rates live in `cut.json` (`rate` per chapter) and are replaced by measured durations once `audio/vo/scratch/lines.json` exists.",
+  "Holds added to the voice clock (all logged in `cut.json` as holds with a note): 1.4 s before the first line (the display settles, \"No music for 2 s\"); a 0.5 s breath before the cold open's second \"Yes.\" (the direction puts the two YESes 4 s apart) and 0.4 s in chapter 4; 0.8-1.0 s before each chapter's first line so its title can be read (2.6 s in chapter 6, over the locked courtroom); 0.5 s between \"2017.\" and the sentence; 1 s at the end of chapter 3, where the script has none.",
+  "The cold open's montage is reel 7's 6.2 s flash-forward (ten shots, 0.8 s down to 0.5 s each), then the 5 s title: 11.2 s with no voice, against the script's \"10 s montage ... 5 s\" (ten shots at 0.5-0.8 s cannot fill 10 s).",
+  "The chapter titles (gfx/type.html `chapter`) sit on each chapter's first shot and leave before its cut; the cold open has the film title instead.",
+  "The flash-forward and the end use the same match cut on the two bags (inspection_room `match` → void_stage `bags`): the push is carried across the cut at the same speed, so the bags stay registered."
+ ],
+ "pieces": {
+  "scale": {
+   "file": "out/gfx/r7/01_scale.mp4",
+   "fixed": true,
+   "about": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/scale_overweight.json"
+   }
+  },
+  "yes": {
+   "file": "out/gfx/r7/03_yes.mp4",
+   "about": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "yes",
+    "plate": "frames/raw/inspection_room/match.png"
+   }
+  },
+  "flash": {
+   "file": "out/gfx/r7/04_flash.mp4",
+   "fixed": true,
+   "about": "the red seam, 1 s, gone with the cut",
+   "gen": {
+    "tool": "seam",
+    "mode": "flash",
+    "bg": "frames/graded/evidence_table/purses.jpg"
+   }
+  },
+  "montage": {
+   "file": "out/gfx/r7/06_montage.mp4",
+   "fixed": true,
+   "about": "the flash-forward, ten shots",
+   "gen": {
+    "tool": "montage"
+   }
+  },
+  "title": {
+   "file": "out/gfx/r7/07_title.mp4",
+   "about": "THE PRIZE THAT BECAME A PRISON over the bags",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "title",
+    "plate": "frames/raw/void_stage/bags.png"
+   }
+  },
+  "email": {
+   "file": "out/gfx/r7/09_email.mp4",
+   "fixed": true,
+   "about": "the prize email; its line cycles the three accounts",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/screen_email.json"
+   }
+  },
+  "search": {
+   "file": "out/gfx/r7/10_search.mp4",
+   "fixed": true,
+   "about": "the search, greeked results",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/screen_search.json"
+   }
+  },
+  "route_leg1": {
+   "file": "out/gfx/r7/11_route_leg1.mp4",
+   "about": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "leg1"
+   }
+  },
+  "route_mainland": {
+   "file": "out/gfx/r7/11_route_mainland.mp4",
+   "about": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "mainland"
+   }
+  },
+  "route_split": {
+   "file": "out/gfx/r7/11_route_split.mp4",
+   "about": "Australia and Qingdao, dashed, labels at 2.4 s",
+   "gen": {
+    "tool": "canvas",
+    "page": "gfx/route.html",
+    "mode": "split"
+   }
+  },
+  "trace": {
+   "file": "out/gfx/r7/12_trace.mp4",
+   "about": "the red trace along the tote's seam, drawn over 1.8 s",
+   "gen": {
+    "tool": "seam",
+    "mode": "trace",
+    "bg": "frames/graded/evidence_table/purses.jpg"
+   }
+  },
+  "cutaway": {
+   "file": "out/gfx/r7/13_cutaway.mp4",
+   "about": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
+   "gen": {
+    "tool": "seam",
+    "mode": "cutaway"
+   }
+  },
+  "doc_yes": {
+   "file": "out/gfx/r7/14_doc.mp4",
+   "about": "S1 p. 1, the first 'yes' line lit at 1.0 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/s1_yes.json"
+   }
+  },
+  "split": {
+   "file": null,
+   "about": "the split frame, the right half cutting to the cut-away",
+   "gen": {
+    "tool": "split",
+    "cut": 2.2
+   }
+  },
+  "split_r7": {
+   "file": "out/gfx/r7/15_splitframe.mp4",
+   "fixed": true,
+   "about": "reel 7's split frame (cut at 2.2 s), the cut-away held open",
+   "gen": {
+    "tool": "split",
+    "cut": 2.2
+   }
+  },
+  "calendar": {
+   "file": "out/gfx/r7/16_calendar.mp4",
+   "about": "2014 → 2017 beside the bags, 1.7 s a year",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "calendar",
+    "plate": "frames/raw/void_stage/bags.png"
+   }
+  },
+  "counter": {
+   "file": "out/gfx/r7/18_counter.mp4",
+   "about": "2014 → 2026 over the far cell, the pull back",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "counter",
+    "plate": "frames/raw/void_stage/cell_far.png",
+    "push": [
+     1.6,
+     0.7
+    ]
+   }
+  },
+  "father": {
+   "file": "out/gfx/r7/19_father.mp4",
+   "about": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s",
+   "gen": {
+    "tool": "doc",
+    "shot": "gfx/shots/s1_father.json"
+   }
+  },
+  "gene": {
+   "file": "out/gfx/r7/20_gene.mp4",
+   "about": "JANUARY 25, 2026 over the empty chair",
+   "gen": {
+    "tool": "plate_type",
+    "mode": "date_gene",
+    "plate": "frames/raw/home/chair.png"
+   }
+  },
+  "doc_fee": {
+   "file": null,
+   "about": "S1 p. 1, the excess-weight fee line lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_fee.json"
+   }
+  },
+  "doc_emails": {
+   "file": null,
+   "about": "S1 p. 2, the emails line lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_emails.json"
+   }
+  },
+  "doc_gene": {
+   "file": null,
+   "about": "S1 p. 2, Gene's and Tim's service lit",
+   "gen": {
+    "tool": "doc",
+    "shot": "design/edit/shots/s1_gene.json"
+   }
+  }
+ },
+ "chapters": [
+  {
+   "n": "00",
+   "title": "Cold open: Overweight",
+   "rate": 160,
+   "voice": [
+    {
+     "id": "00.pre",
+     "hold": 1.4,
+     "note": "the display settles; no voice, no music for the first seconds"
+    },
+    {
+     "id": "00.01",
+     "text": "The bags are overweight."
+    },
+    {
+     "id": "00.02",
+     "text": "Only slightly. There's a small fee, and she pays it without a second thought."
+    },
+    {
+     "id": "00.03",
+     "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won."
+    },
+    {
+     "id": "00.beat1",
+     "hold": 0.8,
+     "note": "(beat)"
+    },
+    {
+     "id": "00.04",
+     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
+    },
+    {
+     "id": "00.05",
+     "text": "The officers want to know one thing. Are these bags hers?"
+    },
+    {
+     "id": "00.06",
+     "text": "According to her brother, she says yes."
+    },
+    {
+     "id": "00.07",
+     "text": "They ask again."
+    },
+    {
+     "id": "00.beat2",
+     "hold": 0.5,
+     "note": "added: a held breath before the second Yes (the direction puts the two YESes 4 s apart)"
+    },
+    {
+     "id": "00.08",
+     "text": "Yes."
+    },
+    {
+     "id": "00.09",
+     "text": "Why would she say anything else? She packed them herself. She just paid to carry them."
+    },
+    {
+     "id": "00.sil1",
+     "hold": 1.0,
+     "note": "(silence, 1 s)"
+    },
+    {
+     "id": "00.10",
+     "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine."
+    },
+    {
+     "id": "00.11",
+     "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life."
+    },
+    {
+     "id": "00.12",
+     "text": "The luggage was hers. The drugs, she said, were not."
+    },
+    {
+     "id": "00.sil2",
+     "hold": 1.5,
+     "note": "(score cut dead; silence, 1.5 s)"
+    },
+    {
+     "id": "00.13",
+     "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life."
+    },
+    {
+     "id": "00.14",
+     "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer."
+    },
+    {
+     "id": "00.sil3",
+     "hold": 1.0,
+     "note": "1 s of near silence after \"answer\" (direction, 1:21)"
+    },
+    {
+     "id": "00.montage",
+     "hold": 6.208333333333333,
+     "note": "no voice: the flash-forward montage (gfx/montage.py, 149 frames), the score building to its peak"
+    },
+    {
+     "id": "00.title",
+     "hold": 5.0,
+     "note": "the title lands on the peak; the score decays into silence"
+    }
+   ],
+   "shots": [
+    {
+     "id": "00-01",
+     "at": "00.pre",
+     "piece": "scale",
+     "row": "0:00 checkin_hall `scale`: the display settles; OVERWEIGHT",
+     "sound": "Belt motor, a soft beep. No music for 2 s."
+    },
+    {
+     "id": "00-02",
+     "at": "00.02@0.16",
+     "plate": "checkin_hall/shoulder",
+     "move": "in",
+     "row": "0:04 checkin_hall `shoulder`: her hand slides the booklet across",
+     "sound": "Paper on laminate"
+    },
+    {
+     "id": "00-03",
+     "at": "00.03",
+     "plate": "checkin_hall/wide",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place_2014",
+       "t0": 0.1
+      }
+     ],
+     "row": "0:09 checkin_hall `wide` | 2014 / CHINA",
+     "sound": "Terminal room tone; a far tannoy"
+    },
+    {
+     "id": "00-04",
+     "at": "00.03@0.45",
+     "plate": "checkin_hall/profile",
+     "move": "in",
+     "sound": "Terminal room tone",
+     "change": "Added (cold open pace, median 1.6-2.4 s): the 10 s line about Dawn checking two bags gets `profile` after the wide instead of holding the wide."
+    },
+    {
+     "id": "00-05",
+     "at": "00.03@0.76",
+     "plate": "departure_gate/seated",
+     "move": "in",
+     "sound": "Terminal room tone; the tannoy",
+     "change": "Added: \"for the next flight of a trip she won\" and the beat over Dawn waiting at the gate with her case, before `seated_called`."
+    },
+    {
+     "id": "00-06",
+     "at": "00.04",
+     "plate": "departure_gate/seated_called",
+     "move": "in",
+     "row": "0:15 departure_gate `seated_called`: her head lifts",
+     "sound": "The tannoy, closer; the pulse starts",
+     "note": "A still plate: the head lift cannot be seen; the cut from `seated` to the wider `seated_called` carries the call."
+    },
+    {
+     "id": "00-07",
+     "at": "00.04@0.45",
+     "plate": "inspection_room/enter",
+     "move": "in",
+     "row": "0:20 inspection_room `enter`",
+     "sound": "Door, steel"
+    },
+    {
+     "id": "00-08",
+     "at": "00.04@0.76",
+     "plate": "inspection_room/wide_pre",
+     "move": "in",
+     "row": "0:20 then `wide` (pre-discovery layout)",
+     "sound": "Door, steel"
+    },
+    {
+     "id": "00-09",
+     "at": "00.05",
+     "plate": "inspection_room/two_shot_pre",
+     "move": "in",
+     "row": "0:27 inspection_room `two_shot` (pre-discovery)",
+     "sound": "Pulse"
+    },
+    {
+     "id": "00-10",
+     "at": "00.05@0.62",
+     "plate": "inspection_room/tag",
+     "move": "in",
+     "sound": "Pulse",
+     "change": "Added: \"Are these bags hers?\" on the luggage tag (her name on the bag), so `dawn_close` can carry \"she says yes\"."
+    },
+    {
+     "id": "00-11",
+     "at": "00.06",
+     "plate": "inspection_room/dawn_close",
+     "move": "in",
+     "row": "0:27 then `dawn_close` (pre-discovery)",
+     "sound": "Pulse"
+    },
+    {
+     "id": "00-12",
+     "at": "00.06$-0.2",
+     "piece": "yes",
+     "max": 2.95,
+     "row": "0:33 inspection_room `match`: the two bags, frontal | YES lands on the word",
+     "sound": "Pulse stops dead on \"Yes.\""
+    },
+    {
+     "id": "00-13",
+     "at": "00.08-0.05",
+     "piece": "yes",
+     "in": 3.0,
+     "max": 4.0,
+     "row": "0:37 the same frame | YES again, a second time, harder",
+     "sound": ""
+    },
+    {
+     "id": "00-14",
+     "at": "00.09@0.38",
+     "plate": "hotel_room/pack",
+     "move": "in",
+     "sound": "",
+     "change": "Added: \"She packed them herself\" over `pack` (a flash of chapter 3), \"She just paid to carry them\" over the belt."
+    },
+    {
+     "id": "00-15",
+     "at": "00.09@0.70",
+     "plate": "baggage_belt/belt",
+     "move": "in",
+     "sound": "Belt rollers, cut off for the silence"
+    },
+    {
+     "id": "00-16",
+     "at": "00.sil1",
+     "plate": "inspection_room/handbags",
+     "move": "in",
+     "row": "0:43 inspection_room `handbags`",
+     "sound": "Silence"
+    },
+    {
+     "id": "00-17",
+     "at": "00.10@0.33",
+     "piece": "flash",
+     "max": 1.0,
+     "row": "0:47 evidence_table `purses` | the red trace runs along one seam, 1 s, and is gone",
+     "sound": "A dry, close zip"
+    },
+    {
+     "id": "00-18",
+     "at": "00.10@0.33+1.0",
+     "plate": "evidence_table/seam",
+     "move": "in",
+     "row": "0:47 push in on the tote",
+     "sound": "A dry, close zip",
+     "change": "The push in on the tote continues on evidence_table `seam` (the close of the same tote) after the 1 s red flash, so the flash leaves with a cut."
+    },
+    {
+     "id": "00-19",
+     "at": "00.11",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "row": "0:56 void_stage `dawn` (uniform)",
+     "sound": "Low drone"
+    },
+    {
+     "id": "00-20",
+     "at": "00.11@0.33",
+     "plate": "hongkong_street/window",
+     "move": "in",
+     "sound": "Low drone",
+     "change": "Added: \"She believed the handbags were a prize\" on the handbags in a Hong Kong shop window (cold open pace)."
+    },
+    {
+     "id": "00-21",
+     "at": "00.11@0.62",
+     "plate": "aircraft_cabin/window",
+     "move": "in",
+     "sound": "Low drone",
+     "change": "Added: \"the trip of her life\" on Dawn at the aircraft window."
+    },
+    {
+     "id": "00-22",
+     "at": "00.12",
+     "plate": "inspection_room/match",
+     "zoom": [
+      1.0,
+      1.018
+     ],
+     "row": "1:04 inspection_room `match` → void_stage `bags`",
+     "sound": "The score, about to cut"
+    },
+    {
+     "id": "00-23",
+     "at": "00.12@0.40",
+     "plate": "void_stage/bags",
+     "continue": "00-22",
+     "row": "1:04 match cut on the two bags (registered to the pixel), the room vanishing on \"The luggage was hers.\"",
+     "sound": "Score cut dead at \"were not.\""
+    },
+    {
+     "id": "00-24",
+     "at": "00.13",
+     "plate": "courtroom/wide",
+     "move": "lock",
+     "sound": "Room tone",
+     "change": "Added: \"Three years later, a court\" on the locked courtroom, so the cut to the sentence lands on \"sentences her to death\"."
+    },
+    {
+     "id": "00-25",
+     "at": "00.13@0.28",
+     "plate": "void_stage/dawn_high",
+     "move": "in",
+     "type": [
+      {
+       "mode": "death_2017",
+       "t0": 0.0
+      }
+     ],
+     "row": "1:10 void_stage `dawn_high` | DEATH SENTENCE / 2017",
+     "sound": "One low impact"
+    },
+    {
+     "id": "00-26",
+     "at": "00.14",
+     "plate": "prison_exterior/tower",
+     "move": "in",
+     "row": "1:17 prison_exterior `tower`",
+     "sound": "Rain, wind"
+    },
+    {
+     "id": "00-27",
+     "at": "00.14@0.30",
+     "plate": "hearing_room/wide",
+     "move": "in",
+     "row": "1:21 hearing_room `wide`, slow push",
+     "sound": "A room of people, very quiet"
+    },
+    {
+     "id": "00-28",
+     "at": "00.14@0.62",
+     "plate": "hearing_room/witness",
+     "move": "in",
+     "row": "1:21 slow push to `witness`",
+     "sound": "1 s of near silence after \"answer\""
+    },
+    {
+     "id": "00-29",
+     "at": "00.montage",
+     "piece": "montage",
+     "row": "1:27 the montage, 0.5-0.8 s a shot",
+     "sound": "The score builds to the film's first peak"
+    },
+    {
+     "id": "00-30",
+     "at": "00.title",
+     "piece": "title",
+     "row": "1:37 void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON",
+     "sound": "The score decays to silence over 4 s; cut on the silence to chapter 1"
+    }
+   ]
+  },
+  {
+   "n": "01",
+   "title": "The winner",
+   "rate": 158,
+   "voice": [
+    {
+     "id": "01.pre",
+     "hold": 0.8,
+     "note": "chapter title"
+    },
+    {
+     "id": "01.01",
+     "text": "Before China, there was Chicago."
+    },
+    {
+     "id": "01.02",
+     "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel."
+    },
+    {
+     "id": "01.03",
+     "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen."
+    },
+    {
+     "id": "01.04",
+     "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself."
+    },
+    {
+     "id": "01.05",
+     "text": "A family that knew what danger looked like."
+    },
+    {
+     "id": "01.06",
+     "text": "What arrived in Dawn's inbox didn't look like danger at all."
+    },
+    {
+     "id": "01.07",
+     "text": "It looked like she had won."
+    },
+    {
+     "id": "01.beat1",
+     "hold": 0.8,
+     "note": "(beat)"
+    },
+    {
+     "id": "01.08",
+     "text": "The message said she'd won a contest. Accounts differ on exactly what the prize was: cash, travel, or both. But every version has the same shape. An unexpected win, and people ready to fly her across the world."
+    },
+    {
+     "id": "01.09",
+     "text": "Dawn didn't believe it. Not at first. Tim says she looked the organizers up online. What she found looked real enough that she sent her passport details."
+    },
+    {
+     "id": "01.10",
+     "text": "Then the thing that ended her doubts arrived."
+    },
+    {
+     "id": "01.11",
+     "text": "The tickets."
+    },
+    {
+     "id": "01.12",
+     "text": "Real tickets to Hong Kong, paid for by someone else."
+    },
+    {
+     "id": "01.13",
+     "text": "That is what makes this story so hard to shake. The first part of the promise was true."
+    },
+    {
+     "id": "01.14",
+     "text": "Her family believes the deception was hidden in everything that came after."
+    },
+    {
+     "id": "01.sil1",
+     "hold": 1.5,
+     "note": "(silence, 1.5 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "01-01",
+     "at": "01.pre",
+     "plate": "chicago_night/wide",
+     "move": "in",
+     "pct": 0.03,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=01&title=The+winner",
+       "t0": 0.0
+      },
+      {
+       "mode": "place",
+       "hash": "a=CHICAGO",
+       "at": "01.01@0.55"
+      }
+     ],
+     "row": "chicago_night `wide` | CHICAGO on the wide",
+     "sound": "City through glass; the score warms (spare piano)"
+    },
+    {
+     "id": "01-02",
+     "at": "01.02@0.35",
+     "plate": "chicago_night/window",
+     "move": "in",
+     "row": "→ `profile` (*new*): Dawn at the glass",
+     "sound": "City through glass",
+     "sub": "chicago_night `profile` (new) has no plate: `window` (Dawn at the glass from behind) stands in; no mug."
+    },
+    {
+     "id": "01-03",
+     "at": "01.02@0.80",
+     "plate": "chicago_night/suitcase",
+     "move": "in",
+     "sound": "City through glass",
+     "change": "Added: \"and loved to travel\" on her packed case by the door (the apartment's own plate)."
+    },
+    {
+     "id": "01-04",
+     "at": "01.03@0.27",
+     "plate": "evidence_table/overhead",
+     "move": "in",
+     "row": "evidence_table `motifs` (*new*)",
+     "sound": "Pencils, paper",
+     "sub": "evidence_table `motifs` (new) has no plate: `overhead` (papers and photographs under the lamp) stands in."
+    },
+    {
+     "id": "01-05",
+     "at": "01.03@0.62",
+     "plate": "evidence_table/push",
+     "move": "in",
+     "row": "evidence_table `entries` (*new*)",
+     "sound": "Pencils, paper",
+     "sub": "evidence_table `entries` (new) has no plate: `push` (the lamp over loose papers) stands in."
+    },
+    {
+     "id": "01-06",
+     "at": "01.04",
+     "plate": "home/dining",
+     "move": "in",
+     "row": "home `dining` warm, Gene seated at the head of the table, Tim beside",
+     "sound": "Low room, a clock",
+     "sub": "home `dining` exists only empty and in the cold blind light: Gene and Tim are not in it (decision 1's seated Gene is not built). It weakens the full-then-empty chair the film plants for chapter 8."
+    },
+    {
+     "id": "01-07",
+     "at": "01.04@0.44",
+     "piece": "doc_gene",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
+        "at": "01.04@0.50",
+        "dur": 0.7
+       }
+      ]
+     },
+     "sound": "Paper",
+     "change": "Added: Gene's service lit on Tim's 2024 statement (S1 p. 2) as the voice gives it (design/edit/shots/s1_gene.json), since no plate shows Gene."
+    },
+    {
+     "id": "01-07b",
+     "at": "01.04@0.80",
+     "plate": "tim_desk/window",
+     "move": "in",
+     "sound": "Low room, a clock",
+     "change": "Added: \"Tim had been a Chicago police officer himself. A family that knew what danger looked like.\" on Tim's lamp-lit room (chapter 7's set)."
+    },
+    {
+     "id": "01-08",
+     "at": "01.06",
+     "plate": "home/kitchen",
+     "move": "in",
+     "row": "home `kitchen`",
+     "sound": "One muted chime"
+    },
+    {
+     "id": "01-09",
+     "at": "01.07",
+     "plate": "evidence_table/laptop",
+     "move": "in",
+     "row": "→ `kitchen_over` (*new*): the laptop screen",
+     "sound": "",
+     "sub": "home `kitchen_over` (new) has no plate: evidence_table `laptop` (the laptop glowing on a dark table) stands in."
+    },
+    {
+     "id": "01-10",
+     "at": "01.08",
+     "piece": "email",
+     "max": 7.5,
+     "row": "evidence_table `screen`: the email | the prize wording (three versions)",
+     "sound": ""
+    },
+    {
+     "id": "01-11",
+     "at": "01.08@0.51",
+     "plate": "departure_gate/wide",
+     "move": "in",
+     "sound": "A far tannoy",
+     "change": "Added: \"people ready to fly her across the world\" on the departure gate (the 7.5 s email cannot hold the whole 14 s line)."
+    },
+    {
+     "id": "01-12",
+     "at": "01.09",
+     "piece": "search",
+     "max": 5.5,
+     "row": "evidence_table `screen`: a search | greeked results",
+     "sound": "Keys"
+    },
+    {
+     "id": "01-13",
+     "at": "01.09@0.52",
+     "plate": "evidence_table/passport",
+     "move": "in",
+     "sound": "Paper",
+     "change": "Added: \"she sent her passport details\" on the passport."
+    },
+    {
+     "id": "01-14",
+     "at": "01.10",
+     "plate": "chicago_night/wide",
+     "move": "out",
+     "sound": "City through glass",
+     "change": "\"Then the thing that ended her doubts arrived\" back in her apartment (the wide, no type, a pull back)."
+    },
+    {
+     "id": "01-15",
+     "at": "01.11",
+     "plate": "departure_gate/window",
+     "move": "in",
+     "row": "departure_gate `window`",
+     "sound": "A boarding chime",
+     "sub": "evidence_table `tickets` (new) has no plate: \"The tickets. Real tickets to Hong Kong\" goes on the aircraft at the gate (`window`), the row the script puts last."
+    },
+    {
+     "id": "01-16",
+     "at": "01.13",
+     "plate": "aircraft_cabin/aisle",
+     "move": "in",
+     "sound": "Engine hum, low",
+     "change": "Added: \"The first part of the promise was true\" in the aircraft cabin."
+    },
+    {
+     "id": "01-17",
+     "at": "01.14",
+     "plate": "evidence_table/purses",
+     "move": "in",
+     "c": [
+      0.72,
+      0.45
+     ],
+     "z": 1.04,
+     "sound": "The score thins; silence 1.5 s",
+     "change": "Added: the chapter ends on a flash-forward (the gift bags on the evidence table, no red) under \"the deception was hidden in everything that came after\"."
+    }
+   ]
+  },
+  {
+   "n": "02",
+   "title": "Eighteen days",
+   "rate": 158,
+   "voice": [
+    {
+     "id": "02.pre",
+     "hold": 1.0,
+     "note": "chapter title; engine hum"
+    },
+    {
+     "id": "02.01",
+     "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered."
+    },
+    {
+     "id": "02.02",
+     "text": "Then they offered more: mainland China. With their help she got a visa, and spent about nine more days travelling through the country."
+    },
+    {
+     "id": "02.03",
+     "text": "Watch what those days did."
+    },
+    {
+     "id": "02.04",
+     "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them."
+    },
+    {
+     "id": "02.05",
+     "text": "There was more to come. Australia, she was told. Another part of the prize."
+    },
+    {
+     "id": "02.06",
+     "text": "For Dawn, the trip of her life was still going."
+    },
+    {
+     "id": "02.07",
+     "text": "But before she left China, they had one more gift for her."
+    },
+    {
+     "id": "02.sil1",
+     "hold": 1.0,
+     "note": "(silence, 1 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "02-01",
+     "at": "02.pre",
+     "plate": "aircraft_cabin/window",
+     "move": "in",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=02&title=Eighteen+days",
+       "t0": 0.0
+      }
+     ],
+     "row": "aircraft_cabin `window`",
+     "sound": "Engine hum"
+    },
+    {
+     "id": "02-02",
+     "at": "02.01@0.40",
+     "piece": "route_leg1",
+     "in": 2.2,
+     "row": "aircraft_cabin `over` | the route draws Chicago → Hong Kong; 9 DAYS",
+     "sound": "Engine hum",
+     "change": "The route map comes in on \"nine days in Hong Kong\" from 2.2 s into leg1, so HONG KONG / 9 DAYS land just after the voice; aircraft_cabin `over` is not used here (it plays in chapter 3)."
+    },
+    {
+     "id": "02-03",
+     "at": "02.01@0.70",
+     "plate": "hongkong_street/wide",
+     "move": "in",
+     "row": "hongkong_street `wide` | HONG KONG on the wide; 9 DAYS",
+     "sound": "Street, trams, rain on awnings",
+     "change": "No HONG KONG / 9 DAYS super on the street wide: the route map has just put both on screen 2 s earlier."
+    },
+    {
+     "id": "02-05",
+     "at": "02.02",
+     "piece": "route_mainland",
+     "max": 4.4,
+     "row": "train | ABOUT 9 MORE DAYS; the route extends into the mainland",
+     "sound": "Rails, far"
+    },
+    {
+     "id": "02-06",
+     "at": "02.02@0.48",
+     "plate": "train/aisle",
+     "move": "in",
+     "row": "train `seat`, `aisle`",
+     "sound": "Rails"
+    },
+    {
+     "id": "02-07",
+     "at": "02.03",
+     "plate": "train/seat",
+     "move": "in",
+     "row": "train `seat`",
+     "sound": "Rails"
+    },
+    {
+     "id": "02-08",
+     "at": "02.04",
+     "piece": "email",
+     "in": 4.0,
+     "max": 3.5,
+     "sound": "",
+     "change": "Added: \"The email became a ticket. The ticket became a city. And the city became a relationship\" cut on each noun: the email, the passport (the ticket stand-in), the city from the hotel, the two men with her."
+    },
+    {
+     "id": "02-09",
+     "at": "02.04@0.15",
+     "plate": "evidence_table/passport",
+     "move": "in",
+     "z": 1.03,
+     "sound": "Paper"
+    },
+    {
+     "id": "02-10",
+     "at": "02.04@0.33",
+     "plate": "hotel_room/window",
+     "move": "in",
+     "row": "hotel_room `window`",
+     "sound": "Air conditioner, the city far below"
+    },
+    {
+     "id": "02-11",
+     "at": "02.04@0.52",
+     "plate": "hongkong_street/company",
+     "move": "in",
+     "row": "hongkong_street `company` (*new*): Dawn walking with two men, from behind",
+     "sound": "Street"
+    },
+    {
+     "id": "02-12",
+     "at": "02.05",
+     "piece": "route_mainland",
+     "in": 4.3,
+     "row": "route map: the dashed line toward Australia",
+     "sound": "The travel pad"
+    },
+    {
+     "id": "02-13",
+     "at": "02.06",
+     "plate": "train/rack",
+     "move": "in",
+     "sound": "Rails",
+     "change": "Added: \"the trip of her life was still going\" on her case on the train's rack."
+    },
+    {
+     "id": "02-14",
+     "at": "02.07",
+     "plate": "hongkong_street/window",
+     "move": "in",
+     "c": [
+      0.42,
+      0.55
+     ],
+     "sound": "The travel pad drops out on \"one more gift\"",
+     "change": "The chapter ends on the gift in the shop window (\"one more gift for her\"), a flash-forward, instead of the route map."
+    }
+   ]
+  },
+  {
+   "n": "03",
+   "title": "The gift",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "03.pre",
+     "hold": 0.8,
+     "note": "chapter title"
+    },
+    {
+     "id": "03.01",
+     "text": "Just before the next leg of the trip, the organizers told Dawn she had won something else. Designer handbags."
+    },
+    {
+     "id": "03.02",
+     "text": "She accepted them. Why wouldn't she? These were the people who had paid for weeks of her life."
+    },
+    {
+     "id": "03.03",
+     "text": "But there was a problem. Her luggage was already full."
+    },
+    {
+     "id": "03.04",
+     "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag."
+    },
+    {
+     "id": "03.05",
+     "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name."
+    },
+    {
+     "id": "03.06",
+     "text": "And at the check-in desk, the scale said what you already know."
+    },
+    {
+     "id": "03.07",
+     "text": "Overweight."
+    },
+    {
+     "id": "03.08",
+     "text": "She paid the fee."
+    },
+    {
+     "id": "03.09",
+     "text": "Tim put that detail in his testimony for a reason. To him, it shows how ordinary this journey felt to his sister."
+    },
+    {
+     "id": "03.10",
+     "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name."
+    },
+    {
+     "id": "03.sil1",
+     "hold": 1.0,
+     "note": "added: the belt runs on for a second before chapter 4 (chapters end on a short silence)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "03-01",
+     "at": "03.pre",
+     "plate": "hotel_room/accept",
+     "move": "in",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=03&title=The+gift",
+       "t0": 0.0
+      }
+     ],
+     "row": "hotel_room `accept` (*new*): Dawn on the bed, the tote in her hands",
+     "sound": "A soft room"
+    },
+    {
+     "id": "03-02",
+     "at": "03.01@0.86",
+     "plate": "hotel_room/overhead_pre",
+     "move": "in",
+     "sound": "A soft room",
+     "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above."
+    },
+    {
+     "id": "03-03",
+     "at": "03.02@0.20",
+     "plate": "aircraft_cabin/over",
+     "move": "in",
+     "sound": "Engine hum, far",
+     "change": "Added: \"the people who had paid for weeks of her life\" on the paid-for flight."
+    },
+    {
+     "id": "03-04",
+     "at": "03.03",
+     "plate": "hotel_room/overhead",
+     "move": "in",
+     "sound": "Zips",
+     "change": "Added: \"Her luggage was already full\" on the packed case from above."
+    },
+    {
+     "id": "03-05",
+     "at": "03.04",
+     "plate": "leather_market/wide",
+     "move": "in",
+     "row": "leather_market `wide`",
+     "sound": "Market, metal shutters"
+    },
+    {
+     "id": "03-06",
+     "at": "03.04@0.45",
+     "plate": "leather_market/stall",
+     "move": "in",
+     "row": "leather_market `stall`",
+     "sound": "Market"
+    },
+    {
+     "id": "03-07",
+     "at": "03.04@0.72",
+     "plate": "leather_market/purchase",
+     "move": "in",
+     "row": "leather_market `purchase`",
+     "sound": "Market"
+    },
+    {
+     "id": "03-08",
+     "at": "03.05",
+     "plate": "hotel_room/pack",
+     "move": "in",
+     "row": "hotel_room `pack`",
+     "sound": "Zips"
+    },
+    {
+     "id": "03-09",
+     "at": "03.05@0.62",
+     "plate": "baggage_belt/overhead",
+     "move": "in",
+     "sound": "Belt rollers",
+     "change": "Added: \"Both checked in her name\" on the two bags on the belt from above."
+    },
+    {
+     "id": "03-10",
+     "at": "03.06",
+     "plate": "checkin_hall/wide",
+     "move": "in",
+     "sound": "Terminal room tone",
+     "change": "Added: \"And at the check-in desk\" on the check-in wide (no type), so the scale lands with \"Overweight\"."
+    },
+    {
+     "id": "03-11",
+     "at": "03.07-1.3",
+     "piece": "scale",
+     "row": "checkin_hall `scale` (the cold open's first shot, matched) | OVERWEIGHT",
+     "sound": "The same beep as 0:00"
+    },
+    {
+     "id": "03-12",
+     "at": "03.08",
+     "plate": "checkin_hall/shoulder",
+     "move": "in",
+     "sound": "Paper on laminate",
+     "change": "Added: \"She paid the fee\" on the cold open's own shot of her hand paying (the plant paid on screen)."
+    },
+    {
+     "id": "03-13",
+     "at": "03.09",
+     "piece": "doc_fee",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit",
+        "at": "03.09@0.12",
+        "dur": 0.8
+       }
+      ]
+     },
+     "sound": "Paper",
+     "change": "Added: \"Tim put that detail in his testimony\" over the testimony itself, the fee line lit (S1 p. 1, design/edit/shots/s1_fee.json)."
+    },
+    {
+     "id": "03-14",
+     "at": "03.10",
+     "piece": "trace",
+     "row": "evidence_table `purses`: the seam | the red line traces the seam in full",
+     "sound": "A small metallic click as it closes"
+    },
+    {
+     "id": "03-15",
+     "at": "03.10@0.42",
+     "piece": "cutaway",
+     "max": 4.6,
+     "row": "then the cut-away closes (seam graphic)",
+     "sound": "A small metallic click as it closes"
+    },
+    {
+     "id": "03-16",
+     "at": "03.10@0.80",
+     "plate": "baggage_belt/curtain",
+     "move": "in",
+     "row": "baggage_belt `curtain`, `belt`",
+     "sound": "Belt rollers; the pulse returns",
+     "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter."
+    }
+   ]
+  },
+  {
+   "n": "04",
+   "title": "Yes",
+   "rate": 155,
+   "voice": [
+    {
+     "id": "04.pre",
+     "hold": 1.0,
+     "note": "chapter title; the tannoy, muffled"
+    },
+    {
+     "id": "04.01",
+     "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags."
+    },
+    {
+     "id": "04.02",
+     "text": "The officers ask whether they are hers."
+    },
+    {
+     "id": "04.03",
+     "text": "Yes."
+    },
+    {
+     "id": "04.04",
+     "text": "They ask again."
+    },
+    {
+     "id": "04.beat1",
+     "hold": 0.4,
+     "note": "added: a held breath before the second Yes, as in the cold open"
+    },
+    {
+     "id": "04.05",
+     "text": "Yes."
+    },
+    {
+     "id": "04.06",
+     "text": "She has no reason to say anything else. They are her bags."
+    },
+    {
+     "id": "04.07",
+     "text": "Then authorities find what is inside the linings."
+    },
+    {
+     "id": "04.sil1",
+     "hold": 1.0,
+     "note": "(hard stop, silence 1 s)"
+    },
+    {
+     "id": "04.08",
+     "text": "Think about the two conversations happening in that room. Dawn believes she is identifying her luggage. The officers are investigating drug smuggling."
+    },
+    {
+     "id": "04.09",
+     "text": "The same room. The same bags. The same word. Two different meanings."
+    },
+    {
+     "id": "04.beat2",
+     "hold": 0.8,
+     "note": "(beat)"
+    },
+    {
+     "id": "04.10",
+     "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to."
+    },
+    {
+     "id": "04.11",
+     "text": "What isn't in dispute is this: drugs were found in luggage she had checked. And in 2014, Dawn Hunt was arrested in China."
+    },
+    {
+     "id": "04.12",
+     "text": "The trip ended in that room. The case was only beginning."
+    },
+    {
+     "id": "04.sil2",
+     "hold": 1.5,
+     "note": "(silence, 1.5 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "04-01",
+     "at": "04.pre",
+     "plate": "departure_gate/seated_called",
+     "move": "in",
+     "pct": 0.04,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=04&title=Yes",
+       "t0": 0.0
+      }
+     ],
+     "row": "departure_gate `seated_called` (the cold open's shot, now held longer)",
+     "sound": "The tannoy, muffled"
+    },
+    {
+     "id": "04-02",
+     "at": "04.01@0.45",
+     "plate": "inspection_room/enter",
+     "move": "in",
+     "row": "inspection_room `enter`",
+     "sound": "Door"
+    },
+    {
+     "id": "04-03",
+     "at": "04.01@0.75",
+     "plate": "inspection_room/wide_pre",
+     "move": "in",
+     "row": "inspection_room `wide`",
+     "sound": "Door"
+    },
+    {
+     "id": "04-04",
+     "at": "04.02",
+     "piece": "doc_yes",
+     "sound": "Paper",
+     "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, reel 7's `s1_yes`), the line \"to which she responded 'yes'\" lighting just before the YES."
+    },
+    {
+     "id": "04-05",
+     "at": "04.03-0.05",
+     "piece": "yes",
+     "max": 2.95,
+     "row": "inspection_room `match` | YES, YES (the cold open's type, same place)",
+     "sound": ""
+    },
+    {
+     "id": "04-06",
+     "at": "04.05-0.05",
+     "piece": "yes",
+     "in": 3.0,
+     "max": 4.0,
+     "row": "(the second YES)",
+     "sound": ""
+    },
+    {
+     "id": "04-07",
+     "at": "04.06@0.55",
+     "plate": "inspection_room/dawn_close",
+     "move": "in",
+     "sound": "",
+     "change": "Added: \"They are her bags.\" on Dawn."
+    },
+    {
+     "id": "04-08",
+     "at": "04.07",
+     "plate": "inspection_room/handbags",
+     "move": "in",
+     "row": "inspection_room `handbags`, the officer's hand on the tote",
+     "sound": "Hard stop"
+    },
+    {
+     "id": "04-09",
+     "at": "04.08",
+     "plate": "inspection_room/two_shot",
+     "move": "in",
+     "sound": "Silence, then room tone",
+     "change": "Added: \"the two conversations happening in that room\" on the two-shot."
+    },
+    {
+     "id": "04-10",
+     "at": "04.08@0.40",
+     "piece": "split",
+     "gen": {
+      "cut_at": "04.08@0.68"
+     },
+     "row": "Split frame: evidence_table `purses` left, inspection_room `handbags` right, the cut-away reopening on the right",
+     "sound": "Silence, then room tone",
+     "note": "Re-rendered at the shot's length with the right half's cut on \"The officers are investigating\"."
+    },
+    {
+     "id": "04-11",
+     "at": "04.09",
+     "plate": "inspection_room/empty_ch05",
+     "move": "in",
+     "row": "inspection_room `empty` (Ch 05 layout)",
+     "sound": "Room tone"
+    },
+    {
+     "id": "04-12",
+     "at": "04.09@0.25",
+     "plate": "inspection_room/match",
+     "move": "in",
+     "pct": 0.02,
+     "type": [
+      {
+       "mode": "yes",
+       "at": "04.09@0.50"
+      }
+     ],
+     "sound": "",
+     "change": "\"The same room. The same bags. The same word. Two different meanings.\" cut on each phrase: the room, the bags (YES landing on \"The same word\"), then the split frame again."
+    },
+    {
+     "id": "04-13",
+     "at": "04.09@0.75",
+     "piece": "split_r7",
+     "in": 3.2,
+     "max": 2.38,
+     "sound": ""
+    },
+    {
+     "id": "04-14",
+     "at": "04.10",
+     "plate": "inspection_room/tag",
+     "move": "in",
+     "sound": "Room tone",
+     "change": "Added: \"One detail doesn't fit neatly\" on the luggage tag (where a destination would be)."
+    },
+    {
+     "id": "04-15",
+     "at": "04.10@0.12",
+     "plate": "departure_gate/window",
+     "move": "in",
+     "c": [
+      0.4,
+      0.5
+     ],
+     "z": 1.03,
+     "sound": "A far jet",
+     "change": "Added: \"flying on to Australia\" on the aircraft at the gate."
+    },
+    {
+     "id": "04-16",
+     "at": "04.10@0.33",
+     "plate": "evidence_table/page",
+     "move": "in",
+     "sound": "Paper",
+     "change": "Added: \"a journalist saw a court account\" on a blank sheet: the account is not shown because we have not seen it."
+    },
+    {
+     "id": "04-17",
+     "at": "04.10@0.58",
+     "piece": "route_split",
+     "row": "route map: two dashed lines from the mainland, one to Australia and one to Qingdao, neither resolved",
+     "sound": "",
+     "change": "The map comes in on \"a different flight ... to Qingdao\" so the two lines draw as the voice names them."
+    },
+    {
+     "id": "04-18",
+     "at": "04.11",
+     "plate": "inspection_room/overhead",
+     "move": "in",
+     "sound": "",
+     "change": "Added: \"drugs were found in luggage she had checked\" on the opened bags from above."
+    },
+    {
+     "id": "04-19",
+     "at": "04.11@0.62",
+     "plate": "detention_corridor/corridor",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2014",
+       "at": "04.11@0.68"
+      }
+     ],
+     "row": "detention_corridor `corridor` | 2014",
+     "sound": "A door closes far down the corridor"
+    },
+    {
+     "id": "04-20",
+     "at": "04.12",
+     "plate": "inspection_room/empty",
+     "move": "lock",
+     "sound": "Room tone, then silence",
+     "change": "\"The trip ended in that room\" back in the empty inspection room, to end the chapter."
+    }
+   ]
+  },
+  {
+   "n": "05",
+   "title": "Three years",
+   "rate": 152,
+   "voice": [
+    {
+     "id": "05.pre",
+     "hold": 0.8,
+     "note": "chapter title"
+    },
+    {
+     "id": "05.01",
+     "text": "For Dawn, the airport wasn't the end of a bad trip. It was the first day of a detention that would last about three years before any verdict."
+    },
+    {
+     "id": "05.02",
+     "text": "Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the emails she had received from the organizers. The same emails that had started it all."
+    },
+    {
+     "id": "05.03",
+     "text": "It wasn't enough."
+    },
+    {
+     "id": "05.04",
+     "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us."
+    },
+    {
+     "id": "05.05",
+     "text": "We are not going to recreate it. It is serious enough to state plainly, and Dawn has already lost control of so much of her own story."
+    },
+    {
+     "id": "05.06",
+     "text": "For three years, her family waited for a trial to correct what they believed was a terrible mistake."
+    },
+    {
+     "id": "05.07",
+     "text": "The verdict was worse than anything they had feared."
+    },
+    {
+     "id": "05.sil1",
+     "hold": 1.5,
+     "note": "(silence, 1.5 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "05-01",
+     "at": "05.pre",
+     "plate": "detention_corridor/door",
+     "move": "in",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=05&title=Three+years",
+       "t0": 0.0
+      }
+     ],
+     "row": "detention_corridor `door`",
+     "sound": "Fluorescent hum"
+    },
+    {
+     "id": "05-02",
+     "at": "05.01@0.39",
+     "plate": "detention_corridor/chair",
+     "move": "in",
+     "row": "detention_corridor `chair`",
+     "sound": "Fluorescent hum"
+    },
+    {
+     "id": "05-03",
+     "at": "05.02",
+     "piece": "doc_emails",
+     "gen": {
+      "marks": [
+       {
+        "phrase": "answered all their questions, produced the emails she received from the organizers",
+        "at": "05.02@0.24",
+        "dur": 1.2
+       }
+      ]
+     },
+     "sound": "Paper",
+     "change": "Added: \"she answered investigators' questions, and gave them the emails\" lit on Tim's statement (S1 p. 2, design/edit/shots/s1_emails.json): the emails planted in chapter 1, paid on screen."
+    },
+    {
+     "id": "05-04",
+     "at": "05.02@0.72",
+     "piece": "email",
+     "in": 1.5,
+     "max": 6.0,
+     "sound": "",
+     "change": "Added: \"The same emails that had started it all\" on the prize email again."
+    },
+    {
+     "id": "05-05",
+     "at": "05.03",
+     "plate": "detention_corridor/envelope",
+     "move": "in",
+     "row": "detention_corridor `envelope_high`",
+     "sound": "Paper",
+     "sub": "detention_corridor `envelope_high` has no plate: `envelope` stands in."
+    },
+    {
+     "id": "05-06",
+     "at": "05.04",
+     "plate": "detention_corridor/door",
+     "z": 1.25,
+     "c": [
+      0.5,
+      0.42
+     ],
+     "move": "in",
+     "sound": "Fluorescent hum",
+     "sub": "A closer framing of `door` (1.25x of the plate) for \"something worse\"; no new picture."
+    },
+    {
+     "id": "05-07",
+     "at": "05.04@0.15",
+     "plate": "hearing_room/hands",
+     "move": "in",
+     "sound": "A large quiet room",
+     "change": "The allegation is carried by Tim's hands on his testimony and the empty dais, never by the detention facility: nothing of the event is shown."
+    },
+    {
+     "id": "05-08",
+     "at": "05.04@0.62",
+     "plate": "hearing_room/dais",
+     "move": "in",
+     "sound": "A large quiet room"
+    },
+    {
+     "id": "05-09",
+     "at": "05.05",
+     "plate": "void_stage/dawn",
+     "move": "out",
+     "sound": "A clock, very low",
+     "change": "Added: \"Dawn has already lost control of so much of her own story\" on Dawn alone in the light, a slow pull back."
+    },
+    {
+     "id": "05-10",
+     "at": "05.06",
+     "piece": "calendar",
+     "max": 7.5,
+     "row": "void_stage `pool`: the empty circle of light, slow push | the calendar rolls 2014 → 2017",
+     "sound": "A clock, very low",
+     "sub": "void_stage `pool` (the empty circle) has no plate: reel 7's calendar is over void_stage `bags` in the beam."
+    },
+    {
+     "id": "05-11",
+     "at": "05.07",
+     "plate": "detention_corridor/corridor",
+     "move": "lock",
+     "row": "detention_corridor `corridor`, locked, long",
+     "sound": "The clock stops on \"worse\""
+    }
+   ]
+  },
+  {
+   "n": "06",
+   "title": "The sentence",
+   "rate": 150,
+   "voice": [
+    {
+     "id": "06.pre",
+     "hold": 2.6,
+     "note": "chapter title over the locked courtroom, room tone, before \"2017.\""
+    },
+    {
+     "id": "06.01",
+     "text": "2017."
+    },
+    {
+     "id": "06.beat1",
+     "hold": 0.5,
+     "note": "added: the year lands before the sentence"
+    },
+    {
+     "id": "06.02",
+     "text": "A death sentence, with a two-year reprieve."
+    },
+    {
+     "id": "06.03",
+     "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison."
+    },
+    {
+     "id": "06.04",
+     "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected."
+    },
+    {
+     "id": "06.05",
+     "text": "Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it."
+    },
+    {
+     "id": "06.06",
+     "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway."
+    },
+    {
+     "id": "06.07",
+     "text": "Deceived."
+    },
+    {
+     "id": "06.08",
+     "text": "And guilty anyway."
+    },
+    {
+     "id": "06.sil1",
+     "hold": 2.0,
+     "note": "(silence, 2 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "06-01",
+     "at": "06.pre",
+     "plate": "courtroom/wide",
+     "move": "lock",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=06&title=The+sentence",
+       "t0": 0.0
+      }
+     ],
+     "row": "courtroom `wide`, locked | 2017",
+     "sound": "Room tone, no gavel",
+     "change": "No 2017 super on the courtroom: the voice says \"2017.\" and the sentence card brings 2017 on the next shot, a second later."
+    },
+    {
+     "id": "06-02",
+     "at": "06.02",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "type": [
+      {
+       "mode": "death_2017",
+       "t0": 0.0
+      }
+     ],
+     "row": "void_stage `dawn_close` (*new*), uniform, head bowed | DEATH SENTENCE WITH TWO-YEAR REPRIEVE",
+     "sound": "One low impact at \"death sentence\"",
+     "sub": "void_stage `dawn_close` (new) has no plate: `dawn` (standing in the pool) stands in."
+    },
+    {
+     "id": "06-03",
+     "at": "06.03@0.10",
+     "plate": "courtroom/dock",
+     "move": "in",
+     "row": "courtroom `dock`: her hands on the rail",
+     "sound": "Room tone"
+    },
+    {
+     "id": "06-04",
+     "at": "06.03@0.44",
+     "plate": "void_stage/dawn_high",
+     "move": "in",
+     "sound": "Room tone",
+     "change": "Added: \"a suspended death sentence\" on the high view of her in the light."
+    },
+    {
+     "id": "06-05",
+     "at": "06.03@0.63",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "type": [
+      {
+       "mode": "sentence_life",
+       "sync": {
+        "t": 3.45,
+        "at": "06.03@0.84",
+        "min_tin": 1.4
+       }
+      }
+     ],
+     "row": "… which changes in place to LIFE IN PRISON",
+     "sound": "Nothing at \"life\"",
+     "note": "The card is already up when the shot opens; the change to LIFE IN PRISON lands on \"life in prison\"."
+    },
+    {
+     "id": "06-06",
+     "at": "06.04",
+     "plate": "prison_exterior/wall",
+     "move": "in",
+     "sound": "Rain on concrete",
+     "change": "Added: \"China sees the case as closed\" on the prison wall."
+    },
+    {
+     "id": "06-07",
+     "at": "06.04@0.17",
+     "plate": "evidence_table/pair",
+     "move": "in",
+     "row": "evidence_table `pair`: the ministry's words on the left sheet, word for word from Reuters | otherwise the sheet stays blank",
+     "sound": "Paper",
+     "note": "Blank: no verbatim Reuters quote is in the archive, so the sheets stay blank (the script's rule)."
+    },
+    {
+     "id": "06-08",
+     "at": "06.04@0.66",
+     "plate": "prison_exterior/tower",
+     "move": "in",
+     "sound": "Rain, wind",
+     "change": "Added: \"their legal rights and health were being protected\" on the prison tower."
+    },
+    {
+     "id": "06-09",
+     "at": "06.05",
+     "plate": "hongkong_street/company",
+     "move": "in",
+     "sound": "Street, far",
+     "change": "Added: \"Her family sees a scam victim\" on the organisers walking with her."
+    },
+    {
+     "id": "06-10",
+     "at": "06.05@0.52",
+     "plate": "baggage_belt/belt",
+     "move": "in",
+     "z": 1.03,
+     "sound": "Belt rollers",
+     "change": "Added: \"someone who carries drugs for traffickers without knowing it\" on the bags on the belt."
+    },
+    {
+     "id": "06-11",
+     "at": "06.06",
+     "plate": "courtroom/bench",
+     "move": "in",
+     "row": "courtroom `bench`",
+     "sound": "Room tone"
+    },
+    {
+     "id": "06-12",
+     "at": "06.06@0.52",
+     "plate": "void_stage/bags",
+     "move": "in",
+     "row": "void_stage `divide` (*new*): the bags in one pool",
+     "sound": "The score thins to one held note",
+     "sub": "void_stage `divide` (new) has no plate: a cut from the bags in their pool to Dawn in hers stands in for the two pools in one frame."
+    },
+    {
+     "id": "06-13",
+     "at": "06.06@0.78",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "row": "… Dawn in the other",
+     "sound": "The score thins to one held note"
+    },
+    {
+     "id": "06-14",
+     "at": "06.07",
+     "plate": "void_stage/dawn",
+     "z": 1.42,
+     "c": [
+      0.5,
+      0.45
+     ],
+     "move": "lock",
+     "row": "void_stage `dawn_close`, locked, on \"Deceived. And guilty anyway.\"",
+     "sound": "Silence, 2 s, then cut",
+     "sub": "void_stage `dawn_close` (new) has no plate: a 1.42x framing of `dawn` stands in (upscaled from the 1280 plate, soft)."
+    }
+   ]
+  },
+  {
+   "n": "07",
+   "title": "The wait",
+   "rate": 132,
+   "voice": [
+    {
+     "id": "07.pre",
+     "hold": 0.8,
+     "note": "chapter title; rain on concrete"
+    },
+    {
+     "id": "07.01",
+     "text": "Dawn is held at Guangdong Women's Prison. It's where her brother has gone to visit her."
+    },
+    {
+     "id": "07.02",
+     "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care."
+    },
+    {
+     "id": "07.03",
+     "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record."
+    },
+    {
+     "id": "07.04",
+     "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior."
+    },
+    {
+     "id": "07.05",
+     "text": "Every letter, every hearing, every request was a door that might open."
+    },
+    {
+     "id": "07.06",
+     "text": "None of them brought her home."
+    },
+    {
+     "id": "07.07",
+     "text": "And the man who had waited longest was running out of time."
+    },
+    {
+     "id": "07.sil1",
+     "hold": 1.5,
+     "note": "(silence, 1.5 s)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "07-01",
+     "at": "07.pre",
+     "plate": "prison_exterior/gate",
+     "move": "in",
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=07&title=The+wait",
+       "t0": 0.0
+      }
+     ],
+     "row": "prison_exterior `wall`, `gate`",
+     "sound": "Rain on concrete",
+     "change": "The gate opens the chapter and the wall follows (the wall played 80 s earlier in chapter 6)."
+    },
+    {
+     "id": "07-02",
+     "at": "07.01@0.50",
+     "plate": "prison_exterior/wall",
+     "move": "in",
+     "row": "prison_exterior `wall`",
+     "sound": "Rain on concrete"
+    },
+    {
+     "id": "07-03",
+     "at": "07.02",
+     "plate": "visiting_room/wide",
+     "move": "in",
+     "row": "visiting_room `wide`",
+     "sound": "The phone line's hiss"
+    },
+    {
+     "id": "07-04",
+     "at": "07.02@0.23",
+     "plate": "visiting_room/glass",
+     "move": "in",
+     "row": "visiting_room `glass` (uniform)",
+     "sound": "The phone line's hiss",
+     "note": "The plate still shows Dawn in the short-sleeved top, not the long-sleeved uniform DECISIONS sets for prison scenes."
+    },
+    {
+     "id": "07-05",
+     "at": "07.02@0.555",
+     "piece": "counter",
+     "max": 14.0,
+     "row": "void_stage `cell_far` → `cell_floor` (*new*), the pull back | 2014 – 2026, the year counter rolling",
+     "sound": "A low pulse, very slow",
+     "sub": "void_stage `cell_floor` (new) has no plate: reel 7's counter pulls back on `cell_far` alone."
+    },
+    {
+     "id": "07-06",
+     "at": "07.03",
+     "plate": "tim_desk/window",
+     "move": "in",
+     "row": "tim_desk: letters, the lamp",
+     "sound": "Pen on paper"
+    },
+    {
+     "id": "07-07",
+     "at": "07.03@0.30",
+     "plate": "tim_desk/letters",
+     "move": "in",
+     "row": "tim_desk: letters",
+     "sound": "Pen on paper"
+    },
+    {
+     "id": "07-08",
+     "at": "07.03@0.47",
+     "plate": "hearing_room/wide",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2024&pre=SEPTEMBER",
+       "at": "07.03@0.49"
+      }
+     ],
+     "row": "hearing_room `wide` | SEPTEMBER 2024",
+     "sound": "A large quiet room"
+    },
+    {
+     "id": "07-09",
+     "at": "07.03@0.76",
+     "plate": "hearing_room/witness",
+     "move": "in",
+     "row": "hearing_room `witness`",
+     "sound": "A large quiet room"
+    },
+    {
+     "id": "07-10",
+     "at": "07.04",
+     "plate": "tim_desk/desk",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2025&pre=MAY",
+       "t0": 0.15
+      }
+     ],
+     "row": "tim_desk: the bill page (when it is in the archive) | MAY 2025",
+     "sound": "",
+     "sub": "The bill page is not in the archive: `desk` (Tim writing) carries MAY 2025."
+    },
+    {
+     "id": "07-11",
+     "at": "07.04@0.45",
+     "plate": "hearing_room/dais",
+     "move": "in",
+     "sound": "A large quiet room",
+     "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais."
+    },
+    {
+     "id": "07-12",
+     "at": "07.05",
+     "plate": "tim_desk/letters",
+     "z": 1.3,
+     "c": [
+      0.45,
+      0.6
+     ],
+     "move": "in",
+     "sound": "Paper",
+     "change": "\"Every letter, every hearing, every request\" on a closer framing of the letters (1.3x), then \"a door that might open\" on the detention door."
+    },
+    {
+     "id": "07-13",
+     "at": "07.05@0.55",
+     "plate": "detention_corridor/door",
+     "move": "in",
+     "sound": "Fluorescent hum"
+    },
+    {
+     "id": "07-14",
+     "at": "07.06",
+     "plate": "void_stage/cell_close",
+     "move": "out",
+     "sound": "A low pulse",
+     "change": "Added: \"None of them brought her home\" on the cell."
+    },
+    {
+     "id": "07-15",
+     "at": "07.07",
+     "piece": "father",
+     "max": 7.0,
+     "row": "evidence_table `page`: S1 with \"not going to live long enough to see his daughter free\" lit | the marker wipe",
+     "sound": "Paper"
+    }
+   ]
+  },
+  {
+   "n": "08",
+   "title": "The father",
+   "rate": 126,
+   "voice": [
+    {
+     "id": "08.pre",
+     "hold": 0.8,
+     "note": "chapter title; a clock"
+    },
+    {
+     "id": "08.01",
+     "text": "Gene Hunt had been a soldier. A steel-mill worker. A bus driver. A Chicago police officer. For most of his life, his job was keeping other people safe."
+    },
+    {
+     "id": "08.02",
+     "text": "There was one person he could not bring home."
+    },
+    {
+     "id": "08.03",
+     "text": "By 2024, his family said, he was ill, and afraid he would not live long enough to see his daughter free. They still hoped he would be there to help her rebuild her life after prison."
+    },
+    {
+     "id": "08.04",
+     "text": "A father in his nineties, planning for a daughter who had already lost ten years."
+    },
+    {
+     "id": "08.05",
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
+    },
+    {
+     "id": "08.sil1",
+     "hold": 2.0,
+     "note": "(silence, 2 s: no score, no room tone)"
+    },
+    {
+     "id": "08.06",
+     "text": "He never saw Dawn come home."
+    },
+    {
+     "id": "08.sil2",
+     "hold": 3.0,
+     "note": "(silence, 3 s; only room tone returns)"
+    }
+   ],
+   "shots": [
+    {
+     "id": "08-01",
+     "at": "08.pre",
+     "plate": "home/dining",
+     "move": "in",
+     "pct": 0.05,
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=08&title=The+father",
+       "t0": 0.0
+      }
+     ],
+     "row": "home `dining`, cold blind light, Gene alone at the head of the table",
+     "sound": "A clock",
+     "sub": "home `dining` has no Gene: the room is empty (decision 1's seated Gene is not built)."
+    },
+    {
+     "id": "08-02",
+     "at": "08.01@0.60",
+     "plate": "home/dining",
+     "z": 1.35,
+     "c": [
+      0.14,
+      0.2
+     ],
+     "move": "in",
+     "row": "home `blinds` (*new*)",
+     "sound": "A clock",
+     "sub": "home `blinds` (new) has no plate: a 1.35x framing of the blinds in `dining` stands in (upscaled, soft)."
+    },
+    {
+     "id": "08-03",
+     "at": "08.02",
+     "plate": "void_stage/dawn_high",
+     "move": "out",
+     "sound": "A clock",
+     "change": "Added: \"one person he could not bring home\" on Dawn small in the light (home `chair` with Gene in profile is not built)."
+    },
+    {
+     "id": "08-04",
+     "at": "08.03",
+     "plate": "hearing_room/witness",
+     "move": "in",
+     "sound": "A large quiet room, far",
+     "change": "Added: \"By 2024, his family said\" on Tim at the witness table (he told Congress)."
+    },
+    {
+     "id": "08-05",
+     "at": "08.03@0.55",
+     "plate": "chicago_night/suitcase",
+     "move": "in",
+     "sound": "A clock",
+     "change": "Added: \"help her rebuild her life after prison\" on the warm hall of chapter 1, her case by the door."
+    },
+    {
+     "id": "08-06",
+     "at": "08.04",
+     "plate": "void_stage/cell_far",
+     "move": "out",
+     "sound": "A clock",
+     "change": "Added: \"a daughter who had already lost ten years\" on the far cell."
+    },
+    {
+     "id": "08-07",
+     "at": "08.05",
+     "piece": "gene",
+     "row": "home `chair` | JANUARY 25, 2026 (reel 7's date over the empty chair)",
+     "sound": "A clock, then nothing",
+     "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (reel 7's `date_gene`), so the straight cut from full to empty cannot happen yet."
+    },
+    {
+     "id": "08-08",
+     "at": "08.sil1",
+     "plate": "home/chair",
+     "z": 1.18,
+     "c": [
+      0.62,
+      0.5
+     ],
+     "move": "lock",
+     "row": "home `chair`, the same frame, empty (straight cut) → void_stage `chair` (*new*)",
+     "sound": "Total silence; then room tone returns",
+     "sub": "The cut on the silence goes to a closer framing of the same empty chair (1.18x), the date leaving with the cut; void_stage `chair` (new) has no plate, so the chair holds through the 3 s silence."
+    }
+   ]
+  },
+  {
+   "n": "09",
+   "title": "When?",
+   "rate": 124,
+   "voice": [
+    {
+     "id": "09.pre",
+     "hold": 0.8,
+     "note": "chapter title; rain"
+    },
+    {
+     "id": "09.01",
+     "text": "Six months later, in July 2026, Tim went back to the prison."
+    },
+    {
+     "id": "09.02",
+     "text": "He told lawmakers he barely recognised his sister. She seemed frail. Stooped. Her teeth had changed. Her hair was much greyer than two years before. She struggled to focus on their conversation."
+    },
+    {
+     "id": "09.03",
+     "text": "But there was one thing she kept coming back to."
+    },
+    {
+     "id": "09.04",
+     "text": "One question."
+    },
+    {
+     "id": "09.05",
+     "text": "When would she be released?"
+    },
+    {
+     "id": "09.06",
+     "text": "Tim could not give her a date."
+    },
+    {
+     "id": "09.beat1",
+     "hold": 0.8,
+     "note": "(beat)"
+    },
+    {
+     "id": "09.07",
+     "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting."
+    },
+    {
+     "id": "09.08",
+     "text": "Remember the question at the beginning of this story? The one no one in that room could answer."
+    },
+    {
+     "id": "09.09",
+     "text": "It was never really his question."
+    },
+    {
+     "id": "09.10",
+     "text": "It was hers."
+    },
+    {
+     "id": "09.sil1",
+     "hold": 2.0,
+     "note": "(silence, 2 s)"
+    },
+    {
+     "id": "09.11",
+     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
+    },
+    {
+     "id": "09.12",
+     "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company."
+    },
+    {
+     "id": "09.13",
+     "text": "Twelve years ago, in a room at an airport, officers asked her a question. She answered it. Yes."
+    },
+    {
+     "id": "09.14",
+     "text": "Now she is the one asking."
+    },
+    {
+     "id": "09.15",
+     "text": "And no one has an answer."
+    },
+    {
+     "id": "09.16",
+     "text": "The testimony, the reporting and her family's campaign are linked below."
+    },
+    {
+     "id": "09.sil2",
+     "hold": 2.0,
+     "note": "two seconds of silence at the very end"
+    }
+   ],
+   "shots": [
+    {
+     "id": "09-01",
+     "at": "09.pre",
+     "plate": "prison_exterior/gate",
+     "move": "in",
+     "c": [
+      0.5,
+      0.55
+     ],
+     "type": [
+      {
+       "mode": "chapter",
+       "hash": "n=09&title=When%3F",
+       "t0": 0.0
+      },
+      {
+       "mode": "place",
+       "hash": "a=2026&pre=JULY",
+       "at": "09.01@0.25"
+      }
+     ],
+     "row": "prison_exterior `gate` | JULY 2026",
+     "sound": "Rain"
+    },
+    {
+     "id": "09-02",
+     "at": "09.02",
+     "plate": "hearing_room/hands",
+     "move": "in",
+     "sound": "A large quiet room",
+     "change": "Added: \"He told lawmakers\" on Tim's hands on his statement; her description then plays over the visiting room seen from afar, never on her face."
+    },
+    {
+     "id": "09-03",
+     "at": "09.02@0.28",
+     "plate": "visiting_room/wide",
+     "move": "in",
+     "row": "visiting_room `reverse` (*new*): over Dawn's shoulder through the glass to Tim",
+     "sound": "The line's hiss; nothing else",
+     "sub": "visiting_room `reverse` (new) has no plate: `wide` (the booth from across the room) stands in."
+    },
+    {
+     "id": "09-04",
+     "at": "09.03",
+     "plate": "visiting_room/glass",
+     "move": "lock",
+     "row": "visiting_room `glass`, locked, long hold",
+     "sound": "Silence under \"When would she be released?\""
+    },
+    {
+     "id": "09-05",
+     "at": "09.06",
+     "plate": "visiting_room/empty",
+     "move": "in",
+     "row": "visiting_room `empty`",
+     "sound": ""
+    },
+    {
+     "id": "09-06",
+     "at": "09.07",
+     "plate": "hearing_room/witness",
+     "move": "in",
+     "type": [
+      {
+       "mode": "place",
+       "hash": "a=2026&pre=SEPTEMBER",
+       "t0": 0.1
+      }
+     ],
+     "row": "hearing_room `witness` | SEPTEMBER 2026",
+     "sound": "A large quiet room"
+    },
+    {
+     "id": "09-07",
+     "at": "09.07@0.50",
+     "plate": "home/chair",
+     "move": "in",
+     "row": "home `chair`, empty",
+     "sound": ""
+    },
+    {
+     "id": "09-08",
+     "at": "09.07@0.78",
+     "plate": "tim_desk/desk",
+     "move": "in",
+     "sound": "Pen on paper",
+     "change": "Added: \"a brother still fighting\" on Tim at his desk."
+    },
+    {
+     "id": "09-09",
+     "at": "09.08",
+     "plate": "hearing_room/wide",
+     "move": "in",
+     "row": "hearing_room `wide` (the cold open's last shot, matched)",
+     "sound": ""
+    },
+    {
+     "id": "09-10",
+     "at": "09.09",
+     "plate": "void_stage/dawn",
+     "move": "in",
+     "row": "void_stage `dawn`",
+     "sound": "Silence"
+    },
+    {
+     "id": "09-11",
+     "at": "09.11",
+     "plate": "prison_exterior/wall",
+     "move": "out",
+     "sound": "Rain",
+     "change": "Added: the status line on the prison wall."
+    },
+    {
+     "id": "09-12",
+     "at": "09.11@0.55",
+     "plate": "tim_desk/window",
+     "move": "in",
+     "sound": "",
+     "change": "Added: \"Her family is still asking\" on Tim's lit window."
+    },
+    {
+     "id": "09-13",
+     "at": "09.12",
+     "plate": "evidence_table/purses",
+     "move": "in",
+     "c": [
+      0.72,
+      0.45
+     ],
+     "z": 1.04,
+     "sound": "",
+     "change": "Added: the State Department's advice over the gifts and the belt, \"weeks in their company\" over the organisers."
+    },
+    {
+     "id": "09-14",
+     "at": "09.12@0.35",
+     "plate": "baggage_belt/curtain",
+     "move": "in",
+     "sound": ""
+    },
+    {
+     "id": "09-15",
+     "at": "09.12@0.64",
+     "plate": "hongkong_street/company",
+     "move": "in",
+     "sound": ""
+    },
+    {
+     "id": "09-16",
+     "at": "09.13",
+     "plate": "inspection_room/wide_pre",
+     "move": "in",
+     "sound": "",
+     "change": "Added: \"in a room at an airport\" on the inspection room before the bags."
+    },
+    {
+     "id": "09-17",
+     "at": "09.13@0.45",
+     "plate": "inspection_room/match",
+     "zoom": [
+      1.0,
+      1.035
+     ],
+     "type": [
+      {
+       "mode": "yes",
+       "at": "09.13$-0.25"
+      }
+     ],
+     "row": "inspection_room `match` → void_stage `bags` | YES, in its cold-open place",
+     "sound": "The opening drone returns quietly"
+    },
+    {
+     "id": "09-18",
+     "at": "09.14",
+     "plate": "void_stage/bags",
+     "continue": "09-17",
+     "type": [
+      {
+       "mode": "yes_when",
+       "t0": 0.0
+      }
+     ],
+     "row": "match cut on the bags; YES erodes and rises as WHEN?; then void_stage `bags`, held, the end screen",
+     "sound": "Resolves to one warm piano note; two seconds of silence at the very end",
+     "note": "WHEN? stays up through the end card; the YouTube end-screen elements go clear of the bags and the word."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+# Sound effects and beds: index
+
+Every sound in `audio/sfx/`, made free and locally on 27 November 2026 for *The Prize That Became a Prison*:
+what it is, how it was made, what earshot heard, how it measures, and its licence. Where each is placed: `../cues.json`
+(and `../SOUND_PLAN.md`). The full record of every take heard, with prompts, seeds and recipes, is `provenance.json`.
+**23 of 36 sounds made** (12 pass earshot's rule, 11 want a person's ear first); 13 waiting.
+
+
+**How they were made.** Two to three takes of each sound from up to three free sources: Stable Audio 3.0 Small SFX
+(Q8_0 GGUF, through audio.cpp on CPU, 8 steps, CFG 1.0), earshot (catalogue designs learned from public-domain
+recordings, recipes of them, and its coded sound bank), and numpy synthesis for sounds that are synthetic in life or
+designed (beeps, chimes, mains hum, a phone line, the drone, the impact). Each take finished as sound.md 3 says (48 kHz,
+onset trimmed, -1 dBFS peak and at most -1 dBTP, 0.15 s raised-cosine fade-out, 24-bit) or, for beds, made
+loop-ready (the last 2 s crossfaded equal-power into the head, so the file repeats with no seam) at -24 LUFS.
+
+**How they were checked.** earshot 1.0 `match` of each take against the sound's description and three or four
+realistic alternatives (z against about 320 vocabulary descriptions: 3 or more strong, 2.5-3 plausible, 2-2.5 weak),
+the AudioSet tagger's labels (any speech in a bed set the take aside), and `rank` across the takes. Pass rule
+(sound.md 4): the description beats every alternative in the forced choice with z >= 3, or holds 60 % of the choice
+and twice the best alternative. The pick is the passing take with the highest z; where none passes, the highest z.
+A fail is evidence, not a veto: several alternatives here are near-synonyms (a clock and a metronome, a phone line
+and radio static, a mail chime and a doorbell). **No take contains a voice or a word**: the tagger's speech score
+is listed for each pick.
+
+**Status.** *done*: passes. *done; ear check*: z 2.5 or more but an alternative won the forced choice. *made; wants
+the ear*: weak or no match; a person should listen, and a CC0 recording may replace it.
+
+## Beds and ambiences (loop-ready)
+
+| Sound | What | Made by | earshot | Speech | Measured | Licence | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `amb_terminal_hall` | Airport terminal room tone: the check-in hall and the departure gate. Large hard hall, air handling, far wheels and steps, no voices. | not made | | | | | **waiting** |
+| `amb_checkin_belt` | The check-in desk's weighing belt: a small conveyor motor running, close. | not made | | | | | **waiting** |
+| `amb_baggage_belt` | The baggage belt behind the curtain: rollers clattering in a big hall. | not made | | | | | **waiting** |
+| `amb_inspection_room` | The inspection room: a small closed room, ventilation, faint fluorescent buzz. | not made | | | | | **waiting** |
+| `amb_fluorescent_hum.wav` | Fluorescent tubes on 50 Hz mains (China): the ballast hum at 100 Hz and its harmonics, a light buzz. Detention corridor; under the inspection room. | numpy synthesis, tools/synth.py (first pass), take 2 | 'fluorescent lights humming and buzzing': z +3.18 strong; forced choice 5% (best alternative: an electric guitar amplifier hum 95%); tags Music 0.88, Musical instrument 0.47; picked from 3 takes | 0.00 | 26.0 s, -24.0 LUFS, TP -14.9 dBTP | made here (numpy): no third-party material | done; ear check |
+| `amb_void_air.wav` | The Void Stage's own air: a vast dark space, almost silent, very low movement. Never digitally dead. | numpy synthesis, tools/synth.py (first pass), take 0 | 'a very quiet low rumble of an empty space': z +2.85 plausible; forced choice 96% (best alternative: an engine 3%); tags Eruption 0.24, White noise 0.13; picked from 3 takes | 0.00 | 26.0 s, -24.0 LUFS, TP -8.3 dBTP | made here (numpy): no third-party material | done |
+| `sd_void_drone.wav` | THE DRONE (score motif carried by sound design): low D with its fifth A, slow beating, dark air. 0:56 to 'were not', and back at the end under YES -> WHEN?. Tuned to A = 440 (D2 73.42 Hz). | numpy synthesis, tools/synth.py (first pass), take 2 | 'a low dark sustained drone': z +3.53 strong; forced choice 86% (best alternative: an organ chord 14%); tags Music 0.52, Synthesizer 0.18; picked from 3 takes | 0.00 | 26.0 s, -24.0 LUFS, TP -14.8 dBTP | made here (numpy): no third-party material | done |
+| `amb_rain_concrete.wav` | Prison exterior: rain on concrete, water running off, gusts of wind. | earshot make (catalogue design), es_street | 'steady rain falling on concrete with wind': z +4.18 strong; forced choice 100% (best alternative: a shower running 0%); tags Rain on surface 0.85, Rain 0.67; picked from 2 takes | 0.00 | 26.0 s, -26.3 LUFS, TP -3.0 dBTP | earshot (public-domain recording, new take): free, no credit | done |
+| `amb_hearing_room` | The congressional hearing room, very quiet: a large room, air handling, faint rustle of clothing and paper, a chair creak. No voices. | not made | | | | | **waiting** |
+| `amb_chicago_night.wav` | Chicago at night through closed glass: distant traffic, muffled. | earshot make --recipe recipes/chicago_glass.json | 'distant city traffic at night heard from indoors': z +1.69 no match; forced choice 0% (best alternative: an airplane flying over 99%); tags Speech 0.43, Field recording 0.40; picked from 1 takes | 0.43 | 25.714 s, -24.0 LUFS, TP -10.6 dBTP | earshot recipe (public-domain recordings): free, no credit | made; wants the ear |
+| `amb_home_room.wav` | The Hunts' home (dining room, kitchen; Tim's desk): a quiet house, still. | earshot make (catalogue design), es_roomtone | 'the quiet room tone of a house': z +2.90 plausible; forced choice 68% (best alternative: an airplane cabin 31%); tags Air conditioning 0.19, Spray 0.19; picked from 1 takes | 0.00 | 26.0 s, -24.0 LUFS, TP -10.1 dBTP | earshot (public-domain recording, new take): free, no credit | done |
+| `amb_aircraft_cabin` | Aircraft cabin in flight: the engines' steady hum and air. | not made | | | | | **waiting** |
+| `amb_hk_street.wav` | Hong Kong street: traffic on a wet road, a tram rumbling past, rain dripping on awnings. | earshot make --recipe recipes/hk_street.json | 'a city street in the rain with traffic': z +2.24 weak; forced choice 27% (best alternative: a crowd cheering 49%); tags Speech 0.40, Vehicle 0.22; picked from 1 takes | 0.40 | 25.707 s, -24.0 LUFS, TP -9.5 dBTP | earshot recipe (public-domain recordings): free, no credit | made; wants the ear |
+| `amb_hotel_room` | Hotel room: air conditioner, the city far below through the window. | not made | | | | | **waiting** |
+| `amb_train` | Inside a moving train: wheels on rail joints, low rumble. | not made | | | | | **waiting** |
+| `amb_market` | Baiyun Leather Market: an indoor market hall, footsteps, bags, trolleys, a shutter far off. Walla kept out (crowd read as chanting before). | not made | | | | | **waiting** |
+| `amb_courtroom` | The courtroom: a large room's tone, air handling, a wooden bench creak. No gavel, no voices. | not made | | | | | **waiting** |
+| `amb_phone_line.wav` | The visiting room's handset line: telephone-band hiss, a faint 50 Hz hum, rare soft crackle. | numpy synthesis, tools/synth.py (first pass), take 1 | 'the hiss of a telephone line': z +1.99 no match; forced choice 0% (best alternative: radio static 100%); tags White noise 0.40, Pink noise 0.15; picked from 3 takes | 0.00 | 26.0 s, -24.0 LUFS, TP -17.7 dBTP | made here (numpy): no third-party material | made; wants the ear |
+| `amb_evidence_room` | The Evidence Table's room: a dry, quiet, almost silent room tone under paper and documents. | not made | | | | | **waiting** |
+| `sfx_clock_tick.wav` | A wall clock ticking once a second (home, Ch 01 and 08; detention, Ch 05, stopping on 'worse'). Loop of whole seconds. | earshot make (catalogue design), es_ticktock | 'a clock ticking': z +2.47 weak; forced choice 1% (best alternative: a metronome 98%); tags Tick 0.19, Tick-tock 0.15; picked from 3 takes | 0.00 | 23.952 s, -26.4 LUFS, TP -3.0 dBTP | earshot (public-domain recording, new take): free, no credit | made; wants the ear |
+
+## Effects (one-shots)
+
+| Sound | What | Made by | earshot | Speech | Measured | Licence | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `sfx_scale_beep.wav` | The check-in scale's beep as the display settles (0:00), and the same beep at 4:41. | numpy synthesis, tools/synth.py (first pass), take 1 | 'a short electronic beep': z +4.20 strong; forced choice 100% (best alternative: a bird chirping 0%); tags Beep, bleep 0.74; picked from 3 takes | 0.00 | 0.19 s, None LUFS short-term max, TP -1.0 dBTP | made here (numpy): no third-party material | done |
+| `sfx_booklet_slide.wav` | Her passport booklet slid across the laminate counter. | earshot make (catalogue design), es_2 | 'a small booklet sliding across a counter': z +1.86 no match; forced choice 8% (best alternative: a page turned 92%); tags Whip 0.20, Scrape 0.12; picked from 3 takes | 0.00 | 0.316 s, None LUFS short-term max, TP -1.3 dBTP | earshot (public-domain recording, new take): free, no credit | made; wants the ear |
+| `sfx_tannoy_far.wav` | A far public-address announcement: a generic two-note chime and a muffled announcement with no intelligible words (synthesised vowel texture, band-limited to 650 Hz, in a 3.2 s hall). | numpy synthesis, tools/synth.py (tannoy2 (second pass)), take 1 | 'a muffled public address announcement echoing in a large hall': z +3.17 strong; forced choice 99% (best alternative: a church bell 0%); tags Music 0.89, Sonar 0.28; picked from 6 takes | 0.00 | 10.165 s, -12.9 LUFS, TP -1.0 dBTP | made here (numpy): no third-party material | done |
+| `sfx_tannoy_near.wav` | The same announcement closer (0:15, and 'the tannoy, muffled' at 5:05); still no intelligible words. | numpy synthesis, tools/synth.py (tannoy2 with the chime at -16 dB), take 1 | 'a muffled public address announcement in an airport': z +3.59 strong; forced choice 7% (best alternative: a doorbell 93%); tags Music 0.80, Musical instrument 0.18; picked from 9 takes | 0.00 | 9.481 s, -15.4 LUFS, TP -1.0 dBTP | made here (numpy): no third-party material | done; ear check |
+| `sfx_door_steel.wav` | The inspection room's door: heavy, steel, closing (0:20 and 5:12). | earshot make (catalogue design), es_shut | 'a heavy metal door closing': z +5.58 strong; forced choice 68% (best alternative: a wooden door closing 32%); tags Door 0.80, Slam 0.45; picked from 3 takes | 0.00 | 2.102 s, -23.6 LUFS, TP -0.5 dBTP | earshot (public-domain recording, new take): free, no credit | done |
+| `sfx_zip.wav` | A dry, close zip (0:47, the tote) and the zips of the packing (4:25). | earshot make (catalogue design), es_jacket | 'a zipper being pulled': z +2.95 plausible; forced choice 46% (best alternative: a cloth tearing 52%); tags Zipper (clothing) 0.81, Whoosh, swoosh, swish 0.08; picked from 4 takes | 0.00 | 1.596 s, -13.0 LUFS, TP -0.7 dBTP | earshot (public-domain recording, new take): free, no credit | done; ear check |
+| `sfx_impact_low.wav` | One low impact: at DEATH SENTENCE / 2017 (1:10) and at 'death sentence' (7:30). Nothing at 'life'. Pitched to the film's root D. | numpy synthesis, tools/synth.py (first pass), take 1 | 'a deep low boom': z +3.25 strong; forced choice 100% (best alternative: a door slammed 0%); tags Music 0.23, Bang 0.11; picked from 7 takes | 0.00 | 5.0 s, -18.1 LUFS, TP -1.0 dBTP | made here (numpy): no third-party material | done |
+| `sfx_pencil_paper.wav` | Pencils on paper: the sweepstakes entries (Ch 01). | earshot make (catalogue design), es_1 | 'a pencil writing on paper': z +5.85 strong; forced choice 98% (best alternative: sandpaper 1%); tags Writing 0.26, Pant 0.09; picked from 3 takes | 0.00 | 3.049 s, -16.1 LUFS, TP -1.0 dBTP | earshot (public-domain recording, new take): free, no credit | done |
+| `sfx_paper_handle.wav` | Paper handled: the tickets (Ch 01), the envelope of emails (Ch 05), the ministry sheet (Ch 06), the testimony page (Ch 07). | earshot make (catalogue design), es_page | 'paper being handled': z +2.22 weak; forced choice 75% (best alternative: a plastic bag 22%); tags Scrape 0.10; picked from 3 takes | 0.00 | 0.511 s, -11.8 LUFS, TP -0.6 dBTP | earshot (public-domain recording, new take): free, no credit | done |
+| `sfx_mail_chime.wav` | One muted chime: a message arriving in an invented mail client on a laptop (Ch 01). Not any real product's sound. | numpy synthesis, tools/synth.py (first pass), take 1 | 'a soft notification chime': z +2.41 weak; forced choice 32% (best alternative: a doorbell 67%); tags Ding 0.57, Clang 0.10; picked from 5 takes | 0.00 | 1.2 s, -11.5 LUFS, TP -1.0 dBTP | made here (numpy): no third-party material | made; wants the ear |
+| `sfx_keys_typing.wav` | Keys: Dawn's search on the laptop (Ch 01). | earshot make (catalogue design), es_1 | 'typing on a laptop keyboard': z +2.66 plausible; forced choice 38% (best alternative: fingers drumming 61%); tags Computer keyboard 0.38, Sound effect 0.21; picked from 3 takes | 0.00 | 2.953 s, -23.3 LUFS, TP -1.0 dBTP | earshot (public-domain recording, new take): free, no credit | done; ear check |
+| `sfx_boarding_chime.wav` | A boarding chime at the departure gate window (end of Ch 01), distant, generic three-note. | numpy synthesis, tools/synth.py (first pass), take 1 | 'an airport announcement chime': z +2.19 weak; forced choice 0% (best alternative: a doorbell 99%); tags Ding 0.14, Ding-dong 0.13; picked from 3 takes | 0.00 | 3.686 s, -10.2 LUFS, TP -1.0 dBTP | made here (numpy): no third-party material | made; wants the ear |
+| `sfx_shutter_roll` | A metal roller shutter at the market (Ch 03). | not made | | | | | **waiting** |
+| `sfx_seam_click.wav` | A small metallic click as the seam cut-away closes (Ch 03). | earshot sfx render click/tink | 'a small metallic click': z +2.71 plausible; forced choice 81% (best alternative: a finger snap 10%); tags Sound effect 0.07; picked from 6 takes | 0.00 | 0.069 s, None LUFS short-term max, TP -0.4 dBTP | earshot bank (code; fit/* from CC0): free, no credit | done |
+| `sfx_door_far.wav` | A door closes far down the corridor (end of Ch 04, 2014). | earshot make --recipe recipes/door_far.json | 'a door closing far away in a corridor': z +2.90 plausible; forced choice 65% (best alternative: a car door 30%); tags Door 0.59, Slam 0.51; picked from 2 takes | 0.00 | 2.273 s, -19.9 LUFS, TP -1.0 dBTP | earshot recipe (public-domain recordings): free, no credit | done |
+| `sfx_pen_paper` | Pen on paper: Tim writing letters (Ch 07). | not made | | | | | **waiting** |
+

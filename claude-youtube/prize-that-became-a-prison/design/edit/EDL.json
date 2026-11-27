@@ -1,0 +1,7056 @@
+{
+ "film": "The Prize That Became a Prison",
+ "version": "animatic_v1",
+ "fps": 24,
+ "size": [
+  1920,
+  1080
+ ],
+ "total_frames": 18565,
+ "duration": 773.542,
+ "duration_tc": "12:53.54",
+ "timing": "estimated from word counts at each chapter's rate (no scratch narration yet)",
+ "gap_s": 0.35,
+ "chapters": [
+  {
+   "n": "00",
+   "title": "Cold open: Overweight",
+   "start": 0.0,
+   "start_tc": "0:00.00",
+   "duration": 98.408,
+   "rate_wpm": 160,
+   "words": 207,
+   "shots": 30
+  },
+  {
+   "n": "01",
+   "title": "The winner",
+   "start": 98.408,
+   "start_tc": "1:38.40",
+   "duration": 98.059,
+   "rate_wpm": 158,
+   "words": 239,
+   "shots": 18
+  },
+  {
+   "n": "02",
+   "title": "Eighteen days",
+   "start": 196.468,
+   "start_tc": "3:16.46",
+   "duration": 49.29,
+   "rate_wpm": 158,
+   "words": 119,
+   "shots": 13
+  },
+  {
+   "n": "03",
+   "title": "The gift",
+   "start": 245.758,
+   "start_tc": "4:05.75",
+   "duration": 63.615,
+   "rate_wpm": 155,
+   "words": 151,
+   "shots": 16
+  },
+  {
+   "n": "04",
+   "title": "Yes",
+   "start": 309.372,
+   "start_tc": "5:09.37",
+   "duration": 73.345,
+   "rate_wpm": 155,
+   "words": 169,
+   "shots": 20
+  },
+  {
+   "n": "05",
+   "title": "Three years",
+   "start": 382.717,
+   "start_tc": "6:22.71",
+   "duration": 66.768,
+   "rate_wpm": 152,
+   "words": 158,
+   "shots": 11
+  },
+  {
+   "n": "06",
+   "title": "The sentence",
+   "start": 449.486,
+   "start_tc": "7:29.48",
+   "duration": 63.6,
+   "rate_wpm": 150,
+   "words": 140,
+   "shots": 14
+  },
+  {
+   "n": "07",
+   "title": "The wait",
+   "start": 513.086,
+   "start_tc": "8:33.08",
+   "duration": 87.127,
+   "rate_wpm": 132,
+   "words": 182,
+   "shots": 15
+  },
+  {
+   "n": "08",
+   "title": "The father",
+   "start": 600.213,
+   "start_tc": "10:00.21",
+   "duration": 56.724,
+   "rate_wpm": 126,
+   "words": 104,
+   "shots": 8
+  },
+  {
+   "n": "09",
+   "title": "When?",
+   "start": 656.937,
+   "start_tc": "10:56.93",
+   "duration": 116.602,
+   "rate_wpm": 124,
+   "words": 220,
+   "shots": 18
+  }
+ ],
+ "shots": [
+  {
+   "id": "00-01",
+   "chapter": "00",
+   "start": 0.0,
+   "start_tc": "0:00.00",
+   "duration": 4.0833,
+   "frames": 98,
+   "start_frame": 0,
+   "source": {
+    "kind": "piece",
+    "name": "scale",
+    "in": 0.0,
+    "frames": 98,
+    "file": "out/gfx/r7/01_scale.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/scale_overweight.json"
+    },
+    "fixed": true,
+    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s"
+   },
+   "voice": [
+    {
+     "id": "00.01",
+     "text": "The bags are overweight."
+    },
+    {
+     "id": "00.02",
+     "text": "Only slightly. There's a small fee, and she pays it without a second thought."
+    }
+   ],
+   "row": "0:00 checkin_hall `scale`: the display settles; OVERWEIGHT",
+   "sound": "Belt motor, a soft beep. No music for 2 s."
+  },
+  {
+   "id": "00-02",
+   "chapter": "00",
+   "start": 4.0833,
+   "start_tc": "0:04.08",
+   "duration": 4.75,
+   "frames": 114,
+   "start_frame": 98,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/checkin_hall/shoulder.png",
+    "stage": "checkin_hall",
+    "camera": "shoulder",
+    "zoom": [
+     1.0,
+     1.05225
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 114,
+    "push": "in 5.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.02",
+     "text": "Only slightly. There's a small fee, and she pays it without a second thought."
+    }
+   ],
+   "row": "0:04 checkin_hall `shoulder`: her hand slides the booklet across",
+   "sound": "Paper on laminate"
+  },
+  {
+   "id": "00-03",
+   "chapter": "00",
+   "start": 8.8333,
+   "start_tc": "0:08.83",
+   "duration": 4.5833,
+   "frames": 110,
+   "start_frame": 212,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/checkin_hall/wide.png",
+    "stage": "checkin_hall",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.05042
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 110,
+    "push": "in 5.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "place_2014",
+      "look": "B",
+      "t0": 0.1,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "00.03",
+     "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won."
+    }
+   ],
+   "row": "0:09 checkin_hall `wide` | 2014 / CHINA",
+   "sound": "Terminal room tone; a far tannoy"
+  },
+  {
+   "id": "00-04",
+   "chapter": "00",
+   "start": 13.4167,
+   "start_tc": "0:13.41",
+   "duration": 3.125,
+   "frames": 75,
+   "start_frame": 322,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/checkin_hall/profile.png",
+    "stage": "checkin_hall",
+    "camera": "profile",
+    "zoom": [
+     1.0,
+     1.03438
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 75,
+    "push": "in 3.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.03",
+     "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won."
+    }
+   ],
+   "sound": "Terminal room tone",
+   "change": "Added (cold open pace, median 1.6-2.4 s): the 10 s line about Dawn checking two bags gets `profile` after the wide instead of holding the wide."
+  },
+  {
+   "id": "00-05",
+   "chapter": "00",
+   "start": 16.5417,
+   "start_tc": "0:16.54",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 397,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/seated.png",
+    "stage": "departure_gate",
+    "camera": "seated",
+    "zoom": [
+     1.0,
+     1.03575
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.03",
+     "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won."
+    }
+   ],
+   "sound": "Terminal room tone; the tannoy",
+   "change": "Added: \"for the next flight of a trip she won\" and the beat over Dawn waiting at the gate with her case, before `seated_called`."
+  },
+  {
+   "id": "00-06",
+   "chapter": "00",
+   "start": 19.7917,
+   "start_tc": "0:19.79",
+   "duration": 3.5417,
+   "frames": 85,
+   "start_frame": 475,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/seated_called.png",
+    "stage": "departure_gate",
+    "camera": "seated_called",
+    "zoom": [
+     1.0,
+     1.03896
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 85,
+    "push": "in 3.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.04",
+     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
+    }
+   ],
+   "row": "0:15 departure_gate `seated_called`: her head lifts",
+   "sound": "The tannoy, closer; the pulse starts",
+   "note": "A still plate: the head lift cannot be seen; the cut from `seated` to the wider `seated_called` carries the call."
+  },
+  {
+   "id": "00-07",
+   "chapter": "00",
+   "start": 23.3333,
+   "start_tc": "0:23.33",
+   "duration": 2.4167,
+   "frames": 58,
+   "start_frame": 560,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/enter.png",
+    "stage": "inspection_room",
+    "camera": "enter",
+    "zoom": [
+     1.0,
+     1.02658
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 58,
+    "push": "in 2.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.04",
+     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
+    }
+   ],
+   "row": "0:20 inspection_room `enter`",
+   "sound": "Door, steel"
+  },
+  {
+   "id": "00-08",
+   "chapter": "00",
+   "start": 25.75,
+   "start_tc": "0:25.75",
+   "duration": 2.25,
+   "frames": 54,
+   "start_frame": 618,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/wide_pre.png",
+    "stage": "inspection_room",
+    "camera": "wide_pre",
+    "zoom": [
+     1.0,
+     1.02475
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 54,
+    "push": "in 2.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.04",
+     "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there."
+    }
+   ],
+   "row": "0:20 then `wide` (pre-discovery layout)",
+   "sound": "Door, steel"
+  },
+  {
+   "id": "00-09",
+   "chapter": "00",
+   "start": 28.0,
+   "start_tc": "0:28.00",
+   "duration": 2.5417,
+   "frames": 61,
+   "start_frame": 672,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/two_shot_pre.png",
+    "stage": "inspection_room",
+    "camera": "two_shot_pre",
+    "zoom": [
+     1.0,
+     1.02796
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 61,
+    "push": "in 2.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.05",
+     "text": "The officers want to know one thing. Are these bags hers?"
+    }
+   ],
+   "row": "0:27 inspection_room `two_shot` (pre-discovery)",
+   "sound": "Pulse"
+  },
+  {
+   "id": "00-10",
+   "chapter": "00",
+   "start": 30.5417,
+   "start_tc": "0:30.54",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 733,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/tag.png",
+    "stage": "inspection_room",
+    "camera": "tag",
+    "zoom": [
+     1.0,
+     1.02108
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.05",
+     "text": "The officers want to know one thing. Are these bags hers?"
+    }
+   ],
+   "sound": "Pulse",
+   "change": "Added: \"Are these bags hers?\" on the luggage tag (her name on the bag), so `dawn_close` can carry \"she says yes\"."
+  },
+  {
+   "id": "00-11",
+   "chapter": "00",
+   "start": 32.4583,
+   "start_tc": "0:32.45",
+   "duration": 2.4583,
+   "frames": 59,
+   "start_frame": 779,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/dawn_close.png",
+    "stage": "inspection_room",
+    "camera": "dawn_close",
+    "zoom": [
+     1.0,
+     1.02704
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 59,
+    "push": "in 2.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.06",
+     "text": "According to her brother, she says yes."
+    }
+   ],
+   "row": "0:27 then `dawn_close` (pre-discovery)",
+   "sound": "Pulse"
+  },
+  {
+   "id": "00-12",
+   "chapter": "00",
+   "start": 34.9167,
+   "start_tc": "0:34.91",
+   "duration": 2.125,
+   "frames": 51,
+   "start_frame": 838,
+   "source": {
+    "kind": "piece",
+    "name": "yes",
+    "in": 0.0,
+    "frames": 51,
+    "file": "out/gfx/r7/03_yes.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "yes",
+     "plate": "frames/raw/inspection_room/match.png"
+    },
+    "fixed": false,
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+   },
+   "voice": [
+    {
+     "id": "00.06",
+     "text": "According to her brother, she says yes."
+    },
+    {
+     "id": "00.07",
+     "text": "They ask again."
+    }
+   ],
+   "row": "0:33 inspection_room `match`: the two bags, frontal | YES lands on the word",
+   "sound": "Pulse stops dead on \"Yes.\""
+  },
+  {
+   "id": "00-13",
+   "chapter": "00",
+   "start": 37.0417,
+   "start_tc": "0:37.04",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 889,
+   "source": {
+    "kind": "piece",
+    "name": "yes",
+    "in": 3.0,
+    "frames": 78,
+    "file": "out/gfx/r7/03_yes.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "yes",
+     "plate": "frames/raw/inspection_room/match.png"
+    },
+    "fixed": false,
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+   },
+   "voice": [
+    {
+     "id": "00.08",
+     "text": "Yes."
+    },
+    {
+     "id": "00.09",
+     "text": "Why would she say anything else? She packed them herself. She just paid to carry them."
+    }
+   ],
+   "row": "0:37 the same frame | YES again, a second time, harder",
+   "sound": ""
+  },
+  {
+   "id": "00-14",
+   "chapter": "00",
+   "start": 40.2917,
+   "start_tc": "0:40.29",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 967,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/pack.png",
+    "stage": "hotel_room",
+    "camera": "pack",
+    "zoom": [
+     1.0,
+     1.02108
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.09",
+     "text": "Why would she say anything else? She packed them herself. She just paid to carry them."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"She packed them herself\" over `pack` (a flash of chapter 3), \"She just paid to carry them\" over the belt."
+  },
+  {
+   "id": "00-15",
+   "chapter": "00",
+   "start": 42.2083,
+   "start_tc": "0:42.20",
+   "duration": 1.8333,
+   "frames": 44,
+   "start_frame": 1013,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/baggage_belt/belt.png",
+    "stage": "baggage_belt",
+    "camera": "belt",
+    "zoom": [
+     1.0,
+     1.02017
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 44,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.09",
+     "text": "Why would she say anything else? She packed them herself. She just paid to carry them."
+    }
+   ],
+   "sound": "Belt rollers, cut off for the silence"
+  },
+  {
+   "id": "00-16",
+   "chapter": "00",
+   "start": 44.0417,
+   "start_tc": "0:44.04",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 1057,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/handbags.png",
+    "stage": "inspection_room",
+    "camera": "handbags",
+    "zoom": [
+     1.0,
+     1.04217
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.10",
+     "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine."
+    }
+   ],
+   "row": "0:43 inspection_room `handbags`",
+   "sound": "Silence"
+  },
+  {
+   "id": "00-17",
+   "chapter": "00",
+   "start": 47.875,
+   "start_tc": "0:47.87",
+   "duration": 1.0,
+   "frames": 24,
+   "start_frame": 1149,
+   "source": {
+    "kind": "piece",
+    "name": "flash",
+    "in": 0.0,
+    "frames": 24,
+    "file": "out/gfx/r7/04_flash.mp4",
+    "gen": {
+     "tool": "seam",
+     "mode": "flash",
+     "bg": "frames/graded/evidence_table/purses.jpg"
+    },
+    "fixed": true,
+    "note_piece": "the red seam, 1 s, gone with the cut"
+   },
+   "voice": [
+    {
+     "id": "00.10",
+     "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine."
+    }
+   ],
+   "row": "0:47 evidence_table `purses` | the red trace runs along one seam, 1 s, and is gone",
+   "sound": "A dry, close zip"
+  },
+  {
+   "id": "00-18",
+   "chapter": "00",
+   "start": 48.875,
+   "start_tc": "0:48.87",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 1173,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/seam.png",
+    "stage": "evidence_table",
+    "camera": "seam",
+    "zoom": [
+     1.0,
+     1.05638
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 123,
+    "push": "in 5.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.10",
+     "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine."
+    }
+   ],
+   "row": "0:47 push in on the tote",
+   "sound": "A dry, close zip",
+   "change": "The push in on the tote continues on evidence_table `seam` (the close of the same tote) after the 1 s red flash, so the flash leaves with a cut."
+  },
+  {
+   "id": "00-19",
+   "chapter": "00",
+   "start": 54.0,
+   "start_tc": "0:54.00",
+   "duration": 3.5833,
+   "frames": 86,
+   "start_frame": 1296,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.0,
+     1.03942
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 86,
+    "push": "in 3.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.11",
+     "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life."
+    }
+   ],
+   "row": "0:56 void_stage `dawn` (uniform)",
+   "sound": "Low drone"
+  },
+  {
+   "id": "00-20",
+   "chapter": "00",
+   "start": 57.5833,
+   "start_tc": "0:57.58",
+   "duration": 3.1667,
+   "frames": 76,
+   "start_frame": 1382,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/window.png",
+    "stage": "hongkong_street",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.03483
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 76,
+    "push": "in 3.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.11",
+     "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life."
+    }
+   ],
+   "sound": "Low drone",
+   "change": "Added: \"She believed the handbags were a prize\" on the handbags in a Hong Kong shop window (cold open pace)."
+  },
+  {
+   "id": "00-21",
+   "chapter": "00",
+   "start": 60.75,
+   "start_tc": "1:00.75",
+   "duration": 4.4583,
+   "frames": 107,
+   "start_frame": 1458,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/aircraft_cabin/window.png",
+    "stage": "aircraft_cabin",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.04904
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 107,
+    "push": "in 4.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.11",
+     "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life."
+    }
+   ],
+   "sound": "Low drone",
+   "change": "Added: \"the trip of her life\" on Dawn at the aircraft window."
+  },
+  {
+   "id": "00-22",
+   "chapter": "00",
+   "start": 65.2083,
+   "start_tc": "1:05.20",
+   "duration": 1.5,
+   "frames": 36,
+   "start_frame": 1565,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/match.png",
+    "stage": "inspection_room",
+    "camera": "match",
+    "zoom": [
+     1.0,
+     1.018
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 36,
+    "push": "in 1.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.12",
+     "text": "The luggage was hers. The drugs, she said, were not."
+    }
+   ],
+   "row": "1:04 inspection_room `match` → void_stage `bags`",
+   "sound": "The score, about to cut"
+  },
+  {
+   "id": "00-23",
+   "chapter": "00",
+   "start": 66.7083,
+   "start_tc": "1:06.70",
+   "duration": 3.75,
+   "frames": 90,
+   "start_frame": 1601,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/bags.png",
+    "stage": "void_stage",
+    "camera": "bags",
+    "zoom": [
+     1.01852,
+     1.06579
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 90,
+    "push": "in 4.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.12",
+     "text": "The luggage was hers. The drugs, she said, were not."
+    }
+   ],
+   "row": "1:04 match cut on the two bags (registered to the pixel), the room vanishing on \"The luggage was hers.\"",
+   "sound": "Score cut dead at \"were not.\""
+  },
+  {
+   "id": "00-24",
+   "chapter": "00",
+   "start": 70.4583,
+   "start_tc": "1:10.45",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 1691,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/courtroom/wide.png",
+    "stage": "courtroom",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 46,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.13",
+     "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life."
+    }
+   ],
+   "sound": "Room tone",
+   "change": "Added: \"Three years later, a court\" on the locked courtroom, so the cut to the sentence lands on \"sentences her to death\"."
+  },
+  {
+   "id": "00-25",
+   "chapter": "00",
+   "start": 72.375,
+   "start_tc": "1:12.37",
+   "duration": 5.2083,
+   "frames": 125,
+   "start_frame": 1737,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn_high.png",
+    "stage": "void_stage",
+    "camera": "dawn_high",
+    "zoom": [
+     1.0,
+     1.05729
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 125,
+    "push": "in 5.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "death_2017",
+      "look": "B",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "00.13",
+     "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life."
+    }
+   ],
+   "row": "1:10 void_stage `dawn_high` | DEATH SENTENCE / 2017",
+   "sound": "One low impact"
+  },
+  {
+   "id": "00-26",
+   "chapter": "00",
+   "start": 77.5833,
+   "start_tc": "1:17.58",
+   "duration": 2.5833,
+   "frames": 62,
+   "start_frame": 1862,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/tower.png",
+    "stage": "prison_exterior",
+    "camera": "tower",
+    "zoom": [
+     1.0,
+     1.02842
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 62,
+    "push": "in 2.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.14",
+     "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer."
+    }
+   ],
+   "row": "1:17 prison_exterior `tower`",
+   "sound": "Rain, wind"
+  },
+  {
+   "id": "00-27",
+   "chapter": "00",
+   "start": 80.1667,
+   "start_tc": "1:20.16",
+   "duration": 2.75,
+   "frames": 66,
+   "start_frame": 1924,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/wide.png",
+    "stage": "hearing_room",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.03025
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 66,
+    "push": "in 3.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.14",
+     "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer."
+    }
+   ],
+   "row": "1:21 hearing_room `wide`, slow push",
+   "sound": "A room of people, very quiet"
+  },
+  {
+   "id": "00-28",
+   "chapter": "00",
+   "start": 82.9167,
+   "start_tc": "1:22.91",
+   "duration": 4.2917,
+   "frames": 103,
+   "start_frame": 1990,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/witness.png",
+    "stage": "hearing_room",
+    "camera": "witness",
+    "zoom": [
+     1.0,
+     1.04721
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 103,
+    "push": "in 4.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "00.14",
+     "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer."
+    }
+   ],
+   "row": "1:21 slow push to `witness`",
+   "sound": "1 s of near silence after \"answer\""
+  },
+  {
+   "id": "00-29",
+   "chapter": "00",
+   "start": 87.2083,
+   "start_tc": "1:27.20",
+   "duration": 6.2083,
+   "frames": 149,
+   "start_frame": 2093,
+   "source": {
+    "kind": "piece",
+    "name": "montage",
+    "in": 0.0,
+    "frames": 149,
+    "file": "out/gfx/r7/06_montage.mp4",
+    "gen": {
+     "tool": "montage"
+    },
+    "fixed": true,
+    "note_piece": "the flash-forward, ten shots"
+   },
+   "voice": [],
+   "row": "1:27 the montage, 0.5-0.8 s a shot",
+   "sound": "The score builds to the film's first peak"
+  },
+  {
+   "id": "00-30",
+   "chapter": "00",
+   "start": 93.4167,
+   "start_tc": "1:33.41",
+   "duration": 5.0,
+   "frames": 120,
+   "start_frame": 2242,
+   "source": {
+    "kind": "piece",
+    "name": "title",
+    "in": 0.0,
+    "frames": 120,
+    "file": "out/gfx/r7/07_title.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "title",
+     "plate": "frames/raw/void_stage/bags.png"
+    },
+    "fixed": false,
+    "note_piece": "THE PRIZE THAT BECAME A PRISON over the bags"
+   },
+   "voice": [],
+   "row": "1:37 void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON",
+   "sound": "The score decays to silence over 4 s; cut on the silence to chapter 1"
+  },
+  {
+   "id": "01-01",
+   "chapter": "01",
+   "start": 98.4167,
+   "start_tc": "1:38.41",
+   "duration": 5.7083,
+   "frames": 137,
+   "start_frame": 2362,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/chicago_night/wide.png",
+    "stage": "chicago_night",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.03
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 137,
+    "push": "in 3.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=01&title=The+winner&out=4.81",
+      "t0": 0.0,
+      "tin": 0.0
+     },
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=CHICAGO",
+      "t0": 1.836,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "01.01",
+     "text": "Before China, there was Chicago."
+    },
+    {
+     "id": "01.02",
+     "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel."
+    }
+   ],
+   "row": "chicago_night `wide` | CHICAGO on the wide",
+   "sound": "City through glass; the score warms (spare piano)"
+  },
+  {
+   "id": "01-02",
+   "chapter": "01",
+   "start": 104.125,
+   "start_tc": "1:44.12",
+   "duration": 3.4167,
+   "frames": 82,
+   "start_frame": 2499,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/chicago_night/window.png",
+    "stage": "chicago_night",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.03758
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 82,
+    "push": "in 3.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.02",
+     "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel."
+    }
+   ],
+   "row": "→ `profile` (*new*): Dawn at the glass",
+   "sound": "City through glass",
+   "sub": "chicago_night `profile` (new) has no plate: `window` (Dawn at the glass from behind) stands in; no mug."
+  },
+  {
+   "id": "01-03",
+   "chapter": "01",
+   "start": 107.5417,
+   "start_tc": "1:47.54",
+   "duration": 5.25,
+   "frames": 126,
+   "start_frame": 2581,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/chicago_night/suitcase.png",
+    "stage": "chicago_night",
+    "camera": "suitcase",
+    "zoom": [
+     1.0,
+     1.05775
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 126,
+    "push": "in 5.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.02",
+     "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel."
+    },
+    {
+     "id": "01.03",
+     "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen."
+    }
+   ],
+   "sound": "City through glass",
+   "change": "Added: \"and loved to travel\" on her packed case by the door (the apartment's own plate)."
+  },
+  {
+   "id": "01-04",
+   "chapter": "01",
+   "start": 112.7917,
+   "start_tc": "1:52.79",
+   "duration": 4.375,
+   "frames": 105,
+   "start_frame": 2707,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/overhead.png",
+    "stage": "evidence_table",
+    "camera": "overhead",
+    "zoom": [
+     1.0,
+     1.04812
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 105,
+    "push": "in 4.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.03",
+     "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen."
+    }
+   ],
+   "row": "evidence_table `motifs` (*new*)",
+   "sound": "Pencils, paper",
+   "sub": "evidence_table `motifs` (new) has no plate: `overhead` (papers and photographs under the lamp) stands in."
+  },
+  {
+   "id": "01-05",
+   "chapter": "01",
+   "start": 117.1667,
+   "start_tc": "1:57.16",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 2812,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/push.png",
+    "stage": "evidence_table",
+    "camera": "push",
+    "zoom": [
+     1.0,
+     1.05638
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 123,
+    "push": "in 5.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.03",
+     "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen."
+    }
+   ],
+   "row": "evidence_table `entries` (*new*)",
+   "sound": "Pencils, paper",
+   "sub": "evidence_table `entries` (new) has no plate: `push` (the lamp over loose papers) stands in."
+  },
+  {
+   "id": "01-06",
+   "chapter": "01",
+   "start": 122.2917,
+   "start_tc": "2:02.29",
+   "duration": 6.8333,
+   "frames": 164,
+   "start_frame": 2935,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/dining.png",
+    "stage": "home",
+    "camera": "dining",
+    "zoom": [
+     1.0,
+     1.07517
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 164,
+    "push": "in 7.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.04",
+     "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself."
+    }
+   ],
+   "row": "home `dining` warm, Gene seated at the head of the table, Tim beside",
+   "sound": "Low room, a clock",
+   "sub": "home `dining` exists only empty and in the cold blind light: Gene and Tim are not in it (decision 1's seated Gene is not built). It weakens the full-then-empty chair the film plants for chapter 8."
+  },
+  {
+   "id": "01-07",
+   "chapter": "01",
+   "start": 129.125,
+   "start_tc": "2:09.12",
+   "duration": 5.625,
+   "frames": 135,
+   "start_frame": 3099,
+   "source": {
+    "kind": "piece",
+    "name": "doc_gene",
+    "in": 0.0,
+    "frames": 135,
+    "file": null,
+    "gen": {
+     "tool": "doc",
+     "shot": "design/edit/shots/s1_gene.json",
+     "marks": [
+      {
+       "phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.",
+       "dur": 0.7,
+       "t": 0.943
+      }
+     ]
+    },
+    "fixed": false,
+    "override": true,
+    "note_piece": "S1 p. 2, Gene's and Tim's service lit"
+   },
+   "voice": [
+    {
+     "id": "01.04",
+     "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: Gene's service lit on Tim's 2024 statement (S1 p. 2) as the voice gives it (design/edit/shots/s1_gene.json), since no plate shows Gene."
+  },
+  {
+   "id": "01-07b",
+   "chapter": "01",
+   "start": 134.75,
+   "start_tc": "2:14.75",
+   "duration": 6.8333,
+   "frames": 164,
+   "start_frame": 3234,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/window.png",
+    "stage": "tim_desk",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.07517
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 164,
+    "push": "in 7.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.04",
+     "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself."
+    },
+    {
+     "id": "01.05",
+     "text": "A family that knew what danger looked like."
+    }
+   ],
+   "sound": "Low room, a clock",
+   "change": "Added: \"Tim had been a Chicago police officer himself. A family that knew what danger looked like.\" on Tim's lamp-lit room (chapter 7's set)."
+  },
+  {
+   "id": "01-08",
+   "chapter": "01",
+   "start": 141.5833,
+   "start_tc": "2:21.58",
+   "duration": 4.5417,
+   "frames": 109,
+   "start_frame": 3398,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/kitchen.png",
+    "stage": "home",
+    "camera": "kitchen",
+    "zoom": [
+     1.0,
+     1.04996
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 109,
+    "push": "in 5.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.06",
+     "text": "What arrived in Dawn's inbox didn't look like danger at all."
+    }
+   ],
+   "row": "home `kitchen`",
+   "sound": "One muted chime"
+  },
+  {
+   "id": "01-09",
+   "chapter": "01",
+   "start": 146.125,
+   "start_tc": "2:26.12",
+   "duration": 3.0833,
+   "frames": 74,
+   "start_frame": 3507,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/laptop.png",
+    "stage": "evidence_table",
+    "camera": "laptop",
+    "zoom": [
+     1.0,
+     1.03392
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 74,
+    "push": "in 3.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.07",
+     "text": "It looked like she had won."
+    }
+   ],
+   "row": "→ `kitchen_over` (*new*): the laptop screen",
+   "sound": "",
+   "sub": "home `kitchen_over` (new) has no plate: evidence_table `laptop` (the laptop glowing on a dark table) stands in."
+  },
+  {
+   "id": "01-10",
+   "chapter": "01",
+   "start": 149.2083,
+   "start_tc": "2:29.20",
+   "duration": 7.3333,
+   "frames": 176,
+   "start_frame": 3581,
+   "source": {
+    "kind": "piece",
+    "name": "email",
+    "in": 0.0,
+    "frames": 176,
+    "file": "out/gfx/r7/09_email.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/screen_email.json"
+    },
+    "fixed": true,
+    "note_piece": "the prize email; its line cycles the three accounts"
+   },
+   "voice": [
+    {
+     "id": "01.08",
+     "text": "The message said she'd won a contest. Accounts differ on exactly what the prize was: cash, travel, or both. But every version has the same shape. An unexpected win, and people ready to fly her across the world."
+    }
+   ],
+   "row": "evidence_table `screen`: the email | the prize wording (three versions)",
+   "sound": ""
+  },
+  {
+   "id": "01-11",
+   "chapter": "01",
+   "start": 156.5417,
+   "start_tc": "2:36.54",
+   "duration": 7.4167,
+   "frames": 178,
+   "start_frame": 3757,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/wide.png",
+    "stage": "departure_gate",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 178,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.08",
+     "text": "The message said she'd won a contest. Accounts differ on exactly what the prize was: cash, travel, or both. But every version has the same shape. An unexpected win, and people ready to fly her across the world."
+    }
+   ],
+   "sound": "A far tannoy",
+   "change": "Added: \"people ready to fly her across the world\" on the departure gate (the 7.5 s email cannot hold the whole 14 s line)."
+  },
+  {
+   "id": "01-12",
+   "chapter": "01",
+   "start": 163.9583,
+   "start_tc": "2:43.95",
+   "duration": 5.3333,
+   "frames": 128,
+   "start_frame": 3935,
+   "source": {
+    "kind": "piece",
+    "name": "search",
+    "in": 0.0,
+    "frames": 128,
+    "file": "out/gfx/r7/10_search.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/screen_search.json"
+    },
+    "fixed": true,
+    "note_piece": "the search, greeked results"
+   },
+   "voice": [
+    {
+     "id": "01.09",
+     "text": "Dawn didn't believe it. Not at first. Tim says she looked the organizers up online. What she found looked real enough that she sent her passport details."
+    }
+   ],
+   "row": "evidence_table `screen`: a search | greeked results",
+   "sound": "Keys"
+  },
+  {
+   "id": "01-13",
+   "chapter": "01",
+   "start": 169.2917,
+   "start_tc": "2:49.29",
+   "duration": 5.2917,
+   "frames": 127,
+   "start_frame": 4063,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/passport.png",
+    "stage": "evidence_table",
+    "camera": "passport",
+    "zoom": [
+     1.0,
+     1.05821
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 127,
+    "push": "in 5.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.09",
+     "text": "Dawn didn't believe it. Not at first. Tim says she looked the organizers up online. What she found looked real enough that she sent her passport details."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: \"she sent her passport details\" on the passport."
+  },
+  {
+   "id": "01-14",
+   "chapter": "01",
+   "start": 174.5833,
+   "start_tc": "2:54.58",
+   "duration": 3.375,
+   "frames": 81,
+   "start_frame": 4190,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/chicago_night/wide.png",
+    "stage": "chicago_night",
+    "camera": "wide",
+    "zoom": [
+     1.03713,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 81,
+    "push": "out 3.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.10",
+     "text": "Then the thing that ended her doubts arrived."
+    }
+   ],
+   "sound": "City through glass",
+   "change": "\"Then the thing that ended her doubts arrived\" back in her apartment (the wide, no type, a pull back)."
+  },
+  {
+   "id": "01-15",
+   "chapter": "01",
+   "start": 177.9583,
+   "start_tc": "2:57.95",
+   "duration": 5.25,
+   "frames": 126,
+   "start_frame": 4271,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/window.png",
+    "stage": "departure_gate",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.05775
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 126,
+    "push": "in 5.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.11",
+     "text": "The tickets."
+    },
+    {
+     "id": "01.12",
+     "text": "Real tickets to Hong Kong, paid for by someone else."
+    }
+   ],
+   "row": "departure_gate `window`",
+   "sound": "A boarding chime",
+   "sub": "evidence_table `tickets` (new) has no plate: \"The tickets. Real tickets to Hong Kong\" goes on the aircraft at the gate (`window`), the row the script puts last."
+  },
+  {
+   "id": "01-16",
+   "chapter": "01",
+   "start": 183.2083,
+   "start_tc": "3:03.20",
+   "duration": 7.2083,
+   "frames": 173,
+   "start_frame": 4397,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/aircraft_cabin/aisle.png",
+    "stage": "aircraft_cabin",
+    "camera": "aisle",
+    "zoom": [
+     1.0,
+     1.07929
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 173,
+    "push": "in 7.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.13",
+     "text": "That is what makes this story so hard to shake. The first part of the promise was true."
+    }
+   ],
+   "sound": "Engine hum, low",
+   "change": "Added: \"The first part of the promise was true\" in the aircraft cabin."
+  },
+  {
+   "id": "01-17",
+   "chapter": "01",
+   "start": 190.4167,
+   "start_tc": "3:10.41",
+   "duration": 6.0417,
+   "frames": 145,
+   "start_frame": 4570,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/purses.png",
+    "stage": "evidence_table",
+    "camera": "purses",
+    "zoom": [
+     1.04,
+     1.10912
+    ],
+    "centre": [
+     0.72,
+     0.45
+    ],
+    "frames": 145,
+    "push": "in 6.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "01.14",
+     "text": "Her family believes the deception was hidden in everything that came after."
+    }
+   ],
+   "sound": "The score thins; silence 1.5 s",
+   "change": "Added: the chapter ends on a flash-forward (the gift bags on the evidence table, no red) under \"the deception was hidden in everything that came after\"."
+  },
+  {
+   "id": "02-01",
+   "chapter": "02",
+   "start": 196.4583,
+   "start_tc": "3:16.45",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 4715,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/aircraft_cabin/window.png",
+    "stage": "aircraft_cabin",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.05638
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 123,
+    "push": "in 5.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=02&title=Eighteen+days&out=4.22",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "02.01",
+     "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered."
+    }
+   ],
+   "row": "aircraft_cabin `window`",
+   "sound": "Engine hum"
+  },
+  {
+   "id": "02-02",
+   "chapter": "02",
+   "start": 201.5833,
+   "start_tc": "3:21.58",
+   "duration": 3.0417,
+   "frames": 73,
+   "start_frame": 4838,
+   "source": {
+    "kind": "piece",
+    "name": "route_leg1",
+    "in": 2.2,
+    "frames": 73,
+    "file": "out/gfx/r7/11_route_leg1.mp4",
+    "gen": {
+     "tool": "canvas",
+     "page": "gfx/route.html",
+     "mode": "leg1"
+    },
+    "fixed": false,
+    "note_piece": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s"
+   },
+   "voice": [
+    {
+     "id": "02.01",
+     "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered."
+    }
+   ],
+   "row": "aircraft_cabin `over` | the route draws Chicago → Hong Kong; 9 DAYS",
+   "sound": "Engine hum",
+   "change": "The route map comes in on \"nine days in Hong Kong\" from 2.2 s into leg1, so HONG KONG / 9 DAYS land just after the voice; aircraft_cabin `over` is not used here (it plays in chapter 3)."
+  },
+  {
+   "id": "02-03",
+   "chapter": "02",
+   "start": 204.625,
+   "start_tc": "3:24.62",
+   "duration": 3.4583,
+   "frames": 83,
+   "start_frame": 4911,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/wide.png",
+    "stage": "hongkong_street",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.03804
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 83,
+    "push": "in 3.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.01",
+     "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered."
+    }
+   ],
+   "row": "hongkong_street `wide` | HONG KONG on the wide; 9 DAYS",
+   "sound": "Street, trams, rain on awnings",
+   "change": "No HONG KONG / 9 DAYS super on the street wide: the route map has just put both on screen 2 s earlier."
+  },
+  {
+   "id": "02-05",
+   "chapter": "02",
+   "start": 208.0833,
+   "start_tc": "3:28.08",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 4994,
+   "source": {
+    "kind": "piece",
+    "name": "route_mainland",
+    "in": 0.0,
+    "frames": 100,
+    "file": "out/gfx/r7/11_route_mainland.mp4",
+    "gen": {
+     "tool": "canvas",
+     "page": "gfx/route.html",
+     "mode": "mainland"
+    },
+    "fixed": false,
+    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s"
+   },
+   "voice": [
+    {
+     "id": "02.02",
+     "text": "Then they offered more: mainland China. With their help she got a visa, and spent about nine more days travelling through the country."
+    }
+   ],
+   "row": "train | ABOUT 9 MORE DAYS; the route extends into the mainland",
+   "sound": "Rails, far"
+  },
+  {
+   "id": "02-06",
+   "chapter": "02",
+   "start": 212.25,
+   "start_tc": "3:32.25",
+   "duration": 4.9167,
+   "frames": 118,
+   "start_frame": 5094,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/train/aisle.png",
+    "stage": "train",
+    "camera": "aisle",
+    "zoom": [
+     1.0,
+     1.05408
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 118,
+    "push": "in 5.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.02",
+     "text": "Then they offered more: mainland China. With their help she got a visa, and spent about nine more days travelling through the country."
+    }
+   ],
+   "row": "train `seat`, `aisle`",
+   "sound": "Rails"
+  },
+  {
+   "id": "02-07",
+   "chapter": "02",
+   "start": 217.1667,
+   "start_tc": "3:37.16",
+   "duration": 2.25,
+   "frames": 54,
+   "start_frame": 5212,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/train/seat.png",
+    "stage": "train",
+    "camera": "seat",
+    "zoom": [
+     1.0,
+     1.02475
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 54,
+    "push": "in 2.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.03",
+     "text": "Watch what those days did."
+    }
+   ],
+   "row": "train `seat`",
+   "sound": "Rails"
+  },
+  {
+   "id": "02-08",
+   "chapter": "02",
+   "start": 219.4167,
+   "start_tc": "3:39.41",
+   "duration": 1.5833,
+   "frames": 38,
+   "start_frame": 5266,
+   "source": {
+    "kind": "piece",
+    "name": "email",
+    "in": 4.0,
+    "frames": 38,
+    "file": "out/gfx/r7/09_email.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/screen_email.json"
+    },
+    "fixed": true,
+    "note_piece": "the prize email; its line cycles the three accounts"
+   },
+   "voice": [
+    {
+     "id": "02.04",
+     "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"The email became a ticket. The ticket became a city. And the city became a relationship\" cut on each noun: the email, the passport (the ticket stand-in), the city from the hotel, the two men with her."
+  },
+  {
+   "id": "02-09",
+   "chapter": "02",
+   "start": 221.0,
+   "start_tc": "3:41.00",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 5304,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/passport.png",
+    "stage": "evidence_table",
+    "camera": "passport",
+    "zoom": [
+     1.03,
+     1.05172
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.04",
+     "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them."
+    }
+   ],
+   "sound": "Paper"
+  },
+  {
+   "id": "02-10",
+   "chapter": "02",
+   "start": 222.9167,
+   "start_tc": "3:42.91",
+   "duration": 2.0,
+   "frames": 48,
+   "start_frame": 5350,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/window.png",
+    "stage": "hotel_room",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.022
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 48,
+    "push": "in 2.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.04",
+     "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them."
+    }
+   ],
+   "row": "hotel_room `window`",
+   "sound": "Air conditioner, the city far below"
+  },
+  {
+   "id": "02-11",
+   "chapter": "02",
+   "start": 224.9167,
+   "start_tc": "3:44.91",
+   "duration": 5.4583,
+   "frames": 131,
+   "start_frame": 5398,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/company.png",
+    "stage": "hongkong_street",
+    "camera": "company",
+    "zoom": [
+     1.0,
+     1.06004
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 131,
+    "push": "in 6.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.04",
+     "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them."
+    }
+   ],
+   "row": "hongkong_street `company` (*new*): Dawn walking with two men, from behind",
+   "sound": "Street"
+  },
+  {
+   "id": "02-12",
+   "chapter": "02",
+   "start": 230.375,
+   "start_tc": "3:50.37",
+   "duration": 5.6667,
+   "frames": 136,
+   "start_frame": 5529,
+   "source": {
+    "kind": "piece",
+    "name": "route_mainland",
+    "in": 4.3,
+    "frames": 136,
+    "file": "out/gfx/r7/11_route_mainland.mp4",
+    "gen": {
+     "tool": "canvas",
+     "page": "gfx/route.html",
+     "mode": "mainland"
+    },
+    "fixed": false,
+    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s"
+   },
+   "voice": [
+    {
+     "id": "02.05",
+     "text": "There was more to come. Australia, she was told. Another part of the prize."
+    }
+   ],
+   "row": "route map: the dashed line toward Australia",
+   "sound": "The travel pad"
+  },
+  {
+   "id": "02-13",
+   "chapter": "02",
+   "start": 236.0417,
+   "start_tc": "3:56.04",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 5665,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/train/rack.png",
+    "stage": "train",
+    "camera": "rack",
+    "zoom": [
+     1.0,
+     1.04583
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 100,
+    "push": "in 4.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.06",
+     "text": "For Dawn, the trip of her life was still going."
+    }
+   ],
+   "sound": "Rails",
+   "change": "Added: \"the trip of her life was still going\" on her case on the train's rack."
+  },
+  {
+   "id": "02-14",
+   "chapter": "02",
+   "start": 240.2083,
+   "start_tc": "4:00.20",
+   "duration": 5.5417,
+   "frames": 133,
+   "start_frame": 5765,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/window.png",
+    "stage": "hongkong_street",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.06096
+    ],
+    "centre": [
+     0.42,
+     0.55
+    ],
+    "frames": 133,
+    "push": "in 6.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "02.07",
+     "text": "But before she left China, they had one more gift for her."
+    }
+   ],
+   "sound": "The travel pad drops out on \"one more gift\"",
+   "change": "The chapter ends on the gift in the shop window (\"one more gift for her\"), a flash-forward, instead of the route map."
+  },
+  {
+   "id": "03-01",
+   "chapter": "03",
+   "start": 245.75,
+   "start_tc": "4:05.75",
+   "duration": 7.125,
+   "frames": 171,
+   "start_frame": 5898,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/accept.png",
+    "stage": "hotel_room",
+    "camera": "accept",
+    "zoom": [
+     1.0,
+     1.07838
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 171,
+    "push": "in 7.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=03&title=The+gift&out=5.00",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "03.01",
+     "text": "Just before the next leg of the trip, the organizers told Dawn she had won something else. Designer handbags."
+    }
+   ],
+   "row": "hotel_room `accept` (*new*): Dawn on the bed, the tote in her hands",
+   "sound": "A soft room"
+  },
+  {
+   "id": "03-02",
+   "chapter": "03",
+   "start": 252.875,
+   "start_tc": "4:12.87",
+   "duration": 2.7917,
+   "frames": 67,
+   "start_frame": 6069,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/overhead_pre.png",
+    "stage": "hotel_room",
+    "camera": "overhead_pre",
+    "zoom": [
+     1.0,
+     1.03071
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 67,
+    "push": "in 3.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.01",
+     "text": "Just before the next leg of the trip, the organizers told Dawn she had won something else. Designer handbags."
+    },
+    {
+     "id": "03.02",
+     "text": "She accepted them. Why wouldn't she? These were the people who had paid for weeks of her life."
+    }
+   ],
+   "sound": "A soft room",
+   "change": "Added: \"Designer handbags. She accepted them.\" over the gifts on the bed from above."
+  },
+  {
+   "id": "03-03",
+   "chapter": "03",
+   "start": 255.6667,
+   "start_tc": "4:15.66",
+   "duration": 5.9167,
+   "frames": 142,
+   "start_frame": 6136,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/aircraft_cabin/over.png",
+    "stage": "aircraft_cabin",
+    "camera": "over",
+    "zoom": [
+     1.0,
+     1.06508
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 142,
+    "push": "in 6.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.02",
+     "text": "She accepted them. Why wouldn't she? These were the people who had paid for weeks of her life."
+    }
+   ],
+   "sound": "Engine hum, far",
+   "change": "Added: \"the people who had paid for weeks of her life\" on the paid-for flight."
+  },
+  {
+   "id": "03-04",
+   "chapter": "03",
+   "start": 261.5833,
+   "start_tc": "4:21.58",
+   "duration": 4.2083,
+   "frames": 101,
+   "start_frame": 6278,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/overhead.png",
+    "stage": "hotel_room",
+    "camera": "overhead",
+    "zoom": [
+     1.0,
+     1.04629
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 101,
+    "push": "in 4.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.03",
+     "text": "But there was a problem. Her luggage was already full."
+    }
+   ],
+   "sound": "Zips",
+   "change": "Added: \"Her luggage was already full\" on the packed case from above."
+  },
+  {
+   "id": "03-05",
+   "chapter": "03",
+   "start": 265.7917,
+   "start_tc": "4:25.79",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 6379,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/leather_market/wide.png",
+    "stage": "leather_market",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.04217
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.04",
+     "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag."
+    }
+   ],
+   "row": "leather_market `wide`",
+   "sound": "Market, metal shutters"
+  },
+  {
+   "id": "03-06",
+   "chapter": "03",
+   "start": 269.625,
+   "start_tc": "4:29.62",
+   "duration": 2.2917,
+   "frames": 55,
+   "start_frame": 6471,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/leather_market/stall.png",
+    "stage": "leather_market",
+    "camera": "stall",
+    "zoom": [
+     1.0,
+     1.02521
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 55,
+    "push": "in 2.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.04",
+     "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag."
+    }
+   ],
+   "row": "leather_market `stall`",
+   "sound": "Market"
+  },
+  {
+   "id": "03-07",
+   "chapter": "03",
+   "start": 271.9167,
+   "start_tc": "4:31.91",
+   "duration": 2.75,
+   "frames": 66,
+   "start_frame": 6526,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/leather_market/purchase.png",
+    "stage": "leather_market",
+    "camera": "purchase",
+    "zoom": [
+     1.0,
+     1.03025
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 66,
+    "push": "in 3.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.04",
+     "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag."
+    }
+   ],
+   "row": "leather_market `purchase`",
+   "sound": "Market"
+  },
+  {
+   "id": "03-08",
+   "chapter": "03",
+   "start": 274.6667,
+   "start_tc": "4:34.66",
+   "duration": 3.375,
+   "frames": 81,
+   "start_frame": 6592,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hotel_room/pack.png",
+    "stage": "hotel_room",
+    "camera": "pack",
+    "zoom": [
+     1.0,
+     1.03713
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 81,
+    "push": "in 3.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.05",
+     "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name."
+    }
+   ],
+   "row": "hotel_room `pack`",
+   "sound": "Zips"
+  },
+  {
+   "id": "03-09",
+   "chapter": "03",
+   "start": 278.0417,
+   "start_tc": "4:38.04",
+   "duration": 2.375,
+   "frames": 57,
+   "start_frame": 6673,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/baggage_belt/overhead.png",
+    "stage": "baggage_belt",
+    "camera": "overhead",
+    "zoom": [
+     1.0,
+     1.02612
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 57,
+    "push": "in 2.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.05",
+     "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name."
+    }
+   ],
+   "sound": "Belt rollers",
+   "change": "Added: \"Both checked in her name\" on the two bags on the belt from above."
+  },
+  {
+   "id": "03-10",
+   "chapter": "03",
+   "start": 280.4167,
+   "start_tc": "4:40.41",
+   "duration": 3.7083,
+   "frames": 89,
+   "start_frame": 6730,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/checkin_hall/wide.png",
+    "stage": "checkin_hall",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.04079
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 89,
+    "push": "in 4.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.06",
+     "text": "And at the check-in desk, the scale said what you already know."
+    }
+   ],
+   "sound": "Terminal room tone",
+   "change": "Added: \"And at the check-in desk\" on the check-in wide (no type), so the scale lands with \"Overweight\"."
+  },
+  {
+   "id": "03-11",
+   "chapter": "03",
+   "start": 284.125,
+   "start_tc": "4:44.12",
+   "duration": 2.25,
+   "frames": 54,
+   "start_frame": 6819,
+   "source": {
+    "kind": "piece",
+    "name": "scale",
+    "in": 0.0,
+    "frames": 54,
+    "file": "out/gfx/r7/01_scale.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/scale_overweight.json"
+    },
+    "fixed": true,
+    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s"
+   },
+   "voice": [
+    {
+     "id": "03.06",
+     "text": "And at the check-in desk, the scale said what you already know."
+    },
+    {
+     "id": "03.07",
+     "text": "Overweight."
+    }
+   ],
+   "row": "checkin_hall `scale` (the cold open's first shot, matched) | OVERWEIGHT",
+   "sound": "The same beep as 0:00"
+  },
+  {
+   "id": "03-12",
+   "chapter": "03",
+   "start": 286.375,
+   "start_tc": "4:46.37",
+   "duration": 1.9167,
+   "frames": 46,
+   "start_frame": 6873,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/checkin_hall/shoulder.png",
+    "stage": "checkin_hall",
+    "camera": "shoulder",
+    "zoom": [
+     1.0,
+     1.02108
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 46,
+    "push": "in 2.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.08",
+     "text": "She paid the fee."
+    }
+   ],
+   "sound": "Paper on laminate",
+   "change": "Added: \"She paid the fee\" on the cold open's own shot of her hand paying (the plant paid on screen)."
+  },
+  {
+   "id": "03-13",
+   "chapter": "03",
+   "start": 288.2917,
+   "start_tc": "4:48.29",
+   "duration": 8.875,
+   "frames": 213,
+   "start_frame": 6919,
+   "source": {
+    "kind": "piece",
+    "name": "doc_fee",
+    "in": 0.0,
+    "frames": 213,
+    "file": null,
+    "gen": {
+     "tool": "doc",
+     "shot": "design/edit/shots/s1_fee.json",
+     "marks": [
+      {
+       "phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit",
+       "dur": 0.8,
+       "t": 1.011
+      }
+     ]
+    },
+    "fixed": false,
+    "override": true,
+    "note_piece": "S1 p. 1, the excess-weight fee line lit"
+   },
+   "voice": [
+    {
+     "id": "03.09",
+     "text": "Tim put that detail in his testimony for a reason. To him, it shows how ordinary this journey felt to his sister."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: \"Tim put that detail in his testimony\" over the testimony itself, the fee line lit (S1 p. 1, design/edit/shots/s1_fee.json)."
+  },
+  {
+   "id": "03-14",
+   "chapter": "03",
+   "start": 297.1667,
+   "start_tc": "4:57.16",
+   "duration": 4.7083,
+   "frames": 113,
+   "start_frame": 7132,
+   "source": {
+    "kind": "piece",
+    "name": "trace",
+    "in": 0.0,
+    "frames": 113,
+    "file": "out/gfx/r7/12_trace.mp4",
+    "gen": {
+     "tool": "seam",
+     "mode": "trace",
+     "bg": "frames/graded/evidence_table/purses.jpg"
+    },
+    "fixed": false,
+    "note_piece": "the red trace along the tote's seam, drawn over 1.8 s"
+   },
+   "voice": [
+    {
+     "id": "03.10",
+     "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name."
+    }
+   ],
+   "row": "evidence_table `purses`: the seam | the red line traces the seam in full",
+   "sound": "A small metallic click as it closes"
+  },
+  {
+   "id": "03-15",
+   "chapter": "03",
+   "start": 301.875,
+   "start_tc": "5:01.87",
+   "duration": 4.25,
+   "frames": 102,
+   "start_frame": 7245,
+   "source": {
+    "kind": "piece",
+    "name": "cutaway",
+    "in": 0.0,
+    "frames": 102,
+    "file": "out/gfx/r7/13_cutaway.mp4",
+    "gen": {
+     "tool": "seam",
+     "mode": "cutaway"
+    },
+    "fixed": false,
+    "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s"
+   },
+   "voice": [
+    {
+     "id": "03.10",
+     "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name."
+    }
+   ],
+   "row": "then the cut-away closes (seam graphic)",
+   "sound": "A small metallic click as it closes"
+  },
+  {
+   "id": "03-16",
+   "chapter": "03",
+   "start": 306.125,
+   "start_tc": "5:06.12",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 7347,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/baggage_belt/curtain.png",
+    "stage": "baggage_belt",
+    "camera": "curtain",
+    "zoom": [
+     1.0,
+     1.03575
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "03.10",
+     "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name."
+    }
+   ],
+   "row": "baggage_belt `curtain`, `belt`",
+   "sound": "Belt rollers; the pulse returns",
+   "change": "The seam and cut-away move to the last line (\"whatever was hidden in those linings\") so they land on the words; `belt` already played in the cold open, so `curtain` ends the chapter."
+  },
+  {
+   "id": "04-01",
+   "chapter": "04",
+   "start": 309.375,
+   "start_tc": "5:09.37",
+   "duration": 4.8333,
+   "frames": 116,
+   "start_frame": 7425,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/seated_called.png",
+    "stage": "departure_gate",
+    "camera": "seated_called",
+    "zoom": [
+     1.0,
+     1.04
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 116,
+    "push": "in 4.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=04&title=Yes&out=3.93",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "04.01",
+     "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags."
+    }
+   ],
+   "row": "departure_gate `seated_called` (the cold open's shot, now held longer)",
+   "sound": "The tannoy, muffled"
+  },
+  {
+   "id": "04-02",
+   "chapter": "04",
+   "start": 314.2083,
+   "start_tc": "5:14.20",
+   "duration": 2.5417,
+   "frames": 61,
+   "start_frame": 7541,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/enter.png",
+    "stage": "inspection_room",
+    "camera": "enter",
+    "zoom": [
+     1.0,
+     1.02796
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 61,
+    "push": "in 2.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.01",
+     "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags."
+    }
+   ],
+   "row": "inspection_room `enter`",
+   "sound": "Door"
+  },
+  {
+   "id": "04-03",
+   "chapter": "04",
+   "start": 316.75,
+   "start_tc": "5:16.75",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 7602,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/wide_pre.png",
+    "stage": "inspection_room",
+    "camera": "wide_pre",
+    "zoom": [
+     1.0,
+     1.0275
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 60,
+    "push": "in 2.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.01",
+     "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags."
+    }
+   ],
+   "row": "inspection_room `wide`",
+   "sound": "Door"
+  },
+  {
+   "id": "04-04",
+   "chapter": "04",
+   "start": 319.25,
+   "start_tc": "5:19.25",
+   "duration": 3.0,
+   "frames": 72,
+   "start_frame": 7662,
+   "source": {
+    "kind": "piece",
+    "name": "doc_yes",
+    "in": 0.0,
+    "frames": 72,
+    "file": "out/gfx/r7/14_doc.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/s1_yes.json"
+    },
+    "fixed": false,
+    "note_piece": "S1 p. 1, the first 'yes' line lit at 1.0 s"
+   },
+   "voice": [
+    {
+     "id": "04.02",
+     "text": "The officers ask whether they are hers."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: \"The officers ask whether they are hers\" on Tim's statement (S1 p. 1, reel 7's `s1_yes`), the line \"to which she responded 'yes'\" lighting just before the YES."
+  },
+  {
+   "id": "04-05",
+   "chapter": "04",
+   "start": 322.25,
+   "start_tc": "5:22.25",
+   "duration": 2.5,
+   "frames": 60,
+   "start_frame": 7734,
+   "source": {
+    "kind": "piece",
+    "name": "yes",
+    "in": 0.0,
+    "frames": 60,
+    "file": "out/gfx/r7/03_yes.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "yes",
+     "plate": "frames/raw/inspection_room/match.png"
+    },
+    "fixed": false,
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+   },
+   "voice": [
+    {
+     "id": "04.03",
+     "text": "Yes."
+    },
+    {
+     "id": "04.04",
+     "text": "They ask again."
+    }
+   ],
+   "row": "inspection_room `match` | YES, YES (the cold open's type, same place)",
+   "sound": ""
+  },
+  {
+   "id": "04-06",
+   "chapter": "04",
+   "start": 324.75,
+   "start_tc": "5:24.75",
+   "duration": 3.5833,
+   "frames": 86,
+   "start_frame": 7794,
+   "source": {
+    "kind": "piece",
+    "name": "yes",
+    "in": 3.0,
+    "frames": 86,
+    "file": "out/gfx/r7/03_yes.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "yes",
+     "plate": "frames/raw/inspection_room/match.png"
+    },
+    "fixed": false,
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+   },
+   "voice": [
+    {
+     "id": "04.05",
+     "text": "Yes."
+    },
+    {
+     "id": "04.06",
+     "text": "She has no reason to say anything else. They are her bags."
+    }
+   ],
+   "row": "(the second YES)",
+   "sound": ""
+  },
+  {
+   "id": "04-07",
+   "chapter": "04",
+   "start": 328.3333,
+   "start_tc": "5:28.33",
+   "duration": 2.4167,
+   "frames": 58,
+   "start_frame": 7880,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/dawn_close.png",
+    "stage": "inspection_room",
+    "camera": "dawn_close",
+    "zoom": [
+     1.0,
+     1.02658
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 58,
+    "push": "in 2.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.06",
+     "text": "She has no reason to say anything else. They are her bags."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"They are her bags.\" on Dawn."
+  },
+  {
+   "id": "04-08",
+   "chapter": "04",
+   "start": 330.75,
+   "start_tc": "5:30.75",
+   "duration": 4.0833,
+   "frames": 98,
+   "start_frame": 7938,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/handbags.png",
+    "stage": "inspection_room",
+    "camera": "handbags",
+    "zoom": [
+     1.0,
+     1.04492
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 98,
+    "push": "in 4.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.07",
+     "text": "Then authorities find what is inside the linings."
+    }
+   ],
+   "row": "inspection_room `handbags`, the officer's hand on the tote",
+   "sound": "Hard stop"
+  },
+  {
+   "id": "04-09",
+   "chapter": "04",
+   "start": 334.8333,
+   "start_tc": "5:34.83",
+   "duration": 3.4167,
+   "frames": 82,
+   "start_frame": 8036,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/two_shot.png",
+    "stage": "inspection_room",
+    "camera": "two_shot",
+    "zoom": [
+     1.0,
+     1.03758
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 82,
+    "push": "in 3.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.08",
+     "text": "Think about the two conversations happening in that room. Dawn believes she is identifying her luggage. The officers are investigating drug smuggling."
+    }
+   ],
+   "sound": "Silence, then room tone",
+   "change": "Added: \"the two conversations happening in that room\" on the two-shot."
+  },
+  {
+   "id": "04-10",
+   "chapter": "04",
+   "start": 338.25,
+   "start_tc": "5:38.25",
+   "duration": 5.4583,
+   "frames": 131,
+   "start_frame": 8118,
+   "source": {
+    "kind": "piece",
+    "name": "split",
+    "in": 0.0,
+    "frames": 131,
+    "file": null,
+    "gen": {
+     "tool": "split",
+     "cut": 2.392
+    },
+    "fixed": false,
+    "override": true,
+    "note_piece": "the split frame, the right half cutting to the cut-away"
+   },
+   "voice": [
+    {
+     "id": "04.08",
+     "text": "Think about the two conversations happening in that room. Dawn believes she is identifying her luggage. The officers are investigating drug smuggling."
+    }
+   ],
+   "row": "Split frame: evidence_table `purses` left, inspection_room `handbags` right, the cut-away reopening on the right",
+   "sound": "Silence, then room tone",
+   "note": "Re-rendered at the shot's length with the right half's cut on \"The officers are investigating\"."
+  },
+  {
+   "id": "04-11",
+   "chapter": "04",
+   "start": 343.7083,
+   "start_tc": "5:43.70",
+   "duration": 1.1667,
+   "frames": 28,
+   "start_frame": 8249,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/empty_ch05.png",
+    "stage": "inspection_room",
+    "camera": "empty_ch05",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 28,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.09",
+     "text": "The same room. The same bags. The same word. Two different meanings."
+    }
+   ],
+   "row": "inspection_room `empty` (Ch 05 layout)",
+   "sound": "Room tone"
+  },
+  {
+   "id": "04-12",
+   "chapter": "04",
+   "start": 344.875,
+   "start_tc": "5:44.87",
+   "duration": 2.3333,
+   "frames": 56,
+   "start_frame": 8277,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/match.png",
+    "stage": "inspection_room",
+    "camera": "match",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 56,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "yes",
+      "look": "B",
+      "t0": 1.165,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "04.09",
+     "text": "The same room. The same bags. The same word. Two different meanings."
+    }
+   ],
+   "sound": "",
+   "change": "\"The same room. The same bags. The same word. Two different meanings.\" cut on each phrase: the room, the bags (YES landing on \"The same word\"), then the split frame again."
+  },
+  {
+   "id": "04-13",
+   "chapter": "04",
+   "start": 347.2083,
+   "start_tc": "5:47.20",
+   "duration": 1.9583,
+   "frames": 47,
+   "start_frame": 8333,
+   "source": {
+    "kind": "piece",
+    "name": "split_r7",
+    "in": 3.2,
+    "frames": 47,
+    "file": "out/gfx/r7/15_splitframe.mp4",
+    "gen": {
+     "tool": "split",
+     "cut": 2.2
+    },
+    "fixed": true,
+    "note_piece": "reel 7's split frame (cut at 2.2 s), the cut-away held open"
+   },
+   "voice": [
+    {
+     "id": "04.09",
+     "text": "The same room. The same bags. The same word. Two different meanings."
+    }
+   ],
+   "sound": ""
+  },
+  {
+   "id": "04-14",
+   "chapter": "04",
+   "start": 349.1667,
+   "start_tc": "5:49.16",
+   "duration": 2.1667,
+   "frames": 52,
+   "start_frame": 8380,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/tag.png",
+    "stage": "inspection_room",
+    "camera": "tag",
+    "zoom": [
+     1.0,
+     1.02383
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 52,
+    "push": "in 2.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.10",
+     "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to."
+    }
+   ],
+   "sound": "Room tone",
+   "change": "Added: \"One detail doesn't fit neatly\" on the luggage tag (where a destination would be)."
+  },
+  {
+   "id": "04-15",
+   "chapter": "04",
+   "start": 351.3333,
+   "start_tc": "5:51.33",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 8432,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/departure_gate/window.png",
+    "stage": "departure_gate",
+    "camera": "window",
+    "zoom": [
+     1.03,
+     1.07343
+    ],
+    "centre": [
+     0.4,
+     0.5
+    ],
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.10",
+     "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to."
+    }
+   ],
+   "sound": "A far jet",
+   "change": "Added: \"flying on to Australia\" on the aircraft at the gate."
+  },
+  {
+   "id": "04-16",
+   "chapter": "04",
+   "start": 355.1667,
+   "start_tc": "5:55.16",
+   "duration": 4.5417,
+   "frames": 109,
+   "start_frame": 8524,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/page.png",
+    "stage": "evidence_table",
+    "camera": "page",
+    "zoom": [
+     1.0,
+     1.04996
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 109,
+    "push": "in 5.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.10",
+     "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: \"a journalist saw a court account\" on a blank sheet: the account is not shown because we have not seen it."
+  },
+  {
+   "id": "04-17",
+   "chapter": "04",
+   "start": 359.7083,
+   "start_tc": "5:59.70",
+   "duration": 8.0,
+   "frames": 192,
+   "start_frame": 8633,
+   "source": {
+    "kind": "piece",
+    "name": "route_split",
+    "in": 0.0,
+    "frames": 192,
+    "file": "out/gfx/r7/11_route_split.mp4",
+    "gen": {
+     "tool": "canvas",
+     "page": "gfx/route.html",
+     "mode": "split"
+    },
+    "fixed": false,
+    "note_piece": "Australia and Qingdao, dashed, labels at 2.4 s"
+   },
+   "voice": [
+    {
+     "id": "04.10",
+     "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to."
+    }
+   ],
+   "row": "route map: two dashed lines from the mainland, one to Australia and one to Qingdao, neither resolved",
+   "sound": "",
+   "change": "The map comes in on \"a different flight ... to Qingdao\" so the two lines draw as the voice names them."
+  },
+  {
+   "id": "04-18",
+   "chapter": "04",
+   "start": 367.7083,
+   "start_tc": "6:07.70",
+   "duration": 5.5,
+   "frames": 132,
+   "start_frame": 8825,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/overhead.png",
+    "stage": "inspection_room",
+    "camera": "overhead",
+    "zoom": [
+     1.0,
+     1.0605
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 132,
+    "push": "in 6.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.11",
+     "text": "What isn't in dispute is this: drugs were found in luggage she had checked. And in 2014, Dawn Hunt was arrested in China."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"drugs were found in luggage she had checked\" on the opened bags from above."
+  },
+  {
+   "id": "04-19",
+   "chapter": "04",
+   "start": 373.2083,
+   "start_tc": "6:13.20",
+   "duration": 3.75,
+   "frames": 90,
+   "start_frame": 8957,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/corridor.png",
+    "stage": "detention_corridor",
+    "camera": "corridor",
+    "zoom": [
+     1.0,
+     1.04125
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 90,
+    "push": "in 4.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=2014",
+      "t0": 0.552,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "04.11",
+     "text": "What isn't in dispute is this: drugs were found in luggage she had checked. And in 2014, Dawn Hunt was arrested in China."
+    }
+   ],
+   "row": "detention_corridor `corridor` | 2014",
+   "sound": "A door closes far down the corridor"
+  },
+  {
+   "id": "04-20",
+   "chapter": "04",
+   "start": 376.9583,
+   "start_tc": "6:16.95",
+   "duration": 5.75,
+   "frames": 138,
+   "start_frame": 9047,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/empty.png",
+    "stage": "inspection_room",
+    "camera": "empty",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 138,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "04.12",
+     "text": "The trip ended in that room. The case was only beginning."
+    }
+   ],
+   "sound": "Room tone, then silence",
+   "change": "\"The trip ended in that room\" back in the empty inspection room, to end the chapter."
+  },
+  {
+   "id": "05-01",
+   "chapter": "05",
+   "start": 382.7083,
+   "start_tc": "6:22.70",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 9185,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/door.png",
+    "stage": "detention_corridor",
+    "camera": "door",
+    "zoom": [
+     1.0,
+     1.05638
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 123,
+    "push": "in 5.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=05&title=Three+years&out=4.22",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "05.01",
+     "text": "For Dawn, the airport wasn't the end of a bad trip. It was the first day of a detention that would last about three years before any verdict."
+    }
+   ],
+   "row": "detention_corridor `door`",
+   "sound": "Fluorescent hum"
+  },
+  {
+   "id": "05-02",
+   "chapter": "05",
+   "start": 387.8333,
+   "start_tc": "6:27.83",
+   "duration": 7.0833,
+   "frames": 170,
+   "start_frame": 9308,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/chair.png",
+    "stage": "detention_corridor",
+    "camera": "chair",
+    "zoom": [
+     1.0,
+     1.07792
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 170,
+    "push": "in 7.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.01",
+     "text": "For Dawn, the airport wasn't the end of a bad trip. It was the first day of a detention that would last about three years before any verdict."
+    }
+   ],
+   "row": "detention_corridor `chair`",
+   "sound": "Fluorescent hum"
+  },
+  {
+   "id": "05-03",
+   "chapter": "05",
+   "start": 394.9167,
+   "start_tc": "6:34.91",
+   "duration": 9.375,
+   "frames": 225,
+   "start_frame": 9478,
+   "source": {
+    "kind": "piece",
+    "name": "doc_emails",
+    "in": 0.0,
+    "frames": 225,
+    "file": null,
+    "gen": {
+     "tool": "doc",
+     "shot": "design/edit/shots/s1_emails.json",
+     "marks": [
+      {
+       "phrase": "answered all their questions, produced the emails she received from the organizers",
+       "dur": 1.2,
+       "t": 3.13
+      }
+     ]
+    },
+    "fixed": false,
+    "override": true,
+    "note_piece": "S1 p. 2, the emails line lit"
+   },
+   "voice": [
+    {
+     "id": "05.02",
+     "text": "Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the emails she had received from the organizers. The same emails that had started it all."
+    }
+   ],
+   "sound": "Paper",
+   "change": "Added: \"she answered investigators' questions, and gave them the emails\" lit on Tim's statement (S1 p. 2, design/edit/shots/s1_emails.json): the emails planted in chapter 1, paid on screen."
+  },
+  {
+   "id": "05-04",
+   "chapter": "05",
+   "start": 404.2917,
+   "start_tc": "6:44.29",
+   "duration": 4.0,
+   "frames": 96,
+   "start_frame": 9703,
+   "source": {
+    "kind": "piece",
+    "name": "email",
+    "in": 1.5,
+    "frames": 96,
+    "file": "out/gfx/r7/09_email.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/screen_email.json"
+    },
+    "fixed": true,
+    "note_piece": "the prize email; its line cycles the three accounts"
+   },
+   "voice": [
+    {
+     "id": "05.02",
+     "text": "Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the emails she had received from the organizers. The same emails that had started it all."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"The same emails that had started it all\" on the prize email again."
+  },
+  {
+   "id": "05-05",
+   "chapter": "05",
+   "start": 408.2917,
+   "start_tc": "6:48.29",
+   "duration": 1.5417,
+   "frames": 37,
+   "start_frame": 9799,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/envelope.png",
+    "stage": "detention_corridor",
+    "camera": "envelope",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 37,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.03",
+     "text": "It wasn't enough."
+    }
+   ],
+   "row": "detention_corridor `envelope_high`",
+   "sound": "Paper",
+   "sub": "detention_corridor `envelope_high` has no plate: `envelope` stands in."
+  },
+  {
+   "id": "05-06",
+   "chapter": "05",
+   "start": 409.8333,
+   "start_tc": "6:49.83",
+   "duration": 2.375,
+   "frames": 57,
+   "start_frame": 9836,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/door.png",
+    "stage": "detention_corridor",
+    "camera": "door",
+    "zoom": [
+     1.25,
+     1.28266
+    ],
+    "centre": [
+     0.5,
+     0.42
+    ],
+    "frames": 57,
+    "push": "in 2.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.04",
+     "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us."
+    }
+   ],
+   "sound": "Fluorescent hum",
+   "sub": "A closer framing of `door` (1.25x of the plate) for \"something worse\"; no new picture."
+  },
+  {
+   "id": "05-07",
+   "chapter": "05",
+   "start": 412.2083,
+   "start_tc": "6:52.20",
+   "duration": 7.4167,
+   "frames": 178,
+   "start_frame": 9893,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/hands.png",
+    "stage": "hearing_room",
+    "camera": "hands",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 178,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.04",
+     "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us."
+    }
+   ],
+   "sound": "A large quiet room",
+   "change": "The allegation is carried by Tim's hands on his testimony and the empty dais, never by the detention facility: nothing of the event is shown."
+  },
+  {
+   "id": "05-08",
+   "chapter": "05",
+   "start": 419.625,
+   "start_tc": "6:59.62",
+   "duration": 6.3333,
+   "frames": 152,
+   "start_frame": 10071,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/dais.png",
+    "stage": "hearing_room",
+    "camera": "dais",
+    "zoom": [
+     1.0,
+     1.06967
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 152,
+    "push": "in 7.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.04",
+     "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us."
+    }
+   ],
+   "sound": "A large quiet room"
+  },
+  {
+   "id": "05-09",
+   "chapter": "05",
+   "start": 425.9583,
+   "start_tc": "7:05.95",
+   "duration": 11.0,
+   "frames": 264,
+   "start_frame": 10223,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.08,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 264,
+    "push": "out 7.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.05",
+     "text": "We are not going to recreate it. It is serious enough to state plainly, and Dawn has already lost control of so much of her own story."
+    }
+   ],
+   "sound": "A clock, very low",
+   "change": "Added: \"Dawn has already lost control of so much of her own story\" on Dawn alone in the light, a slow pull back."
+  },
+  {
+   "id": "05-10",
+   "chapter": "05",
+   "start": 436.9583,
+   "start_tc": "7:16.95",
+   "duration": 7.4583,
+   "frames": 179,
+   "start_frame": 10487,
+   "source": {
+    "kind": "piece",
+    "name": "calendar",
+    "in": 0.0,
+    "frames": 179,
+    "file": "out/gfx/r7/16_calendar.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "calendar",
+     "plate": "frames/raw/void_stage/bags.png"
+    },
+    "fixed": false,
+    "note_piece": "2014 → 2017 beside the bags, 1.7 s a year"
+   },
+   "voice": [
+    {
+     "id": "05.06",
+     "text": "For three years, her family waited for a trial to correct what they believed was a terrible mistake."
+    }
+   ],
+   "row": "void_stage `pool`: the empty circle of light, slow push | the calendar rolls 2014 → 2017",
+   "sound": "A clock, very low",
+   "sub": "void_stage `pool` (the empty circle) has no plate: reel 7's calendar is over void_stage `bags` in the beam."
+  },
+  {
+   "id": "05-11",
+   "chapter": "05",
+   "start": 444.4167,
+   "start_tc": "7:24.41",
+   "duration": 5.0833,
+   "frames": 122,
+   "start_frame": 10666,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/corridor.png",
+    "stage": "detention_corridor",
+    "camera": "corridor",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 122,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "05.07",
+     "text": "The verdict was worse than anything they had feared."
+    }
+   ],
+   "row": "detention_corridor `corridor`, locked, long",
+   "sound": "The clock stops on \"worse\""
+  },
+  {
+   "id": "06-01",
+   "chapter": "06",
+   "start": 449.5,
+   "start_tc": "7:29.50",
+   "duration": 3.6667,
+   "frames": 88,
+   "start_frame": 10788,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/courtroom/wide.png",
+    "stage": "courtroom",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 88,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=06&title=The+sentence&out=2.77",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "06.01",
+     "text": "2017."
+    }
+   ],
+   "row": "courtroom `wide`, locked | 2017",
+   "sound": "Room tone, no gavel",
+   "change": "No 2017 super on the courtroom: the voice says \"2017.\" and the sentence card brings 2017 on the next shot, a second later."
+  },
+  {
+   "id": "06-02",
+   "chapter": "06",
+   "start": 453.1667,
+   "start_tc": "7:33.16",
+   "duration": 4.25,
+   "frames": 102,
+   "start_frame": 10876,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.0,
+     1.04675
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 102,
+    "push": "in 4.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "death_2017",
+      "look": "B",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "06.02",
+     "text": "A death sentence, with a two-year reprieve."
+    },
+    {
+     "id": "06.03",
+     "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison."
+    }
+   ],
+   "row": "void_stage `dawn_close` (*new*), uniform, head bowed | DEATH SENTENCE WITH TWO-YEAR REPRIEVE",
+   "sound": "One low impact at \"death sentence\"",
+   "sub": "void_stage `dawn_close` (new) has no plate: `dawn` (standing in the pool) stands in."
+  },
+  {
+   "id": "06-03",
+   "chapter": "06",
+   "start": 457.4167,
+   "start_tc": "7:37.41",
+   "duration": 3.6667,
+   "frames": 88,
+   "start_frame": 10978,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/courtroom/dock.png",
+    "stage": "courtroom",
+    "camera": "dock",
+    "zoom": [
+     1.0,
+     1.04033
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 88,
+    "push": "in 4.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.03",
+     "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison."
+    }
+   ],
+   "row": "courtroom `dock`: her hands on the rail",
+   "sound": "Room tone"
+  },
+  {
+   "id": "06-04",
+   "chapter": "06",
+   "start": 461.0833,
+   "start_tc": "7:41.08",
+   "duration": 2.0417,
+   "frames": 49,
+   "start_frame": 11066,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn_high.png",
+    "stage": "void_stage",
+    "camera": "dawn_high",
+    "zoom": [
+     1.0,
+     1.02246
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 49,
+    "push": "in 2.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.03",
+     "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison."
+    }
+   ],
+   "sound": "Room tone",
+   "change": "Added: \"a suspended death sentence\" on the high view of her in the light."
+  },
+  {
+   "id": "06-05",
+   "chapter": "06",
+   "start": 463.125,
+   "start_tc": "7:43.12",
+   "duration": 4.375,
+   "frames": 105,
+   "start_frame": 11115,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.0,
+     1.04812
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 105,
+    "push": "in 4.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "sentence_life",
+      "look": "B",
+      "t0": 0.0,
+      "tin": 1.4
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "06.03",
+     "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison."
+    }
+   ],
+   "row": "… which changes in place to LIFE IN PRISON",
+   "sound": "Nothing at \"life\"",
+   "note": "The card is already up when the shot opens; the change to LIFE IN PRISON lands on \"life in prison\"."
+  },
+  {
+   "id": "06-06",
+   "chapter": "06",
+   "start": 467.5,
+   "start_tc": "7:47.50",
+   "duration": 2.625,
+   "frames": 63,
+   "start_frame": 11220,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/wall.png",
+    "stage": "prison_exterior",
+    "camera": "wall",
+    "zoom": [
+     1.0,
+     1.02887
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 63,
+    "push": "in 2.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.04",
+     "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected."
+    }
+   ],
+   "sound": "Rain on concrete",
+   "change": "Added: \"China sees the case as closed\" on the prison wall."
+  },
+  {
+   "id": "06-07",
+   "chapter": "06",
+   "start": 470.125,
+   "start_tc": "7:50.12",
+   "duration": 7.6667,
+   "frames": 184,
+   "start_frame": 11283,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/pair.png",
+    "stage": "evidence_table",
+    "camera": "pair",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 184,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.04",
+     "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected."
+    }
+   ],
+   "row": "evidence_table `pair`: the ministry's words on the left sheet, word for word from Reuters | otherwise the sheet stays blank",
+   "sound": "Paper",
+   "note": "Blank: no verbatim Reuters quote is in the archive, so the sheets stay blank (the script's rule)."
+  },
+  {
+   "id": "06-08",
+   "chapter": "06",
+   "start": 477.7917,
+   "start_tc": "7:57.79",
+   "duration": 5.625,
+   "frames": 135,
+   "start_frame": 11467,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/tower.png",
+    "stage": "prison_exterior",
+    "camera": "tower",
+    "zoom": [
+     1.0,
+     1.06187
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 135,
+    "push": "in 6.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.04",
+     "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected."
+    }
+   ],
+   "sound": "Rain, wind",
+   "change": "Added: \"their legal rights and health were being protected\" on the prison tower."
+  },
+  {
+   "id": "06-09",
+   "chapter": "06",
+   "start": 483.4167,
+   "start_tc": "8:03.41",
+   "duration": 5.2083,
+   "frames": 125,
+   "start_frame": 11602,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/company.png",
+    "stage": "hongkong_street",
+    "camera": "company",
+    "zoom": [
+     1.0,
+     1.05729
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 125,
+    "push": "in 5.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.05",
+     "text": "Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it."
+    }
+   ],
+   "sound": "Street, far",
+   "change": "Added: \"Her family sees a scam victim\" on the organisers walking with her."
+  },
+  {
+   "id": "06-10",
+   "chapter": "06",
+   "start": 488.625,
+   "start_tc": "8:08.62",
+   "duration": 5.1667,
+   "frames": 124,
+   "start_frame": 11727,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/baggage_belt/belt.png",
+    "stage": "baggage_belt",
+    "camera": "belt",
+    "zoom": [
+     1.03,
+     1.08854
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 124,
+    "push": "in 5.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.05",
+     "text": "Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it."
+    }
+   ],
+   "sound": "Belt rollers",
+   "change": "Added: \"someone who carries drugs for traffickers without knowing it\" on the bags on the belt."
+  },
+  {
+   "id": "06-11",
+   "chapter": "06",
+   "start": 493.7917,
+   "start_tc": "8:13.79",
+   "duration": 7.7083,
+   "frames": 185,
+   "start_frame": 11851,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/courtroom/bench.png",
+    "stage": "courtroom",
+    "camera": "bench",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 185,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.06",
+     "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway."
+    }
+   ],
+   "row": "courtroom `bench`",
+   "sound": "Room tone"
+  },
+  {
+   "id": "06-12",
+   "chapter": "06",
+   "start": 501.5,
+   "start_tc": "8:21.50",
+   "duration": 3.8333,
+   "frames": 92,
+   "start_frame": 12036,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/bags.png",
+    "stage": "void_stage",
+    "camera": "bags",
+    "zoom": [
+     1.0,
+     1.04217
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 92,
+    "push": "in 4.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.06",
+     "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway."
+    }
+   ],
+   "row": "void_stage `divide` (*new*): the bags in one pool",
+   "sound": "The score thins to one held note",
+   "sub": "void_stage `divide` (new) has no plate: a cut from the bags in their pool to Dawn in hers stands in for the two pools in one frame."
+  },
+  {
+   "id": "06-13",
+   "chapter": "06",
+   "start": 505.3333,
+   "start_tc": "8:25.33",
+   "duration": 3.5833,
+   "frames": 86,
+   "start_frame": 12128,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.0,
+     1.03942
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 86,
+    "push": "in 3.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.06",
+     "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway."
+    }
+   ],
+   "row": "… Dawn in the other",
+   "sound": "The score thins to one held note"
+  },
+  {
+   "id": "06-14",
+   "chapter": "06",
+   "start": 508.9167,
+   "start_tc": "8:28.91",
+   "duration": 4.1667,
+   "frames": 100,
+   "start_frame": 12214,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.42,
+     1.4484
+    ],
+    "centre": [
+     0.5,
+     0.45
+    ],
+    "frames": 100,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "06.07",
+     "text": "Deceived."
+    },
+    {
+     "id": "06.08",
+     "text": "And guilty anyway."
+    }
+   ],
+   "row": "void_stage `dawn_close`, locked, on \"Deceived. And guilty anyway.\"",
+   "sound": "Silence, 2 s, then cut",
+   "sub": "void_stage `dawn_close` (new) has no plate: a 1.42x framing of `dawn` stands in (upscaled from the 1280 plate, soft)."
+  },
+  {
+   "id": "07-01",
+   "chapter": "07",
+   "start": 513.0833,
+   "start_tc": "8:33.08",
+   "duration": 4.4583,
+   "frames": 107,
+   "start_frame": 12314,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/gate.png",
+    "stage": "prison_exterior",
+    "camera": "gate",
+    "zoom": [
+     1.0,
+     1.04904
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 107,
+    "push": "in 4.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=07&title=The+wait&out=3.56",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "07.01",
+     "text": "Dawn is held at Guangdong Women's Prison. It's where her brother has gone to visit her."
+    }
+   ],
+   "row": "prison_exterior `wall`, `gate`",
+   "sound": "Rain on concrete",
+   "change": "The gate opens the chapter and the wall follows (the wall played 80 s earlier in chapter 6)."
+  },
+  {
+   "id": "07-02",
+   "chapter": "07",
+   "start": 517.5417,
+   "start_tc": "8:37.54",
+   "duration": 3.9583,
+   "frames": 95,
+   "start_frame": 12421,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/wall.png",
+    "stage": "prison_exterior",
+    "camera": "wall",
+    "zoom": [
+     1.0,
+     1.04354
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 95,
+    "push": "in 4.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.01",
+     "text": "Dawn is held at Guangdong Women's Prison. It's where her brother has gone to visit her."
+    }
+   ],
+   "row": "prison_exterior `wall`",
+   "sound": "Rain on concrete"
+  },
+  {
+   "id": "07-03",
+   "chapter": "07",
+   "start": 521.5,
+   "start_tc": "8:41.50",
+   "duration": 6.2917,
+   "frames": 151,
+   "start_frame": 12516,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/visiting_room/wide.png",
+    "stage": "visiting_room",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.06921
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 151,
+    "push": "in 6.9 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.02",
+     "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care."
+    }
+   ],
+   "row": "visiting_room `wide`",
+   "sound": "The phone line's hiss"
+  },
+  {
+   "id": "07-04",
+   "chapter": "07",
+   "start": 527.7917,
+   "start_tc": "8:47.79",
+   "duration": 8.8333,
+   "frames": 212,
+   "start_frame": 12667,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/visiting_room/glass.png",
+    "stage": "visiting_room",
+    "camera": "glass",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 212,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.02",
+     "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care."
+    }
+   ],
+   "row": "visiting_room `glass` (uniform)",
+   "sound": "The phone line's hiss",
+   "note": "The plate still shows Dawn in the short-sleeved top, not the long-sleeved uniform DECISIONS sets for prison scenes."
+  },
+  {
+   "id": "07-05",
+   "chapter": "07",
+   "start": 536.625,
+   "start_tc": "8:56.62",
+   "duration": 12.5,
+   "frames": 300,
+   "start_frame": 12879,
+   "source": {
+    "kind": "piece",
+    "name": "counter",
+    "in": 0.0,
+    "frames": 300,
+    "file": "out/gfx/r7/18_counter.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "counter",
+     "plate": "frames/raw/void_stage/cell_far.png",
+     "push": [
+      1.6,
+      0.7
+     ]
+    },
+    "fixed": false,
+    "note_piece": "2014 → 2026 over the far cell, the pull back"
+   },
+   "voice": [
+    {
+     "id": "07.02",
+     "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care."
+    }
+   ],
+   "row": "void_stage `cell_far` → `cell_floor` (*new*), the pull back | 2014 – 2026, the year counter rolling",
+   "sound": "A low pulse, very slow",
+   "sub": "void_stage `cell_floor` (new) has no plate: reel 7's counter pulls back on `cell_far` alone."
+  },
+  {
+   "id": "07-06",
+   "chapter": "07",
+   "start": 549.125,
+   "start_tc": "9:09.12",
+   "duration": 5.2083,
+   "frames": 125,
+   "start_frame": 13179,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/window.png",
+    "stage": "tim_desk",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.05729
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 125,
+    "push": "in 5.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.03",
+     "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record."
+    }
+   ],
+   "row": "tim_desk: letters, the lamp",
+   "sound": "Pen on paper"
+  },
+  {
+   "id": "07-07",
+   "chapter": "07",
+   "start": 554.3333,
+   "start_tc": "9:14.33",
+   "duration": 2.9167,
+   "frames": 70,
+   "start_frame": 13304,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/letters.png",
+    "stage": "tim_desk",
+    "camera": "letters",
+    "zoom": [
+     1.0,
+     1.03208
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 70,
+    "push": "in 3.2 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.03",
+     "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record."
+    }
+   ],
+   "row": "tim_desk: letters",
+   "sound": "Pen on paper"
+  },
+  {
+   "id": "07-08",
+   "chapter": "07",
+   "start": 557.25,
+   "start_tc": "9:17.25",
+   "duration": 5.0,
+   "frames": 120,
+   "start_frame": 13374,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/wide.png",
+    "stage": "hearing_room",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.055
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 120,
+    "push": "in 5.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=2024&pre=SEPTEMBER",
+      "t0": 0.345,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "07.03",
+     "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record."
+    }
+   ],
+   "row": "hearing_room `wide` | SEPTEMBER 2024",
+   "sound": "A large quiet room"
+  },
+  {
+   "id": "07-09",
+   "chapter": "07",
+   "start": 562.25,
+   "start_tc": "9:22.25",
+   "duration": 4.5,
+   "frames": 108,
+   "start_frame": 13494,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/witness.png",
+    "stage": "hearing_room",
+    "camera": "witness",
+    "zoom": [
+     1.0,
+     1.0495
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 108,
+    "push": "in 5.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.03",
+     "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record."
+    }
+   ],
+   "row": "hearing_room `witness`",
+   "sound": "A large quiet room"
+  },
+  {
+   "id": "07-10",
+   "chapter": "07",
+   "start": 566.75,
+   "start_tc": "9:26.75",
+   "duration": 7.7917,
+   "frames": 187,
+   "start_frame": 13602,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/desk.png",
+    "stage": "tim_desk",
+    "camera": "desk",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 187,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=2025&pre=MAY",
+      "t0": 0.15,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "07.04",
+     "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior."
+    }
+   ],
+   "row": "tim_desk: the bill page (when it is in the archive) | MAY 2025",
+   "sound": "",
+   "sub": "The bill page is not in the archive: `desk` (Tim writing) carries MAY 2025."
+  },
+  {
+   "id": "07-11",
+   "chapter": "07",
+   "start": 574.5417,
+   "start_tc": "9:34.54",
+   "duration": 9.8333,
+   "frames": 236,
+   "start_frame": 13789,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/dais.png",
+    "stage": "hearing_room",
+    "camera": "dais",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 236,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.04",
+     "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior."
+    }
+   ],
+   "sound": "A large quiet room",
+   "change": "Added: \"Members of Congress introduced a bipartisan bill\" on the hearing room's dais."
+  },
+  {
+   "id": "07-12",
+   "chapter": "07",
+   "start": 584.375,
+   "start_tc": "9:44.37",
+   "duration": 3.0,
+   "frames": 72,
+   "start_frame": 14025,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/letters.png",
+    "stage": "tim_desk",
+    "camera": "letters",
+    "zoom": [
+     1.3,
+     1.3429
+    ],
+    "centre": [
+     0.45,
+     0.6
+    ],
+    "frames": 72,
+    "push": "in 3.3 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.05",
+     "text": "Every letter, every hearing, every request was a door that might open."
+    }
+   ],
+   "sound": "Paper",
+   "change": "\"Every letter, every hearing, every request\" on a closer framing of the letters (1.3x), then \"a door that might open\" on the detention door."
+  },
+  {
+   "id": "07-13",
+   "chapter": "07",
+   "start": 587.375,
+   "start_tc": "9:47.37",
+   "duration": 2.7917,
+   "frames": 67,
+   "start_frame": 14097,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/detention_corridor/door.png",
+    "stage": "detention_corridor",
+    "camera": "door",
+    "zoom": [
+     1.0,
+     1.03071
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 67,
+    "push": "in 3.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.05",
+     "text": "Every letter, every hearing, every request was a door that might open."
+    }
+   ],
+   "sound": "Fluorescent hum"
+  },
+  {
+   "id": "07-14",
+   "chapter": "07",
+   "start": 590.1667,
+   "start_tc": "9:50.16",
+   "duration": 3.0833,
+   "frames": 74,
+   "start_frame": 14164,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/cell_close.png",
+    "stage": "void_stage",
+    "camera": "cell_close",
+    "zoom": [
+     1.03392,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 74,
+    "push": "out 3.3 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "07.06",
+     "text": "None of them brought her home."
+    }
+   ],
+   "sound": "A low pulse",
+   "change": "Added: \"None of them brought her home\" on the cell."
+  },
+  {
+   "id": "07-15",
+   "chapter": "07",
+   "start": 593.25,
+   "start_tc": "9:53.25",
+   "duration": 6.9583,
+   "frames": 167,
+   "start_frame": 14238,
+   "source": {
+    "kind": "piece",
+    "name": "father",
+    "in": 0.0,
+    "frames": 167,
+    "file": "out/gfx/r7/19_father.mp4",
+    "gen": {
+     "tool": "doc",
+     "shot": "gfx/shots/s1_father.json"
+    },
+    "fixed": false,
+    "note_piece": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s"
+   },
+   "voice": [
+    {
+     "id": "07.07",
+     "text": "And the man who had waited longest was running out of time."
+    }
+   ],
+   "row": "evidence_table `page`: S1 with \"not going to live long enough to see his daughter free\" lit | the marker wipe",
+   "sound": "Paper"
+  },
+  {
+   "id": "08-01",
+   "chapter": "08",
+   "start": 600.2083,
+   "start_tc": "10:00.20",
+   "duration": 8.7917,
+   "frames": 211,
+   "start_frame": 14405,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/dining.png",
+    "stage": "home",
+    "camera": "dining",
+    "zoom": [
+     1.0,
+     1.05
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 211,
+    "push": "in 5.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=08&title=The+father&out=5.00",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "08.01",
+     "text": "Gene Hunt had been a soldier. A steel-mill worker. A bus driver. A Chicago police officer. For most of his life, his job was keeping other people safe."
+    }
+   ],
+   "row": "home `dining`, cold blind light, Gene alone at the head of the table",
+   "sound": "A clock",
+   "sub": "home `dining` has no Gene: the room is empty (decision 1's seated Gene is not built)."
+  },
+  {
+   "id": "08-02",
+   "chapter": "08",
+   "start": 609.0,
+   "start_tc": "10:09.00",
+   "duration": 5.7083,
+   "frames": 137,
+   "start_frame": 14616,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/dining.png",
+    "stage": "home",
+    "camera": "dining",
+    "zoom": [
+     1.35,
+     1.43477
+    ],
+    "centre": [
+     0.14,
+     0.2
+    ],
+    "frames": 137,
+    "push": "in 6.3 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.01",
+     "text": "Gene Hunt had been a soldier. A steel-mill worker. A bus driver. A Chicago police officer. For most of his life, his job was keeping other people safe."
+    }
+   ],
+   "row": "home `blinds` (*new*)",
+   "sound": "A clock",
+   "sub": "home `blinds` (new) has no plate: a 1.35x framing of the blinds in `dining` stands in (upscaled, soft)."
+  },
+  {
+   "id": "08-03",
+   "chapter": "08",
+   "start": 614.7083,
+   "start_tc": "10:14.70",
+   "duration": 4.625,
+   "frames": 111,
+   "start_frame": 14753,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn_high.png",
+    "stage": "void_stage",
+    "camera": "dawn_high",
+    "zoom": [
+     1.05088,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 111,
+    "push": "out 4.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.02",
+     "text": "There was one person he could not bring home."
+    }
+   ],
+   "sound": "A clock",
+   "change": "Added: \"one person he could not bring home\" on Dawn small in the light (home `chair` with Gene in profile is not built)."
+  },
+  {
+   "id": "08-04",
+   "chapter": "08",
+   "start": 619.3333,
+   "start_tc": "10:19.33",
+   "duration": 9.4167,
+   "frames": 226,
+   "start_frame": 14864,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/witness.png",
+    "stage": "hearing_room",
+    "camera": "witness",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 226,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.03",
+     "text": "By 2024, his family said, he was ill, and afraid he would not live long enough to see his daughter free. They still hoped he would be there to help her rebuild her life after prison."
+    }
+   ],
+   "sound": "A large quiet room, far",
+   "change": "Added: \"By 2024, his family said\" on Tim at the witness table (he told Congress)."
+  },
+  {
+   "id": "08-05",
+   "chapter": "08",
+   "start": 628.75,
+   "start_tc": "10:28.75",
+   "duration": 8.0833,
+   "frames": 194,
+   "start_frame": 15090,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/chicago_night/suitcase.png",
+    "stage": "chicago_night",
+    "camera": "suitcase",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 194,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.03",
+     "text": "By 2024, his family said, he was ill, and afraid he would not live long enough to see his daughter free. They still hoped he would be there to help her rebuild her life after prison."
+    }
+   ],
+   "sound": "A clock",
+   "change": "Added: \"help her rebuild her life after prison\" on the warm hall of chapter 1, her case by the door."
+  },
+  {
+   "id": "08-06",
+   "chapter": "08",
+   "start": 636.8333,
+   "start_tc": "10:36.83",
+   "duration": 7.5,
+   "frames": 180,
+   "start_frame": 15284,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/cell_far.png",
+    "stage": "void_stage",
+    "camera": "cell_far",
+    "zoom": [
+     1.08,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 180,
+    "push": "out 7.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.04",
+     "text": "A father in his nineties, planning for a daughter who had already lost ten years."
+    }
+   ],
+   "sound": "A clock",
+   "change": "Added: \"a daughter who had already lost ten years\" on the far cell."
+  },
+  {
+   "id": "08-07",
+   "chapter": "08",
+   "start": 644.3333,
+   "start_tc": "10:44.33",
+   "duration": 4.75,
+   "frames": 114,
+   "start_frame": 15464,
+   "source": {
+    "kind": "piece",
+    "name": "gene",
+    "in": 0.0,
+    "frames": 114,
+    "file": "out/gfx/r7/20_gene.mp4",
+    "gen": {
+     "tool": "plate_type",
+     "mode": "date_gene",
+     "plate": "frames/raw/home/chair.png"
+    },
+    "fixed": false,
+    "note_piece": "JANUARY 25, 2026 over the empty chair"
+   },
+   "voice": [
+    {
+     "id": "08.05",
+     "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two."
+    }
+   ],
+   "row": "home `chair` | JANUARY 25, 2026 (reel 7's date over the empty chair)",
+   "sound": "A clock, then nothing",
+   "sub": "Gene in profile in the chair is not built: the date sits over the empty chair (reel 7's `date_gene`), so the straight cut from full to empty cannot happen yet."
+  },
+  {
+   "id": "08-08",
+   "chapter": "08",
+   "start": 649.0833,
+   "start_tc": "10:49.08",
+   "duration": 7.8333,
+   "frames": 188,
+   "start_frame": 15578,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/chair.png",
+    "stage": "home",
+    "camera": "chair",
+    "zoom": [
+     1.18,
+     1.2036
+    ],
+    "centre": [
+     0.62,
+     0.5
+    ],
+    "frames": 188,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "08.06",
+     "text": "He never saw Dawn come home."
+    }
+   ],
+   "row": "home `chair`, the same frame, empty (straight cut) → void_stage `chair` (*new*)",
+   "sound": "Total silence; then room tone returns",
+   "sub": "The cut on the silence goes to a closer framing of the same empty chair (1.18x), the date leaving with the cut; void_stage `chair` (new) has no plate, so the chair holds through the 3 s silence."
+  },
+  {
+   "id": "09-01",
+   "chapter": "09",
+   "start": 656.9167,
+   "start_tc": "10:56.91",
+   "duration": 6.9583,
+   "frames": 167,
+   "start_frame": 15766,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/gate.png",
+    "stage": "prison_exterior",
+    "camera": "gate",
+    "zoom": [
+     1.0,
+     1.07654
+    ],
+    "centre": [
+     0.5,
+     0.55
+    ],
+    "frames": 167,
+    "push": "in 7.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "chapter",
+      "look": "B",
+      "hash": "n=09&title=When%3F&out=5.00",
+      "t0": 0.0,
+      "tin": 0.0
+     },
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=2026&pre=JULY",
+      "t0": 2.272,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "09.01",
+     "text": "Six months later, in July 2026, Tim went back to the prison."
+    }
+   ],
+   "row": "prison_exterior `gate` | JULY 2026",
+   "sound": "Rain"
+  },
+  {
+   "id": "09-02",
+   "chapter": "09",
+   "start": 663.875,
+   "start_tc": "11:03.87",
+   "duration": 4.3333,
+   "frames": 104,
+   "start_frame": 15933,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/hands.png",
+    "stage": "hearing_room",
+    "camera": "hands",
+    "zoom": [
+     1.0,
+     1.04767
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 104,
+    "push": "in 4.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.02",
+     "text": "He told lawmakers he barely recognised his sister. She seemed frail. Stooped. Her teeth had changed. Her hair was much greyer than two years before. She struggled to focus on their conversation."
+    }
+   ],
+   "sound": "A large quiet room",
+   "change": "Added: \"He told lawmakers\" on Tim's hands on his statement; her description then plays over the visiting room seen from afar, never on her face."
+  },
+  {
+   "id": "09-03",
+   "chapter": "09",
+   "start": 668.2083,
+   "start_tc": "11:08.20",
+   "duration": 11.5,
+   "frames": 276,
+   "start_frame": 16037,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/visiting_room/wide.png",
+    "stage": "visiting_room",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 276,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.02",
+     "text": "He told lawmakers he barely recognised his sister. She seemed frail. Stooped. Her teeth had changed. Her hair was much greyer than two years before. She struggled to focus on their conversation."
+    }
+   ],
+   "row": "visiting_room `reverse` (*new*): over Dawn's shoulder through the glass to Tim",
+   "sound": "The line's hiss; nothing else",
+   "sub": "visiting_room `reverse` (new) has no plate: `wide` (the booth from across the room) stands in."
+  },
+  {
+   "id": "09-04",
+   "chapter": "09",
+   "start": 679.7083,
+   "start_tc": "11:19.70",
+   "duration": 9.2917,
+   "frames": 223,
+   "start_frame": 16313,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/visiting_room/glass.png",
+    "stage": "visiting_room",
+    "camera": "glass",
+    "zoom": [
+     1.0,
+     1.02
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 223,
+    "push": "in 2.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.03",
+     "text": "But there was one thing she kept coming back to."
+    },
+    {
+     "id": "09.04",
+     "text": "One question."
+    },
+    {
+     "id": "09.05",
+     "text": "When would she be released?"
+    }
+   ],
+   "row": "visiting_room `glass`, locked, long hold",
+   "sound": "Silence under \"When would she be released?\""
+  },
+  {
+   "id": "09-05",
+   "chapter": "09",
+   "start": 689.0,
+   "start_tc": "11:29.00",
+   "duration": 4.2083,
+   "frames": 101,
+   "start_frame": 16536,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/visiting_room/empty.png",
+    "stage": "visiting_room",
+    "camera": "empty",
+    "zoom": [
+     1.0,
+     1.04629
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 101,
+    "push": "in 4.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.06",
+     "text": "Tim could not give her a date."
+    }
+   ],
+   "row": "visiting_room `empty`",
+   "sound": ""
+  },
+  {
+   "id": "09-06",
+   "chapter": "09",
+   "start": 693.2083,
+   "start_tc": "11:33.20",
+   "duration": 6.5,
+   "frames": 156,
+   "start_frame": 16637,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/witness.png",
+    "stage": "hearing_room",
+    "camera": "witness",
+    "zoom": [
+     1.0,
+     1.0715
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 156,
+    "push": "in 7.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "place",
+      "look": "B",
+      "hash": "a=2026&pre=SEPTEMBER",
+      "t0": 0.1,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "09.07",
+     "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting."
+    }
+   ],
+   "row": "hearing_room `witness` | SEPTEMBER 2026",
+   "sound": "A large quiet room"
+  },
+  {
+   "id": "09-07",
+   "chapter": "09",
+   "start": 699.7083,
+   "start_tc": "11:39.70",
+   "duration": 3.6667,
+   "frames": 88,
+   "start_frame": 16793,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/home/chair.png",
+    "stage": "home",
+    "camera": "chair",
+    "zoom": [
+     1.0,
+     1.04033
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 88,
+    "push": "in 4.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.07",
+     "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting."
+    }
+   ],
+   "row": "home `chair`, empty",
+   "sound": ""
+  },
+  {
+   "id": "09-08",
+   "chapter": "09",
+   "start": 703.375,
+   "start_tc": "11:43.37",
+   "duration": 3.25,
+   "frames": 78,
+   "start_frame": 16881,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/desk.png",
+    "stage": "tim_desk",
+    "camera": "desk",
+    "zoom": [
+     1.0,
+     1.03575
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 78,
+    "push": "in 3.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.07",
+     "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting."
+    }
+   ],
+   "sound": "Pen on paper",
+   "change": "Added: \"a brother still fighting\" on Tim at his desk."
+  },
+  {
+   "id": "09-09",
+   "chapter": "09",
+   "start": 706.625,
+   "start_tc": "11:46.62",
+   "duration": 9.0417,
+   "frames": 217,
+   "start_frame": 16959,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hearing_room/wide.png",
+    "stage": "hearing_room",
+    "camera": "wide",
+    "zoom": [
+     1.0,
+     1.08
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 217,
+    "push": "in 8.0 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.08",
+     "text": "Remember the question at the beginning of this story? The one no one in that room could answer."
+    }
+   ],
+   "row": "hearing_room `wide` (the cold open's last shot, matched)",
+   "sound": ""
+  },
+  {
+   "id": "09-10",
+   "chapter": "09",
+   "start": 715.6667,
+   "start_tc": "11:55.66",
+   "duration": 6.7083,
+   "frames": 161,
+   "start_frame": 17176,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/dawn.png",
+    "stage": "void_stage",
+    "camera": "dawn",
+    "zoom": [
+     1.0,
+     1.07379
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 161,
+    "push": "in 7.4 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.09",
+     "text": "It was never really his question."
+    },
+    {
+     "id": "09.10",
+     "text": "It was hers."
+    }
+   ],
+   "row": "void_stage `dawn`",
+   "sound": "Silence"
+  },
+  {
+   "id": "09-11",
+   "chapter": "09",
+   "start": 722.375,
+   "start_tc": "12:02.37",
+   "duration": 6.375,
+   "frames": 153,
+   "start_frame": 17337,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/prison_exterior/wall.png",
+    "stage": "prison_exterior",
+    "camera": "wall",
+    "zoom": [
+     1.07012,
+     1.0
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 153,
+    "push": "out 6.6 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.11",
+     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
+    }
+   ],
+   "sound": "Rain",
+   "change": "Added: the status line on the prison wall."
+  },
+  {
+   "id": "09-12",
+   "chapter": "09",
+   "start": 728.75,
+   "start_tc": "12:08.75",
+   "duration": 5.5833,
+   "frames": 134,
+   "start_frame": 17490,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/tim_desk/window.png",
+    "stage": "tim_desk",
+    "camera": "window",
+    "zoom": [
+     1.0,
+     1.06142
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 134,
+    "push": "in 6.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.11",
+     "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"Her family is still asking\" on Tim's lit window."
+  },
+  {
+   "id": "09-13",
+   "chapter": "09",
+   "start": 734.3333,
+   "start_tc": "12:14.33",
+   "duration": 5.5833,
+   "frames": 134,
+   "start_frame": 17624,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/evidence_table/purses.png",
+    "stage": "evidence_table",
+    "camera": "purses",
+    "zoom": [
+     1.04,
+     1.10387
+    ],
+    "centre": [
+     0.72,
+     0.45
+    ],
+    "frames": 134,
+    "push": "in 6.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.12",
+     "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company."
+    }
+   ],
+   "sound": "",
+   "change": "Added: the State Department's advice over the gifts and the belt, \"weeks in their company\" over the organisers."
+  },
+  {
+   "id": "09-14",
+   "chapter": "09",
+   "start": 739.9167,
+   "start_tc": "12:19.91",
+   "duration": 4.625,
+   "frames": 111,
+   "start_frame": 17758,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/baggage_belt/curtain.png",
+    "stage": "baggage_belt",
+    "camera": "curtain",
+    "zoom": [
+     1.0,
+     1.05088
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 111,
+    "push": "in 5.1 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.12",
+     "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company."
+    }
+   ],
+   "sound": ""
+  },
+  {
+   "id": "09-15",
+   "chapter": "09",
+   "start": 744.5417,
+   "start_tc": "12:24.54",
+   "duration": 6.125,
+   "frames": 147,
+   "start_frame": 17869,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/hongkong_street/company.png",
+    "stage": "hongkong_street",
+    "camera": "company",
+    "zoom": [
+     1.0,
+     1.06737
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 147,
+    "push": "in 6.7 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.12",
+     "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company."
+    }
+   ],
+   "sound": ""
+  },
+  {
+   "id": "09-16",
+   "chapter": "09",
+   "start": 750.6667,
+   "start_tc": "12:30.66",
+   "duration": 3.9167,
+   "frames": 94,
+   "start_frame": 18016,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/wide_pre.png",
+    "stage": "inspection_room",
+    "camera": "wide_pre",
+    "zoom": [
+     1.0,
+     1.04308
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 94,
+    "push": "in 4.3 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": []
+   },
+   "voice": [
+    {
+     "id": "09.13",
+     "text": "Twelve years ago, in a room at an airport, officers asked her a question. She answered it. Yes."
+    }
+   ],
+   "sound": "",
+   "change": "Added: \"in a room at an airport\" on the inspection room before the bags."
+  },
+  {
+   "id": "09-17",
+   "chapter": "09",
+   "start": 754.5833,
+   "start_tc": "12:34.58",
+   "duration": 5.125,
+   "frames": 123,
+   "start_frame": 18110,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/inspection_room/match.png",
+    "stage": "inspection_room",
+    "camera": "match",
+    "zoom": [
+     1.0,
+     1.035
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 123,
+    "push": "in 3.5 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "yes",
+      "look": "B",
+      "t0": 4.526,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "09.13",
+     "text": "Twelve years ago, in a room at an airport, officers asked her a question. She answered it. Yes."
+    }
+   ],
+   "row": "inspection_room `match` → void_stage `bags` | YES, in its cold-open place",
+   "sound": "The opening drone returns quietly"
+  },
+  {
+   "id": "09-18",
+   "chapter": "09",
+   "start": 759.7083,
+   "start_tc": "12:39.70",
+   "duration": 13.8333,
+   "frames": 332,
+   "start_frame": 18233,
+   "source": {
+    "kind": "plate",
+    "plate": "frames/raw/void_stage/bags.png",
+    "stage": "void_stage",
+    "camera": "bags",
+    "zoom": [
+     1.03529,
+     1.13657
+    ],
+    "centre": [
+     0.5,
+     0.5
+    ],
+    "frames": 332,
+    "push": "in 9.8 % (log space, constant speed)",
+    "grade": "scenes/shoot.py GRADE (A fixed), grain fresh each frame",
+    "type": [
+     {
+      "mode": "yes_when",
+      "look": "B",
+      "t0": 0.0,
+      "tin": 0.0
+     }
+    ]
+   },
+   "voice": [
+    {
+     "id": "09.14",
+     "text": "Now she is the one asking."
+    },
+    {
+     "id": "09.15",
+     "text": "And no one has an answer."
+    },
+    {
+     "id": "09.16",
+     "text": "The testimony, the reporting and her family's campaign are linked below."
+    }
+   ],
+   "row": "match cut on the bags; YES erodes and rises as WHEN?; then void_stage `bags`, held, the end screen",
+   "sound": "Resolves to one warm piano note; two seconds of silence at the very end",
+   "note": "WHEN? stays up through the end card; the YouTube end-screen elements go clear of the bags and the word."
+  }
+ ],
+ "voice": [
+  {
+   "id": "00.pre",
+   "start": 0.0,
+   "speech": 0.0,
+   "end": 1.4,
+   "hold": 1.4,
+   "note": "the display settles; no voice, no music for the first seconds"
+  },
+  {
+   "id": "00.01",
+   "start": 1.4,
+   "speech": 1.5,
+   "end": 3.25,
+   "text": "The bags are overweight.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.02",
+   "start": 3.25,
+   "speech": 5.25,
+   "end": 8.85,
+   "text": "Only slightly. There's a small fee, and she pays it without a second thought.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.03",
+   "start": 8.85,
+   "speech": 10.125,
+   "end": 18.975,
+   "text": "It's 2014, at an airport in China. Dawn Michelle Hunt, an American from Chicago, is checking two bags for the next flight of a trip she won.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.beat1",
+   "start": 18.975,
+   "speech": 0.0,
+   "end": 19.775,
+   "hold": 0.8,
+   "note": "(beat)"
+  },
+  {
+   "id": "00.04",
+   "start": 19.775,
+   "speech": 7.875,
+   "end": 28.0,
+   "text": "Not long after, security staff call her aside. She is led into a room, and her two bags are already there.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.05",
+   "start": 28.0,
+   "speech": 4.125,
+   "end": 32.475,
+   "text": "The officers want to know one thing. Are these bags hers?",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.06",
+   "start": 32.475,
+   "speech": 2.625,
+   "end": 35.45,
+   "text": "According to her brother, she says yes.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.07",
+   "start": 35.45,
+   "speech": 1.125,
+   "end": 36.575,
+   "text": "They ask again.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.beat2",
+   "start": 36.575,
+   "speech": 0.0,
+   "end": 37.075,
+   "hold": 0.5,
+   "note": "added: a held breath before the second Yes (the direction puts the two YESes 4 s apart)"
+  },
+  {
+   "id": "00.08",
+   "start": 37.075,
+   "speech": 0.6,
+   "end": 38.025,
+   "text": "Yes.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.09",
+   "start": 38.025,
+   "speech": 6.0,
+   "end": 44.025,
+   "text": "Why would she say anything else? She packed them herself. She just paid to carry them.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.sil1",
+   "start": 44.025,
+   "speech": 0.0,
+   "end": 45.025,
+   "hold": 1.0,
+   "note": "(silence, 1 s)"
+  },
+  {
+   "id": "00.10",
+   "start": 45.025,
+   "speech": 8.625,
+   "end": 54.0,
+   "text": "Inside the luggage are designer handbags. And sewn into the linings of those handbags, authorities say, is more than two kilograms of methamphetamine.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.11",
+   "start": 54.0,
+   "speech": 10.875,
+   "end": 65.225,
+   "text": "Her family says she had no idea it was there. She believed the handbags were a prize, from the people who had paid for the trip of her life.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.12",
+   "start": 65.225,
+   "speech": 3.75,
+   "end": 68.975,
+   "text": "The luggage was hers. The drugs, she said, were not.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.sil2",
+   "start": 68.975,
+   "speech": 0.0,
+   "end": 70.475,
+   "hold": 1.5,
+   "note": "(score cut dead; silence, 1.5 s)"
+  },
+  {
+   "id": "00.13",
+   "start": 70.475,
+   "speech": 6.75,
+   "end": 77.575,
+   "text": "Three years later, a court sentences her to death, with a two-year reprieve. Today, she is serving life.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.14",
+   "start": 77.575,
+   "speech": 8.625,
+   "end": 86.2,
+   "text": "And twelve years after that airport, her brother appears before American lawmakers with a question that no one in the room can answer.",
+   "timing": "estimated"
+  },
+  {
+   "id": "00.sil3",
+   "start": 86.2,
+   "speech": 0.0,
+   "end": 87.2,
+   "hold": 1.0,
+   "note": "1 s of near silence after \"answer\" (direction, 1:21)"
+  },
+  {
+   "id": "00.montage",
+   "start": 87.2,
+   "speech": 0.0,
+   "end": 93.408,
+   "hold": 6.208333333333333,
+   "note": "no voice: the flash-forward montage (gfx/montage.py, 149 frames), the score building to its peak"
+  },
+  {
+   "id": "00.title",
+   "start": 93.408,
+   "speech": 0.0,
+   "end": 98.408,
+   "hold": 5.0,
+   "note": "the title lands on the peak; the score decays into silence"
+  },
+  {
+   "id": "01.pre",
+   "start": 98.408,
+   "speech": 0.0,
+   "end": 99.208,
+   "hold": 0.8,
+   "note": "chapter title"
+  },
+  {
+   "id": "01.01",
+   "start": 99.208,
+   "speech": 1.899,
+   "end": 101.457,
+   "text": "Before China, there was Chicago.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.02",
+   "start": 101.457,
+   "speech": 7.595,
+   "end": 109.402,
+   "text": "Dawn was a daughter and a sister. A former flight attendant. An artist who loved fashion, and loved to travel.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.03",
+   "start": 109.402,
+   "speech": 12.532,
+   "end": 122.284,
+   "text": "Her brother Tim remembers her as intelligent, and trusting. She and their mother liked to enter sweepstakes, he told Reuters. For Dawn, every entry was a small possibility that something wonderful might happen.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.04",
+   "start": 122.284,
+   "speech": 15.57,
+   "end": 138.203,
+   "text": "In 2014 she was working as a receptionist, in a family that had given decades to public service. Her father, Gene, had served in the Army and then as a Chicago police sergeant. Tim had been a Chicago police officer himself.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.05",
+   "start": 138.203,
+   "speech": 3.038,
+   "end": 141.591,
+   "text": "A family that knew what danger looked like.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.06",
+   "start": 141.591,
+   "speech": 4.177,
+   "end": 146.118,
+   "text": "What arrived in Dawn's inbox didn't look like danger at all.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.07",
+   "start": 146.118,
+   "speech": 2.278,
+   "end": 148.397,
+   "text": "It looked like she had won.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.beat1",
+   "start": 148.397,
+   "speech": 0.0,
+   "end": 149.197,
+   "hold": 0.8,
+   "note": "(beat)"
+  },
+  {
+   "id": "01.08",
+   "start": 149.197,
+   "speech": 14.43,
+   "end": 163.977,
+   "text": "The message said she'd won a contest. Accounts differ on exactly what the prize was: cash, travel, or both. But every version has the same shape. An unexpected win, and people ready to fly her across the world.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.09",
+   "start": 163.977,
+   "speech": 10.253,
+   "end": 174.58,
+   "text": "Dawn didn't believe it. Not at first. Tim says she looked the organizers up online. What she found looked real enough that she sent her passport details.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.10",
+   "start": 174.58,
+   "speech": 3.038,
+   "end": 177.968,
+   "text": "Then the thing that ended her doubts arrived.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.11",
+   "start": 177.968,
+   "speech": 0.759,
+   "end": 179.078,
+   "text": "The tickets.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.12",
+   "start": 179.078,
+   "speech": 3.797,
+   "end": 183.225,
+   "text": "Real tickets to Hong Kong, paid for by someone else.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.13",
+   "start": 183.225,
+   "speech": 6.835,
+   "end": 190.411,
+   "text": "That is what makes this story so hard to shake. The first part of the promise was true.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.14",
+   "start": 190.411,
+   "speech": 4.557,
+   "end": 194.968,
+   "text": "Her family believes the deception was hidden in everything that came after.",
+   "timing": "estimated"
+  },
+  {
+   "id": "01.sil1",
+   "start": 194.968,
+   "speech": 0.0,
+   "end": 196.468,
+   "hold": 1.5,
+   "note": "(silence, 1.5 s)"
+  },
+  {
+   "id": "02.pre",
+   "start": 196.468,
+   "speech": 0.0,
+   "end": 197.468,
+   "hold": 1.0,
+   "note": "chapter title; engine hum"
+  },
+  {
+   "id": "02.01",
+   "start": 197.468,
+   "speech": 10.253,
+   "end": 208.071,
+   "text": "According to Tim's sworn account, Dawn spent nine days in Hong Kong. Sightseeing. Shopping. The people running the trip treated her well, and every expense was covered.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.02",
+   "start": 208.071,
+   "speech": 8.734,
+   "end": 217.155,
+   "text": "Then they offered more: mainland China. With their help she got a visa, and spent about nine more days travelling through the country.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.03",
+   "start": 217.155,
+   "speech": 1.899,
+   "end": 219.404,
+   "text": "Watch what those days did.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.04",
+   "start": 219.404,
+   "speech": 10.633,
+   "end": 230.387,
+   "text": "The email became a ticket. The ticket became a city. And the city became a relationship, with people who had given her nothing but reasons to trust them.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.05",
+   "start": 230.387,
+   "speech": 5.316,
+   "end": 236.053,
+   "text": "There was more to come. Australia, she was told. Another part of the prize.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.06",
+   "start": 236.053,
+   "speech": 3.797,
+   "end": 240.201,
+   "text": "For Dawn, the trip of her life was still going.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.07",
+   "start": 240.201,
+   "speech": 4.557,
+   "end": 244.758,
+   "text": "But before she left China, they had one more gift for her.",
+   "timing": "estimated"
+  },
+  {
+   "id": "02.sil1",
+   "start": 244.758,
+   "speech": 0.0,
+   "end": 245.758,
+   "hold": 1.0,
+   "note": "(silence, 1 s)"
+  },
+  {
+   "id": "03.pre",
+   "start": 245.758,
+   "speech": 0.0,
+   "end": 246.558,
+   "hold": 0.8,
+   "note": "chapter title"
+  },
+  {
+   "id": "03.01",
+   "start": 246.558,
+   "speech": 7.355,
+   "end": 254.263,
+   "text": "Just before the next leg of the trip, the organizers told Dawn she had won something else. Designer handbags.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.02",
+   "start": 254.263,
+   "speech": 6.968,
+   "end": 261.58,
+   "text": "She accepted them. Why wouldn't she? These were the people who had paid for weeks of her life.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.03",
+   "start": 261.58,
+   "speech": 3.871,
+   "end": 265.801,
+   "text": "But there was a problem. Her luggage was already full.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.04",
+   "start": 265.801,
+   "speech": 8.516,
+   "end": 274.667,
+   "text": "So, Tim testified, she went with people from the trip to the Baiyun Leather Market, where the organizers bought an extra bag.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.05",
+   "start": 274.667,
+   "speech": 5.419,
+   "end": 280.437,
+   "text": "Dawn packed the handbags herself. Two pieces of luggage. Both checked in her name.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.06",
+   "start": 280.437,
+   "speech": 4.645,
+   "end": 285.432,
+   "text": "And at the check-in desk, the scale said what you already know.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.07",
+   "start": 285.432,
+   "speech": 0.6,
+   "end": 286.382,
+   "text": "Overweight.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.08",
+   "start": 286.382,
+   "speech": 1.548,
+   "end": 288.28,
+   "text": "She paid the fee.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.09",
+   "start": 288.28,
+   "speech": 8.516,
+   "end": 297.146,
+   "text": "Tim put that detail in his testimony for a reason. To him, it shows how ordinary this journey felt to his sister.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.10",
+   "start": 297.146,
+   "speech": 11.226,
+   "end": 308.372,
+   "text": "The people behind the trip had given her the handbags. They had solved her luggage problem. And whatever was hidden in those linings was now travelling in her name.",
+   "timing": "estimated"
+  },
+  {
+   "id": "03.sil1",
+   "start": 308.372,
+   "speech": 0.0,
+   "end": 309.372,
+   "hold": 1.0,
+   "note": "added: the belt runs on for a second before chapter 4 (chapters end on a short silence)"
+  },
+  {
+   "id": "04.pre",
+   "start": 309.372,
+   "speech": 0.0,
+   "end": 310.372,
+   "hold": 1.0,
+   "note": "chapter title; the tannoy, muffled"
+  },
+  {
+   "id": "04.01",
+   "start": 310.372,
+   "speech": 8.516,
+   "end": 319.238,
+   "text": "At the airport, security staff call her aside. Tim says she is led into a room, and there are her two bags.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.02",
+   "start": 319.238,
+   "speech": 2.71,
+   "end": 322.298,
+   "text": "The officers ask whether they are hers.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.03",
+   "start": 322.298,
+   "speech": 0.6,
+   "end": 323.248,
+   "text": "Yes.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.04",
+   "start": 323.248,
+   "speech": 1.161,
+   "end": 324.409,
+   "text": "They ask again.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.beat1",
+   "start": 324.409,
+   "speech": 0.0,
+   "end": 324.809,
+   "hold": 0.4,
+   "note": "added: a held breath before the second Yes, as in the cold open"
+  },
+  {
+   "id": "04.05",
+   "start": 324.809,
+   "speech": 0.6,
+   "end": 325.759,
+   "text": "Yes.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.06",
+   "start": 325.759,
+   "speech": 4.645,
+   "end": 330.754,
+   "text": "She has no reason to say anything else. They are her bags.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.07",
+   "start": 330.754,
+   "speech": 3.097,
+   "end": 333.851,
+   "text": "Then authorities find what is inside the linings.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.sil1",
+   "start": 333.851,
+   "speech": 0.0,
+   "end": 334.851,
+   "hold": 1.0,
+   "note": "(hard stop, silence 1 s)"
+  },
+  {
+   "id": "04.08",
+   "start": 334.851,
+   "speech": 8.516,
+   "end": 343.717,
+   "text": "Think about the two conversations happening in that room. Dawn believes she is identifying her luggage. The officers are investigating drug smuggling.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.09",
+   "start": 343.717,
+   "speech": 4.645,
+   "end": 348.363,
+   "text": "The same room. The same bags. The same word. Two different meanings.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.beat2",
+   "start": 348.363,
+   "speech": 0.0,
+   "end": 349.163,
+   "hold": 0.8,
+   "note": "(beat)"
+  },
+  {
+   "id": "04.10",
+   "start": 349.163,
+   "speech": 18.194,
+   "end": 367.706,
+   "text": "One detail doesn't fit neatly. Dawn told her family she was flying on to Australia. But Tim has acknowledged that a journalist saw a court account naming a different flight, a domestic one, to Qingdao. We haven't seen records that settle it, and we won't pretend to.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.11",
+   "start": 367.706,
+   "speech": 8.903,
+   "end": 376.959,
+   "text": "What isn't in dispute is this: drugs were found in luggage she had checked. And in 2014, Dawn Hunt was arrested in China.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.12",
+   "start": 376.959,
+   "speech": 4.258,
+   "end": 381.217,
+   "text": "The trip ended in that room. The case was only beginning.",
+   "timing": "estimated"
+  },
+  {
+   "id": "04.sil2",
+   "start": 381.217,
+   "speech": 0.0,
+   "end": 382.717,
+   "hold": 1.5,
+   "note": "(silence, 1.5 s)"
+  },
+  {
+   "id": "05.pre",
+   "start": 382.717,
+   "speech": 0.0,
+   "end": 383.517,
+   "hold": 0.8,
+   "note": "chapter title"
+  },
+  {
+   "id": "05.01",
+   "start": 383.517,
+   "speech": 11.053,
+   "end": 394.92,
+   "text": "For Dawn, the airport wasn't the end of a bad trip. It was the first day of a detention that would last about three years before any verdict.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.02",
+   "start": 394.92,
+   "speech": 13.026,
+   "end": 408.296,
+   "text": "Her family says she tried to cooperate. Tim testified that she answered investigators' questions, and gave them the emails she had received from the organizers. The same emails that had started it all.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.03",
+   "start": 408.296,
+   "speech": 1.184,
+   "end": 409.831,
+   "text": "It wasn't enough.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.04",
+   "start": 409.831,
+   "speech": 15.789,
+   "end": 425.97,
+   "text": "Her family also alleges something worse. In testimony to Congress in 2024, Tim said Dawn had told their father she was sexually assaulted in the detention facility. That allegation has not been independently established in the sources available to us.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.05",
+   "start": 425.97,
+   "speech": 10.658,
+   "end": 436.978,
+   "text": "We are not going to recreate it. It is serious enough to state plainly, and Dawn has already lost control of so much of her own story.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.06",
+   "start": 436.978,
+   "speech": 7.105,
+   "end": 444.433,
+   "text": "For three years, her family waited for a trial to correct what they believed was a terrible mistake.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.07",
+   "start": 444.433,
+   "speech": 3.553,
+   "end": 447.986,
+   "text": "The verdict was worse than anything they had feared.",
+   "timing": "estimated"
+  },
+  {
+   "id": "05.sil1",
+   "start": 447.986,
+   "speech": 0.0,
+   "end": 449.486,
+   "hold": 1.5,
+   "note": "(silence, 1.5 s)"
+  },
+  {
+   "id": "06.pre",
+   "start": 449.486,
+   "speech": 0.0,
+   "end": 452.086,
+   "hold": 2.6,
+   "note": "chapter title over the locked courtroom, room tone, before \"2017.\""
+  },
+  {
+   "id": "06.01",
+   "start": 452.086,
+   "speech": 0.6,
+   "end": 452.686,
+   "text": "2017.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.beat1",
+   "start": 452.686,
+   "speech": 0.0,
+   "end": 453.186,
+   "hold": 0.5,
+   "note": "added: the year lands before the sentence"
+  },
+  {
+   "id": "06.02",
+   "start": 453.186,
+   "speech": 2.8,
+   "end": 456.336,
+   "text": "A death sentence, with a two-year reprieve.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.03",
+   "start": 456.336,
+   "speech": 10.8,
+   "end": 467.486,
+   "text": "The words matter. It was not an order for her immediate execution. It was a suspended death sentence, and it was later reduced to life in prison.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.04",
+   "start": 467.486,
+   "speech": 15.6,
+   "end": 483.436,
+   "text": "China sees the case as closed. Asked about it in 2026, China's foreign ministry told Reuters that Dawn and another imprisoned American were serving sentences for serious drug-related crimes, and that their legal rights and health were being protected.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.05",
+   "start": 483.436,
+   "speech": 10.0,
+   "end": 493.786,
+   "text": "Her family sees a scam victim. They insist she was what investigators call a blind mule: someone who carries drugs for traffickers without knowing it.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.06",
+   "start": 493.786,
+   "speech": 14.8,
+   "end": 508.936,
+   "text": "And this is the part they find hardest to accept. According to her family, and to reporting on the court's reasoning, the judge recognised that Dawn had been deceived, and concluded that she should have known anyway.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.07",
+   "start": 508.936,
+   "speech": 0.6,
+   "end": 509.886,
+   "text": "Deceived.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.08",
+   "start": 509.886,
+   "speech": 1.2,
+   "end": 511.086,
+   "text": "And guilty anyway.",
+   "timing": "estimated"
+  },
+  {
+   "id": "06.sil1",
+   "start": 511.086,
+   "speech": 0.0,
+   "end": 513.086,
+   "hold": 2.0,
+   "note": "(silence, 2 s)"
+  },
+  {
+   "id": "07.pre",
+   "start": 513.086,
+   "speech": 0.0,
+   "end": 513.886,
+   "hold": 0.8,
+   "note": "chapter title; rain on concrete"
+  },
+  {
+   "id": "07.01",
+   "start": 513.886,
+   "speech": 7.273,
+   "end": 521.509,
+   "text": "Dawn is held at Guangdong Women's Prison. It's where her brother has gone to visit her.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.02",
+   "start": 521.509,
+   "speech": 27.273,
+   "end": 549.131,
+   "text": "In 2024, Tim told Congress that his sister had lost weight, and become pale. Prison doctors had found uterine fibroids, and raised the possibility of ovarian cancer. A possibility, not a diagnosis. She'd had heavy bleeding, and blood transfusions. Doctors recommended a hysterectomy. She refused, Tim said, in part because she did not trust the people responsible for her care.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.03",
+   "start": 549.131,
+   "speech": 17.273,
+   "end": 566.754,
+   "text": "At home in Chicago, the family turned the case into a campaign. Tim wrote to officials and to lawyers. In September 2024, he testified before a congressional commission, and his sister's case became part of the public record.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.04",
+   "start": 566.754,
+   "speech": 17.273,
+   "end": 584.377,
+   "text": "In May 2025, according to Tim, the United States formally requested her release on humanitarian grounds. Members of Congress introduced a bipartisan bill carrying her name, and the name of another American imprisoned in China, Nelson Wells Junior.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.05",
+   "start": 584.377,
+   "speech": 5.455,
+   "end": 590.181,
+   "text": "Every letter, every hearing, every request was a door that might open.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.06",
+   "start": 590.181,
+   "speech": 2.727,
+   "end": 593.259,
+   "text": "None of them brought her home.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.07",
+   "start": 593.259,
+   "speech": 5.455,
+   "end": 598.713,
+   "text": "And the man who had waited longest was running out of time.",
+   "timing": "estimated"
+  },
+  {
+   "id": "07.sil1",
+   "start": 598.713,
+   "speech": 0.0,
+   "end": 600.213,
+   "hold": 1.5,
+   "note": "(silence, 1.5 s)"
+  },
+  {
+   "id": "08.pre",
+   "start": 600.213,
+   "speech": 0.0,
+   "end": 601.013,
+   "hold": 0.8,
+   "note": "chapter title; a clock"
+  },
+  {
+   "id": "08.01",
+   "start": 601.013,
+   "speech": 13.333,
+   "end": 614.696,
+   "text": "Gene Hunt had been a soldier. A steel-mill worker. A bus driver. A Chicago police officer. For most of his life, his job was keeping other people safe.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.02",
+   "start": 614.696,
+   "speech": 4.286,
+   "end": 619.332,
+   "text": "There was one person he could not bring home.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.03",
+   "start": 619.332,
+   "speech": 17.143,
+   "end": 636.825,
+   "text": "By 2024, his family said, he was ill, and afraid he would not live long enough to see his daughter free. They still hoped he would be there to help her rebuild her life after prison.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.04",
+   "start": 636.825,
+   "speech": 7.143,
+   "end": 644.318,
+   "text": "A father in his nineties, planning for a daughter who had already lost ten years.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.05",
+   "start": 644.318,
+   "speech": 4.762,
+   "end": 649.08,
+   "text": "On January 25th, 2026, Gene Hunt died. He was ninety-two.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.sil1",
+   "start": 649.08,
+   "speech": 0.0,
+   "end": 651.08,
+   "hold": 2.0,
+   "note": "(silence, 2 s: no score, no room tone)"
+  },
+  {
+   "id": "08.06",
+   "start": 651.08,
+   "speech": 2.857,
+   "end": 653.937,
+   "text": "He never saw Dawn come home.",
+   "timing": "estimated"
+  },
+  {
+   "id": "08.sil2",
+   "start": 653.937,
+   "speech": 0.0,
+   "end": 656.937,
+   "hold": 3.0,
+   "note": "(silence, 3 s; only room tone returns)"
+  },
+  {
+   "id": "09.pre",
+   "start": 656.937,
+   "speech": 0.0,
+   "end": 657.737,
+   "hold": 0.8,
+   "note": "chapter title; rain"
+  },
+  {
+   "id": "09.01",
+   "start": 657.737,
+   "speech": 5.806,
+   "end": 663.893,
+   "text": "Six months later, in July 2026, Tim went back to the prison.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.02",
+   "start": 663.893,
+   "speech": 15.484,
+   "end": 679.727,
+   "text": "He told lawmakers he barely recognised his sister. She seemed frail. Stooped. Her teeth had changed. Her hair was much greyer than two years before. She struggled to focus on their conversation.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.03",
+   "start": 679.727,
+   "speech": 4.839,
+   "end": 684.916,
+   "text": "But there was one thing she kept coming back to.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.04",
+   "start": 684.916,
+   "speech": 0.968,
+   "end": 686.234,
+   "text": "One question.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.05",
+   "start": 686.234,
+   "speech": 2.419,
+   "end": 689.003,
+   "text": "When would she be released?",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.06",
+   "start": 689.003,
+   "speech": 3.387,
+   "end": 692.39,
+   "text": "Tim could not give her a date.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.beat1",
+   "start": 692.39,
+   "speech": 0.0,
+   "end": 693.19,
+   "hold": 0.8,
+   "note": "(beat)"
+  },
+  {
+   "id": "09.07",
+   "start": 693.19,
+   "speech": 13.065,
+   "end": 706.605,
+   "text": "In September 2026, he appeared before Congress again. There was no reunion to report. Only an empty place at the family table, and a brother still fighting.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.08",
+   "start": 706.605,
+   "speech": 8.71,
+   "end": 715.664,
+   "text": "Remember the question at the beginning of this story? The one no one in that room could answer.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.09",
+   "start": 715.664,
+   "speech": 2.903,
+   "end": 718.918,
+   "text": "It was never really his question.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.10",
+   "start": 718.918,
+   "speech": 1.452,
+   "end": 720.369,
+   "text": "It was hers.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.sil1",
+   "start": 720.369,
+   "speech": 0.0,
+   "end": 722.369,
+   "hold": 2.0,
+   "note": "(silence, 2 s)"
+  },
+  {
+   "id": "09.11",
+   "start": 722.369,
+   "speech": 11.613,
+   "end": 734.332,
+   "text": "As of November 2026, Dawn Michelle Hunt is still in prison in China. Her family is still asking for her release on humanitarian grounds.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.12",
+   "start": 734.332,
+   "speech": 15.968,
+   "end": 750.65,
+   "text": "The State Department's advice is simple: never carry gifts or luggage across a border for people you do not truly know. Dawn thought she knew them. She had spent weeks in their company.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.13",
+   "start": 750.65,
+   "speech": 8.71,
+   "end": 759.709,
+   "text": "Twelve years ago, in a room at an airport, officers asked her a question. She answered it. Yes.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.14",
+   "start": 759.709,
+   "speech": 2.903,
+   "end": 762.963,
+   "text": "Now she is the one asking.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.15",
+   "start": 762.963,
+   "speech": 2.903,
+   "end": 766.216,
+   "text": "And no one has an answer.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.16",
+   "start": 766.216,
+   "speech": 5.323,
+   "end": 771.538,
+   "text": "The testimony, the reporting and her family's campaign are linked below.",
+   "timing": "estimated"
+  },
+  {
+   "id": "09.sil2",
+   "start": 771.538,
+   "speech": 0.0,
+   "end": 773.538,
+   "hold": 2.0,
+   "note": "two seconds of silence at the very end"
+  }
+ ],
+ "warnings": []
+}

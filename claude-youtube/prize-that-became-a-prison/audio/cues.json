@@ -1,0 +1,2425 @@
+{
+ "film": "The Prize That Became a Prison",
+ "clock": "SCRIPT_V2 script clock, seconds (design/script/SCRIPT_V2.md). Each cue carries its chapter, direction row and offset from the row start; when the edit is re-timed, set rows[].t0 from the cut and run audio/tools/retime.py.",
+ "fps": 24,
+ "duration_s": 775.0,
+ "energy": "calm",
+ "lufs": -14,
+ "true_peak_dbtp": -1.0,
+ "lra_min_lu": 7,
+ "voice_ref": "level_re_voice_db is dB under the narration's short-term loudness while it speaks (about -14 LUFS in a -14 LUFS master). Effects sit -11 to -24 dB under the voice; beds -22 to -36; the mixer may lift a hero cue it would bury (weight: hero).",
+ "room": {
+  "decay_s": 0.6,
+  "wet_db": -18
+ },
+ "air_floor": {
+  "lufs": -60,
+  "filter": "noise LP 900 Hz / HP 60 Hz",
+  "note": "Under the whole film, including the total silences, so nothing is digitally dead."
+ },
+ "music": {
+  "file": "out/audio/score_bed.wav",
+  "start_s": 0,
+  "loop": false,
+  "fade_out_s": 0.05,
+  "note": "Built from audio/score_plan.json once the score exists (not generated: waiting on the author's go for Lyria)."
+ },
+ "voice": [],
+ "voice_note": "Filled from the narration takes (audio/vo/, another agent).",
+ "duck_db": 9,
+ "duck_note": "Score ducks 9 dB under the voice where they compete; beds are already set under the voice and are not ducked. Stop-downs (silences with \"stop-down\") beat ducking at the YES lines.",
+ "rows": [
+  {
+   "id": "00.01",
+   "chapter": "00",
+   "t0": 0.0,
+   "t1": 4.0,
+   "picture": "checkin_hall scale"
+  },
+  {
+   "id": "00.02",
+   "chapter": "00",
+   "t0": 4.0,
+   "t1": 9.0,
+   "picture": "checkin_hall shoulder"
+  },
+  {
+   "id": "00.03",
+   "chapter": "00",
+   "t0": 9.0,
+   "t1": 15.0,
+   "picture": "checkin_hall wide"
+  },
+  {
+   "id": "00.04",
+   "chapter": "00",
+   "t0": 15.0,
+   "t1": 20.0,
+   "picture": "departure_gate seated_called"
+  },
+  {
+   "id": "00.05",
+   "chapter": "00",
+   "t0": 20.0,
+   "t1": 27.0,
+   "picture": "inspection_room enter, wide"
+  },
+  {
+   "id": "00.06",
+   "chapter": "00",
+   "t0": 27.0,
+   "t1": 33.0,
+   "picture": "inspection_room two_shot, dawn_close"
+  },
+  {
+   "id": "00.07",
+   "chapter": "00",
+   "t0": 33.0,
+   "t1": 37.0,
+   "picture": "inspection_room match (YES)"
+  },
+  {
+   "id": "00.08",
+   "chapter": "00",
+   "t0": 37.0,
+   "t1": 43.0,
+   "picture": "inspection_room match (YES again)"
+  },
+  {
+   "id": "00.09",
+   "chapter": "00",
+   "t0": 43.0,
+   "t1": 47.0,
+   "picture": "inspection_room handbags"
+  },
+  {
+   "id": "00.10",
+   "chapter": "00",
+   "t0": 47.0,
+   "t1": 56.0,
+   "picture": "evidence_table purses (red trace)"
+  },
+  {
+   "id": "00.11",
+   "chapter": "00",
+   "t0": 56.0,
+   "t1": 64.0,
+   "picture": "void_stage dawn"
+  },
+  {
+   "id": "00.12",
+   "chapter": "00",
+   "t0": 64.0,
+   "t1": 70.0,
+   "picture": "inspection_room match -> void_stage bags"
+  },
+  {
+   "id": "00.13",
+   "chapter": "00",
+   "t0": 70.0,
+   "t1": 77.0,
+   "picture": "void_stage dawn_high (DEATH SENTENCE / 2017)"
+  },
+  {
+   "id": "00.14",
+   "chapter": "00",
+   "t0": 77.0,
+   "t1": 81.0,
+   "picture": "prison_exterior tower"
+  },
+  {
+   "id": "00.15",
+   "chapter": "00",
+   "t0": 81.0,
+   "t1": 87.0,
+   "picture": "hearing_room wide -> witness"
+  },
+  {
+   "id": "00.16",
+   "chapter": "00",
+   "t0": 87.0,
+   "t1": 97.0,
+   "picture": "montage (0.5-0.8 s a shot)"
+  },
+  {
+   "id": "00.17",
+   "chapter": "00",
+   "t0": 97.0,
+   "t1": 102.0,
+   "picture": "void_stage bags in the beam (TITLE)"
+  },
+  {
+   "id": "01.01",
+   "chapter": "01",
+   "t0": 102.0,
+   "t1": 112.0,
+   "picture": "chicago_night wide -> profile"
+  },
+  {
+   "id": "01.02",
+   "chapter": "01",
+   "t0": 112.0,
+   "t1": 124.0,
+   "picture": "evidence_table motifs, entries"
+  },
+  {
+   "id": "01.03",
+   "chapter": "01",
+   "t0": 124.0,
+   "t1": 140.0,
+   "picture": "home dining (warm; Gene, Tim)"
+  },
+  {
+   "id": "01.04",
+   "chapter": "01",
+   "t0": 140.0,
+   "t1": 148.0,
+   "picture": "home kitchen -> kitchen_over (inbox)"
+  },
+  {
+   "id": "01.05",
+   "chapter": "01",
+   "t0": 148.0,
+   "t1": 162.0,
+   "picture": "evidence_table screen: the email"
+  },
+  {
+   "id": "01.06",
+   "chapter": "01",
+   "t0": 162.0,
+   "t1": 171.0,
+   "picture": "evidence_table screen: a search"
+  },
+  {
+   "id": "01.07",
+   "chapter": "01",
+   "t0": 171.0,
+   "t1": 178.0,
+   "picture": "evidence_table tickets"
+  },
+  {
+   "id": "01.08",
+   "chapter": "01",
+   "t0": 178.0,
+   "t1": 185.0,
+   "picture": "departure_gate window"
+  },
+  {
+   "id": "02.01",
+   "chapter": "02",
+   "t0": 185.0,
+   "t1": 194.0,
+   "picture": "aircraft_cabin window, over"
+  },
+  {
+   "id": "02.02",
+   "chapter": "02",
+   "t0": 194.0,
+   "t1": 204.0,
+   "picture": "hongkong_street wide, dawn"
+  },
+  {
+   "id": "02.03",
+   "chapter": "02",
+   "t0": 204.0,
+   "t1": 210.0,
+   "picture": "hongkong_street company"
+  },
+  {
+   "id": "02.04",
+   "chapter": "02",
+   "t0": 210.0,
+   "t1": 218.0,
+   "picture": "hotel_room window"
+  },
+  {
+   "id": "02.05",
+   "chapter": "02",
+   "t0": 218.0,
+   "t1": 230.0,
+   "picture": "train seat, aisle"
+  },
+  {
+   "id": "02.06",
+   "chapter": "02",
+   "t0": 230.0,
+   "t1": 240.0,
+   "picture": "route map: dashed line to Australia"
+  },
+  {
+   "id": "03.01",
+   "chapter": "03",
+   "t0": 240.0,
+   "t1": 250.0,
+   "picture": "hotel_room accept"
+  },
+  {
+   "id": "03.02",
+   "chapter": "03",
+   "t0": 250.0,
+   "t1": 264.0,
+   "picture": "leather_market wide, stall, purchase"
+  },
+  {
+   "id": "03.03",
+   "chapter": "03",
+   "t0": 264.0,
+   "t1": 270.0,
+   "picture": "hotel_room pack"
+  },
+  {
+   "id": "03.04",
+   "chapter": "03",
+   "t0": 270.0,
+   "t1": 278.0,
+   "picture": "evidence_table purses: the seam"
+  },
+  {
+   "id": "03.05",
+   "chapter": "03",
+   "t0": 278.0,
+   "t1": 286.0,
+   "picture": "checkin_hall scale (matched)"
+  },
+  {
+   "id": "03.06",
+   "chapter": "03",
+   "t0": 286.0,
+   "t1": 305.0,
+   "picture": "baggage_belt curtain, belt"
+  },
+  {
+   "id": "04.01",
+   "chapter": "04",
+   "t0": 305.0,
+   "t1": 312.0,
+   "picture": "departure_gate seated_called (held)"
+  },
+  {
+   "id": "04.02",
+   "chapter": "04",
+   "t0": 312.0,
+   "t1": 317.0,
+   "picture": "inspection_room enter, wide"
+  },
+  {
+   "id": "04.03",
+   "chapter": "04",
+   "t0": 317.0,
+   "t1": 327.0,
+   "picture": "inspection_room match (YES, YES)"
+  },
+  {
+   "id": "04.04",
+   "chapter": "04",
+   "t0": 327.0,
+   "t1": 333.0,
+   "picture": "inspection_room handbags (officer's hand)"
+  },
+  {
+   "id": "04.05",
+   "chapter": "04",
+   "t0": 333.0,
+   "t1": 345.0,
+   "picture": "split frame: purses | handbags"
+  },
+  {
+   "id": "04.06",
+   "chapter": "04",
+   "t0": 345.0,
+   "t1": 352.0,
+   "picture": "inspection_room empty"
+  },
+  {
+   "id": "04.07",
+   "chapter": "04",
+   "t0": 352.0,
+   "t1": 368.0,
+   "picture": "route map: Australia / Qingdao"
+  },
+  {
+   "id": "04.08",
+   "chapter": "04",
+   "t0": 368.0,
+   "t1": 380.0,
+   "picture": "detention_corridor corridor (2014)"
+  },
+  {
+   "id": "05.01",
+   "chapter": "05",
+   "t0": 380.0,
+   "t1": 392.0,
+   "picture": "detention_corridor door, chair"
+  },
+  {
+   "id": "05.02",
+   "chapter": "05",
+   "t0": 392.0,
+   "t1": 402.0,
+   "picture": "detention_corridor envelope_high"
+  },
+  {
+   "id": "05.03",
+   "chapter": "05",
+   "t0": 402.0,
+   "t1": 430.0,
+   "picture": "void_stage pool (calendar 2014-2017)"
+  },
+  {
+   "id": "05.04",
+   "chapter": "05",
+   "t0": 430.0,
+   "t1": 445.0,
+   "picture": "detention_corridor corridor, locked"
+  },
+  {
+   "id": "06.01",
+   "chapter": "06",
+   "t0": 445.0,
+   "t1": 450.0,
+   "picture": "courtroom wide (2017)"
+  },
+  {
+   "id": "06.02",
+   "chapter": "06",
+   "t0": 450.0,
+   "t1": 468.0,
+   "picture": "void_stage dawn_close (DEATH SENTENCE -> LIFE)"
+  },
+  {
+   "id": "06.03",
+   "chapter": "06",
+   "t0": 468.0,
+   "t1": 475.0,
+   "picture": "courtroom dock"
+  },
+  {
+   "id": "06.04",
+   "chapter": "06",
+   "t0": 475.0,
+   "t1": 482.0,
+   "picture": "courtroom bench"
+  },
+  {
+   "id": "06.05",
+   "chapter": "06",
+   "t0": 482.0,
+   "t1": 495.0,
+   "picture": "evidence_table pair (ministry)"
+  },
+  {
+   "id": "06.06",
+   "chapter": "06",
+   "t0": 495.0,
+   "t1": 513.0,
+   "picture": "void_stage divide"
+  },
+  {
+   "id": "06.07",
+   "chapter": "06",
+   "t0": 513.0,
+   "t1": 525.0,
+   "picture": "void_stage dawn_close (\"Deceived. And guilty anyway.\")"
+  },
+  {
+   "id": "07.01",
+   "chapter": "07",
+   "t0": 525.0,
+   "t1": 535.0,
+   "picture": "prison_exterior wall, gate"
+  },
+  {
+   "id": "07.02",
+   "chapter": "07",
+   "t0": 535.0,
+   "t1": 555.0,
+   "picture": "visiting_room wide, glass"
+  },
+  {
+   "id": "07.03",
+   "chapter": "07",
+   "t0": 555.0,
+   "t1": 570.0,
+   "picture": "void_stage cell_far -> cell_floor"
+  },
+  {
+   "id": "07.04",
+   "chapter": "07",
+   "t0": 570.0,
+   "t1": 580.0,
+   "picture": "tim_desk letters, lamp"
+  },
+  {
+   "id": "07.05",
+   "chapter": "07",
+   "t0": 580.0,
+   "t1": 588.0,
+   "picture": "hearing_room wide, witness (SEPTEMBER 2024)"
+  },
+  {
+   "id": "07.06",
+   "chapter": "07",
+   "t0": 588.0,
+   "t1": 596.0,
+   "picture": "evidence_table page (S1 lit)"
+  },
+  {
+   "id": "07.07",
+   "chapter": "07",
+   "t0": 596.0,
+   "t1": 610.0,
+   "picture": "tim_desk bill page (MAY 2025)"
+  },
+  {
+   "id": "08.01",
+   "chapter": "08",
+   "t0": 610.0,
+   "t1": 624.0,
+   "picture": "home dining, cold, Gene alone"
+  },
+  {
+   "id": "08.02",
+   "chapter": "08",
+   "t0": 624.0,
+   "t1": 638.0,
+   "picture": "home chair, Gene in profile"
+  },
+  {
+   "id": "08.03",
+   "chapter": "08",
+   "t0": 638.0,
+   "t1": 648.0,
+   "picture": "home blinds (JANUARY 25, 2026)"
+  },
+  {
+   "id": "08.04",
+   "chapter": "08",
+   "t0": 648.0,
+   "t1": 656.0,
+   "picture": "home chair, empty"
+  },
+  {
+   "id": "08.05",
+   "chapter": "08",
+   "t0": 656.0,
+   "t1": 670.0,
+   "picture": "void_stage chair"
+  },
+  {
+   "id": "09.01",
+   "chapter": "09",
+   "t0": 670.0,
+   "t1": 678.0,
+   "picture": "prison_exterior gate (JULY 2026)"
+  },
+  {
+   "id": "09.02",
+   "chapter": "09",
+   "t0": 678.0,
+   "t1": 698.0,
+   "picture": "visiting_room reverse"
+  },
+  {
+   "id": "09.03",
+   "chapter": "09",
+   "t0": 698.0,
+   "t1": 708.0,
+   "picture": "visiting_room glass, locked, long hold"
+  },
+  {
+   "id": "09.04",
+   "chapter": "09",
+   "t0": 708.0,
+   "t1": 714.0,
+   "picture": "visiting_room empty"
+  },
+  {
+   "id": "09.05",
+   "chapter": "09",
+   "t0": 714.0,
+   "t1": 722.0,
+   "picture": "hearing_room witness (SEPTEMBER 2026)"
+  },
+  {
+   "id": "09.06",
+   "chapter": "09",
+   "t0": 722.0,
+   "t1": 728.0,
+   "picture": "home chair, empty"
+  },
+  {
+   "id": "09.07",
+   "chapter": "09",
+   "t0": 728.0,
+   "t1": 734.0,
+   "picture": "hearing_room wide (matched)"
+  },
+  {
+   "id": "09.08",
+   "chapter": "09",
+   "t0": 734.0,
+   "t1": 752.0,
+   "picture": "void_stage dawn"
+  },
+  {
+   "id": "09.09",
+   "chapter": "09",
+   "t0": 752.0,
+   "t1": 768.0,
+   "picture": "inspection_room match -> void_stage bags (YES -> WHEN?)"
+  },
+  {
+   "id": "09.10",
+   "chapter": "09",
+   "t0": 768.0,
+   "t1": 775.0,
+   "picture": "void_stage bags held (end screen)"
+  }
+ ],
+ "beds": [
+  {
+   "id": "terminal_hall.0",
+   "sound": "audio/sfx/amb_terminal_hall.wav",
+   "rows": [
+    "00.01",
+    "00.04"
+   ],
+   "chapter": "00",
+   "t0": 0.0,
+   "t1": 20.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "Terminal room tone. Under the scale in 0:00-0:09, then up a little on the wide."
+  },
+  {
+   "id": "terminal_hall.1",
+   "sound": "audio/sfx/amb_terminal_hall.wav",
+   "rows": [
+    "01.08",
+    "01.08"
+   ],
+   "chapter": "01",
+   "t0": 178.0,
+   "t1": 183.5,
+   "offset_in_s": 0,
+   "offset_out_s": -1.5,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "terminal_hall.2",
+   "sound": "audio/sfx/amb_terminal_hall.wav",
+   "rows": [
+    "03.05",
+    "03.05"
+   ],
+   "chapter": "03",
+   "t0": 278.0,
+   "t1": 286.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "terminal_hall.3",
+   "sound": "audio/sfx/amb_terminal_hall.wav",
+   "rows": [
+    "04.01",
+    "04.01"
+   ],
+   "chapter": "04",
+   "t0": 305.0,
+   "t1": 312.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "checkin_belt.0",
+   "sound": "audio/sfx/amb_checkin_belt.wav",
+   "rows": [
+    "00.01",
+    "00.02"
+   ],
+   "chapter": "00",
+   "t0": 0.0,
+   "t1": 9.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.05,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Belt motor on the scale shots."
+  },
+  {
+   "id": "checkin_belt.1",
+   "sound": "audio/sfx/amb_checkin_belt.wav",
+   "rows": [
+    "03.05",
+    "03.05"
+   ],
+   "chapter": "03",
+   "t0": 278.0,
+   "t1": 286.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.05,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "baggage_belt.0",
+   "sound": "audio/sfx/amb_baggage_belt.wav",
+   "rows": [
+    "03.06",
+    "03.06"
+   ],
+   "chapter": "03",
+   "t0": 286.0,
+   "t1": 305.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -22,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "Belt rollers; the pulse returns over it."
+  },
+  {
+   "id": "inspection_room.0",
+   "sound": "audio/sfx/amb_inspection_room.wav",
+   "rows": [
+    "00.05",
+    "00.09"
+   ],
+   "chapter": "00",
+   "t0": 20.0,
+   "t1": 47.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "The room. Out with the hard stop at the discovery (5:31); back after the silence, on the split frame (5:33). At 1:04 and 12:32 it vanishes with the room on the match cut to the void."
+  },
+  {
+   "id": "inspection_room.1",
+   "sound": "audio/sfx/amb_inspection_room.wav",
+   "rows": [
+    "00.12",
+    "00.12"
+   ],
+   "chapter": "00",
+   "t0": 64.0,
+   "t1": 65.0,
+   "offset_in_s": 0,
+   "offset_out_s": -5.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "inspection_room.2",
+   "sound": "audio/sfx/amb_inspection_room.wav",
+   "rows": [
+    "04.02",
+    "04.04"
+   ],
+   "chapter": "04",
+   "t0": 312.0,
+   "t1": 331.0,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "inspection_room.3",
+   "sound": "audio/sfx/amb_inspection_room.wav",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 333.0,
+   "t1": 352.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "inspection_room.4",
+   "sound": "audio/sfx/amb_inspection_room.wav",
+   "rows": [
+    "09.09",
+    "09.09"
+   ],
+   "chapter": "09",
+   "t0": 752.0,
+   "t1": 756.0,
+   "offset_in_s": 0,
+   "offset_out_s": -12.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "fluorescent_hum.0",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "00.05",
+    "00.09"
+   ],
+   "chapter": "00",
+   "t0": 20.0,
+   "t1": 47.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "50 Hz tubes (China). Under the inspection room at -30; the bed of the detention corridor."
+  },
+  {
+   "id": "fluorescent_hum.1",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "00.12",
+    "00.12"
+   ],
+   "chapter": "00",
+   "t0": 64.0,
+   "t1": 65.0,
+   "offset_in_s": 0,
+   "offset_out_s": -5.0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "fluorescent_hum.2",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "04.02",
+    "04.04"
+   ],
+   "chapter": "04",
+   "t0": 312.0,
+   "t1": 331.0,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "fluorescent_hum.3",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "04.05",
+    "04.06"
+   ],
+   "chapter": "04",
+   "t0": 333.0,
+   "t1": 352.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "fluorescent_hum.4",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "04.08",
+    "05.02"
+   ],
+   "chapter": "04",
+   "t0": 368.0,
+   "t1": 402.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "fluorescent_hum.5",
+   "sound": "audio/sfx/amb_fluorescent_hum.wav",
+   "rows": [
+    "05.04",
+    "05.04"
+   ],
+   "chapter": "05",
+   "t0": 430.0,
+   "t1": 445.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.0",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "00.11",
+    "00.11"
+   ],
+   "chapter": "00",
+   "t0": 56.0,
+   "t1": 64.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "The void's own air, barely there. In Ch 08 it is the \"room tone\" that returns after the total silence."
+  },
+  {
+   "id": "void_air.1",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "00.12",
+    "00.13"
+   ],
+   "chapter": "00",
+   "t0": 65.0,
+   "t1": 77.0,
+   "offset_in_s": 1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.2",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "00.17",
+    "00.17"
+   ],
+   "chapter": "00",
+   "t0": 97.0,
+   "t1": 102.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.3",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "05.03",
+    "05.03"
+   ],
+   "chapter": "05",
+   "t0": 402.0,
+   "t1": 430.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.4",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "06.02",
+    "06.02"
+   ],
+   "chapter": "06",
+   "t0": 450.0,
+   "t1": 468.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.5",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "06.06",
+    "06.07"
+   ],
+   "chapter": "06",
+   "t0": 495.0,
+   "t1": 525.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.6",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "07.03",
+    "07.03"
+   ],
+   "chapter": "07",
+   "t0": 555.0,
+   "t1": 570.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.7",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "08.05",
+    "08.05"
+   ],
+   "chapter": "08",
+   "t0": 656.0,
+   "t1": 670.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "void_air.8",
+   "sound": "audio/sfx/amb_void_air.wav",
+   "rows": [
+    "09.08",
+    "09.10"
+   ],
+   "chapter": "09",
+   "t0": 734.0,
+   "t1": 773.0,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -34,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "rain_concrete.0",
+   "sound": "audio/sfx/amb_rain_concrete.wav",
+   "rows": [
+    "00.14",
+    "00.14"
+   ],
+   "chapter": "00",
+   "t0": 77.0,
+   "t1": 81.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "Rain and wind at the prison."
+  },
+  {
+   "id": "rain_concrete.1",
+   "sound": "audio/sfx/amb_rain_concrete.wav",
+   "rows": [
+    "07.01",
+    "07.01"
+   ],
+   "chapter": "07",
+   "t0": 524.0,
+   "t1": 535.0,
+   "offset_in_s": -1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "rain_concrete.2",
+   "sound": "audio/sfx/amb_rain_concrete.wav",
+   "rows": [
+    "09.01",
+    "09.01"
+   ],
+   "chapter": "09",
+   "t0": 669.0,
+   "t1": 678.0,
+   "offset_in_s": -1.0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.6,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "hearing_room.0",
+   "sound": "audio/sfx/amb_hearing_room.wav",
+   "rows": [
+    "00.15",
+    "00.15"
+   ],
+   "chapter": "00",
+   "t0": 81.0,
+   "t1": 87.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "A large room, very quiet. At 1:25 it drops to near silence for 1 s after \"answer\"."
+  },
+  {
+   "id": "hearing_room.1",
+   "sound": "audio/sfx/amb_hearing_room.wav",
+   "rows": [
+    "07.05",
+    "07.05"
+   ],
+   "chapter": "07",
+   "t0": 580.0,
+   "t1": 588.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "hearing_room.2",
+   "sound": "audio/sfx/amb_hearing_room.wav",
+   "rows": [
+    "09.05",
+    "09.05"
+   ],
+   "chapter": "09",
+   "t0": 714.0,
+   "t1": 722.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "hearing_room.3",
+   "sound": "audio/sfx/amb_hearing_room.wav",
+   "rows": [
+    "09.07",
+    "09.07"
+   ],
+   "chapter": "09",
+   "t0": 728.0,
+   "t1": 734.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "chicago_night.0",
+   "sound": "audio/sfx/amb_chicago_night.wav",
+   "rows": [
+    "01.01",
+    "01.01"
+   ],
+   "chapter": "01",
+   "t0": 102.0,
+   "t1": 112.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 1.0,
+   "fade_out_s": 0.8,
+   "loop": true,
+   "note": "City through glass."
+  },
+  {
+   "id": "home_room.0",
+   "sound": "audio/sfx/amb_home_room.wav",
+   "rows": [
+    "01.03",
+    "01.04"
+   ],
+   "chapter": "01",
+   "t0": 124.0,
+   "t1": 148.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "The house (and Tim's desk). In Ch 08 it cuts out with the clock on the cut to the empty chair (10:48)."
+  },
+  {
+   "id": "home_room.1",
+   "sound": "audio/sfx/amb_home_room.wav",
+   "rows": [
+    "07.04",
+    "07.04"
+   ],
+   "chapter": "07",
+   "t0": 570.0,
+   "t1": 580.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "home_room.2",
+   "sound": "audio/sfx/amb_home_room.wav",
+   "rows": [
+    "07.07",
+    "07.07"
+   ],
+   "chapter": "07",
+   "t0": 596.0,
+   "t1": 608.0,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "home_room.3",
+   "sound": "audio/sfx/amb_home_room.wav",
+   "rows": [
+    "08.01",
+    "08.03"
+   ],
+   "chapter": "08",
+   "t0": 610.0,
+   "t1": 648.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "home_room.4",
+   "sound": "audio/sfx/amb_home_room.wav",
+   "rows": [
+    "09.06",
+    "09.06"
+   ],
+   "chapter": "09",
+   "t0": 722.0,
+   "t1": 728.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "aircraft_cabin.0",
+   "sound": "audio/sfx/amb_aircraft_cabin.wav",
+   "rows": [
+    "02.01",
+    "02.01"
+   ],
+   "chapter": "02",
+   "t0": 185.0,
+   "t1": 194.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.5,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Engine hum."
+  },
+  {
+   "id": "hk_street.0",
+   "sound": "audio/sfx/amb_hk_street.wav",
+   "rows": [
+    "02.02",
+    "02.03"
+   ],
+   "chapter": "02",
+   "t0": 194.0,
+   "t1": 210.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Street, trams, rain on awnings."
+  },
+  {
+   "id": "hotel_room.0",
+   "sound": "audio/sfx/amb_hotel_room.wav",
+   "rows": [
+    "02.04",
+    "02.04"
+   ],
+   "chapter": "02",
+   "t0": 210.0,
+   "t1": 218.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": "Air conditioner, the city far below; \"a soft room\" in Ch 03."
+  },
+  {
+   "id": "hotel_room.1",
+   "sound": "audio/sfx/amb_hotel_room.wav",
+   "rows": [
+    "03.01",
+    "03.01"
+   ],
+   "chapter": "03",
+   "t0": 240.0,
+   "t1": 250.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "hotel_room.2",
+   "sound": "audio/sfx/amb_hotel_room.wav",
+   "rows": [
+    "03.03",
+    "03.03"
+   ],
+   "chapter": "03",
+   "t0": 264.0,
+   "t1": 270.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.5,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "train.0",
+   "sound": "audio/sfx/amb_train.wav",
+   "rows": [
+    "02.05",
+    "02.05"
+   ],
+   "chapter": "02",
+   "t0": 218.0,
+   "t1": 230.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Rails."
+  },
+  {
+   "id": "market.0",
+   "sound": "audio/sfx/amb_market.wav",
+   "rows": [
+    "03.02",
+    "03.02"
+   ],
+   "chapter": "03",
+   "t0": 250.0,
+   "t1": 264.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -26,
+   "fade_in_s": 0.4,
+   "fade_out_s": 0.6,
+   "loop": true,
+   "note": "Market, no walla."
+  },
+  {
+   "id": "courtroom.0",
+   "sound": "audio/sfx/amb_courtroom.wav",
+   "rows": [
+    "06.01",
+    "06.01"
+   ],
+   "chapter": "06",
+   "t0": 445.0,
+   "t1": 450.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": "Room tone, no gavel."
+  },
+  {
+   "id": "courtroom.1",
+   "sound": "audio/sfx/amb_courtroom.wav",
+   "rows": [
+    "06.03",
+    "06.04"
+   ],
+   "chapter": "06",
+   "t0": 468.0,
+   "t1": 482.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.4,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "phone_line.0",
+   "sound": "audio/sfx/amb_phone_line.wav",
+   "rows": [
+    "07.02",
+    "07.02"
+   ],
+   "chapter": "07",
+   "t0": 535.0,
+   "t1": 555.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": "The handset line's hiss. In Ch 09 it cuts at 11:38.5: the silence under \"When would she be released?\"."
+  },
+  {
+   "id": "phone_line.1",
+   "sound": "audio/sfx/amb_phone_line.wav",
+   "rows": [
+    "09.02",
+    "09.02"
+   ],
+   "chapter": "09",
+   "t0": 678.0,
+   "t1": 698.5,
+   "offset_in_s": 0,
+   "offset_out_s": 0.5,
+   "level_re_voice_db": -30,
+   "fade_in_s": 0.2,
+   "fade_out_s": 0.05,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "evidence_room.0",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "00.10",
+    "00.10"
+   ],
+   "chapter": "00",
+   "t0": 47.0,
+   "t1": 56.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": "The evidence table's near-silent room under paper."
+  },
+  {
+   "id": "evidence_room.1",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "01.02",
+    "01.02"
+   ],
+   "chapter": "01",
+   "t0": 112.0,
+   "t1": 124.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "evidence_room.2",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "01.05",
+    "01.07"
+   ],
+   "chapter": "01",
+   "t0": 148.0,
+   "t1": 178.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "evidence_room.3",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "03.04",
+    "03.04"
+   ],
+   "chapter": "03",
+   "t0": 270.0,
+   "t1": 278.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "evidence_room.4",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "06.05",
+    "06.05"
+   ],
+   "chapter": "06",
+   "t0": 482.0,
+   "t1": 495.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "evidence_room.5",
+   "sound": "audio/sfx/amb_evidence_room.wav",
+   "rows": [
+    "07.06",
+    "07.06"
+   ],
+   "chapter": "07",
+   "t0": 588.0,
+   "t1": 596.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -36,
+   "fade_in_s": 0.3,
+   "fade_out_s": 0.3,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "clock.0",
+   "sound": "audio/sfx/sfx_clock_tick.wav",
+   "rows": [
+    "01.03",
+    "01.03"
+   ],
+   "chapter": "01",
+   "t0": 124.0,
+   "t1": 140.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "A clock. Ch 05: very low (-32), it stops on \"worse\" (7:18.2): a hard stop between ticks, no fade. Ch 08: it stops dead on the cut to the empty chair (10:48)."
+  },
+  {
+   "id": "clock.1",
+   "sound": "audio/sfx/sfx_clock_tick.wav",
+   "rows": [
+    "05.03",
+    "05.04"
+   ],
+   "chapter": "05",
+   "t0": 402.0,
+   "t1": 438.2,
+   "offset_in_s": 0,
+   "offset_out_s": -6.8,
+   "level_re_voice_db": -32,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "clock.2",
+   "sound": "audio/sfx/sfx_clock_tick.wav",
+   "rows": [
+    "08.01",
+    "08.03"
+   ],
+   "chapter": "08",
+   "t0": 610.0,
+   "t1": 648.0,
+   "offset_in_s": 0,
+   "offset_out_s": 0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 0.0,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  },
+  {
+   "id": "drone.0",
+   "sound": "audio/sfx/sd_void_drone.wav",
+   "rows": [
+    "00.11",
+    "00.11"
+   ],
+   "chapter": "00",
+   "t0": 56.0,
+   "t1": 65.0,
+   "offset_in_s": 0,
+   "offset_out_s": 1.0,
+   "level_re_voice_db": -24,
+   "fade_in_s": 2.5,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": "THE DRONE: in under void_stage dawn (0:56), cut dead with the score at \"were not\" (1:05); returns quietly at 12:32 under YES -> WHEN? and gives way to the one warm piano note (score SC09c), out by 12:46."
+  },
+  {
+   "id": "drone.1",
+   "sound": "audio/sfx/sd_void_drone.wav",
+   "rows": [
+    "09.09",
+    "09.09"
+   ],
+   "chapter": "09",
+   "t0": 752.0,
+   "t1": 766.0,
+   "offset_in_s": 0,
+   "offset_out_s": -2.0,
+   "level_re_voice_db": -28,
+   "fade_in_s": 2.5,
+   "fade_out_s": 0.0,
+   "loop": true,
+   "note": ""
+  }
+ ],
+ "silence_ok": [
+  [
+   0.0,
+   2.0
+  ],
+  [
+   33.0,
+   44.0
+  ],
+  [
+   43.0,
+   44.0
+  ],
+  [
+   65.0,
+   66.5
+  ],
+  [
+   85.0,
+   86.5
+  ],
+  [
+   101.0,
+   102.0
+  ],
+  [
+   183.5,
+   185.0
+  ],
+  [
+   238.0,
+   239.5
+  ],
+  [
+   278.5,
+   280.5
+  ],
+  [
+   319.4,
+   320.0
+  ],
+  [
+   322.4,
+   323.0
+  ],
+  [
+   331.0,
+   333.0
+  ],
+  [
+   378.0,
+   380.0
+  ],
+  [
+   441.0,
+   443.0
+  ],
+  [
+   447.5,
+   449.0
+  ],
+  [
+   513.5,
+   515.0
+  ],
+  [
+   520.0,
+   522.0
+  ],
+  [
+   607.5,
+   609.0
+  ],
+  [
+   640.5,
+   642.0
+  ],
+  [
+   648.0,
+   654.5
+  ],
+  [
+   698.5,
+   708.0
+  ],
+  [
+   729.0,
+   730.0
+  ],
+  [
+   731.0,
+   733.0
+  ],
+  [
+   734.0,
+   752.0
+  ],
+  [
+   773.0,
+   775.0
+  ]
+ ],
+ "silences": [
+  {
+   "id": "no_music_open",
+   "chapter": "00",
+   "row": "00.01",
+   "offset_s": 0.0,
+   "t0": 0.0,
+   "t1": 2.0,
+   "out": "score",
+   "why": "No music for 2 s: the belt, the beep and the hall only."
+  },
+  {
+   "id": "after_yes",
+   "chapter": "00",
+   "row": "00.07",
+   "offset_s": 0.0,
+   "t0": 33.0,
+   "t1": 44.0,
+   "out": "score",
+   "why": "The pulse stops dead on \"Yes.\" (0:33) and stays out through the second YES; voice and room only."
+  },
+  {
+   "id": "linings_drop",
+   "chapter": "00",
+   "row": "00.09",
+   "offset_s": 0.0,
+   "t0": 43.0,
+   "t1": 44.0,
+   "out": "score, effects",
+   "why": "(silence, 1 s) before \"Inside the luggage...\": room tone low."
+  },
+  {
+   "id": "were_not",
+   "chapter": "00",
+   "row": "00.12",
+   "offset_s": 1.0,
+   "t0": 65.0,
+   "t1": 66.5,
+   "out": "score, drone, room",
+   "why": "Score and drone cut dead at \"were not.\" (1:05); 1.5 s of the void's air only, then \"Three years later...\"."
+  },
+  {
+   "id": "after_answer",
+   "chapter": "00",
+   "row": "00.15",
+   "offset_s": 4.0,
+   "t0": 85.0,
+   "t1": 86.5,
+   "out": "score",
+   "why": "1 s of near silence after \"answer\" (1:25): the hearing room drops to near silence (-40 re voice)."
+  },
+  {
+   "id": "title_decay",
+   "chapter": "00",
+   "row": "00.17",
+   "offset_s": 4.0,
+   "t0": 101.0,
+   "t1": 102.0,
+   "out": "all but the decaying score tail",
+   "why": "The score decays to silence over 4 s; cut on the silence to Ch 01 (1:42)."
+  },
+  {
+   "id": "ch01_end",
+   "chapter": "01",
+   "row": "01.08",
+   "offset_s": 5.5,
+   "t0": 183.5,
+   "t1": 185.0,
+   "out": "score",
+   "why": "(silence, 1.5 s): the gate's room only."
+  },
+  {
+   "id": "ch02_end",
+   "chapter": "02",
+   "row": "02.06",
+   "offset_s": 8.0,
+   "t0": 238.0,
+   "t1": 239.5,
+   "out": "score",
+   "why": "The travel pad drops out on \"one more gift\" (3:57); 1 s of silence."
+  },
+  {
+   "id": "fee_drop",
+   "chapter": "03",
+   "row": "03.05",
+   "offset_s": 0.5,
+   "t0": 278.5,
+   "t1": 280.5,
+   "out": "score",
+   "why": "Drop before \"Overweight.\" (4:38.5-4:40.5): belt and hall low; then the beep."
+  },
+  {
+   "id": "yes_stop_1",
+   "chapter": "04",
+   "row": "04.03",
+   "offset_s": 2.4,
+   "t0": 319.4,
+   "t1": 320.0,
+   "out": "score (stop-down)",
+   "why": "The pulse stops 0.6 s before the first \"Yes\" (5:20) and comes back after it."
+  },
+  {
+   "id": "yes_stop_2",
+   "chapter": "04",
+   "row": "04.03",
+   "offset_s": 5.4,
+   "t0": 322.4,
+   "t1": 323.0,
+   "out": "score (stop-down)",
+   "why": "The same before the second \"Yes\" (5:23)."
+  },
+  {
+   "id": "discovery",
+   "chapter": "04",
+   "row": "04.04",
+   "offset_s": 4.0,
+   "t0": 331.0,
+   "t1": 333.0,
+   "out": "score, beds",
+   "why": "Hard stop on \"...inside the linings.\" (5:31): the pulse and the room cut together; 1.5 s of silence (air floor only), then the room returns on the split frame (5:33)."
+  },
+  {
+   "id": "ch04_end",
+   "chapter": "04",
+   "row": "04.08",
+   "offset_s": 10.0,
+   "t0": 378.0,
+   "t1": 380.0,
+   "out": "score",
+   "why": "(silence, 1.5 s): the corridor hum only."
+  },
+  {
+   "id": "clock_stop",
+   "chapter": "05",
+   "row": "05.04",
+   "offset_s": 8.2,
+   "t0": 438.2,
+   "t1": 438.2,
+   "out": "clock",
+   "why": "The clock stops on \"worse\" (7:18.2), between ticks."
+  },
+  {
+   "id": "ch05_end",
+   "chapter": "05",
+   "row": "05.04",
+   "offset_s": 11.0,
+   "t0": 441.0,
+   "t1": 443.0,
+   "out": "score",
+   "why": "(silence, 1.5 s): the corridor hum only."
+  },
+  {
+   "id": "sentence_drop",
+   "chapter": "06",
+   "row": "06.01",
+   "offset_s": 2.5,
+   "t0": 447.5,
+   "t1": 449.0,
+   "out": "score",
+   "why": "Drop before \"A death sentence\" (7:27.5-7:29): courtroom tone only."
+  },
+  {
+   "id": "deceived_drop",
+   "chapter": "06",
+   "row": "06.07",
+   "offset_s": 0.5,
+   "t0": 513.5,
+   "t1": 515.0,
+   "out": "score",
+   "why": "Drop before \"Deceived.\" (8:33.5): the score has thinned out; the void's air only."
+  },
+  {
+   "id": "deceived_after",
+   "chapter": "06",
+   "row": "06.07",
+   "offset_s": 7.0,
+   "t0": 520.0,
+   "t1": 522.0,
+   "out": "score",
+   "why": "Silence, 2 s, after \"And guilty anyway.\", then cut."
+  },
+  {
+   "id": "ch07_end",
+   "chapter": "07",
+   "row": "07.07",
+   "offset_s": 11.5,
+   "t0": 607.5,
+   "t1": 609.0,
+   "out": "score",
+   "why": "(silence, 1.5 s)."
+  },
+  {
+   "id": "gene_drop",
+   "chapter": "08",
+   "row": "08.03",
+   "offset_s": 2.5,
+   "t0": 640.5,
+   "t1": 642.0,
+   "out": "score",
+   "why": "Drop before \"On January 25th, 2026, Gene Hunt died.\" (10:40.5): the clock and the room only."
+  },
+  {
+   "id": "gene_total",
+   "chapter": "08",
+   "row": "08.04",
+   "offset_s": 0.0,
+   "t0": 648.0,
+   "t1": 654.5,
+   "out": "everything but the air floor (score, room tone, clock)",
+   "why": "TOTAL SILENCE on the cut to the empty chair (10:48): 2 s, \"He never saw Dawn come home.\" over it, then 2 s more. The loudest moment of the film."
+  },
+  {
+   "id": "gene_room_returns",
+   "chapter": "08",
+   "row": "08.05",
+   "offset_s": 0.0,
+   "t0": 656.0,
+   "t1": 656.0,
+   "out": "-",
+   "why": "Room tone (the void's air, -30 re voice) returns on the cut to void_stage chair (10:56)."
+  },
+  {
+   "id": "question",
+   "chapter": "09",
+   "row": "09.03",
+   "offset_s": 0.5,
+   "t0": 698.5,
+   "t1": 708.0,
+   "out": "score, phone line",
+   "why": "Silence under \"When would she be released?\" (11:38.5-11:48): the line's hiss cuts out; the air floor only."
+  },
+  {
+   "id": "hers_drop",
+   "chapter": "09",
+   "row": "09.07",
+   "offset_s": 1.0,
+   "t0": 729.0,
+   "t1": 730.0,
+   "out": "score",
+   "why": "Drop before \"It was hers.\" (12:09)."
+  },
+  {
+   "id": "hers_after",
+   "chapter": "09",
+   "row": "09.07",
+   "offset_s": 3.0,
+   "t0": 731.0,
+   "t1": 733.0,
+   "out": "score",
+   "why": "(silence, 2 s) after \"It was hers.\""
+  },
+  {
+   "id": "status_line",
+   "chapter": "09",
+   "row": "09.08",
+   "offset_s": 0.0,
+   "t0": 734.0,
+   "t1": 752.0,
+   "out": "score, effects",
+   "why": "void_stage dawn: Silence. The status line and the State Department line over the void's air only."
+  },
+  {
+   "id": "very_end",
+   "chapter": "09",
+   "row": "09.10",
+   "offset_s": 5.0,
+   "t0": 773.0,
+   "t1": 775.0,
+   "out": "everything but the air floor",
+   "why": "Two seconds of silence at the very end."
+  }
+ ],
+ "drops_before_reveals": [
+  "linings_drop",
+  "were_not",
+  "fee_drop",
+  "yes_stop_1",
+  "yes_stop_2",
+  "discovery",
+  "sentence_drop",
+  "deceived_drop",
+  "gene_drop",
+  "gene_total",
+  "question",
+  "hers_drop"
+ ],
+ "cues": [
+  {
+   "id": "00.01-scale_beep",
+   "t": 0.6,
+   "sound": "audio/sfx/sfx_scale_beep.wav",
+   "weight": "hero",
+   "align": "start",
+   "chapter": "00",
+   "row": "00.01",
+   "offset_s": 0.6,
+   "anchor": "the display settles on OVERWEIGHT",
+   "level_re_voice_db": -14,
+   "why": "The film's first sound; paid off at 4:41."
+  },
+  {
+   "id": "00.02-booklet",
+   "t": 4.6,
+   "sound": "audio/sfx/sfx_booklet_slide.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "00",
+   "row": "00.02",
+   "offset_s": 0.6,
+   "anchor": "her hand slides the booklet across",
+   "level_re_voice_db": -18,
+   "why": "Paper on laminate."
+  },
+  {
+   "id": "00.03-tannoy_far",
+   "t": 10.2,
+   "sound": "audio/sfx/sfx_tannoy_far.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "00",
+   "row": "00.03",
+   "offset_s": 1.2,
+   "anchor": "the wide; behind \"It's 2014, at an airport in China\"",
+   "level_re_voice_db": -24,
+   "why": "A far tannoy, no intelligible words."
+  },
+  {
+   "id": "00.04-tannoy_near",
+   "t": 15.2,
+   "sound": "audio/sfx/sfx_tannoy_near.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "00",
+   "row": "00.04",
+   "offset_s": 0.2,
+   "anchor": "her head lifts",
+   "level_re_voice_db": -21,
+   "why": "The tannoy, closer: she is being called. The pulse starts under it."
+  },
+  {
+   "id": "00.05-door_inspection",
+   "t": 20.5,
+   "sound": "audio/sfx/sfx_door_steel.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "00",
+   "row": "00.05",
+   "offset_s": 0.5,
+   "anchor": "the door closes behind her",
+   "level_re_voice_db": -15,
+   "why": "Door, steel."
+  },
+  {
+   "id": "00.10-zip_tote",
+   "t": 48.0,
+   "sound": "audio/sfx/sfx_zip.wav",
+   "weight": "hero",
+   "align": "start",
+   "chapter": "00",
+   "row": "00.10",
+   "offset_s": 1.0,
+   "anchor": "the push in on the tote, before \"sewn into the linings\"",
+   "level_re_voice_db": -16,
+   "why": "A dry, close zip."
+  },
+  {
+   "id": "00.13-impact_sentence_open",
+   "t": 70.0,
+   "sound": "audio/sfx/sfx_impact_low.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "00",
+   "row": "00.13",
+   "offset_s": 0.0,
+   "anchor": "\"...a court sentences her to death\": on the cut to DEATH SENTENCE / 2017",
+   "level_re_voice_db": -11,
+   "why": "One low impact (1 of 2 in the film)."
+  },
+  {
+   "id": "01.02-pencil_entries",
+   "t": 113.5,
+   "sound": "audio/sfx/sfx_pencil_paper.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "01",
+   "row": "01.02",
+   "offset_s": 1.5,
+   "anchor": "\"liked to enter sweepstakes\"",
+   "level_re_voice_db": -20,
+   "why": "Pencils, paper."
+  },
+  {
+   "id": "01.02-paper_entries",
+   "t": 119.0,
+   "sound": "audio/sfx/sfx_paper_handle.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "01",
+   "row": "01.02",
+   "offset_s": 7.0,
+   "anchor": "\"every entry was a small possibility\"",
+   "level_re_voice_db": -21,
+   "why": "Paper."
+  },
+  {
+   "id": "01.04-mail_chime",
+   "t": 143.5,
+   "sound": "audio/sfx/sfx_mail_chime.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "01",
+   "row": "01.04",
+   "offset_s": 3.5,
+   "anchor": "the message lands, after \"What arrived in Dawn's inbox...\"",
+   "level_re_voice_db": -20,
+   "why": "One muted chime (an invented mail client)."
+  },
+  {
+   "id": "01.06-keys_search",
+   "t": 162.8,
+   "sound": "audio/sfx/sfx_keys_typing.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "01",
+   "row": "01.06",
+   "offset_s": 0.8,
+   "anchor": "\"she looked the organizers up online\"",
+   "level_re_voice_db": -21,
+   "why": "Keys."
+  },
+  {
+   "id": "01.07-paper_tickets",
+   "t": 172.0,
+   "sound": "audio/sfx/sfx_paper_handle.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "01",
+   "row": "01.07",
+   "offset_s": 1.0,
+   "anchor": "\"The tickets.\"",
+   "level_re_voice_db": -18,
+   "why": "Paper."
+  },
+  {
+   "id": "01.08-boarding_chime",
+   "t": 179.5,
+   "sound": "audio/sfx/sfx_boarding_chime.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "01",
+   "row": "01.08",
+   "offset_s": 1.5,
+   "anchor": "the gate window",
+   "level_re_voice_db": -22,
+   "why": "A boarding chime, far."
+  },
+  {
+   "id": "03.02-shutter_market",
+   "t": 252.0,
+   "sound": "audio/sfx/sfx_shutter_roll.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "03",
+   "row": "03.02",
+   "offset_s": 2.0,
+   "anchor": "the stall",
+   "level_re_voice_db": -22,
+   "why": "Metal shutters."
+  },
+  {
+   "id": "03.03-zip_pack_1",
+   "t": 265.0,
+   "sound": "audio/sfx/sfx_zip.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "03",
+   "row": "03.03",
+   "offset_s": 1.0,
+   "anchor": "\"Dawn packed the handbags herself\"",
+   "level_re_voice_db": -18,
+   "why": "Zips."
+  },
+  {
+   "id": "03.03-zip_pack_2",
+   "t": 268.0,
+   "sound": "audio/sfx/sfx_zip.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "03",
+   "row": "03.03",
+   "offset_s": 4.0,
+   "anchor": "\"Both checked in her name\"",
+   "level_re_voice_db": -19,
+   "why": "Zips."
+  },
+  {
+   "id": "03.04-seam_click",
+   "t": 276.5,
+   "sound": "audio/sfx/sfx_seam_click.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "03",
+   "row": "03.04",
+   "offset_s": 6.5,
+   "anchor": "the red trace ends and the cut-away closes",
+   "level_re_voice_db": -16,
+   "why": "A small metallic click as it closes."
+  },
+  {
+   "id": "03.05-scale_beep_again",
+   "t": 280.8,
+   "sound": "audio/sfx/sfx_scale_beep.wav",
+   "weight": "hero",
+   "align": "start",
+   "chapter": "03",
+   "row": "03.05",
+   "offset_s": 2.8,
+   "anchor": "just before \"Overweight.\"",
+   "level_re_voice_db": -14,
+   "why": "The same beep as 0:00 (the same file, the same level)."
+  },
+  {
+   "id": "04.01-tannoy_muffled",
+   "t": 305.8,
+   "sound": "audio/sfx/sfx_tannoy_near.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "04",
+   "row": "04.01",
+   "offset_s": 0.8,
+   "anchor": "the gate, held longer",
+   "level_re_voice_db": -23,
+   "why": "The tannoy, muffled."
+  },
+  {
+   "id": "04.02-door_inspection_again",
+   "t": 312.8,
+   "sound": "audio/sfx/sfx_door_steel.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "04",
+   "row": "04.02",
+   "offset_s": 0.8,
+   "anchor": "\"she is led into a room\"",
+   "level_re_voice_db": -16,
+   "why": "Door."
+  },
+  {
+   "id": "04.08-door_far",
+   "t": 376.5,
+   "sound": "audio/sfx/sfx_door_far.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "04",
+   "row": "04.08",
+   "offset_s": 8.5,
+   "anchor": "under \"The case was only beginning\", before the 1.5 s silence",
+   "level_re_voice_db": -22,
+   "why": "A door closes far down the corridor."
+  },
+  {
+   "id": "05.02-paper_envelope",
+   "t": 396.0,
+   "sound": "audio/sfx/sfx_paper_handle.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "05",
+   "row": "05.02",
+   "offset_s": 4.0,
+   "anchor": "\"gave them the emails\"",
+   "level_re_voice_db": -19,
+   "why": "Paper."
+  },
+  {
+   "id": "06.02-impact_sentence",
+   "t": 450.0,
+   "sound": "audio/sfx/sfx_impact_low.wav",
+   "weight": "hero",
+   "align": "peak",
+   "chapter": "06",
+   "row": "06.02",
+   "offset_s": 0.0,
+   "anchor": "\"A death sentence\": on the cut to void_stage dawn_close",
+   "level_re_voice_db": -11,
+   "why": "One low impact (2 of 2). Nothing at \"life\"."
+  },
+  {
+   "id": "06.05-paper_ministry",
+   "t": 483.0,
+   "sound": "audio/sfx/sfx_paper_handle.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "06",
+   "row": "06.05",
+   "offset_s": 1.0,
+   "anchor": "the sheet",
+   "level_re_voice_db": -20,
+   "why": "Paper."
+  },
+  {
+   "id": "07.04-pen_letters",
+   "t": 571.0,
+   "sound": "audio/sfx/sfx_pen_paper.wav",
+   "weight": "support",
+   "align": "start",
+   "chapter": "07",
+   "row": "07.04",
+   "offset_s": 1.0,
+   "anchor": "\"Tim wrote to officials and to lawyers\"",
+   "level_re_voice_db": -20,
+   "why": "Pen on paper."
+  },
+  {
+   "id": "07.06-paper_testimony",
+   "t": 589.0,
+   "sound": "audio/sfx/sfx_paper_handle.wav",
+   "weight": "support",
+   "align": "peak",
+   "chapter": "07",
+   "row": "07.06",
+   "offset_s": 1.0,
+   "anchor": "the page, before the marker wipe",
+   "level_re_voice_db": -20,
+   "why": "Paper."
+  }
+ ]
+}
