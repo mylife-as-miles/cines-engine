@@ -1,6 +1,6 @@
-# Noir kit assets (files not in git)
+# Noir kit assets
 
-The files themselves stay out of git; this list records where each came from and what its licence asks. Credits go in the YouTube description, never on screen.
+The Tripo props (`props/`) and the MakeHuman clothes (`makehuman/`) are in git (the author's request, 27 November 2026, so any agent can continue); the other files stay out of git. This list records where each came from and what its licence asks. Credits go in the YouTube description, never on screen.
 
 | File | What | Creator and source | Licence | Credit needed |
 | --- | --- | --- | --- | --- |

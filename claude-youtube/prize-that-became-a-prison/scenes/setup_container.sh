@@ -1,9 +1,8 @@
 #!/bin/bash
 # Rebuild everything the stages need that is not in git, in a fresh container. Run from the repository root:
 #     bash claude-youtube/prize-that-became-a-prison/scenes/setup_container.sh
-# Network: PyPI and npm (package registries), github.com, and files.makehumancommunity.org (add it to the
-# environment's allowed hosts if the download is refused). About 10-15 minutes.
-# The 26 Tripo props are NOT fetched here (they live in the author's Tripo account): see HANDOFF.md, step 3.
+# Network: PyPI (package registry) and github.com. About 5-10 minutes, most of it downloading Blender (~300 MB).
+# The 26 Tripo props and the MakeHuman clothes are in git (noir-kit/assets/props, noir-kit/assets/makehuman).
 set -e
 REPO=$(pwd)
 KIT=$REPO/claude-youtube/noir-kit
@@ -21,16 +20,18 @@ mkdir -p "$HOME/.config/blender/5.3/extensions/user_default"
 rm -rf "$HOME/.config/blender/5.3/extensions/user_default/mpfb"
 cp -r /tmp/mpfb2/src/mpfb "$HOME/.config/blender/5.3/extensions/user_default/"
 
-echo "== 3. MakeHuman system clothes (CC0) -> noir-kit/assets/makehuman/clothes"
+echo "== 3. MakeHuman system clothes (CC0): in git; downloaded only if missing"
+if [ -d "$KIT/assets/makehuman/clothes/female_elegantsuit01" ]; then echo "   present"; else
 mkdir -p "$KIT/assets/makehuman" /tmp/mhpack
 curl -fL -o /tmp/mhpack/pack.zip \
   https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip
 (cd /tmp/mhpack && unzip -q -o pack.zip)
 SRC=$(find /tmp/mhpack -type d -name clothes | head -1)
 rm -rf "$KIT/assets/makehuman/clothes" && cp -r "$SRC" "$KIT/assets/makehuman/clothes"
-ls "$KIT/assets/makehuman/clothes" | head -30
+fi
+ls "$KIT/assets/props" | wc -l | sed 's/^/   Tripo props in git: /'
 
-echo "== 4. glTF-Transform (decodes Tripo's meshopt GLBs for the pip Blender)"
+echo "== 4. glTF-Transform (only for NEW Tripo downloads, which come meshopt-compressed)"
 mkdir -p "$HOME/gltftool" && cd "$HOME/gltftool" && [ -f package.json ] || npm init -y >/dev/null
 cd "$HOME/gltftool" && npm install --silent @gltf-transform/core@4 @gltf-transform/extensions@4 \
   @gltf-transform/functions@4 meshoptimizer@0.22
@@ -47,6 +48,6 @@ import bpy
 import setkit as sk
 sk.reset()
 import people
-print("CAST OK", people.dawn().name, people.man("Tim").name)  # officers also need the Tripo cap (step 3)
+print("CAST OK", people.dawn().name, people.officer("OfficerA", 0).name, people.man("Tim").name)
 EOF
-echo "Done. Next: HANDOFF.md step 3 (the Tripo props), then render a stage with scenes/shoot.py."
+echo "Done. Next: render a stage with scenes/shoot.py (HANDOFF.md, step 4)."

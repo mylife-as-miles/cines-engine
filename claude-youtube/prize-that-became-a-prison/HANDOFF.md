@@ -49,21 +49,15 @@ with people rendered before 26 November about 22:30 UTC needs re-rendering to sh
 
 ## Step by step
 
-1. **Set up the container** (about 15 minutes): from the repository root,
-   `bash claude-youtube/prize-that-became-a-prison/scenes/setup_container.sh`. It installs Blender 5.3 (`pip bpy`) in
-   `~/bpyenv`, MPFB 2, the MakeHuman CC0 clothes, and glTF-Transform. If `files.makehumancommunity.org` is refused, the
-   environment's network allowlist needs that host.
+1. **Set up the container** (about 5-10 minutes): from the repository root,
+   `bash claude-youtube/prize-that-became-a-prison/scenes/setup_container.sh`. It installs Blender 5.3 as a Python
+   package (`pip install bpy`, about 300 MB) in `~/bpyenv`, copies MPFB 2 (MakeHuman for Blender) from GitHub into
+   Blender's extensions, installs glTF-Transform, and builds Dawn, an officer and Tim once as a check.
 2. **Use `~/bpyenv/bin/python -I`** wherever `scenes/AGENT_BRIEF.md` names the original session's scratchpad path.
-3. **The 26 Tripo props** (`claude-youtube/noir-kit/assets/props/<name>.glb`, not in git; they belong to the author's
-   Tripo account, licence-clean). Names and model IDs: `design/TRIPO_PACKAGE.md` (the three "Batch results" tables).
-   - A Claude session with the Tripo Studio MCP connected (`claude mcp add` per `.claude/skills/tripo-studio-mcp`, OAuth
-     client `studio-claude-code`, callback port 3000): for each model ID call `tripo_get_model_asset` (free, read-only),
-     download its `model_url` with curl (host `tripo-data.rg1.data.tripo3d.com` must be allowed), then
-     `cd ~/gltftool && node unpack_glb.mjs raw.glb <repo>/claude-youtube/noir-kit/assets/props/<name>.glb`.
-     Never call a Tripo *generation* tool.
-   - Codex or any agent without Tripo: ask the author to download the GLBs from Tripo Studio (Assets), or to send them.
-     Downloads are free; decompress each with `unpack_glb.mjs` the same way.
-   - Not needed: `checkin-desk` and `stanchion` (misses, rebuilt in Python).
+3. **Assets are in git** (pushed at the author's request, 27 November 2026): the 26 Tripo props, decompressed, in
+   `claude-youtube/noir-kit/assets/props/` (names and IDs in `design/TRIPO_PACKAGE.md`; `checkin-desk` and
+   `stanchion` are misses, not used) and the MakeHuman CC0 clothes in `claude-youtube/noir-kit/assets/makehuman/`.
+   Never call a Tripo *generation* tool.
 4. **Render** one camera of one stage:
    `cd claude-youtube/prize-that-became-a-prison && ~/bpyenv/bin/python -I scenes/shoot.py -- <stage> <cam> out/stages/<stage>/<name>.png --res 960x540 --spp 24 [--nocast]`
    Finals: `--res 1280x720 --spp 64`, file `final_<cam>.png` (`--cam all` renders every camera after one build). It writes
