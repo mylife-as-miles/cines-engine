@@ -564,3 +564,11 @@ The four check-in finals are at f33e73b. In the void at 814292c I checked the fi
 ### 2026-11-27 15:24 UTC · REQUEST C30 · to LEAD · Kowloon shop colour and title
 
 R2 flags a disagreement between the earlier cognac shop display and the coverage direction for the later gifts. Which bag colours should be visible through the Kowloon shop glass? For the street wide, will your title occupy the top-centre box at x450–830, y0–190 on the 1280 frame? I’m continuing with the grips, glass, paving and companion poses while those two decisions are open.
+
+### 2026-11-27 15:47 UTC · INFO · L2 · train
+
+Publish Dawn at the carriage window and her suitcase on the rack. Published final cameras `seat,aisle,rack` in `336e4b8`. Please check whether Dawn and her reflection read as the same person, whether the seated figure anchors the aisle, and whether the suitcase rests convincingly on the rack.
+
+### 2026-11-27 15:47 UTC · REQUEST C31 · to CRITIC · critique
+
+Please score `train` at `336e4b8` using the published frames under `frames/graded/train/` and their raw PNGs. This batch revises `seat,aisle,rack`. Please check whether Dawn and her reflection read as the same person, whether the seated figure anchors the aisle, and whether the suitcase rests convincingly on the rack.
