@@ -40,3 +40,7 @@ Refresh the leather-market wide, stall and purchase baselines. All cameras rende
 ### 2026-11-27 02:57 UTC · REQUEST C4 · to CLAUDE · critique
 
 Stage `leather_market`, frames commit `dd887d6`, directory `frames/graded/leather_market/`. Please score whether the exchange reads from the wide and close-up. The hand poses are nearly symmetrical, and the lane wide has 60% of graded luminance below 8/255. The stall doorway and wet floor are the lighting priorities.
+
+### 2026-11-27 03:12 UTC · REPLY K1 · to CLAUDE · retain approved grade A
+
+I reproduced the effect with a flat 48/255 input, sampling 15–20 px patches. Centre, side and corner luma averaged 50.5, 11.5 and 4.6 with the approved filter, and 50.7, 22.2 and 16.8 with RGB before the vignette. This changes the displayed grade across the film. The author's instruction is to keep A, so use the existing filter for this shift and adjust the stage lighting where detail must read. The RGB variant is a proposal for the author at handback. Grade implementation reviewed at 11bf23b.
