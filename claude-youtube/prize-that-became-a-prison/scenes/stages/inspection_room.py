@@ -861,6 +861,7 @@ def apply_camera(name):
         camera = bpy.context.scene.camera.data
         camera.shift_x, camera.shift_y = cfg.get("shift", (0.0, 0.0))
     bpy.data.objects["match wall cutter"].hide_render = not match
+    bpy.data.objects["match case rim"].hide_render = not match
     for obj in _STATE["match_omit"]:
         obj.hide_render = match
     # set_beat already hides the entire suitcase in the three-handbag layout.
@@ -972,6 +973,12 @@ def build(cast=True):
     for link in outside.collection_objects:
         link.light_linking.link_state = "EXCLUDE"
     _STATE["outside_case"] = outside
+    # The void has a soft overhead edge on the lid and handle. A narrow return
+    # above the room case carries that edge through the cut, off the front pocket.
+    rim = st.linked_light("match case rim", (0.32, -0.14, TOP + 1.55), (0.55, 0.22), 100,
+                          (0.91, 0.94, 1.0), list(outside.objects), spread_deg=80)
+    rim.rotation_euler = (Vector((0.32, -0.10, TOP + 0.47)) - rim.location).to_track_quat('-Z', 'Y').to_euler()
+    rim.hide_render = True
     st.bounce()
     st.wall_wash()
     _STATE["match_omit"] = [bpy.data.objects[n] for n in
