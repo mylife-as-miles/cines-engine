@@ -83,7 +83,7 @@ CAMERAS = {
     # (a stop under the stage: the table downlight lands square on the papers and his sleeves from above)
     # (with the trims below and 0.45 under the stage: paper about 150 graded, the charcoal sleeve 30-45; a full stop
     # under left the paper at 110 and the frame muddy)
-    "hands": dict(loc=(st.TIM_X + 0.04, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
+    "hands": dict(loc=(st.TIM_X + 0.04, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.10, st.TOP), lens=52, focus="fx_hands",
                   fstop=4.0, beat="ch09", exposure=EXPOSURE - 0.45),
 }
 
