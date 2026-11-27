@@ -38,6 +38,7 @@ import bpy  # noqa: E402
 import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
+import cast as castkit  # noqa: E402
 import people  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -95,7 +96,7 @@ CAMERAS = {
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
 # the wide is exposed most of a stop over the others (the room has to read round the island): there the room's
 # own dark, the screen's spill behind the desk and the street light's stripes are each brought up to show
-TRIMS = {"desk": {"night_glow": 2.5, "letter return": 0.0},
+TRIMS = {"desk": {"night_glow": 1.5, "lamp_spot": 0.9, "letter return": 0.0},
          "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
          "window": {"room_fill": 9.0, "night_glow": 3.0, "lamp_spill": 3.0,
                     "laptop_screen_light": 1.02, "street": 1.6, "letter return": 0.62}}
@@ -215,7 +216,7 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
     for v in edge_v:
         d = ang(v.co)
         if d < 62:
-            v.co.z = max(v.co.z, line(d))
+            v.co.z = line(d)
     for _ in range(3):
         # Relax only along the cut edge, keeping the fitted cap on the head.
         smooth = {}
@@ -272,6 +273,7 @@ def tim():
     people.tim_jaw(h)
     suit_tones(h)
     recede_hair(h)
+    castkit.relax_sculpted_hair(h)
     return h
 
 
@@ -933,6 +935,7 @@ def apply_camera(name):
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
         ob.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+    st.LIGHTS["lamp_spot"].data.color = (1.0, 0.195, 0.013) if name == "desk" else st.WARM
     panel = bpy.data.objects["laptop_screen"].active_material.node_tree.nodes
     # Reduce the screen itself in the elevated view, where it would outweigh the pen and folded reply.
     panel["Screen backlight power"].inputs[1].default_value = 0.49 if name == "window" else st.LAPTOP_EMISSION
