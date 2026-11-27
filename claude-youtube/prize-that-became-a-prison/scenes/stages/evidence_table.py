@@ -31,6 +31,7 @@ from mathutils.bvhtree import BVHTree  # noqa: E402
 
 import props  # noqa: E402
 import setkit as sk  # noqa: E402
+import evidence_table_art as art  # noqa: E402
 import evidence_table_mats as mt  # noqa: E402
 import evidence_table_paper as pp  # noqa: E402
 
@@ -63,7 +64,7 @@ HIDE = {
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
 HIDE["document"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery")
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -123,6 +124,9 @@ CAMERAS["tickets"] = dict(loc=(0.026, -0.405, TOP + 0.310), aim=(0.177, 0.017, T
 CAMERAS["entries"] = dict(loc=(-0.085, -0.65, TOP + 0.48), aim=(-0.025, 0.032, TOP + 0.022), lens=42,
                          focus="fx_entries", fstop=4.8, beat="entries", exposure=-1.60,
                          show=("entry stationery",), lamp=(-0.45, 0.18, -117))
+CAMERAS["motifs"] = dict(loc=(0.11, -0.62, TOP + 0.44), aim=(-0.015, -0.002, TOP + 0.006), lens=54,
+                        focus="fx_entries", fstop=4, beat="document", show=("art materials",),
+                        lamp=(-0.42, 0.16, -120), exposure=-1.5)
 HIDE["tickets"] = HIDE["ch02"]
 HIDE["entries"] = tuple(g for g in DOCUMENT_PROPS if g != "mug")
 
@@ -706,6 +710,12 @@ def entry_stationery():
     forms.extend(pp.pen("entry pen", m["pen"], m["chrome"], m["chrome"], 0.112, -0.112, 35))
     forms.extend(pp.mug("second mug", mt.glaze("second mug glaze", (0.27, 0.22, 0.16)), m["bisque"], m["coffee"],
                         0.22, 0.10, 28))
+    pp.SUPPORT[:] = wood
+    supplies = art.swatches() + art.art_tools(m) + [art.tape()]
+    pp.SUPPORT[:] = wood
+    supplies.extend(pp.passport("travel booklet corner", m["cover"], m["pages"], 0.217, 0.124, 13,
+                                m_end=m["endpaper"]))
+    group("art materials", supplies)
     pp.SUPPORT[:] = saved
     group("entry stationery", forms)
     empty("fx_entries", (0.018, -0.020, TOP + 0.001))
