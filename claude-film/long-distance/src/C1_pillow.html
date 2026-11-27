@@ -1,0 +1,239 @@
+<!doctype html><meta charset="utf-8"><title>C1 · The Pillow</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_c.js"></script>
+<script>
+/* LONG DISTANCE · LOOK C "HALF EMPTY" · C1 THE PILLOW (INT. BEDROOM, night)
+   The film's first image. A long lens high over the foot of the double bed, dead centre: the frame is two squares and the bed's own
+   seam (the gap between the pillows, the join of the two headboard panels) is the line between them.
+   His half: the quilt thrown back and rucked, the sheet creased, him on his side in a T-shirt. Her half: still made, the quilt tight
+   and square, the sheet turned down in a straight line, the pillow smooth. On her pillow, where a head would be, the phone stands
+   propped, its back to us, its screen turned to his face. Its cold light is the only light in the room and it lands on his face.
+   His hand lies over it like a hand on a sleeping shoulder. His eyes are closing. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LC.P;
+  const f = OTM.frame(ctx, { seed: 11 });
+  const g = f.world, E = f.emissive;
+  const mk = cy => LC.camera({ target: [0, 0.66, 2.38], dist: 7.5, pitch: -1.0, f: 4750, cx: 960, cy });
+  let cam = mk(540); { const t = cam.p(0, 1.06, 3.12)[1]; cam = mk(540 + (178 - t)); }
+  const p = cam.p, Q = a => LC.pathPts(cam.pts(a));
+  const WALLZ = 3.12, MT = 0.56, BX = 0.83;
+  // night, but legible: the room in warm darks, the bed a pale island; the phone the only cold
+  const N = { wall: '#2C2723', wallLo: '#26221F', floor: '#1D1A17', table: '#2E2A26', tableTop: '#38332E', tableSide: '#221F1C', head: '#3A3530', headTop: '#45403A',
+    sheet: '#4C463F', skin: '#46352C', skinM: '#55423A', hair: '#140F0D', tee: '#3A3530', teeL: '#4B453E', shade: '#59524A', shadeD: '#423C36', shadeIn: '#1C1916' };
+  const ICE = '#CBEEF7', iceRGB = LC.hexToRgb(ICE);
+  // the screen: standing on her pillow, turned to his face
+  const PH = { c: [0.34, 0.86, 2.78] };
+  const nL = (() => { const v = [-0.95, 0.04, 0.3], l = Math.hypot(...v); return v.map(a => a / l); })();     // the way its light goes
+  const LPOS = [PH.c[0] + nL[0] * 0.02, PH.c[1], PH.c[2] + nL[2] * 0.02];
+  const cold = (X, n, k, wrap) => { const vx = LPOS[0] - X[0], vy = LPOS[1] - X[1], vz = LPOS[2] - X[2], d = Math.hypot(vx, vy, vz), u = [vx / d, vy / d, vz / d];
+    const lam = Math.max(0, (n[0] * u[0] + n[1] * u[1] + n[2] * u[2] + (wrap || 0)) / (1 + (wrap || 0))), em = Math.max(0, -(nL[0] * u[0] + nL[1] * u[1] + nL[2] * u[2]));
+    return k * lam * Math.pow(em, 2.2) / (Math.pow(d, 2.4) + 0.012); };
+  const AMB = (() => { const v = [-0.4, 1, -0.35], l = Math.hypot(...v); return v.map(a => a / l); })();     // a little street glow from the curtained window, high on the left
+  const soft = (coldK) => (x, y, z, n) => { const a = n[0] * AMB[0] + n[1] * AMB[1] + n[2] * AMB[2]; const c = cold([x, y, z], n, coldK, 0.15);
+    return [OTM.clamp((a - 0.55) / 0.45, 0, 1), OTM.clamp(Math.sqrt(c / 1.2), 0, 1)]; };
+  const pal = (tones, steps, mixes) => (a, c) => { const t = tones[a < 0.4 ? 0 : a < 0.78 ? 1 : 2]; let k = 0; steps.forEach((s2, i) => { if (c >= s2) k = mixes[i]; });
+    const r = LC.hexToRgb(t); return k ? r.map((v, i) => Math.round(v + (iceRGB[i] - v) * k)) : r; };
+  const CSTEPS = [0.2, 0.31, 0.45, 0.62, 0.8], CMIX = [0.08, 0.16, 0.27, 0.4, 0.58];
+
+  // =====================================================================
+  // 1. THE ROOM: the wall behind the headboard, the floor
+  // =====================================================================
+  g.fillStyle = N.floor; g.fillRect(0, 0, W, H);
+  { g.strokeStyle = 'rgba(0,0,0,0.28)'; g.lineWidth = 1.6; for (let x = -2.6; x <= 2.6; x += 0.14) { const a = p(x, 0, WALLZ), b = p(x, 0, 0.6); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); } }
+  LC.fill(g, Q([[-3, 0, WALLZ], [3, 0, WALLZ], [3, 2.6, WALLZ], [-3, 2.6, WALLZ]]), N.wall);
+  LC.fill(g, Q([[-3, 0, WALLZ - 0.01], [3, 0, WALLZ - 0.01], [3, 0.09, WALLZ - 0.01], [-3, 0.09, WALLZ - 0.01]]), N.wallLo);
+  LC.mottle(g, null, { x: 0, y: 0, w: W, h: H }, 4, '#000000', 0.1, 0.005);
+
+  // =====================================================================
+  // 2. BEDSIDE TABLES AND LAMPS (both off). His table: a glass of water, a paperback face down. Hers: the lamp, nothing else.
+  // =====================================================================
+  function table(x0, x1) {
+    const zf = 2.62, zb = 3.1, h = 0.56, inner = x0 < 0 ? x1 : x0;
+    LC.fill(g, Q([[inner, h, zf], [inner, h, zb], [inner, 0, zb], [inner, 0, zf]]), N.tableSide);
+    LC.fill(g, Q([[x0, h, zf], [x1, h, zf], [x1, 0, zf], [x0, 0, zf]]), N.table);
+    LC.fill(g, Q([[x0, h, zb], [x1, h, zb], [x1, h, zf], [x0, h, zf]]), N.tableTop);
+    const d1 = p(x0 + 0.03, h - 0.16, zf), d2 = p(x1 - 0.03, h - 0.16, zf); g.strokeStyle = 'rgba(0,0,0,0.4)'; g.lineWidth = 2; g.beginPath(); g.moveTo(d1[0], d1[1]); g.lineTo(d2[0], d2[1]); g.stroke();
+    const kn = p((x0 + x1) / 2, h - 0.08, zf); g.fillStyle = '#4A443E'; g.beginPath(); g.arc(kn[0], kn[1], 4, 0, 7); g.fill();
+  }
+  // a table lamp with a linen drum shade, seen from above and in front: base, stem, the shade's side and its open top
+  function lamp(x, z) {
+    const k = cam.scaleAt(x, 0.9, z), base = p(x, 0.56, z), e = 0.84;       // e: how round the ellipses look from this height
+    g.fillStyle = '#26221F'; g.beginPath(); g.ellipse(base[0], base[1], 0.07 * k, 0.07 * k * e, 0, 0, 7); g.fill();
+    const s0 = p(x, 0.58, z), s1 = p(x, 0.8, z); g.fillStyle = '#302B27'; g.fillRect(s0[0] - 0.012 * k, s1[1], 0.024 * k, s0[1] - s1[1]);
+    const sb = p(x, 0.78, z), st = p(x, 0.99, z), rB = 0.17 * k, rT = 0.14 * k;
+    const side = new Path2D(); side.ellipse(sb[0], sb[1], rB, rB * e, 0, 0, Math.PI); side.lineTo(st[0] - rT, st[1]); side.ellipse(st[0], st[1], rT, rT * e, 0, Math.PI, 0, true); side.closePath();
+    LC.softShadow(g, side, '#000000', 10, 0.45, 6, 8);
+    g.fillStyle = LC.lin(g, sb[0] - rB, 0, sb[0] + rB, 0, [[0, N.shade], [0.6, N.shade], [1, N.shadeD]]); g.fill(side);
+    g.fillStyle = N.shadeIn; g.beginPath(); g.ellipse(st[0], st[1], rT, rT * e, 0, 0, 7); g.fill();
+    g.strokeStyle = '#6A625A'; g.lineWidth = 2; g.beginPath(); g.ellipse(st[0], st[1], rT, rT * e, 0, 0, 7); g.stroke();
+    const bl = p(x, 0.9, z); g.fillStyle = '#4A453F'; g.beginPath(); g.arc(bl[0], bl[1] - 4, 0.03 * k, 0, 7); g.fill();       // the bulb, unlit, inside
+    g.strokeStyle = 'rgba(0,0,0,0.2)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(sb[0], sb[1], rB, rB * e, 0, 0.1, Math.PI - 0.1); g.stroke();
+  }
+  table(-1.42, -0.96); table(0.96, 1.42);
+  { const gl = p(-1.06, 0.56, 2.74), k = cam.scaleAt(-1.06, 0.62, 2.74), gt = p(-1.06, 0.69, 2.74), r = 0.034 * k;      // his glass of water
+    g.fillStyle = 'rgba(110,104,96,0.5)'; g.fillRect(gl[0] - r, gt[1], r * 2, gl[1] - gt[1]); g.fillStyle = 'rgba(70,66,60,0.7)'; g.fillRect(gl[0] - r, gt[1] + (gl[1] - gt[1]) * 0.35, r * 2, (gl[1] - gt[1]) * 0.65);
+    g.fillStyle = 'rgba(150,142,132,0.55)'; g.beginPath(); g.ellipse(gt[0], gt[1], r, r * 0.84, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(60,56,52,0.8)'; g.beginPath(); g.ellipse(gt[0], gt[1] + 2, r * 0.86, r * 0.7, 0, 0, 7); g.fill();
+    LC.fill(g, Q([[-1.36, 0.585, 2.8], [-1.16, 0.585, 2.76], [-1.14, 0.585, 2.96], [-1.34, 0.585, 3.0]]), '#4A3F35');                  // paperback, face down
+    LC.fill(g, Q([[-1.36, 0.56, 2.8], [-1.16, 0.56, 2.76], [-1.16, 0.585, 2.76], [-1.36, 0.585, 2.8]]), '#2E2722'); }
+  lamp(-1.2, 2.92); lamp(1.2, 2.92);
+
+  // =====================================================================
+  // 3. THE BED: headboard (two upholstered panels, their seam on the centre line), the bottom sheet
+  // =====================================================================
+  const HBZ = 3.04, HBT = 1.06;
+  LC.fill(g, Q([[-BX - 0.02, MT, 3.04], [BX + 0.02, MT, 3.04], [BX + 0.02, MT, 0.9], [-BX - 0.02, MT, 0.9]]), N.sheet);
+  [[-0.88, -0.008], [0.008, 0.88]].forEach(([a, b]) => {
+    LC.fill(g, Q([[a, HBT, HBZ], [b, HBT, HBZ], [b, 0.45, HBZ], [a, 0.45, HBZ]]), N.head);
+    LC.fill(g, Q([[a, HBT, 3.12], [b, HBT, 3.12], [b, HBT, HBZ], [a, HBT, HBZ]]), N.headTop);
+  });
+  { const hb = Q([[-0.88, HBT, HBZ], [0.88, HBT, HBZ], [0.88, 0.45, HBZ], [-0.88, 0.45, HBZ]]);      // the screen's spill on the headboard, his side of the phone only
+    const Lr = LC.layer(); const c = p(PH.c[0] - 0.16, 0.86, HBZ); Lr.fillStyle = LC.rad(Lr, c[0], c[1], 0, 420, [[0, ICE, 0.16], [0.4, ICE, 0.06], [1, ICE, 0]]); Lr.fillRect(0, 0, W, H);
+    Lr.globalCompositeOperation = 'destination-out'; Lr.fillRect(p(PH.c[0], 0.86, HBZ)[0], 0, W, H); g.save(); g.clip(hb); g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(Lr.canvas, 14, false), 0, 0); g.restore(); }
+
+  // his half of the bottom sheet, exposed where the quilt is thrown back: creased
+  const rollZ = x => (x > -0.5 ? 2.56 + 0.025 * Math.sin(x * 14) - 0.06 * Math.exp(-(((x + 0.04) / 0.06) ** 2)) : 2.56 - (-0.5 - x) / 0.33 * 0.46) + 0.015 * Math.sin(x * 23);
+  const sheetH = (x, z) => { if (x > -0.005 || z < rollZ(x) - 0.04 || z > 2.62) return null; return MT + 0.01 + 0.006 * Math.sin(x * 31 + z * 7) * Math.sin(z * 13 - x * 5) + 0.008 * Math.exp(-(((x + 0.12) / 0.05) ** 2)) * Math.sin(z * 20); };
+  LC.heightFieldPost(g, cam, { x0: -BX, x1: 0, z0: 1.9, z1: 2.62, step: 0.008, h: sheetH, value: soft(0.05), palette: pal(['#433D37', '#4C463F', '#544D46'], CSTEPS, CMIX), blur: 3 });
+
+  // =====================================================================
+  // 4. THE PILLOWS (height fields). Hers plump, square, untouched. His pressed flat and pushed askew.
+  // =====================================================================
+  function pillowH(cx, cz, hw, hd, ht, rot, dent, wr) {
+    const c = Math.cos(rot), s = Math.sin(rot);
+    return (x, z) => {
+      const lx = (x - cx) * c + (z - cz) * s, lz = -(x - cx) * s + (z - cz) * c;
+      const u = lx / hw, v = lz / hd; const m = Math.pow(Math.abs(u), 3) + Math.pow(Math.abs(v), 3); if (m > 1.04) return null;
+      let y = MT + ht * Math.pow(Math.max(0, 1 - m), 0.45);
+      if (dent) { const d = Math.hypot(x - dent[0], (z - dent[1]) * 1.1); y -= dent[2] * Math.exp(-((d / dent[3]) ** 2)); }
+      if (wr) y += wr * (Math.sin(x * 21 + z * 8) * 0.6 + Math.sin(x * 9 - z * 17) * 0.4) * Math.pow(Math.max(0, 1 - m), 0.3);
+      return y;
+    };
+  }
+  const outline = (cx, cz, hw, hd, rot, grow, y) => { const c = Math.cos(rot), s = Math.sin(rot), pts = [];
+    for (let i = 0; i < 90; i++) { const a = i / 90 * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a); const u = Math.sign(ca) * Math.pow(Math.abs(ca), 2 / 3), v = Math.sign(sa) * Math.pow(Math.abs(sa), 2 / 3);
+      const lx = u * hw * grow, lz = v * hd * grow; pts.push(p(cx + lx * c - lz * s, y, cz + lx * s + lz * c)); }
+    return LC.smooth(pts); };
+  const pillowClip = (cx, cz, hw, hd, rot, ht) => { const q = new Path2D(); q.addPath(outline(cx, cz, hw, hd, rot, 0.99, MT + 0.04)); q.addPath(outline(cx, cz, hw, hd, rot, 0.86, MT + ht * 0.82)); q.addPath(outline(cx, cz, hw, hd, rot, 0.6, MT + ht * 0.98)); return q; };
+  const herPH = pillowH(0.41, 2.78, 0.35, 0.24, 0.2, 0, null, 0), hisPH = pillowH(-0.405, 2.775, 0.355, 0.24, 0.14, -0.06, [-0.3, 2.84, 0.06, 0.15], 0.005);
+  const herClip = pillowClip(0.41, 2.78, 0.35, 0.24, 0, 0.2), hisPClip = pillowClip(-0.405, 2.775, 0.355, 0.24, -0.06, 0.14);
+  LC.softShadow(g, herClip, '#14110F', 8, 0.6, 0, 6); LC.softShadow(g, hisPClip, '#14110F', 8, 0.6, 0, 6);
+  LC.heightFieldPost(g, cam, { x0: -0.8, x1: 0.0, z0: 2.5, z1: 3.06, step: 0.008, h: hisPH, value: soft(0.05), palette: pal(['#4C463F', '#555048', '#5D574F'], CSTEPS, CMIX), clip: hisPClip, blur: 3 });
+  LC.heightFieldPost(g, cam, { x0: 0.02, x1: 0.8, z0: 2.5, z1: 3.06, step: 0.008, h: herPH, value: soft(0.05), palette: pal(['#575049', '#615A52', '#6A635A'], [0.26, 0.42, 0.62], [0.1, 0.22, 0.38]), clip: herClip, blur: 3 });
+
+  // =====================================================================
+  // 5. HIM, on his side, facing the phone: the head on his pillow, the T-shirt shoulder and body lying on the creased sheet
+  // =====================================================================
+  const HW = [-0.3, 0.83, 2.855], HC = p(...HW), HS = 0.24 * cam.scaleAt(...HW);
+  const Mh = LC.frameM(HC[0], HC[1], HS, 0.1), L = pts => LC.mapPts(Mh, pts), L1 = (x, y) => LC.ap(Mh, [x, y]);
+  const shoulderP = LC.smooth(L([[-0.5, 0.44], [0.0, 0.5], [0.36, 0.62], [0.62, 0.9], [0.3, 1.3], [-0.6, 1.3]])); LC.fill(g, shoulderP, N.tee);
+  { g.save(); g.clip(shoulderP); LC.fill(g, LC.smooth(L([[0.1, 0.4], [0.8, 0.4], [0.8, 1.4], [0.2, 1.4]])), LC.mix(N.tee, ICE, 0.12)); g.restore(); }
+  // head
+  const skull = LC.smooth(L([[0.02, -0.52], [0.21, -0.48], [0.32, -0.35], [0.36, -0.2], [0.385, -0.09], [0.355, -0.03, 1], [0.405, 0.065], [0.462, 0.158, 1], [0.425, 0.195], [0.395, 0.215, 1],
+    [0.418, 0.262], [0.398, 0.292, 1], [0.412, 0.328], [0.368, 0.372, 1], [0.382, 0.43], [0.33, 0.5], [0.17, 0.53], [-0.02, 0.47], [-0.16, 0.37], [-0.33, 0.29], [-0.45, 0.1], [-0.48, -0.14], [-0.38, -0.4], [-0.2, -0.51]]));
+  LC.softShadow(g, skull, '#0E0C0A', 16, 0.5, -46, 8);           // its shadow thrown left across his pillow by the screen
+  LC.softShadow(g, skull, '#100D0B', 7, 0.6, -5, 4);
+  const neck = LC.smooth(L([[-0.24, 0.26], [0.16, 0.36], [0.28, 0.66], [-0.28, 0.66]])); LC.fill(g, neck, N.skin);
+  LC.stroke(g, LC.smooth(L([[-0.34, 0.62], [-0.02, 0.68], [0.32, 0.62]]), true), '#2A2622', 4);       // the T-shirt's neckband
+  LC.fill(g, skull, N.skin);
+  { g.save(); g.clip(skull);
+    LC.fill(g, LC.smooth(L([[0.1, -0.62], [0.62, -0.62], [0.62, 0.64], [0.26, 0.62], [0.17, 0.47], [0.05, 0.31], [0.08, 0.1], [0.05, -0.08], [0.08, -0.32]])), LC.mix('#8A6A58', ICE, 0.3));
+    LC.fill(g, LC.smooth(L([[0.245, -0.62], [0.62, -0.62], [0.62, 0.64], [0.34, 0.6], [0.295, 0.45], [0.215, 0.31], [0.235, 0.12], [0.195, -0.06], [0.235, -0.32]])), LC.mix('#A9876F', ICE, 0.42));
+    g.restore();
+    LC.crescent(g, skull, 1, 0.04, 4, LC.mix('#BC9A86', ICE, 0.62)); }
+  const ear = LC.smooth(L([[-0.115, -0.075], [-0.02, -0.115], [0.035, 0.0], [-0.005, 0.135], [-0.09, 0.135], [-0.145, 0.04]]));
+  LC.fill(g, ear, '#3A2C24'); LC.stroke(g, LC.smooth(L([[-0.075, -0.045], [-0.01, -0.055], [-0.02, 0.07]]), true), 'rgba(14,10,8,0.6)', 2.4);
+  const hairP = LC.smooth(L([[0.3, -0.3, 1], [0.355, -0.44], [0.25, -0.61], [0.02, -0.67], [-0.25, -0.63], [-0.45, -0.47], [-0.54, -0.2], [-0.53, 0.06], [-0.45, 0.25], [-0.33, 0.31, 1],
+    [-0.27, 0.12], [-0.2, -0.04], [-0.12, -0.15], [0.02, -0.21], [0.14, -0.22], [0.22, -0.27]]));
+  LC.fill(g, hairP, N.hair); LC.crescent(g, hairP, 1, -0.1, 3, LC.mix(N.hair, ICE, 0.32));
+  { const ln = (pts, col, w) => { const q = L(pts); g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.beginPath(); g.moveTo(q[0][0], q[0][1]); if (q.length === 3) g.quadraticCurveTo(q[1][0], q[1][1], q[2][0], q[2][1]); else g.lineTo(q[1][0], q[1][1]); g.stroke(); };
+    LC.fill(g, LC.smooth(L([[0.23, -0.088], [0.29, -0.103], [0.343, -0.075], [0.3, -0.05]])), LC.mix('#A9876F', ICE, 0.5));   // the heavy lid
+    ln([[0.235, -0.06], [0.29, -0.04], [0.338, -0.058]], '#1B1918', 2.8);
+    ln([[0.27, -0.045], [0.264, -0.028]], 'rgba(27,25,24,0.8)', 1.4); ln([[0.3, -0.043], [0.296, -0.026]], 'rgba(27,25,24,0.8)', 1.4);
+    ln([[0.2, -0.165], [0.29, -0.188], [0.372, -0.16]], '#171411', 5.5);
+    g.fillStyle = 'rgba(28,24,22,0.75)'; const no = L1(0.393, 0.176); g.beginPath(); g.ellipse(no[0], no[1], 4.5, 2.6, 0.3, 0, 7); g.fill();
+    ln([[0.328, 0.31], [0.372, 0.318], [0.402, 0.298]], 'rgba(34,26,24,0.85)', 2.4);
+    ln([[0.3, 0.33], [0.33, 0.31]], 'rgba(34,26,24,0.45)', 2); }
+
+  // =====================================================================
+  // 6. THE QUILT. His: thrown back in a thick ruck across his waist, bunched over his legs. Hers: tight, square, the sheet turned down straight.
+  // =====================================================================
+  // hers: a flat, tight field with its stitched squares, crisp at every edge
+  const TOPZ = 2.38, QZ0 = 0.6;
+  LC.fill(g, Q([[BX + 0.03, 0.61, TOPZ], [BX + 0.03, 0.61, QZ0], [BX + 0.05, 0.22, QZ0], [BX + 0.05, 0.22, TOPZ]]), '#3A352F');      // its side, hanging straight
+  const herQ = Q([[0.0, 0.61, TOPZ], [BX + 0.03, 0.61, TOPZ], [BX + 0.03, 0.61, QZ0], [0.0, 0.61, QZ0]]);
+  LC.fill(g, herQ, '#5B544C');
+  { g.save(); g.clip(herQ); const a = p(0.3, 0.61, TOPZ); g.fillStyle = LC.lin(g, 0, a[1], 0, H, [[0, '#FFFFFF', 0.05], [1, '#000000', 0.14]]); g.fillRect(0, 0, W, H);
+    g.strokeStyle = 'rgba(30,26,22,0.45)'; g.lineWidth = 1.6; g.setLineDash([6, 5]);
+    for (let gx = 0.2075; gx < BX; gx += 0.2075) { const u = p(gx, 0.612, TOPZ), v = p(gx, 0.612, QZ0); g.beginPath(); g.moveTo(u[0], u[1]); g.lineTo(v[0], v[1]); g.stroke(); }
+    for (let gz = TOPZ - 0.04; gz > QZ0; gz -= 0.2075) { const u = p(0, 0.612, gz), v = p(BX + 0.03, 0.612, gz); g.beginPath(); g.moveTo(u[0], u[1]); g.lineTo(v[0], v[1]); g.stroke(); }
+    g.restore(); }
+  LC.fill(g, Q([[0.0, 0.615, TOPZ + 0.13], [BX + 0.03, 0.615, TOPZ + 0.13], [BX + 0.03, 0.615, TOPZ], [0.0, 0.615, TOPZ]]), '#6A635A');   // the turned-down sheet: a straight white band
+  { const a = p(0.0, 0.615, TOPZ), b = p(BX + 0.03, 0.615, TOPZ); g.fillStyle = 'rgba(0,0,0,0.3)'; g.fillRect(a[0], a[1], b[0] - a[0], 3); const c = p(0, 0.615, TOPZ + 0.13), d = p(BX + 0.03, 0.615, TOPZ + 0.13); g.fillStyle = '#77706A'; g.fillRect(c[0], c[1] - 2, d[0] - c[0], 3); }
+  // his: the roll of thrown-back quilt across his waist, and the bunched quilt over his legs (big, loose folds: no legs show through)
+  const ruck = (x, z) => 0.05 * OTM.fbm(x * 1.7 + 4, z * 1.5, 7, 2) + 0.026 * Math.sin(x * 6 + z * 4 + 1) * Math.sin(z * 5 - x * 2) + 0.1 * Math.exp(-(((x + 0.32) / 0.2) ** 2)) * OTM.clamp((z - 1.6) / 0.8, 0, 1);
+  const hisQ = (x, z) => { if (x > -0.004) return null; const zr = rollZ(x); if (z > zr + 0.07) return null;
+    const dr = (zr - z), roll = (x < -0.46 ? 0.1 : 0.03) * Math.exp(-(((dr - 0.04) / 0.06) ** 2)) * (1 + 0.25 * Math.sin(x * 17));
+    const lip = dr < 0 ? Math.sqrt(Math.max(0, 1 - ((-dr) / 0.07) ** 2)) : 1;
+    return 0.6 + (0.06 + ruck(x, z) + roll) * lip; };
+  const hisClip = new Path2D(); { const pts = []; for (let x = -BX - 0.03; x <= 0.0001; x += 0.01) { const zr = rollZ(x); let best = null, by = 1e9; for (let z = zr - 0.12; z <= zr + 0.07; z += 0.005) { const y = hisQ(x, z); if (y == null) continue; const q = p(x, y, z); if (q[1] < by) { by = q[1]; best = q; } } if (best) pts.push(best); }
+    pts.push([pts[pts.length - 1][0], H + 50]); pts.push([pts[0][0], H + 50]); hisClip.moveTo(pts[0][0], pts[0][1]); pts.forEach(q => hisClip.lineTo(q[0], q[1])); hisClip.closePath(); }
+  LC.softShadow(g, hisClip, '#14110F', 9, 0.7, 0, -6);
+  LC.fill(g, Q([[-BX - 0.03, 0.62, rollZ(-BX)], [-BX - 0.03, 0.62, QZ0], [-BX - 0.06, 0.22, QZ0], [-BX - 0.06, 0.22, rollZ(-BX)]]), '#332E29');
+  LC.heightFieldPost(g, cam, { x0: -BX - 0.03, x1: 0.0, z0: QZ0, z1: 2.5, step: 0.009, h: hisQ, value: soft(0.05), palette: pal(['#403B35', '#4A443D', '#554E46'], CSTEPS, CMIX), clip: hisClip, blur: 4 });
+  { g.save(); g.clip(hisClip); g.strokeStyle = 'rgba(24,20,17,0.4)'; g.lineWidth = 1.5; g.setLineDash([6, 5]);       // the same stitched squares, dragged out of true
+    for (let gx = -BX + 0.2075; gx < -0.02; gx += 0.2075) { g.beginPath(); let st = false; for (let z = QZ0; z < 2.5; z += 0.008) { const y = hisQ(gx + 0.04 * Math.sin(z * 4), z); if (y == null) break; const q = p(gx + 0.04 * Math.sin(z * 4), y + 0.003, z); st ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); st = true; } g.stroke(); }
+    g.restore(); }
+
+  // =====================================================================
+  // 7. THE PHONE, standing on her pillow where a head would be: its back to us, its screen turned to his face. His hand over it.
+  // =====================================================================
+  const nG = (() => { const v = [-0.62, -0.1, 0.78], l = Math.hypot(...v); return v.map(a => a / l); })();   // the screen faces him (and a little toward the headboard), so we see its back
+  const upv = (() => { const v = [-0.12, 1, 0], d = v[0] * nG[0] + v[1] * nG[1] + v[2] * nG[2]; const w = v.map((a, i) => a - d * nG[i]); const l = Math.hypot(...w); return w.map(a => a / l); })();
+  const rt = [upv[1] * nG[2] - upv[2] * nG[1], upv[2] * nG[0] - upv[0] * nG[2], upv[0] * nG[1] - upv[1] * nG[0]];
+  const PW = 0.088, PHh = 0.19, PT = 0.01;
+  const pcW = (a, b, c) => [0, 1, 2].map(i => PH.c[i] + rt[i] * a * PW / 2 + upv[i] * b * PHh / 2 + nG[i] * c * PT / 2), pc = (a, b, c) => p(...pcW(a, b, c));
+  const back = [pc(-1, 1, -1), pc(1, 1, -1), pc(1, -1, -1), pc(-1, -1, -1)], front = [pc(-1, 1, 1), pc(1, 1, 1), pc(1, -1, 1), pc(-1, -1, 1)];
+  // the light: a pool on the pillows between them (on top of the cloth), the glass's edge glowing where it faces him
+  { const Lr = LC.layer(); const c = p(PH.c[0] - 0.12, 0.76, PH.c[2] + 0.02); Lr.fillStyle = LC.rad(Lr, c[0], c[1], 0, 330, [[0, ICE, 0.42], [0.35, ICE, 0.17], [1, ICE, 0]]); Lr.save(); Lr.translate(c[0], c[1]); Lr.scale(1.5, 0.7); Lr.translate(-c[0], -c[1]); Lr.fillRect(0, 0, W, H); Lr.restore();
+    Lr.globalCompositeOperation = 'destination-out'; Lr.fillRect(front[1][0] + 6, 0, W, H);
+    g.save(); g.globalCompositeOperation = 'screen'; g.drawImage(LC.blurred(Lr.canvas, 10, false), 0, 0); g.restore(); }
+  LC.softShadow(g, LC.pathPts([pc(-1, -1, -1), pc(1, -1, -1), pc(1, -1, 1), pc(-1, -1, 1)]), '#0C0A09', 5, 0.7, 2, 3);       // where it presses into the pillow
+  LC.fill(g, LC.pathPts([front[1], back[1], back[2], front[2]]), '#17171A');                                                  // its right edge
+  LC.fill(g, LC.pathPts([front[0], front[1], back[1], back[0]]), '#2A2A2E');                                                  // its top edge
+  const backP = LC.rquad(back, 9); LC.fill(g, backP, '#222226');
+  { g.save(); g.clip(backP); g.fillStyle = LC.lin(g, back[0][0], back[0][1], back[2][0], back[2][1], [[0, '#FFFFFF', 0.06], [0.5, '#FFFFFF', 0.0]]); g.fillRect(0, 0, W, H); g.restore();
+    const cm = pc(0.45, 0.62, -1.15); g.fillStyle = '#0C0C0E'; g.fill(LC.rrect(cm[0] - 9, cm[1] - 11, 20, 24, 7)); g.fillStyle = 'rgba(200,236,247,0.28)'; g.beginPath(); g.arc(cm[0] - 1, cm[1] - 3, 2, 0, 7); g.fill(); }
+  { const e0 = front[0], e3 = front[3]; g.strokeStyle = ICE; g.lineWidth = 2.6; g.beginPath(); g.moveTo(e0[0], e0[1]); g.lineTo(e3[0], e3[1]); g.stroke();      // the screen's edge, glowing on his side
+    E.save(); E.strokeStyle = ICE; E.lineWidth = 14; E.beginPath(); E.moveTo(e0[0], e0[1]); E.lineTo(e3[0], e3[1]); E.stroke();
+    const lc = p(PH.c[0] - 0.14, 0.84, PH.c[2]); E.fillStyle = OTM.rgba(P.cyan, 0.2); E.beginPath(); E.ellipse(lc[0] - 20, lc[1], 120, 70, 0, 0, 7); E.fill(); E.restore(); }
+
+  // his arm across the seam (sleeve, upper arm, forearm lying over the gap between the pillows) and the hand over the phone's top edge
+  const t0 = [back[0][0] * 0.62 + back[1][0] * 0.38, back[0][1] * 0.62 + back[1][1] * 0.38];
+  const ha = 0.55, KN = 50, wr = [t0[0] - Math.cos(ha) * (KN - 8), t0[1] - Math.sin(ha) * (KN - 8)];
+  const Mhd = LC.frameM(wr[0], wr[1], 1, ha), Hd = pts => LC.mapPts(Mhd, pts);
+  const sh0 = L1(0.3, 0.95), el = p(-0.03, 0.74, 2.62);
+  const arm = LC.smooth([[sh0[0] - 4, sh0[1] - 26], [el[0] - 6, el[1] - 22], [wr[0] - 4, wr[1] - 16], [wr[0] + 6, wr[1] - 16], [wr[0] + 8, wr[1] + 16], [el[0] + 8, el[1] + 22], [sh0[0] + 2, sh0[1] + 26]]);
+  LC.softShadow(g, arm, '#0E0C0A', 8, 0.6, 8, 12);
+  LC.fill(g, arm, N.skin);
+  { g.save(); g.clip(arm); g.fillStyle = LC.lin(g, el[0], 0, wr[0], 0, [[0, ICE, 0], [1, ICE, 0.14]]); g.fill(LC.smooth([[el[0] - 30, el[1] - 50], [wr[0] + 40, wr[1] - 50], [wr[0] + 40, wr[1] - 3], [el[0] + 16, el[1] - 6], [el[0] - 24, el[1] - 2]])); g.restore(); }
+  LC.crescent(g, arm, 0.5, -0.85, 3.5, LC.mix(N.skin, ICE, 0.36));
+  const sleeve = LC.smooth(L([[-0.1, 0.6], [0.28, 0.66], [0.56, 0.76], [0.7, 0.9], [0.74, 1.1], [0.56, 1.24], [0.2, 1.24], [-0.1, 1.12]]));
+  LC.fill(g, sleeve, N.tee); LC.stroke(g, LC.smooth(L([[0.56, 0.76], [0.7, 0.9], [0.74, 1.1]]), true), '#24201C', 3.5);
+  { g.save(); g.clip(sleeve); LC.fill(g, LC.smooth(L([[0.3, 0.6], [0.9, 0.6], [0.9, 1.0], [0.5, 0.96], [0.36, 0.8]])), LC.mix(N.tee, ICE, 0.14)); g.restore(); }
+  { const handP = LC.smooth(Hd([[-2, -15], [12, -19], [24, -27], [36, -31], [46, -29], [50, -22], [62, -19], [76, -17], [86, -12], [92, -2], [90, 12], [84, 20], [72, 24], [58, 23], [36, 20], [14, 17], [-2, 15]]));
+    LC.softShadow(g, handP, '#080707', 5, 0.65, 5, 7);
+    LC.fill(g, handP, N.skinM);
+    g.save(); g.clip(handP);
+    LC.fill(g, LC.smooth(Hd([[74, -40], [130, -40], [130, 40], [72, 40], [70, 0]])), 'rgba(16,12,10,0.38)');      // the fingers bend down over the phone's back, into its shade
+    g.strokeStyle = 'rgba(14,10,9,0.55)'; g.lineWidth = 1.5; g.lineCap = 'round';
+    [[-8, -7], [3, 4], [13, 15]].forEach(([y0, y1]) => { const q = Hd([[62, y0], [91, y1 * 0.9]]); g.beginPath(); g.moveTo(q[0][0], q[0][1]); g.lineTo(q[1][0], q[1][1]); g.stroke(); });
+    g.restore();
+    LC.crescent(g, handP, -0.9, 0.4, 2.5, LC.mix(N.skinM, ICE, 0.45)); }
+
+  // =====================================================================
+  // 8. FINISH: halation, grain, 2.00:1 (two squares), plain black bars
+  // =====================================================================
+  f.finish({ letterbox: LC.ASPECT, grain: 0.05, fibre: 0, vignette: 0, halation: 0.7, beforePost: c => LC.vignette(c, 0.42, '#0A0908', 960, 520, 480, 1150) });
+  window.FRAME_READY = true;
+})();
+</script>

@@ -1,0 +1,56 @@
+{
+ "note": "Voiced sounds that are not lines: her soft laugh on the phone (Q01 laugh_phone, the phone's voice, en-us-tova) and his murmur (Q01 murmur, his voice telling her about an ordinary day, en-us-varo, filtered until no word can be understood). Takes go to audio/vo/takes/fx_<key>_t<n>.wav (gitignored); tools/vocal_fx.py ranks them with earshot, checks them with speech recognition and writes audio/vo/<key>.wav. The direction rides in the speech_metadata annotation and is never spoken.",
+ "laugh_phone": {
+  "voice": "en-us-tova",
+  "listen_for": "a woman laughing softly",
+  "alts": [
+   "a woman speaking",
+   "a woman sighing"
+  ],
+  "takes": [
+   {
+    "text": "Hah... hm hm.",
+    "style": "She laughs softly at something he just said, in bed at night, the phone on the pillow by his face: a short, warm, breathy little laugh, close and private. A laugh, not words."
+   },
+   {
+    "text": "Ha ha.",
+    "style": "A soft, fond, breathy laugh at his little joke, close and intimate, under her breath. Laugh it; do not say the words."
+   },
+   {
+    "text": "Mm-hah hah.",
+    "style": "Laughing quietly and warmly, close to his ear in the dark, amused and affectionate, brief. A real laugh, no words."
+   },
+   {
+    "text": "Hah!",
+    "style": "One small surprised laugh that escapes her, warm and close, then a smile. A laugh, not a word."
+   },
+   {
+    "text": "Heh heh heh.",
+    "style": "A soft, delighted, breathy giggle, close and private, quiet, as if lying beside him. Laugh, do not speak."
+   },
+   {
+    "text": "Ha ha ha.",
+    "style": "A warm, amused, voiced little laugh at his joke, soft and close, three short notes of real laughter in the throat, smiling. Not a sigh, not breathy: laughing."
+   },
+   {
+    "text": "Hahaha.",
+    "style": "She can't help laughing at what he just told her: a short, bright, genuine laugh, quiet because it is late at night, close to him. Laughter with voice in it."
+   },
+   {
+    "text": "Ha! Ha ha.",
+    "style": "Amused and delighted, a soft giggle with voice, close and intimate, at night. Real laughter, not a breath."
+   },
+   {
+    "text": "Ah ha ha.",
+    "style": "A smooth, pretty, even little laugh, perfectly pitched, soft and close, warm and affectionate. Laughing."
+   }
+  ]
+ },
+ "murmur": {
+  "voice": "en-us-varo",
+  "text": "So the bus was late again, obviously. And then at lunch, Dave tried to fix the printer, and he ended up apologising to it. Out loud. To the printer. Anyway. Then I came home, and I made the pasta thing, and I sat there, and I thought about you.",
+  "style": "Lying in bed in the dark, talking quietly to his girlfriend on the phone on the pillow beside him, telling her about his ordinary day. Sleepy, warm and amused, low and close, almost a murmur, unhurried, with small pauses.",
+  "lowpass_hz": 420,
+  "check": "no word recognised by speech recognition (Whisper small.en)"
+ }
+}

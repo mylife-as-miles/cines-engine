@@ -1,0 +1,310 @@
+<!doctype html><meta charset="utf-8"><title>A3 · The Screen Between Them</title>
+<script src="../kit/otm.js"></script><script src="../kit/look_a.js"></script>
+<script>
+/* LONG DISTANCE · LOOK A "THE GLOW" · A3 THE SCREEN BETWEEN THEM (INT. APARTMENT, living room, day)
+   The same corner of the same room as the waterfall, in grey daylight: the first light in the flat that is not a screen. We stand
+   behind his left shoulder. She faces him in her coat, bag on her shoulder, hair cut short above the jaw, and holds his phone up
+   beside her own face, screen turned to him: the waterfall, the long hair, her younger face in warm light. It hangs in front of the
+   pale rectangle on the wall where their frame used to be. Her free hand has gone to the back of her neck, where her hair used to be.
+   He holds the old floral makeup bag in his palm, his thumb on its broken zip, and looks at neither her nor the screen.
+   On the fridge behind him, the strip. Three of her in one frame; only one is lit like a person.
+   World units are metres, y up; seen from the front, +x is on screen-left. */
+(async () => {
+  await OTM.loadFonts('../fonts/fonts.css');
+  const ctx = OTM.stage(), { W, H } = OTM, P = LA.P;
+  const f = OTM.frame(ctx, { seed: 31 });
+  const g = f.world, E = f.emissive;
+  const EYE = [1.95, 1.6, 4.5];
+  const cam = LA.lookAt(EYE, [1.8, 1.35, 2.2], { f: 2600, cy: 540 });
+  const sp = LA.space(cam, 2.0);
+  const V = (a, b, k) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k];
+  const N = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const X = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const D3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const SUB = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const LEN = v => Math.hypot(v[0], v[1], v[2]);
+  const MID = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2];
+  const S = p => cam.P(p);
+  const K = p => cam.k(cam.view(p)[2]);
+  const poly = (pts, col, a) => { g.save(); if (a != null) g.globalAlpha = a; g.fillStyle = col; g.fill(LA.pathPts(cam.pts(pts))); g.restore(); };
+  const quadP = pts => LA.pathPts(cam.pts(pts));
+  const UP = [0, 1, 0];
+  const L3 = LA.L3;
+  // two-bone reach: the elbow for a shoulder S and wrist Wr, bent toward the pole direction
+  const ik = (S0, Wr, L1, L2, pole) => { const dv = SUB(Wr, S0), d = Math.min(LEN(dv), L1 + L2 - 1e-4), dir = N(dv); const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+    const pp = N(V(pole, dir, -D3(pole, dir))); return V(V(S0, dir, a), pp, h); };
+  const chain = (list, pts, r, opt) => { for (let i = 0; i + 1 < pts.length; i++) sp.cap(list, pts[i], pts[i + 1], Array.isArray(r) ? r[i] : r, opt); };
+
+  // ------------------------------------------------------------------ the people, in the world
+  const HER = [1.45, 1.6, 2.16], HIS = [2.16, 1.56, 2.85];
+  // her: facing him; her right side toward us
+  const herFwd = N(V(V(V([0, 0, 0], N(SUB([2.16, 1.56, 2.85], HER)), 0.66), N(SUB([1.95, 1.6, 4.5], HER)), 0.34), UP, -0.1));   // to him, a little toward us
+  const herFf = N([herFwd[0], 0, herFwd[2]]);
+  const herR = N(X(herFf, UP));
+  const herN0 = V(V(HER, UP, -0.155), herFf, -0.03);                      // the base of her neck
+  const herRS = V(V(herN0, herR, 0.155), UP, -0.04), herLS = V(V(herN0, herR, -0.155), UP, -0.04);
+  // her right arm raised and bent: the elbow out and up, the forearm back to the nape, the hand under the short hair
+  const nape = V(V(HER, herFf, -0.082), UP, -0.122);
+  const herRW = V(V(nape, herR, 0.065), herFf, 0.005);
+  const herRE = V(V(V(herRS, herR, 0.145), UP, 0.17), herFf, 0.0);
+  // him: his body turned to her, his head bowed to the bag in his left hand
+  const hisFf = N([-0.5, 0, -0.87]);
+  const hisFwd = N([-0.42, -0.46, -0.78]);
+  const hisL = N(X(UP, hisFf));                                            // his left: toward us and screen-right
+  const hisN0 = [2.19, 1.405, 2.9];
+  const hisLS = V(V(hisN0, hisL, 0.195), UP, -0.05), hisRS = V(V(hisN0, hisL, -0.195), UP, -0.05);
+  const hisLE = [2.03, 1.065, 3.0];
+  // the phone: in her left hand, held out beside her face, the screen turned to him (and so, past his shoulder, to us)
+  const PB = [1.81, 1.55, 2.55], PHW = 0.076, PHH = 0.162;
+  const hisEye = V(V(HIS, hisFwd, 0.09), UP, -0.01);
+  const n = N(V(N(SUB(hisEye, PB)), N(SUB(EYE, PB)), 1));
+  let up = N(V(UP, n, -D3(UP, n))); { const w0 = N(X(up, n)); up = N(V(up, w0, -0.08)); }
+  const wd = N(X(up, n));
+  const corner = (a, b) => V(V(PB, up, a * PHH / 2), wd, b * PHW / 2);
+  const toHer = Math.sign(D3(SUB(HER, PB), wd)) || 1;                      // which way along wd her body lies
+  const LP = V(PB, n, 0.06), LPc = sp.P(LP);
+  // her grip: the hand behind the lower half of the phone, the wrist below its edge on her side
+  const herLW = V(V(V(PB, up, -0.085), wd, toHer * 0.022), n, -0.03);
+  const herLE = ik(herLS, herLW, 0.27, 0.25, N(V(V([0, -1, 0], herR, -0.6), herFf, -0.2)));
+
+  // ------------------------------------------------------------------ light: grey daylight from the window on the left; the phone, warm, small
+  const day = N([1, 0.5, 0.48]);
+  const lightsDay = (k, lo, dd) => [
+    { type: 'dir', d: sp.D(dd || day), col: [0.7 * k, 0.712 * k, 0.73 * k], steps: [[0.0, lo || 0.52], [0.3, 0.78], [0.62, 0.94]], soft: 0.32, shadow: false, wrap: 0.45, spec: 14 },
+    { type: 'amb', up: [0.3, 0.305, 0.318], down: [0.2, 0.19, 0.182] },
+    { type: 'point', p: LPc, col: [0.9, 0.5, 0.22], d0: 0.28 * sp.k, emit: sp.D(n), spill: 0.08, steps: [[0.12, 0.5], [0.4, 1]], soft: 0.06, shadow: false },
+  ];
+  // her: a pale, tired, real woman. Warm under the grey, the mole, a little shadow under the eyes. The coat hangs open on a dark jumper.
+  const herA0 = LA.albedoFor({ skin: '#D4A890', lip: '#A8716A', hair: '#2A1C15', mole: [0.17, 0.14, 0.27], underEye: '#AC7F70', seed: 9, flush: 0.8,
+    cloth: { coat: '#928D86', strap: '#3A2F29', jumper: '#46413D' } });
+  const JUMP = L3('#46413D'), FACING = L3('#77726B');
+  const herA = (mat, pl, prim, nrm) => {
+    if (mat === 'coat' && prim.g === 'top' && pl[2] > -0.15 && pl[1] > 0.72) {
+      const half = 0.09 + 0.06 * (pl[1] - 0.72), ax = Math.abs(pl[0] + 0.03);
+      if (ax < half) return JUMP; if (ax < half + 0.05) return FACING;
+    }
+    return herA0(mat, pl, prim, nrm);
+  };
+  const himA = LA.albedoFor({ skin: '#A87452', lip: '#8C5848', hair: '#16100C', stubble: '#2E2420', stubbleK: 0.6, seed: 4, cloth: { shirt: '#485366' } });
+
+  // ---- HER: head, neck, body in the coat, the collar up, both arms, both hands, the bag's strap: one trace
+  const hL = N(X([0, -1, 0], herFwd)), hC = X(herFwd, hL);
+  const herHead = sp.obj(HER, hL, hC, 0.225, { albedo: herA });
+  { const F0 = Object.assign({}, LA.FACE.her); Object.assign(LA.FACE.her, { jaw: 0.8, chin: 0.84, faceW: 0.93 });   // older, thinner in the face than in the photographs
+    LA.head(herHead, 'her', { neck: false }); Object.assign(LA.FACE.her, F0); }
+  // her mouth: the kit's lips are buried in the muzzle at this angle and poke out at the far corner; replace them with a pale, unpainted pair
+  herHead.prims = herHead.prims.filter(q => q.mat !== 'lipU' && q.mat !== 'lipL');
+  LA.ell(herHead, [0, 0.262, 0.342], [0.078, 0.017, 0.022], { mat: 'lipU', g: 'skin', ao: 0.1 });
+  LA.ell(herHead, [0, 0.296, 0.336], [0.066, 0.022, 0.024], { mat: 'lipL', g: 'skin', ao: 0.12 });
+  LA.hairHer(herHead, 'short');
+  const herParts = [herHead];
+  sp.cap(herParts, V(herN0, UP, -0.03), V(V(HER, hC, 0.225 * 0.27), herFwd, -0.225 * 0.13), 0.047, { albedo: herA, mat: 'skin', g: 'neck' });
+  const herBody = sp.obj(V(herN0, UP, 0.155), N(X([0, -1, 0], herFf)), [0, -1, 0], 0.225, { albedo: herA });
+  // the coat: square in the shoulders, hanging straight from them
+  { const m = { mat: 'coat', g: 'top', ao: 0 };
+    LA.ell(herBody, [0, 0.95, -0.1], [0.72, 0.22, 0.3], m);
+    [-1, 1].forEach(s => LA.ell(herBody, [s * 0.56, 1.1, -0.1], [0.2, 0.24, 0.22], m));
+    LA.ell(herBody, [0, 2.75, -0.08], [0.74, 2.1, 0.4], m); }
+  herParts.push(herBody);
+  // a collar: a band cut from a shell round the neck (open at the front where the coat opens), flaring a little toward the top
+  const collar = (list, base, R, y0, y1, open, fw, alb, mat) => { const c = V(base, UP, 0.1); const fl = [fw[0], 0, -fw[2]];
+    sp.ell(list, c, [R, 0.2, R], { albedo: alb, mat, g: 'collar', back: true, mask: pl => { const yy = -pl[1] + 0.1; if (yy < y0 || yy > y1) return false; const l = Math.hypot(pl[0], pl[2]) || 1; return (pl[0] * fl[0] + pl[2] * fl[2]) / l < open; } }); };
+  collar(herParts, herN0, 0.084, -0.03, 0.03, 0.62, herFf, herA, 'coat');
+  // the raised arm, in its sleeve; the sleeve has slid down toward the elbow and shows her wrist
+  { const ca = { albedo: herA, mat: 'coat', g: 'armR' }, fa = N(SUB(herRW, herRE)), cuff = V(herRE, fa, LEN(SUB(herRW, herRE)) - 0.075);
+    sp.cap(herParts, herRS, herRE, 0.043, ca); sp.cap(herParts, herRE, V(herRE, fa, 0.08), 0.04, ca); sp.cap(herParts, V(herRE, fa, 0.08), cuff, 0.036, ca);
+    sp.cap(herParts, V(cuff, fa, -0.03), herRW, 0.022, { albedo: herA, mat: 'skin', g: 'wristR' }); }
+  const hN = sp.obj(herRW, N(V(V([0, 0, 0], herR, -1), UP, 0.3)), herFf, 0.19, { albedo: herA });
+  LA.hand(hN, 1, { curl: [0.22, 0.28, 0.34, 0.4], spread: 0.07, thumb: { a: 0.5, curl: 0.2, down: 0.25 } }, { forearm: false, g: 'herHandN' });
+  herParts.push(hN);
+  // the phone arm: shoulder, a soft bend at the elbow, the wrist bare below the cuff
+  { const ca = { albedo: herA, mat: 'coat', g: 'armL' }, fa = N(SUB(herLW, herLE)), cuff = V(herLE, fa, LEN(SUB(herLW, herLE)) - 0.06);
+    sp.cap(herParts, herLS, herLE, 0.046, ca); sp.cap(herParts, herLE, cuff, 0.04, ca);
+    sp.cap(herParts, V(cuff, fa, -0.03), herLW, 0.021, { albedo: herA, mat: 'skin', g: 'wristL' }); }
+  const hP = sp.obj(herLW, N(V(up, wd, -toHer * 0.15)), n, 0.19, { albedo: herA });
+  const hPr = LA.hand(hP, -toHer, { curl: [0.18, 0.2, 0.24, 0.3], spread: 0.03, thumb: { a: 1.1, curl: 0.1, down: -0.5 } }, { forearm: false, g: 'herHandP' });
+  herParts.push(hP);
+  // the strap of her shoulder bag, over her left shoulder and down her front
+  // (worn across the body: over the left shoulder, across the chest, to the right hip; laid on the coat's surface)
+  { const EL = [[[0, 0.95, -0.1], [0.72, 0.22, 0.3]], [[-0.56, 1.1, -0.1], [0.2, 0.24, 0.22]], [[0.56, 1.1, -0.1], [0.2, 0.24, 0.22]], [[0, 2.75, -0.08], [0.74, 2.1, 0.4]]];
+    const zS = (x, y) => { let z = -9; EL.forEach(([c, r]) => { const q = 1 - ((x - c[0]) / r[0]) ** 2 - ((y - c[1]) / r[1]) ** 2; if (q > 0) z = Math.max(z, c[2] + r[2] * Math.sqrt(q)); }); return z; };
+    const O = V(herN0, UP, 0.155), Wd = (x, y, z) => V(V(V(O, herR, x * 0.225), UP, -y * 0.225), herFf, z * 0.225);
+    const path = [[-0.5, 0.8, -0.25], [-0.5, 0.86], [-0.47, 1.15], [-0.3, 1.65], [-0.02, 2.25], [0.24, 2.8], [0.4, 3.2], [0.5, 3.6]];
+    chain(herParts, path.map(([x, y, z]) => Wd(x, y, z == null ? zS(x, y) + 0.035 : z)), 0.0075, { albedo: herA, mat: 'strap', g: 'strap' }); }
+  const RHer = LA.trace(herParts, lightsDay(1, 0.58, N([0.75, 0.55, 0.8])).concat([{ type: 'dir', d: sp.D(N(SUB(EYE, HER))), col: [0.17, 0.17, 0.175], steps: [[0, 0], [0.25, 0.55], [0.55, 1]], soft: 0.4, shadow: false, wrap: 0.3 }]), { ao: 0, rect: { x: 0, y: 0, w: W, h: H }, add: [0.006, 0.006, 0.007], specMat: { skin: 0.08, lipL: 0.2 }, crossBlend: true, blend: { armR: 0.05, armL: 0.05, collar: 0.02, top: 0.1, skin: 0.15 } });
+
+  // ---- HIM: from behind; head, neck, shirt with its collar, arms; the bag in his left palm, his thumb along its zip
+  const iL = N(X([0, -1, 0], hisFwd)), iC = X(hisFwd, iL);
+  const hisHead = sp.obj(HIS, iL, iC, 0.23, { albedo: himA });
+  LA.head(hisHead, 'him', { neck: false }); LA.hairHim(hisHead);
+  // short at the back, down to a soft line at the nape
+  LA.ell(hisHead, [0, 0.1, -0.29], [0.31, 0.26, 0.2], { mat: 'hair', g: 'hair', ao: 0.2, mask: pl => pl[1] < 0.33 + 0.02 * (OTM.vnoise(pl[0] * 30, 4, 7) - 0.5) && pl[2] < -0.12 });
+  const hisParts = [hisHead];
+  sp.cap(hisParts, V(hisN0, UP, -0.04), V(V(HIS, iC, 0.23 * 0.28), hisFwd, -0.23 * 0.14), 0.053, { albedo: himA, mat: 'skin', g: 'neck' });
+  const hisBody = sp.obj(V(hisN0, UP, 0.16), N(X([0, -1, 0], hisFf)), [0, -1, 0], 0.23, { albedo: himA });
+  { const m = { mat: 'shirt', g: 'top', ao: 0 };
+    LA.ell(hisBody, [0, 0.95, -0.12], [0.8, 0.24, 0.3], m);
+    [-1, 1].forEach(s => LA.ell(hisBody, [s * 0.64, 1.12, -0.12], [0.22, 0.27, 0.24], m));
+    LA.ell(hisBody, [0, 2.75, -0.1], [0.84, 2.0, 0.4], m); }
+  hisParts.push(hisBody);
+  // the shirt collar: the band standing round his neck, and the fold turned down over it
+  collar(hisParts, V(hisN0, hisFf, -0.005), 0.062, -0.005, 0.036, 0.6, hisFf, himA, 'shirt');
+  { const c = V(V(hisN0, hisFf, -0.01), UP, -0.08), fl = [hisFf[0], 0, -hisFf[2]];   // the fold: a cone that flares down over the band onto the shoulders
+    sp.ell(hisParts, c, [0.118, 0.12, 0.118], { albedo: himA, mat: 'shirt', g: 'collar', back: true, mask: pl => { const yy = -pl[1]; if (yy < 0.066 || yy > 0.104) return false; const l = Math.hypot(pl[0], pl[2]) || 1; return (pl[0] * fl[0] + pl[2] * fl[2]) / l < 0.4; } }); }
+  // the bag: lying in his left palm, tipped up toward him
+  const tau = 0.62, fdF = N([-0.3, 0, -0.95]);
+  const fd = N(V(V([0, 0, 0], fdF, Math.cos(tau)), UP, Math.sin(tau)));     // across the bag, away from him
+  const bn = N(V(V([0, 0, 0], UP, Math.cos(tau)), fdF, -Math.sin(tau)));    // the bag's top face, toward him
+  let bu = N(X(fd, bn)); if (bu[0] > 0) bu = [-bu[0], -bu[1], -bu[2]];      // its length, toward her (screen right)
+  const BAG = [1.9, 1.245, 2.69];
+  const BQ = (u, v, w) => V(V(V(BAG, bu, u), fd, v), bn, w);
+  // his forearm and hand
+  const hisLW = BQ(-0.045, -0.105, -0.03);
+  { const sa = { albedo: himA, mat: 'shirt', g: 'armL' }, fa = N(SUB(hisLW, hisLE));
+    sp.cap(hisParts, hisLS, hisLE, 0.054, Object.assign({}, sa, { g: 'top' })); sp.cap(hisParts, hisLE, V(hisLE, fa, 0.07), 0.054, sa);   // the sleeve rolled to below the elbow
+    sp.cap(hisParts, V(hisLE, fa, 0.06), V(hisLE, fa, 0.17), 0.039, { albedo: himA, mat: 'skin', g: 'foreL' });
+    sp.cap(hisParts, V(hisLE, fa, 0.17), hisLW, 0.031, { albedo: himA, mat: 'skin', g: 'foreL' });
+    sp.cap(hisParts, hisRS, V(V(hisRS, UP, -0.29), hisFf, 0.02), 0.056, Object.assign({}, sa, { g: 'armR' })); }
+  const sk = { albedo: himA, mat: 'skin', g: 'hisHand' };
+  // the palm under the bag, the fingers round its far edge
+  sp.cap(hisParts, BQ(-0.045, -0.085, -0.032), BQ(-0.045, 0.0, -0.036), 0.03, sk);
+  [[-0.012, 0.0105], [-0.036, 0.011], [-0.058, 0.0105], [-0.078, 0.0092]].forEach(([u, r], i) => {
+    const s = 1 - i * 0.04; chain(hisParts, [BQ(u, 0.005, -0.036), BQ(u, 0.056 * s, -0.03), BQ(u, 0.07 * s, -0.004), BQ(u, 0.062 * s, 0.022)], r, sk); });
+  // the thumb (also traced again on top of the zip, below)
+  const TH = [BQ(-0.026, -0.082, -0.016), BQ(-0.004, -0.066, 0.014), BQ(0.024, -0.05, 0.027), BQ(0.054, -0.043, 0.028)];
+  sp.cap(hisParts, BQ(-0.03, -0.09, -0.03), TH[0], 0.02, sk); chain(hisParts, TH, [0.0112, 0.0104, 0.0093], sk);
+  // the bag itself: a soft quilted pouch, faded floral cotton
+  const hx = (i, j, s) => { let h = Math.imul(i, 374761393) + Math.imul(j, 668265263) + Math.imul(s, 1274126177) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+  const BASE = L3('#C8ABA1'), PET = ['#A66B6B', '#BC9064', '#C79C9A', '#8C6878'].map(L3), DARKP = L3('#6E4447'), LEAF = L3('#7B8A6E'), CEN = L3('#E4D3B6');
+  const bagAlb = (mat, pl) => {
+    const x = pl[0], y = pl[1], cs = 0.46; let col = BASE;
+    for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) {
+      const i = Math.floor(x / cs) + di, j = Math.floor(y / cs) + dj;
+      const cx = (i + 0.5 + (hx(i, j, 1) - 0.5) * 0.45) * cs, cy = (j + 0.5 + (hx(i, j, 2) - 0.5) * 0.45) * cs;
+      const R = cs * (0.27 + 0.1 * hx(i, j, 3)), dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy);
+      // a leaf
+      const la = hx(i, j, 5) * 6.283, lx = cx + Math.cos(la) * R * 1.2, ly = cy + Math.sin(la) * R * 1.2;
+      const ex = (x - lx) * Math.cos(la) + (y - ly) * Math.sin(la), ey = -(x - lx) * Math.sin(la) + (y - ly) * Math.cos(la);
+      if ((ex / (R * 0.55)) ** 2 + (ey / (R * 0.22)) ** 2 < 1) col = LEAF;
+      if (d > R * 1.05) continue;
+      const th = Math.atan2(dy, dx) + hx(i, j, 4) * 6.283, pr = R * (0.58 + 0.42 * Math.abs(Math.cos(2.5 * th)));
+      const pc = PET[(((i * 7 + j * 3) % 4) + 4) % 4];
+      if (d < R * 0.2) col = CEN; else if (d < pr) col = d < R * 0.42 ? [pc[0] * 0.75 + DARKP[0] * 0.25, pc[1] * 0.75 + DARKP[1] * 0.25, pc[2] * 0.75 + DARKP[2] * 0.25] : pc;
+    }
+    // old: faded, and rubbed paler where hands have held it
+    const fade = 0.22 + 0.3 * OTM.vnoise(x * 2.5 + 7, y * 2.5, 5) + 0.25 * Math.exp(-(((x + 0.5) / 0.5) ** 2) - (((y + 0.4) / 0.4) ** 2));
+    return [col[0] + (BASE[0] * 1.12 - col[0]) * fade, col[1] + (BASE[1] * 1.1 - col[1]) * fade, col[2] + (BASE[2] * 1.08 - col[2]) * fade];
+  };
+  const bagOb = sp.obj(BAG, bu, fd, 0.1, { albedo: bagAlb });
+  { const m = { mat: 'bag', g: 'bag' };
+    LA.ell(bagOb, [0, 0, 0], [1.02, 0.6, 0.24], m);
+    [-1, 1].forEach(s => { LA.ell(bagOb, [s * 0.56, 0, 0], [0.5, 0.58, 0.225], m); LA.ell(bagOb, [0, s * 0.26, 0], [0.96, 0.36, 0.22], m); }); }
+  hisParts.push(bagOb);
+  const RHis = LA.trace(hisParts, lightsDay(0.92), { rect: { x: 0, y: 0, w: W, h: H }, add: [0.006, 0.006, 0.007], crossBlend: true, blend: { bag: 0.18, armL: 0.05, foreL: 0.05, collar: 0.02, hisHand: 0.05, top: 0.12 } });
+  const thumbParts = []; chain(thumbParts, TH, [0.0112, 0.0104, 0.0093], sk);
+  const RThumb = LA.trace(thumbParts, lightsDay(0.92), { add: [0.006, 0.006, 0.007], crossBlend: true, blend: { hisHand: 0.05 } });
+
+  // ================================================================== 1. the room in daylight
+  g.fillStyle = '#A9AAA6'; g.fillRect(0, 0, W, H);
+  { const wl = quadP([[-2, 0, 0], [5, 0, 0], [5, 2.7, 0], [-2, 2.7, 0]]); LA.steps(g, wl, S([3.5, 1.5, 0]), S([0, 1.5, 0]), ['#BDBEB9', '#B5B6B1', '#ACADA8', '#A3A49F'], 0.04); }
+  poly([[-2, 0, 0], [5, 0, 0], [5, 0, 6], [-2, 0, 6]], '#7E7D79');
+  // the window's light lies across the back wall: a pale, soft-edged slab (overcast, so no hard sun), the frame of the window in it
+  { const wp = quadP([[1.0, 0.45, 0.001], [0.15, 0.36, 0.001], [-0.15, 2.25, 0.001], [0.72, 2.38, 0.001]]); g.save(); g.filter = 'blur(14px)'; g.fillStyle = 'rgba(226,228,224,0.6)'; g.fill(wp); g.restore();
+    const mull = quadP([[0.6, 0.4, 0.001], [0.555, 0.39, 0.001], [0.27, 2.3, 0.001], [0.315, 2.31, 0.001]]); g.save(); g.filter = 'blur(7px)'; g.fillStyle = 'rgba(150,151,147,0.35)'; g.fill(mull); g.restore(); }
+  // the pale rectangle where their frame used to hang: unfaded paint, its nail still in the wall
+  { const x0 = 1.12, x1 = 1.64, y0 = 1.3, y1 = 1.72; const pr = [[x1, y0, 0.002], [x0, y0, 0.002], [x0, y1, 0.002], [x1, y1, 0.002]]; const pp = quadP(pr);
+    g.save(); g.filter = 'blur(1.5px)'; g.fillStyle = '#D0D1CC'; g.fill(pp); g.restore();
+    g.save(); g.clip(pp); g.strokeStyle = 'rgba(150,148,140,0.35)'; g.lineWidth = 3; g.filter = 'blur(2px)'; g.stroke(pp); g.restore();
+    const nl = S([(x0 + x1) / 2, y1 + 0.035, 0.003]); g.fillStyle = 'rgba(90,88,82,0.45)'; g.beginPath(); g.ellipse(nl[0] + 1.5, nl[1] + 4, 2.4, 4.5, 0, 0, 7); g.fill();
+    g.fillStyle = '#3B3935'; g.beginPath(); g.arc(nl[0], nl[1], 3.2, 0, 7); g.fill(); g.fillStyle = 'rgba(220,220,215,0.6)'; g.beginPath(); g.arc(nl[0] - 0.9, nl[1] - 0.9, 1.1, 0, 7); g.fill(); }
+  // the shelf and the two mugs
+  const SHY = 1.12;
+  poly([[0.95, SHY, 0.0], [1.7, SHY, 0.0], [1.7, SHY, 0.2], [0.95, SHY, 0.2]], '#8F908B');
+  poly([[0.95, SHY - 0.02, 0.2], [1.7, SHY - 0.02, 0.2], [1.7, SHY, 0.2], [0.95, SHY, 0.2]], '#C9CAC5');
+  const mug = (x, z, col, dust) => { const b0 = S([x, SHY, z]), t0 = S([x, SHY + 0.1, z]); const r = 0.042 * cam.k(b0[2]);
+    if (dust) { g.fillStyle = 'rgba(214,212,205,0.95)'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.34, r * 0.4, 0, 0, 7); g.fill(); g.fillStyle = '#8F908B'; g.beginPath(); g.ellipse(b0[0], b0[1], r * 1.03, r * 0.29, 0, 0, 7); g.fill(); }
+    g.fillStyle = col; g.fillRect(b0[0] - r, t0[1], 2 * r, b0[1] - t0[1]); g.beginPath(); g.ellipse(b0[0], b0[1], r, r * 0.28, 0, 0, Math.PI); g.fill();
+    g.fillStyle = '#3E3E3B'; g.beginPath(); g.ellipse(t0[0], t0[1], r, r * 0.28, 0, 0, 7); g.fill();
+    g.strokeStyle = col; g.lineWidth = r * 0.28; g.beginPath(); g.ellipse(b0[0] - r * 1.15, (b0[1] + t0[1]) / 2, r * 0.38, r * 0.5, 0, Math.PI - 1.3, Math.PI + 1.3); g.stroke();
+    g.fillStyle = 'rgba(255,255,255,0.25)'; g.fillRect(b0[0] + r * 0.6, t0[1], r * 0.35, b0[1] - t0[1]); };
+  mug(1.48, 0.1, '#6E7A86', false); mug(1.24, 0.1, '#8A8079', true);
+  // the counter's end
+  const TOP = 0.91, CX0 = 0.95, CX1 = 1.76, CZ1 = 1.62;
+  poly([[CX0, 0, CZ1], [CX1, 0, CZ1], [CX1, TOP, CZ1], [CX0, TOP, CZ1]], '#71706C');
+  poly([[CX1, 0, 0], [CX1, 0, CZ1], [CX1, TOP, CZ1], [CX1, TOP, 0]], '#8A8985');
+  poly([[CX0 - 0.02, TOP, 0], [CX1 + 0.02, TOP, 0], [CX1 + 0.02, TOP, CZ1 + 0.02], [CX0 - 0.02, TOP, CZ1 + 0.02]], '#9C9B96');
+  poly([[CX0 - 0.02, TOP - 0.035, CZ1 + 0.02], [CX1 + 0.02, TOP - 0.035, CZ1 + 0.02], [CX1 + 0.02, TOP, CZ1 + 0.02], [CX0 - 0.02, TOP, CZ1 + 0.02]], '#BEBDB8');
+  // the fridge, and the strip
+  const FX0 = 2.2, FX1 = 2.94, FZ = 0.7, FH = 1.86;
+  poly([[FX0, 0, 0], [FX0, 0, FZ], [FX0, FH, FZ], [FX0, FH, 0]], '#8E8F8B');
+  const door = [[FX0, 0.02, FZ], [FX1, 0.02, FZ], [FX1, FH, FZ], [FX0, FH, FZ]];
+  { g.save(); g.clip(quadP(door)); LA.steps(g, null, S([FX1, 1.2, FZ]), S([FX0, 1.2, FZ]), ['#DFE0DC', '#D6D7D3', '#CDCECA', '#C4C5C1'], 0.03);
+    poly([[FX0, 1.16, FZ + 0.001], [FX1, 1.16, FZ + 0.001], [FX1, 1.172, FZ + 0.001], [FX0, 1.172, FZ + 0.001]], '#9A9B97'); g.restore(); }
+  { const strip = LA.boothStrip(200, 620); const SC = [2.74, 1.58, FZ + 0.003], sRot = -0.05;
+    const sq = [[0.045, 0.14], [-0.045, 0.14], [-0.045, -0.14], [0.045, -0.14]].map(([u, v]) => S([SC[0] + u * Math.cos(sRot) - v * Math.sin(sRot), SC[1] + u * Math.sin(sRot) + v * Math.cos(sRot), SC[2]]));
+    LA.soft(g, LA.pathPts(sq.map(q => [q[0] + 2, q[1] + 3])), 'rgba(60,60,58,0.5)', 3); LA.quadImage(g, strip, sq, { affine: true });
+    const mg = S([SC[0] + 0.004, SC[1] + 0.13, SC[2] + 0.01]); const r = 0.016 * cam.k(mg[2]); g.fillStyle = '#7A4A48'; g.beginPath(); g.arc(mg[0], mg[1], r, 0, 7); g.fill(); }
+
+  // ================================================================== 2. HER
+  RHer.draw(g);
+  LA.features(g, RHer, herHead, 'her', { eyes: 0.72, look: [0.7, 0.15], mouth: 'still', brow: 0.85, iris: '#3A2A20', lash: '#1A120E', catchOff: [-0.3, -0.3], lineCol: '#7A5550' });
+  // the coat's buttons down the near edge of the opening, and its weight in two long soft folds
+  { const kb = K(herN0); [0.95, 1.45, 1.95].forEach(y => { const c = herBody.toCam([-0.2 - 0.06 * (y - 0.72), y, 0.42]); const s = RHer.zAt(c[0], c[1]); if (Math.abs(s - c[2]) > 0.08 * herBody.s) return;
+      g.fillStyle = '#4E4A46'; g.beginPath(); g.arc(c[0], c[1], 0.011 * kb, 0, 7); g.fill(); g.fillStyle = 'rgba(200,198,192,0.5)'; g.beginPath(); g.arc(c[0] - 0.003 * kb, c[1] - 0.003 * kb, 0.004 * kb, 0, 7); g.fill(); }); }
+
+  // ================================================================== 3. the phone, in front of the pale rectangle, beside her face
+  { const bq = cam.pts([corner(1, 1), corner(1, -1), corner(-1, -1), corner(-1, 1)]);
+    const bk = cam.pts([corner(1, 1), corner(1, -1), corner(-1, -1), corner(-1, 1)].map(p => V(p, n, -0.009)));
+    const sq2 = cam.pts([corner(0.94, 0.9), corner(0.94, -0.9), corner(-0.94, -0.9), corner(-0.94, 0.9)].map(p => V(p, n, 0.001)));
+    LA.soft(g, LA.rquad(bq, 16), P.g1, 30, 0.35, 'screen');
+    g.fillStyle = '#2B2D31'; g.fill(LA.rquad(bk, 16)); g.fillStyle = '#121418'; g.fill(LA.rquad(bq, 16));
+    g.save(); g.strokeStyle = 'rgba(190,192,196,0.55)'; g.lineWidth = 1.2; g.stroke(LA.rquad(bq, 16)); g.restore();
+    const wf = LA.waterfallImage(300, 640);
+    g.save(); g.clip(LA.rquad(sq2, 12)); LA.quadImage(g, wf, sq2, { affine: true });
+    g.fillStyle = 'rgba(255,240,220,0.05)'; g.fillRect(0, 0, W, H); g.restore();
+    E.save(); E.fillStyle = OTM.rgba(P.g1, 0.4); E.fill(LA.rquad(sq2, 12)); E.restore();
+    // her thumb comes round onto the front of the phone at the lower corner on her side
+    const base = S(V(corner(-0.78, toHer * 1.12), n, 0.004)), mid = S(V(corner(-0.62, toHer * 0.86), n, 0.006)), tip = S(V(corner(-0.5, toHer * 0.6), n, 0.006)); const kk = K(PB);
+    LA.limb(g, [base[0], base[1]], [mid[0], mid[1]], 0.019 * kk, 0.017 * kk, '#B98C76', { lit: '#E0B59C', litSide: 1, litA: 0.7 });
+    LA.limb(g, [mid[0], mid[1]], [tip[0], tip[1]], 0.017 * kk, 0.015 * kk, '#B98C76', { lit: '#E0B59C', litSide: 1, litA: 0.7 });
+    const a = Math.atan2(tip[1] - mid[1], tip[0] - mid[0]); g.fillStyle = 'rgba(232,200,186,0.85)'; g.beginPath(); g.ellipse(tip[0] - Math.cos(a) * 0.004 * kk, tip[1] - Math.sin(a) * 0.004 * kk, 0.005 * kk, 0.0042 * kk, a, 0, 7); g.fill(); }
+
+  // ================================================================== 4. HIM, in the foreground, his back to us
+  RHis.draw(g);
+  LA.features(g, RHis, hisHead, 'him', { eyes: 0.3, look: [0, 1], mouth: 'still', brow: 1.1 });
+  // the shirt: the yoke seam across his shoulders, the drag of the cloth toward the arm that holds the bag, a crease at the small of the back
+  { const L = LA.layer(); const q = L; const kB = K(hisN0); const B = (x, y) => hisBody.toCam([x, y, -0.5]).slice(0, 2);
+    const line = (pts, w, col) => { q.save(); q.strokeStyle = col; q.lineWidth = w; q.lineCap = 'round'; q.filter = 'blur(2px)'; q.stroke(LA.smooth(pts.map(p => B(p[0], p[1])), true)); q.restore(); };
+    // the window light falls across the near shoulder blade and dies toward the far side and the waist
+    { const a = B(0.45, 1.3), b = B(-0.6, 2.9), L2 = LA.layer(); L2.fillStyle = LA.lg(L2, a[0], a[1], b[0], b[1], [[0, '#8C9AB0', 0.2], [0.45, '#8C9AB0', 0.0], [0.7, '#12161C', 0.0], [1, '#12161C', 0.3]]); L2.fillRect(0, 0, W, H);
+      const y0 = S(hisN0)[1]; L2.globalCompositeOperation = 'destination-out'; L2.fillStyle = LA.lg(L2, 0, y0 - 0.02 * kB, 0, y0 + 0.08 * kB, [[0, '#000000', 1], [1, '#000000', 0]]); L2.fillRect(0, 0, W, y0 + 0.08 * kB); q.drawImage(L2.canvas, 0, 0); }
+    q.save(); q.filter = 'blur(12px)'; q.fillStyle = 'rgba(25,29,36,0.2)';
+    [[[0.1, 1.3], [0.45, 1.75], [0.72, 2.3], [0.62, 2.33], [0.36, 1.8], [0.02, 1.38]], [[-0.3, 1.45], [-0.05, 1.95], [0.22, 2.7], [0.12, 2.72], [-0.13, 2.0], [-0.38, 1.5]]]
+      .forEach(pp => q.fill(LA.pathPts(pp.map(p => B(p[0], p[1]))))); q.restore();
+    q.save(); q.filter = 'blur(8px)'; q.fillStyle = 'rgba(140,152,170,0.16)'; [[[-0.1, 1.4], [0.22, 1.85], [0.48, 2.45], [0.4, 2.47], [0.14, 1.9], [-0.16, 1.45]]].forEach(pp => q.fill(LA.pathPts(pp.map(p => B(p[0], p[1]))))); q.restore();
+    q.globalCompositeOperation = 'destination-in'; q.drawImage(RHis.canvas, RHis.x, RHis.y);
+    g.drawImage(q.canvas, 0, 0); }
+  // the zip along the bag's near edge: closed as far as the slider, then split open to the far end, the teeth loose on each side
+  { const kb = K(BAG); const ZW = (u, side, open) => BQ(u, -0.045 + side * open, 0.0165 + 0.002 * side); const Z = (u, side, open) => S(ZW(u, side, open));
+    const seen = (u, side, open) => { const w = ZW(u, side, open), p = S(w); return Math.abs(RHis.zAt(p[0], p[1]) - sp.P(w)[2]) < 0.02 * sp.k; };
+    const seg = (u0, u1, side, open, w, col) => { g.save(); g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.beginPath(); let on = false; for (let i = 0; i <= 40; i++) { const u = u0 + (u1 - u0) * i / 40; const p = Z(u, side, open(u)); if (!seen(u, side, open(u))) { on = false; continue; } on ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); on = true; } g.stroke(); g.restore(); };
+    const SL = 0.028, gap = u => u < SL ? 0 : Math.min(0.011, (u - SL) * 0.17);
+    // the dark inside of the bag through the split
+    { const pts = []; for (let i = 0; i <= 20; i++) { const u = SL + (0.096 - SL) * i / 20; pts.push(Z(u, 1, gap(u))); } for (let i = 20; i >= 0; i--) { const u = SL + (0.096 - SL) * i / 20; pts.push(Z(u, -1, gap(u))); }
+      g.fillStyle = '#2A211F'; g.fill(LA.pathPts(pts)); }
+    [-1, 1].forEach(s => seg(-0.098, 0.097, s, u => gap(u) + 0.0026, 0.004 * kb, '#86736B'));      // the tapes
+    for (let u = -0.094; u < 0.096; u += 0.003) [-1, 1].forEach(s => { if (!seen(u, s, gap(u) + 0.001)) return; const a = Z(u, s, gap(u) + 0.001); g.fillStyle = (Math.round(u / 0.003) & 1) ? '#B9B3AA' : '#8E8780'; g.beginPath(); g.arc(a[0], a[1], 0.0016 * kb, 0, 7); g.fill(); });
+    const sl = Z(SL, 0, 0), sl2 = Z(SL - 0.014, 0, 0); g.save(); g.fillStyle = '#9B968F'; g.strokeStyle = '#5E5953'; g.lineWidth = 1; g.beginPath(); g.ellipse(sl[0], sl[1], 0.009 * kb, 0.005 * kb, Math.atan2(sl[1] - sl2[1], sl[0] - sl2[0]), 0, 7); g.fill(); g.stroke();
+    const tb = S(V(BQ(SL - 0.004, -0.07, 0.006), UP, -0.012)); g.strokeStyle = '#8C877F'; g.lineWidth = 0.004 * kb; g.beginPath(); g.moveTo(sl[0], sl[1]); g.lineTo(tb[0], tb[1]); g.stroke();
+    g.fillStyle = '#A9A49C'; g.beginPath(); g.ellipse(tb[0], tb[1], 0.004 * kb, 0.007 * kb, 0.3, 0, 7); g.fill(); g.restore(); }
+  RThumb.draw(g);
+  { const t3 = S(TH[3]), t2 = S(TH[2]), kb = K(BAG); const a = Math.atan2(t3[1] - t2[1], t3[0] - t2[0]);
+    g.fillStyle = 'rgba(214,170,146,0.85)'; g.beginPath(); g.ellipse(t3[0] - Math.cos(a) * 0.006 * kb, t3[1] - Math.sin(a) * 0.006 * kb - 0.004 * kb, 0.0075 * kb, 0.005 * kb, a, 0, 7); g.fill(); }
+
+  // ================================================================== 5. finish: soft daylight grade, the subtitle in the picture
+  f.finish({ letterbox: 0, grain: 0.05, fibre: 0, vignette: 0, halation: 0.45, beforePost: c => {
+    c.save(); c.fillStyle = LA.rg(c, W * 0.55, H * 0.42, 420, 1300, [[0, '#1A1C1F', 0], [1, '#1A1C1F', 0.4]]); c.fillRect(0, 0, W, H); c.restore(); } });
+  LA.caption(ctx, [{ t: 'Her: We’ve never taken this photo.' }, { t: 'We’ve never been to a waterfall.' }], { y: H - 50, size: 42 });
+  window.FRAME_READY = true;
+})();
+</script>

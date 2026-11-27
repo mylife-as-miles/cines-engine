@@ -1,0 +1,437 @@
+{
+ "streetcar_far": {
+  "match": "a distant train passing",
+  "z": 1.3,
+  "verdict": "no match",
+  "candidates": [
+   {
+    "file": "audio/gen/var/streetcar_far/2.wav",
+    "z": 1.3
+   },
+   {
+    "file": "audio/gen/var/streetcar_far/1.wav",
+    "z": 1.29
+   },
+   {
+    "file": "audio/gen/var/streetcar_far/0_original.wav",
+    "z": 1.28
+   },
+   {
+    "file": "audio/gen/var/streetcar_far/4.wav",
+    "z": 0.81
+   },
+   {
+    "file": "audio/gen/var/streetcar_far/3.wav",
+    "z": 0.63
+   }
+  ],
+  "pick": "var/streetcar_far/2.wav",
+  "prompt": "a city tram rumbling past slowly on rails, far away down the street at night, a low steady rumble rising and fading, heard from indoors",
+  "seed": 2002,
+  "dur": 7
+ },
+ "sigh_m": {
+  "match": "a man sighing",
+  "z": 5.83,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/sigh_m/1.wav",
+    "z": 5.83
+   },
+   {
+    "file": "audio/gen/var/sigh_m/3.wav",
+    "z": 5.61
+   },
+   {
+    "file": "audio/gen/var/sigh_m/4.wav",
+    "z": 4.95
+   },
+   {
+    "file": "audio/gen/var/sigh_m/2.wav",
+    "z": 4.55
+   },
+   {
+    "file": "audio/gen/var/sigh_m/0_original.wav",
+    "z": 1.4
+   }
+  ],
+  "pick": "var/sigh_m/1.wav",
+  "prompt": "a man sighing softly through his nose as he falls asleep, one long gentle breath out, very close",
+  "seed": 1001,
+  "dur": 3
+ },
+ "bus_bell": {
+  "match": "a single electronic chime ding",
+  "z": 3.93,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/bus_bell/2.wav",
+    "z": 3.93
+   },
+   {
+    "file": "audio/gen/var/bus_bell/1.wav",
+    "z": 3.91
+   },
+   {
+    "file": "audio/gen/var/bus_bell/4.wav",
+    "z": 2.87
+   },
+   {
+    "file": "audio/gen/var/bus_bell/3.wav",
+    "z": 1.84
+   },
+   {
+    "file": "audio/gen/var/bus_bell/0_original.wav",
+    "z": 1.8
+   }
+  ],
+  "pick": "var/bus_bell/2.wav",
+  "prompt": "the stop request chime on a city bus, one short soft electronic bing, heard from inside the bus",
+  "seed": 2002,
+  "dur": 2
+ },
+ "couch_creak": {
+  "match": "furniture creaking",
+  "z": 3.15,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/couch_creak/4.wav",
+    "z": 3.15
+   },
+   {
+    "file": "audio/gen/var/couch_creak/3.wav",
+    "z": 2.81
+   },
+   {
+    "file": "audio/gen/var/couch_creak/0_original.wav",
+    "z": 2.14
+   },
+   {
+    "file": "sfx/creak.flac",
+    "z": 1.72
+   },
+   {
+    "file": "audio/gen/var/couch_creak/1.wav",
+    "z": 1.69
+   },
+   {
+    "file": "audio/gen/var/couch_creak/2.wav",
+    "z": 1.25
+   }
+  ],
+  "pick": "var/couch_creak/4.wav",
+  "prompt": "an old sofa's wooden frame creaking under someone's weight, one slow creak, close, quiet room",
+  "seed": 2002,
+  "dur": 3
+ },
+ "coat_rustle": {
+  "match": "clothes rustling",
+  "z": 3.23,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/coat_rustle/2.wav",
+    "z": 3.23
+   },
+   {
+    "file": "audio/gen/var/coat_rustle/1.wav",
+    "z": 3.2
+   },
+   {
+    "file": "audio/gen/var/coat_rustle/3.wav",
+    "z": 2.85
+   },
+   {
+    "file": "audio/gen/var/coat_rustle/4.wav",
+    "z": 2.44
+   },
+   {
+    "file": "sfx/cloth2.flac",
+    "z": 2.01
+   },
+   {
+    "file": "sfx/cloth1.flac",
+    "z": 1.67
+   },
+   {
+    "file": "audio/gen/var/coat_rustle/0_original.wav",
+    "z": 1.62
+   }
+  ],
+  "pick": "var/coat_rustle/2.wav",
+  "prompt": "the rustle of a thick wool coat as a woman moves her arm, soft heavy fabric brushing, close",
+  "seed": 2002,
+  "dur": 2
+ },
+ "hangers": {
+  "match": "coat hangers clinking",
+  "z": 1.85,
+  "verdict": "no match",
+  "candidates": [
+   {
+    "file": "audio/gen/var/hangers/2.wav",
+    "z": 1.85
+   },
+   {
+    "file": "audio/gen/var/hangers/4.wav",
+    "z": 1.7
+   },
+   {
+    "file": "audio/gen/var/hangers/1.wav",
+    "z": 1.59
+   },
+   {
+    "file": "audio/gen/var/hangers/3.wav",
+    "z": 1.31
+   },
+   {
+    "file": "audio/gen/var/hangers/0_original.wav",
+    "z": 1.12
+   }
+  ],
+  "pick": "var/hangers/2.wav",
+  "prompt": "two empty wooden coat hangers swinging on a metal wardrobe rail and clacking against each other, a light hollow clack, close, small bedroom",
+  "seed": 3202,
+  "dur": 3
+ },
+ "bag_lift": {
+  "match": "a bag picked up",
+  "z": 3.03,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "sfx/cloth2.flac",
+    "z": 3.03
+   },
+   {
+    "file": "sfx/rustle.flac",
+    "z": 1.94
+   },
+   {
+    "file": "audio/gen/var/bag_lift/4.wav",
+    "z": 1.5
+   },
+   {
+    "file": "audio/gen/var/bag_lift/0_original.wav",
+    "z": 1.45
+   },
+   {
+    "file": "audio/gen/var/bag_lift/1.wav",
+    "z": 1.4
+   },
+   {
+    "file": "audio/gen/var/bag_lift/3.wav",
+    "z": 1.19
+   },
+   {
+    "file": "audio/gen/var/bag_lift/2.wav",
+    "z": 0.93
+   }
+  ],
+  "pick": "otm/cloth2",
+  "source": "CC0 recording (One Too Many)"
+ },
+ "phone_cushion": {
+  "match": "a soft thud on a cushion",
+  "z": 1.69,
+  "verdict": "no match",
+  "candidates": [
+   {
+    "file": "sfx/cloth1.flac",
+    "z": 1.69
+   },
+   {
+    "file": "audio/gen/var/phone_cushion/3.wav",
+    "z": 0.76
+   },
+   {
+    "file": "audio/gen/var/phone_cushion/4.wav",
+    "z": 0.35
+   },
+   {
+    "file": "audio/gen/var/phone_cushion/0_original.wav",
+    "z": -0.58
+   },
+   {
+    "file": "audio/gen/var/phone_cushion/1.wav",
+    "z": -0.81
+   },
+   {
+    "file": "audio/gen/var/phone_cushion/2.wav",
+    "z": -0.97
+   }
+  ],
+  "pick": "otm/cloth1",
+  "source": "CC0 recording (One Too Many)"
+ },
+ "street_day": {
+  "match": "distant city traffic",
+  "z": 2.82,
+  "verdict": "plausible",
+  "candidates": [
+   {
+    "file": "audio/gen/var/street_day/3.wav",
+    "z": 2.82
+   },
+   {
+    "file": "audio/gen/var/street_day/4.wav",
+    "z": 2.74
+   },
+   {
+    "file": "audio/gen/var/street_day/2.wav",
+    "z": 2.44
+   },
+   {
+    "file": "audio/gen/var/street_day/0_original.wav",
+    "z": 2.27
+   },
+   {
+    "file": "audio/gen/var/street_day/1.wav",
+    "z": 2.06
+   }
+  ],
+  "pick": "var/street_day/3.wav",
+  "prompt": "distant urban traffic murmur through a window, soft, far away, daytime city ambience",
+  "seed": 1001,
+  "dur": 10
+ },
+ "chair_creak": {
+  "match": "a chair creaking",
+  "z": 4.1,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/chair_creak/3.wav",
+    "z": 4.1
+   },
+   {
+    "file": "audio/gen/var/chair_creak/4.wav",
+    "z": 3.43
+   },
+   {
+    "file": "audio/gen/var/chair_creak/2.wav",
+    "z": 2.88
+   },
+   {
+    "file": "audio/gen/var/chair_creak/1.wav",
+    "z": 2.55
+   },
+   {
+    "file": "audio/gen/var/chair_creak/0_original.wav",
+    "z": 2.37
+   },
+   {
+    "file": "sfx/creak.flac",
+    "z": 1.59
+   }
+  ],
+  "pick": "var/chair_creak/3.wav",
+  "prompt": "a desk chair creak, a man shifts his weight, a single short creak, quiet office",
+  "seed": 1001,
+  "dur": 2
+ },
+ "steps_fast": {
+  "match": "fast footsteps on wood",
+  "z": 3.16,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/steps_fast/0_original.wav",
+    "z": 3.16
+   },
+   {
+    "file": "audio/gen/var/steps_fast/4.wav",
+    "z": 2.91
+   },
+   {
+    "file": "audio/gen/var/steps_fast/1.wav",
+    "z": 2.63
+   },
+   {
+    "file": "audio/gen/var/steps_fast/3.wav",
+    "z": 2.59
+   },
+   {
+    "file": "audio/gen/var/steps_fast/2.wav",
+    "z": 2.41
+   }
+  ],
+  "pick": "var/steps_fast/0_original.wav",
+  "prompt": "a man walking quickly across a wooden floor, four fast steps and then stopping, inside a small flat",
+  "seed": 136,
+  "dur": 3
+ },
+ "trade": {
+  "match": "cloth rustling",
+  "z": 3.56,
+  "verdict": "strong",
+  "candidates": [
+   {
+    "file": "audio/gen/var/trade/4.wav",
+    "z": 3.56
+   },
+   {
+    "file": "audio/gen/var/trade/3.wav",
+    "z": 3.21
+   },
+   {
+    "file": "audio/gen/var/trade/1.wav",
+    "z": 2.88
+   },
+   {
+    "file": "audio/gen/var/trade/2.wav",
+    "z": 2.45
+   },
+   {
+    "file": "sfx/cloth1.flac",
+    "z": 2.21
+   },
+   {
+    "file": "sfx/cloth2.flac",
+    "z": 1.96
+   },
+   {
+    "file": "audio/gen/var/trade/0_original.wav",
+    "z": 1.6
+   }
+  ],
+  "pick": "var/trade/4.wav",
+  "prompt": "cloth rustling as two people exchange small objects, a soft fabric movement, close, quiet room",
+  "seed": 2002,
+  "dur": 3
+ },
+ "zip": {
+  "match": "a zipper being fiddled with",
+  "z": 2.41,
+  "verdict": "weak",
+  "candidates": [
+   {
+    "file": "audio/gen/var/zip/3.wav",
+    "z": 2.41
+   },
+   {
+    "file": "audio/gen/var/zip/4.wav",
+    "z": 2.26
+   },
+   {
+    "file": "audio/gen/var/zip/2.wav",
+    "z": 2.13
+   },
+   {
+    "file": "audio/gen/var/zip/1.wav",
+    "z": 2.06
+   },
+   {
+    "file": "audio/gen/var/zip/0_original.wav",
+    "z": 1.84
+   }
+  ],
+  "pick": "var/zip/3.wav",
+  "prompt": "fidgeting with the metal tab of a zipper on a small bag, small soft clicks, very close",
+  "seed": 1001,
+  "dur": 6
+ }
+}

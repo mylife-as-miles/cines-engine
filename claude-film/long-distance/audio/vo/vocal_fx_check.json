@@ -1,0 +1,136 @@
+{
+ "laugh_phone": {
+  "t1": {
+   "text": "Hah... hm hm.",
+   "dur": 4.28,
+   "z": 4.39,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t1_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.3; would rank #1 among 322 vocabulary descriptions; cosine 0.16). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +3.9), 'people laughing' (z +3.6), 'a person coughing' (z +3.3), 'children laughing' (z +3.1)."
+  },
+  "t2": {
+   "text": "Ha ha.",
+   "dur": 1.12,
+   "z": 3.49,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t2_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +3.4; would rank #3 among 322 vocabulary descriptions; cosine 0.10). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +3.9), 'a person coughing' (z +3.6), 'crisp hi-hats' (z +2.7), 'a punchy impact hit' (z +2.7)."
+  },
+  "t3": {
+   "text": "Mm-hah hah.",
+   "dur": 2.56,
+   "z": 4.14,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t3_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.1; would rank #1 among 322 vocabulary descriptions; cosine 0.15). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +4.0), 'a person coughing' (z +3.6), 'people laughing' (z +3.2), 'children laughing' (z +2.7)."
+  },
+  "t4": {
+   "text": "Hah!",
+   "dur": 1.52,
+   "z": 4.89,
+   "laugh_share": 12.0,
+   "summary": "fx_laugh_phone_t4_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.8; would rank #1 among 322 vocabulary descriptions; cosine 0.22). Forced choice vs your alternatives: 'a woman laughing softly' 12%, 'a woman speaking' <1%, 'a woman sighing' 88%. It sounds most like: 'people laughing' (z +4.3), 'a person coughing' (z +3.6), 'children laughing' (z +3.2), 'a vocal chop' (z +3.1)."
+  },
+  "t5": {
+   "text": "Heh heh heh.",
+   "dur": 8.63,
+   "z": 3.94,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t5_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +3.9; would rank #1 among 322 vocabulary descriptions; cosine 0.09). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a punchy impact hit' (z +2.9), 'a person coughing' (z +2.8), 'a person breathing' (z +2.6), 'a cow mooing' (z +2.6)."
+  },
+  "t6": {
+   "text": "Ha ha ha.",
+   "dur": 2.26,
+   "z": 5.24,
+   "laugh_share": 15.0,
+   "summary": "fx_laugh_phone_t6_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +5.2; would rank #1 among 322 vocabulary descriptions; cosine 0.21). Forced choice vs your alternatives: 'a woman laughing softly' 15%, 'a woman speaking' <1%, 'a woman sighing' 85%. It sounds most like: 'people laughing' (z +4.7), 'children laughing' (z +3.3), 'a vocal chop' (z +2.7), 'a person coughing' (z +2.7).",
+   "heard": "Hahaha."
+  },
+  "t7": {
+   "text": "Hahaha.",
+   "dur": 5.4,
+   "z": 4.29,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t7_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.15). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person coughing' (z +3.5), 'a person breathing' (z +2.7), 'a punchy impact hit' (z +2.7), 'people laughing' (z +2.7)."
+  },
+  "t8": {
+   "text": "Ha! Ha ha.",
+   "dur": 2.15,
+   "z": 4.51,
+   "laugh_share": 4.0,
+   "summary": "fx_laugh_phone_t8_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +4.5; would rank #1 among 322 vocabulary descriptions; cosine 0.16). Forced choice vs your alternatives: 'a woman laughing softly' 4%, 'a woman speaking' <1%, 'a woman sighing' 96%. It sounds most like: 'people laughing' (z +4.0), 'children laughing' (z +3.4), 'a punchy impact hit' (z +3.0), 'a person coughing' (z +3.0)."
+  },
+  "t9": {
+   "text": "Ah ha ha.",
+   "dur": 1.75,
+   "z": 3.34,
+   "laugh_share": 0.5,
+   "summary": "fx_laugh_phone_t9_trim.wav: 'a woman laughing softly' -> strong (unvalidated: music / instrument / voice description) (z +3.3; would rank #2 among 322 vocabulary descriptions; cosine 0.06). Forced choice vs your alternatives: 'a woman laughing softly' <1%, 'a woman speaking' <1%, 'a woman sighing' >99%. It sounds most like: 'a person breathing' (z +3.4), 'a punchy impact hit' (z +2.9), 'a person coughing' (z +2.7), 'a cow mooing' (z +2.6)."
+  },
+  "pick": "t6",
+  "pick_reason": "the largest share for \"a woman laughing softly\" in earshot's forced choice against a sigh and speech (every TTS laugh leans toward a sigh), then the highest z; speech recognition hears no sentence in it"
+ },
+ "murmur": {
+  "dur": 25.32,
+  "lowpass_hz": 420,
+  "heard_unfiltered": "So the bus was late again, obviously. And then at lunch, Dave tried to fix the printer and he ended up apologizing to it out loud to the printer. Anyway, then I came home and I made the pasta thing and I sat there that I thought about you.",
+  "heard_filtered": "hmm hmm hmm ... (Whisper's filler loop; none of the script's words)",
+  "script_words_recognised": [],
+  "pauses": [
+   [
+    0.43,
+    1.05
+   ],
+   [
+    1.46,
+    1.65
+   ],
+   [
+    2.58,
+    2.96
+   ],
+   [
+    3.58,
+    4.89
+   ],
+   [
+    5.51,
+    5.99
+   ],
+   [
+    6.62,
+    7.46
+   ],
+   [
+    8.88,
+    9.46
+   ],
+   [
+    11.12,
+    12.22
+   ],
+   [
+    12.82,
+    13.59
+   ],
+   [
+    14.19,
+    16.11
+   ],
+   [
+    16.35,
+    17.89
+   ],
+   [
+    18.77,
+    19.4
+   ],
+   [
+    20.71,
+    22.09
+   ],
+   [
+    22.78,
+    24.08
+   ]
+  ],
+  "note": "Whisper small.en at 420 Hz heard only hmm; the automatic loop went on lowering the cut-off because it counted the invented fillers as words, so it was stopped and 420 Hz kept (warmer, still unintelligible)."
+ }
+}

@@ -1,0 +1,803 @@
+[
+ {
+  "type": "transition",
+  "text": "FADE IN:"
+ },
+ {
+  "type": "scene",
+  "id": "S01",
+  "text": "INT. BEDROOM - NIGHT"
+ },
+ {
+  "type": "action",
+  "id": "A001",
+  "text": "Dark. A double bed. One side is slept in. The other is still made, the pillow smooth."
+ },
+ {
+  "type": "action",
+  "id": "A002",
+  "text": "A MAN (30s) lies on the slept-in side, facing the smooth pillow. His phone rests on it, where a head would be. The screen is turned away from us. Its glow is on his face."
+ },
+ {
+  "type": "line",
+  "id": "L001",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": "from the phone",
+  "text": "Tell me about your day.",
+  "parts": [
+   {
+    "t": "Tell me about your day."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A003",
+  "text": "Her voice is warm and close. Very clean. No room behind it."
+ },
+ {
+  "type": "line",
+  "id": "L002",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "You first.",
+  "parts": [
+   {
+    "t": "You first."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L003",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": null,
+  "text": "Mine’s better now. You go.",
+  "parts": [
+   {
+    "t": "Mine’s better now. You go."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A004",
+  "text": "He smiles and starts to talk. We don’t hear the words, only the murmur. Her soft laugh arrives exactly where a laugh should."
+ },
+ {
+  "type": "scene",
+  "id": "S02",
+  "text": "LATER"
+ },
+ {
+  "type": "action",
+  "id": "A005",
+  "text": "His eyes are heavy."
+ },
+ {
+  "type": "line",
+  "id": "L004",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "Goodnight.",
+  "parts": [
+   {
+    "t": "Goodnight."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L005",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": null,
+  "text": "Goodnight. I love you.",
+  "parts": [
+   {
+    "t": "Goodnight. I love you."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L006",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "I love you.",
+  "parts": [
+   {
+    "t": "I love you."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A006",
+  "text": "He doesn’t hang up. He lays his hand over the phone, the way you would touch a sleeping shoulder, and closes his eyes."
+ },
+ {
+  "type": "scene",
+  "id": "S03",
+  "text": "INT. BATHROOM - MORNING"
+ },
+ {
+  "type": "action",
+  "id": "A007",
+  "text": "Two toothbrushes in a glass. He takes the blue one. The bristles of the other are stiff and grey with dust."
+ },
+ {
+  "type": "action",
+  "id": "A008",
+  "text": "The phone, propped against the mirror, lights up. A message from a contact saved as a single heart: “Good morning.”"
+ },
+ {
+  "type": "action",
+  "id": "A009",
+  "text": "He types with a mouth full of foam: “Good morning. I love you.”"
+ },
+ {
+  "type": "action",
+  "id": "A010",
+  "text": "The answer is there before his thumb leaves the glass: “I love you.”"
+ },
+ {
+  "type": "scene",
+  "id": "S04",
+  "text": "INT. OFFICE - DAY"
+ },
+ {
+  "type": "action",
+  "id": "A011",
+  "text": "Open plan. Grey carpet, grey dividers. He works down a spreadsheet. The phone lies beside the keyboard."
+ },
+ {
+  "type": "action",
+  "id": "A012",
+  "text": "It buzzes. He reads. Bites back a smile. A COWORKER looks over. He turns the phone face down."
+ },
+ {
+  "type": "scene",
+  "id": "S05",
+  "text": "INT. OFFICE STAIRWELL - DAY"
+ },
+ {
+  "type": "action",
+  "id": "A013",
+  "text": "A concrete fire stair. He sits alone on a step, his lunch unopened beside him."
+ },
+ {
+  "type": "action",
+  "id": "A014",
+  "text": "He types: “Send me one.”"
+ },
+ {
+  "type": "action",
+  "id": "A015",
+  "text": "A chime. Instantly."
+ },
+ {
+  "type": "action",
+  "id": "A016",
+  "text": "He checks the stairs above him. The stairs below. He tilts the screen to his chest, then looks."
+ },
+ {
+  "type": "action",
+  "id": "A017",
+  "text": "We never see it. We see what it does to him: the breath going out, the colour coming up in his neck."
+ },
+ {
+  "type": "action",
+  "id": "A018",
+  "text": "He scrolls back through the thread. OVER HIS SHOULDER, out of focus: a grid of thumbnails, a blur of skin tones. He scrolls. It keeps coming. He scrolls. It keeps coming."
+ },
+ {
+  "type": "scene",
+  "id": "S06",
+  "text": "INT. BUS - EVENING"
+ },
+ {
+  "type": "action",
+  "id": "A019",
+  "text": "Packed. He stands with one hand on the rail, earbuds in."
+ },
+ {
+  "type": "action",
+  "id": "A020",
+  "text": "He presses play on a voice message. A waveform crawls across the screen. We hear only the bus."
+ },
+ {
+  "type": "action",
+  "id": "A021",
+  "text": "His ears go red. He glances at the stranger pressed against his arm, then at the floor."
+ },
+ {
+  "type": "action",
+  "id": "A022",
+  "text": "The waveform ends. He plays it again."
+ },
+ {
+  "type": "scene",
+  "id": "S07",
+  "text": "INT. APARTMENT - LIVING ROOM - NIGHT"
+ },
+ {
+  "type": "action",
+  "id": "A023",
+  "text": "Small. Tidy for one, furnished for two. A pale rectangle on the wall where a frame used to hang. Two mugs on the shelf. One has a ring of dust around its base."
+ },
+ {
+  "type": "action",
+  "id": "A024",
+  "text": "On the fridge, under a magnet, a PHOTO-BOOTH STRIP: him and a WOMAN squeezed into the frame, laughing. Her hair is long, past her shoulders. In the last picture her head is tipped against his."
+ },
+ {
+  "type": "action",
+  "id": "A025",
+  "text": "He eats from the pan, standing, the phone propped against the salt."
+ },
+ {
+  "type": "action",
+  "id": "A026",
+  "text": "A chime. An image. This one we see:"
+ },
+ {
+  "type": "action",
+  "id": "A027",
+  "text": "The two of them in front of a WATERFALL, holding each other, white water behind them. She has the long hair. Her head is tipped against his, exactly as it is on the fridge. The light falls on both their faces the same way."
+ },
+ {
+  "type": "action",
+  "id": "A028",
+  "text": "He stops chewing. He looks at it for a long time."
+ },
+ {
+  "type": "line",
+  "id": "L007",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": "to the empty room",
+  "text": "I love this one.",
+  "parts": [
+   {
+    "t": "I love this one."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A029",
+  "text": "He sets it as his wallpaper. Locks the phone. Wakes it. There they are. Locks it. Wakes it. There they are."
+ },
+ {
+  "type": "scene",
+  "id": "S08",
+  "text": "INT. BEDROOM - NIGHT"
+ },
+ {
+  "type": "action",
+  "id": "A030",
+  "text": "The phone on the smooth pillow. His hand over it."
+ },
+ {
+  "type": "line",
+  "id": "L008",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": null,
+  "text": "Goodnight. I love you.",
+  "parts": [
+   {
+    "t": "Goodnight. I love you."
+   }
+  ]
+ },
+ {
+  "type": "scene",
+  "id": "S09",
+  "text": "INT. BATHROOM - MORNING"
+ },
+ {
+  "type": "action",
+  "id": "A031",
+  "text": "Foam. His thumb on the glass: “Good morning.”"
+ },
+ {
+  "type": "action",
+  "id": "A032",
+  "text": "“I love you.” Instantly."
+ },
+ {
+  "type": "scene",
+  "id": "S10",
+  "text": "INT. APARTMENT - LIVING ROOM - DAY"
+ },
+ {
+  "type": "action",
+  "id": "A033",
+  "text": "Grey daylight. He lies along the couch, texting, smiling at the screen."
+ },
+ {
+  "type": "action",
+  "id": "A034",
+  "text": "A KNOCK at the door. Three knocks."
+ },
+ {
+  "type": "action",
+  "id": "A035",
+  "text": "He looks at the door as if it has never made that sound before."
+ },
+ {
+  "type": "action",
+  "id": "A036",
+  "text": "He sets the phone on the couch cushion, face up, and goes."
+ },
+ {
+  "type": "scene",
+  "id": "S11",
+  "text": "INT. APARTMENT - DOORWAY - CONTINUOUS"
+ },
+ {
+  "type": "action",
+  "id": "A037",
+  "text": "He opens the door."
+ },
+ {
+  "type": "action",
+  "id": "A038",
+  "text": "The Woman from the photo-booth strip. Real. Coat on, bag on her shoulder. Her hair is cut short now, above the jaw. She is older than the photographs by exactly the time that has passed."
+ },
+ {
+  "type": "action",
+  "id": "A039",
+  "text": "He doesn’t smile. The colour leaves his face. His hand tightens on the edge of the door."
+ },
+ {
+  "type": "action",
+  "id": "A040",
+  "text": "Behind him, on the couch, the phone is still lit."
+ },
+ {
+  "type": "action",
+  "id": "A041",
+  "text": "A long beat. He steps aside. She comes in and stops just inside the door, like a guest. She keeps her coat on."
+ },
+ {
+  "type": "line",
+  "id": "L009",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "Why didn’t you call first?",
+  "parts": [
+   {
+    "t": "Why didn’t you call first?"
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L010",
+  "speaker": "HER",
+  "ext": null,
+  "dir": null,
+  "text": "I don’t know.",
+  "parts": [
+   {
+    "t": "I don’t know."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A042",
+  "text": "Her eyes travel the room: the dusty mug, the pale rectangle on the wall, the fridge. The photo-booth strip. She looks away from it."
+ },
+ {
+  "type": "line",
+  "id": "L011",
+  "speaker": "HER",
+  "ext": "CONT’D",
+  "dir": null,
+  "text": "I came for my makeup bag. The old one.",
+  "parts": [
+   {
+    "t": "I came for my makeup bag. The old one."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A043",
+  "text": "He is already moving."
+ },
+ {
+  "type": "scene",
+  "id": "S12",
+  "text": "INT. BEDROOM - CONTINUOUS"
+ },
+ {
+  "type": "action",
+  "id": "A044",
+  "text": "He opens the wardrobe. His clothes on the left. On the right, bare hangers."
+ },
+ {
+  "type": "action",
+  "id": "A045",
+  "text": "On the shelf above them, an old MAKEUP BAG, floral, the zip broken. He lifts it down. Where it sat, a clean rectangle in the dust."
+ },
+ {
+  "type": "action",
+  "id": "A046",
+  "text": "Through the wall: his phone BUZZES against the couch."
+ },
+ {
+  "type": "action",
+  "id": "A047",
+  "text": "He goes rigid. Shuts his eyes."
+ },
+ {
+  "type": "scene",
+  "id": "S13",
+  "text": "INT. APARTMENT - LIVING ROOM - CONTINUOUS"
+ },
+ {
+  "type": "action",
+  "id": "A048",
+  "text": "He comes out fast, the bag in his hand. Too late."
+ },
+ {
+  "type": "action",
+  "id": "A049",
+  "text": "She is standing over the couch, looking down."
+ },
+ {
+  "type": "scene",
+  "id": "S14",
+  "text": "INSERT - PHONE SCREEN"
+ },
+ {
+  "type": "action",
+  "id": "A050",
+  "text": "The lock screen. A banner from the contact saved as a heart: “Call me tonight?” Behind the banner, the waterfall. Him. Her. The long hair."
+ },
+ {
+  "type": "transition",
+  "text": "BACK TO SCENE"
+ },
+ {
+  "type": "line",
+  "id": "L012",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "Don’t look at my phone.",
+  "parts": [
+   {
+    "t": "Don’t look at my phone."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L013",
+  "speaker": "HER",
+  "ext": null,
+  "dir": null,
+  "text": "What is this?",
+  "parts": [
+   {
+    "t": "What is this?"
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L014",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "It’s just a friend from work. It’s nothing. It’s none of your business.",
+  "parts": [
+   {
+    "t": "It’s just a friend from work. It’s nothing. It’s none of your business."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L015",
+  "speaker": "HER",
+  "ext": null,
+  "dir": null,
+  "text": "I’m not talking about the text.",
+  "parts": [
+   {
+    "t": "I’m not talking about the text."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A051",
+  "text": "She picks up the phone and turns the screen to face him. Holds it there between them."
+ },
+ {
+  "type": "line",
+  "id": "L016",
+  "speaker": "HER",
+  "ext": "CONT’D",
+  "dir": null,
+  "text": "We’ve never taken this photo. We’ve never been to a waterfall.",
+  "parts": [
+   {
+    "t": "We’ve never taken this photo. We’ve never been to a waterfall."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A052",
+  "text": "He says nothing. His thumb worries the broken zip of the makeup bag."
+ },
+ {
+  "type": "line",
+  "id": "L017",
+  "speaker": "HER",
+  "ext": "CONT’D",
+  "dir": null,
+  "text": "Maybe it’s not my place. But I’m the background of your phone, and we aren’t together anymore.",
+  "parts": [
+   {
+    "t": "Maybe it’s not my place. But I’m the background of your phone, and we aren’t together anymore."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L018",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "I know. I forgot to change it.",
+  "parts": [
+   {
+    "t": "I know. I forgot to change it."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L019",
+  "speaker": "HER",
+  "ext": null,
+  "dir": null,
+  "text": "You didn’t forget.",
+  "parts": [
+   {
+    "t": "You didn’t forget."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A053",
+  "text": "She turns the phone back and studies the picture. The woman in it smiles up at her. Without noticing, she lifts her free hand to the back of her neck, where her hair used to be."
+ },
+ {
+  "type": "line",
+  "id": "L020",
+  "speaker": "HER",
+  "ext": "CONT’D",
+  "dir": null,
+  "text": "Is it Photoshop?",
+  "parts": [
+   {
+    "t": "Is it Photoshop?"
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A054",
+  "text": "He looks at the floor."
+ },
+ {
+  "type": "line",
+  "id": "L021",
+  "speaker": "HER",
+  "ext": "CONT’D",
+  "dir": "quieter",
+  "text": "Have you been using AI to make pictures of me?",
+  "parts": [
+   {
+    "t": "Have you been using AI to make pictures of me?"
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L022",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "I just missed you, is all.",
+  "parts": [
+   {
+    "t": "I just missed you, is all."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A055",
+  "text": "She goes very still."
+ },
+ {
+  "type": "action",
+  "id": "A056",
+  "text": "Her thumb rests on the glass. One swipe from everything else in this phone. He watches the thumb. He has stopped breathing."
+ },
+ {
+  "type": "action",
+  "id": "A057",
+  "text": "The screen dims. She lets it go dark."
+ },
+ {
+  "type": "action",
+  "id": "A058",
+  "text": "She holds out the phone. He holds out the bag. They trade, and she takes hers without touching his fingers."
+ },
+ {
+  "type": "line",
+  "id": "L023",
+  "speaker": "HER",
+  "ext": null,
+  "dir": null,
+  "text": "We’ve been apart longer than we were ever together. This is not okay.",
+  "parts": [
+   {
+    "t": "We’ve been apart longer than we were ever together."
+   },
+   {
+    "dir": "beat"
+   },
+   {
+    "t": "This is not okay."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A059",
+  "text": "She draws a breath to say something more. Swallows it."
+ },
+ {
+  "type": "action",
+  "id": "A060",
+  "text": "She leaves. The door closes softly behind her."
+ },
+ {
+  "type": "action",
+  "id": "A061",
+  "text": "He stays where he is. Her FOOTSTEPS go down the stairs. A street door. Then nothing."
+ },
+ {
+  "type": "action",
+  "id": "A062",
+  "text": "He looks down at the phone. In the black glass, his own face."
+ },
+ {
+  "type": "action",
+  "id": "A063",
+  "text": "He touches it. The waterfall blooms back: him, her, smiling."
+ },
+ {
+  "type": "action",
+  "id": "A064",
+  "text": "He taps the banner."
+ },
+ {
+  "type": "scene",
+  "id": "S15",
+  "text": "INSERT - PHONE SCREEN"
+ },
+ {
+  "type": "action",
+  "id": "A065",
+  "text": "Not a phone call. An app. Her face fills the screen, the photo-booth face, the long hair, above a thin line that pulses, waiting. No number. Nothing dials. Nothing rings."
+ },
+ {
+  "type": "transition",
+  "text": "BACK TO SCENE"
+ },
+ {
+  "type": "action",
+  "id": "A066",
+  "text": "He lowers himself onto the couch and puts the phone to his ear."
+ },
+ {
+  "type": "line",
+  "id": "L024",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "Are you there?",
+  "parts": [
+   {
+    "t": "Are you there?"
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L025",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": null,
+  "text": "Yes.",
+  "parts": [
+   {
+    "t": "Yes."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A067",
+  "text": "At once. Warm and close. Very clean. No room behind it."
+ },
+ {
+  "type": "line",
+  "id": "L026",
+  "speaker": "HIM",
+  "ext": null,
+  "dir": null,
+  "text": "I love you.",
+  "parts": [
+   {
+    "t": "I love you."
+   }
+  ]
+ },
+ {
+  "type": "line",
+  "id": "L027",
+  "speaker": "HER",
+  "ext": "V.O.",
+  "dir": null,
+  "text": "I love you too.",
+  "parts": [
+   {
+    "t": "I love you too."
+   }
+  ]
+ },
+ {
+  "type": "action",
+  "id": "A068",
+  "text": "He closes his eyes. He lies down along the couch and rests the phone on the cushion beside his face, where a head would be."
+ },
+ {
+  "type": "action",
+  "id": "A069",
+  "text": "On the fridge behind him, the photo-booth strip. Long hair. Laughing."
+ },
+ {
+  "type": "transition",
+  "text": "CUT TO BLACK."
+ },
+ {
+  "type": "title",
+  "text": "LONG DISTANCE"
+ },
+ {
+  "type": "transition",
+  "text": "FADE OUT."
+ }
+]

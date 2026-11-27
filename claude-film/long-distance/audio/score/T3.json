@@ -1,0 +1,7 @@
+{
+ "id": "T3",
+ "model": "lyria-3.5",
+ "prompt": "Instrumental film-score cue, about 70 seconds. Solo felt piano, very soft and intimate, close-miked in a small quiet room, the gentle mechanical sound of the felt audible. Slow, around 56 BPM, rubato. A simple, tender four-note melody in D major that rises and falls, played sparsely with long pauses between phrases, over a few warm low notes. Halfway through, a single cello enters very quietly, holding long low notes under the piano. It ends unresolved, on a held suspended chord that fades out. Melancholy but warm, the memory of someone. No drums, no percussion, no vocals, no choir, no synthesizer. In tune at A = 440.",
+ "mime_type": "audio/mpeg",
+ "model_text": "[[A0]]\n[[A1]]"
+}

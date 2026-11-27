@@ -1,0 +1,463 @@
+{
+ "_doc": "Every bed and cue name the sequences use -> its sound (tools/build_mix.py). Paths: gen/ = audio/kit/*.flac (Stable Audio 3.0 Small SFX, generated here, finished by tools/kit_make.py), synth/ = audio/synth (tools/synth_sfx.py: the phone's gloss sounds), vo/ = audio/vo (Gemini TTS: her laugh, his murmur), otm/ = ../one-too-many/audio/sfx (CC0 recordings). Beds: lufs = the bed's loudness against the voices (mix.py sets the voices to -16 LUFS; the bed is kept as built), filter lp:/hp: (several with |), offset = where in the source the bed starts (else a seeded offset), the sequence's level is relative to that name's median. Cues: weight hero|support, align peak|start|end; real sounds get their sequence's room (spaces, rooms), synth/ sounds stay dry (gloss); peak_db = a story beat placed at a designed peak level in the world instead of mix.py's 'just audible' levelling; world = an envelope on the world (dB breakpoints relative to the cue), no sound; voice = a voiced sound placed with the voices, through the treatment 'as'. A list picks by order of occurrence within a sequence; cycle rotates; name@Qnn overrides for one sequence; null = silent on purpose.",
+ "duck_db": 9,
+ "air_floor_lufs": -60,
+ "rooms": {
+  "bedroom": {
+   "rt": 0.32,
+   "top": 6000,
+   "wet_db": -16,
+   "size": 0.8
+  },
+  "flat": {
+   "rt": 0.5,
+   "top": 8000,
+   "wet_db": -13
+  },
+  "bathroom": {
+   "rt": 0.75,
+   "top": 10000,
+   "wet_db": -11,
+   "size": 0.7
+  },
+  "office": {
+   "rt": 0.6,
+   "top": 8000,
+   "wet_db": -16,
+   "size": 1.4
+  },
+  "stair": {
+   "rt": 1.8,
+   "top": 7000,
+   "wet_db": -8,
+   "predelay": 0.015,
+   "size": 1.8
+  },
+  "bus": {
+   "rt": 0.25,
+   "top": 6000,
+   "wet_db": -20,
+   "size": 0.6
+  }
+ },
+ "spaces": {
+  "Q01": "bedroom",
+  "Q02": "bathroom",
+  "Q03": "office",
+  "Q04": "stair",
+  "Q05": "bus",
+  "Q06": "flat",
+  "Q07": "bedroom",
+  "Q08": "flat",
+  "Q09": "flat",
+  "Q10": "flat",
+  "Q11": "flat"
+ },
+ "voices": {
+  "phone": {
+   "what": "the app's voice: close, dry, too clean; no room; a little proximity, presence and air; gently compressed; every line the same loudness",
+   "hp": 110,
+   "eq": [
+    [
+     "low",
+     180,
+     1.5
+    ],
+    [
+     "peak",
+     4500,
+     2.5,
+     0.9
+    ],
+    [
+     "high",
+     9500,
+     2.0
+    ]
+   ],
+   "compress": {
+    "thr_below_peak": -12,
+    "ratio": 3
+   },
+   "lufs": -16,
+   "even": true
+  },
+  "door": {
+   "what": "the real woman in the flat: the flat's room clearly around her (RT 0.5 s, 5 dB under the dry voice), a touch of distance (7.5 kHz), her own dynamics",
+   "hp": 90,
+   "lp": 7500,
+   "room": "flat",
+   "wet_db": -5,
+   "lufs": -17.5,
+   "spread_db": 3
+  },
+  "room": {
+   "what": "him in the flat: the same room, a little drier",
+   "hp": 90,
+   "lp": 9000,
+   "room": "flat",
+   "wet_db": -8,
+   "lufs": -17,
+   "spread_db": 3
+  },
+  "bed": {
+   "what": "him in bed at night, close: the bedroom's short soft room, barely there",
+   "hp": 80,
+   "lp": 10000,
+   "eq": [
+    [
+     "low",
+     180,
+     1.0
+    ]
+   ],
+   "room": "bedroom",
+   "wet_db": -22,
+   "lufs": -18,
+   "spread_db": 1.5
+  }
+ },
+ "beds": {
+  "room_night": {
+   "file": "gen/bed_night",
+   "lufs": -42
+  },
+  "fridge_far": {
+   "file": "gen/fridge_hum",
+   "lufs": -54,
+   "filter": "lp:700"
+  },
+  "murmur": {
+   "file": "vo/murmur",
+   "lufs": -30,
+   "offset": 10.55,
+   "why": "starts in '...apologising to it. Out loud. To the printer.'; the laugh (18.2) lands 0.16 s after 'printer', in the take's longest pause"
+  },
+  "bathroom": {
+   "file": "gen/bed_bathroom",
+   "lufs": -40
+  },
+  "tap": {
+   "file": "gen/water_tap",
+   "lufs": -36
+  },
+  "brushing": {
+   "file": "gen/brushing",
+   "lufs": -35
+  },
+  "office": {
+   "file": "gen/bed_office",
+   "lufs": -36
+  },
+  "keyboard_near": {
+   "file": "gen/keyboard_near",
+   "lufs": -42
+  },
+  "stairwell": {
+   "file": "gen/bed_stairwell",
+   "lufs": -40
+  },
+  "heartbeat_soft": {
+   "file": "gen/heartbeat",
+   "lufs": -48,
+   "filter": "lp:400"
+  },
+  "scroll": null,
+  "bus": {
+   "file": "gen/bed_bus",
+   "lufs": -30
+  },
+  "pendant_hum": {
+   "file": "gen/pendant_hum",
+   "lufs": -50
+  },
+  "chewing": null,
+  "fridge_hum": {
+   "file": "gen/fridge_hum",
+   "lufs": -46
+  },
+  "room_day": {
+   "file": "gen/bed_day",
+   "lufs": -41
+  },
+  "street_day": {
+   "file": "gen/street_day",
+   "lufs": -47,
+   "filter": "lp:3000"
+  },
+  "type": {
+   "file": "synth/type_bed",
+   "lufs": -46
+  },
+  "landing_air": {
+   "file": "gen/bed_stairwell",
+   "lufs": -43
+  },
+  "zip": null,
+  "footsteps_stairs": {
+   "file": "gen/stairs_down",
+   "lufs": -40,
+   "filter": "lp:3500",
+   "offset": 0
+  },
+  "room_dusk": {
+   "file": "gen/bed_day",
+   "lufs": -43,
+   "filter": "lp:2200"
+  }
+ },
+ "cues": {
+  "laugh_phone": {
+   "voice": "vo/laugh_phone",
+   "as": "phone",
+   "gain_db": -3,
+   "align": "start"
+  },
+  "streetcar_far": {
+   "file": "gen/streetcar_far",
+   "filter": "lp:2500",
+   "align": "start"
+  },
+  "duvet": {
+   "file": "gen/duvet"
+  },
+  "breath": {
+   "file": "gen/sigh_m",
+   "align": "start"
+  },
+  "buzz_glass": {
+   "file": "synth/buzz_glass",
+   "align": "start"
+  },
+  "send": {
+   "file": "synth/send",
+   "align": "start"
+  },
+  "receive": {
+   "file": "synth/receive",
+   "align": "start"
+  },
+  "type": {
+   "cycle": [
+    "synth/type_1",
+    "synth/type_2",
+    "synth/type_3",
+    "synth/type_4",
+    "synth/type_5",
+    "synth/type_6"
+   ],
+   "align": "start"
+  },
+  "vibrate_desk": {
+   "file": "synth/buzz_desk_1",
+   "align": "start"
+  },
+  "chair_creak": {
+   "file": "gen/chair_creak"
+  },
+  "phone_flip": {
+   "file": "otm/tap2"
+  },
+  "door_far": {
+   "file": "gen/door_far"
+  },
+  "breath_out": {
+   "file": "gen/breath_out",
+   "align": "start"
+  },
+  "scroll": {
+   "cycle": [
+    "synth/scroll_1",
+    "synth/scroll_2",
+    "synth/scroll_3"
+   ]
+  },
+  "bus_brakes": {
+   "file": "gen/bus_brakes",
+   "align": "start"
+  },
+  "tap": {
+   "cycle": [
+    "synth/tap_1",
+    "synth/tap_2"
+   ],
+   "align": "start"
+  },
+  "bell": {
+   "file": "gen/bus_bell",
+   "align": "start"
+  },
+  "bus_doors": {
+   "file": "gen/bus_doors",
+   "align": "start"
+  },
+  "fork_pan": {
+   "cycle": [
+    "gen/fork_pan_1",
+    "gen/fork_pan_2"
+   ]
+  },
+  "swallow": null,
+  "lock": {
+   "file": "synth/lock",
+   "align": "start"
+  },
+  "wake": {
+   "file": "synth/wake",
+   "align": "start"
+  },
+  "knock": [
+   {
+    "file": "gen/knock_1",
+    "peak_db": -14
+   },
+   {
+    "file": "gen/knock_2",
+    "peak_db": -14
+   },
+   {
+    "file": "gen/knock_3",
+    "peak_db": -15
+   }
+  ],
+  "couch_creak": {
+   "file": "gen/couch_creak"
+  },
+  "phone_down": {
+   "file": "otm/cloth1",
+   "what": "CC0 (One Too Many): the phone set on the cushion, a soft cloth touch"
+  },
+  "footsteps": {
+   "file": "gen/steps_m",
+   "align": "start"
+  },
+  "footsteps@Q08": [
+   {
+    "file": "gen/steps_m",
+    "align": "start",
+    "what": "him, from the couch to the door"
+   },
+   {
+    "file": "gen/steps_m2",
+    "align": "start",
+    "what": "him stepping aside: two steps"
+   },
+   {
+    "file": "gen/steps_f",
+    "align": "start",
+    "what": "her: three slow steps in, then she stops",
+    "weight": "hero"
+   },
+   {
+    "file": "gen/steps_m",
+    "align": "start",
+    "what": "him, going"
+   }
+  ],
+  "footsteps@Q09": {
+   "file": "gen/steps_fast",
+   "align": "start"
+  },
+  "door_open": {
+   "file": "gen/door_open",
+   "align": "start",
+   "weight": "hero",
+   "why": "he opens the door to her: a story beat, levelled in its main band"
+  },
+  "door_close": {
+   "file": "gen/door_close",
+   "weight": "hero",
+   "why": "she is in"
+  },
+  "coat_rustle": {
+   "file": "gen/coat_rustle"
+  },
+  "wardrobe_door": {
+   "file": "gen/wardrobe_door",
+   "space": "bedroom",
+   "align": "start"
+  },
+  "hangers": {
+   "file": "gen/hangers",
+   "space": "bedroom",
+   "align": "start"
+  },
+  "bag_lift": {
+   "file": "otm/cloth2",
+   "space": "bedroom",
+   "what": "CC0 (One Too Many): ranked above the generated takes"
+  },
+  "buzz_muffled": {
+   "file": "synth/buzz_wall",
+   "align": "start"
+  },
+  "phone_pickup": {
+   "file": "otm/cloth1"
+  },
+  "breath_held": {
+   "world": [
+    [
+     0,
+     0
+    ],
+    [
+     3.0,
+     -9
+    ],
+    [
+     3.6,
+     -9
+    ]
+   ],
+   "silence_ok": true
+  },
+  "phone_dim": {
+   "world": [
+    [
+     -0.1,
+     -9
+    ],
+    [
+     1.2,
+     -40
+    ],
+    [
+     2.6,
+     -40
+    ],
+    [
+     3.6,
+     0
+    ]
+   ],
+   "silence_ok": true
+  },
+  "trade": {
+   "file": "gen/trade",
+   "align": "start"
+  },
+  "breath_in": {
+   "file": "gen/breath_in_f",
+   "align": "start"
+  },
+  "door_close_soft": {
+   "file": "gen/door_close_soft",
+   "weight": "hero",
+   "why": "she has gone"
+  },
+  "street_door": {
+   "file": "gen/street_door",
+   "filter": "lp:2500"
+  },
+  "app_open": null
+ },
+ "_silent_on_purpose": {
+  "chewing": "no generated take read as chewing (earshot: rubber stretch, spray can); the fork on the pan carries the meal, and its stopping at 30 s carries the stop",
+  "zip": "no take read as a zip (earshot forced choice: a spray can hissing 77%); his thumb on the broken zip plays over the room alone: he says nothing",
+  "swallow": "a generated gulp did not read as a swallow (earshot: no match, a wet squelch); the line comes out of the quiet instead",
+  "scroll (bed)": "the seven scroll cues carry his thumb; a scroll bed under them would double it",
+  "app_open": "the app makes no sound at all when it opens: nothing dials, nothing rings",
+  "phone_dim": "no sound: the room drops out instead (a world envelope)",
+  "breath_held": "no sound: the room goes quiet around him (a world envelope)"
+ }
+}

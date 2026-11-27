@@ -1,0 +1,79 @@
+{
+ "T1": {
+  "dur_s": 69.09,
+  "tune_cents": 6.0,
+  "strongest_pitch_class": "E",
+  "vocal_or_drum_tag": false,
+  "rms_db_5s": [
+   -20.8,
+   -19.1,
+   -18.1,
+   -19.8,
+   -16.5,
+   -16.1,
+   -18.9,
+   -15.6,
+   -15.8,
+   -14.5,
+   -10.5,
+   -12.6,
+   -13.2,
+   -18.7
+  ],
+  "audioset": "AudioSet Music 0",
+  "describe": "69.09 s long recording, loudness range 10 LU. Music (AudioSet Music 0.83). Unvalidated hints - genre: solo piano music (z +3.6), jazz music (z +3.5); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.6), romantic music (z +2.4). Sounds most like: a sustained glass harp tone (z +2.0), a music box melody (z +1.9), a celesta note (z +1.7) [weak reading]. Other readings: a pen click (foley, z +1.5), keys jingling (everyday, z +1.4). AudioSet: Music 0.83, Cello 0.77, Piano 0.65. peak -0.1 dBFS, -11.2 LUFS, brightness 718 Hz, bandwidth 6.5 kHz, side/mid -6 dB. Windows that read differently: 0:00.00-0:10.00 a music box melody (z +2.6; AudioSet Music 0.74); 0:25.00-0:35.00 keys jingling (z +2.1; AudioSet Music 0.83); 0:50.00-1:00.00 a sustained glass harp tone (z +1.9; AudioSet Cello 0.76).",
+  "forced_choice": "Forced choice vs your alternatives: 'a very soft, slow, sparse solo piano piece, intimate and melancholy, film score' 81%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral piece' <1%, 'a bright happy piano piece' 19%."
+ },
+ "T2": {
+  "dur_s": 72.72,
+  "tune_cents": 9.0,
+  "strongest_pitch_class": "G",
+  "vocal_or_drum_tag": false,
+  "rms_db_5s": [
+   -29.0,
+   -18.1,
+   -18.4,
+   -22.7,
+   -15.7,
+   -15.4,
+   -19.8,
+   -12.3,
+   -13.2,
+   -12.1,
+   -11.6,
+   -12.8,
+   -13.5,
+   -20.3,
+   -36.9
+  ],
+  "audioset": "AudioSet Music 0",
+  "describe": "72.72 s long recording, loudness range 11 LU. Music (AudioSet Music 0.76). Unvalidated hints - genre: solo piano music (z +3.1), jazz music (z +3.1); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.5), romantic music (z +2.4). No sound-effect description stands out (closest: a music box melody z +1.9, a sustained glass harp tone z +1.9; tentative). AudioSet: Cello 0.80, Music 0.76, Double bass 0.63. peak -0.1 dBFS, -11.2 LUFS, brightness 707 Hz, bandwidth 10.2 kHz, side/mid -7 dB. Windows that read differently: 0:00.00-0:10.00 a music box melody (z +3.0; AudioSet Music 0.75); 0:50.00-1:00.00 a singing bowl (z +1.7; AudioSet Cello 0.80); 1:02.73-1:12.72 a sustained glass harp tone (z +2.6; AudioSet Music 0.74).",
+  "forced_choice": "Forced choice vs your alternatives: 'a very soft, slow, sparse solo piano piece, intimate and melancholy, film score' 79%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral piece' <1%, 'a bright happy piano piece' 20%."
+ },
+ "T3": {
+  "dur_s": 71.5,
+  "tune_cents": 2.0,
+  "strongest_pitch_class": "G",
+  "vocal_or_drum_tag": false,
+  "rms_db_5s": [
+   -23.3,
+   -23.5,
+   -18.3,
+   -23.1,
+   -18.8,
+   -19.1,
+   -21.4,
+   -10.5,
+   -13.4,
+   -12.8,
+   -9.4,
+   -16.1,
+   -14.3,
+   -18.2,
+   -36.5
+  ],
+  "audioset": "AudioSet Music 0",
+  "describe": "71.50 s long recording, loudness range 13 LU. Music (AudioSet Music 0.76). Unvalidated hints - genre: solo piano music (z +3.8), jazz music (z +3.5); mood (wrong for ~1 in 5 tracks in a test): sad and melancholic music (z +3.7), romantic music (z +3.0). No sound-effect description stands out (closest: a sustained glass harp tone z +1.7, a celesta note z +1.6; tentative). AudioSet: Double bass 0.77, Music 0.76, Cello 0.73. peak -0.1 dBFS, -11.6 LUFS, brightness 539 Hz, bandwidth 4.1 kHz, side/mid -7 dB. Windows that read differently: 0:00.00-0:10.00 an airplane flying overhead (z +1.9; AudioSet Music 0.76); 0:15.00-0:25.00 keys jingling (z +1.7; AudioSet Music 0.76); 1:01.50-1:11.50 a sustained glass harp tone (z +2.0; AudioSet Music 0.53).",
+  "forced_choice": "Forced choice vs your alternatives: 'a very soft, slow, sparse solo piano piece, intimate and melancholy, film score' 59%, 'a pop song with vocals' <1%, 'a drum beat' <1%, 'a choir singing' <1%, 'an epic orchestral piece' <1%, 'a bright happy piano piece' 41%."
+ }
+}

@@ -1,0 +1,303 @@
+{
+ "bed_night": {
+  "match": "the quiet room tone of a bedroom at night",
+  "verdict": "plausible",
+  "z": 2.79,
+  "summary": "bed_night.wav: 'the quiet room tone of a bedroom at night' -> plausible (z +2.7; would rank #3 among 322 vocabulary descriptions; cosine 0.30). It sounds most like: 'a computer fan hum' (z +3.2), 'an electrical hum' (z +2.5), 'a gust of wind rushing past' (z +2.4), 'wind blowing' (z +2.3). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bed_day": {
+  "match": "the quiet room tone of an apartment by day",
+  "verdict": "plausible",
+  "z": 2.89,
+  "summary": "bed_day.wav: 'the quiet room tone of an apartment by day' -> plausible (z +2.8; would rank #1 among 322 vocabulary descriptions; cosine 0.38). It sounds most like: 'a quiet room at night' (z +2.6), 'crickets at night' (z +2.4), 'wind blowing' (z +2.4), 'a soft air whoosh' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bed_bathroom": {
+  "match": "the quiet room tone of a small bathroom with a fan",
+  "verdict": "strong",
+  "z": 3.09,
+  "summary": "bed_bathroom.wav: 'the quiet room tone of a small bathroom with a fan' -> strong (z +3.0; would rank #3 among 322 vocabulary descriptions; cosine 0.29). It sounds most like: 'a microwave beep' (z +3.9), 'a computer fan hum' (z +3.3), 'an electrical hum' (z +2.5), 'a vacuum cleaner' (z +2.2). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bed_office": {
+  "match": "a quiet office with air conditioning and distant typing",
+  "verdict": "plausible",
+  "z": 2.88,
+  "summary": "bed_office.wav: 'a quiet office with air conditioning and distant typing' -> plausible (z +2.8; would rank #2 among 322 vocabulary descriptions; cosine 0.32). It sounds most like: 'an office ambience' (z +3.1), 'footsteps on wood' (z +2.7), 'a quiet room at night' (z +2.1), 'a printer printing' (z +2.1). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "keyboard_near": {
+  "match": "typing on a computer keyboard",
+  "verdict": "strong",
+  "z": 3.48,
+  "summary": "keyboard_near.wav: 'typing on a computer keyboard' -> strong (z +3.4; would rank #2 among 322 vocabulary descriptions; cosine 0.42). It sounds most like: 'slow typing with separate key presses' (z +3.5), 'a deep thocky mechanical keyboard' (z +3.4), 'a laptop keyboard typing' (z +3.3), 'a single mechanical keyboard key press' (z +3.3). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bed_stairwell": {
+  "match": "the hollow air of an empty concrete stairwell",
+  "verdict": "plausible",
+  "z": 2.86,
+  "summary": "bed_stairwell.wav: 'the hollow air of an empty concrete stairwell' -> plausible (z +2.8; would rank #6 among 322 vocabulary descriptions; cosine 0.21). It sounds most like: 'a gust of wind rushing past' (z +3.6), 'a soft air whoosh' (z +3.3), 'a fast whoosh' (z +2.9), 'a stick swung fast through the air' (z +2.9). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bed_bus": {
+  "match": "the inside of a moving bus",
+  "verdict": "strong",
+  "z": 3.22,
+  "summary": "bed_bus.wav: 'the inside of a moving bus' -> strong (z +3.2; would rank #1 among 322 vocabulary descriptions; cosine 0.22). It sounds most like: 'a match being struck' (z +2.4), 'a city street with traffic' (z +2.4), 'a spray can hissing' (z +2.3), 'a car driving past' (z +2.3). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "fridge_hum": {
+  "match": "a refrigerator humming",
+  "verdict": "strong",
+  "z": 3.06,
+  "summary": "fridge_hum.wav: 'a refrigerator humming' -> strong (z +3.0; would rank #2 among 322 vocabulary descriptions; cosine 0.24). It sounds most like: 'a printer printing' (z +3.1), 'a computer fan hum' (z +2.9), 'a microwave beep' (z +2.7), 'a vacuum cleaner' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "pendant_hum": {
+  "match": "the electrical hum of a light",
+  "verdict": "strong",
+  "z": 3.68,
+  "summary": "pendant_hum.wav: 'the electrical hum of a light' -> strong (z +3.6; would rank #1 among 322 vocabulary descriptions; cosine 0.44). It sounds most like: 'an electrical hum' (z +3.1), 'a phone vibration buzz' (z +3.0), 'an error buzz' (z +2.5), 'a computer fan hum' (z +2.5). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "street_day": {
+  "match": "distant traffic heard through a window",
+  "verdict": "weak",
+  "z": 2.35,
+  "summary": "street_day.wav: 'distant traffic heard through a window' -> weak (z +2.3; would rank #5 among 322 vocabulary descriptions; cosine 0.27). It sounds most like: 'wind blowing' (z +2.6), 'a car driving past' (z +2.6), 'a gust of wind rushing past' (z +2.5), 'a city street with traffic' (z +2.3). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "water_tap": {
+  "match": "a tap running water into a sink",
+  "verdict": "plausible",
+  "z": 2.55,
+  "summary": "water_tap.wav: 'a tap running water into a sink' -> plausible (z +2.5; would rank #3 among 322 vocabulary descriptions; cosine 0.20). It sounds most like: 'a squishy wet squelch' (z +3.8), 'a spray can hissing' (z +3.5), 'pouring water' (z +2.5), 'paper rustling' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "brushing": {
+  "match": "brushing teeth",
+  "verdict": "strong",
+  "z": 4.28,
+  "summary": "brushing.wav: 'brushing teeth' -> strong (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.36). It sounds most like: 'a small animal running through grass' (z +2.8), 'a saw cutting wood' (z +2.5), 'a record scratch' (z +2.5), 'a rubber stretch' (z +2.4). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "chewing": {
+  "match": "a person chewing food",
+  "verdict": "plausible",
+  "z": 2.57,
+  "summary": "chewing.wav: 'a person chewing food' -> plausible (z +2.5; would rank #1 among 322 vocabulary descriptions; cosine 0.26). It sounds most like: 'a match being struck' (z +2.5), 'a spray can hissing' (z +2.4), 'someone whispering' (z +2.2), 'a phone vibration buzz' (z +2.1). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "heartbeat": {
+  "match": "a heartbeat",
+  "verdict": "strong",
+  "z": 3.13,
+  "summary": "heartbeat.wav: 'a heartbeat' -> strong (z +3.1; would rank #2 among 322 vocabulary descriptions; cosine 0.28). It sounds most like: 'a sub bass drop' (z +3.8), 'a deep sub bass' (z +2.7), 'a phone vibration buzz' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "stairs_down": {
+  "match": "footsteps going down stairs, receding",
+  "verdict": "strong",
+  "z": 4.4,
+  "summary": "stairs_down.wav: 'footsteps going down stairs, receding' -> strong (z +4.4; would rank #1 among 322 vocabulary descriptions; cosine 0.33). It sounds most like: 'footsteps on wood' (z +3.4), 'a heavy thud' (z +3.3), 'a door slam' (z +3.1), 'a body falling on the ground' (z +3.0). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "knock": {
+  "match": "knocking on a wooden door",
+  "verdict": "strong",
+  "z": 4.66,
+  "summary": "knock.wav: 'knocking on a wooden door' -> strong (z +4.6; would rank #1 among 322 vocabulary descriptions; cosine 0.48). It sounds most like: 'a knock on a door' (z +4.2), 'a door slam' (z +3.2), 'a wooden knock' (z +3.1), 'a heavy thud' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "door_open": {
+  "match": "a door opening",
+  "verdict": "strong",
+  "z": 3.21,
+  "summary": "door_open.wav: 'a door opening' -> strong (z +3.2; would rank #1 among 322 vocabulary descriptions; cosine 0.35). It sounds most like: 'an old typewriter' (z +2.6), 'a latch clicking shut' (z +2.5), 'a cash register' (z +2.3), 'a microwave beep' (z +2.2). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "door_close": {
+  "match": "a door closing",
+  "verdict": "strong",
+  "z": 3.83,
+  "summary": "door_close.wav: 'a door closing' -> strong (z +3.8; would rank #2 among 322 vocabulary descriptions; cosine 0.37). It sounds most like: 'a door slam' (z +3.8), 'a heavy thud' (z +2.6), 'a latch clicking shut' (z +2.5), 'a microwave beep' (z +2.2). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "door_close_soft": {
+  "match": "a door closing softly",
+  "verdict": "strong",
+  "z": 3.14,
+  "summary": "door_close_soft.wav: 'a door closing softly' -> strong (z +3.1; would rank #2 among 322 vocabulary descriptions; cosine 0.26). It sounds most like: 'a door slam' (z +3.8), 'a body falling on the ground' (z +2.5), 'a latch clicking shut' (z +2.4), 'a heavy thud' (z +2.4). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "street_door": {
+  "match": "a distant door closing",
+  "verdict": "plausible",
+  "z": 2.93,
+  "summary": "street_door.wav: 'a distant door closing' -> plausible (z +2.9; would rank #2 among 322 vocabulary descriptions; cosine 0.18). It sounds most like: 'a door slam' (z +3.7), 'a drawer closing' (z +2.6), 'an explosion' (z +2.5), 'a big drum hit' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "door_far": {
+  "match": "a distant door closing in a stairwell",
+  "verdict": "strong",
+  "z": 3.7,
+  "summary": "door_far.wav: 'a distant door closing in a stairwell' -> strong (z +3.7; would rank #2 among 322 vocabulary descriptions; cosine 0.26). It sounds most like: 'a door slam' (z +3.7), 'an explosion' (z +3.0), 'a big drum hit' (z +2.8), 'a basketball bouncing' (z +2.7). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "streetcar_far": {
+  "match": "a distant tram passing",
+  "verdict": "no match",
+  "z": 1.63,
+  "summary": "streetcar_far.wav: 'a distant tram passing' -> no match (z +1.6; would rank #21 among 322 vocabulary descriptions; cosine 0.14). It sounds most like: 'a gust of wind rushing past' (z +3.4), 'a soft air whoosh' (z +3.1), 'cloth whipping through the air' (z +2.3), 'wind blowing' (z +2.2).",
+  "error": null
+ },
+ "duvet": {
+  "match": "bedsheets rustling",
+  "verdict": "strong",
+  "z": 3.63,
+  "summary": "duvet.wav: 'bedsheets rustling' -> strong (z +3.6; would rank #1 among 322 vocabulary descriptions; cosine 0.42). It sounds most like: 'cloth rustling' (z +2.9), 'a soft air whoosh' (z +2.9), 'cloth whipping through the air' (z +2.9), 'a body falling on the ground' (z +2.8). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "sigh_m": {
+  "match": "a man breathing out softly",
+  "verdict": "no match",
+  "z": 1.95,
+  "summary": "sigh_m.wav: 'a man breathing out softly' -> no match (unvalidated: music / instrument / voice description) (z +1.9; would rank #12 among 322 vocabulary descriptions; cosine 0.21). It sounds most like: 'a soft air whoosh' (z +3.2), 'a phone vibration buzz' (z +2.8), 'a match being struck' (z +2.8), 'a fast whoosh' (z +2.7).",
+  "error": null
+ },
+ "breath_out": {
+  "match": "a man exhaling",
+  "verdict": "strong",
+  "z": 3.93,
+  "summary": "breath_out.wav: 'a man exhaling' -> strong (unvalidated: music / instrument / voice description) (z +3.9; would rank #2 among 322 vocabulary descriptions; cosine 0.25). It sounds most like: 'a spray can hissing' (z +4.2), 'a soft air whoosh' (z +3.4), 'a swoosh passing by' (z +3.2), 'a fast whoosh' (z +3.1).",
+  "error": null
+ },
+ "breath_in_f": {
+  "match": "a woman breathing in",
+  "verdict": "strong",
+  "z": 4.93,
+  "summary": "breath_in_f.wav: 'a woman breathing in' -> strong (unvalidated: music / instrument / voice description) (z +4.9; would rank #1 among 322 vocabulary descriptions; cosine 0.29). It sounds most like: 'a person breathing' (z +3.4), 'a person coughing' (z +3.0), 'singing vocals' (z +2.8), 'digging in soil' (z +2.7).",
+  "error": null
+ },
+ "chair_creak": {
+  "match": "a chair creaking",
+  "verdict": "weak",
+  "z": 2.36,
+  "summary": "chair_creak.wav: 'a chair creaking' -> weak (z +2.3; would rank #4 among 322 vocabulary descriptions; cosine 0.24). It sounds most like: 'a box lid closing' (z +2.8), 'an old typewriter' (z +2.6), 'a plastic case snapping shut' (z +2.3), 'a plastic object falling on a table' (z +2.2). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bus_brakes": {
+  "match": "a bus braking",
+  "verdict": "plausible",
+  "z": 2.62,
+  "summary": "bus_brakes.wav: 'a bus braking' -> plausible (z +2.6; would rank #2 among 322 vocabulary descriptions; cosine 0.21). It sounds most like: 'a kettle whistling' (z +2.8), 'a match being struck' (z +2.6), 'a spray can hissing' (z +2.5), 'an explosion' (z +2.3). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "bus_bell": {
+  "match": "a bus stop bell ding",
+  "verdict": "no match",
+  "z": 1.09,
+  "summary": "bus_bell.wav: 'a bus stop bell ding' -> no match (z +1.0; would rank #42 among 322 vocabulary descriptions; cosine 0.05). It sounds most like: 'a triangle hit' (z +4.1), 'a metallic clang' (z +3.1), 'a sword being drawn' (z +3.0), 'a glass ting' (z +2.8).",
+  "error": null
+ },
+ "bus_doors": {
+  "match": "bus doors opening with a hiss",
+  "verdict": "strong",
+  "z": 3.97,
+  "summary": "bus_doors.wav: 'bus doors opening with a hiss' -> strong (z +3.9; would rank #1 among 322 vocabulary descriptions; cosine 0.23). It sounds most like: 'a printer printing' (z +3.7), 'a spray can hissing' (z +3.4), 'a drawer closing' (z +3.2), 'a power drill' (z +2.5). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "fork_pan": {
+  "match": "a fork scraping a pan",
+  "verdict": "strong",
+  "z": 3.08,
+  "summary": "fork_pan.wav: 'a fork scraping a pan' -> strong (z +3.0; would rank #4 among 322 vocabulary descriptions; cosine 0.23). It sounds most like: 'a sword being drawn' (z +3.5), 'dominoes falling' (z +3.4), 'digging in soil' (z +3.4), 'an old typewriter' (z +3.0). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "swallow": {
+  "match": "a person swallowing",
+  "verdict": "no match",
+  "z": 1.47,
+  "summary": "swallow.wav: 'a person swallowing' -> no match (unvalidated: music / instrument / voice description) (z +1.4; would rank #31 among 322 vocabulary descriptions; cosine -0.12). It sounds most like: 'a squishy wet squelch' (z +2.6), 'a record scratch' (z +2.4), 'a sustained glass harp tone' (z +2.2), 'ambient synth pad music' (z +2.2).",
+  "error": null
+ },
+ "couch_creak": {
+  "match": "a sofa creaking",
+  "verdict": "no match",
+  "z": 1.98,
+  "summary": "couch_creak.wav: 'a sofa creaking' -> no match (z +1.9; would rank #15 among 322 vocabulary descriptions; cosine 0.19). It sounds most like: 'cloth rustling' (z +2.9), 'a body falling on the ground' (z +2.9), 'a short swish' (z +2.7), 'a soft air whoosh' (z +2.7).",
+  "error": null
+ },
+ "steps_m": {
+  "match": "footsteps on a wooden floor",
+  "verdict": "plausible",
+  "z": 2.63,
+  "summary": "steps_m.wav: 'footsteps on a wooden floor' -> plausible (z +2.6; would rank #3 among 322 vocabulary descriptions; cosine 0.32). It sounds most like: 'cloth whipping through the air' (z +2.8), 'a stick swung fast through the air' (z +2.6), 'a small animal running through grass' (z +2.5), 'footsteps on wood' (z +2.4). Evidence for 'plausible' (held-out library search, ~3% of candidate pairs true): the right kind of sound 41% of the time, the exact variant 22% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "steps_f": {
+  "match": "footsteps on a wooden floor",
+  "verdict": "strong",
+  "z": 4.23,
+  "summary": "steps_f.wav: 'footsteps on a wooden floor' -> strong (z +4.2; would rank #1 among 322 vocabulary descriptions; cosine 0.35). It sounds most like: 'footsteps on wood' (z +3.9), 'high heels walking' (z +3.2), 'a body falling on the ground' (z +2.8), 'a heavy thud' (z +2.6). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "steps_fast": {
+  "match": "fast footsteps",
+  "verdict": "weak",
+  "z": 2.4,
+  "summary": "steps_fast.wav: 'fast footsteps' -> weak (z +2.4; would rank #15 among 322 vocabulary descriptions; cosine 0.13). It sounds most like: 'footsteps on wood' (z +3.5), 'a punchy impact hit' (z +3.4), 'a heavy thud' (z +3.3), 'a body falling on the ground' (z +3.0). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "coat_rustle": {
+  "match": "clothes rustling",
+  "verdict": "no match",
+  "z": 1.62,
+  "summary": "coat_rustle.wav: 'clothes rustling' -> no match (z +1.6; would rank #19 among 322 vocabulary descriptions; cosine 0.17). It sounds most like: 'a match being struck' (z +2.8), 'a stutter glitch transition' (z +2.4), 'a digital glitch' (z +2.4), 'a phone vibration buzz' (z +2.4).",
+  "error": null
+ },
+ "wardrobe_door": {
+  "match": "a wardrobe door opening",
+  "verdict": "strong",
+  "z": 3.13,
+  "summary": "wardrobe_door.wav: 'a wardrobe door opening' -> strong (z +3.1; would rank #1 among 322 vocabulary descriptions; cosine 0.33). It sounds most like: 'a body falling on the ground' (z +2.7), 'a balloon squeak' (z +2.3), 'a door slam' (z +2.1), 'a drawer closing' (z +2.1). Evidence for 'strong' (held-out library search, ~3% of candidate pairs true): the right kind of sound 98% of the time, the exact variant 61% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "hangers": {
+  "match": "coat hangers clinking",
+  "verdict": "no match",
+  "z": 0.98,
+  "summary": "hangers.wav: 'coat hangers clinking' -> no match (z +0.9; would rank #56 among 322 vocabulary descriptions; cosine 0.10). It sounds most like: 'a body falling on the ground' (z +2.8), 'a small animal running through grass' (z +2.6), 'footsteps on wood' (z +2.5), 'a small object dropping on a table' (z +2.4).",
+  "error": null
+ },
+ "bag_lift": {
+  "match": "a bag lifted off a shelf",
+  "verdict": "no match",
+  "z": 1.71,
+  "summary": "bag_lift.wav: 'a bag lifted off a shelf' -> no match (z +1.7; would rank #16 among 322 vocabulary descriptions; cosine 0.16). It sounds most like: 'a match being struck' (z +2.9), 'a record scratch' (z +2.3), 'cloth rustling' (z +2.2), 'paper rustling' (z +2.1).",
+  "error": null
+ },
+ "trade": {
+  "match": "fabric rustling as something is handed over",
+  "verdict": "weak",
+  "z": 2.09,
+  "summary": "trade.wav: 'fabric rustling as something is handed over' -> weak (z +2.0; would rank #11 among 322 vocabulary descriptions; cosine 0.19). It sounds most like: 'a spray can hissing' (z +3.1), 'a rubber stretch' (z +2.9), 'a phone vibration buzz' (z +2.6), 'a quick swipe' (z +2.5). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "zip": {
+  "match": "a small zipper being fiddled with",
+  "verdict": "weak",
+  "z": 2.07,
+  "summary": "zip.wav: 'a small zipper being fiddled with' -> weak (z +2.0; would rank #8 among 322 vocabulary descriptions; cosine 0.26). It sounds most like: 'a match being struck' (z +3.2), 'a spray can hissing' (z +2.6), 'a pen click' (z +2.5), 'lego bricks clicking' (z +2.4). Evidence for 'weak' (held-out library search, ~3% of candidate pairs true): the right kind of sound 28% of the time, the exact variant 17% (a close variant such as an Enter key for a spacebar counts as wrong then).",
+  "error": null
+ },
+ "phone_cushion": {
+  "match": "an object put down on a cushion",
+  "verdict": "no match",
+  "z": 0.36,
+  "summary": "phone_cushion.wav: 'an object put down on a cushion' -> no match (z +0.3; would rank #116 among 322 vocabulary descriptions; cosine -0.10). It sounds most like: 'a squishy wet squelch' (z +3.1), 'a zipper' (z +2.6), 'a record scratch' (z +2.3), 'a stutter glitch transition' (z +2.3).",
+  "error": null
+ }
+}

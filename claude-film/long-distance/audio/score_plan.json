@@ -1,0 +1,77 @@
+{
+ "note": "Long Distance has a sparse score, chosen by the author (27 November 2026): one felt-piano motif, heard twice. Several takes of one prompt are generated (`takes`, never placed); the two cues are windows of the chosen take, so they share instrument, key and room. tools/build_mix.py places each cue into the bed under the voices (ducked by mix.py); the world's silences do not silence the score, so every cue ends before the black.",
+ "decided": true,
+ "cue_format": {
+  "id": "M01 (file audio/score/M01.*)",
+  "seq": "Q01",
+  "start_s": "global seconds",
+  "end_s": "global seconds",
+  "level_db": "-15 = the house level (the take is normalised to -23 LUFS, then level_db + 9 dB)",
+  "from_s": "where in the take to start (window past its intro)",
+  "tune_cents": "measured detune to remove",
+  "fade_in_s": 1.2,
+  "fade_out_s": 2.5,
+  "prompt": "...",
+  "why": "...",
+  "take": "id of the take in `takes` this cue is cut from (file audio/score/<take>.*)"
+ },
+ "silences_to_keep": [
+  "Q10 51.5-55 s (global 422-425.5): the room drops out as the screen goes dark; music here would undo it",
+  "Q11 11 s (global 464): the app opens with no sound at all; nothing dials, nothing rings",
+  "Q11 58-72 s (global 511-525): the black and the title are silent, unless the score's last note is decided to carry the title"
+ ],
+ "cues": [
+  {
+   "id": "M01",
+   "take": "T2",
+   "seq": "Q06",
+   "start_s": 197.5,
+   "end_s": 225.5,
+   "from_s": 1.0,
+   "level_db": -17,
+   "tune_cents": 9.0,
+   "fade_in_s": 2.5,
+   "fade_out_s": 3.0,
+   "why": "The waterfall: he stops chewing and looks at the photo; the motif enters under the room, carries L007 (ducked under it), the lock/wake rhyme and the push to the strip, and fades into the hard cut. The first music in the film, 3:17 in."
+  },
+  {
+   "id": "M02",
+   "take": "T2",
+   "seq": "Q11",
+   "start_s": 477.0,
+   "end_s": 503.5,
+   "from_s": 46.22,
+   "level_db": -15,
+   "tune_cents": 9.0,
+   "fade_in_s": 3.0,
+   "fade_out_s": 1.0,
+   "why": "Beside his face: after the last \"I love you too.\" he lies down with the phone where a head would be; the same piano returns, sparse held notes under the push to the strip, and the take's own fade ends exactly at the cut to black. The black and the title stay silent."
+  }
+ ],
+ "takes": [
+  {
+   "id": "T1",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental film-score cue, about 70 seconds. Solo felt piano, very soft and intimate, close-miked in a small quiet room, the gentle mechanical sound of the felt audible. Slow, around 56 BPM, rubato. A simple, tender four-note melody in D major that rises and falls, played sparsely with long pauses between phrases, over a few warm low notes. Halfway through, a single cello enters very quietly, holding long low notes under the piano. It ends unresolved, on a held suspended chord that fades out. Melancholy but warm, the memory of someone. No drums, no percussion, no vocals, no choir, no synthesizer. In tune at A = 440.",
+   "why": "one motif for the whole film"
+  },
+  {
+   "id": "T2",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental film-score cue, about 70 seconds. Solo felt piano, very soft and intimate, close-miked in a small quiet room, the gentle mechanical sound of the felt audible. Slow, around 56 BPM, rubato. A simple, tender four-note melody in D major that rises and falls, played sparsely with long pauses between phrases, over a few warm low notes. Halfway through, a single cello enters very quietly, holding long low notes under the piano. It ends unresolved, on a held suspended chord that fades out. Melancholy but warm, the memory of someone. No drums, no percussion, no vocals, no choir, no synthesizer. In tune at A = 440.",
+   "why": "one motif for the whole film"
+  },
+  {
+   "id": "T3",
+   "model": "lyria-3.5",
+   "prompt": "Instrumental film-score cue, about 70 seconds. Solo felt piano, very soft and intimate, close-miked in a small quiet room, the gentle mechanical sound of the felt audible. Slow, around 56 BPM, rubato. A simple, tender four-note melody in D major that rises and falls, played sparsely with long pauses between phrases, over a few warm low notes. Halfway through, a single cello enters very quietly, holding long low notes under the piano. It ends unresolved, on a held suspended chord that fades out. Melancholy but warm, the memory of someone. No drums, no percussion, no vocals, no choir, no synthesizer. In tune at A = 440.",
+   "why": "one motif for the whole film"
+  }
+ ],
+ "chosen_take": {
+  "id": "T2",
+  "why": "79% \"very soft, slow, sparse solo piano, intimate and melancholy\" in earshot (no vocal, drum or choir tag; sad and melancholic z +3.5); a busier melodic first half, a sparse held second half, and the only clean natural fade to silence of the three (to -88 dB at the end)",
+  "tune_cents": 9.0,
+  "dur_s": 72.72
+ }
+}

@@ -1,0 +1,8 @@
+out/
+audio/gen/*.wav
+*.log
+frames/*.png
+audio/audition/takes/
+audio/vo/takes/
+audio/gen/var/
+audio/gen/**/*.wav

@@ -1,0 +1,76 @@
+{
+ "_doc": "Variants for the takes earshot heard as weak or no match (audio/gen/check.json). tools/sfx_variants.py generates every prompt x seed, ranks them with the current take and any CC0 recordings named, and keeps the best (audio/gen/picks.json).",
+ "streetcar_far": {
+  "prompts": ["a city tram rumbling past slowly on rails, far away down the street at night, a low steady rumble rising and fading, heard from indoors",
+              "a distant train passing in the city at night, a soft low rumble of wheels on rails swelling and fading away"],
+  "match": "a distant train passing"
+ },
+ "sigh_m": {
+  "prompts": ["a man sighing softly through his nose as he falls asleep, one long gentle breath out, very close",
+              "a tired man's slow contented sigh, a soft breath out, close and quiet"],
+  "match": "a man sighing"
+ },
+ "bus_bell": {
+  "prompts": ["the stop request chime on a city bus, one short soft electronic bing, heard from inside the bus",
+              "one single short electronic ding of a bus stop button, a small chime over the engine"],
+  "match": "a single electronic chime ding"
+ },
+ "couch_creak": {
+  "prompts": ["the creak of an old fabric couch as a man sits down on it, a soft spring creak and a cushion compressing",
+              "an old sofa's wooden frame creaking under someone's weight, one slow creak, close, quiet room"],
+  "match": "furniture creaking",
+  "cc0": ["otm/creak"]
+ },
+ "coat_rustle": {
+  "prompts": ["the rustle of a thick wool coat as a woman moves her arm, soft heavy fabric brushing, close",
+              "clothing rustle, a coat sleeve brushing against the coat's body, soft, close"],
+  "match": "clothes rustling",
+  "cc0": ["otm/cloth1", "otm/cloth2"]
+ },
+ "hangers": {
+  "prompts": ["empty wooden clothes hangers clacking together on a wardrobe rail, a few hollow wooden knocks",
+              "a hand brushing past bare wooden coat hangers in a wardrobe, they knock together, hollow wooden clatter"],
+  "match": "wooden hangers knocking together"
+ },
+ "bag_lift": {
+  "prompts": ["a small soft cosmetics bag picked up from a shelf, a brief soft fabric rustle and a light scrape, close",
+              "lifting a small zipped fabric pouch off a wooden shelf, a quiet slide and rustle"],
+  "match": "a bag picked up",
+  "cc0": ["otm/cloth2", "otm/rustle"]
+ },
+ "phone_cushion": {
+  "prompts": ["a smartphone dropped gently onto a soft sofa cushion, one soft muffled thump, close",
+              "a small object set down on a fabric cushion, a quiet soft thud"],
+  "match": "a soft thud on a cushion",
+  "cc0": ["otm/cloth1"]
+ },
+ "street_day": {
+  "prompts": ["the muffled sound of a city street outside a closed apartment window by day, distant cars and a bus far away, soft and steady",
+              "distant urban traffic murmur through a window, soft, far away, daytime city ambience"],
+  "dur": 10,
+  "match": "distant city traffic"
+ },
+ "chair_creak": {
+  "prompts": ["an office chair squeaking as a man leans back in it, one short squeak of the chair's spring, close",
+              "a desk chair creak, a man shifts his weight, a single short creak, quiet office"],
+  "match": "a chair creaking",
+  "cc0": ["otm/creak"]
+ },
+ "steps_fast": {
+  "prompts": ["a man walking quickly across a wooden floor in an apartment, five quick footsteps, then he stops",
+              "hurried footsteps on a wooden floor, a man coming quickly out of a room, a few steps"],
+  "match": "fast footsteps on wood"
+ },
+ "trade": {
+  "prompts": ["a small fabric pouch handed from one person to another, a soft quick cloth rustle, close",
+              "cloth rustling as two people exchange small objects, a soft fabric movement, close, quiet room"],
+  "match": "cloth rustling",
+  "cc0": ["otm/cloth1", "otm/cloth2"]
+ },
+ "zip": {
+  "prompts": ["a small zipper pull fiddled with by a thumb, tiny metallic ticks of the zipper tab, very close, quiet",
+              "fidgeting with the metal tab of a zipper on a small bag, small soft clicks, very close"],
+  "dur": 6,
+  "match": "a zipper being fiddled with"
+ }
+}
