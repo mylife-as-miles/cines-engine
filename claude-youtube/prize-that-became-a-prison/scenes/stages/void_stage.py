@@ -496,7 +496,7 @@ def light_suit(h, net=0.30, hair_net=0.20, body_net=0.26, bounce_w=45.0):
     wrist = rig.matrix_world @ rig.pose.bones["hand_fk.L"].head
     lateral = h.rotation_euler.to_matrix() @ Vector((0.75, 0, 0))
     side = st.area("left hand floor return", wrist + lateral + Vector((0.15, -0.05, -0.27)), wrist,
-                   (0.60, 0.38), 1.8, (0.90, 0.94, 1.0), spread_deg=65)
+                   (0.60, 0.38), 4.8, (0.90, 0.94, 1.0), spread_deg=65)
     st.link_lights([hands, side], receivers=[body], tag="hand_return")
     bun = [o for o in hair if o.name.endswith("_bun")]
     rim = copies(0.25, "_bun_edge") if bun else []
