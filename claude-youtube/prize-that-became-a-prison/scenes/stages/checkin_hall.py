@@ -22,6 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "noir-kit"))
 sys.path.insert(0, os.path.join(HERE, ".."))
 import bpy  # noqa: E402
+from bpy_extras.object_utils import world_to_camera_view  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 
 import cast as castkit  # noqa: E402
@@ -56,9 +57,9 @@ CAMERAS = {
     "signs": dict(loc=(4.7, -3.65, 2.65), aim=(-2.1, -0.30, 3.39), lens=34, focus="focus_sign", fstop=4,
                   exposure=-1.6),
     "scale": dict(loc=(1.60, -1.98, 0.95), aim=(1.46, 0.46, 0.67), lens=46, focus="focus_duffel", fstop=2.8,
-                  exposure=-2.0),
+                  exposure=-2.0, final_res=(1920, 1080)),
     "profile": dict(loc=(5.2, -0.38, 1.52), aim=(0.3, 0.2, 0.9), lens=45, focus="focus_dawn", fstop=2.8),
-    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=2.4,
+    "shoulder": dict(loc=(0.3, 1.68, 1.53), aim=(0.25, -0.3, 1.261), lens=50, focus="focus_dawn", fstop=3.5,
                      exposure=-2.65),   # her pale blouse and face fill this frame: hold them off white
 }
 MON = (-0.2, 0.5, 30.0)   # agent's monitor: centre x, y on the work surface, yaw (deg) of its face from +Y toward +X
@@ -719,17 +720,17 @@ def desk(x0, idx, open_):
     for s in (-1, 1):  # the ends: darker laminate (they face the lights side-on), a recessed kick along each
         box(p + "side_lo", (0.03, 0.74, RV - 0.11), (x0 + s * (hw - 0.015), 0.39, 0.1 + (RV - 0.11) / 2), m["laminate_dark"], bevel=B)
         # The end panel steps down to the worktop behind the passenger ledge.
-        for name, y0, y1, top in (("ledge end", 0.02, 0.294, LEDGE - 0.006),
-                                  ("desk end", 0.294, 0.76, WORK - 0.004)):
+        for name, y0, y1, top in (("ledge end", 0.02, 0.322, LEDGE - 0.006),
+                                  ("desk end", 0.322, 0.76, WORK - 0.004)):
             bottom = RV + 0.005
             box(p + name, (0.03, y1 - y0, top - bottom),
                 (x0 + s * (hw - 0.015), (y0 + y1) / 2, (top + bottom) / 2), m["laminate_side"], bevel=B)
         box(p + "side_reveal", (0.036, 0.72, 0.016), (x0 + s * (hw - 0.015), 0.39, RV - 0.005), m["steel"], bevel=0.004)
         box(p + "side_kick", (0.02, 0.7, 0.1), (x0 + s * (hw - 0.035), 0.41, 0.05), m["kick"], bevel=0.003)
     # dark transaction ledge (overhangs the front) with a 6 mm dull-steel nosing, the lower work surface behind it
-    box(p + "ledge", (2 * hw + 0.04, 0.33, 0.035), (x0, 0.125, LEDGE + 0.0175), m["top"], bevel=0.008)
+    box(p + "ledge", (2 * hw + 0.04, 0.358, 0.035), (x0, 0.139, LEDGE + 0.0175), m["top"], bevel=0.008)
     box(p + "nosing", (2 * hw + 0.044, 0.008, 0.006), (x0, -0.0415, LEDGE + 0.0285), m["steel_dark"], bevel=0.002)
-    box(p + "upstand", (2 * hw - 0.06, 0.025, LEDGE - WORK), (x0, 0.3, WORK + (LEDGE - WORK) / 2), m["top"], bevel=0.005)
+    box(p + "upstand", (2 * hw - 0.06, 0.025, LEDGE - WORK), (x0, 0.328, WORK + (LEDGE - WORK) / 2), m["top"], bevel=0.005)
     box(p + "work", (2 * hw - 0.06, 0.45, 0.03), (x0, 0.53, WORK - 0.015), m["top"], bevel=B)
     box(p + "back", (2 * hw - 0.06, 0.02, WORK - 0.2), (x0, 0.7, 0.16 + (WORK - 0.2) / 2), m["laminate_side"], bevel=0.004)
     # the agent's monitor: a 45 mm housing on a neck and foot, a dark bezel round a blank glowing screen. It stands in
@@ -1014,6 +1015,27 @@ def focus(name, loc):
     e = bpy.data.objects.new(name, None)
     bpy.context.scene.collection.objects.link(e)
     e.location = loc
+
+
+def frame_metadata(name, scene, resolution):
+    """Track the passenger-facing glass for the scale readout added in the edit."""
+    if name != "scale":
+        return None
+    display = bpy.data.objects["scale_display"].evaluated_get(bpy.context.evaluated_depsgraph_get())
+    front = min(v.co.y for v in display.data.vertices)
+    points = [v.co for v in display.data.vertices if abs(v.co.y - front) < 1e-6]
+    width, height = resolution
+    corners, depths, inside = {}, {}, {}
+    for label, right, top in (("top_left", -1, 1), ("top_right", 1, 1),
+                              ("bottom_right", 1, -1), ("bottom_left", -1, -1)):
+        vertex = max(points, key=lambda v: right * v.x + top * v.z)
+        p = world_to_camera_view(scene, scene.camera, display.matrix_world @ vertex)
+        corners[label] = [round(p.x * width, 3), round((1 - p.y) * height, 3)]
+        depths[label] = round(p.z, 6)
+        inside[label] = p.z > 0 and 0 <= p.x <= 1 and 0 <= p.y <= 1
+    return {"camera": name, "screen": display.name, "resolution": [width, height],
+            "origin": "top-left pixel edge", "depth_axis": "camera forward",
+            "corners": corners, "depth_m": depths, "in_frame": inside}
 
 
 def place(holder, loc, facing_deg):
@@ -1354,7 +1376,7 @@ def pose_cast(d, a):
                           "f_ring": (17, 15, 12, 3), "f_pinky": (18, 16, 13, 6), "thumb": (22, 8, 9, -12)}}}
     gd = aim_head_iter(d, dp, eye_centre(a) + Vector((0, 0, 0.03)))
     fwd = Vector((-0.208, 0.978, 0)) + 0.52 * Vector((0.978, 0.208, 0))   # her forward, turned a little inward
-    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.084, LEDGE + 0.08), LEDGE + 0.0414, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
+    hand = rest_hand(d, dp, "L", (DAWN[0] - 0.20, 0.043, LEDGE + 0.08), LEDGE + 0.0414, fwd.normalized(), curl=8, passing=True, palm_drop=-0.002)
     # Put the booklet under the solved finger pads. Leave the far edge and a corner
     # exposed so the page block reads as a closed passport.
     for part in ("back", "pages", "front"):
