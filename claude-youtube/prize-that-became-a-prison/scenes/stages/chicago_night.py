@@ -43,8 +43,8 @@ import chicago_night_set as st  # noqa: E402
 
 EXPOSURE = -0.5
 
-DAWN = (0.51, 1.93, 172.0)                 # where she stands (footprint) and her facing: out of the window (+Y)
-MUG = (0.06, 0.30, 1.22)                   # the mug in both hands at chest height: her frame (x right, y forward, z up)
+DAWN = (0.51, 1.93, 158.0)                 # where she stands (footprint) and her facing: out of the window (+Y)
+MUG = (0.08, 0.34, 1.25)                   # the mug in both hands at chest height: her frame (x right, y forward, z up)
 LOOK = (-470.0, 1650.0, 190.0)             # the downtown cluster, the eyes lifted a few degrees: looking out, hopeful
 # weight on her right leg: hips 2.5 cm over it and 6 mm down, the free (left) foot 6 cm forward and turned out
 STANCE = dict(hip_side=0.025, hip_down=0.004, hip_tilt=4.0, foot_fwd=0.06, foot_out=10.0)
@@ -64,12 +64,15 @@ CAMERAS = {
     # Ch 01: behind her, a little to her left, low: the horizon glow crosses her shoulder blades, her head and
     # shoulders stand against the glow (the +10.5..+19.5 degree clear wedge of the skyline)
     "window": dict(loc=(0.05, 0.22, 1.20), aim=(0.15, 2.45, 1.32), lens=28, focus="fx_head", fstop=2.8, beat="ch01",
-                   exposure=0.1),
+                   exposure=0.1, glass_reflection=0.06),
     # Ch 01: low and close: the packed case by the door, the city soft in the glass beyond
     "suitcase": dict(loc=(-1.0, -0.95, 0.55), aim=(-2.75, 1.7, 0.47), lens=40, focus="fx_case", fstop=2.0, beat="ch01",
-                     exposure=-1.05),
+                     exposure=-1.05, glass_reflection=0.06),
+    "profile": dict(loc=(-0.65, 1.41, 1.45), aim=(0.53, 1.98, 1.39), lens=55, focus="fx_head",
+                    fstop=2.0, beat="ch01", exposure=0.05, glass_reflection=0.04),
 }
-TRIMS = {"wide": {}, "window": {}, "suitcase": {}}
+TRIMS = {"wide": {"case_card": 0.0, "entry_light": 0.6}, "window": {"lamp_bounce": 0.0},
+         "profile": {"dawn_edge": 0.75}, "suitcase": {"lamp_bounce": 0.0, "dawn_edge": 0.0}}
 # objects (and lights) kept out of glossy rays per camera. In the window shot her own reflection would stand beside
 # her as a ghost head (the cast is hidden from glossy there) and the lamps and the entry can would float in the glass
 # as bright discs; in the suitcase shot the console lamp would stand among the towers. The wide keeps them: its floor
@@ -163,6 +166,11 @@ def dawn():
     bun = bpy.data.objects.get(f"{h['body']}_bun")
     if bun is not None:
         bun.data.transform(Matrix.Translation((0.0, -0.025, -0.02)))
+    hair = bpy.data.materials.get(f"hair_{h.name}")
+    if hair and hair.use_nodes:
+        shader = next(n for n in hair.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+        shader.inputs["Roughness"].default_value = 0.76
+        shader.inputs["Specular IOR Level"].default_value = 0.18
     hands_stone(h)
     print(f"CHICAGO Dawn: blouse {n} vertices", flush=True)
     return h
@@ -307,15 +315,9 @@ def ik_arm(holder, side, palm, pole=(0.45, 0.3, -1.0)):
 
 
 def curl_fingers(holder):
-    rig = rigged.rig_of(holder)
-    pb = rig.pose.bones
-    for k, fingers in CURL.items():
-        for f, (knuckle, joint) in fingers.items():
-            for n, deg in ((f"{f}.01_master.{k}", knuckle), (f"{f}.02.{k}", joint), (f"{f}.03.{k}", joint)):
-                if n in pb and deg:
-                    pb[n].rotation_mode = "XYZ"
-                    pb[n].rotation_euler.x = math.radians(deg)
-    bpy.context.view_layer.update()
+    for side, fingers in CURL.items():
+        rigged.articulate_hand(holder, side, {digit: (knuckle, joint, joint)
+                                             for digit, (knuckle, joint) in fingers.items()})
 
 
 def pose_dawn(h):
@@ -366,7 +368,7 @@ def pose_dawn(h):
 
 
 def mug_prop(c):
-    m = sk.mat("mug glaze", (0.42, 0.4, 0.37), 0.3)
+    m = sk.mat("mug glaze", (0.62, 0.58, 0.52), 0.3)
     r, hgt = 0.041, 0.095
     st.lathe("mug", [(0.0, 0.004), (r - 0.004, 0.0), (r, 0.006), (r, hgt), (r - 0.004, hgt), (r - 0.004, 0.01), (0.0, 0.01)],
              (c.x, c.y, c.z - hgt / 2), m, segs=40)
@@ -391,11 +393,10 @@ def apply_camera(name):
             setattr(sc.cycles, k, v)
         except (AttributeError, TypeError):
             pass
-    # the camera must see the whole city: setkit.camera() leaves Blender's 1000 m clip_end, but the sky dome has a
-    # radius of 15 km and the downtown cluster stands 1.7 km out
+    # The 15 km sky dome uses the shared camera range.
     cam = sc.camera
     if cam is not None:
-        cam.data.clip_start, cam.data.clip_end = 0.05, 20000.0
+        cam.data.clip_start = 0.05
         cam.data.shift_y = CAMERAS.get(name, {}).get("shift_y", 0.0)
     # the glass's reflection strength: in the wide even 0.2 of Fresnel showed the console lamp's spill on the wall
     # as an orange smear among the towers
@@ -403,8 +404,8 @@ def apply_camera(name):
     if g is not None and "reflection" in g.node_tree.nodes:
         g.node_tree.nodes["reflection"].inputs[1].default_value = CAMERAS.get(name, {}).get("glass_reflection", 0.2)
     for o in _STATE.get("cast", []):
-        o.visible_glossy = name != "window"
-    hide = NO_GLOSSY.get(name, ())
+        o.visible_glossy = name not in ("window", "profile")
+    hide = NO_GLOSSY.get("window" if name == "profile" else name, ())
     for o in bpy.data.objects:
         if o.name.startswith(GLOSSY_CTRL):
             o.visible_glossy = not o.name.startswith(hide)

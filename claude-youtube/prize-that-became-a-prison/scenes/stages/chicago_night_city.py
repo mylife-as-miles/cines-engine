@@ -25,7 +25,7 @@ FOG_D = 2300.0
 FOG_BUILDINGS = 1200.0             # buildings fade faster than lights, so near, mid and far layers separate
 # Sky levels set for the camera exposures (-0.4 to -0.6, AgX) now that the camera sees past 1 km (clip_end 20 km):
 # the horizon band lands near 70/255 raw, the sky behind Dawn's head about 30-45/255, the upper sky 12-20/255.
-HORIZON = (0.104, 0.1, 0.108)      # the haze lit by the city, at the horizon (emission, linear): a faint sodium lift
+HORIZON = (0.16, 0.135, 0.105)      # the haze lit by the city, at the horizon (emission, linear): a faint sodium lift
 BUILDING_FOG = (0.034, 0.038, 0.048)  # what far facades fade to: darker than the sky behind them, so towers stay silhouettes
 SKY_TOP = (0.004, 0.005, 0.01)
 DOWNTOWN = (-470.0, 1650.0)           # the tower cluster's centre: about 17 degrees left of straight out
@@ -234,12 +234,11 @@ def building_mat():
     h = nb.add(nb.mul(lx, ay), nb.mul(ly, ax))
     bd = nb.sep(nb.attr("bdata").outputs["Vector"])
     rnd, kind, litf = bd[0], bd[1], bd[2]
-    cdist = nt.nodes.new("ShaderNodeCameraData").outputs["View Distance"]
-    litf = nb.mul(litf, nb.math("MAXIMUM", 0.3, nb.math("MINIMUM", 1.0, nb.math("DIVIDE", cdist, 700.0))))
+    litf = nb.add(0.25, nb.mul(0.1, nb.math("MINIMUM", litf, 1.0)))
     cr = nb.sep(nb.attr("bcrown").outputs["Vector"])
     top, crown, csel = cr[0], cr[1], cr[2]
-    bay = nb.add(1.5, nb.mul(1.6, nb.math("FRACT", nb.mul(rnd, 7.31))))
-    flo = nb.add(3.05, nb.mul(0.85, kind))
+    bay = 1.5
+    flo = 3.8
     u = nb.math("DIVIDE", h, bay)
     v = nb.math("DIVIDE", lz, flo)
     cu, cv = nb.math("FLOOR", u), nb.math("FLOOR", v)
@@ -262,7 +261,7 @@ def building_mat():
     lit_floor = nb.mul(nb.math("LESS_THAN", fl, nb.mul(0.10, kind)), nb.math("SUBTRACT", 1.0, lit_cell))
     bright = nb.add(0.25, nb.mul(0.75, c2[0]))
     warm, cool, tv = (1.0, 0.70, 0.42), (0.74, 0.86, 1.0), (0.42, 0.55, 1.0)
-    col = nb.mixc(kind, warm, cool)
+    col = nb.mixc(nb.math("GREATER_THAN", c2[1], 0.7), warm, cool)
     col = nb.mixc(nb.math("LESS_THAN", c2[1], 0.08), col, tv)
     col = nb.mixc(nb.mul(c2[2], 0.35), col, (0.95, 0.92, 0.85))
     emit = nb.scale(col, nb.mul(nb.mul(nb.mul(mask, lit_cell), bright), 3.6))
@@ -303,7 +302,7 @@ def sky_mat():
     cr.elements[0].position, cr.elements[0].color = 0.0, (*HORIZON, 1)
     cr.elements[1].position, cr.elements[1].color = 1.0, (*SKY_TOP, 1)
     # a glow that holds up to about 6 degrees (Dawn's shoulders from the window camera), then falls off cooler
-    for pos, col in ((0.035, (0.086, 0.084, 0.092)), (0.1, (0.052, 0.053, 0.062)), (0.25, (0.024, 0.026, 0.034)),
+    for pos, col in ((0.035, (0.125, 0.108, 0.095)), (0.1, (0.048, 0.047, 0.055)), (0.25, (0.016, 0.018, 0.024)),
                      (0.5, (0.011, 0.012, 0.018))):
         el = cr.elements.new(pos)
         el.color = (*col, 1)
@@ -626,7 +625,17 @@ def build():
     me = fast_mesh("city_roads", v, f, 4)
     point_colour(me, "col", np.repeat(s_c, 8, axis=0))
     rd = _city_object(_link(bpy.data.objects.new("city_roads", me)))
-    rd.data.materials.append(emission_mat("city_road", "col", strength=1.0, fog_max=0.9))
+    roadway = emission_mat("city_road", "col", strength=0.35, fog_max=0.9)
+    nt = roadway.node_tree
+    noise = nt.nodes.new("ShaderNodeTexNoise")
+    noise.inputs["Scale"].default_value = 0.03
+    nt.links.new(nt.nodes.new("ShaderNodeTexCoord").outputs["Object"], noise.inputs["Vector"])
+    strength = nt.nodes.new("ShaderNodeMapRange")
+    strength.inputs["To Min"].default_value, strength.inputs["To Max"].default_value = 0.21, 0.35
+    nt.links.new(noise.outputs["Fac"], strength.inputs["Value"])
+    emission = next(n for n in nt.nodes if n.type == "EMISSION")
+    nt.links.new(strength.outputs["Result"], emission.inputs["Strength"])
+    rd.data.materials.append(roadway)
 
     t_lo, t_hi, t_c = traffic()
     v, f, _ = boxes(t_lo, t_hi)

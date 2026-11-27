@@ -393,9 +393,9 @@ def materials():
         glaze=sk.mat("charcoal glaze", (0.03, 0.035, 0.042), 0.18),
         stoneware=sk.mat("stoneware", (0.32, 0.29, 0.25), 0.55),
         shade=shade_linen(),
-        rug=fabric("wool rug", (0.20, 0.17, 0.13), 700.0, 0.6, 0.08),            # warm oatmeal wool
+        rug=fabric("wool rug", (0.20, 0.17, 0.13), 250.0, 0.95, 0.08),            # warm oatmeal wool
         rug_border=fabric("wool rug border", (0.10, 0.08, 0.06), 700.0, 0.6, 0.08),
-        uphol=fabric("upholstery", (0.30, 0.12, 0.06), 1100.0, 0.3, 0.15),       # rust wool: a warm accent
+        uphol=fabric("upholstery", (0.42, 0.17, 0.08), 1100.0, 0.3, 0.15),       # rust wool: a warm accent
         leather=sk.mat("tag leather", (0.14, 0.065, 0.03), 0.55),
         leatherette=sk.mat("book cloth", (0.07, 0.08, 0.1), 0.7),
         paper=sk.mat("sketch paper", (0.62, 0.6, 0.55), 0.9),
@@ -495,12 +495,12 @@ def door():
     for n, s, l in (("jamb_l", (0.12, 0.02, dh), (W0 - 0.06, y0 + 0.01, dh / 2)), ("jamb_r", (0.12, 0.02, dh), (W0 - 0.06, y1 - 0.01, dh / 2)),
                     ("jamb_top", (0.12, y1 - y0, 0.02), (W0 - 0.06, yc, dh - 0.01))):
         box(n, s, l, m["trim"], bevel=0.002)
-    # the door leaf: flush, 45 mm, set back in the opening; a 12 mm gap at the floor
-    leaf = box("door_leaf", (0.045, y1 - y0 - 0.046, dh - 0.034), (W0 - 0.05, yc, 0.012 + (dh - 0.034) / 2), m["door"], bevel=0.003)
+    # the door leaf: flush, 45 mm, set back in the opening; a 7 mm gap at the floor
+    leaf = box("door_leaf", (0.045, y1 - y0 - 0.046, dh - 0.029), (W0 - 0.05, yc, 0.007 + (dh - 0.029) / 2), m["door"], bevel=0.003)
     # two-panel shaker face on the room side: stiles and rails 6 mm proud of the panels, all bevelled
     fx = W0 - 0.05 + 0.0225 + 0.003
     ly0, ly1 = y0 + 0.023, y1 - 0.023
-    lz0, lz1 = 0.012, dh - 0.022
+    lz0, lz1 = 0.007, dh - 0.022
     sw, rw = 0.115, 0.13
     box("door_stile_a", (0.006, sw, lz1 - lz0), (fx, ly0 + sw / 2, (lz0 + lz1) / 2), m["door"], bevel=0.002)
     box("door_stile_b", (0.006, sw, lz1 - lz0), (fx, ly1 - sw / 2, (lz0 + lz1) / 2), m["door"], bevel=0.002)
@@ -516,7 +516,7 @@ def door():
     cyl("door_deadbolt", 0.022, 0.01, (W0 - 0.017, hy, 1.12), m["steel"], rot=(0, math.radians(90), 0), bev=0.002)
     _ = (leaf, lever)
     # the corridor's light: a bright strip in the gap under the door (the corridor side is lit)
-    em = sk.emission("corridor_glow", (1.0, 0.88, 0.7), 5.0)
+    em = sk.emission("corridor_glow", (1.0, 0.88, 0.7), 9.0)
     box("door_gap_glow", (0.04, y1 - y0 - 0.06, 0.004), (W0 - 0.09, yc, 0.004), em)
 
 
@@ -603,11 +603,10 @@ def lamp():
 
 def suitcase(props):
     """Dawn's soft case, standing by the door with its telescopic handle drawn up: packed and waiting."""
-    import props as pk  # noqa: F401
     x, y, t = CASE
     h = props.load("dawn-suitcase", size=0.66, axis="z", loc=(x, y, 0.0), turn_deg=t, sat=0.6)
     bpy.context.view_layer.update()
-    meshes = [o for o in h.children_recursive if o.type == "MESH"]
+    meshes = props.meshes(h)
     # draw the handle up: the grip is the part above the shell at the back (file -X): lift it 0.36 m and add the
     # two telescoping tubes under it
     lift = 0.36
@@ -634,16 +633,23 @@ def suitcase(props):
             b = Vector((x, y, 0)) + R @ Vector((gx, yy, 0.61 + lift))
             tube(f"case_handle_{s}", [tuple(a), tuple(b)], 0.0085, M["steel"], res=4)
         # a blank leather luggage tag on a strap, hanging from the grip (continuity with the inspection-room tag)
-        gz0 = min(p.z for p in grip_pts) + lift
+        gz = max(p.z for p in grip_pts) + lift - 0.012
         gyc = (gy0 + gy1) / 2 + 0.035
-        W = lambda lx, ly, lz: tuple(Vector((x, y, 0)) + R @ Vector((lx, ly, lz)))
-        rz = math.radians(t)
-        box("case_tag_strap", (0.003, 0.011, 0.07), W(gx + 0.013, gyc, gz0 - 0.028), M["leather"], bevel=0.001,
+        def W(lx, ly, lz):
+            return Vector((x, y, 0)) + R @ Vector((lx, ly, lz))
+        loop = [(0.016, -0.081), (0.013, 0.004), (0.008, 0.013), (0.0, 0.016),
+                (-0.008, 0.013), (-0.015, 0.005), (-0.014, -0.017), (0.012, -0.072)]
+        tube("case_tag_loop", [W(gx + dx, gyc, gz + dz) for dx, dz in loop], 0.0022, M["leather"], res=5)
+        rz = math.radians(t + 13)
+        box("case_tag", (0.005, 0.058, 0.09), W(gx + 0.015, gyc, gz - 0.115), M["leather"], bevel=0.0024,
             rot=(0, 0, rz))
-        box("case_tag", (0.005, 0.058, 0.09), W(gx + 0.016, gyc, gz0 - 0.063 - 0.045), M["leather"], bevel=0.0024,
-            rot=(math.radians(4), 0, rz))
-        cyl("case_tag_eyelet", 0.005, 0.006, W(gx + 0.019, gyc, gz0 - 0.074), M["brass"],
-            rot=(0, math.radians(90), rz), verts=16)
+        cyl("case_tag_eyelet", 0.005, 0.006, W(gx + 0.017, gyc, gz - 0.081), M["brass"],
+            rot=(0, math.radians(90), rz), verts=24)
+        # Plain hardware on the small raised disc of the front pocket.
+        normal = R @ Vector((0.953, 0.032, 0.300)).normalized()
+        cap = cyl("case_plain_rivet", 0.0095, 0.003, W(0.0893, 0.129, 0.474) + normal * 0.0018,
+                  sk.mat("case rivet", (0.085, 0.079, 0.073), 0.55, 0.6), verts=32, bev=0.0009)
+        cap.rotation_euler = normal.to_track_quat("Z", "Y").to_euler()
     print(f"SET suitcase handle: {moved} vertices lifted", flush=True)
     return h
 
@@ -668,9 +674,9 @@ def coffee_table():
     # two closed books and a low stoneware vase with three dry stems
     # (the vase and its tall dry stems at the table's far-left end: at the other end they stood right in front of
     # the window camera's lens)
-    box("book_a", (0.26, 0.2, 0.03), (cx + 0.26, cy + 0.04, 0.415), m["leatherette"], bevel=0.003, rot=(0, 0, math.radians(-7)))
+    box("book_a", (0.26, 0.2, 0.03), (cx + 0.26, cy + 0.04, 0.415), m["leatherette"], bevel=0.003, rot=(0, 0, math.radians(18)))
     bk = sk.mat("book cloth 2", (0.2, 0.16, 0.11), 0.75)
-    box("book_b", (0.22, 0.17, 0.024), (cx + 0.27, cy + 0.03, 0.442), bk, bevel=0.003, rot=(0, 0, math.radians(5)))
+    box("book_b", (0.22, 0.17, 0.024), (cx + 0.27, cy + 0.03, 0.442), bk, bevel=0.003, rot=(0, 0, math.radians(30)))
     vx = cx - 0.32
     lathe("vase", [(0.0, 0.0), (0.05, 0.0), (0.07, 0.04), (0.068, 0.12), (0.03, 0.2), (0.022, 0.24), (0.026, 0.25),
                    (0.018, 0.25), (0.0, 0.2)], (vx, cy - 0.05, 0.4), m["stoneware"], segs=48)
@@ -694,7 +700,7 @@ def lounge_chair():
     """A mid-century lounge chair by the window: walnut side frames (tapered legs, a flat arm rail), a deep seat
     cushion and a raked back cushion in a warm wool."""
     m = M
-    cx, cy, turn = 1.95, 1.05, math.radians(95)
+    cx, cy, turn = 1.85, 1.12, math.radians(120)
     R = Matrix.Rotation(turn, 4, "Z")
     O = Vector((cx, cy, 0))
     P = lambda x, y, z: tuple(O + R @ Vector((x, y, z)))
@@ -824,9 +830,13 @@ def plant(x=1.76, y=2.2):
 
 def passport():
     """A plain dark-blue passport by the bowl on the console (no crest, no text): the trip is near."""
-    m = sk.mat("passport cover", (0.03, 0.045, 0.1), 0.7)
-    box("passport", (0.088, 0.125, 0.007), (W0 + 0.27, -1.2, CONSOLE[2] + 0.0035), m, bevel=0.0015,
-        rot=(0, 0, math.radians(-14)))
+    m = sk.mat("passport cover", (0.05, 0.07, 0.16), 0.7)
+    box("passport", (0.088, 0.125, 0.007), (W0 + 0.18, -0.67, CONSOLE[2] + 0.0215), m, bevel=0.0015,
+        rot=(0, 0, math.radians(20)))
+    cashmere = fabric("folded camel scarf", (0.144, 0.112, 0.076), 560.0, 0.22, 0.15)
+    for i, offset in enumerate((0.0, 0.007, -0.003)):
+        box(f"scarf_fold_{i}", (0.24, 0.18, 0.010), (W0 + 0.19 + offset, -1.26, CONSOLE[2] + 0.005 + i * 0.008),
+            cashmere, bevel=0.0045, rot=(0, 0, math.radians(5 + i)))
 
 
 def case_card(power=9.0):
@@ -852,7 +862,7 @@ def window_light(power=6.0):
     return li
 
 
-def door_light(power=1.6):
+def door_light(power=4.5):
     """The corridor light under the door: a thin warm-neutral sheet at floor level, fanning across the floor."""
     y0, y1, _ = DOOR
     li = sk.area_light("under_door", (W0 + 0.004, (y0 + y1) / 2, 0.007), (0.012, y1 - y0 - 0.08), power, (1.0, 0.86, 0.68),
@@ -873,6 +883,13 @@ def build(props):
     plant()
     passport()
     window_light()
+    for name, origin, target, size, power, tint in (
+        ("dawn_edge", (0.95, 2.36, 1.30), (0.51, 1.93, 1.3), (0.4, 1.2), 8.0, (0.62, 0.72, 1.0)),
+        ("lamp_bounce", (1.30, 1.62, 1.05), (0.51, 1.93, 1.2), (0.3, 0.3), 6.0, (1.0, 0.5, 0.2)),
+    ):
+        light = sk.area_light(name, origin, size, power, tint, spread_deg=90)
+        light.rotation_euler = (Vector(target) - Vector(origin)).to_track_quat("-Z", "Y").to_euler()
+        light.visible_glossy = light.visible_camera = False
     door_light()
     case_card()
     return case
