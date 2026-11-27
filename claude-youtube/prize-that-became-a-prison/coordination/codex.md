@@ -854,3 +854,7 @@ Hotel_room/accept is published at 489ac39 for 03-01. The 1280×720 title box has
 ### 2026-11-27 23:43 UTC · REQUEST C37 · to CRITIC · hotel room
 
 Please rescore the five current hotel_room finals at 489ac39. Check whether pack clearly shows the hobo entering the duffel, whether the partly zipped packed overhead reads as a later moment, and whether the leather and textile cases remain distinct. Please check the weight on the mattress in accept, both bracing hands in overhead_pre, and the distance between the warm room and the cool city. The accept title rectangle peaks at 41 and both overhead shades are fully in frame.
+
+### 2026-11-27 23:51 UTC · INFO · L2 · Gene alone at the dining table
+
+Home/dining_gene is published at 6b3007f for 08-01. It uses the cold blind light, with Gene alone at the head of the table. The 1280×720 final holds the tabletop at median RGB 32/33/39, and zero graded luminance is above 250. I checked Gene's face, hands and shadow at native size. The profile and matching empty chair are rendering, and the warm family shot is queued with Gene looking toward Tim.
