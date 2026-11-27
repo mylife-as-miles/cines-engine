@@ -279,3 +279,30 @@ Publish the 2560px two-document evidence insert and its eight tracking pins. Pub
 ### 2026-11-27 09:56 UTC · REQUEST C19 · to CRITIC · critique
 
 Please score `evidence_table` at `f720f32` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `pair`. Please check both page tracks, surface lighting and readiness for compositing. Measured visible-corner errors are 0.30–1.07 px across the eight corners. The 3 mm and 20 mm edge samples agree to within 1.9 percent. The left and right graded paper centres are RGB 178/174/171 and 154/148/143. The screen is rendering.
+
+### 2026-11-27 10:10 UTC · INFO · STATUS
+
+Latest independent scores, with the minimum criterion in parentheses. The single-page master is approved for compositing. No entire stage has met the three pass conditions yet.
+
+| Stage | Mean (minimum) | What I am doing next |
+| --- | --- | --- |
+| hongkong_street | 4.75 (4) | Reviewed the revised wide. Check the doorway light on Dawn, the tote window and the company reflection before rendering all four finals. |
+| train | 5.00 (4) | Preview the adjusted rack framing and the 20 px chignon silhouette in the window reflection. |
+| hotel_room | 5.25 (4) | Check both palms in accept, the three pre-packing bags in overhead_pre and the post-market packing grip. |
+| checkin_hall | 5.63 (5) | Check the passport silhouette, paired fingertips, scale and screen in the five-camera preview. |
+| aircraft_cabin | 5.69 (4.5) | Preview the warmer reading-light pool, window-facing pose and newly fitted fingers and belt. |
+| baggage_belt | 5.69 (5) | Check the backlit parted curtain and the single light pool over the sorter. Retracted case handles and folded blank tags are in place. |
+| evidence_table | 5.75 (5) | Pair C19 is with CRITIC. All eight pin errors are under 1.1 px. The 2560 screen pins are within 1 px, but the key tops reached 116. I reduced screen spill and changed the caps before publishing. The page and pair JSON now also carry lens, aperture, focus distance, corner depths and in-frame flags; their pixel coordinates match the published masters exactly. |
+| void_stage | 5.75 (4) | Check hand and cuff separation, the bun and lived-in cell lighting before the next final batch. |
+| leather_market | 5.88 (5) | Check the purchase close-up against the fitted thumb and finger pads and compare the revised wide and stall. |
+| inspection_room | 5.94 (5) | Check the three unmarked bags and the lowered knuckles. The earlier five-camera coverage batch is ready for final rendering. |
+| chicago_night | 6.00 (5) | Three verified camera setups are queued for finals. Check the corrected profile before including it. |
+| departure_gate | 6.06 (5.5) | The called pose now looks toward the tannoy and releases the left hand about 5.6 cm. Measure the floor reflection in isolated light and material tests. |
+| courtroom | 6.13 (5) | Review the revised bench lighting, cast poses and empty coverage together. |
+| hearing_room | 6.13 (5) | Review cast and empty-camera previews for seating and practical-light contrast. |
+| visiting_room | 6.25 (5) | Check the glass, reverse, empty and wide previews for hand placement and reflections. |
+| home | 6.69 (6) | Finish the family and Gene coverage, then check the remaining kitchen and dining angles. |
+| prison_exterior | 6.75 (6) | Preview camera-specific additive rain, the visible gate-lamp support and irregular road reflections. |
+| detention_corridor | 7.00 (6) | Check the envelope, tabletop, chair, door and corridor previews against the latest review. |
+
+L2 remains open across multiple stages. Only finals have been published. The two-page review at f720f32 is the only outstanding critique request.
