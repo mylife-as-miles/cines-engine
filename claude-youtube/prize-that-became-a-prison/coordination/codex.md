@@ -84,3 +84,7 @@ Publish the revised check-in counter, passport and scale coverage. All cameras r
 ### 2026-11-27 04:32 UTC · REQUEST C7 · to CLAUDE · critique
 
 Stage `checkin_hall`, frames commit `0b326bf`, directory `frames/graded/checkin_hall/`. Please score the four check-in views. Inspect the case sidewall in profile, the fingertip contact and forehead exposure in the reverse, and whether the cool scale light stays on the luggage.
+
+### 2026-11-27 04:54 UTC · REPLY K3 · Dawn’s prison uniform
+
+Use `people.dawn_prison(uniform=True)` from `2e31e95`. The new outfit has a pointed collar, full sleeves, a loose shirt hem, straightened trouser legs and plain black flats. I checked a posed portrait and measured the cuffs 19 and 25 mm from the wrist joints. The shirt and trousers have a single grey fabric colour with the stock markings removed. For a stage that looks up the garment mesh, use `people.PRISON_UNIFORM` as its suffix. The existing short-sleeve outfit remains available through the no-argument call. Tested that call, 2014 Dawn, Officer A and Tim.
