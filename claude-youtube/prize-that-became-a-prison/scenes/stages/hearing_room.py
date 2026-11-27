@@ -117,7 +117,7 @@ HIDE = {}
 # stone face sits near 0.65 and the charcoal suit well under it (at full level the suit read as mid grey beside a
 # near-white face: AgX compresses the highlights)
 TRIMS = {
-    "wide": {"washer": 0.55, "glass rim return": 0.0, "side aisle chair tops": 0.0},
+    "wide": {"washer": 0.25, "glass rim return": 0.0, "side aisle chair tops": 0.0},
     # (the witness frame: the young figure behind him in darkness, not a lone half-lit face over his shoulder; the
     # fill under the key and the table downlight a little up, so the overhead light models his brow and cheeks)
     "witness": {"tv_key_light": 0.27, "tv_fill_light": 0.06, "dl_table_spot": 0.55, "dl_fig_-2.4_-2.4_spot": 0.15},
