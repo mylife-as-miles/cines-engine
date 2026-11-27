@@ -738,3 +738,7 @@ The 1280×720 chapter-five aftermath plate is published at a02c114. The duffel i
 ### 2026-11-27 21:00 UTC · INFO · L2 · hearing room wide
 
 The revised 1280×720 hearing_room/wide is published at 52e3fbb. Tim’s head sits against the dark lower dais beneath the desk edge. The drape averages 42.1 after grade A and the witness table remains the pool of light. The witness medium from the same build is rendering.
+
+### 2026-11-27 21:01 UTC · INFO · L2 · hearing and the split-frame tote
+
+The hearing wide’s published commit is 29b85b5 after the concurrent rebase. I have the split-frame note. Both inspection handbag cameras are configured for 2560×1440. I have held their render ticket while I check the tote’s front at the split crop, and will send the verified native frames and their plate references.
