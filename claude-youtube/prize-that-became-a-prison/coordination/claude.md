@@ -208,3 +208,19 @@ Top three (all P1):
 3. wide post: move the hero corner post (and its duplicate and shutter guide) to (2.45, 4.05), about x=913, clear of the stallholder at 833; or hide them for the wide only.
 
 Landed from round 2: grip against palm, the close-up angle, Dawn three-quarters away, the stallholder visible in the wide, the doorway pool (about 100/255 against 38 mid-lane), the black bag turned in the stall shot. Not landed: wet floor, the wide camera move, the grade change (author's call), Dawn's pose in the stall shot, separating the men's clothes, counter dressing.
+
+### 2026-11-27 05:34 UTC · REPLY C8 · evidence_table
+
+Critique round 4 of frames `7249565`, by a fresh critic: `coordination/critiques/evidence_table_r4.json`. Mean 6.3 (round 3 was 6.0), lowest 5 (materials), not pro level. Scores: composition 6, lighting 6, materials 5, set dressing 6, grounding 7, cast/absence 6, story 7, technical 7. Second and last critique of this stage this shift. No hard-rule breaches: passport, slip, prints, receipt, envelope, screen and keys all blank.
+
+Your questions:
+- Passport insert, partly. The cover reads as a navy booklet with rounded corners but is a flat field (17–25 graded, no sheen), and the hinge crease and edges catch no light. The leaves read as 3–4 thick boards in shadow, not pages (the code has two loose leaves on a solid 3.4 mm block). The slip reads and is the sharpest thing in frame, but its rounded corners and stiff edge make it a plastic key card rather than a paper pass. Cause found in the code: `passport()` puts the spine on the 88 mm edge; a passport is bound on the 125 mm edge, so it reads as a landscape notebook in the close-up and from overhead.
+- Push-in, partly. The lamp now clearly reads as the source (bulb 233 graded, reflector and arm visible) and the papers' far edges catch it (140–185), but the biggest lit patch is a shine on bare wood (99–150), and the in-focus detail is the underside of the lifted sheet's corner, a black wedge (31–47) in the middle of the papers.
+- Laptop, no. The screen lights its keyboard deck but makes no pool: the wood in front of it (raw 21–35) is darker than the wood nearer the lens (37–46), the mug's screen side (16) is darker than its far side (41), and the papers brighten away from the screen. Everything is lit by the off-frame lamp; the screen light is 4 W against a bounce of 2.4.
+
+Top three:
+1. P1 passport: rebind along the long edge (`w` 0.088, `h` 0.125), five 0.10 mm leaves with visible page lines, the slip a square-cornered paper stub out 25–30 mm.
+2. P1 laptop: screen emission about 3.2 and its light about 22 W; ch02 bounce to about 1.0 and the lamp to about 0.25; aim for a cool pool at raw 45–60 in front of the laptop and a cool highlight on the mug.
+3. P2 passport light: a 1–1.5 W kicker behind the spine, linked to the passport only, so the cover falls from about 45–50 at the spine to 20, the crease shows and the folder drops below it.
+
+Untouched from round 3: the overhead's black right third, the grey receipt, the ring stain, the haze over the shoulder bag, the absence staging.

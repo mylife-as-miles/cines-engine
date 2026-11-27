@@ -13,7 +13,7 @@
     "technical": 7
   },
   "pro_level": false,
-  "verdict": "Round 4 fixes the push lamp and part of the passport, and breaks no hard rule (the passport, slip, prints, receipt, screen and keys are all blank). The lamp now reads as a real practical: the bulb core grades 233 and the reflector and arm show. The passport is navy, with the focus on its fore-edge and a blank slip that reads; the overhead prints have three tones and the smear is gone. But the passport is bound along its 88 mm edge, its fore-edge reads as a few thick boards and its cover is the darkest, flattest thing in its own insert; the laptop screen lights its keyboard and nothing else; the push focuses on a black curl; and the round-3 overhead void, grey receipt, ring stain and absence notes are untouched, so the stage is still short of fern.",
+  "verdict": "Round 4 fixes the push lamp and part of the passport, and breaks no hard rule (the passport, slip, prints, receipt, screen and keys are all blank): the bulb core now grades 233 with the reflector and arm showing, the passport is navy with the focus on its fore-edge and a blank slip that reads, and the overhead prints have three tones with the smear gone. But the passport is bound along its 88 mm edge, its fore-edge reads as a few thick boards and its cover is the darkest, flattest thing in its own insert; the laptop screen lights its keyboard and nothing else; and the push focuses on a black curl. With the round-3 overhead void, grey receipt, ring stain and absence notes untouched, the stage is still short of fern.",
   "fixes": [
     {
       "priority": 1,
