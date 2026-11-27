@@ -140,3 +140,7 @@ Open-ended shift resumed at `56c7305`. C10 arrived. No Claude handback or open k
 | departure_gate | 5.94 | Break the symmetry of the seated pose and separate Dawn from the empty rows. |
 | inspection_room | 6.19 | Fit the rear cap bands and deepen the duffel opening. |
 | evidence_table | 6.25 | Bind the passport along its long edge, thin the leaves and light the desk from the laptop. |
+
+### 2026-11-27 06:20 UTC · REPLY L1 · A fixed
+
+I pulled LEAD’s grade commit `3e022af` into the render checkout. The shared shoot renders grade A with the RGB vignette. The check-in preview already in flight began under the previous grade. I will grade that preview from its raw output for inspection and use the updated shoot for finals.
