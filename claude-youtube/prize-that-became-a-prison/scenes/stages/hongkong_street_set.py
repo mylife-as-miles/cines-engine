@@ -879,7 +879,7 @@ def separated_sign(fr, side, a, near, far, low, high, kind):
     for left, right, bottom, top, area0, depth0, side0, kind0 in _BASE["sign_rectangles"]:
         overlap = max(0, min(x1, right)-max(x0, left)) * max(0, min(y1, top)-max(y0, bottom))
         gap = abs(depth-depth0)
-        if gap > 1.5 and overlap > 0.15 * min(size, area0):
+        if overlap > 0.15 * min(size, area0):
             return False
         if overlap and gap < 6 and side == side0 and "dead" in (kind, kind0) and kind != kind0:
             return False
@@ -963,6 +963,22 @@ def signs(G, fr, side, W, H, b):
         if kind == "box" and col2 is not None:
             field = pick([((0.12, 0.12, 0.88, 0.88), 3), ((0.0, 0.5, 1.0, 1.0), 2), ((0.08, 0.06, 0.92, 0.4), 2)])
         wn = 0.3 + max(0.0, b["setback"])         # clear of an overhanging upper facade
+        # At these bays the ledge in front of the sign would take a bite
+        # from the coloured face. Cantilever the short brackets past it.
+        extension = 0.0
+        if side > 0 and 26 < yw < 28:
+            extension = 0.80
+        elif side > 0 and 43 < yw < 44:
+            extension = 1.0
+        elif side < 0 and 32 < yw < 33:
+            extension = 1.5
+        wn += extension
+        if XF - wn - reach < RW:
+            zmin = max(zmin, 5.6)
+        if zb < zmin:
+            zt += zmin - zb
+            zb = zmin
+
         def in_title(length, base, top):
             return meets_wide_title([fr.p(a + da, w, z) for da in (-0.15, 0.15)
                                      for w in (wn, wn + length) for z in (base, top)])
@@ -978,7 +994,10 @@ def signs(G, fr, side, W, H, b):
             else:
                 lower = max(zmin, 8.25 if near_span and zt > 6.85 else zmin)
                 zb, zt = lower, lower + zt - zb
-        if not in_title(reach, zb, zt) and separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
+        # The two adjacent shop bays at the boutique share one projecting
+        # lightbox. A second panel hides all but two edges of the turquoise one.
+        shared_bay = side > 0 and 18.9 < yw < 19.1 and kind == "neon"
+        if not shared_bay and not in_title(reach, zb, zt) and separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
             sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
             if kind != "dead" and 0 < yw < 90 and zt < 20 and _BASE["sign_lights"] < 60:
                 power = 14 * reach * (zt-zb) * strength * (0.06 if kind == "neon" else 1)

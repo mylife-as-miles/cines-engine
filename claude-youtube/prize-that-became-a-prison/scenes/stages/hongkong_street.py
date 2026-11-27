@@ -863,7 +863,7 @@ def build(cast=True):
     # From across the road the lower shopfront throws a second, broader reflection
     # at her feet. Its light stays on the paving so her coat retains its shape.
     source = Vector((6.88, 15.55, 2.05))
-    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 800.0, (1.0, 0.70, 0.51),
+    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 280.0, (1.0, 0.70, 0.51),
                            Vector((5.56, 16.70, st.PZ)) - source, spread=90)
     paving_light.visible_glossy = False
     receivers = bpy.data.collections.new("Boutique pavement")

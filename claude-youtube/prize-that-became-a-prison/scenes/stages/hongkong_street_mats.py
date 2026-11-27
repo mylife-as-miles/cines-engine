@@ -331,6 +331,7 @@ def pavers(name="pavers wet"):
     r = _maprange(nt, _noise(nt, o, 4.0, 3.0, 0.6), 0.3, 0.7, 0.22, 0.4)
     r = _fmix(nt, damp, r, 0.25)
     r = _fmix(nt, wet, r, 0.18)
+    b.inputs["Specular IOR Level"].default_value = 0.25
     r = _fmix(nt, border.outputs["Factor"], r, 0.60)
     r = _fmix(nt, joint, r, 0.90)
     _link(nt, r, b.inputs["Roughness"])
