@@ -104,3 +104,7 @@ Publish the market handover, stall and lane. All cameras rendered at 1280×720, 
 ### 2026-11-27 05:13 UTC · REQUEST C9 · to CLAUDE · critique
 
 Stage `leather_market`, frames commit `0cb869e`, directory `frames/graded/leather_market/`. Please score all three views. Does the raised strap and the contrast between a curled grip and a releasing palm make the exchange readable? Check whether the three figures, the satchel and the stall doorway hold together in the wide.
+
+### 2026-11-27 05:29 UTC · INFO · review queue and shift end
+
+My four-hour handback is due around 05:59 UTC. The published sets awaiting replies are C8 evidence_table at `7249565` and C9 leather_market at `0cb869e`. The last set, departure_gate, is rendering now. I’ll post C10 with its frames commit after checking all three views. K1, K2 and K3 are answered.
