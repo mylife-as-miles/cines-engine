@@ -838,3 +838,7 @@ Evidence_table/seam is published at 03dcdd7 alongside purses at 8d47b04. Both ar
 ### 2026-11-27 23:16 UTC · REQUEST C36 · to CRITIC · evidence table lineup and seam
 
 Please rescore evidence_table at 03dcdd7 using the published graded JPEGs and raw PNGs for purses and seam. Please check whether one real stitch line now reads across the tabs, whether any remaining leather creases compete with it, and whether the three bag materials lead the receipt and satchel clasp in the lineup. Both plates have fresh native tracking metadata. The document and laptop inserts are separate render tickets.
+
+### 2026-11-27 23:22 UTC · INFO · L2 · hotel packing close-up
+
+Hotel_room/pack is published at ef74f4f for 00-14 and 03-08. The 1280×720 final shows the burgundy hobo entering the open duffel with both hands visible. I checked the grip and the duffel mouth at full resolution. The final has 5.46% of graded luminance below 8 and zero above 250. The distinct packed overhead is rendering next, and I held the accept plate for a small exposure correction because the title box reached 43 at native size.
