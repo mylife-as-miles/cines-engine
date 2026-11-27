@@ -1,0 +1,71 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q08B · THE TREATY HOUSE YARD · THE SPEAR AND THE DOOR (from the approved references)
+References: @Image 1 — environment: the yard of the Treaty House, the place and its light · @Image 2 — character sheet: MARL · @Image 3 — character sheet: the FARMER · @Image 4 — character sheet: KARST · @Image 5 — the child's wooden bowl
+Reference mode · 12 s · 2 shots · 2.35:1 · photoreal live action · spoken English: one speaker, two sentences, said once · no music
+
+## SCENE INTENT
+The yard of an old stone fort on the ground, full of refugees grey with rock dust. Serath, an officer of the kingdom in the sky, has just landed and is walking through them; she is never seen in these two shots. First: Marl, who lost her valley two days ago, is handing out spears. She puts one into the hand of a farmer who is alone. His free hand goes to the child's wooden bowl at his belt and stays there. Then both of them watch Serath pass. Second: at the fort's door waits Karst, once an engineer of that kingdom, now the man who speaks for the ground. He tells her, without heat, what the ground has done.
+
+## GLOBAL LOCKS
+Character identity — MARL exactly as @Image 2: a woman of thirty-four, dusty hair in one braid, armour beaten from white hull-plate, rust-stained. The FARMER exactly as @Image 3: a bearded man in a grey wool jacket; at his belt hangs the small wooden bowl of @Image 5. KARST exactly as @Image 4: a man of fifty-six, grey in his dark hair and short beard, a long pale stained engineer's coat with paler patches where its insignia were cut away, ink on his fingers. From the sheets take face, hair and clothes only. Each face, costume, voice and line stays with its one person.
+Wardrobe override — none: everyone exactly as in the images.
+Location / environment continuity — Both shots are in the yard of @Image 1, and lit exactly as @Image 1: packed grey dust and old flagstones, the massive dark fort with its buttresses and its one arched door, people of the ground sitting and standing along its wall among sacks and racks of spears, and overhead the dark rock underside of the kingdom and heavy grey cloud. Shot 1 is in front of the fort's sloping wall. Shot 2 is at the fort's arched door, its heavy door open inward and its inside deep shadow.
+Props and temporal state — One spear changes hands: a plain ash shaft with a dull iron head. The wooden bowl of @Image 5 hangs on a cord at the farmer's belt, on the hip nearer the camera. Karst's hands are empty and rest one over the other.
+
+## MOVIE COLOR
+The colour, light and dust of @Image 1, unchanged: cold grey and black, low and heavy under a dark roof, everything dulled by fine rock dust; Marl's white plate and Karst's pale coat are the palest things. Exposed for those; faces are lit softly from the left and fall off on the other side; a face is never the brightest thing in the frame. Blacks deep but never crushed. No cast shadows.
+Influences, each with its purpose — Denis Villeneuve, Dune and Blade Runner 2049: a figure waiting in a dark doorway, a frame within the frame; faces that watch and say nothing; silence before speech. James Cameron: a look answered by what it looks at, held off until the next shot.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain, shallow focus on faces. Both shots are locked off: the camera is planted and does not move.
+
+## VOICE DNA (immutable)
+KARST: The grammar of the court spoken with the vowels of the ground: an educated Received Pronunciation flattened toward a northern English plainness by nineteen years below. A man of fifty-six with a dry, tired baritone, a slight rasp, low energy. He is unhurried. His sentences end flat and falling. He is never angry. When something matters most he gets quieter, not louder.
+No one else speaks.
+
+## AUDIO DESIGN
+An open yard, dusty air. Low wind. Cloth. A spear's butt on packed dust. His voice, close and dry.
+
+## FIRST-FRAME ANCHOR
+None: both shots are composed in the yard of @Image 1.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–4.0 s
+[CAM] a two-shot from the hips up, 50 mm, chest height, shallow focus; behind them, out of focus, the fort's dark sloping wall and people of the ground grey with dust; dark stone fills the top of the frame, no sky; locked off.
+[BLOCK] Marl on the left, three-quarters toward the right; the farmer on the right, three-quarters toward the left, facing her, an arm's length apart. She holds one spear upright between them, her hand high on its shaft; his right hand is closing on it below hers. The wooden bowl hangs on its cord at his hip, inside the frame.
+[ACT] Both mouths are closed from the first frame to the last. From the first frame she pushes the spear into his hand and lets go of it; by 1.0 s he has its weight, and its butt comes down on the ground. Between 1.0 s and 2.0 s his free hand goes to the wooden bowl at his belt, closes over it and stays there. At 2.4 s both turn their faces toward us and look past the left side of the camera at someone off-screen, who is walking by behind it. Their eyes follow her a little way toward the right and stop short of the camera; neither looks into the lens. Their faces give nothing. Behind them the refugees shift their feet.
+[DIALOGUE] / V.O. none
+[SFX] the spear's butt on packed dust; cloth; low wind.
+[STATE OUT] The farmer holding the spear upright in one hand, his other hand on the bowl; both looking off to the left of the camera, mouths closed.
+
+### SHOT 2
+[TIME] 4.0–12.0 s
+[CAM] medium shot, 65 mm, at his eye height, frontal, from the hips up, shallow focus; he stands in the fort's arched doorway and the deep shadow of its inside fills the frame behind him; the dark stone of the doorway at the left and right edges; no sky; locked off.
+[BLOCK] Karst alone, in the middle of the frame, a pace inside the doorway, lit softly from the left by the grey day of the yard; the right side of his face falls away into the door's shadow. His hands rest one over the other in front of him, ink on his fingers.
+[ACT] He stands still, his hands one over the other. From the first frame his eyes rest just past the right side of the camera, on Serath, off-screen. From 4.0 s to 5.0 s he only looks at her, his mouth closed. At 5.0 s he breathes in, and says the first sentence plainly, as a fact, his head still. At 8.3 s he breathes out. Then he says the second sentence, more quietly, and it falls flat at its end. His mouth closes at 10.5 s. From 10.5 s to the last frame he stays exactly as he is, looking at her, his mouth closed.
+[DIALOGUE] / V.O. KARST (after the still second and his breath in; 5.3 to 8.2 s): "We did not attack your city, Admiral." — dry, level, unhurried; no anger. Then (after his breath out; 8.8 to 10.5 s): "We stopped carrying it." — quieter; flat and falling.
+[SFX] his voice, close and dry; his breath; low wind.
+[STATE OUT] Karst in the doorway, his eyes on her, his mouth closed.
+
+## PERFORMANCE ARC
+MARL: all business → watches her pass, as she would watch weather.
+THE FARMER: takes what he is given → his hand finds the bowl → watches her pass and does not look away.
+KARST: patient → states it → gets quieter where it matters.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+The cost has faces, and she does not know the look. What the ground has done is a refusal.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. The spear is heavy for him: its butt drops to the ground. Cloth hangs straight. Dust hangs in the air. Heads turn at a living pace, never snapping.
+
+## AUDIO LOCKS
+The two quoted sentences are spoken once, word for word, by Karst, in the order written, and nothing else is said by anyone. His mouth moves only while he speaks them. In shot 1 no mouth moves. Speech is unhurried. No narration. No music or singing.
+
+## CONTINUITY LOCKS
+[POSITIVE] the yard and its light exactly as @Image 1 in both shots · Karst alone in his shot · the bowl at the farmer's belt, his hand on it from 2.0 s · one spear · two shots, one hard cut at 4.0 s
+[NEGATIVE] a grey studio backdrop · sunlight, blue sky or warm light · a look into the lens · anyone smiling · Serath in either shot · a second speaker · the spear pointed at anyone · lamps, candles or flames · camera movement · text, captions or subtitles · slow motion
+
+## GENERATION PRIORITY ORDER
+1. Karst's two sentences, word for word, once, unhurried, his voice as written  2. Two shots at the times written, a hard cut at 4.0 s  3. The yard and its light exactly as @Image 1  4. Shot 1: the spear handed over, his hand to the bowl, both heads turning to watch  5. Character identity from the sheets  6. Sound: a dusty yard and his voice, no music
+
+## FINAL STATE
+Karst stands in the dark doorway, his hands one over the other, his eyes past the right side of the camera, his mouth closed.

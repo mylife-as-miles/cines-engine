@@ -1,0 +1,79 @@
+# AUTEUR VIDEO PROMPT
+## THE WEIGHT OF HEAVEN — Q08A · THE WALL · THE TREATY HOUSE YARD · HER OWN WEIGHT
+References: @Image 1 — first frame of shot 1: the valley from the top of the black wall, the last frame of the sequence before · @Image 2 — environment: the yard of the Treaty House, the place and its light · @Image 3 — the naval cutter · @Image 4 — character sheet: SERATH · @Image 5 — character sheet: her AIDE
+Reference mode · 11 s · 3 shots · 2.35:1 · photoreal live action · no speech · no music
+
+## SCENE INTENT
+This follows the sequence before directly. A white naval cutter from the kingdom that floats above the cloud has crossed the black plain. It passes along the top of the great black wall and sets down in the yard of an old stone fort. Serath, an officer of that kingdom, has never stood on the ground. She steps onto it and for the first time in her life feels her own weight: her knees give for a moment. Behind her, her aide falls outright. The people of the ground watch the sky people learn to stand. Nobody laughs. Then, close: the gold collar of her rank is heavy on her neck and pulls her head down, and she lifts her head against it.
+
+## GLOBAL LOCKS
+Character identity — SERATH exactly as @Image 4: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. Her AIDE exactly as @Image 5: a young officer in a white coat with a white satchel, white gloves. From the sheets take face, hair and clothes only. The people of the ground are grey with rock dust, in dark wool. Each face and costume stays with its one person.
+Wardrobe override — none: everyone exactly as their sheet.
+Location / environment continuity — Shot 1 is exactly @Image 1: a green valley of walled fields under a grey sky, stone farmhouses with smoking chimneys, and along the right of the frame the flat top of the black wall running away into the distance. Shots 2 and 3 are the yard of @Image 2, and lit exactly as @Image 2: packed grey dust and old flagstones, the massive dark fort with its buttresses, the thick outer wall with one plain gateway, and overhead the dark rock underside of the kingdom and heavy grey cloud. The cutter stands on the pale landing ground at the left of the yard, in front of the outer wall.
+Props and temporal state — The cutter exactly as @Image 3: a white wooden boat that flies, ten metres long, a small cabin forward with pointed windows, a slate roof and a stubby spire, brass rails, two dark iron landing skids under its keel, a short wooden gangway at its side. There is one cutter. In shot 1 it flies; in shots 2 and 3 it stands still on the ground on its skids. Serath's gloved hands are empty. The gold collar is heavy.
+
+## MOVIE COLOR
+Shot 1: the colour and light of @Image 1, unchanged: soft grey day, muted green. Shots 2 and 3: the colour and light of @Image 2, unchanged: cold grey and black, low and heavy under a dark roof, rock dust in the air. The cutter, Serath and the aide are the only white things, and the gold of her collar is the only colour. Exposed for the pale things; faces are lit softly from the side and fall off on the other; a face is never the brightest thing in the frame. Blacks deep but never crushed. No cast shadows.
+Influences, each with its purpose — Denis Villeneuve, Arrival and Dune: the one who does not belong, sharp and pale among dark still watchers; a body told by its weight; stillness. James Cameron: a thing felt for the first time is shown on the body before the face.
+Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Every shot is locked off: the camera is planted and does not move.
+
+## VOICE DNA (immutable)
+No one speaks.
+
+## AUDIO DESIGN
+Wind. A low hum passing. Boots on grit. Cloth. Hands and knees on dust. Breath.
+
+## FIRST-FRAME ANCHOR
+Shot 1 opens exactly on @Image 1, the same framing.
+
+## SHOT-BY-SHOT BREAKDOWN
+### SHOT 1
+[TIME] 0.0–2.5 s
+[CAM] exactly the framing of @Image 1; grey sky across the top of the frame; locked off.
+[BLOCK] Exactly @Image 1: the valley on the left and in the middle; the flat top of the black wall along the right, running away from us.
+[ACT] From the first frame the white cutter comes into the frame at the right edge, close to us, flying low and level over the top of the wall, away from us. At first it is a quarter of the frame wide; it goes steadily away along the wall, and by 2.5 s it is small and far. The smoke from the chimneys leans as it passes. Nothing else changes.
+[DIALOGUE] / V.O. none
+[SFX] wind; a low hum passing.
+[STATE OUT] The cutter small, far along the wall; the valley as it was.
+
+### SHOT 2
+[TIME] 2.5–8.0 s
+[CAM] medium-wide, 40 mm, one metre above the ground, from among the people of the ground, looking across the yard at the landing ground and the outer wall; the dark rock closes the top of the frame; locked off.
+[BLOCK] At the left and right edges of the frame, out of focus, the dark backs and shoulders of two people of the ground, watching; one holds an upright spear. Between them, sharp, fifteen metres away: the white cutter standing on its skids, seen from its side, its gangway down; behind it the outer wall and its gateway. Serath stands at the foot of the gangway, her whole figure, a third of the frame tall, facing us. The aide is behind her on the gangway, one hand on the rail.
+[ACT] At 2.5 s she steps off the gangway onto the ground and takes her whole weight. At 3.5 s her knees give for a moment: she dips half a head's height and her hands come a little way out from her sides, no higher than her waist. By 4.5 s she is standing upright again, her hands at her sides, and she stays so. At 5.0 s, behind her, the aide steps off the gangway; his legs fold at once and by 6.0 s he is down on his hands and knees in the dust, his back level, his head up off the ground. He stays there. She does not turn round. The watchers do not move at any time. Dust drifts.
+[DIALOGUE] / V.O. none
+[SFX] boots on grit; cloth; hands and knees on dust; wind.
+[STATE OUT] Serath upright and still; the aide on his hands and knees behind her; the watchers as they were.
+
+### SHOT 3
+[TIME] 8.0–11.0 s
+[CAM] close-up, 85 mm, at the height of her chin, a little from her left, shallow focus; behind her, far out of focus, the white side of the cutter and the dark outer wall; the dark rock closes the top of the frame; locked off.
+[BLOCK] Serath from the shoulders up, in the middle of the frame, the gold collar at her throat, her head bowed, her eyes lowered.
+[ACT] Her mouth is closed from the first frame to the last. Between 8.0 s and 9.3 s she lifts her chin level against the weight of the collar; the tendons of her neck stand. Her eyes come up and rest ahead, past the left side of the camera. From 9.3 s to the end she holds exactly that: her head level, her eyes steady on someone off-screen. At 10.2 s she blinks once, slowly.
+[DIALOGUE] / V.O. none
+[SFX] her breath; cloth; wind.
+[STATE OUT] Her head level, her eyes past the left side of the camera, her mouth closed.
+
+## PERFORMANCE ARC
+SERATH: steps down as she has stepped off a thousand decks → her body fails her for a second → she will not let it show → she holds her head up against the weight of her own rank, and looks at who is waiting for her.
+THE AIDE: follows her → falls.
+THE WATCHERS: still.
+
+## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
+Weight is real, and she has never felt it. The people who bear it all their lives watch her find out.
+
+## PHYSICS LOCKS
+Normal speed and real weight throughout. The cutter flies level and steady, with no sails, wings, engine, smoke or light. Bodies are heavy: knees that give drop fast and are caught; a man who falls goes down all at once. Cloth hangs straight. Dust drifts slowly.
+
+## AUDIO LOCKS
+No speech and no voice of any kind. No narration. No music or singing.
+
+## CONTINUITY LOCKS
+[POSITIVE] shot 1 exactly as @Image 1 · the yard and its light exactly as @Image 2 · the cutter exactly as @Image 3 · Serath exactly as @Image 4 · white gloves on her hands · the cutter still on the ground in shots 2 and 3 · three shots, a hard cut between each
+[NEGATIVE] a grey studio backdrop · sunlight, blue sky or warm light · anyone smiling, laughing, helping or bowing · Serath falling, kneeling, crouching low or putting a hand down · her arms raised or flung wide · the aide's head on the ground · a hand at her neck · camera movement · text or captions · slow motion
+
+## GENERATION PRIORITY ORDER
+1. Three separate shots, hard cuts, at the times written  2. Shot 2: her knees give for a moment and she stands; the aide falls to his hands and knees; the watchers do not move  3. The yard and its light exactly as @Image 2  4. Character identity from the sheets; the cutter from @Image 3  5. Shot 1 opens on @Image 1 and the cutter passes  6. Sound: natural sound only, no voice
+
+## FINAL STATE
+Serath in close-up, her head level against the weight of the gold collar, her eyes past the left side of the camera, her mouth closed.
