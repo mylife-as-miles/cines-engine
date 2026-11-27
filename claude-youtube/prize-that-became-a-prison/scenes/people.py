@@ -5,13 +5,15 @@
     p = people.dawn_prison()              # Dawn in detention / court / prison: plain grey casual suit
     a = people.officer("OfficerA", 0)     # officers: navy suit, black boots, the licence-clean peaked cap
     g = people.staff("Agent", 0)          # airline or hotel staff: dark suit, no cap
-    t = people.man("Tim", age=0.55)       # other men (Tim, Gene, the trip's organisers): muted casual suit
+    t = people.tim()                      # Tim at the hearing and on the 2026 prison visit
+    g = people.man("Gene", age=0.8)       # other men in muted casual suits
 
 Each returns the cast holder empty, built at the origin facing -Y, for rigged.pose_figure and then placing.
 Rules from the critiques: garments well below the stone skin's value (0.5) so they read as clothes, no shimmering pinstripe (garments are tinted flat: the colour is plain, the weave's relief
 stays), no sneakers (plain black shoes), no logos, and no two people alike (variants differ in height, build, age and
 suit tone).
 """
+import math
 import os
 import sys
 
@@ -304,3 +306,108 @@ def man(name, height_cm=178, age=0.5, weight=0.55, suit="male_casualsuit05", ton
         _elegant_suit_tones(h, tone, tone if shirt_tone is None else shirt_tone,
                            tone if tie_tone is None else tie_tone)
     return h
+
+
+def _tim_jaw(holder):
+    """Broaden the lower jaw and neck of the witness without shifting his eyelids or hairline."""
+    body = bpy.data.objects[holder["body"]]
+    rig = bpy.data.objects[holder["rig"]]
+    head = body.matrix_world.inverted() @ rig.matrix_world @ rig.data.bones["DEF-spine.006"].head_local
+    groups = {g.index for g in body.vertex_groups if g.name in ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006")}
+    if body.data.shape_keys is None:
+        body.shape_key_add(name="Basis")
+    shape = body.shape_key_add(name="Mature neck and jaw", from_mix=False)
+    count = 0
+    for v in body.data.vertices:
+        if not any(g.group in groups and g.weight > 0.18 for g in v.groups):
+            continue
+        dz = v.co.z - head.z
+        neck = max(0.0, 1 - ((dz + 0.045) / 0.07) ** 2) ** 2
+        jaw = max(0.0, 1 - ((dz - 0.032) / 0.045) ** 2) ** 2
+        if neck or jaw:
+            shape.data[v.index].co.x += (v.co.x - head.x) * max(0.12 * neck, 0.08 * jaw)
+            count += 1
+    shape.value = 1.0
+    print(f"CAST Tim jaw and neck profile: {count} vertices", flush=True)
+
+
+def _tim_hairline(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (62, 0.0)), volume=0.0065):
+    """A man of 55: the sculpted short hair's front hairline raised, further at the temples than in the middle (a
+    receding M), and the hair thinner over the skull (a close crop, not a cap). The shell's faces under the new line
+    are cut, the new edge snapped onto it and eased, and the volume weights (which taper the shell to nothing at its
+    edge) recomputed from the new edge. Mesh coordinates are the body's rest space (the head faces -Y)."""
+    hair = bpy.data.objects.get(f"{holder['body']}_hair")
+    if hair is None:
+        return
+    bm = bmesh.new()
+    bm.from_mesh(hair.data)
+    zs = [v.co.z for v in bm.verts]
+    ztop = max(zs)
+    crown = [v.co for v in bm.verts if v.co.z > ztop - 0.06]
+    cx = sum(c.x for c in crown) / len(crown)
+    cy = sum(c.y for c in crown) / len(crown)
+
+    def ang(co):
+        return abs(math.degrees(math.atan2(co.x - cx, -(co.y - cy))))
+    edge = sorted((ang(v.co), v.co.z) for v in bm.verts if v.is_boundary)
+
+    def old_line(d):
+        best = min(edge, key=lambda e: abs(e[0] - d))
+        near = [z for a_, z in edge if abs(a_ - best[0]) < 3.0]
+        return sum(near) / len(near)
+
+    def extra(d):
+        for (d0, z0), (d1, z1) in zip(lift, lift[1:]):
+            if d <= d1:
+                t = (d - d0) / (d1 - d0)
+                t = t * t * (3 - 2 * t)
+                return z0 + (z1 - z0) * t
+        return 0.0
+    base = {d: old_line(d) for d in range(0, 64, 2)}
+
+    def line(d):
+        d0 = min(62, int(d) // 2 * 2)
+        return base[d0] + extra(d)
+    kill = [f for f in bm.faces if ang(f.calc_center_median()) < 62 and f.calc_center_median().z < line(ang(f.calc_center_median()))]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
+    loose = [v for v in bm.verts if not v.link_faces]
+    bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    edge_v = [v for v in bm.verts if v.is_boundary]
+    for v in edge_v:
+        d = ang(v.co)
+        if d < 62:
+            v.co.z = max(v.co.z, line(d))
+    ring = {e.other_vert(v) for v in edge_v for e in v.link_edges} - set(edge_v)
+    bmesh.ops.smooth_vert(bm, verts=list(ring), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+    bm.verts.index_update()
+    bm.verts.ensure_lookup_table()
+    from mathutils.kdtree import KDTree
+    boundary = [v for v in bm.verts if v.is_boundary]
+    edge_tree = KDTree(len(boundary))
+    for v in boundary:
+        edge_tree.insert(v.co, v.index)
+    edge_tree.balance()
+    distances = {v.index: edge_tree.find(v.co)[2] for v in bm.verts}
+    bm.to_mesh(hair.data)
+    bm.free()
+    volume_group = hair.vertex_groups.get("volume")
+    clumps = hair.vertex_groups.new(name="hair_clumps")
+    for i, distance in distances.items():
+        t = min(1.0, distance / 0.025)
+        if volume_group is not None:
+            volume_group.add([i], t * t * (3 - 2 * t), "REPLACE")
+        clumps.add([i], max(0.0, min(1.0, (distance - 0.015) / 0.018)), "REPLACE")
+    md = hair.modifiers.get("volume")
+    if md is not None:
+        md.strength = volume
+    print(f"CAST Tim's hairline raised: {len(kill)} faces cut, front edge now {line(0):.3f} m "
+          f"(was {base[0]:.3f}), temples {line(32):.3f} (was {base[32]:.3f})", flush=True)
+
+
+def tim(*, shirt_tone=None, tie_tone=None):
+    """Tim in the 2024–26 testimony and visit. Both sets use the same build, jaw and receding hairline."""
+    holder = man("Tim", age=0.78, weight=0.7, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1),
+                 shirt_tone=shirt_tone, tie_tone=tie_tone)
+    _tim_jaw(holder)
+    _tim_hairline(holder)
+    return holder

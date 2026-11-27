@@ -633,7 +633,7 @@ def build_cast():
     holders = {}
     # Tim: on the visitors' side, facing the glass (+Y), leaning in; the handset in his right hand (his right is +X,
     # toward the phone on the booth's +X baffle), his left hand flat on the counter
-    t = people.man("Tim", age=0.78, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
+    t = people.tim()
     d = people.dawn_prison(uniform=True)
     matt_cloth(t, "male_elegantsuit01", folds=0.35)
     # Keep the shared grey of the long-sleeved shirt and trousers under the visiting booth lights.

@@ -14,8 +14,7 @@ readable in the dark.
 
     <bpy python> -I scenes/shoot.py -- hearing_room <cam> out.png [--nocast]
 
-The set is in hearing_room_set.py, its materials in hearing_room_mats.py. Tim is people.man('Tim', age=TIM_AGE,
-weight=TIM_WEIGHT, suit='male_elegantsuit01', tone=(0.09, 0.09, 0.1)) with a pale shirt and dark tie split out of the
+The set is in hearing_room_set.py, its materials in hearing_room_mats.py. Tim is the shared people.tim() with a pale shirt and dark tie split out of the
 suit's texture and a receding hairline, seated through Rigify (the seated solve is the departure gate's: legs to FK,
 thigh and shin solved so the seat rests on the cushion and the soles on the carpet); his arms are placed elbow first
 onto the table with the forearm twist that turns each palm down; the fingers are closed and curled joint by joint
@@ -44,12 +43,6 @@ EXPOSURE = -1.5
 
 EDGE = st.TABLE[1] - st.TD / 2         # the table's near edge (Tim's side)
 TORSO_GAP = 0.06                      # his jacket front this far from the table edge
-# Tim: MakeHuman's age macro is 0.5 = 25 years, 1.0 = 90 (linear between), so 55 years is 0.73 (at 0.55 he read as a
-# man of about 30). Head: chin up toward the dais and turned toward the camera side, so the eyeline passes a little
-# above and beside the witness lens; fingers curled 18 degrees (40 curled them into claws), thumbs 10.
-# At 0.73 / 0.6 the smooth stone still read as a man of 30 (a statue loses the skin's age): 0.78 (about 60 on the
-# macro) and a heavier 0.7 give the jaw, neck and middle of a man in his mid fifties, with the receding hairline.
-TIM_AGE, TIM_WEIGHT = 0.78, 0.7
 TIM_UPPER = {"head": (-8, -8), "neck": (2, 0), "chest": (12, 0), "fingers": 18}
 THUMB_CURL = 10.0
 ELBOW_FWD = 0.12          # the elbow hangs this far ahead of the shoulder (the upper arm nearly plumb)
@@ -702,29 +695,6 @@ def hand_relief(holder):
     print(f"HEARING knuckle relief: {len(offsets)} dorsal vertices", flush=True)
 
 
-def age_neck_and_jaw(holder):
-    """Broaden the lower jaw and neck of the witness without shifting his eyelids or hairline."""
-    body = bpy.data.objects[holder["body"]]
-    rig = rigged.rig_of(holder)
-    head = body.matrix_world.inverted() @ rig.matrix_world @ rig.data.bones["DEF-spine.006"].head_local
-    groups = {g.index for g in body.vertex_groups if g.name in ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006")}
-    if body.data.shape_keys is None:
-        body.shape_key_add(name="Basis")
-    shape = body.shape_key_add(name="Mature neck and jaw", from_mix=False)
-    count = 0
-    for v in body.data.vertices:
-        if not any(g.group in groups and g.weight > 0.18 for g in v.groups):
-            continue
-        dz = v.co.z - head.z
-        neck = max(0.0, 1 - ((dz + 0.045) / 0.07) ** 2) ** 2
-        jaw = max(0.0, 1 - ((dz - 0.032) / 0.045) ** 2) ** 2
-        if neck or jaw:
-            shape.data[v.index].co.x += (v.co.x - head.x) * max(0.12 * neck, 0.08 * jaw)
-            count += 1
-    shape.value = 1.0
-    print(f"HEARING jaw and neck profile: {count} vertices", flush=True)
-
-
 def soften_hair(holder):
     """The sculpted short hair read as a ribbed swim cap: a regular groove bump over a perfectly even shell. Break
     the shell with a slow clumpy displacement (inside the volume group, so the hairline stays tapered) and make the
@@ -766,87 +736,10 @@ def soften_hair(holder):
         b.inputs["Roughness"].default_value = 0.78
 
 
-def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (62, 0.0)), volume=0.0065):
-    """A man of 55: the sculpted short hair's front hairline raised, further at the temples than in the middle (a
-    receding M), and the hair thinner over the skull (a close crop, not a cap). The shell's faces under the new line
-    are cut, the new edge snapped onto it and eased, and the volume weights (which taper the shell to nothing at its
-    edge) recomputed from the new edge. Mesh coordinates are the body's rest space (the head faces -Y)."""
-    import bmesh
-    hair = bpy.data.objects.get(f"{holder['body']}_hair")
-    if hair is None:
-        return
-    bm = bmesh.new()
-    bm.from_mesh(hair.data)
-    zs = [v.co.z for v in bm.verts]
-    ztop = max(zs)
-    crown = [v.co for v in bm.verts if v.co.z > ztop - 0.06]
-    cx = sum(c.x for c in crown) / len(crown)
-    cy = sum(c.y for c in crown) / len(crown)
-
-    def ang(co):
-        return abs(math.degrees(math.atan2(co.x - cx, -(co.y - cy))))
-    edge = sorted((ang(v.co), v.co.z) for v in bm.verts if v.is_boundary)
-
-    def old_line(d):
-        best = min(edge, key=lambda e: abs(e[0] - d))
-        near = [z for a_, z in edge if abs(a_ - best[0]) < 3.0]
-        return sum(near) / len(near)
-
-    def extra(d):
-        for (d0, z0), (d1, z1) in zip(lift, lift[1:]):
-            if d <= d1:
-                t = (d - d0) / (d1 - d0)
-                t = t * t * (3 - 2 * t)
-                return z0 + (z1 - z0) * t
-        return 0.0
-    base = {d: old_line(d) for d in range(0, 64, 2)}
-
-    def line(d):
-        d0 = min(62, int(d) // 2 * 2)
-        return base[d0] + extra(d)
-    kill = [f for f in bm.faces if ang(f.calc_center_median()) < 62 and f.calc_center_median().z < line(ang(f.calc_center_median()))]
-    bmesh.ops.delete(bm, geom=kill, context="FACES")
-    loose = [v for v in bm.verts if not v.link_faces]
-    bmesh.ops.delete(bm, geom=loose, context="VERTS")
-    edge_v = [v for v in bm.verts if v.is_boundary]
-    for v in edge_v:
-        d = ang(v.co)
-        if d < 62:
-            v.co.z = max(v.co.z, line(d))
-    ring = {e.other_vert(v) for v in edge_v for e in v.link_edges} - set(edge_v)
-    bmesh.ops.smooth_vert(bm, verts=list(ring), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
-    bm.verts.index_update()
-    bm.verts.ensure_lookup_table()
-    from mathutils.kdtree import KDTree
-    boundary = [v for v in bm.verts if v.is_boundary]
-    edge_tree = KDTree(len(boundary))
-    for v in boundary:
-        edge_tree.insert(v.co, v.index)
-    edge_tree.balance()
-    distances = {v.index: edge_tree.find(v.co)[2] for v in bm.verts}
-    bm.to_mesh(hair.data)
-    bm.free()
-    volume_group = hair.vertex_groups.get("volume")
-    clumps = hair.vertex_groups.new(name="hair_clumps")
-    for i, distance in distances.items():
-        t = min(1.0, distance / 0.025)
-        if volume_group is not None:
-            volume_group.add([i], t * t * (3 - 2 * t), "REPLACE")
-        clumps.add([i], max(0.0, min(1.0, (distance - 0.015) / 0.018)), "REPLACE")
-    md = hair.modifiers.get("volume")
-    if md is not None:
-        md.strength = volume
-    print(f"HEARING Tim's hairline raised: {len(kill)} faces cut, front edge now {line(0) - base[0] + base[0]:.3f} m "
-          f"(was {base[0]:.3f}), temples {line(32):.3f} (was {base[32]:.3f})", flush=True)
-
-
 def tim():
     """Tim at the witness table: seated, then turned to face the dais, slid so his jacket front sits TORSO_GAP from
     the table edge; his chair set behind him; his arms laid on the table."""
-    h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1),
-                   shirt_tone=SHIRT, tie_tone=TIE)
-    age_neck_and_jaw(h)
-    recede_hair(h)
+    h = people.tim(shirt_tone=SHIRT, tie_tone=TIE)
     soften_hair(h)
     seat_figure(h, st.SEAT_Z, TIM_UPPER, 0.11, 0.11, tag="Tim")
     h.rotation_euler = (0, 0, math.radians(180.0))
