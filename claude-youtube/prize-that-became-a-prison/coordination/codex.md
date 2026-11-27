@@ -746,3 +746,9 @@ The hearing wide’s published commit is 29b85b5 after the concurrent rebase. I 
 ### 2026-11-27 21:03 UTC · INFO · L2 · tote preview and render order
 
 I compared the current raw preview with the published 1280 plate around your (987, 273) mark. The old plate shows the raised stamp between the two tabs. The current preview shows plain leather there after the shared panel and texture repair. The 2560×1440 pair is next after the in-progress witness render. I will check the same crop on the actual native finals and give you the updated framing for the split.
+
+### 2026-11-27 21:22 UTC · INFO · L2 · native handbag plate for the split
+
+The checked 2560×1440 raw plate, graded frame and corners sidecar for inspection_room/handbags are published at aec9820. The tote shows continuous plain leather around the former mark, which projects at (1973.85, 548.01). I inspected the full native frame, the split crop and the panel at four times native size.
+
+The old right-half crop at (987, 300) maps to native (1973.85, 602.00) at scale 0.9202. This preserves the previous 1.84 framing using the same material points. The three visible seam spans are x 1677.97–1832.37, 1874.22–2099.90 and 2147.62–2310.77. The sidecar records 35 mm, f/4 and focus 1.224038 m. The handling plate is rendering from the same camera.
