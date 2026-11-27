@@ -66,13 +66,10 @@ CAMERAS = {
 # (a key may also be the start of a lamp's name: the mast beside the wall camera is turned down for that frame, so
 # the pools further along the wall are the brighter ones)
 TRIMS = {"wall": {"mast_spot_0": 0.7, "mast_spill_0": 0.7}, "gate": {"yardglow": 0.52}, "tower": {}}
-# The rain per camera. cover: how much of the frame the streaks may cover in all; gain: how much light a drop
-# returns (low: a streak is bright only near a lamp and fades down the cone); wpx: a streak's width in pixels;
-# length: metres; clear: how transparent a streak is (0: opaque). Across a beam (wall) and into one (gate) the rain
-# is fine, faint and dense; under the tower, where the drops are a few metres from the lens, it is sparser and
-# brighter. The gate's streaks are 60 % clear, so they do not draw dark hairlines across the lit gate.
+# Cover sets the number of streaks. Gain and max_radiance set their backscatter
+# so the gate can hold fine rain without obscuring its surface.
 RAIN = {"wall": dict(cover=0.045, seed=3, gain=0.12, wpx=(0.30, 0.55), length=(0.25, 0.55)),
-        "gate": dict(cover=0.05, seed=5, gain=0.09, wpx=(0.30, 0.55), length=(0.18, 0.40)),
+        "gate": dict(cover=0.05, seed=5, gain=0.03, wpx=(0.30, 0.55), length=(0.18, 0.40), max_radiance=0.50),
         "tower": dict(cover=0.020, seed=8, gain=0.22, wpx=(0.30, 0.60), length=(0.23, 0.50))}
 FALL = (0.07, -0.035, -1.0)   # the rain's fall line: a light wind along the wall
 
@@ -110,7 +107,7 @@ def irradiance(P, skip=()):
 
 
 def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), e_min=0.8,
-              d_min=4.5, d_max=75.0, d_knee=11.0):
+              d_min=4.5, d_max=75.0, d_knee=11.0, max_radiance=1.5):
     """Streaks in this camera's view, only where light falls. Even per volume near the camera and thinning beyond
     `d_knee`; each as wide as about one pixel at its distance, so near and far rain read alike."""
     loc, f, r, u = camera_frame(cfg)
@@ -172,7 +169,7 @@ def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 
     me = bpy.data.meshes.new(name)
     me.from_pydata(V.tolist(), [], F.tolist())
     energy_attr = me.attributes.new("drop radiance", "FLOAT", "FACE")
-    radiance = np.minimum(1.5, gain * energy * 0.40)
+    radiance = np.minimum(max_radiance, gain * energy * 0.40)
     energy_attr.data.foreach_set("value", radiance.astype(np.float32))
     me.update()
     me.materials.append(mt.M["rain"])
