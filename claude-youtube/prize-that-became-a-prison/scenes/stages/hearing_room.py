@@ -90,7 +90,7 @@ CAMERAS = {
     # (a stop under the stage: the table downlight lands square on the papers and his sleeves from above)
     # (with the trims below and 0.45 under the stage: paper about 150 graded, the charcoal sleeve 30-45; a full stop
     # under left the paper at 110 and the frame muddy)
-    "hands": dict(loc=(st.TIM_X + 0.12, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
+    "hands": dict(loc=(st.TIM_X + 0.04, 0.05, 2.05), aim=(st.TIM_X + 0.02, -0.2, st.TOP), lens=50, focus="fx_hands",
                   fstop=4.0, beat="ch09", exposure=EXPOSURE - 0.45),
 }
 
@@ -108,8 +108,8 @@ def mic_place(base, at, scale=1.0):
 # not); his glass to his right, whole in the witness frame; the nameplate (facing the dais) moved to his left so the
 # witness frame does not cut it; the timer off to the empty place's side.
 TABLE_POS = {
-    "mic_tim": mic_place((st.TIM_X - 0.21, EDGE + 0.28), (st.TIM_X, EDGE - 0.06), 1.0),
-    "glass_tim": (st.TIM_X + 0.36, EDGE + 0.23, 0.6),
+    "mic_tim": mic_place((st.TIM_X - 0.12, EDGE + 0.30), (st.TIM_X - 0.02, EDGE - 0.10), 1.15),
+    "glass_tim": (st.TIM_X + 0.36, EDGE + 0.23, 0.86),
     "np_tim": (st.TIM_X - 0.3, st.TABLE[1] + st.TD / 2 - 0.07, 0.0),
     "timer": (st.TIM_X + 0.75, EDGE + 0.17, -8.0),
     "mic_empty": (st.EMPTY_X + 0.12, st.TABLE[1] + 0.17, 186.0, 0.95),
@@ -124,12 +124,12 @@ HIDE = {}
 # stone face sits near 0.65 and the charcoal suit well under it (at full level the suit read as mid grey beside a
 # near-white face: AgX compresses the highlights)
 TRIMS = {
-    "wide": {"washer": 0.55},
+    "wide": {"washer": 0.55, "glass rim return": 0.0, "side aisle chair tops": 0.0},
     # (the witness frame: the young figure behind him in darkness, not a lone half-lit face over his shoulder; the
     # fill under the key and the table downlight a little up, so the overhead light models his brow and cheeks)
     "witness": {"tv_key_light": 0.27, "tv_fill_light": 0.06, "dl_table_spot": 0.55, "dl_fig_-2.4_-2.4_spot": 0.15},
-    "dais": {"washer": 0.75},
-    "hands": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
+    "dais": {"washer": 0.75, "glass rim return": 0.0, "side aisle chair tops": 0.0},
+    "hands": {"side aisle chair tops": 0.0, "tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
 }
 
 if os.environ.get("HEARING_CAMS"):     # preview rounds: render a subset of the cameras with `--cam all`
@@ -387,7 +387,7 @@ L_CLEAR = 0.0025          # the left hand rests this far above the right hand's 
 # rotation bends the knuckle only, the finger stays straight, which read as stiff spread claws); the right hand lies
 # flat on the papers with the fingertips just down, the left drapes its fingers over the right hand's thumb side
 FINGERS = ("f_index", "f_middle", "f_ring", "f_pinky")
-CURL = {"R": (9.0, 16.0, 9.0), "L": (24.0, 36.0, 18.0)}
+CURL = {"R": (9.0, 16.0, 9.0), "L": (20.0, 31.0, 14.0)}
 SPREAD = (2.0, 2.5, 4.5)  # degrees between neighbours (index-middle, ring-middle, pinky-ring): fingers together
 
 
@@ -673,6 +673,35 @@ def hands_folded(holder):
     print("HEARING hands " + "; ".join(report), flush=True)
 
 
+def hand_relief(holder):
+    """Model the slight ridge over the four metacarpal heads on the backs of the folded hands."""
+    rig = rigged.rig_of(holder)
+    with fast_body(holder) as body:
+        shape = body.shape_key_add(name="Knuckle ridges", from_mix=False)
+        ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        mesh = ev.to_mesh()
+        normal_matrix = ev.matrix_world.to_3x3().inverted().transposed()
+        offsets = []
+        for side in ("L", "R"):
+            marks = [rig.matrix_world @ rig.pose.bones[f"DEF-{finger}.01.{side}"].head for finger in FINGERS]
+            for ix in _sel(body, ("DEF-hand", "DEF-palm", "DEF-f_"), "." + side):
+                v = mesh.vertices[int(ix)]
+                normal = (normal_matrix @ v.normal).normalized()
+                if normal.z < 0.35:
+                    continue
+                pt = ev.matrix_world @ v.co
+                distance = min((pt - mark).length for mark in marks)
+                if distance < 0.018:
+                    relief = (1 - (distance / 0.018) ** 2) ** 2 * 0.0011 * normal.z
+                    offsets.append((int(ix), relief))
+        ev.to_mesh_clear()
+        for ix, lift in offsets:
+            normal = body.data.vertices[ix].normal
+            shape.data[ix].co += normal * (lift / max(1e-6, (body.matrix_world.to_3x3() @ normal).length))
+        shape.value = 1.0
+    print(f"HEARING knuckle relief: {len(offsets)} dorsal vertices", flush=True)
+
+
 def age_neck_and_jaw(holder):
     """Broaden the lower jaw and neck of the witness without shifting his eyelids or hairline."""
     body = bpy.data.objects[holder["body"]]
@@ -841,6 +870,7 @@ def tim():
           f"(apron {st.TOP - 0.09:.3f}), lowest {lo * 1000:+.1f} mm", flush=True)
     chair = st.witness_chair("tim_chair", st.TIM_X, rear - 0.012)
     hands_folded(h)
+    hand_relief(h)
     return h, chair
 
 
@@ -989,6 +1019,12 @@ def lights():
     bar in front of the witness, two on the bar behind him toward the dais), the cans over the tiers, the light
     hidden under the tiers' caps, a can on each still figure in the public rows and a few dim cans over the rows,
     one over the press table; the washer on the drape, the sconces and the doors are built with their fittings."""
+    gx, gy, _ = TABLE_POS["glass_tim"]
+    st.point("glass rim return", (gx - 0.09, gy - 0.12, st.TOP + 0.21), 0.40, st.COOL, radius=0.01)
+    graze_at = (st.TIM_X - 2, -3.0, 2.6)
+    aisle = st.area("side aisle chair tops", graze_at, (1.6, 0.20), 32, st.COOL, spread=60,
+                    rot=st.aim_rot(graze_at, (st.TIM_X, -3.7, 0.62)))
+    aisle.visible_glossy = False
     xs, ys = st.coffer_centres()
     # the island: two cans in the coffer over the table, both aimed at Tim's place
     st.downlight("dl_table", st.TIM_X + 0.25, 0.0, 450.0, target=(st.TIM_X + 0.05, -0.15, st.TOP), size_deg=30,

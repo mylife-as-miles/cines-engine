@@ -499,6 +499,18 @@ def dais_props(places):
         if mic is None:
             mic = props.load("microphone", size=0.42, axis="z", loc=(mp.x, mp.y, p["zd"]), turn_deg=tm, sat=0.45,
                              rough_add=0.1)
+            # The mesh is one welded component. The bright patch is in its colour map.
+            for material in {slot.material for ob in mic.children_recursive if ob.type == "MESH"
+                             for slot in ob.material_slots if slot.material}:
+                tree = material.node_tree
+                bsdf = next(node for node in tree.nodes if node.type == "BSDF_PRINCIPLED")
+                colour = bsdf.inputs["Base Color"]
+                if colour.is_linked:
+                    cap = tree.nodes.new("ShaderNodeVectorMath")
+                    cap.operation = "MINIMUM"
+                    tree.links.new(colour.links[0].from_socket, cap.inputs[0])
+                    cap.inputs[1].default_value = (0.065, 0.070, 0.074)
+                    tree.links.new(cap.outputs["Vector"], colour)
         else:      # not all alike: a little taller or shorter, turned a little differently
             instance(mic, f"dais_mic{k}", (mp.x, mp.y, p["zd"]), tm + ((k * 7) % 5 - 2) * 5.0,
                      scale=1.0 + ((k * 5) % 3 - 1) * 0.07)
@@ -579,12 +591,16 @@ def tumbler(name, x, y, fill, z=TOP):
     r_top, r_bot, h = 0.036, 0.03, 0.105
     prof = [(0.0, 0.0), (r_bot - 0.002, 0.0), (r_bot, 0.002), (r_top, h), (r_top - 0.0025, h), (r_bot - 0.0025, 0.012),
             (0.0, 0.012)]
-    g = lathe(name, prof, (x, y, z), m["glass"])
+    g = lathe(name, prof, (x, y, z), m["glass"], segs=112)
     if fill > 0:
         zf = 0.012 + (h - 0.012) * fill
         rw = r_bot - 0.0026 + (r_top - r_bot) * (zf / h)
-        wp = [(0.0, 0.0121), (r_bot - 0.0026, 0.0121), (rw, zf), (0.0, zf)]
-        lathe(name + "_water", wp, (x, y, z), m["water"])
+        wp = [(0.0, 0.0121), (r_bot - 0.0026, 0.0121), (rw, zf + 0.0007),
+              (rw - 0.0009, zf), (rw - 0.002, zf - 0.0001), (0.0, zf - 0.0001)]
+        water = lathe(name + "_water", wp, (x, y, z), m["water"], segs=112)
+        for face in water.data.polygons:
+            if abs(face.normal.z) > 0.999:
+                face.use_smooth = False
     return g
 
 
@@ -730,7 +746,9 @@ def table_dressing(mic_src, pos=None):
     nameplate("np_empty", *p["np_empty"])
     carafe("witness_carafe", EMPTY_X + 0.38, TABLE[1] + 0.12, TOP)
     timer_box(*p["timer"])
-    tumbler("glass_tim", *p["glass_tim"])
+    gx, gy, fill = p["glass_tim"]
+    sk.cyl("witness coaster", 0.045, 0.001, (gx, gy, TOP + 0.0005), materials()["paper"], verts=96)
+    tumbler("glass_tim", gx, gy, fill, z=TOP + 0.001)
     tumbler("glass_empty", *p["glass_empty"])
     # microphones (head toward +Y in the file: turned to point back at the witness)
     x, y, t, s = p["mic_tim"]
