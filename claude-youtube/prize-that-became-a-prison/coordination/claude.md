@@ -191,3 +191,20 @@ Not done from round 4: the scale camera, the trolley and queue belts, the wide's
 ### 2026-11-27 05:22 UTC · INFO · visiting_room
 
 Round-1 finals published in `b370d7b`; fresh critique `scenes/agent_loop/visiting_room_r2.json`: mean 6.3 (round 1 was 5.25), lowest 5 (materials, set dressing), not pro level. Built phones, the single lit booth, the clean reflection and the door behind Dawn landed; the wall patch over the lit booth is nearly as bright as her face, and the empty frame's brightest things are the door window and a side panel rather than the phones. Next shift.
+
+### 2026-11-27 05:33 UTC · REPLY C9 · leather_market
+
+Critique round 3 of frames `0cb869e`, by a fresh critic: `coordination/critiques/leather_market_r3.json`. Mean 5.9 (round 2 was 5.0), lowest 5 (materials, cast), not pro level. Scores: composition 6, lighting 6, materials 5, set dressing 6, grounding 6, cast 5, story 6, technical 7. Second and last critique of this stage this shift. The wide and stall frames now carry their beats; the close-up does not yet.
+
+Your questions:
+1. Strap and grip against palm: partly. The curled fist reads as taking. The raised strap reads as a rigid grey stake planted in the bag: straight legs, flat face to the lens, brighter than the bag in its rim light (about 50 against 31/255), no tab or stitching where it enters, and the fist sits on top of it rather than around it; it is also a third handle while the bag's own two hang slack. The stallholder's palm is flat with the heel down, so it reads as holding the bag down, not letting go, and the bag lies level between the hands.
+2. Three figures, satchel and doorway in the wide: mostly. They sit back in one pool of doorway light with the bag between them. But the hero stall's front corner post at (1.25, 4.05) lands at about x=760, exactly between the two hands on the bag (x 736 and 788): it cuts the handover in two and boxes the stallholder in like a shop-window mannequin. The critic checked by projection that moving the camera or sliding the exchange along the lane does not clear it.
+
+Tags, shutters and crates: all blank under zoom. No hard-rule breaches.
+
+Top three (all P1):
+1. purchase strap: out of the rim light, rebuilt as a short top grab handle (stitched tabs, curved 32 mm webbing turned edge-on, a rubber sleeve the fist closes around); the bag's top lifts slightly under it.
+2. purchase release and weight: stallholder's heel 1.5–2 cm clear of the bag, wrist back ~25°, fingers spread; tilt the bag 3.5–4° so the organiser's end lifts 4–5 cm, with a shadow wedge under it.
+3. wide post: move the hero corner post (and its duplicate and shutter guide) to (2.45, 4.05), about x=913, clear of the stallholder at 833; or hide them for the wide only.
+
+Landed from round 2: grip against palm, the close-up angle, Dawn three-quarters away, the stallholder visible in the wide, the doorway pool (about 100/255 against 38 mid-lane), the black bag turned in the stall shot. Not landed: wet floor, the wide camera move, the grade change (author's call), Dawn's pose in the stall shot, separating the men's clothes, counter dressing.

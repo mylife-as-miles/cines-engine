@@ -1,0 +1,67 @@
+{
+  "stage": "evidence_table",
+  "round": 4,
+  "commit": "7249565",
+  "scores": {
+    "composition": 6,
+    "lighting": 6,
+    "materials": 5,
+    "set_dressing": 6,
+    "grounding_scale": 7,
+    "cast": 6,
+    "story_read": 7,
+    "technical": 7
+  },
+  "pro_level": false,
+  "verdict": "Round 4 fixes the push lamp and part of the passport, and breaks no hard rule (the passport, slip, prints, receipt, screen and keys are all blank). The lamp now reads as a real practical: the bulb core grades 233 and the reflector and arm show. The passport is navy, with the focus on its fore-edge and a blank slip that reads; the overhead prints have three tones and the smear is gone. But the passport is bound along its 88 mm edge, its fore-edge reads as a few thick boards and its cover is the darkest, flattest thing in its own insert; the laptop screen lights its keyboard and nothing else; the push focuses on a black curl; and the round-3 overhead void, grey receipt, ring stain and absence notes are untouched, so the stage is still short of fern.",
+  "fixes": [
+    {
+      "priority": 1,
+      "camera": "passport",
+      "problem": "The cover is now navy (graded about 18-24, 22-24, 30-32) with rounded corners, the sharp plane is the fore-edge corner, and the blank slip reads. But the booklet is bound on the wrong edge. passport() puts the spine at -x with w = 0.125, so the spine runs along h = 88 mm and the fore-edge is the short side. Every real passport is a portrait booklet bound along its 125 mm edge. This one reads as a landscape notebook, and from overhead the slip pokes out of its short end. The fore-edge shows 3-4 strata of equal weight in shadow at 11-21/255: the front board, two 0.14 mm loose leaves, a solid 3.4 mm block and the back board. They read as a stack of boards, not about 30 thin pages. The long near edge is one smooth cream band (p95 130) with no visible leaves, so the two page edges disagree. The slip has 1.2 mm rounded corners, a crisp bright edge and no bend, so it reads as a plastic key card more than a paper pass.",
+      "fix": "In evidence_table_paper.passport(), swap the dimensions so the spine runs along the long edge: w = 0.088 (spine to fore-edge), h = 0.125 (spine length), T stays 5.2 mm. Re-turn the passport in spread() (turn -38) about 90 degrees, so the fore-edge corner still faces the passport camera, and re-check that it stays clear of pass_2's stub. Replace the two loose leaves with five, at fractions (0.12, 0.25, 0.40, 0.55, 0.70) of open_deg, each 0.10 mm thick and each inset 0.3 mm more than the one above. Lower open_deg from 5.3 to about 4, so the fore-edge shows a fine fan of pages. In page_block(), make the leaves visible at this distance: replace the 3800-scale noise with a Wave texture banded along Z at about 2500 per metre, mapped to 0.62-0.82 of the cream, so about 9 lines show across the 3.4 mm on both page edges. Make the slip a paper boarding stub: 0.075 x 0.042 m, corner radius 0.0004, the boarding_card material instead of endpaper, positioned so 25-30 mm sticks out of the fore-edge. Bend the protruding part down 3-4 degrees so its tip rests on the folder."
+    },
+    {
+      "priority": 1,
+      "camera": "laptop",
+      "problem": "The laptop does not cast a credible pool. The screen is still a flat card: raw 158-161 from top to bottom, graded 138-154. It is set to strength 1.5 at COOL, and its 4 W laptop_screen_light is swamped by BOUNCE['ch02'] 2.4 and the lamp at 0.5. The wood just in front of the laptop reads raw 21-35, darker than the wood 40 cm nearer the lens (37-46). The left paper, nearer the lens, is brighter (raw 120-132) than its right end, nearer the screen (105-113). The mug's screen-facing side is raw 16 against 41 on its far side. Every cue says the light comes from the off-frame lamp on the left. Only the keyboard deck (raw about 105) shows spill.",
+      "fix": "Raise the screen material's strength from 1.5 to about 3.2, so the panel reads raw 215-230, with a 6-8% fall from top to bottom. Raise laptop_screen_light from 4 W to about 22 W and spread_deg from 125 to 150. Drop BOUNCE['ch02'] from 2.4 to about 1.0 and LAMP_LEVEL['ch02'] from 0.5 to about 0.25. Turn the ch02 lamp mark so what is left of its pool falls on the stack, not on the passes. Targets: the wood 5-25 cm in front of the laptop at raw 45-60, cool after the grade, falling to 15-20 at the bottom of the frame. The passport and passes should be brightest at the edge nearest the screen. The mug's laptop-facing side should carry a cool vertical highlight at raw 50-70. Keep the dark contact shadow under the laptop's front edge (raw 2-6 now, which is right)."
+    },
+    {
+      "priority": 2,
+      "camera": "passport",
+      "problem": "The hero is the darkest, flattest thing in the frame. The cover reads 17-25/255 with std about 2 and no sheen. The hinge crease (0.55 mm deep, 7 mm from the spine) and the board bevels catch nothing. The brightest areas are the bare folder at bottom left (graded 62-80) and the page-edge band. Cheating the lamp to the front left stops the cover greying, but it also leaves no light on the cover at all.",
+      "fix": "Add a small warm kicker for this camera only. Use an area light of about 0.10 x 0.05 m at 1-1.5 W, about 25 cm behind the passport's spine and 10-12 cm above the table. Light-link it to passport_front and passport_back only, and aim it so its specular lies across the far third of the cover. Targets: the cover grades from about 45-50/255 near the spine, where the crease reads as a lit line, to about 20 at the near edge, with the pebble grain breaking up the sheen. Raise passport_net's level from 0.86 to about 0.92, or extend its ramp under the folder's lower left. That should bring the folder's bottom-left corner down to about 40-45 graded, so the page edges and the slip are the brightest things in frame."
+    },
+    {
+      "priority": 2,
+      "camera": "push",
+      "problem": "The lamp now reads as the source: bulb core 233 graded, reflector 140-200, arm 35 against a 2/255 wall, with the head inside the frame. But the paperwork does not read as what it lights. fx_push sits on sheet_a's 30 mm lifted corner, and from this low angle the camera sees its underside, with the lamp behind it. That makes a 31-47/255 black triangle in the middle of the papers, while the lit paper beside it reads 140-185. The largest lit area in the lower half is the lamp's specular streak on bare wood (99-150 graded), not a document. The three prints on the right are still black faces (about 7/255) outlined by lit edges, the wireframe look of round 2. The far wall is 2/255, so the void has no depth.",
+      "fix": "Lower sheet_a's lift (corners=(0.0, 0.030, 0.0, 0.0) in spread()) to about 0.014. Raise translucency on the 'paper' material from 0.08 to about 0.25, warm tinted, so the backlit underside of the curl grades about 90-120, as real 80 gsm paper does. Alternatively, move the lift to the corner away from the camera, so the camera sees its lit top. Move fx_push about 4 cm back onto the sheet's lit far edge, so the sharp plane is bright paper. In the push, raise the prints' image_rgb so their faces grade at least 25-35. Drop the photo border paper_rgb from 0.74 to about 0.5, so each print reads as a plane, not an outline. Lift the wall plaster behind the lamp to 4-8/255 in a soft gradient around the head."
+    },
+    {
+      "priority": 2,
+      "camera": "overhead",
+      "problem": "Carried over from round 3. The far wood is raw 12.8 but grades to 1.9/255 (BOUNCE['spread'] is still 2.0), and the wood beyond the lamp grades to 0.3. Half the frame is below 8/255, so the right third reads as a void, not falloff. The passport here is a neutral slate tile (graded 71, 75, 83): the coat picks up the lamp's sheen at this angle, so it is not navy. With the slip sticking out of its short end, it reads as a phone. The receipt is still a uniform grey slab (graded 34) with a rounded end, a brick rather than thermal paper.",
+      "fix": "Raise BOUNCE['spread'] to about 4.0, or add a weak warm 1.2 x 0.6 m panel over the table's right half, light-linked to the table only, until the far wood reads raw 20-24 (about 8-12 graded) with its grain visible. Keep the pool's sheets at 190 raw or below. On passport_cover, lower Coat Weight from 0.2 to about 0.08 and the base roughness from 0.6 to about 0.7, so the cover stays navy beside the lamp (target graded hue about 220, blue at least 1.3x red); the close-up's sheen then comes from the passport kicker above. Move the receipt from x 0.60 to about 0.52, into the edge of the pool, so the strip and roll read as white paper at 70-90 graded with a soft shadow."
+    },
+    {
+      "priority": 3,
+      "camera": "laptop",
+      "problem": "Unchanged from round 3. The case stack is still cut by the left frame edge, and the mug's handle faces away, so it reads as a plain tumbler. The lamp the beat names is out of frame, so the warm rake across the stack's top has no visible source.",
+      "fix": "Pan the laptop camera about 4 degrees right (aim x 0.22 to about 0.26), or move the stack about +0.06 m in x for ch02, so the stack's end has a margin of 5% or more. Turn the mug about 150 degrees so its handle shows in three-quarter view on the screen side, where it will catch the screen's cool spill. If the lamp stays out of frame, let the edge of its shade enter at frame left, unlit on the outside, so the stack's light has a source."
+    },
+    {
+      "priority": 3,
+      "camera": "purses",
+      "problem": "The ring stain on the front plank (about x 550-650, y 595-625) still reads as a dark, scratch-like crescent, as in rounds 2 and 3. The shoulder bag sits in a lit haze bank (raw 60-76 at the left edge of the frame), so it reads through fog while the satchel and tote are crisp. The tote is still raw (114, 54, 5) at saturation 0.96. It now grades to an acceptable camel (65, 47, 27), but its shadows sit on the edge of clipping the blue channel.",
+      "fix": "For ch04, drop the ring at (-0.22, -0.235) from worn_wood's rings, or halve its darkness and soften its edge to about 3 mm, so it reads as a faint full ring rather than an arc. For the purses camera, halve the global haze density (0.013 to about 0.006), or pull the haze box's -x face in so the lamp's beam does not light the air in front of the lens. Target: haze at the left edge of the frame at raw 30 or below, with the burgundy bag's folds readable. In BAG_GRADE for handbag-tote, take sat from 1.15 to about 1.0 and hue from 0.508 to about 0.50 (target raw about 120, 60, 22)."
+    },
+    {
+      "priority": 4,
+      "camera": "all",
+      "problem": "The absence is acceptable but not staged: a mug, a pen, an uncapped highlighter, and black around every frame. None of the round-3 suggestions landed. In the overhead, two board end-joints line up exactly at x = 760 (raw 13 to 8 at the top, 44 to 40 at the bottom), which reads as a seam. The lamp's elbow ends in the dark at x about 75.",
+      "fix": "Add folded reading glasses beside the letter in the overhead. Add the top rail of a chair back pushed away from the table, at near left in the laptop frame, with lamp spill along it (graded 20-30). Stagger the board end-joints in worn_wood by at least 0.25 m between neighbouring boards. Give the lamp arm's elbow joint a small satin-metal highlight from the room_bounce, so the arm's end reads as a joint, not a cut-off."
+    }
+  ]
+}
