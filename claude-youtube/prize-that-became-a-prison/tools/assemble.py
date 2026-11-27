@@ -101,7 +101,9 @@ def norm(w):
 # ------------------------------------------------------------------------------------------------ timing
 
 def measured_lines():
-    """[(text, seconds)] from the scratch narration, if it exists; durations from the file's fields or its audio."""
+    """[(text, seconds, segment id or None)] from the scratch narration, if it exists; durations from the file's
+    fields or its audio. A line that names its chapter and its paragraph number (as the voice session's files do,
+    00_01.wav = segment 00.01) is matched to that segment directly when the words agree."""
     if not LINES.exists():
         return None
     d = json.load(open(LINES))
@@ -109,6 +111,14 @@ def measured_lines():
     out = []
     for L in lines:
         text, dur = L.get("text", ""), None
+        sid = None
+        if "chapter" in L and "index" in L:
+            try:
+                sid = f"{int(str(L['chapter'])[:2]):02d}.{int(L['index']):02d}"
+            except ValueError:
+                sid = None
+        elif isinstance(L.get("id"), str) and re.fullmatch(r"\d\d[._]\d\d", L["id"]):
+            sid = L["id"].replace("_", ".")
         for k in ("duration_s", "duration", "dur_s", "dur", "seconds", "length_s", "len_s"):
             if k in L:
                 dur = float(L[k]); break
@@ -122,16 +132,21 @@ def measured_lines():
                         dur = float(run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f]).strip())
                     break
         if text and dur:
-            out.append((text, dur))
+            out.append((text, dur, sid))
     return out or None
 
 
 def align_measured(segs, lines):
-    """Give each voice segment the measured time of its words: every line's duration is spread over its words by
-    their length, and the segments' words are found in that stream in order. Returns {seg id: seconds} for the
-    segments found."""
+    """Give each voice segment the measured time of its words. Lines that name their segment, with the same words,
+    are taken directly; otherwise every line's duration is spread over its words by their length, and the segments'
+    words are found in that stream in order. Returns {seg id: seconds} for the segments found."""
+    byid = {s["id"]: s for s in segs}
+    direct = {sid: dur for text, dur, sid in lines
+              if sid in byid and [norm(w) for w in text.split() if norm(w)] == [norm(w) for w in byid[sid]["text"].split() if norm(w)]}
+    if len(direct) == len([1 for _, _, sid in lines if sid]) and direct:
+        return direct
     stream = []
-    for text, dur in lines:
+    for text, dur, _ in lines:
         ws = [norm(w) for w in text.split() if norm(w)]
         tot = sum(len(w) + 1 for w in ws) or 1
         stream += [(w, dur * (len(w) + 1) / tot) for w in ws]
@@ -306,6 +321,9 @@ def time_cmd(args):
             if "max" in s and dur > s["max"] + 1e-6:
                 warnings.append(f"{s['id']}: {dur:.2f} s is longer than the {s['max']} s the piece allows from in={src['in']}")
             src["note_piece"] = pc.get("about", "")
+            plan, cmd = plan_command(src)
+            src["clip"] = str(plan["path"].relative_to(ROOT))
+            src["command"] = cmd
         s["_src"] = src
         e["source"] = src
         # the voice it covers
@@ -367,12 +385,6 @@ def piece_cmd(gen, out, secs):
     raise ValueError(t)
 
 
-def describe_cmd(src):
-    g = dict(src["gen"]); n = src["frames"]; secs = src["in"] + n / FPS
-    if g["tool"] == "doc":
-        g["_json"] = g.get("shot", "") + (" (with the marks and length above)" if src.get("override") else "")
-    c = piece_cmd(g, "<out>.mp4", secs)
-    return " ".join(str(x) if " " not in str(x) else f'"{x}"' for x in c).replace(PY, "<gfx python>")
 
 
 # ------------------------------------------------------------------------------------------------ EDL.md and SRT
@@ -425,8 +437,10 @@ def write_md(edl, cut):
         L.append("")
     L += ["## Substitutions (a camera the script names that has no plate yet, or a stand-in)", ""] + subs + [""]
     L += ["## Rows changed, added or cut, and why", ""] + changes + [f"- {c}" for c in cut.get("changes", [])] + [""]
-    L += ["## Graphics commands", "", "Each graphics shot's piece, with the exact command that renders it at the length the shot needs "
-          "(`tools/assemble.py render` reuses reel 7's clip in `out/gfx/r7/` when it is long enough and unchanged).", ""]
+    L += ["## Graphics commands", "", "Each graphics shot's clip and the exact command that made it (run from the project folder; "
+          "NODE_PATH=$(npm root -g) for node). Reel 7's clips in `out/gfx/r7/` are reused when unchanged and long enough "
+          "(the command shown is then reel 7's own, at its own length); otherwise `tools/assemble.py render` re-renders the "
+          "piece with the same tool at the length the shot needs, into `out/film/pieces/`.", ""]
     for s in edl["shots"]:
         if s["source"]["kind"] == "piece":
             src = s["source"]
@@ -434,8 +448,7 @@ def write_md(edl, cut):
             if src.get("override"):
                 ov = {k: v for k, v in src["gen"].items() if k in ("marks", "cut", "length", "duration", "focus")}
                 extra = f" Shot-specific: `{json.dumps(ov, ensure_ascii=False)}`."
-            L.append(f"- {s['id']}: `{describe_cmd(src)}`, trimmed from {src['in']:.3f} s for {src['frames']} frames"
-                     + (f" (reel 7 file `{src['file']}`)" if src.get("file") else "") + "." + extra)
+            L.append(f"- {s['id']}: `{src['clip']}` from {src['in']:.3f} s, {src['frames']} frames. Made by `{src['command']}`." + extra)
     EDL_MD.write_text("\n".join(L) + "\n")
 
 
@@ -490,18 +503,25 @@ def write_srt(segs):
 
 def shot_hash(e):
     keep = {"source": e["source"], "frames": e["frames"], "v": RENDER_VERSION}
-    keep["source"] = {k: v for k, v in e["source"].items() if k not in ("note_piece",)}
+    keep["source"] = {k: v for k, v in e["source"].items() if k not in ("note_piece", "command", "clip")}
     return hashlib.sha1(json.dumps(keep, sort_keys=True).encode()).hexdigest()[:16]
 
 
-def ensure_piece(src, work):
-    """A clip of the piece holding at least in + frames, reusing reel 7's file when it is long enough."""
+_FRAMES = {}
+
+
+def piece_plan(src):
+    """Where a graphics shot's clip comes from: reel 7's file when it is unchanged and long enough (its own length),
+    else a render of the same tool at the length the shot needs. Returns {path, reuse, secs, gen, json}."""
     need = int(round(src["in"] * FPS)) + src["frames"]
     f = src.get("file")
     if f and not src.get("override") and (ROOT / f).exists():
-        have = probe_frames(ROOT / f)
+        have = _FRAMES.setdefault(f, probe_frames(ROOT / f))
         if have >= need:
-            return ROOT / f
+            gen = dict(src["gen"])
+            if gen["tool"] == "doc":
+                gen["_json"] = gen["shot"]
+            return {"path": ROOT / f, "reuse": True, "secs": have / FPS, "gen": gen, "json": None}
         if src.get("fixed"):
             raise RuntimeError(f"piece {src['name']} has {have} frames, the shot needs {need}, and it cannot be re-rendered longer")
     if src.get("fixed") and not src.get("override"):
@@ -509,21 +529,39 @@ def ensure_piece(src, work):
     secs = need / FPS + 0.25
     gen = dict(src["gen"])
     key = hashlib.sha1(json.dumps({"gen": gen, "secs": round(secs, 3)}, sort_keys=True).encode()).hexdigest()[:12]
+    j = None
+    if gen["tool"] == "doc":                 # the shot file, with this shot's length and marks
+        j = PIECES / f"{src['name']}-{key}.json"
+        gen["_json"] = str(j.relative_to(ROOT))
+    return {"path": PIECES / f"{src['name']}-{key}.mp4", "reuse": False, "secs": secs, "gen": gen, "json": j, "key": key}
+
+
+def plan_command(src):
+    p = piece_plan(src)
+    c = piece_cmd(p["gen"], str(p["path"].relative_to(ROOT)), p["secs"])
+    return p," ".join(str(x) if " " not in str(x) else f'"{x}"' for x in c).replace(PY, "<gfx python>")
+
+
+def ensure_piece(src, work):
+    """A clip of the piece holding at least in + frames, reusing reel 7's file when it is long enough."""
+    p = piece_plan(src)
+    need = int(round(src["in"] * FPS)) + src["frames"]
+    if p["reuse"]:
+        return p["path"]
+    out, gen, secs = p["path"], p["gen"], p["secs"]
     PIECES.mkdir(parents=True, exist_ok=True)
-    out = PIECES / f"{src['name']}-{key}.mp4"
     if out.exists() and probe_frames(out) >= need:
         return out
-    if gen["tool"] == "doc":                 # the shot file, with this shot's length and marks
-        base = json.load(open(ROOT / gen["shot"]))
+    if gen["tool"] == "doc":
+        base = json.load(open(ROOT / src["gen"]["shot"]))
         base["length"] = round(secs, 3)
         base["duration"] = min(base.get("duration", secs), secs) if "duration" not in gen else gen["duration"]
         for k in ("marks", "focus", "zoom", "end_offset", "soft"):
             if k in gen:
                 base[k] = gen[k]
-        j = PIECES / f"{src['name']}-{key}.json"
-        j.write_text(json.dumps(base, indent=1, ensure_ascii=False))
-        gen["_json"] = str(j)
-    tmp = PIECES / f".{src['name']}-{key}.tmp.mp4"
+        p["json"].write_text(json.dumps(base, indent=1, ensure_ascii=False))
+        gen["_json"] = str(p["json"])
+    tmp = PIECES / f".{out.name[:-4]}.tmp.mp4"
     run(piece_cmd(gen, str(tmp), secs), env=node_env())
     tmp.rename(out)
     return out
@@ -644,7 +682,7 @@ def join_cmd(args):
     lst.write_text("".join(f"file '{SHOTS / (e['id'] + '.mp4')}'\n" for e in edl["shots"]))
     tmp = FILM_DIR / "animatic_v1.tmp.mp4"
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-an", "-vf", "setsar=1,format=yuv420p",
-         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p",
+         "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-crf", "18", "-preset", "fast", "-pix_fmt", "yuv420p",
          "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-movflags", "+faststart", tmp])
     got = probe_frames(tmp)
     if got != edl["total_frames"]:

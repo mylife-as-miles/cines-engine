@@ -327,34 +327,34 @@ Scene presentation by running time (DECISIONS: Fluorescent Noir 50 %, Evidence T
 
 ## Graphics commands
 
-Each graphics shot's piece, with the exact command that renders it at the length the shot needs (`tools/assemble.py render` reuses reel 7's clip in `out/gfx/r7/` when it is long enough and unchanged).
+Each graphics shot's clip and the exact command that made it (run from the project folder; NODE_PATH=$(npm root -g) for node). Reel 7's clips in `out/gfx/r7/` are reused when unchanged and long enough (the command shown is then reel 7's own, at its own length); otherwise `tools/assemble.py render` re-renders the piece with the same tool at the length the shot needs, into `out/film/pieces/`.
 
-- 00-01: `<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out <out>.mp4`, trimmed from 0.000 s for 98 frames (reel 7 file `out/gfx/r7/01_scale.mp4`).
-- 00-12: `<gfx python> gfx/plate_type.py yes 2.125 frames/raw/inspection_room/match.png <out>.mp4`, trimmed from 0.000 s for 51 frames (reel 7 file `out/gfx/r7/03_yes.mp4`).
-- 00-13: `<gfx python> gfx/plate_type.py yes 6.250 frames/raw/inspection_room/match.png <out>.mp4`, trimmed from 3.000 s for 78 frames (reel 7 file `out/gfx/r7/03_yes.mp4`).
-- 00-17: `node gfx/type_render.js seq flash 1.000 <out>.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg`, trimmed from 0.000 s for 24 frames (reel 7 file `out/gfx/r7/04_flash.mp4`).
-- 00-29: `<gfx python> gfx/montage.py --out <out>.mp4`, trimmed from 0.000 s for 149 frames (reel 7 file `out/gfx/r7/06_montage.mp4`).
-- 00-30: `<gfx python> gfx/plate_type.py title 5.000 frames/raw/void_stage/bags.png <out>.mp4`, trimmed from 0.000 s for 120 frames (reel 7 file `out/gfx/r7/07_title.mp4`).
-- 01-07: `<gfx python> gfx/doc_composite.py --shot "design/edit/shots/s1_gene.json (with the marks and length above)" --out <out>.mp4`, trimmed from 0.000 s for 135 frames. Shot-specific: `{"marks": [{"phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.", "dur": 0.7, "t": 0.943}]}`.
-- 01-10: `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out <out>.mp4`, trimmed from 0.000 s for 176 frames (reel 7 file `out/gfx/r7/09_email.mp4`).
-- 01-12: `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_search.json --out <out>.mp4`, trimmed from 0.000 s for 128 frames (reel 7 file `out/gfx/r7/10_search.mp4`).
-- 02-02: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 5.242 <out>.mp4`, trimmed from 2.200 s for 73 frames (reel 7 file `out/gfx/r7/11_route_leg1.mp4`).
-- 02-05: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 4.167 <out>.mp4`, trimmed from 0.000 s for 100 frames (reel 7 file `out/gfx/r7/11_route_mainland.mp4`).
-- 02-08: `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out <out>.mp4`, trimmed from 4.000 s for 38 frames (reel 7 file `out/gfx/r7/09_email.mp4`).
-- 02-12: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 10.167 <out>.mp4`, trimmed from 4.500 s for 136 frames (reel 7 file `out/gfx/r7/11_route_mainland.mp4`).
-- 03-11: `<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out <out>.mp4`, trimmed from 0.000 s for 54 frames (reel 7 file `out/gfx/r7/01_scale.mp4`).
-- 03-13: `<gfx python> gfx/doc_composite.py --shot "design/edit/shots/s1_fee.json (with the marks and length above)" --out <out>.mp4`, trimmed from 0.000 s for 213 frames. Shot-specific: `{"marks": [{"phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit", "dur": 0.8, "t": 1.011}]}`.
-- 03-14: `node gfx/type_render.js seq trace 4.708 <out>.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg`, trimmed from 0.000 s for 113 frames (reel 7 file `out/gfx/r7/12_trace.mp4`).
-- 03-15: `node gfx/type_render.js seq cutaway 4.250 <out>.mp4 --page gfx/seam.html`, trimmed from 0.000 s for 102 frames (reel 7 file `out/gfx/r7/13_cutaway.mp4`).
-- 04-04: `<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out <out>.mp4`, trimmed from 0.000 s for 72 frames (reel 7 file `out/gfx/r7/14_doc.mp4`).
-- 04-05: `<gfx python> gfx/plate_type.py yes 2.500 frames/raw/inspection_room/match.png <out>.mp4`, trimmed from 0.000 s for 60 frames (reel 7 file `out/gfx/r7/03_yes.mp4`).
-- 04-06: `<gfx python> gfx/plate_type.py yes 6.583 frames/raw/inspection_room/match.png <out>.mp4`, trimmed from 3.000 s for 86 frames (reel 7 file `out/gfx/r7/03_yes.mp4`).
-- 04-10: `<gfx python> gfx/split.py --out <out>.mp4 --len 5.458 --cut 2.392`, trimmed from 0.000 s for 131 frames. Shot-specific: `{"cut": 2.392}`.
-- 04-13: `<gfx python> gfx/split.py --out <out>.mp4 --len 5.158 --cut 2.200`, trimmed from 3.200 s for 47 frames (reel 7 file `out/gfx/r7/15_splitframe.mp4`).
-- 04-17: `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 8.000 <out>.mp4`, trimmed from 0.000 s for 192 frames (reel 7 file `out/gfx/r7/11_route_split.mp4`).
-- 05-03: `<gfx python> gfx/doc_composite.py --shot "design/edit/shots/s1_emails.json (with the marks and length above)" --out <out>.mp4`, trimmed from 0.000 s for 225 frames. Shot-specific: `{"marks": [{"phrase": "answered all their questions, produced the emails she received from the organizers", "dur": 1.2, "t": 3.13}]}`.
-- 05-04: `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out <out>.mp4`, trimmed from 1.500 s for 96 frames (reel 7 file `out/gfx/r7/09_email.mp4`).
-- 05-10: `<gfx python> gfx/plate_type.py calendar 7.458 frames/raw/void_stage/bags.png <out>.mp4`, trimmed from 0.000 s for 179 frames (reel 7 file `out/gfx/r7/16_calendar.mp4`).
-- 07-05: `<gfx python> gfx/plate_type.py counter 12.500 frames/raw/void_stage/cell_far.png <out>.mp4 --push 1.6 0.7`, trimmed from 0.000 s for 300 frames (reel 7 file `out/gfx/r7/18_counter.mp4`).
-- 07-15: `<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_father.json --out <out>.mp4`, trimmed from 0.000 s for 167 frames (reel 7 file `out/gfx/r7/19_father.mp4`).
-- 08-07: `<gfx python> gfx/plate_type.py date_gene 4.750 frames/raw/home/chair.png <out>.mp4`, trimmed from 0.000 s for 114 frames (reel 7 file `out/gfx/r7/20_gene.mp4`).
+- 00-01: `out/gfx/r7/01_scale.mp4` from 0.000 s, 98 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4`.
+- 00-12: `out/gfx/r7/03_yes.mp4` from 0.000 s, 51 frames. Made by `<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4`.
+- 00-13: `out/gfx/r7/03_yes.mp4` from 3.000 s, 78 frames. Made by `<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4`.
+- 00-17: `out/gfx/r7/04_flash.mp4` from 0.000 s, 24 frames. Made by `node gfx/type_render.js seq flash 1.000 out/gfx/r7/04_flash.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg`.
+- 00-29: `out/gfx/r7/06_montage.mp4` from 0.000 s, 149 frames. Made by `<gfx python> gfx/montage.py --out out/gfx/r7/06_montage.mp4`.
+- 00-30: `out/gfx/r7/07_title.mp4` from 0.000 s, 120 frames. Made by `<gfx python> gfx/plate_type.py title 5.000 frames/raw/void_stage/bags.png out/gfx/r7/07_title.mp4`.
+- 01-07: `out/film/pieces/doc_gene-082a0c70035d.mp4` from 0.000 s, 135 frames. Made by `<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_gene-082a0c70035d.json --out out/film/pieces/doc_gene-082a0c70035d.mp4`. Shot-specific: `{"marks": [{"phrase": "He’s an Army veteran, and a retired Chicago Police Sergeant of 32 years.", "dur": 0.7, "t": 0.943}]}`.
+- 01-10: `out/gfx/r7/09_email.mp4` from 0.000 s, 176 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4`.
+- 01-12: `out/gfx/r7/10_search.mp4` from 0.000 s, 128 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_search.json --out out/gfx/r7/10_search.mp4`.
+- 02-02: `out/gfx/r7/11_route_leg1.mp4` from 2.200 s, 73 frames. Made by `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 6.500 out/gfx/r7/11_route_leg1.mp4`.
+- 02-05: `out/gfx/r7/11_route_mainland.mp4` from 0.000 s, 100 frames. Made by `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 7.500 out/gfx/r7/11_route_mainland.mp4`.
+- 02-08: `out/gfx/r7/09_email.mp4` from 4.000 s, 38 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4`.
+- 02-12: `out/film/pieces/route_mainland-8b67ff7820ae.mp4` from 4.500 s, 136 frames. Made by `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 10.417 out/film/pieces/route_mainland-8b67ff7820ae.mp4`.
+- 03-11: `out/gfx/r7/01_scale.mp4` from 0.000 s, 54 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4`.
+- 03-13: `out/film/pieces/doc_fee-61ff3bb3a8cf.mp4` from 0.000 s, 213 frames. Made by `<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fee-61ff3bb3a8cf.json --out out/film/pieces/doc_fee-61ff3bb3a8cf.mp4`. Shot-specific: `{"marks": [{"phrase": "she even paid a small excess weight fee since the luggage was slightly over the weight limit", "dur": 0.8, "t": 1.011}]}`.
+- 03-14: `out/film/pieces/trace-a382b237c5a2.mp4` from 0.000 s, 113 frames. Made by `node gfx/type_render.js seq trace 4.958 out/film/pieces/trace-a382b237c5a2.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg`.
+- 03-15: `out/gfx/r7/13_cutaway.mp4` from 0.000 s, 102 frames. Made by `node gfx/type_render.js seq cutaway 5.000 out/gfx/r7/13_cutaway.mp4 --page gfx/seam.html`.
+- 04-04: `out/gfx/r7/14_doc.mp4` from 0.000 s, 72 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out out/gfx/r7/14_doc.mp4`.
+- 04-05: `out/gfx/r7/03_yes.mp4` from 0.000 s, 60 frames. Made by `<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4`.
+- 04-06: `out/gfx/r7/03_yes.mp4` from 3.000 s, 86 frames. Made by `<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4`.
+- 04-10: `out/film/pieces/split-a5f2ddb4bd12.mp4` from 0.000 s, 131 frames. Made by `<gfx python> gfx/split.py --out out/film/pieces/split-a5f2ddb4bd12.mp4 --len 5.708 --cut 2.392`. Shot-specific: `{"cut": 2.392}`.
+- 04-13: `out/gfx/r7/15_splitframe.mp4` from 3.200 s, 47 frames. Made by `<gfx python> gfx/split.py --out out/gfx/r7/15_splitframe.mp4 --len 5.583 --cut 2.200`.
+- 04-17: `out/film/pieces/route_split-06275e95583f.mp4` from 0.000 s, 192 frames. Made by `node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 8.250 out/film/pieces/route_split-06275e95583f.mp4`.
+- 05-03: `out/film/pieces/doc_emails-4b87cacbf0b2.mp4` from 0.000 s, 225 frames. Made by `<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_emails-4b87cacbf0b2.json --out out/film/pieces/doc_emails-4b87cacbf0b2.mp4`. Shot-specific: `{"marks": [{"phrase": "answered all their questions, produced the emails she received from the organizers", "dur": 1.2, "t": 3.13}]}`.
+- 05-04: `out/gfx/r7/09_email.mp4` from 1.500 s, 96 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4`.
+- 05-10: `out/gfx/r7/16_calendar.mp4` from 0.000 s, 179 frames. Made by `<gfx python> gfx/plate_type.py calendar 7.500 frames/raw/void_stage/bags.png out/gfx/r7/16_calendar.mp4`.
+- 07-05: `out/gfx/r7/18_counter.mp4` from 0.000 s, 300 frames. Made by `<gfx python> gfx/plate_type.py counter 14.000 frames/raw/void_stage/cell_far.png out/gfx/r7/18_counter.mp4 --push 1.6 0.7`.
+- 07-15: `out/gfx/r7/19_father.mp4` from 0.000 s, 167 frames. Made by `<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_father.json --out out/gfx/r7/19_father.mp4`.
+- 08-07: `out/film/pieces/gene-3bb9dd335b61.mp4` from 0.000 s, 114 frames. Made by `<gfx python> gfx/plate_type.py date_gene 5.000 frames/raw/home/chair.png out/film/pieces/gene-3bb9dd335b61.mp4`.

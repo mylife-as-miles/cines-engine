@@ -133,7 +133,9 @@
      "shot": "gfx/shots/scale_overweight.json"
     },
     "fixed": true,
-    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s"
+    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
+    "clip": "out/gfx/r7/01_scale.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4"
    },
    "voice": [
     {
@@ -526,7 +528,9 @@
      "plate": "frames/raw/inspection_room/match.png"
     },
     "fixed": false,
-    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+    "clip": "out/gfx/r7/03_yes.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
    },
    "voice": [
     {
@@ -561,7 +565,9 @@
      "plate": "frames/raw/inspection_room/match.png"
     },
     "fixed": false,
-    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+    "clip": "out/gfx/r7/03_yes.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
    },
    "voice": [
     {
@@ -700,7 +706,9 @@
      "bg": "frames/graded/evidence_table/purses.jpg"
     },
     "fixed": true,
-    "note_piece": "the red seam, 1 s, gone with the cut"
+    "note_piece": "the red seam, 1 s, gone with the cut",
+    "clip": "out/gfx/r7/04_flash.mp4",
+    "command": "node gfx/type_render.js seq flash 1.000 out/gfx/r7/04_flash.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg"
    },
    "voice": [
     {
@@ -1122,7 +1130,9 @@
      "tool": "montage"
     },
     "fixed": true,
-    "note_piece": "the flash-forward, ten shots"
+    "note_piece": "the flash-forward, ten shots",
+    "clip": "out/gfx/r7/06_montage.mp4",
+    "command": "<gfx python> gfx/montage.py --out out/gfx/r7/06_montage.mp4"
    },
    "voice": [],
    "row": "1:27 the montage, 0.5-0.8 s a shot",
@@ -1148,7 +1158,9 @@
      "plate": "frames/raw/void_stage/bags.png"
     },
     "fixed": false,
-    "note_piece": "THE PRIZE THAT BECAME A PRISON over the bags"
+    "note_piece": "THE PRIZE THAT BECAME A PRISON over the bags",
+    "clip": "out/gfx/r7/07_title.mp4",
+    "command": "<gfx python> gfx/plate_type.py title 5.000 frames/raw/void_stage/bags.png out/gfx/r7/07_title.mp4"
    },
    "voice": [],
    "row": "1:37 void_stage `bags` in the beam | THE PRIZE THAT BECAME A PRISON",
@@ -1418,7 +1430,9 @@
     },
     "fixed": false,
     "override": true,
-    "note_piece": "S1 p. 2, Gene's and Tim's service lit"
+    "note_piece": "S1 p. 2, Gene's and Tim's service lit",
+    "clip": "out/film/pieces/doc_gene-082a0c70035d.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_gene-082a0c70035d.json --out out/film/pieces/doc_gene-082a0c70035d.mp4"
    },
    "voice": [
     {
@@ -1558,7 +1572,9 @@
      "shot": "gfx/shots/screen_email.json"
     },
     "fixed": true,
-    "note_piece": "the prize email; its line cycles the three accounts"
+    "note_piece": "the prize email; its line cycles the three accounts",
+    "clip": "out/gfx/r7/09_email.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
    },
    "voice": [
     {
@@ -1623,7 +1639,9 @@
      "shot": "gfx/shots/screen_search.json"
     },
     "fixed": true,
-    "note_piece": "the search, greeked results"
+    "note_piece": "the search, greeked results",
+    "clip": "out/gfx/r7/10_search.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_search.json --out out/gfx/r7/10_search.mp4"
    },
    "voice": [
     {
@@ -1877,7 +1895,9 @@
      "mode": "leg1"
     },
     "fixed": false,
-    "note_piece": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s"
+    "note_piece": "Chicago → Hong Kong, HONG KONG 3.0 s, 9 DAYS 3.6 s",
+    "clip": "out/gfx/r7/11_route_leg1.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq leg1 0 6.500 out/gfx/r7/11_route_leg1.mp4"
    },
    "voice": [
     {
@@ -1945,7 +1965,9 @@
      "mode": "mainland"
     },
     "fixed": false,
-    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s"
+    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
+    "clip": "out/gfx/r7/11_route_mainland.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 7.500 out/gfx/r7/11_route_mainland.mp4"
    },
    "voice": [
     {
@@ -2045,7 +2067,9 @@
      "shot": "gfx/shots/screen_email.json"
     },
     "fixed": true,
-    "note_piece": "the prize email; its line cycles the three accounts"
+    "note_piece": "the prize email; its line cycles the three accounts",
+    "clip": "out/gfx/r7/09_email.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
    },
    "voice": [
     {
@@ -2180,7 +2204,9 @@
      "mode": "mainland"
     },
     "fixed": false,
-    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s"
+    "note_piece": "MAINLAND CHINA 1.7 s, ABOUT 9 MORE DAYS 2.2 s; the Australia line 4.6-6.2 s",
+    "clip": "out/film/pieces/route_mainland-8b67ff7820ae.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq mainland 0 10.417 out/film/pieces/route_mainland-8b67ff7820ae.mp4"
    },
    "voice": [
     {
@@ -2642,7 +2668,9 @@
      "shot": "gfx/shots/scale_overweight.json"
     },
     "fixed": true,
-    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s"
+    "note_piece": "the scale display: the bar fills, OVERWEIGHT from 1.25 s",
+    "clip": "out/gfx/r7/01_scale.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/scale_overweight.json --out out/gfx/r7/01_scale.mp4"
    },
    "voice": [
     {
@@ -2719,7 +2747,9 @@
     },
     "fixed": false,
     "override": true,
-    "note_piece": "S1 p. 1, the excess-weight fee line lit"
+    "note_piece": "S1 p. 1, the excess-weight fee line lit",
+    "clip": "out/film/pieces/doc_fee-61ff3bb3a8cf.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_fee-61ff3bb3a8cf.json --out out/film/pieces/doc_fee-61ff3bb3a8cf.mp4"
    },
    "voice": [
     {
@@ -2750,7 +2780,9 @@
      "bg": "frames/graded/evidence_table/purses.jpg"
     },
     "fixed": false,
-    "note_piece": "the red trace along the tote's seam, drawn over 1.8 s"
+    "note_piece": "the red trace along the tote's seam, drawn over 1.8 s",
+    "clip": "out/film/pieces/trace-a382b237c5a2.mp4",
+    "command": "node gfx/type_render.js seq trace 4.958 out/film/pieces/trace-a382b237c5a2.mp4 --page gfx/seam.html --bg frames/graded/evidence_table/purses.jpg"
    },
    "voice": [
     {
@@ -2780,7 +2812,9 @@
      "mode": "cutaway"
     },
     "fixed": false,
-    "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s"
+    "note_piece": "the section opens 1.3-2.1 s, closes 3.6-4.05 s",
+    "clip": "out/gfx/r7/13_cutaway.mp4",
+    "command": "node gfx/type_render.js seq cutaway 5.000 out/gfx/r7/13_cutaway.mp4 --page gfx/seam.html"
    },
    "voice": [
     {
@@ -2959,7 +2993,9 @@
      "shot": "gfx/shots/s1_yes.json"
     },
     "fixed": false,
-    "note_piece": "S1 p. 1, the first 'yes' line lit at 1.0 s"
+    "note_piece": "S1 p. 1, the first 'yes' line lit at 1.0 s",
+    "clip": "out/gfx/r7/14_doc.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_yes.json --out out/gfx/r7/14_doc.mp4"
    },
    "voice": [
     {
@@ -2990,7 +3026,9 @@
      "plate": "frames/raw/inspection_room/match.png"
     },
     "fixed": false,
-    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+    "clip": "out/gfx/r7/03_yes.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
    },
    "voice": [
     {
@@ -3025,7 +3063,9 @@
      "plate": "frames/raw/inspection_room/match.png"
     },
     "fixed": false,
-    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s"
+    "note_piece": "YES lands at 0 s; the second YES on a tighter frame at 3.0 s",
+    "clip": "out/gfx/r7/03_yes.mp4",
+    "command": "<gfx python> gfx/plate_type.py yes 7.000 frames/raw/inspection_room/match.png out/gfx/r7/03_yes.mp4"
    },
    "voice": [
     {
@@ -3165,7 +3205,9 @@
     },
     "fixed": false,
     "override": true,
-    "note_piece": "the split frame, the right half cutting to the cut-away"
+    "note_piece": "the split frame, the right half cutting to the cut-away",
+    "clip": "out/film/pieces/split-a5f2ddb4bd12.mp4",
+    "command": "<gfx python> gfx/split.py --out out/film/pieces/split-a5f2ddb4bd12.mp4 --len 5.708 --cut 2.392"
    },
    "voice": [
     {
@@ -3273,7 +3315,9 @@
      "cut": 2.2
     },
     "fixed": true,
-    "note_piece": "reel 7's split frame (cut at 2.2 s), the cut-away held open"
+    "note_piece": "reel 7's split frame (cut at 2.2 s), the cut-away held open",
+    "clip": "out/gfx/r7/15_splitframe.mp4",
+    "command": "<gfx python> gfx/split.py --out out/gfx/r7/15_splitframe.mp4 --len 5.583 --cut 2.200"
    },
    "voice": [
     {
@@ -3408,7 +3452,9 @@
      "mode": "split"
     },
     "fixed": false,
-    "note_piece": "Australia and Qingdao, dashed, labels at 2.4 s"
+    "note_piece": "Australia and Qingdao, dashed, labels at 2.4 s",
+    "clip": "out/film/pieces/route_split-06275e95583f.mp4",
+    "command": "node /home/user/cines-engine/.claude/skills/cines-engine/scripts/canvas_render.js gfx/route.html seq split 0 8.250 out/film/pieces/route_split-06275e95583f.mp4"
    },
    "voice": [
     {
@@ -3638,7 +3684,9 @@
     },
     "fixed": false,
     "override": true,
-    "note_piece": "S1 p. 2, the emails line lit"
+    "note_piece": "S1 p. 2, the emails line lit",
+    "clip": "out/film/pieces/doc_emails-4b87cacbf0b2.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot out/film/pieces/doc_emails-4b87cacbf0b2.json --out out/film/pieces/doc_emails-4b87cacbf0b2.mp4"
    },
    "voice": [
     {
@@ -3668,7 +3716,9 @@
      "shot": "gfx/shots/screen_email.json"
     },
     "fixed": true,
-    "note_piece": "the prize email; its line cycles the three accounts"
+    "note_piece": "the prize email; its line cycles the three accounts",
+    "clip": "out/gfx/r7/09_email.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/screen_email.json --out out/gfx/r7/09_email.mp4"
    },
    "voice": [
     {
@@ -3874,7 +3924,9 @@
      "plate": "frames/raw/void_stage/bags.png"
     },
     "fixed": false,
-    "note_piece": "2014 → 2017 beside the bags, 1.7 s a year"
+    "note_piece": "2014 → 2017 beside the bags, 1.7 s a year",
+    "clip": "out/gfx/r7/16_calendar.mp4",
+    "command": "<gfx python> gfx/plate_type.py calendar 7.500 frames/raw/void_stage/bags.png out/gfx/r7/16_calendar.mp4"
    },
    "voice": [
     {
@@ -4621,7 +4673,9 @@
      ]
     },
     "fixed": false,
-    "note_piece": "2014 → 2026 over the far cell, the pull back"
+    "note_piece": "2014 → 2026 over the far cell, the pull back",
+    "clip": "out/gfx/r7/18_counter.mp4",
+    "command": "<gfx python> gfx/plate_type.py counter 14.000 frames/raw/void_stage/cell_far.png out/gfx/r7/18_counter.mp4 --push 1.6 0.7"
    },
    "voice": [
     {
@@ -4983,7 +5037,9 @@
      "shot": "gfx/shots/s1_father.json"
     },
     "fixed": false,
-    "note_piece": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s"
+    "note_piece": "S1 p. 2, \"not going to live long enough to see his daughter free\" lit at 1.2 s",
+    "clip": "out/gfx/r7/19_father.mp4",
+    "command": "<gfx python> gfx/doc_composite.py --shot gfx/shots/s1_father.json --out out/gfx/r7/19_father.mp4"
    },
    "voice": [
     {
@@ -5234,7 +5290,9 @@
      "plate": "frames/raw/home/chair.png"
     },
     "fixed": false,
-    "note_piece": "JANUARY 25, 2026 over the empty chair"
+    "note_piece": "JANUARY 25, 2026 over the empty chair",
+    "clip": "out/film/pieces/gene-3bb9dd335b61.mp4",
+    "command": "<gfx python> gfx/plate_type.py date_gene 5.000 frames/raw/home/chair.png out/film/pieces/gene-3bb9dd335b61.mp4"
    },
    "voice": [
     {
