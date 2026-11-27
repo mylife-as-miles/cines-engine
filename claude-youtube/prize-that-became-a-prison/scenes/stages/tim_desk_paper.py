@@ -12,6 +12,7 @@ following it, then the item's own rest shape (curl, folds, puff) is added, and a
 """
 import math
 import random
+from zlib import crc32
 
 import bpy  # noqa: F401  (first)
 import bmesh
@@ -209,7 +210,7 @@ def sheet_shape(w, h, seed, corners=(0.0, 0.0, 0.0, 0.0), edge=None, wave=0.0006
     return f
 
 
-def trifold_shape(w, h, seed, up=(8.0, 5.0)):
+def trifold_shape(w, h, seed, up=(14.0, 10.0)):
     """A letter folded in three and opened out: the middle panel flat, the outer panels rising from the creases
     (degrees), a slight ridge along each crease."""
     rng = random.Random(seed)
@@ -233,7 +234,7 @@ def sheet(name, m, w, h, x, y, turn, thick=0.00022, step=0.005, shape=None, stif
     nx, ny = max(2, round(w / step)), max(2, round(h / step))
     if shape == "trifold":
         ny = 3 * max(1, round(h / step / 3))
-        shape = trifold_shape(w, h, hash(name) % 997)
+        shape = trifold_shape(w, h, crc32(name.encode()) % 997)
     return place_flat(name, grid_bm(w, h, nx, ny), frame(x, y, turn), m, thick, shape=shape, stiff=stiff)
 
 
@@ -425,7 +426,7 @@ def bundle(name, mats, m_band, x, y, turn, n=16, w=0.19, h=0.11, seed=4, band_at
     mw = frame(x, y, turn)
     tree = support_tree(_footprint(mw, [(-w / 2, -h / 2), (w / 2, h / 2)]))
     z = max(drop(tree, mw @ Vector((px, py, 0.0))) for px in (-w / 2, 0.0, w / 2) for py in (-h / 2, 0.0, h / 2))
-    ob, height = _slab_stack(name, mats, w, h, n, seed)
+    ob, height = _slab_stack(name, mats, w, h, n, seed, slip=0.010)
     ob.matrix_world = frame(x, y, turn, z + 0.00005)
     hh, r = h / 2 - 0.0015, 0.0011
     top = height + r * 0.6

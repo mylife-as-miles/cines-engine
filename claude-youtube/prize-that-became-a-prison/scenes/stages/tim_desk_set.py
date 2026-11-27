@@ -48,8 +48,8 @@ DW, DD, TOP, TT = 1.40, 0.68, pp.TOP, 0.032                  # desk top: width (
 PED_IN, PED_OUT, PED_Y = 0.30, 0.685, 0.315                 # pedestals: |x| from PED_IN to PED_OUT, |y| to PED_Y
 PLINTH = 0.085
 RUG = (0.0, 1.2, 2.3, 1.6)                                   # centre x, y, size x, y
-WARM = (1.0, 0.69, 0.4)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
-COOL = (0.78, 0.86, 1.0)           # the laptop's blank page
+WARM = (1.0, 0.40, 0.085)           # the lamp: an old incandescent bulb (warm enough to stay warm under the film's grade)
+COOL = (0.38, 0.60, 1.0)           # the laptop's blank page
 NIGHT = (0.55, 0.68, 1.0)          # the street and the sky
 
 # the lamp prop at LAMP_SIZE (base near the origin, the shade looking along +Y and down). Measured by ray probes at
@@ -227,14 +227,14 @@ def materials():
         chrome=mt.satin_metal("sash lock", (0.5, 0.5, 0.5), 0.3),
         night=mt.night("night outside", low=(0.05, 0.065, 0.1), high=(0.012, 0.016, 0.03), strength=2.2, z0=0.4, z1=5.0, lit=lit,
                        roof=(0.9, 0.9)),
-        desk=mt.worn_wood("desk top oak", DD / 5, -DD / 2, light=(0.12, 0.072, 0.039), dark=(0.045, 0.026, 0.014),
+        desk=mt.worn_wood("desk top oak", DD / 5, -DD / 2, light=(0.15, 0.066, 0.023), dark=(0.052, 0.023, 0.009),
                           rings=((0.19, 0.115, 0.041), (-0.3, -0.22, 0.04), (0.44, 0.19, 0.039)), front_y=-DD / 2),
         carcass=mt.worn_wood("desk carcass oak", 0.14, -0.07, light=(0.1, 0.06, 0.032), dark=(0.038, 0.022, 0.012), rough=0.5),
         plinth=mt.worn_wood("desk plinth", 0.1, -0.05, light=(0.05, 0.03, 0.017), dark=(0.02, 0.012, 0.007), rough=0.55),
         pull=mt.satin_metal("drawer pull brass", (0.23, 0.16, 0.075), 0.42),
-        paper=mt.paper("letter paper", (0.74, 0.71, 0.64), 0.86, 0.05, 0.04, translucency=0.2, edge_tone=(0.216, 0.279)),
-        paper2=mt.paper("letter paper 2", (0.71, 0.69, 0.63), 0.86, 0.05, 0.06, edge_tone=(0.216, 0.279)),
-        ruled=mt.ruled("ruled sheet", 0.215, 0.274),
+        paper=mt.paper("letter paper", (0.72, 0.63, 0.48), 0.86, 0.05, 0.04, translucency=0.2, edge_tone=(0.216, 0.279)),
+        paper2=mt.paper("letter paper 2", (0.70, 0.64, 0.51), 0.86, 0.05, 0.06, edge_tone=(0.216, 0.279)),
+        ruled=mt.ruled("ruled sheet", 0.215, 0.274, rgb=(0.71, 0.63, 0.51)),
         block=mt.page_block("pad block", (0.7, 0.67, 0.6)),
         board=mt.manila("pad chipboard", (0.2, 0.18, 0.15)),
         tape=mt.book_cloth("pad binding", (0.05, 0.02, 0.02)),
@@ -247,16 +247,16 @@ def materials():
         band=mt.plastic("rubber band", (0.3, 0.2, 0.1), 0.6, 0.3),
         pen=mt.plastic("pen plastic", (0.012, 0.012, 0.014), 0.38, 0.5),
         pen_metal=mt.satin_metal("pen metal", (0.62, 0.62, 0.6), 0.25),
-        glaze=mt.glaze("mug glaze", (0.11, 0.13, 0.16)),
+        glaze=mt.glaze("mug glaze", (0.40, 0.35, 0.26), rough=0.25),
         bisque=mt.matte("mug foot", (0.32, 0.29, 0.25), 0.85),
         coffee=mt.liquid("coffee"),
-        enamel=mt.plastic("lamp reflector enamel", (0.42, 0.4, 0.36), 0.36, 0.5, 0.05),
-        bulb=mt.glow("lamp bulb", (1.0, 0.86, 0.66), 26.0),
+        enamel=mt.plastic("lamp reflector enamel", (0.34, 0.26, 0.17), 0.36, 0.5, 0.05),
+        bulb=mt.glow("lamp bulb", (1.0, 0.59, 0.23), 13.0),
         phone=mt.plastic("phone back", (0.02, 0.021, 0.024), 0.3, 0.5, 0.25),
         phone_edge=mt.satin_metal("phone band", (0.12, 0.12, 0.125), 0.35),
         lens=mt.plastic("phone lens", (0.004, 0.004, 0.005), 0.08, 0.6, 0.0),
         frame=mt.worn_wood("picture frame wood", 0.02, -0.01, light=(0.05, 0.03, 0.017), dark=(0.018, 0.011, 0.006), rough=0.4),
-        hardboard=mt.manila("frame back", (0.17, 0.125, 0.085), 0.8),
+        hardboard=mt.manila("frame back", (0.12, 0.074, 0.04), 0.8),
         photo=mt.photo("framed photograph", 0.127, 0.178, 0.0, image_rgb=(0.085, 0.08, 0.075), gradient=0.3),
         iron=mt.cast_iron("radiator paint"),
         brass=mt.satin_metal("valve brass", (0.3, 0.21, 0.09), 0.35),
@@ -563,6 +563,7 @@ def room():
     bd.visible_diffuse = False
     # the right wall (-X): the radiator and a dark picture over it
     on_wall("right_wall", (x0, 0.7, 0.0), math.pi / 2, lambda: (radiator("rad", 0.0, -0.055), picture("pic", -0.2, 1.5)))
+    on_wall("desk wall picture", (x1, 1.38, 0.0), -math.pi / 2, picture, "family_frame", 0.0, 1.48, 0.44, 0.32)
     # left of the window: a bookcase against the same wall, its books facing the room
     on_wall("bookcase", (1.31, y0, 0.0), math.pi, bookcase, "case", w=0.8)
     rg = box("rug", (RUG[2], RUG[3], 0.012), (RUG[0], RUG[1], 0.006), M["rug"], bevel=0.004, seg=2)
@@ -579,7 +580,7 @@ def desk():
     round so the material's worn front band lies along Tim's edge (+Y)."""
     bm = bmesh.new()
     pw = DD / 5
-    gap = 0.001
+    gap = 0.0005
     for i in range(5):
         y = -DD / 2 + pw * (i + 0.5)
         add_box(bm, (DW, pw - gap, TT), (0.0, y, 0.0))
@@ -682,16 +683,25 @@ def lamp():
                 mm.inputs[0].default_value = inp.default_value
             nt.links.new(mm.outputs[0], inp)
         bsdf.inputs["Specular IOR Level"].default_value = 0.5
-    parts = []
+    # The imported shade's rim is offset from its light source. Seat the enamel
+    # lining just inside the measured 79 mm radius so the mouth stays continuous.
+    optical_center = BULB - AXIS.cross(Vector((1, 0, 0))) * (0.0385 * _K)
+    profile = [(0.0, 0.025), (0.014, 0.027), (0.029, 0.032), (0.047, 0.040),
+               (0.062, 0.049), (0.0735, 0.061), (0.0775, 0.0715)]
+    liner = lathe("enamel shade lining", [(r * _K, z * _K) for r, z in profile],
+                  tuple(optical_center), M["enamel"], segs=80)
+    liner.rotation_euler = AXIS.to_track_quat("Z", "Y").to_euler()
+    liner.visible_shadow = False
+    parts = [liner]
     src = BULB + AXIS * SPOT_OUT
-    bulb = sk.sphere("lamp_bulb", 0.019 * _K, tuple(src), M["bulb"], segs=24)
+    bulb = sk.sphere("lamp_bulb", 0.019 * _K, tuple(optical_center + AXIS * (0.052 * _K)), M["bulb"], segs=32)
     bulb.visible_shadow = False
     bulb.visible_diffuse = False
     bulb.visible_volume_scatter = False
     parts.append(bulb)
-    sp = spot("lamp_spot", tuple(src), tuple(src + AXIS), 60.0, WARM, 150.0, 0.25, 0.026)
+    sp = spot("lamp_spot", tuple(src), tuple(src + AXIS), 40.0, WARM, 150.0, 0.25, 0.026)
     parts.append(sp)
-    parts.append(point("lamp_glow", tuple(BULB - AXIS * 0.004), 0.5, WARM, 0.012))
+    parts.append(point("lamp_glow", tuple(BULB - AXIS * 0.004), 0.22, WARM, 0.012))
     # the spill behind and over the head (outside the shade, so the shade does not cut it)
     # (aimed up and back: it washes the blinds, the wall and the bookcase behind the lamp, and the lamp's own base
     # stays in its head's shadow)
@@ -923,6 +933,28 @@ def hand_pen(tip, axis):
 
 
 # ---------------------------------------------------------------- what lies on the desk
+def letter_tray(x, y):
+    """A shallow open card box. The envelopes stand on their long edges."""
+    width, depth, height, gauge = 0.257, 0.153, 0.064, 0.0035
+    tray = [box("letter tray bottom", (width, depth, gauge), (x, y, TOP + gauge / 2), M["card"])]
+    for side in (-1, 1):
+        tray.append(box("letter tray side", (gauge, depth, height),
+                        (x + side * (width - gauge) / 2, y, TOP + height / 2), M["card"], bevel=0.0007))
+        tray.append(box("letter tray end", (width - 2 * gauge, gauge, height),
+                        (x, y + side * (depth - gauge) / 2, TOP + height / 2), M["card"], bevel=0.0007))
+    rng = random.Random(72)
+    for i in range(43):
+        w, h = rng.uniform(0.194, 0.227), rng.uniform(0.091, 0.106)
+        pitch = math.radians(8 + 3 * math.sin(i / 6))
+        row_y = y - 0.064 + i * 0.00265
+        center = (x + rng.uniform(-0.003, 0.003), row_y + h * math.sin(pitch) / 2,
+                  TOP + gauge + h * math.cos(pitch) / 2)
+        stock = M["white_env"] if i % 5 < 2 else M["cream"]
+        tray.append(box("filed envelope", (w, 0.00125, h), center, stock,
+                        bevel=0.0004, rot=(-pitch, 0, rng.uniform(-0.002, 0.002))))
+    return tray
+
+
 def papers(pad=PAD):
     """Lay the desk's papers bottom to top (each drops onto what is already there). Returns the top sheet of the
     pad. Tim's left is +X; the letters he has had back lie to his right (-X), in the camera's foreground."""
@@ -941,11 +973,9 @@ def papers(pad=PAD):
     group("papers", pp.envelope_front("reply_env_a", m["window_env"], -0.635, 0.0, 97.0, seed=2))
     group("papers", pp.envelope_front("reply_env_b", m["window_env"], -0.6, 0.07, 84.0, seed=5))
     group("papers", pp.sheet("reply_letter", m["paper"], 0.216, 0.279, -0.47, -0.02, 100.0, shape="trifold"))
-    b, _ = pp.bundle("bundle", [m["airmail_uv"], m["airmail_uv"], m["cream"], m["airmail_uv"]], m["band"], -0.56, -0.24, -6.0, n=17, seed=4)
+    group("papers", letter_tray(-0.54, -0.245))
+    b, _ = pp.bundle("bundle", [m["airmail_uv"], m["airmail_uv"], m["cream"], m["airmail_uv"]], m["band"], -0.54, 0.22, -6.0, n=17, seed=4)
     group("papers", b)
-    st_, _ = pp.loose_stack("loose_airmail", [m["airmail_uv"], m["white_env"], m["airmail_uv"], m["airmail_uv"]], -0.52, 0.22, -18.0, n=5, seed=9)
-    group("papers", st_)
-    group("papers", pp.envelope("loose_top", m["airmail"], -0.51, 0.225, -31.0, w=0.19, h=0.11, puff=0.002))
     return top
 
 
@@ -956,7 +986,7 @@ def desk_things(pad=PAD):
     group("mug", pp.mug("mug", m["glaze"], m["bisque"], m["coffee"], 0.2, 0.03, 60.0))
     group("glasses", reading_glasses(px + 0.035, py - 0.105, pt - 180.0))
     group("phone", phone(-0.245, -0.03, 12.0))
-    group("frame", photo_frame(-0.12, -0.19, 143.1))
+    group("frame", photo_frame(-0.12, -0.19, 121.0))
     # the photograph stands with its back to the window, under the stool's shadow: the night's light on that back
     # (only the frame sees it), so the hardboard, the strut and the turn buttons read from the desk camera
     kick = area("frame_kicker", (-0.5, -0.33, TOP + 0.42), (0.2, 0.14), 1.3, NIGHT, spread=120, aim=(-0.12, -0.19, TOP + 0.1))

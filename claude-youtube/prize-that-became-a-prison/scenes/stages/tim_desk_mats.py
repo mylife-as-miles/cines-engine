@@ -210,13 +210,15 @@ def worn_wood(name, plank_w, y0, light=(0.085, 0.052, 0.03), dark=(0.032, 0.019,
         ddy = _math(nt, "SUBTRACT", y, ry)
         d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", ddx, ddx), _math(nt, "MULTIPLY", ddy, ddy)))
         band = _maprange(nt, _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", d, rr)), 0.0008, 0.0032, 1.0, 0.0)
-        part = _maprange(nt, _noise(nt, o, 22.0, 3.0, 0.6, offset=(rx * 5.0, ry * 5.0, 0.0)), 0.35, 0.55, 0.15, 1.0)
-        inner = _math(nt, "MULTIPLY", _maprange(nt, d, rr - 0.004, rr, 0.0, 0.25), _maprange(nt, d, rr, rr + 0.001, 1.0, 0.0))
-        one = _math(nt, "MAXIMUM", _math(nt, "MULTIPLY", band, part), inner)
+        part = _maprange(nt, _noise(nt, o, 32.0, 3.0, 0.6, offset=(rx * 5.0, ry * 5.0, 0.0)), 0.32, 0.62, 0.12, 1.0)
+        angle = rx * 8.0 + ry * 4.0
+        along = _math(nt, "ADD", _math(nt, "MULTIPLY", ddx, math.cos(angle)), _math(nt, "MULTIPLY", ddy, math.sin(angle)))
+        arc = _maprange(nt, along, rr * 0.46, rr * 0.67, 1.0, 0.0)
+        one = _math(nt, "MULTIPLY", arc, _math(nt, "MULTIPLY", band, part))
         ring_m = one if ring_m is None else _math(nt, "MAXIMUM", ring_m, one)
     if ring_m is not None:
-        col = _mix(nt, _math(nt, "MULTIPLY", ring_m, 0.6), col, (0.012, 0.007, 0.004))
-        rough_s = _math(nt, "SUBTRACT", rough_s, _math(nt, "MULTIPLY", ring_m, 0.16))
+        col = _mix(nt, _math(nt, "MULTIPLY", ring_m, 0.15), col, (0.012, 0.007, 0.004))
+        rough_s = _math(nt, "SUBTRACT", rough_s, _math(nt, "MULTIPLY", ring_m, 0.035))
     # fine streaks of use along the boards (things slid across the top): stretched noise, mostly in the roughness
     streak = _noise(nt, o, 1.0, 3.0, 0.6, mapping=(4.0, 400.0, 400.0), offset=(0.0, 0.3, 0.0))
     rough_s = _math(nt, "ADD", rough_s, _maprange(nt, streak, 0.3, 0.7, -0.08, 0.08))
@@ -665,7 +667,11 @@ def night(name, low=(0.035, 0.045, 0.07), high=(0.006, 0.009, 0.018), strength=1
         dx = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, wx))
         dz = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", z, wz))
         inside = _math(nt, "MULTIPLY", _maprange(nt, dx, ww / 2, ww / 2 + 0.03, 1.0, 0.0), _maprange(nt, dz, wh / 2, wh / 2 + 0.03, 1.0, 0.0))
-        col = _mix(nt, inside, col, rgb)
+        panes = _math(nt, "MULTIPLY", _maprange(nt, dx, 0.018, 0.035, 0.12, 1.0),
+                      _maprange(nt, dz, 0.018, 0.035, 0.12, 1.0))
+        curtain = _maprange(nt, _math(nt, "SUBTRACT", x, wx), -ww / 2, ww / 2, 0.48, 1.0)
+        window = _mix(nt, _math(nt, "MULTIPLY", panes, curtain), (0.009, 0.009, 0.012), rgb)
+        col = _mix(nt, inside, col, window)
     _link(nt, col, em.inputs["Color"])
     em.inputs["Strength"].default_value = strength
     _link(nt, em.outputs[0], nt.nodes["Material Output"].inputs[0])

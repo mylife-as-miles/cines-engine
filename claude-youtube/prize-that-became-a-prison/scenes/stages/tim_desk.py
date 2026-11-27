@@ -58,11 +58,11 @@ SINK = 0.012                       # how far he sinks into the (wooden) seat: th
 KNEE_HALF, ANKLE_HALF = 0.105, 0.1
 
 # leaning in on his forearms, head bowed over the page
-UPPER = {"torso": (6, 0), "chest": (12, 0), "neck": (11, 2), "head": (19, -6), "fingers": 10}
+UPPER = {"torso": (6, 0), "chest": (18, 0), "neck": (14, 2), "head": (28, -6), "fingers": 10}
 SOLVE = dict(UPPER, l_arm=(70, 6, 30), r_arm=(70, 6, 30))
 # the arms (world, Tim facing -Y; his right is -X): each elbow just off the desk's edge beside him, the forearm
 # lying across the desk at ARM_IN degrees in from straight ahead, the right hand on the pad, the left at its edge
-ARM_IN = {"R": 50.0, "L": 50.0}
+ARM_IN = {"R": 50.0, "L": 30.0}
 ELBOW_Z = TOP + 0.05
 HAND_REST = {"R": TOP + st.PAD_H + 0.0005, "L": TOP + st.PAD_H + 0.0005}    # what each hand rests on
 PALM_TILT = {"R": 40.0, "L": 12.0}       # degrees the knuckle line dips to the little-finger side: the writing
@@ -71,7 +71,7 @@ PITCHES = {"R": (0, -4, -8, -12, -16, -20), "L": (8, 4, 0, -4, -8, -12, -16)}   
                                          # down from level): the one that rests the heel and the fingers both is kept
 # finger joints (knuckle, middle, end, in degrees, on top of the body's relaxed rest curl): the right hand's index
 # and middle fingers lie along the pen, the other two tuck under; the left hand loosely flat
-CURLS = {"R": {"f_index": (-2, 0, 0), "f_middle": (4, 8, 4), "f_ring": (2, 8, 4), "f_pinky": (4, 10, 6)},
+CURLS = {"R": {"f_index": (20, 36, 19), "f_middle": (18, 28, 15), "f_ring": (27, 36, 19), "f_pinky": (30, 40, 22)},
          "L": {"f_index": (-12, -12, -6), "f_middle": (-12, -12, -6), "f_ring": (-10, -10, -5), "f_pinky": (-8, -10, -5)}}
 THUMB_CURL = {"R": 15.0, "L": 8.0}
 FINGERS = ("f_index", "f_middle", "f_ring", "f_pinky")
@@ -85,16 +85,20 @@ CAMERAS = {
     # Ch 09 (and Ch 01 'Tim remembers'): medium on Tim at the desk in the lamp's pool
     "desk": dict(loc=(-1.42, -0.24, 1.12), aim=(0.0, 0.2, 1.0), lens=33, focus="fx_tim", fstop=2.8, beat="ch09"),
     # Ch 09 / Ch 11 'The family's letters': straight down on the desk (the top of the frame is the window side)
-    "letters": dict(loc=(-0.04, 0.009, TOP + 3.1), aim=(-0.04, 0.005, TOP), lens=85, focus="fx_letters", fstop=11.0, beat="ch09",
+    "letters": dict(loc=(-0.30, 0.009, TOP + 3.1), aim=(-0.30, 0.005, TOP), lens=100, focus="fx_letters", fstop=11.0, beat="ch09",
                     cast=False),
     # Ch 09 (and Ch 01 'Tim himself'): wide from behind, Tim small at the desk against the window and the night
-    "window": dict(loc=(1.0, 4.05, 1.25), aim=(-0.1, -0.37, 0.9), lens=28, focus="fx_tim", fstop=4.0, beat="ch09", exposure=-0.6),
+    "window": dict(loc=(0.70, 3.90, 1.95), aim=(-0.10, -0.25, 0.85), lens=32, focus="fx_tim", fstop=4.0,
+                   beat="ch09", exposure=-0.6, final_res=(1920, 1080)),
 }
 # per camera: haze density and light trims (multipliers on the built energies)
 HAZE = {"desk": 0.004, "letters": 0.0, "window": 0.006}
 # the wide is exposed most of a stop over the others (the room has to read round the island): there the room's
 # own dark, the screen's spill behind the desk and the street light's stripes are each brought up to show
-TRIMS = {"desk": {}, "letters": {"tim_bounce": 0.0}, "window": {"room_fill": 5.0, "laptop_screen_light": 2.5, "street": 1.6}}
+TRIMS = {"desk": {"night_glow": 2.5, "letter return": 0.0},
+         "letters": {"tim_bounce": 0.0, "lamp_spill": 2.5, "street": 3.0},
+         "window": {"room_fill": 9.0, "night_glow": 3.0, "lamp_spill": 3.0,
+                    "laptop_screen_light": 1.5, "street": 1.6, "letter return": 0.0}}
 _STATE = {"cast": [], "base": {}, "with_cast": False}
 
 
@@ -201,7 +205,8 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
 
     def line(d):
         d0 = min(62, int(d) // 2 * 2)
-        return base[d0] + extra(d)
+        d1 = min(d0 + 2, 62)
+        return base[d0] + (base[d1] - base[d0]) * (d - d0) / 2 + extra(d)
     kill = [f for f in bm.faces if ang(f.calc_center_median()) < 62 and f.calc_center_median().z < line(ang(f.calc_center_median()))]
     bmesh.ops.delete(bm, geom=kill, context="FACES")
     loose = [v for v in bm.verts if not v.link_faces]
@@ -211,6 +216,15 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
         d = ang(v.co)
         if d < 62:
             v.co.z = max(v.co.z, line(d))
+    for _ in range(3):
+        # Relax only along the cut edge, keeping the fitted cap on the head.
+        smooth = {}
+        for v in edge_v:
+            neighbours = [e.other_vert(v).co for e in v.link_edges if e.is_boundary]
+            if len(neighbours) == 2 and ang(v.co) < 62:
+                smooth[v] = v.co.lerp((neighbours[0] + neighbours[1]) / 2, 0.45)
+        for v, co in smooth.items():
+            v.co = co
     ring = {e.other_vert(v) for v in edge_v for e in v.link_edges} - set(edge_v)
     bmesh.ops.smooth_vert(bm, verts=list(ring), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
     bm.verts.index_update()
@@ -674,19 +688,16 @@ def grip_pen(holder):
         a2 = max(-40.0, min(70.0, a1 + (INDEX_UP - z1) * (a1 - a0) / (z1 - z0)))
         a0, z0, a1, z1 = a1, z1, a2, tip_z(a2)
     y_h, x_h, n_p, idx, itip = hand_frame(rig, k)
-    web = idx + x_h * 0.013 - n_p * 0.016
-    fwd = Vector((y_h.x, y_h.y, 0.0)).normalized()
-    p0 = Vector((itip.x, itip.y, paper)) + fwd * 0.014
+    # Incline the barrel back across the thumb web. Its nib meets the sheet and its
+    # upper surface touches the index pad even when the seated pose changes.
+    back = _wpos(rig, "upper_arm_fk.R") - itip
+    back.z = 0.0
+    tilt = math.radians(53.0)
     zax = Vector((0, 0, 1))
-    for _ in range(5):                                 # the barrel through the web and under the index fingertip
-        axis = (web - p0).normalized()
-        up = (zax - axis * axis.z).normalized()
-        q = itip - up * reach
-        if q.z > web.z - 0.01:
-            break
-        p0 = web + (q - web) * ((paper - web.z) / (q.z - web.z))
-    axis = (web - p0).normalized()
+    axis = back.normalized() * math.cos(tilt) + zax * math.sin(tilt)
     up = (zax - axis * axis.z).normalized()
+    contact = itip - up * reach
+    p0 = contact - axis * ((contact.z - paper) / axis.z)
     side_t = axis.cross(up).normalized()
     if side_t.dot(x_h) < 0:
         side_t = -side_t
@@ -730,8 +741,9 @@ def grip_pen(holder):
             pb[nm].rotation_euler = (math.radians(c), 0.0, 0.0)
         upd()
         tp = _wpos(rig, f"thumb.03.{k}", tail=True)
-        return (tp - marks["thumb"]).length + 3.0 * max(0.0, reach - off_axis(tp))
-    for c in (0, 20):
+        radius = off_axis(tp)
+        return (tp - marks["thumb"]).length + 2.0 * abs(radius - reach) + 3.0 * max(0.0, reach - radius)
+    for c in (0, 20, 40):
         for x in range(-70, 71, 10):
             for z in range(-70, 71, 10):
                 d = try_t(x, z, c)
@@ -832,6 +844,18 @@ def lights():
     fill = st.area("room_fill", ((R["x0"] + R["x1"]) / 2, 2.2, R["h"] - 0.05), (3.0, 3.4), 2.4, (0.6, 0.72, 1.0), spread=170)
     fill.visible_camera = False
     fill.visible_glossy = False
+    wall = bpy.data.objects["room_wall+x"]
+    glow = st.area("lamp wall return", (R["x1"] - 0.60, 0.83, 1.49), (0.62, 0.60),
+                   5.2, st.WARM, spread=135, aim=(R["x1"], 1.03, 1.40))
+    receivers = bpy.data.collections.new("desk wall and frame")
+    for ob in [wall, *bpy.data.objects["desk wall picture"].children]:
+        receivers.objects.link(ob)
+    glow.light_linking.receiver_collection = receivers
+    glow.visible_camera = glow.visible_glossy = False
+    # Warm spill reaching the correspondence from the lamp side in the overhead insert.
+    reply = st.area("letter return", (-0.17, -0.16, TOP + 0.30), (0.22, 0.13),
+                    5.5, st.WARM, spread=95, aim=(-0.52, -0.02, TOP))
+    reply.visible_camera = reply.visible_glossy = False
 
 
 def tim_lights(holder):
