@@ -463,6 +463,23 @@ def arm_to(holder, side, elbow_t, wrist_t, hand_pitch=14.0):
     return e, w, tip
 
 
+def rest_hand_on_top(holder, side, key, elbow, wrist, top, *, gap=0.002, pitch_limit=16.0):
+    """Set the palm heel and finger pads on a horizontal surface using the posed skin."""
+    pitch = 1.0
+    for _ in range(8):
+        e, w, tip = arm_to(holder, side, elbow, wrist, hand_pitch=pitch)
+        skin = rigged.hand_surface(holder, key)
+        palm = min(p.z for p in skin["palm"])
+        pads = min(p.z for p in skin["fingers"] + skin["thumb"])
+        low = min(palm, pads)
+        print(f"HOME contact {holder.name} {key}: heel {(palm-top)*1000:+.1f} mm, pads {(pads-top)*1000:+.1f} mm", flush=True)
+        if abs(low - top - gap) < 0.002 and abs(palm - pads) < 0.008:
+            break
+        pitch = max(-pitch_limit, min(pitch_limit, pitch + math.degrees((pads - palm) / 0.15)))
+        wrist = (wrist[0], wrist[1], wrist[2] + max(-0.025, min(0.025, top + gap - low)))
+    return e, w, tip, skin
+
+
 def place_dawn(holder, seat_z):
     cx, cy, _ = DAWN_CHAIR
     dz, _ = seat_figure(holder, seat_z)
@@ -516,19 +533,9 @@ def arms_on_table(holder):
     deck = K_TOP + st.LAP_T + 0.002
     for side, k in ((-1, "R"), (1, "L")):
         e, w, tip, et, wt = out[k]
-        pitch = 1.0
-        for _ in range(8):
-            e, w, tip = arm_to(holder, side, et, wt, hand_pitch=pitch)
-            surface = rigged.hand_surface(holder, k)
-            palm = min(p.z for p in surface["palm"])
-            pads = min(p.z for p in surface["fingers"] + surface["thumb"])
-            low = min(palm, pads)
-            # Lower the heel toward the deck while keeping the fingertips just above it.
-            print(f"HOME contact {k}: heel {(palm-deck)*1000:+.1f} mm, pads {(pads-deck)*1000:+.1f} mm", flush=True)
-            if abs(low - deck - 0.002) < 0.002 and abs(palm - pads) < 0.008:
-                break
-            pitch = max(-16.0, min(16.0, pitch + math.degrees((pads - palm) / 0.15)))
-            wt = (wt[0], wt[1], wt[2] + max(-0.025, min(0.025, deck + 0.002 - low)))
+        e, w, tip, surface = rest_hand_on_top(holder, side, k, et, wt, deck)
+        pads = min(p.z for p in surface["fingers"] + surface["thumb"])
+        palm = min(p.z for p in surface["palm"])
         if k == "R":
             touching = [p for p in surface["fingers"] if p.z <= pads + 0.006]
             out["trackpad"] = sum(touching, Vector()) / len(touching) if touching else tip
@@ -727,9 +734,9 @@ def family_member(name, chair, age, height, weight, tone):
         elbow_y = shoulder.y - math.sqrt(max(0, length**2 - (shoulder.z - elbow_z)**2 - 0.015**2))
         elbow = (shoulder.x + side * 0.015, elbow_y, elbow_z)
         wrist = (hip.x + side * 0.105, elbow_y - 0.255, st.D_TOP + 0.028)
-        arm_to(holder, side, elbow, wrist, hand_pitch=3.0)
         rigged.articulate_hand(holder, k, {"f_index": (5, 7, 6), "f_middle": (7, 9, 7),
                                          "f_ring": (9, 11, 8, 4), "f_pinky": (11, 12, 9, 7)})
+        rest_hand_on_top(holder, side, k, elbow, wrist, st.D_TOP, gap=0.001, pitch_limit=32.0)
     holder.rotation_euler.z = math.radians(turn + 90.0)
     shift = holder.rotation_euler.to_matrix() @ Vector((hip.x, hip.y + (0.10 if gene else 0), 0.0))
     holder.location.x, holder.location.y = x - shift.x, y - shift.y
