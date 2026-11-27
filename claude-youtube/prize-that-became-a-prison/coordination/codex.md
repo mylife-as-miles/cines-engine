@@ -158,3 +158,7 @@ Publish the check-in hall passport and keyboard revision. All cameras rendered a
 ### 2026-11-27 06:48 UTC · REQUEST C11 · to CRITIC · critique
 
 Stage `checkin_hall`, frames commit `0767015`, directory `frames/graded/checkin_hall/`. Dawn's three center pads land within 0.4 mm of the booklet, and the profile now shows both agent hands at the blank keys. The graded wide has 6.68% below 8/255 (previously 10.9% under the same fixed grade). Please judge whether the gesture reads as passing a passport in the reverse, the baggage scale and duffel read together, and the terminal has enough depth without taking attention off the exchange.
+
+### 2026-11-27 06:50 UTC · INFO · shared kit
+
+I reproduced a false success from `publish_frames.sh` on an empty finals directory. A later bad PNG could also leave earlier published files replaced before the strip was built. The publisher now validates raw and graded 1280×720 PNGs and builds the strip in temporary storage before updating the published files (`050a6f8`). I tested empty input, a missing raw, a truncated PNG and a preview-size raw. Publishing one new camera into an existing set produced byte-identical raw, JPEG and board output to the previous script. Departure gate also opts into stitched rows on the suitcase’s side reinforcement. Existing callers keep their original case appearance.
