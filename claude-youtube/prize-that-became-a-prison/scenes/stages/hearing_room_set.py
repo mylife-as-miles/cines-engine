@@ -36,7 +36,7 @@ T = 0.3                  # wall thickness
 
 # the dais: two tiers on concentric arcs about C = (0, DC), angles measured from +Y toward +X
 DC = -1.2
-SPAN = math.radians(38.0)
+SPAN = math.radians(48.0)
 TIERS = (   # fascia face radius, platform z, desk z, cap z, facets
     dict(R=5.2, zp=0.30, zd=1.0, zc=1.1, n=8),
     dict(R=6.95, zp=0.95, zd=1.66, zc=1.78, n=10),
@@ -397,9 +397,9 @@ def drape():
         row = []
         for i in range(nx + 1):
             x = x0 + (x1 - x0) * i / nx
-            ph = 2 * math.pi * x / lam
+            ph = 2 * math.pi * x / lam + 0.52 * math.sin(1.8 * x) + 0.27 * math.sin(3.2 * x + 0.7)
             wob = 0.35 * math.sin(x * 1.7 + 0.6) * t       # pleats wander a little toward the hem
-            y = yb - amp * (math.sin(ph + wob) * 0.92 + 0.08 * math.sin(2 * ph + 1.3))
+            y = yb - amp * (1 + 0.12 * math.sin(4.4 * x)) * (math.sin(ph + wob) * 0.92 + 0.08 * math.sin(2 * ph + 1.3))
             row.append(bm.verts.new((x, y, z)))
         rows.append(row)
     for j in range(nz):
@@ -414,9 +414,9 @@ def drape():
     span("pelmet", x0 - 0.15, x1 + 0.15, yb - 0.24, Y1, z1 - 0.02, z1 + 0.34, m["walnut_h"], bevel=0.012)
     span("pelmet_lip", x0 - 0.17, x1 + 0.17, yb - 0.26, yb - 0.2, z1 + 0.26, z1 + 0.36, m["walnut_h"], bevel=0.01)
     # the washer: a slot in the ceiling in front of the pelmet, its light grazing down the folds
-    slot = box("washer_slot", (9.6, 0.05, 0.012), (0, yb - 0.55, H - 0.004), mt.glow("washer lens", COOL, 1.2))
-    src = (0.0, yb - 0.55, H - 0.03)
-    area("washer", src, (9.4, 0.05), 380.0, COOL, spread=80, rot=aim_rot(src, (0.0, yb + 0.25, 1.2)))
+    slot = box("washer_slot", (9.6, 0.05, 0.012), (0, yb - 1.1, H - 0.004), mt.glow("washer lens", COOL, 1.2))
+    src = (0.0, yb - 1.1, H - 0.03)
+    area("washer", src, (9.4, 0.05), 380.0, COOL, spread=100, rot=aim_rot(src, (0.0, yb + 0.1, 2.2)))
     return ob
 
 
@@ -502,6 +502,18 @@ def dais_props(places):
         else:      # not all alike: a little taller or shorter, turned a little differently
             instance(mic, f"dais_mic{k}", (mp.x, mp.y, p["zd"]), tm + ((k * 7) % 5 - 2) * 5.0,
                      scale=1.0 + ((k * 5) % 3 - 1) * 0.07)
+        direction = Vector((math.cos(p["a"]), math.sin(p["a"]), 0))
+        tent = mp - direction * 0.26
+        nameplate(f"dais_blank_{k}", tent.x, tent.y, turn=math.degrees(p["a"]) + 180, z=p["zd"])
+        if k in (1, 4, 7):
+            binder = mp + direction * 0.28
+            box(f"closed_binder_{k}", (0.19, 0.25, 0.025), (binder.x, binder.y, p["zd"] + 0.0125),
+                materials()["backing"], bevel=0.004, rot=(0, 0, p["a"] + 0.08))
+        if k == 2:
+            pos = mp + direction * 0.26
+            carafe("dais_carafe", pos.x, pos.y, p["zd"])
+            for offset in (0.11, 0.20):
+                tumbler(f"dais_glass_{offset}", pos.x + offset, pos.y, 0, z=p["zd"])
         k += 1
     return chair, mic
 
@@ -561,18 +573,18 @@ def witness_table():
     return top
 
 
-def tumbler(name, x, y, fill):
+def tumbler(name, x, y, fill, z=TOP):
     """A plain glass tumbler (a lathed thin wall with a thick base) and the water in it."""
     m = materials()
     r_top, r_bot, h = 0.036, 0.03, 0.105
     prof = [(0.0, 0.0), (r_bot - 0.002, 0.0), (r_bot, 0.002), (r_top, h), (r_top - 0.0025, h), (r_bot - 0.0025, 0.012),
             (0.0, 0.012)]
-    g = lathe(name, prof, (x, y, TOP), m["glass"])
+    g = lathe(name, prof, (x, y, z), m["glass"])
     if fill > 0:
         zf = 0.012 + (h - 0.012) * fill
         rw = r_bot - 0.0026 + (r_top - r_bot) * (zf / h)
         wp = [(0.0, 0.0121), (r_bot - 0.0026, 0.0121), (rw, zf), (0.0, zf)]
-        lathe(name + "_water", wp, (x, y, TOP), m["water"])
+        lathe(name + "_water", wp, (x, y, z), m["water"])
     return g
 
 
@@ -601,7 +613,17 @@ def lathe(name, prof, loc, m, segs=48):
     return ob
 
 
-def nameplate(name, x, y, turn=0.0):
+def carafe(name, x, y, z):
+    material = materials()
+    profile = [(0, 0), (0.052, 0.001), (0.057, 0.009), (0.056, 0.13), (0.030, 0.19),
+               (0.026, 0.23), (0.031, 0.245), (0.028, 0.245), (0.023, 0.23),
+               (0.027, 0.19), (0.053, 0.13), (0.054, 0.009), (0, 0.007)]
+    lathe(name, profile, (x, y, z), material["glass"])
+    lathe(name + "_water", [(0, 0.007), (0.052, 0.007), (0.0525, 0.12), (0, 0.12)],
+          (x, y, z), material["water"])
+
+
+def nameplate(name, x, y, turn=0.0, z=TOP):
     """A blank nameplate: a dark walnut plate with bevelled edges (no lettering) leaning back in a walnut holder, its
     face toward the dais. (A pale card here read as a flat grey slab in the witness close-up.)"""
     m = materials()
@@ -612,7 +634,7 @@ def nameplate(name, x, y, turn=0.0):
     card = box(f"{name}_plate", (w, 0.009, 0.07), (0, 0.004, 0.016 + 0.034), m["walnut_h"], bevel=0.003,
                rot=(math.radians(12), 0, 0), parent=root)
     box(f"{name}_slot", (w + 0.01, 0.016, 0.012), (0, -0.002, 0.022), m["walnut_h"], bevel=0.003, parent=root)
-    root.location = (x, y, TOP)
+    root.location = (x, y, z)
     root.rotation_euler = (0, 0, math.radians(turn))
     return card
 
@@ -706,6 +728,7 @@ def table_dressing(mic_src, pos=None):
     folder(*p["folder"])
     nameplate("np_tim", *p["np_tim"])
     nameplate("np_empty", *p["np_empty"])
+    carafe("witness_carafe", EMPTY_X + 0.38, TABLE[1] + 0.12, TOP)
     timer_box(*p["timer"])
     tumbler("glass_tim", *p["glass_tim"])
     tumbler("glass_empty", *p["glass_empty"])

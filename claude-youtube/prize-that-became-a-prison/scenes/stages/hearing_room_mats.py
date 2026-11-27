@@ -338,7 +338,7 @@ def carpet(name, base=(0.03, 0.034, 0.046), lattice=0.09, walk=()):
     return m
 
 
-def felt(name, rgb=(0.02, 0.026, 0.045), nap=0.4):
+def felt(name, rgb=(0.02, 0.026, 0.045), nap=0.3):
     """Dense wool felt (the witness table's cloth): matt, a fine fuzzy nap (cellular fibre clumps plus fine noise)
     whose pale sheen catches light at grazing angles, faint clouding in the dye, darker where it folds into the
     shadow (AO). Kept low in saturation so the grade does not leave a flat saturated blue sheet."""

@@ -50,7 +50,7 @@ TORSO_GAP = 0.06                      # his jacket front this far from the table
 # At 0.73 / 0.6 the smooth stone still read as a man of 30 (a statue loses the skin's age): 0.78 (about 60 on the
 # macro) and a heavier 0.7 give the jaw, neck and middle of a man in his mid fifties, with the receding hairline.
 TIM_AGE, TIM_WEIGHT = 0.78, 0.7
-TIM_UPPER = {"head": (-18, -16), "neck": (2, 0), "chest": (12, 0), "fingers": 18}
+TIM_UPPER = {"head": (-8, -8), "neck": (2, 0), "chest": (12, 0), "fingers": 18}
 THUMB_CURL = 10.0
 ELBOW_FWD = 0.12          # the elbow hangs this far ahead of the shoulder (the upper arm nearly plumb)
 SHIRT = (0.78, 0.8, 0.84)       # read values (x people.FABRIC_VALUE): a pale shirt so the collar's V separates
@@ -74,7 +74,7 @@ CAMERAS = {
     # Ch 09: from behind the public seats, high enough to look over the rows: Tim small at the witness table in the
     # one pool of light, facing the high curved dais and its empty chairs, the drape beyond
     # (a quarter stop over the stage: the grade's vignette takes the frame's edges, where the side walls are, to black)
-    "wide": dict(loc=(2.3, -9.05, 2.05), aim=(-0.35, 2.4, 1.5), lens=30, focus="fx_wide", fstop=8.0, beat="ch09",
+    "wide": dict(loc=(2.3, -9.05, 2.40), aim=(-0.35, 2.4, 1.60), lens=30, focus="fx_wide", fstop=8.0, beat="ch09",
                  exposure=EXPOSURE + 0.25),
     # Ch 09: controlled medium from the dais side, a little above his eyeline: Tim at the microphones, hands folded on
     # the papers, the empty rows going dark behind him
@@ -124,11 +124,11 @@ HIDE = {}
 # stone face sits near 0.65 and the charcoal suit well under it (at full level the suit read as mid grey beside a
 # near-white face: AgX compresses the highlights)
 TRIMS = {
-    "wide": {},
+    "wide": {"washer": 0.55},
     # (the witness frame: the young figure behind him in darkness, not a lone half-lit face over his shoulder; the
     # fill under the key and the table downlight a little up, so the overhead light models his brow and cheeks)
-    "witness": {"tv_key_light": 0.27, "tv_fill_light": 0.18, "dl_table_spot": 0.55, "dl_fig_-2.4_-2.4_spot": 0.15},
-    "dais": {},
+    "witness": {"tv_key_light": 0.27, "tv_fill_light": 0.06, "dl_table_spot": 0.55, "dl_fig_-2.4_-2.4_spot": 0.15},
+    "dais": {"washer": 0.75},
     "hands": {"tv_key_light": 0.3, "tv_fill_light": 0.3, "dl_table_spot": 0.4},
 }
 
@@ -673,85 +673,27 @@ def hands_folded(holder):
     print("HEARING hands " + "; ".join(report), flush=True)
 
 
-def suit_tones(holder, item, jacket, shirt, tie):
-    """people.man tints the elegant suit flat in one tone, so shirt, tie and jacket read as one black shirt. Split it
-    with masks made from the garment's own texture (the shirt is its bright grey regions: collar, V and cuffs; the
-    tie its navy region, grown to swallow its stripes) and tint the three flat: a pale shirt so the collar's V
-    separates from the jacket, a dark tie. Tones are read values, multiplied by people.FABRIC_VALUE."""
-    import numpy as np
-    ob = bpy.data.objects.get(f"{holder.name}_{item}")
-    if ob is None:
-        print(f"HEARING suit_tones: no {holder.name}_{item}", flush=True)
-        return
-    fv = people.FABRIC_VALUE
-    for slot in ob.material_slots:
-        mat = slot.material
-        if not (mat and mat.use_nodes):
+def age_neck_and_jaw(holder):
+    """Broaden the lower jaw and neck of the witness without shifting his eyelids or hairline."""
+    body = bpy.data.objects[holder["body"]]
+    rig = rigged.rig_of(holder)
+    head = body.matrix_world.inverted() @ rig.matrix_world @ rig.data.bones["DEF-spine.006"].head_local
+    groups = {g.index for g in body.vertex_groups if g.name in ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006")}
+    if body.data.shape_keys is None:
+        body.shape_key_add(name="Basis")
+    shape = body.shape_key_add(name="Mature neck and jaw", from_mix=False)
+    count = 0
+    for v in body.data.vertices:
+        if not any(g.group in groups and g.weight > 0.18 for g in v.groups):
             continue
-        nt = mat.node_tree
-        tex = next((n for n in nt.nodes if n.type == "TEX_IMAGE" and n.image), None)
-        bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
-        if tex is None or bsdf is None:
-            continue
-        img = tex.image
-        w, hgt = img.size
-        px = np.empty(w * hgt * 4, np.float32)
-        img.pixels.foreach_get(px)
-        px = px.reshape(hgt, w, 4)[..., :3]
-        v, mn = px.max(-1), px.min(-1)
-        navy = (px[..., 2] - px[..., 0] > 0.06) & (v > 0.12)
-        tie_m = np.zeros_like(navy)
-        ys, xs = np.nonzero(navy)
-        if len(xs) > 50:
-            y0, y1 = int(np.percentile(ys, 0.5)) - 10, int(np.percentile(ys, 99.5)) + 10
-            x0, x1 = int(np.percentile(xs, 0.5)) - 10, int(np.percentile(xs, 99.5)) + 10
-            sub = navy[y0:y1, x0:x1]
-            grown = sub.copy()
-            for dy in range(-7, 8):                  # close the stripes: grow 7 px, shrink 4
-                for dx in range(-7, 8):
-                    if dx * dx + dy * dy <= 49:
-                        grown |= np.roll(np.roll(sub, dy, 0), dx, 1)
-            shrunk = grown.copy()
-            for dy in range(-4, 5):
-                for dx in range(-4, 5):
-                    if dx * dx + dy * dy <= 16:
-                        shrunk &= np.roll(np.roll(grown, dy, 0), dx, 1)
-            tie_m[y0:y1, x0:x1] = shrunk
-        shirt_m = (v > 0.42) & ((v - mn) < 0.15) & ~tie_m
-        out = np.zeros((hgt, w, 4), np.float32)
-        out[..., 0] = shirt_m
-        out[..., 1] = tie_m
-        out[..., 3] = 1.0
-        # (the colour space is set before the pixels and the image packed: setting it afterwards regenerated the blank
-        # generated image, so the mask rendered black and the shirt took the jacket's tone, the black-shirt look)
-        mimg = bpy.data.images.new(f"{holder.name}_suitmask", w, hgt, alpha=False)
-        mimg.colorspace_settings.name = "Non-Color"
-        mimg.pixels.foreach_set(out.ravel())
-        mimg.pack()
-        mt_ = nt.nodes.new("ShaderNodeTexImage")
-        mt_.image = mimg
-        if tex.inputs["Vector"].links:
-            nt.links.new(tex.inputs["Vector"].links[0].from_socket, mt_.inputs["Vector"])
-        sep = nt.nodes.new("ShaderNodeSeparateColor")
-        nt.links.new(mt_.outputs["Color"], sep.inputs["Color"])
-        def rgba_mix(fac_socket, a, b):
-            mx = nt.nodes.new("ShaderNodeMix")
-            mx.data_type = "RGBA"
-            fs = [i for i in mx.inputs if i.name == "Factor" and i.type == "VALUE"][0]
-            sa = [i for i in mx.inputs if i.name == "A" and i.type == "RGBA"][0]
-            sb = [i for i in mx.inputs if i.name == "B" and i.type == "RGBA"][0]
-            nt.links.new(fac_socket, fs)
-            for sock, val in ((sa, a), (sb, b)):
-                if isinstance(val, tuple):
-                    sock.default_value = (*[c * fv for c in val], 1)
-                else:
-                    nt.links.new(val, sock)
-            return [o for o in mx.outputs if o.type == "RGBA"][0]
-        col = rgba_mix(sep.outputs["Red"], tuple(jacket), tuple(shirt))
-        col = rgba_mix(sep.outputs["Green"], col, tuple(tie))
-        nt.links.new(col, bsdf.inputs["Base Color"])
-        print(f"HEARING suit_tones: {mat.name} shirt {shirt_m.mean() * 100:.2f}% tie {tie_m.mean() * 100:.2f}% of the "
-              f"texture", flush=True)
+        dz = v.co.z - head.z
+        neck = max(0.0, 1 - ((dz + 0.045) / 0.07) ** 2) ** 2
+        jaw = max(0.0, 1 - ((dz - 0.032) / 0.045) ** 2) ** 2
+        if neck or jaw:
+            shape.data[v.index].co.x += (v.co.x - head.x) * max(0.12 * neck, 0.08 * jaw)
+            count += 1
+    shape.value = 1.0
+    print(f"HEARING jaw and neck profile: {count} vertices", flush=True)
 
 
 def soften_hair(holder):
@@ -764,7 +706,7 @@ def soften_hair(holder):
         tx.noise_scale, tx.noise_depth = 0.018, 2
         dp = hair.modifiers.new("clumps", "DISPLACE")
         dp.texture, dp.texture_coords = tx, "LOCAL"
-        dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.5, 0.004, "volume"
+        dp.direction, dp.mid_level, dp.strength, dp.vertex_group = "NORMAL", 0.5, 0.004, "hair_clumps"
         i, j = hair.modifiers.find("clumps"), hair.modifiers.find("volume") + 1
         if 0 < j < i:
             hair.modifiers.move(i, j)
@@ -846,24 +788,22 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
     bmesh.ops.smooth_vert(bm, verts=list(ring), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
     bm.verts.index_update()
     bm.verts.ensure_lookup_table()
-    dist = {v.index: 0 for v in bm.verts if v.is_boundary}
-    front, step = list(dist), 0
-    while front:
-        step += 1
-        nxt = []
-        for i in front:
-            for e in bm.verts[i].link_edges:
-                o = e.other_vert(bm.verts[i]).index
-                if o not in dist:
-                    dist[o] = step
-                    nxt.append(o)
-        front = nxt
+    from mathutils.kdtree import KDTree
+    boundary = [v for v in bm.verts if v.is_boundary]
+    edge_tree = KDTree(len(boundary))
+    for v in boundary:
+        edge_tree.insert(v.co, v.index)
+    edge_tree.balance()
+    distances = {v.index: edge_tree.find(v.co)[2] for v in bm.verts}
     bm.to_mesh(hair.data)
     bm.free()
-    vg = hair.vertex_groups.get("volume")
-    if vg is not None:
-        for i, d in dist.items():
-            vg.add([i], min(1.0, (d / 10.0)) ** 0.7, "REPLACE")
+    volume_group = hair.vertex_groups.get("volume")
+    clumps = hair.vertex_groups.new(name="hair_clumps")
+    for i, distance in distances.items():
+        t = min(1.0, distance / 0.025)
+        if volume_group is not None:
+            volume_group.add([i], t * t * (3 - 2 * t), "REPLACE")
+        clumps.add([i], max(0.0, min(1.0, (distance - 0.015) / 0.018)), "REPLACE")
     md = hair.modifiers.get("volume")
     if md is not None:
         md.strength = volume
@@ -874,8 +814,9 @@ def recede_hair(holder, lift=((0, 0.02), (16, 0.024), (32, 0.034), (48, 0.02), (
 def tim():
     """Tim at the witness table: seated, then turned to face the dais, slid so his jacket front sits TORSO_GAP from
     the table edge; his chair set behind him; his arms laid on the table."""
-    h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1))
-    suit_tones(h, "male_elegantsuit01", (0.09, 0.09, 0.1), SHIRT, TIE)
+    h = people.man("Tim", age=TIM_AGE, weight=TIM_WEIGHT, suit="male_elegantsuit01", tone=(0.09, 0.09, 0.1),
+                   shirt_tone=SHIRT, tie_tone=TIE)
+    age_neck_and_jaw(h)
     recede_hair(h)
     soften_hair(h)
     seat_figure(h, st.SEAT_Z, TIM_UPPER, 0.11, 0.11, tag="Tim")
