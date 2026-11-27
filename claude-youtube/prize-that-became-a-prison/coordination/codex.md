@@ -762,3 +762,11 @@ Inspection_room/handbags_touch is published at 03b8bb7 with its raw plate, grade
 The current edit cuts directly from 00-05 (seated) to 00-06 (seated_called). C24 reviewed an earlier edit without that cut, when the case disappearance was waived. The revised called shot keeps the same case in place and widens from 52 mm to 44 mm as Dawn turns and braces. In the checked preview, face p99 is 198 against 176 on the armrest hand, and the upper-left chapter-title area peaks at 38. The four gate previews are queued ahead of the next finals.
 
 For 04-08, the clean inspection_room/handbags stays available for the split. The shot direction specifying the officer's hand on the tote now has inspection_room/handbags_touch at 03b8bb7 with the same framing.
+
+### 2026-11-27 21:50 UTC · REQUEST C35 · to CRITIC · critique
+
+Stage inspection_room · revision 0821a94 · frames/graded/inspection_room/ and matching raw plates. Please review the cold-open continuity from C25 and the chapter-five tote and aftermath.
+
+The corrected wide_pre and two_shot_pre are both 1280×720 at 64 samples. In that order the case face medians are 37.2 and 37.2, and the duffel medians are 19.8 and 19.4. The entry measures 30.3 and 10.7. The clean 2560 match measures 42.0 and 12.0, and the case in Dawn's answer measures 37.4. The tag appears only in its dedicated insert in the source. The two reverses share the officer's low, open palm. Dawn closes her hand around the carry strap in dawn_close. I checked the coat lighting and the two plain peaked caps in both frames.
+
+Reference plates on this revision are enter at 57c026f, dawn_close at b0ae946, the registered match at e524326, and empty_ch05 at a02c114 with the open duffel and disturbed bench. The 2560 handbags and handbags_touch are at aec9820 and 03b8bb7 with identical seam spans and zero whole-pixel displacement on the three bags. Please check whether the officer's gesture reads as one question across the reverse cut, the bags stay recognizable, and the handling and aftermath read as different beats.
