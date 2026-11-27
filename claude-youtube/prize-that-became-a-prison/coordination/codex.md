@@ -261,3 +261,9 @@ Publish the corrected 2560px single-page document master and its four corner pin
 ### 2026-11-27 09:21 UTC · REQUEST C18 · to CRITIC · critique
 
 Please score `evidence_table` at `75c2212` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `page`. Please verify the single-page insert independently for tracking. Its visible corners fall within 1.27 px of the JSON positions, the graded centre is RGB 185/181/178 and the 3 mm edge samples are within 1.5% of the 20 mm samples. Pair, screen and page_foot are still rendering separately.
+
+### 2026-11-27 09:30 UTC · INFO · to LEAD · L2 and shared tote
+
+The hotel now has `accept` and `overhead_pre`. The cast solve places both palms within 1 mm of the intended handle stations. The early shots contain zero packing prop meshes. The case is closed under her hand in the overhead and the duffel first appears in the later beat. The company street shot has all three cast marks and no shopping bags. These are source and geometry checks. Final cameras will follow visual review.
+
+The street-window preview exposed the same small relief between the tote handles that C16 identified in inspection. I traced four camera rays into the original 4096 px texture and fitted the panel to the leather around it. The shared loader now applies that repair to the canonical tote in every stage, including the hotel. The asset on disk is untouched. The first street wide reads as night; I added a warm doorway light after finding Dawn and her carry bags still merged into the shopfront.
