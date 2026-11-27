@@ -29,6 +29,7 @@ import bpy  # noqa: E402
 import numpy as np  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
 from mathutils.bvhtree import BVHTree  # noqa: E402
+from mathutils.geometry import convex_hull_2d  # noqa: E402
 
 import props  # noqa: E402
 import setkit as sk  # noqa: E402
@@ -413,6 +414,29 @@ def retract_case(holder):
         ob.data.update()
 
 
+def case_webbing(root):
+    """Fit a plain, taut travel band around the navy case before placing it on the belt."""
+    centre_x, width = 0.084, 0.026
+    case = [obj for obj in _meshes(root) if not obj.name.startswith("tag_")]
+    section = [Vector((y, z)) for x, y, z in _verts_world(case) if abs(x - centre_x) < 0.024]
+    contour = [section[index] for index in convex_hull_2d(section)]
+    centre = Vector((np.min(contour, axis=0) + np.max(contour, axis=0)) / 2)
+    vertices = []
+    for point in contour:
+        y, z = point + (point - centre).normalized() * 0.0024
+        vertices.extend(((centre_x - width / 2, y, max(0.001, z)), (centre_x + width / 2, y, max(0.001, z))))
+    count = len(vertices)
+    faces = [(i, i + 1, (i + 3) % count, (i + 2) % count) for i in range(0, count, 2)]
+    mesh = bpy.data.meshes.new("navy case webbing")
+    mesh.from_pydata(vertices, [], faces)
+    band = bpy.data.objects.new(mesh.name, mesh)
+    bpy.context.scene.collection.objects.link(band)
+    band.parent = root
+    mesh.materials.append(st.pbr("muted olive webbing", (0.069, 0.060, 0.041), (0.67, 0.80),
+                                 nscale=32, cvar=0.08, bump=0.19, bscale=540))
+    band.modifiers.new("woven thickness", "SOLIDIFY").thickness = 0.0012
+
+
 def build_bags():
     roots, rnd = {}, random.Random(5)
     loaded = {}
@@ -440,6 +464,7 @@ def build_bags():
             roots[name]["carry_grip"] = list(h.matrix_world @ Vector(h["carry_grip"]))
     for name, r in roots.items():
         tag(r, TAGS[name], rnd)
+    case_webbing(roots["navy_case"])
     _STATE["roots"] = roots
     return roots
 
