@@ -1,0 +1,21 @@
+{
+  "about": "Cold open and chapter 4: Tim's 2024 statement (S1, page 1), the two 'yes' lines lit in turn as the voice says them.",
+  "plate": "frames/raw/evidence_table/page.png",
+  "corners": "frames/raw/evidence_table/page.corners.json",
+  "pdf": "archive/S1_tim_hunt_cecc_written_submission_2024.pdf",
+  "page": 1,
+  "dpi": 400,
+  "marks": [
+    {"phrase": "the luggage belonged to her, to which she responded “yes”.", "t": 1.0, "dur": 0.55},
+    {"phrase": "multiple times and each time she said “yes”", "t": 3.4, "dur": 0.55}
+  ],
+  "focus": "the luggage belonged to her, to which she responded “yes”.",
+  "soft": ["Dear Mr. Flipse,", "Dawn was born 12 June 1971, so she is now 53.",
+           "I am currently busy helping my father through cancer treatment but I am"],
+  "zoom": [3.0, 3.2],
+  "end_offset": [0, 6],
+  "roll_deg": -9,
+  "focus_band": {"sharp_lines": 1.3, "ramp_lines": 4.0, "blur_px": 3.2},
+  "duration": 6.0,
+  "length": 7.0
+}

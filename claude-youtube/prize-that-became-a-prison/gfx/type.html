@@ -105,34 +105,40 @@ function land(ctx, text, x, y, st, t, t0, opts = {}) {
 function erode(ctx, a, b, x, y, st, t, t0) {
   const L = look(), tf = (t - t0) * 60;
   font(ctx, st); const wa = width(ctx, a, st), wb = width(ctx, b, st);
-  const k = E.snapOut(cl((tf - 6) / 24)), slot = wa + (wb - wa) * k;
+  const k = E.snapOut(cl((tf - a.length * 3) / 24)), slot = wa + (wb - wa) * k;
   ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink;
   // old word, letters leaving last-first
   let cx = x - slot / 2 + (slot - wa) / 2 * (1 - k);
   for (let i = 0; i < a.length; i++) {
-    const order = a.length - 1 - i, q = cl((tf - order * 3) / 6), op = 1 - Math.min(1, 1.6 * q);
+    const order = a.length - 1 - i, q = cl((tf - order * 3) / 5), op = 1 - Math.min(1, 1.6 * q);
     font(ctx, st); const lw = ctx.measureText(a[i]).width;
     if (op > 0) { ctx.globalAlpha = op; ctx.fillText(a[i], cx, y); }
     if (q > 0 && q < 1) { ctx.save(); ctx.globalAlpha = 0.9 * Math.sin(Math.PI * q) * 0.5; ctx.filter = 'blur(6px)'; ctx.fillText(a[i], cx + 8, y); ctx.restore(); }
     cx += lw;
   }
-  // new word, letters rising in order
+  // new word, letters rising in order out of a slot at the baseline (clipped below it), once the old word has
+  // mostly gone, so no two letters ever sit on the same spot
   cx = x - slot / 2 + (slot - wb) / 2 * (1 - k);
+  const start = a.length * 3 - 1;
   for (let i = 0; i < b.length; i++) {
-    const r = cl((tf - 6 - i * 4) / 20), op = Math.min(1, 2.5 * r);
+    const r = cl((tf - start - i * 4) / 20), op = Math.min(1, 2.5 * r);
     font(ctx, st); const lw = ctx.measureText(b[i]).width;
-    if (r > 0) { ctx.globalAlpha = op; ctx.fillText(b[i], cx, y + (1 - E.snapOut(r)) * 0.45 * st.size); }
+    if (r > 0) {
+      ctx.save(); ctx.beginPath(); ctx.rect(cx - st.size * 0.2, y - st.size * 1.2, lw + st.size * 0.4, st.size * 1.42); ctx.clip();
+      ctx.globalAlpha = op; ctx.fillText(b[i], cx, y + (1 - E.snapOut(r)) * 0.45 * st.size); ctx.restore();
+    }
     cx += lw;
   }
   ctx.restore();
 }
 // Rolling year digits: tabular strips at 1.2 em pitch; the value steps a -> b with a stepped tail into the landing.
 function roll(ctx, a, b, x, y, st, t, t0, dur) {
-  const L = look(), n = b - a, p = cl((t - t0) / dur), v = a + n * E.out(p), lo = Math.floor(v), frac = v - lo;
+  // each year gets its own tick: gaps grow from 0.18 s to about 0.6 s into the landing (cinetic's stepped tail)
+  const L = look(), n = b - a, p = cl((t - t0) / dur), q = 1 - Math.pow(1 - p, 1.8), v = a + n * q, lo = Math.floor(v), frac = v - lo;
   const sa = String(lo), sb = String(Math.min(b, lo + 1));
   font(ctx, st); ctx.save(); ctx.textBaseline = 'alphabetic'; ctx.fillStyle = L.ink; ctx.fontVariantNumeric = 'tabular-nums';
   const total = width(ctx, String(b), st); let cx = x - total / 2;
-  const pitch = st.size * 1.2, roll = E.out(cl(frac * 1.6));
+  const pitch = st.size * 1.2, roll = E.out(cl(frac * 2.2));
   for (let i = 0; i < sa.length; i++) {
     const dw = ctx.measureText(sb[i]).width;
     ctx.save(); ctx.beginPath(); ctx.rect(cx - 4, y - st.size * 0.95, dw + 8, st.size * 1.12); ctx.clip();
@@ -164,7 +170,7 @@ const MOMENTS = {
     if (t < 3.2) { reveal(ctx, 'DEATH SENTENCE', 0.08 * W, 0.42 * H, L.big, t, 0.2); reveal(ctx, 'WITH TWO-YEAR REPRIEVE', 0.08 * W, 0.42 * H + L.big.size * 1.15, L.big, t, 0.7); }
     else { reveal(ctx, 'LIFE IN PRISON', 0.08 * W, 0.42 * H, L.big, t, 3.2); } },
   counter: (ctx, t) => { const L = look();         // void cell pull back: 2014 rolling to 2026
-    roll(ctx, 2014, 2026, 0.5 * W, 0.22 * H, L.num, t, 0.3, 4.0); },
+    roll(ctx, 2014, 2026, 0.5 * W, 0.22 * H, L.num, t, 0.3, 6.0); },
   title: (ctx, t) => { const L = look();           // over void bags in the beam
     reveal(ctx, 'THE PRIZE THAT BECAME A PRISON', 0.5 * W, 0.2 * H, L.big, t, 0.0, 'center'); },
   date_gene: (ctx, t) => { const L = look();
