@@ -11,7 +11,7 @@
   "loop": false,
   "fade_out_s": 0.05
  },
- "music_lufs": -37.78,
+ "music_lufs": -36.429,
  "voice": [
   {
    "file": "/home/user/cines-engine/claude-film/long-distance/out/mix/voice/L001.wav",
