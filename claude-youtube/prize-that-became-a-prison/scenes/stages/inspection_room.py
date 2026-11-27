@@ -316,8 +316,8 @@ def officer(name, variant):
         for v in mesh.vertices:
             x, y, z = v.co.x - centre.x, v.co.y - centre.y, v.co.z - band_z
             if z < 0:
-                x -= 0.50 * z
-                z *= 0.33
+                x -= 0.95 * z
+                z *= 0.075
             v.co = (centre.x + 1.18 * y, centre.y - 1.54 * x + 0.009, band_z + z * 1.82 - 0.035)
         mesh.update()
     return h
