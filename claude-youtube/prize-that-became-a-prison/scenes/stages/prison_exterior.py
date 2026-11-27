@@ -59,21 +59,21 @@ CAMERAS = {
                  beat="ch08"),
     # Ch 08: from the road, low, up at the tower: its outer face in the mast's light, the cabin dark against the
     # sky, the wire running along the wall top to it
-    "tower": dict(loc=(-8.5, -9.0, 0.55), aim=(2.2, -20.2, 9.9), lens=26, shift_y=0.0, exposure=-1.2, mist=0.0045,
+    "tower": dict(loc=(-8.5, -9.0, 0.55), aim=(2.2, -20.2, 9.9), lens=26, shift_y=0.0, exposure=-1.2, mist=0.006,
                   beat="ch08"),
 }
 # light trims per camera: group -> factor (groups: mast, spill, gate, yard, yardglow, tower)
 # (a key may also be the start of a lamp's name: the mast beside the wall camera is turned down for that frame, so
 # the pools further along the wall are the brighter ones)
-TRIMS = {"wall": {"mast_spot_0": 0.7, "mast_spill_0": 0.7}, "gate": {}, "tower": {}}
+TRIMS = {"wall": {"mast_spot_0": 0.7, "mast_spill_0": 0.7}, "gate": {"yardglow": 0.52}, "tower": {}}
 # The rain per camera. cover: how much of the frame the streaks may cover in all; gain: how much light a drop
 # returns (low: a streak is bright only near a lamp and fades down the cone); wpx: a streak's width in pixels;
 # length: metres; clear: how transparent a streak is (0: opaque). Across a beam (wall) and into one (gate) the rain
 # is fine, faint and dense; under the tower, where the drops are a few metres from the lens, it is sparser and
 # brighter. The gate's streaks are 60 % clear, so they do not draw dark hairlines across the lit gate.
-RAIN = {"wall": dict(cover=0.035, seed=3, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1)),
-        "gate": dict(cover=0.035, seed=5, gain=0.14, wpx=(0.3, 0.55), length=(0.5, 1.1), clear=0.6),
-        "tower": dict(cover=0.014, seed=8, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6))}
+RAIN = {"wall": dict(cover=0.045, seed=3, gain=0.12, wpx=(0.30, 0.55), length=(0.25, 0.55)),
+        "gate": dict(cover=0.05, seed=5, gain=0.09, wpx=(0.30, 0.55), length=(0.18, 0.40)),
+        "tower": dict(cover=0.020, seed=8, gain=0.22, wpx=(0.30, 0.60), length=(0.23, 0.50))}
 FALL = (0.07, -0.035, -1.0)   # the rain's fall line: a light wind along the wall
 
 _STATE = {"rain": {}, "cast": []}
@@ -94,11 +94,12 @@ def irradiance(P, skip=()):
     """What the lamps put on points P (N x 3), ignoring shadows: enough to know where rain would show."""
     E = np.zeros(len(P))
     for L in st.LIGHTS:
-        if L["kind"] != "spot" or L["group"] == "yard" or any(L["name"].startswith(k) for k in skip):
-            continue                       # rain shows in the floodlights' cones, not in their spill
+        spill = L["name"].startswith(("mast_spill", "gate_spill"))
+        if L["kind"] != "spot" and not spill or L["group"] == "yard" or any(L["name"].startswith(k) for k in skip):
+            continue
         v = P - np.array(L["loc"])
         d2 = np.maximum((v * v).sum(1), 0.25)
-        e = L["power"] / (4 * math.pi * d2)
+        e = (0.30 if spill else 1.0) * L["power"] / (4 * math.pi * np.maximum(d2, 9.0))
         if L["kind"] == "spot":
             ca = (v @ np.array(L["dir"])) / np.sqrt(d2)
             ch = math.cos(L["half"])
@@ -108,7 +109,7 @@ def irradiance(P, skip=()):
     return E
 
 
-def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), clear=0.0, e_min=3.0,
+def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 0.6), e_min=0.8,
               d_min=4.5, d_max=75.0, d_knee=11.0):
     """Streaks in this camera's view, only where light falls. Even per volume near the camera and thinning beyond
     `d_knee`; each as wide as about one pixel at its distance, so near and far rain read alike."""
@@ -132,38 +133,49 @@ def make_rain(name, cfg, cover, seed, gain=0.5, wpx=(0.35, 0.75), length=(0.25, 
     keep &= ~((P[:, 0] > st.WALL_T) & (P[:, 2] < st.COPE_TOP + 0.4))        # nothing low in the yards
     P, d = P[keep], d[keep]
     E = irradiance(P, cfg.get("no_scatter", ()))
-    lit = E > e_min
+    lit = (E > e_min) & (rs.rand(len(E)) < np.clip(E / 12.0, 0.0, 1.0) ** 0.7)
     P, d, E = P[lit], d[lit], E[lit]
     # draw them in a random order and stop when they cover enough of the frame
-    w = np.ones(len(P))                                    # even through the cones: the lamps do the rest
-    order = rs.choice(len(P), size=min(len(P), 60000), replace=False, p=w / w.sum())
-    P, d = P[order], d[order]
+    order = rs.permutation(len(P))[:60000]
+    P, d, E = P[order], d[order], E[order]
     length = rs.uniform(length[0], length[1], len(P))       # a short shutter
     wpx = rs.uniform(wpx[0], wpx[1], len(P))                # under a pixel wide: a streak, never a dash
     px = length * lens * RES_X / (36.0 * d) * wpx
     n = int(np.searchsorted(np.cumsum(px), cover * RES_X * RES_X * 9 / 16)) + 1
     n = min(n, len(P))
     P, d, length, wpx = P[:n], d[:n], length[:n], wpx[:n]
+    energy = E[:n] * rs.uniform(0.5, 1.5, n)
+    if name == "rain_tower":
+        near = 35
+        depth = rs.uniform(1.5, 3.0, near)
+        directions = (f + rs.uniform(-18 / lens, 18 / lens, (near, 1)) * r
+                      + rs.uniform(-10 / lens, 10 / lens, (near, 1)) * u)
+        P = np.vstack((P, loc + depth[:, None] * directions))
+        d = np.r_[d, depth]
+        length = np.r_[length, rs.uniform(0.025, 0.052, near)]
+        wpx = np.r_[wpx, rs.uniform(1, 1.6, near)]
+        energy = np.r_[energy, rs.uniform(0.5, 1.6, near)]
+        n += near
     fall = np.array(FALL, float)
     fall = fall[None, :] + rs.normal(0.0, 0.012, (n, 3))
     fall /= np.linalg.norm(fall, axis=1)[:, None]
     width = np.maximum(0.001, wpx * d * 36.0 / (lens * RES_X))
     a = np.cross(fall, f[None, :])
     a /= np.linalg.norm(a, axis=1)[:, None]
-    b = np.cross(fall, a)
-    top = P + fall * (-length / 2)[:, None]
-    bot = P + fall * (length / 2)[:, None]
-    hw = (width / 2)[:, None]
-    ring = [a * hw, b * hw, -a * hw, -b * hw]
-    V = np.stack([top + k for k in ring] + [bot + k for k in ring], axis=1).reshape(-1, 3)
-    base = (np.arange(n) * 8)[:, None]
-    quads = np.array([(0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
-    F = (base[:, None, :] + quads[None, :, :]).reshape(-1, 4)
+    # One tapered ribbon, integrated once per ray. The stored value is the illumination
+    # at the drop, including the near-lamp clamp; the background passes through in full.
+    hw = a * (width / 2)[:, None]
+    drift = fall * length[:, None]
+    V = np.stack((P - 0.5 * drift, P - 0.33 * drift + hw, P + 0.33 * drift + hw,
+                  P + 0.5 * drift, P + 0.33 * drift - hw, P - 0.33 * drift - hw), axis=1).reshape(-1, 3)
+    F = np.arange(n * 6).reshape(n, 6)
     me = bpy.data.meshes.new(name)
-    me.from_pydata(V.astype(np.float32).tolist(), [], F.tolist())
-    me.polygons.foreach_set("use_smooth", np.ones(len(F), bool))
+    me.from_pydata(V.tolist(), [], F.tolist())
+    energy_attr = me.attributes.new("drop radiance", "FLOAT", "FACE")
+    radiance = np.minimum(1.5, gain * energy * 0.40)
+    energy_attr.data.foreach_set("value", radiance.astype(np.float32))
     me.update()
-    me.materials.append(mt.rain(f"rain {name}", gain, clear))
+    me.materials.append(mt.M["rain"])
     ob = bpy.data.objects.new(name, me)
     bpy.context.scene.collection.objects.link(ob)
     ob.visible_shadow = ob.visible_diffuse = ob.visible_glossy = False
