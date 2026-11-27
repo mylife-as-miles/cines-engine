@@ -94,7 +94,7 @@ CAMERAS = {
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.016,
+                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.002, glass_grazing=0.36,
                    hide_glossy=("shop_interiors", "tubes")),
 }
 CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
@@ -780,7 +780,7 @@ def apply_camera(name, width=1280):
     if gl is not None and "refl" in gl.node_tree.nodes:
         fresnel = gl.node_tree.nodes["refl"]
         fresnel.inputs["To Min"].default_value = cfg.get("glass_refl", 0.07)
-        fresnel.inputs["To Max"].default_value = 0.58 if name == "window" else 1.0
+        fresnel.inputs["To Max"].default_value = cfg.get("glass_grazing", 1.0)
     for key in ("shop_interiors", "tubes", "signboards"):
         o = st.OBJ.get(key)
         if o is not None:
