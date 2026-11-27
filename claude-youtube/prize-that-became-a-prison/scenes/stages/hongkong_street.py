@@ -86,7 +86,7 @@ CAMERAS = {
     # the vanishing point; Dawn small on the right-hand pavement among the walkers, bags in her hands, walking
     # toward the lit boutique
     "wide": dict(loc=(1.4, 0.0, 1.5), aim=(2.45, 60.0, 1.5), lens=24, focus="fx_dawn", fstop=5.6, beat="walk",
-                 shift_y=0.12, haze=0.0022, exposure=-1.9),
+                 shift_y=0.12, haze=0.0022, sky_gain=0.16, exposure=-1.9),
     # Ch 03: Dawn from behind, three-quarter from her right, stopped at the boutique's lit window, the bags at her
     # sides; the street soft beyond on the left, its signs and shops melting into the haze
     "dawn": dict(loc=(5.33, 13.47, 1.36), aim=(7.24, 23.29, 1.0), lens=35, focus="fx_dawn", fstop=2.8, beat="window",
@@ -748,10 +748,11 @@ def apply_camera(name):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
-        if ln == "display shelf return" and name != "dawn":
+        if (ln == "display shelf return" and name != "dawn") or (ln == "boutique pavement spill" and name != "wide"):
             li.data.energy = 0
         if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
             li.visible_glossy = name not in ("window", "dawn")
+    mt.M["sky"].node_tree.nodes["sky exposure"].inputs[1].default_value = cfg.get("sky_gain", 1.0)
     hz = st.OBJ.get("haze")
     if hz is not None:
         pv = next(n for n in hz.data.materials[0].node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
@@ -805,6 +806,15 @@ def build(cast=True):
     lamp = st.area("boutique door spill", door, (0.66, 1.28), 142.0, (1.0, 0.59, 0.34),
                    Vector((5.57, 16.34, 0.84)) - door, spread=68)
     lamp.visible_glossy = False
+    # From across the road the lower shopfront throws a second, broader reflection
+    # at her feet. Its light stays on the paving so her coat retains its shape.
+    source = Vector((6.88, 15.55, 2.05))
+    paving_light = st.area("boutique pavement spill", source, (1.5, 0.8), 800.0, (1.0, 0.70, 0.51),
+                           Vector((5.56, 16.70, st.PZ)) - source, spread=90)
+    paving_light.visible_glossy = False
+    receivers = bpy.data.collections.new("Boutique pavement")
+    receivers.objects.link(bpy.data.objects["street_ground"])
+    paving_light.light_linking.receiver_collection = receivers
     for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
         mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
         BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")
