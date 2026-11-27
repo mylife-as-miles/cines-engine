@@ -254,7 +254,6 @@ def carpet(name, base=(0.035, 0.040, 0.052), lane_x=()):
     _spec(b, 0.25)
     x, y, _ = _xyz(nt, o)
     # diamond motif from two diagonal band textures
-    d1 = _wave(nt, o, 9.0, "X", 0.0)
     mp = _n(nt, "ShaderNodeMapping")
     mp.inputs["Rotation"].default_value = (0.0, 0.0, 0.785)
     _link(nt, o, mp.inputs["Vector"])
@@ -267,7 +266,6 @@ def carpet(name, base=(0.035, 0.040, 0.052), lane_x=()):
     pile = _noise(nt, o, 700.0, 2.0, 0.7)
     col = _mix(nt, motif, base, tuple(min(1, k * 1.45) for k in base))
     col = _mix(nt, _maprange(nt, pile, 0.3, 0.7, 0.0, 1.0), tuple(k * 0.8 for k in base), col, "MULTIPLY")
-    col = _mix(nt, 0.5, col, col)
     lane = None
     for lx in lane_x:
         d = _math(nt, "ABSOLUTE", _math(nt, "SUBTRACT", x, lx))
@@ -282,7 +280,7 @@ def carpet(name, base=(0.035, 0.040, 0.052), lane_x=()):
     col = _mix(nt, _maprange(nt, _ao(nt, 0.15), 0.2, 1.0, 0.6, 0.0), col, (0.0, 0.0, 0.0))
     _link(nt, col, b.inputs["Base Color"])
     _bump(nt, b, _math(nt, "ADD", pile, _math(nt, "MULTIPLY", motif, 0.4)), 0.25, 0.0012)
-    del d1, y
+    del y
     return m
 
 

@@ -117,6 +117,20 @@ The author wants the work to continue without a time limit. For every agent:
   in a mailbox entry or a commit, not only in your head.
 - **Repository size.** Publish finals only (never previews), and only when a stage's frames changed.
 
+## When the Claude session hands back (the author's instruction, 27 November 2026)
+
+From the moment `coordination/claude.md` carries a `HANDBACK` entry:
+
+- **Codex takes over Claude's seven stages** as well as its own five: detention_corridor, void_stage, visiting_room,
+  hearing_room, courtroom, home, chicago_night (their `scenes/stages/<stage>*.py`, `frames/` and boards). Start from
+  what is pushed on the branch: Claude worked in a separate folder, and anything it did not push does not exist.
+  Read Claude's handback and each stage's latest critique in `scenes/agent_loop/<stage>_r<N>.json` first. The three
+  prison stages (courtroom, void_stage, visiting_room) use `people.dawn_prison(uniform=True)` (DECISIONS, Outfits).
+- **LEAD takes over** Claude's three new stages if they are on the branch (hongkong_street, hotel_room, train),
+  `scenes/AGENT_BRIEF.md` and `scenes/agent_loop/`, and is the critic for every stage Codex owns. Critiques from then
+  on are saved in `coordination/critiques/<stage>_r<N>.json` for all twelve stages (continue each stage's numbering).
+- Until that entry appears, the ownership table above stands: do not touch Claude's stages.
+
 ## Stopping (first shift)
 
 Work for about four hours, or until the author says stop. Then post a `HANDBACK` entry: per stage what changed, the

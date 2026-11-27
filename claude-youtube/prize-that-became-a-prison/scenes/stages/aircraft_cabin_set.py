@@ -260,13 +260,12 @@ CUSHION = [(-0.03, 0.36), (0.44, 0.36), (0.485, 0.385), (0.497, 0.425), (0.485, 
 
 
 def cushion_top(y):
-    top = CUSHION[5:] [::-1]
-    pts = sorted(set([(y_, z_) for y_, z_ in CUSHION if z_ > 0.44]))
+    """Height of the seat cushion's top at block-local y (the sitter's side of the profile)."""
+    pts = [(-0.03, 0.44), (0.0, 0.447), (0.12, 0.457), (0.30, 0.468), (0.45, 0.470), (0.485, 0.458)]
     for (y0, z0), (y1, z1) in zip(pts, pts[1:]):
         if y0 <= y <= y1:
             return z0 + (z1 - z0) * (y - y0) / (y1 - y0)
-    del top
-    return 0.447 if y < 0.2 else 0.47
+    return pts[0][1] if y < pts[0][0] else pts[-1][1]
 
 
 def back_front_y(z):
@@ -292,7 +291,7 @@ def seat_parts(coll, sx, aisle_side=0):
     for k in (-1, 1):
         w = back_box(f"wing_{sx:+.2f}_{k}", (sx + k * 0.19 - 0.03, sx + k * 0.19 + 0.03), (0.52, 0.71), (-0.10, -0.01),
                      M["seat_dark"], coll, 0.022, 3)
-        w.rotation_euler.z = -k * 0.25
+        w.rotation_euler.z = k * 0.25
     back_box(f"cover_{sx:+.2f}", (sx - 0.165, sx + 0.165), (0.53, 0.735), (-0.093, -0.086), M["cover"], coll, 0.003, 2)
     back_box(f"covertop_{sx:+.2f}", (sx - 0.165, sx + 0.165), (0.726, 0.738), (-0.093, 0.035), M["cover"], coll, 0.004, 2)
     # the moulded shell behind: a deep tray with its rim forward round the cushions
@@ -392,8 +391,8 @@ def seats(lit_screens=(), skip=()):
 
 
 # ---------------------------------------------------------------- shell of the cabin
-def windows_y():
-    from aircraft_cabin import DAWN_WINDOW_Y  # noqa: E402  (the stage decides where Dawn's window falls)
+def windows_y(DAWN_WINDOW_Y):
+    """Window centres along the cabin at WIN_PITCH, one of them at DAWN_WINDOW_Y."""
     k0 = math.floor((DAWN_WINDOW_Y - (REAR_Y + 0.5)) / WIN_PITCH)
     first = DAWN_WINDOW_Y - k0 * WIN_PITCH
     ys = []
@@ -436,8 +435,10 @@ def window(side, y, shade, name, glass=True):
     N = 40
     x_in = lining_x(WIN_Z)
     rings = []
-    for x, a, b in ((x_in - 0.016, 0.205, 0.288), (x_in - 0.006, 0.188, 0.268), (x_in + 0.01, 0.172, 0.25),
-                    (x_in + 0.09, 0.148, 0.222), (3.02, 0.132, 0.205)):
+    # the flange follows the curved lining (offsets from the wall at each point's height), the tunnel goes straight
+    for off, a, b in ((0.004, 0.207, 0.29), (-0.012, 0.204, 0.287), (-0.007, 0.189, 0.269), (0.012, 0.172, 0.25)):
+        rings.append([(side * (lining_x(WIN_Z + v) + off), y + u, WIN_Z + v) for u, v in superellipse(a, b, 2.6, N)])
+    for x, a, b in ((x_in + 0.09, 0.148, 0.222), (3.02, 0.132, 0.205)):
         rings.append([(side * x, y + u, WIN_Z + v) for u, v in superellipse(a, b, 2.6, N)])
     rv = loft(f"{name}_reveal", rings, M["reveal"])
     finish(rv, 0.0)
@@ -455,9 +456,8 @@ def window(side, y, shade, name, glass=True):
     return rv
 
 
-def shell(shades):
+def shell(shades, ys):
     """Lining, dado, bins, aisle ceilings and coves, crown, floor, bulkheads. `shades`: {(side, index): fraction}."""
-    ys = windows_y()
     y0, y1 = REAR_Y, FRONT_Y
     for side in (-1, 1):
         d = sweep(f"dado_{side}", DADO, y0, y1, M["dado"], flip_x=side < 0)
@@ -500,7 +500,7 @@ def shell(shades):
             box(f"clatch_{side}_{k}", (0.03, 0.18, 0.035), (side * 0.742, (a + b) / 2, 2.02), M["dark_plastic"],
                 bevel=0.006)
     # crown and the floor
-    box("crown", (3.6, y1 - y0, 0.04), (0.0, (y0 + y1) / 2, 2.62), M["black"])
+    box("crown", (5.8, y1 - y0, 0.04), (0.0, (y0 + y1) / 2, 2.62), M["black"])
     box("floor", (5.3, y1 - y0, 0.02), (0.0, (y0 + y1) / 2, -0.01), M["carpet"])
     box("rear_bulkhead", (5.8, 0.06, 2.7), (0.0, y0 - 0.03, 1.35), M["lining"], bevel=0.01)
     return ys
@@ -510,18 +510,29 @@ def psu(row):
     """Passenger service units under the bins over each block: reading lenses, gaspers, a blank sign panel."""
     y = row_y(row) + 0.30
     for b, bx in enumerate(BLOCK_X):
-        z = 1.80 if b != 1 else 1.925
-        if b != 1:
-            # under the sloping side bin: its bottom height at x
-            z = 1.785 + (2.74 - abs(bx)) / (2.74 - 1.44) * 0.05 - 0.035
-        p = box(f"psu_{row}_{b}", (0.80, 0.70, 0.03), (bx, y - 0.02, z), M["bin"], bevel=0.006)
-        del p
-        box(f"psu_sign_{row}_{b}", (0.10, 0.06, 0.006), (bx, y - 0.16, z - 0.017), M["dark_plastic"], bevel=0.002)
+        if b == 1:
+            zc, slope = 1.945 - 0.016, 0.0
+        else:
+            side = 1 if bx > 0 else -1
+            zc = bin_bottom(abs(bx)) - 0.016
+            slope = side * 0.05 / 1.30                 # the side bin's bottom rises toward the aisle
+        rot = (0.0, math.atan(slope), 0.0)
+        box(f"psu_{row}_{b}", (0.80, 0.70, 0.03), (bx, y - 0.02, zc), M["bin"], bevel=0.006, rot=rot)
+        zat = lambda x: zc - slope * (x - bx)          # noqa: E731
+        box(f"psu_sign_{row}_{b}", (0.10, 0.06, 0.006), (bx, y - 0.16, zat(bx) - 0.017), M["dark_plastic"], bevel=0.002,
+            rot=rot)
         for s, sx in enumerate(SEAT_DX):
-            cyl(f"lens_{row}_{b}_{s}", 0.022, 0.006, (bx + sx, y, z - 0.017), M["lens_off"], verts=20)
-            cyl(f"lensring_{row}_{b}_{s}", 0.03, 0.004, (bx + sx, y, z - 0.016), M["mid_plastic"], verts=20)
-            cyl(f"gasper_{row}_{b}_{s}", 0.018, 0.022, (bx + sx + 0.09, y - 0.03, z - 0.024), M["mid_plastic"],
-                verts=16, r2=0.012)
+            x = bx + sx
+            cyl(f"lens_{row}_{b}_{s}", 0.022, 0.006, (x, y, zat(x) - 0.017), M["lens_off"], verts=20, rot=rot)
+            cyl(f"lensring_{row}_{b}_{s}", 0.03, 0.004, (x, y, zat(x) - 0.016), M["mid_plastic"], verts=20, rot=rot)
+            cyl(f"gasper_{row}_{b}_{s}", 0.018, 0.022, (x + 0.09, y - 0.03, zat(x + 0.09) - 0.024), M["mid_plastic"],
+                verts=16, r2=0.012, rot=rot)
+
+
+def bin_bottom(ax):
+    """The side bin's underside height at |x| = ax."""
+    (x0, z0), (x1, z1) = SIDE_BIN[0], SIDE_BIN[1]
+    return z0 + (z1 - z0) * (x0 - ax) / (x0 - x1)
 
 
 def path_lights():
@@ -540,8 +551,6 @@ def front_bulkhead():
     """The front of the cabin: a lined bulkhead with the two aisle openings to the galley, curtains half drawn
     across them, galley light behind; a blank glowing panel over each opening."""
     y = FRONT_Y
-    wall = mesh_obj("front_wall", [], [], M["lining"])
-    del wall
     # the wall as boxes around the two openings
     xs = [-2.9, AISLES[0] - 0.36, AISLES[0] + 0.36, AISLES[1] - 0.36, AISLES[1] + 0.36, 2.9]
     for a, b in ((xs[0], xs[1]), (xs[2], xs[3]), (xs[4], xs[5])):
