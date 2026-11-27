@@ -74,7 +74,7 @@ CAMERAS = {
     # Ch 10: the empty chair, from the far side near the end wall, the wall seen edge-on: the street light's stripes
     # across the chair, its striped shadow clear of it on the end wall to the left, the table's head soft at the
     # right; the image before the cut to black
-    "chair": dict(loc=(4.05, 2.05, 1.1), aim=(4.4, -0.25, 0.42), lens=32, focus="fx_chair", fstop=2.8, beat="ch10",
+    "chair": dict(loc=(3.98, 2.18, 1.22), aim=(4.35, -0.25, 0.70), lens=29, focus="fx_chair", fstop=2.8, beat="ch10",
                   exposure=-0.95, spp_final=128),
 }
 # Same lens and blocking as the empty room, so the editor can cut to Gene's absence.

@@ -1180,4 +1180,4 @@ def dining_chairs():
     return out
 
 
-HEAD_WOOD = 1.15
+HEAD_WOOD = 1.35
