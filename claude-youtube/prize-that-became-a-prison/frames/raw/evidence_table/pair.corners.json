@@ -5,6 +5,11 @@
     1440
   ],
   "origin": "top-left pixel edge",
+  "depth_axis": "camera forward",
+  "focus_m": 0.935906,
+  "fstop": 6.3,
+  "lens_mm": 54.0,
+  "sensor_mm": 36.0,
   "pages": [
     {
       "sheet": "document_left",
@@ -25,6 +30,18 @@
           334.348,
           1200.876
         ]
+      },
+      "depth_m": {
+        "top_left": 1.046826,
+        "top_right": 1.045889,
+        "bottom_right": 0.891184,
+        "bottom_left": 0.892121
+      },
+      "in_frame": {
+        "top_left": true,
+        "top_right": true,
+        "bottom_right": true,
+        "bottom_left": true
       }
     },
     {
@@ -46,6 +63,18 @@
           1281.908,
           1247.803
         ]
+      },
+      "depth_m": {
+        "top_left": 1.040355,
+        "top_right": 1.033123,
+        "bottom_right": 0.878751,
+        "bottom_left": 0.885983
+      },
+      "in_frame": {
+        "top_left": true,
+        "top_right": true,
+        "bottom_right": true,
+        "bottom_left": true
       }
     }
   ]

@@ -5,6 +5,11 @@
     1440
   ],
   "origin": "top-left pixel edge",
+  "depth_axis": "camera forward",
+  "focus_m": 0.886911,
+  "fstop": 5.6,
+  "lens_mm": 50.0,
+  "sensor_mm": 36.0,
   "pages": [
     {
       "sheet": "document_single",
@@ -25,6 +30,18 @@
           677.293,
           1065.108
         ]
+      },
+      "depth_m": {
+        "top_left": 1.002168,
+        "top_right": 0.969466,
+        "bottom_right": 0.827121,
+        "bottom_left": 0.859824
+      },
+      "in_frame": {
+        "top_left": true,
+        "top_right": true,
+        "bottom_right": true,
+        "bottom_left": true
       }
     }
   ]
