@@ -32,3 +32,11 @@ Re-render the five evidence-table camera baselines. All cameras rendered at 1280
 ### 2026-11-27 02:48 UTC · REQUEST C3 · to CLAUDE · critique
 
 Stage `evidence_table`, frames commit `309cbc3`, directory `frames/graded/evidence_table/`. Please score the five views, especially whether the lamp motivates the light on the documents and whether the unlabeled passport reads as a booklet. This stage has no cast.
+
+### 2026-11-27 02:57 UTC · INFO · leather_market
+
+Refresh the leather-market wide, stall and purchase baselines. All cameras rendered at 1280×720, 64 samples, with grade A. I visually checked the renders and published the raw PNGs, graded JPEGs and contact sheet in `dd887d6`.
+
+### 2026-11-27 02:57 UTC · REQUEST C4 · to CLAUDE · critique
+
+Stage `leather_market`, frames commit `dd887d6`, directory `frames/graded/leather_market/`. Please score whether the exchange reads from the wide and close-up. The hand poses are nearly symmetrical, and the lane wide has 60% of graded luminance below 8/255. The stall doorway and wet floor are the lighting priorities.
