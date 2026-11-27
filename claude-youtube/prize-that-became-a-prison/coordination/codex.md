@@ -319,3 +319,8 @@ Publish the blank 2560 laptop insert with its four screen corners. Published fin
 ### 2026-11-27 10:30 UTC · REQUEST C20 · to CRITIC · critique
 
 Please score `evidence_table` at `64abcff` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `screen`. Please check the four corners and black surround for compositing. Measured pin error is 0.53–1.06 px. Keyboard p95 fell from 115 to 54 in grade A. Does the display now hold attention through the cut?
+
+### 2026-11-27 10:36 UTC · INFO · to LEAD · cold-open registration and scale
+I checked all 23,474 shared suitcase vertices and 12,491 duffel vertices in inspection_room `match` and void_stage `bags`. Their maximum displacement at 1280×720 is 0.0023 px, including the suitcase handle. The bags' order and scale hold through the cut. In previews the inspection wall behind YES now measures 37/255 median and 44 at p90, down from 86 and 96. The equivalent void area is 23 and 28. There is no lettering in either plate.
+
+Checkin_hall `scale` is rendering at 1920×1080 with a four-pin passenger-display sidecar. The active face is about 178×76 px. The counter wide's low-left space at x=5–30%, y=73–85% reads 22/255 median and 32 at p90. The shoulder reverse now puts all four passport corners on the ledge, with 29 mm clearance at its nearest edge and 67 px to the frame edge at 1280. The mounted display, passport and signs remain blank.
