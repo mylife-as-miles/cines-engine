@@ -1,21 +1,23 @@
 """Stage: the night flight to Hong Kong, 2014 (Ch 02 end / Ch 03). Fluorescent Noir.
 
 A generic wide-body economy cabin at night, built in Python (aircraft_cabin_set.py, materials in
-aircraft_cabin_mats.py): 3-3-3 rows of seats with headrests, tray tables and dark or blank-glowing seat-back screens;
-side and centre overhead bins; the curved sidewall with oval windows, most shades pulled down for the night; the
-blue night coves on the aisle ceilings and the path-light strips along the aisles; the galley curtains glowing at the
-far end. Every reading light is off but one: Dawn's, over the port window seat in row 5, the one pool in the dark.
+aircraft_cabin_mats.py): 3-3-3 rows of seats with headrests under cloth covers, tray tables and dark or blank-glowing
+seat-back screens, belts left crossed on the empty cushions; side and centre overhead bins;
+the curved sidewall with oval windows, most shades pulled down for the night; the blue night coves on the aisle
+ceilings, a thin wash down the sidewalls and the path lights along the aisles; the galley curtains glowing at the far
+end. Every reading light is off but one: Dawn's, over the port window seat in row 5, the one pool in the dark.
 Outside her window the sky at altitude, a faint horizon far below, the port wing reaching out to its red tip light.
 
 Dawn is the shared cast's people.dawn() (as at the gate the same night), seated through Rigify with the gate's
-method (legs to FK, a small solve for thigh and shin so her seat rests on the cushion and her soles on the carpet,
-then slid back to the backrest), hands resting in her lap, head turned to the window. A few still passengers
-(people.man / people.staff) sit asleep in the other blocks; most seats are empty.
+method (legs to FK, a small solve for thigh and shin so her seat sinks a little into the cushion and her soles rest on
+the carpet, then slid back to the backrest), leaning back into the seat, hands resting in her lap, head turned to the
+window. A few still passengers (people.man / people.staff) sit asleep in the other blocks; most seats are empty.
 
     <bpy python> -I scenes/shoot.py -- aircraft_cabin <cam> out.png [--nocast]
 
 A hook on setkit.render sets the camera clip (the sky dome is 2.5 km away), clamps indirect light and applies the
-per-camera light trims before each render.
+per-camera trims before each render. With CABIN_EXR=<dir> in the environment it also saves the render's light groups
+(key, window, coves, wash, path, screens, galley, exterior) as a multilayer EXR there, for balancing the lights.
 """
 import math
 import os
@@ -40,49 +42,68 @@ EXPOSURE = -1.5
 
 DAWN_ROW = 5
 DAWN_SEAT = (st.BLOCK_X[0] + st.SEAT_DX[0], st.row_y(DAWN_ROW))      # port window seat (x -2.47)
-EYE = Vector((-2.40, st.row_y(DAWN_ROW) + 0.02, 1.19))               # where her eyes end up (printed at build)
-DAWN_WINDOW_Y = EYE.y + 0.24                                         # her window: a little ahead of her face
+HEAD = Vector((-2.478, 3.993, 1.257))                                # her head's centre once seated (printed at build)
+EYES = Vector((-2.502, 4.065, 1.228))
+DAWN_WINDOW_Y = st.row_y(DAWN_ROW) + 0.14                            # her window: beside and a little ahead of her face
+SINK = 0.045                                                         # how far a sitter sinks into the cushion
 
-# passengers: (name, kind, row, block, seat, upper-body pose, build kwargs)
+# passengers: (name, kind, row, block, seat, upper-body pose, lean back, build kwargs)
 PAX = [
-    ("Pax1", "man", DAWN_ROW + 2, 1, 0, {"head": (24, -12), "neck": (8, 0), "chest": (-10, 0), "fingers": 22},
+    ("Pax1", "man", DAWN_ROW + 2, 1, 0, {"head": (20, -14), "neck": (9, -6), "chest": (-2, 0), "fingers": 22}, 12.0,
      dict(height_cm=176, age=0.62, weight=0.66, suit="male_casualsuit05", tone=(0.10, 0.104, 0.11))),
-    ("Pax2", "staff", DAWN_ROW + 4, 2, 2, {"head": (14, -26), "neck": (6, -8), "chest": (-12, 0), "fingers": 20},
+    ("Pax2", "staff", DAWN_ROW + 5, 1, 1, {"head": (15, 16), "neck": (8, 8), "chest": (-2, 0), "fingers": 20}, 12.0,
      dict(variant=1)),
-    ("Pax3", "man", DAWN_ROW - 2, 1, 0, {"head": (18, 6), "neck": (6, 0), "chest": (-8, 0), "fingers": 20},
+    ("Pax3", "man", DAWN_ROW + 4, 0, 2, {"head": (17, 12), "neck": (8, 6), "chest": (-3, 0), "fingers": 20}, 13.0,
      dict(height_cm=183, age=0.34, weight=0.5, suit="male_casualsuit01", tone=(0.07, 0.074, 0.084))),
-    ("Pax4", "staff", DAWN_ROW + 7, 2, 0, {"head": (10, 4), "neck": (4, 0), "chest": (-12, 0), "fingers": 18},
+    ("Pax4", "staff", DAWN_ROW + 3, 1, 2, {"head": (12, 5), "neck": (5, 0), "chest": (-2, 0), "fingers": 18}, 11.0,
      dict(variant=0)),
 ]
 # blank-glowing seat-back screens: (row, block, seat, strength) -- the screen faces the seat behind it
-LIT = [(DAWN_ROW - 1, 1, 0, 1.0), (DAWN_ROW + 8, 2, 0, 1.0), (DAWN_ROW + 3, 1, 0, 0.7), (DAWN_ROW + 10, 1, 2, 0.6),
-       (DAWN_ROW + 5, 0, 1, 0.5)]
+LIT = [(DAWN_ROW + 3, 1, 0, 1.0), (DAWN_ROW + 5, 0, 2, 0.8), (DAWN_ROW + 8, 1, 1, 0.9), (DAWN_ROW + 10, 0, 1, 0.7),
+       (DAWN_ROW + 6, 2, 0, 0.6), (DAWN_ROW + 11, 2, 1, 0.6)]
 
+
+def _toward(loc, az_deg, el_deg, dist):
+    """A point `dist` from loc, az degrees forward (+Y) of straight out to port (-X), el degrees above level."""
+    a, e = math.radians(az_deg), math.radians(el_deg)
+    return (loc[0] - dist * math.cos(a) * math.cos(e), loc[1] + dist * math.sin(a) * math.cos(e),
+            loc[2] + dist * math.sin(e))
+
+
+AISLE_CAM = (-1.04, 1.70, 1.56)
+WINDOW_CAM = (-1.10, 4.42, 1.24)
+OVER_CAM = (-2.14, 3.40, 1.37)
 FOCUS = {
-    "fx_aisle": (DAWN_SEAT[0] + 0.1, DAWN_SEAT[1], 1.15),
-    "fx_face": (EYE.x + 0.04, EYE.y, EYE.z - 0.02),
-    "fx_window": (-2.98, DAWN_WINDOW_Y, st.WIN_Z),
+    "fx_aisle": tuple(HEAD),
+    "fx_face": tuple(EYES),
+    "fx_over": _toward(OVER_CAM, 38.0, -5.0, 3.0),
 }
 
 CAMERAS = {
-    # Ch 02 end / Ch 03: from the rear galley, standing height, down the port aisle: rows of seat backs receding,
-    # the blue night coves and the path lights leading to the lit galley curtains; Dawn's reading light the one pool
-    "aisle": dict(loc=(-1.06, -1.55, 1.66), aim=(-1.52, 9.0, 1.02), lens=27, focus="fx_aisle", fstop=5.6,
-                  beat="ch02-03"),
-    # Ch 03: from the middle seat beside her, at eye height: Dawn in profile against the oval window, the dark sky
-    "window": dict(loc=(-1.62, EYE.y - 0.06, 1.21), aim=(-2.78, EYE.y + 0.14, 1.14), lens=55, focus="fx_face",
-                   fstop=2.8, beat="ch03"),
-    # Ch 03: over her right shoulder, out of the window: the wing reaching to its red tip light, the horizon far below
-    "over": dict(loc=(-2.02, EYE.y - 0.34, 1.34), aim=(-2.99, DAWN_WINDOW_Y + 0.02, 1.10), lens=45, focus="fx_window",
-                 fstop=4.0, beat="ch03"),
+    # Ch 02 end / Ch 03: standing in the port aisle two rows behind her: rows of seat backs receding to the lit galley
+    # curtains, the blue night coves and the path lights, and at the left Dawn's reading light, the one pool
+    "aisle": dict(loc=AISLE_CAM, aim=(AISLE_CAM[0] - 2.42, AISLE_CAM[1] + 9.70, 0.70), lens=24, focus="fx_aisle",
+                  fstop=4.0, beat="ch02-03"),
+    # Ch 03: from the aisle across the two empty seats of her row: Dawn in profile against the oval window, awake,
+    # hands in her lap
+    "window": dict(loc=WINDOW_CAM, aim=(HEAD.x, HEAD.y + 0.04, 0.985), lens=30, focus="fx_face", fstop=2.8,
+                   beat="ch03"),
+    # Ch 03: over her right shoulder, out of the window: the wing reaching to its red tip light, the horizon and the
+    # dark below
+    "over": dict(loc=OVER_CAM, aim=_toward(OVER_CAM, 46.0, -7.0, 1.2), lens=40, focus="fx_over", fstop=8.0,
+                 beat="ch03"),
 }
+TIP_THROUGH = _toward(OVER_CAM, 37.0, -6.0, 1.077 / math.cos(math.radians(6.0)))   # where on her window's pane the
+#                                                  wing-tip light shows from "over": 37 deg forward, 6 deg below level
+# per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {},
-    "window": {},
-    "over": {},
+    "aisle": {"haze": 1.0},
+    "window": {"haze": 0.0},
+    "over": {"haze": 0.0},
 }
 READ = "reading_light"
 _STATE = {"base": {}}
+GROUPS = ("key", "spill", "win", "cove", "wash", "path", "screen", "galley", "ext")
 
 
 # ---------------------------------------------------------------- shades (0 open, 1 closed)
@@ -95,8 +116,9 @@ def shade_plan(ys):
             h = (k * 7 + (3 if side > 0 else 0)) % 11
             plan[(side, k)] = 0.0 if h == 4 else 0.55 if h in (1, 8) else 1.0
     plan[(-1, dk)] = 0.0
-    plan[(-1, dk - 1)] = 0.78
-    plan[(-1, dk + 1)] = 1.0
+    plan[(-1, dk - 1)] = 1.0
+    plan[(-1, dk + 1)] = 0.72
+    plan[(-1, dk + 2)] = 1.0
     return plan, dk
 
 
@@ -204,7 +226,24 @@ def finger_gap(body, surface, side):
 KNEE_HALF, ANKLE_HALF = 0.088, 0.062
 
 
-def sit_legs(holder, thigh, shin, knee_half=KNEE_HALF, ankle_half=ANKLE_HALF):
+def foot_rest(holder):
+    """Legs to FK; the feet's rest directions (before any lean), so the soles stay flat on the carpet."""
+    rig = rigged.rig_of(holder)
+    pb = rig.pose.bones
+    for k in "LR":
+        p = pb.get(f"thigh_parent.{k}")
+        if p is not None and "IK_FK" in p.keys():
+            p["IK_FK"] = 1.0
+    bpy.context.view_layer.update()
+    rest = {}
+    for k in "LR":
+        f = (pb[f"foot_fk.{k}"].matrix.to_3x3() @ Vector((0, 1, 0)))
+        f.x = 0.0
+        rest[k] = f.normalized()
+    return rest
+
+
+def sit_legs(holder, thigh, shin, rest, knee_half=KNEE_HALF, ankle_half=ANKLE_HALF):
     rig = rigged.rig_of(holder)
     pb = rig.pose.bones
     for k in "LR":
@@ -213,11 +252,6 @@ def sit_legs(holder, thigh, shin, knee_half=KNEE_HALF, ankle_half=ANKLE_HALF):
             p["IK_FK"] = 1.0
     bpy.context.view_layer.update()
     mw = rig.matrix_world
-    rest = {}
-    for k in "LR":
-        f = (pb[f"foot_fk.{k}"].matrix.to_3x3() @ Vector((0, 1, 0)))
-        f.x = 0.0
-        rest[k] = f.normalized()
     mid = sum((mw @ pb[f"thigh_fk.{k}"].head for k in "LR"), Vector()) / 2
     for side, k in ((1, "L"), (-1, "R")):
         head, tail = mw @ pb[f"thigh_fk.{k}"].head, mw @ pb[f"thigh_fk.{k}"].tail
@@ -253,19 +287,28 @@ def body_points(holder, only=None, unmasked=False):
     return pts
 
 
-def seat_figure(holder, seat_z, upper, hands=True, fit_hands=True):
-    """Pose a figure seated (built at the origin facing -Y) and solve thigh/shin so that the seat rests on the
-    cushion and the soles on the floor. Returns the height offset and the hip."""
+def seat_figure(holder, seat_z, upper, lean=0.0, hands=True, fit_hands=True):
+    """Pose a figure seated (built at the origin facing -Y), the whole trunk leaning back `lean` degrees about the
+    hips, and solve thigh/shin so that the seat sinks SINK into the cushion and the soles rest on the floor.
+    Returns the height offset."""
     rig = rigged.rig_of(holder)
     body = bpy.data.objects[holder["body"]]
-    thigh, shin = 84.0, 6.0
+    thigh, shin = 80.0, 6.0
     dz = 0.0
     tag = holder.name
-    for it in range(8):
+    rigged.pose_figure(holder, upper)
+    rest = foot_rest(holder)
+
+    def pose(forearms=None):
         rigged.pose_figure(holder, upper)
+        if lean:
+            rigged._turn(rig, "torso", -lean, 0.0)
         if hands:
-            lap_hands(holder)
-        sit_legs(holder, thigh, shin)
+            lap_hands(holder, forearms) if forearms else lap_hands(holder)
+        sit_legs(holder, thigh, shin, rest)
+
+    for it in range(8):
+        pose()
         hip = sum((rig.matrix_world @ rig.pose.bones[f"thigh_fk.{k}"].head for k in "LR"), Vector()) / 2
         skin = body_points(holder, only=body, unmasked=True)
         seat_pts = [p for p in skin if hip.y - 0.12 < p.y < hip.y + 0.25 and 0.035 < abs(p.x - hip.x) < 0.2
@@ -273,7 +316,7 @@ def seat_figure(holder, seat_z, upper, hands=True, fit_hands=True):
         sole_pts = [p for p in body_points(holder) if p.y < hip.y - 0.3]
         butt = min(p.z for p in seat_pts)
         sole = min(p.z for p in sole_pts)
-        dz = seat_z - 0.012 - butt          # the cushion gives a little under the seat
+        dz = seat_z - SINK - butt           # the cushion gives under the seat
         gap = sole + dz
         print(f"CABIN {tag} seated it {it}: thigh {thigh:.1f} shin {shin:.1f} soles {gap * 1000:+.1f} mm", flush=True)
         if abs(gap) < 0.005:
@@ -293,10 +336,8 @@ def seat_figure(holder, seat_z, upper, hands=True, fit_hands=True):
     if hands and fit_hands:
         surface = lap_surface(holder)
         forearms = [48.0, 43.0]
-        for it in range(5):
-            rigged.pose_figure(holder, upper)
-            lap_hands(holder, forearms)
-            sit_legs(holder, thigh, shin)
+        for it in range(6):
+            pose(forearms)
             gaps = [finger_gap(body, surface, side) for side in ("L", "R")]
             if None in gaps:
                 print(f"CABIN {tag} hands: no lap under a hand", flush=True)
@@ -312,41 +353,42 @@ def back_y(z):
     """The backrest's front (block-local y) at height z: cushion, lumbar roll, headrest cover."""
     sr, cr = math.sin(st.RECLINE), math.cos(st.RECLINE)
     v = (z - st.PIVOT_Z) / cr
-    w = -0.09 if 0.10 < v < 0.24 else -0.093 if v > 0.5 else -0.072
+    w = -0.09 if 0.10 < v < 0.24 else -0.093 if v > 0.5 + st.DV else -0.072
     v = (z - st.PIVOT_Z + w * sr) / cr
     return -v * sr - w * cr
 
 
-def place_seated(holder, seat_xy, upper, hands=True, fit_hands=True):
+def place_seated(holder, seat_xy, upper, lean=0.0, hands=True, fit_hands=True):
     sx, sy = seat_xy
     seat_z = st.cushion_top(0.16)
-    dz = seat_figure(holder, seat_z, upper, hands, fit_hands)
+    dz = seat_figure(holder, seat_z, upper, lean, hands, fit_hands)
     holder.rotation_euler = (0, 0, math.radians(180))
     bpy.context.view_layer.update()
     rig = rigged.rig_of(holder)
-    body = bpy.data.objects[holder["body"]]
     hip_w = sum((rig.matrix_world @ rig.pose.bones[f"thigh_fk.{k}"].head for k in "LR"), Vector()) / 2
     target = Vector((sx, sy + 0.17, hip_w.z + dz))
     holder.location += target - hip_w
     bpy.context.view_layer.update()
-    skin = body_points(holder, only=body, unmasked=True)
-    low = [p for p in skin if seat_z + 0.03 < p.z < seat_z + 0.28 and abs(p.x - sx) < 0.2 and p.y < target.y + 0.05]
-    gap = min(p.y - (sy + back_y(p.z)) for p in low)
-    holder.location.y += 0.012 - gap
+    # slide back until the clothes meet the backrest somewhere (the seat's foot or the shoulders)
+    top = st.PIVOT_Z + (0.72 + st.DV) * math.cos(st.RECLINE)
+    pts = [p for p in body_points(holder) if abs(p.x - sx) < 0.21 and seat_z + 0.05 < p.z < top]
+    low = min(p.y - (sy + back_y(p.z)) for p in pts if p.z < seat_z + 0.28)
+    high = min(p.y - (sy + back_y(p.z)) for p in pts if p.z >= seat_z + 0.28)
+    gap = min(low, high)
+    holder.location.y += -0.006 - gap           # 6 mm into the cushion: it gives
     bpy.context.view_layer.update()
-    skin = body_points(holder, only=body, unmasked=True)
-    up = [p for p in skin if seat_z + 0.3 < p.z < seat_z + 0.6 and abs(p.x - sx) < 0.2]
-    upper_gap = min((p.y - (sy + back_y(p.z)) for p in up), default=9.9)
-    pts = body_points(holder)
-    lo = min(p.z for p in pts)
-    print(f"CABIN {holder.name} seated at ({sx:.2f}, {sy:.2f}): seat to backrest {gap * 1000:+.0f} -> 12 mm, upper back "
-          f"{upper_gap * 1000:+.0f} mm, lowest point {lo * 1000:+.1f} mm", flush=True)
+    lo = min(p.z for p in body_points(holder))
+    print(f"CABIN {holder.name} seated at ({sx:.2f}, {sy:.2f}): to the backrest low {low * 1000:+.0f} mm, shoulders "
+          f"{high * 1000:+.0f} mm (slid {(-0.006 - gap) * 1000:+.0f}), lowest point {lo * 1000:+.1f} mm", flush=True)
 
 
-def head_point(holder):
+def head_points(holder):
+    """Head centre, and the body's foremost point at face height (the nose), in the world."""
     rig = rigged.rig_of(holder)
     pb = rig.pose.bones["head"]
-    return rig.matrix_world @ ((pb.head + pb.tail) / 2)
+    c = rig.matrix_world @ ((pb.head + pb.tail) / 2)
+    fwd = (rig.matrix_world.to_3x3() @ (pb.matrix.to_3x3() @ Vector((0, 0, 1)))).normalized()
+    return c, fwd
 
 
 # ---------------------------------------------------------------- per-camera hook
@@ -372,45 +414,102 @@ def apply_camera(name):
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
-        ob.data.energy = base * trims.get(n, 1.0)
+        k = trims.get(n, trims.get(ob.lightgroup, 1.0))
+        ob.data.energy = base * k
+    hz = bpy.data.objects.get("lamp haze")
+    if hz is not None:
+        hz.hide_render = trims.get("haze", 1.0) <= 0.0
     print(f"CABIN camera {name or '?'}: beat {CAMERAS.get(name, {}).get('beat', '?')}, trims {trims or 'none'}",
           flush=True)
+
+
+def save_groups(name, out):
+    """Write the finished render's passes (the light groups among them) as a multilayer EXR, for light balancing."""
+    folder = os.environ.get("CABIN_EXR")
+    if not folder:
+        return
+    try:
+        os.makedirs(folder, exist_ok=True)
+        sc = bpy.context.scene
+        ims = sc.render.image_settings
+        keep = (ims.file_format, ims.color_depth, ims.color_mode)
+        ims.file_format = "OPEN_EXR_MULTILAYER"
+        ims.color_depth, ims.exr_codec = "16", "ZIP"
+        path = os.path.join(folder, os.path.basename(str(out)).replace(".png", "") + ".exr")
+        bpy.data.images["Render Result"].save_render(path, scene=sc)
+        ims.file_format = keep[0]
+        ims.color_depth, ims.color_mode = keep[1], keep[2]
+        print(f"CABIN light groups saved: {path}", flush=True)
+    except Exception as e:  # never lose a render to the extra file
+        print(f"CABIN light groups not saved: {e!r}", flush=True)
 
 
 def install_hook():
     orig = getattr(sk.render, "_orig", sk.render)
 
     def render(*args, **kw):
-        apply_camera(which_camera())
-        return orig(*args, **kw)
+        name = which_camera()
+        apply_camera(name)
+        r = orig(*args, **kw)
+        save_groups(name, args[0] if args else kw.get("out", "render.png"))
+        return r
     render._orig = orig
     sk.render = render
 
 
 # ---------------------------------------------------------------- lights
+def group(ob, g):
+    ob.lightgroup = g
+    return ob
+
+
 def lights():
-    L = st.LIGHTS
     y_d = st.row_y(DAWN_ROW)
-    # Dawn's reading light: the lens in the PSU over her seat, a narrow warm-white cone onto her lap and hands
+    # Dawn's reading light: the lens in the PSU over her seat, a warm-white cone onto her lap, hands and face
     lens = Vector((DAWN_SEAT[0], y_d + 0.30, PSU_Z[0] - 0.024))
-    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.04, y_d + 0.20, 0.60), 14.0, (1.0, 0.87, 0.70), 34.0, 0.35, radius=0.018)
+    sp = st.spot(READ, lens, (DAWN_SEAT[0] + 0.02, y_d + 0.10, 0.90), 28.0, (1.0, 0.87, 0.70), 56.0, 0.45, radius=0.018)
     sp.data.use_soft_falloff = False
+    group(sp, "key")
+    # the lens scatters a little outside its beam: the wall, the headrests and the seat back in front
+    sl = st.spot("reading_spill", lens + Vector((0, 0, -0.01)), (DAWN_SEAT[0], y_d + 0.22, 0.62), 8.0, (1.0, 0.87, 0.70),
+                 150.0, 0.8, radius=0.03)
+    group(sl, "spill")
     # the window's cool glow on her face (sky and moon through the pane)
-    wf = st.area("window_fill", (-2.93, DAWN_WINDOW_Y, st.WIN_Z + 0.04), (0.2, 0.3), 0.9, (0.6, 0.72, 1.0),
-                 spread=90, aim=(EYE.x, EYE.y, EYE.z - 0.05))
+    wf = st.area("window_fill", (-2.92, DAWN_WINDOW_Y, st.WIN_Z + 0.02), (0.22, 0.34), 0.9, (0.6, 0.72, 1.0),
+                 spread=100, aim=(HEAD.x + 0.02, HEAD.y + 0.04, HEAD.z - 0.08))
     wf.visible_glossy = False
     wf.visible_camera = False
-    # night coves: long thin strips on the bin tops washing the aisle ceilings in dim blue
+    group(wf, "win")
+    # night coves: long thin strips hidden on the bins, washing the aisle ceilings in dim blue
+    yc, length = (st.REAR_Y + st.FRONT_Y) / 2, st.FRONT_Y - st.REAR_Y - 0.4
     for side in (-1, 1):
-        for x, z, k in ((side * 1.52, 2.37, 1), (side * 0.81, 2.43, -1)):
-            a = st.area(f"cove_light_{side}_{k}", (x, (st.REAR_Y + st.FRONT_Y) / 2, z), (0.05, st.FRONT_Y - st.REAR_Y - 0.4),
-                        9.0, (0.36, 0.5, 1.0), spread=150)
-            a.rotation_euler = (0.0, -side * k * 0.55, 0.0)
+        for x, z, rot, k in ((side * 1.52, 2.372, side * 2.10, 1), (side * 0.81, 2.432, -side * 2.02, -1)):
+            a = st.area(f"cove_light_{side}_{k}", (x, yc, z), (0.03, length), 9.0, (0.36, 0.5, 1.0), spread=150)
+            a.rotation_euler = (0.0, rot, 0.0)
             a.visible_camera = False
-    del L
+            group(a, "cove")
 
 
 PSU_Z = {}
+
+
+def assign_groups():
+    """Light groups for every emitter (lamps were grouped where they were made; here the glowing meshes)."""
+    vl = bpy.context.view_layer
+    for g in GROUPS:
+        if g not in [x.name for x in vl.lightgroups]:
+            vl.lightgroups.add(name=g)
+    rules = (("pathled_", "path"), ("pathglow_", "path"), ("path_light_", "path"), ("wash_", "wash"),
+             ("cove_", "cove"), ("screenglow_", "screen"), ("screenspill_", "screen"), ("galley_", "galley"),
+             ("bulk_sign_", "galley"), ("sky", "ext"), ("navlight", "ext"), ("strobe", "ext"), ("nav_red_light", "ext"),
+             ("moon", "ext"), ("lens_", "key"))
+    for ob in bpy.data.objects:
+        if ob.lightgroup:
+            continue
+        for pre, g in rules:
+            if ob.name.startswith(pre):
+                ob.lightgroup = g
+                break
 
 
 def build(cast=True):
@@ -420,11 +519,12 @@ def build(cast=True):
     ys = st.windows_y(DAWN_WINDOW_Y)
     plan, dk = shade_plan(ys)
     st.shell(plan, ys)
-    skip = set()
-    st.seats(lit_screens=LIT, skip=skip)
+    occupied = {(DAWN_ROW, 0, 0)} | {(row, b, s) for _, _, row, b, s, _, _, _ in PAX}
+    st.seats(lit_screens=LIT, skip=set())
+    st.belts(skip=occupied)
     for r in range(st.N_ROWS):
         st.psu(r)
-    PSU_Z[0] = st.bin_bottom(1.98) - 0.016
+    PSU_Z[0] = st.bin_bottom(abs(DAWN_SEAT[0])) - 0.016
     # Dawn's lens lit
     lens = bpy.data.objects.get(f"lens_{DAWN_ROW}_0_0")
     if lens is not None:
@@ -433,16 +533,16 @@ def build(cast=True):
     st.path_lights()
     st.front_bulkhead()
     recv = bpy.data.collections.new("exterior receivers")
-    tip_dir = (Vector((-2.99, DAWN_WINDOW_Y + 0.02, 1.07)) - Vector(CAMERAS["over"]["loc"])).normalized()
-    tip = Vector(CAMERAS["over"]["loc"]) + tip_dir * (27.0 / abs(tip_dir.x))
-    st.exterior(tuple(tip), recv)
+    tip_dir = (Vector(TIP_THROUGH) - Vector(OVER_CAM)).normalized()
+    tip = Vector(OVER_CAM) + tip_dir * (27.0 / abs(tip_dir.x))
+    st.exterior(tuple(tip), recv, moon_dir=(tip_dir.x, tip_dir.y, 0.42))
     lights()
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
         e.location = p
-    # a little haze round her lamp so its cone has a shape
-    hz = sk.haze((0.9, 1.3, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.15, 1.05), 0.035,
+    # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
+    hz = sk.haze((0.9, 1.3, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.15, 1.05), 0.06,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -452,18 +552,22 @@ def build(cast=True):
     for n, ob in st.LIGHTS.items():
         if n != READ and ob.type == "LIGHT" and ob.light_linking.receiver_collection is None:
             ob.light_linking.receiver_collection = hc
+    assign_groups()
     print(f"CABIN windows {len(ys)} a side, Dawn's window #{dk} at y {ys[dk]:.3f}; wing tip at "
-          f"({tip.x:.1f}, {tip.y:.1f}, {tip.z:.1f})", flush=True)
+          f"({tip.x:.1f}, {tip.y:.1f}, {tip.z:.1f}); lights {len(st.LIGHTS)}", flush=True)
     if cast:
         d = dawn()
-        upper = {"head": (7, 30), "neck": (3, 10), "chest": (-14, 3), "fingers": 17}
-        place_seated(d, DAWN_SEAT, upper)
-        hp = head_point(d)
-        print(f"CABIN Dawn head centre ({hp.x:.3f}, {hp.y:.3f}, {hp.z:.3f})", flush=True)
-        for name, kind, row, b, s, up, kw in PAX:
-            h = people.man(name, **kw) if kind == "man" else people.staff(name, **kw)
-            g = garment(h)
-            if g is not None:
-                ease_seated(g, 0.010)
-            place_seated(h, (st.BLOCK_X[b] + st.SEAT_DX[s], st.row_y(row)), up, hands=True, fit_hands=False)
+        upper = {"head": (7, 20), "neck": (4, 10), "chest": (-4, 5), "fingers": 17}
+        place_seated(d, DAWN_SEAT, upper, lean=11.0)
+        hp, fwd = head_points(d)
+        print(f"CABIN Dawn head centre ({hp.x:.3f}, {hp.y:.3f}, {hp.z:.3f}) (planned {tuple(round(c, 3) for c in HEAD)}),"
+              f" head bone up ({fwd.x:.2f}, {fwd.y:.2f}, {fwd.z:.2f})", flush=True)
+        if os.environ.get("CABIN_PAX", "1") != "0":
+            for name, kind, row, b, s, up, lean, kw in PAX:
+                h = people.man(name, **kw) if kind == "man" else people.staff(name, **kw)
+                g = garment(h)
+                if g is not None:
+                    ease_seated(g, 0.010)
+                place_seated(h, (st.BLOCK_X[b] + st.SEAT_DX[s], st.row_y(row)), up, lean=lean, hands=True,
+                             fit_hands=False)
     install_hook()

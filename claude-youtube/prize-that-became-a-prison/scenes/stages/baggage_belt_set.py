@@ -36,11 +36,22 @@ XC = 0.05                 # strip plane (hall side of the wall)
 CHUTE = (9.3, 10.7)       # chute mouth along the +Y guard
 BAT_Y, BAT_Z = -0.85, 2.62
 BATTENS = [(1.3, 1.0), (5.6, 1.0), (9.9, 1.0), (14.2, 0.7), (18.5, 0.42), (22.8, 0.0)]
+# a second, sparser row over the far side of the belt (the side the walkway is not on): one by the end wall, one
+# over the sorter landing, one dead. They keep that half of the hall from going to pure black.
+SERVICE_Y = 2.3
+# (first try: 0.6 by the end wall lit that whole wall evenly, flat; 0.62 right over the sorter slide turned its
+# stainless bed into a white slab from overhead)
+SERVICE = [(1.0, 0.24), (11.2, 0.45), (19.0, 0.0)]
 COOL = (0.80, 0.88, 1.0)
 SODIUM = (1.0, 0.56, 0.22)
+SIGN_Y = (1.2, 1.2, 2.1)   # end wall, far side of the opening: warning triangle, mandatory disc under it, isolator
+TRANSFER = (0.72, 1.30)   # the powered-roller transfer between the in-feed belt and the hall belt
+LACING = (6.2, 13.1, 20.0)
+EYES = (0.5, 8.6)         # photo-eye pairs: after the curtain, before the diverter
 
 M = {}
 STRIPS = []               # dicts: ob, y, x, w, top, L, rows, cols, lean
+LACING_OBS = []           # the belt's lacing seams (the stage moves them with the bags)
 FOCUS = {}
 
 
@@ -325,19 +336,26 @@ def galvanised(name, scuff=False):
     nt.links.new(p, vo.inputs["Vector"])
     cell = nt.nodes.new("ShaderNodeRGBToBW")
     nt.links.new(_out(vo, "Color"), cell.inputs[0])
-    base = (0.47, 0.48, 0.49)
+    base = (0.36, 0.37, 0.38)
     col = _mix(nt, _range(nt, cell.outputs[0], 0.0, 1.0, 0.0, 1.0), tuple(c * 0.9 for c in base), tuple(c * 1.06 for c in base))
-    col = _mix(nt, _range(nt, _noise(nt, p, 1.3, 5.0), 0.35, 0.7, 0.0, 0.5), col, (0.3, 0.305, 0.31))
-    r = _range(nt, cell.outputs[0], 0.0, 1.0, 0.34, 0.46)
-    r = _fmix(nt, _range(nt, _noise(nt, p, 2.0, 5.0), 0.4, 0.7, 0.0, 1.0), r, 0.55)
+    col = _mix(nt, _range(nt, _noise(nt, p, 1.3, 5.0), 0.35, 0.7, 0.0, 0.5), col, (0.24, 0.245, 0.25))
+    r = _range(nt, cell.outputs[0], 0.0, 1.0, 0.44, 0.56)
+    r = _fmix(nt, _range(nt, _noise(nt, p, 2.0, 5.0), 0.4, 0.7, 0.0, 1.0), r, 0.64)
     x, y, z = _xyz(nt, p)
     if scuff:
+        # (the first version stretched one noise 240:1 along the run: it read as motion blur on a still rail)
         band = _math(nt, "MULTIPLY", _range(nt, z, BZ + 0.02, BZ + 0.06, 0.0, 1.0, smooth=True),
                      _range(nt, z, BZ + 0.17, BZ + 0.25, 1.0, 0.0, smooth=True))
-        streak = _range(nt, _noise(nt, _scale(nt, p, (0.25, 60.0, 60.0)), 1.0, 3.0), 0.4, 0.62, 0.2, 1.0)
-        pol = _math(nt, "MULTIPLY", band, streak)
-        col = _mix(nt, pol, col, (0.6, 0.61, 0.62))
-        r = _fmix(nt, pol, r, 0.2)
+        # fine scratches where zips and wheels drag: 5 to 30 cm long, a few mm high
+        scr = _range(nt, _noise(nt, _scale(nt, p, (3.0, 1.0, 260.0)), 1.0, 3.0, 0.6), 0.56, 0.72, 0.0, 1.0)
+        pol = _math(nt, "MULTIPLY", band, scr)
+        col = _mix(nt, _math(nt, "MULTIPLY", pol, 0.5), col, (0.5, 0.51, 0.52))
+        r = _fmix(nt, pol, r, 0.36)
+        # black rubber rub marks: longer, softer, sparse
+        rub = _math(nt, "MULTIPLY", band,
+                    _range(nt, _noise(nt, _scale(nt, p, (1.1, 1.0, 36.0)), 1.0, 4.0), 0.6, 0.74, 0.0, 0.7))
+        col = _mix(nt, rub, col, (0.07, 0.07, 0.072))
+        r = _fmix(nt, rub, r, 0.72)
         dirt = _range(nt, z, BZ - 0.02, BZ + 0.05, 0.8, 0.0)
         col = _mix(nt, dirt, col, (0.08, 0.08, 0.08))
         r = _fmix(nt, dirt, r, 0.8)
@@ -353,17 +371,26 @@ def belt_mat():
     p = _pos(nt)
     x, y, z = _xyz(nt, p)
     ay = _math(nt, "ABSOLUTE", y)
-    edge = _range(nt, ay, 0.28, 0.48, 0.0, 1.0, smooth=True)
-    streak = _range(nt, _noise(nt, _scale(nt, p, (0.06, 14.0, 1.0)), 2.0, 5.0), 0.35, 0.68, 0.0, 1.0)
-    col = _mix(nt, _math(nt, "MULTIPLY", streak, 0.6), (0.016, 0.016, 0.017), (0.03, 0.03, 0.031))
+    edge = _range(nt, ay, 0.30, 0.49, 0.0, 1.0, smooth=True)
+    # (the first version's strong, glossy 8 m streaks read as brushed metal: now matt rubber, faint wear lanes,
+    # short scuffs, dust mottle)
+    lanes = _range(nt, _noise(nt, _scale(nt, p, (0.05, 9.0, 1.0)), 2.0, 4.0), 0.3, 0.7, 0.0, 1.0)
+    scuff = _range(nt, _noise(nt, _scale(nt, p, (2.2, 70.0, 1.0)), 2.0, 3.0, 0.6), 0.62, 0.74, 0.0, 1.0)
+    mott = _range(nt, _noise(nt, p, 5.0, 6.0, 0.65), 0.3, 0.7, 0.0, 1.0)
+    col = _mix(nt, lanes, (0.017, 0.017, 0.018), (0.027, 0.027, 0.029))
+    col = _mix(nt, _math(nt, "MULTIPLY", mott, 0.7), col, (0.042, 0.043, 0.045))
+    col = _mix(nt, _math(nt, "MULTIPLY", scuff, 0.55), col, (0.075, 0.075, 0.077))
     dust = _math(nt, "MULTIPLY", edge, _range(nt, _noise(nt, p, 3.0, 6.0), 0.3, 0.7, 0.5, 1.0))
-    col = _mix(nt, dust, col, (0.058, 0.058, 0.058))
+    col = _mix(nt, dust, col, (0.06, 0.06, 0.058))
     nt.links.new(col, b.inputs["Base Color"])
-    r = _fmix(nt, streak, 0.38, 0.55)
-    r = _fmix(nt, edge, r, 0.82)
+    # (at roughness 0.56-0.66 the grazing sheen under a batten turned the belt into a pale grey slab seen low)
+    r = _fmix(nt, lanes, 0.66, 0.78)
+    r = _fmix(nt, scuff, r, 0.86)
+    r = _fmix(nt, edge, r, 0.9)
     nt.links.new(r, b.inputs["Roughness"])
-    b.inputs["Specular IOR Level"].default_value = 0.45
-    _bump(nt, b, _noise(nt, p, 420.0, 2.0), 0.12, 0.0006)
+    b.inputs["Specular IOR Level"].default_value = 0.3
+    h = _math(nt, "ADD", _noise(nt, p, 420.0, 2.0), _math(nt, "MULTIPLY", scuff, -0.6))
+    _bump(nt, b, h, 0.12, 0.0006)
     return m
 
 
@@ -416,7 +443,7 @@ def paper_mat():
     """Bag-tag paper: matt, slightly warm, a fibre tooth, a little grubby."""
     m, nt, b = _new("tag paper")
     p = nt.nodes.new("ShaderNodeTexCoord").outputs["Object"]
-    col = _mix(nt, _range(nt, _noise(nt, p, 18.0, 5.0), 0.35, 0.7, 0.0, 1.0), (0.50, 0.485, 0.44), (0.42, 0.40, 0.36))
+    col = _mix(nt, _range(nt, _noise(nt, p, 18.0, 5.0), 0.35, 0.7, 0.0, 1.0), (0.43, 0.415, 0.38), (0.36, 0.345, 0.31))
     nt.links.new(col, b.inputs["Base Color"])
     b.inputs["Roughness"].default_value = 0.86
     b.inputs["Specular IOR Level"].default_value = 0.25
@@ -452,6 +479,7 @@ def materials():
         floor=floor_mat(),
         wall_x=block_mat("block wall x", "x"),
         wall_y=block_mat("block wall y", "y"),
+        wall_end=block_mat("block wall end", "y", upper=(0.07, 0.074, 0.08)),
         wall_back=block_mat("block wall back room", "y", lower=(0.02, 0.022, 0.026), upper=(0.04, 0.042, 0.045)),
         concrete=concrete_mat("concrete soffit"),
         beam=concrete_mat("concrete beam", (0.07, 0.072, 0.076)),
@@ -472,17 +500,18 @@ def materials():
                       grime=(0.4, 1.0, 0.3)),
         plastic=pbr("black plastic", (0.018, 0.018, 0.02), (0.38, 0.5), nscale=12, cvar=0.1),
         rubber=pbr("black rubber", (0.02, 0.02, 0.021), (0.62, 0.8), nscale=9, cvar=0.2, bump=0.2, bscale=200),
-        roller=pbr("roller steel", (0.56, 0.57, 0.58), (0.22, 0.34), metal=1.0, nscale=5, stretch=(1, 1, 8), cvar=0.1,
-                   aniso=0.3),
+        roller=pbr("roller steel", (0.5, 0.51, 0.52), (0.3, 0.44), metal=1.0, nscale=5, stretch=(1, 1, 8), cvar=0.12,
+                   aniso=0.3, world=True, grime=(BZ - 0.06, BZ - 0.005, 0.5)),
         steel=pbr("brushed steel", (0.58, 0.59, 0.6), (0.24, 0.38), metal=1.0, nscale=3, stretch=(1, 30, 30), cvar=0.08,
                   aniso=0.4, world=True),
-        stainless=pbr("chute stainless", (0.55, 0.56, 0.57), (0.26, 0.42), metal=1.0, nscale=2, stretch=(1, 20, 1),
-                      cvar=0.12, aniso=0.5, world=True),
+        # the slide is brushed down its slope (along Y), worn duller where the bags run
+        stainless=pbr("chute stainless", (0.36, 0.37, 0.38), (0.42, 0.56), metal=1.0, nscale=1.5, stretch=(36, 1, 1),
+                      cvar=0.08, aniso=0.3, world=True),
         dark_steel=pbr("dark steel", (0.2, 0.205, 0.21), (0.35, 0.55), metal=1.0, nscale=7, cvar=0.2, world=True),
         motor=pbr("motor paint", (0.045, 0.06, 0.075), (0.3, 0.45), nscale=8, cvar=0.15, coat=0.3, world=True,
                   chips=((0.3, 0.3, 0.31), 0.3)),
         void=pbr("void", (0.004, 0.004, 0.005), (0.9, 1.0), nscale=2, cvar=0.0, spec=0.1),
-        hazard_v=stripes_mat("hazard tape", (0.7071, 0.0, 0.7071)),
+        hazard_v=stripes_mat("hazard tape", (0.5, 0.5, 0.7071)),     # diagonal on faces across X and across Y alike
         hazard_vy=stripes_mat("hazard tape y", (0.0, 0.7071, 0.7071)),
         hazard_floor=stripes_mat("hazard floor", (0.7071, 0.7071, 0.0), pitch=0.2, worn=0.55, yellow=(0.45, 0.31, 0.02)),
         line=floor_paint(),
@@ -496,8 +525,13 @@ def materials():
         bulk_lens=sk.emission("bulkhead lens", (0.86, 0.92, 1.0), 6.0),
         sodium=sk.emission("sodium lamp", SODIUM, 24.0),
         backglow=screen_mat("vision panel glow", (0.7, 0.8, 1.0), 1.6, 0.5),
+        backroom=screen_mat("lit room behind the curtain", (0.78, 0.86, 1.0), 2.4, 0.55),
+        sign_yellow=pbr("sign yellow", (0.6, 0.42, 0.03), (0.4, 0.55), nscale=9, cvar=0.08, world=True),
+        sign_black=pbr("sign black", (0.015, 0.015, 0.016), (0.45, 0.6), nscale=9, cvar=0.08, world=True),
+        sign_blue=pbr("sign blue", (0.02, 0.07, 0.2), (0.4, 0.55), nscale=9, cvar=0.08, world=True),
+        sign_white=pbr("sign white", (0.5, 0.5, 0.48), (0.45, 0.6), nscale=9, cvar=0.06, world=True),
         exit=screen_mat("exit glow", (0.3, 1.0, 0.55), 2.2, 0.4),
-        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 1.4, 0.45),
+        hmi=screen_mat("hmi blank", (0.55, 0.72, 1.0), 4.2, 0.45),
         led_green=sk.emission("led green", (0.25, 1.0, 0.4), 18.0),
         led_amber=sk.emission("led amber", (1.0, 0.55, 0.12), 14.0),
         led_off=pbr("led off", (0.05, 0.03, 0.02), (0.15, 0.25), nscale=10, cvar=0.05),
@@ -641,10 +675,10 @@ def curtain_wall():
     t = 0.3
     xw = HX0 - t / 2
     yl, yr = YW0 - 0.3, YW1 + 0.3
-    box("cwall_left", (t, o["y0"] - yl, H), (xw, (yl + o["y0"]) / 2, H / 2), m["wall_y"])
-    box("cwall_right", (t, yr - o["y1"], H), (xw, (yr + o["y1"]) / 2, H / 2), m["wall_y"])
-    box("cwall_top", (t, o["y1"] - o["y0"], H - o["z1"]), (xw, 0, (H + o["z1"]) / 2), m["wall_y"])
-    box("cwall_bottom", (t, o["y1"] - o["y0"], o["z0"]), (xw, 0, o["z0"] / 2), m["wall_y"])
+    box("cwall_left", (t, o["y0"] - yl, H), (xw, (yl + o["y0"]) / 2, H / 2), m["wall_end"])
+    box("cwall_right", (t, yr - o["y1"], H), (xw, (yr + o["y1"]) / 2, H / 2), m["wall_end"])
+    box("cwall_top", (t, o["y1"] - o["y0"], H - o["z1"]), (xw, 0, (H + o["z1"]) / 2), m["wall_end"])
+    box("cwall_bottom", (t, o["y1"] - o["y0"], o["z0"]), (xw, 0, o["z0"] / 2), m["wall_end"])
     # opening reveals (the cut through the block, painted dark)
     for s, yy in ((-1, o["y0"]), (1, o["y1"])):
         box(f"reveal_{s}", (t, 0.02, o["z1"] - o["z0"]), (xw, yy - s * 0.01, (o["z0"] + o["z1"]) / 2), m["void"])
@@ -664,15 +698,19 @@ def curtain_wall():
         y = o["y0"] + 0.06 + i * (o["y1"] - o["y0"] - 0.12) / 8
         bolts.rod((XC + 0.006, y, ztop + 0.01), (XC + 0.02, y, ztop + 0.01), 0.008, 6)
     bolts.done("curtain_bolts", m["steel"], bevel=0.002)
-    strip_curtain("strip", XC + 0.012, o["y0"] + 0.02, o["y1"] - 0.02, ztop - 0.005, BZ + 0.012, 8, 0.2)
-    # back room: dark walls, the belt runs on into it; a light near the belt shines out through the strips
+    # seven strips a hair narrower than their pitch, each a few mm off its place: slivers of the lit room behind
+    strip_curtain("strip", XC + 0.012, o["y0"] + 0.02, o["y1"] - 0.02, ztop - 0.005, BZ + 0.012, 7, 0.19, gaps=0.007)
+    # back room (the check-in side): the belt runs on into it; it is lit, so the strips are backlit, light spills
+    # out under whatever parts them, and the gaps between strips show as cold slivers
     box("back_wall", (0.3, YW1 - YW0, H), (X0 - 0.4, (YW0 + YW1) / 2, H / 2), m["wall_back"])
-    bl = light("behind_curtain", (-1.6, 0.0, BZ + 1.05), (1.2, 0.5), 75.0, (0.78, 0.86, 1.0), spread=110,
+    box("back_glow", (0.02, 3.2, 2.3), (X0 - 0.1, 0.0, 1.35), m["backroom"])
+    bl = light("behind_curtain", (-1.6, 0.0, BZ + 1.05), (1.2, 0.5), 90.0, (0.78, 0.86, 1.0), spread=110,
                rot=(0, math.radians(-62), 0))
     bl.visible_glossy = True
-    light("behind_curtain_low", (-0.9, 0.0, BZ + 0.5), (0.6, 0.3), 10.0, (0.78, 0.86, 1.0), spread=140,
+    light("behind_curtain_low", (-0.9, 0.0, BZ + 0.5), (0.6, 0.3), 12.0, (0.78, 0.86, 1.0), spread=140,
           rot=(0, math.radians(-90), 0))
     control_panel()
+    wall_dressing()
 
 
 def control_panel():
@@ -694,7 +732,7 @@ def control_panel():
     for i in range(2):
         box(f"panel_hinge{i}", (0.02, 0.02, 0.06), (HX0 + 0.205, y - 0.24, z + 0.2 - 0.4 * i), m["dark_steel"], bevel=0.003)
     box("panel_handle", (0.025, 0.02, 0.1), (HX0 + 0.215, y + 0.215, z), m["plastic"], bevel=0.005)
-    pt = point("panel_screen_spill", (HX0 + 0.35, y + 0.06, z + 0.13), 0.9, (0.6, 0.75, 1.0), 0.06)
+    pt = point("panel_screen_spill", (HX0 + 0.35, y + 0.06, z + 0.13), 1.6, (0.6, 0.75, 1.0), 0.06)
     pt.visible_glossy = False
     point("panel_led_spill", (HX0 + 0.26, y - 0.15, z + 0.17), 0.12, (0.3, 1.0, 0.45), 0.01)
     c = Batch()
@@ -706,6 +744,68 @@ def control_panel():
     c.done("panel_conduits", m["galv"], bevel=0.002)
     # caged bulkhead lamp over the panel: a practical that lights the wall and the panel
     bulkhead("bulk_panel", (HX0, -1.55, 2.32), "x")
+
+
+def plate(name, yz, x, t, m, bevel=0.0):
+    """A flat plate on the end wall, facing +X: the outline `yz` (list of (y, z)) extruded from x to x + t."""
+    bm = bmesh.new()
+    vs = [bm.verts.new((x, y, z)) for y, z in yz]
+    f = bm.faces.new(vs)
+    bmesh.ops.extrude_face_region(bm, geom=[f])
+    bm.verts.ensure_lookup_table()
+    for v in bm.verts[len(yz):]:
+        v.co.x = x + t
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(ob)
+    me.materials.append(m)
+    if bevel:
+        bv = ob.modifiers.new("bevel", "BEVEL")
+        bv.width, bv.segments, bv.limit_method = bevel, 2, "ANGLE"
+    return ob
+
+
+def disc(name, y, z, x, r, t, m):
+    ob = cyl(name, r, t, (x + t / 2, y, z), m, rot=(0, math.pi / 2, 0), verts=48)
+    for p in ob.data.polygons:      # flat: smooth shading over the rim made the disc look like a dome
+        p.use_smooth = False
+    return ob
+
+
+def wall_dressing():
+    """The end wall on the far side of the opening (the side the walkway is not on): blank safety signs as bare
+    shapes (a yellow warning triangle, a blue mandatory disc, both without symbols or words), an isolator switch
+    with its conduit, and a dead bulkhead lamp. They tell you this is machinery without a word."""
+    m = materials()
+    x = HX0
+    # warning triangle: black border, blank yellow field (no symbol: even "!" would be a character)
+    cy, cz, s = SIGN_Y[0], 1.5, 0.32
+    h = s * math.sqrt(3) / 2
+    tri = lambda k: [(cy - k * s / 2, cz - k * h / 3), (cy + k * s / 2, cz - k * h / 3), (cy, cz + k * 2 * h / 3)]
+    plate("sign_tri_back", tri(1.0), x + 0.002, 0.003, m["sign_black"], bevel=0.001)
+    plate("sign_tri_field", tri(0.78), x + 0.0052, 0.0006, m["sign_yellow"])
+    # mandatory disc: blue, a plain white ring
+    cy2, cz2 = SIGN_Y[1], 1.1
+    disc("sign_disc", cy2, cz2, x + 0.002, 0.14, 0.003, m["sign_blue"])
+    disc("sign_disc_ring", cy2, cz2, x + 0.005, 0.08, 0.0006, m["sign_white"])
+    disc("sign_disc_hole", cy2, cz2, x + 0.0056, 0.055, 0.0006, m["sign_blue"])
+    # isolator switch: a grey box with a red rotary handle on a yellow plate, conduit up to the tray
+    iy, iz = SIGN_Y[2], 1.3
+    box("isolator_body", (0.11, 0.2, 0.28), (x + 0.055, iy, iz), m["enclosure"], bevel=0.008)
+    box("isolator_plate", (0.004, 0.11, 0.11), (x + 0.112, iy, iz + 0.03), m["yellow"], bevel=0.002)
+    cyl("isolator_hub", 0.03, 0.02, (x + 0.123, iy, iz + 0.03), m["red"], rot=(0, math.pi / 2, 0), bevel=0.004)
+    box("isolator_lever", (0.02, 0.022, 0.085), (x + 0.14, iy, iz + 0.045), m["red"], bevel=0.005,
+        rot=(math.radians(28), 0, 0))
+    c = Batch()
+    c.rod((x + 0.05, iy, iz + 0.14), (x + 0.05, iy, H - 0.02), 0.013)
+    c.rod((x + 0.05, iy - 0.05, iz - 0.14), (x + 0.05, iy - 0.05, 0.0), 0.013)
+    for zz in (2.0, 2.8, 0.6):
+        c.box((0.03, 0.05, 0.02), (x + 0.03, iy if zz > 1 else iy - 0.05, zz))
+    c.done("isolator_conduit", m["galv"], bevel=0.002)
+    bulkhead("bulk_far_side", (x, 1.55, 2.32), "x", lit=False)
 
 
 def bulkhead(name, loc, facing, lit=True, energy=9.0):
@@ -778,12 +878,12 @@ def far_wall():
 
 
 # ---------------------------------------------------------------- the strip curtains
-def strip_curtain(name, xc, y0, y1, ztop, zbot, n, w, drape=True):
+def strip_curtain(name, xc, y0, y1, ztop, zbot, n, w, drape=True, gaps=0.0):
     m = materials()
     pitch = (y1 - y0 - w) / (n - 1)
     rnd = random.Random(sum(map(ord, name)))
     for i in range(n):
-        yc = y0 + w / 2 + i * pitch
+        yc = y0 + w / 2 + i * pitch + (rnd.uniform(-gaps, gaps) if 0 < i < n - 1 else 0.0)
         xp = xc + (0.005 if i % 2 else 0.0)
         rows, cols = 40, 5
         verts = [(xp, yc - w / 2 + w * j / (cols - 1), ztop - (ztop - zbot) * r / (rows - 1))
@@ -914,25 +1014,39 @@ def conveyor():
     L = X1 - X0
     cx = (X0 + X1) / 2
     # the belt: carry side, its rounded nose ends, the return run below
-    # in-feed belt from the check-in side, a gap with three transfer rollers at x 0.85-0.97, then the hall belt
-    ta, tb = 0.80, 1.02
+    # in-feed belt from the check-in side, a powered-roller transfer (eight steel rollers), then the hall belt
+    ta, tb = TRANSFER
     box("belt_in", (ta - X0, BW, 0.012), ((X0 + ta) / 2, 0, BZ - 0.006), m["belt"], bevel=0.004)
     box("belt", (X1 - tb, BW, 0.012), ((tb + X1) / 2, 0, BZ - 0.006), m["belt"], bevel=0.004)
     for xx in (ta, tb):    # the belts wrap round their end pulleys
         cyl(f"belt_wrap_{xx:.2f}", 0.03, BW, (xx, 0, BZ - 0.03), m["belt"], rot=(math.pi / 2, 0, 0), verts=32)
-    for k in range(3):
-        cyl(f"transfer_roller{k}", 0.019, BW - 0.03, (0.871 + 0.039 * k, 0, BZ - 0.019), m["roller"],
-            rot=(math.pi / 2, 0, 0), verts=24, bevel=0.003)
-    box("transfer_tray", (tb - ta + 0.04, BW + 0.02, 0.006), ((ta + tb) / 2, 0, BZ - 0.05), m["dark_steel"])
-    box("slider_bed", (L, BW + 0.06, 0.008), (cx, 0, BZ - 0.016), m["dark_steel"])
+    rr, nr = 0.027, 8
+    x0r, x1r = ta + 0.03 + rr + 0.012, tb - 0.03 - rr - 0.012
+    rol, ends = Batch(), Batch()
+    for k in range(nr):
+        xr = x0r + (x1r - x0r) * k / (nr - 1)
+        rol.rod((xr, -BW / 2 + 0.012, BZ - rr), (xr, BW / 2 - 0.012, BZ - rr), rr, 28)
+        for s in (-1, 1):   # bearing caps against the side frames, the axle stubs
+            ends.rod((xr, s * (BW / 2 - 0.012), BZ - rr), (xr, s * (BW / 2 + 0.03), BZ - rr), 0.012, 12)
+    rol.done("transfer_rollers", m["roller"], bevel=0.003)
+    ends.done("transfer_axles", m["dark_steel"], bevel=0.002)
+    for s in (-1, 1):       # a dark infill strip each side so the gap to the guard does not show the floor
+        box(f"transfer_cheek_{s}", (tb - ta + 0.06, 0.07, 0.03), ((ta + tb) / 2, s * (BW / 2 + 0.035), BZ - 0.02),
+            m["dark_steel"], bevel=0.003)
+    box("transfer_tray", (tb - ta + 0.06, BW + 0.06, 0.006), ((ta + tb) / 2, 0, BZ - 0.075), m["dark_steel"])
+    # slider bed under the hall belt and under the in-feed belt (not under the rollers)
+    box("slider_bed", (X1 - tb, BW + 0.06, 0.008), ((tb + X1) / 2, 0, BZ - 0.016), m["dark_steel"])
+    box("slider_bed_in", (ta - X0, BW + 0.06, 0.008), ((X0 + ta) / 2, 0, BZ - 0.016), m["dark_steel"])
     box("belt_return", (L, BW, 0.01), (cx, 0, BZ - 0.315), m["belt"], bevel=0.003)
-    # lacing seams across the belt every 7.3 m: a row of steel clips
-    for i, x in enumerate((2.35, 9.55, 16.85, 24.1)):
+    # lacing seams across the belt: a row of dull steel clips (bright steel read as a white dashed line)
+    for i, x in enumerate(LACING):
         lace = Batch()
         for k in range(36):
             y = -BW / 2 + 0.03 + k * (BW - 0.06) / 35
-            lace.box((0.022, 0.016, 0.003), (x, y, BZ + 0.0008))
-        lace.done(f"lacing_{i}", m["steel"], bevel=0.0008)
+            lace.box((0.022, 0.016, 0.003), (0.0, y, BZ + 0.0008))
+        ob = lace.done(f"lacing_{i}", m["dark_steel"], bevel=0.0008)
+        ob.location.x = x
+        LACING_OBS.append(ob)
     # side frames (painted channel) and the galvanised guards with their rolled tops
     for s in (-1, 1):
         box(f"frame_side_{s}", (L, 0.05, 0.22), (cx, s * (GY + 0.03), BZ - 0.13), m["frame"], bevel=0.004)
@@ -957,6 +1071,18 @@ def conveyor():
                 j_bolt.rod((x + dx, ly - 0.055, 0.0), (x + dx, ly - 0.055, 0.03), 0.008, 6)
         legs.box((0.04, 2 * GY + 0.04, 0.04), (x, 0, 0.18))          # cross brace low
         legs.box((0.04, 2 * GY + 0.04, 0.05), (x, 0, BZ - 0.26))     # cross member under the frame
+    seam, screws = Batch(), Batch()
+    for k in range(int((X1 - 0.75) / 1.5) + 1):
+        x = 0.75 + 1.5 * k
+        for s in (-1, 1):
+            if s > 0 and CHUTE[0] - 0.1 < x < CHUTE[1] + 0.1:
+                continue
+            seam.box((0.003, 0.0016, GH + 0.03), (x, s * (GY - 0.0004), BZ + GH / 2 - 0.012))
+            for dx in (-0.022, 0.022):
+                for zz in (BZ + 0.055, BZ + 0.14, BZ + 0.225):
+                    screws.rod((x + dx, s * (GY + 0.001), zz), (x + dx, s * (GY - 0.0028), zz), 0.006, 10)
+    seam.done("guard_seams", m["void"], smooth=False)
+    screws.done("guard_screws", m["steel"], bevel=0.0012)
     j_flange.done("guard_flanges", m["galv"], bevel=0.002)
     j_bolt.done("conveyor_bolts", m["steel"], bevel=0.0015)
     legs.done("conveyor_legs", m["leg"], bevel=0.004)
@@ -971,7 +1097,7 @@ def conveyor():
             brg.rod((x, s * (BW / 2 + 0.06), BZ - 0.295), (x, s * (GY + 0.03), BZ - 0.24), 0.008, 6)
     rol.done("return_rollers", m["roller"], bevel=0.004)
     brg.done("roller_brackets", m["frame"], bevel=0.003)
-    drive(2.3)
+    drive(1.5)    # (at 2.3 its yellow chain guard sat in the corner of the low camera's frame)
     pull_cord()
     sensors()
 
@@ -997,8 +1123,8 @@ def drive(x):
     tube("drive_cable", [(x - 0.12, y - 0.02, z + 0.16), (x - 0.3, y - 0.05, z + 0.12), (x - 0.6, y - 0.08, 0.05),
                          (x - 1.4, y - 0.1, 0.03)], 0.011, m["plastic"])
     # an emergency stop on the frame near the curtain
-    box("estop_box", (0.11, 0.08, 0.11), (1.45, -(GY + 0.065), BZ + 0.18), m["yellow"], bevel=0.008)
-    cyl("estop_button", 0.025, 0.03, (1.45, -(GY + 0.115), BZ + 0.18), m["red"], rot=(math.pi / 2, 0, 0), bevel=0.006)
+    box("estop_box", (0.11, 0.08, 0.11), (0.95, -(GY + 0.065), BZ + 0.18), m["yellow"], bevel=0.008)
+    cyl("estop_button", 0.025, 0.03, (0.95, -(GY + 0.115), BZ + 0.18), m["red"], rot=(math.pi / 2, 0, 0), bevel=0.006)
 
 
 def pull_cord():
@@ -1018,21 +1144,26 @@ def pull_cord():
     for i, (a, b) in enumerate(zip(pts, pts[1:])):
         mid = ((a[0] + b[0]) / 2, y - 0.004, z - 0.03)
         tube(f"pullcord_{i}", [a, mid, b], 0.0042, m["yellow_cable"], res=3)
-    for i, x in enumerate((1.05, 13.0, 25.0)):
+    for i, x in enumerate((0.45, 13.0, 25.0)):
         box(f"pullswitch_{i}", (0.16, 0.1, 0.15), (x, -(GY + 0.08), z - 0.02), m["yellow"], bevel=0.01)
         cyl(f"pullswitch_cap_{i}", 0.02, 0.02, (x, -(GY + 0.135), z), m["red"], rot=(math.pi / 2, 0, 0), bevel=0.004)
 
 
 def sensors():
-    """Photo-eye pairs on short posts over the guards: before the curtain-end transfer and before the diverter."""
+    """Photo-eye pairs clamped on the guards' rolled tops (low: a tall post stood in front of the bags from the
+    walkway): just after the curtain and before the diverter. A small black head, a lens, one indicator LED."""
     m = materials()
-    for i, x in enumerate((1.3, 8.6)):
+    for i, x in enumerate(EYES):
         for s in (-1, 1):
-            y = s * (GY + 0.02)
-            box(f"eye_post_{i}_{s}", (0.03, 0.03, 0.16), (x, y, BZ + GH + 0.07), m["dark_steel"], bevel=0.003)
-            box(f"eye_head_{i}_{s}", (0.05, 0.06, 0.07), (x, y - s * 0.015, BZ + GH + 0.17), m["plastic"], bevel=0.008)
+            y = s * (GY + 0.012)
+            zc = BZ + GH + 0.04
+            box(f"eye_clamp_{i}_{s}", (0.05, 0.05, 0.03), (x, y, BZ + GH - 0.002), m["dark_steel"], bevel=0.004)
+            box(f"eye_head_{i}_{s}", (0.036, 0.055, 0.05), (x, y, zc), m["plastic"], bevel=0.006)
+            cyl(f"eye_lens_{i}_{s}", 0.009, 0.004, (x, y - s * 0.028, zc), m["glass"], rot=(math.pi / 2, 0, 0))
             led = m["led_amber"] if s < 0 else m["led_green"]
-            cyl(f"eye_led_{i}_{s}", 0.005, 0.004, (x - 0.026, y - s * 0.015, BZ + GH + 0.19), led, rot=(0, math.pi / 2, 0))
+            cyl(f"eye_led_{i}_{s}", 0.004, 0.003, (x, y, zc + 0.026), led)
+            tube(f"eye_cable_{i}_{s}", [(x + 0.018, y + s * 0.01, zc - 0.01), (x + 0.06, y + s * 0.03, BZ + GH - 0.05),
+                                        (x + 0.07, y + s * 0.035, BZ - 0.1)], 0.0035, m["plastic"], res=3)
 
 
 def chute():
@@ -1049,6 +1180,19 @@ def chute():
     cyl("diverter_pivot", 0.04, 0.5, (xa - 0.22, -(GY + 0.02), BZ + 0.18), m["dark_steel"], bevel=0.006)
     box("diverter_actuator", (0.7, 0.18, 0.3), (xa + 0.1, -(GY + 0.12), BZ + 0.05), m["enclosure"], bevel=0.012)
     box("diverter_act_guard", (0.72, 0.012, 0.18), (xa + 0.1, -(GY + 0.215), BZ + 0.06), m["hazard_v"], bevel=0.003)
+    ax, ay, az = xa + 0.1, -(GY + 0.12), BZ + 0.2
+    box("diverter_act_lid", (0.66, 0.15, 0.006), (ax, ay, az + 0.003), m["enclosure"], bevel=0.003)
+    box("diverter_act_gasket", (0.672, 0.162, 0.003), (ax, ay, az + 0.0005), m["rubber"])
+    sc = Batch()
+    for dx in (-0.31, -0.1, 0.1, 0.31):
+        for dy in (-0.06, 0.06):
+            sc.rod((ax + dx, ay + dy, az + 0.005), (ax + dx, ay + dy, az + 0.0095), 0.006, 10)
+    sc.rod((ax + 0.22, ay - 0.02, az + 0.005), (ax + 0.22, ay - 0.02, az + 0.03), 0.014, 12)     # cable gland
+    sc.done("diverter_act_screws", m["steel"], bevel=0.0012)
+    tube("diverter_act_cable", [(ax + 0.22, ay - 0.02, az + 0.028), (ax + 0.25, ay - 0.05, az + 0.07),
+                                (ax + 0.33, ay - 0.1, az + 0.03), (ax + 0.36, ay - 0.105, BZ - 0.2)], 0.008, m["plastic"])
+    box("diverter_act_plate", (0.12, 0.07, 0.0015), (ax - 0.2, ay, az + 0.0068), m["steel"], bevel=0.0006)   # blank rating plate
+    cyl("diverter_pivot_cap", 0.05, 0.02, (xa - 0.22, -(GY + 0.02), BZ + 0.44), m["yellow"], bevel=0.004)
     # the +Y guard has a gap over the mouth: hide the continuous guard there with the chute's own side walls
     # (the guard is cut by a void-coloured box would look wrong; instead the chute walls rise above the guard)
     slope = math.radians(20)
@@ -1108,34 +1252,40 @@ def guard_gaps():
 
 
 # ---------------------------------------------------------------- lights and services
-def battens():
-    """Twin-tube fluorescent battens on drop rods over the walkway edge, the last ones dimmer, the last one dead."""
+def batten(n, x, y, k, spread=110, watts=230.0):
+    """One twin-tube fluorescent batten on drop rods; k = how much of its light is left (0 = dead)."""
     m = materials()
+    box(n + "_body", (1.52, 0.11, 0.07), (x, y, BAT_Z + 0.035), m["enclosure"], bevel=0.008)
+    mat = m["tube"] if k >= 0.9 else m["tube_mid"] if k >= 0.6 else m["tube_low"] if k > 0 else m["opal_off"]
+    box(n + "_diffuser", (1.46, 0.085, 0.03), (x, y, BAT_Z - 0.008), mat, bevel=0.012)
+    for e in (-1, 1):
+        box(n + f"_cap{e}", (0.02, 0.1, 0.05), (x + e * 0.74, y, BAT_Z + 0.01), m["plastic"], bevel=0.004)
+    rods = Batch()
+    for e in (-0.55, 0.55):
+        rods.rod((x + e, y, BAT_Z + 0.07), (x + e, y, H), 0.005, 8)
+        rods.box((0.06, 0.06, 0.01), (x + e, y, H - 0.005))
+    rods.done(n + "_rods", m["galv"], bevel=0.001)
+    if k > 0:
+        li = light(n + "_light", (x, y, BAT_Z - 0.03), (1.4, 0.08), watts * k, COOL, spread=spread)
+        li.visible_volume_scatter = True
+        # the tubes' spill upward: the soffit and the beams over each fitting read, a rhythm down the tunnel
+        up = light(n + "_up", (x, y, BAT_Z + 0.08), (1.4, 0.08), 34.0 * k, COOL, spread=160, rot=(math.pi, 0, 0))
+        up.visible_glossy = False
+
+
+def battens():
+    """Twin-tube fluorescent battens over the walkway edge, the last ones dimmer, the last one dead; and the
+    sparse service row over the far side (wider throw, weaker)."""
     for i, (x, k) in enumerate(BATTENS):
-        n = f"batten{i}"
-        box(n + "_body", (1.52, 0.11, 0.07), (x, BAT_Y, BAT_Z + 0.035), m["enclosure"], bevel=0.008)
-        mat = m["tube"] if k >= 0.9 else m["tube_mid"] if k >= 0.6 else m["tube_low"] if k > 0 else m["opal_off"]
-        d = box(n + "_diffuser", (1.46, 0.085, 0.03), (x, BAT_Y, BAT_Z - 0.008), mat, bevel=0.012)
-        del d
-        for e in (-1, 1):
-            box(n + f"_cap{e}", (0.02, 0.1, 0.05), (x + e * 0.74, BAT_Y, BAT_Z + 0.01), m["plastic"], bevel=0.004)
-        rods = Batch()
-        for e in (-0.55, 0.55):
-            rods.rod((x + e, BAT_Y, BAT_Z + 0.07), (x + e, BAT_Y, H), 0.005, 8)
-            rods.box((0.06, 0.06, 0.01), (x + e, BAT_Y, H - 0.005))
-        rods.done(n + "_rods", m["galv"], bevel=0.001)
-        if k > 0:
-            li = light(n + "_light", (x, BAT_Y, BAT_Z - 0.03), (1.4, 0.08), 230.0 * k, COOL, spread=110)
-            li.visible_volume_scatter = True
-            up = light(n + "_up", (x, BAT_Y, BAT_Z + 0.08), (1.4, 0.08), 14.0 * k, COOL, spread=150,
-                       rot=(math.pi, 0, 0))
-            up.visible_glossy = False
+        batten(f"batten{i}", x, BAT_Y, k)
+    for i, (x, k) in enumerate(SERVICE):
+        batten(f"sbatten{i}", x, SERVICE_Y, k, spread=150)
 
 
 def wall_lamps():
     """Caged bulkheads on the +Y wall pilasters (between them), a sodium flood further down the hall."""
     for i, x in enumerate((3.6, 10.8, 18.0, 25.2)):
-        li = bulkhead(f"bulk_n{i}", (x, YW1, 2.25), "-y", lit=i < 3, energy=(7.0, 6.0, 3.5, 0)[i])
+        li = bulkhead(f"bulk_n{i}", (x, YW1, 2.25), "-y", lit=i < 3, energy=(12.0, 14.0, 6.0, 0)[i])
         del li
     m = materials()
     x, z = 15.3, 2.75
@@ -1224,6 +1374,7 @@ def haze(density=0.0032):
 def build():
     M.clear()
     STRIPS.clear()
+    LACING_OBS.clear()
     FOCUS.clear()
     materials()
     hall()

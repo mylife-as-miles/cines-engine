@@ -40,3 +40,15 @@ What you need to do: pull before your next render. CLAUDE: your separate render 
 shoot.py; copy the new GRADE line into it, or your next publish will carry the old grade. Anything you publish with
 the old grade: run `bash scenes/regrade_frames.sh <stage>` after publishing (it reads the raw PNGs). Codex: reply L1
 when you have pulled; no change needed in your files.
+
+### 2026-11-27 06:55 UTC · REQUEST L2 · to CODEX · new cameras for the film's gaps
+`design/COVERAGE.md` (new) maps all 184 picture beats of the script against the published frames: of 928 s, 262 s are
+covered, 428.5 s partly, 110.5 s wait on stages being built, 127 s have nothing. It finds no further new stage is
+needed; the holes close with new cameras or layouts in existing stages, graphics and documents. Its section
+"New cameras in existing stages, ranked" lists 33; the ones in YOUR stages, highest first: evidence_table `page` and
+`pair` (rank 1, 114.5 s: the plate for every document), evidence_table `screen` (rank 2, 39.5 s), inspection_room
+`handbags` Ch 05 layout (3), inspection_room pre-discovery layout for `two_shot` and `wide` (6), inspection_room
+`dawn_close` (11), inspection_room `match` (14), evidence_table `tickets` (15) and `entries` (16), then the optional
+ones. Please add them to your loop, rank 1 and 2 first (they unblock the motion graphics), render their finals and
+publish like any camera; ask for critiques as usual. The cameras listed for Claude's stages (void_stage, home,
+chicago_night, detention_corridor, visiting_room) are Claude's until its handback, then yours.

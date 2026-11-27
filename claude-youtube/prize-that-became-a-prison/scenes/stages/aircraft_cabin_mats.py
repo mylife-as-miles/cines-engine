@@ -446,6 +446,34 @@ def wing_paint(name, rgb=(0.34, 0.35, 0.36)):
     return m
 
 
+def webbing(name, rgb=(0.035, 0.038, 0.046)):
+    """Seat-belt webbing: tight nylon twill with a low sheen, its ribs across the strap."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    _spec(b, 0.3)
+    b.inputs["Sheen Weight"].default_value = 0.3
+    rib = _wave(nt, o, 1100.0, "Y")
+    col = _mix(nt, _maprange(nt, rib, 0.2, 0.8, 0.0, 1.0), tuple(c * 0.8 for c in rgb), tuple(c * 1.25 for c in rgb))
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, _maprange(nt, _noise(nt, o, 30.0, 3.0, 0.6), 0.3, 0.7, 0.5, 0.68), b.inputs["Roughness"])
+    _bump(nt, b, rib, 0.3, 0.0003)
+    return m
+
+
+def paper(name, rgb=(0.46, 0.45, 0.42), rough=0.82, coat=0.0):
+    """A blank printed card or magazine cover (no text): matt, slightly warm, edges handled darker."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    _spec(b, 0.3)
+    b.inputs["Coat Weight"].default_value = coat
+    b.inputs["Coat Roughness"].default_value = 0.2
+    tone = _maprange(nt, _noise(nt, o, 18.0, 4.0, 0.6), 0.35, 0.7, 0.0, 1.0)
+    _link(nt, _mix(nt, tone, tuple(c * 0.9 for c in rgb), rgb), b.inputs["Base Color"])
+    _link(nt, _maprange(nt, tone, 0.0, 1.0, rough - 0.08, rough + 0.06), b.inputs["Roughness"])
+    _bump(nt, b, _noise(nt, o, 500.0, 2.0, 0.6), 0.05, 0.0002)
+    return m
+
+
 def materials(lanes=()):
     M.clear()
     M["seat"] = upholstery("seat cloth")
@@ -471,7 +499,13 @@ def materials(lanes=()):
     M["lens_off"] = pbr("reading lens off", (0.2, 0.2, 0.2), (0.25, 0.3), spec=0.5)
     M["lens_on"] = glow("reading lens on", (1.0, 0.86, 0.68), 60.0, falloff=0.5, axes=("X", "Y"))
     M["cove"] = glow("night cove light", (0.32, 0.45, 0.9), 3.0, sample=True)
-    M["path"] = glow("aisle path light", (0.78, 0.84, 1.0), 6.0, sample=True)
+    M["path"] = glow("aisle path light", (0.74, 0.84, 1.0), 2.6, sample=True)
+    M["path_dim"] = glow("aisle path strip", (0.5, 0.75, 0.82), 0.10)
+    M["wash"] = glow("sidewall wash slot", (0.36, 0.5, 0.95), 0.7)
+    M["belt"] = webbing("belt webbing")
+    M["buckle"] = aluminium("belt buckle", (0.62, 0.63, 0.65), 0.3, "Y")
+    M["card"] = paper("safety card", (0.46, 0.455, 0.43))
+    M["magazine"] = paper("magazine cover", (0.07, 0.085, 0.11), rough=0.45, coat=0.4)
     M["sign"] = glow("blank sign glow", (0.7, 0.76, 0.86), 1.2, falloff=0.3)
     M["curtain"] = curtain("galley curtain")
     M["galley"] = glow("galley glow", (0.85, 0.88, 0.95), 1.6, falloff=0.6, axes=("X", "Z"))

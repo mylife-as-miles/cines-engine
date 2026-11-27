@@ -32,7 +32,9 @@ AISLES = (-0.99, 0.99)
 REAR_Y, FRONT_Y = -2.05, 14.55
 RECLINE = math.radians(16.0)
 PIVOT_Z = 0.44                     # the backrest's hinge line above the seat reference point (y = 0)
-WIN_PITCH, WIN_Z, WIN_W, WIN_H = 0.53, 1.12, 0.27, 0.42
+BACK_TOP = 0.79                    # the shell's top along the reclined back (the seat's top is 1.20 m off the floor)
+DV = BACK_TOP - 0.725              # how far the headrest and the screen sit above the first, shorter seat
+WIN_PITCH, WIN_Z, WIN_W, WIN_H = 0.53, 1.15, 0.27, 0.42
 
 
 def row_y(i):
@@ -276,6 +278,33 @@ def back_front_y(z):
     return -v * sr - w * cr
 
 
+def rslab(name, xs, vs, ws, m, coll, rt=0.06, rb=0.02, bevel=0.012, segs=3, arc=6):
+    """A slab in the backrest frame with rounded corners in its face (top radius rt, bottom rb), edges bevelled."""
+    (x0, x1), (v0, v1) = xs, vs
+    pts = []
+
+    def corner(cx, cv, r, a0):
+        for k in range(arc + 1):
+            t = a0 + (math.pi / 2) * k / arc
+            pts.append((cx + r * math.cos(t), cv + r * math.sin(t)))
+    corner(x1 - rt, v1 - rt, rt, 0.0)
+    corner(x0 + rt, v1 - rt, rt, math.pi / 2)
+    corner(x0 + rb, v0 + rb, rb, math.pi)
+    corner(x1 - rb, v0 + rb, rb, 1.5 * math.pi)
+    n = len(pts)
+    verts = [back_pt(x, v, ws[0]) for x, v in pts] + [back_pt(x, v, ws[1]) for x, v in pts]
+    faces = [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)]
+    faces.append(tuple(range(n)))
+    faces.append(tuple(reversed(range(n, 2 * n))))
+    ob = mesh_obj(name, verts, faces, m, coll=coll)
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    bm.to_mesh(ob.data)
+    bm.free()
+    return finish(ob, bevel, segs, angle=50)
+
+
 def seat_parts(coll, sx, aisle_side=0):
     """One seat at block-local x = sx."""
     # seat cushion: the profile across x, then rounded
@@ -284,30 +313,44 @@ def seat_parts(coll, sx, aisle_side=0):
     sub = c.modifiers.new("sub", "SUBSURF")
     sub.levels = sub.render_levels = 1
     c.modifiers.move(c.modifiers.find("sub"), 0)
-    # the backrest cushion with a gentle lumbar roll, the headrest with side wings, the cover
-    back_box(f"backcush_{sx:+.2f}", (sx - 0.208, sx + 0.208), (0.03, 0.50), (-0.072, 0.0), M["seat"], coll, 0.03, 4)
+    # the backrest cushion with a gentle lumbar roll, the headrest with side wings
+    rslab(f"backcush_{sx:+.2f}", (sx - 0.208, sx + 0.208), (0.03, 0.50 + DV), (-0.072, 0.0), M["seat"], coll, 0.035, 0.03,
+          0.028, 4)
     back_box(f"lumbar_{sx:+.2f}", (sx - 0.19, sx + 0.19), (0.10, 0.24), (-0.09, -0.05), M["seat"], coll, 0.03, 4)
-    back_box(f"headrest_{sx:+.2f}", (sx - 0.17, sx + 0.17), (0.50, 0.722), (-0.085, 0.0), M["seat_dark"], coll, 0.035, 4)
+    rslab(f"headrest_{sx:+.2f}", (sx - 0.17, sx + 0.17), (0.50 + DV, 0.722 + DV), (-0.085, 0.0), M["seat_dark"], coll,
+          0.05, 0.03, 0.03, 4)
     for k in (-1, 1):
-        w = back_box(f"wing_{sx:+.2f}_{k}", (sx + k * 0.19 - 0.03, sx + k * 0.19 + 0.03), (0.52, 0.71), (-0.10, -0.01),
-                     M["seat_dark"], coll, 0.022, 3)
+        w = back_box(f"wing_{sx:+.2f}_{k}", (sx + k * 0.19 - 0.03, sx + k * 0.19 + 0.03), (0.52 + DV, 0.70 + DV),
+                     (-0.10, -0.01), M["seat_dark"], coll, 0.022, 3)
         w.rotation_euler.z = k * 0.25
-    back_box(f"cover_{sx:+.2f}", (sx - 0.165, sx + 0.165), (0.53, 0.735), (-0.093, -0.086), M["cover"], coll, 0.003, 2)
-    back_box(f"covertop_{sx:+.2f}", (sx - 0.165, sx + 0.165), (0.726, 0.738), (-0.093, 0.035), M["cover"], coll, 0.004, 2)
+    # the headrest cover: a cloth laid over the top, hanging down the front and a little down the back
+    rslab(f"cover_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.545 + DV, 0.735 + DV), (-0.093, -0.086), M["cover"], coll,
+          0.008, 0.008, 0.003, 2)
+    back_box(f"covertop_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.722 + DV, 0.739 + DV), (-0.093, 0.054), M["cover"], coll,
+             0.006, 3)
+    rslab(f"coverback_{sx:+.2f}", (sx - 0.15, sx + 0.15), (0.635 + DV, 0.735 + DV), (0.047, 0.054), M["cover"], coll,
+          0.008, 0.008, 0.003, 2)
     # the moulded shell behind: a deep tray with its rim forward round the cushions
-    back_box(f"shell_{sx:+.2f}", (sx - 0.232, sx + 0.232), (-0.10, 0.725), (0.0, 0.048), M["shell"], coll, 0.03, 4)
+    rslab(f"shell_{sx:+.2f}", (sx - 0.232, sx + 0.232), (-0.10, BACK_TOP), (0.0, 0.048), M["shell"], coll, 0.075, 0.03,
+          0.016, 4)
     for k in (-1, 1):
         back_box(f"shellside_{sx:+.2f}_{k}", (sx + k * 0.222 - 0.012, sx + k * 0.222 + 0.012), (-0.06, 0.70),
                  (-0.075, 0.03), M["shell"], coll, 0.01, 3)
-    # the back of the shell: tray table, latch, screen in its bezel, literature pocket
+    # the back of the shell: tray table, latch, screen in its bezel, literature pocket with a card and a magazine
     back_box(f"tray_{sx:+.2f}", (sx - 0.185, sx + 0.185), (0.10, 0.37), (0.046, 0.061), M["shell"], coll, 0.008, 3)
     back_box(f"traygap_{sx:+.2f}", (sx - 0.19, sx + 0.19), (0.095, 0.375), (0.044, 0.055), M["dark_plastic"], coll, 0.004, 2)
     back_box(f"latch_{sx:+.2f}", (sx - 0.022, sx + 0.022), (0.377, 0.392), (0.046, 0.068), M["mid_plastic"], coll, 0.004, 2)
-    back_box(f"bezel_{sx:+.2f}", (sx - 0.135, sx + 0.135), (0.418, 0.582), (0.044, 0.058), M["dark_plastic"], coll, 0.006, 3)
-    back_box(f"screen_{sx:+.2f}", (sx - 0.121, sx + 0.121), (0.432, 0.567), (0.055, 0.0595), M["screen_off"], coll, 0.0, 1)
+    back_box(f"bezel_{sx:+.2f}", (sx - 0.135, sx + 0.135), (0.418 + DV, 0.582 + DV), (0.044, 0.058), M["dark_plastic"],
+             coll, 0.006, 3)
+    back_box(f"screen_{sx:+.2f}", (sx - 0.121, sx + 0.121), (0.432 + DV, 0.567 + DV), (0.055, 0.0595), M["screen_off"],
+             coll, 0.0, 1)
+    back_box(f"hook_{sx:+.2f}", (sx + 0.150, sx + 0.166), (0.600 + DV, 0.626 + DV), (0.046, 0.062), M["mid_plastic"], coll,
+             0.004, 2)
     back_box(f"pocket_{sx:+.2f}", (sx - 0.17, sx + 0.17), (-0.07, 0.07), (0.046, 0.072), M["seat_dark"], coll, 0.012, 3)
     back_box(f"pocketrim_{sx:+.2f}", (sx - 0.175, sx + 0.175), (0.062, 0.078), (0.046, 0.076), M["mid_plastic"], coll,
              0.005, 2)
+    back_box(f"card_{sx:+.2f}", (sx - 0.135, sx - 0.005), (-0.04, 0.097), (0.053, 0.0545), M["card"], coll, 0.0, 1)
+    back_box(f"magazine_{sx:+.2f}", (sx - 0.06, sx + 0.14), (-0.04, 0.089), (0.057, 0.0615), M["magazine"], coll, 0.001, 1)
     # under the cushion: the pan, the life-vest pouch
     box(f"pan_{sx:+.2f}", (0.40, 0.42, 0.03), (sx, 0.22, 0.345), M["dark_plastic"], bevel=0.006, coll=coll)
     box(f"vest_{sx:+.2f}", (0.22, 0.12, 0.05), (sx, 0.36, 0.305), M["mid_plastic"], bevel=0.008, coll=coll)
@@ -350,6 +393,50 @@ def block_collection():
     return coll
 
 
+def slab(name, a, b, width, thick, m, coll=None, bevel=0.0):
+    """A flat strap or plate from a to b, `width` across and `thick` through, lying with its face up."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    length = d.length
+    d.normalize()
+    side = d.cross(Vector((0, 0, 1))).normalized()
+    up = side.cross(d).normalized()
+    ob = box(name, (width, length, thick), (a + b) / 2, m, bevel=bevel, coll=coll, segs=2)
+    ob.rotation_euler = Matrix((side, d, up)).transposed().to_euler()
+    return ob
+
+
+def belt_collection():
+    """An empty seat's lap belt, left crossed on the cushion (seat-local: x from the seat's centre)."""
+    coll = bpy.data.collections.new("seat_belt")
+    z = lambda y: cushion_top(y) + 0.0035          # noqa: E731
+    la, lb = (-0.203, 0.03, z(0.03)), (0.105, 0.285, z(0.285))
+    ra, rb = (0.203, 0.03, z(0.03) + 0.002), (-0.085, 0.262, z(0.262) + 0.0045)
+    slab("belt_l", la, lb, 0.047, 0.003, M["belt"], coll)
+    slab("belt_r", ra, rb, 0.047, 0.003, M["belt"], coll)
+    d = (Vector(rb) - Vector(ra)).normalized()
+    slab("buckle", Vector(rb) - d * 0.012, Vector(rb) + d * 0.058, 0.054, 0.014, M["buckle"], coll, bevel=0.004)
+    slab("buckle_flap", Vector(rb) + d * 0.004 + Vector((0, 0, 0.008)), Vector(rb) + d * 0.05 + Vector((0, 0, 0.0085)),
+         0.046, 0.003, M["buckle"], coll, bevel=0.001)
+    d = (Vector(lb) - Vector(la)).normalized()
+    slab("tongue", Vector(lb) - d * 0.006, Vector(lb) + d * 0.05, 0.03, 0.0025, M["buckle"], coll, bevel=0.0008)
+    slab("tongue_shoe", Vector(lb) - d * 0.03, Vector(lb) + d * 0.004, 0.052, 0.006, M["buckle"], coll, bevel=0.002)
+    return coll
+
+
+def belts(skip=()):
+    """Belts on every seat but the occupied ones (`skip`: (row, block, seat)); every other one mirrored."""
+    coll = belt_collection()
+    for r in range(N_ROWS):
+        for b, bx in enumerate(BLOCK_X):
+            for s_, sx in enumerate(SEAT_DX):
+                if (r, b, s_) in skip:
+                    continue
+                ob = instance(f"belt_{r:02d}_{b}_{s_}", coll, (bx + sx, row_y(r), 0.0))
+                if (r * 7 + b * 3 + s_ * 5) % 3 == 0:
+                    ob.scale.x = -1.0
+
+
 def instance(name, coll, loc):
     ob = bpy.data.objects.new(name, None)
     ob.instance_type = "COLLECTION"
@@ -361,7 +448,7 @@ def instance(name, coll, loc):
 
 def screen_pos(bx, sx, row):
     """World centre of a seat's screen glass and the shell's back normal (toward the row behind)."""
-    p = back_pt(bx + sx, 0.4995, 0.0595) + Vector((0, row_y(row), 0))
+    p = back_pt(bx + sx, 0.4995 + DV, 0.0595) + Vector((0, row_y(row), 0))
     nrm = Vector((0, -math.cos(RECLINE), -math.sin(RECLINE)))
     return p, nrm
 
@@ -453,6 +540,10 @@ def window(side, y, shade, name, glass=True):
     if glass:
         pane = box(f"{name}_pane", (0.004, 0.30, 0.44), (side * 3.0, y, WIN_Z), M["pane"])
         pane.visible_shadow = False
+        # the inner scratch pane, in the reveal's throat (the shade runs behind it)
+        ring = [(side * (x_in + 0.088), y + u, WIN_Z + v) for u, v in superellipse(0.150, 0.225, 2.6, N)]
+        sp = mesh_obj(f"{name}_scratch", ring, [tuple(range(N))], M["scratch_pane"], smooth=False)
+        sp.visible_shadow = False
     return rv
 
 
@@ -485,6 +576,12 @@ def shell(shades, ys):
         # the aisle ceiling (a gentle vault) and the cove light hidden on top of the bin
         cl = sweep(f"aisleceil_{side}", AISLE_CEIL, y0, y1, M["ceiling"], flip_x=side < 0)
         finish(cl, 0.0)
+        # the sidewall wash: a thin lit slot where the lining meets the bin, washing the wall and the reveals
+        box(f"wash_slot_{side}", (0.012, y1 - y0 - 0.2, 0.006), (side * 2.712, (y0 + y1) / 2, 1.792), M["wash"])
+        wl = area(f"wash_light_{side}", (side * 2.70, (y0 + y1) / 2, 1.778), (0.03, y1 - y0 - 0.4), 5.0,
+                  (0.42, 0.56, 1.0), spread=140)
+        wl.rotation_euler = (0.0, side * 0.42, 0.0)          # down the wall, turned a little outboard
+        wl.visible_camera = False
         cv = box(f"cove_{side}", (0.03, y1 - y0 - 0.2, 0.012), (side * 1.53, (y0 + y1) / 2, 2.355), M["cove"])
         cv.visible_camera = False
         cv2 = box(f"cove_c_{side}", (0.03, y1 - y0 - 0.2, 0.012), (side * 0.80, (y0 + y1) / 2, 2.415), M["cove"])
@@ -536,15 +633,24 @@ def bin_bottom(ax):
 
 
 def path_lights():
-    """Floor path-light strips along both edges of both aisles."""
+    """Floor path lights along both edges of both aisles: a dark strip in the carpet with one short LED dash a row,
+    and a hidden strip light under the seat ends that carries their spill onto the aisle carpet."""
+    L = FRONT_Y - REAR_Y - 0.6
+    yc = (FRONT_Y + REAR_Y) / 2
     for ax in AISLES:
         for k in (-1, 1):
-            x = ax + k * 0.225
-            s = box(f"pathstrip_{ax}_{k}", (0.016, FRONT_Y - REAR_Y - 0.6, 0.008), (x, (FRONT_Y + REAR_Y) / 2, 0.004),
-                    M["path"])
-            s.visible_shadow = False
-            box(f"pathhousing_{ax}_{k}", (0.026, FRONT_Y - REAR_Y - 0.6, 0.006), (x, (FRONT_Y + REAR_Y) / 2, 0.003),
-                M["dark_plastic"])
+            x = ax + k * 0.228
+            box(f"pathhousing_{ax}_{k}", (0.026, L, 0.006), (x, yc, 0.003), M["dark_plastic"], bevel=0.002)
+            g = box(f"pathglow_{ax}_{k}", (0.010, L, 0.002), (x, yc, 0.0065), M["path_dim"])
+            g.visible_shadow = False
+            n = int(L / (PITCH / 2))
+            for i in range(n):
+                d = box(f"pathled_{ax}_{k}_{i}", (0.011, 0.085, 0.004), (x, REAR_Y + 0.45 + i * PITCH / 2, 0.0075),
+                        M["path"], bevel=0.0015)
+                d.visible_shadow = False
+            sl = area(f"path_light_{ax}_{k}", (x + k * 0.02, yc, 0.105), (0.02, L), 6.0, (0.62, 0.74, 1.0), spread=150)
+            sl.rotation_euler = (0.0, k * 0.75, 0.0)          # down and in toward the aisle's middle
+            sl.visible_camera = False
 
 
 def front_bulkhead():
@@ -586,7 +692,7 @@ def front_bulkhead():
 
 
 # ---------------------------------------------------------------- exterior
-def exterior(tip, recv):
+def exterior(tip, recv, moon_dir=(-0.75, 0.55, 0.38)):
     """The night outside: the sky dome, the port wing (root far forward, swept back to a raked tip near eye level), its
     red navigation light and the white tail strobe beside it. Lights linked to `recv` (the exterior) only."""
     sky = bpy.data.objects.new("sky", bpy.data.meshes.new("sky"))
@@ -624,11 +730,15 @@ def exterior(tip, recv):
     rings = []
     for (x, le, chord, thick, z) in sections:
         rings.append([(x, le - c * chord, z + h * thick) for c, h in ring_def])
+    # a blended winglet: the tip section swept up, back and a little out
+    x, le, chord, thick, z = sections[-1]
+    for t, up, out, back, ch in ((0.35, 0.22, -0.30, 0.25, 2.1), (0.7, 0.75, -0.50, 0.75, 1.5), (1.0, 1.75, -0.72, 1.6, 0.8)):
+        rings.append([(x + out - h * thick * 0.6 * (1 - t), le - back - c * ch, z + up + h * thick * 0.25 * (1 - t))
+                      for c, h in ring_def])
     wing = loft("wing", rings, M["wing"], closed_end=True)
     finish(wing, 0.0)
     recv.objects.link(wing)
     # a raked tip cap and the nav light housing at the tip's leading edge
-    x, le, chord, thick, z = sections[-1]
     light_pos = Vector((x - 0.15, le - 0.45, z + 0.05))
     cyl("navlight_housing", 0.09, 0.22, light_pos, M["wing_dark"], rot=(0, math.pi / 2, 0), verts=16)
     nl = bpy.data.objects.new("navlight", bpy.data.meshes.new("navlight"))
@@ -653,10 +763,11 @@ def exterior(tip, recv):
     red.light_linking.receiver_collection = recv
     # the moon, out of shot above and ahead: a cool soft sun on the wing only
     li = bpy.data.lights.new("moon", "SUN")
-    li.energy, li.color, li.angle = 0.06, (0.62, 0.72, 1.0), math.radians(1.0)
+    li.energy, li.color, li.angle = 0.5, (0.62, 0.72, 1.0), math.radians(4.0)
     mo = bpy.data.objects.new("moon", li)
     _coll().objects.link(mo)
-    mo.rotation_euler = Vector((0.35, -0.55, 0.75)).to_track_quat("Z", "Y").to_euler()
+    # low and ahead of the wing, so its upper skin carries a long soft sheen toward the cabin
+    mo.rotation_euler = Vector(moon_dir).to_track_quat("Z", "Y").to_euler()
     mo.light_linking.receiver_collection = recv
     LIGHTS["moon"] = mo
     return wing, nl

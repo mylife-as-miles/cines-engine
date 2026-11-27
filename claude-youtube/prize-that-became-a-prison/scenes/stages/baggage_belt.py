@@ -43,8 +43,10 @@ WORLD = 0.0
 DAWN = {
     "dawn_case": dict(src="dawn-suitcase", size=0.66, axis="z", lying=True,
                       grade=dict(sat=0.6, val=0.9, rough_add=0.15), spec=0.2),
+    # (val 0.25, the inspection room's value under its troffer, was a pure black blob in this hall: the brief's
+    # table value 0.35 keeps it black with its seams and straps still readable under the battens)
     "dawn_duffel": dict(src="extra-bag-closed", size=0.75, axis="long", lying=False,
-                        grade=dict(sat=0.5, val=0.25, rough_add=0.35), spec=0.06),
+                        grade=dict(sat=0.5, val=0.35, rough_add=0.3), spec=0.1),
 }
 OTHERS = {   # copy of, scale (x, y, z) relative to the source, body tint (linear albedo)
     "navy_case": ("dawn_case", (1.12, 1.08, 1.1), (0.010, 0.016, 0.042)),
@@ -57,41 +59,49 @@ SHELL = "shell_case"
 FABRIC_MEDIAN = 0.03     # linear luminance of both bag textures' fabric (measured: sRGB median 0.19-0.20)
 
 # tags: start (local x, y as fractions of the bag's half length / half width), heading (deg from +X), length (m)
+# (the soft case's box includes its pulled-out handle: its body ends about 0.19 m short of the -X end)
 TAGS = {
-    "dawn_case": ((-0.55, 0.25), 186, 0.36),
-    "dawn_duffel": ((0.05, -0.1), 78, 0.34),
-    "navy_case": ((-0.5, -0.3), 172, 0.34),
-    "oxblood_case": ((-0.45, 0.2), 194, 0.3),
-    "tan_case": ((-0.6, 0.0), 180, 0.33),
-    "olive_duffel": ((-0.1, 0.1), -84, 0.33),
-    "stone_duffel": ((0.12, -0.05), 96, 0.35),
-    "shell_case": ((-0.5, 0.2), 176, 0.32),
+    "dawn_case": ((-0.05, 0.3), 184, 0.3),
+    "dawn_duffel": ((0.02, 0.0), 58, 0.18),
+    "navy_case": ((-0.1, -0.3), 174, 0.3),
+    "oxblood_case": ((-0.05, 0.2), 190, 0.27),
+    "tan_case": ((-0.1, 0.0), 180, 0.28),
+    "olive_duffel": ((-0.1, 0.05), -66, 0.21),
+    "stone_duffel": ((0.12, -0.05), 112, 0.22),
+    "shell_case": ((-0.5, 0.2), 176, 0.24),
 }
 
 # ---------------------------------------------------------------- layouts per camera: bag -> (x, y, turn deg)
+# The belt runs toward +X. Her extra bag went on first, her case after it: in every layout the duffel is about
+# 1.3 m ahead of the case, the duffel toward the walkway side (-Y), the case toward the chute side (+Y).
 LAYOUT = {
-    # her soft case half through the curtain (strips draped over it), the extra bag just ahead, out in the hall
-    "curtain": {"dawn_case": (0.16, 0.03, 2.0), "dawn_duffel": (1.42, -0.05, -5.0), "navy_case": (3.15, 0.04, 6.0)},
-    # her bags leading, the others ahead of them, away down the belt into the dark
-    "belt": {"dawn_case": (3.35, 0.05, -3.0), "dawn_duffel": (4.85, -0.06, 4.0), "stone_duffel": (6.75, 0.1, 84.0),
-             "navy_case": (8.45, -0.07, 5.0), "shell_case": (11.0, 0.08, -7.0), "tan_case": (13.6, -0.05, 3.0),
-             "olive_duffel": (16.4, 0.07, -4.0), "oxblood_case": (19.6, -0.06, 8.0)},
+    # her soft case half through the curtain (the strips draped over it), the extra bag ahead of it on the rollers
+    "curtain": {"dawn_case": (0.10, 0.20, 3.0), "dawn_duffel": (1.35, -0.24, -6.0)},
+    # her two bags nearest, then a gap, then other people's bags ahead of them, away down the belt into the dark
+    "belt": {"dawn_case": (3.0, 0.18, -3.0), "dawn_duffel": (4.35, -0.22, 5.0), "navy_case": (7.9, 0.1, 5.0),
+             "shell_case": (10.4, -0.12, -7.0), "tan_case": (12.9, 0.06, 3.0), "stone_duffel": (15.6, -0.05, 84.0),
+             "olive_duffel": (18.2, 0.07, -4.0), "oxblood_case": (20.8, -0.06, 8.0)},
     # straight down at the sorter: an olive duffel, her case, her extra bag, a navy case
-    "overhead": {"olive_duffel": (8.45, 0.06, 4.0), "dawn_case": (9.55, -0.03, -4.0), "dawn_duffel": (10.62, 0.04, 3.0),
-                 "navy_case": (11.75, -0.05, 86.0)},
+    "overhead": {"olive_duffel": (8.47, -0.08, 4.0), "dawn_case": (9.45, 0.18, -4.0),
+                 "dawn_duffel": (10.72, -0.22, 3.0), "navy_case": (11.74, 0.05, 86.0)},
 }
 CAM_FOCUS = {"curtain": "focus_curtain", "belt": "focus_belt", "overhead": "focus_over"}
 CAMERAS = {
-    # Ch 04 end: from the walkway, three-quarter on the end wall; the soft case pushing through the strips, the
-    # extra bag ahead of it, the control panel's glow on the left
-    "curtain": dict(loc=(2.75, -1.32, 1.32), aim=(0.32, 0.12, 0.8), lens=32, focus="focus_curtain", fstop=4.0,
-                    exposure=-1.5),
-    # Ch 05 open: low over the belt, her bags leading the others away under the battens into the dark
-    "belt": dict(loc=(0.72, -0.22, 1.06), aim=(12.0, 0.15, 0.78), lens=35, focus="focus_belt", fstop=2.8,
-                 exposure=-1.4),
+    # Ch 04 end: from over the belt, looking back at the end wall. Her soft case pushes out through the strips (lit
+    # from the room behind), her extra bag ahead of it on the transfer rollers; the control panel's glow on the left.
+    # (First version: from the walkway, three-quarter. The guards are as high as the bags, so they hid them, and a
+    # photo-eye post stood in front of her case.)
+    "curtain": dict(loc=(3.7, 0.22, 1.15), aim=(0.7, 0.0, 0.95), lens=35, focus="focus_curtain", fstop=4.0,
+                    exposure=-1.35),
+    # Ch 05 open: low over the belt on its centre line, one-point down the tunnel: her two bags nearest, the others
+    # ahead of them, the battens thinning out and dying toward the far wall
+    # (at 1.02 m, 11 cm over the guards, their inner faces filled both lower corners: 1.15 m keeps it low and
+    # turns them into two leading lines)
+    "belt": dict(loc=(0.9, 0.0, 1.15), aim=(14.0, -0.02, 0.23), lens=32, focus="focus_belt", fstop=4.0,
+                 exposure=-1.2),
     # Ch 04/05: straight down on the belt at the sorter chute; her two bags among the others
-    "overhead": dict(loc=(10.05, 0.06, 3.22), aim=(10.05, 0.0601, BZ), lens=24, focus="focus_over", fstop=8.0,
-                     exposure=-1.6),
+    "overhead": dict(loc=(10.05, 0.06, 3.22), aim=(10.05, 0.0601, BZ), lens=20, focus="focus_over", fstop=8.0,
+                     exposure=-1.5),
 }
 
 _STATE = {"roots": {}, "parts": {}}
@@ -259,9 +269,24 @@ def shell_case(name):
     return holder
 
 
+def _upper_hull(pts):
+    """Upper convex hull of (s, z) points sorted by s: where a taut strip of paper touches a lumpy surface."""
+    hull = []
+    for q in pts:
+        while len(hull) >= 2:
+            (s1, z1), (s2, z2) = hull[-2], hull[-1]
+            if (s2 - s1) * (q[1] - z1) - (z2 - z1) * (q[0] - s1) >= 0:
+                hull.pop()
+            else:
+                break
+        hull.append(q)
+    return hull
+
+
 def tag(root, spec, rnd):
-    """A blank airline bag tag: a pale paper strip lying across the bag from its handle, over the edge, a little
-    drooping. Laid by ray casts on the bag's own surface (in the root's frame)."""
+    """A blank airline bag tag: a pale paper strip lying across the bag from its handle and over the edge. The strip
+    is stiff paper, so it bridges straps, zips and creases (the upper hull of the bag's profile along its line, found
+    by ray casts in the root's frame) and hangs a little way down the side where it runs off the bag."""
     (fx, fy), head, length = spec
     hx, hy, hz = root["half"]
     objs = [o for o in _meshes(root) if not o.name.startswith("tag_")]
@@ -279,36 +304,54 @@ def tag(root, spec, rnd):
         ev.to_mesh_clear()
     bvh = BVHTree.FromPolygons(verts, polys)
     a = math.radians(head)
-    p = Vector((fx * hx, fy * hy, 0))
-    pts = []
-    step = 0.008
-    drop = 0.0
-    n = int(length / step)
-    curl = rnd.uniform(-0.6, 0.6)
-    for i in range(n):
-        d = Vector((math.cos(a), math.sin(a), 0))
-        hit = bvh.ray_cast(Vector((p.x, p.y, 1.5)), Vector((0, 0, -1)), 2.0)
-        if hit[0] is not None and drop == 0.0:
-            z = hit[0].z + 0.003
-            if pts:
-                z = max(z, pts[-1].z - 0.035)
-        else:
-            drop += step
-            if drop > 0.07:
+    d = Vector((math.cos(a), math.sin(a), 0))
+    side = Vector((-d.y, d.x, 0))
+    w = 0.04
+    p0 = Vector((fx * hx, fy * hy, 0))
+    step = 0.006
+    prof = []                       # (s, z): the highest of three casts across the strip's width
+    for i in range(int(length / step) + 1):
+        q = p0 + d * (i * step)
+        zs = [h[0].z for h in (bvh.ray_cast(Vector((q.x + k * side.x, q.y + k * side.y, 1.5)), Vector((0, 0, -1)), 2.0)
+                               for k in (-w * 0.4, 0.0, w * 0.4)) if h[0] is not None]
+        if not zs:
+            if len(prof) >= 4:
                 break
-            z = pts[-1].z - step * 2.2 if pts else 0.002
-        pts.append(Vector((p.x, p.y, z)))
-        p = p + d * step
-        a += math.radians(curl)
-    if len(pts) < 4:
+            continue
+        if len(prof) >= 4 and max(zs) < prof[-1][1] - 0.035:     # over the edge
+            break
+        prof.append((i * step, max(zs)))
+    if len(prof) < 4:
         return None
-    w = 0.042
+    hull = _upper_hull(prof)
+    pts = []
+    k = 0
+    for s_, _z in prof:
+        while k < len(hull) - 2 and hull[k + 1][0] < s_:
+            k += 1
+        (s1, z1), (s2, z2) = hull[k], hull[k + 1]
+        z = z1 + (z2 - z1) * (s_ - s1) / max(1e-9, s2 - s1)
+        pts.append(p0 + d * s_ + Vector((0, 0, z + 0.0025)))
+    # off the edge: a short bend, then the tail hangs (never below the belt)
+    left = length - prof[-1][0]
+    hang = min(left, 0.085, max(0.0, pts[-1].z - 0.012))
+    if hang > 0.012:
+        e, r = pts[-1], 0.016
+        for j in range(1, 7):
+            t = (math.pi / 2) * j / 6
+            pts.append(e + d * (r * math.sin(t)) + Vector((0, 0, -r * (1 - math.cos(t)))))
+        n = max(2, int((hang - r) / 0.012))
+        base = pts[-1]
+        sway = rnd.uniform(0.12, 0.4)
+        for j in range(1, n + 1):
+            dz = (hang - r) * j / n
+            pts.append(base + Vector((0, 0, -dz)) + d * (sway * dz))
+    curl = rnd.uniform(-0.004, 0.004)
     vs, fs = [], []
     for i, q in enumerate(pts):
-        t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)])
-        t.z = 0
-        side = Vector((-t.y, t.x, 0)).normalized() * (w / 2)
-        vs += [q - side, q + side]
+        t = i / (len(pts) - 1)
+        lift = Vector((0, 0, curl * math.sin(t * math.pi * 2)))      # the paper is never perfectly flat
+        vs += [q - side * (w / 2) + lift, q + side * (w / 2) - lift]
         if i:
             k = 2 * i
             fs.append((k - 2, k - 1, k + 1, k))
@@ -320,7 +363,7 @@ def tag(root, spec, rnd):
     bpy.context.scene.collection.objects.link(ob)
     me.materials.append(st.materials()["paper"])
     so = ob.modifiers.new("paper", "SOLIDIFY")
-    so.thickness, so.offset = 0.0005, 1.0
+    so.thickness, so.offset = 0.0006, 1.0
     ob.parent = root
     ob.matrix_parent_inverse = Matrix.Identity(4)
     return ob
@@ -363,6 +406,12 @@ def set_layout(cam):
     bpy.context.view_layer.update()
     visible = [o for name in lay for o in _meshes(_STATE["roots"][name]) if not o.name.startswith("tag_")]
     st.drape_strips(visible)
+    # the belt's lacing seam rides with the bags: always 0.58 m ahead of her extra bag, the next ones 7.1 m apart
+    seam = lay["dawn_duffel"][0] + 0.58
+    for i, ob in enumerate(st.LACING_OBS):
+        x = seam + (i - 1) * 7.1
+        ob.location.x = x
+        ob.hide_render = not (st.TRANSFER[1] + 0.25 < x < st.X1 - 0.3)
     # focus: the bag the camera is about, at the middle of its top
     target = {"curtain": "dawn_duffel", "belt": "dawn_case", "overhead": "dawn_case"}.get(cam, "dawn_case")
     r = _STATE["roots"][target]
