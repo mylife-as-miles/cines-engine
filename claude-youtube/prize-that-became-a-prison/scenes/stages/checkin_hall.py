@@ -1381,6 +1381,16 @@ def build(cast=True):
     focus("focus_agent", (AGENT[0], AGENT[1] - 0.08, 1.6))
     if not cast:
         return
+    # At the profile's lower eyeline the finger pads see the passenger-side
+    # ceiling fitting. Flag only its route to the keyboard, below both faces.
+    keyboard_flag = box("profile keyboard cutter", (0.78, 0.126, 0.004), (0.11, 0.70, 1.90), materials()["plastic"])
+    keyboard_flag.hide_render = True
+    for kind in ("camera", "diffuse", "glossy", "transmission", "volume_scatter"):
+        setattr(keyboard_flag, "visible_" + kind, False)
+    monitor = bpy.data.objects["desk0_mon_light"]
+    monitor_aim = monitor.rotation_euler.copy()
+    monitor_spread = monitor.data.spread
+    profile_aim = (monitor.location - Vector((AGENT[0] - 0.05, AGENT[1] - 0.12, 1.62))).to_track_quat("Z", "Y").to_euler()
     d = people.dawn()                  # the shared cast: flat taupe blouse and skirt, plain black flats
     castkit.relax_sculpted_hair(d)
     a = people.staff("Agent", 0)       # airline staff: plain dark suit, no insignia
@@ -1403,8 +1413,12 @@ def build(cast=True):
         cam = bpy.context.scene.camera
         name = cam.get("stage_camera") if cam else None
         hidden = dawn_meshes + agent_meshes if name == "signs" else dawn_meshes if name == "scale" else ()
-        edge.hide_render = name == "profile"
-        fill.data.energy = 7.0 if name == "profile" else 2.5
+        profile = name == "profile"
+        edge.hide_render = profile
+        fill.data.energy = 7.0 if profile else 2.5
+        keyboard_flag.hide_render = not profile
+        monitor.rotation_euler = profile_aim if profile else monitor_aim
+        monitor.data.spread = math.radians(60) if profile else monitor_spread
         try:
             for ob in hidden:
                 ob.visible_camera = False
@@ -1412,6 +1426,9 @@ def build(cast=True):
         finally:
             edge.hide_render = False
             fill.data.energy = 2.5
+            keyboard_flag.hide_render = True
+            monitor.rotation_euler = monitor_aim
+            monitor.data.spread = monitor_spread
             for ob in hidden:
                 ob.visible_camera = True
     render._orig = orig
@@ -1454,7 +1471,7 @@ def pose_cast(d, a):
     # Set the long axis along the transfer. The pad line sits near the
     # trailing end so both rounded front corners project clearly.
     card.rotation_euler.z = math.atan2(fwd.y, fwd.x)
-    centre = hand["pad"] + fwd * 0.037
+    centre = hand["pad"] + fwd * 0.034
     card.location.x, card.location.y = centre.x, centre.y
     flag = bpy.data.objects["pos0_hand flag2"]
     flag.location.x, flag.location.y = hand["palm"].x, hand["palm"].y
