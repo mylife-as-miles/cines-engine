@@ -22,7 +22,7 @@ const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) *
 const PU = (lat, lon) => P(lat, U(lon));
 // The mainland is a region (no city is named for the days of travel); the departure is an unnamed point by Guangzhou,
 // where the sourced Baiyun Leather Market is, and both disputed onward flights leave from it.
-const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], depart: [23.6, 112.9], australia: [-25.57, 134.36], qingdao: [36.07, 120.38], interior: [33.0, 101.0] };
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], depart: [23.6, 112.9], ausCoast: [-12.6, 131.0], australia: [-25.57, 134.36], qingdao: [36.07, 120.38], interior: [33.0, 101.0] };
 const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
 const span = (t, a, b) => sm((t - a) / (b - a));
 const INK = '#ece8e1';
@@ -39,10 +39,16 @@ function bend(a, b, lift, n = 80) {
   return out;
 }
 function path(ctx, pts, f) { const n = Math.max(1, Math.floor((pts.length - 1) * f)); ctx.beginPath(); ctx.moveTo(...pts[0]); for (let i = 1; i <= n; i++) ctx.lineTo(...pts[i]); return pts[n]; }
-function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2) {   // word-by-word calm reveal
+function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2, leader = null) {
+  // a calm word-by-word reveal; a soft dark halo keeps the thin serif legible over coastlines; a leader line (if given,
+  // [x, y] of the place) draws first so the label always points at what it names
   const words = text.split(' '); ctx.save(); ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
   ctx.font = `${w} ${size}px "Cormorant"`; ctx.letterSpacing = `${(size * track).toFixed(1)}px`;
-  const total = ctx.measureText(text).width; let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
+  const total = ctx.measureText(text).width - size * track; let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
+  if (leader && t > t0) { const f = sm((t - t0) / 0.4); ctx.save(); ctx.strokeStyle = 'rgba(236,232,225,0.45)'; ctx.lineWidth = 1;
+    const ex = align === 'right' ? x + 10 : x - 10; ctx.beginPath(); ctx.moveTo(leader[0], leader[1]);
+    ctx.lineTo(leader[0] + (ex - leader[0]) * f, leader[1] + (y - leader[1]) * f); ctx.stroke(); ctx.restore(); }
+  ctx.shadowColor = 'rgba(3,5,9,0.85)'; ctx.shadowBlur = size * 0.35;
   words.forEach((wd, i) => {
     const p = t - (t0 + i * 0.19), a = cl(p / 0.47), r = 1 - sm(p / 0.37);
     if (p > 0) { ctx.globalAlpha = a; ctx.fillText(wd, cx, y + r * size * 0.33); }
@@ -63,7 +69,7 @@ function base(ctx) {
   ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1;
   for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
   for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); }
-  ctx.fillStyle = '#1f2833'; ctx.strokeStyle = 'rgba(236,232,225,0.30)'; ctx.lineWidth = 1.5;
+  ctx.fillStyle = '#1f2833'; ctx.strokeStyle = 'rgba(236,232,225,0.60)'; ctx.lineWidth = 1;
   for (const r of window.LAND.rings) { ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke(); }
 }
 function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre moving toward the route's goal
@@ -79,9 +85,9 @@ function solid(ctx, pts, f, a = 1) {
   }
   ctx.restore();
 }
-function dashed(ctx, pts, f, a = 0.6) { if (f <= 0) return; ctx.save(); ctx.setLineDash([9, 11]); ctx.lineCap = 'round'; ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; path(ctx, pts, f); ctx.stroke(); ctx.restore(); }
-function region(ctx, a) {        // the days of travel: mainland China's own outline, lit; nothing outside it
-  if (a <= 0) return; const r = window.REG.CHN.ring; ctx.save(); ctx.globalAlpha = a;
+function dashed(ctx, pts, f, a = 0.75) { if (f <= 0) return; ctx.save(); ctx.setLineDash([10, 9]); ctx.lineCap = 'round'; ctx.strokeStyle = `rgba(200,208,218,${a})`; ctx.lineWidth = 2.5; path(ctx, pts, f); ctx.stroke(); ctx.restore(); }
+function region(ctx, a, key = 'CHN') { // a country's own outline, lit (mainland China for the days of travel; Australia)
+  if (a <= 0) return; const r = window.REG[key].ring; ctx.save(); ctx.globalAlpha = a;
   ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath();
   ctx.fillStyle = 'rgba(236,232,225,0.12)'; ctx.fill(); ctx.strokeStyle = 'rgba(236,232,225,0.55)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore(); }
 function arrowEnd(ctx, pts, f, a = 0.75) {   // a small open arrowhead where a dashed line stops (no ring, no city)
@@ -91,33 +97,38 @@ function arrowEnd(ctx, pts, f, a = 0.75) {   // a small open arrowhead where a d
   ctx.lineTo(x1 - 14 * Math.cos(ang + 0.45), y1 - 14 * Math.sin(ang + 0.45)); ctx.stroke(); ctx.restore(); }
 
 const leg1 = () => gc(CITY.chicago, CITY.hongkong);
-const legA = () => gc(CITY.depart, CITY.australia), legQ = () => bend(CITY.depart, CITY.qingdao, -70);
+// the Qingdao line bows out over the sea (east of the coast) so it never runs along the coastline
+const legA = () => gc(CITY.depart, CITY.ausCoast), legQ = () => bend(CITY.depart, CITY.qingdao, -150);
 const MODES = {
   leg1(ctx, t) {
     camera(ctx, t, [W / 2, H * 0.47], [W * 0.47, H * 0.47], 1.0, 1.04, 6);
     base(ctx); const L = leg1(), [cx, cy] = PU(...CITY.chicago), [hx, hy] = PU(...CITY.hongkong);
-    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 26, cy + 38, 30, t, 0.2, 'right');
+    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 30, cy + 40, 36, t, 0.2, 'right');
     solid(ctx, L, span(t, 0.6, 3.0));
-    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', hx - 26, hy + 38, 30, t, 3.0, 'right');
-    label(ctx, '9 DAYS', hx - 26, hy + 104, 72, t, 3.6, 'right', 400, 0.06);
+    // Hong Kong's labels sit over the South China Sea, below and right of the marker
+    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', hx + 34, hy + 52, 36, t, 3.0, 'left', 500, 0.2, [hx + 8, hy + 8]);
+    label(ctx, '9 DAYS', hx + 34, hy + 118, 72, t, 3.6, 'left', 400, 0.06);
   },
   mainland(ctx, t) {
     camera(ctx, t, [W * 0.47, H * 0.47], [W * 0.40, H * 0.56], 1.04, 1.12, 7);
     base(ctx); const [hx, hy] = PU(...CITY.hongkong), [ix, iy] = PU(...CITY.interior), [ax, ay] = PU(...CITY.australia);
-    solid(ctx, leg1(), 1, 1 - 0.95 * span(t, 0.2, 1.6)); dot(ctx, hx, hy, 1 - 0.95 * span(t, 0.2, 1.6), 1);
+    solid(ctx, leg1(), 1, 1 - span(t, 0.2, 1.2)); dot(ctx, hx, hy, 1 - span(t, 0.2, 1.2), 1);
     region(ctx, span(t, 0.4, 1.6));
-    label(ctx, 'MAINLAND CHINA', ix, iy - 26, 26, t, 1.2, 'center');                // on the land, over the interior
-    label(ctx, 'ABOUT 9 MORE DAYS', ix, iy + 24, 42, t, 1.8, 'center', 400, 0.04);
-    const A = legA(); dashed(ctx, A, span(t, 4.2, 6.2)); arrowEnd(ctx, A, span(t, 4.2, 6.2));
-    label(ctx, 'AUSTRALIA', ax, ay + 44, 30, t, 6.2, 'center');
+    // the label over the open sea east of Japan, with a leader to the mainland's interior
+    const lx = PU(33, 150)[0], ly = PU(33, 150)[1];
+    label(ctx, 'MAINLAND CHINA', lx, ly - 34, 36, t, 1.2, 'left', 500, 0.2, [ix, iy]);
+    label(ctx, 'ABOUT 9 MORE DAYS', lx, ly + 28, 52, t, 1.8, 'left', 400, 0.04);
+    const A = legA(); dashed(ctx, A, span(t, 4.2, 5.8)); arrowEnd(ctx, A, span(t, 4.2, 5.8));
+    region(ctx, 0.8 * span(t, 5.6, 6.4), 'AUS'); label(ctx, 'AUSTRALIA', ax, ay, 36, t, 6.2, 'center');
   },
   split(ctx, t) {
     camera(ctx, t, [W * 0.40, H * 0.56], [W * 0.40, H * 0.57], 1.12, 1.16, 6);
-    base(ctx); const [ax, ay] = PU(...CITY.australia), [qx, qy] = PU(...CITY.qingdao), [hx, hy] = PU(...CITY.hongkong);
-    solid(ctx, leg1(), 1, 0.05); dot(ctx, hx, hy, 0.05, 1); region(ctx, 0.7);
+    base(ctx); const [ax, ay] = PU(...CITY.australia), [qx, qy] = PU(...CITY.qingdao);
+    region(ctx, 0.7); region(ctx, 0.55, 'AUS');
     const A = legA(), Q = legQ();
-    dashed(ctx, A, span(t, 0.4, 2.4)); arrowEnd(ctx, A, span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', ax, ay + 44, 30, t, 2.4, 'center');
-    dashed(ctx, Q, span(t, 1.0, 2.4)); dot(ctx, qx, qy, span(t, 2.3, 2.6), 1, true); label(ctx, 'QINGDAO', qx + 28, qy - 14, 30, t, 2.4);
+    dashed(ctx, A, span(t, 0.4, 2.4)); arrowEnd(ctx, A, span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', ax, ay, 36, t, 2.4, 'center');
+    dashed(ctx, Q, span(t, 1.0, 2.4)); arrowEnd(ctx, Q, span(t, 1.0, 2.4));
+    const [lx, ly] = PU(37.5, 133); label(ctx, 'QINGDAO', lx, ly, 36, t, 2.4, 'left', 500, 0.2, [qx, qy]);   // over the sea, with a leader
   },
 };
 window.draw = (mode, t) => { const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t); };

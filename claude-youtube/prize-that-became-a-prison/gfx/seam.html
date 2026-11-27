@@ -37,66 +37,71 @@ function trace(ctx, p, f, a = 1) {
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 18, 0, 7); ctx.fill(); }
   ctx.restore();
 }
+function rng(seed) { let x = seed >>> 0; return () => ((x = (x * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function grain(ctx, t) {                 // per-frame grain (sigma about 1 luma), so the dark ground never bands or freezes
+  const f = Math.round(t * 24), r = rng(9173 + f * 131), img = ctx.getImageData(0, 0, W, H), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (r() + r() + r() - 1.5) * 2.4; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  ctx.putImageData(img, 0, 0);
+}
 function cutaway(ctx, t) {
-  // A section through the bag wall at the top seam, drawn as an extruded slab in an oblique view: the cut face shows
-  // the leather over the lining; the top face recedes. The lining is sewn to the leather at the seam (left); it swings
-  // down about its stitches to open a wedge of hidden space, outlined in red and left empty, then snaps shut.
+  // A section through the bag wall at the top seam, an extruded slab in an oblique view: the cut face shows the leather
+  // over the lining; the top face recedes. It opens on a straight match cut from the tote: on frame 1 its red seam
+  // sits where the tote's seam was (y 380, x 1262-1735 on the 1920 purses frame), then the view eases back to the
+  // whole section (1.2 s). The lining swings down about its stitches to open a space, in which a flat, neutral, unlabelled
+  // layer lies (schematic: something sewn in; no packets, no substance), then closes over 0.45 s.
   ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H);
   const vg = ctx.createRadialGradient(W * 0.5, H * 0.5, 120, W * 0.5, H * 0.5, W * 0.62);
   vg.addColorStop(0, 'rgba(26,32,42,0.55)'); vg.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-  const open = sm((t - 0.9) / 0.9) * (1 - Math.pow(cl((t - 3.1) / 0.22), 2));   // parts, holds, snaps shut
-  const reveal = eo(t / 0.7), drift = 1 + 0.02 * eo(t / 5);                        // a slow push across the shot
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2); ctx.globalAlpha = reveal;
-  const X0 = 330, X1 = 1560, Y = 440, D = [170, -136];                              // D: the receding depth vector
-  const LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];                            // leather and lining thickness
-  const ang = 0.085 * open;                                                         // the lining's swing, radians
+  const X0 = 330, X1 = 1560, Y = 440, D = [170, -136], LEA = 92, LIN = 40, hinge = [X0 + 120, Y + LEA];
+  const sA = [X0 + 18, Y + 10], sB = [X1 - 14, Y + 10];               // the cut face's stitch row, end to end
+  const tA = [1262, 380], tB = [1735, 380];                            // where the tote's seam was on the cut
+  const k0 = (tB[0] - tA[0]) / (sB[0] - sA[0]), e = sm(t / 1.2);       // start scale, eased to 1
+  const k = k0 + (1 - k0) * e, ox = (tA[0] - k0 * sA[0]) * (1 - e), oy = (tA[1] - k0 * sA[1]) * (1 - e);
+  const drift = 1 + 0.02 * sm(t / 5);
+  const open = sm((t - 1.4) / 0.9) * (1 - sm((t - 3.4) / 0.45));
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(drift, drift); ctx.translate(-W / 2, -H / 2);
+  ctx.translate(ox, oy); ctx.scale(k, k);
+  const ang = 0.085 * open;
   const rot = (x, y) => { const dx = x - hinge[0], dy = y - hinge[1], c = Math.cos(ang), s2 = Math.sin(ang);
     return [hinge[0] + dx * c - dy * s2, hinge[1] + dx * s2 + dy * c]; };
-  const slab = (pts, faceFill, topFill, edge) => {                                  // cut face + receding top + side
-    const top = [pts[0], pts[1], [pts[1][0] + D[0], pts[1][1] + D[1]], [pts[0][0] + D[0], pts[0][1] + D[1]]];
-    const side = [pts[1], pts[2], [pts[2][0] + D[0], pts[2][1] + D[1]], [pts[1][0] + D[0], pts[1][1] + D[1]]];
-    for (const [poly, fill] of [[top, topFill], [side, faceFill], [pts, faceFill]]) {
-      ctx.beginPath(); poly.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath();
-      ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = edge; ctx.lineWidth = 1.4; ctx.stroke();
-    }
+  const poly = (pts) => { ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); };
+  const leather = (pts, base, seed) => {                               // a fine grain on the leather faces
+    poly(pts); ctx.fillStyle = base; ctx.fill(); ctx.save(); poly(pts); ctx.clip(); const r = rng(seed);
+    for (let i = 0; i < 900; i++) { const x = X0 - 40 + r() * (X1 - X0 + 260), y = Y - 160 + r() * 340;
+      ctx.fillStyle = r() < 0.5 ? 'rgba(255,240,220,0.035)' : 'rgba(0,0,0,0.08)'; ctx.fillRect(x, y, 2 + r() * 3, 1 + r() * 2); }
+    ctx.restore(); poly(pts); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.4 / k; ctx.stroke();
   };
-  const hatch = (pts, col) => { ctx.save(); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath(); ctx.clip();
-    ctx.strokeStyle = col; ctx.lineWidth = 1; for (let k = X0 - 400; k < X1 + 200; k += 12) { ctx.beginPath(); ctx.moveTo(k, Y + 400); ctx.lineTo(k + 300, Y - 200); ctx.stroke(); } ctx.restore(); };
-  // the lining (drawn first, it sits behind the leather's cut face when closed)
+  const slab = (pts, face, top, seed) => {
+    const T = [pts[0], pts[1], [pts[1][0] + D[0], pts[1][1] + D[1]], [pts[0][0] + D[0], pts[0][1] + D[1]]];
+    const S = [pts[1], pts[2], [pts[2][0] + D[0], pts[2][1] + D[1]], [pts[1][0] + D[0], pts[1][1] + D[1]]];
+    leather(T, top, seed); leather(S, face, seed + 1); leather(pts, face, seed + 2);
+  };
   const lin = [[X0, Y + LEA], [X1, Y + LEA], [X1, Y + LEA + LIN], [X0, Y + LEA + LIN]].map(([x, y]) => x < hinge[0] ? [x, y] : rot(x, y));
-  slab(lin, '#22272e', '#2b3038', 'rgba(214,208,198,0.45)'); hatch(lin, 'rgba(214,208,198,0.06)');
-  // the hidden space: between the leather and the swung lining, a flat neutral layer that was sewn in (schematic only:
-  // no packets, no substance, no label); its outline is grey, because red marks only the seam
-  if (open > 0.01) {
+  slab(lin, '#22272e', '#2b3038', 11);
+  if (open > 0.01) {                                                   // the space, and the flat layer sewn into it
     const a2 = cl(open * 1.6), p0 = [hinge[0] + 6, Y + LEA], p1 = [X1 - 30, Y + LEA], p2 = rot(X1 - 30, Y + LEA);
-    const mid = (u, v, k) => [u[0] + (v[0] - u[0]) * k, u[1] + (v[1] - u[1]) * k];
+    const mid = (u, v, q) => [u[0] + (v[0] - u[0]) * q, u[1] + (v[1] - u[1]) * q];
     const l0 = mid(p0, p1, 0.08), l1 = mid(p0, p1, 0.92), l3 = mid(p0, p2, 0.08), l2 = mid(p0, p2, 0.92);
-    const q0 = mid(l0, l3, 0.25), q1 = mid(l1, l2, 0.25), q2 = mid(l1, l2, 0.7), q3 = mid(l0, l3, 0.7);
-    ctx.save(); ctx.globalAlpha = a2; ctx.beginPath(); [q0, q1, q2, q3].forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.closePath();
-    ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.2; ctx.stroke(); ctx.restore();
+    const q = [mid(l0, l3, 0.25), mid(l1, l2, 0.25), mid(l1, l2, 0.7), mid(l0, l3, 0.7)];
+    ctx.save(); ctx.globalAlpha = a2; poly(q); ctx.fillStyle = '#4a4d52'; ctx.fill(); ctx.strokeStyle = 'rgba(214,208,198,0.5)'; ctx.lineWidth = 1.2 / k; ctx.stroke(); ctx.restore();
   }
-  // the leather
-  const lea = [[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]];
-  slab(lea, '#3b342d', '#4a4239', 'rgba(214,208,198,0.55)'); hatch(lea, 'rgba(214,208,198,0.08)');
-  // the seam: a running stitch along the whole top edge and through both layers at the hinge, in the film's red,
-  // each stitch kept on its face
-  ctx.save(); ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.2; ctx.lineCap = 'butt';
-  for (let x = X0 + 18; x < X1 - 14; x += 22) {                     // along the cut face, just under the top edge
-    ctx.beginPath(); ctx.moveTo(x, Y + 10); ctx.lineTo(x + 11, Y + 10); ctx.stroke();
-  }
-  for (let k = 0.12; k < 0.9; k += 0.12) {                          // along the receding top face
-    const x = X0 + 30 + D[0] * k, y = Y + D[1] * k; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 11, y); ctx.stroke();
-  }
-  for (let i = 0; i < 4; i++) {                                      // through both layers at the hinge, inside the faces
-    const x = X0 + 30 + i * 26; ctx.beginPath(); ctx.moveTo(x, Y + 3); ctx.lineTo(x, Y + LEA + LIN - 3); ctx.stroke();
-  }
+  slab([[X0, Y], [X1, Y], [X1, Y + LEA], [X0, Y + LEA]], '#3b342d', '#4a4239', 21);
+  // the seam, in the film's red: a dashed running stitch along the cut face and along the receding top edge (one line
+  // along the projected edge), stitch holes at each end, and stitches through both layers at the hinge
+  ctx.save(); ctx.strokeStyle = `rgba(${RED},0.92)`; ctx.lineWidth = 2.2 / Math.max(k, 0.6); ctx.setLineDash([11, 11]);
+  ctx.beginPath(); ctx.moveTo(...sA); ctx.lineTo(...sB); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(X0 + 18 + D[0] * 0.08, Y + 10 + D[1] * 0.08); ctx.lineTo(X0 + 18 + D[0] * 0.92, Y + 10 + D[1] * 0.92); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle = 'rgba(8,6,5,0.85)';
+  for (let x = sA[0]; x < sB[0]; x += 22) { ctx.beginPath(); ctx.arc(x, sA[1], 1.6, 0, 7); ctx.arc(x + 11, sA[1], 1.6, 0, 7); ctx.fill(); }
+  for (let i = 0; i < 4; i++) { const x = X0 + 30 + i * 26; ctx.beginPath(); ctx.moveTo(x, Y + 3); ctx.lineTo(x, Y + LEA + LIN - 3); ctx.stroke(); }
   ctx.restore(); ctx.restore();
+  grain(ctx, t);
 }
 window.draw = (mode, t) => {
   const ctx = document.getElementById('c').getContext('2d'); ctx.clearRect(0, 0, W, H);
   if (bgImg && mode !== 'cutaway') ctx.drawImage(bgImg, 0, 0, W, H);
-  if (mode === 'flash') { if (t < 1.0) trace(ctx, pts(), eo(t / 0.55), 1 - sm((t - 0.8) / 0.2) * 0); }
-  else if (mode === 'trace') trace(ctx, pts(), eo(t / 1.8));
+  if (mode === 'flash') trace(ctx, pts(), sm(t / 0.6));
+  else if (mode === 'trace') trace(ctx, pts(), sm(t / 1.8));
   else if (mode === 'cutaway') cutaway(ctx, t);
 };
 window.setBG = url => new Promise(r => { if (!url) { bgImg = null; return r(); } const i = new Image(); i.onload = () => { bgImg = i; r(); }; i.src = url; });

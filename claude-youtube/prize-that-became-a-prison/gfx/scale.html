@@ -19,7 +19,7 @@ function draw(mode, t) {
   ctx.fillStyle = FACE; ctx.fillRect(0, 0, W, H);
   // the unlit segments of an LCD show faintly, as on a real panel
   ctx.font = '500 150px "Oswald"'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'center';
-  ctx.fillStyle = GHOST; ctx.fillText('OVERWEIGHT', W / 2, 238);
+  if (t > 1.15) { ctx.fillStyle = GHOST; ctx.fillText('OVERWEIGHT', W / 2, 238); }   // unlit segments appear only once the bar is past the limit
   // the weight bar: settles over 1.4 s with a small hunt, the way a load cell does, ending past the limit tick
   const limit = 0.82, fill = Math.min(0.9, ease(t / 1.4) * 0.9 + 0.012 * Math.sin(t * 9) * Math.exp(-2.2 * t));
   const bx = 70, by = 286, bw = W - 140, bh = 34;

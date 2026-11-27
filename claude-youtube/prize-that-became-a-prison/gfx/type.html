@@ -55,7 +55,7 @@ const LOOKS = {
     sup2: { fam: 'Cormorant', w: 400, size: 104, track: 0.04, caps: true },
     hero: { fam: 'Cormorant', w: 300, size: 340, track: 0.02, caps: true },
     big: { fam: 'Cormorant', w: 500, size: 84, track: 0.08, caps: true },
-    num: { fam: 'Cormorant', w: 400, size: 250, track: 0.0, caps: true, italic: true } },
+    num: { fam: 'Cormorant', w: 400, size: 250, track: 0.0, caps: true } },
   C: { name: 'Condensed',    // Bebas Neue with Oswald: tall, heavy, the hardest hit
     ink: '#e9eaec', dim: 'rgba(233,234,236,0.62)',
     sup: { fam: 'Oswald', w: 500, size: 40, track: 0.18, caps: true },
@@ -118,7 +118,7 @@ function erode(ctx, a, b, x, y, st, t, t0) {
   // new word, letters rising in order out of a slot at the baseline (clipped below it), once the old word has
   // mostly gone, so no two letters ever sit on the same spot
   const bx = x - slot / 2 + (slot - wb) / 2 * (1 - k);
-  const start = (a.length - 1) * 3 + 5;                               // after the last old letter has gone
+  const start = (a.length - 1) * 3;                                   // overlaps the last old letter's fade by two frames
   for (let i = 0; i < b.length; i++) {
     const r = cl((tf - start - i * 4) / 20), op = Math.min(1, 2.5 * r), cx = bx + at(b, i), lw = at(b, i + 1) - at(b, i);
     if (r > 0) {
@@ -173,7 +173,7 @@ function sentenceCard(ctx, t, life) {
   // DEATH SENTENCE fitted to the left block (x 0.08-0.44 W, clear of a figure centre or right); the reprieve on one line
   // under it, as wide as the block allows; the date small above, last to arrive. With `life` the date leaves letter
   // by letter first, then both lines change in place to LIFE IN PRISON.
-  const L = look(), x = 0.08 * W, maxW = 0.44 * W - x;
+  const L = look(), x = 0.08 * W, maxW = 0.39 * W - x;
   const big = Object.assign({}, L.big); big.size *= Math.min(1.15, maxW / width(ctx, 'DEATH SENTENCE', big));
   const q = Object.assign({}, L.big, { track: 0.12 }); q.size = Math.min(big.size * 0.62, q.size * maxW / width(ctx, 'WITH A TWO-YEAR REPRIEVE', q));
   const y1 = 0.42 * H, y2 = y1 + big.size * 0.98, yd = y1 - big.size * 1.05;
@@ -186,7 +186,7 @@ function sentenceCard(ctx, t, life) {
 // Each mode draws one moment; t is seconds from the moment's cue. Positions are fractions of the frame and sit on the
 // plate's darkest plain area (checked on the stills).
 const YES_Y = 0.29 * H;    // YES's baseline: cap top about 99 px (title-safe), about 65 px above the case handle on the native 2560 bag plates (lens-shifted)
-const CAL_X = 120 + 250;   // the calendar's centre: its left edge stays 120 px or more from the frame edge
+const CAL_X = 110 + 190;   // the calendar's centre: left edge at about 110 px, about 140 px clear of the case
 const MOMENTS = {
   place_2014: (ctx, t) => { const L = look();      // checkin_hall wide, low left
     reveal(ctx, '2014', 0.072 * W, 0.80 * H, L.sup2, t, 0.0);
@@ -200,15 +200,17 @@ const MOMENTS = {
   sentence_life: (ctx, t) => sentenceCard(ctx, t, true),  // chapter 6: the same card, then life
   calendar: (ctx, t) => { const L = look();        // ch 5, beside the empty pool: 2014, 2015, 2016, 2017, each held
     const hold = 1.7, k = Math.min(3, Math.floor(t / hold)), u = t - k * hold;
-    if (k === 0) land(ctx, '2014', CAL_X, 0.56 * H, L.num, t, 0.0, { from: 1.3 });
-    else roll(ctx, 2013 + k, 2014 + k, CAL_X, 0.56 * H, L.num, u, 0.0, 0.21); },
+    const cs = Object.assign({}, L.num, { size: L.num.size * 0.8 });
+    if (k === 0) land(ctx, '2014', CAL_X, 0.56 * H, cs, t, 0.0, { from: 1.3 });
+    else roll(ctx, 2013 + k, 2014 + k, CAL_X, 0.56 * H, cs, u, 0.0, 0.21); },
   counter: (ctx, t) => { const L = look();         // void cell, camera locked: twelve years, each one a beat
     // 2014 holds 1.2 s; then one year at a time, the gaps growing from 0.55 s to 1.0 s, so the years feel heavier as
     // they pile up; 2026 lands at about 10 s and holds (the moment runs 14 s or more)
     const ticks = [1.2]; for (let k = 1; k < 12; k++) ticks.push(ticks[k - 1] + 0.55 + 0.45 * (k - 1) / 10);
     let k = 0; while (k < 12 && t >= ticks[k]) k++;
-    if (k === 0) land(ctx, '2014', 0.5 * W, 0.22 * H, L.num, t, 0.0, { from: 1.25 });
-    else roll(ctx, 2013 + k, 2014 + k, 0.5 * W, 0.22 * H, L.num, t - ticks[k - 1], 0.0, 0.21); },
+    const cy = 0.22 * H + 120 * (t > 10 ? (1 - Math.cos(Math.PI * cl((t - 10) / 4))) / 2 : 0);
+    if (k === 0) land(ctx, '2014', 0.5 * W, cy, L.num, t, 0.0, { from: 1.25 });
+    else roll(ctx, 2013 + k, 2014 + k, 0.5 * W, cy, L.num, t - ticks[k - 1], 0.0, 0.21); },
   title: (ctx, t) => { const L = look();           // over void bags in the beam
     // lands whole on the score's peak (cut in slightly large, settles), then holds while the score decays
     // two centred lines, measured so the wider one stays inside 70 % of the frame width
@@ -217,6 +219,8 @@ const MOMENTS = {
     land(ctx, 'THE PRIZE THAT', 0.5 * W, 0.17 * H - 8, st, t, 0.0, { from: 1.12 });
     land(ctx, 'BECAME A PRISON', 0.5 * W, 0.17 * H - 8 + st.size * 1.12, st, t, 0.08, { from: 1.12 }); },
   date_gene: (ctx, t) => { const L = look();
+    const g = ctx.createRadialGradient(0.19 * W, 0.85 * H, 0, 0.19 * W, 0.85 * H, 350); g.addColorStop(0, `rgba(3,5,8,${0.3 * sm(t / 0.5)})`); g.addColorStop(1, 'rgba(3,5,8,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     reveal(ctx, 'JANUARY 25, 2026', 0.07 * W, 0.86 * H, L.sup, t, 0.0); },
 };
 
