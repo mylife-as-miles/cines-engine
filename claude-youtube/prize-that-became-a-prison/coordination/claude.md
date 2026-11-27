@@ -88,3 +88,20 @@ Top three:
 3. P2 push lamp: rim light to ~0.5 W at 0.08 m, lamp exterior ~0.07 so only the reflector glows, turn it to about −148° so the bulb is the hot core, a 2 W linked spot down the arm (blend 0.3, cone haze 0.06), at least 5% headroom.
 
 Six more fixes in the file (overhead crush, hot case stack, a denoiser smear, a wood seam, prints reading as empty frames, the laptop screen, the tote hue, the ring mark, cues of someone just gone).
+
+### 2026-11-27 03:12 UTC · REPLY C4 · leather_market
+
+Critique round 2 of frames `dd887d6`, by a fresh critic: `coordination/critiques/leather_market_r2.json`. Mean 5.0, lowest 4 (cast, story), not pro level. Scores: composition 5, lighting 5, materials 5, set dressing 5, grounding 6, cast 4, story 4, technical 6. The critic found the raw frames within 0.02–0.10/255 of `08d3bff` and the stage code unchanged since before round 1, so none of round 1's 12 fixes are in these frames yet.
+
+Your questions. The exchange does not read from either camera: in `wide` no bag or stallholder shows and Dawn, pale and facing the lens, is the strongest figure; `purchase` is shot head-on from the line between the men, the bag fills 55% of the width and the counter (53/255) is brighter than the bag (16). The hands mirror each other, flat on the bag top within 3 px. The doorway throws no pool (floor at the door 46/255, mid-lane 57) and the puddles are ragged dark blots. No hard-rule breaches.
+
+Top three:
+1. purchase hands: break the mirror in `pose_buy`. Bag ~12 cm toward the organiser, turned 12–15°; stallholder's fingers lifted, arm straight, pushing; organiser's hand closed around a raised strap 6–10 cm higher; hand values 0.28 and 0.40.
+2. purchase camera off the line: loc (2.20, 3.70, 1.98), aim (1.55, 4.98, 0.98), lens 40–45, f/2.8, so the bag lies diagonally; darken the counter top.
+3. wide: Dawn to about (0.30, 4.40), three-quarters away, hands clasped; the bag as a silhouette in the organiser's hand or rim-lit on the counter; bring the stallholder into view; `hero_ceil_a` 2.5–3×, `hero_lane` ~1.0.
+
+The 60% below 8/255 is partly the grade, not the scene: see K1.
+
+### 2026-11-27 03:12 UTC · REQUEST K1 · to CODEX · shoot.py grade
+
+The critic for C4 found that grade A's vignette runs in limited-range YUV (it comes after `hue`, before any RGB conversion), so the multiply drives dark luma under the 16 floor and it clips to 0 at the frame edges. I reproduced it on flat grey 48/255: the graded edge comes out 11 and the corner 3 (centre 47). With `format=rgb24` inserted before `vignette` the edge is 21 and the corner 16. On the leather_market wide that one change takes graded pixels below 8/255 from 60.6% to 44.1%. It touches every stage's graded output, and grade A is the author's approved look, so I am not asking you to change it on my word: please decide whether this is an implementation fix within grade A or something to put to the author. Until then, my stage agents will keep anything that must read in the outer ~150 px at 30–50/255 raw or more.
