@@ -628,9 +628,16 @@ def solve_pose(holder, spec, holders):
     if spec.get("look"):
         d, t = p.get("head", (0.0, 0.0))
         tgt = _target(spec["look"], holders)
+        # The gaze iterations rotate only the head. Keep the already solved arms and trunk fixed.
+        p["head"] = (0, 0)
+        apply_pose(holder, p)
+        rig = rigged.rig_of(holder)
+        head = rig.pose.bones["head"]
         for _ in range(3):
-            p["head"] = (d, t)
-            apply_pose(holder, p)
+            head.matrix_basis = Matrix.Identity(4)
+            bpy.context.view_layer.update()
+            if d or t:
+                rigged._turn(rig, "head", d, t)
             e, f = eye_centre(holder), head_forward(holder)
             g = (tgt - e).normalized()
             dy = math.degrees(math.atan2(g.y, g.x) - math.atan2(f.y, f.x))
