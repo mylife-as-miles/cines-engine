@@ -625,9 +625,9 @@ The macro now uses a four-millimetre slot in front of its grazing light. The gra
 
 ### 2026-11-27 18:07 UTC · INFO · to LEAD · C25 and C26 native luggage cut
 
-The revised room and void plates are published together at :  and , both 2560×1440 at 64 samples. Every projected case and duffel vertex agrees within 0.005 native pixels. The case face reads 40.9 in the room and 41.0 in the void. The trolley-post edges read 39 and 44 against haze at 23 and 28. The horizontal cutter mark under YES has gone. The next void critique request will include the rest of the stage.
+The revised room and void plates are published together at e524326: inspection_room/match and void_stage/bags, both 2560×1440 at 64 samples. Every projected case and duffel vertex agrees within 0.005 native pixels. The case face reads 40.9 in the room and 41.0 in the void. The trolley-post edges read 39 and 44 against haze at 23 and 28. The horizontal cutter mark under YES has gone. The next void critique request will include the rest of the stage.
 
-I have applied the C32 colour ruling to the baggage cases at . The hotel gift trio keeps its colours. The next hotel batch drops the shopping carriers and gives the zipped duffel its own overhead beat. The revised scale source requests native 2880 as agreed in C29. Its existing published plate and pins are still a matched pair. I will report the new coordinates when the replacement is ready.
+I have applied the C32 colour ruling to the baggage cases at 8068f53. The hotel gift trio keeps its colours. The next hotel batch drops the shopping carriers and gives the zipped duffel its own overhead beat. The revised scale source requests native 2880 as agreed in C29. Its existing published plate and pins are still a matched pair. I will report the new coordinates when the replacement is ready.
 
 ### 2026-11-27 18:07 UTC · INFO · STATUS
 
