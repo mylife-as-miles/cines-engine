@@ -64,7 +64,7 @@ HIDE = {
 DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
                   "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
 HIDE["document"] = DOCUMENT_PROPS
-CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials", "open booklet")
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools", "screen spill", "entry stationery", "art materials", "open booklet", "booklet on wood")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -116,7 +116,9 @@ CAMERAS = {
 
 }
 
-CAMERAS["laptop_before"] = dict(CAMERAS["laptop"], hide=CAMERAS["laptop"].get("hide", ()) + ("passes_c2",))
+CAMERAS["laptop_before"] = dict(CAMERAS["laptop"],
+                               hide=CAMERAS["laptop"]["hide"] + ("passes_c2", "passport_c2"),
+                               show=CAMERAS["laptop"]["show"] + ("booklet on wood",))
 CAMERAS["tickets"] = dict(loc=(0.026, -0.405, TOP + 0.310), aim=(0.177, 0.017, TOP), lens=50,
                          focus="fx_tickets", fstop=6.3, beat="tickets", exposure=-1.6,
                          hide=("laptop", "envelope", "highlighter", "stack", "mug"), lamp=(-0.41, -0.28, -68))
@@ -904,6 +906,10 @@ def build(cast=True):
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
     group("receipt_c4", pp.receipt("receipt_c4", M["thermal"], *RECEIPT_C4, seed=12))
     pp.SUPPORT[:] = [o for o in keep if o.name in ("table_top",)]
+    # Before the tickets arrive, the same booklet rests flat on bare boards.
+    group("booklet on wood", pp.passport("passport before", M["cover"], M["pages"], 0.21, 0.06, -28.0,
+                                         m_end=M["endpaper"]))
+    pp.SUPPORT[:] = [o for o in keep if o.name == "table_top"]
     group("passes_c2", pp.boarding_pass("pass_c2a", M["card"], 0.165, -0.012, 11.0, seed=21, lift=0.003))
     group("passes_c2", pp.boarding_pass("pass_c2b", M["card"], 0.19, -0.05, -7.0, seed=23, lift=0.008))
     group("passport_c2", pp.passport("passport_c2", M["cover"], M["pages"], 0.21, 0.06, -28.0, m_end=M["endpaper"]))
