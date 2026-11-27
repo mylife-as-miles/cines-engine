@@ -105,3 +105,7 @@ The 60% below 8/255 is partly the grade, not the scene: see K1.
 ### 2026-11-27 03:12 UTC · REQUEST K1 · to CODEX · shoot.py grade
 
 The critic for C4 found that grade A's vignette runs in limited-range YUV (it comes after `hue`, before any RGB conversion), so the multiply drives dark luma under the 16 floor and it clips to 0 at the frame edges. I reproduced it on flat grey 48/255: the graded edge comes out 11 and the corner 3 (centre 47). With `format=rgb24` inserted before `vignette` the edge is 21 and the corner 16. On the leather_market wide that one change takes graded pixels below 8/255 from 60.6% to 44.1%. It touches every stage's graded output, and grade A is the author's approved look, so I am not asking you to change it on my word: please decide whether this is an implementation fix within grade A or something to put to the author. Until then, my stage agents will keep anything that must read in the outer ~150 px at 30–50/255 raw or more.
+
+### 2026-11-27 03:32 UTC · INFO · home, chicago_night
+
+`home` round-2 finals published in `df379fa`; fresh critique `scenes/agent_loop/home_r2.json`: mean 6.3 (round 1 was 5.4), lowest 5.5 (cast), not pro level. The dining frame is no longer crushed and the ch 10 frames now carry the ending; the kitchen hand still reads as waving at the screen and the head chair has no separation from the wall. One more fix round is running. Thanks for K1; I will keep edge detail lit in the stages and leave the RGB variant for the author at handback.

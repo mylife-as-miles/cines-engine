@@ -1,0 +1,91 @@
+{
+ "stage": "home",
+ "round": 2,
+ "commit": "df379fa",
+ "scores": {
+  "composition": 6.5,
+  "lighting": 6.5,
+  "materials": 6,
+  "set_dressing": 6,
+  "grounding_scale": 6,
+  "cast": 5.5,
+  "story_read": 7,
+  "technical": 7
+ },
+ "pro_level": false,
+ "verdict": "Most round-1 fixes landed. The chair close-up's haze veil, vertical streak and doubled-chair read are gone. The dining wide is no longer crushed (6.7% of pixels at or below 5/255, down from 51%), and the head chair now stands alone on the right third with its striped shadow clear beside it, so both Ch 10 frames now carry the ending. It is still not at fern level. In the kitchen, Dawn's right hand is cocked up off the trackpad with straight, fanned fingers reaching to the lid, which reads as waving at or touching the screen, and the right third is a dead black void. In the dining wide, the hero chair has no tonal separation from the wall behind it (78 vs 76/255), so its shadow and a bright bowl take the eye. The close-up's lower half is murky, and the chair's legs dissolve into the floor with no readable contact.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "kitchen",
+   "problem": "Dawn's right hand is tipped up about 28 deg at the wrist and rises roughly 11 cm above her forearm. Its fingers are straight and fanned, and the tips meet the laptop lid's left edge. It reads as waving at or touching the screen, not as the 'finger on the trackpad' the module intends. The brightest pixel in the frame (177/255) is on these fingers, right beside her face. The brief names this failure ('not hovering or splayed'), and round 1's flat mitten hand has become a more visible error.",
+   "fix": "In arms_on_table, stop the deck-clearance loop from tipping the hand back. Rest the right wrist on the laptop's palm rest: wrist target z = K_TOP + 0.0175 + 0.022, about 4 cm in from the laptop's front edge. Set hand_pitch to +4 to +6 deg (down) and PITCH_MIN to about -6, so the solver lifts the wrist instead of cocking the hand. Cut the right hand's CURL to knuckle 10-15 and joints 12-18, with the index at 5/8 reaching the trackpad's near half and the thumb tucked along it. A simpler option that is safer from this angle: rest the right hand palm down on the table just left of the laptop, fingers curled 15-20 deg and wrist 2 cm above the top, and give the trackpad to her left hand, which the lid hides. Check from the kitchen camera that no fingertip rises above the lower third of the lid and that a sliver of table shows under the palm."
+  },
+  {
+   "priority": 2,
+   "camera": "dining",
+   "problem": "The head chair has almost no tonal separation from the unlit wainscot behind it (graded top rail and spindles 77-78/255, wall 76), and the stripes barely mark the chair itself. The eye lands first on its shadow, the highest-contrast shape in the frame, and then on the bowl. The beat asks for the stripes to cross the table and the chair.",
+   "fix": "Move HEAD_CHAIR y from 0.02 to about 0.14, or swing the 'street' spot's target y from 0.0 to about +0.12, or both. The chair's right stile and top rail should overlap the patch's lit left (jamb) edge by about 40 px, so the back is silhouetted against the stripes and the slat light crosses its top rail and spindles. Cut the fill on the wall left of the patch for this camera only, TRIMS['dining'] = {'d_sky': 0.6}, and add back d_sky_end if the near table end drops under about 15/255. Graded targets: striped top rail at least 115, unlit wall left of the chair at most 55, shadow still at least 120 px clear of the chair."
+  },
+  {
+   "priority": 2,
+   "camera": "chair",
+   "problem": "The lower 40% of the frame is a murky mass: the bottom half averages 18/255 and 39% of it sits at or below 12. The seat (16) and the turned legs merge with the oak (18), and the feet's contact cannot be read even with the contact decals. The only floor stripes are a strip at the foot of the wall, away from the chair. The back's crest also catches only faint stripes, so the chair is the dimmest thing in its own close-up.",
+   "fix": "Lower and steepen the 'street' spot so its slat stripes land on the boards around and behind the chair's feet: direction d = (0.9, -0.36, -0.34) normalised, target (4.45, 0.0, 0.5) in place of (0.9, -0.36, -0.27) and z 0.66. The legs and their contact shadows then show as dark silhouettes on lit stripes. Graded targets: floor stripes round the feet 45-60, legs at most 20. Re-check the dining wide: the end-wall patch should still start above the chair rail and the shadow should still clear the chair. If the patch drops too far, raise the spot rather than lowering its target. Also raise chair_head's wood value about 15% (tune_prop val) so the stripes across its seat and back read."
+  },
+  {
+   "priority": 2,
+   "camera": "kitchen",
+   "problem": "The right third of the frame is a dead black void: graded mean 4/255, and 38% of the whole frame sits at or below 5. The raw has a plain unlit wall there, which the grade's vignette crushes. Nothing on that side tells the room, so the frame weighs left, and the dressing added in round 2 (dish rack, range, fruit bowl) is mostly lost in the dark.",
+   "fix": "Give the screen glow something to land on at the right. Option one: a fridge, 0.75 x 0.7 x 1.75 m, satin off-white enamel (albedo about 0.45, roughness 0.35, 0.02 bevel, vertical bar handle), at the right end of the counter run 1.5-2 m behind her, where its door edge and handle catch the laptop's cool spill. Option two: a doorway in the right wall with a dim cool hall light (area 0.4 x 2.0 m, 3-5 W) that leaves a sliver of lit jamb. Target the right third at 12-20 graded with one readable silhouette, still well below her face (about 100-140)."
+  },
+  {
+   "priority": 3,
+   "camera": "dining",
+   "problem": "The white bowl is the brightest object after the stripes (rim 150/255, as bright as the brightest stripe) and sits on the left third, a second subject that pulls the eye away from the head chair. The module's comment says it is 'out of the light', but it is not.",
+   "fix": "Darken mt.ceramic('bowl') from 0.4 to about 0.2 and raise its roughness from 0.3 to 0.5, or move d_bowl about 0.3 m toward the far chairs (DT[0] - 0.7, DT[1] + 0.2) into shadow. Target: rim at most 90 graded."
+  },
+  {
+   "priority": 3,
+   "camera": "dining, chair",
+   "problem": "The dining tabletop reads as rough-sawn barn timber: deep cracks and checks come from the prop's baked normals, and the finish is grey and ashy. It does not read as a family dining table, and the street light leaves no sheen along it.",
+   "fix": "In dining_table, cut the prop's baked normal-map strength on the top to about 0.35, or halve the late_k bump, and drop the crack contrast. Add a satin clear coat (coat 0.25, coat roughness 0.25) so the blind stripes leave a soft gleam along the top toward the head chair."
+  },
+  {
+   "priority": 3,
+   "camera": "dining",
+   "problem": "chair_n2's dark back (12/255) is the largest shape in the frame and is cut by the bottom edge, and its top rail cuts the tabletop in two halfway to the head. The leftmost chair is a half-chair cut by the left edge, and the bright blinds are cut by the top-left edge.",
+   "fix": "Push chair_n2 from (2.42, -0.42) to about (2.2, -0.30) so its seat goes under the top and its rail sits lower and further left, or remove it so the top runs unbroken to the head chair. If the cut chair at the left edge still reads as a fragment, nudge the camera loc x by +0.1 or pan about 2 deg right, keeping the head chair on the right third."
+  },
+  {
+   "priority": 3,
+   "camera": "chair",
+   "problem": "The lidded ceramic jar on the sideboard (d_jar + d_jarLid) reads as a cremation urn in the chapter about Gene Hunt's death, which implies a fact the film has no source for. Its lid also sits about 7 px from the top frame edge, a tangent.",
+   "fix": "Remove d_jarLid and turn d_jar into a low open vase about 0.18 m tall, or replace it with a shallow bowl, or leave just the candlesticks. Keep its top under about 1.06 m so it clears the chair camera's top edge by at least 30 px."
+  },
+  {
+   "priority": 3,
+   "camera": "kitchen",
+   "problem": "The pale kettle sits directly behind her shoulder and neck, and its lower edge touches her contour (around x 560-600, y 330-340), so it looks like a lump growing out of her shoulder. The paper-towel stand's bright top knob over a pale cylinder reads as a lit pillar candle.",
+   "fix": "Slide k_kettle, k_kettleHandle and k_kettleSpout about 0.15 m along the range away from her head, leaving at least 25 px of tile between the kettle and her neck. Make the paper-towel stand's knob dark bronze (value 0.08, roughness 0.5), and make the loose sheet (k_ptSheet) catch more light so the roll reads as paper."
+  },
+  {
+   "priority": 4,
+   "camera": "dining, chair",
+   "problem": "Inside the stripe patch the wainscot panels read flat. Each stile is a single dark hairline (dining around x 1015 and x 1240, chair close-up along the panels), not a moulding with relief, so the raking street light does not reveal the panelling.",
+   "fix": "Model the panel frames 9-12 mm proud of the field with a 4 mm bevel (or a small ogee), so the street light draws a lit edge and a shadow edge along each stile and rail."
+  },
+  {
+   "priority": 4,
+   "camera": "kitchen",
+   "problem": "The T-shirt reads as a smooth moulded shell, with no folds at the waist, under the arm or at the sleeve where her right arm crosses forward.",
+   "fix": "In cloth() for the shirt, add a low-frequency wrinkle bump (noise scale 5-8, strength 0.12-0.18, distance 0.004) masked toward the waist and the armpits, keeping the fine woven bump, so the shirt reads as cotton."
+  },
+  {
+   "priority": 4,
+   "camera": "all",
+   "problem": "The shared grade's vignette in shoot.py (vignette angle PI/4.4) takes the corners to about 30% of raw. It roughly halves the dining stripe patch at the right edge (raw about 140, graded about 71) and crushes the kitchen's right third. This file is not the stage author's to change.",
+   "fix": "For the orchestrator: soften the vignette to about PI/5.5, or make it a per-stage setting. Until then, frame the key light motifs (the stripe patch, the hero chair) inside the central 70% of the frame, and judge the corners on the graded frame."
+  }
+ ]
+}

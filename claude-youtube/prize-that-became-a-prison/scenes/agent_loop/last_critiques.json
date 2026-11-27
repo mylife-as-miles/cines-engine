@@ -202,7 +202,7 @@
     "priority": 2,
     "camera": "all",
     "problem": "The carpet tiles read as a smooth vinyl checkerboard. Large tiles alternate tone, with no fibre and no seams.",
-    "fix": "Use 0.5 m tiles with alternating quarter-turn grain. Keep value variation between tiles to about ±3%. Make seams 2 mm and slightly darker. Add fibre with a Noise texture (scale about 600-900) into Bump at strength 0.12, plus a directional wave texture for pile direction. Roughness 0.95, specular about 0.2. Base value low (about 0.12-0.15) so the floor sits under Dawn, not at her value."
+    "fix": "Use 0.5 m tiles with alternating quarter-turn grain. Keep value variation between tiles to about \u00b13%. Make seams 2 mm and slightly darker. Add fibre with a Noise texture (scale about 600-900) into Bump at strength 0.12, plus a directional wave texture for pile direction. Roughness 0.95, specular about 0.2. Base value low (about 0.12-0.15) so the floor sits under Dawn, not at her value."
    },
    {
     "priority": 3,
@@ -432,91 +432,91 @@
   ]
  },
  "home": {
-  "round": 1,
+  "round": 2,
   "scores": {
-   "composition": 5.5,
-   "lighting": 5.5,
-   "materials": 5,
-   "set_dressing": 5,
-   "grounding_scale": 5.5,
-   "cast": 6.5,
-   "story_read": 5.5,
-   "technical": 5
+   "composition": 6.5,
+   "lighting": 6.5,
+   "materials": 6,
+   "set_dressing": 6,
+   "grounding_scale": 6,
+   "cast": 5.5,
+   "story_read": 7,
+   "technical": 7
   },
   "pro_level": false,
-  "verdict": "Not at the bar yet. The kitchen comes closest. Lighting from the practicals works: the screen glow models Dawn's face and forearms, the warm under-cabinet strip rakes the subway tile, and the gooseneck faucet stands out against a cool window. It reads as \"a woman alone with an email at night\". It is let down by a bare showroom counter, a flat mottled navy backdrop in place of a night exterior, a pale blob and an upright pen cut by the bottom frame edge, the hard (not soft) laptop lid, and the under-cabinet lens bar, which at about 180/255 is the brightest thing in frame and pulls the eye to the top edge.\n\nThe two Ch 10 frames carry the film's ending and both fail to make the empty chair read cleanly.\n\nDINING: 51% of pixels sit at 5/255 or below, so the whole foot end, the near chairs and the left side crush to black. The top 40% is dead wall. Three chair-like silhouettes stack on the hero: the head chair, its spindle shadow on the end wall and a near side chair (chair_n2) whose back covers the head chair's legs and seat. The hero is only about 110 px tall and does not \"stand apart\". Plank seams crossed by blind stripes turn the tabletop into a checkerboard. The pendant shade bites a curved notch out of the top of the stripe patch on the end wall. The sideboard is cut at the right frame edge.\n\nCHAIR: d_haze at 0.018 puts the street spot's volumetric slat shafts between the lens and the chair. The frame reads as a double exposure through glass. A straight vertical streak (a volumetric shadow edge) runs from the top of the frame to the bottom at x≈667, through the seat. The chair's top rail almost coincides with its own wall shadow, so it reads as two chairs. The rug is a flat, edge-sharp, blue-grey sheet with no pile or thickness, and reads as glass or concrete. The Tripo chair's baked texture holds up badly in close-up: the seat looks like speckled stone and the rails are blotchy. Floor contact of the legs cannot be read.\n\nThere is no clipping (maximum 151–180/255). Denoiser blotching shows in the dark window and on the walls at 64 spp.",
+  "verdict": "Most round-1 fixes landed. The chair close-up's haze veil, vertical streak and doubled-chair read are gone. The dining wide is no longer crushed (6.7% of pixels at or below 5/255, down from 51%), and the head chair now stands alone on the right third with its striped shadow clear beside it, so both Ch 10 frames now carry the ending. It is still not at fern level. In the kitchen, Dawn's right hand is cocked up off the trackpad with straight, fanned fingers reaching to the lid, which reads as waving at or touching the screen, and the right third is a dead black void. In the dining wide, the hero chair has no tonal separation from the wall behind it (78 vs 76/255), so its shadow and a bright bowl take the eye. The close-up's lower half is murky, and the chair's legs dissolve into the floor with no readable contact.",
   "fixes": [
    {
     "priority": 1,
-    "camera": "chair",
-    "problem": "Haze veil: the street spot's volumetric slat shafts sit between the camera and the chair, so the chair, the floor and the table read as if seen through a striped glass sheet. A straight vertical volumetric shadow line crosses the whole frame at x≈667, through the seat.",
-    "fix": "In apply_camera, set the d_haze volume density per camera: chair 0.0 to 0.004 (or set bpy.data.objects['d_haze'].hide_render = True for 'chair'); dining keep about 0.012. After that, if the vertical line remains, find the end-window part casting it (a blind cord or ladder string on d_endwin) and either move the cord to the far jamb or set that object's visible_shadow = False."
-   },
-   {
-    "priority": 1,
-    "camera": "dining",
-    "problem": "The hero chair does not stand apart: chair_n2's dark back overlaps the head chair's seat and legs, and the head chair's spindle shadow sits right beside it on the end wall. Three overlapping chair silhouettes, and the hero is only about 15% of the frame height.",
-    "fix": "Move chair_n2 from (3.04, -0.7) to about (2.72, -0.58), and push all four side chairs in to |y| = 0.58 so their seats tuck under the top. Lower and tighten the camera: loc (1.35, -1.75, 1.38), aim (4.45, 0.05, 0.55), lens 30. Check that a clear gap of at least 60 px of lit wall shows between the head chair's back and any other chair."
-   },
-   {
-    "priority": 1,
-    "camera": "chair",
-    "problem": "The chair's top rail almost coincides with its own spindle shadow on the end wall (upper left), so it reads as a doubled chair. The table head is not soft as briefed, and the leg contact is unreadable.",
-    "fix": "View the end wall more edge-on so the chair-to-wall depth becomes lateral separation: loc about (4.25, 1.8, 1.08), aim (4.6, -0.25, 0.5), lens 32, f/2.8 with focus on fx_chair. That puts the table head (x 3.9) soft at the right and the chair's shadow clearly to its left on the wall. Optionally pull HEAD_CHAIR x to 4.35 so the gap to the wall grows to about 0.65 m. Add a weak contact AO: either a 0.3 x 0.3 m dark decal under each foot (alpha 0.25), or raise world AO / keep the floor rougher so shadows read."
+    "camera": "kitchen",
+    "problem": "Dawn's right hand is tipped up about 28 deg at the wrist and rises roughly 11 cm above her forearm. Its fingers are straight and fanned, and the tips meet the laptop lid's left edge. It reads as waving at or touching the screen, not as the 'finger on the trackpad' the module intends. The brightest pixel in the frame (177/255) is on these fingers, right beside her face. The brief names this failure ('not hovering or splayed'), and round 1's flat mitten hand has become a more visible error.",
+    "fix": "In arms_on_table, stop the deck-clearance loop from tipping the hand back. Rest the right wrist on the laptop's palm rest: wrist target z = K_TOP + 0.0175 + 0.022, about 4 cm in from the laptop's front edge. Set hand_pitch to +4 to +6 deg (down) and PITCH_MIN to about -6, so the solver lifts the wrist instead of cocking the hand. Cut the right hand's CURL to knuckle 10-15 and joints 12-18, with the index at 5/8 reaching the trackpad's near half and the thumb tucked along it. A simpler option that is safer from this angle: rest the right hand palm down on the table just left of the laptop, fingers curled 15-20 deg and wrist 2 cm above the top, and give the trackpad to her left hand, which the lid hides. Check from the kitchen camera that no fingertip rises above the lower third of the lid and that a sliver of table shows under the palm."
    },
    {
     "priority": 2,
     "camera": "dining",
-    "problem": "Crushed: about 51% of the frame is at or below 5/255. The foot of the table, the near chairs, the radiator and the left wall are pure black. The top 40% of the frame is empty black wall.",
-    "fix": "Raise d_sky from 6 to about 16 W and street_side from 10000 to about 15000, or set the dining exposure from -1.15 to about -0.85 (maximum 151/255 leaves headroom). Target: the near table end and the foot chair at about 15–25/255 in the graded frame, with the stripes no brighter than about 200. Tilt the camera down (aim z 0.62 to 0.5) so the black upper wall drops out. Either reframe or move the sideboard so it is not cut at the right frame edge."
-   },
-   {
-    "priority": 2,
-    "camera": "dining, chair",
-    "problem": "The pendant shade's shadow bites a curved notch out of the top of the blind-stripe patch on the end wall (dining around (870–1000, 240–260), chair around (590–670, 60–85)). It reads as an unexplained shape.",
-    "fix": "Raise the pendant drop in home_set.dining from 0.86 to about 0.7 m, or move the pendant 0.2 m toward the foot, so the shade clears the street spot's cone. Re-check that the stripe patch's top edge is the window head's straight shadow."
-   },
-   {
-    "priority": 2,
-    "camera": "chair, dining",
-    "problem": "The rug reads as a flat blue-grey slab of glass or concrete with a razor edge and no thickness. The head chair's front legs straddle its edge.",
-    "fix": "Make d_rug 0.012 thick with a 0.004 bevel. In mt.rug, drop the value to about 0.07–0.09, roughness 0.92, no specular, and add a pile bump (noise scale about 900, strength 0.3, distance 0.001) plus a two-tone woven border band 8 cm wide. Either shrink the rug to 2.3 x 1.7 so the head chair (x 4.42) sits fully off it on the oak, or grow it so the chair sits fully on it."
+    "problem": "The head chair has almost no tonal separation from the unlit wainscot behind it (graded top rail and spindles 77-78/255, wall 76), and the stripes barely mark the chair itself. The eye lands first on its shadow, the highest-contrast shape in the frame, and then on the bowl. The beat asks for the stripes to cross the table and the chair.",
+    "fix": "Move HEAD_CHAIR y from 0.02 to about 0.14, or swing the 'street' spot's target y from 0.0 to about +0.12, or both. The chair's right stile and top rail should overlap the patch's lit left (jamb) edge by about 40 px, so the back is silhouetted against the stripes and the slat light crosses its top rail and spindles. Cut the fill on the wall left of the patch for this camera only, TRIMS['dining'] = {'d_sky': 0.6}, and add back d_sky_end if the near table end drops under about 15/255. Graded targets: striped top rail at least 115, unlit wall left of the chair at most 55, shadow still at least 120 px clear of the chair."
    },
    {
     "priority": 2,
     "camera": "chair",
-    "problem": "The baked Tripo texture on chair_head fails in close-up: the seat looks like speckled grey stone and the back rails are blotchy reddish smears.",
-    "fix": "For chair_head only, replace the base colour with a procedural satin wood (reuse oak_floor's grain or mt.pbr with stretch (1, 18, 18), rgb about (0.07, 0.035, 0.02), rough 0.45–0.55, bump 0.1). Give the seat a slightly worn, lighter patch at its front edge (value +15%). Remove the specular speckle (lower rough_add noise; spec 0.3)."
+    "problem": "The lower 40% of the frame is a murky mass: the bottom half averages 18/255 and 39% of it sits at or below 12. The seat (16) and the turned legs merge with the oak (18), and the feet's contact cannot be read even with the contact decals. The only floor stripes are a strip at the foot of the wall, away from the chair. The back's crest also catches only faint stripes, so the chair is the dimmest thing in its own close-up.",
+    "fix": "Lower and steepen the 'street' spot so its slat stripes land on the boards around and behind the chair's feet: direction d = (0.9, -0.36, -0.34) normalised, target (4.45, 0.0, 0.5) in place of (0.9, -0.36, -0.27) and z 0.66. The legs and their contact shadows then show as dark silhouettes on lit stripes. Graded targets: floor stripes round the feet 45-60, legs at most 20. Re-check the dining wide: the end-wall patch should still start above the chair rail and the shadow should still clear the chair. If the patch drops too far, raise the spot rather than lowering its target. Also raise chair_head's wood value about 15% (tune_prop val) so the stripes across its seat and back read."
+   },
+   {
+    "priority": 2,
+    "camera": "kitchen",
+    "problem": "The right third of the frame is a dead black void: graded mean 4/255, and 38% of the whole frame sits at or below 5. The raw has a plain unlit wall there, which the grade's vignette crushes. Nothing on that side tells the room, so the frame weighs left, and the dressing added in round 2 (dish rack, range, fruit bowl) is mostly lost in the dark.",
+    "fix": "Give the screen glow something to land on at the right. Option one: a fridge, 0.75 x 0.7 x 1.75 m, satin off-white enamel (albedo about 0.45, roughness 0.35, 0.02 bevel, vertical bar handle), at the right end of the counter run 1.5-2 m behind her, where its door edge and handle catch the laptop's cool spill. Option two: a doorway in the right wall with a dim cool hall light (area 0.4 x 2.0 m, 3-5 W) that leaves a sliver of lit jamb. Target the right third at 12-20 graded with one readable silhouette, still well below her face (about 100-140)."
+   },
+   {
+    "priority": 3,
+    "camera": "dining",
+    "problem": "The white bowl is the brightest object after the stripes (rim 150/255, as bright as the brightest stripe) and sits on the left third, a second subject that pulls the eye away from the head chair. The module's comment says it is 'out of the light', but it is not.",
+    "fix": "Darken mt.ceramic('bowl') from 0.4 to about 0.2 and raise its roughness from 0.3 to 0.5, or move d_bowl about 0.3 m toward the far chairs (DT[0] - 0.7, DT[1] + 0.2) into shadow. Target: rim at most 90 graded."
    },
    {
     "priority": 3,
     "camera": "dining, chair",
-    "problem": "The dining tabletop's plank seams crossed by the blind stripes read as a checkerboard or tile grid, not wood.",
-    "fix": "In dining_table's tune_prop top_wood, cut the seam and plank contrast by about half (narrow the light/dark range to about (0.09, 0.045, 0.025) / (0.06, 0.03, 0.017)) and raise the grain frequency from 70 to about 110, so the stripes dominate and the planks read as a subtle grain."
+    "problem": "The dining tabletop reads as rough-sawn barn timber: deep cracks and checks come from the prop's baked normals, and the finish is grey and ashy. It does not read as a family dining table, and the street light leaves no sheen along it.",
+    "fix": "In dining_table, cut the prop's baked normal-map strength on the top to about 0.35, or halve the late_k bump, and drop the crack contrast. Add a satin clear coat (coat 0.25, coat roughness 0.25) so the blind stripes leave a soft gleam along the top toward the head chair."
+   },
+   {
+    "priority": 3,
+    "camera": "dining",
+    "problem": "chair_n2's dark back (12/255) is the largest shape in the frame and is cut by the bottom edge, and its top rail cuts the tabletop in two halfway to the head. The leftmost chair is a half-chair cut by the left edge, and the bright blinds are cut by the top-left edge.",
+    "fix": "Push chair_n2 from (2.42, -0.42) to about (2.2, -0.30) so its seat goes under the top and its rail sits lower and further left, or remove it so the top runs unbroken to the head chair. If the cut chair at the left edge still reads as a fragment, nudge the camera loc x by +0.1 or pan about 2 deg right, keeping the head chair on the right third."
+   },
+   {
+    "priority": 3,
+    "camera": "chair",
+    "problem": "The lidded ceramic jar on the sideboard (d_jar + d_jarLid) reads as a cremation urn in the chapter about Gene Hunt's death, which implies a fact the film has no source for. Its lid also sits about 7 px from the top frame edge, a tangent.",
+    "fix": "Remove d_jarLid and turn d_jar into a low open vase about 0.18 m tall, or replace it with a shallow bowl, or leave just the candlesticks. Keep its top under about 1.06 m so it clears the chair camera's top edge by at least 30 px."
    },
    {
     "priority": 3,
     "camera": "kitchen",
-    "problem": "The set dressing is too sparse for a family home: the counters are bare, there is no fridge, no dish rack, no towel, and the window shows a flat mottled navy plane like a painted backdrop.",
-    "fix": "Add 4–6 restrained items to the counter run: a dish rack with two plates by the sink, a kettle on the range, a paper-towel holder, a fruit bowl, and a dish towel over the oven handle (simple cloth-sim or bent box). Behind the window glass, at y + 3.5 m, add a dark brick wall (painted brick 0.05 value) with one dim warm 0.6 x 0.9 m window and a faint cool alley light, in place of the flat noise."
+    "problem": "The pale kettle sits directly behind her shoulder and neck, and its lower edge touches her contour (around x 560-600, y 330-340), so it looks like a lump growing out of her shoulder. The paper-towel stand's bright top knob over a pale cylinder reads as a lit pillar candle.",
+    "fix": "Slide k_kettle, k_kettleHandle and k_kettleSpout about 0.15 m along the range away from her head, leaving at least 25 px of tile between the kettle and her neck. Make the paper-towel stand's knob dark bronze (value 0.08, roughness 0.5), and make the loose sheet (k_ptSheet) catch more light so the roll reads as paper."
    },
    {
-    "priority": 3,
-    "camera": "kitchen",
-    "problem": "The under-cabinet lens bar is the brightest element in frame (about 180/255 against about 150 on her face) and leads the eye to the top edge. The bottom edge carries an unreadable pale blob (the envelopes) and an upright black stick (the pen) cut by the frame.",
-    "fix": "Cut uc_lens emission from 9 to about 3 (keep the k_undercab area light at 3.2), or raise its y so the camera does not see the lens. Move the envelopes to about (lx - 0.36, ly + 0.08) so they sit wholly in frame beside the mug, with paper value about 0.35 and warm. Turn the pen to lie parallel to the frame's bottom edge, or remove it."
+    "priority": 4,
+    "camera": "dining, chair",
+    "problem": "Inside the stripe patch the wainscot panels read flat. Each stile is a single dark hairline (dining around x 1015 and x 1240, chair close-up along the panels), not a moulding with relief, so the raking street light does not reveal the panelling.",
+    "fix": "Model the panel frames 9-12 mm proud of the field with a 4 mm bevel (or a small ogee), so the street light draws a lit edge and a shadow edge along each stile and rail."
    },
    {
-    "priority": 3,
+    "priority": 4,
     "camera": "kitchen",
-    "problem": "Small cast issues. Her right hand sits flat with straight, spread fingers like a mitten on the deck. The bow of her head is slight, so 'reading' depends on the light alone. The laptop lid in the right foreground is nearly sharp, not soft.",
-    "fix": "Curl the right hand's fingers 18–25 degrees, with the index alone resting at the trackpad and the thumb tucked. Add 8–12 degrees of head-down pitch via pose_figure head. Open the lens to f/1.8, or move the focus distance onto her eye so the lid (about 0.5 m nearer) goes clearly soft."
+    "problem": "The T-shirt reads as a smooth moulded shell, with no folds at the waist, under the arm or at the sleeve where her right arm crosses forward.",
+    "fix": "In cloth() for the shirt, add a low-frequency wrinkle bump (noise scale 5-8, strength 0.12-0.18, distance 0.004) masked toward the waist and the armpits, keeping the fine woven bump, so the shirt reads as cotton."
    },
    {
     "priority": 4,
     "camera": "all",
-    "problem": "Denoiser blotching in large dark gradients (the kitchen window, the right walls, the dining wall) at 64 spp; the grain over it does not hide the low-frequency blobs.",
-    "fix": "Render finals at --spp 128 for these dark frames (or set adaptive threshold 0.005), and keep sample_clamp_indirect at 3. If the time budget forbids that, denoise with albedo and normal passes (prefilter ACCURATE) before the grade adds grain."
+    "problem": "The shared grade's vignette in shoot.py (vignette angle PI/4.4) takes the corners to about 30% of raw. It roughly halves the dining stripe patch at the right edge (raw about 140, graded about 71) and crushes the kitchen's right third. This file is not the stage author's to change.",
+    "fix": "For the orchestrator: soften the vignette to about PI/5.5, or make it a per-stage setting. Until then, frame the key light motifs (the stripe patch, the hero chair) inside the central 70% of the frame, and judge the corners on the graded frame."
    }
   ]
  },
@@ -640,7 +640,7 @@
     "priority": 2,
     "camera": "witness, wide",
     "problem": "Tim does not read as a 55-year-old father. The face is young and androgynous, the hair is a ribbed cap, and shirt, tie and jacket share one value (a black-shirt look). The mic sits beside him, not in front of his mouth, so he is not 'speaking into the microphone'.",
-    "fix": "Use people.man's age parameter at about 0.65-0.7 and weight about 0.6 for a heavier jaw and neck, and the short sculpted hair with a less regular groove pattern (or smooth it with Subdivision plus a noise bump at 0.002 m). Tint the shirt pale (0.55, 0.57, 0.6) × FABRIC_VALUE and keep the tie at 0.06, so the V of the collar separates from the jacket. Move the gooseneck mic to his front-left, base about 0.25 m from the table edge and 0.12 m off his centre line, with the head angled to about 0.3 m from his mouth. Head pose: chin up 5 degrees toward the dais, eyes aimed about 15 degrees above the lens."
+    "fix": "Use people.man's age parameter at about 0.65-0.7 and weight about 0.6 for a heavier jaw and neck, and the short sculpted hair with a less regular groove pattern (or smooth it with Subdivision plus a noise bump at 0.002 m). Tint the shirt pale (0.55, 0.57, 0.6) \u00d7 FABRIC_VALUE and keep the tie at 0.06, so the V of the collar separates from the jacket. Move the gooseneck mic to his front-left, base about 0.25 m from the table edge and 0.12 m off his centre line, with the head angled to about 0.3 m from his mouth. Head pose: chin up 5 degrees toward the dais, eyes aimed about 15 degrees above the lens."
    },
    {
     "priority": 2,
@@ -664,7 +664,7 @@
     "priority": 3,
     "camera": "wide",
     "problem": "The broadcast lights are bare white grid squares floating in the dark, facing the lens, with no fitting or bar visible. An unexplained small bright square sits at left (about x 145, y 297).",
-    "fix": "Build each tv_light as a fixture: a 0.6 × 0.45 m black housing about 0.12 m deep with barn doors, a yoke and a 0.5 m pipe drop to a visible black ceiling bar, all bevelled. Tilt it so its emissive face points at the witness table, not the camera, so the lens sees housing and edge glow rather than a lit white face. Keep the emissive face visibility to camera on but its strength at about 3-5 so it reads at about 200 graded, not 255. Identify the small square at left: either remove it, or make it a blank door-exit pictogram box with a visible frame and a spill light under it."
+    "fix": "Build each tv_light as a fixture: a 0.6 \u00d7 0.45 m black housing about 0.12 m deep with barn doors, a yoke and a 0.5 m pipe drop to a visible black ceiling bar, all bevelled. Tilt it so its emissive face points at the witness table, not the camera, so the lens sees housing and edge glow rather than a lit white face. Keep the emissive face visibility to camera on but its strength at about 3-5 so it reads at about 200 graded, not 255. Identify the small square at left: either remove it, or make it a blank door-exit pictogram box with a visible frame and a spill light under it."
    },
    {
     "priority": 4,
@@ -849,6 +849,95 @@
     "camera": "all",
     "problem": "The hanging bags have a uniform satin CG sheen with no seams or edge piping; up close they read as soft plastic.",
     "fix": "Per copy, randomise rough_add between 0.15 and 0.35 and add a fine leather-grain bump (Voronoi scale about 400, strength 0.05). Give the edges a slight darkening from an AO or pointiness mask (edge piping and wear), so neighbours differ in sheen as well as hue."
+   }
+  ]
+ },
+ "chicago_night": {
+  "round": 1,
+  "scores": {
+   "composition": 5.5,
+   "lighting": 4,
+   "materials": 5,
+   "set_dressing": 5,
+   "grounding_scale": 6,
+   "cast": 4,
+   "story_read": 4.5,
+   "technical": 4.5
+  },
+  "pro_level": false,
+  "verdict": "The interior is built with care: the lamp spills well up the wall, the light under the door works, the shaker door, walnut console and suitcase prop all hold up, and the suitcase close-up nearly works as it stands. But the stage misses its brief. The night city is mostly missing because the camera clips at 1000 m, so the sky renders black and the downtown cluster is cut off. Dawn is an unlit black cutout in both shots she is in. The grade leaves this 'warmest stage' neutral to cold and very dark (graded median luma 10, 4 and 19 out of 255), so it reads as the same lonely noir as the prison chapters, not 'calm and hopeful, the life before'.",
+  "fixes": [
+   {
+    "priority": 1,
+    "camera": "all",
+    "problem": "Root cause of the black sky and the thin skyline: setkit.camera() leaves Blender's default clip_end of 1000 m (checked in this bpy 5.3), but the sky dome has a radius of 15,000 m, the downtown cluster centre is about 1.7 km away and the city runs to y = 5200. Everything past 1 km is not rendered: the sky measures 1-2/255 raw above Dawn's head, the horizon band 5-9/255, the tallest towers and the aviation lights are missing, and the city ends in black. The CLEAR sky wedges planned behind her head have nothing to show.",
+    "fix": "In chicago_night.apply_camera() (it already runs before every render), add: cam = bpy.context.scene.camera; cam.data.clip_start = 0.05; cam.data.clip_end = 20000.0. Re-render the window camera first and check that the raw horizon band sits around 40-60/255 and the upper sky around 10-20/255. If the glow is still weak, raise HORIZON to about (0.35, 0.33, 0.36) with a slight sodium cast. Re-judge the city only after this fix (see the priority-3 city fix)."
+   },
+   {
+    "priority": 1,
+    "camera": "window",
+    "problem": "The silhouette does not read. Her back measures 0.3-0.6/255 raw against a sky of 1-2/255: there is no separation, and there is no warm edge despite the docstring. The far-city edge, which is the horizon, runs straight through her neck (camera z 1.45 puts elevation 0 at her chin). Her reflection in the glass forms a blue-grey ghost head (graded 13-24 against a sky of 2-5) right next to her real head at x 745-780, y 270-310. Her hanging hand is cut by the bottom edge.",
+    "fix": "Lower the camera so the horizon glow crosses her shoulder blades and her head and shoulders stand against the glow: loc (0.05, 0.22, 1.20), aim (0.15, 2.45, 1.32), lens 28, which still sits in the +10.5..+19.5 degree CLEAR wedge. Remove the ghost: in apply_camera('window'), set visible_glossy = False on every object in _STATE['cast'] (restore it to True for the other cameras), or move the camera to x -0.12 so the reflection clears her head by more than a head-width. Give her a warm edge from the second practical in the next fix, which sits to her right and slightly behind her, so her right jaw, ear and bun catch a warm rim on the far side of the silhouette. Either end the frame above the hand or raise the mug (next fix) so neither hand is cut at the edge."
+   },
+   {
+    "priority": 1,
+    "camera": "all",
+    "problem": "'Warmer than any other stage' fails on the graded frames, and the frames are badly underexposed. Mean R-B of lit pixels after the grade: wide +3.4, suitcase +3.3, window -12.2 (the same as the institutional stages), while evidence_table/purses reaches +15.8. The lamp-lit wall goes from raw (155, 128, 103) to graded (86, 82, 76), which is nearly neutral. Pixels below 20/255 after the grade: wide 68%, window 89%, suitcase 51%. On YouTube that will band and block into black mush.",
+    "fix": "Push the warmth in-scene, because the fixed grade (hue s=0.55 plus blue curves) strips it. lamp_light colour (1.0, 0.62, 0.33) -> (1.0, 0.45, 0.16), energy 38 -> 65 W; bulb emission to (1.0, 0.6, 0.3); entry_light and can_lens to (1.0, 0.55, 0.25). Repaint the walls a warm greige (about (0.52, 0.47, 0.40)) instead of the present cool grey (raw 39, 39, 44), so the bounce is warm. Halve city_glow from 30 to about 15 W so the cool fill stops neutralising the room. Raise exposure: wide -1.0 -> -0.4, suitcase -1.1 -> -0.6, window -0.9 -> -0.4 (after the clip fix). Targets on the graded frames: median luma 25-35 for wide and suitcase and at least 12 for window; lit-pixel R-B of +18 or more in wide and suitcase; no lamp shade clipping (the shade face stays under 245)."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "The subject is the least-lit thing in the frame: Dawn is a flat black shape (raw 0.2-0.4) with pale legs, and her suit shows no fabric or form. The mug in her hands, the one 'calm, ordinary' gesture, is hidden at her waist in both cameras. Her stance is square and static (feet parallel, weight centred), which reads as standing guard rather than at ease. The lounge chair at the right is crushed to graded 0.4-0.7, a black hole filling about 15% of the frame.",
+    "fix": "Add a second warm practical beside her: move the side table to about (1.55, 1.75) and put a small ceramic table lamp on it (shade a 0.26 m linen drum like lamp_shade, bulb at z about 1.0, point light 20-25 W, colour (1.0, 0.48, 0.18), shadow_soft_size 0.03). It falls at about x 1070 in the wide, inside the frame and not cut, and outside the window camera's frame. It lights the chair, rims her right side warm and frames the cool city between two warm islands. Re-pose her: MUG -> (0.06, 0.30, 1.22) so both hands hold the mug at chest height, where it shows in silhouette against the city; turn her 15-20 degrees toward camera-left (DAWN facing 190 -> about 172) so the mug and forearm show in profile; shift her weight with one knee bent about 8 degrees and the hips shifted about 3 cm; lift her head 4-6 degrees (looking out, hopeful)."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "The foreground is a dead slab. The rug field is albedo 0.06 (raw 7, graded 6-11), and together with the black chair and the dark floor the bottom 40% of the establishing frame carries nothing. The brief says to avoid big flat dark or grey slabs in the foreground.",
+    "fix": "Rug field -> warm oatmeal wool, around (0.20, 0.17, 0.13), with the border at about (0.10, 0.08, 0.06). Raise the pile bump to strength 0.6 and give the rug a visible 8-10 mm edge with a short fringe or bound edge. Change the lounge-chair upholstery to a warm accent that survives the grade, such as rust wool at about (0.30, 0.12, 0.06), roughness 0.95. The new side lamp will then model it."
+   },
+   {
+    "priority": 2,
+    "camera": "wide",
+    "problem": "Converging verticals: the 24 mm lens tilted 6 degrees down (aim z 1.0 from 1.6) makes the door casing and the window mullions lean (the left casing drifts about 12 px over the door's height). This reads as amateur in an architectural interior.",
+    "fix": "Keep the camera level and frame with lens shift: aim (-1.15, 1.75, 1.6), then in apply_camera('wide') set scene.camera.data.shift_y = -0.10 (or about -0.12 if the floor then needs more room). Verticals should be within 2 px over the door's height."
+   },
+   {
+    "priority": 2,
+    "camera": "wide, suitcase",
+    "problem": "The door casing has black square artefacts at both top corners. casing_l and casing_r are dh + cw tall and overlap casing_top, and their front faces share the same plane (x = W0 + ct), so the bevelled coincident faces render as dark squares.",
+    "fix": "In chicago_night_set.door(): make casing_l and casing_r height dh with centre z dh/2 so they butt under the head, or make casing_top 0.021 thick (3 mm proud of the legs, like a real head casing), or both. Check the corners in the wide at 2x."
+   },
+   {
+    "priority": 2,
+    "camera": "all",
+    "problem": "Room reflections in the glass muddle the city. In the wide, the lamp and the print sit in the left bay and Dawn's legs are doubled beside her. In the suitcase shot, the lamp's reflection reads as a lamp standing outside among the towers (graded about (39, 34, 25) at x 990-1060, y 120-180). In the window shot, the lamp's reflection is a warm blob cut by the left frame edge.",
+    "fix": "In thin_glass(), scale the reflection: put a Math MULTIPLY node (x 0.4) between the Fresnel output and the mix factor, so night-window reflections stay a faint ghost. For the suitcase camera, also aim about 0.25 m further toward the door (aim y 1.95 -> 1.7) or turn the camera so the lamp's mirror image falls behind the window column. Optionally hang a sheer voile panel bunched at the right column (white, roughly 1.2 m wide gathered to 0.3 m, translucent 0.4); it softens the glass wall and hides one reflection."
+   },
+   {
+    "priority": 3,
+    "camera": "window, wide",
+    "problem": "Even in the visible near band, the city reads as a game asset. The buildings are plain extruded boxes with flat roofs and featureless black facades (albedo 0.012-0.016); the floodlit crowns show as pale grey blank slabs (the box at x 960-1040, y 125-155 in the wide); and the 'whole lit office floor' rows show as hard cool-white planks on low roofs (window shot lower left; through Dawn's hands in the wide). There is no atmospheric depth between layers.",
+    "fix": "After the clip fix: cut the whole-floor rows from 3.6x to about 1.5x and tint them warm-neutral (0.95, 0.85, 0.7); modulate the crown band with vertical bay stripes (0.5-1.0) and drop its strength from 1.4 to about 0.7. Give unlit facade cells a faint reflectance (base about 0.03 in window cells against 0.012 on spandrels) so towers read as structure, not cut-outs. Add rooftop clutter on the low-rises (1-3 small boxes 2-6 m, mechanical units) and parapets of 1 m. For building fog, use a shorter distance (FOG_D about 900 m) so near, mid and far layers separate toward the horizon glow."
+   },
+   {
+    "priority": 3,
+    "camera": "suitcase",
+    "problem": "The best frame of the three, but the subject melts away at its right edge: the dark case meets the black window jamb, and its front measures only raw (23, 17, 11) under a top-only spot. The case carries no sign of the trip or the person.",
+    "fix": "Add a soft warm card: an area light 0.4 x 0.4 m, colour (1.0, 0.6, 0.32), about 8-10 W, at (-1.7, 0.55, 0.75) facing the case, with visible_camera False. It should lift the weave and zip pulls to about 40-50/255 raw while the case stays the darkest object. Either move the case 0.15 m toward the door's centre (CASE y 1.12 -> 0.97) so its silhouette sits against the lit door slab, or swing the camera so it does. Add one personal cue: a light trench coat folded over the handle, or a blank leather ID tag on the grip (continuity with the inspection-room tag)."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "The dressing is tasteful but generic catalogue. Nothing says 'a woman who loved to travel', and there are no soft or organic elements (plants, textiles, personal objects).",
+    "fix": "Keep it restrained, but add 3-4 cues: keys and a plain dark-blue passport with no crest or text in the console bowl; a coat on a wall hook beside the door; a pair of plain flats by the case; a potted plant (about 0.9 m, simple broad leaves) by the right column. Optionally swap the abstract print for a second, smaller abstract landscape print, still with no text."
+   },
+   {
+    "priority": 3,
+    "camera": "wide",
+    "problem": "In the wide the oak floor reads as large tiles rather than boards: the brick texture's offset 0.37 with offset_frequency 1 lines up the end joints on alternate rows, and the board tone is too uniform to read as wood at that distance.",
+    "fix": "In oak_floor(): set offset_frequency to 3 and offset to 0.31, and add a per-row random offset (feed a white-noise value of the floored row coordinate into the mapping's X location) so end joints never line up. Widen the tone spread (Color1 about (0.26, 0.16, 0.09), Color2 about (0.13, 0.075, 0.04)) and add a faint per-board roughness variation (0.28-0.42)."
    }
   ]
  }
