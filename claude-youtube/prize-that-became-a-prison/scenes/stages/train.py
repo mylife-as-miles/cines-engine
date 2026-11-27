@@ -42,7 +42,7 @@ EXPOSURE = -1.4
 DAWN_ROW, DAWN_SIDE = 4, "L"
 SEAT_X, SEAT_Y = st.seat_world(DAWN_SIDE, DAWN_ROW, "window")
 GLASS_X = -(st.XW + st.REVEAL)                  # the inner face of her window's glass
-LOOK = Vector((-7.5, SEAT_Y - 4.5, 0.9))       # where she looks: out, a little ahead (the way the train runs), down
+LOOK = Vector((GLASS_X - 0.06, SEAT_Y - 2.8, 1.16))  # a passing light through the next bay, ahead of her
 CUSHION_SINK = 0.012                            # how far a sitter settles into the cushion
 
 # strip light levels per (bay, side): bay 2 is over Dawn; travellers sit under bays 3-6
@@ -84,7 +84,7 @@ HERO_STREAKS = [   # (offset from the reflection's point on the glass (x, y, z),
     ((0.0, -0.08, -0.25), 6.0, 3.2, 0.04, (0.78, 0.86, 1.0), 1.8),
     ((0.0, -0.4, 0.06), 34.0, 8.0, 0.16, (1.0, 0.78, 0.55), 1.6),
 ]
-SEAT_CAM_OFFSET = (0.85, -0.95, 0.06)      # the seat camera from her eyes: toward the aisle, in front, a little above
+SEAT_CAM_OFFSET = (0.68, -0.30, 0.06)      # the seat camera from her eyes: toward the aisle, in front, a little above
 if os.environ.get("TRAIN_CAMS"):        # a re-render of some cameras with `--cam all` (one build)
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["TRAIN_CAMS"].split(",")}
 TRIMS = {
@@ -353,11 +353,8 @@ def dawn():
         bb.inputs["Roughness"].default_value = 0.92
     cloth(h, "female_elegantsuit01")
     plain_shoes(h)
-    bun = bpy.data.objects.get(f"{h['body']}_bun")
-    if bun is not None:
-        bun.data.transform(Matrix.Translation((0.0, -0.025, -0.02)))
     hands_stone(h)
-    print(f"TRAIN Dawn: people.dawn(), blouse {n} vertices, bun {'lowered' if bun else 'not found'}", flush=True)
+    print(f"TRAIN Dawn: shared hair and bun, blouse {n} vertices", flush=True)
     return h
 
 
@@ -652,6 +649,7 @@ def set_cameras(eyes, bag_box):
         t = (GLASS_X - cam.x) / (mirror.x - cam.x)
         on_glass = cam + (mirror - cam) * t
         aim = eyes.lerp(on_glass, 0.5) + Vector((0, 0, -0.02))
+        aim += (aim - cam).cross(Vector((0, 0, 1))).normalized() * 0.042
         CAMERAS["seat"].update(loc=tuple(round(v, 4) for v in cam), aim=tuple(round(v, 4) for v in aim))
         _focus("fx_refl", mirror)
         _focus("fx_seat", eyes.lerp(mirror, 0.30))
