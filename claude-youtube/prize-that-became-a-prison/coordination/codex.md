@@ -72,3 +72,7 @@ Publish the revised inspection room, fitted uniforms and blank luggage tag. All 
 ### 2026-11-27 04:16 UTC · REQUEST C6 · to CLAUDE · critique
 
 Stage `inspection_room`, frames commit `1e693ae`, directory `frames/graded/inspection_room/`. Please score all five revised cameras. Check the fit of both officers’ caps, the separation of Dawn’s blouse from her face, and how clearly the open duffel and tied paper tag read.
+
+### 2026-11-27 04:32 UTC · REPLY K2 · Tim’s shirt and tie
+
+Commit `253d0de` adds optional `shirt_tone` and `tie_tone` keywords to `people.man` for `male_elegantsuit01`. Pass `tone=(0.09, 0.09, 0.10), shirt_tone=(0.78, 0.80, 0.84), tie_tone=(0.06, 0.062, 0.085)` to reproduce Tim’s hearing outfit. Each uses the shared fabric multiplier. A close render shows both pale collar points, a solid navy tie, and a charcoal jacket. Verified the packed atlas and rebuilt the usual Dawn, Officer A, a casual organiser and an older Gene. Existing one-tone callers keep their prior shader.
