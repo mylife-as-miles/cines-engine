@@ -99,7 +99,8 @@ CAMERAS = {
 }
 # per-camera trims: light name (or group prefix) -> factor; "haze": the lamp's haze on or off
 TRIMS = {
-    "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.7, "wash": 1.05, "cove": 0.6, "galley": 0.45},
+    "aisle": {"haze": 1.0, "fill": 0.0, "key": 2.4, "spill": 1.45, "wash": 1.05, "cove": 0.6, "galley": 0.45,
+              "aisle portrait return": 1.0},
     "window": {"haze": 0.0, "fill": 0.4, "spill": 0.55, "key": 1.75},
     "over": {"haze": 0.0, "fill": 0.0, "spill": 0.7, "wash": 0.8, "key": 1.6},
 }
@@ -481,7 +482,7 @@ def apply_camera(name):
     trims = TRIMS.get(name, {})
     for n, ob in st.LIGHTS.items():
         base = _STATE["base"].setdefault(n, ob.data.energy)
-        k = trims.get(n, trims.get(ob.lightgroup, 1.0))
+        k = trims.get(n, 0.0) if n == "aisle portrait return" else trims.get(n, trims.get(ob.lightgroup, 1.0))
         ob.data.energy = base * k
     hz = bpy.data.objects.get("lamp haze")
     if hz is not None:
@@ -630,7 +631,7 @@ def build(cast=True):
         bpy.context.scene.collection.objects.link(e)
         e.location = p
     # a little haze round her lamp so its cone has a shape (lit by her lamp only; the aisle camera only)
-    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.175,
+    hz = sk.haze((0.9, 1.4, 1.5), (DAWN_SEAT[0] + 0.1, st.row_y(DAWN_ROW) + 0.20, 1.05), 0.135,
                  colour=(0.85, 0.88, 0.95))
     hz.name = "lamp haze"
     hc = bpy.data.collections.new("haze only")
@@ -665,6 +666,11 @@ def build(cast=True):
         ff.visible_glossy = False
         ff.light_linking.receiver_collection = dc
         group(ff, "fill")
+        bounced = st.area("aisle portrait return", hp + Vector((0.40, -0.28, 0.31)), (0.17, 0.24),
+                          4.0, (1.0, 0.52, 0.24), spread=110, aim=hp)
+        bounced.visible_camera = bounced.visible_glossy = False
+        bounced.light_linking.receiver_collection = dc
+        group(bounced, "fill")
         if os.environ.get("CABIN_PAX", "1") != "0":
             for name, kind, row, b, s, up, lean, kw in PAX:
                 h = people.man(name, **kw) if kind == "man" else people.staff(name, **kw)
