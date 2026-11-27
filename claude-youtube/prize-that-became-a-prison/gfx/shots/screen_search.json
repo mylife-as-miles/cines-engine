@@ -1,0 +1,11 @@
+{
+  "about": "Chapter 1: she looks the organizers up online (evidence_table `screen`); greeked results only.",
+  "plate": "frames/raw/evidence_table/screen.png",
+  "corners": "frames/raw/evidence_table/screen.corners.json",
+  "texture": {"video": "out/gfx/screen/search.mp4", "fps": 24},
+  "focus_uv": [0.42, 0.25],
+  "em_px": 34,
+  "zoom": [1.55, 1.65],
+  "duration": 4.0,
+  "length": 4.0
+}

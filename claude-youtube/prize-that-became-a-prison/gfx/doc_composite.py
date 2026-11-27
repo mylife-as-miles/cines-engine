@@ -103,6 +103,25 @@ class Page:
         raise ValueError(f"phrase not found on the page: {phrase!r}")
 
 
+class Texture:
+    """A moving texture (the laptop screen's UI) read from a video, frame by frame in order (or seeked for a still)."""
+    def __init__(self, path, fps):
+        self.cap, self.fps, self.i, self.img = cv2.VideoCapture(path), fps, -1, None
+        self.w, self.h = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.n = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    def get(self, t):
+        k = min(self.n - 1, max(0, int(round(t * self.fps))))
+        if k < self.i or self.img is None and k > 0:
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, k); self.i = k - 1
+        while self.i < k:
+            ok, im = self.cap.read()
+            if not ok:
+                break
+            self.img, self.i = cv2.cvtColor(im, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0, self.i + 1
+        return self.img
+
+
 def marker_mask(page, lines, progress, seed=7):
     """Coverage 0..1 of a marker stroke over `lines`, written left to right, line after line; progress 0..1 overall."""
     m = np.zeros((page.h, page.w), np.float32)
@@ -146,15 +165,17 @@ def main():
 
     plate = cv2.cvtColor(cv2.imread(rel(shot["plate"]), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
     PH, PW = plate.shape[:2]
-    pins = json.load(open(rel(shot["corners"])))["pages"][shot.get("sheet", 0)]["corners"]
+    cj = json.load(open(rel(shot["corners"])))
+    pins = cj["pages"][shot.get("sheet", 0)]["corners"] if "pages" in cj else cj["corners"]
     dst = np.float32([pins["top_left"], pins["top_right"], pins["bottom_right"], pins["bottom_left"]])
-    page = Page(rel(shot["pdf"]), shot["page"], shot.get("dpi", 400))
+    tex = Texture(rel(shot["texture"]["video"]), shot["texture"].get("fps", 24)) if "texture" in shot else None
+    page = tex if tex else Page(rel(shot["pdf"]), shot["page"], shot.get("dpi", 400))
     src = np.float32([[0, 0], [page.w, 0], [page.w, page.h], [0, page.h]])
     H_pp = cv2.getPerspectiveTransform(src, dst).astype(np.float64)
 
     # private lines: soften in page space so no frame can read them
-    ink = page.ink.copy()
-    for phrase in shot.get("soft", []):
+    ink = None if tex else page.ink.copy()
+    for phrase in ([] if tex else shot.get("soft", [])):
         for line in page.find(phrase):
             y0 = int(min(b[1] for b in line) - 6); y1 = int(max(b[3] for b in line) + 6)
             band = ink[y0:y1]
@@ -164,8 +185,12 @@ def main():
     yellow_lin = srgb_to_lin(yellow)
 
     # framing: the crop centre and zoom follow a log-space push toward `focus` (a phrase, in plate pixels)
-    fl = page.find(shot["focus"]) if "focus" in shot else marks[0][0]
-    fx = np.mean([(b[0] + b[2]) / 2 for line in fl for b in line]); fy = np.mean([(b[1] + b[3]) / 2 for line in fl for b in line])
+    if tex:                                   # a screen: focus is a point given as fractions of the texture
+        fx, fy = shot["focus_uv"][0] * page.w, shot["focus_uv"][1] * page.h
+        fl = [[(fx - 10, fy - shot.get("em_px", 30) / 2, fx + 10, fy + shot.get("em_px", 30) / 2)]]
+    else:
+        fl = page.find(shot["focus"]) if "focus" in shot else marks[0][0]
+        fx = np.mean([(b[0] + b[2]) / 2 for line in fl for b in line]); fy = np.mean([(b[1] + b[3]) / 2 for line in fl for b in line])
     focus_plate = cv2.perspectiveTransform(np.float64([[[fx, fy]]]), H_pp)[0, 0]
     z0, z1 = shot["zoom"]                     # zoom relative to the full plate (1.0 = the whole 2560 frame)
     c0 = np.float64(shot.get("start_center", focus_plate)); c1 = focus_plate + np.float64(shot.get("end_offset", [0, 0]))
@@ -179,19 +204,24 @@ def main():
         if t > dur:                           # a one-way creep after landing
             z *= 1 + 0.0012 * (t - dur) * 24
         k = W / PW * z
+        # keep the crop inside the plate (no mirrored plate at the edges), whatever the focus point
+        hw, hh = W / 2 / k * (1 + abs(np.sin(roll))), H / 2 / k * (1 + abs(np.sin(roll)))
+        c = np.array([min(max(c[0], hw), PW - hw), min(max(c[1], hh), PH - hh)])
         cr, sr = np.cos(roll), np.sin(roll)
         A = np.array([[k * cr, -k * sr, 0], [k * sr, k * cr, 0], [0, 0, 1]], np.float64)
         A[:2, 2] = np.array([W / 2, H / 2]) - A[:2, :2] @ c
         base = cv2.warpAffine(plate, A[:2], (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
         Ht = A @ H_pp
-        # page albedo for this frame (marker under the ink)
-        mk = np.zeros((page.h, page.w), np.float32)
-        for lines, t0, d in marks:
-            prog = (t - t0) / (d * len(lines))
-            if prog > 0:
-                mk = np.maximum(mk, marker_mask(page, lines, min(prog, 1.0)))
-        ink_lin = 1.0 - 0.93 * ink              # ink reflectance about 0.07
-        alb = np.stack([ink_lin * (1 - mk + mk * yellow_lin[i]) for i in range(3)], -1)
+        if tex:                               # an emissive screen: the UI scales the blank display's own glow
+            alb = srgb_to_lin(tex.get(t)).astype(np.float32)
+        else:                                 # page albedo for this frame (marker under the ink)
+            mk = np.zeros((page.h, page.w), np.float32)
+            for lines, t0, d in marks:
+                prog = (t - t0) / (d * len(lines))
+                if prog > 0:
+                    mk = np.maximum(mk, marker_mask(page, lines, min(prog, 1.0)))
+            ink_lin = 1.0 - 0.93 * ink              # ink reflectance about 0.07
+            alb = np.stack([ink_lin * (1 - mk + mk * yellow_lin[i]) for i in range(3)], -1)
         # pre-scale the page texture near the output scale so the warp does not alias
         scale = np.sqrt(abs(np.linalg.det(Ht[:2, :2])))
         if scale < 0.8:

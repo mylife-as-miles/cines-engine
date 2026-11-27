@@ -1,0 +1,114 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>route map</title>
+<style>
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Cormorant";src:url(fonts/cormorant-garamond-latin-300-normal.woff2) format("woff2");font-weight:300}
+html,body{margin:0;background:#04060a}canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+// The route map (script version 2, chapters 2 and 4), rebuilt from design/gfx/route_map.html as a function of
+// seconds. Modes:
+//   leg1     Chicago -> Hong Kong, then 9 DAYS                               (ch 2, over the cabin and street)
+//   mainland the solid leg into the mainland, ABOUT 9 MORE DAYS, then the dashed line toward Australia (ch 2)
+//   split    from the mainland, two dashed lines: Australia and Qingdao; neither resolves (ch 4)
+// The script names no city in mainland China, so the mainland is a region that warms, never a pin. No red: red marks
+// only the seam. Type is look B (Cormorant). Routes draw over about 1-2.4 s on an ease-in-out; labels reveal word by
+// word; the camera pushes slowly in log space toward where the route is going (cinetic's numbers).
+const W = 1920, H = 1080, K = 8.7, XF = 0.85, LON_C = 170, LAT_C = 18;
+const U = lon => (lon < -30 ? lon + 360 : lon);
+const P = (lat, lon) => [W / 2 + (lon - LON_C) * K * XF, H / 2 - (lat - LAT_C) * K];
+const PU = (lat, lon) => P(lat, U(lon));
+const CITY = { chicago: [41.88, -87.63], hongkong: [22.32, 114.17], china: [29.5, 112.0], sydney: [-33.87, 151.21], qingdao: [36.07, 120.38] };
+const cl = x => x < 0 ? 0 : x > 1 ? 1 : x, sm = x => { x = cl(x); return x * x * (3 - 2 * x); };
+const span = (t, a, b) => sm((t - a) / (b - a));
+const INK = '#ece8e1';
+function gc(a, b, n = 200) {
+  const r = Math.PI / 180, v = ([la, lo]) => [Math.cos(la * r) * Math.cos(lo * r), Math.cos(la * r) * Math.sin(lo * r), Math.sin(la * r)];
+  const p1 = v(a), p2 = v(b), om = Math.acos(p1.reduce((s, x, i) => s + x * p2[i], 0)), out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, s1 = Math.sin((1 - t) * om) / Math.sin(om), s2 = Math.sin(t * om) / Math.sin(om);
+    const q = p1.map((x, k) => s1 * x + s2 * p2[k]); out.push(PU(Math.asin(q[2]) / r, Math.atan2(q[1], q[0]) / r)); }
+  return out;
+}
+function bend(a, b, lift, n = 80) {
+  const [x1, y1] = PU(...a), [x2, y2] = PU(...b), mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - lift, out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; out.push([u * u * x1 + 2 * u * t * mx + t * t * x2, u * u * y1 + 2 * u * t * my + t * t * y2]); }
+  return out;
+}
+function path(ctx, pts, f) { const n = Math.max(1, Math.floor((pts.length - 1) * f)); ctx.beginPath(); ctx.moveTo(...pts[0]); for (let i = 1; i <= n; i++) ctx.lineTo(...pts[i]); return pts[n]; }
+function label(ctx, text, x, y, size, t, t0, align = 'left', w = 500, track = 0.2) {   // word-by-word calm reveal
+  const words = text.split(' '); ctx.save(); ctx.textBaseline = 'middle'; ctx.fillStyle = INK;
+  ctx.font = `${w} ${size}px "Cormorant"`; ctx.letterSpacing = `${(size * track).toFixed(1)}px`;
+  const total = ctx.measureText(text).width; let cx = align === 'right' ? x - total : align === 'center' ? x - total / 2 : x;
+  words.forEach((wd, i) => {
+    const p = t - (t0 + i * 0.19), a = cl(p / 0.47), r = 1 - sm(p / 0.37);
+    if (p > 0) { ctx.globalAlpha = a; ctx.fillText(wd, cx, y + r * size * 0.33); }
+    cx += ctx.measureText(wd + ' ').width;
+  });
+  ctx.restore();
+}
+function dot(ctx, x, y, a, ring) {
+  if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = INK;
+  ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
+  ctx.strokeStyle = `rgba(236,232,225,${0.4 * (1 - ring)})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 8 + 22 * ring, 0, 7); ctx.stroke(); ctx.restore();
+}
+function base(ctx) {
+  const g = ctx.createRadialGradient(W * 0.55, H * 0.45, 100, W * 0.5, H * 0.5, W * 0.75);
+  g.addColorStop(0, '#0d131b'); g.addColorStop(1, '#03050a'); ctx.fillStyle = g; ctx.fillRect(-W, -H, 3 * W, 3 * H);
+  ctx.strokeStyle = 'rgba(120,150,180,0.06)'; ctx.lineWidth = 1;
+  for (let lon = 75; lon <= 315; lon += 15) { const [x] = P(0, lon); ctx.beginPath(); ctx.moveTo(x, -H); ctx.lineTo(x, 2 * H); ctx.stroke(); }
+  for (let lat = -75; lat <= 90; lat += 15) { const [, y] = P(lat, 0); ctx.beginPath(); ctx.moveTo(-W, y); ctx.lineTo(2 * W, y); ctx.stroke(); }
+  ctx.fillStyle = '#0f1720'; ctx.strokeStyle = 'rgba(150,175,200,0.2)';
+  for (const r of window.LAND.rings) { ctx.beginPath(); for (let i = 0; i < r.length; i += 2) { const [x, y] = P(r[i + 1], r[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke(); }
+}
+function camera(ctx, t, from, to, z0, z1, dur) {     // log-space push, centre moving toward the route's goal
+  const p = 1 - Math.pow(1 - cl(t / dur), 3), z = z0 * Math.pow(z1 / z0, p);
+  const c = [from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p];
+  ctx.setTransform(z, 0, 0, z, W / 2 - z * c[0], H / 2 - z * c[1]);
+}
+function solid(ctx, pts, f) {
+  if (f <= 0) return; ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = INK; ctx.lineWidth = 2.6; const h = path(ctx, pts, f); ctx.stroke();
+  if (f < 1) {                                       // the travelling head: a small bright point with a soft halo
+    const g = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], 22); g.addColorStop(0, 'rgba(236,232,225,0.55)'); g.addColorStop(1, 'rgba(236,232,225,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(h[0], h[1], 22, 0, 7); ctx.fill(); ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(h[0], h[1], 3.5, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+}
+function dashed(ctx, pts, f, a = 0.6) { if (f <= 0) return; ctx.save(); ctx.setLineDash([9, 11]); ctx.lineCap = 'round'; ctx.strokeStyle = `rgba(190,200,212,${a})`; ctx.lineWidth = 2; path(ctx, pts, f); ctx.stroke(); ctx.restore(); }
+function region(ctx, a) { if (a <= 0) return; const [mx, my] = PU(...CITY.china); ctx.save(); ctx.globalAlpha = a;
+  const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 130); rg.addColorStop(0, 'rgba(236,232,225,0.20)'); rg.addColorStop(1, 'rgba(236,232,225,0)');
+  ctx.fillStyle = rg; ctx.beginPath(); ctx.ellipse(mx, my, 160, 115, -0.2, 0, 7); ctx.fill(); ctx.restore(); }
+
+const leg1 = () => gc(CITY.chicago, CITY.hongkong), legM = () => bend(CITY.hongkong, CITY.china, 30);
+const legA = () => gc(CITY.china, CITY.sydney), legQ = () => bend(CITY.china, CITY.qingdao, 40);
+const MODES = {
+  leg1(ctx, t) {
+    camera(ctx, t, [W / 2, H / 2], [W * 0.47, H * 0.5], 1.0, 1.04, 6);
+    base(ctx); const L = leg1(), [cx, cy] = PU(...CITY.chicago), [hx, hy] = PU(...CITY.hongkong);
+    dot(ctx, cx, cy, span(t, 0.1, 0.4), span(t, 0.1, 1.2)); label(ctx, 'CHICAGO', cx - 22, cy + 30, 26, t, 0.2, 'right');
+    solid(ctx, L, span(t, 0.6, 3.0));
+    dot(ctx, hx, hy, span(t, 2.9, 3.1), span(t, 2.9, 4.0)); label(ctx, 'HONG KONG', hx - 24, hy + 30, 26, t, 3.0, 'right');
+    label(ctx, '9 DAYS', hx - 24, hy + 92, 72, t, 3.6, 'right', 400, 0.06);
+  },
+  mainland(ctx, t) {
+    camera(ctx, t, [W * 0.47, H * 0.5], [W * 0.38, H * 0.56], 1.04, 1.12, 7);
+    base(ctx); const [hx, hy] = PU(...CITY.hongkong), [mx, my] = PU(...CITY.china), [sx, sy] = PU(...CITY.sydney);
+    solid(ctx, leg1(), 1); dot(ctx, hx, hy, 1, 1);
+    solid(ctx, legM(), span(t, 0.3, 1.3)); region(ctx, span(t, 1.0, 2.0));
+    label(ctx, 'MAINLAND CHINA', mx - 40, my - 74, 26, t, 1.4, 'right');
+    label(ctx, 'ABOUT 9 MORE DAYS', mx - 40, my - 26, 48, t, 2.0, 'right', 400, 0.05);
+    dashed(ctx, legA(), span(t, 4.0, 6.0)); label(ctx, 'AUSTRALIA', sx + 22, sy + 4, 24, t, 6.0);
+  },
+  split(ctx, t) {
+    camera(ctx, t, [W * 0.38, H * 0.56], [W * 0.36, H * 0.52], 1.12, 1.18, 6);
+    base(ctx); const [mx, my] = PU(...CITY.china), [sx, sy] = PU(...CITY.sydney), [qx, qy] = PU(...CITY.qingdao);
+    solid(ctx, leg1(), 1); solid(ctx, legM(), 1); region(ctx, 1);
+    dashed(ctx, legA(), span(t, 0.4, 2.4)); label(ctx, 'AUSTRALIA', sx + 22, sy + 4, 24, t, 2.4);
+    dashed(ctx, legQ(), span(t, 1.2, 2.4)); label(ctx, 'QINGDAO', qx + 18, qy - 8, 24, t, 2.4);
+  },
+};
+window.draw = (mode, t) => { const ctx = document.getElementById('c').getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); MODES[mode](ctx, t); };
+fetch('../design/gfx/land_pacific.json').then(r => r.json()).then(d => { window.LAND = d; return document.fonts.load('500 26px "Cormorant"'); })
+  .then(() => document.fonts.load('400 26px "Cormorant"')).then(() => { window.READY = true; });
+</script></body></html>
