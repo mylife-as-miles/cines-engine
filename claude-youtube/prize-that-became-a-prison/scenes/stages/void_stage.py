@@ -38,6 +38,7 @@ import props  # noqa: E402
 import rigged  # noqa: E402
 import setkit as sk  # noqa: E402
 import void_stage_cell as vc  # noqa: E402
+import void_stage_fit as fit  # noqa: E402
 import void_stage_set as st  # noqa: E402
 
 EXPOSURE = -1.5
@@ -47,17 +48,22 @@ AT = {"dawn": (0.0, 0.0), "cell": (40.0, 0.0), "bags": (-40.0, 0.0)}
 
 # the spots: height above the island, offset of the lamp toward the camera (-y), pool radius on the floor, watts
 # (E = P / (4 pi d^2); the stone skin's crown and the cell's floor land near 1.0 and 0.5 after the exposure). Each has
-# a soft inner cone from the same point (st.hotspot) so the pool is about a third brighter at its centre than its edge.
+# a soft inner cone from the same point (st.hotspot, HOT = (frac, gain)) so the pool is brighter at its centre than its
+# edge: a worked lamp's pool, not a flat CG disc.
 SPOTS = {
-    # high (9.5 m) and narrow, so the cone visibly tapers over her head instead of standing behind her like a curtain;
-    # a little behind her (fwd < 0): the front of the suit falls dark (in front light the tight cut modelled bust and
-    # thighs like skin), the shoulders, crown and legs take a rim off the black, and the bowed face stays in shadow
-    # (in front light the nose tip alone caught the lamp: a white speck in a black face)
-    "dawn": dict(h=9.5, fwd=-0.5, pool=1.2, watts=18500.0, blend=0.28),
-    # the cell's lamp over the middle, its cone an ellipse that lands just inside the walls: the floor and the wall
-    # bases lit, the walls falling off upward into the dark, no spill on the stage outside
-    "cell": dict(h=7.6, fwd=0.0, pool=(1.5, 2.05), watts=13500.0, blend=0.25),
-    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=9600.0, blend=0.28),
+    # low enough (5.2 m) that the cone visibly tapers: half-angle about 13 deg, so in the dawn frame the beam narrows
+    # from 2.4 m on the floor to about 1.1 m at the frame top (at 9.5 m the rays were near parallel and the haze stood
+    # behind her as a curtain, round 2); watts by inverse square from 18.5 kW at 9.5 m, less the hotter centre. A
+    # little behind her (fwd < 0): the front of the suit falls dark, shoulders, crown and legs take a rim off the
+    # black, and the bowed face stays in shadow (in front light the nose tip alone caught the lamp)
+    "dawn": dict(h=5.2, fwd=-0.3, pool=1.2, watts=4600.0, blend=0.34, hot=(0.5, 0.9)),
+    # the cell's lamp, its cone an ellipse that lands just inside the walls: the floor and the wall bases lit, the walls
+    # falling off upward into the dark. Weaker than round 2 (13.5 kW) and its centre a little toward the open side, so
+    # the window's shaft and barred patch lead after the floor (round 2: the patch 1.2:1 over a floor as bright as
+    # the shaft). Pushed 0.35 forward with a short cone (preview 3) its edge crossed the close shot's floor as a
+    # bright arc in front and the patch still sat in the bright half; now the edge lies at the slab's front and back
+    "cell": dict(h=7.6, fwd=0.15, pool=(1.5, 1.85), watts=9500.0, blend=0.25),
+    "bags": dict(h=5.8, fwd=0.2, pool=1.15, watts=7600.0, blend=0.34, hot=(0.5, 0.9)),
 }
 # faint: 0.02-0.03 read as a grey wall behind the subject (round 1); the beam should be a ghost, not a slab. The dawn
 # and bags haze fills only a frustum round the cone, drifting a little in density
@@ -66,10 +72,12 @@ SHAFT_HAZE = 0.08    # a denser slab along the window's light, so a faint shaft 
                      # (0.02 did not show against the top spot's haze at this source's distance)
 
 DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
-# only the head bowed (18); the chest and neck nearly upright so the spine stays vertical from above (round 2 read as
-# a stoop); arms hanging loose, elbows soft, the hands just in front of the outer thighs, wrists straight, fingers
-# relaxed (40 read as claws)
-POSE = {"head": (18, 3), "neck": (4, 0), "chest": (2.5, 0), "l_arm": (5, 7, 9), "r_arm": (6, 6, 8), "fingers": 16}
+# the head bowed (28) on a slightly bent neck (7): from the 1.2 m lens an 18 deg bow on a 1.6 m figure read as a level
+# gaze with a faint grin (round 2), now the face falls into the shadow of the brow. The chest nearly upright so the
+# spine stays vertical from above (round 2 read as a stoop); arms hanging close (out 2.5), elbows soft, wrists
+# straight; the fingers are closed and curled by void_stage_fit.close_hands, not by pose_figure's knuckle-only curl
+# (the master bone alone left open claws), so "fingers" is 0 here
+POSE = {"head": (28, 3), "neck": (7, 0), "chest": (2.5, 0), "l_arm": (5, 2.5, 9), "r_arm": (6, 2.5, 8), "fingers": 0}
 # legs straight (FK): her weight on the right leg, its knee locked; the left (free) knee soft, its foot a little out
 LEGS = {"R": dict(thigh=(0.0, 1.5), shin=(0.0, 1.5)), "L": dict(thigh=(3.0, 3.5), shin=(-1.5, 3.5))}
 SUIT_RGB = (0.03, 0.031, 0.033)    # flat charcoal prison greys: the trousers
@@ -114,13 +122,15 @@ CAMERAS = {
                      beat="cell"),
     # Ch 11: the end: the two bags alone in the spotlight on black, low, so they rise against the dark above the
     # pool's far edge; the beam behind them
-    "bags": dict(loc=_p(G, 0.15, -4.7, 0.55), aim=_p(G, 0.02, 0.0, 0.33), lens=50, focus="fx_bags", fstop=4.0,
+    # pushed in (round 2 at 4.7 m: the bags a third of the frame, a band of empty lit floor in front): the case about
+    # 40 % of the frame height, the whole pool edge still in frame
+    "bags": dict(loc=_p(G, 0.12, -4.0, 0.55), aim=_p(G, 0.0, -0.02, 0.33), lens=50, focus="fx_bags", fstop=4.0,
                  beat="bags"),
 }
 
 # check frames, never in the finals: VOID_DEBUG=1 adds tight looks at Dawn (suit, hands, face) from her two cameras
 if os.environ.get("VOID_DEBUG"):
-    CAMERAS["dbg_dawn"] = dict(loc=_p(D, 0.0, -7.6, 1.25), aim=_p(D, 0.0, 0.0, 1.2), lens=150, focus="fx_dawn",
+    CAMERAS["dbg_dawn"] = dict(loc=_p(D, 0.0, -7.6, 1.2), aim=_p(D, 0.0, 0.0, 1.13), lens=135, focus="fx_dawn",
                                fstop=11.0, beat="dawn")
     CAMERAS["dbg_dawn_high"] = dict(loc=_p(D, 3.6, -5.3, 6.15), aim=_p(D, 0.0, -0.05, 0.95), lens=120,
                                     focus="fx_dawn_high", fstop=11.0, beat="dawn")
@@ -138,7 +148,9 @@ def hands_stone(holder, value=0.4):
     """The hands a shade darker stone than the face (as in the inspection room): under a top light the backs of the
     hands face the lamp and the face does not. A soft mask from the hands' deform weights, so no seam at the wrist."""
     body = bpy.data.objects[holder["body"]]
-    gi = {g.index for g in body.vertex_groups if any(k in g.name for k in ("hand", "f_", "thumb", "palm"))}
+    # the ears too: under the bowed head's hairline the top-lit ear read as a white speck at the temple (round 2)
+    gi = {g.index for g in body.vertex_groups if any(k in g.name for k in ("hand", "f_", "thumb", "palm"))
+          or g.name.startswith("DEF-ear")}
     if not gi:
         return 0
     me = body.data
@@ -168,7 +180,10 @@ def hands_stone(holder, value=0.4):
     return 1
 
 
-GARMENT = "female_casualsuit01"
+# the kit's prison uniform (people.dawn_prison(uniform=True), round 3): a collared shirt with full sleeves and a loose
+# hem over straight trousers, one plain grey, no markings. Round 2's fitted T-shirt and leggings read as athleisure.
+UNIFORM = True
+GARMENT = people.PRISON_UNIFORM if UNIFORM else "female_casualsuit01"
 # vertex groups that stay skin whatever the suit does: neck, head, hands, feet
 KEEP = ("DEF-spine.004", "DEF-spine.005", "DEF-spine.006", "DEF-hand", "DEF-palm", "DEF-f_", "DEF-thumb", "DEF-foot",
         "DEF-toe")
@@ -197,18 +212,23 @@ def prison_suit(holder, rgb=SUIT_RGB):
                 nt.links.remove(ln)
         ao = next((n for n in nt.nodes if n.type == "TEX_IMAGE" and n.image and "_ao" in n.image.name), None)
         tc = nt.nodes.new("ShaderNodeTexCoord")
-        # the shirt a shade darker than the trousers (from above, the top-lit shoulders of a 0.03 shirt still came
-        # out near the arms' stone value): the shirt's UV islands are the top half (front, back) and the two sleeves
-        uvn = nt.nodes.new("ShaderNodeUVMap")
-        u, v, _ = st._xyz(nt, uvn.outputs["UV"])
-        shirt = st._math(nt, "MAXIMUM", st._math(nt, "GREATER_THAN", v, 0.58),
-                         st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", u, 0.745),
-                                  st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", v, 0.15),
-                                           st._math(nt, "LESS_THAN", v, 0.45))))
-        col = st._mix(nt, shirt, rgb, SHIRT_RGB)
+        if UNIFORM:
+            # the uniform: one plain grey, shirt and trousers alike (the kit's choice)
+            col = rgb
+        else:
+            # the shirt a shade darker than the trousers (from above, the top-lit shoulders of a 0.03 shirt still came
+            # out near the arms' stone value): the shirt's UV islands are the top half (front, back) and the sleeves
+            uvn = nt.nodes.new("ShaderNodeUVMap")
+            u, v, _ = st._xyz(nt, uvn.outputs["UV"])
+            shirt = st._math(nt, "MAXIMUM", st._math(nt, "GREATER_THAN", v, 0.58),
+                             st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", u, 0.745),
+                                      st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", v, 0.15),
+                                               st._math(nt, "LESS_THAN", v, 0.45))))
+            col = st._mix(nt, shirt, rgb, SHIRT_RGB)
         if ao is not None:
-            # the AO bake, softened (0.62-1.0), times the flat charcoal
-            mr = st._maprange(nt, ao.outputs["Color"], 0.0, 1.0, 0.62, 1.0)
+            # the AO bake, softened (0.62-1.0; 0.75-1.0 on the uniform, whose atlas held jeans hardware), times the
+            # flat charcoal
+            mr = st._maprange(nt, ao.outputs["Color"], 0.0, 1.0, 0.75 if UNIFORM else 0.62, 1.0)
             col = st._mix(nt, 1.0, col, mr, "MULTIPLY")
         nt.links.new(col, b.inputs["Base Color"])
         b.inputs["Alpha"].default_value = 1.0
@@ -221,7 +241,8 @@ def prison_suit(holder, rgb=SUIT_RGB):
         # fine weave. A smooth tight garment top-lit on the shoulders read as bare skin from above (preview 2)
         nm = next((n for n in nt.nodes if n.type == "NORMAL_MAP"), None)
         prev = None
-        if nm is not None and nm.inputs["Color"].is_linked:
+        # (not on the uniform: its normal map carries the stock shirt's pinstripes and the jeans' rivets)
+        if nm is not None and nm.inputs["Color"].is_linked and not UNIFORM:
             nm.inputs["Strength"].default_value = 0.7
             prev = nm.outputs["Normal"]
         wv = nt.nodes.new("ShaderNodeTexWave")
@@ -357,11 +378,12 @@ def suit_fit(holder, push=0.005, tuck=0.008):
     return len(covered)
 
 
-def creases(gar, strength=0.006, mid=0.25, scale=0.045, stretch=2.4):
+def creases(gar, strength=0.010, mid=0.25, scale=0.07, stretch=3.2):
     """Real relief in the cloth, not only a bump: soft folds a few millimetres deep, longer across the body than up it
     (horizontal wrinkles over the belly and the knees, as cotton and denim bunch), on the smoothed suit. Mostly outward
     (mid 0.25: -1.5 to +4.5 mm), so the stand-off over the skin holds. Under the hard top light a smooth tight suit
-    read as painted skin; folds catch the light as cloth does."""
+    read as painted skin; folds catch the light as cloth does. Round 3: deeper and broader (0.006 at 4.5 cm did not
+    show at the camera's distance), so a few horizontal folds read at the waist, the knees and the ankles."""
     tex = bpy.data.textures.new(f"{gar.name}_creases", "CLOUDS")
     tex.noise_scale, tex.noise_depth, tex.noise_type = scale, 2, "SOFT_NOISE"
     space = bpy.data.objects.new(f"{gar.name}_crease_space", None)
@@ -376,7 +398,7 @@ def creases(gar, strength=0.006, mid=0.25, scale=0.045, stretch=2.4):
     return dp
 
 
-def light_suit(h, net=0.55, bounce_w=80.0):
+def light_suit(h, net=0.42, hair_net=0.28, body_net=0.75, bounce_w=80.0):
     """Light the suit and the hair as a cinematographer would with a net and a bounce, all invisible in frame. Round 1
     read the top-lit shirt (shoulders and the top of the bust a mid grey, the bowed head's shadow a black strip down
     the sternum, the rest black) as a pale bolero over a black leotard, skin showing through. Now the spot reaches the
@@ -388,22 +410,34 @@ def light_suit(h, net=0.55, bounce_w=80.0):
     if main is None or gar is None:
         return []
     hair = [o for o in h.children_recursive if o.type == "MESH" and (o.name.endswith("_hair") or o.name.endswith("_bun"))]
-    netted = [gar] + hair
+    body = bpy.data.objects[h["body"]]
+    eyes = [o for o in h.children_recursive if o.type == "MESH" and "_eye" in o.name]
+    netted = [gar] + hair + [body] + eyes
     st.link_lights([main, hot], exclude=netted, tag="dawn_net")
-    dup = []
-    for src in (main, hot):
-        ob = src.copy()
-        ob.data = src.data.copy()
-        ob.name = ob.data.name = src.name + "_net"
-        ob.data.energy = src.data.energy * net
-        bpy.context.scene.collection.objects.link(ob)
-        dup.append(ob)
-    st.link_lights(dup, receivers=netted, tag="dawn_netted")
+
+    def copies(k, tag):
+        out = []
+        for src in (main, hot):
+            ob = src.copy()
+            ob.data = src.data.copy()
+            ob.name = ob.data.name = src.name + tag
+            ob.data.energy = src.data.energy * k
+            bpy.context.scene.collection.objects.link(ob)
+            out.append(ob)
+        return out
+    dup = copies(net, "_net")
+    st.link_lights(dup, receivers=[gar], tag="dawn_netted")
+    # the sculpted hair through its own, denser net: top-lit at 0.55 the crown was the brightest thing in frame (raw
+    # 0.78, a white swim cap over a black face); the lamp is lower now (5.2 m), so the bowed crown is nearer it
+    hair_dup = copies(hair_net, "_hairnet")
+    st.link_lights(hair_dup, receivers=hair, tag="dawn_hairnet")
+    # the stone a little netted too (`body_net`): with the lamp lower and the forearms swung out to clear the hips,
+    # their tops and the backs of the hands were the brightest thing on her (display 0.68 against the crown's 0.55)
+    body_dup = copies(body_net, "_bodynet")
+    st.link_lights(body_dup, receivers=[body] + eyes, tag="dawn_bodynet")
     # the netted lamp's shadows on the suit come from the suit alone (the bust still shades the belly): the bowed
     # head's shadow, a sharp black strip from the collar to under the bust, read as a V-neck over a leotard (preview 2
     # of this round, with the net and bounce but the head still shadowing)
-    body = bpy.data.objects[h["body"]]
-    eyes = [o for o in h.children_recursive if o.type == "MESH" and "_eye" in o.name]
     blk = bpy.data.collections.new("dawn_net_block")
     for o in [body] + hair + eyes:
         blk.objects.link(o)
@@ -414,9 +448,9 @@ def light_suit(h, net=0.55, bounce_w=80.0):
     x, y = h.location.x, h.location.y
     fill = st.area("bounce_dawn", (x, y - 1.8, 0.45), (x, y, 1.1), (1.6, 1.0), bounce_w, (0.9, 0.93, 1.0))
     st.link_lights([fill], receivers=[gar], tag="dawn_bounce")
-    print(f"VOID suit light: spot net {net:.2f} on {[o.name for o in netted]}, bounce {bounce_w:.0f} W on the suit",
-          flush=True)
-    return dup + [fill]
+    print(f"VOID suit light: spot net {net:.2f} on the suit, {hair_net:.2f} on {[o.name for o in hair]}, bounce "
+          f"{bounce_w:.0f} W on the suit", flush=True)
+    return dup + hair_dup + body_dup + [fill]
 
 
 def stone_finish(holder, spec=0.3, rough=0.66):
@@ -481,19 +515,28 @@ def ground(holder, floor_z=0.0):
 
 
 def dawn():
-    h = people.dawn_prison()
+    h = people.dawn_prison(uniform=True) if UNIFORM else people.dawn_prison()
     prison_suit(h)
     stone_finish(h)
     hands_stone(h)
     rigged.pose_figure(h, POSE)
     straight_wrists(h, POSE)
     stand_legs(h)
+    # palms to the thighs, fingers closed and curled, then each forearm swung out from the elbow just clear of the
+    # hips (measured), and the palms squared to the thighs again
+    fit.pronate(h)
+    fit.close_hands(h)
+    fit.carry_arms(h, GARMENT, POSE)
+    fit.pronate(h)
     rig = rigged.rig_of(h)
     pb = rig.pose.bones
     mw = rig.matrix_world
     hip, neck = mw @ pb["DEF-spine"].head, mw @ pb["DEF-spine.004"].head
     print(f"VOID spine lean {math.degrees(math.atan2(hip.y - neck.y, neck.z - hip.z)):.1f} deg forward", flush=True)
     suit_fit(h)
+    fit.loosen_suit(h, GARMENT)
+    fit.shoe_fit(h)
+    fit.clearance(h, GARMENT)
     h.location = (D[0], D[1], 0.0)
     h.rotation_euler = (0, 0, math.radians(DAWN_TURN))
     bpy.context.view_layer.update()
@@ -549,9 +592,10 @@ def _spot_and_haze(name, aim_xy, aim_z=0.0):
     reach = math.dist(lamp, aim)
     size = 2 * math.degrees(math.atan(cfg["pool"] / reach))
     main = st.spot(f"spot_{name}", lamp, aim, cfg["watts"], size, cfg["blend"])
-    st.hotspot(main)
-    # the frustum starts under the floor: a face lying on the floor blacks the floor out for cameras outside it
-    st.haze_cone(f"haze_{name}", lamp, aim, cfg["pool"] + 0.4, 0.35, HAZE[name], drift=0.7)
+    st.hotspot(main, *cfg.get("hot", (0.62, 0.35)))
+    # the frustum starts under the floor (a face lying on the floor blacks the floor out for cameras outside it) and
+    # closes almost to a point under the lamp, so the haze follows the cone instead of a column
+    st.haze_cone(f"haze_{name}", lamp, aim, cfg["pool"] + 0.4, 0.05, HAZE[name], drift=0.7)
     return main
 
 
@@ -595,8 +639,17 @@ def build_cell_island():
 
 
 def build_bags_island():
-    bags()
-    _spot_and_haze("bags", (G[0] + 0.02, G[1]))
+    pair = bags()
+    # the spot on the bags' centroid, so they stand in the pool's hot centre
+    cx = G[0] + (CASE[0] + DUFFEL[0]) / 2
+    cy = G[1] + (CASE[1] + DUFFEL[1]) / 2
+    _spot_and_haze("bags", (cx, cy))
+    # a faint back rim linked to the two bags only (never the floor or the haze): the case's handle and top edge and
+    # the duffel's straps and top seam draw a fine line against the haze, the faces stay dark (round 2: two dark lumps
+    # on a dark haze)
+    rim = st.area("rim_bags", (cx, cy + 2.4, 1.5), (cx, cy, 0.35), (0.6, 0.6), 40.0, (0.88, 0.92, 1.0))
+    rim.visible_glossy = True
+    st.link_lights([rim], receivers=_meshes(pair[0]) + _meshes(pair[1]), tag="bags_rim")
 
 
 def which_camera():

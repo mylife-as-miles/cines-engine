@@ -596,13 +596,16 @@ SLAB = 0.12                 # the slab the cell stands on
 WH = 2.75                   # wall height above the slab
 TOPZ = SLAB + WH
 SLOT = (0.22, 0.72, SLAB + 1.93, 0.3)  # window slot: centre x, width, sill z, height (in the back wall)
-WINDOW_PATCH = (0.2, 0.3, SLAB)        # where the slot's light lands (cell-local): open floor right of the bunk, in
+WINDOW_PATCH = (-0.02, 0.3, SLAB)      # where the slot's light lands (cell-local): open floor right of the bunk, in
                                        # the close shot's frame (a 35-45 deg fall would land it at the lens's feet)
 SPLAY = 0.24                           # the sill slopes this far down to the inner face, as thick walls' high windows do,
                                        # so a steep light gets through the slot
 WINDOW_DIST = 12.0                     # the night source: a small lamp this far behind the slot (near-parallel rays:
-WINDOW_W = 175000.0                    # the patch is the slot, barred, a fifth larger), W; at 125 kW the patch was
-                                       # only 17 % over the top-lit floor and its bars barely read
+WINDOW_W = 330000.0                    # the patch is the slot, barred, a fifth larger), W; at 125 kW the patch was
+                                       # only 17 % over the top-lit floor and its bars barely read; at 175 kW the
+                                       # patch was 1.2:1 over the floor and the shaft vanished (round 2): now about
+                                       # 2:1, the patch 0.22 m left of the slot so the night comes in raked about
+                                       # 8 deg and the shaft runs on a visible diagonal instead of straight at the lens
 BARS = 5                               # round bars in the slot, 25 mm
 CAP = 0.0015                           # the wall-top caps (the graze light's receivers)
 

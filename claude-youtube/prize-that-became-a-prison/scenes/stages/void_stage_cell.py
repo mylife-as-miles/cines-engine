@@ -133,8 +133,10 @@ def pages(name="book pages"):
 def materials():
     M.clear()
     bunk_paint()
-    vinyl("mattress vinyl")
-    wool("blanket wool")
+    # round 3: the vinyl a shade lighter so the lower mattress's top edge and lip read under the upper deck (at
+    # 0.04-0.066 it vanished into a black hole); the lower blanket a shade darker (it was the lightest cloth)
+    vinyl("mattress vinyl", rgb=(0.10, 0.11, 0.12))
+    wool("blanket wool", rgb=(0.06, 0.057, 0.053))
     wool("blanket wool folded", rgb=(0.07, 0.072, 0.075), sheen=0.1)
     cotton("pillow cotton", (0.2, 0.2, 0.195), rough=0.85, bump=0.1)
     cotton("towel terry", (0.15, 0.158, 0.165), rough=0.97, bump=0.6, scale=900.0)
@@ -552,7 +554,9 @@ def desk(ox, oy):
         me.materials.append(P)
         _bevel(g, 0.0015, 2)
         objs.append(g)
-    sx, sy = x0 + dd + 0.2, y0 + w * 0.45
+    # the stool tucked under the desk between its gussets, half in the desk's shadow (round 2: in front of the desk
+    # its top-lit seat was a pale disc cut by the close shot's frame)
+    sx, sy = x0 + 0.25, y0 + w * 0.5
     objs.append(tube("stool_post", (sx, sy, z0), (sx, sy, z0 + 0.43), 0.03, P, bevel=0.002))
     objs.append(tube("stool_flange", (sx, sy, z0), (sx, sy, z0 + 0.008), 0.09, P, segs=32, bevel=0.002))
     objs.append(tube("stool_seat", (sx, sy, z0 + 0.43), (sx, sy, z0 + 0.455), 0.17, P, segs=40, bevel=0.004))
