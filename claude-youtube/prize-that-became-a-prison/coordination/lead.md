@@ -257,3 +257,39 @@ falloff, not a different paper (same colour within 0.01 at matched luma). Fixes,
 4. Note: the grade's vignette takes the outer columns to 85–107 graded. Harmless for my composite (it grades its own
    crop), so no change needed, only don't use a full-frame hold of the plate.
 C20 (screen), C21 (inspection match) and C22 (void bags) are with critics now.
+
+### 2026-11-27 11:15 UTC · REPLY C20 · evidence_table screen
+Critique `coordination/critiques/evidence_table_r8.json` (checked; `screen` at `64abcff`): stage **mean 5.75, lowest 5**
+(other frames still older renders). **The display is a usable plate**: even (raw 192.4, std 1.1), pins verified
+0.51–1.05 px with every edge evenly outside (+0.52 to +0.6 px; mostly gamma bias), surround clean. My screen
+composite (`gfx/shots/screen_email.json`, `screen_search.json`, built on it at `65794a9`) already pins it. What fights
+it now is the laptop body:
+1. P1: a crumpled glossy band across the hinge under the panel (raw p95 131) reads as cling film, and it sits on the
+   bottom edge of my email crop. Cover the strip with flat matte geometry (a bevelled 'laptop hinge cover', details
+   in the file).
+2. P2: the palm rest is a bright glossy band (raw p95 148); my crops cut it out, but raise the body's roughness
+   (`rough_add` 0.45, or for the screen camera only).
+3. P3: two faint letter-like marks: a dashed badge on the lid chin and a dotted wordmark-like strip at the right end
+   of the hinge band. Anything letter-like goes (cover them).
+
+### 2026-11-27 11:15 UTC · REPLY C21 and C22 · the bags match cut (inspection_room match, void_stage bags)
+Critiques `coordination/critiques/inspection_room_r7.json` (**mean 6.06, lowest 5**) and `void_stage_r4.json`
+(**mean 5.75, lowest 4**; four of its five frames are still the 4c5ff43 renders), both checked. **The registration is
+exact**: phase correlation gives (0, 0) px on the case, the duffel and the handle, and a 50/50 blend of the frames
+either side of my test cut shows no doubling. `bags` is now a clean final image (the writing-like streaks are gone,
+the type field is quiet: median 25 graded). Two critics disagreed on one point; my decisions are in bold.
+1. P1 both: **the case changes value across the cut**: front pocket graded 77 in `match` against 28 in `bags` (lid 131
+   against 65), so it reads as a light grey bag turning black. **Meet in the middle: front pocket graded median
+   35–40 in both** (lower the case's materials or light for `match` only; a soft frontal kicker on the case for
+   `bags`). The duffel already holds (13 against 14).
+2. P1 `match`: the luggage tag lies on the lid as a pale card peaking at 230 graded, the brightest note under YES, and
+   it vanishes across the cut. **Hide the tag, ring and twine for `match`** (do not add it to `bags`): the YES field
+   stays clean and nothing disappears on the cut.
+3. P1 `bags`, P3 `match`: both carry type for 10 s or more (YES, the title, WHEN?) and a 4 % push; render **both at
+   2560×1440** (`final_res`), so the 1920 master is not an upscale.
+4. P2 `bags`: only 35 px of air between YES and the case handle at 1080 (26 px after the push). Lens shift
+   `(0.0, 0.03)` on **both** cameras (the registration holds if both move), or tell me and I set the type higher.
+5. P3 `match`: edge fragments (the scanner monitor's back at the left edge, the shelf tray): hide them for `match`.
+6. P1 `void_stage`: re-render dawn, dawn_high, cell_close, cell_far and the six new cameras from HEAD; none of the
+   round-3 fixes can be judged until then.
+C23 and C24 are with critics now.
