@@ -73,7 +73,7 @@ HAZE = {"dawn": 0.010, "cell": 0.006, "bags": 0.010}
 SHAFT_HAZE = 0.08    # a denser slab along the window's light, so a faint shaft joins window and patch
                      # (0.02 did not show against the top spot's haze at this source's distance)
 
-DAWN_TURN = 32.0     # she faces the camera, turned a little to frame right (deg from facing -Y)
+DAWN_TURN = 68.0     # the low bun clears the skull by 6 px in the frontal camera at 1280
 # the head bowed (28) on a slightly bent neck (7): from the 1.2 m lens an 18 deg bow on a 1.6 m figure read as a level
 # gaze with a faint grin (round 2), now the face falls into the shadow of the brow. The chest nearly upright so the
 # spine stays vertical from above (round 2 read as a stoop); arms hanging close (out 2.5), elbows soft, wrists
@@ -434,7 +434,7 @@ def creases(gar, strength=0.014, mid=0.25, scale=0.07, stretch=1.5):
     return dp
 
 
-def light_suit(h, net=0.30, hair_net=0.20, body_net=0.75, bounce_w=45.0):
+def light_suit(h, net=0.30, hair_net=0.20, body_net=0.26, bounce_w=45.0):
     """Light the suit and the hair as a cinematographer would with a net and a bounce, all invisible in frame. Round 1
     read the top-lit shirt (shoulders and the top of the bust a mid grey, the bowed head's shadow a black strip down
     the sternum, the rest black) as a pale bolero over a black leotard, skin showing through. Now the spot reaches the
@@ -486,14 +486,21 @@ def light_suit(h, net=0.30, hair_net=0.20, body_net=0.75, bounce_w=45.0):
     st.link_lights([fill], receivers=[gar], tag="dawn_bounce")
     print(f"VOID suit light: spot net {net:.2f} on the suit, {hair_net:.2f} on {[o.name for o in hair]}, bounce "
           f"{bounce_w:.0f} W on the suit", flush=True)
-    hands = st.area("hand_return", (x, y - 1.4, 0.5), (x, y, 0.81), (0.60, 0.40), 26, (0.90, 0.94, 1.0),
-                    spread_deg=50)
-    st.link_lights([hands], receivers=[body], tag="hand_return")
+    # The lifted pool returns light underneath both wrists. The left hand is
+    # screened by the hip at this turn and picks up a little bounce from its side.
+    hands = st.area("hand_return", (x, y - 1.4, 0.50), (x, y, 0.88), (1.00, 0.46), 0.65,
+                    (0.90, 0.94, 1.0), spread_deg=50)
+    rig = rigged.rig_of(h)
+    wrist = rig.matrix_world @ rig.pose.bones["hand_fk.L"].head
+    lateral = h.rotation_euler.to_matrix() @ Vector((0.75, 0, 0))
+    side = st.area("left hand floor return", wrist + lateral + Vector((0.15, -0.05, -0.27)), wrist,
+                   (0.60, 0.38), 1.8, (0.90, 0.94, 1.0), spread_deg=65)
+    st.link_lights([hands, side], receivers=[body], tag="hand_return")
     bun = [o for o in hair if o.name.endswith("_bun")]
-    rim = copies(0.36, "_bun_edge") if bun else []
+    rim = copies(0.25, "_bun_edge") if bun else []
     if rim:
         st.link_lights(rim, receivers=bun, tag="bun_edge")
-    return dup + hair_dup + body_dup + rim + [fill, hands]
+    return dup + hair_dup + body_dup + rim + [fill, hands, side]
 
 
 def stone_finish(holder, spec=0.3, rough=0.66):
@@ -759,10 +766,11 @@ def apply_camera(name):
         if "seated" not in _STATE["groups"]:
             _island("seated", build_seated_dawn)
         active.add("seated")
-    if name == "dawn_close" and _STATE["with_cast"]:
-        active.add("portrait")
     if "dawn" in active and cfg.get("cast", True):
         active.add("standing")
+        if _STATE["with_cast"]:
+            active.add("portrait")
+            bpy.data.objects["portrait_floor_return"].data.energy = 3.5 if name == "dawn_close" else 1.6
     for group, objs in _STATE["groups"].items():
         for ob in objs:
             ob.hide_render = group not in active or ob in _STATE["originally_hidden"]
