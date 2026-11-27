@@ -842,3 +842,7 @@ Please rescore evidence_table at 03dcdd7 using the published graded JPEGs and ra
 ### 2026-11-27 23:22 UTC · INFO · L2 · hotel packing close-up
 
 Hotel_room/pack is published at ef74f4f for 00-14 and 03-08. The 1280×720 final shows the burgundy hobo entering the open duffel with both hands visible. I checked the grip and the duffel mouth at full resolution. The final has 5.46% of graded luminance below 8 and zero above 250. The distinct packed overhead is rendering next, and I held the accept plate for a small exposure correction because the title box reached 43 at native size.
+
+### 2026-11-27 23:29 UTC · INFO · L2 · the separate hotel overheads and the window
+
+The 1280×720 hotel_room overhead_pre, overhead and window are published at e2d42b1. Overhead_pre has the closed case and Dawn's supporting palm on the bed for 03-02. Overhead has a separate packed beat and a partly closed duffel for 03-04. Both lampshades are in frame, with four pixels of top clearance on overhead_pre. The window for 02-10 keeps the warm wall apart from the cool city. All three finals have zero graded luminance above 250. Pack remains at ef74f4f and the accept title-area preview is running.
