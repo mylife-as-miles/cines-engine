@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Q08 (the Treaty House yard: her own weight, the spear, "We stopped carrying it") storyboard. Nothing generated.
 
-Five shots in two generations: A (no speech) is Sarn Vale alive, the landing, and the collar; B is the spear and Karst's
+Five shots in two generations: A (no speech) is the landing, the collar, and Sarn Vale alive; B is the spear and Karst's
 line at the door. The frames are staging sketches cut from the approved sheets and references: they place people and
-things in the frame and say what happens. The pictures are made by three shot plates, then the takes.
+things in the frame and say what happens. The pictures are made by four shot plates, then the takes.
 
     /root/leonxlnx/earshot/.venv/bin/python tools/board_q08.py   ->  design/boards/Q08_board.jpg
 """
@@ -42,13 +42,14 @@ def dark(rgba, k):
 
 
 def yard():
-    """The yard seen from the fort's door: rock and the band of day, the outer wall, packed dust."""
+    """The yard looking at its outer wall: the rock closing the top, the tall wall and its gateway, packed dust."""
     a = np.zeros((H, W, 3), np.float32)
-    a[:int(H * 0.30)] = part('refs/candidates/E05B_t1a_fixed.jpg', (0.0, 0.0, 1.0, 0.36), (W, int(H * 0.30))) * 0.80
-    a[int(H * 0.30):int(H * 0.41)] = np.array([0.07, 0.075, 0.085], np.float32)                       # the outer wall
-    y0, y1 = int(H * 0.31), int(H * 0.41); a[y0:y1, int(W * 0.74):int(W * 0.79)] = a[y0 - 40:y1 - 40, int(W * 0.74):int(W * 0.79)]   # its gateway
-    g = np.linspace(0.30, 0.44, H - int(H * 0.41), dtype=np.float32)[:, None, None]
-    a[int(H * 0.41):] = g * np.array([1.0, 1.02, 1.05], np.float32) + np.random.default_rng(3).normal(0, 0.012, (H - int(H * 0.41), W, 1)).astype(np.float32)
+    top, foot = int(H * 0.13), int(H * 0.41)
+    a[:top] = part('refs/candidates/E05B_t1a_fixed.jpg', (0.0, 0.0, 1.0, 0.16), (W, top)) * 0.55                # dark rock and cloud
+    a[top:foot] = np.array([0.085, 0.09, 0.10], np.float32)                                                    # the outer wall, more than twice a man's height
+    a[top + 22:foot, int(W * 0.72):int(W * 0.80)] = np.array([0.55, 0.57, 0.60], np.float32)                   # its gateway: the plain, pale with haze
+    g = np.linspace(0.30, 0.44, H - foot, dtype=np.float32)[:, None, None]
+    a[foot:] = g * np.array([1.0, 1.02, 1.05], np.float32) + np.random.default_rng(3).normal(0, 0.012, (H - foot, W, 1)).astype(np.float32)
     return a
 
 
@@ -57,8 +58,8 @@ def sheet(cells, path):
     pad, cap, gap, hd = 16, 104, 14, 86
     rows = (len(cells) + 1) // 2
     S = Image.new('RGB', (pad * 2 + W * 2 + gap, hd + rows * (H + cap) + pad), INK); d = ImageDraw.Draw(S)
-    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q08  ·  THE TREATY HOUSE YARD  ·  storyboard  ·  five shots in two generations, 21 s', fill=GOLD, font=f0)
-    d.text((pad, 48), 'Staging sketches cut from the approved sheets and references. They place people in the frame; the pictures are made by three shot plates, then the takes. '
+    d.text((pad, 14), 'THE WEIGHT OF HEAVEN  ·  Q08  ·  THE TREATY HOUSE YARD  ·  storyboard  ·  five shots in two generations, 24 s', fill=GOLD, font=f0)
+    d.text((pad, 48), 'Staging sketches cut from the approved sheets and references. They place people in the frame; the pictures are made by four shot plates, then the takes. '
                       'Every shot is locked off: below, the camera is planted.', fill=PAPER, font=f2)
     for k, (im, title, text) in enumerate(cells):
         x = pad + (k % 2) * (W + gap); y = hd + (k // 2) * (H + cap)
@@ -79,7 +80,7 @@ def main():
     note(d, (36, 30), 'the same view as in the film, alive this time')
     arrow(d, (590, 235), (620, 175), w=3); note(d, (640, 168), 'smoke climbs and leans')
     arrow(d, (720, 300), (690, 268), w=3); note(d, (735, 300), 'three sheep walk uphill')
-    note(d, (36, 388), 'wind runs through the grass; a cloud\'s shadow crosses the far fields')
+    note(d, (36, 388), 'wind runs through the grass; mist drifts along the far hillside')
     # A2. the landing
     a = yard()
     ship = key(part('refs/SHIP_V04_cutter.jpg', (0.255, 0.52, 0.76, 0.89), (760, 320)), lo=0.06)
@@ -91,19 +92,19 @@ def main():
     for who, cx in (('farmer', W * 0.07), ('marl', W * 0.95), ('farmer', W * 0.80)):
         a = b4.over(a, dark(b4.cut(who, 1), 0.30), cx=cx, foot=H * 1.55, height=H * 1.5, soft=3.0)
     c2 = img(a); d = ImageDraw.Draw(c2)
-    note(d, (150, 26), 'from among the watchers; the kingdom overhead; the plain beyond the wall')
+    note(d, (150, 16), 'from among the watchers; the tall outer wall behind; rock closes the top')
     arrow(d, (W * 0.42 - 60, 250), (W * 0.42 - 60, 300), w=3); note(d, (150, 236), 'her knees almost go; she stands')
     arrow(d, (W * 0.50 + 40, 270), (W * 0.50 + 40, 330), w=3); note(d, (560, 250), 'the aide falls outright')
     note(d, (250, 392), 'the watchers do not move. Nobody laughs')
     # A3. the collar
-    g = np.zeros((H, W, 3), np.float32) + np.array([0.46, 0.48, 0.50], np.float32)
-    g[:, :int(W * 0.42)] = np.array([0.78, 0.79, 0.80], np.float32)                                     # the cutter's white side, soft
-    g = b4.blur(g, 40)
+    g = np.zeros((H, W, 3), np.float32) + np.array([0.50, 0.52, 0.55], np.float32)                     # grey cloud behind her
+    g[:int(H * 0.26)] = np.array([0.07, 0.075, 0.085], np.float32)                                       # the dark rock across the top
+    g = b4.blur(g, 30)
     g = b4.over(g, b4.cut('serath', 2), cx=W * 0.52, foot=H + 120, height=H * 1.42, gain=0.86)
     c3 = img(g); d = ImageDraw.Draw(c3)
     note(d, (36, 30), 'the gold collar drags at her neck like a hand')
     arrow(d, (640, 330), (640, 270), w=4); note(d, (660, 290), 'she lifts her chin level against it')
-    note(d, (36, 388), 'close, 85 mm; her mouth closed; her eyes come up')
+    note(d, (36, 388), 'her eyes come up and hold: also her answer to Karst, in the cut')
     # B1. the spear
     a = b4.blur(part('refs/ENV_E08_treaty-house-courtyard.jpg', (0.28, 0.12, 0.72, 0.58), (W, H)), 7) * 0.8
     y0 = int(H * 0.2); crowd = b4.blur(part('refs/CROWD_K03_refugees.jpg', (0.10, 0.10, 0.90, 0.95), (W, H - y0)), 5)
@@ -113,7 +114,7 @@ def main():
     c4 = img(a); d = ImageDraw.Draw(c4)
     d.line([(W * 0.515, 0), (W * 0.515, H)], fill=(150, 128, 96), width=7)
     note(d, (36, 26), 'Marl puts a spear into his hand'); note(d, (540, 60), 'his free hand goes to the bowl at his belt')
-    arrow(d, (360, 360), (640, 360), w=3); note(d, (240, 388), 'then both watch her pass, left to right. No words')
+    arrow(d, (360, 360), (640, 360), w=3); note(d, (240, 388), 'then both watch her pass; neither looks into the lens')
     # B2. Karst at the door
     a = np.zeros((H, W, 3), np.float32) + 0.018
     stone = b4.blur(part('refs/ENV_E08_treaty-house-courtyard.jpg', (0.30, 0.20, 0.40, 0.60), (int(W * 0.16), H)), 2) * 0.55
@@ -124,11 +125,11 @@ def main():
     note(d, (190, 26), 'Karst in the door\'s shadow: a frame within the frame')
     note(d, (150, 350), '"We did not attack your city, Admiral."'); note(d, (150, 384), '"We stopped carrying it."  The song cuts out')
     cells = [
-        (c1, 'A · SHOT 1 · 0–3.5 s · Sarn Vale from the wall\'s top, locked off', 'The valley beyond the wall, alive: smoke rising from each chimney, sheep grazing and walking, wind in the grass, a cloud\'s shadow passing. It takes the place of the still valley at the end of Q07.'),
-        (c2, 'A · SHOT 2 · 3.5–8.5 s · the yard, low, from among the watchers · her own weight', 'The white cutter has set down. Serath steps onto the ground; her knees almost give; she catches herself and stands. Behind her the aide steps down and falls onto his hands and knees. The people of the ground watch and do not move.'),
-        (c3, 'A · SHOT 3 · 8.5–11 s · close on Serath · the collar', 'The collar of her rank pulls her head down. She lifts her chin level against it and holds it there. Her eyes come up and rest ahead.'),
-        (c4, 'B · SHOT 1 · 0–3.5 s · two-shot, from the hips up · the spear and the bowl', 'Marl puts a spear into the farmer\'s hand; its butt drops to the ground. His free hand goes to the wooden bowl at his belt and stays there. Both turn and watch the admiral pass, off-screen. Their faces give nothing.'),
-        (c5, 'B · SHOT 2 · 3.5–10 s · Karst in the doorway, from the hips up · the line', 'He looks at her for a second. Then, dry and without heat: the first sentence; a breath; the second, quieter, falling flat. He stays as he is. One and a half seconds are left after the line, so that nothing can cut it short.'),
+        (c2, 'A · SHOT 1 · 0–5.5 s · the yard, low, from among the watchers · her own weight', 'The white cutter has set down. Serath steps onto the ground; her knees buckle; she catches herself and stands. Behind her the aide steps down and falls onto his hands and knees. The people of the ground watch and do not move. First, so that nothing can squeeze it.'),
+        (c3, 'A · SHOT 2 · 5.5–9 s · close on Serath, from below · the collar', 'The collar of her rank pulls her head down. She lifts her chin level against it, and from 7 s holds: her eyes steady on someone off-screen. Those two held seconds can also follow Karst\'s line in the cut, as her answer.'),
+        (c1, 'A · SHOT 3 · 9–12 s · Sarn Vale from the wall\'s top, locked off', 'The valley beyond the wall, alive: smoke rising from each chimney, sheep grazing and walking, wind in the grass, mist drifting on the far hillside. It takes the place of the still valley at the end of Q07. Last, where an overrun costs least.'),
+        (c4, 'B · SHOT 1 · 0–4 s · two-shot, from the hips up · the spear and the bowl', 'Marl puts a spear into the farmer\'s hand; its butt drops to the ground. His free hand goes to the wooden bowl at his belt and stays there. Both turn and watch Serath pass, off-screen; neither looks into the lens. Their faces give nothing.'),
+        (c5, 'B · SHOT 2 · 4–12 s · Karst in the doorway, from the hips up · the line', 'He looks at her for a second. Then, dry and without heat: the first sentence (about 3 s); a breath; the second, quieter, falling flat. He stays as he is. A second and a half is left after the line, so that nothing can cut it short.'),
     ]
     sheet(cells, P('design/boards/Q08_board.jpg'))
 

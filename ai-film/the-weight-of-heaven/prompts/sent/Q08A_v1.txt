@@ -1,79 +1,79 @@
 # AUTEUR VIDEO PROMPT
-## THE WEIGHT OF HEAVEN — Q08A · SARN VALE · THE TREATY HOUSE YARD · HER OWN WEIGHT
-References: @Image 1 — first frame of shot 1: the valley from the top of the black wall · @Image 2 — first frame of shot 2: the yard of the old fort, the cutter set down, Serath at the foot of its gangway · @Image 3 — character sheet: SERATH
-Reference mode · 11 s · 3 shots · 2.35:1 · photoreal live action · no speech · no music
+## THE WEIGHT OF HEAVEN — Q08A · THE TREATY HOUSE YARD · HER OWN WEIGHT · SARN VALE
+References: @Image 1 — first frame of shot 1: the yard of the old fort, the cutter set down, Serath at the foot of its gangway · @Image 2 — first frame of shot 2: Serath in close-up, her head bowed under the gold collar · @Image 3 — first frame of shot 3: the valley from the top of the black wall · @Image 4 — character sheet: SERATH
+Reference mode · 12 s · 3 shots · 2.35:1 · photoreal live action · no speech · no music
 
 ## SCENE INTENT
-Three separate views, cut hard. First the valley that lies beyond the black wall: farms, sheep, smoke, all of it alive and unaware. Then the yard of an old stone fort on the ground, where a white naval cutter has set down. Serath, Grand Admiral of the kingdom that floats above the cloud, has never stood on the ground. She steps onto it and for the first time in her life feels her own weight: her knees almost give. Behind her, her aide falls outright. The people of the ground watch the sky people learn to stand. Nobody laughs. Last, close: the gold collar of her rank drags at her neck like a hand, and she lifts her head against it.
+Three separate views, cut hard. In the yard of an old stone fort on the ground a white naval cutter has set down. Serath, an officer of the kingdom that floats above the cloud, has never stood on the ground. She steps onto it and for the first time in her life feels her own weight: her knees buckle and she almost goes down. Behind her, her aide falls outright. The people of the ground watch the sky people learn to stand. Nobody laughs. Then, close: the gold collar of her rank is heavy on her neck and pulls her head down, and she lifts her head against it. Last, elsewhere: the green valley that lies beyond the black wall, alive and unaware.
 
 ## GLOBAL LOCKS
-Character identity — SERATH exactly as @Image 3 and as she stands in @Image 2: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. Her AIDE exactly as he stands in @Image 2: a young officer in a white coat with a white satchel. The watchers are the dark figures of @Image 2, seen from behind. Each face and costume stays with its one person.
+Character identity — SERATH exactly as @Image 4 and as she is in @Image 1 and @Image 2: a woman of fifty-five, upright, short black hair going grey, a long white coat, a heavy gold collar at her throat, white gloves. Her AIDE exactly as he stands in @Image 1: a young officer in a white coat with a white satchel. The watchers are the dark figures of @Image 1, seen from behind. From @Image 4 take her face, hair and clothes only. Each face and costume stays with its one person.
 Wardrobe override — none: everyone exactly as in the images.
-Location / environment continuity — Shot 1 is exactly @Image 1: a green valley of walled fields under a grey sky, stone farmhouses with smoking chimneys, sheep on the nearer slope, and in the lower right corner the flat top of a black stone wall. Shots 2 and 3 are the yard of @Image 2: packed grey dust, the white cutter standing on its two iron skids with its gangway down, the yard's black wall behind it, the black plain and the dark underside of the kingdom beyond, and at the edges of the frame the dark backs of people watching.
+Location / environment continuity — Shot 1 is exactly @Image 1: packed grey dust, the white cutter standing on its two iron skids with its gangway down, the tall dark outer wall behind it with its one gateway, the dark rock closing the top of the frame, and at the edges of the frame the dark backs of people watching. Shot 2 is exactly @Image 2: her face close, grey cloud behind her, the dark rock across the top of the frame. Shot 3 is exactly @Image 3: a green valley of walled fields under a grey sky, stone farmhouses with smoking chimneys, sheep on the nearer slope, and in the lower right corner the flat top of a black stone wall.
 Props and temporal state — The cutter stands still on the ground throughout. Serath's gloved hands are empty. The gold collar is heavy.
 
 ## MOVIE COLOR
-The colour, light and haze of @Image 1 and @Image 2, unchanged. The valley: soft grey day, muted green. The yard: cold grey and black, rock dust in the air; the cutter, the admiral and the aide are the only white things, and the gold of her collar is the only colour. Exposed for the pale things; faces are lit softly from the side and are never the brightest thing in the frame. Blacks deep but never crushed.
-Influences, each with its purpose — Denis Villeneuve, Arrival and Dune: the one who does not belong, sharp and pale among dark still watchers; a body told by weight; stillness. James Cameron: a thing felt for the first time shown on the body before the face.
+The colour, light and haze of the three images, unchanged. The yard: cold grey and black, rock dust in the air; the cutter, Serath and the aide are the only white things, and the gold of her collar is the only colour. The valley: soft grey day, muted green. Exposed for the pale things; faces are lit softly from the left and are never the brightest thing in the frame. Blacks deep but never crushed.
+Influences, each with its purpose — Denis Villeneuve, Arrival and Dune: the one who does not belong, sharp and pale among dark still watchers; a body told by its weight; stillness. James Cameron: a thing felt for the first time is shown on the body before the face.
 Camera package — ARRI Alexa 65, large format, spherical primes, fine grain. Every shot is locked off: the camera is planted and does not move.
 
 ## VOICE DNA (immutable)
 No one speaks.
 
 ## AUDIO DESIGN
-Wind. Sheep, far off. Boots on grit. Cloth. Hands and knees on dust. Breath.
+Wind. Boots on grit. Cloth. Hands and knees on dust. Breath. Sheep, far off.
 
 ## FIRST-FRAME ANCHOR
 Shot 1 opens exactly on @Image 1, the same framing.
 
 ## SHOT-BY-SHOT BREAKDOWN
 ### SHOT 1
-[TIME] 0.0–3.5 s
-[CAM] exactly the framing of @Image 1; locked off.
-[BLOCK] Exactly @Image 1.
-[ACT] The valley is alive. Smoke climbs from each chimney and leans away to the right. The sheep graze; three of them walk slowly uphill in a line. Wind runs through the long grass in slow waves. The shadow of a cloud slides across the far fields from left to right. Nothing else happens.
-[DIALOGUE] / V.O. none
-[SFX] wind; sheep, far off.
-[STATE OUT] The valley, living, as before.
-
-### SHOT 2
-[TIME] 3.5–8.5 s
-[CAM] exactly the framing of @Image 2: low, 40 mm, from among the watchers; locked off.
-[BLOCK] Exactly @Image 2: the dark backs of the watchers at the left and right edges; the white cutter across the middle distance; Serath at the foot of the gangway, one boot on the ground, the other still on the gangway; the aide behind her, one step higher.
-[ACT] From the first frame she brings her other boot down onto the ground and takes her whole weight. At 4.5 s her knees give: she drops a hand's width, her shoulders dip and her head is pulled forward. She catches herself without touching anything, and by 6.0 s she is standing upright again, her hands at her sides. At 6.0 s, behind her, the aide steps down off the gangway; his legs fold at once and he goes down onto his hands and knees in the dust, and stays there, his head hanging. She does not turn round. The watchers do not move. Dust drifts.
+[TIME] 0.0–5.5 s
+[CAM] exactly the framing of @Image 1: low, 40 mm, from among the watchers; the dark rock closes the top of the frame; locked off.
+[BLOCK] Exactly @Image 1: the dark backs of the watchers at the left and right edges; the white cutter across the middle distance; Serath at the foot of the gangway, one boot on the ground, the other still on the gangway; the aide behind her, one step higher.
+[ACT] From the first frame she brings her other boot down onto the ground and takes her whole weight. At 1.0 s her knees buckle: she sinks half a head's height, her arms come out from her sides and her head is pulled forward. She catches herself without touching anything, and by 2.5 s she is standing upright again, her hands at her sides. At 2.5 s, behind her, the aide steps down off the gangway; his legs fold at once, and by 3.5 s he is down on his hands and knees in the dust, his head hanging. He stays there. She does not turn round. From 3.5 s to the end she stands still. The watchers do not move at any time. Dust drifts.
 [DIALOGUE] / V.O. none
 [SFX] boots on grit; cloth; hands and knees on dust; wind.
 [STATE OUT] Serath upright and still; the aide on his hands and knees behind her; the watchers as they were.
 
-### SHOT 3
-[TIME] 8.5–11.0 s
-[CAM] close-up, 85 mm, at the height of her chin, a little from her left, shallow focus; locked off. Behind her, out of focus: the white side of the cutter and grey air.
-[BLOCK] Serath from the collarbone up, in the middle of the frame, the gold collar across the bottom of the frame.
-[ACT] Her mouth is closed from the first frame to the last. Her head is a little bowed, pulled down by the collar; the tendons of her neck stand; her jaw is set. Between 8.5 s and 10.0 s she lifts her chin level against the weight and holds it there. Her eyes come up and rest ahead, past the left side of the camera. She breathes out once through her nose.
+### SHOT 2
+[TIME] 5.5–9.0 s
+[CAM] exactly the framing of @Image 2: close-up, 85 mm, from the height of her collarbone, looking a little upward; the dark rock closes the top of the frame; locked off.
+[BLOCK] Exactly @Image 2: Serath from the collarbone up, the gold collar across the bottom of the frame, her head a little bowed, her eyes lowered.
+[ACT] Her mouth is closed from the first frame to the last. Between 5.5 s and 7.0 s she lifts her chin level against the weight of the collar; the tendons of her neck stand; her eyes come up and rest ahead, past the left side of the camera. From 7.0 s to the end she holds exactly that: her head level, her eyes steady on someone off-screen. At 8.0 s she blinks once, slowly. She breathes out through her nose.
 [DIALOGUE] / V.O. none
 [SFX] her breath; cloth; wind.
-[STATE OUT] Her head level, her eyes ahead, her mouth closed.
+[STATE OUT] Her head level, her eyes past the left side of the camera, her mouth closed.
+
+### SHOT 3
+[TIME] 9.0–12.0 s
+[CAM] exactly the framing of @Image 3; grey sky across the top of the frame; locked off.
+[BLOCK] Exactly @Image 3.
+[ACT] The valley is alive. Smoke climbs from each chimney and leans away to the right. The sheep graze; three of them walk slowly uphill in a line. Wind runs through the long grass in slow waves. Mist drifts along the far hillside from left to right. Nothing else happens.
+[DIALOGUE] / V.O. none
+[SFX] wind; sheep, far off.
+[STATE OUT] The valley, living, as before.
 
 ## PERFORMANCE ARC
-SERATH: steps down as she has stepped off a thousand decks → her body fails her for half a second → she will not let it show → she holds her head up against the weight of her own rank.
+SERATH: steps down as she has stepped off a thousand decks → her body fails her for a second → she will not let it show → she holds her head up against the weight of her own rank, and looks at who is waiting for her.
 THE AIDE: follows her → falls.
 THE WATCHERS: still.
 
 ## THEMATIC / SYMBOLIC / STRUCTURAL LOGIC
-Weight is real, and she has never felt it. The people who carry it all their lives watch her find out.
+Weight is real, and she has never felt it. The people who bear it all their lives watch her find out.
 
 ## PHYSICS LOCKS
-Normal speed and real weight throughout. Bodies are heavy: a knee that gives drops fast and is caught late; a man who falls goes down all at once. Cloth hangs straight. Dust drifts slowly. Smoke rises and leans with the wind. Sheep walk at a sheep's pace.
+Normal speed and real weight throughout. Bodies are heavy: knees that buckle drop fast and are caught late; a man who falls goes down all at once. Cloth hangs straight. Dust drifts slowly. Smoke rises and leans with the wind. Sheep walk at a sheep's pace.
 
 ## AUDIO LOCKS
 No speech and no voice of any kind. No narration. No music or singing.
 
 ## CONTINUITY LOCKS
-[POSITIVE] shot 1 exactly as @Image 1 · shot 2 exactly as @Image 2 · Serath exactly as @Image 3 in shot 3 · white gloves on her hands · the cutter still on the ground · three shots, a hard cut between each
-[NEGATIVE] sunlight, blue sky or warm light · anyone smiling, laughing, helping or bowing · Serath falling, kneeling or putting a hand down · the cutter moving · camera movement · text or captions · slow motion
+[POSITIVE] shot 1 exactly as @Image 1 · shot 2 exactly as @Image 2 · shot 3 exactly as @Image 3 · white gloves on her hands · the cutter still on the ground · three shots, a hard cut between each
+[NEGATIVE] a grey studio backdrop · sunlight, blue sky or warm light · anyone smiling, laughing, helping or bowing · Serath falling, kneeling or putting a hand down · a hand at her neck · the cutter moving · camera movement · text or captions · slow motion
 
 ## GENERATION PRIORITY ORDER
-1. Three separate shots, hard cuts, at the times written  2. Shot 2: her knees almost give and she stands; the aide falls to his hands and knees; the watchers do not move  3. Shots 1 and 2 exactly their images: framing, light, colour  4. Character identity from the images  5. Shot 1 alive: smoke, sheep, grass  6. Sound: natural sound only, no voice
+1. Three separate shots, hard cuts, at the times written  2. Shot 1: her knees buckle and she stands; the aide falls to his hands and knees; the watchers do not move  3. Each shot exactly its image: framing, light, colour  4. Character identity from the images  5. Shot 3 alive: smoke, sheep, grass  6. Sound: natural sound only, no voice
 
 ## FINAL STATE
-Serath in close-up, her head level against the weight of the gold collar, her eyes ahead, her mouth closed.
+The valley beyond the wall, living: smoke rising, sheep on the slope, wind in the grass.

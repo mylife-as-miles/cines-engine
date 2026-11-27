@@ -12,15 +12,13 @@ It must feel physically real and spatially coherent: one frame of a feature film
 
 # REFERENCE IMAGES
 
-@Image 1 — the approved courtyard of the Treaty House. Use it for the place and its look: the packed grey dust, the sloping walls of dark basalt, the racks of spears, the flat grey light, the colour and the exposure. Do not copy its wide view: the new picture is close to two people.
+@Image 1 — a part of the approved yard: the fort's sloping wall of dark basalt, with people sitting against it and sacks piled at its foot. Use it for what is behind the two people, out of focus, and for the look: the stone, the dust, the flat grey light, the colour and the exposure.
 
 @Image 2 — the character sheet of MARL. Use it for her face, her dusty hair in one braid, and her armour beaten from white hull-plate, rust-stained, over grey work clothes.
 
 @Image 3 — the character sheet of THE FARMER. Use it for his face, his beard, his grey wool jacket and belt.
 
-@Image 4 — a line-up of refugees. Use it for the people who wait behind: their grey, dust-covered clothes and their bundles.
-
-@Image 5 — a child's small wooden bowl. Use it only for the bowl that hangs at the farmer's belt.
+@Image 4 — a child's small wooden bowl. Use it only for the one bowl that hangs at the farmer's belt.
 
 Do not copy the grey backdrops of the sheets. Marl and the farmer each appear once.
 
@@ -59,9 +57,9 @@ Establish clear, believable geography.
 The camera stands in the yard at chest height, two and a half metres from two people, level and still.
 
 - on the left of the frame: MARL of @Image 2, from the hips up, turned three-quarters toward the right: a woman in her thirties. With her right hand she holds a spear upright between the two of them: a plain ash shaft with a dull iron head; its head is above the top of the frame
-- on the right of the frame: THE FARMER of @Image 3, from the hips up, turned three-quarters toward the left, facing her. His right hand is closing round the spear's shaft just below hers. At his belt, on the hip nearer the camera, hangs the small wooden bowl of @Image 5, plain to see; his left hand hangs beside it
+- on the right of the frame: THE FARMER of @Image 3, from the hips up, turned three-quarters toward the left, facing her. His right hand is closing round the spear's shaft just below hers. At his belt, on the hip nearer the camera, hangs the small wooden bowl of @Image 4, plain to see; his left hand hangs beside it
 - both look at the spear. Their mouths are closed. Neither smiles
-- behind them, out of focus: five or six refugees as in @Image 4, grey with rock dust, bundles on their backs, standing in a line and waiting; a rack of spears; and behind everything the fort's sloping wall of dark basalt
+- behind them, out of focus: refugees in loose groups, some turned away, some sitting against the wall, all grey with rock dust, bundles on their backs or at their feet; and behind everything the fort's sloping wall of @Image 1
 
 Everyone and everything is grey with fine rock dust. Her armour's white plate is the palest thing in the frame.
 
@@ -129,12 +127,10 @@ PRIMARY OBJECTS:
 
 - Marl and the farmer, and the one spear between them
 - the small wooden bowl at his belt
-- the line of refugees behind, soft
-- the rack of spears
+- the refugees behind, soft
 
 SECONDARY LIVED-IN DETAILS:
 
-- racks or bundles of spears against a wall
 - piles of dusty bundles
 - iron rings in the wall
 
@@ -210,7 +206,6 @@ Maintain:
 
 For this location:
 
-- the arched doorway is deep shadow
 - no sunlight, no cast shadows
 - the light is the flat grey day, coming low from the left: both faces are lit softly from that side and fall off on the other; no face is the brightest thing in the frame
 
@@ -241,7 +236,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS FRAME:
-50 mm, chest height, locked off, level. Focus on the two faces and the spear; everything behind them is soft.
+50 mm, chest height, locked off, level. Focus on the two faces and the spear; everything behind them is soft. No sky is in the frame.
 
 Maintain:
 
@@ -264,7 +259,7 @@ One frame of a film, made to be held on screen: not a master reference.
 - behind them only grey: soft grey people and dark stone; no sky
 - level and still
 
-Scale: they stand an arm's length apart; the refugees behind are four metres further off.
+Scale: they stand an arm's length apart; the people behind are four metres further off.
 
 ---
 
@@ -359,4 +354,4 @@ Avoid:
 - crenellations
 - banners or emblems
 
-Also never: anyone smiling; a sword, a shield, a helmet or a banner; the spear held as a weapon or pointed at anyone; a third person in focus; polished or shining armour; open sky; the grey studio backdrop of a sheet.
+Also never: anyone smiling; a sword, a shield, a helmet or a banner; a second spear in anyone's hand; the spear held as a weapon or pointed at anyone; a third person in focus; people standing in a row; polished or shining armour; open sky; the grey studio backdrop of a sheet; more than one bowl.

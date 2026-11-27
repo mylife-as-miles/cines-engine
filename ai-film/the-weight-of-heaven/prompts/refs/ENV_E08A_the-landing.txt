@@ -2,7 +2,7 @@
 
 ## THE TREATY HOUSE — COURTYARD · THE LANDING (shot plate)
 
-Create one photorealistic frame of a feature film: a white flying boat has set down in the yard of an old stone fort, and an admiral in white steps from it onto the ground, watched by the people of the ground.
+Create one photorealistic frame of a feature film: a white flying boat has set down in the yard of an old stone fort, and an officer in white steps from it onto the ground, watched by the people of the ground.
 
 This is a FILM PRODUCTION REFERENCE FRAME, not concept art, not an architectural visualization, not advertising photography.
 
@@ -12,11 +12,11 @@ It must feel physically real and spatially coherent: one frame of a feature film
 
 # REFERENCE IMAGES
 
-@Image 1 — the approved courtyard of the Treaty House. Use it for the place and its look: the packed grey dust of the yard, the thick walls of dark basalt, the flat grey light, the dark roof of rock and cloud overhead, the colour and the exposure. Do not copy its camera position: the new picture looks the other way, from the fort's door back across the yard to the landing ground and the yard's outer wall.
+@Image 1 — one side of the approved yard: its outer wall of dark basalt, more than twice a man's height, with one plain square gateway onto the plain; the packed grey ground in front of it; the grey cloud and dark rock above. Use it for the place behind the cutter and for the look: the stone, the dust, the flat grey light, the colour and the exposure.
 
 @Image 2 — the naval cutter on a grey studio backdrop. Use it only for the cutter's design. Draw this cutter once, standing on the ground on its skids, seen from its side.
 
-@Image 3 — the character sheet of SERATH, the admiral. Use it for her face, her short black hair going grey, her long white coat, the heavy gold collar at her throat, her white gloves.
+@Image 3 — the character sheet of SERATH. Use it for her face, her short black hair going grey, her long white coat, the heavy gold collar at her throat, her white gloves.
 
 @Image 4 — the character sheet of her AIDE. Use it for his face, his white coat, white gloves and white satchel.
 
@@ -54,7 +54,7 @@ It must not feel production-designed for symbolism.
 
 Establish clear, believable geography.
 
-The camera stands in the yard among the people of the ground, one metre above the dust, level and still, looking from the fort's door back across the yard.
+The camera stands in the yard among the people of the ground, one metre above the dust, level and still, looking across the yard at the outer wall of @Image 1.
 
 From front to back:
 
@@ -62,9 +62,8 @@ From front to back:
 - in the middle of the yard, fifteen metres away and sharp: the white cutter of @Image 2, set down on its two iron skids on the packed dust, seen from its side, its bow to the left, ten metres long. A short wooden gangway is let down from its side to the ground
 - at the foot of the gangway, a little left of the centre of the frame: SERATH of @Image 3, her whole figure, one third of the frame tall. She has just stepped onto the ground: one boot on the dust, the other still on the gangway. She stands very upright, her gloved hands at her sides, facing the camera, her eyes ahead, her mouth closed
 - behind her on the gangway, one step higher: the AIDE of @Image 4, one hand on the cutter's rail
-- behind the cutter: the yard's thick outer wall of black basalt, shoulder high, with one plain open gateway
-- beyond the wall: the black basalt plain going off into pale haze, and low hills far away
-- across the top of the frame: the dark rock underside of the kingdom, running out of the frame, and under it a band of pale grey daylight
+- behind the cutter: the outer wall exactly as in @Image 1, dark basalt, more than twice a man's height, right across the frame, with its one square gateway; through the gateway only, the black plain, pale with haze
+- above the wall: grey cloud, and the dark rock underside of the kingdom closing the top of the frame
 
 No one else stands in the middle of the frame. Nothing is in the air but rock, cloud and dust.
 
@@ -83,7 +82,7 @@ Preserve believable architecture appropriate to:
 Specify:
 
 WALLS:
-Massive basalt masonry, very old, worn smooth at the corners, leaning inward, buttressed.
+The yard's outer wall: massive basalt masonry, very old, worn smooth at the corners.
 
 CEILING:
 Open-air: dark underside and cloud.
@@ -92,16 +91,16 @@ FLOOR:
 Packed grey dust and grit over old flagstones.
 
 WINDOWS:
-A few narrow slits high in the walls.
+None.
 
 DOORS:
-One dark arched doorway in the main building, its heavy door open inward; a wide gate in the outer wall.
+One plain square gateway in the outer wall.
 
 TRIM / MOULDING:
 None; heavy stone lintels and plain arches.
 
 FIXTURES:
-Buttresses; iron rings set in the wall.
+None.
 
 Architectural details should feel ordinary and regionally credible.
 
@@ -115,8 +114,6 @@ For this location:
 
 - old dark basalt masonry, worn smooth
 - grey rock dust over everything
-- dark oak door with iron bands
-- iron rings
 
 Surfaces should contain subtle wear.
 
@@ -133,13 +130,11 @@ PRIMARY OBJECTS:
 - the white cutter, on the ground, its gangway down
 - Serath at the foot of the gangway; the aide behind her
 - the dark backs of the watchers at the frame's edges
-- the yard's outer wall and its gateway
+- the outer wall and its gateway
 
 SECONDARY LIVED-IN DETAILS:
 
-- racks or bundles of spears against a wall
 - piles of dusty bundles
-- iron rings in the wall
 
 Objects should feel casually accumulated over time.
 
@@ -213,9 +208,8 @@ Maintain:
 
 For this location:
 
-- the arched doorway is deep shadow
 - no sunlight, no cast shadows
-- the light is the flat grey day, coming low from the left, the side of the open plain: faces are lit softly from that side and fall off on the other; the cutter's white hull is the brightest thing in the frame, and no face is
+- the light is the flat grey day, coming low from the left: faces are lit softly from that side and fall off on the other; the cutter's white hull is the brightest thing in the frame, and no face is
 
 No beauty lighting.
 
@@ -244,7 +238,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS FRAME:
-40 mm, one metre above the ground, locked off, level. Focus on Serath and the cutter; the watchers' backs in the foreground are soft.
+40 mm, one metre above the ground, locked off, level. Focus on Serath and the cutter; the watchers' backs in the foreground are soft. The dark rock closes the top of the frame.
 
 Maintain:
 
@@ -262,12 +256,12 @@ The environment should look like a frame from THE WEIGHT OF HEAVEN, not a locati
 
 One frame of a film, made to be held on screen: not a master reference.
 
-- we look past dark shoulders at three white things, small in a dark grey frame: the cutter, the admiral, the aide. They are the only clean things in it
+- we look past dark shoulders at three white things, small in a dark grey frame: the cutter, the officer, the aide. They are the only clean things in it
 - she is the sharpest thing in the frame and stands a little left of centre; the cutter's hull runs across the frame behind her
-- a great deal of dark: the watchers, the wall, the rock overhead; the pale band of day lies behind the cutter, low
+- a great deal of dark: the watchers, the wall, the rock overhead
 - level and still; nothing dramatic about the angle
 
-Scale: the cutter is ten metres long; the yard is forty metres across; the kingdom overhead is the whole sky.
+Scale: the cutter is ten metres long; the wall behind it is more than twice the height of a man.
 
 ---
 
@@ -362,4 +356,4 @@ Avoid:
 - crenellations
 - banners or emblems
 
-Also never: the cutter in the air or tilted; sails, wings, balloons, propellers, engines, smoke or lights on the cutter; a crowd in the middle of the frame; anyone smiling, waving or bowing; soldiers in ranks; a carpet; the grey studio backdrop of a sheet; a second admiral; a view of the fort's door.
+Also never: the cutter in the air or tilted; sails, wings, balloons, propellers, engines, smoke or lights on the cutter; the fort's main building or its arched door; a crowd in the middle of the frame; anyone smiling, waving or bowing; soldiers in ranks; a carpet; the grey studio backdrop of a sheet; a second officer in white beside the two.

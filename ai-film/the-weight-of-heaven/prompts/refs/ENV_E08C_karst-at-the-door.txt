@@ -12,9 +12,9 @@ It must feel physically real and spatially coherent: one frame of a feature film
 
 # REFERENCE IMAGES
 
-@Image 1 — the approved courtyard of the Treaty House. Use it for the place and its look: the arched door of the main building, its sloping walls of dark basalt, the flat grey light, the colour and the exposure. Do not copy its wide view: the new picture is close on the doorway.
+@Image 1 — the arched door of the approved fort: dark basalt masonry, a plain stone arch, the door open inward, its inside black. Use it for the doorway and for the look: the stone, the flat grey light, the colour and the exposure.
 
-@Image 2 — the character sheet of KARST. Use it for his face, the grey in his dark hair and short beard, and his long pale engineer's coat, stained, with paler patches where its insignia were cut away.
+@Image 2 — the character sheet of KARST. Use it for his face, the grey in his dark hair and short beard, his long pale engineer's coat, stained, with paler patches where its insignia were cut away, and the ink on his fingers.
 
 Do not copy the grey backdrop of the sheet. He appears once.
 
@@ -50,10 +50,10 @@ It must not feel production-designed for symbolism.
 
 Establish clear, believable geography.
 
-The camera stands in the yard four metres from the arched door of the main building, at the height of his eyes, level and still, looking straight into the doorway.
+The camera stands in the yard four metres from the arched door of @Image 1, at the height of his eyes, level and still, looking straight into the doorway.
 
 - the doorway fills the frame: its jambs of dark basalt blocks stand at the left and right edges of the frame, and its inside is black
-- KARST of @Image 2 stands in the doorway, just inside its shadow, in the middle of the frame, from the hips up, square to the camera: a man in his fifties. His coat hangs open and plain. His hands rest one over the other in front of him, low; his fingertips are black with ink
+- KARST of @Image 2 stands in the doorway, just inside its shadow, in the middle of the frame, from the hips up, square to the camera: a man in his fifties. His coat hangs open and plain. His hands rest one over the other in front of him, low; there is ink on his fingers, as in @Image 2
 - his head is level. His eyes look just past the right side of the camera, at someone standing in the yard. His mouth is closed. He is patient and tired, and not unkind
 - the grey day lights him softly from the left, the side of the yard; the right side of his face falls away into the dark of the door
 
@@ -127,8 +127,6 @@ PRIMARY OBJECTS:
 
 SECONDARY LIVED-IN DETAILS:
 
-- racks or bundles of spears against a wall
-- piles of dusty bundles
 - iron rings in the wall
 
 Objects should feel casually accumulated over time.
@@ -203,7 +201,6 @@ Maintain:
 
 For this location:
 
-- the arched doorway is deep shadow
 - no sunlight, no cast shadows
 - the grey day lights him softly from the left; the right side of his face falls away into the door's dark; his pale coat is the palest thing in the frame and his face sits just under it
 
@@ -234,7 +231,7 @@ LENS CHARACTER:
 clean, modern, high-resolving rendering; low distortion; no flare; no bloom
 
 THIS FRAME:
-65 mm, at his eye height, locked off, level. Focus on his eyes; the stone at the frame's edges is a little soft.
+65 mm, at his eye height, locked off, level. Focus on his eyes; the stone at the frame's edges is a little soft. No sky is in the frame.
 
 Maintain:
 
@@ -352,4 +349,4 @@ Avoid:
 - crenellations
 - banners or emblems
 
-Also never: a second person; a lamp, a candle or a flame; a weapon; a uniform with insignia, medals or braid; a smile; a hood or a hat; sky; the grey studio backdrop of the sheet.
+Also never: a second person; a lamp, a candle or a flame; a spear or any weapon; sacks, crates or barrels; a uniform with insignia, medals or braid; a smile; a hood or a hat; sky; the grey studio backdrop of the sheet.
