@@ -154,3 +154,7 @@ Top three:
 3. P2 overhead duffel: lining darker than the outside (~0.012), zip lips 10–12 cm apart, flap falling outward, a visible zip tape.
 
 Not landed from round 4: overhead hands and floor, the scanner, Officer B's grey shoe and the palm-up gesture in `wide`. New: A's fingertips touch the bottom of the door's window panel in `two_shot`. No hard-rule breaches.
+
+### 2026-11-27 04:55 UTC · INFO · hearing_room
+
+Round-1 finals published in `877b7b1`; fresh critique `scenes/agent_loop/hearing_room_r2.json`: mean 6.1 (round 1 was 5.0), lowest 5 (cast), not pro level. Hands, the wide's shadows and the dais angle landed; Tim still reads about 30 with a swim-cap hairline and flat face light, shirt flecks show through the tie, and the drape outshines his pool in `wide`. I am not starting another fix round before handback (the render queue is full); these fixes go to the next shift.

@@ -1,0 +1,91 @@
+{
+ "stage": "hearing_room",
+ "round": 2,
+ "commit": "877b7b1",
+ "scores": {
+  "composition": 6.5,
+  "lighting": 6,
+  "materials": 5.5,
+  "set_dressing": 6,
+  "grounding_scale": 6.5,
+  "cast": 5,
+  "story_read": 6.5,
+  "technical": 7
+ },
+ "pro_level": false,
+ "verdict": "Most round-1 fixes landed. HANDS now sits in the stage's exposure (graded mean 30, sleeve 40 against hand 132, paper peak 157) with a clean left-over-right fold and a stacked paper pile. The WIDE's crush fell from 49% to 17% of pixels at or below 3/255: sconces, housed broadcast lights and a clerk's table now tell the room. DAIS is a real low angle and its fascia falls off (13 graded under chairs at 64). It is still not at fern level, and most of what holds it back is in the WITNESS medium. Tim still reads as a smooth, androgynous man of about 30 whose hair is a shell with a raised step at the hairline. His face is lit almost flat (about 1.15:1). The shirt tone leaks onto the tie in pale flecks. The microphone stands at his shoulder while he looks away from it. The rows behind him crush to black (1.6 graded on the right), so 'empty rows behind' does not read. In the WIDE, the evenly washed blue drape (mean 71) pulls the eye harder than Tim's pool of light, its pleat tops end in a picket-fence row of pointed tips, and the lower-tier desk cap runs through the top of his head.",
+ "fixes": [
+  {
+   "priority": 1,
+   "camera": "witness",
+   "problem": "Tim does not read as a man in his mid-fifties, even at TIM_AGE 0.78 and weight 0.7. The face is smooth with a small jaw. The chin is raised 18 degrees, which shows a long thin neck standing inside a loose collar ring. The receded hair is a smooth shell that ends in a visible raised step all round the hairline (temples and front), so it reads as a swim cap or wig edge. The face is lit almost flat: lit half 137 against shadow half 120 graded (about 1.15:1), which wipes out the form that would carry age on a stone statue.",
+   "fix": "(a) TIM_UPPER head (-18, -16) -> about (-8, -8). Less chin-up shortens the neck in view, fills the collar and turns the face toward the mic and the dais. (b) Widen the neck about 12% and the jaw about 8%. Use MakeHuman targets if cast.person exposes them (neck-scale-horiz-incr about 0.35, chin-width-incr about 0.3, head-square about 0.3). Otherwise bind a 2x2x3 Lattice to the neck and jaw vertex groups. Pull the shirt collar ring about 6 mm in so it sits on the neck. (c) In recede_hair, ramp the 'volume' weights from 0 at the new edge to 1 over 25 mm, and mask soften_hair's clumps displacement to 0 within 15 mm of the edge. At a 5x crop the hair must meet the scalp flush, with no ledge. (d) In TRIMS['witness'], cut tv_fill_light 0.18 -> about 0.06 and leave the key, so the face's lit side is about 140 graded and the shadow side 65-80 (about 2:1), with readable shadow under the brow, cheekbone and jaw."
+  },
+  {
+   "priority": 1,
+   "camera": "witness",
+   "problem": "Pale, ragged flecks run along the tie's left edge and knot (graded about 90-150 on a tie of 39). The shirt tone leaks onto the tie through holes in suit_tones' tie mask, or the shirt mesh pokes through. It sits on the hero's chest in the controlled medium.",
+   "fix": "In suit_tones(), close tie_m before building shirt_m: dilate it by about 6 px (a 13x13 max filter, or scipy.ndimage.binary_dilation iterations=6) and fill holes inside the tie's bounding box. Then remove a 3 px band around tie_m from shirt_m. If flecks remain at a 5x crop of the knot, the cause is geometry: push the tie region out 2-3 mm with a Displace modifier along the normals, restricted to a tie vertex group built from the same mask."
+  },
+  {
+   "priority": 2,
+   "camera": "wide, dais",
+   "problem": "The drape is the biggest bright mass in the WIDE (mean 71 graded, against 40 for Tim's back and 44 for the table top), so the eye lands on it before the 'one pool of light'. The pelmet's shadow edge on the perfectly regular sine pleats (lam 0.21, one amplitude) cuts the top of every crest into a pointed tip. The result is a picket-fence or icicle fringe along the drape's top in both frames, and the pleats read as a CG comb.",
+   "fix": "Add TRIMS['wide'] = {'washer': 0.55} and TRIMS['dais'] = {'washer': 0.75}. In drape(), move the washer slot and source from yb - 0.55 to about yb - 1.1, aim it at (0, yb + 0.1, 2.2) and widen the spread to about 100. The pelmet shadow then sits at the very top and the valleys fill. Alternatively, hide a cove strip under pelmet_lip, aimed straight down. Give each pleat its own pitch (lam x random 0.88-1.12) and amplitude (x 0.8-1.2) from a seeded sequence, so no two folds match. Targets: drape mean in the WIDE 40-48 graded, Tim's crown still the brightest point (at least 180), no pointed crest tips at a 3x crop."
+  },
+  {
+   "priority": 2,
+   "camera": "wide",
+   "problem": "The lower-tier desk cap runs through the top of Tim's head, a tangency right at the figure the frame is about. The lit crown (208) merges into the lit cap line instead of standing against dark.",
+   "fix": "Raise the wide camera from z 2.05 to about 2.4 and the aim z from 1.5 to about 1.6 to keep the framing. The near figure then drops faster than the far dais and his crown lands on the dark fascia panel (about 28 graded). Check that at least 15 px separate the crown from the cap line at 1280."
+  },
+  {
+   "priority": 2,
+   "camera": "witness",
+   "problem": "He still does not speak into the microphone. The gooseneck head sits at chest height off his left shoulder (screen x about 735, y about 290, with his mouth at about 575, 230), and his head is turned the other way, toward the camera side.",
+   "fix": "Re-place mic_tim with mic_place((TIM_X - 0.12, EDGE + 0.30), (TIM_X - 0.02, EDGE - 0.10), 1.15). The larger scale lifts the head to about 3-5 cm below mouth height and about 0.2-0.25 m in front of it. With the head turn reduced in fix 1, his mouth addresses it. From the witness camera, the mic head should sit level with his chin, at least 15 px clear of the face silhouette."
+  },
+  {
+   "priority": 3,
+   "camera": "witness",
+   "problem": "The beat's 'empty rows behind' does not survive the grade. The public chairs behind him are 7.7 graded on the left and 1.6 on the right (they read in the raw frame), so he sits in a void. The young statue is a faint lone head and hand at 6-11 graded.",
+   "fix": "Add a practical graze for this camera: an area light about 1.6 x 0.2 m, 25-40 W, COOL, at z 2.6 over the side aisle behind Tim (around x = TIM_X - 2.0, y = -3.0), with spread 60, aimed down across the chair backs, so their top rails and seat fronts make receding lines at 12-20 graded across the frame. Keep 'dl_fig_-2.4_-2.4_spot' at 0.15 so the statue stays a dark silhouette among the rows, and do not lift LIFT['witness'] instead."
+  },
+  {
+   "priority": 3,
+   "camera": "witness, hands",
+   "problem": "The water glass still reads as a black tumbler. In WITNESS it is opaque-looking, with three specular dots, no water line, no rim and no readable contact. In HANDS, seen from above, it is a ribbed black disc on the felt that reads as a jar lid or dial, not glass and water.",
+   "fix": "Put a coaster under glass_tim: a 0.09 m disc of the paper material, 1 mm thick. The refraction then has something bright to show, and the base contact reads. Add a point light of about 0.4 W, radius 0.01, about 0.15 m behind and above the glass on the witness camera's line, so the rim and meniscus catch a thin highlight. In lathe(), raise segs from 48 to 96 or more, set the water surface 10-15 mm below the rim, and check from the hands camera for a clear disc of water with a rim highlight and no rib pattern."
+  },
+  {
+   "priority": 3,
+   "camera": "hands",
+   "problem": "The microphone base shows a ragged, flat white patch (about 124 graded) and a scatter of dark chips on the disc, which are prop mesh and texture defects in the close-up. The mic head is a lumpy out-of-focus blob cut by the top edge at x about 800-870.",
+   "fix": "After props.load('microphone'), split the mesh by loose parts (bmesh) and delete islands with fewer than about 1% of its vertices. Cover the white patch with a built button: sk.cyl radius 0.011, height 0.004, dark satin (about 0.06), bevel 0.0008. Alternatively, remap the texture's values above 0.8 to about 0.08. Shift the hands camera loc x by about -0.08, or roll it about 6-8 degrees, so the mic head leaves the frame and only the base and stem remain. Re-check this after the mic move in the fix above."
+  },
+  {
+   "priority": 4,
+   "camera": "wide, dais",
+   "problem": "The dais desk tops are bare except for the mics, so the two tiers read as a showroom rather than a hearing room that is set and waiting. The witness table has only one glass per place.",
+   "fix": "At each upper and lower seat, place a blank walnut name tent (0.25 x 0.06 x 0.08 m, 2 mm bevel, no text) facing the well. Add a closed dark binder at 3-4 places and a water carafe with two glasses at the lower-tier centre. Add a carafe at the witness table's empty place. Keep all of them at 20-40 graded under the tier cans."
+  },
+  {
+   "priority": 4,
+   "camera": "hands, witness",
+   "problem": "The felt is still a flat CG plane with no nap or weave and a hard front edge. The upper (left) hand is puffy and glove-like, with no knuckle or tendon definition, beside the lower hand, which has nails.",
+   "fix": "Felt: Sheen about 0.3 tinted pale blue and a noise bump at scale about 800, strength 0.06, for the nap. Round the cloth over the table edge with a 15-20 mm radius. Hand: add a subtle knuckle bump on the hand vertex groups (a Displace of 0.8-1.2 mm masked to the knuckle ridge, or a sculpted shape key), and curl the upper hand's fingers 4-6 degrees less, so they drape over the right wrist instead of hooking into it."
+  },
+  {
+   "priority": 5,
+   "camera": "wide",
+   "problem": "The left-side figure near the staff table is a lone grey head (about 11-21 graded) with no body, so it reads as a bust on a bench. From behind, Tim's back is a smooth rounded blob with no jacket collar or white shirt collar at the nape.",
+   "fix": "Either light that figure's shoulders with a 10-15 W spot so it reads as a seated person (torso 12-18 graded), or turn it off for this camera through HIDE. On Tim, make sure the 1-1.5 cm shirt collar shows above the jacket collar at the nape (the shirt mask covers the collar band at the back), so his silhouette reads as a dressed man."
+  },
+  {
+   "priority": 5,
+   "camera": "dais",
+   "problem": "The 'curved' dais still reads as straight runs: the cap line barely bends across the frame. The top right is dead black wall (about 3 graded) apart from the sconce.",
+   "fix": "Tighten the arc: raise SPAN from 38 to about 48 degrees, or cut the tier radii about 20%, so that from the low camera the cap line visibly bends (at least 40 px of sag over the frame). Lift the right wall with the existing sconce's down-scallop, or a second sconce about 2 m further along, to 8-15 graded."
+  }
+ ]
+}
