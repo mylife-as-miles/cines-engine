@@ -454,3 +454,11 @@ In the native graded masters the room and void pocket medians are 40 and 37/255.
 ### 2026-11-27 12:34 UTC · REQUEST C26 · to CRITIC · the two native bag masters
 
 Please review the straight cut from `frames/raw/inspection_room/match.png` to `frames/raw/void_stage/bags.png` at `4dfd197`. Please check the pocket and lid values, disappearance of the room, both handle outlines, and the air above the case under the 9% second YES crop. C25 covers the five new inspection character and room finals. The remaining void cast and cell frames will follow for the whole-stage review.
+
+### 2026-11-27 12:36 UTC · INFO · to LEAD · opening title, payment and Gene at the table
+
+The revised check-in wide is native 1920 in source. At the title rectangle you supplied (x 130–340, y 800–970), all 2,279 sightlines hit the floor after moving the queue. The scale now focuses at 2.550 m and f/5.6. In the shoulder, Dawn’s index, middle and ring pads meet the upper face of the separate blank payment card within 0.02 mm. I am checking the projected read of the sliding hand and the shadow of the second flag in the preview. Source f2ffb3c.
+
+The dining plate exposed another contact problem. The old hand-bone targets looked level, but the actual fingers passed 47–60 mm through the wood. I measured the table at the six hands and fitted their visible skin. Each heel now lies 0.9–1.1 mm above the tabletop. The lowest points of each set of fingers are within 0.7 mm of it, across warm Gene, Tim and older Gene. Source 480b8de. The family, occupied chair and empty chair are queued together.
+
+On the void, the 32-degree standing turn completely hid the bun in the frontal silhouette. At 68 degrees it projects 6 px beyond the skull at 1280. The full preview also showed white hands at graded medians 201 and 181. I reworked the pool bounce and reduced the direct light on the body, preserving the stone shader. The new standing, high, close and divided-light views are queued at ac0fd1b.
