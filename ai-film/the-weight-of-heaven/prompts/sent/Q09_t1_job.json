@@ -1,0 +1,35 @@
+{
+  "name": "Q09_t1",
+  "endpoint": "bytedance/seedance-2.5/us/reference-to-video",
+  "prompt_file": "prompts/sent/Q09_v2.txt",
+  "prompt_chars": 18410,
+  "images": [
+    "refs/relit/ENV_E09_treaty-house-hall_dark.jpg",
+    "refs/relit/ENV_E09_treaty-house-hall_plain.jpg",
+    "refs/CHAR_C01_serath.jpg",
+    "refs/CHAR_C02_karst.jpg"
+  ],
+  "videos": [],
+  "audio": [],
+  "params": {
+    "task": "reference",
+    "duration": "25",
+    "aspect_ratio": "21:9",
+    "draft": true,
+    "generate_audio": true,
+    "return_last_frame": false
+  },
+  "estimated_cost_usd": 5.51,
+  "submitted": "2026-11-27 19:57:11",
+  "record": "/home/user/cines-engine/ai-film/the-weight-of-heaven/out/jobs/Q09_t1.json",
+  "out": "/home/user/cines-engine/ai-film/the-weight-of-heaven/out/takes/Q09_t1.mp4",
+  "request_id": "01a21e95-5093-7e10-8ac0-8f19a60e709a",
+  "status_url": "https://queue.fal.run/bytedance/seedance-2.5/requests/01a21e95-5093-7e10-8ac0-8f19a60e709a/status",
+  "response_url": "https://queue.fal.run/bytedance/seedance-2.5/requests/01a21e95-5093-7e10-8ac0-8f19a60e709a",
+  "result": {
+    "seed": 448148869,
+    "draft_id": "draft_gAAAAABrCeCblYTEsRVWvZWhWMXJFatmwwYXt8o-CpsoxHM5cgIaCcSb-cl2IwnDIQa-kAn770FRhg-_XnMmya-wiuezNNQp5YMFaC8aeC9j8xQeChVxes1hMYFxZTl1R8MBc6CYjxa0Nt91C-zViGQEoVvqUCa_qVbTTwXdfSgx2AZNYWwIH3ccPO8Iip87_cWVX7hpopflSGvhZRBMmpVGcGtdO4DPK6pko4POBu3vwyj6SIOfGu4-td1VTql9wia_3_SJ7pROyQt2aIEI9IJcvWyUX2H4p-GGivNUFvtR5C5uprMtloMqhhWD-UHcUv43EedDOaV28VpNnCYFIVRntX5AETIKIASFKkk3iagwhqlYywEtmnmLUdVrHf2blwIddf8v4spAW3S1mhz_RZtlcuI98CBrUVlWETSjQJbTUE1aPKDoQmHmzsNXj6-34mZCf4dvY37Il8sZr-ImdXxSz1pEmnF5Y3innBaF4A9rU-mEm1cQm60="
+  },
+  "video_url": "https://v3b.fal.media/files/b/0ab4301f/lFZqWddUPO4PAVlSCiEvC_video.mp4",
+  "completed": "2026-11-27 19:59:54"
+}
