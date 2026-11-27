@@ -504,7 +504,7 @@ def solve_pose(holder, spec, holders):
 
 def open_zip(holder):
     """Spread the two existing zip lips and let the inset nylon lining catch the overhead key."""
-    lining = castkit.stone("duffel lining", (0.055, 0.060, 0.065), 0.91)
+    lining = castkit.stone("duffel lining", (0.018, 0.021, 0.025), 0.94)
     for ob in holder.children_recursive:
         if ob.type != "MESH":
             continue
@@ -514,13 +514,17 @@ def open_zip(holder):
         mesh.materials.append(lining)
         for face in mesh.polygons:
             x, y, z = world @ face.center
-            if (x / 0.15) ** 2 + ((y - 0.025) / 0.065) ** 2 < 1 and 0.12 < z < 0.28:
+            if abs(x) < 0.185 and -0.040 < y < 0.117 and 0.075 < z < 0.25:
                 face.material_index = len(mesh.materials) - 1
         for v in mesh.vertices:
             x, y, z = world @ v.co
             across = y - 0.022
             weight = max(0, 1 - (x / 0.24) ** 4) * max(0, 1 - (across / 0.15) ** 2)
             weight *= min(1, max(0, (z - 0.12) / 0.10))
+            # Short folds die out before the zip. The liner turns up the inside of the bag.
+            if abs(x) < 0.185 and -0.040 < y < 0.117 and 0.075 < z < 0.25:
+                taper = max(0, 1 - (x / 0.185) ** 2) * max(0, 1 - ((y - 0.035) / 0.080) ** 2)
+                z += 0.007 * taper * math.sin(84 * x + 22 * y)
             v.co = local @ Vector((x, y + 0.033 * weight * math.tanh(across / 0.020), z))
         mesh.update()
 
