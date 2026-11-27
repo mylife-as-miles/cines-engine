@@ -14,6 +14,8 @@ import os
 
 import bmesh
 import bpy
+from bpy_extras.object_utils import world_to_camera_view
+import setkit as sk
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
@@ -178,6 +180,65 @@ def surface_bvh(holder):
         polygons.extend([base + i for i in face.vertices] for face in mesh.polygons)
         ev.to_mesh_clear()
     return BVHTree.FromPolygons(vertices, polygons)
+
+
+def tote_topstitch(holder):
+    """The line of saddle stitching just under the front lip, interrupted by the handle tabs."""
+    surface = surface_bvh(holder)
+    base = holder.matrix_world.translation
+    rotation = holder.matrix_world.to_quaternion()
+    front = rotation @ Vector((0, 1, 0))
+    yarn = bpy.data.curves.new("tote hem stitching", "CURVE")
+    yarn.dimensions = "3D"
+    yarn.bevel_depth = 0.00032
+    yarn.bevel_resolution = 2
+    yarn.materials.append(sk.mat("tobacco saddle thread", (0.13, 0.066, 0.024), 0.84))
+    for i in range(69):
+        centre = (i - 34) * 0.00435
+        points = []
+        for offset in (-0.00155, 0.0, 0.00155):
+            x = centre + offset
+            z = 0.246 + 0.008 * (abs(x) / 0.15) ** 1.3
+            pos, normal, _, _ = surface.ray_cast(base + rotation @ Vector((x, 0.15, z)), -front)
+            # The raised handle tabs cover the hem. Never project thread onto a tab.
+            if pos is None or (pos - base).dot(front) > 0.054:
+                break
+            points.append(pos + normal * (0.00015 if offset == 0 else -0.00010))
+        if len(points) == 3:
+            stitch = yarn.splines.new("POLY")
+            stitch.points.add(2)
+            for point, pos, radius in zip(stitch.points, points, (0.5, 1.0, 0.5)):
+                point.co = (*pos, 1)
+                point.radius = radius
+    ob = bpy.data.objects.new("tote front hem", yarn)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.parent = holder
+    ob.matrix_parent_inverse = holder.matrix_world.inverted()
+    return ob
+
+
+def tote_seam_paths(hem, blockers, scene, resolution):
+    """Project the visible thread left to right, lifting the editorial trace at each handle tab."""
+    surfaces = [surface_bvh(obj) for obj in blockers]
+    eye = scene.camera.matrix_world.translation
+    width, height = resolution
+    paths = []
+    previous = None
+    for spline in reversed(hem.data.splines[:]):
+        for control in reversed(spline.points[:]):
+            point = hem.matrix_world @ Vector(control.co[:3])
+            ray = point - eye
+            # Ignore the leather carrying the stitch itself (its surface is within 0.2 mm).
+            if any(surface.ray_cast(eye, ray.normalized(), ray.length - 0.0007)[0] is not None
+                   for surface in surfaces):
+                previous = None
+                continue
+            if previous is None or (point - previous).length > 0.008:
+                paths.append([])
+            uv = world_to_camera_view(scene, scene.camera, point)
+            paths[-1].append([round(uv.x * width, 3), round((1 - uv.y) * height, 3)])
+            previous = point
+    return [path for path in paths if len(path) >= 2]
 
 
 def _retouch_tote_textures(holder, box, dx, feather=8):

@@ -532,40 +532,6 @@ def laptop():
     return [h] + list(h.children_recursive) + [scr, li, deck, pad, keys, hinge, chin]
 
 
-def tote_topstitch(holder):
-    """The line of saddle stitching just under the front lip, interrupted by the handle tabs."""
-    surface = world_bvh(holder)
-    base = holder.matrix_world.translation
-    rotation = holder.matrix_world.to_quaternion()
-    front = rotation @ Vector((0, 1, 0))
-    yarn = bpy.data.curves.new("tote hem stitching", "CURVE")
-    yarn.dimensions = "3D"
-    yarn.bevel_depth = 0.00032
-    yarn.bevel_resolution = 2
-    yarn.materials.append(sk.mat("tobacco saddle thread", (0.13, 0.066, 0.024), 0.84))
-    for i in range(69):
-        centre = (i - 34) * 0.00435
-        points = []
-        for offset in (-0.00155, 0.0, 0.00155):
-            x = centre + offset
-            z = 0.246 + 0.008 * (abs(x) / 0.15) ** 1.3
-            pos, normal, _, _ = surface.ray_cast(base + rotation @ Vector((x, 0.15, z)), -front)
-            # The raised handle tabs cover the hem. Never project thread onto a tab.
-            if pos is None or (pos - base).dot(front) > 0.054:
-                break
-            points.append(pos + normal * (0.00015 if offset == 0 else -0.00010))
-        if len(points) == 3:
-            stitch = yarn.splines.new("POLY")
-            stitch.points.add(2)
-            for point, pos, radius in zip(stitch.points, points, (0.5, 1.0, 0.5)):
-                point.co = (*pos, 1)
-                point.radius = radius
-    ob = bpy.data.objects.new("tote front hem", yarn)
-    bpy.context.scene.collection.objects.link(ob)
-    ob.parent = holder
-    ob.matrix_parent_inverse = holder.matrix_world.inverted()
-
-
 def bags():
     out = []
     for name, (x, y, t) in BAGS.items():
@@ -582,7 +548,7 @@ def bags():
                     seen.add(slot.material.name)
                     mt.tune_prop(slot.material, spec=fin.get("spec"), to_metres=to_m)
         if name == "handbag-tote":
-            tote_topstitch(h)
+            props.tote_topstitch(h)
         out += [h] + list(h.children_recursive)
     return out
 
@@ -750,35 +716,11 @@ def entry_stationery():
     empty("fx_tickets", (0.184, -0.061, TOP + 0.002))
 
 
-def seam_paths(scene, resolution):
-    """Project the visible thread left to right, lifting the editorial trace at each handle tab."""
-    hem = bpy.data.objects["tote front hem"]
-    surfaces = [world_bvh(bpy.data.objects[name]) for name in BAGS]
-    eye = scene.camera.matrix_world.translation
-    width, height = resolution
-    paths = []
-    previous = None
-    for spline in reversed(hem.data.splines[:]):
-        for control in reversed(spline.points[:]):
-            point = hem.matrix_world @ Vector(control.co[:3])
-            ray = point - eye
-            # Ignore the leather carrying the stitch itself (its surface is within 0.2 mm).
-            if any(surface.ray_cast(eye, ray.normalized(), ray.length - 0.0007)[0] is not None
-                   for surface in surfaces):
-                previous = None
-                continue
-            if previous is None or (point - previous).length > 0.008:
-                paths.append([])
-            uv = world_to_camera_view(scene, scene.camera, point)
-            paths[-1].append([round(uv.x * width, 3), round((1 - uv.y) * height, 3)])
-            previous = point
-    return [path for path in paths if len(path) >= 2]
-
-
 def frame_metadata(name, scene, resolution):
     """Export compositor coordinates in top-left-origin frame pixels."""
     if name in ("purses", "seam"):
-        return {**sk.plate_optics(name, scene, resolution), "seam_paths_px": seam_paths(scene, resolution)}
+        return {**sk.plate_optics(name, scene, resolution), "seam_paths_px": props.tote_seam_paths(
+            bpy.data.objects["tote front hem"], [bpy.data.objects[key] for key in BAGS], scene, resolution)}
     names = {"page": ("document_single",), "page_foot": ("document_single",),
              "pair": ("document_left", "document_right"), "screen": ("laptop_screen",)}
     if name not in names:
