@@ -1,0 +1,348 @@
+# THE FOREST ON THE WALL — ENVIRONMENT REFERENCE PROMPT
+
+## THE LIVING ROOM, CHRISTMAS EVE
+
+Create a photorealistic cinematic environment reference image for THE LIVING ROOM, CHRISTMAS EVE.
+
+This is a FILM PRODUCTION LOCATION REFERENCE, not concept art, not an architectural visualization, not advertising photography.
+
+The environment must feel physically real, inhabited, spatially coherent, and suitable for repeated use as a continuity reference across multiple generated film shots.
+
+---
+
+# LOCATION IDENTITY
+
+LOCATION:
+The living room of a family house, late on Christmas Eve
+
+COUNTRY / REGION:
+A snowy town (no specific country)
+
+SETTING:
+Residential living room
+
+TIME PERIOD:
+Present day
+
+SOCIAL / ECONOMIC CHARACTER:
+A modest, comfortable family home
+
+OVERALL FEEL:
+Cozy, quiet, lived-in, the house asleep
+
+The location should feel like a place that existed before the camera arrived.
+
+It must not feel production-designed for symbolism.
+
+---
+
+# SPATIAL GEOGRAPHY
+
+Establish clear, believable geography.
+
+Include:
+
+- One long plain cream wall runs across the back of the frame, from left to right. It is bare: nothing hangs on it and nothing stands against it.
+- At the left end, a side wall at a right angle to the cream wall holds one window with a deep painted wooden sill. Snow falls outside in the dark.
+- A brass desk lamp stands on that windowsill, switched on, its shade turned to throw its light across the room onto the cream wall.
+- At the right end of the cream wall, an open doorway with no door leads into a dark hall.
+- Just past the doorway, in the right-hand corner of the room, stands a decorated Christmas tree about 1.8 m tall, with small warm-white lights, a few red and gold glass baubles and a simple star on top; a few wrapped presents under it.
+- A large wool rug lies on the floorboards in front of the cream wall, the open floor where a child can sit facing the wall.
+- The camera's side of the room is out of frame.
+- Camera positions: the whole wall from the middle of the room at eye height; close on the windowsill; low behind the tree; over the shoulder of someone sitting on the rug.
+
+The geography must be easy to understand and remain reproducible from different camera angles.
+
+Do not create impossible architecture.
+
+Do not create furniture that blocks basic movement.
+
+Do not create a room that changes scale from one side to another.
+
+---
+
+# ARCHITECTURE
+
+Preserve believable architecture appropriate to:
+
+- country
+- building age
+- social class
+- function
+- climate
+
+Specify:
+
+WALLS:
+Smooth painted plaster, warm cream, matte, a faint hand-plastered texture
+
+CEILING:
+Plain, painted off-white, ordinary height, no light fitting switched on
+
+FLOOR:
+Worn oak floorboards, a large cream-and-red wool rug in front of the cream wall
+
+WINDOWS:
+One painted wooden window in the left side wall, small panes, a deep wooden sill at waist height, a little frost in the pane corners
+
+DOORS:
+An open doorway with a plain painted wooden frame at the right end of the cream wall; the hall beyond is dark
+
+TRIM / MOULDING:
+Plain painted wooden skirting boards and door frame
+
+FIXTURES:
+An old painted radiator under the window; one power socket low on the side wall for the lamp
+
+Architectural details should feel ordinary and regionally credible.
+
+---
+
+# MATERIALS + TEXTURE
+
+Use tactile, photorealistic materials:
+
+- matte painted plaster
+- worn oak floorboards
+- thick wool rug
+- painted wood
+- aged brass
+- real pine needles
+- glass baubles
+- cold window glass with a little frost
+
+Surfaces should contain subtle wear.
+
+Nothing should look freshly generated, pristine, glossy, or showroom-perfect.
+
+---
+
+# PRODUCTION DESIGN
+
+Include only story-relevant objects.
+
+PRIMARY OBJECTS:
+
+- the brass desk lamp on the windowsill: an old adjustable desk lamp with a small brass dome shade on a jointed arm, lit, its cable running down to the socket
+- the decorated Christmas tree in the right-hand corner, past the doorway
+- the wool rug in front of the bare cream wall
+
+SECONDARY LIVED-IN DETAILS:
+
+- a few wrapped presents under the tree
+- the radiator under the window
+- a little frost in the corners of the window panes
+
+Objects should feel casually accumulated over time.
+
+Avoid excessive dressing.
+
+Avoid obvious symbolic props.
+
+The environment should remain visually usable for performance.
+
+---
+
+# COLOR IDENTITY
+
+WARM TUNGSTEN NIGHT, CHRISTMAS RED AND PINE.
+
+Permanent palette of THE FOREST ON THE WALL:
+
+- warm cream
+- warm tungsten amber
+- deep warm-neutral black
+- Christmas red
+- deep pine green
+- soft muted blue-grey night outside the window
+
+For this environment specifically:
+
+DOMINANT:
+The cream wall in warm amber lamplight, falling away into deep warm darkness
+
+SECONDARY:
+The tree's small warm lights, pine green, red and gold baubles
+
+ACCENT:
+The brass of the lamp; the red of the rug
+
+NEUTRALS:
+Oak brown, the dark hall, the muted blue-grey of the snowy night through the glass
+
+Warm and felt, not loud.
+
+Never neon.
+
+Never radioactive.
+
+Never generic teal-and-orange cinema grading.
+
+---
+
+# LIGHTING DESIGN
+
+ONE SMALL WARM LAMP.
+HARD-EDGED SHADOWS.
+DEEP WARM DARKNESS.
+
+Primary motivated source:
+
+The brass desk lamp on the windowsill. Its small tungsten bulb throws a warm pool of light across the cream wall from the left, raking along it. Anything in its beam casts a crisp, hard-edged shadow on the wall.
+
+Secondary motivated source:
+
+The Christmas tree's small warm lights, glowing softly in the right-hand corner; and a faint cool blue-grey glow from the snowy night through the window.
+
+Maintain:
+
+- the room mostly dark, with the cream wall the brightest surface
+- crisp, sharp-edged shadows from the lamp
+- shadows that keep a little detail, so the room's geography stays readable
+- natural falloff from the lamp into darkness
+- realistic practical-light behavior
+- believable night-time exposure
+
+No ceiling light.
+
+No light sources other than the lamp, the tree lights and the window.
+
+No beauty lighting.
+
+No exaggerated rim light.
+
+No glossy commercial lighting.
+
+---
+
+# CAMERA / OPTICAL LANGUAGE
+
+CAMERA:
+A 35 mm film camera
+
+ASPECT RATIO:
+16:9 (a reference image; the film's frames are 9:16)
+
+LENS:
+About 32 mm, at eye height, level
+
+LENS CHARACTER:
+A clean vintage spherical prime
+
+Maintain:
+
+- gentle optical softness
+- moderate microcontrast
+- dimensional space
+- organic focus falloff
+- smooth highlight roll-off
+- gentle film grain
+- natural textures
+
+The environment should look like a frame from THE FOREST ON THE WALL, not a location catalogue.
+
+---
+
+# COMPOSITION
+
+Create a useful master environment reference.
+
+Prefer:
+
+- a wide view, square-on to the cream wall from the middle of the room
+- the window, sill and lamp at the left edge, the whole cream wall across the middle, the doorway and the tree at the right edge
+- human eye-level perspective
+- the rug and open floor in the foreground
+- every anchor visible at once
+
+Do not use an extreme cinematic angle that hides geography.
+
+The image must be useful later for generating:
+
+- wides
+- mediums
+- close-ups
+- reverse angles
+- entrances
+- exits
+
+---
+
+# ATMOSPHERE
+
+Atmosphere:
+
+Late on Christmas Eve, the house asleep. Snow falling slowly outside the window. Warm, still air indoors. Absolute quiet.
+
+Atmosphere must emerge from physical conditions, not digital effects.
+
+---
+
+# REALISM LOCK
+
+Photorealistic.
+
+Physically believable.
+
+Architecturally coherent.
+
+Lived-in.
+
+Understated.
+
+No fantasy architecture.
+
+No impossible reflections.
+
+No floating props.
+
+No warped furniture.
+
+No excessive depth-of-field blur that hides the location.
+
+---
+
+# CONTINUITY LOCK
+
+The final environment must establish a stable reference for:
+
+- architecture
+- room dimensions
+- the bare cream wall
+- the window and the lamp on its sill
+- the doorway
+- the tree in the corner past the doorway
+- the rug
+- practical lights
+- material palette
+- object positions
+- camera geography
+
+Future generations should be able to reproduce this exact location.
+
+---
+
+# NEGATIVE LOCK
+
+Avoid:
+
+- pictures, frames, shelves, clocks, mirrors, a television or anything else on the cream wall
+- furniture against the cream wall
+- people
+- generic AI interiors
+- luxury redesign
+- excessive décor
+- glossy architectural visualization
+- showroom cleanliness
+- extreme HDR
+- oversaturation
+- neon
+- cyberpunk lighting
+- random signage
+- text
+- impossible room proportions
+- duplicated furniture
+- floating objects
+- distorted architecture
+- fisheye
+- dramatic concept-art composition

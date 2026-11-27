@@ -6,7 +6,7 @@ The character-sheet template builds a sheet from a reference image of the person
 
 Prompt v1, for the author's go. Generate: Nano Banana 2.1 on fal (`google/nano-banana-2.1`), 16:9, 2K, one candidate. Reference images: none. Price: about $0.059 (fal's listed price as recorded on 25 November 2026).
 
-Open for the author before it is sent: the line marked **[AUTHOR]** (her skin tone and features). The doc gives only her age, hair and clothes.
+Open for the author before it is sent: the line marked **[WRITE HER SKIN TONE AND FEATURES HERE]** (her skin tone and features). The doc gives only her age, hair and clothes.
 
 ```text
 # THE FOREST ON THE WALL — CASTING REFERENCE
@@ -25,7 +25,7 @@ WORLD
 A family home in a snowy town on Christmas Eve, present day.
 
 FACE AND BODY
-A real 7-year-old's height and proportions: small, slight, a child's round cheeks and small hands. An ordinary, natural, unretouched face with real skin texture. [AUTHOR: skin tone and features]
+A real 7-year-old's height and proportions: small, slight, a child's round cheeks and small hands. An ordinary, natural, unretouched face with real skin texture. [WRITE HER SKIN TONE AND FEATURES HERE]
 
 HAIR
 Dark curly hair, loose natural curls to just above the shoulders, a little untidy from bed.
