@@ -40,7 +40,7 @@ import setkit as sk  # noqa: E402
 import hongkong_street_set as st  # noqa: E402
 import hongkong_street_mats as mt  # noqa: E402
 
-EXPOSURE = -1.5
+EXPOSURE = -1.9
 WORLD = 0.0
 
 # ---------------------------------------------------------------- blocking
@@ -48,12 +48,20 @@ WORLD = 0.0
 # boutique; "window": Dawn stopped at the boutique's display, looking at the bags on the shelf.
 BLOCK = {
     "walk": {
-        "Dawn": ((5.5, 14.0), (5.5, 30.0), "walk_bags"),
+        "Dawn": ((5.5, 16.30), (5.5, 30.0), "walk_bags"),
         "T1": ((6.35, 27.5), (6.2, 10.0), "walk_up"),
         "M2": ((-5.55, 21.2), (-5.4, 5.0), "walk_talk"),
         "W1": ((-6.2, 21.0), (-6.3, 5.0), "walk_talk_w"),
         "M3": ((-6.55, 33.5), (-7.4, 33.9), "stand_look"),
+        "Organiser": ((-5.7, 33.4), (-6.4, 32.8), "walk_talk"),
+        "ShopNear": ((8.1, 11.0), (5.6, 9.8), "at_counter"),
+        "ShopFar": ((-8.2, 24.5), (-5.7, 23.1), "at_counter"),
         "M4": ((5.25, 43.0), (5.3, 60.0), "walk_away"),
+    },
+    "company": {
+        "Dawn": ((5.64, 16.4), (5.62, 32.0), "walk_away"),
+        "Organiser": ((6.39, 16.75), (6.38, 30.5), "walk_away"),
+        "T1": ((4.95, 16.13), (5.01, 31.0), "walk_away"),
     },
     "window": {
         "Dawn": ((6.55, 17.9), (8.0, 18.9), "stand_bags"),
@@ -78,18 +86,20 @@ CAMERAS = {
     # the vanishing point; Dawn small on the right-hand pavement among the walkers, bags in her hands, walking
     # toward the lit boutique
     "wide": dict(loc=(1.4, 0.0, 1.5), aim=(2.45, 60.0, 1.5), lens=24, focus="fx_dawn", fstop=5.6, beat="walk",
-                 shift_y=0.12, haze=0.0022, exposure=-1.5),
+                 shift_y=0.12, haze=0.0022, exposure=-1.9),
     # Ch 03: Dawn from behind, three-quarter from her right, stopped at the boutique's lit window, the bags at her
     # sides; the street soft beyond on the left, its signs and shops melting into the haze
-    "dawn": dict(loc=(5.33, 13.47, 1.36), aim=(7.24, 23.29, 1.0), lens=35, focus="fx_dawn", fstop=1.8, beat="window",
+    "dawn": dict(loc=(5.33, 13.47, 1.36), aim=(7.24, 23.29, 1.0), lens=35, focus="fx_dawn", fstop=2.8, beat="window",
                  shift_y=0.0, haze=0.0025, exposure=-1.5),
     # Ch 03: a controlled close-up through the boutique glass: the handbags on the lit shelf, blank, and Dawn's
     # reflection faint over the dark felt above them
     "window": dict(loc=(6.75, 18.0, 1.40), aim=(8.0, 18.9, 1.39), lens=40, focus="fx_bags", fstop=5.6, beat="reflect",
-                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.1,
-                   hide_glossy=("shop_interiors", "tubes", "signboards")),
+                   shift_y=0.0, haze=0.0, exposure=-1.3, only=("Dawn",), glass_refl=0.025,
+                   hide_glossy=("shop_interiors", "tubes")),
 }
-TRIMS = {"wide": {}, "dawn": {}, "window": {}}
+CAMERAS["company"] = dict(loc=(5.32, 11.6, 1.47), aim=(5.8, 18.3, 1.12), lens=35, focus="fx_dawn",
+                          fstop=4.0, beat="company", shift_y=0.0, haze=0.0022, exposure=-1.65)
+TRIMS = {"wide": {}, "dawn": {}, "window": {"bq_glow": 0.25}}
 # a run may render only some cameras: HK_CAMS="wide,dawn" (shoot.py's `all` walks CAMERAS)
 if os.environ.get("HK_CAMS"):
     CAMERAS = {k: v for k, v in CAMERAS.items() if k in os.environ["HK_CAMS"].split(",")}
@@ -259,6 +269,10 @@ def build_cast():
                                tone=(0.2, 0.2, 0.19), shoes="shoes04")
     holders["M4"] = people.man("M4", height_cm=172, age=0.24, weight=0.42, suit="male_casualsuit01",
                                tone=(0.075, 0.08, 0.085), shoes="shoes04")
+    holders["Organiser"] = people.man("Organiser", age=0.4, suit="male_casualsuit03",
+                                      tone=(0.1, 0.1, 0.11), shoes="shoes04")
+    holders["ShopNear"] = people.staff("ShopNear", 0)
+    holders["ShopFar"] = people.staff("ShopFar", 1)
     for n, h in holders.items():
         if n != "Dawn":
             for o in h.children_recursive:
@@ -606,8 +620,14 @@ def act(name, h, action, beat):
                 break
             out += 1.5
         rep += f"arms out {out} head {hd} (err {err}) trail knee {kb:.0f} feet {f * 1000:+.0f} mm, bag clash R {cr * 1000:+.0f} L {cl * 1000:+.0f} mm"
+    elif action == "at_counter":
+        rigged.pose_figure(h, {"chest": (3, 0), "head": (9, -7), "fingers": 22,
+                              "l_arm": (6, 5, 12), "r_arm": (19, 8, 30)})
+        ground(h)
     elif action.startswith("walk"):
         lead = {"walk_up": "R", "walk_talk": "L", "walk_talk_w": "R", "walk_away": "R"}[action]
+        if beat == "company" and name == "Dawn":
+            lead = "L"
         sw = 14.0
         la, ra = ((-sw * 0.7, 6.0, 10.0), (sw, 7.0, 22.0)) if lead == "L" else ((sw, 6.0, 22.0), (-sw * 0.7, 7.0, 10.0))
         pose = {"chest": (4.0, 4.0 if lead == "L" else -4.0), "l_arm": la, "r_arm": ra, "fingers": 0}
@@ -675,7 +695,7 @@ def pose_cast(beat):
             _STATE["bags"][k].matrix_world = mw
         bpy.context.view_layer.update()
         return
-    order = ["W1", "M2", "T1", "M3", "M4", "Dawn"]
+    order = ["W1", "M2", "T1", "M3", "M4", "Organiser", "ShopNear", "ShopFar", "Dawn"]
     for n in order:
         if n not in H or n not in BLOCK[beat]:
             continue
@@ -708,9 +728,12 @@ def apply_camera(name):
         pose_cast(beat)
         only = cfg.get("only")
         for n, h in H.items():
-            vis = only is None or n in only
+            vis = n in BLOCK[beat] and (only is None or n in only)
             for o in [h] + list(h.children_recursive):
                 o.hide_render = not vis
+        for bag in _STATE["bags"].values():
+            for ob in [bag] + list(bag.children_recursive):
+                ob.hide_render = beat == "company"
         e = bpy.data.objects.get("fx_dawn")
         if e is not None:
             e.location = eye_centre(H["Dawn"]) - Vector((0, 0, 0.25))
@@ -720,6 +743,8 @@ def apply_camera(name):
             li["base_energy"] = li.data.energy
             base = li.data.energy
         li.data.energy = base * TRIMS.get(name, {}).get(ln, 1.0)
+        if ln.startswith(("spill_", "fill_", "canopy_", "bounce_")):
+            li.visible_glossy = name not in ("window", "dawn")
     hz = st.OBJ.get("haze")
     if hz is not None:
         pv = next(n for n in hz.data.materials[0].node_tree.nodes if n.type == "PRINCIPLED_VOLUME")
@@ -764,7 +789,10 @@ def install_hook():
 
 
 def build(cast=True):
-    st.build(props)
+    st.build(props, wide=CAMERAS["wide"])
+    for name, side, target_y in (("ShopNear", 1, 13.0), ("ShopFar", -1, 25.0)):
+        mark, look = min(st._BASE["shopkeepers"][side], key=lambda pair: abs(pair[0].y-target_y))
+        BLOCK["walk"][name] = ((mark.x, mark.y), (look.x, look.y), "at_counter")
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)

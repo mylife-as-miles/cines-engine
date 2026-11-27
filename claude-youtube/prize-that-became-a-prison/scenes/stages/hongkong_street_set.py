@@ -230,12 +230,12 @@ CLOTHES = [(0.35, 0.33, 0.3), (0.12, 0.16, 0.24), (0.33, 0.12, 0.1), (0.28, 0.28
            (0.09, 0.09, 0.1), (0.22, 0.26, 0.18), (0.4, 0.3, 0.22), (0.18, 0.12, 0.2)]
 GOODS = [(0.32, 0.08, 0.06), (0.38, 0.32, 0.12), (0.1, 0.18, 0.3), (0.42, 0.4, 0.37), (0.14, 0.24, 0.12),
          (0.46, 0.4, 0.3), (0.3, 0.3, 0.33), (0.08, 0.08, 0.09), (0.5, 0.2, 0.08), (0.2, 0.3, 0.34)]
-SIGN_COL = {"warm": (1.0, 0.84, 0.62), "cool": (0.8, 0.9, 1.0), "red": (1.0, 0.16, 0.1), "amber": (1.0, 0.5, 0.12),
+SIGN_COL = {"warm": (1.0, 0.45, 0.12), "cool": (0.15, 0.45, 1.0), "red": (1.0, 0.16, 0.1), "amber": (1.0, 0.5, 0.12),
             "teal": (0.15, 0.75, 0.66), "green": (0.3, 0.85, 0.3), "magenta": (0.85, 0.2, 0.55),
-            "blue": (0.25, 0.42, 1.0), "yellow": (1.0, 0.8, 0.22), "cream": (1.0, 0.92, 0.78)}
-SIGN_W = [("warm", 3), ("cool", 2.5), ("red", 5), ("amber", 4), ("cream", 2), ("teal", 2.5), ("green", 2),
+            "blue": (0.25, 0.42, 1.0), "yellow": (1.0, 0.62, 0.05), "cream": (0.95, 0.51, 0.16)}
+SIGN_W = [("warm", 3), ("cool", 0.5), ("red", 5), ("amber", 4), ("cream", 0.5), ("teal", 2.5), ("green", 2),
           ("magenta", 2), ("blue", 2), ("yellow", 2)]
-WIN_COL = [((1.0, 0.7, 0.42), 0.45), ((0.78, 0.9, 1.0), 0.4), ((0.45, 0.58, 1.0), 0.15)]
+WIN_COL = [((1.0, 0.7, 0.42), 0.55), ((0.78, 0.9, 1.0), 0.4), ((0.45, 0.58, 1.0), 0.15)]
 
 
 def pick(items):
@@ -383,7 +383,7 @@ def window(G, fr, a0, a1, z0, z1, w, lit=None, kind="slide"):
     """Glass and an anodised frame at w (the recess), a mullion and a transom; lit rooms glow per pane."""
     t = 0.045
     if lit is None:
-        lit = rng.random() < 0.5
+        lit = rng.random() < (0.65 if z0 > 12 else 0.5)
     col, s = (0.0, 0.0, 0.0), 0.0
     if lit:
         col = pick(WIN_COL)
@@ -595,13 +595,16 @@ def floors_tenement(G, fr, W, H, sb, col, fk, b):
 def shop(G, fr, side, s0, s1, kind, b):
     """One ground-floor shop unit between a = s0..s1 (the opening 3.55 m high)."""
     top = 3.55
-    D = 5.2
+    shop_index = _BASE["shop_index"][side]
+    _BASE["shop_index"][side] += 1
+    trade = ("clothes", "grocery", "eatery", "electronics")[shop_index % 4]
+    D = 3.55 if shop_index % 2 else 5.2
     I = G["int"]
     am = (s0 + s1) / 2
     W = s1 - s0
     if kind == "boutique":
         return
-    warm = kind.endswith("warm")
+    warm = trade == "eatery" or (trade == "clothes" and kind.endswith("warm"))
     col = (1.0, 0.8, 0.58) if warm else (0.82, 0.92, 1.0)
     lit = kind not in ("shutter",)
     # the interior box
@@ -623,12 +626,32 @@ def shop(G, fr, side, s0, s1, kind, b):
             for i in range(max(1, int(W // 1.1))):
                 a = s0 + (i + 0.5) * W / max(1, int(W // 1.1))
                 I.box((a - 0.035, -D + 0.4, top - 0.05), (a + 0.035, -0.6, top - 0.01), 7, fr=fr)
-    # shelves along the side walls and the back, stocked with blank goods
-    for (aa, sgn) in ((s0, 1), (s1, -1)):
-        shelving(G, fr, aa, sgn, -D + 0.3, -0.7, kind)
-    back_shelf(G, fr, s0 + 0.5, s1 - 0.5, -D, kind)
-    if W > 3.0 and D > 4:
-        gondola(G, fr, am, -D + 1.2, -1.6, kind)
+    if kind != "shutter":
+        if trade == "clothes":
+            rails(G, fr, s0, s1, -D, kind)
+        elif trade == "grocery":
+            for aa, sgn in ((s0, 1), (s1, -1)):
+                shelving(G, fr, aa, sgn, -D + 0.3, -0.7, kind)
+            back_shelf(G, fr, s0 + 0.5, s1 - 0.5, -D, kind)
+            if W > 3.0:
+                gondola(G, fr, am, -D + 1.05, -1.6, kind)
+        elif trade == "eatery":
+            for i in range(3):
+                aa = s0 + (i + 0.55) * W / 3.2
+                ww = -2.2 if i % 2 else -D + 0.78
+                tube(I, [fr.p(aa, ww, PZ+0.70), fr.p(aa, ww, PZ+0.74)], 0.28, 4, segs=18)
+                tube(I, [fr.p(aa, ww, PZ), fr.p(aa, ww, PZ+0.70)], 0.038, 3)
+                for dx in (-0.37, 0.37):
+                    tube(I, [fr.p(aa+dx, ww, PZ), fr.p(aa+dx, ww, PZ+0.37)], 0.035, 3)
+                    tube(I, [fr.p(aa+dx, ww, PZ+0.37), fr.p(aa+dx, ww, PZ+0.42)], 0.14, 4, segs=16)
+                tube(I, [fr.p(aa, ww, 2.38), fr.p(aa, ww, top)], 0.006, 3)
+                tube(I, [fr.p(aa, ww, 2.33), fr.p(aa, ww, 2.4)], 0.14, 6, segs=18)
+        else:
+            I.box((s0 + 0.25, -2.1, PZ), (s1 - 0.3, -1.63, 0.58), 3, fr=fr)
+            I.box((s0 + 0.25, -2.1, 0.58), (s1 - 0.3, -1.63, 0.91), 8, fr=fr)
+            for i in range(3):
+                aa = s0 + (i + 0.7) * W / 3.4
+                I.box((aa-0.19, -D + 0.1, 1.3), (aa+0.19, -D + 0.14, 1.57), 9, fr=fr)
     ca = s0 + 0.35 if rng.random() < 0.5 else s1 - 1.55
     I.box((ca, -1.4, PZ), (ca + 1.2, -0.75, PZ + 0.98), 4, fr=fr)
     if kind == "shutter":
@@ -642,8 +665,8 @@ def shop(G, fr, side, s0, s1, kind, b):
     area(f"spill_{b['id']}_{s0:.1f}", fr.p(am, -0.45, top - 0.25), (W * 0.9, 0.7), e, col, d, spread=140)
     area(f"fill_{b['id']}_{s0:.1f}", fr.p(am, -D / 2, top - 0.06), (W * 0.8, D * 0.7), e * 0.14, col, -fr.Z, spread=160)
     LIT.append((fr, am, W, col, e))
-    if warm and rng.random() < 0.55:
-        rails(G, fr, s0, s1, -D, kind)
+    if not kind.startswith("half") and trade in ("clothes", "grocery"):
+        _BASE["shopkeepers"][side].append((fr.p(ca+0.6, -1.77, PZ), fr.p(ca+0.25, 0.5, PZ)))
     # a canopy with a tube under it, on some
     if b.get("canopy") and not kind.startswith("half"):
         G["slab"].box((s0 - 0.1, 0.0, 3.42), (s1 + 0.1, 1.15, 3.55), fr=fr)
@@ -708,7 +731,7 @@ def bounce(G):
         d = (-fr.W * 0.42 + fr.Z * 0.91)
         c = tuple(0.6 * x + 0.4 * y for x, y in zip(col, (0.9, 0.92, 0.95)))
         y = fr.p(am, 0, 0).y
-        k = 0.3 if y < 15.0 else 0.55
+        k = 0.3
         area(f"bounce_{i}", fr.p(am, 1.9, 4.7), (W * 1.1, 1.0), e * k, c, d, spread=110)
 
 
@@ -781,13 +804,13 @@ def sign_box(G, fr, a, wn, wf, zb, zt, kind, col, strength, col2=None, field=Non
     filled colour field: col2 and field are ignored (kept for the call signature)."""
     S = G["sign"]
     t = 0.15
-    rim = 0.06
+    rim = 0.03
     for lo, hi in (((a - t, wn, zt - rim), (a + t, wf, zt)), ((a - t, wn, zb), (a + t, wf, zb + rim)),
                    ((a - t, wn, zb), (a + t, wn + rim, zt)), ((a - t, wf - rim, zb), (a + t, wf, zt))):
         S.box(lo, hi, 0, fr=fr)
     uv = {"suv": [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]}
     lit = kind in ("box", "neon")
-    panel = strength if kind == "box" else strength * 0.12
+    panel = strength if kind == "box" else strength * 0.06
     for s in (-1, 1):
         aa = a + s * (t - 0.02)
         P = [fr.p(aa, wn + rim, zb + rim), fr.p(aa, wf - rim, zb + rim), fr.p(aa, wf - rim, zt - rim), fr.p(aa, wn + rim, zt - rim)]
@@ -819,6 +842,30 @@ def rect_tube(G, fr, aa, w0, w1, z0, z1, col, strength):
 def bar_tube(G, fr, aa, w0, w1, z, col, strength):
     r = 0.012
     G["neon"].box((aa - r, w0, z - r), (aa + r, w1, z + r), 0, fr=fr, scol=col, sstr=strength)
+
+
+def separated_sign(fr, side, a, near, far, low, high, kind):
+    """Reject overlaps between blank panels that would form a stepped glyph in the wide shot."""
+    inv, origin = _BASE["wide_view"]
+    corners = [inv @ (fr.p(a, w, z) - origin) for w in (near, far) for z in (low, high)]
+    if any(p.z >= -0.1 for p in corners):
+        return True
+    xs = [-p.x / p.z for p in corners]
+    ys = [-p.y / p.z for p in corners]
+    x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
+    if x1 < -0.75 or x0 > 0.75 or y1 < -0.45 or y0 > 0.65:
+        return True
+    depth = fr.p(a, near, low).y
+    size = (x1-x0)*(y1-y0)
+    for left, right, bottom, top, area0, depth0, side0, kind0 in _BASE["sign_rectangles"]:
+        overlap = max(0, min(x1, right)-max(x0, left)) * max(0, min(y1, top)-max(y0, bottom))
+        gap = abs(depth-depth0)
+        if gap > 1.5 and overlap > 0.15 * min(size, area0):
+            return False
+        if overlap and gap < 6 and side == side0 and "dead" in (kind, kind0) and kind != kind0:
+            return False
+    _BASE["sign_rectangles"].append((x0,x1,y0,y1,size,depth,side,kind))
+    return True
 
 
 def signs(G, fr, side, W, H, b):
@@ -875,14 +922,22 @@ def signs(G, fr, side, W, H, b):
         col = SIGN_COL[cname]
         col2 = SIGN_COL[pick(SIGN_W)] if rng.random() < 0.72 else None
         # lightboxes the brightest things in the street after the shop interiors: they light the facades round them
-        strength = b.get("sign_gain", 1.0) * (rng.uniform(3.6, 7.2) if kind == "box" else rng.uniform(20.0, 32.0))
+        strength = b.get("sign_gain", 1.0) * (rng.uniform(1.0, 2.2) if kind == "box" else rng.uniform(20.0, 32.0))
         if cname in ("warm", "cream", "cool", "yellow") and kind == "box":
             strength *= 0.75
         field = None
         if kind == "box" and col2 is not None:
             field = pick([((0.12, 0.12, 0.88, 0.88), 3), ((0.0, 0.5, 1.0, 1.0), 2), ((0.08, 0.06, 0.92, 0.4), 2)])
         wn = 0.3 + max(0.0, b["setback"])         # clear of an overhanging upper facade
-        sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
+        if separated_sign(fr, side, a, wn, wn + reach, zb, zt, kind):
+            sign_box(G, fr, a, wn, wn + reach, zb, zt, kind, col, strength, col2, field)
+            if kind != "dead" and 0 < yw < 90 and zt < 20 and _BASE["sign_lights"] < 60:
+                power = 8 * reach * (zt-zb) * strength * (0.06 if kind == "neon" else 1)
+                for direction in (-1, 1):
+                    key = f"sign spill {_BASE['sign_lights']}"
+                    area(key, fr.p(a + 0.27*direction, wn+reach/2, (zb+zt)/2),
+                         (0.60, zt-zb), power, col, fr.A*direction, spread=140)
+                    _BASE["sign_lights"] += 1
         SIGNS.append((yw, yw, zb, zt_drawn, side * x_end))
     # a fascia sign over each shop (parallel to the wall), lit or dead
     if not b.get("boutique") and rng.random() < 0.8:
@@ -936,12 +991,15 @@ def boutique(G, props):
     F.face([(gx + 0.06, d0 - 0.06, 3.3), (bx, d0 - 0.06, 3.3), (bx, d1 + 0.06, 3.3), (gx + 0.06, d1 + 0.06, 3.3)], 2, n=(0, 0, -1))
     F.box((gx + 0.06, d0 - 0.06, 0.6), (bx, d1 + 0.06, 0.66), 4)
     # plinth and floating shelf
-    F.box((7.62, 16.55, 0.66), (8.32, 17.65, 0.92), 3)
+    F.box((7.62, 16.9, 0.66), (8.32, 17.9, 0.92), 3)
     F.box((7.55, 17.8, 1.08), (8.5, 19.8, 1.12), 4)
     for yy in (18.0, 19.6):                                                        # the shelf's brackets
         F.box((8.47, yy - 0.015, 0.95), (8.55, yy + 0.015, 1.08), 0)
     # LED strip under the shelf's front edge
-    G["tube"].box((7.62, 17.85, 1.065), (7.66, 19.75, 1.08), 0)
+    G["tube"].box((7.62, 17.85, 1.065), (7.66, 19.75, 1.08), 2)
+    F.box((8.02, 18.12, 1.59), (8.49, 18.70, 1.615), 4)
+    G["dress"].box((8.11, 18.28, 1.615), (8.39, 18.54, 1.69), 3)
+    F.box((gx-0.012, 19.92, 0.63), (gx+0.028, 19.95, 3.28), 0)
     # the warm interior through the door
     for (p, n) in (([(12.5, 19.9, PZ), (12.5, 22.3, PZ), (12.5, 22.3, 3.4), (12.5, 19.9, 3.4)], (-1, 0, 0)),):
         F.face(p, 5, n=n)
@@ -962,11 +1020,11 @@ def boutique(G, props):
     # interior
     # (a spot's watts spread over the whole sphere: 450 W puts about 9 W/m2 on a bag 2 m below, the window's
     # brightest thing)
-    spot("bq_spot_shoulder", (7.5, 16.85, 3.2), (7.97, 17.1, 1.05), 560.0, (1.0, 0.82, 0.62), 18, 0.3, 0.02)
-    spot("bq_spot_satchel", (7.5, 18.25, 3.2), (8.0, 18.5, 1.25), 600.0, (1.0, 0.82, 0.62), 18, 0.3, 0.02)
-    spot("bq_spot_tote", (7.5, 19.05, 3.2), (8.02, 19.3, 1.25), 600.0, (1.0, 0.82, 0.62), 18, 0.3, 0.02)
+    spot("bq_spot_shoulder", (7.5, 17.28, 3.2), (7.97, 17.52, 1.05), 560.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
+    spot("bq_spot_satchel", (7.5, 18.25, 3.2), (8.0, 18.5, 1.25), 600.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
+    spot("bq_spot_tote", (7.5, 19.05, 3.2), (8.02, 19.3, 1.25), 600.0, (1.0, 0.74, 0.5), 18, 0.3, 0.02)
     area("bq_top", (8.0, 18.1, 3.25), (0.8, 3.4), 22.0, (1.0, 0.86, 0.7), (0, 0, -1), spread=100)
-    area("bq_led", (7.64, 18.8, 1.06), (0.05, 1.9), 40.0, (1.0, 0.9, 0.78), (0, 0, -1), spread=150)
+    area("bq_led", (7.64, 18.8, 1.06), (0.05, 1.9), 15.0, (1.0, 0.9, 0.78), (0, 0, -1), spread=150)
     # the display's glow on whoever stands at the glass (the light a lit window throws on a face): just inside the
     # glass at face height, turned out to the street; unseen by the camera and in reflections
     g = area("bq_glow", (7.32, 18.3, 1.45), (2.6, 0.7), 60.0, (1.0, 0.86, 0.7), (-1, 0, 0.0), spread=120)
@@ -976,9 +1034,9 @@ def boutique(G, props):
     area("bq_inside", (10.5, 21.1, 3.35), (2.5, 1.8), 120.0, (1.0, 0.8, 0.58), (0, 0, -1), spread=160)
     # the bags on display
     out = {}
-    spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=1.05, hue=0.545, rough_add=0.2)),
+    spec = {"handbag-tote": ((8.02, 19.3, 1.12), 0.35, -108.0, dict(sat=1.0, val=0.85, hue=0.49, rough_add=0.2)),
             "handbag-satchel": ((8.0, 18.5, 1.12), 0.30, -72.0, dict(sat=0.8, rough_add=0.12)),
-            "handbag-shoulder": ((7.97, 17.1, 0.92), 0.32, -105.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
+            "handbag-shoulder": ((7.97, 17.52, 0.92), 0.32, -105.0, dict(sat=0.55, val=0.55, rough_add=0.25))}
     for name, (loc, size, turn, grade) in spec.items():
         h = props.load(name, size=size, axis="long", loc=loc, turn_deg=turn, **grade)
         for o in h.children_recursive:
@@ -1118,6 +1176,21 @@ def wires(G):
             y += L
 
 
+def tram(G):
+    """A double-deck streetcar on the far track, readable by its stacked windows and wheels."""
+    x, y = TRACK, 120.0
+    car = G["railing"]
+    car.box((x-1.18, y-5.7, 0.35), (x+1.18, y+5.7, 4.45), 0)
+    for side in (-1, 1):
+        for offset in (-3.75, 3.75):
+            tube(G["steel"], [(x+side*1.02, y+offset, 0.39), (x+side*1.10, y+offset, 0.39)], 0.39, segs=18)
+        for z in (1.22, 3.00):
+            for i in range(8):
+                yy = y-5.08+i*1.35
+                G["int"].box((x+side*1.185-0.003, yy, z), (x+side*1.185+0.003, yy+1.08, z+0.85), 9)
+            G["int"].box((x-0.98, y+side*5.71-0.004, z), (x+0.98, y+side*5.71+0.004, z+0.85), 9)
+
+
 def end_building(G):
     """The building across the far end, closing the vista: windows and a few big lit panels, mostly in haze."""
     fr = Frame((XF + 14, END_Y, 0.0), (-1, 0, 0), (0, -1, 0))
@@ -1252,7 +1325,7 @@ def shop_kinds(b):
     return out
 
 
-def build(props):
+def build(props, wide=None):
     mt.materials()
     SIGNS.clear()
     LIT.clear()
@@ -1260,6 +1333,11 @@ def build(props):
     LIGHTS.clear()
     OBJ.clear()
     _BASE.clear()
+    wide = wide or {"loc": (1.4, 0, 1.5), "aim": (2.45, 60, 1.5)}
+    origin = Vector(wide["loc"])
+    inverse = (Vector(wide["aim"])-origin).to_track_quat("-Z", "Y").to_matrix().transposed()
+    _BASE.update(wide_view=(inverse, origin), sign_rectangles=[], sign_lights=0,
+                 shop_index={1: 0, -1: 0}, shopkeepers={1: [], -1: []})
     G = {
         "fac": MB("facades", [M["facade"]], merge=True),
         "slab": MB("slabs_ledges", [M["slab"]]),
@@ -1271,15 +1349,15 @@ def build(props):
         "sign": MB("signboards", [M["frame"], M["sign"], M["sign_dead"]]),
         "neon": MB("neon_tubes", [M["neon"]]),
         "int": MB("shop_interiors", [M["int_wall"], M["int_floor"], M["int_ceiling"], M["shelf"], M["counter"], M["goods"],
-                                     M["panel_warm"], M["panel_cool"]]),
+                                     M["panel_warm"], M["panel_cool"], M["shelf_glass"], M["store_lcd"]]),
         "shut": MB("shutters", [M["shutter"]]),
-        "tube": MB("tubes", [M["panel_warm"], M["panel_cool"]]),
+        "tube": MB("tubes", [M["panel_warm"], M["panel_cool"], M["shelf_led"]]),
         "ground": MB("street_ground", [M["asphalt"], M["pavers"], M["granite"], M["paint_white"], M["paint_yellow"], M["rail"], M["iron"]]),
         "railing": MB("railings", [M["rail_green"]]),
         "pole": MB("lamp_poles", [M["pole"]]),
         "lamp": MB("lamp_lenses", [M["lamp_head"]]),
         "cable": MB("cables", [M["cable"]]),
-        "dress": MB("pavement_dressing", [M["plastic_crate"], M["cardboard"], M["steel"]]),
+        "dress": MB("pavement_dressing", [M["plastic_crate"], M["cardboard"], M["steel"], M["card_dark"]]),
         "bq": MB("boutique", [M["alu"], M["plinth"], M["felt"], M["plinth"], M["wood_dark"], M["int_wall"]]),
         "bqglass": MB("boutique_glass", [M["shop_glass"]]),
     }
@@ -1290,13 +1368,14 @@ def build(props):
         b["shops"] = shop_kinds(b)
         # around Dawn's stretch the right-hand shops burn brightest: the lit island
         yc = (b["y0"] + b["y1"]) / 2
-        b["spill"] = 1.25 if (b["side"] > 0 and 8 < yc < 32) else (0.8 if yc < 8 else 1.0)
+        b["spill"] = 1.25 if (b["side"] > 0 and 8 < yc < 32) else 0.7
         b["sign_gain"] = 0.85 if yc < 10 else 1.0
         if yc < 6:
             b["nsigns"] = min(b["nsigns"], 2)
         building(G, b["side"], b)
     bounce(G)
     street(G)
+    tram(G)
     railings(G)
     lamps(G)
     wires(G)

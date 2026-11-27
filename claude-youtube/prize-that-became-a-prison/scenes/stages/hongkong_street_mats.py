@@ -195,7 +195,7 @@ def _attr_emitter(name, col_attr, str_attr, gain=1.0, base_rgb=(0.05, 0.05, 0.05
     sa = _attr(nt, str_attr)
     b.inputs["Roughness"].default_value = 0.42
     b.inputs["Specular IOR Level"].default_value = 0.35
-    bc = _mix(nt, 0.55, ca.outputs["Color"], base_rgb)
+    bc = _mix(nt, 0.15 if hotspot else 0.55, ca.outputs["Color"], base_rgb)
     _link(nt, bc, b.inputs["Base Color"])
     strength = _math(nt, "MULTIPLY", sa.outputs["Factor"], gain)
     if hotspot:
@@ -265,7 +265,7 @@ def asphalt(name="asphalt wet"):
     r = _maprange(nt, _noise(nt, o, 2.2, 4.0, 0.6), 0.3, 0.7, 0.15, 0.3)
     r = _fmix(nt, _math(nt, "MULTIPLY", lanes, 0.5), r, 0.1)
     r = _fmix(nt, damp, r, 0.06)
-    r = _fmix(nt, wet, r, 0.025)
+    r = _fmix(nt, wet, r, _maprange(nt, _noise(nt, o, 14, 2, 0.55), 0.3, 0.7, 0.04, 0.12))
     _link(nt, r, b.inputs["Roughness"])
     b.inputs["Specular IOR Level"].default_value = 0.55
     agg = _math(nt, "ADD", _math(nt, "MULTIPLY", _noise(nt, o, 140.0, 3.0, 0.6), 0.7), _noise(nt, o, 18.0, 2.0, 0.5))
@@ -317,17 +317,17 @@ def pavers(name="pavers wet"):
     wet = _maprange(nt, w, 0.72, 0.8, 0.0, 1.0, smooth=True)
     damp = _maprange(nt, w, 0.4, 0.75, 0.0, 1.0, smooth=True)
     col = _mix(nt, _math(nt, "MULTIPLY", damp, 0.4), base, (0.04, 0.04, 0.042))
-    col = _mix(nt, joint, col, (0.02, 0.02, 0.02))
+    col = _mix(nt, joint, col, (0.012, 0.012, 0.012))
     col = _mix(nt, wet, col, (0.03, 0.03, 0.032))
     _link(nt, col, b.inputs["Base Color"])
     r = _maprange(nt, _noise(nt, o, 4.0, 3.0, 0.6), 0.3, 0.7, 0.22, 0.4)
     r = _fmix(nt, damp, r, 0.12)
     r = _fmix(nt, wet, r, 0.03)
-    r = _fmix(nt, _math(nt, "MULTIPLY", joint, 0.8), r, 0.7)
+    r = _fmix(nt, _math(nt, "MULTIPLY", joint, 1.0), r, 0.9)
     _link(nt, r, b.inputs["Roughness"])
     h = _math(nt, "SUBTRACT", _math(nt, "MULTIPLY", _noise(nt, o, 90.0, 3.0, 0.6), _math(nt, "SUBTRACT", 1.0, wet)),
-              _math(nt, "MULTIPLY", joint, 1.5))
-    _bump(nt, b, h, 0.2, 0.001)
+              _math(nt, "MULTIPLY", joint, 0.4))
+    _bump(nt, b, h, 0.08, 0.001)
     return m
 
 
@@ -511,9 +511,9 @@ def sky(name="night sky"):
     nt.nodes.remove(nt.nodes["Principled BSDF"])
     o = _world(nt)
     x, y, z = _xyz(nt, o)
-    cloud = _maprange(nt, _noise(nt, o, 0.012, 4.0, 0.6), 0.3, 0.7, 0.75, 1.2)
+    cloud = _maprange(nt, _noise(nt, o, 0.012, 4.0, 0.6), 0.3, 0.7, 0.6, 0.9)
     far = _maprange(nt, y, 40.0, 260.0, 0.0, 1.0, smooth=True)
-    col = _mix(nt, far, (0.075, 0.092, 0.125), (0.12, 0.112, 0.118))
+    col = _mix(nt, far, (0.035, 0.045, 0.065), (0.070, 0.060, 0.060))
     em = _n(nt, "ShaderNodeEmission")
     _link(nt, col, em.inputs["Color"])
     _link(nt, cloud, em.inputs["Strength"])
@@ -545,7 +545,7 @@ def shop_glass(name="shop glass", refl=0.9, tint=(0.92, 0.96, 0.95)):
     _link(nt, gl.outputs[0], mix.inputs[2])
     # faint smudges: the reflection's roughness varies a little
     o = _obj(nt)
-    _link(nt, _maprange(nt, _noise(nt, o, 7.0, 3.0, 0.6), 0.55, 0.75, 0.008, 0.06), gl.inputs["Roughness"])
+    _link(nt, _maprange(nt, _noise(nt, o, 7.0, 3.0, 0.6), 0.55, 0.75, 0.02, 0.09), gl.inputs["Roughness"])
     _emit_out(m, nt, mix.outputs[0])
     return m
 
@@ -636,16 +636,18 @@ def materials():
     M["goods"] = goods()
     M["cable"] = pbr("cable rubber", (0.012, 0.012, 0.013), rough=(0.4, 0.6), nscale=20.0, cvar=0.2)
     M["sky"] = sky()
-    M["sign"] = _attr_emitter("sign face", "scol", "sstr", gain=1.0, hotspot=0.35)
+    M["sign"] = _attr_emitter("sign face", "scol", "sstr", gain=1.0, base_rgb=(0.01, 0.01, 0.01), hotspot=0.6)
     M["neon"] = _attr_emitter("neon tube", "scol", "sstr", gain=1.0, base_rgb=(0.2, 0.2, 0.2))
     M["sign_dead"] = pbr("sign panel unlit", (0.09, 0.09, 0.088), rough=(0.5, 0.75), nscale=6.0, cvar=0.3, grime=0.2)
-    M["frame"] = pbr("sign frame", (0.06, 0.058, 0.056), rough=(0.35, 0.6), metal=0.6, nscale=10.0, cvar=0.25, grime=0.25)
+    M["frame"] = pbr("sign frame", (0.06, 0.058, 0.056), rough=(0.57, 0.66), metal=0.6, nscale=10.0, cvar=0.25, grime=0.25)
     # shop walls a mid-dark painted board, not white (at 0.4 under the fill the open shops read as empty white bays)
     M["int_wall"] = pbr("shop wall", (0.2, 0.195, 0.185), rough=(0.6, 0.8), nscale=1.5, cvar=0.12, grime=0.45)
     M["int_floor"] = pbr("shop floor", (0.11, 0.105, 0.1), rough=(0.12, 0.3), nscale=3.0, cvar=0.15)
     M["int_ceiling"] = pbr("shop ceiling", (0.35, 0.35, 0.34), rough=(0.8, 0.9), nscale=1.0, cvar=0.05)
     M["shelf"] = pbr("shelf white", (0.32, 0.32, 0.31), rough=(0.35, 0.5), nscale=4.0, cvar=0.1)
     M["counter"] = pbr("counter", (0.06, 0.05, 0.042), rough=(0.25, 0.45), nscale=4.0, cvar=0.15)
+    M["store_lcd"] = emit("unlettered display", (0.69, 0.75, 0.79), 0.82)
+    M["shelf_led"] = emit("boutique shelf diffuser", (1, 0.84, 0.63), 1.8)
     M["panel_warm"] = emit("ceiling panel warm", (1.0, 0.82, 0.6), 6.0)
     M["panel_cool"] = emit("ceiling panel cool", (0.82, 0.92, 1.0), 6.0)
     M["lamp_head"] = emit("street lamp lens", (1.0, 0.88, 0.72), 30.0, sampling="NONE")
