@@ -739,7 +739,7 @@ def soften_hair(holder):
 def tim():
     """Tim at the witness table: seated, then turned to face the dais, slid so his jacket front sits TORSO_GAP from
     the table edge; his chair set behind him; his arms laid on the table."""
-    h = people.tim(shirt_tone=SHIRT, tie_tone=TIE)
+    h = people.tim(shirt_tone=SHIRT, tie_tone=TIE, tie_padding=6)
     soften_hair(h)
     seat_figure(h, st.SEAT_Z, TIM_UPPER, 0.11, 0.11, tag="Tim")
     h.rotation_euler = (0, 0, math.radians(180.0))

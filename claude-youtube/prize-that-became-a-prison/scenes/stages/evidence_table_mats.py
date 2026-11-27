@@ -573,9 +573,8 @@ def matte(name, rgb, rough=0.8):
 
 # ---------------------------------------------------------------- generated props
 
-def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
-    """Finish a generated prop's material in place (copied from inspection_room_mats): spec sets the dielectric
-    specular level; weave = (period_m, strength) adds a plain-weave bump on the prop's own normal map."""
+def tune_prop(mat, spec=None, weave=None, to_metres=1.0, ceiling=None):
+    """Finish a generated prop with dielectric specular, a plain-weave bump, or a cap on its base colour."""
     if not (mat and mat.use_nodes):
         return
     nt = mat.node_tree
@@ -584,6 +583,12 @@ def tune_prop(mat, spec=None, weave=None, to_metres=1.0):
         return
     if spec is not None:
         b.inputs["Specular IOR Level"].default_value = spec
+    base = b.inputs["Base Color"]
+    if ceiling and base.is_linked:
+        clamp = _n(nt, "ShaderNodeVectorMath", operation="MINIMUM")
+        clamp.inputs[1].default_value = ceiling
+        _link(nt, base.links[0].from_socket, clamp.inputs[0])
+        _link(nt, clamp.outputs["Vector"], base)
     if weave:
         period, strength = weave
         o = _obj(nt)

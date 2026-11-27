@@ -581,7 +581,9 @@ def rooftop_signs(b_lo, b_hi, b_data, seed=21):
         lo.append((xc - w / 2, y0 + 1.0, z1 + 2.2))
         hi.append((xc + w / 2, y0 + 1.5, z1 + 2.2 + hgt))
         rot.append(0.0)
-        col.append(tuple(v * rng.uniform(0.6, 1.0) for v in rng.choice(pal)))
+        # The broad near sign faces sit below the light on Dawn at the window.
+        radiance = 0.52 if y0 + 1.0 < 520.0 else 0.82
+        col.append(tuple(v * rng.uniform(0.6, 1.0) * radiance for v in rng.choice(pal)))
         size.append((w, 0.5, hgt))
         for sx in (xc - w / 2 + 0.3, xc + w / 2 - 0.6):
             frame_lo.append((sx, y0 + 1.6, z1))
