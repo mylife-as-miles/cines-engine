@@ -66,23 +66,29 @@ HOBO_TURN = 8.0
 STANCE = dict(hip_side=0.022, hip_down=0.004, hip_tilt=3.5, foot_fwd=0.05, foot_out=9.0)
 
 FOCUS = {"fx_window": (WIN_SPOT[0], WIN_SPOT[1], 1.5), "fx_overhead": (-0.95, -0.45, 0.95),
-         "fx_pack": (-1.03, -0.66, 0.85)}
+         "fx_accept": (-1.0, -0.92, 1.02), "fx_pack": (-1.03, -0.66, 0.85)}
 
 CAMERAS = {
     # Ch 03: from the dim room behind her right shoulder at a standing eye line: the bed and the lamp island on the
     # left, Dawn at the glass drawing the sheer back, the city across the window
-    "window": dict(loc=(1.3, -2.2, 1.45), aim=(-0.6, 1.8, 1.08), lens=26, focus="fx_window", fstop=4.0,
+    "window": dict(loc=(0.95, -1.7, 1.55), aim=(-0.45, 1.6, 1.2), lens=33, focus="fx_window", fstop=4.0,
                    beat="window", exposure=-1.2),
     # Ch 04: straight down onto the bed through the ceiling (image top = the head of the bed)
-    "overhead": dict(loc=(-0.80, -0.42, 5.0), aim=(-0.806, -0.42, 0.6), lens=62, focus="fx_overhead", fstop=8.0,
+    "overhead": dict(loc=(-1.074, -0.42, 5.0), aim=(-1.08, -0.42, 0.6), lens=46, focus="fx_overhead", fstop=8.0,
                      beat="pack", exposure=-1.0, above_ceiling=True),
     # Ch 04: close, from behind her right side, a little above the bag: the shoulder bag going into the open extra
     # bag's mouth, her arm and hand on its strap coming in from the left, the lamp warm beyond (f/2.8)
-    "pack": dict(loc=(-0.05, -1.40, 1.08), aim=(-1.08, -0.47, 0.90), lens=45, focus="fx_pack", fstop=2.8,
+    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.58, 0.89), lens=55, focus="fx_pack", fstop=2.8,
                  beat="pack", exposure=-1.1),
+    "accept": dict(loc=(0.62, -2.02, 1.54), aim=(-1.0, -0.55, 1.0), lens=40,
+                   focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
+    "overhead_pre": dict(loc=(-0.955, -0.28, 4.75), aim=(-0.961, -0.28, 0.66), lens=55,
+                         focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0),
 }
 TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.55},
-         "overhead": {"duvet_bounce": 0.0}, "pack": {"ceiling_bounce": 0.6}}
+         "overhead": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15}, "pack": {"ceiling_bounce": 0.6},
+         "overhead_pre": {"duvet_bounce": 0.0, "ceiling_bounce": 0.15},
+         "accept": {"duvet_bounce": 0.4, "ceiling_bounce": 0.24}}
 _STATE = {"cast": [], "dawn": None, "poses": {}, "base": {}, "hobo": None, "sheers": {}}
 
 
@@ -128,7 +134,7 @@ def hem_thickness(ob, t=0.006):
         ob.modifiers.move(len(ob.modifiers) - 1, sub)
 
 
-def hands_stone(holder, value=0.36):
+def hands_stone(holder, value=0.28):
     body = bpy.data.objects[holder["body"]]
     gi = {g.index for g in body.vertex_groups if any(k in g.name for k in ("hand", "f_", "thumb", "palm"))}
     if not gi:
@@ -339,12 +345,15 @@ def look_at(h, pose, target, d=0.0, t=0.0, lim=(-20.0, 45.0)):
 def snapshot(h):
     rig = rigged.rig_of(h)
     return dict(loc=tuple(h.location), rot=tuple(h.rotation_euler),
+                switches={pb.name: pb["IK_FK"] for pb in rig.pose.bones if "IK_FK" in pb},
                 bones={pb.name: (pb.rotation_mode, pb.matrix_basis.copy()) for pb in rig.pose.bones})
 
 
 def restore(h, snap):
     rig = rigged.rig_of(h)
     h.location, h.rotation_euler = snap["loc"], snap["rot"]
+    for n, value in snap["switches"].items():
+        rig.pose.bones[n]["IK_FK"] = value
     for pb in rig.pose.bones:
         mode, mb = snap["bones"][pb.name]
         pb.rotation_mode = mode
@@ -394,6 +403,67 @@ def pose_window(h):
 
 # ---------------------------------------------------------------- per camera
 
+def premarket_props(duvet):
+    case = hp.load_baked("dawn-suitcase")
+    co = hp.verts_np(case.data)
+    # Bake the same furniture-space rotation as the open case. The glTF nodes
+    # retain their import channels, including the separate webbing mesh.
+    centre = (co[:, 2].max() + co[:, 2].min()) / 2
+    lay = Matrix.Translation((centre, 0, -co[:, 0].min())) @ Matrix.Rotation(-math.pi / 2, 4, "Y")
+    for mesh in [case] + list(case.children_recursive):
+        if mesh.type == "MESH":
+            mesh.data.transform(lay)
+            mesh.data.update()
+    hp.holder("closed_case_on_bed", (-0.98, -0.52, _on_duvet(duvet, -0.98, -0.52)), 0, [case])
+    trio = []
+    for style, x, angle in (("satchel", -1.62, 170), ("tote", -1.03, 160), ("shoulder", -0.50, 183)):
+        root, mesh = hp.bag_upright("handbag-" + style, (x, 0.12, _on_duvet(duvet, x, 0.12)), angle)
+        trio.append((root, mesh))
+    bpy.context.view_layer.update()
+    return case, trio
+
+
+def premarket_poses(h, duvet, case, tote, tote_mesh):
+    from home import seat_figure
+    place(h, PACK_SPOT)
+    pose = {"chest": (13, 3), "neck": (4, 0), "fingers": 14, "l_arm": (4, 6, 11)}
+    palm = Vector((-1.08, -0.68, hp.surface_z([case], -1.08, -0.68) + 0.024))
+    look_at(h, pose, palm, d=20)
+    stance(h)
+    ground(h)
+    ik_arm(h, -1, palm)
+    turn_palm(h, -1, (0, 0, -1))
+    rigged.articulate_hand(h, "R", {"f_index": (6, 8, 5), "f_middle": (8, 9, 7),
+                                     "f_ring": (10, 11, 7), "f_pinky": (13, 14, 9), "thumb": (9, 7, 5)})
+    _STATE["poses"]["pre"] = snapshot(h)
+    place(h, (0, 0, 0))
+    x, y = -1.00, -0.80
+    dz, hip = seat_figure(h, _on_duvet(duvet, x, y), upper={"chest": (5, 2), "head": (23, 2),
+                                                            "neck": (5, 0), "fingers": 16})
+    h.location = (x - hip.x, y - hip.y, dz)
+    tote.location = (x, y - 0.23, _on_duvet(duvet, x, y) + 0.125)
+    tote.rotation_euler.z = math.radians(178)
+    bpy.context.view_layer.update()
+    # Catch the two ascending sides of the same handle. The narrower left and right
+    # grip stations sit below its apex, so her knuckles never meet in the middle.
+    verts = [tote_mesh.matrix_world @ v.co for v in tote_mesh.data.vertices]
+    high = max(p.z for p in verts)
+    band = [p for p in verts if high - 0.071 < p.z < high - 0.060]
+    for side, k in ((1, "L"), (-1, "R")):
+        flank = [p for p in band if side * (p.x - x) > 0.015]
+        nearest = min(p.y for p in flank)
+        wire = [p for p in flank if p.y < nearest + 0.009]
+        grip = sum(wire, Vector()) / len(wire)
+        err = ik_arm(h, side, grip + Vector((0.014 * side, -0.012, 0.006)))
+        turn_palm(h, side, (-side, 0.55, -0.12))
+        rigged.articulate_hand(h, k, {"f_index": (40, 59, 38), "f_middle": (48, 65, 43),
+                                     "f_ring": (55, 67, 46), "f_pinky": (59, 71, 49), "thumb": (22, 29, 17)})
+        print(f"HOTEL accept {k} grip station {tuple(round(v, 3) for v in grip)}, palm error {err*1000:.1f} mm",
+              flush=True)
+    _STATE["poses"]["accept"] = snapshot(h)
+    bpy.data.objects["fx_accept"].location = (x, y - 0.19, high + 0.035)
+
+
 def which_camera():
     cam = bpy.context.scene.camera
     if cam is None:
@@ -412,6 +482,15 @@ def set_beat(beat):
     if hobo is not None:
         for o in [hobo] + list(hobo.children_recursive):
             o.hide_render = beat != "pack"
+    premarket = beat in ("pre", "accept")
+    for o in _STATE["packing_props"]:
+        o.hide_render = premarket
+    for o in _STATE["early_props"]:
+        o.hide_render = not premarket
+    for o in _STATE["closed_case"]:
+        o.hide_render = beat != "pre"
+    tote = _STATE["early_tote"]
+    tote.matrix_world = _STATE["accept_tote" if beat == "accept" else "row_tote"]
     held = _STATE["sheers"].get("held")
     straight = _STATE["sheers"].get("straight")
     if held is not None and straight is not None:
@@ -443,6 +522,8 @@ def apply_camera(name):
         o = bpy.data.objects.get(n)
         if o is not None:
             o.data.energy = base * TRIMS.get(name, {}).get(n, 1.0)
+            if n == "window_rim" and name != "window":
+                o.data.energy = 0
     print(f"HOTEL camera {name}: beat {cfg.get('beat')}, ceiling {'see-through' if cfg.get('above_ceiling') else 'solid'}",
           flush=True)
 
@@ -469,6 +550,7 @@ def build(cast=True):
     st.CEILING.clear()
     duvet = st.build()
     city.build()
+    room_objects = set(bpy.context.scene.objects)
     # the bags on the bed
     cx, cy, cturn, side = CASE
     case, cinfo = hp.open_suitcase((cx, cy, _on_duvet(duvet, cx, cy) - 0.004), cturn, lid_side=side)
@@ -483,15 +565,23 @@ def build(cast=True):
     # tissue: stuffing puffing from the tote's mouth, a sheet spilling from the extra bag's mouth, a folded stack
     hp.tissue_sheet("tissue_tote_stuff", (tx - 0.11, ty, st.BED["top"] + 0.03), math.radians(80), 0.5, 0.36, [duvet, tote],
                     seed=8, folds=40, angle=45, flatten=0.45, keep=0.8, scrunch=0.42)
-    hp.tissue_sheet("tissue_bag_mouth", (bx + 0.15, by - 0.01, st.BED["top"] + 0.2), math.radians(-20), 0.5, 0.4,
-                    [duvet, bag], seed=5, folds=44, angle=50, flatten=0.45, keep=0.6, scrunch=0.22)
     hp.tissue_sheet("tissue_loose", (-0.36, -0.52, st.BED["top"] + 0.02), math.radians(30), 0.4, 0.32,
                     [duvet, bpy.data.objects["runner"]], seed=11, folds=40, angle=46, flatten=0.6, keep=0.7, scrunch=0.75)
     lid = bpy.data.objects["case_lid_mesh"]
     lc = lid.matrix_world.translation
     hp.tissue_sheet("tissue_lid", (lc.x + 0.05, lc.y - 0.04, lc.z + 0.05), math.radians(-80), 0.34, 0.26, [lid], seed=17,
                     folds=34, angle=42, flatten=0.55, keep=0.65, scrunch=0.7)
-    hp.tissue_stack("tissue_fresh", (-0.31, -0.24, _on_duvet(duvet, -0.31, -0.24) + SINK + 0.001), math.radians(8))
+    hp.tissue_sheet("tissue_fresh", (-0.31, -0.24, st.BED["top"] + 0.03), math.radians(8), 0.27, 0.19,
+                    [duvet, bpy.data.objects["runner"]], seed=15, folds=9, angle=16, flatten=0.16)
+    _STATE["packing_props"] = list(set(bpy.context.scene.objects) - room_objects)
+    before_early = set(bpy.context.scene.objects)
+    closed_case, trio = premarket_props(duvet)
+    early_tote, tote_mesh = trio[1]
+    _STATE["early_props"] = list(set(bpy.context.scene.objects) - before_early)
+    _STATE["closed_case"] = [closed_case] + list(closed_case.children_recursive)
+    _STATE["early_tote"] = early_tote
+    _STATE["row_tote"] = early_tote.matrix_world.copy()
+    _STATE["accept_tote"] = early_tote.matrix_world.copy()
     for n, p in FOCUS.items():
         e = bpy.data.objects.new(n, None)
         bpy.context.scene.collection.objects.link(e)
@@ -514,8 +604,8 @@ def build(cast=True):
         through = hold + (n * 0.018 if n is not None else Vector()) + a * 0.02
         _STATE["sheers"]["held"] = st.curtains(hand=tuple(through))
         bpy.data.objects["fx_window"].location = eye_centre(h)
-        # the packing beat: the strap's apex under her closed fingers, the bag's base 5 cm into the mouth
-        grip_z = lip_z - 0.05 + (hobo_apex.z) + 0.024
+        # the packing beat: the strap's apex under her closed fingers, the bag's base just entering the mouth
+        grip_z = lip_z - 0.015 + hobo_apex.z + 0.024
         steady = Vector((bx - 0.25, by - 0.03, hp.surface_z([bag], bx - 0.25, by - 0.03) + 0.026))
         _STATE["poses"]["pack"] = pose_pack(h, grip_z, (mouth.x, mouth.y), steady)
         pc = palm_centre(h, -1)
@@ -527,12 +617,14 @@ def build(cast=True):
         bpy.data.objects["fx_pack"].location = (strap.x, strap.y, strap.z - hobo_apex.z * 0.75)
         print(f"HOTEL shoulder bag: strap at {tuple(round(v, 3) for v in strap)}, base z {strap.z - hobo_apex.z:.3f}, "
               f"lip z {lip_z:.3f}", flush=True)
+        premarket_poses(h, duvet, closed_case, early_tote, tote_mesh)
+        _STATE["accept_tote"] = early_tote.matrix_world.copy()
         # the straight sheer for the other beats
         straight = _straight_sheer()
         _STATE["sheers"]["straight"] = straight
     else:
         st.curtains(hand=None)
-        hobo_h.location = (mouth.x, mouth.y, lip_z - 0.05)
+        hobo_h.location = (mouth.x, mouth.y, lip_z + 0.01)
     _STATE["base"] = {o.name: o.data.energy for o in bpy.data.objects if o.type == "LIGHT"}
     install_hook()
 

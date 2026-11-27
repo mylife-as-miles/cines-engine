@@ -216,14 +216,14 @@ def metal(name, rgb, rough=0.35, brushed=True):
     return m
 
 
-def tissue(name="tissue paper", rgb=(0.6, 0.595, 0.57)):
+def tissue(name="tissue paper", rgb=(0.62, 0.60, 0.55)):
     """Gift tissue: thin, matt and translucent (light shows through a single sheet), a faint fibre."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
     b = nt.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1)
-    b.inputs["Roughness"].default_value = 0.92
+    b.inputs["Roughness"].default_value = 0.60
     b.inputs["Specular IOR Level"].default_value = 0.1
     tl = _n(nt, "ShaderNodeBsdfTranslucent")
     tl.inputs["Color"].default_value = (rgb[0] * 0.8, rgb[1] * 0.8, rgb[2] * 0.75, 1)
@@ -286,7 +286,7 @@ def sheer(name="sheer voile", rgb=(0.62, 0.63, 0.64)):
     return m
 
 
-def thin_glass(name="window glass", refl=0.32):
+def thin_glass(name="window glass", refl=0.39):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -378,7 +378,7 @@ def materials():
         carpet=carpet("carpet"),
         cotton=cotton("duvet cotton", (0.56, 0.565, 0.57)),
         pillow=cotton("pillow cotton", (0.58, 0.585, 0.59), 1700.0, 0.15),
-        runner=woven("bed runner", (0.07, 0.085, 0.10), 380.0, 0.5, 0.9, 0.15),
+        runner=woven("bed runner", (0.091, 0.10, 0.11), 300.0, 0.56, 0.9, 0.22),
         valance=woven("bed base fabric", (0.035, 0.037, 0.042), 600.0, 0.3, 0.92, 0.05),
         headboard=channel_uphol("headboard wool", (0.06, 0.068, 0.08)),
         veneer=veneer(),

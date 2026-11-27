@@ -281,6 +281,16 @@ def building_mat():
     wash = nb.mixc(nb.math("FRACT", nb.mul(rnd, 3.7)), (1.0, 0.62, 0.4), (0.62, 0.8, 1.0))
     emit = nb.vadd(emit, nb.scale(wash, nb.mul(nb.mul(side, nb.mul(up, up)), 0.05 * K)))
     emit = nb.vadd(emit, nb.scale((0.42, 0.48, 0.6), nb.mul(side, 0.0045 * K)))
+    # Parapets catch the ambient city glow above the darker roof membranes.
+    width, depth, _ = nb.sep(nb.attr("extent").outputs["Vector"])
+    ex = nb.math("MINIMUM", lx, nb.math("SUBTRACT", width, lx))
+    ey = nb.math("MINIMUM", ly, nb.math("SUBTRACT", depth, ly))
+    lip = nb.lt(nb.math("MINIMUM", ex, ey), 0.6)
+    roof = nb.gt(nz, 0.5)
+    roof_light = nb.mul(roof, nb.add(0.008 * K, nb.mul(lip, 0.030 * K)))
+    emit = nb.vadd(emit, nb.scale((0.42, 0.48, 0.60), roof_light))
+    street = nb.math("SUBTRACT", 1.0, nb.math("DIVIDE", lz, 15.0), clamp=True)
+    emit = nb.vadd(emit, nb.scale((1.0, 0.55, 0.30), nb.mul(nb.mul(street, side), 0.09 * K)))
     # LED strips on a few far towers: a narrow vertical strip at each corner and a band under the roof (blank)
     tz = nb.mul(top, 1000.0)
     band = nb.mul(nb.gt(lz, nb.math("SUBTRACT", tz, 6.0)), nb.lt(lz, nb.math("SUBTRACT", tz, 3.5)))
@@ -622,7 +632,7 @@ def streets(seed=5):
             y += 26.0
         s_lo.append((gx - 3.5, 40.0, GROUND + 0.1))
         s_hi.append((gx + 3.5, 1300.0, GROUND + 0.2))
-        s_c.append(tuple(v * 0.08 for v in c))
+        s_c.append(tuple(v * 0.30 for v in c))
         s_rot.append(0.0)
     for gy in np.arange(40.0, 1300.0, 58.0):
         c = led if rng.random() < 0.5 else sodium
@@ -735,7 +745,7 @@ def build():
     rd.data.materials.append(ridge_mat())
 
     lo, hi, data, crown = plan()
-    _boxes_object("hk_buildings", lo, hi, building_mat(), attrs={"bdata": data, "bcrown": crown})
+    _boxes_object("hk_buildings", lo, hi, building_mat(), attrs={"bdata": data, "bcrown": crown, "extent": hi - lo})
 
     s_lo, s_hi, s_rot, s_col, s_size = signs()
     (r_lo, r_hi, r_rot, r_col, r_size), (f_lo, f_hi) = rooftop_signs(lo, hi, data)

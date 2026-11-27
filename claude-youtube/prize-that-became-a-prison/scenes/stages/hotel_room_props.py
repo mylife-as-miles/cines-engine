@@ -157,7 +157,7 @@ def slab(name, size, loc, m, rot=0.0, bevel=None, sag=0.0, seed=0, disp=0.003):
     return ob
 
 
-def crumple(name, w, h, m, seed=1, folds=26, angle=38.0, flatten=0.45, res=(36, 26), scrunch=1.0):
+def crumple(name, w, h, m, seed=1, folds=26, angle=38.0, flatten=0.45, res=(82, 58), scrunch=1.0):
     """A crumpled sheet of tissue: a fine grid folded again and again along random lines (each fold turns every
     point on one side of a line through two random points about that line), with a fine noise, then flattened onto
     whatever it lies on. Returns the object with its lowest point at z 0, centred on its footprint."""
@@ -194,7 +194,7 @@ def crumple(name, w, h, m, seed=1, folds=26, angle=38.0, flatten=0.45, res=(36, 
     ob = _link(bpy.data.objects.new(name, me))
     ob.data.materials.append(m)
     so = ob.modifiers.new("thick", "SOLIDIFY")
-    so.thickness, so.offset = 0.0008, 0.0
+    so.thickness, so.offset = 0.0003, 0.0
     for p in me.polygons:
         p.use_smooth = True
     return ob

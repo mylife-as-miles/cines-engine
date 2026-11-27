@@ -246,7 +246,11 @@ def pleated(name, B, E, m, z0, z1, n_pleat, amp, nu=None, nv=40, thick=0.002, ga
                 gz, gk = gather
                 a *= 1.0 + gk * u * math.exp(-((z - gz) / 0.4) ** 2)
             a *= 0.85 + 0.15 * math.sin(7.0 * v + 3 * u)                       # pleats wander a little
-            off = a * math.sin(2 * math.pi * u * n_pleat)
+            phase = 2 * math.pi * u * n_pleat
+            a *= 1 + 0.30 * math.sin(phase * 0.28 + 0.5 * v)
+            off = a * math.sin(phase + 0.26 * math.sin(phase * 0.35 + v))
+            if z - z0 < 0.04:
+                off *= 0.81
             q = p + nrm * off
             row.append(bm.verts.new((q.x, q.y, z)))
         rows.append(row)
@@ -339,7 +343,23 @@ def bed():
     # the duvet over the mattress: a deep rounded slab, soft wrinkles (fine) and a slow undulation (broad)
     dz0, dz1 = b["base"] - 0.02, b["top"]
     duvet = soft_box("duvet", (L + 0.03, Wd + 0.05, dz1 - dz0), (xc + 0.015, yc, (dz0 + dz1) / 2), m["cotton"], 0.07,
-                     cuts=(38, 30, 5), disp=((0.06, 0.004), (0.35, 0.012)))
+                     cuts=(50, 42, 8), disp=((0.06, 0.004), (0.35, 0.020)))
+    # The edge hangs beyond the divan and folds back toward it below the crest.
+    for vert in duvet.data.vertices:
+        x, y, z = vert.co
+        side = min(1, max(0, (abs(y) - Wd / 2 + 0.095) / 0.095))
+        foot = min(1, max(0, (x - L / 2 + 0.10) / 0.10))
+        height = max(0, min(1, (z + (dz1 - dz0) / 2) / (dz1 - dz0)))
+        bow = 0.045 + 0.057 * math.sin(math.pi * height)
+        vert.co.y += math.copysign(side * (bow + 0.008 * math.sin(32 * x + 3 * height)), y)
+        vert.co.x += foot * (bow + 0.008 * math.sin(28 * y + 2 * height))
+        vert.co.z -= max(side, foot) * 0.065
+        if height >= 0.98:
+            for px, py, dx, dy in ((-1.28, -0.12, 0.24, 0.10), (-1.25, 0.25, 0.21, 0.15),
+                                   (-1.05, -0.63, 0.34, 0.16), (-0.41, 0.21, 0.22, 0.30)):
+                r2 = ((x + duvet.location.x - px) / dx)**2 + ((y + yc - py) / dy)**2
+                vert.co.z -= 0.018 * math.exp(-1.8 * r2)
+    duvet.data.update()
     # the runner across the foot: the same rounded section 6 mm proud, cut to 0.5 m
     rx0, rx1 = -0.52, -0.02
     soft_box("runner", (rx1 - rx0, Wd + 0.062, dz1 - dz0 + 0.012), ((rx0 + rx1) / 2, yc, (dz0 + dz1) / 2 + 0.003),
@@ -438,6 +458,10 @@ def lights(city=32.0, ambient=0.0):
                        (0.5, 0.64, 1.0), spread_deg=110, rot=(math.radians(-90), 0, 0))
     li.visible_camera = False
     li.visible_glossy = False
+    rim_pos = Vector((0.35, 1.75, 1.3))
+    rim = sk.area_light("window_rim", rim_pos, (0.3, 1.2), 9.0, (0.55, 0.66, 1.0), spread_deg=85,
+                        rot=(Vector((-0.28, 1.40, 1.48)) - rim_pos).to_track_quat("-Z", "Y").to_euler())
+    rim.visible_camera = rim.visible_glossy = False
     # a low cool bounce off the ledge and the floor by the window (the city light hitting the stone)
     b = sk.area_light("ledge_bounce", ((WX0 + WX1) / 2, LEDGE_Y - 0.05, 0.5), (WX1 - WX0, 0.3), city * 0.12,
                       (0.55, 0.66, 1.0), spread_deg=150, rot=(math.radians(-60), 0, 0))
