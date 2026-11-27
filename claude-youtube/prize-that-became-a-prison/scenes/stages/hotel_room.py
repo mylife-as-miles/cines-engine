@@ -71,18 +71,18 @@ FOCUS = {"fx_window": (WIN_SPOT[0], WIN_SPOT[1], 1.5), "fx_overhead": (-0.95, -0
 CAMERAS = {
     # Ch 03: from the dim room behind her right shoulder at a standing eye line: the bed and the lamp island on the
     # left, Dawn at the glass drawing the sheer back, the city across the window
-    "window": dict(loc=(0.95, -1.7, 1.55), aim=(-0.45, 1.6, 1.2), lens=33, focus="fx_window", fstop=4.0,
+    "window": dict(loc=(0.95, -1.7, 1.55), aim=(-0.83, 1.46, 1.2), lens=33, focus="fx_window", fstop=4.0,
                    beat="window", exposure=-1.2),
     # Ch 04: straight down onto the bed through the ceiling (image top = the head of the bed)
     "overhead": dict(loc=(-1.074, -0.42, 5.0), aim=(-1.08, -0.42, 0.6), lens=46, focus="fx_overhead", fstop=8.0,
                      beat="pack", exposure=-1.0, above_ceiling=True),
     # Ch 04: close, from behind her right side, a little above the bag: the shoulder bag going into the open extra
     # bag's mouth, her arm and hand on its strap coming in from the left, the lamp warm beyond (f/2.8)
-    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.58, 0.89), lens=55, focus="fx_pack", fstop=2.8,
+    "pack": dict(loc=(0.15, -1.15, 1.35), aim=(-1.06, -0.58, 0.96), lens=50, focus="fx_pack", fstop=2.8,
                  beat="pack", exposure=-1.1),
-    "accept": dict(loc=(0.62, -2.02, 1.54), aim=(-1.0, -0.55, 1.0), lens=40,
+    "accept": dict(loc=(0.62, -2.02, 1.54), aim=(-1.0, -0.55, 1.056), lens=37,
                    focus="fx_accept", fstop=4.0, beat="accept", exposure=-1.10),
-    "overhead_pre": dict(loc=(-0.955, -0.28, 4.75), aim=(-0.961, -0.28, 0.66), lens=55,
+    "overhead_pre": dict(loc=(-1.025, -0.28, 4.75), aim=(-1.031, -0.28, 0.66), lens=49,
                          focus="fx_overhead", fstop=8.0, beat="pre", exposure=-1.0),
 }
 TRIMS = {"window": {"duvet_bounce": 0.0, "ceiling_bounce": 0.0, "lamp_spill": 0.55},
@@ -403,6 +403,27 @@ def pose_window(h):
 
 # ---------------------------------------------------------------- per camera
 
+def shopping_carriers():
+    from hongkong_street import bag_mesh
+    kraft = sk.mat("hotel kraft paper", (0.30, 0.205, 0.13), 0.86)
+    card = sk.mat("hotel bag charcoal", (0.055, 0.046, 0.040), 0.91)
+    cord = sk.mat("hotel bag cord", (0.11, 0.078, 0.052), 0.95)
+    for name, x, y, turn, w, g, height, material in (
+        ("kraft", 0.33, 0.27, 12, 0.32, 0.12, 0.38, kraft),
+        ("charcoal", 0.36, -0.07, -19, 0.25, 0.10, 0.28, card),
+    ):
+        drop = 0.14
+        root = bag_mesh("hotel_carrier_" + name, w, g, height, drop, material, cord)
+        root.location = (x, y, height + drop)
+        root.rotation_euler.z = math.radians(turn)
+        handles = next(o for o in root.children if "_handles" in o.name)
+        for vert in handles.data.vertices:
+            above = max(0, vert.co.z + drop)
+            vert.co.z -= above * 0.46
+            vert.co.y += above * 0.36
+        handles.data.update()
+
+
 def premarket_props(duvet):
     case = hp.load_baked("dawn-suitcase")
     co = hp.verts_np(case.data)
@@ -551,6 +572,7 @@ def build(cast=True):
     duvet = st.build()
     city.build()
     room_objects = set(bpy.context.scene.objects)
+    shopping_carriers()
     # the bags on the bed
     cx, cy, cturn, side = CASE
     case, cinfo = hp.open_suitcase((cx, cy, _on_duvet(duvet, cx, cy) - 0.004), cturn, lid_side=side)
