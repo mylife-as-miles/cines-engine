@@ -14,6 +14,7 @@ import os
 
 import bpy
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 PROPS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "props")
 
@@ -54,6 +55,71 @@ def _grade(mat, sat, val, rough_add, hue=0.5):
             rough.default_value = min(1.0, rough.default_value + rough_add)
 
 
+def _plain_suitcase_side(ob):
+    """Sew an unmarked nylon reinforcement from the side handle to the case's upper seam.
+
+    The generated case has four bright metal bars above that handle. The reinforcement follows
+    the sidewall in the source GLB's Z-up coordinates and covers the bars from every camera.
+    """
+    mesh = ob.data
+    world = ob.matrix_world
+    local = world.inverted()
+    coords = [world @ v.co for v in mesh.vertices]
+    tree = BVHTree.FromPolygons(coords, [p.vertices[:] for p in mesh.polygons])
+    # Recess the metal beneath the stitching so the reinforcement lies flat.
+    for vertex, point in zip(mesh.vertices, coords):
+        x, y, z = point
+        if -0.082 < x < 0.019 and 0.076 < z < 0.184 and y > 0.271:
+            vertex.co = local @ Vector((x, 0.271, z))
+    mesh.update()
+    verts, quads = [], []
+    # The lower tab overlaps the top handle anchor. At the top the webbing tapers into the seam.
+    for j in range(26):
+        t = j / 25
+        z = 0.032 + 0.326 * t
+        half = 0.054 - 0.018 * max(0.0, (t - 0.75) / 0.25)
+        left = tree.ray_cast((-0.10, 0.60, z), (0, -1, 0))[0]
+        right = tree.ray_cast((0.032, 0.60, z), (0, -1, 0))[0]
+        if left is None or right is None:
+            break
+        for i in range(7):
+            x = -0.031 + (i / 3 - 1) * half
+            u = (x - left.x) / (right.x - left.x)
+            y = (1 - u) * left.y + u * right.y
+            # The raised centre and rolled edges catch the light on the woven strip.
+            crown = 1 - ((i - 3) / 3) ** 4
+            verts.append(local @ Vector((x, y + 0.003 + 0.004 * crown, z)))
+            if i and j:
+                k = len(verts) - 1
+                quads.append((k - 8, k - 1, k, k - 7))
+    panel = bpy.data.meshes.new("suitcase side webbing")
+    panel.from_pydata(verts, [], quads)
+    band = bpy.data.objects.new("suitcase handle reinforcement", panel)
+    bpy.context.scene.collection.objects.link(band)
+    band.parent = ob
+    mat = bpy.data.materials.new("charcoal nylon webbing")
+    mat.use_nodes = True
+    b = mat.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.016, 0.017, 0.019, 1)
+    b.inputs["Roughness"].default_value = 0.85
+    b.inputs["Specular IOR Level"].default_value = 0.16
+    nodes = mat.node_tree.nodes
+    weave = nodes.new("ShaderNodeTexNoise")
+    weave.inputs["Scale"].default_value = 750
+    weave.inputs["Detail"].default_value = 2
+    bump = nodes.new("ShaderNodeBump")
+    bump.inputs["Distance"].default_value = 0.00035
+    bump.inputs["Strength"].default_value = 0.13
+    mat.node_tree.links.new(nodes.new("ShaderNodeTexCoord").outputs["Object"], weave.inputs["Vector"])
+    mat.node_tree.links.new(weave.outputs["Fac"], bump.inputs["Height"])
+    mat.node_tree.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+    panel.materials.append(mat)
+    for face in panel.polygons:
+        face.use_smooth = True
+    edge = band.modifiers.new("webbing edge", "SOLIDIFY")
+    edge.thickness = 0.0016
+
+
 def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, rough_add=0.0, hue=0.5, path=None):
     """Import a prop GLB, size it and put it down. Returns the holder empty (meshes are its children).
 
@@ -66,6 +132,9 @@ def load(name, size, axis="z", loc=(0, 0, 0), turn_deg=0.0, sat=0.65, val=1.0, r
     new = [o for o in bpy.data.objects if o not in before]
     meshes = [o for o in new if o.type == "MESH"]
     bpy.context.view_layer.update()
+    if name == "dawn-suitcase" and os.path.abspath(path) == os.path.join(PROPS, "dawn-suitcase.glb"):
+        for ob in meshes:
+            _plain_suitcase_side(ob)
     pts = [o.matrix_world @ Vector(c) for o in meshes for c in o.bound_box]
     lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
     hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
