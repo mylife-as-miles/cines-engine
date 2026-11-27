@@ -2,6 +2,7 @@
 """Q07's reel after two independent critics: their fixes, by editing only. Nothing generated.
 
     /root/leonxlnx/earshot/.venv/bin/python tools/finish_q07.py   ->  out/edits/Q07_reel_v4.mp4 (silent), .json
+    Q07_SHOT3=out/takes/Q07R_t1.mp4:4 ... tools/finish_q07.py     ->  out/edits/Q07_reel_v5.mp4: shot 3 from the remake
     Q07_CLOCK=out/edits/Q07_reel_v4.json ... tools/mix_q07.py     ->  out/review/Q07_reel_v4.mp4
 
 The author, 27 November: "run your critics on that scene... Do this reach dune level then use edit to fix places that
@@ -158,6 +159,12 @@ def shot3(img, j, n):
     return crop(img, 69, 0, 923, 372)
 
 
+def shot3r(img, j, n):
+    """The remade crossing (Q07R, a real travelling shot from its own plate): only brought to the reel's level and colour."""
+    hi = np.clip((img - 0.72) / 0.28, 0, 1); img = img - 0.07 * hi * hi                             # the sky's top eased down: whites keep their detail
+    return less_green(img * 0.95, 0.30) * (0.35 + 0.65 * fq.VIG)[..., None]
+
+
 def shot4(img, j, n):
     l = luma(img)
     img = img * (1 - (1 - 1 / stops(0.5)) * smooth(0.56, 0.68, l) * (1 - ramp(215, 245)))[..., None]   # every piece of sky, right up to the stone (a soft box left a halo at the piers)
@@ -185,7 +192,13 @@ def shot5(img, j, n):
 def main():
     p = subprocess.run(['ffmpeg', '-v', 'error', '-i', P('out/edits/Q07_reel_v2.mp4'), '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True)
     f = np.frombuffer(p.stdout, np.uint8).reshape(-1, H, W, 3)
-    dst = P('out/edits/Q07_reel_v4.mp4')
+    alt = os.environ.get('Q07_SHOT3')                                # 'take.mp4:first frame': the remade shot 3 in place of the pickup's
+    g3 = None
+    if alt:
+        path, start = alt.rsplit(':', 1); start = int(start)
+        p3 = subprocess.run(['ffmpeg', '-v', 'error', '-i', P(path), '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True)
+        g3 = np.frombuffer(p3.stdout, np.uint8).reshape(-1, H, W, 3)
+    dst = P('out/edits/Q07_reel_v5.mp4' if alt else 'out/edits/Q07_reel_v4.mp4')
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-an',
                             '-c:v', 'libx264', '-crf', '12', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', dst], stdin=subprocess.PIPE)
     fn = [shot1, None, shot3, shot4, shot5]; q = 0; keep = {}
@@ -195,8 +208,11 @@ def main():
     for s, (a, b) in enumerate(TRIM):
         for k in range(a, b):
             img = f[k].astype(np.float32) / 255; j, n = k - a, b - a
-            img = shot2(img, j, n, k, float(fall[j])) if s == 1 else fn[s](img, j, n)
-            img = FLOOR[s] + (1 - FLOOR[s]) * np.clip(img, 0, 1)                                                    # one black point
+            if s == 2 and g3 is not None:
+                img = shot3r(g3[start + j].astype(np.float32) / 255, j, n); fl = 0.0
+            else:
+                img = shot2(img, j, n, k, float(fall[j])) if s == 1 else fn[s](img, j, n); fl = FLOOR[s]
+            img = fl + (1 - fl) * np.clip(img, 0, 1)                                                    # one black point
             g = ndimage.gaussian_filter(np.random.default_rng(1000 + q).normal(0, 0.030, (H, W)).astype(np.float32), 0.6)
             img = img + (g * (0.55 + 0.45 * (1 - luma(img))))[..., None]                              # one fine grain, moving
             out = (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
@@ -205,7 +221,7 @@ def main():
             enc.stdin.write(out.tobytes()); q += 1
     enc.stdin.close(); enc.wait()
     starts = [int(x) for x in np.cumsum([0] + [b - a for a, b in TRIM[:-1]])]
-    info = {'file': 'out/edits/Q07_reel_v4.mp4', 'frames': q, 'seconds': round(q / FPS, 3), 'shots_start_frames': starts,
+    info = {'file': os.path.relpath(dst, HERE), 'shot3_from': alt, 'frames': q, 'seconds': round(q / FPS, 3), 'shots_start_frames': starts,
             'shots_seconds': [round(x / FPS, 3) for x in starts], 'shot_lengths_s': [round((b - a) / FPS, 3) for a, b in TRIM], 'kept_frames_of_v2': TRIM}
     json.dump(info, open(dst.replace('.mp4', '.json'), 'w'), indent=1); print(info)
     dbg = os.environ.get('Q07_DEBUG')
