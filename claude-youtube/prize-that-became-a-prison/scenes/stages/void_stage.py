@@ -72,7 +72,8 @@ DAWN_TURN = 18.0     # she faces the camera, turned a little to frame right (deg
 POSE = {"head": (18, 3), "neck": (4, 0), "chest": (2.5, 0), "l_arm": (5, 7, 9), "r_arm": (6, 6, 8), "fingers": 16}
 # legs straight (FK): her weight on the right leg, its knee locked; the left (free) knee soft, its foot a little out
 LEGS = {"R": dict(thigh=(0.0, 1.5), shin=(0.0, 1.5)), "L": dict(thigh=(3.0, 3.5), shin=(-1.5, 3.5))}
-SUIT_RGB = (0.028, 0.029, 0.031)   # flat charcoal prison greys (people.dawn_prison's tint, read on screen as cloth)
+SUIT_RGB = (0.03, 0.031, 0.033)    # flat charcoal prison greys: the trousers
+SHIRT_RGB = (0.017, 0.0175, 0.019)  # the shirt, a shade darker (its shoulders take the top light full on)
 
 # the bags (island-local x, y, turn): the case standing, its front pocket turned three-quarters to the lens; the
 # duffel on its side beside it, a little forward, angled; a hand's width of lit floor between them from the lens
@@ -189,12 +190,20 @@ def prison_suit(holder, rgb=SUIT_RGB):
                 nt.links.remove(ln)
         ao = next((n for n in nt.nodes if n.type == "TEX_IMAGE" and n.image and "_ao" in n.image.name), None)
         tc = nt.nodes.new("ShaderNodeTexCoord")
+        # the shirt a shade darker than the trousers (from above, the top-lit shoulders of a 0.03 shirt still came
+        # out near the arms' stone value): the shirt's UV islands are the top half (front, back) and the two sleeves
+        uvn = nt.nodes.new("ShaderNodeUVMap")
+        u, v, _ = st._xyz(nt, uvn.outputs["UV"])
+        shirt = st._math(nt, "MAXIMUM", st._math(nt, "GREATER_THAN", v, 0.58),
+                         st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", u, 0.745),
+                                  st._math(nt, "MULTIPLY", st._math(nt, "GREATER_THAN", v, 0.15),
+                                           st._math(nt, "LESS_THAN", v, 0.45))))
+        col = st._mix(nt, shirt, rgb, SHIRT_RGB)
         if ao is not None:
-            # the AO bake, softened (0.75-1.0), times the flat charcoal
+            # the AO bake, softened (0.62-1.0), times the flat charcoal
             mr = st._maprange(nt, ao.outputs["Color"], 0.0, 1.0, 0.62, 1.0)
-            nt.links.new(st._mix(nt, 1.0, rgb, mr, "MULTIPLY"), b.inputs["Base Color"])
-        else:
-            b.inputs["Base Color"].default_value = (*rgb, 1)
+            col = st._mix(nt, 1.0, col, mr, "MULTIPLY")
+        nt.links.new(col, b.inputs["Base Color"])
         b.inputs["Alpha"].default_value = 1.0
         b.inputs["Roughness"].default_value = 0.9
         b.inputs["Specular IOR Level"].default_value = 0.14

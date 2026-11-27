@@ -45,15 +45,21 @@ PHONE_Z = 1.05                            # bottom of the phone prop (its cord l
 FIT_Y = 0.42                              # fittings' centre |y| (over the counters, ahead of the sitters' faces)
 FIT_L = 0.64                              # fitting length (x)
 FIT_W = 210.0                             # a fitting's lamp (W) at level 1
-# fitting levels per booth, visitors' side and inmates' side: the occupied booth burns, a few others glow low
-LEVEL_V = [0.2, 0.0, 0.06, 1.0, 0.0, 0.06]
-LEVEL_I = [0.0, 0.07, 0.04, 1.0, 0.04, 0.0]
+LIP = 0.095                               # the steel shield on a fitting's partition side: depth below the body (m)
+# fitting levels per booth, visitors' side and inmates' side. Only the occupied booth burns (round-1 critique: three
+# lenses near white in the wide, though the brief has one booth lit). Booth 2 is built lit at level 1 only so the
+# empty-booth camera can turn it on: the stage's hook trims it to 0 for every other camera.
+LEVEL_V = [0.0, 0.0, 1.0, 1.0, 0.0, 0.0]
+LEVEL_I = [0.0, 0.03, 1.0, 1.0, 0.0, 0.0]
+BACK_LEVEL = (0.05, 0.0)                  # the visitors' room's own ceiling fittings (left one faint: the left wall)
 COOL = (0.80, 0.90, 1.0)
 UPPER, LOWER = (0.40, 0.405, 0.385), (0.10, 0.118, 0.13)    # pale emulsion above, satin blue-grey dado
 STEEL_PAINT = (0.075, 0.085, 0.095)       # booth steel: baffles (a dark blue-grey, so the row is not pale slabs)
 VD = dict(y=-2.35, w=0.95, h=2.1)         # visitors' door in the left wall (x = -XW)
 ID = dict(x=-2.15, w=0.95, h=2.1)         # inmates' door in the back wall (y = Y1)
-CLOCK = (1.75, Y1, 2.12)
+ID2 = dict(x=1.2, w=0.95, h=2.1)          # a second inmates' door, behind the occupied booth (the glass shot's depth)
+CLOCK = (2.25, Y1, 2.2)
+NIGHT = (-1.0, Y0, 2.45)                  # a bulkhead night light on the visitors' back wall (reflects in booth 2's pane)
 
 M = {}
 LIGHTS = {}
@@ -71,10 +77,15 @@ def materials():
         floor_i=mt.floor_paint("vr inmate floor", paint=(0.085, 0.092, 0.092), bare=(0.15, 0.145, 0.135),
                                path_w=-1.0, joint=3.0, joint_off=0.4, rough=0.55),
         soffit=mt.soffit("vr soffit", (0.3, 0.302, 0.295)),
-        steel=mt.paint("booth steel", STEEL_PAINT, 0.42, 0.05, 0.3, edge_rgb=(0.3, 0.3, 0.3)),
-        frame=mt.paint("frame steel", (0.05, 0.056, 0.062), 0.38, 0.04, 0.25, edge_rgb=(0.22, 0.22, 0.22)),
+        steel=mt.booth_paint("booth steel", STEEL_PAINT, 0.52, grime=0.78, scuffs=0.8),
+        frame=mt.booth_paint("frame steel", (0.05, 0.056, 0.062), 0.48, bare=(0.26, 0.265, 0.27), grime=0.85, edge=0.16),
         kick=mt.paint("kick paint", (0.03, 0.033, 0.036), 0.35, 0.04, 0.35, edge_rgb=(0.12, 0.12, 0.12)),
-        counter=mt.solid_surface("counter top", (0.07, 0.072, 0.073), 0.55),
+        counter=mt.counter_top("counter top", (0.07, 0.072, 0.073), 0.5,
+                               spots=[(bx + 0.12, -0.3) for bx in BX] + [(bx - 0.12, 0.3) for bx in BX]),
+        sealant=mt.rubber("sealant", (0.025, 0.025, 0.027), 0.55),
+        tape=mt.tape("floor tape"),
+        notice=mt.notice("notice laminate"),
+        plate=mt.brushed("plate stainless", (0.42, 0.43, 0.44), 0.36, 0.5, 0.25),
         glass=mt.security_glass("security glass"),
         glass_edge=mt.glass_edge("glass edge"),
         stainless=mt.brushed("phone stainless", (0.52, 0.53, 0.54), 0.3, 0.6, 0.2),
@@ -246,13 +257,14 @@ def shell():
     wall_run("wall_l", "y", -XW, -1, Y0 - T, Y1 + T, [(VD["y"], VD["w"] + 0.1, VD["h"] + 0.05)], m["wall_y"])
     wall_run("wall_r", "y", XW, +1, Y0 - T, Y1 + T, [], m["wall_y"])
     wall_run("wall_near", "x", Y0, -1, -XW, XW, [], m["wall_x"])
-    wall_run("wall_back", "x", Y1, +1, -XW, XW, [(ID["x"], ID["w"] + 0.1, ID["h"] + 0.05)], m["wall_x"])
+    wall_run("wall_back", "x", Y1, +1, -XW, XW, [(ID["x"], ID["w"] + 0.1, ID["h"] + 0.05),
+                                                  (ID2["x"], ID2["w"] + 0.1, ID2["h"] + 0.05)], m["wall_x"])
     kick_run("kick_l_v", "y", -XW, -1, Y0, -KW, [(VD["y"], VD["w"] + 0.1)], m["kick"])
     kick_run("kick_l_i", "y", -XW, -1, KW, Y1, [], m["kick"])
     kick_run("kick_r_v", "y", XW, +1, Y0, -KW, [], m["kick"])
     kick_run("kick_r_i", "y", XW, +1, KW, Y1, [], m["kick"])
     kick_run("kick_near", "x", Y0, -1, -XW, XW, [], m["kick"])
-    kick_run("kick_back", "x", Y1, +1, -XW, XW, [(ID["x"], ID["w"] + 0.1)], m["kick"])
+    kick_run("kick_back", "x", Y1, +1, -XW, XW, [(ID["x"], ID["w"] + 0.1), (ID2["x"], ID2["w"] + 0.1)], m["kick"])
 
 
 # ---------------------------------------------------------------- the partition and the booths
@@ -272,8 +284,22 @@ def partition():
         bevelled(top, 0.006, 3, 30)
         # a painted steel fascia under the counter's front edge, set back 6 mm
         box(f"fascia_{sy}", (x1 - x0, 0.016, 0.07), (0, y_out - sy * 0.014, TOP - CT - 0.035), m["steel"], bevel=0.003)
-        # the counter's front edge: a rounded nosing
+        # the counter's front edge: a rounded nosing capped by a stainless nosing strip (2 mm proud of the top, wrapped
+        # over the front), so the edge reads as a worn steel line rather than the slab's soft edge
         sk.cyl(f"nosing_{sy}", CT / 2, x1 - x0 + BAF_T, (0, y_out, TOP - CT / 2), m["counter"], rot=(0, math.pi / 2, 0), verts=20)
+        ns = box(f"nose_strip_{sy}", (x1 - x0 + BAF_T, 0.006, CT + 0.008), (0, y_out + sy * (CT / 2 + 0.001), TOP - CT / 2),
+                 m["stainless"], bevel=0.0025)
+        nt_ = box(f"nose_top_{sy}", (x1 - x0 + BAF_T, 0.024, 0.003), (0, y_out + sy * (CT / 2 - 0.008), TOP + 0.0012),
+                  m["stainless"], bevel=0.0012)
+        PARTS.setdefault("nosing", []).extend([ns, nt_])
+        # fixing screws through the nosing's front, every 0.25 m
+        scr = bmesh.new()
+        xx = x0 + 0.06
+        while xx < x1 - 0.04:
+            yy = y_out + sy * (CT / 2 + 0.004)
+            add_rod(scr, (xx, yy, TOP - CT / 2), (xx, yy + sy * 0.0018, TOP - CT / 2), 0.0035, 10)
+            xx += 0.25
+        mesh_obj(f"nose_screws_{sy}", scr, m["screw"], smooth=True)
         kick_run(f"kick_knee_{sy}", "x", sy * KW, -sy, x0, x1, [], m["kick"])
     # the frame: sill and head rails the length of the row, a mullion at every booth division
     for nm, (za, zb) in (("sill", SILL), ("head", HEAD)):
@@ -308,6 +334,19 @@ def partition():
                             (bx + sx * (iw / 2 - 0.009), sy * (GT / 2 + 0.0205), zz), 0.0045, 10)
     bevelled(mesh_obj("glazing_stops", bm_stop, m["frame"]), 0.003, 2)
     mesh_obj("stop_screws", screws, m["screw"], smooth=True)
+    # the pane's cut edge showing in the rebate: a 1.5 mm green-grey strip the pane's thickness deep along each inner
+    # edge of the stops, so the 25 mm glass reads as a slab with an edge, not an open hatch
+    edges = bmesh.new()
+    for i, bx in enumerate(BX):
+        iw, ih = P - MUL, HEAD[0] - SILL[1]
+        cz = (SILL[1] + HEAD[0]) / 2
+        e_ = 0.0015
+        for sx in (-1, 1):
+            add_box(edges, (e_, GT + 0.002, ih - 0.036), (bx + sx * (iw / 2 - 0.018 - e_ / 2), 0, cz))
+        for sz in (-1, 1):
+            add_box(edges, (iw - 0.036, GT + 0.002, e_), (bx, 0, cz + sz * (ih / 2 - 0.018 - e_ / 2)))
+    eo = mesh_obj("glass_edges", edges, m["glass_edge"])
+    eo.visible_shadow = False
     # the frame's face screws on the mullions (both sides)
     screws = bmesh.new()
     for k in range(N + 1):

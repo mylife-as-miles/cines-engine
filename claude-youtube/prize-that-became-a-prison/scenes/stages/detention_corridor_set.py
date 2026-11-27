@@ -311,8 +311,9 @@ def cells():
         if (side, y) == CLOSE:
             continue
         # a faint night light on the cell ceiling, toward the back
-        area(f"cell{i}_night", (sx * (XW + T + CELL_D * 0.65), y, CELL_H - 0.02), (0.25, 0.25), 2.5,
-             (0.62, 0.76, 1.0), spread=150)
+        # (brighter in the cells whose windows spill onto the corridor, so the window itself reads as lit)
+        area(f"cell{i}_night", (sx * (XW + T + CELL_D * 0.65), y, CELL_H - 0.02), (0.25, 0.25),
+             8.0 if i in WIN_LIT else 2.5, (0.62, 0.76, 1.0), spread=150)
     close_cell()
 
 
@@ -924,20 +925,26 @@ def back_door():
 
 # ---------------------------------------------------------------- the visitation room's furniture
 def table():
+    """Bolted-down institutional table: a 35 mm laminate top (its edge band chipped) on a welded steel frame, a
+    75 mm steel apron, 50 mm square legs, and at each foot a 100 mm square, 6 mm floor flange with four bolts."""
     m = materials()
     x, y = TABLE
-    box("table_top", (1.1, 0.7, 0.03), (x, y, TOP - 0.015), m["laminate"], 0.004)
+    tt = 0.035
+    box("table_top", (1.1, 0.7, tt), (x, y, TOP - tt / 2), m["laminate"], 0.003)
+    za = TOP - tt - 0.0375
     for s in (-1, 1):
-        box("table_apron", (0.94, 0.02, 0.06), (x, y + s * 0.27, TOP - 0.06), m["table_steel"], 0.003)
-        box("table_apron", (0.02, 0.52, 0.06), (x + s * 0.46, y, TOP - 0.06), m["table_steel"], 0.003)
+        box("table_apron", (0.94, 0.025, 0.075), (x, y + s * 0.27, za), m["table_steel"], 0.003)
+        box("table_apron", (0.025, 0.515, 0.075), (x + s * 0.46, y, za), m["table_steel"], 0.003)
     for sx in (-1, 1):
         for sy in (-1, 1):
-            lx, ly = x + sx * 0.47, y + sy * 0.28
-            box("table_leg", (0.04, 0.04, TOP - 0.03), (lx, ly, (TOP - 0.03) / 2), m["table_steel"], 0.004)
-            box("table_foot", (0.09, 0.09, 0.006), (lx, ly, 0.003), m["table_steel"], 0.002)
+            lx, ly = x + sx * 0.465, y + sy * 0.275
+            box("table_leg", (0.05, 0.05, TOP - tt), (lx, ly, (TOP - tt) / 2), m["table_steel"], 0.004)
+            box("table_foot", (0.1, 0.1, 0.006), (lx, ly, 0.003), m["table_steel"], 0.002)
             for bx in (-1, 1):
                 for by in (-1, 1):
-                    sk.cyl("table_bolt", 0.006, 0.008, (lx + bx * 0.031, ly + by * 0.031, 0.008), m["hardware"], verts=6)
+                    b = sk.cyl("table_bolt", 0.0075, 0.006, (lx + bx * 0.034, ly + by * 0.034, 0.009), m["hardware"], verts=6)
+                    bevelled(b, 0.001, 1, 40)
+                    sk.cyl("table_washer", 0.011, 0.0015, (lx + bx * 0.034, ly + by * 0.034, 0.0065), m["hardware"], verts=24)
 
 
 def chair(xy, facing_deg, val=0.95):
@@ -975,13 +982,13 @@ def chair(xy, facing_deg, val=0.95):
 
 
 def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
-    """A sealed envelope lying back up: its body (0.4 mm card) pillowed by the folded letter inside, the bottom flap
-    and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw the envelope's seams and
-    cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the far left corner has
-    curled up about 9 mm over its last 4.5 cm from handling and damp."""
+    """A sealed envelope lying back up: its body (0.8 mm: paper and the folded letter inside) pillowed in the
+    middle, the bottom flap and the sealed top flap laid over it as thin sheets 0.3 mm proud, so their edges draw
+    the envelope's seams and cast hairline shadows; the top flap's tip lifts a little where the glue gave, and the
+    far left corner has curled up about 20 mm over its last 6.5 cm from handling and damp."""
     m = materials()
     root = empty("envelope", (cx, cy, z), math.radians(ang_deg))
-    cq = 0.045                                           # the curl's reach in from the corner, along the diagonal
+    cq = 0.065                                           # the curl's reach in from the corner, along the diagonal
     def pill(x, y):
         """Height of the envelope's back: pillowed by the folded letter, a gentle warp, and its far left corner
         curled up off the table (a fold line square to the diagonal, rising as the square of the distance)."""
@@ -989,7 +996,7 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
         h += 0.0006 * math.sin(2.1 * math.pi * x / W + 0.6) * math.cos(1.3 * math.pi * y / D)
         h += 0.0006 * (1 + math.sin(3.0 * math.pi * x / W - 1.0)) * max(0.0, (2 * y / D) ** 2 - 0.6)
         q = ((x + W / 2) + (D / 2 - y)) * 0.70711
-        h += 0.010 * max(0.0, 1 - q / cq) ** 2
+        h += 0.020 * max(0.0, 1 - q / cq) ** 2
         return max(h, 0.0)
     nu, nv = 46, 32
     bm = bmesh.new()
@@ -998,10 +1005,10 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
         for j in range(nv):
             bm.faces.new((vs[i][j], vs[i + 1][j], vs[i + 1][j + 1], vs[i][j + 1]))
     for v in bm.verts:
-        v.co.z = pill(v.co.x, v.co.y) + 0.0004
+        v.co.z = pill(v.co.x, v.co.y) + 0.0008
     body = mesh_obj("envelope_body", bm, m["paper"], smooth=True)
     so = body.modifiers.new("card", "SOLIDIFY")
-    so.thickness, so.offset = 0.0004, -1.0
+    so.thickness, so.offset = 0.0008, -1.0
     body.parent = root
 
     def flap(name, poly, lift, mat):
@@ -1012,7 +1019,7 @@ def envelope(cx, cy, z, ang_deg, W=0.229, D=0.162):
             bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=2, use_grid_fill=True)
         bmesh.ops.triangulate(bm, faces=bm.faces[:])
         for v in bm.verts:
-            v.co.z = pill(v.co.x, v.co.y) + 0.0004 + lift(v.co.x, v.co.y)
+            v.co.z = pill(v.co.x, v.co.y) + 0.0008 + lift(v.co.x, v.co.y)
         ob = mesh_obj(name, bm, mat, smooth=True)
         s = ob.modifiers.new("card", "SOLIDIFY")
         s.thickness, s.offset = 0.0003, -1.0
@@ -1085,7 +1092,7 @@ def pendant():
     # (falling off about 0.35 m out, so the table's ends sit 2-3 stops down), and a weak bare point inside the
     # shade for its white inner glow and rim
     spot("pendant_light", (x, y, z0 + 0.1), PEND_W, WARM, 95.0, 0.35, 0.03)
-    spot("pendant_pool", (x, y, z0 + 0.1), POOL_W, WARM, 56.0, 0.65, 0.03)
+    spot("pendant_pool", (x, y, z0 + 0.1), POOL_W, WARM, POOL_CONE, 0.65, 0.03)
     g = point("pendant_glow", (x, y, z0 + 0.135), GLOW_W, WARM, radius=0.02)
     g.visible_glossy = True
 
@@ -1132,7 +1139,7 @@ def clock_light(xyz):
     """A small kicker 0.3 m below the clock, grazing up across its face, so it reads as a clock (ticks, hands),
     not a dark disc."""
     x, y, z = xyz
-    area("clock_kick", (x, y - 0.24, z - 0.3), (0.1, 0.1), 3.0, (0.95, 0.93, 0.9), spread=36,
+    area("clock_kick", (x, y - 0.24, z - 0.3), (0.1, 0.1), 0.8, (0.95, 0.93, 0.9), spread=90,
          rot=(math.pi - math.radians(38), 0, 0), glossy=False)
 
 

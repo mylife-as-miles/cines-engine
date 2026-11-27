@@ -37,7 +37,7 @@ EXPOSURE = -1.5
 
 CHAIR = (-0.12, 16.3, -90.0)                 # x, y, facing (deg; -90 = toward the door): the detainee's side, pulled out
 NEAR_CHAIR = (-0.84, 15.02, 66.0)            # the visitor's own chair at the near left corner, tucked in toward the table
-ENVELOPE = (-0.07, 15.69, 13.0)              # x, y, turn (deg) on the table top
+ENVELOPE = (0.04, 15.55, 13.0)               # x, y, turn (deg) on the table top: under the bulb
 
 FOCUS = {
     "fx_corridor": (0.0, 7.5, 1.2),
@@ -52,26 +52,30 @@ CAMERAS = {
     # Ch 06: controlled close-up on a cell door's barred window from the hinge side, 40 deg off its axis, so the
     # reveal has depth, the round bars throw shadows on the glass and the raking key grazes the leaf; the empty
     # bunk's top rail rim-lit beyond the bars
-    "door": dict(loc=(0.14, 8.53, 1.56), aim=(st.XW, 7.56, 1.48), lens=40, focus="fx_door", fstop=5.6),
+    "door": dict(loc=(0.14, 8.53, 1.56), aim=(st.XW, 7.56, 1.47), lens=38, focus="fx_door", fstop=5.6),
     # Ch 06: the visitation room from the doorway at a seated visitor's eye height (the end wall cut away): the
     # whole table in the pendant's pool, its legs and hard shadow on the floor, the empty chair behind the envelope,
     # the visitor's own chair pushed in at frame left, the shade's glowing rim in the upper third
     "chair": dict(loc=(0.30, 12.4, 1.16), aim=(-0.12, 15.9, 1.16), lens=25, focus="fx_chair", fstop=5.6,
                   shift=(0.0, -0.1), clip=1.0),
-    # Ch 06 (added): the insert: the sealed envelope in the pool of light from above the table's near edge, the
-    # empty chair soft beyond it
-    "envelope": dict(loc=(0.25, 15.0, 1.12), aim=(-0.03, 15.82, 0.78), lens=40, focus="fx_envelope", fstop=2.8,
-                     exposure=-1.7),
+    # Ch 06 (added): the insert, low over the table (23 cm above the top, a seated visitor leaning in): the sealed
+    # envelope on the lower third with its curled corner and its shadow, the table falling off into the dark
+    # round it, the empty chair's back large and soft beyond
+    "envelope": dict(loc=(0.418, 14.574, 0.97), aim=(-0.051, 15.786, 0.776), lens=50, focus="fx_envelope",
+                     fstop=2.8, exposure=-1.7),
 }
 # per-camera light changes (absolute watts by light name)
 TRIMS = {
     # the corridor: the room through the gap washed warm, so it is the brightest, warmest thing at the vanishing
-    # point
-    "corridor": {"room_warm": 600.0, "vd_spill": 0.0},
+    # point, and its warm wedge on the corridor floor
+    "corridor": {"room_warm": 600.0, "vd_spill": 0.0, "vd_floor_wedge": 400.0},
     # the door close-up: a raking key from the hinge side does the shaping; the fitting beyond the door turned
     # down so it does not fill
     "door": {"door_rake": 14.0, "fit4_down": 150.0, "fit4_up": 4.0},
 }
+# per-camera light positions: in the insert the pool's hot centre comes from the far left side of the bulb (still
+# inside the shade), so the curl and the envelope's edges throw their shadows toward the lens
+MOVES = {"envelope": {"pendant_pool": (-0.11, 15.68, st.PEND_Z + 0.03)}}
 # per-camera value of the far (empty) chair's shell: in the insert it would otherwise outshine the envelope
 CHAIR_VAL = {"envelope": 0.62}
 # per-camera swing of the visitation room's door leaf (deg): for the chair camera, which stands in the doorway with
@@ -98,10 +102,14 @@ def apply_camera(name):
         sx, sy = cfg.get("shift", (0.0, 0.0))
         cam.data.shift_x, cam.data.shift_y = sx, sy
     trims = TRIMS.get(name, {})
+    moves = MOVES.get(name, {})
     base = _STATE.setdefault("base", {})
+    base_loc = _STATE.setdefault("base_loc", {})
     for n, ob in st.LIGHTS.items():
         b = base.setdefault(n, ob.data.energy)
         ob.data.energy = trims.get(n, b)
+        bl = base_loc.setdefault(n, tuple(ob.location))
+        ob.location = moves.get(n, bl)
     for node, v0 in _STATE.get("chair_val", []):
         node.inputs["Value"].default_value = v0 * CHAIR_VAL.get(name, 1.0)
     leaf = st.PARTS.get("vd_leaf")
@@ -135,7 +143,7 @@ def door_rake():
     side, y = st.CLOSE
     sx = -1 if side == "L" else 1
     hinge = 1 if side == "R" else -1                 # world +Y for a right-hand door (the prop's hinges sit at -y)
-    a = math.radians(13.0)
+    a = math.radians(22.0)                       # swung into the wall so the inboard bars catch it too
     # it shines along -hinge (across the leaf), turned 13 deg into the wall
     rot = (-math.pi / 2, 0.0, hinge * sx * a) if hinge > 0 else (math.pi / 2, 0.0, hinge * sx * a)
     st.area("door_rake", (sx * (st.XW - 0.15), y + hinge * 0.85, 1.45), (0.08, 0.8), 0.0, (0.82, 0.9, 1.0), spread=70,
@@ -154,6 +162,7 @@ def build(cast=True):
     st.cell_doors()
     st.ceiling_services()
     st.drain()
+    st.near_door()
     st.vis_door()
     st.room()
     far = st.chair(CHAIR[:2], CHAIR[2])
@@ -163,7 +172,7 @@ def build(cast=True):
     st.chair(NEAR_CHAIR[:2], NEAR_CHAIR[2], val=0.4)
     st.envelope(ENVELOPE[0], ENVELOPE[1], st.TOP, ENVELOPE[2])
     door_rake()
-    sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.004)
+    sk.haze((2 * st.XW - 0.02, st.Y1 - st.Y0 - 0.02, st.H - 0.02), (0, (st.Y0 + st.Y1) / 2, st.H / 2), 0.0025)
     room_haze = sk.haze((2 * st.RX - 0.02, st.RY1 - st.RY0 - 0.02, st.H - 0.02), (0, (st.RY0 + st.RY1) / 2, st.H / 2), 0.014)
     room_haze.name = "room_haze"
     for n, p in FOCUS.items():

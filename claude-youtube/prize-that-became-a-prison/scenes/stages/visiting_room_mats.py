@@ -750,7 +750,15 @@ def security_glass(name, tint=(0.84, 0.875, 0.86), refl=0.035, smudge_zone=(0.95
     gl.inputs["Color"].default_value = (0.9, 0.95, 0.93, 1)
     lw = _n(nt, "ShaderNodeLayerWeight")
     lw.inputs["Blend"].default_value = 0.06
-    fac = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.9), refl)
+    # per-camera multipliers (set by the stage's hook): the clean glass's base reflectance and the film's milky
+    # diffuse, so a camera that looks at an empty pane can make the glass itself read
+    rg = _n(nt, "ShaderNodeValue")
+    rg.name = "refl_gain"
+    rg.outputs[0].default_value = 1.0
+    fd = _n(nt, "ShaderNodeValue")
+    fd.name = "film_diffuse"
+    fd.outputs[0].default_value = 1.0
+    fac = _math(nt, "ADD", _math(nt, "MULTIPLY", _out(lw, "Fresnel"), 0.9), _math(nt, "MULTIPLY", rg.outputs[0], refl))
     fac = _math(nt, "ADD", fac, _math(nt, "MULTIPLY", film, 0.015), clamp=True)
     mx = _n(nt, "ShaderNodeMixShader")
     _link(nt, fac, mx.inputs[0])
@@ -760,19 +768,185 @@ def security_glass(name, tint=(0.84, 0.875, 0.86), refl=0.035, smudge_zone=(0.95
     df = _n(nt, "ShaderNodeBsdfDiffuse")
     df.inputs["Color"].default_value = (0.8, 0.82, 0.82, 1)
     mx2 = _n(nt, "ShaderNodeMixShader")
-    _link(nt, _math(nt, "ADD", _math(nt, "MULTIPLY", film, 0.01), _math(nt, "MULTIPLY", scr, 0.025), clamp=True), mx2.inputs[0])
+    milk = _math(nt, "ADD", _math(nt, "MULTIPLY", film, 0.01), _math(nt, "MULTIPLY", scr, 0.025))
+    _link(nt, _math(nt, "MULTIPLY", milk, fd.outputs[0], clamp=True), mx2.inputs[0])
     _link(nt, mx.outputs[0], mx2.inputs[1])
     _link(nt, df.outputs[0], mx2.inputs[2])
     _link(nt, mx2.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
     return m
 
 
-def glass_edge(name, rgb=(0.05, 0.09, 0.075)):
-    """The cut edge of thick float glass: deep green, glossy."""
+def glass_edge(name, rgb=(0.11, 0.17, 0.14)):
+    """The cut edge of thick laminated glass as it shows in the rebate: a green-grey line, glossy (light carried
+    along inside the pane makes the edge read a little lighter than the frame)."""
     m, nt, b = _new(name)
     b.inputs["Base Color"].default_value = (*rgb, 1)
-    b.inputs["Roughness"].default_value = 0.12
-    b.inputs["Transmission Weight"].default_value = 0.6
+    b.inputs["Roughness"].default_value = 0.15
+    b.inputs["Transmission Weight"].default_value = 0.3
+    b.inputs["Emission Color"].default_value = (0.55, 0.75, 0.66, 1)
+    b.inputs["Emission Strength"].default_value = 0.04
+    return m
+
+
+# ---------------------------------------------------------------- round-1 fixes (critic, 27 Nov 2026)
+def _edge_mask(nt, radius=0.003, samples=4):
+    """1 on convex and concave edges (a bevelled normal turning away from the true one), 0 on flat faces."""
+    bev = _n(nt, "ShaderNodeBevel", samples=samples)
+    bev.inputs["Radius"].default_value = radius
+    geo = _n(nt, "ShaderNodeNewGeometry")
+    dt = _n(nt, "ShaderNodeVectorMath", operation="DOT_PRODUCT")
+    _link(nt, bev.outputs["Normal"], dt.inputs[0])
+    _link(nt, geo.outputs["Normal"], dt.inputs[1])
+    return _maprange(nt, _out(dt, "Value"), 0.995, 0.93, 0.0, 1.0)
+
+
+def booth_paint(name, rgb, rough=0.52, bare=(0.3, 0.305, 0.31), grime=0.8, scuffs=0.0, edge=0.13):
+    """Painted steel that has stood in a visiting room for years: a fine orange-peel bump (noise ~400/m), roughness
+    wandering 0.45-0.6, edge wear (a bevel-normal edge mask, broken by noise to cover ~`edge` of the edges) toward
+    lighter bare steel, grime in a gradient over the bottom 25 cm (value x `grime`), optional horizontal scuffs at
+    chair height (where chair backs and knees knock), and faint hand-greasy patches. Bump and wear in object space,
+    grime and scuffs in world space."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    p = _world(nt)
+    wx, wy, wz = _xyz(nt, p)
+    peel = _noise(nt, o, 400.0, 2.0, 0.5)
+    w = _noise(nt, o, 3.0, 4.0, 0.6)
+    col = _mix(nt, _maprange(nt, w, 0.35, 0.75, 0.0, 0.22), rgb, tuple(c * 0.8 for c in rgb))
+    col = _mix(nt, _maprange(nt, _noise(nt, o, 11.0, 3.0, 0.6), 0.55, 0.8, 0.0, 0.25), col, tuple(min(1, c * 1.22) for c in rgb))
+    # grime: the bottom 25 cm darker, ragged
+    g = _maprange(nt, wz, 0.25, 0.02, 0.0, 1.0)
+    g = _math(nt, "MULTIPLY", g, _maprange(nt, _noise(nt, p, 6.0, 4.0, 0.6), 0.3, 0.7, 0.6, 1.0))
+    col = _mix(nt, 1.0, col, _combine1(nt, _maprange(nt, g, 0.0, 1.0, 1.0, grime)), "MULTIPLY")
+    sc_m = None
+    if scuffs:
+        sc = _noise(nt, p, 1.0, 3.0, 0.6, mapping=(26.0, 26.0, 2.2))
+        sc_m = _maprange(nt, sc, 0.64, 0.7, 0.0, 1.0)
+        sc_m = _math(nt, "MULTIPLY", sc_m, _band(nt, wz, 0.38, 0.78, 0.08))
+        sc_m = _math(nt, "MULTIPLY", sc_m, _maprange(nt, _noise(nt, p, 1.4, 2.0, 0.5), 0.45, 0.62, 0.0, scuffs))
+        col = _mix(nt, sc_m, col, (0.03, 0.03, 0.032))
+    # worn edges: bare steel showing on the arrises, in broken runs
+    em = _edge_mask(nt, 0.003)
+    brk = _maprange(nt, _noise(nt, o, 24.0, 3.0, 0.65), 0.5 - edge, 0.5 + edge * 0.6, 0.0, 1.0)
+    wear = _maprange(nt, _math(nt, "MULTIPLY", em, brk), 0.25, 0.55, 0.0, 1.0)
+    col = _mix(nt, wear, col, bare)
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, _math(nt, "MULTIPLY", wear, 0.85), b.inputs["Metallic"])
+    r = _maprange(nt, _noise(nt, o, 2.2, 3.0, 0.5), 0.3, 0.7, rough - 0.07, rough + 0.08)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", g, 0.12))
+    if sc_m is not None:
+        r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", sc_m, 0.15))
+    r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", wear, 0.22), clamp=True)
+    _link(nt, r, b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.45
+    h = _math(nt, "ADD", peel, _math(nt, "MULTIPLY", wear, -0.6))
+    _bump(nt, b, h, 0.04, 0.0006)
+    return m
+
+
+def counter_top(name, rgb=(0.07, 0.072, 0.073), rough=0.5, spots=(), nose_y=None):
+    """The booth counters (world space): dark solid surface with a mineral speckle, fine scratches running along X
+    (sleeves and keys dragged along the counter), a worn patch 30 x 20 cm where each sitter's forearms rest in front
+    of the phone (darker and polished: `spots` = ((x, y), ...)), and grime gathering against the frame."""
+    m, nt, b = _new(name)
+    p = _world(nt)
+    wx, wy, wz = _xyz(nt, p)
+    sp = _noise(nt, p, 520.0, 2.0, 0.5)
+    col = _mix(nt, _maprange(nt, sp, 0.35, 0.65, 0.0, 0.35), rgb, tuple(c * 1.35 for c in rgb))
+    col = _mix(nt, _maprange(nt, _noise(nt, p, 3.0, 4.0, 0.6), 0.5, 0.75, 0.0, 0.3), col, tuple(c * 0.82 for c in rgb))
+    # scratches along X: noise stretched hard along X, cut thin, in broken runs
+    scr = None
+    for k, (sy, sz, ang) in enumerate(((900.0, 4.0, 0.0), (1300.0, 7.0, 0.05), (700.0, 3.0, -0.08))):
+        rot = _n(nt, "ShaderNodeMapping")
+        rot.inputs["Rotation"].default_value = (0.0, 0.0, ang)
+        rot.inputs["Location"].default_value = (0.31 * k, 0.13 * k, 0.0)
+        _link(nt, p, rot.inputs["Vector"])
+        mp = _n(nt, "ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (sz, sy, sz)
+        _link(nt, rot.outputs["Vector"], mp.inputs["Vector"])
+        nn = _n(nt, "ShaderNodeTexNoise")
+        nn.inputs["Scale"].default_value = 1.0
+        nn.inputs["Detail"].default_value = 1.0
+        _link(nt, mp.outputs["Vector"], nn.inputs["Vector"])
+        s = _maprange(nt, nn.outputs["Fac"], 0.62, 0.66, 0.0, 1.0)
+        scr = s if scr is None else _math(nt, "MAXIMUM", scr, s)
+    scr = _math(nt, "MULTIPLY", scr, _maprange(nt, _noise(nt, p, 2.5, 2.0, 0.5), 0.4, 0.62, 0.0, 1.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", scr, 0.5), col, tuple(c * 1.9 for c in rgb))
+    worn = None
+    ay = _math(nt, "ABSOLUTE", wy)
+    for (sx, sy_) in spots:
+        dx = _math(nt, "DIVIDE", _math(nt, "SUBTRACT", wx, sx), 0.15)
+        dy = _math(nt, "DIVIDE", _math(nt, "SUBTRACT", wy, sy_), 0.10)
+        d = _math(nt, "SQRT", _math(nt, "ADD", _math(nt, "MULTIPLY", dx, dx), _math(nt, "MULTIPLY", dy, dy)))
+        d = _math(nt, "ADD", d, _maprange(nt, _noise(nt, p, 9.0, 3.0, 0.6), 0.3, 0.7, -0.25, 0.25))
+        s = _maprange(nt, d, 1.0, 0.55, 0.0, 1.0)
+        worn = s if worn is None else _math(nt, "MAXIMUM", worn, s)
+    if worn is not None:
+        col = _mix(nt, _math(nt, "MULTIPLY", worn, 0.7), col, tuple(c * 0.72 for c in rgb))
+    # grime in the back corner against the frame (|y| small)
+    gb = _math(nt, "MULTIPLY", _maprange(nt, ay, 0.12, 0.06, 0.0, 1.0), _maprange(nt, _noise(nt, p, 8.0, 3.0, 0.6), 0.3, 0.7, 0.4, 1.0))
+    col = _mix(nt, _math(nt, "MULTIPLY", gb, 0.6), col, (0.02, 0.02, 0.02))
+    _link(nt, col, b.inputs["Base Color"])
+    r = _maprange(nt, _noise(nt, p, 1.8, 3.0, 0.5), 0.3, 0.7, rough - 0.08, rough + 0.08)
+    r = _math(nt, "ADD", r, _math(nt, "MULTIPLY", scr, 0.18))
+    if worn is not None:
+        r = _math(nt, "SUBTRACT", r, _math(nt, "MULTIPLY", worn, 0.16))
+    r = _math(nt, "MAXIMUM", _math(nt, "MINIMUM", r, 0.75), 0.3)
+    _link(nt, r, b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.35
+    _bump(nt, b, _math(nt, "ADD", _math(nt, "MULTIPLY", scr, -0.5), _math(nt, "MULTIPLY", sp, 0.2)), 0.06, 0.0003)
+    return m
+
+
+def lens_glow(name, rgb, strength, ends=0.5, half=0.3):
+    """A fitting's opal diffuser: an emitter (its blackened tube ends darker along local Z, `half` the half length)
+    ADDED to the unlit opal's milky surface, so a fitting trimmed to 0 for a camera reads as an unlit diffuser, not
+    a black hole. Its strength sits in a Map Range (To Min / To Max) that the stage's hook scales per camera."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    o = _obj(nt)
+    d = _noise(nt, o, 14.0, 3.0, 0.6)
+    _link(nt, _mix(nt, _maprange(nt, d, 0.5, 0.75, 0.0, 0.4), (0.3, 0.31, 0.31), (0.12, 0.11, 0.1)), b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.4
+    em = _n(nt, "ShaderNodeEmission")
+    em.inputs["Color"].default_value = (*rgb, 1)
+    x, y, z = _xyz(nt, o)
+    a = _math(nt, "ABSOLUTE", z)
+    _link(nt, _maprange(nt, a, half * 0.78, half, strength, strength * (1.0 - ends)), em.inputs["Strength"])
+    add = _n(nt, "ShaderNodeAddShader")
+    _link(nt, b.outputs[0], add.inputs[0])
+    _link(nt, em.outputs[0], add.inputs[1])
+    _link(nt, add.outputs[0], nt.nodes["Material Output"].inputs["Surface"])
+    m.cycles.emission_sampling = "NONE"
+    return m
+
+
+def tape(name, rgb=(0.3, 0.27, 0.15)):
+    """Worn floor tape (world space): matt vinyl, scuffed through to the floor in ragged patches, dirty."""
+    m, nt, b = _new(name)
+    p = _world(nt)
+    wear = _maprange(nt, _noise(nt, p, 14.0, 4.0, 0.65), 0.6, 0.7, 0.0, 1.0)
+    wear = _math(nt, "MULTIPLY", wear, _maprange(nt, _noise(nt, p, 1.5, 2.0, 0.5), 0.4, 0.6, 0.3, 1.0))
+    col = _mix(nt, _maprange(nt, _noise(nt, p, 5.0, 3.0, 0.6), 0.3, 0.7, 0.0, 0.35), rgb, tuple(c * 0.7 for c in rgb))
+    col = _mix(nt, wear, col, (0.12, 0.12, 0.115))
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, _maprange(nt, wear, 0.0, 1.0, 0.62, 0.4), b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.35
+    return m
+
+
+def notice(name, rgb=(0.42, 0.41, 0.37)):
+    """A blank laminated notice panel: matt off-white, a slight satin film, greyed toward its edges where hands
+    have pushed it, a faint yellowing."""
+    m, nt, b = _new(name)
+    o = _obj(nt)
+    n = _noise(nt, o, 4.0, 3.0, 0.6)
+    col = _mix(nt, _maprange(nt, n, 0.4, 0.75, 0.0, 0.25), rgb, (rgb[0] * 0.9, rgb[1] * 0.86, rgb[2] * 0.72))
+    _link(nt, col, b.inputs["Base Color"])
+    _link(nt, _maprange(nt, n, 0.3, 0.7, 0.42, 0.55), b.inputs["Roughness"])
+    b.inputs["Specular IOR Level"].default_value = 0.35
     return m
 
 
