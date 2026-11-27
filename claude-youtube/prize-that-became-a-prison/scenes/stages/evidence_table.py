@@ -26,6 +26,7 @@ sys.path.insert(0, HERE)
 import bpy  # noqa: E402
 import bmesh  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils.bvhtree import BVHTree  # noqa: E402
 
 import props  # noqa: E402
@@ -59,7 +60,10 @@ HIDE = {
     "ch02": ("bags", "receipt_c4", "photos", "receipt", "passport", "folder", "letter"),
     "ch04": ("laptop", "folder", "highlighter", "passport", "passport_c2", "passes_c2", "letter", "photos", "receipt", "stack"),
 }
-CAMERA_ONLY = ("net_passport", "cover light", "chair")
+DOCUMENT_PROPS = ("laptop", "bags", "receipt_c4", "passport_c2", "passes_c2", "photos", "receipt",
+                  "passport", "folder", "letter", "envelope", "highlighter", "stack", "mug")
+HIDE["document"] = DOCUMENT_PROPS
+CAMERA_ONLY = ("net_passport", "cover light", "chair", "page sheet", "pair sheets", "document tools")
 
 LAPTOP = (0.40, 0.30, 60.0)      # base centre and turn: the screen faces (-cos t, -sin t), toward the front
 # Ch 04: the rolled receipt in front of the tote, in the pool's falloff so it is not the brightest thing in frame
@@ -100,6 +104,16 @@ CAMERAS = {
     # the passes behind fall under it, helped by a graduated net off the lamp
     "passport": dict(loc=(-0.102, -0.41, TOP + 0.27), aim=(-0.252, -0.056, TOP + 0.010), lens=64, focus="fx_passport", fstop=4.8,
                      beat="spread", show=("net_passport", "cover light"), hide=("envelope",), lamp=(-0.81, -0.36, -64.0)),
+    "page": dict(loc=(0.0, -0.45, TOP + 0.752), aim=(0.0, -0.012, TOP), lens=50,
+                 focus="fx_page", fstop=5.6, beat="document", show=("page sheet", "document tools"),
+                 lamp=(-0.40, 0.20, -123.0), exposure=-1.55, final_res=(2560, 1440)),
+    "pair": dict(loc=(0.02, -0.508, TOP + 0.82), aim=(0.0, -0.008, TOP), lens=54,
+                 focus="fx_page", fstop=6.3, beat="document", show=("pair sheets", "document tools"),
+                 lamp=(-0.40, 0.20, -122.0), exposure=-1.4, final_res=(2560, 1440)),
+    "screen": dict(loc=(0.025, -0.22, TOP + 0.26), aim=(0.43, 0.37, TOP + 0.121), lens=50,
+                   focus="fx_screen", fstop=3.5, beat="ch02", hide=("passport_c2", "passes_c2", "envelope", "highlighter", "stack"),
+                   exposure=-1.6),
+
 }
 
 M = {}
@@ -610,6 +624,43 @@ def pulled_chair():
     return parts
 
 
+def document_plates():
+    """Flat blank sheets on bare wood so artwork can be corner-pinned without distortion."""
+    m = materials()
+    keep = list(pp.SUPPORT)
+    wood = [o for o in keep if o.name == "table_top"]
+    for group_name, name, x, y, turn in (("page sheet", "document_single", 0, 0, -40),
+                                          ("pair sheets", "document_left", -0.114, 0.004, 1.8),
+                                          ("pair sheets", "document_right", 0.115, -0.005, -1.5)):
+        pp.SUPPORT[:] = wood
+        group(group_name, pp.sheet(name, m["paper"], 0.210, 0.297, x, y, turn, step=0.014, stiff=0))
+    pp.SUPPORT[:] = wood
+    group("document tools", pp.pen("document_pen", m["pen"], m["chrome"], m["chrome"], -0.222, -0.062, 86))
+    group("document tools", pp.highlighter("document_highlighter", m["hl_body"], m["hl_cap"], 0.258, 0.045, 74))
+    pp.SUPPORT[:] = keep
+    empty("fx_page", (0, -0.055, TOP + 0.0003))
+
+
+def frame_metadata(name, scene, resolution):
+    """Export paper corners, clockwise in document reading order, in top-left-origin frame pixels."""
+    names = {"page": ("document_single",), "pair": ("document_left", "document_right")}
+    if name not in names:
+        return None
+    pages = []
+    width, height = resolution
+    dg = bpy.context.evaluated_depsgraph_get()
+    for sheet_name in names[name]:
+        sheet = bpy.data.objects[sheet_name].evaluated_get(dg)
+        corners = {}
+        for label, x, y in (("top_left", -0.105, 0.1485), ("top_right", 0.105, 0.1485),
+                            ("bottom_right", 0.105, -0.1485), ("bottom_left", -0.105, -0.1485)):
+            vertex = min(sheet.data.vertices, key=lambda v: ((v.co.x - x)**2 + (v.co.y - y)**2, -v.co.z))
+            p = world_to_camera_view(scene, scene.camera, sheet.matrix_world @ vertex.co)
+            corners[label] = [round(p.x * width, 3), round((1 - p.y) * height, 3)]
+        pages.append({"sheet": sheet_name, "corners": corners})
+    return {"camera": name, "resolution": [width, height], "origin": "top-left pixel edge", "pages": pages}
+
+
 def spread():
     """Lay the evidence out bottom to top: each paper drops onto what is already there."""
     m = materials()
@@ -807,7 +858,10 @@ def build(cast=True):
     table()
     lamp()
     spread()
+    document_plates()
     group("laptop", laptop())
+    bpy.context.view_layer.update()
+    empty("fx_screen", tuple(bpy.data.objects["laptop_screen"].matrix_world.translation))
     group("bags", bags())
     # Ch 04: the rolled receipt on the wood in front of the bags, its roll toward the lamp, seen nearly end on
     # Ch 04's receipt, and Ch 02 (night, the email): the documents are put away; the passport and the two boarding

@@ -13,6 +13,7 @@ grain). Prints the wait, build and render times. `--cam all` renders every camer
 """
 import fcntl
 import importlib
+import json
 import os
 import subprocess
 import sys
@@ -52,7 +53,10 @@ print(f"SHOOT build {t2 - t1:.1f} s", flush=True)
 sc = bpy.context.scene
 sc.render.threads_mode = "FIXED"
 sc.render.threads = 4
-names = list(mod.CAMERAS) if cam_name == "all" else [cam_name]
+names = list(mod.CAMERAS) if cam_name == "all" else cam_name.split(",")
+unknown = set(names) - mod.CAMERAS.keys()
+if unknown:
+    raise ValueError(f"Unknown cameras for {stage}: {sorted(unknown)}")
 for n in names:
     c = mod.CAMERAS[n]
     for o in [o for o in bpy.data.objects if o.type == "CAMERA"]:
@@ -60,12 +64,23 @@ for n in names:
     focus = c.get("focus")
     focus = focus if focus and focus in bpy.data.objects else None
     sk.camera(c["loc"], c["aim"], lens=c.get("lens", 35), focus=focus, fstop=c.get("fstop", 4.0))
-    path = out if len(names) == 1 else out.replace(".png", f"_{n}.png")
+    path = out if cam_name != "all" and len(names) == 1 else out.replace(".png", f"_{n}.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    sk.render(path, spp, res, exposure=c.get("exposure", getattr(mod, "EXPOSURE", -2.0)))
+    stem = os.path.splitext(os.path.basename(path))[0]
+    final = stem == "final" or stem.startswith("final_")
+    render_res = res
+    if final and c.get("final_res", res)[0] > res[0]:
+        render_res = c["final_res"]
+    sk.render(path, spp, render_res, exposure=c.get("exposure", getattr(mod, "EXPOSURE", -2.0)))
     if "--nograde" not in a:
         g = path.replace(".png", "_graded.png")
         subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", path, "-vf", GRADE, g], check=True)
         print("SHOOT graded", g, flush=True)
+    if final and hasattr(mod, "frame_metadata"):
+        metadata = mod.frame_metadata(n, sc, render_res)
+        if metadata is not None:
+            with open(os.path.splitext(path)[0] + ".corners.json", "w") as stream:
+                json.dump(metadata, stream, indent=2)
+                stream.write("\n")
     print("SHOOT wrote", path, flush=True)
 print(f"SHOOT total {time.time() - t0:.0f} s (waited {t1 - t0:.0f} s)", flush=True)
