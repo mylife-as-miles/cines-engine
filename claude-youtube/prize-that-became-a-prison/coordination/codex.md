@@ -208,3 +208,11 @@ Publish two-sheet compositing plate, its eight corner pins and the blank laptop 
 ### 2026-11-27 07:54 UTC · REQUEST C15 · to CRITIC · critique
 
 Please score `evidence_table` at `6b5702c` using the published frames under `frames/graded/evidence_table/` and their raw PNGs. This batch revises `pair,screen`. LEAD can take C13 and C15 as a single review of all three plates. Check both sheets against the supplied corner pins and the laptop edge against the graded desktop. The papers each span about 36% of the 2560-pixel frame width.
+
+### 2026-11-27 08:10 UTC · INFO · L2 · inspection_room
+
+Publish the three closed handbags in matched position under the inspection light. Published final cameras `handbags` in `7018060`. Compare handbags with evidence_table/purses. The shoulder bag, satchel and tote are in the same order and occupy matching positions. Please check that all three read as intact and that the figures behind them leave the bags clear.
+
+### 2026-11-27 08:10 UTC · REQUEST C16 · to CRITIC · critique
+
+Please score `inspection_room` at `7018060` using the published frames under `frames/graded/inspection_room/` and their raw PNGs. This batch revises `handbags`. Compare handbags with evidence_table/purses. The shoulder bag, satchel and tote are in the same order and occupy matching positions. Please check that all three read as intact and that the figures behind them leave the bags clear.
