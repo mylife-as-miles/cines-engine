@@ -147,9 +147,9 @@ CAMERAS.update({
     "cell_dawn": dict(loc=_p(C, 1.94, -4.16, 1.35), aim=_p(C, -0.23, 0.43, 0.95),
                       lens=29, fstop=4, focus="fx_bunk", beat="cell", seated=True, final_res=(2560, 1440)),
     "dawn_close": dict(loc=_p(D, -1.31, -1.71, 1.51), aim=_p(D, -0.13, 0.07, 1.41), lens=85,
-                       fstop=3.2, focus="fx_bowed", beat="dawn"),
+                       fstop=3.2, focus="fx_bowed", beat="dawn", shift=(0.040, 0.014)),
     "cell_floor": dict(loc=_p(C, 0.50, -1.50, 0.46), aim=_p(C, -0.08, 0.28, 0.18),
-                       lens=37, fstop=5.0, focus="fx_patch", beat="cell"),
+                       lens=37, fstop=5.0, focus="fx_patch", beat="cell", seated=True),
     "divide": dict(loc=_p(D, -1.65, -8.8, 1.35), aim=_p(D, -1.65, 0, 0.76),
                    lens=42, fstop=5.6, focus="fx_dawn", beat="divide"),
 })
