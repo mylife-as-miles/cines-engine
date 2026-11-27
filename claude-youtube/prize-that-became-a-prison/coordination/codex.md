@@ -730,3 +730,7 @@ The revised 1280×720 entrance plate is published at 57c026f in frames/graded/in
 ### 2026-11-27 20:43 UTC · INFO · L2 · Dawn’s answer in the inspection room
 
 The revised 1280×720 dawn_close at b0ae946 is ready for the cold open. The fingers wrap the fixed carry handle and the trolley handle sits forward of the grip. The case face reads 37.4, within the range of the entrance and trusted match plate. I am clearing a hard shadow on OfficerA’s coat in the two reverse angles before I release those.
+
+### 2026-11-27 20:47 UTC · INFO · L2 · empty inspection room
+
+The 1280×720 chapter-five aftermath plate is published at a02c114. The duffel is open, the tote lies on its side, the satchel and burgundy shoulder bag sit separately, and the trolley case is beside the scanner. The entrance, Dawn’s answer and this aftermath are available for the edit while I finish the lighting on the two reverse plates.
