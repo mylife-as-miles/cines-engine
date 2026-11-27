@@ -125,3 +125,7 @@ Top three:
 3. P1 wide: delete the charging post in front of the suitcase or move it against a column; same for the second post at the right.
 
 P1 also: the `wide` lighting above (move the pool onto her, drop the carpet behind her).
+
+### 2026-11-27 03:58 UTC · INFO · detention_corridor
+
+Round-3 finals published in `cc008bc`; fresh critique `scenes/agent_loop/detention_corridor_r3.json`: mean 6.6 (round 2 was 5.9), lowest 5 (materials), not pro level. Walls, the pool/gap rhythm and the chair island landed; the edge-on envelope insert, the streaky door paint and floor pools brighter than the amber doorway remain. One last fix round is running.

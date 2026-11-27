@@ -237,73 +237,85 @@
   ]
  },
  "detention_corridor": {
-  "round": 2,
+  "round": 3,
   "scores": {
-   "composition": 6,
-   "lighting": 5,
+   "composition": 7,
+   "lighting": 6,
    "materials": 5,
-   "set_dressing": 6,
-   "grounding_scale": 6,
-   "cast": 6,
+   "set_dressing": 7,
+   "grounding_scale": 7,
+   "cast": 7,
    "story_read": 6,
-   "technical": 7
+   "technical": 8
   },
   "pro_level": false,
-  "verdict": "Not pro level yet. All four frames are clean and the ideas are right: one-point night corridor, an empty chair in a lit island, an envelope insert. But only the chair frame would hold up next to fern's cuts or the Leonxlnx stills.\n\ncorridor: The left and right foreground walls are crushed. I measured 2-9/255 in the graded frame, and about 40% of the frame is near-black, so the block coursing and dado that carry the place are gone. The floor is the brightest large surface (about 140/255 down the middle). The pool / dead gap / pool rhythm barely shows: the gap is only about 18% darker than the pools (117 against 143). The worn-floor texture reads as blotchy camouflage, and the drain sits on a black blob that reads as a hole, not a damp patch. The visitation door at the vanishing point grades to pale beige, not amber, and the haze greys it out. The meal tray on the near hatch is unreadable: it is just a cup on a dark shelf.\n\ndoor: The riveted rounded-rectangle frame with 24 dome rivets reads as a ship's porthole, not a detention vision panel. The two left bars render flat black and the two right bars light grey, so they look like two different materials. The tie bar is four floating square blocks. The bunk beyond is an unreadable shelf shape. The hinge has an oversized hex bolt and dark speckle that looks like spatter. The frame's top edge is about 15 px from the top of the picture.\n\nchair: The best frame. The pendant pool, the hard rectangular shadow and the dead-centre empty chair carry the beat. But the table top is hardly brighter than the floor around its shadow, so the island is the floor, not the table. The clock has its own unmotivated fan-shaped hotspot. The table is a thin generic flat-pack top.\n\nenvelope: The envelope is cold near-white (raw p99 is 230) with no visible thickness. It has no contact shadow, the 9 mm curl does not show, and it looks pasted on. The flat, untextured grey table top fills about 60% of the frame: the big flat grey foreground slab the brief warns against.\n\nTechnical: no clipping and fine grain. The only artefacts are the clock hotspot and some milky haze at the far end.",
+  "verdict": "Clearly better than round 2. The corridor now opens out of walls you can read, with a real pool / dead gap / pool rhythm, the door panel no longer reads as a porthole, and the chair frame is a lit island at fern's level. It is still not pro level. Shot edge-on from 17 cm, the envelope insert no longer reads as a sealed envelope. The cell-door close-up still shows streaky, wood-grain paint, the prop's melted hinge and hatch, and a black-and-white muddle behind the bars. In the corridor, the floor pools (about 180/255 graded) still outshine the amber doorway (about 122) that should be the frame's destination.",
   "fixes": [
    {
     "priority": 1,
-    "camera": "corridor",
-    "problem": "Foreground side walls crushed to 2-9/255 graded; about 40% of the frame is near-black, so the block, dado and doors in the foreground carry nothing.",
-    "fix": "Light them with a motivated practical, not fill. In close_cell()/cell_doors(), give the vision panels of the two nearest doors on each side (y below 3 m) a faint cell night light: an area of about 0.2 x 0.1 m, 25-40 W, COOL, placed inside the panel and aimed out across the corridor, so each spills a soft cool patch onto the opposite wall at dado height. Also put a recessed blank-glazed door at the near end wall Y0 behind camera with a 0.3 x 1.8 m, 15 W area leaking along the floor. Target: graded foreground walls at 18-30/255 with mortar lines visible, while the corridor still opens out of darkness."
+    "camera": "envelope",
+    "problem": "The round-2 fix overshot. From 17 cm above the top on a 70 mm lens the envelope is seen almost edge-on: a white sliver about 380 x 60 px with a 20 mm curl rising to a sharp point. It reads as a folded strip of paper or a paper boat. The flap V, the seal and the envelope's proportions, which are the whole beat ('a sealed envelope'), are gone. The previous top-down version read better as an envelope.",
+    "fix": "In CAMERAS['envelope'], raise the camera to about 18-22 deg above the table: loc about (0.45, 14.5, 1.15), aim about (-0.08, 15.95, 0.72), lens 70-75, fstop 2.8, focus on fx_envelope. Adjust the aim at preview so that the envelope sits on the lower-third line with the top flap's V and its tip clearly visible, the top of the empty chair's back sits about 10% below the frame top, and the table stays under about 45% of the frame. In envelope(), reduce the curl from h += 0.020 * max(0, 1 - q/cq)**2 to about 0.008, with cq widened from 0.065 to 0.09, so the corner lifts gently instead of rising to a peak. Keep the pendant_pool MOVES offset so the curl and the body still throw their shadow toward the lens."
    },
    {
     "priority": 1,
-    "camera": "corridor",
-    "problem": "Floor is the brightest large surface (about 140/255) and the pool / dead gap / pool rhythm barely shows (gap 117 against pools 143).",
-    "fix": "In detention_corridor_set.py set FIT_SPREAD from 118 to about 90, and keep fit3 (y=7.0) at 0. In floor_paint, lower bare from (0.13,0.126,0.118) to about (0.085,0.082,0.077) and the path brightening from 1.45x to 1.2x. Raise FIT_W only if the pools then read too dim. Target: the floor in the dead gap at 7 m at or below 50% of the pool luminance at 4.6 m and 9.4 m, with each pool a visible ellipse with edges."
+    "camera": "door",
+    "problem": "Door paint: thin vertical dark streaks run over the whole leaf around and below the window and over the frame. In the close-up they read as wood grain or rain streaks on steel, which the brief warns against. The 3 mm panel dents that should show under the raking key do not read, so the leaf is a flat blue-grey field with streaks.",
+    "fix": "In detention_corridor_mats.door_steel(): restrict the 'win' zone to under the frame's bottom edge (band pz 0.95-1.18 instead of 0.95-1.82) so the field round the window stays clean. Tighten runs from maprange(0.6, 0.66) to (0.72, 0.75) and drips from (0.9, 0.97) to (0.96, 0.985), and drop the streak mix factor from 0.7 to 0.3, leaving a few drips under the frame and above the hatch. Raise the dent bump distance from 0.003 to 0.006 at noise scale 1.6, so door_rake shows soft panel undulation. Add a broad roughness variation of 0.45-0.62 (noise scale 1.2) so the raking light breaks unevenly across the leaf."
    },
    {
     "priority": 2,
     "camera": "corridor",
-    "problem": "The vanishing-point door grades to pale beige, not amber. Haze and the fitting directly above it (11.8 m, level 0.2) wash it out, so the frame's destination is weak.",
-    "fix": "Drop the dying tube fit5 to level 0.06-0.08, or move it to y=11.2 so it does not sit over the door. Add a spot 'vd_floor_wedge' inside the room aimed out through the gap, low (z=0.4), 40 deg cone, AMBER, about 150 W, so a warm wedge of light lies on the corridor floor out of the door for 1.5-2 m. Raise room_warm saturation (AMBER g toward 0.32). Lower the corridor haze density from 0.004 to 0.0025 so the end is not milky. Check that the graded doorway reads orange-amber (R about 1.4x B)."
+    "problem": "The rhythm fix landed (gap 75 against pools 168-181 graded), but the pools are now brighter than in round 2 (about 140), and the floor is still by far the brightest large surface. The cool pool from the fitting at 9.4 sits directly in front of the visitation door and outshines it: doorway interior about 122, graded R/B 1.39, tan rather than amber. The warm wedge on the floor shows only as a 10 px tint at the threshold. The eye lands on the floor, not on the destination.",
+    "fix": "In FITTINGS, set the 9.4 fitting's level from 1.0 to about 0.5 (or move it to y=8.8), and lower FIT_W from 280 to about 220, so the pools peak at 120-135 graded. In TRIMS['corridor'], raise room_warm from 900 to about 1300 and vd_floor_wedge from 1100 to about 1600, and widen the wedge's cone from 60 to 75 deg so it lies 2-3 m out of the door past the dying tube's footprint. Target: the doorway interior at 150-170 graded, the brightest thing in the lower two thirds, with R about 1.6x B, and a warm wedge at least 60 px deep on the floor before the cool pool takes over."
    },
    {
     "priority": 2,
     "camera": "door",
-    "problem": "The panel reads as a ship's porthole: a rounded frame with 24 dome rivets. The bars are inconsistent (two black, two light), the tie bar is four floating blocks, and the bunk beyond is unreadable.",
-    "fix": "In window_frame(): drop to a flat welded steel frame about 50 mm wide with corner radius about 0.012 m, and either no rivets or 8 small countersunk bolt heads (5 mm dome). In cell_bars(): replace the per-bar square blocks with one continuous flat tie bar 40 x 8 mm through all four bars, bevel 1.5 mm. Light the left two bars: raise cell_close_night to 120-150 W and move it so it rims the bars from inside, or swing door_rake 8-10 deg so the inboard bars catch it. Make the bunk read: a mattress box 0.1 m thick with a folded grey blanket, rim-lit by cell_close_night, its edge level with the tie bar."
+    "problem": "The prop's lumpy, melted geometry still shows. On the leaf side of the new barrel knuckle (around x 820-850, y 90-210) a crumpled blob remains from the generated hinge. The generated food hatch is cut by the bottom edge (x 500-750, y 650-720) and reads as warped plates. The same hatches show on every corridor door as pale crumpled shapes (around x 480, 840 and 1150-1280 at y 400-640).",
+    "fix": "In door_proto(), cut the prop's own hinge and hatch faces the way the bars are cut: delete the faces inside the hatch box and the hinge zone by local-coordinate bounds. Then build, for every closed door, a clean hatch in hinges()/cell_doors(): a flap box 0.36 x 0.012 x 0.15 m with a 3 mm bevel set in a 20 mm pressed surround, two 18 mm hinge knuckles on its lower edge, and a slide bolt (a 60 x 14 x 10 mm box with an 8 mm knob) at the top, in the door_steel paint. Cover the hinge zone with a flat leaf plate (0.05 x 0.004 x 0.12 m, four 5 mm countersunk heads). For the door camera also tilt the aim about 3 cm higher so the hatch is either fully in frame or clear of the bottom edge."
    },
    {
     "priority": 2,
-    "camera": "envelope",
-    "problem": "The envelope is cold near-white with no contact shadow and an invisible curl, and looks pasted on. The flat untextured table top fills about 60% of the frame.",
-    "fix": "In envelope(): raise the curl to h += 0.02 * max(0, 1 - q/0.065)**2 (about 20 mm over 6.5 cm), and solidify the body to 0.8 mm so its edge shows. Set the paper albedo to a warm (0.68,0.64,0.56), roughness 0.85, with a fine fibre noise bump (scale 800, strength 0.02). Offset pendant_pool 0.15 m toward -x/+y so the curl and edges throw a visible shadow on the table. Give the table top material laminate wear: fine scratches, a dried cup ring, edge chips, roughness variation 0.45-0.7. Either drop the camera to z=0.95 and aim at the envelope so the table is under 40% of the frame and the empty chair larger, or let the pool fall off to under 35% of its centre value at the frame edges."
+    "camera": "door",
+    "problem": "Behind the bars, the bottom of the window shows a hard black-and-white triangle pattern (whatever surface the cell_close_night lights hot, cut by the bar and tie-bar shadows), and ghost reflections in the glass fill the upper half. The empty bunk the camera was framed for still does not read.",
+    "fix": "In close_cell(), lower cell_close_night from 140 W to about 60 W and move it to the cell's far end wall at z 1.9, aimed back toward the door, so it rims the mattress's near edge and the folded blanket rather than lighting their top faces flat. Add a soft 0.6 x 0.8 m, 15 W cool area grazing the cell's latch-side wall behind the bunk, so the bunk's rail, mattress edge and blanket fold read as a silhouette against a lit wall. Lower the mattress by about 6 cm so the window sees its front edge, not its top. Cut the glass reflections by setting thin_glass refl from 0.05 to about 0.015 for the close door. Check that nothing behind the bars goes above about 170 graded or below about 8."
+   },
+   {
+    "priority": 3,
+    "camera": "corridor",
+    "problem": "The 'worn painted floor' of the beat does not read. At 1280 the floor is a clean, smooth grey lightbox under each pool with no visible scuffs or paint wear. The saw-cut joint at 2.4 m falls exactly on the pool's falloff edge beside the drain, so the pool looks cut off by a ruled line. The drain's stain now reads as a saturated orange decal on one side of the grate.",
+    "fix": "In floor_paint (corridor floor), add dark heel and trolley scuffs: a noise stretched about 8:1 along Y, thresholded to about 5% coverage, at 0.6x the paint value, roughness +0.15. Widen roughness variation along the path to 0.38-0.72, so each fitting's reflection breaks into soft streaks instead of an even glow. Raise the contrast between bare and paint slightly (bare about 1.25x paint at path_lift 1.2). Set joint_off so the joint lands about 0.6 m from the pool edge (for example joint_off 0.8). Keep the rust stain to within about 4 cm of the grate, at half its present saturation, and let the damp patch carry the shape."
    },
    {
     "priority": 3,
     "camera": "chair",
-    "problem": "The table top is barely brighter than the floor round its shadow, so the lit island is the floor. The clock has an unmotivated fan-shaped hotspot. The table is a thin generic top.",
-    "fix": "Lower PEND_W from 180 to about 90 and narrow pendant_pool's cone from 56 to about 40 deg, keeping POOL_W 300, so the table top is at least 1.6x the surrounding floor. Set clock_kick to 0.6-1.0 W with spread 90, or delete it and let the clock read by pendant spill. In table(): make the top 35 mm thick with a steel apron, and add four floor flanges (0.1 m square, 6 mm, 4 bolts each) so it reads as bolted-down institutional furniture."
-   },
-   {
-    "priority": 3,
-    "camera": "corridor",
-    "problem": "Floor wear reads as camouflage blobs, and the drain's damp patch is a black hole.",
-    "fix": "In floor_paint, stretch the wear noise along the walking direction (multiply world Y by 0.2 before the pit and big noises) so it forms long scuffed streaks, and raise pit scale from 26 to 45. Make the damp patch only about 20% darker than the paint, roughness 0.25, radius 0.3, with a soft noise edge, not a near-black blob. Sink the drain frame 2 mm and add a 3 mm dark gap round it."
+    "problem": "The left fifth of the frame is pure black (mean 1.7/255) and the right edge is about 6. The visitor's own chair, which should carry half of the absence, has its seat and back lost in the black; only its tubes read.",
+    "fix": "For the chair camera, add to TRIMS a vd_spill of about 35-45 W (the corridor's cool light through the open doorway behind the lens), turned about 20 deg toward -x so it rims the near chair's backrest and seat edge and lifts the left wall's coursing to about 12-20/255. Alternatively raise the near chair's val from 0.4 to about 0.55 and turn it about 10 deg so its backrest catches the pendant spill. Target: the near chair's back reads at 30-45/255 against a wall at 10-15."
    },
    {
     "priority": 3,
     "camera": "door",
-    "problem": "The hinge has an oversized hex bolt and spatter-like chips. The door leaf is uniform flat grey and identical in value to the wall. The frame's top edge is crowded against the top of the picture.",
-    "fix": "Replace the hinge with a barrel knuckle about 25 mm in diameter and 120 mm long, with a flush leaf and 4 countersunk screws; remove the dark speckle decal. Give the door paint a slightly different hue and value from the wall (e.g. blue-grey 0.16,0.19,0.21 against wall 0.22), with polished wear round the panel edge and handle. Aim the camera about 4 cm lower, or use lens 36, so the frame's top has at least 40 px clear."
+    "problem": "The left 15% of the frame (x 0-180) is a dead black slab (mean 1/255). Beside it, a blank rectangular plate (x 185-275, y 55-200) sits alone on the leaf's edge, unexplained.",
+    "fix": "Either reframe 3-4 deg toward the window (aim x shifted so the black jamb strip is under 8% of the frame), or let door_rake's spread (70 to about 95) graze the reveal so the jamb reads at 10-18/255. Remove the stray plate or make it the visible top hinge leaf matching the new knuckle."
+   },
+   {
+    "priority": 4,
+    "camera": "chair",
+    "problem": "The light under the back door is a uniform hard line peaking at 231/255. It reads as an LED strip rather than daylight-cool light leaking under a door, and its fan on the floor is very short.",
+    "fix": "In back_door(), lower the bd_under glow strength from 2.2 to about 1.0. Raise bd_under_light from 3.5 to about 6 W and tip it 20 deg down instead of 12, so the light fans 30-40 cm across the floor tiles with a soft falloff. Target peak about 170 graded."
    },
    {
     "priority": 4,
     "camera": "corridor",
-    "problem": "The meal tray on the near open hatch is unreadable: the cup reads, the tray does not.",
-    "fix": "Raise the hatch slot light to about 15-20 W. Turn cd0_tray about 20 deg so its compartments face the camera, and lift the tray plastic to val about 0.35 (0.32,0.3,0.27) so it reads against the dark door. Add a spoon and a covered bowl for silhouette."
+    "problem": "On the open hatch the cup, bowl and napkin blow out to near-white blobs against the dark door, so they read as shapes rather than objects. The end wall round the visitation door is mottled noise in the raw frame rather than painted block with mortar lines.",
+    "fix": "Lower the tray items' albedo to about 0.4 (cup, bowl, lid) or the hatch slot light by about 30%, so the tray contents peak at about 170 graded with visible shading. Give the end wall the same block_wall material (mortar coursing, dado) as the side walls."
+   },
+   {
+    "priority": 4,
+    "camera": "envelope",
+    "problem": "A faint out-of-focus grey sliver is cut by the right frame edge (x 1265-1280, y 60-220).",
+    "fix": "Identify it (probably the back door's frame or the vent) and nudge the aim 1-2 deg, or darken it, so the edge of the frame stays clean. Recheck after the camera change in the priority-1 fix."
    }
   ]
  },
